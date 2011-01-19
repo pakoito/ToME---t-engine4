@@ -27,9 +27,7 @@ newTalent{
 	equilibrium = 10,
 	cooldown = 26,
 	range = 10,
-	tactical = {
-		ATTACK = 10,
-	},
+	tactical = { CLOSEIN = 2, ESCAPE = 2 },
 	requires_target = true,
 	action = function(self, t)
 		self:setEffect(self.EFF_LIGHTNING_SPEED, math.ceil(6 + self:getTalentLevel(t) * 1.2), {power=400 + self:getTalentLevel(t) * 70})
@@ -50,9 +48,7 @@ newTalent{
 	equilibrium = 20,
 	cooldown = 20,
 	range = 1,
-	tactical = {
-		DEFEND = 10,
-	},
+	tactical = { ATTACKAREA = 5 },
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="ball", radius=1, friendlyfire=false, talent=t}
@@ -86,6 +82,7 @@ newTalent{
 	equilibrium = 14,
 	cooldown = 15,
 	proj_speed = 2, -- This is purely indicative
+	tactical = { ATTACK = 2, DISABLE = 2 },
 	range = function(self, t) return 4 + math.floor(self:getTalentLevel(t)) end,
 	requires_target = true,
 	action = function(self, t)
@@ -159,9 +156,7 @@ newTalent{
 	equilibrium = 12,
 	cooldown = 12,
 	message = "@Source@ breathes lightning!",
-	tactical = {
-		ATTACKAREA = 10,
-	},
+	tactical = { ATTACKAREA = 2 },
 	range = function(self, t) return 4 + self:getTalentLevelRaw(t) end,
 	direct_hit = true,
 	requires_target = true,

@@ -178,6 +178,7 @@ newTalent{
 	type = {"base/race", 1},
 	no_energy = true,
 	cooldown = 50,
+	tactical = { HEAL = 2 },
 	action = function(self, t)
 		self:setEffect(self.EFF_REGENERATION, 10, {power=5 + self:getWil() * 0.5})
 		return true
@@ -195,6 +196,7 @@ newTalent{
 	type = {"base/race", 1},
 	no_energy = true,
 	cooldown = 50,
+	tactical = { DEFEND = 1 },
 	action = function(self, t)
 		local power = 0.1 + self:getDex() / 210
 		self:setEffect(self.EFF_SPEED, 8, {power=1 - 1 / (1 + power)})
@@ -213,6 +215,7 @@ newTalent{
 	type = {"base/race", 1},
 	no_energy = true,
 	cooldown = 50,
+	tactical = { DEFEND = 2 },
 	action = function(self, t)
 		self:setEffect(self.EFF_DWARVEN_RESILIENCE, 8, {
 			armor=5 + self:getCon() / 5,
@@ -234,6 +237,7 @@ newTalent{
 	type = {"base/race", 1},
 	no_energy = true,
 	cooldown = 50,
+	tactical = { ATTACK = 2 },
 	action = function(self, t)
 		self:setEffect(self.EFF_HALFLING_LUCK, 5, {
 			physical=10 + self:getCun() / 2,
@@ -254,6 +258,7 @@ newTalent{
 	type = {"base/race", 1},
 	no_energy = true,
 	cooldown = 50,
+	tactical = { ATTACK = 1, DEFEND = 1 },
 	action = function(self, t)
 		self:setEffect(self.EFF_ETERNAL_WRATH, 5, {power=7 + self:getWil(10)})
 		return true
@@ -271,6 +276,7 @@ newTalent{
 	type = {"base/race", 1},
 	no_energy = true,
 	cooldown = 50,
+	tactical = { ATTACK = 2 },
 	action = function(self, t)
 		self:setEffect(self.EFF_ORC_FURY, 5, {power=10 + self:getWil(20)})
 		return true

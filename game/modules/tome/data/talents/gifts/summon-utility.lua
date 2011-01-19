@@ -18,24 +18,12 @@
 -- darkgod@te4.org
 
 newTalent{
-	name = "Summon End",
-	type = {"wild-gift/other",1},
-	points = 1,
-	action = function(self, t)
-		self:die()
-		return true
-	end,
-	info = function(self, t)
-		return ([[Cancels the control of your summon, returning your will into your body and destroying the summon.]])
-	end,
-}
-
-newTalent{
 	name = "Taunt",
 	type = {"technique/other",1},
 	points = 1,
 	cooldown = 5,
 	requires_target = false,
+	tactical = { PROTECT = 2 },
 	range = function(self, t) return 3 + self:getTalentLevelRaw(t) end,
 	action = function(self, t)
 		local tg = {type="ball", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
@@ -58,6 +46,7 @@ newTalent{
 	type = {"technique/other",1},
 	points = 5,
 	cooldown = 10,
+	tactical = { DEFEND = 2 },
 	action = function(self, t)
 		local dur = math.ceil(4 + self:getTalentLevel(t) * 0.7)
 		local power = 34 + self:getTalentLevel(t) * 7
@@ -76,6 +65,7 @@ newTalent{ short_name="SPIDER_WEB",
 	equilibrium = 5,
 	cooldown = 3,
 	range=7,
+	tactical = { DISABLE = 2 },
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
@@ -94,56 +84,6 @@ newTalent{ short_name="SPIDER_WEB",
 	end,
 }
 
-newTalent{ short_name="HEAL_OTHER",
-	name = "Heal Other",
-	type = {"wild-gift/other",1},
-	points = 5,
-	equilibrium = 5,
-	cooldown = 4,
-	range=7,
-	requires_target = true,
-	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		self:project(tg, x, y, function(tx, ty)
-			local target = game.level.map(tx, ty, Map.ACTOR)
-			if target then
-				target:heal(15 + self:getMag(40) * self:getTalentLevel(t))
-			end
-		end)
-		return true
-	end,
-	info = function(self, t)
-		return ([[Heal your target for %d life.]]):format(15 + self:getMag(40) * self:getTalentLevel(t))
-	end,
-}
-
-newTalent{ short_name="REGENERATE_OTHER",
-	name = "Regenerate Other",
-	type = {"wild-gift/other",1},
-	points = 5,
-	equilibrium = 5,
-	cooldown = 10,
-	range=7,
-	requires_target = true,
-	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		self:project(tg, x, y, function(tx, ty)
-			local target = game.level.map(tx, ty, Map.ACTOR)
-			if target then
-				target:setEffect(target.EFF_REGENERATION, 10, {power=(15 + self:getMag(40) * self:getTalentLevel(t)) / 10})
-			end
-		end)
-		return true
-	end,
-	info = function(self, t)
-		return ([[Regenerate your target for %d life over 10 turns.]]):format(15 + self:getMag(40) * self:getTalentLevel(t))
-	end,
-}
-
 newTalent{
 	name = "Turtle",
 	type = {"wild-gift/summon-utility", 1},
@@ -155,6 +95,7 @@ newTalent{
 	cooldown = 10,
 	range = 10,
 	requires_target = true,
+	tactical = { DEFEND = 2, PROTECT = 2 },
 	action = function(self, t)
 		if not self:canBe("summon") then game.logPlayer(self, "You can not summon, you are suppressed!") return end
 		if checkMaxSummon(self) then return end
@@ -225,6 +166,7 @@ newTalent{
 	equilibrium = 5,
 	cooldown = 10,
 	range = 10,
+	tactical = { ATTACK = 1, DISABLE = 2 },
 	requires_target = true,
 	action = function(self, t)
 		if not self:canBe("summon") then game.logPlayer(self, "You can not summon, you are suppressed!") return end
@@ -296,6 +238,7 @@ newTalent{
 	cooldown = 18,
 	range = function(self, t) return 4 + self:getTalentLevel(t) end,
 	requires_target = true,
+	tactical = { DISABLE = 0.2 },
 	action = function(self, t)
 		local dur = math.floor(5 + self:getTalentLevel(t))
 		local tg = {type="ball", range=0, radius=self:getTalentRange(t), friendlyfire=true, talent=t}

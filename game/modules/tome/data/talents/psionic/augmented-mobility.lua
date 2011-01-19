@@ -21,7 +21,7 @@ local function getGemLevel(self)
 		local gem_level = 0
 		if not self:getInven("PSIONIC_FOCUS")[1] then return gem_level end
 		local tk_item = self:getInven("PSIONIC_FOCUS")[1]
-		if tk_item.type == "gem" then 
+		if tk_item.type == "gem" then
 			gem_level = tk_item.material_level
 		else
 			gem_level = 0
@@ -36,6 +36,7 @@ newTalent{
 	cooldown = 40,
 	psi = 20,
 	points = 5,
+	tactical = { CLOSEIN = 2 },
 	range = function(self, t)
 		local r = 2+self:getTalentLevelRaw(t)
 		local gem_level = getGemLevel(self)
@@ -98,6 +99,7 @@ newTalent{
 	cooldown = 15,
 	psi = 10,
 	points = 5,
+	tactical = { CLOSEIN = 2 },
 	range = function(self, t)
 		local r = 2 + self:getTalentLevelRaw(t)
 		local gem_level = getGemLevel(self)
@@ -136,9 +138,7 @@ newTalent{
 	random_ego = "attack",
 	psi = 60,
 	cooldown = 10,
-	tactical = {
-		ATTACK = 10,
-	},
+	tactical = { CLOSEIN = 2, ATTACK = 1 },
 	range = function(self, t)
 		local r = 2 + self:getTalentLevel(t)
 		local gem_level = getGemLevel(self)
@@ -149,8 +149,14 @@ newTalent{
 	--range = function(self, t) return 3+self:getTalentLevel(t)+self:getWil(4) end,
 	direct_hit = true,
 	requires_target = true,
+	on_pre_use = function(self, t, vocal)
+		if not self:hasEffect(self.EFF_KINSPIKE_SHIELD) then
+			if vocal then game.logSeen(self, "You must have a spiked kinetic shield active. Cancelling charge.") end
+			return false
+		end
+		return true
+	end,
 	action = function(self, t)
-		if not self:hasEffect(self.EFF_KINSPIKE_SHIELD) then game.logSeen(self, "You must have a spiked kinetic shield active. Cancelling charge.") return end
 		if self:getTalentLevelRaw(t) < 5 then
 			local tg = {type="beam", range=self:getTalentRange(t), friendlyfire=false, talent=t}
 			local x, y = self:getTarget(tg)
@@ -191,7 +197,7 @@ newTalent{
 				lx, ly = l()
 			end
 			self:move(tx, ty, true)
-			return true		
+			return true
 		end
 	end,
 	info = function(self, t)

@@ -27,9 +27,7 @@ newTalent{
 	equilibrium = 3,
 	cooldown = 20,
 	range = 5,
-	tactical = {
-		DEFEND = 10,
-	},
+	tactical = { DEFEND = 1, DISABLE = 3 },
 	action = function(self, t)
 		local tg = {type="ball", range=0, radius=2 + self:getTalentLevelRaw(t), friendlyfire=false, talent=t}
 		self:project(tg, self.x, self.y, DamageType.CONFUSION, {dur=3, dam=40 + 6 * self:getTalentLevel(t)}, {type="flame"})
@@ -50,9 +48,7 @@ newTalent{
 	cooldown = 10,
 	range = 5,
 	direct_hit = true,
-	tactical = {
-		DEFEND = 10,
-	},
+	tactical = { DEFEND = 1, DISABLE = 2, ESCAPE = 1 },
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="cone", range=0, radius=4 + self:getTalentLevelRaw(t), friendlyfire=false, talent=t}
@@ -76,9 +72,7 @@ newTalent{
 	random_ego = "attack",
 	equilibrium = 10,
 	cooldown = 35,
-	tactical = {
-		ATTACKAREA = 10,
-	},
+	tactical = { ATTACKAREA = 2 },
 	range = 10,
 	direct_hit = true,
 	requires_target = true,
@@ -117,9 +111,7 @@ newTalent{
 	equilibrium = 12,
 	cooldown = 12,
 	message = "@Source@ breathes fire!",
-	tactical = {
-		ATTACKAREA = 10,
-	},
+	tactical = { ATTACKAREA = 2 },
 	range = function(self, t) return 4 + self:getTalentLevelRaw(t) end,
 	direct_hit = true,
 	requires_target = true,

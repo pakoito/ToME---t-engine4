@@ -35,8 +35,8 @@ newTalent{
 	cooldown = 10,
 	psi = 10,
 	range = 1,
+	tactical = { ATTACK = 2 },
 	action = function(self, t)
-
 		local tkweapon = self:getInven("MAINHAND")[1]
 		if type(tkweapon) == "boolean" then tkweapon = nil end
 		if not tkweapon then
@@ -64,6 +64,7 @@ newTalent{
 	mode = "sustained",
 	cooldown = 0,
 	sustain_psi = 10,
+	tactical = { BUFF = 2 },
 	activate = function(self, t)
 		local str_power = math.floor(0.06*self:getTalentLevel(t)*self:getWil())
 		local dex_power = math.floor(0.06*self:getTalentLevel(t)*self:getCun())
@@ -97,8 +98,7 @@ newTalent{
 	mode = "sustained",
 	sustain_psi = 0,
 	points = 5,
-
-
+	tactical = { ATTACK = 2 },
 	activate = function(self, t)
 		local ret = {
 		k_aura_on = self:isTalentActive(self.T_KINETIC_AURA),
@@ -112,7 +112,6 @@ newTalent{
 		self:incPsi(cur_psi)
 		return ret
 	end,
-
 	do_combat = function(self, t, target)
 		local mult = 1 + 0.1*(self:getTalentLevel(t))
 		local auras = self:isTalentActive(t.id)
@@ -151,6 +150,7 @@ newTalent{
 	cooldown = 20,
 	psi = 30,
 	points = 5,
+	tactical = { ATTACK = 3 },
 	action = function(self, t)
 		local targets = 1 + math.ceil(self:getTalentLevel(t)/5)
 		self:setEffect(self.EFF_PSIFRENZY, 3 * self:getTalentLevelRaw(t), {power=targets})

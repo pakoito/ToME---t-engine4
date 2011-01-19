@@ -25,6 +25,7 @@ newTalent{ short_name = "RITCH_FLAMESPITTER_BOLT",
 	range = 10,
 	reflectable = true,
 	requires_target = true,
+	tactical = { ATTACK = 2 },
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -47,9 +48,7 @@ newTalent{
 	equilibrium = 10,
 	cooldown = 8,
 	message = "@Source@ breathes acid!",
-	tactical = {
-		ATTACKAREA = 10,
-	},
+	tactical = { ATTACKAREA = 2 },
 	range = 5,
 	requires_target = true,
 	action = function(self, t)
@@ -75,9 +74,7 @@ newTalent{
 	equilibrium = 10,
 	cooldown = 8,
 	message = "@Source@ breathes lightning!",
-	tactical = {
-		ATTACKAREA = 10,
-	},
+	tactical = { ATTACKAREA = 2 },
 	range = 5,
 	requires_target = true,
 	action = function(self, t)
@@ -108,9 +105,7 @@ newTalent{
 	equilibrium = 10,
 	cooldown = 8,
 	message = "@Source@ breathes poison!",
-	tactical = {
-		ATTACKAREA = 10,
-	},
+	tactical = { ATTACKAREA = 2 },
 	range = 5,
 	requires_target = true,
 	action = function(self, t)
@@ -139,6 +134,7 @@ newTalent{
 	cooldown = 10,
 	range = 10,
 	requires_target = true,
+	tactical = { ATTACK = 2 },
 	action = function(self, t)
 		if not self:canBe("summon") then game.logPlayer(self, "You can not summon, you are suppressed!") return end
 		if checkMaxSummon(self) then return end
@@ -212,6 +208,7 @@ newTalent{
 	cooldown = 10,
 	range = 10,
 	requires_target = true,
+	tactical = { ATTACK = 2 },
 	action = function(self, t)
 		if not self:canBe("summon") then game.logPlayer(self, "You can not summon, you are suppressed!") return end
 		if checkMaxSummon(self) then return end
@@ -285,6 +282,7 @@ newTalent{
 	cooldown = 10,
 	range = 10,
 	requires_target = true,
+	tactical = { ATTACK = 1, DISABLE = 2 },
 	action = function(self, t)
 		if not self:canBe("summon") then game.logPlayer(self, "You can not summon, you are suppressed!") return end
 		if checkMaxSummon(self) then return end
@@ -360,6 +358,7 @@ newTalent{
 	cooldown = 10,
 	range = 10,
 	requires_target = true,
+	tactical = { ATTACK = 2, DISABLE = 2 },
 	action = function(self, t)
 		if not self:canBe("summon") then game.logPlayer(self, "You can not summon, you are suppressed!") return end
 		if checkMaxSummon(self) then return end

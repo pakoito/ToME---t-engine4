@@ -46,9 +46,7 @@ newTalent{
 	require = undeads_req2,
 	points = 5,
 	cooldown = 20,
-	tactical = {
-		ATTACK = 10,
-	},
+	tactical = { CLOSEIN = 3 },
 	direct_hit = true,
 	range = function(self, t) return math.floor(4 + self:getTalentLevel(t) * 1.2) end,
 	requires_target = true,
@@ -88,9 +86,7 @@ newTalent{
 	require = undeads_req3,
 	points = 5,
 	cooldown = 15,
-	tactical = {
-		ATTACK = 20,
-	},
+	tactical = { ATTACK = 1, DISABLE = 2 },
 	range = 1,
 	requires_target = true,
 	action = function(self, t)
@@ -122,10 +118,7 @@ newTalent{
 	require = undeads_req4,
 	points = 5,
 	cooldown = 25,
-	tactical = {
-		DEFEND = 10,
-		ATTACK = 10,
-	},
+	tactical = { ATTACK = 1, DEFEND = 1 },
 	range=1,
 	action = function(self, t)
 		local duration = self:getTalentLevel(t) / 2 + 4

@@ -145,6 +145,7 @@ newTalent{
 	equilibrium = 20,
 	cooldown = 50,
 	range = 10,
+	tactical = { BUFF = 2 },
 	action = function(self, t)
 		local nb = math.ceil(self:getTalentLevel(t) + 2)
 		local tids = {}

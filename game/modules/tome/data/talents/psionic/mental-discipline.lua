@@ -73,6 +73,7 @@ newTalent{
 	psi = 15,
 	points = 5,
 	no_energy = true,
+	tactical = { BUFF = 3 },
 	action = function(self, t)
 		if self.talents_cd[self.T_KINETIC_SHIELD] == nil and self.talents_cd[self.T_THERMAL_SHIELD] == nil and self.talents_cd[self.T_CHARGED_SHIELD] == nil then
 			return
@@ -100,6 +101,7 @@ newTalent{
 	psi = 15,
 	points = 5,
 	no_energy = true,
+	tactical = { BUFF = 2 },
 	action = function(self, t)
 		if self.talents_cd[self.T_KINETIC_AURA] == nil and self.talents_cd[self.T_THERMAL_AURA] == nil and self.talents_cd[self.T_CHARGED_AURA] == nil then
 			return

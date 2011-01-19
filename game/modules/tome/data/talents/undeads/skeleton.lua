@@ -46,9 +46,7 @@ newTalent{
 	require = undeads_req2,
 	points = 5,
 	cooldown = 15,
-	tactical = {
-		ATTACK = 10,
-	},
+	tactical = { ATTACK = 2 },
 	range = 1,
 	action = function(self, t)
 		local x, y = self.x, self.y
@@ -87,9 +85,7 @@ newTalent{
 	require = undeads_req3,
 	points = 5,
 	cooldown = 30,
-	tactical = {
-		DEFEND = 20,
-	},
+	tactical = { DEFEND = 2 },
 	action = function(self, t)
 		self:setEffect(self.EFF_DAMAGE_SHIELD, 10, {power=(8 + self:getDex(20)) * self:getTalentLevel(t)})
 		return true
@@ -107,9 +103,7 @@ newTalent{ short_name = "SKELETON_REASSEMBLE",
 	require = undeads_req4,
 	points = 5,
 	cooldown = 45,
-	tactical = {
-		DEFEND = 10,
-	},
+	tactical = { HEAL = 2 },
 	on_learn = function(self, t)
 		if self:getTalentLevelRaw(t) == 5 then
 			self:attr("self_resurrect", 1)
@@ -121,13 +115,13 @@ newTalent{ short_name = "SKELETON_REASSEMBLE",
 		end
 	end,
 	action = function(self, t)
-		self:heal(self:getTalentLevel(t) * self.level / 2, self)
+		self:heal(self:getTalentLevel(t) * self.level * 2.5, self)
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
 	info = function(self, t)
 		return ([[Re-position some of your bones, healing yourself for %d.
 		At level 5 you will gain the ability to completely re-assemble your body should it be destroyed (can only be used once)]]):
-		format(self:getTalentLevel(t) * self.level / 2)
+		format(self:getTalentLevel(t) * self.level  * 2.5)
 	end,
 }

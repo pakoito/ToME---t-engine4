@@ -21,7 +21,7 @@ local function getGemLevel(self)
 		local gem_level = 0
 		if not self:getInven("PSIONIC_FOCUS")[1] then return gem_level end
 		local tk_item = self:getInven("PSIONIC_FOCUS")[1]
-		if tk_item.type == "gem" then 
+		if tk_item.type == "gem" then
 			gem_level = tk_item.material_level
 		else
 			gem_level = 0
@@ -44,7 +44,7 @@ local function forceHit(self, target, sourceX, sourceY, damage, knockback, knock
 		self:project(target, target.x, target.y, DamageType.PHYSICAL, damage)
 		game.level.map:particleEmitter(target.x, target.y, 1, "force_hit", {power=power, dx=target.x - sourceX, dy=target.y - sourceY})
 	end
-	
+
 	-- knockback?
 	if not target.dead and knockback and knockback > 0 and target:canBe("knockback") and (target.never_move or 0) < 1 then
 		-- give direct hit a direction?
@@ -53,7 +53,7 @@ local function forceHit(self, target, sourceX, sourceY, damage, knockback, knock
 			sourceX = sourceX + dir_to_coord[newDirection][1]
 			sourceY = sourceY + dir_to_coord[newDirection][2]
 		end
-	
+
 		local lineFunction = line.new(sourceX, sourceY, target.x, target.y, true)
 		local finalX, finalY = target.x, target.y
 		local knockbackCount = 0
@@ -61,7 +61,7 @@ local function forceHit(self, target, sourceX, sourceY, damage, knockback, knock
 		while knockback > 0 do
 			blocked = true
 			local x, y = lineFunction(true)
-			
+
 			if not game.level.map:isBound(x, y) or game.level.map:checkAllEntities(x, y, "block_move", target) then
 				-- blocked
 				local nextTarget = game.level.map(x, y, Map.ACTOR)
@@ -76,17 +76,17 @@ local function forceHit(self, target, sourceX, sourceY, damage, knockback, knock
 				else
 					game.logPlayer(self, "%s was smashed!", target.name:capitalize())
 				end
-				
+
 				-- take partial damage
 				local blockDamage = damage * knockback * knockbackDamage / 100
 				self:project(target, target.x, target.y, DamageType.PHYSICAL, blockDamage)
-				
+
 				if nextTarget then
 					-- start a new force hit with the knockback damage and current knockback
-					
+
 					forceHit(self, nextTarget, sourceX, sourceY, blockDamage, knockback, knockbackDamage, power / 2)
 				end
-				
+
 				knockback = 0
 			else
 				-- allow move
@@ -95,11 +95,11 @@ local function forceHit(self, target, sourceX, sourceY, damage, knockback, knock
 				knockbackCount = knockbackCount + 1
 			end
 		end
-		
+
 		if not blocked and knockbackCount > 0 then
 			game.logPlayer(self, "%s was blasted back %d spaces!", target.name:capitalize())
 		end
-		
+
 		if not target.dead and (finalX ~= target.x or finalY ~= target.y) then
 			target:move(finalX, finalY, true)
 		end
@@ -117,9 +117,7 @@ newTalent{
 	cooldown = function(self, t)
 		return 15 - (self:getTalentLevelRaw(self.T_PROJECTION_MASTERY) or 0)
 	end,
-	tactical = {
-		ATTACKAREA = 10,
-	},
+	tactical = { ATTACKAREA = 2 },
 	range = 1,
 	direct_hit = true,
 	getAuraStrength = function(self, t)
@@ -164,19 +162,19 @@ newTalent{
 	deactivate = function(self, t, p)
 		local dam = 50 + 0.25 * t.getAuraStrength(self, t)*t.getAuraStrength(self, t)
 		local cost = t.sustain_psi - 2*getGemLevel(self)
-		if self:getPsi() <= cost then 
+		if self:getPsi() <= cost then
 			game.logPlayer(self, "The aura dissipates without producing a spike.")
-			return true 
+			return true
 		end
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
 		local knockback = t.getKnockback(self, t)
-		forceHit(self, target, self.x, self.y, dam, knockback, 15, 1)		
+		forceHit(self, target, self.x, self.y, dam, knockback, 15, 1)
 		--self:project(tg, x, y, DamageType.BATTER, dam)
 		self:incPsi(-cost)
-		
+
 		return true
 	end,
 
@@ -203,9 +201,7 @@ newTalent{
 	cooldown = function(self, t)
 		return 15 - (self:getTalentLevelRaw(self.T_PROJECTION_MASTERY) or 0)
 	end,
-	tactical = {
-		ATTACKAREA = 10,
-	},
+	tactical = { ATTACKAREA = 2 },
 	range = function(self, t)
 		local r = 6
 		local gem_level = getGemLevel(self)
@@ -254,9 +250,9 @@ newTalent{
 		local dam = 50 + 0.4 * t.getAuraStrength(self, t)*t.getAuraStrength(self, t)
 		local cost = t.sustain_psi - 2*getGemLevel(self)
 		--if self:isTalentActive(self.T_CONDUIT) then return true end
-		if self:getPsi() <= cost then 
+		if self:getPsi() <= cost then
 			game.logPlayer(self, "The aura dissipates without producing a spike.")
-			return true 
+			return true
 		end
 
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t, display={particle="bolt_fire", trail="firetrail"}}
@@ -265,7 +261,7 @@ newTalent{
 		self:project(tg, x, y, DamageType.FIREBURN, self:spellCrit(rng.avg(0.8*dam, dam)))
 		local _ _, x, y = self:canProject(tg, x, y)
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "flamebeam", {tx=x-self.x, ty=y-self.y})
-		
+
 		game:playSoundNear(self, "talents/fire")
 		self:incPsi(-cost)
 		return true
@@ -294,9 +290,7 @@ newTalent{
 	cooldown = function(self, t)
 		return 15 - (self:getTalentLevelRaw(self.T_PROJECTION_MASTERY) or 0)
 	end,
-	tactical = {
-		ATTACKAREA = 10,
-	},
+	tactical = { ATTACKAREA = 2 },
 	range = function(self, t)
 		local r = 6
 		local gem_level = getGemLevel(self)
@@ -344,11 +338,11 @@ newTalent{
 		local dam = 50 + 0.4 * t.getAuraStrength(self, t)*t.getAuraStrength(self, t)
 		local cost = t.sustain_psi - 2*getGemLevel(self)
 		--if self:isTalentActive(self.T_CONDUIT) then return true end
-		if self:getPsi() <= cost then 
+		if self:getPsi() <= cost then
 			game.logPlayer(self, "The aura dissipates without producing a spike.")
-			return true 
+			return true
 		end
-		
+
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		local fx, fy = self:getTarget(tg)
 		if not fx or not fy then return nil end

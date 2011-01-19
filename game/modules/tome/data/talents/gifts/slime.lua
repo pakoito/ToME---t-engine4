@@ -27,9 +27,7 @@ newTalent{
 	equilibrium = 2,
 	cooldown = 10,
 	range = 1,
-	tactical = {
-		ATTACK = 10,
-	},
+	tactical = { ATTACK = 2 },
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
@@ -57,9 +55,7 @@ newTalent{
 	sustain_equilibrium = 25,
 	cooldown = 10,
 	range = 1,
-	tactical = {
-		DEFEND = 10,
-	},
+	tactical = { DEFEND = 1 },
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/slime")
 		local power = 10 + 5 * self:getTalentLevel(t)
@@ -84,9 +80,7 @@ newTalent{
 	random_ego = "attack",
 	equilibrium = 4,
 	cooldown = 30,
-	tactical = {
-		ATTACK = 10,
-	},
+	tactical = { ATTACK = 2 },
 	range = 10,
 	direct_hit = true,
 	proj_speed = 8,
@@ -112,9 +106,7 @@ newTalent{
 	random_ego = "utility",
 	equilibrium = 5,
 	cooldown = 20,
-	tactical = {
-		MOVEMENT = 10,
-	},
+	tactical = { CLOSEIN = 2 },
 	requires_target = true,
 	range = 10,
 	action = function(self, t)

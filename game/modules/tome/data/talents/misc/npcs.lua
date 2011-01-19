@@ -34,6 +34,7 @@ newTalent{
 	type = {"other/other", 1},
 	cooldown = 3,
 	range = 10,
+	tactical = { ATTACK = 3 },
 	action = function(self, t)
 		if not self.can_multiply or self.can_multiply <= 0 then print("no more multiply")  return nil end
 
@@ -70,6 +71,7 @@ newTalent{
 	cooldown = 5,
 	range = 1,
 	requires_target = true,
+	tactical = { ATTACK = 2 },
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -92,6 +94,7 @@ newTalent{
 	message = "@Source@ crawls acid onto @target@.",
 	cooldown = 2,
 	range = 1,
+	tactical = { ATTACK = 2 },
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
@@ -115,6 +118,7 @@ newTalent{
 	message = "@Source@ releases blinding spores at @target@.",
 	cooldown = 2,
 	range = 1,
+	tactical = { ATTACK = 2 },
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
@@ -139,6 +143,7 @@ newTalent{
 	message = "@Source@ releases poisonous spores at @target@.",
 	cooldown = 2,
 	range = 1,
+	tactical = { ATTACK = 2 },
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
@@ -161,6 +166,7 @@ newTalent{
 	cooldown = 6,
 	stamina = 8,
 	require = { stat = { str=12 }, },
+	tactical = { ATTACK = 1, DISABLE = 2 },
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
@@ -193,6 +199,7 @@ newTalent{
 	stamina = 8,
 	require = { stat = { str=12 }, },
 	requires_target = true,
+	tactical = { ATTACK = 1, DISABLE = 2 },
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -222,6 +229,7 @@ newTalent{
 	stamina = 8,
 	require = { stat = { str=12 }, },
 	requires_target = true,
+	tactical = { ATTACK = 2 },
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -253,6 +261,7 @@ newTalent{
 	stamina = 8,
 	require = { stat = { str=12 }, },
 	requires_target = true,
+	tactical = { ATTACK = 1, DISABLE = 2 },
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -284,6 +293,7 @@ newTalent{
 	message = "@Source@ bites poison into @target@.",
 	cooldown = 5,
 	range = 1,
+	tactical = { ATTACK = 2 },
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
@@ -304,6 +314,7 @@ newTalent{
 	range = 10,
 	equilibrium = 18,
 	direct_hit = true,
+	tactical = { ATTACK = 2 },
 	action = function(self, t)
 		if not self:canBe("summon") then game.logPlayer(self, "You can not summon, you are suppressed!") return end
 
@@ -357,6 +368,7 @@ newTalent{
 	cooldown = 8,
 	message = "@Source@ diseases @target@.",
 	requires_target = true,
+	tactical = { ATTACK = 2, DISABLE = 1 },
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -386,6 +398,7 @@ newTalent{
 	points = 5,
 	cooldown = 8,
 	message = "@Source@ diseases @target@.",
+	tactical = { ATTACK = 2, DISABLE = 1 },
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
@@ -417,6 +430,7 @@ newTalent{
 	cooldown = 8,
 	message = "@Source@ diseases @target@.",
 	requires_target = true,
+	tactical = { ATTACK = 2, DISABLE = 1 },
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -449,6 +463,7 @@ newTalent{
 	range = 10,
 	direct_hit = true,
 	requires_target = true,
+	tactical = { DISABLE = 3 },
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -472,6 +487,7 @@ newTalent{
 	},
 	range = 10,
 	reflectable = true,
+	tactical = { ATACK = 1 },
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
@@ -500,6 +516,7 @@ newTalent{
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,
+	tactical = { DISABLE = 2, ATTACK = 1 },
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -522,6 +539,7 @@ newTalent{
 	stamina = 8,
 	require = { stat = { str=12 }, },
 	requires_target = true,
+	tactical = { DISABLE = 2, ATTACK = 1 },
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -559,6 +577,7 @@ newTalent{
 	range = 4,
 	direct_hit = true,
 	requires_target = true,
+	tactical = { DISABLE = 2 },
 	action = function(self, t)
 		local tg = {type="cone", range=0, radius=4 + self:getTalentLevelRaw(t), friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)
@@ -583,6 +602,7 @@ newTalent{
 	},
 	range = 10,
 	requires_target = true,
+	tactical = { ATTACK = 2 },
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t)}
 		local x, y = self:getTarget(tg)
@@ -608,6 +628,7 @@ newTalent{
 	range = 10,
 	direct_hit = true,
 	requires_target = true,
+	tactical = { ATTACK = 2 },
 	action = function(self, t)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=2}
 		local x, y = self:getTarget(tg)
@@ -634,6 +655,7 @@ newTalent{
 	},
 	range = 10,
 	requires_target = true,
+	tactical = { DISABLE = 2 },
 	action = function(self, t)
 		local dur = 2 + self:getTalentLevel(t)
 		local trap = mod.class.Trap.new{
@@ -675,6 +697,7 @@ newTalent{
 	},
 	range = 10,
 	direct_hit = true,
+	tactical = { DISABLE = 3 },
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="ball", range=0, radius=2 + self:getTalentLevelRaw(t) / 1.5, talent=t}
@@ -707,6 +730,7 @@ newTalent{
 	},
 	range = 10,
 	direct_hit = true,
+	tactical = { DISABLE = 3, ATTACK = 2, ESCAPE = 2 },
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=1, talent=t}
@@ -733,6 +757,7 @@ newTalent{
 	},
 	message = "@Source@ howls",
 	range = 10,
+	tactical = { ATTACK = 3 },
 	direct_hit = true,
 	action = function(self, t)
 		local rad = self:getTalentLevel(t) + 5
@@ -768,6 +793,7 @@ newTalent{
 	message = "@Source@ shrieks.",
 	range = 10,
 	direct_hit = true,
+	tactical = { ATTACK = 3 },
 	action = function(self, t)
 		local rad = self:getTalentLevel(t) + 5
 		for i = self.x - rad, self.x + rad do for j = self.y - rad, self.y + rad do if game.level.map:isBound(i, j) then
@@ -798,6 +824,7 @@ newTalent{
 	cooldown = 6,
 	stamina = 12,
 	requires_target = true,
+	tactical = { ATTACK = 1, DISABLE = 2 },
 	action = function(self, t)
 		local weapon = self:hasTwoHandedWeapon()
 		if not weapon then
@@ -836,6 +863,7 @@ newTalent{
 	range = 7,
 	direct_hit = true,
 	requires_target = true,
+	tactical = { ATTACK = 3 },
 	action = function(self, t)
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -859,6 +887,7 @@ newTalent{
 	range = 7,
 	direct_hit = true,
 	requires_target = true,
+	tactical = { DISABLE = 3 },
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -881,6 +910,7 @@ newTalent{
 	range = 7,
 	direct_hit = true,
 	requires_target = true,
+	tactical = { ATTACK = 3 },
 	action = function(self, t)
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -904,6 +934,7 @@ newTalent{
 	range = 10,
 	direct_hit = true,
 	requires_target = true,
+	tactical = { ATTACK = 2 },
 	action = function(self, t)
 		local duration = self:getTalentLevel(t) + 2
 		local radius = 4
@@ -936,6 +967,7 @@ newTalent{
 	cooldown = 1,
 	range = 10,
 	direct_hit = true,
+	tactical = { ATTACK = 3 },
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local tx, ty = self:getTarget(tg)
@@ -978,6 +1010,7 @@ newTalent{
 	cooldown = 1,
 	range = 1,
 	requires_target = true,
+	tactical = { ATTACK = 1 },
 	action = function(self, t)
 		local tg = {type="bolt", range=1}
 		local x, y, target = self:getTarget(tg)
@@ -1003,6 +1036,7 @@ newTalent{
 	range = 20,
 	proj_speed = 2,
 	requires_target = true,
+	tactical = { ATTACK = 2 },
 	action = function(self, t)
 		local tg = {type = "bolt", range = 20, talent = t}
 		local x, y = self:getTarget(tg)

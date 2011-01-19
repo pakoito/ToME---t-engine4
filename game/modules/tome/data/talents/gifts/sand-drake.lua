@@ -26,9 +26,7 @@ newTalent{
 	cooldown = 10,
 	range = 1,
 	message = "@Source@ tries to swallow @target@!",
-	tactical = {
-		ATTACK = 10,
-	},
+	tactical = { ATTACK = 0.5 },
 	requires_target = true,
 	no_npc_use = true,
 	action = function(self, t)
@@ -69,9 +67,7 @@ newTalent{
 	message = "@Source@ shakes the ground!",
 	equilibrium = 4,
 	cooldown = 30,
-	tactical = {
-		ATTACKAREA = 10,
-	},
+	tactical = { ATTACKAREA = 2, DISABLE = 2 },
 	range = 10,
 	no_npc_use = true,
 	action = function(self, t)
@@ -94,6 +90,7 @@ newTalent{
 	equilibrium = 50,
 	cooldown = 30,
 	range = 10,
+	tactical = { CLOSEIN = 0.5, ESCAPE = 0.5 },
 	action = function(self, t)
 		self:setEffect(self.EFF_BURROW, 5 + self:getTalentLevel(t) * 3, {})
 		return true
@@ -112,9 +109,7 @@ newTalent{
 	equilibrium = 12,
 	cooldown = 12,
 	message = "@Source@ breathes sand!",
-	tactical = {
-		ATTACKAREA = 10,
-	},
+	tactical = { ATTACKAREA = 2, DISABLE = 2 },
 	range = function(self, t) return 4 + self:getTalentLevelRaw(t) end,
 	direct_hit = true,
 	requires_target = true,

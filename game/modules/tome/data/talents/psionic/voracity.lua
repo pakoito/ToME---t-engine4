@@ -21,7 +21,7 @@ local function getGemLevel(self)
 		local gem_level = 0
 		if not self:getInven("PSIONIC_FOCUS")[1] then return gem_level end
 		local tk_item = self:getInven("PSIONIC_FOCUS")[1]
-		if tk_item.type == "gem" then 
+		if tk_item.type == "gem" then
 			gem_level = tk_item.material_level
 		else
 			gem_level = 0
@@ -36,10 +36,7 @@ newTalent{
 	points = 5,
 	psi = 0,
 	cooldown = 40,
-	tactical = {
-		ATTACKAREA = 10,
-		DEFEND = 4,
-	},
+	tactical = { DEFEND = 1, DISABLE = 2 },
 	direct_hit = true,
 	range = function(self, t)
 		local r = 2
@@ -81,10 +78,7 @@ newTalent{
 	points = 5,
 	cooldown = 50,
 	psi = 0,
-	tactical = {
-		ATTACKAREA = 10,
-		DEFEND = 4,
-	},
+	tactical = { DEFEND = 2, DISABLE = 2 },
 	range = function(self, t)
 		local r = 1
 		local gem_level = getGemLevel(self)
@@ -113,7 +107,7 @@ newTalent{
 		local range = self:getTalentRange(t)
 		local en = ( 4 + self:getTalentLevel(t)) * (100 + self:getWil())/85
 		--local duration = self:getTalentLevel(t) + 2
-		return ([[You leech the heat out of all foes in a radius of %d, gaining %d energy for each enemy frozen. 
+		return ([[You leech the heat out of all foes in a radius of %d, gaining %d energy for each enemy frozen.
 		The effect scales with Willpower.]]):
 		format(range, en)
 	end,
@@ -126,10 +120,7 @@ newTalent{
 	points = 5,
 	psi = 0,
 	cooldown = 60,
-	tactical = {
-		ATTACKAREA = 10,
-		DEFEND = 4,
-	},
+	tactical = { DEFEND = 2, DAMAGE = 2, DISABLE = 1 },
 	direct_hit = true,
 	range = function(self, t)
 		local r = 2

@@ -24,6 +24,7 @@ newTalent{
 	cooldown = 100,
 	psi = 15,
 	points = 5,
+	tactical = { BUFF = 2 },
 	action = function(self, t)
 		self:setEffect(self.EFF_CONTROL, 5 + self:getTalentLevelRaw(t), {power=15 + math.ceil(self:getTalentLevel(t)*(1 + self:getCun(8)))})
 		return true
@@ -44,6 +45,7 @@ newTalent{
 	cooldown = 1,
 	psi = 100,
 	points = 5,
+	no_npc_use = true,
 	action = function(self, t)
 		self:showInventory("Reshape which weapon?", self:getInven("INVEN"), function(o) return o.type == "weapon" and not o.fully_reshaped end, function(o, item)
 			--o.wielder = o.wielder or {}
@@ -79,6 +81,7 @@ newTalent{
 	cooldown = 1,
 	psi = 100,
 	points = 5,
+	no_npc_use = true,
 	action = function(self, t)
 		self:showInventory("Reshape which piece of armor?", self:getInven("INVEN"), function(o) return o.type == "armor" and not o.fully_reshaped end, function(o, item)
 			if (o.old_fat or 0) < math.ceil(0.5*self:getTalentLevel(t)*(1 + self:getWil(4))) then
@@ -120,6 +123,7 @@ newTalent{
 	cooldown = 50,
 	psi = 0,
 	points = 5,
+	no_npc_use = true,
 	action = function(self, t)
 		self:showInventory("Use which gem?", self:getInven("INVEN"), function(gem) return gem.type == "gem" and gem.material_level and gem.material_level == 5 end, function(gem, gem_item)
 			self:removeObject(self:getInven("INVEN"), gem_item)

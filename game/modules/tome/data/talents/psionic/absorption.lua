@@ -54,6 +54,7 @@ newTalent{
 		return 20 - 2*(self:getTalentLevelRaw(self.T_ABSORPTION_MASTERY) or 0)
 	end,
 	range = 10,
+	tactical = { DEFEND = 2 },
 
 	--called when damage gets absorbed by kinetic shield
 	ks_on_damage = function(self, t, damtype, dam)
@@ -145,6 +146,7 @@ newTalent{
 		return 20 - 2*(self:getTalentLevelRaw(self.T_ABSORPTION_MASTERY) or 0)
 	end,
 	range = 10,
+	tactical = { DEFEND = 2 },
 
 	--called when damage gets absorbed by thermal shield
 	ts_on_damage = function(self, t, damtype, dam)
@@ -233,6 +235,7 @@ newTalent{
 		return 20 - 2*(self:getTalentLevelRaw(self.T_ABSORPTION_MASTERY) or 0)
 	end,
 	range = 10,
+	tactical = { DEFEND = 2 },
 
 	--called when damage gets absorbed by charged shield
 	cs_on_damage = function(self, t, damtype, dam)

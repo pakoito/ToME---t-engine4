@@ -121,6 +121,11 @@ newAI("use_tactical", function(self)
 			want.defend = 1 + need_heal / 2 + nb_foes * 0.5
 		end
 
+		-- Need buffs
+		if avail.buff and want.attack and want.attack > 0 then
+			want.buff = math.max(0.01, want.attack - 1)
+		end
+
 		if avail.disable then want.disable = 2 end
 		if avail.attack then want.attack = 1 end
 		if avail.attackarea then want.attackarea = (want.attack or 0) + nb_foes * 0.6 end
