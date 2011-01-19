@@ -26,6 +26,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 40,
 	stamina = 60,
+	tactical = { DEFEND = 2 },
 	action = function(self, t)
 		self:setEffect(self.EFF_EARTHEN_BARRIER, 20, {power=self:getTalentLevelRaw(t) * 5})
 		return true
@@ -44,6 +45,7 @@ newTalent{
 	mode = "sustained",
 	cooldown = 60,
 	sustain_stamina = 80,
+	tactical = { BUFF = 2 },
 	activate = function(self, t)
 		return {
 			onslaught = self:addTemporaryValue("onslaught", math.floor(self:getTalentLevel(t))),
@@ -71,8 +73,10 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 10,
 	stamina = 30,
+	tactical = { CLOSEIN = 2 },
+	range = function(self, t) return 2 + self:getTalentLevel(t) end,
 	action = function(self, t)
-		local tg = {type="ball", range=0, friendlyfire=false, radius=2 + self:getTalentLevel(t), talent=t}
+		local tg = {type="ball", range=0, friendlyfire=false, radius=self:getTalentRange(t), talent=t}
 		self:project(tg, self.x, self.y, function(px, py)
 			local target = game.level.map(px, py, Map.ACTOR)
 			if not target then return end
@@ -97,12 +101,12 @@ newTalent{
 	mode = "sustained",
 	cooldown = 30,
 	sustain_stamina = 40,
+	tactical = { buff = 2 },
 	activate = function(self, t)
 		return {
 			dam = self:addTemporaryValue("shattering_impact", self:combatTalentWeaponDamage(t, 0.2, 0.6)),
 		}
 	end,
-
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("shattering_impact", p.dam)
 		return true

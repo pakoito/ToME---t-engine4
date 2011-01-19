@@ -57,10 +57,12 @@ newEntity{ define_as = "SHADE",
 		[Talents.T_MANATHRUST]=4, [Talents.T_FREEZE]=4, [Talents.T_TIDAL_WAVE]=2,
 		[Talents.T_WEAPONS_MASTERY]=3,
 	},
-	inc_damage = {all=-30},
+	resolvers.inscriptions(1, {"shielding rune", "phase door rune", "regeneration infusion", "heroism infusion"}),
+	inc_damage = {all=-20},
 
 	autolevel = "warriormage",
-	ai = "dumb_talented_simple", ai_state = { talent_in=4, ai_move="move_astar" },
+	ai = "tactical", ai_state = { talent_in=3, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"",
 
 	on_die = function(self, who)
 		game.state:activateBackupGuardian("KOR_FURY", 5, 35, ".. yes I tell you! The old ruins of Kor'Pul are still haunted!")

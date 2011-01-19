@@ -83,7 +83,7 @@ newAI("use_tactical", function(self)
 		end
 
 		-- Need closing-in
-		if avail.closein and target_dist then
+		if avail.closein and target_dist and target_dist > 2 and self.ai_tactic.closein then
 			want.closein = 1 + target_dist / 2
 		end
 

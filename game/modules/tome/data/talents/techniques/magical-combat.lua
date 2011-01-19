@@ -26,6 +26,7 @@ newTalent{
 	sustain_stamina = 20,
 	no_energy = true,
 	cooldown = 5,
+	tactical = { BUFF = 2 },
 	do_trigger = function(self, t, target)
 		if rng.percent(20 + self:getTalentLevel(t) * (1 + self:getDex(9, true))) then
 			local spells = {}
@@ -98,6 +99,7 @@ newTalent{
 	sustain_stamina = 40,
 	require = techs_req3,
 	range = 10,
+	tactical = { BUFF = 2 },
 	activate = function(self, t)
 		local power = self:getTalentLevel(t) / 14
 		return {

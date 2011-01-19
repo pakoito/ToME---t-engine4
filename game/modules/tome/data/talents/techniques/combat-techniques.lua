@@ -28,6 +28,7 @@ newTalent{
 	require = techs_strdex_req1,
 	cooldown = 30,
 	sustain_stamina = 30,
+	tactical = { BUFF = 1 },
 	activate = function(self, t)
 		return {
 			speed = self:addTemporaryValue("combat_physspeed", self:combatSpeed() - 1 / (1 + 0.08 * 1.3)),
@@ -57,9 +58,7 @@ newTalent{
 	random_ego = "attack",
 	stamina = 45,
 	cooldown = function(self, t) return math.floor(40 - self:getTalentLevel(t) * 4) end,
-	tactical = {
-		ATTACK = 4,
-	},
+	tactical = { ATTACK = 1, CLOSEIN = 3 },
 	requires_target = true,
 	range = function(self, t) return math.floor(5 + self:getTalentLevelRaw(t)) end,
 	action = function(self, t)
@@ -108,6 +107,8 @@ newTalent{
 	cooldown = 55,
 	stamina = 25,
 	require = techs_strdex_req3,
+	no_energy = true,
+	tactical = { ATTACK = 4 },
 	action = function(self, t)
 		self:setEffect(self.EFF_ATTACK, 1 + self:getTalentLevel(t), {power=100})
 		return true
@@ -126,6 +127,7 @@ newTalent{
 	stamina = 25,
 	no_energy = true,
 	require = techs_strdex_req4,
+	tactical = { BUFF = 2, CLOSEIN = 2, ESCAPE = 2 },
 	action = function(self, t)
 		self:setEffect(self.EFF_SPEED, 5, {power=1 - (1 / (1 + self:getTalentLevel(t) * 0.06))})
 		return true

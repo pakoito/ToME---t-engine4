@@ -47,6 +47,7 @@ newTalent{
 	require = techs_dex_req3,
 	cooldown = 30,
 	sustain_stamina = 50,
+	tactical = { BUFF = 2 },
 	on_pre_use = function(self, t, silent) if not self:hasDualWeapon() then if not silent then game.logPlayer(self, "You require a two weapons to use this talent.") end return false end return true end,
 	activate = function(self, t)
 		local weapon, offweapon = self:hasDualWeapon()
@@ -77,6 +78,7 @@ newTalent{
 	cooldown = 30,
 	sustain_stamina = 50,
 	require = techs_dex_req4,
+	tactical = { BUFF = 2 },
 	on_pre_use = function(self, t, silent) if not self:hasDualWeapon() then if not silent then game.logPlayer(self, "You require a two weapons to use this talent.") end return false end return true end,
 	activate = function(self, t)
 		local weapon, offweapon = self:hasDualWeapon()
@@ -114,6 +116,7 @@ newTalent{
 	stamina = 15,
 	require = techs_dex_req1,
 	requires_target = true,
+	tactical = { ATTACK = 2, DISABLE = 2 },
 	on_pre_use = function(self, t, silent) if not self:hasDualWeapon() then if not silent then game.logPlayer(self, "You require a two weapons to use this talent.") end return false end return true end,
 	action = function(self, t)
 		local weapon, offweapon = self:hasDualWeapon()
@@ -162,6 +165,7 @@ newTalent{
 	stamina = 15,
 	require = techs_dex_req2,
 	requires_target = true,
+	tactical = { ATTACK = 4 },
 	on_pre_use = function(self, t, silent) if not self:hasDualWeapon() then if not silent then game.logPlayer(self, "You require a two weapons to use this talent.") end return false end return true end,
 	action = function(self, t)
 		local weapon, offweapon = self:hasDualWeapon()
@@ -194,6 +198,7 @@ newTalent{
 	stamina = 30,
 	require = techs_dex_req3,
 	requires_target = true,
+	tactical = { ATTACKAREA = 2 },
 	on_pre_use = function(self, t, silent) if not self:hasDualWeapon() then if not silent then game.logPlayer(self, "You require a two weapons to use this talent.") end return false end return true end,
 	action = function(self, t)
 		local weapon, offweapon = self:hasDualWeapon()
@@ -245,6 +250,7 @@ newTalent{
 	cooldown = 8,
 	stamina = 30,
 	require = techs_dex_req4,
+	tactical = { ATTACKAREA = 2 },
 	on_pre_use = function(self, t, silent) if not self:hasDualWeapon() then if not silent then game.logPlayer(self, "You require a two weapons to use this talent.") end return false end return true end,
 	action = function(self, t)
 		local weapon, offweapon = self:hasDualWeapon()

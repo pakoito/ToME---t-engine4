@@ -90,6 +90,7 @@ newTalent{
 	points = 5,
 	cooldown = 45,
 	stamina = 120,
+	tactical = { DEFEND = 5, CLOSEIN = 2 },
 	action = function(self, t)
 		self:setEffect(self.EFF_UNSTOPPABLE, 2 + self:getTalentLevelRaw(t), {hp_per_kill=math.floor(self:getTalentLevel(t) * 3.5)})
 		return true

@@ -30,6 +30,7 @@ newTalent{
 	cooldown = 6,
 	stamina = 8,
 	requires_target = true,
+	tactical = { ATTACK = 1, DISABLE = 3 },
 	on_pre_use = function(self, t, silent) if not self:hasShield() then if not silent then game.logPlayer(self, "You require a weapon and a shield to use this talent.") end return false end return true end,
 	action = function(self, t)
 		local shield = self:hasShield()
@@ -85,6 +86,7 @@ newTalent{
 	cooldown = 8,
 	stamina = 22,
 	requires_target = true,
+	tactical = { ATTACK = 2, ESCAPE = 1, DISABLE = 1 },
 	on_pre_use = function(self, t, silent) if not self:hasShield() then if not silent then game.logPlayer(self, "You require a weapon and a shield to use this talent.") end return false end return true end,
 	action = function(self, t)
 		local shield = self:hasShield()
@@ -132,6 +134,7 @@ newTalent{
 	cooldown = 6,
 	stamina = 16,
 	requires_target = true,
+	tactical = { ATTACK = 4 },
 	on_pre_use = function(self, t, silent) if not self:hasShield() then if not silent then game.logPlayer(self, "You require a weapon and a shield to use this talent.") end return false end return true end,
 	action = function(self, t)
 		local shield = self:hasShield()
@@ -176,6 +179,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 10,
 	stamina = 30,
+	tactical = { ESCAPE = 2, DEFEND = 0.5 },
 	on_pre_use = function(self, t, silent) if not self:hasShield() then if not silent then game.logPlayer(self, "You require a weapon and a shield to use this talent.") end return false end return true end,
 	action = function(self, t)
 		local shield = self:hasShield()
@@ -211,6 +215,7 @@ newTalent{
 	points = 5,
 	cooldown = 30,
 	sustain_stamina = 50,
+	tactical = { DEFEND = 2 },
 	on_pre_use = function(self, t, silent) if not self:hasShield() then if not silent then game.logPlayer(self, "You require a weapon and a shield to use this talent.") end return false end return true end,
 	activate = function(self, t)
 		local shield = self:hasShield()
@@ -278,6 +283,7 @@ newTalent{
 	points = 5,
 	cooldown = 60,
 	sustain_stamina = 90,
+	tactical = { DEFEND = 3 },
 	on_pre_use = function(self, t, silent) if not self:hasShield() then if not silent then game.logPlayer(self, "You require a weapon and a shield to use this talent.") end return false end return true end,
 	activate = function(self, t)
 		local shield = self:hasShield()

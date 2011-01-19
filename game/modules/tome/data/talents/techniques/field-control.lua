@@ -27,6 +27,7 @@ newTalent{
 	cooldown = 12,
 	stamina = 20,
 	range = 7,
+	tactical = { ESCAPE = 2 },
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
@@ -48,6 +49,7 @@ newTalent{
 	points = 5,
 	random_ego = "utility",
 	cooldown = 20,
+	no_npc_use = true,
 	action = function(self, t)
 		local rad = 5 + self:getCun(10) * self:getTalentLevel(t)
 		self:setEffect(self.EFF_SENSE, 3 + self:getTalentLevel(t), {
@@ -70,6 +72,7 @@ newTalent{
 	random_ego = "defensive",
 	cooldown = 15,
 	stamina = 30,
+	tactical = { ESCAPE = 1, DISABLE = 3 },
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
@@ -106,6 +109,7 @@ newTalent{
 	cooldown = 30,
 	range = 10,
 	sustain_stamina = 120,
+	tactical = { BUFF = 2 },
 	activate = function(self, t)
 		return {
 			slow_projectiles = self:addTemporaryValue("slow_projectiles", 15 + self:getDex(10) * self:getTalentLevel(t)),

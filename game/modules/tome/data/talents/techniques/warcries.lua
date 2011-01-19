@@ -28,6 +28,7 @@ newTalent{
 	stamina = 20,
 	range = 4,
 	requires_target = true,
+	tactical = { ATTACKAREA = 2 },
 	action = function(self, t)
 		local tg = {type="cone", range=0, radius=3 + self:getTalentLevelRaw(t), friendlyfire=false}
 		local x, y = self:getTarget(tg)
@@ -47,7 +48,8 @@ newTalent{
 	require = techs_req_high2,
 	points = 5,
 	random_ego = "utility",
-	cooldown = 150,
+	cooldown = 100,
+	tactical = { STAMINA = 2 },
 	action = function(self, t)
 		self:incStamina(20 + self:getTalentLevel(t) * 12)
 		return true
@@ -66,6 +68,7 @@ newTalent{
 	random_ego = "defensive",
 	cooldown = 30,
 	stamina = 40,
+	tactical = { DEFEND = 2, BUFF = 1 },
 	action = function(self, t)
 		self:setEffect(self.EFF_BATTLE_SHOUT, 5 + self:getTalentLevelRaw(t) * 2, {power=10+self:getTalentLevelRaw(t)})
 		return true
@@ -85,6 +88,7 @@ newTalent{
 	stamina = 40,
 	range = 4,
 	requires_target = true,
+	tactical = { DISABLE = 2 },
 	action = function(self, t)
 		local tg = {type="cone", range=0, radius=3 + self:getTalentLevelRaw(t), friendlyfire=false}
 		local x, y = self:getTarget(tg)

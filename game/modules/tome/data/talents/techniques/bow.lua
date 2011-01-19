@@ -37,6 +37,7 @@ newTalent{
 	stamina = 15,
 	require = techs_dex_req2,
 	range = 10,
+	tactical = { ATTACK = 2 },
 	requires_target = true,
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon("bow") then if not silent then game.logPlayer(self, "You require a bow for this talent.") end return false end return true end,
 	action = function(self, t)
@@ -61,6 +62,7 @@ newTalent{
 	stamina = 15,
 	require = techs_dex_req3,
 	range = 10,
+	tactical = { ATTACKAREA = 1 },
 	requires_target = true,
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon("bow") then if not silent then game.logPlayer(self, "You require a bow for this talent.") end return false end return true end,
 	action = function(self, t)
@@ -87,6 +89,7 @@ newTalent{
 	require = techs_dex_req4,
 	range = 10,
 	direct_hit = true,
+	tactical = { ATTACKAREA = 2 },
 	requires_target = true,
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon("bow") then if not silent then game.logPlayer(self, "You require a bow for this talent.") end return false end return true end,
 	action = function(self, t)

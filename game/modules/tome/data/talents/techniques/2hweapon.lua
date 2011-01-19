@@ -26,6 +26,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 10,
 	stamina = 30,
+	tactical = { ATTACKAREA = 3 },
 	on_pre_use = function(self, t, silent) if not self:hasTwoHandedWeapon() then if not silent then game.logPlayer(self, "You require a two handed weapon to use this talent.") end return false end return true end,
 	action = function(self, t)
 		local weapon = self:hasTwoHandedWeapon()
@@ -57,6 +58,7 @@ newTalent{
 	mode = "sustained",
 	cooldown = 30,
 	sustain_stamina = 40,
+	tactical = { BUFF = 2 },
 	on_pre_use = function(self, t, silent) if not self:hasTwoHandedWeapon() then if not silent then game.logPlayer(self, "You require a two handed weapon to use this talent.") end return false end return true end,
 	activate = function(self, t)
 		local weapon = self:hasTwoHandedWeapon()
@@ -104,9 +106,7 @@ newTalent{
 	random_ego = "attack",
 	stamina = 30,
 	cooldown = 18,
-	tactical = {
-		ATTACKAREA = 10,
-	},
+	tactical = { ATTACKAREA = 1, DISABLE = 3 },
 	range = 1,
 	requires_target = true,
 	on_pre_use = function(self, t, silent) if not self:hasTwoHandedWeapon() then if not silent then game.logPlayer(self, "You require a two handed weapon to use this talent.") end return false end return true end,
@@ -143,6 +143,7 @@ newTalent{
 	cooldown = 30,
 	stamina = 30,
 	requires_target = true,
+	tactical = { ATTACK = 1 },
 	on_pre_use = function(self, t, silent) if not self:hasTwoHandedWeapon() then if not silent then game.logPlayer(self, "You require a two handed weapon to use this talent.") end return false end return true end,
 	action = function(self, t)
 		local weapon = self:hasTwoHandedWeapon()
@@ -200,6 +201,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 6,
 	stamina = 8,
+	tactical = { ATTACK = 2, DISABLE = 2 },
 	requires_target = true,
 	on_pre_use = function(self, t, silent) if not self:hasTwoHandedWeapon() then if not silent then game.logPlayer(self, "You require a two handed weapon to use this talent.") end return false end return true end,
 	action = function(self, t)
@@ -243,6 +245,7 @@ newTalent{
 	cooldown = 6,
 	stamina = 12,
 	requires_target = true,
+	tactical = { ATTACK = 2, DISABLE = 2 },
 	on_pre_use = function(self, t, silent) if not self:hasTwoHandedWeapon() then if not silent then game.logPlayer(self, "You require a two handed weapon to use this talent.") end return false end return true end,
 	action = function(self, t)
 		local weapon = self:hasTwoHandedWeapon()
@@ -287,6 +290,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 6,
 	stamina = 12,
+	tactical = { ATTACK = 2, DISABLE = 2 },
 	requires_target = true,
 	on_pre_use = function(self, t, silent) if not self:hasTwoHandedWeapon() then if not silent then game.logPlayer(self, "You require a two handed weapon to use this talent.") end return false end return true end,
 	action = function(self, t)
@@ -332,6 +336,7 @@ newTalent{
 	mode = "sustained",
 	cooldown = 15,
 	sustain_stamina = 100,
+	tactical = { BUFF = 1 },
 	do_turn = function(self, t)
 		if self.blood_frenzy > 0 then
 			self.blood_frenzy = self.blood_frenzy - 2
