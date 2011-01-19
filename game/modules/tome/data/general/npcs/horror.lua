@@ -215,7 +215,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 
 newEntity{ base = "BASE_NPC_HORROR", define_as = "BASE_NPC_ELDRICTH_EYE",
 	name = "eldritch eye", color=colors.SLATE, is_eldritch_eye=true,
-	desc ="A small bloodshot eye floats here.",
+	desc ="A small bloadshot eye floats here.",
 	level_range = {30, nil}, exp_worth = 1,
 	life_rating = 7,
 	rank = 2,
@@ -366,6 +366,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	combat_armor = 1, combat_def = 10,
 	combat = { dam=5, atk=15, apr=20, dammod={wil=0.6}, damtype=DamageType.LIGHT},
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },
+	lite = 1,
 
 	resists = {all = 35, [DamageType.DARKNESS] = -50, [DamageType.LIGHT] = 100, [DamageType.FIRE] = 100},
 
@@ -388,7 +389,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	},
 }
 
-newEntity{ base = "BASE_NPC_HORROR", define_as="TEST",
+newEntity{ base = "BASE_NPC_HORROR",
 	name = "radiant horror", color=colors.GOLD,
 	desc ="A lanky four-armed humanoid shape composed of bright golden light.  It's so bright it's hard to look at and you can feel heat radiating outward from it.",
 	level_range = {35, nil}, exp_worth = 1,
@@ -399,6 +400,7 @@ newEntity{ base = "BASE_NPC_HORROR", define_as="TEST",
 	combat_armor = 1, combat_def = 10,
 	combat = { dam=20, atk=30, apr=40, dammod={wil=1}, damtype=DamageType.LIGHT},
 	ai = "tactical", ai_state = { ai_move="move_dmap", talent_in=1, },
+	lite = 1,
 
 	resists = {all = 40, [DamageType.DARKNESS] = -50, [DamageType.LIGHT] = 100, [DamageType.FIRE] = 100},
 
@@ -422,6 +424,165 @@ newEntity{ base = "BASE_NPC_HORROR", define_as="TEST",
 	make_escort = {
 		{type="horror", subtype="eldritch", name="luminous horror", number=1, no_subescort=true},
 	},
+}
+
+-- Temporal Horrors
+
+newEntity{ base = "BASE_NPC_HORROR",
+	subtype = "temporal",
+	name = "temporal devourer", color=colors.CRIMSON,
+	desc = "A headless round creature with stubly legs and arms.  It's body seems to be all teeth.",
+	level_range = {10, nil}, exp_worth = 1,
+	rarity = 1,
+	rank = 2,
+	size_category = 2,
+	autolevel = "warrior",
+	max_life = resolvers.rngavg(50, 80),
+	combat_armor = 1, combat_def = 10,
+	combat = { dam=resolvers.rngavg(20,30), atk=resolvers.rngavg(10,20), apr=5, dammod={str=1} },
+
+	resists = { [DamageType.TEMPORAL] = 5},
+
+	resolvers.talents{
+	},
+
+	resolvers.sustains_at_birth(),
+}
+
+newEntity{ base = "BASE_NPC_HORROR",
+	subtype = "temporal",
+	dredge = 1,
+	name = "dredgling", color=colors.TAN,
+	desc = "A small pink skinned humanoid with large bulbous eyes.",
+	level_range = {10, nil}, exp_worth = 1,
+	rarity = 1,
+	rank = 2,
+	size_category = 2,
+	autolevel = "warriormage",
+	max_life = resolvers.rngavg(50, 80),
+	combat_armor = 1, combat_def = 10,
+	combat = { dam=resolvers.rngavg(15,20), atk=resolvers.rngavg(5,15), apr=5, dammod={str=1} },
+
+	resists = { [DamageType.TEMPORAL] = 5},
+
+	resolvers.talents{
+		[Talents.T_DUST_TO_DUST]=1,
+	},
+
+	resolvers.sustains_at_birth(),
+}
+
+newEntity{ base = "BASE_NPC_HORROR",
+	subtype = "temporal",
+	dredge = 1,
+	name = "temporal dredge", color=colors.PINK,
+	desc = "A hulking pink skinned creature with long arms as thick as tree trunks.  It drags it's knuckles on the ground as it lumbers towards you.",
+	level_range = {15, nil}, exp_worth = 1,
+	rarity = 4,
+	rank = 2,
+	size_category = 4,
+	autolevel = "warrior",
+	max_life = resolvers.rngavg(120, 150),
+	energy = { mod=0.7 },
+	combat_armor = 1, combat_def = 0,
+	combat = { dam=resolvers.rngavg(25,150), atk=resolvers.rngavg(25,130), apr=1, dammod={str=1.1} },
+
+	resists = {all = 10, [DamageType.TEMPORAL] = 50, [DamageType.PHYSICAL] = 25},
+
+	resolvers.talents{
+		[Talents.T_STUN]=3,
+		[Talents.T_SPEED_SAP]=2,
+	},
+
+	resolvers.sustains_at_birth(),
+}
+
+newEntity{ base = "BASE_NPC_HORROR",
+	subtype = "temporal",
+	dredge = 1,
+	name = "dredge captain", color=colors.SALMON,
+	desc = "A thin pink skinned creature with long spindly arms.  Half it's body is old and wrinkly and the other half appears quite young.",
+	level_range = {20, nil}, exp_worth = 1,
+	rarity = 6,
+	rank = 3,
+	size_category = 3,
+	max_life = resolvers.rngavg(60,80),
+	autolevel = "warriormage",
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
+	combat_armor = 1, combat_def = 0,
+
+	resists = {all = 10, [DamageType.TEMPORAL] = 50},
+
+	make_escort = {
+		{type="horror", subtype="temporal", name="temporal dredge", number=3, no_subescort=true},
+	},
+
+	resolvers.talents{
+		[Talents.T_DREDGE_FRENZY]=5,
+		[Talents.T_SPEED_SAP]=3,
+	},
+
+	resolvers.sustains_at_birth(),
+}
+
+newEntity{ base = "BASE_NPC_HORROR",
+	subtype = "temporal",
+	name = "temporal stalker", color=colors.STEEL_BLUE,
+	desc = "A slender mettallic monstrousity with long claws in place of fingers and razor sharp teeth.",
+	level_range = {20, nil}, exp_worth = 1,
+	rarity = 6,
+	size_category = 3,
+	max_life = resolvers.rngavg(50,70),
+	energy = { mod=1.2 },
+	autolevel = "rogue",
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
+	combat_armor = 10, combat_def = 10,
+	combat = { dam=resolvers.rngavg(25,100), atk=resolvers.rngavg(25,100), apr=25, dammod={dex=1.1} },
+
+	resists = {all = 10, [DamageType.TEMPORAL] = 50},
+
+	resolvers.talents{
+		[Talents.T_PRESCIENCE]=3,
+		[Talents.T_AVOID_FATE]=5,
+		[Talents.T_STEALTH]=3,
+		[Talents.T_SHADOWSTRIKE]=3,
+		[Talents.T_UNSEEN_ACTIONS]=3,
+	},
+
+	resolvers.sustains_at_birth(),
+}
+
+newEntity{ base = "BASE_NPC_HORROR",
+	subtype = "temporal",
+	name = "void horror", color=colors.GREY,
+	desc = "It looks like a hole in spacetime, but you get the impression it's somehow more then that.",
+	level_range = {20, nil}, exp_worth = 1,
+	rarity = 4,
+	rank = 2,
+	size_category = 2,
+	max_life = resolvers.rngavg(20,50),
+	autolevel = "warriormage",
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
+	combat_armor = 1, combat_def = 10,
+	on_melee_hit = { [DamageType.TEMPORAL] = resolvers.mbonus(20, 10), },
+
+	resists = {[DamageType.TEMPORAL] = 50},
+
+	resolvers.talents{
+		[Talents.T_DISPERSE_MAGIC]=3,
+		[Talents.T_ENTROPIC_SHIELD]=3,
+	},
+	-- Random Anomaly on Death
+	on_die = function(self, who)
+		local ts = {}
+		for id, t in pairs(self.talents_def) do
+			if t.type[1] == "chronomancy/anomalies" then ts[#ts+1] = id end
+		end
+		self:forceUseTalent(rng.table(ts), {ignore_energy=true})
+		game.logSeen(self, "%s has collappsed in upon itself.", self.name)
+	end,
+
+	resolvers.sustains_at_birth(),
 }
 ------------------------------------------------------------------------
 -- Uniques
@@ -512,4 +673,80 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "GRGGLCK_TENTACLE",
 			self.summoner:takeHit(self.max_life, who)
 		end
 	end,
+}
+
+newEntity{ base="BASE_NPC_HORROR",
+	name = "Chronolith Twin", color=colors.VIOLET, unique = true,
+	subtype = "temporal",
+	desc = [[A six armed creature with black insect-like eyes dressed in robes.]],
+	level_range = {20, nil}, exp_worth = 2,
+	max_life = 150, life_rating = 15, fixed_rating = true,
+	rank = 4,
+	size_category = 3,
+	stats = { str=10, dex=12, cun=14, mag=25, wil=25, con=16 },
+
+	instakill_immune = 1,
+	blind_immune = 0.5,
+	silence_immune = 0.5,
+
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+	equipment = resolvers.equip{
+		{type="weapon", subtype="staff", ego_chance=100, autoreq=true},
+		{type="armor", subtype="cloth", ego_chance=100, autoreq=true},
+	},
+	resolvers.drops{chance=100, nb=4, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=1, {unique=true} },
+
+	resists = { [DamageType.TEMPORAL] = 50, },
+
+	resolvers.talents{
+		[Talents.T_RETHREAD]=3,
+		[Talents.T_ECHOES_FROM_THE_PAST]=3,
+		[Talents.T_TURN_BACK_THE_CLOCK]=3,
+		[Talents.T_HASTE]=3,
+		[Talents.T_STATIC_HISTORY]=5,
+		[Talents.T_DIMENSIONAL_STEP]=5,
+		[Talents.T_FORESIGHT]=5,
+	},
+
+	autolevel = "warriormage",
+	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_astar" },
+}
+
+newEntity{ base="BASE_NPC_HORROR",
+	name = "Chronolith Clone", color=colors.VIOLET, unique = true,
+	subtype = "temporal",
+	desc = [[A six armed creature with black insect-like eyes dressed in robes.]],
+	level_range = {20, nil}, exp_worth = 2,
+	max_life = 150, life_rating = 15, fixed_rating = true,
+	rank = 4,
+	size_category = 3,
+	stats = { str=10, dex=12, cun=14, mag=25, wil=25, con=16 },
+
+	instakill_immune = 1,
+	blind_immune = 0.5,
+	silence_immune = 0.5,
+
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+	equipment = resolvers.equip{
+		{type="weapon", subtype="staff", ego_chance=100, autoreq=true},
+		{type="armor", subtype="cloth", ego_chance=100, autoreq=true},
+	},
+	resolvers.drops{chance=100, nb=4, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=1, {unique=true} },
+
+	resists = { [DamageType.TEMPORAL] = 50, },
+
+	resolvers.talents{
+		[Talents.T_TEMPORAL_WAKE]=3,
+		[Talents.T_TIME_SKIP]=3,
+		[Talents.T_TEMPORAL_FUGUE]=3,
+		[Talents.T_BORROWED_TIME]=3,
+		[Talents.T_DIMENSIONAL_STEP]=5,
+		[Talents.T_STATIC_HISTORY]=5,
+		[Talents.T_FORESIGHT]=5,
+	},
+
+	autolevel = "warriormage",
+	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_astar" },
 }

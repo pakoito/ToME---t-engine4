@@ -69,6 +69,7 @@ newEntity{ base = "BASE_NPC_COLD_DRAKE",
 	combat_armor = 12, combat_def = 0,
 	combat = { dam=resolvers.rngavg(25,70), atk=resolvers.rngavg(25,70), apr=25, dammod={str=1.1} },
 	on_melee_hit = {[DamageType.COLD]=resolvers.mbonus(15, 10)},
+	lite = 1,
 
 	summon = {
 		{type="dragon", name="cold drake hatchling", number=1, hasxp=false},
@@ -93,6 +94,7 @@ newEntity{ base = "BASE_NPC_COLD_DRAKE",
 	combat = { dam=resolvers.rngavg(25,110), atk=resolvers.rngavg(25,70), apr=25, dammod={str=1.1} },
 	on_melee_hit = {[DamageType.COLD]=resolvers.mbonus(25, 10)},
 	combat = { dam=resolvers.rngavg(25,40), atk=25, apr=25, dammod={str=1.1} },
+	lite = 1,
 
 	summon = {
 		{type="dragon", name="cold drake", number=1, hasxp=false},

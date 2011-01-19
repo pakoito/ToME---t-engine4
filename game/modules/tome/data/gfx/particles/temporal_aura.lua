@@ -17,33 +17,32 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local Talents = require("engine.interface.ActorTalents")
+base_size = 32
 
-newEntity{
-	define_as = "BASE_NPC_ORC_GORBAT",
-	type = "humanoid", subtype = "orc",
-	display = "o", color=colors.GREEN,
-	faction = "orc-pride",
+return { generator = function()
+	local ad = rng.range(0, 360)
+	local a = math.rad(ad)
+	local dir = math.rad(ad + 90)
+	local r = rng.range(12, 20)
+	local dirv = math.rad(1)
 
-	combat = { dam=resolvers.rngavg(5,12), atk=2, apr=6, physspeed=2 },
+	return {
+		trail = 1,
+		life = 10,
+		size = 4, sizev = -0.1, sizea = 0,
 
-	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
-	resolvers.drops{chance=20, nb=1, {} },
-	resolvers.drops{chance=10, nb=1, {type="money"} },
-	infravision = 20,
-	lite = 1,
+		x = r * math.cos(a), xv = 0, xa = 0,
+		y = r * math.sin(a), yv = 0, ya = 0,
+		dir = dir, dirv = dirv, dira = 0,
+		vel = 1, velv = 0, vela = 0,
 
-	life_rating = 15,
-	rank = 2,
-	size_category = 3,
-
-	open_door = true,
-	resolvers.sustains_at_birth(),
-
-	resolvers.inscriptions(2, "infusion"),
-
-	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
-	energy = { mod=1 },
-	stats = { str=20, dex=8, mag=6, con=16 },
-}
+		r = rng.range(176, 250)/255, rv = rng.range(0, 10), ra = 0,
+		g = rng.range(196, 250)/255,    gv = 0, ga = 0,
+		b = rng.range(222, 0)/255,   bv = rng.range(0, 10), ba = 0,
+		a = rng.range(25, 220)/255,   av = 0, aa = 0,
+	}
+end, },
+function(self)
+	self.ps:emit(10)
+end,
+100

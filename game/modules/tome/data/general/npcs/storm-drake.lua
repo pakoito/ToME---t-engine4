@@ -69,6 +69,7 @@ newEntity{ base = "BASE_NPC_STORM_DRAKE",
 	combat_armor = 12, combat_def = 0,
 	combat = { dam=resolvers.rngavg(25,70), atk=resolvers.rngavg(25,70), apr=25, dammod={str=1.1} },
 	on_melee_hit = {[DamageType.LIGHTNING]=resolvers.mbonus(15, 10)},
+	lite = 1,
 
 	summon = {
 		{type="dragon", name="storm drake hatchling", number=1, hasxp=false},
@@ -92,6 +93,7 @@ newEntity{ base = "BASE_NPC_STORM_DRAKE",
 	combat_armor = 30, combat_def = 0,
 	on_melee_hit = {[DamageType.LIGHTNING]=resolvers.mbonus(25, 10)},
 	combat = { dam=resolvers.rngavg(25,110), atk=resolvers.rngavg(25,70), apr=25, dammod={str=1.1} },
+	lite = 1,
 
 	ai = "tactical",
 	ai_tactic = resolvers.tactic"melee",

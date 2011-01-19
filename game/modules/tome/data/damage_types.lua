@@ -1286,3 +1286,14 @@ newDamageType{
 		end
 	end,
 }
+
+-- Dredge Haste
+newDamageType{
+	name = "dredge frenzy", type = "DREDGE_FRENZY",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and target.dredge then
+			target:setEffect(target.EFF_SPEED, 3, {power=0.6})
+		end
+	end,
+}

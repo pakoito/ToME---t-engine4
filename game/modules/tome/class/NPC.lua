@@ -56,10 +56,6 @@ function _M:act()
 end
 
 function _M:doFOV()
---	if self.lite > 0 then
---	print("lite", self.name, self.lite)
---		self:computeFOV(self.lite, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y) end, true, true)
---	end
 	-- If the actor has no special vision we can use the default cache
 	if not self.special_vision then
 		self:computeFOV(self.sight or 10, "block_sight", nil, nil, nil, true)

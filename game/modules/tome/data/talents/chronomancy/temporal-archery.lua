@@ -24,10 +24,8 @@ newTalent{
 	points = 5,
 	paradox = 3,
 	stamina = 6,
-	cooldown = 20, 
-	tactical = {
-		BUFF = 10,
-	},
+	cooldown = 20,
+	tactical = { ESCAPE = 2, CLOSEIN = 2, BUFF = 2 },
 	no_energy = true,
 	getPower = function(self, t) return 1 - 1 / (1 + ((10 + ((self:getTalentLevel(t) * 10) * getParadoxModifier(self, pm)))/ 100)) end,
 	action = function(self, t)
@@ -36,8 +34,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local power = t.getPower(self, t)
-		return ([[Increases the caster's movement speed by %d%% for the next 5 turns.
-		Additionally switching weapons takes no time while Celerity is active.]]):format(power * 100)
+		return ([[Increases the caster's movement speed by %d%% for the next 5 turns.  Additionally switching weapons takes no time while Celerity is active.
+		The effect will scale with your Paradox.]]):format(power * 100)
 	end,
 }
 
@@ -50,7 +48,8 @@ newTalent{
 	paradox = 3,
 	cooldown = 6,
 	no_energy = "fake",
-	range = 20,
+	range = 10,
+	tactical = { ATTACK = 2 },
 	requires_target = true,
 	getResistPenalty = function(self, t) return 10 + (10 * self:getTalentLevelRaw(t)) end,
 	action = function(self, t)
@@ -63,7 +62,8 @@ newTalent{
 	info = function(self, t)
 		local penalty = t.getResistPenalty(self, t)
 		local weapon = 100 * (self:combatTalentWeaponDamage(t, 1, 1.5) * getParadoxModifier(self, pm))
-		return ([[You glimpse into the future and fire, increasing your physical resistance penetration by %d%% for a turn and firing a single shot doing %d%% damage.]])
+		return ([[You glimpse into the future and fire, increasing your physical resistance penetration by %d%% for a turn and firing a single shot doing %d%% damage.
+		The damage and effect will scale with your Paradox.]])
 		:format(penalty, weapon)
 	end,
 }
@@ -73,11 +73,12 @@ newTalent{
 	type = {"chronomancy/temporal-archery", 3},
 	require = temporal_req3,
 	points = 5,
-	stamina = 8, 
+	stamina = 8,
 	paradox = 6,
 	cooldown = function(self, t) return 18 - 2 * self:getTalentLevelRaw(t) end,
 	no_energy = "fake",
-	range = 20,
+	range = 10,
+	tactical = { ATTACK = 2 },
 	requires_target = true,
 	action = function(self, t)
 		local old = self.energy.value
@@ -89,7 +90,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local weapon = 100 * (self:combatTalentWeaponDamage(t, 1, 1.5) * getParadoxModifier(self, pm))
-		return ([[A quick shot, doing %d%% damage.]]):format(weapon)
+		return ([[A quick shot, doing %d%% damage.  The damage will scale with your Paradox.]]):format(weapon)
 	end,
 }
 
@@ -102,7 +103,8 @@ newTalent{
 	paradox = 6,
 	cooldown = 10,
 	no_energy = "fake",
-	range = 20,
+	range = 10,
+	tactical = { ATTACK = 2 },
 	requires_target = true,
 	action = function(self, t)
 		local targets = self:archeryAcquireTargets({type="beam"}, {one_shot=true})
@@ -112,7 +114,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local weapon = 100 * (self:combatTalentWeaponDamage(t, 1, 1.5) * getParadoxModifier(self, pm))
-		return ([[You fire a shot that phases out of time, hitting all targets in a beam for %d%% weapon damage as temporal damage.]]):
+		return ([[You fire a shot that phases out of time, hitting all targets in a beam for %d%% weapon damage as temporal damage.
+		The damage will scale with your Paradox.]]):
 		format(weapon)
 	end
 }

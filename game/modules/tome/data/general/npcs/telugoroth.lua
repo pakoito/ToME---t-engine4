@@ -134,7 +134,7 @@ newEntity{ base = "BASE_NPC_TELUGOROTH",
 	pin_immune = 1,
 
 	resolvers.talents{
-		[Talents.T_BACKTRACK]=5,
+		[Talents.T_DIMENSIONAL_STEP]=5,
 		[Talents.T_ANOMALY_REARRANGE]=1,
 		[Talents.T_TEMPORAL_WAKE]=4,
 	},
@@ -161,7 +161,7 @@ newEntity{ base = "BASE_NPC_TELUGOROTH",
 	resolvers.talents{
 		[Talents.T_ANOMALY_TEMPORAL_STORM]=1,
 		[Talents.T_TIME_SKIP]=5,
-		[Talents.T_BACKTRACK]=5,
+		[Talents.T_DIMENSIONAL_STEP]=5,
 		[Talents.T_ANOMALY_REARRANGE]=1,
 		[Talents.T_TEMPORAL_WAKE]=4,
 	},

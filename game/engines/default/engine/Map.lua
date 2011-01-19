@@ -209,6 +209,7 @@ function _M:init(w, h)
 	self.attrs = {}
 	self.lites = {}
 	self.seens = {}
+	self.infovs = {}
 	self.has_seens = {}
 	self.remembers = {}
 	self.effects = {}
@@ -284,6 +285,13 @@ function _M:loaded()
 		end
 		return t[x + y * self.w]
 	end
+	local mapfov = function(t, x, y, v)
+		if x < 0 or y < 0 or x >= self.w or y >= self.h then return end
+		if v ~= nil then
+			t[x + y * self.w] = v
+		end
+		return t[x + y * self.w]
+	end
 	local maphasseen = function(t, x, y, v)
 		if x < 0 or y < 0 or x >= self.w or y >= self.h then return end
 		if v ~= nil then
@@ -321,6 +329,7 @@ function _M:loaded()
 	getmetatable(self).__call = _M.call
 	setmetatable(self.lites, {__call = maplite})
 	setmetatable(self.seens, {__call = mapseen})
+	setmetatable(self.infovs, {__call = mapfov})
 	setmetatable(self.has_seens, {__call = maphasseen})
 	setmetatable(self.remembers, {__call = mapremember})
 	setmetatable(self.attrs, {__call = mapattrs})
@@ -368,7 +377,7 @@ end
 function _M:cleanFOV()
 	if not self.clean_fov then return end
 	self.clean_fov = false
-	for i = 0, self.w * self.h - 1 do self.seens[i] = nil end
+	for i = 0, self.w * self.h - 1 do self.seens[i] = nil self.infovs[i] = nil end
 	self._map:cleanSeen()
 end
 
@@ -572,6 +581,7 @@ end
 -- Used by FOV code
 function _M:apply(x, y, v)
 	if x < 0 or x >= self.w or y < 0 or y >= self.h then return end
+	self.infovs[x + y * self.w] = true
 	if self.lites[x + y * self.w] then
 		self.seens[x + y * self.w] = v or 1
 		self.has_seens[x + y * self.w] = true
@@ -579,6 +589,20 @@ function _M:apply(x, y, v)
 		self.remembers[x + y * self.w] = true
 		self._map:setRemember(x, y, true)
 	end
+end
+
+--- Sets a grid as seen, lited and remembered, if it is in the current FOV
+-- Used by FOV code
+function _M:applyExtraLite(x, y, v)
+	if x < 0 or x >= self.w or y < 0 or y >= self.h then return end
+	if not self.infovs[x + y * self.w] then return end
+	if self.lites[x + y * self.w] or self:checkEntity(x, y, TERRAIN, "always_remember") then
+		self.remembers[x + y * self.w] = true
+		self._map:setRemember(x, y, true)
+	end
+	self.seens[x + y * self.w] = v or 1
+	self.has_seens[x + y * self.w] = true
+	self._map:setSeen(x, y, v or 1)
 end
 
 --- Sets a grid as seen, lited and remembered

@@ -23,21 +23,20 @@ newTalent{
 	require = chrono_req1,
 	points = 5,
 	paradox = 3,
-	cooldown = 5, 
-	tactical = {
-		ATTACK = 10,
-	},
+	cooldown = 5,
+	tactical = { ATTACK = 2, DISABLE = 2 },
 	range = 10,
 	reflectable = true,
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 200)*getParadoxModifier(self, pm) end,
-	getDamageStat = function(self, t) return 5 + math.ceil(t.getDamage(self, t) / 20) end, 
+	getDamageStat = function(self, t) return 5 + math.ceil(t.getDamage(self, t) / 20) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		x, y = checkBackfire(self, x, y)
 		self:project(tg, x, y, DamageType.CLOCK, self:spellCrit(t.getDamage(self, t)))
+		game.level.map:particleEmitter(x, y, 1, "temporal_thrust")
 		game:playSoundNear(self, "talents/arcane")
 		return true
 	end,
@@ -45,7 +44,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local damagestat = t.getDamageStat(self, t)
 		return ([[Fires a bolt of temporal energy, dealing %0.2f temporal damage and reducing all of the target's stats by %d for 3 turns.
-		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.TEMPORAL, damage), damagestat)
+		The damage will scale with your Paradox and Magic stat.]]):format(damDesc(self, DamageType.TEMPORAL, damage), damagestat)
 	end,
 }
 
@@ -56,9 +55,7 @@ newTalent{
 	points = 5,
 	paradox = 5,
 	cooldown = 10,
-	tactical = {
-		HEAL = 10,
-	},
+	tactical = { HEAL = 2 },
 	getHeal = function(self, t) return self:combatTalentSpellDamage(t, 40, 220)*getParadoxModifier(self, pm) end,
 	getRemoveCount = function(self, t) return math.floor(self:getTalentLevel(t)) end,
 	action = function(self, t)
@@ -80,15 +77,15 @@ newTalent{
 			if eff[1] == "effect" then
 				target:removeEffect(eff[2])
 			end
-		end		
+		end
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
 	info = function(self, t)
 		local heal = t.getHeal(self, t)
 		local count = t.getRemoveCount(self, t)
-		return ([[You revert your body to a previous state, healing you for %0.2f and removing %d status effects (both good and bad).
-		The life healed will increase with the Magic stat]]):
+		return ([[You revert your body to a previous state, healing youself for %0.2f and removing %d status effects (both good and bad).
+		The life healed will scale with your Paradox and Magic stat.]]):
 		format(heal, count)
 	end,
 }
@@ -100,14 +97,12 @@ newTalent{
 	points = 5,
 	paradox = 5,
 	cooldown = 15,
-	tactical = {
-		ATTACKAREA = 10,
-	},
+	tactical = { ATTACKAREA = 2, DISABLE= 2 },
 	range = 1,
 	requires_target = true,
 	getConfuseDuration = function(self, t) return math.floor((self:getTalentLevel(t) + 2) * getParadoxModifier(self, pm)) end,
 	getConfuseEfficency = function(self, t) return (50 + self:getTalentLevelRaw(t) * 10) * getParadoxModifier(self, pm) end,
-	getRadius = function (self, t) return 2 + self:getTalentLevelRaw (t) end, 
+	getRadius = function (self, t) return 2 + self:getTalentLevelRaw (t) end,
 	action = function(self, t)
 		local tg = {type="cone", range=0, radius=t.getRadius(self, t), friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)
@@ -117,14 +112,15 @@ newTalent{
 			dur = t.getConfuseDuration(self, t),
 			dam = t.getConfuseEfficency(self, t)
 		})
-		game:playSoundNear(self, "talents/fire")
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "temporal_breath", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
+		game:playSoundNear(self, "talents/tidalwave")
 		return true
 	end,
 	info = function(self, t)
 		local duration = t.getConfuseDuration(self, t)
 		local radius = t.getRadius (self, t)
 		return ([[Reverts the minds of all creatures in a %d radius cone to an infantile state, in effect confusing them for %d turns.
-		]]):
+		The duration and power of the confuse will scale with your Paradox.]]):
 		format(radius, duration)
 	end,
 }
@@ -136,27 +132,25 @@ newTalent{
 	points = 5,
 	paradox = 10,
 	cooldown = 8,
-	tactical = {
-		ATTACK = 10,
-	},
+	tactical = { ATTACKAREA = 2, DISABLE = 2 },
 	range = 6,
 	direct_hit = true,
 	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 220)*getParadoxModifier(self, pm) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 240)*getParadoxModifier(self, pm) end,
+	getRadius = function (self, t) return 1 + math.floor(self:getTalentLevel(t)/5) end,
 	action = function(self, t)
-		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
+		local tg = {type="ball", range=self:getTalentRange(t), radius=t.getRadius(self, t), friendlyfire=self:spellFriendlyFire(), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		x, y = checkBackfire(self, x, y)
 		self:project(tg, x, y, DamageType.WASTING, self:spellCrit(t.getDamage(self, t)))
-		local _ _, x, y = self:canProject(tg, x, y)
-		game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "mana_beam", {tx=x-self.x, ty=y-self.y})
-		game:playSoundNear(self, "talents/arcane")
+		game.level.map:particleEmitter(x, y, tg.radius, "ball_temporal", {radius=tg.radius, tx=x, ty=y})
+		game:playSoundNear(self, "talents/cloud")
 		return true
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Fires a short range beam that causes targets to waste away, slowing and inflicting %0.2f temporal damage over three turns to everything in it's path.
-		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.TEMPORAL, damage))
+		return ([[Fires a short range ball that causes targets to waste away, slowing and inflicting %0.2f temporal damage over three turns to everything in it's path.
+		The damage will scale with your Paradox and Magic stat]]):format(damDesc(self, DamageType.TEMPORAL, damage))
 	end,
 }

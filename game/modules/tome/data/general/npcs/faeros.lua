@@ -27,6 +27,7 @@ newEntity{
 	combat = { dam=resolvers.mbonus(40, 15), atk=15, apr=15, dammod={mag=0.8}, damtype=DamageType.FIRE },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+	lite = 1,
 
 	infravision = 20,
 	life_rating = 8,

@@ -24,6 +24,7 @@ newTalent{
 	points = 5,
 	message = "@Source@ fixes some of the damage caused in the past.",
 	cooldown = 50,
+	tactical = { PARADOX = 2 },
 	getReduction = function(self, t) return (20 + (self:getWil() * self:getTalentLevel(t)/2)) end,
 	action = function(self, t)
 		self:incParadox (- t.getReduction(self, t))
@@ -39,16 +40,13 @@ newTalent{
 }
 
 newTalent{
-	name = "Backtrack",
+	name = "Dimensional Step",
 	type = {"chronomancy/spacetime-weaving", 2},
 	require = temporal_req2,
 	points = 5,
 	paradox = 3,
 	cooldown = 10,
-	tactical = {
-		ESCAPE = 5,
-		MOVEMENT = 5,
-	},
+	tactical = { CLOSEIN = 2, ESCAPE = 2 },
 	getRange = function(self, t) return 3 + math.ceil(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
 	requires_target = true,
 	direct_hit = true,
@@ -66,9 +64,9 @@ newTalent{
 			if tx and ty then
 				self:move(tx, ty, true)
 			end
-			game.level.map:particleEmitter(self.x, self.y, 1, "teleport")
+			game.level.map:particleEmitter(self.x, self.y, 1, "temporal_teleport")
 			self:move(tx, ty, true)
-			game.level.map:particleEmitter(self.x, self.y, 1, "teleport")
+			game.level.map:particleEmitter(self.x, self.y, 1, "temporal_teleport")
 			game:playSoundNear(self, "talents/teleport")
 		else
 			game.logSeen(self, "You cannot move there.")
@@ -79,31 +77,31 @@ newTalent{
 	info = function(self, t)
 		local range = t.getRange(self, t)
 		return ([[Teleports you to up to %d tiles away to a location in line of sight.
-		]]):format(range)
+		The range will scale with your Paradox.]]):format(range)
 	end,
 }
 
 newTalent{
 	name = "Temporal Reprieve",
 	type = {"chronomancy/spacetime-weaving", 3},
-	require = chrono_req3,
+	require = temporal_req3,
 	points = 5,
 	paradox = 5,
 	cooldown = 50,
-	tactical = {
-		UTILITY = 10,
-	},
+	tactical = { BUFF = 0.5 },
 	message = "@Source@ manipulates the flow of time.",
 	getCooldownReduction = function(self, t) return 2 + math.ceil(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
 	action = function(self, t)
 		for tid, cd in pairs(self.talents_cd) do
 			self.talents_cd[tid] = cd - t.getCooldownReduction(self, t)
 		end
-			return true
+		game:playSoundNear(self, "talents/spell_generic2")
+		return true
 	end,
 	info = function(self, t)
 		local reduction = t.getCooldownReduction(self, t)
-		return ([[All your talents, runes, and infusions currently on cooldown are %d turns closer to being off cooldown.]]):
+		return ([[All your talents, runes, and infusions currently on cooldown are %d turns closer to being off cooldown.
+		The effect will scale with your Paradox.]]):
 		format(reduction)
 	end,
 }
@@ -115,9 +113,7 @@ newTalent{
 	points = 5,
 	paradox = 10,
 	cooldown = 20,
-	tactical = {
-		ESCAPE = 4,
-	},
+	tactical = { ESCAPE = 2 },
 	requires_target = function(self, t) return self:getTalentLevel(t) >= 4 end,
 	getRadius = function(self, t) return math.floor(7 - self:getTalentLevel(t)) end,
 	getRange = function (self, t) return 10 + math.floor (self:getTalentLevel(t)/2) end,
@@ -230,7 +226,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local radius = t.getRadius(self, t)
 		return ([[You fold the space between two points, allowing travel back and forth between them for the next %d turns.
-		At level 4 you may choose the exit location target area (radius %d).]])
+		At level 4 you may choose the exit location target area (radius %d).  The duration will scale with your Paradox.]])
 		:format(duration, radius)
 	end,
 }

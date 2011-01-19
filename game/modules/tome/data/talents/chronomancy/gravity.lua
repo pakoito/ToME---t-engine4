@@ -25,9 +25,7 @@ newTalent{
 	random_ego = "attack",
 	paradox = 3,
 	cooldown = 6,
-	tactical = {
-		ATTACK = 10,
-	},
+	tactical = { ATTACK = 2 },
 	range = 6,
 	direct_hit = true,
 	reflectable = true,
@@ -55,9 +53,7 @@ newTalent{
 	random_ego = "attack",
 	paradox = 5,
 	cooldown = 10,
-	tactical = {
-		ATTACKAREA = 10,
-	},
+	tactical = { ATTACK = 2, DISABLE = 2 },
 	range = 6,
 	direct_hit = true,
 	reflectable = true,
@@ -82,7 +78,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Creates a gravity spike in a %d radius, moving all targets towards the spells center and inflicting %0.2f physical damage.
+		return ([[Creates a gravity spike in a radius of %d, moving all targets towards the spells center and inflicting %0.2f physical damage.
 		The damage will increase with the Magic Stat.]]):format(self:getTalentLevel (t), damDesc(self, DamageType.PHYSICAL, self:combatTalentSpellDamage(t, 8, 170)*getParadoxModifier(self, pm)))
 	end,
 }
@@ -95,9 +91,7 @@ newTalent{
 	random_ego = "attack",
 	paradox = 6,
 	cooldown = 12,
-	tactical = {
-		ATTACKAREA = 10,
-	},
+	tactical = { ATTACK = 1, ESCAPE = 2, DISABLE = 1 },
 	range = function(self, t) return self:getTalentLevel(t) end,
 	action = function(self, t)
 		local tg = {type="ball", radius=self:getTalentRange(t), friendlyfire=false}
@@ -120,9 +114,7 @@ newTalent{
 	random_ego = "attack",
 	paradox = 10,
 	cooldown = 8,
-	tactical = {
-		ATTACKAREA = 10,
-	},
+	tactical = { ATTACK = 2, DISABLE = 2 },
 	range = 6,
 	direct_hit = true,
 	requires_target = true,

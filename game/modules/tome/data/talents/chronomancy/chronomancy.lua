@@ -24,9 +24,7 @@ newTalent{
 	points = 5,
 	paradox = 3,
 	cooldown = 20,
-	tactical = {
-		BUFF = 10,
-	},
+	tactical = { BUFF = 2 },
 	no_energy = true,
 	getDuration = function(self, t) return 1 + math.ceil((self:getTalentLevel(t)/4) * getParadoxModifier(self, pm)) end,
 	getPower = function(self, t) return 10 + (self:combatTalentSpellDamage(t, 10, 50) * getParadoxModifier(self, pm)) end,
@@ -38,7 +36,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local power = t.getPower(self, t)
 		return ([[You bring your awareness fully into the present for %d turns, increasing your physical and spell critical strike chance by %d%%.
-		The crit increase will improve with the Magic stat.]]):format(duration, power)
+		The duration will scale with your Paradox.  The crit increase will scale with Paradox and your Magic stat.]]):format(duration, power)
 	end,
 }
 
@@ -65,7 +63,7 @@ newTalent{
 	info = function(self, t)
 		local radius = t.getRadius(self, t)
 		return ([[Your powerful intuition gives you a glimpse of your surroundings in a %d radius.  At talent level 4 it also reveals creatures within this radius.
-		The radius will improve with the Magic stat.]]):format(radius)
+		The radius will scale with your Paradox and Magic stat.]]):format(radius)
 	end,
 }
 
@@ -76,9 +74,7 @@ newTalent{
 	points = 5,
 	paradox = 5,
 	cooldown = 20,
-	tactical = {
-		DEFEND = 10,
-	},
+	tactical = { DEFEND = 2 },
 	no_energy = true,
 	getDuration = function(self, t) return 1 + math.ceil((self:getTalentLevel(t)/4) * getParadoxModifier(self, pm)) end,
 	getPower = function(self, t) return 10 + (self:combatTalentSpellDamage(t, 10, 50) * getParadoxModifier(self, pm)) end,
@@ -90,7 +86,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local power = t.getPower(self, t)
 		return ([[You glimpse into the future, granting you %d%% resistance to all attacks for the next %d turns.
-		The resistance will improve with the Magic stat.]]):format(power, duration)
+		The duration will scale with your Paradox.  The resistance bonus will scale with Paradox and your Magic stat.]]):format(power, duration)
 	end,
 }
 
@@ -110,6 +106,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[You peer %d turns into the future.  Note that visions of your own death can still be fatal.]]):format(duration)
+		return ([[You peer %d turns into the future.  Note that visions of your own death will still be fatal.
+		The duration will scale with your Paradox.]]):format(duration)
 	end,
 }

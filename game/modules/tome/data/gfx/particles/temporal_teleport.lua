@@ -17,33 +17,24 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local Talents = require("engine.interface.ActorTalents")
+base_size = 32
 
-newEntity{
-	define_as = "BASE_NPC_ORC_GORBAT",
-	type = "humanoid", subtype = "orc",
-	display = "o", color=colors.GREEN,
-	faction = "orc-pride",
+return {
+	base = 1000,
 
-	combat = { dam=resolvers.rngavg(5,12), atk=2, apr=6, physspeed=2 },
+	angle = { 0, 360 }, anglev = { 2000, 5000 }, anglea = { 20, 60 },
 
-	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
-	resolvers.drops{chance=20, nb=1, {} },
-	resolvers.drops{chance=10, nb=1, {type="money"} },
-	infravision = 20,
-	lite = 1,
+	life = { 20, 30 },
+	size = { 3, 7 }, sizev = {0, 0}, sizea = {0, 0},
 
-	life_rating = 15,
-	rank = 2,
-	size_category = 3,
+	r = {176, 250}, rv = {0, 10}, ra = {0, 0},
+	g = {196, 250}, gv = {0, 0}, ga = {0, 0},
+	b = {222, 0}, bv = {0, 10}, ba = {0, 0},
+	a = {25, 255}, av = {0, 0}, aa = {0, 0},
 
-	open_door = true,
-	resolvers.sustains_at_birth(),
-
-	resolvers.inscriptions(2, "infusion"),
-
-	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
-	energy = { mod=1 },
-	stats = { str=20, dex=8, mag=6, con=16 },
-}
+}, function(self)
+	self.nb = (self.nb or 0) + 1
+	if self.nb < 6 then
+		self.ps:emit(100)
+	end
+end

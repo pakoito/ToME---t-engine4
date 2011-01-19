@@ -25,9 +25,7 @@ newTalent{
 	random_ego = "attack",
 	paradox = 3,
 	cooldown = 3,
-	tactical = {
-		ATTACK = 10,
-	},
+	tactical = { ATTACK = 2 },
 	range = 6,
 	direct_hit = true,
 	reflectable = true,
@@ -54,10 +52,8 @@ newTalent{
 	require = chrono_req2,
 	points = 5,
 	paradox = 10,
-	tactical = {
-		UTILITY = 10,
-	},
 	range = 6,
+	no_npc_use = true,
 	cooldown = function(self, t) return math.ceil(20 - (self:getTalentLevel(t) *2)) end,
 	reflectable = true,
 	requires_target = true,
@@ -88,9 +84,7 @@ newTalent{
 	random_ego = "attack",
 	paradox = 5,
 	cooldown = 6,
-	tactical = {
-		ATTACK = 10,
-	},
+	tactical = { CLOSEIN = 2 },
 	range = 6,
 	direct_hit = true,
 	reflectable = true,
@@ -127,14 +121,12 @@ newTalent{
 	random_ego = "attack",
 	paradox = 10,
 	cooldown = 8,
-	tactical = {
-		ATTACKAREA = 10,
-	},
+	tactical = { ATTACKAREA = 2 },
 	range = 6,
 	direct_hit = true,
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 240)*getParadoxModifier(self, pm) end,
-	getRadius = function (self, t) return 1 + math.floor(self:getTalentLevel(t)/5) end, 
+	getRadius = function (self, t) return 1 + math.floor(self:getTalentLevel(t)/5) end,
 	action = function(self, t)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=t.getRadius(self, t), friendlyfire=self:spellFriendlyFire(), talent=t}
 		local x, y = self:getTarget(tg)

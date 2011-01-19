@@ -86,9 +86,7 @@ newTalent{
 	points = 5,
 	paradox = 3,
 	cooldown = 6,
-	tactical = {
-		BUFF = 10,
-	},
+	tactical = { BUFF = 2 },
 	getPercent = function(self, t) return 40 + (self:combatTalentSpellDamage(t, 20, 60)*getParadoxModifier(self, pm)) end,
 	action = function(self, t)
 		self:setEffect(self.EFF_GATHER_THE_THREADS, 1, {power=t.getPercent(self,t)})
@@ -108,9 +106,7 @@ newTalent{
 	points = 5,
 	paradox = 4,
 	cooldown = 6,
-	tactical = {
-		ATTACK = 10,
-	},
+	tactical = { ATTACK = 2 },
 	range = 6,
 	direct_hit = true,
 	reflectable = true,
@@ -123,8 +119,8 @@ newTalent{
 		x, y = checkBackfire(self, x, y)
 		self:project(tg, x, y, DamageType.RETHREAD, self:spellCrit(t.getDamage(self, t)))
 		local _ _, x, y = self:canProject(tg, x, y)
-		game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "temporal_lightning", {tx=x-self.x, ty=y-self.y})
-		game:playSoundNear(self, "talents/lightning")
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "temporalbeam", {tx=x-self.x, ty=y-self.y})
+		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
 	info = function(self, t)
@@ -142,9 +138,7 @@ newTalent{
 	points = 5,
 	cooldown = 30,
 	paradox = 5,
-	tactical = {
-		ATTACK = 10,
-	},
+	tactical = { ATTACK = 2, DISABLE = 2 },
 	requires_target = true,
 	range = 6,
 	no_npc_use = true,
@@ -197,7 +191,7 @@ newTalent{
 		if m.talents.T_MULTIPLY then m.talents.T_MULTIPLY = nil end
 
 		game.zone:addEntity(game.level, m, "actor", x, y)
-		game.level.map:particleEmitter(x, y, 1, "shadow")
+		game.level.map:particleEmitter(x, y, 1, "temporal_teleport")
 
 		-- force target to attack double
 		local a = game.level.map(tx, ty, Map.ACTOR)

@@ -25,15 +25,18 @@ newTalent{
 	points = 5,
 	sustain_stamina = 40,
 	cooldown = 18,
+	tactical = { BUFF = 2 },
 	getPercentage = function(self, t) return ((15 + (self:getTalentLevel(t) * 5)) / 100) end,
 	getPower = function(self, t) return math.floor (self:getWil() * t.getPercentage(self, t)) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/arcane")
 		return {
 			stats = self:addTemporaryValue("inc_stats", {[self.STAT_STR] = t.getPower(self, t)}),
+			particle = self:addParticles(Particles.new("temporal_focus", 1)),
 		}
 	end,
 	deactivate = function(self, t, p)
+		self:removeParticles(p.particle)
 		self:removeTemporaryValue("inc_stats", p.stats)
 		return true
 	end,
@@ -50,10 +53,8 @@ newTalent{
 	require = temporal_req2,
 	points = 5,
 	paradox = 10,
-	cooldown = 50, 
-	tactical = {
-		UTILITY = 10,
-	},
+	cooldown = 50,
+	tactical = { STAMINA = 2 },
 	getPower = function(self, t) return (20 + self:getTalentLevel(t) * 12)/5 end,
 	action = function(self, t)
 		self:setEffect(self.EFF_STIMULANCE, 5, {power=t.getPower(self, t)})
@@ -87,7 +88,7 @@ newTalent{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
 			self:attackTarget(target, nil, t.getDamage(self, t), true)
-		else		
+		else
 			return
 		end
 		return true
@@ -108,16 +109,19 @@ newTalent{
 	points = 5,
 	sustain_stamina = 40,
 	cooldown = 18,
+	tactical = { BUFF = 2 },
 	getPercentage = function(self, t) return ((15 + (self:getTalentLevel(t) * 5)) / 100) end,
 	getPower = function(self, t) return math.floor (self:getWil() * t.getPercentage(self, t)) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/arcane")
 		return {
 			stats = self:addTemporaryValue("inc_stats", {[self.STAT_MAG] = t.getPower(self, t)}),
+			particle = self:addParticles(Particles.new("arcane_power", 1)),
 		}
 	end,
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("inc_stats", p.stats)
+		self:removeParticles(p.particle)
 		return true
 	end,
 	info = function(self, t)
@@ -134,9 +138,7 @@ newTalent{
 	points = 5,
 	paradox = 25,
 	cooldown = 50,
-	tactical = {
-		DEFENSE = 10,
-	},
+	tactical = { DEFEND = 2 },
 	getDuration = function(self, t) return 2 + math.ceil(((self:getTalentLevel(t) / 2)) * getParadoxModifier(self, pm)) end,
 	action = function(self, t)
 		self:setEffect(self.EFF_DAMAGE_SMEARING, t.getDuration(self,t), {power=10})
@@ -146,6 +148,6 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[For the next %d turns you spread all damage that deals 10 or more points out over five turns rather then taking it all at once.
-		]]):format (duration)
+		The duration will scale with your Paradox.]]):format (duration)
 	end,
 }

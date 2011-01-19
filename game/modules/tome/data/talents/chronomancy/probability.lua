@@ -51,10 +51,8 @@ newTalent{
 	require = temporal_req3,
 	points = 5,
 	paradox = 5,
-	cooldown = 20, 
-	tactical = {
-		BUFF = 10,
-	},
+	cooldown = 20,
+	tactical = { BUFF = 2 },
 	no_energy = true,
 	getDuration = function(self, t) return math.ceil((self:getTalentLevel(t) + 4) * getParadoxModifier(self, pm)) end,
 	getPower = function(self, t) return self:combatTalentSpellDamage(t, 20, 60)*getParadoxModifier(self, pm) end,

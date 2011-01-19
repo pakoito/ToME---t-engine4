@@ -25,10 +25,8 @@ newTalent{
 	require = chrono_req_1,
 	points = 5,
 	paradox = 5,
-	cooldown = 15,
-	tactical = {
-		ATTACKAREA = 10,
-	},
+	cooldown = 6,
+	tactical = { ATTACKAREA = 2 },
 	range = 1,
 	requires_target = true,
 	getPercent = function(self, t) return (20 + (self:combatTalentSpellDamage(t, 10, 50)*getParadoxModifier(self, pm))) / 100 end,
@@ -38,14 +36,15 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.TEMPORAL_ECHO, self:spellCrit(t.getPercent(self, t)))
-		game:playSoundNear(self, "talents/fire")
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "temporal_breath", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
+		game:playSoundNear(self, "talents/spell_generic2")
 		return true
 	end,
 	info = function(self, t)
 		local percent = t.getPercent(self, t) * 100
 		local radius = t.getRadius(self, t)
-		return ([[Creates a temporal echo in a %d raidus cone.  Affected targets will take %d%% of the damage they've already taken as temporal damage.  Note that boss and unique creatures are resistant to this effect and will take less damage then other targets.
-		The percentage scales with the Magic stat.]]):
+		return ([[Creates a temporal echo in a %d radIus cone.  Affected targets will take %d%% of the damage they've already taken as temporal damage.  Note that boss and unique creatures are resistant to this effect and will take less damage then other targets.
+		The percentage scales with your Paradox and the Magic stat.]]):
 		format(radius, percent)
 	end,
 }
@@ -58,6 +57,7 @@ newTalent{
 	paradox = 10,
 	cooldown = 20,
 	no_energy = true,
+	tactical = { ESCAPE = 2, CLOSEIN = 2, BUFF = 2 },
 	getDuration = function(self, t) return 2 + math.floor(self:getTalentLevelRaw(t)/4) end,
 	getStun = function(self, t) return 6 - self:getTalentLevelRaw(t) end,
 	action = function(self, t)
@@ -79,9 +79,7 @@ newTalent{
 	points = 5,
 	cooldown = 6,
 	paradox = 10,
-	tactical = {
-		ATTACK = 10,
-	},
+	tactical = { ATTACK = 1, DISABLE = 2 },
 	range = 6,
 	direct_hit = true,
 	reflectable = true,
@@ -150,6 +148,8 @@ newTalent{
 		end
 
 		self:project(tg, tx, ty, DamageType.TEMPORAL, self:spellCrit(t.getDamage(self, t)))
+		game.level.map:particleEmitter(tx, ty, 1, "temporal_thrust")
+		game:playSoundNear(self, "talents/arcane")
 		-- Remove the target and place the temporal placeholder
 		if not target.dead then
 			if target ~= self then
@@ -169,7 +169,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[Inflicts %0.2f temporal damage.  If your target survives it will be sent %d turns into the future.
-		The damage will increase with the Magic stat.]]):format(damDesc(self, DamageType.TEMPORAL, damage), duration)
+		The duration will scale with your Paradox.  The damage will scale with Paradox and the Magic stat.]]):format(damDesc(self, DamageType.TEMPORAL, damage), duration)
 	end,
 }
 

@@ -100,6 +100,7 @@ newEntity{ base = "BASE_NPC_SNOW_GIANT",
 	make_escort = {
 		{type="giant", subtype="ice", number=3},
 	},
+	lite = 1,
 
 	ai = "tactical",
 

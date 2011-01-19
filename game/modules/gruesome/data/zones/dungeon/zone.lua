@@ -24,7 +24,7 @@ return {
 	level_adjust_level = function(zone, level) return zone.base_level + zone.max_level - level.level end,
 	width = 80, height = 23,
 	persistent = "zone",
-	all_remembered = true,
+--	all_remembered = true,
 	color_shown = {1, 1, 1, 1},
 	color_obscure = {1*0.4, 1*0.4, 1*0.4, 1},
 	generator =  {

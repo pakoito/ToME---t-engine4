@@ -24,9 +24,7 @@ newTalent{
 	points = 5,
 	paradox = 5,
 	cooldown = 10,
-	tactical = {
-		HEAL = 10,
-	},
+	tactical = { HEAL = 2 },
 	getHeal = function(self, t) return self:combatTalentSpellDamage(t, 40, 220)*getParadoxModifier(self, pm) end,
 	getRemoveCount = function(self, t) return math.floor(self:getTalentLevel(t)) end,
 	action = function(self, t)
@@ -69,10 +67,7 @@ newTalent{
 	random_ego = "attack",
 	paradox = 5,
 	cooldown = 10,
-	tactical = {
-		ATTACK = 10,
-		MOVEMENT = 10,
-	},
+	tactical = { ATTACK = 1, CLOSEIN = 2 },
 	range = 6,
 	direct_hit = true,
 	reflectable = true,
@@ -116,9 +111,7 @@ newTalent{
 	points = 5,
 	paradox = 5,
 	cooldown = 15,
-	tactical = {
-		ATTACKAREA = 10,
-	},
+	tactical = { DISABLE = 2 },
 	range = 1,
 	requires_target = true,
 	getConfuseDuration = function(self, t) return math.floor((self:getTalentLevel(t) + 2) * getParadoxModifier(self, pm)) end,
@@ -152,9 +145,7 @@ newTalent{
 	points = 5,
 	paradox = 10,
 	cooldown = 8,
-	tactical = {
-		ATTACKAREA = 10,
-	},
+	tactical = { ATTACKAREA = 1, DISABLE = 2 },
 	range = 10,
 	direct_hit = true,
 	requires_target = true,

@@ -368,6 +368,15 @@ function _M:playerFOV()
 			end
 		end, true, true, true)
 	end
+
+	-- For each entity, generate lite
+	local uid, e = next(game.level.entities)
+	while uid do
+		if e ~= self and e.lite and e.lite > 0 and e.computeFOV then
+			e:computeFOV(e.lite, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyExtraLite(x, y) end, true, true)
+		end
+		uid, e = next(game.level.entities, uid)
+	end
 end
 
 function _M:doFOV()

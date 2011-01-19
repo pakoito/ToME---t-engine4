@@ -87,7 +87,6 @@ newBirthDescriptor{
 		"The Temporal Warden has learned to blend archery, dual-weapon fighting, and chronomancy into a fearsome whole.",
 		"Through their use of the chronomantic arts the Temporal Warden seeks to control the battle field while they pepper their foes with arrows or engage in hand-to-hand combat.",
 		"Their study of chronomancy enables them to amplify their own physical and magical abilities and manipulate the speed of themselves and those around them.",
-		"The Temporal Warden starts play with a longsword and dagger equipped and a bow in their inventory, if you wish to make use of their ranged attacks remember to equip your bow in your secondary weapon slot for easy access.",
 		"Their most important stats are: Strength, Dexterity, Willpower, and Magic",
 		"#GOLD#Stats modifiers:",
 		"#LIGHT_BLUE# * +2 Strength, +3 Dexterity, +0 Constitution",

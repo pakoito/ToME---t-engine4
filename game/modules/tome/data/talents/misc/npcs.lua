@@ -19,6 +19,7 @@
 
 -- race & classes
 newTalentType{ type="technique/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
+newTalentType{ no_silence=true, is_spell=true, type="chronomancy/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
 newTalentType{ no_silence=true, is_spell=true, type="spell/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
 newTalentType{ no_silence=true, is_spell=true, type="corruption/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
 newTalentType{ type="wild-gift/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
@@ -1058,5 +1059,61 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Fire a slow bolt of a random element. Damage raises with magic stat.]])
+	end,
+}
+
+newTalent{
+	name = "Speed Sap",
+	type = {"chronomancy/other", 1},
+	points = 5,
+	paradox = 10,
+	cooldown = 8,
+	tactical = {
+		ATTACK = 10,
+	},
+	range = 3,
+	direct_hit = true,
+	reflectable = true,
+	requires_target = true,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 220)*getParadoxModifier(self, pm) end,
+	action = function(self, t)
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		x, y = checkBackfire(self, x, y)
+		self:project(tg, x, y, DamageType.WASTING, self:spellCrit(t.getDamage(self, t)))
+		self:setEffect(self.EFF_SPEED, 3, {power=0.3})
+		local _ _, x, y = self:canProject(tg, x, y)
+		game:playSoundNear(self, "talents/arcane")
+		return true
+	end,
+	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		return ([[Saps away 30% of the targets speed and inflicts %d temporal damage for three turns
+		]]):format(damDesc(self, DamageType.TEMPORAL, damage))
+	end,
+}
+
+newTalent{
+	name = "Dredge Frenzy",
+	type = {"chronomancy/other", 1},
+	points = 5,
+	paradox = 10,
+	cooldown = 6,
+	tactical = {
+		BUFF = 10,
+	},
+	direct_hit = true,
+	range = function(self, t) return 1 + self:getTalentLevelRaw(t) end,
+	action = function(self, t)
+		local tg = {type="ball", range=0, radius=self:getTalentRange(t), friendlyfire=true, talent=t}
+		local grids = self:project(tg, self.x, self.y, DamageType.DREDGE_FRENZY)
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_light", {radius=tg.radius})
+		game:playSoundNear(self, "talents/arcane")
+		return true
+	end,
+	info = function(self, t)
+		return ([[Speeds up nearby Dredges.
+		]]):format()
 	end,
 }
