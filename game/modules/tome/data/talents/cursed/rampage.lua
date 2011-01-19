@@ -26,6 +26,7 @@ newTalent{
 	type = {"cursed/rampage", 1},
 	require = cursed_str_req1,
 	points = 5,
+	tactical = { ATTACK = 3 },
 	cooldown = function(self, t)
 		local tReflexes = self:getTalentFromId(self.T_REFLEXES)
 		if tReflexes then

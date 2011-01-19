@@ -412,6 +412,8 @@ newInscription{
 	points = 1,
 	is_spell = true,
 	tactical = { ATTACK = 1 },
+	requires_target = true,
+	direct_hit = true,
 	range = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return data.range
@@ -443,6 +445,8 @@ newInscription{
 	points = 1,
 	is_spell = true,
 	tactical = { ATTACK = 1, DISABLE=1 },
+	requires_target = true,
+	direct_hit = true,
 	range = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return data.range
@@ -472,6 +476,8 @@ newInscription{
 	points = 1,
 	is_spell = true,
 	tactical = { ATTACKAREA = 1 },
+	requires_target = true,
+	direct_hit = true,
 	range = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return data.range
@@ -500,6 +506,8 @@ newInscription{
 	points = 1,
 	is_spell = true,
 	tactical = { ATTACK = 1 },
+	requires_target = true,
+	direct_hit = true,
 	range = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return data.range

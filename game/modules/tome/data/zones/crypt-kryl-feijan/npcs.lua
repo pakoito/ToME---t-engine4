@@ -46,6 +46,7 @@ newEntity{ base="BASE_NPC_MAJOR_DEMON", define_as = "KRYL_FEIJAN",
 	ai = "tactical", ai_state = { talent_in=2, ai_move="move_astar", },
 	ai_tactic = resolvers.tactic"melee",
 	resolvers.inscriptions(3, {}),
+	resolvers.inscriptions(1, {"manasurge rune"}),
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 
@@ -128,6 +129,7 @@ newEntity{ define_as = "ACOLYTE",
 	ai = "tactical", ai_state = { talent_in=2, ai_move="move_astar", },
 	ai_tactic = resolvers.tactic"ranged",
 	resolvers.inscriptions(1, "rune"),
+	resolvers.inscriptions(1, {"manasurge rune"}),
 
 	on_die = function(self)
 		if not game.level.turn_counter then return end

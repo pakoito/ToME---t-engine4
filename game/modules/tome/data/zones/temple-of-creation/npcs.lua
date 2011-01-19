@@ -87,6 +87,7 @@ newEntity{ define_as = "SLASUL",
 	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
 	ai_tactic = resolvers.tactic"melee",
 	resolvers.inscriptions(4, "infusion"),
+	resolvers.inscriptions(1, {"manasurge rune"}),
 
 	on_die = function(self, who)
 		game.player:resolveSource():setQuestStatus("temple-of-creation", engine.Quest.COMPLETED, "kill-slasul")

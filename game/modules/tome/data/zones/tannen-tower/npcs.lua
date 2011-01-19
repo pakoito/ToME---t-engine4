@@ -83,6 +83,7 @@ newEntity{ define_as = "TANNEN",
 	ai_tactic = resolvers.tactic"ranged",
 	resolvers.inscriptions(2, "infusion"),
 	resolvers.inscriptions(1, "rune"),
+	resolvers.inscriptions(1, {"manasurge rune"}),
 
 	on_die = function(self, who)
 		game.player:resolveSource():setQuestStatus("east-portal", engine.Quest.COMPLETED, "tannen-dead")

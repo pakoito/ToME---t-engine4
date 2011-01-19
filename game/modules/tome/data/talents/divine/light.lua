@@ -25,9 +25,7 @@ newTalent{
 	random_ego = "defensive",
 	cooldown = 10,
 	positive = -10,
-	tactical = {
-		HEAL = 10,
-	},
+	tactical = { HEAL = 2 },
 	getHeal = function(self, t) return self:combatTalentSpellDamage(t, 20, 240) end,
 	action = function(self, t)
 		self:heal(self:spellCrit(t.getHeal(self, t)), self)
@@ -50,9 +48,7 @@ newTalent{
 	points = 5,
 	cooldown = 10,
 	positive = -20,
-	tactical = {
-		HEAL = 10,
-	},
+	tactical = { HEAL = 3 },
 	getHeal = function(self, t) return self:combatTalentSpellDamage(t, 4, 30) end,
 	getDuration = function(self, t) return self:getTalentLevel(t) + 2 end,
 	action = function(self, t)
@@ -86,6 +82,7 @@ newTalent{
 	random_ego = "defensive",
 	positive = -20,
 	cooldown = 15,
+	tactical = { DEFEND = 2 },
 	getAbsorb = function(self, t) return self:combatTalentSpellDamage(t, 30, 270) end,
 	action = function(self, t)
 		self:setEffect(self.EFF_DAMAGE_SHIELD, 10, {power=t.getAbsorb(self, t)})
@@ -108,9 +105,7 @@ newTalent{
 	random_ego = "defensive",
 	positive = -20,
 	cooldown = 30,
-	tactical = {
-		HEAL = 10,
-	},
+	tactical = { HEAL = 2.5 },
 	getRegeneration = function(self, t) return self:combatTalentSpellDamage(t, 10, 50) end,
 	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t)) end,
 	action = function(self, t)

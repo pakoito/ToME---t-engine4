@@ -47,6 +47,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 6,
 	hate = 0.1,
+	tactical = { ATTACK = 3 },
 	requires_target = true,
 	action = function(self, t)
 		local target = {type="hit", range=self:getTalentRange(t)}
@@ -97,6 +98,7 @@ newTalent{
 	cooldown = 10,
 	hate = 0.3,
 	range = 6,
+	tactical = { CLOSEIN = 2, ATTACK = 1 },
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
@@ -136,6 +138,7 @@ newTalent{
 	cooldown = 25,
 	hate = 0.1,
 	range = 6,
+	no_npc_use = true,
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}

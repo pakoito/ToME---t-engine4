@@ -25,10 +25,7 @@ newTalent{
 	points = 5,
 	cooldown = 20,
 	negative = 20,
-	tactical = {
-		ATTACK = 10,
-		BUFF = 10,
-	},
+	tactical = { DEFEND = 2, ATTACK = 1 },
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 4, 30) end,
 	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
 	getRadius = function(self, t) return 2 + math.floor(self:getTalentLevelRaw(t)/2) end,
@@ -62,10 +59,7 @@ newTalent{
 	points = 5,
 	cooldown = 20,
 	positive = 20,
-	tactical = {
-		ATTACK = 10,
-		BUFF = 10,
-	},
+	tactical = { DEFEND = 2, ATTACK = 1 },
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 2, 15) end,
 	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
 	getRadius = function(self, t) return 2 + math.floor(self:getTalentLevelRaw(t)/2) end,
@@ -103,10 +97,7 @@ newTalent{
 	cooldown = 20,
 	positive = 20,
 	negative = 20,
-	tactical = {
-		ATTACK = 10,
-		BUFF = 10,
-	},
+	tactical = { DEFEND = 2, ATTACK = 1 },
 	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
 	getRadius = function(self, t) return 2 + math.floor(self:getTalentLevelRaw(t)/2) end,
 	action = function(self, t)
@@ -138,10 +129,7 @@ newTalent{
 	cooldown = 20,
 	positive = 20,
 	negative = 20,
-	tactical = {
-		ATTACK = 10,
-		BUFF = 10,
-	},
+	tactical = { DEFEND = 2, ATTACK = 1 },
 	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
 	getRadius = function(self, t) return 2 + math.floor(self:getTalentLevelRaw(t)/2) end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 2, 20)  end,

@@ -58,6 +58,7 @@ newEntity{ define_as = "SHADE",
 		[Talents.T_WEAPONS_MASTERY]=3,
 	},
 	resolvers.inscriptions(1, {"shielding rune", "phase door rune"}),
+	resolvers.inscriptions(1, {"manasurge rune"}),
 	inc_damage = {all=-20},
 
 	autolevel = "warriormage",
@@ -124,4 +125,5 @@ newEntity{ define_as = "KOR_FURY",
 	ai = "tactical", ai_state = { ai_target="target_player_radius", sense_radius=50, talent_in=1, },
 	ai_tactic = resolvers.tactic"ranged",
 	resolvers.inscriptions(4, "rune"),
+	resolvers.inscriptions(1, {"manasurge rune"}),
 }

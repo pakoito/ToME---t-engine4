@@ -278,6 +278,7 @@ This one looks even nastier and looks toward you with what seems to be disdain. 
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, NECK=1 },
 	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
+	resolvers.inscriptions(1, {"manasurge rune"}),
 	resolvers.inscriptions(3, "rune"),
 
 	resolvers.equip{

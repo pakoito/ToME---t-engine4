@@ -23,6 +23,7 @@ newTalent{
 	type = {"spell/other",1},
 	points = 5,
 	range = 10,
+	tactical = { ESCAPE = 2 },
 	action = function(self, t)
 		local x, y, range
 		if self.ai_state.shadow_wall then
@@ -51,6 +52,7 @@ newTalent{
 	random_ego = "attack",
 	range = 10,
 	requires_target = true,
+	tactical = { CLOSEIN = 2 },
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -152,7 +154,7 @@ local function createShadow(self, level, duration, target)
 			blindside_chance = 15,
 			phasedoor_chance = 5,
 			attack_spell_chance = 5,
-			
+
 			feed_level = 0
 		},
 		ai_target = {
@@ -160,7 +162,7 @@ local function createShadow(self, level, duration, target)
 			x = nil,
 			y = nil
 		},
-		
+
 		healSelf = function(self)
 			self:useTalent(self.T_HEAL)
 		end,
@@ -183,18 +185,18 @@ local function createShadow(self, level, duration, target)
 		feed = function(self, t)
 			local level = self.summoner:getTalentLevel(t)
 			if self.ai_state.feed_level == level then return end
-			
+
 			self.ai_state.feed_level = level
-		
+
 			-- clear old values
 			if self.ai_state.feed_temp1 then self:removeTemporaryValue("combat_atk", self.ai_state.feed_temp1) end
 			self.ai_state.feed_temp1 = nil
 			if self.ai_state.feed_temp2 then self:removeTemporaryValue("inc_damage", self.ai_state.feed_temp2) end
 			self.ai_state.feed_temp2 = nil
 			self.summoner_hate_per_kill = nil
-			
+
 			if level and level > 0 then
-				-- set new values			
+				-- set new values
 				self.ai_state.feed_temp1 = self:addTemporaryValue("combat_atk", t.getCombatAtk(self.summoner, t))
 				self.ai_state.feed_temp2 = self:addTemporaryValue("inc_damage", {all=t.getIncDamage(self.summoner, t)})
 				self.summoner_hate_per_kill = t.getHatePerKill(self.summoner, t)
@@ -214,9 +216,7 @@ newTalent{
 	require = cursed_mag_req1,
 	points = 5,
 	cooldown = 10,
-	tactical = {
-		DEFEND = 10,
-	},
+	tactical = { BUFF = 5 },
 	getLevel = function(self, t)
 		return self.level --return math.max(1, self.level - 2 + self:getMag(4))
 	end,
@@ -308,6 +308,7 @@ newTalent{
 	hate = 1,
 	range = 6,
 	requires_target = true,
+	tactical = { ATTACK = 2 },
 	getDuration = function(self, t)
 		return self:getTalentLevel(t)
 	end,
@@ -378,7 +379,7 @@ newTalent{
 				end
 			end
 		end
-		
+
 		return { }
 	end,
 	on_unlearn = function(self, t, p)
@@ -407,6 +408,7 @@ newTalent{
 	points = 5,
 	cooldown = 10,
 	hate = 1,
+	tactical = { DEFEND = 2 },
 	getDuration = function(self, t)
 		return 2 + self:getTalentLevel(t) * 2
 	end,

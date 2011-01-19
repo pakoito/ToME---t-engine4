@@ -20,6 +20,7 @@
 newTalent{
 	name = "Automatic Stealth",
 	type = {"cunning/stealth-base", 1},
+	tactical = { BUFF = 3 },
 	mode = "sustained", no_sustain_autoreset = true,
 	points = 1,
 	cooldown = 0,
@@ -42,6 +43,7 @@ newTalent{
 	points = 5,
 	cooldown = 10,
 	no_energy = true,
+	tactical = { BUFF = 3 },
 	getStealthPower = function(self, t) return 4 + self:getCun(10) * self:getTalentLevel(t) end,
 	getRadius = function(self, t) return math.floor(10 - self:getTalentLevel(t) * 1.1) end,
 	on_learn = function(self, t)
@@ -125,6 +127,7 @@ newTalent{
 	points = 5,
 	stamina = 20,
 	cooldown = 40,
+	tactical = { DEFEND = 2 },
 	getChance = function(self, t) return 40 + self:getTalentLevel(t) * 7 end,
 	action = function(self, t)
 		if self:isTalentActive(self.T_STEALTH) then return end

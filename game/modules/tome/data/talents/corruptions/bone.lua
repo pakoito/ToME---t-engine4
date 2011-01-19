@@ -26,6 +26,7 @@ newTalent{
 	cooldown = 4,
 	range = 10,
 	random_ego = "attack",
+	tactical = { ATTACK = 2 },
 	direct_hit = true,
 	requires_target = true,
 	action = function(self, t)
@@ -51,6 +52,7 @@ newTalent{
 	vim = 28,
 	cooldown = 15,
 	range = 7,
+	tactical = { DISABLE = 1, CLOSEIN = 3 },
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t)}
@@ -93,6 +95,7 @@ newTalent{
 	points = 5,
 	vim = 25,
 	cooldown = 12,
+	tactical = { ATTACKAREA = 2 },
 	random_ego = "attack",
 	range = function(self, t) return self:getTalentLevelRaw(t) end,
 	action = function(self, t)
@@ -115,9 +118,7 @@ newTalent{
 	require = corrs_req4,
 	cooldown = 60,
 	sustain_vim = 150,
-	tactical = {
-		DEFEND = 10,
-	},
+	tactical = { DEFEND = 4 },
 	direct_hit = true,
 	absorb = function(self, t, p)
 		game.logPlayer(self, "Your bone shield absorbs the damage!")

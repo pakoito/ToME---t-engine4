@@ -29,6 +29,7 @@ newTalent{
 		ATTACK = 10,
 	},
 	range = 7,
+	tactical = { ATTACK = 2 },
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,
@@ -71,15 +72,12 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 22,
 	positive = -15,
-	tactical = {
-		ATTACK = 10,
-	},
-	range = 6,
+	tactical = { ATTACKAREA = 1, DISABLE = 2 },
 	direct_hit = true,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 4, 80) end,
-	getRadius = function(self, t) return 2 + self:getTalentLevel(t) / 2 end,
+	RANGE = function(self, t) return 2 + self:getTalentLevel(t) / 2 end,
 	action = function(self, t)
-		local tg = {type="ball", range=0, friendlyfire=true, radius=t.getRadius(self, t), talent=t}
+		local tg = {type="ball", range=0, friendlyfire=true, radius=self:getTalentRange(t), talent=t}
 		self:project(tg, self.x, self.y, DamageType.LITE, 1)
 		tg.friendlyfire = false
 		local grids = self:project(tg, self.x, self.y, DamageType.BLIND, 3 + self:getTalentLevel(t))
@@ -108,9 +106,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 7,
 	positive = -20,
-	tactical = {
-		ATTACK = 10,
-	},
+	tactical = { ATTACK = 2 },
 	range = 70,
 	direct_hit = true,
 	requires_target = true,
@@ -142,9 +138,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 15,
 	positive = -20,
-	tactical = {
-		ATTACKAREA = 10,
-	},
+	tactical = { ATTACKAREA = 2 },
 	range = 3,
 	direct_hit = true,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 160) end,

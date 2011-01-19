@@ -91,6 +91,19 @@ newAI("use_tactical", function(self)
 			end
 		end
 
+		-- Need vim
+		if avail.vim then
+			want.vim = 0
+			local vim = 100 * self.vim / self.max_vim
+			if vim < 20 then want.vim = want.vim + 4
+			elseif vim < 30 then want.vim = want.vim + 3
+			elseif vim < 40 then want.vim = want.vim + 2
+			elseif vim < 60 then want.vim = want.vim + 2
+			elseif vim < 80 then want.vim = want.vim + 1
+			elseif vim < 100 then want.vim = want.vim + 0.5
+			end
+		end
+
 		-- Need closing-in
 		if avail.closein and target_dist and target_dist > 2 and self.ai_tactic.closein then
 			want.closein = 1 + target_dist / 2
@@ -121,14 +134,16 @@ newAI("use_tactical", function(self)
 			want.defend = 1 + need_heal / 2 + nb_foes * 0.5
 		end
 
+		-- Attacks
+		if avail.attack and self.ai_target.actor then want.attack = 1 end
+		if avail.disable and self.ai_target.actor then want.disable = (want.attack or 0) + 1 end
+		if avail.attackarea and self.ai_target.actor then want.attackarea = (want.attack or 0) + nb_foes * 0.6 end
+
 		-- Need buffs
 		if avail.buff and want.attack and want.attack > 0 then
 			want.buff = math.max(0.01, want.attack - 1)
 		end
 
-		if avail.disable then want.disable = 2 end
-		if avail.attack then want.attack = 1 end
-		if avail.attackarea then want.attackarea = (want.attack or 0) + nb_foes * 0.6 end
 
 		print("Tactical ai report for", self.name)
 		local res = {}

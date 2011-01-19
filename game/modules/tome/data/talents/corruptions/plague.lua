@@ -25,6 +25,7 @@ newTalent{
 	vim = 8,
 	cooldown = 3,
 	random_ego = "attack",
+	tactical = { ATTACK = 2 },
 	requires_target = true,
 	range = function(self, t) return 4 + math.floor(self:getTalentLevel(t)) end,
 	action = function(self, t)
@@ -65,6 +66,7 @@ newTalent{
 	vim = 18,
 	cooldown = 9,
 	range = 7,
+	tactical = { ATTACK = 1 },
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t)}
@@ -124,6 +126,7 @@ newTalent{
 	vim = 35,
 	cooldown = 15,
 	range = 6,
+	tactical = { DISABLE = 1 },
 	direct_hit = true,
 	requires_target = true,
 	action = function(self, t)
@@ -177,6 +180,7 @@ newTalent{
 	vim = 20,
 	cooldown = 13,
 	range = 6,
+	tactical = { ATTACK = 2 },
 	requires_target = true,
 	do_spread = function(self, t, carrier)
 		-- List all diseases

@@ -25,6 +25,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 6,
 	range = 7,
+	tactical = { BUFF = 2, DEFEND = 1 },
 	requires_target = true,
 	getHateGain = function(self, t)
 		return math.sqrt(self:getTalentLevel(t)) * 0.2 + self:getWil(0.15)
@@ -38,7 +39,7 @@ newTalent{
 			game.logPlayer(self, "You can only gain sustenance from your foes!");
 			return nil
 		end
-		
+
 		print("*** targeted");
 
 		-- remove old effect

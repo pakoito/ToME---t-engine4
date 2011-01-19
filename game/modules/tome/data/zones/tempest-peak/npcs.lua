@@ -68,6 +68,7 @@ newEntity{ define_as = "URKIS",
 	autolevel = "warriormage",
 	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
 	resolvers.inscriptions(1, "rune"),
+	resolvers.inscriptions(1, {"manasurge rune"}),
 
 	on_die = function(self, who)
 		game.player:resolveSource():setQuestStatus("lightning-overload", engine.Quest.COMPLETED)

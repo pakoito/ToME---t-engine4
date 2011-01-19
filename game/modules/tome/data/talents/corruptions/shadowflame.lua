@@ -24,6 +24,7 @@ newTalent{
 	points = 5,
 	sustain_vim = 20,
 	cooldown = 30,
+	tactical = { BUFF = 2, ESCAPE = 1, CLOSEIN = 1 },
 	action = function(self, t)
 		self:setEffect(self.EFF_WRAITHFORM, 4 + self:getTalentLevel(t), {def=self:combatTalentSpellDamage(t, 5, 19), armor=self:combatTalentSpellDamage(t, 5, 15)})
 		return true
@@ -46,6 +47,7 @@ newTalent{
 	requires_target = true,
 	range = 6,
 	proj_speed = 4,
+	tactical = { ATTACKAREA = 2 },
 	direct_hit = true,
 	requires_target = true,
 	action = function(self, t)
@@ -77,6 +79,7 @@ newTalent{
 	points = 5,
 	sustain_vim = 90,
 	cooldown = 30,
+	tactical = { BUFF = 2 },
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/flame")
 		self.__old_type = {self.type, self.subtype}
@@ -119,7 +122,7 @@ newTalent{
 	sustain_vim = 90,
 	cooldown = 60,
 	no_sustain_autoreset = true,
-	no_npc_use = true,
+	tactical = { DISABLE = 3 },
 	range = 5,
 	activate = function(self, t)
 		if game.zone.is_demon_plane then

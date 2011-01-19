@@ -73,6 +73,7 @@ newEntity{ define_as = "UKLLMSWWIK",
 	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
 	ai_tactic = resolvers.tactic"melee",
 	resolvers.inscriptions(3, "infusion"),
+	resolvers.inscriptions(1, {"manasurge rune"}),
 
 	on_die = function(self, who)
 		game.player:resolveSource():setQuestStatus("temple-of-creation", engine.Quest.COMPLETED, "kill-drake")

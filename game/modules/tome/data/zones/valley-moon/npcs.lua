@@ -65,6 +65,7 @@ newEntity{ define_as = "CORRUPTED_DAELACH",
 	ai = "tactical", ai_state = { talent_in=2, ai_move="move_astar", },
 	ai_tactic = resolvers.tactic"melee",
 	resolvers.inscriptions(3, {}),
+	resolvers.inscriptions(1, {"manasurge rune"}),
 
 	on_die = function(self, who)
 	end,

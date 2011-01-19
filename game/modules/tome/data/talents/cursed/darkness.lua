@@ -147,6 +147,7 @@ newTalent{
 	cooldown = 20,
 	hate = 1.5,
 	range = 5,
+	tactical = { ATTACK = 1, DISABLE = 2 },
 	requires_target = true,
 
 	-- implementation of creeping darkness..used in various locations, but stored here
@@ -309,7 +310,7 @@ newTalent{
 				print("*** locations", darkX, darkY)
 			end
 		end end
-		
+
 		darkCount = math.min(darkCount, #locations)
 		if darkCount == 0 then return false end
 
@@ -366,9 +367,7 @@ newTalent{
 	random_ego = "attack",
 	hate = 0.8,
 	cooldown = 6,
-	tactical = {
-		ATTACK = 10,
-	},
+	tactical = { ATTACK = 2, DISABLE = 1 },
 	range = 5,
 	direct_hit = true,
 	reflectable = true,
@@ -422,6 +421,7 @@ newTalent{
 	cooldown = 10,
 	hate =  1.2,
 	range = 6,
+	tactical = { ATTACK = 2, DISABLE = 2 },
 	getPinDuration = function(self, t)
 		return 1 + math.floor(self:getTalentLevel(t) / 2)
 	end,

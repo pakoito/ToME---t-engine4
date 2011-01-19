@@ -76,6 +76,7 @@ newEntity{ define_as = "GREATER_MUMMY_LORD",
 	autolevel = "warriormage",
 	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
 	resolvers.inscriptions(3, "rune"),
+	resolvers.inscriptions(1, {"manasurge rune", "manasurge rune"}),
 }
 
 -- Some mummy minions

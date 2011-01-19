@@ -25,9 +25,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 3,
 	negative = 10,
-	tactical = {
-		ATTACK = 10,
-	},
+	tactical = { ATTACK = 2 },
 	range = 10,
 	direct_hit = true,
 	reflectable = true,
@@ -59,9 +57,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 10,
 	negative = 15,
-	tactical = {
-		ATTACK = 10,
-	},
+	tactical = { ATTACKAREA = 2 },
 	range = 5,
 	direct_hit = true,
 	requires_target = true,
@@ -108,9 +104,7 @@ newTalent{
 	cooldown = 7,
 	negative = -20,
 	positive = -10,
-	tactical = {
-		ATTACK = 10,
-	},
+	tactical = { ATTACKAREA = 1 },
 	range = 2,
 	direct_hit = true,
 	getLightDamage = function(self, t) return 10 + self:combatSpellpower(0.2) * self:getTalentLevel(t) end,
@@ -142,9 +136,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 12,
 	negative = 20,
-	tactical = {
-		ATTACKAREA = 10,
-	},
+	tactical = { ATTACKAREA = 2, DISABLE = 2 },
 	range = 6,
 	direct_hit = true,
 	requires_target = true,

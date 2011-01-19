@@ -73,6 +73,7 @@ newEntity{ define_as = "DRAEBOR",
 	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
 	ai_tactic = resolvers.tactic"ranged",
 	resolvers.inscriptions(2, "rune"),
+	resolvers.inscriptions(1, {"manasurge rune"}),
 
 	on_die = function(self, who)
 		require("engine.ui.Dialog"):simplePopup("Back and there again", "As the annoying imp falls a portal appears under its corpse.")

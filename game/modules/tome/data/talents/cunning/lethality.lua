@@ -40,6 +40,7 @@ newTalent{
 	cooldown = 12,
 	stamina = 15,
 	require = cuns_req2,
+	tactical = { ATTACK = 2 },
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.8, 1.4) end,
 	getArmorPierce = function(self, t) return 4 + (self:getTalentLevel(t) * self:getCun()) / 20 end,
@@ -74,6 +75,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 60,
 	stamina = 25,
+	tactical = { BUFF = 3 },
 	require = cuns_req3,
 	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t) * 1.5) end,
 	getDamage = function(self, t) return self:getWil(70) end,
@@ -97,6 +99,7 @@ newTalent{
 	points = 5,
 	stamina = 50,
 	cooldown = 50,
+	tactical = { BUFF = 1 },
 	getTalentCount = function(self, t) return math.ceil(self:getTalentLevel(t) + 2) end,
 	getMaxLevel = function(self, t) return self:getTalentLevelRaw(t) end,
 	action = function(self, t)

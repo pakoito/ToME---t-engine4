@@ -25,6 +25,7 @@ newTalent{
 	require = cuns_req1,
 	sustain_stamina = 20,
 	cooldown = 5,
+	tactical = { BUFF = 2 },
 	getDamage = function(self, t) return 3 + self:getTalentLevel(t) * 2 end,
 	getManaCost = function(self, t) return 1 + self:getTalentLevelRaw(t) / 1.5 end,
 	activate = function(self, t)
@@ -64,6 +65,7 @@ newTalent{
 	sustain_stamina = 40,
 	require = cuns_req3,
 	range = 10,
+	tactical = { BUFF = 2 },
 	getManaRegen = function(self, t) return self:getTalentLevel(t) / 14 end,
 	activate = function(self, t)
 		return {
@@ -89,6 +91,7 @@ newTalent{
 	cooldown = 5,
 	stamina = 100,
 	require = cuns_req4,
+	tactical = { CLOSEIN = 2, DISABLE = 1 },
 	range = function(self, t) return math.floor(5 + self:getTalentLevel(t)) end,
 	direct_hit = true,
 	requires_target = true,

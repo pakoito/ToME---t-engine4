@@ -25,9 +25,7 @@ newTalent{
 	points = 5,
 	cooldown = 10,
 	sustain_positive = 10,
-	tactical = {
-		BUFF = 10,
-	},
+	tactical = { BUFF = 2 },
 	range = 10,
 	getHeal = function(self, t) return self:combatTalentSpellDamage(t, 5, 25) end,
 	activate = function(self, t)
@@ -61,6 +59,7 @@ newTalent{
 	points = 5,
 	cooldown = 8,
 	positive = 20,
+	tactical = { ATTACK = 2 },
 	requires_target = true,
 	getWeaponDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.8, 1.3) end,
 	getShieldDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.8, 1.3, self:getTalentLevel(self.T_SHIELD_EXPERTISE)) end,
@@ -115,9 +114,7 @@ newTalent{
 	sustain_positive = 20,
 	cooldown = 10,
 	range = function(self, t) return 1 + self:getTalentLevelRaw(t) end,
-	tactical = {
-		DEFEND = 10,
-	},
+	tactical = { DEFEND = 2 },
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 28, 170) end,
 	activate = function(self, t)
 		local shield = self:hasShield()
@@ -158,9 +155,7 @@ newTalent{
 	mode = "sustained",
 	sustain_positive = 60,
 	cooldown = 50,
-	tactical = {
-		DEFEND = 10,
-	},
+	tactical = { DEFEND = 2 },
 	getLife = function(self, t) return self.max_life * (0.05 + self:getTalentLevel(t)/25) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/heal")

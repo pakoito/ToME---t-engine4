@@ -80,6 +80,7 @@ newTalent{
 	stamina = 15,
 	no_break_stealth = true,
 	require = cuns_req2,
+	no_npc_use = true,
 	range = function(self, t) return math.ceil(self:getTalentLevel(t) + 5) end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -147,6 +148,7 @@ newTalent{
 	proj_speed = 10,
 	requires_target = true,
 	range = 10,
+	tactical = { DISABLE = 2 },
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -185,6 +187,7 @@ newTalent{
 	stamina = 15,
 	requires_target = true,
 	range = trap_range,
+	tactical = { ATTACKAREA = 2 },
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local x, y, target = self:getTarget(tg)
@@ -243,6 +246,7 @@ newTalent{
 	stamina = 10,
 	requires_target = true,
 	range = trap_range,
+	tactical = { DISABLE = 2 },
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local x, y, target = self:getTarget(tg)
@@ -305,6 +309,7 @@ newTalent{
 	cooldown = 10,
 	stamina = 15,
 	requires_target = true,
+	tactical = { DISABLE = 2 },
 	range = trap_range,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -374,6 +379,7 @@ newTalent{
 	cooldown = 25,
 	stamina = 25,
 	requires_target = true,
+	tactical = { DISABLE = 2 },
 	range = trap_range,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -434,6 +440,7 @@ newTalent{
 	points = 1,
 	cooldown = 8,
 	stamina = 15,
+	tactical = { DISABLE = 2 },
 	requires_target = true,
 	range = trap_range,
 	action = function(self, t)

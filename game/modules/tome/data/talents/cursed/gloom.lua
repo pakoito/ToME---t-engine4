@@ -58,6 +58,7 @@ newTalent{
 	points = 5,
 	cooldown = 0,
 	range = 3,
+	tactical = { BUFF = 5 },
 	activate = function(self, t)
 		self.torment_turns = nil -- restart torment
 		game:playSoundNear(self, "talents/arcane")

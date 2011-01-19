@@ -48,10 +48,10 @@ newTalent{
 		if maxHeal > 0 then
 			local heal = math.min(t.getRegenRate(self, t), maxHeal)
 			self:heal(heal)
-		
+
 			self.unnatural_body_heal = math.max(0, (self.unnatural_body_heal or 0) - heal)
 		end
-		
+
 		-- update resists as well
 		local oldResist = self.unnatural_body_resist or 0
 		local newResist = t.getResist(self, t)
@@ -70,7 +70,7 @@ newTalent{
 		local healPerKill = t.getHealPerKill(self, t)
 		local regenRate = t.getRegenRate(self, t)
 		local resist = -18 + (self:getTalentLevel(t) * 3)
-		
+
 		local modifier1, modifier2 = "more", "more"
 		if resist > 0 then modifier1 = "less" end
 		if resist + 18 > 0 then modifier2 = "less" end
@@ -126,12 +126,13 @@ newTalent{
 	require = cursed_wil_req2,
 	points = 5,
 	cooldown = 500,
+	tactical = { BUFF = 1 },
 	getHateGain = function(self, t)
 		return (math.sqrt(self:getTalentLevel(t)) - 0.5) * 2.3
 	end,
 	action = function(self, t)
 		self:incHate(t.getHateGain(self, t))
-		
+
 		game.level.map:particleEmitter(self.x, self.y, 5, "fireflash", {radius=1, tx=self.x, ty=self.y})
 		game:playSoundNear(self, "talents/fireflash")
 		return true
@@ -174,6 +175,7 @@ newTalent{
 	points = 5,
 	rage = 0.1,
 	cooldown = 50,
+	tactical = { DEFEND = 2 },
 	action = function(self, t)
 		local life = 50 + self:getTalentLevel(t) * 50
 		self:setEffect(self.EFF_INCREASED_LIFE, 20, { life = life })

@@ -26,9 +26,7 @@ newTalent{
 	points = 5,
 	cooldown = 6,
 	positive = 15,
-	tactical = {
-		BUFF = 10,
-	},
+	tactical = { BUFF = 1 },
 	range = 10,
 	getNegativeGain = function(self, t) return 20 + self:getTalentLevel(t) * self:getCun(40) end,
 	action = function(self, t)
@@ -55,9 +53,7 @@ newTalent{
 	cooldown = 7,
 	negative = 14,
 	type_no_req = true,
-	tactical = {
-		MOVE = 10,
-	},
+	tactical = { ESCAPE = 2 },
 	no_npc_use = true,
 	action = function(self, t)
 		local eff = self.sustain_talents[self.T_JUMPGATE]
@@ -89,9 +85,7 @@ newTalent{
 	cooldown = function(self, t) return 24 - 4 * self:getTalentLevelRaw(t) end,
 	sustain_negative = 20,
 	no_npc_use = true,
-	tactical = {
-		MOVE = 10,
-	},
+	tactical = { ESCAPE = 2 },
 	on_learn = function(self, t)
 		if self:getTalentLevel(t) >= 4 then
 			if not self:knowTalent(self.T_JUMPGATE_TWO) then
@@ -155,9 +149,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 15,
 	negative = 15,
-	tactical = {
-		ATTACKAREA = 10,
-	},
+	tactical = { DISABLE = 3 },
 	range = 3,
 	direct_hit = true,
 	requires_target = true,
@@ -188,9 +180,7 @@ newTalent{
 	points = 5,
 	cooldown = 30,
 	negative = 10,
-	tactical = {
-		ATTACK = 10,
-	},
+	tactical = { DISABLE = 2 },
 	requires_target = true,
 	range = 5,
 	no_npc_use = true,
@@ -278,9 +268,7 @@ newTalent{
 	sustain_negative = 20,
 	no_npc_use = true,
 	type_no_req = true,
-	tactical = {
-		MOVE = 10,
-	},
+	tactical = { ESCAPE = 2 },
 	on_learn = function(self, t)
 		if not self:knowTalent(self.T_JUMPGATE_TELEPORT_TWO) then
 			self:learnTalent(self.T_JUMPGATE_TELEPORT_TWO)
@@ -336,9 +324,7 @@ newTalent{
 	cooldown = 7,
 	negative = 14,
 	type_no_req = true,
-	tactical = {
-		MOVE = 10,
-	},
+	tactical = { ESCAPE = 2 },
 	no_npc_use = true,
 	action = function(self, t)
 		local eff = self.sustain_talents[self.T_JUMPGATE_TWO]

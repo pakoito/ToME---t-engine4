@@ -24,6 +24,7 @@ newTalent{
 	points = 5,
 	cooldown = 7,
 	vim = 24,
+	tactical = { ATTACKAREA = 2 },
 	range = function(self, t) return math.ceil(3 + self:getTalentLevel(t)) end,
 	direct_hit = true,
 	requires_target = true,
@@ -58,6 +59,7 @@ newTalent{
 	vim = 20,
 	range = 10,
 	proj_speed = 20,
+	tactical = { ATTACK = 2, HEAL = 2 },
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_blood"}}
@@ -80,6 +82,7 @@ newTalent{
 	points = 5,
 	cooldown = 12,
 	vim = 30,
+	tactical = { ATTACKAREA = 2, DISABLE = 2 },
 	range = function(self, t) return 2 + self:getTalentLevelRaw(t) end,
 	requires_target = true,
 	action = function(self, t)
@@ -103,6 +106,7 @@ newTalent{
 	points = 5,
 	sustain_vim = 60,
 	cooldown = 30,
+	tactical = { BUFF = 2 },
 	on_crit = function(self, t)
 		self:setEffect(self.EFF_BLOOD_FURY, 5, {power=self:combatTalentSpellDamage(t, 10, 30)})
 	end,

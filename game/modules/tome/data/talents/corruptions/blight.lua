@@ -23,6 +23,7 @@ newTalent{
 	mode = "sustained",
 	require = corrs_req1,
 	points = 5,
+	tactical = { ATTACK = 2 },
 	sustain_vim = 20,
 	cooldown = 30,
 	activate = function(self, t)
@@ -51,6 +52,7 @@ newTalent{
 	cooldown = 10,
 	vim = 30,
 	range = 10,
+	tactical = { DISABLE = 2 },
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="ball", radius=3, range=self:getTalentRange(t), talent=t}
@@ -109,6 +111,7 @@ newTalent{
 	cooldown = 10,
 	vim = 12,
 	range = 10,
+	tactical = { ATTACK = 2 },
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
@@ -137,9 +140,7 @@ newTalent{
 	points = 5,
 	vim = 36,
 	cooldown = 30,
-	tactical = {
-		ATTACKAREA = 20,
-	},
+	tactical = { ATTACKAREA = 2 },
 	action = function(self, t)
 		local duration = 5 + self:getTalentLevel(t)
 		local radius = 4

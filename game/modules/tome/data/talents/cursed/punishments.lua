@@ -34,6 +34,7 @@ newTalent{
 	cooldown = 3,
 	hate =  0.5,
 	range = 2,
+	tactical = { ATTACKAREA = 2 },
 	getDamage = function(self, t)
 		return combatTalentDamage(self, t, 25, 240)
 	end,
@@ -82,6 +83,7 @@ newTalent{
 	cooldown = 10,
 	hate =  0.8,
 	range = 7,
+	tactical = { ATTACK = 2 },
 	getDuration = function(self, t)
 		return 10
 	end,
@@ -102,7 +104,7 @@ newTalent{
 		local tg = {type="hit", range=range}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target or target:hasEffect(target.EFF_HATEFUL_WHISPER) then return nil end
-		
+
 		local duration = t.getDuration(self, t)
 		local damage = t.getDamage(self, t)
 		local mindpower = t.getMindpower(self, t)
@@ -257,6 +259,7 @@ newTalent{
 	cooldown = 3,
 	hate =  0.5,
 	range = 7,
+	tactical = { ATTACK = 2 },
 	getDuration = function(self, t)
 		return 5
 	end,
@@ -271,7 +274,7 @@ newTalent{
 		local tg = {type="hit", range=range}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		
+
 		local damage = t.getDamage(self, t)
 		local mindpower = t.getMindpower(self, t)
 		local duration = t.getDuration(self, t)
@@ -300,6 +303,7 @@ newTalent{
 	mode = "passive",
 	require = cursed_wil_req4,
 	points = 5,
+	tactical = { ATTACK = 2 },
 	getMindpower = function(self, t)
 		return math.sqrt(self:getTalentLevel(t)) * 0.4 * combatPower(self, t)
 	end,

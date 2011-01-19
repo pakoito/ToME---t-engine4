@@ -25,9 +25,7 @@ newTalent{
 	points = 5,
 	cooldown = 10,
 	sustain_positive = 10,
-	tactical = {
-		BUFF = 10,
-	},
+	tactical = { BUFF = 2 },
 	range = 10,
 	getDamage = function(self, t) return 7 + self:combatSpellpower(0.092) * self:getTalentLevel(t) end,
 	activate = function(self, t)
@@ -56,9 +54,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 22,
 	positive = 25,
-	tactical = {
-		ATTACK = 10,
-	},
+	tactical = { DISABLE = 2 },
 	range = 6,
 	reflectable = true,
 	requires_target = true,
@@ -92,9 +88,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 6,
 	positive = 10,
-	tactical = {
-		ATTACK = 10,
-	},
+	tactical = { ATTACK = 2 },
 	requires_target = true,
 	range = function(self, t) return 2 + self:getStr(8) end,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1.1, 1.9) end,
@@ -127,9 +121,7 @@ newTalent{
 	points = 5,
 	cooldown = 10,
 	positive = 10,
-	tactical = {
-		ATTACK = 10,
-	},
+	tactical = { ATTACK = 2 },
 	range = 1,
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1.1, 1.9) end,

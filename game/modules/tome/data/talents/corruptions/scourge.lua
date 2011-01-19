@@ -25,6 +25,7 @@ newTalent{
 	vim = 9,
 	cooldown = 6,
 	range = 1,
+	tactical = { ATTACK = 2 },
 	requires_target = true,
 	action = function(self, t)
 		local weapon, offweapon = self:hasDualWeapon()
@@ -74,6 +75,7 @@ newTalent{
 	points = 5,
 	sustain_vim = 40,
 	cooldown = 30,
+	tactical = { BUFF = 2 },
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/slime")
 		local ret = {
@@ -101,6 +103,7 @@ newTalent{
 	cooldown = 12,
 	range = 1,
 	requires_target = true,
+	tactical = { ATTACK = 2, DISABLE = 1 },
 	action = function(self, t)
 		local weapon, offweapon = self:hasDualWeapon()
 		if not weapon then
@@ -140,6 +143,7 @@ newTalent{
 	cooldown = 8,
 	range = 1,
 	requires_target = true,
+	tactical = { ATTACK = 2, DISABLE = 2 },
 	action = function(self, t)
 		local weapon, offweapon = self:hasDualWeapon()
 		if not weapon then

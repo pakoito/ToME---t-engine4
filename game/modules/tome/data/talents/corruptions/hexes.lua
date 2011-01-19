@@ -25,6 +25,7 @@ newTalent{
 	cooldown = 20,
 	vim = 30,
 	range = 10,
+	tactical = { DISABLE = 2 },
 	direct_hit = true,
 	requires_target = true,
 	action = function(self, t)
@@ -55,6 +56,7 @@ newTalent{
 	cooldown = 20,
 	vim = 30,
 	range = 10,
+	tactical = { DISABLE = 2 },
 	direct_hit = true,
 	requires_target = true,
 	action = function(self, t)
@@ -85,6 +87,7 @@ newTalent{
 	cooldown = 20,
 	vim = 30,
 	range = 10,
+	tactical = { DISABLE = 2 },
 	direct_hit = true,
 	requires_target = true,
 	action = function(self, t)

@@ -26,6 +26,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 12,
 	stamina = 10,
+	tactical = { DISABLE = 2, ATTACK = 0.5 },
 	require = cuns_req1,
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.2, 0.7) end,
@@ -78,6 +79,7 @@ newTalent{
 	stamina = 50,
 	require = cuns_req3,
 	requires_target = true,
+	tactical = { DISABLE = 2 },
 	getDuration = function(self, t) return 1 + self:getTalentLevel(t) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
@@ -116,6 +118,7 @@ newTalent{
 	stamina = 30,
 	require = cuns_req4,
 	requires_target = true,
+	tactical = { DISABLE = 2, ATTACK = 2 },
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.9, 1.4) end,
 	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
 	getAttackPenalty = function(self, t) return 10 + self:getTalentLevel(t) * 3 end,

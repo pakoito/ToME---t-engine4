@@ -25,6 +25,7 @@ newTalent{
 	vim = 0,
 	cooldown = 30,
 	range = 10,
+	tactical = { VIM = 1 },
 	action = function(self, t)
 		if self.max_life * 0.2 >= self.life then
 			game.logPlayer(self, "Doing this would kill you.")
@@ -66,6 +67,7 @@ newTalent{
 	cooldown = 9,
 	reflectable = true,
 	proj_speed = 15,
+	tactical = { ATTACK = 2, VIM = 2 },
 	requires_target = true,
 	range = function(self, t) return 4 + self:getTalentLevelRaw(t) end,
 	action = function(self, t)
@@ -92,6 +94,7 @@ newTalent{
 	sustain_vim = 30,
 	cooldown = 30,
 	range = 10,
+	tactical = { buff = 2 },
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic2")
 		local ret = {
@@ -120,6 +123,8 @@ newTalent{
 	vim = 40,
 	cooldown = 20,
 	range = 10,
+	no_energy = true,
+	tactical = { ATTACK = 2 },
 	action = function(self, t)
 		self:setEffect(self.EFF_LIFE_TAP, 7, {power=math.ceil(6 + self:getTalentLevel(t) * 2)})
 		game:playSoundNear(self, "talents/spell_generic2")

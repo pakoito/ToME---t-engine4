@@ -29,6 +29,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 6,
 	hate = 0.1,
+	tactical = { ATTACK = 2 },
 	requires_target = true,
 	action = function(self, t)
 		local weapon = self:hasAxeWeapon()
@@ -58,6 +59,7 @@ newTalent{
 	type = {"cursed/slaughter", 2},
 	require = cursed_str_req2,
 	points = 5,
+	tactical = { ATTACKAREA = 2 },
 	random_ego = "attack",
 	cooldown = 15,
 	hate = 0.2,
@@ -107,6 +109,7 @@ newTalent{
 	cooldown = 20,
 	hate = 0.5,
 	range = 4,
+	tactical = { CLOSEIN = 2 },
 	requires_target = true,
 	action = function(self, t)
 		local weapon = self:hasAxeWeapon()
@@ -123,7 +126,7 @@ newTalent{
 		local lineFunction = line.new(self.x, self.y, targetX, targetY)
 		local nextX, nextY = lineFunction()
 		local currentX, currentY = self.x, self.y
-		
+
 		while nextX and nextY do
 			local blockingTarget = game.level.map(nextX, nextY, Map.ACTOR)
 			if blockingTarget and self:reactionToward(blockingTarget) < 0 then
@@ -135,7 +138,7 @@ newTalent{
 				elseif level >= 3 then
 					maxSize = 3
 				end
-		
+
 				local blocked = true
 				if blockingTarget.size_category <= maxSize then
 					if blockingTarget:checkHit(self:combatAttackStr(), blockingTarget:combatPhysicalResist(), 0, 95, 15) and blockingTarget:canBe("knockback") then
@@ -155,7 +158,7 @@ newTalent{
 						end
 					end
 				end
-				
+
 				if blocked then
 					game.logSeen(self, "%s blocks %s!", blockingTarget.name:capitalize(), self.name)
 				end

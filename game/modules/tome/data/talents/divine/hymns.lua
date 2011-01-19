@@ -36,9 +36,7 @@ newTalent{
 	sustain_negative = 20,
 	no_energy = true,
 	dont_provide_pool = true,
-	tactical = {
-		BUFF = 10,
-	},
+	tactical = { BUFF = 2 },
 	range = 10,
 	getDamageOnMeleeHit = function(self, t) return self:combatTalentSpellDamage(t, 10, 50) end,
 	getDarknessDamageIncrease = function(self, t) return self:combatTalentSpellDamage(t, 5, 25) end,
@@ -79,9 +77,7 @@ newTalent{
 	sustain_negative = 20,
 	no_energy = true,
 	dont_provide_pool = true,
-	tactical = {
-		BUFF = 10,
-	},
+	tactical = { BUFF = 2 },
 	range = 10,
 	getDamageOnMeleeHit = function(self, t) return self:combatTalentSpellDamage(t, 5, 25) end,
 	getInfraVisionPower = function(self, t) return math.floor(5 + self:getTalentLevel(t)) end,
@@ -122,9 +118,7 @@ newTalent{
 	sustain_negative = 20,
 	no_energy = true,
 	dont_provide_pool = true,
-	tactical = {
-		BUFF = 10,
-	},
+	tactical = { BUFF = 2 },
 	range = 10,
 	getDamageOnMeleeHit = function(self, t) return self:combatTalentSpellDamage(t, 10, 50) end,
 	getImmunities = function(self, t) return 0.2 + self:getTalentLevel(t) / 10 end,
@@ -170,9 +164,7 @@ newTalent{
 	sustain_negative = 20,
 	no_energy = true,
 	dont_provide_pool = true,
-	tactical = {
-		BUFF = 10,
-	},
+	tactical = { BUFF = 2 },
 	range = 10,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 7, 80) end,
 	getTargetCount = function(self, t) return math.floor(self:getTalentLevel(t)) end,
