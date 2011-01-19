@@ -369,9 +369,18 @@ function resolvers.inscriptions(nb, list)
 end
 function resolvers.calc.inscriptions(t, e)
 	for i = 1, t[1] do
-		local name = rng.tableRemove(t[2])
-		if not name then return nil end
-		local o = game.zone:makeEntity(game.level, "object", {name=name}, nil, true)
+		local o
+		if type(t[2]) == "table" then
+			if #t[2] then
+				local name = rng.tableRemove(t[2])
+				if not name then return nil end
+				o = game.zone:makeEntity(game.level, "object", {name=name}, nil, true)
+			else
+				o = game.zone:makeEntity(game.level, "object", {type="scroll"}, nil, true)
+			end
+		else
+			o = game.zone:makeEntity(game.level, "object", {type="scroll", subtype=t[2]}, nil, true)
+		end
 		if o and o.inscription_talent and o.inscription_data then
 			e:setInscription(nil, o.inscription_talent, o.inscription_data, false, false, nil, true)
 		end

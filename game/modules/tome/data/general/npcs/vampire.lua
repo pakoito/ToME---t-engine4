@@ -58,6 +58,8 @@ newEntity{
 
 	open_door = true,
 
+	resolvers.inscriptions(1, "rune"),
+
 	resolvers.tmasteries{ ["technique/other"]=0.5, ["spell/phantasm"]=0.8, },
 	resolvers.sustains_at_birth(),
 
@@ -113,6 +115,7 @@ It can summon the very shades of its victims from beyond the grave to come ensla
 	combat_armor = 12, combat_def = 10,
 	rank = 3,
 	ai = "dumb_talented_simple", ai_state = { talent_in=6, },
+	resolvers.inscriptions(1, "rune"),
 	summon = {{type="undead", number=1, hasxp=false}, },
 	resolvers.talents{ [Talents.T_STUN]=2, [Talents.T_SUMMON]=1, [Talents.T_BLUR_SIGHT]=3, [Talents.T_PHANTASMAL_SHIELD]=2, [Talents.T_ROTTING_DISEASE]=3, },
 }
@@ -126,6 +129,7 @@ newEntity{ base = "BASE_NPC_VAMPIRE",
 	combat_armor = 15, combat_def = 15,
 	rank = 3,
 	ai = "dumb_talented_simple", ai_state = { talent_in=4, },
+	resolvers.inscriptions(1, "rune"),
 	summon = {{type="undead", number=1, hasxp=false}, },
 	resolvers.talents{ [Talents.T_STUN]=4, [Talents.T_SUMMON]=1, [Talents.T_BLUR_SIGHT]=4, [Talents.T_PHANTASMAL_SHIELD]=5, [Talents.T_ROTTING_DISEASE]=5, },
 	make_escort = {

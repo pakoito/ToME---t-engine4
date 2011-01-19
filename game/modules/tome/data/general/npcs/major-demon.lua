@@ -40,6 +40,8 @@ newEntity{
 	size_category = 3,
 	no_breath = 1,
 	demon = 1,
+
+	resolvers.inscriptions(1, "rune"),
 }
 
 newEntity{ base = "BASE_NPC_MAJOR_DEMON",

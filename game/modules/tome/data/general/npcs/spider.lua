@@ -38,6 +38,8 @@ newEntity{
 	energy = { mod=1.2 },
 	stats = { str=15, dex=15, mag=8, con=10 },
 
+	resolvers.inscriptions(2, "infusion"),
+
 	resolvers.tmasteries{ ["technique/other"]=0.3 },
 	resolvers.sustains_at_birth(),
 

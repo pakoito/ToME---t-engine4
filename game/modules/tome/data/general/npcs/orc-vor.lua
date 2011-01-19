@@ -40,6 +40,8 @@ newEntity{
 
 	open_door = true,
 
+	resolvers.inscriptions(2, "rune"),
+
 	autolevel = "caster",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },
 	energy = { mod=1 },

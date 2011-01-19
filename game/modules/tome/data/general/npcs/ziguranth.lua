@@ -41,6 +41,7 @@ newEntity{
 	open_door = true,
 
 	resolvers.talents{ [Talents.T_HEAVY_ARMOUR_TRAINING]=1, },
+	resolvers.inscriptions(1, "infusion"),
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },

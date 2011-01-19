@@ -37,6 +37,8 @@ newEntity{
 	size_category = 3,
 
 	open_door = true,
+	resolvers.inscriptions(1, "infusion"),
+	resolvers.inscriptions(1, "rune"),
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },

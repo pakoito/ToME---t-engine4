@@ -57,7 +57,7 @@ newEntity{ define_as = "SHADE",
 		[Talents.T_MANATHRUST]=4, [Talents.T_FREEZE]=4, [Talents.T_TIDAL_WAVE]=2,
 		[Talents.T_WEAPONS_MASTERY]=3,
 	},
-	resolvers.inscriptions(1, {"shielding rune", "phase door rune", "regeneration infusion", "heroism infusion"}),
+	resolvers.inscriptions(1, {"shielding rune", "phase door rune"}),
 	inc_damage = {all=-20},
 
 	autolevel = "warriormage",

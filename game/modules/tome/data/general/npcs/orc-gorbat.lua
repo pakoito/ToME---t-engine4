@@ -40,6 +40,8 @@ newEntity{
 	open_door = true,
 	resolvers.sustains_at_birth(),
 
+	resolvers.inscriptions(2, "infusion"),
+
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
 	energy = { mod=1 },

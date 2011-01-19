@@ -37,6 +37,7 @@ newEntity{
 
 	open_door = true,
 
+	resolvers.inscriptions(1, "rune"),
 	resolvers.tmasteries{ ["technique/2hweapon-offense"]=1, ["technique/2hweapon-cripple"]=1, },
 
 	blind_immune = 1,

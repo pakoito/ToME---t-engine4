@@ -56,6 +56,7 @@ newEntity{ base = "BASE_NPC_ORC",
 		{type="weapon", subtype="waraxe", autoreq=true},
 		{type="armor", subtype="shield", autoreq=true},
 	},
+	resolvers.inscriptions(1, "infusion"),
 	combat_armor = 2, combat_def = 0,
 	resolvers.talents{ [Talents.T_SHIELD_PUMMEL]=1, },
 }
@@ -72,6 +73,7 @@ newEntity{ base = "BASE_NPC_ORC",
 	ai_state = { talent_in=1, },
 
 	autolevel = "archer",
+	resolvers.inscriptions(1, "infusion"),
 	resolvers.equip{
 		{type="weapon", subtype="longbow", autoreq=true},
 		{type="ammo", subtype="arrow", autoreq=true},
@@ -89,6 +91,7 @@ newEntity{ base = "BASE_NPC_ORC", define_as = "ORC",
 		{type="weapon", subtype="battleaxe", autoreq=true},
 	},
 	combat_armor = 2, combat_def = 0,
+	resolvers.inscriptions(1, "infusion"),
 	resolvers.talents{ [Talents.T_SUNDER_ARMOUR]=2, [Talents.T_CRUSH]=2, },
 }
 
@@ -105,6 +108,7 @@ newEntity{ base = "BASE_NPC_ORC", define_as = "ORC_FIRE_WYRMIC",
 	},
 	combat_armor = 2, combat_def = 0,
 
+	resolvers.inscriptions(1, "infusion"),
 	make_escort = {
 		{type="humanoid", subtype="orc", name="orc soldier", number=resolvers.mbonus(3, 2)},
 	},
@@ -129,6 +133,7 @@ newEntity{ base = "BASE_NPC_ORC",
 	},
 	combat_armor = 2, combat_def = 0,
 
+	resolvers.inscriptions(1, "infusion"),
 	make_escort = {
 		{type="humanoid", subtype="orc", name="orc soldier", number=resolvers.mbonus(3, 2)},
 	},
@@ -158,6 +163,7 @@ newEntity{ base = "BASE_NPC_ORC",
 		[Talents.T_SHADOWSTRIKE]=3,
 	},
 	max_life = resolvers.rngavg(80,100),
+	resolvers.inscriptions(1, "infusion"),
 
 	resolvers.sustains_at_birth(),
 	autolevel = "rogue",
@@ -176,6 +182,7 @@ newEntity{ base = "BASE_NPC_ORC",
 		{type="weapon", subtype="dagger", ego_chance=20, autoreq=true},
 		{type="armor", subtype="light", autoreq=true}
 	},
+	resolvers.inscriptions(1, "infusion"),
 	resolvers.talents{
 		[Talents.T_STEALTH]=5,
 		[Talents.T_LETHALITY]=4,
@@ -201,6 +208,7 @@ newEntity{ base = "BASE_NPC_ORC",
 		{type="weapon", subtype="dagger", ego_chance=20, autoreq=true},
 		{type="armor", subtype="light", autoreq=true}
 	},
+	resolvers.inscriptions(3, "infusion"),
 	resolvers.talents{
 		[Talents.T_STEALTH]=5,
 		[Talents.T_LETHALITY]=4,

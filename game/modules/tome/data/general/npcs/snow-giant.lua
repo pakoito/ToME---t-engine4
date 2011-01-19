@@ -40,6 +40,8 @@ newEntity{
 	energy = { mod=1 },
 	stats = { str=20, dex=8, mag=6, con=16 },
 
+	resolvers.inscriptions(1, "infusion"),
+
 	resists = { [DamageType.PHYSICAL] = 20, [DamageType.COLD] = 50, },
 
 	no_breath = 1,

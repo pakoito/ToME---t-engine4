@@ -100,6 +100,7 @@ newEntity{ base = "BASE_NPC_TROLL",
 	mana_regen = 20,
 	combat_armor = 8, combat_def = 4,
 	autolevel = "warriormage",
+	resolvers.inscriptions(1, "rune"),
 	resolvers.talents{
 		[Talents.T_STUN]=4, [Talents.T_KNOCKBACK]=3,
 		[Talents.T_LIGHTNING]=4,
