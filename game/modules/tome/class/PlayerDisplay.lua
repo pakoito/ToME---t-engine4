@@ -347,7 +347,7 @@ end
 function _M:toScreen()
 	self:display()
 
-	self.bg.tex[1]:toScreenFull(self.display_x, self.display_y, self.w, self.h, self.bg.tex[2], self.bg[3] / self.bg.tex[3])
+	self.bg.tex[1]:toScreen(self.display_x, self.display_y, self.w, self.h)
 	for i = 1, #self.items do
 		local item = self.items[i]
 		if type(item) == "table" then

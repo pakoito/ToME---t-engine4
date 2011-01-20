@@ -69,9 +69,12 @@ newBirthDescriptor{
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
 	},
 	copy = {
-		equipment = resolvers.equip{ id=true,
+		resolvers.equip{ id=true,
 			{type="weapon", subtype="longbow", name="elm longbow", autoreq=true},
 		},
+		resolvers.generic(function(e)
+			e.auto_shoot_talent = e.T_SHOOT
+		end),
 	},
 }
 
