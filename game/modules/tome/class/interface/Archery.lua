@@ -198,7 +198,7 @@ function _M:archeryShoot(targets, talent, tg, params)
 	tg.talent = tg.talent or talent
 
 	if not tg.range then tg.range=weapon.range or 6 end
-	tg.display = tg.display or {display='/'}
+	tg.display = tg.display or {display='/', trail="generictrail"}
 	tg.speed = (tg.speed or 20) * (ammo.travel_speed or 100) / 100
 	tg.archery = params or {}
 	tg.archery.weapon = weapon

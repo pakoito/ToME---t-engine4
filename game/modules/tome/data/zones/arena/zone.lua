@@ -403,7 +403,7 @@ return {
 				if not plvl == game.player.level then --If bonuses made the player level up, give minimal time.
 					if rest_time > 30 then rest_time = 30 end
 				else
-					if rest_time < 10 then rest_time = 10
+					if rest_time < 25 then rest_time = 25
 					elseif rest_time > 80 then rest_time = 80
 					end
 				end

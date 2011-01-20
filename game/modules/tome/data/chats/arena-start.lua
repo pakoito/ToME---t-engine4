@@ -174,8 +174,8 @@ newChat{ id="welcome",
 	text = "#LIGHT_GREEN#You take a look at the ranking boards before entering.\n"..text,
 	answers = {
 		--{"Enter the arena for 3 rounds[DEBUG]", action=arena_3, jump="perks"},
-		{"Enter the arena for 30 rounds", action=arena_30, jump="perks"},
-		{"Enter the arena for 60 rounds", action=arena_60, jump="perks"},
+		{"Enter the arena (60 waves)", action=arena_60, jump="perks"},
+		{"Enter the arena (shorter mode, 30 rounds)", action=arena_30, jump="perks"},
 		--{"Enter the arena for as much as you can last", action=arena_inf, jump="perks"},
 		{"#LIGHT_RED#[Reset all arena save data]", action=save_clear, jump="welcome2"},
 	}
@@ -185,8 +185,8 @@ newChat{ id="welcome2",
 	text = "What will you do now?",
 	answers = {
 		--{"Enter the arena for 3 rounds[DEBUG]", action=arena_3, jump="perks"},
-		{"Enter the arena for 30 rounds", action=arena_30, jump="perks"},
 		{"Enter the arena for 60 rounds", action=arena_60, jump="perks"},
+		{"Enter the arena for 30 rounds", action=arena_30, jump="perks"},
 		--{"Enter the arena for as much as you can last", action=arena_inf, jump="perks"},
 	}
 }

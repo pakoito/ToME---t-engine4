@@ -58,7 +58,7 @@ newTalent{
 	end,
 	on_pre_use = function(self, t, silent)
 		if self:isTalentActive(t.id) then return true end
-		local armor = self:getInven("BODY")[1]
+		local armor = self:getInven("BODY") and self:getInven("BODY")[1]
 		if armor and (armor.subtype == "heavy" or armor.subtype == "massive") then
 			if not silent then game.logPlayer(self, "You cannot Stealth with such heavy armour!") end
 			return nil
