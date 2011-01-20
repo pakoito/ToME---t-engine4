@@ -77,12 +77,7 @@ function _M:archeryAcquireTargets(tg, params)
 			for i = 1, params.multishots or 1 do
 				local a
 				if not ammo.infinite then
-					if self:doesPackRat() then
-						game.logPlayer(self, "Pack Rat!")
-						a = self:getInven("QUIVER")[1]
-					else
-						a = self:removeObject(self:getInven("QUIVER"), 1)
-					end
+					a = self:removeObject(self:getInven("QUIVER"), 1)
 				else
 					a = ammo
 				end

@@ -52,7 +52,17 @@ newTalent{
 		else                                        explosion = "manathrust"          particle = "bolt_arcane"    trail = "arcanetrail" damtype = DamageType.ARCANE
 		end
 
-		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display = {particle=particle, trail=trail}}
+		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display = {particle=particle, trail=trail},
+			-- Like a normal block_path, but goes over friendlies
+			block_path = function(typ, lx, ly)
+				local a = game.level.map(lx, ly, engine.Map.ACTOR)
+				if a and self:reactionToward(a) >= 0 then return false, lx, ly
+				elseif game.level.map:checkAllEntities(lx, ly, "block_move") then return true, lx, ly end
+				if typ.range and typ.source_actor and typ.source_actor.x and math.sqrt((typ.source_actor.x-lx)^2 + (typ.source_actor.y-ly)^2) > typ.range then return true end
+				return false, lx, ly
+			end,
+		}
+
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 
