@@ -389,8 +389,8 @@ end
 -- You cannot simply increase life_regen, so you use this method which will increase it AND
 -- store the increase. it will return an "increase id" that can be passed to removeTemporaryValue()
 -- to remove the effect.
--- @param prop the property to affect
--- @param v the value to add (only numbers supported for now)
+-- @param prop the property to affect.  This can be either a string or a table of strings, the latter allowing nested properties to be modified.
+-- @param v the value to add.  This should either be a number or a table of properties and numbers.
 -- @param noupdate if true the actual property is not changed and needs to be changed by the caller
 -- @return an id that can be passed to removeTemporaryValue() to delete this value
 function _M:addTemporaryValue(prop, v, noupdate)
@@ -402,30 +402,43 @@ function _M:addTemporaryValue(prop, v, noupdate)
 	t[id] = v
 	t.n = id
 
-	-- Update the base prop
-	if not noupdate then
+	-- Find the base, one removed from the last prop
+	local initial_base, initial_prop
+	if type(prop) == "table" then
+		initial_base = self
+		local idx = 1
+		while idx < #prop do
+			initial_base = initial_base[prop[idx]]
+			idx = idx + 1
+		end
+		initial_prop = prop[idx]
+	else
+		initial_base = self
+		initial_prop = prop
+	end
+
+	-- The recursive enclosure
+	local recursive
+	recursive = function(base, prop, v)
 		if type(v) == "number" then
 			-- Simple addition
-			self[prop] = (self[prop] or 0) + v
+			base[prop] = (base[prop] or 0) + v
 			self:onTemporaryValueChange(prop, nil, v)
-			print("addTmpVal", prop, v, " :=: ", #t, id)
+			print("addTmpVal", base, prop, v, " :=: ", #t, id)
 		elseif type(v) == "table" then
 			for k, e in pairs(v) do
-				self[prop][k] = (self[prop][k] or 0) + e
-				self:onTemporaryValueChange(prop, k, e)
-				print("addTmpValTable", prop, k, e, " :=: ", #t, id)
-				if #t == 0 then print("*******************************WARNING") end
+				print("addTmpValTable", base[prop], k, e)
+				base[prop] = base[prop] or {}
+				recursive(base[prop], k, e)
 			end
---		elseif type(v) == "boolean" then
---			-- False has precedence over true
---			if v == false then
---				self[prop] = false
---			elseif self[prop] ~= false then
---				self[prop] = true
---			end
 		else
-			error("unsupported temporary value type: "..type(v))
+			error("unsupported temporary value type: "..type(v).." :=: "..v)
 		end
+	end
+
+	-- Update the base prop
+	if not noupdate then
+		recursive(initial_base, initial_prop, v)
 	end
 
 	return id
@@ -439,21 +452,42 @@ function _M:removeTemporaryValue(prop, id, noupdate)
 	local oldval = self.compute_vals[id]
 	print("removeTempVal", prop, oldval, " :=: ", id)
 	self.compute_vals[id] = nil
-	if not noupdate then
-		if type(oldval) == "number" then
-			self[prop] = self[prop] - oldval
-			self:onTemporaryValueChange(prop, nil, -oldval)
-			print("delTmpVal", prop, oldval)
-		elseif type(oldval) == "table" then
-			for k, e in pairs(oldval) do
-				self[prop][k] = self[prop][k] - e
-				self:onTemporaryValueChange(prop, k, -e)
-				print("delTmpValTable", prop, k, e)
-			end
---		elseif type(oldval) == "boolean" then
-		else
-			error("unsupported temporary value type: "..type(oldval))
+
+	-- Find the base, one removed from the last prop
+	local initial_base, initial_prop
+	if type(prop) == "table" then
+		initial_base = self
+		local idx = 1
+		while idx < #prop do
+			initial_base = initial_base[prop[idx]]
+			idx = idx + 1
 		end
+		initial_prop = prop[idx]
+	else
+		initial_base = self
+		initial_prop = prop
+	end
+
+	-- The recursive enclosure
+	local recursive
+	recursive = function(base, prop, v)
+		if type(v) == "number" then
+			-- Simple addition
+			base[prop] = base[prop] - v
+			self:onTemporaryValueChange(prop, nil, v)
+			print("delTmpVal", prop, v)
+		elseif type(v) == "table" then
+			for k, e in pairs(v) do
+				recursive(base[prop], k, e)
+			end
+		else
+			error("unsupported temporary value type: "..type(v).." :=: "..v)
+		end
+	end
+
+	-- Update the base prop
+	if not noupdate then
+		recursive(initial_base, initial_prop, oldval)
 	end
 end
 

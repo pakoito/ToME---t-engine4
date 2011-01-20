@@ -649,7 +649,37 @@ newEntity{ base = "BASE_KNIFE",
 	},
 }
 
-newEntity{ base = "BASE_KNIFE",
+-- The Twin blades Moon and Star
+local activate_pair = function(moon, star, who)
+	local DamageType = require "engine.DamageType"
+	moon.paired = {}
+	star.paired = {}
+
+	-- The Moon knife's bonuses
+	moon.paired._special1 = {who, "lite", who:addTemporaryValue("lite", 1)}
+	moon.paired._special2 = {moon, "combat", moon:addTemporaryValue("combat", {melee_project={[DamageType.BLINDPHYSICAL]=2}})}
+	moon.paired._special3 = {who, {"inc_damage", DamageType.DARKNESS}, who:addTemporaryValue({"inc_damage", DamageType.DARKNESS}, 10)}
+	-- The Star knife's bonuses
+	star.paired._special1 = {who, "lite", who:addTemporaryValue("lite", 1)}
+	star.paired._special2 = {star, "combat", star:addTemporaryValue("combat", {melee_project={[DamageType.RANDOM_CONFUSION]=2}})}
+	star.paired._special3 = {who, "inc_damage", who:addTemporaryValue("inc_damage", {[DamageType.LIGHT]=10}) }
+	game.log("The two blades glow brightly as they are brought close together.")
+end
+
+local deactivate_pair = function(moon, star, who)
+	-- Remove the paired bonusese
+	for k, id in pairs(moon.paired) do
+		id[1]:removeTemporaryValue(id[2], id[3])
+	end
+	for k, id in pairs(star.paired) do
+		id[1]:removeTemporaryValue(id[2], id[3])
+	end
+	moon.paired = nil
+	star.paired = nil
+	game.log("The light from the two blades fades as they are separated.")
+end
+
+newEntity{ base = "BASE_KNIFE", define_as = "ART_PAIR_MOON",
 	unique = true,
 	name = "Moon",
 	unided_name = "crescent blade",
@@ -672,9 +702,26 @@ newEntity{ base = "BASE_KNIFE",
 			[DamageType.DARKNESS] = 5,
 		},
 	},
+	activate_pair = activate_pair,
+	deactivate_pair = deactivate_pair,
+	on_wear = function(self, who)
+		-- Look for the Moon knife
+		local o, item, inven_id = who:findInAllInventoriesBy("define_as", "ART_PAIR_STAR")
+		if o and who:getInven(inven_id).worn then
+			self.activate_pair(o, self, who)
+		end
+	end,
+	on_takeoff = function(self, who)
+		if self.paired then
+			local o, item, inven_id = who:findInAllInventoriesBy("define_as", "ART_PAIR_STAR")
+			if o and who:getInven(inven_id).worn then
+				self.deactivate_pair(o, self, who)
+			end
+		end
+	end,
 }
 
-newEntity{ base = "BASE_KNIFE",
+newEntity{ base = "BASE_KNIFE", define_as = "ART_PAIR_STAR",
 	unique = true,
 	name = "Star",
 	unided_name = "jagged blade",
@@ -697,6 +744,23 @@ newEntity{ base = "BASE_KNIFE",
 			[DamageType.LIGHT] = 5,
 		},
 	},
+	activate_pair = activate_pair,
+	deactivate_pair = deactivate_pair,
+	on_wear = function(self, who)
+		-- Look for the Moon knife
+		local o, item, inven_id = who:findInAllInventoriesBy("define_as", "ART_PAIR_MOON")
+		if o and who:getInven(inven_id).worn then
+			self.activate_pair(o, self, who)
+		end
+	end,
+	on_takeoff = function(self, who)
+		if self.paired then
+			local o, item, inven_id = who:findInAllInventoriesBy("define_as", "ART_PAIR_MOON")
+			if o and who:getInven(inven_id).worn then
+				self.deactivate_pair(o, self, who)
+			end
+		end
+	end,
 }
 
 newEntity{ base = "BASE_RING",
