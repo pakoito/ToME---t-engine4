@@ -60,7 +60,9 @@ newEntity{ name = "gladiator",
 	on_die = function (self)
 		local m = game.zone:makeEntityByName(game.level, "actor", "SLINGER")
 		if m then
-			game.zone:addEntity(game.level, m, "actor", 8, 2)
+			local y = 2
+			if game.player.y < 3 then y = 11 end
+			game.zone:addEntity(game.level, m, "actor", 8, y)
 		end
 	end
 }
@@ -110,7 +112,9 @@ newEntity{ name = "slinger",
 	on_die = function (self)
 		local m = game.zone:makeEntityByName(game.level, "actor", "ARCANEBLADE")
 		if m then
-			game.zone:addEntity(game.level, m, "actor", 8, 2)
+			local y = 2
+			if game.player.y < 3 then y = 11 end
+			game.zone:addEntity(game.level, m, "actor", 8, y)
 		end
 	end
 }

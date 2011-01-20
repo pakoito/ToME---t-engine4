@@ -122,7 +122,7 @@ function _M:makePortrait(a, current, x, y)
 	self.items[#self.items+1] = item
 
 	local item = function(dx, dy)
-		a:toScreen(nil, dx+x+2, dy+y+2, 32, 32)
+		a:toScreen(nil, dx+x+4, dy+y+1, 32, 32)
 	end
 	self.items[#self.items+1] = item
 

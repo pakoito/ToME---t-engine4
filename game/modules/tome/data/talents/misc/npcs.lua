@@ -1007,7 +1007,7 @@ newTalent{
 	name = "Explode",
 	type = {"technique/other", 1},
 	points = 5,
-	message = "@Source@ explodes against @target@.",
+	message = "@Source@ explodes! @target@ is enveloped in searing light.",
 	cooldown = 1,
 	range = 1,
 	requires_target = true,
@@ -1017,6 +1017,7 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
 		self:project(tg, x, y, DamageType.LIGHT, math.floor(self:combatSpellpower(0.25) * self:getTalentLevel(t)), {type="light"})
+		game.level.map:particleEmitter(self.x, self.y, 1, "ball_fire", {radius = 1, r = 1, g = 0, b = 0})
 		self:die(self)
 		game:playSoundNear(self, "talents/arcane")
 		return true
@@ -1042,18 +1043,20 @@ newTalent{
 		local tg = {type = "bolt", range = 20, talent = t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		local elem = rng.table{
-			{DamageType.FIRE, "flame", "bolt_fire"},
-			{DamageType.COLD, "freeze", "bolt_ice"},
-			{DamageType.LIGHTNING, "lightning_explosion", "bolt_lightning"},
-			{DamageType.ACID, "acid", "bolt_acid"},
-			{DamageType.NATURE, "slime", "bolt_slime"},
-			{DamageType.BLIGHT, "blood", "bolt_blood"},
-			{DamageType.LIGHT, "light", "bolt_light"},
-			{DamageType.ARCANE, "manathrust", "bolt_arcane"},
-		}
-		tg.display={particle=elem[3]}
-		self:projectile(tg, x, y, elem[1], math.floor(self:getMag(100) * self:getTalentLevel(t)), {type=elem[2]})
+			local elem = rng.table{
+				{DamageType.ACID, "acid"},
+				{DamageType.FIRE, "flame"},
+				{DamageType.COLD, "freeze"},
+				{DamageType.LIGHTNING, "lightning_explosion"},
+				{DamageType.ACID, "acid"},
+				{DamageType.NATURE, "slime"},
+				{DamageType.BLIGHT, "blood"},
+				{DamageType.LIGHT, "light"},
+				{DamageType.ARCANE, "manathrust"},
+				{DamageType.DARKNESS, "dark"},
+			}
+			tg.display={particle="bolt_elemental", trail="generictrail"}
+		self:projectile(tg, x, y, elem[1], math.floor(self:getMag(90) * self:getTalentLevel(t)), {type=elem[2]})
 		game:playSoundNear(self, "talents/arcane")
 		return true
 	end,

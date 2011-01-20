@@ -74,17 +74,17 @@ end
 
 function _M:summonMiniboss(val)
 	local miniboss = {
-		{ name = "SKELERAT", wave = 4, entry = 2, display = "Skeletal rats", score = 100, power = 5 },
-		{ name = "GLADIATOR", wave = 2, entry = 1, display = "Gladiators", score = 150, power = 10 },
+		{ name = "SKELERAT", wave = 4, entry = 2, display = "Skeletal rats", score = 100, power = 5, rank = 0.1 },
+		{ name = "GLADIATOR", wave = 2, entry = 1, display = "Gladiators", score = 150, power = 10, rank = 0.2 },
 		{ nil },
-		{ name = "GOLDCRYSTAL", wave = 4, entry = 3, display = "Golden crystals", score = 250, power = 15 },
-		{ name = "MASTERSLINGER", wave = 3, entry = 2, display = "Master slingers", score = 350, power = 20 },
+		{ name = "GOLDCRYSTAL", wave = 4, entry = 3, display = "Golden crystals", score = 250, power = 15, rank = 0.1 },
+		{ name = "MASTERSLINGER", wave = 3, entry = 2, display = "Master slingers", score = 350, power = 20, rank = 0.2 },
 		{ nil },
-		{ name = "MASTERALCHEMIST", wave = 1, entry = 1, display = "Master Alchemist", score = 400, power = 25 },
-		{ name = "MULTIHUEWYRMIC", wave = 1, entry = 1, display = "Multi-hued Wyrmic", score = 400, power = 30 },
+		{ name = "MASTERALCHEMIST", wave = 1, entry = 1, display = "Master Alchemist", score = 400, power = 25, rank = 0.5 },
+		{ name = "MULTIHUEWYRMIC", wave = 1, entry = 1, display = "Multi-hued Wyrmic", score = 400, power = 30, rank = 0.5 },
 		{ nil },
-		{ name = "REAVER", wave = 2, entry = 2, display = "Reaver", score = 800, power = 40 },
-		{ name = "HEADLESSHORROR", wave = 1, entry = 1, display = "Headless horror", score = 1000, power = 50 },
+		{ name = "REAVER", wave = 2, entry = 2, display = "Reaver", score = 800, power = 40, rank = 0.3 },
+		{ name = "HEADLESSHORROR", wave = 1, entry = 1, display = "Headless horror", score = 1000, power = 50, rank = 1 },
 	}
 	local e = miniboss[val] or miniboss[1]
 	for i = 1, e.wave do
@@ -110,6 +110,8 @@ function _M:generateMiniboss(e)
 		local entry = self:getEntrance(e.entry)
 		m.arenaPower = e.power
 		m.arenaScore = e.score
+		m.arenaRank = e.rank
+		m:setTarget(game.player)
 		if m.on_added then m.on_added_orig = m.on_added end
 		m.on_added = function (self)
 			if m.on_added_orig then m.on_added_orig(self) end
@@ -122,6 +124,7 @@ function _M:generateMiniboss(e)
 			if m.on_die_orig then m.on_die_orig(self) end
 			game.level.arena.danger = game.level.arena.danger - self.arenaPower
 			game.level.arena.bonus = game.level.arena.bonus + self.arenaScore
+			game.level.arena.raiseRank(self.arenaRank)
 			game.level.map:particleEmitter(self.x, self.y, 1, "ball_fire", {radius = 1})
 		end
 		self:place(m, entry, true)
@@ -208,6 +211,7 @@ function _M:generateBoss(val)
 	local e = bosses[val] or bosses[1]
 	local m = self.zone:makeEntityByName(self.level, "actor", e.name)
 	if m then
+		m:setTarget(game.player)
 		m.arenaPower = e.power
 		m.arenaScore = e.score
 		m.on_added = function (self)
@@ -217,9 +221,10 @@ function _M:generateBoss(val)
 			game.level.arena.pinchValue = game.level.arena.pinchValue + self.arenaPower
 		end
 		m.on_die = function (self)
+			game.level.arena.raiseRank(0.5)
 			game.level.arena.danger = game.level.arena.danger - self.arenaPower
 			game.level.arena.bonus = game.level.arena.bonus + self.arenaScore
-			game.level.map:particleEmitter(self.x, self.y, 1, "ball_fire", {radius = 2})
+			game.level.map:particleEmitter(self.x, self.y, 1, "ball_fire", {radius = 3})
 			self.arenaDefeat()
 		end
 		e.start()
@@ -251,6 +256,7 @@ function _M:generateMaster()
 	if defmaster == true then
 		local m = self.zone:makeEntityByName(self.level, "actor", "ARENA_BOSS_MASTER_DEFAULT")
 		if m then
+			m:setTarget(game.player)
 			m.on_added = function (self)
 				local Chat = require "engine.Chat"
 				local chat = Chat.new("arena", {name="The final fight!"}, game.player)
@@ -279,6 +285,7 @@ function _M:generateMaster()
 		local m = master
 		mod.class.NPC.castAs(m)
 		engine.interface.ActorAI.init(m, m)
+		m:setTarget(game.player)
 		m.on_added = function (self)
 			local Chat = require "engine.Chat"
 			local chat = Chat.new("arena", {name="The final fight!"}, game.player)
@@ -366,6 +373,8 @@ function _M:calculateWave()
 			wave = 1, power = 12, delay = 3, bonus = 0.3, score = 150 , entry = 2 },
 		{ entity = { name = "shadowblade" },
 			wave = 1, power = 13, delay = 1, bonus = 0.4, score = 200 , entry = 1 },
+		{ entity = { name = "trickster" },
+			wave = 1, power = 13, delay = 3, bonus = 0.4, score = 50 , entry = 1 },
 		{ entity = { name = "orc soldier" },
 			wave = 1, power = 10, delay = 4, bonus = 0.3, score = 150 , entry = 1,
 			special = function (self) if game.level.arena.currentWave > 25 then self.entity = {type = "humanoid", subtype = "orc"} end return self end },
@@ -443,6 +452,9 @@ function _M:generateOne(e)
 		m.arenaPower = e.power * m.level
 		m.arenaBonusMult = e.bonus
 		m.arenaScore = e.score
+		m.arenaLastHit = 0
+		m:setTarget(game.player)
+		m.on_takehit = function(self, value, src) if src.player then self.arenaLastHit = value end return value end
 		if m.on_added then m.on_added_orig = m.on_added end
 		if e.entry == 3 then
 			m.on_added = function (self)
@@ -460,6 +472,21 @@ function _M:generateOne(e)
 		if m.on_die then m.on_die_orig = m.on_die end
 		m.on_die = function (self)
 			if self.on_die_orig then self.on_die_orig(self) end
+			if self.arenaLastHit >= self.max_life then
+				if self.arenaLastHit >= self.max_life * 2 then
+					local x, y = game.level.map:getTileToScreen(self.x, self.y)
+					game.flyers:add(x, y, 90, 0, -0.5, "OVERKILL", { 231, 0, 0 }, false)
+					game.log("#LIGHT_GREEN#Your powerful attack completely obliterates #WHITE#"..self.name.."#LIGHT_GREEN#!")
+					local val = (self.level * 0.015)
+					if val > 0.5 then game.log("#LIGHT_GREEN#The audience cheers!") end
+					game.level.arena.raiseRank(val)
+				else
+					game.log("#LIGHT_GREEN#Your destroy #WHITE#"..self.name.."#LIGHT_GREEN# in a single blow!")
+					local val = (self.level * 0.01)
+					if val > 0.5 then game.log("#LIGHT_GREEN#The audience cheers!") end
+					game.level.arena.raiseRank(val)
+				end
+			end
 			game.level.arena.danger = game.level.arena.danger - self.arenaPower
 			if game.level.arena.pinch == false then
 				game.log("#LIGHT_GREEN#Your score multiplier increases by #WHITE#"..self.arenaBonusMult.."#LIGHT_GREEN#!")
@@ -474,8 +501,11 @@ function _M:generateOne(e)
 			end
 			if self.level > game.player.level + 3 then
 				game.log("#YELLOW#You defeat an experienced enemy!")
-				local raise = (self.level - game.player.level) + 0.03
-				if raise > 0.5 then raise = 0.5 end
+				local raise = (self.level - game.player.level) * 0.01
+				if raise > 0.5 then
+					game.log("#LIGHT_GREEN#The audience cheers!")
+					raise = 0.5
+				end
 				game.level.arena.raiseRank(raise)
 			end
 		end

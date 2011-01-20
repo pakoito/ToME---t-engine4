@@ -109,6 +109,41 @@ local give_debugarms = function(self, player)
 		player:addObject(player.INVEN_INVEN, o)
 		game.zone:addEntity(game.level, o, "object")
 	end
+	o = nil
+	o = game.zone:makeEntityByName(game.level, "object", "BARRAGE")
+	if o then
+		o:identify(true)
+		player:addObject(player.INVEN_INVEN, o)
+		game.zone:addEntity(game.level, o, "object")
+	end
+	o = nil
+	o = game.zone:makeEntityByName(game.level, "object", "RAPTOR")
+	if o then
+		o:identify(true)
+		player:addObject(player.INVEN_INVEN, o)
+		game.zone:addEntity(game.level, o, "object")
+	end
+	o = nil
+	o = game.zone:makeEntityByName(game.level, "object", "ARENA_BOOTS_JUMPING")
+	if o then
+		o:identify(true)
+		player:addObject(player.INVEN_INVEN, o)
+		game.zone:addEntity(game.level, o, "object")
+	end
+	o = nil
+	o = game.zone:makeEntityByName(game.level, "object", "WARDING")
+	if o then
+		o:identify(true)
+		player:addObject(player.INVEN_INVEN, o)
+		game.zone:addEntity(game.level, o, "object")
+	end
+	o = nil
+	o = game.zone:makeEntityByName(game.level, "object", "HEATEATER")
+	if o then
+		o:identify(true)
+		player:addObject(player.INVEN_INVEN, o)
+		game.zone:addEntity(game.level, o, "object")
+	end
 	game.level.arena.perk = "Debug"..game.level.arena.modeString
 end
 

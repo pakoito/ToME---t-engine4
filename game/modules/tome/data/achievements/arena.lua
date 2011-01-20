@@ -31,7 +31,7 @@ newAchievement{
 	name = "Arena Battler 50",
 	desc = [[Got to wave 50 in the arena.]],
 }
-	
+
 newAchievement{
 	name = "Almost Master of Arena",
 	desc = [[Became the new master of the arena in 30-wave mode.]],
@@ -41,12 +41,12 @@ newAchievement{
 	name = "Master of Arena",
 	desc = [[Became the new master of the arena in 60-wave mode.]],
 }
-	
+
 newAchievement{
 	name = "XXX the Destroyer",
 	desc = [[Earned the rank of Destroyer in the arena.]],
 }
-	
+
 newAchievement{
 	name = "Grand Master",
 	desc = [[Earned the rank of Grand Master in the arena.]],
@@ -54,5 +54,5 @@ newAchievement{
 
 newAchievement{
 	name = "Ten at one blow",
-	desc = [[Killed ten enemies in a single turn, in the arena.]],
-}	
+	desc = [[Killed 10 or more enemies in one single attack in the arena.]],
+}

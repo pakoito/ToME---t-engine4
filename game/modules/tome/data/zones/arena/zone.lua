@@ -64,6 +64,7 @@ return {
 			end
 		end
 		if game.level.arena.bonus > 0 then game.level.arena.bonus = game.level.arena.bonus - 10  end
+		if game.level.arena.bonus < 0 then game.level.arena.bonus = 0 end
 		if game.level.arena.delay > 0 then game.level.arena.delay = game.level.arena.delay - 1  end
 		--Only raise danger level while you can raise bonus multiplier.
 		if game.level.arena.dangerMod < 1.5 and game.level.arena.pinch == false
@@ -117,7 +118,7 @@ return {
 			if o then game.zone:addEntity(game.level, o, "object", 7, 3) end
 		end
 		level.arena = {
-			ranks = { "nobody", "rat stomper", "aspirant", "fighter", "brave", "powerful", "promise", "rising star", "destroyer", "obliterator", "annihilator", "grandious", "glorious", "victorious", "ultimate", "ultimate", "ultimate", "ultimate", "ultimate", "grand master" },
+			ranks = { "nobody", "rat stomper", "aspirant", "fighter", "brave", "dangerous", "promise", "powerful", "rising star", "destroyer", "obliterator", "annihilator", "grandious", "glorious", "victorious", "ultimate", "ultimate", "ultimate", "ultimate", "ultimate", "grand master" },
 			rank = 1,
 			perk = nil,
 			event = 0,
@@ -206,8 +207,8 @@ return {
 				master.color_g = 0
 				master.color_b = 255
 				master._mo:invalidate()
-				master.ai = "dumb_talented_simple"
-				master.ai_state = {talent_in=1}
+				master.ai = "tactical"
+				master.ai_state = {talent_in=1, ai_move="move_astar"}
 				master.faction="enemies"
 				master.life = master.max_life
 				-- Remove some talents
@@ -283,16 +284,17 @@ return {
 				game.log("#LIGHT_RED#The gates close!")
 			end,
 			raiseRank = function (val)
-				if game.level.arena.rank >= 20 then return end
+				if game.level.arena.rank >= 21 then return end
 				local currentRank = math.floor(game.level.arena.rank)
 				game.level.arena.rank = game.level.arena.rank + val
+				if game.level.arena.rank >= #game.level.arena.ranks then game.level.arena.rank = #game.level.arena.ranks end
 				local newRank = math.floor(game.level.arena.rank)
 				if currentRank < newRank then --Player's rank increases!
 					local x, y = game.level.map:getTileToScreen(game.player.x, game.player.y)
-					if rank == 9 then world:gainAchievement("XXX_THE_DESTROYER", game.player)
-					elseif rank == 20 then world:gainAchievement("GRAND_MASTER", game.player)
+					if newRank == 9 then world:gainAchievement("XXX_THE_DESTROYER", game.player)
+					elseif newRank == 21 then world:gainAchievement("GRAND_MASTER", game.player)
 					end
-					game.flyers:add(x, y, 90, 0, -0.5, "RANK UP!!", { 2, 57, 185 }, false)
+					game.flyers:add(x, y, 90, 0, -0.5, "RANK UP!!", { 2, 57, 185 }, true)
 					game.log("#LIGHT_GREEN#The public is pleased by your performance! You now have the rank of #WHITE#"..game.level.arena.ranks[newRank].."!")
 				end
 			end,
@@ -300,9 +302,9 @@ return {
 				if k >= 10 then world:gainAchievement("TEN_AT_ONE_BLOW", game.player) end
 				if k > 2 then
 					local x, y = game.level.map:getTileToScreen(game.player.x, game.player.y)
-					local b = k * 0.035
+					local b = (k * 0.035) + 0.04
 					game.level.arena.raiseRank(b)
-					game.flyers:add(x, y, 90, 0, -0.5, k.." kills!", { 2, 57, 185 }, false)
+					game.flyers:add(x, y, 90, 0.5, 0, k.." kills!", { 2, 57, 185 }, false)
 					game.log("#YELLOW#You killed "..k.." enemies in a single turn! The public is excited!")
 				else return
 				end
