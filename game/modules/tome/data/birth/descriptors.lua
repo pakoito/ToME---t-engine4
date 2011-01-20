@@ -67,6 +67,9 @@ newBirthDescriptor{
 		no_auto_resists = true,
 		no_auto_high_stats = true,
 		resists_cap = {all=70},
+		keep_inven_on_death = true,
+		can_change_level = true,
+		can_change_zone = true,
 
 		-- Mages are unheard of at first, nobody but them regenerates mana
 		mana_rating = 6,
@@ -78,7 +81,9 @@ newBirthDescriptor{
 			{type="lite", subtype="lite", name="brass lantern"},
 		},
 		make_tile = function(e)
-			e.image = "player/"..e.descriptor.subrace:lower().."_"..e.descriptor.subclass:lower()..".png"
+			if not e.image then
+				e.image = "player/"..e.descriptor.subrace:lower().."_"..e.descriptor.subclass:lower()..".png"
+			end
 		end,
 	},
 }
@@ -209,6 +214,7 @@ load("/data/birth/races/orc.lua")
 load("/data/birth/races/troll.lua")
 --load("/data/birth/races/spider.lua")
 load("/data/birth/races/undead.lua")
+load("/data/birth/races/construct.lua")
 
 -- Sexes
 load("/data/birth/sexes.lua")

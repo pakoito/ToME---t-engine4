@@ -393,9 +393,12 @@ function resolvers.tactic(name)
 	return {__resolver="tactic", name}
 end
 function resolvers.calc.tactic(t, e)
-	if t[1] == "melee" then return {attack=2, attackarea=2, disable=2, escape=0, closein=2, go_melee=1}
-	elseif t[1] == "ranged" then return {disable=1.5, escape=3, closein=0, defend=2, heal=2, safe_range = 4}
-	elseif t[1] == "tank" then return {disable=3, escape=0, closein=2, defend=2, protect=2, heal=3, go_melee=1}
+	if t[1] == "default" then return {type="default", }
+	elseif t[1] == "standby" then return {type="standby", standby=1}
+	elseif t[1] == "melee" then return {type="melee", attack=2, attackarea=2, disable=2, escape=0, closein=2, go_melee=1}
+	elseif t[1] == "ranged" then return {type="ranged", disable=1.5, escape=3, closein=0, defend=2, heal=2, safe_range=4}
+	elseif t[1] == "tank" then return {type="tank", disable=3, escape=0, closein=2, defend=2, protect=2, heal=3, go_melee=1}
+	elseif t[1] == "survivor" then return {type="survivor", disable=2, escape=5, closein=0, defend=3, protect=0, heal=6, safe_range=8}
 	end
 	return {}
 end

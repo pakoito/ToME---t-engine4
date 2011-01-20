@@ -180,7 +180,7 @@ function _M:selectType(type)
 		local allowed = true
 		print("[BIRTHER] checking allowance for ", d.name)
 		for j, od in ipairs(self.descriptors) do
-			if od.descriptor_choices[type] then
+			if od.descriptor_choices and od.descriptor_choices[type] then
 				local what = util.getval(od.descriptor_choices[type][d.name]) or util.getval(od.descriptor_choices[type].__ALL__)
 				if what and what == "allow" then
 					allowed = true
@@ -235,7 +235,9 @@ function _M:prev()
 	table.remove(self.descriptors)
 	self.cur_order = self.cur_order - 1
 	self:selectType(self.order[self.cur_order])
-	if #self.list == 1 then
+	if #self.list == 0 then
+		self:prev()
+	elseif #self.list == 1 then
 		self:prev()
 	end
 end
@@ -243,7 +245,7 @@ end
 function _M:next()
 	self.changed = true
 	if self.list then
-		table.insert(self.descriptors, self.list[self.sel])
+		table.insert(self.descriptors, self.list[self.sel] or "none")
 		if self.list[self.sel] and self.list[self.sel].on_select then self.list[self.sel]:on_select() end
 
 		self.cur_order = self.cur_order + 1
@@ -258,7 +260,9 @@ function _M:next()
 
 	if self:quickBirth() then return end
 
-	if #self.list == 1 and self.birth_auto[self.current_type] ~= false then
+	if #self.list == 0 then
+		self:next()
+	elseif #self.list == 1 and self.birth_auto[self.current_type] ~= false then
 		self:next()
 	end
 end
@@ -279,8 +283,8 @@ function _M:apply()
 	self.actor.descriptor = {}
 	local stats, inc_stats = {}, {}
 	for i, d in ipairs(self.descriptors) do
-		print("[BIRTH] Applying descriptor "..d.name)
-		self.actor.descriptor[d.type] = d.name
+		print("[BIRTH] Applying descriptor "..(d.name or "none"))
+		self.actor.descriptor[d.type or "none"] = (d.name or "none")
 
 		if d.copy then
 			local copy = table.clone(d.copy, true)

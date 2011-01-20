@@ -130,7 +130,7 @@ newAI("use_tactical", function(self)
 		end
 
 		-- Need defence
-		if avail.defend and need_heal then
+		if avail.defend and need_heal and nb_foes > 0 then
 			want.defend = 1 + need_heal / 2 + nb_foes * 0.5
 		end
 
@@ -192,10 +192,10 @@ newAI("tactical", function(self)
 
 	if targeted and not self.energy.used then
 		if special_move then
-			self:runAI(special_move)
+			return self:runAI(special_move)
 		else
-			self:runAI(self.ai_state.ai_move or "move_simple")
+			return self:runAI(self.ai_state.ai_move or "move_simple")
 		end
 	end
-	return true
+	return false
 end)

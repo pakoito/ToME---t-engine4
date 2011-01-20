@@ -970,11 +970,6 @@ end
 function _M:die(src)
 	engine.interface.ActorLife.die(self, src)
 
-	-- Remove from the party if needed
-	if self.remove_from_party_on_death then
-		game.party:removeMember(self, true)
-	end
-
 	-- Gives the killer some exp for the kill
 	local killer = nil
 	if src and src.resolveSource and src:resolveSource().gainExp then
@@ -1101,8 +1096,9 @@ function _M:die(src)
 
 	if src and src.resolveSource and src:resolveSource().player then
 		-- Achievements
-		local p = src:resolveSource()
+		local p = game.party:findMember{main=true}
 		if math.floor(p.life) <= 1 and not p.dead then world:gainAchievement("THAT_WAS_CLOSE", p) end
+		if p.dead and self.rank >= 3.5 then world:gainAchievement("EMANCIPATION", p, self) end
 		world:gainAchievement("EXTERMINATOR", p, self)
 		world:gainAchievement("PEST_CONTROL", p, self)
 		world:gainAchievement("REAVER", p, self)

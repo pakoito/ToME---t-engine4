@@ -19,10 +19,9 @@
 
 require "engine.class"
 local WA = require "engine.interface.WorldAchievements"
-local table = table
 
 --- Handles achievements in a world
-module(..., package.seeall, class.inherit({}, WA))
+module(..., package.seeall, class.inherit(class.make{}, WA))
 
 --- Make a new achievement with a name and desc
 function _M:newAchievement(t)
@@ -42,4 +41,10 @@ function _M:newAchievement(t)
 		t2.name = t2.name.." (Insane difficulty)"
 		WA.newAchievement(self, t2)
 	end
+end
+
+function _M:gainAchievement(id, src, ...)
+	-- Redirect achievements to the main player, always
+	src = game.party:findMember{main=true}
+	return WA.gainAchievement(self, id, src, ...)
 end

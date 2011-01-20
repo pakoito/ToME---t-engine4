@@ -76,7 +76,7 @@ local function makeGolem()
 		-- Break control when losing LOS
 		on_act = function(self)
 			if game.player ~= self then return end
-			if not self:hasLOS(self.summoner.x, self.summoner.y) then
+			if not self.summoner.dead and not self:hasLOS(self.summoner.x, self.summoner.y) then
 				if not self:hasEffect(self.EFF_GOLEM_OFS) then
 					self:setEffect(self.EFF_GOLEM_OFS, 8, {})
 				end
@@ -116,6 +116,7 @@ local function makeGolem()
 		stone_immune = 1,
 		see_invisible = 30,
 		no_breath = 1,
+		can_change_level = true,
 	}
 end
 

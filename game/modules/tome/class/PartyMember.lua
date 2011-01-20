@@ -19,8 +19,9 @@
 
 require "engine.class"
 require "mod.class.NPC"
+require "mod.class.interface.PartyDeath"
 
-module(..., package.seeall, class.inherit(mod.class.NPC))
+module(..., package.seeall, class.inherit(mod.class.NPC, mod.class.interface.PartyDeath))
 
 function _M:init(t, no_default)
 	mod.class.NPC.init(self, t, no_default)
@@ -39,8 +40,13 @@ function _M:tooltip(x, y, seen_by)
 	str:add(
 		true,
 		{"color", "TEAL"},
-		("Behavior: %s"):format(self.ai_state.tactic_behavior), true,
-		("Action radius: %d"):format(self.ai_state.tactic_leash), true
+		("Behavior: %s"):format(self.ai_tactic.type or "default"), true,
+		("Action radius: %d"):format(self.ai_state.tactic_leash), true,
+		{"color", "WHITE"}
 	)
 	return str
+end
+
+function _M:die(src)
+	return self:onPartyDeath(self, src)
 end

@@ -44,15 +44,17 @@ function _M:use(item)
 	if not item then return end
 	game:unregisterDialog(self)
 
-	self.actor.ai_state.tactic_behavior = item.set
+	self.actor.ai_tactic = resolvers.calc.tactic({item.set}, self.actor)
 	game.logPlayer(game.player, "%s behavior set to %s.", self.actor.name:capitalize(), item.set)
 end
 
 function _M:generateList()
 	local list = {
-		{name="Aggressive", set="aggressive"},
-		{name="Defensive", set="defensive"},
-		{name="Passive", set="follow"},
+		{name="Default", set="default"},
+		{name="Melee", set="melee"},
+		{name="Ranged", set="ranged"},
+		{name="Tank", set="tank"},
+		{name="Standby", set="standby"},
 	}
 
 	local chars = {}

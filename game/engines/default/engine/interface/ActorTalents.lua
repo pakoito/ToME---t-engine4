@@ -260,6 +260,8 @@ end
 -- @param t_id the id of the talent to learn
 -- @return true if the talent was unlearnt, nil and an error message otherwise
 function _M:unlearnTalent(t_id)
+	if not self:knowTalent(t_id) then return false, "talent not known" end
+
 	local t = _M.talents_def[t_id]
 
 	if self.talents[t_id] and self.talents[t_id] == 1 then

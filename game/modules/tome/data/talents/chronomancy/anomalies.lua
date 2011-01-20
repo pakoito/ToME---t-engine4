@@ -30,6 +30,7 @@ newTalent{
 	type_no_req = true,
 	getTargetCount = function(self, t) return math.floor(self:getParadox()/200) end,
 	getRange = function(self, t) return (self:getParadox()/10) end,
+	message = "Reality has shifted.",
 	action = function(self, t)
 		local tgts = {}
 		local grids = core.fov.circle_grids(self.x, self.y, 6, true)
@@ -51,7 +52,6 @@ newTalent{
 			a:teleportRandom(a.x, a.y, t.getRange(self, t), 15)
 			game.level.map:particleEmitter(a.x, a.y, 1, "teleport")
 		end
-		game.logSeen(self, "Reality has shifted.")
 		return true
 	end,
 	info = function(self, t)
@@ -70,6 +70,7 @@ newTalent{
 	type_no_req = true,
 	getTargetCount = function(self, t) return math.floor(self:getParadox()/50) end,
 	getRange = function(self, t) return (self:getParadox()/100) end,
+	message = "@Source@ has caused a hiccup in the fabric of spacetime.",
 	action = function(self, t)
 		local tgts = {}
 		local grids = core.fov.circle_grids(self.x, self.y, 6, true)
@@ -91,8 +92,6 @@ newTalent{
 			a:teleportRandom(a.x, a.y, t.getRange(self, t), 1)
 			game.level.map:particleEmitter(a.x, a.y, 1, "teleport")
 		end
-		game.logSeen(self,"%s has caused a hiccup in the fabric of spacetime.", self.name)
-		game.logSeen(self, "Reality has shifted.")
 		return true
 	end,
 	info = function(self, t)
@@ -112,6 +111,7 @@ newTalent{
 	getTargetCount = function(self, t) return 1 end,
 	getRadius = function(self, t) return math.floor(self:getParadox()/200) end,
 	getStop = function(self, t) return (self:getParadox()/100) end,
+	message = "@Source@ has created a bubble of nul time.",
 	action = function(self, t)
 		local tgts = {}
 		local grids = core.fov.circle_grids(self.x, self.y, 6, true)
@@ -150,6 +150,7 @@ newTalent{
 	getTargetCount = function(self, t) return 1 end,
 	getRadius = function(self, t) return math.floor(self:getParadox()/200) end,
 	getSlow = function(self, t) return 1 - 1 / (1 + (self:getParadox()/15) / 100) end,
+	message = "@Source@ has created a bubble of slow time.",
 	action = function(self, t)
 		local tgts = {}
 		local grids = core.fov.circle_grids(self.x, self.y, 6, true)
@@ -187,6 +188,7 @@ newTalent{
 	type_no_req = true,
 	getTargetCount = function(self, t) return math.floor(self:getParadox()/300) end,
 	getPower = function(self, t) return ((self:getParadox()/15) / 100) end,
+	message = "@Source@ has sped up several threads of time.",
 	action = function(self, t)
 		local tgts = {}
 		local grids = core.fov.circle_grids(self.x, self.y, 6, true)
@@ -220,9 +222,9 @@ newTalent{
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
 	type_no_req = true,
+	message = "A spacetime correction has occurred.",
 	action = function(self, t)
 		self:incParadox (-(self:getParadox()*0.5))
-		game.logSeen(self, "A spacetime correction has occurred.")
 		return true
 	end,
 	info = function(self, t)
@@ -235,9 +237,9 @@ newTalent{
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
 	type_no_req = true,
+	message = "@Source@ has done massive damage to the spacetime continuum!.",
 	action = function(self, t)
 		self:incParadox ((self:getParadox()*0.5))
-		game.logSeen(self, "%s has done damage to the spacetime continuum!", self.name)
 		return true
 	end,
 	info = function(self, t)
@@ -252,6 +254,7 @@ newTalent{
 	type_no_req = true,
 	getDamage = function(self, t) return self:getParadox()/25 end,
 	getDuration = function(self, t) return self:getParadox()/50 end,
+	message = "A temporal storm rages around @Source@.",
 	action = function(self, t)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
@@ -262,7 +265,6 @@ newTalent{
 			engine.Entity.new{alpha=75, display='', color_br=200, color_bg=200, color_bb=0},
 			nil, self:spellFriendlyFire()
 		)
-		game.logSeen(self, "A temporal storm rages around %s!", self.name)
 		return true
 	end,
 	info = function(self, t)
@@ -282,6 +284,7 @@ newTalent{
 	type_no_req = true,
 	getTargetCount = function(self, t) return math.floor(self:getParadox()/200) end,
 	getSummonTime = function(self, t) return math.floor(self:getParadox()/50) end,
+	message = "Some Time Elementals have been attracted by @Source@'s meddling.",
 	action = function(self, t)
 		local tgts = {}
 		local grids = core.fov.circle_grids(self.x, self.y, 6, true)
@@ -368,6 +371,7 @@ newTalent{
 	type_no_req = true,
 	getTargetCount = function(self, t) return math.floor(self:getParadox()/200) end,
 	getDuration = function(self, t) return (self:getParadox()/100) end,
+	message = "@Source@ has paused a temporal thread.",
 	action = function(self, t)
 		local tgts = {}
 		local grids = core.fov.circle_grids(self.x, self.y, 6, true)
@@ -387,7 +391,6 @@ newTalent{
 
 			self:project(tg, a.x, a.y, DamageType.TIME_PRISON, t.getDuration(self, t), {type="manathrust"})
 		end
-		game.logSeen(self,"%s has paused a thread in time.", self.name)
 		return true
 	end,
 	info = function(self, t)

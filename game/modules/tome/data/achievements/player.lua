@@ -42,3 +42,17 @@ newAchievement{
 	name = "Unstoppable",
 	desc = [[Has returned from the dead.]],
 }
+
+newAchievement{
+	name = "Emancipation", id = "EMANCIPATION",
+	desc = [[Have the golem kill a boss while its master is already dead.]],
+	mode = "player",
+	can_gain = function(self, who, target)
+		local p = game.party:findMember{main=true}
+		if p.dead and p.descriptor.subclass == "Alchemist" then return true end
+	end,
+	on_gain = function(_, src, personal)
+--		game:setAllowedBuild("construct")
+--		game:setAllowedBuild("construct_runic_golem", true)
+	end,
+}

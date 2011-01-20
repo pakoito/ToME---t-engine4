@@ -110,7 +110,7 @@ newTalent{
 	action = function(self, t)
 		local target = self
 
-		if self:getTalentLevel(t) >= 5 then
+		if self:getTalentLevel(t) >= 4 then
 			game.logPlayer(self, "Selects a target to teleport...")
 			local tg = {default_target=self, type="hit", nowarning=true, range=10, first_target="friend"}
 			local tx, ty = self:getTarget(tg)
@@ -134,7 +134,7 @@ newTalent{
 		if target ~= self and target:reactionToward(self) < 0 then target:setTarget(self) end
 
 		local x, y = self.x, self.y
-		if self:getTalentLevel(t) >= 4 then
+		if self:getTalentLevel(t) >= 5 then
 			game.logPlayer(self, "Selects a teleport location...")
 			local tg = {type="ball", nolock=true, pass_terrain=true, nowarning=true, range=t.getRange(self, t), radius=t.getRadius(self, t), requires_knowledge=false}
 			x, y = self:getTarget(tg)
@@ -162,8 +162,8 @@ newTalent{
 		local range = t.getRange(self, t)
 		local radius = t.getRadius(self, t)
 		return ([[Teleports you randomly with a large range (%d), with a minimum range of 15.
-		At level 4 it allows you to choose the target area (radius %d).
-		At level 5 it allows you to specify which creature to teleport.
+		At level 4 it allows you to specify which creature to teleport.
+		At level 5 it allows you to choose the target area (radius %d).
 		The range will increase with the Magic stat]]):format(range, radius)
 	end,
 }

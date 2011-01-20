@@ -48,7 +48,6 @@ function _M:addMember(actor, def)
 	def.index = #self.m_list
 
 	actor.ai_state = actor.ai_state or {}
-	actor.ai_state.tactic_behavior = actor.ai_state.tactic_behavior or "defensive"
 	actor.ai_state.tactic_leash = actor.ai_state.tactic_leash or 10
 
 	actor.addEntityOrder = function(self, level)
@@ -120,11 +119,15 @@ function _M:canControl(actor, vocal)
 	return true
 end
 
-function _M:setPlayer(actor)
+function _M:setPlayer(actor, bypass)
 	if type(actor) == "number" then actor = self.m_list[actor] end
 
-	local ok, err = self:canControl(actor, true)
-	if not ok then return nil, err end
+	if not bypass then
+		local ok, err = self:canControl(actor, true)
+		if not ok then return nil, err end
+	end
+
+	if actor == game.player then return true end
 
 	local def = self.members[actor]
 	local oldp = self.player

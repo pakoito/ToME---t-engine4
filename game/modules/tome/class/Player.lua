@@ -27,12 +27,12 @@ require "engine.interface.PlayerMouse"
 require "mod.class.interface.PlayerStats"
 require "mod.class.interface.PlayerLore"
 require "mod.class.interface.PlayerDumpJSON"
+require "mod.class.interface.PartyDeath"
 local Map = require "engine.Map"
 local Dialog = require "engine.ui.Dialog"
 local ActorTalents = require "engine.interface.ActorTalents"
 local LevelupStatsDialog = require "mod.dialogs.LevelupStatsDialog"
 local LevelupTalentsDialog = require "mod.dialogs.LevelupTalentsDialog"
-local DeathDialog = require "mod.dialogs.DeathDialog"
 
 --- Defines the player for ToME
 -- It is a normal actor, with some redefined methods to handle user interaction.<br/>
@@ -46,7 +46,8 @@ module(..., package.seeall, class.inherit(
 	engine.interface.PlayerSlide,
 	mod.class.interface.PlayerStats,
 	mod.class.interface.PlayerLore,
-	mod.class.interface.PlayerDumpJSON
+	mod.class.interface.PlayerDumpJSON,
+	mod.class.interface.PartyDeath
 ))
 
 function _M:init(t, no_default)
@@ -61,6 +62,9 @@ function _M:init(t, no_default)
 	t.type = t.type or "humanoid"
 	t.subtype = t.subtype or "player"
 	t.faction = t.faction or "players"
+
+	t.ai = t.ai or "tactical"
+	t.ai_state = t.ai_state or {talent_in=1, ai_move="move_astar"}
 
 	if t.fixed_rating == nil then t.fixed_rating = true end
 
@@ -418,27 +422,7 @@ function _M:die(src)
 	self:runStop("died")
 	self:restStop("died")
 
-	local game_ender = self.game_ender
-	-- Look for an other possible player in the party, otherwise we are done !
-	if not game_ender then game_ender = not game.party:findSuitablePlayer() end
-
-	if game_ender then
-		engine.interface.ActorLife.die(self, src)
-		game.paused = true
-		self.energy.value = game.energy_to_act
-		self.killedBy = src
-		self.died_times[#self.died_times+1] = {name=src.name, level=self.level, turn=game.turn}
-		self:registerDeath(self.killedBy)
-		if self.death_dialog then
-			game:registerDialog(require("mod.dialogs."..self.death_dialog).new(self))
-		else
-			game:registerDialog(DeathDialog.new(self))
-		end
-
-		game.player:saveUUID()
-	else
-		mod.class.Actor.die(self, src)
-	end
+	return self:onPartyDeath(self, src)
 end
 
 --- Suffocate a bit, lose air

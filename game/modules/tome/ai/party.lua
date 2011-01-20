@@ -27,10 +27,8 @@ newAI("party_member", function(self)
 		return self:runAI(self.ai_state.ai_move or "move_simple")
 	end
 
-	-- When passive only accept targets from the master
---	if self.ai_state.tactic_behavior == "passive" then
-
---	end
+	-- Unselect friendly targets
+	if self.ai_target.actor and self:reactionToward(self.ai_target.actor) >= 0 then self:setTarget(nil) end
 
 	-- Run normal AI
 	local ret = self:runAI(self.ai_state.ai_party)

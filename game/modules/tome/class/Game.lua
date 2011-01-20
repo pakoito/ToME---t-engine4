@@ -137,7 +137,7 @@ function _M:newGame()
 		type="player",
 		title="Main character",
 		main=true,
-		orders = {follow=true},
+		orders = {follow=true, behavior=true, leash=true},
 	})
 	self.party:setPlayer(player)
 	Map:setViewerActor(self.player)
@@ -395,8 +395,12 @@ function _M:leaveLevel(level, lev, old_lev)
 end
 
 function _M:changeLevel(lev, zone, keep_old_lev, force_down)
-	if not self.player.game_ender then
+	if not self.player.can_change_level then
 		self.logPlayer(self.player, "#LIGHT_RED#You may not change level without your own body!")
+		return
+	end
+	if zone and not self.player.can_change_zone then
+		self.logPlayer(self.player, "#LIGHT_RED#You may not leave the zone with this character!")
 		return
 	end
 
