@@ -59,7 +59,6 @@ newBirthDescriptor{
 		["technique/combat-training"]={true, 0.3},
 		["technique/field-control"]={true, 0},
 		["cunning/survival"]={true, 0},
-		["cunning/packing"]={true, 0.2},
 		["cunning/dirty"]={false, 0},
 	},
 	talents = {
@@ -98,7 +97,6 @@ newBirthDescriptor{
 		["technique/combat-training"]={true, 0.3},
 		["technique/field-control"]={true, 0},
 		["cunning/survival"]={true, 0},
-		["cunning/packing"]={true, 0.2},
 		["cunning/dirty"]={false, 0},
 	},
 	talents = {
