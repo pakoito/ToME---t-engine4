@@ -1306,9 +1306,6 @@ end
 
 function _M:getMaxEncumbrance()
 	local add = 0
-	if self:knowTalent(self.T_BURDEN_MANAGEMENT) then
-		add = add + 20 + self:getTalentLevel(self.T_BURDEN_MANAGEMENT) * 15
-	end
 	return math.floor(40 + self:getStr() * 1.8 + (self.max_encumber or 0) + add)
 end
 
@@ -1316,16 +1313,6 @@ function _M:getEncumbrance()
 	local enc = 0
 
 	local fct = function(so) enc = enc + so.encumber end
-	if self:knowTalent(self.T_EFFICIENT_PACKING) then
-		local reduction = 1 - self:getTalentLevel(self.T_EFFICIENT_PACKING) * 0.1
-		fct = function(so)
-			if so.encumber <= 1 then
-				enc = enc + so.encumber * reduction
-			else
-				enc = enc + so.encumber
-			end
-		end
-	end
 
 	-- Compute encumbrance
 	for inven_id, inven in pairs(self.inven) do
@@ -1792,15 +1779,6 @@ function _M:antimagicBackslash(turns)
 		end
 	end
 	if done then game.logPlayer(self, "#LIGHT_RED#Your antimagic abilities are disrupted!") end
-end
-
---- Pack Rat chance
-function _M:doesPackRat()
-	if self:knowTalent(self.T_PACK_RAT) then
-		local chance = 10 + self:getTalentLevel(self.T_PACK_RAT) * 7
-		if rng.percent(chance) then return true end
-	end
-	return false
 end
 
 --- Return the full description of a talent

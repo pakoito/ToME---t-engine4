@@ -169,9 +169,6 @@ local function tryDestroy(who, inven, dam, destroy_prop, proof_prop, msg)
 	if not inven then return end
 
 	local reduction = 1
-	if who:knowTalent(who.T_INSULATING_PACKING) then
-		reduction = who:getTalentLevel(who.T_INSULATING_PACKING) * 0.14
-	end
 
 	for i = #inven, 1, -1 do
 		local o = inven[i]

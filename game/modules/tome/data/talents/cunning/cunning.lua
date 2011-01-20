@@ -26,7 +26,6 @@ newTalentType{ allow_random=true, type="cunning/dirty", name = "dirty fighting",
 newTalentType{ allow_random=true, type="cunning/lethality", name = "lethality", description = "How to make your foes feel the pain." }
 newTalentType{ allow_random=true, type="cunning/shadow-magic", name = "shadow magic", description = "Blending magic and shadows." }
 newTalentType{ allow_random=true, type="cunning/survival", name = "survival", generic = true, description = "The knowledge of the dangers of the world, and how to best avoid them." }
-newTalentType{ allow_random=true, type="cunning/packing", name = "packing", generic = true, description = "Learn to optimize your carrying capacity and even how to protect fragile items." }
 
 -- Generic requires for cunning based on talent level
 cuns_req1 = {
@@ -55,5 +54,4 @@ load("/data/talents/cunning/traps.lua")
 load("/data/talents/cunning/dirty.lua")
 load("/data/talents/cunning/lethality.lua")
 load("/data/talents/cunning/survival.lua")
-load("/data/talents/cunning/packing.lua")
 load("/data/talents/cunning/shadow-magic.lua")
