@@ -90,16 +90,15 @@ function _M:display()
 		if ts[3] == "talent" then
 			local tid = ts[1]
 			local t = a:getTalentFromId(tid)
-			local can_use = a:preUseTalent(t, true, true)
-			if not can_use then
-				txt = t.name
-				color = {190,190,190}
-			elseif a:isTalentCoolingDown(t) then
+			if a:isTalentCoolingDown(t) then
 				txt = ("%s (%d)"):format(t.name, a:isTalentCoolingDown(t))
 				color = {255,0,0}
 			elseif a:isTalentActive(t.id) then
 				txt = t.name
 				color = {255,255,0}
+			elseif not a:preUseTalent(t, true, true) then
+				txt = t.name
+				color = {190,190,190}
 			else
 				txt = t.name
 				color = {0,255,0}
