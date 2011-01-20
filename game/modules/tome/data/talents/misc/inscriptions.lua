@@ -266,8 +266,17 @@ newInscription{
 		-- Target code does not restrict the target coordinates to the range, it lets the project function do it
 		-- but we cant ...
 		local _ _, x, y = self:canProject(tg, x, y)
+
+		-- Check LOS
+		local rad = 3
+		if not self:hasLOS(x, y) and rng.percent(35) then
+			game.logPlayer(self, "The targetted phase door fizzles and works randomly!")
+			x, y = self.x, self.y
+			rad = tg.range
+		end
+
 		game.level.map:particleEmitter(self.x, self.y, 1, "teleport")
-		self:teleportRandom(x, y, 3)
+		self:teleportRandom(x, y, rad)
 		game.level.map:particleEmitter(self.x, self.y, 1, "teleport")
 		return true
 	end,

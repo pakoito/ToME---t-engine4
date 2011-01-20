@@ -54,11 +54,7 @@ function _M:archeryAcquireTargets(tg, params)
 	if params.one_shot then
 		local a
 		if not ammo.infinite then
-			if self:doesPackRat() then
-				a = self:getInven("QUIVER")[1]
-			else
-				a = self:removeObject(self:getInven("QUIVER"), 1)
-			end
+			a = self:removeObject(self:getInven("QUIVER"), 1)
 		else
 			a = ammo
 		end

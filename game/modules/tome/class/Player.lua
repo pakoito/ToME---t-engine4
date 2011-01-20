@@ -681,20 +681,16 @@ function _M:playerUseItem(object, item, inven)
 					self:antimagicBackslash(4 + (o.material_level or 1))
 				end
 
-				if not o.unique and self:doesPackRat() then
-					game.logPlayer(self, "Pack Rat!")
+				if o.multicharge and o.multicharge > 1 then
+					o.multicharge = o.multicharge - 1
 				else
-					if o.multicharge and o.multicharge > 1 then
-						o.multicharge = o.multicharge - 1
+					local _, del = self:removeObject(self:getInven(inven), item)
+					if del then
+						game.log("You have no more %s.", o:getName{no_count=true, do_color=true})
 					else
-						local _, del = self:removeObject(self:getInven(inven), item)
-						if del then
-							game.log("You have no more %s.", o:getName{no_count=true, do_color=true})
-						else
-							game.log("You have %s.", o:getName{do_color=true})
-						end
-						self:sortInven(self:getInven(inven))
+						game.log("You have %s.", o:getName{do_color=true})
 					end
+					self:sortInven(self:getInven(inven))
 				end
 				self:breakStealth()
 				self:breakLightningSpeed()
