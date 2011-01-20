@@ -45,10 +45,10 @@ newBirthDescriptor
 	desc = {
 		"Runic Golems are creatures made of solid rock and animated using arcane forces.",
 		"They can not be of any class, but they have many intrinsinc abilities.",
-		"#GOLD#Stats modifiers:",
+		"#GOLD#Stat modifiers:",
 		"#LIGHT_BLUE# * +3 Strength, -2 Dexterity, +3 Constitution",
 		"#LIGHT_BLUE# * +2 Magic, +2 Willpower, -5 Cunning",
-		"#GOLD#Life per levels:#LIGHT_BLUE# 13",
+		"#GOLD#Life per level:#LIGHT_BLUE# 13",
 		"#GOLD#Experience penalty:#LIGHT_BLUE# 50%",
 	},
 	descriptor_choices =

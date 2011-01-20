@@ -44,7 +44,7 @@ newBirthDescriptor{
 		"Mindslayers specialize in direct and brutal application of mental forces to their immediate surroundings.",
 		"When Mindslayers do battle, they will most often be found in the thick of the fighting, vast energies churning around them and telekinetically-wielded weapons hewing nearby foes at the speed of thought.",
 		"Their most important stats are: Willpower and Cunning",
-		"#GOLD#Stats modifiers:",
+		"#GOLD#Stat modifiers:",
 		"#LIGHT_BLUE# * +1 Strength, +0 Dexterity, +0 Constitution",
 		"#LIGHT_BLUE# * +0 Magic, +4 Willpower, +3 Cunning",
 	},
