@@ -155,7 +155,7 @@ newTalent{
 	type = {"spell/stone-alchemy",4},
 	require = spells_req4,
 	points = 5,
-	mana = 80,
+	mana = 45,
 	cooldown = 15,
 	tactical = { DISABLE = 3 },
 	range = function(self, t)

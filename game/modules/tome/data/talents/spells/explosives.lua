@@ -168,7 +168,7 @@ newTalent{
 	type = {"spell/explosives",4},
 	require = spells_req4,
 	points = 5,
-	mana = 40,
+	mana = 32,
 	cooldown = 10,
 	range = function(self, t)
 		return math.ceil(5 + self:getDex(6))
