@@ -81,6 +81,7 @@ newTalent{
 	info = function(self, t)
 		local damagemod = t.getDamageMod(self, t)
 		return ([[Channel raw mana through your staff, projecting a bolt of your staff's damage type doing %d%% staff damage.
+		The bolt will only hurt hostile targets and pass safely through friendly ones.
 		This attack always has a 100%% chance to hit and ignores target armour.]]):
 		format(damagemod * 100)
 	end,
