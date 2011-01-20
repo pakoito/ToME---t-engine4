@@ -286,3 +286,21 @@ newTalent{
 		The bonus will increase with the Willpower stat]]):format(10 + self:getWil(20))
 	end,
 }
+
+-- Yeek's power: temporary damage increase
+newTalent{
+	short_name = "YEEK_WILL",
+	name = "Dominant Will",
+	type = {"base/race", 1},
+	no_energy = true,
+	cooldown = 50,
+	tactical = { ATTACK = 2 },
+	action = function(self, t)
+		self:setEffect(self.EFF_ORC_FURY, 5, {power=10 + self:getWil(20)})
+		return true
+	end,
+	info = function(self)
+		return ([[Summons your lust for blood and destruction, increasing all damage by %d%% for 5 turns.
+		The bonus will increase with the Willpower stat]]):format(10 + self:getWil(20))
+	end,
+}

@@ -61,6 +61,7 @@ local default_eyal_descriptors = {
 		Elf = "allow",
 		Dwarf = "allow",
 		Halfling = "allow",
+		Yeek = function() return profile.mod.allow_build.yeek and "allow" or "disallow" end,
 		Undead = function() return profile.mod.allow_build.undead and "allow" or "disallow" end,
 		Construct = function() return profile.mod.allow_build.construct and "allow" or "disallow" end,
 	},
