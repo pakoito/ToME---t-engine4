@@ -132,10 +132,15 @@ function _M:drawItem(item)
 	for i, col in ipairs(self.columns) do
 		local level = item.level
 		local color = util.getval(item.color, item) or {255,255,255}
-		local text = item[col.display_prop or col.sort]
-		if type(text) ~= "table" or not text.is_tstring then
-			text = util.getval(text, item)
-			if type(text) ~= "table" then text = tstring.from(tostring(text)) end
+		local text
+		if type(col.display_prop) == "function" then
+			text = col.display_prop(item):toTString()
+		else
+			text = item[col.display_prop or col.sort]
+			if type(text) ~= "table" or not text.is_tstring then
+				text = util.getval(text, item)
+				if type(text) ~= "table" then text = tstring.from(tostring(text)) end
+			end
 		end
 		local s = col.surface
 

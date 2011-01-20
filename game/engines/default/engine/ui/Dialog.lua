@@ -25,6 +25,24 @@ local Base = require "engine.ui.Base"
 module(..., package.seeall, class.inherit(Base))
 
 --- Requests a simple, press any key, dialog
+function _M:listPopup(title, text, list, w, h, fct)
+	local d = new(title, 1, 1)
+	local desc = require("engine.ui.Textzone").new{width=w, auto_height=true, text=text, scrollbar=true}
+	local l = require("engine.ui.List").new{width=w, height=h-16 - desc.h, list=list, fct=function() d.key:triggerVirtual("ACCEPT") end}
+	d:loadUI{
+		{left = 3, top = 3, ui=desc},
+		{left = 3, top = 3 + desc.h + 3, ui=require("engine.ui.Separator").new{dir="vertical", size=w - 12}},
+		{left = 3, bottom = 3, ui=l},
+	}
+	d.key:addBind("EXIT", function() game:unregisterDialog(d) if fct then fct() end end)
+	d.key:addBind("ACCEPT", function() game:unregisterDialog(d) if fct then fct(list[l.sel]) end end)
+	d:setFocus(l)
+	d:setupUI(true, true)
+	game:registerDialog(d)
+	return d
+end
+
+--- Requests a simple, press any key, dialog
 function _M:simplePopup(title, text, fct, no_leave)
 	local w, h = self.font:size(text)
 	local d = new(title, 1, 1)

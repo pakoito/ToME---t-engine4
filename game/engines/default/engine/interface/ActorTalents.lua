@@ -533,7 +533,7 @@ function _M:cooldownTalents()
 end
 
 --- Show usage dialog
-function _M:useTalents()
-	local d = require("engine.dialogs.UseTalents").new(self)
+function _M:useTalents(add_cols)
+	local d = require("engine.dialogs.UseTalents").new(self, add_cols)
 	game:registerDialog(d)
 end

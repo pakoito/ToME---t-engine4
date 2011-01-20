@@ -913,7 +913,7 @@ function _M:setupCommands()
 		end,
 
 		USE_TALENTS = not_wild(function()
-			self.player:useTalents()
+			self:registerDialog(require("mod.dialogs.UseTalents").new(self.player))
 		end),
 
 		LEVELUP = function()
