@@ -146,7 +146,7 @@ newTalent{
 		self.resists[DamageType.ACID] = self.resists[DamageType.ACID] - 3
 	end,
 	info = function(self, t)
-		return ([[Improves your resistance against the elemental damage of your own bombs by %d%%, and against external elemental damage by %d%%.
+		return ([[Improves your resistance (and your golem's) against the elemental damage of your own bombs by %d%%, and against external elemental damage by %d%%.
 		At talent level 5 it also protects you against all side effects of your bombs.]]):
 		format(self:getTalentLevelRaw(t) * 20, self:getTalentLevelRaw(t) * 3)
 	end,
