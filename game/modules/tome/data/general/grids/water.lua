@@ -163,6 +163,7 @@ newEntity{
 	notice = true,
 	change_level = 1,
 	change_zone = "wilderness",
+	air_level = -5, air_condition="water",
 }
 
 newEntity{
@@ -172,6 +173,7 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	change_level = -1,
+	air_level = -5, air_condition="water",
 }
 
 newEntity{
@@ -181,4 +183,5 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	change_level = 1,
+	air_level = -5, air_condition="water",
 }
