@@ -52,3 +52,23 @@ newEntity{ base = "BASE_SCROLL", define_as = "JEWELER_SUMMON", subtype="tome", n
 		use = function(self, who) who:hasQuest("master-jeweler"):summon_limmir(who) end
 	},
 }
+
+newEntity{ base = "BASE_AMULET",
+	unique = true,
+	name = "Pendent of the Sun and Moon", color = colors.LIGHT_SLATE,
+	unided_name = "a gray and gold pendent",
+	desc = [[This small pendent depicts a hematite moon eclipsing a golden sun and according to legend was worn by one of the Sunwall's founders.]],
+	level_range = {35, 45},
+	rarity = 300,
+	cost = 200,
+	material_level = 4,
+	wielder = {
+		combat_spellpower = 5,
+		combat_spellcrit = 5,
+		inc_damage = { [DamageType.LIGHT]= 7,[DamageType.DARKNESS]= 7 },
+		resists = { [DamageType.LIGHT]= 10, [DamageType.DARKNESS]= 10 },
+		resists_cap = { [DamageType.LIGHT]= 5, [DamageType.DARKNESS]= 5 },
+	},
+	max_power = 60, power_regen = 1,
+	use_talent = { id = Talents.T_CIRCLE_OF_SANCTITY, level = 2, power = 60 },
+}

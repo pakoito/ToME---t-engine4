@@ -326,6 +326,28 @@ This star is the culmination of their craft. Light radiates from its ever-shifti
 	},
 }
 
+newEntity{ base = "BASE_LITE",
+	unique = true,
+	name = "Dúathedlen Heart",
+	unided_name = "a dark, fleshy mass",
+	level_range = {30, 40},
+	color = colors.RED,
+	encumber = 1,
+	rarity = 300,
+	desc = [[This dark red heart still beats despite being seperated from it's owner.  It also snuffs out any light source that come near it]],
+	cost = 100,
+
+	wielder = {
+		lite = -1000,
+		infravision = 7,
+		resists_cap = { [DamageType.LIGHT] = 10 },
+		resists = { [DamageType.LIGHT] = 30 },
+	},
+
+	max_power = 15, power_regen = 1,
+	use_talent = { id = Talents.T_BLOOD_GRASP, level = 3, power = 10 },
+}
+
 newEntity{
 	unique = true,
 	type = "potion", subtype="potion",
@@ -915,6 +937,65 @@ newEntity{ base = "BASE_GLOVES",
 		knockback_immune=0.3,
 		stun_immune=0.3,
 	},
+}
+
+newEntity{ base = "BASE_GAUNTLETS",
+	unique = true,
+	name = "Dakhtun's Gauntlets", color = colors.STEEL_BLUE,
+	unided_name = "expertly-crafted dwarven-steel gauntlets",
+	desc = [[Fashioned by Grand Smith Dakhtun in the Age of Allure, these dwarven-steel gauntlets have been etched with golden arcane runes and are said to grant the wearer unparalleled physical and magical might.]],
+	level_range = {40, 50},
+	rarity = 300,
+	cost = 2000,
+	material_level = 3,
+	wielder = {
+		inc_stats = { [Stats.STAT_STR] = 6, [Stats.STAT_MAG] = 6 },
+		inc_damage = { [DamageType.PHYSICAL] = 10 },
+		combat_physcrit = 10,
+		combat_spellcrit = 10,
+		combat_critical_power = 50,
+	},
+}
+
+newEntity{ base = "BASE_GLOVES",
+	unique = true,
+	name = "Snow Giant Wraps", color = colors.SANDY_BROWN,
+	unided_name = "fur-lined leather wraps",
+	desc = [[Two large pieces of leather designed to be wrapped about the hands and the forearms.  This particular pair of wraps has been enchanted, imparting the wearer with great strength.]],
+	level_range = {15, 25},
+	rarity = 200,
+	cost = 500,
+	material_level = 1,
+	wielder = {
+		inc_stats = { [Stats.STAT_STR] = 4, },
+		resists = { [DamageType.COLD]= 10, [DamageType.LIGHTNING] = 10, },
+		knockback_immune = 0.5,
+		max_life = 60,
+	},
+	max_power = 6, power_regen = 1,
+	use_talent = { id = Talents.T_THROW_BOULDER, level = 2, power = 6 },
+}
+
+newEntity{ base = "BASE_GAUNTLETS",
+	unique = true,
+	name = "Storm Bringer's Guantlets", color = colors.LIGHT_STEEL_BLUE,
+	unided_name = "fine-mesh gauntlets",
+	desc = [[This pair of fine mesh voratun gauntlets is covered with glyphs of power that spark with azure energy.  The metal is supple and light so as not to interfere with spell-casting.  When and where these gauntlets were forged is a mystery but odds are the crafter knew a thing or two about magic.]],
+	level_range = {25, 35},
+	rarity = 250,
+	cost = 1000,
+	material_level = 5,
+	require = nil,
+	wielder = {
+		inc_stats = { [Stats.STAT_MAG] = 4, },
+		resists = { [DamageType.LIGHTNING] = 15, },
+		inc_damage = { [DamageType.LIGHTNING] = 10 },
+		resists_cap = { [DamageType.LIGHTNING] = 5 },
+		combat_spellcrit = 5,
+		combat_critical_power = 20,
+	},
+	max_power = 16, power_regen = 1,
+	use_talent = { id = Talents.T_CHAIN_LIGHTNING, level = 3, power = 16 },
 }
 
 newEntity{ base = "BASE_CLOAK",
