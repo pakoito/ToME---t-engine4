@@ -193,7 +193,8 @@ newTalent{
 			if (self.x ~= x or self.y ~= y) and game.level.map:isBound(x, y) and game.level.map(x, y, Map.ACTOR) then
 				local target = game.level.map(x, y, Map.ACTOR)
 				if target:checkHit(self:combatAttack(shield.special_combat), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("knockback") then
-					target:knockback(self.x, self.y, 1 + self:getTalentLevel(t))
+					target:knockback(self.x, self.y, 2 + self:getTalentLevel(t))
+					if target:canBe("stun") then target:setEffect(target.EFF_DAZED, 3 + self:getStr(8), {}) end
 				else
 					game.logSeen(target, "%s resists the knockback!", target.name:capitalize())
 				end
@@ -203,7 +204,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Let all your foes pile up on your shield, then put all your strength in one mighty thrust and repel them all away %d grids. The distance increases with talent level.]]):format(math.floor(1 + self:getTalentLevel(t)))
+		return ([[Let all your foes pile up on your shield, then put all your strength in one mighty thrust and repel them all away %d grids.
+		In addition all creature knocked back will also be dazed for %d turns.
+		The distance increases with talent level and the daze with Strength.]]):format(math.floor(2 + self:getTalentLevel(t)), 3 + self:getStr(8))
 	end,
 }
 
