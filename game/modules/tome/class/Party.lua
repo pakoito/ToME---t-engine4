@@ -153,7 +153,7 @@ function _M:setPlayer(actor, bypass)
 
 	-- Change back the old actor to a normal actor
 	if oldp then
-		if self.members[oldp].on_uncontrol then self.members[oldp].on_uncontrol(oldp) end
+		if self.members[oldp] and self.members[oldp].on_uncontrol then self.members[oldp].on_uncontrol(oldp) end
 
 		if oldp.__PREVIOUS_CLASSNAME then
 			oldp:replaceWith(require(oldp.__PREVIOUS_CLASSNAME).new(oldp))

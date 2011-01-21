@@ -1,0 +1,662 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="170" height="100" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="dg_grounds32" tilewidth="32" tileheight="32">
+  <image source="gfx/dg_grounds32.gif" width="288" height="640"/>
+  <tile id="9">
+   <properties>
+    <property name="display" value="."/>
+   </properties>
+  </tile>
+  <tile id="12">
+   <properties>
+    <property name="display" value="|"/>
+   </properties>
+  </tile>
+  <tile id="15">
+   <properties>
+    <property name="display" value="westreach-lake"/>
+   </properties>
+  </tile>
+  <tile id="16">
+   <properties>
+    <property name="display" value="("/>
+   </properties>
+  </tile>
+  <tile id="17">
+   <properties>
+    <property name="display" value="spellmurk-lake"/>
+   </properties>
+  </tile>
+  <tile id="18">
+   <properties>
+    <property name="display" value="irondeep-lake"/>
+   </properties>
+  </tile>
+  <tile id="19">
+   <properties>
+    <property name="display" value=")"/>
+   </properties>
+  </tile>
+  <tile id="20">
+   <properties>
+    <property name="display" value="*"/>
+   </properties>
+  </tile>
+  <tile id="33">
+   <properties>
+    <property name="display" value="{"/>
+    <property name="value" value=""/>
+   </properties>
+  </tile>
+  <tile id="53">
+   <properties>
+    <property name="display" value="^"/>
+   </properties>
+  </tile>
+  <tile id="54">
+   <properties>
+    <property name="display" value="T"/>
+   </properties>
+  </tile>
+  <tile id="56">
+   <properties>
+    <property name="display" value="v"/>
+   </properties>
+  </tile>
+  <tile id="69">
+   <properties>
+    <property name="display" value="p"/>
+   </properties>
+  </tile>
+  <tile id="72">
+   <properties>
+    <property name="display" value="-"/>
+   </properties>
+  </tile>
+  <tile id="73">
+   <properties>
+    <property name="display" value="~"/>
+    <property name="value" value=""/>
+   </properties>
+  </tile>
+  <tile id="81">
+   <properties>
+    <property name="display" value="#"/>
+   </properties>
+  </tile>
+  <tile id="84">
+   <properties>
+    <property name="display" value="&quot;"/>
+   </properties>
+  </tile>
+  <tile id="88">
+   <properties>
+    <property name="display" value="¨"/>
+   </properties>
+  </tile>
+  <tile id="89">
+   <properties>
+    <property name="display" value="m"/>
+   </properties>
+  </tile>
+  <tile id="90">
+   <properties>
+    <property name="display" value="t"/>
+   </properties>
+  </tile>
+  <tile id="93">
+   <properties>
+    <property name="display" value="!"/>
+   </properties>
+  </tile>
+  <tile id="105">
+   <properties>
+    <property name="display" value="="/>
+   </properties>
+  </tile>
+  <tile id="126">
+   <properties>
+    <property name="display" value="q"/>
+   </properties>
+  </tile>
+  <tile id="129">
+   <properties>
+    <property name="display" value="charred-scar"/>
+   </properties>
+  </tile>
+  <tile id="147">
+   <properties>
+    <property name="display" value="_"/>
+   </properties>
+  </tile>
+  <tile id="159">
+   <properties>
+    <property name="display" value="&amp;"/>
+   </properties>
+  </tile>
+  <tile id="171">
+   <properties>
+    <property name="display" value="gates-of-morning"/>
+   </properties>
+  </tile>
+  <tile id="172">
+   <properties>
+    <property name="display" value="w"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="181" name="numbers" tilewidth="32" tileheight="32">
+  <image source="gfx/numbers.png" width="192" height="192"/>
+  <tile id="0">
+   <properties>
+    <property name="display" value="derth"/>
+   </properties>
+  </tile>
+  <tile id="1">
+   <properties>
+    <property name="display" value="last-hope"/>
+   </properties>
+  </tile>
+  <tile id="2">
+   <properties>
+    <property name="display" value="angolwen"/>
+   </properties>
+  </tile>
+  <tile id="3">
+   <properties>
+    <property name="display" value="trollmire"/>
+   </properties>
+  </tile>
+  <tile id="4">
+   <properties>
+    <property name="display" value="maze"/>
+   </properties>
+  </tile>
+  <tile id="5">
+   <properties>
+    <property name="display" value="old-forest"/>
+   </properties>
+  </tile>
+  <tile id="6">
+   <properties>
+    <property name="display" value="sandworm"/>
+   </properties>
+  </tile>
+  <tile id="7">
+   <properties>
+    <property name="display" value="dreadfell"/>
+   </properties>
+  </tile>
+  <tile id="8">
+   <properties>
+    <property name="display" value="daikara"/>
+   </properties>
+  </tile>
+  <tile id="9">
+   <properties>
+    <property name="display" value="kor-pul"/>
+   </properties>
+  </tile>
+  <tile id="10">
+   <properties>
+    <property name="display" value="shatur"/>
+   </properties>
+  </tile>
+  <tile id="11">
+   <properties>
+    <property name="display" value="elvala"/>
+   </properties>
+  </tile>
+  <tile id="12">
+   <properties>
+    <property name="display" value=""/>
+   </properties>
+  </tile>
+  <tile id="13">
+   <properties>
+    <property name="display" value="high-peak"/>
+   </properties>
+  </tile>
+  <tile id="14">
+   <properties>
+    <property name="display" value="unremarkable-cave"/>
+   </properties>
+  </tile>
+  <tile id="15">
+   <properties>
+    <property name="display" value="zigur"/>
+   </properties>
+  </tile>
+  <tile id="16">
+   <properties>
+    <property name="display" value="angolwen-teleport"/>
+   </properties>
+  </tile>
+  <tile id="17">
+   <properties>
+    <property name="display" value="halfling-ruins"/>
+   </properties>
+  </tile>
+  <tile id="18">
+   <properties>
+    <property name="display" value="irkkk"/>
+   </properties>
+  </tile>
+  <tile id="19">
+   <properties>
+    <property name="display" value="rel-tunnel"/>
+   </properties>
+  </tile>
+  <tile id="20">
+   <properties>
+    <property name="display" value="murgol-lair"/>
+   </properties>
+  </tile>
+  <tile id="21">
+   <properties>
+    <property name="display" value="ritch-tunnels"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="Terrain" width="170" height="100">
+  <data encoding="base64" compression="zlib">
+   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
+  </data>
+ </layer>
+ <objectgroup name="addSpot#pops" width="170" height="100">
+  <object name="Allied kingdoms patrol" x="1059" y="1284" width="26" height="24">
+   <properties>
+    <property name="subtype" value="&quot;allied-kingdoms&quot;"/>
+    <property name="type" value="&quot;patrol&quot;"/>
+   </properties>
+  </object>
+  <object name="Allied kingdoms patrol" x="770" y="546" width="26" height="24">
+   <properties>
+    <property name="subtype" value="&quot;allied-kingdoms&quot;"/>
+    <property name="type" value="&quot;patrol&quot;"/>
+   </properties>
+  </object>
+  <object name="Allied kingdoms patrol" x="546" y="1253" width="26" height="24">
+   <properties>
+    <property name="subtype" value="&quot;allied-kingdoms&quot;"/>
+    <property name="type" value="&quot;patrol&quot;"/>
+   </properties>
+  </object>
+  <object name="Allied kingdoms patrol" x="1314" y="577" width="26" height="24">
+   <properties>
+    <property name="subtype" value="&quot;allied-kingdoms&quot;"/>
+    <property name="type" value="&quot;patrol&quot;"/>
+   </properties>
+  </object>
+  <object name="Allied kingdoms patrol" x="2081" y="354" width="26" height="24">
+   <properties>
+    <property name="subtype" value="&quot;allied-kingdoms&quot;"/>
+    <property name="type" value="&quot;patrol&quot;"/>
+   </properties>
+  </object>
+  <object name="Allied kingdoms patrol" x="1921" y="1219" width="26" height="24">
+   <properties>
+    <property name="subtype" value="&quot;allied-kingdoms&quot;"/>
+    <property name="type" value="&quot;patrol&quot;"/>
+   </properties>
+  </object>
+  <object name="small hostiles" x="806" y="846" width="48" height="40">
+   <properties>
+    <property name="subtype" value="&quot;maj-eyal&quot;"/>
+    <property name="type" value="&quot;hostile&quot;"/>
+   </properties>
+  </object>
+  <object name="small hostiles" x="1799" y="425" width="46" height="42">
+   <properties>
+    <property name="subtype" value="&quot;maj-eyal&quot;"/>
+    <property name="type" value="&quot;hostile&quot;"/>
+   </properties>
+  </object>
+  <object name="small hostiles" x="1444" y="1385" width="50" height="48">
+   <properties>
+    <property name="subtype" value="&quot;maj-eyal&quot;"/>
+    <property name="type" value="&quot;hostile&quot;"/>
+   </properties>
+  </object>
+  <object name="small hostiles" x="226" y="813" width="52" height="44">
+   <properties>
+    <property name="subtype" value="&quot;maj-eyal&quot;"/>
+    <property name="type" value="&quot;hostile&quot;"/>
+   </properties>
+  </object>
+  <object name="Reknor" x="2212" y="710" width="24" height="20">
+   <properties>
+    <property name="subtype" value="&quot;reknor&quot;"/>
+    <property name="type" value="&quot;zone-pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Eruan" x="4962" y="1510" width="24" height="20">
+   <properties>
+    <property name="subtype" value="&quot;eruan&quot;"/>
+    <property name="type" value="&quot;zone-pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Valley of Moon" x="4804" y="1766" width="24" height="20">
+   <properties>
+    <property name="subtype" value="&quot;valley-moon-caverns&quot;"/>
+    <property name="type" value="&quot;zone-pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Gorbat" x="4706" y="1734" width="24" height="20">
+   <properties>
+    <property name="subtype" value="&quot;gorbat-pride&quot;"/>
+    <property name="type" value="&quot;zone-pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Rak'Shor" x="4486" y="1637" width="24" height="20">
+   <properties>
+    <property name="subtype" value="&quot;rak-shor-pride&quot;"/>
+    <property name="type" value="&quot;zone-pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Ardhungol" x="5184" y="901" width="24" height="20">
+   <properties>
+    <property name="subtype" value="&quot;ardhungol&quot;"/>
+    <property name="type" value="&quot;zone-pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Lumberjack Town" x="1953" y="708" width="24" height="20">
+   <properties>
+    <property name="subtype" value="&quot;lumberjack-town&quot;"/>
+    <property name="type" value="&quot;zone-pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Telmur" x="1667" y="935" width="24" height="20">
+   <properties>
+    <property name="subtype" value="&quot;telmur&quot;"/>
+    <property name="type" value="&quot;zone-pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Vor Pride" x="5378" y="263" width="24" height="20">
+   <properties>
+    <property name="subtype" value="&quot;vor-pride&quot;"/>
+    <property name="type" value="&quot;zone-pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Vor Armoury" x="5348" y="262" width="24" height="20">
+   <properties>
+    <property name="subtype" value="&quot;vor-armoury&quot;"/>
+    <property name="type" value="&quot;zone-pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Grushnak" x="4230" y="326" width="24" height="20">
+   <properties>
+    <property name="subtype" value="&quot;grushnak-pride&quot;"/>
+    <property name="type" value="&quot;zone-pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Briagh Lair" x="5284" y="1670" width="24" height="20">
+   <properties>
+    <property name="subtype" value="&quot;briagh&quot;"/>
+    <property name="type" value="&quot;zone-pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Ruined gates of mroning" x="5218" y="997" width="24" height="20">
+   <properties>
+    <property name="subtype" value="&quot;ruined-gates-of-morning&quot;"/>
+    <property name="type" value="&quot;zone-pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Antimagic Town" x="1637" y="520" width="24" height="20">
+   <properties>
+    <property name="subtype" value="&quot;antimagic&quot;"/>
+    <property name="type" value="&quot;zone-pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Angolwen" x="386" y="774" width="24" height="20">
+   <properties>
+    <property name="subtype" value="&quot;angolwen&quot;"/>
+    <property name="type" value="&quot;zone-pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Angolwen Portal" x="451" y="774" width="24" height="20">
+   <properties>
+    <property name="subtype" value="&quot;angolwen-portal&quot;"/>
+    <property name="type" value="&quot;zone-pop&quot;"/>
+   </properties>
+  </object>
+  <object name="High Peak" x="4869" y="422" width="21" height="18">
+   <properties>
+    <property name="subtype" value="&quot;high-peak&quot;"/>
+    <property name="type" value="&quot;zone-pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Far East portal arrival" x="4899" y="517" width="24" height="20">
+   <properties>
+    <property name="subtype" value="&quot;fareast&quot;"/>
+    <property name="type" value="&quot;farportal-end&quot;"/>
+   </properties>
+  </object>
+  <object name="Gates of morning portal arrival" x="5187" y="999" width="24" height="20">
+   <properties>
+    <property name="subtype" value="&quot;gates-of-morning&quot;"/>
+    <property name="type" value="&quot;farportal-end&quot;"/>
+   </properties>
+  </object>
+  <object name="Last Hope portal arrival" x="1891" y="1254" width="24" height="20">
+   <properties>
+    <property name="subtype" value="&quot;last-hope&quot;"/>
+    <property name="type" value="&quot;farportal-end&quot;"/>
+   </properties>
+  </object>
+  <object name="Iron Throne portal arrival" x="2179" y="712" width="24" height="20">
+   <properties>
+    <property name="subtype" value="&quot;iron-throne&quot;"/>
+    <property name="type" value="&quot;farportal-end&quot;"/>
+   </properties>
+  </object>
+  <object name="Demon Plane portal arrival" x="1891" y="424" width="24" height="20">
+   <properties>
+    <property name="subtype" value="&quot;demon-plane-arrival&quot;"/>
+    <property name="type" value="&quot;farportal-end&quot;"/>
+   </properties>
+  </object>
+  <object name="Sunwall patrol" x="5188" y="1028" width="26" height="24">
+   <properties>
+    <property name="subtype" value="&quot;sunwall&quot;"/>
+    <property name="type" value="&quot;patrol&quot;"/>
+   </properties>
+  </object>
+  <object name="Sunwall patrol" x="5250" y="1348" width="26" height="24">
+   <properties>
+    <property name="subtype" value="&quot;sunwall&quot;"/>
+    <property name="type" value="&quot;patrol&quot;"/>
+   </properties>
+  </object>
+  <object name="Sunwall patrol" x="5218" y="582" width="26" height="24">
+   <properties>
+    <property name="subtype" value="&quot;sunwall&quot;"/>
+    <property name="type" value="&quot;patrol&quot;"/>
+   </properties>
+  </object>
+  <object name="Sunwall patrol" x="4836" y="964" width="26" height="24">
+   <properties>
+    <property name="subtype" value="&quot;sunwall&quot;"/>
+    <property name="type" value="&quot;patrol&quot;"/>
+   </properties>
+  </object>
+  <object name="Orc pride patrol" x="4518" y="1636" width="26" height="24">
+   <properties>
+    <property name="subtype" value="&quot;orc-pride&quot;"/>
+    <property name="type" value="&quot;patrol&quot;"/>
+   </properties>
+  </object>
+  <object name="Orc pride patrol" x="4708" y="1699" width="26" height="24">
+   <properties>
+    <property name="subtype" value="&quot;orc-pride&quot;"/>
+    <property name="type" value="&quot;patrol&quot;"/>
+   </properties>
+  </object>
+  <object name="Orc pride patrol" x="5218" y="1538" width="26" height="24">
+   <properties>
+    <property name="subtype" value="&quot;orc-pride&quot;"/>
+    <property name="type" value="&quot;patrol&quot;"/>
+   </properties>
+  </object>
+  <object name="Orc pride patrol" x="5347" y="293" width="26" height="24">
+   <properties>
+    <property name="subtype" value="&quot;orc-pride&quot;"/>
+    <property name="type" value="&quot;patrol&quot;"/>
+   </properties>
+  </object>
+  <object name="Orc pride patrol" x="4963" y="548" width="26" height="24">
+   <properties>
+    <property name="subtype" value="&quot;orc-pride&quot;"/>
+    <property name="type" value="&quot;patrol&quot;"/>
+   </properties>
+  </object>
+  <object name="Orc pride patrol" x="4227" y="292" width="26" height="24">
+   <properties>
+    <property name="subtype" value="&quot;orc-pride&quot;"/>
+    <property name="type" value="&quot;patrol&quot;"/>
+   </properties>
+  </object>
+  <object name="Zigur" x="1443" y="901" width="24" height="20">
+   <properties>
+    <property name="subtype" value="&quot;zigur&quot;"/>
+    <property name="type" value="&quot;zone-pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Sher'Tul Fortress portal" x="1027" y="741" width="24" height="20">
+   <properties>
+    <property name="subtype" value="&quot;shertul-fortress&quot;"/>
+    <property name="type" value="&quot;zone-pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Halfling ruins" x="1186" y="1027" width="24" height="20">
+   <properties>
+    <property name="subtype" value="&quot;halfling-ruins&quot;"/>
+    <property name="type" value="&quot;zone-pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Rel tunnel" x="996" y="1510" width="24" height="20">
+   <properties>
+    <property name="subtype" value="&quot;rel-tunnel&quot;"/>
+    <property name="type" value="&quot;zone-pop&quot;"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="addZone#zonenames" width="170" height="100" visible="0">
+  <object name="Maj'Eyal" x="171" y="56" width="2478" height="1344">
+   <properties>
+    <property name="subtype" value="&quot;Maj'Eyal&quot;"/>
+    <property name="type" value="&quot;zonename&quot;"/>
+   </properties>
+  </object>
+  <object name="Maj'Eyal" x="204" y="1406" width="434" height="196">
+   <properties>
+    <property name="subtype" value="&quot;Maj'Eyal&quot;"/>
+    <property name="type" value="&quot;zonename&quot;"/>
+   </properties>
+  </object>
+  <object name="Island of Rel" x="856" y="1458" width="386" height="266">
+   <properties>
+    <property name="subtype" value="&quot;Island of Rel&quot;"/>
+    <property name="type" value="&quot;zonename&quot;"/>
+   </properties>
+  </object>
+  <object name="Maj'Eyal" x="1668" y="1544" width="306" height="174">
+   <properties>
+    <property name="subtype" value="&quot;Charred Scar&quot;"/>
+    <property name="type" value="&quot;zonename&quot;"/>
+   </properties>
+  </object>
+  <object name="Far East" x="3870" y="72" width="1542" height="1990">
+   <properties>
+    <property name="subtype" value="&quot;Far East&quot;"/>
+    <property name="type" value="&quot;zonename&quot;"/>
+   </properties>
+  </object>
+  <object name="Far East" x="230" y="1736" width="2192" height="1044">
+   <properties>
+    <property name="subtype" value="&quot;Tar'Eyal&quot;"/>
+    <property name="type" value="&quot;zonename&quot;"/>
+   </properties>
+  </object>
+  <object name="Far East" x="370" y="1634" width="332" height="94">
+   <properties>
+    <property name="subtype" value="&quot;Tar'Eyal&quot;"/>
+    <property name="type" value="&quot;zonename&quot;"/>
+   </properties>
+  </object>
+  <object name="Far East" x="2064" y="1670" width="78" height="56">
+   <properties>
+    <property name="subtype" value="&quot;Tar'Eyal&quot;"/>
+    <property name="type" value="&quot;zonename&quot;"/>
+   </properties>
+  </object>
+  <object name="Far East" x="354" y="2786" width="184" height="252">
+   <properties>
+    <property name="subtype" value="&quot;Tar'Eyal&quot;"/>
+    <property name="type" value="&quot;zonename&quot;"/>
+   </properties>
+  </object>
+  <object name="Maj'Eyal" x="1310" y="1402" width="802" height="120">
+   <properties>
+    <property name="subtype" value="&quot;Maj'Eyal&quot;"/>
+    <property name="type" value="&quot;zonename&quot;"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="addZone#pops" width="170" height="100" visible="0">
+  <object name="Lumjberjack quest" x="1759" y="741" width="348" height="469">
+   <properties>
+    <property name="subtype" value="&quot;lumberjack-cursed&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
+  <object name="Angolwen quest" x="123" y="485" width="480" height="651">
+   <properties>
+    <property name="subtype" value="&quot;angolwen&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
+  <object name="Shadow crypt" x="4357" y="1381" width="284" height="407">
+   <properties>
+    <property name="subtype" value="&quot;shadow-crypt&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
+  <object name="Infinite Dungeon" x="1459" y="103" width="186" height="169">
+   <properties>
+    <property name="subtype" value="&quot;infinite-dungeon&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
+  <object name="Infinite Dungeon" x="2401" y="195" width="122" height="119">
+   <properties>
+    <property name="subtype" value="&quot;infinite-dungeon&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
+  <object name="Infinite Dungeon" x="1953" y="259" width="124" height="85">
+   <properties>
+    <property name="subtype" value="&quot;infinite-dungeon&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
+  <object name="Infinite Dungeon" x="653" y="37" width="352" height="267">
+   <properties>
+    <property name="subtype" value="&quot;infinite-dungeon&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
+  <object name="Infinite Dungeon" x="1893" y="1317" width="216" height="185">
+   <properties>
+    <property name="subtype" value="&quot;infinite-dungeon&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
+  <object name="Mark of the Spellblaze" x="1222" y="1128" width="502" height="344">
+   <properties>
+    <property name="subtype" value="&quot;mark-spellblaze&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

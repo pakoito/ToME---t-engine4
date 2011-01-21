@@ -21,12 +21,12 @@ require "engine.class"
 
 module(..., package.seeall, class.make)
 
-function _M:playerStatGetCharacterIdentifier()
-	return self.descriptor.world..","..self.descriptor.subrace..","..self.descriptor.subclass..","..self.descriptor.difficulty
+function _M:playerStatGetCharacterIdentifier(p)
+	return p.descriptor.world..","..p.descriptor.subrace..","..p.descriptor.subclass..","..p.descriptor.difficulty
 end
 
 function _M:registerDeath(src)
-	local pid = self:playerStatGetCharacterIdentifier()
+	local pid = self:playerStatGetCharacterIdentifier(game.party:findMember{main=true})
 	local name = src.name
 
 	profile.mod.deaths = profile.mod.deaths or {}
@@ -39,7 +39,7 @@ function _M:registerDeath(src)
 end
 
 function _M:registerUniqueKilled(who)
-	local pid = self:playerStatGetCharacterIdentifier()
+	local pid = self:playerStatGetCharacterIdentifier(game.party:findMember{main=true})
 
 	profile.mod.uniques = profile.mod.uniques or { uniques={} }
 	profile.mod.uniques.uniques[who.name] = profile.mod.uniques.uniques[who.name] or {}
@@ -50,7 +50,7 @@ end
 function _M:registerArtifactsPicked(what)
 	if what.stat_picked_up then return end
 	what.stat_picked_up = true
-	local pid = self:playerStatGetCharacterIdentifier()
+	local pid = self:playerStatGetCharacterIdentifier(game.party:findMember{main=true})
 	local name = what:getName{do_color=false, do_count=false, force_id=true}
 
 	profile.mod.artifacts = profile.mod.artifacts or { artifacts={} }
@@ -60,7 +60,7 @@ function _M:registerArtifactsPicked(what)
 end
 
 function _M:registerCharacterPlayed()
-	local pid = self:playerStatGetCharacterIdentifier()
+	local pid = self:playerStatGetCharacterIdentifier(game.party:findMember{main=true})
 
 	profile.mod.characters = profile.mod.characters or { characters={} }
 	profile.mod.characters.characters[pid] = (profile.mod.characters.characters[pid] or 0) + 1

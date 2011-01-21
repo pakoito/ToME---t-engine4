@@ -111,26 +111,6 @@ function _M:display(dispx, dispy)
 	self.display_x, self.display_y = ox, oy
 end
 
--- Default type def
-target_type = {
-	range=20,
-	friendlyfire=true,
-	block_path = function(typ, lx, ly)
-		if not typ.no_restrict then
-			if typ.requires_knowledge and not game.level.map.remembers(lx, ly) and not game.level.map.seens(lx, ly) then return true end
-			if not typ.pass_terrain and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") then return true
-			-- If we explode due to something other than terrain, then we should explode ON the tile, not before it
-			elseif typ.stop_block and game.level.map:checkAllEntities(lx, ly, "block_move") then return true, lx, ly end
-			if typ.range and typ.source_actor and typ.source_actor.x and math.sqrt((typ.source_actor.x-lx)^2 + (typ.source_actor.y-ly)^2) > typ.range then return true end
-		end
-		-- If we don't block the path, then the explode point should be here
-		return false, lx, ly
-	end,
-	block_radius=function(typ, lx, ly)
-		return not typ.no_restrict and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move")
-	end
-}
-
 -- @return t The target table used by ActorProject, Projectile, GameTargeting, etc.
 -- @param t Target table used to generate the
 -- @param t.type The engine-defined type, populates other more complex variables (see below)
@@ -151,6 +131,26 @@ function _M:getType(t)
 	if not t then return {} end
 	-- Add the default values
 	t = table.clone(t)
+	-- Default type def
+	local target_type = {
+		range=20,
+		friendlyfire=true,
+		block_path = function(typ, lx, ly)
+			if not typ.no_restrict then
+				if typ.requires_knowledge and not game.level.map.remembers(lx, ly) and not game.level.map.seens(lx, ly) then return true end
+				if not typ.pass_terrain and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") then return true
+				-- If we explode due to something other than terrain, then we should explode ON the tile, not before it
+				elseif typ.stop_block and game.level.map:checkAllEntities(lx, ly, "block_move") then return true, lx, ly end
+				if typ.range and typ.source_actor and typ.source_actor.x and math.sqrt((typ.source_actor.x-lx)^2 + (typ.source_actor.y-ly)^2) > typ.range then return true end
+			end
+			-- If we don't block the path, then the explode point should be here
+			return false, lx, ly
+		end,
+		block_radius=function(typ, lx, ly)
+			return not typ.no_restrict and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move")
+		end
+	}
+
 	table.update(t, target_type)
 	-- And now modify for the default types
 	if t.type then

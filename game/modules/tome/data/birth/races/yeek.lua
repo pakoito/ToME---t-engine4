@@ -24,7 +24,8 @@ newBirthDescriptor{
 	type = "race",
 	name = "Yeek",
 	desc = {
-		"Yeeks are a mysterious race native to the tropical island of Rel.",
+		"Yeeks are a mysterious race of small humanoids native to the tropical island of Rel.",
+		"Their body is covered with white fur and their disproportionate head gives them a ridiculous look.",
 		"Although they are now nearly unheard of in Maj'Eyal, they spend many centuries as secret slaves to the halfling nation of Nargol.",
 		"They gained their freedom during the Age of Pyre and have since then followed 'The Way' - a unity of minds enforced by their powerful psionics.",
 	},
@@ -40,8 +41,8 @@ newBirthDescriptor{
 		faction = "the-way",
 		type = "humanoid", subtype="yeek",
 		size_category = 2,
-		default_wilderness = {28, 13},
-		starting_zone = "trollmire",
+		default_wilderness = {28, 49},
+		starting_zone = "wilderness",
 		starting_quest = "start-yeek",
 		starting_intro = "yeek",
 		resolvers.inscription("INFUSION:_REGENERATION", {cooldown=10, dur=5, heal=60}),
@@ -62,11 +63,12 @@ newBirthDescriptor
 		"Although they are now nearly unheard of in Maj'Eyal, they spend many centuries as secret slaves to the halfling nation of Nargol.",
 		"They gained their freedom during the Age of Pyre and have since then followed 'The Way' - a unity of minds enforced by their powerful psionics.",
 		"They possess the #GOLD#Dominant Will#WHITE# talent which allows them temporarily subvert the mind of a lesser creature. When the effect ends the creature dies.",
+		"While yeeks are not amphibians they still have an affinity for water, allowing them to survive longer without breathing.",
 		"#GOLD#Stat modifiers:",
 		"#LIGHT_BLUE# * -3 Strength, -2 Dexterity, -5 Constitution",
 		"#LIGHT_BLUE# * +0 Magic, +6 Willpower, +4 Cunning",
 		"#GOLD#Life per level:#LIGHT_BLUE# 8",
-		"#GOLD#Experience penalty:#LIGHT_BLUE# --15%",
+		"#GOLD#Experience penalty:#LIGHT_BLUE# -15%",
 	},
 	inc_stats = { str=-3, con=-5, cun=4, wil=6, mag=0, dex=-2 },
 	talents = {
@@ -74,6 +76,7 @@ newBirthDescriptor
 	},
 	copy = {
 		life_rating=8,
+		max_air = 200,
 	},
 	experience = 0.85,
 }

@@ -704,6 +704,37 @@ newEffect{
 }
 
 newEffect{
+	name = "DOMINANT_WILL",
+	desc = "Dominated",
+	long_desc = function(self, eff) return ("The target's mind has been shattered. Its body remains as a thrall to your mind.") end,
+	type = "mental",
+	status = "detrimental",
+	parameters = { },
+	on_gain = function(self, err) return "#Target# mind is shattered." end,
+	on_lose = function(self, err) return "#Target# colapses." end,
+	activate = function(self, eff)
+		eff.pid = self:addTemporaryValue("inc_damage", {all=-15})
+		self.faction = eff.src.faction
+		self.ai_state = self.ai_state or {}
+		self.ai_state.tactic_leash = 100
+		self.remove_from_party_on_death = true
+		self.move_others = true
+		game.party:addMember(self, {
+			control="full",
+			type="thrall",
+			title="Thrall",
+			orders = {leash=true, follow=true},
+			on_control = function(self)
+				self:hotkeyAutoTalents()
+			end,
+		})
+	end,
+	deactivate = function(self, eff)
+		self:die(eff.src)
+	end,
+}
+
+newEffect{
 	name = "POWER_OVERLOAD",
 	desc = "Power Overload",
 	long_desc = function(self, eff) return ("The target radiates incredible power, increasing all damage done by %d%%."):format(eff.power) end,

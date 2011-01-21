@@ -1104,7 +1104,7 @@ function _M:die(src)
 		world:gainAchievement("REAVER", p, self)
 
 		if self.unique then
-			p:registerUniqueKilled(self)
+			game.player:registerUniqueKilled(self)
 		end
 
 		-- Record kills

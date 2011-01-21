@@ -294,13 +294,27 @@ newTalent{
 	type = {"base/race", 1},
 	no_energy = true,
 	cooldown = 50,
-	tactical = { ATTACK = 2 },
+	range = 4,
+	no_npc_use = true,
 	action = function(self, t)
-		self:setEffect(self.EFF_ORC_FURY, 5, {power=10 + self:getWil(20)})
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, function(px, py)
+			local target = game.level.map(px, py, Map.ACTOR)
+			if not target then return end
+			if not target:canBe("instakill") or target.rank > 2 or target.undead or not target:checkHit(self:getWil(20) + self.level * 1.5, target.level) then
+				game.logSeen(target, "%s resists the mental assault!", target.name:capitalize())
+				return
+			end
+			target:setEffect(target.EFF_DOMINANT_WILL, 4 + self:getWil(10), {src=self})
+		end)
 		return true
 	end,
 	info = function(self)
-		return ([[Summons your lust for blood and destruction, increasing all damage by %d%% for 5 turns.
-		The bonus will increase with the Willpower stat]]):format(10 + self:getWil(20))
+		return ([[Shatters the mind of your victim, giving your full control over its actions for %s turns.
+		When the effect ends you pull out your mind and the victim's body colapses dead.
+		This effect does not work on elite or undeads.
+		The duration will increase with the Willpower stat]]):format(10 + self:getWil(20))
 	end,
 }
