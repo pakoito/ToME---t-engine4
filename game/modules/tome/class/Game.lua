@@ -1028,6 +1028,13 @@ function _M:setupMouse(reset)
 	self.mouse:registerZone(self.player_display.display_x, self.player_display.display_y, self.player_display.w, self.player_display.h, function(button, mx, my, xrel, yrel, bx, by, event)
 		self.player_display.mouse:delegate(button, mx, my, xrel, yrel, bx, by, event)
 	end)
+	-- Move using the minimap
+	self.mouse:registerZone(0, 35, 200, 200, function(button, mx, my, xrel, yrel, bx, by, event)
+		if button == "left" and not xrel and not yrel and event == "button" then
+			local tmx, tmy = math.floor(bx / 4), math.floor(by / 4)
+			self.player:mouseMove(tmx, tmy)
+		end
+	end)
 	if not reset then self.mouse:setCurrent() end
 end
 

@@ -679,11 +679,11 @@ local activate_pair = function(moon, star, who)
 
 	-- The Moon knife's bonuses
 	moon.paired._special1 = {who, "lite", who:addTemporaryValue("lite", 1)}
-	moon.paired._special2 = {moon, "combat", moon:addTemporaryValue("combat", {melee_project={[DamageType.BLINDPHYSICAL]=2}})}
+	moon.paired._special2 = {moon, "combat", moon:addTemporaryValue("combat", {melee_project={[DamageType.RANDOM_CONFUSION]=3}})}
 	moon.paired._special3 = {who, {"inc_damage", DamageType.DARKNESS}, who:addTemporaryValue({"inc_damage", DamageType.DARKNESS}, 10)}
 	-- The Star knife's bonuses
 	star.paired._special1 = {who, "lite", who:addTemporaryValue("lite", 1)}
-	star.paired._special2 = {star, "combat", star:addTemporaryValue("combat", {melee_project={[DamageType.RANDOM_CONFUSION]=2}})}
+	star.paired._special2 = {star, "combat", star:addTemporaryValue("combat", {melee_project={[DamageType.RANDOM_BLINDPHYSICAL]=3}})}
 	star.paired._special3 = {who, "inc_damage", who:addTemporaryValue("inc_damage", {[DamageType.LIGHT]=10}) }
 	game.log("The two blades glow brightly as they are brought close together.")
 end
@@ -705,23 +705,23 @@ newEntity{ base = "BASE_KNIFE", define_as = "ART_PAIR_MOON",
 	unique = true,
 	name = "Moon",
 	unided_name = "crescent blade",
-	desc = [[A viciously curved blade that devours the light around it.]],
+	desc = [[A viciously curved blade that a folk story says is made from a material that originates from the moon.  Devouring the light abound, it fades.]],
 	level_range = {20, 30},
 	rarity = 200,
-	require = { stat = { dex=28, cun=20 }, },
+	require = { stat = { dex=24, cun=24 }, },
 	cost = 300,
 	material_level = 3,
 	combat = {
-		dam = 24,
-		apr = 15,
-		physcrit = 5,
-		dammod = {dex=0.45,str=0.45},
+		dam = 30,
+		apr = 30,
+		physcrit = 10,
+		dammod = {dex=0.45,cun=0.45},
 		melee_project={[DamageType.DARKNESS] = 20},
 	},
 	wielder = {
 		lite = -1,
 		inc_damage={
-			[DamageType.DARKNESS] = 5,
+			[DamageType.DARKNESS] = 10,
 		},
 	},
 	activate_pair = activate_pair,
@@ -747,23 +747,23 @@ newEntity{ base = "BASE_KNIFE", define_as = "ART_PAIR_STAR",
 	unique = true,
 	name = "Star",
 	unided_name = "jagged blade",
-	desc = [[A bright blade with more teeth than the most savage troll.]],
+	desc = [[Legend tells of a blade, shining bright as a star. Forged from a material fallen from the skies, it glows.]],
 	level_range = {20, 30},
 	rarity = 200,
-	require = { stat = { dex=20, cun=28 }, },
+	require = { stat = { dex=24, cun=24 }, },
 	cost = 300,
 	material_level = 3,
 	combat = {
-		dam = 22,
-		apr = 7,
-		physcrit = 13,
-		dammod = {dex=0.45,str=0.45},
+		dam = 25,
+		apr = 20,
+		physcrit = 20,
+		dammod = {dex=0.45,cun=0.45},
 		melee_project={[DamageType.LIGHT] = 20},
 	},
 	wielder = {
 		lite = 1,
 		inc_damage={
-			[DamageType.LIGHT] = 5,
+			[DamageType.LIGHT] = 10,
 		},
 	},
 	activate_pair = activate_pair,
