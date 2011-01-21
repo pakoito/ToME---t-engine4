@@ -27,7 +27,7 @@ newAI("dumb_talented", function(self)
 	for tid, _ in pairs(self.talents) do
 		local t = self:getTalentFromId(tid)
 --		print(self.name, self.uid, "dumb ai talents can try use", t.name, tid, "::", t.mode, not self:isTalentCoolingDown(t), target_dist <= self:getTalentRange(t), self:preUseTalent(t, true), self:canProject({type="bolt"}, self.ai_target.actor.x, self.ai_target.actor.y))
-		if t.mode == "activated" and
+		if t.mode == "activated" and not t.no_npc_use and
 		   not self:isTalentCoolingDown(t) and
 		   target_dist <= self:getTalentRange(t)
 		   and self:preUseTalent(t, true, true) and
@@ -36,7 +36,7 @@ newAI("dumb_talented", function(self)
 		   then
 			avail[#avail+1] = tid
 			print(self.name, self.uid, "dumb ai talents can use", t.name, tid)
-		elseif t.mode == "sustained" and not self:isTalentCoolingDown(t) and
+		elseif t.mode == "sustained" and not t.no_npc_use and not self:isTalentCoolingDown(t) and
 		   not self:isTalentActive(t.id) and
 		   self:preUseTalent(t, true, true)
 		   then

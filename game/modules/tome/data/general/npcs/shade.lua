@@ -54,7 +54,7 @@ newEntity{
 		e.max_life = e.max_life * 0.50
 		e.life = e.max_life
 		e.resists.all = 20
-		e.lite = nil,
+		e.lite = nil
 
 		-- AI
 		e.ai_state.sense_radius = 6
