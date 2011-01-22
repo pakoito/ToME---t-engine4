@@ -73,7 +73,7 @@ newTalent{
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			x, y, t.getDuration(self, t),
-			DamageType.DARKNESS, t.getDamage(self, t),
+			DamageType.DARKNESS, t.getDamageOnSpot(self, t),
 			3,
 			5, nil,
 			{type="shadow_zone"},
