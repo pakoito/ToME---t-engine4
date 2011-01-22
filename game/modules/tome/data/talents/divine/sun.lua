@@ -75,7 +75,7 @@ newTalent{
 	tactical = { ATTACKAREA = 1, DISABLE = 2 },
 	direct_hit = true,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 4, 80) end,
-	RANGE = function(self, t) return 2 + self:getTalentLevel(t) / 2 end,
+	range = function(self, t) return 2 + self:getTalentLevel(t) / 2 end,
 	action = function(self, t)
 		local tg = {type="ball", range=0, friendlyfire=true, radius=self:getTalentRange(t), talent=t}
 		self:project(tg, self.x, self.y, DamageType.LITE, 1)
@@ -89,7 +89,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local radius = t.getRadius(self, t)
+		local radius = self:getTalentRange(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[Invokes Sun flare with radius of %d, blinding your foes for %d turns and lighting up your immediate area.
 		At level 3 it will start dealing %0.2f light damage.

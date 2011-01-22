@@ -61,10 +61,6 @@ newTalent{
 			game.logPlayer(self, "You must sustain the Jumpgate spell to be able to teleport.")
 			return
 		end
-		if eff.jumpgate_level ~= game.zone.short_name .. "-" .. game.level.level then
-			game.logPlayer(self, "The destination is too far away.")
-			return
-		end
 		game.level.map:particleEmitter(self.x, self.y, 1, "teleport")
 		self:teleportRandom(eff.jumpgate_x, eff.jumpgate_y, 1)
 		game.level.map:particleEmitter(eff.jumpgate_x, eff.jumpgate_y, 1, "teleport")
@@ -330,10 +326,6 @@ newTalent{
 		local eff = self.sustain_talents[self.T_JUMPGATE_TWO]
 		if not eff then
 			game.logPlayer(self, "You must sustain the Jumpgate Two spell to be able to teleport.")
-			return
-		end
-		if eff.jumpgate2_level ~= game.zone.short_name .. "-" .. game.level.level then
-			game.logPlayer(self, "The destination is too far away.")
 			return
 		end
 		game.level.map:particleEmitter(self.x, self.y, 1, "teleport")
