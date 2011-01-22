@@ -94,7 +94,7 @@ return {
 	on_enter = function(lev, old_lev, newzone)
 		if newzone then
 			game.logPlayer(game.player, "#AQUAMARINE#You arrive deep under water, at the sea floor, as you look upwards you only see a glimpse of light coming through.")
-			game.logPlayer(game.player, "#AQUAMARINE#You should be crushed by the pressure but strangely you feel no discomfort.")
+			game.logPlayer(game.player, "#AQUAMARINE#You should be crushed by the pressure, but strangely you feel no discomfort.")
 			game.logPlayer(game.player, "#AQUAMARINE#All around you there is only water as far as you can see, except to your left, a giant coral structure. This is probably the temple of Creation.")
 		end
 	end,

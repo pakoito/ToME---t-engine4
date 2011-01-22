@@ -205,7 +205,7 @@ newEntity{ base = "BASE_AMULET",
 		combat_def = 6,
 	},
 	max_power = 300, power_regen = 1,
-	use_power = { name = "destructive wail", power = 300,
+	use_power = { name = "unleash a destructive wail", power = 300,
 		use = function(self, who)
 			who:project({type="ball", range=0, friendlyfire=false, radius=3}, who.x, who.y, engine.DamageType.DIG, 1)
 			who:project({type="ball", range=0, friendlyfire=false, radius=3}, who.x, who.y, engine.DamageType.DIG, 1)
