@@ -278,11 +278,29 @@ function _M:display()
 		h = h + self.font_h
 	end
 
+	h = h + self.font_h
+	for tid, act in pairs(player.sustain_talents) do
+		if act then
+			local t = player:getTalentFromId(tid)
+			local displayName = t.name
+			if t.getDisplayName then displayName = t.getDisplayName(player, t, player:isTalentActive(tid)) end
+			local desc = "#GOLD##{bold}#"..displayName.."#{normal}##WHITE#\n"..tostring(player:getTalentFullDescription(t))
+			self:mouseTooltip(desc, self:makeTexture(("#LIGHT_GREEN#%s"):format(displayName), x, h, 255, 255, 255)) h = h + self.font_h
+		end
+	end
+	for eff_id, p in pairs(player.tmp) do
+		local e = player.tempeffect_def[eff_id]
+		local dur = p.dur + 1
+		local desc = e.long_desc(player, p)
+		if e.status == "detrimental" then
+			self:mouseTooltip(desc, self:makeTexture(("#LIGHT_RED#%s(%d)"):format(e.desc,dur), x, h, 255, 255, 255)) h = h + self.font_h
+		else
+			self:mouseTooltip(desc, self:makeTexture(("#LIGHT_GREEN#%s(%d)"):format(e.desc,dur), x, h, 255, 255, 255)) h = h + self.font_h
+		end
+	end
 	if game.level and game.level.arena then
 		h = h + self.font_h
 		local arena = game.level.arena
-		self:makeTexture(("-Arena mode-"), x, h, 255, 255, 255) h = h + self.font_h
-
 		if arena.score > world.arena.scores[1].score then
 			self:makeTexture(("Score(TOP): %d"):format(arena.score), x, h, 255, 255, 100) h = h + self.font_h
 		else
@@ -319,27 +337,6 @@ function _M:display()
 			self:makeTexture("Rank: "..arena.printRank(arena.rank, arena.ranks), x, h, 255, 255, 255) h = h + self.font_h
 		end
 		h = h + self.font_h
-	end
-
-	h = h + self.font_h
-	for tid, act in pairs(player.sustain_talents) do
-		if act then
-			local t = player:getTalentFromId(tid)
-			local displayName = t.name
-			if t.getDisplayName then displayName = t.getDisplayName(player, t, player:isTalentActive(tid)) end
-			local desc = "#GOLD##{bold}#"..displayName.."#{normal}##WHITE#\n"..tostring(player:getTalentFullDescription(t))
-			self:mouseTooltip(desc, self:makeTexture(("#LIGHT_GREEN#%s"):format(displayName), x, h, 255, 255, 255)) h = h + self.font_h
-		end
-	end
-	for eff_id, p in pairs(player.tmp) do
-		local e = player.tempeffect_def[eff_id]
-		local dur = p.dur + 1
-		local desc = e.long_desc(player, p)
-		if e.status == "detrimental" then
-			self:mouseTooltip(desc, self:makeTexture(("#LIGHT_RED#%s(%d)"):format(e.desc,dur), x, h, 255, 255, 255)) h = h + self.font_h
-		else
-			self:mouseTooltip(desc, self:makeTexture(("#LIGHT_GREEN#%s(%d)"):format(e.desc,dur), x, h, 255, 255, 255)) h = h + self.font_h
-		end
 	end
 
 end
