@@ -61,59 +61,6 @@ color_shown   = { 1, 1, 1, 1 }
 color_obscure = { 0.6, 0.6, 0.6, 1 }
 smooth_scroll = 0
 
--- The minimap data
-MM_FLOOR = 1
-MM_BLOCK = 2
-MM_OBJECT = 4
-MM_TRAP = 8
-MM_FRIEND = 16
-MM_NEUTRAL = 32
-MM_HOSTILE = 64
-MM_LEVEL_CHANGE = 128
-
-local s_floor = core.display.newSurface(4, 4)
-s_floor:erase(0, 0, 0, 255)
-local s_floor_gl = s_floor:glTexture()
-
-local s_block = core.display.newSurface(4, 4)
-s_block:erase(240, 240, 240, 255)
-local s_block_gl = s_block:glTexture()
-
-local s_level_change = core.display.newSurface(4, 4)
-s_level_change:erase(240, 0, 240, 255)
-local s_level_change_gl = s_level_change:glTexture()
-
-local s_hostile = core.display.newSurface(4, 4)
-s_hostile:erase(240, 0, 0, 255)
-local s_hostile_gl = s_hostile:glTexture()
-
-local s_friend = core.display.newSurface(4, 4)
-s_friend:erase(0, 240, 0, 255)
-local s_friend_gl = s_friend:glTexture()
-
-local s_neutral = core.display.newSurface(4, 4)
-s_neutral:erase(0, 0, 240, 255)
-local s_neutral_gl = s_neutral:glTexture()
-
-local s_object = core.display.newSurface(4, 4)
-s_object:erase(0, 0, 240, 255)
-local s_object_gl = s_object:glTexture()
-
-local s_trap = core.display.newSurface(4, 4)
-s_trap:erase(240, 240, 0, 255)
-local s_trap_gl = s_trap:glTexture()
-
-mm_blocks = {
-	[MM_FLOOR] = s_floor_gl,
-	[MM_BLOCK] = s_block_gl,
-	[MM_LEVEL_CHANGE] = s_level_change_gl,
-	[MM_HOSTILE] = s_hostile_gl,
-	[MM_FRIEND] = s_friend_gl,
-	[MM_NEUTRAL] = s_neutral_gl,
-	[MM_OBJECT] = s_object_gl,
-	[MM_TRAP] = s_trap_gl,
-}
-
 --- Sets the viewport size
 -- Static
 -- @param x screen coordinate where the map will be displayed (this has no impact on the real display). This is used to compute mouse clicks
@@ -238,16 +185,6 @@ function _M:makeCMap()
 	self._map = core.map.newMap(self.w, self.h, self.mx, self.my, self.viewport.mwidth, self.viewport.mheight, self.tile_w, self.tile_h, self.zdepth)
 	self._map:setObscure(unpack(self.color_obscure))
 	self._map:setShown(unpack(self.color_shown))
-	self._map:setupMiniMap(
-		mm_blocks[MM_FLOOR],
-		mm_blocks[MM_BLOCK],
-		mm_blocks[MM_OBJECT],
-		mm_blocks[MM_TRAP],
-		mm_blocks[MM_FRIEND],
-		mm_blocks[MM_NEUTRAL],
-		mm_blocks[MM_HOSTILE],
-		mm_blocks[MM_LEVEL_CHANGE]
-	)
 	self._fovcache =
 	{
 		block_sight = core.fov.newCache(self.w, self.h),
@@ -385,7 +322,6 @@ end
 -- This updates many things, from the C map object, the FOV caches, the minimap if it exists, ...
 function _M:updateMap(x, y)
 	-- Update minimap if any
-	local mm = MM_FLOOR
 	local mos = {}
 
 	if not self.updateMapDisplay then
@@ -402,40 +338,39 @@ function _M:updateMap(x, y)
 				self._fovcache.path_caches[ps]:set(x, y, g:check("block_move", x, y, ps, false, true))
 			end
 
-			mm = mm + (g:check("block_move") and MM_BLOCK or 0)
-			mm = mm + (g:check("change_level") and MM_LEVEL_CHANGE or 0)
 			g:getMapObjects(self.tiles, mos, 1)
+			g:setupMinimapInfo(g._mo, self)
 		end
 		if t then
 			-- Handles trap being known
 			if not self.actor_player or t:knownBy(self.actor_player) then
 				t:getMapObjects(self.tiles, mos, 4)
-				mm = mm + MM_TRAP
+				t:setupMinimapInfo(t._mo, self)
 			else
 				t = nil
 			end
 		end
 		if o then
 			o:getMapObjects(self.tiles, mos, 7)
+			o:setupMinimapInfo(o._mo, self)
 			if self.object_stack_count then
 				local mo = o:getMapStackMO(self, x, y)
 				if mo then mos[9] = mo end
 			end
-			mm = mm + MM_OBJECT
 		end
 		if a then
 			-- Handles invisibility and telepathy and other such things
 			if not self.actor_player or self.actor_player:canSee(a) then
-				local r = self.actor_player:reactionToward(a)
-				mm = mm + (r > 0 and MM_FRIEND or (r == 0 and MM_NEUTRAL or MM_HOSTILE))
 				a:getMapObjects(self.tiles, mos, 10)
+				a:setupMinimapInfo(a._mo, self)
 			end
 		end
 		if p then
 			p:getMapObjects(self.tiles, mos, 13)
+			p:setupMinimapInfo(p._mo, self)
 		end
 	else
-		mm = self:updateMapDisplay(x, y, mos)
+		self:updateMapDisplay(x, y, mos)
 	end
 
 	-- Update entities checker for this spot
@@ -453,7 +388,7 @@ function _M:updateMap(x, y)
 	self._check_entities_store[ce] = self._check_entities[x + y * self.w]
 
 	-- Cache the map objects in the C map
-	self._map:setGrid(x, y, mm, mos)
+	self._map:setGrid(x, y, mos)
 
 	-- Update FOV caches
 	if self:checkAllEntities(x, y, "block_sight", self.actor_player) then self._fovcache.block_sight:set(x, y, true)

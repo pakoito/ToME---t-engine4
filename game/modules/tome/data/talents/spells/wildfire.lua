@@ -26,6 +26,7 @@ newTalent{
 	cooldown = 5,
 	tactical = { ATTACKAREA = 2, DISABLE = 2, ESCAPE = 2 },
 	direct_hit = true,
+	requires_target = true,
 	range = function(self, t) return 1 + self:getTalentLevelRaw(t) end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 28, 180) end,
 	action = function(self, t)
@@ -51,6 +52,7 @@ newTalent{
 	cooldown = 16,
 	tactical = { ATTACKAREA = 2 },
 	range = 10,
+	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 240) end,
 	getTargetCount = function(self, t) return math.ceil(self:getTalentLevel(t) + 2) end,
 	action = function(self, t)

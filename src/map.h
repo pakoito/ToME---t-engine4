@@ -34,6 +34,9 @@ typedef struct {
 	float tint_r;
 	float tint_g;
 	float tint_b;
+	float mm_r;
+	float mm_g;
+	float mm_b;
 	bool on_seen;
 	bool on_remember;
 	bool on_unknown;
@@ -50,7 +53,10 @@ typedef struct {
 	bool **grids_remembers;
 	bool **grids_lites;
 	unsigned char **minimap;
-	GLuint mm_floor, mm_block, mm_object, mm_trap, mm_friend, mm_neutral, mm_hostile, mm_level_change;
+
+	GLfloat *vertices;
+	GLfloat *colors;
+	GLfloat *texcoords;
 
 	int mo_list_ref;
 

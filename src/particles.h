@@ -42,6 +42,10 @@ typedef struct {
 	int density;
 	bool no_stop;
 
+	GLfloat *vertices;
+	GLfloat *colors;
+	GLshort *texcoords;
+
 	int base;
 
 	int angle_min, anglev_min, anglea_min;

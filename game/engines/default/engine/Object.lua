@@ -66,6 +66,12 @@ function _M:canAct()
 	return false
 end
 
+--- Setup minimap color for this entity
+-- You may overload this method to customize your minimap
+function _M:setupMinimapInfo(mo, map)
+	mo:minimap(0, 0, 240)
+end
+
 --- Do something when its your turn
 -- For objects this mostly is to recharge them
 -- By default, does nothing at all

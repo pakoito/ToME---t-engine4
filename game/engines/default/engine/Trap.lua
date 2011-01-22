@@ -52,6 +52,12 @@ function _M:loaded()
 	setmetatable(self.known_by, {__mode="k"})
 end
 
+--- Setup minimap color for this entity
+-- You may overload this method to customize your minimap
+function _M:setupMinimapInfo(mo, map)
+	mo:minimap(240, 240, 0)
+end
+
 --- Do we have enough energy
 function _M:enoughEnergy(val)
 	val = val or game.energy_to_act

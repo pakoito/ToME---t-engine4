@@ -32,6 +32,7 @@
 #define rng(x, y) (x + rand_div(1 + y - x))
 
 #define PARTICLE_ETERNAL 999999
+#define PARTICLES_PER_ARRAY 1000
 
 static void getinitfield(lua_State *L, const char *key, int *min, int *max)
 {
@@ -81,6 +82,11 @@ static int particles_new(lua_State *L)
 	ps->texture = *t;
 	ps->texture_ref = t_ref;
 	ps->no_stop = no_stop;
+
+	int batch = (nb < PARTICLES_PER_ARRAY) ? nb : PARTICLES_PER_ARRAY;
+	ps->vertices = calloc(2*4*batch, sizeof(GLfloat)); // 2 coords, 4 vertices per particles
+	ps->colors = calloc(4*4*batch, sizeof(GLfloat)); // 4 color data, 4 vertices per particles
+	ps->texcoords = calloc(2*4*batch, sizeof(GLshort));
 
 	ps->particles = calloc(nb, sizeof(particle_type));
 
@@ -143,6 +149,9 @@ static int particles_free(lua_State *L)
 {
 	particles_type *ps = (particles_type*)auxiliar_checkclass(L, "core{particles}", 1);
 
+	free(ps->texcoords);
+	free(ps->vertices);
+	free(ps->colors);
 	free(ps->particles);
 	luaL_unref(L, LUA_REGISTRYINDEX, ps->texture_ref);
 	if (ps->generator_ref) luaL_unref(L, LUA_REGISTRYINDEX, ps->generator_ref);
@@ -264,7 +273,6 @@ static int particles_emit(lua_State *L)
 	return 0;
 }
 
-
 static int particles_to_screen(lua_State *L)
 {
 	particles_type *ps = (particles_type*)auxiliar_checkclass(L, "core{particles}", 1);
@@ -276,21 +284,15 @@ static int particles_to_screen(lua_State *L)
 	int w = 0;
 	int i, j;
 	bool alive = FALSE;
-	GLfloat vertices[3*4] = {
-		0, 0, -97,
-		0, 0, -97,
-		0, 0, -97,
-		0, 0, -97,
-	};
-	GLshort texcoords[2*4] = {
-		0, 0,
-		1, 0,
-		1, 1,
-		0, 1,
-	};
+	int vert_idx = 0, col_idx = 0;
+	GLfloat *vertices = ps->vertices;
+	GLfloat *colors = ps->colors;
+	GLshort *texcoords = ps->texcoords;
 
 	glBindTexture(GL_TEXTURE_2D, ps->texture);
 	glTexCoordPointer(2, GL_SHORT, 0, texcoords);
+	glColorPointer(4, GL_FLOAT, 0, colors);
+	glVertexPointer(2, GL_FLOAT, 0, vertices);
 
 	for (w = 0; w < ps->nb; w++)
 	{
@@ -307,52 +309,69 @@ static int particles_to_screen(lua_State *L)
 					i = x + p->x * zoom - p->size / 2;
 					j = y + p->y * zoom - p->size / 2;
 
-					vertices[0] = i; vertices[1] = j;
-					vertices[3] = p->size + i; vertices[4] = j;
-					vertices[6] = p->size + i; vertices[7] = p->size + j;
-					vertices[9] = i; vertices[10] = p->size + j;
+					vertices[vert_idx] = i; vertices[vert_idx+1] = j;
+					vertices[vert_idx+2] = p->size + i; vertices[vert_idx+3] = j;
+					vertices[vert_idx+4] = p->size + i; vertices[vert_idx+5] = p->size + j;
+					vertices[vert_idx+6] = i; vertices[vert_idx+7] = p->size + j;
 				}
 				else
 				{
 					if ((p->ox <= p->x) && (p->oy <= p->y))
 					{
-						vertices[0] = 0 + x + p->ox * zoom; vertices[1] = 0 + y + p->oy * zoom;
-						vertices[3] = p->size + x + p->x * zoom; vertices[4] = 0 + y + p->y * zoom;
-						vertices[6] = p->size + x + p->x * zoom; vertices[7] = p->size + y + p->y * zoom;
-						vertices[9] = 0 + x + p->x * zoom; vertices[10] = p->size + y + p->y * zoom;
+						vertices[vert_idx+0] = 0 + x + p->ox * zoom; vertices[vert_idx+1] = 0 + y + p->oy * zoom;
+						vertices[vert_idx+2] = p->size + x + p->x * zoom; vertices[vert_idx+3] = 0 + y + p->y * zoom;
+						vertices[vert_idx+4] = p->size + x + p->x * zoom; vertices[vert_idx+5] = p->size + y + p->y * zoom;
+						vertices[vert_idx+6] = 0 + x + p->x * zoom; vertices[vert_idx+7] = p->size + y + p->y * zoom;
 					}
 					else if ((p->ox <= p->x) && (p->oy > p->y))
 					{
-						vertices[0] = 0 + x + p->x * zoom; vertices[1] = 0 + y + p->y * zoom;
-						vertices[3] = p->size + x + p->x * zoom; vertices[4] = 0 + y + p->y * zoom;
-						vertices[6] = p->size + x + p->x * zoom; vertices[7] = p->size + y + p->y * zoom;
-						vertices[9] = 0 + x + p->ox * zoom; vertices[10] = p->size + y + p->oy * zoom;
+						vertices[vert_idx+0] = 0 + x + p->x * zoom; vertices[vert_idx+1] = 0 + y + p->y * zoom;
+						vertices[vert_idx+2] = p->size + x + p->x * zoom; vertices[vert_idx+3] = 0 + y + p->y * zoom;
+						vertices[vert_idx+4] = p->size + x + p->x * zoom; vertices[vert_idx+5] = p->size + y + p->y * zoom;
+						vertices[vert_idx+6] = 0 + x + p->ox * zoom; vertices[vert_idx+7] = p->size + y + p->oy * zoom;
 					}
 					else if ((p->ox > p->x) && (p->oy <= p->y))
 					{
-						vertices[0] = 0 + x + p->x * zoom; vertices[1] = 0 + y + p->y * zoom;
-						vertices[3] = p->size + x + p->ox * zoom; vertices[4] = 0 + y + p->oy * zoom;
-						vertices[6] = p->size + x + p->x * zoom; vertices[7] = p->size + y + p->y * zoom;
-						vertices[9] = 0 + x + p->x * zoom; vertices[10] = p->size + y + p->y * zoom;
+						vertices[vert_idx+0] = 0 + x + p->x * zoom; vertices[vert_idx+1] = 0 + y + p->y * zoom;
+						vertices[vert_idx+2] = p->size + x + p->ox * zoom; vertices[vert_idx+3] = 0 + y + p->oy * zoom;
+						vertices[vert_idx+4] = p->size + x + p->x * zoom; vertices[vert_idx+5] = p->size + y + p->y * zoom;
+						vertices[vert_idx+6] = 0 + x + p->x * zoom; vertices[vert_idx+7] = p->size + y + p->y * zoom;
 					}
 					else if ((p->ox > p->x) && (p->oy > p->y))
 					{
-						vertices[0] = 0 + x + p->x * zoom; vertices[1] = 0 + y + p->y * zoom;
-						vertices[3] = p->size + x + p->x * zoom; vertices[4] = 0 + y + p->y * zoom;
-						vertices[6] = p->size + x + p->ox * zoom; vertices[7] = p->size + y + p->oy * zoom;
-						vertices[9] = 0 + x + p->x * zoom; vertices[10] = p->size + y + p->y * zoom;
+						vertices[vert_idx+0] = 0 + x + p->x * zoom; vertices[vert_idx+1] = 0 + y + p->y * zoom;
+						vertices[vert_idx+2] = p->size + x + p->x * zoom; vertices[vert_idx+3] = 0 + y + p->y * zoom;
+						vertices[vert_idx+4] = p->size + x + p->ox * zoom; vertices[vert_idx+5] = p->size + y + p->oy * zoom;
+						vertices[vert_idx+6] = 0 + x + p->x * zoom; vertices[vert_idx+7] = p->size + y + p->y * zoom;
 					}
 				}
 
-				tglColor4f(p->r, p->g, p->b, p->a);
-				glVertexPointer(3, GL_FLOAT, 0, vertices);
-				glDrawArrays(GL_QUADS, 0, 4);
+				/* Setup texture coords */
+				texcoords[vert_idx] = 0; texcoords[vert_idx+1] = 0;
+				texcoords[vert_idx+2] = 1; texcoords[vert_idx+3] = 0;
+				texcoords[vert_idx+4] = 1; texcoords[vert_idx+5] = 1;
+				texcoords[vert_idx+6] = 0; texcoords[vert_idx+7] = 1;
+
+				/* Setup color */
+				colors[col_idx] = p->r; colors[col_idx+1] = p->g; colors[col_idx+2] = p->b; colors[col_idx+3] = p->a;
+				colors[col_idx+4] = p->r; colors[col_idx+5] = p->g; colors[col_idx+6] = p->b; colors[col_idx+7] = p->a;
+				colors[col_idx+8] = p->r; colors[col_idx+9] = p->g; colors[col_idx+10] = p->b; colors[col_idx+11] = p->a;
+				colors[col_idx+12] = p->r; colors[col_idx+13] = p->g; colors[col_idx+14] = p->b; colors[col_idx+15] = p->a;
+
+				/* Draw if over PARTICLES_PER_ARRAY particles */
+				vert_idx += 8;
+				col_idx += 16;
+				if (vert_idx >= 2*4*PARTICLES_PER_ARRAY) {
+					// Draw them all in one fell swoop
+					glDrawArrays(GL_QUADS, 0, vert_idx / 2);
+					vert_idx = 0;
+					col_idx = 0;
+				}
 			}
 		}
 	}
-
-	// Restore normal display
-	tglColor4f(1, 1, 1, 1);
+	// Draw them all in one fell swoop
+	if (vert_idx) glDrawArrays(GL_QUADS, 0, vert_idx / 2);
 
 	lua_pushboolean(L, alive || ps->no_stop);
 	return 1;
@@ -408,9 +427,6 @@ static int particles_update(lua_State *L)
 			p->sizev += p->sizea;
 		}
 	}
-
-	// Restore normal display
-	tglColor4f(1, 1, 1, 1);
 
 	lua_pushboolean(L, alive || ps->no_stop);
 	return 1;

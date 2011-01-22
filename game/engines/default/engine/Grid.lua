@@ -34,3 +34,11 @@ function _M:init(t, no_default)
 	self.name = t.name
 	Entity.init(self, t, no_default)
 end
+
+--- Setup minimap color for this entity
+-- You may overload this method to customize your minimap
+function _M:setupMinimapInfo(mo, map)
+	if self:check("block_move") then mo:minimap(240, 240, 240)
+	else mo:minimap(0, 0, 0)
+	end
+end

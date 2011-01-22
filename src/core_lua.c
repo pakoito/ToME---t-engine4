@@ -532,16 +532,21 @@ static int gl_draw_quad(lua_State *L)
 	else
 		tglBindTexture(GL_TEXTURE_2D, 0);
 
-	tglColor4f(r, g, b, a);
-
 	GLfloat texcoords[2*4] = {
 		0, 0,
 		0, 1,
 		1, 1,
 		1, 0,
 	};
-
+	GLfloat colors[4*4] = {
+		r, g, b, a,
+		r, g, b, a,
+		r, g, b, a,
+		r, g, b, a,
+	};
+	glColorPointer(4, GL_FLOAT, 0, colors);
 	glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
+
 	GLfloat vertices[2*4] = {
 		x, y,
 		x, y + h,
@@ -549,9 +554,8 @@ static int gl_draw_quad(lua_State *L)
 		x + w, y,
 	};
 	glVertexPointer(2, GL_FLOAT, 0, vertices);
-	glDrawArrays(GL_QUADS, 0, 4);
 
-	tglColor4f(1, 1, 1, 1);
+	glDrawArrays(GL_QUADS, 0, 4);
 	return 0;
 }
 
@@ -738,7 +742,23 @@ static int sdl_surface_toscreen(lua_State *L)
 		float g = luaL_checknumber(L, 5);
 		float b = luaL_checknumber(L, 6);
 		float a = luaL_checknumber(L, 7);
-		tglColor4f(r, g, b, a);
+		GLfloat colors[4*4] = {
+			r, g, b, a,
+			r, g, b, a,
+			r, g, b, a,
+			r, g, b, a,
+		};
+		glColorPointer(4, GL_FLOAT, 0, colors);
+	}
+	else
+	{
+		GLfloat colors[4*4] = {
+			1, 1, 1, 1,
+			1, 1, 1, 1,
+			1, 1, 1, 1,
+			1, 1, 1, 1,
+		};
+		glColorPointer(4, GL_FLOAT, 0, colors);
 	}
 
 	GLuint t;
@@ -750,8 +770,6 @@ static int sdl_surface_toscreen(lua_State *L)
 	draw_textured_quad(x,y,(*s)->w,(*s)->h);
 
 	glDeleteTextures(1, &t);
-
-	if (lua_isnumber(L, 4)) tglColor4f(1, 1, 1, 1);
 
 	return 0;
 }
@@ -768,15 +786,29 @@ static int sdl_surface_toscreen_with_texture(lua_State *L)
 		float g = luaL_checknumber(L, 6);
 		float b = luaL_checknumber(L, 7);
 		float a = luaL_checknumber(L, 8);
-		tglColor4f(r, g, b, a);
+		GLfloat colors[4*4] = {
+			r, g, b, a,
+			r, g, b, a,
+			r, g, b, a,
+			r, g, b, a,
+		};
+		glColorPointer(4, GL_FLOAT, 0, colors);
+	}
+	else
+	{
+		GLfloat colors[4*4] = {
+			1, 1, 1, 1,
+			1, 1, 1, 1,
+			1, 1, 1, 1,
+			1, 1, 1, 1,
+		};
+		glColorPointer(4, GL_FLOAT, 0, colors);
 	}
 
 	tglBindTexture(GL_TEXTURE_2D, *t);
 
 	copy_surface_to_texture(*s);
 	draw_textured_quad(x,y,(*s)->w,(*s)->h);
-
-	if (lua_isnumber(L, 5)) tglColor4f(1, 1, 1, 1);
 
 	return 0;
 }
@@ -862,7 +894,23 @@ static int sdl_texture_toscreen(lua_State *L)
 		float g = luaL_checknumber(L, 7);
 		float b = luaL_checknumber(L, 8);
 		float a = luaL_checknumber(L, 9);
-		tglColor4f(r, g, b, a);
+		GLfloat colors[4*4] = {
+			r, g, b, a,
+			r, g, b, a,
+			r, g, b, a,
+			r, g, b, a,
+		};
+		glColorPointer(4, GL_FLOAT, 0, colors);
+	}
+	else
+	{
+		GLfloat colors[4*4] = {
+			1, 1, 1, 1,
+			1, 1, 1, 1,
+			1, 1, 1, 1,
+			1, 1, 1, 1,
+		};
+		glColorPointer(4, GL_FLOAT, 0, colors);
 	}
 
 	tglBindTexture(GL_TEXTURE_2D, *t);
@@ -883,8 +931,6 @@ static int sdl_texture_toscreen(lua_State *L)
 	};
 	glVertexPointer(2, GL_FLOAT, 0, vertices);
 	glDrawArrays(GL_QUADS, 0, 4);
-
-	if (lua_isnumber(L, 6)) tglColor4f(1, 1, 1, 1);
 	return 0;
 }
 
@@ -903,7 +949,23 @@ static int sdl_texture_toscreen_full(lua_State *L)
 		float g = luaL_checknumber(L, 10);
 		float b = luaL_checknumber(L, 11);
 		float a = luaL_checknumber(L, 12);
-		tglColor4f(r, g, b, a);
+		GLfloat colors[4*4] = {
+			r, g, b, a,
+			r, g, b, a,
+			r, g, b, a,
+			r, g, b, a,
+		};
+		glColorPointer(4, GL_FLOAT, 0, colors);
+	}
+	else
+	{
+		GLfloat colors[4*4] = {
+			1, 1, 1, 1,
+			1, 1, 1, 1,
+			1, 1, 1, 1,
+			1, 1, 1, 1,
+		};
+		glColorPointer(4, GL_FLOAT, 0, colors);
 	}
 
 	tglBindTexture(GL_TEXTURE_2D, *t);
@@ -926,8 +988,6 @@ static int sdl_texture_toscreen_full(lua_State *L)
 	};
 	glVertexPointer(2, GL_FLOAT, 0, vertices);
 	glDrawArrays(GL_QUADS, 0, 4);
-
-	if (lua_isnumber(L, 8)) tglColor4f(1, 1, 1, 1);
 	return 0;
 }
 
@@ -990,6 +1050,7 @@ static int sdl_texture_outline(lua_State *L)
 	float g = luaL_checknumber(L, 7);
 	float b = luaL_checknumber(L, 8);
 	float a = luaL_checknumber(L, 9);
+	int i;
 
 	// Setup our FBO
 	// WARNING: this is a static, only one FBO is ever made, and never deleted, for some reasons
@@ -1029,34 +1090,39 @@ static int sdl_texture_outline(lua_State *L)
 	glClear(GL_COLOR_BUFFER_BIT);
 	glLoadIdentity();
 
+	/* Render to buffer: shadow */
+	glBindTexture(GL_TEXTURE_2D, *t);
+
 	GLfloat texcoords[2*4] = {
 		0, 0,
 		1, 0,
 		1, 1,
 		0, 1,
 	};
-
-	glBindTexture(GL_TEXTURE_2D, *t);
-	glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
 	GLfloat vertices[2*4] = {
 		x,   y,
 		w+x, y,
 		w+x, h+y,
 		x,   h+y,
 	};
-
-	/* Render to buffer: shadow */
-	tglColor4f(r, g, b, a);
+	GLfloat colors[4*4] = {
+		r, g, b, a,
+		r, g, b, a,
+		r, g, b, a,
+		r, g, b, a,
+	};
+	glColorPointer(4, GL_FLOAT, 0, colors);
 	glVertexPointer(2, GL_FLOAT, 0, vertices);
+	glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
+
 	glDrawArrays(GL_QUADS, 0, 4);
 
 	/* Render to buffer: original */
-	tglColor4f(1, 1, 1, 1);
+	for (i = 0; i < 4*4; i++) colors[i] = 1;
 	vertices[0] = 0; vertices[1] = 0;
 	vertices[2] = w; vertices[3] = 0;
 	vertices[4] = w; vertices[5] = h;
 	vertices[6] = 0; vertices[7] = h;
-	glVertexPointer(2, GL_FLOAT, 0, vertices);
 	glDrawArrays(GL_QUADS, 0, 4);
 
 	// Unbind texture from FBO and then unbind FBO
@@ -1265,7 +1331,23 @@ static int gl_fbo_toscreen(lua_State *L)
 		g = luaL_checknumber(L, 8);
 		b = luaL_checknumber(L, 9);
 		a = luaL_checknumber(L, 10);
-		tglColor4f(r, g, b, a);
+		GLfloat colors[4*4] = {
+			r, g, b, a,
+			r, g, b, a,
+			r, g, b, a,
+			r, g, b, a,
+		};
+		glColorPointer(4, GL_FLOAT, 0, colors);
+	}
+	else
+	{
+		GLfloat colors[4*4] = {
+			1, 1, 1, 1,
+			1, 1, 1, 1,
+			1, 1, 1, 1,
+			1, 1, 1, 1,
+		};
+		glColorPointer(4, GL_FLOAT, 0, colors);
 	}
 	if (lua_isuserdata(L, 6))
 	{
@@ -1295,7 +1377,6 @@ static int gl_fbo_toscreen(lua_State *L)
 	glDrawArrays(GL_QUADS, 0, 4);
 
 	if (lua_isuserdata(L, 6)) glUseProgramObjectARB(0);
-	if (lua_isnumber(L, 7)) tglColor4f(1, 1, 1, 1);
 	glEnable(GL_BLEND);
 	return 0;
 }

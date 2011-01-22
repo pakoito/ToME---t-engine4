@@ -299,14 +299,20 @@ void call_draw(int nb_keyframes)
 			1, 1,
 			0, 1,
 		};
+		GLfloat colors[4*4] = {
+			1, 1, 1, 1,
+			1, 1, 1, 1,
+			1, 1, 1, 1,
+			1, 1, 1, 1,
+		};
 
 		glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
+		glColorPointer(4, GL_FLOAT, 0, colors);
 
 		int x = mousex + mouse_cursor_ox;
 		int y = mousey + mouse_cursor_oy;
 		int down = SDL_GetMouseState(NULL, NULL);
 		tglBindTexture(GL_TEXTURE_2D, down ? mouse_cursor_down_tex : mouse_cursor_tex);
-		tglColor4f(1, 1, 1, 1);
 
 		GLfloat vertices[2*4] = {
 			x, y,
@@ -485,9 +491,6 @@ void setupDisplayTimer(int fps)
 /* general OpenGL initialization function */
 int initGL()
 {
-	/* Enable smooth shading */
-//	glShadeModel( GL_SMOOTH );
-
 	/* Set the background black */
 	tglClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
 
@@ -496,19 +499,13 @@ int initGL()
 
 	/* The Type Of Depth Test To Do */
 	glDepthFunc(GL_LEQUAL);
-//	glDepthFunc(GL_LESS);
-
-	/* Really Nice Perspective Calculations */
-	//	glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST );
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-//	glDisable(GL_DEPTH_TEST);
-	tglColor4f(1.0f,1.0f,1.0f,1.0f);
-//	glAlphaFunc(GL_GREATER,0.1f);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glEnableClientState(GL_COLOR_ARRAY);
 
 	return( TRUE );
 }
@@ -546,9 +543,6 @@ int resizeWindow(int width, int height)
 
 	/* Reset The View */
 	glLoadIdentity( );
-
-//	glEnable(GL_ALPHA_TEST);
-//	tglColor4f(1.0f,1.0f,1.0f,1.0f);
 
 	return( TRUE );
 }
