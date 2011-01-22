@@ -40,7 +40,7 @@ newTalent{
 		local trap = game.level.map(tx, ty, Map.TRAP)
 		if trap then return end
 
-		local dam = t.getDamage(self, t)
+		local dam = t.getDazeDuration(self, t)
 		local trap = Trap.new{
 			name = "glyph of paralysis",
 			type = "elemental", id_by_type=true, unided_name = "trap",
