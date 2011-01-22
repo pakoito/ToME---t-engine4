@@ -31,14 +31,6 @@
 //#include "shaders.h"
 #include "useshader.h"
 
-#define DO_QUAD(dx, dy, dz, zoom) {\
-		glBegin(GL_QUADS); \
-		glTexCoord2f(0,0); glVertex3f((dx), (dy),				(dz)); \
-		glTexCoord2f(map->tex_tile_w,0); glVertex3f(map->tile_w * (zoom) + (dx), (dy),			(dz)); \
-		glTexCoord2f(map->tex_tile_w,map->tex_tile_h); glVertex3f(map->tile_w * (zoom) + (dx), map->tile_h * (zoom) + (dy),	(dz)); \
-		glTexCoord2f(0,map->tex_tile_h); glVertex3f((dx), map->tile_h * (zoom) + (dy),			(dz)); \
-		glEnd(); }
-
 static int map_object_new(lua_State *L)
 {
 	long uid = luaL_checknumber(L, 1);
@@ -256,6 +248,21 @@ static int map_objects_toscreen(lua_State *L)
 	int w = luaL_checknumber(L, 3);
 	int h = luaL_checknumber(L, 4);
 
+	GLfloat vertices[3*4] = {
+		0, 0, -96,
+		0, 0, -96,
+		0, 0, -96,
+		0, 0, -96,
+	};
+	GLfloat texcoords[2*4] = {
+		0, 0,
+		1, 0,
+		1, 1,
+		0, 1,
+	};
+
+	glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
+
 	/***************************************************
 	 * Render
 	 ***************************************************/
@@ -271,17 +278,17 @@ static int map_objects_toscreen(lua_State *L)
 		for (z = (!shaders_active) ? 0 : (m->nb_textures - 1); z >= 0; z--)
 		{
 			if (multitexture_active && shaders_active) tglActiveTexture(GL_TEXTURE0+z);
-			glBindTexture(m->textures_is3d[z] ? GL_TEXTURE_3D : GL_TEXTURE_2D, m->textures[z]);
+			tglBindTexture(m->textures_is3d[z] ? GL_TEXTURE_3D : GL_TEXTURE_2D, m->textures[z]);
 		}
 
 		int dx = x, dy = y;
 		int dz = moid;
-		glBegin(GL_QUADS);
-		glTexCoord2f(0,0); glVertex3f((dx), (dy),				(dz));
-		glTexCoord2f(1,0); glVertex3f(w + (dx), (dy),			(dz));
-		glTexCoord2f(1,1); glVertex3f(w + (dx), h + (dy),	(dz));
-		glTexCoord2f(0,1); glVertex3f((dx), h + (dy),			(dz));
-		glEnd();
+		vertices[0] = dx; vertices[1] = dy; vertices[3] = dz;
+		vertices[3] = w + dx; vertices[4] = dy; vertices[5] = dz;
+		vertices[6] = w + dx; vertices[7] = h + dy; vertices[8] = dz;
+		vertices[9] = dx; vertices[10] = h + dy; vertices[11] = dz;
+		glVertexPointer(3, GL_FLOAT, 0, vertices);
+		glDrawArrays(GL_QUADS, 0, 4);
 
 		if (m->shader) glUseProgramObjectARB(0);
 
@@ -310,7 +317,7 @@ static int map_objects_display(lua_State *L)
 	// Now setup a texture to render to
 	GLuint img;
 	CHECKGL(glGenTextures(1, &img));
-	CHECKGL(glBindTexture(GL_TEXTURE_2D, img));
+	tglBindTexture(GL_TEXTURE_2D, img);
 	CHECKGL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL));
 	CHECKGL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
 	CHECKGL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
@@ -337,6 +344,21 @@ static int map_objects_display(lua_State *L)
 	CHECKGL(glClear(GL_COLOR_BUFFER_BIT));
 	CHECKGL(glLoadIdentity());
 
+	GLfloat vertices[3*4] = {
+		0, 0, -96,
+		0, 0, -96,
+		0, 0, -96,
+		0, 0, -96,
+	};
+	GLfloat texcoords[2*4] = {
+		0, 0,
+		1, 0,
+		1, 1,
+		0, 1,
+	};
+
+	glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
+
 	/***************************************************
 	 * Render to buffer
 	 ***************************************************/
@@ -352,17 +374,17 @@ static int map_objects_display(lua_State *L)
 		for (z = (!shaders_active) ? 0 : (m->nb_textures - 1); z >= 0; z--)
 		{
 			if (multitexture_active && shaders_active) tglActiveTexture(GL_TEXTURE0+z);
-			glBindTexture(m->textures_is3d[z] ? GL_TEXTURE_3D : GL_TEXTURE_2D, m->textures[z]);
+			tglBindTexture(m->textures_is3d[z] ? GL_TEXTURE_3D : GL_TEXTURE_2D, m->textures[z]);
 		}
 
 		int dx = 0, dy = 0;
 		int dz = moid;
-		glBegin(GL_QUADS);
-		glTexCoord2f(0,0); glVertex3f((dx), (dy),				(dz));
-		glTexCoord2f(1,0); glVertex3f(w + (dx), (dy),			(dz));
-		glTexCoord2f(1,1); glVertex3f(w + (dx), h + (dy),	(dz));
-		glTexCoord2f(0,1); glVertex3f((dx), h + (dy),			(dz));
-		glEnd();
+		vertices[0] = dx; vertices[1] = dy; vertices[3] = dz;
+		vertices[3] = w + dx; vertices[4] = dy; vertices[5] = dz;
+		vertices[6] = w + dx; vertices[7] = h + dy; vertices[8] = dz;
+		vertices[9] = dx; vertices[10] = h + dy; vertices[11] = dz;
+		glVertexPointer(3, GL_FLOAT, 0, vertices);
+		glDrawArrays(GL_QUADS, 0, 4);
 
 		if (m->shader) glUseProgramObjectARB(0);
 
@@ -370,7 +392,6 @@ static int map_objects_display(lua_State *L)
 	}
 	/***************************************************
 	 ***************************************************/
-
 
 	// Unbind texture from FBO and then unbind FBO
 	CHECKGL(glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, 0, 0));
@@ -719,11 +740,23 @@ static int map_set_scroll(lua_State *L)
 	return 0;
 }
 
+#define DO_QUAD(dx, dy, zoom) {\
+	vertices[0] = (dx); vertices[1] = (dy); \
+	vertices[3] = map->tile_w * (zoom) + (dx); vertices[4] = (dy); \
+	vertices[6] = map->tile_w * (zoom) + (dx); vertices[7] = map->tile_h * (zoom) + (dy); \
+	vertices[9] = (dx); vertices[10] = map->tile_h * (zoom) + (dy); \
+	glVertexPointer(3, GL_FLOAT, 0, vertices); \
+	glDrawArrays(GL_QUADS, 0, 4); \
+	}
 
 inline void display_map_quad(map_type *map, int dx, int dy, float dz, map_object *m, int i, int j, float a, float seen, int nb_keyframes) ALWAYS_INLINE;
 void display_map_quad(map_type *map, int dx, int dy, float dz, map_object *m, int i, int j, float a, float seen, int nb_keyframes)
 {
 	float r, g, b;
+
+	/********************************************************
+	 ** Select the color to use
+	 ********************************************************/
 	if (seen)
 	{
 		if (m->tint_r < 1 || m->tint_g < 1 || m->tint_b < 1)
@@ -750,17 +783,31 @@ void display_map_quad(map_type *map, int dx, int dy, float dz, map_object *m, in
 		}
 	}
 
-	// Setup for display
+	/********************************************************
+	 ** Setup all textures we need
+	 ********************************************************/
 	a = (a > 1) ? 1 : ((a < 0) ? 0 : a);
 	int z;
 	if (m->shader) useShader(m->shader, i, j, map->tile_w, map->tile_h, r, g, b, a);
 	for (z = (!shaders_active) ? 0 : (m->nb_textures - 1); z >= 0; z--)
 	{
 		if (multitexture_active && shaders_active) tglActiveTexture(GL_TEXTURE0+z);
-		glBindTexture(m->textures_is3d[z] ? GL_TEXTURE_3D : GL_TEXTURE_2D, m->textures[z]);
+		tglBindTexture(m->textures_is3d[z] ? GL_TEXTURE_3D : GL_TEXTURE_2D, m->textures[z]);
 	}
 
-	// Handle move anim
+	/********************************************************
+	 ** Make up the arrays to push
+	 ********************************************************/
+	GLfloat vertices[3*4] = {
+		0, 0, 0,
+		0, 0, 0,
+		0, 0, 0,
+		0, 0, 0,
+	};
+
+	/********************************************************
+	 ** Compute/display movement and motion blur
+	 ********************************************************/
 	float animdx = 0, animdy = 0;
 	if (m->display_last == DL_NONE) m->move_max = 0;
 	if (m->move_max)
@@ -786,7 +833,7 @@ void display_map_quad(map_type *map, int dx, int dy, float dz, map_object *m, in
 						animdx = map->tile_w * (adx * step / (float)m->move_max - adx);
 						animdy = map->tile_h * (ady * step / (float)m->move_max - ady);
 						tglColor4f(r, g, b, a * 2 / (3 + z));
-						DO_QUAD(dx + m->dx * map->tile_w + animdx, dy + m->dy * map->tile_h + animdy, 0, m->scale);
+						DO_QUAD(dx + m->dx * map->tile_w + animdx, dy + m->dy * map->tile_h + animdy, m->scale);
 					}
 				}
 			}
@@ -797,13 +844,16 @@ void display_map_quad(map_type *map, int dx, int dy, float dz, map_object *m, in
 		}
 	}
 
-	// Final display
+	/********************************************************
+	 ** Display the entity
+	 ********************************************************/
 	tglColor4f(r, g, b, a);
-	DO_QUAD(dx + m->dx * map->tile_w + animdx, dy + m->dy * map->tile_h + animdy, 0, m->scale);
+	DO_QUAD(dx + m->dx * map->tile_w + animdx, dy + m->dy * map->tile_h + animdy, m->scale);
 
-	// Unbind any shaders
+	/********************************************************
+	 ** Cleanup
+	 ********************************************************/
 	if (m->shader) glUseProgramObjectARB(0);
-
 	m->display_last = DL_TRUE;
 }
 
@@ -819,6 +869,14 @@ static int map_to_screen(lua_State *L)
 
 	/* Enables Depth Testing */
 	glEnable(GL_DEPTH_TEST);
+
+	GLfloat texcoords[2*4] = {
+		0, 0,
+		map->tex_tile_w, 0,
+		map->tex_tile_w, map->tex_tile_h,
+		0, map->tex_tile_h,
+	};
+	glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
 
 	// Smooth scrolling
 	float animdx = 0, animdy = 0;
@@ -896,6 +954,15 @@ static int map_to_screen(lua_State *L)
 	return 0;
 }
 
+#define DO_MINIQUAD(dx, dy) {\
+	vertices[0] = (dx); vertices[1] = (dy); \
+	vertices[3] = map->minimap_gridsize + (dx); vertices[4] = (dy); \
+	vertices[6] = map->minimap_gridsize + (dx); vertices[7] = map->minimap_gridsize + (dy); \
+	vertices[9] = (dx); vertices[10] = map->minimap_gridsize + (dy); \
+	glVertexPointer(3, GL_FLOAT, 0, vertices); \
+	glDrawArrays(GL_QUADS, 0, 4); \
+	}
+
 static int minimap_to_screen(lua_State *L)
 {
 	map_type *map = (map_type*)auxiliar_checkclass(L, "core{map}", 1);
@@ -907,6 +974,20 @@ static int minimap_to_screen(lua_State *L)
 	int mdh = luaL_checknumber(L, 7);
 	float transp = luaL_checknumber(L, 8);
 	int i = 0, j = 0;
+	GLfloat vertices[3*4] = {
+		0, 0, -96,
+		0, 0, -96,
+		0, 0, -96,
+		0, 0, -96,
+	};
+
+	GLfloat texcoords[2*4] = {
+		0, 0,
+		map->tex_tile_w, 0,
+		map->tex_tile_w, map->tex_tile_h,
+		0, map->tex_tile_h,
+	};
+	glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
 
 	for (i = mdx; i < mdx + mdw; i++)
 	{
@@ -924,83 +1005,43 @@ static int minimap_to_screen(lua_State *L)
 					tglColor4f(map->shown_r, map->shown_g, map->shown_b, map->shown_a * transp);
 					if ((map->minimap[i][j] & MM_LEVEL_CHANGE) && map->mm_level_change)
 					{
-						glBindTexture(GL_TEXTURE_2D, map->mm_level_change);
-						glBegin(GL_QUADS);
-						glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-96);
-						glTexCoord2f(1,0); glVertex3f(map->minimap_gridsize +dx, 0  +dy,-96);
-						glTexCoord2f(1,1); glVertex3f(map->minimap_gridsize +dx, map->minimap_gridsize +dy,-96);
-						glTexCoord2f(0,1); glVertex3f(0  +dx, map->minimap_gridsize +dy,-96);
-						glEnd();
+						tglBindTexture(GL_TEXTURE_2D, map->mm_level_change);
+						DO_MINIQUAD(dx, dy);
 					}
 					else if ((map->minimap[i][j] & MM_HOSTILE) && map->mm_hostile)
 					{
-						glBindTexture(GL_TEXTURE_2D, map->mm_hostile);
-						glBegin(GL_QUADS);
-						glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-96);
-						glTexCoord2f(1,0); glVertex3f(map->minimap_gridsize +dx, 0  +dy,-96);
-						glTexCoord2f(1,1); glVertex3f(map->minimap_gridsize +dx, map->minimap_gridsize +dy,-96);
-						glTexCoord2f(0,1); glVertex3f(0  +dx, map->minimap_gridsize +dy,-96);
-						glEnd();
+						tglBindTexture(GL_TEXTURE_2D, map->mm_hostile);
+						DO_MINIQUAD(dx, dy);
 					}
 					else if ((map->minimap[i][j] & MM_NEUTRAL) && map->mm_neutral)
 					{
-						glBindTexture(GL_TEXTURE_2D, map->mm_neutral);
-						glBegin(GL_QUADS);
-						glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-96);
-						glTexCoord2f(1,0); glVertex3f(map->minimap_gridsize +dx, 0  +dy,-96);
-						glTexCoord2f(1,1); glVertex3f(map->minimap_gridsize +dx, map->minimap_gridsize +dy,-96);
-						glTexCoord2f(0,1); glVertex3f(0  +dx, map->minimap_gridsize +dy,-96);
-						glEnd();
+						tglBindTexture(GL_TEXTURE_2D, map->mm_neutral);
+						DO_MINIQUAD(dx, dy);
 					}
 					else if ((map->minimap[i][j] & MM_FRIEND) && map->mm_friend)
 					{
-						glBindTexture(GL_TEXTURE_2D, map->mm_friend);
-						glBegin(GL_QUADS);
-						glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-96);
-						glTexCoord2f(1,0); glVertex3f(map->minimap_gridsize +dx, 0  +dy,-96);
-						glTexCoord2f(1,1); glVertex3f(map->minimap_gridsize +dx, map->minimap_gridsize +dy,-96);
-						glTexCoord2f(0,1); glVertex3f(0  +dx, map->minimap_gridsize +dy,-96);
-						glEnd();
+						tglBindTexture(GL_TEXTURE_2D, map->mm_friend);
+						DO_MINIQUAD(dx, dy);
 					}
 					else if ((map->minimap[i][j] & MM_TRAP) && map->mm_trap)
 					{
-						glBindTexture(GL_TEXTURE_2D, map->mm_trap);
-						glBegin(GL_QUADS);
-						glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-96);
-						glTexCoord2f(1,0); glVertex3f(map->minimap_gridsize +dx, 0  +dy,-96);
-						glTexCoord2f(1,1); glVertex3f(map->minimap_gridsize +dx, map->minimap_gridsize +dy,-96);
-						glTexCoord2f(0,1); glVertex3f(0  +dx, map->minimap_gridsize +dy,-96);
-						glEnd();
+						tglBindTexture(GL_TEXTURE_2D, map->mm_trap);
+						DO_MINIQUAD(dx, dy);
 					}
 					else if ((map->minimap[i][j] & MM_OBJECT) && map->mm_object)
 					{
-						glBindTexture(GL_TEXTURE_2D, map->mm_object);
-						glBegin(GL_QUADS);
-						glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-96);
-						glTexCoord2f(1,0); glVertex3f(map->minimap_gridsize +dx, 0  +dy,-96);
-						glTexCoord2f(1,1); glVertex3f(map->minimap_gridsize +dx, map->minimap_gridsize +dy,-96);
-						glTexCoord2f(0,1); glVertex3f(0  +dx, map->minimap_gridsize +dy,-96);
-						glEnd();
+						tglBindTexture(GL_TEXTURE_2D, map->mm_object);
+						DO_MINIQUAD(dx, dy);
 					}
 					else if ((map->minimap[i][j] & MM_BLOCK) && map->mm_block)
 					{
-						glBindTexture(GL_TEXTURE_2D, map->mm_block);
-						glBegin(GL_QUADS);
-						glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-96);
-						glTexCoord2f(1,0); glVertex3f(map->minimap_gridsize +dx, 0  +dy,-96);
-						glTexCoord2f(1,1); glVertex3f(map->minimap_gridsize +dx, map->minimap_gridsize +dy,-96);
-						glTexCoord2f(0,1); glVertex3f(0  +dx, map->minimap_gridsize +dy,-96);
-						glEnd();
+						tglBindTexture(GL_TEXTURE_2D, map->mm_block);
+						DO_MINIQUAD(dx, dy);
 					}
 					else if ((map->minimap[i][j] & MM_FLOOR) && map->mm_floor)
 					{
-						glBindTexture(GL_TEXTURE_2D, map->mm_floor);
-						glBegin(GL_QUADS);
-						glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-96);
-						glTexCoord2f(1,0); glVertex3f(map->minimap_gridsize +dx, 0  +dy,-96);
-						glTexCoord2f(1,1); glVertex3f(map->minimap_gridsize +dx, map->minimap_gridsize +dy,-96);
-						glTexCoord2f(0,1); glVertex3f(0  +dx, map->minimap_gridsize +dy,-96);
-						glEnd();
+						tglBindTexture(GL_TEXTURE_2D, map->mm_floor);
+						DO_MINIQUAD(dx, dy);
 					}
 				}
 				else
@@ -1008,33 +1049,18 @@ static int minimap_to_screen(lua_State *L)
 					tglColor4f(map->obscure_r, map->obscure_g, map->obscure_b, map->obscure_a * transp);
 					if ((map->minimap[i][j] & MM_LEVEL_CHANGE) && map->mm_level_change)
 					{
-						glBindTexture(GL_TEXTURE_2D, map->mm_level_change);
-						glBegin(GL_QUADS);
-						glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-96);
-						glTexCoord2f(1,0); glVertex3f(map->minimap_gridsize +dx, 0  +dy,-96);
-						glTexCoord2f(1,1); glVertex3f(map->minimap_gridsize +dx, map->minimap_gridsize +dy,-96);
-						glTexCoord2f(0,1); glVertex3f(0  +dx, map->minimap_gridsize +dy,-96);
-						glEnd();
+						tglBindTexture(GL_TEXTURE_2D, map->mm_level_change);
+						DO_MINIQUAD(dx, dy);
 					}
 					else if ((map->minimap[i][j] & MM_BLOCK) && map->mm_block)
 					{
-						glBindTexture(GL_TEXTURE_2D, map->mm_block);
-						glBegin(GL_QUADS);
-						glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-96);
-						glTexCoord2f(1,0); glVertex3f(map->minimap_gridsize +dx, 0  +dy,-96);
-						glTexCoord2f(1,1); glVertex3f(map->minimap_gridsize +dx, map->minimap_gridsize +dy,-96);
-						glTexCoord2f(0,1); glVertex3f(0  +dx, map->minimap_gridsize +dy,-96);
-						glEnd();
+						tglBindTexture(GL_TEXTURE_2D, map->mm_block);
+						DO_MINIQUAD(dx, dy);
 					}
 					else if ((map->minimap[i][j] & MM_FLOOR) && map->mm_floor)
 					{
-						glBindTexture(GL_TEXTURE_2D, map->mm_floor);
-						glBegin(GL_QUADS);
-						glTexCoord2f(0,0); glVertex3f(0  +dx, 0  +dy,-96);
-						glTexCoord2f(1,0); glVertex3f(map->minimap_gridsize +dx, 0  +dy,-96);
-						glTexCoord2f(1,1); glVertex3f(map->minimap_gridsize +dx, map->minimap_gridsize +dy,-96);
-						glTexCoord2f(0,1); glVertex3f(0  +dx, map->minimap_gridsize +dy,-96);
-						glEnd();
+						tglBindTexture(GL_TEXTURE_2D, map->mm_floor);
+						DO_MINIQUAD(dx, dy);
 					}
 				}
 			}

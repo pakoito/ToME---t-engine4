@@ -33,3 +33,9 @@ extern GLenum gl_c_texture_unit;
 	{ \
 	if ((tu) != gl_c_texture_unit) { glActiveTexture((tu)); gl_c_texture_unit=(tu); } \
 	}
+
+extern GLenum gl_c_texture;
+#define tglBindTexture(w, t) \
+	{ \
+	if ((t) != gl_c_texture) { glBindTexture((w), (t)); gl_c_texture=(t); } \
+	}

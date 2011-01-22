@@ -286,17 +286,29 @@ void call_draw(int nb_keyframes)
 	/* Mouse pointer */
 	if (mouse_cursor_tex && mouse_cursor_down_tex)
 	{
+		GLfloat texcoords[2*4] = {
+			0, 0,
+			1, 0,
+			1, 1,
+			0, 1,
+		};
+
+		glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
+
 		int x = mousex + mouse_cursor_ox;
 		int y = mousey + mouse_cursor_oy;
 		int down = SDL_GetMouseState(NULL, NULL);
-		glBindTexture(GL_TEXTURE_2D, down ? mouse_cursor_down_tex : mouse_cursor_tex);
+		tglBindTexture(GL_TEXTURE_2D, down ? mouse_cursor_down_tex : mouse_cursor_tex);
 		tglColor4f(1, 1, 1, 1);
-		glBegin(GL_QUADS);
-		glTexCoord2f(0,0); glVertex2f(0  + x, 0  + y);
-		glTexCoord2f(0,1); glVertex2f(0  + x, 32 + y);
-		glTexCoord2f(1,1); glVertex2f(32 + x, 32 + y);
-		glTexCoord2f(1,0); glVertex2f(32 + x, 0  + y);
-		glEnd();
+
+		GLfloat vertices[2*4] = {
+			x, y,
+			x, y + 32,
+			x + 32, y + 32,
+			x + 32, y,
+		};
+		glVertexPointer(2, GL_FLOAT, 0, vertices);
+		glDrawArrays(GL_QUADS, 0, 4);
 	}
 }
 
@@ -487,6 +499,9 @@ int initGL()
 //	glDisable(GL_DEPTH_TEST);
 	tglColor4f(1.0f,1.0f,1.0f,1.0f);
 //	glAlphaFunc(GL_GREATER,0.1f);
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 	return( TRUE );
 }

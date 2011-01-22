@@ -33,24 +33,24 @@ bool shaders_active = TRUE;
 
 void useShader(GLuint p, int x, int y, int w, int h, float r, float g, float b, float a)
 {
-	CHECKGL(glUseProgramObjectARB(p));
+	glUseProgramObjectARB(p);
 	GLfloat t = SDL_GetTicks();
-	CHECKGL(glUniform1fvARB(glGetUniformLocationARB(p, "tick"), 1, &t));
+	glUniform1fvARB(glGetUniformLocationARB(p, "tick"), 1, &t);
 	GLfloat d[4];
 	d[0] = r;
 	d[1] = g;
 	d[2] = b;
 	d[3] = a;
-	CHECKGL(glUniform4fvARB(glGetUniformLocationARB(p, "displayColor"), 1, d));
+	glUniform4fvARB(glGetUniformLocationARB(p, "displayColor"), 1, d);
 
 	GLfloat c[2];
 	c[0] = x;
 	c[1] = y;
-	CHECKGL(glUniform2fvARB(glGetUniformLocationARB(p, "mapCoord"), 1, c));
+	glUniform2fvARB(glGetUniformLocationARB(p, "mapCoord"), 1, c);
 
 	c[0] = w;
 	c[1] = h;
-	CHECKGL(glUniform2fvARB(glGetUniformLocationARB(p, "texSize"), 1, c));
+	glUniform2fvARB(glGetUniformLocationARB(p, "texSize"), 1, c);
 }
 
 static GLuint loadShader(const char* code, GLuint type)
@@ -170,9 +170,9 @@ static int program_set_uniform_number(lua_State *L)
 	const char *var = luaL_checkstring(L, 2);
 	GLfloat i = luaL_checknumber(L, 3);
 
-	CHECKGL(glUseProgramObjectARB(*p));
-	CHECKGL(glUniform1fvARB(glGetUniformLocationARB(*p, var), 1, &i));
-	CHECKGL(glUseProgramObjectARB(0));
+	glUseProgramObjectARB(*p);
+	glUniform1fvARB(glGetUniformLocationARB(*p, var), 1, &i);
+	glUseProgramObjectARB(0);
 	return 0;
 }
 
@@ -184,9 +184,9 @@ static int program_set_uniform_number2(lua_State *L)
 	i[0] = luaL_checknumber(L, 3);
 	i[1] = luaL_checknumber(L, 4);
 
-	CHECKGL(glUseProgramObjectARB(*p));
-	CHECKGL(glUniform2fvARB(glGetUniformLocationARB(*p, var), 1, i));
-	CHECKGL(glUseProgramObjectARB(0));
+	glUseProgramObjectARB(*p);
+	glUniform2fvARB(glGetUniformLocationARB(*p, var), 1, i);
+	glUseProgramObjectARB(0);
 	return 0;
 }
 
@@ -199,9 +199,9 @@ static int program_set_uniform_number3(lua_State *L)
 	i[1] = luaL_checknumber(L, 4);
 	i[2] = luaL_checknumber(L, 5);
 
-	CHECKGL(glUseProgramObjectARB(*p));
-	CHECKGL(glUniform3fvARB(glGetUniformLocationARB(*p, var), 1, i));
-	CHECKGL(glUseProgramObjectARB(0));
+	glUseProgramObjectARB(*p);
+	glUniform3fvARB(glGetUniformLocationARB(*p, var), 1, i);
+	glUseProgramObjectARB(0);
 	return 0;
 }
 
@@ -215,9 +215,9 @@ static int program_set_uniform_number4(lua_State *L)
 	i[2] = luaL_checknumber(L, 5);
 	i[3] = luaL_checknumber(L, 6);
 
-	CHECKGL(glUseProgramObjectARB(*p));
-	CHECKGL(glUniform4fvARB(glGetUniformLocationARB(*p, var), 1, i));
-	CHECKGL(glUseProgramObjectARB(0));
+	glUseProgramObjectARB(*p);
+	glUniform4fvARB(glGetUniformLocationARB(*p, var), 1, i);
+	glUseProgramObjectARB(0);
 	return 0;
 }
 
@@ -227,9 +227,9 @@ static int program_set_uniform_texture(lua_State *L)
 	const char *var = luaL_checkstring(L, 2);
 	GLint i = luaL_checknumber(L, 3);
 
-	CHECKGL(glUseProgramObjectARB(*p));
-	CHECKGL(glUniform1ivARB(glGetUniformLocationARB(*p, var), 1, &i));
-	CHECKGL(glUseProgramObjectARB(0));
+	glUseProgramObjectARB(*p);
+	glUniform1ivARB(glGetUniformLocationARB(*p, var), 1, &i);
+	glUseProgramObjectARB(0);
 	return 0;
 }
 
@@ -240,13 +240,13 @@ static int program_use(lua_State *L)
 
 	if (active)
 	{
-		CHECKGL(glUseProgramObjectARB(*p));
+		glUseProgramObjectARB(*p);
 		GLfloat t = SDL_GetTicks();
-		CHECKGL(glUniform1fvARB(glGetUniformLocationARB(*p, "tick"), 1, &t));
+		glUniform1fvARB(glGetUniformLocationARB(*p, "tick"), 1, &t);
 	}
 	else
 	{
-		CHECKGL(glUseProgramObjectARB(0));
+		glUseProgramObjectARB(0);
 	}
 
 	return 0;

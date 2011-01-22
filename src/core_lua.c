@@ -495,7 +495,7 @@ static int gl_texture_to_sdl(lua_State *L)
 	auxiliar_setclass(L, "sdl{surface}", -1);
 
 	// Bind the texture to read
-	glBindTexture(GL_TEXTURE_2D, *t);
+	tglBindTexture(GL_TEXTURE_2D, *t);
 
 	// Get texture size
 	GLint w, h;
@@ -527,18 +527,29 @@ static int gl_draw_quad(lua_State *L)
 	if (lua_isuserdata(L, 9))
 	{
 		GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 9);
-		glBindTexture(GL_TEXTURE_2D, *t);
+		tglBindTexture(GL_TEXTURE_2D, *t);
 	}
 	else
-		glBindTexture(GL_TEXTURE_2D, 0);
+		tglBindTexture(GL_TEXTURE_2D, 0);
 
 	tglColor4f(r, g, b, a);
-	glBegin( GL_QUADS );                 /* Draw A Quad              */
-	glTexCoord2f(0,0); glVertex2f(0  + x, 0  + y);
-	glTexCoord2f(0,1); glVertex2f(0  + x, h + y);
-	glTexCoord2f(1,1); glVertex2f(w + x, h + y);
-	glTexCoord2f(1,0); glVertex2f(w + x, 0  + y);
-	glEnd( );                            /* Done Drawing The Quad    */
+
+	GLfloat texcoords[2*4] = {
+		0, 0,
+		0, 1,
+		1, 1,
+		1, 0,
+	};
+
+	glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
+	GLfloat vertices[2*4] = {
+		x, y,
+		x, y + h,
+		x + w, y + h,
+		x + w, y,
+	};
+	glVertexPointer(2, GL_FLOAT, 0, vertices);
+	glDrawArrays(GL_QUADS, 0, 4);
 
 	tglColor4f(1, 1, 1, 1);
 	return 0;
@@ -627,12 +638,22 @@ static void draw_textured_quad(int x, int y, int w, int h) {
 	GLfloat texw = (GLfloat)w/realw;
 	GLfloat texh = (GLfloat)h/realh;
 
-	glBegin( GL_QUADS );
-	glTexCoord2f(0,0); glVertex2f(0  + x, 0  + y);
-	glTexCoord2f(0,texh); glVertex2f(0  + x, h + y);
-	glTexCoord2f(texw,texh); glVertex2f(w + x, h + y);
-	glTexCoord2f(texw,0); glVertex2f(w + x, 0  + y);
-	glEnd( );
+	GLfloat texcoords[2*4] = {
+		0, 0,
+		0, texh,
+		texw, texh,
+		texw, 0,
+	};
+
+	glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
+	GLfloat vertices[2*4] = {
+		x, y,
+		x, y + h,
+		x + w, y + h,
+		x + w, y,
+	};
+	glVertexPointer(2, GL_FLOAT, 0, vertices);
+	glDrawArrays(GL_QUADS, 0, 4);
 }
 
 static GLenum sdl_gl_texture_format(SDL_Surface *s) {
@@ -722,7 +743,7 @@ static int sdl_surface_toscreen(lua_State *L)
 
 	GLuint t;
 	glGenTextures(1, &t);
-	glBindTexture(GL_TEXTURE_2D, t);
+	tglBindTexture(GL_TEXTURE_2D, t);
 
 	make_texture_for_surface(*s, NULL, NULL);
 	copy_surface_to_texture(*s);
@@ -750,7 +771,7 @@ static int sdl_surface_toscreen_with_texture(lua_State *L)
 		tglColor4f(r, g, b, a);
 	}
 
-	glBindTexture(GL_TEXTURE_2D, *t);
+	tglBindTexture(GL_TEXTURE_2D, *t);
 
 	copy_surface_to_texture(*s);
 	draw_textured_quad(x,y,(*s)->w,(*s)->h);
@@ -765,7 +786,7 @@ static int sdl_surface_update_texture(lua_State *L)
 	SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 1);
 	GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 2);
 
-	glBindTexture(GL_TEXTURE_2D, *t);
+	tglBindTexture(GL_TEXTURE_2D, *t);
 	copy_surface_to_texture(*s);
 
 	return 0;
@@ -779,7 +800,7 @@ static int sdl_surface_to_texture(lua_State *L)
 	auxiliar_setclass(L, "gl{texture}", -1);
 
 	glGenTextures(1, t);
-	glBindTexture(GL_TEXTURE_2D, *t);
+	tglBindTexture(GL_TEXTURE_2D, *t);
 
 	int fw, fh;
 	make_texture_for_surface(*s, &fw, &fh);
@@ -844,13 +865,24 @@ static int sdl_texture_toscreen(lua_State *L)
 		tglColor4f(r, g, b, a);
 	}
 
-	glBindTexture(GL_TEXTURE_2D, *t);
-	glBegin( GL_QUADS );                 /* Draw A Quad              */
-	glTexCoord2f(0,0); glVertex2f(0  + x, 0  + y);
-	glTexCoord2f(0,1); glVertex2f(0  + x, h + y);
-	glTexCoord2f(1,1); glVertex2f(w + x, h + y);
-	glTexCoord2f(1,0); glVertex2f(w + x, 0  + y);
-	glEnd( );                            /* Done Drawing The Quad    */
+	tglBindTexture(GL_TEXTURE_2D, *t);
+
+	GLfloat texcoords[2*4] = {
+		0, 0,
+		0, 1,
+		1, 1,
+		1, 0,
+	};
+
+	glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
+	GLfloat vertices[2*4] = {
+		x, y,
+		x, y + h,
+		x + w, y + h,
+		x + w, y,
+	};
+	glVertexPointer(2, GL_FLOAT, 0, vertices);
+	glDrawArrays(GL_QUADS, 0, 4);
 
 	if (lua_isnumber(L, 6)) tglColor4f(1, 1, 1, 1);
 	return 0;
@@ -874,16 +906,26 @@ static int sdl_texture_toscreen_full(lua_State *L)
 		tglColor4f(r, g, b, a);
 	}
 
-	glBindTexture(GL_TEXTURE_2D, *t);
+	tglBindTexture(GL_TEXTURE_2D, *t);
 	GLfloat texw = (GLfloat)w/rw;
 	GLfloat texh = (GLfloat)h/rh;
 
-	glBegin( GL_QUADS );
-	glTexCoord2f(0,0); glVertex2f(0  + x, 0  + y);
-	glTexCoord2f(0,texh); glVertex2f(0  + x, h + y);
-	glTexCoord2f(texw,texh); glVertex2f(w + x, h + y);
-	glTexCoord2f(texw,0); glVertex2f(w + x, 0  + y);
-	glEnd( );
+	GLfloat texcoords[2*4] = {
+		0, 0,
+		0, texh,
+		texw, texh,
+		texw, 0,
+	};
+
+	glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
+	GLfloat vertices[2*4] = {
+		x, y,
+		x, y + h,
+		x + w, y + h,
+		x + w, y,
+	};
+	glVertexPointer(2, GL_FLOAT, 0, vertices);
+	glDrawArrays(GL_QUADS, 0, 4);
 
 	if (lua_isnumber(L, 8)) tglColor4f(1, 1, 1, 1);
 	return 0;
@@ -900,13 +942,13 @@ static int sdl_texture_bind(lua_State *L)
 		if (multitexture_active && shaders_active)
 		{
 			tglActiveTexture(GL_TEXTURE0+i);
-			glBindTexture(is3d ? GL_TEXTURE_3D : GL_TEXTURE_2D, *t);
+			tglBindTexture(is3d ? GL_TEXTURE_3D : GL_TEXTURE_2D, *t);
 			tglActiveTexture(GL_TEXTURE0);
 		}
 	}
 	else
 	{
-		glBindTexture(is3d ? GL_TEXTURE_3D : GL_TEXTURE_2D, *t);
+		tglBindTexture(is3d ? GL_TEXTURE_3D : GL_TEXTURE_2D, *t);
 	}
 
 	return 0;
@@ -953,29 +995,29 @@ static int sdl_texture_outline(lua_State *L)
 	// WARNING: this is a static, only one FBO is ever made, and never deleted, for some reasons
 	// deleting it makes the game crash when doing a chain lightning spell under luajit1 ... (yeah I know .. weird)
 	static GLuint fbo = 0;
-	if (!fbo) CHECKGL(glGenFramebuffersEXT(1, &fbo));
-	CHECKGL(glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo));
+	if (!fbo) glGenFramebuffersEXT(1, &fbo);
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
 
 	// Now setup a texture to render to
 	GLuint *img = (GLuint*)lua_newuserdata(L, sizeof(GLuint));
 	auxiliar_setclass(L, "gl{texture}", -1);
-	CHECKGL(glGenTextures(1, img));
-	CHECKGL(glBindTexture(GL_TEXTURE_2D, *img));
-	CHECKGL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,  w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL));
-	CHECKGL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
-	CHECKGL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
-	CHECKGL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-	CHECKGL(glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, *img, 0));
+	glGenTextures(1, img);
+	tglBindTexture(GL_TEXTURE_2D, *img);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,  w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, *img, 0);
 
 	GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
 	if(status != GL_FRAMEBUFFER_COMPLETE_EXT) return 0;
 
 	// Set the viewport and save the old one
-	CHECKGL(glPushAttrib(GL_VIEWPORT_BIT));
+	glPushAttrib(GL_VIEWPORT_BIT);
 
-	CHECKGL(glViewport(0, 0, w, h));
+	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);
-	CHECKGL(glPushMatrix());
+	glPushMatrix();
 	glLoadIdentity();
 	glOrtho(0, w, 0, h, -101, 101);
 	glMatrixMode( GL_MODELVIEW );
@@ -984,39 +1026,51 @@ static int sdl_texture_outline(lua_State *L)
 	glLoadIdentity( );
 
 	tglClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
-	CHECKGL(glClear(GL_COLOR_BUFFER_BIT));
-	CHECKGL(glLoadIdentity());
+	glClear(GL_COLOR_BUFFER_BIT);
+	glLoadIdentity();
 
-	/* Render to buffer */
-	CHECKGL(glBindTexture(GL_TEXTURE_2D, *t));
-	CHECKGL(tglColor4f(r, g, b, a));
-	glBegin(GL_QUADS);
-	glTexCoord2f(0,0); glVertex3f(0+x, 0+y, -1);
-	glTexCoord2f(1,0); glVertex3f(w+x, 0+y, -1);
-	glTexCoord2f(1,1); glVertex3f(w+x, h+y, -1);
-	glTexCoord2f(0,1); glVertex3f(0+x, h+y, -1);
-	glEnd();
+	GLfloat texcoords[2*4] = {
+		0, 0,
+		1, 0,
+		1, 1,
+		0, 1,
+	};
 
-	CHECKGL(tglColor4f(1, 1, 1, 1));
-	glBegin(GL_QUADS);
-	glTexCoord2f(0,0); glVertex3f(0, 0, 0);
-	glTexCoord2f(1,0); glVertex3f(w, 0, 0);
-	glTexCoord2f(1,1); glVertex3f(w, h, 0);
-	glTexCoord2f(0,1); glVertex3f(0, h, 0);
-	glEnd();
+	glBindTexture(GL_TEXTURE_2D, *t);
+	glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
+	GLfloat vertices[2*4] = {
+		x,   y,
+		w+x, y,
+		w+x, h+y,
+		x,   h+y,
+	};
+
+	/* Render to buffer: shadow */
+	tglColor4f(r, g, b, a);
+	glVertexPointer(2, GL_FLOAT, 0, vertices);
+	glDrawArrays(GL_QUADS, 0, 4);
+
+	/* Render to buffer: original */
+	tglColor4f(1, 1, 1, 1);
+	vertices[0] = 0; vertices[1] = 0;
+	vertices[2] = w; vertices[3] = 0;
+	vertices[4] = w; vertices[5] = h;
+	vertices[6] = 0; vertices[7] = h;
+	glVertexPointer(2, GL_FLOAT, 0, vertices);
+	glDrawArrays(GL_QUADS, 0, 4);
 
 	// Unbind texture from FBO and then unbind FBO
-	CHECKGL(glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, 0, 0));
-	CHECKGL(glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0));
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, 0, 0);
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 	// Restore viewport
-	CHECKGL(glPopAttrib());
+	glPopAttrib();
 
 	// Cleanup
 	// No, dot not it's a static, see upwards
 //	CHECKGL(glDeleteFramebuffersEXT(1, &fbo));
 
 	glMatrixMode(GL_PROJECTION);
-	CHECKGL(glPopMatrix());
+	glPopMatrix();
 	glMatrixMode( GL_MODELVIEW );
 
 	tglClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
@@ -1121,22 +1175,22 @@ static int gl_new_fbo(lua_State *L)
 	fbo->w = w;
 	fbo->h = h;
 
-	CHECKGL(glGenFramebuffersEXT(1, &(fbo->fbo)));
-	CHECKGL(glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo->fbo));
+	glGenFramebuffersEXT(1, &(fbo->fbo));
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo->fbo);
 
 	// Now setup a texture to render to
-	CHECKGL(glGenTextures(1, &(fbo->texture)));
-	CHECKGL(glBindTexture(GL_TEXTURE_2D, fbo->texture));
-	CHECKGL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,  w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL));
-	CHECKGL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
-	CHECKGL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
-	CHECKGL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-	CHECKGL(glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, fbo->texture, 0));
+	glGenTextures(1, &(fbo->texture));
+	tglBindTexture(GL_TEXTURE_2D, fbo->texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,  w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, fbo->texture, 0);
 
 	GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
 	if(status != GL_FRAMEBUFFER_COMPLETE_EXT) return 0;
 
-	CHECKGL(glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0));
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 
 	return 1;
 }
@@ -1145,12 +1199,12 @@ static int gl_free_fbo(lua_State *L)
 {
 	lua_fbo *fbo = (lua_fbo*)auxiliar_checkclass(L, "gl{fbo}", 1);
 
-	CHECKGL(glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo->fbo));
-	CHECKGL(glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, 0, 0));
-	CHECKGL(glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0));
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo->fbo);
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, 0, 0);
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 
-	CHECKGL(glDeleteTextures(1, &(fbo->texture)));
-	CHECKGL(glDeleteFramebuffersEXT(1, &(fbo->fbo)));
+	glDeleteTextures(1, &(fbo->texture));
+	glDeleteFramebuffersEXT(1, &(fbo->fbo));
 
 	lua_pushnumber(L, 1);
 	return 1;
@@ -1220,13 +1274,25 @@ static int gl_fbo_toscreen(lua_State *L)
 	}
 
 	glDisable(GL_BLEND);
-	glBindTexture(GL_TEXTURE_2D, fbo->texture);
-	glBegin( GL_QUADS );                 /* Draw A Quad              */
-	glTexCoord2f(0,1); glVertex2f(0  + x, 0  + y);
-	glTexCoord2f(0,0); glVertex2f(0  + x, h + y);
-	glTexCoord2f(1,0); glVertex2f(w + x, h + y);
-	glTexCoord2f(1,1); glVertex2f(w + x, 0  + y);
-	glEnd( );                            /* Done Drawing The Quad    */
+	tglBindTexture(GL_TEXTURE_2D, fbo->texture);
+
+
+	GLfloat texcoords[2*4] = {
+		0, 1,
+		0, 0,
+		1, 0,
+		1, 1,
+	};
+
+	glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
+	GLfloat vertices[2*4] = {
+		x, y,
+		x, y + h,
+		x + w, y + h,
+		x + w, y,
+	};
+	glVertexPointer(2, GL_FLOAT, 0, vertices);
+	glDrawArrays(GL_QUADS, 0, 4);
 
 	if (lua_isuserdata(L, 6)) glUseProgramObjectARB(0);
 	if (lua_isnumber(L, 7)) tglColor4f(1, 1, 1, 1);
