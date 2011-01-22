@@ -137,6 +137,7 @@ function _M:use(item, button)
 		}
 		for i = 1, 36 do list[#list+1] = {name="Hotkey "..i, what=i} end
 		Dialog:listPopup("Bind talent: "..item.name, "How do you want to bind this talent?", list, 400, 500, function(b)
+			if not b then return end
 			if type(b.what) == "number" then
 				for i = 1, 36 do
 					if self.actor.hotkey[i] and self.actor.hotkey[i][1] == "talent" and self.actor.hotkey[i][2] == item.talent then self.actor.hotkey[i] = nil end
