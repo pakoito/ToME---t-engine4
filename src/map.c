@@ -55,7 +55,7 @@ static int map_object_new(lua_State *L)
 	obj->dx = luaL_checknumber(L, 6);
 	obj->dy = luaL_checknumber(L, 7);
 	obj->scale = luaL_checknumber(L, 8);
-	obj->shader = 0;
+	obj->shader = NULL;
 	obj->tint_r = obj->tint_g = obj->tint_b = 1;
 	for (i = 0; i < nb_textures; i++)
 	{
@@ -116,8 +116,8 @@ static int map_object_texture(lua_State *L)
 static int map_object_shader(lua_State *L)
 {
 	map_object *obj = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 1);
-	GLuint *s = (GLuint*)auxiliar_checkclass(L, "gl{program}", 2);
-	obj->shader = *s;
+	shader_type *s = (shader_type*)auxiliar_checkclass(L, "gl{program}", 2);
+	obj->shader = s;
 	return 0;
 }
 

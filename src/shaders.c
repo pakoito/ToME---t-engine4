@@ -26,31 +26,33 @@
 #include "types.h"
 #include "music.h"
 #include "script.h"
+#include "useshader.h"
 #include "shaders.h"
 #include "libtcod.h"
 
 bool shaders_active = TRUE;
 
-void useShader(GLuint p, int x, int y, int w, int h, float r, float g, float b, float a)
+void useShader(shader_type *p, int x, int y, int w, int h, float r, float g, float b, float a)
 {
-	glUseProgramObjectARB(p);
+	glUseProgramObjectARB(p->shader);
+	printf("Using shader %d at %dx%d (%dx%d), %f;%f;%f;%f\n", p->shader,x,y,w,h,r,g,b,a);
 	GLfloat t = SDL_GetTicks();
-	glUniform1fvARB(glGetUniformLocationARB(p, "tick"), 1, &t);
+	glUniform1fvARB(p->p_tick, 1, &t);
 	GLfloat d[4];
 	d[0] = r;
 	d[1] = g;
 	d[2] = b;
 	d[3] = a;
-	glUniform4fvARB(glGetUniformLocationARB(p, "displayColor"), 1, d);
+	glUniform4fvARB(p->p_color, 1, d);
 
 	GLfloat c[2];
 	c[0] = x;
 	c[1] = y;
-	glUniform2fvARB(glGetUniformLocationARB(p, "mapCoord"), 1, c);
+	glUniform2fvARB(p->p_mapcoord, 1, c);
 
 	c[0] = w;
 	c[1] = h;
-	glUniform2fvARB(glGetUniformLocationARB(p, "texSize"), 1, c);
+	glUniform2fvARB(p->p_texsize, 1, c);
 }
 
 static GLuint loadShader(const char* code, GLuint type)
@@ -91,21 +93,21 @@ static int program_new(lua_State *L)
 {
 	if (!shaders_active) return 0;
 
-	GLuint *s = (GLuint*)lua_newuserdata(L, sizeof(GLuint));
+	shader_type *p = (shader_type*)lua_newuserdata(L, sizeof(shader_type));
 	auxiliar_setclass(L, "gl{program}", -1);
 
-	*s = glCreateProgramObjectARB();
+	p->shader = glCreateProgramObjectARB();
 
-	printf("New GL Shader program %d\n", *s);
+	printf("New GL Shader program %d\n", p->shader);
 
 	return 1;
 }
 
 static int program_free(lua_State *L)
 {
-	GLuint *s = (GLuint*)auxiliar_checkclass(L, "gl{program}", 1);
+	shader_type *p = (shader_type*)auxiliar_checkclass(L, "gl{program}", 1);
 
-	glDeleteObjectARB(*s);
+	glDeleteObjectARB(p->shader);
 
 	lua_pushnumber(L, 1);
 	return 1;
@@ -113,12 +115,12 @@ static int program_free(lua_State *L)
 
 static int program_compile(lua_State *L)
 {
-	GLuint *p = (GLuint*)auxiliar_checkclass(L, "gl{program}", 1);
+	shader_type *p = (shader_type*)auxiliar_checkclass(L, "gl{program}", 1);
 
-	glLinkProgramARB(*p);
-	CHECKGLSLLINK(*p);
+	glLinkProgramARB(p->shader);
+	CHECKGLSLLINK(p->shader);
 
-	CHECKGLSLVALID(*p);
+	CHECKGLSLVALID(p->shader);
 
 #if 1
 	char buffer[256];
@@ -127,87 +129,93 @@ static int program_compile(lua_State *L)
 	int length;
 	GLenum dummytype;
 
-	glGetObjectParameterivARB(*p, GL_ACTIVE_UNIFORMS, &count);
+	glGetObjectParameterivARB(p->shader, GL_ACTIVE_UNIFORMS, &count);
 	int i;
 	for(i = 0; i<count;++i)
 	{
 		GLint uniLoc;
-		glGetActiveUniformARB(*p, i, 256, &length, &dummysize, &dummytype, buffer);
-		uniLoc = glGetUniformLocationARB(*p, buffer);
+		glGetActiveUniformARB(p->shader, i, 256, &length, &dummysize, &dummytype, buffer);
+		uniLoc = glGetUniformLocationARB(p->shader, buffer);
 		if(uniLoc>=0)	// Test for valid uniform location
 		{
-			printf("*p %i: Uniform: %i: %X %s\n", *p,uniLoc, dummytype, buffer);
+			printf("*p %i: Uniform: %i: %X %s\n", p->shader,uniLoc, dummytype, buffer);
 		}
 	}
 #endif
+
+	p->p_tick = glGetUniformLocationARB(p->shader, "tick");
+	p->p_color = glGetUniformLocationARB(p->shader, "displayColor");
+	p->p_mapcoord = glGetUniformLocationARB(p->shader, "mapCoord");
+	p->p_texsize = glGetUniformLocationARB(p->shader, "texSize");
+
 	lua_pushboolean(L, TRUE);
 	return 1;
 }
 
 static int program_attach(lua_State *L)
 {
-	GLuint *p = (GLuint*)auxiliar_checkclass(L, "gl{program}", 1);
+	shader_type *p = (shader_type*)auxiliar_checkclass(L, "gl{program}", 1);
 	GLuint *s = (GLuint*)auxiliar_checkclass(L, "gl{shader}", 2);
 
-	glAttachObjectARB(*p, *s);
+	glAttachObjectARB(p->shader, *s);
 
 	return 0;
 }
 
 static int program_detach(lua_State *L)
 {
-	GLuint *p = (GLuint*)auxiliar_checkclass(L, "gl{program}", 1);
+	shader_type *p = (shader_type*)auxiliar_checkclass(L, "gl{program}", 1);
 	GLuint *s = (GLuint*)auxiliar_checkclass(L, "gl{shader}", 2);
 
-	glDetachObjectARB(*p, *s);
+	glDetachObjectARB(p->shader, *s);
 
 	return 0;
 }
 
 static int program_set_uniform_number(lua_State *L)
 {
-	GLuint *p = (GLuint*)auxiliar_checkclass(L, "gl{program}", 1);
+	shader_type *p = (shader_type*)auxiliar_checkclass(L, "gl{program}", 1);
 	const char *var = luaL_checkstring(L, 2);
 	GLfloat i = luaL_checknumber(L, 3);
 
-	glUseProgramObjectARB(*p);
-	glUniform1fvARB(glGetUniformLocationARB(*p, var), 1, &i);
+	glUseProgramObjectARB(p->shader);
+	glUniform1fvARB(glGetUniformLocationARB(p->shader, var), 1, &i);
 	glUseProgramObjectARB(0);
 	return 0;
 }
 
 static int program_set_uniform_number2(lua_State *L)
 {
-	GLuint *p = (GLuint*)auxiliar_checkclass(L, "gl{program}", 1);
+	shader_type *p = (shader_type*)auxiliar_checkclass(L, "gl{program}", 1);
 	const char *var = luaL_checkstring(L, 2);
 	GLfloat i[2];
 	i[0] = luaL_checknumber(L, 3);
 	i[1] = luaL_checknumber(L, 4);
 
-	glUseProgramObjectARB(*p);
-	glUniform2fvARB(glGetUniformLocationARB(*p, var), 1, i);
+	glUseProgramObjectARB(p->shader);
+	glUniform2fvARB(glGetUniformLocationARB(p->shader, var), 1, i);
 	glUseProgramObjectARB(0);
 	return 0;
 }
 
 static int program_set_uniform_number3(lua_State *L)
 {
-	GLuint *p = (GLuint*)auxiliar_checkclass(L, "gl{program}", 1);
+	shader_type *p = (shader_type*)auxiliar_checkclass(L, "gl{program}", 1);
 	const char *var = luaL_checkstring(L, 2);
 	GLfloat i[3];
 	i[0] = luaL_checknumber(L, 3);
 	i[1] = luaL_checknumber(L, 4);
 	i[2] = luaL_checknumber(L, 5);
 
-	glUseProgramObjectARB(*p);
-	glUniform3fvARB(glGetUniformLocationARB(*p, var), 1, i);
+	glUseProgramObjectARB(p->shader);
+	glUniform3fvARB(glGetUniformLocationARB(p->shader, var), 1, i);
 	glUseProgramObjectARB(0);
 	return 0;
 }
 
 static int program_set_uniform_number4(lua_State *L)
 {
-	GLuint *p = (GLuint*)auxiliar_checkclass(L, "gl{program}", 1);
+	shader_type *p = (shader_type*)auxiliar_checkclass(L, "gl{program}", 1);
 	const char *var = luaL_checkstring(L, 2);
 	GLfloat i[4];
 	i[0] = luaL_checknumber(L, 3);
@@ -215,34 +223,34 @@ static int program_set_uniform_number4(lua_State *L)
 	i[2] = luaL_checknumber(L, 5);
 	i[3] = luaL_checknumber(L, 6);
 
-	glUseProgramObjectARB(*p);
-	glUniform4fvARB(glGetUniformLocationARB(*p, var), 1, i);
+	glUseProgramObjectARB(p->shader);
+	glUniform4fvARB(glGetUniformLocationARB(p->shader, var), 1, i);
 	glUseProgramObjectARB(0);
 	return 0;
 }
 
 static int program_set_uniform_texture(lua_State *L)
 {
-	GLuint *p = (GLuint*)auxiliar_checkclass(L, "gl{program}", 1);
+	shader_type *p = (shader_type*)auxiliar_checkclass(L, "gl{program}", 1);
 	const char *var = luaL_checkstring(L, 2);
 	GLint i = luaL_checknumber(L, 3);
 
-	glUseProgramObjectARB(*p);
-	glUniform1ivARB(glGetUniformLocationARB(*p, var), 1, &i);
+	glUseProgramObjectARB(p->shader);
+	glUniform1ivARB(glGetUniformLocationARB(p->shader, var), 1, &i);
 	glUseProgramObjectARB(0);
 	return 0;
 }
 
 static int program_use(lua_State *L)
 {
-	GLuint *p = (GLuint*)auxiliar_checkclass(L, "gl{program}", 1);
+	shader_type *p = (shader_type*)auxiliar_checkclass(L, "gl{program}", 1);
 	bool active = lua_toboolean(L, 2);
 
 	if (active)
 	{
-		glUseProgramObjectARB(*p);
+		glUseProgramObjectARB(p->shader);
 		GLfloat t = SDL_GetTicks();
-		glUniform1fvARB(glGetUniformLocationARB(*p, "tick"), 1, &t);
+		glUniform1fvARB(glGetUniformLocationARB(p->shader, "tick"), 1, &t);
 	}
 	else
 	{

@@ -22,13 +22,14 @@
 #define _MAP_H_
 
 #include "tgl.h"
+#include "useshader.h"
 
 typedef struct {
 	int nb_textures;
 	int *textures_ref;
 	GLuint *textures;
 	bool *textures_is3d;
-	GLuint shader;
+	shader_type *shader;
 	float dx, dy, scale;
 	float tint_r;
 	float tint_g;

@@ -47,6 +47,7 @@
 #define HEIGHT 600
 
 lua_State *L = NULL;
+bool no_debug = FALSE;
 int current_mousehandler = LUA_NOREF;
 int current_keyhandler = LUA_NOREF;
 int current_game = LUA_NOREF;
@@ -92,6 +93,12 @@ int docall (lua_State *L, int narg, int nret)
 	/* force a complete garbage collection in case of errors */
 	if (status != 0) lua_gc(L, LUA_GCCOLLECT, 0);
 	return status;
+}
+
+/* No print function, does .. nothing */
+int noprint(lua_State *L)
+{
+	return 0;
 }
 
 void display_utime()
@@ -614,6 +621,13 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 		luaopen_shaders(L);
 		luaopen_serial(L);
 
+		// Override "print" if requested
+		if (no_debug)
+		{
+			lua_pushcfunction(L, noprint);
+			lua_setglobal(L, "print");
+		}
+
 		// Make the uids repository
 		lua_newtable(L);
 		lua_setglobal(L, "__uids");
@@ -698,6 +712,7 @@ int main(int argc, char *argv[])
 		if (!strncmp(arg, "-u", 2)) reboot_name = strdup(arg+2);
 		if (!strncmp(arg, "-E", 2)) reboot_einfo = strdup(arg+2);
 		if (!strncmp(arg, "-n", 2)) reboot_new = TRUE;
+		if (!strncmp(arg, "--no-debug", 10)) no_debug = TRUE;
 	}
 
 	boot_lua(1, FALSE, argc, argv);
