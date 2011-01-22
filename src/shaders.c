@@ -35,7 +35,6 @@ bool shaders_active = TRUE;
 void useShader(shader_type *p, int x, int y, int w, int h, float r, float g, float b, float a)
 {
 	glUseProgramObjectARB(p->shader);
-	printf("Using shader %d at %dx%d (%dx%d), %f;%f;%f;%f\n", p->shader,x,y,w,h,r,g,b,a);
 	GLfloat t = SDL_GetTicks();
 	glUniform1fvARB(p->p_tick, 1, &t);
 	GLfloat d[4];
