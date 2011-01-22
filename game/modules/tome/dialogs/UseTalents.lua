@@ -45,7 +45,9 @@ Check out the keybinding screen in the game menu to bind hotkeys to a key (defau
 		{name="Talent", width=80, display_prop="name"},
 		{name="Status", width=20, display_prop="status"},
 		{name="Hotkey", width={70,"fixed"}, display_prop="hotkey"},
-		{name="Left Mouse", width={60,"fixed"}, display_prop=function(item) if item.talent == self.actor.auto_shoot_talent then return "LeftClick" else return "" end end},
+		{name="Left Mouse", width={60,"fixed"}, display_prop=function(item)
+			if item.talent and item.talent == self.actor.auto_shoot_talent then return "LeftClick" else return "" end
+		end},
 	}
 	self.c_list = TreeList.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 10, all_clicks=true, scrollbar=true, columns=cols, tree=self.list, fct=function(item, sel, button) self:use(item, button) end, select=function(item, sel) self:select(item) end}
 	self.c_list.cur_col = 2
@@ -109,17 +111,19 @@ end
 
 function _M:defineHotkey(id)
 	if not self.actor.hotkey then return end
-	local item = self.list[self.c_list.sel]
+	local item = self.cur_item
 	if not item or not item.talent then return end
 
 	self.actor.hotkey[id] = {"talent", item.talent}
 	self:simplePopup("Hotkey "..id.." assigned", self.actor:getTalentFromId(item.talent).name:capitalize().." assigned to hotkey "..id)
+	self.c_list:drawTree()
 	self.actor.changed = true
 end
 
 function _M:select(item)
 	if item then
 		self.c_desc:switchItem(item, item.desc)
+		self.cur_item = item
 	end
 end
 
