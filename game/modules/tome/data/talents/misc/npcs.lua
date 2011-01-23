@@ -619,6 +619,80 @@ newTalent{
 }
 
 newTalent{
+	name = "Spit Blight",
+	type = {"wild-gift/other", 1},
+	points = 5,
+	equilibrium = 4,
+	cooldown = 6,
+	tactical = {
+		ATTACK = 10,
+	},
+	range = 10,
+	requires_target = true,
+	tactical = { ATTACK = 2 },
+	action = function(self, t)
+		local tg = {type="bolt", range=self:getTalentRange(t)}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, DamageType.BLIGHT, 20 + (self:getMag() * self:getTalentLevel(t)) * 0.8, {type="slime"})
+		game:playSoundNear(self, "talents/slime")
+		return true
+	end,
+	info = function(self, t)
+		return ([[Spit blight at your target doing %0.2f blight damage.
+		The damage will increase with the Magic stat]]):format(20 + (self:getDex() * self:getTalentLevel(t)) * 0.8)
+	end,
+}
+
+newTalent{
+	name = "Rushing Claws",
+	type = {"wild-gift/other", 1},
+	message = "@Source@ rushes out, claws sharp and ready!",
+	points = 5,
+	equilibrium = 10,
+	cooldown = 15,
+	tactical = { DISABLE = 2, CLOSEIN = 3 },
+	requires_target = true,
+	range = function(self, t) return math.floor(5 + self:getTalentLevelRaw(t)) end,
+	action = function(self, t)
+		if self:attr("never_move") then game.logPlayer(self, "You can not do that currently.") return end
+
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y or not target then return nil end
+		if math.floor(core.fov.distance(self.x, self.y, x, y)) > self:getTalentRange(t) then return nil end
+
+		local l = line.new(self.x, self.y, x, y)
+		local lx, ly = l()
+		local tx, ty = self.x, self.y
+		lx, ly = l()
+		while lx and ly do
+			if game.level.map:checkAllEntities(lx, ly, "block_move", self) then break end
+			tx, ty = lx, ly
+			lx, ly = l()
+		end
+
+		local ox, oy = self.x, self.y
+		self:move(tx, ty, true)
+		if config.settings.tome.smooth_move > 0 then
+			self:resetMoveAnim()
+			self:setMoveAnim(ox, oy, 8, 5)
+		end
+
+		-- Attack ?
+		if math.floor(core.fov.distance(self.x, self.y, x, y)) == 1 and target:canBe("pin") then
+			target:setEffect(target.EFF_PINNED, 5, {})
+		end
+
+		return true
+	end,
+	info = function(self, t)
+		return ([[Rushes toward your target with incredible speed. If the target is reached you use your claws to pin it to the ground for 5 turns.
+		You must rush from at least 2 tiles away.]])
+	end,
+}
+
+newTalent{
 	name = "Throw Bones",
 	type = {"undead/other", 1},
 	points = 5,

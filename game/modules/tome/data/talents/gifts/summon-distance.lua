@@ -18,10 +18,11 @@
 -- darkgod@te4.org
 
 newTalent{ short_name = "RITCH_FLAMESPITTER_BOLT",
-	name = "Fire Bolt",
+	name = "Flamespit",
 	type = {"wild-gift/other",1},
 	points = 5,
 	equilibrium = 2,
+	mesage = "@Source@ spits flames!",
 	range = 10,
 	reflectable = true,
 	requires_target = true,
