@@ -40,6 +40,7 @@ on_status_change = function(self, who, status, sub)
 		if self:isCompleted("ritch") and self:isCompleted("murgol") then
 			who:setQuestStatus(self.id, engine.Quest.DONE)
 			who:grantQuest("starter-zones")
+			game.logPlayer(game.player, "You should head to the tunnel to Maj'Eyal and explore the world. For the Way.")
 		end
 	end
 end
