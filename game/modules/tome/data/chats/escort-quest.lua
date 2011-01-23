@@ -151,7 +151,7 @@ local function generate_rewards()
 			level = math.min(t.points - game.player:getTalentLevelRaw(tid), level)
 			if level > 0 then
 				local doit = function(npc, player)
-					player:setTalentTypeMastery(t.type[1], 0.7)
+					if game.player:knowTalentType(t.type[1]) == nil then player:setTalentTypeMastery(t.type[1], 0.7) end
 					player:learnTalent(tid, true, level)
 					if t.hide then player.__show_special_talents[tid] = true end
 					player:hasQuest(npc.quest_id).reward_message = ("%s talent %s (+%d level(s))"):format(game.player:knowTalent(tid) and "improved" or "learnt", t.name, level)
@@ -169,7 +169,7 @@ local function generate_rewards()
 		end
 	end
 	if reward.types then
-		for tt, mastery in pairs(reward.types) do if not game.player:knowTalentType(tt) then
+		for tt, mastery in pairs(reward.types) do if game.player:knowTalentType(tt) == nil then
 			local tt_def = npc:getTalentTypeFrom(tt)
 			local cat = tt_def.type:gsub("/.*", "")
 			local doit = function(npc, player)

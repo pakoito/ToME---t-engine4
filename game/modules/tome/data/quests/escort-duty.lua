@@ -265,6 +265,7 @@ on_status_change = function(self, who, status, sub)
 		-- Remove the actor is we failed
 		for uid, e in pairs(game.level.entities) do
 			if e.quest_id and e.quest_id == self.id then
+				game.party:removeMember(e, true)
 				e:disappear()
 				e:removed()
 			end
@@ -298,7 +299,6 @@ local function getPortalSpot(npc, dist, min_dist)
 		end
 	end
 end
-
 
 on_grant = function(self, who)
 	local x, y = util.findFreeGrid(who.x, who.y, 10, true, {[engine.Map.ACTOR]=true})
