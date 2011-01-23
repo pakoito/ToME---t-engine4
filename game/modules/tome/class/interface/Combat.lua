@@ -417,32 +417,31 @@ function _M:combatArmor()
 end
 
 --- Gets the attack
-function _M:combatAttack(weapon)
+function _M:combatAttackBase(weapon, ammo)
 	weapon = weapon or self.combat or {}
+	return self.combat_atk + self:getTalentLevel(Talents.T_WEAPON_COMBAT) * 5 + (weapon.atk or 0) + (ammo and ammo.atk or 0) + (self:getLck() - 50) * 0.4
+end
+function _M:combatAttack(weapon, ammo)
 	local stats
 	if self.use_psi_combat then stats = (self:getWil(50) - 5) + (self:getCun(50) - 5)
 	else stats = (self:getStr(50) - 5) + (self:getDex(50) - 5)
 	end
-
-	return self.combat_atk + self:getTalentLevel(Talents.T_WEAPON_COMBAT) * 5 + (weapon.atk or 0) + stats + (self:getLck() - 50) * 0.4
+	return self:combatAttackBase(weapon, ammo) + stats
 end
 
 --- Gets the attack using only strength
-function _M:combatAttackStr(weapon)
-	weapon = weapon or self.combat or {}
-	return self.combat_atk + self:getTalentLevel(Talents.T_WEAPON_COMBAT) * 5 + (weapon.atk or 0) + (self:getStr(100) - 10) + (self:getLck() - 50) * 0.4
+function _M:combatAttackStr(weapon, ammo)
+	return self:combatAttackBase(weapon, ammo) + (self:getStr(100) - 10)
 end
 
 --- Gets the attack using only dexterity
-function _M:combatAttackDex(weapon)
-	weapon = weapon or self.combat or {}
-	return self.combat_atk + self:getTalentLevel(Talents.T_WEAPON_COMBAT) * 5 + (weapon.atk or 0) + (self:getDex(100) - 10) + (self:getLck() - 50) * 0.4
+function _M:combatAttackDex(weapon, ammo)
+	return self:combatAttackBase(weapon, ammo) + (self:getDex(100) - 10)
 end
 
 --- Gets the attack using only magic
-function _M:combatAttackDex(weapon)
-	weapon = weapon or self.combat or {}
-	return self.combat_atk + self:getTalentLevel(Talents.T_WEAPON_COMBAT) * 5 + (weapon.atk or 0) + (self:getMag(100) - 10) + (self:getLck() - 50) * 0.4
+function _M:combatAttackMag(weapon, ammo)
+	return self:combatAttackBase(weapon, ammo) + (self:getMag(100) - 10)
 end
 
 --- Gets the armor penetration

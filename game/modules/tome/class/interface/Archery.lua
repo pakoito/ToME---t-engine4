@@ -121,7 +121,7 @@ local function archery_projectile(tx, ty, tg, self)
 	local mult = tg.archery.mult or 1
 
 	-- Does the blow connect? yes .. complex :/
-	local atk, def = self:combatAttack(weapon), target:combatDefenseRanged()
+	local atk, def = self:combatAttack(weapon, ammo), target:combatDefenseRanged()
 	local dam, apr, armor = self:combatDamage(ammo), self:combatAPR(ammo), target:combatArmor()
 	print("[ATTACK ARCHERY] to ", target.name, " :: ", dam, apr, armor, "::", mult)
 	if not self:canSee(target) then atk = atk / 3 end
