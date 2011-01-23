@@ -763,15 +763,6 @@ function _M:setupCommands()
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
 			self.nicer_tiles:postProcessLevelTiles(self.level)
-
-		for i, e in ipairs(game.zone.object_list) do
-			if e.subtype == "staff" and e.rarity and e.name then
-				local a = game.zone:finishEntity(game.level, "object", e)
-				a.no_unique_lore = true -- to not spam
-				a:identify(true)
-				game.zone:addEntity(game.level, a, "object", game.player.x, game.player.y)
-			end
-		end
 		end end,
 	}
 

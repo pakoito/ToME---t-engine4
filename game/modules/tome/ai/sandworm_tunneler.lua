@@ -97,7 +97,7 @@ newAI("sandworm_tunneler", function(self)
 		self:useEnergy()
 	else
 		local feat = game.level.map(lx, ly, engine.Map.TERRAIN)
-		if feat:check("block_move") then
+		if feat:check("block_move") or feat:check("tunneler_dig") then
 			self:project({type="hit"}, lx, ly, DamageType.DIG, 1)
 		end
 		self:move(lx, ly)

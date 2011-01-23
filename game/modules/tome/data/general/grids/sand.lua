@@ -70,6 +70,7 @@ newEntity{
 					end
 				end
 			end,
+			tunneler_dig = 1,
 			dig = function(src, x, y, old)
 				old.temporary = 20
 				return nil, old, true
