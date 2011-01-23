@@ -90,6 +90,7 @@ end
 function _M:setEffect(eff_id, dur, p, silent)
 	-- Beware, setting to 0 means removing
 	if dur <= 0 then return self:removeEffect(eff_id) end
+	dur = math.ceil(dur)
 
 	for k, e in pairs(_M.tempeffect_def[eff_id].parameters) do
 		if not p[k] then p[k] = e end
