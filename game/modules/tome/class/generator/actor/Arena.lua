@@ -290,6 +290,12 @@ function _M:generateMaster()
 			local Chat = require "engine.Chat"
 			local chat = Chat.new("arena", {name="The final fight!"}, game.player)
 			chat:invoke("master-entry")
+			if self.alchemy_golem then
+				self.alchemy_golem.dead = nil
+				self.alchemy_golem.faction = self.faction
+				self.alchemy_golem.life = self.alchemy_golem.max_life
+				game.zone:addEntity(game.level, self.alchemy_golem, "actor", 8, 2)
+			end
 			game.level.arena.danger = game.level.arena.danger + 1000
 			game.level.map:particleEmitter(self.x, self.y, 3, "teleport")
 			game:playSoundNear(game.player, "talents/teleport")
@@ -316,7 +322,8 @@ function _M:calculateWave()
 	local foe = {
 --Relative cannon fodder.
 		{ entity = { type = "vermin", subtype = "rodent" }, --Wave 1
-			wave = 4, power = 2, delay = 3, bonus = 0.1, score = 5, entry = 2 },
+			wave = 4, power = 2, delay = 3, bonus = 0.1, score = 5, entry = 2,
+			special = function (self) if game.level.arena.bonusMultiplier > 7 then self.entity = {name="giant crystal rat"} self.power = 4 self.wave = 6 end return self end },
 		{ entity = { type = "insect", subtype = "ant" },
 			wave = 2, power = 2, delay = 2, bonus = 0.1, score = 15 , entry = 2 },
 		{ entity = { type = "animal", subtype = "canine" },
@@ -437,7 +444,7 @@ function _M:calculateWave()
 
 	}
 	local dangerMin = 1 + math.floor(game.level.arena.currentWave * 0.1)
-	local dangerMax = dangerMin + (game.level.arena.currentWave ^ game.level.arena.dangerMod)
+	local dangerMax = ((game.level.arena.currentWave + 1) ^ game.level.arena.dangerMod) + dangerMin
 	if dangerMax > #foe then dangerMax = #foe end
 	local val = rng.range(dangerMin, dangerMax)
 	return foe[val]
@@ -481,7 +488,7 @@ function _M:generateOne(e)
 					if val > 0.5 then game.log("#LIGHT_GREEN#The audience cheers!") end
 					game.level.arena.raiseRank(val)
 				else
-					game.log("#LIGHT_GREEN#Your destroy #WHITE#"..self.name.."#LIGHT_GREEN# in a single blow!")
+					game.log("#LIGHT_GREEN#You destroy #WHITE#"..self.name.."#LIGHT_GREEN# in a single blow!")
 					local val = (self.level * 0.01)
 					if val > 0.5 then game.log("#LIGHT_GREEN#The audience cheers!") end
 					game.level.arena.raiseRank(val)

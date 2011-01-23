@@ -22,12 +22,18 @@ return {
 	level_range = {1, 50},
 	level_scheme = "player",
 	max_level = 1,
-	actor_adjust_level = function(zone, level, e) return game.player.level + rng.range(-2, 2) end,
+	actor_adjust_level = function(zone, level, e)
+		local val = 0
+		if level.arena.bonusMultiplier >= 7 then
+			val = math.floor(level.arena.bonusMultiplier * 0.3)
+		end
+	return game.player.level + rng.range(-2 + val, 2 + val)
+	end,
 	width = 15, height = 15,
 	all_remembered = true,
 	all_lited = true,
 	no_worldport = true,
-	--ambiant_music = "a_lomos_del_dragon_blanco.ogg",
+	ambiant_music = "a_lomos_del_dragon_blanco.ogg",
 
 	generator =  {
 		map = {
@@ -36,8 +42,8 @@ return {
 			zoom = 4,
 		},
 		actor = { },
-		object = { },
-		trap = { },
+		--object = { },
+		--trap = { },
 
 	},
 
@@ -69,7 +75,7 @@ return {
 		--Only raise danger level while you can raise bonus multiplier.
 		if game.level.arena.dangerMod < 1.5 and game.level.arena.pinch == false
 		and game.level.arena.delay  <= 0 and not game.level.turn_counter then
-			game.level.arena.dangerMod = game.level.arena.dangerMod + 0.02
+			game.level.arena.dangerMod = game.level.arena.dangerMod + 0.05
 		end
 		--Reset kill counter
 		if game.level.arena.kills > 0 then
@@ -102,7 +108,7 @@ return {
 		--Allow players to shoot bows and stuff by default. Move it back to perks if too powerful.
 		game.player:learnTalent(game.player.T_SHOOT, true)
 		game.player.changed = true
-		level.turn_counter = 50 --5 turns before action starts.
+		level.turn_counter = 60 --5 turns before action starts.
 		--world.arena = nil
 		if not world.arena or not world.arena.ver then
 			local emptyScore = {name = nil, score = 0, perk = nil, wave = 1, sex = nil, race = nil, class = nil}

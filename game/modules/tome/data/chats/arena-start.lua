@@ -96,54 +96,17 @@ local give_imbue = function(self, player)
 end
 
 local give_debugarms = function(self, player)
-	local o = game.zone:makeEntityByName(game.level, "object", "ARENA_DEBUG_CANNON")
-	if o then
-		o:identify(true)
-		player:addObject(player.INVEN_INVEN, o)
-		game.zone:addEntity(game.level, o, "object")
+	local debugarms = { "ARENA_DEBUG_CANNON", "ARENA_DEBUG_ARMOR", "BARRAGE", "RAPTOR", "ARENA_BOOTS_JUMPING", "WARDING", "HEATEATER", "PRISM" }
+	local o
+	for i = 0, #debugarms do
+	o = game.zone:makeEntityByName(game.level, "object", debugarms[i])
+		if o then
+			o:identify(true)
+			player:addObject(player.INVEN_INVEN, o)
+			game.zone:addEntity(game.level, o, "object")
+		end
 	end
-	o = nil
-	o = game.zone:makeEntityByName(game.level, "object", "ARENA_DEBUG_ARMOR")
-	if o then
-		o:identify(true)
-		player:addObject(player.INVEN_INVEN, o)
-		game.zone:addEntity(game.level, o, "object")
-	end
-	o = nil
-	o = game.zone:makeEntityByName(game.level, "object", "BARRAGE")
-	if o then
-		o:identify(true)
-		player:addObject(player.INVEN_INVEN, o)
-		game.zone:addEntity(game.level, o, "object")
-	end
-	o = nil
-	o = game.zone:makeEntityByName(game.level, "object", "RAPTOR")
-	if o then
-		o:identify(true)
-		player:addObject(player.INVEN_INVEN, o)
-		game.zone:addEntity(game.level, o, "object")
-	end
-	o = nil
-	o = game.zone:makeEntityByName(game.level, "object", "ARENA_BOOTS_JUMPING")
-	if o then
-		o:identify(true)
-		player:addObject(player.INVEN_INVEN, o)
-		game.zone:addEntity(game.level, o, "object")
-	end
-	o = nil
-	o = game.zone:makeEntityByName(game.level, "object", "WARDING")
-	if o then
-		o:identify(true)
-		player:addObject(player.INVEN_INVEN, o)
-		game.zone:addEntity(game.level, o, "object")
-	end
-	o = nil
-	o = game.zone:makeEntityByName(game.level, "object", "HEATEATER")
-	if o then
-		o:identify(true)
-		player:addObject(player.INVEN_INVEN, o)
-		game.zone:addEntity(game.level, o, "object")
-	end
+
 	game.level.arena.perk = "Debug"..game.level.arena.modeString
 end
 
@@ -197,7 +160,7 @@ newChat{ id="perks",
 		{"A pair of boots of phasing...", action=give_boots_phas},
 		--{"#DARK_BLUE#A pair of boots of lightning speed...", action=give_boots_lspeed},
 		{"A healing infusion...", action=give_healinfu},
-		{"A bow of steady shots...", action=give_bow},
+		{"A bow of piercing arrows...", action=give_bow},
 		{"A sling of flare...", action=give_sling},
 		{"The talent to imbue gems...", action=give_imbue},
 		--{"[DEBUG] Debug arms!", action=give_debugarms},
@@ -219,7 +182,6 @@ newChat{ id="welcome",
 newChat{ id="welcome2",
 	text = "What will you do now?",
 	answers = {
-		--{"Enter the arena for 3 rounds[DEBUG]", action=arena_3, jump="perks"},
 		{"Enter the arena for 60 rounds", action=arena_60, jump="perks"},
 		{"Enter the arena for 30 rounds", action=arena_30, jump="perks"},
 		--{"Enter the arena for as much as you can last", action=arena_inf, jump="perks"},

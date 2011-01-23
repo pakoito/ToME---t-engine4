@@ -83,7 +83,7 @@ newEntity{ base = "BASE_NPC_CRYSTAL",
 	rarity = 4,
 	resists = { [DamageType.ICE] = -100 },
 	resolvers.talents{
-		[Talents.T_WATER_BOLT]=3,
+		[Talents.T_TIDAL_WAVE]=3,
 	}
 }
 

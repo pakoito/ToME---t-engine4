@@ -20,16 +20,16 @@
 base_size = 32
 
 return { generator = function()
-	local life = rng.range(5, 10)
-	local size = rng.range(6, 7)
+	local life = rng.range(10, 20)
+	local size = rng.range(15, 20)
 	local angle = math.rad(rng.range(0, 360))
-	local distance = engine.Map.tile_w * rng.float(0.3, 0.7)
+	local distance = engine.Map.tile_w * rng.float(2, 2.5)
 	local vel = distance / life
 
 	return {
 		trail = 1,
 		life = life,
-		size = size, sizev = size / life / 3, sizea = 0,
+		size = size, sizev = 0.2, sizea = 0,
 
 		x = -size / 2 + distance * math.cos(angle), xv = 0, xa = 0,
 		y = -size / 2 + distance * math.sin(angle), yv = 0, ya = 0,
@@ -39,13 +39,13 @@ return { generator = function()
 		r = rng.range(200, 255) / 255,  rv = 0, ra = 0,
 		g = rng.range(200, 255) / 255,  gv = 0, ga = 0,
 		b = rng.range(200, 255) / 255,  bv = 0, ba = 0,
-		a = alpha,  av = -alpha / life / 2, aa = 0,
+		a = 0.5,  av = 0.01, aa = 0,
 	}
 end, },
 function(self)
 	self.nb = (self.nb or 0) + 1
 	if self.nb < 6 then
-		self.ps:emit(20)
+		self.ps:emit(10)
 	end
 end,
-20 * 6
+120

@@ -27,8 +27,6 @@ return { generator = function()
 	local r = rng.float(0.1, sradius * 0.5)
 	local x = r * math.cos(a)
 	local y = r * math.sin(a)
-	local bx = math.floor(x / engine.Map.tile_w)
-	local by = math.floor(y / engine.Map.tile_h)
 
 	return {
 		trail = 1,
@@ -48,7 +46,7 @@ return { generator = function()
 end, },
 function(self)
 	if nb < 1 then
-		self.ps:emit(5)
+		self.ps:emit(6)
 	end
 	nb = nb + 1
 end,
