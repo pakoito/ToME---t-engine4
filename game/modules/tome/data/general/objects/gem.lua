@@ -147,7 +147,7 @@ newGem("Zircon",	"object/zircon.png",1,	8,	"yellow",	1,	10, 1, 20,
 	{ resists = {all=2} },
 	{ daze={chance=20, dur=3} }
 )
-newGem("Spinel",	"object/spinet.png",1,	8,	"green",	1,	10, 1, 20,
+newGem("Spinel",	"object/spinel.png",1,	8,	"green",	1,	10, 1, 20,
 	{ combat_def=2 },
 	{ mana=10 }
 )
