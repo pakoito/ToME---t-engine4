@@ -125,6 +125,14 @@ techs_strdex_req5 = function(self, t) local stat = self:getStr() >= self:getDex(
 	level = function(level) return 16 + (level-1)  end,
 } end
 
+
+-- Archery range talents
+archery_range = function(self, t)
+	local weapon = self:hasArcheryWeapon()
+	if not weapon or not weapon.combat then return 1 end
+	return weapon.combat.range or 6
+end
+
 load("/data/talents/techniques/2hweapon.lua")
 load("/data/talents/techniques/dualweapon.lua")
 load("/data/talents/techniques/weaponshield.lua")
