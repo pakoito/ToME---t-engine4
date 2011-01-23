@@ -229,6 +229,31 @@ newEntity{ base = "BASE_RING",
 	},
 }
 
+newEntity{ base = "BASE_RING",
+	define_as = "NIGHT_SONG", rarity=false,
+	name = "Nightsong", unique=true, image="object/artifact/nightsong.png",
+	desc = [[A pitch black ring, unadorned. It seems as though tendrils of darkness crept upon it.]],
+	unided_name = "obsidian ring",
+	level_range = {15, 23},
+	rarity = 250,
+	cost = 500,
+	material_level = 4,
+	wielder = {
+		max_stamina = 25,
+		combat_def = 6,
+		fatigue = -7,
+		inc_stats = { [Stats.STAT_CUN] = 6 },
+		combat_mentalresist = 13,
+		talent_cd_reduction={
+			[Talents.T_SHADOWSTEP]=1,
+		},
+		inc_damage={ [DamageType.PHYSICAL] = 5, },
+	},
+
+	max_power = 50, power_regen = 1,
+	use_talent = { id = Talents.T_DARK_TENDRILS, level=2, power = 40 },
+}
+
 newEntity{ base = "BASE_HELM",
 	define_as = "HELM_OF_GARKUL",
 	unided_name = "tribal helm",

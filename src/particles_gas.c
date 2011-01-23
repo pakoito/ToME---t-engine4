@@ -357,15 +357,16 @@ static int gas_to_screen(lua_State *L)
 	float zoom = luaL_checknumber(L, 5);
 	int w = 0;
 	int i, j, dx, dy;
-	bool alive = FALSE;
+	int vert_idx = 0, col_idx = 0;
+
+	GLfloat vertices[2*4*1000];
+	GLfloat colors[4*4*1000];
+	GLshort texcoords[2*4*1000];
 
 	glBindTexture(GL_TEXTURE_2D, gz->texture);
-
-	if (gz->last_tick == -1) gz->last_tick = ((float)SDL_GetTicks()) / 1000.0f - 1;
-
-	float now = ((float)SDL_GetTicks()) / 1000.0f;
-	update(gz, now - gz->last_tick);
-	gz->last_tick = now;
+	glTexCoordPointer(2, GL_SHORT, 0, texcoords);
+	glColorPointer(4, GL_FLOAT, 0, colors);
+	glVertexPointer(2, GL_FLOAT, 0, vertices);
 
 	for (dx=0; dx <= gz->n; dx++)
 	{
@@ -375,22 +376,55 @@ static int gas_to_screen(lua_State *L)
 			coef = CLAMP(0.0f, 1.0f, coef);
 			if (coef > 0.1)
 			{
-				tglColor4f(coef, 0, 0, coef);
-
-				glBegin(GL_QUADS);
 				i = x + dx * 4;
 				j = y + dy * 4;
-				glTexCoord2f(0,0); glVertex3f(0 + i,	0 + j,		-97);
-				glTexCoord2f(1,0); glVertex3f(10 + i,	0 + j,		-97);
-				glTexCoord2f(1,1); glVertex3f(10 + i,	10 + j,		-97);
-				glTexCoord2f(0,1); glVertex3f(0 + i,	10 + j,		-97);
-				glEnd();
+
+				vertices[vert_idx+0] = i; vertices[vert_idx+1] = j;
+				vertices[vert_idx+2] = i + 10; vertices[vert_idx+3] = j;
+				vertices[vert_idx+4] = i + 10; vertices[vert_idx+5] = j + 10;
+				vertices[vert_idx+6] = i; vertices[vert_idx+7] = j + 10;
+
+				/* Setup texture coords */
+				texcoords[vert_idx] = 0; texcoords[vert_idx+1] = 0;
+				texcoords[vert_idx+2] = 1; texcoords[vert_idx+3] = 0;
+				texcoords[vert_idx+4] = 1; texcoords[vert_idx+5] = 1;
+				texcoords[vert_idx+6] = 0; texcoords[vert_idx+7] = 1;
+
+				/* Setup color */
+				colors[col_idx] = coef; colors[col_idx+1] = 0; colors[col_idx+2] = 0; colors[col_idx+3] = coef;
+				colors[col_idx+4] = coef; colors[col_idx+5] = 0; colors[col_idx+6] = 0; colors[col_idx+7] = coef;
+				colors[col_idx+8] = coef; colors[col_idx+9] = 0; colors[col_idx+10] = 0; colors[col_idx+11] = coef;
+				colors[col_idx+12] = coef; colors[col_idx+13] = 0; colors[col_idx+14] = 0; colors[col_idx+15] = coef;
+
+				/* Draw if over PARTICLES_PER_ARRAY particles */
+				vert_idx += 8;
+				col_idx += 16;
+				if (vert_idx >= 2*4*1000) {
+					// Draw them all in one fell swoop
+					glDrawArrays(GL_QUADS, 0, vert_idx / 2);
+					vert_idx = 0;
+					col_idx = 0;
+				}
 			}
 		}
 	}
 
-	// Restore normal display
-	tglColor4f(1, 1, 1, 1);
+	// Draw them all in one fell swoop
+	if (vert_idx) glDrawArrays(GL_QUADS, 0, vert_idx / 2);
+
+	lua_pushboolean(L, 1);
+	return 1;
+}
+
+static int gas_update(lua_State *L)
+{
+	gaszone_type *gz = (gaszone_type*)auxiliar_checkclass(L, "core{gas}", 1);
+
+	if (gz->last_tick == -1) gz->last_tick = ((float)SDL_GetTicks()) / 1000.0f - 1;
+
+	float now = ((float)SDL_GetTicks()) / 1000.0f;
+	update(gz, now - gz->last_tick);
+	gz->last_tick = now;
 
 	lua_pushboolean(L, 1);
 	return 1;
@@ -407,6 +441,7 @@ static const struct luaL_reg gas_reg[] =
 	{"__gc", gas_free},
 	{"close", gas_free},
 	{"emit", gas_emit},
+	{"update", gas_update},
 	{"toScreen", gas_to_screen},
 	{NULL, NULL},
 };

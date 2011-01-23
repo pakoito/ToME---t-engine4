@@ -104,7 +104,7 @@ newTalent{
 		return self:combatTalentIntervalDamage(t, "wil", 21, 281)*(1 + 0.3*gem_level)
 	end,
 	action = function(self, t)
-		--local gem_level = getGemLevel(self)
+		local gem_level = getGemLevel(self)
 		--local dam = (20 + self:getTalentLevel(t) * self:getWil(40))*(1 + 0.3*gem_level)
 		local dam = t.getDamage(self, t)
 		local tgts = {}

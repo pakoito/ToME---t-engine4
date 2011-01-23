@@ -762,8 +762,7 @@ function _M:setupCommands()
 			self.nicer_tiles:replaceAll(self.level)
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
---			self.nicer_tiles:postProcessLevelTiles(self.level)
-		game.level.map:particleEmitter(self.player.x, self.player.y, 1, "breath_fire_navier")
+			self.nicer_tiles:postProcessLevelTiles(self.level)
 		end end,
 	}
 

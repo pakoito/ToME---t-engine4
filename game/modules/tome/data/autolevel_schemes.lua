@@ -54,6 +54,10 @@ Autolevel:registerScheme{ name = "warriormage", levelup = function(self)
 	self:learnStats{ self.STAT_MAG, self.STAT_MAG, self.STAT_WIL, self.STAT_STR, self.STAT_STR, self.STAT_DEX }
 end}
 
+Autolevel:registerScheme{ name = "roguemage", levelup = function(self)
+	self:learnStats{ self.STAT_CUN, self.STAT_DEX, self.STAT_CUN, self.STAT_MAG }
+end}
+
 Autolevel:registerScheme{ name = "dexmage", levelup = function(self)
 	self:learnStats{ self.STAT_MAG, self.STAT_MAG, self.STAT_DEX, self.STAT_DEX }
 end}

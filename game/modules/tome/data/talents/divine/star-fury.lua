@@ -86,7 +86,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local damage = t.getDuration(self, t)
+		local damage = t.getDamage(self, t)
 		local damageonspot = t.getDamageOnSpot(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[Invokes a blast of shadows dealing %0.2f darkness damage and leaving a field that does %0.2f darkness damage per turn for %d turns.

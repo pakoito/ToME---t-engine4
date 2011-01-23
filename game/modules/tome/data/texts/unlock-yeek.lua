@@ -17,35 +17,18 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local nb = 0
+return "New Race: #LIGHT_GREEN#Yeek",
+[[
+Yeeks are a mysterious race of small humanoids native to the tropical island of Rel.
+Their body is covered with white fur and their disproportionate head gives them a ridiculous look, yet they are a cunning and willful race.
+Although they are now nearly unheard of in Maj'Eyal, they spent many centuries as secret slaves to the halfling nation of Nargol.
+They gained their freedom during the Age of Pyre and have since then followed 'The Way' - a unity of minds enforced by their powerful psionics.
 
-return { gas = {w=60, h=60},
-generator = function()
-	if nb < 10 then
-		nb = nb + 1
-		return {
+You have helped a yeek wayist and can now create a new character with the #LIGHT_GREEN#Yeek race#WHITE#.
 
-			{ sx = 3, sy = 29, dx = 3, dy = -3 },
-			{ sx = 3, sy = 30, dx = 3, dy = 0 },
-			{ sx = 3, sy = 31, dx = 3, dy = 3 },
-
-			{ sx = 4, sy = 29, dx = 3, dy = -3 },
-			{ sx = 4, sy = 30, dx = 3, dy = 0 },
-			{ sx = 4, sy = 31, dx = 3, dy = 3 },
---[[
-			{ sx = 29, sy = 29, dx = -3, dy = -3 },
-			{ sx = 31, sy = 29, dx =  3, dy = -3 },
-			{ sx = 29, sy = 31, dx = -3, dy =  3 },
-			{ sx = 31, sy = 31, dx =  3, dy =  3 },
-
-			{ sx = 30, sy = 29, dx =  0, dy = -3 },
-			{ sx = 30, sy = 31, dx =  0, dy =  3 },
-			{ sx = 29, sy = 30, dx = -3, dy =  0 },
-			{ sx = 31, sy = 30, dx =  3, dy =  0 },
---]]
-		}
-	else return {}
-	end
-end, },
-function(self)end,
-30*6
+Race features:#YELLOW#
+- Mental domination racial power
+- Confusion resistance
+- Fast leveling
+- Frail body#WHITE#
+]]

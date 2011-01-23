@@ -348,6 +348,8 @@ function _M:act()
 
 	if self.on_act then self:on_act() end
 
+	if self.never_act then return false end
+
 	return true
 end
 
