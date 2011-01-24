@@ -46,9 +46,9 @@ function _M:init(title, actor, filter, action, on_select)
 		{name="Enc.", width=8, display_prop="encumberance", sort="encumberance"},
 	}, list={}, fct=function(item, sel, button, event) self:use(item, button, event) end, select=function(item, sel) self:select(item) end}
 
-	self.c_equip = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.max_h*self.font_h - 10, item_height=32, scrollbar=true, columns={
+	self.c_equip = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.max_h*self.font_h - 10, scrollbar=true, columns={
 		{name="", width={20,"fixed"}, display_prop="char"},
-		{name="", width={8+32,"fixed"}, display_prop="object", direct_draw=function(item, x, y) if item.object then item.object:toScreen(nil, x+4, y, 64, 64) end end},
+		{name="", width={8+16,"fixed"}, display_prop="object", direct_draw=function(item, x, y) if item.object then item.object:toScreen(nil, x+4, y, 16, 16) end end},
 		{name="Equipment", width=72, display_prop="name"},
 		{name="Category", width=20, display_prop="cat"},
 		{name="Enc.", width=8, display_prop="encumberance"},
