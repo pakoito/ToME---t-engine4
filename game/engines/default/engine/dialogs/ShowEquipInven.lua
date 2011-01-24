@@ -34,7 +34,6 @@ function _M:init(title, actor, filter, action, on_select)
 
 	Dialog.init(self, title or "Inventory", math.max(800, game.w * 0.8), math.max(600, game.h * 0.8))
 
---	self:maxH()
 	self.max_h = 0
 
 --	self.c_desc = TextzoneList.new{width=self.iw, height=self.max_h*self.font_h, no_color_bleed=true}
@@ -47,9 +46,9 @@ function _M:init(title, actor, filter, action, on_select)
 		{name="Enc.", width=8, display_prop="encumberance", sort="encumberance"},
 	}, list={}, fct=function(item, sel, button, event) self:use(item, button, event) end, select=function(item, sel) self:select(item) end}
 
-	self.c_equip = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.max_h*self.font_h - 10, scrollbar=true, columns={
+	self.c_equip = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.max_h*self.font_h - 10, item_height=32, scrollbar=true, columns={
 		{name="", width={20,"fixed"}, display_prop="char"},
-		{name="", width={24,"fixed"}, display_prop="object", direct_draw=function(item, x, y) if item.object then item.object:toScreen(nil, x+4, y, 16, 16) end end},
+		{name="", width={8+32,"fixed"}, display_prop="object", direct_draw=function(item, x, y) if item.object then item.object:toScreen(nil, x+4, y, 64, 64) end end},
 		{name="Equipment", width=72, display_prop="name"},
 		{name="Category", width=20, display_prop="cat"},
 		{name="Enc.", width=8, display_prop="encumberance"},
@@ -140,7 +139,6 @@ end
 
 function _M:select(item)
 	if item then
---		self.c_desc:switchItem(item, item.desc)
 		if self.on_select then self.on_select(item) end
 	end
 end
@@ -203,21 +201,6 @@ function _M:generateList()
 
 	self.c_inven:setList(self.inven_list)
 	self.c_equip:setList(self.equip_list)
-end
-
-function _M:maxH()
-	self.max_h = 0
-	for inven_id =  1, #self.actor.inven_def do
-		if self.actor.inven[inven_id] and self.actor.inven_def[inven_id].is_worn then
-			self.max_h = math.max(self.max_h, #self.actor.inven_def[inven_id].description:splitLines(self.iw - 10, self.font))
-		end
-	end
-	local i = 1
-	for item, o in ipairs(self.actor:getInven("INVEN")) do
-		if not self.filter or self.filter(o) then
-			self.max_h = math.max(self.max_h, o:getDesc():splitLines(self.iw - 10, self.font):countLines())
-		end
-	end
 end
 
 function _M:on_recover_focus()

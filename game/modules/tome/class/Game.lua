@@ -86,7 +86,8 @@ function _M:run()
 	self.hotkeys_display = HotkeysDisplay.new(nil, self.w * 0.5 + 30, self.h * 0.8 + 7, self.w * 0.5 - 30, self.h * 0.2 - 7, "/data/gfx/ui/talents-list.png")
 	self.npcs_display = ActorsSeenDisplay.new(nil, self.w * 0.5 + 30, self.h * 0.8 + 7, self.w * 0.5 - 30, self.h * 0.2 - 7, "/data/gfx/ui/talents-list.png")
 	self.calendar = Calendar.new("/data/calendar_allied.lua", "Today is the %s %s of the %s year of the Age of Ascendancy of Maj'Eyal.\nThe time is %02d:%02d.", 122, 167)
-	self.tooltip = Tooltip.new(nil, nil, {255,255,255}, {30,30,30})
+	self.tooltip = Tooltip.new(nil, nil, {255,255,255}, {30,30,30,230})
+	self.tooltip2 = Tooltip.new(nil, nil, {255,255,255}, {30,30,30,230})
 	self.flyers = FlyingText.new()
 	self:setFlyingText(self.flyers)
 	self.minimap_bg, self.minimap_bg_w, self.minimap_bg_h = core.display.loadImage("/data/gfx/ui/minimap.png"):glTexture()
@@ -733,9 +734,13 @@ end
 function _M:onRegisterDialog(d)
 	-- Clean up tooltip
 	self.tooltip_x, self.tooltip_y = nil, nil
+	self.tooltip2_x, self.tooltip2_y = nil, nil
 	if self.player then self.player:updateMainShader() end
 end
 function _M:onUnregisterDialog(d)
+	-- Clean up tooltip
+	self.tooltip_x, self.tooltip_y = nil, nil
+	self.tooltip2_x, self.tooltip2_y = nil, nil
 	if self.player then self.player:updateMainShader() end
 end
 

@@ -566,10 +566,33 @@ end
 --- Show combined equipment/inventory dialog
 -- Overload to make it use the tooltip
 function _M:showEquipInven(title, filter, action)
+	local last = nil
 	return mod.class.Actor.showEquipInven(self, title, filter, action, function(item)
 		if item.last_display_x then
 			game.tooltip_x, game.tooltip_y = {}, 1
 			game.tooltip:displayAtMap(nil, nil, item.last_display_x, item.last_display_y, item.desc)
+
+			if item == last or not item.object or item.object.wielded then return end
+			last = item
+
+			local winven = item.object:wornInven()
+			winven = winven and self:getInven(winven)
+			if not winven then return end
+
+			local str = tstring{{"font", "bold"}, {"color", "GREY"}, "Currently equiped:", {"font", "normal"}, {"color", "LAST"}, true}
+			local ok = false
+			for i = 1, #winven do
+				str:merge(winven[i]:getDesc())
+				if i < #winven then str:add{"---", true} end
+				ok = true
+			end
+			if ok then
+				game.tooltip2_x, game.tooltip2_y = {}, 1
+				game.tooltip2:displayAtMap(nil, nil, 1, item.last_display_y, str)
+				game.tooltip2.last_display_x = game.tooltip.last_display_x - game.tooltip2.w
+			else
+				game.tooltip2_x = nil
+			end
 		end
 	end)
 end

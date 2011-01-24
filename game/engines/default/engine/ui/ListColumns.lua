@@ -52,7 +52,7 @@ function _M:init(t)
 	self.all_clicks = t.all_clicks
 	self.hide_columns = t.hide_columns
 
-	self.fh = ls_h
+	self.fh = t.item_height or ls_h
 
 	local w = self.w
 	if self.scrollbar then w = w - 10 end

@@ -28,6 +28,7 @@ tiles = engine.Tiles.new(16, 16)
 function _M:init(fontname, fontsize, color, bgcolor, max)
 	self.color = color or {255,255,255}
 	self.bgcolor = bgcolor or {0,0,0}
+	self.bgcolor[4] = self.bgcolor[4] or 200
 	self.font = core.display.newFont(fontname or "/data/font/Vera.ttf", fontsize or 12)
 	self.font_h = self.font:lineSkip()
 	self.max = max or 300
@@ -67,7 +68,7 @@ function _M:display()
 	self.surface = core.display.newSurface(self.w, self.h)
 
 	-- Erase and the display the tooltip
-	self.surface:erase(self.bgcolor[1], self.bgcolor[2], self.bgcolor[3], 200)
+	self.surface:erase(self.bgcolor[1], self.bgcolor[2], self.bgcolor[3], self.bgcolor[4])
 
 	self.surface:merge(tiles:get(nil, 0,0,0, 0,0,0, "border_7.png"), 0, 0)
 	self.surface:merge(tiles:get(nil, 0,0,0, 0,0,0, "border_9.png"), self.w - 8, 0)
