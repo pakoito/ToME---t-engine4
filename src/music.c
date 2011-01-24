@@ -228,5 +228,6 @@ int luaopen_sound(lua_State *L)
 	auxiliar_newclass(L, "core{music}", music_reg);
 	auxiliar_newclass(L, "core{sound}", sound_reg);
 	luaL_openlib(L, "core.sound", soundlib, 0);
+	lua_pop(L, 1);
 	return 1;
 }

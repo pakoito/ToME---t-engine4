@@ -1128,5 +1128,6 @@ int luaopen_map(lua_State *L)
 	auxiliar_newclass(L, "core{map}", map_reg);
 	auxiliar_newclass(L, "core{mapobj}", map_object_reg);
 	luaL_openlib(L, "core.map", maplib, 0);
+	lua_pop(L, 1);
 	return 1;
 }

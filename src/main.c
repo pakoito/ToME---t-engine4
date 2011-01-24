@@ -84,6 +84,7 @@ static int traceback (lua_State *L) {
 
 int docall (lua_State *L, int narg, int nret)
 {
+//	printf("<===%d\n", lua_gettop(L));
 	int status;
 	int base = lua_gettop(L) - narg;  /* function index */
 	lua_pushcfunction(L, traceback);  /* push traceback function */
@@ -92,6 +93,7 @@ int docall (lua_State *L, int narg, int nret)
 	lua_remove(L, base);  /* remove traceback function */
 	/* force a complete garbage collection in case of errors */
 	if (status != 0) lua_gc(L, LUA_GCCOLLECT, 0);
+//	printf(">===%d\n", lua_gettop(L));
 	return status;
 }
 
@@ -260,7 +262,7 @@ void on_tick()
 		lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
 		docall(L, 1, 1);
 		tickPaused = lua_toboolean(L, -1);
-//		lua_pop(L, 1);
+		lua_pop(L, 1);
 	}
 
 	/* Gather our frames per second */

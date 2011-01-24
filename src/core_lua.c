@@ -2371,5 +2371,7 @@ int luaopen_core(lua_State *L)
 	luaL_openlib(L, "rng", rnglib, 0);
 	luaL_openlib(L, "line", linelib, 0);
 	luaL_openlib(L, "fs", fslib, 0);
+
+	lua_pop(L, 8);
 	return 1;
 }

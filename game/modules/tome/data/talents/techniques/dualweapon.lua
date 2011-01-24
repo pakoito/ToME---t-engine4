@@ -131,7 +131,7 @@ newTalent{
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
 
 		-- First attack with offhand
-		local speed, hit = self:attackTargetWith(target, offweapon.combat, nil, self:combatTalentWeaponDamage(t, 0.7, 1.7))
+		local speed, hit = self:attackTargetWith(target, offweapon.combat, nil, self:combatTalentWeaponDamage(t, 0.7, 1.5))
 
 		-- Second attack with mainhand
 		if hit then
@@ -142,7 +142,7 @@ newTalent{
 			end
 
 			-- Attack after the stun, to benefit from backstabs
-			self:attackTargetWith(target, weapon.combat, nil, self:combatTalentWeaponDamage(t, 0.7, 1.7))
+			self:attackTargetWith(target, weapon.combat, nil, self:combatTalentWeaponDamage(t, 0.7, 1.5))
 		end
 
 		return true
@@ -150,9 +150,9 @@ newTalent{
 	info = function(self, t)
 		return ([[Hit with your offhand weapon for %d%% damage. If the attack hits, the target is stunned for %d turns and you hit it with your mainhand weapon doing %d%% damage.
 		Stun chance increase with your Dexterity stat.]])
-		:format(100 * self:combatTalentWeaponDamage(t, 0.7, 1.7),
+		:format(100 * self:combatTalentWeaponDamage(t, 0.7, 1.5),
 		2 + self:getTalentLevel(t),
-		100 * self:combatTalentWeaponDamage(t, 0.7, 1.7))
+		100 * self:combatTalentWeaponDamage(t, 0.7, 1.5))
 	end,
 }
 
@@ -178,14 +178,14 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.5, 1.4), true)
-		self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.5, 1.4), true)
-		self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.5, 1.4), true)
+		self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.4, 1.0), true)
+		self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.4, 1.0), true)
+		self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.4, 1.0), true)
 
 		return true
 	end,
 	info = function(self, t)
-		return ([[Lashes out with a flurry of blows, hitting your target three times with each weapon for %d%% damage.]]):format(100 * self:combatTalentWeaponDamage(t, 0.5, 1.4))
+		return ([[Lashes out with a flurry of blows, hitting your target three times with each weapon for %d%% damage.]]):format(100 * self:combatTalentWeaponDamage(t, 0.4, 1.0))
 	end,
 }
 

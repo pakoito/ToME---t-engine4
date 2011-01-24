@@ -198,6 +198,7 @@ static struct luaL_reg md5lib[] = {
 int luaopen_md5_core (lua_State *L) {
   luaL_openlib(L, "md5.core", md5lib, 0);
   set_info (L);
+  lua_pop(L, 1);
   return 1;
 }
 

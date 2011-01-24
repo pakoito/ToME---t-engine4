@@ -2253,6 +2253,7 @@ int luaopen_lpeg (lua_State *L) {
   lua_pushliteral(L, "__index");
   lua_pushvalue(L, -2);
   lua_settable(L, -4);
+  lua_pop(L, 2);
   return 1;
 }
 

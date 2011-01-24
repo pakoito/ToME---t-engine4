@@ -535,6 +535,7 @@ int luaopen_lxp (lua_State *L) {
   luaL_openlib (L, NULL, lxp_meths, 0);
   luaL_openlib (L, "lxp", lxp_funcs, 0);
   set_info (L);
+  lua_pop(L, 2);
 
   return 1;
 }

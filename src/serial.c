@@ -433,5 +433,6 @@ int luaopen_serial(lua_State *L)
 {
 	auxiliar_newclass(L, "core{serial}", serial_reg);
 	luaL_openlib(L, "core.serial", seriallib, 0);
+	lua_pop(L, 1);
 	return 1;
 }

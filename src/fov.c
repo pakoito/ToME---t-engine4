@@ -450,5 +450,6 @@ int luaopen_fov(lua_State *L)
 {
 	auxiliar_newclass(L, "fov{cache}", fovcache_reg);
 	luaL_openlib(L, "core.fov", fovlib, 0);
+	lua_pop(L, 1);
 	return 1;
 }

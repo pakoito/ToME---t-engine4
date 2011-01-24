@@ -450,5 +450,6 @@ int luaopen_gas(lua_State *L)
 {
 	auxiliar_newclass(L, "core{gas}", gas_reg);
 	luaL_openlib(L, "core.gas", gaslib, 0);
+	lua_pop(L, 1);
 	return 1;
 }

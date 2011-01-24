@@ -18,6 +18,11 @@ newoption {
 	value       = "VM_Type",
 	description = "Links libraries relative to the application path for redistribution",
 }
+newoption {
+	trigger     = "luaassert",
+	value       = "VM_Type",
+	description = "Enable lua asserts to debug lua C code",
+}
 
 _OPTIONS.lua = _OPTIONS.lua or "default"
 
@@ -69,6 +74,7 @@ configuration "Debug"
 	flags { "Symbols" }
 	buildoptions { "-ggdb" }
 	targetdir "bin/Debug"
+	if _OPTIONS.luaassert then defines {"LUA_USE_APICHECK"} end
 
 configuration "Release"
 	defines { "NDEBUG=1" }

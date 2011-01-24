@@ -43,7 +43,7 @@ static size_t b64decode(UC c, UC *input, size_t size, luaL_Buffer *buffer);
 static void qpsetup(UC *qpclass, UC *qpunbase);
 static void qpquote(UC c, luaL_Buffer *buffer);
 static size_t qpdecode(UC c, UC *input, size_t size, luaL_Buffer *buffer);
-static size_t qpencode(UC c, UC *input, size_t size, 
+static size_t qpencode(UC c, UC *input, size_t size,
         const char *marker, luaL_Buffer *buffer);
 static size_t qppad(UC *input, size_t size, luaL_Buffer *buffer);
 
@@ -91,6 +91,7 @@ MIME_API int luaopen_mime_core(lua_State *L)
     /* initialize lookup tables */
     qpsetup(qpclass, qpunbase);
     b64setup(b64unbase);
+    lua_pop(L, 1);
     return 1;
 }
 
@@ -100,9 +101,9 @@ MIME_API int luaopen_mime_core(lua_State *L)
 /*-------------------------------------------------------------------------*\
 * Incrementaly breaks a string into lines. The string can have CRLF breaks.
 * A, n = wrp(l, B, length)
-* A is a copy of B, broken into lines of at most 'length' bytes. 
-* 'l' is how many bytes are left for the first line of B. 
-* 'n' is the number of bytes left in the last line of A. 
+* A is a copy of B, broken into lines of at most 'length' bytes.
+* 'l' is how many bytes are left for the first line of B.
+* 'n' is the number of bytes left in the last line of A.
 \*-------------------------------------------------------------------------*/
 static int mime_global_wrp(lua_State *L)
 {
@@ -120,7 +121,7 @@ static int mime_global_wrp(lua_State *L)
         else lua_pushnil(L);
         lua_pushnumber(L, length);
         return 2;
-    } 
+    }
     luaL_buffinit(L, &buffer);
     while (input < last) {
         switch (*input) {
@@ -147,9 +148,9 @@ static int mime_global_wrp(lua_State *L)
 }
 
 /*-------------------------------------------------------------------------*\
-* Fill base64 decode map. 
+* Fill base64 decode map.
 \*-------------------------------------------------------------------------*/
-static void b64setup(UC *b64unbase) 
+static void b64setup(UC *b64unbase)
 {
     int i;
     for (i = 0; i <= 255; i++) b64unbase[i] = (UC) 255;
@@ -158,11 +159,11 @@ static void b64setup(UC *b64unbase)
 }
 
 /*-------------------------------------------------------------------------*\
-* Acumulates bytes in input buffer until 3 bytes are available. 
+* Acumulates bytes in input buffer until 3 bytes are available.
 * Translate the 3 bytes into Base64 form and append to buffer.
 * Returns new number of bytes in buffer.
 \*-------------------------------------------------------------------------*/
-static size_t b64encode(UC c, UC *input, size_t size, 
+static size_t b64encode(UC c, UC *input, size_t size,
         luaL_Buffer *buffer)
 {
     input[size++] = c;
@@ -171,7 +172,7 @@ static size_t b64encode(UC c, UC *input, size_t size,
         unsigned long value = 0;
         value += input[0]; value <<= 8;
         value += input[1]; value <<= 8;
-        value += input[2]; 
+        value += input[2];
         code[3] = b64base[value & 0x3f]; value >>= 6;
         code[2] = b64base[value & 0x3f]; value >>= 6;
         code[1] = b64base[value & 0x3f]; value >>= 6;
@@ -183,11 +184,11 @@ static size_t b64encode(UC c, UC *input, size_t size,
 }
 
 /*-------------------------------------------------------------------------*\
-* Encodes the Base64 last 1 or 2 bytes and adds padding '=' 
+* Encodes the Base64 last 1 or 2 bytes and adds padding '='
 * Result, if any, is appended to buffer.
 * Returns 0.
 \*-------------------------------------------------------------------------*/
-static size_t b64pad(const UC *input, size_t size, 
+static size_t b64pad(const UC *input, size_t size,
         luaL_Buffer *buffer)
 {
     unsigned long value = 0;
@@ -200,7 +201,7 @@ static size_t b64pad(const UC *input, size_t size,
             luaL_addlstring(buffer, (char *) code, 4);
             break;
         case 2:
-            value = input[0]; value <<= 8; 
+            value = input[0]; value <<= 8;
             value |= input[1]; value <<= 2;
             code[2] = b64base[value & 0x3f]; value >>= 6;
             code[1] = b64base[value & 0x3f]; value >>= 6;
@@ -214,11 +215,11 @@ static size_t b64pad(const UC *input, size_t size,
 }
 
 /*-------------------------------------------------------------------------*\
-* Acumulates bytes in input buffer until 4 bytes are available. 
+* Acumulates bytes in input buffer until 4 bytes are available.
 * Translate the 4 bytes from Base64 form and append to buffer.
 * Returns new number of bytes in buffer.
 \*-------------------------------------------------------------------------*/
-static size_t b64decode(UC c, UC *input, size_t size, 
+static size_t b64decode(UC c, UC *input, size_t size,
         luaL_Buffer *buffer)
 {
     /* ignore invalid characters */
@@ -236,7 +237,7 @@ static size_t b64decode(UC c, UC *input, size_t size,
         decoded[1] = (UC) (value & 0xff); value >>= 8;
         decoded[0] = (UC) value;
         /* take care of paddding */
-        valid = (input[2] == '=') ? 1 : (input[3] == '=') ? 2 : 3; 
+        valid = (input[2] == '=') ? 1 : (input[3] == '=') ? 2 : 3;
         luaL_addlstring(buffer, (char *) decoded, valid);
         return 0;
     /* need more data */
@@ -248,7 +249,7 @@ static size_t b64decode(UC c, UC *input, size_t size,
 * A, B = b64(C, D)
 * A is the encoded version of the largest prefix of C .. D that is
 * divisible by 3. B has the remaining bytes of C .. D, *without* encoding.
-* The easiest thing would be to concatenate the two strings and 
+* The easiest thing would be to concatenate the two strings and
 * encode the result, but we can't afford that or Lua would dupplicate
 * every chunk we received.
 \*-------------------------------------------------------------------------*/
@@ -267,7 +268,7 @@ static int mime_global_b64(lua_State *L)
     }
     /* process first part of the input */
     luaL_buffinit(L, &buffer);
-    while (input < last) 
+    while (input < last)
         asize = b64encode(*input++, atom, asize, &buffer);
     input = (UC *) luaL_optlstring(L, 2, NULL, &isize);
     /* if second part is nil, we are done */
@@ -280,7 +281,7 @@ static int mime_global_b64(lua_State *L)
     }
     /* otherwise process the second part */
     last = input + isize;
-    while (input < last) 
+    while (input < last)
         asize = b64encode(*input++, atom, asize, &buffer);
     luaL_pushresult(&buffer);
     lua_pushlstring(L, (char *) atom, asize);
@@ -308,7 +309,7 @@ static int mime_global_unb64(lua_State *L)
     }
     /* process first part of the input */
     luaL_buffinit(L, &buffer);
-    while (input < last) 
+    while (input < last)
         asize = b64decode(*input++, atom, asize, &buffer);
     input = (UC *) luaL_optlstring(L, 2, NULL, &isize);
     /* if second is nil, we are done */
@@ -320,7 +321,7 @@ static int mime_global_unb64(lua_State *L)
     }
     /* otherwise, process the rest of the input */
     last = input + isize;
-    while (input < last) 
+    while (input < last)
         asize = b64decode(*input++, atom, asize, &buffer);
     luaL_pushresult(&buffer);
     lua_pushlstring(L, (char *) atom, asize);
@@ -336,7 +337,7 @@ static int mime_global_unb64(lua_State *L)
 * 9 and 32 can be plain, unless in the end of a line, where must be =XX
 * encoded lines must be no longer than 76 not counting CRLF
 * soft line-break are =CRLF
-* To encode one byte, we need to see the next two. 
+* To encode one byte, we need to see the next two.
 * Worst case is when we see a space, and wonder if a CRLF is comming
 \*-------------------------------------------------------------------------*/
 /*-------------------------------------------------------------------------*\
@@ -349,7 +350,7 @@ static void qpsetup(UC *qpclass, UC *qpunbase)
     for (i = 0; i < 256; i++) qpclass[i] = QP_QUOTED;
     for (i = 33; i <= 60; i++) qpclass[i] = QP_PLAIN;
     for (i = 62; i <= 126; i++) qpclass[i] = QP_PLAIN;
-    qpclass['\t'] = QP_IF_LAST; 
+    qpclass['\t'] = QP_IF_LAST;
     qpclass[' '] = QP_IF_LAST;
     qpclass['\r'] = QP_CR;
     for (i = 0; i < 256; i++) qpunbase[i] = 255;
@@ -375,9 +376,9 @@ static void qpquote(UC c, luaL_Buffer *buffer)
 
 /*-------------------------------------------------------------------------*\
 * Accumulate characters until we are sure about how to deal with them.
-* Once we are sure, output to the buffer, in the correct form. 
+* Once we are sure, output to the buffer, in the correct form.
 \*-------------------------------------------------------------------------*/
-static size_t qpencode(UC c, UC *input, size_t size, 
+static size_t qpencode(UC c, UC *input, size_t size,
         const char *marker, luaL_Buffer *buffer)
 {
     input[size++] = c;
@@ -418,7 +419,7 @@ static size_t qpencode(UC c, UC *input, size_t size,
 }
 
 /*-------------------------------------------------------------------------*\
-* Deal with the final characters 
+* Deal with the final characters
 \*-------------------------------------------------------------------------*/
 static size_t qppad(UC *input, size_t size, luaL_Buffer *buffer)
 {
@@ -435,8 +436,8 @@ static size_t qppad(UC *input, size_t size, luaL_Buffer *buffer)
 * Incrementally converts a string to quoted-printable
 * A, B = qp(C, D, marker)
 * Marker is the text to be used to replace CRLF sequences found in A.
-* A is the encoded version of the largest prefix of C .. D that 
-* can be encoded without doubts. 
+* A is the encoded version of the largest prefix of C .. D that
+* can be encoded without doubts.
 * B has the remaining bytes of C .. D, *without* encoding.
 \*-------------------------------------------------------------------------*/
 static int mime_global_qp(lua_State *L)
@@ -478,7 +479,7 @@ static int mime_global_qp(lua_State *L)
 
 /*-------------------------------------------------------------------------*\
 * Accumulate characters until we are sure about how to deal with them.
-* Once we are sure, output the to the buffer, in the correct form. 
+* Once we are sure, output the to the buffer, in the correct form.
 \*-------------------------------------------------------------------------*/
 static size_t qpdecode(UC c, UC *input, size_t size, luaL_Buffer *buffer) {
     int d;
@@ -486,8 +487,8 @@ static size_t qpdecode(UC c, UC *input, size_t size, luaL_Buffer *buffer) {
     /* deal with all characters we can deal */
     switch (input[0]) {
         /* if we have an escape character */
-        case '=': 
-            if (size < 3) return size; 
+        case '=':
+            if (size < 3) return size;
             /* eliminate soft line break */
             if (input[1] == '\r' && input[2] == '\n') return 0;
             /* decode quoted representation */
@@ -497,7 +498,7 @@ static size_t qpdecode(UC c, UC *input, size_t size, luaL_Buffer *buffer) {
             else luaL_putchar(buffer, (c << 4) + d);
             return 0;
         case '\r':
-            if (size < 2) return size; 
+            if (size < 2) return size;
             if (input[1] == '\n') luaL_addlstring(buffer, (char *)input, 2);
             return 0;
         default:
@@ -510,8 +511,8 @@ static size_t qpdecode(UC c, UC *input, size_t size, luaL_Buffer *buffer) {
 /*-------------------------------------------------------------------------*\
 * Incrementally decodes a string in quoted-printable
 * A, B = qp(C, D)
-* A is the decoded version of the largest prefix of C .. D that 
-* can be decoded without doubts. 
+* A is the decoded version of the largest prefix of C .. D that
+* can be decoded without doubts.
 * B has the remaining bytes of C .. D, *without* decoding.
 \*-------------------------------------------------------------------------*/
 static int mime_global_unqp(lua_State *L)
@@ -538,7 +539,7 @@ static int mime_global_unqp(lua_State *L)
         if (!(*lua_tostring(L, -1))) lua_pushnil(L);
         lua_pushnil(L);
         return 2;
-    } 
+    }
     /* otherwise process rest of input */
     last = input + isize;
     while (input < last)
@@ -551,9 +552,9 @@ static int mime_global_unqp(lua_State *L)
 /*-------------------------------------------------------------------------*\
 * Incrementally breaks a quoted-printed string into lines
 * A, n = qpwrp(l, B, length)
-* A is a copy of B, broken into lines of at most 'length' bytes. 
-* 'l' is how many bytes are left for the first line of B. 
-* 'n' is the number of bytes left in the last line of A. 
+* A is a copy of B, broken into lines of at most 'length' bytes.
+* 'l' is how many bytes are left for the first line of B.
+* 'n' is the number of bytes left in the last line of A.
 * There are two complications: lines can't be broken in the middle
 * of an encoded =XX, and there might be line breaks already
 \*-------------------------------------------------------------------------*/
@@ -586,11 +587,11 @@ static int mime_global_qpwrp(lua_State *L)
                 if (left <= 3) {
                     left = length;
                     luaL_addstring(&buffer, EQCRLF);
-                } 
+                }
                 luaL_putchar(&buffer, *input);
                 left--;
                 break;
-            default: 
+            default:
                 if (left <= 1) {
                     left = length;
                     luaL_addstring(&buffer, EQCRLF);
@@ -618,7 +619,7 @@ static int mime_global_qpwrp(lua_State *L)
 * last is the previous character
 \*-------------------------------------------------------------------------*/
 #define eolcandidate(c) (c == '\r' || c == '\n')
-static int eolprocess(int c, int last, const char *marker, 
+static int eolprocess(int c, int last, const char *marker,
         luaL_Buffer *buffer)
 {
     if (eolcandidate(c)) {
@@ -636,10 +637,10 @@ static int eolprocess(int c, int last, const char *marker,
 }
 
 /*-------------------------------------------------------------------------*\
-* Converts a string to uniform EOL convention. 
+* Converts a string to uniform EOL convention.
 * A, n = eol(o, B, marker)
 * A is the converted version of the largest prefix of B that can be
-* converted unambiguously. 'o' is the context returned by the previous 
+* converted unambiguously. 'o' is the context returned by the previous
 * call. 'n' is the new context.
 \*-------------------------------------------------------------------------*/
 static int mime_global_eol(lua_State *L)
@@ -666,18 +667,18 @@ static int mime_global_eol(lua_State *L)
 }
 
 /*-------------------------------------------------------------------------*\
-* Takes one byte and stuff it if needed. 
+* Takes one byte and stuff it if needed.
 \*-------------------------------------------------------------------------*/
 static size_t dot(int c, size_t state, luaL_Buffer *buffer)
 {
     luaL_putchar(buffer, c);
     switch (c) {
-        case '\r': 
+        case '\r':
             return 1;
-        case '\n': 
-            return (state == 1)? 2: 0; 
-        case '.':  
-            if (state == 2) 
+        case '\n':
+            return (state == 1)? 2: 0;
+        case '.':
+            if (state == 2)
                 luaL_putchar(buffer, '.');
         default:
             return 0;
@@ -702,7 +703,7 @@ static int mime_global_dot(lua_State *L)
     }
     /* process all input */
     luaL_buffinit(L, &buffer);
-    while (input < last) 
+    while (input < last)
         state = dot(*input++, state, &buffer);
     luaL_pushresult(&buffer);
     lua_pushnumber(L, state);

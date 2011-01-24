@@ -263,6 +263,7 @@ static int particles_emit(lua_State *L)
 					getparticulefield(L, "av", &(p->av));
 					getparticulefield(L, "aa", &(p->aa));
 				}
+				lua_pop(L, 1);
 			}
 			p->ox = p->x;
 			p->oy = p->y;
@@ -385,8 +386,6 @@ static int particles_update(lua_State *L)
 	int i, j;
 	bool alive = FALSE;
 
-	glBindTexture(GL_TEXTURE_2D, ps->texture);
-
 	for (w = 0; w < ps->nb; w++)
 	{
 		particle_type *p = &ps->particles[w];
@@ -456,5 +455,6 @@ int luaopen_particles(lua_State *L)
 	lua_pushstring(L, "ETERNAL");
 	lua_pushnumber(L, PARTICLE_ETERNAL);
 	lua_settable(L, -3);
+	lua_pop(L, 1);
 	return 1;
 }

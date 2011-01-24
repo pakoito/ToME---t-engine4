@@ -226,5 +226,6 @@ int luaopen_profiler(lua_State *L) {
   lua_pushliteral (L, "_VERSION");
   lua_pushliteral (L, "2.0.1");
   lua_settable (L, -3);
+  lua_pop(L, 1);
   return 1;
 }

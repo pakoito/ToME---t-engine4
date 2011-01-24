@@ -306,5 +306,6 @@ int luaopen_shaders(lua_State *L)
 	auxiliar_newclass(L, "gl{program}", program_reg);
 	luaL_openlib(L, "core.shader", shaderlib, 0);
 
+	lua_pop(L, 1);
 	return 1;
 }

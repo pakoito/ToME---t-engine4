@@ -392,5 +392,6 @@ int luaopen_noise(lua_State *L)
 {
 	auxiliar_newclass(L, "noise{core}", noise_reg);
 	luaL_openlib(L, "core.noise", noiselib, 0);
+	lua_pop(L, 1);
 	return 1;
 }
