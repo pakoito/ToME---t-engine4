@@ -28,8 +28,8 @@ return {
 --	all_remembered = true,
 --	all_lited = true,
 	persistent = "zone",
-	color_shown = {0.5, 0.5, 0.5, 1},
-	color_obscure = {0.5*0.6, 0.5*0.6, 0.5*0.6, 1},
+	color_shown = {0.7, 0.7, 0.7, 1},
+	color_obscure = {0.7*0.6, 0.7*0.6, 0.7*0.6, 1},
 	ambient_music = "Woods of Eremae.ogg",
 	generator =  {
 		map = {
@@ -98,19 +98,7 @@ return {
 	},
 	post_process = function(level)
 		if level.level > 1 then return end
-		local Map = require "engine.Map"
-		level.foreground_particle = require("engine.Particles").new("raindrops", 1, {width=Map.viewport.width, height=Map.viewport.height})
-	end,
-
-	foreground = function(level, x, y, nb_keyframes)
-		if level.level > 1 then return end
-		local Map = require "engine.Map"
-
-		for i = 1, nb_keyframes do
-			level.foreground_particle:update()
-			if i == 1 then level.foreground_particle.ps:toScreen(x, y, true, 1) end
-			level.foreground_particle.ps:update()
-		end
+		game.state:makeWeather(level, 6, {max_nb=3, chance=1, dir=110, speed={0.1, 0.6}, alpha={0.4, 0.6}, particle_name="weather/dark_cloud_%02d"})
 	end,
 
 	on_enter = function(lev, old_lev, newzone)

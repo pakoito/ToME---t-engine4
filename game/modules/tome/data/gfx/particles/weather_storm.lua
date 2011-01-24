@@ -17,8 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-dir = math.rad(110)
-h_per_tick = math.sin(dir)
+rdir = math.rad(dir or 110)
+h_per_tick = math.sin(rdir)
 
 local first = true
 
@@ -30,12 +30,12 @@ return { generator = function()
 	local vel = rng.float(speed[1], speed[2])
 
 	return {
-		life = (height + size*2) / h_per_tick,
+		life = (height + size*2) / (h_per_tick * vel),
 		size = rng.float(300, 800), sizev = 0, sizea = 0,
 
 		x = x, xv = 0, xa = 0,
 		y = y, yv = 0, ya = 0,
-		dir = dir, dirv = blur, dira = 0,
+		dir = rdir, dirv = blur, dira = 0,
 		vel = vel, velv = 0, vela = 0,
 
 		r = 1, rv = 0, ra = 0,

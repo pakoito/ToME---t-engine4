@@ -80,29 +80,10 @@ return {
 	},
 
 	post_process = function(level)
-		local Map = require "engine.Map"
-		local Particles = require("engine.Particles")
-		local ps = {}
-		ps[#ps+1] = Particles.new("weather_storm", 1, {width=Map.viewport.width, height=Map.viewport.height, speed={10, 40}, alpha={0.3, 0.6}, particle_name="weather/sand_light_01"})
-		ps[#ps+1] = Particles.new("weather_storm", 1, {width=Map.viewport.width, height=Map.viewport.height, speed={10, 40}, alpha={0.3, 0.6}, particle_name="weather/sand_light_02"})
-		ps[#ps+1] = Particles.new("weather_storm", 1, {width=Map.viewport.width, height=Map.viewport.height, speed={10, 40}, alpha={0.3, 0.6}, particle_name="weather/sand_light_03"})
-		ps[#ps+1] = Particles.new("weather_storm", 1, {width=Map.viewport.width, height=Map.viewport.height, speed={10, 40}, alpha={0.3, 0.6}, particle_name="weather/sand_light_04"})
-		ps[#ps+1] = Particles.new("weather_storm", 1, {width=Map.viewport.width, height=Map.viewport.height, speed={10, 40}, alpha={0.3, 0.6}, particle_name="weather/sand_light_05"})
-		ps[#ps+1] = Particles.new("weather_storm", 1, {width=Map.viewport.width, height=Map.viewport.height, speed={10, 40}, alpha={0.3, 0.6}, particle_name="weather/sand_light_06"})
-		ps[#ps+1] = Particles.new("weather_storm", 1, {width=Map.viewport.width, height=Map.viewport.height, speed={10, 40}, alpha={0.3, 0.6}, particle_name="weather/sand_light_07"})
-		level.foreground_particle = ps
-	end,
+		-- Place a lore note on each level
+		game:placeRandomLoreObject("NOTE"..level.level)
 
-	foreground = function(level, x, y, nb_keyframes)
-		local Map = require "engine.Map"
-
-		local ps = level.foreground_particle
-		for j = 1, #ps do
-			for i = 1, nb_keyframes do
-				ps[j]:update()
-				ps[j].ps:update()
-			end
-			ps[j].ps:toScreen(x, y, true, 1)
-		end
+		-- Sand storms over Eruan
+		game.state:makeWeather(level, 7, {max_nb=2, chance=1, dir=70, speed={24, 50}, alpha={0.2, 0.5}, particle_name="weather/sand_light_%02d"})
 	end,
 }

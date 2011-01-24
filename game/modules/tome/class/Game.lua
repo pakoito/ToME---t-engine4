@@ -678,6 +678,7 @@ function _M:display(nb_keyframes)
 			self.level.map:display(0, 0, nb_keyframes)
 			self.target:display(0, 0)
 			if self.level.data.foreground then self.level.data.foreground(self.level, 0, 0, nb_keyframes) end
+			if self.level.data.weather_particle then self.state:displayWeather(self.level, self.level.data.weather_particle, nb_keyframes) end
 
 			self.fbo:use(false)
 			_2DNoise:bind(1, false)

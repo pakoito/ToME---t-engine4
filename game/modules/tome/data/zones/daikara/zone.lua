@@ -58,10 +58,6 @@ return {
 			nb_trap = {9, 15},
 		},
 	},
-	post_process = function(level)
-		-- Place a lore note on each level
-		game:placeRandomLoreObject("NOTE"..level.level)
-	end,
 	levels =
 	{
 		[1] = {
@@ -70,4 +66,11 @@ return {
 			}, },
 		},
 	},
+
+	post_process = function(level)
+		-- Place a lore note on each level
+		game:placeRandomLoreObject("NOTE"..level.level)
+
+		game.state:makeWeather(level, 6, {max_nb=7, chance=1, dir=120, speed={0.1, 0.9}, alpha={0.2, 0.4}, particle_name="weather/grey_cloud_%02d"})
+	end,
 }

@@ -19,6 +19,8 @@
 
 require "engine.class"
 require "engine.Entity"
+local Particles = require "engine.Particles"
+local Map = require "engine.Map"
 local NameGenerator = require("engine.NameGenerator")
 
 module(..., package.seeall, class.inherit(engine.Entity))
@@ -419,5 +421,31 @@ function _M:handleWorldEncounter(target)
 	if type(enc) == "table" then
 		if enc.type == "ambush" then target:die() self:spawnWorldAmbush(enc)
 		end
+	end
+end
+
+--------------------------------------------------------------------
+-- Weather stuff
+--------------------------------------------------------------------
+function _M:makeWeather(level, nb, params, typ)
+	local ps = {}
+	params.width = level.map.w*level.map.tile_w
+	params.height = level.map.h*level.map.tile_h
+	for i = 1, nb do
+		local p = table.clone(params, true)
+		p.particle_name = p.particle_name:format(nb)
+		ps[#ps+1] = Particles.new(typ or "weather_storm", 1, p)
+	end
+	level.data.weather_particle = ps
+end
+
+function _M:displayWeather(level, ps, nb_keyframes)
+	local dx, dy = level.map:getScreenUpperCorner() -- Display at map border, always, so it scrolls with the map
+	for j = 1, #ps do
+		for i = 1, nb_keyframes do
+			ps[j]:update()
+			ps[j].ps:update()
+		end
+		ps[j].ps:toScreen(dx, dy, true, 1)
 	end
 end

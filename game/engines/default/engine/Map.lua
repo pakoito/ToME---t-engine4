@@ -818,6 +818,7 @@ end
 
 --- Display the overlay effects, called by self:display()
 function _M:displayEffects()
+	local sx, sy = self._map:getScroll()
 	for i, e in ipairs(self.effects) do
 		-- Dont bother with obviously out of screen stuff
 		if e.overlay and e.x + e.radius >= self.mx and e.x - e.radius < self.mx + self.viewport.mwidth and e.y + e.radius >= self.my and e.y - e.radius < self.my + self.viewport.mheight then
@@ -827,7 +828,7 @@ function _M:displayEffects()
 			for lx, ys in pairs(e.grids) do
 				for ly, _ in pairs(ys) do
 					if self.seens(lx, ly) then
-						s:toScreen(self.display_x + (lx - self.mx) * self.tile_w * self.zoom, self.display_y + (ly - self.my) * self.tile_h * self.zoom, self.tile_w * self.zoom, self.tile_h * self.zoom)
+						s:toScreen(self.display_x + sx + (lx - self.mx) * self.tile_w * self.zoom, self.display_y + sy + (ly - self.my) * self.tile_h * self.zoom, self.tile_w * self.zoom, self.tile_h * self.zoom)
 					end
 				end
 			end
