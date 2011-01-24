@@ -260,6 +260,7 @@ void on_tick()
 		lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
 		docall(L, 1, 1);
 		tickPaused = lua_toboolean(L, -1);
+		lua_pop(L, 1);
 	}
 
 	/* Gather our frames per second */

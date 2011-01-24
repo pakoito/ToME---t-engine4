@@ -27,4 +27,7 @@ else
 	print("LuaVM:", _VERSION)
 end
 
+-- Setup correct lua path
+package.path = "/?.lua"
+
 math.randomseed(os.time())
