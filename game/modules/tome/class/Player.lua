@@ -572,18 +572,18 @@ function _M:showEquipInven(title, filter, action)
 			game.tooltip_x, game.tooltip_y = {}, 1
 			game.tooltip:displayAtMap(nil, nil, item.last_display_x, item.last_display_y, item.desc)
 
-			if item == last or not item.object or item.object.wielded then return end
+			if item == last or not item.object or item.object.wielded then game.tooltip2_x = nil return end
 			last = item
 
 			local winven = item.object:wornInven()
 			winven = winven and self:getInven(winven)
-			if not winven then return end
+			if not winven then game.tooltip2_x = nil return end
 
 			local str = tstring{{"font", "bold"}, {"color", "GREY"}, "Currently equiped:", {"font", "normal"}, {"color", "LAST"}, true}
 			local ok = false
 			for i = 1, #winven do
 				str:merge(winven[i]:getDesc())
-				if i < #winven then str:add{"---", true} end
+				if i < #winven then str:add{true, "---", true} end
 				ok = true
 			end
 			if ok then
