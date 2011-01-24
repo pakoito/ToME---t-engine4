@@ -90,8 +90,8 @@ return {
 
 		for i = 1, nb_keyframes do
 			level.foreground_particle:update()
-			if i == 1 then level.foreground_particle.ps:toScreen(x, y, true, 1) end
 			level.foreground_particle.ps:update()
 		end
+		level.foreground_particle.ps:toScreen(x, y, true, 1)
 	end,
 }

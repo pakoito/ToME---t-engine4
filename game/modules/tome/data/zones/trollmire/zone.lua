@@ -66,10 +66,6 @@ return {
 			nb_trap = {6, 9},
 		},
 	},
-	post_process = function(level)
-		-- Place a lore note on each level
-		game:placeRandomLoreObject("NOTE"..level.level)
-	end,
 	levels =
 	{
 		[1] = {
@@ -78,4 +74,35 @@ return {
 			}, },
 		},
 	},
+
+	post_process = function(level)
+		-- Place a lore note on each level
+		game:placeRandomLoreObject("NOTE"..level.level)
+
+		local Map = require "engine.Map"
+		local Particles = require("engine.Particles")
+		local ps = {}
+		ps[#ps+1] = Particles.new("weather_storm", 1, {max_nb=5, width=level.map.w*level.map.tile_w, height=level.map.h*level.map.tile_h, speed={0.5, 1.6}, alpha={0.23, 0.35}, particle_name="weather/grey_cloud_01"})
+		ps[#ps+1] = Particles.new("weather_storm", 1, {max_nb=5, width=level.map.w*level.map.tile_w, height=level.map.h*level.map.tile_h, speed={0.5, 1.6}, alpha={0.23, 0.35}, particle_name="weather/grey_cloud_02"})
+		ps[#ps+1] = Particles.new("weather_storm", 1, {max_nb=5, width=level.map.w*level.map.tile_w, height=level.map.h*level.map.tile_h, speed={0.5, 1.6}, alpha={0.23, 0.35}, particle_name="weather/grey_cloud_03"})
+		ps[#ps+1] = Particles.new("weather_storm", 1, {max_nb=5, width=level.map.w*level.map.tile_w, height=level.map.h*level.map.tile_h, speed={0.5, 1.6}, alpha={0.23, 0.35}, particle_name="weather/grey_cloud_04"})
+		ps[#ps+1] = Particles.new("weather_storm", 1, {max_nb=5, width=level.map.w*level.map.tile_w, height=level.map.h*level.map.tile_h, speed={0.5, 1.6}, alpha={0.23, 0.35}, particle_name="weather/grey_cloud_05"})
+		ps[#ps+1] = Particles.new("weather_storm", 1, {max_nb=5, width=level.map.w*level.map.tile_w, height=level.map.h*level.map.tile_h, speed={0.5, 1.6}, alpha={0.23, 0.35}, particle_name="weather/grey_cloud_06"})
+		ps[#ps+1] = Particles.new("weather_storm", 1, {max_nb=5, width=level.map.w*level.map.tile_w, height=level.map.h*level.map.tile_h, speed={0.5, 1.6}, alpha={0.23, 0.35}, particle_name="weather/grey_cloud_07"})
+		level.foreground_particle = ps
+	end,
+
+	foreground = function(level, x, y, nb_keyframes)
+		local Map = require "engine.Map"
+
+		local ps = level.foreground_particle
+		local dx, dy = level.map:getTileToScreen(0, 0) -- Display at map border, always, so it scrolls with the map
+		for j = 1, #ps do
+			for i = 1, nb_keyframes do
+				ps[j]:update()
+				ps[j].ps:update()
+			end
+			ps[j].ps:toScreen(dx, dy, true, 1)
+		end
+	end,
 }

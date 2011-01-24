@@ -164,6 +164,7 @@ static int particles_emit(lua_State *L)
 {
 	particles_type *ps = (particles_type*)auxiliar_checkclass(L, "core{particles}", 1);
 	int nb = luaL_checknumber(L, 2);
+	if (!nb) return 0;
 
 	nb = (nb * ps->density) / 100;
 	if (!nb) nb = 1;

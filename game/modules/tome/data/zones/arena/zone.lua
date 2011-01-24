@@ -297,7 +297,7 @@ return {
 				local newRank = math.floor(game.level.arena.rank)
 				if currentRank < newRank then --Player's rank increases!
 					local x, y = game.level.map:getTileToScreen(game.player.x, game.player.y)
-					if newRank == 9 then world:gainAchievement("XXX_THE_DESTROYER", game.player)
+					if newRank == 10 then world:gainAchievement("XXX_THE_DESTROYER", game.player)
 					elseif newRank == 21 then world:gainAchievement("GRAND_MASTER", game.player)
 					end
 					game.flyers:add(x, y, 90, 0, -0.5, "RANK UP!!", { 2, 57, 185 }, true)
