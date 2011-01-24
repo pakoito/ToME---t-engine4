@@ -1620,7 +1620,8 @@ static int rng_chance(lua_State *L)
 static int rng_percent(lua_State *L)
 {
 	int x = luaL_checknumber(L, 1);
-	lua_pushboolean(L, rand_div(100) < x);
+	int res = rand_div(100);
+	lua_pushboolean(L, res < x);
 	return 1;
 }
 
