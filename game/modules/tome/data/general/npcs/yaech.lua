@@ -91,7 +91,7 @@ newEntity{ base = "BASE_NPC_YAECH",
 }
 
 newEntity{ base = "BASE_NPC_YAECH",
-	name = "yaech psion", color=colors.LIGHT_RED,
+	name = "yaech psion", color=colors.RED,
 	desc = [[Yaeches are an aquatic subspecies of yeeks, they share the same psionic powers, but they refuse to take part in the Way.]],
 	level_range = {3, nil}, exp_worth = 1,
 	rarity = 3,

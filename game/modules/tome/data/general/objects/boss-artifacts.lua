@@ -185,6 +185,27 @@ Tridents require the exotic weapons mastery talent to use correctly.]],
 }
 
 newEntity{ base = "BASE_LIGHT_ARMOR",
+	define_as = "EEL_SKIN", rarity=false,
+	name = "Eel-skin armour", unique=true,
+	unided_name = "slippery armour", color=colors.VIOLET,
+	desc = [[This armour seems to have been patched together from many eels. Yuck.]],
+	level_range = {5, 12},
+	rarity = 200,
+	cost = 500,
+	material_level = 2,
+	wielder = {
+		inc_stats = { [Stats.STAT_DEX] = 2, [Stats.STAT_CUN] = 3,  },
+		poison_immune = 0.3,
+		combat_armor = 1,
+		combat_def = 10,
+		fatigue = 2,
+	},
+
+	max_power = 50, power_regen = 1,
+	use_talent = { id = Talents.T_LIGHTNING, level=2, power = 18 },
+}
+
+newEntity{ base = "BASE_LIGHT_ARMOR",
 	define_as = "CHROMATIC_HARNESS", rarity=false,
 	name = "Chromatic Harness", unique=true,
 	unided_name = "multi-hued leather armour", color=colors.VIOLET,
