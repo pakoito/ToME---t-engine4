@@ -17,6 +17,10 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+-----------------------------------------------------------
+-- Non-yeek version
+-----------------------------------------------------------
+
 newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*Before you stands a creature about as tall as a halfling, covered in small white fur and with a disproportionate head.
 You also notice he does not wield its greatsword, it seems to float in the air - bound to his will.*#WHITE#
@@ -66,4 +70,25 @@ This is the way.]],
 	}
 }
 
-return "welcome"
+-----------------------------------------------------------
+-- Yeek version
+-----------------------------------------------------------
+
+newChat{ id="yeek-welcome",
+	text = [[Thank the Way, this ..thing.. would have killed me.]],
+	answers = {
+		{"The Way sent me to explore this side of the tunnel.", jump="explore"},
+	}
+}
+
+newChat{ id="explore",
+	text = [[Yes me too, we should split up to cover more ground.]],
+	answers = {
+		{"Farewell, we are the Way, always.", action=function()
+			game:setAllowedBuild("psionic")
+			game:setAllowedBuild("psionic_mindslayer", true)
+		end},
+	}
+}
+
+return (game.party:findMember{main=true}.descriptor.race == "Yeek") and "yeek-welcome" or "welcome"

@@ -92,6 +92,9 @@ newEntity{ define_as="SUBJECT_Z",
 		if p.descriptor.race == "Halfling" then
 			wayist:doEmote("Halfling?! DIE!!!!!", 70)
 			wayist:checkAngered(p, false, -200)
+		elseif p.descriptor.race == "Yeek" then
+			wayist:doEmote("The Way sent you?", 70)
+			wayist.can_talk = "yeek-wayist"
 		else
 			wayist:doEmote("You.. saved me?", 70)
 			wayist.can_talk = "yeek-wayist"
