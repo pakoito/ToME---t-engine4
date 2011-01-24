@@ -729,6 +729,43 @@ static int map_set_scroll(lua_State *L)
 	return 0;
 }
 
+#define SMOOTH_SCROLL()  \
+	float animdx = 0, animdy = 0; \
+	int mx = map->mx; \
+	int my = map->my; \
+	if (map->move_max) \
+	{ \
+		map->move_step += nb_keyframes; \
+		if (map->move_step >= map->move_max) \
+		{ \
+			map->move_max = 0; \
+			map->oldmx = map->mx; \
+			map->oldmy = map->my; \
+		} \
+ \
+		if (map->move_max) \
+		{ \
+			float adx = (float)map->mx - map->oldmx; \
+			float ady = (float)map->my - map->oldmy; \
+			animdx = map->tile_w * (adx * map->move_step / (float)map->move_max - adx); \
+			animdy = map->tile_h * (ady * map->move_step / (float)map->move_max - ady); \
+			mx = map->mx + (int)(adx * map->move_step / (float)map->move_max - adx); \
+			my = map->my + (int)(ady * map->move_step / (float)map->move_max - ady); \
+		} \
+	}
+
+
+static int map_get_scroll(lua_State *L)
+{
+	map_type *map = (map_type*)auxiliar_checkclass(L, "core{map}", 1);
+	int nb_keyframes = 1;
+	SMOOTH_SCROLL();
+	lua_pushnumber(L, -animdx);
+	lua_pushnumber(L, -animdy);
+	return 2;
+}
+
+
 #define DO_QUAD(dx, dy, zoom, r, g, b, a) {\
 	vertices[(*vert_idx)] = (dx); vertices[(*vert_idx)+1] = (dy); \
 	vertices[(*vert_idx)+2] = map->tile_w * (zoom) + (dx); vertices[(*vert_idx)+3] = (dy); \
@@ -902,29 +939,7 @@ static int map_to_screen(lua_State *L)
 	glColorPointer(4, GL_FLOAT, 0, colors);
 
 	// Smooth scrolling
-	float animdx = 0, animdy = 0;
-	int mx = map->mx;
-	int my = map->my;
-	if (map->move_max)
-	{
-		map->move_step += nb_keyframes;
-		if (map->move_step >= map->move_max)
-		{
-			map->move_max = 0; // Reset once in place
-			map->oldmx = map->mx;
-			map->oldmy = map->my;
-		}
-
-		if (map->move_max)
-		{
-			float adx = (float)map->mx - map->oldmx;
-			float ady = (float)map->my - map->oldmy;
-			animdx = map->tile_w * (adx * map->move_step / (float)map->move_max - adx);
-			animdy = map->tile_h * (ady * map->move_step / (float)map->move_max - ady);
-			mx = map->mx + (int)(adx * map->move_step / (float)map->move_max - adx);
-			my = map->my + (int)(ady * map->move_step / (float)map->move_max - ady);
-		}
-	}
+	SMOOTH_SCROLL();
 	x -= animdx;
 	y -= animdy;
 
@@ -1084,6 +1099,7 @@ static const struct luaL_reg map_reg[] =
 	{"setRemember", map_set_remember},
 	{"setLite", map_set_lite},
 	{"setScroll", map_set_scroll},
+	{"getScroll", map_get_scroll},
 	{"toScreen", map_to_screen},
 	{"toScreenMiniMap", minimap_to_screen},
 	{"setupMiniMapGridSize", map_set_minimap_gridsize},

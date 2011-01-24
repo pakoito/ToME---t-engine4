@@ -725,6 +725,14 @@ function _M:isOnScreen(x, y)
 	return false
 end
 
+--- Get the screen offset where to start drawing (upper corner)
+function _M:getScreenUpperCorner()
+	local sx, sy = self._map:getScroll()
+	local x = -self.mx * self.tile_w * self.zoom + self.display_x + sx
+	local y = -self.my * self.tile_h * self.zoom + self.display_y + sy
+	return x, y
+end
+
 --- Import a map into the current one
 -- @param map the map to import
 -- @param dx coordinate where to import it in the current map
