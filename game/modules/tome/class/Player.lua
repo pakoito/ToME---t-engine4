@@ -278,56 +278,6 @@ function _M:playerFOV()
 	-- Compute ESP FOV, using cache
 	if not game.zone.wilderness then self:computeFOV(self.esp.range or 10, "block_esp", function(x, y) game.level.map:applyESP(x, y, 0.6) end, true, true, true) end
 
-	if not self:attr("blind") then
-		-- Compute both the normal and the lite FOV, using cache
-		if game.zone.wilderness_see_radius then
-			self:computeFOV(game.zone.wilderness_see_radius, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y, wild_fovdist[sqdist]) end, true, true, true)
-		else
-			self:computeFOV(self.sight or 10, "block_sight", function(x, y, dx, dy, sqdist)
-				game.level.map:apply(x, y, fovdist[sqdist])
-			end, true, false, true)
-			if self.lite <= 0 then game.level.map:applyLite(self.x, self.y)
-			else self:computeFOV(self.lite, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y) end, true, true, true) end
-		end
-
-		-- Handle infravision/heightened_senses which allow to see outside of lite radius but with LOS
-		if self:attr("infravision") or self:attr("heightened_senses") then
-			local rad = (self.heightened_senses or 0) + (self.infravision or 0)
-			local rad2 = math.max(1, math.floor(rad / 4))
-			self:computeFOV(rad, "block_sight", function(x, y) if game.level.map(x, y, game.level.map.ACTOR) then game.level.map.seens(x, y, 1) end end, true, true, true)
-			self:computeFOV(rad2, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y) end, true, true, true)
-		end
-
-		-- Handle dark vision; same as infravision, but also sees past creeping dark
-		-- this is treated as a sense, but is filtered by custom LOS code
-		if self:knowTalent(self.T_DARK_VISION) then
-			local t = self:getTalentFromId(self.T_DARK_VISION)
-			local range = self:getTalentRange(t)
-			self:computeFOV(range, "block_sense", function(x, y)
-				local actor = game.level.map(x, y, game.level.map.ACTOR)
-				if actor then
-					-- modified actor:hasLOS()
-					local l = line.new(self.x, self.y, x, y)
-					local lx, ly = l()
-					while lx and ly do
-						if game.level.map:checkAllEntities(lx, ly, "block_sight") then
-							if not game.level.map:checkAllEntities(lx, ly, "creepingDark") then break end
-							print("see creepingDark")
-						end
-
-						lx, ly = l()
-					end
-					-- Ok if we are at the end reset lx and ly for the next code
-					if not lx and not ly then lx, ly = x, y end
-
-					if lx == x and ly == y then
-						game.level.map.seens(x, y, 1)
-					end
-				end
-			end, true, true, true)
-		end
-	end
-
 	-- Handle Sense spell, a simple FOV, using cache. Note that this means some terrain features can be made to block sensing
 	if self:attr("detect_range") then
 		self:computeFOV(self:attr("detect_range"), "block_sense", function(x, y)
@@ -342,7 +292,7 @@ function _M:playerFOV()
 
 			if ok then
 				if self.detect_function then self.detect_function(self, x, y) end
-				game.level.map.seens(x, y, 1)
+				game.level.map.seens(x, y, 0.6)
 			end
 		end, true, true, true)
 	end
@@ -368,7 +318,7 @@ function _M:playerFOV()
 		local range = self:getTalentRange(t)
 		self:computeFOV(range, "block_sense", function(x, y)
 			if game.level.map(x, y, game.level.map.ACTOR) then
-				game.level.map.seens(x, y, 1)
+				game.level.map.seens(x, y, 0.6)
 			end
 		end, true, true, true)
 	end
@@ -377,9 +327,60 @@ function _M:playerFOV()
 	local uid, e = next(game.level.entities)
 	while uid do
 		if e ~= self and e.lite and e.lite > 0 and e.computeFOV then
-			e:computeFOV(e.lite, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyExtraLite(x, y) end, true, true)
+			e:computeFOV(e.lite, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyExtraLite(x, y, fovdist[sqdist]) end, true, true)
 		end
 		uid, e = next(game.level.entities, uid)
+	end
+
+	if not self:attr("blind") then
+		-- Handle dark vision; same as infravision, but also sees past creeping dark
+		-- this is treated as a sense, but is filtered by custom LOS code
+		if self:knowTalent(self.T_DARK_VISION) then
+			local t = self:getTalentFromId(self.T_DARK_VISION)
+			local range = self:getTalentRange(t)
+			self:computeFOV(range, "block_sense", function(x, y)
+				local actor = game.level.map(x, y, game.level.map.ACTOR)
+				if actor then
+					-- modified actor:hasLOS()
+					local l = line.new(self.x, self.y, x, y)
+					local lx, ly = l()
+					while lx and ly do
+						if game.level.map:checkAllEntities(lx, ly, "block_sight") then
+							if not game.level.map:checkAllEntities(lx, ly, "creepingDark") then break end
+							print("see creepingDark")
+						end
+
+						lx, ly = l()
+					end
+					-- Ok if we are at the end reset lx and ly for the next code
+					if not lx and not ly then lx, ly = x, y end
+
+					if lx == x and ly == y then
+						game.level.map.seens(x, y, 0.6)
+					end
+				end
+			end, true, true, true)
+		end
+
+		-- Handle infravision/heightened_senses which allow to see outside of lite radius but with LOS
+		if self:attr("infravision") or self:attr("heightened_senses") then
+			local rad = (self.heightened_senses or 0) + (self.infravision or 0)
+			local rad2 = math.max(1, math.floor(rad / 4))
+			self:computeFOV(rad, "block_sight", function(x, y, dx, dy, sqdist) if game.level.map(x, y, game.level.map.ACTOR) then game.level.map.seens(x, y, fovdist[sqdist]) end end, true, true, true)
+			self:computeFOV(rad2, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y, fovdist[sqdist]) end, true, true, true)
+		end
+
+		-- Compute both the normal and the lite FOV, using cache
+		-- Do it last so it overrides others
+		if game.zone.wilderness_see_radius then
+			self:computeFOV(game.zone.wilderness_see_radius, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y, wild_fovdist[sqdist]) end, true, true, true)
+		else
+			self:computeFOV(self.sight or 10, "block_sight", function(x, y, dx, dy, sqdist)
+				game.level.map:apply(x, y, fovdist[sqdist])
+			end, true, false, true)
+			if self.lite <= 0 then game.level.map:applyLite(self.x, self.y)
+			else self:computeFOV(self.lite, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y) end, true, true, true) end
+		end
 	end
 end
 

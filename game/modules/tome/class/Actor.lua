@@ -1903,9 +1903,6 @@ function _M:canSeeNoCache(actor, def, def_pct)
 		local esp = self:attr("esp")
 		-- Full ESP
 		if esp.all and esp.all > 0 then
-			if game.level then
-				game.level.map.seens(actor.x, actor.y, 1)
-			end
 			return true, 100
 		end
 
