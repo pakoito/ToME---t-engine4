@@ -695,6 +695,7 @@ function _M:display(nb_keyframes)
 			self.level.map:display(nil, nil, nb_keyframes)
 			self.target:display()
 			if self.level.data.foreground then self.level.data.foreground(self.level, self.level.map.display_x, self.level.map.display_y, nb_keyframes) end
+			if self.level.data.weather_particle then self.state:displayWeather(self.level, self.level.data.weather_particle, nb_keyframes) end
 		end
 
 		if not self.zone_name_s then self:updateZoneName() end
