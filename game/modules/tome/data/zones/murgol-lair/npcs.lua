@@ -18,5 +18,6 @@
 -- darkgod@te4.org
 
 load("/data/general/npcs/yaech.lua", rarity(0))
+load("/data/general/npcs/aquatic_critter.lua", rarity(2))
 
 local Talents = require("engine.interface.ActorTalents")
