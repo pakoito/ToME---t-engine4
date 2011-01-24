@@ -1252,19 +1252,6 @@ newEntity{ base = "BASE_LEATHER_BELT",
 		max_encumber = 70,
 		combat_armor = 4,
 	},
-	belt_slots = 10,
-	on_wear = function(self, who)
-		who.inven[who.INVEN_INBELT] = {max=self.belt_slots, worn=false, use_speed=0.6, id=who.INVEN_INBELT}
-	end,
-	on_cantakeoff = function(self, who)
-		if #who:getInven(who.INVEN_INBELT) > 0 then
-			game.logPlayer(who, "You can not remove %s while it still carries items.", self:getName{do_color=true})
-			return true
-		end
-	end,
-	on_takeoff = function(self, who)
-		who.inven[who.INVEN_INBELT] = nil
-	end,
 }
 
 

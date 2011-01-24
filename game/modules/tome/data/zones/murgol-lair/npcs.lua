@@ -17,9 +17,6 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/npcs/ritch.lua", rarity(0))
-load("/data/general/npcs/vermin.lua", rarity(0))
-load("/data/general/npcs/ant.lua", rarity(2))
-load("/data/general/npcs/jelly.lua", rarity(3))
+load("/data/general/npcs/yaech.lua", rarity(0))
 
 local Talents = require("engine.interface.ActorTalents")
