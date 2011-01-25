@@ -111,7 +111,17 @@ function _M:getInscriptionData(name)
 	assert(fake or self.inscriptions_data[name], "unknown inscription "..name)
 	local d = table.clone(fake or self.inscriptions_data[name])
 	d.inc_stat = 0
-	if d.use_stat and d.use_stat_mod then d.inc_stat = self:getStat(d.use_stat) * d.use_stat_mod end
+	if d.use_any_stat and d.use_stat_mod then
+		local max = math.max(
+			self:getStr(),
+			self:getDex(),
+			self:getCon(),
+			self:getMag(),
+			self:getWil(),
+			self:getCun()
+		) * d.use_any_stat
+		d.inc_stat = max * d.use_stat_mod
+	elseif d.use_stat and d.use_stat_mod then d.inc_stat = self:getStat(d.use_stat) * d.use_stat_mod end
 	return d
 end
 

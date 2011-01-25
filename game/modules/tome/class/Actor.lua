@@ -683,7 +683,9 @@ function _M:onHeal(value, src)
 	if self:hasEffect(self.EFF_UNSTOPPABLE) then
 		return 0
 	end
-	return value * (self.healing_factor or 1)
+	value = value * (self.healing_factor or 1)
+	print("[HEALING]", self.uid, self.name, "for", value)
+	return value
 end
 
 --- Called before taking a hit, it's the chance to check for shields

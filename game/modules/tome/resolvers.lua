@@ -243,12 +243,18 @@ end
 --- Random bonus based on level, more strict
 resolvers.current_level = 1
 function resolvers.mbonus_level(max, add, pricefct, step)
-	return {__resolver="mbonus", max, add, pricefct} -- mbonus_level does not work really well, skip it for now
+	return {__resolver="mbonus_level", max, add, step or 10, pricefct} -- mbonus_level does not work really well, skip it for now
 end
 function resolvers.calc.mbonus_level(t, e)
+	local max = resolvers.mbonus_max_level
+
 	local ml = 1 + math.floor((resolvers.current_level - 1) / t[3])
-	local maxl = 1 + math.floor((resolvers.mbonus_max_level - 1) / t[3])
-	local v = math.ceil(rng.mbonus(t[1], resolvers.current_level, resolvers.mbonus_max_level) * ml / maxl) + (t[2] or 0)
+	ml = util.bound(rng.float(ml, ml * 1.6), 1, 6)
+
+	local maxl = 1 + math.floor((max - 1) / t[3])
+	local power = 1 + math.log10(ml / maxl)
+
+	local v = math.ceil(rng.mbonus(t[1], resolvers.current_level, max) * power) + (t[2] or 0)
 
 	if e.cost and t[4] then
 		local ap, nv = t[4](e, v)
@@ -382,6 +388,7 @@ function resolvers.calc.inscriptions(t, e)
 			o = game.zone:makeEntity(game.level, "object", {type="scroll", subtype=t[2]}, nil, true)
 		end
 		if o and o.inscription_talent and o.inscription_data then
+			o.inscription_data.use_any_stat = 0.7 -- Cheat a beat to scale inscriptions nicely
 			e:setInscription(nil, o.inscription_talent, o.inscription_data, false, false, nil, true, true)
 		end
 	end
