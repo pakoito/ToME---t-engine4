@@ -17,31 +17,20 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-------------------------------------------------------------
--- For inside the sea
-------------------------------------------------------------
+name = "Back and Back and Back to the Future"
+desc = function(self, who)
+	local desc = {}
+	desc[#desc+1] = "After passing through some kind of time anomaly you met a temporal warden who told you to destroy to abominations of this alternate timeline.\n"
+	return table.concat(desc, "\n")
+end
 
-newEntity{
-	define_as = "VOID",
-	name = "void",
-	display = ' ',
-	_noalpha = false,
-}
-
-newEntity{
-	define_as = "SPACE_TURBULENCE1",
-	name = "space turbulence",
-	display = '#', color=colors.YELLOW, image="terrain/temporal_instability_yellow.png",
-	always_remember = true,
-	does_block_move = true,
-	_noalpha = false,
-}
-
-newEntity{
-	define_as = "SPACE_TURBULENCE2",
-	name = "space turbulence",
-	display = '#', color=colors.BLUE, image="terrain/temporal_instability_blue.png",
-	always_remember = true,
-	does_block_move = true,
-	_noalpha = false,
-}
+on_status_change = function(self, who, status, sub)
+	if sub then
+		if self:isCompleted("twin") and self:isCompleted("clone") then
+			who:setQuestStatus(self.id, engine.Quest.DONE)
+			local Chat = require "engine.Chat"
+			local chat = Chat.new("temporal-rift-end", {name="Temporal Warden"}, who)
+			chat:invoke()
+		end
+	end
+end

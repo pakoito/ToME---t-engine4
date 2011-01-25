@@ -18,3 +18,14 @@
 -- darkgod@te4.org
 
 load("/data/general/objects/objects.lua")
+
+newEntity{ base = "BASE_RUNE", define_as = "RUNE_RIFT",
+	name = "Rune of the Rift", unique = true, identified = true,
+	cost = 100,
+	material_level = 3,
+
+	inscription_data = {
+		cooldown = 14,
+	},
+	inscription_talent = "RUNE_OF_THE_RIFT",
+}

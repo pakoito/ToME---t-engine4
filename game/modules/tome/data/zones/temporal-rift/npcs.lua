@@ -18,3 +18,189 @@
 -- darkgod@te4.org
 
 load("/data/general/npcs/telugoroth.lua", rarity(0))
+load("/data/general/npcs/horror.lua", function(e) if e.rarity then e.horror_rarity, e.rarity = e.rarity, nil end end)
+
+local Talents = require("engine.interface.ActorTalents")
+
+newEntity{ define_as = "BEN_CRUTHDAR",
+	type = "humanoid", subtype = "temporal", unique = true,
+	name = "Ben Cruthdar, the Abomination",
+	display = "p", color=colors.VIOLET,
+	desc = [[This crazed madman seems twisted and corrupted by temporal energy, his body shifting and phasing in and out of reality.]],
+	level_range = {15, nil}, exp_worth = 2,
+	max_life = 270, life_rating = 17, fixed_rating = true,
+	max_stamina = 85,
+	stats = { str=20, dex=15, wil=18, con=20 },
+	rank = 3.5,
+	size_category = 2,
+	infravision = 20,
+	instakill_immune = 1,
+	move_others=true,
+
+	resists = { [DamageType.COLD] = 25 },
+
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+	resolvers.equip{ {type="weapon", subtype="battleaxe", ego_chance=100, autoreq=true}, },
+	resolvers.drops{chance=100, nb=1, {ego_chance=100} },
+
+	resolvers.talents{
+		[Talents.T_GLOOM]=3,
+		[Talents.T_WEAKNESS]=3,
+		[Talents.T_TORMENT]=3,
+		[Talents.T_UNNATURAL_BODY]=4,
+		[Talents.T_DOMINATE]=1,
+		[Talents.T_BLINDSIDE]=3,
+		[Talents.T_SLASH]=3,
+		[Talents.T_RECKLESS_CHARGE]=1,
+
+		[Talents.T_DAMAGE_SMEARING]=5,
+		[Talents.T_HASTE]=3,
+		[Talents.T_BORROWED_TIME]=3,
+	},
+	resolvers.sustains_at_birth(),
+
+	autolevel = "warriorwill",
+	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"melee",
+	resolvers.inscriptions(1, "healing infusion"),
+
+	-- On die needs to make stairs back to the Rift
+	on_die = function(self, who)
+		game.level.data.portal_next(self)
+	end,
+}
+
+newEntity{ define_as = "ABOMINATION_RANTHA",
+	type = "dragon", subtype = "temporal", unique = true,
+	name = "Rantha the Abomination",
+	display = "D", color=colors.VIOLET,
+	desc = [[Claws and teeth. Ice and death. Dragons are not all extinct it seems...  and this one seems to have been corrupted by the time rift.]],
+	level_range = {15, nil}, exp_worth = 2,
+	max_life = 220, life_rating = 15, fixed_rating = true,
+	max_stamina = 85,
+	max_mana = 200,
+	stats = { str=25, dex=10, cun=8, mag=20, wil=20, con=20 },
+	rank = 3.5,
+	size_category = 5,
+	combat_armor = 17, combat_def = 14,
+	infravision = 20,
+	instakill_immune = 1,
+	move_others=true,
+
+	resists = { [DamageType.FIRE] = -20, [DamageType.COLD] = 100,  [DamageType.TEMPORAL] = 25, },
+
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+
+	-- Frost Treads drop should be changed.
+	resolvers.drops{chance=100, nb=5, {type="gem"} },
+	resolvers.drops{chance=100, nb=10, {type="money"} },
+
+	resolvers.talents{
+		[Talents.T_KNOCKBACK]=3,
+
+		[Talents.T_ICE_STORM]=2,
+		[Talents.T_FREEZE]=3,
+
+		[Talents.T_ICE_CLAW]=4,
+		[Talents.T_ICY_SKIN]=3,
+		[Talents.T_ICE_BREATH]=4,
+
+		[Talents.T_BODY_REVERSION]=4,
+		[Talents.T_ECHOES_FROM_THE_PAST]=4,
+		[Talents.T_QUANTUM_SPIKE]=4,
+	},
+	resolvers.sustains_at_birth(),
+
+	autolevel = "warriormage",
+	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
+	resolvers.inscriptions(1, "infusion"),
+
+	-- On die needs to make stairs back to the Rift
+	on_die = function(self, who)
+		game.level.data.portal_next(self)
+	end,
+}
+
+newEntity{ base="BASE_NPC_HORROR", define_as = "CHRONOLITH_TWIN",
+	name = "Chronolith Twin", color=colors.VIOLET, unique = true,
+	subtype = "temporal",
+	desc = [[A six armed creature with black insect-like eyes dressed in robes.]],
+	level_range = {20, nil}, exp_worth = 2,
+	max_life = 150, life_rating = 15, fixed_rating = true,
+	rank = 4,
+	size_category = 3,
+	stats = { str=10, dex=12, cun=14, mag=25, wil=25, con=16 },
+
+	instakill_immune = 1,
+	blind_immune = 0.5,
+	silence_immune = 0.5,
+
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+	equipment = resolvers.equip{
+		{type="weapon", subtype="staff", ego_chance=100, autoreq=true},
+		{type="armor", subtype="cloth", ego_chance=100, autoreq=true},
+	},
+	resolvers.drops{chance=100, nb=4, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=1, {unique=true} },
+
+	resists = { [DamageType.TEMPORAL] = 50, },
+
+	resolvers.talents{
+		[Talents.T_RETHREAD]=3,
+		[Talents.T_ECHOES_FROM_THE_PAST]=3,
+		[Talents.T_TURN_BACK_THE_CLOCK]=3,
+		[Talents.T_HASTE]=3,
+		[Talents.T_STATIC_HISTORY]=5,
+		[Talents.T_DIMENSIONAL_STEP]=5,
+		[Talents.T_FORESIGHT]=5,
+	},
+
+	autolevel = "warriormage",
+	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_astar" },
+
+	on_die = function(self, who)
+		game.player:resolveSource():setQuestStatus("temporal-rift", engine.Quest.COMPLETED, "twin")
+	end,
+}
+
+newEntity{ base="BASE_NPC_HORROR", define_as = "CHRONOLITH_CLONE",
+	name = "Chronolith Clone", color=colors.VIOLET, unique = true,
+	subtype = "temporal",
+	desc = [[A six armed creature with black insect-like eyes dressed in robes.]],
+	level_range = {20, nil}, exp_worth = 2,
+	max_life = 150, life_rating = 15, fixed_rating = true,
+	rank = 4,
+	size_category = 3,
+	stats = { str=10, dex=12, cun=14, mag=25, wil=25, con=16 },
+
+	instakill_immune = 1,
+	blind_immune = 0.5,
+	silence_immune = 0.5,
+
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+	equipment = resolvers.equip{
+		{type="weapon", subtype="staff", ego_chance=100, autoreq=true},
+		{type="armor", subtype="cloth", ego_chance=100, autoreq=true},
+	},
+	resolvers.drops{chance=100, nb=4, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=1, {unique=true} },
+
+	resists = { [DamageType.TEMPORAL] = 50, },
+
+	resolvers.talents{
+		[Talents.T_TEMPORAL_WAKE]=3,
+		[Talents.T_QUANTUM_SPIKE]=3,
+		[Talents.T_TEMPORAL_FUGUE]=3,
+		[Talents.T_BORROWED_TIME]=3,
+		[Talents.T_DIMENSIONAL_STEP]=5,
+		[Talents.T_STATIC_HISTORY]=5,
+		[Talents.T_FORESIGHT]=5,
+	},
+
+	autolevel = "warriormage",
+	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_astar" },
+
+	on_die = function(self, who)
+		game.player:resolveSource():setQuestStatus("temporal-rift", engine.Quest.COMPLETED, "clone")
+	end,
+}

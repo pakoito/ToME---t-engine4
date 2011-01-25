@@ -19,6 +19,9 @@
 
 rdir = math.rad(dir or 110)
 h_per_tick = math.sin(rdir)
+r = r or 1
+g = g or 1
+b = b or 1
 
 local first = true
 
@@ -38,9 +41,9 @@ return { generator = function()
 		dir = rdir, dirv = blur, dira = 0,
 		vel = vel, velv = 0, vela = 0,
 
-		r = 1, rv = 0, ra = 0,
-		g = 1, gv = 0, ga = 0,
-		b = 1, bv = 0, ba = 0,
+		r = r, rv = 0, ra = 0,
+		g = g, gv = 0, ga = 0,
+		b = b, bv = 0, ba = 0,
 		a = rng.float(alpha[1], alpha[2]), av = 0, aa = 0,
 	}
 end, },

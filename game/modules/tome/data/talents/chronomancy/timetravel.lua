@@ -96,7 +96,7 @@ newTalent{
 		if tx then
 			target = game.level.map(tx, ty, engine.Map.ACTOR)
 		end
-		if target then
+		if target and not target.player then
 			local hit = self:checkHit(self:combatSpellpower(), target:combatSpellResist() + (target:attr("continuum_destabilization") or 0))
 			if not hit then
 				game.logSeen(target, "The spell fizzles!")

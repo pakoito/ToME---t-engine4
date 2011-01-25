@@ -19,3 +19,14 @@
 
 load("/data/general/grids/basic.lua")
 load("/data/general/grids/mountain.lua")
+
+newEntity{
+	define_as = "RIFT",
+	name = "Temporal Rift", image = "terrain/rocky_ground.png", add_displays = {class.new{image="terrain/temporal_instability_yellow.png"}},
+	display = '&', color_r=255, color_g=0, color_b=220, back_color=colors.VIOLET,
+	notice = true,
+	always_remember = true,
+	show_tooltip = true,
+	desc = [[The rift leads somewhere ..]],
+	change_level = 1, change_zone = "temporal-rift",
+}

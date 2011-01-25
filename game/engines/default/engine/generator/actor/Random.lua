@@ -47,22 +47,26 @@ function _M:generate()
 	if self.guardian_level then glevel = self.guardian_level end
 
 	if self.guardian and self.level.level == glevel then
-		local m = self.zone:makeEntityByName(self.level, "actor", self.guardian)
-		if m then
-			local x, y = rng.range(self.area.x1, self.area.x2), rng.range(self.area.y1, self.area.y2)
-			local tries = 0
-			while (not m:canMove(x, y) or self.map.room_map[x][y].special) and tries < 100 do
-				x, y = rng.range(self.area.x1, self.area.x2), rng.range(self.area.y1, self.area.y2)
-				tries = tries + 1
-			end
-			if tries < 100 then
-				self.spots[#self.spots+1] = {x=x, y=y, guardian=true, check_connectivity=(not self.guardian_no_connectivity) and "entrance" or nil}
-				self.zone:addEntity(self.level, m, "actor", x, y)
-				print("Guardian allocated: ", self.guardian, m.uid, m.name)
-			end
-		else
-			print("WARNING: Guardian not found: ", self.guardian)
+		self:generateGuardian(self.guardian)
+	end
+end
+
+function _M:generateGuardian(guardian)
+	local m = self.zone:makeEntityByName(self.level, "actor", guardian)
+	if m then
+		local x, y = rng.range(self.area.x1, self.area.x2), rng.range(self.area.y1, self.area.y2)
+		local tries = 0
+		while (not m:canMove(x, y) or self.map.room_map[x][y].special) and tries < 100 do
+			x, y = rng.range(self.area.x1, self.area.x2), rng.range(self.area.y1, self.area.y2)
+			tries = tries + 1
 		end
+		if tries < 100 then
+			self.spots[#self.spots+1] = {x=x, y=y, guardian=true, check_connectivity=(not self.guardian_no_connectivity) and "entrance" or nil}
+			self.zone:addEntity(self.level, m, "actor", x, y)
+			print("Guardian allocated: ", self.guardian, m.uid, m.name)
+		end
+	else
+		print("WARNING: Guardian not found: ", self.guardian)
 	end
 end
 

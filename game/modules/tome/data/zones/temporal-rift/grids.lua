@@ -18,4 +18,32 @@
 -- darkgod@te4.org
 
 load("/data/general/grids/basic.lua")
+load("/data/general/grids/forest.lua")
+load("/data/general/grids/water.lua")
+load("/data/general/grids/mountain.lua")
+load("/data/general/grids/sand.lua")
 load("/data/general/grids/void.lua")
+
+-- Override exits
+newEntity { base = "GRASS", define_as = "GRASS_UP_WILDERNESS" }
+newEntity { base = "DEEP_OCEAN_WATER", define_as = "WATER_DOWN" }
+newEntity { base = "GRASS", define_as = "OLD_FOREST" }
+
+newEntity{
+	define_as = "RIFT",
+	name = "Temporal Rift", image="terrain/demon_portal2.png",
+	display = '&', color_r=255, color_g=0, color_b=220, back_color=colors.VIOLET,
+	notice = true,
+	always_remember = true,
+	show_tooltip = true,
+	desc = [[The rift leads somewhere ..]],
+	change_level = 1,
+	change_level_check = function()
+		if game.level.level > 1 then return end
+		local p = game.party:findMember{main=true}
+		local Chat = require "engine.Chat"
+		local chat = Chat.new("temporal-rift-start", {name="Temporal Warden"}, p)
+		chat:invoke()
+		return true
+	end,
+}

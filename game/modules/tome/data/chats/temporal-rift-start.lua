@@ -17,31 +17,15 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-------------------------------------------------------------
--- For inside the sea
-------------------------------------------------------------
-
-newEntity{
-	define_as = "VOID",
-	name = "void",
-	display = ' ',
-	_noalpha = false,
+newChat{ id="welcome",
+	text = [[#LIGHT_GREEN#*A tall man, glowing like a star appears out of nowhere.*#WHITE#
+Oh no, an other *adventurer*! You should not mess with things beyond your comprehension!
+Do not meddle in the affairs of Time, for it passes swiftly and easily disrupted!
+#LIGHT_GREEN#*He looks at you more closely.*#WHITE#
+You seem capable. Help me, fight the abominations while I repair the timeline, it is your only way out!]],
+	answers = {
+		{"But what is all th...", action = function(npc, player) game:changeLevel(2) game.player:grantQuest("temporal-rift") end},
+	}
 }
 
-newEntity{
-	define_as = "SPACE_TURBULENCE1",
-	name = "space turbulence",
-	display = '#', color=colors.YELLOW, image="terrain/temporal_instability_yellow.png",
-	always_remember = true,
-	does_block_move = true,
-	_noalpha = false,
-}
-
-newEntity{
-	define_as = "SPACE_TURBULENCE2",
-	name = "space turbulence",
-	display = '#', color=colors.BLUE, image="terrain/temporal_instability_blue.png",
-	always_remember = true,
-	does_block_move = true,
-	_noalpha = false,
-}
+return "welcome"

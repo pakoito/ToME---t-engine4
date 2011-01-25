@@ -71,6 +71,20 @@ return {
 		-- Place a lore note on each level
 		game:placeRandomLoreObject("NOTE"..level.level)
 
+		-- Temporal rift on level 4
+		if level.level == 4 then
+			local g = game.zone:makeEntityByName(game.level, "terrain", "RIFT")
+			local x, y = rng.range(0, game.level.map.w-1), rng.range(0, game.level.map.h-1)
+			local tries = 0
+				while game.level.map:checkEntity(x, y, engine.Map.TERRAIN, "block_move") and tries < 100 do
+				x, y = rng.range(0, game.level.map.w-1), rng.range(0, game.level.map.h-1)
+				tries = tries + 1
+			end
+			if tries < 100 then
+				game.zone:addEntity(game.level, g, "terrain", x, y)
+			end
+		end
+
 		game.state:makeWeather(level, 6, {max_nb=7, chance=1, dir=120, speed={0.1, 0.9}, alpha={0.2, 0.4}, particle_name="weather/grey_cloud_%02d"})
 	end,
 }

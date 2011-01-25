@@ -19,44 +19,131 @@
 
 return {
 	name = "Temporal Rift",
+	display_name = function(x, y)
+		if game.level.level == 2 then return "Temporal Rift: Lumberjack village"
+		elseif game.level.level == 3 then return "Temporal Rift: Daikara"
+		elseif game.level.level == 2 then return "Temporal Rift: Lake of Nur"
+		end
+		return "Temporal Rift"
+	end,
+	variable_zone_name = true,
 	level_range = {16, 30},
 	level_scheme = "player",
 	max_level = 4,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
-	width = 90, height = 90,
-	all_remembered = true,
+	width = 60, height = 25,
+--	all_remembered = true,
 	all_lited = true,
 	persistent = "zone",
 	generator =  {
-		map = {
-			class = "engine.generator.map.Forest",
-			floor = "VOID",
-			wall = "SPACE_TURBULENCE",
-			up = "VOID",
-			down = "VOID",
-		},
-		actor = {
-			class = "engine.generator.actor.Random",
-			nb_npc = {10, 20},
-		},
---[[
-		object = {
-			class = "engine.generator.object.Random",
-			nb_object = {12, 16},
-		},
-		trap = {
-			class = "engine.generator.trap.Random",
-			nb_trap = {20, 30},
-		},
-]]
 	},
+	levels =
+	{
+		[1] = { generator = {
+			map = {
+				class = "engine.generator.map.Forest",
+				floor = "VOID",
+				wall = {"SPACE_TURBULENCE1","SPACE_TURBULENCE2"},
+				up = "VOID",
+				down = "RIFT",
+				edge_entrances = {4,6},
+			},
+			actor = {
+				class = "engine.generator.actor.Random",
+				nb_npc = {15, 25},
+			},
+		} },
+		[2] = {
+			width = 25, height = 25,
+			generator = {
+			map = {
+				class = "engine.generator.map.Static",
+				map = "towns/lumberjack-village",
+			},
+			actor = {
+				class = "engine.generator.actor.Random",
+				nb_npc = {3, 3},
+			},
+		} },
+		[3] = {
+			width = 50, height = 50,
+			generator = {
+			map = {
+				class = "engine.generator.map.Roomer",
+				nb_rooms = 10,
+				edge_entrances = {2,8},
+				rooms = {"forest_clearing","rocky_snowy_trees"},
+				['.'] = "ROCKY_GROUND",
+				['T'] = "ROCKY_SNOWY_TREE",
+				['#'] = "MOUNTAIN_WALL",
+				up = "ROCKY_GROUND",
+				down = "ROCKY_GROUND",
+				door = "ROCKY_GROUND",
+			},
+			actor = {
+				class = "engine.generator.actor.Random",
+				nb_npc = {15, 25},
+			},
+		} },
+		[4] = {
+			width = 50, height = 50,
+			generator = {
+			map = {
+				class = "engine.generator.map.Static",
+				map = "zones/lake-nur",
+			},
+			actor = {
+				class = "engine.generator.actor.Random",
+				nb_npc = {0, 0},
+			},
+		} },
+	},
+
 	post_process = function(level)
-		local Map = require "engine.Map"
-		level.background_particle = require("engine.Particles").new("starfield", 1, {width=Map.viewport.width, height=Map.viewport.height})
+		if level.level == 1 then
+			local Map = require "engine.Map"
+			level.background_particle = require("engine.Particles").new("starfield", 1, {width=Map.viewport.width, height=Map.viewport.height})
+		end
+
+		if level.level <= 2 then
+			game.state:makeWeather(level, 6, {max_nb=7, chance=1, dir=120, speed={0.1, 0.9}, r=0.2, g=0.4, b=1, alpha={0.2, 0.4}, particle_name="weather/grey_cloud_%02d"})
+		else
+			game.state:makeWeather(level, 6, {max_nb=12, chance=1, dir=120, speed={0.1, 0.9}, r=0.2, g=0.4, b=1, alpha={0.2, 0.4}, particle_name="weather/grey_cloud_%02d"})
+		end
+	end,
+
+	on_enter = function(lev, old_lev, newzone)
+		local Dialog = require("engine.ui.Dialog")
+		if lev == 1 and not game.level.shown_warning then
+			Dialog:simplePopup("Temporal Rift", "Space and time distort and lose meaning as you pass through the rift. This place is alien.")
+			game.level.shown_warning = true
+		elseif lev == 2 and not game.level.shown_warning then
+			Dialog:simplePopup("Temporal Rift", "This looks like Maj'Eyal's forest but it looks strangely distorbed, beware...")
+			game.level.shown_warning = true
+		elseif lev == 3 and not game.level.shown_warning then
+			Dialog:simplePopup("Temporal Rift", "As you pass the rift you see what seems to be the Daikara mountains, yet they are not.")
+			game.level.shown_warning = true
+			require("engine.generator.actor.Random").new(game.zone, game.level.map, game.level, {}):generateGuardian("ABOMINATION_RANTHA")
+		elseif lev == 4 and not game.level.shown_warning then
+			Dialog:simplePopup("Temporal Rift", "The peace of this place has been disturbed.")
+			game.level.shown_warning = true
+
+			local m = game.zone:makeEntityByName(game.level, "actor", "CHRONOLITH_TWIN")
+			game.zone:addEntity(game.level, m, "actor", 26, 8)
+			local m = game.zone:makeEntityByName(game.level, "actor", "CHRONOLITH_CLONE")
+			game.zone:addEntity(game.level, m, "actor", 29, 8)
+		end
+	end,
+
+	portal_next = function(npc)
+		local g = game.zone:makeEntityByName(game.level, "terrain", "RIFT")
+		game.zone:addEntity(game.level, g, "terrain", npc.x, npc.y)
 	end,
 
 	background = function(level, x, y, nb_keyframes)
+		if level.level ~= 1 then return end
+
 		local Map = require "engine.Map"
 
 		for i = 1, nb_keyframes do
