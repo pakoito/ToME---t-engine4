@@ -212,6 +212,8 @@ newTalent{
 			lx, ly = l()
 		end
 
+		self:move(tx, ty, true)
+
 		if self.ai_target then self.ai_target.target = target end
 
 		-- Attack & daze
