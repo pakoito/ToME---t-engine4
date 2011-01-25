@@ -651,6 +651,49 @@ function _M:onTurn()
 	-- The following happens only every 10 game turns (once for every turn of 1 mod speed actors)
 	if self.turn % 10 ~= 0 then return end
 
+	-- Day/Night cycle, not worknig properly yet
+	if false then
+			local doTint = function (from, to, amount)
+				local tint = {r = 0, g = 0, b = 0}
+				tint.r = (from.r * (1 - amount) + to.r * amount)
+				tint.g = (from.g * (1 - amount) + to.g * amount)
+				tint.b = (from.b * (1 - amount) + to.b * amount)
+				return tint
+			end
+			local hour, minute = game.calendar:getTimeOfDay(game.turn)
+			hour = hour + (minute / 60)
+			local tint = {r = 0.1, g = 0.1, b = 0.1}
+			local startTint = {r = 0.1, g = 0.1, b = 0.1}
+			local endTint = {r = 0.1, g = 0.1, b = 0.1}
+			local lite = game.level.baseLite or 1
+			if hour <= 4 then
+				tint = {r = 0.1, g = 0.1, b = 0.1}
+			elseif hour > 4 and hour <= 7 then
+				startTint = { r = 0.1, g = 0.1, b = 0.1 }
+				endTint = { r = 0.3, g = 0.3, b = 0.5 }
+				tint = doTint(startTint, endTint, (hour - 4) / 3)
+				lite = lite + 1
+			elseif hour > 7 and hour <= 12 then
+				startTint = { r = 0.3, g = 0.3, b = 0.5 }
+				endTint = { r = 0.9, g = 0.9, b = 0.9 }
+				tint = doTint(startTint, endTint, (hour - 7) / 5)
+				lite = lite + 2
+			elseif hour > 12 and hour <= 18 then
+				startTint = { r = 0.9, g = 0.9, b = 0.9 }
+				endTint = { r = 0.9, g = 0.9, b = 0.6 }
+				tint = doTint(startTint, endTint, (hour - 12) / 6)
+				lite = lite + 4
+			elseif hour > 18 and hour < 24 then
+				startTint = { r = 0.9, g = 0.9, b = 0.6 }
+				endTint = { r = 0.1, g = 0.1, b = 0.1 }
+				tint = doTint(startTint, endTint, (hour - 18) / 6)
+				lite = lite + 3
+			end
+			game.level.map:setShown(tint.r+0.5, tint.g+0.5, tint.b+0.5, 1)
+			game.level.map:setObscure(tint.r+0.3, tint.g+0.3, tint.b+0.3, 1)
+--			game.player.lite = lite
+	end
+
 	-- Process overlay effects
 	self.level.map:processEffects()
 
