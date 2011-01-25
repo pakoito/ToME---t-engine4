@@ -1202,6 +1202,7 @@ function _M:countBirthUnlocks()
 
 		undead_ghoul = true,
 		undead_skeleton = true,
+		yeek = true,
 
 		mage = true,
 		mage_tempest = true,
@@ -1220,6 +1221,10 @@ function _M:countBirthUnlocks()
 
 		afflicted_cursed = true,
 		afflicted_doomed = true,
+
+		chronomancer_temporal_warden = true,
+
+		psionic_mindslayer = true,
 	}
 
 	for name, _ in pairs(list) do
