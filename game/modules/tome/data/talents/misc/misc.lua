@@ -315,6 +315,6 @@ newTalent{
 		return ([[Shatters the mind of your victim, giving your full control over its actions for %s turns.
 		When the effect ends you pull out your mind and the victim's body colapses dead.
 		This effect does not work on elite or undeads.
-		The duration will increase with the Willpower stat]]):format(10 + self:getWil(20))
+		The duration will increase with the Willpower stat]]):format(4 + self:getWil(10))
 	end,
 }
