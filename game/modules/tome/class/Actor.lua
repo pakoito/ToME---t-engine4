@@ -1353,7 +1353,7 @@ function _M:onAddObject(o)
 	-- Achievement checks
 	if self.player then
 		if o.unique then
-			self:resolveSource():registerArtifactsPicked(o)
+			game.player:registerArtifactsPicked(o)
 		end
 		world:gainAchievement("DEUS_EX_MACHINA", self, o)
 	end
