@@ -652,6 +652,7 @@ function _M:onTurn()
 	if self.turn % 10 ~= 0 then return end
 
 	-- Day/Night cycle, not worknig properly yet
+--[[
 	if false then
 			local doTint = function (from, to, amount)
 				local tint = {r = 0, g = 0, b = 0}
@@ -693,6 +694,7 @@ function _M:onTurn()
 			game.level.map:setObscure(tint.r+0.3, tint.g+0.3, tint.b+0.3, 1)
 --			game.player.lite = lite
 	end
+]]
 
 	-- Process overlay effects
 	self.level.map:processEffects()
