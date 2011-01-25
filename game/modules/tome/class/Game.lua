@@ -278,7 +278,7 @@ function _M:loaded()
 		end,
 	}
 	Map:setViewerActor(self.player)
-	Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 32, 32, nil, 22, true)
+	Map:setViewPort(216, 36, self.w - 216, math.floor(self.h * 0.80) - 36, 32, 32, nil, 22, true)
 	if self.player then self.player.changed = true end
 	self.key = engine.KeyBind.new()
 
@@ -310,13 +310,13 @@ function _M:setupDisplayMode(reboot)
 	local do_bg = true
 
 	if gfx.size == "64x64" then
-		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 64, 64, nil, 44, do_bg)
+		Map:setViewPort(216, 36, self.w - 216, math.floor(self.h * 0.80) - 36, 64, 64, nil, 44, do_bg)
 		Map:resetTiles()
 	elseif gfx.size == "32x32" then
-		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 32, 32, nil, 22, do_bg)
+		Map:setViewPort(216, 36, self.w - 216, math.floor(self.h * 0.80) - 36, 32, 32, nil, 22, do_bg)
 		Map:resetTiles()
 	elseif gfx.size == "16x16" then
-		Map:setViewPort(200, 20, self.w - 200, math.floor(self.h * 0.80) - 20, 16, 16, "/data/font/FSEX300.ttf", 16, do_bg)
+		Map:setViewPort(216, 36, self.w - 216, math.floor(self.h * 0.80) - 36, 16, 16, "/data/font/FSEX300.ttf", 16, do_bg)
 		Map:resetTiles()
 	end
 

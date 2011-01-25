@@ -22,7 +22,7 @@ return {
 	display_name = function(x, y)
 		if game.level.level == 2 then return "Temporal Rift: Lumberjack village"
 		elseif game.level.level == 3 then return "Temporal Rift: Daikara"
-		elseif game.level.level == 2 then return "Temporal Rift: Lake of Nur"
+		elseif game.level.level == 4 then return "Temporal Rift: Lake of Nur"
 		end
 		return "Temporal Rift"
 	end,
@@ -35,9 +35,13 @@ return {
 	width = 60, height = 25,
 --	all_remembered = true,
 	all_lited = true,
+	no_worldport = true,
 	persistent = "zone",
 	generator =  {
 	},
+	color_shown = {0.4, 0.3, 0.5, 1},
+	color_obscure = {0.4*0.6, 0.3*0.6, 0.5*0.6, 1},
+	ambient_music = "Through the Dark Portal.ogg",
 	levels =
 	{
 		[1] = { generator = {

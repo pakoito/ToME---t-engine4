@@ -22,19 +22,6 @@
 --Reach: gem-based range improvements
 --Channeling: gem-based shield and improvement
 
-local function getGemLevel(self)
-		local gem_level = 0
-		if not self:getInven("PSIONIC_FOCUS") or self:getInven("PSIONIC_FOCUS")[1] then return gem_level end
-		local tk_item = self:getInven("PSIONIC_FOCUS")[1]
-		if tk_item.type == "gem" then
-			gem_level = tk_item.material_level
-		else
-			gem_level = 0
-		end
-		return gem_level
-end
-
-
 newTalent{
 	name = "Mindlash",
 	type = {"psionic/focus", 1},
