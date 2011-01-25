@@ -365,6 +365,8 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 		target:attackTarget(self, nil, nil, true)
 	end
 
+	game.level.map:particleEmitter(target.x, target.y, 1, "melee_attack")
+
 	return self:combatSpeed(weapon), hitted
 end
 
