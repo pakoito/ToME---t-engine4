@@ -82,6 +82,7 @@ newBirthDescriptor
 		default_wilderness = {28, 13},
 		starting_zone = "ruins-kor-pul",
 		starting_quest = "start-allied",
+		blood_color = colors.GREY,
 
 		mana_regen = 0.5,
 		mana_rating = 7,

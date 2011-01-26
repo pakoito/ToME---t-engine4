@@ -25,6 +25,7 @@ newEntity{
 	define_as = "BASE_NPC_SHADE",
 	type = "undead", subtype = "shade",
 	display = "G", color=colors.DARK_GREY,
+	blood_color = colors.GREY,
 
 	resolvers.generic(function(e)
 		local base = game.zone:makeEntity(game.level, "actor", e.shade_filter, nil , true)

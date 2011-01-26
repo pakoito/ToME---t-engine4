@@ -365,7 +365,8 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 		target:attackTarget(self, nil, nil, true)
 	end
 
-	game.level.map:particleEmitter(target.x, target.y, 1, "melee_attack")
+	-- Visual feedback
+	if hitted then game.level.map:particleEmitter(target.x, target.y, 1, "melee_attack", {color=target.blood_color}) end
 
 	return self:combatSpeed(weapon), hitted
 end

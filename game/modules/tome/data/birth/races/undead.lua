@@ -145,6 +145,7 @@ newBirthDescriptor
 		cut_immune = 1,
 		fear_immune = 1,
 		no_breath = 1,
+		blood_color = colors.GREY,
 	},
 	experience = 2,
 }

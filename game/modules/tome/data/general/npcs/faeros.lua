@@ -22,6 +22,7 @@ local Talents = require("engine.interface.ActorTalents")
 newEntity{
 	define_as = "BASE_NPC_FAEROS",
 	type = "elemental", subtype = "fire",
+	blood_color = colors.ORANGE,
 	display = "E", color=colors.ORANGE,
 
 	combat = { dam=resolvers.mbonus(40, 15), atk=15, apr=15, dammod={mag=0.8}, damtype=DamageType.FIRE },

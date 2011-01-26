@@ -22,6 +22,7 @@ local Talents = require("engine.interface.ActorTalents")
 newEntity{
 	define_as = "BASE_NPC_BONE_GIANT",
 	type = "undead", subtype = "giant",
+	blood_color = colors.GREY,
 	display = "K", color=colors.WHITE,
 
 	combat = { dam=resolvers.mbonus(45, 20), atk=15, apr=10, dammod={str=0.8} },

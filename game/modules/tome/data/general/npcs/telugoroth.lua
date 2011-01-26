@@ -22,6 +22,7 @@ local Talents = require("engine.interface.ActorTalents")
 newEntity{
 	define_as = "BASE_NPC_TELUGOROTH", -- telu goroth = time terror
 	type = "elemental", subtype = "temporal",
+	blood_color = colors.PURPLE,
 	display = "E", color=colors.YELLOW,
 
 	combat = { dam=resolvers.mbonus(40, 15), atk=15, apr=15, dammod={mag=0.8}, damtype=DamageType.TEMPORAL },

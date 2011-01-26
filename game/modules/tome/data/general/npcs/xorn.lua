@@ -24,6 +24,7 @@ newEntity{
 	type = "elemental", subtype = "xorn",
 	display = "X", color=colors.UMBER,
 
+	blood_color = colors.UMBER,
 	combat = { dam=resolvers.mbonus(46, 15), atk=15, apr=15, dammod={str=0.8} },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },

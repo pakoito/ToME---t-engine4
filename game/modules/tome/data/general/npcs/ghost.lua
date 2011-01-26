@@ -22,6 +22,7 @@ local Talents = require("engine.interface.ActorTalents")
 newEntity{
 	define_as = "BASE_NPC_GHOST",
 	type = "undead", subtype = "ghost",
+	blood_color = colors.GREY,
 	display = "G", color=colors.WHITE,
 
 	combat = { dam=1, atk=1, apr=1 },

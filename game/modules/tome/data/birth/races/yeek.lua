@@ -45,6 +45,7 @@ newBirthDescriptor{
 		starting_zone = "wilderness",
 		starting_quest = "start-yeek",
 		starting_intro = "yeek",
+		blood_color = colors.BLUE,
 		resolvers.inscription("INFUSION:_REGENERATION", {cooldown=10, dur=5, heal=60}),
 		resolvers.inscription("INFUSION:_WILD", {cooldown=12, what={poison=true}, dur=4, power=14}),
 	},

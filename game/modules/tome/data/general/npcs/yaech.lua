@@ -22,6 +22,7 @@ local Talents = require("engine.interface.ActorTalents")
 newEntity{
 	define_as = "BASE_NPC_YAECH",
 	type = "humanoid", subtype = "yaech",
+	blood_color = colors.BLUE,
 	display = "y", color=colors.AQUAMARINE,
 
 	combat = { dam=resolvers.rngavg(5,12), atk=2, apr=6, physspeed=2 },

@@ -23,6 +23,7 @@ newEntity{
 	define_as = "BASE_NPC_RITCH",
 	type = "insect", subtype = "ritch",
 	display = "I", color=colors.RED,
+	blood_color = colors.GREEN,
 	desc = [[Ritchs are giant insects native to the arid wastes of the southern parts of the Far East.
 Vicious predators, they inject corrupting diseases into their foes, and their sharp claws cut through most armours.]],
 

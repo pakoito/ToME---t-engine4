@@ -23,6 +23,7 @@ newEntity{
 	define_as = "BASE_NPC_MOLD",
 	type = "immovable", subtype = "molds",
 	display = "m", color=colors.WHITE,
+	blood_color = colors.PURPLE,
 	desc = "A strange growth on the dungeon floor.",
 	body = { INVEN = 10 },
 	autolevel = "warrior",

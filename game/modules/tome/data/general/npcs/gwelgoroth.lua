@@ -22,6 +22,7 @@ local Talents = require("engine.interface.ActorTalents")
 newEntity{
 	define_as = "BASE_NPC_GWELGOROTH", -- gwelu goroth = air terror
 	type = "elemental", subtype = "air",
+	blood_color = colors.AQUAMARINE,
 	display = "E", color=colors.AQUAMARINE,
 
 	combat = { dam=resolvers.mbonus(40, 15), atk=15, apr=15, dammod={mag=0.8}, damtype=DamageType.LIGHTNING },

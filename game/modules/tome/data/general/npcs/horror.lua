@@ -25,6 +25,7 @@ newEntity{
 	define_as = "BASE_NPC_HORROR",
 	type = "horror", subtype = "eldritch",
 	display = "h", color=colors.WHITE,
+	blood_color = colors.BLUE,
 	body = { INVEN = 10 },
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },

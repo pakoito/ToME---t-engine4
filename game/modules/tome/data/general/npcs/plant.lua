@@ -25,6 +25,7 @@ newEntity{
 	define_as = "BASE_NPC_PLANT",
 	type = "immovable", subtype = "plants",
 	display = "#", color=colors.WHITE,
+	blood_color = colors.GREEN,
 	desc = "A not-so-strange growth on the dungeon floor.",
 	body = { INVEN = 10 },
 	autolevel = "warrior",

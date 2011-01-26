@@ -4,6 +4,7 @@ newEntity{
 	define_as = "BASE_NPC_CRYSTAL",
 	type = "immovable", subtype = "crystal",
 	display = "%", color=colors.WHITE,
+	blood_color = colors.GREY,
 	desc = "A shining crystal formation charged with magical energies.",
 	body = { INVEN = 10 },
 	autolevel = "caster",

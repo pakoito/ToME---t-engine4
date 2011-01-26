@@ -25,6 +25,7 @@ newEntity{
 	define_as = "BASE_NPC_AQUATIC_DEMON",
 	type = "aquatic", subtype = "demon",
 	display = "U", color=colors.WHITE,
+	blood_color = colors.GREEN,
 	body = { INVEN = 10 },
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },

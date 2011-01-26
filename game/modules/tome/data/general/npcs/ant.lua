@@ -24,6 +24,7 @@ local Talents = require("engine.interface.ActorTalents")
 newEntity{
 	define_as = "BASE_NPC_ANT",
 	type = "insect", subtype = "ant",
+	blood_color = colors.GREY,
 	display = "a", color=colors.WHITE,
 	body = { INVEN = 10 },
 	autolevel = "warrior",

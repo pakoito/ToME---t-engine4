@@ -19,6 +19,10 @@
 
 local first = true
 base_size = 32
+local r = 255
+local g = 0
+local b = 0
+if color then r, g, b = color.r, color.g, color.b end
 
 return { generator = function()
 	local size = rng.range(18, 28)
@@ -34,9 +38,9 @@ return { generator = function()
 		dir = 0, dirv = 0, dira = 0,
 		vel = 0, velv = 0, vela = 0,
 
-		r = 1, rv = 0, ra = 0,
-		g = 1, gv = 0, ga = 0,
-		b = 1, bv = 0, ba = 0,
+		r = r, rv = 0, ra = 0,
+		g = g, gv = 0, ga = 0,
+		b = b, bv = 0, ba = 0,
 		a = rng.float(0.6, 1), av = 0.1, aa = 0,
 	}
 end, },
@@ -46,4 +50,4 @@ function(self)
 		first = false
 	end
 end,
-1, ("attacks/attack_red_%02d"):format(rng.range(1, 5))
+1, ("attacks/attack_white_%02d"):format(rng.range(1, 19))
