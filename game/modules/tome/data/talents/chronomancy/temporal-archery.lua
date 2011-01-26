@@ -100,7 +100,7 @@ newTalent{
 	require = temporal_req4,
 	points = 5,
 	stamina = 15,
-	paradox = 6,
+	paradox = 10,
 	cooldown = 10,
 	no_energy = "fake",
 	range = 10,

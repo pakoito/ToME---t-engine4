@@ -50,34 +50,11 @@ newTalent{
 }
 
 newTalent{
-	name = "Borrowed Time",
-	type = {"chronomancy/timetravel", 2},
+	name = "Time Skip",
+	type = {"chronomancy/timetravel",2},
 	require = chrono_req2,
 	points = 5,
-	paradox = 10,
-	cooldown = 20,
-	no_energy = true,
-	tactical = { ESCAPE = 2, CLOSEIN = 2, BUFF = 2 },
-	getDuration = function(self, t) return 2 + math.floor(self:getTalentLevelRaw(t)/4) end,
-	getStun = function(self, t) return 6 - self:getTalentLevelRaw(t) end,
-	action = function(self, t)
-		self:setEffect(self.EFF_BORROWED_TIME, t.getDuration(self, t), {power=t.getStun(self,t)})
-		return true
-	end,
-	info = function(self, t)
-		local duration = t.getDuration(self, t)
-		local stun = t.getStun(self, t)
-		return ([[You borrow some energy from the future, greatly increasing your global speed for %d turns.  At the end of this time though you'll be stunned for %d turns as you pay back the time you borrowed.
-		]]):format(duration, stun)
-	end,
-}
-
-newTalent{
-	name = "Time Skip",
-	type = {"chronomancy/timetravel",3},
-	require = chrono_req3,
-	points = 5,
-	cooldown = 6,
+	cooldown = 10,
 	paradox = 10,
 	tactical = { ATTACK = 1, DISABLE = 2 },
 	range = 6,
@@ -173,6 +150,30 @@ newTalent{
 	end,
 }
 
+
+newTalent{
+	name = "Borrowed Time",
+	type = {"chronomancy/timetravel", 3},
+	require = chrono_req3,
+	points = 5,
+	paradox = 15,
+	cooldown = 20,
+	no_energy = true,
+	tactical = { ESCAPE = 2, CLOSEIN = 2, BUFF = 2 },
+	getDuration = function(self, t) return 2 + math.floor(self:getTalentLevelRaw(t)/4) end,
+	getStun = function(self, t) return 6 - self:getTalentLevelRaw(t) end,
+	action = function(self, t)
+		self:setEffect(self.EFF_BORROWED_TIME, t.getDuration(self, t), {power=t.getStun(self,t)})
+		return true
+	end,
+	info = function(self, t)
+		local duration = t.getDuration(self, t)
+		local stun = t.getStun(self, t)
+		return ([[You borrow some energy from the future, greatly increasing your global speed for %d turns.  At the end of this time though you'll be stunned for %d turns as you pay back the time you borrowed.
+		]]):format(duration, stun)
+	end,
+}
+
 newTalent{
 	name = "Revision",
 	type = {"chronomancy/timetravel", 4},
@@ -198,7 +199,7 @@ newTalent{
 
 			-- Manualy start the cooldown of the "old player"
 			game.player:startTalentCooldown(t)
-			game.player:incParadox(t.paradox * (1 + (game.player.paradox / 100)))
+			game.player:incParadox(t.paradox * (1 + (game.player.paradox / 300)))
 			game.player.max_life = game.player.max_life * (1 - t.getPercent(self, t) / 100)
 		end)
 		return true

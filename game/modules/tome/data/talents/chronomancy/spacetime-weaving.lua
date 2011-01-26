@@ -23,9 +23,13 @@ newTalent{
 	require = temporal_req1,
 	points = 5,
 	message = "@Source@ fixes some of the damage caused in the past.",
-	cooldown = 50,
+	cooldown = 24,
 	tactical = { PARADOX = 2 },
-	getReduction = function(self, t) return (20 + (self:getWil() * self:getTalentLevel(t)/2)) end,
+	getReduction = function(self, t)
+		local modifier = self:getWil() * (1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10) or 0 )
+		local reduction = (20 + (modifier * self:getTalentLevel(t)/2))
+		return reduction
+	end,
 	action = function(self, t)
 		self:incParadox (- t.getReduction(self, t))
 		game:playSoundNear(self, "talents/spell_generic2")
@@ -44,8 +48,8 @@ newTalent{
 	type = {"chronomancy/spacetime-weaving", 2},
 	require = temporal_req2,
 	points = 5,
-	paradox = 3,
-	cooldown = 10,
+	paradox = 5,
+	cooldown = 20,
 	tactical = { CLOSEIN = 2, ESCAPE = 2 },
 	getRange = function(self, t) return 3 + math.ceil(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
 	requires_target = true,
@@ -86,7 +90,7 @@ newTalent{
 	type = {"chronomancy/spacetime-weaving", 3},
 	require = temporal_req3,
 	points = 5,
-	paradox = 5,
+	paradox = 20,
 	cooldown = 50,
 	tactical = { BUFF = 0.5 },
 	message = "@Source@ manipulates the flow of time.",
@@ -111,7 +115,7 @@ newTalent{
 	type = {"chronomancy/spacetime-weaving", 4},
 	require = temporal_req4,
 	points = 5,
-	paradox = 10,
+	paradox = 20,
 	cooldown = 20,
 	tactical = { ESCAPE = 2 },
 	requires_target = function(self, t) return self:getTalentLevel(t) >= 4 end,

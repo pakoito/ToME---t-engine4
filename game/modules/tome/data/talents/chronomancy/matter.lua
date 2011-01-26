@@ -18,34 +18,36 @@
 -- darkgod@te4.org
 
 newTalent{
-	name = "Quantum Spike",
-	type = {"chronomancy/matter", 1},
+	name = "Dust to Dust",
+	type = {"chronomancy/matter",1},
 	require = chrono_req1,
 	points = 5,
-	random_ego = "attack",
-	paradox = 3,
-	cooldown = 3,
-	tactical = { ATTACK = 2 },
+	paradox = 6,
+	cooldown = 4,
+	tactical = { ATTACKAREA = 2 },
 	range = 6,
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 250)*getParadoxModifier(self, pm) end,
 	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		x, y = checkBackfire(self, x, y)
-			self:project(tg, x, y, DamageType.TEMPORAL, self:spellCrit(self:combatTalentSpellDamage(t, 10, 115)*getParadoxModifier(self, pm)), {type="teleport"})
-			self:project(tg, x, y, DamageType.PHYSICAL, self:spellCrit(self:combatTalentSpellDamage(t, 10, 115)*getParadoxModifier(self, pm)))
-			game:playSoundNear(self, "talents/arcane")
+		self:project(tg, x, y, DamageType.WASTING, self:spellCrit(t.getDamage(self, t)))
+		local _ _, x, y = self:canProject(tg, x, y)
+		game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "mana_beam", {tx=x-self.x, ty=y-self.y})
+		game:playSoundNear(self, "talents/spell_generic2")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Attempts to pull the target apart at a molecular level, inflicing %d temporal damage and %d physical damage.
-		The damage will increase with the Magic stat]]):format (damDesc(self, DamageType.TEMPORAL, (self:combatTalentSpellDamage(t, 10, 115)*getParadoxModifier(self, pm))), damDesc(self, DamageType.PHYSICAL, (self:combatTalentSpellDamage(t, 10, 115)*getParadoxModifier(self, pm))))
+		local damage = t.getDamage(self, t)
+		return ([[Fires a beam that attempts to turn everything in it's path to dust, inflicting %0.2f temporal damage over three turns.
+		The damage will scale with your Paradox and Magic stat.]]):
+		format(damDesc(self, DamageType.TEMPORAL, damage))
 	end,
 }
-
 newTalent{
 	name = "Terraforming",
 	type = {"chronomancy/matter",2},
@@ -82,7 +84,7 @@ newTalent{
 	require = chrono_req3,
 	points = 5,
 	random_ego = "attack",
-	paradox = 5,
+	paradox = 20,
 	cooldown = 6,
 	tactical = { CLOSEIN = 2 },
 	range = 6,
@@ -114,34 +116,44 @@ newTalent{
 }
 
 newTalent{
-	name = "Dust to Dust",
-	type = {"chronomancy/matter",4},
+	name = "Quantum Spike",
+	type = {"chronomancy/matter", 4},
 	require = chrono_req4,
 	points = 5,
-	random_ego = "attack",
-	paradox = 10,
-	cooldown = 8,
-	tactical = { ATTACKAREA = 2 },
+	paradox = 20,
+	cooldown = 12,
+	tactical = { ATTACK = 2 },
 	range = 6,
 	direct_hit = true,
+	reflectable = true,
 	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 240)*getParadoxModifier(self, pm) end,
-	getRadius = function (self, t) return 1 + math.floor(self:getTalentLevel(t)/5) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 230)*getParadoxModifier(self, pm) end,
 	action = function(self, t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=t.getRadius(self, t), friendlyfire=self:spellFriendlyFire(), talent=t}
-		local x, y = self:getTarget(tg)
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local x, y, target = self:getTarget(tg)
 		if not x or not y then return nil end
 		x, y = checkBackfire(self, x, y)
-		self:project(tg, x, y, DamageType.DIG, nil)
-		self:project(tg, x, y, DamageType.TEMPORAL, self:spellCrit(t.getDamage(self, t)))
-		game:playSoundNear(self, "talents/fire")
+		self:project(tg, x, y, DamageType.TEMPORAL, self:spellCrit(t.getDamage(self,t)))
+		game:playSoundNear(self, "talents/arcane")
+		-- Try to insta-kill
+		if target then
+			if target:checkHit(self:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("instakill") and target.life > 0 and target.life < target.max_life * 0.2 then
+				-- KILL IT !
+				game.logSeen(target, "%s has been pulled apart at a molecular level!", target.name:capitalize())
+				target:die(self)
+			elseif target.life > 0 and target.life < target.max_life * 0.2 then
+				game.logSeen(target, "%s resists the quantum spike!", target.name:capitalize())
+			end
+		end
+		if target.dead then
+			game.level.map:particleEmitter(x, y, 1, "teleport")
+		end
 		return true
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		local radius = t.getRadius(self, t)
-		return ([[Destroys trees, walls, etc. and inflicts %d temporal damage on everything with in a radius of %d.
-		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.TEMPORAL, damage), radius)
+		return ([[Attempts to pull the target apart at a molecular level, inflicing %0.2f temporal damage.  If the target ends up with low enough life(<20%%) it might be instantly killed.
+		The damage will scale with your Paradox and the Magic stat.]]):format(damDesc(self, DamageType.TEMPORAL, damage))
 	end,
 }
 

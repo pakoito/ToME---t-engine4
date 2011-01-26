@@ -84,18 +84,20 @@ newTalent{
 	type = {"chronomancy/timeline-threading", 1},
 	require = chrono_req_high1,
 	points = 5,
-	paradox = 3,
+	paradox = 5,
 	cooldown = 6,
 	tactical = { BUFF = 2 },
-	getPercent = function(self, t) return 40 + (self:combatTalentSpellDamage(t, 20, 60)*getParadoxModifier(self, pm)) end,
+	getThread = function(self, t) return 60 + (self:combatTalentSpellDamage(t, 10, 30)*getParadoxModifier(self, pm)) end,
 	action = function(self, t)
-		self:setEffect(self.EFF_GATHER_THE_THREADS, 1, {power=t.getPercent(self,t)})
+		self:setEffect(self.EFF_GATHER_THE_THREADS, 5, {power=t.getThread(self, t)})
+		game:playSoundNear(self, "talents/spell_generic2")
 		return true
 	end,
 	info = function(self, t)
-		local percent = t.getPercent(self, t)
-		return ([[You pull damage you inflict the turn after casting this spell out of other timelines and into your own, inflicting %d%% damage again on any targets you damage while the spell is in effect.
-		The percent will increase with the Magic stat.]]):format(percent)
+		local primary = t.getThread(self, t)
+		return ([[You begin to gather energy from other timelines, increasing all damage dealt by %d%% on the first turn and %d%% more each additional turn.
+		The increased damage will be released with the first attack, item, or talent used, otherwise the spell ends after five turns.
+		The percentages will increase with your Paradox and Magic stat.]]):format(primary + (primary/5), primary/5)
 	end,
 }
 
@@ -104,7 +106,7 @@ newTalent{
 	type = {"chronomancy/timeline-threading", 2},
 	require = chrono_req_high2,
 	points = 5,
-	paradox = 4,
+	paradox = 10,
 	cooldown = 6,
 	tactical = { ATTACK = 2 },
 	range = 6,
@@ -137,7 +139,7 @@ newTalent{
 	require = chrono_req_high3,
 	points = 5,
 	cooldown = 30,
-	paradox = 5,
+	paradox = 15,
 	tactical = { ATTACK = 2, DISABLE = 2 },
 	requires_target = true,
 	range = 6,

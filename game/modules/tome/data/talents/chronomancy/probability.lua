@@ -50,7 +50,7 @@ newTalent{
 	type = {"chronomancy/probability",3},
 	require = temporal_req3,
 	points = 5,
-	paradox = 5,
+	paradox = 10,
 	cooldown = 20,
 	tactical = { BUFF = 2 },
 	no_energy = true,

@@ -143,15 +143,6 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			DamageType.defaultProjector(target, target.x, target.y, type, dam * target.reflect_damage / 100, tmp, true)
 		end
 
-		--[[if src.attr and src:attr("threading") then
-			if target.attr and not target:attr("threaded") then
-				DamageType.defaultProjector(target, target.x, target.y, type, dam * src.threading/ 100, tmp, true)
-				target:addTemporaryValue("threaded")
-			else
-				target:removeTemporaryValue("threaded")
-			end
-		end]]
-
 		if target.knowTalent and target:knowTalent(target.T_RESOLVE) then local t = target:getTalentFromId(target.T_RESOLVE) t.on_absorb(target, t, type, dam) end
 
 		if not target.dead and dam > 0 and type == DamageType.MIND and src and src.knowTalent and src:knowTalent(src.T_MADNESS) then
@@ -674,6 +665,23 @@ newDamageType{
 				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
 			else
 				game.logSeen(target, "%s resists the punch!", target.name:capitalize())
+			end
+		end
+	end,
+}
+
+-- Gravity repulsion; checks for spell power against physical resistance
+newDamageType{
+	name = "repulsion", type = "REPULSION",
+	projector = function(src, x, y, type, dam)
+		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
+				target:knockback(src.x, src.y, 2)
+				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
+			else
+				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end
 		end
 	end,

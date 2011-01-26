@@ -718,11 +718,13 @@ function _M:playerUseItem(object, item, inven)
 				end
 				self:breakStealth()
 				self:breakLightningSpeed()
+				self:breakGatherTheThreads()
 				return true
 			end
 
 			self:breakStealth()
 			self:breakLightningSpeed()
+			self:breakGatherTheThreads()
 			self.changed = true
 		end)
 		local ok, ret = coroutine.resume(co)

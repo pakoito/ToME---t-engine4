@@ -48,7 +48,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Stimulance",
+	name = "Invigorate",
 	type = {"chronomancy/temporal-combat", 2},
 	require = temporal_req2,
 	points = 5,
@@ -57,7 +57,7 @@ newTalent{
 	tactical = { STAMINA = 2 },
 	getPower = function(self, t) return (20 + self:getTalentLevel(t) * 12)/5 end,
 	action = function(self, t)
-		self:setEffect(self.EFF_STIMULANCE, 5, {power=t.getPower(self, t)})
+		self:setEffect(self.EFF_INVIGORATE, 5, {power=t.getPower(self, t)})
 		return true
 	end,
 	info = function(self, t)

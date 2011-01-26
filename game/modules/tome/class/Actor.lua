@@ -1549,9 +1549,11 @@ function _M:preUseTalent(ab, silent, fake)
 	-- But it is not affected by fatigue
 	if (ab.paradox or ab.sustain_paradox) and not fake then
 		local pa = ab.paradox or ab.sustain_paradox
-		local chance = math.pow (((self:getParadox() - self:getWil()) /200), 2)*((100 + self:combatFatigue()) / 100)
+		local modifier = self:getWil() * (1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10) or 0 )
+		--print("[Paradox] Will modifier: ", modifier, "::", self:getParadox())
+		local chance = math.pow (((self:getParadox() - modifier)/200), 2)*((100 + self:combatFatigue()) / 100)
 		-- Fail ? lose energy and 1/10 more paradox
-		print("[Paradox] Fail chance: ", chance, "::", self:getParadox())
+		--print("[Paradox] Fail chance: ", chance, "::", self:getParadox())
 		if rng.percent(math.pow((self:getParadox()/400), 4)) then
 			-- Random anomaly
 			local ts = {}
@@ -1711,7 +1713,7 @@ function _M:postUseTalent(ab, ret)
 		end
 		-- Paradox is not affected by fatigue but it's cost does increase exponentially
 		if ab.paradox then
-			trigger = true; self:incParadox(ab.paradox * (1 + (self.paradox / 100)))
+			trigger = true; self:incParadox(ab.paradox * (1 + (self.paradox / 300)))
 		end
 		if ab.psi then
 			trigger = true; self:incPsi(-ab.psi * (100 + 2 * self.fatigue) / 100)
@@ -1725,6 +1727,7 @@ function _M:postUseTalent(ab, ret)
 	-- Cancel stealth!
 	if ab.id ~= self.T_STEALTH and ab.id ~= self.T_HIDE_IN_PLAIN_SIGHT and not ab.no_break_stealth then self:breakStealth() end
 	if ab.id ~= self.T_LIGHTNING_SPEED then self:breakLightningSpeed() end
+	if ab.id ~= self.T_GATHER_THE_THREADS then self:breakGatherTheThreads() end
 	return true
 end
 
@@ -1767,6 +1770,14 @@ function _M:breakLightningSpeed()
 	end
 end
 
+--- Breaks gather the threads if active
+function _M:breakGatherTheThreads()
+	if self:hasEffect(self.EFF_GATHER_THE_THREADS) then
+		self:removeEffect(self.EFF_GATHER_THE_THREADS)
+	end
+end
+
+
 --- Break antimagic for a while after using spells & magic devices
 function _M:antimagicBackslash(turns)
 	local done = false
@@ -1806,7 +1817,7 @@ function _M:getTalentFullDescription(t, addlevel)
 	if t.positive or t.sustain_positive then d:add({"color",0x6f,0xff,0x83}, "Positive energy cost: ", {"color",255, 215, 0}, ""..(t.sustain_positive or t.positive * (100 + self:combatFatigue()) / 100), true) end
 	if t.negative or t.sustain_negative then d:add({"color",0x6f,0xff,0x83}, "Negative energy cost: ", {"color", 127, 127, 127}, ""..(t.sustain_negative or t.negative * (100 + self:combatFatigue()) / 100), true) end
 	if t.hate or t.sustain_hate then d:add({"color",0x6f,0xff,0x83}, "Hate cost:  ", {"color", 127, 127, 127}, ""..(t.hate or t.sustain_hate), true) end
-	if t.paradox or t.sustain_paradox then d:add({"color",0x6f,0xff,0x83}, "Paradox cost: ", {"color",  176, 196, 222}, ("%0.2f"):format(t.sustain_paradox or t.paradox * (1 + (self.paradox / 100))), true) end
+	if t.paradox or t.sustain_paradox then d:add({"color",0x6f,0xff,0x83}, "Paradox cost: ", {"color",  176, 196, 222}, ("%0.2f"):format(t.sustain_paradox or t.paradox * (1 + (self.paradox / 300))), true) end
 	if t.psi or t.sustain_psi then d:add({"color",0x6f,0xff,0x83}, "Psi cost: ", {"color",0x7f,0xff,0xd4}, ""..(t.sustain_psi or t.psi * (100 + 2 * self.fatigue) / 100), true) end
 	if self:getTalentRange(t) > 1 then d:add({"color",0x6f,0xff,0x83}, "Range: ", {"color",0xFF,0xFF,0xFF}, ("%0.2f"):format(self:getTalentRange(t)), true)
 	else d:add({"color",0x6f,0xff,0x83}, "Range: ", {"color",0xFF,0xFF,0xFF}, "melee/personal", true)

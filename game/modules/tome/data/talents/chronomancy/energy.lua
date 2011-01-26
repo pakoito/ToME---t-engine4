@@ -65,7 +65,7 @@ newTalent{
 	require = chrono_req_high2,
 	points = 5,
 	random_ego = "attack",
-	paradox = 5,
+	paradox = 10,
 	cooldown = 10,
 	tactical = { ATTACK = 1, CLOSEIN = 2 },
 	range = 6,

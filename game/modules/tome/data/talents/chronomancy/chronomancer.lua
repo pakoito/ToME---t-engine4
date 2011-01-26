@@ -103,8 +103,9 @@ temporal_req5 = {
 -- Backfire Function
 
 checkBackfire = function(self, x, y)
-	local backfire = math.pow (((self:getParadox() - self:getWil())/300), 3)
-	print("[Paradox] Backfire chance: ", backfire, "::", self:getParadox())
+	local modifier = self:getWil() * (1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10) or 0 )
+	local backfire = math.pow (((self:getParadox() - modifier)/300), 3)
+--	print("[Paradox] Backfire chance: ", backfire, "::", self:getParadox())
 	if rng.percent(backfire) then
 		game.logPlayer(self, "The fabric of spacetime ripples and your spell backfires!!")
 		return self.x, self.y
@@ -112,6 +113,19 @@ checkBackfire = function(self, x, y)
 		return x, y
 	end
 end
+
+-- Make sure we don't do silly stuff like use Precognition with see the threads active.
+-- Didn't work and would break Revision anyway
+--[[local timeline_check = function(self, ab, silent, fake)
+	if game._chronoworlds and (#game._chronoworlds > 0) then
+		game.logPlayer(self, "How much messing up of timelines do you want to do?!")
+		return false
+	else
+		return true
+	end
+end]]
+
+--[[on_pre_use = timeline_check,]]
 
 -- Paradox modifier.  This controls how much extra effect chronomancy spells have at high paradox.
 -- Note that 300 is the optimal balance and going below this number will decrease the effect of chronomancy spells.

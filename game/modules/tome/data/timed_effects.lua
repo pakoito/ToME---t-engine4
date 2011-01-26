@@ -2927,7 +2927,7 @@ newEffect{
 newEffect{
 	name = "WASTING",
 	desc = "Wasting",
-	long_desc = function(self, eff) return ("The target is wasting away and is slowed as well as taking %0.2f temporal damage per turn."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target is wasting away, taking %0.2f temporal damage per turn."):format(eff.power) end,
 	type = "magical",
 	status = "detrimental",
 	parameters = { power=10 },
@@ -2944,12 +2944,6 @@ newEffect{
 	end,
 	on_timeout = function(self, eff)
 		DamageType:get(DamageType.TEMPORAL).projector(eff.src, self.x, self.y, DamageType.TEMPORAL, eff.power)
-	end,
-	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("energy", {mod=-0.3})
-	end,
-	deactivate = function(self, eff)
-		self:removeTemporaryValue("energy", eff.tmpid)
 	end,
 }
 
@@ -2992,7 +2986,7 @@ newEffect{
 newEffect{
 	name = "PERFECT_AIM",
 	desc = "Perfect Aim",
-	long_desc = function(self, eff) return ("The target's aim has become precise, increasing it's critical damage multiplier by increased by %d%%."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target's aim has become precise, increasing it's critical damage multiplier by %d%%."):format(eff.power) end,
 	type = "magical",
 	status = "beneficial",
 	parameters = { power = 10 },
@@ -3059,14 +3053,14 @@ newEffect{
 }
 
 newEffect{
-	name = "STIMULANCE",
-	desc = "Stimulance",
+	name = "INVIGORATE",
+	desc = "Invigorate",
 	long_desc = function(self, eff) return ("The target is regaining %d stamina per turn."):format(eff.power) end,
 	type = "magical",
 	status = "beneficial",
 	parameters = {power = 10},
-	on_gain = function(self, err) return "#Target# is recovering stamina.", "+Stimulance" end,
-	on_lose = function(self, err) return "#Target# is no longer recovering stamina.", "-Stimulance" end,
+	on_gain = function(self, err) return "#Target# is recovering stamina.", "+Invigorate" end,
+	on_lose = function(self, err) return "#Target# is no longer recovering stamina.", "-Invigorate" end,
 	activate = function(self, eff)
 		self.stamina_regen = self.stamina_regen + eff.power
 	end,
@@ -3078,17 +3072,33 @@ newEffect{
 newEffect{
 	name = "GATHER_THE_THREADS",
 	desc = "Gather the Threads",
-	long_desc = function(self, eff) return ("%d%% of all damage done by the target will be inflicted again."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target will inflict %d%% more damage on it's next attack plus an additional %d%% for each turn spent gathering threads beyond the first."):
+	format(eff.power + (eff.power / 5), eff.power/5) end,
 	type = "magical",
 	status = "beneficial",
 	parameters = { power=10 },
-	on_gain = function(self, err) return "#Target# is gathering effects from other timelines.", "+Gather the Threads" end,
+	on_gain = function(self, err) return "#Target# is gathering energy from other timelines.", "+Gather the Threads" end,
 	on_lose = function(self, err) return "#Target# is no longer manipulating the timestream.", "-Gather the Threads" end,
+	on_merge = function(self, old_eff, new_eff)
+		self:removeTemporaryValue("inc_damage", old_eff.tmpid)
+		old_eff.cur_power = (old_eff.cur_power + new_eff.power)
+		old_eff.tmpid = self:addTemporaryValue("inc_damage", {all = old_eff.cur_power})
+
+		old_eff.dur = old_eff.dur
+		return old_eff
+	end,
+	on_timeout = function(self, eff)
+		local threads = eff.power / 5
+		self:setEffect(self.EFF_GATHER_THE_THREADS, 1, {power=threads})
+	end,
 	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("threading", eff.power)
+		eff.cur_power = eff.power
+		eff.tmpid = self:addTemporaryValue("inc_damage", {all=eff.power})
+		eff.particle = self:addParticles(Particles.new("arcane_power", 1))
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("threading", eff.tmpid)
+		self:removeTemporaryValue("inc_damage", eff.tmpid)
+		self:removeParticles(eff.particle)
 	end,
 }
 
@@ -3158,6 +3168,94 @@ newEffect{
 				game._chronoworlds.see_threads_base = nil
 				local chat = Chat.new("chronomancy-see-threads", {name="See the Threads"}, self, {turns=eff.max_dur})
 				chat:invoke()
+			end
+		end)
+	end,
+}
+
+newEffect{
+	name = "REPULSION_FIELD",
+	desc = "Repulsion Field",
+	long_desc = function(self, eff) return ("The target is surrounded by a field that will knockback attackers."):format() end,
+	type = "magical",
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# is protected by a repulsion field.", "+Repulsion Field" end,
+	on_lose = function(self, err) return "#Target# is no longer protected by a repulsion field.", "-Repulsion Field" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("on_melee_hit", {[DamageType.REPULSION]= eff.power})
+		eff.particle = self:addParticles(Particles.new("gravity_focus", 1))
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("on_melee_hit", eff.tmpid)
+		self:removeParticles(eff.particle)
+	end,
+}
+
+newEffect{
+	name = "IMMINENT_PARADOX_CLONE",
+	desc = "Imminent Paradox Clone",
+	long_desc = function(self, eff) return "When the effect expires you'll be pulled into the past." end,
+	type = "time",
+	status = "detrimental",
+	parameters = { power=10 },
+	activate = function(self, eff)
+			game:onTickEnd(function()
+			game:chronoClone("paradox_past")
+		end)
+	end,
+	deactivate = function(self, eff)
+		local t = self:getTalentFromId(self.T_PARADOX_CLONE)
+		local base = t.getDuration(self, t) - 2
+		game:onTickEnd(function()
+			local worlds = game._chronoworlds
+			-- save the players health so we can reload it
+			local oldplayer = game.player
+
+			-- Clone but not the subworlds
+			game._chronoworlds = nil
+			local clone = game:chronoClone()
+			game._chronoworlds = worlds
+
+			-- Move back in time, but keep the paradox_future world stored
+			game:chronoRestore("paradox_past", true)
+			game._chronoworlds["paradox_future"] = clone
+			game.logPlayer(self, "#LIGHT_BLUE#You've been pulled into the past!")
+			-- pass health and resources into the new timeline
+			game.player.life = oldplayer.life
+			for i, r in ipairs(game.player.resources_def) do
+				game.player[r.short_name] = oldplayer[r.short_name]
+			end
+
+			-- Hack to remove the IMMINENT_PARADOX_CLONE effect in the past
+			-- Note that we have to use game.player now since self refers to self from the future!
+			game.player.tmp[self.EFF_IMMINENT_PARADOX_CLONE] = nil
+
+			-- Setup the return effect
+			game.player:setEffect(self.EFF_PARADOX_CLONE, base, {})
+		end)
+	end,
+}
+
+newEffect{
+	name = "PARADOX_CLONE",
+	desc = "Paradox Clone",
+	long_desc = function(self, eff) return "You've been pulled into the past." end,
+	type = "time",
+	status = "detrimental",
+	parameters = { power=10 },
+	activate = function(self, eff)
+	end,
+	deactivate = function(self, eff)
+		-- save the players rescources so we can reload it
+		local oldplayer = game.player
+		game:onTickEnd(function()
+			game:chronoRestore("paradox_future")
+			-- Reload the player's health and resources
+			game.logPlayer(game.player, "#LIGHT_BLUE#You've been returned to the present!")
+			game.player.life = oldplayer.life
+			for i, r in ipairs(game.player.resources_def) do
+				game.player[r.short_name] = oldplayer[r.short_name]
 			end
 		end)
 	end,

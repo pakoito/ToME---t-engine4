@@ -120,7 +120,7 @@ newEntity{ base = "BASE_NPC_SANDWORM",
 	autolevel = "warriormage",
 
 	resolvers.talents{
-		[Talents.T_CRUSHING_WEIGHT]=5,
+		[Talents.T_GRAVITY_WELL]=3,
 		[Talents.T_GRAVITY_SPIKE]=5,
 		[Talents.T_DAMAGE_SMEARING]=5,
 	},

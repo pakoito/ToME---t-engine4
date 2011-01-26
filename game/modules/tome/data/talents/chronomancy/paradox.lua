@@ -20,37 +20,25 @@
 newTalent{
 	name = "Paradox Mastery",
 	type = {"chronomancy/paradox", 1},
-	require = chrono_req_high1,
+	require = chrono_req1,
 	points = 5,
-	random_ego = "attack",
-	mana = 10,
-	cooldown = 3,
-	tactical = {
-		ATTACK = 10,
-	},
-	range = 20,
-	reflectable = true,
-	action = function(self, t)
-		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		local dam = self:spellCrit(self:combatTalentSpellDamage(t, 20, 290))
-		self:project(tg, x, y, DamageType.TEMPORAL, rng.avg(dam / 3, dam, 3))
-		local _ _, x, y = self:canProject(tg, x, y)
-		game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "lightning", {tx=x-self.x, ty=y-self.y})
-		game:playSoundNear(self, "talents/lightning")
-		return true
+	mode = "passive",
+	on_learn = function(self, t)
+		self.resists[DamageType.TEMPORAL] = (self.resists[DamageType.TEMPORAL] or 0) + 5
+	end,
+	on_unlearn = function(self, t)
+		self.resists[DamageType.TEMPORAL] = (self.resists[DamageType.TEMPORAL] or 0) - 5
 	end,
 	info = function(self, t)
-		return ([[Conjures up mana into a powerful beam of lightning doing %0.2f to %0.2f damage
-		The damage will increase with the Magic stat]]):format(self:combatTalentSpellDamage(t, 20, 290) / 3, self:combatTalentSpellDamage(t, 20, 290))
+		return ([[You've learned to better control and resist the dangers of chronomancy.  Increases your effective willpower for static history, failure, and backfire calculations by %d%% and increases your Temporal resistance by %d%%.]]):
+		format(self:getTalentLevel(t) * 10, self:getTalentLevelRaw(t) * 5)
 	end,
 }
 
 newTalent{
 	name = "Paradox Shield",
 	type = {"chronomancy/paradox", 2},
-	require = chrono_req_high2,
+	require = chrono_req2,
 	points = 5,
 	random_ego = "attack",
 	mana = 40,
@@ -129,7 +117,7 @@ newTalent{
 newTalent{
 	name = "Twinning Matter",
 	type = {"chronomancy/paradox",3},
-	require = chrono_req_high3,
+	require = chrono_req3,
 	points = 5,
 	mode = "sustained",
 	cooldown = 10,
@@ -163,57 +151,58 @@ newTalent{
 
 newTalent{
 	name = "Paradox Clone",
-	type = {"chronomancy/paradox", 4},
-	require = chrono_req_high4,
+	type = {"chronomancy/paradox", 1},
+	require = chrono_req1,
 	points = 5,
-	mode = "sustained",
-	sustain_mana = 170,
-	cooldown = 15,
-	tactical = {
-		ATTACKAREA = 10,
-	},
+	paradox = 15,
+	cooldown = 1,
+	tactical = { ATTACK = 1, DISABLE = 2 },
 	range = 5,
-	do_storm = function(self, t)
-		if self:getMana() <= 0 then
-			local old = self.energy.value
-			self.energy.value = 100000
-			self:useTalent(self.T_THUNDERSTORM)
-			self.energy.value = old
-			return
+	no_npc_use = true,
+	on_pre_use = timeline_check,
+	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)* getParadoxModifier(self, pm)) end,
+	getModifier = function(self, t) return rng.range(t.getDuration(self,t), t.getDuration(self, t)*4) end,
+	action = function (self, t)
+		local sex = game.player.female and "she" or "he"
+		local a = mod.class.NPC.new{}
+		a:replaceWith(game.player:resolveSource():cloneFull())
+		mod.class.NPC.castAs(a)
+		engine.interface.ActorAI.init(a, a)
+		a.no_drops = true
+		a.energy.value = 0
+		a.player = nil
+		a.name = a.name.."'s future self"
+		a.color_r = 176 a.color_g = 196 a.color_b = 222
+		a._mo:invalidate()
+		a.faction = self.faction
+		a.max_life = a.max_life
+		a.life = a.max_life
+		a.summoner = self
+		a.summoner_gain_exp=true
+		a.summon_time = t.getDuration(self, t)
+		a.ai = "summoned"
+		a.ai_real = "tactical"
+		a.ai_tactic = resolvers.tactic("ranged")
+		a.ai_state = { talent_in=1, }
+		a.desc = [[The real you... or so ]]..sex..[[ says.]]
+
+		-- Remove some talents
+		local tids = {}
+		for tid, _ in pairs(a.talents) do
+			local t = a:getTalentFromId(tid)
+			if t.no_npc_use then tids[#tids+1] = t end
+		end
+		for i, t in ipairs(tids) do
+			if t.mode == "sustained" and a:isTalentActive(t.id) then a:forceUseTalent(t.id, {ignore_energy=true}) end
+			a.talents[t.id] = nil
 		end
 
-		local tgts = {}
-		local grids = core.fov.circle_grids(self.x, self.y, 5, true)
-		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
-			local a = game.level.map(x, y, Map.ACTOR)
-			if a and self:reactionToward(a) < 0 then
-				tgts[#tgts+1] = a
-			end
-		end end
-
-		-- Randomly take targets
-		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
-		for i = 1, math.floor(self:getTalentLevel(t)) do
-			if #tgts <= 0 then break end
-			local a, id = rng.table(tgts)
-			table.remove(tgts, id)
-
-			self:project(tg, a.x, a.y, DamageType.LIGHTNING, rng.avg(1, self:spellCrit(self:combatTalentSpellDamage(t, 15, 80)), 3))
-			game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(a.x-self.x), math.abs(a.y-self.y)), "lightning", {tx=a.x-self.x, ty=a.y-self.y})
-			game:playSoundNear(self, "talents/lightning")
+		local x, y = util.findFreeGrid(self.x, self.y, 10, true, {[engine.Map.ACTOR]=true})
+		if x and y then
+			game.zone:addEntity(game.level, a, "actor", x, y)
 		end
-	end,
-	activate = function(self, t)
-		game:playSoundNear(self, "talents/thunderstorm")
-		game.logSeen(self, "#0080FF#A furious lightning storm forms around %s!", self.name)
-		return {
-			drain = self:addTemporaryValue("mana_regen", -3 * self:getTalentLevelRaw(t)),
-		}
-	end,
-	deactivate = function(self, t, p)
-		game.logSeen(self, "#0080FF#The furious lightning storm around %s calms down and disappears.", self.name)
-		self:removeTemporaryValue("mana_regen", p.drain)
-		return true
+		game:playSoundNear(self, "talents/spell_generic")
+		self:setEffect(self.EFF_IMMINENT_PARADOX_CLONE, t.getDuration(self, t) + t.getModifier(self, t), {})
 	end,
 	info = function(self, t)
 		return ([[Conjures a furious, raging lightning storm with a radius of 5 that follows you as long as this spell is active.
