@@ -48,7 +48,7 @@ Vicious predators, they inject corrupting diseases into their foes, and their sh
 	resists = { [DamageType.BLIGHT] = 20, [DamageType.FIRE] = 40 },
 }
 
-newEntity{ base = "BASE_NPC_RITCH",
+newEntity{ base = "BASE_NPC_RITCH_REL",
 	name = "ritch flamespitter", color=colors.DARK_RED,
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 1,
@@ -63,7 +63,7 @@ newEntity{ base = "BASE_NPC_RITCH",
 	},
 }
 
-newEntity{ base = "BASE_NPC_RITCH",
+newEntity{ base = "BASE_NPC_RITCH_REL",
 	name = "ritch impaler", color=colors.UMBER,
 	level_range = {2, nil}, exp_worth = 1,
 	rarity = 1,
@@ -78,7 +78,7 @@ newEntity{ base = "BASE_NPC_RITCH",
 	},
 }
 
-newEntity{ base = "BASE_NPC_RITCH",
+newEntity{ base = "BASE_NPC_RITCH_REL",
 	name = "chitinous ritch", color=colors.YELLOW,
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 1,

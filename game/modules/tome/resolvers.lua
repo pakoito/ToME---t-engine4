@@ -243,7 +243,7 @@ end
 --- Random bonus based on level, more strict
 resolvers.current_level = 1
 function resolvers.mbonus_level(max, add, pricefct, step)
-	return {__resolver="mbonus_level", max, add, step or 10, pricefct} -- mbonus_level does not work really well, skip it for now
+	return {__resolver="mbonus_level", max, add, step or 10, pricefct}
 end
 function resolvers.calc.mbonus_level(t, e)
 	local max = resolvers.mbonus_max_level
