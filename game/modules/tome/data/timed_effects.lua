@@ -2507,9 +2507,25 @@ newEffect{
 			if eff.extension <= 0 then
 				self:removeEffect(self.EFF_FEED)
 			end
-		elseif eff.target.dead or not self:hasLOS(eff.target.x, eff.target.y, "block_move") then
+			return
+		end
+		
+		if eff.target.dead then
 			eff.isSevered = true
-
+		else
+			local t = self:getTalentFromId(self.T_DARK_VISION)
+			if t then
+				if not t.hasLOS(self.x, self.y, eff.target.x, eff.target.y) then
+					eff.isSevered = true
+				end
+			else
+				if not self:hasLOS(eff.target.x, eff.target.y) then
+					eff.isSevered = true
+				end
+			end
+		end
+		
+		if eff.isSevered then
 			if eff.particles then
 				-- remove old particle emitter
 				eff.particles.x = nil

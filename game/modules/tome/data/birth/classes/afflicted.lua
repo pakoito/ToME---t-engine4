@@ -56,7 +56,6 @@ newBirthDescriptor{
 		["cursed/slaughter"]={true, 0.0},
 		["cursed/endless-hunt"]={true, 0.0},
 		["cursed/cursed-form"]={true, 0.0},
-		["cursed/traveler"]={true, 0.0},
 		["technique/combat-training"]={true, 0.3},
 		["cunning/survival"]={false, 0.0},
 		["cursed/rampage"]={false, 0.0},
@@ -102,7 +101,7 @@ newBirthDescriptor{
 		["cursed/shadows"]={true, 0.3},
 		["cursed/darkness"]={true, 0.3},
 		["cursed/cursed-form"]={true, 0.0},
-		["cursed/traveler"]={true, 0.0},
+		["cunning/survival"]={false, 0.0},
 		["cursed/dark-figure"]={false, 0.0},
 	},
 	talents = {

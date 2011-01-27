@@ -27,7 +27,7 @@ newTalent{
 	action = function(self, t)
 		local x, y, range
 		if self.ai_state.shadow_wall then
-			x, y, range = self.summoner.x, self.summoner.y, 1
+			x, y, range = self.ai_state.shadow_wall_target.x, self.ai_state.shadow_wall_target.y, 1
 		elseif self.ai_target.x and self.ai_target.y then
 			x, y, range = self.ai_target.x, self.ai_target.y, 1
 		else
@@ -82,6 +82,82 @@ newTalent{
 	end,
 }
 
+newTalent{
+	short_name = "SHADOW_LIGHTNING",
+	name = "Shadow Lightning",
+	type = {"spell/other", 1},
+	require = { },
+	points = 5,
+	random_ego = "attack",
+	range = 1,
+	direct_hit = true,
+	requires_target = true,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 200) end,
+	action = function(self, t)
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		local dam = self:spellCrit(t.getDamage(self, t))
+		self:project(tg, x, y, DamageType.LIGHTNING, rng.avg(dam / 3, dam, 3))
+		local _ _, x, y = self:canProject(tg, x, y)
+		game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "lightning", {tx=x-self.x, ty=y-self.y})
+		game:playSoundNear(self, "talents/lightning")
+		return true
+	end,
+	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		return ([[Strikes the target with a spark of lightning doing %0.2f to %0.2f damage.
+		The damage will increase with the Magic stat]]):
+		format(damDesc(self, DamageType.LIGHTNING, damage / 3),
+		damDesc(self, DamageType.LIGHTNING, damage))
+	end,
+}
+
+newTalent{
+	short_name = "SHADOW_FLAMES",
+	name = "Shadow Flames",
+	type = {"spell/other", 1},
+	require = { },
+	points = 5,
+	random_ego = "attack",
+	range = 6,
+	direct_hit = true,
+	requires_target = true,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 140) end,
+	action = function(self, t)
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		local dam = self:spellCrit(t.getDamage(self, t))
+		self:project(tg, x, y, DamageType.FIRE, dam)
+		game.level.map:particleEmitter(x, y, 1, "flame")
+		game:playSoundNear(self, "talents/fire")
+		return true
+	end,
+	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		return ([[Bathes the target in flames doing %0.2f damage
+		The damage will increase with the Magic stat]]):
+		format(damDesc(self, DamageType.FIREBURN, damage))
+	end,
+}
+
+newTalent{
+	short_name = "SHADOW_REFORM",
+	name = "Reform",
+	type = {"spell/other", 1},
+	require = { },
+	points = 5,
+	getChance = function(self, t)
+		return 50 --10 + self:getMag() * 0.25 + self:getTalentLevel(t) * 2
+	end,
+	info = function(self, t)
+		local chance = t.getChance(self, t)
+		return ([[When a shadow is hit and killed, there is a %d%% chance it will reform unhurt."
+		The chance will increase with the Magic stat]]):format(chance)
+	end,
+}
+
 local function createShadow(self, level, duration, target)
 	return require("mod.class.NPC").new{
 		type = "undead", subtype = "shadow",
@@ -105,8 +181,8 @@ local function createShadow(self, level, duration, target)
 		stats = {
 			str=10 + math.floor(level * 0.2),
 			dex=15 + math.floor(level * 0.8),
-			mag=15 + math.floor(level * 0.5),
-			wil=10 + math.floor(level * 0.4),
+			mag=15 + math.floor(level * 0.6),
+			wil=10 + math.floor(level * 0.6),
 			cun=10 + math.floor(level * 0.2),
 			con=5,
 		},
@@ -119,12 +195,15 @@ local function createShadow(self, level, duration, target)
 		},
 		evasion = 30,
 		mana = 100,
+		summoner_hate_per_kill = 0.8,
 		resolvers.talents{
 			[self.T_SHADOW_PHASE_DOOR]=math.max(5, math.floor(1 + level * 0.1)),
 			[self.T_SHADOW_BLINDSIDE]=math.max(5, math.floor(1 + level * 0.1)),
-			[self.T_LIGHTNING]=math.max(5, math.floor(1 + level * 0.1)),
-			[self.T_SHOCK]=math.max(5, math.floor(1 + level * 0.1)),
+			[self.T_SHADOW_LIGHTNING]=math.max(5, math.floor(1 + level * 0.1)),
+			[self.T_SHADOW_FLAMES]=math.max(5, math.floor(1 + level * 0.1)),
+			[self.T_SHADOW_REFORM]=math.max(5, math.floor(1 + level * 0.1)),
 			[self.T_HEAL]=math.max(5, math.floor(1 + level * 0.1)),
+			[self.T_DOMINATE]=math.max(5, math.floor(1 + level * 0.1)),
 		},
 
 		undead = 1,
@@ -153,7 +232,10 @@ local function createShadow(self, level, duration, target)
 
 			blindside_chance = 15,
 			phasedoor_chance = 5,
-			attack_spell_chance = 5,
+			close_attack_spell_chance = 0,
+			far_attack_spell_chance = 0,
+			can_reform = false,
+			dominate_chance = 0,
 
 			feed_level = 0
 		},
@@ -166,45 +248,39 @@ local function createShadow(self, level, duration, target)
 		healSelf = function(self)
 			self:useTalent(self.T_HEAL)
 		end,
-		canAttackSpell = function(self)
-			local target = self.ai_target.actor
-			return target and math.floor(core.fov.distance(self.x, self.y, target.x, target.y)) <= 1
+		closeAttackSpell = function(self)
+			return self:useTalent(self.T_SHADOW_LIGHTNING)
 		end,
-		attackSpell = function(self)
-			if self:canAttackSpell() then
-				local choice = rng.range(1, 2)
-				if choice == 1 then
-					return self:useTalent(self.T_LIGHTNING)
-				else
-					return self:useTalent(self.T_SHOCK)
-				end
+		farAttackSpell = function(self)
+			return self:useTalent(self.T_SHADOW_FLAMES)
+		end,
+		dominate = function(self)
+			return self:useTalent(self.T_DOMINATE)
+		end,
+		feed = function(self)
+			if self.summoner:knowTalent(self.summoner.T_SHADOW_MAGES) then
+				local tShadowMages = self.summoner:getTalentFromId(self.summoner.T_SHADOW_MAGES)
+				self.ai_state.close_attack_spell_chance = tShadowMages.getCloseAttackSpellChance(self.summoner, tShadowMages)
+				self.ai_state.far_attack_spell_chance = tShadowMages.getFarAttackSpellChance(self.summoner, tShadowMages)
+				self.ai_state.can_reform = self.summoner:getTalentLevel(tShadowMages) >= 5
 			else
-				return false
+				self.ai_state.close_attack_spell_chance = 0
+				self.ai_state.far_attack_spell_chance = 0
+				self.ai_state.can_reform = false
 			end
-		end,
-		feed = function(self, t)
-			local level = self.summoner:getTalentLevel(t)
-			if self.ai_state.feed_level == level then return end
 
-			self.ai_state.feed_level = level
-
-			-- clear old values
 			if self.ai_state.feed_temp1 then self:removeTemporaryValue("combat_atk", self.ai_state.feed_temp1) end
 			self.ai_state.feed_temp1 = nil
 			if self.ai_state.feed_temp2 then self:removeTemporaryValue("inc_damage", self.ai_state.feed_temp2) end
 			self.ai_state.feed_temp2 = nil
-			self.summoner_hate_per_kill = nil
-
-			if level and level > 0 then
-				-- set new values
-				self.ai_state.feed_temp1 = self:addTemporaryValue("combat_atk", t.getCombatAtk(self.summoner, t))
-				self.ai_state.feed_temp2 = self:addTemporaryValue("inc_damage", {all=t.getIncDamage(self.summoner, t)})
-				self.summoner_hate_per_kill = t.getHatePerKill(self.summoner, t)
+			if self.summoner:knowTalent(self.summoner.T_SHADOW_WARRIORS) then
+				local tShadowWarriors = self.summoner:getTalentFromId(self.summoner.T_SHADOW_WARRIORS)
+				self.ai_state.feed_temp1 = self:addTemporaryValue("combat_atk", tShadowWarriors.getCombatAtk(self.summoner, tShadowWarriors))
+				self.ai_state.feed_temp2 = self:addTemporaryValue("inc_damage", {all=tShadowWarriors.getIncDamage(self.summoner, tShadowWarriors)})
+				self.ai_state.dominate_chance = tShadowWarriors.getDominateChance(self.summoner, tShadowWarriors)
+			else
+				self.ai_state.dominate_chance = 0
 			end
-		end,
-		shadowWall = function(self, t, duration)
-			self.ai_state.shadow_wall = true
-			self.ai_state.shadow_wall_time = duration
 		end,
 	}
 end
@@ -279,6 +355,7 @@ newTalent{
 		shadow:resolve(nil, true)
 		shadow:forceLevelup(level)
 		game.zone:addEntity(game.level, shadow, "actor", x, y)
+		shadow:feed()
 		game.level.map:particleEmitter(x, y, 1, "teleport_in")
 
 		game:playSoundNear(self, "talents/spell_generic")
@@ -294,7 +371,7 @@ newTalent{
 	info = function(self, t)
 		local maxShadows = t.getMaxShadows(self, t)
 		local level = t.getLevel(self, t)
-		return ([[While this ability is active you will continually call up to %d level %d shadows to aid you in battle. Each shadow costs 1 hate to summon and will be equal in level to you when it appears.]]):format(maxShadows, level)
+		return ([[While this ability is active you will continually call up to %d level %d shadows to aid you in battle. Shadows are weak combatants that can Heal themselves, Blindside their opponents and Phase Door from place to place. Each shadow costs 1 hate to summon and will be equal in level to you when it appears.]]):format(maxShadows, level)
 	end,
 }
 
@@ -305,71 +382,98 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	cooldown = 10,
-	hate = 1,
+	hate = 0.5,
 	range = 6,
 	requires_target = true,
 	tactical = { ATTACK = 2 },
-	getDuration = function(self, t)
-		return self:getTalentLevel(t)
+	getDefenseDuration = function(self, t)
+		return 3 + math.floor(self:getTalentLevel(t) * 1.5)
 	end,
 	getBlindsideChance = function(self, t)
 		return math.min(100, 30 + self:getTalentLevel(t) * 10)
 	end,
-	getAttackSpellChance = function(self, t)
-		return math.min(100, 5 + self:getTalentLevel(t) * 5)
-	end,
 	action = function(self, t)
-		local target = { type="hit", range=self:getTalentRange(t) }
+		local range = self:getTalentRange(t)
+		local target = { type="hit", range=range, nowarning=true }
 		local x, y, target = self:getTarget(target)
-		if not x or not y or not target then return nil end
+		if not x or not y or not target or core.fov.distance(self.x, self.y, x, y) > range then return nil end
+		
+		if self:reactionToward(target) < 0 then
+			-- attack the target
+			local blindsideChance = t.getBlindsideChance(self, t)
+			local shadowCount = 0
+			for _, e in pairs(game.level.entities) do
+				if e.summoner and e.summoner == self and e.subtype == "shadow" then
+					-- reset target and set to focus
+					e.ai_target.x = nil
+					e.ai_target.y = nil
+					e.ai_target.actor = target
+					e.ai_target.focus_on_target = true
+					e.ai_target.blindside_chance = blindsideChance
 
-		local blindsideChance = t.getBlindsideChance(self, t)
-		local attackSpellChance = t.getAttackSpellChance(self, t)
-		local shadowCount = 0
-		for _, e in pairs(game.level.entities) do
-			if e.summoner and e.summoner == self and e.subtype == "shadow" then
-				-- reset target and set to focus
-				e.ai_target.x = nil
-				e.ai_target.y = nil
-				e.ai_target.actor = target
-				e.ai_target.focus_on_target = true
-				e.ai_target.blindside_chance = blindsideChance
-				e.ai_target.attack_spell_chance = attackSpellChance
-
-				shadowCount = shadowCount + 1
+					shadowCount = shadowCount + 1
+				end
 			end
-		end
 
-		if shadowCount > 0 then
-			game.logPlayer(self, "#PINK#The shadows converge on %s!", target.name)
-			return true
+			if shadowCount > 0 then
+				game.logPlayer(self, "#PINK#The shadows converge on %s!", target.name)
+				return true
+			else
+				game.logPlayer(self, "Their are no shadows to heed the call!")
+				return false
+			end
 		else
-			game.logPlayer(self, "Their are no shadows to heed the call!")
-			return false
+			-- defend the target
+			local defenseDuration = t.getDefenseDuration(self, t)
+			local shadowCount = 0
+			for _, e in pairs(game.level.entities) do
+				if e.summoner and e.summoner == self and e.subtype == "shadow" then
+					e.ai_state.shadow_wall = true
+					e.ai_state.shadow_wall_target = target
+					e.ai_state.shadow_wall_time = defenseDuration
+
+					shadowCount = shadowCount + 1
+				end
+			end
+
+			if shadowCount > 0 then
+				game.logPlayer(self, "#PINK#The shadows form around %s!", target.name)
+				return true
+			else
+				game.logPlayer(self, "Their are no shadows to heed the call!")
+				return false
+			end
 		end
 	end,
 	info = function(self, t)
-		local duration = t.getDuration(self, t)
+		local defenseDuration = t.getDefenseDuration(self, t)
 		local blindsideChance = t.getBlindsideChance(self, t)
-		local attackSpellChance = t.getAttackSpellChance(self, t)
-		return ([[Focus your shadows on a single target. There is a %d%% chance they will blindside the target and a %d%% chance they will use an attack spell.]]):format(blindsideChance, attackSpellChance)
+		return ([[Focus your shadows on a single target. Friendly targets will be defended for %d turns. Hostile targets will be attacked with a %d%% chance they will blindside the target.]]):format(defenseDuration, blindsideChance)
 	end,
 }
 
 newTalent{
-	name = "Feed Shadows",
+	name = "Shadow Mages",
 	type = {"cursed/shadows", 3},
 	mode = "passive",
 	require = cursed_mag_req3,
 	points = 5,
-	getIncDamage = function(self, t)
-		return math.floor((math.sqrt(self:getTalentLevel(t)) - 0.5) * 17)
+	getCloseAttackSpellChance = function(self, t)
+		if self:getTalentLevelRaw(t) > 0 then
+			return math.min(100, math.sqrt(self:getTalentLevel(t)) * 5)
+		else
+			return 0
+		end
 	end,
-	getCombatAtk = function(self, t)
-		return math.floor((math.sqrt(self:getTalentLevel(t)) - 0.5) * 17)
+	getFarAttackSpellChance = function(self, t)
+		if self:getTalentLevelRaw(t) >= 3 then
+			return math.min(100, math.sqrt(self:getTalentLevel(t)) * 5)
+		else
+			return 0
+		end
 	end,
-	getHatePerKill = function(self, t)
-		return (self:getTalentLevel(t) / 8) * self.hate_per_kill
+	canReform = function(self, t)
+		return self:getTalentLevelRaw(t) >= 5
 	end,
 	on_learn = function(self, t)
 		if game and game.level and game.level.entities then
@@ -394,46 +498,73 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local combatAtk = t.getCombatAtk(self, t)
-		local incDamage = t.getIncDamage(self, t)
-		local hatePerKill = t.getHatePerKill(self, t)
-		return ([[Your hatred of all living things begins to feed your shadows. Their new viciousness gives them %d%% extra attack and %d%% extra damage and each kill they make transfers %0.2f hatred back to you.]]):format(combatAtk, incDamage, hatePerKill)
+		local closeAttackSpellChance = t.getCloseAttackSpellChance(self, t)
+		local farAttackSpellChance = t.getFarAttackSpellChance(self, t)
+		
+		local level = self:getTalentLevelRaw(t)
+		if level < 3 then
+			return ([[Infuse magic into your shadows to give them fearsome spells.
+			Your shadows can strike adjacent foes with Lightning (%d%% chance at range 1).
+			At 3 talent points they will gain Flames and at 5 talent points they will gain Reform.]]):format(closeAttackSpellChance)
+		elseif level < 5 then
+			return ([[Infuse magic into your shadows to give them fearsome spells.
+			Your shadows can strike adjacent foes with Lightning (%d%% chance at range 1).
+			Your shadows can sear their enemies from a distance with Flames (%d%% chance at range 2 to 6).
+			At 5 talent points they will gain Reform.]]):format(closeAttackSpellChance, farAttackSpellChance)
+		else
+			return ([[Infuse magic into your shadows to give them fearsome spells.
+			Your shadows can strike adjacent foes with Lightning (%d%% chance at range 1).
+			Your shadows can sear their enemies from a distance with Flames (%d%% chance at range 2 to 6).
+			When your shadows are struck down they will attempt to Reform becoming whole again.]]):format(closeAttackSpellChance, farAttackSpellChance)
+		end
 	end,
 }
 
 newTalent{
-	name = "Shadow Wall",
+	name = "Shadow Warriors",
 	type = {"cursed/shadows", 4},
+	mode = "passive",
 	require = cursed_mag_req4,
 	points = 5,
-	cooldown = 10,
-	hate = 1,
-	tactical = { DEFEND = 2 },
-	getDuration = function(self, t)
-		return 2 + self:getTalentLevel(t) * 2
+	getIncDamage = function(self, t)
+		return math.floor((math.sqrt(self:getTalentLevel(t)) - 0.5) * 23)
 	end,
-	action = function(self, t)
-
-		local duration = t.getDuration(self, t)
-		local shadowCount = 0
-		for _, e in pairs(game.level.entities) do
-			if e.summoner and e.summoner == self and e.subtype == "shadow" then
-				e:shadowWall(t, duration)
-
-				shadowCount = shadowCount + 1
+	getCombatAtk = function(self, t)
+		return math.floor((math.sqrt(self:getTalentLevel(t)) - 0.5) * 23)
+	end,
+	getDominateChance = function(self, t)
+		if self:getTalentLevelRaw(t) > 0 then
+			return math.min(100, math.sqrt(self:getTalentLevel(t)) * 5)
+		else
+			return 0
+		end
+	end,
+	on_learn = function(self, t)
+		if game and game.level and game.level.entities then
+			for _, e in pairs(game.level.entities) do
+				if e.summoner and e.summoner == self and e.subtype == "shadow" then
+					e:feed(t)
+				end
+			end
+		end
+		
+		return { }
+	end,
+	on_unlearn = function(self, t, p)
+		if game and game.level and game.level.entities then
+			for _, e in pairs(game.level.entities) do
+				if e.summoner and e.summoner == self and e.subtype == "shadow" then
+					e:feed(t)
+				end
 			end
 		end
 
-		if shadowCount > 0 then
-			game.logPlayer(self, "#PINK#The shadows form around %s!", self.name)
-			return true
-		else
-			game.logPlayer(self, "Their are no shadows to heed the call!")
-			return false
-		end
+		return true
 	end,
 	info = function(self, t)
-		local duration = t.getDuration(self, t)
-		return ([[Summon your shadows to your side to form a wall against danger. Your shadows will stay beside you for %d turns and attack anyone nearby.]]):format(duration)
+		local combatAtk = t.getCombatAtk(self, t)
+		local incDamage = t.getIncDamage(self, t)
+		local dominateChance = t.getDominateChance(self, t)
+		return ([[Instill hate in your shadows strengthening their attacks. They gain %d%% extra attack and %d%% extra damage. The fury of their attacks gives them the ability to try to Dominate their foes, increasing all damage taken by that foe for 4 turns. (%d%% chance at range 1)]]):format(combatAtk, incDamage, dominateChance)
 	end,
 }

@@ -59,6 +59,20 @@ local function shadowChooseActorTarget(self)
 end
 
 local function shadowMoveToActorTarget(self)
+	local range = math.floor(core.fov.distance(self.x, self.y, self.ai_target.actor.x, self.ai_target.actor.y))
+	
+	if range <= 1 and self.ai_state.close_attack_spell_chance and rng.percent(self.ai_state.close_attack_spell_chance) then
+		-- chance for close spell
+		if self:closeAttackSpell() then return true end
+	elseif range <= 6 and self.ai_state.far_attack_spell_chance and rng.percent(self.ai_state.far_attack_spell_chance) then
+		-- chance for a far spell
+		if self:farAttackSpell() then return true end
+	end
+	
+	if range <= 1 and self.ai_state.dominate_chance and rng.percent(self.ai_state.dominate_chance) then
+		if self:dominate() then return true end
+	end
+	
 	-- use the target blindside chance if it was assigned; otherwise, use the normal chance
 	local blindsideChance = self.ai_target.blindside_chance or self.ai_state.blindside_chance
 	self.ai_target.blindside_chance = nil
@@ -76,17 +90,8 @@ local function shadowMoveToActorTarget(self)
 		end
 	end
 	
-	if self:canAttackSpell() then
-		-- use the attack spell chance if it was assigned; otherwise, use the normal chance
-		local attackSpellChance = self.ai_target.attack_spell_chance or self.ai_state.attack_spell_chance
-		self.ai_target.attack_spell_chance = nil
-		if rng.percent(attackSpellChance) and self:attackSpell() then
-			return true
-		end
-	end
-	
 	-- chance to reset target next turn if we are attacking (unless we have been focused)
-	if math.floor(core.fov.distance(self.x, self.y, self.ai_target.actor.x, self.ai_target.actor.y)) <= 1 and rng.percent(20) then
+	if range <= 1 and rng.percent(20) then
 		--game.logPlayer(self.summoner, "#PINK#%s is about to attack.", self.name:capitalize())
 		if not self.ai_state.focus_on_target then
 			self.ai_state.target_time = self.ai_state.target_timeout
@@ -198,32 +203,28 @@ newAI("shadow", function(self)
 		clearTarget(self)
 	end
 	
-	-- apply feed
-	if self.summoner:knowTalent(self.summoner.T_FEED_SHADOWS) then
-		local t = self.summoner:getTalentFromId(self.summoner.T_FEED_SHADOWS)
-		self:feed(t)
-	end
-	
 	-- shadow wall
 	if self.ai_state.shadow_wall then
+		
 		clearTarget(self)
+		
+		local defendant = self.ai_state.shadow_wall_target
 	
-		if self.ai_state.shadow_wall_time <= 0 then
+		if self.ai_state.shadow_wall_time <= 0 or defendant.dead then
 			self.ai_state.shadow_wall = false
 		else
 			self.ai_state.shadow_wall_time = self.ai_state.shadow_wall_time - 1
 		
-			local range = core.fov.distance(self.x, self.y, self.summoner.x, self.summoner.y)
-			if range > 3 then
+			local range = core.fov.distance(self.x, self.y, defendant.x, defendant.y)
+			if range >= 3 then
 				-- phase door into range
 				self:useTalent(self.T_SHADOW_PHASE_DOOR)
 				return true
 			elseif range > 1 then
-				self.ai_target.x = self.summoner.x
-				self.ai_target.y = self.summoner.y
+				self.ai_target.x = defendant.x
+				self.ai_target.y = defendant.y
 				if shadowMoveToLocationTarget(self) then return true end
 			end
-			
 			-- no action..look for a target to attack
 			local newX, newY
 			local start = rng.range(0, 8)
@@ -235,7 +236,7 @@ newAI("shadow", function(self)
 					self:attackTarget(target, nil, 1, true)
 					return true
 				end
-				if not newX and math.floor(core.fov.distance(x, y, self.summoner.x, self.summoner.y)) <= 1 and self:canMove(x, y, false) then
+				if not newX and math.floor(core.fov.distance(x, y, defendant.x, defendant.y)) <= 1 and self:canMove(x, y, false) then
 					newX, newY = x, y
 				end
 			end

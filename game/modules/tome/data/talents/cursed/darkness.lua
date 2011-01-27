@@ -46,7 +46,7 @@ local function createDarkTendrils(summoner, x, y, target, damage, duration, pinD
 			local done = false
 			local hitTarget = false
 
-			local tCreepingDarkness = self.summoner:getTalentFromId(summoner.T_CREEPING_DARKNESS)
+			local tCreepingDarkness = self.summoner:getTalentFromId(self.summoner.T_CREEPING_DARKNESS)
 
 			if self.finalizing then
 				if self.duration <= 0 or self.target.dead or self.x ~= self.target.x or self.y ~= self.target.y then
@@ -295,7 +295,6 @@ newTalent{
 		local locations = {}
 		local grids = core.fov.circle_grids(x, y, radius, true)
 		for darkX, yy in pairs(grids) do for darkY, _ in pairs(grids[darkX]) do
-			print("*** pairs", darkX, darkY)
 			local l = line.new(x, y, darkX, darkY)
 			local lx, ly = l()
 			while lx and ly do
@@ -307,7 +306,6 @@ newTalent{
 
 			if lx == darkX and ly == darkY and t.canCreep(darkX, darkY) then
 				locations[#locations+1] = {darkX, darkY}
-				print("*** locations", darkX, darkY)
 			end
 		end end
 
@@ -349,6 +347,17 @@ newTalent{
 
 		return 5 + (level - 3) * 3
 	end,
+	hasLOS = function(x1, y1, x2, y2)
+		local l = line.new(x1, y1, x2, y2)
+		local lx, ly = l()
+		while lx and ly do
+			local entity = game.level.map:checkAllEntities(lx, ly, "block_sight")
+			if entity and not game.level.map:checkAllEntities(lx, ly, "creepingDark") then return false end
+
+			lx, ly = l()
+		end
+		return true
+	end,
 	info = function(self, t)
 		local damageIncrease = t.getDamageIncrease(self, t)
 		if damageIncrease <= 0 then
@@ -369,7 +378,6 @@ newTalent{
 	cooldown = 6,
 	tactical = { ATTACK = 2, DISABLE = 1 },
 	range = 5,
-	direct_hit = true,
 	reflectable = true,
 	requires_target = true,
 	getDamage = function(self, t)
@@ -422,6 +430,8 @@ newTalent{
 	hate =  1.2,
 	range = 6,
 	tactical = { ATTACK = 2, DISABLE = 2 },
+	direct_hit = true,
+	requires_target = true,
 	getPinDuration = function(self, t)
 		return 1 + math.floor(self:getTalentLevel(t) / 2)
 	end,
@@ -431,9 +441,10 @@ newTalent{
 	action = function(self, t)
 		if self.dark_tendrils then return false end
 
-		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local range = self:getTalentRange(t)
+		local tg = {type="hit", range=range, talent=t}
 		local x, y, target = self:getTarget(tg)
-		if not x or not y or not target then return nil end
+		if not x or not y or not target or core.fov.distance(self.x, self.y, x, y) > range then return nil end
 
 		local pinDuration = t.getPinDuration(self, t)
 		local damage = t.getDamage(self, t)

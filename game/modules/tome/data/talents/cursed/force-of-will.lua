@@ -103,6 +103,8 @@ newTalent{
 	cooldown = 4,
 	hate = 0.5,
 	tactical = { ATTACK = 2 },
+	direct_hit = true,
+	requires_target = true,
 	range = function(self, t)
 		return 4
 	end,
@@ -117,11 +119,10 @@ newTalent{
 
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
-		if not x or not y or not target then return nil end
+		if not x or not y or not target or core.fov.distance(self.x, self.y, x, y) > range then return nil end
 
-		local distance = math.max(1, math.floor(core.fov.distance(self.x, self.y, x, y)))
-
-		local power = (1 - ((distance - 1) / range))
+		--local distance = math.max(1, math.floor(core.fov.distance(self.x, self.y, x, y)))
+		local power = 1 --(1 - ((distance - 1) / range))
 		local damage = t.getDamage(self, t) * power
 		local knockback = t.getKnockback(self, t)
 		forceHit(self, target, self.x, self.y, damage, knockback, 15, power)
@@ -130,7 +131,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local knockback = t.getKnockback(self, t)
-		return ([[Focusing your hate you strike your foe with unseen force for up to %d damage and %d knockback at a range of 1. Damage decreases the further you are from your target.
+		return ([[Focusing your hate you strike your foe with unseen force for %d damage and %d knockback.
 		Damage increases with the Willpower stat.]]):format(damDesc(self, DamageType.PHYSICAL, damage), knockback)
 	end,
 }
@@ -145,7 +146,6 @@ newTalent{
 	cooldown = 12,
 	tactical = { DEFEND = 2 },
 	no_sustain_autoreset = true,
-	direct_hit = true,
 	getMaxDamage = function(self, t)
 		return combatTalentDamage(self, t, 20, 200)
 	end,
@@ -210,6 +210,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 10,
 	tactical = { ATTACK = 2 },
+	requires_target = true,
 	hate = 1.5,
 	range = function(self, t)
 		return 4
@@ -231,7 +232,7 @@ newTalent{
 
 		local tg = {type="ball", nolock=true, pass_terrain=false, friendly_fire=false, nowarning=true, range=range, radius=radius, talent=t}
 		local blastX, blastY = self:getTarget(tg)
-		if not blastX or not blastY then return nil end
+		if not blastX or not blastY or core.fov.distance(self.x, self.y, blastX, blastY) > range then return nil end
 
 		local grids = self:project(tg, blastX, blastY,
 			function(x, y, target, self)
@@ -269,7 +270,6 @@ newTalent{
 	hate = 2,
 	cooldown = 50,
 	tactical = { ATTACKAREA = 2 },
-	direct_hit = true,
 	range = function(self, t)
 		return math.floor(4 + self:getTalentLevel(t) / 2.3)
 	end,

@@ -943,8 +943,7 @@ function _M:onTakeHit(value, src)
 			self:forceUseTalent(self.T_SHIELD_OF_LIGHT, {ignore_energy=true})
 		end
 	end
-
-
+	
 	-- Second Life
 	if self:isTalentActive(self.T_SECOND_LIFE) and value >= self.life then
 		local sl = self.max_life * (0.05 + self:getTalentLevelRaw(self.T_SECOND_LIFE)/25)
@@ -952,6 +951,18 @@ function _M:onTakeHit(value, src)
 		self.life = sl
 		game.logSeen(self, "%s has been saved by a blast of positive energy!", self.name:capitalize())
 		self:forceUseTalent(self.T_SECOND_LIFE, {ignore_energy=true})
+	end
+	
+	if value >= self.life and self.ai_state and self.ai_state.can_reform then
+		local t = self:getTalentFromId(self.T_SHADOW_REFORM)
+		if rng.percent(t.getChance(self, t)) then
+			value = 0
+			self.life = self.max_life
+			game.logSeen(self, "%s fades for a moment and then reforms whole again!", self.name:capitalize())
+			game.level.map:particleEmitter(self.x, self.y, 1, "teleport_out")
+			game:playSoundNear(self, "talents/heal")
+			game.level.map:particleEmitter(self.x, self.y, 1, "teleport_in")
+		end
 	end
 
 	if self:knowTalent(self.T_LEECH) and src.hasEffect and src:hasEffect(src.EFF_VIMSENSE) then

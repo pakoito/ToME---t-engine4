@@ -17,6 +17,14 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local function combatTalentDamage(self, t, min, max)
+	return self:combatTalentSpellDamage(t, min, max, self.level + self:getWil())
+end
+
+local function combatPower(self, t, multiplier)
+	return (self.level + self:getWil()) * (multiplier or 1)
+end
+
 newTalent{
 	name = "Feed",
 	type = {"cursed/dark-sustenance", 1},
@@ -26,25 +34,25 @@ newTalent{
 	cooldown = 6,
 	range = 7,
 	tactical = { BUFF = 2, DEFEND = 1 },
-	requires_target = true,
+	requires_target = function(self, t) return self:getTalentLevel(t) >= 5 end,
+	direct_hit = true,
 	getHateGain = function(self, t)
 		return math.sqrt(self:getTalentLevel(t)) * 0.2 + self:getWil(0.15)
 	end,
 	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t)}
+		local range = self:getTalentRange(t)
+		local tg = {type="hit", range=range}
 		local x, y, target = self:getTarget(tg)
-		if not x or not y or not target then return nil end
+		if not x or not y or not target or core.fov.distance(self.x, self.y, x, y) > range then return nil end
 
 		if self:reactionToward(target) >= 0 or target.summoner == self then
 			game.logPlayer(self, "You can only gain sustenance from your foes!");
 			return nil
 		end
 
-		print("*** targeted");
-
 		-- remove old effect
-		if self:hasEffect(self.EFF_FEED_HATE) then
-			self:removeEffect(self.EFF_FEED_HATE)
+		if self:hasEffect(self.EFF_FEED) then
+			self:removeEffect(self.EFF_FEED)
 		end
 
 		local hateGain = t.getHateGain(self, t)
@@ -53,11 +61,11 @@ newTalent{
 		local damageGain = 0
 		local resistGain = 0
 
-		local tFeedHealth = self:getTalentFromId(self.T_FEED_HEALTH)
-		if tFeedHealth and self:getTalentLevelRaw(tFeedHealth) > 0 then
-			constitutionGain = tFeedHealth.getConstitutionGain(self, tFeedHealth, target)
-			lifeRegenGain = tFeedHealth.getLifeRegenGain(self, tFeedHealth)
-		end
+		--local tFeedHealth = self:getTalentFromId(self.T_FEED_HEALTH)
+		--if tFeedHealth and self:getTalentLevelRaw(tFeedHealth) > 0 then
+		--	constitutionGain = tFeedHealth.getConstitutionGain(self, tFeedHealth, target)
+		--	lifeRegenGain = tFeedHealth.getLifeRegenGain(self, tFeedHealth)
+		--end
 
 		local tFeedPower = self:getTalentFromId(self.T_FEED_POWER)
 		if tFeedPower and self:getTalentLevelRaw(tFeedPower) > 0 then
@@ -75,11 +83,67 @@ newTalent{
 	end,
 	info = function(self, t)
 		local hateGain = t.getHateGain(self, t)
-		return ([[Feed from the essence of your enemy. Draws %0.2f hate per turn from a targeted foe as long as the foe remains in your line of sight.
+		return ([[Feed from the essence of your enemy. Draws %0.2f hate per turn from a targeted foe as long as the they remain in your line of sight.
 		Improves with the Willpower stat.]]):format(hateGain)
 	end,
 }
 
+newTalent{
+	name = "Devour Life",
+	type = {"cursed/dark-sustenance", 2},
+	require = cursed_wil_req2,
+	points = 5,
+	random_ego = "attack",
+	cooldown = 6,
+	range = 7,
+	tactical = { BUFF = 2, DEFEND = 1 },
+	direct_hit = true,
+	requires_target = true,
+	getLifeSteal = function(self, t, target)
+		return combatTalentDamage(self, t, 20, 120)
+	end,
+	action = function(self, t)
+		local effect = self:hasEffect(self.EFF_FEED)
+		if not effect then
+			if self:getTalentLevel(t) >= 5 then
+				local tFeed = self:getTalentFromId(self.T_FEED)
+				if not tFeed.action(self, tFeed) then return nil end
+				
+				effect = self:hasEffect(self.EFF_FEED)
+			else
+				game.logPlayer(self, "You must begin feeding before you can Devour Life.");
+				return nil
+			end
+		end
+		local target = effect.target
+		
+		if target and not target.dead then
+			local lifeSteal = t.getLifeSteal(self, t)
+			self:project({type="hit", x=target.x,y=target.y}, target.x, target.y, DamageType.DEVOUR_LIFE, { dam=lifeSteal })
+			
+			game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(target.x-self.x), math.abs(target.y-self.y)), "dark_torrent", {tx=target.x-self.x, ty=target.y-self.y})
+			--local dx, dy = target.x - self.x, target.y - self.y
+			--game.level.map:particleEmitter(self.x, self.y,math.max(math.abs(dx), math.abs(dy)), "feed_hate", { tx=dx, ty=dy })
+			game:playSoundNear(self, "talents/fire")
+			
+			return true
+		end
+		
+		return nil
+	end,
+	info = function(self, t)
+		local lifeSteal = t.getLifeSteal(self, t)
+		if self:getTalentLevel(t) >= 5 then
+			return ([[Devours life from the target of your feeding. %d life from the victim will be added to your own. Devour Life can be used like the Feed talent to begin feeding.
+			Improves with the Willpower stat.]]):format(lifeSteal)
+		else
+			return ([[Devours life from the target of your feeding. %d life from the victim will be added to your own. At level 5 Devour Life can be used like the Feed talent to begin feeding.
+			Improves with the Willpower stat.]]):format(lifeSteal)
+		end
+	end,
+}
+
+--[[
 newTalent{
 	name = "Feed Health",
 	type = {"cursed/dark-sustenance", 2},
@@ -102,11 +166,11 @@ newTalent{
 	info = function(self, t)
 		local constitutionGain = t.getConstitutionGain(self, t)
 		local lifeRegenGain = t.getLifeRegenGain(self, t)
-		return ([[Enhances your feeding by transferring %d constitution and %0.1f life per turn from a targeted foe to you.
-		Improves with the Willpower stat.]]):format(constitutionGain, lifeRegenGain)
+		return ([Enhances your feeding by transferring %d constitution and %0.1f life per turn from a targeted foe to you.
+		Improves with the Willpower stat.]):format(constitutionGain, lifeRegenGain)
 	end,
 }
-
+]]
 newTalent{
 	name = "Feed Power",
 	type = {"cursed/dark-sustenance", 3},

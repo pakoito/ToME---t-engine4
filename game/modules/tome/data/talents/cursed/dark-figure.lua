@@ -31,6 +31,7 @@ newTalent{
 	getRadius = function(self, t) return 3 + math.floor((self:getTalentLevelRaw(t) - 1) / 2) end,
 	getDuration = function(self, t) return 5 + math.floor(self:getTalentLevel(t) * 2) end,
 	tactical = { DISABLE = 2 },
+	requires_target = true,
 	range = 6,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}

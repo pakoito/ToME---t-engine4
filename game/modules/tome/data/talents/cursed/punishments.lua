@@ -84,6 +84,8 @@ newTalent{
 	hate =  0.8,
 	range = 7,
 	tactical = { ATTACK = 2 },
+	direct_hit = true,
+	requires_target = true,
 	getDuration = function(self, t)
 		return 10
 	end,
@@ -103,7 +105,7 @@ newTalent{
 		local range = self:getTalentRange(t)
 		local tg = {type="hit", range=range}
 		local x, y, target = self:getTarget(tg)
-		if not x or not y or not target or target:hasEffect(target.EFF_HATEFUL_WHISPER) then return nil end
+		if not x or not y or not target or core.fov.distance(self.x, self.y, x, y) > range or target:hasEffect(target.EFF_HATEFUL_WHISPER) then return nil end
 
 		local duration = t.getDuration(self, t)
 		local damage = t.getDamage(self, t)
@@ -260,6 +262,8 @@ newTalent{
 	hate =  0.5,
 	range = 7,
 	tactical = { ATTACK = 2 },
+	direct_hit = true,
+	requires_target = true,
 	getDuration = function(self, t)
 		return 5
 	end,
@@ -273,7 +277,7 @@ newTalent{
 		local range = self:getTalentRange(t)
 		local tg = {type="hit", range=range}
 		local x, y, target = self:getTarget(tg)
-		if not x or not y or not target then return nil end
+		if not x or not y or not target or core.fov.distance(self.x, self.y, x, y) > range then return nil end
 
 		local damage = t.getDamage(self, t)
 		local mindpower = t.getMindpower(self, t)

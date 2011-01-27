@@ -1302,3 +1302,18 @@ newDamageType{
 		end
 	end,
 }
+
+newDamageType{
+	name = "devour life", type = "DEVOUR_LIFE",
+	projector = function(src, x, y, type, dam)
+		if _G.type(dam) == "number" then dam = {dam=dam} end
+		local target = game.level.map(x, y, Map.ACTOR) -- Get the target first to make sure we heal even on kill
+		local realdam = DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam.dam)
+		if target and realdam > 0 then
+			local heal = realdam * (dam.healfactor or 1)
+			src:heal(heal)
+			game.logSeen(target, "%s consumes %d life from %s!", src.name:capitalize(), heal, target.name)
+		end
+	end,
+	hideMessage=true,
+}
