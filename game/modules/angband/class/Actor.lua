@@ -140,10 +140,10 @@ end
 --- Called when a temporary value changes (added or deleted)
 -- Takes care to compute energy mod
 -- @param prop the property changing
--- @param sub the sub element of the property if it is a table, or nil
 -- @param v the value of the change
-function _M:onTemporaryValueChange(prop, sub, v)
-	if prop == "speed" then
+-- @param base the base table of prop
+function _M:onTemporaryValueChange(prop, v, base)
+	if prop == "speed" and base == self then
 		self:computeEnergyMod()
 	end
 end

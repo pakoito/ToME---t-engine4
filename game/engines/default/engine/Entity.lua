@@ -428,7 +428,7 @@ function _M:addTemporaryValue(prop, v, noupdate)
 		if type(v) == "number" then
 			-- Simple addition
 			base[prop] = (base[prop] or 0) + v
-			self:onTemporaryValueChange(prop, nil, v)
+			self:onTemporaryValueChange(prop, v, base)
 			print("addTmpVal", base, prop, v, " :=: ", #t, id)
 		elseif type(v) == "table" then
 			for k, e in pairs(v) do
@@ -479,7 +479,7 @@ function _M:removeTemporaryValue(prop, id, noupdate)
 		if type(v) == "number" then
 			-- Simple addition
 			base[prop] = base[prop] - v
-			self:onTemporaryValueChange(prop, nil, v)
+			self:onTemporaryValueChange(prop, -v, base)
 			print("delTmpVal", prop, v)
 		elseif type(v) == "table" then
 			for k, e in pairs(v) do
@@ -499,9 +499,9 @@ end
 --- Called when a temporary value changes (added or deleted)
 -- This does nothing by default, you can overload it to react to changes
 -- @param prop the property changing
--- @param sub the sub element of the property if it is a table, or nil
 -- @param v the value of the change
-function _M:onTemporaryValueChange(prop, sub, v)
+-- @param base the base table of prop
+function _M:onTemporaryValueChange(prop, v, base)
 end
 
 --- Increases/decreases an attribute

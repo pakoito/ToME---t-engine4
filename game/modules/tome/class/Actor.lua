@@ -943,7 +943,7 @@ function _M:onTakeHit(value, src)
 			self:forceUseTalent(self.T_SHIELD_OF_LIGHT, {ignore_energy=true})
 		end
 	end
-	
+
 	-- Second Life
 	if self:isTalentActive(self.T_SECOND_LIFE) and value >= self.life then
 		local sl = self.max_life * (0.05 + self:getTalentLevelRaw(self.T_SECOND_LIFE)/25)
@@ -952,7 +952,7 @@ function _M:onTakeHit(value, src)
 		game.logSeen(self, "%s has been saved by a blast of positive energy!", self.name:capitalize())
 		self:forceUseTalent(self.T_SECOND_LIFE, {ignore_energy=true})
 	end
-	
+
 	if value >= self.life and self.ai_state and self.ai_state.can_reform then
 		local t = self:getTalentFromId(self.T_SHADOW_REFORM)
 		if rng.percent(t.getChance(self, t)) then
@@ -1307,11 +1307,11 @@ end
 --- Called when a temporary value changes (added or deleted)
 -- Takes care to call onStatChange when needed
 -- @param prop the property changing
--- @param sub the sub element of the property if it is a table, or nil
 -- @param v the value of the change
-function _M:onTemporaryValueChange(prop, sub, v)
-	if prop == "inc_stats" then
-		self:onStatChange(sub, v)
+-- @param base the base table of prop
+function _M:onTemporaryValueChange(prop, v, base)
+	if base == self.inc_stats then
+		self:onStatChange(prop, v)
 	end
 end
 
