@@ -107,7 +107,7 @@ newTalent{
 	cooldown = 7,
 	positive = -20,
 	tactical = { ATTACK = 2 },
-	range = 70,
+	range = 7,
 	direct_hit = true,
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 200) end,
