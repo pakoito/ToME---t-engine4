@@ -55,7 +55,7 @@ He is wielding a small tree trunk and lumbering toward you.]],
 		[Talents.T_RUSH]=3,
 		[Talents.T_KNOCKBACK]=1,
 	},
-	resolvers.inscriptions(1, {"wild infusion", "healing infusion", "regeneration infusion", "heroism infusion"}),
+	resolvers.inscriptions(1, {"wild infusion", "heroism infusion"}),
 	inc_damage = { all = -35 },
 
 	autolevel = "warrior",
