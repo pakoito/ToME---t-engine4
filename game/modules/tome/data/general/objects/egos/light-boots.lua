@@ -24,6 +24,7 @@ local Talents = require "engine.interface.ActorTalents"
 
 
 newEntity{
+	power_source = {technique=true},
 	name = "stealthy ", prefix=true, instant_resolve=true,
 	level_range = {20, 50},
 	rarity = 5,

@@ -23,6 +23,7 @@ local Stats = require "engine.interface.ActorStats"
 load("/data/general/objects/egos/armor.lua")
 
 newEntity{
+	power_source = {nature=true},
 	name = " of the dragon", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
 	greater_ego = true,
@@ -48,6 +49,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "impenetrable ", prefix=true, instant_resolve=true,
 	level_range = {10, 50},
 	rarity = 8,

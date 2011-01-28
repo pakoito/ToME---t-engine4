@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 newEntity{
+	power_source = {arcane=true},
 	name = "flaming ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
@@ -26,6 +27,7 @@ newEntity{
 	},
 }
 newEntity{
+	power_source = {arcane=true},
 	name = "icy ", prefix=true, instant_resolve=true,
 	level_range = {15, 50},
 	rarity = 5,
@@ -34,6 +36,7 @@ newEntity{
 	},
 }
 newEntity{
+	power_source = {nature=true},
 	name = "acidic ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
@@ -42,6 +45,7 @@ newEntity{
 	},
 }
 newEntity{
+	power_source = {arcane=true},
 	name = "shocking ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
@@ -50,6 +54,7 @@ newEntity{
 	},
 }
 newEntity{
+	power_source = {nature=true},
 	name = "poisonous ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
@@ -59,6 +64,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = "slime-covered ", prefix=true, instant_resolve=true,
 	level_range = {10, 50},
 	rarity = 5,
@@ -68,6 +74,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = "elemental ", prefix=true, instant_resolve=true,
 	level_range = {35, 50},
 	greater_ego = true,
@@ -84,6 +91,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = " of the wind", suffix=true, instant_resolve=true,
 	level_range = {10, 50},
 	rarity = 7,
@@ -94,6 +102,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of annihilation", suffix=true,
 	level_range = {1, 50},
 	greater_ego = true,
@@ -109,6 +118,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of unerring flight", suffix=true,
 	level_range = {1, 50},
 	greater_ego = true,

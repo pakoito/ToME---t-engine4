@@ -27,6 +27,7 @@ local Talents = require "engine.interface.ActorTalents"
 --load("/data/general/objects/egos/charged-utility.lua")
 
 newEntity{
+	power_source = {nature=true},
 	name = " of cunning (#STATBONUS#)", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
@@ -36,6 +37,7 @@ newEntity{
 	},
 }
 newEntity{
+	power_source = {nature=true},
 	name = " of willpower (#STATBONUS#)", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
@@ -45,6 +47,7 @@ newEntity{
 	},
 }
 newEntity{
+	power_source = {nature=true},
 	name = " of mastery (#MASTERY#)", suffix=true,
 	level_range = {1, 50},
 	rarity = 3,
@@ -64,6 +67,7 @@ newEntity{
 	end),
 }
 newEntity{
+	power_source = {arcane=true},
 	name = " of greater telepathy", suffix=true,
 	level_range = {40, 50},
 	greater_ego = true,
@@ -75,6 +79,7 @@ newEntity{
 	},
 }
 newEntity{
+	power_source = {arcane=true},
 	name = " of telepathic range", suffix=true,
 	level_range = {40, 50},
 	rarity = 15,
@@ -84,6 +89,7 @@ newEntity{
 	},
 }
 newEntity{
+	power_source = {nature=true},
 	name = " of the fish", suffix=true,
 	level_range = {25, 50},
 	rarity = 10,
@@ -94,6 +100,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = " of teleportation", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
 	rarity = 10,
@@ -114,6 +121,7 @@ newEntity{
 
 
 newEntity{
+	power_source = {nature=true},
 	name = "insulating ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
@@ -127,6 +135,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = "grounding ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
@@ -140,6 +149,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = "stabilizing ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
@@ -151,6 +161,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = "shielding ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
@@ -162,6 +173,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = "cleansing ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 9,
@@ -176,6 +188,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = "vitalizing ", prefix=true, instant_resolve=true,
 	level_range = {20, 50},
 	greater_ego = true,
@@ -197,6 +210,7 @@ newEntity{
 
 
 newEntity{
+	power_source = {technique=true},
 	name = " of murder", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,
@@ -212,6 +226,7 @@ newEntity{
 
 
 newEntity{
+	power_source = {nature=true},
 	name = " of vision", suffix=true, instant_resolve=true,
 	level_range = {25, 50},
 	greater_ego = true,
@@ -227,6 +242,7 @@ newEntity{
 
 
 newEntity{
+	power_source = {nature=true},
 	name = " of healing", suffix=true, instant_resolve=true,
 	level_range = {35, 50},
 	greater_ego = true,
@@ -241,6 +257,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "protective ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,
@@ -254,6 +271,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "enraging ", prefix=true, instant_resolve=true,
 	level_range = {40, 50},
 	greater_ego = true,
@@ -268,6 +286,7 @@ newEntity{
 
 
 newEntity{
+	power_source = {arcane=true},
 	name = "archmage's ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,

@@ -22,6 +22,7 @@
 local Stats = require "engine.interface.ActorStats"
 
 newEntity{
+	power_source = {arcane=true},
 	name = "flaming ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
@@ -30,6 +31,7 @@ newEntity{
 	},
 }
 newEntity{
+	power_source = {arcane=true},
 	name = "icy ", prefix=true, instant_resolve=true,
 	level_range = {15, 50},
 	rarity = 5,
@@ -38,6 +40,7 @@ newEntity{
 	},
 }
 newEntity{
+	power_source = {nature=true},
 	name = "acidic ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
@@ -46,6 +49,7 @@ newEntity{
 	},
 }
 newEntity{
+	power_source = {arcane=true},
 	name = "shocking ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
@@ -54,6 +58,7 @@ newEntity{
 	},
 }
 newEntity{
+	power_source = {nature=true},
 	name = "poisonous ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
@@ -63,6 +68,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = "slime-covered ", prefix=true, instant_resolve=true,
 	level_range = {10, 50},
 	rarity = 5,
@@ -72,6 +78,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of accuracy", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 3,
@@ -80,6 +87,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = "phase ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 3,
@@ -88,6 +96,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = "elemental ", prefix=true, instant_resolve=true,
 	level_range = {35, 50},
 	greater_ego = true,
@@ -104,6 +113,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of massacre", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 3,
@@ -114,6 +124,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = " of torment", suffix=true, instant_resolve=true,
 	level_range = {15, 50},
 	rarity = 18,
@@ -138,6 +149,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of rage", suffix=true, instant_resolve=true,
 	level_range = {35, 50},
 	greater_ego = true,
@@ -160,6 +172,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = " of corruption", suffix=true, instant_resolve=true,
 	level_range = {35, 50},
 	greater_ego = true,
@@ -178,6 +191,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of crippling", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 3,
@@ -188,6 +202,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = " of daylight", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 3,
@@ -198,6 +213,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of defense", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 3,
@@ -208,6 +224,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of ruin", suffix=true, instant_resolve=true,
 	level_range = {15, 50},
 	greater_ego = true,
@@ -225,6 +242,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "quick ", prefix=true, instant_resolve=true,
 	level_range = {20, 50},
 	greater_ego = true,
@@ -241,6 +259,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = "mystic ", prefix=true, instant_resolve=true,
 	level_range = {20, 50},
 	greater_ego = true,

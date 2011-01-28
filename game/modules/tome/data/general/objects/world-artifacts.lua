@@ -28,6 +28,7 @@ end
 
 -- This file describes artifacts not bound to a special location, they can be found anywhere
 newEntity{ base = "BASE_STAFF",
+	power_source = {arcane=true},
 	unique = true,
 	name = "Staff of Destruction",
 	unided_name = "darkness infused staff",
@@ -56,6 +57,7 @@ newEntity{ base = "BASE_STAFF",
 }
 
 newEntity{ base = "BASE_STAFF",
+	power_source = {arcane=true},
 	unique = true,
 	name = "Penitence",
 	unided_name = "glowing staff",
@@ -110,6 +112,7 @@ newEntity{ base = "BASE_STAFF",
 }
 
 newEntity{ base = "BASE_RING",
+	power_source = {nature=true},
 	unique = true,
 	name = "Vargh Redemption", color = colors.LIGHT_BLUE,
 	unided_name = "sea-blue ring",
@@ -153,6 +156,7 @@ newEntity{ base = "BASE_RING",
 }
 
 newEntity{ base = "BASE_RING",
+	power_source = {nature=true},
 	unique = true,
 	name = "Ring of the Dead", color = colors.DARK_GREY,
 	unided_name = "dull black ring",
@@ -169,6 +173,7 @@ newEntity{ base = "BASE_RING",
 }
 
 newEntity{ base = "BASE_RING",
+	power_source = {arcane=true},
 	unique = true,
 	name = "Elemental Fury", color = colors.PURPLE,
 	unided_name = "multi-hued ring",
@@ -191,6 +196,7 @@ newEntity{ base = "BASE_RING",
 }
 
 newEntity{ base = "BASE_AMULET",
+	power_source = {arcane=true},
 	unique = true,
 	name = "Spellblaze Echos", color = colors.DARK_GREY,
 	unided_name = "deep black amulet",
@@ -218,6 +224,7 @@ newEntity{ base = "BASE_AMULET",
 }
 
 newEntity{ base = "BASE_AMULET",
+	power_source = {technique=true},
 	unique = true,
 	name = "Feathersteel Amulet", color = colors.WHITE,
 	unided_name = "light amulet",
@@ -234,6 +241,7 @@ newEntity{ base = "BASE_AMULET",
 }
 
 newEntity{ base = "BASE_AMULET",
+	power_source = {technique=true},
 	unique = true,
 	name = "Daneth's Neckguard", color = colors.STEEL_BLUE,
 	unided_name = "a thick steel gorget",
@@ -256,6 +264,7 @@ newEntity{ base = "BASE_AMULET",
 }
 
 newEntity{ base = "BASE_AMULET",
+	power_source = {technique=true},
 	unique = true,
 	name = "Garkul's Teeth", color = colors.YELLOW,
 	unided_name = "a necklace made of teeth",
@@ -280,6 +289,7 @@ newEntity{ base = "BASE_AMULET",
 }
 
 newEntity{ base = "BASE_LITE",
+	power_source = {nature=true},
 	unique = true,
 	name = "Summertide Phial", image="object/artifact/summertide_phial.png",
 	unided_name = "glowing phial",
@@ -303,6 +313,7 @@ newEntity{ base = "BASE_LITE",
 }
 
 newEntity{ base = "BASE_LITE",
+	power_source = {arcane=true},
 	unique = true,
 	name = "Burning Star",
 	unided_name = "burning jewel",
@@ -327,6 +338,7 @@ This star is the culmination of their craft. Light radiates from its ever-shifti
 }
 
 newEntity{ base = "BASE_LITE",
+	power_source = {arcane=true},
 	unique = true,
 	name = "Dúathedlen Heart",
 	unided_name = "a dark, fleshy mass",
@@ -349,6 +361,7 @@ newEntity{ base = "BASE_LITE",
 }
 
 newEntity{
+	power_source = {nature=true},
 	unique = true,
 	type = "potion", subtype="potion",
 	name = "Blood of Life",
@@ -373,6 +386,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_LONGBOW",
+	power_source = {nature=true},
 	name = "Thaloren-Tree Longbow", unided_name = "glowing elven-wood longbow", unique=true,
 	desc = [[In the aftermath of the Spellblaze, the Thaloren had to defend their forests against foes and fires alike. Many of the trees died despite the efforts of the Elves to save them. Their wood was fashioned into a bow to be wielded against the darkness.]],
 	level_range = {40, 50},
@@ -400,6 +414,7 @@ newEntity{ base = "BASE_LONGBOW",
 }
 
 newEntity{ base = "BASE_SLING",
+	power_source = {technique=true},
 	unique = true,
 	name = "Eldoral Last Resort",
 	unided_name = "well-made sling",
@@ -427,6 +442,7 @@ newEntity{ base = "BASE_SLING",
 }
 
 newEntity{ base = "BASE_LONGSWORD",
+	power_source = {arcane=true},
 	unique = true,
 	name = "Spellblade",
 	unided_name = "glowing long sword",
@@ -459,6 +475,7 @@ newEntity{ base = "BASE_LONGSWORD",
 }
 
 newEntity{ base = "BASE_LEATHER_BOOT",
+	power_source = {technique=true},
 	unique = true,
 	name = "Eden's Guile",
 	unided_name = "pair of yellow boots",
@@ -485,6 +502,7 @@ newEntity{ base = "BASE_LEATHER_BOOT",
 }
 
 newEntity{ base = "BASE_SHIELD",
+	power_source = {nature=true, technique=true},
 	unique = true,
 	name = "Fire Dragon Shield",
 	unided_name = "dragon shield",
@@ -513,6 +531,7 @@ newEntity{ base = "BASE_SHIELD",
 }
 
 newEntity{ base = "BASE_SHIELD",
+	power_source = {technique=true},
 	unique = true,
 	name = "Titanic",
 	unided_name = "huge shield",
@@ -537,6 +556,7 @@ newEntity{ base = "BASE_SHIELD",
 }
 
 newEntity{ base = "BASE_LIGHT_ARMOR",
+	power_source = {technique=true},
 	unique = true,
 	name = "Rogue Plight",
 	unided_name = "blackened leather armour",
@@ -558,6 +578,7 @@ newEntity{ base = "BASE_LIGHT_ARMOR",
 }
 
 newEntity{
+	power_source = {nature=true},
 	unique = true,
 	type = "misc", subtype="egg",
 	unided_name = "dark egg",
@@ -603,6 +624,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_HELM",
+	power_source = {technique=true},
 	unique = true,
 	name = "Helm of the Dwarven Kings",
 	unided_name = "shining helm",
@@ -623,6 +645,7 @@ newEntity{ base = "BASE_HELM",
 }
 
 newEntity{ base = "BASE_KNIFE",
+	power_source = {technique=true},
 	unique = true,
 	name = "Orc Feller",
 	unided_name = "shining dagger",
@@ -651,6 +674,7 @@ newEntity{ base = "BASE_KNIFE",
 }
 
 newEntity{ base = "BASE_KNIFE",
+	power_source = {technique=true},
 	unique = true,
 	name = "Silent Blade",
 	unided_name = "shining dagger",
@@ -702,6 +726,7 @@ local deactivate_pair = function(moon, star, who)
 end
 
 newEntity{ base = "BASE_KNIFE", define_as = "ART_PAIR_MOON",
+	power_source = {arcane=true},
 	unique = true,
 	name = "Moon",
 	unided_name = "crescent blade",
@@ -744,6 +769,7 @@ newEntity{ base = "BASE_KNIFE", define_as = "ART_PAIR_MOON",
 }
 
 newEntity{ base = "BASE_KNIFE", define_as = "ART_PAIR_STAR",
+	power_source = {arcane=true},
 	unique = true,
 	name = "Star",
 	unided_name = "jagged blade",
@@ -786,6 +812,7 @@ newEntity{ base = "BASE_KNIFE", define_as = "ART_PAIR_STAR",
 }
 
 newEntity{ base = "BASE_RING",
+	power_source = {technique=true},
 	unique = true,
 	name = "Ring of the War Master", color = colors.DARK_GREY,
 	unided_name = "blade-edged ring",
@@ -818,6 +845,7 @@ newEntity{ base = "BASE_RING",
 }
 
 newEntity{ base = "BASE_GREATMAUL",
+	power_source = {technique=true, arcane=true},
 	unique = true,
 	name = "Voratun Hammer of the Deep Bellow", color = colors.LIGHT_RED,
 	unided_name = "flame scorched voratun hammer",
@@ -843,6 +871,7 @@ newEntity{ base = "BASE_GREATMAUL",
 }
 
 newEntity{ base = "BASE_GREATMAUL",
+	power_source = {technique=true},
 	unique = true,
 	name = "Unstoppable Mauler", color = colors.UMBER,
 	unided_name = "heavy maul",
@@ -863,6 +892,7 @@ newEntity{ base = "BASE_GREATMAUL",
 }
 
 newEntity{ base = "BASE_MACE",
+	power_source = {technique=true},
 	unique = true,
 	name = "Crooked Club", color = colors.GREEN,
 	unided_name = "weird club",
@@ -883,6 +913,7 @@ newEntity{ base = "BASE_MACE",
 }
 
 newEntity{ base = "BASE_CLOTH_ARMOR",
+	power_source = {nature=true, arcane=true},
 	unique = true,
 	name = "Spider-Silk Robe of Spydrë", color = colors.DARK_GREEN,
 	unided_name = "spider-silk robe",
@@ -903,6 +934,7 @@ newEntity{ base = "BASE_CLOTH_ARMOR",
 }
 
 newEntity{ base = "BASE_HELM",
+	power_source = {technique=true},
 	unique = true,
 	name = "Dragon-helm of Kroltar",
 	unided_name = "dragon-helm",
@@ -923,6 +955,7 @@ newEntity{ base = "BASE_HELM",
 }
 
 newEntity{ base = "BASE_GLOVES",
+	power_source = {technique=true},
 	unique = true,
 	name = "Gloves of the Firm Hand",
 	unided_name = "heavy gloves",
@@ -940,6 +973,7 @@ newEntity{ base = "BASE_GLOVES",
 }
 
 newEntity{ base = "BASE_GAUNTLETS",
+	power_source = {technique=true},
 	unique = true,
 	name = "Dakhtun's Gauntlets", color = colors.STEEL_BLUE,
 	unided_name = "expertly-crafted dwarven-steel gauntlets",
@@ -958,6 +992,7 @@ newEntity{ base = "BASE_GAUNTLETS",
 }
 
 newEntity{ base = "BASE_GLOVES",
+	power_source = {nature=true},
 	unique = true,
 	name = "Snow Giant Wraps", color = colors.SANDY_BROWN,
 	unided_name = "fur-lined leather wraps",
@@ -977,6 +1012,7 @@ newEntity{ base = "BASE_GLOVES",
 }
 
 newEntity{ base = "BASE_GAUNTLETS",
+	power_source = {arcane=true},
 	unique = true,
 	name = "Storm Bringer's Guantlets", color = colors.LIGHT_STEEL_BLUE,
 	unided_name = "fine-mesh gauntlets",
@@ -999,6 +1035,7 @@ newEntity{ base = "BASE_GAUNTLETS",
 }
 
 newEntity{ base = "BASE_CLOAK",
+	power_source = {nature=true},
 	unique = true,
 	name = "Serpentine Cloak",
 	unided_name = "tattered cloak",
@@ -1018,6 +1055,7 @@ newEntity{ base = "BASE_CLOAK",
 }
 
 newEntity{ base = "BASE_CLOTH_ARMOR",
+	power_source = {arcane=true},
 	unique = true,
 	name = "Vestments of the Conclave", color = colors.DARK_GREY,
 	unided_name = "tattered robe",
@@ -1046,6 +1084,7 @@ It was made by humans for Humans; only they can harness the true power of the ro
 }
 
 newEntity{ base = "BASE_CLOTH_ARMOR",
+	power_source = {arcane=true},
 	unique = true,
 	name = "Robe of the Archmage", color = colors.RED,
 	unided_name = "glittering robe",
@@ -1068,6 +1107,7 @@ newEntity{ base = "BASE_CLOTH_ARMOR",
 }
 
 newEntity{ base = "BASE_GEM",
+	power_source = {arcane=true},
 	unique = true,
 	unided_name = "scintillating white crystal",
 	name = "Telos's Staff Crystal", subtype = "multi-hued",
@@ -1117,6 +1157,7 @@ newEntity{ base = "BASE_GEM",
 
 -- The staff that goes with the crystal above, it will not be generated randomly it is created by the crystal
 newEntity{ base = "BASE_STAFF", define_as = "VOICE_TELOS",
+	power_source = {arcane=true},
 	unique = true,
 	name = "Voice of Telos",
 	unided_name = "scintillating white staff",
@@ -1140,6 +1181,7 @@ newEntity{ base = "BASE_STAFF", define_as = "VOICE_TELOS",
 }
 
 newEntity{ base = "BASE_WAND",
+	power_source = {arcane=true},
 	unided_name = "glowing rod",
 	name = "Gwai's Burninator", color=colors.LIGHT_RED, unique=true,
 	desc = [[Gwai, a Pyromanceress that lived during the Spellhunt, was cornered by group of mage hunters. She fought to her last breath and is said to have killed at least ten people with this wand before she fell.]],
@@ -1163,6 +1205,7 @@ newEntity{ base = "BASE_WAND",
 }
 
 newEntity{ base = "BASE_BATTLEAXE",
+	power_source = {technique=true},
 	unique = true,
 	unided_name = "crude iron battle axe",
 	name = "Crude Iron Battle Axe of Kroll", color = colors.GREY,
@@ -1196,6 +1239,7 @@ newEntity{ base = "BASE_BATTLEAXE",
 }
 
 newEntity{ base = "BASE_WARAXE",
+	power_source = {technique=true, nature=true},
 	unique = true,
 	name = "Blood-Letter",
 	unided_name = "Glacial Hatchet",
@@ -1218,6 +1262,7 @@ newEntity{ base = "BASE_WARAXE",
 }
 
 newEntity{ base = "BASE_WHIP",
+	power_source = {nature=true},
 	unided_name = "metal whip",
 	name = "Scorpion's Tail", color=colors.GREEN, unique = true,
 	desc = [[A long whip of linked metal joints finished with a viciously sharp barb leaking venomous poison.]],
@@ -1238,6 +1283,7 @@ newEntity{ base = "BASE_WHIP",
 }
 
 newEntity{ base = "BASE_LEATHER_BELT",
+	power_source = {technique=true},
 	unique = true,
 	name = "Mighty Girdle",
 	unided_name = "massive, stained girdle",
@@ -1256,6 +1302,7 @@ newEntity{ base = "BASE_LEATHER_BELT",
 
 
 newEntity{ base = "BASE_LEATHER_BELT",
+	power_source = {nature=true, arcane=true},
 	unique = true,
 	name = "Rope Belt of the Thaloren",
 	unided_name = "short length of rope",
@@ -1273,6 +1320,7 @@ newEntity{ base = "BASE_LEATHER_BELT",
 }
 
 newEntity{ base = "BASE_LEATHER_BELT",
+	power_source = {nature=true},
 	unique = true,
 	name = "Girdle of Preservation",
 	unided_name = "shimmering, flawless belt",
@@ -1303,6 +1351,7 @@ newEntity{ base = "BASE_LEATHER_BELT",
 }
 
 newEntity{ base = "BASE_LEATHER_BELT",
+	power_source = {nature=true},
 	unique = true,
 	name = "Girdle of the Calm Waters",
 	unided_name = "golden belt",
@@ -1324,6 +1373,7 @@ newEntity{ base = "BASE_LEATHER_BELT",
 }
 
 newEntity{ base = "BASE_LIGHT_ARMOR",
+	power_source = {technique=true},
 	unique = true,
 	name = "Behemoth Hide",
 	unided_name = "tough weathered hide",
@@ -1353,6 +1403,7 @@ newEntity{ base = "BASE_LIGHT_ARMOR",
 }
 
 newEntity{ base = "BASE_LIGHT_ARMOR",
+	power_source = {technique=true},
 	unique = true,
 	name = "Skin of Many",
 	unided_name = "stitched skin armour",
@@ -1375,6 +1426,7 @@ newEntity{ base = "BASE_LIGHT_ARMOR",
 }
 
 newEntity{ base = "BASE_HEAVY_ARMOR",
+	power_source = {technique=true},
 	unique = true,
 	name = "Iron Mail of Bloodletting",
 	unided_name = "gore-encrusted suit of iron mail",
@@ -1403,6 +1455,7 @@ newEntity{ base = "BASE_HEAVY_ARMOR",
 
 
 newEntity{ base = "BASE_HEAVY_ARMOR",
+	power_source = {technique=true, nature=true},
 	unique = true,
 	name = "Scale Mail of Kroltar",
 	unided_name = "perfectly-wrought suit of dragon scales",
@@ -1433,6 +1486,7 @@ newEntity{ base = "BASE_HEAVY_ARMOR",
 }
 
 newEntity{ base = "BASE_MASSIVE_ARMOR",
+	power_source = {technique=true},
 	unique = true,
 	name = "Plate Armor of the King",
 	unided_name = "suit of gleaming voratun plate",
@@ -1463,6 +1517,7 @@ newEntity{ base = "BASE_MASSIVE_ARMOR",
 }
 
 newEntity{ base = "BASE_MASSIVE_ARMOR",
+	power_source = {technique=true},
 	unique = true,
 	name = "Cuirass of the Thronesmen",
 	unided_name = "heavy dwarven-steel armour",
@@ -1487,6 +1542,7 @@ newEntity{ base = "BASE_MASSIVE_ARMOR",
 }
 
 newEntity{ base = "BASE_GREATSWORD",
+	power_source = {technique=true},
 	unique = true,
 	name = "Golden Three-Edged Sword 'The Truth' ",
 	unided_name = "three-edged sword",
@@ -1517,6 +1573,7 @@ newEntity{ base = "BASE_GREATSWORD",
 }
 
 newEntity{ base = "BASE_WARAXE",
+	power_source = {technique=true},
 	unique = true,
 	rarity = false, unided_name = "razor sharp war axe",
 	name = "Razorblade, the Cursed Waraxe", color = colors.LIGHT_BLUE,
@@ -1540,6 +1597,7 @@ It is said the wielder will slowly grow mad. This, however, has never been prove
 }
 
 newEntity{ base = "BASE_GAUNTLETS",
+	power_source = {arcane=true},
 	unique = true,
 	name = "Stone Gauntlets of Harkor'Zun",
 	unided_name = "dark stone gauntlets",
@@ -1560,6 +1618,7 @@ newEntity{ base = "BASE_GAUNTLETS",
 }
 
 newEntity{ base = "BASE_AMULET",
+	power_source = {arcane=true},
 	unique = true,
 	name = "Zemekkys' Broken Hourglass", color = colors.WHITE,
 	unided_name = "a broken hourglass",
@@ -1580,6 +1639,7 @@ newEntity{ base = "BASE_AMULET",
 }
 
 newEntity{ base = "BASE_AMULET",
+	power_source = {arcane=true},
 	unique = true,
 	name = "Unflinching Eye", color = colors.WHITE,
 	unided_name = "a bloodshot eye",
@@ -1600,6 +1660,7 @@ newEntity{ base = "BASE_AMULET",
 }
 
 newEntity{ base = "BASE_CLOAK",
+	power_source = {nature=true},
 	unique = true,
 	name = "Ureslak's Molted Scales",
 	unided_name = "scaley multi-hued cloak",

@@ -30,6 +30,7 @@ newEntity{
 	elec_destroy = {{20,1}, {30,2}, {60,5}, {90,10}, {170,20}},
 	desc = [[Magical wands are made by powerful Alchemists and Archmagi to store spells. Anybody can use them to release the spells.]],
 	egos = "/data/general/objects/egos/wands.lua", egos_chance = { prefix=resolvers.mbonus(20, 5), suffix=100 }, ego_first_type = "suffix",
+	power_source = {arcane=true},
 }
 
 newEntity{ base = "BASE_WAND",

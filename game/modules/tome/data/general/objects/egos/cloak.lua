@@ -22,6 +22,7 @@ local DamageType = require "engine.DamageType"
 --load("/data/general/objects/egos/charged-defensive.lua")
 
 newEntity{
+	power_source = {technique=true},
 	name = "shadow ", prefix=true, instant_resolve=true,
 	level_range = {20, 50},
 	rarity = 5,
@@ -32,6 +33,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "thick ", prefix=true, instant_resolve=true,
 	level_range = {1, 40},
 	rarity = 6,
@@ -42,6 +44,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "plush ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
@@ -52,6 +55,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of Eldoral", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
@@ -65,6 +69,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = " of the Shaloren", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
@@ -78,6 +83,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of Iron Throne", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
@@ -91,6 +97,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "oiled ", prefix=true, instant_resolve=true,
 	level_range = {1, 40},
 	rarity = 6,
@@ -102,6 +109,7 @@ newEntity{
 
 
 newEntity{
+	power_source = {nature=true},
 	name = " of fog", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,
@@ -121,6 +129,7 @@ newEntity{
 
 
 newEntity{
+	power_source = {nature=true},
 	name = " of resilience", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 7,
@@ -131,6 +140,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of stability", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 7,
@@ -142,6 +152,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "enveloping ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
@@ -152,6 +163,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = " of sorcery", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,
@@ -168,6 +180,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of implacability", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,
@@ -181,6 +194,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = "restorative ", prefix=true, instant_resolve=true,
 	level_range = {35, 50},
 	greater_ego = true,
@@ -196,6 +210,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "regal ", prefix=true, instant_resolve=true,
 	level_range = {15, 50},
 	greater_ego = true,
@@ -211,6 +226,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "wyrmwaxed ", prefix=true, instant_resolve=true,
 	level_range = {35, 50},
 	greater_ego = true,

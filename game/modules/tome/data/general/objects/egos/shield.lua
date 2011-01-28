@@ -24,6 +24,7 @@ local Stats = require "engine.interface.ActorStats"
 --load("/data/general/objects/egos/charged-utility.lua")
 
 newEntity{
+	power_source = {technique=true},
 	name = " of fire resistance", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
@@ -33,6 +34,7 @@ newEntity{
 	},
 }
 newEntity{
+	power_source = {technique=true},
 	name = " of cold resistance", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
@@ -42,6 +44,7 @@ newEntity{
 	},
 }
 newEntity{
+	power_source = {technique=true},
 	name = " of acid resistance", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
@@ -51,6 +54,7 @@ newEntity{
 	},
 }
 newEntity{
+	power_source = {technique=true},
 	name = " of lightning resistance", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
@@ -60,6 +64,7 @@ newEntity{
 	},
 }
 newEntity{
+	power_source = {technique=true},
 	name = " of nature resistance", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
@@ -71,6 +76,7 @@ newEntity{
 
 
 newEntity{
+	power_source = {arcane=true},
 	name = "flaming ", prefix=true, instant_resolve=true,
 	level_range = {15, 50},
 	rarity = 8,
@@ -80,6 +86,7 @@ newEntity{
 	},
 }
 newEntity{
+	power_source = {arcane=true},
 	name = "icy ", prefix=true, instant_resolve=true,
 	level_range = {15, 50},
 	rarity = 8,
@@ -89,6 +96,7 @@ newEntity{
 	},
 }
 newEntity{
+	power_source = {nature=true},
 	name = "acidic ", prefix=true, instant_resolve=true,
 	level_range = {15, 50},
 	rarity = 8,
@@ -98,6 +106,7 @@ newEntity{
 	},
 }
 newEntity{
+	power_source = {arcane=true},
 	name = "shocking ", prefix=true, instant_resolve=true,
 	level_range = {15, 50},
 	rarity = 8,
@@ -108,6 +117,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = " of resilience", suffix=true, instant_resolve=true,
 	level_range = {10, 50},
 	rarity = 10,
@@ -118,6 +128,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of deflection", suffix=true, instant_resolve=true,
 	level_range = {10, 50},
 	rarity = 10,
@@ -128,6 +139,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = "reflective ", prefix=true, instant_resolve=true,
 	level_range = {10, 50},
 	rarity = 10,
@@ -141,6 +153,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = "brilliant ", prefix=true, instant_resolve=true,
 	level_range = {15, 50},
 	rarity = 8,
@@ -151,6 +164,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of crushing", suffix=true, instant_resolve=true,
 	level_range = {15, 50},
 	greater_ego = true,
@@ -164,6 +178,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = " of resistance", suffix=true, instant_resolve=true,
 	level_range = {15, 50},
 	greater_ego = true,
@@ -180,21 +195,23 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = " of the night", suffix=true, instant_resolve=true,
 	level_range = {15, 50},
 	greater_ego = true,
 	rarity = 16,
 	cost = 20,
-	wielder = {	
+	wielder = {
 		resists={
 			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 10, function(e, v) return v * 0.15 end),
-		},	
+		},
 		on_melee_hit={[DamageType.DARKNESS] = resolvers.mbonus_material(10, 10, function(e, v) return v * 0.7 end)},
 		infravision = resolvers.mbonus_material(2, 1, function(e, v) return v * 1.4 end),
 	},
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "impervious ", prefix=true, instant_resolve=true,
 	level_range = {40, 50},
 	greater_ego = true,
@@ -210,6 +227,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = "spellplated ", prefix=true, instant_resolve=true,
 	level_range = {10, 50},
 	greater_ego = true,
@@ -225,6 +243,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = "blood-runed ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,

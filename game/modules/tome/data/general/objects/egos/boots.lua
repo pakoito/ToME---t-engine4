@@ -21,6 +21,7 @@ local Stats = require "engine.interface.ActorStats"
 local Talents = require "engine.interface.ActorTalents"
 
 newEntity{
+	power_source = {arcane=true},
 	name = " of phasing", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
 	greater_ego = true,
@@ -44,6 +45,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of uncanny dodging", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
@@ -54,6 +56,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = " of speed", suffix=true, instant_resolve=true,
 	level_range = {15, 50},
 	greater_ego = true,
@@ -65,6 +68,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of rushing", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
 	greater_ego = true,
@@ -81,6 +85,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of disengagement", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
 	greater_ego = true,
@@ -98,6 +103,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of stability", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
 	rarity = 12,
@@ -109,6 +115,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of tirelessness", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 9,
@@ -120,6 +127,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "traveler's ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
@@ -131,6 +139,7 @@ newEntity{
 
 
 newEntity{
+	power_source = {arcane=true},
 	name = "scholar's ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
@@ -141,6 +150,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "miner's ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
@@ -151,6 +161,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "stalker's ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
@@ -161,6 +172,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = "restorative ", prefix=true, instant_resolve=true,
 	level_range = {35, 50},
 	greater_ego = true,
@@ -176,6 +188,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = "invigorating ", prefix=true, instant_resolve=true,
 	level_range = {40, 50},
 	greater_ego = true,
@@ -189,6 +202,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "blood-soaked ", prefix=true, instant_resolve=true,
 	level_range = {15, 50},
 	greater_ego = true,

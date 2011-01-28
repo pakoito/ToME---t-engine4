@@ -22,6 +22,7 @@ local Stats = require("engine.interface.ActorStats")
 --load("/data/general/objects/egos/charged-attack.lua")
 
 newEntity{
+	power_source = {technique=true},
 	name = " of power", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 3,
@@ -30,6 +31,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "mighty ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 3,
@@ -40,6 +42,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "steady ", prefix=true, instant_resolve=true,
 	level_range = {20, 50},
 	rarity = 9,
@@ -50,6 +53,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of dexterity (#STATBONUS#)", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
 	rarity = 7,
@@ -60,6 +64,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of speed", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
 	rarity = 7,
@@ -68,6 +73,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of great speed", suffix=true, instant_resolve=true,
 	level_range = {40, 50},
 	greater_ego = true,
@@ -77,6 +83,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "halfling ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,

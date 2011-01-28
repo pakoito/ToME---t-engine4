@@ -22,6 +22,7 @@ local DamageType = require "engine.DamageType"
 --load("/data/general/objects/egos/charged-defensive.lua")
 
 newEntity{
+	power_source = {arcane=true},
 	name = " of carrying", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
@@ -32,6 +33,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = " of shielding", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
 	rarity = 10,
@@ -49,6 +51,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = " of the mystic", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
@@ -59,6 +62,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of the titan", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
@@ -69,6 +73,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = " of life", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 8,
@@ -79,6 +84,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = " of resilience", suffix=true, instant_resolve=true,
 	level_range = {10, 50},
 	rarity = 6,
@@ -89,6 +95,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "blurring ", prefix=true, instant_resolve=true,
 	level_range = {10, 50},
 	rarity = 9,
@@ -100,6 +107,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "insulating ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
@@ -113,6 +121,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "grounding ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
@@ -126,6 +135,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "stabilizing ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
@@ -137,6 +147,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = "cleansing ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 9,
@@ -151,6 +162,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = " of magery", suffix=true, instant_resolve=true,
 	level_range = {25, 50},
 	greater_ego = true,
@@ -166,6 +178,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of burglary", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
 	greater_ego = true,
@@ -182,6 +195,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = " of dampening", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,
@@ -198,6 +212,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of inertia", suffix=true, instant_resolve=true,
 	level_range = {25, 50},
 	greater_ego = true,
@@ -214,6 +229,7 @@ newEntity{
 
 
 newEntity{
+	power_source = {technique=true},
 	name = "monstrous ", prefix=true, instant_resolve=true,
 	level_range = {40, 50},
 	greater_ego = true,
@@ -228,6 +244,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "balancing ", prefix=true, instant_resolve=true,
 	level_range = {40, 50},
 	greater_ego = true,
@@ -244,6 +261,7 @@ newEntity{
 
 
 newEntity{
+	power_source = {technique=true},
 	name = "protective ", prefix=true, instant_resolve=true,
 	level_range = {40, 50},
 	greater_ego = true,

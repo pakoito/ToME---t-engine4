@@ -47,6 +47,7 @@ newEntity{
 	desc = [[Natural infusions may be grafted onto your body, granting you an on-demand ability.]],
 	egos = "/data/general/objects/egos/infusions.lua", egos_chance = resolvers.mbonus(30, 5),
 
+	power_source = {nature=true},
 	use_simple = { name="inscribe your skin with the infusion.", use = function(self, who, inven, item)
 		if who:setInscription(nil, self.inscription_talent, self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
 			return "destroy", true
@@ -68,6 +69,7 @@ newEntity{
 	desc = [[Magical runes may be inscribes onto your body, granting you an on-demand ability.]],
 	egos = "/data/general/objects/egos/infusions.lua", egos_chance = resolvers.mbonus(30, 5),
 
+	power_source = {arcane=true},
 	use_simple = { name="inscribe your skin with the rune.", use = function(self, who, inven, item)
 		if who:setInscription(nil, self.inscription_talent, self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
 			return "destroy", true

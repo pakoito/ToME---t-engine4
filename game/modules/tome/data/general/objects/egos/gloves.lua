@@ -20,6 +20,7 @@ local Stats = require "engine.interface.ActorStats"
 local DamageType = require "engine.DamageType"
 
 newEntity{
+	power_source = {technique=true},
 	name = " of disarming", suffix=true, instant_resolve=true,
 	level_range = {10, 50},
 	rarity = 5,
@@ -30,6 +31,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of criticals", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
 	rarity = 9,
@@ -41,6 +43,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of mighty criticals", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,
@@ -52,6 +55,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of attack", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
@@ -62,6 +66,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of damage", suffix=true, instant_resolve=true,
 	level_range = {10, 50},
 	rarity = 7,
@@ -72,6 +77,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = "cinder ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 3,
@@ -83,6 +89,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = "polar ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 3,
@@ -94,6 +101,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = "corrosive ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 3,
@@ -105,6 +113,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = "charged ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 3,
@@ -116,6 +125,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = "naturalist ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 3,
@@ -127,6 +137,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = "blighted ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 3,
@@ -138,6 +149,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "powerful ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 3,
@@ -148,6 +160,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of strength (#STATBONUS#)", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
@@ -158,6 +171,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of dexterity (#STATBONUS#)", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
@@ -168,6 +182,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = " of magic (#STATBONUS#)", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
@@ -178,6 +193,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of iron grip", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
 	rarity = 9,
@@ -189,6 +205,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = " of protection", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
 	greater_ego = true,
@@ -204,6 +221,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of warmaking", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,
@@ -220,6 +238,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of regeneration", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,
@@ -233,6 +252,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "heroic ", prefix=true, instant_resolve=true,
 	level_range = {40, 50},
 	greater_ego = true,
@@ -249,6 +269,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = "alchemist's ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,
@@ -265,6 +286,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "archer's ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,

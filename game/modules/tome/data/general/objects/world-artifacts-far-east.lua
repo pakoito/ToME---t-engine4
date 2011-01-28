@@ -41,6 +41,7 @@ newEntity{ base = "BASE_SCROLL", define_as = "JEWELER_TOME", subtype="tome", no_
 
 -- Not a random drop, used by the quest started above
 newEntity{ base = "BASE_SCROLL", define_as = "JEWELER_SUMMON", subtype="tome", no_unique_lore=true,
+	power_source = {unknown=true},
 	unique = true, quest=true, identified=true,
 	name = "Scroll of Summoning (Limmir the Jeweler)",
 	color = colors.VIOLET,
@@ -54,6 +55,7 @@ newEntity{ base = "BASE_SCROLL", define_as = "JEWELER_SUMMON", subtype="tome", n
 }
 
 newEntity{ base = "BASE_AMULET",
+	power_source = {arcane=true},
 	unique = true,
 	name = "Pendent of the Sun and Moon", color = colors.LIGHT_SLATE,
 	unided_name = "a gray and gold pendent",

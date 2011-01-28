@@ -20,6 +20,7 @@
 local Stats = require "engine.interface.ActorStats"
 
 newEntity{
+	power_source = {technique=true},
 	name = " of the badger", suffix=true,
 	level_range = {1, 50},
 	rarity = 7,
@@ -28,6 +29,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of strength", suffix=true, instant_resolve=true,
 	level_range = {10, 50},
 	rarity = 6,
@@ -38,6 +40,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of delving", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,
@@ -50,6 +53,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of endurance", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
@@ -60,6 +64,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "miner's ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
@@ -70,6 +75,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = "woodsman's ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
@@ -80,6 +86,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of the Iron Throne", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
 	greater_ego = true,
@@ -93,6 +100,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of Reknor", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
 	greater_ego = true,
@@ -108,6 +116,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "brutal ", prefix=true, instant_resolve=true,
 	level_range = {40, 50},
 	greater_ego = true,
@@ -122,6 +131,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "builder's ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,
@@ -137,6 +147,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "soldier's ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,

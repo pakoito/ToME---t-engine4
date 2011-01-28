@@ -25,6 +25,7 @@ local DamageType = require "engine.DamageType"
 
 
 newEntity{
+	power_source = {technique=true},
 	name = " of strength (#STATBONUS#)", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
@@ -34,6 +35,7 @@ newEntity{
 	},
 }
 newEntity{
+	power_source = {technique=true},
 	name = " of constitution (#STATBONUS#)", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
@@ -43,6 +45,7 @@ newEntity{
 	},
 }
 newEntity{
+	power_source = {technique=true},
 	name = " of dexterity (#STATBONUS#)", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
@@ -52,6 +55,7 @@ newEntity{
 	},
 }
 newEntity{
+	power_source = {arcane=true},
 	name = " of greater telepathy", suffix=true,
 	level_range = {40, 50},
 	greater_ego = true,
@@ -63,6 +67,7 @@ newEntity{
 	},
 }
 newEntity{
+	power_source = {arcane=true},
 	name = " of telepathic range", suffix=true,
 	level_range = {40, 50},
 	rarity = 15,
@@ -72,6 +77,7 @@ newEntity{
 	},
 }
 newEntity{
+	power_source = {arcane=true},
 	name = "shaloran ", prefix=true, instant_resolve=true,
 	level_range = {25, 50},
 	greater_ego = true,
@@ -84,6 +90,7 @@ newEntity{
 	},
 }
 newEntity{
+	power_source = {nature=true},
 	name = "prismatic ", prefix=true, instant_resolve=true,
 	level_range = {10, 50},
 	rarity = 10,
@@ -97,6 +104,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = " of precognition", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,
@@ -110,6 +118,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = " of the depths", suffix=true,
 	level_range = {15, 50},
 	rarity = 7,
@@ -120,6 +129,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of absorption", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
 	rarity = 10,
@@ -132,6 +142,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "miner's ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
@@ -142,6 +153,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "insulating ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
@@ -155,6 +167,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "grounding ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
@@ -168,6 +181,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "stabilizing ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
@@ -179,6 +193,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = "cleansing ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 9,
@@ -194,6 +209,7 @@ newEntity{
 
 
 newEntity{
+	power_source = {arcane=true},
 	name = " of knowledge", suffix=true, instant_resolve=true,
 	level_range = {15, 50},
 	greater_ego = true,
@@ -210,6 +226,7 @@ newEntity{
 
 
 newEntity{
+	power_source = {technique=true},
 	name = " of might", suffix=true, instant_resolve=true,
 	level_range = {15, 50},
 	greater_ego = true,
@@ -225,6 +242,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of trickery", suffix=true, instant_resolve=true,
 	level_range = {15, 50},
 	greater_ego = true,
@@ -240,6 +258,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = "warlord's ", prefix=true, instant_resolve=true,
 	level_range = {40, 50},
 	greater_ego = true,
@@ -255,6 +274,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "defender's ", prefix=true, instant_resolve=true,
 	level_range = {40, 50},
 	greater_ego = true,
@@ -268,6 +288,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "dragonslayer's ", prefix=true, instant_resolve=true,
 	level_range = {40, 50},
 	greater_ego = true,

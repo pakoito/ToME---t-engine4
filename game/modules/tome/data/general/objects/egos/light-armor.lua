@@ -23,6 +23,7 @@ local Stats = require "engine.interface.ActorStats"
 load("/data/general/objects/egos/armor.lua")
 
 newEntity{
+	power_source = {technique=true},
 	name = "troll-hide ", prefix=true, instant_resolve=true,
 	level_range = {20, 50},
 	greater_ego = true,
@@ -34,6 +35,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "nimble ", prefix=true, instant_resolve=true,
 	level_range = {25, 50},
 	greater_ego = true,

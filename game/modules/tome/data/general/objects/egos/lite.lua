@@ -22,6 +22,7 @@ local Stats = require "engine.interface.ActorStats"
 --load("/data/general/objects/egos/charged-utility.lua")
 
 newEntity{
+	power_source = {technique=true},
 	name = "bright ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
@@ -32,6 +33,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of clear sight", suffix=true, instant_resolve=true,
 	level_range = {10, 50},
 	rarity = 5,
@@ -42,6 +44,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = " of the sun", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
 	greater_ego = true,
@@ -55,6 +58,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = "scorching ", prefix=true, instant_resolve=true,
 	level_range = {10, 50},
 	rarity = 5,
@@ -65,6 +69,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of revealing", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 7,
@@ -76,6 +81,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of clarity", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 7,
@@ -86,6 +92,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = " of health", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 7,
@@ -96,18 +103,20 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of guile", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 7,
 	cost = 10,
 	wielder = {
 		inc_stats = {
-		[Stats.STAT_CUN] = resolvers.mbonus_material(4, 3, function(e, v) return v * 3 end),
+			[Stats.STAT_CUN] = resolvers.mbonus_material(4, 3, function(e, v) return v * 3 end),
 		},
 	},
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "burglar's ", prefix=true, instant_resolve=true,
 	level_range = {15, 50},
 	rarity = 9,
@@ -119,6 +128,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "guard's ", prefix=true, instant_resolve=true,
 	level_range = {15, 50},
 	rarity = 9,
@@ -129,6 +139,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = "healer's ", prefix=true, instant_resolve=true,
 	level_range = {15, 50},
 	rarity = 9,
@@ -139,6 +150,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "guide's ", prefix=true, instant_resolve=true,
 	level_range = {15, 50},
 	rarity = 9,
@@ -149,6 +161,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = "reflective ", prefix=true, instant_resolve=true,
 	level_range = {20, 50},
 	greater_ego = true,
@@ -164,6 +177,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = "nightwalker's ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,
@@ -179,6 +193,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = "ethereal ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,
@@ -194,6 +209,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = " of illusion", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,
@@ -208,6 +224,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = " of corpselight", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,

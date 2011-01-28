@@ -21,6 +21,7 @@ local Stats = require "engine.interface.ActorStats"
 
 -- The staff of absorption, the reason the game exists!
 newEntity{ define_as = "STAFF_ABSORPTION",
+	power_source = {unknown=true},
 	unique = true, quest=true,
 	slot = "MAINHAND",
 	type = "weapon", subtype="staff",
@@ -67,6 +68,7 @@ Light around it seems to dim and you can feel its tremendous power simply by tou
 
 -- The orb of many ways, allows usage of Farportals
 newEntity{ define_as = "ORB_MANY_WAYS",
+	power_source = {unknown=true},
 	unique = true, quest=true,
 	type = "jewelry", subtype="orb",
 	unided_name = "swirling orb",
@@ -101,6 +103,7 @@ If used near a portal it could probably activate it.]],
 
 -- The orb of many ways, allows usage of Farportals
 newEntity{ define_as = "ORB_MANY_WAYS_DEMON",
+	power_source = {unknown=true},
 	unique = "Orb of Many Ways Demon", quest=true, no_unique_lore=true,
 	type = "jewelry", subtype="orb",
 	unided_name = "swirling orb", identified=true,
@@ -145,6 +148,7 @@ If used near a portal it could probably activate it.]],
 
 -- Rak'shor Pride
 newEntity{ define_as = "ORB_UNDEATH",
+	power_source = {unknown=true},
 	unique = true, quest=true,
 	type = "jewelry", subtype="orb",
 	unided_name = "orb of command",
@@ -173,6 +177,7 @@ newEntity{ define_as = "ORB_UNDEATH",
 
 -- Gorbat Pride
 newEntity{ define_as = "ORB_DRAGON",
+	power_source = {unknown=true},
 	unique = true, quest=true,
 	type = "jewelry", subtype="orb",
 	unided_name = "orb of command",
@@ -201,6 +206,7 @@ newEntity{ define_as = "ORB_DRAGON",
 
 -- Vor Pride
 newEntity{ define_as = "ORB_ELEMENTS",
+	power_source = {unknown=true},
 	unique = true, quest=true,
 	type = "jewelry", subtype="orb",
 	unided_name = "orb of command",
@@ -229,6 +235,7 @@ newEntity{ define_as = "ORB_ELEMENTS",
 
 -- Grushnak Pride
 newEntity{ define_as = "ORB_DESTRUCTION",
+	power_source = {unknown=true},
 	unique = true, quest=true,
 	type = "jewelry", subtype="orb",
 	unided_name = "orb of command",
@@ -257,6 +264,7 @@ newEntity{ define_as = "ORB_DESTRUCTION",
 
 -- Scrying
 newEntity{ define_as = "ORB_SCRYING",
+	power_source = {unknown=true},
 	unique = true, quest=true,
 	type = "jewelry", subtype="orb",
 	unided_name = "orb of scrying",
@@ -287,6 +295,7 @@ newEntity{ define_as = "ORB_SCRYING",
 }
 
 newEntity{ base = "BASE_WAND",
+	power_source = {unknown=true},
 	define_as = "ROD_OF_RECALL",
 	unided_name = "unstable wand", identified=true, force_lore_artifact=true,
 	name = "Rod of Recall", color=colors.LIGHT_BLUE, unique=true,

@@ -25,6 +25,7 @@ local Talents = require "engine.interface.ActorTalents"
 --load("/data/general/objects/egos/charged-utility.lua")
 
 newEntity{
+	power_source = {arcane=true},
 	name = " of power", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 4,
@@ -35,6 +36,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = "shimmering ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 3,
@@ -46,6 +48,7 @@ newEntity{
 
 
 newEntity{
+	power_source = {arcane=true},
 	name = " of might", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 3,
@@ -56,6 +59,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = " of wizardry", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,
@@ -69,6 +73,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = "magma ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 3,
@@ -79,6 +84,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = "icy ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 3,
@@ -89,6 +95,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = "acidic ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 3,
@@ -99,6 +106,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = "crackling ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 3,
@@ -109,6 +117,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = "naturalist ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 3,
@@ -119,6 +128,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = "blighted ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 3,
@@ -129,6 +139,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = "sunbathed ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 3,
@@ -139,6 +150,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = "shadow ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 3,
@@ -149,6 +161,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = " of divination", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 8,
@@ -161,6 +174,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = " of conveyance", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 10,
@@ -181,6 +195,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = " of illumination", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 8,
@@ -193,6 +208,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = " of blasting", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,
@@ -212,6 +228,7 @@ newEntity{
 
 
 newEntity{
+	power_source = {arcane=true},
 	name = " of warding", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,
@@ -230,6 +247,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = " of channeling", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,
@@ -244,6 +262,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = "lifebinding ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,
@@ -260,6 +279,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = "infernal ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,
@@ -273,11 +293,10 @@ newEntity{
 			[DamageType.BLIGHT] = resolvers.mbonus_material(20, 5, function(e, v) return v * 0.25 end),
 		},
 	},
-
 }
 
-
 newEntity{
+	power_source = {arcane=true},
 	name = "chronomancer's ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},
 	greater_ego = true,

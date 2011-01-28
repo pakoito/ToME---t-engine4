@@ -21,6 +21,7 @@ local Talents = require("engine.interface.ActorTalents")
 local Stats = require "engine.interface.ActorStats"
 
 newEntity{
+	power_source = {technique=true},
 	name = " of fire resistance", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
@@ -30,6 +31,7 @@ newEntity{
 	},
 }
 newEntity{
+	power_source = {technique=true},
 	name = " of cold resistance", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
@@ -39,6 +41,7 @@ newEntity{
 	},
 }
 newEntity{
+	power_source = {technique=true},
 	name = " of acid resistance", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
@@ -48,6 +51,7 @@ newEntity{
 	},
 }
 newEntity{
+	power_source = {technique=true},
 	name = " of lightning resistance", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
@@ -57,6 +61,7 @@ newEntity{
 	},
 }
 newEntity{
+	power_source = {nature=true},
 	name = " of nature resistance", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
@@ -67,6 +72,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of stability", suffix=true, instant_resolve=true,
 	level_range = {10, 50},
 	rarity = 7,
@@ -78,6 +84,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = "prismatic ", prefix=true, instant_resolve=true,
 	level_range = {10, 50},
 	rarity = 10,
@@ -91,6 +98,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "spiked ", prefix=true, instant_resolve=true,
 	level_range = {5, 50},
 	rarity = 6,
@@ -101,6 +109,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = "searing ", prefix=true, instant_resolve=true,
 	level_range = {10, 50},
 	rarity = 10,
@@ -114,6 +123,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = "rejuvenating ", prefix=true, instant_resolve=true,
 	level_range = {15, 50},
 	rarity = 10,
@@ -124,6 +134,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = "radiant ", prefix=true, instant_resolve=true,
 	level_range = {20, 50},
 	greater_ego = true,
@@ -143,6 +154,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "insulating ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 9,
@@ -158,6 +170,7 @@ newEntity{
 
 
 newEntity{
+	power_source = {technique=true},
 	name = "grounding ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 9,
@@ -172,6 +185,7 @@ newEntity{
 
 
 newEntity{
+	power_source = {nature=true},
 	name = "cleansing ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 9,
@@ -185,6 +199,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = "fortifying ", prefix=true, instant_resolve=true,
 	level_range = {20, 50},
 	greater_ego = true,
@@ -201,6 +216,7 @@ newEntity{
 
 
 newEntity{
+	power_source = {technique=true},
 	name = "hardened ", prefix=true, instant_resolve=true,
 	level_range = {40, 50},
 	greater_ego = true,
@@ -221,6 +237,7 @@ newEntity{
 
 
 newEntity{
+	power_source = {nature=true},
 	name = " of resilience", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 9,
@@ -233,6 +250,7 @@ newEntity{
 
 
 newEntity{
+	power_source = {arcane=true},
 	name = " of the sky", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
 	greater_ego = true,
@@ -252,6 +270,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = " of Eyal", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
 	greater_ego = true,
@@ -265,6 +284,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of Toknor", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
 	greater_ego = true,
@@ -278,6 +298,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
 	name = " of implacability", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
 	greater_ego = true,

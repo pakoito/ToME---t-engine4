@@ -25,6 +25,7 @@ local DamageType = require "engine.DamageType"
 --load("/data/general/objects/egos/charged-utility.lua")
 
 newEntity{
+	power_source = {technique=true},
 	name = " of absorption", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
 	rarity = 10,
@@ -37,6 +38,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = " of magic (#STATBONUS#)", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
@@ -46,6 +48,7 @@ newEntity{
 	},
 }
 newEntity{
+	power_source = {nature=true},
 	name = " of willpower (#STATBONUS#)", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
@@ -55,6 +58,7 @@ newEntity{
 	},
 }
 newEntity{
+	power_source = {arcane=true},
 	name = " of cunning (#STATBONUS#)", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
@@ -64,6 +68,7 @@ newEntity{
 	},
 }
 newEntity{
+	power_source = {arcane=true},
 	name = " of greater telepathy", suffix=true,
 	level_range = {40, 50},
 	greater_ego = true,
@@ -75,6 +80,7 @@ newEntity{
 	},
 }
 newEntity{
+	power_source = {arcane=true},
 	name = " of telepathic range", suffix=true,
 	level_range = {40, 50},
 	rarity = 15,
@@ -84,6 +90,7 @@ newEntity{
 	},
 }
 newEntity{
+	power_source = {arcane=true},
 	name = "shimmering ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 10,
@@ -94,6 +101,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = " of seeing ", suffix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 5,
@@ -105,6 +113,7 @@ newEntity{
 
 
 newEntity{
+	power_source = {arcane=true},
 	name = "arcanist's ", prefix=true, instant_resolve=true,
 	level_range = {25, 50},
 	greater_ego = true,
@@ -121,6 +130,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = "insulating ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
@@ -134,6 +144,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = "grounding ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
@@ -147,6 +158,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = "stabilizing ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,
@@ -158,6 +170,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = "cleansing ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 9,
@@ -172,6 +185,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = "runed ", prefix=true, instant_resolve=true,
 	level_range = {15, 50},
 	rarity = 10,
@@ -182,6 +196,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = " of knowledge", suffix=true, instant_resolve=true,
 	level_range = {15, 50},
 	greater_ego = true,
@@ -197,6 +212,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
 	name = " of the Spellblaze", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
 	greater_ego = true,
@@ -213,6 +229,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = "naturalist's ", prefix=true, instant_resolve=true,
 	level_range = {10, 50},
 	greater_ego = true,
@@ -228,6 +245,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	name = "soothing ", prefix=true, instant_resolve=true,
 	level_range = {25, 50},
 	greater_ego = true,

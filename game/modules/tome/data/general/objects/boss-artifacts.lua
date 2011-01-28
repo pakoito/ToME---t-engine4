@@ -23,6 +23,7 @@ local Talents = require "engine.interface.ActorTalents"
 -- This file describes artifacts associated with a boss of the game, they have a high chance of dropping their respective ones, but they can still be found elsewhere
 
 newEntity{ base = "BASE_LONGSWORD",
+	power_source = {nature=true},
 	define_as = "LONGSWORD_WINTERTIDE", rarity=false, unided_name = "glittering longsword", image="object/artifact/wintertide.png",
 	name = "Wintertide", unique=true,
 	desc = [[The air seems to freeze around the blade of this sword, draining all heat from the area.
@@ -59,6 +60,7 @@ It is said the Conclave created this weapon for their warmaster during the dark 
 }
 
 newEntity{ base = "BASE_LITE", define_as = "WINTERTIDE_PHIAL",
+	power_source = {arcane=true},
 	unided_name = "phial filled with darkness", unique = true, image="object/artifact/wintertide_phial.png",
 	name = "Wintertide Phial", color=colors.DARK_GREY,
 	desc = [[This phial seems filled with darkness, yet it cleanses your thoughts.]],
@@ -75,6 +77,7 @@ newEntity{ base = "BASE_LITE", define_as = "WINTERTIDE_PHIAL",
 }
 
 newEntity{ base = "BASE_AMULET",
+	power_source = {arcane=true},
 	define_as = "FIERY_CHOKER", rarity=false,
 	unided_name = "flame-wrought amulet",
 	name = "Fiery Choker", unique=true, image="object/artifact/fiery_choker.png",
@@ -100,6 +103,7 @@ newEntity{ base = "BASE_AMULET",
 
 -- Artifact, dropped by Rantha
 newEntity{ base = "BASE_LEATHER_BOOT",
+	power_source = {nature=true},
 	define_as = "FROST_TREADS",
 	unided_name = "icy covered boots",
 	name = "Frost Treads", unique=true, image="object/artifact/frost_treads.png",
@@ -126,6 +130,7 @@ newEntity{ base = "BASE_LEATHER_BOOT",
 }
 
 newEntity{ base = "BASE_HELM",
+	power_source = {technique=true},
 	define_as = "DRAGON_SKULL",
 	name = "Dragonskull Helm", unique=true, unided_name="skull helm",
 	desc = [[Traces of a dragon's power still remain in this bleached and cracked skull.]],
@@ -150,6 +155,7 @@ newEntity{ base = "BASE_HELM",
 }
 
 newEntity{ base = "BASE_TRIDENT",
+	power_source = {nature=true},
 	define_as = "TRIDENT_TIDES",
 	unided_name = "ever-dripping trident",
 	name = "Trident of the Tides", unique=true,
@@ -185,6 +191,7 @@ Tridents require the exotic weapons mastery talent to use correctly.]],
 }
 
 newEntity{ base = "BASE_LIGHT_ARMOR",
+	power_source = {nature=true},
 	define_as = "EEL_SKIN", rarity=false,
 	name = "Eel-skin armour", unique=true,
 	unided_name = "slippery armour", color=colors.VIOLET,
@@ -206,6 +213,7 @@ newEntity{ base = "BASE_LIGHT_ARMOR",
 }
 
 newEntity{ base = "BASE_LIGHT_ARMOR",
+	power_source = {nature=true},
 	define_as = "CHROMATIC_HARNESS", rarity=false,
 	name = "Chromatic Harness", unique=true,
 	unided_name = "multi-hued leather armour", color=colors.VIOLET,
@@ -225,6 +233,7 @@ newEntity{ base = "BASE_LIGHT_ARMOR",
 }
 
 newEntity{ base = "BASE_RING",
+	power_source = {technique=true},
 	define_as = "PRIDE_GLORY", rarity=false,
 	name = "Glory of the Pride", unique=true, image="object/artifact/glory_of_the_pride.png",
 	desc = [[The most prized treasure of the Battlemaster of the Pride, Grushnak. This gold ring is inscribed in the orc tongue, the black speech.]],
@@ -251,6 +260,7 @@ newEntity{ base = "BASE_RING",
 }
 
 newEntity{ base = "BASE_RING",
+	power_source = {arcane=true},
 	define_as = "NIGHT_SONG", rarity=false,
 	name = "Nightsong", unique=true, image="object/artifact/nightsong.png",
 	desc = [[A pitch black ring, unadorned. It seems as though tendrils of darkness crept upon it.]],
@@ -276,6 +286,7 @@ newEntity{ base = "BASE_RING",
 }
 
 newEntity{ base = "BASE_HELM",
+	power_source = {nature=true},
 	define_as = "HELM_OF_GARKUL",
 	unided_name = "tribal helm",
 	name = "Steel Helm of Garkul", unique=true, image="object/artifact/helm_of_garkul.png",
@@ -296,6 +307,7 @@ newEntity{ base = "BASE_HELM",
 }
 
 newEntity{ base = "BASE_SHIELD",
+	power_source = {nature=true},
 	define_as = "LUNAR_SHIELD",
 	unique = true,
 	name = "Lunar Shield",
@@ -329,6 +341,7 @@ newEntity{ base = "BASE_SHIELD",
 }
 
 newEntity{ base = "BASE_SHIELD",
+	power_source = {nature=true},
 	define_as = "WRATHROOT_SHIELD",
 	unided_name = "large chunk of wood",
 	name = "Wrathroot's Barkwood", unique=true,
@@ -358,6 +371,7 @@ newEntity{ base = "BASE_SHIELD",
 }
 
 newEntity{ base = "BASE_GEM",
+	power_source = {nature=true},
 	unique = true, define_as = "PETRIFIED_WOOD",
 	unided_name = "burned piece of wood",
 	name = "Petrified Wood", subtype = "black",
@@ -375,6 +389,7 @@ newEntity{ base = "BASE_GEM",
 }
 
 newEntity{ base = "BASE_CLOTH_ARMOR",
+	power_source = {arcane=true},
 	define_as = "BLACK_ROBE", rarity=false,
 	name = "Black Robe", unique=true,
 	unided_name = "black robe", color=colors.DARK_GREY,
@@ -393,6 +408,7 @@ newEntity{ base = "BASE_CLOTH_ARMOR",
 }
 
 newEntity{ base = "BASE_WARAXE",
+	power_source = {arcane=true},
 	define_as = "MALEDICTION", rarity=false,
 	unided_name = "pestilent waraxe",
 	name = "Malediction", unique=true,
@@ -416,6 +432,7 @@ newEntity{ base = "BASE_WARAXE",
 }
 
 newEntity{ base = "BASE_STAFF",
+	power_source = {arcane=true},
 	define_as = "STAFF_KOR", rarity=false,
 	unided_name = "dark staff",
 	name = "Kor's Fall", unique=true,
@@ -445,6 +462,7 @@ newEntity{ base = "BASE_STAFF",
 }
 
 newEntity{ base = "BASE_AMULET",
+	power_source = {arcane=true},
 	define_as = "VOX", rarity=false,
 	name = "Vox", unique=true,
 	unided_name = "ringing amulet", color=colors.BLUE,
@@ -463,6 +481,7 @@ newEntity{ base = "BASE_AMULET",
 }
 
 newEntity{ base = "BASE_STAFF",
+	power_source = {arcane=true},
 	define_as = "TELOS_TOP_HALF", rarity=false,
 	slot_forbid = false,
 	twohanded = false,
@@ -489,6 +508,7 @@ newEntity{ base = "BASE_STAFF",
 }
 
 newEntity{ base = "BASE_AMULET",
+	power_source = {arcane=true},
 	define_as = "AMULET_DREAD", rarity=false,
 	name = "Choker of Dread", unique=true,
 	unided_name = "dark amulet", color=colors.LIGHT_DARK,
@@ -563,6 +583,7 @@ newEntity{ base = "BASE_AMULET",
 }
 
 newEntity{ define_as = "RUNED_SKULL",
+	power_source = {arcane=true},
 	unique = true,
 	type = "gem", subtype="red",
 	unided_name = "human skull",
@@ -581,6 +602,7 @@ newEntity{ define_as = "RUNED_SKULL",
 }
 
 newEntity{ base = "BASE_GREATMAUL",
+	power_source = {technique=true},
 	define_as = "GREATMAUL_BILL_TRUNK",
 	unided_name = "tree trunk", image = "object/artifact/bill_treestump.png",
 	name = "Bill's Tree Trunk", unique=true,
@@ -604,6 +626,7 @@ newEntity{ base = "BASE_GREATMAUL",
 
 
 newEntity{ base = "BASE_SHIELD",
+	power_source = {technique=true},
 	define_as = "SANGUINE_SHIELD",
 	unided_name = "bloody shield",
 	name = "Sanguine Shield", unique=true,
@@ -630,6 +653,7 @@ newEntity{ base = "BASE_SHIELD",
 }
 
 newEntity{ base = "BASE_WHIP",
+	power_source = {arcane=true},
 	define_as = "WHIP_URH_ROK",
 	unided_name = "fiery whip",
 	name = "Whip of Urh'Rok", color=colors.PURPLE, unique = true,
@@ -658,6 +682,7 @@ newEntity{ base = "BASE_WHIP",
 }
 
 newEntity{ base = "BASE_GREATSWORD",
+	power_source = {technique=true},
 	define_as = "MURDERBLADE", rarity=false,
 	name = "Warmaster Gnarg's Murderblade", unique=true,
 	unided_name = "blood-etched greatsword", color=colors.CRIMSON,
@@ -684,6 +709,7 @@ newEntity{ base = "BASE_GREATSWORD",
 }
 
 newEntity{ base = "BASE_LEATHER_CAP",
+	power_source = {arcane=true},
 	define_as = "CROWN_ELEMENTS", rarity=false,
 	name = "Crown of the Elements", unique=true,
 	unided_name = "jeweled crown", color=colors.DARK_GREY,
