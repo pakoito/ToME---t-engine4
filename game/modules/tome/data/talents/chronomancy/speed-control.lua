@@ -32,48 +32,15 @@ newTalent{
 	end,
 	info = function(self, t)
 		local power = t.getPower(self, t)
-		return ([[You encase yourself in a shield that slows incoming projectiles by %d%% and grants you %d%% physical resistance for 10 turns.
-		The effect will scale with your Paradox and Magic stat.]]):format(power, power / 2)
-	end,
-}
-
-
-newTalent{
-	name = "Slow",
-	type = {"chronomancy/speed-control", 2},
-	require = chrono_req2,
-	points = 5,
-	paradox = 10,
-	cooldown = 30,
-	tactical = { DISABLE = 2 },
-	range = 6,
-	direct_hit = true,
-	requires_target = true,
-	getSlow = function(self, t) return 1 - 1 / (1 + ((10 + (self:combatTalentSpellDamage(t, 10, 50) * getParadoxModifier(self, pm))) / 100)) end,
-	getRadius = function (self, t) return 1 + math.floor(self:getTalentLevel(t)/5) end,
-	action = function(self, t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=t.getRadius(self, t), friendlyfire=self:spellFriendlyFire(), talent=t}
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		x, y = checkBackfire(self, x, y)
-		self:project(tg, x, y, DamageType.SLOW, t.getSlow(self, t))
-		game.level.map:particleEmitter(x, y, tg.radius, "ball_temporal", {radius=tg.radius, tx=x, ty=y})
-		game:playSoundNear(self, "talents/teleport")
-		return true
-	end,
-	info = function(self, t)
-		local slow = t.getSlow(self, t)
-		local radius = t.getRadius(self, t)
-		return ([[Creates a radius %d ball of time distortion, decreasing affected targets global speed by %d%% for 7 turns.
-		The amount the targets will be slowed will scale with your Paradox and Magic stat.]]):
-		format(radius, 100 * slow)
+		return ([[You encase yourself in a shield that slows incoming projectiles by %d%% and grants you %d%% physical resistance for 10 turns.  Additionally any attacker that strikes you in melee will suffer %0.2f temporal damage.
+		The effect will scale with your Paradox and Magic stat.]]):format(power, power / 2, damDesc(self, DamageType.TEMPORAL, power))
 	end,
 }
 
 newTalent{
 	name = "Stop",
-	type = {"chronomancy/speed-control",3},
-	require = chrono_req3,
+	type = {"chronomancy/speed-control",2},
+	require = chrono_req2,
 	points = 5,
 	paradox = 15,
 	cooldown = 20,
@@ -99,6 +66,48 @@ newTalent{
 		return ([[Attempts to stun all creatures in a radius %d ball for %d turns.
 		The stun duration will scale with your Paradox.]]):
 		format(radius, duration)
+	end,
+}
+
+newTalent{
+	name = "Slow",
+	type = {"chronomancy/speed-control", 3},
+	require = chrono_req3,
+	points = 5,
+	paradox = 10,
+	cooldown = 30,
+	tactical = { ATTACKAREA = 2, DISABLE = 2 },
+	range = 6,
+	direct_hit = true,
+	requires_target = true,
+	getSlow = function(self, t) return 1 - 1 / (1 + ((10 + (self:combatTalentSpellDamage(t, 10, 50) * getParadoxModifier(self, pm))) / 100)) end,
+	getRadius = function (self, t) return 2 + math.floor(self:getTalentLevel(t)/4) end,
+	getDuration = function(self, t) return 5 + math.ceil(self:getTalentLevel(t)) end,
+	action = function(self, t)
+		local tg = {type="ball", range=self:getTalentRange(t), radius=t.getRadius(self, t)}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		x, y = checkBackfire(self, x, y)
+		local _ _, x, y = self:canProject(tg, x, y)
+		-- Add a lasting map effect
+		game.level.map:addEffect(self,
+			x, y, t.getDuration(self, t),
+			DamageType.CHRONOSLOW, t.getSlow(self, t),
+			t.getRadius(self, t),
+			5, nil,
+			{type="temporal_cloud"},
+			nil, self:spellFriendlyFire()
+		)
+		game:playSoundNear(self, "talents/teleport")
+		return true
+	end,
+	info = function(self, t)
+		local slow = t.getSlow(self, t)
+		local radius = t.getRadius(self, t)
+		local duration = t.getDuration(self, t)
+		return ([[Creates a time distortion in a radius of %d that lasts for %d turns, decreasing affected targets global speed by %d%% for 2 turns and inflicting %0.2f temporal damage each turn they remain in the area.
+		The slow effect and damage will scale with your Paradox and Magic stat.]]):
+		format(radius, duration, 100 * slow, damDesc(self, DamageType.TEMPORAL, 100 * slow))
 	end,
 }
 

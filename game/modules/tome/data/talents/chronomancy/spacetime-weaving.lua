@@ -49,9 +49,9 @@ newTalent{
 	require = temporal_req2,
 	points = 5,
 	paradox = 5,
-	cooldown = 20,
+	cooldown = function(self, t) return 20 - (self:getTalentLevelRaw(t) * 2) end,
 	tactical = { CLOSEIN = 2, ESCAPE = 2 },
-	getRange = function(self, t) return 3 + math.ceil(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
+	getRange = function(self, t) return 6 end,
 	requires_target = true,
 	direct_hit = true,
 	action = function(self, t)
@@ -79,9 +79,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local range = t.getRange(self, t)
-		return ([[Teleports you to up to %d tiles away to a location in line of sight.
-		The range will scale with your Paradox.]]):format(range)
+		return ([[Teleports you to up to 6 tiles away to a targeted location in line of sight.
+		Additional talent points will lower the cooldown.]]):format()
 	end,
 }
 

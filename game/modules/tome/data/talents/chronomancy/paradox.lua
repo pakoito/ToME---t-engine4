@@ -115,7 +115,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Twinning Matter",
+	name = "Redux",
 	type = {"chronomancy/paradox",3},
 	require = chrono_req3,
 	points = 5,

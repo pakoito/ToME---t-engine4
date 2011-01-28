@@ -1159,7 +1159,11 @@ newTalent{
 		if not x or not y then return nil end
 		x, y = checkBackfire(self, x, y)
 		self:project(tg, x, y, DamageType.WASTING, self:spellCrit(t.getDamage(self, t)))
-		self:setEffect(self.EFF_SPEED, 3, {power=0.3})
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			target:setEffect(target.EFF_SLOW, 3, {power=0.3})
+			self:setEffect(self.EFF_SPEED, 3, {power=0.3})
+		end
 		local _ _, x, y = self:canProject(tg, x, y)
 		game:playSoundNear(self, "talents/arcane")
 		return true

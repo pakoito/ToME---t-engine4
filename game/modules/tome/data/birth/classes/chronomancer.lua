@@ -115,7 +115,7 @@ newBirthDescriptor{
 		[ActorTalents.T_SHOOT] = 1,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
 		[ActorTalents.T_DUAL_STRIKE] = 1,
-		[ActorTalents.T_CELERITY] = 1,
+		[ActorTalents.T_UNERRING_SHOT] = 1,
 		[ActorTalents.T_STRENGTH_OF_PURPOSE] = 1,
 		},
 	copy = {

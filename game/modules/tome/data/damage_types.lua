@@ -1317,3 +1317,18 @@ newDamageType{
 	end,
 	hideMessage=true,
 }
+
+newDamageType{
+	name = "chronoslow", type = "CHRONOSLOW",
+	projector = function(src, x, y, type, dam)
+		DamageType:get(DamageType.TEMPORAL).projector(src, x, y, DamageType.TEMPORAL, dam * 100)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) then
+				target:setEffect(target.EFF_SLOW, 2, {power=dam}, true)
+			else
+				game.logSeen(target, "%s resists the slow", target.name:capitalize())
+			end
+		end
+	end,
+}

@@ -51,7 +51,7 @@ newTalent{
 	range = 6,
 	direct_hit = true,
 	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 8, 170)*getParadoxModifier(self, pm) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 170)*getParadoxModifier(self, pm) end,
 	getRadius = function (self, t) return 2 + math.floor(self:getTalentLevel(t) / 3) end,
 	action = function(self, t)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=t.getRadius(self, t)}
@@ -90,7 +90,7 @@ newTalent{
 	tactical = { ATTACKAREA = 2, ESCAPE = 2 },
 	range = 1,
 	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 8, 170)*getParadoxModifier(self, pm) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 170)*getParadoxModifier(self, pm) end,
 	getRadius = function (self, t) return 2 + self:getTalentLevelRaw (t) end,
 	action = function(self, t)
 		local tg = {type="cone", range=0, radius=t.getRadius(self, t), friendlyfire=false, talent=t}
@@ -117,12 +117,12 @@ newTalent{
 	require = chrono_req4,
 	points = 5,
 	paradox = 20,
-	cooldown = 12,
+	cooldown = 30,
 	tactical = { ATTACK = 2, DISABLE = 2 },
 	range = 6,
 	direct_hit = true,
 	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 4, 50)*getParadoxModifier(self, pm) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 50)*getParadoxModifier(self, pm) end,
 	getDuration = function (self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
 	action = function(self, t)
 		local duration = t.getDuration(self,t)

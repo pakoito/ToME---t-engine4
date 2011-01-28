@@ -29,13 +29,13 @@ newTalent{
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 250)*getParadoxModifier(self, pm) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 220)*getParadoxModifier(self, pm) end,
 	action = function(self, t)
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		x, y = checkBackfire(self, x, y)
-		self:project(tg, x, y, DamageType.WASTING, self:spellCrit(t.getDamage(self, t)))
+		self:project(tg, x, y, DamageType.TEMPORAL, self:spellCrit(t.getDamage(self, t)))
 		local _ _, x, y = self:canProject(tg, x, y)
 		game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "mana_beam", {tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/spell_generic2")
@@ -43,7 +43,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Fires a beam that attempts to turn everything in it's path to dust, inflicting %0.2f temporal damage over three turns.
+		return ([[Fires a beam that attempts to turn matter into dust, inflicting %0.2f temporal damage.
 		The damage will scale with your Paradox and Magic stat.]]):
 		format(damDesc(self, DamageType.TEMPORAL, damage))
 	end,
@@ -56,7 +56,7 @@ newTalent{
 	paradox = 10,
 	range = 6,
 	no_npc_use = true,
-	cooldown = function(self, t) return math.ceil(20 - (self:getTalentLevel(t) *2)) end,
+	cooldown = function(self, t) return 20 - math.ceil(self:getTalentLevel(t) *2) or 0 end,
 	reflectable = true,
 	requires_target = true,
 	action = function(self, t)
@@ -83,35 +83,40 @@ newTalent{
 	type = {"chronomancy/matter",3},
 	require = chrono_req3,
 	points = 5,
-	random_ego = "attack",
 	paradox = 20,
-	cooldown = 6,
-	tactical = { CLOSEIN = 2 },
+	cooldown = 20,
+	tactical = { ATTACKAREA = 2, DISABLE = 2 },
 	range = 6,
 	direct_hit = true,
-	reflectable = true,
 	requires_target = true,
+	getRadius = function (self, t) return 1 + math.floor(self:getTalentLevel(t) / 4) end,
+	getDuration = function(self, t) return 2 + math.floor(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
 	action = function(self, t)
-		local tg = {type="beam", range=self:getTalentRange(t), friendlyfire=false, talent=t}
+		local tg = {type="ball", range=self:getTalentRange(t), radius=t.getRadius(self, t)}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		if self:hasLOS(x, y) and not game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") and not game.level.map:checkEntity(x, y, Map.ACTOR, "block_move") then
-			local dam = self:spellCrit(self:combatTalentSpellDamage(t, 20, 290))
-			self:project(tg, x, y, DamageType.LIGHTNING, rng.avg(dam / 6, dam / 2, 3))
-			self:project(tg, x, y, DamageType.TEMPORAL, dam/2)
-			local _ _, x, y = self:canProject(tg, x, y)
-			game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "lightning", {tx=x-self.x, ty=y-self.y})
-			game:playSoundNear(self, "talents/lightning")
-			self:move(x, y, true)
-		else
-			game.logSeen(self, "You can't move there.")
-			return nil
-		end
+		x, y = checkBackfire(self, x, y)
+		self:project(tg, x, y, function(tx, ty)
+			local target = game.level.map(tx, ty, Map.ACTOR)
+			if not target then return end
+
+			if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 10) and target:canBe("stone") and target:canBe("instakill") then
+				target:setEffect(target.EFF_STONED, t.getDuration(self, t), {})
+			else
+				game.logSeen(target, "%s resists the calcification.", target.name:capitalize())
+			end
+		end)
+		game.level.map:particleEmitter(x, y, tg.radius, "temporal_ball", {radius=tg.radius, grids=grids, tx=x, ty=y})
+		game:playSoundNear(self, "talents/earth")
 		return true
 	end,
 	info = function(self, t)
-		return ([[You transform yourself into a powerful bolt of temporal lightning and move between two points dealing %0.2f to %0.2f lightning damage and %0.2f temporal damage to everything in your path.
-		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.LIGHTNING, self:combatTalentSpellDamage(t, 20, 290) / 6), damDesc(self, DamageType.LIGHTNING, self:combatTalentSpellDamage(t, 20, 290)/2), damDesc(self, DamageType.TEMPORAL, self:combatTalentSpellDamage(t, 20, 290)/2))
+		local radius = t.getRadius(self, t)
+		local duration = t.getDuration(self, t)
+		return ([[Attempts to turn all targets in a radius of %d to stone for %d turns.  Stoned creatures are unable to act or regen life and are very brittle.
+		If a stoned creature is hit by an attack that deals more than 30%% of its life it will shattered and be destroyed.
+		Stoned creatures are highly resistant to fire and lightning and somewhat resistant to physical attacks.
+		The duration will scale with your Paradox.]]):format(radius, duration)
 	end,
 }
 

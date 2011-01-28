@@ -2266,7 +2266,7 @@ newEffect{
 newEffect{
 	name = "ENTROPIC_SHIELD",
 	desc = "Entropic Shield",
-	long_desc = function(self, eff) return ("Encased in a shield that slows projectiles by %d%% and increases physical resistance by %d%%."):format(eff.power, eff.power/2) end,
+	long_desc = function(self, eff) return ("Target is encased in a shield that slows projectiles by %d%%, inflicts %0.2f temporal damage on hit, and increases physical resistance by %d%%."):format(eff.power, eff.power, eff.power/2) end,
 	type = "magical",
 	status = "beneficial",
 	parameters = { power=10 },
@@ -2274,11 +2274,13 @@ newEffect{
 	on_lose = function(self, err) return "The entropic shield around #Target# dissipates.", "-Entropic Shield" end,
 	activate = function(self, eff)
 		eff.particle = self:addParticles(Particles.new("time_shield", 1))
+		eff.tmpid = self:addTemporaryValue("on_melee_hit", {[DamageType.TEMPORAL]= eff.power})
 		eff.phys = self:addTemporaryValue("resists", {[DamageType.PHYSICAL]=eff.power/2})
 		eff.proj = self:addTemporaryValue("slow_projectiles", eff.power)
 	end,
 	deactivate = function(self, eff)
 		self:removeParticles(eff.particle)
+		self:removeTemporaryValue("on_melee_hit", eff.tmpid)
 		self:removeTemporaryValue("resists", eff.phys)
 		self:removeTemporaryValue("slow_projectiles", eff.proj)
 	end,
@@ -3013,23 +3015,6 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("combat_critical_power", eff.ccpid)
-	end,
-}
-
-newEffect{
-	name = "PRECOGNIZANT_AIM",
-	desc = "Precognizant Aim",
-	long_desc = function(self, eff) return ("The target's physical resistance penetration has been increased by %d%%."):format(eff.power) end,
-	type = "magical",
-	status = "beneficial",
-	parameters = { power=10 },
-	activate = function(self, eff)
-		eff.penet = self:addTemporaryValue("resists_pen", {
-			[DamageType.PHYSICAL] = eff.power,
-		})
-	end,
-	deactivate = function(self, eff)
-		self:removeTemporaryValue("resists_pen", eff.penet)
 	end,
 }
 
