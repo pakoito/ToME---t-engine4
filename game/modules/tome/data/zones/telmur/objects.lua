@@ -22,6 +22,7 @@ load("/data/general/objects/objects.lua")
 local Stats = require "engine.interface.ActorStats"
 
 newEntity{ base = "BASE_STAFF",
+	power_source = {arcane=true},
 	slot = "OFFHAND", slot_forbid = false,
 	twohanded = false, add_name=false,
 	define_as = "TELOS_BOTTOM_HALF", rarity=false,

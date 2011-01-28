@@ -22,6 +22,7 @@ load("/data/general/objects/objects.lua")
 local Stats = require "engine.interface.ActorStats"
 
 newEntity{ base = "BASE_LEATHER_BOOT",
+	power_source = {arcane=true},
 	define_as = "BOOTS_OF_PHASING",
 	unique = true,
 	name = "Shifting Boots",

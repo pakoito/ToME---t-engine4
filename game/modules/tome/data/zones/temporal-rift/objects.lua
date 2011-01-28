@@ -20,6 +20,7 @@
 load("/data/general/objects/objects.lua")
 
 newEntity{ base = "BASE_RUNE", define_as = "RUNE_RIFT",
+	power_source = {arcane=true},
 	name = "Rune of the Rift", unique = true, identified = true,
 	cost = 100,
 	material_level = 3,

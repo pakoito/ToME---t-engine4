@@ -21,6 +21,7 @@ load("/data/general/objects/objects.lua")
 
 -- Allows undeads to pass as normal humans
 newEntity{ define_as = "CLOAK_DECEPTION",
+	power_source = {arcane=true},
 	unique = true, quest=true,
 	slot = "CLOAK",
 	type = "armor", subtype="cloak",

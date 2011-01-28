@@ -25,6 +25,7 @@ local Stats = require "engine.interface.ActorStats"
 local DamageType = require "engine.DamageType"
 
 newEntity{ base = "BASE_LITE",
+	power_source = {arcane=true},
 	define_as = "ELDRITCH_PEARL",
 	unided_name = "bright pearl",
 	name = "Eldritch Pearl", unique=true,

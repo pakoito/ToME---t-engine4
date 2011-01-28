@@ -21,6 +21,7 @@ load("/data/general/objects/objects.lua")
 
 -- Id stuff
 newEntity{ define_as = "ORB_KNOWLEDGE",
+	power_source = {unknown=true},
 	unique = true, quest=true,
 	type = "jewelry", subtype="orb",
 	unided_name = "orb", no_unique_lore = true,

@@ -21,6 +21,7 @@ load("/data/general/objects/objects.lua")
 
 -- Artifact, dropped by the sandworm queen
 newEntity{
+	power_source = {nature=true},
 	define_as = "SANDQUEEN_HEART",
 	type = "corpse", subtype = "heart",
 	name = "Heart of the Sandworm Queen", unique=true, unided_name="pulsing organ",
@@ -52,6 +53,7 @@ newEntity{
 }
 
 newEntity{
+	power_source = {nature=true},
 	define_as = "PUTRESCENT_POTION",
 	type = "corpse", subtype = "blood",
 	name = "Wyrm Bile", unique=true, unided_name="putrescent potion",

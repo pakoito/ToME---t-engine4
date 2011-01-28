@@ -24,6 +24,7 @@ local Stats = require "engine.interface.ActorStats"
 
 -- The staff of absorption, the reason the game exists!
 newEntity{ define_as = "STAFF_ABSORPTION_AWAKENED", base="BASE_STAFF",
+	power_source = {unknown=true},
 	unique = true, godslayer=true,
 	name = "Awakened Staff of Absorption", identified=true, force_lore_artifact=true,
 	display = "\\", color=colors.VIOLET, image = "object/artifact/staff_absorption.png",
@@ -71,6 +72,7 @@ The Sorcerers seem to have awakened its power.
 }
 
 newEntity{ define_as = "PEARL_LIFE_DEATH",
+	power_source = {nature=true},
 	unique = true,
 	type = "gem", subtype="white",
 	unided_name = "shining pearl",

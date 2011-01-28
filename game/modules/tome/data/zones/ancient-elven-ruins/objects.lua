@@ -25,6 +25,7 @@ local Talents = require "engine.interface.ActorTalents"
 
 -- Random artifact
 newEntity{ base = "BASE_MUMMY_WRAPPING",
+	power_source = {arcane=true},
 	unique = true,
 	name = "Bindings of Eternal Night",
 	unided_name = "blackened, slithering mummy wrappings",

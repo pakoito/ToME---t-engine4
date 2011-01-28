@@ -63,6 +63,7 @@ newEntity{ define_as = "ATHAME_WEST2",
 
 -- The orb of many ways, allows usage of Farportals
 newEntity{ define_as = "ORB_MANY_WAYS2",
+	power_source = {unknown=true},
 	unique = "Orb of Many Ways2", quest=true, no_unique_lore=true,
 	type = "jewelry", subtype="orb",
 	unided_name = "swirling orb",
