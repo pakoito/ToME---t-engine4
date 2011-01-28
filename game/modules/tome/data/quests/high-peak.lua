@@ -65,6 +65,9 @@ on_status_change = function(self, who, status, sub)
 end
 
 function start_end_combat(self)
+	local p = game.party:findMember{main=true}
+	p.entered_level = {x=25, y= 8}
+
 	-- Allow teleporting inside
 	for i = 11, 38 do for j = 1, 21 do
 		game.level.map.lites(i, j, true)

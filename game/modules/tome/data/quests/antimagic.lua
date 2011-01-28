@@ -20,13 +20,7 @@
 name = "The Curse of Magic"
 desc = function(self, who)
 	local desc = {}
-	desc[#desc+1] = "You met a warrior who invited you join the group called the Ziguranth, dedicated to opposing magic."
-	if who:hasQuest("antimagic"):ten_levels_ok(who) then
-		desc[#desc+1] = "#SLATE#* You must report back to the warrior in Zigur.#WHITE#"
-	else
-		desc[#desc+1] = "#SLATE#* You must not use spells, runes, or magical devices.#WHITE#"
-		desc[#desc+1] = ("#SLATE#* You have gained %d of 10 levels.#WHITE#"):format(who.level - self.start_level)
-	end
+	desc[#desc+1] = "You have been invited to join a group called the Ziguranth, dedicated to opposing magic."
 	return table.concat(desc, "\n")
 end
 
@@ -41,16 +35,12 @@ on_status_change = function(self, who, status, sub)
 	end
 end
 
-ten_levels_ok = function(self, who)
-	if not self:isEnded() then
-		if who.level >= self.start_level + 10 then return true end
-	end
-end
-
 -- Start the event, summon the first challenger
 start_event = function(self)
 	local spot = game.level:pickSpot{type="quest", subtype="arena"}
-	game.player:move(spot.x, spot.y, true)
+	local p = game.party:findMember{main=true}
+	p:move(spot.x, spot.y, true)
+	p.entered_level = {x=spot.x, y=spot.y}
 
 	self.wave = 1
 	self:add_foe(true, true, 1)
@@ -69,6 +59,8 @@ next_combat = function(self)
 	else
 		local spot = game.level:pickSpot{type="quest", subtype="outside-arena"}
 		game.player:move(spot.x, spot.y, true)
+		local p = game.party:findMember{main=true}
+		p.entered_level = {x=game.level.default_up.x, y=game.level.default_up.y}
 
 		if not self:isEnded() then
 			local Chat = require "engine.Chat"
