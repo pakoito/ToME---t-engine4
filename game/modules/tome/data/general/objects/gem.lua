@@ -26,6 +26,7 @@ newEntity{
 	encumber = 0,
 	identified = true,
 	stacking = true,
+	auto_pickup = true,
 	desc = [[Gems can be sold for money or used in arcane rituals.]],
 }
 
