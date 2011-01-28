@@ -429,7 +429,7 @@ end
 --- Suffocate a bit, lose air
 function _M:suffocate(value, src)
 	local dead, affected = mod.class.Actor.suffocate(self, value, src)
-	if affected and value < 0 then
+	if affected and value > 0 then
 		self:runStop("suffocating")
 		self:restStop("suffocating")
 	end
