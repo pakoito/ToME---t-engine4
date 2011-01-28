@@ -152,7 +152,7 @@ function _M:setPlayer(actor, bypass)
 	actor.move_others = true
 
 	-- Change back the old actor to a normal actor
-	if oldp then
+	if oldp and oldp ~= actor then
 		if self.members[oldp] and self.members[oldp].on_uncontrol then self.members[oldp].on_uncontrol(oldp) end
 
 		if oldp.__PREVIOUS_CLASSNAME then

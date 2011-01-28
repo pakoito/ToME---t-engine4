@@ -143,13 +143,11 @@ newBirthDescriptor{
 			local gem = t.make_gem(self, t, "GEM_AGATE")
 			self:wearObject(gem, true, true)
 			self:sortInven()
-		end),
 
-		on_birth_done = function(self)
 			-- Invoke the golem
 			local t = self:getTalentFromId(self.T_REFIT_GOLEM)
 			t.action(self, t)
-		end,
+		end),
 	},
 	copy_add = {
 		life_rating = -1,

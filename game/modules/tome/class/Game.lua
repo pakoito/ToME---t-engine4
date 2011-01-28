@@ -141,7 +141,6 @@ function _M:newGame()
 		orders = {follow=true, behavior=true, leash=true},
 	})
 	self.party:setPlayer(player)
-	Map:setViewerActor(self.player)
 	self:setupDisplayMode()
 
 	-- Create the entity to store various game state things
@@ -198,7 +197,10 @@ function _M:newGame()
 				self.player:grantQuest(self.player.starting_quest)
 				self.player:onBirth(birth)
 				-- For quickbirth
-				savefile_pipe:push("", "entity", self.player)
+				self.party.name = self.player.name
+				self.party.__version = game.__mod_info.version
+				savefile_pipe:push("", "entity", self.party)
+				self.party.__version = nil
 				self.creating_player = false
 
 				birth_done()
@@ -221,16 +223,23 @@ function _M:newGame()
 		savefile_pipe:ignoreSaveToken(false)
 
 		-- If we got the player, use it, otherwise quickbirth as normal
-		if qb then
+		if qb and qb.__version and qb.__version[1] == game.__mod_info.version[1] and qb.__version[2] == game.__mod_info.version[2] and qb.__version[3] == game.__mod_info.version[3] then
 			-- Disable quickbirth
 			birth.do_quickbirth = false
 			self:unregisterDialog(b)
 
 			-- Load the player directly
-			self.player:replaceWith(qb)
-			if self.player.__game_difficulty then self:setupDifficulty(self.player.__game_difficulty) end
-			self:changeLevel(self.player.starting_level or 1, self.player.starting_zone, nil, self.player.starting_level_force_down)
+			self.party = qb
+			self.player = nil
+			self.party:setPlayer(1, true)
 			Map:setViewerFaction(self.player.faction)
+			if self.player.__game_difficulty then self:setupDifficulty(self.player.__game_difficulty) end
+
+			-- Tell the level gen code to add all the party
+			self.to_re_add_actors = {}
+			for act, _ in pairs(self.party.members) do if self.player ~= act then self.to_re_add_actors[act] = true end end
+
+			self:changeLevel(self.player.starting_level or 1, self.player.starting_zone, nil, self.player.starting_level_force_down)
 			self.player:removeQuest(self.player.starting_quest)
 			self.player:grantQuest(self.player.starting_quest)
 			self.creating_player = false
