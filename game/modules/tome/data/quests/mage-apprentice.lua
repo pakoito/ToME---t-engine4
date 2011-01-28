@@ -134,7 +134,8 @@ access_angolwen = function(self, player)
 		desc="The city of magic lies inside the mountains to the west. Either a spell or a portal is needed to access it.",
 		display='*', color=colors.VIOLET, image = "terrain/grass.png", add_displays = {mod.class.Grid.new{image="terrain/maze_teleport.png"}},
 		notice = true,
-		change_level=1, change_zone="town-angolwen"
+		change_level=1, change_zone="town-angolwen",
+		change_level_check = function() local p = game.party:findMember{main=true} if p:attr("forbid_arcane") then game.log("The portal fizzles.") return true end return false end
 	}
 	g:resolve() g:resolve(nil, true)
 	p:resolve() p:resolve(nil, true)

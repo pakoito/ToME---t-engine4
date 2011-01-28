@@ -17,6 +17,22 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local p = game.party:findMember{main=true}
+if p:attr("forbid_arcane") then
+
+newChat{ id="welcome",
+	text = [[#LIGHT_GREEN#*Before you stands a young man, a novice mage by his looks*#WHITE#
+Good day to yo...#LIGHT_GREEN#*He stares at you and starts to run away fast!*#WHITE#
+Do not kill me please!]],
+	answers = {
+		{"...", action = function(npc, player) npc:die() end,
+},
+	}
+}
+return "welcome"
+
+end
+
 newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*Before you stands a young man, a novice mage by his looks*#WHITE#
 Good day to you, fellow traveler!]],

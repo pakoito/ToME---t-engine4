@@ -83,7 +83,7 @@ quickEntity('rel-tunnel', {always_remember = true, show_tooltip=true, name="Tunn
 -- Angolwen is only know from the start to mages
 if game.player:knowTalent(game.player.T_TELEPORT_ANGOLWEN) then
 	quickEntity('angolwen', {always_remember = true, show_tooltip=true, name="Angolwen, the hidden city of magic", desc="Secret place of magic, set apart from the world to protect it.\nLead by the Supreme Archmage Linaniil.", display='*', color=colors.WHITE, back_color=colors.UMBER, image="terrain/town1.png", notice = true, change_level=1, change_zone="town-angolwen"})
-	quickEntity('angolwen-teleport', {always_remember = true, show_tooltip=true, name="Hidden teleportation portal to Angolwen, the hidden city of magic", display='&', color=colors.LIGHT_BLUE, back_color=colors.DARK_GREEN, image="terrain/grass.png", add_displays = {mod.class.Grid.new{image="terrain/maze_teleport.png"}}, notice = true, change_level=1, change_zone="town-angolwen"})
+	quickEntity('angolwen-teleport', {always_remember = true, show_tooltip=true, name="Hidden teleportation portal to Angolwen, the hidden city of magic", display='&', color=colors.LIGHT_BLUE, back_color=colors.DARK_GREEN, image="terrain/grass.png", add_displays = {mod.class.Grid.new{image="terrain/maze_teleport.png"}}, notice = true, change_level=1, change_zone="town-angolwen", change_level_check = function() local p = game.party:findMember{main=true} if p:attr("forbid_arcane") then game.log("The portal fizzles.") return true end return false end})
 else
 	quickEntity('angolwen', '^')
 	quickEntity('angolwen-teleport', '.')
