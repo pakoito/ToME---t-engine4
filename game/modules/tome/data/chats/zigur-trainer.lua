@@ -19,35 +19,39 @@
 
 local sex = game.player.female and "Sister" or "Brother"
 
-if game.player:hasQuest("antimagic") then
+local remove_magic = function(npc, player)
+	player:attr("forbid_arcane", 1)
 
-newChat{ id="welcome",
-	text = [[Welcome back, ]]..sex..[[.]],
-	answers = {
-		{"I am ready for the test", jump="test", cond=function(npc, player) return player:hasQuest("antimagic"):ten_levels_ok(player) end},
-		{"I have got to go."},
-	}
-}
+	for tid, _ in pairs(player.sustain_talents) do
+		local t = player:getTalentFromId(tid)
+		if t.is_spell then player:forceUseTalent(tid, {ignore_energy=true}) end
+	end
 
-else
+	-- Remove equipment
+	for inven_id, inven in pairs(player.inven) do
+		for i = #inven, 1, -1 do
+			local o = inven[i]
+			if o.power_source and o.power_source.arcane then
+				game.logPlayer(player, "You can not use your %s anymore, it is tainted by magic.", o:getName{do_color=true})
+				local o = player:removeObject(inven, i, true)
+				player:addObject(player.INVEN_INVEN, o)
+				player:sortInven()
+			end
+		end
+	end
+	player.changed = true
+end
 
 newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*A grim-looking Fighter stands there, clad in mail armour and a large olive cloak. He doesn't appear hostile - his sword is sheathed.*#WHITE#
 ]]..sex..[[, our guild has been watching you and we believe that you have potential.
 We see that the hermetic arts have always been at the root of each and every trial this land has endured, and we also see that one day it will bring about our destruction, so we have decided to take action, training ourselves to combat those who wield the arcane.
-We can train you, but you need to prove you are pure from the eldritch forces.
-Return to us when your power has grown ten times without using any spells, runes or other magic devices. Come back here, and you will be tested and then we will train you.]],
+We can train you, but you need to prove you are both pure from the eldritch forces and ready to fight them to the end.
+You will be challenged against magical foes, should you defeat them we will teach you our ways, and never again will you be able to be tainted by magic, or use it.]],
 	answers = {
-		{"Ok, I will return then.", jump="ok"},
+		{"I will face your challenge!", cond=function(npc, player) return player.level >= 10 end, jump="testok"},
+		{"I will face your challenge!", cond=function(npc, player) return player.level < 10 end, jump="testko"},
 		{"I'm not interested.", jump="ko"},
-	}
-}
-end
-
-newChat{ id="ok",
-	text = [[Excellent. Come back soon!]],
-	answers = {
-		{"I will, thank you.", action=function(npc, player) player:grantQuest("antimagic") end},
 	}
 }
 
@@ -58,12 +62,34 @@ newChat{ id="ko",
 	}
 }
 
+newChat{ id="testko",
+	text = [[Ah you seem eager, but maybe still too young, come back when you have grown a bit.]],
+	answers = {
+		{"I shall."},
+	}
+}
+
+newChat{ id="testok",
+	text = [[Very well. Before you start we will make sure no magic can help you:
+- You will not be able to use an spells or magical devices
+- Any worn objects that are powered by the arcane will be unequiped
+
+Are you ready, or do you wish to prepare first?]],
+	answers = {
+		{"I am ready", jump="test", action=remove_magic},
+		{"I need to prepare."},
+	}
+}
+
 newChat{ id="test",
 	text = [[#VIOLET#*You are grabbed by two olive-clad warriors and thrown into a crude arena!*
 #LIGHT_GREEN#*You hear the voice of the Fighter ring above you.*#WHITE#
 ]]..sex..[[! Your training begins! I want to see you prove your superiority over the works of magic! Fight!]],
 	answers = {
-		{"But wha.. [you notice your first opponent is already there]", action=function(npc, player) player:hasQuest("antimagic"):start_event() end},
+		{"But wha.. [you notice your first opponent is already there]", action=function(npc, player)
+			player:grantQuest("antimagic")
+			player:hasQuest("antimagic"):start_event()
+		end},
 	}
 }
 

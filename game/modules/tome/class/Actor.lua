@@ -1386,6 +1386,15 @@ function _M:getObjectOffslot(o)
 	end
 end
 
+--- Can we wear this item?
+function _M:canWearObject(o, try_slot)
+	if self:attr("forbid_arcane") and o.power_source and o.power_source.arcane then
+		return nil, "antimagic"
+	end
+
+	return engine.interface.ActorInventory.canWearObject(self, o, try_slot)
+end
+
 --- Actor learns a talent
 -- @param t_id the id of the talent to learn
 -- @return true if the talent was learnt, nil and an error message otherwise
@@ -1479,6 +1488,10 @@ function _M:preUseTalent(ab, silent, fake)
 	end
 	if ab.no_silence and self:attr("silence") then
 		if not silent then game.logSeen(self, "%s is silenced and cannot use %s.", self.name:capitalize(), ab.name) end
+		return false
+	end
+	if ab.is_spell and self:attr("forbid_arcane") then
+		if not silent then game.logSeen(self, "The spell fizzles.") end
 		return false
 	end
 
@@ -1621,12 +1634,6 @@ end
 -- @return true to continue, false to stop
 function _M:postUseTalent(ab, ret)
 	if not ret then return end
-
-	-- Count talents that count as spells
-	if ab.is_spell then
-		if self:hasQuest("antimagic") and game.party:hasMember(self) and not self:hasQuest("antimagic"):isEnded() then self:setQuestStatus("antimagic", engine.Quest.FAILED) end -- Fail antimagic quest
-		self:antimagicBackslash(4 + self:getTalentLevelRaw(ab))
-	end
 
 	self.changed = true
 	if not ab.no_energy then
@@ -1786,25 +1793,6 @@ function _M:breakGatherTheThreads()
 	if self:hasEffect(self.EFF_GATHER_THE_THREADS) then
 		self:removeEffect(self.EFF_GATHER_THE_THREADS)
 	end
-end
-
-
---- Break antimagic for a while after using spells & magic devices
-function _M:antimagicBackslash(turns)
-	local done = false
-	for tid, _ in pairs(self.talents) do
-		local t = self:getTalentFromId(tid)
-		if t.type[1] == "wild-gift/antimagic" and t.mode ~= "passive" then
-			if t.mode == "activated" then
-				self.talents_cd[tid] = (self.talents_cd[tid] or 0) + turns
-			elseif t.mode == "sustained" then
-				if self:isTalentActive(tid) then self:forceUseTalent(tid, {ignore_energy=true}) end
-				self.talents_cd[tid] = (self.talents_cd[tid] or 0) + turns
-			end
-			done = true
-		end
-	end
-	if done then game.logPlayer(self, "#LIGHT_RED#Your antimagic abilities are disrupted!") end
 end
 
 --- Return the full description of a talent

@@ -694,17 +694,18 @@ function _M:playerUseItem(object, item, inven)
 	local use_fct = function(o, inven, item)
 		local co = coroutine.create(function()
 			self.changed = true
+
+			-- Count magic devices
+			if (o.is_magic_device or (o.power_source and o.power_source.arcane)) and self:attr("forbid_arcane") then
+				game.logPlayer(self, "Your antimagic disrupts %s.", o:getName{no_count=true, do_color=true})
+				return true
+			end
+
 			local ret, id = o:use(self, nil, inven, item)
 			if id then
 				o:identify(true)
 			end
 			if ret and ret == "destroy" then
-				-- Count magic devices
-				if o.is_magic_device then
-					if self:hasQuest("antimagic") and game.party:hasMember(self) and not self:hasQuest("antimagic"):isEnded() then self:setQuestStatus("antimagic", engine.Quest.FAILED) end -- Fail antimagic quest
-					self:antimagicBackslash(4 + (o.material_level or 1))
-				end
-
 				if o.multicharge and o.multicharge > 1 then
 					o.multicharge = o.multicharge - 1
 				else
