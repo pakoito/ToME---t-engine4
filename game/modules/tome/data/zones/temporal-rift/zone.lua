@@ -39,8 +39,8 @@ return {
 	persistent = "zone",
 	generator =  {
 	},
-	color_shown = {0.4, 0.3, 0.5, 1},
-	color_obscure = {0.4*0.6, 0.3*0.6, 0.5*0.6, 1},
+	color_shown = {0.7, 0.6, 0.8, 1},
+	color_obscure = {0.7*0.6, 0.6*0.6, 0.8*0.6, 1},
 	ambient_music = "Through the Dark Portal.ogg",
 	levels =
 	{
