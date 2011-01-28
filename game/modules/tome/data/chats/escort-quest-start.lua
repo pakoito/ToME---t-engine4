@@ -17,6 +17,24 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local p = game.party:findMember{main=true}
+if p:attr("forbid_arcane") and not npc.antimagic_ok then
+
+newChat{ id="welcome",
+	text = text,
+	answers =
+	{
+		{"Go away; I do help filthy arcane users!", action=function(npc, player)
+			npc:disappear()
+			npc:removed()
+			player:hasQuest(npc.quest_id).abandoned = true
+			player:setQuestStatus(npc.quest_id, engine.Quest.FAILED)
+		end},
+	},
+}
+
+else
+
 newChat{ id="welcome",
 	text = text,
 	answers =
@@ -38,5 +56,7 @@ newChat{ id="welcome",
 		end},
 	},
 }
+
+end
 
 return "welcome"

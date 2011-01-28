@@ -61,6 +61,7 @@ local possible_types = {
 			lite = 4,
 			rank = 2,
 			exp_worth = 1,
+			antimagic_ok = true,
 
 			max_life = 50, life_regen = 0,
 			life_rating = 12,
@@ -113,6 +114,7 @@ local possible_types = {
 			lite = 4,
 			rank = 2,
 			exp_worth = 1,
+			antimagic_ok = true,
 
 			max_life = 50, life_regen = 0,
 			life_rating = 11,
@@ -219,6 +221,7 @@ local possible_types = {
 			lite = 4,
 			rank = 2,
 			exp_worth = 1,
+			antimagic_ok = true,
 
 			max_life = 50, life_regen = 0,
 			life_rating = 10,
@@ -369,7 +372,7 @@ on_grant = function(self, who)
 	self.name = "Escort: "..self.kind.name.." (level "..self.level_name..")"
 
 	local Chat = require "engine.Chat"
-	Chat.new("escort-quest-start", npc, game.player, {text=self.kind.text}):invoke()
+	Chat.new("escort-quest-start", npc, game.player, {text=self.kind.text, npc=npc}):invoke()
 
 	-- Check if we found sunpaladins/anorithils before going east
 	if npc.sunwall_query then
