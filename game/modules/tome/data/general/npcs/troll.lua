@@ -22,7 +22,6 @@ local Talents = require("engine.interface.ActorTalents")
 newEntity{
 	define_as = "BASE_NPC_TROLL",
 	type = "giant", subtype = "troll",
-	blood_color = colors.CRIMSON,
 	display = "T", color=colors.UMBER,
 
 	combat = { dam=resolvers.mbonus(45, 10), atk=2, apr=6, physspeed=2, dammod={str=0.8} },
