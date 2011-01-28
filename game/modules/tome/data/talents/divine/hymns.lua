@@ -80,12 +80,16 @@ newTalent{
 	tactical = { BUFF = 2 },
 	range = 10,
 	getDamageOnMeleeHit = function(self, t) return self:combatTalentSpellDamage(t, 5, 25) end,
+	getSeeInvisible = function(self, t) return self:combatTalentSpellDamage(t, 2, 35) end,
+	getSeeStealth = function(self, t) return self:combatTalentSpellDamage(t, 2, 15) end,
 	getInfraVisionPower = function(self, t) return math.floor(5 + self:getTalentLevel(t)) end,
 	activate = function(self, t)
 		cancelHymns(self)
 		game:playSoundNear(self, "talents/spell_generic2")
 		local ret = {
 			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.DARKNESS]= t.getDamageOnMeleeHit(self, t)}),
+			invis = self:addTemporaryValue("see_invisible", t.getSeeInvisible(self, t)),
+			stealth = self:addTemporaryValue("see_stealth", t.getSeeStealth(self, t)),
 			infravision = self:addTemporaryValue("infravision", t.getInfraVisionPower(self, t)),
 			particle = self:addParticles(Particles.new("darkness_shield", 1))
 		}
@@ -95,16 +99,20 @@ newTalent{
 		self:removeParticles(p.particle)
 		self:removeTemporaryValue("on_melee_hit", p.onhit)
 		self:removeTemporaryValue("infravision", p.infravision)
+		self:removeTemporaryValue("see_invisible", p.invis)
+		self:removeTemporaryValue("see_stealth", p.stealth)
 		return true
 	end,
 	info = function(self, t)
 		local infra = t.getInfraVisionPower(self, t)
+		local invis = t.getSeeInvisible(self, t)
+		local stealth = t.getSeeStealth(self, t)
 		local darknessdamage = t.getDamageOnMeleeHit(self, t)
-		return ([[Chant the glory of the moon, granting you infravision up to %d grids.
+		return ([[Chant the glory of the moon, granting you infravision up to %d grids, stealth detection (+%d power), invisibility detection (+%d power).
 		In addition it surrounds you with a shield of darkness, damaging anything that attacks you for %0.2f darkness damage.
 		You may only have one Hymn active at once.
 		The damage will increase with the Magic stat]]):
-		format(infra, damDesc(self, DamageType.DARKNESS, darknessdamage))
+		format(infra, stealth, invis, damDesc(self, DamageType.DARKNESS, darknessdamage))
 	end,
 }
 
