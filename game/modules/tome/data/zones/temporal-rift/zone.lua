@@ -125,6 +125,7 @@ return {
 		elseif lev == 2 and not game.level.shown_warning then
 			Dialog:simplePopup("Temporal Rift", "This looks like Maj'Eyal's forest but it looks strangely distorbed, beware...")
 			game.level.shown_warning = true
+			require("engine.generator.actor.Random").new(game.zone, game.level.map, game.level, {}):generateGuardian("BEN_CRUTHDAR_ABOMINATION")
 		elseif lev == 3 and not game.level.shown_warning then
 			Dialog:simplePopup("Temporal Rift", "As you pass the rift you see what seems to be the Daikara mountains, yet they are not.")
 			game.level.shown_warning = true

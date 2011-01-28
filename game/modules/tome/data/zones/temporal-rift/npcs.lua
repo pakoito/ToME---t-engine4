@@ -22,7 +22,7 @@ load("/data/general/npcs/horror.lua", function(e) if e.rarity then e.horror_rari
 
 local Talents = require("engine.interface.ActorTalents")
 
-newEntity{ define_as = "BEN_CRUTHDAR",
+newEntity{ define_as = "BEN_CRUTHDAR_ABOMINATION",
 	type = "humanoid", subtype = "temporal", unique = true,
 	name = "Ben Cruthdar, the Abomination",
 	display = "p", color=colors.VIOLET,
