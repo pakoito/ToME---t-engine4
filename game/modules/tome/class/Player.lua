@@ -546,7 +546,14 @@ end
 function _M:hotkeyInventory(name)
 	local find = function(name)
 		local os = {}
+		-- Sort invens, use worn first
+		local invens = {}
 		for inven_id, inven in pairs(self.inven) do
+			invens[#invens+1] = {inven_id, inven}
+		end
+		table.sort(invens, function(a,b) return (a[2].worn and 1 or 0) > (b[2].worn and 1 or 0) end)
+		for i = 1, #invens do
+			local inven_id, inven = unpack(invens[i])
 			local o, item = self:findInInventory(inven, name, {no_count=true, force_id=true, no_add_name=true})
 			if o and item then os[#os+1] = {o, item, inven_id, inven} end
 		end
