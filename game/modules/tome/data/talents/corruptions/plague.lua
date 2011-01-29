@@ -212,7 +212,7 @@ newTalent{
 			local target = game.level.map(px, py, engine.Map.ACTOR)
 			if not target or (self:reactionToward(target) >= 0) then return end
 			if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 12 - self:getTalentLevel(t)) and target:canBe("disease") then
-				target:setEffect(self.EFF_EPIDEMIC, 6, {src=self, dam=self:combatTalentSpellDamage(t, 15, 50)})
+				target:setEffect(self.EFF_EPIDEMIC, 6, {src=self, dam=self:combatTalentSpellDamage(t, 15, 50), heal_factor=40 + self:getTalentLevel(t) * 4})
 			else
 				game.logSeen(target, "%s resists the disease!", target.name:capitalize())
 			end
@@ -225,7 +225,8 @@ newTalent{
 	info = function(self, t)
 		return ([[Infects the target with a very contagious disease doing %0.2f damage per turn for 6 turns.
 		If any blight damage from non-diseases hits the target, the epidemic will activate and spread a random disease to nearby targets.
+		Creatures suffering from that disease will also suffer healing reduction (%d%%).
 		The damage will increase with your Magic stat.]]):
-		format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 15, 50)))
+		format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 15, 50)), 40 + self:getTalentLevel(t) * 4)
 	end,
 }

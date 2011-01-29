@@ -683,7 +683,7 @@ function _M:onHeal(value, src)
 	if self:hasEffect(self.EFF_UNSTOPPABLE) then
 		return 0
 	end
-	value = value * (self.healing_factor or 1)
+	value = value * util.bound((self.healing_factor or 1), 0, 2.5)
 	print("[HEALING]", self.uid, self.name, "for", value)
 	return value
 end

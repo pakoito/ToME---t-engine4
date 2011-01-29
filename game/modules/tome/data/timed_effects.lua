@@ -1246,9 +1246,11 @@ newEffect{
 	end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("diseases_spread_on_blight", 1)
+		eff.healid = self:addTemporaryValue("healing_factor", -eff.heal_factor / 100)
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("diseases_spread_on_blight", eff.tmpid)
+		self:removeTemporaryValue("healing_factor", eff.healid)
 	end,
 }
 
@@ -2511,7 +2513,7 @@ newEffect{
 			end
 			return
 		end
-		
+
 		if eff.target.dead then
 			eff.isSevered = true
 		else
@@ -2526,7 +2528,7 @@ newEffect{
 				end
 			end
 		end
-		
+
 		if eff.isSevered then
 			if eff.particles then
 				-- remove old particle emitter
