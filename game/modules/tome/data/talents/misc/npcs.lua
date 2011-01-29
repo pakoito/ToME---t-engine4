@@ -323,6 +323,9 @@ newTalent{
 		if #filters == 0 then return end
 		local filter = rng.table(filters)
 
+		-- Apply summon destabilization
+		self:setEffect(self.EFF_SUMMON_DESTABILIZATION, 500, {power=5})
+
 		for i = 1, filter.number do
 			-- Find space
 			local x, y = util.findFreeGrid(self.x, self.y, 10, true, {[Map.ACTOR]=true})
@@ -345,15 +348,15 @@ newTalent{
 
 				game.logSeen(self, "%s summons %s!", self.name:capitalize(), m.name)
 
+				-- Apply summon destabilization
+				m:setEffect(m.EFF_SUMMON_DESTABILIZATION, 500, {power=self:hasEffect(self.EFF_SUMMON_DESTABILIZATION).power})
+
 				-- Learn about summoners
 				if game.level.map.seens(self.x, self.y) then
 					game:setAllowedBuild("wilder_summoner", true)
 				end
 			end
 		end
-
-		-- Apply summon destabilization
-		self:setEffect(self.EFF_SUMMON_DESTABILIZATION, 500, {power=5})
 
 		return true
 	end,
