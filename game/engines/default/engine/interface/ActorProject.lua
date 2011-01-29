@@ -115,14 +115,14 @@ function _M:project(t, x, y, damtype, dam, particles)
 						if type(damtype) == "function" then if damtype(px, py, tg, self) then stop=true break end
 						else DamageType:get(damtype).projector(self, px, py, damtype, dam, tmp) end
 						if particles then
-							game.level.map:particleEmitter(px, py, 1, particles.type)
+							game.level.map:particleEmitter(px, py, 1, particles.type, particles.args)
 						end
 					end
 				else
 					if type(damtype) == "function" then if damtype(px, py, tg, self) then stop=true break end
 					else DamageType:get(damtype).projector(self, px, py, damtype, dam, tmp) end
 					if particles then
-						game.level.map:particleEmitter(px, py, 1, particles.type)
+						game.level.map:particleEmitter(px, py, 1, particles.type, particles.args)
 					end
 				end
 			end
@@ -228,14 +228,14 @@ function _M:projectDoAct(typ, tg, damtype, dam, particles, px, py, tmp)
 				if type(damtype) == "function" then if damtype(px, py, tg, self) then return true end
 				else DamageType:get(damtype).projector(self, px, py, damtype, dam, tmp) end
 				if particles and type(particles) == "table" then
-					game.level.map:particleEmitter(px, py, 1, particles.type)
+					game.level.map:particleEmitter(px, py, 1, particles.type, particles.args)
 				end
 			end
 		else
 			if type(damtype) == "function" then if damtype(px, py, tg, self) then return true end
 			else DamageType:get(damtype).projector(self, px, py, damtype, dam, tmp) end
 			if particles and type(particles) == "table" then
-				game.level.map:particleEmitter(px, py, 1, particles.type)
+				game.level.map:particleEmitter(px, py, 1, particles.type, particles.args)
 			end
 		end
 	end
