@@ -38,7 +38,7 @@ return {
 			lite_room_chance = 100,
 			['.'] = "ROCKY_GROUND",
 			['#'] = "MOUNTAIN_WALL",
-			up = "ROCKY_GROUND",
+			up = "UP",
 			down = "DOWN",
 			door = "DOOR",
 		},
@@ -84,4 +84,13 @@ return {
 			end
 		},
 	},
+
+	on_enter = function(lev, old_lev, newzone)
+		if lev == 1 and not game.level.created_way_back and game.player:isQuestStatus("lightning-overload", engine.Quest.COMPLETED, "tempest-entrance") then
+			game.level.created_way_back = true
+			local g = game.zone:makeEntityByName(game.level, "terrain", "ROCKY_UP_WILDERNESS")
+			g.change_level_check = function() game.turn = game.turn + 5 * game.calendar.HOUR end -- Make it take time to travel
+			game.zone:addEntity(game.level, g, "terrain", game.player.x, game.player.y)
+		end
+	end,
 }

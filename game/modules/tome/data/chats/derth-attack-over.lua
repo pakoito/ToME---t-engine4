@@ -35,7 +35,8 @@ I do not know. I was tending my crop just outside the town when I heard screamin
 
 newChat{ id="quest2",
 	text = [[Thank you! You have saved many people today!
-I have heard of rumours of a reclusive town of wise and powerful men somewhere in the blue mountains. Maybe they could help? If they even exist...]],
+I have heard of rumours of a reclusive town of wise and powerful men somewhere in the mountains. Maybe they could help? If they even exist...
+There are also those zigur-something people that claim to fight magic. Why are they not here?!]],
 	answers = {
 		{"I will not let you down.", action=function(npc, player) player:hasQuest("lightning-overload"):done_derth() end},
 	}

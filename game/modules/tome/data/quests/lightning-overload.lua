@@ -23,10 +23,13 @@ desc = function(self, who)
 	desc[#desc+1] = "As you came to Derth you saw a huge dark cloud over the small town."
 	desc[#desc+1] = "When you entered you were greeted by an army of air elementals slaughtering the population."
 	if self:isCompleted("saved-derth") then
-		desc[#desc+1] = " * You have dispatched the elementals but the cloud lingers still. You must find a powerful ally to remove it. There are rumours of a secret town in the blue mountains, to the southwest."
+		desc[#desc+1] = " * You have dispatched the elementals but the cloud lingers still. You must find a powerful ally to remove it. There are rumours of a secret town in the blue mountains, to the southwest. You could also check out the Ziguranth group that is supposed to fight magic."
 	end
 	if self:isCompleted("tempest-located") then
 		desc[#desc+1] = " * You have learned the real threat comes from a rogue Archmage, a Tempest named Urkis. The mages of Angolwen are ready to teleport you there."
+	end
+	if self:isCompleted("tempest-entrance") then
+		desc[#desc+1] = " * You have learned the real threat comes from a rogue Archmage, a Tempest. You have been shown a secret entrance to his stronghold."
 	end
 
 	return table.concat(desc, "\n")
@@ -101,6 +104,29 @@ teleport_urkis = function(self)
 	game:changeLevel(1, "tempest-peak")
 	require("engine.ui.Dialog"):simpleLongPopup("Danger...", [[You step out on unfamiliar grounds. You are nearly on top of one of the highest peaks you can see.
 The storm is raging above your head.]], 400)
+end
+
+create_entrance = function(self)
+	local p = mod.class.Grid.new{
+		show_tooltip=true, always_remember = true,
+		name="Long road to the Tempest Peak",
+		display='>', color=colors.WHITE,
+		notice = true,
+		change_level=1, change_zone="tempest-peak",
+		change_level_check = function()
+			game.turn = game.turn + 5 * game.calendar.HOUR
+			if not game.player:hasQuest("lightning-overload").walked then
+				require("engine.ui.Dialog"):simpleLongPopup("Danger...", [[After an hours long walk you finally reach the end of the way. You are nearly on top of one of the highest peaks you can see.
+The storm is raging above your head.]], 400)
+				game.player:hasQuest("lightning-overload").walked = true
+			end
+		end
+	}
+	p:resolve() p:resolve(nil, true)
+	local level = game.memory_levels["wilderness-1"]
+	local spot = level:pickSpot{type="zone-pop", subtype="tempest-peak"}
+	game.zone:addEntity(level, p, "terrain", spot.x, spot.y)
+	game.player:setQuestStatus(self.id, engine.Quest.COMPLETED, "tempest-entrance")
 end
 
 reenter_derth = function(self)

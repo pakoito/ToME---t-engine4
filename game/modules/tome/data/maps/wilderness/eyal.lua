@@ -165,6 +165,7 @@ addSpot({45, 28}, "zone-pop", "zigur")
 addSpot({32, 23}, "zone-pop", "shertul-fortress")
 addSpot({37, 32}, "zone-pop", "halfling-ruins")
 addSpot({31, 47}, "zone-pop", "rel-tunnel")
+addSpot({60, 9}, "zone-pop", "tempest-peak")
 
 -- addZone section
 addZone({5, 1, 82, 43}, "zonename", "Maj'Eyal")

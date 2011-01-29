@@ -26,6 +26,9 @@ defineTile(".", "ROCKY_GROUND")
 
 startx = 16
 starty = 5
+endx = 10
+endy = 14
+
 
 -- ASCII map section
 return [[

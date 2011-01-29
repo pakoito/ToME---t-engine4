@@ -125,8 +125,8 @@
   </tile>
  </tileset>
  <layer name="Terrain" width="50" height="50">
-  <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3YTWoDMQwFYHcbmFUOEOgl5rrd9gA9TBbtujco3ZWBGITQz5Nle0xo4EGbOlN/Y0txci2lXAdnn5DRhqjj8sgMxwUMd9xJ0GugrhHz1+aQcXiWjOEORBufvSdRh3XNYz4vRhDHqxPUMtvxTZ6vc9UemqXeC9TBe4jmqNf9JT9LDhrPYFkiDqkXWo7j95vyvOaoj/dHLIu2Py2H1tOtOucOq57RtaAOauG9BHFEeskNHBcxUEtkPdC14PPnGeGolp9i10eLoTro6yQHNUYctG54naCOyHpoDmmNUAevfcSh/b11X1l7TKpzq19VQ9QRDbKvsjXivbf3OAe2OpD+i55Repxro/1K80TOWCPW48yc6UDO+BHDszqObBMdnwmH9/ljI5m1Ppn5I46VLK3fM6zk8QzI59qsRfqu5KvoNcHPQ4gBcVBL5j5GetQuvL6nY4Qlu59aHVEL/3/R94yejp51gn4WmOHI9K9ncWTWcYRjNQvqONviebKOVTwRx8qWqMOzjDK9Cck6Ip5eXslBLRlHL1PGUfdYL0fWv7KD3nNv3KqOOv8dsNRxqzpoP7EsdOzZde45qGUjYzZh7OoOyeOdm1ZwIPNEYxlm9ateFr5Gsxze/uqZfweWj0mOP+4ePdEQJwAA
+  <data encoding="base64" compression="zlib">
+   eJzt2E1qAzEMBWB3G5hVDhDoJea63fYAPUwW7bo3KN2VgRiE0M+TZXtMaOBBmzpTf2NLcXItpVwHZ5+Q0Yao4/LIDMcFDHfcSdBroK4R89fmkHF4lozhDkQbn70nUYd1zWM+L0YQx6sT1DLb8U2er3PVHpql3gvUwXuI5qjX/SU/Sw4az2BZIg6pF1qO4/eb8rzmqI/3RyyLtj8th9bTrTrnDque0bWgDmrhvQRxRHrJDRwXMVBLZD3QteDz5xnhqJafYtdHi6E66OskBzVGHLRueJ2gjsh6aA5pjVAHr33Eof29dV9Ze0yqc6tfVUPUEQ2yr7I14r239zgHtjqQ/oueUXqca6P9SvNEzlgj1uPMnOlAzvgRw7M6jmwTHZ8Jh/f5YyOZtT6Z+SOOlSyt3zOs5PEMyOfarEX6ruSr6DXBz0OIAXFQS+Y+RnrULry+p2OEJbufWh1RC/9/0feMno6edYJ+FpjhyPSvZ3Fk1nGEYzUL6jjb4nmyjlU8EcfKlqjDs4wyvQnJOiKeXl7JQS0ZRy9TxlH3WC9H1r+yg95zb9yqjjr/HbDUcas6aD+xLHTs2XXuOahlI2M2YezqDsnjnZtWcCDzRGMZZvWrXha+RrMc3v7qmX8Hlo9Jjj/Sl0NZ
   </data>
  </layer>
  <objectgroup name="addSpot" width="50" height="50">
@@ -212,6 +212,14 @@
    <properties>
     <property name="subtype" value="&quot;ziguranth&quot;"/>
     <property name="type" value="&quot;arrival&quot;"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="Actor" width="50" height="50">
+  <object name="Myssil" x="616" y="165" width="17" height="19">
+   <properties>
+    <property name="display" value="@"/>
+    <property name="value" value="&quot;PROTECTOR_MYSSIL&quot;"/>
    </properties>
   </object>
  </objectgroup>

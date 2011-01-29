@@ -540,6 +540,12 @@
     <property name="type" value="&quot;zone-pop&quot;"/>
    </properties>
   </object>
+  <object name="Tempest Peak" x="1923" y="291" width="24" height="20">
+   <properties>
+    <property name="subtype" value="&quot;tempest-peak&quot;"/>
+    <property name="type" value="&quot;zone-pop&quot;"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="addZone#zonenames" width="170" height="100" visible="0">
   <object name="Maj'Eyal" x="171" y="56" width="2478" height="1344">

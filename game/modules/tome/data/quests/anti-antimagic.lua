@@ -51,10 +51,12 @@ on_grant = function(self, who)
 	local spot, x, y, m
 
 	-- Summon the ziguranth defenders
-	spot = game.level:pickSpot{type="arrival", subtype="ziguranth"}
-	x, y = util.findFreeGrid(spot.x, spot.y, 5, true, {[engine.Map.ACTOR]=true})
-	m = game.zone:makeEntityByName(game.level, "actor", "PROTECTOR_MYSSIL")
-	if m and x and y then game.zone:addEntity(game.level, m, "actor", x, y) end
+	for uid, e in pairs(game.level.entities) do
+		if e.define_as == "PROTECTOR_MYSSIL" then
+			e:setTarget(who)
+			break
+		end
+	end
 
 	for i = 1, 7 do
 		spot = game.level:pickSpot{type="arrival", subtype="ziguranth"}
