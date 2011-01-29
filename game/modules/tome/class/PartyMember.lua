@@ -48,5 +48,5 @@ function _M:tooltip(x, y, seen_by)
 end
 
 function _M:die(src)
-	return self:onPartyDeath(self, src)
+	return self:onPartyDeath(src)
 end

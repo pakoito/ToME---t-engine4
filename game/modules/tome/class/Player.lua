@@ -424,7 +424,7 @@ function _M:die(src)
 	self:runStop("died")
 	self:restStop("died")
 
-	return self:onPartyDeath(self, src)
+	return self:onPartyDeath(src)
 end
 
 --- Suffocate a bit, lose air
