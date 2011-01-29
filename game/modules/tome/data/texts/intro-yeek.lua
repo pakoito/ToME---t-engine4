@@ -20,7 +20,7 @@
 return [[Welcome #LIGHT_GREEN#@name@#WHITE#.
 You are a Yeek Wayist of Irkkk.
 All yeeks follow the Way - which is both a global psionic link that unify the whole yeek race and a way of life.
-Your whole life is dedicated to serving the yeek race. You feel compeled by the Way to protect your race at all costs even your own life.
+Your whole life is dedicated to serving the yeek race. You feel compelled by the Way to protect your race at all costs even your own life.
 
 You have been tasked to vanquish Murgol, an abomination from the deeps and to clear the ritchs tunnels before their blight spreads to the whole island.
 ]]
