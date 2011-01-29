@@ -57,6 +57,7 @@ newEntity{
 		melee_project={[DamageType.LIGHTNING] = resolvers.mbonus_material(25, 4, function(e, v) return v * 0.7 end)},
 	},
 }
+
 newEntity{
 	power_source = {nature=true},
 	name = "poisonous ", prefix=true, instant_resolve=true,
@@ -118,8 +119,8 @@ newEntity{
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 4,
-	wielder = {
-		combat_dam = resolvers.mbonus_material(7, 3, function(e, v) return v * 3 end),
+	combat = {
+		dam = resolvers.mbonus_material(7, 3, function(e, v) return v * 3 end),
 	},
 }
 
