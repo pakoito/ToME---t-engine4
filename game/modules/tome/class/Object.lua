@@ -402,6 +402,7 @@ function _M:getTextualDesc()
 	if w.max_stamina then desc:add(("Maximum stamina %d"):format(w.max_stamina), true) end
 
 	if w.combat_spellpower or w.combat_spellcrit then desc:add(("Spellpower %d, Spell Crit %d%%"):format(w.combat_spellpower or 0, w.combat_spellcrit or 0), true) end
+	if w.combat_physcrit then desc:add(("Physical Crit %d%%"):format(w.combat_physcrit or 0), true) end
 
 	if w.lite then desc:add(("Light radius %d"):format(w.lite), true) end
 	if w.infravision then desc:add(("Infravision radius %d"):format(w.infravision), true) end

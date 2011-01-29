@@ -22,6 +22,7 @@ local Savefile = require "engine.Savefile"
 local Dialog = require "engine.ui.Dialog"
 local Map = require "engine.Map"
 local Astar = require "engine.Astar"
+local forceprint = print
 local print = function() end
 
 --- Defines a zone: a set of levels, with depth, npcs, objects, level generator, ...
@@ -49,6 +50,7 @@ end
 -- @param short_name the short name of the zone to load, if should correspond to a directory in your module data/zones/short_name/ with a zone.lua, npcs.lua, grids.lua and objects.lua files inside
 function _M:init(short_name, dynamic)
 	self.short_name = short_name
+	self.specific_base_level = self.specific_base_level or {}
 	if not self:load(dynamic) then
 		self.level_range = self.level_range or {1,1}
 		if type(self.level_range) == "number" then self.level_range = {self.level_range, self.level_range} end
@@ -94,16 +96,18 @@ end
 function _M:computeRarities(type, list, level, filter, add_level, rarity_field)
 	rarity_field = rarity_field or "rarity"
 	local r = { total=0 }
-	print("******************", level.level)
+	print("******************", level.level, type)
+
+	local lev
+	if self.level_adjust_level then
+		lev = self:level_adjust_level(level, self, type)
+	else
+		lev = self.base_level + (self.specific_base_level[type] or 0) + (level.level - 1) + (add_level or 0)
+	end
+
 	for i, e in ipairs(list) do
 		if e[rarity_field] and e.level_range and (not filter or filter(e)) then
 --			print("computing rarity of", e.name)
-			local lev
-			if self.level_adjust_level then
-				lev = self:level_adjust_level(level)
-			else
-				lev = self.base_level + (level.level - 1) + (add_level or 0)
-			end
 
 			local max = 10000
 			if lev < e.level_range[1] then max = 10000 / (self.ood_factor * (e.level_range[1] - lev))
