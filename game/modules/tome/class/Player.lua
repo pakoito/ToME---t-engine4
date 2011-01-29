@@ -276,8 +276,15 @@ local arcane_eye_true_seeing = function() return true, 100 end
 function _M:playerFOV()
 	-- Clean FOV before computing it
 	game.level.map:cleanFOV()
+
+	-- Do wilderness stuff, nothing else
+	if game.zone.wilderness then
+		self:computeFOV(game.zone.wilderness_see_radius, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y, wild_fovdist[sqdist]) end, true, true, true)
+		return
+	end
+
 	-- Compute ESP FOV, using cache
-	if not game.zone.wilderness then self:computeFOV(self.esp.range or 10, "block_esp", function(x, y) game.level.map:applyESP(x, y, 0.6) end, true, true, true) end
+	self:computeFOV(self.esp.range or 10, "block_esp", function(x, y) game.level.map:applyESP(x, y, 0.6) end, true, true, true)
 
 	-- Handle Sense spell, a simple FOV, using cache. Note that this means some terrain features can be made to block sensing
 	if self:attr("detect_range") then
@@ -373,15 +380,11 @@ function _M:playerFOV()
 
 		-- Compute both the normal and the lite FOV, using cache
 		-- Do it last so it overrides others
-		if game.zone.wilderness_see_radius then
-			self:computeFOV(game.zone.wilderness_see_radius, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y, wild_fovdist[sqdist]) end, true, true, true)
-		else
-			self:computeFOV(self.sight or 10, "block_sight", function(x, y, dx, dy, sqdist)
-				game.level.map:apply(x, y, fovdist[sqdist])
-			end, true, false, true)
-			if self.lite <= 0 then game.level.map:applyLite(self.x, self.y)
-			else self:computeFOV(self.lite, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y) end, true, true, true) end
-		end
+		self:computeFOV(self.sight or 10, "block_sight", function(x, y, dx, dy, sqdist)
+			game.level.map:apply(x, y, fovdist[sqdist])
+		end, true, false, true)
+		if self.lite <= 0 then game.level.map:applyLite(self.x, self.y)
+		else self:computeFOV(self.lite, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y) end, true, true, true) end
 	end
 end
 

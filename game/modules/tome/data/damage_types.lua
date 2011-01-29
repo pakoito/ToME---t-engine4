@@ -121,13 +121,13 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 
 		local sx, sy = game.level.map:getTileToScreen(x, y)
 		if target:takeHit(dam, src) then
-			if rsrc == game.player or rtarget == game.player or game.party:hasMember(rsrc) or game.party:hasMember(rtarget) then
+			if game.level.map.seens(x, y) and (rsrc == game.player or rtarget == game.player or game.party:hasMember(rsrc) or game.party:hasMember(rtarget)) then
 				game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -3, "Kill!", {255,0,255})
 			end
 		elseif not DamageType:get(type).hideFlyer then
-			if rsrc == game.player or game.party:hasMember(rsrc) then
+			if game.level.map.seens(x, y) and (rsrc == game.player or game.party:hasMember(rsrc)) then
 				game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -3, tostring(-math.ceil(dam)), {0,255,0})
-			elseif rtarget == game.player or game.party:hasMember(rtarget) then
+			elseif game.level.map.seens(x, y) and (rtarget == game.player or game.party:hasMember(rtarget)) then
 				game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -3, tostring(-math.ceil(dam)), {255,0,0})
 			end
 		end
