@@ -64,6 +64,7 @@ He is wielding a small tree trunk and lumbering toward you.]],
 
 	on_die = function(self, who)
 		game.state:activateBackupGuardian("ALUIN", 2, 35, "... and we thought the trollmire was safer now!")
+		game.player:resolveSource():grantQuest("start-allied")
 		game.player:resolveSource():setQuestStatus("start-allied", engine.Quest.COMPLETED, "trollmire")
 		if who and who.level and who.level == 1 then
 			world:gainAchievement("KILL_BILL", game.player)
