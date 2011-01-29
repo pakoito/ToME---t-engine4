@@ -18,9 +18,47 @@
 -- darkgod@te4.org
 
 newTalent{
-	name = "Keen Senses",
+	name = "Arcane Eye",
 	type = {"spell/divination", 1},
 	require = spells_req1,
+	points = 5,
+	mana = 15,
+	cooldown = 10,
+	no_energy = true,
+	no_npc_use = true,
+	requires_target = true,
+	getDuration = function(self, t) return math.floor(10 + self:getTalentLevel(t) * 3) end,
+	getRadius = function(self, t) return math.floor(4 + self:getTalentLevel(t)) end,
+	action = function(self, t)
+		local tg = {type="hit", nolock=true, pass_terrain=true, nowarning=true, range=100, requires_knowledge=false}
+		x, y = self:getTarget(tg)
+		if not x then return nil end
+		-- Target code does not restrict the target coordinates to the range, it lets the project function do it
+		-- but we cant ...
+		local _ _, x, y = self:canProject(tg, x, y)
+
+		self:setEffect(self.EFF_ARCANE_EYE, t.getDuration(self, t), {x=x, y=y, track=game.level.map(x, y, Map.ACTOR), radius=t.getRadius(self, t), true_seeing=self:getTalentLevel(t) >= 5})
+		game:playSoundNear(self, "talents/spell_generic")
+		return true
+	end,
+	info = function(self, t)
+		local radius = t.getRadius(self, t)
+		local duration = t.getDuration(self, t)
+		return ([[Summons an ethereal magical eye at the designated location that lasts for %d turns.
+		The eye can not be seen or attacked by other creatures and posses magical vision that allows it to see any creature in a %d range around it.
+		It does not require light to do so but it can not see through walls.
+		Casting the eye does not take a turn.
+		Only one arcane eye can exist at any given time.
+		At level 4 if cast on a creature it will follow it until it expires or until the creature dies.
+		At level 5 its vision can see through invisibility, stealth and all other sight affecting effects.]]):
+		format(duration, radius)
+	end,
+}
+
+newTalent{
+	name = "Keen Senses",
+	type = {"spell/divination", 2},
+	require = spells_req2,
 	mode = "sustained",
 	points = 5,
 	sustain_mana = 40,
@@ -53,44 +91,6 @@ newTalent{
 		Improves critical spell chance +%d%%.
 		The effects will improve with the Magic stat]]):
 		format(seeinvisible, seestealth, criticalchance)
-	end,
-}
-
-newTalent{
-	name = "Arcane Eye",
-	type = {"spell/divination", 2},
-	require = spells_req2,
-	points = 5,
-	mana = 15,
-	cooldown = 10,
-	no_energy = true,
-	no_npc_use = true,
-	requires_target = true,
-	getDuration = function(self, t) return math.floor(10 + self:getTalentLevel(t) * 3) end,
-	getRadius = function(self, t) return math.floor(4 + self:getTalentLevel(t)) end,
-	action = function(self, t)
-		local tg = {type="hit", nolock=true, pass_terrain=true, nowarning=true, range=100, requires_knowledge=false}
-		x, y = self:getTarget(tg)
-		if not x then return nil end
-		-- Target code does not restrict the target coordinates to the range, it lets the project function do it
-		-- but we cant ...
-		local _ _, x, y = self:canProject(tg, x, y)
-
-		self:setEffect(self.EFF_ARCANE_EYE, t.getDuration(self, t), {x=x, y=y, track=game.level.map(x, y, Map.ACTOR), radius=t.getRadius(self, t), true_seeing=self:getTalentLevel(t) >= 5})
-		game:playSoundNear(self, "talents/spell_generic")
-		return true
-	end,
-	info = function(self, t)
-		local radius = t.getRadius(self, t)
-		local duration = t.getDuration(self, t)
-		return ([[Summons an ethereal magical eye at the designated location that lasts for %d turns.
-		The eye can not be seen or attacked by other creatures and posses magical vision that allows it to see any creature in a %d range around it.
-		It does not require light to do so but it can not see through walls.
-		Casting the eye does not take a turn.
-		Only one arcane eye can exist at any given time.
-		At level 4 if cast on a creature it will follow it until it expires or until the creature dies.
-		At level 5 its vision can see through invisibility, stealth and all other sight affecting effects.]]):
-		format(duration, radius)
 	end,
 }
 
