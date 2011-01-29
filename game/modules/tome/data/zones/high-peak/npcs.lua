@@ -282,6 +282,7 @@ newEntity{ define_as = "HIGH_SUN_PALADIN_AERYN",
 	instakill_immune = 1,
 	stun_immune = 0.5,
 	move_others=true,
+	never_anger = true,
 
 	open_door = true,
 
