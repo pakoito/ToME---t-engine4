@@ -229,3 +229,16 @@ end
 function _M:doEmote(text, dur, color)
 	self:setEmote(Emote.new(text, dur, color))
 end
+
+--- Call when added to a level
+-- Used to make escorts and such
+function _M:addedToLevel(level, x, y)
+	if game.difficulty == game.DIFFICULTY_INSANE and not game.party:hasMember(self) then
+		-- Increase talent level
+		for tid, lev in pairs(self.talents) do
+			self:learnTalent(tid, true, lev)
+		end
+	end
+
+	return mod.class.Actor.addedToLevel(self, level, x, y)
+end

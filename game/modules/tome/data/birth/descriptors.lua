@@ -189,7 +189,7 @@ newBirthDescriptor{
 		"Absolutely unfair game setting",
 		"Only one life, unless ways to self-resurrect are found in-game.",
 		"All zone levels increased by 100% + 10",
-		"All damage done to the player increased by 60%",
+		"All creatures talent levels increased by 100%",
 		"Player rank is normal instead of elite",
 	},
 	descriptor_choices =

@@ -27,7 +27,10 @@ newTalent{
 	cooldown = 30,
 	tactical = { BUFF = 2 },
 	spellpower_increase = { 5, 9, 13, 16, 18 },
-	getSpellpowerIncrease = function(self, t) return t.spellpower_increase[self:getTalentLevelRaw(t)] end,
+	getSpellpowerIncrease = function(self, t)
+		local v = t.spellpower_increase[self:getTalentLevelRaw(t)]
+		if v then return v else return 18 + (self:getTalentLevelRaw(t) - 5) * 2 end
+	end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/arcane")
 		return {

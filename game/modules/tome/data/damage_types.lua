@@ -29,10 +29,6 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		-- Difficulty settings
 		if game.difficulty == game.DIFFICULTY_EASY and rtarget.player then
 			dam = dam * 0.7
-		elseif game.difficulty == game.DIFFICULTY_NIGHTMARE and rtarget.player then
-			dam = dam * 1.3
-		elseif game.difficulty == game.DIFFICULTY_INSANE and rtarget.player then
-			dam = dam * 1.6
 		end
 		print("[PROJECTOR] after difficulty dam", dam)
 

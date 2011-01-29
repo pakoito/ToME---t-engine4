@@ -437,7 +437,7 @@ function _M:addTemporaryValue(prop, v, noupdate)
 				recursive(base[prop], k, e)
 			end
 		else
-			error("unsupported temporary value type: "..type(v).." :=: "..v)
+			error("unsupported temporary value type: "..type(v).." :=: "..tostring(v))
 		end
 	end
 
