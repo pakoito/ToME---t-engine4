@@ -94,7 +94,7 @@ newEntity{ base = "BASE_INFUSION",
 	material_level = 1,
 
 	inscription_data = {
-		cooldown = resolvers.rngrange(5, 10),
+		cooldown = resolvers.rngrange(12, 17),
 		heal = resolvers.mbonus_level(400, 40, function(e, v) return v * 0.06 end),
 		use_stat_mod = 2.7,
 	},
@@ -126,7 +126,7 @@ newEntity{ base = "BASE_INFUSION",
 
 	inscription_data = resolvers.generic(function(e)
 		return {
-			cooldown = rng.range(10, 15),
+			cooldown = rng.range(12, 17),
 			dur = rng.mbonus(4, resolvers.current_level, resolvers.mbonus_max_level) + 4,
 			power = rng.mbonus(20, resolvers.current_level, resolvers.mbonus_max_level) + 10,
 			use_stat_mod = 0.1,
@@ -214,7 +214,7 @@ newEntity{ base = "BASE_RUNE",
 	material_level = 1,
 
 	inscription_data = {
-		cooldown = resolvers.rngrange(5, 9),
+		cooldown = resolvers.rngrange(8, 10),
 		range = resolvers.mbonus_level(10, 5, function(e, v) return v * 1 end),
 		use_stat_mod = 0.07,
 	},
@@ -229,7 +229,7 @@ newEntity{ base = "BASE_RUNE",
 	material_level = 4,
 
 	inscription_data = {
-		cooldown = resolvers.rngrange(7, 12),
+		cooldown = resolvers.rngrange(10, 12),
 		range = resolvers.mbonus_level(6, 5, function(e, v) return v * 3 end),
 		use_stat_mod = 0.05,
 	},
@@ -244,7 +244,7 @@ newEntity{ base = "BASE_RUNE",
 	material_level = 2,
 
 	inscription_data = {
-		cooldown = resolvers.rngrange(9, 14),
+		cooldown = resolvers.rngrange(14, 19),
 		range = resolvers.mbonus_level(100, 20, function(e, v) return v * 0.03 end),
 		use_stat_mod = 1,
 	},
