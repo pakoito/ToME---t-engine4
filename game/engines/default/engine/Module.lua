@@ -235,7 +235,7 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 	local hash_valid, hash_err = profile:checkModuleHash(mod.version_name, fmd5)
 
 	-- If bad hash, switch to dev profile
-	if not hash_valid then
+	if not hash_valid and not profile.auth then
 		print("[PROFILE] switching to dev profile")
 		_G.profile = engine.PlayerProfile.new("dev")
 	end
