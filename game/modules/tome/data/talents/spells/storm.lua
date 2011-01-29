@@ -50,7 +50,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local dam = damDesc(self, DamageType.LIGHTNING, t.getDamage(self, t))
-		return ([[A lightning emanates from you in a circual wave, doing %0.2f to %0.2f lightning damage and possibly dazing them (75%% chance).
+		return ([[A lightning emanates from you in a circular wave, doing %0.2f to %0.2f lightning damage and possibly dazing them (75%% chance).
 		The damage will increase with the Magic stat]]):format(dam / 3, dam)
 	end,
 }
