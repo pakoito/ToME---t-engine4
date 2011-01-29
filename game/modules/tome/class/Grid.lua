@@ -63,6 +63,13 @@ function _M:block_move(x, y, e, act, couldpass)
 	return self.does_block_move
 end
 
+--- Setup minimap color for this entity
+-- You may overload this method to customize your minimap
+function _M:setupMinimapInfo(mo, map)
+	if self.change_level then mo:minimap(240, 0, 240) return end
+	return engine.Grid.setupMinimapInfo(self, mo, map)
+end
+
 function _M:on_move(x, y, who, forced)
 	if forced then return end
 	if who.move_project and next(who.move_project) then
