@@ -2179,7 +2179,7 @@ static int lua_fs_umount(lua_State *L)
 static int lua_fs_get_real_path(lua_State *L)
 {
 	const char *src = luaL_checkstring(L, 1);
-	char path = PHYSFS_getDependentPath(src);
+	char *path = PHYSFS_getDependentPath(src);
 	lua_pushstring(L, path);
 	free(path);
 	return 1;
