@@ -121,6 +121,18 @@ newEntity{ define_as = "ABOMINATION_RANTHA",
 	end,
 }
 
+local twin_take_hit = function(self, value, src)
+	value = mod.class.Actor.onTakeHit(self, value, src)
+	value = value / 2
+	if value > 0 then
+		local o = self.brother.onTakeHit
+		self.brother.onTakeHit = nil
+		self.brother:takeHit(value, src)
+		self.brother.onTakeHit = o
+	end
+	return value
+end
+
 newEntity{ base="BASE_NPC_HORROR", define_as = "CHRONOLITH_TWIN",
 	name = "Chronolith Twin", color=colors.VIOLET, unique = true,
 	subtype = "temporal",
@@ -158,7 +170,10 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "CHRONOLITH_TWIN",
 	autolevel = "warriormage",
 	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_astar" },
 
+	onTakeHit = twin_take_hit,
+
 	on_die = function(self, who)
+		self.brother = nil
 		game.player:resolveSource():setQuestStatus("temporal-rift", engine.Quest.COMPLETED, "twin")
 	end,
 }
@@ -200,7 +215,10 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "CHRONOLITH_CLONE",
 	autolevel = "warriormage",
 	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_astar" },
 
+	onTakeHit = twin_take_hit,
+
 	on_die = function(self, who)
+		self.brother = nil
 		game.player:resolveSource():setQuestStatus("temporal-rift", engine.Quest.COMPLETED, "clone")
 	end,
 }

@@ -134,10 +134,12 @@ return {
 			Dialog:simplePopup("Temporal Rift", "The peace of this place has been disturbed.")
 			game.level.shown_warning = true
 
-			local m = game.zone:makeEntityByName(game.level, "actor", "CHRONOLITH_TWIN")
-			game.zone:addEntity(game.level, m, "actor", 26, 8)
-			local m = game.zone:makeEntityByName(game.level, "actor", "CHRONOLITH_CLONE")
-			game.zone:addEntity(game.level, m, "actor", 29, 8)
+			local m1 = game.zone:makeEntityByName(game.level, "actor", "CHRONOLITH_TWIN")
+			game.zone:addEntity(game.level, m1, "actor", 26, 8)
+			local m2 = game.zone:makeEntityByName(game.level, "actor", "CHRONOLITH_CLONE")
+			game.zone:addEntity(game.level, m2, "actor", 29, 8)
+			m1.brother = m2
+			m2.brother = m1
 		end
 	end,
 
