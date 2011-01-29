@@ -34,6 +34,7 @@ function _M:init(actor)
 	actor:saveUUID()
 
 	self:generateList()
+	if self.dont_show then return end
 
 	self.c_desc = Textzone.new{width=self.iw, auto_height=true, text=[[You have #LIGHT_RED#died#LAST#!
 Death in T.o.M.E. is usually permanent, but if you have a means of resurrection it will be proposed in the menu below.

@@ -31,7 +31,7 @@ newTalent{
 		-- Check for visible monsters, only see LOS actors, so telepathy wont prevent it
 		core.fov.calc_circle(self.x, self.y, game.level.map.w, game.level.map.h, 20, function(_, x, y) return game.level.map:opaque(x, y) end, function(_, x, y)
 			local actor = game.level.map(x, y, game.level.map.ACTOR)
-			if actor and actor ~= self then seen = true end
+			if actor and actor ~= self and self:reactionToward(actor) < 0 then seen = true end
 		end, nil)
 		if seen then
 			game.logPlayer(self, "There's too much going on for you to use Meditation right now!")
