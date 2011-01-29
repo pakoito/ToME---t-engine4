@@ -99,6 +99,24 @@ function _M:findMember(filter)
 	end
 end
 
+function _M:setDeathTurn(actor, turn)
+	local def = self.members[actor]
+	if not def then return end
+	def.last_death_turn = turn
+end
+
+function _M:findLastDeath()
+	local max_turn = -9999
+	local last = nil
+
+	for i, actor in ipairs(self.m_list) do
+		local def = self.members[actor]
+
+		if def.last_death_turn and def.last_death_turn > max_turn then max_turn = def.last_death_turn; last = actor end
+	end
+	return last or self:findMember{main=true}
+end
+
 function _M:canControl(actor, vocal)
 	if not actor then return false end
 	if actor == game.player then return false end

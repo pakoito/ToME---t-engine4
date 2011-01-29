@@ -91,11 +91,15 @@ function _M:resurrectBasic(actor)
 	actor.dead = false
 	actor.died = (actor.died or 0) + 1
 
-	local x, y = util.findFreeGrid(actor.x, actor.y, 20, true, {[Map.ACTOR]=true})
-	if not x then x, y = actor.x, actor.y end
-	actor.x, actor.y = nil, nil
+	-- Find the position of the last dead
+	local last = game.party:findLastDeath()
 
+	local x, y = util.findFreeGrid(last.x, last.y, 20, true, {[Map.ACTOR]=true})
+	if not x then x, y = last.x, last.y end
+
+	actor.x, actor.y = nil, nil
 	actor:move(x, y, true)
+
 	game.level:addEntity(actor)
 	game:unregisterDialog(self)
 	game.level.map:redisplay()

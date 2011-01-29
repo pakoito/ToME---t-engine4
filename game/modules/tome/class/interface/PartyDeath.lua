@@ -26,6 +26,9 @@ function _M:onPartyDeath(src)
 	-- Remove from the party if needed
 	if self.remove_from_party_on_death then
 		game.party:removeMember(self, true)
+	-- Overwise note the death turn
+	else
+		game.party:setDeathTurn(self, game.turn)
 	end
 
 	-- Die
