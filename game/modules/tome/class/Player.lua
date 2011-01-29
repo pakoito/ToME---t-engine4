@@ -837,9 +837,6 @@ end
 
 --- Notify of object pickup
 function _M:on_pickup_object(o)
-	-- Grant the artifact quest
-	if o.unique and not o.lore and not o:isIdentified() and not game.zone.infinite_dungeon then self:grantQuest("first-artifact") end
-
 	if self:attr("auto_id") and o:getPowerRank() <= self.auto_id then
 		o:identify(true)
 	end

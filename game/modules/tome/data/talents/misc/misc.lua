@@ -318,3 +318,40 @@ newTalent{
 		The duration will increase with the Willpower stat]]):format(4 + self:getWil(10))
 	end,
 }
+
+-- Yeek's power: ID
+newTalent{
+	short_name = "YEEK_ID",
+	name = "Knowledge of the Way",
+	type = {"base/race", 1},
+	no_npc_use = true,
+	on_learn = function(self, t) self.auto_id = 1 end,
+	action = function(self, t)
+		local Chat = require("engine.Chat")
+		local chat = Chat.new("elisa-orb-scrying", {name="The Way"}, self, {version="yeek"})
+		chat:invoke()
+		return true
+	end,
+	info = function(self)
+		return ([[You merge your mind with the rest of the Way for a brief moment, the sum of all yeek knowledge gathers in your mind
+		and allows you to identify any item you could not recognize yourself.]])
+	end,
+}
+
+-- Undeads's power: ID
+newTalent{
+	short_name = "UNDEAD_ID",
+	name = "Knowledge of the Past",
+	type = {"base/race", 1},
+	no_npc_use = true,
+	on_learn = function(self, t) self.auto_id = 1 end,
+	action = function(self, t)
+		local Chat = require("engine.Chat")
+		local chat = Chat.new("elisa-orb-scrying", {name="Past memories"}, self, {version="undead"})
+		chat:invoke()
+		return true
+	end,
+	info = function(self)
+		return ([[You concentrate for a moment to recall some of your memories as a living being and look for knowledge to identify rare objects.]])
+	end,
+}

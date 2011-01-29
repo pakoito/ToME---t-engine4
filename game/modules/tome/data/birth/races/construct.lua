@@ -83,6 +83,7 @@ newBirthDescriptor
 		starting_zone = "ruins-kor-pul",
 		starting_quest = "start-allied",
 		blood_color = colors.GREY,
+		resolvers.inventory{ id=true, {defined="ORB_SCRYING"} },
 
 		mana_regen = 0.5,
 		mana_rating = 7,

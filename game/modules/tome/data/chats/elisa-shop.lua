@@ -34,7 +34,6 @@ local function auto_id(npc, player)
 			if not o:isIdentified() then
 				o:identify(true)
 				list[#list+1] = o:getName{do_color=true}
-				if o.unique and player:hasQuest("first-artifact") and not player:hasQuest("first-artifact"):isEnded() then do_quest = true end
 			end
 		end
 	end

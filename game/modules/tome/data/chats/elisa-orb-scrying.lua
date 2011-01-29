@@ -25,37 +25,76 @@ local function can_auto_id(npc, player)
 		end
 	end
 end
+local function can_not_auto_id(npc, player)
+	return not can_auto_id(npc, player)
+end
 
-local function auto_id(npc, player)
-	local list = {}
-	for inven_id, inven in pairs(player.inven) do
-		for item, o in ipairs(inven) do
-			if not o:isIdentified() then
-				o:identify(true)
-				list[#list+1] = o:getName{do_color=true}
+local function auto_id(header, footer, done)
+	return function(npc, player)
+		local list = {}
+		for inven_id, inven in pairs(player.inven) do
+			for item, o in ipairs(inven) do
+				if not o:isIdentified() then
+					o:identify(true)
+					list[#list+1] = o:getName{do_color=true}
+				end
 			end
 		end
-	end
 
-	-- Create the chat
-	newChat{ id="id_list",
-		text = [[Let's see what have you got here...
-]]..table.concat(list, "\n")..[[
-
-That is very nice, @playername@!]],
-		answers = {
-			{"Thank you, Elisa!"},
+		-- Create the chat
+		newChat{ id="id_list",
+			text = header..table.concat(list, "\n")..footer,
+			answers = { {done} }
 		}
-	}
 
-	-- Switch to that chat
-	return "id_list"
+		-- Switch to that chat
+		return "id_list"
+	end
 end
+
+----------------------------------------------------------------------
+-- Yeek version
+----------------------------------------------------------------------
+if version == "yeek" then
+
+newChat{ id="welcome",
+	text = [[You immerse your mind in the Way and let knowledge flow in.]],
+	answers = {
+		{"[Images and knowledge flow in.]", cond=can_auto_id,
+			action=auto_id("", "", "[You mentally thank the Way.]")
+		},
+		{"[You do not gain any knowledge.]", cond=can_not_auto_id},
+	}
+}
+return "welcome"
+
+----------------------------------------------------------------------
+-- Undead version
+----------------------------------------------------------------------
+elseif version == "undead" then
+
+newChat{ id="welcome",
+	text = [[You pause and recall past memories.]],
+	answers = {
+		{"[Images and knowledge flow in.]", cond=can_auto_id,
+			action=auto_id("", "", "[done]")
+		},
+		{"[You do not recognize anything new.]", cond=can_not_auto_id},
+	}
+}
+return "welcome"
+
+----------------------------------------------------------------------
+-- Elisa version
+----------------------------------------------------------------------
+else
 
 newChat{ id="welcome",
 	text = [[Oh, hi @playername@, have you got something new to show me?]],
 	answers = {
-		{"Yes, Elisa, could you have a look at these objects please? [show her the items the orb could not identify]", cond=can_auto_id, action=auto_id},
+		{"Yes, Elisa, could you have a look at these objects please? [show her the items the orb could not identify]", cond=can_auto_id,
+			action=auto_id("Let's see what have you got here...\n", "\n\nThat is very nice, @playername@!", "Thank you, Elisa!")
+		},
 		{"Err, no... sorry, I just wanted to hear a friendly voice.", jump="friend"},
 		{"Not yet sorry!"},
 	}
@@ -68,5 +107,6 @@ Oh, you are #{bold}#SOOOO#{normal}# cute!]],
 		{"Goodbye, Elisa!"},
 	}
 }
-
 return "welcome"
+
+end

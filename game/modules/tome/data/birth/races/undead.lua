@@ -42,6 +42,9 @@ newBirthDescriptor{
 			Divine = "disallow",
 		},
 	},
+	talents = {
+		[ActorTalents.T_UNDEAD_ID]=1,
+	},
 	copy = {
 		-- Force undead faction to undead
 		resolvers.genericlast(function(e) e.faction = "undead" end),

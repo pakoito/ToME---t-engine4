@@ -75,6 +75,7 @@ newBirthDescriptor
 	inc_stats = { str=-3, con=-5, cun=4, wil=6, mag=0, dex=-2 },
 	talents = {
 		[ActorTalents.T_YEEK_WILL]=1,
+		[ActorTalents.T_YEEK_ID]=1,
 	},
 	copy = {
 		life_rating=7,
