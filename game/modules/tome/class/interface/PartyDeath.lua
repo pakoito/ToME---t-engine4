@@ -48,7 +48,10 @@ function _M:onPartyDeath(src)
 		game.player.killedBy = src
 		game.player.died_times[#game.player.died_times+1] = {name=src.name, level=game.player.level, turn=game.turn}
 		game.player:registerDeath(game.player.killedBy)
-		game:registerDialog(require("mod.dialogs."..(game.player.death_dialog or "DeathDialog")).new(game.player))
+		local dialog = require("mod.dialogs."..(game.player.death_dialog or "DeathDialog")).new(game.player)
+		if not dialog.dont_show then
+			game:registerDialog(dialog)
+		end
 		game.player:saveUUID()
 	end
 end

@@ -265,7 +265,7 @@ newEntity{ define_as = "ORB_DESTRUCTION",
 -- Scrying
 newEntity{ define_as = "ORB_SCRYING",
 	power_source = {unknown=true},
-	unique = true, quest=true,
+	unique = true, quest=true, no_unique_lore=true,
 	type = "jewelry", subtype="orb",
 	unided_name = "orb of scrying",
 	name = "Orb of Scrying",

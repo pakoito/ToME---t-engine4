@@ -44,6 +44,11 @@ newAchievement{
 }
 
 newAchievement{
+	name = "Utterly Destroyed", id = "EIDOLON_DEATH",
+	desc = [[Died on the Eidolon Plane.]],
+}
+
+newAchievement{
 	name = "Emancipation", id = "EMANCIPATION",
 	desc = [[Have the golem kill a boss while its master is already dead.]],
 	mode = "player",

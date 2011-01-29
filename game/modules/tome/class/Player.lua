@@ -243,6 +243,7 @@ function _M:updateMainShader()
 		elseif self:attr("invisible") then game.fbo_shader:setUniform("colorize", {0.4,0.5,0.7})
 		elseif self:attr("unstoppable") then game.fbo_shader:setUniform("colorize", {1,0.2,0})
 		elseif self:attr("lightning_speed") then game.fbo_shader:setUniform("colorize", {0.2,0.3,1})
+		elseif game.level and game.level.data.is_eidolon_plane then game.fbo_shader:setUniform("colorize", {1,1,1})
 --		elseif game:hasDialogUp() then game.fbo_shader:setUniform("colorize", {0.9,0.9,0.9})
 		else game.fbo_shader:setUniform("colorize", {0,0,0}) -- Disable
 		end

@@ -106,8 +106,46 @@ function _M:resurrectBasic(actor)
 	actor.energy.value = game.energy_to_act
 	actor.changed = true
 	game.paused = true
+end
 
-	world:gainAchievement("UNSTOPPABLE", actor)
+--- Send the party to the Eidolon Plane
+function _M:eidolonPlane()
+	game:onTickEnd(function()
+		local oldzone = game.zone
+		local oldlevel = game.level
+		local zone = engine.Zone.new("eidolon-plane")
+		local level = zone:getLevel(game, 1, 0)
+		level.data.eidolon_exit_x = self.actor.x
+		level.data.eidolon_exit_y = self.actor.y
+
+		local acts = {}
+		for act, _ in pairs(game.party.members) do
+			if not act.dead then
+				acts[#acts+1] = act
+				if oldlevel:hasEntity(act) then oldlevel:removeEntity(act) end
+			end
+		end
+
+		level.source_zone = oldzone
+		level.source_level = oldlevel
+		game.zone = zone
+		game.level = level
+		game.zone_name_s = nil
+
+		for _, act in ipairs(acts) do
+			local x, y = util.findFreeGrid(5, 5, 20, true, {[Map.ACTOR]=true})
+			if x then
+				level:addEntity(act)
+				act:move(x, y, true)
+				act.changed = true
+				game.level.map:particleEmitter(x, y, 1, "teleport")
+			end
+		end
+
+		game.log("#LIGHT_RED#As you are on the brink of death you seem to be yanked to an other plane.")
+		game.player:updateMainShader()
+	end)
+	return true
 end
 
 function _M:use(item)
@@ -139,18 +177,22 @@ function _M:use(item)
 		self:cleanActor(self.actor)
 		self:restoreResources(self.actor)
 		self:resurrectBasic(self.actor)
+		world:gainAchievement("UNSTOPPABLE", actor)
 	elseif act == "easy_mode" then
 		self.actor:attr("easy_mode_lifes", -1)
-		game.logPlayer(self.actor, "#LIGHT_RED#You resurrect!")
 
-		self.actor.x = self.actor.entered_level.x
-		self.actor.y = self.actor.entered_level.y
 		self:cleanActor(self.actor)
 		self:resurrectBasic(self.actor)
-
 		for uid, e in pairs(game.level.entities) do
-			self:restoreResources(e)
+			if not game.party:hasMember(e) then
+				self:restoreResources(e)
+			else
+				e.life = math.max(e.life, 1)
+				e.changed = true
+			end
 		end
+		self:eidolonPlane()
+		game.log("#LIGHT_RED#You have %s left.", self.actor:attr("easy_mode_lifes") and (self.actor:attr("easy_mode_lifes").." life(s)" or "no more lifes"))
 	elseif act == "skeleton" then
 		self.actor:attr("re-assembled", 1)
 		game.logPlayer(self.actor, "#YELLOW#Your bones magically come back together. You are once more able to dish out pain to your foes!")
@@ -158,6 +200,7 @@ function _M:use(item)
 		self:cleanActor(self.actor)
 		self:restoreResources(self.actor)
 		self:resurrectBasic(self.actor)
+		world:gainAchievement("UNSTOPPABLE", actor)
 	elseif act:find("^consume") then
 		local inven, item, o = item.inven, item.item, item.object
 		self.actor:removeObject(inven, item)
@@ -166,15 +209,33 @@ function _M:use(item)
 		self:cleanActor(self.actor)
 		self:restoreResources(self.actor)
 		self:resurrectBasic(self.actor)
+		world:gainAchievement("UNSTOPPABLE", actor)
 	end
 end
 
 function _M:generateList()
 	local list = {}
+	local allow_res = true
+
+	-- Pause the game
+	game:onTickEnd(function()
+		game.paused = true
+		game.player.energy.value = game.energy_to_act
+	end)
+
+	if game.zone.is_eidolon_plane then
+		game.logPlayer(self, "You managed to die on the eidolon plane! DIE!")
+		game:onTickEnd(function() world:gainAchievement("EIDOLON_DEATH", self.actor) end)
+		allow_res = false
+	end
 
 	if config.settings.cheat then list[#list+1] = {name="Resurrect by cheating", action="cheat"} end
-	if not self.actor.no_resurrect then
-		if self.actor:attr("easy_mode_lifes") then list[#list+1] = {name=("Resurrect (%d left)"):format(self.actor.easy_mode_lifes), action="easy_mode"} end
+	if not self.actor.no_resurrect and allow_res then
+		if self.actor:attr("easy_mode_lifes") then
+			self:use{action="easy_mode"}
+			self.dont_show = true
+			return
+		end
 		if self.actor:attr("blood_life") and not self.actor:attr("undead") then list[#list+1] = {name="Resurrect with the Blood of Life", action="blood_life"} end
 		if self.actor:getTalentLevelRaw(self.actor.T_SKELETON_REASSEMBLE) >= 5 and not self.actor:attr("re-assembled") then list[#list+1] = {name="Re-assemble your bones and resurrect (Skeleton ability)", action="skeleton"} end
 
