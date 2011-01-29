@@ -80,7 +80,7 @@ newTalent{
 newTalent{
 	name = "Gem Golem",
 	type = {"spell/advanced-golemancy",3},
-	require = spells_req3,
+	require = spells_req_high3,
 	mode = "passive",
 	points = 5,
 	info = function(self, t)
