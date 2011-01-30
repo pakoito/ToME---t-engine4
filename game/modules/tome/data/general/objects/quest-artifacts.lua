@@ -295,7 +295,7 @@ newEntity{ define_as = "ORB_SCRYING",
 }
 
 newEntity{ base = "BASE_WAND",
-	power_source = {unknown=true},
+	power_source = {unknown=true, arcane=false},
 	define_as = "ROD_OF_RECALL",
 	unided_name = "unstable wand", identified=true, force_lore_artifact=true,
 	name = "Rod of Recall", color=colors.LIGHT_BLUE, unique=true,

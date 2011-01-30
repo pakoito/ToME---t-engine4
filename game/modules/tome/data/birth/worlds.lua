@@ -101,6 +101,9 @@ newBirthDescriptor{
 		"But what lurks in the shadows of the world?",
 	},
 	descriptor_choices = default_eyal_descriptors,
+	copy = {
+		__allow_rod_recall = true,
+	}
 }
 
 newBirthDescriptor{

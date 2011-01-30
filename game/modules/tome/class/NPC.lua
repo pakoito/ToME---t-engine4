@@ -193,11 +193,11 @@ function _M:die(src)
 		return
 	end
 
-	if self.rank >= 4 and not game.state.droped_rod_recall then
+	if self.rank >= 4 and game.state:allowRodRecall() then
 		local rod = game.zone:makeEntityByName(game.level, "object", "ROD_OF_RECALL")
 		if rod then
 			game.zone:addEntity(game.level, rod, "object", self.x, self.y)
-			game.state.droped_rod_recall = true
+			game.state:allowRodRecall(false)
 		end
 	end
 

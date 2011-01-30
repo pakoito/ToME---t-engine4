@@ -157,6 +157,8 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y then return nil end
+		local actor = game.level.map(x, y, Map.ACTOR)
+		if not actor then return true end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
 		local knockback = t.getKnockback(self, t)
 		forceHit(self, target, self.x, self.y, dam, knockback, 15, 1)
@@ -246,6 +248,8 @@ newTalent{
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t, display={particle="bolt_fire", trail="firetrail"}}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
+		local actor = game.level.map(x, y, Map.ACTOR)
+		if math.floor(core.fov.distance(self.x, self.y, x, y)) == 1 and not actor then return true end
 		self:project(tg, x, y, DamageType.FIREBURN, self:spellCrit(rng.avg(0.8*dam, dam)))
 		local _ _, x, y = self:canProject(tg, x, y)
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "flamebeam", {tx=x-self.x, ty=y-self.y})

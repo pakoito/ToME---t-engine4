@@ -146,6 +146,8 @@ function _M:newGame()
 	-- Create the entity to store various game state things
 	self.state = GameState.new{}
 	local birth_done = function()
+		if self.player.__allow_rod_recall then game.state:allowRodRecall(true) self.player.__allow_rod_recall = nil end
+
 		for i = 1, 50 do
 			local o = self.state:generateRandart(true)
 			self.zone.object_list[#self.zone.object_list+1] = o

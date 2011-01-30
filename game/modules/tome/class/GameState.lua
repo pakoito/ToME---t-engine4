@@ -32,6 +32,12 @@ function _M:init(t, no_default)
 	self.world_artifacts_pool = {}
 end
 
+--- Allow dropping the rod of recall
+function _M:allowRodRecall(v)
+	if v == nil then return self.allow_drop_recall end
+	self.allow_drop_recall = v
+end
+
 --- Discovered the far east
 function _M:goneEast()
 	self.gone_east = true
