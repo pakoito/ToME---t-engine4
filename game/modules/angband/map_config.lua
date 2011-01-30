@@ -23,7 +23,6 @@ Map.zdepth = 4
 
 -- Setup the map to only display one entity
 Map.updateMapDisplay = function(self, x, y, mos)
-	local mm = Map.MM_FLOOR
 	local g = self(x, y, Map.TERRAIN)
 	local o = self(x, y, Map.OBJECT)
 	local a = self(x, y, Map.ACTOR)
@@ -36,15 +35,12 @@ Map.updateMapDisplay = function(self, x, y, mos)
 			self._fovcache.path_caches[ps]:set(x, y, g:check("block_move", x, y, ps, false, true))
 		end
 
-		mm = mm + (g:check("block_move") and Map.MM_BLOCK or 0)
-		mm = mm + (g:check("change_level") and Map.MM_LEVEL_CHANGE or 0)
 		g:getMapObjects(self.tiles, mos, 1)
 	end
 	if t then
 		-- Handles trap being known
 		if not self.actor_player or t:knownBy(self.actor_player) then
 			t:getMapObjects(self.tiles, mos, 2)
-			mm = mm + Map.MM_TRAP
 		end
 	end
 	if o then
@@ -53,15 +49,12 @@ Map.updateMapDisplay = function(self, x, y, mos)
 			local mo = o:getMapStackMO(self, x, y)
 			if mo then mos[2] = mo end
 		end
-		mm = mm + Map.MM_OBJECT
 	end
 	if a then
 		-- Handles invisibility and telepathy and other such things
 		if not self.actor_player or self.actor_player:canSee(a) then
 			local r = self.actor_player:reactionToward(a)
-			mm = mm + (r > 0 and Map.MM_FRIEND or (r == 0 and Map.MM_NEUTRAL or Map.MM_HOSTILE))
 			a:getMapObjects(self.tiles, mos, 4)
 		end
 	end
-	return mm
 end

@@ -220,7 +220,7 @@ function _M:display(nb_keyframe)
 	if self.change_res_dialog then engine.GameTurnBased.display(self, nb_keyframe) return end
 
 	-- Now the map, if any
-	if self.level and self.level.map and self.level.map.finished then
+	if self.level and self.level.map and self.level.map.finished and self.player.x and self.player.y then
 		-- Display the map and compute FOV for the player if needed
 		if self.level.map.changed then
 			self.player:playerFOV()
