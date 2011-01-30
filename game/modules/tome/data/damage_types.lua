@@ -830,6 +830,22 @@ newDamageType{
 	end,
 }
 
+-- Blind
+newDamageType{
+	name = "% chances to blind", type = "RANDOM_BLIND",
+	projector = function(src, x, y, type, dam)
+		if _G.type(dam) == "number" then dam = {dam=dam} end
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and rng.percent(dam.dam) then
+			if target:checkHit((dam.power_check or src.combatSpellpower)(src), (dam.resist_check or target.combatMentalResist)(target), 0, 95, 15) and target:canBe("confusion") then
+				target:setEffect(target.EFF_BLINDED, dam.dam, {})
+			else
+				game.logSeen(target, "%s resists!", target.name:capitalize())
+			end
+		end
+	end,
+}
+
 -- Physical + Blind
 newDamageType{
 	name = "sand", type = "SAND",

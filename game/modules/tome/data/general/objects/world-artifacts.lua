@@ -707,7 +707,7 @@ local activate_pair = function(moon, star, who)
 	moon.paired._special3 = {who, {"inc_damage", DamageType.DARKNESS}, who:addTemporaryValue({"inc_damage", DamageType.DARKNESS}, 10)}
 	-- The Star knife's bonuses
 	star.paired._special1 = {who, "lite", who:addTemporaryValue("lite", 1)}
-	star.paired._special2 = {star, "combat", star:addTemporaryValue("combat", {melee_project={[DamageType.RANDOM_BLINDPHYSICAL]=3}})}
+	star.paired._special2 = {star, "combat", star:addTemporaryValue("combat", {melee_project={[DamageType.RANDOM_BLIND]=3}})}
 	star.paired._special3 = {who, "inc_damage", who:addTemporaryValue("inc_damage", {[DamageType.LIGHT]=10}) }
 	game.logPlayer(who, "The two blades glow brightly as they are brought close together.")
 end
