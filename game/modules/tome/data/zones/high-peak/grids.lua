@@ -85,60 +85,65 @@ local invocation_close = function(self, who)
 	for i = 1, #game.level.spots do if game.level.spots[i] == spot then table.remove(game.level.spots, i) break end end
 	local g = game.level.map(spot.x, spot.y, engine.Map.TERRAIN)
 	g.name = g.name .. " (disabled)"
+	g.color_r = colors.WHITE.r
+	g.color_g = colors.WHITE.g
+	g.color_b = colors.WHITE.b
+	if g._mo then g._mo:invalidate() g._mo = nil end
+	game.level.map:updateMap(spot.x, spot.y)
 	who:setQuestStatus("high-peak", engine.Quest.COMPLETED, "closed-portal-"..self.summon)
 end
 
 newEntity{
-	define_as = "PORTAL_UNDEAD",
+	define_as = "ORB_UNDEATH",
 	name = "Invocation Portal: Undeath",
 	display = '&', color=colors.GREY, back_color=colors.PURPLE,
 	notice = true,
 	always_remember = true,
 	show_tooltip = true,
 	desc = [[An invocation portal, perpetually summoning beings through it.]],
-	orb_portal = {
+	orb_command = {
 		summon = "undead",
 		special = invocation_close,
 	},
 }
 
 newEntity{
-	define_as = "PORTAL_ELEMENTS",
+	define_as = "ORB_ELEMENTS",
 	name = "Invocation Portal: Elements",
 	display = '&', color=colors.LIGHT_RED, back_color=colors.PURPLE,
 	notice = true,
 	always_remember = true,
 	show_tooltip = true,
 	desc = [[An invocation portal, perpetually summoning beings through it.]],
-	orb_portal = {
+	orb_command = {
 		summon = "elemental",
 		special = invocation_close,
 	},
 }
 
 newEntity{
-	define_as = "PORTAL_DRAGON",
+	define_as = "ORB_DRAGON",
 	name = "Invocation Portal: Dragons",
 	display = '&', color=colors.LIGHT_BLUE, back_color=colors.PURPLE,
 	notice = true,
 	always_remember = true,
 	show_tooltip = true,
 	desc = [[An invocation portal, perpetually summoning beings through it.]],
-	orb_portal = {
+	orb_command = {
 		summon = "dragon",
 		special = invocation_close,
 	},
 }
 
 newEntity{
-	define_as = "PORTAL_DESTRUCTION",
+	define_as = "ORB_DESTRUCTION",
 	name = "Invocation Portal: Destruction",
 	display = '&', color=colors.WHITE, back_color=colors.PURPLE,
 	notice = true,
 	always_remember = true,
 	show_tooltip = true,
 	desc = [[An invocation portal, perpetually summoning beings through it.]],
-	orb_portal = {
+	orb_command = {
 		summon = "demon",
 		special = invocation_close,
 	},
