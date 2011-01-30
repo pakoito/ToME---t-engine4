@@ -1637,12 +1637,14 @@ function _M:postUseTalent(ab, ret)
 
 	self.changed = true
 
+--[[
 	-- Handle inscriptions
 	if ab.type[1] == "inscriptions/infusions" then
 		self:setEffect(self.EFF_INFUSION_COOLDOWN, 15, {power=2})
 	elseif ab.type[1] == "inscriptions/runes" then
 		self:setEffect(self.EFF_RUNE_COOLDOWN, 15, {power=2})
 	end
+]]
 
 	if not ab.no_energy then
 		if ab.is_spell then
@@ -1851,6 +1853,7 @@ function _M:getTalentCooldown(t)
 	if type(cd) == "function" then cd = cd(self, t) end
 	if not cd then return end
 
+--[[
 	if t.type[1] == "inscriptions/infusions" then
 		local eff = self:hasEffect(self.EFF_INFUSION_COOLDOWN)
 		if eff and eff.power then cd = cd + eff.power end
@@ -1858,6 +1861,7 @@ function _M:getTalentCooldown(t)
 		local eff = self:hasEffect(self.EFF_RUNE_COOLDOWN)
 		if eff and eff.power then cd = cd + eff.power end
 	end
+]]
 
 	if self.talent_cd_reduction[t.id] then cd = cd - self.talent_cd_reduction[t.id] end
 	if self.talent_cd_reduction.all then cd = cd - self.talent_cd_reduction.all end

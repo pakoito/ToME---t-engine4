@@ -390,6 +390,7 @@ function resolvers.calc.inscriptions(t, e)
 		end
 		if o and o.inscription_talent and o.inscription_data then
 			o.inscription_data.use_any_stat = 0.3 -- Cheat a beat to scale inscriptions nicely
+			o.inscription_data.cooldown = math.ceil(o.inscription_data.cooldown * 1.7)
 			e:setInscription(nil, o.inscription_talent, o.inscription_data, false, false, nil, true, true)
 		end
 	end
