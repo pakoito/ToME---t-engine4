@@ -60,6 +60,7 @@ newBirthDescriptor{
 		["technique/combat-training"]={true, 0.3},
 		["technique/superiority"]={false, 0.3},
 		["technique/warcries"]={false, 0.3},
+		["technique/battle-tactics"]={false, 0.3},
 		["technique/field-control"]={false, 0},
 		["cunning/survival"]={true, 0},
 		["cunning/dirty"]={false, 0},

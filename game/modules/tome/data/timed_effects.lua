@@ -74,6 +74,26 @@ newEffect{
 }
 
 newEffect{
+	name = "DEEP_WOUND",
+	desc = "Deep Wound",
+	long_desc = function(self, eff) return ("Huge cut that bleeds blood, doing %0.2f physical damage per turn and decreasing all heals received by %d%%."):format(eff.power, eff.heal_factor) end,
+	type = "physical",
+	status = "detrimental",
+	parameters = {power=10, heal_factor=30},
+	on_gain = function(self, err) return "#Target# starts to bleed.", "+Deep Wounds" end,
+	on_lose = function(self, err) return "#Target# stops bleeding.", "-Deep Wounds" end,
+	activate = function(self, eff)
+		eff.healid = self:addTemporaryValue("healing_factor", -eff.heal_factor / 100)
+	end,
+	on_timeout = function(self, eff)
+		DamageType:get(DamageType.PHYSICAL).projector(eff.src or self, self.x, self.y, DamageType.PHYSICAL, eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("healing_factor", eff.healid)
+	end,
+}
+
+newEffect{
 	name = "MANAFLOW",
 	desc = "Manaflow",
 	long_desc = function(self, eff) return ("The mana surge engulfs the target, regenerating %0.2f mana per turn."):format(eff.power) end,
@@ -2214,6 +2234,27 @@ newEffect{
 }
 
 newEffect{
+	name = "STEP_UP",
+	desc = "Step Up",
+	long_desc = function(self, eff) return ("Movement is %d%% faster."):format(eff.power) end,
+	type = "physical",
+	status = "beneficial",
+	parameters = {power=1000},
+	on_gain = function(self, err) return "#Target# prepares for the next kill!.", "+Step Up" end,
+	on_lose = function(self, err) return "#Target# slows down.", "-Step Up" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("step_up", 1)
+		eff.moveid = self:addTemporaryValue("energy", {mod=self.energy.mod*eff.power/100})
+		if self.ai_state then eff.aiid = self:addTemporaryValue("ai_state", {no_talents=1}) end -- Make AI not use talents while using it
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("step_up", eff.tmpid)
+		if eff.aiid then self:removeTemporaryValue("ai_state", eff.aiid) end
+		self:removeTemporaryValue("energy", eff.moveid)
+	end,
+}
+
+newEffect{
 	name = "LIGHTNING_SPEED",
 	desc = "Lightning Speed",
 	long_desc = function(self, eff) return ("Turn into pure lightning, moving %d%% faster. It also increases your lightning resistance by 100%% and your physical resistance by 30%%."):format(eff.power) end,
@@ -2324,7 +2365,7 @@ newEffect{
 	on_lose = function(self, err) return "The entropic shield around #Target# dissipates.", "-Entropic Shield" end,
 	activate = function(self, eff)
 		eff.particle = self:addParticles(Particles.new("time_shield", 1))
-		eff.tmpid = self:addTemporaryValue("on_melee_hit", {[DamageType.TEMPORAL]= eff.power})
+		eff.tmpid = self:addTemporaryValue("on_melee_hit", {[DamageType.TEMPORAL]= eff.power/2})
 		eff.phys = self:addTemporaryValue("resists", {[DamageType.PHYSICAL]=eff.power/2})
 		eff.proj = self:addTemporaryValue("slow_projectiles", eff.power)
 	end,
@@ -3333,5 +3374,56 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("resists", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "GREATER_WEAPON_FOCUS",
+	desc = "Greater Weapon Focus",
+	long_desc = function(self, eff) return ("%d%% chances to score a secondary blow."):format(eff.chance) end,
+	type = "physical",
+	status = "beneficial",
+	parameters = { chance=50 },
+	activate = function(self, eff)
+	end,
+	deactivate = function(self, eff)
+	end,
+}
+
+newEffect{
+	name = "SPACETIME_TUNING",
+	desc = "Spacetime Tuning",
+	long_desc = function(self, eff) return "The target is retuning the fabric of spacetime, any damage will stop it." end,
+	type = "magical",
+	status = "detrimental",
+	parameters = {},
+	on_timeout = function(self, eff)
+		local t = self:getTalentFromId(self.T_SPACETIME_TUNING)
+		local anomaly = t.getAnomaly(self, t)
+
+		-- first check for anomaly
+		if rng.percent(anomaly) then
+			-- Random anomaly
+			local ts = {}
+			for id, t in pairs(self.talents_def) do
+				if t.type[1] == "chronomancy/anomalies" then ts[#ts+1] = id end
+			end
+			if not silent then game.logPlayer(self, "You lose control and unleash an anomaly!") end
+			self:forceUseTalent(rng.table(ts), {ignore_energy=true})
+			-- cancel tuning
+			self:removeEffect(self.EFF_SPACETIME_TUNING)
+		else
+			self:incParadox(eff.power)
+		end
+
+	end,
+	activate = function(self, eff)
+		-- energy gets used here instead of in the talent since the talent will use it when the dialog box pops up and mess with our daze
+		self:useEnergy()
+		-- set daze
+		eff.tmpid = self:addTemporaryValue("dazed", 1)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("dazed", eff.tmpid)
 	end,
 }

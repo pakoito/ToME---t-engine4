@@ -1223,7 +1223,7 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			local dam = 5 + math.ceil(dam / 20)
+			local dam = 2 + math.ceil(dam / 15)
 			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) then
 				target:setEffect(target.EFF_TURN_BACK_THE_CLOCK, 3, {power=dam})
 			else

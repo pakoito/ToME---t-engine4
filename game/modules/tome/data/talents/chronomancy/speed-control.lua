@@ -33,7 +33,7 @@ newTalent{
 	info = function(self, t)
 		local power = t.getPower(self, t)
 		return ([[You encase yourself in a shield that slows incoming projectiles by %d%% and grants you %d%% physical resistance for 10 turns.  Additionally any attacker that strikes you in melee will suffer %0.2f temporal damage.
-		The effect will scale with your Paradox and Magic stat.]]):format(power, power / 2, damDesc(self, DamageType.TEMPORAL, power))
+		The effect will scale with your Paradox and Magic stat.]]):format(power, power / 2, damDesc(self, DamageType.TEMPORAL, power / 2))
 	end,
 }
 

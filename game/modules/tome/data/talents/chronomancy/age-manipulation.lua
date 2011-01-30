@@ -31,7 +31,7 @@ newTalent{
 	proj_speed = 3,
 	direct_hit = true,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 200)*getParadoxModifier(self, pm) end,
-	getDamageStat = function(self, t) return 5 + math.ceil(t.getDamage(self, t) / 10) end,
+	getDamageStat = function(self, t) return 2 + math.ceil(t.getDamage(self, t) / 15) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="temporal_bolt"}}
 		local x, y = self:getTarget(tg)

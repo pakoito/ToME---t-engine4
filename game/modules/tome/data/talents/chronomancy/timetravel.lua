@@ -49,6 +49,8 @@ newTalent{
 	end,
 }
 
+-- Time Skip and other Overlay talents like jumpgate are causing issues on remove.  They'll eat other overlays.
+
 newTalent{
 	name = "Time Skip",
 	type = {"chronomancy/timetravel",2},
@@ -206,8 +208,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local percent = t.getPercent(self, t)
-		return ([[Casting this spell sends you back to the moment you entered the current dungeon level.
-		Traveling through time carries with it inherent penalties and doing so will permanently reduce your hit points by %d%%.]])
+		return ([[Casting this spell sends you back to the moment you entered the current dungeon level.  Traveling through time carries with it inherent penalties and doing so will permanently reduce your hit points by %d%%.
+		Additional talent points will lower the hit point cost.]])
 		:format(percent)
 	end,
 }

@@ -70,6 +70,9 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 	local speed, hit = nil, false
 	local sound, sound_miss = nil, nil
 
+	-- Break before we do the blow, because it might start step up, we dont want to insta-cancel it
+	self:breakStepUp()
+
 	if self:attr("feared") then
 		if not noenergy then
 			self:useEnergy(game.energy_to_act * speed)
@@ -364,6 +367,14 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_RIPOSTE) and rng.percent(target:getTalentLevel(target.T_RIPOSTE) * (5 + target:getDex(5))) then
 		game.logSeen(self, "%s ripostes!", target.name:capitalize())
 		target:attackTarget(self, nil, nil, true)
+	end
+
+	-- Greater Weapon Focus
+	local gwf = self:hasEffect(self.EFF_GREATER_WEAPON_FOCUS)
+	if hitted and not target.dead and gwf and not gwf.inside and rng.percent(gwf.chance) then
+		gwf.inside = true
+		self:attackTargetWith(target, weapon, damtype, mult)
+		gwf.inside = nil
 	end
 
 	-- Visual feedback

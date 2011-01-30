@@ -67,11 +67,72 @@ newTalent{
 }
 
 newTalent{
-	name = "Energy Wall",
-	type = {"chronomancy/energy", 2},
+	name = "Energy Decomposition",
+	type = {"chronomancy/energy",2},
 	require = chrono_req2,
 	points = 5,
-	paradox = 5,
+	paradox = 15,
+	cooldown = 24,
+	tactical = { DISABLE = 2 },
+	direct_hit = true,
+	requires_target = true,
+	range = 6,
+	getRemoveCount = function(self, t) return math.floor(self:getTalentLevel(t)*getParadoxModifier(self, pm)) end,
+	action = function(self, t)
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local tx, ty = self:getTarget(tg)
+		if not tx or not ty then return nil end
+		tx, ty = checkBackfire(self, tx, ty)
+		if game.level.map(tx, ty, Map.ACTOR) then
+			target = game.level.map(tx, ty, Map.ACTOR)
+		end
+		
+		local effs = {}
+
+		-- Go through all spell effects
+		for eff_id, p in pairs(target.tmp) do
+		local e = target.tempeffect_def[eff_id]
+			if e.type == "magical" then
+				effs[#effs+1] = {"effect", eff_id}
+			end
+		end
+
+		-- Go through all sustained spells
+		for tid, act in pairs(target.sustain_talents) do
+		local talent = target:getTalentFromId(tid)
+			  if talent.is_spell then
+				effs[#effs+1] = {"talent", tid}
+			end
+		end
+
+		for i = 1, t.getRemoveCount(self, t) do
+			if #effs == 0 then break end
+			local eff = rng.tableRemove(effs)
+			
+			if eff[1] == "effect" then
+				target:removeEffect(eff[2])
+			else
+				target:forceUseTalent(eff[2], {ignore_energy=true})
+			end
+		end
+		game.level.map:particleEmitter(tx, ty, 1, "temporal_thrust")
+		game:playSoundNear(self, "talents/spell_generic")
+		return true
+	end,
+	info = function(self, t)
+		local count = t.getRemoveCount(self, t)
+		return ([[Removes up to %d magical effects or sustained spells(both good and bad) from the target.
+		The number of effects removed will scale with your Paradox.]]):
+		format(count)
+	end,
+}
+
+newTalent{
+	name = "Energy Wall",
+	type = {"chronomancy/energy", 3},
+	require = chrono_req3,
+	points = 5,
+	paradox = 20,
 	cooldown = 20,
 	range = 6,
 	tactical = { PROTECT = 2 },
@@ -123,7 +184,7 @@ newTalent{
 
 			inc_damage = table.clone(self.inc_damage, true),
 
-			combat = { dam=8, atk=15, apr=100, damtype=DamageType.LIGHTNING, dammod={mag=1} },
+			combat = { dam=8, atk=15, apr=100, damtype=DamageType.LIGHTNING, dammod={mag=0.5} },
 			on_melee_hit = { [DamageType.LIGHTNING] = 20, 10},
 				
 			summoner = self, summoner_gain_exp=true,
@@ -141,66 +202,6 @@ newTalent{
 		return ([[Summons an immovable wall of crackling energy that lasts %d turns.  Nearby enemies may be struck by stray electricity and creatures who attack it will suffer lightning damage.
 		The duration will scale with your Paradox.  The health, resistance, and damage of the energy barrier will improve with your Magic stat.]]):
 		format(duration)
-	end,
-}
-
-newTalent{
-	name = "Energy Decomposition",
-	type = {"chronomancy/energy",3},
-	require = chrono_req3,
-	points = 5,
-	paradox = 20,
-	cooldown = 24,
-	tactical = { DISABLE = 2 },
-	direct_hit = true,
-	requires_target = true,
-	range = 6,
-	getRemoveCount = function(self, t) return math.floor(self:getTalentLevel(t)*getParadoxModifier(self, pm)) end,
-	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t)}
-		local tx, ty = self:getTarget(tg)
-		if not tx or not ty then return nil end
-		tx, ty = checkBackfire(self, tx, ty)
-		if game.level.map(tx, ty, Map.ACTOR) then
-			target = game.level.map(tx, ty, Map.ACTOR)
-		end
-		
-		local effs = {}
-
-		-- Go through all spell effects
-		for eff_id, p in pairs(target.tmp) do
-		local e = target.tempeffect_def[eff_id]
-			if e.type == "magical" then
-				effs[#effs+1] = {"effect", eff_id}
-			end
-		end
-
-		-- Go through all sustained spells
-		for tid, act in pairs(target.sustain_talents) do
-			if act then
-				effs[#effs+1] = {"talent", tid}
-			end
-		end
-
-		for i = 1, t.getRemoveCount(self, t) do
-			if #effs == 0 then break end
-			local eff = rng.tableRemove(effs)
-			
-			if eff[1] == "effect" then
-				target:removeEffect(eff[2])
-			else
-				target:forceUseTalent(eff[2], {ignore_energy=true})
-			end
-		end
-		game.level.map:particleEmitter(tx, ty, 1, "temporal_thrust")
-		game:playSoundNear(self, "talents/spell_generic")
-		return true
-	end,
-	info = function(self, t)
-		local count = t.getRemoveCount(self, t)
-		return ([[Removes up to %d magical effects (both good and bad) from the target.
-		The number of effects removed will scale with your Paradox.]]):
-		format(count)
 	end,
 }
 

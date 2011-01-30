@@ -30,6 +30,7 @@ newTalentType{ allow_random=true, type="technique/archery-sling", name = "archer
 newTalentType{ allow_random=true, type="technique/archery-training", name = "archery - common", description = "Generic archery techniques." }
 newTalentType{ allow_random=true, type="technique/archery-utility", name = "archery - utility", description = "Specialized archery techniques to maim your targets." }
 newTalentType{ allow_random=true, type="technique/superiority", name = "superiority", description = "Advanced combat techniques." }
+newTalentType{ allow_random=true, type="technique/battle-tactics", name = "battle tactics", description = "Advanced combat tactics." }
 newTalentType{ allow_random=true, type="technique/warcries", name = "warcries", no_silence = true, description = "Master the warcries to improve yourself and weaken others." }
 newTalentType{ allow_random=true, type="technique/bloodthirst", name = "bloodthirst", description = "Delight in the act of battle and the spilling of blood." }
 newTalentType{ allow_random=true, type="technique/field-control", name = "field control", generic = true, description = "Control the battlefield using various techniques." }
@@ -139,6 +140,7 @@ load("/data/talents/techniques/weaponshield.lua")
 load("/data/talents/techniques/superiority.lua")
 load("/data/talents/techniques/warcries.lua")
 load("/data/talents/techniques/bloodthirst.lua")
+load("/data/talents/techniques/battle-tactics.lua")
 load("/data/talents/techniques/field-control.lua")
 load("/data/talents/techniques/combat-techniques.lua")
 load("/data/talents/techniques/combat-training.lua")

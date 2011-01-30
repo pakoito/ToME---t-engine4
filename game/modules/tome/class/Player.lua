@@ -728,12 +728,14 @@ function _M:playerUseItem(object, item, inven)
 					end
 					self:sortInven(self:getInven(inven))
 				end
+				self:breakStepUp()
 				self:breakStealth()
 				self:breakLightningSpeed()
 				self:breakGatherTheThreads()
 				return true
 			end
 
+			self:breakStepUp()
 			self:breakStealth()
 			self:breakLightningSpeed()
 			self:breakGatherTheThreads()

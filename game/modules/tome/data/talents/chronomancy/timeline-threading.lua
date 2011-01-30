@@ -166,15 +166,17 @@ newTalent{
 	paradox = 100,
 	cooldown = 100,
 	no_npc_use = true,
+	getDuration = function(self, t) return 4 + math.floor(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
 	action = function(self, t)
 		if checkTimeline(self) == true then
 			return
 		end
-		self:setEffect(self.EFF_SEE_THREADS, 10, {})
+		self:setEffect(self.EFF_SEE_THREADS, t.getDuration(self, t), {})
 		return true
 	end,
 	info = function(self, t)
-		return ([[]])
-		:format()
+		local duration = t.getDuration(self, t)
+		return ([[You peer %d turns into three different possible futures and then follow one of them into the present.  Note that seeing visions of your own death is fatal.]])
+		:format(duration)
 	end,
 }

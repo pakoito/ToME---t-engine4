@@ -263,6 +263,10 @@ function _M:act()
 		local t = self:getTalentFromId(self.T_BLOOD_FRENZY)
 		t.do_turn(self, t)
 	end
+	if self:isTalentActive(self.T_TRUE_GRIT) then
+		local t = self:getTalentFromId(self.T_TRUE_GRIT)
+		t.do_turn(self, t)
+	end
 	-- this handles cursed gloom turn based effects
 	if self:isTalentActive(self.T_GLOOM) then
 	    local t = self:getTalentFromId(self.T_GLOOM)
@@ -401,7 +405,7 @@ function _M:move(x, y, force)
 
 	if moved and not force and ox and oy and (ox ~= self.x or oy ~= self.y) and config.settings.tome.smooth_move > 0 then
 		local blur = 0
-		if self:attr("lightning_speed") then blur = 3 end
+		if self:attr("lightning_speed") or self:attr("step_up") then blur = 3 end
 		self:setMoveAnim(ox, oy, config.settings.tome.smooth_move, blur)
 	end
 
@@ -704,6 +708,9 @@ function _M:onTakeHit(value, src)
 	-- Un-meditate
 	if self:hasEffect(self.EFF_MEDITATION) then
 		self:removeEffect(self.EFF_MEDITATION)
+	end
+	if self:hasEffect(self.EFF_SPACETIME_TUNING) then
+		self:removeEffect(self.EFF_SPACETIME_TUNING)
 	end
 	-- remove stalking if there is an interaction
 	if self.stalker and src and self.stalker == src then
@@ -1108,6 +1115,10 @@ function _M:die(src)
 	if src and src.hasEffect and src:hasEffect(self.EFF_UNSTOPPABLE) then
 		local p = src:hasEffect(self.EFF_UNSTOPPABLE)
 		p.kills = p.kills + 1
+	end
+
+	if src and src.knowTalent and src:knowTalent(src.T_STEP_UP) and rng.percent(src:getTalentLevelRaw(src.T_STEP_UP) * 20) then
+		src:setEffect(self.EFF_STEP_UP, 6, {})
 	end
 
 	if self:hasEffect(self.EFF_CORROSIVE_WORM) then
@@ -1765,6 +1776,7 @@ function _M:postUseTalent(ab, ret)
 	if ab.id ~= self.T_STEALTH and ab.id ~= self.T_HIDE_IN_PLAIN_SIGHT and not ab.no_break_stealth then self:breakStealth() end
 	if ab.id ~= self.T_LIGHTNING_SPEED then self:breakLightningSpeed() end
 	if ab.id ~= self.T_GATHER_THE_THREADS then self:breakGatherTheThreads() end
+	self:breakStepUp()
 	return true
 end
 
@@ -1797,6 +1809,13 @@ function _M:breakStealth()
 
 		self:forceUseTalent(self.T_STEALTH, {ignore_energy=true})
 		self.changed = true
+	end
+end
+
+--- Breaks step up if active
+function _M:breakStepUp()
+	if self:hasEffect(self.EFF_STEP_UP) then
+		self:removeEffect(self.EFF_STEP_UP)
 	end
 end
 

@@ -18,6 +18,44 @@
 -- darkgod@te4.org
 
 newTalent{
+	name = "Spacetime Tuning",
+	type = {"chronomancy/spacetime-weaving", 1},
+	hide = true,
+	points = 1,
+	message = "@Source@ retunes the fabric of spacetime.",
+	cooldown = 100,
+	tactical = { PARADOX = 2 },
+	no_npc_use = true,
+	no_energy = true,
+	getAnomaly = function(self, t) return 6 - (self:getTalentLevelRaw(self.T_STATIC_HISTORY) or 0) end,
+	action = function(self, t)
+		-- open dialog to get desired paradox
+		local q = engine.dialogs.GetQuantity.new("Retuning the fabric of spacetime...", "What's your desired paradox level?", math.floor(self.paradox), nil, function(qty)
+			
+			-- get reduction amount and find duration
+			amount = qty - self.paradox
+			local dur = math.floor(math.abs(qty-self.paradox)/self:getWil())
+			
+			-- set tuning effect
+			if amount >= 0 then
+				self:setEffect(self.EFF_SPACETIME_TUNING, dur, {power = self:getWil()})
+			elseif amount < 0 then
+				self:setEffect(self.EFF_SPACETIME_TUNING, dur, {power = -self:getWil()})
+			end
+			
+		end)
+		game:registerDialog(q)
+		return true
+	end,
+	info = function(self, t)
+		local chance = t.getAnomaly(self, t)
+		return ([[Retunes your Paradox to the desired level.  You will be dazed while tuning and each turn your Paradox will increase or decrease by an amount equal to your Willpower stat.
+		Each turn you have a %d%% chance of triggering a temporal anomaly which will end the tuning process.]]):
+		format(chance)
+	end,
+}
+
+newTalent{
 	name = "Static History",
 	type = {"chronomancy/spacetime-weaving", 1},
 	require = temporal_req1,
@@ -121,6 +159,7 @@ newTalent{
 	getRadius = function(self, t) return math.floor(7 - self:getTalentLevel(t)) end,
 	getRange = function (self, t) return 10 + math.floor (self:getTalentLevel(t)/2) end,
 	getDuration = function (self, t) return 5 + math.floor(self:getTalentLevel(t)*getParadoxModifier(self, pm)) end,
+	no_npc_use = true,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local entrance_x, entrance_y = self:getTarget(tg)

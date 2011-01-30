@@ -64,6 +64,7 @@ newBirthDescriptor{
 
 	},
 	talents = {
+		[ActorTalents.T_SPACETIME_TUNING] = 1,
 		[ActorTalents.T_STATIC_HISTORY] = 1,
 		[ActorTalents.T_TURN_BACK_THE_CLOCK] = 1,
 		[ActorTalents.T_DUST_TO_DUST] = 1,
@@ -111,6 +112,7 @@ newBirthDescriptor{
 	},
 	talents = {
 		[ActorTalents.T_SHOOT] = 1,
+		[ActorTalents.T_SPACETIME_TUNING] = 1,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
 		[ActorTalents.T_DUAL_STRIKE] = 1,
 		[ActorTalents.T_UNERRING_SHOT] = 1,
