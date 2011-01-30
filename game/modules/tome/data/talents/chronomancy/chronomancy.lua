@@ -18,77 +18,51 @@
 -- darkgod@te4.org
 
 newTalent{
-	name = "Prescience",
+	name = "Probability Weaving",
 	type = {"chronomancy/chronomancy", 1},
-	require = chrono_req1,
+	require = temporal_req1,
+	mode = "passive",
 	points = 5,
-	paradox = 5,
+	info = function(self, t)
+		return ([[Bends the laws of probability, increasing your defense by %d and reducing the chance you'll be critically hit by %d%%]]):format(self:getTalentLevel(t) * 2,  self:getTalentLevel(t))
+	end,
+}
+
+newTalent{
+	name = "Perfect Aim",
+	type = {"chronomancy/chronomancy",2},
+	require = temporal_req2,
+	points = 5,
+	paradox = 10,
 	cooldown = 20,
 	tactical = { BUFF = 2 },
 	no_energy = true,
-	getDuration = function(self, t) return 1 + math.ceil((self:getTalentLevel(t)/4) * getParadoxModifier(self, pm)) end,
-	getPower = function(self, t) return 10 + (self:combatTalentSpellDamage(t, 10, 50) * getParadoxModifier(self, pm)) end,
+	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
+	getPower = function(self, t) return 10 + (self:combatTalentSpellDamage(t, 10, 40)*getParadoxModifier(self, pm)) end,
 	action = function(self, t)
-		self:setEffect(self.EFF_PRESCIENCE, t.getDuration(self, t), {power=t.getPower(self, t)})
+		self:setEffect(self.EFF_PERFECT_AIM, t.getDuration(self, t), {power=t.getPower(self, t)})
 		return true
 	end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		local power = t.getPower(self, t)
-		return ([[You bring your awareness fully into the present for %d turns, increasing your physical and spell critical strike chance by %d%%.
-		The duration will scale with your Paradox.  The crit increase will scale with Paradox and your Magic stat.]]):format(duration, power)
+		return ([[You focus your aim for the next %d turns, increasing your physical and spell critical strike chance and your critical damage multiplier by %d%%..
+		The effect will scale with your Paradox and the Magic stat.]]):format(duration, power)
 	end,
 }
 
 newTalent{
-	name = "Deja Vu",
-	type = {"chronomancy/chronomancy", 2},
-	require = chrono_req2,
-	points = 5,
-	paradox = 10,
-	cooldown = 20,
-	no_npc_use = true,
-	getRadius = function(self, t) return 3 + (self:combatTalentSpellDamage(t, 2, 8) * getParadoxModifier(self, pm)) end,
-	action = function(self, t)
-		self:magicMap(t.getRadius(self, t))
-		if self:getTalentLevel(t) >= 4 then
-			self:setEffect(self.EFF_SENSE, 1, {
-				range = t.getRadius(self, t),
-				actor = 1,
-			})
-		end
-		game:playSoundNear(self, "talents/spell_generic")
-		return true
-	end,
-	info = function(self, t)
-		local radius = t.getRadius(self, t)
-		return ([[Your powerful intuition gives you a glimpse of your surroundings in a %d radius.  At talent level 4 it also reveals creatures within this radius.
-		The radius will scale with your Paradox and Magic stat.]]):format(radius)
-	end,
-}
-
-newTalent{
-	name = "Foresight",
+	name = "Avoid Fate",
 	type = {"chronomancy/chronomancy", 3},
-	require = chrono_req3,
+	require = temporal_req3,
 	points = 5,
-	paradox = 10,
-	cooldown = 20,
-	tactical = { DEFEND = 2 },
-	no_energy = true,
-	getDuration = function(self, t) return 1 + math.ceil((self:getTalentLevel(t)/4) * getParadoxModifier(self, pm)) end,
-	getPower = function(self, t) return 10 + (self:combatTalentSpellDamage(t, 10, 50) * getParadoxModifier(self, pm)) end,
-	action = function(self, t)
-		self:setEffect(self.EFF_FORESIGHT, t.getDuration(self, t), {power=t.getPower(self, t)})
-		return true
-	end,
+	mode = "passive",
 	info = function(self, t)
-		local duration = t.getDuration(self, t)
-		local power = t.getPower(self, t)
-		return ([[You glimpse into the future, granting you %d%% resistance to all attacks for the next %d turns.
-		The duration will scale with your Paradox.  The resistance bonus will scale with Paradox and your Magic stat.]]):format(power, duration)
+		return ([[As long as your life is at or above %d any single attack that would reduce you below 1 life instead reduces you to 1 life.]]):
+		format(self.max_life * (.6 - (self:getTalentLevel(self.T_AVOID_FATE)/20)))
 	end,
 }
+
 
 newTalent{
 	name = "Precognition",
@@ -100,6 +74,9 @@ newTalent{
 	no_npc_use = true,
 	getDuration = function(self, t) return 4 + math.floor(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
 	action = function(self, t)
+		if checkTimeline(self) == true then
+			return
+		end
 		game:playSoundNear(self, "talents/spell_generic")
 		self:setEffect(self.EFF_PRECOGNITION, t.getDuration(self, t), {})
 		return true

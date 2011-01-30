@@ -18,152 +18,223 @@
 -- darkgod@te4.org
 
 newTalent{
-	name = "Recharge",
+	name = "Entropy",
 	type = {"chronomancy/energy", 1},
-	require = chrono_req_high1,
+	require = chrono_req1,
 	points = 5,
 	paradox = 5,
-	cooldown = 10,
-	tactical = { HEAL = 2 },
-	getHeal = function(self, t) return self:combatTalentSpellDamage(t, 40, 220)*getParadoxModifier(self, pm) end,
-	getRemoveCount = function(self, t) return math.floor(self:getTalentLevel(t)) end,
+	cooldown = 12,
+	tactical = { DISABLE = 2 },
+	direct_hit = true,
+	requires_target = true,
+	range = 6,
+	getCooldown = function(self, t) return 2 + math.ceil(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
+	getTalentCount = function(self, t) return self:getTalentLevelRaw(t) end,
 	action = function(self, t)
-		self:heal(self:spellCrit(t.getHeal(self, t)), self)
-		local target = self
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local tx, ty = self:getTarget(tg)
+		if not tx or not ty then return nil end
+		tx, ty = checkBackfire(self, tx, ty)
+		if game.level.map(tx, ty, Map.ACTOR) then
+			target = game.level.map(tx, ty, Map.ACTOR)
+		end
+		
+		local tids = {}
+		for tid, _ in pairs(target.talents) do
+			local tt = target:getTalentFromId(tid)
+			if tt.type[1]:find("^inscriptions/") then
+				tids[#tids+1] = tid
+			end
+		end
+		
+		for i = 1, t.getTalentCount(self, t) do
+			if #tids == 0 then break end
+			local tid = rng.tableRemove(tids)
+			target.talents_cd[tid] = t.getCooldown(self, t)
+		end
+		self.changed = true
+		
+		game.level.map:particleEmitter(tx, ty, 1, "temporal_thrust")
+		game:playSoundNear(self, "talents/spell_generic")
+		return true
+	end,
+	info = function(self, t)
+		local talentcount = t.getTalentCount(self, t)
+		local cooldown = t.getCooldown(self, t)
+		return ([[You sap the energy out of %d of the targets runes or infusions, placing them on cooldown for %d turns.]]):
+		format(talentcount, cooldown)
+	end,
+}
+
+newTalent{
+	name = "Energy Wall",
+	type = {"chronomancy/energy", 2},
+	require = chrono_req2,
+	points = 5,
+	paradox = 5,
+	cooldown = 20,
+	range = 6,
+	tactical = { PROTECT = 2 },
+	requires_target = true,
+	getResistance = function(self, t) return 30 + math.ceil (self:combatTalentSpellDamage(t, 5, 30) * getParadoxModifier(self, pm)) end,
+	getDuration = function(self, t) return 5 + math.ceil(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
+	action = function(self, t)
+		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
+		local tx, ty, target = self:getTarget(tg)
+		if not tx or not ty then return nil end
+		local _ _, tx, ty = self:canProject(tg, tx, ty)
+		target = game.level.map(tx, ty, Map.ACTOR)
+		if target == self then target = nil end
+
+		-- Find space
+		local x, y = util.findFreeGrid(tx, ty, 5, true, {[Map.ACTOR]=true})
+		if not x then
+			game.logPlayer(self, "Not enough space to summon!")
+			return
+		end
+
+		local NPC = require "mod.class.NPC"
+		local m = NPC.new{
+			type = "immovable", subtype = "wall",
+			display = "#", color=colors.LIGHT_STEEL_BLUE,
+			desc = [[A wall of crackling energy.]],
+			name = "Energy Wall",
+			autolevel = "none", faction=self.faction,
+			stats = { mag = 10 + self:getMag() * self:getTalentLevel(t) / 5, wil = 10 + self:getTalentLevel(t) * 2, con = 10 + self:getMag() * self:getTalentLevel(t) / 5},
+			resists = { all = 15, [DamageType.LIGHT] = t.getResistance(self, t), [DamageType.FIRE] = t.getResistance(self, t), [DamageType.LIGHTNING] = t.getResistance(self, t), [DamageType.TEMPORAL] = t.getResistance(self, t),},
+			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=3, },
+			level_range = {self.level, self.level}, exp_worth = 0,
+
+			max_life = resolvers.rngavg(25,50),
+			life_rating = 15,
+			infravision = 20,
+						
+			cut_immune = 1,
+			blind_immune = 1,
+			fear_immune = 1,
+			poison_immune = 1,
+			disease_immune = 1,
+			stone_immune = 1,
+			see_invisible = 30,
+			no_breath = 1,
+
+			combat_armor = 0, combat_def = 0,
+			never_move = 1,
+
+			inc_damage = table.clone(self.inc_damage, true),
+
+			combat = { dam=8, atk=15, apr=100, damtype=DamageType.LIGHTNING, dammod={mag=1} },
+			on_melee_hit = { [DamageType.LIGHTNING] = 20, 10},
+				
+			summoner = self, summoner_gain_exp=true,
+			summon_time =t.getDuration(self, t), 
+			ai_target = {actor=target}
+		}
+
+		setupSummon(self, m, x, y)
+		
+		game:playSoundNear(self, "talents/spell_generic")
+		return true
+	end,
+	info = function(self, t)
+		local duration = t.getDuration(self, t)
+		return ([[Summons an immovable wall of crackling energy that lasts %d turns.  Nearby enemies may be struck by stray electricity and creatures who attack it will suffer lightning damage.
+		The duration will scale with your Paradox.  The health, resistance, and damage of the energy barrier will improve with your Magic stat.]]):
+		format(duration)
+	end,
+}
+
+newTalent{
+	name = "Energy Decomposition",
+	type = {"chronomancy/energy",3},
+	require = chrono_req3,
+	points = 5,
+	paradox = 20,
+	cooldown = 24,
+	tactical = { DISABLE = 2 },
+	direct_hit = true,
+	requires_target = true,
+	range = 6,
+	getRemoveCount = function(self, t) return math.floor(self:getTalentLevel(t)*getParadoxModifier(self, pm)) end,
+	action = function(self, t)
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local tx, ty = self:getTarget(tg)
+		if not tx or not ty then return nil end
+		tx, ty = checkBackfire(self, tx, ty)
+		if game.level.map(tx, ty, Map.ACTOR) then
+			target = game.level.map(tx, ty, Map.ACTOR)
+		end
+		
 		local effs = {}
+
 		-- Go through all spell effects
 		for eff_id, p in pairs(target.tmp) do
-			local e = target.tempeffect_def[eff_id]
-			if e.status == "detrimental" or "beneficial" then
+		local e = target.tempeffect_def[eff_id]
+			if e.type == "magical" then
 				effs[#effs+1] = {"effect", eff_id}
+			end
+		end
+
+		-- Go through all sustained spells
+		for tid, act in pairs(target.sustain_talents) do
+			if act then
+				effs[#effs+1] = {"talent", tid}
 			end
 		end
 
 		for i = 1, t.getRemoveCount(self, t) do
 			if #effs == 0 then break end
 			local eff = rng.tableRemove(effs)
-
+			
 			if eff[1] == "effect" then
 				target:removeEffect(eff[2])
+			else
+				target:forceUseTalent(eff[2], {ignore_energy=true})
 			end
 		end
-		game:playSoundNear(self, "talents/heal")
+		game.level.map:particleEmitter(tx, ty, 1, "temporal_thrust")
+		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
-		local heal = t.getHeal(self, t)
 		local count = t.getRemoveCount(self, t)
-		return ([[You revert your body to a previous state, healing you for %0.2f and removing %d status effects (both good and bad).
-		The life healed will increase with the Magic stat]]):
-		format(heal, count)
+		return ([[Removes up to %d magical effects (both good and bad) from the target.
+		The number of effects removed will scale with your Paradox.]]):
+		format(count)
 	end,
 }
 
 newTalent{
-	name = "Temporal Wake",
-	type = {"chronomancy/energy", 2},
-	require = chrono_req_high2,
-	points = 5,
-	random_ego = "attack",
-	paradox = 10,
-	cooldown = 10,
-	tactical = { ATTACK = 1, CLOSEIN = 2 },
-	range = 6,
-	direct_hit = true,
-	reflectable = true,
-	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 200) end,
-	action = function(self, t)
-		local tg = {type="beam", range=self:getTalentRange(t), friendlyfire=false, talent=t}
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		if self:hasLOS(x, y) and not game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then
-			local dam = self:spellCrit(t.getDamage(self, t))
-			self:project(tg, x, y, DamageType.LIGHTNING, rng.avg(dam / 6, dam / 2, 3))
-			self:project(tg, x, y, DamageType.TEMPORAL, dam/2)
-			local _ _, x, y = self:canProject(tg, x, y)
-			game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "temporal_lightning", {tx=x-self.x, ty=y-self.y})
-			game:playSoundNear(self, "talents/lightning")
-			local tx, ty = util.findFreeGrid(x, y, 5, true, {[Map.ACTOR]=true})
-			if tx and ty then
-				self:move(tx, ty, true)
-			end
-		else
-			game.logSeen(self, "You can't move there.")
-			return nil
-		end
-		return true
-	end,
-	info = function(self, t)
-		local damage = t.getDamage(self, t)
-		return ([[You transform yourself into a powerful bolt of temporal lightning and move between two points dealing %0.2f to %0.2f lightning damage and %0.2f temporal damage to everything in your path.
-		The damage will increase with the Magic stat]]):
-		format(damDesc(self, DamageType.LIGHTNING, damage / 6),
-		damDesc(self, DamageType.LIGHTNING, damage / 2),
-		damDesc(self, DamageType.TEMPORAL, damage / 2))
-	end,
-}
-
-newTalent{
-	name = "Energy Redirection",
-	type = {"chronomancy/energy", 3},
-	require = chrono_req_high3,
-	points = 5,
-	paradox = 5,
-	cooldown = 15,
-	tactical = { DISABLE = 2 },
-	range = 1,
-	requires_target = true,
-	getConfuseDuration = function(self, t) return math.floor((self:getTalentLevel(t) + 2) * getParadoxModifier(self, pm)) end,
-	getConfuseEfficency = function(self, t) return (50 + self:getTalentLevelRaw(t) * 10) * getParadoxModifier(self, pm) end,
-	getRadius = function (self, t) return 3 + self:getTalentLevelRaw (t) end,
-	action = function(self, t)
-		local tg = {type="cone", range=0, radius=t.getRadius(self, t), friendlyfire=false, talent=t}
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		print (check)
-		self:project(tg, self.x, self.y, DamageType.CONFUSION, {
-			dur = t.getConfuseDuration(self, t),
-			dam = t.getConfuseEfficency(self, t)
-		})
-		game:playSoundNear(self, "talents/fire")
-		return true
-	end,
-	info = function(self, t)
-		local duration = t.getConfuseDuration(self, t)
-		local radius = t.getRadius (self, t)
-		return ([[Reverts the minds of all creatures in a %d radius cone to an infantile state, in effect confusing them for %d turns.
-		]]):
-		format(radius, duration)
-	end,
-}
-
-newTalent{
-	name = "Entropy",
+	name = "Redux",
 	type = {"chronomancy/energy",4},
-	require = chrono_req_high4,
+	require = chrono_req4,
 	points = 5,
-	paradox = 10,
-	cooldown = 8,
-	tactical = { ATTACKAREA = 1, DISABLE = 2 },
-	range = 10,
-	direct_hit = true,
-	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 240)*getParadoxModifier(self, pm) end,
-	getRadius = function (self, t) return 1 + math.floor(self:getTalentLevel(t)/5) end,
+	paradox = 30,
+	cooldown = 50,
+	tactical = { BUFF = 2 },
+	getTalentCount = function(self, t) return math.ceil(self:getTalentLevel(t) + 2) end,
+	getMaxLevel = function(self, t) return self:getTalentLevelRaw(t) end,
 	action = function(self, t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=t.getRadius(self, t), friendlyfire=self:spellFriendlyFire(), talent=t, display={particle="bolt_fire", trail="firetrail"}}
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		x, y = checkBackfire(self, x, y)
-		self:project(tg, x, y, DamageType.WASTING, self:spellCrit(t.getDamage(self, t)))
-		game:playSoundNear(self, "talents/fire")
+		local tids = {}
+		for tid, _ in pairs(self.talents_cd) do
+			local tt = self:getTalentFromId(tid)
+			if tt.type[2] <= t.getMaxLevel(self, t) and tt.type[1]:find("^chronomancy/") then
+				tids[#tids+1] = tid
+			end
+		end
+		for i = 1, t.getTalentCount(self, t) do
+			if #tids == 0 then break end
+			local tid = rng.tableRemove(tids)
+			self.talents_cd[tid] = nil
+		end
+		self.changed = true
+		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
-		local damage = t.getDamage(self, t)
-		local radius = t.getRadius(self, t)
-		return ([[Slows and inflicts %0.2f temporal damage over three turns on everything with in a radius of %d as targets waste away.
-		The damage will increase with the Magic stat]]):format(damage, radius)
+		local talentcount = t.getTalentCount(self, t)
+		local maxlevel = t.getMaxLevel(self, t)
+		return ([[Your mastery of energy allows you to reset the cooldown of %d of your chronomantic spells of level %d or less.]]):
+		format(talentcount, maxlevel)
 	end,
 }

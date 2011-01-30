@@ -38,7 +38,7 @@ newTalent{
 		if not x or not y then return nil end
 		x, y = checkBackfire(self, x, y)
 		self:projectile(tg, x, y, DamageType.CLOCK, self:spellCrit(t.getDamage(self, t)))
-		game:playSoundNear(self, "talents/arcane")
+		game:playSoundNear(self, "talents/spell_generic2")
 		return true
 	end,
 	info = function(self, t)
@@ -62,11 +62,12 @@ newTalent{
 	action = function(self, t)
 		self:heal(self:spellCrit(t.getHeal(self, t)), self)
 		local target = self
+		
 		local effs = {}
 		-- Go through all spell effects
 		for eff_id, p in pairs(target.tmp) do
 			local e = target.tempeffect_def[eff_id]
-			if e.status == "detrimental" or "beneficial" then
+			if e.type ~= "time" then
 				effs[#effs+1] = {"effect", eff_id}
 			end
 		end
@@ -85,7 +86,7 @@ newTalent{
 	info = function(self, t)
 		local heal = t.getHeal(self, t)
 		local count = t.getRemoveCount(self, t)
-		return ([[You revert your body to a previous state, healing youself for %0.2f and removing %d status effects (both good and bad).
+		return ([[You revert your body to a previous state, healing youself for %0.2f life and removing %d status effects (both good and bad).
 		The life healed will scale with your Paradox and Magic stat.]]):
 		format(heal, count)
 	end,

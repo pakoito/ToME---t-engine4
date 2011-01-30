@@ -29,7 +29,7 @@ newTalent{
 	tactical = { ATTACKAREA = 2 },
 	range = 1,
 	requires_target = true,
-	getPercent = function(self, t) return (20 + (self:combatTalentSpellDamage(t, 10, 50)*getParadoxModifier(self, pm))) / 100 end,
+	getPercent = function(self, t) return (40 + (self:combatTalentSpellDamage(t, 10, 30)*getParadoxModifier(self, pm))) / 100 end,
 	getRadius = function (self, t) return 2 + self:getTalentLevelRaw (t) end,
 	action = function(self, t)
 		local tg = {type="cone", range=0, radius=t.getRadius(self, t), friendlyfire=false, talent=t}

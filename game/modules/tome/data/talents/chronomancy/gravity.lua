@@ -35,7 +35,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[Surround yourself with a repulsion field for %d turns, inflcing %0.2f physical damage to attackers and potentially knocking them back.
+		return ([[Surround yourself with a repulsion field for %d turns, inflicting %0.2f physical damage to attackers and potentially knocking them back.
 		The damage will scale with your Paradox and Magic stat.]]):format(duration, damDesc(self, DamageType.PHYSICAL, t.getDamage(self, t)))
 	end,
 }

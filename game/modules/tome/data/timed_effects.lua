@@ -3042,9 +3042,13 @@ newEffect{
 	on_lose = function(self, err) return "#Target# doesn't seem to be aiming as well anymore." end,
 	activate = function(self, eff)
 		eff.ccpid = self:addTemporaryValue("combat_critical_power", eff.power)
+		eff.pid = self:addTemporaryValue("combat_physcrit", eff.power)
+		eff.sid = self:addTemporaryValue("combat_spellcrit", eff.power)
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("combat_critical_power", eff.ccpid)
+		self:removeTemporaryValue("combat_physcrit", eff.pid)
+		self:removeTemporaryValue("combat_spellcrit", eff.sid)
 	end,
 }
 
@@ -3137,7 +3141,7 @@ newEffect{
 	name = "PRECOGNITION",
 	desc = "Precognition",
 	long_desc = function(self, eff) return "You walk into the future, when the effects end, if you are not dead, you are brought back to the past." end,
-	type = "magical",
+	type = "time",
 	status = "beneficial",
 	parameters = { power=10 },
 	activate = function(self, eff)
@@ -3152,6 +3156,7 @@ newEffect{
 				return
 			end
 			game.logPlayer(game.player, "#LIGHT_BLUE#You unfold the space time continuum to a previous state!")
+			game.player.tmp[self.EFF_PRECOGNITION] = nil
 		end)
 	end,
 }
@@ -3160,7 +3165,7 @@ newEffect{
 	name = "SEE_THREADS",
 	desc = "See the Threads",
 	long_desc = function(self, eff) return ("You walk three different timelines, choosing the one you prefer at the end (current timeline: %d)."):format(eff.thread) end,
-	type = "magical",
+	type = "time",
 	status = "beneficial",
 	parameters = { power=10 },
 	activate = function(self, eff)
@@ -3289,5 +3294,24 @@ newEffect{
 				game.player[r.short_name] = oldplayer[r.short_name]
 			end
 		end)
+	end,
+}
+
+newEffect{
+	name = "FLAWED_DESIGN",
+	desc = "Flawed Design",
+	long_desc = function(self, eff) return ("The target's passed has been altered, reducing all it's resistances by %d%%."):format(eff.power) end,
+	type = "magical",
+	status = "detrimental",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# is flawed.", "+Flawed" end,
+	on_lose = function(self, err) return "#Target# is no longer flawed.", "-Flawed" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("resists", {
+			all = -eff.power,
+		})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("resists", eff.tmpid)
 	end,
 }

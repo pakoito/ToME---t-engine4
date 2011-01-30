@@ -22,7 +22,7 @@ newTalent{
 	type = {"chronomancy/spacetime-weaving", 1},
 	require = temporal_req1,
 	points = 5,
-	message = "@Source@ fixes some of the damage caused in the past.",
+	message = "@Source@ fixes some of the damage caused to the timeline.",
 	cooldown = 24,
 	tactical = { PARADOX = 2 },
 	getReduction = function(self, t)
@@ -32,7 +32,7 @@ newTalent{
 	end,
 	action = function(self, t)
 		self:incParadox (- t.getReduction(self, t))
-		game:playSoundNear(self, "talents/spell_generic2")
+		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)

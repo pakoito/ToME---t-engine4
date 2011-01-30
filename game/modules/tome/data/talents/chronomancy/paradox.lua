@@ -20,7 +20,7 @@
 newTalent{
 	name = "Paradox Mastery",
 	type = {"chronomancy/paradox", 1},
-	require = chrono_req1,
+	require = chrono_req_high1,
 	points = 5,
 	mode = "passive",
 	on_learn = function(self, t)
@@ -36,133 +36,81 @@ newTalent{
 }
 
 newTalent{
-	name = "Paradox Shield",
+	name = "Damage Shunt",
 	type = {"chronomancy/paradox", 2},
-	require = chrono_req2,
+	require = chrono_req_high2,
 	points = 5,
-	random_ego = "attack",
-	mana = 40,
-	cooldown = 8,
-	tactical = {
-		ATTACK = 10,
-	},
-	range = 20,
-	reflectable = true,
+	paradox = 10,
+	cooldown = 15,
+	tactical = { DEFEND = 2 },
+	no_energy = true, 
+	getAbsorb = function(self, t) return self:combatTalentSpellDamage(t, 30, 270) * getParadoxModifier(self, pm) end,
 	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
-		local fx, fy = self:getTarget(tg)
-		if not fx or not fy then return nil end
-
-		local nb = 3 + self:getTalentLevelRaw(t)
-		local affected = {}
-		local first = nil
-
-		self:project(tg, fx, fy, function(dx, dy)
-			print("[Chain lightning] targetting", fx, fy, "from", self.x, self.y)
-			local actor = game.level.map(dx, dy, Map.ACTOR)
-			if actor and not affected[actor] then
-				ignored = false
-				affected[actor] = true
-				first = actor
-
-				print("[Chain lightning] looking for more targets", nb, " at ", dx, dy, "radius ", 10, "from", actor.name)
-				self:project({type="ball", friendlyfire=false, x=dx, y=dy, radius=10, range=0}, dx, dy, function(bx, by)
-					local actor = game.level.map(bx, by, Map.ACTOR)
-					if actor and not affected[actor] and self:reactionToward(actor) < 0 then
-						print("[Chain lightning] found possible actor", actor.name, bx, by, "distance", core.fov.distance(dx, dy, bx, by))
-						affected[actor] = true
-					end
-				end)
-				return true
-			end
-		end)
-
-		if not first then return end
-		local targets = { first }
-		affected[first] = nil
-		local possible_targets = table.listify(affected)
-		print("[Chain lightning] Found targets:", #possible_targets)
-		for i = 2, nb do
-			if #possible_targets == 0 then break end
-			local act = rng.tableRemove(possible_targets)
-			targets[#targets+1] = act[1]
-		end
-
-		local sx, sy = self.x, self.y
-		for i, actor in ipairs(targets) do
-			local tgr = {type="beam", range=self:getTalentRange(t), friendlyfire=false, talent=t, x=sx, y=sy}
-			print("[Chain lightning] jumping from", sx, sy, "to", actor.x, actor.y)
-			local dam = self:spellCrit(self:combatTalentSpellDamage(t, 10, 200))
-			self:project(tgr, actor.x, actor.y, DamageType.LIGHTNING, rng.avg(rng.avg(dam / 3, dam, 3), dam, 5))
-			game.level.map:particleEmitter(sx, sy, math.max(math.abs(actor.x-sx), math.abs(actor.y-sy)), "lightning", {tx=actor.x-sx, ty=actor.y-sy, nb_particles=150, life=6})
-			sx, sy = actor.x, actor.y
-		end
-
-		game:playSoundNear(self, "talents/lightning")
-
+		self:setEffect(self.EFF_DAMAGE_SHIELD, 10, {power=t.getAbsorb(self, t)})
+		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Invokes a forking beam of lightning doing %0.2f to %0.2f damage and forking to an other target.
-		It can hit up to %d targets and will never hit the same one twice, neither will it hit the caster.
-		The damage will increase with the Magic stat]]):
-		format(
-			self:combatTalentSpellDamage(t, 10, 200) / 3,
-			self:combatTalentSpellDamage(t, 10, 200),
-			3 + self:getTalentLevelRaw(t)
-		)
+		local absorb = t.getAbsorb(self, t)
+		return ([[Divides up to %0.2f damage evenly along every second of your past and future, effectively negating it.  Damage Shunt lasts 10 turns or until the maximum damage limit has been reached.
+		Casting Damage Shunt costs no time and the effect will scale with your Paradox and Magic stat.]]):
+		format(absorb)
 	end,
 }
 
 newTalent{
-	name = "Redux",
+	name = "Flawed Design",
 	type = {"chronomancy/paradox",3},
-	require = chrono_req3,
+	require = chrono_req_high3,
 	points = 5,
-	mode = "sustained",
-	cooldown = 10,
-	sustain_mana = 50,
-	tactical = {
-		MOVEMENT = 10,
-	},
-	activate = function(self, t)
-		game:playSoundNear(self, "talents/spell_generic2")
-		local ret = {
-			encumb = self:addTemporaryValue("max_encumber", math.floor(self:combatTalentSpellDamage(t, 10, 110))),
-			def = self:addTemporaryValue("combat_def_ranged", self:combatTalentSpellDamage(t, 4, 30)),
-			lev = self:addTemporaryValue("levitation", 1),
-		}
-		self:checkEncumbrance()
-		return ret
-	end,
-	deactivate = function(self, t, p)
-		self:removeTemporaryValue("max_encumber", p.encumb)
-		self:removeTemporaryValue("combat_def_ranged", p.def)
-		self:removeTemporaryValue("levitation", p.lev)
-		self:checkEncumbrance()
+	cooldown = 20,
+	paradox = 20,
+	range = 6,
+	tactical = { DISABLE = 2 },
+	requires_target = true,
+	direct_hit = true,
+	getDuration = function(self, t) return 2 + math.floor(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
+	getReduction = function(self, t) return 10 + (self:combatTalentSpellDamage(t, 10, 40) * getParadoxModifier(self, pm)) end,
+	action = function(self, t)
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		x, y = checkBackfire(self, x, y)
+		self:project(tg, x, y, function(tx, ty)
+			local target = game.level.map(tx, ty, Map.ACTOR)
+			if not target then return end
+			if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) then
+				target:setEffect(target.EFF_FLAWED_DESIGN, t.getDuration(self,t), {power=t.getReduction(self, t)})
+			end
+		end)
+		game:playSoundNear(self, "talents/generic2")
 		return true
 	end,
 	info = function(self, t)
-		return ([[A gentle wind circles around the caster, increasing carrying capacity by %d and increasing defense against projectiles by %d.
-		At level 4 it also makes you slightly levitate, allowing you to ignore some traps.]]):
-		format(self:getTalentLevel(t) * self:combatSpellpower(0.15), 6 + self:combatSpellpower(0.07) * self:getTalentLevel(t))
+		local duration = t.getDuration(self, t)
+		local reduction = t.getReduction(self, t)
+		return ([[By alterting the target's past you change it's present, reducing all of it's resistances by %d%% for %d turns.
+		The duration and reduction will scale with your Paradox.  The reduction will increase with your Magic stat.]]):
+		format(reduction, duration)
 	end,
 }
 
 newTalent{
 	name = "Paradox Clone",
-	type = {"chronomancy/paradox", 1},
-	require = chrono_req1,
+	type = {"chronomancy/paradox", 4},
+	require = chrono_req_high4,
 	points = 5,
-	paradox = 15,
-	cooldown = 1,
+	paradox = 25,
+	cooldown = 50,
 	tactical = { ATTACK = 1, DISABLE = 2 },
-	range = 5,
 	no_npc_use = true,
-	on_pre_use = timeline_check,
 	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)* getParadoxModifier(self, pm)) end,
 	getModifier = function(self, t) return rng.range(t.getDuration(self,t), t.getDuration(self, t)*4) end,
 	action = function (self, t)
+		if checkTimeline(self) == true then
+			return
+		end
+		
 		local sex = game.player.female and "she" or "he"
 		local a = mod.class.NPC.new{}
 		a:replaceWith(game.player:resolveSource():cloneFull())
@@ -171,7 +119,7 @@ newTalent{
 		a.no_drops = true
 		a.energy.value = 0
 		a.player = nil
-		a.name = a.name.."'s future self"
+		a.name = a.name.."'s paradox clone"
 		a.color_r = 176 a.color_g = 196 a.color_b = 222
 		a._mo:invalidate()
 		a.faction = self.faction
@@ -205,9 +153,8 @@ newTalent{
 		self:setEffect(self.EFF_IMMINENT_PARADOX_CLONE, t.getDuration(self, t) + t.getModifier(self, t), {})
 	end,
 	info = function(self, t)
-		return ([[Conjures a furious, raging lightning storm with a radius of 5 that follows you as long as this spell is active.
-		Each turn a random lightning bolt will hit up to %d of your foes for 1 to %0.2f damage.
-		This powerful spell will continuously drain mana while active.
-		The damage will increase with the Magic stat]]):format(self:getTalentLevel(t), self:combatTalentSpellDamage(t, 15, 80))
+		local duration = t.getDuration(self, t)
+		return ([[You summon your future self to fight alongside you for %d turns.
+		The duration will scale with your Paradox.]]):format(duration)
 	end,
 }

@@ -56,11 +56,9 @@ newBirthDescriptor{
 		["chronomancy/energy"]={true, 0.3},
 		["chronomancy/gravity"]={true, 0.3},
 		["chronomancy/matter"]={true, 0.3},
-		["chronomancy/paradox"]={true, 0.3},
-		["chronomancy/probability"]={true, 0.3},
+		["chronomancy/paradox"]={false, 0.3},
 		["chronomancy/speed-control"]={true, 0.3},
-		--["chronomancy/temporal-combat"]={true, 0.3},
-		["chronomancy/timeline-threading"]={true, 0.3},
+		["chronomancy/timeline-threading"]={false, 0.3},
 		["chronomancy/timetravel"]={true, 0.3},
 		["chronomancy/spacetime-weaving"]={true, 0.3},
 
@@ -69,7 +67,7 @@ newBirthDescriptor{
 		[ActorTalents.T_STATIC_HISTORY] = 1,
 		[ActorTalents.T_TURN_BACK_THE_CLOCK] = 1,
 		[ActorTalents.T_DUST_TO_DUST] = 1,
-		[ActorTalents.T_PARADOX_MASTERY] = 1,
+		[ActorTalents.T_ENTROPIC_SHIELD] = 1,
 		},
 	copy = {
 		max_life = 90,

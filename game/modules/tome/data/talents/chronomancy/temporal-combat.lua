@@ -67,40 +67,6 @@ newTalent{
 	end,
 }
 
---[[newTalent{
-	name = "Kinetic Folding",
-	type = {"chronomancy/temporal-combat", 2},
-	require = temporal_req2,
-	points = 5,
-	stamina = 8,
-	paradox = 4,
-	cooldown = 6,
-	tactical = {
-		ATTACK = 10,
-	},
-	range = 6,
-	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1, 1.5) * getParadoxModifier(self, pm) end,
-	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		x, y = checkBackfire(self, x, y)
-		local target = game.level.map(x, y, Map.ACTOR)
-		if target then
-			self:attackTarget(target, nil, t.getDamage(self, t), true)
-		else
-			return
-		end
-		return true
-	end,
-	info = function(self, t)
-		local damage = t.getDamage(self, t)
-		return (You momentarily fold the space between yourself and your target, attacking it at range for %d%% weapon damage.
-		):
-		format (damage*100)
-	end,
-}]]
-
 newTalent{
 	name = "Quantum Feed",
 	type = {"chronomancy/temporal-combat", 3},

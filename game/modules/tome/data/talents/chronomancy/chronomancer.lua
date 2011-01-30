@@ -20,16 +20,16 @@
 -- Paradox Mage SpellsnewTalentType
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/age-manipulation", name = "Age Manipulation", description = "Manipulate the age of creatures you encounter." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/chronomancy", name = "chronomancy", generic = true, description = "Allows you to glimpse the future or become more aware of the present." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/energy", name = "energy", description = "Manipulate raw energy by addition or subtraction." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/energy", name = "energy", generic = true, description = "Manipulate raw energy by addition or subtraction." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/gravity", name = "gravity", description = "Call upon the force of gravity to crush, push, and pull your foes." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/matter", name = "matter", description = "Change and shape matter itself." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/paradox", name = "paradox", description = "Create loopholes in the laws of spacetime." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/probability", name = "probability", generic = true, description = "Manipulate the laws of probability to make your own luck, choose your own fate, and spin your own destiny." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/speed-control", name = "Speed Control", description = "Control how fast objects and creatures move through spacetime." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/temporal-archery", name = "Temporal Archery", description = "A blend of chronomancy and ranged combat." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/temporal-combat", name = "Temporal Combat", description = "A blend of chronomancy and physical combat." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/timeline-threading", name = "Timeline Threading", description = "Examine and alter the timelines that make up the spacetime continuum." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/timetravel", name = "Time Travel", description = "Travel through time yourself or send your foes into the future.." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/spacetime-folding", name = "Spacetime Folding", description = "Mastery of folding points in space." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/spacetime-weaving", name = "Spacetime Weaving", generic = true, description = "Weave the threads of spacetime and correct the damage you've caused through your meddling." }
 
 -- Anomalies are not learnable but can occur instead of an intended spell when paradox gets to high.
@@ -114,18 +114,14 @@ checkBackfire = function(self, x, y)
 	end
 end
 
--- Make sure we don't do silly stuff like use Precognition with see the threads active.
--- Didn't work and would break Revision anyway
---[[local timeline_check = function(self, ab, silent, fake)
-	if game._chronoworlds and (#game._chronoworlds > 0) then
-		game.logPlayer(self, "How much messing up of timelines do you want to do?!")
-		return false
-	else
+checkTimeline = function(self)
+	if self:hasEffect(self.EFF_SEE_THE_THREADS) or self:hasEffect(self.EFF_PRECOGNITION) or self:hasEffect(self.EFF_PARADOX_CLONE) or self:hasEffect(self.EFF_IMMINENT_PARADOX_CLONE) then
+		game.logPlayer(self, "The timeline is to fractured right now to use this ability.")
 		return true
+	else
+		return false
 	end
-end]]
-
---[[on_pre_use = timeline_check,]]
+end
 
 -- Paradox modifier.  This controls how much extra effect chronomancy spells have at high paradox.
 -- Note that 300 is the optimal balance and going below this number will decrease the effect of chronomancy spells.
@@ -141,12 +137,12 @@ load("/data/talents/chronomancy/energy.lua")
 load("/data/talents/chronomancy/gravity.lua")
 load("/data/talents/chronomancy/matter.lua")
 load("/data/talents/chronomancy/paradox.lua")
-load("/data/talents/chronomancy/probability.lua")
 load("/data/talents/chronomancy/speed-control.lua")
 load("/data/talents/chronomancy/temporal-archery.lua")
 load("/data/talents/chronomancy/temporal-combat.lua")
 load("/data/talents/chronomancy/timeline-threading.lua")
 load("/data/talents/chronomancy/timetravel.lua")
+load("/data/talents/chronomancy/spacetime-folding.lua")
 load("/data/talents/chronomancy/spacetime-weaving.lua")
 
 -- Anomalies, not learnable talents that may be cast instead of the intended spell when paradox gets to high

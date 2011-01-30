@@ -543,7 +543,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	resists = {all = 10, [DamageType.TEMPORAL] = 50},
 
 	resolvers.talents{
-		[Talents.T_PRESCIENCE]=3,
+		[Talents.T_PERFECT_AIM]=3,
 		[Talents.T_AVOID_FATE]=5,
 		[Talents.T_STEALTH]=3,
 		[Talents.T_SHADOWSTRIKE]=3,

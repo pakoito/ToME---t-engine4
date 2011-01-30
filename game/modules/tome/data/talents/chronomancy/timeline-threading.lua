@@ -17,68 +17,6 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
---[[newTalent{
-	name = "Swap",
-	type = {"chronomancy/timeline-threading", 1},
-	require = chrono_req_high1,
-	points = 5,
-	paradox = 5,
-	cooldown = 10,
-	tactical = {
-		ATTACK = 5,
-	},
-	requires_target = true,
-	direct_hit = true,
-	getRange = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)*getParadoxModifier(self, pm)) end,
-	action = function(self, t)
-		local tg = {type="hit", range=t.getRange(self, t)}
-		local tx, ty, target = self:getTarget(tg)
-		if not tx or not ty then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, tx, ty)) > t.getRange(self, t) then return nil end
-		if not self:canBe("teleport") or game.level.map.attrs(tx, ty, "no_teleport") or game.level.map.attrs(self.x, self.y, "no_teleport") then
-			game.logSeen(self, "The spell fizzles!")
-			return true
-		end
-		if tx then
-			local _ _, tx, ty = self:canProject(tg, tx, ty)
-			if tx then
-				target = game.level.map(tx, ty, Map.ACTOR)
-			end
-		end
-		if target:canBe("teleport") then
-			local hit = self:checkHit(self:combatSpellpower(), target:combatSpellResist() + (target:attr("continuum_destabilization") or 0))
-			if not hit then
-				game.logSeen(target, "The spell fizzles!")
-				return true
-			end
-		end
-
-		-- Annoy them!
-		if target ~= self and target:reactionToward(self) < 0 then target:setTarget(self) end
-
-		game.level.map:remove(self.x, self.y, Map.ACTOR)
-		game.level.map:remove(target.x, target.y, Map.ACTOR)
-		game.level.map(self.x, self.y, Map.ACTOR, target)
-		game.level.map(target.x, target.y, Map.ACTOR, self)
-		self.x, self.y, target.x, target.y = target.x, target.y, self.x, self.y
-		game.level.map:particleEmitter(target.x, target.y, 1, "teleport")
-		game.level.map:particleEmitter(self.x, self.y, 1, "teleport")
-
-
-		if target ~= self then
-			target:setEffect(target.EFF_CONTINUUM_DESTABILIZATION, 100, {power=self:combatSpellpower(0.3)})
-		end
-
-		game:playSoundNear(self, "talents/teleport")
-		return true
-	end,
-	info = function(self, t)
-		local range = t.getRange(self, t)
-		return (You manipulate the spacetime continuum in such a way that you switch places with another creature with in a range of %d.
-		):format (range)
-	end,
-}]]
-
 newTalent{
 	name = "Gather the Threads",
 	type = {"chronomancy/timeline-threading", 1},
@@ -229,6 +167,9 @@ newTalent{
 	cooldown = 100,
 	no_npc_use = true,
 	action = function(self, t)
+		if checkTimeline(self) == true then
+			return
+		end
 		self:setEffect(self.EFF_SEE_THREADS, 10, {})
 		return true
 	end,
