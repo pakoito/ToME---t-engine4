@@ -78,6 +78,28 @@ newEntity{
 }
 
 newEntity{
+	define_as = "BASE_TAINT",
+	type = "scroll", subtype="taint", add_name = " [#INSCRIPTION#]",
+	unided_name = "taint", id_by_type = true,
+	display = "?", color=colors.LIGHT_BLUE, image="object/rune_yellow.png",
+	encumber = 0.1,
+	use_sound = "actions/read",
+	use_no_blind = true,
+	use_no_silence = true,
+	is_magic_device = true,
+	fire_destroy = {{10,1}, {20,2}, {40,5}, {60,10}, {120,20}},
+	desc = [[Corrupted taints may be inscribes onto your body, granting you an on-demand ability.]],
+	egos = "/data/general/objects/egos/infusions.lua", egos_chance = resolvers.mbonus(30, 5),
+
+	power_source = {arcane=true},
+	use_simple = { name="inscribe your skin with the taint.", use = function(self, who, inven, item)
+		if who:setInscription(nil, self.inscription_talent, self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
+			return "destroy", true
+		end
+	end}
+}
+
+newEntity{
 	define_as = "BASE_LORE",
 	type = "lore", subtype="lore", not_in_stores=true,
 	unided_name = "scroll", identified=true,
@@ -86,6 +108,9 @@ newEntity{
 	desc = [[This parchment contains some lore.]],
 }
 
+-----------------------------------------------------------
+-- Infusions
+-----------------------------------------------------------
 newEntity{ base = "BASE_INFUSION",
 	name = "healing infusion",
 	level_range = {7, 50},
@@ -206,6 +231,9 @@ newEntity{ base = "BASE_INFUSION",
 	inscription_talent = "INFUSION:_MIND_POWER",
 }
 
+-----------------------------------------------------------
+-- Runes
+-----------------------------------------------------------
 newEntity{ base = "BASE_RUNE",
 	name = "phase door rune",
 	level_range = {1, 50},
@@ -397,3 +425,24 @@ newEntity{ base = "BASE_RUNE",
 	},
 	inscription_talent = "RUNE:_MANASURGE",
 }
+
+-----------------------------------------------------------
+-- Taints
+-----------------------------------------------------------
+--[[
+newEntity{ base = "BASE_TAINT",
+	name = "taint of the devourer",
+	level_range = {1, 50},
+	rarity = 15,
+	cost = 10,
+	material_level = 1,
+
+	inscription_data = {
+		cooldown = resolvers.rngrange(12, 17),
+		effects = resolvers.mbonus_level(3, 2, function(e, v) return v * 0.06 end),
+		heal = resolvers.mbonus_level(70, 40, function(e, v) return v * 0.06 end),
+		use_stat_mod = 0.6,
+	},
+	inscription_talent = "TAINT:_DEVOURER",
+}
+]]

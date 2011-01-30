@@ -677,3 +677,70 @@ newInscription{
 		return ("%0.2f temporal damage, removed from time %d turns"):format(t.getDamage(self, t), t.getDuration(self, t))
 	end,
 }
+
+-----------------------------------------------------------------------
+-- Taints
+-----------------------------------------------------------------------
+newInscription{
+	name = "Taint: Devourer",
+	type = {"inscriptions/taints", 1},
+	points = 1,
+	is_spell = true,
+	tactical = { ATTACK = 1, HEAL=1 },
+	requires_target = true,
+	direct_hit = true,
+	no_energy = true,
+	range = 5,
+	action = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, function(px, py)
+			local target = game.level.map(px, py, Map.ACTOR)
+			if not target then return end
+
+			local effs = {}
+
+			-- Go through all spell effects
+			for eff_id, p in pairs(target.tmp) do
+				local e = target.tempeffect_def[eff_id]
+				if e.type == "magical" or e.type == "physical" then
+					effs[#effs+1] = {"effect", eff_id}
+				end
+			end
+
+			-- Go through all sustained spells
+			for tid, act in pairs(target.sustain_talents) do
+				if act then
+					effs[#effs+1] = {"talent", tid}
+				end
+			end
+
+			local nb = data.effects
+			for i = 1, nb do
+				if #effs == 0 then break end
+				local eff = rng.tableRemove(effs)
+
+				if eff[1] == "effect" then
+					target:removeEffect(eff[2])
+				else
+					target:forceUseTalent(eff[2], {ignore_energy=true})
+				end
+				self:heal(data.heal + data.inc_stat)
+			end
+
+			game.level.map:particleEmitter(px, py, 1, "shadow_zone")
+		end)
+		game:playSoundNear(self, "talents/fire")
+		return true
+	end,
+	info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[Activate the taint on a foe, removing %d effects from it and healing you for %d per effects.]]):format(data.effects, data.heal + data.inc_stat)
+	end,
+	short_info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[%d effects / %d heal]]):format(data.effects, data.heal + data.inc_stat)
+	end,
+}
