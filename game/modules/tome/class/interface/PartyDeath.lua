@@ -23,6 +23,8 @@ local Dialog = require "engine.ui.Dialog"
 module(..., package.seeall, class.make)
 
 function _M:onPartyDeath(src)
+	if self.dead then return true end
+
 	-- Remove from the party if needed
 	if self.remove_from_party_on_death then
 		game.party:removeMember(self, true)

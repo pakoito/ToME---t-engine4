@@ -990,6 +990,8 @@ function _M:resolveSource()
 end
 
 function _M:die(src)
+	if self.dead then return true end
+
 	engine.interface.ActorLife.die(self, src)
 
 	-- Gives the killer some exp for the kill
@@ -1000,7 +1002,7 @@ function _M:die(src)
 	end
 
 	-- Hack: even if the boss dies from something else, give the player exp
-	if (not killer or not killer.player) and self.rank > 3 then
+	if (not killer or not killer.player) and self.rank > 3 and not game.party:hasMember(self) then
 		game.logPlayer(game.player, "You feel a surge of power as a powerful creature falls nearby.")
 		killer = game.player:resolveSource()
 		killer:gainExp(self:worthExp(killer))

@@ -131,6 +131,8 @@ function _M:onTakeHit(value, src)
 end
 
 function _M:die(src)
+	if self.dead then return true end
+
 	if src and Faction:get(self.faction) and Faction:get(self.faction).hostile_on_attack then
 		Faction:setFactionReaction(self.faction, src.faction, Faction:factionReaction(self.faction, src.faction) - self.rank, true)
 	end
