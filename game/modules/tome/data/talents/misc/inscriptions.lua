@@ -226,6 +226,35 @@ newInscription{
 	end,
 }
 
+newInscription{
+	name = "Infusion: Insidious Poison",
+	type = {"inscriptions/infusions", 1},
+	points = 1,
+	tactical = { ATTACK = 1, DISABLE=1 },
+	requires_target = true,
+	range = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return data.range
+	end,
+	action = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_slime", trail="slimetrail"}}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:projectile(tg, x, y, DamageType.INSIDIOUS_POISON, {dam=data.power + data.inc_stat, dur=7, heal_factor=data.heal_factor}, {type="slime"})
+		game:playSoundNear(self, "talents/slime")
+		return true
+	end,
+	info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[Activate the infusion to spit a bolt of poison doing %0.2f nature damage per turns for 7 turns and reducing the target's healing received by %d%%.]]):format(damDesc(self, DamageType.COLD, data.power + data.inc_stat) / 7, data.heal_factor)
+	end,
+	short_info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[%d nature damage, %d%% healing reduction]]):format(damDesc(self, DamageType.NATURE, data.power + data.inc_stat) / 7, data.heal_factor)
+	end,
+}
+
 -----------------------------------------------------------------------
 -- Runes
 -----------------------------------------------------------------------
@@ -455,7 +484,6 @@ newInscription{
 	is_spell = true,
 	tactical = { ATTACK = 1, DISABLE=1 },
 	requires_target = true,
-	direct_hit = true,
 	range = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return data.range

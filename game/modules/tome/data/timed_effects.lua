@@ -195,6 +195,47 @@ newEffect{
 }
 
 newEffect{
+	name = "SPYDRIC_POISON",
+	desc = "Spydric Poison",
+	long_desc = function(self, eff) return ("The target is poisoned, taking %0.2f nature damage per turn and preventing any movements (but can still act freely)."):format(eff.power) end,
+	type = "poison",
+	status = "detrimental",
+	parameters = {power=10},
+	on_gain = function(self, err) return "#Target# is poisoned and cannot move!", "+Spydric Poison" end,
+	on_lose = function(self, err) return "#Target# is no longer poisoned.", "-Spydric Poison" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("never_move", 1)
+		eff.dur = self:updateEffectDuration(eff.dur, "pin")
+	end,
+	on_timeout = function(self, eff)
+		DamageType:get(DamageType.NATURE).projector(eff.src, self.x, self.y, DamageType.NATURE, eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("never_move", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "INSIDIOUS_POISON",
+	desc = "Insidious Poison",
+	long_desc = function(self, eff) return ("The target is poisoned, taking %0.2f nature damage per turn and decreasing all heals received by %d%%."):format(eff.power, eff.heal_factor) end,
+	type = "poison",
+	status = "detrimental",
+	parameters = {power=10, heal_factor=30},
+	on_gain = function(self, err) return "#Target# is poisoned!", "+Insidious Poison" end,
+	on_lose = function(self, err) return "#Target# is no longer poisoned.", "-Insidious Poison" end,
+	activate = function(self, eff)
+		eff.healid = self:addTemporaryValue("healing_factor", -eff.heal_factor / 100)
+	end,
+	on_timeout = function(self, eff)
+		DamageType:get(DamageType.NATURE).projector(eff.src, self.x, self.y, DamageType.NATURE, eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("healing_factor", eff.healid)
+	end,
+}
+
+newEffect{
 	name = "FROZEN",
 	desc = "Frozen",
 	long_desc = function(self, eff) return "The target is encased in ice, completely unable to act. The ice increases all your resistances by 20%." end,
@@ -322,27 +363,6 @@ newEffect{
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("stunned", eff.tmpid)
 		if not self:attr("stunned") then self.stunned_counter = nil end
-	end,
-}
-
-newEffect{
-	name = "SPYDRIC_POISON",
-	desc = "Spydric Poison",
-	long_desc = function(self, eff) return ("The target is poisoned, taking %0.2f nature damage per turn and preventing any movements (but can still act freely)."):format(eff.power) end,
-	type = "poison",
-	status = "detrimental",
-	parameters = {power=10},
-	on_gain = function(self, err) return "#Target# is poisoned and cannot move!", "+Spydric Poison" end,
-	on_lose = function(self, err) return "#Target# is no longer poisoned.", "-Spydric Poison" end,
-	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("never_move", 1)
-		eff.dur = self:updateEffectDuration(eff.dur, "pin")
-	end,
-	on_timeout = function(self, eff)
-		DamageType:get(DamageType.NATURE).projector(eff.src, self.x, self.y, DamageType.NATURE, eff.power)
-	end,
-	deactivate = function(self, eff)
-		self:removeTemporaryValue("never_move", eff.tmpid)
 	end,
 }
 

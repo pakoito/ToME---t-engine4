@@ -707,6 +707,18 @@ newDamageType{
 	end,
 }
 
+-- Insidious poison: prevents healing
+newDamageType{
+	name = "insidious poison", type = "INSIDIOUS_POISON",
+	projector = function(src, x, y, type, dam)
+		DamageType:get(DamageType.NATURE).projector(src, x, y, DamageType.NATURE, dam.dam / dam.dur)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and target:canBe("poison") then
+			target:setEffect(target.EFF_INSIDIOUS_POISON, dam.dur, {src=src, power=dam.dam / dam.dur, heal_factor=dam.heal_factor})
+		end
+	end,
+}
+
 -- Bleeding damage
 newDamageType{
 	name = "bleed", type = "BLEED",

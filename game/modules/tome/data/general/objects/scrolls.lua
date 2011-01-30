@@ -231,6 +231,23 @@ newEntity{ base = "BASE_INFUSION",
 	inscription_talent = "INFUSION:_MIND_POWER",
 }
 
+newEntity{ base = "BASE_INFUSION",
+	name = "insidious poison infusion",
+	level_range = {10, 50},
+	rarity = 16,
+	cost = 20,
+	material_level = 2,
+
+	inscription_data = {
+		cooldown = resolvers.rngrange(15, 25),
+		range = resolvers.mbonus_level(3, 3),
+		heal_factor = resolvers.mbonus_level(50, 20, function(e, v) return v * 0.1 end),
+		power = resolvers.mbonus_level(300, 70, function(e, v) return v * 0.1 end),
+		use_stat_mod = 2,
+	},
+	inscription_talent = "INFUSION:_INSIDIOUS_POISON",
+}
+
 -----------------------------------------------------------
 -- Runes
 -----------------------------------------------------------

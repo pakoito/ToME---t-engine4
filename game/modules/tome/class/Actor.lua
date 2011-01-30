@@ -678,6 +678,13 @@ function _M:tooltip(x, y, seen_by)
 	return ts
 end
 
+--- Regenerate life, call it from your actor class act() method
+function _M:regenLife()
+	if self.life_regen then
+		self.life = util.bound(self.life + self.life_regen * util.bound((self.healing_factor or 1), 0, 2.5), 0, self.max_life)
+	end
+end
+
 --- Called before healing
 function _M:onHeal(value, src)
 	if self:hasEffect(self.EFF_UNSTOPPABLE) then
