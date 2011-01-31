@@ -16,7 +16,7 @@ newEntity{
 	stats = { str=1, dex=5, mag=20, con=1 },
 	energy = { mod=0.5 },
 	infravision = 20,
-	combat_armor = 10, combat_def = 1,
+	combat_def = 1,
 	never_move = 1,
 	blind_immune = 1,
 	fear_immune = 1,

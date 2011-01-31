@@ -53,6 +53,7 @@ newBirthDescriptor{
 		starting_level = 8, starting_level_force_down = true,
 		starting_quest = "start-undead",
 		undead = 1,
+		inscription_restrictions = { ["inscriptions/runes"] = true, },
 		resolvers.inscription("RUNE:_SHIELDING", {cooldown=14, dur=5, power=100}),
 		resolvers.inscription("RUNE:_PHASE_DOOR", {cooldown=7, range=10}),
 	},
@@ -76,7 +77,7 @@ newBirthDescriptor
 		"#LIGHT_BLUE# * +3 Strength, +1 Dexterity, +5 Constitution",
 		"#LIGHT_BLUE# * +0 Magic, -2 Willpower, -2 Cunning",
 		"#GOLD#Life per level:#LIGHT_BLUE# 14",
-		"#GOLD#Experience penalty:#LIGHT_BLUE# 100%",
+		"#GOLD#Experience penalty:#LIGHT_BLUE# 40%",
 		"#GOLD#Speed penalty:#LIGHT_BLUE# -20%",
 	},
 	descriptor_choices =
@@ -104,7 +105,7 @@ newBirthDescriptor
 		fear_immune = 1,
 		energy = {mod=0.8},
 	},
-	experience = 2,
+	experience = 1.4,
 }
 
 newBirthDescriptor
@@ -123,7 +124,7 @@ newBirthDescriptor
 		"#LIGHT_BLUE# * +3 Strength, +4 Dexterity, +0 Constitution",
 		"#LIGHT_BLUE# * +0 Magic, +0 Willpower, +0 Cunning",
 		"#GOLD#Life per level:#LIGHT_BLUE# 12",
-		"#GOLD#Experience penalty:#LIGHT_BLUE# 100%",
+		"#GOLD#Experience penalty:#LIGHT_BLUE# 40%",
 	},
 	descriptor_choices =
 	{
@@ -150,5 +151,5 @@ newBirthDescriptor
 		no_breath = 1,
 		blood_color = colors.GREY,
 	},
-	experience = 2,
+	experience = 1.4,
 }

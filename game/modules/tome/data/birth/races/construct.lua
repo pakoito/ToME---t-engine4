@@ -88,6 +88,7 @@ newBirthDescriptor
 
 		mana_regen = 0.5,
 		mana_rating = 7,
+		inscription_restrictions = { ["inscriptions/runes"] = true, },
 		resolvers.inscription("RUNE:_MANASURGE", {cooldown=25, dur=10, mana=620}),
 		resolvers.inscription("RUNE:_SHIELDING", {cooldown=14, dur=5, power=100}),
 		resolvers.inscription("RUNE:_PHASE_DOOR", {cooldown=7, range=10}),

@@ -52,7 +52,6 @@ newBirthDescriptor{
 		resolvers.inventory{ id=true, {defined="ORB_SCRYING"} },
 		resolvers.generic(function(e) e.hotkey[10] = {"inventory", "Orb of Scrying"} end),
 	},
-	random_escort_possibilities = { {"trollmire", 2, 5}, {"ruins-kor-pul", 1, 4}, {"daikara", 1, 7}, {"old-forest", 1, 7}, {"dreadfell", 1, 8}, {"iron-throne", 1, 1}, },
 }
 
 ---------------------------------------------------------
@@ -84,6 +83,7 @@ newBirthDescriptor
 		life_rating = 9,
 	},
 	experience = 1.35,
+	random_escort_possibilities = { {"scintillating-caves", 2, 5}, {"daikara", 1, 7}, {"old-forest", 1, 7}, {"dreadfell", 1, 8}, {"iron-throne", 1, 1}, },
 }
 
 newBirthDescriptor
@@ -110,4 +110,5 @@ newBirthDescriptor
 		life_rating = 11,
 	},
 	experience = 1.35,
+	random_escort_possibilities = { {"trollmire", 2, 5}, {"ruins-kor-pul", 1, 4}, {"daikara", 1, 7}, {"old-forest", 1, 7}, {"dreadfell", 1, 8}, {"iron-throne", 1, 1}, },
 }
