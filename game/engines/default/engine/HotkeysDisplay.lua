@@ -150,8 +150,9 @@ function _M:onMouse(button, mx, my, click, on_over)
 				a.changed = true
 			else
 				a.changed = true
+				local oldsel = self.cur_sel
 				self.cur_sel = i
-				if on_over then
+				if on_over and self.cur_sel ~= oldsel then
 					local text = ""
 					if a.hotkey[i] and a.hotkey[i][1] == "talent" then
 						local t = self.actor:getTalentFromId(a.hotkey[i][2])
