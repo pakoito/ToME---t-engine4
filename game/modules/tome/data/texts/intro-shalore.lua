@@ -20,12 +20,11 @@
 return [[Welcome #LIGHT_GREEN#@name@#WHITE#.
 You are of the Shaloren, the Elven race with the closest ties to magic, and you are despised.
 While your people are at peace with the other kingdoms, many have not forgotten it was your race that created the terrible Spellblaze, thousands of years ago.
-Magic is frowned upon, even in your own country.
 
 You have decided to venture into the old and wild places looking for ancient treasures and glory.
 
-You have come to a land called the Derthfields on the western border of the Thaloren forest, in search of the Trollmire. It is an old forest infested with trolls and all kinds of wild animals.
-To the west lies another dangerous place: the old ruins of Kor'Pul. You heard the caves below it were infested by vermin and undead.
+You have come to the north of the Shaloren capital city of Elvala, in search of the Scintillating Caves. It is infested with vermin and seemingly alive crystals.
+To the west lies another dangerous place: a camp of Rhaloren. They are renegate Shaloren who do not wish to restrict their magic usage. Stopping them is both good for your race and your treasure hunt.
 
-After days of travel, you have found the forest and entered it. What will you find there...?
+After days of travel, you have found the caves and entered it. What will you find there...?
 ]]

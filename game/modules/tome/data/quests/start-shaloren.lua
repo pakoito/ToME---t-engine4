@@ -21,6 +21,7 @@ name = "Echoes of the Spellblaze"
 desc = function(self, who)
 	local desc = {}
 	desc[#desc+1] = "You have heard that within the scintillating caves lie strange crystals imbued with spellblaze energies.\n"
+	desc[#desc+1] = "There are also rumours of a regenate shaloren, rhaloren, camp to the west.\n"
 	if self:isCompleted("spellblaze") then
 		desc[#desc+1] = "#LIGHT_GREEN#* You have explored the scintillating caves and destroyed the Spellblaze Crystal.#WHITE#"
 	else
@@ -38,7 +39,7 @@ on_status_change = function(self, who, status, sub)
 	if sub then
 		if self:isCompleted("spellblaze") and self:isCompleted("rhaloren") then
 			who:setQuestStatus(self.id, engine.Quest.DONE)
-			who:grantQuest("started-zones")
+			who:grantQuest("starter-zones")
 		end
 	end
 end
