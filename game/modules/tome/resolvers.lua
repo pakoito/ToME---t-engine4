@@ -371,27 +371,53 @@ function resolvers.calc.inscription(t, e)
 end
 
 --- Random inscription resolver
-function resolvers.inscriptions(nb, list)
-	return {__resolver="inscriptions", nb, list}
+local inscriptions_max = {
+	heal = 1,
+	protect = 1,
+	attack = 4,
+	movement = 1,
+	utility = 6,
+}
+
+function resolvers.inscriptions(nb, list, kind)
+	return {__resolver="inscriptions", nb, list, kind}
 end
 function resolvers.calc.inscriptions(t, e)
+	local kind = nil
+	if t[3] then
+		kind = function(o)
+			if 	o.incription_kind == t[3] and
+				(e.__npc_inscription_kinds[o.inscription_kind] or 0) < (inscriptions_max[o.inscription_kind] or 0)
+				then return true
+			end return false
+		end
+	else
+		kind = function(o)
+			if 	(e.__npc_inscription_kinds[o.inscription_kind] or 0) < (inscriptions_max[o.inscription_kind] or 0)
+				then return true
+			end return false
+		end
+	end
+
+	e.__npc_inscription_kinds = e.__npc_inscription_kinds or {}
 	for i = 1, t[1] do
 		local o
 		if type(t[2]) == "table" then
 			if #t[2] then
 				local name = rng.tableRemove(t[2])
 				if not name then return nil end
-				o = game.zone:makeEntity(game.level, "object", {name=name}, nil, true)
+				o = game.zone:makeEntity(game.level, "object", {special=kind, name=name}, nil, true)
 			else
-				o = game.zone:makeEntity(game.level, "object", {type="scroll"}, nil, true)
+				o = game.zone:makeEntity(game.level, "object", {special=kind, type="scroll"}, nil, true)
 			end
 		else
-			o = game.zone:makeEntity(game.level, "object", {type="scroll", subtype=t[2]}, nil, true)
+			o = game.zone:makeEntity(game.level, "object", {special=kind, type="scroll", subtype=t[2]}, nil, true)
 		end
 		if o and o.inscription_talent and o.inscription_data then
-			o.inscription_data.use_any_stat = 0.3 -- Cheat a beat to scale inscriptions nicely
-			o.inscription_data.cooldown = math.ceil(o.inscription_data.cooldown * 1.7)
+			o.inscription_data.use_any_stat = 0.5 -- Cheat a bit to scale inscriptions nicely
+			o.inscription_data.cooldown = math.ceil(o.inscription_data.cooldown * 1.6)
 			e:setInscription(nil, o.inscription_talent, o.inscription_data, false, false, nil, true, true)
+			e.__npc_inscription_kinds[o.inscription_kind] = (e.__npc_inscription_kinds[o.inscription_kind] or 0) + 1
 		end
 	end
 	return nil

@@ -118,6 +118,7 @@ newEntity{ base = "BASE_INFUSION",
 	cost = 10,
 	material_level = 1,
 
+	inscription_kind = "heal",
 	inscription_data = {
 		cooldown = resolvers.rngrange(12, 17),
 		heal = resolvers.mbonus_level(400, 40, function(e, v) return v * 0.06 end),
@@ -133,6 +134,7 @@ newEntity{ base = "BASE_INFUSION",
 	cost = 10,
 	material_level = 1,
 
+	inscription_kind = "heal",
 	inscription_data = {
 		cooldown = resolvers.rngrange(12, 17),
 		dur = 5,
@@ -149,6 +151,7 @@ newEntity{ base = "BASE_INFUSION",
 	cost = 20,
 	material_level = 1,
 
+	inscription_kind = "protect",
 	inscription_data = resolvers.generic(function(e)
 		return {
 			cooldown = rng.range(12, 17),
@@ -176,6 +179,7 @@ newEntity{ base = "BASE_INFUSION",
 	cost = 30,
 	material_level = 3,
 
+	inscription_kind = "movement",
 	inscription_data = {
 		cooldown = resolvers.rngrange(10, 15),
 		dur = resolvers.mbonus_level(5, 2, function(e, v) return v * 1 end),
@@ -191,6 +195,7 @@ newEntity{ base = "BASE_INFUSION",
 	cost = 10,
 	material_level = 1,
 
+	inscription_kind = "utility",
 	inscription_data = {
 		cooldown = resolvers.rngrange(6, 12),
 		range = resolvers.mbonus_level(5, 5, function(e, v) return v * 0.1 end),
@@ -206,6 +211,7 @@ newEntity{ base = "BASE_INFUSION",
 	cost = 40,
 	material_level = 3,
 
+	inscription_kind = "utility",
 	inscription_data = {
 		cooldown = resolvers.rngrange(20, 30),
 		dur = resolvers.mbonus_level(7, 7),
@@ -222,6 +228,7 @@ newEntity{ base = "BASE_INFUSION",
 	cost = 40,
 	material_level = 3,
 
+	inscription_kind = "utility",
 	inscription_data = {
 		cooldown = resolvers.rngrange(20, 30),
 		dur = resolvers.mbonus_level(7, 7),
@@ -238,6 +245,7 @@ newEntity{ base = "BASE_INFUSION",
 	cost = 20,
 	material_level = 2,
 
+	inscription_kind = "attack",
 	inscription_data = {
 		cooldown = resolvers.rngrange(15, 25),
 		range = resolvers.mbonus_level(3, 3),
@@ -258,6 +266,7 @@ newEntity{ base = "BASE_RUNE",
 	cost = 10,
 	material_level = 1,
 
+	inscription_kind = "movement",
 	inscription_data = {
 		cooldown = resolvers.rngrange(8, 10),
 		range = resolvers.mbonus_level(10, 5, function(e, v) return v * 1 end),
@@ -273,6 +282,7 @@ newEntity{ base = "BASE_RUNE",
 	cost = 50,
 	material_level = 4,
 
+	inscription_kind = "movement",
 	inscription_data = {
 		cooldown = resolvers.rngrange(10, 12),
 		range = resolvers.mbonus_level(6, 5, function(e, v) return v * 3 end),
@@ -288,6 +298,7 @@ newEntity{ base = "BASE_RUNE",
 	cost = 10,
 	material_level = 2,
 
+	inscription_kind = "movement",
 	inscription_data = {
 		cooldown = resolvers.rngrange(14, 19),
 		range = resolvers.mbonus_level(100, 20, function(e, v) return v * 0.03 end),
@@ -303,6 +314,7 @@ newEntity{ base = "BASE_RUNE",
 	cost = 20,
 	material_level = 3,
 
+	inscription_kind = "protect",
 	inscription_data = {
 		cooldown = resolvers.rngrange(14, 24),
 		dur = resolvers.mbonus_level(5, 3),
@@ -319,6 +331,7 @@ newEntity{ base = "BASE_RUNE",
 	cost = 40,
 	material_level = 3,
 
+	inscription_kind = "utility",
 	inscription_data = {
 		cooldown = resolvers.rngrange(14, 24),
 		dur = resolvers.mbonus_level(9, 4, function(e, v) return v * 1 end),
@@ -336,6 +349,7 @@ newEntity{ base = "BASE_RUNE",
 	cost = 40,
 	material_level = 3,
 
+	inscription_kind = "utility",
 	inscription_data = {
 		cooldown = resolvers.rngrange(14, 24),
 		dur = resolvers.mbonus_level(4, 3),
@@ -353,6 +367,7 @@ newEntity{ base = "BASE_RUNE",
 	cost = 30,
 	material_level = 2,
 
+	inscription_kind = "detection",
 	inscription_data = {
 		cooldown = resolvers.rngrange(20, 30),
 		range = resolvers.mbonus_level(10, 8),
@@ -370,6 +385,7 @@ newEntity{ base = "BASE_RUNE",
 	cost = 20,
 	material_level = 3,
 
+	inscription_kind = "attack",
 	inscription_data = {
 		cooldown = resolvers.rngrange(15, 25),
 		range = resolvers.mbonus_level(5, 4),
@@ -386,6 +402,7 @@ newEntity{ base = "BASE_RUNE",
 	cost = 20,
 	material_level = 3,
 
+	inscription_kind = "attack",
 	inscription_data = {
 		cooldown = resolvers.rngrange(15, 25),
 		range = resolvers.mbonus_level(5, 4),
@@ -402,6 +419,7 @@ newEntity{ base = "BASE_RUNE",
 	cost = 20,
 	material_level = 3,
 
+	inscription_kind = "attack",
 	inscription_data = {
 		cooldown = resolvers.rngrange(15, 25),
 		range = resolvers.mbonus_level(3, 2),
@@ -418,6 +436,7 @@ newEntity{ base = "BASE_RUNE",
 	cost = 20,
 	material_level = 3,
 
+	inscription_kind = "attack",
 	inscription_data = {
 		cooldown = resolvers.rngrange(15, 25),
 		range = resolvers.mbonus_level(5, 4),
@@ -434,6 +453,7 @@ newEntity{ base = "BASE_RUNE",
 	cost = 10,
 	material_level = 1,
 
+	inscription_kind = "utility",
 	inscription_data = {
 		cooldown = resolvers.rngrange(20, 30),
 		dur = 10,
@@ -454,6 +474,7 @@ newEntity{ base = "BASE_TAINT",
 	cost = 10,
 	material_level = 1,
 
+	inscription_kind = "heal",
 	inscription_data = {
 		cooldown = resolvers.rngrange(12, 17),
 		effects = resolvers.mbonus_level(3, 2, function(e, v) return v * 0.06 end),
