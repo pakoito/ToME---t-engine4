@@ -76,6 +76,9 @@ newBirthDescriptor
 	experience = 1.3,
 	talents = { [ActorTalents.T_SHALOREN_SPEED]=1 },
 	copy = {
+		default_wilderness = {17, 42},
+		starting_zone = "scintillating-caves",
+		starting_quest = "start-shaloren",
 		faction = "shalore",
 		starting_intro = "shalore",
 		life_rating = 9,

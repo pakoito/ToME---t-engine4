@@ -331,15 +331,6 @@ function _M:playerFOV()
 		end, true, true, true)
 	end
 
-	-- For each entity, generate lite
-	local uid, e = next(game.level.entities)
-	while uid do
-		if e ~= self and e.lite and e.lite > 0 and e.computeFOV then
-			e:computeFOV(e.lite, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyExtraLite(x, y, fovdist[sqdist]) end, true, true)
-		end
-		uid, e = next(game.level.entities, uid)
-	end
-
 	if not self:attr("blind") then
 		-- Handle dark vision; same as infravision, but also sees past creeping dark
 		-- this is treated as a sense, but is filtered by custom LOS code
@@ -385,6 +376,15 @@ function _M:playerFOV()
 		end, true, false, true)
 		if self.lite <= 0 then game.level.map:applyLite(self.x, self.y)
 		else self:computeFOV(self.lite, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y) end, true, true, true) end
+
+		-- For each entity, generate lite
+		local uid, e = next(game.level.entities)
+		while uid do
+			if e ~= self and e.lite and e.lite > 0 and e.computeFOV then
+				e:computeFOV(e.lite, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyExtraLite(x, y, fovdist[sqdist]) end, true, true)
+			end
+			uid, e = next(game.level.entities, uid)
+		end
 	end
 end
 

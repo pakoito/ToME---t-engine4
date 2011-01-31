@@ -17,17 +17,23 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-newChat{ id="welcome",
-	text = [[#LIGHT_GREEN#*Before you stands an humanoid shape filled with 'nothing'. It seems to stare at you.*#WHITE#
-I have brought you here on the instant of your death. I am the Eidolon.
-I have deemed you worthy of my 'interest', I will watch your future steps with interest.
-You may rest here, when you are ready I will send you back to the material plane.
-But do not abuse my help, I am not your servant, someday I might just let you die.
-As for your probable many questions, they will stay unanswered, I may help, but I am not here to explain why.]],
-	answers = {
-		{"Thank you, I will rest for a while."},
-		{"Thank you, I am ready to go back!", action=function() game.level.data.eidolon_exit() end},
-	}
-}
+name = "Echoes of the Spellblaze"
+desc = function(self, who)
+	local desc = {}
+	desc[#desc+1] = "You have heard that within the scintillating caves lie strange crystals imbued with spellblaze energies.\n"
+	if self:isCompleted("spellblaze") then
+		desc[#desc+1] = "#LIGHT_GREEN#* You have explored the scintillating caves and destroyed the Spellblaze Crystal.#WHITE#"
+	else
+		desc[#desc+1] = "#SLATE#* You must explore the scintillating caves.#WHITE#"
+	end
+	return table.concat(desc, "\n")
+end
 
-return "welcome"
+on_status_change = function(self, who, status, sub)
+	if sub then
+		if self:isCompleted("spellblaze") then
+			who:setQuestStatus(self.id, engine.Quest.DONE)
+			who:grantQuest("start-allied")
+		end
+	end
+end

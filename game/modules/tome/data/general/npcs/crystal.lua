@@ -9,7 +9,9 @@ newEntity{
 	body = { INVEN = 10 },
 	autolevel = "caster",
 	ai = "dumb_talented_simple", ai_state = { talent_in=1, },
-	resolvers.drops{chance=25, nb=1, {type="jewelry", ego_chance = 100}},
+
+	resolvers.drops{chance=15, nb=1, {type="jewelry"}},
+
 	max_life = resolvers.rngavg(12,34),
 	stats = { str=1, dex=5, mag=20, con=1 },
 	energy = { mod=0.5 },
@@ -29,7 +31,9 @@ newEntity{
 	see_invisible = 25,
 	resolvers.talents{
 		[Talents.T_PHASE_DOOR]=1,
-	}
+	},
+
+	lite = 2,
 }
 
 
@@ -58,7 +62,7 @@ newEntity{ base = "BASE_NPC_CRYSTAL",
 newEntity{ base = "BASE_NPC_CRYSTAL",
 	name = "black crystal", color=colors.BLACK,
 	desc = "A formation of black crystal. It absorbs all light around it.",
-	level_range = {1, nil}, exp_worth = 1,
+	level_range = {3, nil}, exp_worth = 1,
 	rarity = 2,
 	resists = { [DamageType.LIGHT] = 100 ,[DamageType.DARKNESS] = -100 },
 	resolvers.talents{
@@ -69,7 +73,7 @@ newEntity{ base = "BASE_NPC_CRYSTAL",
 newEntity{ base = "BASE_NPC_CRYSTAL",
 	name = "crimson crystal", color=colors.DARK_RED,
 	desc = "A formation of crimson crystal. It emits a crimson light reminiscent of blood.",
-	level_range = {1, nil}, exp_worth = 1,
+	level_range = {3, nil}, exp_worth = 1,
 	rarity = 3,
 	resists = { [DamageType.LIGHT] = -100 },
 	resolvers.talents{
@@ -80,7 +84,7 @@ newEntity{ base = "BASE_NPC_CRYSTAL",
 newEntity{ base = "BASE_NPC_CRYSTAL",
 	name = "blue crystal", color=colors.BLUE,
 	desc = "A formation of blue crystal. Its light shines like the ocean's waves.",
-	level_range = {1, nil}, exp_worth = 1,
+	level_range = {3, nil}, exp_worth = 1,
 	rarity = 4,
 	resists = { [DamageType.ICE] = -100 },
 	resolvers.talents{
@@ -92,7 +96,7 @@ newEntity{ base = "BASE_NPC_CRYSTAL",
 	name = "multi-hued crystal", color=colors.VIOLET,
 	shader = "quad_hue",
 	desc = "A formation of multi-hued crystal. It shines with all the colors of the rainbow.",
-	level_range = {1, nil}, exp_worth = 1,
+	level_range = {10, nil}, exp_worth = 1,
 	rarity = 4,
 	resists = { [DamageType.LIGHT] = 100 },
 	resolvers.talents{
@@ -107,7 +111,7 @@ newEntity{ base = "BASE_NPC_CRYSTAL",
 	name = "shimmering crystal", color=colors.GREEN,
 	shader = "quad_hue",
 	desc = "A formation of shimmering crystal. Orbs of light circle around it.",
-	level_range = {1, nil}, exp_worth = 1,
+	level_range = {10, nil}, exp_worth = 1,
 	rarity = 5,
 	resists = { [DamageType.LIGHT] = 100 },
 	summon = {{name = "wisp", number=3, hasxp=false}},

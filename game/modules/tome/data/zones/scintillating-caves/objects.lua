@@ -17,17 +17,15 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-newChat{ id="welcome",
-	text = [[#LIGHT_GREEN#*Before you stands an humanoid shape filled with 'nothing'. It seems to stare at you.*#WHITE#
-I have brought you here on the instant of your death. I am the Eidolon.
-I have deemed you worthy of my 'interest', I will watch your future steps with interest.
-You may rest here, when you are ready I will send you back to the material plane.
-But do not abuse my help, I am not your servant, someday I might just let you die.
-As for your probable many questions, they will stay unanswered, I may help, but I am not here to explain why.]],
-	answers = {
-		{"Thank you, I will rest for a while."},
-		{"Thank you, I am ready to go back!", action=function() game.level.data.eidolon_exit() end},
-	}
-}
+load("/data/general/objects/objects.lua")
 
-return "welcome"
+for i = 1, 5 do
+newEntity{ base = "BASE_LORE",
+	define_as = "NOTE"..i,
+	name = "tattered paper scrap", lore="trollmire-note-"..i,
+	desc = [[A paper scrap, left by an adventurer.]],
+	rarity = false,
+	is_magic_device = false,
+	encumberance = 0,
+}
+end
