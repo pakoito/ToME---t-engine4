@@ -972,10 +972,10 @@ function _M:displayParticles(nb_keyframes)
 
 				-- Only draw the first keyframe
 				if i == 1 and alive and e.x + e.radius >= self.mx and e.x - e.radius < self.mx + self.viewport.mwidth and e.y + e.radius >= self.my and e.y - e.radius < self.my + self.viewport.mheight then
-					alive = e.ps:toScreen(self.display_x + (adx + e.x - self.mx + 0.5) * self.tile_w * self.zoom, self.display_y + (ady + e.y - self.my + 0.5) * self.tile_h * self.zoom, self.seens(e.x, e.y), e.zoom * self.zoom, nb_keyframes)
+					e.ps:toScreen(self.display_x + (adx + e.x - self.mx + 0.5) * self.tile_w * self.zoom, self.display_y + (ady + e.y - self.my + 0.5) * self.tile_h * self.zoom, self.seens(e.x, e.y))
 				end
 				-- Update the particles enough times
-				e.ps:update()
+				if alive then alive = e.ps:update(e.zoom * self.zoom, i == nb_keyframes) end
 
 				if i == 1 and not alive then
 					del[#del+1] = e

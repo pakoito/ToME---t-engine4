@@ -70,7 +70,7 @@ return {
 		for i = 1, nb_keyframes do
 			level.background_particle:update()
 			if i == 1 then level.background_particle.ps:toScreen(x, y, true, 1) end
-			level.background_particle.ps:update()
+			level.background_particle.ps:update(1, i == nb_keyframes)
 		end
 	end,
 ]]

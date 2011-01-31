@@ -42,6 +42,7 @@ typedef struct {
 	int density;
 	bool no_stop;
 
+	int batch_nb;
 	GLfloat *vertices;
 	GLfloat *colors;
 	GLshort *texcoords;
