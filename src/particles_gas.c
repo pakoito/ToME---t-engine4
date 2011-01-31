@@ -31,26 +31,6 @@
 
 #define rng(x, y) (x + rand_div(1 + y - x))
 
-static void getinitfield(lua_State *L, const char *key, int *min, int *max)
-{
-	lua_pushstring(L, key);
-	lua_gettable(L, -2);
-
-	lua_pushnumber(L, 1);
-	lua_gettable(L, -2);
-	*min = (int)lua_tonumber(L, -1);
-	lua_pop(L, 1);
-
-	lua_pushnumber(L, 2);
-	lua_gettable(L, -2);
-	*max = (int)lua_tonumber(L, -1);
-	lua_pop(L, 1);
-
-//	printf("%s :: %d %d\n", key, (int)*min, (int)*max);
-
-	lua_pop(L, 1);
-}
-
 static void getparticulefield(lua_State *L, const char *k, float *v)
 {
 	lua_pushstring(L, k);
@@ -64,7 +44,7 @@ static int gas_new(lua_State *L)
 {
 	int w = luaL_checknumber(L, 1);
 	int h = luaL_checknumber(L, 2);
-	int density = luaL_checknumber(L, 3);
+//	int density = luaL_checknumber(L, 3);
 	GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 5);
 	int t_ref = luaL_ref(L, LUA_REGISTRYINDEX);
 	int p_ref = luaL_ref(L, LUA_REGISTRYINDEX);
@@ -343,7 +323,7 @@ void update(gaszone_type *gz, float elapsed) {
 
 static int gas_emit(lua_State *L)
 {
-	gaszone_type *gz = (gaszone_type*)auxiliar_checkclass(L, "core{gas}", 1);
+//	gaszone_type *gz = (gaszone_type*)auxiliar_checkclass(L, "core{gas}", 1);
 
 	return 0;
 }
@@ -353,9 +333,8 @@ static int gas_to_screen(lua_State *L)
 	gaszone_type *gz = (gaszone_type*)auxiliar_checkclass(L, "core{gas}", 1);
 	int x = luaL_checknumber(L, 2);
 	int y = luaL_checknumber(L, 3);
-	bool show = lua_toboolean(L, 4);
-	float zoom = luaL_checknumber(L, 5);
-	int w = 0;
+//	bool show = lua_toboolean(L, 4);
+//	float zoom = luaL_checknumber(L, 5);
 	int i, j, dx, dy;
 	int vert_idx = 0, col_idx = 0;
 

@@ -167,6 +167,7 @@ static int map_object_reset_move_anim(lua_State *L)
 {
 	map_object *obj = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 1);
 	obj->move_max = 0;
+	return 0;
 }
 
 static int map_object_set_move_anim(lua_State *L)

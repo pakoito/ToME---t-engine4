@@ -394,6 +394,7 @@ static int loader_Physfs (lua_State *L) {
 	return 1;  /* library loaded successfully */
 }
 
+#if 0 // UNUSED
 static int loader_Lua (lua_State *L) {
   const char *filename;
   const char *name = luaL_checkstring(L, 1);
@@ -403,7 +404,7 @@ static int loader_Lua (lua_State *L) {
     loaderror(L, filename);
   return 1;  /* library loaded successfully */
 }
-
+#endif
 
 static const char *mkfuncname (lua_State *L, const char *modname) {
   const char *funcname;

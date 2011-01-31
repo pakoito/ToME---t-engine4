@@ -200,7 +200,7 @@ static float calcCallTime(lua_State *L) {
                  ";
 
   lprofC_start_timer(&timer);
-  luaL_dostring(L, lua_code);
+  (void)luaL_dostring(L, lua_code);
   return lprofC_get_seconds(timer) / (float) 100000;
 }
 

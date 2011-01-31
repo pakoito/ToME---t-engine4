@@ -4,6 +4,8 @@ int luaopen_mime_core(lua_State *L);
 int luaopen_profiler(lua_State *L);
 int luaopen_lpeg(lua_State *L);
 int luaopen_map(lua_State *L);
+int luaopen_fov(lua_State *L);
+int luaopen_gas(lua_State *L);
 int luaopen_particles(lua_State *L);
 int luaopen_sound(lua_State *L);
 int luaopen_lanes(lua_State *L);

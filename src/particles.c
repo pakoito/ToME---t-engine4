@@ -282,7 +282,6 @@ static int particles_to_screen(lua_State *L)
 	int y = luaL_checknumber(L, 3);
 	bool show = lua_toboolean(L, 4);
 	float zoom = luaL_checknumber(L, 5);
-	int kf;
 	int w = 0;
 	int i, j;
 	bool alive = FALSE;
@@ -383,7 +382,6 @@ static int particles_update(lua_State *L)
 {
 	particles_type *ps = (particles_type*)auxiliar_checkclass(L, "core{particles}", 1);
 	int w = 0;
-	int i, j;
 	bool alive = FALSE;
 
 	for (w = 0; w < ps->nb; w++)

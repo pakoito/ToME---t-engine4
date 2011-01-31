@@ -82,6 +82,28 @@ static int traceback (lua_State *L) {
 	return 1;
 }
 
+static void stackDump (lua_State *L) {
+	int i=lua_gettop(L);
+	printf(" ----------------  Stack Dump ----------------\n" );
+	while(  i   ) {
+		int t = lua_type(L, i);
+		switch (t) {
+		case LUA_TSTRING:
+			printf("%d:`%s'\n", i, lua_tostring(L, i));
+			break;
+		case LUA_TBOOLEAN:
+			printf("%d: %s\n",i,lua_toboolean(L, i) ? "true" : "false");
+			break;
+		case LUA_TNUMBER:
+			printf("%d: %g\n",  i, lua_tonumber(L, i));
+			break;
+		default: printf("%d: %s\n", i, lua_typename(L, t)); break;
+		}
+		i--;
+	}
+	printf("--------------- Stack Dump Finished ---------------\n" );
+}
+
 int docall (lua_State *L, int narg, int nret)
 {
 //	printf("<===%d\n", lua_gettop(L));
@@ -92,8 +114,13 @@ int docall (lua_State *L, int narg, int nret)
 	status = lua_pcall(L, narg, nret, base);
 	lua_remove(L, base);  /* remove traceback function */
 	/* force a complete garbage collection in case of errors */
-	if (status != 0) lua_gc(L, LUA_GCCOLLECT, 0);
+	if (status != 0) { lua_pop(L, 1); lua_gc(L, LUA_GCCOLLECT, 0); }
 //	printf(">===%d\n", lua_gettop(L));
+	if (lua_gettop(L) != nret)
+	{
+		stackDump(L);
+//		assert(0);
+	}
 	return status;
 }
 
@@ -101,16 +128,6 @@ int docall (lua_State *L, int narg, int nret)
 int noprint(lua_State *L)
 {
 	return 0;
-}
-
-void display_utime()
-{
-	struct timeval tv;
-	struct timezone tz;
-	struct tm *tm;
-	gettimeofday(&tv, &tz);
-	tm=localtime(&tv.tv_sec);
-	printf(" %d:%02d:%02d %d \n", tm->tm_hour, tm->tm_min, tm->tm_sec, tv.tv_usec);
 }
 
 // define our data that is passed to our redraw function
@@ -650,14 +667,17 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 		// Could not load bootstrap! Try to mount the engine from working directory as last resort
 		else
 		{
+			lua_pop(L, 1);
 			printf("WARNING: No bootstrap code found, defaulting to working directory for engine code!\n");
 			PHYSFS_mount("game/thirdparty", "/", 1);
 			PHYSFS_mount("game/", "/", 1);
 		}
 
 		// And run the lua engine pre init scripts
-		luaL_loadfile(L, "/loader/pre-init.lua");
-		docall(L, 0, 0);
+		if (!luaL_loadfile(L, "/loader/pre-init.lua"))
+			docall(L, 0, 0);
+		else
+			lua_pop(L, 1);
 	}
 	else if (state == 2)
 	{
@@ -667,15 +687,21 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 		luaopen_lanes(L);
 
 		// And run the lua engine scripts
-		luaL_loadfile(L, "/loader/init.lua");
-		if (reboot_engine) lua_pushstring(L, reboot_engine); else lua_pushnil(L);
-		if (reboot_engine_version) lua_pushstring(L, reboot_engine_version); else lua_pushnil(L);
-		if (reboot_module) lua_pushstring(L, reboot_module); else lua_pushnil(L);
-		if (reboot_name) lua_pushstring(L, reboot_name); else lua_pushnil(L);
-		lua_pushboolean(L, reboot_new);
-		if (reboot_einfo) lua_pushstring(L, reboot_einfo); else lua_pushnil(L);
-		if (request_profile) lua_pushstring(L, request_profile); else lua_pushnil(L);
-		docall(L, 7, 0);
+		if (!luaL_loadfile(L, "/loader/init.lua"))
+		{
+			if (reboot_engine) lua_pushstring(L, reboot_engine); else lua_pushnil(L);
+			if (reboot_engine_version) lua_pushstring(L, reboot_engine_version); else lua_pushnil(L);
+			if (reboot_module) lua_pushstring(L, reboot_module); else lua_pushnil(L);
+			if (reboot_name) lua_pushstring(L, reboot_name); else lua_pushnil(L);
+			lua_pushboolean(L, reboot_new);
+			if (reboot_einfo) lua_pushstring(L, reboot_einfo); else lua_pushnil(L);
+			if (request_profile) lua_pushstring(L, request_profile); else lua_pushnil(L);
+			docall(L, 7, 0);
+		}
+		else
+		{
+			lua_pop(L, 1);
+		}
 	}
 }
 

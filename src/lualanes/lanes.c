@@ -1,3 +1,4 @@
+  #include <pthread.h>
 /*
  * LANES.C   	                          Copyright (c) 2007-08, Asko Kauppi
  *

@@ -10,18 +10,19 @@ newoption {
 }
 newoption {
 	trigger     = "force32bits",
-	value       = "VM_Type",
 	description = "Forces compilation in 32bits mode, allowing to use the lua jit",
 }
 newoption {
 	trigger     = "relpath",
-	value       = "VM_Type",
 	description = "Links libraries relative to the application path for redistribution",
 }
 newoption {
 	trigger     = "luaassert",
-	value       = "VM_Type",
 	description = "Enable lua asserts to debug lua C code",
+}
+newoption {
+	trigger     = "pedantic",
+	description = "Enables compiling with all pedantic options",
 }
 
 _OPTIONS.lua = _OPTIONS.lua or "default"
@@ -75,6 +76,7 @@ configuration "Debug"
 	buildoptions { "-ggdb" }
 	targetdir "bin/Debug"
 	if _OPTIONS.luaassert then defines {"LUA_USE_APICHECK"} end
+	if _OPTIONS.pedantic then buildoptions { "-Wall" } end
 
 configuration "Release"
 	defines { "NDEBUG=1" }

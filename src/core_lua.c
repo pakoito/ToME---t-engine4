@@ -1406,7 +1406,7 @@ static int get_text_aa(lua_State *L)
 	return 1;
 }
 
-static sdl_get_modes_list(lua_State *L)
+static int sdl_get_modes_list(lua_State *L)
 {
 	SDL_PixelFormat format;
 	SDL_Rect **modes;
