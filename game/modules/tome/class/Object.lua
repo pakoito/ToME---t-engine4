@@ -323,21 +323,21 @@ function _M:getTextualDesc()
 		desc:add(("Increases damage type: %s."):format(table.concat(rs, ',')), true)
 	end
 
+	local esps = {}
+	if w.esp_all then esps[#esps+1] = "all" end
+	if w.esp_range then esps[#esps+1] = "increase range by "..w.esp_range end
 	if w.esp then
-		local rs = {}
 		for type, i in pairs(w.esp) do
-			if type == "all" then rs[#rs+1] = "all"
-			elseif type == "range" then rs[#rs+1] = "increase range by "..i
+			local _, _, t, st = type:find("^([^/]+)/?(.*)$")
+			if st and st ~= "" then
+				esps[#esps+1] = st
 			else
-				local _, _, t, st = type:find("^([^/]+)/?(.*)$")
-				if st and st ~= "" then
-					rs[#rs+1] = st
-				else
-					rs[#rs+1] = t
-				end
+				esps[#esps+1] = t
 			end
 		end
-		desc:add(("Grants telepathy: %s."):format(table.concat(rs, ',')), true)
+	end
+	if #esps > 0 then
+		desc:add(("Grants telepathy: %s."):format(table.concat(esps, ',')), true)
 	end
 
 	if w.talents_types_mastery then

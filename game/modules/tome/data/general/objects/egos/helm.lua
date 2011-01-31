@@ -63,7 +63,7 @@ newEntity{
 	cost = 25,
 	wielder = {
 		life_regen = -3,
-		esp = {all=1},
+		esp_all = 1,
 	},
 }
 newEntity{
@@ -73,7 +73,7 @@ newEntity{
 	rarity = 15,
 	cost = 15,
 	wielder = {
-		esp = {range=10},
+		esp_range = 10,
 	},
 }
 newEntity{

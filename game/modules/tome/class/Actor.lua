@@ -108,7 +108,7 @@ function _M:init(t, no_default)
 	t.positive_negative_rating = t.positive_negative_rating or 3
 	t.psi_rating = t.psi_rating or 1
 
-	t.esp = t.esp or {range=10}
+	t.esp = t.esp or {}
 
 	t.talent_cd_reduction = t.talent_cd_reduction or {}
 
@@ -1961,14 +1961,14 @@ end
 function _M:canSeeNoCache(actor, def, def_pct)
 	if not actor then return false, 0 end
 
-	-- ESP, see all, or only types/subtypes
-	if self:attr("esp") then
-		local esp = self:attr("esp")
-		-- Full ESP
-		if esp.all and esp.all > 0 then
-			return true, 100
-		end
+	-- Full ESP
+	if self.esp_all and self.esp_all > 0 then
+		return true, 100
+	end
 
+	-- ESP, see all, or only types/subtypes
+	if self.esp then
+		local esp = self.esp
 		-- Type based ESP
 		if esp[actor.type] and esp[actor.type] > 0 then
 			return true, 100

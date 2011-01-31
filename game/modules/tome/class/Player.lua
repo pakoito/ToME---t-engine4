@@ -284,7 +284,9 @@ function _M:playerFOV()
 	end
 
 	-- Compute ESP FOV, using cache
-	self:computeFOV(self.esp.range or 10, "block_esp", function(x, y) game.level.map:applyESP(x, y, 0.6) end, true, true, true)
+	if (self.esp_all and self.esp_all > 0) or next(self.esp) then
+		self:computeFOV(self.esp_range or 10, "block_esp", function(x, y) game.level.map:applyESP(x, y, 0.6) end, true, true, true)
+	end
 
 	-- Handle Sense spell, a simple FOV, using cache. Note that this means some terrain features can be made to block sensing
 	if self:attr("detect_range") then

@@ -55,13 +55,11 @@ function _M:use(item)
 	if act == "godmode" then
 		game.player:forceLevelup(50)
 		game.player.invulnerable = 1
-		game.player.esp.all = 1
-		game.player.esp.range = 50
+		game.player.esp_all = 1
+		game.player.esp_range = 50
 		game.player.no_breath = 1
 		game.player.invulnerable = 1
 		game.player.money = 500
-		game.player.esp.all = 1
-		game.player.esp.range = 50
 		game.player.auto_id = 100
 		game.player.inc_damage.all = 100000
 		game.player:incStat("str", 100) game.player:incStat("dex", 100) game.player:incStat("mag", 100) game.player:incStat("wil", 100) game.player:incStat("cun", 100) game.player:incStat("con", 100)

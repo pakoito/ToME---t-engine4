@@ -193,7 +193,7 @@ function _M:use(item)
 			end
 		end
 		self:eidolonPlane()
-		game.log("#LIGHT_RED#You have %s left.", self.actor:attr("easy_mode_lifes") and (self.actor:attr("easy_mode_lifes").." life(s)" or "no more lifes"))
+		game.log("#LIGHT_RED#You have %s left.", (self.actor:attr("easy_mode_lifes") and self.actor:attr("easy_mode_lifes").." life(s)") or "no more lifes")
 	elseif act == "skeleton" then
 		self.actor:attr("re-assembled", 1)
 		game.logPlayer(self.actor, "#YELLOW#Your bones magically come back together. You are once more able to dish out pain to your foes!")
