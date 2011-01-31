@@ -43,13 +43,47 @@ newEntity{
 	silence_immune = 0.5,
 
 	resolvers.talents{ [Talents.T_HEAVY_ARMOUR_TRAINING]=1, },
-	resolvers.inscriptions(1, "rune"),
 
 	autolevel = "caster",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },
 	energy = { mod=1 },
 	stats = { str=20, dex=8, mag=6, con=16 },
 }
+
+newEntity{ base = "BASE_NPC_ELVEN_CASTER",
+	name = "elven mage", color=colors.TEAL,
+	desc = [[An elven mage, dressed in dark robes.]],
+	level_range = {2, nil}, exp_worth = 1,
+	rarity = 2,
+	max_life = resolvers.rngavg(70, 80), life_rating = 10,
+	resolvers.equip{
+		{type="weapon", subtype="staff", autoreq=true},
+	},
+	combat_armor = 0, combat_def = 0,
+	resolvers.talents{
+		[Talents.T_EARTHEN_MISSILES]=2,
+		[Talents.T_SHOCK]=1,
+	},
+}
+
+newEntity{ base = "BASE_NPC_ELVEN_CASTER",
+	name = "elven tempest", color=colors.LIGHT_BLUE,
+	desc = [[An elven mage, dressed in dark robes.]],
+	level_range = {3, nil}, exp_worth = 1,
+	rarity = 2,
+	max_life = resolvers.rngavg(70, 80), life_rating = 10,
+	mana_regen = 30, max_mana = 200,
+	resolvers.equip{
+		{type="weapon", subtype="staff", autoreq=true},
+	},
+	combat_armor = 0, combat_def = 0,
+	resolvers.talents{
+		[Talents.T_LIGHTNING]=2,
+		[Talents.T_THUNDERSTORM]=1,
+	},
+	resolvers.sustains_at_birth(),
+}
+
 
 newEntity{ base = "BASE_NPC_ELVEN_CASTER",
 	name = "elven cultist", color=colors.DARK_SEA_GREEN,
@@ -71,6 +105,7 @@ newEntity{ base = "BASE_NPC_ELVEN_CASTER",
 		[Talents.T_DARK_RITUAL]=3,
 	},
 	resolvers.sustains_at_birth(),
+	resolvers.inscriptions(1, "rune"),
 }
 
 newEntity{ base = "BASE_NPC_ELVEN_CASTER",
@@ -93,6 +128,7 @@ newEntity{ base = "BASE_NPC_ELVEN_CASTER",
 		[Talents.T_BONE_SPEAR]=5,
 	},
 	resolvers.sustains_at_birth(),
+	resolvers.inscriptions(1, "rune"),
 }
 
 newEntity{ base = "BASE_NPC_ELVEN_CASTER",
@@ -118,4 +154,5 @@ newEntity{ base = "BASE_NPC_ELVEN_CASTER",
 		[Talents.T_BONE_SPEAR]=5,
 	},
 	resolvers.sustains_at_birth(),
+	resolvers.inscriptions(1, "rune"),
 }

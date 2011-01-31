@@ -42,12 +42,39 @@ newEntity{
 	open_door = true,
 
 	resolvers.talents{ [Talents.T_HEAVY_ARMOUR_TRAINING]=1, },
-	resolvers.inscriptions(1, "rune"),
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
 	energy = { mod=1 },
 	stats = { str=20, dex=8, mag=6, con=16 },
+}
+
+newEntity{ base = "BASE_NPC_ELVEN_WARRIOR",
+	name = "elven guard", color=colors.LIGHT_UMBER,
+	desc = [[An elven guard.]],
+	level_range = {1, nil}, exp_worth = 1,
+	rarity = 1,
+	max_life = resolvers.rngavg(80,90), life_rating = 11,
+	resolvers.equip{
+		{type="weapon", subtype="longsword", autoreq=true},
+		{type="armor", subtype="shield", autoreq=true},
+	},
+	combat_armor = 0, combat_def = 6,
+	resolvers.talents{ [Talents.T_SHIELD_PUMMEL]=1, },
+}
+
+newEntity{ base = "BASE_NPC_ELVEN_WARRIOR",
+	name = "mean looking elven guard", color=colors.UMBER,
+	desc = [[An elven guard.]],
+	level_range = {3, nil}, exp_worth = 1,
+	rarity = 1,
+	max_life = resolvers.rngavg(100,110), life_rating = 11,
+	resolvers.equip{
+		{type="weapon", subtype="longsword", autoreq=true},
+		{type="armor", subtype="shield", autoreq=true},
+	},
+	combat_armor = 0, combat_def = 6,
+	resolvers.talents{ [Talents.T_BLEEDING_EDGE]=1, },
 }
 
 newEntity{ base = "BASE_NPC_ELVEN_WARRIOR",
@@ -63,6 +90,7 @@ newEntity{ base = "BASE_NPC_ELVEN_WARRIOR",
 	},
 	combat_armor = 0, combat_def = 6,
 	resolvers.talents{ [Talents.T_SHIELD_PUMMEL]=2, },
+	resolvers.inscriptions(1, "rune"),
 }
 
 newEntity{ base = "BASE_NPC_ELVEN_WARRIOR",
@@ -84,4 +112,5 @@ newEntity{ base = "BASE_NPC_ELVEN_WARRIOR",
 		[Talents.T_SHIELD_PUMMEL]=2,
 		[Talents.T_ASSAULT]=3,
 	},
+	resolvers.inscriptions(1, "rune"),
 }

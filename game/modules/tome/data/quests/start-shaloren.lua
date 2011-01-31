@@ -26,14 +26,19 @@ desc = function(self, who)
 	else
 		desc[#desc+1] = "#SLATE#* You must explore the scintillating caves.#WHITE#"
 	end
+	if self:isCompleted("rhaloren") then
+		desc[#desc+1] = "#LIGHT_GREEN#* You have explored the Rhaloren camp and kill the Inquisitor.#WHITE#"
+	else
+		desc[#desc+1] = "#SLATE#* You must explore the Rhaloren camp.#WHITE#"
+	end
 	return table.concat(desc, "\n")
 end
 
 on_status_change = function(self, who, status, sub)
 	if sub then
-		if self:isCompleted("spellblaze") then
+		if self:isCompleted("spellblaze") and self:isCompleted("rhaloren") then
 			who:setQuestStatus(self.id, engine.Quest.DONE)
-			who:grantQuest("start-allied")
+			who:grantQuest("started-zones")
 		end
 	end
 end

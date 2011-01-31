@@ -779,7 +779,7 @@ newEntity{ base = "BASE_GEM", define_as = "CRYSTAL_FOCUS",
 			who:sortInven(gem_inven)
 
 			-- Change the weapon
-			o.name = "Crystalline "..o.name
+			o.name = "Crystalline "..o.name:capitalize()
 			o.unique = o.name
 			o.no_unique_lore = true
 			if o.combat and o.combat.dam then
@@ -800,4 +800,44 @@ newEntity{ base = "BASE_GEM", define_as = "CRYSTAL_FOCUS",
 			game.logPlayer(who, "You fix the crystal on the %s and create the %s.", oldname, o:getName{do_color=true})
 		end)
 	end },
+}
+
+newEntity{ base = "BASE_WAND", define_as = "ROD_OF_ANNULMENT",
+	power_source = {arcane=true},
+	unided_name = "dark rod",
+	name = "Rod of Annulment", color=colors.LIGHT_BLUE, unique=true,
+	desc = [[You can feel magic draining out around this rod, even nature itself seems affected.]],
+	cost = 50,
+	rarity = 380,
+	level_range = {5, 12},
+	elec_proof = true,
+	add_name = false,
+
+	material_level = 2,
+
+	max_power = 30, power_regen = 1,
+	use_power = { name = "force your some foe's infusions, runes or talents on cooldown", power = 30,
+		use = function(self, who)
+			local tg = {type="bolt", range=5}
+			local x, y = who:getTarget(tg)
+			if not x or not y then return nil end
+			who:project(tg, x, y, function(px, py)
+				local target = game.level.map(px, py, engine.Map.ACTOR)
+				if not target then return end
+
+				local tids = {}
+				for tid, lev in pairs(target.talents) do
+					local t = target:getTalentFromId(tid)
+					if not target.talents_cd[tid] and t.mode == "activated" then tids[#tids+1] = t end
+				end
+				for i = 1, 3 do
+					local t = rng.tableRemove(tids)
+					if not t then break end
+					target.talents_cd[t.id] = rng.range(3, 5)
+					game.logSeen(target, "%s's %s is disrupted!", target.name:capitalize(), t.name)
+				end
+				target.changed = true
+			end, nil, {type="flame"})
+		end
+	},
 }
