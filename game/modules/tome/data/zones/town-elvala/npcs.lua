@@ -22,10 +22,10 @@ load("/data/general/npcs/gwelgoroth.lua", function(e) if e.rarity then e.derth_r
 local Talents = require("engine.interface.ActorTalents")
 
 newEntity{
-	define_as = "BASE_NPC_DERTH_TOWN",
-	type = "humanoid", subtype = "human",
+	define_as = "BASE_NPC_ELVALA_TOWN",
+	type = "humanoid", subtype = "elf",
 	display = "p", color=colors.WHITE,
-	faction = "allied-kingdoms",
+	faction = "shalore",
 	anger_emote = "Catch @himher@!",
 
 	combat = { dam=resolvers.rngavg(1,2), atk=2, apr=0, dammod={str=0.4} },
@@ -39,7 +39,7 @@ newEntity{
 
 	open_door = true,
 
-	resolvers.inscriptions(1, "infusion"),
+	resolvers.inscriptions(1, "rune"),
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
@@ -47,8 +47,8 @@ newEntity{
 	stats = { str=12, dex=8, mag=6, con=10 },
 }
 
-newEntity{ base = "BASE_NPC_DERTH_TOWN",
-	name = "derth guard", color=colors.LIGHT_UMBER,
+newEntity{ base = "BASE_NPC_ELVALA_TOWN",
+	name = "elvala guard", color=colors.LIGHT_UMBER,
 	desc = [[A stern-looking guard, he will not let you disturb the town.]],
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 3,
@@ -61,44 +61,13 @@ newEntity{ base = "BASE_NPC_DERTH_TOWN",
 	resolvers.talents{ [Talents.T_RUSH]=1, [Talents.T_PERFECT_STRIKE]=1, },
 }
 
-newEntity{ base = "BASE_NPC_DERTH_TOWN",
-	name = "halfling slinger", color=colors.UMBER,
-	subtype = "halfling",
-	desc = [[A Halfling, with a sling. Beware.]],
+newEntity{ base = "BASE_NPC_ELVALA_TOWN",
+	name = "shalore rune master", color=colors.RED,
+	desc = [[A tall elf, his skin covered in runes.]],
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 3,
 	max_life = resolvers.rngavg(50,60),
-	resolvers.talents{ [Talents.T_SHOOT]=1, },
-	ai_state = { talent_in=2, },
-	autolevel = "slinger",
-	resolvers.equip{ {type="weapon", subtype="sling", autoreq=true}, {type="ammo", subtype="shot", autoreq=true} },
-}
-
-newEntity{ base = "BASE_NPC_DERTH_TOWN",
-	name = "human farmer", color=colors.WHITE,
-	desc = [[A weather-worn Human farmer.]],
-	level_range = {1, nil}, exp_worth = 1,
-	rarity = 1,
-	max_life = resolvers.rngavg(30,40),
-	combat_armor = 2, combat_def = 0,
-}
-
-newEntity{ base = "BASE_NPC_DERTH_TOWN",
-	name = "halfling gardener", color=colors.WHITE,
-	subtype = "halfling",
-	desc = [[A Halfling, he seems to be looking for plants.]],
-	level_range = {1, nil}, exp_worth = 1,
-	rarity = 1,
-	max_life = resolvers.rngavg(30,40),
-}
-
-newEntity{ base = "BASE_NPC_DERTH_TOWN",
-	define_as ="ARENA_AGENT",
-	name = "Shady cornac man", color=colors.DARK_BLUE, unique = true,
-	level_range = {1, nil}, exp_worth = 1,
-	can_talk = "arena-unlock",
-	can_quest = true,
-	never_move = 1,
-	rarity = false,
-	max_life = resolvers.rngavg(70,80),
+	ai_state = { talent_in=1, },
+	autolevel = "caster",
+	resolvers.inscriptions(3, {"heat beam rune", "frozen spear rune", "acid wave rune", "lightning rune"}),
 }
