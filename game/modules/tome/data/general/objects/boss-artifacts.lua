@@ -756,3 +756,48 @@ newEntity{ base = "BASE_GLOVES", define_as = "FLAMEWROUGHT",
 	max_power = 24, power_regen = 1,
 	use_talent = { id = Talents.T_RITCH_FLAMESPITTER_BOLT, level = 2, power = 6 },
 }
+
+newEntity{ base = "BASE_GEM", define_as = "CRYSTAL_FOCUS",
+	power_source = {arcane=true},
+	unique = true,
+	unided_name = "scintillating crystal",
+	name = "Crystal Focus", subtype = "multi-hued",
+	color = colors.WHITE, image="object/ametrine.png",
+	level_range = {5, 12},
+	desc = [[This crystal radiates the power of the Spellblaze itself.]],
+	rarity = 200,
+	cost = 50,
+	material_level = 2,
+
+	max_power = 1, power_regen = 1,
+	use_power = { name = "combine with a weapon", power = 1, use = function(self, who, gem_inven, gem_item)
+		who:showInventory("Fuse with which weapon?", who:getInven("INVEN"), function(o) return o.type == "weapon" and not o.egoed and not o.unique end, function(o, item)
+			local oldname = o:getName{do_color=true}
+
+			-- Remove the gem
+			who:removeObject(gem_inven, gem_item)
+			who:sortInven(gem_inven)
+
+			-- Change the weapon
+			o.name = "Crystalline "..o.name
+			o.unique = o.name
+			o.no_unique_lore = true
+			if o.combat and o.combat.dam then
+				o.combat.dam = o.combat.dam * 1.5
+				o.combat.damtype = engine.DamageType.ARCANE
+			end
+			o.wielder = o.wielder or {}
+			o.wielder.combat_spellpower = 12
+			o.wielder.combat_dam = 12
+			o.wielder.inc_stats = o.wielder.inc_stats or {}
+			o.wielder.inc_stats[Stats.STAT_WIL] = 3
+			o.wielder.inc_stats[Stats.STAT_CON] = 3
+			o.wielder.inc_damage = o.wielder.inc_damage or {}
+			o.wielder.inc_damage[engine.DamageType.ARCANE] = 10
+			who:sortInven()
+			who.changed = true
+
+			game.logPlayer(who, "You fix the crystal on the %s and create the %s.", oldname, o:getName{do_color=true})
+		end)
+	end },
+}
