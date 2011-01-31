@@ -116,7 +116,7 @@ end
 --- Defines the "shown" factor of seen map
 -- By default it is 1, 1, 1, 1
 function _M:setShown(r, g, b, a)
-	self.color_shown= {r, g, b, a}
+	self.color_shown = {r, g, b, a}
 	-- If we are used on a real map, set it locally
 	if self._map then self._map:setShown(unpack(self.color_shown)) end
 end
