@@ -62,11 +62,6 @@ return {
 		if level.level ~= 1 then return end
 
 		local Map = require "engine.Map"
-
-		for i = 1, nb_keyframes do
-			level.background_particle:update()
-			level.background_particle.ps:update(1, i == nb_keyframes)
-		end
 		level.background_particle.ps:toScreen(x, y, true, 1)
 	end,
 

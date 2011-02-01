@@ -23,10 +23,6 @@ require "engine.class"
 -- Used by engine.Map
 module(..., package.seeall, class.make)
 
-_M.particles_def = {}
-
-_M.__particles_gl = { particle = core.display.loadImage("/data/gfx/particle.png"):glTexture() }
-
 --- Make a particle emitter
 function _M:init(def, radius, args)
 	self.args = args
@@ -46,7 +42,7 @@ end
 function _M:cloned()
 	self:loaded()
 end
-
+--[[
 function _M:loaded()
 	local def, fct, max, gl, no_stop
 	local base_size = nil
@@ -85,6 +81,26 @@ function _M:loaded()
 	else
 		self.ps = core.particles.newEmitter(max or 1000, no_stop, config.settings.particles_density or 100, def, gl)
 	end
+end
+]]
+
+local foo = {}
+function _M:loaded()
+	local base_size = nil
+	if type(self.def) == "string" then
+	else error("unsupported particle type: "..type(self.def))
+	end
+
+	-- Zoom accordingly
+	self.base_size = base_size
+	self:updateZoom()
+
+	-- Serialize arguments for passing into the particles threads
+	local args = table.serialize(self.args or {})
+	args = args.."tile_w="..engine.Map.tile_w.."\ntile_h="..engine.Map.tile_h
+
+	self.update = fct
+	self.ps = core.particles.newEmitter("/data/gfx/particles/"..self.def..".lua", args, self.zoom, config.settings.particles_density or 100)
 end
 
 function _M:updateZoom()

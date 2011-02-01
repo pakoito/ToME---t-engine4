@@ -686,7 +686,7 @@ static GLenum sdl_gl_texture_format(SDL_Surface *s) {
 
 // allocate memory for a texture without copying pixels in
 // caller binds texture
-static void make_texture_for_surface(SDL_Surface *s, int *fw, int *fh) {
+void make_texture_for_surface(SDL_Surface *s, int *fw, int *fh) {
 	// Paramétrage de la texture.
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -718,7 +718,7 @@ static void make_texture_for_surface(SDL_Surface *s, int *fw, int *fh) {
 }
 
 // copy pixels into previous allocated surface
-static void copy_surface_to_texture(SDL_Surface *s) {
+void copy_surface_to_texture(SDL_Surface *s) {
 	GLenum texture_format = sdl_gl_texture_format(s);
 
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, s->w, s->h, texture_format, GL_UNSIGNED_BYTE, s->pixels);

@@ -448,10 +448,6 @@ end
 function _M:displayWeather(level, ps, nb_keyframes)
 	local dx, dy = level.map:getScreenUpperCorner() -- Display at map border, always, so it scrolls with the map
 	for j = 1, #ps do
-		for i = 1, nb_keyframes do
-			ps[j]:update()
-			ps[j].ps:update(1, i == nb_keyframes)
-		end
 		ps[j].ps:toScreen(dx, dy, true, 1)
 	end
 end

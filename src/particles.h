@@ -33,20 +33,35 @@ typedef struct {
 	bool trail;
 } particle_type;
 
+struct s_plist;
+
 typedef struct {
+	SDL_mutex *lock;
+
+	// Read only by main
 	GLuint texture;
+
+	// W by main, R by thread
+	const char *name_def;
+	const char *args;
+	const char *texture_name;
+	float zoom;
+
+	// R/W only by thread
 	particle_type *particles;
 	int nb;
-	int texture_ref;
-	int generator_ref;
 	int density;
 	bool no_stop;
 
+	// W only by thread, R only by main
 	int batch_nb;
 	GLfloat *vertices;
 	GLfloat *colors;
 	GLshort *texcoords;
+	bool alive;
+	bool init;
 
+	// R/W only by thread
 	int base;
 
 	int angle_min, anglev_min, anglea_min;
@@ -61,6 +76,27 @@ typedef struct {
 	int r_max, g_max, b_max, a_max, rv_max, gv_max, bv_max, av_max, ra_max, ga_max, ba_max, aa_max;
 
 	int life_min, life_max;
+
+	struct s_plist *l;
 } particles_type;
+
+// Particles thread-only structure
+struct s_plist {
+	particles_type *ps;
+	int generator_ref;
+	int updator_ref;
+	int emit_ref;
+	int update_ref;
+	struct s_plist *next;
+};
+typedef struct s_plist plist;
+
+typedef struct {
+	int id;
+	lua_State *L;
+	SDL_mutex *lock;
+	SDL_sem *keyframes;
+	plist *list;
+} particle_thread;
 
 #endif

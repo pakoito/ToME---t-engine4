@@ -89,11 +89,6 @@ return {
 
 	foreground = function(level, x, y, nb_keyframes)
 		local Map = require "engine.Map"
-
-		for i = 1, nb_keyframes do
-			level.foreground_particle:update()
-			level.foreground_particle.ps:update(1, i == nb_keyframes)
-		end
 		level.foreground_particle.ps:toScreen(x, y, true, 1)
 	end,
 }

@@ -82,7 +82,7 @@ static int traceback (lua_State *L) {
 	return 1;
 }
 
-static void stackDump (lua_State *L) {
+void stackDump (lua_State *L) {
 	int i=lua_gettop(L);
 	printf(" ----------------  Stack Dump ----------------\n" );
 	while(  i   ) {
@@ -299,6 +299,10 @@ void on_tick()
 void call_draw(int nb_keyframes)
 {
 	if (nb_keyframes > 30) nb_keyframes = 30;
+
+	// Notify the particles threads that there are new keyframes
+	thread_particle_new_keyframes(nb_keyframes);
+
 	if (current_game != LUA_NOREF)
 	{
 		lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
@@ -790,7 +794,8 @@ int main(int argc, char *argv[])
 
 	boot_lua(2, FALSE, argc, argv);
 
-//	start_xmpp_thread();
+	//	start_xmpp_thread();
+	create_particles_thread();
 
 	pass_command_args(argc, argv);
 

@@ -37,6 +37,35 @@ function table.print(src, offset)
 	end
 end
 
+--- This is a really naive algorithm, it will not handle objects and such.
+-- USe only for small tables
+function table.serialize(src, sub)
+	local str = ""
+	if sub then str = "{" end
+	for k, e in pairs(src) do
+		local nk, ne = k, e
+		local tk, te = type(k), type(e)
+
+		if tk == "table" then nk = table.serialize(nk, true)
+		elseif tk == "string" then -- nothing, we are good
+		else nk = "["..nk.."]"
+		end
+
+		if te == "table" then
+			str = str..string.format("%s=%s ", nk, table.serialize(ne, true))
+		elseif te == "number" then
+			str = str..string.format("%s=%f ", nk, ne)
+		elseif te == "string" then
+			str = str..string.format("%s=%q ", nk, ne)
+		elseif te == "boolean" then
+			str = str..string.format("%s=%s ", nk, tostring(ne))
+		end
+		if sub then str = str..", " end
+	end
+	if sub then str = str.."}" end
+	return str
+end
+
 function table.clone(tbl, deep)
 	local n = {}
 	for k, e in pairs(tbl) do
@@ -950,41 +979,6 @@ function util.showMainMenu(no_reboot, reboot_engine, reboot_engine_version, rebo
 		print("[MAIN] rebooting lua state: ", reboot_engine, reboot_engine_version, reboot_module, reboot_name, reboot_new)
 		core.game.reboot(reboot_engine or "te4", reboot_engine_version or "LATEST", reboot_module or "boot", reboot_name or "player", reboot_new, reboot_einfo or "")
 	end
-end
-
-function rng.mbonus(max, level, max_level)
-	if level > max_level - 1 then level = max_level - 1 end
-
-	local bonus = (max * level) / max_level
-	local extra = (max * level) % max_level
-	if rng.range(0, max_level - 1) < extra then bonus = bonus + 1 end
-
-	local stand = max / 4
-	extra = max % 4
-	if rng.range(0, 3) < extra then stand = stand + 1 end
-
-	local val = rng.normal(bonus, stand)
-	if val < 0 then val = 0 end
-	if val > max then val = max end
-
-	return val
-end
-
-function rng.table(t)
-	local id = rng.range(1, #t)
-	return t[id], id
-end
-
-function rng.tableRemove(t)
-	local id = rng.range(1, #t)
-	return table.remove(t, id)
-end
-
-function rng.tableIndex(t, ignore)
-	local rt = {}
-	if not ignore then ignore = {} end
-	for k, e in pairs(t) do if not ignore[k] then rt[#rt+1] = k end end
-	return rng.table(rt)
 end
 
 function util.factorial(n)

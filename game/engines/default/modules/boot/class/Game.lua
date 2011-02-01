@@ -289,36 +289,6 @@ function _M:display(nb_keyframes)
 	self.flyers = old
 end
 
---- Skip to a module directly ?
-function _M:commandLineArgs(args)
-	local req_mod = nil
-	local req_save = nil
-	local req_new = false
-	for i, arg in ipairs(args) do
-		if arg:find("^%-M") then
-			-- Force module loading
-			req_mod = arg:sub(3)
-		end
-		if arg:find("^%-u") then
-			-- Force save loading
-			req_save = arg:sub(3)
-		end
-		if arg:find("^%-n") then
-			-- Force save loading
-			req_new = true
-		end
-	end
-
-	if req_mod then
-		local mod = self.mod_list[req_mod]
-		if mod then
-			Module:instanciate(mod, req_save or "player", req_new)
-		else
-			print("Error: module "..req_mod.." not found!")
-		end
-	end
-end
-
 --- Ask if we really want to close, if so, save the game first
 function _M:onQuit()
 	if self.is_quitting then return end
