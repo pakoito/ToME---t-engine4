@@ -23,6 +23,7 @@
 #if defined(SELFEXE_LINUX)
 #include <limits.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 const char *get_self_executable(int argc, char **argv)
 {
@@ -30,6 +31,11 @@ const char *get_self_executable(int argc, char **argv)
 	// On linux systems /proc/self/exe is always a symlink to the real executable, so we jsut resolve it
 	realpath("/proc/self/exe", res);
 	return res;
+}
+
+int get_number_cpus()
+{
+	return sysconf(_SC_NPROCESSORS_ONLN);
 }
 
 #elif defined(SELFEXE_WINDOWS)
@@ -43,9 +49,18 @@ const char *get_self_executable(int argc, char **argv)
 	return szEXEPath;
 }
 
+int get_number_cpus()
+{
+	SYSTEM_INFO sysinfo;
+	GetSystemInfo(&sysinfo);
+
+	return sysinfo.dwNumberOfProcessors;
+}
+
 #elif defined(SELFEXE_MACOSX)
 #include <mach-o/dyld.h>
 #include <string.h>
+#include <unistd.h>
 
 const char *get_self_executable(int argc, char **argv)
 {
@@ -62,10 +77,40 @@ const char *get_self_executable(int argc, char **argv)
 	return buf;
 }
 
+int get_number_cpus()
+{
+	int mib[4];
+	size_t len = sizeof(numCPU);
+
+	/* set the mib for hw.ncpu */
+	mib[0] = CTL_HW;
+	mib[1] = HW_AVAILCPU;  // alternatively, try HW_NCPU;
+
+	/* get the number of CPUs from the system */
+	sysctl(mib, 2, &numCPU, &len, NULL, 0);
+
+	if( numCPU < 1 )
+	{
+		mib[1] = HW_NCPU;
+		sysctl( mib, 2, &numCPU, &len, NULL, 0 );
+
+		if( numCPU < 1 )
+		{
+			numCPU = 1;
+		}
+	}
+	return numCPU;
+}
+
 #else
 const char *get_self_executable(int argc, char **argv)
 {
 	return NULL;
+}
+
+int get_number_cpus()
+{
+	return 1;
 }
 
 #endif

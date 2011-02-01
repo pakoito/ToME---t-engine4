@@ -37,8 +37,9 @@
 #define PARTICLE_ETERNAL 999999
 #define PARTICLES_PER_ARRAY 1000
 
-#define MAX_THREADS 7
-static particle_thread threads[MAX_THREADS];
+int MAX_THREADS = 1;
+extern int nb_cpus;
+static particle_thread *threads;
 static int textures_ref = LUA_NOREF;
 static int nb_threads = 0;
 static int cur_thread = 0;
@@ -804,6 +805,9 @@ void thread_add(particles_type *ps)
 void create_particles_thread()
 {
 	int i;
+
+	MAX_THREADS = 1 + nb_cpus / 2;
+	threads = calloc(MAX_THREADS, sizeof(particle_thread));
 
 	cur_thread = 0;
 	for (i = 0; i < MAX_THREADS; i++)

@@ -47,6 +47,7 @@
 #define HEIGHT 600
 
 lua_State *L = NULL;
+int nb_cpus;
 bool no_debug = FALSE;
 int current_mousehandler = LUA_NOREF;
 int current_keyhandler = LUA_NOREF;
@@ -723,6 +724,10 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 
 int main(int argc, char *argv[])
 {
+	// Get cpu cores
+	nb_cpus = get_number_cpus();
+	printf("[CPU] Detected %d CPUs\n", nb_cpus);
+
 	// RNG init
 	init_gen_rand(time(NULL));
 
@@ -743,6 +748,7 @@ int main(int argc, char *argv[])
 	}
 
 	boot_lua(1, FALSE, argc, argv);
+	create_particles_thread();
 
 	// initialize engine and set up resolution and depth
 	Uint32 flags=SDL_INIT_VIDEO | SDL_INIT_TIMER;
@@ -795,7 +801,6 @@ int main(int argc, char *argv[])
 	boot_lua(2, FALSE, argc, argv);
 
 	//	start_xmpp_thread();
-	create_particles_thread();
 
 	pass_command_args(argc, argv);
 
