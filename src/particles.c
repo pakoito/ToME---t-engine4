@@ -812,7 +812,8 @@ void create_particles_thread()
 {
 	int i;
 
-	MAX_THREADS = 1 + nb_cpus / 2;
+	MAX_THREADS = nb_cpus - 1;
+	MAX_THREADS = (MAX_THREADS < 1) ? 1 : MAX_THREADS;
 	threads = calloc(MAX_THREADS, sizeof(particle_thread));
 
 	cur_thread = 0;
