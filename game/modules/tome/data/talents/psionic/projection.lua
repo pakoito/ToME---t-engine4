@@ -103,7 +103,7 @@ newTalent{
 	sustain_psi = 30,
 	remove_on_zero = true,
 	cooldown = function(self, t)
-		return 15 - (self:getTalentLevelRaw(self.T_PROJECTION_MASTERY) or 0)
+		return 15 - (self:getTalentLevelRaw(self.T_AURA_DISCIPLINE) or 0)
 	end,
 	tactical = { ATTACKAREA = 2 },
 	range = 1,
@@ -114,14 +114,14 @@ newTalent{
 			add = getGemLevel(self)*(1 + 0.1*(self:getTalentLevel(self.T_FOCUSED_CHANNELING) or 0))
 		end
 		--return 5 + (1+ self:getWil(5))*self:getTalentLevel(t) + add
-		return self:combatTalentIntervalDamage(t, "wil", 6, 40) + add
+		return self:combatTalentIntervalDamage(t, "wil", 6, 50) + add
 	end,
 	getKnockback = function(self, t)
 		return 3 + math.floor(self:getTalentLevel(t))
 	end,
 	do_kineticaura = function(self, t)
 
-		local mast = 3 + (self:getTalentLevel(self.T_PROJECTION_MASTERY) or 0) + getGemLevel(self)
+		local mast = 5 + (self:getTalentLevel(self.T_AURA_DISCIPLINE) or 0) + getGemLevel(self)
 		local dam = t.getAuraStrength(self, t)
 		local tgts = {}
 		local grids = core.fov.circle_grids(self.x, self.y, 1, true)
@@ -154,7 +154,7 @@ newTalent{
 			game.logPlayer(self, "The aura dissipates without producing a spike.")
 			return true
 		end
-		local tg = {type="hit", range=self:getTalentRange(t)}
+		local tg = {type="hit", nolock=true, range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y then return nil end
 		local actor = game.level.map(x, y, Map.ACTOR)
@@ -171,7 +171,7 @@ newTalent{
 	info = function(self, t)
 		local dam = t.getAuraStrength(self, t)
 		local spikedam = 50 + 0.25 * dam * dam
-		local mast = 3 + (self:getTalentLevel(self.T_PROJECTION_MASTERY) or 0) + getGemLevel(self)
+		local mast = 5 + (self:getTalentLevel(self.T_AURA_DISCIPLINE) or 0) + getGemLevel(self)
 		local spikecost = t.sustain_psi - 2*getGemLevel(self)
 		return ([[Fills the air around you with reactive currents of force that do %d physical damage to all who approach. All damage done by the aura will drain one point of energy per %0.2f points of damage dealt.
 		When deactivated, if you have at least %d energy, a massive spike of kinetic energy is released, smashing a target for %d physical damage and sending it flying. Telekinetically wielding a gem instead of a weapon will result in improved spike efficiency.
@@ -189,7 +189,7 @@ newTalent{
 	sustain_psi = 40,
 	remove_on_zero = true,
 	cooldown = function(self, t)
-		return 15 - (self:getTalentLevelRaw(self.T_PROJECTION_MASTERY) or 0)
+		return 15 - (self:getTalentLevelRaw(self.T_AURA_DISCIPLINE) or 0)
 	end,
 	tactical = { ATTACKAREA = 2 },
 	range = function(self, t)
@@ -206,11 +206,11 @@ newTalent{
 			add = getGemLevel(self)*(1 + 0.1*(self:getTalentLevel(self.T_FOCUSED_CHANNELING) or 0))
 		end
 		--return 5 + (1+ self:getWil(5))*self:getTalentLevel(t) + add
-		return self:combatTalentIntervalDamage(t, "wil", 6, 40) + add
+		return self:combatTalentIntervalDamage(t, "wil", 6, 50) + add
 	end,
 	do_thermalaura = function(self, t)
 
-		local mast = 3 + (self:getTalentLevel(self.T_PROJECTION_MASTERY) or 0) + getGemLevel(self)
+		local mast = 5 + (self:getTalentLevel(self.T_AURA_DISCIPLINE) or 0) + getGemLevel(self)
 		local dam = t.getAuraStrength(self, t)
 		local tgts = {}
 		local grids = core.fov.circle_grids(self.x, self.y, 1, true)
@@ -245,7 +245,7 @@ newTalent{
 			return true
 		end
 
-		local tg = {type="beam", range=self:getTalentRange(t), talent=t, display={particle="bolt_fire", trail="firetrail"}}
+		local tg = {type="beam", nolock=true, range=self:getTalentRange(t), talent=t, display={particle="bolt_fire", trail="firetrail"}}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local actor = game.level.map(x, y, Map.ACTOR)
@@ -262,7 +262,7 @@ newTalent{
 	info = function(self, t)
 		local dam = t.getAuraStrength(self, t)
 		local spikedam = 50 + 0.4 * dam * dam
-		local mast = 3 + (self:getTalentLevel(self.T_PROJECTION_MASTERY) or 0) + getGemLevel(self)
+		local mast = 5 + (self:getTalentLevel(self.T_PROJECTION_MASTERY) or 0) + getGemLevel(self)
 		local spikecost = t.sustain_psi - 2*getGemLevel(self)
 		return ([[Fills the air around you with reactive currents of furnace-like heat that do %d fire damage to all who approach. All damage done by the aura will drain one point of energy per %0.2f points of damage dealt.
 		When deactivated, if you have at least %d energy, a massive spike of thermal energy is released as a tunnel of superheated air. Anybody caught in it will suffer %d fire damage. Telekinetically wielding a gem instead of a weapon will result in improved spike efficiency.
@@ -280,7 +280,7 @@ newTalent{
 	sustain_psi = 50,
 	remove_on_zero = true,
 	cooldown = function(self, t)
-		return 15 - (self:getTalentLevelRaw(self.T_PROJECTION_MASTERY) or 0)
+		return 15 - (self:getTalentLevelRaw(self.T_AURA_DISCIPLINE) or 0)
 	end,
 	tactical = { ATTACKAREA = 2 },
 	range = function(self, t)
@@ -297,10 +297,10 @@ newTalent{
 			add = getGemLevel(self)*(1 + 0.1*(self:getTalentLevel(self.T_FOCUSED_CHANNELING) or 0))
 		end
 		--return 5 + (1+ self:getWil(5))*self:getTalentLevel(t) + add
-		return self:combatTalentIntervalDamage(t, "wil", 6, 40) + add
+		return self:combatTalentIntervalDamage(t, "wil", 6, 50) + add
 	end,
 	do_chargedaura = function(self, t)
-		local mast = 3 + (self:getTalentLevel(self.T_PROJECTION_MASTERY) or 0) + getGemLevel(self)
+		local mast = 5 + (self:getTalentLevel(self.T_AURA_DISCIPLINE) or 0) + getGemLevel(self)
 		local dam = t.getAuraStrength(self, t)
 		local tgts = {}
 		local grids = core.fov.circle_grids(self.x, self.y, 1, true)
@@ -335,7 +335,7 @@ newTalent{
 			return true
 		end
 
-		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
+		local tg = {type="bolt", nolock=true, range=self:getTalentRange(t), talent=t}
 		local fx, fy = self:getTarget(tg)
 		if not fx or not fy then return nil end
 
@@ -390,7 +390,7 @@ newTalent{
 	info = function(self, t)
 		local dam = t.getAuraStrength(self, t)
 		local spikedam = 50 + 0.4 * dam * dam
-		local mast = 3 + (self:getTalentLevel(self.T_PROJECTION_MASTERY) or 0) + getGemLevel(self)
+		local mast = 5 + (self:getTalentLevel(self.T_AURA_DISCIPLINE) or 0) + getGemLevel(self)
 		local spikecost = t.sustain_psi - 2*getGemLevel(self)
 		local nb = 3 + self:getTalentLevelRaw(t)
 		return ([[Fills the air around you with crackling energy, doing %d lightning damage to all who stand nearby. All damage done by the aura will drain one point of energy per %0.2f points of damage dealt.
@@ -403,12 +403,39 @@ newTalent{
 	name = "Projection Mastery",
 	type = {"psionic/projection", 4},
 	require = psi_wil_req4,
-	points = 5,
-	mode = "passive",
-	info = function(self, t)
-		local cooldown = self:getTalentLevelRaw(t)
-		local mast = (self:getTalentLevel(t) or 0)
-		return ([[Your expertise in the art of energy projection grows.
-		Aura cooldowns are all reduced by %d turns. Aura damage drains energy more slowly (+%0.2f damage required to lose a point of energy).]]):format(cooldown, mast)
+	cooldown = function(self, t)
+		return 120 - self:getTalentLevel(t)*12
 	end,
+	psi = 15,
+	points = 5,
+	no_energy = true,
+	tactical = { BUFF = 2 },
+	action = function(self, t)
+		if self.talents_cd[self.T_KINETIC_AURA] == nil and self.talents_cd[self.T_THERMAL_AURA] == nil and self.talents_cd[self.T_CHARGED_AURA] == nil then
+			return
+		else
+			if self:isTalentActive(self.T_CONDUIT) then
+				local auras = self:isTalentActive(self.T_CONDUIT)
+				if not auras.k_aura_on then
+					self.talents_cd[self.T_KINETIC_AURA] = nil
+				end
+				if not auras.t_aura_on then
+					self.talents_cd[self.T_THERMAL_AURA] = nil
+				end
+				if not auras.c_aura_on then
+					self.talents_cd[self.T_CHARGED_AURA] = nil
+				end
+			else
+				self.talents_cd[self.T_KINETIC_AURA] = nil
+				self.talents_cd[self.T_THERMAL_AURA] = nil
+				self.talents_cd[self.T_CHARGED_AURA] = nil
+			end
+			return true
+		end
+	end,
+
+	info = function(self, t)
+		return ([[When activated, brings all auras off cooldown. Additional talent points spent in Projection Mastery allow it to be used more frequently.]])
+	end,
+
 }

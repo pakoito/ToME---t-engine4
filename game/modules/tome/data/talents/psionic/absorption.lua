@@ -23,12 +23,12 @@ local function getShieldStrength(self, t)
 		add = getGemLevel(self)*(1 + 0.1*(self:getTalentLevel(self.T_FOCUSED_CHANNELING) or 0))
 	end
 	--return 2 + (1+ self:getWil(8))*self:getTalentLevel(t) + add
-	return self:combatTalentIntervalDamage(t, "wil", 3, 60) + add
+	return self:combatTalentIntervalDamage(t, "wil", 3, 50) + add
 end
 
 local function getSpikeStrength(self, t)
 	local ss = getShieldStrength(self, t)
-	return  75*self:getTalentLevel(t) + ss*math.sqrt(ss)
+	return  75*self:getTalentLevel(t) + 2*ss*math.sqrt(ss)
 end
 
 newTalent{
@@ -39,16 +39,17 @@ newTalent{
 	points = 5,
 	sustain_psi = 30,
 	cooldown = function(self, t)
-		return 20 - 2*(self:getTalentLevelRaw(self.T_ABSORPTION_MASTERY) or 0)
+		return 20 - 2*(self:getTalentLevelRaw(self.T_SHIELD_DISCIPLINE) or 0)
 	end,
 	range = 10,
+	no_energy = true,
 	tactical = { DEFEND = 2 },
 
 	--called when damage gets absorbed by kinetic shield
 	ks_on_damage = function(self, t, damtype, dam)
-		local mast = 20 - (2*self:getTalentLevel(self.T_ABSORPTION_MASTERY) or 0) - 0.4*getGemLevel(self)
+		local mast = 30 - (2*self:getTalentLevel(self.T_SHIELD_DISCIPLINE) or 0) - 0.4*getGemLevel(self)
 		local total_dam = dam
-		local absorbable_dam = 0.01*(60 + math.min(self:getCun(50), 40))* total_dam
+		local absorbable_dam = 0.01*(60 + math.min(self:getCun(30), 40))* total_dam
 		local guaranteed_dam = total_dam - absorbable_dam
 		dam = absorbable_dam
 		if damtype ~= DamageType.PHYSICAL and damtype ~= DamageType.ACID then return total_dam end
@@ -81,9 +82,9 @@ newTalent{
 
 	--called when damage gets absorbed by kinetic shield spike
 	kss_on_damage = function(self, t, damtype, dam)
-		local mast = 20 - (2*self:getTalentLevel(self.T_ABSORPTION_MASTERY) or 0) - 0.4*getGemLevel(self)
+		local mast = 30 - (2*self:getTalentLevel(self.T_SHIELD_DISCIPLINE) or 0) - 0.4*getGemLevel(self)
 		local total_dam = dam
-		local absorbable_dam = 0.01*(60 + math.min(self:getCun(50), 40))* total_dam
+		local absorbable_dam = 1*total_dam
 		local guaranteed_dam = total_dam - absorbable_dam
 		dam = absorbable_dam
 
@@ -91,10 +92,10 @@ newTalent{
 			-- Absorb damage into the shield
 			if dam <= self.kinspike_shield_absorb then
 				self.kinspike_shield_absorb = self.kinspike_shield_absorb - dam
-				self:incPsi(2 + dam/mast)
+				self:incPsi(2 + 2*dam/mast)
 				dam = 0
 			else
-				self:incPsi(2 + self.kinspike_shield_absorb/mast)
+				self:incPsi(2 + 2*self.kinspike_shield_absorb/mast)
 				dam = dam - self.kinspike_shield_absorb
 				self.kinspike_shield_absorb = 0
 			end
@@ -112,10 +113,10 @@ newTalent{
 	info = function(self, t)
 		local s_str = getShieldStrength(self, t)
 		local spike_str = getSpikeStrength(self, t)
-		local mast = 20 - (2*self:getTalentLevel(self.T_ABSORPTION_MASTERY) or 0) - 0.4*getGemLevel(self)
-		local absorb = 60 + math.min(self:getCun(50), 40)
+		local mast = 30 - (2*self:getTalentLevel(self.T_SHIELD_DISCIPLINE) or 0) - 0.4*getGemLevel(self)
+		local absorb = 60 + math.min(self:getCun(30), 40)
 		return ([[Surround yourself with a shield that will absorb at most %d physical or acid damage per attack. Deactivating the shield spikes it up to a temporary (five turns) %d point shield. The effect will increase with your Willpower stat.
-		Every time your shield absorbs damage, you gain two points of energy plus an additional point for every %d points of damage absorbed.
+		Every time your shield absorbs damage, you gain two points of energy plus an additional point for every %d points of damage absorbed. Spiked shields absorb energy more efficiently.
 		%d%% of any given attack is subject to absorption by this shield. The rest gets through as normal. Improve this by increasing Cunning.]]):
 		format(s_str, spike_str, mast, absorb)
 	end,
@@ -131,16 +132,17 @@ newTalent{
 	points = 5,
 	sustain_psi = 30,
 	cooldown = function(self, t)
-		return 20 - 2*(self:getTalentLevelRaw(self.T_ABSORPTION_MASTERY) or 0)
+		return 20 - 2*(self:getTalentLevelRaw(self.T_SHIELD_DISCIPLINE) or 0)
 	end,
 	range = 10,
+	no_energy = true,
 	tactical = { DEFEND = 2 },
 
 	--called when damage gets absorbed by thermal shield
 	ts_on_damage = function(self, t, damtype, dam)
-		local mast = 20 - (2*self:getTalentLevel(self.T_ABSORPTION_MASTERY) or 0) - 0.4*getGemLevel(self)
+		local mast = 30 - (2*self:getTalentLevel(self.T_SHIELD_DISCIPLINE) or 0) - 0.4*getGemLevel(self)
 		local total_dam = dam
-		local absorbable_dam = 0.01*(60 + math.min(self:getCun(50), 40))* total_dam
+		local absorbable_dam = 0.01*(60 + math.min(self:getCun(30), 40))* total_dam
 		local guaranteed_dam = total_dam - absorbable_dam
 		dam = absorbable_dam
 		if damtype ~= DamageType.FIRE and damtype ~= DamageType.COLD then return total_dam end
@@ -172,9 +174,9 @@ newTalent{
 
 	--called when damage gets absorbed by thermal shield spike
 	tss_on_damage = function(self, t, damtype, dam)
-		local mast = 20 - (2*self:getTalentLevel(self.T_ABSORPTION_MASTERY) or 0) - 0.4*getGemLevel(self)
+		local mast = 30 - (2*self:getTalentLevel(self.T_SHIELD_DISCIPLINE) or 0) - 0.4*getGemLevel(self)
 		local total_dam = dam
-		local absorbable_dam = 0.01*(60 + math.min(self:getCun(50), 40))* total_dam
+		local absorbable_dam = 1* total_dam
 		local guaranteed_dam = total_dam - absorbable_dam
 		dam = absorbable_dam
 
@@ -182,10 +184,10 @@ newTalent{
 			-- Absorb damage into the shield
 			if dam <= self.thermspike_shield_absorb then
 				self.thermspike_shield_absorb = self.thermspike_shield_absorb - dam
-				self:incPsi(2 + dam/mast)
+				self:incPsi(2 + 2*dam/mast)
 				dam = 0
 			else
-				self:incPsi(2 + self.thermspike_shield_absorb/mast)
+				self:incPsi(2 + 2*self.thermspike_shield_absorb/mast)
 				dam = dam - self.thermspike_shield_absorb
 				self.thermspike_shield_absorb = 0
 			end
@@ -203,10 +205,10 @@ newTalent{
 	info = function(self, t)
 		local s_str = getShieldStrength(self, t)
 		local spike_str = getSpikeStrength(self, t)
-		local mast = 20 - (2*self:getTalentLevel(self.T_ABSORPTION_MASTERY) or 0) - 0.4*getGemLevel(self)
-		local absorb = 60 + math.min(self:getCun(50), 40)
+		local mast = 30 - (2*self:getTalentLevel(self.T_SHIELD_DISCIPLINE) or 0) - 0.4*getGemLevel(self)
+		local absorb = 60 + math.min(self:getCun(30), 40)
 		return ([[Surround yourself with a shield that will absorb at most %d thermal damage per attack. Deactivating the shield spikes it up to a temporary (five turns) %d point shield. The effect will increase with your Willpower stat.
-		Every time your shield absorbs damage, you gain two points of energy plus an additional point for every %d points of damage absorbed.
+		Every time your shield absorbs damage, you gain two points of energy plus an additional point for every %d points of damage absorbed. Spiked shields absorb energy more efficiently.
 		%d%% of any given attack is subject to absorption by this shield. The rest gets through as normal. Improve this by increasing Cunning.]]):
 		format(s_str, spike_str, mast, absorb)
 	end,
@@ -220,16 +222,17 @@ newTalent{
 	points = 5,
 	sustain_psi = 30,
 	cooldown = function(self, t)
-		return 20 - 2*(self:getTalentLevelRaw(self.T_ABSORPTION_MASTERY) or 0)
+		return 20 - 2*(self:getTalentLevelRaw(self.T_SHIELD_DISCIPLINE) or 0)
 	end,
 	range = 10,
+	no_energy = true,
 	tactical = { DEFEND = 2 },
 
 	--called when damage gets absorbed by charged shield
 	cs_on_damage = function(self, t, damtype, dam)
-		local mast = 20 - (2*self:getTalentLevel(self.T_ABSORPTION_MASTERY) or 0) - 0.4*getGemLevel(self)
+		local mast = 30 - (2*self:getTalentLevel(self.T_SHIELD_DISCIPLINE) or 0) - 0.4*getGemLevel(self)
 		local total_dam = dam
-		local absorbable_dam = 0.01*(60 + math.min(self:getCun(50), 40))* total_dam
+		local absorbable_dam = 0.01*(60 + math.min(self:getCun(30), 40))* total_dam
 		local guaranteed_dam = total_dam - absorbable_dam
 		dam = absorbable_dam
 		if damtype ~= DamageType.LIGHTNING and damtype ~= DamageType.BLIGHT then return total_dam end
@@ -261,19 +264,19 @@ newTalent{
 
 	--called when damage gets absorbed by charged shield spike
 	css_on_damage = function(self, t, damtype, dam)
-		local mast = 20 - (2*self:getTalentLevel(self.T_ABSORPTION_MASTERY) or 0) - 0.4*getGemLevel(self)
+		local mast = 30 - (2*self:getTalentLevel(self.T_SHIELD_DISCIPLINE) or 0) - 0.4*getGemLevel(self)
 		local total_dam = dam
-		local absorbable_dam = 0.01*(60 + math.min(self:getCun(50), 40))* total_dam
+		local absorbable_dam = 1* total_dam
 		local guaranteed_dam = total_dam - absorbable_dam
 		dam = absorbable_dam
 		if damtype == DamageType.LIGHTNING or damtype == DamageType.BLIGHT then
 			-- Absorb damage into the shield
 			if dam <= self.chargespike_shield_absorb then
 				self.chargespike_shield_absorb = self.chargespike_shield_absorb - dam
-				self:incPsi(2 + dam/mast)
+				self:incPsi(2 + 2*dam/mast)
 				dam = 0
 			else
-				self:incPsi(2 + self.chargespike_shield_absorb/mast)
+				self:incPsi(2 + 2*self.chargespike_shield_absorb/mast)
 				dam = dam - self.chargespike_shield_absorb
 				self.chargespike_shield_absorb = 0
 			end
@@ -291,10 +294,10 @@ newTalent{
 	info = function(self, t)
 		local s_str = getShieldStrength(self, t)
 		local spike_str = getSpikeStrength(self, t)
-		local mast = 20 - (2*self:getTalentLevel(self.T_ABSORPTION_MASTERY) or 0) - 0.4*getGemLevel(self)
-		local absorb = 60 + math.min(self:getCun(50), 40)
+		local mast = 30 - (2*self:getTalentLevel(self.T_SHIELD_DISCIPLINE) or 0) - 0.4*getGemLevel(self)
+		local absorb = 60 + math.min(self:getCun(30), 40)
 		return ([[Surround yourself with a shield that will absorb at most %d lightning or blight damage per attack. Deactivating the shield spikes it up to a temporary (five turns) %d point shield. The effect will increase with your Willpower stat.
-		Every time your shield absorbs damage, you gain two points of energy plus an additional point for every %d points of damage absorbed.
+		Every time your shield absorbs damage, you gain two points of energy plus an additional point for every %d points of damage absorbed. Spiked shields absorb energy more efficiently.
 		%d%% of any given attack is subject to absorption by this shield. The rest gets through as normal. Improve this by increasing Cunning.]]):
 		format(s_str, spike_str, mast, absorb)
 	end,
@@ -304,12 +307,25 @@ newTalent{
 	name = "Absorption Mastery",
 	type = {"psionic/absorption", 4},
 	require = psi_wil_req2,
+	cooldown = function(self, t)
+		return 120 - self:getTalentLevel(t)*12
+	end,
+	psi = 15,
 	points = 5,
-	mode = "passive",
+	no_energy = true,
+	tactical = { BUFF = 3 },
+	action = function(self, t)
+		if self.talents_cd[self.T_KINETIC_SHIELD] == nil and self.talents_cd[self.T_THERMAL_SHIELD] == nil and self.talents_cd[self.T_CHARGED_SHIELD] == nil then
+			return
+		else
+			self.talents_cd[self.T_KINETIC_SHIELD] = nil
+			self.talents_cd[self.T_THERMAL_SHIELD] = nil
+			self.talents_cd[self.T_CHARGED_SHIELD] = nil
+			return true
+		end
+	end,
+
 	info = function(self, t)
-		local cooldown = 2*self:getTalentLevelRaw(t)
-		local mast = 2*self:getTalentLevel(t)
-		return ([[Your expertise in the art of energy absorption grows. Shield cooldowns are all reduced by %d turns, and the amount of damage absorption required to gain a point of energy is reduced by %0.2f.]]):
-		format(cooldown, mast)
+		return ([[When activated, brings all shields off cooldown. Additional talent points spent in Absorption Mastery allow it to be used more frequently.]])
 	end,
 }

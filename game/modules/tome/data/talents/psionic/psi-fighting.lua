@@ -66,8 +66,8 @@ newTalent{
 	sustain_psi = 10,
 	tactical = { BUFF = 2 },
 	activate = function(self, t)
-		local str_power = math.floor(0.06*self:getTalentLevel(t)*self:getWil())
-		local dex_power = math.floor(0.06*self:getTalentLevel(t)*self:getCun())
+		local str_power = math.floor(0.05*self:getTalentLevel(t)*self:getWil())
+		local dex_power = math.floor(0.05*self:getTalentLevel(t)*self:getCun())
 		return {
 			stats = self:addTemporaryValue("inc_stats", {
 				[self.STAT_STR] = str_power,
@@ -80,9 +80,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local inc = 10*self:getTalentLevel(t)
-		local str_power = math.floor(0.06*self:getTalentLevel(t)*self:getWil())
-		local dex_power = math.floor(0.06*self:getTalentLevel(t)*self:getCun())
+		local inc = 5*self:getTalentLevel(t)
+		local str_power = math.floor(0.05*self:getTalentLevel(t)*self:getWil())
+		local dex_power = math.floor(0.05*self:getTalentLevel(t)*self:getCun())
 		return ([[While active, you give your flesh and blood body a little aid in the form of precisely applied mental forces. Increases Strength and Dexterity by %d%% of your Willpower and Cunning, respectively.
 		Strength increased by %d
 		Dexterity increased by %d]]):

@@ -502,6 +502,7 @@ function _M:combatDamage(weapon)
 		if self.use_psi_combat and stat == "dex" then stat = "cun" end
 		totstat = totstat + self:getStat(stat) * mod
 	end
+	if self.use_psi_combat then totstat = totstat * 0.6 end
 
 	local add = 0
 	if self:knowTalent(Talents.T_ARCANE_DESTRUCTION) then

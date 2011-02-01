@@ -43,19 +43,19 @@ newTalent{
 	type = {"psionic/finer-energy-manipulations", 2},
 	require = psi_cun_req2,
 	cooldown = 1,
-	psi = 100,
+	psi = 0,
 	points = 5,
 	no_npc_use = true,
 	action = function(self, t)
 		self:showInventory("Reshape which weapon?", self:getInven("INVEN"), function(o) return o.type == "weapon" and not o.fully_reshaped end, function(o, item)
 			--o.wielder = o.wielder or {}
-			if (o.old_atk or 0) < math.floor(self:getTalentLevel(t)*(1 + self:getWil(4))) then
+			if (o.old_atk or 0) < math.floor(self:getTalentLevel(t)*(1 + self:getWil(3))) then
 				o.combat.atk = (o.combat.atk or 0) - (o.old_atk or 0)
 				o.combat.dam = (o.combat.dam or 0) - (o.old_dam or 0)
-				o.combat.atk = (o.combat.atk or 0) + math.floor(self:getTalentLevel(t)*(1 + self:getWil(4)))
-				o.combat.dam = (o.combat.dam or 0) + math.floor(self:getTalentLevel(t)*(1 + self:getWil(4)))
-				o.old_atk = math.floor(self:getTalentLevel(t)*(1 + self:getWil(4)))
-				o.old_dam = math.floor(self:getTalentLevel(t)*(1 + self:getWil(4)))
+				o.combat.atk = (o.combat.atk or 0) + math.floor(self:getTalentLevel(t)*(1 + self:getWil(3)))
+				o.combat.dam = (o.combat.dam or 0) + math.floor(self:getTalentLevel(t)*(1 + self:getWil(3)))
+				o.old_atk = math.floor(self:getTalentLevel(t)*(1 + self:getWil(3)))
+				o.old_dam = math.floor(self:getTalentLevel(t)*(1 + self:getWil(3)))
 				game.logPlayer(self, "You reshape your %s.", o:getName{do_colour=true, no_count=true})
 				if not o.been_reshaped then
 					o.name = "reshaped" .. " "..o.name..""
@@ -70,7 +70,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Manipulate forces on the molecular level to realign, rebalance, and hone your weapon. Permanently increases the attack and damage of any weapon by %d.
 		This value scales with Willpower.]]):
-		format(math.floor(self:getTalentLevel(t)*(1 + self:getWil(4))))
+		format(math.floor(self:getTalentLevel(t)*(1 + self:getWil(3))))
 	end,
 }
 
@@ -79,7 +79,7 @@ newTalent{
 	type = {"psionic/finer-energy-manipulations", 3},
 	require = psi_cun_req3,
 	cooldown = 1,
-	psi = 100,
+	psi = 0,
 	points = 5,
 	no_npc_use = true,
 	action = function(self, t)

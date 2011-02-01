@@ -67,69 +67,28 @@ newTalent{
 	name = "Shield Discipline",
 	type = {"psionic/mental-discipline", 3},
 	require = psi_wil_req3,
-	cooldown = function(self, t)
-		return 120 - self:getTalentLevel(t)*12
-	end,
-	psi = 15,
 	points = 5,
-	no_energy = true,
-	tactical = { BUFF = 3 },
-	action = function(self, t)
-		if self.talents_cd[self.T_KINETIC_SHIELD] == nil and self.talents_cd[self.T_THERMAL_SHIELD] == nil and self.talents_cd[self.T_CHARGED_SHIELD] == nil then
-			return
-		else
-			self.talents_cd[self.T_KINETIC_SHIELD] = (self.talents_cd[self.T_KINETIC_SHIELD] or 0) - 10 - 2 * self:getTalentLevelRaw(t)
-			self.talents_cd[self.T_THERMAL_SHIELD] = (self.talents_cd[self.T_THERMAL_SHIELD] or 0) - 10 - 2 * self:getTalentLevelRaw(t)
-			self.talents_cd[self.T_CHARGED_SHIELD] = (self.talents_cd[self.T_CHARGED_SHIELD] or 0) - 10 - 2 * self:getTalentLevelRaw(t)
-			return true
-		end
+	mode = "passive",
+	info = function(self, t)
+		local cooldown = 2*self:getTalentLevelRaw(t)
+		local mast = 2*self:getTalentLevel(t)
+		return ([[Your expertise in the art of energy absorption grows. Shield cooldowns are all reduced by %d turns, and the amount of damage absorption required to gain a point of energy is reduced by %0.2f.]]):
+		format(cooldown, mast)
 	end,
 
-	info = function(self, t)
-		return ([[When activated, reduces the cooldowns of all shields by %d. Additional talent points spent in Shield Discipline improve this value and allow it to be used more frequently.]]):
-		format(10+self:getTalentLevelRaw(t)*2)
-	end,
 }
 
 newTalent{
 	name = "Aura Discipline",
 	type = {"psionic/mental-discipline", 4},
 	require = psi_wil_req4,
-	cooldown = function(self, t)
-		return 120 - self:getTalentLevel(t)*12
-	end,
-	psi = 15,
 	points = 5,
-	no_energy = true,
-	tactical = { BUFF = 2 },
-	action = function(self, t)
-		if self.talents_cd[self.T_KINETIC_AURA] == nil and self.talents_cd[self.T_THERMAL_AURA] == nil and self.talents_cd[self.T_CHARGED_AURA] == nil then
-			return
-		else
-			if self:isTalentActive(self.T_CONDUIT) then
-				local auras = self:isTalentActive(self.T_CONDUIT)
-				if not auras.k_aura_on then
-					self.talents_cd[self.T_KINETIC_AURA] = (self.talents_cd[self.T_KINETIC_AURA] or 0) - 4 - 1 * self:getTalentLevelRaw(t)
-				end
-				if not auras.t_aura_on then
-					self.talents_cd[self.T_THERMAL_AURA] = (self.talents_cd[self.T_THERMAL_AURA] or 0) - 4 - 1 * self:getTalentLevelRaw(t)
-				end
-				if not auras.c_aura_on then
-					self.talents_cd[self.T_CHARGED_AURA] = (self.talents_cd[self.T_CHARGED_AURA] or 0) - 4 - 1 * self:getTalentLevelRaw(t)
-				end
-			else
-				self.talents_cd[self.T_KINETIC_AURA] = (self.talents_cd[self.T_KINETIC_AURA] or 0) - 4 - 1 * self:getTalentLevelRaw(t)
-				self.talents_cd[self.T_THERMAL_AURA] = (self.talents_cd[self.T_THERMAL_AURA] or 0) - 4 - 1 * self:getTalentLevelRaw(t)
-				self.talents_cd[self.T_CHARGED_AURA] = (self.talents_cd[self.T_CHARGED_AURA] or 0) - 4 - 1 * self:getTalentLevelRaw(t)
-			end
-			return true
-		end
-	end,
-
+	mode = "passive",
 	info = function(self, t)
-		local red = 4 + self:getTalentLevelRaw(t)
-		return ([[When activated, reduces the cooldown of all auras by %d. Additional talent points spent in Aura Discipline improve this value and allow it to be used more frequently.]]):
-		format(red)
+		local cooldown = self:getTalentLevelRaw(t)
+		local mast = (self:getTalentLevel(t) or 0)
+		return ([[Your expertise in the art of energy projection grows.
+		Aura cooldowns are all reduced by %d turns. Aura damage drains energy more slowly (+%0.2f damage required to lose a point of energy).]]):format(cooldown, mast)
 	end,
 }
 
