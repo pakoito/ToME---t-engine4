@@ -37,7 +37,7 @@
 #define PARTICLE_ETERNAL 999999
 #define PARTICLES_PER_ARRAY 1000
 
-#define MAX_THREADS 1
+#define MAX_THREADS 7
 static particle_thread threads[MAX_THREADS];
 static int textures_ref = LUA_NOREF;
 static int nb_threads = 0;
@@ -91,6 +91,10 @@ static int particles_new(lua_State *L)
 	ps->density = density;
 	ps->alive = TRUE;
 	ps->l = NULL;
+	ps->texcoords = NULL;
+	ps->vertices = NULL;
+	ps->colors = NULL;
+	ps->particles = NULL;
 	ps->init = FALSE;
 
 	thread_add(ps);
