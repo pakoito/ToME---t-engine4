@@ -106,11 +106,14 @@ static int particles_new(lua_State *L)
 static int particles_free(lua_State *L)
 {
 	particles_type *ps = (particles_type*)auxiliar_checkclass(L, "core{particles}", 1);
+	plist *l = ps->l;
 
 	printf("Deleting particle from main lua state %x :: %x\n", (int)ps->l, (int)ps);
 
+	if (l && l->pt) SDL_mutexP(l->pt->lock);
+
 	ps->alive = FALSE;
-	ps->l->ps = NULL;
+	if (l) l->ps = NULL;
 	ps->l = NULL;
 	SDL_DestroyMutex(ps->lock);
 
@@ -118,6 +121,8 @@ static int particles_free(lua_State *L)
 	if (ps->vertices) { free(ps->vertices); ps->vertices = NULL; }
 	if (ps->colors) { free(ps->colors); ps->colors = NULL; }
 	if (ps->particles) { free(ps->particles); ps->particles = NULL; }
+
+	if (l && l->pt) SDL_mutexV(l->pt->lock);
 
 	lua_pushnumber(L, 1);
 	return 1;
@@ -789,6 +794,7 @@ void thread_add(particles_type *ps)
 	// Insert it in the head of the list
 	SDL_mutexP(pt->lock);
 	plist *l = malloc(sizeof(plist));
+	l->pt = pt;
 	l->ps = ps;
 	l->next = pt->list;
 	pt->list = l;

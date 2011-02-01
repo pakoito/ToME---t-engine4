@@ -81,22 +81,25 @@ typedef struct {
 } particles_type;
 
 // Particles thread-only structure
+struct s_particle_thread;
 struct s_plist {
 	particles_type *ps;
 	int generator_ref;
 	int updator_ref;
 	int emit_ref;
 	int update_ref;
+	struct s_particle_thread *pt;
 	struct s_plist *next;
 };
 typedef struct s_plist plist;
 
-typedef struct {
+struct s_particle_thread {
 	int id;
 	lua_State *L;
 	SDL_mutex *lock;
 	SDL_sem *keyframes;
 	plist *list;
-} particle_thread;
+};
+typedef struct s_particle_thread particle_thread;
 
 #endif
