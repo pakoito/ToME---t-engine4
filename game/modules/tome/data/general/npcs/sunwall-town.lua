@@ -45,7 +45,7 @@ newEntity{
 
 newEntity{ base = "BASE_NPC_SUNWALL_TOWN",
 	name = "human guard", color=colors.LIGHT_UMBER,
-	desc = [[A stern looking guard, he will not let you disturb the town.]],
+	desc = [[A stern-looking guard, he will not let you disturb the town.]],
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(70,80),
@@ -59,7 +59,7 @@ newEntity{ base = "BASE_NPC_SUNWALL_TOWN",
 
 newEntity{ base = "BASE_NPC_SUNWALL_TOWN",
 	name = "elven archer", color=colors.UMBER,
-	desc = [[A stern looking guard, he will not let you disturb the town.]],
+	desc = [[A stern-looking guard, he will not let you disturb the town.]],
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 3,
 	max_life = resolvers.rngavg(50,60),

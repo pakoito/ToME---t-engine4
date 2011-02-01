@@ -40,7 +40,7 @@ newEntity{
 
 newEntity{ base = "BASE_NPC_INSECT",
 	name = "midge swarm", color=colors.UMBER, image="npc/midge_swarm.png",
-	desc = "A swarm of midges, they want blood.",
+	desc = "A swarm of midges; they want blood.",
 	level_range = {1, 25}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(1,2),

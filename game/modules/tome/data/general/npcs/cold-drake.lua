@@ -45,7 +45,7 @@ newEntity{
 
 newEntity{ base = "BASE_NPC_COLD_DRAKE",
 	name = "cold drake hatchling", color=colors.WHITE, display="d",
-	desc = [[A drake hatchling, not too powerful by itself, but it usually comes with its brothers and sisters.]],
+	desc = [[A drake hatchling. Not too powerful by itself, but it usually comes with its brothers and sisters.]],
 	level_range = {8, nil}, exp_worth = 1,
 	rarity = 1,
 	rank = 1, size_category = 2,

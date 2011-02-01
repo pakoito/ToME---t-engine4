@@ -96,7 +96,7 @@ Tide huntresses wield both magic and hunting skills, making them terrible foes.]
 
 newEntity{ base = "BASE_NPC_NAGA",
 	name = "naga psyren", color=colors.YELLOW, image="npc/naga_psyren.png",
-	desc = [[A naga psyren, she looks at you with great intensity.
+	desc = [[A naga psyren; she looks at you with great intensity.
 Psyrens are dangerous nagas that can directly assault your mind.]],
 	level_range = {36, nil}, exp_worth = 1,
 	rarity = 4,
