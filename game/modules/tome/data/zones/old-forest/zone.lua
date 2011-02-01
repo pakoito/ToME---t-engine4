@@ -78,17 +78,19 @@ return {
 	},
 
 	post_process = function(level)
+		-- Place a lore note on each level
+		game:placeRandomLoreObject("NOTE"..level.level)
+
+		if not config.settings.tome.weather_effects then return end
+
 		local Map = require "engine.Map"
 		level.foreground_particle = require("engine.Particles").new("raindrops", 1, {width=Map.viewport.width, height=Map.viewport.height})
 
 		game.state:makeWeather(level, 6, {max_nb=3, chance=1, dir=110, speed={0.1, 0.6}, alpha={0.3, 0.5}, particle_name="weather/dark_cloud_%02d"})
-
-		-- Place a lore note on each level
-		game:placeRandomLoreObject("NOTE"..level.level)
 	end,
 
 	foreground = function(level, x, y, nb_keyframes)
-		local Map = require "engine.Map"
+		if not config.settings.tome.weather_effects or not level.foreground_particle then return end
 		level.foreground_particle.ps:toScreen(x, y, true, 1)
 	end,
 }

@@ -185,6 +185,7 @@ end
 if type(config.settings.tome.autosave) == "nil" then config.settings.tome.autosave = true end
 if not config.settings.tome.smooth_move then config.settings.tome.smooth_move = 3 end
 if not config.settings.tome.gfx then config.settings.tome.gfx = {size="32x32", tiles="mushroom"} end
+if type(config.settings.tome.weather_effects) == "nil" then config.settings.tome.weather_effects = true end
 Map.smooth_scroll = config.settings.tome.smooth_move
 
 return {require "mod.class.Game", require "mod.class.World"}

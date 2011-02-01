@@ -434,6 +434,8 @@ end
 -- Weather stuff
 --------------------------------------------------------------------
 function _M:makeWeather(level, nb, params, typ)
+	if not config.settings.tome.weather_effects then return end
+
 	local ps = {}
 	params.width = level.map.w*level.map.tile_w
 	params.height = level.map.h*level.map.tile_h

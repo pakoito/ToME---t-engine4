@@ -101,5 +101,14 @@ function _M:generateList()
 		end))
 	end,}
 
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Enables or disables weather effects in some zones.\nDisabling it can gain some performance, it will not affect previously visited zones.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Weather effects#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.tome.weather_effects and "enabled" or "disabled")
+	end, fct=function(item)
+		config.settings.tome.weather_effects = not config.settings.tome.weather_effects
+		game:saveSettings("tome.weather_effects", ("tome.weather_effects = %s\n"):format(tostring(config.settings.tome.weather_effects)))
+		self.c_list:drawItem(item)
+	end,}
+
 	self.list = list
 end
