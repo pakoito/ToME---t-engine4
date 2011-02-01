@@ -109,6 +109,11 @@ static int particles_free(lua_State *L)
 	ps->l = NULL;
 	SDL_DestroyMutex(ps->lock);
 
+	if (ps->texcoords) { free(ps->texcoords); ps->texcoords = NULL; }
+	if (ps->vertices) { free(ps->vertices); ps->vertices = NULL; }
+	if (ps->colors) { free(ps->colors); ps->colors = NULL; }
+	if (ps->particles) { free(ps->particles); ps->particles = NULL; }
+
 	lua_pushnumber(L, 1);
 	return 1;
 }
@@ -692,7 +697,7 @@ void thread_particle_die(particle_thread *pt, plist *l)
 	lua_State *L = pt->L;
 	particles_type *ps = l->ps;
 
-	printf("Deleteting particle from list %x :: %x\n", (int)l, (int)ps);
+	printf("Deleting particle from list %x :: %x\n", (int)l, (int)ps);
 	luaL_unref(L, LUA_REGISTRYINDEX, l->emit_ref);
 	luaL_unref(L, LUA_REGISTRYINDEX, l->updator_ref);
 	luaL_unref(L, LUA_REGISTRYINDEX, l->update_ref);
@@ -700,10 +705,10 @@ void thread_particle_die(particle_thread *pt, plist *l)
 
 	if (ps)
 	{
-		free(ps->texcoords);
-		free(ps->vertices);
-		free(ps->colors);
-		free(ps->particles);
+		if (ps->texcoords) { free(ps->texcoords); ps->texcoords = NULL; }
+		if (ps->vertices) { free(ps->vertices); ps->vertices = NULL; }
+		if (ps->colors) { free(ps->colors); ps->colors = NULL; }
+		if (ps->particles) { free(ps->particles); ps->particles = NULL; }
 		ps->init = FALSE;
 		ps->alive = FALSE;
 	}
