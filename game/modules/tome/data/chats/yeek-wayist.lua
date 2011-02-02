@@ -47,7 +47,7 @@ newChat{ id="what",
 			player:attr("confusion_immune", 0.10)
 			game.logPlayer(player, "The contact with the Wayist mind has improved your mental shields. (+15 mental save, +10%% confusion resistance)")
 		end},
-		{"So you will wander the land alone?", jump="done"},
+--		{"So you will wander the land alone?", jump="done"},
 	}
 }
 
