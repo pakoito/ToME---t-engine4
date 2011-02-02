@@ -165,7 +165,7 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "CHRONOLITH_TWIN",
 		[Talents.T_HASTE]=3,
 		[Talents.T_STATIC_HISTORY]=5,
 		[Talents.T_DIMENSIONAL_STEP]=5,
-		[Talents.T_REPULSION_FIELD]=5,
+		[Talents.T_REPULSION_SHIELD]=5,
 	},
 
 	autolevel = "warriormage",
@@ -213,14 +213,14 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "CHRONOLITH_CLONE",
 		[Talents.T_HASTE]=3,
 		[Talents.T_DIMENSIONAL_STEP]=5,
 		[Talents.T_STATIC_HISTORY]=5,
-		[Talents.T_ENTROPIC_SHIELD]=5,
+		[Talents.T_ENTROPIC_FIELD]=5,
 	},
 
 	autolevel = "warriormage",
 	ai = "tactical", ai_state = { talent_in=2, ai_move="move_astar", },
 	ai_tactic = resolvers.tactic "ranged",
 	resolvers.inscriptions(1, {"invisibility rune"}),
-	
+
 	onTakeHit = twin_take_hit,
 
 	on_die = function(self, who)
