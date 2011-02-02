@@ -29,7 +29,7 @@ newEntity{
 	can_pass = {pass_wall=1},
 	block_sight = false,
 	air_level = -20,
-	dig = "FLOOR",
+	dig = "WALL_SEE",
 }
 for i = 1, 5 do
 	newEntity{ base = "WALL_SEE", define_as = "WALL_SEE"..i, image = "terrain/granite_wall1_"..i..".png"}
@@ -52,4 +52,9 @@ newEntity{
 	always_remember = true,
 	block_sight = true,
 	does_block_move = true,
+	air_level = -40,
+	on_stand = function(self, x, y, who)
+		local DT = engine.DamageType
+		local dam = DT:get(DT.PHYSICAL).projector(self, x, y, DT.PHYSICAL, 200)
+	end,
 }

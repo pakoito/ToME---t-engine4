@@ -31,20 +31,23 @@ newEntity{ base = "BASE_LORE",
 
 
 -- Id stuff
-newEntity{ define_as = "ORB_KNOWLEDGE", name = "Orb of Knowledge",
+newEntity{ define_as = "ORB_KNOWLEDGE",
+	power_source = {unknown=true},
 	unique = true, quest=true,
 	type = "jewelry", subtype="orb",
 	unided_name = "orb", no_unique_lore = true,
-	identified = true,
+	name = "Orb of Knowledge", identified = true,
 	display = "*", color=colors.VIOLET, image = "object/ruby.png",
 	encumber = 1,
 	desc = [[This orb was given to you by Elisa the halfling scryer, it will automatically identify normal and rare items for you and can be activated to identify all others.]],
+
 	on_drop = function(self, who)
 		if who == game.player then
 			game.logPlayer(who, "You cannot bring yourself to drop the %s", self:getName())
 			return true
 		end
 	end,
+
 	max_power = 1, power_regen = 1,
 	use_power = { name = "use the orb", power = 1,
 		use = function(self, who)
@@ -58,6 +61,7 @@ newEntity{ define_as = "ORB_KNOWLEDGE", name = "Orb of Knowledge",
 			end
 		end
 	},
+
 	carrier = {
 		auto_id = 1,
 	},
@@ -66,7 +70,8 @@ newEntity{ define_as = "ORB_KNOWLEDGE", name = "Orb of Knowledge",
 newEntity{ define_as = "ARENA_BOOTS_DISE", name = "a pair of leather boots of disengagement",
 	slot = "FEET",
 	type = "armor", subtype="feet",
-	add_name = " (#ARMOR#)",
+	power_source = {technique=true},
+	add_name = " (#ARMOR#)#CHARGES#",
 	display = "]", color=colors.UMBER, image = resolvers.image_material("boots", "leather"),
 	encumber = 2,
 	desc = [[A pair of boots made of leather. They seem to be of exceptional quality.]],
@@ -81,14 +86,15 @@ newEntity{ define_as = "ARENA_BOOTS_DISE", name = "a pair of leather boots of di
 		combat_armor = 2,
 		fatigue = 1,
 	},
-	max_power = 20, power_regen = 1,
-	use_talent = { id = Talents.T_DISENGAGE, level = 2, power = 10 },
+	max_power = 12, power_regen = 1,
+	use_talent = { id = Talents.T_DISENGAGE, level = 2, power = 12 },
 }
 
 newEntity{ define_as = "ARENA_BOOTS_PHAS", name = "a pair of leather boots of phasing",
 	slot = "FEET",
 	type = "armor", subtype="feet",
-	add_name = " (#ARMOR#)",
+	power_source = {arcane=true},
+	add_name = " (#ARMOR#)#CHARGES#",
 	display = "]", color=colors.UMBER, image = resolvers.image_material("boots", "leather"),
 	encumber = 2,
 	desc = [[A pair of boots made of leather. They seem to be of exceptional quality.]],
@@ -117,7 +123,8 @@ newEntity{ define_as = "ARENA_BOOTS_PHAS", name = "a pair of leather boots of ph
 newEntity{ define_as = "ARENA_BOOTS_RUSH", name = "a pair of leather boots of rushing",
 	slot = "FEET",
 	type = "armor", subtype="feet",
-	add_name = " (#ARMOR#)",
+	power_source = {technique=true},
+	add_name = " (#ARMOR#)#CHARGES#",
 	display = "]", color=colors.UMBER, image = resolvers.image_material("boots", "leather"),
 	encumber = 2,
 	desc = [[A pair of boots made of leather. They seem to be of exceptional quality.]],
@@ -132,22 +139,24 @@ newEntity{ define_as = "ARENA_BOOTS_RUSH", name = "a pair of leather boots of ru
 		combat_armor = 2,
 		fatigue = 1,
 	},
-	max_power = 20, power_regen = 1,
-	use_talent = { id = Talents.T_RUSH, level = 2, power = 10 },
+	max_power = 32, power_regen = 1,
+	use_talent = { id = Talents.T_RUSH, level = 2, power = 32 },
 }
 
 newEntity{ define_as = "ARENA_BOW", name = "elm longbow of piercing arrows",
 	base = "BASE_LONGBOW",
 	level_range = {1, 10},
+	power_source = {technique=true},
 	require = { stat = { dex=11 }, },
 	rarity = 30,
+	add_name = " #CHARGES#",
 	egoed = true,
 	greater_ego = true,
 	identified = true,
 	cost = 0,
 	material_level = 1,
 	use_talent = { id = Talents.T_PIERCING_ARROW, level = 2, power = 10 },
-	max_power = 15, power_regen = 1,
+	max_power = 10, power_regen = 1,
 	combat = {
 		range = 8,
 		physspeed = 0.8,
@@ -163,15 +172,17 @@ newEntity{ define_as = "ARENA_BOW", name = "elm longbow of piercing arrows",
 newEntity{ define_as = "ARENA_SLING", name = "rough leather sling of flare",
 	base = "BASE_SLING",
 	level_range = {1, 10},
+	power_source = {technique=true},
 	require = { stat = { dex=11 }, },
+	add_name = " #CHARGES#",
 	rarity = 30,
 	egoed = true,
 	greater_ego = true,
 	identified = true,
 	cost = 0,
 	material_level = 1,
-	use_talent = { id = Talents.T_FLARE, level = 2, power = 15 },
-	max_power = 15, power_regen = 1,
+	use_talent = { id = Talents.T_FLARE, level = 3, power = 25 },
+	max_power = 25, power_regen = 1,
 	combat = {
 		range = 8,
 		physspeed = 0.8,

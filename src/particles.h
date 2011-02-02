@@ -95,7 +95,9 @@ typedef struct s_plist plist;
 
 struct s_particle_thread {
 	int id;
+	bool running;
 	lua_State *L;
+	SDL_Thread *thread;
 	SDL_mutex *lock;
 	SDL_sem *keyframes;
 	plist *list;

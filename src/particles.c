@@ -39,7 +39,7 @@
 
 int MAX_THREADS = 1;
 extern int nb_cpus;
-static particle_thread *threads;
+static particle_thread *threads = NULL;
 static int textures_ref = LUA_NOREF;
 static int nb_threads = 0;
 static int cur_thread = 0;
@@ -696,9 +696,9 @@ void thread_particle_init(particle_thread *pt, plist *l)
 //	stackDump (L);
 //	lua_pop(L,1);
 
-//	free((char*)ps->name_def);
-//	free((char*)ps->args);
-//	ps->name_def = ps->args = NULL;
+	free((char*)ps->name_def);
+	free((char*)ps->args);
+	ps->name_def = ps->args = NULL;
 	ps->init = TRUE;
 }
 
@@ -740,7 +740,7 @@ int thread_particles(void *data)
 
 	plist *prev;
 	plist *l;
-	while (TRUE)
+	while (pt->running)
 	{
 		// Wait for a keyframe
 		SDL_SemWait(pt->keyframes);
@@ -771,6 +771,18 @@ int thread_particles(void *data)
 		}
 		SDL_mutexV(pt->lock);
 	}
+
+	// Cleanup
+	SDL_mutexP(pt->lock);
+	l = pt->list;
+	while (l)
+	{
+		thread_particle_die(pt, l);
+		l = l->next;
+	}
+	SDL_mutexV(pt->lock);
+
+	lua_close(L);
 
 	return(0);
 }
@@ -812,6 +824,20 @@ void create_particles_thread()
 {
 	int i;
 
+	// Previous ones
+	if (threads)
+	{
+		for (i = 0; i < MAX_THREADS; i++)
+		{
+			threads[i].running = FALSE;
+			int status;
+			SDL_SemPost(threads[i].keyframes);
+			SDL_WaitThread(threads[i].thread, &status);
+			printf("Destroyed particle thread %d (%d)\n", i, status);
+		}
+		nb_threads = 0;
+	}
+
 	MAX_THREADS = nb_cpus - 1;
 	MAX_THREADS = (MAX_THREADS < 1) ? 1 : MAX_THREADS;
 	threads = calloc(MAX_THREADS, sizeof(particle_thread));
@@ -822,10 +848,12 @@ void create_particles_thread()
 		SDL_Thread *thread;
 		particle_thread *pt = &threads[i];
 
+		pt->thread = thread;
 		pt->id = nb_threads++;
 		pt->list = NULL;
 		pt->lock = SDL_CreateMutex();
 		pt->keyframes = SDL_CreateSemaphore(0);
+		pt->running = TRUE;
 
 		thread = SDL_CreateThread(thread_particles, pt);
 		if (thread == NULL) {

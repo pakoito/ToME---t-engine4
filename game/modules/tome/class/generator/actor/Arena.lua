@@ -455,6 +455,7 @@ function _M:generateOne(e)
 	if m then
 		local escort = m.make_escort
 		m.make_escort = nil
+		m.faction = "enemies"
 		local entry = self:getEntrance(e.entry)
 		m.arenaPower = e.power * m.level
 		m.arenaBonusMult = e.bonus

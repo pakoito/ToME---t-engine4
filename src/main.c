@@ -683,6 +683,8 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 			docall(L, 0, 0);
 		else
 			lua_pop(L, 1);
+
+		create_particles_thread();
 	}
 	else if (state == 2)
 	{
@@ -748,7 +750,6 @@ int main(int argc, char *argv[])
 	}
 
 	boot_lua(1, FALSE, argc, argv);
-	create_particles_thread();
 
 	// initialize engine and set up resolution and depth
 	Uint32 flags=SDL_INIT_VIDEO | SDL_INIT_TIMER;
