@@ -377,6 +377,7 @@ local inscriptions_max = {
 	attack = 4,
 	movement = 1,
 	utility = 6,
+	teleport = 0, -- Annoying
 }
 
 function resolvers.inscriptions(nb, list, kind)

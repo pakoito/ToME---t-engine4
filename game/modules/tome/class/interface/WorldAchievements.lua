@@ -46,5 +46,10 @@ end
 function _M:gainAchievement(id, src, ...)
 	-- Redirect achievements to the main player, always
 	src = game.party:findMember{main=true}
-	return WA.gainAchievement(self, id, src, ...)
+	local ret = WA.gainAchievement(self, id, src, ...)
+
+	if ret then
+		game.state:checkDonation(true) -- They gained someting nice, they could be more receptive
+	end
+	return ret
 end

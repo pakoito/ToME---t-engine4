@@ -121,6 +121,9 @@ function _M:run()
 	-- Run the current music if any
 	self:playMusic()
 
+	-- Start time
+	self.real_starttime = os.time()
+
 	if self.level then self:setupDisplayMode() end
 end
 
@@ -1146,6 +1149,12 @@ function _M:onQuit()
 	end
 end
 
+--- Called when we leave the module
+function _M:onDealloc()
+	local time = os.time() - self.real_starttime
+	print("Played ToME for "..time.." seconds")
+end
+
 --- When a save is being made, stop running/resting
 function _M:onSavefilePush()
 	self.player:runStop("saving")
@@ -1172,6 +1181,7 @@ function _M:setAllowedBuild(what, notify)
 	profile:saveModuleProfile("allow_build", profile.mod.allow_build)
 
 	if notify then
+		self.state:checkDonation() -- They gained someting nice, they could be more receptive
 		self:registerDialog(require("mod.dialogs.UnlockDialog").new(what))
 	end
 

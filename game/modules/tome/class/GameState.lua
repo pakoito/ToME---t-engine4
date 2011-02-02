@@ -22,6 +22,7 @@ require "engine.Entity"
 local Particles = require "engine.Particles"
 local Map = require "engine.Map"
 local NameGenerator = require("engine.NameGenerator")
+local Donation = require "mod.dialogs.Donation"
 
 module(..., package.seeall, class.inherit(engine.Entity))
 
@@ -451,5 +452,71 @@ function _M:displayWeather(level, ps, nb_keyframes)
 	local dx, dy = level.map:getScreenUpperCorner() -- Display at map border, always, so it scrolls with the map
 	for j = 1, #ps do
 		ps[j].ps:toScreen(dx, dy, true, 1)
+	end
+end
+
+--------------------------------------------------------------------
+-- Donations
+--------------------------------------------------------------------
+function _M:checkDonation(back_insert)
+	-- Multiple checks to see if this is a "good" time
+	-- This is only called when something nice happens (like an achievement)
+	-- We then check multiple conditions to make sure the player is in a good state of mind
+
+	-- Dont ask often
+	local last = profile.generic.donations and profile.generic.donations.last_ask or 0
+	local min_interval = 30 * 24 * 60 * 60 -- 1 month
+	if os.time() < last + min_interval then
+		print("Donation check: too soon")
+		return
+	end
+
+	-- Not as soon as they start playing, wait 15 minutes
+	if os.time() - game.real_starttime < 15 * 60 then
+		print("Donation check: not started tome long enough")
+		return
+	end
+
+	-- Total playtime must be over a few hours
+	local total = profile.generic.modules_played and profile.generic.modules_played.tome or 0
+	if total + (os.time() - game.real_starttime) < 7 * 60 * 60 then
+		print("Donation check: total time too low")
+		return
+	end
+
+	-- Dont ask low level characters, they are probably still pissed to not have progressed further
+	if game.player.level < 15 then
+		print("Donation check: too low level")
+		return
+	end
+
+	-- Dont ask people in immediate danger
+	if game.player.life / game.player.max_life < 0.7 then
+		print("Donation check: too low life")
+		return
+	end
+
+	-- Dont ask people that already have their hands full
+	local nb_foes = 0
+	for i = 1, #game.player.fov.actors_dist do
+		local act = game.player.fov.actors_dist[i]
+		if act and game.player:reactionToward(act) < 0 and not act.dead then
+			if act.rank and act.rank > 3 then nb_foes = nb_foes + 1000 end -- Never with bosses in sight
+			nb_foes = nb_foes + 1
+		end
+	end
+	if nb_foes > 2 then
+		print("Donation check: too many foes")
+		return
+	end
+
+	-- Request money! Even a god has to eat :)
+	profile.generic.donations = profile.generic.donations or {}
+	profile.generic.donations.last_ask = os.time()
+	profile:saveGenericProfile("donations", profile.generic.donations)
+	if back_insert then
+		game:registerDialogAt(Donation.new(), 2)
+	else
+		game:registerDialog(Donation.new())
 	end
 end

@@ -94,11 +94,13 @@ function _M:gainPersonalAchievement(silent, id, src, ...)
 		Dialog:simplePopup("Personal New Achievement: #LIGHT_GREEN#"..a.name, a.desc)
 	end
 	if a.on_gain then a:on_gain(src, true) end
+	return true
 end
 
 --- Gain an achievement
 -- @param id the achievement to gain
 -- @param src who did it
+-- @return true if an achievement was gained
 function _M:gainAchievement(id, src, ...)
 	local a = self.achiev_defs[id]
 	if not a then error("Unknown achievement "..id) return end
@@ -123,7 +125,7 @@ function _M:gainAchievement(id, src, ...)
 		if not a.can_gain(data, src, ...) then return end
 	end
 
-	if self.achieved[id] then self:gainPersonalAchievement(false, id, src, ...) return end
+	if self.achieved[id] then return self:gainPersonalAchievement(false, id, src, ...) end
 	self:gainPersonalAchievement(true, id, src, ...)
 
 	self.achieved[id] = {turn=game.turn, who=self:achievementWho(src), when=os.date("%Y-%m-%d %H:%M:%S")}
@@ -132,6 +134,7 @@ function _M:gainAchievement(id, src, ...)
 	Dialog:simplePopup("New Achievement: #LIGHT_GREEN#"..a.name, a.desc)
 
 	if a.on_gain then a:on_gain(src) end
+	return true
 end
 
 --- Format an achievement source

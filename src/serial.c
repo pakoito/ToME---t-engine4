@@ -168,11 +168,19 @@ static void basic_serialize(lua_State *L, serial_type *s, int type, int idx)
 			{
 				ktype = lua_type(L, -2);
 				etype = lua_type(L, -1);
-				writeZipFixed(s, "[", 1);
-				basic_serialize(L, s, ktype, -2);
-				writeZipFixed(s, "]=", 2);
-				basic_serialize(L, s, etype, -1);
-				writeZipFixed(s, ",\n", 2);
+
+				// Only save allowed types
+				if (
+					((ktype == LUA_TBOOLEAN) || (ktype == LUA_TNUMBER) || (ktype == LUA_TSTRING) || (ktype == LUA_TFUNCTION) || (ktype == LUA_TTABLE)) &&
+					((etype == LUA_TBOOLEAN) || (etype == LUA_TNUMBER) || (etype == LUA_TSTRING) || (etype == LUA_TFUNCTION) || (etype == LUA_TTABLE))
+					)
+				{
+					writeZipFixed(s, "[", 1);
+					basic_serialize(L, s, ktype, -2);
+					writeZipFixed(s, "]=", 2);
+					basic_serialize(L, s, etype, -1);
+					writeZipFixed(s, ",\n", 2);
+				}
 
 				/* removes 'value'; keeps 'key' for next iteration */
 				lua_pop(L, 1);
@@ -180,7 +188,6 @@ static void basic_serialize(lua_State *L, serial_type *s, int type, int idx)
 			writeZipFixed(s, "}\n", 2);
 		}
 	} else {
-		writeZipFixed(s, "nil", 3);
 		printf("*WARNING* can not save value of type %s\n", lua_typename(L, type));
 	}
 }

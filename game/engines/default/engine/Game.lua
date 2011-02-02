@@ -208,6 +208,22 @@ function _M:registerDialog(d)
 	if self.onRegisterDialog then self:onRegisterDialog(d) end
 end
 
+--- Registers a dialog to display somewher in the stack
+-- @param d the dialog
+-- @param pos the stack position (1=top, 2=second, ...)
+function _M:registerDialogAt(d, pos)
+	if pos == 1 then return self:registerDialog(d) end
+
+	table.insert(self.dialogs, #self.dialogs - (pos - 2), d)
+	for i = 1, #self.dialogs do
+		local dd = self.dialogs[i]
+		self.dialogs[d] = i
+		d.__stack_id = i
+	end
+	if d.on_register then d:on_register() end
+	if self.onRegisterDialog then self:onRegisterDialog(d) end
+end
+
 --- Replaces a dialog to display with an other
 function _M:replaceDialog(src, dest)
 	local id = src.__stack_id

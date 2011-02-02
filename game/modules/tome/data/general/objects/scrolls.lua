@@ -266,7 +266,7 @@ newEntity{ base = "BASE_RUNE",
 	cost = 10,
 	material_level = 1,
 
-	inscription_kind = "movement",
+	inscription_kind = "teleport",
 	inscription_data = {
 		cooldown = resolvers.rngrange(8, 10),
 		range = resolvers.mbonus_level(10, 5, function(e, v) return v * 1 end),
@@ -298,7 +298,7 @@ newEntity{ base = "BASE_RUNE",
 	cost = 10,
 	material_level = 2,
 
-	inscription_kind = "movement",
+	inscription_kind = "teleport",
 	inscription_data = {
 		cooldown = resolvers.rngrange(14, 19),
 		range = resolvers.mbonus_level(100, 20, function(e, v) return v * 0.03 end),
