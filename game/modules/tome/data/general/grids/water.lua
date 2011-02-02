@@ -149,6 +149,14 @@ newEntity{
 	add_displays = class:makeWater(true, "poison_"),
 	always_remember = true,
 	air_level = -5, air_condition="water",
+
+	mindam = resolvers.mbonus(10, 25),
+	maxdam = resolvers.mbonus(20, 50),
+	on_stand = function(self, x, y, who)
+		local DT = engine.DamageType
+		local dam = DT:get(DT.POISON).projector(self, x, y, DT.POISON, rng.range(self.mindam, self.maxdam))
+		if dam > 0 then game.logPlayer(who, "The water poisons you!") end
+	end,
 }
 
 

@@ -357,6 +357,7 @@ function _M:finishEntity(level, type, e, ego_filter)
 				else newname = e.name .. ego.name end
 				print("applying ego", ego.name, "to ", e.name, "::", newname, "///", e.unided_name, ego.unided_name)
 				ego.unided_name = nil
+				ego.__CLASSNAME = nil
 				-- The ego requested instant resolving before merge ?
 				if ego.instant_resolve then ego:resolve(nil, nil, e) end
 				ego.instant_resolve = nil
