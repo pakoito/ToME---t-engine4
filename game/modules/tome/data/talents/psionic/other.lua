@@ -28,7 +28,7 @@ newTalent{
 	action = function(self, t)
 		local inven = self:getInven("INVEN")
 		self:showInventory("Telekinetically grasp which item?", inven, function(o)
-			return (o.type == "weapon" or o.type == "gem") and o.subtype ~= "longbow" and o.subtype ~= "sling" and o.material_level
+			return (o.type == "weapon" or o.type == "gem") and o.subtype ~= "longbow" and o.subtype ~= "sling"
 		end, function(o, item)
 			o = self:removeObject(inven, item)
 			local pf = self:getInven("PSIONIC_FOCUS")
