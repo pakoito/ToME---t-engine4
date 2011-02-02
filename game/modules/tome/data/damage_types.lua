@@ -1206,6 +1206,23 @@ newDamageType{
 	end,
 }
 
+-- Freezes target, checks for physresistance
+newDamageType{
+	name = "mindfreeze", type = "MINDFREEZE",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			-- Freeze it, if we pass the test
+			local sx, sy = game.level.map:getTileToScreen(x, y)
+			if target:checkHit(src:combatMindpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("stun") then
+				target:setEffect(target.EFF_FROZEN, dam, {src=src})
+			else
+				game.logSeen(target, "%s resists!", target.name:capitalize())
+			end
+		end
+	end,
+}
+
 -- Temporal + Stat damage
 newDamageType{
 	name = "clock", type = "CLOCK",

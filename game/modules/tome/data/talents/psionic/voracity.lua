@@ -53,9 +53,9 @@ newTalent{
 		local range = self:getTalentRange(t)
 		local slow = 3 * self:getTalentLevel(t) + 10
 		local en = ( 3 + self:getTalentLevel(t)) * (100 + self:getWil())/100
-		return ([[You suck the kinetic energy out of your surroundings, slowing all enemies in a radius of %d by %d%%.
+		return ([[You suck the kinetic energy out of your surroundings, slowing all enemies in a radius of %d by %d%% for four turns.
 		For each enemy drained, you gain %d energy.
-		The effect scales with Willpower.]]):format(range, slow, en)
+		The energy gained scales with Willpower.]]):format(range, slow, en)
 	end,
 }
 
@@ -86,18 +86,19 @@ newTalent{
 		self:incPsi(en*#tgts)
 		local duration = self:getTalentLevel(t) + 2
 		local radius = self:getTalentRange(t)
-		local dam = 1 + 0.3*self:getTalentLevel(t)
+		local dam = math.ceil(1 + 0.5*self:getTalentLevel(t))
 		local tg = {type="ball", range=0, radius=radius, friendlyfire=false}
-		self:project(tg, self.x, self.y, DamageType.FREEZE, dam)
+		self:project(tg, self.x, self.y, DamageType.MINDFREEZE, dam)
 		return true
 	end,
 	info = function(self, t)
 		local range = self:getTalentRange(t)
+		local dam = math.ceil(1 + 0.5*self:getTalentLevel(t))
 		local en = ( 4 + self:getTalentLevel(t)) * (100 + self:getWil())/85
 		--local duration = self:getTalentLevel(t) + 2
-		return ([[You leech the heat out of all foes in a radius of %d, gaining %d energy for each enemy frozen.
-		The effect scales with Willpower.]]):
-		format(range, en)
+		return ([[You leech the heat out of all foes in a radius of %d, freezing them for up to %d turns and gaining %d energy for each enemy frozen.
+		The energy gained scales with Willpower.]]):
+		format(range, dam, en)
 	end,
 }
 
@@ -128,7 +129,7 @@ newTalent{
 		local en = ( 5 + self:getTalentLevel(t)) * (100 + self:getWil())/75
 		self:incPsi(en*#tgts)
 		local tg = {type="ball", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
-		local dam = self:spellCrit(self:combatTalentMindDamage(t, 28, 170))
+		local dam = self:spellCrit(self:combatTalentMindDamage(t, 28, 270))
 		self:project(tg, self.x, self.y, DamageType.LIGHTNING_DAZE, rng.avg(dam / 3, dam, 3))
 		local x, y = self.x, self.y
 		-- Lightning ball gets a special treatment to make it look neat
@@ -148,9 +149,9 @@ newTalent{
 	info = function(self, t)
 		local range = self:getTalentRange(t)
 		local en = ( 5 + self:getTalentLevel(t)) * (100 + self:getWil())/75
-		local dam = damDesc(self, DamageType.LIGHTNING, self:combatTalentMindDamage(t, 28, 170))
+		local dam = damDesc(self, DamageType.LIGHTNING, self:combatTalentMindDamage(t, 28, 270))
 		return ([[You pull electric potential from the foes around you in a radius of %d, gaining %d energy for each one affected and giving them a nasty shock in the process. Deals between %d and %d damage.
-		The effect scales with Willpower.]]):format(range, en, dam / 3, dam)
+		The energy gained scales with Willpower.]]):format(range, en, dam / 3, dam)
 	end,
 }
 newTalent{
@@ -166,7 +167,7 @@ newTalent{
 		self.max_psi = self.max_psi - 10
 	end,
 	info = function(self, t)
-		return ([[Increases your maximum Energy by %d]]):format(10 * self:getTalentLevelRaw(t))
+		return ([[Increases your maximum energy by %d]]):format(10 * self:getTalentLevelRaw(t))
 	end,
 }
 
