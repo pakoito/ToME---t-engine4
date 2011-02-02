@@ -269,6 +269,7 @@ end
 
 function _M:randomSelect()
 	self.sel = rng.range(1, #self.list)
+	game.log("Randomly selected %s.", self.list[self.sel].name)
 	self:next()
 end
 
