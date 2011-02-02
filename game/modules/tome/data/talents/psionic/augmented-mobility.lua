@@ -137,9 +137,9 @@ newTalent{
 	--range = function(self, t) return 3+self:getTalentLevel(t)+self:getWil(4) end,
 	direct_hit = true,
 	requires_target = true,
-	on_pre_use = function(self, t, vocal)
+	on_pre_use = function(self, t, silent)
 		if not self:hasEffect(self.EFF_KINSPIKE_SHIELD) then
-			if vocal then game.logSeen(self, "You must have a spiked kinetic shield active. Cancelling charge.") end
+			if not silent then game.logSeen(self, "You must have a spiked kinetic shield active. Cancelling charge.") end
 			return false
 		end
 		return true

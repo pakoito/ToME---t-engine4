@@ -40,6 +40,7 @@ ToME is free and open-source and will stay that way, but that does not mean I ca
 If you feel that the (many) hours you have spent having fun were worth it, please consider making a donation for the future of the game.
 ]]}
 	self.c_donate = Numberbox.new{title="Donation amount: ", number=10, max=1000, min=5, chars=5, fct=function() end}
+	local euro = Textzone.new{auto_width=true, auto_height=true, text=[[€]]}
 	self.c_recur = Checkbox.new{title="Make it a recurring montly donation", default=false, fct=function() end}
 	local ok = require("engine.ui.Button").new{text="Accept", fct=function() self:ok() end}
 	local cancel = require("engine.ui.Button").new{text="Cancel", fct=function() self:cancel() end}
@@ -47,6 +48,7 @@ If you feel that the (many) hours you have spent having fun were worth it, pleas
 	self:loadUI{
 		{left=0, top=0, ui=desc},
 		{left=5, bottom=5 + ok.h, ui=self.c_donate},
+		{left=5+self.c_donate.w, bottom=10 + ok.h, ui=euro},
 		{right=5, bottom=5 + ok.h, ui=self.c_recur},
 		{left=0, bottom=0, ui=ok},
 		{right=0, bottom=0, ui=cancel},

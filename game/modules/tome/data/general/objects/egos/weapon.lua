@@ -208,7 +208,7 @@ newEntity{
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 4,
-	wielder = {
+	combat = {
 		melee_project={[DamageType.LIGHT] = resolvers.mbonus_material(45, 6, function(e, v) return v * 0.9 end)},
 	},
 }
