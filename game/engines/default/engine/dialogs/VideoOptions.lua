@@ -132,5 +132,17 @@ function _M:generateList()
 		self.c_list:drawItem(item)
 	end,}
 
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Gamma correction setting.\nIncrease this to get a brighter display.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Gamma correction#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.gamma_correction)
+	end, fct=function(item)
+		game:registerDialog(GetQuantity.new("Gamma correction", "From 1 to 300", config.settings.gamma_correction, 300, function(qty)
+			game:saveSettings("gamma_correction", ("gamma_correction = %d\n"):format(qty))
+			config.settings.gamma_correction = qty
+			core.display.setGamma(config.settings.gamma_correction / 100)
+			self.c_list:drawItem(item)
+		end), 1)
+	end,}
+
 	self.list = list
 end

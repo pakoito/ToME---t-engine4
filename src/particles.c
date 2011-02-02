@@ -108,7 +108,7 @@ static int particles_free(lua_State *L)
 	particles_type *ps = (particles_type*)auxiliar_checkclass(L, "core{particles}", 1);
 	plist *l = ps->l;
 
-	printf("Deleting particle from main lua state %x :: %x\n", (int)ps->l, (int)ps);
+//	printf("Deleting particle from main lua state %x :: %x\n", (int)ps->l, (int)ps);
 
 	if (l && l->pt) SDL_mutexP(l->pt->lock);
 
@@ -523,11 +523,9 @@ void thread_particle_run(particle_thread *pt, plist *l)
 	// Update
 	lua_rawgeti(L, LUA_REGISTRYINDEX, l->updator_ref);
 	lua_rawgeti(L, LUA_REGISTRYINDEX, l->emit_ref);
-//	printf("Updating!!!! %x %s\n", l, ps->name_def);
-//	stackDump (L);
 	if (lua_pcall(L, 1, 0, 0))
 	{
-		printf("Particle updater error %x (%d, %d): %s\n", (int)l, l->updator_ref, l->emit_ref, lua_tostring(L, -1));
+		printf("L(%x) Particle updater error %x (%d, %d): %s\n", (int)L, (int)l, l->updator_ref, l->emit_ref, lua_tostring(L, -1));
 		lua_pop(L, 1);
 	}
 
@@ -690,11 +688,6 @@ void thread_particle_init(particle_thread *pt, plist *l)
 	lua_settable(L, -3);
 
 	l->emit_ref = luaL_ref(L, LUA_REGISTRYINDEX);
-	//
-//	printf("Checking!!!! %x %s\n", l, ps->name_def);
-//	lua_rawgeti(L, LUA_REGISTRYINDEX, l->emit_ref);
-//	stackDump (L);
-//	lua_pop(L,1);
 
 	free((char*)ps->name_def);
 	free((char*)ps->args);
@@ -707,11 +700,13 @@ void thread_particle_die(particle_thread *pt, plist *l)
 	lua_State *L = pt->L;
 	particles_type *ps = l->ps;
 
-	printf("Deleting particle from list %x :: %x\n", (int)l, (int)ps);
-	luaL_unref(L, LUA_REGISTRYINDEX, l->emit_ref);
-	luaL_unref(L, LUA_REGISTRYINDEX, l->updator_ref);
-	luaL_unref(L, LUA_REGISTRYINDEX, l->update_ref);
+//	printf("Deleting particle from list %x :: %x\n", (int)l, (int)ps);
+	if (l->emit_ref != LUA_NOREF) luaL_unref(L, LUA_REGISTRYINDEX, l->emit_ref);
+	if (l->updator_ref != LUA_NOREF) luaL_unref(L, LUA_REGISTRYINDEX, l->updator_ref);
 	if (l->generator_ref != LUA_NOREF) luaL_unref(L, LUA_REGISTRYINDEX, l->generator_ref);
+	l->emit_ref = LUA_NOREF;
+	l->updator_ref = LUA_NOREF;
+	l->generator_ref = LUA_NOREF;
 
 	if (ps)
 	{
@@ -746,6 +741,7 @@ int thread_particles(void *data)
 		SDL_SemWait(pt->keyframes);
 
 		SDL_mutexP(pt->lock);
+//		int nb = 0;
 		l = pt->list;
 		prev = NULL;
 		while (l)
@@ -768,7 +764,9 @@ int thread_particles(void *data)
 
 				l = l->next;
 			}
+//			nb++;
 		}
+//		printf("Particels thread has %d systems\n",nb);
 		SDL_mutexV(pt->lock);
 	}
 
@@ -813,7 +811,7 @@ void thread_add(particles_type *ps)
 	ps->l = l;
 	SDL_mutexV(pt->lock);
 
-	printf("New particles registered on thread %d: %s\n", cur_thread, ps->name_def);
+//	printf("New particles registered on thread %d: %s\n", cur_thread, ps->name_def);
 
 	cur_thread++;
 	if (cur_thread >= MAX_THREADS) cur_thread = 0;
@@ -858,7 +856,7 @@ void create_particles_thread()
 		thread = SDL_CreateThread(thread_particles, pt);
 		if (thread == NULL) {
 			printf("Unable to create particle thread: %s\n", SDL_GetError());
-			return;
+			continue;
 		}
 
 		printf("Creating particles thread %d\n", pt->id);

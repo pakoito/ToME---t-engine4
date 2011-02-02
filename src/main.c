@@ -63,6 +63,7 @@ int mouse_cursor_tex = 0, mouse_cursor_tex_ref = LUA_NOREF;
 int mouse_cursor_down_tex = 0, mouse_cursor_down_tex_ref = LUA_NOREF;
 int mouse_cursor_ox = 0, mouse_cursor_oy = 0;
 int mousex = 0, mousey = 0;
+float gamma_correction = 1;
 SDL_TimerID display_timer_id = NULL;
 SDL_TimerID realtime_timer_id = NULL;
 
@@ -98,7 +99,7 @@ void stackDump (lua_State *L) {
 		case LUA_TNUMBER:
 			printf("%d: %g\n",  i, lua_tonumber(L, i));
 			break;
-		default: printf("%d: %s\n", i, lua_typename(L, t)); break;
+		default: printf("%d: %s // %x\n", i, lua_typename(L, t), lua_topointer(L, i)); break;
 		}
 		i--;
 	}
@@ -568,6 +569,8 @@ int resizeWindow(int width, int height)
 
 	/* Reset The View */
 	glLoadIdentity( );
+
+	SDL_SetGamma(gamma_correction, gamma_correction, gamma_correction);
 
 	return( TRUE );
 }

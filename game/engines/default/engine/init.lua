@@ -57,6 +57,7 @@ particles_density = 100
 background_saves = true
 mouse_cursor = true
 display_fps = 30
+gamma_correction = 100
 ]]
 for i, file in ipairs(fs.list("/settings/")) do
 	if file:find(".cfg$") then
@@ -84,6 +85,7 @@ game = false
 -- Setup resolution
 engine.Game:setResolution(config.settings.window.size, true)
 core.display.setTextBlended(config.settings.aa_text)
+core.display.setGamma(config.settings.gamma_correction / 100)
 if not config.settings.fbo_active then core.display.disableFBO() print("Disabling FBO") end
 if not config.settings.shaders_active then core.shader.disable() print("Disabling Shaders") end
 

@@ -180,6 +180,7 @@ static void basic_serialize(lua_State *L, serial_type *s, int type, int idx)
 			writeZipFixed(s, "}\n", 2);
 		}
 	} else {
+		writeZipFixed(s, "nil", 3);
 		printf("*WARNING* can not save value of type %s\n", lua_typename(L, type));
 	}
 }

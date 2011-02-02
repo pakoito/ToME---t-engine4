@@ -1459,6 +1459,18 @@ static int sdl_get_modes_list(lua_State *L)
 	return 1;
 }
 
+extern float gamma_correction;
+static int sdl_set_gamma(lua_State *L)
+{
+	if (lua_isnumber(L, 1))
+	{
+		gamma_correction = lua_tonumber(L, 1);
+		SDL_SetGamma(gamma_correction, gamma_correction, gamma_correction);
+	}
+	lua_pushnumber(L, gamma_correction);
+	return 1;
+}
+
 static const struct luaL_reg displaylib[] =
 {
 	{"setTextBlended", set_text_aa},
@@ -1480,6 +1492,7 @@ static const struct luaL_reg displaylib[] =
 	{"setWindowSize", sdl_set_window_size},
 	{"getModesList", sdl_get_modes_list},
 	{"setMouseCursor", sdl_set_mouse_cursor},
+	{"setGamma", sdl_set_gamma},
 	{NULL, NULL},
 };
 

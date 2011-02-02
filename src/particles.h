@@ -87,7 +87,6 @@ struct s_plist {
 	int generator_ref;
 	int updator_ref;
 	int emit_ref;
-	int update_ref;
 	struct s_particle_thread *pt;
 	struct s_plist *next;
 };
