@@ -153,12 +153,8 @@ function _M:init(t, no_default)
 	t.hate = t.hate or 10
 	t.hate_per_kill = t.hate_per_kill or 0.8
 
-	-- Equilibrium has a default very high max, as bad effects happen even before reaching it
-	t.max_equilibrium = t.max_equilibrium or 100000
 	t.equilibrium = t.equilibrium or 0
 
-	-- Paradox has a default very high max, as bad effects happen even before reaching it
-	t.max_paradox = t.max_paradox or 100000
 	t.paradox = t.paradox or 300
 
 	t.money = t.money or 0
@@ -1716,59 +1712,59 @@ function _M:postUseTalent(ab, ret)
 	if ab.mode == "sustained" then
 		if not self:isTalentActive(ab.id) then
 			if ab.sustain_mana then
-				trigger = true; self.max_mana = self.max_mana - ab.sustain_mana
+				trigger = true; self:incMaxMana(-ab.sustain_mana)
 			end
 			if ab.sustain_stamina then
-				trigger = true; self.max_stamina = self.max_stamina - ab.sustain_stamina
+				trigger = true; self:incMaxStamina(-ab.sustain_stamina)
 			end
 			if ab.sustain_vim then
-				trigger = true; self.max_vim = self.max_vim - ab.sustain_vim
+				trigger = true; self:incMaxVim(-ab.sustain_vim)
 			end
 			if ab.sustain_equilibrium then
-				self:incEquilibrium(ab.sustain_equilibrium)
+				trigger = true; self:incMinEquilibrium(ab.sustain_equilibrium)
 			end
 			if ab.sustain_positive then
-				trigger = true; self.max_positive = self.max_positive - ab.sustain_positive
+				trigger = true; self:incMaxPositive(-ab.sustain_positive)
 			end
 			if ab.sustain_negative then
-				trigger = true; self.max_negative = self.max_negative - ab.sustain_negative
+				trigger = true; self:incMaxNegative(-ab.sustain_negative)
 			end
 			if ab.sustain_hate then
-				trigger = true; self.max_hate = self.max_hate - ab.sustain_hate
+				trigger = true; self:incMaxHate(-ab.sustain_hate)
 			end
 			if ab.sustain_paradox then
-				self:incParadox(ab.sustain_paradox)
+				trigger = true; self:incMinParadox(ab.sustain_paradox)
 			end
 			if ab.sustain_psi then
-				trigger = true; self.max_psi = self.max_psi - ab.sustain_psi
+				trigger = true; self:incMaxPsi(-ab.sustain_psi)
 			end
 		else
 			if ab.sustain_mana then
-				trigger = true; self.max_mana = self.max_mana + ab.sustain_mana
+				trigger = true; self:incMaxMana(ab.sustain_mana)
 			end
 			if ab.sustain_stamina then
-				trigger = true; self.max_stamina = self.max_stamina + ab.sustain_stamina
+				trigger = true; self:incMaxStamina(ab.sustain_stamina)
 			end
 			if ab.sustain_vim then
-				trigger = true; self.max_vim = self.max_vim + ab.sustain_vim
+				trigger = true; self:incMaxVim(ab.sustain_vim)
 			end
 			if ab.sustain_equilibrium then
-				self:incEquilibrium(-ab.sustain_equilibrium)
+				trigger = true; self:incMinEquilibrium(-ab.sustain_equilibrium)
 			end
 			if ab.sustain_positive then
-				trigger = true; self.max_positive = self.max_positive + ab.sustain_positive
+				trigger = true; self:incMaxPositive(ab.sustain_positive)
 			end
 			if ab.sustain_negative then
-				trigger = true; self.max_negative = self.max_negative + ab.sustain_negative
+				trigger = true; self:incMaxNegative(ab.sustain_negative)
 			end
 			if ab.sustain_hate then
-				trigger = true; self.max_hate = self.max_hate + ab.sustain_hate
+				trigger = true; self:incMaxHate(ab.sustain_hate)
 			end
 			if ab.sustain_paradox then
-				self:incParadox(-ab.sustain_paradox)
+				trigger = true; self:incMinParadox(-ab.sustain_paradox)
 			end
 			if ab.sustain_psi then
-				trigger = true; self.max_psi = self.max_psi + ab.sustain_psi
+				trigger = true; self:incMaxPsi(ab.sustain_psi)
 			end
 		end
 	else
@@ -1793,7 +1789,7 @@ function _M:postUseTalent(ab, ret)
 		end
 		-- Equilibrium is not affected by fatigue
 		if ab.equilibrium then
-			self:incEquilibrium(ab.equilibrium)
+			trigger = true; self:incEquilibrium(ab.equilibrium)
 		end
 		-- Paradox is not affected by fatigue but it's cost does increase exponentially
 		if ab.paradox then

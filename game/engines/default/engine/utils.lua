@@ -863,8 +863,8 @@ function util.boundWrap(i, min, max)
 	return i
 end
 function util.bound(i, min, max)
-	if i < min then i = min
-	elseif i > max then i = max end
+	if min and i < min then i = min
+	elseif max and i > max then i = max end
 	return i
 end
 function util.scroll(sel, scroll, max)

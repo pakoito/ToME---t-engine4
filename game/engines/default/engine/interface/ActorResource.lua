@@ -29,7 +29,7 @@ _M.resources_def = {}
 -- All actors will now have :getResourcename() and :incResourcename() methods as well as a .max_resourcename and .resourcename
 -- properties. It is advised to NOT access .resourcename directly and use the get/inc methods. They handle talent
 -- dependencies
-function _M:defineResource(name, short_name, talent, regen_prop, desc)
+function _M:defineResource(name, short_name, talent, regen_prop, desc, min, max)
 	assert(name, "no resource name")
 	assert(short_name, "no resource short_name")
 	table.insert(self.resources_def, {
@@ -38,23 +38,40 @@ function _M:defineResource(name, short_name, talent, regen_prop, desc)
 		talent = talent,
 		regen_prop = regen_prop,
 		description = desc,
+		minname = "min_"..short_name,
 		maxname = "max_"..short_name,
+		min = min or 0,
+		max = max or 100,
 	})
 	self.resources_def[#self.resources_def].id = #self.resources_def
 	self.resources_def[short_name] = self.resources_def[#self.resources_def]
 	self["RS_"..short_name:upper()] = #self.resources_def
+	local minname = "min_"..short_name
 	local maxname = "max_"..short_name
 	self["inc"..short_name:lower():capitalize()] = function(self, v)
-		self[short_name] = util.bound(self[short_name] + v, 0, self[maxname])
+		self[short_name] = util.bound(self[short_name] + v, self[minname], self[maxname])
+	end
+	self["incMin"..short_name:lower():capitalize()] = function(self, v)
+		self[minname] = self[minname] + v
+		self["inc"..short_name:lower():capitalize()](self, 0)
 	end
 	self["incMax"..short_name:lower():capitalize()] = function(self, v)
 		self[maxname] = self[maxname] + v
+		self["inc"..short_name:lower():capitalize()](self, 0)
 	end
 	if talent then
 		-- if there is an associated talent, check for it
 		self["get"..short_name:lower():capitalize()] = function(self)
 			if self:knowTalent(talent) then
 				return self[short_name]
+			else
+				return 0
+			end
+		end
+		-- if there is an associated talent, check for it
+		self["getMin"..short_name:lower():capitalize()] = function(self)
+			if self:knowTalent(talent) then
+				return self[minname]
 			else
 				return 0
 			end
@@ -71,6 +88,9 @@ function _M:defineResource(name, short_name, talent, regen_prop, desc)
 		self["get"..short_name:lower():capitalize()] = function(self)
 			return self[short_name]
 		end
+		self["getMin"..short_name:lower():capitalize()] = function(self)
+			return self[minname]
+		end
 		self["getMax"..short_name:lower():capitalize()] = function(self)
 			return self[maxname]
 		end
@@ -79,7 +99,8 @@ end
 
 function _M:init(t)
 	for i, r in ipairs(_M.resources_def) do
-		self["max_"..r.short_name] = t["max_"..r.short_name] or 100
+		self["min_"..r.short_name] = t["min_"..r.short_name] or r.min
+		self["max_"..r.short_name] = t["max_"..r.short_name] or r.max
 		self[r.short_name] = t[r.short_name] or self["max_"..r.short_name]
 		if r.regen_prop then
 			self[r.regen_prop] = t[r.regen_prop] or 0
