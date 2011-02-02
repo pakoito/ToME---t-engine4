@@ -752,14 +752,17 @@ int main(int argc, char *argv[])
 		if (!strncmp(arg, "--no-debug", 10)) no_debug = TRUE;
 	}
 
-	boot_lua(1, FALSE, argc, argv);
-
 	// initialize engine and set up resolution and depth
 	Uint32 flags=SDL_INIT_VIDEO | SDL_INIT_TIMER;
 	if (SDL_Init (flags) < 0) {
 		printf("cannot initialize SDL: %s\n", SDL_GetError ());
 		return -1;
 	}
+
+	// Filter events, to catch the quit event
+	SDL_SetEventFilter(event_filter);
+
+	boot_lua(1, FALSE, argc, argv);
 
 	SDL_WM_SetIcon(IMG_Load_RW(PHYSFSRWOPS_openRead("/engines/default/data/gfx/te4-icon.png"), TRUE), NULL);
 
@@ -807,9 +810,6 @@ int main(int argc, char *argv[])
 	//	start_xmpp_thread();
 
 	pass_command_args(argc, argv);
-
-	// Filter events, to catch the quit event
-	SDL_SetEventFilter(event_filter);
 
 	SDL_Event event;
 	while (!exit_engine)
