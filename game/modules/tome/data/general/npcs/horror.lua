@@ -571,7 +571,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 
 	resolvers.talents{
 		[Talents.T_DISPERSE_MAGIC]=3,
-		[Talents.T_ENTROPIC_SHIELD]=3,
+		[Talents.T_ENTROPIC_FIELD]=3,
 	},
 	-- Random Anomaly on Death
 	on_die = function(self, who)

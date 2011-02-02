@@ -19,7 +19,7 @@
 
 newTalent{
 	name = "Spacetime Tuning",
-	type = {"chronomancy/spacetime-weaving", 1},
+	type = {"chronomancy/spacetime-weaving-other", 1},
 	hide = true,
 	points = 1,
 	message = "@Source@ retunes the fabric of spacetime.",
@@ -49,7 +49,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local chance = t.getAnomaly(self, t)
-		return ([[Retunes your Paradox to the desired level.  You will be dazed while tuning and each turn your Paradox will increase or decrease by an amount equal to your Willpower stat.
+		return ([[Retunes your Paradox towards the desired level.  You will be dazed while tuning and each turn your Paradox will increase or decrease by an amount equal to your Willpower stat.
 		Each turn you have a %d%% chance of triggering a temporal anomaly which will end the tuning process.]]):
 		format(chance)
 	end,
@@ -75,7 +75,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local reduction = t.getReduction (self, t)
-		return ([[Reduce Paradox by %d by revising past damage you've inflicted on the spacetime continuum.
+		return ([[Reduce Paradox by %d by revising past damage you've inflicted on the spacetime continuum.  Talent points invested in Static History will also reduce your chances of triggering an anomaly while using Spacetime Tuning.
 		The effect will increase with the Willpower stat.]]):
 		format(reduction)
 	end,

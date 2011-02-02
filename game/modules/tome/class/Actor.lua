@@ -817,7 +817,41 @@ function _M:onTakeHit(value, src)
 			end
 		end
 	end
+	
+	if self:attr("repulsion_shield") then
+		-- Absorb damage into the shield
+		if value <= self.repulsion_shield_absorb then
+			self.repulsion_shield_absorb = self.repulsion_shield_absorb - value
+			value = 0
+		else
+			value = value - self.repulsion_shield_absorb
+			self.repulsion_shield_absorb = 0
+		end
 
+		-- If we are at the end of the capacity, remove the effect
+		if self.repulsion_shield_absorb <= 0 then
+			game.logPlayer(self, "Your repulsion shield crumbles under the damage!")
+			self:removeEffect(self.EFF_REPULSION_SHIELD)
+		end
+	end
+	
+	if self:attr("damage_shunt") then
+		-- Absorb damage into the shield
+		if value <= self.damage_shunt_absorb then
+			self.damage_shunt_absorb = self.damage_shunt_absorb - value
+			value = 0
+		else
+			value = value - self.damage_shunt_absorb
+			self.damage_shunt_absorb = 0
+		end
+
+		-- If we are at the end of the capacity, remove the effect
+		if self.damage_shunt_absorb <= 0 then
+			game.logPlayer(self, "Your damage shunt spell has done all it can!")
+			self:removeEffect(self.EFF_DAMAGE_SHUNT)
+		end
+	end
+	
 	if self:isTalentActive(self.T_BONE_SHIELD) then
 		local t = self:getTalentFromId(self.T_BONE_SHIELD)
 		t.absorb(self, t, self:isTalentActive(self.T_BONE_SHIELD))
@@ -931,7 +965,7 @@ function _M:onTakeHit(value, src)
 
 	-- Chronomancy
 	if self:knowTalent(self.T_AVOID_FATE) then
-		local af = .6 - (self:getTalentLevel(self.T_AVOID_FATE)/20)
+		local af = .6 - (self:getTalentLevelRaw(self.T_AVOID_FATE)/10)
 		print ("af->", af)
 		local av = self.max_life * af
 		if value >= self.life and self.life >= av then

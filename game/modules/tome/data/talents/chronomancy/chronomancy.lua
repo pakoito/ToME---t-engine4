@@ -37,7 +37,7 @@ newTalent{
 	cooldown = 20,
 	tactical = { BUFF = 2 },
 	no_energy = true,
-	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
+	getDuration = function(self, t) return 1 + math.floor(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
 	getPower = function(self, t) return 10 + (self:combatTalentSpellDamage(t, 10, 40)*getParadoxModifier(self, pm)) end,
 	action = function(self, t)
 		self:setEffect(self.EFF_PERFECT_AIM, t.getDuration(self, t), {power=t.getPower(self, t)})
@@ -59,7 +59,7 @@ newTalent{
 	mode = "passive",
 	info = function(self, t)
 		return ([[As long as your life is at or above %d any single attack that would reduce you below 1 life instead reduces you to 1 life.]]):
-		format(self.max_life * (.6 - (self:getTalentLevel(self.T_AVOID_FATE)/20)))
+		format(self.max_life * (.6 - (self:getTalentLevelRaw(self.T_AVOID_FATE)/10)))
 	end,
 }
 

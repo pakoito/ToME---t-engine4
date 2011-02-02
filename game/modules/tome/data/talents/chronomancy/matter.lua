@@ -35,17 +35,17 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		x, y = checkBackfire(self, x, y)
-		self:project(tg, x, y, DamageType.TEMPORAL, self:spellCrit(t.getDamage(self, t)))
+		self:project(tg, x, y, DamageType.MATTER, self:spellCrit(t.getDamage(self, t)))
 		local _ _, x, y = self:canProject(tg, x, y)
-		game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "mana_beam", {tx=x-self.x, ty=y-self.y})
+		game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "matter_beam", {tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/arcane")
 		return true
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Fires a beam that attempts to turn matter into dust, inflicting %0.2f temporal damage.
+		return ([[Fires a beam that attempts to turn matter into dust, inflicting %0.2f temporal damage and %0.2f physical damage.
 		The damage will scale with your Paradox and Magic stat.]]):
-		format(damDesc(self, DamageType.TEMPORAL, damage))
+		format(damDesc(self, DamageType.TEMPORAL, damage / 2), damDesc(self, DamageType.PHYSICAL, damage / 2))
 	end,
 }
 newTalent{
@@ -106,7 +106,7 @@ newTalent{
 				game.logSeen(target, "%s resists the calcification.", target.name:capitalize())
 			end
 		end)
-		game.level.map:particleEmitter(x, y, tg.radius, "temporal_ball", {radius=tg.radius, grids=grids, tx=x, ty=y})
+		game.level.map:particleEmitter(x, y, tg.radius, "ball_earth", {radius=tg.radius, grids=grids, tx=x, ty=y})
 		game:playSoundNear(self, "talents/earth")
 		return true
 	end,
@@ -138,7 +138,7 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y then return nil end
 		x, y = checkBackfire(self, x, y)
-		self:project(tg, x, y, DamageType.TEMPORAL, self:spellCrit(t.getDamage(self,t)))
+		self:project(tg, x, y, DamageType.MATTER, self:spellCrit(t.getDamage(self,t)))
 		game:playSoundNear(self, "talents/arcane")
 		-- Try to insta-kill
 		if target then
@@ -150,15 +150,19 @@ newTalent{
 				game.logSeen(target, "%s resists the quantum spike!", target.name:capitalize())
 			end
 		end
+		-- if we kill it use teleport particles for larger effect radius
 		if target.dead then
 			game.level.map:particleEmitter(x, y, 1, "teleport")
+		else
+			game.level.map:particleEmitter(x, y, 1, "entropythrust")
 		end
+		
 		return true
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Attempts to pull the target apart at a molecular level, inflicing %0.2f temporal damage.  If the target ends up with low enough life(<20%%) it might be instantly killed.
-		The damage will scale with your Paradox and the Magic stat.]]):format(damDesc(self, DamageType.TEMPORAL, damage))
+		return ([[Attempts to pull the target apart at a molecular level, inflicing %0.2f temporal damage and %0.2f physical damage.  If the target ends up with low enough life(<20%%) it might be instantly killed.
+		The damage will scale with your Paradox and the Magic stat.]]):format(damDesc(self, DamageType.TEMPORAL, damage/2), damDesc(self, DamageType.PHYSICAL, damage/2))
 	end,
 }
 

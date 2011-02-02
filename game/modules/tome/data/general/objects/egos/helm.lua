@@ -182,6 +182,20 @@ newEntity{
 
 newEntity{
 	power_source = {technique=true},
+	name = "anchoring ", prefix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 6,
+	cost = 5,
+	wielder = {
+		resists={
+			[DamageType.TEMPORAL] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+		},
+		teleport_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
+	},
+}
+
+newEntity{
+	power_source = {technique=true},
 	name = "stabilizing ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 6,

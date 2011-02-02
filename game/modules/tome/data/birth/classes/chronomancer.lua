@@ -61,14 +61,14 @@ newBirthDescriptor{
 		["chronomancy/timeline-threading"]={false, 0.3},
 		["chronomancy/timetravel"]={true, 0.3},
 		["chronomancy/spacetime-weaving"]={true, 0.3},
-
+		["cunning/survival"]={false, 0},
 	},
 	talents = {
 		[ActorTalents.T_SPACETIME_TUNING] = 1,
 		[ActorTalents.T_STATIC_HISTORY] = 1,
 		[ActorTalents.T_TURN_BACK_THE_CLOCK] = 1,
 		[ActorTalents.T_DUST_TO_DUST] = 1,
-		[ActorTalents.T_ENTROPIC_SHIELD] = 1,
+		[ActorTalents.T_ENTROPIC_FIELD] = 1,
 		},
 	copy = {
 		max_life = 90,

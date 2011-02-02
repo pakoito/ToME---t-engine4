@@ -103,14 +103,20 @@ newTalent{
 	paradox = 25,
 	cooldown = 50,
 	tactical = { ATTACK = 1, DISABLE = 2 },
+	range = 2,
+	requires_target = true,
 	no_npc_use = true,
 	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)* getParadoxModifier(self, pm)) end,
-	getModifier = function(self, t) return rng.range(t.getDuration(self,t), t.getDuration(self, t)*4) end,
+	getModifier = function(self, t) return rng.range(t.getDuration(self,t)*2, t.getDuration(self, t)*4) end,
 	action = function (self, t)
 		if checkTimeline(self) == true then
 			return
 		end
 		
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local tx, ty = self:getTarget(tg)
+		if not tx or not ty then return nil end
+				
 		local sex = game.player.female and "she" or "he"
 		local a = mod.class.NPC.new{}
 		a:replaceWith(game.player:resolveSource():cloneFull())
@@ -145,12 +151,13 @@ newTalent{
 			a.talents[t.id] = nil
 		end
 
-		local x, y = util.findFreeGrid(self.x, self.y, 10, true, {[engine.Map.ACTOR]=true})
+		local x, y = util.findFreeGrid(tx, ty, 10, true, {[engine.Map.ACTOR]=true})
 		if x and y then
 			game.zone:addEntity(game.level, a, "actor", x, y)
 		end
 		game:playSoundNear(self, "talents/spell_generic")
 		self:setEffect(self.EFF_IMMINENT_PARADOX_CLONE, t.getDuration(self, t) + t.getModifier(self, t), {})
+		return true
 	end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)

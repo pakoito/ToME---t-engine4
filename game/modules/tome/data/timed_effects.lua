@@ -2355,14 +2355,14 @@ newEffect{
 --Chronomancy Effects
 
 newEffect{
-	name = "ENTROPIC_SHIELD",
-	desc = "Entropic Shield",
-	long_desc = function(self, eff) return ("Target is encased in a shield that slows projectiles by %d%%, inflicts %0.2f temporal damage on hit, and increases physical resistance by %d%%."):format(eff.power, eff.power, eff.power/2) end,
+	name = "ENTROPIC_FIELD",
+	desc = "Entropic Field",
+	long_desc = function(self, eff) return ("Target is surrounded by a field that slows projectiles by %d%%, inflicts %0.2f temporal damage to attackers, and increases physical resistance by %d%%."):format(eff.power, eff.power/2, eff.power/2) end,
 	type = "magical",
 	status = "beneficial",
 	parameters = { power=10 },
-	on_gain = function(self, err) return "#Target# is surrounded by an entropic shield.", "+Entropic Shield" end,
-	on_lose = function(self, err) return "The entropic shield around #Target# dissipates.", "-Entropic Shield" end,
+	on_gain = function(self, err) return "#Target# is surrounded by an entropic field.", "+Entropic Field" end,
+	on_lose = function(self, err) return "The entropic fhield around #Target# dissipates.", "-Entropic Field" end,
 	activate = function(self, eff)
 		eff.particle = self:addParticles(Particles.new("time_shield", 1))
 		eff.tmpid = self:addTemporaryValue("on_melee_hit", {[DamageType.TEMPORAL]= eff.power/2})
@@ -3271,21 +3271,46 @@ newEffect{
 }
 
 newEffect{
-	name = "REPULSION_FIELD",
-	desc = "Repulsion Field",
-	long_desc = function(self, eff) return ("The target is surrounded by a field that will knockback attackers."):format() end,
+	name = "REPULSION_SHIELD",
+	desc = "Repulsion Shield",
+	long_desc = function(self, eff) return ("The target is surrounded by a repulsion field that will absorb up to %d/%d damage and knockback attackers."):format(self.repulsion_shield_absorb, eff.power) end,
 	type = "magical",
 	status = "beneficial",
 	parameters = { power=10 },
-	on_gain = function(self, err) return "#Target# is protected by a repulsion field.", "+Repulsion Field" end,
-	on_lose = function(self, err) return "#Target# is no longer protected by a repulsion field.", "-Repulsion Field" end,
+	on_gain = function(self, err) return "#Target# is protected by a repulsion field.", "+Repulsion Shield" end,
+	on_lose = function(self, err) return "#Target# is no longer protected by a repulsion field.", "-Repulsion Shield" end,
 	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("on_melee_hit", {[DamageType.REPULSION]= eff.power})
+		eff.tmpid = self:addTemporaryValue("repulsion_shield", eff.power)
+		eff.kbid = self:addTemporaryValue("on_melee_hit", {[DamageType.REPULSION]= eff.power})
 		eff.particle = self:addParticles(Particles.new("gravity_focus", 1))
+		self.repulsion_shield_absorb = eff.power
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("on_melee_hit", eff.tmpid)
+		self:removeTemporaryValue("repulsion_shield", eff.tmpid)
+		self:removeTemporaryValue("on_melee_hit", eff.kbid)
 		self:removeParticles(eff.particle)
+	end,
+}
+
+newEffect{
+	name = "DAMAGE_SHUNT",
+	desc = "Damage Shunt",
+	long_desc = function(self, eff) return ("The target is splitting all damage it recieves along the timeline, negating up to %d/%d damage."):format(self.damage_shunt_absorb, eff.power) end,
+	type = "magical",
+	status = "beneficial",
+	parameters = { power=100 },
+	on_gain = function(self, err) return "#Target# is splitting damage along the timeline.", "+Damage Shunt" end,
+	on_lose = function(self, err) return "The spell protecting #target# has ended.", "-Damage Shunt" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("damage_shunt", eff.power)
+		--- Warning there can be only one time shield active at once for an actor
+		self.damage_shield_absorb = eff.power
+		eff.particle = self:addParticles(Particles.new("damage_shield", 1))
+	end,
+	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)
+		self:removeTemporaryValue("damage_shunt", eff.tmpid)
+		self.damage_shield_absorb = nil
 	end,
 }
 

@@ -184,6 +184,28 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
+	name = "timelord's ", prefix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = true,
+	rarity = 16,
+	cost = 50,
+	wielder = {
+		resists={
+			[DamageType.TEMPORAL] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+			[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+		},
+		inc_stats = {
+			[Stats.STAT_MAG] = resolvers.mbonus_material(4, 4, function(e, v) return v * 3 end),
+			},
+		inc_damage = {
+			[DamageType.TEMPORAL] = resolvers.mbonus_material(15, 5, function(e, v) return v * 0.25 end),
+			[DamageType.PHYSICAL] = resolvers.mbonus_material(15, 5, function(e, v) return v * 0.25 end),
+		},
+	},
+}
+
+newEntity{
 	power_source = {nature=true},
 	name = "stormlord's ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},

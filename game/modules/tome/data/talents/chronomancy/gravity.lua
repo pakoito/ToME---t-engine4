@@ -18,25 +18,25 @@
 -- darkgod@te4.org
 
 newTalent{
-	name = "Repulsion Field",
+	name = "Repulsion Shield",
 	type = {"chronomancy/gravity",1},
 	require = chrono_req1,
 	points = 5,
 	paradox = 4,
 	cooldown = 20,
 	tactical = { DEFEND = 1, ESCAPE = 1, DISABLE = 1 },
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 4, 50)*getParadoxModifier(self, pm) end,
+	getAbsorb = function(self, t) return self:combatTalentSpellDamage(t, 30, 270) * getParadoxModifier(self, pm) end,
 	getDuration = function (self, t) return 4 + math.ceil(self:getTalentLevel(t)) end,
 	action = function(self, t)
-		self:setEffect(self.EFF_REPULSION_FIELD, t.getDuration(self, t), {power=t.getDamage(self, t)})
+		self:setEffect(self.EFF_REPULSION_SHIELD, t.getDuration(self, t), {power=t.getAbsorb(self, t)})
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
 	info = function(self, t)
-		local damage = t.getDamage(self, t)
+		local absorb = t.getAbsorb(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[Surround yourself with a repulsion field for %d turns, inflicting %0.2f physical damage to attackers and potentially knocking them back.
-		The damage will scale with your Paradox and Magic stat.]]):format(duration, damDesc(self, DamageType.PHYSICAL, t.getDamage(self, t)))
+		return ([[Surround yourself with a repulsion field for %d turns that will absorb up to %0.2f damage and potentially knock back attackers.
+		The absorption will scale with your Paradox and Magic stat.]]):format(duration, absorb)
 	end,
 }
 
@@ -96,7 +96,7 @@ newTalent{
 		local tg = {type="cone", range=0, radius=t.getRadius(self, t), friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.REPULSION, self:spellCrit(t.getDamage(self, t)))
+		self:project(tg, x, y, DamageType.SPELLKNOCKBACK, self:spellCrit(t.getDamage(self, t)))
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "gravity_breath", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/earth")
 		return true
@@ -122,11 +122,12 @@ newTalent{
 	range = 6,
 	direct_hit = true,
 	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 50)*getParadoxModifier(self, pm) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 80)*getParadoxModifier(self, pm) end,
 	getDuration = function (self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
+	getRadius = function (self, t) return 2 + math.floor(self:getTalentLevel(t) / 3) end,
 	action = function(self, t)
 		local duration = t.getDuration(self,t)
-		local radius = 2
+		local radius = t.getRadius(self, t)
 		local dam = t.getDamage(self, t)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=radius}
 		local x, y = self:getTarget(tg)
@@ -148,7 +149,8 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[Increases local gravity, doing %0.2f physical damage with a chance to pin in a radius of 3 each turn for %d turns.
-		The damage will scale with your Paradox and Magic stat]]):format(damDesc(self, DamageType.PHYSICAL, damage), duration)
+		local radius = t.getRadius(self, t)
+		return ([[Increases local gravity, doing %0.2f physical damage with a chance to pin in a radius of %d each turn for %d turns.
+		The damage will scale with your Paradox and Magic stat]]):format(damDesc(self, DamageType.PHYSICAL, damage), radius, duration)
 	end,
 }

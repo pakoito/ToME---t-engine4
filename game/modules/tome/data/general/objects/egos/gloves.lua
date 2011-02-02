@@ -123,6 +123,17 @@ newEntity{
 		resists = { [DamageType.LIGHTNING] = resolvers.mbonus_material(5, 5, function(e, v) return v * 0.15 end), },
 	},
 }
+newEntity{
+	power_source = {arcane=true},
+	name = "temporal ", prefix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 3,
+	cost = 5,
+	wielder = {
+		inc_damage={ [DamageType.TEMPORAL] = resolvers.mbonus_material(8, 3, function(e, v) return v * 0.8 end), },
+		resists = { [DamageType.TEMPORAL] = resolvers.mbonus_material(5, 5, function(e, v) return v * 0.15 end), },
+	},
+}
 
 newEntity{
 	power_source = {nature=true},

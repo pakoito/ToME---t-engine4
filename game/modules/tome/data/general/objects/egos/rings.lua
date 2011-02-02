@@ -72,6 +72,19 @@ newEntity{
 
 newEntity{
 	power_source = {arcane=true},
+	name = " of time (#RESIST#)", suffix=true, instant_resolve=true,
+	level_range = {10, 40},
+	rarity = 6,
+	cost = 2,
+	wielder = {
+		inc_damage = { [DamageType.TEMPORAL] = resolvers.mbonus_material(10, 10, function(e, v) return v * 0.8 end) },
+		resists = {},
+		resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.TEMPORAL] = (e.wielder.resists[engine.DamageType.TEMPORAL] or 0) + e.wielder.inc_damage[engine.DamageType.TEMPORAL] end),
+	},
+}
+
+newEntity{
+	power_source = {arcane=true},
 	name = " of frost (#RESIST#)", suffix=true, instant_resolve=true,
 	level_range = {10, 40},
 	rarity = 6,

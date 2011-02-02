@@ -39,6 +39,11 @@ newTalent{
 			target = game.level.map(tx, ty, Map.ACTOR)
 		end
 		
+		if not self:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) then
+			game.logSeen(target, "%s resists!", target.name:capitalize())
+			return true
+		end
+		
 		local tids = {}
 		for tid, _ in pairs(target.talents) do
 			local tt = target:getTalentFromId(tid)
@@ -54,7 +59,8 @@ newTalent{
 		end
 		self.changed = true
 		
-		game.level.map:particleEmitter(tx, ty, 1, "temporal_thrust")
+		game.logSeen(target, "%s feels the effects of entropy!", target.name:capitalize())
+		game.level.map:particleEmitter(tx, ty, 1, "entropythrust")
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
@@ -115,7 +121,7 @@ newTalent{
 				target:forceUseTalent(eff[2], {ignore_energy=true})
 			end
 		end
-		game.level.map:particleEmitter(tx, ty, 1, "temporal_thrust")
+		game.level.map:particleEmitter(tx, ty, 1, "entropythrust")
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
@@ -137,7 +143,7 @@ newTalent{
 	range = 6,
 	tactical = { PROTECT = 2 },
 	requires_target = true,
-	getResistance = function(self, t) return 30 + math.ceil (self:combatTalentSpellDamage(t, 5, 30) * getParadoxModifier(self, pm)) end,
+	getResistance = function(self, t) return 30 + math.ceil (self:combatTalentSpellDamage(t, 10, 40) * getParadoxModifier(self, pm)) end,
 	getDuration = function(self, t) return 5 + math.ceil(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -162,12 +168,12 @@ newTalent{
 			name = "Energy Wall",
 			autolevel = "none", faction=self.faction,
 			stats = { mag = 10 + self:getMag() * self:getTalentLevel(t) / 5, wil = 10 + self:getTalentLevel(t) * 2, con = 10 + self:getMag() * self:getTalentLevel(t) / 5},
-			resists = { all = 15, [DamageType.LIGHT] = t.getResistance(self, t), [DamageType.FIRE] = t.getResistance(self, t), [DamageType.LIGHTNING] = t.getResistance(self, t), [DamageType.TEMPORAL] = t.getResistance(self, t),},
+			resists = { all = t.getResistance(self, t), },
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=3, },
 			level_range = {self.level, self.level}, exp_worth = 0,
 
-			max_life = resolvers.rngavg(25,50),
-			life_rating = 15,
+			max_life = resolvers.rngavg(20,40),
+			life_rating = 12,
 			infravision = 20,
 						
 			cut_immune = 1,

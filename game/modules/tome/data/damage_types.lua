@@ -666,18 +666,17 @@ newDamageType{
 	end,
 }
 
--- Gravity repulsion; checks for spell power against physical resistance
+-- Generic spell knockback vs. physresist.  Uses a more generic resist message
 newDamageType{
 	name = "repulsion", type = "REPULSION",
 	projector = function(src, x, y, type, dam)
-		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
 			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
 				target:knockback(src.x, src.y, 2)
 				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
 			else
-				game.logSeen(target, "%s resists!", target.name:capitalize())
+				game.logSeen(target, "%s resists the knockback!", target.name:capitalize())
 			end
 		end
 	end,
@@ -1065,40 +1064,28 @@ newDamageType{
 -- Chronomancy damage types
 newDamageType{
 	name = "temporal", type = "TEMPORAL", text_color = "#LIGHT_STEEL_BLUE#",
+	antimagic_resolve = true,
 }
 
--- Gravity damage
+-- Temporal/Physical damage
 newDamageType{
-	name = "CRUSHING", type = "CRUSHING",
+	name = "matter", type = "MATTER",
 	projector = function(src, x, y, type, dam)
-		local dur = 3
-		local perc = 0
-		if _G.type(dam) == "table" then dam, dur, perc = dam.dam, dam.dur, (dam.initial or perc) end
-		local init_dam = dam * perc / 100
-		if init_dam > 0 then DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, init_dam) end
-		local target = game.level.map(x, y, Map.ACTOR)
-		if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("pin") then
-			target:setEffect(target.EFF_PINNED, 3, {})
-			dam = dam - init_dam
-			target:setEffect(target.EFF_CRUSHED, dur, {src=src, power=dam / dur})
-		else
-			dam = dam - init_dam
-			target:setEffect(target.EFF_CRUSHED, dur, {src=src, power=dam / dur})
-		end
+		DamageType:get(DamageType.TEMPORAL).projector(src, x, y, DamageType.TEMPORAL, dam / 2)
+		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam / 2)
 	end,
 }
 
+-- Gravity damage
 newDamageType{
 	name = "gravity", type = "GRAVITY",
 	projector = function(src, x, y, type, dam)
 		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
-		if target and rng.percent(25) then
-			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 20) and target:canBe("pin") then
-				target:setEffect(target.EFF_PINNED, 2, {})
-			else
-				game.logSeen(target, "%s resists!", target.name:capitalize())
-			end
+		if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 20) and target:canBe("pin") then
+			target:setEffect(target.EFF_PINNED, 2, {}, true)
+		else
+			game.logSeen(target, "%s resists!", target.name:capitalize())
 		end
 	end,
 }
@@ -1219,6 +1206,7 @@ newDamageType{
 	end,
 }
 
+-- Temporal + Stat damage
 newDamageType{
 	name = "clock", type = "CLOCK",
 	projector = function(src, x, y, type, dam)
@@ -1236,6 +1224,7 @@ newDamageType{
 	end,
 }
 
+-- Temporal Over Time
 newDamageType{
 	name = "wasting", type = "WASTING",
 	projector = function(src, x, y, type, dam)
