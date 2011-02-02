@@ -88,13 +88,17 @@ newTalent{
 
 		-- Attack ?
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) == 1 then
-			self:attackTarget(target, nil, 1.2, true)
+			if self:attackTarget(target, nil, 1.2, true) and target:canBe("stun") then
+				-- Daze, no save
+				target:setEffect(target.EFF_DAZED, 3, {})
+			end
 		end
 
 		return true
 	end,
 	info = function(self, t)
 		return ([[Rushes toward your target with incredible speed. If the target is reached you get a free attack doing 120% weapon damage.
+		If the attack hits the target is dazed for 3 turns.
 		You must rush from at least 2 tiles away.]])
 	end,
 }
