@@ -77,29 +77,15 @@ const char *get_self_executable(int argc, char **argv)
 	return buf;
 }
 
+#import <sys/sysctl.h>
+
 int get_number_cpus()
 {
-	int mib[4];
-	size_t len = sizeof(numCPU);
+	int count ;
+	size_t size=sizeof(count) ;
 
-	/* set the mib for hw.ncpu */
-	mib[0] = CTL_HW;
-	mib[1] = HW_AVAILCPU;  // alternatively, try HW_NCPU;
-
-	/* get the number of CPUs from the system */
-	sysctl(mib, 2, &numCPU, &len, NULL, 0);
-
-	if( numCPU < 1 )
-	{
-		mib[1] = HW_NCPU;
-		sysctl( mib, 2, &numCPU, &len, NULL, 0 );
-
-		if( numCPU < 1 )
-		{
-			numCPU = 1;
-		}
-	}
-	return numCPU;
+	if (sysctlbyname("hw.ncpu",&count,&size,NULL,0)) return 1;
+	return count;
 }
 
 #else
