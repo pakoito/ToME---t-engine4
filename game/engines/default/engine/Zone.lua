@@ -609,6 +609,12 @@ function _M:newLevel(level_data, lev, old_lev, game)
 		end
 	end end
 
+	-- Generate actors
+	if level_data.generator.actor and level_data.generator.actor.class then
+		local generator = self:getGenerator("actor", level, spots)
+		generator:generate()
+	end
+
 	-- Generate objects
 	if level_data.generator.object and level_data.generator.object.class then
 		local generator = self:getGenerator("object", level, spots)
@@ -618,12 +624,6 @@ function _M:newLevel(level_data, lev, old_lev, game)
 	-- Generate traps
 	if level_data.generator.trap and level_data.generator.trap.class then
 		local generator = self:getGenerator("trap", level, spots)
-		generator:generate()
-	end
-
-	-- Generate actors
-	if level_data.generator.actor and level_data.generator.actor.class then
-		local generator = self:getGenerator("actor", level, spots)
 		generator:generate()
 	end
 

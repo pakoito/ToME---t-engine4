@@ -949,8 +949,8 @@ function util.findFreeGrid(sx, sy, radius, block, what)
 		end
 	end)
 
-	print("findFreeGrid using", gs[1][1], gs[1][2])
-	return gs[1][1], gs[1][2]
+--	print("findFreeGrid using", gs[1][1], gs[1][2])
+	return gs[1][1], gs[1][2], gs
 end
 
 function util.showMainMenu(no_reboot, reboot_engine, reboot_engine_version, reboot_module, reboot_name, reboot_new, reboot_einfo)

@@ -43,14 +43,15 @@ return {
 			door = "DOOR",
 		},
 		actor = {
-			class = "engine.generator.actor.Random",
+			class = "engine.generator.actor.OnSpots",
 			nb_npc = {20, 30},
 			filters = { {max_ood=2}, },
---			guardian = "SHADE", -- The guardian is set in the static map
+			nb_spots = 2, on_spot_chance = 50,
 		},
 		object = {
-			class = "engine.generator.object.Random",
+			class = "engine.generator.object.OnSpots",
 			nb_object = {6, 9},
+			nb_spots = 2, on_spot_chance = 70,
 		},
 		trap = {
 			class = "engine.generator.trap.Random",
