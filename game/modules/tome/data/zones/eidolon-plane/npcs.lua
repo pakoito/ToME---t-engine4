@@ -28,7 +28,7 @@ newEntity{ define_as = "EIDOLON",
 	rank = 5,
 	never_move = 1,
 	invulnerable = 1,
-	never_angry = 1,
+	never_anger = 1,
 
 	can_talk = "eidolon-plane",
 }

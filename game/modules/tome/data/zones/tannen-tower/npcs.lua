@@ -93,10 +93,10 @@ newEntity{ define_as = "TANNEN",
 newEntity{ define_as = "DROLEM",
 	type = "construct", subtype = "golem",
 	display = 'g', color=colors.GREEN,
-	desc = [[This is Tannen's construct, a #{bold}#HUGE#{normal}# golem in the rough shape of a dragon.
+	desc = [[This is Tannen's construct, a HUGE golem in the rough shape of a dragon.
 It is so huge that it blocks sight beyond it.]],
 	level_range = {35, nil}, exp_worth=2,
-	max_life = 600, life_rating = 13, fixed_rating = true,
+	max_life = 600, life_rating = 17, fixed_rating = true,
 
 	-- Special, the golem is HUGE and blocks LOS
 	block_sight = true,

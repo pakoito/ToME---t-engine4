@@ -121,7 +121,7 @@ TOOLTIP_MAG = [[#GOLD#Magic#LAST#
 Magic defines your character's ability to manipulate the magical energy of the world. It increases your spell power, your chance to save against magical effects, and the effect of spells and other magic items.
 ]]
 TOOLTIP_WIL = [[#GOLD#Willpower#LAST#
-Willpower defines your character's ability to concentrate. It increases your mana and stamina capacity, and your chance to your chance to save against magical and mental effects.
+Willpower defines your character's ability to concentrate. It increases your mana, stamina and psi capacity, and your chance to your chance to save against magical and mental effects.
 ]]
 TOOLTIP_CUN = [[#GOLD#Cunning#LAST#
 Cunning defines your character's ability to learn, think, and react. It allows you to learn many worldly abilities, and increases your chance to save against mental effects and critical chance.

@@ -68,8 +68,8 @@ return {
 		local tick = core.game.getTime()
 		local sr, sg, sb
 		sr = (1 + math.sin(tick / 2000)) / 2 * 0.4 + 0.8
-		sg = (1 + math.sin(tick / 2700)) / 2 * 0.4 + 0.6
-		sb = (1 + math.sin(tick / 3200)) / 2 * 0.4 + 0.6
+		sg = (1 + math.sin(tick / 2700)) / 2 * 0.4 + 0.7
+		sb = (1 + math.sin(tick / 3200)) / 2 * 0.4 + 0.7
 		level.map:setShown(sr, sg, sb, 1)
 		level.map:setObscure(sr * 0.6, sg * 0.6, sb * 0.6, 1)
 	end,
