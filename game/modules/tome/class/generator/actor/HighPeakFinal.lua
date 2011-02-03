@@ -53,6 +53,8 @@ function _M:generateOne()
 		local x = spot.x
 		local y = spot.y
 		if m:canMove(x, y) then
+			m.faction = "sorcerers"
+			m.never_anger = true
 			m:setTarget(game.player)
 			self.zone:addEntity(self.level, m, "actor", x, y)
 			game.logSeen(m, "An entity appears through the portal!")

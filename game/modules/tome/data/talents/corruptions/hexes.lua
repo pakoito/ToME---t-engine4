@@ -34,7 +34,7 @@ newTalent{
 		if not x or not y then return nil end
 		self:project(tg, x, y, function(tx, ty)
 			local target = game.level.map(tx, ty, Map.ACTOR)
-			if not target then return end
+			if not target or target == self then return end
 			if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) then
 				target:setEffect(target.EFF_PACIFICATION_HEX, 20, {chance=self:combatTalentSpellDamage(t, 30, 50)})
 			end
@@ -65,7 +65,7 @@ newTalent{
 		if not x or not y then return nil end
 		self:project(tg, x, y, function(tx, ty)
 			local target = game.level.map(tx, ty, Map.ACTOR)
-			if not target then return end
+			if not target or target == self then return end
 			if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) then
 				target:setEffect(target.EFF_BURNING_HEX, 20, {src=self, dam=self:combatTalentSpellDamage(t, 4, 90)})
 			end
@@ -96,7 +96,7 @@ newTalent{
 		if not x or not y then return nil end
 		self:project(tg, x, y, function(tx, ty)
 			local target = game.level.map(tx, ty, Map.ACTOR)
-			if not target then return end
+			if not target or target == self then return end
 			if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) then
 				target:setEffect(target.EFF_EMPATHIC_HEX, 20, {power=self:combatTalentSpellDamage(t, 4, 20)})
 			end
@@ -127,7 +127,7 @@ newTalent{
 		if not x or not y then return nil end
 		self:project(tg, x, y, function(tx, ty)
 			local target = game.level.map(tx, ty, Map.ACTOR)
-			if not target then return end
+			if not target or target == self then return end
 			if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 25) and target:canBe("instakill") then
 				target:setEffect(target.EFF_DOMINATION_HEX, 2 + self:getTalentLevel(t), {src=self})
 			end
