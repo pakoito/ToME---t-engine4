@@ -80,6 +80,6 @@ return {
 		game:placeRandomLoreObject("NOTE"..level.level)
 
 		-- Some clouds floating happily over the trollmire
-		game.state:makeWeather(level, 7, {max_nb=1, speed={0.5, 1.6}, alpha={0.23, 0.35}, particle_name="weather/grey_cloud_%02d"})
+		game.state:makeWeather(level, 7, {max_nb=1, speed={0.5, 1.6}, shadow=true, alpha={0.23, 0.35}, particle_name="weather/grey_cloud_%02d"})
 	end,
 }
