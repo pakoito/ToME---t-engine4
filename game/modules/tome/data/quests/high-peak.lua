@@ -66,17 +66,6 @@ end
 
 function start_end_combat(self)
 	local p = game.party:findMember{main=true}
-	p.entered_level = {x=25, y= 8}
-
-	-- Allow teleporting inside
-	for i = 11, 38 do for j = 1, 21 do
-		game.level.map.lites(i, j, true)
-		game.level.map.attrs(i, j, "no_teleport", false)
-	end end
-	-- Forbid teleporting outside
-	for i = 0, game.level.map.w - 1 do for j = 22, game.level.map.h - 1 do
-		game.level.map.attrs(i, j, "no_teleport", true)
-	end end
 	game.level.allow_portals = true
 end
 

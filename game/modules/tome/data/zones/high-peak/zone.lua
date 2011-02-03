@@ -19,6 +19,10 @@
 
 return {
 	name = "High Peak",
+	display_name = function(x, y)
+		if game.level.level == 16 then return "High Peak: The Sanctum" end
+		return "High Peak ("..game.level.level..")"
+	end,
 	level_range = {55, 80},
 	level_scheme = "player",
 	max_level = 15,
@@ -78,14 +82,21 @@ return {
 	{
 		[15] = {
 			generator = {
-			map = {
-				class = "engine.generator.map.Static",
-				map = "zones/high-peak-last",
-			},
-			actor = {
-				nb_npc = {30, 40},
-				area = {x1=0, x2=49, y1=23, y2=23+50},
-			},
+				map = {
+					down = "PORTAL_BOSS",
+					force_last_stair = true,
+				}
+			}
+		},
+		[16] = {
+			generator = {
+				map = {
+					class = "engine.generator.map.Static",
+					map = "zones/high-peak-last",
+				},
+				actor = {
+					nb_npc = {0, 0},
+				},
 			},
 		},
 	},

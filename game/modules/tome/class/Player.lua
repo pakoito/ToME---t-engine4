@@ -805,7 +805,8 @@ function _M:useOrbPortal(portal)
 
 	if portal.on_preuse then portal:on_preuse(self) end
 
-	if portal.teleport_level then
+	if portal.nothing then -- nothing
+	elseif portal.teleport_level then
 		local x, y = util.findFreeGrid(portal.teleport_level.x, portal.teleport_level.y, 2, true, {[Map.ACTOR]=true})
 		if x and y then self:move(x, y, true) end
 	else

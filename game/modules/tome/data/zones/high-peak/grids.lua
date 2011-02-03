@@ -158,12 +158,15 @@ newEntity{
 	show_tooltip = true,
 	desc = [[This portal seems to connect to an other part of this level.]],
 	orb_portal = {
-		teleport_level = {x=25, y=8},
+		nothing = true,
 		message = "#VIOLET#You enter the swirling portal and appear in a large room with other portals and the two wizards.",
 		on_use = function()
+			game:changeLevel(16) -- Special level, can not get to it any other way
+			if game.player:hasQuest("high-peak"):isCompleted("sanctum-chat") then return end
 			local Chat = require "engine.Chat"
 			local chat = Chat.new("sorcerer-fight", {name="Elandar"}, game.player)
 			chat:invoke()
+			game.player:hasQuest("high-peak"):setStatus(engine.Quest.COMPLETED, "sanctum-chat")
 			game.player:hasQuest("high-peak"):start_end_combat()
 		end,
 	},
