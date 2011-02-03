@@ -738,7 +738,10 @@ int thread_particles(void *data)
 	while (pt->running)
 	{
 		// Wait for a keyframe
+//		printf("Runing particle thread %d (waiting for sem)\n", pt->id);
 		SDL_SemWait(pt->keyframes);
+//		printf("Runing particle thread %d (waiting for mutex; running(%d))\n", pt->id, pt->running);
+		if (!pt->running) break;
 
 		SDL_mutexP(pt->lock);
 //		int nb = 0;
@@ -766,9 +769,11 @@ int thread_particles(void *data)
 			}
 //			nb++;
 		}
-//		printf("Particels thread has %d systems\n",nb);
+//		printf("Particles thread %d has %d systems\n", pt->id, nb);
 		SDL_mutexV(pt->lock);
 	}
+
+	printf("Cleaning up particle thread %d\n", pt->id);
 
 	// Cleanup
 	SDL_mutexP(pt->lock);
@@ -781,6 +786,10 @@ int thread_particles(void *data)
 	SDL_mutexV(pt->lock);
 
 	lua_close(L);
+
+	SDL_DestroySemaphore(pt->keyframes);
+	SDL_DestroyMutex(pt->lock);
+	printf("Cleaned up particle thread %d\n", pt->id);
 
 	return(0);
 }
@@ -827,10 +836,20 @@ void create_particles_thread()
 	{
 		for (i = 0; i < MAX_THREADS; i++)
 		{
-			threads[i].running = FALSE;
 			int status;
-			SDL_SemPost(threads[i].keyframes);
-			SDL_WaitThread(threads[i].thread, &status);
+			int sem_res;
+			particle_thread *pt = &threads[i];
+
+			printf("Destroying particle thread %d (waiting for mutex)\n", i);
+			SDL_mutexP(pt->lock);
+			pt->running = FALSE;
+			SDL_mutexV(pt->lock);
+
+			printf("Destroying particle thread %d\n", i);
+			sem_res = SDL_SemPost(pt->keyframes);
+			if (sem_res) printf("Error while waiting for particle thread to die: %s\n", SDL_GetError());
+			printf("Destroying particle thread %d (waiting for thread)\n", i);
+			SDL_WaitThread(pt->thread, &status);
 			printf("Destroyed particle thread %d (%d)\n", i, status);
 		}
 		nb_threads = 0;
