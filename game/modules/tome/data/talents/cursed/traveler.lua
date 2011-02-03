@@ -57,7 +57,7 @@ newTalent{
 	require = cursed_wil_req3,
 	mode = "passive",
 	points = 5,
-	
+
 	on_learn = function(self, t)
 		self.resists[DamageType.FIRE] = (self.resists[DamageType.FIRE] or 0) + 7
 		self.resists[DamageType.COLD] = (self.resists[DamageType.COLD] or 0) + 7
@@ -78,10 +78,10 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	on_learn = function(self, t)
-		self.exp_kill_multiplier = (self.exp_kill_multiplier or 1) + 3
+		self.exp_kill_multiplier = (self.exp_kill_multiplier or 1) + 0.03
 	end,
 	on_unlearn = function(self, t)
-		self.exp_kill_multiplier = (self.exp_kill_multiplier or 1) - 3
+		self.exp_kill_multiplier = (self.exp_kill_multiplier or 1) - 0.03
 	end,
 	info = function(self, t)
 		return ([[You have become a keen observer in your travels. Each kill gives you %d%% more experience.]]):format(self:getTalentLevelRaw(t) * 3)
