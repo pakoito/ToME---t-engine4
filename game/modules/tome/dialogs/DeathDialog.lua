@@ -112,10 +112,25 @@ end
 --- Send the party to the Eidolon Plane
 function _M:eidolonPlane()
 	game:onTickEnd(function()
+		self.actor:attr("easy_mode_lifes", -1)
+		game.log("#LIGHT_RED#You have %s left.", (self.actor:attr("easy_mode_lifes") and self.actor:attr("easy_mode_lifes").." life(s)") or "no more lives")
+
+		self:cleanActor(self.actor)
+		self:resurrectBasic(self.actor)
+		for uid, e in pairs(game.level.entities) do
+			if not game.party:hasMember(e) then
+				self:restoreResources(e)
+			else
+				e.life = math.max(e.life, 1)
+				e.changed = true
+			end
+		end
+
 		local oldzone = game.zone
 		local oldlevel = game.level
 		local zone = engine.Zone.new("eidolon-plane")
 		local level = zone:getLevel(game, 1, 0)
+
 		level.data.eidolon_exit_x = self.actor.x
 		level.data.eidolon_exit_y = self.actor.y
 
@@ -180,20 +195,7 @@ function _M:use(item)
 		self:resurrectBasic(self.actor)
 		world:gainAchievement("UNSTOPPABLE", actor)
 	elseif act == "easy_mode" then
-		self.actor:attr("easy_mode_lifes", -1)
-
-		self:cleanActor(self.actor)
-		self:resurrectBasic(self.actor)
-		for uid, e in pairs(game.level.entities) do
-			if not game.party:hasMember(e) then
-				self:restoreResources(e)
-			else
-				e.life = math.max(e.life, 1)
-				e.changed = true
-			end
-		end
 		self:eidolonPlane()
-		game.log("#LIGHT_RED#You have %s left.", (self.actor:attr("easy_mode_lifes") and self.actor:attr("easy_mode_lifes").." life(s)") or "no more lives")
 	elseif act == "skeleton" then
 		self.actor:attr("re-assembled", 1)
 		game.logPlayer(self.actor, "#YELLOW#Your bones magically knit back together. You are once more able to dish out pain to your foes!")

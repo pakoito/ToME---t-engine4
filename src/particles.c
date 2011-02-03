@@ -856,6 +856,7 @@ void create_particles_thread()
 	}
 
 	MAX_THREADS = nb_cpus - 1;
+	MAX_THREADS = 1;
 	MAX_THREADS = (MAX_THREADS < 1) ? 1 : MAX_THREADS;
 	threads = calloc(MAX_THREADS, sizeof(particle_thread));
 

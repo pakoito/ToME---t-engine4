@@ -61,6 +61,18 @@ start_ambush = function(self, who)
 				e.dead = true
 			end
 		end
+
+		-- Go through all effects and disable them
+		local effs = {}
+		for eff_id, p in pairs(actor.tmp) do
+			local e = actor.tempeffect_def[eff_id]
+			effs[#effs+1] = {"effect", eff_id}
+		end
+		while #effs > 0 do
+			local eff = rng.tableRemove(effs)
+			actor:removeEffect(eff[2])
+		end
+
 		-- Protect from other hits on the same turn
 		self:setEffect(self.EFF_DAMAGE_SHIELD, 3, {power=1000000})
 
