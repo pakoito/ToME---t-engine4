@@ -864,14 +864,13 @@ void create_particles_thread()
 	for (i = 0; i < MAX_THREADS; i++)
 	{
 		SDL_Thread *thread;
+		particle_thread *pt = &threads[i];
+
 		thread = SDL_CreateThread(thread_particles, pt);
 		if (thread == NULL) {
 			printf("Unable to create particle thread: %s\n", SDL_GetError());
 			continue;
 		}
-
-		particle_thread *pt = &threads[i];
-
 		pt->thread = thread;
 		pt->id = nb_threads++;
 		pt->list = NULL;
