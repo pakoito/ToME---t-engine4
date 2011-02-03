@@ -58,7 +58,7 @@ local change_gem = function(npc, player, gemid)
 	player:showInventory("Select a gem for your golem.", inven, function(o) return o.type == "gem" and o.material_level and o.material_level <= player:getTalentLevelRaw(player.T_GEM_GOLEM) end, function(o, item)
 		player:removeObject(inven, item, true)
 		local gems = golem:getInven("GEM")
-		local old = golem:removeObject(gems, gemid, true)
+		local old = golem:removeObject(gems, gemid)
 		if old then player:addObject(inven, old) end
 
 		-- Force "wield"
