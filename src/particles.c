@@ -849,7 +849,7 @@ void create_particles_thread()
 			printf("Destroying particle thread %d\n", i);
 			sem_res = SDL_SemPost(pt->keyframes);
 			if (sem_res) printf("Error while waiting for particle thread to die: %s\n", SDL_GetError());
-			printf("Destroying particle thread %d (waiting for thread)\n", i);
+			printf("Destroying particle thread %d (waiting for thread %x)\n", i, (int)pt->thread);
 			SDL_WaitThread(pt->thread, &status);
 			printf("Destroyed particle thread %d (%d)\n", i, status);
 		}
@@ -864,6 +864,12 @@ void create_particles_thread()
 	for (i = 0; i < MAX_THREADS; i++)
 	{
 		SDL_Thread *thread;
+		thread = SDL_CreateThread(thread_particles, pt);
+		if (thread == NULL) {
+			printf("Unable to create particle thread: %s\n", SDL_GetError());
+			continue;
+		}
+
 		particle_thread *pt = &threads[i];
 
 		pt->thread = thread;
@@ -872,12 +878,6 @@ void create_particles_thread()
 		pt->lock = SDL_CreateMutex();
 		pt->keyframes = SDL_CreateSemaphore(0);
 		pt->running = TRUE;
-
-		thread = SDL_CreateThread(thread_particles, pt);
-		if (thread == NULL) {
-			printf("Unable to create particle thread: %s\n", SDL_GetError());
-			continue;
-		}
 
 		printf("Creating particles thread %d\n", pt->id);
 	}
