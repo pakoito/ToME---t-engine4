@@ -121,7 +121,7 @@ function getGemLevel(self)
 	if self:getInven("PSIONIC_FOCUS") then
 		local tk_item = self:getInven("PSIONIC_FOCUS")[1]
 		if tk_item and (tk_item.type == "gem") then
-			gem_level = tk_item.material_level or 0
+			gem_level = tk_item.material_level or 5
 		end
 	end
 	return gem_level

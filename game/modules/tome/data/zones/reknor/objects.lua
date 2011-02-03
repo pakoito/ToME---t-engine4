@@ -31,6 +31,7 @@ newEntity{ base = "BASE_SCROLL", define_as = "NOTE_FROM_LAST_HOPE",
 newEntity{ base = "BASE_GEM",
 	define_as = "RESONATING_DIAMOND_WEST",
 	name = "Resonating Diamond", color=colors.VIOLET, quest=true, unique="Resonating Diamond West", identified=true, no_unique_lore=true,
+	material_level = 5,
 
 	on_drop = function(self, who)
 		if who == game.player then

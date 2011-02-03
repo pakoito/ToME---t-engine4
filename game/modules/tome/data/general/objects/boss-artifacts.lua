@@ -593,6 +593,7 @@ newEntity{ define_as = "RUNED_SKULL",
 	rarity = 390,
 	cost = 150,
 	encumber = 3,
+	material_level = 5,
 	desc = [[Dull red runes are etched all over this blackened skull.]],
 
 	carrier = {
