@@ -39,8 +39,33 @@ newTalent{
 			self:addObject(pf, o)
 			game.logSeen(self, "%s wears: %s.", self.name:capitalize(), o:getName{do_color=true})
 
+			-- Fix the slot_forbid bug
+			if o.slot_forbid then
+				-- Store any original on_takeoff function
+				if o.on_takeoff then
+					o._old_on_takeoff = o.on_takeoff
+				end
+				-- Save the original slot_forbid
+				o._slot_forbid = o.slot_forbid
+				o.slot_forbid = nil
+				-- And prepare the resoration of everything
+				o.on_takeoff = function(self)
+					-- Remove the slot forbid fix
+					o.slot_forbid = o._slot_forbid
+					o._slot_forbid = nil
+					-- Run the original on_takeoff
+					if self._old_on_takeoff then
+						self.on_takeoff = self._old_on_takeoff
+						self._old_on_takeoff = nil
+						self:on_takeoff()
+					end
+				end
+			end
+
 			-- Put back the old one in inventory
-			if old then self:addObject(inven, old) end
+			if old then
+				self:addObject(inven, old)
+			end
 			self:sortInven()
 		end)
 		end,
@@ -147,4 +172,3 @@ newTalent{
 		format(atk, dam, apr, crit, speed)
 	end,
 }
-

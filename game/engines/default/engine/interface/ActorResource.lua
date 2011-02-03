@@ -40,8 +40,8 @@ function _M:defineResource(name, short_name, talent, regen_prop, desc, min, max)
 		description = desc,
 		minname = "min_"..short_name,
 		maxname = "max_"..short_name,
-		min = min or 0,
-		max = max or 100,
+		min = (min == nil) and 0 or min,
+		max = (max == nil) and 100 or max,
 	})
 	self.resources_def[#self.resources_def].id = #self.resources_def
 	self.resources_def[short_name] = self.resources_def[#self.resources_def]
