@@ -727,6 +727,7 @@ int thread_particles(void *data)
 	lua_State *L = lua_open();  /* create state */
 	luaL_openlibs(L);  /* open libraries */
 	luaopen_core(L);
+	luaopen_particles(L);
 	pt->L = L;
 
 	// And run the lua engine pre init scripts

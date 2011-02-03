@@ -70,6 +70,7 @@ newEntity{
 	see_invisible = 100,
 	instakill_immune = 1,
 	stun_immune = 0.5,
+	confusion_immune = 0.5,
 	blind_immune = 1,
 
 	combat_armor = 20,
@@ -113,7 +114,7 @@ newEntity{
 	autolevel = "caster",
 	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
 	ai_tactic = resolvers.tactic"ranged",
-	resolvers.inscriptions(6, {"healing infusion", "regeneration infusion", "shielding rune", "invisibility rune", "movement infusion", "wild infusion", "phase door rune"}),
+	resolvers.inscriptions(6, {"healing infusion", "regeneration infusion", "shielding rune", "invisibility rune", "movement infusion", "wild infusion"}),
 
 	on_die = function(self, who)
 		game.player:resolveSource():setQuestStatus("high-peak", engine.Quest.COMPLETED, "elandar-dead")
@@ -140,6 +141,7 @@ newEntity{
 	see_invisible = 100,
 	instakill_immune = 1,
 	stun_immune = 0.5,
+	confusion_immune = 0.5,
 	blind_immune = 1,
 
 	combat_armor = 20,
@@ -188,7 +190,7 @@ newEntity{
 	autolevel = "warriormage",
 	ai = "tactical", ai_state = { talent_in=2, ai_move="move_astar", },
 	ai_tactic = resolvers.tactic"melee",
-	resolvers.inscriptions(3, {"healing infusion", "healing infusion", "shielding rune"}),
+	resolvers.inscriptions(2, {"shielding rune", "shielding rune"}),
 	resolvers.inscriptions(3, {}),
 
 	on_die = function(self, who)
