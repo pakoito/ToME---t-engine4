@@ -138,9 +138,9 @@ newBirthDescriptor{
 	display_name = "The Arena: Challenge of the Master",
 	desc =
 	{
-		"Play as a lone warrior setting foot in the Arena's challenge!",
-		"You can use any class and race into it.",
-		"Check out how far you can go! Can you become the new Master of the Arena?",
+		"Play as a lone warrior facing the Arena's challenge!",
+		"You can use any class and race for it.",
+		"See how far you can go! Can you become the new Master of the Arena?",
 		"If so, you will battle your own champion next time!",
 	},
 	descriptor_choices = default_eyal_descriptors,

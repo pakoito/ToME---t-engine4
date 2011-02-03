@@ -21,7 +21,7 @@ newBirthDescriptor{
 	type = "class",
 	name = "Chronomancer",
 	desc = {
-		"With one foot literally in the past and one in the future Chronomancers manipulate the present at a whim and wield a power that only bows to nature's own need to keep the balance. The wake in spacetime they leave behind them makes their own Chronomantic abilites that much stronger and that much harder to control.  The wise Chronomancer learns to maintain the balance between his own thirst for cosmic power and the universe's need to flow undisturbed, for the hole he tears that amplifies his own abilities just may be the same hole that one day swallows him.",
+		"With one foot literally in the past and one in the future, Chronomancers manipulate the present at a whim and wield a power that only bows to nature's own need to keep the balance. The wake in spacetime they leave behind them makes their own Chronomantic abilites that much stronger and that much harder to control.  The wise Chronomancer learns to maintain the balance between his own thirst for cosmic power and the universe's need to flow undisturbed, for the hole he tears that amplifies his own abilities just may be the same hole that one day swallows him.",
 	},
 	descriptor_choices =
 	{
@@ -86,9 +86,9 @@ newBirthDescriptor{
 	type = "subclass",
 	name = "Temporal Warden",
 	desc = {
-		"The Temporal Warden has learned to blend archery, dual-weapon fighting, and chronomancy into a fearsome whole.",
-		"Through their use of the chronomantic arts the Temporal Warden seeks to control the battle field while they pepper their foes with arrows or engage in hand-to-hand combat.",
-		"Their study of chronomancy enables them to amplify their own physical and magical abilities and manipulate the speed of themselves and those around them.",
+		"The Temporal Wardens have learned to blend archery, dual-weapon fighting, and chronomancy into a fearsome whole.",
+		"Through their use of the chronomantic arts, the Temporal Wardens seek to control the battlefield while peppering their foes with arrows or engage in hand-to-hand combat.",
+		"Their study of chronomancy enables them to amplify their own physical and magical abilities, and to manipulate the speed of themselves and those around them.",
 		"Their most important stats are: Strength, Dexterity, Willpower, and Magic",
 		"#GOLD#Stat modifiers:",
 		"#LIGHT_BLUE# * +2 Strength, +3 Dexterity, +0 Constitution",

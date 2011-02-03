@@ -41,7 +41,7 @@ newBirthDescriptor{
 	type = "subclass",
 	name = "Reaver",
 	desc = {
-		"A Reaver is a terrible foe, wielding two weapons while charging his foes.",
+		"Reavers are terrible foes, wielding two weapons while charging their enemies.",
 		"They can harness the blight of evil, infecting their foes with terrible contagious diseases while crushing their skulls with devastating combat techniques.",
 		"Their most important stats are: Strength and Magic",
 		"#GOLD#Stat modifiers:",

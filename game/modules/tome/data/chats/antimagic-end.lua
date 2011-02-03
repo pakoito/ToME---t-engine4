@@ -20,7 +20,7 @@
 newChat{ id="welcome",
 	text = [[Excellent! You truly prove that no mage-wrought flame or storm can stand against blade and arrow! Come, learn our ways. You are ready.
 #LIGHT_GREEN#*he gives you a potion.*#WHITE#
-Drink this, we extract it from a very rare kind of drake. It will grant you powers to fight and cancel magic, but never again will you be able to use magic.]],
+Drink this. We extract it from a very rare kind of drake. It will grant you powers to fight and cancel magic, but never again will you be able to use magic.]],
 	answers = {
 		{"Thank you. I shall not let magic triumph! #LIGHT_GREEN#[you drink the potion]", action=function(npc, player) player:setQuestStatus("antimagic", engine.Quest.COMPLETED) end},
 	}

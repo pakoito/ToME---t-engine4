@@ -49,7 +49,7 @@ newAchievement{
 
 newAchievement{
 	name = "Pyromancer",
-	desc = [[Unlocked Archmage class and done over one million fire damage (with any item/talent/class).]],
+	desc = [[Unlocked Archmage class and did over one million fire damage (with any item/talent/class).]],
 	mode = "world",
 	can_gain = function(self, who, dam)
 		self.nb = (self.nb or 0) + dam
@@ -61,7 +61,7 @@ newAchievement{
 }
 newAchievement{
 	name = "Cryomancer",
-	desc = [[Unlocked Archmage class and done over one million cold damage (with any item/talent/class).]],
+	desc = [[Unlocked Archmage class and did over one million cold damage (with any item/talent/class).]],
 	mode = "world",
 	can_gain = function(self, who, dam)
 		self.nb = (self.nb or 0) + dam

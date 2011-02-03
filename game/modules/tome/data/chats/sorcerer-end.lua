@@ -32,12 +32,12 @@ end
 if void_portal_open(nil, game.player) then
 newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*The two Sorcerers lie dead before you.*#WHITE#
-#LIGHT_GREEN#*Their bodies vanish in small cloud of mist, quickly fading away.*#WHITE#
+#LIGHT_GREEN#*Their bodies vanish in a small cloud of mist, quickly fading away.*#WHITE#
 But the portal to the Void is already open. It must be closed before the Creator can come through or all will have been in vain!
 After searching the remains of the Sorcerers you find a note explaining that the portal can only be closed with a sentient being's sacrifice.]],
 	answers = {
 		{"Aeryn, I am sorry but one of us needs to be sacrificed for the world to go on. #LIGHT_GREEN#[sacrifice Aeryn for the sake of the world]", jump="aeryn-sacrifice", cond=aeryn_alive},
-		{"I will close it #LIGHT_GREEN#[sacrifice yourself for the sake of the world]", action=function(npc, player)
+		{"I will close it. #LIGHT_GREEN#[sacrifice yourself for the sake of the world]", action=function(npc, player)
 			player.no_resurrect = true
 			player:die(player)
 			player:hasQuest("high-peak"):win("self-sacrifice")

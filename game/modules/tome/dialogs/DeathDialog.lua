@@ -143,7 +143,7 @@ function _M:eidolonPlane()
 			end
 		end
 
-		game.log("#LIGHT_RED#As you are on the brink of death you seem to be yanked to an other plane.")
+		game.log("#LIGHT_RED#As you are on the brink of death you seem to be yanked to another plane.")
 		game.player:updateMainShader()
 	end)
 	return true
@@ -166,7 +166,7 @@ function _M:use(item)
 	elseif act == "dump" then
 		game:registerDialog(require("mod.dialogs.CharacterSheet").new(self.actor))
 	elseif act == "cheat" then
-		game.logPlayer(self.actor, "#LIGHT_BLUE#You resurrect! CHEATER !")
+		game.logPlayer(self.actor, "#LIGHT_BLUE#You resurrect! CHEATER!")
 
 		self:cleanActor(self.actor)
 		self:restoreResources(self.actor)
@@ -193,10 +193,10 @@ function _M:use(item)
 			end
 		end
 		self:eidolonPlane()
-		game.log("#LIGHT_RED#You have %s left.", (self.actor:attr("easy_mode_lifes") and self.actor:attr("easy_mode_lifes").." life(s)") or "no more lifes")
+		game.log("#LIGHT_RED#You have %s left.", (self.actor:attr("easy_mode_lifes") and self.actor:attr("easy_mode_lifes").." life(s)") or "no more lives")
 	elseif act == "skeleton" then
 		self.actor:attr("re-assembled", 1)
-		game.logPlayer(self.actor, "#YELLOW#Your bones magically come back together. You are once more able to dish out pain to your foes!")
+		game.logPlayer(self.actor, "#YELLOW#Your bones magically knit back together. You are once more able to dish out pain to your foes!")
 
 		self:cleanActor(self.actor)
 		self:restoreResources(self.actor)

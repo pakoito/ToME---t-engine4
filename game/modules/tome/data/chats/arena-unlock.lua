@@ -16,15 +16,15 @@ That's unfortunate. You look like a fighter.
 #LIGHT_GREEN#*The hooded man draws a smile in his face. You can't tell if it's an arrogant
 #LIGHT_GREEN#smirk, or a sign of satisfaction. Concerned, you draw your hand closer to your
 #LIGHT_GREEN#weapon*#WHITE#
-Heheheh...Indeed, you are.
+Heheheh... indeed, you are.
 I am looking for strong fighters for battling in the arena. A tiny entertainment for the
-masses...but also a good source of good gold, and battles.
+masses... but also a good source of good gold, and experience.
 Listen, here is the deal. If you can prove your worth as fighter, I will give you
 an invitation to the arena.
-Fight three combatants, if you win, you get a pass. If you can survive, that is...
+Fight three combatants. If you win, you get a pass. If you can survive, that is...
 ]],
 	answers = {
-		{"Interesting, I am up to the challenge.", jump="yes"},
+		{"Interesting. I am up to the challenge.", jump="yes"},
 		{"I am not interested.", jump="ok"},
 	}
 }
@@ -32,9 +32,9 @@ Fight three combatants, if you win, you get a pass. If you can survive, that is.
 newChat{ id="yes",
 	text = [[#LIGHT_GREEN#*The man shows a devious smile*#WHITE#
 Ah, excellent. A great fighter is always willing to head into battle.
-Heheh...very well then, follow me, @playerdescriptor.race@.
+Heheh... very well then, follow me, @playerdescriptor.race@.
 #LIGHT_GREEN#*The man starts walking away, but suddenly turns to you*#WHITE#
-Just remember, you might lose your life if you are weak...
+Just remember, you might lose your life if you are weak.
 But that is not the case, is it? Heheh...
 ]],
 	answers = {
@@ -59,16 +59,16 @@ newChat{ id="go",
 
 
 newChat{ id="win",
-	text = [[#LIGHT_GREEN#*The cornac rogue comes back from the shadows*#WHITE#
+	text = [[#LIGHT_GREEN#*The Cornac rogue comes back from the shadows*#WHITE#
 Hehehe, well done, @playerdescriptor.race@! I knew you had potential.
 #LIGHT_GREEN#*The rogue takes out his hood, showing a fairly young, but unmistakingly
 #LIGHT_GREEN#battle-hardened man. He is smiling widely, but this time you can clearly
 #LIGHT_GREEN#recognize satisfaction in his smile.#WHITE#
 The name's Rej. I work for the arena to recruit great fighters who can give a good
-show...and not die in two blows.
+show... and not die in two blows.
 A promise is a promise. This envelope contains an invitation to the arena, and a map
 with its location.
-When you are done adventuring, I'll like to see you there.
+When you are done adventuring, I'd like to see you there.
 #LIGHT_GREEN#*As you travel back to Derth in company of the rogue, you both talk about past
 #LIGHT_GREEN#battles and techniques. His experience in combat inspires you greatly. (#WHITE#+2 generic talent points#LIGHT_GREEN#)
 #WHITE#Very well, @playername@. I must go now. I need to meet with some fighters at

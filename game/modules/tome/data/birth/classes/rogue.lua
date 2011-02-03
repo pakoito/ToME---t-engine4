@@ -21,7 +21,7 @@ newBirthDescriptor{
 	type = "class",
 	name = "Rogue",
 	desc = {
-		"Rogues are masters of tricks; they can steal from shops and monsters, and lure monsters into deadly traps.",
+		"Rogues are masters of tricks; they can strike from the shadows, and lure monsters into deadly traps.",
 	},
 	descriptor_choices =
 	{

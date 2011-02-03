@@ -116,11 +116,11 @@ function _M:incStat(v)
 			return
 		end
 		if self.actor:getStat(self.sel, nil, nil, true) >= self.actor.level * 1.4 + 20 then
-			self:simplePopup("Stat is at the maximum for your level", "You can not increase this stat further until next level!")
+			self:simplePopup("Stat is at the maximum for your level", "You cannot increase this stat further until next level!")
 			return
 		end
 		if self.actor:isStatMax(self.sel) or self.actor:getStat(self.sel, nil, nil, true) >= 60 then
-			self:simplePopup("Stat is at the maximum", "You can not increase this stat further!")
+			self:simplePopup("Stat is at the maximum", "You cannot increase this stat further!")
 			return
 		end
 	else

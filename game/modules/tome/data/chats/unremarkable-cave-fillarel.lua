@@ -33,7 +33,7 @@ My companions were... were slaughtered by orcs, and I nearly died as well. Thank
 }
 
 newChat{ id="sunwall",
-	text = [[Yes, I noticed you were not from here. Your only hope is the Gates of Morning, the last bastion of freedom in this orc territory. When you leave the caves head southeast; you cannot miss it.
+	text = [[Yes, I noticed you were not from here. Your only hope is the Gates of Morning, the last bastion of freedom in this orc territory. When you leave the caves, head southeast; you cannot miss it.
 Tell High Sun Paladin Aeryn that you met me. I'll send word to let you pass.]],
 	answers = {
 		{"Thank you, I will talk with Aeryn.", action=function(npc, player) game.player:setQuestStatus("strange-new-world", engine.Quest.COMPLETED, "helped-fillarel") end},

@@ -21,7 +21,7 @@ newBirthDescriptor{
 	type = "class",
 	name = "Psionic",
 	desc = {
-		"Psionics find their power within themselves. Their highly trained mind can harness energy from many different source and manipulate it to produce their own effects.",
+		"Psionics find their power within themselves. Their highly trained minds can harness energy from many different sources and manipulate it to produce physical effects.",
 	},
 	descriptor_choices =
 	{

@@ -59,7 +59,7 @@ text = [[#LIGHT_GREEN#*The gate opens, revealing a mature human woman in crimson
 #LIGHT_GREEN#She looks at you with a wide smile*
 #WHITE# My, my, what a fine @playerdescriptor.race@ you are. What was your name again, @playername@? I am soo delighted to be your rival today.
 #LIGHT_GREEN#*She speaks quietly as if telling a secret* #WHITE#You know, so few get past the little one as of late, it's such a bore.#LIGHT_GREEN#*She giggles*#WHITE#
-So! I am Reala, the Crimson. I came directly from Angolwen. Despite, you know, the whole thing with the Spellblaze, people still enjoys a few magic tricks!
+So! I am Reala, the Crimson. I came directly from Angolwen. Despite, you know, the whole thing with the Spellblaze, people still enjoy a few magic tricks!
 #LIGHT_GREEN#*She snaps her fingers, and then flames start dancing around her!*#WHITE#
 Fryjia told me about you, the poor thing, so I will not underestimate such a promising aspirant #LIGHT_GREEN#*She smiles warmly* #WHITE#So, let's make haste my dear!
 There is a battle to fight here!]],
@@ -72,10 +72,10 @@ newChat{ id="riala-defeat",
 text = [[#LIGHT_GREEN#*With the final blow, Reala falls...to suddenly burst in flames!!
 #LIGHT_GREEN#You stare at the blazing inferno with understandable confusion,
 #LIGHT_GREEN#until you hear her voice from behind*#WHITE#
-Oh, my dear! That was quite the fight wasn't it? I concede you the honor of victory.
+Oh, my dear! That was quite the fight, wasn't it? I concede you the honor of victory.
 #LIGHT_GREEN#*She bows politely*
-Fryjia was right about you, you seem to be a champion on the works!
-Oh, and, please forgive her behavior. You will understand when you meet her father.
+Fryjia was right about you: you seem to be a champion in the works!
+Oh, and please forgive her behavior. You will understand when you meet her father.
 And, if you keep fighting like this, it will be really soon.
 So, it's been my pleasure, @playername@. #LIGHT_GREEN#*She vanishes in a spiral of flame*]],
 	answers = {
@@ -106,14 +106,14 @@ f...t...ma....ll...
 newChat{ id="valfren-defeat",
 text = [[#LIGHT_GREEN#*You valiantly deliver the finishing blow!*
 #LIGHT_GREEN#*Valfren collapses as the light returns to this world.
-#LIGHT_GREEN#You close your eyes for a brief instant, Fryjia is there when you open them*
+#LIGHT_GREEN#You close your eyes for a brief instant. Fryjia is there when you open them*
 Father... #LIGHT_GREEN#*She stands silent for a few seconds*#WHITE# You win, @playerdescriptor.race@.
-You have done well. Prepare for your final battle...if you win, we will be at your service.
+You have done well. Prepare for your final battle... if you win, we will be at your service.
 Good luck...
 #LIGHT_GREEN#*After a few uncomfortable seconds, Valfren starts to move again.
 #LIGHT_GREEN#He stands up and walks away with Fryjia. At the gates, Valfren turns his
-#LIGHT_GREEN#head in your direction. You look at him, and then, he looks above
-#LIGHT_GREEN#the arena's walls. You follow his guide...to meet the Master of the Arena*
+#LIGHT_GREEN#head in your direction. You look at him, and then he looks above
+#LIGHT_GREEN#the arena's walls. You follow his gaze... to meet the Master of the Arena*
 
 #LIGHT_GREEN#*There it is. Your goal. Your heart beats fast, as the time has come*
 #LIGHT_GREEN#*The Master of the Arena smiles proudly*

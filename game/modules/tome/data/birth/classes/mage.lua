@@ -98,10 +98,10 @@ newBirthDescriptor{
 	type = "subclass",
 	name = "Alchemist",
 	desc = {
-		"An Alchemist is manipulator of materials using magic.",
+		"An Alchemist is a manipulator of materials using magic.",
 		"They do not use the forbidden arcane arts practised by the mages of old - such pervertors of nature using willpower alone have been shunned or actively hunted down since the Spellblaze.",
 		"Alchemists can transmute gems to bring forth elemental effects, turning them into balls of fire, torrents of acid, and other effects.  They can also reinforce armour with magical effects using gems, and channel arcane staffs to produce bolts of energy.",
-		"Though normally physically weak most alchemists are accompanied by magical golems which they construct and use as bodyguards.  These golems are enslaved to their master's will, and can grow in power as their master advances through the arts.",
+		"Though normally physically weak, most alchemists are accompanied by magical golems which they construct and use as bodyguards.  These golems are enslaved to their master's will, and can grow in power as their master advances through the arts.",
 		"Their most important stats are: Magic and Dexterity",
 		"#GOLD#Stat modifiers:",
 		"#LIGHT_BLUE# * +0 Strength, +3 Dexterity, +0 Constitution",

@@ -20,8 +20,8 @@
 local p = game.party:findMember{main=true}
 if not p:isQuestStatus("antimagic", engine.Quest.DONE) then
 newChat{ id="welcome",
-	text = [[#LIGHT_GREEN#*A halfling woman stands before you, clad in dark steel plate.*#WHITE#
-Take the test, then we can talk.]],
+	text = [[#LIGHT_GREEN#*A Halfling woman stands before you, clad in dark steel plate.*#WHITE#
+Take the test, and then we can talk.]],
 	answers = {
 		{"But.."},
 	}
@@ -32,7 +32,7 @@ end
 
 
 newChat{ id="welcome",
-	text = [[#LIGHT_GREEN#*A halfling woman stands before you, clad in dark steel plate.*#WHITE#
+	text = [[#LIGHT_GREEN#*A Halfling woman stands before you, clad in dark steel plate.*#WHITE#
 I am Protector Myssil. Welcome to Zigur.]],
 	answers = {
 		{"I require all the help I can get, not for my sake but for the town of Derth, to the northeast of here.", jump="save-derth", cond=function(npc, player) local q = player:hasQuest("lightning-overload") return q and q:isCompleted("saved-derth") and not q:isCompleted("tempest-entrance") end},
@@ -41,9 +41,9 @@ I am Protector Myssil. Welcome to Zigur.]],
 }
 
 newChat{ id="save-derth",
-	text = [[Yes, we have sensed the blight of the eldritch forces there. I have already people to dispel the cloud, but the real threat is not there.
+	text = [[Yes, we have sensed the blight of the eldritch forces there. I have people working to dispel the cloud, but the real threat is not there.
 We know that a Tempest, a powerful Archmage who can control the storms, is responsible for the damage. Those wretched fools from Angolwen will not act. All corrupted!
-So you must act @playername@. I will show you the location of this mage - high in the Daikara mountains.
+So you must act, @playername@. I will show you the location of this mage - high in the Daikara mountains.
 Erase him.]],
 	answers = {
 		{"You can count on me, Protector.", action=function(npc, player)

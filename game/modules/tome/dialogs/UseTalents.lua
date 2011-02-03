@@ -33,7 +33,7 @@ function _M:init(actor)
 	Dialog.init(self, "Use Talents: "..actor.name, game.w * 0.8, game.h * 0.8)
 
 	self.c_tut = Textzone.new{width=math.floor(self.iw / 2 - 10), height=1, auto_height=true, no_color_bleed=true, text=[[
-You can bind a talent to a hotkey be pressing the corresponding hotkey while selecting a talent or by right-clicking on the talent.
+You can bind a talent to a hotkey by pressing the corresponding hotkey while selecting a talent or by right-clicking on the talent.
 Check out the keybinding screen in the game menu to bind hotkeys to a key (default is 1-0 plus control or shift).
 ]]}
 	self.c_desc = TextzoneList.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.c_tut.h - 20, scrollbar=true, no_color_bleed=true}

@@ -34,7 +34,7 @@ function _M:init()
 	Dialog.init(self, "Donations", 500, 300)
 
 	local desc = Textzone.new{width=self.iw, auto_height=true, text=[[Hi, I am Nicolas (DarkGod), the maker of this game.
-It is my dearest hope that you find my game enjoyable, and that you will continue to do so for the many years to come!
+It is my dearest hope that you find my game enjoyable, and that you will continue to do so for many years to come!
 
 ToME is free and open-source and will stay that way, but that does not mean I can live without money, so I have come to disturb you here and now to ask for your kindness.
 If you feel that the (many) hours you have spent having fun were worth it, please consider making a donation for the future of the game.

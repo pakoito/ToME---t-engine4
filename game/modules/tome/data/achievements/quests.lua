@@ -55,7 +55,7 @@ newAchievement{
 }
 newAchievement{
 	name = "Brave new world", id = "STRANGE_NEW_WORLD",
-	desc = [[Gone to the Far East and took side in the war.]],
+	desc = [[Went to the Far East and took part in the war.]],
 }
 newAchievement{
 	name = "Race through fire", id = "CHARRED_SCAR_SUCCESS",

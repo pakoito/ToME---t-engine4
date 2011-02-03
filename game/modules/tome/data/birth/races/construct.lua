@@ -25,7 +25,7 @@ newBirthDescriptor{
 	name = "Construct",
 	desc = {
 		"Constructs are not natural creatures.",
-		"THe momst usual contructs are golem, but they can vary in shape, form and abilities.",
+		"The most usual contructs are golems, but they can vary in shape, form and abilities.",
 	},
 	descriptor_choices =
 	{

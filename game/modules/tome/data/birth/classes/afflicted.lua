@@ -43,8 +43,8 @@ newBirthDescriptor{
 	desc = {
 		"Through ignorance, greed or folly the Cursed served some dark design and are now doomed to pay for their sins.",
 		"Their only master now is the hatred they carry for every living thing.",
-		"Drawing strength from the death of all they encounter, the cursed become terrifying combatants.",
-		"Worse, any who approach the cursed can be driven mad by their terrible aura.",
+		"Drawing strength from the death of all they encounter, the Cursed become terrifying combatants.",
+		"Worse, any who approach the Cursed can be driven mad by their terrible aura.",
 		"Their most important stats are: Strength and Willpower",
 		"#GOLD#Stat modifiers:",
 		"#LIGHT_BLUE# * +5 Strength, +0 Dexterity, +0 Constitution",

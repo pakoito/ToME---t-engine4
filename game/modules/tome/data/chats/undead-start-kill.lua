@@ -26,7 +26,7 @@ Please spare me! I am pitiful. I will not stop you. Let me leave!]],
 }
 
 newChat{ id="welcome2",
-	text = [[But but you were my... you...
+	text = [[But, but, you were my... you...
 You need me! What do you think you will do on the surface? Everything you will meet will try to destroy you.
 You are strong but you cannot resist them all!]],
 	answers = {

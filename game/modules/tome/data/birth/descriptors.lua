@@ -97,7 +97,7 @@ newBirthDescriptor{
 	desc =
 	{
 		"#GOLD##{bold}#Tutorial mode",
-		"#WHITE#Starts with a simplified character and discover the game in a simple quest.#{normal}#",
+		"#WHITE#Start with a simplified character and discover the game in a simple quest.#{normal}#",
 		"All damage done to the player reduced by 20%",
 		"All healing for the player increased by 10%",
 		"No main game achievements possible.",
@@ -148,8 +148,8 @@ newBirthDescriptor{
 	desc =
 	{
 		"#GOLD##{bold}#Adventure mode#WHITE#",
-		"Provides the normal game experience but with limited extra lifes.",
-		"Use it if you want a normal playing conditions but do not feel ready for just one life.#{normal}#",
+		"Provides the normal game experience but with limited extra lives.",
+		"Use it if you want normal playing conditions but do not feel ready for just one life.#{normal}#",
 		"At level 1,2,5,7,14,24,35 get one more 'life' that allows to resurrect at the start of the level.",
 	},
 	descriptor_choices =
@@ -169,7 +169,7 @@ newBirthDescriptor{
 	{
 		"#GOLD##{bold}#Roguelike mode#WHITE#",
 		"Provides the closer experience to 'classic' roguelike games.",
-		"You will only have one life, you *ARE* your character.#{normal}#",
+		"You will only have one life; you *ARE* your character.#{normal}#",
 		"Only one life, unless ways to self-resurrect are found in-game.",
 	},
 	descriptor_choices =

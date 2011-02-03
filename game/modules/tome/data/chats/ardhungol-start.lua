@@ -19,7 +19,7 @@
 
 if not game.player:hasQuest("spydric-infestation") then
 newChat{ id="welcome",
-	text = [[I have heard you are a great hero of the west? Could you help me, please?]],
+	text = [[I have heard you are a great hero of the west. Could you help me, please?]],
 	answers = {
 		{"Maybe, what is it about?", jump="quest", cond=function(npc, player) return not player:hasQuest("spydric-infestation") end},
 		{"I have got enough problems sorry."},
@@ -37,7 +37,7 @@ end
 
 newChat{ id="quest",
 	text = [[My husband, Rashim, is a Sun Paladin. He was sent to clear the spider lair of Ardhungol to the north of this town.
-It has been three days now. He should be back by now. I have a feeling something terrible has happened to him. Please find him.
+It has been three days now. He should be back by now. I have a feeling something terrible has happened to him. Please find him!
 He should have a magical stone given by the Anorithil to create a portal back here, yet he did not use it!]],
 	answers = {
 		{"I will see if I can find him.", action=function(npc, player) player:grantQuest("spydric-infestation") end},

@@ -70,7 +70,7 @@ newChat{ id="melinda",
 ------------------------------------------------------------------
 newChat{ id="scars",
 	text = [[#LIGHT_GREEN#*She presses on her lower belly in a provocative way.*#WHITE#
-See, you can touch it. It is fine. No pain anymore! This is thanks to you my... dear friend.]],
+See, you can touch it. It is fine. No pain any more! This is thanks to you, my... dear friend.]],
 	answers = {
 		{"I am sorry. I do not think your father would approve. Be well, my lady.", quick_reply="I think he would, but if this is what you wish, goodbye and farewell."},
 		{"#LIGHT_GREEN#[touch the spot she indicates] Yes, it seems all right", jump="touch_male", cond=function(npc, player) return player.male end},

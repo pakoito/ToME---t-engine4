@@ -24,7 +24,7 @@ local isNotSet = function(what) return function(npc, player) return not q:isComp
 
 newChat{ id="welcome",
 	text = [[*#LIGHT_GREEN#The creature slowly turns to you. You hear its terrible voice directly in your head.#WHITE#*
-Welcome master.]],
+Welcome, master.]],
 	answers = {
 		{"What are you and what is this place?", jump="what", cond=isNotSet"what", action=set"what"},
 		{"Master? I am not your mas..", jump="master", cond=isNotSet"master", action=set"master"},
@@ -38,14 +38,14 @@ newChat{ id="master",
 	text = [[*#LIGHT_GREEN#The creature glares at you.#WHITE#*
 You posses a control rod. You are the master.]],
 	answers = {
-		{"Err ok.", jump="welcome"},
+		{"Err... ok.", jump="welcome"},
 	}
 }
 newChat{ id="understand",
 	text = [[*#LIGHT_GREEN#The creature glares at you.#WHITE#*
-You are the master, you have the rod. I am created to speak to the master.]],
+You are the master; you have the rod. I am created to speak to the master.]],
 	answers = {
-		{"Err ok.", jump="welcome"},
+		{"Err... ok.", jump="welcome"},
 	}
 }
 
@@ -55,9 +55,9 @@ You see titanic wars in an age now forgotten. You see armies of what you suppose
 They fight with weapons, magic and other things. They fight gods. They hunt them down, killing or banishing them.
 You see great fortresses like this one, flying all over the skies of Eyal - shining bastions of power glittering in the young sun.
 You see the gods beaten, defeated and dead. All but one.
-Then you see darkness, it seems like the shadow does not know what followed those events.
+Then you see darkness; it seems like the shadow does not know what followed those events.
 
-You shake your head as the vision disipates, your normal sight comes back slowly.
+You shake your head as the vision dissipates, and your normal sight comes back slowly.
 #WHITE#*
 ]],
 	answers = {
@@ -73,7 +73,7 @@ newChat{ id="godslayers",
 }
 
 newChat{ id="where",
-	text = [[They are gone now. I can not tell you more.]],
+	text = [[They are gone now. I cannot tell you more.]],
 	answers = {
 		{"But I am the master!", jump="where"},
 		{"Fine.", jump="welcome"},
@@ -82,7 +82,7 @@ newChat{ id="where",
 
 newChat{ id="storage",
 	text = [[*#LIGHT_GREEN#The creature glares at you.#WHITE#*
-You are the master. You can use this place as you desire. However most of the energies are depleted and only some rooms are usable.
+You are the master. You can use this place as you desire. However, most of the energies are depleted and only some rooms are usable.
 To the south you will find the storage room.]],
 	answers = {
 		{"Thanks.", jump="welcome"},

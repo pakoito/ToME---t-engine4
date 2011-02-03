@@ -235,7 +235,7 @@ function _M:onDrawItem(item)
 		if t.generic then
 			what = "generic talent"
 			text:add({"color",0x00,0xFF,0xFF}, "Generic Talent", true)
-			text:add({"color",0x00,0xFF,0xFF}, "A generic talent allows you to perform various utility actions and improve your character. It represents talents anybody can learn (should they find a trainer for it). You gain one point every levels (except every 5th level). You may also find trainers or artifacts that allow you to learn more.", true, true, {"color", "WHITE"})
+			text:add({"color",0x00,0xFF,0xFF}, "A generic talent allows you to perform various utility actions and improve your character. It represents talents anybody can learn (should they find a trainer for it). You gain one point every level (except every 5th level). You may also find trainers or artifacts that allow you to learn more.", true, true, {"color", "WHITE"})
 		else
 			what = "class talent"
 			text:add({"color",0x00,0xFF,0xFF}, "Class talent", true)
@@ -344,7 +344,7 @@ function _M:learnTalent(t_id, v)
 			if ok then
 				self.actor.unused_talents = self.actor.unused_talents + 1
 			else
-				self:simplePopup("Impossible", "You can not unlearn this talent because of talent: "..dep_miss)
+				self:simplePopup("Impossible", "You cannot unlearn this talent because of talent: "..dep_miss)
 				self.actor:learnTalent(t_id)
 				return
 			end
@@ -429,7 +429,7 @@ function _M:learnType(tt, v)
 			if ok then
 				self.actor.unused_talents_types = self.actor.unused_talents_types + 1
 			else
-				self:simplePopup("Impossible", "You can not unlearn this category because of: "..dep_miss)
+				self:simplePopup("Impossible", "You cannot unlearn this category because of: "..dep_miss)
 				self.actor:learnTalentType(tt)
 				return
 			end

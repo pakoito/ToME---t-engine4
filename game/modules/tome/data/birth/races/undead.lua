@@ -24,7 +24,7 @@ newBirthDescriptor{
 	type = "race",
 	name = "Undead",
 	desc = {
-		"Undead are humanoids (humans, elves, dwarves, ...) that have been brought back to life by the corruption of dark magics.",
+		"Undead are humanoids (Humans, Elves, Dwarves, ...) that have been brought back to life by the corruption of dark magics.",
 		"Undead can take many forms, from ghouls to vampires and liches.",
 	},
 	descriptor_choices =

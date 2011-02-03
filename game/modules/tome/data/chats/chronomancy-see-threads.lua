@@ -33,7 +33,7 @@ local function select(id)
 end
 
 newChat{ id="welcome",
-	text = [[You have lived ]]..turns..[[ in three different timelines, which do you choose to be the real timeline?]],
+	text = [[You have lived ]]..turns..[[ in three different timelines. Which do you choose to be the real timeline?]],
 	answers = {
 		{"The first.", action=function(npc, player) select(1) end},
 		{"The second.", action=function(npc, player) select(2) end},

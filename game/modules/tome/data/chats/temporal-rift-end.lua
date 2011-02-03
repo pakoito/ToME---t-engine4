@@ -18,10 +18,10 @@
 -- darkgod@te4.org
 
 newChat{ id="welcome",
-	text = [[#LIGHT_GREEN#*A tall man, glowing like a star appears out of nowhere.*#WHITE#
+	text = [[#LIGHT_GREEN#*A tall man, glowing like a star, appears out of nowhere.*#WHITE#
 You destroyed *it* both? I am sorry for my harsh tone when we first met, but repairing time threads is stressful.
-I can not stay, I still have much to do, but take this it should help you.
-#LIGHT_GREEN#*He disappears again before you can even reply. A rift opens, to Maj'Eyal you hope.*#WHITE#]],
+I cannot stay. I still have much to do. But take this-- it should help you.
+#LIGHT_GREEN#*He disappears again before you can even reply. A rift opens, to Maj'Eyal... you hope.*#WHITE#]],
 	answers = {
 		{"Ok...", action = function(npc, player)
 			local o = game.zone:makeEntityByName(game.level, "object", "RUNE_RIFT")

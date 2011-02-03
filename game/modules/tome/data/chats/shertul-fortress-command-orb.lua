@@ -32,7 +32,7 @@ Rokzz krilt copru.]],
 }
 
 newChat{ id="examine",
-	text = [[*#LIGHT_GREEN#The device seems to be made of pure crystal, it projects a very accurate map of the known world - including the forbidden continent of the south.
+	text = [[*#LIGHT_GREEN#The device seems to be made of pure crystal. It projects a very accurate map of the known world - including the forbidden continent of the south.
 There seems to be a hole about the size and form of your Rod of Recall.#WHITE#*]],
 	answers = {
 		{"[Insert the rod]", jump="activate"},
@@ -43,7 +43,7 @@ newChat{ id="activate",
 	text = [[*#LIGHT_GREEN#As you take the rod close to the orb it seems to vibrate and react.
 A shadow appear in a corner of the room! You retract the rod immediately but the shadow stays.
 It looks like the horrors you fought when coming inside, only less degenerated.
-The thing looks roughtly humanoid, but it has no head and its members look like tentacles. It does not seem hostile.#WHITE#*]],
+The thing looks roughly humanoid, but it has no head and its limbs look like tentacles. It does not seem hostile.#WHITE#*]],
 	answers = {
 		{"[Leave the orb alone]", action=function(npc, player)
 			player:hasQuest("shertul-fortress"):spawn_butler()

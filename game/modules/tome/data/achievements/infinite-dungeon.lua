@@ -19,61 +19,61 @@
 
 newAchievement{
 	name = "Infinite x10",
-	desc = [[Got to the level 10 of the infinite dungeon.]],
+	desc = [[Got to level 10 of the infinite dungeon.]],
 }
 newAchievement{
 	name = "Infinite x20",
-	desc = [[Got to the level 20 of the infinite dungeon.]],
+	desc = [[Got to level 20 of the infinite dungeon.]],
 }
 newAchievement{
 	name = "Infinite x30",
-	desc = [[Got to the level 30 of the infinite dungeon.]],
+	desc = [[Got to level 30 of the infinite dungeon.]],
 }
 newAchievement{
 	name = "Infinite x40",
-	desc = [[Got to the level 40 of the infinite dungeon.]],
+	desc = [[Got to level 40 of the infinite dungeon.]],
 }
 newAchievement{
 	name = "Infinite x50",
-	desc = [[Got to the level 50 of the infinite dungeon.]],
+	desc = [[Got to level 50 of the infinite dungeon.]],
 }
 newAchievement{
 	name = "Infinite x60",
-	desc = [[Got to the level 60 of the infinite dungeon.]],
+	desc = [[Got to level 60 of the infinite dungeon.]],
 }
 newAchievement{
 	name = "Infinite x70",
-	desc = [[Got to the level 70 of the infinite dungeon.]],
+	desc = [[Got to level 70 of the infinite dungeon.]],
 }
 newAchievement{
 	name = "Infinite x80",
-	desc = [[Got to the level 80 of the infinite dungeon.]],
+	desc = [[Got to level 80 of the infinite dungeon.]],
 }
 newAchievement{
 	name = "Infinite x90",
-	desc = [[Got to the level 90 of the infinite dungeon.]],
+	desc = [[Got to level 90 of the infinite dungeon.]],
 }
 newAchievement{
 	name = "Infinite x100",
-	desc = [[Got to the level 100 of the infinite dungeon.]],
+	desc = [[Got to level 100 of the infinite dungeon.]],
 }
 newAchievement{
 	name = "Infinite x150",
-	desc = [[Got to the level 150 of the infinite dungeon.]],
+	desc = [[Got to level 150 of the infinite dungeon.]],
 }
 newAchievement{
 	name = "Infinite x200",
-	desc = [[Got to the level 200 of the infinite dungeon.]],
+	desc = [[Got to level 200 of the infinite dungeon.]],
 }
 newAchievement{
 	name = "Infinite x300",
-	desc = [[Got to the level 300 of the infinite dungeon.]],
+	desc = [[Got to level 300 of the infinite dungeon.]],
 }
 newAchievement{
 	name = "Infinite x400",
-	desc = [[Got to the level 400 of the infinite dungeon.]],
+	desc = [[Got to level 400 of the infinite dungeon.]],
 }
 newAchievement{
 	name = "Infinite x500",
-	desc = [[Got to the level 500 of the infinite dungeon.]],
+	desc = [[Got to level 500 of the infinite dungeon.]],
 }

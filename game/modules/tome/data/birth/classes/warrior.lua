@@ -134,7 +134,7 @@ newBirthDescriptor{
 		"The Arcane Blade is a warrior who has been touched by the gift of magic.",
 		"Their use of magic is innate and not really studied; as such they do not naturally regenerate mana and must use external means of recharging.",
 		"They can cast spells from a limited selection but have the unique capacity to 'channel' their attack spells through their melee attacks.",
-		"They are adept at two-handed weapons, for the sheer destruction they can bring.",
+		"They are adept with two-handed weapons, for the sheer destruction they can bring.",
 		"Their most important stats are: Strength, Dexterity and Magic",
 		"#GOLD#Stat modifiers:",
 		"#LIGHT_BLUE# * +3 Strength, +3 Dexterity, +0 Constitution",

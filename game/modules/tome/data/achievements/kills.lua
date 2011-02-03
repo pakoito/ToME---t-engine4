@@ -36,7 +36,7 @@ newAchievement{
 }
 newAchievement{
 	name = "Pest Control",
-	desc = [[Killed 1000 reproducing vermins]],
+	desc = [[Killed 1000 reproducing vermin]],
 	mode = "player",
 	can_gain = function(self, who, target)
 		if target:knowTalent(target.T_MULTIPLY) then

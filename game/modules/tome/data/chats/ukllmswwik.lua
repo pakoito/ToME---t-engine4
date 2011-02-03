@@ -27,7 +27,7 @@ end
 if not game.player:isQuestStatus("temple-of-creation", engine.Quest.COMPLETED, "drake-story") then
 
 newChat{ id="welcome",
-	text = [[#LIGHT_GREEN#*@npcname@ deep voice booms through the level.*#WHITE#
+	text = [[#LIGHT_GREEN#*@npcname@'s deep voice booms through the caverns.*#WHITE#
 This is my domain, and I do not take kindly to intruders. What is your purpose here?]],
 	answers = {
 		{"I am here to kill you and take your treasures! Die, damned fish!", action=attack("DIE!")},
@@ -42,7 +42,7 @@ The Naloren Elves perished... or so the world thinks. Some of them survived; usi
 They are now called the nagas. They live deep in the ocean between Maj'Eyal and the Far East.
 One of them, Slasul, rebelled against his order and decided he wanted the world for himself, both underwater and above. He found an ancient temple, probably a Sher'Tul remain, called the Temple of Creation.
 He believes he can use it to #{italic}#improve#{normal}# nagas.
-But he has become mad and now looks upon all intelligent water life as a threat, and that includes myself.
+But he has become mad and now looks upon all other intelligent water life as a threat, and that includes myself.
 I cannot leave this sanctuary, but perhaps you could help me?
 After all, it would be an act of mercy to end his madness.]],
 	answers = {
@@ -69,7 +69,7 @@ newChat{ id="welcome",
 	text = [[Yes?]],
 	answers = {
 		{"[attack]", action=attack("TREACHERY!")},
-		{"I want your treasures, water beast!", action=attack("Oh, is that so? Well, COME GET IT!")},
+		{"I want your treasures, water beast!", action=attack("Oh, is that so? Well, COME GET THEM!")},
 		{"I spoke with Slasul, and he did not seem hostile, or mad.", jump="slasul_friend", cond=function(npc, player) return player:isQuestStatus("temple-of-creation", engine.Quest.COMPLETED, "slasul-story") and not player:isQuestStatus("temple-of-creation", engine.Quest.COMPLETED, "kill-slasul") end},
 		{"Farewell, dragon."},
 	}

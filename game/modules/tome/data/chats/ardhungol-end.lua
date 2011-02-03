@@ -19,7 +19,7 @@
 
 newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*As the monstrous spider falls you see something... moving in her belly until it explodes! A tall black man steps out of the spewed guts, surrounded by a golden light.*#WHITE#
-By the sun! I thought I would never again see a friendly face!
+By the Sun! I thought I would never again see a friendly face!
 Thank you. I am Rashim, and I am in your debt.
 ]],
 	answers = {

@@ -68,7 +68,7 @@ Since the last invasion of the orcs there has been no threat to unite them!]],
 newChat{ id="explain2",
 	text = [[Us? Ah, no, we are merely instruments for the Master. We have planned for His return.]],
 	answers = {
-		{"And 'Him' would be?", jump="explain3"},
+		{"And 'He' would be...?", jump="explain3"},
 	}
 }
 

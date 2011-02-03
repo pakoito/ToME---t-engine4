@@ -21,7 +21,7 @@ newBirthDescriptor{
 	type = "class",
 	name = "Divine",
 	desc = {
-		"Divine classes are composed of worshippers of many various gods and entities.",
+		"Divine classes are composed of worshippers of various gods and entities.",
 		"They include the worship of the Sun, the Moon, powerful spirits, ...",
 	},
 	descriptor_choices =
