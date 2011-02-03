@@ -26,6 +26,7 @@ function _M:init(zone, map, level, spots)
 	Random.init(self, zone, map, level, spots)
 	local data = level.data.generator.actor
 	self.on_spot_chance = data.on_spot_chance or 70
+	self.spot_radius = data.spot_radius or 5
 	self.spot_filters = data.spot_filters or {}
 
 	-- Pick a number of spots
@@ -41,7 +42,7 @@ function _M:getSpawnSpot(m)
 	if rng.percent(self.on_spot_chance) then
 		local spot = rng.table(self.spots)
 		if not spot then return end
-		local _, _, gs = util.findFreeGrid(spot.x, spot.y, 5, "block_move", {[Map.ACTOR]=true})
+		local _, _, gs = util.findFreeGrid(spot.x, spot.y, self.spot_radius, "block_move", {[Map.ACTOR]=true})
 		local tries = 0
 		local g = rng.table(gs)
 		local x, y = g[1], g[2]

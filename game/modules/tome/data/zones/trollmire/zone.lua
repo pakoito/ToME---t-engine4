@@ -52,14 +52,16 @@ return {
 			lite_room_chance = 100,
 		},
 		actor = {
-			class = "engine.generator.actor.Random",
+			class = "engine.generator.actor.OnSpots",
 			nb_npc = {20, 30},
 			filters = { {max_ood=2}, },
+			nb_spots = 2, on_spot_chance = 35,
 			guardian = "TROLL_BILL",
 		},
 		object = {
-			class = "engine.generator.object.Random",
+			class = "engine.generator.object.OnSpots",
 			nb_object = {6, 9},
+			nb_spots = 2, on_spot_chance = 80,
 		},
 		trap = {
 			class = "engine.generator.trap.Random",

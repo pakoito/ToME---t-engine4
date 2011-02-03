@@ -46,12 +46,12 @@ return {
 			class = "engine.generator.actor.OnSpots",
 			nb_npc = {20, 30},
 			filters = { {max_ood=2}, },
-			nb_spots = 2, on_spot_chance = 50,
+			nb_spots = 2, on_spot_chance = 35,
 		},
 		object = {
 			class = "engine.generator.object.OnSpots",
 			nb_object = {6, 9},
-			nb_spots = 2, on_spot_chance = 70,
+			nb_spots = 2, on_spot_chance = 80,
 		},
 		trap = {
 			class = "engine.generator.trap.Random",

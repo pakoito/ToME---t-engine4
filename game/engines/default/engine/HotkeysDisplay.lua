@@ -140,6 +140,15 @@ end
 -- This is optional, only if you need mouse support
 function _M:onMouse(button, mx, my, click, on_over)
 	local a = self.actor
+
+	if button == "wheelup" and click then
+		a:prevHotkeyPage()
+		return
+	elseif button == "wheeldown" and click then
+		a:nextHotkeyPage()
+		return
+	end
+
 	mx, my = mx - self.display_x, my - self.display_y
 	for i, zone in pairs(self.clics) do
 		if mx >= zone[1] and mx < zone[1] + zone[3] and my >= zone[2] and my < zone[2] + zone[4] then

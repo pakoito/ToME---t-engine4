@@ -34,6 +34,7 @@ function _M:init(zone, map, level, data)
 	self.hurst = data.hurst or nil
 	self.lacunarity = data.lacunarity or nil
 	self.octave = data.octave or 4
+	self.nb_spots = data.nb_spots or 10
 	self.do_ponds = data.do_ponds
 	if self.do_ponds then
 		self.do_ponds.zoom = self.do_ponds.zoom or 5
@@ -138,6 +139,7 @@ function _M:generate(lev, old_lev)
 	end end
 
 	-- make the noise
+	local possible_spots = {}
 	local noise = core.noise.new(2, self.hurst, self.lacunarity)
 	for i = 1, self.map.w do
 		for j = 1, self.map.h do
@@ -146,12 +148,19 @@ function _M:generate(lev, old_lev)
 				self.map(i-1, j-1, Map.TERRAIN, self:resolve("wall"))
 			else
 				self.map(i-1, j-1, Map.TERRAIN, self:resolve("floor"))
+				if v >= self.sqrt_percent then possible_spots[#possible_spots+1] = {x=i-1, y=j-1, type="clearing", subtype="clearing"} end
 			end
 		end
 	end
 
 	local spots = {}
 	self.spots = spots
+
+	-- Add some spots
+	for i = 1, self.nb_spots do
+		local s = rng.tableRemove(possible_spots)
+		if s then self.spots[#self.spots+1] = s end
+	end
 
 	if self.do_ponds then
 		for i = 1, rng.range(self.do_ponds.nb[1], self.do_ponds.nb[2]) do

@@ -18,24 +18,6 @@
 -- darkgod@te4.org
 
 newEntity{
-	define_as = "GENERAL_STORE",
-	name = "general store",
-	display = '1', color=colors.LIGHT_UMBER,
-	store = {
-		purse = 10,
-		restock_after = 1000,
-		empty_before_restock = true,
-		min_fill = 40,
-		max_fill = 60,
-		filters = {
---			{type="scroll", id=true},
-		},
---		fixed = {
---		},
-	},
-}
-
-newEntity{
 	define_as = "ARMOR",
 	name = "armour smith",
 	display = '2', color=colors.UMBER,
