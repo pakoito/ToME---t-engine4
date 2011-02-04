@@ -421,6 +421,11 @@ function _M:getTextualDesc()
 
 	if self.combat then desc_combat(self.combat) end
 
+	if self.special_combat then
+		desc:add({"color","YELLOW"}, "When used to attack (with talents):", {"color", "LAST"}, true)
+		desc_combat(self.special_combat)
+	end
+
 	if self.no_teleport then
 		desc:add("It is immune to teleportation, if you teleport it will fall on the ground.", true)
 	end
