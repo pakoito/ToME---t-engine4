@@ -86,7 +86,7 @@ newTalent{
 	info = function(self, t)
 		local heal = t.getHeal(self, t)
 		local count = t.getRemoveCount(self, t)
-		return ([[You revert your body to a previous state, healing youself for %0.2f life and removing %d status effects (both good and bad).
+		return ([[You revert your body to a previous state, healing yourself for %0.2f life and removing %d status effects (both good and bad).
 		The life healed will scale with your Paradox and Magic stat.]]):
 		format(heal, count)
 	end,

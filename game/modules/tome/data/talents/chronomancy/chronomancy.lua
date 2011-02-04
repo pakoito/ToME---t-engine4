@@ -67,7 +67,7 @@ newTalent{
 newTalent{
 	name = "Precognition",
 	type = {"chronomancy/chronomancy",4},
-	require = chrono_req4,
+	require = temporal_req4,
 	points = 5,
 	paradox = 50,
 	cooldown = 100,

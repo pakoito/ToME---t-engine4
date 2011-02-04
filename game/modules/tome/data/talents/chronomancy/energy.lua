@@ -23,7 +23,7 @@ newTalent{
 	require = chrono_req1,
 	points = 5,
 	paradox = 5,
-	cooldown = 12,
+	cooldown = 10,
 	tactical = { DISABLE = 2 },
 	direct_hit = true,
 	requires_target = true,
@@ -47,7 +47,7 @@ newTalent{
 		local tids = {}
 		for tid, _ in pairs(target.talents) do
 			local tt = target:getTalentFromId(tid)
-			if tt.type[1]:find("^inscriptions/") then
+			if tt.type[1]:find("^inscriptions/") and not target.talents_cd[tid] then
 				tids[#tids+1] = tid
 			end
 		end
