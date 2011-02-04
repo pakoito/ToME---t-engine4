@@ -265,7 +265,7 @@ function _M:act()
 	end
 	-- this handles cursed gloom turn based effects
 	if self:isTalentActive(self.T_GLOOM) then
-	    local t = self:getTalentFromId(self.T_GLOOM)
+		local t = self:getTalentFromId(self.T_GLOOM)
 		t.do_gloom(self, t)
 	end
 	-- this handles cursed call shadows turn based effects
@@ -813,7 +813,7 @@ function _M:onTakeHit(value, src)
 			end
 		end
 	end
-	
+
 	if self:attr("repulsion_shield") then
 		-- Absorb damage into the shield
 		if value <= self.repulsion_shield_absorb then
@@ -830,7 +830,7 @@ function _M:onTakeHit(value, src)
 			self:removeEffect(self.EFF_REPULSION_SHIELD)
 		end
 	end
-	
+
 	if self:attr("damage_shunt") then
 		-- Absorb damage into the shield
 		if value <= self.damage_shunt_absorb then
@@ -847,7 +847,7 @@ function _M:onTakeHit(value, src)
 			self:removeEffect(self.EFF_DAMAGE_SHUNT)
 		end
 	end
-	
+
 	if self:isTalentActive(self.T_BONE_SHIELD) then
 		local t = self:getTalentFromId(self.T_BONE_SHIELD)
 		t.absorb(self, t, self:isTalentActive(self.T_BONE_SHIELD))

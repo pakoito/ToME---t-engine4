@@ -85,6 +85,8 @@ newTalent{
 	direct_hit = true,
 	tactical = { BUFF = 3 },
 	do_tkautoattack = function(self, t)
+		if game.zone.wilderness then return end
+
 		local targnum = 1
 		if self:hasEffect(self.EFF_PSIFRENZY) then targnum = 1 + math.ceil(0.2*self:getTalentLevel(self.T_FRENZIED_PSIFIGHTING)) end
 		local speed, hit = nil, false
