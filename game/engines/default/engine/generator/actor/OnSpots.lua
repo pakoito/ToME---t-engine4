@@ -40,10 +40,25 @@ end
 function _M:getSpawnSpot(m)
 	-- Spawn near a spot
 	if rng.percent(self.on_spot_chance) then
-		local spot = rng.table(self.spots)
-		if not spot then return end
-		local _, _, gs = util.findFreeGrid(spot.x, spot.y, self.spot_radius, "block_move", {[Map.ACTOR]=true})
+		-- Cycle through spots, looking for one with empty spaces
 		local tries = 0
+		local spot = rng.table(self.spots)
+		if not spot then
+			print("No spots for spawning")
+			return
+		end
+		local _, _, gs = util.findFreeGrid(spot.x, spot.y, self.spot_radius, "block_move", {[Map.ACTOR]=true})
+		while not gs and tries < 10 do
+			spot = rng.table(self.spots)
+			_, _, gs = util.findFreeGrid(spot.x, spot.y, self.spot_radius, "block_move", {[Map.ACTOR]=true})
+			tries = tries + 1
+		end
+		if not gs then
+			print("No more free space for spawning")
+			return
+		end
+		-- Cycle through available spaces
+		tries = 0
 		local g = rng.table(gs)
 		local x, y = g[1], g[2]
 		while (not m:canMove(x, y) or (self.map.room_map[x][y] and self.map.room_map[x][y].special)) and tries < 100 do

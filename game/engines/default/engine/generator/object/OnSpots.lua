@@ -26,6 +26,7 @@ function _M:init(zone, map, level, spots)
 	Random.init(self, zone, map, level, spots)
 	local data = level.data.generator.actor
 	self.on_spot_chance = data.on_spot_chance or 70
+	self.spot_radius = data.spot_radius or 8
 	self.spot_filters = data.spot_filters or {{special=function(spot) return spot.spawned_actors and true or false end}}
 
 	-- Pick a number of spots
@@ -39,17 +40,25 @@ end
 function _M:getSpawnSpot(o)
 	-- Spawn near a spot
 	if rng.percent(self.on_spot_chance) then
-		local spot = rng.table(self.spots)
-		if not spot then return end
-		local _, _, gs = util.findFreeGrid(spot.x, spot.y, 8, "block_move", {[Map.OBJECT]=true})
+		-- Cycle through spots, looking for one with empty spaces
 		local tries = 0
-		local g = rng.table(gs)
-		local x, y = g[1], g[2]
-		while (self.map:checkEntity(x, y, Map.TERRAIN, "block_move") or self.map(x, y, Map.OBJECT) or (self.map.room_map[x][y] and self.map.room_map[x][y].special)) and tries < 100 do
-			g = rng.table(gs)
-			x, y = g[1], g[2]
+		local spot = rng.table(self.spots)
+		if not spot then
+			print("No spots for spawning")
+			return
+		end
+		local _, _, gs = util.findFreeGrid(spot.x, spot.y, self.spot_radius, "block_move", {[Map.OBJECT]=true})
+		while not gs and tries < 10 do
+			spot = rng.table(self.spots)
+			_, _, gs = util.findFreeGrid(spot.x, spot.y, self.spot_radius, "block_move", {[Map.OBJECT]=true})
 			tries = tries + 1
 		end
+		if not gs then
+			print("No more free space for spawning")
+			return
+		end
+		-- Cycle through available spaces
+		tries = 0
 		if tries < 100 then
 			print("Spawning ", o.name, " near ", spot.type, spot.subtype, " at ", x, y)
 			-- Count an actor there
