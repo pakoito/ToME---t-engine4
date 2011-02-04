@@ -34,11 +34,11 @@ return {
 			class = "engine.generator.map.Cavern",
 			zoom = 14,
 			min_floor = 700,
-			floor = "UNDERGROUND_FLOOR",
+			floor = "CRYSTAL_FLOOR",
 			wall = {"CRYSTAL_WALL","CRYSTAL_WALL2","CRYSTAL_WALL3","CRYSTAL_WALL4","CRYSTAL_WALL5","CRYSTAL_WALL6","CRYSTAL_WALL7","CRYSTAL_WALL8","CRYSTAL_WALL9","CRYSTAL_WALL10","CRYSTAL_WALL11","CRYSTAL_WALL12","CRYSTAL_WALL13","CRYSTAL_WALL14","CRYSTAL_WALL15","CRYSTAL_WALL16","CRYSTAL_WALL17","CRYSTAL_WALL18","CRYSTAL_WALL19","CRYSTAL_WALL20",},
-			up = "UNDERGROUND_LADDER_UP",
-			down = "UNDERGROUND_LADDER_DOWN",
-			door = "UNDERGROUND_FLOOR",
+			up = "CRYSTAL_LADDER_UP",
+			down = "CRYSTAL_LADDER_DOWN",
+			door = "CRYSTAL_FLOOR",
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
@@ -59,7 +59,7 @@ return {
 	{
 		[1] = {
 			generator = { map = {
-				up = "UNDERGROUND_LADDER_UP_WILDERNESS",
+				up = "CRYSTAL_LADDER_UP_WILDERNESS",
 			}, },
 		},
 	},

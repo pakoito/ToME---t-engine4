@@ -57,7 +57,7 @@ function resolvers.calc.equip(t, e)
 			e:wearObject(o, true, false)
 
 			-- Do not drop it unless it is an ego or better
-			if not o.unique then o.no_drop = true print(" * "..o.name.." => no drop") end
+			if not o.egoed and not o.unique then o.no_drop = true print(" * "..o.name.." => no drop") end
 			if filter.force_drop then o.no_drop = nil end
 			game.zone:addEntity(game.level, o, "object")
 
