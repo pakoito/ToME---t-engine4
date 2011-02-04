@@ -117,7 +117,7 @@ function _M:setEffect(eff_id, dur, p, silent)
 			end
 			if fly and game.flyers and game.level.map.seens(self.x, self.y) then
 				local sx, sy = game.level.map:getTileToScreen(self.x, self.y)
-				game.flyers:add(sx, sy, 20, (rng.range(0,2)-1) * 0.5, -3, fly, {255,100,80})
+				if game.level.map.seens(self.x, self.y) then game.flyers:add(sx, sy, 20, (rng.range(0,2)-1) * 0.5, -3, fly, {255,100,80}) end
 			end
 		end
 	end
@@ -135,6 +135,7 @@ end
 --- Removes the effect
 function _M:removeEffect(eff, silent)
 	local p = self.tmp[eff]
+	if not p then return end
 	self.tmp[eff] = nil
 	self.changed = true
 	if _M.tempeffect_def[eff].on_lose then
@@ -145,7 +146,7 @@ function _M:removeEffect(eff, silent)
 			end
 			if fly and game.flyers then
 				local sx, sy = game.level.map:getTileToScreen(self.x, self.y)
-				game.flyers:add(sx, sy, 20, (rng.range(0,2)-1) * 0.5, -3, fly, {255,100,80})
+				if game.level.map.seens(self.x, self.y) then game.flyers:add(sx, sy, 20, (rng.range(0,2)-1) * 0.5, -3, fly, {255,100,80}) end
 			end
 		end
 	end
