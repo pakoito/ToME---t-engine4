@@ -211,26 +211,26 @@ end
 
 --- Scan the run direction and sides with the given function
 function _M:runScan(fct)
-	fct(self.x, self.y)
+	fct(self.x, self.y, "self")
 	if not self.running.path then
 		-- Ahead
 		local dx, dy = dir_to_coord[self.running.dir][1], dir_to_coord[self.running.dir][2]
 		local x, y = self.x + dx, self.y + dy
-		fct(x, y)
+		fct(x, y, "ahead")
 
 		-- Ahead left
 		local dx, dy = dir_to_coord[sides[self.running.dir].left][1], dir_to_coord[sides[self.running.dir].left][2]
 		local x, y = self.x + dx, self.y + dy
-		fct(x, y)
+		fct(x, y, "ahead left")
 
 		-- Ahead right
 		local dx, dy = dir_to_coord[sides[self.running.dir].right][1], dir_to_coord[sides[self.running.dir].right][2]
 		local x, y = self.x + dx, self.y + dy
-		fct(x, y)
+		fct(x, y, "ahead right")
 	elseif self.running.path[self.running.cnt] then
 		-- Ahead
 		local x, y = self.running.path[self.running.cnt].x, self.running.path[self.running.cnt].y
-		fct(x, y)
+		fct(x, y, "ahead")
 	end
 end
 

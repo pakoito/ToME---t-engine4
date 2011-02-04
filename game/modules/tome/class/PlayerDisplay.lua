@@ -108,7 +108,7 @@ function _M:makePortrait(a, current, x, y)
 	local hl = 32 * math.max(0, a.life) / a.max_life
 	s:erase(colors.RED.r * 0.7, colors.RED.g * 0.7, colors.RED.b * 0.7, 255, 6, 32+6-hl, 32, hl)
 
-	self:mouseTooltip("#GOLD##{bold}#"..a.name.."\n#WHITE##{normal}#Level: "..a.level.."\n"..def.title, 40, 40, x, y, function()
+	self:mouseTooltip("#GOLD##{bold}#"..a.name.."\n#WHITE##{normal}#Life: "..math.floor(100 * a.life / a.max_life).."%\nLevel: "..a.level.."\n"..def.title, 40, 40, x, y, function()
 		if def.control == "full" then
 			game.party:select(a)
 		end
