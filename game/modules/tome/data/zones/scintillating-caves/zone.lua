@@ -65,16 +65,16 @@ return {
 	},
 
 	foreground = function(level, dx, dx, nb_keyframes)
-do return end
 		local tick = core.game.getTime()
 		local sr, sg, sb
-		sr = 2 + math.sin(tick / 2000)
-		sg = 2 + math.sin(tick / 2700)
-		sb = 2 + math.sin(tick / 3200)
+		sr = 4 + math.sin(tick / 2000) / 2
+		sg = 3 + math.sin(tick / 2700)
+		sb = 3 + math.sin(tick / 3200)
 		local max = math.max(sr, sg, sb)
 		sr = sr / max
 		sg = sg / max
 		sb = sb / max
+
 		level.map:setShown(sr, sg, sb, 1)
 		level.map:setObscure(sr * 0.6, sg * 0.6, sb * 0.6, 1)
 	end,
