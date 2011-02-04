@@ -19,6 +19,7 @@
 
 newEntity{
 	define_as = "UNDERGROUND_FLOOR",
+	type = "floor", subtype = "underground",
 	name = "floor", image = "terrain/underground_floor.png",
 	display = '.', color=colors.LIGHT_UMBER, back_color=colors.UMBER,
 	grow = "UNDERGROUND_TREE",
@@ -27,6 +28,7 @@ newEntity{
 for i = 1, 20 do
 newEntity{
 	define_as = "UNDERGROUND_TREE"..(i > 1 and i or ""),
+	type = "wall", subtype = "underground",
 	name = "underground thick vegetation",
 	image = "terrain/underground_floor.png",
 	add_displays = class:makeTrees("terrain/underground_tree_alpha", 7),
@@ -39,8 +41,25 @@ newEntity{
 }
 end
 
+for i = 1, 20 do
+newEntity{
+	define_as = "CRYSTAL_WALL"..(i > 1 and i or ""),
+	type = "wall", subtype = "underground",
+	name = "crystals",
+	image = "terrain/underground_floor.png",
+	add_displays = class:makeCrystals("terrain/crystal_alpha"),
+	display = '#', color=colors.LIGHT_BLUE, back_color=colors.UMBER,
+	always_remember = true,
+	can_pass = {pass_wall=1},
+	does_block_move = true,
+	block_sight = true,
+	dig = "UNDERGROUND_FLOOR",
+}
+end
+
 newEntity{
 	define_as = "UNDERGROUND_LADDER_DOWN",
+	type = "floor", subtype = "underground",
 	name = "ladder to the next level", image = "terrain/underground_floor.png", add_displays = {class.new{image="terrain/ladder_down.png"}},
 	display = '>', color_r=255, color_g=255, color_b=0,
 	notice = true,
@@ -49,6 +68,7 @@ newEntity{
 }
 newEntity{
 	define_as = "UNDERGROUND_LADDER_UP",
+	type = "floor", subtype = "underground",
 	name = "ladder to the previous level", image = "terrain/underground_floor.png", add_displays = {class.new{image="terrain/ladder_up.png"}},
 	display = '<', color_r=255, color_g=255, color_b=0,
 	notice = true,
@@ -57,6 +77,7 @@ newEntity{
 }
 newEntity{
 	define_as = "UNDERGROUND_LADDER_UP_WILDERNESS",
+	type = "floor", subtype = "underground",
 	name = "ladder to worldmap", image = "terrain/underground_floor.png", add_displays = {class.new{image="terrain/ladder_up_wild.png"}},
 	display = '<', color_r=255, color_g=255, color_b=0,
 	notice = true,

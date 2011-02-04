@@ -524,9 +524,11 @@ function _M:runCheck()
 		local grid = game.level.map(x, y, Map.TERRAIN)
 		if grid and grid.notice then noticed = "interesting terrain" end
 
-		-- Objects are always interesting
-		local obj = game.level.map:getObject(x, y, 1)
-		if obj then noticed = "object seen" end
+		-- Objects are always interesting, only on curent spot
+		if x == self.x and y == self.y then
+			local obj = game.level.map:getObject(x, y, 1)
+			if obj then noticed = "object seen" end
+		end
 
 		-- Traps are always interesting if known
 		local trap = game.level.map(x, y, Map.TRAP)

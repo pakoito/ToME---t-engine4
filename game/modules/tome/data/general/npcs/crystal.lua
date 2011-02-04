@@ -2,7 +2,7 @@ local Talents = require("engine.interface.ActorTalents")
 
 newEntity{
 	define_as = "BASE_NPC_CRYSTAL",
-	type = "immovable", subtype = "crystal",
+	type = "immovable", subtype = "crystal", image = "npc/crystal_npc.png",
 	display = "%", color=colors.WHITE,
 	blood_color = colors.GREY,
 	desc = "A shining crystal formation charged with magical energies.",
@@ -38,7 +38,7 @@ newEntity{
 
 newEntity{ name = "wisp",
 	type = "elemental", subtype = "light",
-	display = "*", color=colors.YELLOW,
+	display = "*", color=colors.YELLOW, tint=colors.YELLOW,
 	desc = [[A floating orb of magical energy. It shines with a radiant light. They explode upon contact.]],
 	combat = { dam=10, atk=5, apr=10, physspeed=1 },
 	blood_color = colors.YELLOW,
@@ -71,7 +71,7 @@ newEntity{ name = "wisp",
 }
 
 newEntity{ base = "BASE_NPC_CRYSTAL",
-	name = "red crystal", color=colors.RED,
+	name = "red crystal", color=colors.RED, tint=colors.RED,
 	desc = "A formation of red crystal. It emits bright red, scorching light.",
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 1,
@@ -82,7 +82,7 @@ newEntity{ base = "BASE_NPC_CRYSTAL",
 }
 
 newEntity{ base = "BASE_NPC_CRYSTAL",
-	name = "white crystal", color=colors.WHITE,
+	name = "white crystal", color=colors.WHITE, tint=colors.WHITE,
 	desc = "A formation of white crystal. It emits bright white, chilling light.",
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 1,
@@ -93,7 +93,7 @@ newEntity{ base = "BASE_NPC_CRYSTAL",
 }
 
 newEntity{ base = "BASE_NPC_CRYSTAL",
-	name = "black crystal", color=colors.BLACK,
+	name = "black crystal", color=colors.BLACK, tint=colors.BLACK,
 	desc = "A formation of black crystal. It absorbs all light around it.",
 	level_range = {3, nil}, exp_worth = 1,
 	rarity = 2,
@@ -104,7 +104,7 @@ newEntity{ base = "BASE_NPC_CRYSTAL",
 }
 
 newEntity{ base = "BASE_NPC_CRYSTAL",
-	name = "crimson crystal", color=colors.DARK_RED,
+	name = "crimson crystal", color=colors.DARK_RED, tint=colors.DARK_RED,
 	desc = "A formation of crimson crystal. It emits a crimson light reminiscent of blood.",
 	level_range = {3, nil}, exp_worth = 1,
 	rarity = 3,
@@ -115,7 +115,7 @@ newEntity{ base = "BASE_NPC_CRYSTAL",
 }
 
 newEntity{ base = "BASE_NPC_CRYSTAL",
-	name = "blue crystal", color=colors.BLUE,
+	name = "blue crystal", color=colors.BLUE, tint=colors.BLUE,
 	desc = "A formation of blue crystal. Its light shines like the ocean's waves.",
 	level_range = {3, nil}, exp_worth = 1,
 	rarity = 4,
@@ -126,7 +126,7 @@ newEntity{ base = "BASE_NPC_CRYSTAL",
 }
 
 newEntity{ base = "BASE_NPC_CRYSTAL",
-	name = "multi-hued crystal", color=colors.VIOLET,
+	name = "multi-hued crystal", color=colors.VIOLET, tint=colors.VIOLET,
 	shader = "quad_hue",
 	desc = "A formation of multi-hued crystal. It shines with all the colors of the rainbow.",
 	level_range = {10, nil}, exp_worth = 1,
@@ -141,7 +141,7 @@ newEntity{ base = "BASE_NPC_CRYSTAL",
 }
 
 newEntity{ base = "BASE_NPC_CRYSTAL",
-	name = "shimmering crystal", color=colors.GREEN,
+	name = "shimmering crystal", color=colors.GREEN, tint=colors.GREEN,
 	shader = "quad_hue",
 	desc = "A formation of shimmering crystal. Orbs of light circle around it.",
 	level_range = {10, nil}, exp_worth = 1,

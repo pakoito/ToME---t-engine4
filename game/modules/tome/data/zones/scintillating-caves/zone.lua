@@ -35,7 +35,7 @@ return {
 			zoom = 14,
 			min_floor = 700,
 			floor = "UNDERGROUND_FLOOR",
-			wall = {"UNDERGROUND_TREE","UNDERGROUND_TREE2","UNDERGROUND_TREE3","UNDERGROUND_TREE4","UNDERGROUND_TREE5","UNDERGROUND_TREE6","UNDERGROUND_TREE7","UNDERGROUND_TREE8","UNDERGROUND_TREE9","UNDERGROUND_TREE10","UNDERGROUND_TREE11","UNDERGROUND_TREE12","UNDERGROUND_TREE13","UNDERGROUND_TREE14","UNDERGROUND_TREE15","UNDERGROUND_TREE16","UNDERGROUND_TREE17","UNDERGROUND_TREE18","UNDERGROUND_TREE19","UNDERGROUND_TREE20",},
+			wall = {"CRYSTAL_WALL","CRYSTAL_WALL2","CRYSTAL_WALL3","CRYSTAL_WALL4","CRYSTAL_WALL5","CRYSTAL_WALL6","CRYSTAL_WALL7","CRYSTAL_WALL8","CRYSTAL_WALL9","CRYSTAL_WALL10","CRYSTAL_WALL11","CRYSTAL_WALL12","CRYSTAL_WALL13","CRYSTAL_WALL14","CRYSTAL_WALL15","CRYSTAL_WALL16","CRYSTAL_WALL17","CRYSTAL_WALL18","CRYSTAL_WALL19","CRYSTAL_WALL20",},
 			up = "UNDERGROUND_LADDER_UP",
 			down = "UNDERGROUND_LADDER_DOWN",
 			door = "UNDERGROUND_FLOOR",
@@ -65,11 +65,16 @@ return {
 	},
 
 	foreground = function(level, dx, dx, nb_keyframes)
+do return end
 		local tick = core.game.getTime()
 		local sr, sg, sb
-		sr = (1 + math.sin(tick / 2000)) / 2 * 0.4 + 0.8
-		sg = (1 + math.sin(tick / 2700)) / 2 * 0.4 + 0.7
-		sb = (1 + math.sin(tick / 3200)) / 2 * 0.4 + 0.7
+		sr = 2 + math.sin(tick / 2000)
+		sg = 2 + math.sin(tick / 2700)
+		sb = 2 + math.sin(tick / 3200)
+		local max = math.max(sr, sg, sb)
+		sr = sr / max
+		sg = sg / max
+		sb = sb / max
 		level.map:setShown(sr, sg, sb, 1)
 		level.map:setObscure(sr * 0.6, sg * 0.6, sb * 0.6, 1)
 	end,
