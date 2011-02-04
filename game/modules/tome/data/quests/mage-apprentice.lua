@@ -51,15 +51,6 @@ collect_staff = function(self, npc, who, dialog)
 			) and not o.unique
 		end,
 		function(o, item)
-			-- Special handling for the staff of absorption
-			if o.define_as and o.define_as == "STAFF_ABSORPTION" then
-				game.logPlayer(who, "#LIGHT_RED#As the apprentice touches the staff he begins to scream, flames bursting out of his mouth. Life seems to be drained away from him, and in an instant he collapses in a lifeless husk.")
-				who:setQuestStatus(self, self.FAILED)
-				game:unregisterDialog(dialog.next_dialog)
-				npc:die()
-				return true
-			end
-
 			self.nb_collect = self.nb_collect + 1
 			if self.nb_collect >= 10 then who:setQuestStatus(self, self.COMPLETED) end
 			who:removeObject(who:getInven("INVEN"), item)
@@ -84,7 +75,7 @@ can_offer = function(self, who)
 	end
 end
 
-collect_staff_unique = function(self, who, dialog)
+collect_staff_unique = function(self, npc, who, dialog)
 	who:showInventory("Offer which item?", who:getInven("INVEN"),
 		function(o) return (
 				(o.type == "weapon" and o.subtype == "staff") or
@@ -93,6 +84,16 @@ collect_staff_unique = function(self, who, dialog)
 			) and o.unique
 		end,
 		function(o, item)
+			-- Special handling for the staff of absorption
+			if o.define_as and o.define_as == "STAFF_ABSORPTION" then
+				game.logPlayer(who, "#LIGHT_RED#As the apprentice touches the staff he begins to scream, flames bursting out of his mouth. Life seems to be drained away from him, and in an instant he collapses in a lifeless husk.")
+				who:setQuestStatus(self, self.FAILED)
+				game:unregisterDialog(dialog.next_dialog)
+				game.level.map:particleEmitter(npc.x, npc.y, 3, "fireflash", {radius=3, tx=npc.x, ty=npc.y})
+				npc:die()
+				return true
+			end
+
 			self.nb_collect = self.nb_collect + 10
 			if self.nb_collect >= 10 then who:setQuestStatus(self, self.COMPLETED) end
 			who:removeObject(who:getInven("INVEN"), item)

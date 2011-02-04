@@ -46,7 +46,7 @@ Good day to you, fellow traveler!]],
 		{"I found this artefact; it looks powerful. Maybe it would be enough?",
 			jump="unique",
 			cond=function(npc, player) return player:hasQuest("mage-apprentice") and player:hasQuest("mage-apprentice"):can_offer_unique(player) end,
-			action=function(npc, player, dialog) player:hasQuest("mage-apprentice"):collect_staff_unique(player, dialog) end
+			action=function(npc, player, dialog) player:hasQuest("mage-apprentice"):collect_staff_unique(npc, player, dialog) end
 		},
 		-- Reward for non-mages: access to Angolwen
 		{"So you have enough magical items now?",
