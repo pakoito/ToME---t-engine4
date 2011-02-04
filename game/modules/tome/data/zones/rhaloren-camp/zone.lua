@@ -46,7 +46,6 @@ return {
 			class = "engine.generator.actor.Random",
 			nb_npc = {20, 30},
 			filters = { {max_ood=2}, },
-			guardian = "INQUISITOR",
 		},
 		object = {
 			class = "engine.generator.object.Random",
@@ -63,6 +62,17 @@ return {
 			generator = { map = {
 				up = "UP_WILDERNESS",
 			}, },
+		},
+		[5] = {
+			generator = {
+				map = {
+					class = "engine.generator.map.Static",
+					map = "zones/rhaloren-camp-last",
+				},
+				actor = {
+					area = {x1=0, x2=49, y1=0, y2=40},
+				},
+			},
 		},
 	},
 }
