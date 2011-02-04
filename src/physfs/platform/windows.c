@@ -123,6 +123,7 @@ static HANDLE (WINAPI *pFindFirstFileW)(LPCWSTR, LPWIN32_FIND_DATAW);
 static BOOL (WINAPI *pFindNextFileW)(HANDLE, LPWIN32_FIND_DATAW);
 static DWORD (WINAPI *pGetCurrentDirectoryW)(DWORD, LPWSTR);
 static BOOL (WINAPI *pDeleteFileW)(LPCWSTR);
+static BOOL (WINAPI *pMoveFileW)(LPCWSTR,LPCWSTR);
 static BOOL (WINAPI *pRemoveDirectoryW)(LPCWSTR);
 static BOOL (WINAPI *pCreateDirectoryW)(LPCWSTR, LPSECURITY_ATTRIBUTES);
 static BOOL (WINAPI *pGetFileAttributesExA)
@@ -213,6 +214,25 @@ static BOOL WINAPI fallbackRemoveDirectoryW(LPCWSTR dname)
     WideCharToMultiByte(CP_ACP, 0, dname, buflen, cpstr, buflen, NULL, NULL);
     retval = RemoveDirectoryA(cpstr);
     __PHYSFS_smallFree(cpstr);
+    return(retval);
+} /* fallbackRemoveDirectoryW */
+
+static BOOL WINAPI fallbackMoveFileW(LPCWSTR fname1, LPCWSTR fname2)
+{
+    BOOL retval = 0;
+
+    const int buflen1 = (int) (wStrLen(fname1) + 1);
+    char *cpstr1 = (char *) __PHYSFS_smallAlloc(buflen1);
+    WideCharToMultiByte(CP_ACP, 0, fname1, buflen1, cpstr1, buflen1, NULL, NULL);
+
+    const int buflen2 = (int) (wStrLen(fname2) + 1);
+    char *cpstr2 = (char *) __PHYSFS_smallAlloc(buflen2);
+    WideCharToMultiByte(CP_ACP, 0, fname2, buflen2, cpstr2, buflen2, NULL, NULL);
+
+    retval = MoveFile(cpstr1, cpstr2);
+	
+    __PHYSFS_smallFree(cpstr1);
+    __PHYSFS_smallFree(cpstr2);
     return(retval);
 } /* fallbackRemoveDirectoryW */
 
@@ -313,6 +333,7 @@ static int findApiSymbols(void)
         LOOKUP(RemoveDirectoryW, osHasUnicode);
         LOOKUP(CreateFileW, osHasUnicode);
         LOOKUP(DeleteFileW, osHasUnicode);
+        LOOKUP(MoveFileW, osHasUnicode);
     } /* if */
 
     #undef LOOKUP_NOFALLBACK
@@ -982,7 +1003,20 @@ int __PHYSFS_platformDeinit(void)
 
 int __PHYSFS_platformRename(const char *filename1, const char *filename2)
 {
-    return MoveFile(filename1, filename2);
+    WCHAR *wfname1, *wfname2;
+
+    UTF8_TO_UNICODE_STACK_MACRO(wfname1, filename1);
+    BAIL_IF_MACRO(wfname1 == NULL, ERR_OUT_OF_MEMORY, NULL);
+
+    UTF8_TO_UNICODE_STACK_MACRO(wfname2, filename2);
+    BAIL_IF_MACRO(wfname2 == NULL, ERR_OUT_OF_MEMORY, NULL);
+
+    BOOL ret = pMoveFileW(wfname1, wfname2);
+	
+    __PHYSFS_smallFree(wfname1);
+    __PHYSFS_smallFree(wfname2);
+	
+	return ret;
 } /* __PHYSFS_platformRename */
 
 static void *doOpen(const char *fname, DWORD mode, DWORD creation, int rdonly)
