@@ -33,7 +33,7 @@ return {
 			class = "engine.generator.map.Roomer",
 			nb_rooms = 10,
 			rooms = {"random_room"},
-			lite_room_chance = 0,
+			lite_room_chance = 100,
 			['.'] = {"WATER_FLOOR","WATER_FLOOR","WATER_FLOOR","WATER_FLOOR","WATER_FLOOR","WATER_FLOOR","WATER_FLOOR","WATER_FLOOR","WATER_FLOOR","WATER_FLOOR","WATER_FLOOR_BUBBLE"},
 			['#'] = "WATER_WALL",
 			up = "WATER_UP",
