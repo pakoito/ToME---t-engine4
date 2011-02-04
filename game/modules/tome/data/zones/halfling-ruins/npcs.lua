@@ -104,7 +104,7 @@ newEntity{ define_as="SUBJECT_Z",
 
 newEntity{ define_as="YEEK_WAYIST",
 	name = "Yeek Wayist", color=colors.VIOLET, display = "y",
-	desc = "This seems to be the 'subject Z' the notes spoke about. He looks human, but this can not be, he would be about five thousands years old!",
+	desc = "This creature is about as tall as a halfling. It is covered in white silky fur and has a disproportionate head. The weirdest thing about it though, its weapon simply float in front of it.",
 	type = "humanoid", subtype = "yeek",
 	level_range = {10, nil},
 	rank = 3,

@@ -40,6 +40,7 @@ local function tunnelDir(x1, y1, x2, y2)
 end
 
 local function tunnel(self, x1, y1, x2, y2)
+	if not x1 or not x2 or not y1 or not y2 then return end
 	if x1 == x2 and y1 == y2 then return end
 	-- Disable the many prints of tunnelling
 --	local print = function()end
