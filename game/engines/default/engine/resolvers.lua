@@ -59,7 +59,13 @@ function resolvers.talents(list)
 	return {__resolver="talents", list}
 end
 function resolvers.calc.talents(t, e)
-	for tid, level in pairs(t[1]) do e:learnTalent(tid, true, level) end
+	for tid, level in pairs(t[1]) do
+		if type(level) == "table" and level.__resolver then
+			level = resolvers.calc[level.__resolver](level, e)
+		end
+		print("Talent resolver for", e.name, ":", tid, "=>", level)
+		e:learnTalent(tid, true, level)
+	end
 	return nil
 end
 
