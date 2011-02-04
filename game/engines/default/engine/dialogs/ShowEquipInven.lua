@@ -109,7 +109,7 @@ function _M:init(title, actor, filter, action, on_select)
 		HOTKEY_THIRD_5 = function() self:defineHotkey(29) end,
 		HOTKEY_THIRD_6 = function() self:defineHotkey(30) end,
 		HOTKEY_THIRD_7 = function() self:defineHotkey(31) end,
-		HOTKEY_THIRD_8 = function() self:defineHotkey(31) end,
+		HOTKEY_THIRD_8 = function() self:defineHotkey(32) end,
 		HOTKEY_THIRD_9 = function() self:defineHotkey(33) end,
 		HOTKEY_THIRD_10 = function() self:defineHotkey(34) end,
 		HOTKEY_THIRD_11 = function() self:defineHotkey(35) end,

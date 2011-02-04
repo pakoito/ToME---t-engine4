@@ -299,7 +299,7 @@ function _M:setupCommands()
 		HOTKEY_THIRD_5 = function() self.player:activateHotkey(29) end,
 		HOTKEY_THIRD_6 = function() self.player:activateHotkey(30) end,
 		HOTKEY_THIRD_7 = function() self.player:activateHotkey(31) end,
-		HOTKEY_THIRD_8 = function() self.player:activateHotkey(31) end,
+		HOTKEY_THIRD_8 = function() self.player:activateHotkey(32) end,
 		HOTKEY_THIRD_9 = function() self.player:activateHotkey(33) end,
 		HOTKEY_THIRD_10 = function() self.player:activateHotkey(34) end,
 		HOTKEY_THIRD_11 = function() self.player:activateHotkey(35) end,
