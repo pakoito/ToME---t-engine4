@@ -90,6 +90,7 @@ collect_staff_unique = function(self, npc, who, dialog)
 				who:setQuestStatus(self, self.FAILED)
 				game:unregisterDialog(dialog.next_dialog)
 				game.level.map:particleEmitter(npc.x, npc.y, 3, "fireflash", {radius=3, tx=npc.x, ty=npc.y})
+				world:gainAchievement("APPRENTICE_STAFF", player)
 				npc:die()
 				return true
 			end

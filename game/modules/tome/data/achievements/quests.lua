@@ -42,6 +42,10 @@ newAchievement{
 	desc = [[Discovered the truth about mages.]],
 }
 newAchievement{
+	name = "Burnt to the ground", id="APPRENTICE_STAFF",
+	desc = [[Gave the staff of absorption to the apprentice mage and watched the fireworks.]],
+}
+newAchievement{
 	name = "Against all odds", id = "KILL_UKRUK",
 	desc = [[Killed Ukruk in the ambush.]],
 }
