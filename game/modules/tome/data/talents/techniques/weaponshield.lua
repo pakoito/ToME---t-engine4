@@ -227,18 +227,13 @@ newTalent{
 			return nil
 		end
 
-		local stun, knock
-		if self:getTalentLevel(t) >= 5 then
-			stun = self:addTemporaryValue("stun_immune", 1)
-			knock = self:addTemporaryValue("knockback_immune", 1)
-		end
 		return {
+			stun = self:addTemporaryValue("stun_immune", 0.1 * self:getTalentLevel(t))
+			knock = self:addTemporaryValue("knockback_immune", 0.1 * self:getTalentLevel(t))
 			atk = self:addTemporaryValue("combat_atk", -10),
 			dam = self:addTemporaryValue("combat_dam", -10),
 			def = self:addTemporaryValue("combat_def", 5 + (1 + self:getDex(4)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE) * 2),
 			armor = self:addTemporaryValue("combat_armor", 5 + (1 + self:getDex(4)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE)),
-			stun = stun,
-			knock = knock
 		}
 	end,
 	deactivate = function(self, t, p)
@@ -246,15 +241,16 @@ newTalent{
 		self:removeTemporaryValue("combat_armor", p.armor)
 		self:removeTemporaryValue("combat_atk", p.atk)
 		self:removeTemporaryValue("combat_dam", p.dam)
-		if p.stun then self:removeTemporaryValue("stun_immune", p.stun) end
-		if p.knock then self:removeTemporaryValue("knockback_immune", p.knock) end
+		self:removeTemporaryValue("stun_immune", p.stun)
+		self:removeTemporaryValue("knockback_immune", p.knock)
 		return true
 	end,
 	info = function(self, t)
 		return ([[Enter a protective battle stance, increasing defense by %d and armor by %d at the cost of 10 attack and 10 damage. The defense and armor increase is based on dexterity.
-		At level 5 it also makes you immune to stunning and knockback.]]):format(
+		It also grants resistance to stunning and knockback (%d%%).]]):format(
 		5 + (1 + self:getDex(4)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE)* 2,
-		5 + (1 + self:getDex(4)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE)
+		5 + (1 + self:getDex(4)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE),
+		0.1 * self:getTalentLevel(t), 0.1 * self:getTalentLevel(t)
 		)
 	end,
 }
