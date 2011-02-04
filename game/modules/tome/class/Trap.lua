@@ -70,10 +70,10 @@ function _M:onDisarm(x, y, who)
 end
 
 --- Called when triggered
-function _M:canTrigger(x, y, who)
+function _M:canTrigger(x, y, who, no_random)
 	if self.safe_levitation and who:attr("levitation") then return false end
 	if self.faction and who:reactionToward(self) >= 0 then return false end
-	if who.trap_avoidance and rng.percent(who.trap_avoidance) then
+	if not no_random and who.trap_avoidance and rng.percent(who.trap_avoidance) then
 		if self:knownBy(who) then
 			game.logPlayer(who, "You carefully avoid the trap (%s).", self:getName())
 		end

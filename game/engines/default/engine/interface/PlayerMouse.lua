@@ -32,7 +32,8 @@ module(..., package.seeall, class.make)
 -- @param tmx the coords clicked
 -- @param tmy the coords clicked
 -- @param spotHostiles a function taking only the player as a parameter that must return true if hostiles are in sight
-function _M:mouseMove(tmx, tmy, spotHostiles)
+-- @param astar_check nil or a function to check each tile on the astar path for passability
+function _M:mouseMove(tmx, tmy, spotHostiles, astar_check)
 	tmx = util.bound(tmx, 0, game.level.map.w - 1)
 	tmy = util.bound(tmy, 0, game.level.map.h - 1)
 
@@ -52,7 +53,7 @@ function _M:mouseMove(tmx, tmy, spotHostiles)
 		end
 
 		local a = Astar.new(game.level.map, self)
-		local path = a:calc(self.x, self.y, tmx, tmy, true)
+		local path = a:calc(self.x, self.y, tmx, tmy, true, nil, astar_check)
 		-- No Astar path ? just be dumb and try direct line
 		if not path then
 			local d = DirectPath.new(game.level.map, self)

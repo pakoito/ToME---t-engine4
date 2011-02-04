@@ -160,6 +160,7 @@ function _M:move(x, y, force)
 	local moved = mod.class.Actor.move(self, x, y, force)
 	if moved then
 		game.level.map:moveViewSurround(self.x, self.y, 8, 8)
+		game.level.map.attrs(self.x, self.y, "walked", true)
 
 		-- Autopickup money
 		if self:getInven(self.INVEN_INVEN) then
@@ -519,15 +520,18 @@ function _M:runCheck()
 
 	-- Notice any noticeable terrain
 	local noticed = false
-	self:runScan(function(x, y)
+	self:runScan(function(x, y, what)
 		-- Only notice interesting terrains
 		local grid = game.level.map(x, y, Map.TERRAIN)
 		if grid and grid.notice then noticed = "interesting terrain" end
 
 		-- Objects are always interesting, only on curent spot
-		if x == self.x and y == self.y then
+		if what == "self" and not game.level.map.attrs(x, y, "obj_seen") then
 			local obj = game.level.map:getObject(x, y, 1)
-			if obj then noticed = "object seen" end
+			if obj then
+				noticed = "object seen"
+				game.level.map.attrs(x, y, "obj_seen", true)
+			end
 		end
 
 		-- Traps are always interesting if known
@@ -542,7 +546,13 @@ end
 --- Move with the mouse
 -- We just feed our spotHostile to the interface mouseMove
 function _M:mouseMove(tmx, tmy)
-	return engine.interface.PlayerMouse.mouseMove(self, tmx, tmy, spotHostiles)
+	local astar_check = function(x, y)
+		-- Dont do traps
+		local trap = game.level.map(x, y, Map.TRAP)
+		if trap and trap:knownBy(self) and trap:canTrigger(x, y, self, true) then return false end
+		return true
+	end
+	return engine.interface.PlayerMouse.mouseMove(self, tmx, tmy, spotHostiles, astar_check)
 end
 
 --- Called after running a step

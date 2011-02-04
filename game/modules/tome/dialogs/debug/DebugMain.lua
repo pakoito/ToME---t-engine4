@@ -76,6 +76,15 @@ function _M:use(item)
 	elseif act == "magic_map" then
 		game.level.map:liteAll(0, 0, game.level.map.w, game.level.map.h)
 		game.level.map:rememberAll(0, 0, game.level.map.w, game.level.map.h)
+		for i = 0, game.level.map.w - 1 do
+			for j = 0, game.level.map.h - 1 do
+				local trap = game.level.map(i, j, game.level.map.TRAP)
+				if trap then
+					trap:setKnown(game.player, true)
+					game.level.map:updateMap(i, j)
+				end
+			end
+		end
 	elseif act == "change_level" then
 		game:registerDialog(GetQuantity.new("Zone: "..game.zone.name, "Level 1-"..game.zone.max_level, game.level.level, game.zone.max_level, function(qty)
 			game:changeLevel(qty)
