@@ -122,6 +122,7 @@ int docall (lua_State *L, int narg, int nret)
 	{
 		stackDump(L);
 //		assert(0);
+		lua_settop(L, base);
 	}
 	return status;
 }
