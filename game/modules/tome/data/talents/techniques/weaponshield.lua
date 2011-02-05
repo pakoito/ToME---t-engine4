@@ -250,7 +250,7 @@ newTalent{
 		It also grants resistance to stunning and knockback (%d%%).]]):format(
 		5 + (1 + self:getDex(4)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE)* 2,
 		5 + (1 + self:getDex(4)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE),
-		0.1 * self:getTalentLevel(t), 0.1 * self:getTalentLevel(t)
+		10 * self:getTalentLevel(t), 10 * self:getTalentLevel(t)
 		)
 	end,
 }
