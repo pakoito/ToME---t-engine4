@@ -791,8 +791,8 @@ newEntity{ base = "BASE_GEM", define_as = "CRYSTAL_FOCUS",
 			o.wielder.combat_spellpower = 12
 			o.wielder.combat_dam = 12
 			o.wielder.inc_stats = o.wielder.inc_stats or {}
-			o.wielder.inc_stats[Stats.STAT_WIL] = 3
-			o.wielder.inc_stats[Stats.STAT_CON] = 3
+			o.wielder.inc_stats[engine.interface.ActorStats.STAT_WIL] = 3
+			o.wielder.inc_stats[engine.interface.ActorStats.STAT_CON] = 3
 			o.wielder.inc_damage = o.wielder.inc_damage or {}
 			o.wielder.inc_damage[engine.DamageType.ARCANE] = 10
 			who:sortInven()

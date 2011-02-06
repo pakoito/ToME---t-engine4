@@ -695,6 +695,30 @@ newDamageType{
 	end,
 }
 
+-- Inferno: fire and maybe remove suff
+newDamageType{
+	name = "inferno", type = "INFERNO",
+	projector = function(src, x, y, type, dam)
+		local realdam = DamageType:get(DamageType.FIRE).projector(src, x, y, DamageType.FIRE, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and src:attr("cleansing_flames") then
+			local effs = {}
+			local status = (src:reactionToward(target) >= 0) and "detrimental" or "beneficial"
+			for eff_id, p in pairs(target.tmp) do
+				local e = target.tempeffect_def[eff_id]
+				if e.status == status and (e.type == "magical" or e.type == "physical" or e.type == "curse" or e.type == "hex") then
+					effs[#effs+1] = {"effect", eff_id}
+				end
+			end
+			if #effs > 0 then
+				local eff = rng.tableRemove(effs)
+				target:removeEffect(eff[2])
+			end
+		end
+		return realdam
+	end,
+}
+
 -- Spydric poison: prevents movement
 newDamageType{
 	name = "spydric poison", type = "SPYDRIC_POISON",
@@ -1082,6 +1106,7 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
+		if not target then return end
 		if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 20) and target:canBe("pin") then
 			target:setEffect(target.EFF_PINNED, 2, {}, true)
 		else

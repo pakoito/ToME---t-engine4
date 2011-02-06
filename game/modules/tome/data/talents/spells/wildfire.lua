@@ -33,6 +33,16 @@ newTalent{
 		local tg = {type="ball", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
 		local grids = self:project(tg, self.x, self.y, DamageType.FIREKNOCKBACK, {dist=3, dam=self:spellCrit(t.getDamage(self, t))})
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_fire", {radius=tg.radius})
+		if self:attr("burning_wake") then
+			game.level.map:addEffect(self,
+				self.x, self.y, 4,
+				DamageType.INFERNO, self:attr("burning_wake"),
+				tg.radius,
+				5, nil,
+				{type="inferno"},
+				nil, self:spellFriendlyFire()
+			)
+		end
 		game:playSoundNear(self, "talents/fire")
 		return true
 	end,
@@ -44,82 +54,46 @@ newTalent{
 }
 
 newTalent{
-	name = "Dancing Fires",
+	name = "Burning Wake",
 	type = {"spell/wildfire",2},
 	require = spells_req_high2,
+	mode = "sustained",
 	points = 5,
-	mana = 35,
-	cooldown = 16,
-	tactical = { ATTACKAREA = 2 },
-	range = 10,
-	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 240) end,
-	getTargetCount = function(self, t) return math.ceil(self:getTalentLevel(t) + 2) end,
-	action = function(self, t)
-		local max = t.getTargetCount(self, t)
-		for i, act in ipairs(self.fov.actors_dist) do
-			if self:reactionToward(act) < 0 then
-				local tg = {type="hit", friendlyfire=false, talent=t}
-				local grids = self:project(tg, act.x, act.y, DamageType.FIREBURN, {dur=8, initial=0, dam=self:spellCrit(t.getDamage(self, t))})
-				game.level.map:particleEmitter(act.x, act.y, tg.radius, "ball_fire", {radius=1})
-
-				max = max - 1
-				if max <= 0 then break end
-			end
-		end
+	sustain_mana = 40,
+	cooldown = 30,
+	tactical = { BUFF=2, ATTACKAREA = 1 },
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 55) end,
+	activate = function(self, t)
 		game:playSoundNear(self, "talents/fire")
+		local cft = self:getTalentFromId(self.T_CLEANSING_FLAMES)
+		return {
+			bw = self:addTemporaryValue("burning_wake", t.getDamage(self, t)),
+			cf = self:addTemporaryValue("cleansing_flames", cft.getChance(self, cft)),
+		}
+	end,
+	deactivate = function(self, t, p)
+		self:removeTemporaryValue("burning_wake", p.bw)
+		self:removeTemporaryValue("cleansing_flames", p.cf)
 		return true
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		local targetcount = t.getTargetCount(self, t)
-		return ([[Surround yourself in flames, setting all those in your line of sight ablaze and doing %0.2f fire damage over 8 turns.
-		At most it will affect %d foes.
-		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.FIRE, damage), targetcount)
+		return ([[Your Flame, Flameshock, Fireflash and Blastwave spells leave a burning wake on the ground, burning all for %0.2f fire damage for 4 turns.
+		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.FIRE, damage))
 	end,
 }
 
 newTalent{
-	name = "Combust",
+	name = "Cleansing Flames",
 	type = {"spell/wildfire",3},
 	require = spells_req_high3,
+	mode = "passive",
 	points = 5,
-	mana = 40,
-	cooldown = 14,
-	tactical = { ATTACKAREA = 1 },
-	range = 7,
-	requires_target = true,
-	getMultiplier = function(self, t) return self:combatTalentWeaponDamage(t, 0.5, 1.5) end,
-	action = function(self, t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=2, friendlyfire=self:spellFriendlyFire(), talent=t}
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-
-		local mult = t.getMultiplier(self, t)
-
-		self:project(tg, x, y, function(tx, ty)
-			local target = game.level.map(tx, ty, Map.ACTOR)
-			if not target then return end
-			if not target:hasEffect(target.EFF_BURNING) then return end
-			local p = target:hasEffect(target.EFF_BURNING)
-			local dam = p.dur * p.power
-			target:removeEffect(target.EFF_BURNING)
-
-			-- Kaboom!
-			dam = dam * mult
-			DamageType:get(DamageType.FIRE).projector(self, tx, ty, DamageType.FIRE, dam)
-		end)
-
-		local _ _, x, y = self:canProject(tg, x, y)
-		game.level.map:particleEmitter(x, y, tg.radius, "fireflash", {radius=tg.radius, tx=x, ty=y})
-
-		game:playSoundNear(self, "talents/fireflash")
-		return true
-	end,
+	getChance = function(self, t) return self:getTalentLevelRaw(t) * 10 end,
 	info = function(self, t)
-		local mult = t.getMultiplier(self, t)
-		return ([[Disrupts all fires in a radius. All targets that were burning will combust, doing all the remaining burn damage instantly.
-		The combustion effect will deal %d%% of the normal burn damage.]]):format(mult * 100)
+		return ([[When your Burning Wake talent is active, your inferno and burning wake effects have %d%% chance each turn to remove a status effect(physical, magical, curse or hex) from the targets.
+		If the target is hostile it will remove a beneficial effect.
+		If the target is friendly it will remove a detrimental effect (but still burn).]]):format(t.getChance(self, t))
 	end,
 }
 

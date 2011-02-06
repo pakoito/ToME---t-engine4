@@ -60,8 +60,14 @@ newEntity{ base = "BASE_NPC_COLD_DRAKE",
 	},
 }
 
-newEntity{ base = "BASE_NPC_COLD_DRAKE",
+newEntity{ base = "BASE_NPC_COLD_DRAKE", define_as = "NPC_COLD_DRAKE",
 	name = "cold drake", color=colors.SLATE, display="D",
+--	quadrant_image = {
+--		[0] = {[0] = "npc/cold_drake7.png",[1] = "npc/cold_drake1.png",},
+--		[1] = {[0] = "npc/cold_drake9.png",[1] = "npc/cold_drake3.png",},
+--	},
+--	msize_w = 2,
+--	msize_h = 2,
 	desc = [[A mature cold drake, armed with a deadly breath weapon and nasty claws.]],
 	level_range = {14, nil}, exp_worth = 1,
 	rarity = 3,
@@ -77,7 +83,7 @@ newEntity{ base = "BASE_NPC_COLD_DRAKE",
 	},
 
 	resolvers.talents{
-		[Talents.T_SUMMON]=1,
+--		[Talents.T_SUMMON]=1,
 		[Talents.T_ICE_CLAW]=2,
 		[Talents.T_ICE_BREATH]=3,
 	},

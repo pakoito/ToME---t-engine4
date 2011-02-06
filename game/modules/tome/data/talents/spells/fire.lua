@@ -36,13 +36,28 @@ newTalent{
 		if self:getTalentLevel(t) >= 5 then tg.type = "beam" end
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
+		local grids = nil
 		if self:getTalentLevel(t) < 5 then
-			self:projectile(tg, x, y, DamageType.FIREBURN, self:spellCrit(t.getDamage(self, t)), {type="flame"})
+			grids = self:projectile(tg, x, y, DamageType.FIREBURN, self:spellCrit(t.getDamage(self, t)), function(self, tg, x, y, grids)
+				game.level.map:particleEmitter(x, y, 1, "flame")
+				if self:attr("burning_wake") then
+					game.level.map:addEffect(self, x, y, 4, engine.DamageType.INFERNO, self:attr("burning_wake"), 0, 5, nil, {type="inferno"}, nil, self:spellFriendlyFire())
+				end
+			end)
 		else
-			self:project(tg, x, y, DamageType.FIREBURN, self:spellCrit(t.getDamage(self, t)))
+			grids = self:project(tg, x, y, DamageType.FIREBURN, self:spellCrit(t.getDamage(self, t)))
 			local _ _, x, y = self:canProject(tg, x, y)
 			game.level.map:particleEmitter(self.x, self.y, tg.radius, "flamebeam", {tx=x-self.x, ty=y-self.y})
 		end
+
+		if self:attr("burning_wake") and grids then
+			for px, ys in pairs(grids) do
+				for py, _ in pairs(ys) do
+					game.level.map:addEffect(self, px, py, 4, engine.DamageType.INFERNO, self:attr("burning_wake"), 0, 5, nil, {type="inferno"}, nil, self:spellFriendlyFire())
+				end
+			end
+		end
+
 		game:playSoundNear(self, "talents/fire")
 		return true
 	end,
@@ -73,6 +88,21 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.FLAMESHOCK, {dur=t.getStunDuration(self, t), dam=self:spellCrit(t.getDamage(self, t))})
+
+		if self:attr("burning_wake") then
+			local l = line.new(self.x, self.y, x, y)
+			local lx, ly = l()
+			local dir = lx and coord_to_dir[lx - self.x][ly - self.y] or 6
+
+			game.level.map:addEffect(self,
+				self.x, self.y, 4,
+				DamageType.INFERNO, self:attr("burning_wake"),
+				tg.radius,
+				dir, 55,
+				{type="inferno"},
+				nil, self:spellFriendlyFire()
+			)
+		end
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "breath_fire", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/fire")
 		return true
@@ -107,6 +137,16 @@ newTalent{
 		if not x or not y then return nil end
 		self:projectile(tg, x, y, DamageType.FIRE, self:spellCrit(t.getDamage(self, t)), function(self, tg, x, y, grids)
 			game.level.map:particleEmitter(x, y, tg.radius, "fireflash", {radius=tg.radius, tx=x, ty=y})
+			if self:attr("burning_wake") then
+				game.level.map:addEffect(self,
+					x, y, 4,
+					engine.DamageType.INFERNO, self:attr("burning_wake"),
+					tg.radius,
+					5, nil,
+					{type="inferno"},
+					nil, self:spellFriendlyFire()
+				)
+			end
 		end)
 		game:playSoundNear(self, "talents/fireflash")
 		return true
@@ -143,7 +183,7 @@ newTalent{
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			x, y, t.getDuration(self, t),
-			DamageType.FIRE, t.getDamage(self, t),
+			DamageType.INFERNO, t.getDamage(self, t),
 			radius,
 			5, nil,
 			{type="inferno"},
