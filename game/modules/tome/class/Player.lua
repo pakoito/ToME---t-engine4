@@ -509,6 +509,18 @@ function _M:restCheck()
 		return true
 	end
 
+	-- Enter cooldown waiting rest if we are at max already
+	if self.resting.cnt == 1 then
+		self.resting.wait_cooldowns = true
+	end
+
+	if self.resting.wait_cooldowns then
+		for tid, cd in pairs(self.talents_cd) do
+			if cd > 0 then return true end
+		end
+	end
+
+	self.resting.wait_cooldowns = nil
 	return false, "all resources and life at maximum"
 end
 
