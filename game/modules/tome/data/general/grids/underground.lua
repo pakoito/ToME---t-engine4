@@ -99,7 +99,7 @@ for i = 1, 8 do newEntity{ base = "CRYSTAL_FLOOR", define_as = "CRYSTAL_FLOOR"..
 newEntity{
 	define_as = "CRYSTAL_LADDER_DOWN",
 	type = "floor", subtype = "underground",
-	name = "ladder to the next level", image = "terrain/crystal_floor1.png", add_displays = {class.new{image="terrain/ladder_down.png"}},
+	name = "ladder to the next level", image = "terrain/crystal_floor1.png", add_displays = {class.new{image="terrain/crystal_ladder_down.png"}},
 	display = '>', color_r=255, color_g=255, color_b=0,
 	notice = true,
 	always_remember = true,
@@ -108,7 +108,7 @@ newEntity{
 newEntity{
 	define_as = "CRYSTAL_LADDER_UP",
 	type = "floor", subtype = "underground",
-	name = "ladder to the previous level", image = "terrain/crystal_floor1.png", add_displays = {class.new{image="terrain/ladder_up.png"}},
+	name = "ladder to the previous level", image = "terrain/crystal_floor1.png", add_displays = {class.new{image="terrain/crystal_ladder_up.png"}},
 	display = '<', color_r=255, color_g=255, color_b=0,
 	notice = true,
 	always_remember = true,
@@ -118,7 +118,7 @@ newEntity{
 newEntity{
 	define_as = "CRYSTAL_LADDER_UP_WILDERNESS",
 	type = "floor", subtype = "underground",
-	name = "ladder to worldmap", image = "terrain/crystal_floor1.png", add_displays = {class.new{image="terrain/ladder_up_wild.png"}},
+	name = "ladder to worldmap", image = "terrain/crystal_floor1.png", add_displays = {class.new{image="terrain/crystal_ladder_up.png"}},
 	display = '<', color_r=255, color_g=255, color_b=0,
 	notice = true,
 	change_level = 1,

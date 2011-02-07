@@ -561,7 +561,7 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 	if feeling then game.log("#TEAL#%s", feeling) end
 
 	-- Autosave
-	if config.settings.tome.autosave and left_zone and left_zone.short_name ~= "wilderness" and left_zone.short_name ~= self.zone.short_name then self:saveGame() end
+	if config.settings.tome.autosave and ((left_zone and left_zone.short_name ~= "wilderness") or self.zone.save_per_level) and left_zone.short_name ~= self.zone.short_name then self:saveGame() end
 
 	self.player:onEnterLevelEnd(self.zone, self.level)
 end
@@ -844,7 +844,7 @@ function _M:setupCommands()
 		MOVE_LEFT_DOWN = function() self.player:moveDir(1) end,
 		MOVE_RIGHT_UP = function() self.player:moveDir(9) end,
 		MOVE_RIGHT_DOWN = function() self.player:moveDir(3) end,
-		MOVE_STAY = function() if self.player:enoughEnergy() then self.player:useEnergy() end end,
+		MOVE_STAY = function() if self.player:enoughEnergy() then self.player:describeFloor(self.player.x, self.player.y) self.player:useEnergy() end end,
 
 		RUN_LEFT = function() self.player:runInit(4) end,
 		RUN_RIGHT = function() self.player:runInit(6) end,

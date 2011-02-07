@@ -17,6 +17,16 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+if game.player:isQuestStatus("antimagic", engine.Quest.DONE) then
+newChat{ id="welcome",
+	text = [[Well met friend.]],
+	answers = {
+		{"Farewell."},
+	}
+}
+return "welcome"
+end
+
 local sex = game.player.female and "Sister" or "Brother"
 
 local remove_magic = function(npc, player)
@@ -58,7 +68,7 @@ You will be challenged against magical foes. Should you defeat them, we will tea
 newChat{ id="ko",
 	text = [[Very well. I will say that this is disappointing, but it is your choice. Farewell.]],
 	answers = {
-		{"Farewell.", action=function(npc, player) player:grantQuest("antimagic") player:setQuestStatus("antimagic", engine.Quest.FAILED) end},
+		{"Farewell."},
 	}
 }
 

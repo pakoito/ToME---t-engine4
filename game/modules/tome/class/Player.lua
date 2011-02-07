@@ -158,35 +158,35 @@ function _M:onWorldEncounter(target)
 	end
 end
 
+function _M:describeFloor(x, y)
+	-- Autopickup money
+	if self:getInven(self.INVEN_INVEN) then
+		local i, nb = 1, 0
+		local obj = game.level.map:getObject(x, y, i)
+		while obj do
+			if obj.auto_pickup then
+				self:pickupFloor(i, true)
+			else
+				if self:attr("auto_id") and obj:getPowerRank() <= self.auto_id then obj:identify(true) end
+				nb = nb + 1
+				i = i + 1
+				game.logSeen(self, "There is an item here: %s", obj:getName{do_color=true})
+			end
+			obj = game.level.map:getObject(x, y, i)
+		end
+	end
+
+	local g = game.level.map(x, y, game.level.map.TERRAIN)
+	if g and g.change_level then game.logPlayer(self, "#YELLOW_GREEN#There is "..g.name:a_an().." here (press '<', '>' or right click to use).") end
+end
+
 function _M:move(x, y, force)
 	local moved = mod.class.Actor.move(self, x, y, force)
 	if moved then
 		game.level.map:moveViewSurround(self.x, self.y, 8, 8)
 		game.level.map.attrs(self.x, self.y, "walked", true)
 
-		-- Autopickup money
-		if self:getInven(self.INVEN_INVEN) then
-			local i, nb = 1, 0
-			local obj = game.level.map:getObject(self.x, self.y, i)
-			while obj do
-				if obj.auto_pickup then
-					self:pickupFloor(i, true)
-				else
-					if self:attr("auto_id") and obj:getPowerRank() <= self.auto_id then obj:identify(true) end
-					nb = nb + 1
-					i = i + 1
-				end
-				obj = game.level.map:getObject(self.x, self.y, i)
-			end
-			if nb >= 2 then
-				game.logSeen(self, "There is more than one object lying here.")
-			elseif nb == 1 then
-				game.logSeen(self, "There is an item here: %s", game.level.map:getObject(self.x, self.y, 1):getName{do_color=true})
-			end
-		end
-
-		local g = game.level.map(self.x, self.y, game.level.map.TERRAIN)
-		if g and g.change_level then game.logPlayer(self, "#YELLOW_GREEN#There is "..g.name:a_an().." here (press '<', '>' or right click to use).") end
+		self:describeFloor(self.x, self.y)
 	end
 
 	-- Update wilderness coords

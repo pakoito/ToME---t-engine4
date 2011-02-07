@@ -83,7 +83,7 @@ start_ambush = function(self, who)
 		game.logPlayer(self, "#VIOLET#You wake up after a few hours, surprised to be alive, but the staff is gone!")
 		game.logPlayer(self, "#VIOLET#Go at once to Last Hope to report those events!")
 
-		game.level.map(self.x, self.y, game.level.map.TERRAIN, game.zone.grid_list.UP_WILDERNESS)
+		game.level.map(self.x, self.y, game.level.map.TERRAIN, game.zone.grid_list.GRASS_UP_WILDERNESS)
 
 		self:setQuestStatus("staff-absorption", engine.Quest.COMPLETED, "ambush-finish")
 	end
@@ -99,7 +99,7 @@ killed_ukruk = function(self, who)
 	game.logPlayer(self, "#VIOLET#You are surprised to still be alive.")
 	game.logPlayer(self, "#VIOLET#Go at once to Last Hope to report those events!")
 
-	game.level.map(who.x, who.y, game.level.map.TERRAIN, game.zone.grid_list.UP_WILDERNESS)
+	game.level.map(who.x, who.y, game.level.map.TERRAIN, game.zone.grid_list.GRASS_UP_WILDERNESS)
 
 	who:setQuestStatus("staff-absorption", engine.Quest.COMPLETED, "survived-ukruk")
 end
