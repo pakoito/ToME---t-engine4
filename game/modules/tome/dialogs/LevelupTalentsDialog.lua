@@ -245,7 +245,7 @@ function _M:onDrawItem(item)
 		if self.actor:getTalentLevelRaw(t.id) > 0 then
 			local req = self.actor:getTalentReqDesc(item.talent, 0)
 			text:add{"color","WHITE"}
-			text:add("Current "..what.." level: "..(self.actor:getTalentLevelRaw(t.id)))
+			text:add({"font", "bold"}, "Current "..what.." level: "..(self.actor:getTalentLevelRaw(t.id)), {"font", "normal"})
 			text:add(true)
 			text:merge(req)
 			text:merge(self.actor:getTalentFullDescription(t))
@@ -253,7 +253,7 @@ function _M:onDrawItem(item)
 
 		if self.actor:getTalentLevelRaw(t.id) < t.points then
 			local req2 = self.actor:getTalentReqDesc(item.talent, 1)
-			text:add("Next "..what.." level: "..(self.actor:getTalentLevelRaw(t.id)+1))
+			text:add(true, true, {"font", "bold"}, "Next "..what.." level: "..(self.actor:getTalentLevelRaw(t.id)+1), {"font", "normal"})
 			text:add(true)
 			text:merge(req2)
 			text:merge(self.actor:getTalentFullDescription(t, 1))
