@@ -20,12 +20,12 @@
 return "New Talent Category: #LIGHT_GREEN#Stone",
 [[Since the dawn of time mages have experimented with the elements.
 While most mages are content using the Earth school, a few of them took their research deeper and created Stone magic.
-At its core lies the Crystalline Focus, which can create attacks so sharp they can cut throught physical immunity.
+At its core lies the Crystalline Focus, which can create attacks so sharp they can cut through physical immunity.
 
 You have mastered stone magic and can now create new Archmage characters that can learn the #LIGHT_GREEN#Stone talents#WHITE#.
 
 Talents:
-- #YELLOW#Earthen Missiles: #WHITE#Fires multiple missiles of stone indepentanly to targets
+- #YELLOW#Earthen Missiles: #WHITE#Fires multiple missiles of stone indepentenly to targets
 - #YELLOW#Body of Stone: #WHITE#Turn into stone, reducing the cooldown of many stone/earth talents
 - #YELLOW#Earthquake: #WHITE#Create a localized earthquake, stunning all in the area
 - #YELLOW#Crystalline Focus: #WHITE#Master the Stone and pierce even through physical immunities

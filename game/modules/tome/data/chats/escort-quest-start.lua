@@ -24,7 +24,7 @@ newChat{ id="welcome",
 	text = text,
 	answers =
 	{
-		{"Go away; I do help filthy arcane users!", action=function(npc, player)
+		{"Go away; I do not help filthy arcane users!", action=function(npc, player)
 			npc:disappear()
 			npc:removed()
 			player:hasQuest(npc.quest_id).abandoned = true
