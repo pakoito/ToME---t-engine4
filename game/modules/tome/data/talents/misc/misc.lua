@@ -326,7 +326,7 @@ newTalent{
 	name = "Knowledge of the Way",
 	type = {"base/race", 1},
 	no_npc_use = true,
-	on_learn = function(self, t) self.auto_id = 1 end,
+	on_learn = function(self, t) self.auto_id = 2 end,
 	action = function(self, t)
 		local Chat = require("engine.Chat")
 		local chat = Chat.new("elisa-orb-scrying", {name="The Way"}, self, {version="yeek"})
@@ -345,7 +345,7 @@ newTalent{
 	name = "Knowledge of the Past",
 	type = {"base/race", 1},
 	no_npc_use = true,
-	on_learn = function(self, t) self.auto_id = 1 end,
+	on_learn = function(self, t) self.auto_id = 2 end,
 	action = function(self, t)
 		local Chat = require("engine.Chat")
 		local chat = Chat.new("elisa-orb-scrying", {name="Past memories"}, self, {version="undead"})
