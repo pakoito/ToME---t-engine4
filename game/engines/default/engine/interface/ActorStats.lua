@@ -60,7 +60,14 @@ function _M:init(t)
 		else
 			self.stats[i] = s.def
 		end
-		if not self.inc_stats[i] then self.inc_stats[i] = 0 end
+
+		if self.inc_stats[i] then
+		elseif self.inc_stats[s.short_name] then
+			self.inc_stats[i] = self.inc_stats[s.short_name]
+			self.inc_stats[s.short_name] = nil
+		else
+			self.inc_stats[i] = 0
+		end
 	end
 end
 

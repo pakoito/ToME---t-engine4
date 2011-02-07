@@ -19,7 +19,7 @@
 
 return {
 	name = "Grushnak Pride",
-	level_range = {35, 45},
+	level_range = {35, 60},
 	level_scheme = "player",
 	max_level = 5,
 	decay = {300, 800},
