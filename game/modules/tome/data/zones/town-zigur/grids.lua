@@ -19,3 +19,16 @@
 
 load("/data/general/grids/basic.lua")
 load("/data/general/grids/forest.lua")
+
+newEntity{
+	define_as = "POST",
+	name = "Zigur Postsign", lore="zigur-post",
+	desc = [[The laws of the Ziguratnh]],
+	image = "terrain/grass.png",
+	display = '_', color=colors.UMBER, back_color=colors.DARK_GREEN,
+	add_displays = {class.new{image="terrain/signpost.png"}},
+	always_remember = true,
+	on_move = function(self, x, y, who)
+		if who.player then who:learnLore(self.lore) end
+	end,
+}

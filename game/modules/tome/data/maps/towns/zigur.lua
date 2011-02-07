@@ -33,6 +33,7 @@ quickEntity('+', {show_tooltip=true, name='closed door', display='+', color_r=25
 quickEntity('=', {show_tooltip=true, name='lava pit', display='~', color=colors.LIGHT_RED, back_color=colors.RED, always_remember = true, does_block_move = true, image="terrain/lava_floor.png"})
 defineTile("?", "OLD_FLOOR")
 defineTile(":", "FLOOR")
+defineTile("&", "POST")
 defineTile("@", "FLOOR", nil, "PROTECTOR_MYSSIL")
 quickEntity("'", {show_tooltip=true, name="Open gates", display="'", color=colors.UMBER, image="terrain/stone_store_open.png"})
 
@@ -155,7 +156,7 @@ return [[
 ~~~~~~~~~~~~~~~,,,,,,,,,,,,,,,,,..........------tt
 ~~~~~~~~~~~~~~~~~~,,,,,,,,,,,,,,,.........------.t
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~,,........------.t
-~~~~~~~~~~~~~~~~~~~~~~~,,,~~~~~~~,........------.t
+~~~~~~~~~~~~~~~~~~~~~~~,,,~~~~~~~,&.......------.t
 ~~~~~~~~~~~~~~~~~~~~~~,,t,,~~~~~~,t.......------.t
 ~~~~~~~~~~~~~~~~~~~~~~,ttt,,~~~~~,tt......------tt
 ~~~~~~~~~~~~~~~~~~~~~~,tttt,,,~,,,ttt.....------tt
