@@ -30,10 +30,10 @@ function _M:init(zone, map, level, spots)
 	self.spot_filters = data.spot_filters or {}
 
 	-- Pick a number of spots
-	self.spots = {}
+	self.genspots = {}
 	for i = 1, self.nb_spots or 2 do
 		local spot = self.level:pickSpot(rng.table(self.spot_filters))
-		if spot then self.spots[#self.spots+1] = spot end
+		if spot then self.genspots[#self.genspots+1] = spot end
 	end
 end
 
@@ -42,14 +42,14 @@ function _M:getSpawnSpot(m)
 	if rng.percent(self.on_spot_chance) then
 		-- Cycle through spots, looking for one with empty spaces
 		local tries = 0
-		local spot = rng.table(self.spots)
+		local spot = rng.table(self.genspots)
 		if not spot then
 			print("No spots for spawning")
 			return
 		end
 		local _, _, gs = util.findFreeGrid(spot.x, spot.y, self.spot_radius, "block_move", {[Map.ACTOR]=true})
 		while not gs and tries < 10 do
-			spot = rng.table(self.spots)
+			spot = rng.table(self.genspots)
 			_, _, gs = util.findFreeGrid(spot.x, spot.y, self.spot_radius, "block_move", {[Map.ACTOR]=true})
 			tries = tries + 1
 		end
