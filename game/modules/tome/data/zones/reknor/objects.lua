@@ -61,29 +61,29 @@ newEntity{ define_as = "ATHAME_WEST",
 
 for i = 1, 4 do
 newEntity{ base = "BASE_LORE",
-	define_as = "IRON_THRONE_PROFIT"..i, unique=true,
+	define_as = "IRON_THRONE_PROFIT"..i,
 	name = "Iron Throne Profits History", lore="iron-throne-profits-"..i,
 	desc = [[A journal of the profits history of the Iron Throne dwarves.]],
-	rarity = 20,
+	rarity = false,
 	is_magic_device = false,
 	encumberance = 0,
 }
 end
 
 newEntity{ base = "BASE_LORE",
-	define_as = "IRON_THRONE_LEDGER", unique=true,
+	define_as = "IRON_THRONE_LEDGER",
 	name = "Iron Throne trade ledger", lore="iron-throne-trade-ledger",
 	desc = [[A trade ledger of the Iron Throne dwarves.]],
-	rarity = 40,
+	rarity = false,
 	is_magic_device = false,
 	encumberance = 0,
 }
 
 newEntity{ base = "BASE_LORE",
-	define_as = "IRON_THRONE_LAST_WORDS", unique=true,
+	define_as = "IRON_THRONE_LAST_WORDS",
 	name = "Iron Throne Reknor expedition, last words", lore="iron-throne-last-words",
 	desc = [[Last words of a dwarven expedition to secure Reknor.]],
-	rarity = 40,
+	rarity = false,
 	is_magic_device = false,
 	encumberance = 0,
 }

@@ -74,6 +74,11 @@ return {
 		},
 	},
 	post_process = function(level)
+		-- Place a lore note on each level
+		game:placeRandomLoreObject("IRON_THRONE_PROFIT"..level.level)
+		if level.level == 2 then game:placeRandomLoreObject("IRON_THRONE_LEDGER") end
+		if level.level == 3 then game:placeRandomLoreObject("IRON_THRONE_LAST_WORDS") end
+
 		if level.level == 1 then
 			local l = game.zone:makeEntityByName(level, "terrain", "IRON_THRONE_EDICT")
 			if not l then return end
