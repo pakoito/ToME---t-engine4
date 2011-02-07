@@ -216,7 +216,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 
 newEntity{ base = "BASE_NPC_HORROR", define_as = "BASE_NPC_ELDRICTH_EYE",
 	name = "eldritch eye", color=colors.SLATE, is_eldritch_eye=true,
-	desc ="A small bloadshot eye floats here.",
+	desc ="A small bloodshot eye floats here.",
 	level_range = {30, nil}, exp_worth = 1,
 	life_rating = 7,
 	rank = 2,

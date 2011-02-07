@@ -123,7 +123,7 @@ return {
 			Dialog:simplePopup("Temporal Rift", "Space and time distort and lose meaning as you pass through the rift. This place is alien.")
 			game.level.shown_warning = true
 		elseif lev == 2 and not game.level.shown_warning then
-			Dialog:simplePopup("Temporal Rift", "This looks like Maj'Eyal's forest but it looks strangely distorbed, beware...")
+			Dialog:simplePopup("Temporal Rift", "This looks like Maj'Eyal's forest but it looks strangely distorted, beware...")
 			game.level.shown_warning = true
 			require("engine.generator.actor.Random").new(game.zone, game.level.map, game.level, {}):generateGuardian("BEN_CRUTHDAR_ABOMINATION")
 		elseif lev == 3 and not game.level.shown_warning then

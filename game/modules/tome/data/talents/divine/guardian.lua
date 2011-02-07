@@ -138,7 +138,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[You start absorbing half of all damage you take into your shield.  Once you're shield has absorbed %0.2f damage it will explode in a burst of light, inflicting damage equal to absorbed damage in a radius of %d.
+		return ([[You start absorbing half of all damage you take into your shield.  Once your shield has absorbed %0.2f damage it will explode in a burst of light, inflicting damage equal to absorbed damage in a radius of %d.
 		The amount absorbed will increase with the Magic stat.]]):
 		format(damDesc(self, DamageType.LIGHT, damage), self:getTalentRange(t))
 	end,

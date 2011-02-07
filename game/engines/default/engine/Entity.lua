@@ -51,7 +51,6 @@ end
 
 local function copy_recurs(dst, src, deep)
 	for k, e in pairs(src) do
-	print("================",k,e)
 		if type(e) == "table" and e.__CLASSNAME then
 			dst[k] = e
 		elseif dst[k] == nil then
