@@ -42,26 +42,9 @@ return { generator = function()
 		g = 0,  gv = 0, ga = 0,
 		b = 64,  bv = 0, ba = 0,
 		a = rng.range(20, 50) / 255,  av = 0, aa = 0,
-
---		trail = 1,
---		life = 30,
---		size = 12, sizev = -0.3, sizea = 0,
-
---		x = r * math.cos(a), xv = 0, xa = 0,
---		y = r * math.sin(a), yv = 0, ya = 0,
---		dir = dir, dirv = 0.1, dira = 0,
---		vel = dirchance and 0.32 or -0.2, velv = 0, vela = dirchance and -0.01 or 0.01,
-
---		r = 0,  rv = 0, ra = 0,
---		g = 0,  gv = 0, ga = 0,
---		b = 0,  bv = 0, ba = 0,
---		a = 60 / 255,  av = -.1, aa = 0,
 	}
 end, },
 function(self)
---	toggle = not toggle
---	if toggle then
-		self.ps:emit(1)
---	end
+	self.ps:emit(1)
 end,
 20

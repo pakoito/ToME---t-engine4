@@ -30,6 +30,10 @@ Autolevel:registerScheme{ name = "ghoul", levelup = function(self)
 	self:learnStats{ self.STAT_STR, self.STAT_CON }
 end}
 
+Autolevel:registerScheme{ name = "zerker", levelup = function(self)
+	self:learnStats{ self.STAT_STR, self.STAT_STR, self.STAT_CON }
+end}
+
 Autolevel:registerScheme{ name = "tank", levelup = function(self)
 	self:learnStats{ self.STAT_STR, self.STAT_CON, self.STAT_CON }
 end}

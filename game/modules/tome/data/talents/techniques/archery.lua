@@ -290,7 +290,7 @@ newTalent{
 	requires_target = true,
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	archery_onhit = function(self, t, target, x, y)
-		if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 10) then
+		if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 10) and target:canBe("stun") then
 			target:setEffect(target.EFF_STUNNED, 2 + self:getTalentLevelRaw(t), {})
 		else
 			game.logSeen(target, "%s resists!", target.name:capitalize())

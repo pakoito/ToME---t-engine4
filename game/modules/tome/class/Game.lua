@@ -199,7 +199,6 @@ function _M:newGame()
 			self:registerDialog(require("engine.dialogs.ShowText").new("Welcome to ToME", "intro-"..self.player.starting_intro, {name=self.player.name}, nil, nil, function()
 				self.player:resetToFull()
 				self.player:registerCharacterPlayed()
-				self.player:grantQuest(self.player.starting_quest)
 				self.player:onBirth(birth)
 				-- For quickbirth
 				self.party.name = self.player.name
@@ -207,6 +206,8 @@ function _M:newGame()
 				savefile_pipe:push("", "entity", self.party)
 				self.party.__version = nil
 				self.creating_player = false
+
+				self.player:grantQuest(self.player.starting_quest)
 
 				birth_done()
 				self.player:check("on_birth_done")
@@ -245,7 +246,6 @@ function _M:newGame()
 			for act, _ in pairs(self.party.members) do if self.player ~= act then self.to_re_add_actors[act] = true end end
 
 			self:changeLevel(self.player.starting_level or 1, self.player.starting_zone, nil, self.player.starting_level_force_down)
-			self.player:removeQuest(self.player.starting_quest)
 			self.player:grantQuest(self.player.starting_quest)
 			self.creating_player = false
 
