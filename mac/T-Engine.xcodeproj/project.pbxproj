@@ -122,9 +122,15 @@
 		28B42695119F618100562F94 /* getself.m in Sources */ = {isa = PBXBuildFile; fileRef = 28B42694119F618100562F94 /* getself.m */; };
 		28B426B0119F673600562F94 /* posix.c in Sources */ = {isa = PBXBuildFile; fileRef = 28B426AF119F673600562F94 /* posix.c */; };
 		28B426BC119F67FB00562F94 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28B426BB119F67FB00562F94 /* IOKit.framework */; };
-		28B4299D119F6A1100562F94 /* game in Resources */ = {isa = PBXBuildFile; fileRef = 28B426D4119F6A1000562F94 /* game */; };
 		28B429EF119F708400562F94 /* bootstrap in Resources */ = {isa = PBXBuildFile; fileRef = 28B429EC119F708400562F94 /* bootstrap */; };
 		28B429FF119F761700562F94 /* te4.icns in Resources */ = {isa = PBXBuildFile; fileRef = 28B429FE119F761700562F94 /* te4.icns */; };
+		28F1B1831300703C0082CA27 /* engines in Copy Game Files */ = {isa = PBXBuildFile; fileRef = 28F1A5AB13006FBA0082CA27 /* engines */; };
+		28F1B1841300703C0082CA27 /* loader in Copy Game Files */ = {isa = PBXBuildFile; fileRef = 28F1A72A13006FBB0082CA27 /* loader */; };
+		28F1B1851300703C0082CA27 /* thirdparty in Copy Game Files */ = {isa = PBXBuildFile; fileRef = 28F1A72E13006FBB0082CA27 /* thirdparty */; };
+		28F1B1861300703C0082CA27 /* xmpp in Copy Game Files */ = {isa = PBXBuildFile; fileRef = 28F1A75013006FBB0082CA27 /* xmpp */; };
+		28F1B187130070480082CA27 /* example in Copy Module Files */ = {isa = PBXBuildFile; fileRef = 28F1A762130070100082CA27 /* example */; };
+		28F1B188130070480082CA27 /* example_realtime in Copy Module Files */ = {isa = PBXBuildFile; fileRef = 28F1A796130070100082CA27 /* example_realtime */; };
+		28F1B189130070480082CA27 /* tome in Copy Module Files */ = {isa = PBXBuildFile; fileRef = 28F1A7CA130070100082CA27 /* tome */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
@@ -142,6 +148,33 @@
 				28B423C8119F511200562F94 /* SDL.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		28F19B7F13006BF50082CA27 /* Copy Game Files */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = game;
+			dstSubfolderSpec = 7;
+			files = (
+				28F1B1831300703C0082CA27 /* engines in Copy Game Files */,
+				28F1B1841300703C0082CA27 /* loader in Copy Game Files */,
+				28F1B1851300703C0082CA27 /* thirdparty in Copy Game Files */,
+				28F1B1861300703C0082CA27 /* xmpp in Copy Game Files */,
+			);
+			name = "Copy Game Files";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		28F19B8013006BF50082CA27 /* Copy Module Files */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = game/modules;
+			dstSubfolderSpec = 7;
+			files = (
+				28F1B187130070480082CA27 /* example in Copy Module Files */,
+				28F1B188130070480082CA27 /* example_realtime in Copy Module Files */,
+				28F1B189130070480082CA27 /* tome in Copy Module Files */,
+			);
+			name = "Copy Module Files";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -371,9 +404,15 @@
 		28B42694119F618100562F94 /* getself.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = getself.m; sourceTree = "<group>"; };
 		28B426AF119F673600562F94 /* posix.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = posix.c; sourceTree = "<group>"; };
 		28B426BB119F67FB00562F94 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
-		28B426D4119F6A1000562F94 /* game */ = {isa = PBXFileReference; lastKnownFileType = folder; name = game; path = ../game; sourceTree = SOURCE_ROOT; };
 		28B429EC119F708400562F94 /* bootstrap */ = {isa = PBXFileReference; lastKnownFileType = folder; name = bootstrap; path = ../bootstrap; sourceTree = SOURCE_ROOT; };
 		28B429FE119F761700562F94 /* te4.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = te4.icns; sourceTree = "<group>"; };
+		28F1A5AB13006FBA0082CA27 /* engines */ = {isa = PBXFileReference; lastKnownFileType = folder; name = engines; path = ../game/engines; sourceTree = SOURCE_ROOT; };
+		28F1A72A13006FBB0082CA27 /* loader */ = {isa = PBXFileReference; lastKnownFileType = folder; name = loader; path = ../game/loader; sourceTree = SOURCE_ROOT; };
+		28F1A72E13006FBB0082CA27 /* thirdparty */ = {isa = PBXFileReference; lastKnownFileType = folder; name = thirdparty; path = ../game/thirdparty; sourceTree = SOURCE_ROOT; };
+		28F1A75013006FBB0082CA27 /* xmpp */ = {isa = PBXFileReference; lastKnownFileType = folder; name = xmpp; path = ../game/xmpp; sourceTree = SOURCE_ROOT; };
+		28F1A762130070100082CA27 /* example */ = {isa = PBXFileReference; lastKnownFileType = folder; name = example; path = ../game/modules/example; sourceTree = SOURCE_ROOT; };
+		28F1A796130070100082CA27 /* example_realtime */ = {isa = PBXFileReference; lastKnownFileType = folder; name = example_realtime; path = ../game/modules/example_realtime; sourceTree = SOURCE_ROOT; };
+		28F1A7CA130070100082CA27 /* tome */ = {isa = PBXFileReference; lastKnownFileType = folder; name = tome; path = ../game/modules/tome; sourceTree = SOURCE_ROOT; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		8D1107310486CEB800E47090 /* T_Engine-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "T_Engine-Info.plist"; sourceTree = "<group>"; };
@@ -735,9 +774,32 @@
 			path = zlib123;
 			sourceTree = "<group>";
 		};
+		28F1A75C13006FD40082CA27 /* Game */ = {
+			isa = PBXGroup;
+			children = (
+				28F1A5AB13006FBA0082CA27 /* engines */,
+				28F1A72A13006FBB0082CA27 /* loader */,
+				28F1A72E13006FBB0082CA27 /* thirdparty */,
+				28F1A75013006FBB0082CA27 /* xmpp */,
+			);
+			name = Game;
+			sourceTree = "<group>";
+		};
+		28F1A76113006FFF0082CA27 /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				28F1A762130070100082CA27 /* example */,
+				28F1A796130070100082CA27 /* example_realtime */,
+				28F1A7CA130070100082CA27 /* tome */,
+			);
+			name = Modules;
+			sourceTree = "<group>";
+		};
 		29B97314FDCFA39411CA2CEA /* T-Engine */ = {
 			isa = PBXGroup;
 			children = (
+				28F1A76113006FFF0082CA27 /* Modules */,
+				28F1A75C13006FD40082CA27 /* Game */,
 				29B97315FDCFA39411CA2CEA /* Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
@@ -807,9 +869,8 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				28B429FE119F761700562F94 /* te4.icns */,
 				28B429EC119F708400562F94 /* bootstrap */,
-				28B426D4119F6A1000562F94 /* game */,
+				28B429FE119F761700562F94 /* te4.icns */,
 				8D1107310486CEB800E47090 /* T_Engine-Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 			);
@@ -833,6 +894,8 @@
 			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "T-Engine" */;
 			buildPhases = (
 				8D1107290486CEB800E47090 /* Resources */,
+				28F19B7F13006BF50082CA27 /* Copy Game Files */,
+				28F19B8013006BF50082CA27 /* Copy Module Files */,
 				28B423CB119F511B00562F94 /* Copy Frameworks */,
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
@@ -881,7 +944,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
-				28B4299D119F6A1100562F94 /* game in Resources */,
 				28B429EF119F708400562F94 /* bootstrap in Resources */,
 				28B429FF119F761700562F94 /* te4.icns in Resources */,
 			);
