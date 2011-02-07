@@ -181,7 +181,7 @@ function _M:useEnergy(val)
 	engine.Actor.useEnergy(self, val)
 
 	-- Do not fire those talents if this is not turn's end
-	if self:enoughEnergy() then return end
+	if self:enoughEnergy() or game.zone.wilderness then return end
 	if self:isTalentActive(self.T_KINETIC_AURA) then
 		local t = self:getTalentFromId(self.T_KINETIC_AURA)
 		t.do_kineticaura(self, t)

@@ -1071,7 +1071,7 @@ function _M:setupMouse(reset)
 		if button == "right" and not xrel and not yrel and event == "button" then self:mouseRightClick(mx, my) return end
 
 		-- Default left button action
-		if button == "left" and not xrel and not yrel and event == "button" then if self:mouseLeftClick(mx, my) then return end end
+		if button == "left" and not xrel and not yrel and event == "button" and self.zone and not self.zone.wilderness then if self:mouseLeftClick(mx, my) then return end end
 
 		-- Handle the mouse movement/scrolling
 		self.player:mouseHandleDefault(self.key, self.key == self.normal_key, button, mx, my, xrel, yrel, event)
