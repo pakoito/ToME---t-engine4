@@ -64,7 +64,7 @@ A gloomy aura emanates from him.]],
 }
 
 newEntity{ defined_as = "LUMBERJACK",
-	type = "humanoid", subtype = "human", unique = true,
+	type = "humanoid", subtype = "human",
 	name = "lumberjack",
 	display = "p", color=colors.UMBER, faction = "allied-kingdoms",
 	desc = [[A lumberjack. Cutting wood is his job, dream and passion.]],
