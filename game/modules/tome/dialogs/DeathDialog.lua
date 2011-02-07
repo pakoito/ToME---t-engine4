@@ -118,12 +118,7 @@ function _M:eidolonPlane()
 		self:cleanActor(self.actor)
 		self:resurrectBasic(self.actor)
 		for uid, e in pairs(game.level.entities) do
-			if not game.party:hasMember(e) then
-				self:restoreResources(e)
-			else
-				e.life = math.max(e.life, 1)
-				e.changed = true
-			end
+			self:restoreResources(e)
 		end
 
 		local oldzone = game.zone
