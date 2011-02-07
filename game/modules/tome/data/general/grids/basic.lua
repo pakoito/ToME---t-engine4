@@ -187,7 +187,7 @@ newEntity{
 	define_as = "HARDWALL",
 	name = "wall", image = "terrain/granite_wall1.png",
 	display = '#', color_r=255, color_g=255, color_b=255, back_color=colors.GREY,
-	nice_tiler = { method="wall3d", inner={"WALL", 100, 1, 5}, north={"WALL_NORTH", 100, 1, 5}, south={"WALL_SOUTH", 10, 1, 17}, north_south="WALL_NORTH_SOUTH", small_pillar="WALL_SMALL_PILLAR", pillar_2="WALL_PILLAR_2", pillar_8={"WALL_PILLAR_8", 100, 1, 5}, pillar_4="WALL_PILLAR_4", pillar_6="WALL_PILLAR_6" },
+	nice_tiler = { method="wall3d", inner={"HARDWALL", 100, 1, 5}, north={"HARDWALL_NORTH", 100, 1, 5}, south={"HARDWALL_SOUTH", 10, 1, 17}, north_south="HARDWALL_NORTH_SOUTH", small_pillar="HARDWALL_SMALL_PILLAR", pillar_2="HARDWALL_PILLAR_2", pillar_8={"HARDWALL_PILLAR_8", 100, 1, 5}, pillar_4="HARDWALL_PILLAR_4", pillar_6="HARDWALL_PILLAR_6" },
 	always_remember = true,
 	does_block_move = true,
 	block_sight = true,
