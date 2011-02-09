@@ -87,7 +87,7 @@ function _M:dumpToJSON(js)
 	local ins = js:newSection(("inscriptions (%d/%d)"):format(nb_inscriptions, self.max_inscriptions), "inscriptions", "pairs", "break")
 	for i = 1, self.max_inscriptions do if self.inscriptions[i] then
 		local t = self:getTalentFromId("T_"..self.inscriptions[i])
-		local desc = self:getTalentFullDescription(t)
+		local desc = tostring(self:getTalentFullDescription(t))
 		local p = t.name:split(": ")
 		ins[#ins+1] = {[p[1]] = {val=p[2], tooltip=desc}}
 	end end

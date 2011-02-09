@@ -105,7 +105,6 @@ newTalent{
 					game.level:removeEntity(self)
 					local mx, my = util.findFreeGrid(self.target.x, self.target.y, 20, true, {[engine.Map.ACTOR]=true})
 					game.zone:addEntity(game.level, self.target, "actor", mx, my)
-					game.level.map:redisplay()
 				end
 			end,
 			summoner_gain_exp = true,
