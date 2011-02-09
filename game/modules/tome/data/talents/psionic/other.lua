@@ -30,14 +30,12 @@ newTalent{
 		self:showInventory("Telekinetically grasp which item?", inven, function(o)
 			return (o.type == "weapon" or o.type == "gem") and o.subtype ~= "longbow" and o.subtype ~= "sling"
 		end, function(o, item)
-			o = self:removeObject(inven, item)
 			local pf = self:getInven("PSIONIC_FOCUS")
-			-- Remove old one
+			-- Put back the old one in inventory
 			local old = self:removeObject(pf, 1, true)
-
-			-- Force "wield"
-			self:addObject(pf, o)
-			game.logSeen(self, "%s wears: %s.", self.name:capitalize(), o:getName{do_color=true})
+			if old then
+				self:addObject(inven, old)
+			end
 
 			-- Fix the slot_forbid bug
 			if o.slot_forbid then
@@ -51,21 +49,25 @@ newTalent{
 				-- And prepare the resoration of everything
 				o.on_takeoff = function(self)
 					-- Remove the slot forbid fix
-					o.slot_forbid = o._slot_forbid
-					o._slot_forbid = nil
+					self.slot_forbid = self._slot_forbid
+					self._slot_forbid = nil
 					-- Run the original on_takeoff
 					if self._old_on_takeoff then
 						self.on_takeoff = self._old_on_takeoff
 						self._old_on_takeoff = nil
 						self:on_takeoff()
+					-- Or remove on_takeoff entirely
+					else
+						self.on_takeoff = nil
 					end
 				end
 			end
 
-			-- Put back the old one in inventory
-			if old then
-				self:addObject(inven, old)
-			end
+			o = self:removeObject(inven, item)
+			-- Force "wield"
+			self:addObject(pf, o)
+			game.logSeen(self, "%s wears: %s.", self.name:capitalize(), o:getName{do_color=true})
+
 			self:sortInven()
 		end)
 		end,

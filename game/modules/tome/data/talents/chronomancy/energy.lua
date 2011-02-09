@@ -127,7 +127,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local count = t.getRemoveCount(self, t)
-		return ([[Removes up to %d magical effects or sustained spells(both good and bad) from the target.
+		return ([[Removes up to %d magical effects or sustained spells (both good and bad) from the target.
 		The number of effects removed will scale with your Paradox.]]):
 		format(count)
 	end,

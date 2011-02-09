@@ -89,7 +89,7 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		local reduction = t.getReduction(self, t)
-		return ([[By alterting the target's past you change it's present, reducing all of it's resistances by %d%% for %d turns.
+		return ([[By altering the target's past you change it's present, reducing all of it's resistances by %d%% for %d turns.
 		The duration and reduction will scale with your Paradox.  The reduction will increase with your Magic stat.]]):
 		format(reduction, duration)
 	end,

@@ -77,7 +77,7 @@ newTalent{
 	stamina = 8,
 	paradox = 6,
 	cooldown = function(self, t) return 18 - 2 * self:getTalentLevelRaw(t) end,
-	no_energy = "fake",
+	no_energy = true,
 	range = 10,
 	tactical = { ATTACK = 2 },
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
@@ -92,7 +92,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local weapon = 100 * (self:combatTalentWeaponDamage(t, 1, 1.5) * getParadoxModifier(self, pm))
-		return ([[A quick shot, doing %d%% damage.  The damage will scale with your Paradox.]]):format(weapon)
+		return ([[A quick shot, doing %d%% damage and taking no time to fire.
+		The damage will scale with your Paradox and the cooldown will go down with more talent points invested.]]):format(weapon)
 	end,
 }
 
