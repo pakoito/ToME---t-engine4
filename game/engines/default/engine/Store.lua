@@ -58,8 +58,9 @@ function _M:loadup(level, zone)
 	end
 
 	local i = 1
-	while i <= rng.range(s.min_fill, s.max_fill) - #inven do
-		local filter = rng.table(s.filters)
+	local rngfill = rng.range(s.min_fill, s.max_fill) - #inven
+	while i <= rngfill do
+		local filter = util.getval(s.filters)
 		local e
 		if not filter.defined then e = zone:makeEntity(level, "object", filter, nil, true)
 		else e = zone:makeEntityByName(level, "object", filter.defined) end

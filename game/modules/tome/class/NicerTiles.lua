@@ -86,14 +86,16 @@ end
 
 --- Make walls have a pseudo 3D effect
 function _M:niceTileWall3d(level, i, j, g, nt)
-	local s = level.map:checkEntity(i, j, Map.TERRAIN, "block_move") and true or false
-	local gn = level.map:checkEntity(i, j-1, Map.TERRAIN, "block_move") and true or false
-	local gs = level.map:checkEntity(i, j+1, Map.TERRAIN, "block_move") and true or false
-	local gw = level.map:checkEntity(i-1, j, Map.TERRAIN, "block_move") and true or false
-	local ge = level.map:checkEntity(i+1, j, Map.TERRAIN, "block_move") and true or false
+	local s = level.map:checkEntity(i, j, Map.TERRAIN, "type") or "wall"
+	local gn = level.map:checkEntity(i, j-1, Map.TERRAIN, "type") or "wall"
+	local gs = level.map:checkEntity(i, j+1, Map.TERRAIN, "type") or "wall"
+	local gw = level.map:checkEntity(i-1, j, Map.TERRAIN, "type") or "wall"
+	local ge = level.map:checkEntity(i+1, j, Map.TERRAIN, "type") or "wall"
 
-	local gnc = level.map:checkEntity(i, j-1, Map.TERRAIN, "block_move", {open_door=true}, false, true) and true or false
-	local gsc = level.map:checkEntity(i, j+1, Map.TERRAIN, "block_move", {open_door=true}, false, true) and true or false
+--	local gnc = level.map:checkEntity(i, j-1, Map.TERRAIN, "block_move", {open_door=true}, false, true) and true or false
+--	local gsc = level.map:checkEntity(i, j+1, Map.TERRAIN, "block_move", {open_door=true}, false, true) and true or false
+	local gnc = gn
+	local gsc = gs
 
 	if gs ~= s and gn ~= s and gw ~= s and ge ~= s then self:replace(i, j, self:getTile(nt.small_pillar))
 	elseif gs ~= s and gn ~= s and gw ~= s and ge == s then self:replace(i, j, self:getTile(nt.pillar_4))
@@ -151,13 +153,13 @@ end
 
 --- Make doors have a pseudo 3D effect
 function _M:niceTileDoor3d(level, i, j, g, nt)
-	local gn = level.map:checkEntity(i, j-1, Map.TERRAIN, "block_move") and true or false
-	local gs = level.map:checkEntity(i, j+1, Map.TERRAIN, "block_move") and true or false
-	local gw = level.map:checkEntity(i-1, j, Map.TERRAIN, "block_move") and true or false
-	local ge = level.map:checkEntity(i+1, j, Map.TERRAIN, "block_move") and true or false
+	local gn = level.map:checkEntity(i, j-1, Map.TERRAIN, "type") or "wall"
+	local gs = level.map:checkEntity(i, j+1, Map.TERRAIN, "type") or "wall"
+	local gw = level.map:checkEntity(i-1, j, Map.TERRAIN, "type") or "wall"
+	local ge = level.map:checkEntity(i+1, j, Map.TERRAIN, "type") or "wall"
 
-	if gs and gn then self:replace(i, j, self:getTile(nt.north_south))
-	elseif gw and ge then self:replace(i, j, self:getTile(nt.west_east))
+	if gs == "wall" and gn == "wall" then self:replace(i, j, self:getTile(nt.north_south))
+	elseif gw == "wall" and ge == "wall" then self:replace(i, j, self:getTile(nt.west_east))
 	end
 end
 

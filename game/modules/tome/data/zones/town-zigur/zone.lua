@@ -19,8 +19,10 @@
 
 return {
 	name = "Zigur",
-	level_range = {15, 40},
+	level_range = {15, 50},
+	level_scheme = "player",
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
+	update_base_level_on_enter = true,
 	max_level = 1,
 	width = 50, height = 50,
 	decay = {300, 800, only={object=true}, no_respawn=true},

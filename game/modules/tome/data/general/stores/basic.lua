@@ -228,9 +228,9 @@ newEntity{
 		empty_before_restock = true,
 		min_fill = 20,
 		max_fill = 30,
-		filters = {
-			{type="armor", id=true, ego_chance={ego_chance=1000, properties={"greater_ego"}}},
-		},
+		filters = function()
+			return {type="armor", id=true, ego_chance={ego_chance=100, properties=rng.percent(game.player.level) and {"greater_ego"}}}
+		end,
 		post_filter = function(e)
 			if e.power_source and e.power_source.arcane then return false end
 			return true
@@ -246,11 +246,14 @@ newEntity{
 		purse = 25,
 		restock_after = 1000,
 		empty_before_restock = true,
-		min_fill = 10,
-		max_fill = 20,
-		filters = {
-			{type="weapon", id=true},
-			{type="ammo", id=true},
-		},
+		min_fill = 20,
+		max_fill = 30,
+		filters = function()
+			return {type="weapon", id=true, ego_chance={ego_chance=100, properties=rng.percent(game.player.level) and {"greater_ego"}}}
+		end,
+		post_filter = function(e)
+			if e.power_source and e.power_source.arcane then return false end
+			return true
+		end,
 	},
 }

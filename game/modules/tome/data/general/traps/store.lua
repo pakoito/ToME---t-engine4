@@ -29,6 +29,7 @@ newEntity{ define_as = "BASE_STORE",
 			local g = level.map(x, y, engine.Map.TERRAIN)
 			g = g:clone()
 			g.does_block_move = false
+			g.nice_tiler = nil
 			level.map(x, y, engine.Map.TERRAIN, g)
 		end)
 	end,

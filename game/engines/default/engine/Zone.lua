@@ -66,15 +66,21 @@ function _M:init(short_name, dynamic)
 
 		if self.on_setup then self:on_setup() end
 
-		-- Determine a zone base level
-		self.base_level = self.level_range[1]
-		if self.level_scheme == "player" then
-			local plev = game:getPlayer().level
-			self.base_level = util.bound(plev, self.level_range[1], self.level_range[2])
-		end
-		print("Initiated zone", self.name, "with base_level", self.base_level)
+		self:updateBaseLevel()
+		forceprint("Initiated zone", self.name, "with base_level", self.base_level)
 	else
-		print("Loaded zone", self.name, "with base_level", self.base_level)
+		if self.update_base_level_on_enter then self:updateBaseLevel() end
+		forceprint("Loaded zone", self.name, "with base_level", self.base_level)
+	end
+end
+
+--- Computes the current base level based on the zone infos
+function _M:updateBaseLevel()
+	-- Determine a zone base level
+	self.base_level = self.level_range[1]
+	if self.level_scheme == "player" then
+		local plev = game:getPlayer().level
+		self.base_level = util.bound(plev, self.level_range[1], self.level_range[2])
 	end
 end
 
@@ -100,7 +106,7 @@ function _M:computeRarities(type, list, level, filter, add_level, rarity_field)
 
 	local lev
 	if self.level_adjust_level then
-		lev = self:level_adjust_level(level, self, type)
+		lev = self:level_adjust_level(level, self, type) + (add_level or 0)
 	else
 		lev = self.base_level + (self.specific_base_level[type] or 0) + (level.level - 1) + (add_level or 0)
 	end
