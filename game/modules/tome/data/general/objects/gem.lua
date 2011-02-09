@@ -100,7 +100,7 @@ newGem("Jade",		"object/jade.png",	4,	16,	"green",	30,	40, 4, 65,
 	{ resists = {all=8} },
 	{ splash={type="SLOW", dam=-1 + 1 / (1 + 0.20)} }
 )
-newGem("Sapphire",	"object/garnet.png",4,	16,	"blue",		30,	40, 4, 65,
+newGem("Sapphire",	"object/sapphire.png",4,	16,	"blue",		30,	40, 4, 65,
 	{ combat_def=8 },
 	{ splash={type="ICE", dam=30} }
 )
