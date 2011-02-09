@@ -18,3 +18,13 @@
 -- darkgod@te4.org
 
 load("/data/general/objects/objects.lua")
+
+newEntity{ base = "BASE_LORE",
+	define_as = "ZIGUR_HISTORY",
+	subtype = "the great evil", unique=true, no_unique_lore=true, not_in_stores=false,
+	name = "The Great Evil", lore="zigur-history",
+	desc = [[History of the horrors of magic.]],
+	rarity = false,
+	encumberance = 0,
+	cost = 2,
+}

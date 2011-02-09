@@ -118,6 +118,11 @@
     <property name="display" value="1"/>
    </properties>
   </tile>
+  <tile id="24">
+   <properties>
+    <property name="display" value="9"/>
+   </properties>
+  </tile>
   <tile id="30">
    <properties>
     <property name="display" value="+"/>
@@ -131,7 +136,7 @@
  </tileset>
  <layer name="Terrain" width="50" height="50">
   <data encoding="base64" compression="zlib">
-   eJzt2E1qAzEMBWB3G5hVDhDoJea63fYAvUuzaNe5QekuDMQghH6eRrbHhAQetKkz9Te2FCfnUsq5c9YB6W2IOk6PjHCcwHDHlQS9BurqMX9tDhmHZ8kYrkC08dl7EnVY19zm82YEcbw7QS2jHTfyfJ2r9tAs9V6gDt5DNEe97j/5WXLQeAbLEnFIvdBybL9flOc1R318PmJZtP1pObSebtU5d1j1jK4FdVAL7yWII9JLLuC4iIFaIuuBrgWfP08PR7X8Fbs+9hiqg75OclBjxEHrhtcJ6oish+aQ1gh18NpHHNrf9+4ra49JdW71q2qIOqJB9lW2Rrz39hbnwL0OpP+iZ5QW59pov9I8kTNWj/U4Mkc6kDN+xPCsji3LQMdPwuF9/lhIRq1PZv6IYybL3u8ZZvJ4BuRzbdYifVfyW/Sa4OchxIA4qCVzHyM9ahVe39LRw5LdT3sdUQv/f9H3jJaOlnWCfhYY4cj0r2dxZNaxh2M2C+o42uJ5so5ZPBHHzJaow7P0Mn0IyToinlZeyUEtGUcrU8ZR91grR9Y/s4Pec2/c96SOOv8VsNRxszpoP7EsdOzRde45qGUhYxZh7OwOyeOdm2ZwIPNEYxlG9atWFr5Goxze/mqZlwPL1yDHHa7hRCc=
+   eJzt2DtOA0EMBuCljUSVA0TiElw3LQfgLqSAmpYKpUOR1pJlje3f43kFiGQBYVj5W48nXo7bth07x/OA6G2IOg57jHAcwJCOCwv0GqirR/5aDhmHZ8kYLkBo67P3JOqwrnnL58EIxPHkBGoZ7fhk71Ou2kuz0L1AHfIM0Rx03Sv7vuTg4RksS8RROgstx+3nk/K+5qDXyx6WRduflkM7060+lw6rn9FacAe31DgiZ8kJXBcxcEvEgdZC5i+jh4Ms35vdHzUGcvC/Kzm4MeLgfSP7BHVE6qE5SjVCHbL3EYf2+9p9Ze2xUp9b5xUZoo5oIPsq2yPeZ3uLObDWgZy/6IzSYq6NnleaJzJj9XDMjJb7KhrIjB8x/FbHKAvl/b5//apweM8fjyxG1SeTP+JYyVL7f4ZWnujMXGNAnmszltJ84/W2XI8YEAe3ZO8h4uA1RA1RR8TiOT4MR7QWNY7auvTsDdQx8zzu6Rhp+XdgjtUsqGO2xfNkHat4Io6VLVGHZ+llOhci64h4WnlLDm7JOFqZMg7aY60cWf+9O8jytrBD7h9rnTdLznJQ7tSHloWvm93nVm7SUgr5nLKyo+Tx5qYVHEieaFiGUX3eyiJrdO+OFnPiX3W8DnL8AHvdPBE=
   </data>
  </layer>
  <objectgroup name="addSpot" width="50" height="50">

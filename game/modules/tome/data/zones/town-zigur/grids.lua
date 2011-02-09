@@ -18,6 +18,8 @@
 -- darkgod@te4.org
 
 load("/data/general/grids/basic.lua")
+load("/data/general/grids/water.lua")
+load("/data/general/grids/sand.lua")
 load("/data/general/grids/forest.lua")
 
 newEntity{
@@ -31,4 +33,27 @@ newEntity{
 	on_move = function(self, x, y, who)
 		if who.player then who:learnLore(self.lore) end
 	end,
+}
+
+newEntity{ define_as = "LAVA",
+	name='lava pit',
+	display='~', color=colors.LIGHT_RED, back_color=colors.RED,
+	always_remember = true, does_block_move = true,
+	image="terrain/lava_floor.png",
+}
+
+newEntity{ base = "GRASS", define_as = "FIELDS",
+	name="cultivated fields",
+	display=';', image="terrain/cultivation.png"
+}
+
+newEntity{ base = "FLOOR", define_as = "COBBLESTONE",
+	name="cobblestone road",
+	display='.', image="terrain/stone_road1.png"
+}
+
+newEntity{ base = "HARDWALL", define_as = "ROCK",
+	name="giant rock",
+	image="terrain/oldstone_floor.png", add_displays = {class.new{image="terrain/maze_rock.png"}},
+	nice_tiler = false,
 }

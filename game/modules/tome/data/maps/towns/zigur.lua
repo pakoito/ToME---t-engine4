@@ -19,27 +19,27 @@
 
 setStatusAll{no_teleport=true}
 
-quickEntity('^', {show_tooltip=true, name='mountains', display='^', color=colors.LIGHT_BLUE, image="terrain/mountain.png", block_move=true, block_sight=true})
-quickEntity('<', {show_tooltip=true, name='portal back', display='<', color=colors.WHITE, change_level=1, change_zone=game.player.last_wilderness, image="terrain/sand.png", add_displays = {mod.class.Grid.new{image="terrain/worldmap.png"}}}, nil, {type="portal", subtype="back"})
+defineTile('<', "GRASS_UP_WILDERNESS")
 defineTile('t', {"TREE","TREE2","TREE3","TREE4","TREE5","TREE6","TREE7","TREE8","TREE9","TREE10","TREE11","TREE12","TREE13","TREE14","TREE15","TREE16","TREE17","TREE18","TREE19","TREE20"})
-quickEntity('~', {show_tooltip=true, name='lake', display='~', color=colors.BLUE, block_move=true, image="terrain/river.png", shader = "water", textures = { function() return _3DNoise, true end }})
-quickEntity('.', {show_tooltip=true, name='grass', display='.', color=colors.LIGHT_GREEN, image="terrain/grass.png"})
-quickEntity('-', {show_tooltip=true, name='cultivated fields', display=';', color=colors.GREEN, back_color=colors.DARK_GREEN, image="terrain/cultivation.png", equilibrium_level=-10})
-quickEntity('_', {show_tooltip=true, name='cobblestone road', display='.', color=colors.WHITE, image="terrain/stone_road1.png"})
-quickEntity(',', {show_tooltip=true, name='sand', display='.', color={r=203,g=189,b=72}, back_color={r=163,g=149,b=42}, image="terrain/sand.png", can_encounter="desert", equilibrium_level=-10}, {no_teleport=true})
-quickEntity('!', {show_tooltip=true, name='giant rock', display='#', color_r=255, color_g=255, color_b=255, back_color=colors.DARK_GREY, always_remember = true, does_block_move = true, block_sight = true, air_level = -20, image="terrain/maze_rock.png"})
-quickEntity('#', {show_tooltip=true, name='wall', display='#', color_r=255, color_g=255, color_b=255, back_color=colors.DARK_GREY, always_remember = true, does_block_move = true, block_sight = true, air_level = -20, image="terrain/bigwall.png"})
-quickEntity('+', {show_tooltip=true, name='closed door', display='+', color_r=255, color_g=255, color_b=255, back_color=colors.DARK_GREY, always_remember = true, does_block_move = true, block_sight = true, air_level = -20, image="terrain/stone_store_closed.png"})
-quickEntity('=', {show_tooltip=true, name='lava pit', display='~', color=colors.LIGHT_RED, back_color=colors.RED, always_remember = true, does_block_move = true, image="terrain/lava_floor.png"})
+defineTile('~', "DEEP_OCEAN_WATER")
+defineTile('.', "GRASS")
+defineTile('-', "FIELDS")
+defineTile('_', "COBBLESTONE")
+defineTile(',', "SAND")
+defineTile('!', "ROCK")
+defineTile('#', "HARDWALL")
+defineTile('+', "DOOR")
+defineTile('=', "LAVA")
 defineTile("?", "OLD_FLOOR")
 defineTile(":", "FLOOR")
 defineTile("&", "POST")
 defineTile("@", "FLOOR", nil, "PROTECTOR_MYSSIL")
-quickEntity("'", {show_tooltip=true, name="Open gates", display="'", color=colors.UMBER, image="terrain/stone_store_open.png"})
+defineTile("'", "DOOR")
 
-quickEntity('1', {show_tooltip=true, name="Trainer", display='1', color=colors.UMBER, chat_faction="zigur", resolvers.chatfeature("zigur-trainer", "zigur"), image="terrain/stone_store_training.png"})
-quickEntity('2', {show_tooltip=true, name="Armour Smith", display='2', color=colors.UMBER, store_faction="zigur", resolvers.store("ARMOR", "zigur"), image="terrain/stone_store_armor.png"})
-quickEntity('3', {show_tooltip=true, name="Weapon Smith", display='3', color=colors.UMBER, store_faction="zigur", resolvers.store("WEAPON", "zigur"), image="terrain/stone_store_weapon.png"})
+defineTile('1', "HARDWALL", nil, nil, "TRAINER")
+defineTile('2', "HARDWALL", nil, nil, "WEAPON_STORE")
+defineTile('3', "HARDWALL", nil, nil, "ARMOR_STORE")
+defineTile('9', "HARDWALL", nil, nil, "LIBRARY")
 
 startx = 24
 starty = 49
@@ -125,7 +125,7 @@ return [[
 ~~~~~~~~.......#:::::::#...#1#.==??????==....##ttt
 ~~~~~~~tt......#:##'##:#......==????????==...##ttt
 ~~~~~~ttt......#:#._.#:#......=??!!??????=...###tt
-~~~~~tttt......###._.###.....==??????????==..####t
+~~~~~tttt......###._.###.....==??????????==..###tt
 ~~~~~ttt..........._.........=????????????=..###tt
 ~~~~tttt........._____.......=????????????==.+#ttt
 ~~~tttt.........._ttt_....___=??????????!??=...ttt
@@ -134,19 +134,19 @@ return [[
 ~~..............._ttt_........=???????????=.....tt
 ~~~.............._ttt_........===???????===.....tt
 ~~~~~............_____..........=========.......tt
-~~~.............................................tt
+~~~~~...........................................tt
 ~~~..........................######............ttt
 ~~~..........................######............ttt
-~~~~,........................##3###...........tttt
+~~~~.........................##3#9#...........tttt
 ~~~~,,,.....................................tttttt
 ~~~~,,,,..................................tttttttt
-~~~~~~,,,,...............................ttttttttt
-~~~~~~~~,,,.............tt###2##....tt..tttttttttt
-~~~~~~~~~,,............ttt######.....t.ttttttttttt
-~~~~~~~~~,,,............ttt#####.......ttttttttttt
-~~~~~~~~~,,,,...........tttt####........tttttttttt
-~~~~~~~~~~,,,.............ttt...........tttttttttt
-~~~~~~~~~~,,,,..............t...........tttttttttt
+~~~~~~,,,,..............t................ttttttttt
+~~~~~~~~,,,............ttt..####....tt..tttttttttt
+~~~~~~~~~,,...........ttttt.####.....t.ttttttttttt
+~~~~~~~~~,,,..........ttttt.##2#.......ttttttttttt
+~~~~~~~~~,,,,...........tt..............tttttttttt
+~~~~~~~~~~,,,...........................tttttttttt
+~~~~~~~~~~,,,,..........................tttttttttt
 ~~~~~~~~~~,,,,..........................tttttttttt
 ~~~~~~~~~~,,,,,..........................ttttttttt
 ~~~~~~~~~~~,,,,,...........................ttttttt
@@ -156,10 +156,10 @@ return [[
 ~~~~~~~~~~~~~~~,,,,,,,,,,,,,,,,,..........------tt
 ~~~~~~~~~~~~~~~~~~,,,,,,,,,,,,,,,.........------.t
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~,,........------.t
-~~~~~~~~~~~~~~~~~~~~~~~,,,~~~~~~~,&.......------.t
-~~~~~~~~~~~~~~~~~~~~~~,,t,,~~~~~~,t.......------.t
-~~~~~~~~~~~~~~~~~~~~~~,ttt,,~~~~~,tt......------tt
-~~~~~~~~~~~~~~~~~~~~~~,tttt,,,~,,,ttt.....------tt
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~,&.......------.t
+~~~~~~~~~~~~~~~~~~~~~~~,,,,~~~~~~,t.......------.t
+~~~~~~~~~~~~~~~~~~~~~~,,tt,,~~~~~,tt......------tt
+~~~~~~~~~~~~~~~~~~~~~~,tttt,,,,,,,ttt.....------tt
 ~~~~~~~~~~~~~~~~~~~~~~,tttttt,,,tttttttt..------tt
 ~~~~~~~~~~~~~~~~~~~~~~,,tttttttttttttttttt-----ttt
 ~~~~~~~~~~~~~~~~~~~~~~~,,tttttttttttttttttttt..ttt

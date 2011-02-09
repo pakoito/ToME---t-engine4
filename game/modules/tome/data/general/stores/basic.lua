@@ -197,3 +197,60 @@ newEntity{
 		},
 	},
 }
+
+-------------------------------------------------------------
+-- Last Hope
+-------------------------------------------------------------
+newEntity{
+	define_as = "ZIGUR_LIBRARY",
+	name = "library",
+	display = '*', color=colors.LIGHT_RED,
+	store = {
+		purse = 5,
+		restock_after = 1000,
+		empty_before_restock = true,
+		sell_percent = 100,
+		min_fill = 40,
+		max_fill = 40,
+		filters = {
+			{id=true, defined="ZIGUR_HISTORY"},
+		},
+	},
+}
+
+newEntity{
+	define_as = "ZIGUR_ARMOR",
+	name = "armour smith",
+	display = '2', color=colors.UMBER,
+	store = {
+		purse = 25,
+		restock_after = 1000,
+		empty_before_restock = true,
+		min_fill = 20,
+		max_fill = 30,
+		filters = {
+			{type="armor", id=true, ego_chance={ego_chance=1000, properties={"greater_ego"}}},
+		},
+		post_filter = function(e)
+			if e.power_source and e.power_source.arcane then return false end
+			return true
+		end,
+	},
+}
+
+newEntity{
+	define_as = "ZIGUR_WEAPON",
+	name = "weapon smith",
+	display = '3', color=colors.UMBER,
+	store = {
+		purse = 25,
+		restock_after = 1000,
+		empty_before_restock = true,
+		min_fill = 10,
+		max_fill = 20,
+		filters = {
+			{type="weapon", id=true},
+			{type="ammo", id=true},
+		},
+	},
+}
