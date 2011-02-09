@@ -36,7 +36,10 @@ newTalent{
 		local tg = {type="bolt", range=self:getTalentRange(t)}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-
+		if not self:canProject(tg, x, y) then 
+			game.logPlayer(self, "The target is out of range")
+			return
+		end
 		self:project(tg, x, y, function(px, py)
 			local target = game.level.map(px, py, engine.Map.ACTOR)
 			if not target then return end
@@ -138,8 +141,8 @@ newTalent{
 	direct_hit = true,
 	requires_target = true,
 	on_pre_use = function(self, t, silent)
-		if not self:hasEffect(self.EFF_KINSPIKE_SHIELD) then
-			if not silent then game.logSeen(self, "You must have a spiked kinetic shield active. Cancelling charge.") end
+		if not self:hasEffect(self.EFF_KINSPIKE_SHIELD) and not self:isTalentActive(self.T_KINETIC_SHIELD) then
+			if not silent then game.logSeen(self, "You must either have a spiked kinetic shield or be able to spike one. Cancelling charge.") end
 			return false
 		end
 		return true
@@ -150,6 +153,9 @@ newTalent{
 			local x, y = self:getTarget(tg)
 			if not x or not y then return nil end
 			if self:hasLOS(x, y) and not game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then
+				if not self:hasEffect(self.EFF_KINSPIKE_SHIELD) and self:isTalentActive(self.T_KINETIC_SHIELD) then
+					self:forceUseTalent(self.T_KINETIC_SHIELD, {ignore_energy=true})
+				end
 				local dam = self:spellCrit(self:combatTalentMindDamage(t, 20, 600))
 				self:project(tg, x, y, DamageType.BATTER, self:spellCrit(rng.avg(2*dam/3, dam, 3)))
 				local _ _, x, y = self:canProject(tg, x, y)
@@ -166,6 +172,9 @@ newTalent{
 			local tg = {type="beam", range=self:getTalentRange(t), nolock=true, talent=t, display={particle="bolt_earth", trail="earthtrail"}}
 			local x, y = self:getTarget(tg)
 			if not x or not y then return nil end
+			if not self:hasEffect(self.EFF_KINSPIKE_SHIELD) and self:isTalentActive(self.T_KINETIC_SHIELD) then
+				self:forceUseTalent(self.T_KINETIC_SHIELD, {ignore_energy=true})
+			end
 			local dam = self:spellCrit(self:combatTalentMindDamage(t, 20, 600))
 
 			for i = 1, self:getTalentRange(t) do

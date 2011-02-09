@@ -47,12 +47,14 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		self:attackTargetWith(target, tkweapon.combat, nil, self:combatTalentWeaponDamage(t, 1.5, 2.5))
+		self.use_psi_combat = true
+		self:attackTargetWith(target, tkweapon.combat, nil, self:combatTalentWeaponDamage(t, 1.8, 3))
+		self.use_psi_combat = false
 		return true
 	end,
 	info = function(self, t)
-		return ([[Gather your will and brutally smash the target with your mainhand weapon, doing %d%% weapon damage.]]):
-		format(100 * self:combatTalentWeaponDamage(t, 1.5, 2.5))
+		return ([[Gather your will and brutally smash the target with your mainhand weapon, doing %d%% weapon damage. If Conduit is active, it will extend to include your mainhand weapon for this attack. This attack uses your Willpower and Cunning instead of Strength and Dexterity to determine accuracy and damage.]]):
+		format(100 * self:combatTalentWeaponDamage(t, 1.8, 3))
 	end,
 }
 
@@ -113,7 +115,7 @@ newTalent{
 		return ret
 	end,
 	do_combat = function(self, t, target)
-		local mult = 1 + 0.1*(self:getTalentLevel(t))
+		local mult = 1 + 0.2*(self:getTalentLevel(t))
 		local auras = self:isTalentActive(t.id)
 		if auras.k_aura_on then
 			local k_aura = self:getTalentFromId(self.T_KINETIC_AURA)
@@ -136,8 +138,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local mult = 1 + 0.1*(self:getTalentLevel(t))
-		return ([[When activated, turns off any active auras and uses your weapons as conduits for the energies that were being channeled through those auras.
+		local mult = 1 + 0.2*(self:getTalentLevel(t))
+		return ([[When activated, turns off any active auras and uses your telekinetically wielded weapon as a conduit for the energies that were being channeled through those auras.
 		Any auras used by Conduit will not start to cool down until Conduit has been deactivated. The damage from each aura applied by Conduit is multiplied by %0.2f, and does not drain energy.]]):
 		format(mult)
 	end,

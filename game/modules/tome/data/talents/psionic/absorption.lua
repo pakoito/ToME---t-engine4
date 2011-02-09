@@ -28,7 +28,11 @@ end
 
 local function getSpikeStrength(self, t)
 	local ss = getShieldStrength(self, t)
-	return  75*self:getTalentLevel(t) + 2*ss*math.sqrt(ss)
+	return  75*self:getTalentLevel(t) + ss*math.sqrt(ss)
+end
+
+local function getEfficiency(self, t)
+	return 0.01*(50 + math.min(self:getCun(30), 50))
 end
 
 newTalent{
@@ -49,7 +53,7 @@ newTalent{
 	ks_on_damage = function(self, t, damtype, dam)
 		local mast = 30 - (2*self:getTalentLevel(self.T_SHIELD_DISCIPLINE) or 0) - 0.4*getGemLevel(self)
 		local total_dam = dam
-		local absorbable_dam = 0.01*(60 + math.min(self:getCun(30), 40))* total_dam
+		local absorbable_dam = getEfficiency(self,t)* total_dam
 		local guaranteed_dam = total_dam - absorbable_dam
 		dam = absorbable_dam
 		if damtype ~= DamageType.PHYSICAL and damtype ~= DamageType.ACID then return total_dam end
@@ -67,6 +71,10 @@ newTalent{
 
 
 	activate = function(self, t)
+		if self:isTalentActive(self.T_THERMAL_SHIELD) and self:isTalentActive(self.T_CHARGED_SHIELD) then
+			game.logSeen(self, "You may only sustain two shields at once. Shield activation cancelled.")
+			return false
+		end
 		game:playSoundNear(self, "talents/heal")
 		local s_str = getShieldStrength(self, t)
 		return {
@@ -114,11 +122,11 @@ newTalent{
 		local s_str = getShieldStrength(self, t)
 		local spike_str = getSpikeStrength(self, t)
 		local mast = 30 - (2*self:getTalentLevel(self.T_SHIELD_DISCIPLINE) or 0) - 0.4*getGemLevel(self)
-		local absorb = 60 + math.min(self:getCun(30), 40)
-		return ([[Surround yourself with a shield that will absorb at most %d physical or acid damage per attack. Deactivating the shield spikes it up to a temporary (five turns) %d point shield. The effect will increase with your Willpower stat.
+		local absorb = 100*getEfficiency(self,t)
+		return ([[Surround yourself with a shield that will absorb %d%% of any physical or acidic attack, up to a maximum of %d damage per attack. Deactivating the shield spikes it up to a temporary (five turns) %d point shield.
 		Every time your shield absorbs damage, you gain two points of energy plus an additional point for every %d points of damage absorbed. Spiked shields absorb energy more efficiently.
-		%d%% of any given attack is subject to absorption by this shield. The rest gets through as normal. Improve this by increasing Cunning.]]):
-		format(s_str, spike_str, mast, absorb)
+		These values scale with Willpower and Cunning.]]):
+		format(absorb, s_str, spike_str, mast)
 	end,
 }
 
@@ -142,7 +150,7 @@ newTalent{
 	ts_on_damage = function(self, t, damtype, dam)
 		local mast = 30 - (2*self:getTalentLevel(self.T_SHIELD_DISCIPLINE) or 0) - 0.4*getGemLevel(self)
 		local total_dam = dam
-		local absorbable_dam = 0.01*(60 + math.min(self:getCun(30), 40))* total_dam
+		local absorbable_dam = getEfficiency(self,t)* total_dam
 		local guaranteed_dam = total_dam - absorbable_dam
 		dam = absorbable_dam
 		if damtype ~= DamageType.FIRE and damtype ~= DamageType.COLD then return total_dam end
@@ -159,6 +167,10 @@ newTalent{
 
 
 	activate = function(self, t)
+		if self:isTalentActive(self.T_KINETIC_SHIELD) and self:isTalentActive(self.T_CHARGED_SHIELD) then
+			game.logSeen(self, "You may only sustain two shields at once. Shield activation cancelled.")
+			return false
+		end
 		game:playSoundNear(self, "talents/heal")
 		local s_str = getShieldStrength(self, t)
 		return {
@@ -206,11 +218,11 @@ newTalent{
 		local s_str = getShieldStrength(self, t)
 		local spike_str = getSpikeStrength(self, t)
 		local mast = 30 - (2*self:getTalentLevel(self.T_SHIELD_DISCIPLINE) or 0) - 0.4*getGemLevel(self)
-		local absorb = 60 + math.min(self:getCun(30), 40)
-		return ([[Surround yourself with a shield that will absorb at most %d thermal damage per attack. Deactivating the shield spikes it up to a temporary (five turns) %d point shield. The effect will increase with your Willpower stat.
+		local absorb = 100*getEfficiency(self,t)
+		return ([[Surround yourself with a shield that will absorb %d%% of any fire or cold attack, up to a maximum of %d damage per attack. Deactivating the shield spikes it up to a temporary (five turns) %d point shield.
 		Every time your shield absorbs damage, you gain two points of energy plus an additional point for every %d points of damage absorbed. Spiked shields absorb energy more efficiently.
-		%d%% of any given attack is subject to absorption by this shield. The rest gets through as normal. Improve this by increasing Cunning.]]):
-		format(s_str, spike_str, mast, absorb)
+		These values scale with Willpower and Cunning.]]):
+		format(absorb, s_str, spike_str, mast)
 	end,
 }
 
@@ -232,7 +244,7 @@ newTalent{
 	cs_on_damage = function(self, t, damtype, dam)
 		local mast = 30 - (2*self:getTalentLevel(self.T_SHIELD_DISCIPLINE) or 0) - 0.4*getGemLevel(self)
 		local total_dam = dam
-		local absorbable_dam = 0.01*(60 + math.min(self:getCun(30), 40))* total_dam
+		local absorbable_dam = getEfficiency(self,t)* total_dam
 		local guaranteed_dam = total_dam - absorbable_dam
 		dam = absorbable_dam
 		if damtype ~= DamageType.LIGHTNING and damtype ~= DamageType.BLIGHT then return total_dam end
@@ -249,6 +261,10 @@ newTalent{
 
 
 	activate = function(self, t)
+		if self:isTalentActive(self.T_KINETIC_SHIELD) and self:isTalentActive(self.T_THERMAL_SHIELD) then
+			game.logSeen(self, "You may only sustain two shields at once. Shield activation cancelled.")
+			return false
+		end
 		game:playSoundNear(self, "talents/heal")
 		local s_str = getShieldStrength(self, t)
 		return {
@@ -295,11 +311,11 @@ newTalent{
 		local s_str = getShieldStrength(self, t)
 		local spike_str = getSpikeStrength(self, t)
 		local mast = 30 - (2*self:getTalentLevel(self.T_SHIELD_DISCIPLINE) or 0) - 0.4*getGemLevel(self)
-		local absorb = 60 + math.min(self:getCun(30), 40)
-		return ([[Surround yourself with a shield that will absorb at most %d lightning or blight damage per attack. Deactivating the shield spikes it up to a temporary (five turns) %d point shield. The effect will increase with your Willpower stat.
+		local absorb = 100*getEfficiency(self,t)
+		return ([[Surround yourself with a shield that will absorb %d%% of any lightning or blight attack, up to a maximum of %d damage per attack. Deactivating the shield spikes it up to a temporary (five turns) %d point shield.
 		Every time your shield absorbs damage, you gain two points of energy plus an additional point for every %d points of damage absorbed. Spiked shields absorb energy more efficiently.
-		%d%% of any given attack is subject to absorption by this shield. The rest gets through as normal. Improve this by increasing Cunning.]]):
-		format(s_str, spike_str, mast, absorb)
+		These values scale with Willpower and Cunning.]]):
+		format(absorb, s_str, spike_str, mast)
 	end,
 }
 

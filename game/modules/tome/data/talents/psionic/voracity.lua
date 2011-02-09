@@ -23,7 +23,9 @@ newTalent{
 	require = psi_wil_req1,
 	points = 5,
 	psi = 0,
-	cooldown = 40,
+	cooldown = function(self, t)
+		return math.ceil(40 - self:getTalentLevel(t)*4)
+	end,
 	tactical = { DEFEND = 1, DISABLE = 2 },
 	direct_hit = true,
 	range = function(self, t)
@@ -64,7 +66,9 @@ newTalent{
 	type = {"psionic/voracity", 2},
 	require = psi_wil_req2,
 	points = 5,
-	cooldown = 50,
+	cooldown = function(self, t)
+		return math.ceil(50 - self:getTalentLevel(t)*4)
+	end,
 	psi = 0,
 	tactical = { DEFEND = 2, DISABLE = 2 },
 	range = function(self, t)
@@ -108,7 +112,9 @@ newTalent{
 	require = psi_wil_req3,
 	points = 5,
 	psi = 0,
-	cooldown = 60,
+	cooldown = function(self, t)
+		return math.ceil(50 - self:getTalentLevel(t)*5)
+	end,
 	tactical = { DEFEND = 2, DAMAGE = 2, DISABLE = 1 },
 	direct_hit = true,
 	range = function(self, t)

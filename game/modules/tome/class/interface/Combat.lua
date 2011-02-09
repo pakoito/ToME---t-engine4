@@ -348,7 +348,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	end
 
 	-- Conduit (Psi)
-	if hitted and not target.dead and self:knowTalent(self.T_CONDUIT) and self:isTalentActive(self.T_CONDUIT) then
+	if hitted and not target.dead and self:knowTalent(self.T_CONDUIT) and self:isTalentActive(self.T_CONDUIT) and self.use_psi_combat then
 		local t =  self:getTalentFromId(self.T_CONDUIT)
 		t.do_combat(self, t, target)
 	end

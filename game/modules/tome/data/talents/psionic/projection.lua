@@ -106,7 +106,13 @@ newTalent{
 		return 15 - (self:getTalentLevelRaw(self.T_AURA_DISCIPLINE) or 0)
 	end,
 	tactical = { ATTACKAREA = 2 },
-	range = 1,
+	range = function(self, t)
+		local r = 6
+		local gem_level = getGemLevel(self)
+		local mult = (1 + 0.02*gem_level*(self:getTalentLevel(self.T_REACH)))
+		r = math.floor(r*mult)
+		return math.min(r, 10)
+	end,
 	direct_hit = true,
 	getAuraStrength = function(self, t)
 		local add = 0
@@ -145,24 +151,29 @@ newTalent{
 
 	end,
 	activate = function(self, t)
+		if self:isTalentActive(self.T_THERMAL_AURA) and self:isTalentActive(self.T_CHARGED_AURA) then
+			game.logSeen(self, "You may only sustain two auras at once. Aura activation cancelled.")
+			return false
+		end
 		return true
 	end,
 	deactivate = function(self, t, p)
-		local dam = 50 + 0.25 * t.getAuraStrength(self, t)*t.getAuraStrength(self, t)
+		local dam = 50 + 0.4 * t.getAuraStrength(self, t)*t.getAuraStrength(self, t)
 		local cost = t.sustain_psi - 2*getGemLevel(self)
 		if self:getPsi() <= cost then
 			game.logPlayer(self, "The aura dissipates without producing a spike.")
 			return true
 		end
-		local tg = {type="hit", nolock=true, range=self:getTalentRange(t)}
-		local x, y, target = self:getTarget(tg)
+		
+		local tg = {type="beam", nolock=true, range=self:getTalentRange(t), talent=t}
+		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local actor = game.level.map(x, y, Map.ACTOR)
-		if not actor then return true end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		local knockback = t.getKnockback(self, t)
-		forceHit(self, target, self.x, self.y, dam, knockback, 15, 1)
-		--self:project(tg, x, y, DamageType.BATTER, dam)
+		--if math.floor(core.fov.distance(self.x, self.y, x, y)) == 1 and not actor then return true end
+		if math.floor(core.fov.distance(self.x, self.y, x, y)) == 0 then return true end
+		self:project(tg, x, y, DamageType.BATTER, self:spellCrit(rng.avg(0.8*dam, dam)))
+		local _ _, x, y = self:canProject(tg, x, y)
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "matter_beam", {tx=x-self.x, ty=y-self.y})
 		self:incPsi(-cost)
 
 		return true
@@ -170,12 +181,13 @@ newTalent{
 
 	info = function(self, t)
 		local dam = t.getAuraStrength(self, t)
-		local spikedam = 50 + 0.25 * dam * dam
+		local spikedam = 50 + 0.4 * dam * dam
 		local mast = 5 + (self:getTalentLevel(self.T_AURA_DISCIPLINE) or 0) + getGemLevel(self)
 		local spikecost = t.sustain_psi - 2*getGemLevel(self)
 		return ([[Fills the air around you with reactive currents of force that do %d physical damage to all who approach. All damage done by the aura will drain one point of energy per %0.2f points of damage dealt.
-		When deactivated, if you have at least %d energy, a massive spike of kinetic energy is released, smashing a target for %d physical damage and sending it flying. Telekinetically wielding a gem instead of a weapon will result in improved spike efficiency.
-		The damage will increase with the Willpower stat.]]):format(dam, mast, spikecost, spikedam)
+		When deactivated, if you have at least %d energy, a massive spike of kinetic energy is released as a beam, smashing targets for %d physical damage and sending them flying. Telekinetically wielding a gem instead of a weapon will result in improved spike efficiency.
+		The damage will increase with the Willpower stat.
+		To turn off an aura without spiking it, deactivate it and target yourself.]]):format(dam, mast, spikecost, spikedam)
 	end,
 }
 
@@ -234,6 +246,10 @@ newTalent{
 
 	end,
 	activate = function(self, t)
+		if self:isTalentActive(self.T_KINETIC_AURA) and self:isTalentActive(self.T_CHARGED_AURA) then
+			game.logSeen(self, "You may only sustain two auras at once. Aura activation cancelled.")
+			return false
+		end
 		return true
 	end,
 	deactivate = function(self, t, p)
@@ -245,15 +261,14 @@ newTalent{
 			return true
 		end
 
-		local tg = {type="beam", nolock=true, range=self:getTalentRange(t), talent=t, display={particle="bolt_fire", trail="firetrail"}}
+		local tg = {type="cone", range=1, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local actor = game.level.map(x, y, Map.ACTOR)
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) == 1 and not actor then return true end
+		--if math.floor(core.fov.distance(self.x, self.y, x, y)) == 1 and not actor then return true end
+		if math.floor(core.fov.distance(self.x, self.y, x, y)) == 0 then return true end
 		self:project(tg, x, y, DamageType.FIREBURN, self:spellCrit(rng.avg(0.8*dam, dam)))
-		local _ _, x, y = self:canProject(tg, x, y)
-		game.level.map:particleEmitter(self.x, self.y, tg.radius, "flamebeam", {tx=x-self.x, ty=y-self.y})
-
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "breath_fire", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/fire")
 		self:incPsi(-cost)
 		return true
@@ -261,12 +276,14 @@ newTalent{
 
 	info = function(self, t)
 		local dam = t.getAuraStrength(self, t)
+		local rad = self:getTalentRange(t)
 		local spikedam = 50 + 0.4 * dam * dam
-		local mast = 5 + (self:getTalentLevel(self.T_PROJECTION_MASTERY) or 0) + getGemLevel(self)
+		local mast = 5 + (self:getTalentLevel(self.T_AURA_DISCIPLINE) or 0) + getGemLevel(self)
 		local spikecost = t.sustain_psi - 2*getGemLevel(self)
 		return ([[Fills the air around you with reactive currents of furnace-like heat that do %d fire damage to all who approach. All damage done by the aura will drain one point of energy per %0.2f points of damage dealt.
-		When deactivated, if you have at least %d energy, a massive spike of thermal energy is released as a tunnel of superheated air. Anybody caught in it will suffer %d fire damage. Telekinetically wielding a gem instead of a weapon will result in improved spike efficiency.
-		The damage will increase with the Willpower stat.]]):format(dam, mast, spikecost, spikedam)
+		When deactivated, if you have at least %d energy, a massive spike of thermal energy is released as a conical blast (radius %d) of superheated air. Anybody caught in it will suffer %d fire damage. Telekinetically wielding a gem instead of a weapon will result in improved spike efficiency.
+		The damage will increase with the Willpower stat.
+		To turn off an aura without spiking it, deactivate it and target yourself.]]):format(dam, mast, spikecost, rad, spikedam)
 	end,
 }
 
@@ -323,6 +340,10 @@ newTalent{
 		end
 	end,
 	activate = function(self, t)
+		if self:isTalentActive(self.T_THERMAL_AURA) and self:isTalentActive(self.T_KINETIC_AURA) then
+			game.logSeen(self, "You may only sustain two auras at once. Aura activation cancelled.")
+			return false
+		end
 		game:playSoundNear(self, "talents/thunderstorm")
 		return true
 	end,
@@ -338,6 +359,7 @@ newTalent{
 		local tg = {type="bolt", nolock=true, range=self:getTalentRange(t), talent=t}
 		local fx, fy = self:getTarget(tg)
 		if not fx or not fy then return nil end
+		if math.floor(core.fov.distance(self.x, self.y, fx, fy)) == 0 then return true end
 
 		local nb = 1 + math.floor(0.5*self:getTalentLevel(t)) + getGemLevel(self)
 		local affected = {}
@@ -395,7 +417,8 @@ newTalent{
 		local nb = 3 + self:getTalentLevelRaw(t)
 		return ([[Fills the air around you with crackling energy, doing %d lightning damage to all who stand nearby. All damage done by the aura will drain one point of energy per %0.2f points of damage dealt.
 		When deactivated, if you have at least %d energy, a massive spike of electrical energy jumps between up to %d nearby targets, doing %d lightning damage to each. Telekinetically wielding a gem instead of a weapon will result in improved spike efficiency.
-		The damage will increase with the Willpower stat.]]):format(dam, mast, spikecost, nb, spikedam)
+		The damage will increase with the Willpower stat.
+		To turn off an aura without spiking it, deactivate it and target yourself.]]):format(dam, mast, spikecost, nb, spikedam)
 	end,
 }
 

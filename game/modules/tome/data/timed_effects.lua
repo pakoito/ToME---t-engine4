@@ -2993,19 +2993,37 @@ newEffect{
 newEffect{
 	name = "CONTROL",
 	desc = "Perfect control",
-	long_desc = function(self, eff) return ("The target's combat attack and crit chance are improved by %d and %d%%, respectively."):format(eff.power, 0.3*eff.power) end,
+	long_desc = function(self, eff) return ("The target's combat attack and crit chance are improved by %d and %d%%, respectively."):format(eff.power, 0.5*eff.power) end,
 	type = "physical",
 	status = "beneficial",
 	parameters = { power=10 },
 	activate = function(self, eff)
 		eff.attack = self:addTemporaryValue("combat_atk", eff.power)
-		eff.crit = self:addTemporaryValue("combat_physcrit", 0.3*eff.power)
+		eff.crit = self:addTemporaryValue("combat_physcrit", 0.5*eff.power)
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("combat_atk", eff.attack)
 		self:removeTemporaryValue("combat_physcrit", eff.crit)
 	end,
 }
+
+newEffect{
+	name = "PSI_REGEN",
+	desc = "Matter is energy",
+	long_desc = function(self, eff) return ("The gem's matter gradually transforms, granting %0.2f energy per turn."):format(eff.power) end,
+	type = "physical",
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "Energy starts pouring from the gem into #Target#.", "+Energy" end,
+	on_lose = function(self, err) return "The flow of energy from #Target#'s gem ceases.", "-Energy" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("psi_regen", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("psi_regen", eff.tmpid)
+	end,
+}
+
 
 newEffect{
 	name = "TURN_BACK_THE_CLOCK",

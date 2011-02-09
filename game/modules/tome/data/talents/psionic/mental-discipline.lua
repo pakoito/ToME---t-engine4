@@ -38,7 +38,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[A life of the mind has had predictably good effects on your Willpower and Cunning.
-		Increases Willpower and Cunning (as well as their maximum values) by %d.]]):format(self:getTalentLevelRaw(t))
+		Increases Willpower and Cunning by %d.]]):format(self:getTalentLevelRaw(t))
 	end,
 }
 

@@ -34,7 +34,7 @@ newTalent{
 		local dur = 5 + self:getTalentLevelRaw(t)
 		return ([[Encase your body in a sheath of thought-quick forces, allowing you to control your body's movements directly without the inefficiency of dealing with crude mechanisms like nerves and muscles.
 		Increases attack by %d and critical strike chance by %0.2f%% for %d turns. The effect scales with Cunning.]]):
-		format(boost, 0.3*boost, dur)
+		format(boost, 0.5*boost, dur)
 	end,
 }
 
@@ -46,16 +46,20 @@ newTalent{
 	psi = 0,
 	points = 5,
 	no_npc_use = true,
+	boost = function(self, t)
+		return math.floor(self:combatTalentIntervalDamage(t, "wil", 3, 20))
+
+	end,
 	action = function(self, t)
 		self:showInventory("Reshape which weapon?", self:getInven("INVEN"), function(o) return o.type == "weapon" and not o.fully_reshaped end, function(o, item)
 			--o.wielder = o.wielder or {}
-			if (o.old_atk or 0) < math.floor(self:getTalentLevel(t)*(1 + self:getWil(3))) then
+			if (o.old_atk or 0) < t.boost(self, t) then
 				o.combat.atk = (o.combat.atk or 0) - (o.old_atk or 0)
 				o.combat.dam = (o.combat.dam or 0) - (o.old_dam or 0)
-				o.combat.atk = (o.combat.atk or 0) + math.floor(self:getTalentLevel(t)*(1 + self:getWil(3)))
-				o.combat.dam = (o.combat.dam or 0) + math.floor(self:getTalentLevel(t)*(1 + self:getWil(3)))
-				o.old_atk = math.floor(self:getTalentLevel(t)*(1 + self:getWil(3)))
-				o.old_dam = math.floor(self:getTalentLevel(t)*(1 + self:getWil(3)))
+				o.combat.atk = (o.combat.atk or 0) + t.boost(self, t)
+				o.combat.dam = (o.combat.dam or 0) + t.boost(self, t)
+				o.old_atk = t.boost(self, t)
+				o.old_dam = t.boost(self, t)
 				game.logPlayer(self, "You reshape your %s.", o:getName{do_colour=true, no_count=true})
 				if not o.been_reshaped then
 					o.name = "reshaped" .. " "..o.name..""
@@ -68,9 +72,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local weapon_boost = t.boost(self, t)
 		return ([[Manipulate forces on the molecular level to realign, rebalance, and hone your weapon. Permanently increases the attack and damage of any weapon by %d.
 		This value scales with Willpower.]]):
-		format(math.floor(self:getTalentLevel(t)*(1 + self:getWil(3))))
+		format(weapon_boost)
 	end,
 }
 
@@ -82,9 +87,16 @@ newTalent{
 	psi = 0,
 	points = 5,
 	no_npc_use = true,
+	arm_boost = function(self, t)
+		--return math.floor(0.1*self:combatTalentIntervalDamage(t, "wil", 10, 30))
+		return math.floor(0.25*t.fat_red(self, t))
+	end,
+	fat_red = function(self, t)
+		return math.floor(0.1*self:combatTalentIntervalDamage(t, "wil", 50, 100))
+	end,
 	action = function(self, t)
 		self:showInventory("Reshape which piece of armor?", self:getInven("INVEN"), function(o) return o.type == "armor" and not o.fully_reshaped end, function(o, item)
-			if (o.old_fat or 0) < math.ceil(0.5*self:getTalentLevel(t)*(1 + self:getWil(4))) then
+			if (o.old_fat or 0) < t.fat_red(self, t) then
 				o.wielder = o.wielder or {}
 				if not o.been_reshaped then
 					o.orig_arm = (o.wielder.combat_armor or 0)
@@ -92,10 +104,10 @@ newTalent{
 				end
 				o.wielder.combat_armor = o.orig_arm
 				o.wielder.fatigue = o.orig_fat
-				o.wielder.combat_armor = (o.wielder.combat_armor or 0) + math.ceil(0.1*self:getTalentLevel(t)*(1 + self:getWil(4)))
-				o.wielder.fatigue = (o.wielder.fatigue or 0) - math.ceil(0.5*self:getTalentLevel(t)*(1 + self:getWil(4)))
+				o.wielder.combat_armor = (o.wielder.combat_armor or 0) + t.arm_boost(self, t)
+				o.wielder.fatigue = (o.wielder.fatigue or 0) - t.fat_red(self, t)
 				if o.wielder.fatigue < 0 then o.wielder.fatigue = 0 end
-				o.old_fat = math.ceil(0.5*self:getTalentLevel(t)*(1 + self:getWil(4)))
+				o.old_fat = t.fat_red(self, t)
 				game.logPlayer(self, "You reshape your %s.", o:getName{do_colour=true, no_count=true})
 				if not o.been_reshaped then
 					o.name = "reshaped" .. " "..o.name..""
@@ -108,8 +120,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local arm = math.ceil(0.1*self:getTalentLevel(t)*(1 + self:getWil(4)))
-		local fat = math.ceil(0.5*self:getTalentLevel(t)*(1 + self:getWil(4)))
+		local arm = t.arm_boost(self, t)
+		local fat = t.fat_red(self, t)
 		return ([[Manipulate forces on the molecular level to realign, rebalance, and hone your weapon. Permanently increases the armor rating of any piece of armor by %d. Also permanently reduces the fatigue rating of any piece of armor by %d.
 		These values scale with Willpower.]]):
 		format(arm, fat)
@@ -125,20 +137,20 @@ newTalent{
 	points = 5,
 	no_npc_use = true,
 	action = function(self, t)
-		self:showInventory("Use which gem?", self:getInven("INVEN"), function(gem) return gem.type == "gem" and gem.material_level and gem.material_level == 5 end, function(gem, gem_item)
+		self:showInventory("Use which gem?", self:getInven("INVEN"), function(gem) return gem.type == "gem" and gem.material_level and not gem.unique end, function(gem, gem_item)
 			self:removeObject(self:getInven("INVEN"), gem_item)
-			--game.logPlayer(self, "You imbue your %s with %s.", o:getName{do_colour=true, no_count=true}, gem:getName{do_colour=true, no_count=true})
-			local quant = 30 + self:getTalentLevel(t)*self:getCun(30)
-			self:incPsi(quant)
+			local amt = 0.1*self:combatTalentIntervalDamage(t, "cun", 100, 400)
+			local dur = 3 + 2*(gem.material_level or 0)
+			self:setEffect(self.EFF_PSI_REGEN, dur, {power=amt})
 			self.changed = true
 		end)
 		return true
 	end,
 	info = function(self, t)
-		local quant = 30 + self:getTalentLevel(t)*self:getCun(30)
+		local amt = 0.1*self:combatTalentIntervalDamage(t, "cun", 100, 400)
 		return ([[Matter is energy, as any good Mindslayer knows. Unfortunately, the various bonds and particles involved are just too numerous and complex to make the conversion feasible in most cases. Fortunately, the organized, crystalline structure of gems makes it possible to transform a small percentage of its matter into usable energy.
-		Turns a high-quality (material level 5) gem into %d energy. This value scales with Cunning.]]):
-		format(quant)
+		Grants %d energy per turn for between five and thirteen turns, depending on the quality of the gem used. The amount of energy granted per turn scales with Cunning.]]):
+		format(amt)
 	end,
 }
 
