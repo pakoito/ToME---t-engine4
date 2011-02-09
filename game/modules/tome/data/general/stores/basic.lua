@@ -27,9 +27,9 @@ newEntity{
 		empty_before_restock = true,
 		min_fill = 10,
 		max_fill = 20,
-		filters = {
-			{type="armor", id=true},
-		},
+		filters = function()
+			return {type="armor", id=true, ego_chance={ego_chance=100, properties=rng.percent(game.player.level) and {"greater_ego"}}}
+		end,
 	},
 }
 
@@ -43,10 +43,9 @@ newEntity{
 		empty_before_restock = true,
 		min_fill = 10,
 		max_fill = 20,
-		filters = {
-			{type="weapon", id=true},
-			{type="ammo", id=true},
-		},
+		filters = function()
+			return {type="weapon", id=true, ego_chance={ego_chance=100, properties=rng.percent(game.player.level) and {"greater_ego"}}}
+		end,
 	},
 }
 
@@ -58,8 +57,8 @@ newEntity{
 		purse = 10,
 		restock_after = 1000,
 		empty_before_restock = true,
-		min_fill = 2,
-		max_fill = 4,
+		min_fill = 4,
+		max_fill = 7,
 		filters = {
 			{type="scroll", subtype="infusion", id=true},
 		},
@@ -74,8 +73,8 @@ newEntity{
 		purse = 10,
 		restock_after = 1000,
 		empty_before_restock = true,
-		min_fill = 2,
-		max_fill = 4,
+		min_fill = 4,
+		max_fill = 7,
 		filters = {
 			{type="scroll", subtype="rune", id=true},
 		},
@@ -90,8 +89,8 @@ newEntity{
 		purse = 30,
 		restock_after = 1000,
 		empty_before_restock = true,
-		min_fill = 40,
-		max_fill = 60,
+		min_fill = 20,
+		max_fill = 30,
 		filters = {
 			{type="gem", id=true},
 		},
@@ -112,12 +111,14 @@ newEntity{
 		empty_before_restock = true,
 		min_fill = 15,
 		max_fill = 25,
-		filters = {
-			{type="weapon", subtype="staff", id=true},
-			{type="weapon", subtype="staff", id=true},
-			{type="weapon", subtype="staff", id=true},
-			{type="wand", subtype="wand", id=true},
-		},
+		filters = function()
+			return rng.table{
+				{type="weapon", subtype="staff", id=true, ego_chance={ego_chance=100, properties=rng.percent(game.player.level) and {"greater_ego"}}},
+				{type="weapon", subtype="staff", id=true, ego_chance={ego_chance=100, properties=rng.percent(game.player.level) and {"greater_ego"}}},
+				{type="weapon", subtype="staff", id=true, ego_chance={ego_chance=100, properties=rng.percent(game.player.level) and {"greater_ego"}}},
+				{type="wand", subtype="wand", id=true, ego_chance={ego_chance=100, properties=rng.percent(game.player.level) and {"greater_ego"}}},
+			}
+		end,
 	},
 }
 
@@ -134,6 +135,14 @@ newEntity{
 		filters = {
 			{type="jewelry", id=true},
 		},
+		filters = function()
+			return rng.table{
+				{type="jewelry", subtype="ring", id=true, ego_chance=-1000},
+				{type="jewelry", id=true, ego_chance={ego_chance=100, properties=rng.percent(game.player.level) and {"greater_ego"}}},
+				{type="jewelry", id=true, ego_chance={ego_chance=100, properties=rng.percent(game.player.level) and {"greater_ego"}}},
+				{type="jewelry", id=true, ego_chance={ego_chance=100, properties=rng.percent(game.player.level) and {"greater_ego"}}},
+			}
+		end,
 	},
 }
 
@@ -145,8 +154,8 @@ newEntity{
 		purse = 10,
 		restock_after = 1000,
 		empty_before_restock = true,
-		min_fill = 2,
-		max_fill = 4,
+		min_fill = 5,
+		max_fill = 9,
 		filters = {
 			{type="scroll", subtype="rune", id=true},
 		},

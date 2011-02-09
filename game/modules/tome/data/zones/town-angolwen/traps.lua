@@ -17,31 +17,28 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-return {
-	name = "Elvala",
-	level_range = {1, 15},
-	level_scheme = "player",
-	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
-	update_base_level_on_enter = true,
-	max_level = 1,
-	width = 196, height = 80,
-	decay = {300, 800, only={object=true}, no_respawn=true},
-	persistent = "zone",
-	all_remembered = true,
-	all_lited = true,
-	ambient_music = "Virtue lost.ogg",
-	generator =  {
-		map = {
-			class = "engine.generator.map.Static",
-			map = "towns/elvala",
-		},
-		actor = {
-			class = "engine.generator.actor.Random",
-			nb_npc = {10, 10},
-		},
-		object = {
-			class = "engine.generator.object.Random",
-			nb_object = {0, 0},
-		},
-	},
+load("/data/general/traps/store.lua")
+
+newEntity{ base = "BASE_STORE", define_as = "ARMOR_STORE",
+	name="Armoury",
+	display='2', color=colors.UMBER,
+	resolvers.store("ZIGUR_ARMOR"),
+}
+
+newEntity{ base = "BASE_STORE", define_as = "WEAPON_STORE",
+	name="Weapon Store",
+	display='3', color=colors.UMBER,
+	resolvers.store("ZIGUR_WEAPON"),
+}
+
+newEntity{ base = "BASE_STORE", define_as = "LIBRARY",
+	name="Library",
+	display='5', color=colors.RED,
+	resolvers.store("ZIGUR_LIBRARY"),
+}
+
+newEntity{ base = "BASE_STORE", define_as = "TRAINER",
+	name="Trainer",
+	display='1', color=colors.UMBER,
+	resolvers.chatfeature("zigur-trainer", "zigur"),
 }
