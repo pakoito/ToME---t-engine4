@@ -67,8 +67,8 @@ function _M:generate()
 		end
 	end)
 	self.key:addBinds{
-		MOVE_UP = function() self.scroll = util.bound(self.scroll - 1, 1, self.max - self.max_display + 1) end,
-		MOVE_DOWN = function() self.scroll = util.bound(self.scroll + 1, 1, self.max - self.max_display + 1) end,
+		MOVE_UP = function() if self.scroll then self.scroll = util.bound(self.scroll - 1, 1, self.max - self.max_display + 1) end end,
+		MOVE_DOWN = function() if self.scroll then self.scroll = util.bound(self.scroll + 1, 1, self.max - self.max_display + 1) end end,
 	}
 end
 

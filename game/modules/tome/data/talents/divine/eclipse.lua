@@ -82,6 +82,10 @@ newTalent{
 	getLightDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 70) end,
 	getDarknessDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 70) end,
 	on_crit = function(self, t)
+		if self:getPositive() < 2 or self:getNegative() < 2 then
+			self:forceUseTalent(t.id, {ignore_energy=true})
+			return
+		end
 		local tgts = {}
 		local grids = core.fov.circle_grids(self.x, self.y, 10, true)
 		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
