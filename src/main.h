@@ -29,5 +29,17 @@ extern bool fbo_active;
 extern bool multitexture_active;
 extern long total_keyframes;
 
+/* Error handling */
+struct lua_err_type_s {
+	char *err_msg;
+	char *file;
+	int line;
+	char *func;
+	struct lua_err_type_s *next;
+};
+typedef struct lua_err_type_s lua_err_type;
+extern lua_err_type *last_lua_error_head, *last_lua_error_tail;
+extern void del_lua_error();
+
 #endif
 

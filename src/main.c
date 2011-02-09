@@ -72,14 +72,70 @@ extern bool shaders_active;
 bool fbo_active;
 bool multitexture_active;
 
+/* Error handling */
+lua_err_type *last_lua_error_head = NULL, *last_lua_error_tail = NULL;
+
+void del_lua_error()
+{
+	lua_err_type *cur = last_lua_error_head;
+	while (cur)
+	{
+		if (cur->err_msg) free(cur->err_msg);
+		if (cur->file) free(cur->file);
+		if (cur->func) free(cur->func);
+
+		lua_err_type *ocur = cur;
+		cur = cur->next;
+		free(ocur);
+	}
+
+	last_lua_error_head = NULL;
+	last_lua_error_tail = NULL;
+}
+
+static void new_lua_error(const char *err)
+{
+	del_lua_error();
+
+	lua_err_type *cur = calloc(1, sizeof(lua_err_type));
+	cur->err_msg = strdup(err);
+	cur->next = NULL;
+
+	last_lua_error_head = cur;
+	last_lua_error_tail = cur;
+}
+
+static void add_lua_error(const char *file, int line, const char *func)
+{
+	lua_err_type *cur = calloc(1, sizeof(lua_err_type));
+	cur->err_msg = NULL;
+	cur->file = strdup(file);
+	cur->line = line;
+	cur->func = strdup(func);
+	cur->next = NULL;
+
+	last_lua_error_tail->next = cur;
+	last_lua_error_tail = cur;
+}
+
 static int traceback (lua_State *L) {
 	lua_Debug ar;
-	int n;
-	n = 0;
+	int n = 0;
 	printf("Lua Error: %s\n", lua_tostring(L, 1));
 	while(lua_getstack(L, n++, &ar)) {
 		lua_getinfo(L, "nSl", &ar);
 		printf("\tAt %s:%d %s\n", ar.short_src, ar.currentline, ar.name?ar.name:"");
+	}
+
+	// Do it again for the lua error popup, if needed
+	if (1)
+	{
+		n = 0;
+		new_lua_error(lua_tostring(L, 1));
+		while(lua_getstack(L, n++, &ar)) {
+			lua_getinfo(L, "nSl", &ar);
+			add_lua_error(ar.short_src, ar.currentline, ar.name?ar.name:"");
+		}
 	}
 	return 1;
 }

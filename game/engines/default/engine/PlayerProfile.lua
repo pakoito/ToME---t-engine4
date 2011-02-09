@@ -237,6 +237,15 @@ function _M:getNews()
 	return self:rpc{action="GetNews", async=true}
 end
 
+function _M:sendError(what, err)
+	print("[ONLINE PROFILE] sending error")
+	local popup = Dialog:simplePopup("Sending...", "Sending the error report. Thank you.", nil, true)
+	popup.__showup = nil
+	core.display.forceRedraw()
+	self:rpc{action="SendError", login=self.login, what=what, err=err, module=game.__mod_info.short_name, version=game.__mod_info.version_name}
+	game:unregisterDialog(popup)
+end
+
 function _M:tryAuth()
 	print("[ONLINE PROFILE] auth")
 	local data = self:rpc{action="TryAuth", login=self.login, pass=self.pass}

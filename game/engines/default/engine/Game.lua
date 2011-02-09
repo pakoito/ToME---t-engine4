@@ -20,6 +20,7 @@
 require "engine.class"
 require "engine.Mouse"
 require "engine.DebugConsole"
+require "engine.dialogs.ShowErrorStack"
 
 --- Represent a game
 -- A module should subclass it and initialize anything it needs to play inside
@@ -162,6 +163,12 @@ end
 
 --- This is the "main game loop", do something here
 function _M:tick()
+	-- Check out any possible errors
+	local errs = core.game.checkError()
+	if errs then
+		self:registerDialog(engine.dialogs.ShowErrorStack.new(errs))
+	end
+
 	local stop = {}
 	local id, co = next(self.__coroutines)
 	while id do

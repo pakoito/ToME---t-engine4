@@ -191,6 +191,26 @@ static int lua_sleep(lua_State *L)
 	SDL_Delay(ms);
 	return 0;
 }
+
+static int lua_check_error(lua_State *L)
+{
+	if (!last_lua_error_head) return 0;
+
+	int n = 1;
+	lua_newtable(L);
+	lua_err_type *cur = last_lua_error_head;
+	while (cur)
+	{
+		if (cur->err_msg) lua_pushfstring(L, "Lua Error: %s", cur->err_msg);
+		else lua_pushfstring(L, "  At %s:%d %s", cur->file, cur->line, cur->func);
+		lua_rawseti(L, -2, n++);
+		cur = cur->next;
+	}
+
+	del_lua_error();
+	return 1;
+}
+
 static const struct luaL_reg gamelib[] =
 {
 	{"reboot", lua_reboot_lua},
@@ -200,6 +220,7 @@ static const struct luaL_reg gamelib[] =
 	{"sleep", lua_sleep},
 	{"setRealtime", lua_set_realtime},
 	{"setFPS", lua_set_fps},
+	{"checkError", lua_check_error},
 	{NULL, NULL},
 };
 

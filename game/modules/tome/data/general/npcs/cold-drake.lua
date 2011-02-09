@@ -83,7 +83,7 @@ newEntity{ base = "BASE_NPC_COLD_DRAKE", define_as = "NPC_COLD_DRAKE",
 	},
 
 	resolvers.talents{
---		[Talents.T_SUMMON]=1,
+		[Talents.T_SUMMON]=1,
 		[Talents.T_ICE_CLAW]=2,
 		[Talents.T_ICE_BREATH]=3,
 	},
