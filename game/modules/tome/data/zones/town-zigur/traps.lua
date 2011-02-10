@@ -42,3 +42,9 @@ newEntity{ base = "BASE_STORE", define_as = "TRAINER",
 	display='1', color=colors.UMBER,
 	resolvers.chatfeature("zigur-trainer", "zigur"),
 }
+
+newEntity{ base = "BASE_STORE", define_as = "HERBALIST",
+	name="Herbalist",
+	display='4', color=colors.GREEN,
+	resolvers.store("POTION", "zigur"),
+}

@@ -103,6 +103,7 @@ function _M:generateList()
 	list[#list+1] = {name="Grant/Alter Quests", dialog="GrantQuest"}
 	list[#list+1] = {name="Summon Creature", dialog="SummonCreature"}
 	list[#list+1] = {name="Create Item", dialog="CreateItem"}
+	list[#list+1] = {name="Alter Faction", dialog="AlterFaction"}
 
 	local chars = {}
 	for i, v in ipairs(list) do

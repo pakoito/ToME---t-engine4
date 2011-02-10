@@ -19,15 +19,16 @@
 
 -- defineTile section
 defineTile("D", "DEEP_BELLOW")
-defineTile("3", "WEAPON_STORE")
 defineTile("#", "HARDWALL")
-defineTile("5", "RUNIC_STORE")
 defineTile("&", {"CRYSTAL_WALL","CRYSTAL_WALL2","CRYSTAL_WALL3","CRYSTAL_WALL4","CRYSTAL_WALL5","CRYSTAL_WALL6","CRYSTAL_WALL7","CRYSTAL_WALL8","CRYSTAL_WALL9","CRYSTAL_WALL10","CRYSTAL_WALL11","CRYSTAL_WALL12","CRYSTAL_WALL13","CRYSTAL_WALL14","CRYSTAL_WALL15","CRYSTAL_WALL16","CRYSTAL_WALL17","CRYSTAL_WALL18","CRYSTAL_WALL19","CRYSTAL_WALL20",})
-defineTile("9", "GEM_STORE")
 defineTile("<", "UP_WILDERNESS")
 defineTile(".", "OLD_FLOOR")
 defineTile("R", "ESCAPE_REKNOR")
+
 defineTile("2", "ARMOR_STORE")
+defineTile("3", "WEAPON_STORE")
+defineTile("5", "RUNIC_STORE")
+defineTile("9", "GEM_STORE")
 
 -- addSpot section
 

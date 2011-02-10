@@ -220,6 +220,8 @@ function _M:getTextualDesc()
 	local desc = tstring{}
 
 	desc:add(("Type: %s / %s"):format(self.type or "unknown", self.subtype or "unknown"), true)
+	if self.slot_forbid == "OFFHAND" then desc:add("It must be held with both hands.", true) end
+	desc:add(true)
 
 	-- Stop here if unided
 	if not self:isIdentified() then return desc end

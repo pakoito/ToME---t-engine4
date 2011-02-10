@@ -184,7 +184,7 @@ function resolvers.calc.store(t, e)
 
 	e.block_move = function(self, x, y, who, act, couldpass)
 		if who and who.player and act then
-			if self.store_faction and who:reactionToward({faction=self.store_faction}) < 0 then return end
+			if self.store_faction and who:reactionToward({faction=self.store_faction}) < 0 then return true end
 			self.store:loadup(game.level, game.zone)
 			self.store:interact(who)
 		end
@@ -208,7 +208,7 @@ function resolvers.calc.chatfeature(t, e)
 
 	e.block_move = function(self, x, y, who, act, couldpass)
 		if who and who.player and act then
-			if self.chat_faction and who:reactionToward({faction=self.chat_faction}) < 0 then return end
+			if self.chat_faction and who:reactionToward({faction=self.chat_faction}) < 0 then return true end
 			local Chat = require("engine.Chat")
 			local chat = Chat.new(self.chat, self, who)
 			chat:invoke()
