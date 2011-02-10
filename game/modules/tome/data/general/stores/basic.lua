@@ -179,9 +179,9 @@ newEntity{
 		sell_percent = 140,
 		min_fill = 10,
 		max_fill = 20,
-		filters = {
-			{ego_chance=80, id=true, ignore={type="money"}},
-		},
+		filters = function()
+			return {id=true, ignore={type="money"}, add_levels=10, ego_chance={ego_chance=100, properties=rng.percent(game.player.level * 2) and {"greater_ego"}}}
+		end,
 	},
 }
 
@@ -193,7 +193,6 @@ newEntity{
 		purse = 5,
 		restock_after = 1000,
 		empty_before_restock = true,
-		sell_percent = 100,
 		min_fill = 40,
 		max_fill = 40,
 		filters = {
@@ -218,7 +217,6 @@ newEntity{
 		purse = 5,
 		restock_after = 1000,
 		empty_before_restock = true,
-		sell_percent = 100,
 		min_fill = 40,
 		max_fill = 40,
 		filters = {

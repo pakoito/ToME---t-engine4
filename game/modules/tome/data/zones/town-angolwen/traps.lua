@@ -19,26 +19,26 @@
 
 load("/data/general/traps/store.lua")
 
-newEntity{ base = "BASE_STORE", define_as = "ARMOR_STORE",
-	name="Armoury",
-	display='2', color=colors.UMBER,
-	resolvers.store("ZIGUR_ARMOR"),
+newEntity{ base = "BASE_STORE", define_as = "JEWELRY",
+	name="Jewelry",
+	display='2', color=colors.BLUE,
+	resolvers.store("ANGOLWEN_JEWELRY"),
 }
 
-newEntity{ base = "BASE_STORE", define_as = "WEAPON_STORE",
-	name="Weapon Store",
-	display='3', color=colors.UMBER,
-	resolvers.store("ZIGUR_WEAPON"),
+newEntity{ base = "BASE_STORE", define_as = "ALCHEMIST",
+	name="Alchemist",
+	display='4', color=colors.GREEN,
+	resolvers.store("POTION"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "LIBRARY",
 	name="Library",
 	display='5', color=colors.RED,
-	resolvers.store("ZIGUR_LIBRARY"),
+	resolvers.store("ANGOLWEN_SCROLL"),
 }
 
-newEntity{ base = "BASE_STORE", define_as = "TRAINER",
-	name="Trainer",
-	display='1', color=colors.UMBER,
-	resolvers.chatfeature("zigur-trainer", "zigur"),
+newEntity{ base = "BASE_STORE", define_as = "STAVES",
+	name="Staves and Wands",
+	display='6', color=colors.UMBER,
+	resolvers.store("ANGOLWEN_STAFF_WAND"),
 }

@@ -17,19 +17,20 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-quickEntity('^', {show_tooltip=true, name='mountains', display='^', color=colors.LIGHT_BLUE, image="terrain/mountain.png", block_move=true, block_sight=true})
+defineTile('^', "HARDMOUNTAIN_WALL")
+defineTile('#', "HARDWALL")
 quickEntity('<', {show_tooltip=true, name='portal back', display='<', color=colors.WHITE, change_level=1, change_zone=game.player.last_wilderness, image="terrain/stone_road1.png", add_displays = {mod.class.Grid.new{image="terrain/worldmap.png"}},}, nil, {type="portal", subtype="back"})
-quickEntity('t', {show_tooltip=true, name='tree', display='#', color=colors.LIGHT_GREEN, block_move=true, block_sight=true, image="terrain/grass.png", add_displays = {mod.class.Grid.new{image="terrain/tree_alpha2.png"}}})
-quickEntity('*', {show_tooltip=true, name='magical rock', display='#', color=colors.GREY, back_color={r=44,g=95,b=43}, block_move=true, block_sight=true, image="terrain/grass.png", add_displays = {mod.class.Grid.new{image="terrain/rock_grass.png"}}})
-quickEntity('~', {show_tooltip=true, name='fountain', display='~', color=colors.BLUE, block_move=true, image="terrain/river.png", shader = "water", textures = { function() return _3DNoise, true end }})
-quickEntity('.', {show_tooltip=true, name='grass', display='.', color=colors.LIGHT_GREEN, image="terrain/grass.png"})
-quickEntity('-', {show_tooltip=true, name='cultivated fields', display=';', color=colors.GREEN, back_color=colors.DARK_GREEN, image="terrain/cultivation.png", equilibrium_level=-10})
-quickEntity('_', {show_tooltip=true, name='cobblestone road', display='.', color=colors.WHITE, image="terrain/stone_road1.png"})
+defineTile(".", "GRASS")
+defineTile("t", {"TREE","TREE2","TREE3","TREE4","TREE5","TREE6","TREE7","TREE8","TREE9","TREE10","TREE11","TREE12","TREE13","TREE14","TREE15","TREE16","TREE17","TREE18","TREE19","TREE20"})
+defineTile('*', "ROCK")
+defineTile('~', "FOUNTAIN")
+defineTile('-', "FIELDS")
+defineTile('_', "COBBLESTONE")
 
-quickEntity('2', {show_tooltip=true, name="Jewelry", display='2', color=colors.BLUE, resolvers.store("ANGOLWEN_JEWELRY"), resolvers.chatfeature("jewelry-store"), image="terrain/wood_store_gem.png"})
-quickEntity('4', {show_tooltip=true, name="Alchemist", display='4', color=colors.LIGHT_BLUE, resolvers.store("POTION"), image="terrain/wood_store_potion.png"})
-quickEntity('5', {show_tooltip=true, name="Library", display='5', color=colors.WHITE, resolvers.store("ANGOLWEN_SCROLL"), image="terrain/wood_store_book.png"})
-quickEntity('6', {show_tooltip=true, name="Staves & Wands", display='6', color=colors.RED, resolvers.store("ANGOLWEN_STAFF_WAND"), resolvers.chatfeature("magic-store"), image="terrain/wood_store_closed.png"})
+defineTile('2', "HARDWALL", nil, nil, "JEWELRY")
+defineTile('4', "HARDWALL", nil, nil, "ALCHEMIST")
+defineTile('5', "HARDWALL", nil, nil, "LIBRARY")
+defineTile('6', "HARDWALL", nil, nil, "STAVES")
 
 defineTile('@', "GRASS", nil, "SUPREME_ARCHMAGE_LINANIIL")
 
@@ -40,15 +41,15 @@ return [[
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-^^^^^^^^^^^^^^^^^^^^2^^4^5^^6^^^^^^^^^^^^^^^^^^^^^
-^^^^^^^^^^^^^^^^^^.._.._._.._..^^^^^^^^^^^^^^^^^^^
-^^^^^^^^^^^^^^^^^^.._________..^^^^^^^^^^^^^^^^^^^
-^^^^^^^^^^^^^^^^^^...t.._..t...^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^.............^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^.._____________..^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^.._..t._._.t.._..^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^.#2#..#4#5#..#6#.^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^.._...._._...._..^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^.._____________..^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^....t.._..t....^^^^^^^^^^^^^^^^^^
 ^^^^^^^^^^^^^^^^^^^^...._....^^^^^^^^^^^^^^^^^^^^^
-^^^^^^^^^^^^^^^^^^^^^^.._..^^^^^^^^^^^^^^^^^^^^^^^
-^^^^^^^^^^^^^^^^^^^^^^^._.^^^^^^^^^^^^^^^^^^^^^^^^
-^^^^^^^^^^^^^^^^^^^^^^^._.^^^^^^^^^^^^^^^^^^^^^^^^
-^^^^^^^^^^^^^^^^^^^^^^^t_t^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^.t_t.^^^^^^^^^^^^^^^^^^^^^^^
 ^^^^^^^^^^^^^^^^^^^^^^^._.^^^^^^^^^^^^^^^^^^^^^^^^
 ^^^^^^^^^^^^^^^^^^^^^^^._.^^^^^^^^^^^^^^^^^^^^^^^^
 ^^^^^^^^^^^^^^^^^^^^^^^._.^^^^^^^^^^^^^^^^^^^^^^^^

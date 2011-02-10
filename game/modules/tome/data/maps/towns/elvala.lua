@@ -30,10 +30,9 @@ defineTile("_", "OLD_FLOOR")
 defineTile(".", "GRASS")
 defineTile("t", {"TREE","TREE2","TREE3","TREE4","TREE5","TREE6","TREE7","TREE8","TREE9","TREE10","TREE11","TREE12","TREE13","TREE14","TREE15","TREE16","TREE17","TREE18","TREE19","TREE20"})
 
-quickEntity('2', {show_tooltip=true, name="Armour Smith", display='2', color=colors.UMBER, resolvers.store("ARMOR"), image="terrain/wood_store_armor.png"})
-quickEntity('3', {show_tooltip=true, name="Weapon Smith", display='3', color=colors.UMBER, resolvers.store("WEAPON"), image="terrain/wood_store_weapon.png"})
-quickEntity('4', {show_tooltip=true, name="Alchemist", display='4', color=colors.LIGHT_BLUE, resolvers.store("POTION"), image="terrain/wood_store_potion.png"})
-quickEntity('5', {show_tooltip=true, name="Scribe", display='5', color=colors.WHITE, resolvers.store("SCROLL"), image="terrain/wood_store_book.png"})
+defineTile("2", "HARDWALL", nil, nil, "ARMOR_STORE")
+defineTile("3", "HARDWALL", nil, nil, "WEAPON_STORE")
+defineTile("5", "HARDWALL", nil, nil, "RUNEMASTER")
 
 -- addSpot section
 
@@ -60,12 +59,12 @@ return [[
 ~~...............##___________##......ttt..~~~~~~~
 ~~....ttt........#__#########__#...........~~~~~~~
 ~....ttt.........#_###########_#...........~~~~~~~
-~...ttt.....######__#########__######.......~~~~~~
+~...ttt.....######__#5#######__######.......~~~~~~
 ~...t....####_______________________####......~~~~
 ~......###_______#_____..._____#_______###.....~~~
 ~.....##________###___.....___###________##....~~~
 ~....##_________###__..ttt..__###_________##...~~~
-~....___________##5__..ttt..__###___________...~~~
+~....___________###__..ttt..__###___________...~~~
 ~....##_________###__..ttt..__###_________##...~~~
 ~~....##________###___.....___###________##.....~~
 ~~.....###_______#_____..._____#_______###......~~

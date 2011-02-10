@@ -30,7 +30,7 @@ function _M:loadStores(f)
 end
 
 function _M:init(t, no_default)
-	t.store.buy_percent = t.store.buy_percent or 40
+	t.store.buy_percent = t.store.buy_percent or function(self, o) if o.type == "gem" then return 40 else return 15 end end
 	t.store.sell_percent = t.store.sell_percent or 100
 	t.store.purse = t.store.purse or 20
 	Store.init(self, t, no_default)
@@ -41,7 +41,7 @@ function _M:init(t, no_default)
 
 	if not self.store.actor_filter then
 		self.store.actor_filter = function(o)
-			return (o.type == "gem" or o.unique) and not o.quest and not o.lore and o.cost and o.cost > 0
+			return not o.quest and not o.lore and o.cost and o.cost > 0
 		end
 	end
 end
@@ -53,7 +53,7 @@ end
 -- @param nb number of items (if stacked) to buy
 -- @return true if allowed to buy
 function _M:tryBuy(who, o, item, nb)
-	local price = o:getPrice() * self.store.sell_percent / 100
+	local price = o:getPrice() * util.getval(self.store.sell_percent, self, o) / 100
 	if who.money >= price * nb then
 		return nb, price * nb
 	else
@@ -68,7 +68,7 @@ end
 -- @param nb number of items (if stacked) to sell
 -- @return true if allowed to sell
 function _M:trySell(who, o, item, nb)
-	local price = o:getPrice() * self.store.buy_percent / 100
+	local price = o:getPrice() * util.getval(self.store.buy_percent, self, o) / 100
 	if price <= 0 or nb <= 0 then return end
 	price = math.min(price * nb, self.store.purse * nb)
 	return nb, price
@@ -83,7 +83,7 @@ end
 -- @return true if allowed to buy
 function _M:onBuy(who, o, item, nb, before)
 	if before then return end
-	local price = o:getPrice() * self.store.sell_percent / 100
+	local price = o:getPrice() * util.getval(self.store.sell_percent, self, o) / 100
 	if who.money >= price * nb then
 		who:incMoney(- price * nb)
 	end
@@ -99,7 +99,7 @@ end
 function _M:onSell(who, o, item, nb, before)
 	if before then o:identify(true) return end
 
-	local price = o:getPrice() * self.store.buy_percent / 100
+	local price = o:getPrice() * util.getval(self.store.buy_percent, self, o) / 100
 	if price <= 0 or nb <= 0 then return end
 	price = math.min(price * nb, self.store.purse * nb)
 	who:incMoney(price)
@@ -148,11 +148,11 @@ end
 -- @return a string (possibly multiline) describing the object
 function _M:descObject(who, what, o)
 	if what == "buy" then
-		local desc = tstring({"font", "bold"}, {"color", "GOLD"}, ("Buy for: %0.2f gold (You have %0.2f gold)"):format(o:getPrice() * self.store.sell_percent / 100, who.money), {"font", "normal"}, {"color", "LAST"}, true, true)
+		local desc = tstring({"font", "bold"}, {"color", "GOLD"}, ("Buy for: %0.2f gold (You have %0.2f gold)"):format(o:getPrice() * util.getval(self.store.sell_percent, self, o) / 100, who.money), {"font", "normal"}, {"color", "LAST"}, true, true)
 		desc:merge(o:getDesc())
 		return desc
 	else
-		local desc = tstring({"font", "bold"}, {"color", "GOLD"}, ("Sell for: %0.2f gold (You have %0.2f gold)"):format(o:getPrice() * self.store.buy_percent / 100, who.money), {"font", "normal"}, {"color", "LAST"}, true, true)
+		local desc = tstring({"font", "bold"}, {"color", "GOLD"}, ("Sell for: %0.2f gold (You have %0.2f gold)"):format(o:getPrice() * util.getval(self.store.buy_percent, self, o) / 100, who.money), {"font", "normal"}, {"color", "LAST"}, true, true)
 		desc:merge(o:getDesc())
 		return desc
 	end
@@ -165,9 +165,9 @@ end
 -- @return a string describing the price
 function _M:descObjectPrice(who, what, o)
 	if what == "buy" then
-		return o:getPrice() * self.store.sell_percent / 100, who.money
+		return o:getPrice() * util.getval(self.store.sell_percent, self, o) / 100, who.money
 	else
-		return o:getPrice() * self.store.buy_percent / 100, who.money
+		return o:getPrice() * util.getval(self.store.buy_percent, self, o) / 100, who.money
 	end
 end
 
