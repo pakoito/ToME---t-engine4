@@ -25,6 +25,7 @@ defineTile('$', "FLOOR", "MONEY_SMALL")
 defineTile('*', "FLOOR", "MONEY_BIG")
 
 defineTile('&', "FAR_EAST_PORTAL")
+defineTile('!', "CFAR_EAST_PORTAL")
 
 defineTile('O', "FLOOR", nil, "GOLBUG")
 defineTile('a', "FLOOR", nil, "ORC_ARCHER")
@@ -49,7 +50,7 @@ return [[
 ####     ###f          ##########              ########a  #############
 ###      ###      #    ##########              ######       ###########
 ###               ###  ##########             f#####   &&&   ##########
-<    o            ###o +++++                  O+++++   &&&   ##########
+<    o            ###o +++++                  O+++++   &!&   ##########
 ###               ##   ##########             i#####   &&&   ##########
 ####        ###        ##########              ######       ###########
 ####        ###i       ##########              ########a  #############

@@ -17,3 +17,34 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+newEntity{
+	define_as = "FAR_EAST_PORTAL",
+	name = "Farportal: Gates of Morning",
+	display = '&', color_r=255, color_g=0, color_b=220, back_color=colors.VIOLET, image = "terrain/grass.png",
+	notice = true,
+	always_remember = true,
+	show_tooltip = true,
+	desc = [[A farportal is a way to travel incredible distances in the blink of an eye. They usually require an external item to use. You have no idea if it is even two-way.
+This one seems to go near the Gates of Morning in the Far East.]],
+
+	orb_portal = {
+		change_level = 1,
+		change_zone = "wilderness",
+		change_wilderness = {
+			spot = {type="farportal-end", subtype="gates-of-morning"},
+		},
+		message = "#VIOLET#You enter the swirling portal and in the blink of an eye you set foot in sight of the Gates of Morning, with no trace of the portal...",
+		on_use = function(self, who)
+		end,
+	},
+}
+newEntity{ base = "FAR_EAST_PORTAL", define_as = "CFAR_EAST_PORTAL",
+	image = "terrain/grass.png",
+	add_displays = {class.new{image="terrain/farportal-base.png", display_x=-1, display_y=-1, display_w=3, display_h=3}},
+	on_added = function(self, level, x, y)
+		level.map:particleEmitter(x, y, 3, "farportal_vortex")
+		level.map:particleEmitter(x, y, 3, "farportal_lightning")
+		level.map:particleEmitter(x, y, 3, "farportal_lightning")
+		level.map:particleEmitter(y, y, 3, "farportal_lightning")
+	end,
+}

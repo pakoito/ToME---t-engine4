@@ -182,6 +182,8 @@ function _M:makeMapObject(tiles, idx)
 		self:check("display_on_unknown"),
 		self:check("display_x") or 0,
 		self:check("display_y") or 0,
+		self:check("display_w") or 1,
+		self:check("display_h") or 1,
 		self:check("display_scale") or 1
 	)
 	_M.__mo_repo[self._mo] = true

@@ -52,7 +52,16 @@ start_fyrk = function(self)
 	if argoniel then game.level:removeEntity(argoniel) argoniel.dead = true end
 
 	local portal = game.zone:makeEntityByName(game.level, "grid", "FAR_EAST_PORTAL")
+	game.zone:addEntity(game.level, portal, "grid", 5, 455)
 	game.zone:addEntity(game.level, portal, "grid", 6, 455)
+	game.zone:addEntity(game.level, portal, "grid", 7, 455)
+	game.zone:addEntity(game.level, portal, "grid", 5, 454)
+	game.zone:addEntity(game.level, portal, "grid", 7, 454)
+	game.zone:addEntity(game.level, portal, "grid", 5, 453)
+	game.zone:addEntity(game.level, portal, "grid", 6, 453)
+	game.zone:addEntity(game.level, portal, "grid", 7, 453)
+	local portal = game.zone:makeEntityByName(game.level, "grid", "CFAR_EAST_PORTAL")
+	game.zone:addEntity(game.level, portal, "grid", 6, 454)
 
 	local fyrk = game.zone:makeEntityByName(game.level, "actor", "FYRK")
 	game.zone:addEntity(game.level, fyrk, "actor", 6, 455)

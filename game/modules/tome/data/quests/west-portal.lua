@@ -77,27 +77,8 @@ end
 
 create_portal = function(self, npc, player)
 	-- Farportal
-	local g = mod.class.Grid.new{
-		name = "Farportal: Last Hope",
-		display = '&', color_r=255, color_g=0, color_b=220, back_color=colors.VIOLET,
-		notice = true,
-		always_remember = true,
-		show_tooltip = true,
-		desc = [[A farportal is a way to travel incredible distances in the blink of an eye. They usually require an external item to use.
-This one seems to go near the town of Last Hope in Maj'Eyal.]],
-
-		orb_portal = {
-			change_level = 1,
-			change_zone = "wilderness",
-			change_wilderness = {
-				spot = {type="farportal-end", subtype="last-hope"},
-			},
-			message = "#VIOLET#You enter the swirling portal and in the blink of an eye you set foot on the outskirts of Last Hope, with no trace of the portal...",
-			on_use = function(self, who)
-			end,
-		},
-	}
-	g:resolve() g:resolve(nil, true)
+	local g1 = game.zone:makeEntityByName(game.level, "terrain", "WEST_PORTAL")
+	local g2 = game.zone:makeEntityByName(game.level, "terrain", "CWEST_PORTAL")
 
 	game.logPlayer(game.player, "#VIOLET#Zemekkys starts to draw runes on the floor using the athame and gem dust.")
 	game.logPlayer(game.player, "#VIOLET#The whole area starts to shake!")
@@ -118,12 +99,18 @@ This one seems to go near the town of Last Hope in Maj'Eyal.]],
 	}
 	zemekkys:resolve() zemekkys:resolve(nil, true)
 
-	game.zone:addEntity(game.level, zemekkys, "actor", 41, 17)
-	game.zone:addEntity(game.level, g, "terrain", 41, 16)
-	game.level.map:particleEmitter(41, 16, 3, "farportal_lightning")
-	game.level.map:particleEmitter(41, 16, 3, "farportal_lightning")
-	game.level.map:particleEmitter(41, 16, 3, "farportal_lightning")
-	player:move(40, 16, true)
+	game.zone:addEntity(game.level, zemekkys, "actor", 39, 17)
+	game.zone:addEntity(game.level, g1, "terrain", 40, 15)
+	game.zone:addEntity(game.level, g1, "terrain", 41, 15)
+	game.zone:addEntity(game.level, g1, "terrain", 42, 15)
+	game.zone:addEntity(game.level, g1, "terrain", 40, 16)
+	game.zone:addEntity(game.level, g2, "terrain", 41, 16)
+	game.zone:addEntity(game.level, g1, "terrain", 42, 16)
+	game.zone:addEntity(game.level, g1, "terrain", 40, 17)
+	game.zone:addEntity(game.level, g1, "terrain", 41, 17)
+	game.zone:addEntity(game.level, g1, "terrain", 42, 17)
+
+	player:move(39, 16, true)
 
 	player:setQuestStatus(self.id, engine.Quest.DONE)
 	world:gainAchievement("WEST_PORTAL", game.player)

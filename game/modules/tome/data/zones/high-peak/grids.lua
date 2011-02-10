@@ -25,7 +25,7 @@ load("/data/general/grids/lava.lua")
 newEntity{
 	define_as = "FAR_EAST_PORTAL",
 	name = "Farportal: the Far East",
-	display = '&', color_r=255, color_g=0, color_b=220, back_color=colors.VIOLET,
+	display = '&', color_r=255, color_g=0, color_b=220, back_color=colors.VIOLET, image = "terrain/marble_floor.png",
 	notice = true,
 	always_remember = true,
 	show_tooltip = true,
@@ -43,11 +43,21 @@ This one seems to go to the Far East.]],
 		end,
 	},
 }
+newEntity{ base = "FAR_EAST_PORTAL", define_as = "CFAR_EAST_PORTAL",
+	image = "terrain/marble_floor.png",
+	add_displays = {class.new{image="terrain/farportal-base.png", display_x=-1, display_y=-1, display_w=3, display_h=3}},
+	on_added = function(self, level, x, y)
+		level.map:particleEmitter(x, y, 3, "farportal_vortex")
+		level.map:particleEmitter(x, y, 3, "farportal_lightning")
+		level.map:particleEmitter(x, y, 3, "farportal_lightning")
+		level.map:particleEmitter(y, y, 3, "farportal_lightning")
+	end,
+}
 
 newEntity{
 	define_as = "WEST_PORTAL",
 	name = "Farportal: Iron Throne",
-	display = '&', color_r=255, color_g=0, color_b=220, back_color=colors.VIOLET,
+	display = '&', color_r=255, color_g=0, color_b=220, back_color=colors.VIOLET, image = "terrain/marble_floor.png",
 	notice = true,
 	always_remember = true,
 	show_tooltip = true,
@@ -65,16 +75,36 @@ This one seems to go to the Iron Throne in the West.]],
 		end,
 	},
 }
+newEntity{ base = "WEST_PORTAL", define_as = "CWEST_PORTAL",
+	image = "terrain/marble_floor.png",
+	add_displays = {class.new{image="terrain/farportal-base.png", display_x=-1, display_y=-1, display_w=3, display_h=3}},
+	on_added = function(self, level, x, y)
+		level.map:particleEmitter(x, y, 3, "farportal_vortex")
+		level.map:particleEmitter(x, y, 3, "farportal_lightning")
+		level.map:particleEmitter(x, y, 3, "farportal_lightning")
+		level.map:particleEmitter(y, y, 3, "farportal_lightning")
+	end,
+}
 
 newEntity{
 	define_as = "VOID_PORTAL",
 	name = "Farportal: the Void",
-	display = '&', color=colors.DARK_GREY, back_color=colors.VIOLET,
+	display = '&', color=colors.DARK_GREY, back_color=colors.VIOLET, image = "terrain/marble_floor.png",
 	notice = true,
 	always_remember = true,
 	show_tooltip = true,
 	desc = [[A farportal is a way to travel incredible distances in the blink of an eye. They usually require an external item to use. You have no idea if it is even two-way.
 This one seems to go to an unknown place, seemingly out of this world. You dare not use it.]],
+}
+newEntity{ base = "VOID_PORTAL", define_as = "CVOID_PORTAL",
+	image = "terrain/marble_floor.png",
+	add_displays = {class.new{image="terrain/farportal-base.png", display_x=-1, display_y=-1, display_w=3, display_h=3}},
+	on_added = function(self, level, x, y)
+		level.map:particleEmitter(x, y, 3, "farportal_vortex", {vortex="shockbolt/terrain/farportal-void-vortex"})
+		level.map:particleEmitter(x, y, 3, "farportal_lightning")
+		level.map:particleEmitter(x, y, 3, "farportal_lightning")
+		level.map:particleEmitter(y, y, 3, "farportal_lightning")
+	end,
 }
 
 local invocation_close = function(self, who)

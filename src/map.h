@@ -31,6 +31,7 @@ typedef struct {
 	bool *textures_is3d;
 	shader_type *shader;
 	float dx, dy, scale;
+	int dw, dh;
 	float tint_r;
 	float tint_g;
 	float tint_b;
@@ -71,7 +72,7 @@ typedef struct {
 	int h;
 	int zdepth;
 	int tile_w, tile_h;
-	GLfloat tex_tile_w, tex_tile_h;
+	GLfloat tex_tile_w[3], tex_tile_h[3];
 
 	// Scrolling
 	int mx, my, mwidth, mheight;

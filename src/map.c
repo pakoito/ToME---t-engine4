@@ -58,7 +58,9 @@ static int map_object_new(lua_State *L)
 	obj->valid = TRUE;
 	obj->dx = luaL_checknumber(L, 6);
 	obj->dy = luaL_checknumber(L, 7);
-	obj->scale = luaL_checknumber(L, 8);
+	obj->dw = luaL_checknumber(L, 8);
+	obj->dh = luaL_checknumber(L, 9);
+	obj->scale = luaL_checknumber(L, 10);
 	obj->shader = NULL;
 	obj->tint_r = obj->tint_g = obj->tint_b = 1;
 	for (i = 0; i < nb_textures; i++)
@@ -449,6 +451,7 @@ static int map_new(lua_State *L)
 	int tile_w = luaL_checknumber(L, 7);
 	int tile_h = luaL_checknumber(L, 8);
 	int zdepth = luaL_checknumber(L, 9);
+	int i, j;
 
 	map_type *map = (map_type*)lua_newuserdata(L, sizeof(map_type));
 	auxiliar_setclass(L, "core{map}", -1);
@@ -476,12 +479,18 @@ static int map_new(lua_State *L)
 	map->mo_list_ref = luaL_ref(L, LUA_REGISTRYINDEX); // Ref the table
 
 	// In case we can't support NPOT textures round up to nearest POT
-	int realw=1;
-	int realh=1;
-	while (realw < tile_w) realw *= 2;
-	while (realh < tile_h) realh *= 2;
-	map->tex_tile_w = (GLfloat)tile_w / realw;
-	map->tex_tile_h = (GLfloat)tile_h / realh;
+	for (i = 1; i <= 3; i++)
+	{
+		int tw = tile_w * i;
+		int realw=1;
+		while (realw < tw) realw *= 2;
+		map->tex_tile_w[i-1] = (GLfloat)tw / realw;
+
+		int th = tile_h * i;
+		int realh=1;
+		while (realh < th) realh *= 2;
+		map->tex_tile_h[i-1] = (GLfloat)th / realh;
+	}
 
 	map->mx = mx;
 	map->my = my;
@@ -494,7 +503,6 @@ static int map_new(lua_State *L)
 	map->minimap = calloc(w, sizeof(unsigned char*));
 	printf("C Map size %d:%d :: %d\n", mwidth, mheight,mwidth * mheight);
 
-	int i, j;
 	for (i = 0; i < w; i++)
 	{
 		map->grids[i] = calloc(h, sizeof(map_object**));
@@ -767,16 +775,16 @@ static int map_get_scroll(lua_State *L)
 }
 
 
-#define DO_QUAD(dx, dy, zoom, r, g, b, a) {\
+#define DO_QUAD(dx, dy, dw, dh, zoom, r, g, b, a) {\
 	vertices[(*vert_idx)] = (dx); vertices[(*vert_idx)+1] = (dy); \
-	vertices[(*vert_idx)+2] = map->tile_w * (zoom) + (dx); vertices[(*vert_idx)+3] = (dy); \
-	vertices[(*vert_idx)+4] = map->tile_w * (zoom) + (dx); vertices[(*vert_idx)+5] = map->tile_h * (zoom) + (dy); \
-	vertices[(*vert_idx)+6] = (dx); vertices[(*vert_idx)+7] = map->tile_h * (zoom) + (dy); \
+	vertices[(*vert_idx)+2] = map->tile_w * (dw) * (zoom) + (dx); vertices[(*vert_idx)+3] = (dy); \
+	vertices[(*vert_idx)+4] = map->tile_w * (dw) * (zoom) + (dx); vertices[(*vert_idx)+5] = map->tile_h * (dh) * (zoom) + (dy); \
+	vertices[(*vert_idx)+6] = (dx); vertices[(*vert_idx)+7] = map->tile_h * (dh) * (zoom) + (dy); \
 	\
 	texcoords[(*vert_idx)] = 0; texcoords[(*vert_idx)+1] = 0; \
-	texcoords[(*vert_idx)+2] = map->tex_tile_w; texcoords[(*vert_idx)+3] = 0; \
-	texcoords[(*vert_idx)+4] = map->tex_tile_w; texcoords[(*vert_idx)+5] = map->tex_tile_h; \
-	texcoords[(*vert_idx)+6] = 0; texcoords[(*vert_idx)+7] = map->tex_tile_h; \
+	texcoords[(*vert_idx)+2] = map->tex_tile_w[dw-1]; texcoords[(*vert_idx)+3] = 0; \
+	texcoords[(*vert_idx)+4] = map->tex_tile_w[dw-1]; texcoords[(*vert_idx)+5] = map->tex_tile_h[dh-1]; \
+	texcoords[(*vert_idx)+6] = 0; texcoords[(*vert_idx)+7] = map->tex_tile_h[dh-1]; \
 	\
 	colors[(*col_idx)] = r; colors[(*col_idx)+1] = g; colors[(*col_idx)+2] = b; colors[(*col_idx)+3] = (a); \
 	colors[(*col_idx)+4] = r; colors[(*col_idx)+5] = g; colors[(*col_idx)+6] = b; colors[(*col_idx)+7] = (a); \
@@ -884,7 +892,7 @@ void display_map_quad(GLuint *cur_tex, int *vert_idx, int *col_idx, map_type *ma
 					{
 						animdx = map->tile_w * (adx * step / (float)m->move_max - adx);
 						animdy = map->tile_h * (ady * step / (float)m->move_max - ady);
-						DO_QUAD(dx + m->dx * map->tile_w + animdx, dy + m->dy * map->tile_h + animdy, m->scale, r, g, b, a * 2 / (3 + z));
+						DO_QUAD(dx + m->dx * map->tile_w + animdx, dy + m->dy * map->tile_h + animdy, m->dw, m->dh, m->scale, r, g, b, a * 2 / (3 + z));
 					}
 				}
 			}
@@ -898,7 +906,7 @@ void display_map_quad(GLuint *cur_tex, int *vert_idx, int *col_idx, map_type *ma
 	/********************************************************
 	 ** Display the entity
 	 ********************************************************/
-	DO_QUAD(dx + m->dx * map->tile_w + animdx, dy + m->dy * map->tile_h + animdy, m->scale, r, g, b, a);
+	DO_QUAD(dx + m->dx * map->tile_w + animdx, dy + m->dy * map->tile_h + animdy, m->dw, m->dh, m->scale, r, g, b, a);
 
 	/********************************************************
 	 ** Cleanup
@@ -1056,9 +1064,9 @@ static int minimap_to_screen(lua_State *L)
 					vertices[vert_idx+6] = (dx); vertices[vert_idx+7] = map->minimap_gridsize + (dy);
 
 					texcoords[vert_idx] = 0; texcoords[vert_idx+1] = 0;
-					texcoords[vert_idx+2] = map->tex_tile_w; texcoords[vert_idx+3] = 0;
-					texcoords[vert_idx+4] = map->tex_tile_w; texcoords[vert_idx+5] = map->tex_tile_h;
-					texcoords[vert_idx+6] = 0; texcoords[vert_idx+7] = map->tex_tile_h;
+					texcoords[vert_idx+2] = 1; texcoords[vert_idx+3] = 0;
+					texcoords[vert_idx+4] = 1; texcoords[vert_idx+5] = 1;
+					texcoords[vert_idx+6] = 0; texcoords[vert_idx+7] = 1;
 
 					vert_idx += 8;
 					col_idx += 16;

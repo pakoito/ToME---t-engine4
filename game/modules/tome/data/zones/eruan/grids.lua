@@ -27,7 +27,7 @@ load("/data/general/grids/mountain.lua")
 newEntity{
 	define_as = "CHARRED_SCAR_PORTAL",
 	name = "Farportal: Charred Scar",
-	display = '&', color_r=255, color_g=0, color_b=220, back_color=colors.VIOLET,
+	display = '&', color_r=255, color_g=0, color_b=220, back_color=colors.VIOLET, image = "terrain/ocean_water_grass_5_1.png",
 	notice = true,
 	always_remember = true,
 	show_tooltip = true,
@@ -49,4 +49,15 @@ This one seems to go to the west, to Charred Scar. A fiery volcano that can only
 			who:setQuestStatus("pre-charred-scar", engine.Quest.DONE)
 		end,
 	},
+}
+
+newEntity{ base = "CHARRED_SCAR_PORTAL", define_as = "CCHARRED_SCAR_PORTAL",
+	image = "terrain/ocean_water_grass_5_1.png",
+	add_displays = {class.new{image="terrain/farportal-base.png", display_x=-1, display_y=-1, display_w=3, display_h=3}},
+	on_added = function(self, level, x, y)
+		level.map:particleEmitter(x, y, 3, "farportal_vortex")
+		level.map:particleEmitter(x, y, 3, "farportal_lightning")
+		level.map:particleEmitter(x, y, 3, "farportal_lightning")
+		level.map:particleEmitter(y, y, 3, "farportal_lightning")
+	end,
 }

@@ -210,8 +210,8 @@ static int particles_to_screen(lua_State *L)
 	glTexCoordPointer(2, GL_SHORT, 0, texcoords);
 	glColorPointer(4, GL_FLOAT, 0, colors);
 	glVertexPointer(2, GL_FLOAT, 0, vertices);
-
 	glTranslatef(x, y, 0);
+	glRotatef(ps->rotate, 0, 0, 1);
 
 	int remaining = ps->batch_nb;
 	while (remaining >= PARTICLES_PER_ARRAY)
@@ -223,6 +223,7 @@ static int particles_to_screen(lua_State *L)
 
 	SDL_mutexV(ps->lock);
 
+	glRotatef(-ps->rotate, 0, 0, 1);
 	glTranslatef(-x, -y, 0);
 
 	return 0;
@@ -244,6 +245,8 @@ static void particles_update(lua_State *L, particles_type *ps, bool last)
 	GLfloat *vertices = ps->vertices;
 	GLfloat *colors = ps->colors;
 	GLshort *texcoords = ps->texcoords;
+
+	ps->rotate += ps->rotate_v;
 
 	for (w = 0; w < ps->nb; w++)
 	{
@@ -621,6 +624,13 @@ void thread_particle_init(particle_thread *pt, plist *l)
 
 	// Grab all parameters
 	lua_pushvalue(L, 1);
+
+	lua_pushstring(L, "system_rotation");
+	lua_gettable(L, -2);
+	ps->rotate = lua_tonumber(L, -1); lua_pop(L, 1);
+	lua_pushstring(L, "system_rotationv");
+	lua_gettable(L, -2);
+	ps->rotate_v = lua_tonumber(L, -1); lua_pop(L, 1);
 
 	lua_pushstring(L, "generator");
 	lua_gettable(L, -2);

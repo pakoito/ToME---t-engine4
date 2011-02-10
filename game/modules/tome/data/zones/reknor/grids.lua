@@ -22,7 +22,7 @@ load("/data/general/grids/basic.lua")
 newEntity{
 	define_as = "FAR_EAST_PORTAL",
 	name = "Farportal: the Far East",
-	display = '&', color_r=255, color_g=0, color_b=220, back_color=colors.VIOLET,
+	display = '&', color_r=255, color_g=0, color_b=220, back_color=colors.VIOLET, image = "terrain/marble_floor.png",
 	notice = true,
 	always_remember = true,
 	show_tooltip = true,
@@ -45,6 +45,21 @@ This one seems to go to the Far East, a continent of which only rumours are know
 			who:setQuestStatus("wild-wild-east", engine.Quest.DONE)
 		end,
 	},
+}
+
+newEntity{ base = "FAR_EAST_PORTAL", define_as = "CFAR_EAST_PORTAL",
+	name = "Farportal: the Far East",
+	image = "terrain/marble_floor.png",
+	add_displays = {
+		class.new{image="terrain/farportal-base.png", display_x=-1, display_y=-1, display_w=3, display_h=3},
+--		class.new{image="terrain/farportal-void-vortex.png", z=18, display_x=-1, display_y=-1, display_w=3, display_h=3},
+	},
+	on_added = function(self, level, x, y)
+		level.map:particleEmitter(x, y, 3, "farportal_vortex")
+		level.map:particleEmitter(x, y, 3, "farportal_lightning")
+		level.map:particleEmitter(x, y, 3, "farportal_lightning")
+		level.map:particleEmitter(y, y, 3, "farportal_lightning")
+	end,
 }
 
 newEntity{

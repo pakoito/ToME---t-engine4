@@ -27,6 +27,9 @@ defineTile('*', "HARDWALL", nil, nil, nil, {lite=true, no_teleport=true})
 defineTile('&', "FAR_EAST_PORTAL", nil, nil, nil, {lite=true, no_teleport=true})
 defineTile('"', "WEST_PORTAL", nil, nil, nil, {lite=true, no_teleport=true})
 defineTile('V', "VOID_PORTAL", nil, nil, nil, {lite=true, no_teleport=true})
+defineTile('!', "CFAR_EAST_PORTAL", nil, nil, nil, {lite=true, no_teleport=true})
+defineTile("'", "CWEST_PORTAL", nil, nil, nil, {lite=true, no_teleport=true})
+defineTile('v', "CVOID_PORTAL", nil, nil, nil, {lite=true, no_teleport=true})
 defineTile('d', "ORB_DESTRUCTION", nil, nil, nil, {lite=true, no_teleport=true})
 defineTile('D', "ORB_DRAGON", nil, nil, nil, {lite=true, no_teleport=true})
 defineTile('E', "ORB_ELEMENTS", nil, nil, nil, {lite=true, no_teleport=true})
@@ -58,7 +61,7 @@ return [[
 **************......................**************
 **************......................**************
 *****"""******..........VVV.........******&&&*****
-*****"""******..#####..AVVVP..####..******&&&*****
+*****"'"******..#####..AVvVP..####..******&!&*****
 *****"""******..........VVV.........******&&&*****
 **************......................**************
 **************......................**************

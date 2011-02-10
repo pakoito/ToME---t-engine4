@@ -187,6 +187,8 @@ function _M:generate(lev, old_lev)
 			g:resolve()
 			g:resolve(nil, true)
 			self.map(i-1, j-1, Map.TERRAIN, g)
+			g:check("addedToLevel", self.level, i-1, j-1)
+			g:check("on_added", self.level, i-1, j-1)
 		end
 
 		if self.status_all then

@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+base = 64
+
 -- Make the 2 main forks
 local forks
 local m1
@@ -27,13 +29,18 @@ local ty
 local breakdir
 local pause = false
 
+local spots = {
+	{-64,  -93},
+	{67, 23},
+	{67,  -93},
+	{-64, 23},
+}
+
 local function make_forks(tx, ty)
 	forks = {{}, {}}
 	m1 = forks[1]
 	m2 = forks[2]
-	tiles = math.ceil(math.sqrt(tx*tx+ty*ty))
-	tx = tx * engine.Map.tile_w
-	ty = ty * engine.Map.tile_h
+	tiles = math.ceil(math.sqrt(2*2+2*2))
 	breakdir = math.rad(rng.range(-8, 8))
 	m1.bx = 0
 	m1.by = 0
@@ -107,7 +114,8 @@ end, },
 function(self)
 	-- Create a lightning
 	if rng.percent(1) then
-		make_forks(rng.range(-2,2), rng.range(-2,2))
+		local spot = rng.table(spots)
+		make_forks(spot[1], spot[2])
 		self.ps:emit(400)
 	end
 end,

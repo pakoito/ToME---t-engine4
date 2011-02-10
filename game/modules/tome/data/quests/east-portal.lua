@@ -65,35 +65,20 @@ on_status_change = function(self, who, status, sub)
 end
 
 create_portal = function(self, npc, player)
-	self:remove_materials(player)
+--	self:remove_materials(player)
 
 	-- Farportal
-	local g = mod.class.Grid.new{
-		name = "Farportal: Gates of Morning",
-		display = '&', color_r=255, color_g=0, color_b=220, back_color=colors.VIOLET,
-		notice = true,
-		always_remember = true,
-		show_tooltip = true,
-		desc = [[A farportal is a way to travel incredible distances in the blink of an eye. They usually require an external item to use.
-This one seems to go near the Gates of Morning in the Far East.]],
-
-		orb_portal = {
-			change_level = 1,
-			change_zone = "wilderness",
-			change_wilderness = {
-				spot = {type="farportal-end", subtype="gates-of-morning"},
-			},
-			message = "#VIOLET#You enter the swirling portal and in the blink of an eye you set foot in sight of the Gates of Morning, with no trace of the portal...",
-			on_use = function(self, who)
-			end,
-		},
-	}
-	g:resolve() g:resolve(nil, true)
-
-	game.zone:addEntity(game.level, g, "terrain", 13, 43)
-	game.level.map:particleEmitter(13, 43, 3, "farportal_lightning")
-	game.level.map:particleEmitter(13, 43, 3, "farportal_lightning")
-	game.level.map:particleEmitter(13, 43, 3, "farportal_lightning")
+	local g1 = game.zone:makeEntityByName(game.level, "terrain", "FAR_EAST_PORTAL")
+	local g2 = game.zone:makeEntityByName(game.level, "terrain", "CFAR_EAST_PORTAL")
+	game.zone:addEntity(game.level, g1, "terrain", 12, 42)
+	game.zone:addEntity(game.level, g1, "terrain", 13, 42)
+	game.zone:addEntity(game.level, g1, "terrain", 14, 42)
+	game.zone:addEntity(game.level, g1, "terrain", 12, 43)
+	game.zone:addEntity(game.level, g2, "terrain", 13, 43)
+	game.zone:addEntity(game.level, g1, "terrain", 14, 43)
+	game.zone:addEntity(game.level, g1, "terrain", 12, 44)
+	game.zone:addEntity(game.level, g1, "terrain", 13, 44)
+	game.zone:addEntity(game.level, g1, "terrain", 14, 44)
 
 	player:setQuestStatus(self.id, engine.Quest.DONE)
 	world:gainAchievement("EAST_PORTAL", game.player)

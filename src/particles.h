@@ -77,6 +77,8 @@ typedef struct {
 
 	int life_min, life_max;
 
+	float rotate, rotate_v;
+
 	struct s_plist *l;
 } particles_type;
 
