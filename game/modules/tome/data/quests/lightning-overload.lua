@@ -56,21 +56,14 @@ on_grant = function(self, who)
 	self.max_count = 0
 	for i = 1, 12 do
 		local m = game.zone:makeEntity(game.level, "actor", {special_rarity="derth_rarity"}, nil, true)
-		if m then
-			local x, y = rng.range(10, game.level.map.w - 11), rng.range(10, game.level.map.h - 11)
-			local tries = 0
-			while not m:canMove(x, y) and tries < 100 do
-				x, y = rng.range(10, game.level.map.w - 11), rng.range(10, game.level.map.h - 11)
-				tries = tries + 1
+		local spot = game.level:pickSpot{type="npc", subtype="elemental"}
+		if m and spot then
+			m.quest = true
+			m.on_die = function(self)
+				game.player:resolveSource():hasQuest("lightning-overload"):kill_one()
 			end
-			if tries < 100 then
-				m.quest = true
-				m.on_die = function(self)
-					game.player:resolveSource():hasQuest("lightning-overload"):kill_one()
-				end
-				game.zone:addEntity(game.level, m, "actor", x, y)
-				self.max_count = self.max_count + 1
-			end
+			game.zone:addEntity(game.level, m, "actor", spot.x, spot.y)
+			self.max_count = self.max_count + 1
 		end
 	end
 	self.kill_count = 0

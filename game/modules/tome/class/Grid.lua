@@ -60,6 +60,15 @@ function _M:block_move(x, y, e, act, couldpass)
 		end
 	end
 
+	-- Huge hack, if we are an actor without position this means we are not yet put on the map
+	-- If so make sure we can only go where we can breathe
+	if e.__is_actor and not e.x and not e:attr("no_breath") then
+		local air_level, air_condition = self:check("air_level"), self:check("air_condition")
+		if air_level and (not air_condition or not e.can_breath[air_condition] or e.can_breath[air_condition] <= 0) then
+			return true
+		end
+	end
+
 	return self.does_block_move
 end
 

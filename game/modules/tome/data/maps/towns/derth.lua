@@ -43,6 +43,26 @@ starty = 20
 
 -- addSpot section
 addSpot({29, 13}, "npc", "arena")
+addSpot({21, 11}, "npc", "elemental")
+addSpot({16, 16}, "npc", "elemental")
+addSpot({12, 25}, "npc", "elemental")
+addSpot({16, 32}, "npc", "elemental")
+addSpot({23, 24}, "npc", "elemental")
+addSpot({28, 32}, "npc", "elemental")
+addSpot({26, 38}, "npc", "elemental")
+addSpot({37, 30}, "npc", "elemental")
+addSpot({32, 29}, "npc", "elemental")
+addSpot({33, 37}, "npc", "elemental")
+addSpot({33, 24}, "npc", "elemental")
+addSpot({34, 15}, "npc", "elemental")
+addSpot({37, 20}, "npc", "elemental")
+addSpot({24, 18}, "npc", "elemental")
+addSpot({28, 20}, "npc", "elemental")
+addSpot({25, 13}, "npc", "elemental")
+addSpot({22, 30}, "npc", "elemental")
+addSpot({18, 36}, "npc", "elemental")
+addSpot({12, 31}, "npc", "elemental")
+addSpot({12, 31}, "npc", "elemental")
 
 -- addZone section
 
