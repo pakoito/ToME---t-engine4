@@ -19,26 +19,26 @@
 
 load("/data/general/traps/store.lua")
 
+newEntity{ base = "BASE_STORE", define_as = "ARMOR_STORE",
+	name="Armoury",
+	display='2', color=colors.UMBER,
+	resolvers.store("ARMOR", "allied-kingdoms"),
+}
+
+newEntity{ base = "BASE_STORE", define_as = "WEAPON_STORE",
+	name="Weapon Store",
+	display='3', color=colors.UMBER,
+	resolvers.store("WEAPON", "allied-kingdoms"),
+}
+
+newEntity{ base = "BASE_STORE", define_as = "HERBALIST",
+	name="Herbalist",
+	display='4', color=colors.LIGHT_BLUE,
+	resolvers.store("POTION", "allied-kingdoms"),
+}
+
 newEntity{ base = "BASE_STORE", define_as = "JEWELRY",
 	name="Jewelry",
-	display='2', color=colors.BLUE,
-	resolvers.store("ANGOLWEN_JEWELRY", "angolwen"),
-}
-
-newEntity{ base = "BASE_STORE", define_as = "ALCHEMIST",
-	name="Alchemist",
-	display='4', color=colors.GREEN,
-	resolvers.store("POTION", "angolwen"),
-}
-
-newEntity{ base = "BASE_STORE", define_as = "LIBRARY",
-	name="Library",
-	display='5', color=colors.RED,
-	resolvers.store("ANGOLWEN_SCROLL", "angolwen"),
-}
-
-newEntity{ base = "BASE_STORE", define_as = "STAVES",
-	name="Staves and Wands",
-	display='6', color=colors.UMBER,
-	resolvers.store("ANGOLWEN_STAFF_WAND", "angolwen"),
+	display='9', color=colors.LIGHT_RED,
+	resolvers.store("GEMSTORE", "allied-kingdoms"),
 }

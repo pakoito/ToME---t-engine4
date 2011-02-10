@@ -47,8 +47,11 @@ return {
 
 	on_enter = function(_, _, newzone)
 		if game.player.level <= 10 and not game.player:hasQuest("arena-unlock") then
+			local spot = game.level:pickSpot{type="npc", subtype="arena"}
 			local m = game.zone:makeEntityByName(game.level, "actor", "ARENA_AGENT")
-			if m then game.zone:addEntity(game.level, m, "actor", 28, 7) end
+			if spot and m then
+				game.zone:addEntity(game.level, m, "actor", spot.x, spot.y)
+			end
 		end
 		if game.player.level >= 12 and game.player.level <= 20 and not game.player:hasQuest("lightning-overload") then
 			game.player:grantQuest("lightning-overload")

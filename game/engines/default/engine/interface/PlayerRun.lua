@@ -80,6 +80,7 @@ function _M:runInit(dir)
 		end),
 	}
 	self.running.dialog.__showup = nil
+	self.running.dialog.__hidden = true
 
 	self:runStep()
 end
@@ -109,6 +110,7 @@ function _M:runFollow(path)
 		end),
 	}
 	self.running.dialog.__showup = nil
+	self.running.dialog.__hidden = true
 
 	self:runStep()
 end

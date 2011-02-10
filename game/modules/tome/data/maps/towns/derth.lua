@@ -17,77 +17,84 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-quickEntity('<', {show_tooltip=true, name='into the wild', display='<', color=colors.WHITE, change_level=1, change_zone="wilderness", image="terrain/stone_road1.png", add_displays = {mod.class.Grid.new{image="terrain/worldmap.png"}}})
-quickEntity('>', {show_tooltip=true, name='into the wild', display='<', color=colors.WHITE, change_level=1, change_zone="wilderness", image="terrain/stone_road1.png", add_displays = {mod.class.Grid.new{image="terrain/worldmap.png"}}})
-quickEntity('S', {name='brick roof top', display='#', color=colors.RED, block_move=true, block_sight=true, image="terrain/wood_wall1.png"})
-quickEntity('s', {name='brick roof', display='#', color=colors.RED, block_move=true, block_sight=true, image="terrain/wood_wall1.png"})
-quickEntity('t', {name='brick roof chimney', display='#', color=colors.LIGHT_RED, block_move=true, block_sight=true, image="terrain/wood_wall1.png"})
-quickEntity('#', {name='wall', display='#', color=colors.WHITE, block_move=true, block_sight=true, image="terrain/wood_wall1.png"})
-quickEntity('C', {name='dark pit', display='#', color=colors.LIGHT_DARK, block_move=true, block_sight=true})
-quickEntity('T', {name='tree', display='#', color=colors.LIGHT_GREEN, block_move=true, block_sight=true, image="terrain/grass.png", add_displays = {mod.class.Grid.new{image="terrain/tree_alpha1.png"}}})
-quickEntity(' ', {name='forest', display='#', color=colors.GREEN, block_move=true, block_sight=true, image="terrain/grass.png", add_displays = {mod.class.Grid.new{image="terrain/tree_alpha1.png"}}})
-quickEntity('V', {name='river', display='~', color=colors.BLUE, block_move=true, image="terrain/river.png"})
-quickEntity('O', {name='cobblestone road', display='.', color=colors.WHITE, image="terrain/stone_road1.png"})
-quickEntity('.', {name='road', display='.', color=colors.WHITE, image="terrain/stone_road1.png"})
-quickEntity(',', {name='dirt', display='.', color=colors.LIGHT_UMBER, image="terrain/sand.png"})
-quickEntity('-', {name='grass', display='.', color=colors.LIGHT_GREEN, image="terrain/grass.png"})
-quickEntity('^', {name='hills', display='^', color=colors.SLATE, image="terrain/mountain.png", block_move=true, block_sight=true})
+defineTile('<', "GRASS_UP_WILDERNESS")
+defineTile('t', {"TREE","TREE2","TREE3","TREE4","TREE5","TREE6","TREE7","TREE8","TREE9","TREE10","TREE11","TREE12","TREE13","TREE14","TREE15","TREE16","TREE17","TREE18","TREE19","TREE20"})
+defineTile('~', "DEEP_WATER")
+defineTile('.', "GRASS")
+defineTile('-', "FIELDS")
+defineTile('_', "COBBLESTONE")
+defineTile(',', "SAND")
+defineTile('!', "ROCK")
+defineTile('#', "HARDWALL")
+defineTile('+', "DOOR")
+defineTile('=', "LAVA")
+defineTile("?", "OLD_FLOOR")
+defineTile(":", "FLOOR")
+defineTile("&", "POST")
+defineTile("'", "DOOR")
 
-quickEntity('1', {show_tooltip=true, name="Closed store", display='1', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
-quickEntity('2', {show_tooltip=true, name="Armour Smith", display='2', color=colors.UMBER, resolvers.store("ARMOR"), image="terrain/wood_store_armor.png"})
-quickEntity('3', {show_tooltip=true, name="Weapon Smith", display='3', color=colors.UMBER, resolvers.store("WEAPON"), image="terrain/wood_store_weapon.png"})
-quickEntity('4', {show_tooltip=true, name="Alchemist", display='4', color=colors.LIGHT_BLUE, resolvers.store("POTION"), image="terrain/wood_store_potion.png"})
-quickEntity('5', {show_tooltip=true, name="Scribe", display='5', color=colors.WHITE, resolvers.store("SCROLL"), image="terrain/wood_store_book.png"})
-quickEntity('6', {show_tooltip=true, name="Elisa the Scryer", display='6', color=colors.LIGHT_BLUE, resolvers.chatfeature("elisa-shop"), image="terrain/wood_store_scroll.png"})
-quickEntity('7', {show_tooltip=true, name="Closed store", display='7', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
-quickEntity('8', {show_tooltip=true, name="Closed store", display='8', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
-quickEntity('9', {show_tooltip=true, name="Gem Store", display='9', color=colors.BLUE, resolvers.store("GEMSTORE"), image="terrain/wood_store_gem.png"})
-quickEntity('0', {show_tooltip=true, name="Closed store", display='0', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
-quickEntity('a', {show_tooltip=true, name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
-quickEntity('b', {show_tooltip=true, name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
-quickEntity('c', {show_tooltip=true, name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
-quickEntity('d', {show_tooltip=true, name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
-quickEntity('e', {show_tooltip=true, name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"})
+defineTile('2', "HARDWALL", nil, nil, "WEAPON_STORE")
+defineTile('3', "HARDWALL", nil, nil, "ARMOR_STORE")
+defineTile('4', "HARDWALL", nil, nil, "HERBALIST")
+defineTile('9', "HARDWALL", nil, nil, "JEWELRY")
 
-startx = 76
-starty = 36
+startx = 0
+starty = 20
 
-return {
-[[                                                                             ]],
-[[                             ,,,,,,,,,,,,,,,,,,                              ]],
-[[                        ,,,,,------------------,,,,,,,,,                     ]],
-[[                     ,,,------TTTTTTTTTTTTTTTT----------,,,,                 ]],
-[[                   ,,----TTTTTT--------------TTTTTTTTTT-----,,,,,            ]],
-[[                 ,,---TTTT..................----------TTTTT------,,          ]],
-[[                ,---TTT....--ssssssss-..---..........-----TTTTTT---,,,       ]],
-[[               ,--TTT...-----SSSSSSSS--.----------,,.....------TTT----,,     ]],
-[[             ,,--TT...-,,,,--ssssssss-..-sssssssssss,---......---TTTT--T,,   ]],
-[[           ,,---TT..-------,,##9#####-.--sssssssssss-,-------...----TT--TT,  ]],
-[[          ,---  T..--sssSsss,,,,------.--StSStSSSStS--,------.-....--TT--TT,^]],
-[[         ,--TTT...---ssstSSS---,,,----.--sssssssssss---,---...----..--TT--T^^]],
-[[        ,--TT...-----sssssss--,,-,,---.--sssssssssss---,-...-------..--TT-^^^]],
-[[        ,-TT..---,,,,###6###,,,---,,--.--###########----..----------..--T^^^^]],
-[[        ,-T..,,,,----,,,,,,,,------,,-.--###b###e###-....,---sssss---.--T^^  ]],
-[[       ,--T.,sssssss----,-----------,,.-----.-----....-,--,,-StSSS---.-T^^^  ]],
-[[      ,--TT.-StStSSS---,-----ssssss--..-----.--....--,,,,,,-,sssss---.-T^^^  ]],
-[[      ,-TT-.-sssssss---,-----SSSSSS--.------.-..--,,,-ssss--,#####---.-T^^   ]],
-[[     ,--T-..-##5####----,----ssssss-..........--ssss,-ssss--,------...-^^^  ^]],
-[[     ,-  OOOO--OOOOO----,----#c##4#-.---.,----,-SStS,-SSSS--,-----..---^^   ^]],
-[[>OO  ,-T-OssOOOO---OOOOOOOOO--OOOO--.-T-.-sss--,ssss,-ssss---,---..--T^^     ]],
-[[  OOOOOOOOSt.---------ssss-OOOO--OOOO---.-StS--,#0##,-ssss---,---.---^^     ^]],
-[[   ,,-T--.ss.-sssss---ssss,---------OOOO.-sss---,,,,,-####--,---..-T^^   ^ ^ ]],
-[[   ,,-T--.##.-SStSS---####,------------OO-###-ssssss-,,,---,----.--T^^   ^   ]],
-[[   ,,-TT-....-sssss--,,,,,,-------------OO-,--SSSSSt-ss-,-,---...-T^^  ^ ^   ]],
-[[   ,,--TT---..#2###-,sssss,-SSSSSSSS-----OO,--ssssss-tS--,.....---^^ ^^     ^]],
-[[    ,,--T----..,,,,,-StSSS,-ssssssss------OOO-#1##a#-ss....-----T^^        ^^]],
-[[    ,,--TT----..----,sssss,-##7#####--------OO,.,,.,-##.----TTTT^^     ^  ^^ ]],
-[[    ,,,--TTTT--..---,##3##-,--,.,---------...OOOOOOOOOOOTTTTT--^^^   ^^  ^^  ]],
-[[     ,,,----  --..........,-,,---,--.......-------TTTTTO-----,,^^^^^^^^^^^   ]],
-[[     ,, ,,---TT----------.....-......-------TTTTTTT----O,,,,,     ^^^^^^^    ]],
-[[     ,,   ,,--TTTTTTTTTT-----...------TTTTTTT------,,,,OOO                   ]],
-[[     ,,,    ,----------TTTTT-----TTTTTT------,,,,,,      OOO                 ]],
-[[      ,,     ,,,,,,,,,,-----TTTTTT-----,,,,,,              OO                ]],
-[[      ,,,              ,,,,,------,,,,,                     OOOO             ]],
-[[       ,,                   ,,,,,,                             OOOOOOO       ]],
-[[                                                                     OOOOOOO<]],
-}
+-- addSpot section
+addSpot({29, 13}, "npc", "arena")
+
+-- addZone section
+
+-- ASCII map section
+return [[
+tttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttt
+ttttttttttttttttttt~~~~~~~~~~ttttttttttttttttttttt
+ttttttttttttttttt~~~~~~~~~~~~~~~tttttttttttttttttt
+tttttttttttttttt~~~~~~~~~~~~~~~~~~tttttttttttttttt
+ttttttttttttttt~~~~~ttttttt~~~~~~~~~tttttttttttttt
+tttttttttttttt~~~~ttt.....tttttt~~~~~~tttttttttttt
+ttttttttttttt~~~~tt............tt~~~~~~tttttttttt~
+tttttttttttt~~~~tt..............ttt~~~~tttttttt~~~
+tttttttttttt~~~tt.................ttt~~~tttttt~~~~
+ttttttttttt~~~~t....................t~~~~ttt~~~~~~
+ttttttttttt~~~tt..######....######...t~~~t~~~~~~~t
+tttttttttt~~~~t...######....######...tt~~~~~~~~~~t
+tttttttttt~~~tt...######....######....t~~~~~~~~ttt
+tttttttttt~~~t....###4##.....___......tt~~~~~~tttt
+tttttttttt~~tt......___......._........t~~~~tttttt
+ttttttttt...t........_........_........t~~~ttttttt
+<______________......_.......__........t~~~ttttttt
+tttttttt...t.._____.___.....__..###....tt~~ttttttt
+tttttttt~~~t......___._______...#9#.....t~~ttttttt
+tttttttt~~~t.....__....._t_.....___.....t~~ttttttt
+ttttttt~~~~t....__......___......_......t~~ttttttt
+ttttttt~~~~t..___........_......__......t~~ttttttt
+ttttttt~~~tt.__.........._......_.......t~~~tttttt
+ttttttt~~~t.._######....._......_.###...t~~~tttttt
+ttttttt~~~t.._######....._.####._.###...t~~~tttttt
+ttttttt~~~t.._######....._.####._.###...t~~~tttttt
+ttttttt~~~t.._####2#....___####._.###...t~~~tttttt
+ttttttt~~~t.._______..___._.._.._.###...t~~~tttttt
+ttttttt~~~t......._..__..._______.###..tt~~~tttttt
+ttttttt~~~tt......_.._.........._.._...t~~~ttttttt
+tttttttt~~~tt.....____.####.....____...t~~~ttttttt
+ttttttttt~~~tt......_..####....._......t~~~ttttttt
+ttttttttt~~~~tt.....__.####....._.....tt~~~ttttttt
+tttttttttt~~~~ttt....__##3#....._.....t~~~tttttttt
+tttttttttttt~~~~tt....___________...tt~~~~tttttttt
+ttttttttttttt~~~~ttttt............ttt~~~~ttttttttt
+tttttttttttttt~~~~~~~ttttttt...tttt~~~~~~ttttttttt
+tttttttttttttttt~~~~~~~~~~~ttttt~~~~~~~~tttttttttt
+ttttttttttttttttttt~~~~~~~~~~~~~~~~~~~~ttttttttttt
+ttttttttttttttttttttt~~~~~~~~~~~~~~~tttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttt]]

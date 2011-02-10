@@ -22,19 +22,19 @@ load("/data/general/traps/store.lua")
 newEntity{ base = "BASE_STORE", define_as = "ARMOR_STORE",
 	name="Armoury",
 	display='2', color=colors.UMBER,
-	resolvers.store("ZIGUR_ARMOR"),
+	resolvers.store("ZIGUR_ARMOR", "zigur"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "WEAPON_STORE",
 	name="Weapon Store",
 	display='3', color=colors.UMBER,
-	resolvers.store("ZIGUR_WEAPON"),
+	resolvers.store("ZIGUR_WEAPON", "zigur"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "LIBRARY",
 	name="Library",
 	display='5', color=colors.RED,
-	resolvers.store("ZIGUR_LIBRARY"),
+	resolvers.store("ZIGUR_LIBRARY", "zigur"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "TRAINER",

@@ -44,7 +44,7 @@ on_grant = function(self, who)
 	-- Add random lightning firing off
 	game.level.data.background = function(level)
 		local Map = require "engine.Map"
-		if rng.chance(12) then
+		if rng.chance(30) then
 			local x1, y1 = rng.range(10, level.map.w - 11), rng.range(10, level.map.h - 11)
 			local x2, y2 = x1 + rng.range(-4, 4), y1 + rng.range(5, 10)
 			level.map:particleEmitter(x1, y1, math.max(math.abs(x2-x1), math.abs(y2-y1)), "lightning", {tx=x2-x1, ty=y2-y1})

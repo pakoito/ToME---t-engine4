@@ -362,6 +362,8 @@ function _M:makeKeyChar(i)
 end
 
 function _M:toScreen(x, y, nb_keyframes)
+	if self.__hidden then return end
+
 	-- Draw with only the texture
 	if self.__showup then
 		local eff = self.__showup_effect or "pop"
