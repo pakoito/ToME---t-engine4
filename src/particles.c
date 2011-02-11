@@ -541,6 +541,8 @@ void thread_particle_init(particle_thread *pt, plist *l)
 {
 	lua_State *L = pt->L;
 	particles_type *ps = l->ps;
+	int tile_w, tile_h;
+	int base_size = 0;
 
 	// Load the particle definition
 	// Returns: generator_fct:1, update_fct:2, max:3, gl:4, no_stop:5
@@ -574,10 +576,12 @@ void thread_particle_init(particle_thread *pt, plist *l)
 		lua_pushstring(L, "tile_w");
 		lua_pushstring(L, "tile_w");
 		lua_gettable(L, -7);
+		tile_w = lua_tonumber(L, -1);
 		lua_settable(L, -3);
 		lua_pushstring(L, "tile_h");
 		lua_pushstring(L, "tile_h");
 		lua_gettable(L, -7);
+		tile_h = lua_tonumber(L, -1);
 		lua_settable(L, -3);
 
 		lua_settable(L, -3);
@@ -593,10 +597,23 @@ void thread_particle_init(particle_thread *pt, plist *l)
 		lua_setmetatable(L, -2);
 
 		// Set the environment
-		lua_setfenv(L, -2);
+		lua_pushvalue(L, -1);
+		lua_setfenv(L, -3);
+		lua_insert(L, -2);
 
 		// Call the method
-		docall(L, 0, 5);
+		if (lua_pcall(L, 0, 5, 0))
+		{
+			printf("Particle run error %x (%s): %s\n", (int)l, ps->args, lua_tostring(L, -1));
+			lua_pop(L, 1);
+		}
+
+		// Check base size
+		lua_pushstring(L, "base_size");
+		lua_gettable(L, -7);
+		base_size = lua_tonumber(L, -1);
+		lua_pop(L, 1);
+		lua_remove(L, -6);
 	}
 	else { lua_pop(L, 1); return; }
 
@@ -605,6 +622,12 @@ void thread_particle_init(particle_thread *pt, plist *l)
 	if (!nb) nb = 1;
 	ps->nb = nb;
 	ps->no_stop = lua_toboolean(L, 5);
+
+	ps->zoom = 1;
+	if (base_size)
+	{
+		ps->zoom = (((float)tile_w + (float)tile_h) / 2) / (float)base_size;
+	}
 
 	int batch = nb;
 	ps->batch_nb = 0;
