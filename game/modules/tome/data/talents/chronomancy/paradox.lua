@@ -65,7 +65,7 @@ newTalent{
 	points = 5,
 	cooldown = 20,
 	paradox = 20,
-	range = 6,
+	range = 10,
 	tactical = { DISABLE = 2 },
 	requires_target = true,
 	direct_hit = true,

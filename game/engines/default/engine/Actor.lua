@@ -310,6 +310,7 @@ end
 
 --- Does the actor have LOS to the target
 function _M:hasLOS(x, y, what)
+	if not x or not y then return false, self.x, self.y end
 	what = what or "block_sight"
 	local l = line.new(self.x, self.y, x, y)
 	local lx, ly = l()

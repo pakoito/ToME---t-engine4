@@ -31,7 +31,7 @@ newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronoma
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/timetravel", name = "Time Travel", description = "Travel through time yourself or send your foes into the future.." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/spacetime-folding", name = "Spacetime Folding", description = "Mastery of folding points in space." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/spacetime-weaving", name = "Spacetime Weaving", generic = true, description = "Weave the threads of spacetime and correct the damage you've caused through your meddling." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/spacetime-weaving-other", name = "Spacetime Weaving Other", generic = true, description = "Basic knowledge of Paradox management." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/other", name = "Other", generic = true, description = "Miscellaneous Chronomancy effects." }
 
 -- Anomalies are not learnable but can occur instead of an intended spell when paradox gets to high.
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/anomalies", name = "anomalies", description = "Spacetime anomalies that can randomly occur when paradox is to high." }

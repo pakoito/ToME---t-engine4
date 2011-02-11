@@ -73,9 +73,29 @@ newTalent{
 }
 
 newTalent{
-	name = "Energy Decomposition",
-	type = {"chronomancy/energy",2},
+	name = "Entropic Field",
+	type = {"chronomancy/energy", 2},
 	require = chrono_req2,
+	points = 5,
+	paradox = 5,
+	cooldown = 20,
+	tactical = { DEFEND = 2 },
+	getPower = function(self, t) return 10 + (self:combatTalentSpellDamage(t, 10, 50)*getParadoxModifier(self, pm)) end,
+	action = function(self, t)
+		self:setEffect(self.EFF_ENTROPIC_FIELD, 10, {power=t.getPower(self, t)})
+		return true
+	end,
+	info = function(self, t)
+		local power = t.getPower(self, t)
+		return ([[You encase yourself in a shield that slows incoming projectiles by %d%% and grants you %d%% physical resistance for 10 turns.
+		The effect will scale with your Paradox and Magic stat.]]):format(power, power / 2)
+	end,
+}
+
+newTalent{
+	name = "Energy Decomposition",
+	type = {"chronomancy/energy",3},
+	require = chrono_req3,
 	points = 5,
 	paradox = 15,
 	cooldown = 24,
@@ -130,84 +150,6 @@ newTalent{
 		return ([[Removes up to %d magical effects or sustained spells (both good and bad) from the target.
 		The number of effects removed will scale with your Paradox.]]):
 		format(count)
-	end,
-}
-
-newTalent{
-	name = "Energy Wall",
-	type = {"chronomancy/energy", 3},
-	require = chrono_req3,
-	points = 5,
-	paradox = 20,
-	cooldown = 20,
-	range = 6,
-	tactical = { PROTECT = 2 },
-	requires_target = true,
-	getResistance = function(self, t) return 30 + math.ceil (self:combatTalentSpellDamage(t, 10, 40) * getParadoxModifier(self, pm)) end,
-	getDuration = function(self, t) return 5 + math.ceil(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
-	action = function(self, t)
-		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
-		local tx, ty, target = self:getTarget(tg)
-		if not tx or not ty then return nil end
-		local _ _, tx, ty = self:canProject(tg, tx, ty)
-		target = game.level.map(tx, ty, Map.ACTOR)
-		if target == self then target = nil end
-
-		-- Find space
-		local x, y = util.findFreeGrid(tx, ty, 5, true, {[Map.ACTOR]=true})
-		if not x then
-			game.logPlayer(self, "Not enough space to summon!")
-			return
-		end
-
-		local NPC = require "mod.class.NPC"
-		local m = NPC.new{
-			type = "immovable", subtype = "wall",
-			display = "#", color=colors.LIGHT_STEEL_BLUE,
-			desc = [[A wall of crackling energy.]],
-			name = "Energy Wall",
-			autolevel = "none", faction=self.faction,
-			stats = { mag = 10 + self:getMag() * self:getTalentLevel(t) / 5, wil = 10 + self:getTalentLevel(t) * 2, con = 10 + self:getMag() * self:getTalentLevel(t) / 5},
-			resists = { all = t.getResistance(self, t), },
-			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=3, },
-			level_range = {self.level, self.level}, exp_worth = 0,
-
-			max_life = resolvers.rngavg(20,40),
-			life_rating = 12,
-			infravision = 20,
-						
-			cut_immune = 1,
-			blind_immune = 1,
-			fear_immune = 1,
-			poison_immune = 1,
-			disease_immune = 1,
-			stone_immune = 1,
-			see_invisible = 30,
-			no_breath = 1,
-
-			combat_armor = 0, combat_def = 0,
-			never_move = 1,
-
-			inc_damage = table.clone(self.inc_damage, true),
-
-			combat = { dam=8, atk=15, apr=100, damtype=DamageType.LIGHTNING, dammod={mag=0.5} },
-			on_melee_hit = { [DamageType.LIGHTNING] = 20, 10},
-				
-			summoner = self, summoner_gain_exp=true,
-			summon_time =t.getDuration(self, t), 
-			ai_target = {actor=target}
-		}
-
-		setupSummon(self, m, x, y)
-		
-		game:playSoundNear(self, "talents/spell_generic")
-		return true
-	end,
-	info = function(self, t)
-		local duration = t.getDuration(self, t)
-		return ([[Summons an immovable wall of crackling energy that lasts %d turns.  Nearby enemies may be struck by stray electricity and creatures who attack it will suffer lightning damage.
-		The duration will scale with your Paradox.  The health, resistance, and damage of the energy barrier will improve with your Magic stat.]]):
-		format(duration)
 	end,
 }
 

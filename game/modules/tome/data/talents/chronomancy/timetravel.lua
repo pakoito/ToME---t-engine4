@@ -29,12 +29,14 @@ newTalent{
 	tactical = { ATTACKAREA = 2 },
 	range = 1,
 	requires_target = true,
-	getPercent = function(self, t) return (40 + (self:combatTalentSpellDamage(t, 20, 60)*getParadoxModifier(self, pm))) / 100 end,
-	getRadius = function (self, t) return 2 + self:getTalentLevelRaw (t) end,
+	getDamage = function(self, t) return (self:combatTalentSpellDamage(t, 10, 120)*getParadoxModifier(self, pm)) end,
+	getPercent = function(self, t) return (30 + (self:combatTalentSpellDamage(t, 10, 30)*getParadoxModifier(self, pm))) / 100 end,
+	getRadius = function (self, t) return 4 + math.floor(self:getTalentLevelRaw (t)/2) end,
 	action = function(self, t)
 		local tg = {type="cone", range=0, radius=t.getRadius(self, t), friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
+		self:project(tg, x, y, DamageType.TEMPORAL, self:spellCrit(t.getDamage(self, t)))
 		self:project(tg, x, y, DamageType.TEMPORAL_ECHO, self:spellCrit(t.getPercent(self, t)))
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "temporal_breath", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/spell_generic2")
@@ -43,9 +45,10 @@ newTalent{
 	info = function(self, t)
 		local percent = t.getPercent(self, t) * 100
 		local radius = t.getRadius(self, t)
-		return ([[Creates a temporal echo in a %d radIus cone.  Affected targets will take %d%% of the damage they've already taken as temporal damage.  Note that boss and unique creatures are resistant to this effect and will take less damage then other targets.
-		The percentage scales with your Paradox and the Magic stat.]]):
-		format(radius, percent)
+		local damage = t.getDamage(self, t)
+		return ([[Creates a temporal echo in a %d radius cone.  Affected targets will take %0.2f temporal damage and %d%% of the difference between their current life and max life as additional temporal damage.
+		The percentage and damage scales with your Paradox and the Magic stat.]]):
+		format(radius, damage, percent)
 	end,
 }
 
@@ -64,7 +67,7 @@ newTalent{
 	reflectable = true,
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 25, 250) * getParadoxModifier(self, pm) end,
-	getDuration = function(self, t) return 2 + math.floor(self:getTalentLevel(t) / 3 * getParadoxModifier(self, pm)) end,
+	getDuration = function(self, t) return 4 + math.floor(self:getTalentLevel(t) / 3 * getParadoxModifier(self, pm)) end,
 	action = function(self, t)
 		-- Find the target and check hit
 		local tg = {type="hit", self:getTalentRange(t), talent=t}

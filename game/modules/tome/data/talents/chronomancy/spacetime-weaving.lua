@@ -19,7 +19,7 @@
 
 newTalent{
 	name = "Spacetime Tuning",
-	type = {"chronomancy/spacetime-weaving-other", 1},
+	type = {"chronomancy/other", 1},
 	hide = true,
 	points = 1,
 	message = "@Source@ retunes the fabric of spacetime.",
@@ -89,7 +89,7 @@ newTalent{
 	paradox = 5,
 	cooldown = function(self, t) return 20 - (self:getTalentLevelRaw(t) * 2) end,
 	tactical = { CLOSEIN = 2, ESCAPE = 2 },
-	getRange = function(self, t) return 6 end,
+	getRange = function(self, t) return 5 + (self:getTalentLevelRaw(t)) end,
 	requires_target = true,
 	direct_hit = true,
 	action = function(self, t)
@@ -117,8 +117,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Teleports you to up to 6 tiles away to a targeted location in line of sight.
-		Additional talent points will lower the cooldown.]]):format()
+		local range = t.getRange(self, t)
+		return ([[Teleports you to up to %d tiles away to a targeted location in line of sight.
+		Additional talent points will lower the cooldown and increase the range.]]):format(range)
 	end,
 }
 

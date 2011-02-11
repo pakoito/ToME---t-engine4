@@ -671,7 +671,7 @@ newDamageType{
 	name = "repulsion", type = "REPULSION",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
-		if target then
+		if target and not target:attr("never_move") then
 			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
 				target:knockback(src.x, src.y, 2)
 				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
@@ -1340,9 +1340,6 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
 			dam = (target.max_life - target.life) * dam
-			if target.rank >= 3.5 then
-				dam = dam / 2
-			end
 			DamageType:get(DamageType.TEMPORAL).projector(src, x, y, DamageType.TEMPORAL, dam)
 		end
 	end,

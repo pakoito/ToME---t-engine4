@@ -544,7 +544,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 
 	resolvers.talents{
 		[Talents.T_PERFECT_AIM]=3,
-		[Talents.T_AVOID_FATE]=5,
+		[Talents.T_FORESIGHT]=5,
 		[Talents.T_STEALTH]=3,
 		[Talents.T_SHADOWSTRIKE]=3,
 		[Talents.T_UNSEEN_ACTIONS]=3,

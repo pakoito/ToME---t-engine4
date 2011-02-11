@@ -18,24 +18,26 @@
 -- darkgod@te4.org
 
 newTalent{
-	name = "Entropic Field",
+	name = "Celerity",
 	type = {"chronomancy/speed-control", 1},
 	require = chrono_req1,
 	points = 5,
-	paradox = 5,
+	paradox = 3,
 	cooldown = 20,
-	tactical = { DEFEND = 2 },
-	getPower = function(self, t) return 10 + (self:combatTalentSpellDamage(t, 10, 50)*getParadoxModifier(self, pm)) end,
+	tactical = { ESCAPE = 2, CLOSEIN = 2, BUFF = 2 },
+	no_energy = true,
+	getPower = function(self, t) return 1 - 1 / (1 + (10 + ((self:combatTalentSpellDamage(t, 10, 50) * getParadoxModifier(self, pm))/ 100))) end,
 	action = function(self, t)
-		self:setEffect(self.EFF_ENTROPIC_FIELD, 10, {power=t.getPower(self, t)})
+		self:setEffect(self.EFF_CELERITY, 5, {power=t.getPower(self, t)})
 		return true
 	end,
 	info = function(self, t)
 		local power = t.getPower(self, t)
-		return ([[You encase yourself in a shield that slows incoming projectiles by %d%% and grants you %d%% physical resistance for 10 turns.  Additionally any attacker that strikes you in melee will suffer %0.2f temporal damage.
-		The effect will scale with your Paradox and Magic stat.]]):format(power, power / 2, damDesc(self, DamageType.TEMPORAL, power / 2))
+		return ([[Increases the caster's movement speed by %d%% for the next 5 turns.  Additionally switching weapons takes no time while Celerity is active.
+		The effect will scale with your Paradox and Magic stat.]]):format(power * 100)
 	end,
 }
+
 
 newTalent{
 	name = "Stop",

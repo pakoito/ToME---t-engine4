@@ -32,18 +32,22 @@ newTalent{
 		game:playSoundNear(self, "talents/arcane")
 		return {
 			stats = self:addTemporaryValue("inc_stats", {[self.STAT_STR] = t.getPower(self, t)}),
+			phys = self:addTemporaryValue("combat_physresist", t.getPower(self, t)/2),
 			particle = self:addParticles(Particles.new("temporal_focus", 1)),
 		}
 	end,
 	deactivate = function(self, t, p)
 		self:removeParticles(p.particle)
 		self:removeTemporaryValue("inc_stats", p.stats)
+		self:removeTemporaryValue("combat_physresist", p.phys)
 		return true
 	end,
 	info = function(self, t)
 		local percentage = t.getPercentage(self, t) * 100
-		return ([[You've learned to overcome physical obstacles through mental determination.  You gain a bonus to strength equal to %d%% of your willpower.]]):
-		format(percentage)
+		local power = t.getPower(self, t)
+		return ([[You've learned to overcome physical obstacles through mental determination.  Increases your strength by %d%% of your willpower and your physical saves by %d%% of your willpower.
+		Strength increase: %d.
+		Physical Save increase: %d.]]):format(percentage, percentage/2, power, power/2)
 	end
 }
 
@@ -82,18 +86,22 @@ newTalent{
 		game:playSoundNear(self, "talents/arcane")
 		return {
 			stats = self:addTemporaryValue("inc_stats", {[self.STAT_MAG] = t.getPower(self, t)}),
+			spell = self:addTemporaryValue("combat_spellresist", t.getPower(self, t)/2),
 			particle = self:addParticles(Particles.new("arcane_power", 1)),
 		}
 	end,
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("inc_stats", p.stats)
+		self:removeTemporaryValue("combat_spellresist", p.spell)
 		self:removeParticles(p.particle)
 		return true
 	end,
 	info = function(self, t)
 		local percentage = t.getPercentage(self, t) * 100
-		return ([[You've learned to use some of your physical reserves to improve your control over the spacetime continuum.  You gain a bonus to magic equal to %d%% of your willpower.]]):
-		format(percentage)
+		local power = t.getPower(self, t)
+		return ([[You've learned to use some of your physical reserves to improve your control over the spacetime continuum.  Increases your magic by %d%% of your willpower and your spell saves by %d%% of your willpower.
+		Magic increase: %d.
+		Spell Save increase: %d.]]):format(percentage, percentage/2, power, power/2)
 	end
 }
 
@@ -105,7 +113,7 @@ newTalent{
 	paradox = 25,
 	cooldown = 50,
 	tactical = { DEFEND = 2 },
-	getDuration = function(self, t) return 2 + math.ceil(((self:getTalentLevel(t) / 2)) * getParadoxModifier(self, pm)) end,
+	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
 	action = function(self, t)
 		self:setEffect(self.EFF_DAMAGE_SMEARING, t.getDuration(self,t), {power=10})
 		game:playSoundNear(self, "talents/spell_generic")

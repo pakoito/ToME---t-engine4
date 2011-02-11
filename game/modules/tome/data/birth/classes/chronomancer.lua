@@ -68,7 +68,7 @@ newBirthDescriptor{
 		[ActorTalents.T_STATIC_HISTORY] = 1,
 		[ActorTalents.T_TURN_BACK_THE_CLOCK] = 1,
 		[ActorTalents.T_DUST_TO_DUST] = 1,
-		[ActorTalents.T_ENTROPIC_FIELD] = 1,
+		[ActorTalents.T_CELERITY] = 1,
 		},
 	copy = {
 		max_life = 90,
@@ -96,8 +96,8 @@ newBirthDescriptor{
 	},
 	stats = { str=2, wil=2, dex=3, mag=2},
 	talents_types = {
-		["technique/archery-bow"]={false, 0.1},
-		["technique/archery-utility"]={true, 0.1},
+		["technique/archery-bow"]={true, 0.1},
+		["technique/archery-utility"]={false, 0.1},
 		["technique/dualweapon-attack"]={true, 0.1},
 		["technique/dualweapon-training"]={false, 0.1},
 		["technique/combat-training"]={true, 0.2},
@@ -115,7 +115,7 @@ newBirthDescriptor{
 		[ActorTalents.T_SPACETIME_TUNING] = 1,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
 		[ActorTalents.T_DUAL_STRIKE] = 1,
-		[ActorTalents.T_UNERRING_SHOT] = 1,
+		[ActorTalents.T_PHASE_SHOT] = 1,
 		[ActorTalents.T_STRENGTH_OF_PURPOSE] = 1,
 		},
 	copy = {

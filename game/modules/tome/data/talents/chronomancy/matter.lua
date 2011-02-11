@@ -23,9 +23,9 @@ newTalent{
 	require = chrono_req1,
 	points = 5,
 	paradox = 6,
-	cooldown = 4,
+	cooldown = 3,
 	tactical = { ATTACKAREA = 2 },
-	range = 6,
+	range = 10,
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,
@@ -128,7 +128,7 @@ newTalent{
 	paradox = 20,
 	cooldown = 12,
 	tactical = { ATTACK = 2 },
-	range = 6,
+	range = 10,
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,
@@ -151,7 +151,7 @@ newTalent{
 			end
 		end
 		-- if we kill it use teleport particles for larger effect radius
-		if target.dead then
+		if target and target.dead then
 			game.level.map:particleEmitter(x, y, 1, "teleport")
 		else
 			game.level.map:particleEmitter(x, y, 1, "entropythrust")

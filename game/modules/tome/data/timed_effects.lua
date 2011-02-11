@@ -2359,7 +2359,7 @@ newEffect{
 newEffect{
 	name = "ENTROPIC_FIELD",
 	desc = "Entropic Field",
-	long_desc = function(self, eff) return ("Target is surrounded by a field that slows projectiles by %d%%, inflicts %0.2f temporal damage to attackers, and increases physical resistance by %d%%."):format(eff.power, eff.power/2, eff.power/2) end,
+	long_desc = function(self, eff) return ("Target is surrounded by a field that slows projectiles by %d%% and increases physical resistance by %d%%."):format(eff.power, eff.power/2, eff.power/2) end,
 	type = "magical",
 	status = "beneficial",
 	parameters = { power=10 },
@@ -2367,13 +2367,11 @@ newEffect{
 	on_lose = function(self, err) return "The entropic shield around #Target# dissipates.", "-Entropic Field" end,
 	activate = function(self, eff)
 		eff.particle = self:addParticles(Particles.new("time_shield", 1))
-		eff.tmpid = self:addTemporaryValue("on_melee_hit", {[DamageType.TEMPORAL]= eff.power/2})
 		eff.phys = self:addTemporaryValue("resists", {[DamageType.PHYSICAL]=eff.power/2})
 		eff.proj = self:addTemporaryValue("slow_projectiles", eff.power)
 	end,
 	deactivate = function(self, eff)
 		self:removeParticles(eff.particle)
-		self:removeTemporaryValue("on_melee_hit", eff.tmpid)
 		self:removeTemporaryValue("resists", eff.phys)
 		self:removeTemporaryValue("slow_projectiles", eff.proj)
 	end,
@@ -3470,5 +3468,18 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("dazed", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "FORESIGHT",
+	desc = "Foresight",
+	long_desc = function(self, eff) return ("The target has peered into the future and will ignore all damage from the next attack."):format() end,
+	type = "magical",
+	status = "beneficial",
+	parameters = {},
+	activate = function(self, eff)
+	end,
+	deactivate = function(self, eff)
 	end,
 }

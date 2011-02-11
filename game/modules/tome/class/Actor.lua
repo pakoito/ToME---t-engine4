@@ -724,7 +724,7 @@ function _M:onTakeHit(value, src)
 	if self:attr("invulnerable") then
 		return 0
 	end
-
+	
 	if self:attr("retribution") then
 	-- Absorb damage into the retribution
 		if value / 2 <= self.retribution_absorb then
@@ -855,7 +855,13 @@ function _M:onTakeHit(value, src)
 		t.absorb(self, t, self:isTalentActive(self.T_BONE_SHIELD))
 		value = 0
 	end
-
+	
+	if self:hasEffect(self.EFF_FORESIGHT) then
+		self:removeEffect(self.EFF_FORESIGHT)
+		game.logSeen(self, "%s avoids the attack.", self.name:capitalize())
+		value = 0
+	end
+	
 	if self:isTalentActive(self.T_DEFLECTION) then
 		local t = self:getTalentFromId(self.T_DEFLECTION)
 		value = t.do_onTakeHit(self, t, self:isTalentActive(self.T_DEFLECTION), value)
@@ -962,16 +968,6 @@ function _M:onTakeHit(value, src)
 	if self.on_takehit then value = self:check("on_takehit", value, src) end
 
 	-- Chronomancy
-	if self:knowTalent(self.T_AVOID_FATE) then
-		local af = .6 - (self:getTalentLevelRaw(self.T_AVOID_FATE)/10)
-		print ("af->", af)
-		local av = self.max_life * af
-		if value >= self.life and self.life >= av then
-			value = self.life - 1
-			game.logSeen(self, "%s has avoided a fatal blow!!", self.name:capitalize())
-		end
-	end
-
 	if self:attr("damage_smearing") and value >= 10 then
 		self:setEffect(self.EFF_SMEARED, 5, {src=src, power=value/6})
 		value = value / 6

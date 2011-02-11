@@ -25,7 +25,7 @@ newTalent{
 	paradox = 5,
 	cooldown = 4,
 	tactical = { ATTACK = 2, DISABLE = 2 },
-	range = 6,
+	range = 10,
 	reflectable = true,
 	requires_target = true,
 	proj_speed = 3,
@@ -104,7 +104,7 @@ newTalent{
 	requires_target = true,
 	getConfuseDuration = function(self, t) return math.floor((self:getTalentLevel(t) + 2) * getParadoxModifier(self, pm)) end,
 	getConfuseEfficency = function(self, t) return (50 + self:getTalentLevelRaw(t) * 10) * getParadoxModifier(self, pm) end,
-	getRadius = function (self, t) return 2 + self:getTalentLevelRaw (t) end,
+	getRadius = function (self, t) return 4 + math.floor(self:getTalentLevelRaw (t)/2) end,
 	action = function(self, t)
 		local tg = {type="cone", range=0, radius=t.getRadius(self, t), friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)

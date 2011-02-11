@@ -35,7 +35,7 @@ newTalent{
 	info = function(self, t)
 		local absorb = t.getAbsorb(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[Surround yourself with a repulsion field for %d turns that will absorb up to %0.2f damage and potentially knock back attackers.
+		return ([[Surround yourself with a repulsion field for %d turns that will absorb up to %0.2f damage and potentially knocking back attackers.  Pinned creatures are immune to this knockback.
 		The absorption will scale with your Paradox and Magic stat.]]):format(duration, absorb)
 	end,
 }
@@ -86,17 +86,18 @@ newTalent{
 	require = chrono_req3,
 	points = 5,
 	paradox = 12,
-	cooldown = 15,
+	cooldown = 12,
 	tactical = { ATTACKAREA = 2, ESCAPE = 2 },
 	range = 1,
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 170)*getParadoxModifier(self, pm) end,
-	getRadius = function (self, t) return 2 + self:getTalentLevelRaw (t) end,
+	getRadius = function (self, t) return 4 + math.floor(self:getTalentLevelRaw (t)/2) end,
 	action = function(self, t)
 		local tg = {type="cone", range=0, radius=t.getRadius(self, t), friendlyfire=false, talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.SPELLKNOCKBACK, self:spellCrit(t.getDamage(self, t)))
+		self:project(tg, x, y, DamageType.PHYSICAL, self:spellCrit(t.getDamage(self, t)))
+		self:project(tg, x, y, DamageType.REPULSION, t.getDamage(self, t))
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "gravity_breath", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/earth")
 		return true
@@ -104,7 +105,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local radius = t.getRadius (self, t)
-		return ([[Sends out a wave of repulsion in a %d radius cone, dealing %0.2f physical damage and knocking back creatures caught in the area.
+		return ([[Sends out a wave of repulsion in a %d radius cone, dealing %0.2f physical damage and knocking back creatures caught in the area.  Pinned creatures are immune to this knockback.
 		The damage will scale with your Paradox and Magic stat.]]):
 		format(radius, damDesc(self, DamageType.PHYSICAL, t.getDamage(self, t)))
 	end,

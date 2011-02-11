@@ -29,48 +29,33 @@ newTalent{
 }
 
 newTalent{
-	name = "Perfect Aim",
+	name = "Deja Vu",
 	type = {"chronomancy/chronomancy",2},
 	require = temporal_req2,
 	points = 5,
 	paradox = 10,
 	cooldown = 20,
-	tactical = { BUFF = 2 },
-	no_energy = true,
-	getDuration = function(self, t) return 1 + math.floor(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
-	getPower = function(self, t) return 10 + (self:combatTalentSpellDamage(t, 10, 40)*getParadoxModifier(self, pm)) end,
+	no_npc_use = true,
+	getRadius = function(self, t) return 5 + math.floor(self:combatTalentSpellDamage(t, 2, 12) * getParadoxModifier(self, pm)) end,
 	action = function(self, t)
-		self:setEffect(self.EFF_PERFECT_AIM, t.getDuration(self, t), {power=t.getPower(self, t)})
+		self:magicMap(t.getRadius(self, t))
+		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
-		local duration = t.getDuration(self, t)
-		local power = t.getPower(self, t)
-		return ([[You focus your aim for the next %d turns, increasing your physical and spell critical strike chance and your critical damage multiplier by %d%%..
-		The effect will scale with your Paradox and the Magic stat.]]):format(duration, power)
+		local radius = t.getRadius(self, t)
+		return ([[Your keen intuition allows you to form a mental picture of your surroundings in a radius of %d.]]):
+		format(radius)
 	end,
 }
-
-newTalent{
-	name = "Avoid Fate",
-	type = {"chronomancy/chronomancy", 3},
-	require = temporal_req3,
-	points = 5,
-	mode = "passive",
-	info = function(self, t)
-		return ([[As long as your life is at or above %d any single attack that would reduce you below 1 life instead reduces you to 1 life.]]):
-		format(self.max_life * (.6 - (self:getTalentLevelRaw(self.T_AVOID_FATE)/10)))
-	end,
-}
-
 
 newTalent{
 	name = "Precognition",
-	type = {"chronomancy/chronomancy",4},
-	require = temporal_req4,
+	type = {"chronomancy/chronomancy",3},
+	require = temporal_req3,
 	points = 5,
-	paradox = 50,
-	cooldown = 100,
+	paradox = 25,
+	cooldown = 50,
 	no_npc_use = true,
 	getDuration = function(self, t) return 4 + math.floor(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
 	action = function(self, t)
@@ -85,5 +70,28 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		return ([[You peer %d turns into the future.  Note that visions of your own death will still be fatal.
 		The duration will scale with your Paradox.]]):format(duration)
+	end,
+}
+
+newTalent{
+	name = "Foresight",
+	type = {"chronomancy/chronomancy", 4},
+	require = temporal_req4,
+	points = 5,
+	paradox = 20,
+	cooldown = function(self, t) return 27 - (self:getTalentLevelRaw(t) * 3) end,
+	getDuration = function(self, t) return 4 + math.floor(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
+	tactical = { DEFEND = 4 },
+	no_energy = true,
+	action = function(self, t)
+		game:playSoundNear(self, "talents/spell_generic")
+		self:setEffect(self.EFF_FORESIGHT, t.getDuration(self, t), {})
+		return true
+	end,
+	info = function(self, t)
+		local duration = t.getDuration(self, t)
+		return ([[You avoid all damage from the a single damage source that occurs within the next %d turns.
+		Additional talent points will lower the cooldown and the duration will scale with your Paradox.]]):
+		format(duration)
 	end,
 }

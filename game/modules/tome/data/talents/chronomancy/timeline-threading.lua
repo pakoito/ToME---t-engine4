@@ -23,7 +23,7 @@ newTalent{
 	require = chrono_req_high1,
 	points = 5,
 	paradox = 5,
-	cooldown = 6,
+	cooldown = 12,
 	tactical = { BUFF = 2 },
 	getThread = function(self, t) return 60 + (self:combatTalentSpellDamage(t, 10, 30)*getParadoxModifier(self, pm)) end,
 	action = function(self, t)
@@ -45,9 +45,9 @@ newTalent{
 	require = chrono_req_high2,
 	points = 5,
 	paradox = 10,
-	cooldown = 6,
+	cooldown = 4,
 	tactical = { ATTACK = 2 },
-	range = 6,
+	range = 10,
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,
@@ -65,7 +65,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Creates a wake of temporal energy that deals %0.2f damage in a beam as you attempt to rethread the timeline.  Affected targets may be dazed, blinded, pinned, or confused for 3 turns..
+		return ([[Creates a wake of temporal energy that deals %0.2f damage in a beam as you attempt to rethread the timeline.  Affected targets may be dazed, blinded, pinned, or confused for 3 turns.
 		The damage will increase with the Magic stat]]):
 		format(damDesc(self, DamageType.TEMPORAL, damage))
 	end,
@@ -164,7 +164,7 @@ newTalent{
 	require = chrono_req_high4,
 	points = 5,
 	paradox = 100,
-	cooldown = 100,
+	cooldown = 50,
 	no_npc_use = true,
 	getDuration = function(self, t) return 4 + math.floor(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
 	action = function(self, t)

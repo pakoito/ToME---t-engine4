@@ -55,6 +55,12 @@ newTalent{
 	type_no_req = true,
 	tactical = { ESCAPE = 2 },
 	no_npc_use = true,
+	getRange = function(self, t) return math.floor(10 + 3 * self:getTalentLevel(t)) end,
+	-- Check distance in preUseTalent to grey out the talent
+	on_pre_use = function(self, t)
+		local eff = self.sustain_talents[self.T_JUMPGATE]
+		return eff and core.fov.distance(self.x, self.y, eff.jumpgate_x, eff.jumpgate_y) < t.getRange(self, t)
+	end,
 	action = function(self, t)
 		local eff = self.sustain_talents[self.T_JUMPGATE]
 		if not eff then
@@ -68,8 +74,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Instantly travel to your jumpgate.]])
-	end,
+		return ([[Instantly travel to your jumpgate as long as you are within %d tiles of it.]]):format(t.getRange(self, t))
+ 	end,
 }
 
 newTalent{
@@ -82,22 +88,18 @@ newTalent{
 	sustain_negative = 20,
 	no_npc_use = true,
 	tactical = { ESCAPE = 2 },
-	on_learn = function(self, t)
-		if self:getTalentLevel(t) >= 4 then
-			if not self:knowTalent(self.T_JUMPGATE_TWO) then
-				self:learnTalent(self.T_JUMPGATE_TWO)
-			end
-		elseif not self:knowTalent(self.T_JUMPGATE_TELEPORT) then
+ 	on_learn = function(self, t)
+		if self:getTalentLevel(t) >= 4 and not self:knowTalent(self.T_JUMPGATE_TWO) then
+			self:learnTalent(self.T_JUMPGATE_TWO)
+ 		end
 			self:learnTalent(self.T_JUMPGATE_TELEPORT)
-		end
 	end,
-	on_unlearn = function(self, t)
-		if not self:knowTalent(t) then
+ 	 on_unlearn = function(self, t)
+		if self:getTalentLevel(t) < 4 and self:knowTalent(self.T_JUMPGATE_TWO) then
+ 			self:unlearnTalent(self.T_JUMPGATE_TWO)
+ 		end
 			self:unlearnTalent(self.T_JUMPGATE_TELEPORT)
-		elseif self:getTalentLevel(t) < 4 and self:knowTalent(self.T_JUMPGATE_TWO) then
-			self:unlearnTalent(self.T_JUMPGATE_TWO)
-		end
-	end,
+ 	end,
 	activate = function(self, t)
 		local terrain = game.level.map(game.player.x, game.player.y, engine.Map.TERRAIN)
 		local jumpgate = mod.class.Object.new(terrain)
@@ -132,10 +134,13 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Create a shadow jumpgate at your location. As long as you sustain this spell you can use 'Jumpgate: Teleport' to instantly travel to the jumpgate.
-		At talent level 4 you learn to create and sustain a second jumpgate.]])
-	end,
-}
+		local jumpgate_teleport = self:getTalentFromId(self.T_JUMPGATE_TELEPORT)
+		local range = jumpgate_teleport.getRange(self, jumpgate_teleport)
+		return ([[Create a shadow jumpgate at your location. As long as you sustain this spell you can use 'Jumpgate: Teleport' to instantly travel to the jumpgate as long as you are within %d tiles of it.
+		At talent level 4 you learn to create and sustain a second jumpgate.]]):format(range)
+ 	end,
+ }
+ 
 
 newTalent{
 	name = "Mind Blast",
@@ -309,9 +314,11 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Create a shadow jumpgate at your location. As long as you sustain this spell you can use 'Jumpgate Two: Teleport' to instantly travel to the jumpgate.]])
-	end,
-}
+		local jumpgate_teleport = self:getTalentFromId(self.T_JUMPGATE_TELEPORT_TWO)
+		local range = jumpgate_teleport.getRange(self, jumpgate_teleport)
+		return ([[Create a second shadow jumpgate at your location. As long as you sustain this spell you can use 'Jumpgate: Teleport' to instantly travel to the jumpgate as long as you are within %d tiles of it.]]):format(range)
+ 	end,
+ }
 
 newTalent{
 	name = "Jumpgate Two: Teleport To", short_name = "JUMPGATE_TELEPORT_TWO",
@@ -322,6 +329,12 @@ newTalent{
 	type_no_req = true,
 	tactical = { ESCAPE = 2 },
 	no_npc_use = true,
+	getRange = function(self, t) return math.floor(10 + 3 * self:getTalentLevel(t)) end,
+	-- Check distance in preUseTalent to grey out the talent
+	on_pre_use = function(self, t)
+		local eff = self.sustain_talents[self.T_JUMPGATE_TWO]
+		return eff and core.fov.distance(self.x, self.y, eff.jumpgate2_x, eff.jumpgate2_y) < t.getRange(self, t)
+	end,
 	action = function(self, t)
 		local eff = self.sustain_talents[self.T_JUMPGATE_TWO]
 		if not eff then
@@ -335,6 +348,6 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Instantly travel to your second jumpgate.]])
-	end,
-}
+		return ([[Instantly travel to your second jumpgate as long as you are within %d tiles of it.]]):format(t.getRange(self, t))
+ 	end,
+ }
