@@ -88,7 +88,6 @@ static int particles_new(lua_State *L)
 	ps->lock = SDL_CreateMutex();
 	ps->name_def = strdup(name_def);
 	ps->args = strdup(args);
-	ps->zoom = zoom;
 	ps->density = density;
 	ps->alive = TRUE;
 	ps->l = NULL;
@@ -211,6 +210,8 @@ static int particles_to_screen(lua_State *L)
 	glColorPointer(4, GL_FLOAT, 0, colors);
 	glVertexPointer(2, GL_FLOAT, 0, vertices);
 	glTranslatef(x, y, 0);
+	glPushMatrix();
+	glScalef(ps->zoom, ps->zoom, ps->zoom);
 	glRotatef(ps->rotate, 0, 0, 1);
 
 	int remaining = ps->batch_nb;
@@ -224,6 +225,7 @@ static int particles_to_screen(lua_State *L)
 	SDL_mutexV(ps->lock);
 
 	glRotatef(-ps->rotate, 0, 0, 1);
+	glPopMatrix();
 	glTranslatef(-x, -y, 0);
 
 	return 0;
@@ -234,7 +236,7 @@ static void particles_update(lua_State *L, particles_type *ps, bool last)
 {
 	int w = 0;
 	bool alive = FALSE;
-	float zoom = ps->zoom;
+	float zoom = 1;
 	int vert_idx = 0, col_idx = 0;
 	int i, j;
 

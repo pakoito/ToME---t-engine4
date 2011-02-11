@@ -124,7 +124,7 @@ function _M:run()
 	-- Start time
 	self.real_starttime = os.time()
 
-	if self.level then self:setupDisplayMode() end
+	if self.level then self:setupDisplayMode(false, "postinit") end
 end
 
 --- Checks if the current character is "tainted" by cheating
@@ -144,7 +144,7 @@ function _M:newGame()
 		orders = {follow=true, behavior=true, leash=true},
 	})
 	self.party:setPlayer(player)
-	self:setupDisplayMode()
+--	self:setupDisplayMode()
 
 	-- Create the entity to store various game state things
 	self.state = GameState.new{}
@@ -291,7 +291,7 @@ function _M:loaded()
 		end,
 	}
 	Map:setViewerActor(self.player)
-	Map:setViewPort(216, 36, self.w - 216, math.floor(self.h * 0.80) - 36, 32, 32, nil, 22, true)
+	self:setupDisplayMode(false, "init")
 	if self.player then self.player.changed = true end
 	self.key = engine.KeyBind.new()
 
@@ -299,59 +299,63 @@ function _M:loaded()
 	if self.player and config.settings.cheat then self.player.__cheated = true end
 end
 
-function _M:setupDisplayMode(reboot)
-	local gfx = config.settings.tome.gfx
-	self:saveSettings("tome.gfx", ('tome.gfx = {tiles=%q, size=%q}\n'):format(gfx.tiles, gfx.size))
+function _M:setupDisplayMode(reboot, mode)
+	if not mode or mode == "init" then
+		local gfx = config.settings.tome.gfx
+		self:saveSettings("tome.gfx", ('tome.gfx = {tiles=%q, size=%q}\n'):format(gfx.tiles, gfx.size))
 
-	if reboot then
-		self.change_res_dialog = true
-		self:saveGame()
-		util.showMainMenu(false, nil, nil, self.__mod_info.short_name, self.save_name, false)
+		if reboot then
+			self.change_res_dialog = true
+			self:saveGame()
+			util.showMainMenu(false, nil, nil, self.__mod_info.short_name, self.save_name, false)
+		end
+
+		-- Show a count for stacked objects
+		Map.object_stack_count = true
+
+		-- Select tiles
+		Tiles.prefix = "/data/gfx/"
+		if gfx.tiles ~= "mushroom" then
+			Tiles.prefix = "/data/gfx/"..gfx.tiles.."/"
+		end
+		print("[DISPLAY MODE] Tileset: "..gfx.tiles)
+		print("[DISPLAY MODE] Size: "..gfx.size)
+
+		local do_bg = true
+
+		if gfx.size == "64x64" then
+			Map:setViewPort(216, 36, self.w - 216, math.floor(self.h * 0.80) - 36, 64, 64, nil, 44, do_bg)
+			Map:resetTiles()
+		elseif gfx.size == "32x32" then
+			Map:setViewPort(216, 36, self.w - 216, math.floor(self.h * 0.80) - 36, 32, 32, nil, 22, do_bg)
+			Map:resetTiles()
+		elseif gfx.size == "16x16" then
+			Map:setViewPort(216, 36, self.w - 216, math.floor(self.h * 0.80) - 36, 16, 16, "/data/font/FSEX300.ttf", 16, do_bg)
+			Map:resetTiles()
+		end
+
+		Map.tiles.use_images = true
+		if gfx.tiles == "ascii" then Map.tiles.use_images = false Map.tiles.force_back_color = {r=0, g=0, b=0, a=255} end
+		if gfx.tiles == "ascii_full" then Map.tiles.use_images = false end
+		if gfx.tiles == "shockbolt" then Map.tiles.nicer_tiles = true end
 	end
 
-	-- Show a count for stacked objects
-	Map.object_stack_count = true
+	if not mode or mode == "postinit" then
+		if self.level then
+			self.level.map:recreate()
+			self:initTargeting()
+			self.level.map:moveViewSurround(self.player.x, self.player.y, 8, 8)
+		end
+		self:setupMiniMap()
 
-	-- Select tiles
-	Tiles.prefix = "/data/gfx/"
-	if gfx.tiles ~= "mushroom" then
-		Tiles.prefix = "/data/gfx/"..gfx.tiles.."/"
+		-- Create the framebuffer
+		self.fbo = core.display.newFBO(Map.viewport.width, Map.viewport.height)
+		if self.fbo then
+			self.fbo_shader = Shader.new("main_fbo")
+			if not self.fbo_shader.shad then self.fbo = nil self.fbo_shader = nil end
+		end
+		if self.player then self.player:updateMainShader() end
 	end
-	print("[DISPLAY MODE] Tileset: "..gfx.tiles)
-	print("[DISPLAY MODE] Size: "..gfx.size)
-
-	local do_bg = true
-
-	if gfx.size == "64x64" then
-		Map:setViewPort(216, 36, self.w - 216, math.floor(self.h * 0.80) - 36, 64, 64, nil, 44, do_bg)
-		Map:resetTiles()
-	elseif gfx.size == "32x32" then
-		Map:setViewPort(216, 36, self.w - 216, math.floor(self.h * 0.80) - 36, 32, 32, nil, 22, do_bg)
-		Map:resetTiles()
-	elseif gfx.size == "16x16" then
-		Map:setViewPort(216, 36, self.w - 216, math.floor(self.h * 0.80) - 36, 16, 16, "/data/font/FSEX300.ttf", 16, do_bg)
-		Map:resetTiles()
-	end
-
-	Map.tiles.use_images = true
-	if gfx.tiles == "ascii" then Map.tiles.use_images = false Map.tiles.force_back_color = {r=0, g=0, b=0, a=255} end
-	if gfx.tiles == "ascii_full" then Map.tiles.use_images = false end
-	if gfx.tiles == "shockbolt" then Map.tiles.nicer_tiles = true end
-
-	if self.level then
-		self.level.map:recreate()
-		self:initTargeting()
-		self.level.map:moveViewSurround(self.player.x, self.player.y, 8, 8)
-	end
-	self:setupMiniMap()
-
-	-- Create the framebuffer
-	self.fbo = core.display.newFBO(Map.viewport.width, Map.viewport.height)
-	if self.fbo then
-		self.fbo_shader = Shader.new("main_fbo")
-		if not self.fbo_shader.shad then self.fbo = nil self.fbo_shader = nil end
-	end
-	if self.player then self.player:updateMainShader() end
 end
 
 function _M:initTargeting()
