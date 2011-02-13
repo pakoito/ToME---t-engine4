@@ -1538,6 +1538,7 @@ newEntity{ base = "BASE_MASSIVE_ARMOR",
 		stun_immune = 0.5,
 		knockback_immune = 0.5,
 		healing_factor = -0.4,
+		fatigue = 15,
 	},
 }
 
