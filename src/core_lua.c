@@ -1373,7 +1373,7 @@ static int gl_fbo_toscreen(lua_State *L)
 	if (lua_isuserdata(L, 6))
 	{
 		shader_type *s = (shader_type*)auxiliar_checkclass(L, "gl{program}", 6);
-		useShader(s, 0, 0, w, h, r, g, b, a);
+		useShader(s, fbo->w, fbo->h, w, h, r, g, b, a);
 	}
 
 	glDisable(GL_BLEND);

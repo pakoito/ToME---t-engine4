@@ -497,17 +497,25 @@ static int map_new(lua_State *L)
 	map->mwidth = mwidth;
 	map->mheight = mheight;
 	map->grids = calloc(w, sizeof(map_object***));
-	map->grids_seens = calloc(w, sizeof(float*));
+	map->grids_seens = calloc(w * h, sizeof(float));
 	map->grids_remembers = calloc(w, sizeof(bool*));
 	map->grids_lites = calloc(w, sizeof(bool*));
 	map->minimap = calloc(w, sizeof(unsigned char*));
 	printf("C Map size %d:%d :: %d\n", mwidth, mheight,mwidth * mheight);
 
+	glGenTextures(1, &(map->seens_texture));
+	tglBindTexture(GL_TEXTURE_2D, map->seens_texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, 4, map->mwidth + 3, map->mheight + 3, 0, GL_BGRA, GL_UNSIGNED_BYTE, NULL);
+	map->seens_map = calloc((map->mwidth + 3)*(map->mheight + 3)*4, sizeof(GLubyte));
+
 	for (i = 0; i < w; i++)
 	{
 		map->grids[i] = calloc(h, sizeof(map_object**));
 		for (j = 0; j < h; j++) map->grids[i][j] = calloc(zdepth, sizeof(map_object*));
-		map->grids_seens[i] = calloc(h, sizeof(float));
+//		map->grids_seens[i] = calloc(h, sizeof(float));
 		map->grids_remembers[i] = calloc(h, sizeof(bool));
 		map->grids_lites[i] = calloc(h, sizeof(bool));
 		map->minimap[i] = calloc(h, sizeof(unsigned char));
@@ -525,7 +533,7 @@ static int map_free(lua_State *L)
 	{
 		for (j = 0; j < map->h; j++) free(map->grids[i][j]);
 		free(map->grids[i]);
-		free(map->grids_seens[i]);
+//		free(map->grids_seens[i]);
 		free(map->grids_remembers[i]);
 		free(map->grids_lites[i]);
 		free(map->minimap[i]);
@@ -541,6 +549,9 @@ static int map_free(lua_State *L)
 	free(map->vertices);
 
 	luaL_unref(L, LUA_REGISTRYINDEX, map->mo_list_ref);
+
+	glDeleteTextures(1, &map->seens_texture);
+	free(map->seens_map);
 
 	lua_pushnumber(L, 1);
 	return 1;
@@ -645,7 +656,7 @@ static int map_set_seen(lua_State *L)
 	float v = lua_tonumber(L, 4);
 
 	if (x < 0 || y < 0 || x >= map->w || y >= map->h) return 0;
-	map->grids_seens[x][y] = v;
+	map->grids_seens[y*map->w+x] = v;
 	return 0;
 }
 
@@ -680,7 +691,7 @@ static int map_clean_seen(lua_State *L)
 
 	for (i = 0; i < map->w; i++)
 		for (j = 0; j < map->h; j++)
-			map->grids_seens[i][j] = 0;
+			map->grids_seens[j*map->w+i] = 0;
 	return 0;
 }
 
@@ -703,6 +714,87 @@ static int map_clean_lite(lua_State *L)
 	for (i = 0; i < map->w; i++)
 		for (j = 0; j < map->h; j++)
 			map->grids_lites[i][j] = FALSE;
+	return 0;
+}
+
+static int map_get_seensinfo(lua_State *L)
+{
+	map_type *map = (map_type*)auxiliar_checkclass(L, "core{map}", 1);
+	lua_pushnumber(L, map->tile_w);
+	lua_pushnumber(L, map->tile_h);
+	lua_pushnumber(L, map->seensinfo_w);
+	lua_pushnumber(L, map->seensinfo_h);
+	return 4;
+}
+
+static int map_update_seen_texture(lua_State *L)
+{
+	map_type *map = (map_type*)auxiliar_checkclass(L, "core{map}", 1);
+
+	tglBindTexture(GL_TEXTURE_2D, map->seens_texture);
+
+	int mx = map->used_mx;
+	int my = map->used_my;
+	GLubyte *seens = map->seens_map;
+	int ptr = 0;
+	int ii, jj;
+	map->seensinfo_w = map->mwidth + 3;
+	map->seensinfo_h = map->mheight + 3;
+
+	for (jj = map->mheight + 3 - 1; jj >= 0; jj--)
+	{
+		for (ii = 0; ii < map->mwidth + 3; ii++)
+		{
+			int i = mx - 1 + ii, j = my - 1 + jj;
+			if ((i < 0) || (j < 0) || (i >= map->w) || (j >= map->h))
+			{
+				seens[ptr] = 0;
+				seens[ptr+1] = 0;
+				seens[ptr+2] = 0;
+				seens[ptr+3] = 255;
+				ptr += 4;
+				continue;
+			}
+			float v = map->grids_seens[j*map->w+i] * 255;
+			if (v)
+			{
+				if (v > 255) v = 255;
+				if (v < 0) v = 0;
+				seens[ptr] = (GLubyte)(map->shown_b * v);
+				seens[ptr+1] = (GLubyte)(map->shown_g * v);
+				seens[ptr+2] = (GLubyte)(map->shown_r * v);
+			}
+			else if (map->grids_remembers[i][j])
+			{
+				seens[ptr] = (GLubyte)(map->obscure_b * 255);
+				seens[ptr+1] = (GLubyte)(map->obscure_g * 255);
+				seens[ptr+2] = (GLubyte)(map->obscure_r * 255);
+			}
+			else
+			{
+				seens[ptr] = 0;
+				seens[ptr+1] = 0;
+				seens[ptr+2] = 0;
+			}
+			seens[ptr+3] = 255;
+			ptr += 4;
+		}
+	}
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, map->mwidth + 3, map->mheight + 3, GL_BGRA, GL_UNSIGNED_BYTE, seens);
+
+	return 0;
+}
+
+static int map_bind_seen_texture(lua_State *L)
+{
+	map_type *map = (map_type*)auxiliar_checkclass(L, "core{map}", 1);
+	int unit = luaL_checknumber(L, 2);
+	if (unit > 0 && !multitexture_active) return 0;
+
+	if (unit > 0) tglActiveTexture(GL_TEXTURE0+unit);
+	tglBindTexture(GL_TEXTURE_2D, map->seens_texture);
+	if (unit > 0) tglActiveTexture(GL_TEXTURE0);
+
 	return 0;
 }
 
@@ -800,8 +892,8 @@ static int map_get_scroll(lua_State *L)
 	} \
 }
 
-inline void display_map_quad(GLuint *cur_tex, int *vert_idx, int *col_idx, map_type *map, int dx, int dy, float dz, map_object *m, int i, int j, float a, float seen, int nb_keyframes) ALWAYS_INLINE;
-void display_map_quad(GLuint *cur_tex, int *vert_idx, int *col_idx, map_type *map, int dx, int dy, float dz, map_object *m, int i, int j, float a, float seen, int nb_keyframes)
+inline void display_map_quad(GLuint *cur_tex, int *vert_idx, int *col_idx, map_type *map, int dx, int dy, float dz, map_object *m, int i, int j, float a, float seen, int nb_keyframes, bool always_show) ALWAYS_INLINE;
+void display_map_quad(GLuint *cur_tex, int *vert_idx, int *col_idx, map_type *map, int dx, int dy, float dz, map_object *m, int i, int j, float a, float seen, int nb_keyframes, bool always_show)
 {
 	float r, g, b;
 	GLfloat *vertices = map->vertices;
@@ -811,29 +903,40 @@ void display_map_quad(GLuint *cur_tex, int *vert_idx, int *col_idx, map_type *ma
 	/********************************************************
 	 ** Select the color to use
 	 ********************************************************/
-	if (seen)
+	if (always_show)
 	{
-		if (m->tint_r < 1 || m->tint_g < 1 || m->tint_b < 1)
-		{
-			r = (map->shown_r + m->tint_r)/2; g = (map->shown_g + m->tint_g)/2; b = (map->shown_b + m->tint_b)/2;
-		}
-		else
-		{
-			r = map->shown_r; g = map->shown_g; b = map->shown_b;
-		}
-		r *= seen;
-		g *= seen;
-		b *= seen;
+		// In smooth fov mode it's the shader that does FOV display
+		r = m->tint_r; g = m->tint_g; b = m->tint_b;
+		a = 1;
 	}
 	else
 	{
-		if (m->tint_r < 1 || m->tint_g < 1 || m->tint_b < 1)
+		if (seen)
 		{
-			r = (map->obscure_r + m->tint_r)/2; g = (map->obscure_g + m->tint_g)/2; b = (map->obscure_b + m->tint_b)/2;
+			if (m->tint_r < 1 || m->tint_g < 1 || m->tint_b < 1)
+			{
+				r = (map->shown_r + m->tint_r)/2; g = (map->shown_g + m->tint_g)/2; b = (map->shown_b + m->tint_b)/2;
+			}
+			else
+			{
+				r = map->shown_r; g = map->shown_g; b = map->shown_b;
+			}
+			r *= seen;
+			g *= seen;
+			b *= seen;
+			a = seen;
 		}
 		else
 		{
-			r = map->obscure_r; g = map->obscure_g; b = map->obscure_b;
+			if (m->tint_r < 1 || m->tint_g < 1 || m->tint_b < 1)
+			{
+				r = (map->obscure_r + m->tint_r)/2; g = (map->obscure_g + m->tint_g)/2; b = (map->obscure_b + m->tint_b)/2;
+			}
+			else
+			{
+				r = map->obscure_r; g = map->obscure_g; b = map->obscure_b;
+			}
+			a = map->obscure_r;
 		}
 	}
 
@@ -932,6 +1035,7 @@ static int map_to_screen(lua_State *L)
 	int x = luaL_checknumber(L, 2);
 	int y = luaL_checknumber(L, 3);
 	int nb_keyframes = luaL_checknumber(L, 4);
+	bool always_show = lua_toboolean(L, 5);
 	int i = 0, j = 0, z = 0;
 	int vert_idx = 0;
 	int col_idx = 0;
@@ -952,6 +1056,9 @@ static int map_to_screen(lua_State *L)
 	x -= animdx;
 	y -= animdy;
 
+	map->used_mx = mx;
+	map->used_my = my;
+
 	// Always display some more of the map to make sure we always see it all
 	for (z = 0; z < map->zdepth; z++)
 	{
@@ -966,15 +1073,15 @@ static int map_to_screen(lua_State *L)
 				map_object *mo = map->grids[i][j][z];
 				if (!mo) continue;
 
-				if ((mo->on_seen && map->grids_seens[i][j]) || (mo->on_remember && map->grids_remembers[i][j]) || mo->on_unknown)
+				if ((mo->on_seen && map->grids_seens[j*map->w+i]) || (mo->on_remember && (always_show || map->grids_remembers[i][j])) || mo->on_unknown)
 				{
-					if (map->grids_seens[i][j])
+					if (map->grids_seens[j*map->w+i])
 					{
-						display_map_quad(&cur_tex, &vert_idx, &col_idx, map, dx, dy, z, mo, i, j, map->shown_a, map->grids_seens[i][j], nb_keyframes);
+						display_map_quad(&cur_tex, &vert_idx, &col_idx, map, dx, dy, z, mo, i, j, map->shown_a, map->grids_seens[j*map->w+i], nb_keyframes, always_show);
 					}
 					else
 					{
-						display_map_quad(&cur_tex, &vert_idx, &col_idx, map, dx, dy, z, mo, i, j, map->obscure_a, 0, nb_keyframes);
+						display_map_quad(&cur_tex, &vert_idx, &col_idx, map, dx, dy, z, mo, i, j, map->obscure_a, 0, nb_keyframes, always_show);
 					}
 				}
 			}
@@ -1039,9 +1146,9 @@ static int minimap_to_screen(lua_State *L)
 				map_object *mo = map->grids[i][j][z];
 				if (!mo || mo->mm_r < 0) continue;
 
-				if ((mo->on_seen && map->grids_seens[i][j]) || (mo->on_remember && map->grids_remembers[i][j]) || mo->on_unknown)
+				if ((mo->on_seen && map->grids_seens[j*map->w+i]) || (mo->on_remember && map->grids_remembers[i][j]) || mo->on_unknown)
 				{
-					if (map->grids_seens[i][j])
+					if (map->grids_seens[j*map->w+i])
 					{
 						r = mo->mm_r; g = mo->mm_g; b = mo->mm_b; a = transp;
 						colors[col_idx] = r; colors[col_idx+1] = g; colors[col_idx+2] = b; colors[col_idx+3] = (a);
@@ -1097,6 +1204,8 @@ static const struct luaL_reg map_reg[] =
 {
 	{"__gc", map_free},
 	{"close", map_free},
+	{"updateSeensTexture", map_update_seen_texture},
+	{"bindSeensTexture", map_bind_seen_texture},
 	{"setZoom", map_set_zoom},
 	{"setShown", map_set_shown},
 	{"setObscure", map_set_obscure},
@@ -1107,6 +1216,7 @@ static const struct luaL_reg map_reg[] =
 	{"setSeen", map_set_seen},
 	{"setRemember", map_set_remember},
 	{"setLite", map_set_lite},
+	{"getSeensInfo", map_get_seensinfo},
 	{"setScroll", map_set_scroll},
 	{"getScroll", map_get_scroll},
 	{"toScreen", map_to_screen},

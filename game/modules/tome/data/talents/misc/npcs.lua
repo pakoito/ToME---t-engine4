@@ -744,13 +744,14 @@ newTalent{
 			detect_power = 6 * self:getTalentLevel(t), disarm_power = 10 * self:getTalentLevel(t),
 			level_range = {self.level, self.level},
 			message = "@Target@ is caught in a web!",
+			pin_dur = dur,
 			canTrigger = function(self, x, y, who)
 				if who.type == "spiderkin" then return false end
 				return mod.class.Trap.canTrigger(self, x, y, who)
 			end,
 			triggered = function(self, x, y, who)
 				if who:checkHit(self.disarm_power + 5, who:combatPhysicalResist(), 0, 95, 15) and who:canBe("stun") and who:canBe("pin") then
-					who:setEffect(who.EFF_PINNED, dur, {})
+					who:setEffect(who.EFF_PINNED, self.pin_dur, {})
 				else
 					game.logSeen(who, "%s resists!", who.name:capitalize())
 				end

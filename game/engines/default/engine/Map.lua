@@ -444,14 +444,17 @@ function _M:minimapDisplay(dx, dy, x, y, w, h, transp)
 	self._map:toScreenMiniMap(dx, dy, x, y, w, h, transp or 0.6)
 end
 
---- Displays the map on a surface
--- @return a surface containing the drawn map
-function _M:display(x, y, nb_keyframe)
+--- Displays the map on screen
+-- @param x the coord where to start drawing, if null it uses self.display_x
+-- @param y the coord where to start drawing, if null it uses self.display_y
+-- @param nb_keyframes the number of keyframes elapsed since last draw
+-- @param always_show tell the map code to force display unseed entities as remembered (used for smooth FOV shading)
+function _M:display(x, y, nb_keyframe, always_show)
 	nb_keyframes = nb_keyframes or 1
 	local ox, oy = self.display_x, self.display_y
 	self.display_x, self.display_y = x or self.display_x, y or self.display_y
 
-	self._map:toScreen(self.display_x, self.display_y, nb_keyframe)
+	self._map:toScreen(self.display_x, self.display_y, nb_keyframe, always_show)
 
 	-- Tactical display
 	if self.view_faction then

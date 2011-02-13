@@ -731,6 +731,7 @@ function _M:playerUseItem(object, item, inven)
 	if game.zone.wilderness then game.logPlayer(self, "You cannot use items on the world map.") return end
 
 	local use_fct = function(o, inven, item)
+		if not o then return end
 		local co = coroutine.create(function()
 			self.changed = true
 

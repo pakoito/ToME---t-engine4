@@ -23,6 +23,7 @@ return {
 	args = {
 		tex = { texture = 0 },
 		noisevol = { texture = 1 },
+		seens = { texture = 2 },
 	},
 	clone = false,
 }

@@ -50,7 +50,7 @@ typedef struct {
 
 typedef struct {
 	map_object* ***grids;
-	float **grids_seens;
+	float *grids_seens;
 	bool **grids_remembers;
 	bool **grids_lites;
 	unsigned char **minimap;
@@ -58,6 +58,9 @@ typedef struct {
 	GLfloat *vertices;
 	GLfloat *colors;
 	GLfloat *texcoords;
+	GLubyte *seens_map;
+
+	GLuint seens_texture;
 
 	int mo_list_ref;
 
@@ -78,6 +81,9 @@ typedef struct {
 	int mx, my, mwidth, mheight;
 	float oldmx, oldmy;
 	int move_step, move_max;
+	float used_mx, used_my;
+	int seensinfo_w;
+	int seensinfo_h;
 } map_type;
 
 #endif

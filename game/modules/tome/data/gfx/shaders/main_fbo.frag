@@ -5,11 +5,35 @@ uniform float tick;
 uniform sampler2D noisevol;
 uniform vec2 texSize;
 uniform sampler2D tex;
+uniform sampler2D seens;
+uniform vec4 seensinfo;
 uniform vec3 colorize;
+
+// Return the given pixel, this allows things like blur to work even with smooth fov shading
+vec4 get_pixel(vec2 coord)
+{
+	/*
+	 * Few lines to do some tricky things
+	 * The game provides use with a "seens" texture that is the computed FOV
+	 * We use this to lookup the current tile and shadow it as needed
+	 * seenscoords is arranged as this: (tile_w, tile_h, view_scene_w, view_scene_h)
+	 * We offset by 1x1.25 tiles .. dont ask why, it just works :/
+	 */
+	vec2 seenscoord = vec2((((coord.x + 64 / texSize.x) / seensinfo.r)) * texSize.x / seensinfo.b, (((coord.y + 80 / texSize.y) / seensinfo.g)) * texSize.y / seensinfo.a);
+	vec3 seen = texture2D(seens, seenscoord);
+	vec4 res = texture2D(tex, coord.xy);
+	res.r *= seen.r;
+	res.g *= seen.g;
+	res.b *= seen.b;
+
+	// Now we got our shaded pixel, we can do otehr stuff with it
+//	res = texture2D(tex, coord.xy); // this is a non shading version
+	return res;
+}
 
 void main(void)
 {
-	gl_FragColor = texture2D(tex, gl_TexCoord[0].xy);
+	gl_FragColor = get_pixel(gl_TexCoord[0]);
 
 	if (motionblur > 0.0)
 	{
@@ -34,7 +58,7 @@ void main(void)
 			{
 				for(int j = -blursize; j <= 0; j++)
 				{
-					sample += texture2D(tex, vec2(gl_TexCoord[0].xy+vec2(float(i)*offset.x, float(j)*offset.y)));
+					sample += get_pixel(vec2(gl_TexCoord[0].xy+vec2(float(i)*offset.x, float(j)*offset.y)));
 				}
 			}
 		}
@@ -44,7 +68,7 @@ void main(void)
 			{
 				for(int j = 0; j <= blursize; j++)
 				{
-					sample += texture2D(tex, vec2(gl_TexCoord[0].xy+vec2(float(i)*offset.x, float(j)*offset.y)));
+					sample += get_pixel(vec2(gl_TexCoord[0].xy+vec2(float(i)*offset.x, float(j)*offset.y)));
 				}
 			}
 		}
@@ -54,7 +78,7 @@ void main(void)
 			{
 				for(int j = -blursize; j <= 0; j++)
 				{
-					sample += texture2D(tex, vec2(gl_TexCoord[0].xy+vec2(float(i)*offset.x, float(j)*offset.y)));
+					sample += get_pixel(vec2(gl_TexCoord[0].xy+vec2(float(i)*offset.x, float(j)*offset.y)));
 				}
 			}
 		}
@@ -64,7 +88,7 @@ void main(void)
 			{
 				for(int j = 0; j <= blursize; j++)
 				{
-					sample += texture2D(tex, vec2(gl_TexCoord[0].xy+vec2(float(i)*offset.x, float(j)*offset.y)));
+					sample += get_pixel(vec2(gl_TexCoord[0].xy+vec2(float(i)*offset.x, float(j)*offset.y)));
 				}
 			}
 		}
@@ -86,7 +110,7 @@ void main(void)
 		{
 			for(int j = -blursize; j <= blursize; j++)
 			{
-				sample += texture2D(tex, vec2(gl_TexCoord[0].xy+vec2(float(i)*offset.x, float(j)*offset.y)));
+				sample += get_pixel(vec2(gl_TexCoord[0].xy+vec2(float(i)*offset.x, float(j)*offset.y)));
 			}
 		}
 		sample /= (blur*2.0) * (blur*2.0);
