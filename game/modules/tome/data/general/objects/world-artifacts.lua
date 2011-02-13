@@ -303,7 +303,7 @@ newEntity{ base = "BASE_LITE",
 	max_power = 15, power_regen = 1,
 	use_power = { name = "call light", power = 10,
 		use = function(self, who)
-			who:project({type="ball", range=0, friendlyfire=false, radius=20}, who.x, who.y, engine.DamageType.LITE, 100)
+			who:project({type="ball", range=0, radius=20}, who.x, who.y, engine.DamageType.LITE, 100)
 			game.logSeen(who, "%s brandishes the %s and banishes all shadows!", who.name:capitalize(), self:getName())
 		end
 	},

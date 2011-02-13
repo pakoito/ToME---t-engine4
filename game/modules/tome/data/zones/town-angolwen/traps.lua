@@ -23,6 +23,7 @@ newEntity{ base = "BASE_STORE", define_as = "JEWELRY",
 	name="Jewelry",
 	display='2', color=colors.BLUE,
 	resolvers.store("ANGOLWEN_JEWELRY", "angolwen"),
+	resolvers.chatfeature("jewelry-store", "angolwen"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "ALCHEMIST",
