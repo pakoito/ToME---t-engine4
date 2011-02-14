@@ -44,7 +44,7 @@ newBirthDescriptor{
 	copy = {
 		faction = "allied-kingdoms",
 		type = "humanoid", subtype="halfling",
-		default_wilderness = {28, 13},
+		default_wilderness = {"playerpop", "allied"},
 		starting_zone = "trollmire",
 		starting_quest = "start-allied",
 		starting_intro = "halfling",

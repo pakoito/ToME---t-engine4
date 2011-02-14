@@ -79,7 +79,7 @@ newBirthDescriptor
 	},
 	copy = {
 		life_rating = 11,
-		default_wilderness = {28, 13},
+		default_wilderness = {"playerpop", "allied"},
 		starting_zone = "trollmire",
 		starting_quest = "start-allied",
 		starting_intro = "higher",
@@ -103,7 +103,7 @@ newBirthDescriptor
 	copy = {
 		unused_talents_types = 1,
 		life_rating = 10,
-		default_wilderness = {28, 13},
+		default_wilderness = {"playerpop", "allied"},
 		starting_zone = "trollmire",
 		starting_quest = "start-allied",
 		starting_intro = "cornac",

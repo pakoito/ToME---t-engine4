@@ -80,12 +80,12 @@ function _M:init()
 end
 
 function _M:run()
+	self.calendar = Calendar.new("/data/calendar_allied.lua", "Today is the %s %s of the %s year of the Age of Ascendancy of Maj'Eyal.\nThe time is %02d:%02d.", 122, 167, 11)
 	self.flash = LogFlasher.new(0, 0, self.w, 20, nil, nil, nil, {255,255,255}, {0,0,0})
 	self.logdisplay = LogDisplay.new(0, self.h * 0.8 + 7, self.w * 0.5 - 30, self.h * 0.2 - 7, nil, nil, nil, {255,255,255}, "/data/gfx/ui/message-log.png")
 	self.player_display = PlayerDisplay.new(0, 230, 200, self.h * 0.8 - 230, {30,30,0})
 	self.hotkeys_display = HotkeysDisplay.new(nil, self.w * 0.5 + 30, self.h * 0.8 + 7, self.w * 0.5 - 30, self.h * 0.2 - 7, "/data/gfx/ui/talents-list.png")
 	self.npcs_display = ActorsSeenDisplay.new(nil, self.w * 0.5 + 30, self.h * 0.8 + 7, self.w * 0.5 - 30, self.h * 0.2 - 7, "/data/gfx/ui/talents-list.png")
-	self.calendar = Calendar.new("/data/calendar_allied.lua", "Today is the %s %s of the %s year of the Age of Ascendancy of Maj'Eyal.\nThe time is %02d:%02d.", 122, 167, 11)
 	self.tooltip = Tooltip.new(nil, nil, {255,255,255}, {30,30,30,230})
 	self.tooltip2 = Tooltip.new(nil, nil, {255,255,255}, {30,30,30,230})
 	self.flyers = FlyingText.new()
@@ -126,6 +126,7 @@ function _M:run()
 
 	if self.level then self:setupDisplayMode(false, "postinit") end
 	if self.level and self.level.data.day_night then self.state:dayNightCycle() end
+	if self.level and self.player then self.calendar = Calendar.new("/data/calendar_"..(self.player.calendar or "allied")..".lua", "Today is the %s %s of the %s year of the Age of Ascendancy of Maj'Eyal.\nThe time is %02d:%02d.", 122, 167, 11) end
 end
 
 --- Checks if the current character is "tainted" by cheating
@@ -175,6 +176,7 @@ function _M:newGame()
 
 	self.creating_player = true
 	local birth; birth = Birther.new("Character Creation: "..self.player.name.." ("..nb_unlocks.."/"..max_unlocks.." unlocked birth options)", self.player, {"base", "difficulty", "world", "race", "subrace", "sex", "class", "subclass" }, function()
+		self.calendar = Calendar.new("/data/calendar_"..(self.player.calendar or "allied")..".lua", "Today is the %s %s of the %s year of the Age of Ascendancy of Maj'Eyal.\nThe time is %02d:%02d.", 122, 167, 11)
 		self.player:check("make_tile")
 		self.player.make_tile = nil
 
@@ -184,8 +186,18 @@ function _M:newGame()
 		save:close()
 
 		self.player:check("before_starting_zone")
-		self.player.wild_x, self.player.wild_y = self.player.default_wilderness[1], self.player.default_wilderness[2]
+
+		-- Configure & create the worldmap
 		self.player.last_wilderness = self.player.default_wilderness[3] or "wilderness"
+		self.player.wild_x, self.player.wild_y = 1, 1
+		self:changeLevel(1, self.player.last_wilderness)
+		self.player.wild_x, self.player.wild_y = self.player.default_wilderness[1], self.player.default_wilderness[2]
+		if type(self.player.wild_x) == "string" and type(self.player.wild_y) == "string" then
+			local spot = self.level:pickSpot{type=self.player.wild_x, subtype=self.player.wild_y} or {x=1,y=1}
+			self.player.wild_x, self.player.wild_y = spot.x, spot.y
+		end
+
+		-- Generate
 		if self.player.__game_difficulty then self:setupDifficulty(self.player.__game_difficulty) end
 		self:changeLevel(self.player.starting_level or 1, self.player.starting_zone, nil, self.player.starting_level_force_down)
 		print("[PLAYER BIRTH] resolve...")
@@ -239,6 +251,7 @@ function _M:newGame()
 			self.party = qb
 			self.player = nil
 			self.party:setPlayer(1, true)
+			self.calendar = Calendar.new("/data/calendar_"..(self.player.calendar or "allied")..".lua", "Today is the %s %s of the %s year of the Age of Ascendancy of Maj'Eyal.\nThe time is %02d:%02d.", 122, 167, 11)
 			Map:setViewerFaction(self.player.faction)
 			if self.player.__game_difficulty then self:setupDifficulty(self.player.__game_difficulty) end
 

@@ -41,7 +41,7 @@ newBirthDescriptor{
 		faction = "the-way",
 		type = "humanoid", subtype="yeek",
 		size_category = 2,
-		default_wilderness = {28, 49},
+		default_wilderness = {"playerpop", "yeek"},
 		starting_zone = "wilderness",
 		starting_quest = "start-yeek",
 		starting_intro = "yeek",

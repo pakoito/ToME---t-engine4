@@ -38,7 +38,8 @@ newBirthDescriptor{
 	copy = {
 		faction = "iron-throne",
 		type = "humanoid", subtype="dwarf",
-		default_wilderness = {28, 13},
+		calendar = "dwarf",
+		default_wilderness = {"playerpop", "dwarf"},
 		starting_zone = "reknor-escape",
 		starting_quest = "start-dwarf",
 		starting_intro = "dwarf",

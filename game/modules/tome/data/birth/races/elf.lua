@@ -44,7 +44,6 @@ newBirthDescriptor{
 	},
 	copy = {
 		type = "humanoid", subtype="elf",
-		default_wilderness = {28, 13},
 		starting_zone = "trollmire",
 		starting_quest = "start-allied",
 		resolvers.inventory{ id=true, {defined="ORB_SCRYING"} },
@@ -73,7 +72,7 @@ newBirthDescriptor
 	experience = 1.3,
 	talents = { [ActorTalents.T_SHALOREN_SPEED]=1 },
 	copy = {
-		default_wilderness = {17, 42},
+		default_wilderness = {"playerpop", "shaloren"},
 		starting_zone = "scintillating-caves",
 		starting_quest = "start-shaloren",
 		faction = "shalore",
@@ -108,6 +107,7 @@ newBirthDescriptor
 		faction = "thalore",
 		starting_intro = "thalore",
 		life_rating = 11,
+		default_wilderness = {"playerpop", "allied"},
 		resolvers.inscription("INFUSION:_REGENERATION", {cooldown=10, dur=5, heal=60}),
 		resolvers.inscription("INFUSION:_WILD", {cooldown=12, what={poison=true}, dur=4, power=14}),
 	},

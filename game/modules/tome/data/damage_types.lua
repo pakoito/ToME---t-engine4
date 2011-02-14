@@ -701,7 +701,7 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local realdam = DamageType:get(DamageType.FIRE).projector(src, x, y, DamageType.FIRE, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
-		if target and src:attr("cleansing_flames") then
+		if target and src:attr("cleansing_flames") and rng.percent(src:attr("cleansing_flames")) then
 			local effs = {}
 			local status = (src:reactionToward(target) >= 0) and "detrimental" or "beneficial"
 			for eff_id, p in pairs(target.tmp) do

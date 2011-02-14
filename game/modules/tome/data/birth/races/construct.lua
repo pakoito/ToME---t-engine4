@@ -79,7 +79,7 @@ newBirthDescriptor
 	copy = {
 		resolvers.generic(function(e) e.descriptor.class = "Golem" e.descriptor.subclass = "Golem" end),
 		resolvers.genericlast(function(e) e.faction = "undead" end),
-		default_wilderness = {28, 13},
+		default_wilderness = {"playerpop", "allied"},
 		starting_zone = "ruins-kor-pul",
 		starting_quest = "start-allied",
 		blood_color = colors.GREY,

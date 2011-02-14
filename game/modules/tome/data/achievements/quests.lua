@@ -157,3 +157,7 @@ newAchievement{
 	name = "Home sweet home", id = "SHERTUL_FORTRESS",
 	desc = [[Dispatched the Weirdling Beast and taken possession of Yiilkgur, the Sher'Tul Fortress for your own usage.]],
 }
+newAchievement{
+	name = "Squadmate", id = "NORGAN_SAVED",
+	desc = [[Escaped from Reknor alive with your squadmate Norgan.]],
+}

@@ -17,6 +17,11 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+startx = 34
+starty = 3
+endx = 6
+endy = 43
+
 -- defineTile section
 defineTile("D", "DEEP_BELLOW")
 defineTile("#", "HARDWALL")
