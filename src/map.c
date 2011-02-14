@@ -727,6 +727,30 @@ static int map_get_seensinfo(lua_State *L)
 	return 4;
 }
 
+#define SMOOTH_SCROLL()  \
+	float animdx = 0, animdy = 0; \
+	if (map->move_max) \
+	{ \
+		map->move_step += nb_keyframes; \
+		if (map->move_step >= map->move_max) \
+		{ \
+			map->move_max = 0; \
+			map->oldmx = map->mx; \
+			map->oldmy = map->my; \
+		} \
+ \
+		if (map->move_max) \
+		{ \
+			float adx = (float)map->mx - map->oldmx; \
+			float ady = (float)map->my - map->oldmy; \
+			animdx = map->tile_w * (adx * map->move_step / (float)map->move_max - adx); \
+			animdy = map->tile_h * (ady * map->move_step / (float)map->move_max - ady); \
+			mx = map->mx + (int)(adx * map->move_step / (float)map->move_max - adx); \
+			my = map->my + (int)(ady * map->move_step / (float)map->move_max - ady); \
+		} \
+	}
+
+
 static int map_update_seen_texture(lua_State *L)
 {
 	map_type *map = (map_type*)auxiliar_checkclass(L, "core{map}", 1);
@@ -741,7 +765,7 @@ static int map_update_seen_texture(lua_State *L)
 	map->seensinfo_w = map->mwidth + 3;
 	map->seensinfo_h = map->mheight + 3;
 
-	for (jj = map->mheight + 3 - 1; jj >= 0; jj--)
+	for (jj = 0; jj < map->mheight + 3 - 1; jj++)
 	{
 		for (ii = 0; ii < map->mwidth + 3; ii++)
 		{
@@ -751,7 +775,7 @@ static int map_update_seen_texture(lua_State *L)
 				seens[ptr] = 0;
 				seens[ptr+1] = 0;
 				seens[ptr+2] = 0;
-				seens[ptr+3] = 255;
+				seens[ptr+3] = 0;
 				ptr += 4;
 				continue;
 			}
@@ -760,28 +784,74 @@ static int map_update_seen_texture(lua_State *L)
 			{
 				if (v > 255) v = 255;
 				if (v < 0) v = 0;
-				seens[ptr] = (GLubyte)(map->shown_b * v);
-				seens[ptr+1] = (GLubyte)(map->shown_g * v);
-				seens[ptr+2] = (GLubyte)(map->shown_r * v);
+				seens[ptr] = (GLubyte)0;
+				seens[ptr+1] = (GLubyte)0;
+				seens[ptr+2] = (GLubyte)0;
+				seens[ptr+3] = (GLubyte)255-v;
 			}
 			else if (map->grids_remembers[i][j])
 			{
-				seens[ptr] = (GLubyte)(map->obscure_b * 255);
-				seens[ptr+1] = (GLubyte)(map->obscure_g * 255);
-				seens[ptr+2] = (GLubyte)(map->obscure_r * 255);
+				seens[ptr] = 0;
+				seens[ptr+1] = 0;
+				seens[ptr+2] = 0;
+				seens[ptr+3] = 255 - map->obscure_r * 255;
 			}
 			else
 			{
 				seens[ptr] = 0;
 				seens[ptr+1] = 0;
 				seens[ptr+2] = 0;
+				seens[ptr+3] = 255;
 			}
-			seens[ptr+3] = 255;
 			ptr += 4;
 		}
 	}
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, map->mwidth + 3, map->mheight + 3, GL_BGRA, GL_UNSIGNED_BYTE, seens);
 
+	return 0;
+}
+
+static int map_draw_seen_texture(lua_State *L)
+{
+	map_type *map = (map_type*)auxiliar_checkclass(L, "core{map}", 1);
+	int nb_keyframes = luaL_checknumber(L, 2);
+	int x = -map->tile_w;
+	int y = -map->tile_h;
+	int w = (map->mwidth + 3) * map->tile_w;
+	int h = (map->mheight + 3) * map->tile_h;
+
+	int mx = map->mx;
+	int my = map->my;
+	SMOOTH_SCROLL();
+	x -= animdx;
+	y -= animdy;
+
+	tglBindTexture(GL_TEXTURE_2D, map->seens_texture);
+
+	GLfloat texcoords[2*4] = {
+		0, 0,
+		0, 1,
+		1, 1,
+		1, 0,
+	};
+	GLfloat colors[4*4] = {
+		1,1,1,1,
+		1,1,1,1,
+		1,1,1,1,
+		1,1,1,1,
+	};
+	glColorPointer(4, GL_FLOAT, 0, colors);
+	glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
+
+	GLfloat vertices[2*4] = {
+		x, y,
+		x, y + h,
+		x + w, y + h,
+		x + w, y,
+	};
+	glVertexPointer(2, GL_FLOAT, 0, vertices);
+
+	glDrawArrays(GL_QUADS, 0, 4);
 	return 0;
 }
 
@@ -829,30 +899,6 @@ static int map_set_scroll(lua_State *L)
 	map->my = y;
 	return 0;
 }
-
-#define SMOOTH_SCROLL()  \
-	float animdx = 0, animdy = 0; \
-	if (map->move_max) \
-	{ \
-		map->move_step += nb_keyframes; \
-		if (map->move_step >= map->move_max) \
-		{ \
-			map->move_max = 0; \
-			map->oldmx = map->mx; \
-			map->oldmy = map->my; \
-		} \
- \
-		if (map->move_max) \
-		{ \
-			float adx = (float)map->mx - map->oldmx; \
-			float ady = (float)map->my - map->oldmy; \
-			animdx = map->tile_w * (adx * map->move_step / (float)map->move_max - adx); \
-			animdy = map->tile_h * (ady * map->move_step / (float)map->move_max - ady); \
-			mx = map->mx + (int)(adx * map->move_step / (float)map->move_max - adx); \
-			my = map->my + (int)(ady * map->move_step / (float)map->move_max - ady); \
-		} \
-	}
-
 
 static int map_get_scroll(lua_State *L)
 {
@@ -1055,12 +1101,9 @@ static int map_to_screen(lua_State *L)
 
 	// Smooth scrolling
 	// If we use shaders for FOV display it means we must uses fbos for smooth scroll too
-	if (!always_show)
-	{
 	SMOOTH_SCROLL();
-		x -= animdx;
-		y -= animdy;
-	}
+	x -= animdx;
+	y -= animdy;
 
 	map->used_mx = mx;
 	map->used_my = my;
@@ -1212,6 +1255,7 @@ static const struct luaL_reg map_reg[] =
 	{"close", map_free},
 	{"updateSeensTexture", map_update_seen_texture},
 	{"bindSeensTexture", map_bind_seen_texture},
+	{"drawSeensTexture", map_draw_seen_texture},
 	{"setZoom", map_set_zoom},
 	{"setShown", map_set_shown},
 	{"setObscure", map_set_obscure},

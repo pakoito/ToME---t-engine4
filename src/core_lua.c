@@ -550,8 +550,14 @@ static int gl_draw_quad(lua_State *L)
 		GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 9);
 		tglBindTexture(GL_TEXTURE_2D, *t);
 	}
+	else if (lua_toboolean(L, 9))
+	{
+		// Do nothing, we keep the currently bound texture
+	}
 	else
+	{
 		tglBindTexture(GL_TEXTURE_2D, 0);
+	}
 
 	GLfloat texcoords[2*4] = {
 		0, 0,

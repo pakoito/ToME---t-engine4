@@ -342,8 +342,6 @@ function _M:setupDisplayMode(reboot, mode)
 		-- Create the framebuffer
 		self.fbo = core.display.newFBO(Map.viewport.width, Map.viewport.height)
 		if self.fbo then self.fbo_shader = Shader.new("main_fbo") if not self.fbo_shader.shad then self.fbo = nil self.fbo_shader = nil end end
-		self.mapfbo = core.display.newFBO(Map.viewport.width + 3 * Map.tile_w, Map.viewport.height + 3 * Map.tile_h)
-		if self.mapfbo then self.mapfbo_shader = Shader.new("map_fbo") if not self.mapfbo_shader.shad then self.mapfbo = nil self.mapfbo_shader = nil end end
 		if self.player then self.player:updateMainShader() end
 	end
 
@@ -735,34 +733,14 @@ function _M:display(nb_keyframes)
 			self.player:playerFOV()
 		end
 
-		-- Display using Framebuffer, so that we can use shaders and all; also uses a second FBO for map smooth FOV shading
-		if self.fbo and self.mapfbo then
-			self.mapfbo:use(true)
-				if self.level.data.background then self.level.data.background(self.level, 0, 0, nb_keyframes) end
-				map:display(Map.tile_w, Map.tile_h, nb_keyframes, true) -- Display at the base of the FBO and make sure to display everything as the shader will do smooth FOV over it
-				map._map:updateSeensTexture()
-				if self.level.data.foreground then self.level.data.foreground(self.level, 0, 0, nb_keyframes) end
-				if self.level.data.weather_particle then self.state:displayWeather(self.level, self.level.data.weather_particle, nb_keyframes) end
-			self.mapfbo:use(false)
-
-			self.fbo:use(true)
-				map._map:bindSeensTexture(1)
-				self.mapfbo_shader:setUniform("seensinfo", {map._map:getSeensInfo()})
-				local sx, sy = map._map:getScroll()
-				self.mapfbo:toScreen(sx-Map.tile_w, sy-Map.tile_h, map.viewport.width + 3 * Map.tile_w, map.viewport.height + 3 * Map.tile_h, self.mapfbo_shader.shad)
-			self.fbo:use(false)
-
-			_2DNoise:bind(1, false)
-			self.fbo:toScreen(map.display_x, map.display_y, map.viewport.width, map.viewport.height, self.fbo_shader.shad)
-			self.target:display()
-
 		-- Display using Framebuffer, so that we can use shaders and all
-		elseif self.fbo then
+		if self.fbo then
 			self.fbo:use(true)
 				if self.level.data.background then self.level.data.background(self.level, 0, 0, nb_keyframes) end
-				map:display(0, 0, nb_keyframes)
+				map:display(0, 0, nb_keyframes, config.settings.tome.smooth_fov)
 				if self.level.data.foreground then self.level.data.foreground(self.level, 0, 0, nb_keyframes) end
 				if self.level.data.weather_particle then self.state:displayWeather(self.level, self.level.data.weather_particle, nb_keyframes) end
+				if config.settings.tome.smooth_fov then map._map:updateSeensTexture() map._map:drawSeensTexture(nb_keyframes) end
 			self.fbo:use(false)
 
 			_2DNoise:bind(1, false)
