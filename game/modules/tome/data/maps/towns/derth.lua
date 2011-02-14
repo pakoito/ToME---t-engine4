@@ -95,10 +95,10 @@ tttttttt~~~t.....__....._t_.....___.....t~~ttttttt
 ttttttt~~~~t....__......___......_......t~~ttttttt
 ttttttt~~~~t..___........_......__......t~~ttttttt
 ttttttt~~~tt.__.........._......_.......t~~~tttttt
-ttttttt~~~t.._######....._......_.###...t~~~tttttt
-ttttttt~~~t.._######....._.####._.###...t~~~tttttt
-ttttttt~~~t.._######....._.####._.###...t~~~tttttt
-ttttttt~~~t.._####2#....___####._.###...t~~~tttttt
+ttttttt~~~t.._.#####....._......_.###...t~~~tttttt
+ttttttt~~~t.._.#####....._.####._.###...t~~~tttttt
+ttttttt~~~t.._.#####....._.####._.###...t~~~tttttt
+ttttttt~~~t.._.###2#....___####._.###...t~~~tttttt
 ttttttt~~~t.._______..___._.._.._.###...t~~~tttttt
 ttttttt~~~t......._..__..._______.###..tt~~~tttttt
 ttttttt~~~tt......_.._.........._.._...t~~~ttttttt

@@ -659,6 +659,7 @@ function _M:tooltip(x, y, seen_by)
 	ts:add({"color", 255, 0, 0}, ("HP: %d (%d%%)"):format(self.life, self.life * 100 / self.max_life), {"color", "WHITE"}, true)
 	ts:add(("Stats: %d / %d / %d / %d / %d / %d"):format(self:getStr(), self:getDex(), self:getMag(), self:getWil(), self:getCun(), self:getCon()), true)
 	ts:add("Resists: ", table.concat(resists, ','), true)
+	ts:add("Armour/Defense: ", tostring(math.floor(self:combatArmor())), ' / ', tostring(math.floor(self:combatDefense())), true)
 	ts:add("Size: ", {"color", "ANTIQUE_WHITE"}, self:TextSizeCategory(), {"color", "WHITE"}, true)
 	ts:add(self.desc, true)
 	ts:add("Faction: ") ts:merge(factcolor:toTString()) ts:add(("%s (%s, %d)"):format(Faction.factions[self.faction].name, factstate, factlevel), {"color", "WHITE"}, true)
@@ -724,7 +725,7 @@ function _M:onTakeHit(value, src)
 	if self:attr("invulnerable") then
 		return 0
 	end
-	
+
 	if self:attr("retribution") then
 	-- Absorb damage into the retribution
 		if value / 2 <= self.retribution_absorb then
@@ -855,13 +856,13 @@ function _M:onTakeHit(value, src)
 		t.absorb(self, t, self:isTalentActive(self.T_BONE_SHIELD))
 		value = 0
 	end
-	
+
 	if self:hasEffect(self.EFF_FORESIGHT) then
 		self:removeEffect(self.EFF_FORESIGHT)
 		game.logSeen(self, "%s avoids the attack.", self.name:capitalize())
 		value = 0
 	end
-	
+
 	if self:isTalentActive(self.T_DEFLECTION) then
 		local t = self:getTalentFromId(self.T_DEFLECTION)
 		value = t.do_onTakeHit(self, t, self:isTalentActive(self.T_DEFLECTION), value)

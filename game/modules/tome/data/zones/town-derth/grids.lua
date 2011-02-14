@@ -30,9 +30,3 @@ newEntity{ base = "FLOOR", define_as = "COBBLESTONE",
 	name="cobblestone road",
 	display='.', image="terrain/stone_road1.png"
 }
-
-newEntity{ base = "FLOOR", define_as = "ROCK",
-	name="magical rock",
-	image="terrain/grass.png", add_displays = {class.new{image="terrain/maze_rock.png"}},
-	does_block_move = true
-}

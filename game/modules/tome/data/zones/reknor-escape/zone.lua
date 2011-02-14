@@ -79,15 +79,6 @@ return {
 		end
 	end,
 
-	on_turn = function(self)
-		if not game.level.turn_counter then return end
-		game.level.turn_counter = game.level.turn_counter - 1
-		game.player.changed = true
-		if game.level.turn_counter < 0 then
-			game.level.turn_counter = nil
-			game.player:hasQuest("master-jeweler"):ritual_end()
-		end
-	end,
 	on_leave = function(lev, old_lev, newzone)
 		if not newzone then return end
 
