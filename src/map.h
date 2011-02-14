@@ -82,6 +82,7 @@ typedef struct {
 	float oldmx, oldmy;
 	int move_step, move_max;
 	float used_mx, used_my;
+	float used_animdx, used_animdy;
 	int seensinfo_w;
 	int seensinfo_h;
 } map_type;

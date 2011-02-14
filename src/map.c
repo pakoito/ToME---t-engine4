@@ -1057,7 +1057,7 @@ static int map_to_screen(lua_State *L)
 	// If we use shaders for FOV display it means we must uses fbos for smooth scroll too
 	if (!always_show)
 	{
-		SMOOTH_SCROLL();
+	SMOOTH_SCROLL();
 		x -= animdx;
 		y -= animdy;
 	}

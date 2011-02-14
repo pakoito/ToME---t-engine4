@@ -739,7 +739,7 @@ function _M:display(nb_keyframes)
 		if self.fbo and self.mapfbo then
 			self.mapfbo:use(true)
 				if self.level.data.background then self.level.data.background(self.level, 0, 0, nb_keyframes) end
-				map:display(0, 0, nb_keyframes, true) -- Display at the base of the FBO and make sure to display everything as the shader will do smooth FOV over it
+				map:display(Map.tile_w, Map.tile_h, nb_keyframes, true) -- Display at the base of the FBO and make sure to display everything as the shader will do smooth FOV over it
 				map._map:updateSeensTexture()
 				if self.level.data.foreground then self.level.data.foreground(self.level, 0, 0, nb_keyframes) end
 				if self.level.data.weather_particle then self.state:displayWeather(self.level, self.level.data.weather_particle, nb_keyframes) end
