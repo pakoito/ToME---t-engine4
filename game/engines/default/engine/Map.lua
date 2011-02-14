@@ -106,7 +106,7 @@ function _M:setZoom(zoom, tmx, tmy)
 end
 
 --- Defines the "obscure" factor of unseen map
--- By default it is 0.6, 0.6, 0.6, 1
+-- By default it is 0.6, 0.6, 0.6, 0.6
 function _M:setObscure(r, g, b, a)
 	self.color_obscure = {r, g, b, a}
 	-- If we are used on a real map, set it locally

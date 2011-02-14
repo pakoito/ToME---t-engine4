@@ -33,7 +33,7 @@ DAY_START = HOUR * 6
 --- Create a calendar
 -- @param definition the file to load that returns a table containing calendar months
 -- @param datestring a string to format the date when requested, in the format "%s %s %s %d %d", standing for, day, month, year, hour, minute
-function _M:init(definition, datestring, start_year, start_day)
+function _M:init(definition, datestring, start_year, start_day, start_hour)
 	local data = dofile(definition)
 	self.calendar = {}
 	local days = 0
@@ -47,6 +47,7 @@ function _M:init(definition, datestring, start_year, start_day)
 	self.datestring = datestring
 	self.start_year = start_year
 	self.start_day = start_day or 1
+	self.start_hour = start_hour or 8
 end
 
 function _M:getTimeDate(turn, dstr)
@@ -57,6 +58,7 @@ end
 
 function _M:getDayOfYear(turn)
 	local d, y
+	turn = turn + self.start_hour * self.HOUR
 	d = math.floor(turn / self.DAY) + (self.start_day - 1)
 	y = math.floor(d / 365)
 	d = math.floor(d % 365)
@@ -65,6 +67,7 @@ end
 
 function _M:getTimeOfDay(turn)
 	local hour, min
+	turn = turn + self.start_hour * self.HOUR
 	min = math.floor((turn % self.DAY) / self.MINUTE)
 	hour = math.floor(min / 60)
 	min = math.floor(min % 60)
