@@ -58,7 +58,7 @@ searchOrderSort = function(a, b)
 end
 
 color_shown   = { 1, 1, 1, 1 }
-color_obscure = { 0.6, 0.6, 0.6, 1 }
+color_obscure = { 0.6, 0.6, 0.6, 0.6 }
 smooth_scroll = 0
 
 --- Sets the viewport size

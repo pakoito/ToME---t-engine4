@@ -29,7 +29,7 @@ return {
 --	all_lited = true,
 	persistent = "zone",
 	color_shown = {0.6, 0.6, 0.6, 1},
-	color_obscure = {0.6*0.6, 0.6*0.6, 0.6*0.6, 1},
+	color_obscure = {0.6*0.6, 0.6*0.6, 0.6*0.6, 0.6},
 	ambient_music = "Anne_van_Schothorst_-_Passed_Tense.ogg",
 	generator =  {
 		map = {

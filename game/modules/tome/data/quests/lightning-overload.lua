@@ -38,7 +38,7 @@ end
 on_grant = function(self, who)
 	-- Darken the level
 	game.level.map:setShown(0.3, 0.3, 0.3, 1)
-	game.level.map:setObscure(0.3*0.6, 0.3*0.6, 0.3*0.6, 1)
+	game.level.map:setObscure(0.3*0.6, 0.3*0.6, 0.3*0.6, 0.6)
 	game.level.level = util.bound(game.player.level, 12, 20)
 
 	-- Add random lightning firing off

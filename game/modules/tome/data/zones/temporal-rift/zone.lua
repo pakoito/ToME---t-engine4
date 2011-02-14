@@ -40,7 +40,7 @@ return {
 	generator =  {
 	},
 	color_shown = {0.7, 0.6, 0.8, 1},
-	color_obscure = {0.7*0.6, 0.6*0.6, 0.8*0.6, 1},
+	color_obscure = {0.7*0.6, 0.6*0.6, 0.8*0.6, 0.6},
 	ambient_music = "Through the Dark Portal.ogg",
 	levels =
 	{

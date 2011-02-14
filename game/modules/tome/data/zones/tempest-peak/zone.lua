@@ -70,7 +70,7 @@ return {
 				nb_object = {0, 0},
 			}, },
 			color_shown = {0.3, 0.3, 0.3, 1},
-			color_obscure = {0.3*0.6, 0.3*0.6, 0.3*0.6, 1},
+			color_obscure = {0.3*0.6, 0.3*0.6, 0.3*0.6, 0.6},
 			all_remembered = true,
 			no_level_connectivity = true,
 			background = function(level)

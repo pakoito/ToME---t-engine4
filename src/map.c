@@ -775,7 +775,7 @@ static int map_update_seen_texture(lua_State *L)
 				seens[ptr] = 0;
 				seens[ptr+1] = 0;
 				seens[ptr+2] = 0;
-				seens[ptr+3] = 0;
+				seens[ptr+3] = 255;
 				ptr += 4;
 				continue;
 			}
@@ -794,7 +794,7 @@ static int map_update_seen_texture(lua_State *L)
 				seens[ptr] = 0;
 				seens[ptr+1] = 0;
 				seens[ptr+2] = 0;
-				seens[ptr+3] = 255 - map->obscure_r * 255;
+				seens[ptr+3] = 255 - map->obscure_a * 255;
 			}
 			else
 			{
@@ -951,39 +951,42 @@ void display_map_quad(GLuint *cur_tex, int *vert_idx, int *col_idx, map_type *ma
 	 ********************************************************/
 	if (always_show)
 	{
-		// In smooth fov mode it's the shader that does FOV display
-		r = m->tint_r; g = m->tint_g; b = m->tint_b;
-		a = 1;
-	}
-	else
-	{
-		if (seen)
+		if (m->tint_r < 1 || m->tint_g < 1 || m->tint_b < 1)
 		{
-			if (m->tint_r < 1 || m->tint_g < 1 || m->tint_b < 1)
-			{
-				r = (map->shown_r + m->tint_r)/2; g = (map->shown_g + m->tint_g)/2; b = (map->shown_b + m->tint_b)/2;
-			}
-			else
-			{
-				r = map->shown_r; g = map->shown_g; b = map->shown_b;
-			}
-			r *= seen;
-			g *= seen;
-			b *= seen;
-			a = seen;
+			r = (map->shown_r + m->tint_r)/2; g = (map->shown_g + m->tint_g)/2; b = (map->shown_b + m->tint_b)/2;
 		}
 		else
 		{
-			if (m->tint_r < 1 || m->tint_g < 1 || m->tint_b < 1)
-			{
-				r = (map->obscure_r + m->tint_r)/2; g = (map->obscure_g + m->tint_g)/2; b = (map->obscure_b + m->tint_b)/2;
-			}
-			else
-			{
-				r = map->obscure_r; g = map->obscure_g; b = map->obscure_b;
-			}
-			a = map->obscure_r;
+			r = map->shown_r; g = map->shown_g; b = map->shown_b;
 		}
+		a = 1;
+	}
+	else if (seen)
+	{
+		if (m->tint_r < 1 || m->tint_g < 1 || m->tint_b < 1)
+		{
+			r = (map->shown_r + m->tint_r)/2; g = (map->shown_g + m->tint_g)/2; b = (map->shown_b + m->tint_b)/2;
+		}
+		else
+		{
+			r = map->shown_r; g = map->shown_g; b = map->shown_b;
+		}
+		r *= seen;
+		g *= seen;
+		b *= seen;
+		a = seen;
+	}
+	else
+	{
+		if (m->tint_r < 1 || m->tint_g < 1 || m->tint_b < 1)
+		{
+			r = (map->obscure_r + m->tint_r)/2; g = (map->obscure_g + m->tint_g)/2; b = (map->obscure_b + m->tint_b)/2;
+		}
+		else
+		{
+			r = map->obscure_r; g = map->obscure_g; b = map->obscure_b;
+		}
+		a = map->obscure_r;
 	}
 
 	/* Reset vertices&all buffers, we are changing texture/shader */
@@ -1126,11 +1129,11 @@ static int map_to_screen(lua_State *L)
 				{
 					if (map->grids_seens[j*map->w+i])
 					{
-						display_map_quad(&cur_tex, &vert_idx, &col_idx, map, dx, dy, z, mo, i, j, map->shown_a, map->grids_seens[j*map->w+i], nb_keyframes, always_show);
+						display_map_quad(&cur_tex, &vert_idx, &col_idx, map, dx, dy, z, mo, i, j, 1, map->grids_seens[j*map->w+i], nb_keyframes, always_show);
 					}
 					else
 					{
-						display_map_quad(&cur_tex, &vert_idx, &col_idx, map, dx, dy, z, mo, i, j, map->obscure_a, 0, nb_keyframes, always_show);
+						display_map_quad(&cur_tex, &vert_idx, &col_idx, map, dx, dy, z, mo, i, j, 1, 0, nb_keyframes, always_show);
 					}
 				}
 			}
