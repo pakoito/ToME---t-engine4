@@ -99,7 +99,7 @@ else
 end
 
 -- Iron Council is only known to dwarves
-if game.player:knowTalent(game.player.T_DWARVEN_RESILIENCE) then
+if game.player:knowTalent(game.player.T_DWARF_RESILIENCE) then
 	quickEntity('iron-council', {always_remember = true, show_tooltip=true, name="Iron Council (Town)", desc="Heart of the dwarven Empire", display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, image="terrain/town1.png", notice = true, change_level=1, change_zone="town-iron-council"})
 else
 	quickEntity('iron-council', '#')

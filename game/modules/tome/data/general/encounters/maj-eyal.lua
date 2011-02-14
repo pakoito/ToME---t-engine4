@@ -110,7 +110,7 @@ newEntity{
 				game.logPlayer(who, "#LIGHT_RED#As you enter you notice the trap door has no visible handle on the inside. You are stuck here!")
 				who:grantQuest("lost-merchant")
 			end
-		end, "Enter the tunnels", "Leave carefully")
+		end, "Enter the tunnels", "Leave carefully", true)
 		return true
 	end,
 }
@@ -132,7 +132,7 @@ newEntity{
 				game.logPlayer(who, "#LIGHT_RED#You carefully open the door and enter the underground crypt...")
 				game.logPlayer(who, "#LIGHT_RED#As you enter you notice the door has no visible handle on the inside. You are stuck here!")
 			end
-		end, "Enter the crypt", "Leave carefully")
+		end, "Enter the crypt", "Leave carefully", true)
 		return true
 	end,
 }

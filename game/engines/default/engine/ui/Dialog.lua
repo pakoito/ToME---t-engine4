@@ -77,14 +77,14 @@ function _M:simpleLongPopup(title, text, w, fct, no_leave, force_height)
 end
 
 --- Requests a simple yes-no dialog
-function _M:yesnoPopup(title, text, fct, yes_text, no_text)
+function _M:yesnoPopup(title, text, fct, yes_text, no_text, no_leave)
 	local w, h = self.font:size(text)
 	local d = new(title, 1, 1)
 
 --	d.key:addBind("EXIT", function() game:unregisterDialog(d) fct(false) end)
 	local ok = require("engine.ui.Button").new{text=yes_text or "Yes", fct=function() game:unregisterDialog(d) fct(true) end}
 	local cancel = require("engine.ui.Button").new{text=no_text or "No", fct=function() game:unregisterDialog(d) fct(false) end}
-	d.key:addBind("EXIT", function() game:unregisterDialog(d) game:unregisterDialog(d) fct(false) end)
+	if not no_leave then d.key:addBind("EXIT", function() game:unregisterDialog(d) game:unregisterDialog(d) fct(false) end) end
 	d:loadUI{
 		{left = 3, top = 3, ui=require("engine.ui.Textzone").new{width=w+20, height=h+5, text=text}},
 		{left = 3, bottom = 3, ui=ok},
@@ -98,14 +98,14 @@ function _M:yesnoPopup(title, text, fct, yes_text, no_text)
 end
 
 --- Requests a long yes-no dialog
-function _M:yesnoLongPopup(title, text, w, fct, yes_text, no_text)
+function _M:yesnoLongPopup(title, text, w, fct, yes_text, no_text, no_leave)
 	local list = text:splitLines(w - 10, font)
 	local d = new(title, 1, 1)
 
 --	d.key:addBind("EXIT", function() game:unregisterDialog(d) fct(false) end)
 	local ok = require("engine.ui.Button").new{text=yes_text or "Yes", fct=function() game:unregisterDialog(d) fct(true) end}
 	local cancel = require("engine.ui.Button").new{text=no_text or "No", fct=function() game:unregisterDialog(d) fct(false) end}
-	d.key:addBind("EXIT", function() game:unregisterDialog(d) game:unregisterDialog(d) fct(false) end)
+	if not no_leave then d.key:addBind("EXIT", function() game:unregisterDialog(d) game:unregisterDialog(d) fct(false) end) end
 	d:loadUI{
 		{left = 3, top = 3, ui=require("engine.ui.Textzone").new{width=w+20, height=self.font_h * #list, text=text}},
 		{left = 3, bottom = 3, ui=ok},
