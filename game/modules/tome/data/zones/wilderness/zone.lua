@@ -26,6 +26,7 @@ return {
 	width = 170, height = 100,
 --	all_remembered = true,
 --	all_lited = true,
+--	day_night = true,
 	persistent = "memory",
 	ambient_music = "Remembrance.ogg",
 	wilderness = true,

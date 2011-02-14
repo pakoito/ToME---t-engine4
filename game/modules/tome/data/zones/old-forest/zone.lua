@@ -27,6 +27,7 @@ return {
 	width = 50, height = 50,
 --	all_remembered = true,
 	all_lited = true,
+	day_night = true,
 	persistent = "zone",
 	color_shown = {0.7, 0.7, 0.7, 1},
 	color_obscure = {0.7*0.6, 0.7*0.6, 0.7*0.6, 0.6},

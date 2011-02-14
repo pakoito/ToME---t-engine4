@@ -28,6 +28,7 @@ return {
 	persistent = "zone",
 --	all_remembered = true,
 	all_lited = true,
+	day_night = true,
 	ambient_music = "Bazaar of Tal-Mashad.ogg",
 	generator =  {
 		map = {

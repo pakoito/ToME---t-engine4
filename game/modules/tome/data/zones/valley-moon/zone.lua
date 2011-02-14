@@ -26,6 +26,7 @@ return {
 	width = 50, height = 50,
 --	all_remembered = true,
 	all_lited = true,
+	day_night = true,
 	persistent = "zone",
 	ambient_music = "The Ancients.ogg",
 	no_level_connectivity = true,

@@ -29,6 +29,7 @@ return {
 	persistent = "zone",
 	no_worldport = true,
 	all_remembered = true,
+	day_night = true,
 	all_lited = true,
 	ambient_music = "Straight Into Ambush.ogg",
 	generator =  {

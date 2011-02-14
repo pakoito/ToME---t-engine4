@@ -29,6 +29,7 @@ return {
 	persistent = "zone",
 --	all_remembered = true,
 	all_lited = true,
+	day_night = true,
 	persistent = "zone",
 	ambient_music = "Dreaming of Flying.ogg",
 	generator =  {

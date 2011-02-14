@@ -59,6 +59,7 @@ return {
 	levels =
 	{
 		[1] = {
+			day_night = true,
 			generator = { map = {
 				class = "engine.generator.map.Town",
 				building_chance = 70,

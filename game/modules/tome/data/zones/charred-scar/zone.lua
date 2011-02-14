@@ -27,6 +27,7 @@ return {
 	width = 12, height = 500,
 --	all_remembered = true,
 	all_lited = true,
+	day_night = true,
 	persistent = "zone",
 	no_level_connectivity = true,
 	no_worldport = true,

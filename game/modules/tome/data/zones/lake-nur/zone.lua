@@ -60,6 +60,7 @@ return {
 	{
 		[1] = {
 			all_lited = true,
+			day_night = true,
 			generator = {
 				map = {
 					class = "engine.generator.map.Static",

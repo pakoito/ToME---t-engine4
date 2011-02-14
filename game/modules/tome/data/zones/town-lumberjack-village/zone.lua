@@ -25,6 +25,7 @@ return {
 	decay = {300, 800, only={object=true}, no_respawn=true},
 	persistent = "zone",
 --	all_remembered = true,
+	day_night = true,
 	all_lited = true,
 	persistent = "zone",
 	ambient_music = "Virtue lost.ogg",
