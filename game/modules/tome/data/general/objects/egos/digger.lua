@@ -43,7 +43,7 @@ newEntity{
 	power_source = {technique=true},
 	name = " of delving", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 20,
 	cost = 20,
 	wielder = {
@@ -89,7 +89,7 @@ newEntity{
 	power_source = {technique=true},
 	name = " of the Iron Throne", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 15,
 	cost = 15,
 	wielder = {
@@ -103,7 +103,7 @@ newEntity{
 	power_source = {technique=true},
 	name = " of Reknor", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 15,
 	cost = 15,
 	wielder = {
@@ -119,7 +119,7 @@ newEntity{
 	power_source = {technique=true},
 	name = "brutal ", prefix=true, instant_resolve=true,
 	level_range = {40, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 20,
 	cost = 70,
 	wielder = {
@@ -134,7 +134,7 @@ newEntity{
 	power_source = {technique=true},
 	name = "builder's ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 15,
 	cost = 15,
 	wielder = {
@@ -150,7 +150,7 @@ newEntity{
 	power_source = {technique=true},
 	name = "soldier's ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 15,
 	cost = 15,
 	wielder = {

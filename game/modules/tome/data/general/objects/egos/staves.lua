@@ -62,7 +62,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = " of wizardry", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 18,
 	cost = 45,
 	wielder = {
@@ -222,7 +222,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = " of blasting", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 18,
 	cost = 45,
 	wielder = {
@@ -242,7 +242,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = " of warding", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 20,
 	cost = 45,
 	wielder = {
@@ -261,7 +261,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = " of channeling", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 18,
 	cost = 45,
 	wielder = {
@@ -276,7 +276,7 @@ newEntity{
 	power_source = {nature=true},
 	name = "lifebinding ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 16,
 	cost = 35,
 	wielder = {
@@ -293,7 +293,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = "infernal ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 16,
 	cost = 35,
 	wielder = {
@@ -310,7 +310,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = "chronomancer's ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 16,
 	cost = 35,
 	wielder = {

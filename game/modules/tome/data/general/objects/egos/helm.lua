@@ -58,7 +58,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = " of greater telepathy", suffix=true,
 	level_range = {40, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 50,
 	cost = 25,
 	wielder = {
@@ -80,7 +80,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = "shaloran ", prefix=true, instant_resolve=true,
 	level_range = {25, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 10,
 	cost = 10,
 	wielder = {
@@ -107,7 +107,7 @@ newEntity{
 	power_source = {nature=true},
 	name = " of precognition", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 18,
 	cost = 25,
 	wielder = {
@@ -226,7 +226,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = " of knowledge", suffix=true, instant_resolve=true,
 	level_range = {15, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 15,
 	cost = 20,
 	wielder = {
@@ -243,7 +243,7 @@ newEntity{
 	power_source = {technique=true},
 	name = " of might", suffix=true, instant_resolve=true,
 	level_range = {15, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 15,
 	cost = 20,
 	wielder = {
@@ -259,7 +259,7 @@ newEntity{
 	power_source = {technique=true},
 	name = " of trickery", suffix=true, instant_resolve=true,
 	level_range = {15, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 13,
 	cost = 20,
 	wielder = {
@@ -275,7 +275,7 @@ newEntity{
 	power_source = {nature=true},
 	name = "warlord's ", prefix=true, instant_resolve=true,
 	level_range = {40, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 17,
 	cost = 50,
 	wielder = {
@@ -291,7 +291,7 @@ newEntity{
 	power_source = {technique=true},
 	name = "defender's ", prefix=true, instant_resolve=true,
 	level_range = {40, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 17,
 	cost = 50,
 	wielder = {
@@ -305,7 +305,7 @@ newEntity{
 	power_source = {technique=true},
 	name = "dragonslayer's ", prefix=true, instant_resolve=true,
 	level_range = {40, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 17,
 	cost = 50,
 	wielder = {

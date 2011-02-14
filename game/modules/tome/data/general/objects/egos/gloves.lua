@@ -46,7 +46,7 @@ newEntity{
 	power_source = {technique=true},
 	name = " of mighty criticals", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 12,
 	cost = 25,
 	wielder = {
@@ -219,7 +219,7 @@ newEntity{
 	power_source = {nature=true},
 	name = " of protection", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 15,
 	cost = 25,
 	wielder = {
@@ -235,7 +235,7 @@ newEntity{
 	power_source = {technique=true},
 	name = " of warmaking", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 17,
 	cost = 35,
 	wielder = {
@@ -252,7 +252,7 @@ newEntity{
 	power_source = {technique=true},
 	name = " of regeneration", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 18,
 	cost = 25,
 	wielder = {
@@ -266,7 +266,7 @@ newEntity{
 	power_source = {technique=true},
 	name = "heroic ", prefix=true, instant_resolve=true,
 	level_range = {40, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 20,
 	cost = 75,
 	wielder = {
@@ -283,7 +283,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = "alchemist's ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 17,
 	cost = 35,
 	wielder = {
@@ -300,7 +300,7 @@ newEntity{
 	power_source = {technique=true},
 	name = "archer's ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 17,
 	cost = 35,
 	wielder = {

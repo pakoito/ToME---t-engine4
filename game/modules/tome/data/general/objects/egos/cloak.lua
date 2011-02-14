@@ -112,7 +112,7 @@ newEntity{
 	power_source = {nature=true},
 	name = " of fog", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 18,
 	cost = 25,
 	wielder = {
@@ -166,7 +166,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = " of sorcery", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 16,
 	cost = 50,
 	wielder = {
@@ -183,7 +183,7 @@ newEntity{
 	power_source = {technique=true},
 	name = " of implacability", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 16,
 	cost = 50,
 	wielder = {
@@ -197,7 +197,7 @@ newEntity{
 	power_source = {nature=true},
 	name = "restorative ", prefix=true, instant_resolve=true,
 	level_range = {35, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 18,
 	cost = 60,
 	wielder = {
@@ -213,7 +213,7 @@ newEntity{
 	power_source = {technique=true},
 	name = "regal ", prefix=true, instant_resolve=true,
 	level_range = {15, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 15,
 	cost = 20,
 	wielder = {
@@ -229,7 +229,7 @@ newEntity{
 	power_source = {technique=true},
 	name = "wyrmwaxed ", prefix=true, instant_resolve=true,
 	level_range = {35, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 18,
 	cost = 60,
 	wielder = {

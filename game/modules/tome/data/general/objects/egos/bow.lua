@@ -76,7 +76,7 @@ newEntity{
 	power_source = {technique=true},
 	name = " of great speed", suffix=true, instant_resolve=true,
 	level_range = {40, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 10,
 	cost = 60,
 	combat={physspeed = -0.2},
@@ -86,7 +86,7 @@ newEntity{
 	power_source = {technique=true},
 	name = "thaloren ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 24,
 	cost = 40,
 	wielder = {

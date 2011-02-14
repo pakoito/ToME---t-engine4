@@ -100,7 +100,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = "elemental ", prefix=true, instant_resolve=true,
 	level_range = {35, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 25,
 	cost = 35,
 	combat = {
@@ -153,7 +153,7 @@ newEntity{
 	power_source = {technique=true},
 	name = " of rage", suffix=true, instant_resolve=true,
 	level_range = {35, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 25,
 	cost = 35,
 	wielder = {
@@ -176,7 +176,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = " of corruption", suffix=true, instant_resolve=true,
 	level_range = {35, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 20,
 	cost = 35,
 	combat = {
@@ -228,7 +228,7 @@ newEntity{
 	power_source = {technique=true},
 	name = " of ruin", suffix=true, instant_resolve=true,
 	level_range = {15, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 20,
 	cost = 25,
 	wielder = {
@@ -246,7 +246,7 @@ newEntity{
 	power_source = {technique=true},
 	name = "quick ", prefix=true, instant_resolve=true,
 	level_range = {20, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 25,
 	cost = 30,
 	wielder = {
@@ -263,7 +263,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = "mystic ", prefix=true, instant_resolve=true,
 	level_range = {20, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 20,
 	cost = 30,
 	wielder = {

@@ -70,7 +70,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = " of greater telepathy", suffix=true,
 	level_range = {40, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 120,
 	cost = 25,
 	wielder = {
@@ -205,7 +205,7 @@ newEntity{
 	power_source = {nature=true},
 	name = "vitalizing ", prefix=true, instant_resolve=true,
 	level_range = {20, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 15,
 	cost = 30,
 	wielder = {
@@ -227,7 +227,7 @@ newEntity{
 	power_source = {technique=true},
 	name = " of murder", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 16,
 	cost = 40,
 	wielder = {
@@ -243,7 +243,7 @@ newEntity{
 	power_source = {nature=true},
 	name = " of vision", suffix=true, instant_resolve=true,
 	level_range = {25, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 15,
 	cost = 30,
 	wielder = {
@@ -259,7 +259,7 @@ newEntity{
 	power_source = {nature=true},
 	name = " of healing", suffix=true, instant_resolve=true,
 	level_range = {35, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 18,
 	cost = 60,
 	wielder = {
@@ -274,7 +274,7 @@ newEntity{
 	power_source = {technique=true},
 	name = "protective ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 16,
 	cost = 40,
 	wielder = {
@@ -288,7 +288,7 @@ newEntity{
 	power_source = {technique=true},
 	name = "enraging ", prefix=true, instant_resolve=true,
 	level_range = {40, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 20,
 	cost = 90,
 	wielder = {
@@ -303,7 +303,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = "archmage's ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 16,
 	cost = 40,
 	wielder = {

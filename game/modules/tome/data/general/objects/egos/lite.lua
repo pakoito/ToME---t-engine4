@@ -47,7 +47,7 @@ newEntity{
 	power_source = {nature=true},
 	name = " of the sun", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 9,
 	cost = 10,
 	wielder = {
@@ -164,7 +164,7 @@ newEntity{
 	power_source = {nature=true},
 	name = "reflective ", prefix=true, instant_resolve=true,
 	level_range = {20, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 10,
 	cost = 30,
 	wielder = {
@@ -180,7 +180,7 @@ newEntity{
 	power_source = {nature=true},
 	name = "nightwalker's ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 10,
 	cost = 50,
 	wielder = {
@@ -196,7 +196,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = "ethereal ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 10,
 	cost = 50,
 	encumber = -1,
@@ -212,7 +212,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = " of illusion", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 10,
 	cost = 50,
 	wielder = {
@@ -227,7 +227,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = " of corpselight", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 10,
 	cost = 50,
 	wielder = {

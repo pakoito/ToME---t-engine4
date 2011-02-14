@@ -99,7 +99,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = " of power", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 18,
 	cost = 15,
 	wielder = {
@@ -165,7 +165,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = "bilefire ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 16,
 	cost = 50,
 	wielder = {
@@ -187,7 +187,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = "timelord's ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 16,
 	cost = 50,
 	wielder = {
@@ -209,7 +209,7 @@ newEntity{
 	power_source = {nature=true},
 	name = "stormlord's ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 16,
 	cost = 50,
 	wielder = {
@@ -231,7 +231,7 @@ newEntity{
 	power_source = {nature=true},
 	name = "radiant ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 16,
 	cost = 50,
 	wielder = {
@@ -251,7 +251,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = " of Angolwen", suffix=true, instant_resolve=true,
 	level_range = {35, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 20,
 	cost = 60,
 	wielder = {
@@ -270,7 +270,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = " of Linaniil", suffix=true, instant_resolve=true,
 	level_range = {35, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 20,
 	cost = 60,
 	wielder = {
@@ -286,7 +286,7 @@ newEntity{
 	power_source = {nature=true},
 	name = " of life", suffix=true, instant_resolve=true,
 	level_range = {35, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 20,
 	cost = 60,
 	wielder = {

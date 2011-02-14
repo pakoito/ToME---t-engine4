@@ -167,7 +167,7 @@ newEntity{
 	power_source = {technique=true},
 	name = " of crushing", suffix=true, instant_resolve=true,
 	level_range = {15, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 16,
 	cost = 20,
 	wielder = {
@@ -181,7 +181,7 @@ newEntity{
 	power_source = {nature=true},
 	name = " of resistance", suffix=true, instant_resolve=true,
 	level_range = {15, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 16,
 	cost = 20,
 	wielder = {
@@ -198,7 +198,7 @@ newEntity{
 	power_source = {nature=true},
 	name = " of the night", suffix=true, instant_resolve=true,
 	level_range = {15, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 16,
 	cost = 20,
 	wielder = {
@@ -214,7 +214,7 @@ newEntity{
 	power_source = {technique=true},
 	name = "impervious ", prefix=true, instant_resolve=true,
 	level_range = {40, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 18,
 	cost = 40,
 	wielder = {
@@ -230,7 +230,7 @@ newEntity{
 	power_source = {nature=true},
 	name = "spellplated ", prefix=true, instant_resolve=true,
 	level_range = {10, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 15,
 	cost = 18,
 	wielder = {
@@ -246,7 +246,7 @@ newEntity{
 	power_source = {nature=true},
 	name = "blood-runed ", prefix=true, instant_resolve=true,
 	level_range = {30, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 17,
 	cost = 30,
 	wielder = {

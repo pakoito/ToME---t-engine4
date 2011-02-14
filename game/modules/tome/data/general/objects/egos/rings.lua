@@ -247,7 +247,7 @@ newEntity{
 	power_source = {technique=true},
 	name = "sneakthief's ", prefix=true, instant_resolve=true,
 	level_range = {15, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 12,
 	cost = 20,
 	wielder = {
@@ -263,7 +263,7 @@ newEntity{
 	power_source = {technique=true},
 	name = "gladiator's ", prefix=true, instant_resolve=true,
 	level_range = {15, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 12,
 	cost = 20,
 	wielder = {
@@ -279,7 +279,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = "conjurer's ", prefix=true, instant_resolve=true,
 	level_range = {15, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 12,
 	cost = 20,
 	wielder = {
@@ -295,7 +295,7 @@ newEntity{
 	power_source = {technique=true},
 	name = " of tenacity", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 12,
 	cost = 50,
 	wielder = {
@@ -310,7 +310,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = " of evocation", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 12,
 	cost = 50,
 	wielder = {
@@ -324,7 +324,7 @@ newEntity{
 	power_source = {nature=true},
 	name = " of life", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 12,
 	cost = 50,
 	wielder = {

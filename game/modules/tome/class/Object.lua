@@ -167,7 +167,11 @@ function _M:getDisplayColor()
 	if self.lore then return {0, 128, 255}, "#0080FF#"
 	elseif self.egoed then
 		if self.greater_ego then
-			return {0, 0x80, 255}, "#0080FF#"
+			if self.greater_ego > 1 then
+				return {0x8d, 0x55, 0xff}, "#8d55ff#"
+			else
+				return {0, 0x80, 255}, "#0080FF#"
+			end
 		else
 			return {0, 255, 128}, "#00FF80#"
 		end

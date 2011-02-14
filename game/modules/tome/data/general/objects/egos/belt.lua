@@ -179,7 +179,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = " of magery", suffix=true, instant_resolve=true,
 	level_range = {25, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 18,
 	cost = 50,
 	wielder = {
@@ -195,7 +195,7 @@ newEntity{
 	power_source = {technique=true},
 	name = " of burglary", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 15,
 	cost = 30,
 	wielder = {
@@ -212,7 +212,7 @@ newEntity{
 	power_source = {nature=true},
 	name = " of dampening", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 18,
 	cost = 50,
 	wielder = {
@@ -229,7 +229,7 @@ newEntity{
 	power_source = {technique=true},
 	name = " of inertia", suffix=true, instant_resolve=true,
 	level_range = {25, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 18,
 	cost = 50,
 	wielder = {
@@ -246,7 +246,7 @@ newEntity{
 	power_source = {technique=true},
 	name = "monstrous ", prefix=true, instant_resolve=true,
 	level_range = {40, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 20,
 	cost = 60,
 	wielder = {
@@ -261,7 +261,7 @@ newEntity{
 	power_source = {technique=true},
 	name = "balancing ", prefix=true, instant_resolve=true,
 	level_range = {40, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 20,
 	cost = 60,
 	wielder = {
@@ -278,7 +278,7 @@ newEntity{
 	power_source = {technique=true},
 	name = "protective ", prefix=true, instant_resolve=true,
 	level_range = {40, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 20,
 	cost = 60,
 	wielder = {

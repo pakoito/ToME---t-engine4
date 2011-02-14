@@ -137,7 +137,7 @@ newEntity{
 	power_source = {nature=true},
 	name = "radiant ", prefix=true, instant_resolve=true,
 	level_range = {20, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 18,
 	cost = 15,
 	wielder = {
@@ -215,7 +215,7 @@ newEntity{
 	power_source = {technique=true},
 	name = "fortifying ", prefix=true, instant_resolve=true,
 	level_range = {20, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 18,
 	cost = 35,
 	wielder = {
@@ -232,7 +232,7 @@ newEntity{
 	power_source = {technique=true},
 	name = "hardened ", prefix=true, instant_resolve=true,
 	level_range = {40, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 29,
 	cost = 47,
 	wielder = {
@@ -266,7 +266,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = " of the sky", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 20,
 	cost = 35,
 	wielder = {
@@ -286,7 +286,7 @@ newEntity{
 	power_source = {nature=true},
 	name = " of Eyal", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 16,
 	cost = 30,
 	wielder = {
@@ -300,7 +300,7 @@ newEntity{
 	power_source = {technique=true},
 	name = " of Toknor", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 16,
 	cost = 30,
 	wielder = {
@@ -314,7 +314,7 @@ newEntity{
 	power_source = {technique=true},
 	name = " of implacability", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 16,
 	cost = 30,
 	wielder = {

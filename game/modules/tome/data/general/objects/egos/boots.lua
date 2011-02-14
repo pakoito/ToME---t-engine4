@@ -24,7 +24,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = " of phasing", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 18,
 	cost = 40,
 	wielder = {
@@ -59,7 +59,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = " of speed", suffix=true, instant_resolve=true,
 	level_range = {15, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 20,
 	cost = 60,
 	wielder = {
@@ -71,7 +71,7 @@ newEntity{
 	power_source = {technique=true},
 	name = " of rushing", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 18,
 	cost = 40,
 	max_power = 80, power_regen = 1,
@@ -88,7 +88,7 @@ newEntity{
 	power_source = {technique=true},
 	name = " of disengagement", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 18,
 	cost = 40,
 
@@ -175,7 +175,7 @@ newEntity{
 	power_source = {nature=true},
 	name = "restorative ", prefix=true, instant_resolve=true,
 	level_range = {35, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 18,
 	cost = 60,
 	wielder = {
@@ -191,7 +191,7 @@ newEntity{
 	power_source = {nature=true},
 	name = "invigorating ", prefix=true, instant_resolve=true,
 	level_range = {40, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 20,
 	cost = 70,
 	wielder = {
@@ -205,7 +205,7 @@ newEntity{
 	power_source = {technique=true},
 	name = "blood-soaked ", prefix=true, instant_resolve=true,
 	level_range = {15, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 15,
 	cost = 20,
 	wielder = {

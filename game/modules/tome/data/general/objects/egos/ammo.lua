@@ -77,7 +77,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = "elemental ", prefix=true, instant_resolve=true,
 	level_range = {35, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 25,
 	cost = 35,
 	wielder = {
@@ -105,7 +105,7 @@ newEntity{
 	power_source = {technique=true},
 	name = " of annihilation", suffix=true,
 	level_range = {1, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	cost = 35,
 	rarity = 15,
 	combat = {
@@ -121,7 +121,7 @@ newEntity{
 	power_source = {technique=true},
 	name = " of unerring flight", suffix=true,
 	level_range = {1, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	cost = 35,
 	rarity = 15,
 	combat = {

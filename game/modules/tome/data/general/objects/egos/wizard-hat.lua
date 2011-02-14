@@ -71,7 +71,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = " of greater telepathy", suffix=true,
 	level_range = {40, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 120,
 	cost = 25,
 	wielder = {
@@ -116,7 +116,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = "arcanist's ", prefix=true, instant_resolve=true,
 	level_range = {25, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 18,
 	cost = 20,
 	wielder = {
@@ -213,7 +213,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = " of knowledge", suffix=true, instant_resolve=true,
 	level_range = {15, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 13,
 	cost = 20,
 	wielder = {
@@ -229,7 +229,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = " of the Spellblaze", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 15,
 	cost = 20,
 	wielder = {
@@ -246,7 +246,7 @@ newEntity{
 	power_source = {nature=true},
 	name = "naturalist's ", prefix=true, instant_resolve=true,
 	level_range = {10, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 11,
 	cost = 15,
 	wielder = {
@@ -262,7 +262,7 @@ newEntity{
 	power_source = {nature=true},
 	name = "soothing ", prefix=true, instant_resolve=true,
 	level_range = {25, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 17,
 	cost = 20,
 	wielder = {

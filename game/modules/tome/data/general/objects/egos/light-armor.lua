@@ -26,7 +26,7 @@ newEntity{
 	power_source = {technique=true},
 	name = "troll-hide ", prefix=true, instant_resolve=true,
 	level_range = {20, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 12,
 	cost = 14,
 	wielder = {
@@ -38,7 +38,7 @@ newEntity{
 	power_source = {technique=true},
 	name = "nimble ", prefix=true, instant_resolve=true,
 	level_range = {25, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 22,
 	cost = 35,
 	wielder = {

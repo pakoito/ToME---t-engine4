@@ -26,7 +26,7 @@ newEntity{
 	power_source = {nature=true},
 	name = " of the dragon", suffix=true, instant_resolve=true,
 	level_range = {20, 50},
-	greater_ego = true,
+	greater_ego = 1,
 	rarity = 20,
 	cost = 60,
 	wielder = {
