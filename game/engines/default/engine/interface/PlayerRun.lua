@@ -77,7 +77,7 @@ function _M:runInit(dir)
 		cnt = 1,
 		dialog = Dialog:simplePopup("Running...", "You are running, press Enter to stop.", function()
 			self:runStop()
-		end),
+		end, false, true),
 	}
 	self.running.dialog.__showup = nil
 	self.running.dialog.__hidden = true
@@ -107,7 +107,7 @@ function _M:runFollow(path)
 		cnt = 1,
 		dialog = Dialog:simplePopup("Running...", "You are running, press any key to stop.", function()
 			self:runStop()
-		end),
+		end, false, true),
 	}
 	self.running.dialog.__showup = nil
 	self.running.dialog.__hidden = true

@@ -341,10 +341,9 @@ function _M:setupDisplayMode(reboot, mode)
 
 		-- Create the framebuffer
 		self.fbo = core.display.newFBO(Map.viewport.width, Map.viewport.height)
-		if self.fbo then
-			self.fbo_shader = Shader.new("main_fbo")
-			if not self.fbo_shader.shad then self.fbo = nil self.fbo_shader = nil end
-		end
+		if self.fbo then self.fbo_shader = Shader.new("main_fbo") if not self.fbo_shader.shad then self.fbo = nil self.fbo_shader = nil end end
+		self.mapfbo = core.display.newFBO(Map.viewport.width + 3 * Map.tile_w, Map.viewport.height + 3 * Map.tile_h)
+		if self.mapfbo then self.mapfbo_shader = Shader.new("map_fbo") if not self.mapfbo_shader.shad then self.mapfbo = nil self.mapfbo_shader = nil end end
 		if self.player then self.player:updateMainShader() end
 	end
 
@@ -728,53 +727,68 @@ function _M:display(nb_keyframes)
 
 	-- Now the map, if any
 	if self.level and self.level.map and self.level.map.finished then
+		local map = self.level.map
+
 		-- Display the map and compute FOV for the player if needed
-		local changed = self.level.map.changed
+		local changed = map.changed
 		if changed then
 			self.player:playerFOV()
 		end
 
-		-- Display using Framebuffer, so that we can use shaders and all
-		if self.fbo then
+		-- Display using Framebuffer, so that we can use shaders and all; also uses a second FBO for map smooth FOV shading
+		if self.fbo and self.mapfbo then
+			self.mapfbo:use(true)
+				if self.level.data.background then self.level.data.background(self.level, 0, 0, nb_keyframes) end
+				map:display(0, 0, nb_keyframes, true) -- Display at the base of the FBO and make sure to display everything as the shader will do smooth FOV over it
+				map._map:updateSeensTexture()
+				if self.level.data.foreground then self.level.data.foreground(self.level, 0, 0, nb_keyframes) end
+				if self.level.data.weather_particle then self.state:displayWeather(self.level, self.level.data.weather_particle, nb_keyframes) end
+			self.mapfbo:use(false)
+
 			self.fbo:use(true)
-
-			if self.level.data.background then self.level.data.background(self.level, 0, 0, nb_keyframes) end
-			self.level.map:display(0, 0, nb_keyframes, true) -- Display at the base of the FBO and make sure to display everything as the shader will do smooth FOV over it
-			if self.level.data.foreground then self.level.data.foreground(self.level, 0, 0, nb_keyframes) end
-			if self.level.data.weather_particle then self.state:displayWeather(self.level, self.level.data.weather_particle, nb_keyframes) end
-
+				map._map:bindSeensTexture(1)
+				self.mapfbo_shader:setUniform("seensinfo", {map._map:getSeensInfo()})
+				local sx, sy = map._map:getScroll()
+				self.mapfbo:toScreen(sx-Map.tile_w, sy-Map.tile_h, map.viewport.width + 3 * Map.tile_w, map.viewport.height + 3 * Map.tile_h, self.mapfbo_shader.shad)
 			self.fbo:use(false)
+
 			_2DNoise:bind(1, false)
-			if changed then self.level.map._map:updateSeensTexture() end
-			self.level.map._map:bindSeensTexture(2)
-			self.fbo_shader:setUniform("seensinfo", {self.level.map._map:getSeensInfo()})
-			self.fbo:toScreen(
-				self.level.map.display_x, self.level.map.display_y,
-				self.level.map.viewport.width, self.level.map.viewport.height,
-				self.fbo_shader.shad
-			)
+			self.fbo:toScreen(map.display_x, map.display_y, map.viewport.width, map.viewport.height, self.fbo_shader.shad)
 			self.target:display()
 
-		-- Basic display
-		else
-			if self.level.data.background then self.level.data.background(self.level, self.level.map.display_x, self.level.map.display_y, nb_keyframes) end
-			self.level.map:display(nil, nil, nb_keyframes)
+		-- Display using Framebuffer, so that we can use shaders and all
+		elseif self.fbo then
+			self.fbo:use(true)
+				if self.level.data.background then self.level.data.background(self.level, 0, 0, nb_keyframes) end
+				map:display(0, 0, nb_keyframes)
+				if self.level.data.foreground then self.level.data.foreground(self.level, 0, 0, nb_keyframes) end
+				if self.level.data.weather_particle then self.state:displayWeather(self.level, self.level.data.weather_particle, nb_keyframes) end
+			self.fbo:use(false)
+
+			_2DNoise:bind(1, false)
+			self.fbo:toScreen(map.display_x, map.display_y, map.viewport.width, map.viewport.height, self.fbo_shader.shad)
 			self.target:display()
-			if self.level.data.foreground then self.level.data.foreground(self.level, self.level.map.display_x, self.level.map.display_y, nb_keyframes) end
+
+		-- Basic display; no FBOs
+		else
+			if self.level.data.background then self.level.data.background(self.level, map.display_x, map.display_y, nb_keyframes) end
+			map:display(nil, nil, nb_keyframes)
+			self.target:display()
+			if self.level.data.foreground then self.level.data.foreground(self.level, map.display_x, map.display_y, nb_keyframes) end
 			if self.level.data.weather_particle then self.state:displayWeather(self.level, self.level.data.weather_particle, nb_keyframes) end
 		end
 
 		if not self.zone_name_s then self:updateZoneName() end
 		self.zone_name_s:toScreenFull(
-			self.level.map.display_x + self.level.map.viewport.width - self.zone_name_w - 15,
-			self.level.map.display_y + self.level.map.viewport.height - self.zone_name_h - 5,
+			map.display_x + map.viewport.width - self.zone_name_w - 15,
+			map.display_y + map.viewport.height - self.zone_name_h - 5,
 			self.zone_name_w, self.zone_name_h,
 			self.zone_name_tw, self.zone_name_th
 		)
 
 		-- Minimap display
 		self.minimap_bg:toScreen(0, 35, 200, 200)
-		self.level.map:minimapDisplay(0, 35, util.bound(self.player.x - 25, 0, self.level.map.w - 50), util.bound(self.player.y - 25, 0, self.level.map.h - 50), 50, 50, 1)
+		map:minimapDisplay(0, 35, util.bound(self.player.x - 25, 0, map.w - 50), util.bound(self.player.y - 25, 0, map.h - 50), 50, 50, 1)
 	end
 
 	-- We display the player's interface

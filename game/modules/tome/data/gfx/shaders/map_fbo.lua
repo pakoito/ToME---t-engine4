@@ -18,11 +18,11 @@
 -- darkgod@te4.org
 
 return {
-	frag = "main_fbo",
+	frag = "map_fbo",
 	vert = nil,
 	args = {
 		tex = { texture = 0 },
-		noisevol = { texture = 1 },
+		seens = { texture = 1 },
 	},
 	clone = false,
 }

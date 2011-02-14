@@ -792,7 +792,7 @@ static int map_bind_seen_texture(lua_State *L)
 	if (unit > 0 && !multitexture_active) return 0;
 
 	if (unit > 0) tglActiveTexture(GL_TEXTURE0+unit);
-	tglBindTexture(GL_TEXTURE_2D, map->seens_texture);
+	glBindTexture(GL_TEXTURE_2D, map->seens_texture);
 	if (unit > 0) tglActiveTexture(GL_TEXTURE0);
 
 	return 0;
@@ -832,8 +832,6 @@ static int map_set_scroll(lua_State *L)
 
 #define SMOOTH_SCROLL()  \
 	float animdx = 0, animdy = 0; \
-	int mx = map->mx; \
-	int my = map->my; \
 	if (map->move_max) \
 	{ \
 		map->move_step += nb_keyframes; \
@@ -860,6 +858,8 @@ static int map_get_scroll(lua_State *L)
 {
 	map_type *map = (map_type*)auxiliar_checkclass(L, "core{map}", 1);
 	int nb_keyframes = 1;
+	int mx = map->mx;
+	int my = map->my;
 	SMOOTH_SCROLL();
 	lua_pushnumber(L, -animdx);
 	lua_pushnumber(L, -animdy);
@@ -1040,6 +1040,8 @@ static int map_to_screen(lua_State *L)
 	int vert_idx = 0;
 	int col_idx = 0;
 	GLuint cur_tex = 0;
+	int mx = map->mx;
+	int my = map->my;
 
 	/* Enables Depth Testing */
 	glEnable(GL_DEPTH_TEST);
@@ -1052,9 +1054,13 @@ static int map_to_screen(lua_State *L)
 	glColorPointer(4, GL_FLOAT, 0, colors);
 
 	// Smooth scrolling
-	SMOOTH_SCROLL();
-	x -= animdx;
-	y -= animdy;
+	// If we use shaders for FOV display it means we must uses fbos for smooth scroll too
+	if (!always_show)
+	{
+		SMOOTH_SCROLL();
+		x -= animdx;
+		y -= animdy;
+	}
 
 	map->used_mx = mx;
 	map->used_my = my;
