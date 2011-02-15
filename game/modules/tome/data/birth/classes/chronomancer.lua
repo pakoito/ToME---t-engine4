@@ -101,7 +101,6 @@ newBirthDescriptor{
 		["technique/dualweapon-attack"]={true, 0.1},
 		["technique/dualweapon-training"]={false, 0.1},
 		["technique/combat-training"]={true, 0.2},
-		["cunning/lethality"]={false, 0},
 		["cunning/survival"]={false, 0},
 		["chronomancy/chronomancy"]={true, 0.1},
 		["chronomancy/speed-control"]={true, 0.1},
@@ -109,13 +108,14 @@ newBirthDescriptor{
 		["chronomancy/temporal-combat"]={true, 0.3},
 		["chronomancy/timetravel"]={false, 0},
 		["chronomancy/spacetime-weaving"]={true, 0},
+		["chronomancy/spacetime-folding"]={true, 0.3},
 	},
 	talents = {
 		[ActorTalents.T_SHOOT] = 1,
 		[ActorTalents.T_SPACETIME_TUNING] = 1,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
 		[ActorTalents.T_DUAL_STRIKE] = 1,
-		[ActorTalents.T_PHASE_SHOT] = 1,
+		[ActorTalents.T_CELERITY] = 1,
 		[ActorTalents.T_STRENGTH_OF_PURPOSE] = 1,
 		},
 	copy = {

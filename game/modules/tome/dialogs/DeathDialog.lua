@@ -54,7 +54,10 @@ end
 --- Clean the actor from debuffs/buffs
 function _M:cleanActor(actor)
 	local effs = {}
-
+	
+	-- Remove chronoworlds
+	if game._chronoworlds then game._chronoworlds = nil end
+	
 	-- Go through all spell effects
 	for eff_id, p in pairs(actor.tmp) do
 		local e = actor.tempeffect_def[eff_id]

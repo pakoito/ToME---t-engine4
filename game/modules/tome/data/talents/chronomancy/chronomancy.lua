@@ -90,7 +90,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[You avoid all damage from the a single damage source that occurs within the next %d turns.
+		return ([[You avoid all damage from a single damage source that occurs within the next %d turns.
 		Additional talent points will lower the cooldown and the duration will scale with your Paradox.]]):
 		format(duration)
 	end,

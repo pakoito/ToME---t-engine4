@@ -30,14 +30,15 @@ newTalent{
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	requires_target = true,
 	action = function(self, t)
-		local targets = self:archeryAcquireTargets({type="hit"}, {one_shot=true})
+		local tg = {type="bolt"}
+		local targets = self:archeryAcquireTargets(tg)
 		if not targets then return end
-		self:archeryShoot(targets, t, {type="hit"}, {mult=self:combatTalentWeaponDamage(t, 1.1, 1.9) * getParadoxModifier(self, pm), damtype=DamageType.TEMPORAL, apr=1000})
+		self:archeryShoot(targets, t, nil, {mult=self:combatTalentWeaponDamage(t, 1.1, 1.9) * getParadoxModifier(self, pm), damtype=DamageType.TEMPORAL, apr=1000})
 		return true
 	end,
 	info = function(self, t)
 		local weapon = 100 * (self:combatTalentWeaponDamage(t, 1.1, 1.9) * getParadoxModifier(self, pm))
-		return ([[You fire a shot that phases out of time and space allowing it to pass through other creatures and virtually ignore armor.  The shot will deal %d%% weapon damage as temporal damage to it's target.
+		return ([[You fire a shot that phases out of time and space allowing it to virtually ignore armor.  The shot will deal %d%% weapon damage as temporal damage to it's target.
 		The damage will scale with your Paradox.]]):
 		format(damDesc(self, DamageType.TEMPORAL, weapon))
 	end
@@ -72,9 +73,41 @@ newTalent{
 }
 
 newTalent{
-	name = "Quick Shot",
+	name = "Perfect Aim",
 	type = {"chronomancy/temporal-archery", 3},
 	require = temporal_req3,
+	mode = "sustained",
+	points = 5,
+	sustain_paradox = 225,
+	cooldown = 10,
+	tactical = { BUFF = 2 },
+	no_energy = true, 
+	getPower = function(self, t) return 10 + (self:combatTalentSpellDamage(t, 10, 40)) end,
+	activate = function(self, t)
+		local power = t.getPower(self, t)
+		return {
+		ccp = self:addTemporaryValue("combat_critical_power", power),
+		pid = self:addTemporaryValue("combat_physcrit", power / 2),
+		sid = self:addTemporaryValue("combat_spellcrit", power / 2),
+		}
+	end,
+	deactivate = function(self, t, p)
+		self:removeTemporaryValue("combat_critical_power", p.ccp)
+		self:removeTemporaryValue("combat_physcrit", p.pid)
+		self:removeTemporaryValue("combat_spellcrit", p.sid)
+		return true
+	end,
+	info = function(self, t)
+		local power = t.getPower(self, t)
+		return ([[You focus your aim, increasing your critical damage multiplier by %d%% and your physical and spell critical strike chance by %d%%
+		The effect will scale with your Magic stat.]]):format(power, power / 2)
+	end,
+}
+
+newTalent{
+	name = "Quick Shot",
+	type = {"chronomancy/temporal-archery", 4},
+	require = temporal_req4,
 	points = 5,
 	paradox = 10,
 	cooldown = function(self, t) return 15 - 2 * self:getTalentLevelRaw(t) end,
@@ -95,28 +128,5 @@ newTalent{
 		local weapon = 100 * (self:combatTalentWeaponDamage(t, 1, 1.5) * getParadoxModifier(self, pm))
 		return ([[You pause time around you long enough to fire a single shot, doing %d%% damage.
 		The damage will scale with your Paradox and the cooldown will go down with more talent points invested.]]):format(weapon)
-	end,
-}
-
-newTalent{
-	name = "Perfect Aim",
-	type = {"chronomancy/temporal-archery", 4},
-	require = temporal_req4,
-	points = 5,
-	paradox = 10,
-	cooldown = 20,
-	tactical = { BUFF = 2 },
-	no_energy = true,
-	getDuration = function(self, t) return 1 + math.ceil((self:getTalentLevel(t)/2) * getParadoxModifier(self, pm)) end,
-	getPower = function(self, t) return 10 + (self:combatTalentSpellDamage(t, 10, 40)*getParadoxModifier(self, pm)) end,
-	action = function(self, t)
-		self:setEffect(self.EFF_PERFECT_AIM, t.getDuration(self, t), {power=t.getPower(self, t)})
-		return true
-	end,
-	info = function(self, t)
-		local duration = t.getDuration(self, t)
-		local power = t.getPower(self, t)
-		return ([[You focus your aim for the next %d turns, increasing your physical and spell critical strike chance and your critical damage multiplier by %d%%..
-		The effect will scale with your Paradox and the Magic stat.]]):format(duration, power)
 	end,
 }

@@ -138,14 +138,11 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[You start absorbing half of all damage you take into your shield.  Once your shield has absorbed %0.2f damage it will explode in a burst of light, inflicting damage equal to absorbed damage in a radius of %d.
+		return ([[Negates half of all damage you take.  Once retribution has negated %0.2f damage your shield will explode in a burst of light, inflicting damage equal to the amount negated in a radius of %d and deactivating the talent.
 		The amount absorbed will increase with the Magic stat.]]):
 		format(damDesc(self, DamageType.LIGHT, damage), self:getTalentRange(t))
 	end,
 }
-
-
-
 
 newTalent{
 	name = "Second Life",

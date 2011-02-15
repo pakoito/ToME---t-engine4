@@ -127,6 +127,9 @@ end
 function _M:onEnterLevelEnd(zone, level)
 	-- Clone level when they are made, for chronomancy
 	if self:attr("game_cloning") then
+		-- First remove the old world to make sure we only have one on_level restore in memory at a time
+		if game._chronoworlds.on_level then game._chronoworlds.on_level = nil end
+		-- then clone the new level		
 		game:chronoClone("on_level")
 	end
 end
@@ -805,7 +808,7 @@ function _M:quickSwitchWeapons()
 	for i = 1, #ohset1 do self:addObject(oh2, ohset1[i]) end
 	for i = 1, #ohset2 do self:addObject(oh1, ohset2[i]) end
 
-	if not self:hasEffect(self.EFF_CELERITY) then self:useEnergy() end
+	if not self:isTalentActive(T_CELERITY) then self:useEnergy() end
 	local names = ""
 	if mh1[1] and oh1[1] then names = mh1[1]:getName{do_color=true}.." and "..oh1[1]:getName{do_color=true}
 	elseif mh1[1] and not oh1[1] then names = mh1[1]:getName{do_color=true}

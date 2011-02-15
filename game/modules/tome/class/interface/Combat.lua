@@ -282,6 +282,13 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 		self:incMana(-mana)
 	end
 
+	-- Temporal cast
+	if hitted and not target.dead and self:knowTalent(self.T_WEAPON_FOLDING) and self:isTalentActive(self.T_WEAPON_FOLDING) and weapon.talented and weapon.talented ~= "bow, sling" then
+		local t = self:getTalentFromId(self.T_WEAPON_FOLDING)
+		local dam = t.getDamage(self, t)
+		DamageType:get(DamageType.TEMPORAL).projector(self, target.x, target.y, DamageType.TEMPORAL, dam)
+	end
+
 	-- Autospell cast
 	if hitted and not target.dead and self:knowTalent(self.T_ARCANE_COMBAT) and self:isTalentActive(self.T_ARCANE_COMBAT) then
 		local t = self:getTalentFromId(self.T_ARCANE_COMBAT)
@@ -462,7 +469,12 @@ end
 --- Gets the armor penetration
 function _M:combatAPR(weapon)
 	weapon = weapon or self.combat or {}
-	return self.combat_apr + (weapon.apr or 0)
+	local addapr = 0
+	if weapon.talented and weapon.talented ~= "bow" and weapon.talented ~= "sling" and self:knowTalent(Talents.T_WEAPON_FOLDING) and self:isTalentActive(self.T_WEAPON_FOLDING) then
+		local t = self:getTalentFromId(self.T_WEAPON_FOLDING)
+		addapr = t.getArmorPen(self, t)
+	end
+	return self.combat_apr + (weapon.apr or 0) + addapr
 end
 
 --- Gets the weapon speed

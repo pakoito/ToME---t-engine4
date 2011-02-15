@@ -107,7 +107,7 @@ checkBackfire = function(self, x, y)
 	local modifier = self:getWil() * (1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10) or 0 )
 	local backfire = math.pow (((self:getParadox() - modifier)/300), 3)
 --	print("[Paradox] Backfire chance: ", backfire, "::", self:getParadox())
-	if rng.percent(backfire) then
+	if rng.percent(backfire) and not self:attr("no_paradox_fail") then
 		game.logPlayer(self, "The fabric of spacetime ripples and your spell backfires!!")
 		return self.x, self.y
 	else

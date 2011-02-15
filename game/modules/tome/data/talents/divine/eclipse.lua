@@ -96,7 +96,6 @@ newTalent{
 		end end
 
 		-- Randomly take targets
-		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_fire"}}
 		for i = 1, t.getTargetCount(self, t) do
 			if #tgts <= 0 then break end
 			local a, id = rng.table(tgts)
@@ -104,11 +103,11 @@ newTalent{
 
 		local corona = rng.range(1, 100)
 			if corona > 50 then
-				local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_light"}}
+				local tg = {type="bolt", range=self:getTalentRange(t), talent=t, friendlyfire=false, display={particle="bolt_light"}}
 				self:projectile(tg, a.x, a.y, DamageType.LIGHT, t.getLightDamage(self, t), {type="light"})
 				self:incPositive(-2)
 			else
-				local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_dark"}}
+				local tg = {type="bolt", range=self:getTalentRange(t), talent=t, friendlyfire=false, display={particle="bolt_dark"}}
 				self:projectile(tg, a.x, a.y, DamageType.DARKNESS, t.getDarknessDamage(self, t), {type="shadow"})
 				self:incNegative(-2)
 			end

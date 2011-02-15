@@ -3111,27 +3111,6 @@ newEffect{
 }
 
 newEffect{
-	name = "PERFECT_AIM",
-	desc = "Perfect Aim",
-	long_desc = function(self, eff) return ("The target's aim has become precise, increasing its critical damage multiplier by %d%%."):format(eff.power) end,
-	type = "magical",
-	status = "beneficial",
-	parameters = { power = 10 },
-	on_gain = function(self, err) return "#Target#'s aim has taken on deadly precision!" end,
-	on_lose = function(self, err) return "#Target# doesn't seem to be aiming as well anymore." end,
-	activate = function(self, eff)
-		eff.ccpid = self:addTemporaryValue("combat_critical_power", eff.power)
-		eff.pid = self:addTemporaryValue("combat_physcrit", eff.power)
-		eff.sid = self:addTemporaryValue("combat_spellcrit", eff.power)
-	end,
-	deactivate = function(self, eff)
-		self:removeTemporaryValue("combat_critical_power", eff.ccpid)
-		self:removeTemporaryValue("combat_physcrit", eff.pid)
-		self:removeTemporaryValue("combat_spellcrit", eff.sid)
-	end,
-}
-
-newEffect{
 	name = "BORROWED_TIME",
 	desc = "Borrowed Time",
 	long_desc = function(self, eff) return ("The target's global speed has been increased by %d%%."):format(300) end,
@@ -3144,25 +3123,6 @@ newEffect{
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("energy", eff.tmpid)
 		self:setEffect(self.EFF_STUNNED, eff.power, {})
-	end,
-}
-
-newEffect{
-	name = "CELERITY",
-	desc = "Celerity",
-	long_desc = function(self, eff) return ("Increases movement speed by %d%%."):format(eff.power * 100) end,
-	type = "magical",
-	status = "beneficial",
-	parameters = { power=0.1 },
-	on_gain = function(self, err) return "#Target# speeds up.", "+Celerity" end,
-	on_lose = function(self, err) return "#Target# slows down.", "-Celerity" end,
-	activate = function(self, eff)
-		--eff.tmpid = self:addTemporaryValue("movement_speed", {mod=-eff.power})
-		self.movement_speed = (self.movement_speed or 0) - eff.power
-	end,
-	deactivate = function(self, eff)
-		--self:removeTemporaryValue("movement_speed", eff.tmpid)
-		self.movement_speed = self.movement_speed + eff.power
 	end,
 }
 
@@ -3445,7 +3405,7 @@ newEffect{
 		local anomaly = t.getAnomaly(self, t)
 
 		-- first check for anomaly
-		if rng.percent(anomaly) then
+		if rng.percent(anomaly) and not game.zone.no_anomalies then
 			-- Random anomaly
 			local ts = {}
 			for id, t in pairs(self.talents_def) do

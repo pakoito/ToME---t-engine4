@@ -52,12 +52,35 @@ newTalent{
 	end,
 }
 
+newTalent{
+	name = "Borrowed Time",
+	type = {"chronomancy/timetravel", 2},
+	require = chrono_req2,
+	points = 5,
+	paradox = 15,
+	cooldown = 20,
+	no_energy = true,
+	tactical = { ESCAPE = 2, CLOSEIN = 2, BUFF = 2 },
+	getDuration = function(self, t) return 2 + math.floor(self:getTalentLevelRaw(t)/4) end,
+	getStun = function(self, t) return 6 - self:getTalentLevelRaw(t) end,
+	action = function(self, t)
+		self:setEffect(self.EFF_BORROWED_TIME, t.getDuration(self, t), {power=t.getStun(self,t)})
+		return true
+	end,
+	info = function(self, t)
+		local duration = t.getDuration(self, t)
+		local stun = t.getStun(self, t)
+		return ([[You borrow some energy from the future, greatly increasing your global speed for %d turns.  At the end of this time though you'll be stunned for %d turns as you pay back the time you borrowed.
+		]]):format(duration, stun)
+	end,
+}
+
 -- Time Skip and other Overlay talents like jumpgate are causing issues on remove.  They'll eat other overlays.
 
 newTalent{
 	name = "Time Skip",
-	type = {"chronomancy/timetravel",2},
-	require = chrono_req2,
+	type = {"chronomancy/timetravel",3},
+	require = chrono_req3,
 	points = 5,
 	cooldown = 10,
 	paradox = 10,
@@ -154,30 +177,6 @@ newTalent{
 	end,
 }
 
-
-newTalent{
-	name = "Borrowed Time",
-	type = {"chronomancy/timetravel", 3},
-	require = chrono_req3,
-	points = 5,
-	paradox = 15,
-	cooldown = 20,
-	no_energy = true,
-	tactical = { ESCAPE = 2, CLOSEIN = 2, BUFF = 2 },
-	getDuration = function(self, t) return 2 + math.floor(self:getTalentLevelRaw(t)/4) end,
-	getStun = function(self, t) return 6 - self:getTalentLevelRaw(t) end,
-	action = function(self, t)
-		self:setEffect(self.EFF_BORROWED_TIME, t.getDuration(self, t), {power=t.getStun(self,t)})
-		return true
-	end,
-	info = function(self, t)
-		local duration = t.getDuration(self, t)
-		local stun = t.getStun(self, t)
-		return ([[You borrow some energy from the future, greatly increasing your global speed for %d turns.  At the end of this time though you'll be stunned for %d turns as you pay back the time you borrowed.
-		]]):format(duration, stun)
-	end,
-}
-
 newTalent{
 	name = "Revision",
 	type = {"chronomancy/timetravel", 4},
@@ -194,13 +193,20 @@ newTalent{
 		self:attr("game_cloning", -1)
 	end,
 	action = function(self, t)
+	
+		-- Prevent Revision After Death
+		if game._chronoworlds == nil then
+			game.logPlayer(game.player, "#LIGHT_RED#Your spell fizzles.")
+			return
+		end		
+	
 		game:onTickEnd(function()
 			if not game:chronoRestore("on_level", true) then
 				game.logSeen(self, "#LIGHT_RED#The spell fizzles.")
 				return
 			end
 			game.logPlayer(game.player, "#LIGHT_BLUE#You unfold the space time continuum to a previous state!")
-
+						
 			-- Manualy start the cooldown of the "old player"
 			game.player:startTalentCooldown(t)
 			game.player:incParadox(t.paradox * (1 + (game.player.paradox / 300)))

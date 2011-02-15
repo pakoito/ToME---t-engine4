@@ -21,20 +21,27 @@ newTalent{
 	name = "Celerity",
 	type = {"chronomancy/speed-control", 1},
 	require = chrono_req1,
+	mode = "sustained",
 	points = 5,
-	paradox = 3,
-	cooldown = 20,
-	tactical = { ESCAPE = 2, CLOSEIN = 2, BUFF = 2 },
-	no_energy = true,
-	getPower = function(self, t) return 1 - 1 / (1 + (10 + ((self:combatTalentSpellDamage(t, 10, 50) * getParadoxModifier(self, pm))/ 100))) end,
-	action = function(self, t)
-		self:setEffect(self.EFF_CELERITY, 5, {power=t.getPower(self, t)})
+	sustain_paradox = 75,
+	cooldown = 10,
+	tactical = { BUFF = 1, CLOSEIN = 1, ESCAPE = 1 },
+	no_energy = true, 
+	getPower = function(self, t) return 1 - 1 / (1 + ((10 + self:combatTalentSpellDamage(t, 10, 50))/ 100)) end,
+	activate = function(self, t)
+		local power = t.getPower(self, t)
+		return {
+		move = self:addTemporaryValue("movement_speed", -power)
+		}
+	end,
+	deactivate = function(self, t, p)
+		self:removeTemporaryValue("movement_speed", p.move)
 		return true
 	end,
 	info = function(self, t)
 		local power = t.getPower(self, t)
-		return ([[Increases the caster's movement speed by %d%% for the next 5 turns.  Additionally switching weapons takes no time while Celerity is active.
-		The effect will scale with your Paradox and Magic stat.]]):format(power * 100)
+		return ([[Increases the caster's movement speed by %d%%.  Additionally switching weapons takes no time while Celerity is active.
+		The effect will scale with your Magic stat.]]):format(power * 100)
 	end,
 }
 

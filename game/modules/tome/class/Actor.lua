@@ -746,7 +746,33 @@ function _M:onTakeHit(value, src)
 			game.level.map:particleEmitter(self.x, self.y, tg.radius, "sunburst", {radius=tg.radius, grids=grids, tx=self.x, ty=self.y})
 		end
 	end
+	
+	if self:knowTalent(self.T_DISPLACE_DAMAGE) and self:isTalentActive(self.T_DISPLACE_DAMAGE) and rng.percent(5 + (self:getTalentLevel(self.T_DISPLACE_DAMAGE) * 5)) then
+		-- find available targets
+		local tgts = {}
+		local grids = core.fov.circle_grids(self.x, self.y, self:getTalentLevelRaw(self.T_DISPLACE_DAMAGE), true)
+		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
+			local a = game.level.map(x, y, Map.ACTOR)
+			if a and self:reactionToward(a) < 0 then
+				tgts[#tgts+1] = a
+			end
+		end end
 
+		-- Randomly take targets
+	--	local tg = {type="hit"}
+		for i = 1, 1 do
+			if #tgts <= 0 then break end
+			local a, id = rng.table(tgts)
+			table.remove(tgts, id)
+			
+			if a then
+				game.logSeen(self, "Some of the damage has been displaced onto %s!", a.name:capitalize())
+				a:takeHit(value / 2, src)
+				value = value / 2
+			end
+		end
+	end
+	
 	if self:attr("disruption_shield") then
 		local mana = self:getMana()
 		local mana_val = value * self:attr("disruption_shield")
@@ -1619,15 +1645,14 @@ function _M:preUseTalent(ab, silent, fake)
 	end
 
 	-- Paradox is special, it has no max, but the higher it is the higher the chance of something bad happening
-	-- But it is not affected by fatigue
 	if (ab.paradox or ab.sustain_paradox) and not fake then
 		local pa = ab.paradox or ab.sustain_paradox
 		local modifier = self:getWil() * (1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10) or 0 )
 		--print("[Paradox] Will modifier: ", modifier, "::", self:getParadox())
 		local chance = math.pow (((self:getParadox() - modifier)/200), 2)*((100 + self:combatFatigue()) / 100)
-		-- Fail ? lose energy and 1/10 more paradox
+		-- Fail ? lose energy and 1/2 more paradox
 		--print("[Paradox] Fail chance: ", chance, "::", self:getParadox())
-		if rng.percent(math.pow((self:getParadox()/400), 4)) then
+		if rng.percent(math.pow((self:getParadox()/400), 4)) and not game.zone.no_anomalies and not self:attr("no_paradox_fail") then
 			-- Random anomaly
 			local ts = {}
 			for id, t in pairs(self.talents_def) do
@@ -1637,7 +1662,7 @@ function _M:preUseTalent(ab, silent, fake)
 			self:forceUseTalent(rng.table(ts), {ignore_energy=true})
 			self:useEnergy()
 			return false
-		elseif rng.percent(chance) then
+		elseif rng.percent(chance) and not self:attr("no_paradox_fail") then
 			if not silent then game.logPlayer(self, "You fail to use %s due to your paradox!", ab.name) end
 			self:incParadox(pa / 2)
 			self:useEnergy()
@@ -1816,10 +1841,12 @@ function _M:forceUseTalent(t, def)
 	local oldpause = game.paused
 	local oldenergy = self.energy.value
 	if def.ignore_energy then self.energy.value = 10000 end
-
+	
 	if def.no_equilibrium_fail then self:attr("no_equilibrium_fail", 1) end
+	if def.no_paradox_fail then self:attr("no_paradox_fail", 1) end
 	self:useTalent(t, nil, def.force_level, def.ignore_cd, def.force_target)
 	if def.no_equilibrium_fail then self:attr("no_equilibrium_fail", -1) end
+	if def.no_paradix_fail then self:attr("no_paradox_fail", -1) end
 
 	if def.ignore_energy then
 		game.paused = oldpause
