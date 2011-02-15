@@ -264,6 +264,6 @@ end
 -- This method should be called by your Player:setTarget() method, it will handle everything
 function _M:targetSetForPlayer(target)
 	self.target.target.entity = target
-	self.target.target.x = target.x
-	self.target.target.y = target.y
+	self.target.target.x = (type(target) == "table" and target.x) or nil
+	self.target.target.y = (type(target) == "table" and target.y) or nil
 end
