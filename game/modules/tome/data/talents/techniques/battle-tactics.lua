@@ -77,7 +77,7 @@ newTalent{
 				dam = rng.range(dam, dam * damrange)
 				dam = dam * self:combatTalentWeaponDamage(t, 2, 3.2)
 
-				target:setEffect(target.EFF_DEEP_WOUND, 7, {heal_factor=self:getTalentLevel(t) * 10, power=dam / 7})
+				target:setEffect(target.EFF_DEEP_WOUND, 7, {src=self, heal_factor=self:getTalentLevel(t) * 10, power=dam / 7})
 			end
 		end
 		return true
