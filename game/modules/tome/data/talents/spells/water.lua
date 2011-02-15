@@ -94,11 +94,11 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	mana = 55,
-	cooldown = 8,
+	cooldown = 10,
 	tactical = { ESCAPE = 2, ATTACKAREA = 1, DISABLE = 1 },
 	direct_hit = true,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 5, 90) end,
-	getDuration = function(self, t) return 5 + self:combatSpellpower(0.01) * self:getTalentLevel(t) end,
+	getDuration = function(self, t) return 3 + self:combatTalentSpellDamage(t, 5, 5) end,
 	action = function(self, t)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
