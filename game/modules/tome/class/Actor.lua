@@ -746,7 +746,7 @@ function _M:onTakeHit(value, src)
 			game.level.map:particleEmitter(self.x, self.y, tg.radius, "sunburst", {radius=tg.radius, grids=grids, tx=self.x, ty=self.y})
 		end
 	end
-	
+
 	if self:knowTalent(self.T_DISPLACE_DAMAGE) and self:isTalentActive(self.T_DISPLACE_DAMAGE) and rng.percent(5 + (self:getTalentLevel(self.T_DISPLACE_DAMAGE) * 5)) then
 		-- find available targets
 		local tgts = {}
@@ -764,7 +764,7 @@ function _M:onTakeHit(value, src)
 			if #tgts <= 0 then break end
 			local a, id = rng.table(tgts)
 			table.remove(tgts, id)
-			
+
 			if a then
 				game.logSeen(self, "Some of the damage has been displaced onto %s!", a.name:capitalize())
 				a:takeHit(value / 2, src)
@@ -772,7 +772,7 @@ function _M:onTakeHit(value, src)
 			end
 		end
 	end
-	
+
 	if self:attr("disruption_shield") then
 		local mana = self:getMana()
 		local mana_val = value * self:attr("disruption_shield")
@@ -1561,7 +1561,8 @@ function _M:preUseTalent(ab, silent, fake)
 		if not silent then game.logSeen(self, "%s is too afraid to use %s.", self.name:capitalize(), ab.name) end
 		return false
 	end
-	if ab.no_silence and self:attr("silence") then
+	-- When silenced you can deactivate spells but not activate them
+	if ab.no_silence and self:attr("silence") and (ab.mode ~= "sustained" or self:isTalentActive(ab.id)) then
 		if not silent then game.logSeen(self, "%s is silenced and cannot use %s.", self.name:capitalize(), ab.name) end
 		return false
 	end
@@ -1841,7 +1842,7 @@ function _M:forceUseTalent(t, def)
 	local oldpause = game.paused
 	local oldenergy = self.energy.value
 	if def.ignore_energy then self.energy.value = 10000 end
-	
+
 	if def.no_equilibrium_fail then self:attr("no_equilibrium_fail", 1) end
 	if def.no_paradox_fail then self:attr("no_paradox_fail", 1) end
 	self:useTalent(t, nil, def.force_level, def.ignore_cd, def.force_target)
