@@ -110,12 +110,14 @@ end
 --- Called by ActorLife interface
 -- We use it to pass aggression values to the AIs
 function _M:onTakeHit(value, src)
-	if not self.ai_target.actor and src and src.targetable then
+	value = mod.class.Actor.onTakeHit(self, value, src)
+
+	if not self.ai_target.actor and src and src.targetable and value > 0 then
 		self.ai_target.actor = src
 	end
 
 	-- Get angry if attacked by a friend
-	if src and src ~= self and src.resolveSource and src.faction and self:reactionToward(src) >= 0 then
+	if src and src ~= self and src.resolveSource and src.faction and self:reactionToward(src) >= 0 and value > 0 then
 		self:checkAngered(src, false, -50)
 
 		-- Call for help if we become hostile
@@ -127,7 +129,7 @@ function _M:onTakeHit(value, src)
 		end
 	end
 
-	return mod.class.Actor.onTakeHit(self, value, src)
+	return value
 end
 
 function _M:die(src)
