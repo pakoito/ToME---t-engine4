@@ -71,7 +71,7 @@ newTalent{
 	points = 5,
 	random_ego = "defensive",
 	cooldown = 15,
-	stamina = 30,
+	stamina = 20,
 	tactical = { ESCAPE = 1, DISABLE = 3 },
 	requires_target = true,
 	action = function(self, t)
@@ -108,7 +108,7 @@ newTalent{
 	points = 5,
 	cooldown = 30,
 	range = 10,
-	sustain_stamina = 120,
+	sustain_stamina = 80,
 	tactical = { BUFF = 2 },
 	activate = function(self, t)
 		return {

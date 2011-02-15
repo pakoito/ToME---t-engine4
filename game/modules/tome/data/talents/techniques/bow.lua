@@ -59,7 +59,6 @@ newTalent{
 	no_energy = "fake",
 	points = 5,
 	cooldown = 8,
-	stamina = 15,
 	require = techs_dex_req3,
 	range = archery_range,
 	tactical = { ATTACKAREA = 1 },
@@ -71,11 +70,12 @@ newTalent{
 		local tg = {type="ball", radius=1}
 		local targets = self:archeryAcquireTargets(tg, {limit_shots=2})
 		if not targets then return end
-		self:archeryShoot(targets, t, nil, {mult=self:combatTalentWeaponDamage(t, 1.2, 1.7)})
+		self:archeryShoot(targets, t, nil, {mult=self:combatTalentWeaponDamage(t, 1.2, 1.9)})
 		return true
 	end,
 	info = function(self, t)
-		return ([[You fire two arrows at your target, hitting it and a nearby foe if possible, doing %d%% damage.]]):format(100 * self:combatTalentWeaponDamage(t, 1.2, 1.7))
+		return ([[You fire two arrows at your target, hitting it and a nearby foe if possible, doing %d%% damage
+		This talent does not use any stamina.]]):format(100 * self:combatTalentWeaponDamage(t, 1.2, 1.9))
 	end,
 }
 

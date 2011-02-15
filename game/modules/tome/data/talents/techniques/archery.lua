@@ -71,7 +71,7 @@ newTalent{
 	points = 5,
 	require = techs_dex_req2,
 	cooldown = 30,
-	sustain_stamina = 50,
+	sustain_stamina = 20,
 	tactical = { BUFF = 2 },
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	activate = function(self, t)
@@ -115,7 +115,7 @@ newTalent{
 	points = 5,
 	require = techs_dex_req3,
 	cooldown = 30,
-	sustain_stamina = 50,
+	sustain_stamina = 20,
 	tactical = { BUFF = 2 },
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	activate = function(self, t)
@@ -146,13 +146,12 @@ newTalent{
 }
 
 newTalent{
-	name = "Critical Shot",
+	name = "Relaxed Shot",
 	type = {"technique/archery-training", 4},
 	no_energy = "fake",
 	points = 5,
 	random_ego = "attack",
 	cooldown = 14,
-	stamina = 35,
 	require = techs_dex_req4,
 	range = archery_range,
 	requires_target = true,
@@ -161,11 +160,13 @@ newTalent{
 	action = function(self, t)
 		local targets = self:archeryAcquireTargets()
 		if not targets then return end
-		self:archeryShoot(targets, t, nil, {mult=self:combatTalentWeaponDamage(t, 1.2, 2), crit_chance=1000})
+		self:archeryShoot(targets, t, nil, {mult=self:combatTalentWeaponDamage(t, 0.5, 1.1)})
+		self:incStamina(12 + self:getTalentLevel(t) * 8)
 		return true
 	end,
 	info = function(self, t)
-		return ([[You concentrate on your aim to produce a guaranteed critical hit (with a base damage of %d%%).]]):format(self:combatTalentWeaponDamage(t, 1.2, 2) * 100)
+		return ([[You fire a shot without putting much strength in it, doing %d%% damage.
+		That brief moment of relief allows you to regain %d stamina.]]):format(self:combatTalentWeaponDamage(t, 0.5, 1.1) * 100, 12 + self:getTalentLevel(t) * 8)
 	end,
 }
 
