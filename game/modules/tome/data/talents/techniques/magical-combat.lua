@@ -28,10 +28,12 @@ newTalent{
 	cooldown = 5,
 	tactical = { BUFF = 2 },
 	do_trigger = function(self, t, target)
-		if rng.percent(20 + self:getTalentLevel(t) * (1 + self:getDex(9, true))) then
+		if rng.percent(200 + self:getTalentLevel(t) * (1 + self:getDex(9, true))) then
 			local spells = {}
-			if self:knowTalent(self.T_FLAME) then spells[#spells+1] = self.T_FLAME end
-			if self:knowTalent(self.T_LIGHTNING) then spells[#spells+1] = self.T_LIGHTNING end
+			local fatigue = (100 + 2 * self:combatFatigue()) / 100
+			local mana = self:getMana() - 1
+			if self:knowTalent(self.T_FLAME) and mana > self:getTalentFromId(self.T_FLAME).mana * fatigue then spells[#spells+1] = self.T_FLAME end
+			if self:knowTalent(self.T_LIGHTNING) and mana > self:getTalentFromId(self.T_LIGHTNING).mana * fatigue then spells[#spells+1] = self.T_LIGHTNING end
 			local tid = rng.table(spells)
 			if tid then
 				-- Extending beam target, assumes a maximum range of 10
