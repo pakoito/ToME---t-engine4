@@ -64,6 +64,12 @@ return {
 				up = "UP_WILDERNESS",
 			}, },
 		},
+		[5] = {
+			generator = { map = {
+				class = "engine.generator.map.Static",
+				map = "zones/reknor-escape-last",
+			}, },
+		},
 	},
 
 	on_enter = function(lev, old_lev, new_zone)

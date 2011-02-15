@@ -18,3 +18,5 @@
 -- darkgod@te4.org
 
 load("/data/general/grids/basic.lua")
+
+newEntity{ base = "DOWN", define_as = "IRON_COUNCIL", name="The Iron Council (Dwarven empire main city)", change_zone="town-iron-council" }
