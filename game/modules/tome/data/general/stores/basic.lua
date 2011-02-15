@@ -176,7 +176,7 @@ newEntity{
 		purse = 35,
 		restock_every = 5,
 		empty_before_restock = true,
-		sell_percent = 140,
+		sell_percent = 240,
 		min_fill = 10,
 		max_fill = 20,
 		filters = function()

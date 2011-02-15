@@ -79,7 +79,6 @@ newEntity{
 	level_range = {35, 50},
 	greater_ego = 1,
 	rarity = 25,
-	cost = 35,
 	wielder = {
 		ranged_project={
 			[DamageType.FIRE] = resolvers.mbonus_material(25, 4, function(e, v) return v * 0.1 * 0.7 * 0.3 end),
@@ -106,7 +105,7 @@ newEntity{
 	name = " of annihilation", suffix=true,
 	level_range = {1, 50},
 	greater_ego = 1,
-	cost = 35,
+	cost = 1,
 	rarity = 15,
 	combat = {
 		physcrit = 100,
@@ -122,7 +121,7 @@ newEntity{
 	name = " of unerring flight", suffix=true,
 	level_range = {1, 50},
 	greater_ego = 1,
-	cost = 35,
+	cost = 1,
 	rarity = 15,
 	combat = {
 		atk = 500,

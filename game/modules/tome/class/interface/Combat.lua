@@ -283,7 +283,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	end
 
 	-- Temporal cast
-	if hitted and not target.dead and self:knowTalent(self.T_WEAPON_FOLDING) and self:isTalentActive(self.T_WEAPON_FOLDING) and weapon.talented and weapon.talented ~= "bow, sling" then
+	if hitted and not target.dead and self:knowTalent(self.T_WEAPON_FOLDING) and self:isTalentActive(self.T_WEAPON_FOLDING) and weapon.talented and weapon.talented ~= "bow" and weapon.talented ~= "sling" then
 		local t = self:getTalentFromId(self.T_WEAPON_FOLDING)
 		local dam = t.getDamage(self, t)
 		DamageType:get(DamageType.TEMPORAL).projector(self, target.x, target.y, DamageType.TEMPORAL, dam)

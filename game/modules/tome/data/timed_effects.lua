@@ -1395,6 +1395,8 @@ newEffect{
 		if eff.dur <= 1 then
 			game:onTickEnd(function()
 				game.logPlayer(self, "#LIGHT_RED#You lost sight of your golem for too long; direct control is broken!")
+				game.player:runStop("golem out of sight")
+				game.player:restStop("golem out of sight")
 				game.party:setPlayer(self.summoner)
 			end)
 		end
