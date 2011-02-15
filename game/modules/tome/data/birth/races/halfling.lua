@@ -36,10 +36,6 @@ newBirthDescriptor{
 			__ALL__ = "disallow",
 			Halfling = "allow",
 		},
-		class =
-		{
-			Corrupter = "disallow",
-		},
 	},
 	copy = {
 		faction = "allied-kingdoms",
