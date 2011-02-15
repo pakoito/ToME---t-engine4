@@ -121,7 +121,8 @@ newTalent{
 			desc = [[]],
 			autolevel = "none",
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=1, },
-			stats = { con=15 + self:getWil() * self:getTalentLevel(t) / 5 + self:getTalentLevelRaw(self.T_RESILIENCE)*2, wil=18, dex=10 + self:getTalentLevel(t) * 2, },
+			stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
+			inc_stats = { con=15 + self:getWil() * self:getTalentLevel(t) / 5 + self:getTalentLevelRaw(self.T_RESILIENCE)*2, wil=18, dex=10 + self:getTalentLevel(t) * 2, },
 			level_range = {self.level, self.level}, exp_worth = 0,
 
 			max_life = 100,
@@ -149,6 +150,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Summon a Turtle for %d turns to distract your foes. Turtles are resilient, but not very powerful. However, they will periodically force any foes to attack them and can protect themselves with their shell.
 		It will get %d constitution, %d dexterity and 18 willpower.
+		Your summons inherit some of your stats: increased damage%, stun/pin/confusion/blindness resistance, armour penetration.
 		Constitution stat will increase with your Willpower stat.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 		15 + self:getWil() * self:getTalentLevel(t) / 5 + self:getTalentLevelRaw(self.T_RESILIENCE)*2,
@@ -193,7 +195,8 @@ newTalent{
 			desc = [[]],
 			autolevel = "none",
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=1, },
-			stats = { dex=15 + self:getWil() * self:getTalentLevel(t) / 5, wil=18, str=10 + self:getTalentLevel(t) * 2, con=10 + self:getTalentLevelRaw(self.T_RESILIENCE)*2 },
+			stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
+			inc_stats = { dex=15 + self:getWil() * self:getTalentLevel(t) / 5, wil=18, str=10 + self:getTalentLevel(t) * 2, con=10 + self:getTalentLevelRaw(self.T_RESILIENCE)*2 },
 			level_range = {self.level, self.level}, exp_worth = 0,
 
 			max_life = 50,
@@ -221,6 +224,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Summon a Spider for %d turns to harass your foes. Spiders can poison your foes and throw webs to pin them to the ground.
 		It will get %d dexterity, %d strength, 18 willpower and %d constitution.
+		Your summons inherit some of your stats: increased damage%, stun/pin/confusion/blindness resistance, armour penetration.
 		Dexterity stat will increase with your Willpower stat.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 		15 + self:getWil() * self:getTalentLevel(t) / 5,

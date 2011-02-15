@@ -54,7 +54,8 @@ newTalent{
 			desc = [[]],
 			autolevel = "warrior",
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=5, },
-			stats = { str=10 + self:getWil() * self:getTalentLevel(t) / 5, dex=10 + self:getTalentLevel(t) * 2, mag=5, con=15 + self:getTalentLevelRaw(self.T_RESILIENCE)*2 },
+			stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
+			inc_stats = { str=10 + self:getWil() * self:getTalentLevel(t) / 5, dex=10 + self:getTalentLevel(t) * 2, mag=5, con=15 + self:getTalentLevelRaw(self.T_RESILIENCE)*2 },
 			level_range = {self.level, self.level}, exp_worth = 0,
 			energy = { mod=1.2 },
 
@@ -64,8 +65,6 @@ newTalent{
 
 			combat_armor = 2, combat_def = 4,
 			combat = { dam=self:getTalentLevel(t) * 10 + rng.avg(12,25), atk=10, apr=10, dammod={str=0.8} },
-
-			inc_damage = table.clone(self.inc_damage, true),
 
 			summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
 			summon_time = math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
@@ -80,6 +79,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Summon a War Hound for %d turns to attack your foes. War hounds are good basic melee attackers.
 		It will get %d strength, %d dexterity, 5 magic and %d constitution.
+		Your summons inherit some of your stats: increased damage%, stun/pin/confusion/blindness resistance, armour penetration.
 		Strength stat will increase with your Willpower stat.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 		10 + self:getWil() * self:getTalentLevel(t) / 5,
@@ -124,7 +124,8 @@ newTalent{
 			desc = "A strange blob on the dungeon floor.",
 			name = "black jelly",
 			autolevel = "none", faction=self.faction,
-			stats = { con=10 + self:getWil() * self:getTalentLevel(t) / 5 + self:getTalentLevelRaw(self.T_RESILIENCE) * 3, str=10 + self:getTalentLevel(t) * 2 },
+			stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
+			inc_stats = { con=10 + self:getWil() * self:getTalentLevel(t) / 5 + self:getTalentLevelRaw(self.T_RESILIENCE) * 3, str=10 + self:getTalentLevel(t) * 2 },
 			resists = { [DamageType.LIGHT] = -50 },
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=5, },
 			level_range = {self.level, self.level}, exp_worth = 0,
@@ -135,8 +136,6 @@ newTalent{
 
 			combat_armor = 1, combat_def = 1,
 			never_move = 1,
-
-			inc_damage = table.clone(self.inc_damage, true),
 
 			combat = { dam=8, atk=15, apr=5, damtype=DamageType.ACID, dammod={str=0.7} },
 
@@ -153,6 +152,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Summon a Jelly for %d turns to attack your foes. Jellies do not move, but are great to block a passage.
 		It will get %d constitution and %d strength.
+		Your summons inherit some of your stats: increased damage%, stun/pin/confusion/blindness resistance, armour penetration.
 		Constitution stat will increase with your Willpower stat.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 		10 + self:getWil() * self:getTalentLevel(t) / 5 + self:getTalentLevelRaw(self.T_RESILIENCE) * 3,
@@ -205,7 +205,8 @@ newTalent{
 			autolevel = "none",
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=2, },
 			energy = { mod=1.2 },
-			stats = { str=25 + self:getWil() * self:getTalentLevel(t) / 5, dex=18, con=10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2, },
+			stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
+			inc_stats = { str=25 + self:getWil() * self:getTalentLevel(t) / 5, dex=18, con=10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2, },
 
 			desc = [[It is a cross between a human and a bull.]],
 			resolvers.equip{ {type="weapon", subtype="battleaxe", auto_req=true}, },
@@ -213,8 +214,6 @@ newTalent{
 
 			combat_armor = 13, combat_def = 8,
 			resolvers.talents{ [Talents.T_WARSHOUT]=3, [Talents.T_STUNNING_BLOW]=3, [Talents.T_SUNDER_ARMOUR]=2, [Talents.T_SUNDER_ARMS]=2, },
-
-			inc_damage = table.clone(self.inc_damage, true),
 
 			faction = self.faction,
 			summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
@@ -230,6 +229,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Summon a Minotaur for %d turns to attack your foes. Minotaurs cannot stay summoned for long, but they deal a lot of damage.
 		It will get %d strength, %d constitution and 18 dexterity.
+		Your summons inherit some of your stats: increased damage%, stun/pin/confusion/blindness resistance, armour penetration.
 		Strength stat will increase with your Willpower stat.]])
 		:format(self:getTalentLevel(t) + 2 + self:getTalentLevelRaw(self.T_RESILIENCE),
 		25 + self:getWil() * self:getTalentLevel(t) / 5,
@@ -281,7 +281,8 @@ newTalent{
 
 			autolevel = "none",
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=2, },
-			stats = { str=25 + self:getWil() * self:getTalentLevel(t) / 5, dex=18, con=10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2, },
+			stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
+			inc_stats = { str=25 + self:getWil() * self:getTalentLevel(t) / 5, dex=18, con=10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2, },
 
 			desc = [[It is a massive animated statue.]],
 			level_range = {self.level, self.level}, exp_worth = 0,
@@ -289,8 +290,6 @@ newTalent{
 			combat_armor = 25, combat_def = -20,
 			combat = { dam=resolvers.rngavg(25,50), atk=20, apr=5, dammod={str=0.9} },
 			resolvers.talents{ [Talents.T_UNSTOPPABLE]=3, [Talents.T_STUN]=3, },
-
-			inc_damage = table.clone(self.inc_damage, true),
 
 			poison_immune=1, cut_immune=1, fear_immune=1, blind_immune=1,
 
@@ -308,6 +307,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Summon a Stone Golem for %d turns to attack your foes. Stone golems are formidable foes that can become unstoppable foes.
 		It will get %d strength, %d constitution and 18 dexterity.
+		Your summons inherit some of your stats: increased damage%, stun/pin/confusion/blindness resistance, armour penetration.
 		Strength stat will increase with your Willpower stat.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 		25 + self:getWil() * self:getTalentLevel(t) / 5,

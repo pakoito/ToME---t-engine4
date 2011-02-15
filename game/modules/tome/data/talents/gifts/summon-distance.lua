@@ -161,7 +161,8 @@ newTalent{
 			desc = [[]],
 			autolevel = "none",
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=1, },
-			stats = { mag=15 + self:getWil() * self:getTalentLevel(t) / 5, wil=10 + self:getTalentLevel(t) * 2, con=10+ self:getTalentLevelRaw(self.T_RESILIENCE)*2, },
+			stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
+			inc_stats = { mag=15 + self:getWil() * self:getTalentLevel(t) / 5, wil=10 + self:getTalentLevel(t) * 2, con=10+ self:getTalentLevelRaw(self.T_RESILIENCE)*2, },
 			level_range = {self.level, self.level}, exp_worth = 0,
 
 			max_life = resolvers.rngavg(5,10),
@@ -174,7 +175,6 @@ newTalent{
 			resolvers.talents{
 				[self.T_RITCH_FLAMESPITTER_BOLT]=self:getTalentLevelRaw(t),
 			},
-			inc_damage = table.clone(self.inc_damage, true),
 			resists = { [DamageType.FIRE] = self:getTalentLevel(t)*10 },
 
 			summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
@@ -190,6 +190,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Summon a Ritch Flamespitter for %d turns to burn your foes to death. Flamespitters are really weak in melee and die easily, but they can burn your foes from afar.
 		It will get %d magic, %d willpower and %d constitution.
+		Your summons inherit some of your stats: increased damage%, stun/pin/confusion/blindness resistance, armour penetration.
 		Magic stat will increase with your Willpower stat.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 		15 + self:getWil() * self:getTalentLevel(t) / 5,
@@ -235,7 +236,8 @@ newTalent{
 			desc = [[A strange reptilian creature with three smouldering heads.]],
 			autolevel = "none",
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=1, },
-			stats = { wil=15 + self:getWil() * self:getTalentLevel(t) / 5, str=18, con=10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2},
+			stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
+			inc_stats = { wil=15 + self:getWil() * self:getTalentLevel(t) / 5, str=18, con=10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2},
 			level_range = {self.level, self.level}, exp_worth = 0,
 
 			max_life = resolvers.rngavg(5,10),
@@ -250,7 +252,6 @@ newTalent{
 				[self.T_ACID_BREATH]=self:getTalentLevelRaw(t),
 				[self.T_POISON_BREATH]=self:getTalentLevelRaw(t),
 			},
-			inc_damage = table.clone(self.inc_damage, true),
 
 			summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
 			summon_time = math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
@@ -265,6 +266,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Summon a 3-headed Hydra for %d turns to destroy your foes. 3-headed hydras are able to breathe poison, acid and lightning.
 		It will get %d willpower and %d constitution and 18 strength.
+		Your summons inherit some of your stats: increased damage%, stun/pin/confusion/blindness resistance, armour penetration.
 		Willpower stat will increase with your Willpower stat.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 		15 + self:getWil() * self:getTalentLevel(t) / 5,
@@ -310,7 +312,8 @@ newTalent{
 			desc = [[It looks like a hole in reality. The Warper disrupts the normal flow of space and time.]],
 			autolevel = "none",
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=1, },
-			stats = { mag=15 + self:getWil() * self:getTalentLevel(t) / 5, wil=10 + self:getTalentLevel(t) * 2, con=10+self:getTalentLevelRaw(self.T_RESILIENCE) * 2, },
+			stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
+			inc_stats = { mag=15 + self:getWil() * self:getTalentLevel(t) / 5, wil=10 + self:getTalentLevel(t) * 2, con=10+self:getTalentLevelRaw(self.T_RESILIENCE) * 2, },
 			level_range = {self.level, self.level}, exp_worth = 0,
 
 			max_life = resolvers.rngavg(5,10),
@@ -325,7 +328,6 @@ newTalent{
 				[self.T_MANATHRUST]=self:getTalentLevelRaw(t),
 				[self.T_PHASE_DOOR]=self:getTalentLevelRaw(t),
 			},
-			inc_damage = table.clone(self.inc_damage, true),
 
 			summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
 			summon_time = math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
@@ -340,6 +342,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Summon a Warper for %d turns to harass your foes. Warpers are really weak in melee and die easily, but they can blink around, throwing manathrusts and time prisons at your foes.
 		It will get %d magic, %d willpower and %d constitution.
+		Your summons inherit some of your stats: increased damage%, stun/pin/confusion/blindness resistance, armour penetration.
 		Magic stat will increase with your Willpower stat.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 		15 + self:getWil() * self:getTalentLevel(t) / 5,
@@ -385,7 +388,8 @@ newTalent{
 			desc = [[A mighty fire drake, an Uruloki.]],
 			autolevel = "none",
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=1, },
-			stats = { str=15 + self:getWil() * self:getTalentLevel(t) / 5, wil=38, con=20 + self:getTalentLevel(t) * 3 + self:getTalentLevelRaw(self.T_RESILIENCE) * 2, },
+			stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
+			inc_stats = { str=15 + self:getWil() * self:getTalentLevel(t) / 5, wil=38, con=20 + self:getTalentLevel(t) * 3 + self:getTalentLevelRaw(self.T_RESILIENCE) * 2, },
 			level_range = {self.level, self.level}, exp_worth = 0,
 
 			max_life = resolvers.rngavg(100, 150),
@@ -403,7 +407,6 @@ newTalent{
 				[self.T_WING_BUFFET]=self:getTalentLevelRaw(t),
 				[self.T_DEVOURING_FLAME]=self:getTalentLevelRaw(t),
 			},
-			inc_damage = table.clone(self.inc_damage, true),
 
 			summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
 			summon_time = math.ceil(self:getTalentLevel(t)) + 2 + self:getTalentLevelRaw(self.T_RESILIENCE),
@@ -418,6 +421,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Summon a Fire Drake for %d turns to burn and crush your foes to death. Fire Drakes are behemoths that can burn your foes from afar with their fiery breath.
 		It will get %d strength, %d constitution and 38 willpower.
+		Your summons inherit some of your stats: increased damage%, stun/pin/confusion/blindness resistance, armour penetration.
 		Strength stat will increase with your Willpower stat.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 2 + self:getTalentLevelRaw(self.T_RESILIENCE),
 		15 + self:getWil() * self:getTalentLevel(t) / 5,

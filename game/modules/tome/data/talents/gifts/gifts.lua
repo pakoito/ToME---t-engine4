@@ -85,6 +85,13 @@ function setupSummon(self, m, x, y)
 	m.unused_talents_types = 0
 	m.ai_state = m.ai_state or {}
 	m.ai_state.tactic_leash = 100
+	local main_weapon = self:getInven("MAINHAND")[1]
+	m:attr("combat_apr", self:combatAPR(main_weapon))
+	m.inc_damage = table.clone(self.inc_damage, true)
+	m:attr("stun_immune", self:attr("stun_immune"))
+	m:attr("blind_immune", self:attr("blind_immune"))
+	m:attr("pin_immune", self:attr("pin_immune"))
+	m:attr("confusion_immune", self:attr("confusion_immune"))
 	if self.player then
 		m.remove_from_party_on_death = true
 		game.party:addMember(m, {
