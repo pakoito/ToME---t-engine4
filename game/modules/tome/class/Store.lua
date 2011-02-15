@@ -31,19 +31,33 @@ end
 
 function _M:init(t, no_default)
 	t.store.buy_percent = t.store.buy_percent or function(self, o) if o.type == "gem" then return 40 else return 15 end end
-	t.store.sell_percent = t.store.sell_percent or 100
+	t.store.sell_percent = t.store.sell_percent or function(self, o) return 100 + 2 * (o.__store_level or 0) end
 	t.store.purse = t.store.purse or 20
 	Store.init(self, t, no_default)
 
 	self.name = self.name .. (" (Max buy %0.2f gold)"):format(self.store.purse)
-
-	if self.store and self.store.restock_after then self.store.restock_after = self.store.restock_after * 10 end
 
 	if not self.store.actor_filter then
 		self.store.actor_filter = function(o)
 			return not o.quest and not o.lore and o.cost and o.cost > 0
 		end
 	end
+end
+
+--- Caleld when a new object is stocked
+function _M:stocked_object(o)
+	o.__store_level = game.zone.base_level + game.level.level - 1
+end
+
+--- Restock based on player level
+function _M:canRestock()
+	local s = self.store
+	local p = game.party:findMember{main=true}
+	if self.last_filled and p and self.last_filled >= p.level - s.restock_every then
+		print("[STORE] not restocking yet [player level]", p.level, s.restock_every, self.last_filled)
+		return false
+	end
+	return true
 end
 
 --- Called on object purchase try

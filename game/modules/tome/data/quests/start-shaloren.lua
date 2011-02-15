@@ -28,7 +28,7 @@ desc = function(self, who)
 		desc[#desc+1] = "#SLATE#* You must explore the scintillating caves.#WHITE#"
 	end
 	if self:isCompleted("rhaloren") then
-		desc[#desc+1] = "#LIGHT_GREEN#* You have explored the Rhaloren camp and kill the Inquisitor.#WHITE#"
+		desc[#desc+1] = "#LIGHT_GREEN#* You have explored the Rhaloren camp and killed the Inquisitor.#WHITE#"
 	else
 		desc[#desc+1] = "#SLATE#* You must explore the Rhaloren camp.#WHITE#"
 	end

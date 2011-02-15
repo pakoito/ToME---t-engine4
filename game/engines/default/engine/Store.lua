@@ -37,16 +37,24 @@ function _M:init(t, no_default)
 	Inventory.init(self, t, no_default)
 end
 
+--- Default restock checking method
+-- Checks based on turns elapsed, you may overload it to do your own checks
+function _M:canRestock()
+	local s = self.store
+	if self.last_filled and game.turn and self.last_filled >= game.turn - s.restock_after then
+		print("[STORE] not restocking yet", game.turn, s.restock_after, self.last_filled)
+		return false
+	end
+	return true
+end
+
 --- Fill the store with goods
 -- @param level the level to generate for (instance of type engine.Level)
 -- @param zone the zone to generate for
 function _M:loadup(level, zone)
 	local s = self.store
 	if not s then error("Store without a store field") end
-	if self.last_filled and game.turn and self.last_filled >= game.turn - s.restock_after then
-		print("[STORE] not restocking yet", game.turn, s.restock_after, self.last_filled)
-		return
-	end
+	if not self:canRestock() then return end
 	local inven = self:getInven("INVEN")
 
 	if s.empty_before_restock then
@@ -70,6 +78,7 @@ function _M:loadup(level, zone)
 				if filter.id then e:identify(filter.id) end
 				self:addObject(inven, e)
 				zone:addEntity(level, e, "object")
+				self:check("stocked_object", e)
 				print("[STORE] stocking up: ", e.name)
 				i = i + 1
 			end
@@ -87,6 +96,7 @@ function _M:loadup(level, zone)
 			if filter.id then e:identify(filter.id) end
 			self:addObject(inven, e)
 			zone:addEntity(level, e, "object")
+			self:check("stocked_object", e)
 			print("[STORE] stocking up: ", e.name)
 		end
 	end
