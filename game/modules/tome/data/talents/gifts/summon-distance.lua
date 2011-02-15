@@ -190,7 +190,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Summon a Ritch Flamespitter for %d turns to burn your foes to death. Flamespitters are really weak in melee and die easily, but they can burn your foes from afar.
 		It will get %d magic, %d willpower and %d constitution.
-		Your summons inherit some of your stats: increased damage%, stun/pin/confusion/blindness resistance, armour penetration.
+		Your summons inherit some of your stats: increased damage%%, stun/pin/confusion/blindness resistance, armour penetration.
 		Magic stat will increase with your Willpower stat.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 		15 + self:getWil() * self:getTalentLevel(t) / 5,
@@ -266,7 +266,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Summon a 3-headed Hydra for %d turns to destroy your foes. 3-headed hydras are able to breathe poison, acid and lightning.
 		It will get %d willpower and %d constitution and 18 strength.
-		Your summons inherit some of your stats: increased damage%, stun/pin/confusion/blindness resistance, armour penetration.
+		Your summons inherit some of your stats: increased damage%%, stun/pin/confusion/blindness resistance, armour penetration.
 		Willpower stat will increase with your Willpower stat.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 		15 + self:getWil() * self:getTalentLevel(t) / 5,
@@ -342,7 +342,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Summon a Warper for %d turns to harass your foes. Warpers are really weak in melee and die easily, but they can blink around, throwing manathrusts and time prisons at your foes.
 		It will get %d magic, %d willpower and %d constitution.
-		Your summons inherit some of your stats: increased damage%, stun/pin/confusion/blindness resistance, armour penetration.
+		Your summons inherit some of your stats: increased damage%%, stun/pin/confusion/blindness resistance, armour penetration.
 		Magic stat will increase with your Willpower stat.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 		15 + self:getWil() * self:getTalentLevel(t) / 5,
@@ -421,7 +421,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Summon a Fire Drake for %d turns to burn and crush your foes to death. Fire Drakes are behemoths that can burn your foes from afar with their fiery breath.
 		It will get %d strength, %d constitution and 38 willpower.
-		Your summons inherit some of your stats: increased damage%, stun/pin/confusion/blindness resistance, armour penetration.
+		Your summons inherit some of your stats: increased damage%%, stun/pin/confusion/blindness resistance, armour penetration.
 		Strength stat will increase with your Willpower stat.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 2 + self:getTalentLevelRaw(self.T_RESILIENCE),
 		15 + self:getWil() * self:getTalentLevel(t) / 5,
