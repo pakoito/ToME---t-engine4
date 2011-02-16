@@ -901,17 +901,18 @@ void create_particles_thread()
 		SDL_Thread *thread;
 		particle_thread *pt = &threads[i];
 
+		pt->id = nb_threads++;
+		pt->list = NULL;
+		pt->lock = SDL_CreateMutex();
+		pt->keyframes = SDL_CreateSemaphore(0);
+		pt->running = TRUE;
+
 		thread = SDL_CreateThread(thread_particles, pt);
 		if (thread == NULL) {
 			printf("Unable to create particle thread: %s\n", SDL_GetError());
 			continue;
 		}
 		pt->thread = thread;
-		pt->id = nb_threads++;
-		pt->list = NULL;
-		pt->lock = SDL_CreateMutex();
-		pt->keyframes = SDL_CreateSemaphore(0);
-		pt->running = TRUE;
 
 		printf("Creating particles thread %d\n", pt->id);
 	}

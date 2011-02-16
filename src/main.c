@@ -40,7 +40,7 @@
 #include "getself.h"
 #include "music.h"
 #include "serial.h"
-#include "te4-xmpp.h"
+#include "profile.h"
 #include "main.h"
 
 #define WIDTH 800
@@ -864,9 +864,9 @@ int main(int argc, char *argv[])
 
 	boot_lua(2, FALSE, argc, argv);
 
-	//	start_xmpp_thread();
-
 	pass_command_args(argc, argv);
+
+	create_profile_thread();
 
 	SDL_Event event;
 	while (!exit_engine)

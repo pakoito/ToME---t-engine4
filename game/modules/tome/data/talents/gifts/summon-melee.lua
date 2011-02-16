@@ -52,7 +52,7 @@ newTalent{
 			display = "C", color=colors.LIGHT_DARK,
 			name = "war hound", faction = self.faction,
 			desc = [[]],
-			autolevel = "warrior",
+			autolevel = "none",
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=5, },
 			stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
 			inc_stats = { str=10 + self:getWil() * self:getTalentLevel(t) / 5, dex=10 + self:getTalentLevel(t) * 2, mag=5, con=15 + self:getTalentLevelRaw(self.T_RESILIENCE)*2 },

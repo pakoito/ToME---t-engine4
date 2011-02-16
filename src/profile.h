@@ -18,11 +18,18 @@
     Nicolas Casalini "DarkGod"
     darkgod@te4.org
 */
-#ifndef _TE4_XMPP_H_
-#define _TE4_XMPP_H_
+#ifndef _TE4_PROFILE_H_
+#define _TE4_PROFILE_H_
 
-extern lua_State *L_xmpp;
-extern void start_xmpp_thread();
+typedef struct {
+	lua_State *L;
+	SDL_Thread *thread;
+	SDL_mutex *lock;
+	bool running;
+
+} profile_type;
+
+extern void create_profile_thread();
 
 #endif
 
