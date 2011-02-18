@@ -24,8 +24,7 @@
 typedef struct {
 	lua_State *L;
 	SDL_Thread *thread;
-	void *s_req; // ZMQ request socket
-//	void *s_rep; // ZMQ response socket
+	int sock;
 	bool running;
 
 } profile_type;

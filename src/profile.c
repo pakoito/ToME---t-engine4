@@ -41,9 +41,6 @@ int thread_profile(void *data)
 	luaopen_mime_core(L);
 	profile->L = L;
 
-	profile->s_req = zmq_socket(Z, ZMQ_REQ);
-	zmq_connect(profile->s_req, "tcp://te4.org:2257");
-
 	// And run the lua engine pre init scripts
 	if (!luaL_loadfile(L, "/loader/pre-init.lua")) docall(L, 0, 0);
 	else lua_pop(L, 1);
