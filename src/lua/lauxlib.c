@@ -537,7 +537,7 @@ static const char *getF (lua_State *L, void *ud, size_t *size) {
     return "\n";
   }
   if (PHYSFS_eof(lf->f)) return NULL;
-  *size = (size_t)PHYSFS_read(lf->f, lf->buff, 1, sizeof(lf->buff));
+  *size = (size_t) PHYSFS_read(lf->f, lf->buff, 1, sizeof(lf->buff));
   return (*size > 0) ? lf->buff : NULL;
 }
 
