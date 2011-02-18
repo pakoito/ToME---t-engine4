@@ -20,10 +20,9 @@
 print("TE4Online starting...")
 
 local Client = require "profile-thread.Client"
-local c = nil
+local c = Client.new()
 
 function step_profile()
-	if not c then c = Client.new() end
 	local ok, res = pcall(c.step, c)
 	if not ok and res then
 		print("TE4Online error: ", res)

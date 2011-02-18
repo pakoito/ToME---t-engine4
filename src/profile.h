@@ -21,12 +21,21 @@
 #ifndef _TE4_PROFILE_H_
 #define _TE4_PROFILE_H_
 
+struct s_profile_queue_type {
+	char *payload;
+	struct s_profile_queue_type *next;
+};
+typedef struct s_profile_queue_type profile_queue;
+
 typedef struct {
 	lua_State *L;
 	SDL_Thread *thread;
 	int sock;
 	bool running;
 
+	profile_queue *queue_head, queue_tail;
+	SDL_mutex *lock_queue;
+	SDL_sem *wait_queue;
 } profile_type;
 
 extern void create_profile_thread();

@@ -31,6 +31,7 @@
 
 static profile_type *main_profile;
 
+
 int thread_profile(void *data)
 {
 	profile_type *profile = (profile_type*)data;
@@ -49,13 +50,12 @@ int thread_profile(void *data)
 	if (!luaL_loadfile(L, "/profile-thread/init.lua")) docall(L, 0, 0);
 	else lua_pop(L, 1);
 
-	int request_nbr=0;
 	while (profile->running)
 	{
 		if (!profile->running) break;
 
-//		lua_getglobal(L, "step_profile");
-//		docall(L, 0, 0);
+		lua_getglobal(L, "step_profile");
+		docall(L, 0, 0);
 	}
 
 	// Cleanup
