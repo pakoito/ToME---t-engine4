@@ -27,7 +27,7 @@ return {
 	all_remembered = true,
 	all_lited = true,
 	persistant = "zone",
-	ambiant_music = "a_lomos_del_dragon_blanco.ogg",
+	ambient_music = "a_lomos_del_dragon_blanco.ogg",
 	no_level_connectivity = true,
 	generator =  {
 		map = {
