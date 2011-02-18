@@ -43,7 +43,6 @@ solution "TEngine"
 		"src/libtcod_import",
 		"src/physfs",
 		"src/physfs/zlib123",
-		"src/zeromq/include",
 		"/usr/include/SDL",
 		"/usr/include/GL",
 	}
@@ -90,7 +89,7 @@ project "TEngine"
 	language "C"
 	targetname "t-engine"
 	files { "src/*.c", }
-	links { "physfs", "lua".._OPTIONS.lua, "fov", "luasocket", "luaprofiler", "lualanes", "lpeg", "tcodimport", "lxp", "expatstatic", "luamd5", "te4zmq" }
+	links { "physfs", "lua".._OPTIONS.lua, "fov", "luasocket", "luaprofiler", "lualanes", "lpeg", "tcodimport", "lxp", "expatstatic", "luamd5" }
 	defines { "_DEFAULT_VIDEOMODE_FLAGS_='SDL_HWSURFACE|SDL_DOUBLEBUF'" }
 	defines { [[TENGINE_HOME_PATH='".t-engine"']] }
 
@@ -267,5 +266,3 @@ project "luamd5"
 	targetname "luamd5"
 
 	files { "src/luamd5/*.c", }
-
-dofile("premake4_zeromq.lua")
