@@ -28,6 +28,7 @@
 #include "main.h"
 #include "profile.h"
 #include "lua_externs.h"
+#include "zhelpers.h"
 
 static profile_type *main_profile;
 
@@ -41,7 +42,7 @@ int thread_profile(void *data)
 	luaopen_mime_core(L);
 	profile->L = L;
 
-	profile->s_req = zmq_socket(Z, ZMQ_SUB);
+	profile->s_req = zmq_socket(Z, ZMQ_REQ);
 	zmq_connect(profile->s_req, "tcp://te4.org:2257");
 
 	// And run the lua engine pre init scripts
@@ -56,13 +57,12 @@ int thread_profile(void *data)
 	while (profile->running)
 	{
 		if (!profile->running) break;
+		printf("=== running\n");
 
-		zmq_msg_t reply;
-		zmq_msg_init(&reply);
-		zmq_recv(profile->s_req, &reply, 0);
-		printf("Received reply %d: [%s]\n", request_nbr,
-			(char *) zmq_msg_data (&reply));
-		zmq_msg_close(&reply);
+		s_send (profile->s_req, "We don't want to see this");
+		char *toto = s_recv (profile->s_req);
+		printf("=== rep %s\n", toto);
+		free(toto);
 
 		request_nbr++;
 
