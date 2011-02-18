@@ -28,7 +28,6 @@
 #include "main.h"
 #include "profile.h"
 #include "lua_externs.h"
-#include "zhelpers.h"
 
 static profile_type *main_profile;
 
@@ -57,15 +56,6 @@ int thread_profile(void *data)
 	while (profile->running)
 	{
 		if (!profile->running) break;
-		printf("=== running\n");
-
-		s_send (profile->s_req, "We don't want to see this");
-		char *toto = s_recv (profile->s_req);
-		printf("=== rep %s\n", toto);
-		free(toto);
-
-		request_nbr++;
-
 
 //		lua_getglobal(L, "step_profile");
 //		docall(L, 0, 0);
@@ -81,6 +71,8 @@ int thread_profile(void *data)
 // Runs on main thread
 void create_profile_thread()
 {
+	return;
+
 	SDL_Thread *thread;
 	profile_type *profile = calloc(1, sizeof(profile_type));
 	main_profile = profile;
