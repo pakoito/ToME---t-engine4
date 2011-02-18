@@ -19,10 +19,16 @@
 
 print("TE4Online starting...")
 
-local Client = require "xmpp.Client"
+local Client = require "profile-thread.Client"
+local c = nil
 
-while true do
-	local c = Client.new()
-	local ok, err = pcall(c.run, c)
-	if not ok and err then print("TE4Online error: ", err) end
+function step_profile()
+	if not c then c = Client.new() end
+	local ok, res = pcall(c.step, c)
+	if not ok and res then
+		print("TE4Online error: ", res)
+		c = nil
+		return false
+	end
+	return res
 end

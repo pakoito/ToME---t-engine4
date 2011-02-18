@@ -46,6 +46,7 @@
 #define WIDTH 800
 #define HEIGHT 600
 
+void *Z; // ZMQ context
 lua_State *L = NULL;
 int nb_cpus;
 bool no_debug = FALSE;
@@ -786,6 +787,9 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 
 int main(int argc, char *argv[])
 {
+	// Init ZMQ lib
+	Z = zmq_init(1);
+
 	// Get cpu cores
 	nb_cpus = get_number_cpus();
 	printf("[CPU] Detected %d CPUs\n", nb_cpus);

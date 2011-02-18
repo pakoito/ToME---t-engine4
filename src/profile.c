@@ -25,10 +25,9 @@
 #include "core_lua.h"
 #include "tSDL.h"
 #include "types.h"
+#include "main.h"
 #include "profile.h"
 #include "lua_externs.h"
-
-extern int docall (lua_State *L, int narg, int nret);
 
 static profile_type *main_profile;
 
@@ -38,29 +37,42 @@ int thread_profile(void *data)
 	lua_State *L = lua_open();  /* create state */
 	luaL_openlibs(L);  /* open libraries */
 	luaopen_core(L);
+	luaopen_socket_core(L);
+	luaopen_mime_core(L);
 	profile->L = L;
+
+	profile->s_req = zmq_socket(Z, ZMQ_SUB);
+	zmq_connect(profile->s_req, "tcp://te4.org:2257");
 
 	// And run the lua engine pre init scripts
 	if (!luaL_loadfile(L, "/loader/pre-init.lua")) docall(L, 0, 0);
 	else lua_pop(L, 1);
 
 	// Load the profile connector
-	if (!luaL_loadfile(L, "//.lua")) docall(L, 0, 0);
+	if (!luaL_loadfile(L, "/profile-thread/init.lua")) docall(L, 0, 0);
 	else lua_pop(L, 1);
 
+	int request_nbr=0;
 	while (profile->running)
 	{
 		if (!profile->running) break;
 
-		SDL_mutexP(profile->lock);
-		SDL_mutexV(profile->lock);
+		zmq_msg_t reply;
+		zmq_msg_init(&reply);
+		zmq_recv(profile->s_req, &reply, 0);
+		printf("Received reply %d: [%s]\n", request_nbr,
+			(char *) zmq_msg_data (&reply));
+		zmq_msg_close(&reply);
+
+		request_nbr++;
+
+
+//		lua_getglobal(L, "step_profile");
+//		docall(L, 0, 0);
 	}
 
 	// Cleanup
-
 	lua_close(L);
-
-	SDL_DestroyMutex(profile->lock);
 	printf("Cleaned up profile thread\n");
 
 	return(0);
@@ -73,7 +85,6 @@ void create_profile_thread()
 	profile_type *profile = calloc(1, sizeof(profile_type));
 	main_profile = profile;
 
-	profile->lock = SDL_CreateMutex();
 	profile->running = TRUE;
 
 	thread = SDL_CreateThread(thread_profile, profile);

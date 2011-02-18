@@ -21,13 +21,17 @@
 #ifndef _MAIN_H_
 #define _MAIN_H_
 
+#include "zmq.h"
+
 extern int resizeWindow(int width, int height);
 extern void do_resize(int w, int h, bool fullscreen);
 extern void setupRealtime(float freq);
 extern void setupDisplayTimer(int fps);
+extern int docall (lua_State *L, int narg, int nret);
 extern bool fbo_active;
 extern bool multitexture_active;
 extern long total_keyframes;
+extern void *Z; // ZMQ context
 
 /* Error handling */
 struct lua_err_type_s {

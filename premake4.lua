@@ -43,6 +43,7 @@ solution "TEngine"
 		"src/libtcod_import",
 		"src/physfs",
 		"src/physfs/zlib123",
+		"src/zeromq/include",
 		"/usr/include/SDL",
 		"/usr/include/GL",
 	}
@@ -89,7 +90,7 @@ project "TEngine"
 	language "C"
 	targetname "t-engine"
 	files { "src/*.c", }
-	links { "physfs", "lua".._OPTIONS.lua, "fov", "luasocket", "luaprofiler", "lualanes", "lpeg", "tcodimport", "lxp", "expatstatic", "luamd5" }
+	links { "physfs", "lua".._OPTIONS.lua, "fov", "luasocket", "luaprofiler", "lualanes", "lpeg", "tcodimport", "lxp", "expatstatic", "luamd5", "te4zmq" }
 	defines { "_DEFAULT_VIDEOMODE_FLAGS_='SDL_HWSURFACE|SDL_DOUBLEBUF'" }
 	defines { [[TENGINE_HOME_PATH='".t-engine"']] }
 
@@ -114,7 +115,7 @@ configuration "windows"
 	defines { [[TENGINE_HOME_PATH='"T-Engine"']], 'SELFEXE_WINDOWS' }
 
 configuration "linux"
-	links { "SDL", "SDL_ttf", "SDL_image", "SDL_mixer", "GL", "GLU", "m", "pthread" }
+	links { "SDL", "SDL_ttf", "SDL_image", "SDL_mixer", "GL", "GLU", "m", "pthread", "uuid" }
 	defines { [[TENGINE_HOME_PATH='".t-engine"']], 'SELFEXE_LINUX' }
 
 configuration {"linux", "Debug"}
@@ -266,3 +267,5 @@ project "luamd5"
 	targetname "luamd5"
 
 	files { "src/luamd5/*.c", }
+
+dofile("premake4_zeromq.lua")
