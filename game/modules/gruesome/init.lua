@@ -23,7 +23,7 @@ short_name = "gruesome"
 author = { "Darren Grey", "darrenjohngrey@hotmail.com" }
 homepage = "http://gruesomegames.com/"
 version = {1,0,0}
-engine = {0,9,20,"te4"}
+engine = {0,9,21,"te4"}
 description = [[
 "It is pitch black.  You are likely to eat someone..."
 
