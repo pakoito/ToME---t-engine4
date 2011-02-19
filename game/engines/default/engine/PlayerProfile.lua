@@ -263,9 +263,11 @@ function _M:getNews(callback)
 	core.profile.pushOrder("o='GetNews'")
 end
 
-function _M:tryAuth()
+function _M:tryAuth(sync)
 	print("[ONLINE PROFILE] auth")
 	core.profile.pushOrder(table.serialize{o="Login", l=self.login, p=self.pass})
+--	if sync then
+--	end
 end
 
 function _M:logOut()
@@ -307,8 +309,8 @@ end
 function _M:checkModuleHash(module, md5)
 	self.hash_valid = false
 --	if not self.auth then return nil, "no online profile active" end
---	if config.settings.cheat then return nil, "cheat mode active" end
---	if game and game:isTainted() then return nil, "savefile tainted" end
+	if config.settings.cheat then return nil, "cheat mode active" end
+	if game and game:isTainted() then return nil, "savefile tainted" end
 	core.profile.pushOrder(table.serialize{o="CheckModuleHash", module=module, md5=md5})
 
 	-- Wait anwser, this blocks thegame but cant really be avoided :/
