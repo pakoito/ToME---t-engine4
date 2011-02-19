@@ -74,6 +74,7 @@ module(..., package.seeall, class.make)
 function _M:init(name)
 	self.generic = {}
 	self.modules = {}
+	self.evt_cbs = {}
 	self.name = name or "default"
 	self:loadGenericProfile()
 
@@ -191,6 +192,32 @@ function _M:saveModuleProfile(name, data, module, nosync)
 	if not nosync then self:setConfigs(module, name, data) end
 end
 
+-----------------------------------------------------------------------
+-- Events
+-----------------------------------------------------------------------
+
+function _M:eventAuth(e)
+	if e.ok then
+		print("===", e.ok)
+		self.auth = e.ok:unserialize()
+		print("[PROFILE] Main thread got authed", self.auth.name, self.auth.email, self.auth.drupid)
+	end
+end
+
+function _M:eventGetNews(e)
+	if e.news then
+		self.evt_cbs.GetNews(e.news:unserialize())
+		self.evt_cbs.GetNews = nil
+	end
+end
+
+--- Got an event from the profile thread
+function _M:handleEvent(e)
+	e = e:unserialize()
+	if not e then return end
+	if self["event"..e.e] then self["event"..e.e](self, e) end
+	return e
+end
 
 -----------------------------------------------------------------------
 -- Online stuff
@@ -232,9 +259,10 @@ function _M:rpc(data)
 	end
 end
 
-function _M:getNews()
+function _M:getNews(callback)
 	print("[ONLINE PROFILE] get news")
-	return self:rpc{action="GetNews", async=true}
+	core.profile.pushOrder("o='GetNews'")
+	self.evt_cbs.GetNews = callback
 end
 
 function _M:sendError(what, err)
@@ -248,10 +276,7 @@ end
 
 function _M:tryAuth()
 	print("[ONLINE PROFILE] auth")
-	local data = self:rpc{action="TryAuth", login=self.login, pass=self.pass}
-	if not data then print("[ONLINE PROFILE] not auth") return end
-	print("[ONLINE PROFILE] auth as ", data.name, data.hash)
-	self.auth = data
+	core.profile.pushOrder(table.serialize{o="Login", l=self.login, p=self.pass})
 end
 
 function _M:getConfigs(module)

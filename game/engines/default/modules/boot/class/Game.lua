@@ -343,34 +343,28 @@ end
 
 function _M:serverNews()
 	local co = coroutine.create(function()
-		local th, l = profile:getNews()
-		if not th or not l then return end
-
-		local ret = l:receive(0, "final")
-		while not ret do
-			coroutine.yield()
-			ret = l:receive(0, "final")
-		end
-
-		self.news = ret
-		local f = loadstring(self.news.text)
-		if f then
-			local env = {}
-			setfenv(f, env)
-			pcall(f)
-			if env.text and env.version then
-				self.news.text = env.text
-				print("Latest engine version available: ", env.version[4], env.version[1], env.version[2], env.version[3])
-				self.latest_engine_version = env.version
-				if env.link then self.news.link = env.link end
-			else
-				self.news = nil
+		local stop = false
+		profile:getNews(function(news)
+			stop = true
+			if news and news.body then
+				local title = news.title
+				news = news.body:unserialize()
+				news.title = title
+				self.news = news
+				self:updateNews()
 			end
-		end
+		end)
 
-		if self.news then
-			self:updateNews()
-		end
+		while not stop do coroutine.yield() end
 	end)
 	game:registerCoroutine("getnews", co)
+end
+
+--- Receives a profile event
+-- Overloads to detect auth
+function _M:handleProfileEvent(evt)
+	evt = engine.GameEnergyBased.handleProfileEvent(self, evt)
+	if evt.e == "Auth" then
+	end
+	return evt
 end

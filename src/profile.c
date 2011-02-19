@@ -29,8 +29,104 @@
 #include "profile.h"
 #include "lua_externs.h"
 
-static profile_type *main_profile;
+static profile_type *main_profile = NULL;
 
+int push_order(lua_State *L)
+{
+	size_t len;
+	const char *code = luaL_checklstring(L, 1, &len);
+
+	profile_queue *q = malloc(sizeof(profile_queue));
+	char *d = calloc(len, sizeof(char));
+	memcpy(d, code, len);
+	q->payload = d;
+	q->payload_len = len;
+
+	SDL_mutexP(main_profile->lock_iqueue);
+	if (!(main_profile->iqueue_tail)) main_profile->iqueue_head = q;
+	else main_profile->iqueue_tail->next = q;
+	q->next = NULL;
+	main_profile->iqueue_tail = q;
+	SDL_mutexV(main_profile->lock_iqueue);
+
+	return 0;
+}
+
+int pop_order(lua_State *L)
+{
+	profile_queue *q = NULL;
+	SDL_mutexP(main_profile->lock_iqueue);
+	if (main_profile->iqueue_head)
+	{
+		q = main_profile->iqueue_head;
+		if (q) main_profile->iqueue_head = q->next;
+		if (!main_profile->iqueue_head) main_profile->iqueue_tail = NULL;
+	}
+	SDL_mutexV(main_profile->lock_iqueue);
+
+	if (q)
+	{
+		lua_pushlstring(L, q->payload, q->payload_len);
+		free(q->payload);
+		free(q);
+	}
+	else
+		lua_pushnil(L);
+
+	return 1;
+}
+
+int push_event(lua_State *L)
+{
+	size_t len;
+	const char *code = luaL_checklstring(L, 1, &len);
+
+	profile_queue *q = malloc(sizeof(profile_queue));
+	char *d = calloc(len, sizeof(char));
+	memcpy(d, code, len);
+	q->payload = d;
+	q->payload_len = len;
+
+	SDL_mutexP(main_profile->lock_oqueue);
+	if (!(main_profile->oqueue_tail)) main_profile->oqueue_head = q;
+	else main_profile->oqueue_tail->next = q;
+	q->next = NULL;
+	main_profile->oqueue_tail = q;
+	SDL_mutexV(main_profile->lock_oqueue);
+
+	return 0;
+}
+
+int pop_event(lua_State *L)
+{
+	profile_queue *q = NULL;
+	SDL_mutexP(main_profile->lock_oqueue);
+	if (main_profile->oqueue_head)
+	{
+		q = main_profile->oqueue_head;
+		if (q) main_profile->oqueue_head = q->next;
+		if (!main_profile->oqueue_head) main_profile->oqueue_tail = NULL;
+	}
+	SDL_mutexV(main_profile->lock_oqueue);
+
+	if (q)
+	{
+		lua_pushlstring(L, q->payload, q->payload_len);
+		free(q->payload);
+		free(q);
+	}
+	else
+		lua_pushnil(L);
+
+	return 1;
+}
+
+static const struct luaL_reg threadlib[] =
+{
+	{"popOrder", pop_order},
+	{"pushEvent", push_event},
+	{NULL, NULL},
+};
 
 int thread_profile(void *data)
 {
@@ -40,7 +136,14 @@ int thread_profile(void *data)
 	luaopen_core(L);
 	luaopen_socket_core(L);
 	luaopen_mime_core(L);
+	luaL_openlib(L, "cprofile", threadlib, 0); lua_pop(L, 1);
+
 	profile->L = L;
+	profile->iqueue_head = profile->iqueue_tail = profile->oqueue_head = profile->oqueue_tail = NULL;
+	profile->lock_iqueue = SDL_CreateMutex();
+	profile->wait_iqueue = SDL_CreateSemaphore(0);
+	profile->lock_oqueue = SDL_CreateMutex();
+	profile->wait_oqueue = SDL_CreateSemaphore(0);
 
 	// And run the lua engine pre init scripts
 	if (!luaL_loadfile(L, "/loader/pre-init.lua")) docall(L, 0, 0);
@@ -66,9 +169,9 @@ int thread_profile(void *data)
 }
 
 // Runs on main thread
-void create_profile_thread()
+int create_profile_thread(lua_State *L)
 {
-	return;
+	if (main_profile) return 0;
 
 	SDL_Thread *thread;
 	profile_type *profile = calloc(1, sizeof(profile_type));
@@ -84,4 +187,21 @@ void create_profile_thread()
 	profile->thread = thread;
 
 	printf("Creating profile thread\n");
+	return 0;
 }
+
+static const struct luaL_reg mainlib[] =
+{
+	{"createThread", create_profile_thread},
+	{"pushOrder", push_order},
+	{"popEvent", pop_event},
+	{NULL, NULL},
+};
+
+int luaopen_profile(lua_State *L)
+{
+	luaL_openlib(L, "core.profile", mainlib, 0);
+	lua_pop(L, 1);
+	return 1;
+}
+

@@ -23,6 +23,7 @@
 
 struct s_profile_queue_type {
 	char *payload;
+	size_t payload_len;
 	struct s_profile_queue_type *next;
 };
 typedef struct s_profile_queue_type profile_queue;
@@ -33,12 +34,16 @@ typedef struct {
 	int sock;
 	bool running;
 
-	profile_queue *queue_head, queue_tail;
-	SDL_mutex *lock_queue;
-	SDL_sem *wait_queue;
+	profile_queue *iqueue_head, *iqueue_tail;
+	SDL_mutex *lock_iqueue;
+	SDL_sem *wait_iqueue;
+
+	profile_queue *oqueue_head, *oqueue_tail;
+	SDL_mutex *lock_oqueue;
+	SDL_sem *wait_oqueue;
 } profile_type;
 
-extern void create_profile_thread();
+extern int luaopen_profile(lua_State *L);
 
 #endif
 

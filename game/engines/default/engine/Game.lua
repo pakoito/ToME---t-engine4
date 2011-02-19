@@ -141,6 +141,19 @@ function _M:display(nb_keyframes)
 		d:display()
 		d:toScreen(d.display_x, d.display_y, nb_keyframes)
 	end
+
+	-- Check profile thread events
+	local evt = core.profile.popEvent()
+	while evt do
+		self:handleProfileEvent(evt)
+		evt = core.profile.popEvent()
+	end
+end
+
+--- Receives a profile event
+-- Usualy this just transfers it to the PlayerProfile class but you can overload it to handle special stuff
+function _M:handleProfileEvent(evt)
+	return profile:handleEvent(evt)
 end
 
 --- Returns the player

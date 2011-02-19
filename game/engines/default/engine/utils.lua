@@ -37,35 +37,6 @@ function table.print(src, offset)
 	end
 end
 
---- This is a really naive algorithm, it will not handle objects and such.
--- USe only for small tables
-function table.serialize(src, sub)
-	local str = ""
-	if sub then str = "{" end
-	for k, e in pairs(src) do
-		local nk, ne = k, e
-		local tk, te = type(k), type(e)
-
-		if tk == "table" then nk = table.serialize(nk, true)
-		elseif tk == "string" then -- nothing, we are good
-		else nk = "["..nk.."]"
-		end
-
-		if te == "table" then
-			str = str..string.format("%s=%s ", nk, table.serialize(ne, true))
-		elseif te == "number" then
-			str = str..string.format("%s=%f ", nk, ne)
-		elseif te == "string" then
-			str = str..string.format("%s=%q ", nk, ne)
-		elseif te == "boolean" then
-			str = str..string.format("%s=%s ", nk, tostring(ne))
-		end
-		if sub then str = str..", " end
-	end
-	if sub then str = str.."}" end
-	return str
-end
-
 function table.clone(tbl, deep)
 	local n = {}
 	for k, e in pairs(tbl) do

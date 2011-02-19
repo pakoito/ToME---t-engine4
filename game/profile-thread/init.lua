@@ -23,10 +23,8 @@ local Client = require "profile-thread.Client"
 local c = Client.new()
 
 function step_profile()
-	local ok, res = pcall(c.step, c)
+	local ok, res = pcall(function() return c:run() end, function(...) server:logError("[profile-thread-error:stacktrace] %s", debug.traceback(...)) end)
 	if not ok and res then
-		print("TE4Online error: ", res)
-		c = nil
 		return false
 	end
 	return res

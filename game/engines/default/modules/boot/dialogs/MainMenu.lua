@@ -65,6 +65,12 @@ function _M:init()
 		self.c_auth and {right=0, bottom=0, absolute=true, ui=self.c_auth} or nil,
 	}
 	self:setupUI(false, true)
+	self.key:addBind("LUA_CONSOLE", function()
+		if config.settings.cheat then
+			game:registerDialog(require("engine.DebugConsole").new())
+		end
+	end)
+
 end
 
 function _M:switchBackground()

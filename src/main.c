@@ -699,6 +699,7 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 		luaopen_noise(L);
 		luaopen_shaders(L);
 		luaopen_serial(L);
+		luaopen_profile(L);
 
 		// Override "print" if requested
 		if (no_debug)
@@ -865,8 +866,6 @@ int main(int argc, char *argv[])
 	boot_lua(2, FALSE, argc, argv);
 
 	pass_command_args(argc, argv);
-
-	create_profile_thread();
 
 	SDL_Event event;
 	while (!exit_engine)
