@@ -232,7 +232,10 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 	table.sort(md5s)
 	local fmd5 = md5.sumhexa(table.concat(md5s))
 	print("[MODULE LOADER] module MD5", fmd5, "computed in ", core.game.getTime() - t)
-	local hash_valid, hash_err = profile:checkModuleHash(mod.version_name, fmd5)
+	local hash_valid, hash_err
+	if mod.short_name ~= "boot" then
+		hash_valid, hash_err = profile:checkModuleHash(mod.version_name, fmd5)
+	end
 
 	-- If bad hash, switch to dev profile
 	if not hash_valid and not profile.auth then
@@ -272,7 +275,7 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 	-- Disable the profile if ungood
 	if mod.short_name ~= "boot" then
 		if not hash_valid then
-			game.log("#LIGHT_RED#Profile disabled(switching to development profile) due to %s.", hash_err)
+			game.log("#LIGHT_RED#Profile disabled(switching to development profile) due to %s.", hash_err or "???")
 		end
 	end
 end

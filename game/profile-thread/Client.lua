@@ -101,8 +101,8 @@ end
 
 function _M:orderLogin(o)
 	-- Already logged?
-	if self.auth and self.auth.login == o.login then
-		print("[PROFILE] reusing login")
+	if self.auth and self.auth.login == o.l then
+		print("[PROFILE] reusing login", self.auth.name)
 		cprofile.pushEvent(string.format("e='Auth' ok=%q", table.serialize(self.auth)))
 	else
 		self.user_login = o.l
@@ -125,7 +125,37 @@ function _M:orderGetNews(o)
 	end
 end
 
+function _M:orderGetConfigs(o)
+	if not self.auth then return end
+	self:command("GCFS", o.module)
+	if self:read("200") then
+		local _, _, size = self.last_line:find("^([0-9]+)")
+		size = tonumber(size)
+		if not size or size < 1 then return end
+		local body = self.sock:receive(size)
+		cprofile.pushEvent(string.format("e='GetConfigs' module=%q data=%q", o.module, body))
+	end
+end
+
+function _M:orderSetConfigs(o)
+	if not self.auth then return end
+	self:command("SCFS", o.data:len(), o.module)
+	if self:read("200") then
+		self.sock:send(o.data)
+	end
+end
+
+function _M:orderCheckModuleHash(o)
+	self:command("CMD5", o.md5, o.module)
+	if self:read("200") then
+		cprofile.pushEvent("e='CheckModuleHash' ok=true")
+	else
+		cprofile.pushEvent("e='CheckModuleHash' ok=false")
+	end
+end
+
 function _M:handleOrder(o)
+	if not self.sock then return end
 	o = o:unserialize()
 	if self["order"..o.o] then self["order"..o.o](self, o) end
 end

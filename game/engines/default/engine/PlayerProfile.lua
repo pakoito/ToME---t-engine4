@@ -84,8 +84,6 @@ function _M:init(name)
 		self.login = self.generic.online.login
 		self.pass = self.generic.online.pass
 		self:tryAuth()
-		self:getConfigs("generic")
-		self:syncOnline("generic")
 	end
 end
 
@@ -192,15 +190,24 @@ function _M:saveModuleProfile(name, data, module, nosync)
 	if not nosync then self:setConfigs(module, name, data) end
 end
 
+function _M:checkFirstRun()
+	local result = self.generic.firstrun
+	if not result then
+		firstrun = { When=os.time() }
+		self:saveGenericProfile("firstrun", firstrun, false)
+	end
+	return result
+end
+
 -----------------------------------------------------------------------
 -- Events
 -----------------------------------------------------------------------
 
 function _M:eventAuth(e)
 	if e.ok then
-		print("===", e.ok)
 		self.auth = e.ok:unserialize()
 		print("[PROFILE] Main thread got authed", self.auth.name, self.auth.email, self.auth.drupid)
+		self:getConfigs("generic", function(e) self:syncOnline(e.module) end)
 	end
 end
 
@@ -211,77 +218,9 @@ function _M:eventGetNews(e)
 	end
 end
 
---- Got an event from the profile thread
-function _M:handleEvent(e)
-	e = e:unserialize()
-	if not e then return end
-	if self["event"..e.e] then self["event"..e.e](self, e) end
-	return e
-end
-
------------------------------------------------------------------------
--- Online stuff
------------------------------------------------------------------------
-
-function _M:rpc(data)
-	-- We can work in asynchronous mode, to not delay the main game execution
-	if data.async and game and type(game) == "table" and not game.refuse_threads then
-		data.async = nil
-		local l = lanes.linda()
-
-		function handler(data)
-			local http = require "socket.http"
-			local url = require "socket.url"
-			require "Json2"
-
-			print("[ONLINE PROFILE] async rpc called", "http://te4.org/lua/profilesrpc.ws/"..data.action)
-			local body, status = http.request("http://te4.org/lua/profilesrpc.ws/"..data.action, "json="..url.escape(json.encode(data)))
-			if not body then
-				l:send("final", nil)
-			else
-				local ok, ret = pcall(json.decode, body)
-				l:send("final", ok and ret or nil)
-			end
-			return true
-		end
-
-		local th = lanes.gen("*", handler)(data)
-		-- Tell the game to monitor this thread and end it when it's done
-		game:registerThread(th, l)
-
-		return th, l
-	else
-		print("[ONLINE PROFILE] rpc called", "http://te4.org/lua/profilesrpc.ws/"..data.action)
-		local body, status = http.request("http://te4.org/lua/profilesrpc.ws/"..data.action, "json="..url.escape(json.encode(data)))
-		if not body then return end
-		local ok, ret = pcall(json.decode, body)
-		return ok and ret or nil
-	end
-end
-
-function _M:getNews(callback)
-	print("[ONLINE PROFILE] get news")
-	core.profile.pushOrder("o='GetNews'")
-	self.evt_cbs.GetNews = callback
-end
-
-function _M:sendError(what, err)
-	print("[ONLINE PROFILE] sending error")
-	local popup = Dialog:simplePopup("Sending...", "Sending the error report. Thank you.", nil, true)
-	popup.__showup = nil
-	core.display.forceRedraw()
-	self:rpc{action="SendError", login=self.login, what=what, err=err, module=game.__mod_info.short_name, version=game.__mod_info.version_name}
-	game:unregisterDialog(popup)
-end
-
-function _M:tryAuth()
-	print("[ONLINE PROFILE] auth")
-	core.profile.pushOrder(table.serialize{o="Login", l=self.login, p=self.pass})
-end
-
-function _M:getConfigs(module)
-	if not self.auth then return end
-	local data = self:rpc{action="GetConfigs", login=self.login, hash=self.auth.hash, module=module}
+function _M:eventGetConfigs(e)
+	local data = e.data:unserialize()
+	local module = e.module
 	if not data then print("[ONLINE PROFILE] get configs") return end
 	for name, val in pairs(data) do
 		print("[ONLINE PROFILE] config ", name)
@@ -303,17 +242,54 @@ function _M:getConfigs(module)
 			end
 		end
 	end
+	if self.evt_cbs.GetConfigs then self.evt_cbs.GetConfigs(e) self.evt_cbs.GetConfigs = nil end
+end
+
+--- Got an event from the profile thread
+function _M:handleEvent(e)
+	e = e:unserialize()
+	if not e then return end
+	if self["event"..e.e] then self["event"..e.e](self, e) end
+	return e
+end
+
+-----------------------------------------------------------------------
+-- Online stuff
+-----------------------------------------------------------------------
+
+function _M:getNews(callback)
+	print("[ONLINE PROFILE] get news")
+	self.evt_cbs.GetNews = callback
+	core.profile.pushOrder("o='GetNews'")
+end
+
+function _M:tryAuth()
+	print("[ONLINE PROFILE] auth")
+	core.profile.pushOrder(table.serialize{o="Login", l=self.login, p=self.pass})
+end
+
+function _M:logOut()
+	core.profile.pushOrder(table.serialize{o="Logoff"})
+	profile.generic.online = nil
+	profile.auth = nil
+
+	local restore = fs.getWritePath()
+	fs.setWritePath(engine.homepath)
+	fs.delete("/profiles/"..self.name.."/generic/online.profile")
+	if restore then fs.setWritePath(restore) end
+end
+
+function _M:getConfigs(module, cb)
+	if not self.auth then return end
+	self.evt_cbs.GetConfigs = cb
+	core.profile.pushOrder(table.serialize{o="GetConfigs", module=module})
 end
 
 function _M:setConfigs(module, name, val)
 	if not self.auth then return end
 	if name == "online" then return end
-
 	if type(val) ~= "string" then val = serialize(val) end
-
-	local data = self:rpc{async=true, action="SetConfigs", login=self.login, hash=self.auth.hash, module=module, data={[name] = val}}
-	if not data then return end
-	print("[ONLINE PROFILE] saved ", module, name, val)
+	core.profile.pushOrder(table.serialize{o="SetConfigs", module=module, data=table.serialize{[name] = val}})
 end
 
 function _M:syncOnline(module)
@@ -325,9 +301,46 @@ function _M:syncOnline(module)
 	local data = {}
 	for k, v in pairs(sync) do if k ~= "online" then data[k] = serialize(v) end end
 
-	local data = self:rpc{async=true, action="SetConfigs", login=self.login, hash=self.auth.hash, module=module, data=data}
-	if not data then return end
-	print("[ONLINE PROFILE] saved ", module)
+	core.profile.pushOrder(table.serialize{o="SetConfigs", module=module, data=table.serialize(data)})
+end
+
+function _M:checkModuleHash(module, md5)
+	self.hash_valid = false
+--	if not self.auth then return nil, "no online profile active" end
+--	if config.settings.cheat then return nil, "cheat mode active" end
+--	if game and game:isTainted() then return nil, "savefile tainted" end
+	core.profile.pushOrder(table.serialize{o="CheckModuleHash", module=module, md5=md5})
+
+	-- Wait anwser, this blocks thegame but cant really be avoided :/
+	local stop = false
+	local ok = false
+	while not stop do
+		local evt = core.profile.popEvent()
+		while evt do
+			evt = self:handleEvent(evt) -- Bypass game handling, there is none around at this point
+			if evt.e == "CheckModuleHash" then
+				ok = evt.ok
+				stop = true
+				break
+			end
+			evt = core.profile.popEvent()
+		end
+	end
+
+	if not ok then return nil, "bad game version" end
+	print("[ONLINE PROFILE] module hash is valid")
+	self.hash_valid = true
+	return true
+end
+
+--[[
+function _M:sendError(what, err)
+	print("[ONLINE PROFILE] sending error")
+	local popup = Dialog:simplePopup("Sending...", "Sending the error report. Thank you.", nil, true)
+	popup.__showup = nil
+	core.display.forceRedraw()
+	self:rpc{action="SendError", login=self.login, what=what, err=err, module=game.__mod_info.short_name, version=game.__mod_info.version_name}
+	game:unregisterDialog(popup)
 end
 
 function _M:newProfile(Login, Name, Password, Email)
@@ -351,25 +364,6 @@ function _M:performlogin(login, pass, name, email)
 	end
 end
 
-function _M:logOut()
-	profile.generic.online = nil
-	profile.auth = nil
-
-	local restore = fs.getWritePath()
-	fs.setWritePath(engine.homepath)
-	fs.delete("/profiles/"..self.name.."/generic/online.profile")
-	if restore then fs.setWritePath(restore) end
-end
-
-function _M:checkFirstRun()
-	local result = self.generic.firstrun
-	if not result then
-		firstrun = { When=os.time() }
-		self:saveGenericProfile("firstrun", firstrun, false)
-	end
-	return result
-end
-
 function _M:registerNewCharacter(module)
 	if not self.auth or not self.hash_valid then return end
 	local dialog = Dialog:simplePopup("Registering character", "Character is being registered on http://te4.org/") dialog.__showup = nil core.display.forceRedraw()
@@ -388,15 +382,4 @@ function _M:registerSaveChardump(module, uuid, title, tags, data)
 	if not data or not data.ok then return end
 	print("[ONLINE PROFILE] saved character ", uuid)
 end
-
-function _M:checkModuleHash(module, md5)
-	self.hash_valid = false
-	if not self.auth then return nil, "no online profile active" end
-	if config.settings.cheat then return nil, "cheat mode active" end
-	if game and game:isTainted() then return nil, "savefile tainted" end
-	local data = self:rpc{action="CheckModuleHash", login=self.login, hash=self.auth.hash, module=module, md5=md5}
-	if not data or not data.ok then return nil, "bad game version" end
-	print("[ONLINE PROFILE] module hash is valid")
-	self.hash_valid = true
-	return true
-end
+]]
