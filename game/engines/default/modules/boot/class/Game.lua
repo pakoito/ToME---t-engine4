@@ -365,6 +365,10 @@ end
 function _M:handleProfileEvent(evt)
 	evt = engine.GameEnergyBased.handleProfileEvent(self, evt)
 	if evt.e == "Auth" then
+		local d = self.dialogs[#self.dialogs]
+		if d and d.__CLASSNAME == "mod.dialogs.MainMenu" then
+			d:on_recover_focus()
+		end
 	end
 	return evt
 end
