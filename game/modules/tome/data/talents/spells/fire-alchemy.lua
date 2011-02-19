@@ -99,7 +99,7 @@ newTalent{
 newTalent{
 	name = "Fire Storm",
 	type = {"spell/fire-alchemy",3},
-	require = spells_req4,
+	require = spells_req3,
 	points = 5,
 	random_ego = "attack",
 	mana = 40,

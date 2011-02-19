@@ -186,13 +186,10 @@ newDamageType{
 	name = "fire", type = "FIRE", text_color = "#LIGHT_RED#",
 	antimagic_resolve = true,
 	projector = function(src, x, y, type, dam)
-		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
-		local target = game.level.map(x, y, Map.ACTOR)
-		if realdam > 0 and target and not target:attr("fire_proof") then
-			tryDestroy(target, target:getInven("INVEN"), realdam, "fire_destroy", "fire_proof", "The burst of heat destroys your %s!")
-			if src.player then world:gainAchievement("PYROMANCER", src, realdam) end
+		if src.fire_convert_to then
+			return DamageType:get(src.fire_convert_to[1]).projector(src, x, y, src.fire_convert_to[1], dam * src.fire_convert_to[2] / 100)
 		end
-		return realdam
+		return DamageType.defaultProjector(src, x, y, type, dam)
 	end,
 }
 newDamageType{
@@ -200,11 +197,6 @@ newDamageType{
 	antimagic_resolve = true,
 	projector = function(src, x, y, type, dam)
 		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
-		local target = game.level.map(x, y, Map.ACTOR)
-		if realdam > 0 and target and not target:attr("cold_proof") then
-			tryDestroy(target, target:getInven("INVEN"), realdam, "cold_destroy", "cold_proof", "The intense cold destroys your %s!")
-			if src.player then world:gainAchievement("CRYOMANCER", src, realdam) end
-		end
 		return realdam
 	end,
 }
@@ -213,10 +205,6 @@ newDamageType{
 	antimagic_resolve = true,
 	projector = function(src, x, y, type, dam)
 		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
-		local target = game.level.map(x, y, Map.ACTOR)
-		if realdam > 0 and target and not target:attr("elec_proof") then
-			tryDestroy(target, target:getInven("INVEN"), realdam, "elec_destroy", "elec_proof", "The burst of lightning destroys your %s!")
-		end
 		return realdam
 	end,
 }
@@ -226,10 +214,6 @@ newDamageType{
 	antimagic_resolve = true,
 	projector = function(src, x, y, type, dam)
 		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
-		local target = game.level.map(x, y, Map.ACTOR)
-		if realdam > 0 and target and not target:attr("acid_proof") then
-			tryDestroy(target, target:getInven("INVEN"), realdam, "acid_destroy", "acid_proof", "The splash of acid destroys your %s!")
-		end
 		return realdam
 	end,
 }
