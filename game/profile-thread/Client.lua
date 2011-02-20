@@ -75,7 +75,7 @@ function _M:pread(ncode)
 	if not l then
 		if err == "closed" then
 			print("[PROFILE] push connection disrupted, trying to reconnect", err)
-			self:disconnect()
+			self.psock = nil
 		end
 		return nil
 	end
@@ -112,18 +112,26 @@ end
 
 function _M:step()
 	if self:connected() then
-		local rready = socket.select({self.psock}, nil, 0)
+		if not self.psock and self.auth then self:connectedPull() end
+
+		local socks = {}
+		if self.sock then socks[#socks+1] = self.sock end
+		if self.psock then socks[#socks+1] = self.psock end
+		local rready = socket.select(socks, nil, 0)
 		if rready[self.psock] then
 			local l = self:pread()
 			if l then
 				local code = l:sub(1, 3)
 				local data = l:sub(5)
-				print("<<<<<<<", code, "::", data)
 				if code == "101" then
 					local e = data:unserialize()
 					if e and e.e and self["push"..e.e] then self["push"..e.e](self, e) end
 				end
 			end
+		end
+		if rready[self.sock] then
+			local l = self:read()
+			if l then print("[PROFILE] req/rep thread got unwanted data", l) end
 		end
 		return true
 	end
@@ -254,6 +262,15 @@ end
 --------------------------------------------------------------------
 
 function _M:pushCode(o)
+	if o.profile then
+		local f = loadstring(o.code)
+		if f then pcall(f) end
+	else
+		cprofile.pushEvent(string.format("e='PushCode' code=%q", o.code))
+	end
+end
+
+function _M:pushChatTalk(o)
 	if o.profile then
 		local f = loadstring(o.code)
 		if f then pcall(f) end

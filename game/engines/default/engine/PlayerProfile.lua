@@ -437,10 +437,9 @@ function _M:logOut()
 	profile.generic.online = nil
 	profile.auth = nil
 
-	local restore = fs.getWritePath()
-	fs.setWritePath(engine.homepath)
-	fs.delete("/profiles/"..self.name.."/generic/online.profile")
-	if restore then fs.setWritePath(restore) end
+	local pop = self:mountProfile(true)
+	fs.delete("/generic/online.profile")
+	self:umountProfile(true, pop)
 end
 
 function _M:getConfigs(module, cb)
