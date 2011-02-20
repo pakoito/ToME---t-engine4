@@ -46,3 +46,4 @@ You are an adventurer, set out to discover wonders, explore old places, and vent
 ]]
 starter = "mod.load"
 profile_stats_fields = {"artifacts", "characters", "deaths", "uniques"}
+allow_userchat = true

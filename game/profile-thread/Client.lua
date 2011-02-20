@@ -19,10 +19,12 @@
 
 require "engine.class"
 local socket = require "socket"
+local UserChat = require "profile-thread.UserChat"
 
 module(..., package.seeall, class.make)
 
 function _M:init()
+	self.chat = UserChat.new(self)
 end
 
 function _M:connected()
@@ -125,7 +127,9 @@ function _M:step()
 				local data = l:sub(5)
 				if code == "101" then
 					local e = data:unserialize()
-					if e and e.e and self["push"..e.e] then self["push"..e.e](self, e) end
+					if e and e.e:find("^Chat") then self.chat:event(e)
+					elseif e and e.e and self["push"..e.e] then self["push"..e.e](self, e)
+					end
 				end
 			end
 		end
@@ -146,6 +150,12 @@ function _M:run()
 		self:step()
 		core.game.sleep(50)
 	end
+end
+
+function _M:handleOrder(o)
+	o = o:unserialize()
+	if not self.sock and o.o ~= "Login" then return end -- Dont do stuff without a connection, unless we try to auth
+	if self["order"..o.o] then self["order"..o.o](self, o) end
 end
 
 --------------------------------------------------------------------
@@ -251,30 +261,20 @@ function _M:orderSaveChardump(o)
 	cprofile.pushEvent("e='SaveChardump' ok=true")
 end
 
-function _M:handleOrder(o)
-	o = o:unserialize()
-	if not self.sock and o.o ~= "Login" then return end -- Dont do stuff without a connection, unless we try to auth
-	if self["order"..o.o] then self["order"..o.o](self, o) end
+function _M:orderChatTalk(o)
+	self:command("BRDC", o.channel, o.msg)
+	self:read("200")
 end
 
 --------------------------------------------------------------------
 -- Pushes comming from the push socket
 --------------------------------------------------------------------
 
-function _M:pushCode(o)
-	if o.profile then
-		local f = loadstring(o.code)
+function _M:pushCode(e)
+	if e.profile then
+		local f = loadstring(e.code)
 		if f then pcall(f) end
 	else
-		cprofile.pushEvent(string.format("e='PushCode' code=%q", o.code))
-	end
-end
-
-function _M:pushChatTalk(o)
-	if o.profile then
-		local f = loadstring(o.code)
-		if f then pcall(f) end
-	else
-		cprofile.pushEvent(string.format("e='PushCode' code=%q", o.code))
+		cprofile.pushEvent(string.format("e='PushCode' code=%q", e.code))
 	end
 end

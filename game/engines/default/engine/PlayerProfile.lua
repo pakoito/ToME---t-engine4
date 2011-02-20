@@ -23,6 +23,7 @@ local url = require "socket.url"
 local ltn12 = require "ltn12"
 local lanes = require "lanes"
 local Dialog = require "engine.ui.Dialog"
+local UserChat = require "engine.UserChat"
 require "Json2"
 
 ------------------------------------------------------------
@@ -72,6 +73,7 @@ end
 module(..., package.seeall, class.make)
 
 function _M:init()
+	self.chat = UserChat.new()
 	self.generic = {}
 	self.modules = {}
 	self.evt_cbs = {}
@@ -376,11 +378,6 @@ function _M:eventGetNews(e)
 	end
 end
 
-function _M:eventPushCode(e)
-	local f = loadstring(e.code)
-	if f then pcall(f) end
-end
-
 function _M:eventGetConfigs(e)
 	local data = e.data:unserialize()
 	local module = e.module
@@ -406,6 +403,15 @@ function _M:eventGetConfigs(e)
 		end
 	end
 	if self.evt_cbs.GetConfigs then self.evt_cbs.GetConfigs(e) self.evt_cbs.GetConfigs = nil end
+end
+
+function _M:eventPushCode(e)
+	local f = loadstring(e.code)
+	if f then pcall(f) end
+end
+
+function _M:eventChat(e)
+	self.chat:event(e)
 end
 
 --- Got an event from the profile thread
