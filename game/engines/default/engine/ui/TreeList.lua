@@ -203,7 +203,7 @@ function _M:generate()
 		if button == "wheelup" and event == "button" then self.scroll = util.bound(self.scroll - 1, 1, self.max - self.max_display + 1)
 		elseif button == "wheeldown" and event == "button" then self.scroll = util.bound(self.scroll + 1, 1, self.max - self.max_display + 1) end
 
-			if self.sel then self.list[self.sel].focus_decay = self.focus_decay_max end
+			if self.sel and self.list[self.sel] then self.list[self.sel].focus_decay = self.focus_decay_max end
 		self.sel = util.bound(self.scroll + math.floor(by / self.fh), 1, self.max)
 		if self.sel_by_col then
 			for i = 1, #self.sel_by_col do if bx > (self.sel_by_col[i-1] or 0) and bx <= self.sel_by_col[i] then
@@ -221,11 +221,11 @@ function _M:generate()
 	self.key:addBinds{
 		ACCEPT = function() self:onUse("left") end,
 		MOVE_UP = function()
-			if self.sel then self.list[self.sel].focus_decay = self.focus_decay_max end
+			if self.sel and self.list[self.sel] then self.list[self.sel].focus_decay = self.focus_decay_max end
 			self.sel = util.boundWrap(self.sel - 1, 1, self.max) self.scroll = util.scroll(self.sel, self.scroll, self.max_display) self:onSelect()
 		end,
 		MOVE_DOWN = function()
-			if self.sel then self.list[self.sel].focus_decay = self.focus_decay_max end
+			if self.sel and self.list[self.sel] then self.list[self.sel].focus_decay = self.focus_decay_max end
 			self.sel = util.boundWrap(self.sel + 1, 1, self.max) self.scroll = util.scroll(self.sel, self.scroll, self.max_display) self:onSelect()
 		end,
 	}
@@ -237,25 +237,25 @@ function _M:generate()
 	end
 	self.key:addCommands{
 		_HOME = function()
-			if self.sel then self.list[self.sel].focus_decay = self.focus_decay_max end
+			if self.sel and self.list[self.sel] then self.list[self.sel].focus_decay = self.focus_decay_max end
 			self.sel = 1
 			self.scroll = util.scroll(self.sel, self.scroll, self.max_display)
 			self:onSelect()
 		end,
 		_END = function()
-			if self.sel then self.list[self.sel].focus_decay = self.focus_decay_max end
+			if self.sel and self.list[self.sel] then self.list[self.sel].focus_decay = self.focus_decay_max end
 			self.sel = self.max
 			self.scroll = util.scroll(self.sel, self.scroll, self.max_display)
 			self:onSelect()
 		end,
 		_PAGEUP = function()
-			if self.sel then self.list[self.sel].focus_decay = self.focus_decay_max end
+			if self.sel and self.list[self.sel] then self.list[self.sel].focus_decay = self.focus_decay_max end
 			self.sel = util.bound(self.sel - self.max_display, 1, self.max)
 			self.scroll = util.scroll(self.sel, self.scroll, self.max_display)
 			self:onSelect()
 		end,
 		_PAGEDOWN = function()
-			if self.sel then self.list[self.sel].focus_decay = self.focus_decay_max end
+			if self.sel and self.list[self.sel] then self.list[self.sel].focus_decay = self.focus_decay_max end
 			self.sel = util.bound(self.sel + self.max_display, 1, self.max)
 			self.scroll = util.scroll(self.sel, self.scroll, self.max_display)
 			self:onSelect()

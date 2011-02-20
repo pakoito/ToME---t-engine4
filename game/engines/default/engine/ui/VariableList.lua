@@ -85,7 +85,7 @@ function _M:generate()
 		item._stex = ss:glTexture()
 
 		self.mouse:registerZone(0, self.h, self.w, fh, function(button, x, y, xrel, yrel, bx, by, event)
-			if self.sel then self.list[self.sel].focus_decay = self.focus_decay_max end
+			if self.sel and self.list[self.sel] then self.list[self.sel].focus_decay = self.focus_decay_max end
 			self.sel = i
 			self:onSelect()
 			if button == "left" and event == "button" then self:onUse() end
@@ -98,11 +98,11 @@ function _M:generate()
 	self.key:addBinds{
 		ACCEPT = function() self:onUse() end,
 		MOVE_UP = function()
-			if self.sel then self.list[self.sel].focus_decay = self.focus_decay_max end
+			if self.sel and self.list[self.sel] then self.list[self.sel].focus_decay = self.focus_decay_max end
 			self.sel = util.boundWrap(self.sel - 1, 1, self.max) self:onSelect()
 		end,
 		MOVE_DOWN = function()
-			if self.sel then self.list[self.sel].focus_decay = self.focus_decay_max end
+			if self.sel and self.list[self.sel] then self.list[self.sel].focus_decay = self.focus_decay_max end
 			self.sel = util.boundWrap(self.sel + 1, 1, self.max) self:onSelect()
 		end,
 	}
