@@ -104,7 +104,7 @@ function _M:okclick()
 	end
 
 	game:unregisterDialog(self)
-	game:createProfile({login=self.c_login.text, pass=self.c_pass.text, email=self.c_email and self.c_email.text})
+	game:createProfile({justlogin=self.c_email and false or true, login=self.c_login.text, pass=self.c_pass.text, email=self.c_email and self.c_email.text})
 end
 
 function _M:cancelclick()

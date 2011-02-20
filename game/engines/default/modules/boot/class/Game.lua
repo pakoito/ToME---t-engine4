@@ -324,20 +324,25 @@ function _M:checkFirstTime()
 end
 
 function _M:createProfile(loginItem)
-	if self.justlogin then
+	if loginItem.justlogin then
+		self.auth_tried = nil
 		profile:performlogin(loginItem.login, loginItem.pass)
+		profile:waitFirstAuth()
 		if profile.auth then
 			Dialog:simplePopup("Profile logged in!", "Your online profile is active now...", function() end )
 		else
-			Dialog:simplePopup("Log in rejected", "Couldn't log you...", function() end )
+			Dialog:simplePopup("Login failed!", "Check your login and password or try again in in a few moments.", function() end )
 		end
 		return
-	end
-	profile:newProfile(loginItem.login, loginItem.name, loginItem.pass, loginItem.email)
-	if (profile.auth) then
-		Dialog:simplePopup(self.justlogin and "Logged in!" or "Profile created!", "Your online profile is active now...", function() end )
 	else
-		Dialog:simplePopup("Profile failed to authenticate!", "Try logging in in a few moments", function() end )
+		self.auth_tried = nil
+		profile:newProfile(loginItem.login, loginItem.name, loginItem.pass, loginItem.email)
+		profile:waitFirstAuth()
+		if profile.auth then
+			Dialog:simplePopup(self.justlogin and "Logged in!" or "Profile created!", "Your online profile is active now...", function() end )
+		else
+			Dialog:simplePopup("Profile creation failed!", "Try again in in a few moments, or try online at http://te4.org/", function() end )
+		end
 	end
 end
 

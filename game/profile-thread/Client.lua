@@ -120,6 +120,15 @@ end
 -- Orders comming from the main thread
 --------------------------------------------------------------------
 
+function _M:orderNewProfile2(o)
+	self:command("NEWP", table.serialize(o))
+	if self:read("200") then
+		cprofile.pushEvent(string.format("e='NewProfile2' uid=%d", tonumber(self.last_line) or -1))
+	else
+		cprofile.pushEvent("e='NewProfile2' uid=nil")
+	end
+end
+
 function _M:orderLogin(o)
 	-- Already logged?
 	if self.auth and self.auth.login == o.l then

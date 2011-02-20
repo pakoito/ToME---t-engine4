@@ -199,13 +199,15 @@ function _M:checkFirstRun()
 	return result
 end
 
-function _M:performlogin(login, pass, name, email)
+function _M:performlogin(login, pass)
 	self.login=login
 	self.pass=pass
 	print("[ONLINE PROFILE] attempting log in ", self.login)
+	self.auth_tried = nil
 	self:tryAuth()
+	self:waitFirstAuth()
 	if (profile.auth) then
-		self.generic.online = { login=login, pass=pass,name=name or "", email=email or "" }
+		self.generic.online = { login=login, pass=pass }
 		self:saveGenericProfile("online", self.generic.online)
 		self:getConfigs("generic")
 		self:syncOnline("generic")
@@ -372,7 +374,6 @@ function _M:syncOnline(module)
 end
 
 function _M:checkModuleHash(module, md5)
-do self.hash_valid = true return true end
 	self.hash_valid = false
 --	if not self.auth then return nil, "no online profile active" end
 	if config.settings.cheat then return nil, "cheat mode active" end
@@ -422,9 +423,9 @@ function _M:newProfile(Login, Name, Password, Email)
 
 	core.profile.pushOrder(table.serialize{o="NewProfile2", login=Login, email=Email, name=Name, pass=Password})
 	local id = nil
-	self:waitEvent("NewProfile2", function(e) id = e.id end)
+	self:waitEvent("NewProfile2", function(e) id = e.uid end)
 
 	if not id then print("[ONLINE PROFILE] could not create") return end
 	print("[ONLINE PROFILE] profile id ", id)
-	self:performlogin(Login, Password, Name, Email)
+	self:performlogin(Login, Password)
 end
