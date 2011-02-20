@@ -71,19 +71,33 @@ end
 --- Handles the player profile, possibly online
 module(..., package.seeall, class.make)
 
-function _M:init(name)
+function _M:init()
 	self.generic = {}
 	self.modules = {}
 	self.evt_cbs = {}
-	self.name = name or "default"
-	self:loadGenericProfile()
+	self.stats_fields = {}
+	local checkstats = function(self, field) return self.stats_fields[field] end
+	self.config_settings =
+	{
+		[checkstats]     = { invalid = { read={online=true}, write="online" }, valid = { read={online=true}, write="online" } },
+		["^allow_build$"] = { invalid = { read={offline=true,online=true}, write="offline" }, valid = { read={online=true}, write="online" } },
+		["^achievement%..*$"] = { invalid = { read={offline=true,online=true}, write="offline" }, valid = { read={online=true}, write="online" } },
+	}
 
 	self.auth = false
+	self:loadGenericProfile()
 
 	if self.generic.online and self.generic.online.login and self.generic.online.pass then
 		self.login = self.generic.online.login
 		self.pass = self.generic.online.pass
 		self:tryAuth()
+		self:waitFirstAuth()
+	end
+end
+
+function _M:addStatFields(...)
+	for i, f in ipairs{...} do
+		self.stats_fields[f] = true
 	end
 end
 
@@ -93,12 +107,34 @@ function _M:loadData(f, where)
 	if not ok and err then print("Error executing data", err) end
 end
 
---- Loads profile generic profile from disk
-function _M:loadGenericProfile()
-	local d = "/profiles/"..self.name.."/generic/"
-	fs.mount(engine.homepath, "/")
-	for i, file in ipairs(fs.list(d)) do
+function _M:mountProfile(online, module)
+	-- Create the directory if needed
+	local restore = fs.getWritePath()
+	fs.setWritePath(engine.homepath)
+	fs.mkdir(string.format("/profiles/%s/generic/", online and "online" or "offline"))
+	if module then fs.mkdir(string.format("/profiles/%s/modules/%s", online and "online" or "offline", module)) end
 
+	local path = engine.homepath.."/profiles/"..(online and "online" or "offline")
+	fs.mount(path, "/current-profile")
+	print("[PROFILE] mounted", online and "online" or "offline", "on /current-profile")
+	fs.setWritePath(path)
+
+	return restore
+end
+function _M:umountProfile(online, pop)
+	local path = engine.homepath.."/profiles/"..(online and "online" or "offline")
+	fs.umount(path)
+	print("[PROFILE] umounted", online and "online" or "offline", "from /current-profile")
+
+	if pop then fs.setWritePath(pop) end
+end
+
+--- Loads profile generic profile from disk
+-- Generic profile is always read from the "online" profile
+function _M:loadGenericProfile()
+	local pop = self:mountProfile(true)
+	local d = "/current-profile/generic/"
+	for i, file in ipairs(fs.list(d)) do
 		if file:find(".profile$") then
 			local f, err = loadfile(d..file)
 			if not f and err then
@@ -111,31 +147,90 @@ function _M:loadGenericProfile()
 			end
 		end
 	end
+	self:umountProfile(true, pop)
+end
 
-	fs.umount(engine.homepath)
+--- Check if we can load this field from this profile
+function _M:filterLoadData(online, field)
+	local ok = false
+	for f, conf in pairs(self.config_settings) do
+		local try = false
+		if type(f) == "string" then try = field:find(f)
+		elseif type(f) == "function" then try = f(self, field) end
+		if try then
+			local c
+			if self.hash_valid then c = conf.valid
+			else c = conf.invalid
+			end
+			if not c then break end
+
+			c = c.read
+			if not c then break end
+
+			if online and c.online then ok = true
+			elseif not online and c.offline then ok = true
+			end
+			break
+		end
+	end
+	print("[PROFILE] filtering load of ", field, " from profile ", online and "online" or "offline", "=>", ok and "allowed" or "disallowed")
+	return ok
+end
+
+--- Return if we should save this field in the online or offline profile
+function _M:filterSaveData(field)
+	local online = false
+	for f, conf in pairs(self.config_settings) do
+		local try = false
+		if type(f) == "string" then try = field:find(f)
+		elseif type(f) == "function" then try = f(self, field) end
+		if try then
+			local c
+			if self.hash_valid then c = conf.valid
+			else c = conf.invalid
+			end
+			if not c then break end
+
+			c = c.write
+			if not c then break end
+
+			if c == "online" then online = true else online = false end
+			break
+		end
+	end
+	print("[PROFILE] filtering save of ", field, " to profile ", online and "online" or "offline")
+	return online
 end
 
 --- Loads profile module profile from disk
 function _M:loadModuleProfile(short_name)
-	local d = "/profiles/"..self.name.."/modules/"..short_name.."/"
-	fs.mount(engine.homepath, "/")
-	print("[Module Profile] ", engine.homepath.."/"..d)
-	self.modules[short_name] = self.modules[short_name] or {}
-	for i, file in ipairs(fs.list(d)) do
-		if file:find(".profile$") then
-			local f, err = loadfile(d..file)
-			if not f and err then
-				print("Error loading data profile", file, err)
-			else
+	if short_name == "boot" then return end
+
+	local function load(online)
+		local pop = self:mountProfile(online, short_name)
+		local d = "/current-profile/modules/"..short_name.."/"
+		self.modules[short_name] = self.modules[short_name] or {}
+		for i, file in ipairs(fs.list(d)) do
+			if file:find(".profile$") then
 				local field = file:gsub(".profile$", "")
-				self.modules[short_name][field] = self.modules[short_name][field] or {}
-				self:loadData(f, self.modules[short_name][field])
-				if not self.modules[short_name][field].__uuid then self.modules[short_name][field].__uuid = util.uuid() end
+
+				if self:filterLoadData(online, field) then
+					local f, err = loadfile(d..file)
+					if not f and err then
+						print("Error loading data profile", file, err)
+					else
+						self.modules[short_name][field] = self.modules[short_name][field] or {}
+						self:loadData(f, self.modules[short_name][field])
+						if not self.modules[short_name][field].__uuid then self.modules[short_name][field].__uuid = util.uuid() end
+					end
+				end
 			end
 		end
+		self:umountProfile(online, pop)
 	end
 
-	fs.umount(engine.homepath)
+	load(false) -- Load from offline profile
+	load(true) -- Load from online profile
 
 	self:getConfigs(short_name)
 	self:syncOnline(short_name)
@@ -155,19 +250,19 @@ function _M:saveGenericProfile(name, data, nosync)
 	local ok, err = pcall(f)
 	if not ok and err then print("[PROFILES] cannot save generic data", name, data, "it does not parse") print(err) return end
 
-	local restore = fs.getWritePath()
-	fs.setWritePath(engine.homepath)
-	fs.mkdir("/profiles/"..self.name.."/generic/")
-	local f = fs.open("/profiles/"..self.name.."/generic/"..name..".profile", "w")
+	local pop = self:mountProfile(true)
+	local f = fs.open("/generic/"..name..".profile", "w")
 	f:write(data)
 	f:close()
-	if restore then fs.setWritePath(restore) end
+	self:umountProfile(true, pop)
 
 	if not nosync then self:setConfigs("generic", name, data) end
 end
 
 --- Saves a module profile data
 function _M:saveModuleProfile(name, data, module, nosync)
+	if module == "boot" then return end
+
 	data = serialize(data)
 	module = module or self.mod_name
 
@@ -178,14 +273,12 @@ function _M:saveModuleProfile(name, data, module, nosync)
 	local ok, err = pcall(f)
 	if not ok and err then print("[PROFILES] cannot save module data", name, data, "it does not parse") print(err) return end
 
-	local restore = fs.getWritePath()
-	fs.setWritePath(engine.homepath)
-	fs.mkdir("/profiles/"..self.name.."/modules/")
-	fs.mkdir("/profiles/"..self.name.."/modules/"..module.."/")
-	local f = fs.open("/profiles/"..self.name.."/modules/"..module.."/"..name..".profile", "w")
+	local online = self:filterSaveData(name)
+	local pop = self:mountProfile(online, module)
+	local f = fs.open("/modules/"..module.."/"..name..".profile", "w")
 	f:write(data)
 	f:close()
-	if restore then fs.setWritePath(restore) end
+	self:umountProfile(online, pop)
 
 	if not nosync then self:setConfigs(module, name, data) end
 end

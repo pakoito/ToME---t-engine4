@@ -45,3 +45,4 @@ Still, this is a golden age. Civilisations are healing the wounds of thousands o
 You are an adventurer, set out to discover wonders, explore old places, and venture into the unknown for wealth and glory.
 ]]
 starter = "mod.load"
+profile_stats_fields = {"artifacts", "characters", "deaths", "uniques"}

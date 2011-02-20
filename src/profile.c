@@ -81,7 +81,7 @@ int push_event(lua_State *L)
 {
 	size_t len;
 	const char *code = luaL_checklstring(L, 1, &len);
-	printf("[profile event] %s\n", code);
+//	printf("[profile event] %s\n", code);
 
 	profile_queue *q = malloc(sizeof(profile_queue));
 	char *d = calloc(len, sizeof(char));

@@ -237,11 +237,7 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 		hash_valid, hash_err = profile:checkModuleHash(mod.version_name, fmd5)
 	end
 
-	-- If bad hash, switch to dev profile
-	if not hash_valid or not profile.auth then
-		print("[PROFILE] switching to dev profile")
-		_G.profile = engine.PlayerProfile.new("dev")
-	end
+	profile:addStatFields(unpack(mod.profile_stats_fields or {}))
 	profile:loadModuleProfile(mod.short_name)
 
 	-- Init the module code
@@ -275,7 +271,7 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 	-- Disable the profile if ungood
 	if mod.short_name ~= "boot" then
 		if not hash_valid then
-			game.log("#LIGHT_RED#Profile disabled(switching to development profile) due to %s.", hash_err or "???")
+			game.log("#LIGHT_RED#Online profile disabled(switching to offline profile) due to %s.", hash_err or "???")
 		end
 	end
 end

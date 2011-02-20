@@ -95,7 +95,7 @@ core.sound.activateMusicCallback()
 
 -- Load profile configs
 core.profile.createThread()
-profile = engine.PlayerProfile.new(__request_profile or "default")
+profile = engine.PlayerProfile.new()
 
 -- Create a savefile pipe
 savefile_pipe = engine.SavefilePipe.new()
