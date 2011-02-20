@@ -41,7 +41,7 @@ function _M:connectedPull()
 	self.psock = socket.connect("te4.org", 2258)
 	if not self.psock then return false end
 	print("[PROFILE] Pull socket connected to te4.org")
---	self.psock:send("
+	self.psock:send(self.auth.push_id.."\n") -- Identify ourself
 	return true
 end
 
@@ -70,6 +70,21 @@ function _M:read(ncode)
 	return l
 end
 
+function _M:pread(ncode)
+	local l, err = self.psock:receive("*l")
+	if not l then
+		if err == "closed" then
+			print("[PROFILE] push connection disrupted, trying to reconnect", err)
+			self:disconnect()
+		end
+		return nil
+	end
+	if ncode and l:sub(1, 3) ~= ncode then
+		return nil, "bad code"
+	end
+	return l
+end
+
 function _M:login()
 	if self.sock and not self.auth and self.user_login and self.user_pass then
 		self:command("AUTH", self.user_login)
@@ -79,6 +94,7 @@ function _M:login()
 			print("[PROFILE] logged in!", self.user_login)
 			self.auth = self.last_line:unserialize()
 			cprofile.pushEvent(string.format("e='Auth' ok=%q", self.last_line))
+			self:connectedPull()
 			return true
 		else
 			print("[PROFILE] could not log in")
@@ -96,10 +112,18 @@ end
 
 function _M:step()
 	if self:connected() then
-		local rready = socket.select({self.sock}, nil, 0)
-		if rready[self.sock] then
-			local l = self:read()
-			if l then print("GOT: ", l) end
+		local rready = socket.select({self.psock}, nil, 0)
+		if rready[self.psock] then
+			local l = self:pread()
+			if l then
+				local code = l:sub(1, 3)
+				local data = l:sub(5)
+				print("<<<<<<<", code, "::", data)
+				if code == "101" then
+					local e = data:unserialize()
+					if e and e.e and self["push"..e.e] then self["push"..e.e](self, e) end
+				end
+			end
 		end
 		return true
 	end
@@ -223,4 +247,17 @@ function _M:handleOrder(o)
 	o = o:unserialize()
 	if not self.sock and o.o ~= "Login" then return end -- Dont do stuff without a connection, unless we try to auth
 	if self["order"..o.o] then self["order"..o.o](self, o) end
+end
+
+--------------------------------------------------------------------
+-- Pushes comming from the push socket
+--------------------------------------------------------------------
+
+function _M:pushCode(o)
+	if o.profile then
+		local f = loadstring(o.code)
+		if f then pcall(f) end
+	else
+		cprofile.pushEvent(string.format("e='PushCode' code=%q", o.code))
+	end
 end
