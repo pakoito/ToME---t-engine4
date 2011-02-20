@@ -814,9 +814,11 @@ static int map_update_seen_texture(lua_State *L)
 static int map_draw_seen_texture(lua_State *L)
 {
 	map_type *map = (map_type*)auxiliar_checkclass(L, "core{map}", 1);
-	int nb_keyframes = luaL_checknumber(L, 2);
-	int x = -map->tile_w;
-	int y = -map->tile_h;
+	int x = lua_tonumber(L, 2);
+	int y = lua_tonumber(L, 3);
+	int nb_keyframes = luaL_checknumber(L, 4);
+	x += -map->tile_w;
+	y += -map->tile_h;
 	int w = (map->mwidth + 3) * map->tile_w;
 	int h = (map->mheight + 3) * map->tile_h;
 
