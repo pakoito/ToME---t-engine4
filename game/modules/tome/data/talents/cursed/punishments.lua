@@ -36,7 +36,7 @@ newTalent{
 	range = 2,
 	tactical = { ATTACKAREA = 2 },
 	getDamage = function(self, t)
-		return combatTalentDamage(self, t, 25, 240)
+		return combatTalentDamage(self, t, 10, 290)
 	end,
 	getMindpower = function(self, t)
 		return combatPower(self, t)
@@ -90,7 +90,7 @@ newTalent{
 		return 10
 	end,
 	getDamage = function(self, t)
-		return combatTalentDamage(self, t, 20, 100)
+		return combatTalentDamage(self, t, 15, 180)
 	end,
 	getMindpower = function(self, t)
 		return combatPower(self, t)
@@ -268,7 +268,7 @@ newTalent{
 		return 5
 	end,
 	getDamage = function(self, t)
-		return combatTalentDamage(self, t, 20, 110)
+		return combatTalentDamage(self, t, 15, 160)
 	end,
 	getMindpower = function(self, t)
 		return combatPower(self, t, 1.2)

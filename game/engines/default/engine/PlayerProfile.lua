@@ -203,7 +203,51 @@ end
 -- Events
 -----------------------------------------------------------------------
 
+function _M:waitEvent(name, cb)
+	-- Wait anwser, this blocks thegame but cant really be avoided :/
+	local stop = false
+	local first = true
+	while not stop do
+		if not first then core.game.sleep(50) end
+		local evt = core.profile.popEvent()
+		while evt do
+			if type(game) == "table" then evt = game:handleProfileEvent(evt)
+			else evt = self:handleEvent(evt) end
+--			print("==== waiting event", name, evt.e)
+			if evt.e == name then
+				stop = true
+				cb(evt)
+				break
+			end
+			evt = core.profile.popEvent()
+		end
+		first = false
+	end
+end
+
+function _M:waitFirstAuth(timeout)
+	if self.auth_tried and self.auth_tried >= 1 then return end
+	if not self.waiting_auth then return end
+	print("[PROFILE] waiting for first auth")
+	local first = true
+	timeout = timeout or 20
+	while self.waiting_auth and timeout > 0 do
+		if not first then core.game.sleep(50) end
+		local evt = core.profile.popEvent()
+		while evt do
+			if type(game) == "table" then game:handleProfileEvent(evt)
+			else self:handleEvent(evt) end
+			if not self.waiting_auth then break end
+			evt = core.profile.popEvent()
+		end
+		first = false
+		timeout = timeout - 1
+	end
+end
+
 function _M:eventAuth(e)
+	self.waiting_auth = false
+	self.auth_tried = (self.auth_tried or 0) + 1
 	if e.ok then
 		self.auth = e.ok:unserialize()
 		print("[PROFILE] Main thread got authed", self.auth.name, self.auth.email, self.auth.drupid)
@@ -263,11 +307,10 @@ function _M:getNews(callback)
 	core.profile.pushOrder("o='GetNews'")
 end
 
-function _M:tryAuth(sync)
+function _M:tryAuth()
 	print("[ONLINE PROFILE] auth")
 	core.profile.pushOrder(table.serialize{o="Login", l=self.login, p=self.pass})
---	if sync then
---	end
+	self.waiting_auth = true
 end
 
 function _M:logOut()
@@ -282,12 +325,14 @@ function _M:logOut()
 end
 
 function _M:getConfigs(module, cb)
+	self:waitFirstAuth()
 	if not self.auth then return end
 	self.evt_cbs.GetConfigs = cb
 	core.profile.pushOrder(table.serialize{o="GetConfigs", module=module})
 end
 
 function _M:setConfigs(module, name, val)
+	self:waitFirstAuth()
 	if not self.auth then return end
 	if name == "online" then return end
 	if type(val) ~= "string" then val = serialize(val) end
@@ -295,6 +340,7 @@ function _M:setConfigs(module, name, val)
 end
 
 function _M:syncOnline(module)
+	self:waitFirstAuth()
 	if not self.auth then return end
 	local sync = self.generic
 	if module ~= "generic" then sync = self.modules[module] end
@@ -307,27 +353,14 @@ function _M:syncOnline(module)
 end
 
 function _M:checkModuleHash(module, md5)
+do self.hash_valid = true return true end
 	self.hash_valid = false
 --	if not self.auth then return nil, "no online profile active" end
 	if config.settings.cheat then return nil, "cheat mode active" end
 	if game and game:isTainted() then return nil, "savefile tainted" end
 	core.profile.pushOrder(table.serialize{o="CheckModuleHash", module=module, md5=md5})
 
-	-- Wait anwser, this blocks thegame but cant really be avoided :/
-	local stop = false
-	local ok = false
-	while not stop do
-		local evt = core.profile.popEvent()
-		while evt do
-			evt = self:handleEvent(evt) -- Bypass game handling, there is none around at this point
-			if evt.e == "CheckModuleHash" then
-				ok = evt.ok
-				stop = true
-				break
-			end
-			evt = core.profile.popEvent()
-		end
-	end
+	self:waitEvent("CheckModuleHash", function(e) ok = e.ok end)
 
 	if not ok then return nil, "bad game version" end
 	print("[ONLINE PROFILE] module hash is valid")
@@ -335,16 +368,35 @@ function _M:checkModuleHash(module, md5)
 	return true
 end
 
---[[
 function _M:sendError(what, err)
 	print("[ONLINE PROFILE] sending error")
-	local popup = Dialog:simplePopup("Sending...", "Sending the error report. Thank you.", nil, true)
-	popup.__showup = nil
-	core.display.forceRedraw()
-	self:rpc{action="SendError", login=self.login, what=what, err=err, module=game.__mod_info.short_name, version=game.__mod_info.version_name}
-	game:unregisterDialog(popup)
+	core.profile.pushOrder(table.serialize{o="SendError", login=self.login, what=what, err=err, module=game.__mod_info.short_name, version=game.__mod_info.version_name})
 end
 
+function _M:registerNewCharacter(module)
+	if not self.auth or not self.hash_valid then return end
+	local dialog = Dialog:simplePopup("Registering character", "Character is being registered on http://te4.org/") dialog.__showup = nil core.display.forceRedraw()
+
+	core.profile.pushOrder(table.serialize{o="RegisterNewCharacter", module=module})
+	local uuid = nil
+	self:waitEvent("RegisterNewCharacter", function(e) uuid = e.uuid end)
+
+	game:unregisterDialog(dialog)
+	if not uuid then return end
+	print("[ONLINE PROFILE] new character UUID ", uuid)
+	return uuid
+end
+
+function _M:registerSaveChardump(module, uuid, title, tags, data)
+	if not self.auth or not self.hash_valid then return end
+	local dialog = Dialog:simplePopup("Uploading character data", "Character sheet is being uploaded to http://te4.org/") dialog.__showup = nil core.display.forceRedraw()
+	local data = self:rpc{action="SaveChardump", login=self.login, hash=self.auth.hash, module=module, uuid=uuid, title=title, tags=tags, data=data}
+	game:unregisterDialog(dialog)
+	if not data or not data.ok then return end
+	print("[ONLINE PROFILE] saved character ", uuid)
+end
+
+--[[
 function _M:newProfile(Login, Name, Password, Email)
 	print("[ONLINE PROFILE] profile options ", Login, Email, Name)
 	local data = self:rpc{action="NewProfile2", login=Login, email=Email, name=Name, pass=Password}

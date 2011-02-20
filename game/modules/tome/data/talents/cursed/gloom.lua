@@ -21,11 +21,8 @@ local function getHateMultiplier(self, min, max)
 	return (min + ((max - min) * math.min(self.hate, 10) / 10))
 end
 
-local function getWillDamage(self, t, base, max)
-	-- Compute at "max"
-	local mod = max / ((base + 100) * ((math.sqrt(5) - 1) * 0.8 + 1))
-	-- Compute real
-	return ((base + self:getWil()) * ((math.sqrt(self:getTalentLevel(t)) - 1) * 0.8 + 1) * mod) * 0.75
+local function combatTalentDamage(self, t, min, max)
+	return self:combatTalentSpellDamage(t, min, max, self.level + self:getWil())
 end
 
 local function checkWillFailure(self, target, minChance, maxChance, attackStrength)
@@ -162,14 +159,13 @@ newTalent{
 							--game:playSoundNear(self, "talents/spell_generic")
 							doTorment = false
 						else
-							game.logSeen(target, "#F53CBE#%s resists your torment.", target.name:capitalize())
+							game.logSeen(target, "#F53CBE#%s resists the torment.", target.name:capitalize())
 						end
 					end
 
 					-- Life Leech
 					if tLifeLeech and self:getTalentLevelRaw(tLifeLeech) > 0 then
-						local fraction = self:getTalentLevel(tLifeLeech) * 0.002
-						local damage = math.min(target.max_life * fraction, self.max_life * fraction * 2)
+						local damage = tLifeLeech.getDamage(self, tLifeLeech)
 						local actualDamage = DamageType:get(DamageType.LIFE_LEECH).projector(self, target.x, target.y, DamageType.LIFE_LEECH, damage)
 						lifeLeeched = lifeLeeched + actualDamage
 					end
@@ -183,7 +179,11 @@ newTalent{
 
 		-- life leech
 		if lifeLeeched > 0 then
+			lifeLeeched = math.min(lifeLeeched, tLifeLeech.getMaxHeal(self, tLifeLeech))
+			local temp = self.healing_factor
+			self.healing_factor = 1
 			self:heal(lifeLeeched)
+			self.healing_factor = temp
 			game.logPlayer(self, "#F53CBE#You leech %0.1f life from your foes.", lifeLeeched)
 		end
 	end,
@@ -222,7 +222,8 @@ newTalent{
 		local baseDamage = 30 + self:getWil() * 0.4 * self:getTalentLevel(t)
 		local attackStrength = 0.3 + self:getTalentLevel(t) * 0.12
 		local effectiveness = getWillFailureEffectiveness(self, 30, 95, attackStrength)
-		return ([[Your rage builds within you for 20 turns, then unleashes itself for %d (at 0 Hate) to %d (at 10+ Hate) darkness damage on the first one to enter your gloom. (%d effectiveness)]]):format(baseDamage * .5, baseDamage * 1.5, effectiveness)
+		return ([[Your rage builds within you for 20 turns, then unleashes itself for %d (at 0 Hate) to %d (at 10+ Hate) darkness damage on the first one to enter your gloom. (%d effectiveness)
+		Improves with the Willpower stat.]]):format(baseDamage * .5, baseDamage * 1.5, effectiveness)
 	end,
 }
 
@@ -232,7 +233,16 @@ newTalent{
 	mode = "passive",
 	require = cursed_wil_req4,
 	points = 5,
+	getDamage = function(self, t)
+		return combatTalentDamage(self, t, 3, 15)
+	end,
+	getMaxHeal = function(self, t)
+		return combatTalentDamage(self, t, 5, 30)
+	end,
 	info = function(self, t)
-		return ([[Each turn your gloom leeches up to %0.1f%% of the life of foes.]]):format(self:getTalentLevel(t) * 0.2)
+		local damage = t.getDamage(self, t)
+		local maxHeal = t.getMaxHeal(self, t)
+		return ([[Every turn you leech %0.1f life from each foe in your gloom restoring up to a total of %0.1f of your own life. This form of healing cannot be reduced.
+		Improves with the Willpower stat.]]):format(damage, maxHeal)
 	end,
 }

@@ -56,7 +56,7 @@ newTalent{
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
 
 		-- attempt domination
-		if checkWillFailure(self, target, 15, 85, 1) then
+		if checkWillFailure(self, target, 50, 90, 1) then
 			local damMult = 1 + self:combatTalentWeaponDamage(t, 0.1, 0.5)
 			target:setEffect(target.EFF_DOMINATED, 4, { dominatedSource = self, dominatedDamMult = damMult })
 		else
@@ -70,7 +70,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damMult = 1 + self:combatTalentWeaponDamage(t, 0.1, 0.5)
-		return ([[Combine strength and will to overpower your opponent with a vicious attack. If your opponent fails to save versus willpower then all of your melee hits will do %d%% damage against them for for 4 turns.]]):format(damMult * 100)
+		return ([[Combine strength and will to overpower your opponent with a vicious attack. If your opponent fails to save versus willpower then all of your melee hits will do %d%% damage against them for for 4 turns. There is a 50%% chance of guaranteed success.]]):format(damMult * 100)
 	end,
 }
 

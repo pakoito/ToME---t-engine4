@@ -106,7 +106,7 @@ newTalent{
 	end,
 	on_unlearn = function(self, t)
 	end,
-	getDuration = function(self, t) return 5 + math.floor(2 * self:getTalentLevel(t)) end,
+	getDuration = function(self, t) return 4 + math.floor(1 * self:getTalentLevel(t)) end,
 	getDamage = function(self, t) return 10 * self:getTalentLevel(t) end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)

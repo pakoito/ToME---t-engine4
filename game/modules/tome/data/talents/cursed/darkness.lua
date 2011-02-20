@@ -278,7 +278,7 @@ newTalent{
 		return 2 + math.floor(self:getTalentLevel(t))
 	end,
 	getDamage = function(self, t)
-		return combatTalentDamage(self, t, 18, 45)
+		return combatTalentDamage(self, t, 15, 70)
 	end,
 	action = function(self, t)
 		local range = self:getTalentRange(t)
@@ -342,10 +342,7 @@ newTalent{
 		return math.floor(2 + self:getTalentLevel(t) * 2)
 	end,
 	getDamageIncrease = function(self, t)
-		local level = self:getTalentLevel(t)
-		if level < 3 then return 0 end
-
-		return 5 + (level - 3) * 3
+		return combatTalentDamage(self, t, 5, 40)
 	end,
 	hasLOS = function(x1, y1, x2, y2)
 		local l = line.new(x1, y1, x2, y2)
@@ -360,11 +357,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damageIncrease = t.getDamageIncrease(self, t)
-		if damageIncrease <= 0 then
-			return ([[Your eyes penetrate the darkness to find anyone that may be hiding there. You can also see through the creeping dark but not well enough to directly target someone. At level 3 you begin to do extra damage to anyone in the dark.]])
-		else
-			return ([[Your eyes penetrate the darkness to find anyone that may be hiding there. You can also see through the creeping dark but not well enough to directly target someone. You do %d%% more damage to anyone in the dark.]]):format(damageIncrease)
-		end
+		return ([[Your eyes penetrate the darkness to find anyone that may be hiding there. You can also see through the creeping dark but not well enough to directly target someone. You do %d%% more damage to anyone in the dark (or in creeping dark).]]):format(damageIncrease)
 	end,
 }
 
@@ -381,7 +374,7 @@ newTalent{
 	reflectable = true,
 	requires_target = true,
 	getDamage = function(self, t)
-		return combatTalentDamage(self, t, 20, 200)
+		return combatTalentDamage(self, t, 15, 250)
 	end,
 	action = function(self, t)
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
@@ -433,10 +426,10 @@ newTalent{
 	direct_hit = true,
 	requires_target = true,
 	getPinDuration = function(self, t)
-		return 1 + math.floor(self:getTalentLevel(t) / 2)
+		return 2 + math.floor(self:getTalentLevel(t) / 2)
 	end,
 	getDamage = function(self, t)
-		return combatTalentDamage(self, t, 40, 80)
+		return combatTalentDamage(self, t, 30, 95)
 	end,
 	action = function(self, t)
 		if self.dark_tendrils then return false end

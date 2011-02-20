@@ -802,6 +802,7 @@ function _M:setupCommands()
 --			self.nicer_tiles:postProcessLevelTiles(self.level)
 --			local m = game.zone:makeEntityByName(game.level, "actor", "NPC_COLD_DRAKE")
 --			game.zone:addEntity(game.level, m, "actor", game.player.x + 1, game.player.y + 1)
+			error("plop")
 		end end,
 	}
 

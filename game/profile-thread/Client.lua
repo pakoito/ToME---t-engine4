@@ -145,6 +145,14 @@ function _M:orderSetConfigs(o)
 	end
 end
 
+function _M:orderSendError(o)
+	o = table.serialize(o)
+	self:command("ERR_", o:len())
+	if self:read("200") then
+		self.sock:send(o)
+	end
+end
+
 function _M:orderCheckModuleHash(o)
 	self:command("CMD5", o.md5, o.module)
 	if self:read("200") then
@@ -154,8 +162,17 @@ function _M:orderCheckModuleHash(o)
 	end
 end
 
+function _M:orderRegisterNewCharacter(o)
+	self:command("CHAR", "NEW", o.module)
+	if self:read("200") then
+		cprofile.pushEvent(string.format("e='RegisterNewCharacter' uuid=%q", self.last_line))
+	else
+		cprofile.pushEvent("e='RegisterNewCharacter' uuid=nil")
+	end
+end
+
 function _M:handleOrder(o)
-	if not self.sock then return end
 	o = o:unserialize()
+	if not self.sock and o.o ~= "Login" then return end -- Dont do stuff without a connection, unless we try to auth
 	if self["order"..o.o] then self["order"..o.o](self, o) end
 end

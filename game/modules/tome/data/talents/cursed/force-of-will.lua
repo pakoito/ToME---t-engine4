@@ -109,7 +109,7 @@ newTalent{
 		return 4
 	end,
 	getDamage = function(self, t)
-		return combatTalentDamage(self, t, 20, 200)
+		return combatTalentDamage(self, t, 15, 240)
 	end,
 	getKnockback = function(self, t)
 		return math.floor(self:getTalentLevel(t))
@@ -147,7 +147,7 @@ newTalent{
 	tactical = { DEFEND = 2 },
 	no_sustain_autoreset = true,
 	getMaxDamage = function(self, t)
-		return combatTalentDamage(self, t, 20, 200)
+		return combatTalentDamage(self, t, 15, 200)
 	end,
 	getDisplayName = function(self, t, p)
 		return ("Deflection (%d)"):format(p.value)
@@ -168,7 +168,7 @@ newTalent{
 		if p.value < maxDamage and self.hate >= 0.02 then
 			self:incHate(-0.02)
 
-			p.value = math.min(p.value + maxDamage / 50, maxDamage)
+			p.value = math.min(p.value + maxDamage / 35, maxDamage)
 
 			t.updateParticles(self, t, p)
 		end
@@ -208,7 +208,7 @@ newTalent{
 	require = cursed_wil_req3,
 	points = 5,
 	random_ego = "attack",
-	cooldown = 10,
+	cooldown = 14,
 	tactical = { ATTACK = 2 },
 	requires_target = true,
 	hate = 1.5,
@@ -219,10 +219,13 @@ newTalent{
 		return math.floor(2 + self:getTalentLevel(t) / 3)
 	end,
 	getDamage = function(self, t)
-		return combatTalentDamage(self, t, 20, 200)
+		return combatTalentDamage(self, t, 10, 300)
 	end,
 	getKnockback = function(self, t)
 		return 2 + math.floor(self:getTalentLevel(t))
+	end,
+	getDazeDuration = function(self, t)
+		return 3
 	end,
 	action = function(self, t)
 		local range = self:getTalentRange(t)
@@ -242,7 +245,12 @@ newTalent{
 					local distance = math.floor(core.fov.distance(blastX, blastY, x, y))
 					local power = (1 - (distance / radius))
 					local localDamage = damage * power
+					local dazeDuration = t.getDazeDuration(self, t)
+					
 					forceHit(self, target, blastX, blastY, damage, math.max(0, knockback - distance), 15, power)
+					if target:canBe("stun") then
+						target:setEffect(target.EFF_DAZED, dazeDuration, {src=self})
+					end
 				end
 			end,
 			nil, nil)
@@ -257,7 +265,8 @@ newTalent{
 		local radius = t.getRadius(self, t)
 		local damage = t.getDamage(self, t)
 		local knockback = t.getKnockback(self, t)
-		return ([[You rage coalesces at a single point and then explodes outward blasting enemies within a radius of %d in all directions. The blast causes %d damage and %d knockback at the center that decreases with distance.
+		local dazeDuration = t.getDazeDuration(self, t)
+		return ([[You rage coalesces at a single point and then explodes outward blasting enemies within a radius of %d in all directions. The blast causes %d damage and %d knockback at the center that decreases with distance. Anyone caught in the explosion will also be dazed for 3 turns.
 		Damage increases with the Willpower stat.]]):format(radius, damDesc(self, DamageType.PHYSICAL, damage), knockback)
 	end,
 }
@@ -277,7 +286,7 @@ newTalent{
 		return 5 + math.floor(self:getTalentLevel(t))
 	end,
 	getDamage = function(self, t)
-		return combatTalentDamage(self, t, 20, 160)
+		return combatTalentDamage(self, t, 10, 200)
 	end,
 	getKnockback = function(self, t)
 		return math.floor(self:getTalentLevel(t))
