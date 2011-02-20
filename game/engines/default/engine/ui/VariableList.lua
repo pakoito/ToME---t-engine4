@@ -85,6 +85,7 @@ function _M:generate()
 		item._stex = ss:glTexture()
 
 		self.mouse:registerZone(0, self.h, self.w, fh, function(button, x, y, xrel, yrel, bx, by, event)
+			if self.sel then self.list[self.sel].focus_decay = self.focus_decay_max end
 			self.sel = i
 			self:onSelect()
 			if button == "left" and event == "button" then self:onUse() end
@@ -96,8 +97,14 @@ function _M:generate()
 	-- Add UI controls
 	self.key:addBinds{
 		ACCEPT = function() self:onUse() end,
-		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, self.max) self:onSelect() end,
-		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, self.max) self:onSelect() end,
+		MOVE_UP = function()
+			if self.sel then self.list[self.sel].focus_decay = self.focus_decay_max end
+			self.sel = util.boundWrap(self.sel - 1, 1, self.max) self:onSelect()
+		end,
+		MOVE_DOWN = function()
+			if self.sel then self.list[self.sel].focus_decay = self.focus_decay_max end
+			self.sel = util.boundWrap(self.sel + 1, 1, self.max) self:onSelect()
+		end,
 	}
 end
 
@@ -115,18 +122,21 @@ function _M:onSelect()
 	if rawget(self, "select") then self.select(item, self.sel) end
 end
 
-function _M:display(x, y)
+function _M:display(x, y, nb_keyframes)
 	for i = 1, self.max do
 		local item = self.list[i]
 		if not item then break end
 		if self.sel == i then
-			if self.focused then
-				item._stex:toScreenFull(x, y, self.fw, item.fh, item._tex_w, item._tex_h)
-			else
-				item._tex:toScreenFull(x, y, self.fw, item.fh, item._tex_w, item._tex_h)
-			end
+			if self.focused then item._stex:toScreenFull(x, y, self.fw, item.fh, item._tex_w, item._tex_h)
+			else item._tex:toScreenFull(x, y, self.fw, item.fh, item._tex_w, item._tex_h) end
 		else
 			item._tex:toScreenFull(x, y, self.fw, item.fh, item._tex_w, item._tex_h)
+			if item.focus_decay then
+				if self.focused then item._stex:toScreenFull(x, y, self.fw, item.fh, item._tex_w, item._tex_h, 1, 1, 1, item.focus_decay / self.focus_decay_max_d)
+				else item._tex:toScreenFull(x, y, self.fw, item.fh, item._tex_w, item._tex_h, 1, 1, 1, item.focus_decay / self.focus_decay_max_d) end
+				item.focus_decay = item.focus_decay - nb_keyframes
+				if item.focus_decay <= 0 then item.focus_decay = nil end
+			end
 		end
 		y = y + item.fh
 	end

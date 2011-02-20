@@ -150,12 +150,17 @@ function _M:updateText()
 	self.text_surf:updateTexture(self.text_tex)
 end
 
-function _M:display(x, y)
+function _M:display(x, y, nb_keyframes)
 	if self.focused then
 		self.stex:toScreenFull(x, y, self.w, self.h, self.tex_w, self.tex_h)
 		self.cursor_tex:toScreenFull(x + self.text_x + (self.cursor-self.scroll) * self.font_mono_w, y + self.text_y, self.cursor_w, self.cursor_h, self.cursor_tex_w, self.cursor_tex_h)
 	else
 		self.tex:toScreenFull(x, y, self.w, self.h, self.tex_w, self.tex_h)
+		if self.focus_decay then
+			self.stex:toScreenFull(x, y, self.w, self.h, self.tex_w, self.tex_h, 1, 1, 1, self.focus_decay / self.focus_decay_max_d)
+			self.focus_decay = self.focus_decay - nb_keyframes
+			if self.focus_decay <= 0 then self.focus_decay = nil end
+		end
 	end
 	self.text_tex:toScreenFull(x + self.text_x, y + self.text_y, self.fw, self.fh, self.text_tex_w, self.text_tex_h)
 end

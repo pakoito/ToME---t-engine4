@@ -72,10 +72,15 @@ function _M:generate()
 	self.w, self.h = fw+10, fh+10
 end
 
-function _M:display(x, y)
+function _M:display(x, y, nb_keyframes)
 	if self.focused then
 		self.stex:toScreenFull(x+5, y+5, self.rw, self.rh, self.tex_w, self.tex_h)
 	else
 		self.tex:toScreenFull(x+5, y+5, self.rw, self.rh, self.tex_w, self.tex_h)
+		if self.focus_decay then
+			self.stex:toScreenFull(x+5, y+5, self.rw, self.rh, self.tex_w, self.tex_h, 1, 1, 1, self.focus_decay / self.focus_decay_max_d)
+			self.focus_decay = self.focus_decay - nb_keyframes
+			if self.focus_decay <= 0 then self.focus_decay = nil end
+		end
 	end
 end

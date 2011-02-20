@@ -238,7 +238,7 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 	end
 
 	-- If bad hash, switch to dev profile
-	if not hash_valid and not profile.auth then
+	if not hash_valid or not profile.auth then
 		print("[PROFILE] switching to dev profile")
 		_G.profile = engine.PlayerProfile.new("dev")
 	end

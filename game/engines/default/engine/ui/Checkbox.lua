@@ -92,11 +92,16 @@ function _M:select()
 	self.checked = not self.checked
 end
 
-function _M:display(x, y)
+function _M:display(x, y, nb_keyframes)
 	if self.focused then
 		self.stex:toScreenFull(x, y, self.w, self.h, self.tex_w, self.tex_h)
 	else
 		self.tex:toScreenFull(x, y, self.w, self.h, self.tex_w, self.tex_h)
+		if self.focus_decay then
+			self.stex:toScreenFull(x, y, self.w, self.h, self.tex_w, self.tex_h, 1, 1, 1, self.focus_decay / self.focus_decay_max_d)
+			self.focus_decay = self.focus_decay - nb_keyframes
+			if self.focus_decay <= 0 then self.focus_decay = nil end
+		end
 	end
 	if self.checked then
 		self.chk_tex:toScreenFull(x + self.w - self.chk_w, y, self.chk_w, self.chk_h, self.chk_tex_w, self.chk_tex_h)

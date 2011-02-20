@@ -29,9 +29,19 @@ function _M:connected()
 	if self.sock then return true end
 	self.sock = socket.connect("te4.org", 2257)
 	if not self.sock then return false end
-	self.sock:settimeout(10)
+--	self.sock:settimeout(10)
 	print("[PROFILE] Thread connected to te4.org")
 	self:login()
+	return true
+end
+
+--- Connects the second tcp channel to receive data
+function _M:connectedPull()
+	if self.psock then return true end
+	self.psock = socket.connect("te4.org", 2258)
+	if not self.psock then return false end
+	print("[PROFILE] Pull socket connected to te4.org")
+--	self.psock:send("
 	return true
 end
 
@@ -39,9 +49,20 @@ function _M:write(str, ...)
 	self.sock:send(str:format(...))
 end
 
+function _M:disconnect()
+	self.sock = nil
+	self.auth = nil
+end
+
 function _M:read(ncode)
-	local l = self.sock:receive("*l")
-	if not l then return end
+	local l, err = self.sock:receive("*l")
+	if not l then
+		if err == "closed" then
+			print("[PROFILE] connection disrupted, trying to reconnect", err)
+			self:disconnect()
+		end
+		return nil
+	end
 	if ncode and l:sub(1, 3) ~= ncode then
 		return nil, "bad code"
 	end
@@ -111,6 +132,15 @@ function _M:orderLogin(o)
 	end
 end
 
+function _M:orderLogoff(o)
+	-- Already logged?
+	if self.auth then
+		print("[PROFILE] logoff", self.auth.name)
+		cprofile.pushEvent("e='Logoff'")
+		self.auth = nil
+	end
+end
+
 function _M:orderGetNews(o)
 	self:command("NEWS")
 	if self:read("200") then
@@ -169,6 +199,15 @@ function _M:orderRegisterNewCharacter(o)
 	else
 		cprofile.pushEvent("e='RegisterNewCharacter' uuid=nil")
 	end
+end
+
+function _M:orderSaveChardump(o)
+	self:command("CHAR", "UPDATE", o.metadata:len(), o.data:len(), o.uuid, o.module)
+	if not self:read("200") then return end
+	self.sock:send(o.metadata)
+	if not self:read("200") then return end
+	self.sock:send(o.data)
+	cprofile.pushEvent("e='SaveChardump' ok=true")
 end
 
 function _M:handleOrder(o)

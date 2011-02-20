@@ -188,32 +188,43 @@ function _M:generate()
 		if button == "wheelup" and event == "button" then self.scroll = util.bound(self.scroll - 1, 1, self.max - self.max_display + 1)
 		elseif button == "wheeldown" and event == "button" then self.scroll = util.bound(self.scroll + 1, 1, self.max - self.max_display + 1) end
 
+		if self.sel then self.list[self.sel].focus_decay = self.focus_decay_max end
 		self.sel = util.bound(self.scroll + math.floor(by / self.fh), 1, self.max)
 		self:onSelect()
 		if (self.all_clicks or button == "left") and event == "button" then self:onUse(button, event) end
 	end)
 	self.key:addBinds{
 		ACCEPT = function() self:onUse("left", "key") end,
-		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, self.max) self.scroll = util.scroll(self.sel, self.scroll, self.max_display) self:onSelect() end,
-		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, self.max) self.scroll = util.scroll(self.sel, self.scroll, self.max_display) self:onSelect() end,
+		MOVE_UP = function()
+			if self.sel then self.list[self.sel].focus_decay = self.focus_decay_max end
+			self.sel = util.boundWrap(self.sel - 1, 1, self.max) self.scroll = util.scroll(self.sel, self.scroll, self.max_display) self:onSelect()
+		end,
+		MOVE_DOWN = function()
+			if self.sel then self.list[self.sel].focus_decay = self.focus_decay_max end
+			self.sel = util.boundWrap(self.sel + 1, 1, self.max) self.scroll = util.scroll(self.sel, self.scroll, self.max_display) self:onSelect()
+		end,
 	}
 	self.key:addCommands{
 		_HOME = function()
+			if self.sel then self.list[self.sel].focus_decay = self.focus_decay_max end
 			self.sel = 1
 			self.scroll = util.scroll(self.sel, self.scroll, self.max_display)
 			self:onSelect()
 		end,
 		_END = function()
+			if self.sel then self.list[self.sel].focus_decay = self.focus_decay_max end
 			self.sel = self.max
 			self.scroll = util.scroll(self.sel, self.scroll, self.max_display)
 			self:onSelect()
 		end,
 		_PAGEUP = function()
+			if self.sel then self.list[self.sel].focus_decay = self.focus_decay_max end
 			self.sel = util.bound(self.sel - self.max_display, 1, self.max)
 			self.scroll = util.scroll(self.sel, self.scroll, self.max_display)
 			self:onSelect()
 		end,
 		_PAGEDOWN = function()
+			if self.sel then self.list[self.sel].focus_decay = self.focus_decay_max end
 			self.sel = util.bound(self.sel + self.max_display, 1, self.max)
 			self.scroll = util.scroll(self.sel, self.scroll, self.max_display)
 			self:onSelect()
@@ -268,7 +279,7 @@ function _M:selectColumn(i, force)
 	end
 end
 
-function _M:display(x, y)
+function _M:display(x, y, nb_keyframes)
 	local bx, by = x, y
 	for j = 1, #self.columns do
 		local col = self.columns[j]
@@ -287,13 +298,16 @@ function _M:display(x, y)
 			local item = self.list[i]
 			if not item then break end
 			if self.sel == i then
-				if self.focused then
-					col._istex[1]:toScreenFull(x, y, col.fw, self.fh, col._istex[2], col._istex[3])
-				else
-					col._isustex[1]:toScreenFull(x, y, col.fw, self.fh, col._isustex[2], col._isustex[3])
-				end
+				if self.focused then col._istex[1]:toScreenFull(x, y, col.fw, self.fh, col._istex[2], col._istex[3])
+				else col._isustex[1]:toScreenFull(x, y, col.fw, self.fh, col._isustex[2], col._isustex[3]) end
 			else
 				col._itex[1]:toScreenFull(x, y, col.fw, self.fh, col._itex[2], col._itex[3])
+				if item.focus_decay then
+					if self.focused then col._istex[1]:toScreenFull(x, y, col.fw, self.fh, col._istex[2], col._istex[3], 1, 1, 1, item.focus_decay / self.focus_decay_max_d)
+					else col._isustex[1]:toScreenFull(x, y, col.fw, self.fh, col._isustex[2], col._isustex[3], 1, 1, 1, item.focus_decay / self.focus_decay_max_d) end
+					item.focus_decay = item.focus_decay - nb_keyframes
+					if item.focus_decay <= 0 then item.focus_decay = nil end
+				end
 			end
 			if col.direct_draw then
 				col.direct_draw(item, x, y, col.fw, self.fh)

@@ -203,6 +203,7 @@ function _M:generate()
 		if button == "wheelup" and event == "button" then self.scroll = util.bound(self.scroll - 1, 1, self.max - self.max_display + 1)
 		elseif button == "wheeldown" and event == "button" then self.scroll = util.bound(self.scroll + 1, 1, self.max - self.max_display + 1) end
 
+			if self.sel then self.list[self.sel].focus_decay = self.focus_decay_max end
 		self.sel = util.bound(self.scroll + math.floor(by / self.fh), 1, self.max)
 		if self.sel_by_col then
 			for i = 1, #self.sel_by_col do if bx > (self.sel_by_col[i-1] or 0) and bx <= self.sel_by_col[i] then
@@ -219,8 +220,14 @@ function _M:generate()
 	end)
 	self.key:addBinds{
 		ACCEPT = function() self:onUse("left") end,
-		MOVE_UP = function() self.sel = util.boundWrap(self.sel - 1, 1, self.max) self.scroll = util.scroll(self.sel, self.scroll, self.max_display) self:onSelect() end,
-		MOVE_DOWN = function() self.sel = util.boundWrap(self.sel + 1, 1, self.max) self.scroll = util.scroll(self.sel, self.scroll, self.max_display) self:onSelect() end,
+		MOVE_UP = function()
+			if self.sel then self.list[self.sel].focus_decay = self.focus_decay_max end
+			self.sel = util.boundWrap(self.sel - 1, 1, self.max) self.scroll = util.scroll(self.sel, self.scroll, self.max_display) self:onSelect()
+		end,
+		MOVE_DOWN = function()
+			if self.sel then self.list[self.sel].focus_decay = self.focus_decay_max end
+			self.sel = util.boundWrap(self.sel + 1, 1, self.max) self.scroll = util.scroll(self.sel, self.scroll, self.max_display) self:onSelect()
+		end,
 	}
 	if self.sel_by_col then
 		self.key:addBinds{
@@ -230,21 +237,25 @@ function _M:generate()
 	end
 	self.key:addCommands{
 		_HOME = function()
+			if self.sel then self.list[self.sel].focus_decay = self.focus_decay_max end
 			self.sel = 1
 			self.scroll = util.scroll(self.sel, self.scroll, self.max_display)
 			self:onSelect()
 		end,
 		_END = function()
+			if self.sel then self.list[self.sel].focus_decay = self.focus_decay_max end
 			self.sel = self.max
 			self.scroll = util.scroll(self.sel, self.scroll, self.max_display)
 			self:onSelect()
 		end,
 		_PAGEUP = function()
+			if self.sel then self.list[self.sel].focus_decay = self.focus_decay_max end
 			self.sel = util.bound(self.sel - self.max_display, 1, self.max)
 			self.scroll = util.scroll(self.sel, self.scroll, self.max_display)
 			self:onSelect()
 		end,
 		_PAGEDOWN = function()
+			if self.sel then self.list[self.sel].focus_decay = self.focus_decay_max end
 			self.sel = util.bound(self.sel + self.max_display, 1, self.max)
 			self.scroll = util.scroll(self.sel, self.scroll, self.max_display)
 			self:onSelect()
@@ -303,7 +314,7 @@ function _M:onUse(...)
 	else self.fct(item, self.sel, ...) end
 end
 
-function _M:display(x, y)
+function _M:display(x, y, nb_keyframes)
 	local bx, by = x, y
 
 	local max = math.min(self.scroll + self.max_display - 1, self.max)
@@ -315,10 +326,15 @@ function _M:display(x, y)
 			if not item then break end
 			local backs = self:getColumnBackground(col, item.level, item.nodes, item.shown)
 			if self.sel == i and (not self.sel_by_col or self.cur_col == j) then
-				if self.focused then
-					backs._stex:toScreenFull(x, y, col.width, self.fh, backs._stex_w, backs._stex_h)
-				else
-					backs._sustex:toScreenFull(x, y, col.width, self.fh, backs._sustex_w, backs._sustex_h)
+				if self.focused then backs._stex:toScreenFull(x, y, col.width, self.fh, backs._stex_w, backs._stex_h)
+				else backs._sustex:toScreenFull(x, y, col.width, self.fh, backs._sustex_w, backs._sustex_h) end
+			elseif (not self.sel_by_col or self.cur_col == j) then
+				backs._tex:toScreenFull(x, y, col.width, self.fh, backs._tex_w, backs._tex_h)
+				if item.focus_decay then
+					if self.focused then backs._stex:toScreenFull(x, y, col.width, self.fh, backs._stex_w, backs._stex_h, 1, 1, 1, item.focus_decay / self.focus_decay_max_d)
+					else backs._sustex:toScreenFull(x, y, col.width, self.fh, backs._sustex_w, backs._sustex_h, 1, 1, 1, item.focus_decay / self.focus_decay_max_d) end
+					item.focus_decay = item.focus_decay - nb_keyframes
+					if item.focus_decay <= 0 then item.focus_decay = nil end
 				end
 			else
 				backs._tex:toScreenFull(x, y, col.width, self.fh, backs._tex_w, backs._tex_h)

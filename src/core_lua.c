@@ -972,10 +972,10 @@ static int sdl_texture_toscreen_full(lua_State *L)
 	int rh = luaL_checknumber(L, 7);
 	if (lua_isnumber(L, 8))
 	{
-		float r = luaL_checknumber(L, 9);
-		float g = luaL_checknumber(L, 10);
-		float b = luaL_checknumber(L, 11);
-		float a = luaL_checknumber(L, 12);
+		float r = luaL_checknumber(L, 8);
+		float g = luaL_checknumber(L, 9);
+		float b = luaL_checknumber(L, 10);
+		float a = luaL_checknumber(L, 11);
 		GLfloat colors[4*4] = {
 			r, g, b, a,
 			r, g, b, a,

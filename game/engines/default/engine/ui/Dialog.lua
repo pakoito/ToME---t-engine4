@@ -387,7 +387,7 @@ function _M:toScreen(x, y, nb_keyframes)
 		self.tex:toScreenFull(x, y, self.w, self.h, self.tex_w, self.tex_h)
 		for i = 1, #self.uis do
 			local ui = self.uis[i]
-			ui.ui:display(x + ui.x, y + ui.y)
+			ui.ui:display(x + ui.x, y + ui.y, nb_keyframes)
 		end
 	end
 end

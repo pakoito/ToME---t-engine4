@@ -199,8 +199,21 @@ function _M:checkFirstRun()
 	return result
 end
 
+function _M:performlogin(login, pass, name, email)
+	self.login=login
+	self.pass=pass
+	print("[ONLINE PROFILE] attempting log in ", self.login)
+	self:tryAuth()
+	if (profile.auth) then
+		self.generic.online = { login=login, pass=pass,name=name or "", email=email or "" }
+		self:saveGenericProfile("online", self.generic.online)
+		self:getConfigs("generic")
+		self:syncOnline("generic")
+	end
+end
+
 -----------------------------------------------------------------------
--- Events
+-- Events from the profile thread
 -----------------------------------------------------------------------
 
 function _M:waitEvent(name, cb)
@@ -208,7 +221,10 @@ function _M:waitEvent(name, cb)
 	local stop = false
 	local first = true
 	while not stop do
-		if not first then core.game.sleep(50) end
+		if not first then
+			core.display.forceRedraw()
+			core.game.sleep(50)
+		end
 		local evt = core.profile.popEvent()
 		while evt do
 			if type(game) == "table" then evt = game:handleProfileEvent(evt)
@@ -232,7 +248,10 @@ function _M:waitFirstAuth(timeout)
 	local first = true
 	timeout = timeout or 20
 	while self.waiting_auth and timeout > 0 do
-		if not first then core.game.sleep(50) end
+		if not first then
+			core.display.forceRedraw()
+			core.game.sleep(50)
+		end
 		local evt = core.profile.popEvent()
 		while evt do
 			if type(game) == "table" then game:handleProfileEvent(evt)
@@ -256,7 +275,7 @@ function _M:eventAuth(e)
 end
 
 function _M:eventGetNews(e)
-	if e.news then
+	if e.news and self.evt_cbs.GetNews then
 		self.evt_cbs.GetNews(e.news:unserialize())
 		self.evt_cbs.GetNews = nil
 	end
@@ -298,7 +317,7 @@ function _M:handleEvent(e)
 end
 
 -----------------------------------------------------------------------
--- Online stuff
+-- Orders for the profile thread
 -----------------------------------------------------------------------
 
 function _M:getNews(callback)
@@ -389,51 +408,23 @@ end
 
 function _M:registerSaveChardump(module, uuid, title, tags, data)
 	if not self.auth or not self.hash_valid then return end
-	local dialog = Dialog:simplePopup("Uploading character data", "Character sheet is being uploaded to http://te4.org/") dialog.__showup = nil core.display.forceRedraw()
-	local data = self:rpc{action="SaveChardump", login=self.login, hash=self.auth.hash, module=module, uuid=uuid, title=title, tags=tags, data=data}
-	game:unregisterDialog(dialog)
-	if not data or not data.ok then return end
+	core.profile.pushOrder(table.serialize{o="SaveChardump",
+		module=module,
+		uuid=uuid,
+		data=data,
+		metadata=table.serialize{tags=tags, title=title},
+	})
 	print("[ONLINE PROFILE] saved character ", uuid)
 end
 
---[[
 function _M:newProfile(Login, Name, Password, Email)
 	print("[ONLINE PROFILE] profile options ", Login, Email, Name)
-	local data = self:rpc{action="NewProfile2", login=Login, email=Email, name=Name, pass=Password}
-	if not data then print("[ONLINE PROFILE] could not create") return end
-	print("[ONLINE PROFILE] profile id ", data.id)
+
+	core.profile.pushOrder(table.serialize{o="NewProfile2", login=Login, email=Email, name=Name, pass=Password})
+	local id = nil
+	self:waitEvent("NewProfile2", function(e) id = e.id end)
+
+	if not id then print("[ONLINE PROFILE] could not create") return end
+	print("[ONLINE PROFILE] profile id ", id)
 	self:performlogin(Login, Password, Name, Email)
 end
-
-function _M:performlogin(login, pass, name, email)
-	self.login=login
-	self.pass=pass
-	print("[ONLINE PROFILE] attempting log in ", self.login)
-	self:tryAuth()
-	if (profile.auth) then
-		self.generic.online = { login=login, pass=pass,name=name or "", email=email or "" }
-		self:saveGenericProfile("online", self.generic.online)
-		self:getConfigs("generic")
-		self:syncOnline("generic")
-	end
-end
-
-function _M:registerNewCharacter(module)
-	if not self.auth or not self.hash_valid then return end
-	local dialog = Dialog:simplePopup("Registering character", "Character is being registered on http://te4.org/") dialog.__showup = nil core.display.forceRedraw()
-	local data = self:rpc{action="RegisterNewCharacter", login=self.login, hash=self.auth.hash, module=module}
-	game:unregisterDialog(dialog)
-	if not data then return end
-	print("[ONLINE PROFILE] new character UUID ", data.uuid)
-	return data.uuid
-end
-
-function _M:registerSaveChardump(module, uuid, title, tags, data)
-	if not self.auth or not self.hash_valid then return end
-	local dialog = Dialog:simplePopup("Uploading character data", "Character sheet is being uploaded to http://te4.org/") dialog.__showup = nil core.display.forceRedraw()
-	local data = self:rpc{action="SaveChardump", login=self.login, hash=self.auth.hash, module=module, uuid=uuid, title=title, tags=tags, data=data}
-	game:unregisterDialog(dialog)
-	if not data or not data.ok then return end
-	print("[ONLINE PROFILE] saved character ", uuid)
-end
-]]

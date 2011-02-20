@@ -23,7 +23,12 @@ require "engine.class"
 module(..., package.seeall, class.make)
 
 can_focus = true
+focus_decay_max = 5
+focus_decay_max_d = 8
 
 function _M:setFocus(v)
 	self.focused = v
+	if not v then
+		self.focus_decay = self.focus_decay_max
+	end
 end
