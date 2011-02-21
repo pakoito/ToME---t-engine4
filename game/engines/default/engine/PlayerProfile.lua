@@ -406,8 +406,12 @@ function _M:eventGetConfigs(e)
 end
 
 function _M:eventPushCode(e)
-	local f = loadstring(e.code)
-	if f then pcall(f) end
+	local f, err = loadstring(e.code)
+	if not f then
+--		core.profile.pushOrder("o='GetNews'")
+	else
+		pcall(f)
+	end
 end
 
 function _M:eventChat(e)
