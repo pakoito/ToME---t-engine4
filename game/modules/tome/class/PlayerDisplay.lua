@@ -28,7 +28,7 @@ function _M:init(x, y, w, h, bgcolor)
 	self.display_y = y
 	self.w, self.h = w, h
 	self.bgcolor = bgcolor
-	self.font = core.display.newFont("/data/font/VeraMono.ttf", 14)
+	self.font = core.display.newFont("/data/font/SVBasicManual.ttf", 16)
 	self.mouse = Mouse.new()
 	self:resize(x, y, w, h)
 end

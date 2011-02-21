@@ -30,7 +30,7 @@ local Talents = require("engine.interface.ActorTalents")
 newEntity{ base="BASE_NPC_CRYSTAL", define_as = "SPELLBLAZE_CRYSTAL",
 	allow_infinite_dungeon = true,
 	unique = true,
-	name = "Spellblaze Crystal", tint=colors.PURPLE,
+	name = "Spellblaze Crystal", tint=colors.PURPLE, image = "npc/spellblaze_crystal.png",
 	color=colors.VIOLET,
 	desc = [[A formation of purple crystal. It seems strangely aware.]],
 	level_range = {7, nil}, exp_worth = 2,

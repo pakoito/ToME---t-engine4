@@ -57,9 +57,12 @@ _2DNoise = n:makeTexture2D(64, 64)
 -- Dialogs fonts
 UIBase.font = core.display.newFont("/data/font/USENET_.ttf", 16)
 UIBase.font_bold = core.display.newFont("/data/font/USENET_.ttf", 16)
+UIBase.font_mono = core.display.newFont("/data/font/SVBasicManual.ttf", 16)
 UIBase.font_bold:setStyle("bold")
 UIBase.font_h = UIBase.font:lineSkip()
 UIBase.font_bold_h = UIBase.font_bold:lineSkip()
+UIBase.font_mono_w = UIBase.font_mono:size(" ")
+UIBase.font_mono_h = UIBase.font_mono:lineSkip()
 
 -- Achievements
 WorldAchievements:loadDefinition("/data/achievements/")

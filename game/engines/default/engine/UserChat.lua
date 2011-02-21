@@ -74,7 +74,7 @@ end
 -- TODO: make it betetr than a simple dialog
 function _M:talkBox()
 	if not profile.auth then return end
-	local d = require("engine.dialogs.GetText").new("Talk", self.cur_channel..":", 0, 250, function(text)
+	local d = require("engine.dialogs.GetText").new("Talk", self.cur_channel, 0, 250, function(text)
 		self:talk(text)
 	end)
 	game:registerDialog(d)

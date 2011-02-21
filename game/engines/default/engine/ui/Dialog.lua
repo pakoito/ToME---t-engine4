@@ -145,8 +145,8 @@ function _M:resize(w, h, nogen)
 	self.w, self.h = math.floor(w), math.floor(h)
 	self.display_x = math.floor(self.force_x or (gamew - self.w) / 2)
 	self.display_y = math.floor(self.force_y or (gameh - self.h) / 2)
-	self.ix, self.iy = 5, 22 + 3
-	self.iw, self.ih = w - 2 * 5, h - 8 - 22 - 3
+	self.ix, self.iy = 5, 8 + 3 + self.font_bold_h
+	self.iw, self.ih = w - 2 * 5, h - 8 - 8 - 3 - self.font_bold_h
 
 	if not nogen then self:generate() end
 end
