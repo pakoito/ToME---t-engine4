@@ -19,11 +19,11 @@
 
 local function remove_materials(npc, player)
 	local gem_o, gem_item, gem_inven_id = player:findInAllInventories("Resonating Diamond")
-	player:removeObject(gem_inven_id, gem_item, true)
+	player:removeObject(gem_inven_id, gem_item, false)
 	gem_o:removed()
 
 	local athame_o, athame_item, athame_inven_id = player:findInAllInventories("Blood-Runed Athame")
-	player:removeObject(athame_inven_id, athame_item, true)
+	player:removeObject(athame_inven_id, athame_item, false)
 	athame_o:removed()
 
 	player:incMoney(-100)

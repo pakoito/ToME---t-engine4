@@ -62,7 +62,7 @@ UIBase.font_bold:setStyle("bold")
 UIBase.font_h = UIBase.font:lineSkip()
 UIBase.font_bold_h = UIBase.font_bold:lineSkip()
 UIBase.font_mono_w = UIBase.font_mono:size(" ")
-UIBase.font_mono_h = UIBase.font_mono:lineSkip()
+UIBase.font_mono_h = UIBase.font_mono:lineSkip()+2
 
 -- Achievements
 WorldAchievements:loadDefinition("/data/achievements/")
