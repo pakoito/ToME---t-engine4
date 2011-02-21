@@ -44,11 +44,13 @@ end
 
 function _M:event(e)
 	if e.se == "Talk" then
+		e.msg = e.msg:removeColorCodes()
+
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
 		local log = self.channels[e.channel].log
 		table.insert(log, 1, ("<%s> %s"):format(e.user, e.msg))
 		while #log > 50 do table.remove(log) end
-		game.log("#YELLOW#"..log[1])
+		_G.game.log("#YELLOW#"..log[1])
 	elseif e.se == "Join" then
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
 		self.channels[e.channel].users[e.user] = true
@@ -60,6 +62,7 @@ end
 
 function _M:talk(msg)
 	if not msg then return end
+	msg = msg:removeColorCodes()
 	core.profile.pushOrder(string.format("o='ChatTalk' channel=%q msg=%q", self.cur_channel, msg))
 end
 
