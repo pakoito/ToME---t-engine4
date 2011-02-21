@@ -580,6 +580,9 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 	if config.settings.tome.autosave and ((left_zone and left_zone.short_name ~= "wilderness") or self.zone.save_per_level) and left_zone.short_name ~= self.zone.short_name then self:saveGame() end
 
 	self.player:onEnterLevelEnd(self.zone, self.level)
+
+	-- Day/Night cycle
+	if self.level.data.day_night then self.state:dayNightCycle() end
 end
 
 function _M:getPlayer()
