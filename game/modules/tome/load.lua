@@ -41,6 +41,7 @@ local Store = require "mod.class.Store"
 local WorldAchievements = require "mod.class.interface.WorldAchievements"
 local PlayerLore = require "mod.class.interface.PlayerLore"
 local Quest = require "engine.Quest"
+local UIBase = require "engine.ui.Base"
 
 config.settings.tome = config.settings.tome or {}
 profile.mod.allow_build = profile.mod.allow_build or {}
@@ -52,6 +53,13 @@ local n = core.noise.new(2)
 _2DNoise = n:makeTexture2D(64, 64)
 --local n = core.noise.new(3)
 --_2DNoise = n:makeTexture2DStack(64, 64, 64)
+
+-- Dialogs fonts
+UIBase.font = core.display.newFont("/data/font/USENET_.ttf", 16)
+UIBase.font_bold = core.display.newFont("/data/font/USENET_.ttf", 16)
+UIBase.font_bold:setStyle("bold")
+UIBase.font_h = UIBase.font:lineSkip()
+UIBase.font_bold_h = UIBase.font_bold:lineSkip()
 
 -- Achievements
 WorldAchievements:loadDefinition("/data/achievements/")

@@ -80,15 +80,16 @@ function _M:init()
 end
 
 function _M:run()
+	self.delayed_log_damage = {}
 	self.calendar = Calendar.new("/data/calendar_allied.lua", "Today is the %s %s of the %s year of the Age of Ascendancy of Maj'Eyal.\nThe time is %02d:%02d.", 122, 167, 11)
-	self.flash = LogFlasher.new(0, 0, self.w, 20, nil, nil, nil, {255,255,255}, {0,0,0})
-	self.logdisplay = LogDisplay.new(0, self.h * 0.8 + 7, self.w * 0.5 - 30, self.h * 0.2 - 7, nil, nil, nil, {255,255,255}, "/data/gfx/ui/message-log.png")
+	self.flash = LogFlasher.new(0, 0, self.w, 20, nil, "/data/font/USENET_.ttf", 16, {255,255,255}, {0,0,0})
+	self.logdisplay = LogDisplay.new(0, self.h * 0.8 + 7, self.w * 0.5 - 30, self.h * 0.2 - 7, nil, "/data/font/USENET_.ttf", 14, {255,255,255}, "/data/gfx/ui/message-log.png")
 	self.player_display = PlayerDisplay.new(0, 230, 200, self.h * 0.8 - 230, {30,30,0})
-	self.hotkeys_display = HotkeysDisplay.new(nil, self.w * 0.5 + 30, self.h * 0.8 + 7, self.w * 0.5 - 30, self.h * 0.2 - 7, "/data/gfx/ui/talents-list.png")
-	self.npcs_display = ActorsSeenDisplay.new(nil, self.w * 0.5 + 30, self.h * 0.8 + 7, self.w * 0.5 - 30, self.h * 0.2 - 7, "/data/gfx/ui/talents-list.png")
-	self.tooltip = Tooltip.new(nil, nil, {255,255,255}, {30,30,30,230})
+	self.hotkeys_display = HotkeysDisplay.new(nil, self.w * 0.5 + 30, self.h * 0.8 + 7, self.w * 0.5 - 30, self.h * 0.2 - 7, "/data/gfx/ui/talents-list.png", "/data/font/USENET_.ttf", 12)
+	self.npcs_display = ActorsSeenDisplay.new(nil, self.w * 0.5 + 30, self.h * 0.8 + 7, self.w * 0.5 - 30, self.h * 0.2 - 7, "/data/gfx/ui/talents-list.png", "/data/font/USENET_.ttf", 12)
+	self.tooltip = Tooltip.new("/data/font/USENET_.ttf", 14, {255,255,255}, {30,30,30,230})
 	self.tooltip2 = Tooltip.new(nil, nil, {255,255,255}, {30,30,30,230})
-	self.flyers = FlyingText.new()
+	self.flyers = FlyingText.new("/data/font/INSULA__.ttf", 14, "/data/font/INSULA__.ttf", 17)
 	self:setFlyingText(self.flyers)
 	self.minimap_bg, self.minimap_bg_w, self.minimap_bg_h = core.display.loadImage("/data/gfx/ui/minimap.png"):glTexture()
 	self.nicer_tiles = NicerTiles.new()
@@ -659,8 +660,51 @@ function _M:tick()
 		self.on_tick_end = {}
 	end
 
+	-- Check damages to log
+	self:displayDelayedLogDamage()
+
 	if savefile_pipe.saving then self.player.changed = true end
 	if self.paused and not savefile_pipe.saving then return true end
+end
+
+function _M:displayDelayedLogDamage()
+	for src, tgts in pairs(self.delayed_log_damage) do
+		for target, dams in pairs(tgts) do
+			local flash = game.flash.NEUTRAL
+			if target == game.player then flash = game.flash.BAD end
+			if src == game.player then flash = game.flash.GOOD end
+			if #dams.descs > 1 then
+				game.logSeen(target, flash, "%s hits %s for %s (total %0.2f).", src.name:capitalize(), target.name, table.concat(dams.descs, ", "), dams.total)
+			else
+				game.logSeen(target, flash, "%s hits %s for %s.", src.name:capitalize(), target.name, table.concat(dams.descs, ", "))
+			end
+
+			local rsrc = src.resolveSource and src:resolveSource() or src
+			local rtarget = target.resolveSource and target:resolveSource() or target
+			local x, y = target.x or -1, target.y or -1
+			local sx, sy = game.level.map:getTileToScreen(x, y)
+			if target.dead then
+				if game.level.map.seens(x, y) and (rsrc == game.player or rtarget == game.player or game.party:hasMember(rsrc) or game.party:hasMember(rtarget)) then
+					game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, rng.float(-2.5, -1.5), ("Kill (%d)!"):format(dams.total), {255,0,255}, true)
+				end
+			else
+				if game.level.map.seens(x, y) and (rsrc == game.player or game.party:hasMember(rsrc)) then
+					game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, rng.float(-3, -2), tostring(-math.ceil(dams.total)), {0,255,0})
+				elseif game.level.map.seens(x, y) and (rtarget == game.player or game.party:hasMember(rtarget)) then
+					game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, rng.float(-3, -2), tostring(-math.ceil(dams.total)), {255,0,0})
+				end
+			end
+		end
+	end
+	self.delayed_log_damage = {}
+end
+
+function _M:delayedLogDamage(src, target, dam, desc)
+	self.delayed_log_damage[src] = self.delayed_log_damage[src] or {}
+	self.delayed_log_damage[src][target] = self.delayed_log_damage[src][target] or {total=0, descs={}}
+	local t = self.delayed_log_damage[src][target]
+	t.descs[#t.descs+1] = desc
+	t.total = t.total + dam
 end
 
 --- Register things to do on tick end

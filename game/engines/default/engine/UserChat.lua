@@ -43,6 +43,9 @@ function _M:setupOnGame()
 end
 
 function _M:event(e)
+	-- Cancel if game is not fully loaded
+	if type(game) ~= "table" then return end
+
 	if e.se == "Talk" then
 		e.msg = e.msg:removeColorCodes()
 
@@ -50,7 +53,7 @@ function _M:event(e)
 		local log = self.channels[e.channel].log
 		table.insert(log, 1, ("<%s> %s"):format(e.user, e.msg))
 		while #log > 50 do table.remove(log) end
-		_G.game.log("#YELLOW#"..log[1])
+		game.log("#YELLOW#"..log[1])
 	elseif e.se == "Join" then
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
 		self.channels[e.channel].users[e.user] = true
@@ -61,6 +64,7 @@ function _M:event(e)
 end
 
 function _M:talk(msg)
+	if not profile.auth then return end
 	if not msg then return end
 	msg = msg:removeColorCodes()
 	core.profile.pushOrder(string.format("o='ChatTalk' channel=%q msg=%q", self.cur_channel, msg))
@@ -69,6 +73,7 @@ end
 --- Request a line to send
 -- TODO: make it betetr than a simple dialog
 function _M:talkBox()
+	if not profile.auth then return end
 	local d = require("engine.dialogs.GetText").new("Talk", self.cur_channel..":", 0, 250, function(text)
 		self:talk(text)
 	end)

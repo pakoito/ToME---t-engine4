@@ -110,27 +110,12 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 
 		print("[PROJECTOR] final dam", dam)
 
-		local flash = game.flash.NEUTRAL
-		if target == game.player then flash = game.flash.BAD end
-		if src == game.player then flash = game.flash.GOOD end
-
+		-- Log damage for later
 		if not DamageType:get(type).hideMessage then
 			local srcname = src.x and src.y and game.level.map.seens(src.x, src.y) and src.name:capitalize() or "Something"
-			game.logSeen(target, flash, "%s hits %s for %s%0.2f %s damage#LAST#.", srcname, target.name, DamageType:get(type).text_color or "#aaaaaa#", dam, DamageType:get(type).name)
+			game:delayedLogDamage(src, target, dam, ("%s%0.2f %s damage#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", dam, DamageType:get(type).name))
 		end
-
-		local sx, sy = game.level.map:getTileToScreen(x, y)
-		if target:takeHit(dam, src) then
-			if game.level.map.seens(x, y) and (rsrc == game.player or rtarget == game.player or game.party:hasMember(rsrc) or game.party:hasMember(rtarget)) then
-				game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -3, "Kill!", {255,0,255})
-			end
-		elseif not DamageType:get(type).hideFlyer then
-			if game.level.map.seens(x, y) and (rsrc == game.player or game.party:hasMember(rsrc)) then
-				game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -3, tostring(-math.ceil(dam)), {0,255,0})
-			elseif game.level.map.seens(x, y) and (rtarget == game.player or game.party:hasMember(rtarget)) then
-				game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -3, tostring(-math.ceil(dam)), {255,0,0})
-			end
-		end
+		target:takeHit(dam, src)
 
 		if src.attr and src:attr("martyrdom") and not no_martyr then
 			DamageType.defaultProjector(target, src.x, src.y, type, dam * src.martyrdom / 100, tmp, true)

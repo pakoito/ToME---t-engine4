@@ -35,7 +35,7 @@ function _M:init(actor, on_finish)
 	self.actor = actor
 	self.actor_dup = actor:clone()
 	self.unused_stats = self.actor.unused_stats
-	Dialog.init(self, "Stats Levelup: "..actor.name, 500, 300)
+	Dialog.init(self, "Stats Levelup: "..actor.name, 600, 500)
 
 	self.sel = 1
 

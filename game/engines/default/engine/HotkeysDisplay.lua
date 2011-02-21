@@ -21,7 +21,7 @@ require "engine.class"
 
 module(..., package.seeall, class.make)
 
-function _M:init(actor, x, y, w, h, bgcolor)
+function _M:init(actor, x, y, w, h, bgcolor, fontname, fontsize)
 	self.actor = actor
 	if type(bgcolor) ~= "string" then
 		self.bgcolor = bgcolor or {0,0,0}
@@ -29,7 +29,7 @@ function _M:init(actor, x, y, w, h, bgcolor)
 		self.bgcolor = {0,0,0}
 		self.bg_image = bgcolor
 	end
-	self.font = core.display.newFont("/data/font/VeraMono.ttf", 10)
+	self.font = core.display.newFont(fontname or "/data/font/VeraMono.ttf", fontsize or 10)
 	self.font_h = self.font:lineSkip()
 	self.clics = {}
 	self:resize(x, y, w, h)
