@@ -278,7 +278,7 @@ function _M:getTextualDesc()
 		for stat, i in pairs(w.inc_stats) do
 			dm[#dm+1] = ("%d %s"):format(i, Stats.stats_def[stat].name)
 		end
-		desc:add(("Increases stats: %s."):format(table.concat(dm, ',')), true)
+		if #dm > 0 then desc:add(("Increases stats: %s."):format(table.concat(dm, ',')), true) end
 	end
 
 	if w.melee_project then
@@ -286,7 +286,7 @@ function _M:getTextualDesc()
 		for typ, dam in pairs(w.melee_project) do
 			rs[#rs+1] = ("%d %s"):format(dam, DamageType.dam_def[typ].name)
 		end
-		desc:add(("Damage on hit(melee): %s."):format(table.concat(rs, ',')), true)
+		if #rs > 0 then desc:add(("Damage on hit(melee): %s."):format(table.concat(rs, ',')), true) end
 	end
 
 	if w.ranged_project then
@@ -294,7 +294,7 @@ function _M:getTextualDesc()
 		for typ, dam in pairs(w.ranged_project) do
 			rs[#rs+1] = ("%d %s"):format(dam, DamageType.dam_def[typ].name)
 		end
-		desc:add(("Damage on hit(ranged): %s."):format(table.concat(rs, ',')), true)
+		if #rs > 0 then desc:add(("Damage on hit(ranged): %s."):format(table.concat(rs, ',')), true) end
 	end
 
 	if w.on_melee_hit then
@@ -302,7 +302,7 @@ function _M:getTextualDesc()
 		for typ, dam in pairs(w.on_melee_hit) do
 			rs[#rs+1] = ("%d %s"):format(dam, DamageType.dam_def[typ].name)
 		end
-		desc:add(("Damage when hit: %s."):format(table.concat(rs, ',')), true)
+		if #rs > 0 then desc:add(("Damage when hit: %s."):format(table.concat(rs, ',')), true) end
 	end
 
 	if w.resists then
@@ -310,7 +310,7 @@ function _M:getTextualDesc()
 		for res, i in pairs(w.resists) do
 			rs[#rs+1] = ("%d%% %s"):format(i, res == "all" and "all" or DamageType.dam_def[res].name)
 		end
-		desc:add(("Increases resistances: %s."):format(table.concat(rs, ',')), true)
+		if #rs > 0 then desc:add(("Increases resistances: %s."):format(table.concat(rs, ',')), true) end
 	end
 
 	if w.resists_cap then
@@ -318,7 +318,7 @@ function _M:getTextualDesc()
 		for res, i in pairs(w.resists_cap) do
 			rs[#rs+1] = ("%d%% %s"):format(i, res == "all" and "all" or DamageType.dam_def[res].name)
 		end
-		desc:add(("Increases resistances cap: %s."):format(table.concat(rs, ',')), true)
+		if #rs > 0 then desc:add(("Increases resistances cap: %s."):format(table.concat(rs, ',')), true) end
 	end
 
 	if w.inc_damage then
@@ -326,7 +326,7 @@ function _M:getTextualDesc()
 		for res, i in pairs(w.inc_damage) do
 			rs[#rs+1] = ("%d%% %s"):format(i, res == "all" and "all" or DamageType.dam_def[res].name)
 		end
-		desc:add(("Increases damage type: %s."):format(table.concat(rs, ',')), true)
+		if #rs > 0 then desc:add(("Increases damage type: %s."):format(table.concat(rs, ',')), true) end
 	end
 
 	local esps = {}
