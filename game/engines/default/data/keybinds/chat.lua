@@ -23,3 +23,10 @@ defineAction{
 	group = "user chat",
 	name = "Talk to people",
 }
+
+defineAction{
+	default = { "sym:32:true:false:false:false" },
+	type = "USERCHAT_SHOW_TALK",
+	group = "user chat",
+	name = "Display chat log",
+}

@@ -54,6 +54,7 @@ end
 function _M:disconnect()
 	self.sock = nil
 	self.auth = nil
+	core.game.sleep(5000) -- Wait 5 secs
 end
 
 function _M:read(ncode)
@@ -78,6 +79,7 @@ function _M:pread(ncode)
 		if err == "closed" then
 			print("[PROFILE] push connection disrupted, trying to reconnect", err)
 			self.psock = nil
+			core.game.sleep(5000) -- Wait 5 secs
 		end
 		return nil
 	end
@@ -264,6 +266,22 @@ end
 function _M:orderChatTalk(o)
 	self:command("BRDC", o.channel, o.msg)
 	self:read("200")
+end
+
+function _M:orderChatJoin(o)
+	self:command("JOIN", o.channel)
+	self:read("200")
+end
+
+function _M:orderChatUserInfo(o)
+	self:command("UINF", o.user)
+	if self:read("200") then
+		local _, _, size = self.last_line:find("^([0-9]+)")
+		size = tonumber(size)
+		if not size or size < 1 then return end
+		local body = self.sock:receive(size)
+		cprofile.pushEvent(string.format("e='Chat' se='UserInfo' user=%q data=%q", o.user, body))
+	end
 end
 
 --------------------------------------------------------------------

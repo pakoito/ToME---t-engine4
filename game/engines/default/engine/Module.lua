@@ -269,7 +269,10 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 	_G.game:run()
 
 	-- Add user chat if needed
-	if mod.allow_userchat and _G.game.key then profile.chat:setupOnGame() end
+	if mod.allow_userchat and _G.game.key then
+		profile.chat:setupOnGame()
+		profile.chat:join(mod.short_name)
+	end
 
 	-- Disable the profile if ungood
 	if mod.short_name ~= "boot" then

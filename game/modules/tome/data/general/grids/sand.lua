@@ -200,20 +200,20 @@ newEntity{ base = "SANDWALL_STABLE", define_as = "SANDWALL_STABLE_PILLAR_6"..i, 
 newEntity{ base = "SANDWALL_STABLE", define_as = "SANDWALL_STABLE_HOLE_2"..i, image = "terrain/sandwall_2h_"..i..".png"}
 newEntity{ base = "SANDWALL_STABLE", define_as = "SANDWALL_STABLE_HOLE_8"..i, image = "terrain/sandwall_5_"..i..".png", add_displays = {class.new{image="terrain/sandwall_8h_1.png", z=18, display_y=-1}}}
 
-
+for i = 1, 20 do
 newEntity{
-	define_as = "PALMTREE",
+	define_as = "PALMTREE"..(i > 1 and i or ""),
 	type = "wall", subtype = "sand",
 	name = "tree", image = "terrain/sandfloor.png",
 	display = '#', color=colors.LIGHT_GREEN, back_color={r=93,g=79,b=22},
---	add_displays = class:makeTrees("terrain/palmtree_alpha", 1),
-	add_displays = {class.new{image="terrain/palmtree_alpha1.png"}},
+	add_displays = class:makeTrees("terrain/palmtree_alpha", 4),
 	always_remember = true,
 	can_pass = {pass_tree=1},
 	does_block_move = true,
 	block_sight = true,
 	dig = "SAND",
 }
+end
 
 -----------------------------------------
 -- Sandy exits
