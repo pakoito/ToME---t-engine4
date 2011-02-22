@@ -140,7 +140,7 @@ newTalent{
 		At talent level 4 you learn to create and sustain a second jumpgate.]]):format(range)
  	end,
  }
- 
+
 
 newTalent{
 	name = "Mind Blast",
@@ -320,8 +320,8 @@ newTalent{
 		local jumpgate_teleport = self:getTalentFromId(self.T_JUMPGATE_TELEPORT_TWO)
 		local range = jumpgate_teleport.getRange(self, jumpgate_teleport)
 		return ([[Create a second shadow jumpgate at your location. As long as you sustain this spell you can use 'Jumpgate: Teleport' to instantly travel to the jumpgate as long as you are within %d tiles of it.]]):format(range)
- 	end,
- }
+	end,
+}
 
 newTalent{
 	name = "Jumpgate Two: Teleport To", short_name = "JUMPGATE_TELEPORT_TWO",
@@ -352,5 +352,5 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Instantly travel to your second jumpgate as long as you are within %d tiles of it.]]):format(t.getRange(self, t))
- 	end,
- }
+	end,
+}
