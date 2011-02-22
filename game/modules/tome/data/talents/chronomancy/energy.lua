@@ -75,20 +75,31 @@ newTalent{
 newTalent{
 	name = "Entropic Field",
 	type = {"chronomancy/energy", 2},
+	mode = "sustained",
 	require = chrono_req2,
 	points = 5,
-	paradox = 5,
+	sustain_paradox = 150,
 	cooldown = 20,
-	tactical = { DEFEND = 2 },
-	getPower = function(self, t) return 10 + (self:combatTalentSpellDamage(t, 10, 50)*getParadoxModifier(self, pm)) end,
-	action = function(self, t)
-		self:setEffect(self.EFF_ENTROPIC_FIELD, 10, {power=t.getPower(self, t)})
+	tactical = { BUFF = 2 },
+	getPower = function(self, t) return 10 + (self:combatTalentSpellDamage(t, 10, 50)) end,
+	activate = function(self, t)
+		game:playSoundNear(self, "talents/heal")
+		return {
+			particle = self:addParticles(Particles.new("time_shield", 1)),
+			phys = self:addTemporaryValue("resists", {[DamageType.PHYSICAL]=t.getPower(self, t)/2}),
+			proj = self:addTemporaryValue("slow_projectiles", t.getPower(self, t)),
+		}
+	end,
+	deactivate = function(self, t, p)
+		self:removeParticles(p.particle)
+		self:removeTemporaryValue("resists", p.phys)
+		self:removeTemporaryValue("slow_projectiles", p.proj)
 		return true
 	end,
 	info = function(self, t)
 		local power = t.getPower(self, t)
-		return ([[You encase yourself in a shield that slows incoming projectiles by %d%% and grants you %d%% physical resistance for 10 turns.
-		The effect will scale with your Paradox and Magic stat.]]):format(power, power / 2)
+		return ([[You encase yourself in a field that slows incoming projectiles by %d%% and grants you %d%% physical resistance.
+		The effect will scale with the Magic stat.]]):format(power, power / 2)
 	end,
 }
 

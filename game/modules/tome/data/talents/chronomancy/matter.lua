@@ -48,7 +48,7 @@ newTalent{
 		format(damDesc(self, DamageType.TEMPORAL, damage / 2), damDesc(self, DamageType.PHYSICAL, damage / 2))
 	end,
 }
-newTalent{
+--[[newTalent{
 	name = "Terraforming",
 	type = {"chronomancy/matter",2},
 	require = chrono_req2,
@@ -73,8 +73,43 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Makes impassable terrain passable and turns passable terrain into walls, trees, etc.
-		Additional talent points will lower the cooldown]]):format()
+		return (Makes impassable terrain passable and turns passable terrain into walls, trees, etc.
+		Additional talent points will lower the cooldown):format()
+	end,
+}]]
+
+newTalent{
+	name = "Carbon Spikes",
+	type = {"chronomancy/matter", 2},
+	require = chrono_req2, no_sustain_autoreset = true,
+	points = 5,
+	mode = "sustained",
+	sustain_paradox = 150,
+	cooldown = 12,
+	tactical = { BUFF =2, DEFEND = 2 },
+	getDamageOnMeleeHit = function(self, t) return self:combatTalentSpellDamage(t, 10, 50) end,
+	getArmor = function(self, t) return math.ceil (self:combatTalentSpellDamage(t, 20, 40)) end,
+	activate = function(self, t)
+		local power = t.getArmor(self, t)
+		self.carbon_armor = power
+		game:playSoundNear(self, "talents/generic")
+		return {
+			armor = self:addTemporaryValue("carbon_spikes", power),
+			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.BLEED]=t.getDamageOnMeleeHit(self, t)}),			
+		}
+	end,
+	deactivate = function(self, t, p)
+		self:removeTemporaryValue("carbon_spikes", p.armor)
+		self:removeTemporaryValue("on_melee_hit", p.onhit)
+		self.carbon_armor = nil
+		return true
+	end,
+	info = function(self, t)
+		local damage = t.getDamageOnMeleeHit(self, t)
+		local armor = t.getArmor(self, t)
+		return ([[Fragile spikes of carbon protrude from your clothing and armor, increasing your armor rating by %d and inflicting %0.2f bleed damage over six turns on attackers.   Each time you're struck the armor increase will be reduced by 1 until the bonus is less then 1, at which point the spikes will crumble completely and the spell will end.
+		The armor and bleed damage will increase with the Magic stat.]]):
+		format(armor, damDesc(self, DamageType.PHYSICAL, damage))
 	end,
 }
 
@@ -86,17 +121,13 @@ newTalent{
 	paradox = 20,
 	cooldown = 20,
 	tactical = { ATTACKAREA = 2, DISABLE = 2 },
-	range = 6,
 	direct_hit = true,
 	requires_target = true,
-	getRadius = function (self, t) return 1 + math.floor(self:getTalentLevel(t) / 4) end,
+	range = function(self, t) return 1 + self:getTalentLevelRaw(t) end,
 	getDuration = function(self, t) return 2 + math.floor(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
 	action = function(self, t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=t.getRadius(self, t)}
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		x, y = checkBackfire(self, x, y)
-		self:project(tg, x, y, function(tx, ty)
+		local tg = {type="ball", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
+		self:project(tg, self.x, self.y, function(tx, ty)
 			local target = game.level.map(tx, ty, Map.ACTOR)
 			if not target then return end
 
@@ -106,14 +137,14 @@ newTalent{
 				game.logSeen(target, "%s resists the calcification.", target.name:capitalize())
 			end
 		end)
-		game.level.map:particleEmitter(x, y, tg.radius, "ball_earth", {radius=tg.radius, grids=grids, tx=x, ty=y})
-		game:playSoundNear(self, "talents/earth")
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_earth", {radius=tg.radius})
+		game:playSoundNear(self, "talents/breath")
 		return true
 	end,
 	info = function(self, t)
-		local radius = t.getRadius(self, t)
+		local radius = self:getTalentRange(t)
 		local duration = t.getDuration(self, t)
-		return ([[Attempts to turn all targets in a radius of %d to stone for %d turns.  Stoned creatures are unable to act or regen life and are very brittle.
+		return ([[Attempts to turn all targets around you in a radius of %d to stone for %d turns.  Stoned creatures are unable to act or regen life and are very brittle.
 		If a stoned creature is hit by an attack that deals more than 30%% of its life it will shattered and be destroyed.
 		Stoned creatures are highly resistant to fire and lightning and somewhat resistant to physical attacks.
 		The duration will scale with your Paradox.]]):format(radius, duration)

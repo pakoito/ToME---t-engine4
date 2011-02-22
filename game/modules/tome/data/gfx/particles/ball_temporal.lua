@@ -40,9 +40,9 @@ return { generator = function()
 		dir = a, dirv = 0, dira = 0,
 		vel = sradius / 2 / 10, velv = 0, vela = 0,
 
-		r = rng.range(70, 176)/255,   rv = 0, ra = 0,
-		g = rng.range(130, 196)/255,   gv = 0.005, ga = 0.0005,
-		b = rng.range(180, 222)/255,      bv = 0, ba = 0,
+		r = rng.range(176, 250)/255,   rv = 0, ra = 0,
+		g = rng.range(196, 250)/255,   gv = 0.005, ga = 0.0005,
+		b = rng.range(222, 0)/255,      bv = 0, ba = 0,
 		a = rng.range(25, 220)/255,    av = static and -0.034 or 0, aa = 0.005,
 	}
 end, },

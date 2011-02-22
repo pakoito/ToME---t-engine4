@@ -64,7 +64,14 @@ newTalent{
 	cooldown = 24,
 	tactical = { PARADOX = 2 },
 	getReduction = function(self, t)
-		local modifier = self:getWil() * (1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10) or 0 )
+		
+		--check for Paradox Mastery
+		if self:knowTalent(self.T_PARADOX_MASTERY) and self:isTalentActive(self.T_PARADOX_MASTERY) then
+			modifier = self:getWil() * (1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10) or 0 )
+		else
+			modifier = self:getWil()
+		end
+		
 		local reduction = (20 + (modifier * self:getTalentLevel(t)/2))
 		return reduction
 	end,

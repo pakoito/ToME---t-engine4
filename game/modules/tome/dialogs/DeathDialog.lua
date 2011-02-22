@@ -77,7 +77,7 @@ function _M:cleanActor(actor)
 		if eff[1] == "effect" then
 			actor:removeEffect(eff[2])
 		else
-			actor:forceUseTalent(eff[2], {ignore_energy=true})
+			actor:forceUseTalent(eff[2], {ignore_energy=true, no_equilibrium_fail=true, no_paradox_fail=true})
 		end
 	end
 end

@@ -36,13 +36,13 @@ Current theory: Possibly a portal of some kind? We have only rumours and myths o
 #{bold}#Hompalan's Log Entry 2#{normal}#
 #{italic}#Age of Allure Year 4541#{normal}#
 
-Testing of live animals has not gone well. Thankfully I can leave the clean-up to my technicians... Four years and it feels like we have not even begun to understand these ruins. I'm worried our research grant will soon be cut. But I have hope that some of the items we've recently uncovered may provide some sort of key to the portals. Or perhaps they were just used for Sher'Tul sports? We shall see.
+Testing of live yeeks has not gone well. Thankfully I can leave the clean-up to my technicians... Four years and it feels like we have not even begun to understand these ruins. I'm worried our research grant will soon be cut. But I have hope that some of the items we've recently uncovered may provide some sort of key to the portals. Or perhaps they were just used for Sher'Tul sports? We shall see.
 
 
 #{bold}#Hompalan's Log Entry 3#{normal}#
 #{italic}#Age of Allure 4542#{normal}#
 
-Third test confirms it - the orb allows transition between portal gates. This is the greatest discovery of my life. We are the first research team to ever unlock such powers from a Sher'Tul ruin! Just a shame about all the animals we sent through before. I'm really starting to suspect that pronged instrument was some sort of eating device... Oh well, plenty more test animals available.
+Third test confirms it - the orb allows transition between portal gates. This is the greatest discovery of my life. We are the first research team to ever unlock such powers from a Sher'Tul ruin! Just a shame about all the yeeks we sent through before. I'm really starting to suspect that pronged instrument was some sort of eating device... Oh well, plenty more dumb yeeks available.
 ]]
 }
 
@@ -61,6 +61,7 @@ Just when I was getting somewhere the military decide to barge in and take over.
 #{italic}#Age of Allure 4545#{normal}#
 
 Well, I suppose this whole war thing wasn't just hot wind after all. Apparently there's lots of people dying outside. What a nuisance - I just want to get on with my work without my supplies being cut off. There is one upside though - human test subjects! We're going to get started on them in the coming months.
+I must say I'll be glad to get rid of these disgusting yeeks. They disturb me somehow with their oversized heads. Why we ever decided to use these useless creatures as servants is beyond me... At least the human subjects will be able to talk, lacking though they be in true mental capacity.
 
 
 #{bold}#Hompalan's Log Entry 6#{normal}#

@@ -2357,28 +2357,6 @@ newEffect{
 }
 
 --Chronomancy Effects
-
-newEffect{
-	name = "ENTROPIC_FIELD",
-	desc = "Entropic Field",
-	long_desc = function(self, eff) return ("Target is surrounded by a field that slows projectiles by %d%% and increases physical resistance by %d%%."):format(eff.power, eff.power/2, eff.power/2) end,
-	type = "magical",
-	status = "beneficial",
-	parameters = { power=10 },
-	on_gain = function(self, err) return "#Target# is surrounded by an entropic field.", "+Entropic Field" end,
-	on_lose = function(self, err) return "The entropic shield around #Target# dissipates.", "-Entropic Field" end,
-	activate = function(self, eff)
-		eff.particle = self:addParticles(Particles.new("time_shield", 1))
-		eff.phys = self:addTemporaryValue("resists", {[DamageType.PHYSICAL]=eff.power/2})
-		eff.proj = self:addTemporaryValue("slow_projectiles", eff.power)
-	end,
-	deactivate = function(self, eff)
-		self:removeParticles(eff.particle)
-		self:removeTemporaryValue("resists", eff.phys)
-		self:removeTemporaryValue("slow_projectiles", eff.proj)
-	end,
-}
-
 newEffect{
 	name = "DAMAGE_SMEARING",
 	desc = "Damage Smearing",

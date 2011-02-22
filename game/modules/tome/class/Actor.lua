@@ -1648,13 +1648,21 @@ function _M:preUseTalent(ab, silent, fake)
 	-- Paradox is special, it has no max, but the higher it is the higher the chance of something bad happening
 	if (ab.paradox or ab.sustain_paradox) and not fake then
 		local pa = ab.paradox or ab.sustain_paradox
-		local modifier = self:getWil() * (1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10) or 0 )
+		
+		--check for Paradox Mastery
+		if self:knowTalent(self.T_PARADOX_MASTERY) and self:isTalentActive(self.T_PARADOX_MASTERY) then
+			modifier = self:getWil() * (1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10) or 0 )
+		else
+			modifier = self:getWil()
+		end
+		
 		--print("[Paradox] Will modifier: ", modifier, "::", self:getParadox())
 		local chance = math.pow (((self:getParadox() - modifier)/200), 2)*((100 + self:combatFatigue()) / 100)
 		-- Fail ? lose energy and 1/2 more paradox
 		--print("[Paradox] Fail chance: ", chance, "::", self:getParadox())
 		if rng.percent(math.pow((self:getParadox()/400), 4)) and not game.zone.no_anomalies and not self:attr("no_paradox_fail") then
 			-- Random anomaly
+			self:incParadox(pa / 2)
 			local ts = {}
 			for id, t in pairs(self.talents_def) do
 				if t.type[1] == "chronomancy/anomalies" then ts[#ts+1] = id end
@@ -1665,7 +1673,7 @@ function _M:preUseTalent(ab, silent, fake)
 			return false
 		elseif rng.percent(chance) and not self:attr("no_paradox_fail") then
 			if not silent then game.logPlayer(self, "You fail to use %s due to your paradox!", ab.name) end
-			self:incParadox(pa / 2)
+			self:incParadox(pa / 10)
 			self:useEnergy()
 			return false
 		end

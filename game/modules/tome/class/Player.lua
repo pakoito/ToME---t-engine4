@@ -125,13 +125,7 @@ function _M:onEnterLevel(zone, level)
 end
 
 function _M:onEnterLevelEnd(zone, level)
-	-- Clone level when they are made, for chronomancy
-	if self:attr("game_cloning") then
-		-- First remove the old world to make sure we only have one on_level restore in memory at a time
-		if game._chronoworlds.on_level then game._chronoworlds.on_level = nil end
-		-- then clone the new level		
-		game:chronoClone("on_level")
-	end
+
 end
 
 function _M:onLeaveLevel(zone, level)

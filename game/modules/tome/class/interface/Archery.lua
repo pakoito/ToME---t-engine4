@@ -173,6 +173,17 @@ local function archery_projectile(tx, ty, tg, self)
 	-- Regen on being hit
 	if hitted and not target.dead and target:attr("stamina_regen_on_hit") then target:incStamina(target.stamina_regen_on_hit) end
 	if hitted and not target.dead and target:attr("mana_regen_on_hit") then target:incMana(target.mana_regen_on_hit) end
+	
+	-- Ablative armor
+	if hitted and not target.dead and target:attr("carbon_spikes") then
+		if target.carbon_armor >= 1 then
+			target.carbon_armor = target.carbon_armor - 1 
+		else
+			-- Deactivate without loosing energy
+			target:forceUseTalent(target.T_CARBON_SPIKES, {ignore_energy=true})
+		end
+	end
+	
 end
 
 --- Shoot at one target

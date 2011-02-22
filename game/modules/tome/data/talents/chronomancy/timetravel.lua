@@ -24,29 +24,27 @@ newTalent{
 	type = {"chronomancy/timetravel", 1},
 	require = chrono_req_1,
 	points = 5,
-	paradox = 5,
+	paradox = 10,
 	cooldown = 6,
 	tactical = { ATTACKAREA = 2 },
-	range = 1,
+	direct_hit = true,
 	requires_target = true,
+	range = function(self, t) return 1 + self:getTalentLevelRaw(t) end,
 	getDamage = function(self, t) return (self:combatTalentSpellDamage(t, 10, 120)*getParadoxModifier(self, pm)) end,
 	getPercent = function(self, t) return (30 + (self:combatTalentSpellDamage(t, 10, 30)*getParadoxModifier(self, pm))) / 100 end,
-	getRadius = function (self, t) return 4 + math.floor(self:getTalentLevelRaw (t)/2) end,
 	action = function(self, t)
-		local tg = {type="cone", range=0, radius=t.getRadius(self, t), friendlyfire=false, talent=t}
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.TEMPORAL, self:spellCrit(t.getDamage(self, t)))
-		self:project(tg, x, y, DamageType.TEMPORAL_ECHO, self:spellCrit(t.getPercent(self, t)))
-		game.level.map:particleEmitter(self.x, self.y, tg.radius, "temporal_breath", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
-		game:playSoundNear(self, "talents/spell_generic2")
+		local tg = {type="ball", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
+		self:project(tg, self.x, self.y, DamageType.TEMPORAL, self:spellCrit(t.getDamage(self, t)))
+		self:project(tg, self.x, self.y, DamageType.TEMPORAL_ECHO, t.getPercent(self, t))
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_temporal", {radius=tg.radius})
+		game:playSoundNear(self, "talents/teleport")
 		return true
 	end,
 	info = function(self, t)
 		local percent = t.getPercent(self, t) * 100
-		local radius = t.getRadius(self, t)
+		local radius = self:getTalentRange(t)
 		local damage = t.getDamage(self, t)
-		return ([[Creates a temporal echo in a %d radius cone.  Affected targets will take %0.2f temporal damage and %d%% of the difference between their current life and max life as additional temporal damage.
+		return ([[Creates a temporal echo in a nova around you in a radius of %d.  Affected targets will take %0.2f temporal damage and %d%% of the difference between their current life and max life as additional temporal damage.
 		The percentage and damage scales with your Paradox and the Magic stat.]]):
 		format(radius, damage, percent)
 	end,
@@ -104,7 +102,7 @@ newTalent{
 		if target and not target.player then
 			local hit = self:checkHit(self:combatSpellpower(), target:combatSpellResist() + (target:attr("continuum_destabilization") or 0))
 			if not hit then
-				game.logSeen(target, "The spell fizzles!")
+				game.logSeen(target, "%s resists!", target.name:capitalize())
 				return true
 			end
 		else
@@ -178,20 +176,62 @@ newTalent{
 }
 
 newTalent{
-	name = "Revision",
+	name = "Door to the Past",
 	type = {"chronomancy/timetravel", 4},
-	require = chrono_req4,
+	require = chrono_req4, no_sustain_autoreset = true,
 	points = 5,
-	paradox = 100,
-	cooldown = 100,
+	mode = "sustained",
+	sustain_paradox = 300,
+	cooldown = 50,
 	no_npc_use = true,
-	getPercent = function(self, t) return 20 - (self:getTalentLevelRaw(t) * 2) end,
+	getParadoxIncrease = function(self, t) return 28 - (self:getTalentLevelRaw(t) * 4) end,
 	on_learn = function(self, t)
-		self:attr("game_cloning", 1)
+		if not self:knowTalent(self.T_REVISION) then
+			self:learnTalent(self.T_REVISION)
+		end
 	end,
 	on_unlearn = function(self, t)
-		self:attr("game_cloning", -1)
+		if not self:knowTalent(t) then
+			self:unlearnTalent(self.T_REVISION)
+		end
 	end,
+	activate = function(self, t)
+	
+		if checkTimeline(self) == true then
+			return
+		end
+		
+		game:playSoundNear(self, "talents/arcane")
+		return {
+			game:chronoClone("revision"),
+			drain = self:addTemporaryValue("paradox_regen", t.getParadoxIncrease(self, t)),
+			particle = self:addParticles(Particles.new("temporal_aura", 1)),
+		}
+	end,
+	deactivate = function(self, t, p)
+		if game._chronoworlds then game._chronoworlds = nil end
+		self:removeParticles(p.particle)
+		self:removeTemporaryValue("paradox_regen", p.drain)
+		return true
+	end,
+	info = function(self, t)
+		local paradox = t.getParadoxIncrease(self, t)
+		return ([[This powerful spell allows you to mark a point in time that you can later return to by casting Revision.  Maintaining such a doorway causes constant damage to the spacetime continuum and will increase your paradox by %d each turn.
+		Additional talent points will lower the paradox increase incurred each turn.]]):
+		format(paradox)
+	end,
+}
+
+newTalent{
+	name = "Revision",
+	type = {"chronomancy/other", 1},
+	type_no_req = true,
+	points = 1,
+	message = "@Source@ revises history.",
+	cooldown = 100,
+	paradox = 100,
+	no_npc_use = true,
+	on_pre_use = function(self, t, silent) if not self:isTalentActive(self.T_DOOR_TO_THE_PAST) then if not silent then game.logPlayer(self, "Door to the Past must be active to use this talent.") end return false end return true end,
 	action = function(self, t)
 	
 		-- Prevent Revision After Death
@@ -201,23 +241,21 @@ newTalent{
 		end		
 	
 		game:onTickEnd(function()
-			if not game:chronoRestore("on_level", true) then
+			if not game:chronoRestore("revision", true) then
 				game.logSeen(self, "#LIGHT_RED#The spell fizzles.")
 				return
 			end
-			game.logPlayer(game.player, "#LIGHT_BLUE#You unfold the space time continuum to a previous state!")
+			game.logPlayer(game.player, "#LIGHT_BLUE#You unfold the spacetime continuum to a previous state!")
 						
 			-- Manualy start the cooldown of the "old player"
 			game.player:startTalentCooldown(t)
 			game.player:incParadox(t.paradox * (1 + (game.player.paradox / 300)))
-			game.player.max_life = game.player.max_life * (1 - t.getPercent(self, t) / 100)
 		end)
+				
 		return true
 	end,
 	info = function(self, t)
-		local percent = t.getPercent(self, t)
-		return ([[Casting this spell sends you back to the moment you entered the current dungeon level.  Traveling through time carries with it inherent penalties and doing so will permanently reduce your hit points by %d%%.
-		Additional talent points will lower the hit point cost.]])
-		:format(percent)
+		return ([[Casting Revision will return you to the point in time you created a temporal marker using Door to the Past.]])
+		:format()
 	end,
 }

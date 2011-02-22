@@ -104,8 +104,15 @@ temporal_req5 = {
 -- Backfire Function
 
 checkBackfire = function(self, x, y)
-	local modifier = self:getWil() * (1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10) or 0 )
-	local backfire = math.pow (((self:getParadox() - modifier)/300), 3)
+	
+	--check for Paradox Mastery
+	if self:knowTalent(self.T_PARADOX_MASTERY) and self:isTalentActive(self.T_PARADOX_MASTERY) then
+		modifier = self:getWil() * (1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10) or 0 )
+	else
+		modifier = self:getWil()
+	end
+	
+	local backfire = math.pow (((self:getParadox() - modifier)/300), 3)*((100 + self:combatFatigue()) / 100)
 --	print("[Paradox] Backfire chance: ", backfire, "::", self:getParadox())
 	if rng.percent(backfire) and not self:attr("no_paradox_fail") then
 		game.logPlayer(self, "The fabric of spacetime ripples and your spell backfires!!")
@@ -116,7 +123,7 @@ checkBackfire = function(self, x, y)
 end
 
 checkTimeline = function(self)
-	if self:hasEffect(self.EFF_SEE_THE_THREADS) or self:hasEffect(self.EFF_PRECOGNITION) or self:hasEffect(self.EFF_PARADOX_CLONE) or self:hasEffect(self.EFF_IMMINENT_PARADOX_CLONE) then
+	if self:isTalentActive(self.T_DOOR_TO_THE_PAST) or self:hasEffect(self.EFF_SEE_THE_THREADS) or self:hasEffect(self.EFF_PRECOGNITION) or self:hasEffect(self.EFF_PARADOX_CLONE) or self:hasEffect(self.EFF_IMMINENT_PARADOX_CLONE) then
 		game.logPlayer(self, "The timeline is to fractured right now to use this ability.")
 		return true
 	else

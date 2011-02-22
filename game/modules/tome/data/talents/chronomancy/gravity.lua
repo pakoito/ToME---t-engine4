@@ -35,7 +35,7 @@ newTalent{
 	info = function(self, t)
 		local absorb = t.getAbsorb(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[Surround yourself with a repulsion field for %d turns that will absorb up to %0.2f damage and potentially knocking back attackers.  Pinned creatures are immune to this knockback.
+		return ([[Surround yourself with a repulsion field for %d turns that will absorb up to %0.2f damage and potentially knock back attackers.  Pinned creatures are immune to this knockback.
 		The absorption will scale with your Paradox and Magic stat.]]):format(duration, absorb)
 	end,
 }

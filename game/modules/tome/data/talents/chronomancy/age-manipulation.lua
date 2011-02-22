@@ -137,11 +137,12 @@ newTalent{
 	tactical = { ATTACKAREA = 2 },
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 8, 135)*getParadoxModifier(self, pm) end,
 	getDuration = function(self, t) return 5 + math.ceil(self:getTalentLevel(t)) end,
+	getRadius = function(self, t) return 3 + math.floor(self:getTalentLevel(t)/4)end,
 	action = function(self, t)
 		game.level.map:addEffect(self,
 			self.x, self.y, t.getDuration(self, t),
 			DamageType.WASTING, t.getDamage(self, t),
-			3,
+			t.getRadius(self, t),
 			5, nil,
 			engine.Entity.new{alpha=100, display='', color_br=176, color_bg=196, color_bb=222},
 			function(e)
@@ -157,7 +158,8 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[You surround yourself with a radius 3 aura of time distortion for %d turns that deals %0.2f stacking temporal damage over 3 turns to all other creatures.
-		The damage will scale with your Paradox and Magic stat]]):format(duration, damDesc(self, DamageType.TEMPORAL, damage))
+		local radius = t.getRadius(self, t)
+		return ([[You surround yourself with a radius %d aura of time distortion for %d turns that deals %0.2f stacking temporal damage over 3 turns to all other creatures.
+		The damage will scale with your Paradox and Magic stat]]):format(radius, duration, damDesc(self, DamageType.TEMPORAL, damage))
 	end,
 }

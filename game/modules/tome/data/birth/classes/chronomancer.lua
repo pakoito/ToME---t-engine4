@@ -51,7 +51,7 @@ newBirthDescriptor{
 	stats = { mag=5, wil=3, cun=1, },
 	talents_types = {
 		["chronomancy/age-manipulation"]={true, 0.3},
-		--["chronomancy/anomalies"]={true, 0},
+	--	["chronomancy/anomalies"]={true, 0},
 		["chronomancy/chronomancy"]={true, 0.3},
 		["chronomancy/energy"]={true, 0.3},
 		["chronomancy/gravity"]={true, 0.3},
@@ -68,7 +68,7 @@ newBirthDescriptor{
 		[ActorTalents.T_STATIC_HISTORY] = 1,
 		[ActorTalents.T_TURN_BACK_THE_CLOCK] = 1,
 		[ActorTalents.T_DUST_TO_DUST] = 1,
-		[ActorTalents.T_CELERITY] = 1,
+		[ActorTalents.T_ECHOES_FROM_THE_PAST] = 1,
 		},
 	copy = {
 		max_life = 90,

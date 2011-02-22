@@ -20,18 +20,29 @@
 newTalent{
 	name = "Paradox Mastery",
 	type = {"chronomancy/paradox", 1},
+	mode = "sustained",
 	require = chrono_req_high1,
+	sustain_paradox = 75,
+	cooldown = 10,
 	points = 5,
-	mode = "passive",
-	on_learn = function(self, t)
-		self.resists[DamageType.TEMPORAL] = (self.resists[DamageType.TEMPORAL] or 0) + 5
+	getResist = function(self, t) return 10 + (self:combatTalentSpellDamage(t, 10, 50)) end,
+	activate = function(self, t)
+		game:playSoundNear(self, "talents/arcane")
+		return {
+			particle = self:addParticles(Particles.new("temporal_focus", 1)),
+			temp = self:addTemporaryValue("resists", {[DamageType.TEMPORAL]=t.getResist(self, t)}),
+		}
 	end,
-	on_unlearn = function(self, t)
-		self.resists[DamageType.TEMPORAL] = (self.resists[DamageType.TEMPORAL] or 0) - 5
+	deactivate = function(self, t, p)
+		self:removeParticles(p.particle)
+		self:removeTemporaryValue("resists", p.temp)
+		return true
 	end,
 	info = function(self, t)
-		return ([[You've learned to better control and resist the dangers of chronomancy.  Increases your effective willpower for static history, failure, and backfire calculations by %d%% and increases your Temporal resistance by %d%%.]]):
-		format(self:getTalentLevel(t) * 10, self:getTalentLevelRaw(t) * 5)
+		local resist = t.getResist(self, t)
+		return ([[You've learned to focus your control over the spacetime continuum and resist anomalous effects.  Increases your effective willpower for static history, failure, and backfire calculations by %d%% and increases your Temporal resistance by %d%%.
+		The resistance will scale with the Magic stat.]]):
+		format(self:getTalentLevel(t) * 10, resist)
 	end,
 }
 

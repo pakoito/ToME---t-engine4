@@ -17,23 +17,21 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Ideas, sex change, gold loss/increase, draining/charging charged items.  Stat rearrangement.  Vertigo (reassign hotkeys so up is down left is right)
-
 local Object = require "engine.Object"
 
 newTalent{
 	name = "Anomaly Teleport",
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
-	range = 6,
+	range = 10,
 	direct_hit = true,
 	type_no_req = true,
 	getTargetCount = function(self, t) return math.floor(self:getParadox()/200) end,
-	getRange = function(self, t) return (self:getParadox()/10) end,
+	getRange = function(self, t) return math.ceil(self:getParadox()/10) end,
 	message = "Reality has shifted.",
 	action = function(self, t)
 		local tgts = {}
-		local grids = core.fov.circle_grids(self.x, self.y, 6, true)
+		local grids = core.fov.circle_grids(self.x, self.y, 10, true)
 		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
 			local a = game.level.map(x, y, Map.ACTOR)
 			if a and a:canBe("teleport") then
@@ -65,15 +63,15 @@ newTalent{
 	name = "Anomaly Rearrange",
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
-	range = 6,
+	range = 10,
 	direct_hit = true,
 	type_no_req = true,
 	getTargetCount = function(self, t) return math.floor(self:getParadox()/50) end,
-	getRange = function(self, t) return (self:getParadox()/100) end,
+	getRange = function(self, t) return math.ceil(self:getParadox()/100) end,
 	message = "@Source@ has caused a hiccup in the fabric of spacetime.",
 	action = function(self, t)
 		local tgts = {}
-		local grids = core.fov.circle_grids(self.x, self.y, 6, true)
+		local grids = core.fov.circle_grids(self.x, self.y, 10, true)
 		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
 			local a = game.level.map(x, y, Map.ACTOR)
 			if a and a:canBe("teleport") then
@@ -105,16 +103,16 @@ newTalent{
 	name = "Anomaly Stop",
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
-	range = 6,
+	range = 10,
 	direct_hit = true,
 	type_no_req = true,
 	getTargetCount = function(self, t) return 1 end,
 	getRadius = function(self, t) return math.floor(self:getParadox()/200) end,
-	getStop = function(self, t) return (self:getParadox()/100) end,
+	getStop = function(self, t) return math.ceil(self:getParadox()/100) end,
 	message = "@Source@ has created a bubble of nul time.",
 	action = function(self, t)
 		local tgts = {}
-		local grids = core.fov.circle_grids(self.x, self.y, 6, true)
+		local grids = core.fov.circle_grids(self.x, self.y, 10, true)
 		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
 			local a = game.level.map(x, y, Map.ACTOR)
 			if a then
@@ -153,7 +151,7 @@ newTalent{
 	message = "@Source@ has created a bubble of slow time.",
 	action = function(self, t)
 		local tgts = {}
-		local grids = core.fov.circle_grids(self.x, self.y, 6, true)
+		local grids = core.fov.circle_grids(self.x, self.y, 10, true)
 		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
 			local a = game.level.map(x, y, Map.ACTOR)
 			if a then
@@ -191,7 +189,7 @@ newTalent{
 	message = "@Source@ has sped up several threads of time.",
 	action = function(self, t)
 		local tgts = {}
-		local grids = core.fov.circle_grids(self.x, self.y, 6, true)
+		local grids = core.fov.circle_grids(self.x, self.y, 10, true)
 		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
 			local a = game.level.map(x, y, Map.ACTOR)
 			if a then
@@ -253,7 +251,7 @@ newTalent{
 	points = 1,
 	type_no_req = true,
 	getDamage = function(self, t) return self:getParadox()/25 end,
-	getDuration = function(self, t) return self:getParadox()/50 end,
+	getDuration = function(self, t) return math.ceil (self:getParadox()/50) end,
 	message = "A temporal storm rages around @Source@.",
 	action = function(self, t)
 		-- Add a lasting map effect
@@ -279,7 +277,7 @@ newTalent{
 	name = "Anomaly Summon Time Elemental",
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
-	range = 6,
+	range = 10,
 	direct_hit = true,
 	type_no_req = true,
 	getTargetCount = function(self, t) return math.floor(self:getParadox()/200) end,
@@ -287,10 +285,10 @@ newTalent{
 	message = "Some Time Elementals have been attracted by @Source@'s meddling.",
 	action = function(self, t)
 		local tgts = {}
-		local grids = core.fov.circle_grids(self.x, self.y, 6, true)
+		local grids = core.fov.circle_grids(self.x, self.y, 10, true)
 		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
 			local a = game.level.map(x, y, Map.ACTOR)
-			if a and a:canBe("teleport") then
+			if a then
 				tgts[#tgts+1] = a
 			end
 		end end
@@ -367,17 +365,17 @@ newTalent{
 	name = "Anomaly Temporal Bubble",
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
-	range = 6,
+	range = 10,
 	type_no_req = true,
 	getTargetCount = function(self, t) return math.floor(self:getParadox()/200) end,
-	getDuration = function(self, t) return (self:getParadox()/100) end,
+	getDuration = function(self, t) return math.ceil(self:getParadox()/100) end,
 	message = "@Source@ has paused a temporal thread.",
 	action = function(self, t)
 		local tgts = {}
-		local grids = core.fov.circle_grids(self.x, self.y, 6, true)
+		local grids = core.fov.circle_grids(self.x, self.y, 10, true)
 		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
 			local a = game.level.map(x, y, Map.ACTOR)
-			if a and a:canBe("teleport") then
+			if a then
 				tgts[#tgts+1] = a
 			end
 		end end
@@ -401,21 +399,409 @@ newTalent{
 	end,
 }
 
---[[newTalent{
-	name = "Anomaly Terrain Change",
+newTalent{
+	name = "Anomaly Dig",
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
 	type_no_req = true,
+	getRadius = function(self, t) return math.ceil(self:getParadox()/100) end,
+	message = "Matter turns to dust around @Source@.",
 	action = function(self, t)
+		local tg = {type="ball", range=0, radius=t.getRadius(self,t), friendlyfire=false, talent=t}
+		self:project(tg, self.x, self.y, DamageType.DIG, 1)
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_earth", {radius=tg.radius})
+		game:playSoundNear(self, "talents/breath")
 		return true
 	end,
 	info = function(self, t)
-		return (Random Terrain in a ball.)
+		return ([[Digs out all terrain in a ball centered on the caster..]])
 	end,
 }
 
 newTalent{
-	name = "Anomaly Dig",
+	name = "Anomaly Swap",
+	type = {"chronomancy/anomalies", 1},
+	points = 1,
+	direct_hit = true,
+	type_no_req = true,
+	getRange = function(self, t) return math.ceil(self:getParadox()/10) end,
+	message = "Reality has shifted.",
+	action = function(self, t)
+		local tgts = {}
+		local grids = core.fov.circle_grids(self.x, self.y, t.getRange(self, t))
+		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
+			local a = game.level.map(x, y, Map.ACTOR)
+			if a and a:canBe("teleport") and a ~= self then
+				tgts[#tgts+1] = a
+			end
+		end end
+
+		-- Randomly take targets
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		for i = 1, 1 do
+			if #tgts <= 0 then break end
+			local a, id = rng.table(tgts)
+			table.remove(tgts, id)
+	
+		local px, py = self.x, self.y
+		local gx, gy = a.x, a.y
+
+		self:move(gx, gy, true)
+		a:move(px, py, true)
+		self:move(gx, gy, true)
+		a:move(px, py, true)
+		game.level.map:particleEmitter(px, py, 1, "teleport")
+		game.level.map:particleEmitter(gx, gy, 1, "teleport")
+		
+		end
+		return true
+	end,
+	info = function(self, t)
+		return ([[Caster swaps places with a random target.]])
+	end,
+}
+
+newTalent{
+	name = "Anomaly Gravity Spike",
+	type = {"chronomancy/anomalies", 1},
+	points = 1,
+	range = 6,
+	direct_hit = true,
+	type_no_req = true,
+	getTargetCount = function(self, t) return 1 end,
+	getRadius = function(self, t) return math.floor(self:getParadox()/100) end,
+	getDamage = function(self, t) return self:getParadox()/10 end,
+	message = "@Source@ has caused a Gravity Spike.",
+	action = function(self, t)
+		local tgts = {}
+		local grids = core.fov.circle_grids(self.x, self.y, 6, true)
+		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
+			local a = game.level.map(x, y, Map.ACTOR)
+			if a then
+				tgts[#tgts+1] = a
+			end
+		end end
+
+		-- Randomly take targets
+		local tg = {type="ball", range=self:getTalentRange(t), radius=t.getRadius(self, t), friendlyfire=self:spellFriendlyFire(), talent=t}
+		for i = 1, t.getTargetCount(self, t) do
+			if #tgts <= 0 then break end
+			local a, id = rng.table(tgts)
+			table.remove(tgts, id)
+
+			self:project(tg, a.x, a.y, function(px, py)
+				local target = game.level.map(px, py, Map.ACTOR)
+				if not target then return end
+				local tx, ty = util.findFreeGrid(a.x, a.y, 5, true, {[Map.ACTOR]=true})
+				if tx and ty and target:canBe("knockback") then
+					target:move(tx, ty, true)
+					game.logSeen(target, "%s is drawn in by the gravity spike!", target.name:capitalize())
+				end
+			end)
+			
+			self:project (tg, a.x, a.y, DamageType.PHYSICAL, self:spellCrit(t.getDamage(self, t)))
+			game.level.map:particleEmitter(a.x, a.y, tg.radius, "gravity_spike", {radius=tg.radius, grids=grids, tx=a.x, ty=a.y})
+			game:playSoundNear(self, "talents/earth")
+			
+		end
+		return true
+	end,
+	info = function(self, t)
+		return ([[Creates a Gravity Spike.]])
+	end,
+}
+
+newTalent{
+	name = "Anomaly Entropy",
+	type = {"chronomancy/anomalies", 1},
+	points = 1,
+	range = 6,
+	direct_hit = true,
+	type_no_req = true,
+	getTargetCount = function(self, t) return math.floor(self:getParadox()/100) end,
+	getPower = function(self, t) return math.ceil(self:getParadox()/50) end,
+	getTalentCount = function(self, t) return math.floor(self:getParadox()/200) end,
+	message = "@Source@ has increased local entropy.",
+	action = function(self, t)
+		local tgts = {}
+		local grids = core.fov.circle_grids(self.x, self.y, 10, true)
+		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
+			local a = game.level.map(x, y, Map.ACTOR)
+			if a then
+				tgts[#tgts+1] = a
+			end
+		end end
+
+		-- Randomly take targets
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		for i = 1, t.getTargetCount(self, t) do
+			if #tgts <= 0 then break end
+			local a, id = rng.table(tgts)
+			table.remove(tgts, id)
+
+			self:project(tg, a.x, a.y, function(px, py)
+				local target = game.level.map(px, py, engine.Map.ACTOR)
+				if not target then return end
+
+				local tids = {}
+				for tid, lev in pairs(target.talents) do
+					local t = target:getTalentFromId(tid)
+					if not target.talents_cd[tid] and t.mode == "activated" then tids[#tids+1] = t end
+				end
+				for i = 1, t.getTalentCount(self, t) do
+					local power = t.getPower(self, t)
+					local t = rng.tableRemove(tids)
+					if not t then break end
+					target.talents_cd[t.id] = rng.range(2, power)
+					game.logSeen(target, "%s's %s is disrupted!", target.name:capitalize(), t.name)
+				end
+				target.changed = true
+			end, nil)
+		end
+		return true
+	end,
+	info = function(self, t)
+		return ([[Places target's talents on cooldown.]])
+	end,
+}
+
+newTalent{
+	name = "Anomaly Summon Townsfolk",
+	type = {"chronomancy/anomalies", 1},
+	points = 1,
+	range = 10,
+	direct_hit = true,
+	type_no_req = true,
+	getTargetCount = function(self, t) return math.floor(self:getParadox()/200) end,
+	getSummonTime = function(self, t) return math.floor(self:getParadox()/20) end,
+	message = "Some innocent bystanders have been pulled out of their timeline.",
+	action = function(self, t)
+		local tgts = {}
+		local grids = core.fov.circle_grids(self.x, self.y, 10, true)
+		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
+			local a = game.level.map(x, y, Map.ACTOR)
+			if a then
+				tgts[#tgts+1] = a
+			end
+		end end
+
+		-- Randomly take targets
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		for i = 1, t.getTargetCount(self, t) do
+			if #tgts <= 0 then break end
+			local a, id = rng.table(tgts)
+			table.remove(tgts, id)
+			-- Randomly pick a race
+			local race = rng.range(1, 4)
+			
+			-- Find space
+			for i = 1, 4 do
+				local x, y = util.findFreeGrid(a.x, a.y, 5, true, {[Map.ACTOR]=true})
+				if not x then
+					game.logPlayer(self, "Not enough space to summon!")
+					return
+				end
+						
+				local NPC = require "mod.class.NPC"
+				local m = NPC.new{
+					type = "humanoid", display = "p", 
+					color=colors.WHITE,
+				
+					combat = { dam=resolvers.rngavg(1,2), atk=2, apr=0, dammod={str=0.4} },
+
+					body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
+					lite = 3,
+
+					life_rating = 10,
+					rank = 2,
+					size_category = 3,
+
+					open_door = true,
+
+					autolevel = "warrior",
+					energy = { mod=1 },
+					stats = { str=12, dex=8, mag=6, con=10 },
+					ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=2, },
+					level_range = {1, 3},
+						
+					max_life = resolvers.rngavg(30,40),
+					combat_armor = 2, combat_def = 0,
+		
+				--	summoner = self,
+					summoner_gain_exp=false,
+					summon_time = t.getSummonTime(self, t),
+				}
+							
+				m.level = 1
+		
+				if race == 1 then
+					m.name = "human farmer"
+					m.subtype = "human"
+					m.desc = [[A weather-worn human farmer, looking at a loss as to what's going on.]]
+					m.faction = "allied-kingdoms"
+					m.resolvers.inscriptions(1, "infusion")
+				elseif race == 2 then
+					m.name = "halfling gardner"
+					m.subtype = "halfling"
+					m.desc = [[A rugged halfling gardner, looking quite confused as to what he's doing here.]]
+					m.faction = "allied-kingdoms"
+					m.resolvers.inscriptions(1, "infusion")
+				elseif race == 3 then
+					m.name = "shalore scribe"
+					m.subtype = "elf"
+					m.desc = [[A scrawny elven scribe, looking bewildered at his surroundings.]]
+					m.faction = "shalore"
+					m.resolvers.inscriptions(1, "rune")
+				elseif race == 4 then
+					m.name = "dwarven smith"
+					m.subtype = "dwarf"
+					m.desc = [[A brawny dwarven smith, looking a bit upset at his current situation.]]
+					m.faction = "iron-throne"
+					m.resolvers.inscriptions(1, "rune")
+				end
+
+				m:resolve() m:resolve(nil, true)
+				m:forceLevelup(self.level)
+				game.zone:addEntity(game.level, m, "actor", x, y)
+				game.level.map:particleEmitter(x, y, 1, "summon")
+			end
+
+			game:playSoundNear(self, "talents/spell_generic")
+		end
+		return true
+	end,
+	info = function(self, t)
+		return ([[Pulls innocent people into the fight.]])
+	end,
+}
+
+newTalent{
+	name = "Anomaly Call",
+	type = {"chronomancy/anomalies", 1},
+	points = 1,
+	direct_hit = true,
+	type_no_req = true,
+	getRange = function(self, t) return math.ceil(self:getParadox()/10) end,
+	getTargetCount = function(self, t) return math.floor(self:getParadox()/200) end,
+	message = "Poof!!",
+	action = function(self, t)
+		local tgts = {}
+		local grids = core.fov.circle_grids(self.x, self.y, t.getRange(self, t))
+		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
+			local a = game.level.map(x, y, Map.ACTOR)
+			if a and a:canBe("teleport") and a ~= self then
+				tgts[#tgts+1] = a
+			end
+		end end
+
+		-- Randomly take targets
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		for i = 1, t.getTargetCount(self, t) do
+			if #tgts <= 0 then break end
+			local a, id = rng.table(tgts)
+			table.remove(tgts, id)
+	
+			local x, y = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
+			if not x then
+				game.logPlayer(self, "Not enough space to summon!")
+				return
+			end
+	
+			a:move(x, y, true)
+			game.level.map:particleEmitter(x, y, 1, "teleport")
+				
+		end
+		return true
+	end,
+	info = function(self, t)
+		return ([[Poofs in some enemies from the level to the caster's location.]])
+	end,
+}
+
+newTalent{
+	name = "Anomaly Flawed Design",
+	type = {"chronomancy/anomalies", 1},
+	points = 1,
+	range = 6,
+	direct_hit = true,
+	type_no_req = true,
+	getTargetCount = function(self, t) return math.floor(self:getParadox()/150) end,
+	getPower = function(self, t) return (self:getParadox()/30) end,
+	message = "@Source@ has inadvertently weakened several creatures.",
+	action = function(self, t)
+		local tgts = {}
+		local grids = core.fov.circle_grids(self.x, self.y, 10, true)
+		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
+			local a = game.level.map(x, y, Map.ACTOR)
+			if a then
+				tgts[#tgts+1] = a
+			end
+		end end
+
+		-- Randomly take targets
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		for i = 1, t.getTargetCount(self, t) do
+			if #tgts <= 0 then break end
+			local a, id = rng.table(tgts)
+			table.remove(tgts, id)
+
+			a:setEffect(self.EFF_FLAWED_DESIGN, 10, {power=t.getPower(self, t)})
+			a:setEffect(self.EFF_TURN_BACK_THE_CLOCK, 10, {power=t.getPower(self, t)})
+			game.level.map:particleEmitter(a.x, a.y, 1, "temporal_teleport")
+			game:playSoundNear(self, "talents/spell_generic")
+		end
+		return true
+	end,
+	info = function(self, t)
+		return ([[Weakens several creatures.]])
+	end,
+}
+
+newTalent{
+	name = "Anomaly Dues Ex",
+	type = {"chronomancy/anomalies", 1},
+	points = 1,
+	range = 6,
+	direct_hit = true,
+	type_no_req = true,
+	getTargetCount = function(self, t) return 1 end,
+	getHastePower = function(self, t) return ((self:getParadox()/15) / 100) end,
+	getRegenPower = function(self, t) return (self:getParadox()/15) end,
+	getStatPower = function(self, t) return (self:getParadox()/30) end,
+	message = "The odds have tilted.",
+	action = function(self, t)
+		local tgts = {}
+		local grids = core.fov.circle_grids(self.x, self.y, 10, true)
+		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
+			local a = game.level.map(x, y, Map.ACTOR)
+			if a then
+				tgts[#tgts+1] = a
+			end
+		end end
+
+		-- Randomly take targets
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		for i = 1, t.getTargetCount(self, t) do
+			if #tgts <= 0 then break end
+			local a, id = rng.table(tgts)
+			table.remove(tgts, id)
+
+			a:setEffect(self.EFF_SPEED, 8, {power=t.getHastePower(self, t)})
+			a:setEffect(self.EFF_REGENERATION, 8, {power=t.getRegenPower(self, t)})
+			a:setEffect(self.EFF_ALL_STAT, 8, {power=t.getStatPower(self, t)})
+			a:setEffect(self.EFF_PAIN_SUPPRESSION, 8, {power=t.getStatPower(self, t)})
+			game.level.map:particleEmitter(a.x, a.y, 1, "temporal_teleport")
+			game:playSoundNear(self, "talents/spell_generic")
+		end
+		return true
+	end,
+	info = function(self, t)
+		return ([[Seriously buffs one target.]])
+	end,
+}
+
+--[[newTalent{
+	name = "Anomaly Terrain Change",
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
 	type_no_req = true,
@@ -463,19 +849,6 @@ newTalent{
 	end,
 	info = function(self, t)
 		return (Clones a random non-elite creature.  Clone may or may not be hostile to the caster.)
-	end,
-}
-
-newTalent{
-	name = "Anomaly Swap",
-	type = {"chronomancy/anomalies", 1},
-	points = 1,
-	type_no_req = true,
-	action = function(self, t)
-		return true
-	end,
-	info = function(self, t)
-		return (Caster swaps places with a random target.)
 	end,
 }
 

@@ -20,11 +20,27 @@
 newTalent{
 	name = "Probability Weaving",
 	type = {"chronomancy/chronomancy", 1},
+	mode = "sustained",
 	require = temporal_req1,
-	mode = "passive",
+	sustain_paradox = 75,
 	points = 5,
+	cooldown = 10,
+	tactical = { BUFF = 2 },
+	getDefense = function(self, t) return self:combatTalentSpellDamage(t, 4, 20) end,
+	activate = function(self, t)
+		game:playSoundNear(self, "talents/heal")
+		return {
+			def = self:addTemporaryValue("combat_def", t.getDefense(self, t)),
+		}
+	end,
+	deactivate = function(self, t, p)
+		self:removeTemporaryValue("combat_def", p.def)
+		return true
+	end,
 	info = function(self, t)
-		return ([[Bends the laws of probability, increasing your defense by %d and reducing the chance you'll be critically hit by %d%%]]):format(self:getTalentLevel(t) * 2,  self:getTalentLevel(t))
+		local defense = t.getDefense(self, t)
+		return ([[Bends the laws of probability, increasing your defense by %d and reducing the chance you'll be critically hit by melee or ranged attacks by %d%%.
+		The defense increase will scale with the Magic stat.]]):format(defense, self:getTalentLevel(t))
 	end,
 }
 
@@ -44,7 +60,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local radius = t.getRadius(self, t)
-		return ([[Your keen intuition allows you to form a mental picture of your surroundings in a radius of %d.]]):
+		return ([[Your keen intuition allows you to form a mental picture of your surroundings in a radius of %d.
+		The radius will scale with your Paradox and Magic stat.]]):
 		format(radius)
 	end,
 }
