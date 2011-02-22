@@ -1182,6 +1182,7 @@ function _M:die(src)
 	end
 
 	-- Increase vim
+	if src and src.knowTalent and src:knowTalent(src.T_VIM_POOL) then src:incVim(1 + src:getWil() / 10)) end
 	if src and src.attr and src:attr("vim_on_death") and not self:attr("undead") then src:incVim(src:attr("vim_on_death")) end
 
 	if src and src.resolveSource and src:resolveSource().player then
@@ -1648,14 +1649,14 @@ function _M:preUseTalent(ab, silent, fake)
 	-- Paradox is special, it has no max, but the higher it is the higher the chance of something bad happening
 	if (ab.paradox or ab.sustain_paradox) and not fake then
 		local pa = ab.paradox or ab.sustain_paradox
-		
+
 		--check for Paradox Mastery
 		if self:knowTalent(self.T_PARADOX_MASTERY) and self:isTalentActive(self.T_PARADOX_MASTERY) then
 			modifier = self:getWil() * (1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10) or 0 )
 		else
 			modifier = self:getWil()
 		end
-		
+
 		--print("[Paradox] Will modifier: ", modifier, "::", self:getParadox())
 		local chance = math.pow (((self:getParadox() - modifier)/200), 2)*((100 + self:combatFatigue()) / 100)
 		-- Fail ? lose energy and 1/2 more paradox
