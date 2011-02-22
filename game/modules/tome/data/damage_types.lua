@@ -113,7 +113,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		-- Log damage for later
 		if not DamageType:get(type).hideMessage then
 			local srcname = src.x and src.y and game.level.map.seens(src.x, src.y) and src.name:capitalize() or "Something"
-			game:delayedLogDamage(src, target, dam, ("%s%0.2f %s damage#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", dam, DamageType:get(type).name))
+			game:delayedLogDamage(src, target, dam, ("%s%d %s#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", math.ceil(dam), DamageType:get(type).name))
 		end
 		target:takeHit(dam, src)
 

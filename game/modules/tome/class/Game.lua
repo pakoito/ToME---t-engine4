@@ -678,9 +678,9 @@ function _M:displayDelayedLogDamage()
 			if target == game.player then flash = game.flash.BAD end
 			if src == game.player then flash = game.flash.GOOD end
 			if #dams.descs > 1 then
-				game.logSeen(target, flash, "%s hits %s for %s (total %0.2f).", src.name:capitalize(), target.name, table.concat(dams.descs, ", "), dams.total)
+				game.logSeen(target, flash, "%s hits %s for %s damage (total %0.2f).", src.name:capitalize(), target.name, table.concat(dams.descs, ", "), dams.total)
 			else
-				game.logSeen(target, flash, "%s hits %s for %s.", src.name:capitalize(), target.name, table.concat(dams.descs, ", "))
+				game.logSeen(target, flash, "%s hits %s for %s damage.", src.name:capitalize(), target.name, table.concat(dams.descs, ", "))
 			end
 
 			local rsrc = src.resolveSource and src:resolveSource() or src
