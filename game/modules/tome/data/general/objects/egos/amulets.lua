@@ -232,7 +232,7 @@ newEntity{
 	cost = 40,
 	wielder = {
 		combat_physcrit = resolvers.mbonus_material(3, 3, function(e, v) return v * 1.4 end),
-		combat_critical_power = resolvers.mbonus_material(10, 10, function(e, v) v=v/100 return v * 200, v end),
+		combat_critical_power = resolvers.mbonus_material(10, 10, function(e, v) return v * 2, v end),
 		combat_atk = resolvers.mbonus_material(5, 5, function(e, v) return v * 1 end),
 		combat_apr = resolvers.mbonus_material(4, 4, function(e, v) return v * 0.3 end),
 	},

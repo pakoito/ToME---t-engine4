@@ -29,7 +29,7 @@ newTalent{
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/slime")
 		local ret = {
-			per = self:addTemporaryValue("combat_critical_power", self:combatTalentSpellDamage(t, 20, 60) / 100),
+			per = self:addTemporaryValue("combat_critical_power", self:combatTalentSpellDamage(t, 20, 60)),
 		}
 		return ret
 	end,

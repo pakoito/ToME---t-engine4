@@ -50,7 +50,7 @@ newEntity{
 	rarity = 12,
 	cost = 25,
 	wielder = {
-		combat_critical_power = resolvers.mbonus_material(35, 5, function(e, v) v=v/100 return v * 200, v end),
+		combat_critical_power = resolvers.mbonus_material(35, 5, function(e, v) return v * 2, v end),
 	},
 }
 
