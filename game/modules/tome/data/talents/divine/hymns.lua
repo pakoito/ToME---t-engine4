@@ -129,7 +129,7 @@ newTalent{
 	tactical = { BUFF = 2 },
 	range = 10,
 	getDamageOnMeleeHit = function(self, t) return self:combatTalentSpellDamage(t, 10, 50) end,
-	getImmunities = function(self, t) return 0.2 + self:getTalentLevel(t) / 10 end,
+	getImmunities = function(self, t) return 0.15 + self:getTalentLevel(t) / 14 end,
 	activate = function(self, t)
 		cancelHymns(self)
 		local dam = self:combatTalentSpellDamage(t, 5, 25)
@@ -176,7 +176,7 @@ newTalent{
 	range = 10,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 7, 80) end,
 	getTargetCount = function(self, t) return math.floor(self:getTalentLevel(t)) end,
-	getNegativeDrain = function(self, t) return -self:getTalentLevelRaw(t) end,
+	getNegativeDrain = function(self, t) return 9 - self:getTalentLevelRaw(t) end,
 	do_beams = function(self, t)
 		if self:getNegative() <= 0 then
 			local old = self.energy.value
@@ -195,16 +195,20 @@ newTalent{
 			end
 		end end
 
+		local drain = t.getNegativeDrain(self, t)
+
 		-- Randomly take targets
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		for i = 1, t.getTargetCount(self, t) do
 			if #tgts <= 0 then break end
+			if self:getNegative() - 1 < drain then break end
 			local a, id = rng.table(tgts)
 			table.remove(tgts, id)
 
 			self:project(tg, a.x, a.y, DamageType.DARKNESS, rng.avg(1, self:spellCrit(t.getDamage(self, t)), 3))
 			game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(a.x-self.x), math.abs(a.y-self.y)), "shadow_beam", {tx=a.x-self.x, ty=a.y-self.y})
 			game:playSoundNear(self, "talents/spell_generic")
+			self:incNegative(-drain)
 		end
 	end,
 	activate = function(self, t)
@@ -212,12 +216,10 @@ newTalent{
 		game:playSoundNear(self, "talents/spell_generic")
 		game.logSeen(self, "#DARK_GREY#A shroud of shadow dances around %s!", self.name)
 		return {
-			drain = self:addTemporaryValue("negative_regen", t.getNegativeDrain(self, t)),
 		}
 	end,
 	deactivate = function(self, t, p)
 		game.logSeen(self, "#DARK_GREY#The shroud of shadows around %s disappears.", self.name)
-		self:removeTemporaryValue("negative_regen", p.drain)
 		return true
 	end,
 	info = function(self, t)
@@ -226,8 +228,8 @@ newTalent{
 		local drain = t.getNegativeDrain(self, t)
 		return ([[Conjures a shroud of dancing shadows with a radius of 5 that follows you as long as this spell is active.
 		Each turn a random shadow beam will hit up to %d of your foes for 1 to %0.2f damage.
-		This powerful spell will continuously drain %d negative energy while active.
+		This powerful spell will drain %d negative energy for each beam, no beam will fire if energy is too low.
 		The damage will increase with the Magic stat]]):
-		format(targetcount, damDesc(self, DamageType.DARKNESS, damage), -drain)
+		format(targetcount, damDesc(self, DamageType.DARKNESS, damage), drain)
 	end,
 }
