@@ -53,6 +53,7 @@ newTalent{
 	getDuration = function(self, t) return self:getTalentLevel(t) + 2 end,
 	action = function(self, t)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=3}
+		self:project(tg, self.x, self.y, DamageType.LITE, 1)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			self.x, self.y, t.getDuration(self, t),
@@ -69,6 +70,7 @@ newTalent{
 		local heal = t.getHeal(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[A magical zone of Sunlight appears around you, healing all within a radius of 3 for %0.2f per turn and increasing healing effects on those within by %d%%.  The effect lasts %d turns.
+		It will also light up the affected zone.
 		The life healed will increase with the Magic stat]]):
 		format(heal, heal, duration)
 	end,

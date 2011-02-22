@@ -172,12 +172,14 @@ newTalent{
 	range = 10,
 	getLightDamageIncrease = function(self, t) return self:combatTalentSpellDamage(t, 10, 50) end,
 	getDamageOnMeleeHit = function(self, t) return self:combatTalentSpellDamage(t, 5, 25) end,
+	getLite = function(self, t) return 1 + math.floor(self:getTalentLevelRaw(t)) end,
 	activate = function(self, t)
 		cancelChants(self)
 		game:playSoundNear(self, "talents/spell_generic2")
 		local ret = {
 			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.LIGHT]=t.getDamageOnMeleeHit(self, t)}),
 			phys = self:addTemporaryValue("inc_damage", {[DamageType.LIGHT] = t.getLightDamageIncrease(self, t)}),
+			lite = self:addTemporaryValue("lite", t.getLite(self, t)),
 			particle = self:addParticles(Particles.new("golden_shield", 1))
 		}
 		return ret
@@ -186,15 +188,18 @@ newTalent{
 		self:removeParticles(p.particle)
 		self:removeTemporaryValue("on_melee_hit", p.onhit)
 		self:removeTemporaryValue("inc_damage", p.phys)
+		self:removeTemporaryValue("lite", p.lite)
 		return true
 	end,
 	info = function(self, t)
 		local damageinc = t.getLightDamageIncrease(self, t)
 		local damage = t.getDamageOnMeleeHit(self, t)
+		local lite = t.getLite(self, t)
 		return ([[Chant the glory of the sun, granting you %d%% more light damage.
 		In addition it surrounds you with a shield of light, damaging anything that attacks you for %0.2f light damage.
+		Your lite radius is also increased by %d.
 		You may only have one Chant active at once.
 		The effects will increase with the Magic stat]]):
-		format(damageinc, damDesc(self, DamageType.LIGHT, damage))
+		format(damageinc, damDesc(self, DamageType.LIGHT, damage), lite)
 	end,
 }
