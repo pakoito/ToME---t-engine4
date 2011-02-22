@@ -94,11 +94,11 @@ local reward_types = {
 	},
 	anorithil = {
 		types = {
-			["divine/hymns"] = 0.7,
+			["divine/light"] = 0.7,
 		},
 		talents = {
-			[Talents.T_HYMN_OF_DETECTION] = 1,
-			[Talents.T_HYMN_OF_PERSEVERANCE] = 1,
+			[Talents.T_BATHE_IN_LIGHT] = 1,
+			[Talents.T_PROVIDENCE] = 1,
 		},
 		stats = {
 			[Stats.STAT_CUN] = 2,

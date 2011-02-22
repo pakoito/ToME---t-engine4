@@ -26,7 +26,7 @@ newTalent{
 	cooldown = 10,
 	positive = -10,
 	tactical = { HEAL = 2 },
-	getHeal = function(self, t) return self:combatTalentSpellDamage(t, 20, 240) end,
+	getHeal = function(self, t) return self:combatTalentSpellDamage(t, 20, 440) end,
 	action = function(self, t)
 		self:heal(self:spellCrit(t.getHeal(self, t)), self)
 		game:playSoundNear(self, "talents/heal")
@@ -49,7 +49,7 @@ newTalent{
 	cooldown = 10,
 	positive = -20,
 	tactical = { HEAL = 3 },
-	getHeal = function(self, t) return self:combatTalentSpellDamage(t, 4, 30) end,
+	getHeal = function(self, t) return self:combatTalentSpellDamage(t, 4, 40) end,
 	getDuration = function(self, t) return self:getTalentLevel(t) + 2 end,
 	action = function(self, t)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=3}
@@ -83,7 +83,7 @@ newTalent{
 	positive = -20,
 	cooldown = 15,
 	tactical = { DEFEND = 2 },
-	getAbsorb = function(self, t) return self:combatTalentSpellDamage(t, 30, 270) end,
+	getAbsorb = function(self, t) return self:combatTalentSpellDamage(t, 30, 470) end,
 	action = function(self, t)
 		self:setEffect(self.EFF_DAMAGE_SHIELD, 10, {power=t.getAbsorb(self, t)})
 		game:playSoundNear(self, "talents/heal")
