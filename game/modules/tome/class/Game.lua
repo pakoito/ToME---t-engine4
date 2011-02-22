@@ -578,7 +578,7 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 	if feeling then game.log("#TEAL#%s", feeling) end
 
 	-- Autosave
-	if config.settings.tome.autosave and ((left_zone and left_zone.short_name ~= "wilderness") or self.zone.save_per_level) and left_zone.short_name ~= self.zone.short_name then self:saveGame() end
+	if config.settings.tome.autosave and ((left_zone and left_zone.short_name ~= "wilderness") or self.zone.save_per_level) and (left_zone and left_zone.short_name ~= self.zone.short_name) then self:saveGame() end
 
 	self.player:onEnterLevelEnd(self.zone, self.level)
 
