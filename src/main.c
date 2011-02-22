@@ -224,6 +224,13 @@ void on_event(SDL_Event *event)
 			lua_remove(L, -2);
 			lua_rawgeti(L, LUA_REGISTRYINDEX, current_keyhandler);
 			lua_pushnumber(L, event->key.keysym.sym);
+/*
+			Uint8 *_pKeyState = SDL_GetKeyState(NULL);
+			lua_pushboolean(L, (_pKeyState[SDLK_RCTRL] || _pKeyState[SDLK_LCTRL]) ? TRUE : FALSE);
+			lua_pushboolean(L, (_pKeyState[SDLK_RSHIFT] || _pKeyState[SDLK_LSHIFT]) ? TRUE : FALSE);
+			lua_pushboolean(L, (_pKeyState[SDLK_RALT] || _pKeyState[SDLK_LALT]) ? TRUE : FALSE);
+			lua_pushboolean(L, (_pKeyState[SDLK_RMETA] || _pKeyState[SDLK_LMETA]) ? TRUE : FALSE);
+*/
 			lua_pushboolean(L, (event->key.keysym.mod & KMOD_CTRL) ? TRUE : FALSE);
 			lua_pushboolean(L, (event->key.keysym.mod & KMOD_SHIFT) ? TRUE : FALSE);
 			lua_pushboolean(L, (event->key.keysym.mod & KMOD_ALT) ? TRUE : FALSE);
