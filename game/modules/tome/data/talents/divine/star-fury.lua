@@ -68,9 +68,9 @@ newTalent{
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=self:spellFriendlyFire()}
 	end,
-	getDamageOnSpot = function(self, t) return self:combatTalentSpellDamage(t, 4, 50) end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 5, 120) end,
-	getDuration = function(self, t) return self:getTalentLevel(t) + 2 end,
+	getDamageOnSpot = function(self, t) return self:combatTalentSpellDamage(t, 4, 40) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 5, 110) end,
+	getDuration = function(self, t) return math.floor(self:getTalentLevel(t) * 0.8) + 2 end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
