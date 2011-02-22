@@ -19,23 +19,23 @@
 
 -- Physical combat
 newTalentType{ allow_random=true, type="technique/2hweapon-offense", name = "two-handed weapons", description = "Specialized two-handed techniques." }
-newTalentType{ allow_random=true, type="technique/2hweapon-cripple", name = "two-handed weapons", description = "Specialized two-handed techniques." }
-newTalentType{ allow_random=true, type="technique/shield-offense", name = "weapons and shields", description = "Specialized weapon and shield techniques." }
-newTalentType{ allow_random=true, type="technique/shield-defense", name = "weapons and shields", description = "Specialized weapon and shield techniques." }
-newTalentType{ allow_random=true, type="technique/dualweapon-training", name = "dual wielding", description = "Specialized dual wielding techniques." }
-newTalentType{ allow_random=true, type="technique/dualweapon-attack", name = "dual wielding", description = "Specialized dual wielding techniques." }
+newTalentType{ allow_random=true, type="technique/2hweapon-cripple", name = "two-handed maiming", description = "Specialized two-handed techniques." }
+newTalentType{ allow_random=true, type="technique/shield-offense", name = "shield offense", description = "Specialized weapon and shield techniques." }
+newTalentType{ allow_random=true, type="technique/shield-defense", name = "shield defense", description = "Specialized weapon and shield techniques." }
+newTalentType{ allow_random=true, type="technique/dualweapon-training", name = "dual weapons", description = "Specialized dual wielding techniques." }
+newTalentType{ allow_random=true, type="technique/dualweapon-attack", name = "dual techniques", description = "Specialized dual wielding techniques." }
 newTalentType{ allow_random=true, type="technique/archery-base", name = "archery - base", description = "Ability to shoot." }
 newTalentType{ allow_random=true, type="technique/archery-bow", name = "archery - bows", description = "Specialized bow techniques." }
 newTalentType{ allow_random=true, type="technique/archery-sling", name = "archery - slings", description = "Specialized sling techniques." }
-newTalentType{ allow_random=true, type="technique/archery-training", name = "archery - common", description = "Generic archery techniques." }
-newTalentType{ allow_random=true, type="technique/archery-utility", name = "archery - utility", description = "Specialized archery techniques to maim your targets." }
+newTalentType{ allow_random=true, type="technique/archery-training", name = "archery training", description = "Generic archery techniques." }
+newTalentType{ allow_random=true, type="technique/archery-utility", name = "archery prowess", description = "Specialized archery techniques to maim your targets." }
 newTalentType{ allow_random=true, type="technique/superiority", name = "superiority", description = "Advanced combat techniques." }
 newTalentType{ allow_random=true, type="technique/battle-tactics", name = "battle tactics", description = "Advanced combat tactics." }
 newTalentType{ allow_random=true, type="technique/warcries", name = "warcries", no_silence = true, description = "Master the warcries to improve yourself and weaken others." }
 newTalentType{ allow_random=true, type="technique/bloodthirst", name = "bloodthirst", description = "Delight in the act of battle and the spilling of blood." }
 newTalentType{ allow_random=true, type="technique/field-control", name = "field control", generic = true, description = "Control the battlefield using various techniques." }
 newTalentType{ allow_random=true, type="technique/combat-techniques-active", name = "combat techniques", description = "Generic combat oriented techniques." }
-newTalentType{ allow_random=true, type="technique/combat-techniques-passive", name = "combat techniques", description = "Generic combat oriented techniques." }
+newTalentType{ allow_random=true, type="technique/combat-techniques-passive", name = "combat veterant", description = "Generic combat oriented techniques." }
 newTalentType{ allow_random=true, type="technique/combat-training", name = "combat training", generic = true, description = "Teaches to use various armors and improves health." }
 newTalentType{ allow_random=true, type="technique/magical-combat", name = "magical combat", description = "The blending together of magic and melee prowess." }
 
