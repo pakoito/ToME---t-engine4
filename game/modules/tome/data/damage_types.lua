@@ -585,6 +585,7 @@ newDamageType{
 	projector = function(src, x, y, type, dam, tmp)
 		local target = game.level.map(x, y, Map.ACTOR)
 		local realdam = 0
+		tmp = tmp or {}
 		if target and not tmp[target] then
 			tmp[target] = true
 			realdam = DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam)
@@ -604,6 +605,7 @@ newDamageType{
 	name = "mind knockback", type = "MINDKNOCKBACK",
 	projector = function(src, x, y, type, dam, tmp)
 		local target = game.level.map(x, y, Map.ACTOR)
+		tmp = tmp or {}
 		if target and not tmp[target] then
 			tmp[target] = true
 			DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam)
@@ -622,6 +624,7 @@ newDamageType{
 	name = "physknockback", type = "PHYSKNOCKBACK",
 	projector = function(src, x, y, type, dam, tmp)
 		local target = game.level.map(x, y, Map.ACTOR)
+		tmp = tmp or {}
 		if target and not tmp[target] then
 			tmp[target] = true
 			DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam.dam)
