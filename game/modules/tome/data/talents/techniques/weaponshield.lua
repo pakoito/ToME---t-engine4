@@ -172,9 +172,52 @@ newTalent{
 -- Defense
 ----------------------------------------------------------------------
 newTalent{
-	name = "Repulsion",
+	name = "Shield Wall",
 	type = {"technique/shield-defense", 1},
 	require = techs_req1,
+	mode = "sustained",
+	points = 5,
+	cooldown = 30,
+	sustain_stamina = 30,
+	tactical = { DEFEND = 2 },
+	on_pre_use = function(self, t, silent) if not self:hasShield() then if not silent then game.logPlayer(self, "You require a weapon and a shield to use this talent.") end return false end return true end,
+	activate = function(self, t)
+		local shield = self:hasShield()
+		if not shield then
+			game.logPlayer(self, "You cannot use Shield Wall without a shield!")
+			return nil
+		end
+
+		return {
+			stun = self:addTemporaryValue("stun_immune", 0.1 * self:getTalentLevel(t)),
+			knock = self:addTemporaryValue("knockback_immune", 0.1 * self:getTalentLevel(t)),
+			dam = self:addTemporaryValue("inc_damage", {[DamageType.PHYSICAL]=-20}),
+			def = self:addTemporaryValue("combat_def", 5 + (1 + self:getDex(4)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE) * 2),
+			armor = self:addTemporaryValue("combat_armor", 5 + (1 + self:getDex(4)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE)),
+		}
+	end,
+	deactivate = function(self, t, p)
+		self:removeTemporaryValue("combat_def", p.def)
+		self:removeTemporaryValue("combat_armor", p.armor)
+		self:removeTemporaryValue("inc_damage", p.dam)
+		self:removeTemporaryValue("stun_immune", p.stun)
+		self:removeTemporaryValue("knockback_immune", p.knock)
+		return true
+	end,
+	info = function(self, t)
+		return ([[Enter a protective battle stance, increasing defense by %d and armor by %d at the cost of -20%% physical damage. The defense and armor increase is based on dexterity.
+		It also grants resistance to stunning and knockback (%d%%).]]):format(
+		5 + (1 + self:getDex(4)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE)* 2,
+		5 + (1 + self:getDex(4)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE),
+		10 * self:getTalentLevel(t), 10 * self:getTalentLevel(t)
+		)
+	end,
+}
+
+newTalent{
+	name = "Repulsion",
+	type = {"technique/shield-defense", 2},
+	require = techs_req2,
 	points = 5,
 	random_ego = "attack",
 	cooldown = 10,
@@ -207,51 +250,6 @@ newTalent{
 		return ([[Let all your foes pile up on your shield, then put all your strength in one mighty thrust and repel them all away %d grids.
 		In addition all creature knocked back will also be dazed for %d turns.
 		The distance increases with talent level and the daze with Strength.]]):format(math.floor(2 + self:getTalentLevel(t)), 3 + self:getStr(8))
-	end,
-}
-
-newTalent{
-	name = "Shield Wall",
-	type = {"technique/shield-defense", 2},
-	require = techs_req2,
-	mode = "sustained",
-	points = 5,
-	cooldown = 30,
-	sustain_stamina = 50,
-	tactical = { DEFEND = 2 },
-	on_pre_use = function(self, t, silent) if not self:hasShield() then if not silent then game.logPlayer(self, "You require a weapon and a shield to use this talent.") end return false end return true end,
-	activate = function(self, t)
-		local shield = self:hasShield()
-		if not shield then
-			game.logPlayer(self, "You cannot use Shield Wall without a shield!")
-			return nil
-		end
-
-		return {
-			stun = self:addTemporaryValue("stun_immune", 0.1 * self:getTalentLevel(t)),
-			knock = self:addTemporaryValue("knockback_immune", 0.1 * self:getTalentLevel(t)),
-			atk = self:addTemporaryValue("combat_atk", -10),
-			dam = self:addTemporaryValue("combat_dam", -10),
-			def = self:addTemporaryValue("combat_def", 5 + (1 + self:getDex(4)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE) * 2),
-			armor = self:addTemporaryValue("combat_armor", 5 + (1 + self:getDex(4)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE)),
-		}
-	end,
-	deactivate = function(self, t, p)
-		self:removeTemporaryValue("combat_def", p.def)
-		self:removeTemporaryValue("combat_armor", p.armor)
-		self:removeTemporaryValue("combat_atk", p.atk)
-		self:removeTemporaryValue("combat_dam", p.dam)
-		self:removeTemporaryValue("stun_immune", p.stun)
-		self:removeTemporaryValue("knockback_immune", p.knock)
-		return true
-	end,
-	info = function(self, t)
-		return ([[Enter a protective battle stance, increasing defense by %d and armor by %d at the cost of 10 attack and 10 damage. The defense and armor increase is based on dexterity.
-		It also grants resistance to stunning and knockback (%d%%).]]):format(
-		5 + (1 + self:getDex(4)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE)* 2,
-		5 + (1 + self:getDex(4)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE),
-		10 * self:getTalentLevel(t), 10 * self:getTalentLevel(t)
-		)
 	end,
 }
 

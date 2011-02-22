@@ -192,7 +192,7 @@ function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode, isup, ismouse)
 	local ks, us
 	if not ismouse then ks, us = self:makeKeyString(sym, ctrl, shift, alt, meta, unicode)
 	else ks = self:makeMouseString(sym, ctrl, shift, alt, meta) end
-	print("[BIND]", sym, ctrl, shift, alt, meta, unicode, " :=: ", ks, us, " ?=? ", self.binds[ks], us and self.binds[us])
+--	print("[BIND]", sym, ctrl, shift, alt, meta, unicode, " :=: ", ks, us, " ?=? ", self.binds[ks], us and self.binds[us])
 	if self.binds[ks] and self.virtuals[self.binds[ks]] then
 		if isup and not _M.binds_def[self.binds[ks]].updown then return end
 		self.virtuals[self.binds[ks]](sym, ctrl, shift, alt, meta, unicode, isup)

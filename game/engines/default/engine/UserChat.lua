@@ -97,7 +97,7 @@ end
 
 function _M:talk(msg)
 	if not profile.auth then return end
-	if not msg then return end
+	if not msg or msg == "" then return end
 	msg = msg:removeColorCodes()
 	core.profile.pushOrder(string.format("o='ChatTalk' channel=%q msg=%q", self.cur_channel, msg))
 end
