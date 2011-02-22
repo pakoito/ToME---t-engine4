@@ -809,6 +809,7 @@ function _M:quickSwitchWeapons()
 	elseif not mh1[1] and oh1[1] then names = oh1[1]:getName{do_color=true}
 	end
 	game.logPlayer(self, "You switch your weapons to: %s.", names)
+	self.changed = true
 end
 
 function _M:playerLevelup(on_finish)

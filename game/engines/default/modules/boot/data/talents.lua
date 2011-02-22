@@ -114,7 +114,7 @@ newTalent{
 	direct_hit = true,
 	requires_target = true,
 	action = function(self, t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=1 + self:getTalentLevelRaw(t), friendlyfire=false, talent=t, display={particle="bolt_fire", trail="firetrail"}}
+		local tg = {type="ball", range=self:getTalentRange(t), radius=1 + self:getTalentLevelRaw(t), selffire=false, talent=t, display={particle="bolt_fire", trail="firetrail"}}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:projectile(tg, x, y, DamageType.FIRE, rng.range(4, 8) * self:getTalentLevel(t), function(self, tg, x, y, grids)

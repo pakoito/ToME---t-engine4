@@ -251,6 +251,11 @@ newTalent{
 	stamina = 30,
 	require = techs_dex_req4,
 	tactical = { ATTACKAREA = 2 },
+	range = 0,
+	radius = 1,
+	target = function(self, t)
+		return {type="ball", radius=self:getTalentRadius(t), range=self:getTalentRange(t)}
+	end,
 	on_pre_use = function(self, t, silent) if not self:hasDualWeapon() then if not silent then game.logPlayer(self, "You require a two weapons to use this talent.") end return false end return true end,
 	action = function(self, t)
 		local weapon, offweapon = self:hasDualWeapon()

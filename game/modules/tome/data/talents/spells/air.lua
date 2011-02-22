@@ -30,9 +30,12 @@ newTalent{
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,
+	target = function(self, t)
+		return {type="beam", range=self:getTalentRange(t), talent=t}
+	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 290) end,
 	action = function(self, t)
-		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local dam = self:spellCrit(t.getDamage(self, t))
@@ -84,7 +87,7 @@ newTalent{
 				first = actor
 
 				print("[Chain lightning] looking for more targets", nb, " at ", dx, dy, "radius ", 10, "from", actor.name)
-				self:project({type="ball", friendlyfire=false, x=dx, y=dy, radius=10, range=0}, dx, dy, function(bx, by)
+				self:project({type="ball", selffire=false, x=dx, y=dy, radius=10, range=0}, dx, dy, function(bx, by)
 					local actor = game.level.map(bx, by, Map.ACTOR)
 					if actor and not affected[actor] and self:reactionToward(actor) < 0 then
 						print("[Chain lightning] found possible actor", actor.name, bx, by, "distance", core.fov.distance(dx, dy, bx, by))
@@ -108,7 +111,7 @@ newTalent{
 
 		local sx, sy = self.x, self.y
 		for i, actor in ipairs(targets) do
-			local tgr = {type="beam", range=self:getTalentRange(t), friendlyfire=false, talent=t, x=sx, y=sy}
+			local tgr = {type="beam", range=self:getTalentRange(t), selffire=false, talent=t, x=sx, y=sy}
 			print("[Chain lightning] jumping from", sx, sy, "to", actor.x, actor.y)
 			local dam = self:spellCrit(t.getDamage(self, t))
 			self:project(tgr, actor.x, actor.y, DamageType.LIGHTNING, rng.avg(rng.avg(dam / 3, dam, 3), dam, 5))

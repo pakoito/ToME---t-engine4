@@ -28,27 +28,27 @@ newTalent{
 	end,
 	tactical = { DEFEND = 1, DISABLE = 2 },
 	direct_hit = true,
-	range = function(self, t)
+	range = 0,
+	radius = function(self, t)
 		local r = 2
 		local gem_level = getGemLevel(self)
 		local mult = (1 + 0.02*gem_level*(self:getTalentLevel(self.T_REACH)))
 		return math.ceil(r*mult)
 	end,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
+	end,
 	action = function(self, t)
-		local tgts = {}
-		local grids = core.fov.circle_grids(self.x, self.y, self:getTalentRange(t), true)
-		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
-			local a = game.level.map(x, y, Map.ACTOR)
-			if a and self:reactionToward(a) < 0 then
-				tgts[#tgts+1] = a
-			end
-		end end
 		local en = ( 3 + self:getTalentLevel(t)) * (100 + self:getWil())/100
-		self:incPsi(en*#tgts)
-		local tg = {type="ball", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
 		local dam = .1 + 0.03*self:getTalentLevel(t)
-		self:project(tg, self.x, self.y, DamageType.MINDSLOW, dam)
-		local x, y = self.x, self.y
+		local tg = self:getTalentTarget(t)
+		self:project(tg, self.x, self.y, function(tx, ty)
+			DamageType:get(DamageType.MINDSLOW).projector(self, tx, ty, DamageType.MINDSLOW, dam)
+			local act = game.level.map(tx, ty, engine.Map.ACTOR)
+			if act then
+				self:incPsi(en)
+			end
+		end)
 		return true
 	end,
 	info = function(self, t)
@@ -71,28 +71,27 @@ newTalent{
 	end,
 	psi = 0,
 	tactical = { DEFEND = 2, DISABLE = 2 },
-	range = function(self, t)
+	range = 0,
+	radius = function(self, t)
 		local r = 1
 		local gem_level = getGemLevel(self)
 		local mult = (1 + 0.02*gem_level*(self:getTalentLevel(self.T_REACH)))
 		return math.ceil(r*mult)
 	end,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
+	end,
 	action = function(self, t)
-		local tgts = {}
-		local grids = core.fov.circle_grids(self.x, self.y, self:getTalentRange(t), true)
-		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
-			local a = game.level.map(x, y, Map.ACTOR)
-			if a and self:reactionToward(a) < 0 then
-				tgts[#tgts+1] = a
-			end
-		end end
 		local en = ( 4 + self:getTalentLevel(t)) * (100 + self:getWil())/85
-		self:incPsi(en*#tgts)
-		local duration = self:getTalentLevel(t) + 2
-		local radius = self:getTalentRange(t)
 		local dam = math.ceil(1 + 0.5*self:getTalentLevel(t))
-		local tg = {type="ball", range=0, radius=radius, friendlyfire=false}
-		self:project(tg, self.x, self.y, DamageType.MINDFREEZE, dam)
+		local tg = self:getTalentTarget(t)
+		self:project(tg, self.x, self.y, function(tx, ty)
+			DamageType:get(DamageType.MINDFREEZE).projector(self, tx, ty, DamageType.MINDFREEZE, dam)
+			local act = game.level.map(tx, ty, engine.Map.ACTOR)
+			if act then
+				self:incPsi(en)
+			end
+		end)
 		return true
 	end,
 	info = function(self, t)
@@ -115,38 +114,38 @@ newTalent{
 	cooldown = function(self, t)
 		return math.ceil(50 - self:getTalentLevel(t)*5)
 	end,
-	tactical = { DEFEND = 2, DAMAGE = 2, DISABLE = 1 },
+	tactical = { DEFEND = 2, ATTACKAREA = 2, DISABLE = 1 },
 	direct_hit = true,
-	range = function(self, t)
+	range = 0,
+	radius = function(self, t)
 		local r = 2
 		local gem_level = getGemLevel(self)
 		local mult = (1 + 0.02*gem_level*(self:getTalentLevel(self.T_REACH)))
 		return math.ceil(r*mult)
 	end,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
+	end,
 	action = function(self, t)
-		local tgts = {}
-		local grids = core.fov.circle_grids(self.x, self.y, self:getTalentRange(t), true)
-		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
-			local a = game.level.map(x, y, Map.ACTOR)
-			if a and self:reactionToward(a) < 0 then
-				tgts[#tgts+1] = a
-			end
-		end end
 		local en = ( 5 + self:getTalentLevel(t)) * (100 + self:getWil())/75
-		self:incPsi(en*#tgts)
-		local tg = {type="ball", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
 		local dam = self:spellCrit(self:combatTalentMindDamage(t, 28, 270))
-		self:project(tg, self.x, self.y, DamageType.LIGHTNING_DAZE, rng.avg(dam / 3, dam, 3))
-		local x, y = self.x, self.y
+		local tg = self:getTalentTarget(t)
+		self:project(tg, self.x, self.y, function(tx, ty)
+			DamageType:get(DamageType.LIGHTNING_DAZE).projector(self, tx, ty, DamageType.LIGHTNING_DAZE, dam)
+			local act = game.level.map(tx, ty, engine.Map.ACTOR)
+			if act then
+				self:incPsi(en)
+			end
+		end)
 		-- Lightning ball gets a special treatment to make it look neat
 		local sradius = (tg.radius + 0.5) * (engine.Map.tile_w + engine.Map.tile_h) / 2
 		local nb_forks = 16
 		local angle_diff = 360 / nb_forks
 		for i = 0, nb_forks - 1 do
 			local a = math.rad(rng.range(0+i*angle_diff,angle_diff+i*angle_diff))
-			local tx = x + math.floor(math.cos(a) * tg.radius)
-			local ty = y + math.floor(math.sin(a) * tg.radius)
-			game.level.map:particleEmitter(x, y, tg.radius, "lightning", {radius=tg.radius, grids=grids, tx=tx-x, ty=ty-y, nb_particles=25, life=8})
+			local tx = self.x + math.floor(math.cos(a) * tg.radius)
+			local ty = self.y + math.floor(math.sin(a) * tg.radius)
+			game.level.map:particleEmitter(x, y, tg.radius, "lightning", {radius=tg.radius, grids=grids, tx=tx-self.x, ty=ty-self.y, nb_particles=25, life=8})
 		end
 
 		game:playSoundNear(self, "talents/lightning")

@@ -26,7 +26,7 @@ newTalent{
 	cooldown = 10,
 	range = 1,
 	message = "@Source@ tries to swallow @target@!",
-	tactical = { ATTACK = 0.5 },
+	tactical = { ATTACK = 0.5, EQUILIBRIUM = 0.5},
 	requires_target = true,
 	no_npc_use = true,
 	action = function(self, t)
@@ -69,16 +69,20 @@ newTalent{
 	cooldown = 30,
 	tactical = { ATTACKAREA = 2, DISABLE = 2 },
 	range = 10,
+	radius = function(self, t)
+		return 2 + self:getTalentLevel(t) / 2
+	end,
 	no_npc_use = true,
 	action = function(self, t)
-		local tg = {type="ball", range=0, friendlyfire=false, radius=2 + self:getTalentLevel(t) / 2, talent=t, no_restrict=true}
+		local tg = {type="ball", range=0, selffire=false, radius=self:getTalentRadius(t), talent=t, no_restrict=true}
 		self:project(tg, self.x, self.y, DamageType.PHYSKNOCKBACK, {dam=self:combatDamage() * 0.8, dist=4})
 		self:doQuake(tg, self.x, self.y)
 		return true
 	end,
 	info = function(self, t)
+		local radius = self:getTalentRadius(t)
 		return ([[You slam your foot onto the ground, shaking the area around you in a radius of %d, damaging them for %d and knocking back up to 4 titles away.
-		The damage will increase with the Strength stat]]):format(2 + self:getTalentLevel(t) / 2, self:combatDamage() * 0.8)
+		The damage will increase with the Strength stat]]):format(radius, self:combatDamage() * 0.8)
 	end,
 }
 
@@ -110,20 +114,32 @@ newTalent{
 	cooldown = 12,
 	message = "@Source@ breathes sand!",
 	tactical = { ATTACKAREA = 2, DISABLE = 2 },
-	range = function(self, t) return 4 + self:getTalentLevelRaw(t) end,
+	range = 0,
+	radius = function(self, t) return 4 + self:getTalentLevelRaw(t) end,
 	direct_hit = true,
 	requires_target = true,
+	target = function(self, t)
+		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
+	end,
+	getDamage = function(self, t)
+		return self:combatTalentStatDamage(t, "str", 30, 400)
+	end,
+	getDuration = function(self, t)
+		return 2+self:getTalentLevelRaw(t)
+	end,
 	action = function(self, t)
-		local tg = {type="cone", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.SAND, {dur=2+self:getTalentLevelRaw(t), dam=self:combatTalentStatDamage(t, "str", 30, 400)})
+		self:project(tg, x, y, DamageType.SAND, {dur=t.getDuration(self, t), dam=t.getDamage(self, t)})
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "breath_earth", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/breath")
 		return true
 	end,
 	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		local duration = t.getDuration(self, t)
 		return ([[You breathe sand in a frontal cone. Any target caught in the area will take %0.2f physical damage and be blinded for %d turns.
-		The damage will increase with the Strength stat]]):format(damDesc(self, DamageType.PHYSICAL, self:combatTalentStatDamage(t, "str", 30, 400)), 2+self:getTalentLevelRaw(t))
+		The damage will increase with the Strength stat]]):format(damDesc(self, DamageType.PHYSICAL, damage), duration)
 	end,
 }

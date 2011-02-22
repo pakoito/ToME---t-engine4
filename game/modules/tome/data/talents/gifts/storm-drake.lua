@@ -47,11 +47,18 @@ newTalent{
 	points = 5,
 	equilibrium = 20,
 	cooldown = 20,
-	range = 1,
+	range = 0,
+	radius = 1,
 	tactical = { ATTACKAREA = 5 },
 	requires_target = true,
+	target = function(self, t)
+		return {type="ball", radius=self:getTalentRadius(t), selffire=false, talent=t}
+	end,
+	getPercent = function(self, t)
+		return self:combatTalentMindDamage(t, 10, 45)
+	end,
 	action = function(self, t)
-		local tg = {type="ball", radius=1, friendlyfire=false, talent=t}
+		local tg = self:getTalentTarget(t)
 		self:project(tg, self.x, self.y, function(px, py)
 			local target = game.level.map(px, py, Map.ACTOR)
 			if not target then return end
@@ -60,7 +67,7 @@ newTalent{
 				return
 			end
 			game.logSeen(target, "%s is caught in the static field!", target.name:capitalize())
-			local dam = target.life * self:combatTalentMindDamage(t, 10, 45) / 100
+			local dam = target.life * t.getPercent(self, t) / 100
 			if target.life - dam < 0 then dam = target.life end
 			target:takeHit(dam, self)
 		end, nil, {type="lightning_explosion"})
@@ -68,9 +75,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local percent = t.getPercent(self, t)
 		return ([[Generate an electrical field around you in a radius of 1. Any foe caught inside will lose %d%% of its current life.
 		This effect can not kill creatures.
-		Life loss will increase with the Willpower stat.]]):format(self:combatTalentMindDamage(t, 10, 45))
+		Life loss will increase with the Willpower stat.]]):format(percent)
 	end,
 }
 
@@ -157,24 +165,32 @@ newTalent{
 	cooldown = 12,
 	message = "@Source@ breathes lightning!",
 	tactical = { ATTACKAREA = 2 },
-	range = function(self, t) return 4 + self:getTalentLevelRaw(t) end,
+	range = 0,
+	radius = function(self, t) return 4 + self:getTalentLevelRaw(t) end,
 	direct_hit = true,
 	requires_target = true,
+	target = function(self, t)
+		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
+	end,
+	getDamage = function(self, t)
+		return self:combatTalentStatDamage(t, "str", 30, 500)
+	end,
 	action = function(self, t)
-		local tg = {type="cone", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		local dam = self:combatTalentStatDamage(t, "str", 30, 500)
+		local dam = t.getDamage(self, t)
 		self:project(tg, x, y, DamageType.LIGHTNING_DAZE, rng.avg(dam / 3, dam, 3))
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "breath_lightning", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/breath")
 		return true
 	end,
 	info = function(self, t)
+		local damage = t.getDamage(self, t)
 		return ([[You breathe lightning in a frontal cone. Any target caught in the area will take %0.2f to %0.2f lightning damage and can be dazed for 3 turns.
 		The damage will increase with the Strength stat]]):format(
-			damDesc(self, DamageType.LIGHTNING, self:combatTalentStatDamage(t, "str", 30, 500)) / 3,
-			damDesc(self, DamageType.LIGHTNING, self:combatTalentStatDamage(t, "str", 30, 500))
+			damDesc(self, DamageType.LIGHTNING, damage / 3,
+			damDesc(self, DamageType.LIGHTNING, damage))
 		)
 	end,
 }

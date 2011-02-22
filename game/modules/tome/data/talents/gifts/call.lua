@@ -99,10 +99,11 @@ newTalent{
 	equilibrium = 3,
 	cooldown = 10,
 	range = 100,
+	radius = function(self, t) return math.ceil(3 + self:getTalentLevel(t)) end,
 	requires_target = true,
 	no_npc_use = true,
 	action = function(self, t)
-		local x, y = self:getTarget{type="ball", nolock=true, no_restrict=true, nowarning=true, range=100, radius=math.ceil(3 + self:getTalentLevel(t))}
+		local x, y = self:getTarget{type="ball", nolock=true, no_restrict=true, nowarning=true, range=100, radius=self:getTalentRadius(t)}
 		if not x then return nil end
 
 		self:magicMap(math.ceil(3 + self:getTalentLevel(t)), x, y)
@@ -110,8 +111,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local radius = self:getTalentRadius(t)
 		return ([[Using your connection to Nature you can see remote areas in a radius of %d.]]):
-		format(math.ceil(3 + self:getTalentLevel(t)))
+		format(radius)
 	end,
 }
 

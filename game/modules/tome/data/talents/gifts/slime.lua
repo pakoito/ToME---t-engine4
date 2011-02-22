@@ -108,24 +108,35 @@ newTalent{
 	cooldown = 20,
 	tactical = { CLOSEIN = 2 },
 	requires_target = true,
-	range = 10,
+	range = function(self, t)
+		return 20 + self:getTalentLevel(t)
+	end,
+	radius = function(self, t)
+		return 7 - self:getTalentLevel(t)
+	end,
+	getDuration = function(self, t)
+		return util.bound(5 - self:getTalentLevel(t) / 2, 2, 7)
+	end,
 	action = function(self, t)
-		local x, y = self:getTarget{type="ball", range=20 + self:getTalentLevel(t), radius=math.min(0, 5 - self:getTalentLevel(t))}
+		local x, y = self:getTarget{type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
 		if not x then return nil end
 		-- Target code does not restrict the self coordinates to the range, it lets the project function do it
 		-- but we cant ...
 		local _ _, x, y = self:canProject(tg, x, y)
 		game.level.map:particleEmitter(self.x, self.y, 1, "slime")
-		self:teleportRandom(x, y, 7 - self:getTalentLevel(t))
+		self:teleportRandom(x, y, self:getTalentRadius(t))
 		game.level.map:particleEmitter(self.x, self.y, 1, "slime")
 
 		-- Stunned!
-		self:setEffect(self.EFF_STUNNED, util.bound(5 - self:getTalentLevel(t) / 2, 2, 7), {})
+		self:setEffect(self.EFF_STUNNED, t.getDuration(self, t), {})
 		game:playSoundNear(self, "talents/slime")
 		return true
 	end,
 	info = function(self, t)
+		local range = self:getTalentRange(t)
+		local radius = self:getTalentRadius(t)
+		local duration = t.getDuration(self, t)
 		return ([[You extend slimy roots into the ground, follow them, and re-appear somewhere else in a range of %d with error margin of %d.
-		The process is quite a strain on your body and you will be stunned for %d turns.]]):format(20 + self:getTalentLevel(t),7 - self:getTalentLevel(t), util.bound(5 - self:getTalentLevel(t) / 2, 2, 7))
+		The process is quite a strain on your body and you will be stunned for %d turns.]]):format(range, radius, duration)
 	end,
 }

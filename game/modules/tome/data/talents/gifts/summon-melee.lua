@@ -99,7 +99,7 @@ newTalent{
 	cooldown = 10,
 	range = 10,
 	requires_target = true,
-	tactical = { ATTACK = 1 },
+	tactical = { ATTACK = 1, EQUILIBRIUM = 1, },
 	action = function(self, t)
 		if not self:canBe("summon") then game.logPlayer(self, "You can not summon, you are suppressed!") return end
 		if checkMaxSummon(self) then return end

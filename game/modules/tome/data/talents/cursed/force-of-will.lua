@@ -209,13 +209,13 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	cooldown = 14,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACKAREA = 2 },
 	requires_target = true,
 	hate = 1.5,
 	range = function(self, t)
 		return 4
 	end,
-	getRadius = function(self, t)
+	radius = function(self, t)
 		return math.floor(2 + self:getTalentLevel(t) / 3)
 	end,
 	getDamage = function(self, t)
@@ -224,16 +224,19 @@ newTalent{
 	getKnockback = function(self, t)
 		return 2 + math.floor(self:getTalentLevel(t))
 	end,
+	target = function(self, t)
+		return {type="ball", nolock=true, pass_terrain=false, friendly_fire=false, nowarning=true, range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t}
+	end,
 	getDazeDuration = function(self, t)
 		return 3
 	end,
 	action = function(self, t)
 		local range = self:getTalentRange(t)
-		local radius = t.getRadius(self, t)
+		local radius = self:getTalentRadius(t)
 		local damage = t.getDamage(self, t)
 		local knockback = t.getKnockback(self, t)
 
-		local tg = {type="ball", nolock=true, pass_terrain=false, friendly_fire=false, nowarning=true, range=range, radius=radius, talent=t}
+		local tg = self:getTalentTarget(t)
 		local blastX, blastY = self:getTarget(tg)
 		if not blastX or not blastY or core.fov.distance(self.x, self.y, blastX, blastY) > range then return nil end
 
@@ -262,7 +265,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local radius = t.getRadius(self, t)
+		local radius = self:getTalentRadius(t)
 		local damage = t.getDamage(self, t)
 		local knockback = t.getKnockback(self, t)
 		local dazeDuration = t.getDazeDuration(self, t)

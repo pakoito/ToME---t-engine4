@@ -27,13 +27,18 @@ newTalent{
 	paradox = 10,
 	cooldown = 6,
 	tactical = { ATTACKAREA = 2 },
-	direct_hit = true,
+        range = 0,
+        radius = function(self, t)
+            return 1 + self:getTalentLevelRaw(t)
+        end,
 	requires_target = true,
-	range = function(self, t) return 1 + self:getTalentLevelRaw(t) end,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), friendlyfire=false, talent=t}
+	end,
 	getDamage = function(self, t) return (self:combatTalentSpellDamage(t, 10, 120)*getParadoxModifier(self, pm)) end,
 	getPercent = function(self, t) return (30 + (self:combatTalentSpellDamage(t, 10, 30)*getParadoxModifier(self, pm))) / 100 end,
 	action = function(self, t)
-		local tg = {type="ball", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
+		local tg = self:getTalentTarget(t)
 		self:project(tg, self.x, self.y, DamageType.TEMPORAL, self:spellCrit(t.getDamage(self, t)))
 		self:project(tg, self.x, self.y, DamageType.TEMPORAL_ECHO, t.getPercent(self, t))
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_temporal", {radius=tg.radius})
@@ -42,7 +47,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local percent = t.getPercent(self, t) * 100
-		local radius = self:getTalentRange(t)
+		local radius = self:getTalentRadius(t)
 		local damage = t.getDamage(self, t)
 		return ([[Creates a temporal echo in a nova around you in a radius of %d.  Affected targets will take %0.2f temporal damage and %d%% of the difference between their current life and max life as additional temporal damage.
 		The percentage and damage scales with your Paradox and the Magic stat.]]):

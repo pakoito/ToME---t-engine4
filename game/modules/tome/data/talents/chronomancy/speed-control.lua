@@ -53,14 +53,19 @@ newTalent{
 	points = 5,
 	paradox = 10,
 	cooldown = 20,
-	tactical = { DISABLE = 3 },
+	tactical = { ATTACKAREA = 1, DISABLE = 3 },
 	range = 6,
+	radius = function(self, t)
+		return 1 + math.floor(self:getTalentLevel(t) / 3)
+	end,
 	direct_hit = true,
 	requires_target = true,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=self:spellFriendlyFire(), talent=t}
+	end,
 	getDuration = function(self, t) return 2 + math.ceil(((self:getTalentLevel(t) / 2)) * getParadoxModifier(self, pm)) end,
-	getRadius = function(self, t) return 1 + math.floor(self:getTalentLevel(t) / 3) end,
 	action = function(self, t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=t.getRadius(self, t), friendlyfire=self:spellFriendlyFire(), talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		x, y = checkBackfire(self, x, y)
@@ -70,7 +75,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local radius = t.getRadius(self, t)
+		local radius = self:getTalentRadius(t)
 		local duration = t.getDuration(self, t)
 		return ([[Attempts to stun all creatures in a radius %d ball for %d turns.
 		The stun duration will scale with your Paradox.]]):
@@ -87,13 +92,18 @@ newTalent{
 	cooldown = 30,
 	tactical = { ATTACKAREA = 2, DISABLE = 2 },
 	range = 6,
+	radius = function(self, t)
+		return 2 + math.floor(self:getTalentLevel(t)/4)
+	end,
 	direct_hit = true,
 	requires_target = true,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
+	end,
 	getSlow = function(self, t) return 1 - 1 / (1 + ((10 + (self:combatTalentSpellDamage(t, 10, 50) * getParadoxModifier(self, pm))) / 100)) end,
-	getRadius = function (self, t) return 2 + math.floor(self:getTalentLevel(t)/4) end,
 	getDuration = function(self, t) return 5 + math.ceil(self:getTalentLevel(t)) end,
 	action = function(self, t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=t.getRadius(self, t)}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		x, y = checkBackfire(self, x, y)
@@ -102,7 +112,7 @@ newTalent{
 		game.level.map:addEffect(self,
 			x, y, t.getDuration(self, t),
 			DamageType.CHRONOSLOW, t.getSlow(self, t),
-			t.getRadius(self, t),
+			self:getTalentRadius(t),
 			5, nil,
 			{type="temporal_cloud"},
 			nil, self:spellFriendlyFire()
@@ -112,7 +122,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local slow = t.getSlow(self, t)
-		local radius = t.getRadius(self, t)
+		local radius = self:getTalentRadius(t)
 		local duration = t.getDuration(self, t)
 		return ([[Creates a time distortion in a radius of %d that lasts for %d turns, decreasing affected targets global speed by %d%% for 2 turns and inflicting %0.2f temporal damage each turn they remain in the area.
 		The slow effect and damage will scale with your Paradox and Magic stat.]]):

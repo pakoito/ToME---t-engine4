@@ -180,18 +180,24 @@ newTalent{
 	cooldown = 15,
 	stamina = 15,
 	range = archery_range,
+	radius = function(self, t)
+		local rad = 1
+		if self:getTalentLevel(t) >= 3 then rad = rad + 1 end
+		if self:getTalentLevel(t) >= 5 then rad = rad + 1 end
+		return rad
+	end,
 	require = techs_dex_req1,
 	tactical = { ATTACKAREA = 2, DISABLE = 2 },
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	requires_target = true,
+	target = function(self, t)
+		return {type="ball", x=x, y=y, radius=self:getTalentRadius(t), range=self:getTalentRange(t)}
+	end,
 	archery_onreach = function(self, t, x, y)
-		local rad = 1
-		if self:getTalentLevel(t) >= 3 then rad = rad + 1 end
-		if self:getTalentLevel(t) >= 5 then rad = rad + 1 end
-		local tg = {type="ball", x=x, y=y, radius=rad}
+		local tg = self:getTalentTarget(t)
 		self:project(tg, x, y, DamageType.LITE, 1)
 		if self:getTalentLevel(t) >= 3 then
-			tg.friendlyfire = false
+			tg.selffire= false
 			self:project(tg, self.x, self.y, DamageType.BLINDPHYSICAL, 3)
 		end
 		game.level.map:particleEmitter(x, y, tg.radius, "ball_light", {radius=tg.radius})
@@ -287,8 +293,14 @@ newTalent{
 	stamina = 15,
 	require = techs_dex_req4,
 	range = archery_range,
+	radius = function(self, t)
+		return 1 + self:getTalentLevel(t) / 3
+	end,
 	tactical = { ATTACKAREA = 2, DISABLE = 3 },
 	requires_target = true,
+	target = function(self, t)
+		return {type="ball", radius=self:getTalentRadius(t), range=self:getTalentRange(t)}
+	end,
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	archery_onhit = function(self, t, target, x, y)
 		if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 10) and target:canBe("stun") then
@@ -298,7 +310,7 @@ newTalent{
 		end
 	end,
 	action = function(self, t)
-		local tg = {type="ball", radius=1 + self:getTalentLevel(t) / 3}
+		local tg = self:getTalentTarget(t)
 		local targets = self:archeryAcquireTargets(tg, {one_shot=true})
 		if not targets then return end
 		self:archeryShoot(targets, t, tg, {mult=self:combatTalentWeaponDamage(t, 0.5, 1.5)})

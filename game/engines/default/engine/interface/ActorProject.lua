@@ -102,22 +102,23 @@ function _M:project(t, x, y, damtype, dam, particles)
 		addGrid(lx, ly)
 	end
 
+	-- Check for minimum range
+	if typ.min_range and core.fov.distance(self.x, self.y, lx, ly) < typ.min_range then
+		return
+	end
+
 	-- Now project on each grid, one type
 	local tmp = {}
 	local stop = false
 	for px, ys in pairs(grids) do
 		for py, _ in pairs(ys) do
 			-- Call the projected method of the target grid if possible
-			if not game.level.map:checkAllEntities(x, y, "projected", self, t, x, y, damtype, dam, particles) then
-				-- Friendly fire ?
-				if px == self.x and py == self.y then
-					if typ.friendlyfire then
-						if type(damtype) == "function" then if damtype(px, py, tg, self) then stop=true break end
-						else DamageType:get(damtype).projector(self, px, py, damtype, dam, tmp) end
-						if particles then
-							game.level.map:particleEmitter(px, py, 1, particles.type, particles.args)
-						end
-					end
+			if not game.level.map:checkAllEntities(px, py, "projected", self, t, px, py, damtype, dam, particles) then
+				-- Check self- and friendly-fire, and if the projection "misses"
+				local act = game.level.map(px, py, engine.Map.ACTOR)
+				if act and act == self and not ((type(typ.selffire) == "number" and rng.percent(typ.selffire)) or (type(typ.selffire) ~= "number" and typ.selffire)) then
+				elseif act and self.reactionToward and (self:reactionToward(act) >= 0) and not ((type(typ.friendlyfire) == "number" and rng.percent(typ.friendlyfire)) or (type(typ.friendlyfire) ~= "number" and typ.friendlyfire)) then
+				-- Otherwise hit
 				else
 					if type(damtype) == "function" then if damtype(px, py, tg, self) then stop=true break end
 					else DamageType:get(damtype).projector(self, px, py, damtype, dam, tmp) end
@@ -161,6 +162,11 @@ function _M:canProject(t, x, y)
 	end
 	if not radius_x then
 		radius_x, radius_y = stop_radius_x, stop_radius_y
+	end
+
+	-- Check for minimum range
+	if typ.min_range and core.fov.distance(self.x, self.y, lx, ly) < typ.min_range then
+		return
 	end
 
 	if lx == x and ly == y then return true, lx, ly end
@@ -222,15 +228,11 @@ function _M:projectDoAct(typ, tg, damtype, dam, particles, px, py, tmp)
 	-- Now project on each grid, one type
 	-- Call the projected method of the target grid if possible
 	if not game.level.map:checkAllEntities(px, py, "projected", self, typ, px, py, damtype, dam, particles) then
-		-- Friendly fire ?
-		if px == self.x and py == self.y then
-			if typ.friendlyfire then
-				if type(damtype) == "function" then if damtype(px, py, tg, self) then return true end
-				else DamageType:get(damtype).projector(self, px, py, damtype, dam, tmp) end
-				if particles and type(particles) == "table" then
-					game.level.map:particleEmitter(px, py, 1, particles.type, particles.args)
-				end
-			end
+		-- Check self- and friendly-fire, and if the projection "misses"
+		local act = game.level.map(px, py, engine.Map.ACTOR)
+		if act and act == self and not ((type(typ.selffire) == "number" and rng.percent(typ.selffire)) or (type(typ.selffire) ~= "number" and typ.selffire)) then
+		elseif act and self.reactionToward and (self:reactionToward(act) >= 0) and not ((type(typ.friendlyfire) == "number" and rng.percent(typ.friendlyfire)) or (type(typ.friendlyfire) ~= "number" and typ.friendlyfire)) then
+		-- Otherwise hit
 		else
 			if type(damtype) == "function" then if damtype(px, py, tg, self) then return true end
 			else DamageType:get(damtype).projector(self, px, py, damtype, dam, tmp) end

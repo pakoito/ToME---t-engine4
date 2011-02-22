@@ -27,12 +27,16 @@ newTalent{
 	cooldown = 8,
 	tactical = { ATTACKAREA = 2 },
 	range = 8,
+	radius = 3,
 	direct_hit = true,
 	requires_target = true,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
+	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 4, 50) end,
 	getDuration = function(self, t) return self:getTalentLevel(t) + 2 end,
 	action = function(self, t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=3}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local _ _, x, y = self:canProject(tg, x, y)
@@ -40,7 +44,7 @@ newTalent{
 		game.level.map:addEffect(self,
 			x, y, t.getDuration(self, t),
 			DamageType.ACID, t.getDamage(self, t),
-			3,
+			self:getTalentRadius(t),
 			5, nil,
 			{type="vapour"},
 			nil, self:spellFriendlyFire()
@@ -97,6 +101,13 @@ newTalent{
 	cooldown = 10,
 	tactical = { ESCAPE = 2, ATTACKAREA = 1, DISABLE = 1 },
 	direct_hit = true,
+	range = 0,
+	radius = function(self, t)
+		return 1 + 0.5 * t.getDuration(self, t)
+	end,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
+	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 5, 90) end,
 	getDuration = function(self, t) return 3 + self:combatTalentSpellDamage(t, 5, 5) end,
 	action = function(self, t)
@@ -134,6 +145,11 @@ newTalent{
 	mana = 40,
 	cooldown = 30,
 	tactical = { ATTACKAREA = 2 },
+	range = 0,
+	radius = 3,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false}
+	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 5, 90) end,
 	getDuration = function(self, t) return 5 + self:combatSpellpower(0.05) + self:getTalentLevel(t) end,
 	action = function(self, t)

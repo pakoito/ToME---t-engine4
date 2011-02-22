@@ -74,13 +74,22 @@ newTalent{
 	positive = -15,
 	tactical = { ATTACKAREA = 1, DISABLE = 2 },
 	direct_hit = true,
+	range = 0,
+	radius = function(self, t)
+		return 2 + self:getTalentLevel(t) / 2
+	end,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), selffire=false, radius=self:getTalentRadius(t), talent=t}
+	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 4, 80) end,
-	range = function(self, t) return 2 + self:getTalentLevel(t) / 2 end,
+	getDuration = function(self, t) return 3 + self:getTalentLevel(t) end,
 	action = function(self, t)
-		local tg = {type="ball", range=0, friendlyfire=true, radius=self:getTalentRange(t), talent=t}
+		local tg = self:getTalentTarget(t)
+		-- Temporarily turn on "friendlyfire" to lite all tiles
+		tg.friendlyfire = true
 		self:project(tg, self.x, self.y, DamageType.LITE, 1)
 		tg.friendlyfire = false
-		local grids = self:project(tg, self.x, self.y, DamageType.BLIND, 3 + self:getTalentLevel(t))
+		local grids = self:project(tg, self.x, self.y, DamageType.BLIND, t.getDuration(self, t))
 		if self:getTalentLevel(t) >= 3 then
 			self:project(tg, self.x, self.y, DamageType.LIGHT, t.getDamage(self, t))
 		end
@@ -89,12 +98,13 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local radius = self:getTalentRange(self, t)
+		local radius = self:getTalentRadius(t)
 		local damage = t.getDamage(self, t)
+		local duration = t.getDuration(self, t)
 		return ([[Invokes Sun flare with radius of %d, blinding your foes for %d turns and lighting up your immediate area.
 		At level 3 it will start dealing %0.2f light damage.
 		The damage will increase with the Magic stat.]]):
-		format(2 + self:getTalentLevel(t) / 2, 3 + self:getTalentLevel(t),damDesc(self, DamageType.LIGHT, self:combatTalentSpellDamage(t, 4, 80)))
+		format(radius, duration, damDesc(self, DamageType.LIGHT, damage))
    end,
 }
 
@@ -110,9 +120,12 @@ newTalent{
 	range = 7,
 	direct_hit = true,
 	requires_target = true,
+	target = function(self, t)
+		return {type="beam", range=self:getTalentRange(t), talent=t}
+	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 200) end,
 	action = function(self, t)
-		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.FIRE, self:spellCrit(t.getDamage(self, t)))
@@ -139,11 +152,15 @@ newTalent{
 	cooldown = 15,
 	positive = -20,
 	tactical = { ATTACKAREA = 2 },
-	range = 3,
+	range = 0,
+	radius = 3,
 	direct_hit = true,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), friendlyfire=false, talent=t}
+	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 160) end,
 	action = function(self, t)
-		local tg = {type="ball", range=0, radius=3, friendlyfire=false, talent=t}
+		local tg = self:getTalentTarget(t)
 		local grids = self:project(tg, self.x, self.y, DamageType.LIGHT, self:spellCrit(t.getDamage(self, t)))
 
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "sunburst", {radius=tg.radius, grids=grids, tx=self.x, ty=self.y})
@@ -152,8 +169,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local radius = self:getTalentRadius(t)
 		local damage = t.getDamage(self, t)
-		return ([[Conjures a furious burst of Sunlight, dealing %0.2f light damage to all those around you in a radius of 3.
-		The damage will increase with the Magic stat.]]):format(damDesc(self, DamageType.LIGHT, damage))
+		return ([[Conjures a furious burst of Sunlight, dealing %0.2f light damage to all those around you in a radius of %d.
+		The damage will increase with the Magic stat.]]):format(damDesc(self, DamageType.LIGHT, damage), radius)
 	end,
 }

@@ -153,7 +153,7 @@ newTalent{
 						resetTorment = true
 						local attackStrength = 0.3 + self:getTalentLevel(tTorment) * 0.12
 						if checkWillFailure(self, target, 30, 95, attackStrength) then
-							local tg = {type="hit", friendlyfire=false, talent=tTorment}
+							local tg = {type="hit", selffire=false, talent=tTorment}
 							local damage = (30 + self:getWil() * 0.4 * self:getTalentLevel(tTorment)) * getHateMultiplier(self, 0.5, 1.5)
 							local grids = self:project(tg, target.x, target.y, DamageType.DARKNESS, damage, {type="slime"})
 							--game:playSoundNear(self, "talents/spell_generic")

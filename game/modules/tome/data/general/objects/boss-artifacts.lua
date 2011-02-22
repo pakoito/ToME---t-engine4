@@ -50,7 +50,7 @@ It is said the Conclave created this weapon for their warmaster during the dark 
 	max_power = 18, power_regen = 1,
 	use_power = { name = "generate a burst of ice", power = 8,
 		use = function(self, who)
-			local tg = {type="ball", range=0, radius=4, friendlyfire=false}
+			local tg = {type="ball", range=0, radius=4, selffire=false}
 			who:project(tg, who.x, who.y, engine.DamageType.ICE, 10 + (who:getMag() + who:getWil()) / 2, {type="freeze"})
 			game:playSoundNear(who, "talents/ice")
 			game.logSeen(who, "%s invokes the power of %s!", who.name:capitalize(), self.name)

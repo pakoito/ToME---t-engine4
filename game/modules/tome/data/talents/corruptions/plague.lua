@@ -66,8 +66,15 @@ newTalent{
 	vim = 18,
 	cooldown = 9,
 	range = 7,
+	radius = function(self, t)
+		return 1 + math.floor(self:getTalentLevelRaw(t) / 2)
+	end,
 	tactical = { ATTACK = 1 },
 	requires_target = true,
+	target = function(self, t)
+		-- Target trying to combine the bolt and the ball disease spread
+		return {type="ballbolt", radius=self:getTalentRadius(t), range=self:getTalentRange(t)}
+	end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t)}
 		local x, y = self:getTarget(tg)
@@ -97,12 +104,12 @@ newTalent{
 		end)
 
 		if #diseases > 0 then
-			self:project({type="ball", radius=1 + math.floor(self:getTalentLevelRaw(t) / 2), range=self:getTalentRange(t)}, x, y, function(px, py)
+			self:project({type="ball", radius=self:getTalentRadius(t), range=self:getTalentRange(t)}, x, y, function(px, py)
 				local target = game.level.map(px, py, engine.Map.ACTOR)
 				if not target or target == source or target == self or (self:reactionToward(target) >= 0) then return end
 
 				local disease = rng.table(diseases)
-				target:setEffect(disease.id, 6, {src=self, dam=disease.params.dam, str=disease.params.str, dex=disease.params.dex, con=disease.params.con})
+				target:setEffect(disease.id, 6, {src=self, dam=disease.params.dam, str=disease.params.str, dex=disease.params.dex, con=disease.params.con, heal_factor=disease.params.heal_factor})
 				game.level.map:particleEmitter(px, py, 1, "slime")
 			end)
 		end
@@ -114,7 +121,7 @@ newTalent{
 		return ([[Make your target's diseases burst, doing %0.2f blight damage for each disease it is infected with.
 		This will also spread a random disease to any nearby foes in a radius of %d.
 		The damage will increase with your Magic stat.]]):
-		format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 15, 85)), 1 + math.floor(self:getTalentLevelRaw(t) / 2))
+		format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 15, 85)), self:getTalentRadius(t))
 	end,
 }
 
@@ -126,11 +133,15 @@ newTalent{
 	vim = 35,
 	cooldown = 15,
 	range = 6,
+	radius = 2,
 	tactical = { DISABLE = 1 },
 	direct_hit = true,
 	requires_target = true,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
+	end,
 	action = function(self, t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=2}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 
@@ -180,6 +191,7 @@ newTalent{
 	vim = 20,
 	cooldown = 13,
 	range = 6,
+	radius = 2,
 	tactical = { ATTACK = 2 },
 	requires_target = true,
 	do_spread = function(self, t, carrier)
@@ -193,12 +205,14 @@ newTalent{
 		end
 
 		if #diseases == 0 then return end
-		self:project({type="ball", radius=2}, carrier.x, carrier.y, function(px, py)
+		self:project({type="ball", radius=self:getTalentRadius(t)}, carrier.x, carrier.y, function(px, py)
 			local target = game.level.map(px, py, engine.Map.ACTOR)
 			if not target or target == carrier or target == self then return end
 
 			local disease = rng.table(diseases)
-			target:setEffect(disease.id, 6, {src=self, dam=disease.params.dam, str=disease.params.str, dex=disease.params.dex, con=disease.params.con})
+			local params = disease.params
+			params.src = self
+			target:setEffect(disease.id, 6, {src=self, dam=disease.params.dam, str=disease.params.str, dex=disease.params.dex, con=disease.params.con, heal_factor=disease.params.heal_factor})
 			game.level.map:particleEmitter(px, py, 1, "slime")
 		end)
 	end,
@@ -224,9 +238,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Infects the target with a very contagious disease doing %0.2f damage per turn for 6 turns.
-		If any blight damage from non-diseases hits the target, the epidemic will activate and spread a random disease to nearby targets.
+		If any blight damage from non-diseases hits the target, the epidemic may activate and spread a random disease to nearby targets.
 		Creatures suffering from that disease will also suffer healing reduction (%d%%).
-		The damage will increase with your Magic stat.]]):
+		The damage will increase with your Magic stat, and the spread chance increases with the blight damage.]]):
 		format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 15, 50)), 40 + self:getTalentLevel(t) * 4)
 	end,
 }

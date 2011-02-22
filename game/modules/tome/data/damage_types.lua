@@ -216,6 +216,7 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		-- Spread diseases if possible
 		if realdam > 0 and target and target:attr("diseases_spread_on_blight") and (not extra or not extra.from_disease) then
+			game.logSeen(src, "The diseases of %s spread!", src.name)
 			if rng.percent(20 + math.sqrt(realdam) * 5) then
 				local t = src:getTalentFromId(src.T_EPIDEMIC)
 				t.do_spread(src, t, target)

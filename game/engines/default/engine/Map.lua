@@ -785,7 +785,10 @@ end
 -- @param dir the numpad direction of the effect, 5 for a ball effect
 -- @param overlay either a simple display entity to draw upon the map or a Particle class
 -- @param update_fct optional function that will be called each time the effect is updated with the effect itself as parameter. Use it to change radius, move around ....
-function _M:addEffect(src, x, y, duration, damtype, dam, radius, dir, angle, overlay, update_fct, friendlyfire)
+-- @param selffire percent chance to damage the source actor (default 100)
+-- @param friendlyfire percent chance to damage friendly actors (default 100)
+function _M:addEffect(src, x, y, duration, damtype, dam, radius, dir, angle, overlay, update_fct, selffire, friendlyfire)
+	if selffire == nil then selffire = true end
 	if friendlyfire == nil then friendlyfire = true end
 
 	local grids
@@ -802,7 +805,7 @@ function _M:addEffect(src, x, y, duration, damtype, dam, radius, dir, angle, ove
 		src=src, x=x, y=y, duration=duration, damtype=damtype, dam=dam, radius=radius, dir=dir, angle=angle,
 		overlay=overlay.__CLASSNAME and overlay,
 		grids = grids,
-		update_fct=update_fct, friendlyfire=friendlyfire
+		update_fct=update_fct, selffire=selffire, friendlyfire=friendlyfire,
 	}
 
 	if not overlay.__CLASSNAME then
@@ -846,7 +849,11 @@ function _M:processEffects()
 		-- Now display each grids
 		for lx, ys in pairs(e.grids) do
 			for ly, _ in pairs(ys) do
-				if e.friendlyfire or not (lx == e.src.x and ly == e.src.y) then
+				local act = game.level.map(lx, ly, engine.Map.ACTOR)
+				if act and act == e.src and not ((type(e.selffire) == "number" and rng.percent(e.selffire)) or (type(e.selffire) ~= "number" and e.selffire)) then
+				elseif act and e.src and e.src.reactionToward and (e.src:reactionToward(act) >= 0) and not ((type(e.friendlyfire) == "number" and rng.percent(typ.friendlyfire)) or (type(e.friendlyfire) ~= "number" and e.friendlyfire)) then
+				-- Otherwise hit
+				else
 					DamageType:get(e.damtype).projector(e.src, lx, ly, e.damtype, e.dam)
 				end
 			end

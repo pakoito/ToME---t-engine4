@@ -96,14 +96,19 @@ newTalent{
 	paradox = 5,
 	cooldown = function(self, t) return 20 - (self:getTalentLevelRaw(t) * 2) end,
 	tactical = { CLOSEIN = 2, ESCAPE = 2 },
-	getRange = function(self, t) return 5 + (self:getTalentLevelRaw(t)) end,
+	range = function(self, t)
+		return 5 + (self:getTalentLevelRaw(t))
+	end,
 	requires_target = true,
+	target = function(self, t)
+		return {type="hit", range=self:getTalentRange(t)}
+	end,
 	direct_hit = true,
 	action = function(self, t)
-		local tg = {type="hit", range=t.getRange(self, t)}
+		local tg = self:getTalentTarget(t)
 		local x, y, target = self:getTarget(tg)
 		if not x or not y then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > t.getRange(self, t) then return nil end
+		if math.floor(core.fov.distance(self.x, self.y, x, y)) > self:getTalentRange(t) then return nil end
 		if not self:canBe("teleport") or game.level.map.attrs(x, y, "no_teleport") then
 			game.logSeen(self, "The spell fizzles!")
 			return true
@@ -124,7 +129,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local range = t.getRange(self, t)
+		local range = self:getTalentRange(t)
 		return ([[Teleports you to up to %d tiles away to a targeted location in line of sight.
 		Additional talent points will lower the cooldown and increase the range.]]):format(range)
 	end,
@@ -163,9 +168,13 @@ newTalent{
 	paradox = 20,
 	cooldown = 20,
 	tactical = { ESCAPE = 2 },
+	range = function (self, t)
+		return 10 + math.floor(self:getTalentLevel(t)/2)
+	end,
+	radius = function(self, t)
+		return math.floor(7 - self:getTalentLevel(t))
+	end,
 	requires_target = function(self, t) return self:getTalentLevel(t) >= 4 end,
-	getRadius = function(self, t) return math.floor(7 - self:getTalentLevel(t)) end,
-	getRange = function (self, t) return 10 + math.floor (self:getTalentLevel(t)/2) end,
 	getDuration = function (self, t) return 5 + math.floor(self:getTalentLevel(t)*getParadoxModifier(self, pm)) end,
 	no_npc_use = true,
 	action = function(self, t)
@@ -185,9 +194,9 @@ newTalent{
 		-- First, find the center possible exit locations
 		local x, y, radius, minimum_distance
 		if self:getTalentLevel(t) >= 4 then
-			radius = t.getRadius(self, t)
+			radius = self:getTalentRadius(t)
 			minimum_distance = 0
-			local tg = {type="ball", nolock=true, pass_terrain=true, nowarning=true, range=t.getRange(self, t), radius=radius}
+			local tg = {type="ball", nolock=true, pass_terrain=true, nowarning=true, range=self:getTalentRange(t), radius=radius}
 			x, y = self:getTarget(tg)
 			if not x then return nil end
 			-- See if we can actually project to the selected location
@@ -274,7 +283,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
-		local radius = t.getRadius(self, t)
+		local radius = self:getTalentRadius(t)
 		return ([[You fold the space between two points, allowing travel back and forth between them for the next %d turns.
 		At level 4 you may choose the exit location target area (radius %d).  The duration will scale with your Paradox.]])
 		:format(duration, radius)

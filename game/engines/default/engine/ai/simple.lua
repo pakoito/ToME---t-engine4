@@ -93,7 +93,7 @@ newAI("target_simple", function(self)
 --		print("AI looking for target", self.uid, self.name, "::", act.uid, act.name, self.fov.actors[act].sqdist)
 		-- find the closest enemy
 		if act and self:reactionToward(act) < 0 and not act.dead then
-			self.ai_target.actor = act
+			self:setTarget(act)
 			self:check("on_acquire_target", act)
 			return true
 		end

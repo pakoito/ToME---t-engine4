@@ -56,9 +56,12 @@ newTalent{
 	equilibrium = 20,
 	cooldown = 10,
 	tactical = { DISABLE = 4 },
-	range = function(self, t) return 4 + self:getTalentLevel(t) * 1.5 end,
+	radius = function(self, t) return 4 + self:getTalentLevel(t) * 1.5 end,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=true, talent=t}
+	end,
 	action = function(self, t)
-		local tg = {type="ball", range=0, radius=self:getTalentRange(t), friendlyfire=true, talent=t}
+		local tg = self:getTalentTarget(t)
 		self:project(tg, self.x, self.y, DamageType.SILENCE, 3 + math.floor(self:getTalentLevel(t) / 2))
 		return true
 	end,

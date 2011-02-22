@@ -26,11 +26,17 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 7,
 	stamina = 20,
-	range = 4,
+	range = 0,
+	radius = function(self, t)
+		return 3 + self:getTalentLevelRaw(t)
+	end,
+	target = function(self, t)
+		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false}
+	end,
 	requires_target = true,
 	tactical = { ATTACKAREA = 2 },
 	action = function(self, t)
-		local tg = {type="cone", range=0, radius=3 + self:getTalentLevelRaw(t), friendlyfire=false}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.PHYSICAL, (50 + self:getTalentLevel(t) * self:getStr()) / 2.3, {type="flame"})
@@ -86,11 +92,17 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 30,
 	stamina = 40,
-	range = 4,
+	range = 0,
+	radius = function(self, t)
+		return 3 + self:getTalentLevelRaw(t)
+	end,
+	target = function(self, t)
+		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false}
+	end,
 	requires_target = true,
 	tactical = { DISABLE = 2 },
 	action = function(self, t)
-		local tg = {type="cone", range=0, radius=3 + self:getTalentLevelRaw(t), friendlyfire=false}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, function(px, py)

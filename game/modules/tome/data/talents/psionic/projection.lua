@@ -94,6 +94,42 @@ local function forceHit(self, target, sourceX, sourceY, damage, knockback, knock
 	end
 end
 
+local function aura_range(self, t)
+	-- Spiked ability
+	if self:isTalentActive(t.id) then
+		if type(t.getSpikedRange) == "function" then return t.getSpikedRange(self, t) end
+		return t.getSpikedRange
+	-- Normal ability
+	else
+		if type(t.getNormalRange) == "function" then return t.getNormalRange(self, t) end
+		return t.getNormalRange
+	end
+end
+
+local function aura_radius(self, t)
+	-- Spiked ability
+	if self:isTalentActive(t.id) then
+		if type(t.getSpikedRadius) == "function" then return t.getSpikedRadius(self, t) end
+		return t.getSpikedRadius
+	-- Normal ability
+	else
+		if type(t.getNormalRadius) == "function" then return t.getNormalRadius(self, t) end
+		return t.getNormalRadius
+	end
+end
+
+local function aura_target(self, t)
+	-- Spiked ability
+	if self:isTalentActive(t.id) then
+		if type(t.getSpikedTarget) == "function" then return t.getSpikedTarget(self, t) end
+		return t.getSpikedTarget
+	-- Normal ability
+	else
+		if type(t.getNormalTarget) == "function" then return t.getNormalTarget(self, t) end
+		return t.getNormalTarget
+	end
+end
+
 newTalent{
 	name = "Kinetic Aura",
 	type = {"psionic/projection", 1},
@@ -106,14 +142,43 @@ newTalent{
 		return 15 - (self:getTalentLevelRaw(self.T_AURA_DISCIPLINE) or 0)
 	end,
 	tactical = { ATTACKAREA = 2 },
-	range = function(self, t)
+	range = aura_range,
+	radius = aura_radius,
+	target = aura_target,
+	getSpikedRange = function(self, t)
 		local r = 6
 		local gem_level = getGemLevel(self)
 		local mult = (1 + 0.02*gem_level*(self:getTalentLevel(self.T_REACH)))
 		r = math.floor(r*mult)
 		return math.min(r, 10)
 	end,
-	direct_hit = true,
+	getNormalRange = function(self, t)
+		return 0
+	end,
+	getSpikedRadius = function(self, t)
+		return 0
+	end,
+	getNormalRadius = function(self, t)
+		return 1
+	end,
+	getSpikedTarget = function(self, t)
+		return {type="beam", nolock=true, range=t.getSpikedRange(self, t), talent=t}
+	end,
+	getNormalTarget = function(self, t)
+		return {type="ball", range=t.getNormalRange(self, t), radius=t.getNormalRadius(self, t), selffire=false}
+	end,
+	requires_target = function(self, t)
+		-- Spiked ability
+		if self:isTalentActive(t.id) and self:getPsi() > t.getSpikeCost(self, t) then
+			return true
+		-- Normal ability
+		else
+			return false
+		end
+	end,
+	getSpikeCost = function(self, t)
+		return t.sustain_psi - 2*getGemLevel(self)
+	end,
 	getAuraStrength = function(self, t)
 		local add = 0
 		if self:knowTalent(self.T_FOCUSED_CHANNELING) then
@@ -126,29 +191,16 @@ newTalent{
 		return 3 + math.floor(self:getTalentLevel(t))
 	end,
 	do_kineticaura = function(self, t)
-
 		local mast = 5 + (self:getTalentLevel(self.T_AURA_DISCIPLINE) or 0) + getGemLevel(self)
 		local dam = t.getAuraStrength(self, t)
-		local tgts = {}
-		local grids = core.fov.circle_grids(self.x, self.y, 1, true)
-		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
-			local a = game.level.map(x, y, Map.ACTOR)
-			if a and self:reactionToward(a) < 0 then
-				tgts[#tgts+1] = a
+		local tg = t.getNormalTarget(self, t)
+		self:project(tg, self.x, self.y, function(tx, ty)
+			DamageType:get(DamageType.PHYSICAL).projector(self, tx, ty, DamageType.PHYSICAL, dam)
+			local act = game.level.map(tx, ty, engine.Map.ACTOR)
+			if act then
+				self:incPsi(-dam/mast)
 			end
-		end end
-
-		-- Randomly take targets
-		local tg = {type="hit", range=1, talent=t}
-		for i = 1, 10 do
-			if #tgts <= 0 then break end
-			local a, id = rng.table(tgts)
-			table.remove(tgts, id)
-			self:project(tg, a.x, a.y, DamageType.PHYSICAL, dam)
-			--game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(a.x-self.x), math.abs(a.y-self.y)), "lightning", {tx=a.x-self.x, ty=a.y-self.y})
-			self:incPsi(-dam/mast)
-		end
-
+		end)
 	end,
 	activate = function(self, t)
 		if self:isTalentActive(self.T_THERMAL_AURA) and self:isTalentActive(self.T_CHARGED_AURA) then
@@ -159,13 +211,13 @@ newTalent{
 	end,
 	deactivate = function(self, t, p)
 		local dam = 50 + 0.4 * t.getAuraStrength(self, t)*t.getAuraStrength(self, t)
-		local cost = t.sustain_psi - 2*getGemLevel(self)
+		local cost = t.getSpikeCost(self, t)
 		if self:getPsi() <= cost then
 			game.logPlayer(self, "The aura dissipates without producing a spike.")
 			return true
 		end
 		
-		local tg = {type="beam", nolock=true, range=self:getTalentRange(t), talent=t}
+		local tg = t.getSpikedTarget(self, t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local actor = game.level.map(x, y, Map.ACTOR)
@@ -183,7 +235,7 @@ newTalent{
 		local dam = t.getAuraStrength(self, t)
 		local spikedam = 50 + 0.4 * dam * dam
 		local mast = 5 + (self:getTalentLevel(self.T_AURA_DISCIPLINE) or 0) + getGemLevel(self)
-		local spikecost = t.sustain_psi - 2*getGemLevel(self)
+		local spikecost = t.getSpikeCost(self, t)
 		return ([[Fills the air around you with reactive currents of force that do %d physical damage to all who approach. All damage done by the aura will drain one point of energy per %0.2f points of damage dealt.
 		When deactivated, if you have at least %d energy, a massive spike of kinetic energy is released as a beam, smashing targets for %d physical damage and sending them flying. Telekinetically wielding a gem instead of a weapon will result in improved spike efficiency.
 		The damage will increase with the Willpower stat.
@@ -204,14 +256,39 @@ newTalent{
 		return 15 - (self:getTalentLevelRaw(self.T_AURA_DISCIPLINE) or 0)
 	end,
 	tactical = { ATTACKAREA = 2 },
-	range = function(self, t)
+	range = aura_range,
+	radius = aura_radius,
+	target = aura_target,
+	getSpikedRange = function(self, t)
+		return 0
+	end,
+	getNormalRange = function(self, t)
+		return 0
+	end,
+	getSpikedRadius = function(self, t)
 		local r = 6
 		local gem_level = getGemLevel(self)
 		local mult = (1 + 0.02*gem_level*(self:getTalentLevel(self.T_REACH)))
 		r = math.floor(r*mult)
-		return math.min(r, 10)
+		return math.min(r, 10)	end,
+	getNormalRadius = function(self, t)
+		return 1
 	end,
-	direct_hit = true,
+	getSpikedTarget = function(self, t)
+		return {type="cone", range=t.getSpikedRange(self, t), radius=t.getSpikedRadius(self, t), selffire=false, talent=t}
+	end,
+	getNormalTarget = function(self, t)
+		return {type="ball", range=t.getNormalRange(self, t), radius=t.getNormalRadius(self, t), selffire=false}
+	end,
+	requires_target = function(self, t)
+		-- Spiked ability
+		if self:isTalentActive(t.id) and self:getPsi() > t.getSpikeCost(self, t) then
+			return true
+		-- Normal ability
+		else
+			return false
+		end
+	end,
 	getAuraStrength = function(self, t)
 		local add = 0
 		if self:knowTalent(self.T_FOCUSED_CHANNELING) then
@@ -220,30 +297,20 @@ newTalent{
 		--return 5 + (1+ self:getWil(5))*self:getTalentLevel(t) + add
 		return self:combatTalentIntervalDamage(t, "wil", 6, 50) + add
 	end,
+	getSpikeCost = function(self, t)
+		return t.sustain_psi - 2*getGemLevel(self)
+	end,
 	do_thermalaura = function(self, t)
-
 		local mast = 5 + (self:getTalentLevel(self.T_AURA_DISCIPLINE) or 0) + getGemLevel(self)
 		local dam = t.getAuraStrength(self, t)
-		local tgts = {}
-		local grids = core.fov.circle_grids(self.x, self.y, 1, true)
-		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
-			local a = game.level.map(x, y, Map.ACTOR)
-			if a and self:reactionToward(a) < 0 then
-				tgts[#tgts+1] = a
+		local tg = t.getNormalTarget(self, t)
+		self:project(tg, self.x, self.y, function(tx, ty)
+			DamageType:get(DamageType.FIRE).projector(self, tx, ty, DamageType.FIRE, dam)
+			local act = game.level.map(tx, ty, engine.Map.ACTOR)
+			if act then
+				self:incPsi(-dam/mast)
 			end
-		end end
-
-		-- Randomly take targets
-		local tg = {type="hit", range=1, talent=t}
-		for i = 1, 10 do
-			if #tgts <= 0 then break end
-			local a, id = rng.table(tgts)
-			table.remove(tgts, id)
-			self:project(tg, a.x, a.y, DamageType.FIRE, dam)
-			--game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(a.x-self.x), math.abs(a.y-self.y)), "lightning", {tx=a.x-self.x, ty=a.y-self.y})
-			self:incPsi(-dam/mast)
-		end
-
+		end)
 	end,
 	activate = function(self, t)
 		if self:isTalentActive(self.T_KINETIC_AURA) and self:isTalentActive(self.T_CHARGED_AURA) then
@@ -254,14 +321,14 @@ newTalent{
 	end,
 	deactivate = function(self, t, p)
 		local dam = 50 + 0.4 * t.getAuraStrength(self, t)*t.getAuraStrength(self, t)
-		local cost = t.sustain_psi - 2*getGemLevel(self)
+		local cost = t.getSpikeCost(self, t)
 		--if self:isTalentActive(self.T_CONDUIT) then return true end
 		if self:getPsi() <= cost then
 			game.logPlayer(self, "The aura dissipates without producing a spike.")
 			return true
 		end
 
-		local tg = {type="cone", range=1, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
+		local tg = t.getSpikedTarget(self, t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local actor = game.level.map(x, y, Map.ACTOR)
@@ -279,7 +346,7 @@ newTalent{
 		local rad = self:getTalentRange(t)
 		local spikedam = 50 + 0.4 * dam * dam
 		local mast = 5 + (self:getTalentLevel(self.T_AURA_DISCIPLINE) or 0) + getGemLevel(self)
-		local spikecost = t.sustain_psi - 2*getGemLevel(self)
+		local spikecost = t.getSpikeCost(self, t)
 		return ([[Fills the air around you with reactive currents of furnace-like heat that do %d fire damage to all who approach. All damage done by the aura will drain one point of energy per %0.2f points of damage dealt.
 		When deactivated, if you have at least %d energy, a massive spike of thermal energy is released as a conical blast (radius %d) of superheated air. Anybody caught in it will suffer %d fire damage. Telekinetically wielding a gem instead of a weapon will result in improved spike efficiency.
 		The damage will increase with the Willpower stat.
@@ -300,14 +367,43 @@ newTalent{
 		return 15 - (self:getTalentLevelRaw(self.T_AURA_DISCIPLINE) or 0)
 	end,
 	tactical = { ATTACKAREA = 2 },
-	range = function(self, t)
+	range = aura_range,
+	radius = aura_radius,
+	target = aura_target,
+	getSpikedRange = function(self, t)
 		local r = 6
 		local gem_level = getGemLevel(self)
 		local mult = (1 + 0.02*gem_level*(self:getTalentLevel(self.T_REACH)))
 		r = math.floor(r*mult)
 		return math.min(r, 10)
 	end,
-	direct_hit = true,
+	getNormalRange = function(self, t)
+		return 0
+	end,
+	getSpikedRadius = function(self, t)
+		return 10
+	end,
+	getNormalRadius = function(self, t)
+		return 1
+	end,
+	getSpikedTarget = function(self, t)
+		return {type="ball", range=t.getSpikedRange(self, t), radius=t.getSpikedRadius(self, t), friendlyfire=false}
+	end,
+	getNormalTarget = function(self, t)
+		return {type="ball", range=t.getNormalRange(self, t), radius=t.getNormalRadius(self, t), selffire=false}
+	end,
+	requires_target = function(self, t)
+		-- Spiked ability
+		if self:isTalentActive(t.id) and self:getPsi() > t.getSpikeCost(self, t) then
+			return true
+		-- Normal ability
+		else
+			return false
+		end
+	end,
+	getSpikeCost = function(self, t)
+		return t.sustain_psi - 2*getGemLevel(self)
+	end,
 	getAuraStrength = function(self, t)
 		local add = 0
 		if self:knowTalent(self.T_FOCUSED_CHANNELING) then
@@ -316,28 +412,20 @@ newTalent{
 		--return 5 + (1+ self:getWil(5))*self:getTalentLevel(t) + add
 		return self:combatTalentIntervalDamage(t, "wil", 6, 50) + add
 	end,
+	getNumSpikeTargets = function(self, t)
+		return 1 + math.floor(0.5*self:getTalentLevel(t)) + getGemLevel(self)
+	end,
 	do_chargedaura = function(self, t)
 		local mast = 5 + (self:getTalentLevel(self.T_AURA_DISCIPLINE) or 0) + getGemLevel(self)
 		local dam = t.getAuraStrength(self, t)
-		local tgts = {}
-		local grids = core.fov.circle_grids(self.x, self.y, 1, true)
-		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
-			local a = game.level.map(x, y, Map.ACTOR)
-			if a and self:reactionToward(a) < 0 then
-				tgts[#tgts+1] = a
+		local tg = t.getNormalTarget(self, t)
+		self:project(tg, self.x, self.y, function(tx, ty)
+			DamageType:get(DamageType.LIGHTNING).projector(self, tx, ty, DamageType.LIGHTNING, dam)
+			local act = game.level.map(tx, ty, engine.Map.ACTOR)
+			if act then
+				self:incPsi(-dam/mast)
 			end
-		end end
-
-		-- Randomly take targets
-		local tg = {type="hit", range=1, talent=t}
-		for i = 1, 10 do
-			if #tgts <= 0 then break end
-			local a, id = rng.table(tgts)
-			table.remove(tgts, id)
-			self:project(tg, a.x, a.y, DamageType.LIGHTNING, dam)
-			--game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(a.x-self.x), math.abs(a.y-self.y)), "lightning", {tx=a.x-self.x, ty=a.y-self.y})
-			self:incPsi(-dam/mast)
-		end
+		end)
 	end,
 	activate = function(self, t)
 		if self:isTalentActive(self.T_THERMAL_AURA) and self:isTalentActive(self.T_KINETIC_AURA) then
@@ -349,7 +437,7 @@ newTalent{
 	end,
 	deactivate = function(self, t, p)
 		local dam = 50 + 0.4 * t.getAuraStrength(self, t)*t.getAuraStrength(self, t)
-		local cost = t.sustain_psi - 2*getGemLevel(self)
+		local cost = t.getSpikeCost(self, t)
 		--if self:isTalentActive(self.T_CONDUIT) then return true end
 		if self:getPsi() <= cost then
 			game.logPlayer(self, "The aura dissipates without producing a spike.")
@@ -361,7 +449,7 @@ newTalent{
 		if not fx or not fy then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, fx, fy)) == 0 then return true end
 
-		local nb = 1 + math.floor(0.5*self:getTalentLevel(t)) + getGemLevel(self)
+		local nb = t.getNumSpikeTargets(self, t)
 		local affected = {}
 		local first = nil
 		--Here's the part where deactivating the aura fires off a huge chain lightning
@@ -413,8 +501,8 @@ newTalent{
 		local dam = t.getAuraStrength(self, t)
 		local spikedam = 50 + 0.4 * dam * dam
 		local mast = 5 + (self:getTalentLevel(self.T_AURA_DISCIPLINE) or 0) + getGemLevel(self)
-		local spikecost = t.sustain_psi - 2*getGemLevel(self)
-		local nb = 3 + self:getTalentLevelRaw(t)
+		local spikecost = t.getSpikeCost(self, t)
+		local nb = t.getNumSpikeTargets(self, t)
 		return ([[Fills the air around you with crackling energy, doing %d lightning damage to all who stand nearby. All damage done by the aura will drain one point of energy per %0.2f points of damage dealt.
 		When deactivated, if you have at least %d energy, a massive spike of electrical energy jumps between up to %d nearby targets, doing %d lightning damage to each. Telekinetically wielding a gem instead of a weapon will result in improved spike efficiency.
 		The damage will increase with the Willpower stat.

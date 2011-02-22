@@ -129,11 +129,15 @@ newTalent{
 	cooldown = 12,
 	message = "@Source@ breathes ice!",
 	tactical = { ATTACKAREA = 2, DISABLE = 1 },
-	range = function(self, t) return 4 + self:getTalentLevelRaw(t) end,
+	range = 0,
+	radius = function(self, t) return 4 + self:getTalentLevelRaw(t) end,
 	direct_hit = true,
 	requires_target = true,
+	target = function(self, t)
+		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRange(t), selffire=false, talent=t}
+	end,
 	action = function(self, t)
-		local tg = {type="cone", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.ICE, self:combatTalentStatDamage(t, "str", 30, 430))

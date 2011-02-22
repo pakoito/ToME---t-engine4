@@ -163,10 +163,14 @@ newTalent{
 		else return math.floor(self:getTalentLevel(t)) end
 	end,
 	requires_target = true,
-	getDuration = function(self, t) return math.floor((3 + self:getTalentLevel(t)) / 1.5) end,
-	action = function(self, t)
+	target = function(self, t)
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
 		if self:getTalentLevel(t) >= 3 then tg.type = "beam" end
+		return tg
+	end,
+	getDuration = function(self, t) return math.floor((3 + self:getTalentLevel(t)) / 1.5) end,
+	action = function(self, t)
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, function(tx, ty)

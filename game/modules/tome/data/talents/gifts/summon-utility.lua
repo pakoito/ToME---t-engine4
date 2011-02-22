@@ -24,12 +24,13 @@ newTalent{
 	cooldown = 5,
 	requires_target = false,
 	tactical = { PROTECT = 2 },
-	range = function(self, t) return 3 + self:getTalentLevelRaw(t) end,
+	range = 0,
+	radius = function(self, t) return 3 + self:getTalentLevelRaw(t) end,
 	action = function(self, t)
-		local tg = {type="ball", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
+		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), friendlyfire=false, talent=t}
 		self:project(tg, self.x, self.y, function(tx, ty)
 			local a = game.level.map(tx, ty, Map.ACTOR)
-			if a and self:reactionToward(a) < 0 then
+			if a then
 				a:setTarget(self)
 			end
 		end)
@@ -120,7 +121,8 @@ newTalent{
 			name = "turtle", faction = self.faction,
 			desc = [[]],
 			autolevel = "none",
-			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=1, },
+			ai = "summoned", ai_real = "tactical", ai_state = { talent_in=1, ally_compassion=10},
+			ai_tactic = resolvers.tactic"default",
 			stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
 			inc_stats = { con=15 + self:getWil() * self:getTalentLevel(t) / 5 + self:getTalentLevelRaw(self.T_RESILIENCE)*2, wil=18, dex=10 + self:getTalentLevel(t) * 2, },
 			level_range = {self.level, self.level}, exp_worth = 0,
@@ -194,7 +196,8 @@ newTalent{
 			name = "giant spider", faction = self.faction,
 			desc = [[]],
 			autolevel = "none",
-			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=1, },
+			ai = "summoned", ai_real = "tactical", ai_state = { talent_in=1, ally_compassion=10},
+			ai_tactic = resolvers.tactic"ranged",
 			stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
 			inc_stats = { dex=15 + self:getWil() * self:getTalentLevel(t) / 5, wil=18, str=10 + self:getTalentLevel(t) * 2, con=10 + self:getTalentLevelRaw(self.T_RESILIENCE)*2 },
 			level_range = {self.level, self.level}, exp_worth = 0,
@@ -245,7 +248,7 @@ newTalent{
 	tactical = { DISABLE = 0.2 },
 	action = function(self, t)
 		local dur = math.floor(5 + self:getTalentLevel(t))
-		local tg = {type="ball", range=0, radius=self:getTalentRange(t), friendlyfire=true, talent=t}
+		local tg = {type="ball", range=0, radius=self:getTalentRange(t), selffire=true, talent=t}
 		self:project(tg, self.x, self.y, function(px, py)
 			local target = game.level.map(px, py, Map.ACTOR)
 			if not target then return end

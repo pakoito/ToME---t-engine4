@@ -49,16 +49,20 @@ newTalent{
 	cooldown = 10,
 	positive = -20,
 	tactical = { HEAL = 3 },
+	range = 0,
+	radius = 3,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
+	end,
 	getHeal = function(self, t) return self:combatTalentSpellDamage(t, 4, 40) end,
 	getDuration = function(self, t) return self:getTalentLevel(t) + 2 end,
 	action = function(self, t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=3}
 		self:project(tg, self.x, self.y, DamageType.LITE, 1)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			self.x, self.y, t.getDuration(self, t),
 			DamageType.HEALING_POWER, t.getHeal(self, t),
-			3,
+			self:getTalentRadius(t),
 			5, nil,
 			{type="healing_vapour"},
 			nil, true
@@ -67,12 +71,13 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local radius = self:getTalentRadius(t)
 		local heal = t.getHeal(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[A magical zone of Sunlight appears around you, healing all within a radius of 3 for %0.2f per turn and increasing healing effects on those within by %d%%.  The effect lasts %d turns.
+		return ([[A magical zone of Sunlight appears around you, healing all within a radius of %d for %0.2f per turn and increasing healing effects on those within by %d%%.  The effect lasts %d turns.
 		It will also light up the affected zone.
 		The life healed will increase with the Magic stat]]):
-		format(heal, heal, duration)
+		format(radius, heal, heal, duration)
 	end,
 }
 

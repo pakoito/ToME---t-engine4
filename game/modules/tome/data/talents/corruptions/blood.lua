@@ -25,11 +25,13 @@ newTalent{
 	cooldown = 7,
 	vim = 24,
 	tactical = { ATTACKAREA = 2 },
-	range = function(self, t) return math.ceil(3 + self:getTalentLevel(t)) end,
+	radius = function(self, t)
+		return math.ceil(3 + self:getTalentLevel(t))
+	end,
 	direct_hit = true,
 	requires_target = true,
 	action = function(self, t)
-		local tg = {type="cone", range=0, radius=self:getTalentRange(t), talent=t}
+		local tg = {type="cone", range=0, radius=self:getTalentRadius(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.CORRUPTED_BLOOD, {
@@ -83,10 +85,12 @@ newTalent{
 	cooldown = 12,
 	vim = 30,
 	tactical = { ATTACKAREA = 2, DISABLE = 2 },
-	range = function(self, t) return 2 + self:getTalentLevelRaw(t) end,
+	radius = function(self, t)
+		return 2 + self:getTalentLevelRaw(t)
+	end,
 	requires_target = true,
 	action = function(self, t)
-		local tg = {type="ball", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
+		local tg = {type="ball", range=0, radius=self:getTalentRadius(t), selffire=false, talent=t}
 		local grids = self:project(tg, self.x, self.y, DamageType.BLOOD_BOIL, self:spellCrit(self:combatTalentSpellDamage(t, 28, 190)))
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_blood", {radius=tg.radius})
 		game:playSoundNear(self, "talents/slime")

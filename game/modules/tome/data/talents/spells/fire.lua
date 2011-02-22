@@ -30,10 +30,14 @@ newTalent{
 	reflectable = true,
 	proj_speed = 20,
 	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 25, 290) end,
-	action = function(self, t)
+	target = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_fire", trail="firetrail"}}
 		if self:getTalentLevel(t) >= 5 then tg.type = "beam" end
+		return tg
+	end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 25, 290) end,
+	action = function(self, t)
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local grids = nil
@@ -79,12 +83,18 @@ newTalent{
 	mana = 30,
 	cooldown = 18,
 	tactical = { ATTACK = 1, DISABLE = 3 },
-	range = 1,
+	range = 0,
+	radius = function(self, t)
+		return 3 + self:getTalentLevelRaw(t)
+	end,
 	requires_target = true,
+	target = function(self, t)
+		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
+	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 120) end,
 	getStunDuration = function(self, t) return self:getTalentLevelRaw(t) + 2 end,
 	action = function(self, t)
-		local tg = {type="cone", range=0, radius=3 + self:getTalentLevelRaw(t), friendlyfire=false, talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.FLAMESHOCK, {dur=t.getStunDuration(self, t), dam=self:spellCrit(t.getDamage(self, t))})
@@ -126,13 +136,18 @@ newTalent{
 	cooldown = 8,
 	tactical = { ATTACKAREA = 2 },
 	range = 7,
+	radius = function(self, t)
+		return 1 + self:getTalentLevelRaw(t)
+	end,
 	proj_speed = 4,
 	direct_hit = true,
 	requires_target = true,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=self:spellFriendlyFire(), talent=t, display={particle="bolt_fire", trail="firetrail"}}
+	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 28, 280) end,
-	getRadius = function(self, t) return 1 + self:getTalentLevelRaw(t) end,
 	action = function(self, t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=t.getRadius(self, t), friendlyfire=self:spellFriendlyFire(), talent=t, display={particle="bolt_fire", trail="firetrail"}}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:projectile(tg, x, y, DamageType.FIRE, self:spellCrit(t.getDamage(self, t)), function(self, tg, x, y, grids)
@@ -144,7 +159,7 @@ newTalent{
 					tg.radius,
 					5, nil,
 					{type="inferno"},
-					nil, self:spellFriendlyFire()
+					nil, tg.selffire
 				)
 			end
 		end)
@@ -153,7 +168,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		local radius = t.getRadius(self, t)
+		local radius = self:getTalentRadius(t)
 		return ([[Conjures up a bolt of fire moving toward the target that explodes into a flash of fire doing %0.2f fire damage in a radius of %d.
 		The damage will increase with the Magic stat]]):
 		format(damDesc(self, DamageType.FIRE, damage), radius)
@@ -170,13 +185,16 @@ newTalent{
 	cooldown = 30,
 	tactical = { ATTACKAREA = 3 },
 	range = 10,
+	radius = 5,
 	direct_hit = true,
 	requires_target = true,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
+	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 80) end,
 	getDuration = function(self, t) return 5 + self:getTalentLevel(t) end,
 	action = function(self, t)
-		local radius = 5
-		local tg = {type="ball", range=self:getTalentRange(t), radius=radius}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local _ _, x, y = self:canProject(tg, x, y)
@@ -184,7 +202,7 @@ newTalent{
 		game.level.map:addEffect(self,
 			x, y, t.getDuration(self, t),
 			DamageType.INFERNO, t.getDamage(self, t),
-			radius,
+			self:getTalentRadius(t),
 			5, nil,
 			{type="inferno"},
 			nil, self:spellFriendlyFire()
@@ -196,8 +214,9 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[Raging flames burn foes and allies alike doing %0.2f fire damage in a radius of 5 each turn for %d turns.
+		local radius = self:getTalentRadius(t)
+		return ([[Raging flames burn foes and allies alike doing %0.2f fire damage in a radius of %d each turn for %d turns.
 		The damage will increase with the Magic stat]]):
-		format(damDesc(self, DamageType.FIRE, damage), duration)
+		format(damDesc(self, DamageType.FIRE, damage), radius, duration)
 	end,
 }

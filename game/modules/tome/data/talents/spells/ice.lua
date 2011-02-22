@@ -26,11 +26,15 @@ newTalent{
 	cooldown = 3,
 	tactical = { ATTACKAREA = 1, ATTACK = 1 },
 	range = 10,
+	radius = 1,
 	proj_speed = 3,
 	requires_target = true,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t}
+	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 18, 200) end,
 	action = function(self, t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=1, talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local grids = self:project(tg, x, y, function(px, py)
@@ -62,10 +66,14 @@ newTalent{
 	cooldown = 10,
 	requires_target = true,
 	tactical = { ATTACKAREA = 2, DISABLE = 1 },
-	range = function(self, t) return 1 + self:getTalentLevelRaw(t) end,
+	range = 0,
+	radius = function(self, t) return 1 + self:getTalentLevelRaw(t) end,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRange(t), selffire=false, talent=t}
+	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 180) end,
 	action = function(self, t)
-		local tg = {type="ball", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
+		local tg = self:getTalentTarget(t)
 		local grids = self:project(tg, self.x, self.y, DamageType.COLDNEVERMOVE, {dur=4, dam=self:spellCrit(t.getDamage(self, t))})
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_ice", {radius=tg.radius})
 		game:playSoundNear(self, "talents/ice")

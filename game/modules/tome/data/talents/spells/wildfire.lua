@@ -27,10 +27,14 @@ newTalent{
 	tactical = { ATTACKAREA = 2, DISABLE = 2, ESCAPE = 2 },
 	direct_hit = true,
 	requires_target = true,
-	range = function(self, t) return 1 + self:getTalentLevelRaw(t) end,
+	range = 0,
+	radius = function(self, t) return 1 + self:getTalentLevelRaw(t) end,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
+	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 28, 180) end,
 	action = function(self, t)
-		local tg = {type="ball", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
+		local tg = self:getTalentTarget(t)
 		local grids = self:project(tg, self.x, self.y, DamageType.FIREKNOCKBACK, {dist=3, dam=self:spellCrit(t.getDamage(self, t))})
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_fire", {radius=tg.radius})
 		if self:attr("burning_wake") then

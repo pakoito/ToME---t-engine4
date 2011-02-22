@@ -97,6 +97,7 @@ newEntity{ base = "BASE_NPC_STORM_DRAKE",
 
 	ai = "tactical",
 	ai_tactic = resolvers.tactic"melee",
+	ai_status = {ally_compassion = 0},
 
 	summon = {
 		{type="dragon", name="storm drake", number=1, hasxp=false},

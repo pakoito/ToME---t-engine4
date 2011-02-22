@@ -25,11 +25,15 @@ newTalent{
 	cooldown = 20,
 	vim = 30,
 	range = 10,
+	radius = 2,
 	tactical = { DISABLE = 2 },
 	direct_hit = true,
 	requires_target = true,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t}
+	end,
 	action = function(self, t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=2, talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, function(tx, ty)
@@ -56,11 +60,15 @@ newTalent{
 	cooldown = 20,
 	vim = 30,
 	range = 10,
+	radius = 2,
 	tactical = { DISABLE = 2 },
 	direct_hit = true,
 	requires_target = true,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t}
+	end,
 	action = function(self, t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=2, talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, function(tx, ty)
@@ -87,11 +95,15 @@ newTalent{
 	cooldown = 20,
 	vim = 30,
 	range = 10,
+	radius = 2,
 	tactical = { DISABLE = 2 },
 	direct_hit = true,
 	requires_target = true,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t}
+	end,
 	action = function(self, t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=2, talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, function(tx, ty)
@@ -121,8 +133,11 @@ newTalent{
 	no_npc_use = true,
 	direct_hit = true,
 	requires_target = true,
+	target = function(self, t)
+		return {type="hit", range=self:getTalentRange(t), talent=t}
+	end,
 	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, function(tx, ty)

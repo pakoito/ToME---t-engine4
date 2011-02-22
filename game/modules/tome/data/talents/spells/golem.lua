@@ -30,12 +30,15 @@ newTalent{
 	range = 5,
 	stamina = 5,
 	requires_target = true,
+	target = function(self, t)
+		return {type="bolt", range=self:getTalentRange(t), min_range=2}
+	end,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.8, 1.6) end,
 	tactical = { DEFEND = 2, DISABLE = 1 },
 	action = function(self, t)
 		if self:attr("never_move") then game.logPlayer(self, "Your golem can not do that currently.") return end
 
-		local tg = {type="hit", range=self:getTalentRange(t)}
+		local tg = self:getTalentTarget(t)
 		local olds = game.target.source_actor
 		game.target.source_actor = self
 		local x, y, target = self:getTarget(tg)
@@ -47,6 +50,10 @@ newTalent{
 
 		local l = line.new(self.x, self.y, x, y)
 		local lx, ly = l()
+		if game.level.map:checkAllEntities(lx, ly, "block_move", self) then
+			game.logPlayer(self, "You are too close to build up momentum!")
+			return
+		end
 		local tx, ty = self.x, self.y
 		lx, ly = l()
 		while lx and ly do
@@ -88,11 +95,17 @@ newTalent{
 		return 20 - self:getTalentLevelRaw(t) * 2
 	end,
 	range = 10,
+	radius = function(self, t)
+		return self:getTalentLevelRaw(t) / 2
+	end,
 	stamina = 5,
 	requires_target = true,
+	target = function(self, t)
+		return {type="ball", radius=self:getTalentRadius(t), range=self:getTalentRange(t), friendlyfire=false}
+	end,
 	tactical = { PROTECT = 3 },
 	action = function(self, t)
-		local tg = {type="ball", radius=self:getTalentLevelRaw(t) / 2, range=self:getTalentRange(t)}
+		local tg = self:getTalentTarget(t)
 		local olds = game.target.source_actor
 		game.target.source_actor = self
 		local x, y = self:getTarget(tg)
@@ -143,6 +156,10 @@ newTalent{
 
 		local l = line.new(self.x, self.y, x, y)
 		local lx, ly = l()
+		if game.level.map:checkAllEntities(lx, ly, "block_move", self) then
+			game.logPlayer(self, "You are too close to build up momentum!")
+			return
+		end
 		local tx, ty = self.x, self.y
 		lx, ly = l()
 		while lx and ly do
@@ -184,8 +201,12 @@ newTalent{
 	points = 5,
 	cooldown = 15,
 	range = 5,
+	radius = 2,
 	stamina = 5,
 	requires_target = true,
+	target = function(self, t)
+		return {type="ballbolt", radius=self:getTalentRadius(t), selffire=false, range=self:getTalentRange(t), min_range=2}
+	end,
 	getGolemDamage = function(self, t)
 		return self:combatTalentWeaponDamage(t, 0.4, 1.1)
 	end,
@@ -194,7 +215,7 @@ newTalent{
 	action = function(self, t)
 		if self:attr("never_move") then game.logPlayer(self, "Your golem can not do that currently.") return end
 
-		local tg = {type="ball", radius=2, friendlyfire=false, range=self:getTalentRange(t)}
+		local tg = self:getTalentTarget(t)
 		local olds = game.target.source_actor
 		game.target.source_actor = self
 		local x, y, target = self:getTarget(tg)
@@ -204,6 +225,10 @@ newTalent{
 
 		local l = line.new(self.x, self.y, x, y)
 		local lx, ly = l()
+		if game.level.map:checkAllEntities(lx, ly, "block_move", self) then
+			game.logPlayer(self, "You are too close to build up momentum!")
+			return
+		end
 		local tx, ty = self.x, self.y
 		lx, ly = l()
 		while lx and ly do
@@ -217,7 +242,7 @@ newTalent{
 		if self.ai_target then self.ai_target.target = target end
 
 		-- Attack & daze
-		self:project({type="ball", radius=2, friendlyfire=false}, tx, ty, function(xx, yy)
+		self:project(tg, tx, ty, function(xx, yy)
 			if xx == self.x and yy == self.y then return end
 			local target = game.level.map(xx, yy, Map.ACTOR)
 			if target and self:attackTarget(target, nil, t.getGolemDamage(self, t), true) then
@@ -254,10 +279,13 @@ newTalent{
 	range = 7,
 	mana = 10,
 	requires_target = true,
+	target = function(self, t)
+		return {type="beam", range=self:getTalentRange(t), talent=t}
+	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 25, 220) end,
 	tactical = { ATTACK = 3 },
 	action = function(self, t)
-		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 
@@ -338,29 +366,41 @@ newTalent{
 	require = spells_req3,
 	points = 5,
 	cooldown = 15,
-	range = function(self, t) return 3 + self:getTalentLevel(t) / 2 end,
+	range = 0,
+	radius = function(self, t)
+		return 3 + self:getTalentLevel(t) / 2
+	end,
 	mana = 20,
 	requires_target = true,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), selffire=false, radius=self:getTalentRadius(t), talent=t}
+	end,
 	tactical = { ATTACKAREA = 2 },
+	getDamage = function(self, t)
+		return self:combatTalentSpellDamage(t, 12, 120)
+	end,
 	action = function(self, t)
-		local tg = {type="ball", range=0, friendlyfire=false, radius=self:getTalentRange(t), talent=t}
-		local done = {}
-		self:project(tg, self.x, self.y, function(px, py)
+		local tg = self:getTalentTarget(t)
+		local tgts = {}
+		self:project(tg, self.x, self.y, function(px, py, tg, self)
 			local target = game.level.map(px, py, Map.ACTOR)
-			if not target then return end
-			local tx, ty = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
-			if tx and ty and target:canBe("teleport") and self:reactionToward(target) < 0 and not done[target] then
-				target:move(tx, ty, true)
-				game.logSeen(target, "%s is pulled by %s!", target.name:capitalize(), self.name)
-				DamageType:get(DamageType.ARCANE).projector(self, tx, ty, DamageType.ARCANE, self:combatTalentSpellDamage(t, 12, 120))
-				done[target] = true
+			if target then
+				tgts[#tgts+1] = {actor=target, sqdist=core.fov.distance(self.x, self.y, px, py)}
 			end
 		end)
+		table.sort(tgts, "sqdist")
+		for i, target in ipairs(tgts) do
+			target.actor:pull(self.x, self.y, tg.radius)
+			game.logSeen(target.actor, "%s is pulled by %s!", target.actor.name:capitalize(), self.name)
+			DamageType:get(DamageType.ARCANE).projector(self, target.actor.x, target.actor.y, DamageType.ARCANE, t.getDamage(self, t))
+		end
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your golem pulls all foes around toward itself, also dealing %0.2f arcane damage.]]):
-		format(self:combatTalentSpellDamage(t, 12, 120))
+		local rad = self:getTalentRadius(t)
+		local dam = t.getDamage(self, t)
+		return ([[Your golem pulls all foes within %d toward itself, also dealing %0.2f arcane damage.]]):
+		format(rad, dam)
 	end,
 }
 
@@ -371,16 +411,20 @@ newTalent{
 	points = 5,
 	mana = 60,
 	cooldown = 15,
+	range = 0,
+	radius = 3,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
+	end,
 	tactical = { ATTACKAREA = 2 },
 	action = function(self, t)
 		local duration = 5 + self:getTalentLevel(t)
-		local radius = 3
 		local dam = self:combatTalentSpellDamage(t, 12, 120)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			self.x, self.y, duration,
 			DamageType.GOLEM_FIREBURN, dam,
-			radius,
+			self:getTalentRadius(t),
 			5, nil,
 			engine.Entity.new{alpha=100, display='', color_br=200, color_bg=60, color_bb=30},
 			function(e)

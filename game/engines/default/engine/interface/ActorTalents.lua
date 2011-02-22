@@ -507,6 +507,25 @@ function _M:getTalentRange(t)
 	return t.range
 end
 
+--- Returns the radius of a talent
+function _M:getTalentRadius(t)
+	if not t.radius then return 0 end
+	if type(t.radius) == "function" then return t.radius(self, t) end
+	return t.radius
+end
+
+--- Returns the target type of a talent
+function _M:getTalentTarget(t)
+	if type(t.target) == "function" then return t.target(self, t) end
+	return t.target
+end
+
+-- Returns whether the talent needs a target or not
+function _M:getTalentRequiresTarget(t)
+	if type(t.requires_target) == "function" then return t.requires_target(self, t) end
+	return t.requires_target
+end
+
 --- Returns the projectile speed of a talent
 function _M:getTalentProjectileSpeed(t)
 	if not t.proj_speed then return nil end

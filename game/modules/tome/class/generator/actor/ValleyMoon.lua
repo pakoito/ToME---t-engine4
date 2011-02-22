@@ -54,7 +54,7 @@ function _M:tick()
 		game.logSeen(_M.limmir, "Limmir summons a blast of holy light!")
 		local rad = 2
 		local dam = 50 + (800 - self.level.turn_counter / 10) / 7
-		local grids = _M.limmir:project({type="ball", radius=rad, friendlyfire=false}, _M.limmir.x, _M.limmir.y, DamageType.HOLY_LIGHT, dam)
+		local grids = _M.limmir:project({type="ball", radius=rad, selffire=false}, _M.limmir.x, _M.limmir.y, DamageType.HOLY_LIGHT, dam)
 		game.level.map:particleEmitter(_M.limmir.x, _M.limmir.y, rad, "sunburst", {radius=rad, grids=grids, tx=_M.limmir.x, ty=_M.limmir.y})
 	end
 end

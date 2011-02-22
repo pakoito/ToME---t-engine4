@@ -135,14 +135,18 @@ newTalent{
 	cooldown = 30,
 	tactical = { ATTACKAREA = 2, DISABLE = 3 },
 	range = 10,
+	radius = function(self, t)
+		return 2 + (self:getTalentLevel(t)/2)
+	end,
 	direct_hit = true,
 	requires_target = true,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
+	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 70) end,
 	getDuration = function(self, t) return 3 + self:getTalentLevel(t) end,
-	getRadius = function(self, t) return 2 + (self:getTalentLevel(t)/2) end,
 	action = function(self, t)
-		local radius = t.getRadius(self, t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=radius}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local _ _, x, y = self:canProject(tg, x, y)
@@ -150,7 +154,7 @@ newTalent{
 		game.level.map:addEffect(self,
 			x, y, t.getDuration(self, t),
 			DamageType.PHYSICAL_STUN, t.getDamage(self, t),
-			radius,
+			self:getTalentRadius(t),
 			5, nil,
 			{type="quake"},
 			nil, self:spellFriendlyFire()
@@ -161,7 +165,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		local radius = t.getRadius(self, t)
+		local radius = self:getTalentRadius(t)
 		local duration = t.getDuration(self, t)
 		return ([[Causes a violent earthquake that deals %0.2f physical damage in a radius of %d each turn for %d turns and potentially stuns all creatures it affects.
 		The damage will increase with the Magic stat]]):

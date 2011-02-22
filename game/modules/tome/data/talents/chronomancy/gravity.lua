@@ -47,14 +47,19 @@ newTalent{
 	points = 5,
 	paradox = 10,
 	cooldown = 10,
-	tactical = { ATTACK = 2, DISABLE = 2 },
+	tactical = { ATTACKAREA = 2, DISABLE = 2 },
 	range = 6,
+	radius = function(self, t)
+		return 2 + math.floor(self:getTalentLevel(t) / 3)
+	end,
 	direct_hit = true,
 	requires_target = true,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
+	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 170)*getParadoxModifier(self, pm) end,
-	getRadius = function (self, t) return 2 + math.floor(self:getTalentLevel(t) / 3) end,
 	action = function(self, t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=t.getRadius(self, t)}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		x, y = checkBackfire(self, x, y)
@@ -74,7 +79,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		local radius = t.getRadius(self, t)
+		local radius = self:getTalentRadius(t)
 		return ([[Creates a gravity spike in a radius of %d moving all targets towards the spells center and inflicting %0.2f physical damage.
 		The damage will scale with your Paradox and Magic Stat.]]):format(radius, damDesc(self, DamageType.PHYSICAL, t.getDamage(self, t)))
 	end,
@@ -88,12 +93,17 @@ newTalent{
 	paradox = 12,
 	cooldown = 12,
 	tactical = { ATTACKAREA = 2, ESCAPE = 2 },
-	range = 1,
+	range = 0,
+	radius = function(self, t)
+		return 4 + math.floor(self:getTalentLevelRaw (t)/2)
+	end,
 	requires_target = true,
+	target = function(self, t)
+		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), friendlyfire=false, talent=t}
+	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 170)*getParadoxModifier(self, pm) end,
-	getRadius = function (self, t) return 4 + math.floor(self:getTalentLevelRaw (t)/2) end,
 	action = function(self, t)
-		local tg = {type="cone", range=0, radius=t.getRadius(self, t), friendlyfire=false, talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.PHYSICAL, self:spellCrit(t.getDamage(self, t)))
@@ -104,7 +114,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		local radius = t.getRadius (self, t)
+		local radius = self:getTalentRadius(t)
 		return ([[Sends out a wave of repulsion in a %d radius cone, dealing %0.2f physical damage and knocking back creatures caught in the area.  Pinned creatures are immune to this knockback.
 		The damage will scale with your Paradox and Magic stat.]]):
 		format(radius, damDesc(self, DamageType.PHYSICAL, t.getDamage(self, t)))
@@ -119,18 +129,23 @@ newTalent{
 	points = 5,
 	paradox = 20,
 	cooldown = 30,
-	tactical = { ATTACK = 2, DISABLE = 2 },
+	tactical = { ATTACKAREA = 2, DISABLE = 2 },
 	range = 6,
+	radius = function(self, t)
+		return 2 + math.floor(self:getTalentLevel(t) / 3)
+	end,
 	direct_hit = true,
 	requires_target = true,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
+	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 80)*getParadoxModifier(self, pm) end,
 	getDuration = function (self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
-	getRadius = function (self, t) return 2 + math.floor(self:getTalentLevel(t) / 3) end,
 	action = function(self, t)
 		local duration = t.getDuration(self,t)
-		local radius = t.getRadius(self, t)
+		local radius = self:getTalentRadius(t)
 		local dam = t.getDamage(self, t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=radius}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		x, y = checkBackfire(self, x, y)
@@ -150,7 +165,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
-		local radius = t.getRadius(self, t)
+		local radius = self:getTalentRadius(t)
 		return ([[Increases local gravity, doing %0.2f physical damage with a chance to pin in a radius of %d each turn for %d turns.
 		The damage will scale with your Paradox and Magic stat]]):format(damDesc(self, DamageType.PHYSICAL, damage), radius, duration)
 	end,

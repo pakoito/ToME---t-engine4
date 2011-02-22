@@ -170,8 +170,8 @@ newInscription{
 	tactical = { BUFF = 2 },
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		self:project({type="ball", range=0, friendlyfire=true, radius=data.range + data.inc_stat}, self.x, self.y, engine.DamageType.LITE, 1)
-		self:project({type="ball", range=0, friendlyfire=true, radius=data.range + data.inc_stat}, self.x, self.y, engine.DamageType.BREAK_STEALTH, 1)
+		self:project({type="ball", range=0, selffire=true, radius=data.range + data.inc_stat}, self.x, self.y, engine.DamageType.LITE, 1)
+		self:project({type="ball", range=0, selffire=true, radius=data.range + data.inc_stat}, self.x, self.y, engine.DamageType.BREAK_STEALTH, 1)
 		return true
 	end,
 	info = function(self, t)
@@ -515,13 +515,14 @@ newInscription{
 	tactical = { ATTACKAREA = 1 },
 	requires_target = true,
 	direct_hit = true,
-	range = function(self, t)
+	range = 0,
+	radius = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return data.range
 	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		local tg = {type="ball", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
+		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 		self:projectile(tg, self.x, self.y, DamageType.ACID, data.power + data.inc_stat)
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_acid", {radius=tg.radius})
 		game:playSoundNear(self, "talents/slime")

@@ -25,14 +25,19 @@ newTalent{
 	points = 5,
 	mana = 5,
 	cooldown = 14,
-	tactical = { DISABLE = 2 },
-	getRadius = function(self, t) return 5 + self:getTalentLevel(t) end,
+	range = 0,
+	radius = function(self, t) return 5 + self:getTalentLevel(t) end,
+	tactical = { DISABLE = function(self, t)
+		if self:getTalentLevel(t) >= 3 then
+			return 2
+		end
+	end},
 	getBlindPower = function(self, t) return 3 + self:getTalentLevel(t) end,
 	action = function(self, t)
-		local tg = {type="ball", range=0, friendlyfire=true, radius=t.getRadius(self, t), talent=t}
+		local tg = {type="ball", range=self:getTalentRange(t), selffire=true, radius=self:getTalentRadius(t), talent=t}
 		self:project(tg, self.x, self.y, DamageType.LITE, 1)
 		if self:getTalentLevel(t) >= 3 then
-			tg.friendlyfire = false
+			tg.selffire= false
 			self:project(tg, self.x, self.y, DamageType.BLIND, t.getBlindPower(self, t))
 		end
 		game:playSoundNear(self, "talents/heal")

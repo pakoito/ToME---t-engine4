@@ -76,10 +76,15 @@ newTalent{
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,
+	target = function(self, t)
+		return {type="beam", range=self:getTalentRange(t), friendlyfire=false, talent=t}
+	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 200) * getParadoxModifier(self, pm) end,
-	getRange = function(self, t) return 5 + (self:getTalentLevelRaw(t)) end,
+	range = function(self, t)
+		return 5 + (self:getTalentLevelRaw(t))
+	end,
 	action = function(self, t)
-		local tg = {type="beam", range=t.getRange(self, t), friendlyfire=false, talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		if self:hasLOS(x, y) and not game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then
@@ -100,7 +105,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		local range = t.getRange(self, t)
+		local range = self:getTalentRange(t)
 		return ([[Violently fold the space between yourself and another point within a range of %d.  You move to the selected point and leave a temporal wake behind, inflicting %0.2f temporal damage to everything in the path.
 		The damage will scale with your Paradox and the Magic stat and the range will increase with the talent level.]]):
 		format(range, damDesc(self, DamageType.TEMPORAL, damage))
@@ -117,10 +122,14 @@ newTalent{
 	tactical = { ATTACK = 2 },
 	range = 10,
 	direct_hit = true,
-	requires_target = true,	on_pre_use = function(self, t, silent) if not self:hasDualWeapon() then if not silent then game.logPlayer(self, "You require two weapons to use this talent.") end return false end return true end,
+	requires_target = true,
+	target = function(self, t)
+		return {type="hit", range=self:getTalentRange(t), talent=t}
+	end,
+	on_pre_use = function(self, t, silent) if not self:hasDualWeapon() then if not silent then game.logPlayer(self, "You require two weapons to use this talent.") end return false end return true end,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1.1, 1.9) * getParadoxModifier(self, pm) end,
 	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		x, y = checkBackfire(self, x, y)

@@ -76,12 +76,25 @@ function _M:display(dispx, dispy)
 	local initial_dir = lx and coord_to_dir[lx - self.source_actor.x][ly - self.source_actor.y] or 5
 	local stopx, stopy = self.source_actor.x, self.source_actor.y
 	local stop_radius_x, stop_radius_y = stopx, stopy
+	local blocked = false
 	while lx and ly do
 		if s == self.sb then
 			stop_radius_x, stop_radius_y = stopx, stopy
 			stopx, stopy = lx, ly
 		end
-		if self.target_type.block_path and self.target_type:block_path(lx, ly) then s = self.sr end
+		if self.target_type.block_path and self.target_type:block_path(lx, ly) then
+			s = self.sr
+			blocked = true
+		end
+		if self.target_type.min_range then
+			-- Check if we should be "red"
+			if core.fov.distance(self.source_actor.x, self.source_actor.y, lx, ly) < self.target_type.min_range then
+				s = self.sr
+			-- Check if we were only "red" because of minimum distance
+			elseif s == self.sr and not blocked then
+				s = self.sb
+			end
+		end
 		s:toScreen(self.display_x + (lx - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (ly - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
 		lx, ly = l()
 	end
@@ -134,6 +147,7 @@ function _M:getType(t)
 	-- Default type def
 	local target_type = {
 		range=20,
+		selffire=true,
 		friendlyfire=true,
 		block_path = function(typ, lx, ly)
 			if not typ.no_restrict then

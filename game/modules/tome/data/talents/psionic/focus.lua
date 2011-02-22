@@ -50,7 +50,7 @@ newTalent{
 		--local gem_level = getGemLevel(self)
 		--local dam = (5 + self:getTalentLevel(t) * self:getWil(40))*(1 + 0.3*gem_level)
 		local dam = t.getDamage(self, t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=0, friendlyfire=false, talent=t}
+		local tg = {type="ball", range=self:getTalentRange(t), radius=0, selffire=false, talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.PHYSICAL, self:spellCrit(rng.avg(0.8*dam, dam)), {type="flame"})
@@ -79,7 +79,8 @@ newTalent{
 	end,
 	psi = 20,
 	tactical = { ATTACK = 2 },
-	range = function(self, t)
+	range = 0,
+	radius = function(self, t)
 		local r = 5
 		local gem_level = getGemLevel(self)
 		local mult = (1 + 0.02*gem_level*(self:getTalentLevel(self.T_REACH)))
@@ -90,40 +91,23 @@ newTalent{
 		local gem_level = getGemLevel(self)
 		return self:combatTalentIntervalDamage(t, "wil", 21, 281)*(1 + 0.3*gem_level)
 	end,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), friendlyfire=false}
+	end,
 	action = function(self, t)
-		local gem_level = getGemLevel(self)
-		--local dam = (20 + self:getTalentLevel(t) * self:getWil(40))*(1 + 0.3*gem_level)
 		local dam = t.getDamage(self, t)
-		local tgts = {}
-		local grids = core.fov.circle_grids(self.x, self.y, self:getTalentRange(t), true)
-		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
-			local a = game.level.map(x, y, Map.ACTOR)
-			if a and self:reactionToward(a) < 0 then
-				tgts[#tgts+1] = a
-			end
-		end end
-
-		-- Burn each target
-		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
-		local targ_num = #tgts
-		for i = 1, targ_num do
-			if #tgts <= 0 then break end
-			local a, id = rng.table(tgts)
-			table.remove(tgts, id)
-			self:project(tg, a.x, a.y, DamageType.FIREBURN, {dur=10, initial=0, dam=(20 + self:getTalentLevel(t) * self:getWil(40))*(1 + 0.3*gem_level)})
-			game.level.map:particleEmitter(a.x, a.y, tg.radius, "ball_fire", {radius=1})
-		end
-
+		local tg = self:getTalentTarget(t)
+		self:project(tg, self.x, self.y, DamageType.FIREBURN, {dur=10, initial=0, dam=dam}, {type="ball_fire", args={radius=1}})
 		return true
 	end,
 	info = function(self, t)
-		local range = self:getTalentRange(t)
+		local radius = self:getTalentRadius(t)
 		--local gem_level = getGemLevel(self)
 		--local dam = (20 + self:getTalentLevel(t) * self:getWil(40))*(1 + 0.3*gem_level)
 		local dam = t.getDamage(self, t)
-		return ([[Focus energies on all targets within %d squares, setting them ablaze. Does %d damage over ten turns.
+		return ([[Focus energies on all foes within %d squares, setting them ablaze. Does %d damage over ten turns.
 		Mindslayers do not do this sort of ranged attack naturally. The use of a telekinetically-wielded gem as a focus will improve the effects considerably.]]):
-		format(range, dam)
+		format(radius, dam)
 	end,
 }
 

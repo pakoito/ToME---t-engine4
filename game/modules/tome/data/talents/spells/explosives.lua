@@ -27,8 +27,21 @@ newTalent{
 	range = function(self, t)
 		return math.ceil(5 + self:getDex(6))
 	end,
+	radius = function(self, t)
+		return 1+self:getTalentLevelRaw(self.T_EXPLOSION_EXPERT)
+	end,
 	direct_hit = true,
 	requires_target = true,
+	target = function(self, t)
+		local ammo = self:hasAlchemistWeapon()
+		-- Using friendlyfire, although this could affect escorts etc.
+		local friendlyfire = true
+		local prot = self:getTalentLevelRaw(self.T_ALCHEMIST_PROTECTION) * 20
+		if prot > 0 then
+			friendlyfire = 100 - prot
+		end
+		return {type="ball", range=self:getTalentRange(t)+(ammo and ammo.alchemist_bomb and ammo.alchemist_bomb.range or 0), radius=self:getTalentRadius(t), friendlyfire=friendlyfire, talent=t}
+	end,
 	tactical = { ATTACKAREA = 2 },
 	computeDamage = function(self, t, ammo)
 		local inc_dam = 0
@@ -54,7 +67,7 @@ newTalent{
 			return
 		end
 
-		local tg = {type="ball", range=self:getTalentRange(t)+(ammo.alchemist_bomb.range or 0), radius=1+self:getTalentLevelRaw(self.T_EXPLOSION_EXPERT), talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 
@@ -62,6 +75,7 @@ newTalent{
 		if not ammo then return end
 
 		local dam, damtype, particle = t.computeDamage(self, t, ammo)
+		dam = self:spellCrit(dam)
 		local prot = self:getTalentLevelRaw(self.T_ALCHEMIST_PROTECTION) * 0.2
 		local golem
 		if self.alchemy_golem then
@@ -79,7 +93,7 @@ newTalent{
 			if d == 0 then return end
 
 			local target = game.level.map(tx, ty, Map.ACTOR)
-			dam_done = dam_done + DamageType:get(damtype).projector(self, tx, ty, damtype, self:spellCrit(d), tmp)
+			dam_done = dam_done + DamageType:get(damtype).projector(self, tx, ty, damtype, d, tmp)
 			if ammo.alchemist_bomb.splash then
 				DamageType:get(DamageType[ammo.alchemist_bomb.splash.type]).projector(self, tx, ty, DamageType[ammo.alchemist_bomb.splash.type], ammo.alchemist_bomb.splash.dam)
 			end
@@ -173,8 +187,12 @@ newTalent{
 	range = function(self, t)
 		return math.ceil(5 + self:getDex(6))
 	end,
+	radius = 2,
 	direct_hit = true,
 	requires_target = true,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t)+(ammo.alchemist_bomb.range or 0), radius=self:getTalentRadius(t), talent=t}
+	end,
 	tactical = { ATTACKAREA = 2, DISABLE = 2 },
 	computeDamage = function(self, t, ammo)
 		local inc_dam = 0
@@ -192,7 +210,7 @@ newTalent{
 			return
 		end
 
-		local tg = {type="ball", range=self:getTalentRange(t)+(ammo.alchemist_bomb.range or 0), radius=2, talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 
@@ -201,6 +219,7 @@ newTalent{
 		if not ammo then return end
 
 		local dam, damtype, particle = t.computeDamage(self, t, ammo)
+		dam = self:spellCrit(dam)
 		local prot = self:getTalentLevelRaw(self.T_ALCHEMIST_PROTECTION) * 0.2
 		local golem
 		if self.alchemy_golem then
@@ -218,7 +237,7 @@ newTalent{
 			if d == 0 then return end
 
 			local target = game.level.map(tx, ty, Map.ACTOR)
-			dam_done = dam_done + DamageType:get(damtype).projector(self, tx, ty, damtype, self:spellCrit(d), tmp)
+			dam_done = dam_done + DamageType:get(damtype).projector(self, tx, ty, damtype, d, tmp)
 			if ammo.alchemist_bomb.splash then
 				DamageType:get(DamageType[ammo.alchemist_bomb.splash.type]).projector(self, tx, ty, DamageType[ammo.alchemist_bomb.splash.type], ammo.alchemist_bomb.splash.dam)
 			end

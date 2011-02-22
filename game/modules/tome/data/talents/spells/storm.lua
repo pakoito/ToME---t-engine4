@@ -25,12 +25,18 @@ newTalent{
 	mana = 12,
 	cooldown = 8,
 	tactical = { ATTACKAREA = 2, DISABLE =1 },
+	range = 0,
+	radius = function(self, t)
+		return math.floor(2 + self:getTalentLevel(t) * 0.7)
+	end,
 	direct_hit = true,
 	requires_target = true,
-	range = function(self, t) return math.floor(2 + self:getTalentLevel(t) * 0.7) end,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
+	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 28, 170) end,
 	action = function(self, t)
-		local tg = {type="ball", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
+		local tg = self:getTalentTarget(t)
 		local dam = self:spellCrit(t.getDamage(self, t))
 		self:project(tg, self.x, self.y, DamageType.LIGHTNING_DAZE, {daze=75, dam=rng.avg(dam / 3, dam, 3)})
 		local x, y = self.x, self.y

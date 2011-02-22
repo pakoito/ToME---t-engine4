@@ -151,13 +151,16 @@ newTalent{
 	cooldown = 15,
 	negative = 15,
 	tactical = { DISABLE = 3 },
-	range = 3,
+	radius = 3,
 	direct_hit = true,
 	requires_target = true,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, selffire=false}
+	end,
 	getConfuseDuration = function(self, t) return math.floor(self:getTalentLevel(t) + self:getCun(5)) + 2 end,
 	getConfuseEfficency = function(self, t) return 50 + self:getTalentLevelRaw(t)*10 end,
 	action = function(self, t)
-		local tg = {type="ball", range=0, radius=self:getTalentRange(t), talent=t, friendlyfire=false}
+		local tg = self:getTalentTarget(t)
 		self:project(tg, self.x, self.y, DamageType.CONFUSION, {
 			dur = t.getConfuseDuration(self, t),
 			dam = t.getConfuseEfficency(self, t)
@@ -169,7 +172,7 @@ newTalent{
 		local duration = t.getConfuseDuration(self, t)
 		return ([[Let out a mental cry that shatters the will of your targets, confusing them for %d turns.
 		The duration will improve with the Cunning stat.]]):
-		format(math.floor(self:getTalentLevel(t) + self:getCun(5)) + 2)
+		format(duration)
 	end,
 }
 

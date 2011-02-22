@@ -30,9 +30,12 @@ newTalent{
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,
+	target = function(self, t)
+		return {type="beam", range=self:getTalentRange(t), talent=t}
+	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 14, 230) end,
 	action = function(self, t)
-		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.DARKNESS, self:spellCrit(t.getDamage(self, t)))
@@ -59,13 +62,17 @@ newTalent{
 	negative = 15,
 	tactical = { ATTACKAREA = 2 },
 	range = 5,
+	radius = 3,
 	direct_hit = true,
 	requires_target = true,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=self:spellFriendlyFire()}
+	end,
 	getDamageOnSpot = function(self, t) return self:combatTalentSpellDamage(t, 4, 50) end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 5, 120) end,
 	getDuration = function(self, t) return self:getTalentLevel(t) + 2 end,
 	action = function(self, t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=3, friendlyfire=self:spellFriendlyFire()}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local _ _, x, y = self:canProject(tg, x, y)
@@ -74,7 +81,7 @@ newTalent{
 		game.level.map:addEffect(self,
 			x, y, t.getDuration(self, t),
 			DamageType.DARKNESS, t.getDamageOnSpot(self, t),
-			3,
+			self:getTalentRadius(t),
 			5, nil,
 			{type="shadow_zone"},
 			nil, self:spellFriendlyFire()
@@ -105,12 +112,16 @@ newTalent{
 	negative = -20,
 	positive = -10,
 	tactical = { ATTACKAREA = 1 },
-	range = 2,
+	range = 0,
+	radius = 2,
 	direct_hit = true,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, friendlyfire=false}
+	end,
 	getLightDamage = function(self, t) return 10 + self:combatSpellpower(0.2) * self:getTalentLevel(t) end,
 	getDarknessDamage = function(self, t) return 10 + self:combatSpellpower(0.2) * self:getTalentLevel(t) end,
 	action = function(self, t)
-		local tg = {type="ball", range=0, radius=self:getTalentRange(t), talent=t, friendlyfire=false}
+		local tg = self:getTalentTarget(t)
 		local grids = self:project(tg, self.x, self.y, DamageType.LIGHT, self:spellCrit(t.getLightDamage(self, t)))
 		self:project(tg, self.x, self.y, DamageType.DARKNESS, self:spellCrit(t.getDarknessDamage(self, t)))
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "shadow_flash", {radius=tg.radius, grids=grids, tx=self.x, ty=self.y})
@@ -138,12 +149,17 @@ newTalent{
 	negative = 20,
 	tactical = { ATTACKAREA = 2, DISABLE = 2 },
 	range = 6,
+	radius = function(self, t)
+		return 1 + math.floor(self:getTalentLevelRaw(t) / 3)
+	end,
 	direct_hit = true,
 	requires_target = true,
-	getRadius = function(self, t) return 1 + math.floor(self:getTalentLevelRaw(t) / 3) end,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=self:spellFriendlyFire(), talent=t}
+	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 28, 170) end,
 	action = function(self, t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=t.getRadius(self, t), friendlyfire=self:spellFriendlyFire(), talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local grids = self:project(tg, x, y, DamageType.DARKSTUN, self:spellCrit(t.getDamage(self, t)))
@@ -154,7 +170,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local radius = t.getRadius(self, t)
+		local radius = self:getTalentRadius(t)
 		local damage = t.getDamage(self, t)
 		return ([[A star falls into area of radius %d, stunning all for 4 turns and doing %0.2f darkness damage.
 		The damage will increase with the Magic stat.]]):

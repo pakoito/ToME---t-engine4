@@ -1934,7 +1934,7 @@ newEffect{
 		self:removeParticles(eff.particle)
 	end,
 	on_timeout = function(self, eff)
-		self:project({type="ball", radius=eff.radius, friendlyfire=false}, self.x, self.y, function(xx, yy)
+		self:project({type="ball", radius=eff.radius, selffire=false}, self.x, self.y, function(xx, yy)
 			local target = game.level.map(xx, yy, game.level.map.ACTOR)
 			if target and target ~= self and target ~= eff.source and target:canBe("knockback") and (target.never_move or 0) ~= 1 then
 				-- attempt to move target away from self
@@ -2131,7 +2131,7 @@ newEffect{
 	on_gain = function(self, err) return "#Target# is caught inside a Hurricane.", "+Hurricane" end,
 	on_lose = function(self, err) return "The Hurricane around #Target# dissipates.", "-Hurricane" end,
 	on_timeout = function(self, eff)
-		local tg = {type="ball", x=self.x, y=self.y, radius=eff.radius, friendlyfire=false}
+		local tg = {type="ball", x=self.x, y=self.y, radius=eff.radius, selffire=false}
 		local dam = eff.dam
 		eff.src:project(tg, self.x, self.y, DamageType.LIGHTNING, rng.avg(dam / 3, dam, 3))
 		local x, y = self.x, self.y

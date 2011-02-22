@@ -101,9 +101,14 @@ newTalent{
 	points = 5,
 	vim = 18,
 	cooldown = 12,
-	range = 1,
+	range = 0,
+	radius = 1,
 	requires_target = true,
 	tactical = { ATTACK = 2, DISABLE = 1 },
+	target = function(self, t)
+		-- Tries to simulate the acid splash
+		return {type="ballbolt", range=1, radius=self:getTalentRadius(t), selffire=false, talent=t}
+	end,
 	action = function(self, t)
 		local weapon, offweapon = self:hasDualWeapon()
 		if not weapon then
@@ -121,7 +126,9 @@ newTalent{
 
 		-- Acid splash !
 		if hit1 or hit2 then
-			local tg = {type="ball", range=0, radius=1, friendlyfire=false, talent=t, x=target.x, y=target.y}
+			local tg = self:getTalentTarget(t)
+			tg.x = target.x
+			tg.y = target.y
 			self:project(tg, target.x, target.y, DamageType.ACID, self:spellCrit(self:combatTalentSpellDamage(t, 10, 130)))
 		end
 

@@ -61,13 +61,17 @@ newTalent{
 	cooldown = 8,
 	require = techs_dex_req3,
 	range = archery_range,
+	radius = 1,
 	tactical = { ATTACKAREA = 1 },
 	requires_target = true,
+	target = function(self, t)
+		return {type="ball", radius=self:getTalentRadius(t), range=self:getTalentRange(t)}
+	end,
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon("bow") then if not silent then game.logPlayer(self, "You require a bow for this talent.") end return false end return true end,
 	action = function(self, t)
 		if not self:hasArcheryWeapon("bow") then game.logPlayer(self, "You must wield a bow!") return nil end
 
-		local tg = {type="ball", radius=1}
+		local tg = self:getTalentTarget(t)
 		local targets = self:archeryAcquireTargets(tg, {limit_shots=2})
 		if not targets then return end
 		self:archeryShoot(targets, t, nil, {mult=self:combatTalentWeaponDamage(t, 1.2, 1.9)})
@@ -88,17 +92,23 @@ newTalent{
 	stamina = 35,
 	require = techs_dex_req4,
 	range = archery_range,
+	radius = function(self, t)
+		return 2 + self:getTalentLevel(t)/3
+	end,
 	direct_hit = true,
 	tactical = { ATTACKAREA = 2 },
 	requires_target = true,
+	target = function(self, t)
+		return {type="ball", radius=self:getTalentRadius(t), range=self:getTalentRange(t), selffire=false}
+	end,
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon("bow") then if not silent then game.logPlayer(self, "You require a bow for this talent.") end return false end return true end,
 	action = function(self, t)
 		if not self:hasArcheryWeapon("bow") then game.logPlayer(self, "You must wield a bow!") return nil end
 
-		local tg = {type="ball", radius=2 + self:getTalentLevel(t)/3, friendlyfire=false}
+		local tg = self:getTalentTarget(t)
 		local targets = self:archeryAcquireTargets(tg)
 		if not targets then return end
-		self:archeryShoot(targets, t, {type="bolt",friendlyfire=false}, {mult=self:combatTalentWeaponDamage(t, 0.6, 1.3)})
+		self:archeryShoot(targets, t, {type="bolt", selffire=false}, {mult=self:combatTalentWeaponDamage(t, 0.6, 1.3)})
 		return true
 	end,
 	info = function(self, t)

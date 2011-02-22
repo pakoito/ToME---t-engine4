@@ -29,9 +29,12 @@ newTalent{
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,
+	target = function(self, t)
+		return {type="beam", range=self:getTalentRange(t), talent=t}
+	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 220)*getParadoxModifier(self, pm) end,
 	action = function(self, t)
-		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		x, y = checkBackfire(self, x, y)
@@ -121,12 +124,21 @@ newTalent{
 	paradox = 20,
 	cooldown = 20,
 	tactical = { ATTACKAREA = 2, DISABLE = 2 },
+        range = 0,
+	radius = function(self, t)
+		return 1 + self:getTalentLevelRaw(t)
+	end,
 	direct_hit = true,
 	requires_target = true,
-	range = function(self, t) return 1 + self:getTalentLevelRaw(t) end,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), friendlyfire=false, talent=t}
+	end,
 	getDuration = function(self, t) return 2 + math.floor(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
 	action = function(self, t)
-		local tg = {type="ball", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
+		local tg = self:getTalentTarget(t)
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		x, y = checkBackfire(self, x, y)
 		self:project(tg, self.x, self.y, function(tx, ty)
 			local target = game.level.map(tx, ty, Map.ACTOR)
 			if not target then return end
@@ -142,7 +154,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local radius = self:getTalentRange(t)
+		local radius = self:getTalentRadius(t)
 		local duration = t.getDuration(self, t)
 		return ([[Attempts to turn all targets around you in a radius of %d to stone for %d turns.  Stoned creatures are unable to act or regen life and are very brittle.
 		If a stoned creature is hit by an attack that deals more than 30%% of its life it will shattered and be destroyed.
@@ -163,9 +175,12 @@ newTalent{
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,
+	target = function(self, t)
+		return {type="hit", range=self:getTalentRange(t), talent=t}
+	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 230)*getParadoxModifier(self, pm) end,
 	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y, target = self:getTarget(tg)
 		if not x or not y then return nil end
 		x, y = checkBackfire(self, x, y)

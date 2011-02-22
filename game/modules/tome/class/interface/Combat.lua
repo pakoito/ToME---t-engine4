@@ -313,7 +313,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	-- Shattering Impact
 	if hitted and self:attr("shattering_impact") then
 		local dam = dam * self.shattering_impact
-		self:project({type="ball", radius=1, friendlyfire=false}, target.x, target.y, DamageType.PHYSICAL, dam)
+		self:project({type="ball", radius=1, selffire=false}, target.x, target.y, DamageType.PHYSICAL, dam)
 		self:incStamina(-15)
 	end
 
@@ -679,8 +679,10 @@ end
 
 --- Do we get hit by our own AOE ?
 function _M:spellFriendlyFire()
-	print("[SPELL] friendly fire chance", self:getTalentLevelRaw(self.T_SPELL_SHAPING) * 20 + (self:getLck() - 50) * 0.2)
-	return not rng.percent(self:getTalentLevelRaw(self.T_SPELL_SHAPING) * 20 + (self:getLck() - 50) * 0.2)
+	local chance = self:getTalentLevelRaw(self.T_SPELL_SHAPING) * 20 + (self:getLck() - 50) * 0.2
+	chance = 100 - chance
+	print("[SPELL] friendly fire chance", chance)
+	return chance
 end
 
 --- Gets mindpower

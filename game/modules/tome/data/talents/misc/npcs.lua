@@ -579,20 +579,30 @@ newTalent{
 		ATTACKAREA = 10,
 		DEFEND = 5,
 	},
-	range = 4,
+	range = 0,
+	radius = function(self, t)
+		return 4 + self:getTalentLevelRaw(t)
+	end,
 	direct_hit = true,
 	requires_target = true,
+	target = function(self, t)
+		return {type="cone", range=self:getTalentRadius(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
+	end,
+	getDuration = function(self, t)
+		return 2 + self:getTalentLevelRaw(t)
+	end,
 	tactical = { DISABLE = 2 },
 	action = function(self, t)
-		local tg = {type="cone", range=0, radius=4 + self:getTalentLevelRaw(t), friendlyfire=false, talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.BLINDING_INK, 2+self:getTalentLevelRaw(t), {type="dark"})
+		self:project(tg, x, y, DamageType.BLINDING_INK, t.getDuration(self, t), {type="dark"})
 		game:playSoundNear(self, "talents/breath")
 		return true
 	end,
 	info = function(self, t)
-		return ([[You project thick black ink, blinding your targets for %d turns.]]):format(2+self:getTalentLevelRaw(t))
+		local duration = t.getDuration(self, t)
+		return ([[You project thick black ink, blinding your targets for %d turns.]]):format(duration)
 	end,
 }
 
@@ -705,11 +715,15 @@ newTalent{
 		ATTACK = 10,
 	},
 	range = 10,
+	radius = 2,
 	direct_hit = true,
 	requires_target = true,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
+	end,
 	tactical = { ATTACK = 2 },
 	action = function(self, t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=2}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.BLEED, 20 + (self:getStr() * self:getTalentLevel(t)) * 0.8, {type="archery"})
@@ -775,12 +789,18 @@ newTalent{
 	tactical = {
 		ATTACK = 10,
 	},
-	range = 10,
+	range = 0,
+	radius = function(self, t)
+		return 2 + self:getTalentLevelRaw(t) / 1.5
+	end,
 	direct_hit = true,
 	tactical = { DISABLE = 3 },
 	requires_target = true,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t}
+	end,
 	action = function(self, t)
-		local tg = {type="ball", range=0, radius=2 + self:getTalentLevelRaw(t) / 1.5, talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, function(px, py)
@@ -809,11 +829,15 @@ newTalent{
 		ATTACK = 10,
 	},
 	range = 10,
+	radius = 1,
 	direct_hit = true,
 	tactical = { DISABLE = 3, ATTACK = 2, ESCAPE = 2 },
 	requires_target = true,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t}
+	end,
 	action = function(self, t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=1, talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.PHYSKNOCKBACK, {dist=3+self:getTalentLevelRaw(t), dam=self:spellCrit(12 + self:getStr(50) * self:getTalentLevel(t))}, {type="archery"})
@@ -943,9 +967,12 @@ newTalent{
 	range = 7,
 	direct_hit = true,
 	requires_target = true,
+	target = function(self, t)
+		return {type="beam", range=self:getTalentRange(t), talent=t}
+	end,
 	tactical = { ATTACK = 3 },
 	action = function(self, t)
-		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.MIND, self:spellCrit(self:combatTalentMindDamage(t, 10, 370)), {type="mind"})
@@ -990,9 +1017,12 @@ newTalent{
 	range = 7,
 	direct_hit = true,
 	requires_target = true,
+	target = function(self, t)
+		return {type="beam", range=self:getTalentRange(t), talent=t}
+	end,
 	tactical = { ATTACK = 3 },
 	action = function(self, t)
-		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.MINDKNOCKBACK, self:spellCrit(self:combatTalentMindDamage(t, 10, 170)), {type="mind"})
@@ -1012,14 +1042,17 @@ newTalent{
 	cooldown = 13,
 	vim = 27,
 	range = 10,
+	radius = 4,
 	direct_hit = true,
 	requires_target = true,
-	tactical = { ATTACK = 2 },
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
+	end,
+	tactical = { ATTACK = 2, ATTACKAREA = 2 },
 	action = function(self, t)
 		local duration = self:getTalentLevel(t) + 2
-		local radius = 4
 		local dam = self:combatTalentSpellDamage(t, 4, 65)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=radius}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local _ _, x, y = self:canProject(tg, x, y)
@@ -1027,7 +1060,7 @@ newTalent{
 		game.level.map:addEffect(self,
 			x, y, duration,
 			DamageType.BLIGHT, dam,
-			radius,
+			self:getTalentRadius(t),
 			5, nil,
 			{type="blightzone"},
 			nil, self:spellFriendlyFire()
@@ -1190,9 +1223,13 @@ newTalent{
 		BUFF = 10,
 	},
 	direct_hit = true,
-	range = function(self, t) return 1 + self:getTalentLevelRaw(t) end,
+	range = 0,
+	radius = function(self, t) return 1 + self:getTalentLevelRaw(t) end,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=true, talent=t}
+	end,
 	action = function(self, t)
-		local tg = {type="ball", range=0, radius=self:getTalentRange(t), friendlyfire=true, talent=t}
+		local tg = self:getTalentTarget(t)
 		local grids = self:project(tg, self.x, self.y, DamageType.DREDGE_FRENZY)
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_light", {radius=tg.radius})
 		game:playSoundNear(self, "talents/arcane")

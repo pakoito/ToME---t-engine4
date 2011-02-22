@@ -147,6 +147,7 @@ newTalent{
 	cooldown = 20,
 	hate = 1.5,
 	range = 5,
+	radius = 3,
 	tactical = { ATTACK = 1, DISABLE = 2 },
 	requires_target = true,
 
@@ -271,9 +272,6 @@ newTalent{
 		end
 	end,
 
-	getRadius = function(self, t)
-		return 3
-	end,
 	getDarkCount = function(self, t)
 		return 2 + math.floor(self:getTalentLevel(t))
 	end,
@@ -282,7 +280,7 @@ newTalent{
 	end,
 	action = function(self, t)
 		local range = self:getTalentRange(t)
-		local radius = t.getRadius(self, t)
+		local radius = self:getTalentRadius(t)
 		local damage = t.getDamage(self, t)
 		local darkCount = t.getDarkCount(self, t)
 
@@ -323,7 +321,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local radius = t.getRadius(self, t)
+		local radius = self:getTalentRadius(t)
 		local damage = t.getDamage(self, t)
 		local darkCount = t.getDarkCount(self, t)
 		return ([[Creeping dark slowly spreads from %d spots in a radius of %d around the targeted location. The dark deals %d damage and blocks the sight of any who do not possess Dark Vision or some other magical means of seeing.

@@ -26,15 +26,22 @@ newTalent{
 	message = "@Source@ roars!",
 	equilibrium = 3,
 	cooldown = 20,
-	range = 5,
+	range = 0,
+	radius = function(self, t)
+		return 2 + self:getTalentLevelRaw(t)
+	end,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
+	end,
 	tactical = { DEFEND = 1, DISABLE = 3 },
 	action = function(self, t)
-		local tg = {type="ball", range=0, radius=2 + self:getTalentLevelRaw(t), friendlyfire=false, talent=t}
+		local tg = self:getTalentTarget(t)
 		self:project(tg, self.x, self.y, DamageType.CONFUSION, {dur=3, dam=40 + 6 * self:getTalentLevel(t)}, {type="flame"})
 		return true
 	end,
 	info = function(self, t)
-		return ([[You let out a powerful roar that sends your foes into utter confusion for 3 turns in a radius of %d.]]):format(2 + self:getTalentLevelRaw(t))
+		local radius = self:getTalentRadius(t)
+		return ([[You let out a powerful roar that sends your foes into utter confusion for 3 turns in a radius of %d.]]):format(radius)
 	end,
 }
 
@@ -46,12 +53,18 @@ newTalent{
 	random_ego = "attack",
 	equilibrium = 7,
 	cooldown = 10,
-	range = 5,
+	range = 0,
+	radius = function(self, t)
+		return 4 + self:getTalentLevelRaw(t)
+	end,
 	direct_hit = true,
 	tactical = { DEFEND = 1, DISABLE = 2, ESCAPE = 1 },
 	requires_target = true,
+	target = function(self, t)
+		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
+	end,
 	action = function(self, t)
-		local tg = {type="cone", range=0, radius=4 + self:getTalentLevelRaw(t), friendlyfire=false, talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.PHYSKNOCKBACK, {dam=self:combatTalentStatDamage(t, "str", 15, 90), dist=4})
@@ -74,13 +87,23 @@ newTalent{
 	cooldown = 35,
 	tactical = { ATTACKAREA = 2 },
 	range = 10,
+	radius = 2,
 	direct_hit = true,
 	requires_target = true,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
+	end,
+	getDamage = function(self, t)
+		return self:combatTalentStatDamage(t, "wil", 15, 120)
+	end,
+	getDuration = function(self, t)
+		return 2 + self:getTalentLevelRaw(t)
+	end,
 	action = function(self, t)
-		local duration = 2 + self:getTalentLevelRaw(t)
-		local radius = 2
-		local dam = self:combatTalentStatDamage(t, "wil", 15, 120)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=radius}
+		local duration = t.getDuration(self, t)
+		local radius = self:getTalentRadius(t)
+		local dam = t.getDamage(self, t)
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local _ _, x, y = self:canProject(tg, x, y)
@@ -97,8 +120,11 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Spit a cloud of flames doing %0.2f fire damage in a radius of 2 each turn for %d turns.
-		The damage will increase with the Willpower stat]]):format(damDesc(self, DamageType.FIRE, self:combatTalentStatDamage(t, "wil", 15, 120)), 2 + self:getTalentLevelRaw(t))
+		local dam = t.getDamage(self, t)
+		local radius = self:getTalentRadius(t)
+		local duration = t.getDuration(self, t)
+		return ([[Spit a cloud of flames doing %0.2f fire damage in a radius of %d each turn for %d turns.
+		The damage will increase with the Willpower stat]]):format(damDesc(self, DamageType.FIRE, dam), radius, duration)
 	end,
 }
 
@@ -112,11 +138,15 @@ newTalent{
 	cooldown = 12,
 	message = "@Source@ breathes fire!",
 	tactical = { ATTACKAREA = 2 },
-	range = function(self, t) return 4 + self:getTalentLevelRaw(t) end,
+	range = 0,
+	radius = function(self, t) return 4 + self:getTalentLevelRaw(t) end,
 	direct_hit = true,
 	requires_target = true,
+	target = function(self, t)
+		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
+	end,
 	action = function(self, t)
-		local tg = {type="cone", range=0, radius=self:getTalentRange(t), friendlyfire=false, talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.FIREBURN, self:combatTalentStatDamage(t, "str", 30, 450))

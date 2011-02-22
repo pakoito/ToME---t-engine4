@@ -104,10 +104,12 @@ newTalent{
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
 	range = 10,
+	radius = function(self, t)
+		return math.floor(self:getParadox()/200)
+	end,
 	direct_hit = true,
 	type_no_req = true,
 	getTargetCount = function(self, t) return 1 end,
-	getRadius = function(self, t) return math.floor(self:getParadox()/200) end,
 	getStop = function(self, t) return math.ceil(self:getParadox()/100) end,
 	message = "@Source@ has created a bubble of nul time.",
 	action = function(self, t)
@@ -121,7 +123,7 @@ newTalent{
 		end end
 
 		-- Randomly take targets
-		local tg = {type="ball", range=self:getTalentRange(t), radius=t.getRadius(self, t), friendlyfire=self:spellFriendlyFire(), talent=t}
+		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=self:spellFriendlyFire(), talent=t}
 		for i = 1, t.getTargetCount(self, t) do
 			if #tgts <= 0 then break end
 			local a, id = rng.table(tgts)
@@ -143,10 +145,12 @@ newTalent{
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
 	range = 6,
+	radius = function(self, t)
+		return 1 - 1 / (1 + (self:getParadox()/15) / 100)
+	end,
 	direct_hit = true,
 	type_no_req = true,
 	getTargetCount = function(self, t) return 1 end,
-	getRadius = function(self, t) return math.floor(self:getParadox()/200) end,
 	getSlow = function(self, t) return 1 - 1 / (1 + (self:getParadox()/15) / 100) end,
 	message = "@Source@ has created a bubble of slow time.",
 	action = function(self, t)
@@ -160,7 +164,7 @@ newTalent{
 		end end
 
 		-- Randomly take targets
-		local tg = {type="ball", range=self:getTalentRange(t), radius=t.getRadius(self, t), friendlyfire=self:spellFriendlyFire(), talent=t}
+		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=self:spellFriendlyFire(), talent=t}
 		for i = 1, t.getTargetCount(self, t) do
 			if #tgts <= 0 then break end
 			local a, id = rng.table(tgts)

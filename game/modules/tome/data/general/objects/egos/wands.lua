@@ -61,7 +61,7 @@ newEntity{
 	cost_per_charge = 0.4,
 
 	use_power = { name = "light the area", power = 3, use = function(self, who)
-		who:project({type="ball", range=0, friendlyfire=true, radius=15}, who.x, who.y, engine.DamageType.LITE, 1)
+		who:project({type="ball", range=0, selffire=true, radius=15}, who.x, who.y, engine.DamageType.LITE, 1)
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
 		return nil, true
 	end}

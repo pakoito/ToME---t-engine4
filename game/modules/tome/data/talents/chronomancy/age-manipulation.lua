@@ -100,13 +100,18 @@ newTalent{
 	paradox = 15,
 	cooldown = 15,
 	tactical = { ATTACKAREA = 2, DISABLE= 2 },
-	range = 1,
+	range = 0,
+	radius = function(self, t)
+		return 4 + math.floor(self:getTalentLevelRaw (t)/2)
+	end,
 	requires_target = true,
+	target = function(self, t)
+		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
+	end,
 	getConfuseDuration = function(self, t) return math.floor((self:getTalentLevel(t) + 2) * getParadoxModifier(self, pm)) end,
 	getConfuseEfficency = function(self, t) return (50 + self:getTalentLevelRaw(t) * 10) * getParadoxModifier(self, pm) end,
-	getRadius = function (self, t) return 4 + math.floor(self:getTalentLevelRaw (t)/2) end,
 	action = function(self, t)
-		local tg = {type="cone", range=0, radius=t.getRadius(self, t), friendlyfire=false, talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		print (check)
@@ -120,7 +125,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local duration = t.getConfuseDuration(self, t)
-		local radius = t.getRadius (self, t)
+		local radius = self:getTalentRadius(t)
 		return ([[Reverts the minds of all creatures in a %d radius cone to an infantile state, in effect confusing them for %d turns.
 		The duration and power of the confuse will scale with your Paradox.]]):
 		format(radius, duration)
@@ -135,14 +140,20 @@ newTalent{
 	paradox = 20,
 	cooldown = 20,
 	tactical = { ATTACKAREA = 2 },
+	range = 0,
+	radius = 3,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false}
+	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 8, 135)*getParadoxModifier(self, pm) end,
 	getDuration = function(self, t) return 5 + math.ceil(self:getTalentLevel(t)) end,
 	getRadius = function(self, t) return 3 + math.floor(self:getTalentLevel(t)/4)end,
 	action = function(self, t)
+		local tg = self:getTalentTarget(t)
 		game.level.map:addEffect(self,
 			self.x, self.y, t.getDuration(self, t),
 			DamageType.WASTING, t.getDamage(self, t),
-			t.getRadius(self, t),
+			tg.radius,
 			5, nil,
 			engine.Entity.new{alpha=100, display='', color_br=176, color_bg=196, color_bb=222},
 			function(e)
@@ -150,7 +161,7 @@ newTalent{
 				e.y = e.src.y
 				return true
 			end,
-			false
+			tg.selffire
 		)
 		game:playSoundNear(self, "talents/cloud")
 		return true

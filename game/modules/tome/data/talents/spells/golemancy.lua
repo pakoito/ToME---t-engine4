@@ -65,7 +65,7 @@ local function makeGolem()
 		hotkey_page = 1,
 		move_others = true,
 
-		ai = "summoned", ai_real = "tactical", ai_state = { talent_in=1, tactic_follow_leader = true, ai_move="move_astar" },
+		ai = "summoned", ai_real = "tactical", ai_state = { talent_in=1, tactic_follow_leader = true, ai_move="move_astar", ally_compassion=10 },
 		energy = { mod=1 },
 		stats = { str=14, dex=12, mag=12, con=12 },
 

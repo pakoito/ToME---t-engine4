@@ -111,7 +111,8 @@ newEntity{ base = "BASE_NPC_MULTIHUED_DRAKE",
 	resists = { [DamageType.PHYSICAL] = 40, [DamageType.FIRE] = 40, [DamageType.COLD] = 40, [DamageType.ACID] = 40, [DamageType.LIGHTNING] = 40, },
 
 	ai = "tactical",
-
+	ai_status = {ally_compassion = 0},
+	
 	summon = {
 		{type="dragon", name="multi-hued drake", number=1, hasxp=false},
 --		{type="dragon", name="greater multi-hued wyrm", number=1, hasxp=false},
@@ -150,7 +151,8 @@ newEntity{ base = "BASE_NPC_MULTIHUED_DRAKE",
 
 	ai = "tactical",
 	ai_tactic = resolvers.tactic"ranged",
-
+	ai_status = {ally_compassion = 0},
+	
 	no_auto_resists = true,
 	color_switch = 2,
 	resists = { all=50, [DamageType.FIRE] = 100, [DamageType.COLD] = -100 },

@@ -29,8 +29,11 @@ newTalent{
 	tactical = { ATTACK = 2 },
 	direct_hit = true,
 	requires_target = true,
+	target = function(self, t)
+		return {type="beam", range=self:getTalentRange(t), talent=t}
+	end,
 	action = function(self, t)
-		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.PHYSICAL, self:spellCrit(self:combatTalentSpellDamage(t, 20, 200)), {type="bones"})
@@ -65,9 +68,7 @@ newTalent{
 			local target = game.level.map(px, py, engine.Map.ACTOR)
 			if not target then return end
 
-			local nx, ny = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
-			if not nx then return end
-			target:move(nx, ny, true)
+			target:pull(self.x, self.y, tg.range)
 
 			DamageType:get(DamageType.PHYSICAL).projector(self, nx, ny, DamageType.PHYSICAL, dam)
 			if target:checkHit(self:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 10) and target:canBe("pin") then
@@ -97,9 +98,14 @@ newTalent{
 	cooldown = 12,
 	tactical = { ATTACKAREA = 2 },
 	random_ego = "attack",
-	range = function(self, t) return self:getTalentLevelRaw(t) end,
+	radius = function(self, t)
+		return self:getTalentLevelRaw(t)
+	end,
+	target = function(self, t)
+		return {type="ball", radius=self:getTalentRadius(t), selffire=false}
+	end,
 	action = function(self, t)
-		local tg = {type="ball", radius=self:getTalentRange(t), friendlyfire=false}
+		local tg = self:getTalentTarget(t)
 		self:project(tg, self.x, self.y, DamageType.PHYSICAL, self:combatTalentSpellDamage(t, 8, 180), {type="bones"})
 		game:playSoundNear(self, "talents/arcane")
 		return true

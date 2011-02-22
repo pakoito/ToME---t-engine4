@@ -741,7 +741,7 @@ function _M:onTakeHit(value, src)
 
 			-- Explode!
 			game.logSeen(self, "%s unleashes the stored damage in retribution!", self.name:capitalize())
-			local tg = {type="ball", range=0, radius=self:getTalentRange(self:getTalentFromId(self.T_RETRIBUTION)), friendlyfire=false, talent=t}
+			local tg = {type="ball", range=0, radius=self:getTalentRange(self:getTalentFromId(self.T_RETRIBUTION)), selffire=false, talent=t}
 			local grids = self:project(tg, self.x, self.y, DamageType.LIGHT, dam)
 			game.level.map:particleEmitter(self.x, self.y, tg.radius, "sunburst", {radius=tg.radius, grids=grids, tx=self.x, ty=self.y})
 		end
@@ -1317,10 +1317,12 @@ function _M:levelup()
 		game.log("#00ffff#Welcome to level %d [%s].", self.level, self.name:capitalize())
 		local more = "Press G to use them."
 		if game.player ~= self then more = "Select "..self.name.. " in the party list and press G to use them." end
-		if self.unused_stats > 0 then game.log("%s has %d stat point(s) to spend. %s", self.name:capitalize(), self.unused_stats, more) end
-		if self.unused_talents > 0 then game.log("%s has %d class talent point(s) to spend. %s", self.name:capitalize(), self.unused_talents, more) end
-		if self.unused_generics > 0 then game.log("%s has %d generic talent point(s) to spend. %s", self.name:capitalize(), self.unused_generics, more) end
-		if self.unused_talents_types > 0 then game.log("%s has %d category point(s) to spend. %s", self.name:capitalize(), self.unused_talents_types, more) end
+		local points = {}
+		if self.unused_stats > 0 then points[#points+1] = ("%d stat point(s)"):format(self.unused_stats) end
+		if self.unused_talents > 0 then points[#points+1] = ("%d class talent point(s)"):format(self.unused_talents) end
+		if self.unused_generics > 0 then points[#points+1] = ("%d generic talent point(s)"):format(self.unused_generics) end
+		if self.unused_talents_types > 0 then points[#points+1] = ("%d category point(s)"):format(self.unused_talents_types) end
+		if #points > 0 then game.log("%s has %s to spend. %s", self.name:capitalize(), table.concat(points, ", "), more) end
 
 		if self.level == 10 then world:gainAchievement("LEVEL_10", self) end
 		if self.level == 20 then world:gainAchievement("LEVEL_20", self) end
@@ -1553,6 +1555,20 @@ function _M:equilibriumChance(eq)
 	return rng.percent(100 - chance * 100), 100 - chance * 100
 end
 
+--- Paradox check
+function _M:paradoxChance(pa)
+	--check for Paradox Mastery
+	if self:knowTalent(self.T_PARADOX_MASTERY) and self:isTalentActive(self.T_PARADOX_MASTERY) then
+		modifier = self:getWil() * (1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10) or 0 )
+	else
+		modifier = self:getWil()
+	end
+	--print("[Paradox] Will modifier: ", modifier, "::", self:getParadox())
+	local chance = math.pow (((self:getParadox() - modifier)/200), 2)*((100 + self:combatFatigue()) / 100)
+	--print("[Paradox] Fail chance: ", chance, "::", self:getParadox())
+	return rng.percent(100 - chance * 100), 100 - chance * 100
+end
+
 --- Called before a talent is used
 -- Check the actor can cast it
 -- @param ab the talent (not the id, the table)
@@ -1648,20 +1664,8 @@ function _M:preUseTalent(ab, silent, fake)
 
 	-- Paradox is special, it has no max, but the higher it is the higher the chance of something bad happening
 	if (ab.paradox or ab.sustain_paradox) and not fake then
-		local pa = ab.paradox or ab.sustain_paradox
-
-		--check for Paradox Mastery
-		if self:knowTalent(self.T_PARADOX_MASTERY) and self:isTalentActive(self.T_PARADOX_MASTERY) then
-			modifier = self:getWil() * (1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10) or 0 )
-		else
-			modifier = self:getWil()
-		end
-
-		--print("[Paradox] Will modifier: ", modifier, "::", self:getParadox())
-		local chance = math.pow (((self:getParadox() - modifier)/200), 2)*((100 + self:combatFatigue()) / 100)
-		-- Fail ? lose energy and 1/2 more paradox
-		--print("[Paradox] Fail chance: ", chance, "::", self:getParadox())
-		if rng.percent(math.pow((self:getParadox()/400), 4)) and not game.zone.no_anomalies and not self:attr("no_paradox_fail") then
+		-- Check anomalies first
+		if not game.zone.no_anomalies and not self:attr("no_paradox_fail") and rng.percent(math.pow((self:getParadox()/400), 4)) then
 			-- Random anomaly
 			self:incParadox(pa / 2)
 			local ts = {}
@@ -1672,7 +1676,8 @@ function _M:preUseTalent(ab, silent, fake)
 			self:forceUseTalent(rng.table(ts), {ignore_energy=true})
 			self:useEnergy()
 			return false
-		elseif rng.percent(chance) and not self:attr("no_paradox_fail") then
+		-- Now check failure
+		elseif not self:attr("no_paradox_fail") and self:paradoxChance(ab.paradox or ab.sustain_paradox) then
 			if not silent then game.logPlayer(self, "You fail to use %s due to your paradox!", ab.name) end
 			self:incParadox(pa / 10)
 			self:useEnergy()

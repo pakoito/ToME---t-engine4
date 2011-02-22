@@ -63,10 +63,14 @@ newTalent{
 	direct_hit = function(self, t) if self:getTalentLevel(t) >= 3 then return true else return false end end,
 	reflectable = true,
 	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 230) end,
-	action = function(self, t)
+	target = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		if self:getTalentLevel(t) >= 3 then tg.type = "beam" end
+		return tg
+	end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 230) end,
+	action = function(self, t)
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.ARCANE, self:spellCrit(t.getDamage(self, t)), nil)

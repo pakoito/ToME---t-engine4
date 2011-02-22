@@ -46,12 +46,18 @@ newTalent{
 	vim = 20,
 	requires_target = true,
 	range = 6,
+	radius = function(self, t)
+		return 1 + self:getTalentLevelRaw(t)
+	end,
 	proj_speed = 4,
 	tactical = { ATTACKAREA = 2 },
 	direct_hit = true,
 	requires_target = true,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=self:spellFriendlyFire(), talent=t, display={particle="bolt_fire", trail="firetrail"}}
+	end,
 	action = function(self, t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=1 + self:getTalentLevelRaw(t), friendlyfire=self:spellFriendlyFire(), talent=t, display={particle="bolt_fire", trail="firetrail"}}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:projectile(tg, x, y, DamageType.SHADOWFLAME, self:spellCrit(self:combatTalentSpellDamage(t, 28, 220)), function(self, tg, x, y, grids)
@@ -66,7 +72,7 @@ newTalent{
 		The damage will increase with the Magic stat]]):format(
 			damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 28, 220) / 2),
 			damDesc(self, DamageType.DARKNESS, self:combatTalentSpellDamage(t, 28, 220) / 2),
-			1 + self:getTalentLevelRaw(t)
+			self:getTalentRadius(t)
 		)
 	end,
 }

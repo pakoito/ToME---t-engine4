@@ -108,7 +108,8 @@ newEntity{ base = "BASE_NPC_COLD_DRAKE",
 	},
 
 	ai = "tactical",
-
+	ai_status = {ally_compassion = 0},
+	
 	resolvers.talents{
 		[Talents.T_SUMMON]=1,
 		[Talents.T_ICE_CLAW]=5,

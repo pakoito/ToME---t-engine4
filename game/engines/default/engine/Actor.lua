@@ -226,7 +226,7 @@ end
 
 --- Knock back the actor
 function _M:knockback(srcx, srcy, dist, recursive)
-	print("[KNOCKBACK] from", srcx, srcy, "over", dist)
+	print("[KNOCKBACK] from", srcx, srcx, "over", dist)
 
 	local l = line.new(srcx, srcy, self.x, self.y, true)
 	local lx, ly = l(true)
@@ -261,6 +261,47 @@ function _M:knockback(srcx, srcy, dist, recursive)
 		self:move(lx, ly, true)
 	elseif game.level.map:isBound(ox, oy) and not game.level.map:checkAllEntities(ox, oy, "block_move", self) then
 		print("[KNOCKBACK] failsafe knocked to", ox, oy, "::", game.level.map:checkAllEntities(ox, oy, "block_move", self))
+		self:move(ox, oy, true)
+	end
+end
+
+--- Pull the actor
+function _M:pull(srcx, srcy, dist, recursive)
+	print("[PULL] from", self.x, self.x, "towards", srcx, srcy, "over", dist)
+
+	local l = line.new(self.x, self.y, srcx, srcy)
+	local lx, ly = l()
+	local ox, oy = lx, ly
+	dist = dist - 1
+
+	print("[PULL] try", lx, ly, dist)
+
+	if recursive then
+		local target = game.level.map(lx, ly, Map.ACTOR)
+		if target and recursive(target) then
+			target:pull(srcx, srcy, dist, recursive)
+		end
+	end
+
+	while game.level.map:isBound(lx, ly) and not game.level.map:checkAllEntities(lx, ly, "block_move", self) and dist > 0 do
+		dist = dist - 1
+		ox, oy = lx, ly
+		lx, ly = l()
+		print("[PULL] try", lx, ly, dist, "::", game.level.map:checkAllEntities(lx, ly, "block_move", self))
+
+		if recursive then
+			local target = game.level.map(lx, ly, Map.ACTOR)
+			if target and recursive(target) then
+				target:pull(srcx, srcy, dist, recursive)
+			end
+		end
+	end
+
+	if game.level.map:isBound(lx, ly) and not game.level.map:checkAllEntities(lx, ly, "block_move", self) then
+		print("[PULL] ok pulled to", lx, ly, "::", game.level.map:checkAllEntities(lx, ly, "block_move", self))
+		self:move(lx, ly, true)
+	elseif game.level.map:isBound(ox, oy) and not game.level.map:checkAllEntities(ox, oy, "block_move", self) then
+		print("[PULL] failsafe pulled to", ox, oy, "::", game.level.map:checkAllEntities(ox, oy, "block_move", self))
 		self:move(ox, oy, true)
 	end
 end

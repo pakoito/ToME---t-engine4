@@ -74,9 +74,15 @@ newTalent{
 	cooldown = 10,
 	stamina = 30,
 	tactical = { CLOSEIN = 2 },
-	range = function(self, t) return 2 + self:getTalentLevel(t) end,
+	range = 0,
+	radius = function(self, t)
+		return 2 + self:getTalentLevel(t)
+	end,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), friendlyfire=false, radius=self:getTalentRadius(t), talent=t}
+	end,
 	action = function(self, t)
-		local tg = {type="ball", range=0, friendlyfire=false, radius=self:getTalentRange(t), talent=t}
+		local tg = self:getTalentTarget(t)
 		self:project(tg, self.x, self.y, function(px, py)
 			local target = game.level.map(px, py, Map.ACTOR)
 			if not target then return end

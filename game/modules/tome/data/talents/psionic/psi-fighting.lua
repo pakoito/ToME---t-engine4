@@ -35,6 +35,7 @@ newTalent{
 	cooldown = 10,
 	psi = 10,
 	range = 1,
+	requires_target = true,
 	tactical = { ATTACK = 2 },
 	action = function(self, t)
 		local tkweapon = self:getInven("MAINHAND")[1]
@@ -100,7 +101,12 @@ newTalent{
 	mode = "sustained",
 	sustain_psi = 0,
 	points = 5,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = function(self, t)
+		local k_aura_on = self:isTalentActive(self.T_KINETIC_AURA)
+		local t_aura_on = self:isTalentActive(self.T_THERMAL_AURA)
+		local c_aura_on = self:isTalentActive(self.T_CHARGED_AURA)
+		return (k_aura_on and 1 or 0) + (t_aura_on and 1 or 0) + (c_aura_on and 1 or 0)
+	end},
 	activate = function(self, t)
 		local ret = {
 		k_aura_on = self:isTalentActive(self.T_KINETIC_AURA),

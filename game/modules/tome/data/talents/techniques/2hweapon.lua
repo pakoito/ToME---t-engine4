@@ -27,6 +27,11 @@ newTalent{
 	cooldown = 10,
 	stamina = 30,
 	tactical = { ATTACKAREA = 3 },
+	range = 0,
+	radius = 1,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
+	end,
 	on_pre_use = function(self, t, silent) if not self:hasTwoHandedWeapon() then if not silent then game.logPlayer(self, "You require a two handed weapon to use this talent.") end return false end return true end,
 	action = function(self, t)
 		local weapon = self:hasTwoHandedWeapon()
@@ -107,8 +112,14 @@ newTalent{
 	stamina = 30,
 	cooldown = 18,
 	tactical = { ATTACKAREA = 1, DISABLE = 3 },
-	range = 1,
+	range = 0,
+	radius = function(self, t)
+		return 3 + self:getTalentLevelRaw(t)
+	end,
 	requires_target = true,
+	target = function(self, t)
+		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false}
+	end,
 	on_pre_use = function(self, t, silent) if not self:hasTwoHandedWeapon() then if not silent then game.logPlayer(self, "You require a two handed weapon to use this talent.") end return false end return true end,
 	action = function(self, t)
 		local weapon = self:hasTwoHandedWeapon()
@@ -117,7 +128,7 @@ newTalent{
 			return nil
 		end
 
-		local tg = {type="cone", range=0, radius=3 + self:getTalentLevelRaw(t), friendlyfire=false}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.CONFUSION, {

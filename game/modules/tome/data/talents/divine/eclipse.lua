@@ -157,9 +157,9 @@ newTalent{
 		self:removeTemporaryValue("invisible", p.invisible)
 		self:removeTemporaryValue("positive_regen", p.fill)
 		self:removeTemporaryValue("negative_regen", p.drain)
-		local tg = {type="ball", range=0, friendlyfire=true, radius= t.getRadius(self, t), talent=t}
+		local tg = {type="ball", range=0, selffire=true, radius= t.getRadius(self, t), talent=t}
 		self:project(tg, self.x, self.y, DamageType.LITE, 1)
-		tg.friendlyfire = false
+		tg.selffire = false
 		local grids = self:project(tg, self.x, self.y, DamageType.LIGHT, self:spellCrit(t.getDamage(self, t) + self.positive))
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "sunburst", {radius=tg.radius, grids=grids, tx=self.x, ty=self.y, max_alpha=80})
 		game:playSoundNear(self, "talents/flame")

@@ -28,6 +28,18 @@ newTalent{
 	reflectable = true,
 	proj_speed = 20,
 	requires_target = true,
+	target = function(self, t)
+		return {type="bolt", range=self:getTalentRange(t), talent=t, display = {particle=particle, trail=trail},
+			-- Like a normal block_path, but goes over friendlies
+			block_path = function(typ, lx, ly)
+				local a = game.level.map(lx, ly, engine.Map.ACTOR)
+				if a and self:reactionToward(a) >= 0 then return false, lx, ly
+				elseif game.level.map:checkAllEntities(lx, ly, "block_move") then return true, lx, ly end
+				if typ.range and typ.source_actor and typ.source_actor.x and math.sqrt((typ.source_actor.x-lx)^2 + (typ.source_actor.y-ly)^2) > typ.range then return true end
+				return false, lx, ly
+			end,
+		}
+	end,
 	getDamageMod = function(self, t) return self:combatTalentWeaponDamage(t, 0.4, 1.1) end,
 	action = function(self, t)
 		local weapon = self:hasStaffWeapon()
@@ -53,17 +65,7 @@ newTalent{
 		else                                        explosion = "manathrust"          particle = "bolt_arcane"    trail = "arcanetrail" damtype = DamageType.ARCANE
 		end
 
-		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display = {particle=particle, trail=trail},
-			-- Like a normal block_path, but goes over friendlies
-			block_path = function(typ, lx, ly)
-				local a = game.level.map(lx, ly, engine.Map.ACTOR)
-				if a and self:reactionToward(a) >= 0 then return false, lx, ly
-				elseif game.level.map:checkAllEntities(lx, ly, "block_move") then return true, lx, ly end
-				if typ.range and typ.source_actor and typ.source_actor.x and math.sqrt((typ.source_actor.x-lx)^2 + (typ.source_actor.y-ly)^2) > typ.range then return true end
-				return false, lx, ly
-			end,
-		}
-
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 
@@ -148,6 +150,9 @@ newTalent{
 	tactical = { ATTACK = 1, DISABLE = 2, ESCAPE = 1 },
 	range = 1,
 	requires_target = true,
+	target = function(self, t)
+		return {type="hit", range=self:getTalentRange(t)}
+	end,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1, 1.5) end,
 	getDazeDuration = function(self, t) return 4 + self:getTalentLevel(t) end,
 	action = function(self, t)
@@ -157,7 +162,7 @@ newTalent{
 			return nil
 		end
 
-		local tg = {type="hit", range=self:getTalentRange(t)}
+		local tg = self:getTalentTarget(t)
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end

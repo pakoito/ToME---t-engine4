@@ -104,6 +104,11 @@ newTalent{
 	random_ego = "attack",
 	mana = 40,
 	cooldown = 30,
+	range = 0,
+	radius = 3,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
+	end,
 	tactical = { ATTACKAREA = 2 },
 	getDuration = function(self, t) return 5 + self:combatSpellpower(0.05) + self:getTalentLevel(t) end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 5, 90) end,

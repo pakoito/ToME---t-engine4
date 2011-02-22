@@ -64,7 +64,9 @@ newTalent{
 	getWeaponDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.8, 1.3) end,
 	getShieldDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.8, 1.3, self:getTalentLevel(self.T_SHIELD_EXPERTISE)) end,
 	getLightDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 150) end,
-	getRadius = function(self, t) return 2 + self:getTalentLevel(t) / 2 end,
+	radius = function(self, t)
+		return 2 + self:getTalentLevel(t) / 2
+	end,
 	action = function(self, t)
 		local shield = self:hasShield()
 		if not shield then
@@ -84,9 +86,9 @@ newTalent{
 
 		-- Light Burst
 		if hit then
-			local tg = {type="ball", range=1, friendlyfire=true, radius=t.getRadius(self, t), talent=t}
+			local tg = {type="ball", range=1, selffire=true, radius=self:getTalentRadius(t), talent=t}
 			self:project(tg, x, y, DamageType.LITE, 1)
-			tg.friendlyfire = false
+			tg.selffire = false
 			local grids = self:project(tg, x, y, DamageType.LIGHT, t.getLightDamage(self, t))
 			game.level.map:particleEmitter(x, y, tg.radius, "sunburst", {radius=tg.radius, grids=grids, tx=x, ty=y, max_alpha=80})
 			game:playSoundNear(self, "talents/flame")
@@ -98,7 +100,7 @@ newTalent{
 		local weapondamage = t.getWeaponDamage(self, t)
 		local shielddamage = t.getShieldDamage(self, t)
 		local lightdamage = t.getLightDamage(self, t)
-		local radius = t.getRadius(self, t)
+		local radius = self:getTalentRadius(t)
 		return ([[Hits the target with your weapon doing %d%% damage and a shield strike doing %d%% damage.  If the shield strike hits your shield will explode in a burst of light, inflicting %0.2f light damage on all within a radius of %d of the target, lighting up the affected grids.
 		Light damage will increase with your Magic stat.]]):
 		format(100 * weapondamage, 100 * shielddamage, damDesc(self, DamageType.LIGHT, lightdamage), radius)

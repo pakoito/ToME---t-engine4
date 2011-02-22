@@ -52,10 +52,14 @@ newTalent{
 	cooldown = 10,
 	vim = 30,
 	range = 10,
+	radius = 3,
 	tactical = { DISABLE = 2 },
 	requires_target = true,
+	target = function(self, t)
+		return {type="ball", radius=self:getTalentRadius(t), range=self:getTalentRange(t), talent=t}
+	end,
 	action = function(self, t)
-		local tg = {type="ball", radius=3, range=self:getTalentRange(t), talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local dam = self:spellCrit(self:combatTalentSpellDamage(t, 28, 120))
@@ -140,10 +144,15 @@ newTalent{
 	points = 5,
 	vim = 36,
 	cooldown = 30,
+	range = 0,
+	radius = 4,
 	tactical = { ATTACKAREA = 2 },
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
+	end,
 	action = function(self, t)
 		local duration = 5 + self:getTalentLevel(t)
-		local radius = 4
+		local radius = self:getTalentRadius(t)
 		local dam = self:combatTalentSpellDamage(t, 12, 130)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
@@ -163,8 +172,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[A furious poison storm rages around the caster, poisoning all creatures inside for doing %0.2f nature damage in 6 turns in a radius of 4 for %d turns.
+		return ([[A furious poison storm rages around the caster, poisoning all creatures inside for doing %0.2f nature damage in 6 turns in a radius of %d for %d turns.
 		Poisoning is cumulative, the longer they stay in they higher the poison they take.
-		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.NATURE, self:combatTalentSpellDamage(t, 12, 130)), 5 + self:getTalentLevel(t))
+		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.NATURE, self:combatTalentSpellDamage(t, 12, 130)), self:getTalentRadius(t), 5 + self:getTalentLevel(t))
 	end,
 }
