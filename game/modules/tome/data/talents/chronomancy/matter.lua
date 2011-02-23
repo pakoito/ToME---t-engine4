@@ -131,14 +131,14 @@ newTalent{
 	direct_hit = true,
 	requires_target = true,
 	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), friendlyfire=false, talent=t}
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
 	getDuration = function(self, t) return 2 + math.floor(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		x, y = checkBackfire(self, x, y)
+	--	local x, y = self:getTarget(tg)
+	--	if not x or not y then return nil end
+	--	x, y = checkBackfire(self, x, y)
 		self:project(tg, self.x, self.y, function(tx, ty)
 			local target = game.level.map(tx, ty, Map.ACTOR)
 			if not target then return end

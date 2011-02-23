@@ -57,7 +57,7 @@ newTalent{
 	paradox = 10,
 	cooldown = 10,
 	tactical = { HEAL = 2 },
-	getHeal = function(self, t) return self:combatTalentSpellDamage(t, 40, 220)*getParadoxModifier(self, pm) end,
+	getHeal = function(self, t) return self:combatTalentSpellDamage(t, 40, 440)*getParadoxModifier(self, pm) end,
 	getRemoveCount = function(self, t) return math.floor(self:getTalentLevel(t)) end,
 	action = function(self, t)
 		self:heal(self:spellCrit(t.getHeal(self, t)), self)

@@ -51,7 +51,8 @@ newEntity{ base = "BASE_NPC_HORROR",
 	life_rating = 16,
 	rank = 3,
 
-	ai = "tactical",
+	ai = "tactical", ai_state = { ai_move="move_dmap", talent_in=1, },
+	ai_tactic = resolvers.tactic "melee",
 
 	see_invisible = 100,
 	instakill_immune = 1,
@@ -509,7 +510,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	size_category = 3,
 	max_life = resolvers.rngavg(60,80),
 	autolevel = "warriormage",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },
 	combat_armor = 1, combat_def = 0,
 
 	resists = {all = 10, [DamageType.TEMPORAL] = 50},

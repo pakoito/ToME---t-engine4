@@ -1667,7 +1667,7 @@ function _M:preUseTalent(ab, silent, fake)
 		-- Check anomalies first
 		if not game.zone.no_anomalies and not self:attr("no_paradox_fail") and rng.percent(math.pow((self:getParadox()/400), 4)) then
 			-- Random anomaly
-			self:incParadox(pa / 2)
+			self:incParadox(ab.paradox or ab.paradox_sustain / 2)
 			local ts = {}
 			for id, t in pairs(self.talents_def) do
 				if t.type[1] == "chronomancy/anomalies" then ts[#ts+1] = id end
@@ -1679,7 +1679,7 @@ function _M:preUseTalent(ab, silent, fake)
 		-- Now check failure
 		elseif not self:attr("no_paradox_fail") and self:paradoxChance(ab.paradox or ab.sustain_paradox) then
 			if not silent then game.logPlayer(self, "You fail to use %s due to your paradox!", ab.name) end
-			self:incParadox(pa / 10)
+			self:incParadox(ab.paradox or ab.paradox_sustain / 10)
 			self:useEnergy()
 			return false
 		end

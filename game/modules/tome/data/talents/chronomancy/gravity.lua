@@ -25,8 +25,8 @@ newTalent{
 	paradox = 4,
 	cooldown = 20,
 	tactical = { DEFEND = 1, ESCAPE = 1, DISABLE = 1 },
-	getAbsorb = function(self, t) return self:combatTalentSpellDamage(t, 30, 270) * getParadoxModifier(self, pm) end,
-	getDuration = function (self, t) return 4 + math.ceil(self:getTalentLevel(t)) end,
+	getAbsorb = function(self, t) return self:combatTalentSpellDamage(t, 30, 470) * getParadoxModifier(self, pm) end,
+	getDuration = function (self, t) return 6 + math.ceil(self:getTalentLevel(t)) end,
 	action = function(self, t)
 		self:setEffect(self.EFF_REPULSION_SHIELD, t.getDuration(self, t), {power=t.getAbsorb(self, t)})
 		game:playSoundNear(self, "talents/heal")
@@ -63,7 +63,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		x, y = checkBackfire(self, x, y)
-		self:project(tg, x, y, function(px, py)
+		local grids = self:project(tg, x, y, function(px, py)
 			local target = game.level.map(px, py, Map.ACTOR)
 			if not target then return end
 			local tx, ty = util.findFreeGrid(x, y, 5, true, {[Map.ACTOR]=true})
@@ -73,6 +73,8 @@ newTalent{
 			end
 		end)
 		self:project (tg, x, y, DamageType.PHYSICAL, self:spellCrit(t.getDamage(self, t)))
+		
+		local _ _, x, y = self:canProject(tg, x, y)
 		game.level.map:particleEmitter(x, y, tg.radius, "gravity_spike", {radius=tg.radius, grids=grids, tx=x, ty=y})
 		game:playSoundNear(self, "talents/earth")
 		return true

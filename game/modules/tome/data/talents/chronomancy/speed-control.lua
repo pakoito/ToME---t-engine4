@@ -69,7 +69,9 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		x, y = checkBackfire(self, x, y)
-		self:project(tg, x, y, DamageType.STOP, t.getDuration(self, t))
+		local grids = self:project(tg, x, y, DamageType.STOP, t.getDuration(self, t))
+		
+		local _ _, x, y = self:canProject(tg, x, y)
 		game.level.map:particleEmitter(x, y, tg.radius, "temporal_flash", {radius=tg.radius, tx=x, ty=y})
 		game:playSoundNear(self, "talents/tidalwave")
 		return true

@@ -33,7 +33,7 @@ newTalent{
         end,
 	requires_target = true,
 	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), friendlyfire=false, talent=t}
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
 	getDamage = function(self, t) return (self:combatTalentSpellDamage(t, 10, 120)*getParadoxModifier(self, pm)) end,
 	getPercent = function(self, t) return (30 + (self:combatTalentSpellDamage(t, 10, 30)*getParadoxModifier(self, pm))) / 100 end,

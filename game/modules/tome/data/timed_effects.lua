@@ -2471,7 +2471,7 @@ newEffect{
 				-- Go through all spell effects
 		for eff_id, p in pairs(self.tmp) do
 			local e = self.tempeffect_def[eff_id]
-			if e.status == "detrimental" then
+			if e.status == "detrimental" and e.type ~= "time" then
 				effs[#effs+1] = {"effect", eff_id}
 			end
 		end
@@ -3262,13 +3262,13 @@ newEffect{
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("damage_shunt", eff.power)
 		--- Warning there can be only one time shield active at once for an actor
-		self.damage_shield_absorb = eff.power
+		self.damage_shunt_absorb = eff.power
 		eff.particle = self:addParticles(Particles.new("damage_shield", 1))
 	end,
 	deactivate = function(self, eff)
 		self:removeParticles(eff.particle)
 		self:removeTemporaryValue("damage_shunt", eff.tmpid)
-		self.damage_shield_absorb = nil
+		self.damage_shunt_absorb = nil
 	end,
 }
 

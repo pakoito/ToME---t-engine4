@@ -18,11 +18,11 @@
 -- darkgod@te4.org
 
 -- Corruptions
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="corruption/sanguisuge", name = "sanguisuge", generic = true, description = "Manipulate the life force to power your own dark powers." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="corruption/vim", name = "vim", generic = true, description = "Touch the very essence of your victims." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="corruption/sanguisuge", name = "sanguisuge", description = "Manipulate the life force to feed your own dark powers." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="corruption/vim", name = "vim", description = "Touch the very essence of your victims." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="corruption/bone", name = "bone", description = "Harness the power of bones." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="corruption/hexes", name = "hexes", description = "Hex your foes, hindering and crippling them." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="corruption/curses", name = "curses", description = "Curse your foes, hindering and crippling them." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="corruption/hexes", name = "hexes", generic = true, description = "Hex your foes, hindering and crippling them." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="corruption/curses", name = "curses", generic = true, description = "Curse your foes, hindering and crippling them." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="corruption/plague", name = "plague", description = "Spread diseases to your foes." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="corruption/scourge", name = "scourge", description = "Bring pain and destruction to the world." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="corruption/reaving-combat", name = "reaving combat", description = "Enhanced melee combat through the dark arts." }

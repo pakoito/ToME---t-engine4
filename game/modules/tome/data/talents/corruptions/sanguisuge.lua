@@ -18,50 +18,9 @@
 -- darkgod@te4.org
 
 newTalent{
-	name = "Blood Sacrifice",
+	name = "Drain",
 	type = {"corruption/sanguisuge", 1},
 	require = corrs_req1,
-	points = 5,
-	vim = 0,
-	cooldown = 30,
-	range = 10,
-	tactical = { VIM = 1 },
-	action = function(self, t)
-		if self.max_life * 0.2 >= self.life then
-			game.logPlayer(self, "Doing this would kill you.")
-			return
-		end
-
-		local seen = false
-		-- Check for visible monsters, only see LOS actors, so telepathy wont prevent resting
-		core.fov.calc_circle(self.x, self.y, game.level.map.w, game.level.map.h, 20, function(_, x, y) return game.level.map:opaque(x, y) end, function(_, x, y)
-			local actor = game.level.map(x, y, game.level.map.ACTOR)
-			if actor and self:reactionToward(actor) < 0 and self:canSee(actor) and game.level.map.seens(x, y) then
-				seen = {x=x,y=y,actor=actor}
-			end
-		end, nil)
-		if not seen then
-			game.logPlayer(self, "There is no foes in sight.")
-			return
-		end
-
-		self:incVim(self:combatTalentSpellDamage(t, 5, 200))
-		self:takeHit(self.max_life * 0.2, self)
-		game:playSoundNear(self, "talents/spell_generic2")
-		return true
-	end,
-	info = function(self, t)
-		return ([[Sacrifices 20%% of your life to restore %d vim.
-		This only works if there is at least one foe in sight.
-		The effect will increase with your Magic stat.]]):
-		format(self:combatTalentSpellDamage(t, 5, 200))
-	end,
-}
-
-newTalent{
-	name = "Drain",
-	type = {"corruption/sanguisuge", 2},
-	require = corrs_req2,
 	points = 5,
 	vim = 0,
 	cooldown = 9,
@@ -82,6 +41,47 @@ newTalent{
 		return ([[Fires a bolt of blight, doing %0.2f blight damage and replenishing 20%% of it as vim energy.
 		The effect will increase with your Magic stat.]]):
 		format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 25, 200)))
+	end,
+}
+
+newTalent{
+	name = "Blood Sacrifice",
+	type = {"corruption/sanguisuge", 2},
+	require = corrs_req2,
+	points = 5,
+	vim = 0,
+	cooldown = 20,
+	range = 10,
+	tactical = { VIM = 1 },
+	action = function(self, t)
+		if self.max_life * 0.4 >= self.life then
+			game.logPlayer(self, "Doing this would kill you.")
+			return
+		end
+
+		local seen = false
+		-- Check for visible monsters, only see LOS actors, so telepathy wont prevent resting
+		core.fov.calc_circle(self.x, self.y, game.level.map.w, game.level.map.h, 20, function(_, x, y) return game.level.map:opaque(x, y) end, function(_, x, y)
+			local actor = game.level.map(x, y, game.level.map.ACTOR)
+			if actor and self:reactionToward(actor) < 0 and self:canSee(actor) and game.level.map.seens(x, y) then
+				seen = {x=x,y=y,actor=actor}
+			end
+		end, nil)
+		if not seen then
+			game.logPlayer(self, "There is no foes in sight.")
+			return
+		end
+
+		self:incVim(30 + self:combatTalentSpellDamage(t, 5, 200))
+		self:takeHit(self.max_life * 0.4, self)
+		game:playSoundNear(self, "talents/spell_generic2")
+		return true
+	end,
+	info = function(self, t)
+		return ([[Sacrifices 40%% of your life to restore %d vim.
+		This only works if there is at least one foe in sight.
+		The effect will increase with your Magic stat.]]):
+		format(30 + self:combatTalentSpellDamage(t, 5, 200))
 	end,
 }
 
@@ -110,7 +110,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Absorbs the life force of your foes as you kill them.
-		As long as this talent is active vim will decrease by one per turn and increase by %d for each kill of a non-undead creature.]]):
+		As long as this talent is active vim will decrease by one per turn and increase by %d for each kill of a non-undead creature (in addition to natural increase based on Willpower).]]):
 		format(math.ceil(self:getTalentLevel(t)))
 	end,
 }

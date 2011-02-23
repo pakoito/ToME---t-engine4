@@ -55,9 +55,9 @@ newTalent{
 	cooldown = 15,
 	tactical = { DEFEND = 2 },
 	no_energy = true, 
-	getAbsorb = function(self, t) return self:combatTalentSpellDamage(t, 30, 270) * getParadoxModifier(self, pm) end,
+	getAbsorb = function(self, t) return self:combatTalentSpellDamage(t, 30, 470) * getParadoxModifier(self, pm) end,
 	action = function(self, t)
-		self:setEffect(self.EFF_DAMAGE_SHIELD, 10, {power=t.getAbsorb(self, t)})
+		self:setEffect(self.EFF_DAMAGE_SHUNT, 10, {power=t.getAbsorb(self, t)})
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
@@ -136,7 +136,8 @@ newTalent{
 		a.no_drops = true
 		a.energy.value = 0
 		a.player = nil
-		a.name = a.name.."'s paradox clone"
+		--a.name = a.name.."'s paradox clone"
+		a.name = a.name
 		a.color_r = 176 a.color_g = 196 a.color_b = 222
 		a._mo:invalidate()
 		a.faction = self.faction
@@ -148,7 +149,7 @@ newTalent{
 		a.ai = "summoned"
 		a.ai_real = "tactical"
 		a.ai_tactic = resolvers.tactic("ranged")
-		a.ai_state = { talent_in=1, }
+		a.ai_state = { talent_in=1, ally_compassion=10}
 		a.desc = [[The real you... or so ]]..sex..[[ says.]]
 
 		-- Remove some talents

@@ -63,7 +63,7 @@ newBirthDescriptor{
 	talents = {
 		[ActorTalents.T_CORRUPTED_STRENGTH] = 1,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
-		[ActorTalents.T_BLOOD_SACRIFICE] = 1,
+		[ActorTalents.T_DRAIN] = 1,
 		[ActorTalents.T_REND] = 1,
 	},
 	copy = {
@@ -104,7 +104,7 @@ newBirthDescriptor{
 		["corruption/blight"]={true, 0.3},
 	},
 	talents = {
-		[ActorTalents.T_BLOOD_SACRIFICE] = 1,
+		[ActorTalents.T_DRAIN] = 1,
 		[ActorTalents.T_BLOOD_GRASP] = 1,
 		[ActorTalents.T_SOUL_ROT] = 1,
 		[ActorTalents.T_PACIFICATION_HEX] = 1,
