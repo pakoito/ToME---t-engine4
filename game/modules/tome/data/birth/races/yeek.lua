@@ -26,7 +26,7 @@ newBirthDescriptor{
 	desc = {
 		"Yeeks are a mysterious race of small humanoids native to the tropical island of Rel.",
 		"Their body is covered with white fur and their disproportionate heads give them a ridiculous look.",
-		"Although they are now nearly unheard of in Maj'Eyal, they spent many centuries as secret slaves to the Halfling nation of Nargol.",
+		"Although they are now nearly unheard of in Maj'Eyal, they spent many thousand years as secret slaves to the Halfling nation of Nargol.",
 		"They gained their freedom during the Age of Pyre and have since then followed 'The Way' - a unity of minds enforced by their powerful psionics.",
 	},
 	descriptor_choices =
