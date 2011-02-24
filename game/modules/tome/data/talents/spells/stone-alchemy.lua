@@ -43,6 +43,7 @@ newTalent{
 			self:addObject(self.INVEN_INVEN, gem)
 			self:removeObject(inven, item)
 			game.logPlayer(self, "You create: %s", gem:getName{do_color=true, do_count=true})
+			self:sortInven()
 			return true
 		end)
 		game:playSoundNear(self, "talents/arcane")
@@ -72,6 +73,7 @@ newTalent{
 			if gem then
 				self:addObject(self.INVEN_INVEN, gem)
 				game.logPlayer(self, "You extract: %s", gem:getName{do_color=true, do_count=true})
+				self:sortInven()
 			end
 			return true
 		end)
