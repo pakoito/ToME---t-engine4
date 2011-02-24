@@ -30,7 +30,7 @@ module(..., package.seeall, class.inherit(Dialog))
 function _M:init(actor, def)
 	self.actor = actor
 	self.def = def
-	Dialog.init(self, "Set talent weights:", math.max(800, game.w * 0.8), math.max(600, game.h * 0.8))
+	Dialog.init(self, "Define tactical talents usage", math.max(800, game.w * 0.8), math.max(600, game.h * 0.8))
 
 	self.c_tut = Textzone.new{width=math.floor(self.iw / 2 - 10), height=1, auto_height=true, no_color_bleed=true, text=([[
 %s is listening attentively, and wants to know what talents to use.
