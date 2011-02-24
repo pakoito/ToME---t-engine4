@@ -40,6 +40,7 @@ newBirthDescriptor{
 		class =
 		{
 			Divine = "disallow",
+			Wilder = "disallow",
 		},
 	},
 	talents = {
