@@ -168,7 +168,7 @@ newTalent{
 		local NPC = require "mod.class.NPC"
 		local m = NPC.new{
 			type = "insect", subtype = "ritch",
-			display = "I", color=colors.LIGHT_RED,
+			display = "I", color=colors.LIGHT_RED, image = "npc/summoner_ritch.png",
 			name = "ritch flamespitter", faction = self.faction,
 			desc = [[]],
 			autolevel = "none",
@@ -244,13 +244,13 @@ newTalent{
 		local NPC = require "mod.class.NPC"
 		local m = NPC.new{
 			type = "hydra", subtype = "3head",
-			display = "M", color=colors.GREEN,
+			display = "M", color=colors.GREEN, image = "npc/summoner_hydra.png",
 			name = "3-headed hydra", faction = self.faction,
 			desc = [[A strange reptilian creature with three smouldering heads.]],
 			autolevel = "none",
 			ai = "summoned", ai_real = "tactical", ai_state = { talent_in=1, ally_compassion=10},
 			ai_tactic = resolvers.tactic"melee",
-			
+
 			stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
 			inc_stats = { wil=15 + self:getWil() * self:getTalentLevel(t) / 5, str=18, con=10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2},
 			level_range = {self.level, self.level}, exp_worth = 0,
@@ -323,7 +323,7 @@ newTalent{
 		local m = NPC.new{
 			type = "demon", subtype = "lesser",
 			display = "u", color=colors.BLUE,
-			name = "warper", faction = self.faction,
+			name = "warper", faction = self.faction, image = "npc/summoner_warper.png",
 			desc = [[It looks like a hole in reality. The Warper disrupts the normal flow of space and time.]],
 			autolevel = "none",
 			ai = "summoned", ai_real = "tactical", ai_state = { talent_in=1, ally_compassion=10},
@@ -399,7 +399,7 @@ newTalent{
 		local NPC = require "mod.class.NPC"
 		local m = NPC.new{
 			type = "dragon", subtype = "fire",
-			display = "D", color=colors.RED,
+			display = "D", color=colors.RED, image = "npc/summoner_fire_drake.png",
 			name = "fire drake", faction = self.faction,
 			desc = [[A mighty fire drake, an Uruloki.]],
 			autolevel = "none",

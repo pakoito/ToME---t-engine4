@@ -49,7 +49,7 @@ newTalent{
 		local NPC = require "mod.class.NPC"
 		local m = NPC.new{
 			type = "animal", subtype = "canine",
-			display = "C", color=colors.LIGHT_DARK,
+			display = "C", color=colors.LIGHT_DARK, image = "npc/summoner_wardog.png",
 			name = "war hound", faction = self.faction,
 			desc = [[]],
 			autolevel = "none",
@@ -119,7 +119,7 @@ newTalent{
 
 		local NPC = require "mod.class.NPC"
 		local m = NPC.new{
-			type = "immovable", subtype = "jelly",
+			type = "immovable", subtype = "jelly", image = "npc/jelly-darkgrey.png",
 			display = "j", color=colors.BLACK,
 			desc = "A strange blob on the dungeon floor.",
 			name = "black jelly",
@@ -203,7 +203,7 @@ newTalent{
 		local m = NPC.new{
 			type = "giant", subtype = "minotaur",
 			display = "H",
-			name = "minotaur", color=colors.UMBER,
+			name = "minotaur", color=colors.UMBER, image = "npc/summoner_minotaur.png",
 
 			body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 

@@ -117,7 +117,7 @@ newTalent{
 		local NPC = require "mod.class.NPC"
 		local m = NPC.new{
 			type = "animal", subtype = "turtle",
-			display = "R", color=colors.GREEN,
+			display = "R", color=colors.GREEN, image = "npc/summoner_turtle.png",
 			name = "turtle", faction = self.faction,
 			desc = [[]],
 			autolevel = "none",
@@ -192,7 +192,7 @@ newTalent{
 		local NPC = require "mod.class.NPC"
 		local m = NPC.new{
 			type = "animal", subtype = "spider",
-			display = "S", color=colors.LIGHT_DARK,
+			display = "S", color=colors.LIGHT_DARK, image = "npc/summoner_spider.png",
 			name = "giant spider", faction = self.faction,
 			desc = [[]],
 			autolevel = "none",
