@@ -69,7 +69,7 @@ newBirthDescriptor{
 	},
 	talents = {
 		[ActorTalents.T_STEALTH] = 1,
-		[ActorTalents.T_WEAPON_COMBAT] = 1,
+		[ActorTalents.T_TRAP_MASTERY] = 1,
 		[ActorTalents.T_LETHALITY] = 1,
 		[ActorTalents.T_DUAL_STRIKE] = 1,
 	},
