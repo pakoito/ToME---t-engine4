@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+max_alpha = max_alpha or 120
+
 local nb = 0
 return { generator = function()
 	local radius = radius

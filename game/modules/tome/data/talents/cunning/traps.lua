@@ -179,6 +179,30 @@ newTalent{
 -- Traps
 ----------------------------------------------------------------
 
+local basetrap = function(self, t, x, y, dur, add)
+	local Trap = require "mod.class.Trap"
+	local trap = {
+		id_by_type=true, unided_name = "trap",
+		display = '^',
+		faction = self.faction,
+		summoner = self, summoner_gain_exp = true,
+		temporary = dur,
+		x = x, y = y,
+		canAct = false,
+		energy = {value=0},
+		act = function(self)
+			self:useEnergy()
+			self.temporary = self.temporary - 1
+			if self.temporary <= 0 then
+				game.level.map:remove(self.x, self.y, engine.Map.TRAP)
+				game.level:removeEntity(self)
+			end
+		end,
+	}
+	table.merge(trap, add)
+	return Trap.new(trap)
+end
+
 newTalent{
 	name = "Explosion Trap",
 	type = {"cunning/traps", 1},
@@ -197,32 +221,15 @@ newTalent{
 
 		local dam = 30 + self:getCun() * 0.8 * self:getTalentLevel(self.T_TRAP_MASTERY)
 
-		local Trap = require "mod.class.Trap"
-		local t = Trap.new{
-			type = "elemental", id_by_type=true, unided_name = "trap",
-			name = "explosion trap", color=colors.LIGHT_RED,
-			display = '^',
+		local t = basetrap(self, t, x, y, 8 + self:getTalentLevel(self.T_TRAP_MASTERY), {
+			type = "elemental", name = "explosion trap", color=colors.LIGHT_RED, image = "trap/blast_fire01.png",
 			dam = dam,
-			faction = self.faction,
 			triggered = function(self, x, y, who)
 				self:project({type="ball", x=x,y=y, radius=2}, x, y, engine.DamageType.FIREBURN, self.dam)
 				game.level.map:particleEmitter(x, y, 2, "fireflash", {radius=2, tx=x, ty=y})
 				return true, true
 			end,
-			summoner = self, summoner_gain_exp = true,
-			temporary = 8 + self:getTalentLevel(self.T_TRAP_MASTERY),
-			x = x, y = y,
-			canAct = false,
-			energy = {value=0},
-			act = function(self)
-				self:useEnergy()
-				self.temporary = self.temporary - 1
-				if self.temporary <= 0 then
-					game.level.map:remove(self.x, self.y, engine.Map.TRAP)
-					game.level:removeEntity(self)
-				end
-			end,
-		}
+		})
 		t:identify(true)
 
 		t:resolve() t:resolve(nil, true)
@@ -258,12 +265,9 @@ newTalent{
 		local dam = (40 + self:getCun() * 0.7 * self:getTalentLevel(self.T_TRAP_MASTERY)) / 5
 
 		local Trap = require "mod.class.Trap"
-		local t = Trap.new{
-			type = "physical", id_by_type=true, unided_name = "trap",
-			name = "bear trap", color=colors.UMBER,
-			display = '^',
+		local t = basetrap(self, t, x, y, 8 + self:getTalentLevel(self.T_TRAP_MASTERY), {
+			type = "physical", name = "bear trap", color=colors.UMBER, image = "trap/beartrap01.png",
 			dam = dam,
-			faction = self.faction,
 			check_hit = self:combatAttackDex(),
 			triggered = function(self, x, y, who)
 				if who and who:canBe("cut") then who:setEffect(who.EFF_CUT, 5, {src=self.summoner, power=self.dam}) end
@@ -274,20 +278,7 @@ newTalent{
 				end
 				return true, true
 			end,
-			summoner = self, summoner_gain_exp = true,
-			temporary = 8 + self:getTalentLevel(self.T_TRAP_MASTERY),
-			x = x, y = y,
-			canAct = false,
-			energy = {value=0},
-			act = function(self)
-				self:useEnergy()
-				self.temporary = self.temporary - 1
-				if self.temporary <= 0 then
-					game.level.map:remove(self.x, self.y, engine.Map.TRAP)
-					game.level:removeEntity(self)
-				end
-			end,
-		}
+		})
 		t:identify(true)
 
 		t:resolve() t:resolve(nil, true)
@@ -322,12 +313,9 @@ newTalent{
 
 
 		local Trap = require "mod.class.Trap"
-		local t = Trap.new{
-			type = "physical", id_by_type=true, unided_name = "trap",
-			name = "catapult trap", color=colors.LIGHT_UMBER,
-			display = '^',
+		local t = basetrap(self, t, x, y, 8 + self:getTalentLevel(self.T_TRAP_MASTERY), {
+			type = "physical", name = "catapult trap", color=colors.LIGHT_UMBER, image = "trap/catapulttrap01.png",
 			dist = 2 + math.ceil(self:getTalentLevel(self.T_TRAP_MASTERY)),
-			faction = self.faction,
 			check_hit = self:combatAttackDex(),
 			triggered = function(self, x, y, who)
 				-- Try to knockback !
@@ -345,20 +333,7 @@ newTalent{
 				end
 				return true, rng.chance(25)
 			end,
-			summoner = self, summoner_gain_exp = true,
-			temporary = 8 + self:getTalentLevel(self.T_TRAP_MASTERY),
-			x = x, y = y,
-			canAct = false,
-			energy = {value=0},
-			act = function(self)
-				self:useEnergy()
-				self.temporary = self.temporary - 1
-				if self.temporary <= 0 then
-					game.level.map:remove(self.x, self.y, engine.Map.TRAP)
-					game.level:removeEntity(self)
-				end
-			end,
-		}
+		})
 		t:identify(true)
 
 		t:resolve() t:resolve(nil, true)
@@ -392,12 +367,9 @@ newTalent{
 		if game.level.map(x, y, Map.TRAP) then game.logPlayer(self, "You somehow fail to set the trap.") return nil end
 
 		local Trap = require "mod.class.Trap"
-		local t = Trap.new{
-			type = "physical", id_by_type=true, unided_name = "trap",
-			name = "disarming trap", color=colors.DARK_GREY,
-			display = '^',
+		local t = basetrap(self, t, x, y, 8 + self:getTalentLevel(self.T_TRAP_MASTERY), {
+			type = "physical", name = "disarming trap", color=colors.DARK_GREY, image = "trap/disarmtrap01.png",
 			dur = 2 + math.ceil(self:getTalentLevel(self.T_TRAP_MASTERY) / 2),
-			faction = self.faction,
 			check_hit = self:combatAttackDex(),
 			triggered = function(self, x, y, who)
 				if who:checkHit(self.check_hit, who:combatPhysicalResist(), 0, 95, 15) and who:canBe("disarm") then
@@ -407,20 +379,7 @@ newTalent{
 				end
 				return true, true
 			end,
-			summoner = self, summoner_gain_exp = true,
-			temporary = 5 + self:getTalentLevel(self.T_TRAP_MASTERY),
-			x = x, y = y,
-			canAct = false,
-			energy = {value=0},
-			act = function(self)
-				self:useEnergy()
-				self.temporary = self.temporary - 1
-				if self.temporary <= 0 then
-					game.level.map:remove(self.x, self.y, engine.Map.TRAP)
-					game.level:removeEntity(self)
-				end
-			end,
-		}
+		})
 		t:identify(true)
 
 		t:resolve() t:resolve(nil, true)
@@ -456,12 +415,9 @@ newTalent{
 		local dam = 20 + self:getCun() * 0.7 * self:getTalentLevel(self.T_TRAP_MASTERY)
 
 		local Trap = require "mod.class.Trap"
-		local t = Trap.new{
-			type = "elemental", id_by_type=true, unided_name = "trap",
-			name = "nightshade trap", color=colors.LIGHT_BLUE,
-			display = '^',
+		local t = basetrap(self, t, x, y, 5 + self:getTalentLevel(self.T_TRAP_MASTERY), {
+			type = "nature", name = "nightshade trap", color=colors.LIGHT_BLUE, image = "trap/poison_vines01.png",
 			dam = dam,
-			faction = self.faction,
 			check_hit = self:combatAttackDex(),
 			triggered = function(self, x, y, who)
 				self:project({type="hit", x=x,y=y}, x, y, engine.DamageType.NATURE, self.dam, {type="slime"})
@@ -470,20 +426,7 @@ newTalent{
 				end
 				return true, true
 			end,
-			summoner = self, summoner_gain_exp = true,
-			temporary = 5 + self:getTalentLevel(self.T_TRAP_MASTERY),
-			x = x, y = y,
-			canAct = false,
-			energy = {value=0},
-			act = function(self)
-				self:useEnergy()
-				self.temporary = self.temporary - 1
-				if self.temporary <= 0 then
-					game.level.map:remove(self.x, self.y, engine.Map.TRAP)
-					game.level:removeEntity(self)
-				end
-			end,
-		}
+		})
 		t:identify(true)
 
 		t:resolve() t:resolve(nil, true)
@@ -497,5 +440,110 @@ newTalent{
 	info = function(self, t)
 		return ([[Lay a trap cotted with a potent venom, doing %0.2f nature damage to a creature and stunning it for 4 turns.]]):
 		format(damDesc(self, DamageType.COLD, 20 + self:getCun() * 0.7 * self:getTalentLevel(self.T_TRAP_MASTERY)))
+	end,
+}
+
+newTalent{
+	name = "Flash Bang Trap",
+	type = {"cunning/traps", 1},
+	points = 1,
+	cooldown = 12,
+	stamina = 12,
+	tactical = { DISABLE = 2 },
+	requires_target = true,
+	range = trap_range,
+	action = function(self, t)
+		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y then return nil end
+		local _ _, x, y = self:canProject(tg, x, y)
+		if game.level.map(x, y, Map.TRAP) then game.logPlayer(self, "You somehow fail to set the trap.") return nil end
+
+		local Trap = require "mod.class.Trap"
+		local t = basetrap(self, t, x, y, 5 + self:getTalentLevel(self.T_TRAP_MASTERY), {
+			type = "elemental", name = "flash bang trap", color=colors.YELLOW, image = "trap/blast_acid01.png",
+			dur = math.floor(self:getTalentLevel(self.T_TRAP_MASTERY) + 4),
+			check_hit = self:combatAttackDex(),
+			triggered = function(self, x, y, who)
+				self:project({type="ball", x=x,y=y, radius=2}, x, y, function(px, py)
+					local who = game.level.map(px, py, engine.Map.ACTOR)
+					if who and who:checkHit(self.check_hit, who:combatSpellResist(), 0, 95, 15) and who:canBe("blind") then
+						who:setEffect(who.EFF_BLINDED, self.dur, {})
+					elseif who and who:checkHit(self.check_hit, who:combatSpellResist(), 0, 95, 15) and who:canBe("stun") then
+						who:setEffect(who.EFF_DAZED, self.dur, {})
+					elseif who then
+						game.logSeen(who, "%s resists the flash bang!", who.name:capitalize())
+					end
+				end)
+				game.level.map:particleEmitter(x, y, 2, "sunburst", {radius=2, tx=x, ty=y})
+				return true, true
+			end,
+		})
+		t:identify(true)
+
+		t:resolve() t:resolve(nil, true)
+		t:setKnown(self, true)
+		game.level:addEntity(t)
+		game.zone:addEntity(game.level, t, "trap", x, y)
+		game.level.map:particleEmitter(x, y, 1, "summon")
+
+		return true
+	end,
+	info = function(self, t)
+		return ([[Lay a trap that explodes in a radius of 2, blinding or dazing anything caught inside for %d turns.
+		Duration increases with Trap Mastery.]]):
+		format(math.floor(self:getTalentLevel(self.T_TRAP_MASTERY) + 4))
+	end,
+}
+
+newTalent{
+	name = "Poison Gas Trap",
+	type = {"cunning/traps", 1},
+	points = 1,
+	cooldown = 10,
+	stamina = 12,
+	tactical = { ATTACKAREA = 2 },
+	requires_target = true,
+	range = trap_range,
+	action = function(self, t)
+		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y then return nil end
+		local _ _, x, y = self:canProject(tg, x, y)
+		if game.level.map(x, y, Map.TRAP) then game.logPlayer(self, "You somehow fail to set the trap.") return nil end
+
+		local dam = 20 + self:getCun() * 0.5 * self:getTalentLevel(self.T_TRAP_MASTERY)
+
+		local t = basetrap(self, t, x, y, 8 + self:getTalentLevel(self.T_TRAP_MASTERY), {
+			type = "nature", name = "poison gas trap", color=colors.LIGHT_RED, image = "trap/blast_acid01.png",
+			dam = dam,
+			triggered = function(self, x, y, who)
+				-- Add a lasting map effect
+				game.level.map:addEffect(self,
+					x, y, 4,
+					DamageType.POISON, self.dam,
+					3,
+					5, nil,
+					{type="vapour"},
+					nil, true
+				)
+				game:playSoundNear(self, "talents/cloud")
+				return true, true
+			end,
+		})
+		t:identify(true)
+
+		t:resolve() t:resolve(nil, true)
+		t:setKnown(self, true)
+		game.level:addEntity(t)
+		game.zone:addEntity(game.level, t, "trap", x, y)
+		game.level.map:particleEmitter(x, y, 1, "summon")
+
+		return true
+	end,
+	info = function(self, t)
+		return ([[Lay a trap that explodes in a radius of 3, releasing a thick poisonous cloud lasting 4 turns.
+		Each turn the cloud infects all creatures with a poison that deals %0.2f nature damage over 5 turns.]]):
+		format(20 + self:getCun() * 0.5 * self:getTalentLevel(self.T_TRAP_MASTERY))
 	end,
 }
