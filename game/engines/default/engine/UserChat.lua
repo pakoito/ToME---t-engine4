@@ -68,10 +68,12 @@ function _M:event(e)
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
 		self.channels[e.channel].users[e.user] = true
 		self.channels_changed = true
+		if type(game) == "table" and game.log and e.channel == self.cur_channel then game.log("#{italic}##FIREBRICK#%s has joined channel %s (press space to talk).#{normal}#", e.user, e.channel) end
 	elseif e.se == "Part" then
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
 		self.channels[e.channel].users[e.user] = nil
 		self.channels_changed = true
+		if type(game) == "table" and game.log and e.channel == self.cur_channel then game.log("#{italic}##FIREBRICK#%s has left channel %s.#{normal}#", e.user, e.channel) end
 	elseif e.se == "UserInfo" then
 		local info = e.data:unserialize()
 		if not info then return end
@@ -191,7 +193,9 @@ function _M:display()
 		table.sort(list, function(a,b) if a == "global" then return 1 elseif b == "global" then return nil else return a < b end end)
 		for i, name in ipairs(list) do
 			local oname = name
-			name = "["..name:capitalize().." ("..#self.channels[name].users..")]"
+			local nb_users = 0
+			for _, _ in pairs(self.channels[name].users) do nb_users = nb_users + 1 end
+			name = "["..name:capitalize().." ("..nb_users..")]"
 			local len = self.font_mono:size(name)
 
 			local s = core.display.newSurface(len + ls_w + rs_w, ls_h)
