@@ -126,7 +126,7 @@ newTalent{
 	cooldown = 30,
 	sustain_mana = 150,
 	tactical = { DEFEND = 2 },
-	getManaRatio = function(self, t) return 3 - self:combatTalentSpellDamage(t, 10, 200) / 100 end,
+	getManaRatio = function(self, t) return 3 - math.max(self:combatTalentSpellDamage(t, 10, 200) / 100, 0.5) end,
 	activate = function(self, t)
 		local power = t.getManaRatio(self, t)
 		self.disruption_shield_absorb = 0
