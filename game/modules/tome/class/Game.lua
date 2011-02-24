@@ -145,7 +145,7 @@ function _M:newGame()
 		type="player",
 		title="Main character",
 		main=true,
-		orders = {follow=true, behavior=true, leash=true},
+		orders = {follow=true, behavior=true, leash=true, talents=true},
 	})
 	self.party:setPlayer(player)
 --	self:setupDisplayMode()
