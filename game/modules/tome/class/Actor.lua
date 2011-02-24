@@ -161,9 +161,6 @@ function _M:init(t, no_default)
 
 	t.money = t.money or 0
 
-	-- Default melee barehanded damage
-	self.combat = { dam=1, atk=1, apr=0, dammod={str=1} }
-
 	engine.Actor.init(self, t, no_default)
 	engine.interface.ActorInventory.init(self, t)
 	engine.interface.ActorTemporaryEffects.init(self, t)
@@ -175,6 +172,10 @@ function _M:init(t, no_default)
 	engine.interface.ActorLevel.init(self, t)
 	engine.interface.ActorFOV.init(self, t)
 	mod.class.interface.ActorInscriptions.init(self, t)
+
+	-- Default melee barehanded damage
+	self.combat = self.combat or { dam=1, atk=1, apr=0, dammod={str=1} }
+	self.talents[self.T_ATTACK] = self.talents[self.T_ATTACK] or 1
 
 	self:resetCanSeeCache()
 end
@@ -661,6 +662,9 @@ function _M:tooltip(x, y, seen_by)
 	ts:add("Resists: ", table.concat(resists, ','), true)
 	ts:add("Armour/Defense: ", tostring(math.floor(self:combatArmor())), ' / ', tostring(math.floor(self:combatDefense())), true)
 	ts:add("Size: ", {"color", "ANTIQUE_WHITE"}, self:TextSizeCategory(), {"color", "WHITE"}, true)
+	if self.summon_time then
+		ts:add("Time left: ", {"color", "ANTIQUE_WHITE"}, ("%d"):format(self.summon_time), {"color", "WHITE"}, true)
+	end
 	ts:add(self.desc, true)
 	ts:add("Faction: ") ts:merge(factcolor:toTString()) ts:add(("%s (%s, %d)"):format(Faction.factions[self.faction].name, factstate, factlevel), {"color", "WHITE"}, true)
 	ts:add("Personal reaction: ") ts:merge(pfactcolor:toTString()) ts:add(("%s, %d"):format(pfactstate, pfactlevel), {"color", "WHITE"}, true)

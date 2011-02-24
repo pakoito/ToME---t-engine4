@@ -29,9 +29,11 @@ newTalent{
 	range = 10,
 	requires_target = true,
 	tactical = { ATTACK = 2 },
+	on_pre_use = function(self, t, silent)
+		if not self:canBe("summon") and not silent then game.logPlayer(self, "You can not summon, you are suppressed!") return end
+		return not checkMaxSummon(self, silent)
+	end,
 	action = function(self, t)
-		if not self:canBe("summon") then game.logPlayer(self, "You can not summon, you are suppressed!") return end
-		if checkMaxSummon(self) then return end
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty then return nil end
@@ -100,9 +102,11 @@ newTalent{
 	range = 10,
 	requires_target = true,
 	tactical = { ATTACK = 1, EQUILIBRIUM = 1, },
+	on_pre_use = function(self, t, silent)
+		if not self:canBe("summon") and not silent then game.logPlayer(self, "You can not summon, you are suppressed!") return end
+		return not checkMaxSummon(self, silent)
+	end,
 	action = function(self, t)
-		if not self:canBe("summon") then game.logPlayer(self, "You can not summon, you are suppressed!") return end
-		if checkMaxSummon(self) then return end
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty then return nil end
@@ -182,9 +186,11 @@ newTalent{
 	range = 10,
 	requires_target = true,
 	tactical = { ATTACK = 2, DISABLE = 2 },
+	on_pre_use = function(self, t, silent)
+		if not self:canBe("summon") and not silent then game.logPlayer(self, "You can not summon, you are suppressed!") return end
+		return not checkMaxSummon(self, silent)
+	end,
 	action = function(self, t)
-		if not self:canBe("summon") then game.logPlayer(self, "You can not summon, you are suppressed!") return end
-		if checkMaxSummon(self) then return end
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty then return nil end
@@ -258,10 +264,12 @@ newTalent{
 	cooldown = 20,
 	range = 10,
 	tactical = { ATTACK = 3, DISABLE = 1 },
+	on_pre_use = function(self, t, silent)
+		if not self:canBe("summon") and not silent then game.logPlayer(self, "You can not summon, you are suppressed!") return end
+		return not checkMaxSummon(self, silent)
+	end,
 	requires_target = true,
 	action = function(self, t)
-		if not self:canBe("summon") then game.logPlayer(self, "You can not summon, you are suppressed!") return end
-		if checkMaxSummon(self) then return end
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty then return nil end

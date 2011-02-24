@@ -28,6 +28,31 @@ newTalentType{ is_spell=true, type="inscriptions/taints", name = "taints", hide 
 load("/data/talents/misc/inscriptions.lua")
 load("/data/talents/misc/npcs.lua")
 
+-- Default melee attack
+newTalent{
+	name = "Attack",
+	type = {"base/class", 1},
+	no_energy = "fake",
+	hide = true,
+	points = 1,
+	range = 1,
+	message = false,
+	requires_target = true,
+	target = {type="hit", range=1},
+	tactical = { ATTACK = 1 },
+	action = function(self, t)
+		local tg = self:getTalentTarget(t)
+		local x, y, target = self:getTarget(tg)
+		if not target then return end
+
+		self:attackTarget(target)
+		return true
+	end,
+	info = function(self, t)
+		return ([[Hack and slash, baby!]])
+	end,
+}
+
 --mindslayer resource
 newTalent{
 	name = "Psi Pool",

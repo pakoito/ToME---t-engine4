@@ -14,14 +14,15 @@ newAI("use_tactical", function(self)
 		local t_avail = false
 		print(self.name, self.uid, "tactical ai talents testing", t.name, tid)
 		if t.tactical then
-			local tg = self:getTalentTarget(t) or {type=util.getval(t.direct_hit, self, t) and "hit" or "bolt"}
+			local tg = self:getTalentTarget(t)
+			local default_tg = {type=util.getval(t.direct_hit, self, t) and "hit" or "bolt"}
 			if t.mode == "activated" and not t.no_npc_use and
 			   not self:isTalentCoolingDown(t) and
 			   self:preUseTalent(t, true, true) and
 			   (not self:getTalentRequiresTarget(t) or (
 				 hate and
 				 target_dist <= (self:getTalentRange(t) + self:getTalentRadius(t)) and
-				 self:canProject(tg, self.ai_target.actor.x, self.ai_target.actor.y) and
+				 self:canProject(tg or default_tg, self.ai_target.actor.x, self.ai_target.actor.y) and
 				 has_los
 			   ))
 			   then
@@ -35,8 +36,8 @@ newAI("use_tactical", function(self)
 			if t_avail then
 				-- Project the talent if possible, counting foes and allies hit
 				local nb_foes_hit, nb_allies_hit, nb_self_hit
-				if tg then
-					local typ = engine.Target:getType(tg)
+				if tg or self:getTalentRequiresTarget(t) then
+					local typ = engine.Target:getType(tg or default_tg)
 					local target_actor = self.ai_target.actor or self
 					nb_foes_hit = 0
 					nb_allies_hit = 0
@@ -59,17 +60,21 @@ newAI("use_tactical", function(self)
 				end
 				-- Evaluate the tactical weights and weight functions
 				for tact, val in pairs(t.tactical) do
-					if not avail[tact] then avail[tact] = {} end
-					-- Save the tactic, if the talent is instant it gets a huge bonus
-					-- Note the addition of a less than one random value, this means the sorting will randomly shift equal values
 					if type(val) == "function" then val = val(self, t, self.ai_target.actor) end
-					val = val * (1 + lvl / 5)
+					val = val * (self.ai_talents and self.ai_talents[t.id] or 1) * (1 + lvl / 5)
 					if nb_foes_hit and (nb_foes_hit > 0 or nb_allies_hit > 0 or nb_self_hit > 0) then
-						val = val * math.max(0.01, nb_foes_hit - ally_compassion * nb_allies_hit - self_compassion * nb_self_hit)
+						val = val * (nb_foes_hit - ally_compassion * nb_allies_hit - self_compassion * nb_self_hit)
 					end
-					avail[tact][#avail[tact]+1] = {val=((t.no_energy==true) and val * 10 or val) + rng.float(0, 0.9), tid=tid, nb_foes_hit=nb_foes_hit, nb_allies_hit=nb_allies_hit, nb_self_hit=nb_self_hit}
-					print(self.name, self.uid, "tactical ai talents can use", t.name, tid, tact, "weight", avail[tact][#avail[tact]].val)
-					ok = true
+					-- Only take values greater than 0... allows the ai_talents to turn talents off
+					if val > 0 then
+						if not avail[tact] then avail[tact] = {} end
+						-- Save the tactic, if the talent is instant it gets a huge bonus
+						-- Note the addition of a less than one random value, this means the sorting will randomly shift equal values
+						val = ((t.no_energy==true) and val * 10 or val) + rng.float(0, 0.9)
+						avail[tact][#avail[tact]+1] = {val=val, tid=tid, nb_foes_hit=nb_foes_hit, nb_allies_hit=nb_allies_hit, nb_self_hit=nb_self_hit}
+						print(self.name, self.uid, "tactical ai talents can use", t.name, tid, tact, "weight", avail[tact][#avail[tact]].val)
+						ok = true
+					end
 				end
 			end
 		end
@@ -166,7 +171,7 @@ newAI("use_tactical", function(self)
 			end
 		end
 
-		
+
 		-- Need closing-in
 		if avail.closein and target_dist and target_dist > 2 and self.ai_tactic.closein then
 			want.closein = 1 + target_dist / 2
@@ -254,6 +259,7 @@ newAI("use_tactical", function(self)
 end)
 
 newAI("tactical", function(self)
+--	if self.debugme then require "remdebug.engine" remdebug.engine.start() end
 	local targeted = self:runAI(self.ai_state.ai_target or "target_simple")
 
 	-- Keep your distance
@@ -314,10 +320,10 @@ newAI("flee_dmap_keep_los", function(self)
 				if not cd or (c and (cd < c and self:canMove(sx, sy))) then c = cd; dir = i end
 			end
 		end
-		
+
 		-- Check if we are in melee
 		-- EVENTUALLY
-		
+
 		return self:moveDirection(util.coordAddDir(self.x, self.y, dir))
 	end
 end)

@@ -34,6 +34,7 @@ newTalent{
 	requires_target = true,
 	target = function(self, t)
 		local ammo = self:hasAlchemistWeapon()
+		if not ammo then return end
 		-- Using friendlyfire, although this could affect escorts etc.
 		local friendlyfire = true
 		local prot = self:getTalentLevelRaw(self.T_ALCHEMIST_PROTECTION) * 20
@@ -191,7 +192,14 @@ newTalent{
 	direct_hit = true,
 	requires_target = true,
 	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t)+(ammo.alchemist_bomb.range or 0), radius=self:getTalentRadius(t), talent=t}
+		local ammo = self:hasAlchemistWeapon()
+		-- Using friendlyfire, although this could affect escorts etc.
+		local friendlyfire = true
+		local prot = self:getTalentLevelRaw(self.T_ALCHEMIST_PROTECTION) * 20
+		if prot > 0 then
+			friendlyfire = 100 - prot
+		end
+		return {type="ball", range=self:getTalentRange(t)+(ammo and ammo.alchemist_bomb and ammo.alchemist_bomb.range or 0), radius=self:getTalentRadius(t), friendlyfire=friendlyfire, talent=t}
 	end,
 	tactical = { ATTACKAREA = 2, DISABLE = 2 },
 	computeDamage = function(self, t, ammo)

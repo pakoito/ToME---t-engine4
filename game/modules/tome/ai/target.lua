@@ -39,7 +39,7 @@ newAI("target_simple", function(self)
 				((act.lite or 0) > 0)
 				or
 				-- Otherwise check if we can see it with our "senses"
-				(self:canSee(act) and self.fov.actors[act].sqdist <= sqsense)
+				(self:canSee(act) and (self.fov.actors[act].sqdist <= sqsense) or game.level.map.lites(act.x, act.y))
 			) then
 
 			self.ai_target.actor = act

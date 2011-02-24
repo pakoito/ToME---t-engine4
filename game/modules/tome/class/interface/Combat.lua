@@ -33,7 +33,7 @@ function _M:bumpInto(target)
 	local reaction = self:reactionToward(target)
 	if reaction < 0 then
 		if target.encounterAttack and self.player then self:onWorldEncounter(target) return end
-		return self:attackTarget(target)
+		return self:useTalent(self.T_ATTACK, nil, nil, nil, target)
 	elseif reaction >= 0 then
 		-- Talk ?
 		if self.player and target.can_talk then

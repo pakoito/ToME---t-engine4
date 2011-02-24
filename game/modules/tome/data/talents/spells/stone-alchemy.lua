@@ -39,6 +39,7 @@ newTalent{
 	end,
 	action = function(self, t)
 		self:showEquipInven("Use which gem?", function(o) return not o.unique and o.type == "gem" end, function(o, inven, item)
+			if not o then return end
 			local gem = t.make_gem(self, t, o.define_as)
 			self:addObject(self.INVEN_INVEN, gem)
 			self:removeObject(inven, item)

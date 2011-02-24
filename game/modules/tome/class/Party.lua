@@ -261,6 +261,8 @@ function _M:giveOrder(actor, order)
 		end)
 	elseif order == "behavior" then
 		game:registerDialog(require("mod.dialogs.orders."..order:capitalize()).new(actor, def))
+	elseif order == "talents" then
+		game:registerDialog(require("mod.dialogs.orders."..order:capitalize()).new(actor, def))
 
 	-------------------------------------------
 	-- Escort specifics

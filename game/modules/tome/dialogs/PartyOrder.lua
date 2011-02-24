@@ -29,6 +29,7 @@ local orders = {
 	leash = {1, function(actor) return ("Set maximum wander distance [current: %d]"):format(actor.ai_state.tactic_leash) end},
 	behavior = {2, function(actor) return ("Set behavior [current: %s]"):format(actor.ai_tactic.type or "default") end},
 	follow = {3, function(actor) return ("Follow party leader [current: %s]"):format(actor.ai_state.tactic_follow_leader and "yes" or "no") end},
+	talents = {4, function(actor) return ("Set talent weights") end},
 }
 
 function _M:init(actor, def)

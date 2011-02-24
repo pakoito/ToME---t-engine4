@@ -520,9 +520,12 @@ newInscription{
 		local data = self:getInscriptionData(t.short_name)
 		return data.range
 	end,
+	target = function(self, t)
+		return  {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
+	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
+		local tg = self:getTalentTarget(t)
 		self:projectile(tg, self.x, self.y, DamageType.ACID, data.power + data.inc_stat)
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_acid", {radius=tg.radius})
 		game:playSoundNear(self, "talents/slime")
@@ -550,9 +553,12 @@ newInscription{
 		local data = self:getInscriptionData(t.short_name)
 		return data.range
 	end,
+	target = function(self, t)
+		return {type="beam", range=self:getTalentRange(t), talent=t}
+	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local dam = data.power + data.inc_stat

@@ -63,15 +63,19 @@ load("/data/talents/gifts/fire-drake.lua")
 load("/data/talents/gifts/cold-drake.lua")
 load("/data/talents/gifts/storm-drake.lua")
 
-function checkMaxSummon(self)
+function checkMaxSummon(self, silent)
 	local nb = 0
-	for _, e in pairs(game.level.entities) do
-		if e.summoner and e.summoner == self and e.wild_gift_summon then nb = nb + 1 end
+	if not game.party then return end
+	-- Count party members
+	for act, def in pairs(game.party.members) do
+		if act.summoner and act.summoner == self and act.wild_gift_summon then nb = nb + 1 end
 	end
 
 	local max = math.max(1, math.floor(self:getCun() / 10))
 	if nb >= max then
-		game.logPlayer(self, "#PINK#You can not summon any more; you have too many summons already (%d). You can increase the limit with higher Cunning(+1 for every 10).", nb)
+		if not silent then
+			game.logPlayer(self, "#PINK#You can not summon any more; you have too many summons already (%d). You can increase the limit with higher Cunning(+1 for every 10).", nb)
+		end
 		return true
 	else
 		return false
@@ -85,6 +89,8 @@ function setupSummon(self, m, x, y)
 	m.unused_talents_types = 0
 	m.ai_state = m.ai_state or {}
 	m.ai_state.tactic_leash = 100
+	-- Try to use stored AI talents to preserve tweaking over multiple summons
+	m.ai_talents = self.stored_ai_talents and self.stored_ai_talents[m.name] or {}
 	local main_weapon = self:getInven("MAINHAND")[1]
 	m:attr("combat_apr", self:combatAPR(main_weapon))
 	m.inc_damage = table.clone(self.inc_damage, true)
@@ -98,7 +104,7 @@ function setupSummon(self, m, x, y)
 			control=self:knowTalent(self.T_SUMMON_CONTROL) and "full" or "no",
 			type="summon",
 			title="Summon",
-			orders = {leash=true, follow=true},
+			orders = {leash=true, follow=true, talents=true},
 			on_control = function(self)
 				local summoner = self.summoner
 				self:setEffect(self.EFF_SUMMON_CONTROL, 1000, {incdur=2 + summoner:getTalentLevel(self.T_SUMMON_CONTROL) * 3, res=summoner:getCun(7, true) * summoner:getTalentLevelRaw(self.T_SUMMON_CONTROL)})
