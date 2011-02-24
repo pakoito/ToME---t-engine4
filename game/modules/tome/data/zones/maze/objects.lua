@@ -18,3 +18,14 @@
 -- darkgod@te4.org
 
 load("/data/general/objects/objects.lua")
+
+for i = 1, 7 do
+newEntity{ base = "BASE_LORE",
+	define_as = "NOTE"..i,
+	name = "torn diary page", lore="maze-note-"..i,
+	desc = [[A diary, left by an adventurer.]],
+	rarity = false,
+	is_magic_device = false,
+	encumberance = 0,
+}
+end

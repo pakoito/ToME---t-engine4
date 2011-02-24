@@ -19,6 +19,7 @@
 
 load("/data/lore/trollmire.lua")
 load("/data/lore/scintillating-caves.lua")
+load("/data/lore/maze.lua")
 load("/data/lore/daikara.lua")
 load("/data/lore/old-forest.lua")
 load("/data/lore/infinite-dungeon.lua")
