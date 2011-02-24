@@ -3407,7 +3407,16 @@ newEffect{
 		eff.tmpid = self:addTemporaryValue("dazed", 1)
 	end,
 	deactivate = function(self, eff)
+		if self:knowTalent(self.T_PARADOX_MASTERY) and self:isTalentActive(self.T_PARADOX_MASTERY) then
+			modifier = self:getWil() * (1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10) or 0 )
+		else
+			modifier = self:getWil()
+		end
+		local failure = math.pow(((self:getParadox() - modifier)/200), 2)*((100 + self:combatFatigue()) / 100)
+		local anomaly = math.pow((self:getParadox()/400), 4)
+		local backfire = math.pow (((self:getParadox() - modifier)/300), 3)*((100 + self:combatFatigue()) / 100)
 		self:removeTemporaryValue("dazed", eff.tmpid)
+		game.logPlayer(self, "Your current failure chance is %d%%, your current anomoly chance is %d%%, and your current backfire chance is %d%%.", failure, anomaly, backfire)
 	end,
 }
 

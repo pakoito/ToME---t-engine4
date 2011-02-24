@@ -23,6 +23,7 @@ newTalent{
 	type = {"technique/archery-base", 1},
 	no_energy = "fake",
 	hide = true,
+	innate = true,
 	points = 1,
 	range = archery_range,
 	message = "@Source@ shoots!",

@@ -1564,7 +1564,7 @@ function _M:equilibriumChance(eq)
 end
 
 --- Paradox check
-function _M:paradoxChance(pa)
+function _M:paradoxFailChance(pa)
 	--check for Paradox Mastery
 	if self:knowTalent(self.T_PARADOX_MASTERY) and self:isTalentActive(self.T_PARADOX_MASTERY) then
 		modifier = self:getWil() * (1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10) or 0 )
@@ -1574,7 +1574,7 @@ function _M:paradoxChance(pa)
 	--print("[Paradox] Will modifier: ", modifier, "::", self:getParadox())
 	local chance = math.pow (((self:getParadox() - modifier)/200), 2)*((100 + self:combatFatigue()) / 100)
 	--print("[Paradox] Fail chance: ", chance, "::", self:getParadox())
-	return rng.percent(100 - chance * 100), 100 - chance * 100
+	return rng.percent(chance)
 end
 
 --- Called before a talent is used
@@ -1672,8 +1672,14 @@ function _M:preUseTalent(ab, silent, fake)
 
 	-- Paradox is special, it has no max, but the higher it is the higher the chance of something bad happening
 	if (ab.paradox or ab.sustain_paradox) and not fake then
-		-- Check anomalies first
-		if not game.zone.no_anomalies and not self:attr("no_paradox_fail") and rng.percent(math.pow((self:getParadox()/400), 4)) then
+		-- Check failure first
+		if not self:attr("no_paradox_fail") and self:paradoxFailChance(ab.paradox or ab.sustain_paradox) then
+			if not silent then game.logPlayer(self, "You fail to use %s due to your paradox!", ab.name) end
+			self:incParadox(ab.paradox or ab.paradox_sustain / 10)
+			self:useEnergy()
+			return false
+		-- Now Check Anomalies
+		elseif not game.zone.no_anomalies and not self:attr("no_paradox_fail") and rng.percent(math.pow((self:getParadox()/400), 4)) then
 			-- Random anomaly
 			self:incParadox(ab.paradox or ab.paradox_sustain / 2)
 			local ts = {}
@@ -1682,12 +1688,6 @@ function _M:preUseTalent(ab, silent, fake)
 			end
 			if not silent then game.logPlayer(self, "You lose control and unleash an anomaly!") end
 			self:forceUseTalent(rng.table(ts), {ignore_energy=true})
-			self:useEnergy()
-			return false
-		-- Now check failure
-		elseif not self:attr("no_paradox_fail") and self:paradoxChance(ab.paradox or ab.sustain_paradox) then
-			if not silent then game.logPlayer(self, "You fail to use %s due to your paradox!", ab.name) end
-			self:incParadox(ab.paradox or ab.paradox_sustain / 10)
 			self:useEnergy()
 			return false
 		end

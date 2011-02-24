@@ -30,7 +30,8 @@ newTalent{
 	getAnomaly = function(self, t) return 6 - (self:getTalentLevelRaw(self.T_STATIC_HISTORY) or 0) end,
 	action = function(self, t)
 		-- open dialog to get desired paradox
-		local q = engine.dialogs.GetQuantity.new("Retuning the fabric of spacetime...", "What's your desired paradox level?", math.floor(self.paradox), nil, function(qty)
+		local q = engine.dialogs.GetQuantity.new("Retuning the fabric of spacetime...", 
+		"What's your desired paradox level?", math.floor(self.paradox), nil, function(qty)
 			
 			-- get reduction amount and find duration
 			amount = qty - self.paradox
@@ -49,7 +50,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local chance = t.getAnomaly(self, t)
-		return ([[Retunes your Paradox towards the desired level.  You will be dazed while tuning and each turn your Paradox will increase or decrease by an amount equal to your Willpower stat.
+		return ([[Retunes your Paradox towards the desired level and informs you of failure, anomaly, and backfire chances when you finish tuning.  You will be dazed while tuning and each turn your Paradox will increase or decrease by an amount equal to your Willpower stat.
 		Each turn you have a %d%% chance of triggering a temporal anomaly which will end the tuning process.]]):
 		format(chance)
 	end,

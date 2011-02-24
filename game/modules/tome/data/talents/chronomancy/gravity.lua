@@ -62,6 +62,7 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
+		local _ _, x, y = self:canProject(tg, x, y)
 		x, y = checkBackfire(self, x, y)
 		local grids = self:project(tg, x, y, function(px, py)
 			local target = game.level.map(px, py, Map.ACTOR)
@@ -74,7 +75,6 @@ newTalent{
 		end)
 		self:project (tg, x, y, DamageType.PHYSICAL, self:spellCrit(t.getDamage(self, t)))
 		
-		local _ _, x, y = self:canProject(tg, x, y)
 		game.level.map:particleEmitter(x, y, tg.radius, "gravity_spike", {radius=tg.radius, grids=grids, tx=x, ty=y})
 		game:playSoundNear(self, "talents/earth")
 		return true

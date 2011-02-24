@@ -34,6 +34,7 @@ newTalent{
 	type = {"base/class", 1},
 	no_energy = "fake",
 	hide = true,
+	innate = true,
 	points = 1,
 	range = 1,
 	message = false,

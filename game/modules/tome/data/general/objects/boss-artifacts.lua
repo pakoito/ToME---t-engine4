@@ -829,7 +829,7 @@ newEntity{ base = "BASE_WAND", define_as = "ROD_OF_ANNULMENT",
 				local tids = {}
 				for tid, lev in pairs(target.talents) do
 					local t = target:getTalentFromId(tid)
-					if not target.talents_cd[tid] and t.mode == "activated" then tids[#tids+1] = t end
+					if not target.talents_cd[tid] and t.mode == "activated" and not t.innate then tids[#tids+1] = t end
 				end
 				for i = 1, 3 do
 					local t = rng.tableRemove(tids)

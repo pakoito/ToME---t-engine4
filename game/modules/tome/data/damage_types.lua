@@ -642,9 +642,11 @@ newDamageType{
 -- Generic spell knockback vs. physresist.  Uses a more generic resist message
 newDamageType{
 	name = "repulsion", type = "REPULSION",
-	projector = function(src, x, y, type, dam)
+	projector = function(src, x, y, type, dam, tmp)
 		local target = game.level.map(x, y, Map.ACTOR)
-		if target and not target:attr("never_move") then
+		tmp = tmp or {}
+		if target and not target:attr("never_move") and not tmp[target] then
+			tmp[target] = true
 			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
 				target:knockback(src.x, src.y, 2)
 				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
