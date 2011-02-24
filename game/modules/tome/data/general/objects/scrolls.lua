@@ -104,7 +104,7 @@ newEntity{
 	type = "lore", subtype="lore", not_in_stores=true,
 	unided_name = "scroll", identified=true,
 	display = "?", color=colors.ANTIQUE_WHITE, image="object/scroll-lore.png",
-	encumber = 0.1,
+	encumber = 0,
 	desc = [[This parchment contains some lore.]],
 }
 

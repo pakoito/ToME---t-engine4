@@ -853,9 +853,8 @@ function _M:setupCommands()
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
 --			self.nicer_tiles:postProcessLevelTiles(self.level)
---			local m = game.zone:makeEntityByName(game.level, "actor", "NPC_COLD_DRAKE")
---			game.zone:addEntity(game.level, m, "actor", game.player.x + 1, game.player.y + 1)
-			error("plop")
+			local m = game.zone:makeEntity(game.level, "object", {properties={"lore"}}, nil, true)
+			game.zone:addEntity(game.level, m, "object", game.player.x, game.player.y)
 		end end,
 	}
 

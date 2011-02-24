@@ -54,9 +54,6 @@ function _M:setupOnGame()
 end
 
 function _M:event(e)
-	-- Cancel if game is not fully loaded
-	if type(game) ~= "table" then return end
-
 	if e.se == "Talk" then
 		e.msg = e.msg:removeColorCodes()
 
@@ -65,6 +62,8 @@ function _M:event(e)
 		table.insert(log, 1, {user=e.user, msg=e.msg})
 		while #log > self.max do table.remove(log) end
 		self.changed = true
+
+		if type(game) == "table" and game.log then game.log("#YELLOW#<%s> %s", e.user, e.msg) end
 	elseif e.se == "Join" then
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
 		self.channels[e.channel].users[e.user] = true

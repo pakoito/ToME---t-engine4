@@ -22,5 +22,22 @@ newEntity{ base = "BASE_LORE",
 	desc = [[An old tale about the fear of magic]],
 	level_range = {1, 20},
 	rarity = 20,
-	encumber = 0,
+}
+
+newEntity{ base = "BASE_LORE",
+	name = "memories of Artelia Firstborn", lore="creation-elf", unique=true,
+	desc = [[The memories of the first elf to have awaken]],
+	level_range = {1, 25},
+	rarity = 20,
+	-- Only elves can find it
+	checkFilter = function(e) local p = game.party:findMember{main=true} if p.descriptor.race == "Elf" then return true end return false end,
+}
+
+newEntity{ base = "BASE_LORE",
+	name = "human myth of creation", lore="creation-human", unique=true,
+	desc = [[Myth of creation of the humans]],
+	level_range = {1, 25},
+	rarity = 20,
+	-- Only humans can find it
+	checkFilter = function(e) local p = game.party:findMember{main=true} if p.descriptor.race == "Human" then return true end return false end,
 }

@@ -66,3 +66,47 @@ newLore{
 ]],
 }
 
+--------------------------------------------------------------
+-- Myths of creations
+--------------------------------------------------------------
+
+newLore{
+	id = "creation-elf",
+	category = "myths of creation",
+	name = "memories of Artelia Firstborn",
+	lore = [[#{italic}#This scroll looks ancient, possibly going back millennia, but has been incredibly well-preserved.#{normal}#
+
+I remember when I first woke, and I drew my first breath, and the fresh young air of the world filled me with vitality. I opened my eyes, and above me stood a figure of outstanding radiance. She was tall and slim, crowned in silver hair that fell to the ground in silken tresses. Her skin was pale to the point of luminance, and her eyes were brighter than the stars.
+
+I watched her for what felt like a century, and she watched me, and I saw tears form in her eyes. I did not have a voice yet, but I thought, "Why does she look so sad?" And I felt then her reply in my thoughts, "For you are beautiful, and far more beautiful than all else in the world. But this is a world of pain and sorrow, and I cannot bear to think of my creation come to harm. I will give you strength to endure many years, and a voice to express all desires, but the burden of sadness will follow you forever. At that thought I weep..."
+
+I felt then strength come into my limbs, and a voice rise in my throat. I rose to the ground and I looked around, and in awe of the world around me and the stars above me I sang loudly for joy. And the woman smiled as she heard my voice, and her tears stopped, so I continued to sing for a while to entertain her. But then I said, "Am I alone?" She nodded, and said, "There are no others like you." At this I felt sad, and she could see the loneliness in my heart. She seemed to hesitate a moment, and said, "Though it pains me, I cannot deny your desires. You will sleep now, and when you awaken you will be among people like yourself, and you will walk out into this broken world and try to mend it."
+
+As she finished speaking I instantly fell into a trance, and when I awoke I saw the world had changed, and there was now a blazing light in the sky - it was the new-born Sun. And I saw all around dozens more people like me, and others similar in appearance but varying in traits and abilities. I woke them up, and gathered them together, and we all expressed delight in each other's being, and named ourselves Alorë. But the woman was gone, and no others knew anything about her, and my searches for any trace of her were in vain.
+
+Times passed and changed, and other creatures were found, and oft they were fell and vile and we did war with them. Then we found the Sher'Tul, and they delighted in our beauty, and taught us the ways of the Arts. And then the War came, and some of us helped them in their battles, but soon we saw we had no place beside such masters, and we retreated to the woods as the War raged to its catastrophic conclusion.
+
+In all those centuries I still searched for the woman and found no trace. I know that the gods were all hunted down, and I remember the thorough searches of the Sher'Tul in their holy war. I grow old now, and some of those who first woke with me have passed away, and each passing night seem ever colder and lonelier. But still at times when I lie asleep I see her face or I hear her voice, and I know that one day, somehow, I will see her again.]],
+}
+
+
+newLore{
+	id = "creation-human",
+	category = "myths of creation",
+	name = "human myth of creation",
+	lore = [[At the start of time Sun was born, and Moon, and Eyal raised from the Darkness.
+And Gerlyk walked Eyal with his three brothers.
+But one day Gerlyk walked alone and realised he was alone, and he desired company.
+So Gerlyk took a burning coal, and put stones around it, and wrapped it in earth, and bathed it in water and breathed his breath into it, and it became alive. And Gerlyk named it Human.
+Now Gerlyk brought Human back to his brothers to see.
+But Gerlyk's brothers were jealous and tore Human apart. One brother grabbed the stone, and one brother grabbed the earth, and one brother grabbed the water.
+Gerlyk was sad, but took the burning coal that was left and made a new Human.
+Then the brother with the earth copied him, but made a short creature, and called it Halfling.
+And the brother with the stone made a thick creature, and called it Dwarf.
+And the brother with the water made a thin creature, and called it Elf.
+But Gerlyk's brothers grew jealous of each others creatures, and they fought, and they all were killed. And Elf cried and Dwarf cried and Halfling cried to see their creators fall.
+And Gerlyk was sad, and looked at Human and said, "I am sorry, but this is not a time for creators any more. I must go."
+And Gerlyk walked into the Darkness.
+But Human did not cry, for the coal in his heart burned hot, and he knew he was not truly alone.]],
+}
+
