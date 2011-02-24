@@ -1474,6 +1474,9 @@ function _M:canWearObject(o, try_slot)
 	if self:attr("forbid_arcane") and o.power_source and o.power_source.arcane then
 		return nil, "antimagic"
 	end
+	if o.power_source and o.power_source.antimagic and not self:attr("forbid_arcane") then
+		return nil, "requires antimagic"
+	end
 
 	return engine.interface.ActorInventory.canWearObject(self, o, try_slot)
 end

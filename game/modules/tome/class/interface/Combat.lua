@@ -241,6 +241,14 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 		print("[ATTACK] after crit", dam)
 		dam = dam * mult
 		print("[ATTACK] after mult", dam)
+
+		if weapon.inc_damage_type then
+			for t, idt in pairs(weapon.inc_damage_type) do
+				if target.type.."/"..target.subtype == t or target.type == t then dam = dam + dam * idt / 100 break end
+			end
+			print("[ATTACK] after inc by type", dam)
+		end
+
 		if crit then game.logSeen(self, "%s performs a critical strike!", self.name:capitalize()) end
 		DamageType:get(damtype).projector(self, target.x, target.y, damtype, math.max(0, dam))
 		hitted = true
@@ -375,17 +383,17 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	if hitted and not target.dead and target:attr("stamina_regen_on_hit") then target:incStamina(target.stamina_regen_on_hit) end
 	if hitted and not target.dead and target:attr("mana_regen_on_hit") then target:incMana(target.mana_regen_on_hit) end
 	if hitted and not target.dead and target:attr("equilibrium_regen_on_hit") then target:incEquilibrium(-target.equilibrium_regen_on_hit) end
-	
+
 	-- Ablative Armor
 	if hitted and not target.dead and target:attr("carbon_spikes") then
 		if target.carbon_armor >= 1 then
-			target.carbon_armor = target.carbon_armor - 1 
+			target.carbon_armor = target.carbon_armor - 1
 		else
 			-- Deactivate without loosing energy
 			target:forceUseTalent(target.T_CARBON_SPIKES, {ignore_energy=true})
 		end
 	end
-	
+
 	-- Riposte!
 	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_RIPOSTE) and rng.percent(target:getTalentLevel(target.T_RIPOSTE) * (5 + target:getDex(5))) then
 		game.logSeen(self, "%s ripostes!", target.name:capitalize())

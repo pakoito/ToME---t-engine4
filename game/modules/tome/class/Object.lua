@@ -266,6 +266,21 @@ function _M:getTextualDesc()
 			end
 			desc:add(("Damage on strike(melee): %s."):format(table.concat(rs, ',')), true)
 		end
+
+		if combat.inc_damage_type then
+			local idt = {}
+			for type, i in pairs(combat.inc_damage_type) do
+				local _, _, t, st = type:find("^([^/]+)/?(.*)$")
+				if st and st ~= "" then
+					idt[#idt+1] = st.." (+"..i.."%)"
+				else
+					idt[#idt+1] = t.." (+"..i.."%)"
+				end
+			end
+			if #idt > 0 then
+				desc:add(("Deals more damage against: %s."):format(table.concat(idt, ',')), true)
+			end
+		end
 	end
 
 	local desc_wielder = function(w)
@@ -512,6 +527,7 @@ function _M:getDesc(name_param)
 	if self.power_source then
 		if self.power_source.arcane then desc:add("Powered by ", {"color", "VIOLET"}, "arcane forces", {"color", "LAST"}, true) end
 		if self.power_source.nature then desc:add("Infused by ", {"color", "OLIVE_DRAB"}, "nature", {"color", "LAST"}, true) end
+		if self.power_source.antimagic then desc:add("Infused by ", {"color", "ORCHID"}, "arcane disrupting forces", {"color", "LAST"}, true) end
 		if self.power_source.technique then desc:add("Crafted by ", {"color", "LIGHT_UMBER"}, "a master", {"color", "LAST"}, true) end
 		if self.power_source.unknown then desc:add("Powered by ", {"color", "CRIMSON"}, "unknown forces", {"color", "LAST"}, true) end
 	end
