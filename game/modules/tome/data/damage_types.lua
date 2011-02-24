@@ -1001,7 +1001,7 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and target:canBe("disease") then
 			local eff = rng.table{{target.EFF_ROTTING_DISEASE, "con"}, {target.EFF_DECREPITUDE_DISEASE, "dex"}, {target.EFF_WEAKNESS_DISEASE, "str"}}
-			target:setEffect(eff[1], dam.dur or 5, { src = src, [eff[2]] = dam.disease_power, dam = dam.disease_dam or (dam.dam / 5) })
+			target:setEffect(eff[1], dam.dur or 5, { src = src, [eff[2]] = dam.disease_power or 5, dam = dam.disease_dam or (dam.dam / 5) })
 		end
 	end,
 }

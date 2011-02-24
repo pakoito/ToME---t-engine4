@@ -206,6 +206,7 @@ function _M:drawDialog(s)
 	end
 
 	immune_type = "poison_immune" immune_name = "Poison Resistance" if player:attr(immune_type) then self:mouseTooltip(self.TOOLTIP_SPECIFIC_IMMUNE, s:drawColorStringBlended(self.font, ("%s: #00ff00#%3d%%"):format(immune_name, util.bound(player:attr(immune_type) * 100, 0, 100)), w, h, 255, 255, 255)) h = h + self.font_h end
+	immune_type = "disease_immune" immune_name = "Disease Resistance" if player:attr(immune_type) then self:mouseTooltip(self.TOOLTIP_SPECIFIC_IMMUNE, s:drawColorStringBlended(self.font, ("%s: #00ff00#%3d%%"):format(immune_name, util.bound(player:attr(immune_type) * 100, 0, 100)), w, h, 255, 255, 255)) h = h + self.font_h end
 	immune_type = "cut_immune" immune_name = "Bleed Resistance" if player:attr(immune_type) then self:mouseTooltip(self.TOOLTIP_SPECIFIC_IMMUNE, s:drawColorStringBlended(self.font, ("%s: #00ff00#%3d%%"):format(immune_name, util.bound(player:attr(immune_type) * 100, 0, 100)), w, h, 255, 255, 255)) h = h + self.font_h end
 	immune_type = "confusion_immune" immune_name = "Confusion Resistance" if player:attr(immune_type) then self:mouseTooltip(self.TOOLTIP_SPECIFIC_IMMUNE, s:drawColorStringBlended(self.font, ("%s: #00ff00#%3d%%"):format(immune_name, util.bound(player:attr(immune_type) * 100, 0, 100)), w, h, 255, 255, 255)) h = h + self.font_h end
 	immune_type = "blind_immune" immune_name = "Blind Resistance" if player:attr(immune_type) then self:mouseTooltip(self.TOOLTIP_SPECIFIC_IMMUNE, s:drawColorStringBlended(self.font, ("%s: #00ff00#%3d%%"):format(immune_name, util.bound(player:attr(immune_type) * 100, 0, 100)), w, h, 255, 255, 255)) h = h + self.font_h end
@@ -396,6 +397,7 @@ function _M:dump()
 	end
 
 	immune_type = "poison_immune" immune_name = "Poison Resistance" if player:attr(immune_type) then nl(("%s: %3d%%"):format(immune_name, util.bound(player:attr(immune_type) * 100, 0, 100))) end
+	immune_type = "disease_immune" immune_name = "Disease Resistance" if player:attr(immune_type) then nl(("%s: %3d%%"):format(immune_name, util.bound(player:attr(immune_type) * 100, 0, 100))) end
 	immune_type = "cut_immune" immune_name = "Bleed Resistance" if player:attr(immune_type) then nl(("%s: %3d%%"):format(immune_name, util.bound(player:attr(immune_type) * 100, 0, 100))) end
 	immune_type = "confusion_immune" immune_name = "Confusion Resistance" if player:attr(immune_type) then nl(("%s: %3d%%"):format(immune_name, util.bound(player:attr(immune_type) * 100, 0, 100))) end
 	immune_type = "blind_immune" immune_name = "Blind Resistance" if player:attr(immune_type) then nl(("%s: %3d%%"):format(immune_name, util.bound(player:attr(immune_type) * 100, 0, 100))) end

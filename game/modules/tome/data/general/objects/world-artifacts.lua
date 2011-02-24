@@ -413,6 +413,31 @@ newEntity{ base = "BASE_LONGBOW",
 	},
 }
 
+newEntity{ base = "BASE_LONGBOW",
+	power_source = {arcane=true, nature=true},
+	name = "Corpsebow", unided_name = "rotting longbow", unique=true,
+	desc = [[A lost artifact of the Age of Dusk, the Corpsebow is filled with a lingering essence of that era's terrible plagues. Those struck by arrows fired from its rotten string find themselves afflicted by echoes of ancient sickness.]],
+	level_range = {10, 20},
+	rarity = 200,
+	require = { stat = { dex=16 }, },
+	cost = 50,
+	material_level = 2,
+	combat = {
+		range = 7,
+		physspeed = 0.8,
+	},
+	basic_ammo = {
+		dam = 20,
+		apr = 7,
+		physcrit = 1.5,
+		dammod = {dex=0.7, str=0.5},
+	},
+	wielder = {
+		disease_immune = 0.5,
+		ranged_project = {[DamageType.CORRUPTED_BLOOD] = 15},
+	},
+}
+
 newEntity{ base = "BASE_SLING",
 	power_source = {technique=true},
 	unique = true,

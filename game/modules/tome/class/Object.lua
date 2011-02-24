@@ -400,6 +400,7 @@ function _M:getTextualDesc()
 
 	if w.blind_immune then desc:add(("Increases blindness immunity: %d%%."):format(w.blind_immune * 100), true) end
 	if w.poison_immune then desc:add(("Increases poison immunity: %d%%."):format(w.poison_immune * 100), true) end
+	if w.disease_immune then desc:add(("Increases disease immunity: %d%%."):format(w.disease_immune * 100), true) end
 	if w.cut_immune then desc:add(("Increases cut immunity: %d%%."):format(w.cut_immune * 100), true) end
 	if w.silence_immune then desc:add(("Increases silence immunity: %d%%."):format(w.silence_immune * 100), true) end
 	if w.disarm_immune then desc:add(("Increases disarm immunity: %d%%."):format(w.disarm_immune * 100), true) end
