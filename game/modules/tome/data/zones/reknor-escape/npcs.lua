@@ -20,7 +20,7 @@
 load("/data/general/npcs/rodent.lua", rarity(0))
 load("/data/general/npcs/vermin.lua", rarity(2))
 load("/data/general/npcs/molds.lua", rarity(1))
-load("/data/general/npcs/skeleton.lua", rarity(0))
+load("/data/general/npcs/orc.lua", function(e) if e.level_range and e.level_range[1] == 10 then e.level_range[1] = 1 end end) -- Make orcs lower level, not a problem we have norgan to help!
 load("/data/general/npcs/snake.lua", rarity(2))
 
 load("/data/general/npcs/all.lua", rarity(4, 35))
@@ -29,44 +29,42 @@ local Talents = require("engine.interface.ActorTalents")
 
 newEntity{ define_as = "BROTOQ",
 	allow_infinite_dungeon = true,
-	type = "undead", subtype = "skeleton", unique = true,
-	name = "The Shade",
-	display = "s", color=colors.VIOLET,
-	shader = "unique_glow",
-	desc = [[This skeleton looks nasty. There are red flames in its empty eye sockets. It wields a nasty sword and strides toward you, throwing spells.]],
+	type = "humanoid", subtype = "orc", unique = true,
+	name = "Brotoq the Reaver",
+	display = "o", color=colors.VIOLET,
+	desc = [[A huge orc blocks your way to the Iron Council. You must pass.]],
 	level_range = {7, nil}, exp_worth = 2,
 	max_life = 150, life_rating = 15, fixed_rating = true,
-	max_mana = 85,
-	max_stamina = 85,
 	rank = 4,
 	size_category = 3,
-	undead = 1,
 	infravision = 20,
-	stats = { str=16, dex=12, cun=14, mag=25, con=16 },
+	stats = { str=20, dex=10, cun=12, mag=20, con=12 },
 	instakill_immune = 1,
-	blind_immune = 1,
-	bleed_immune = 1,
 	move_others=true,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	equipment = resolvers.equip{ {type="weapon", subtype="staff", defined="STAFF_KOR", random_art_replace={chance=75}, autoreq=true}, {type="armor", subtype="light", autoreq=true}, },
+	equipment = resolvers.equip{
+		{type="weapon", subtype="longsword", autoreq=true},
+		{type="weapon", subtype="longsword", autoreq=true},
+		{type="armor", subtype="light", autoreq=true},
+	},
 	drops = resolvers.drops{chance=100, nb=3, {ego_chance=100} },
 
 	resolvers.talents{
-		[Talents.T_MANATHRUST]=4, [Talents.T_FREEZE]=4, [Talents.T_TIDAL_WAVE]=2,
-		[Talents.T_WEAPONS_MASTERY]=3,
+		[Talents.T_VIRULENT_DISEASE]=2,
+		[Talents.T_CORRUPTED_STRENGTH]=1,
+		[Talents.T_CARRIER]=1,
+		[Talents.T_ACID_BLOOD]=1,
+		[Talents.T_REND]=2,
+		[Talents.T_WEAPONS_MASTERY]=2,
 	},
-	resolvers.inscriptions(1, {"shielding rune", "phase door rune"}),
-	resolvers.inscriptions(1, {"manasurge rune"}),
-	inc_damage = {all=-20},
+	resolvers.inscriptions(1, {"wild infusion"}),
 
 	autolevel = "warriormage",
 	ai = "tactical", ai_state = { talent_in=3, ai_move="move_astar", },
 
 	on_die = function(self, who)
-		game.state:activateBackupGuardian("KOR_FURY", 5, 35, ".. yes I tell you! The old ruins of Kor'Pul are still haunted!")
-		game.player:resolveSource():grantQuest("start-allied")
-		game.player:resolveSource():setQuestStatus("start-allied", engine.Quest.COMPLETED, "kor-pul")
+		game.player:resolveSource():setQuestStatus("start-dwarf", engine.Quest.COMPLETED, "brotoq")
 	end,
 }
 
@@ -83,6 +81,7 @@ newEntity{ define_as = "NORGAN",
 	stats = { str=19, dex=10, cun=12, mag=8, con=16, wil=13 },
 	move_others=true,
 	never_anger = true,
+	remove_from_party_on_death = true,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, LITE=1 },
 	equipment = resolvers.equip{

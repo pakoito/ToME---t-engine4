@@ -55,7 +55,7 @@ function _M:bumpInto(target)
 end
 
 function _M:takeHit()
-	return nil
+	return nil, 0
 end
 
 function _M:encounterAttack(target)

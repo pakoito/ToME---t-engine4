@@ -27,6 +27,7 @@ return {
 	width = 50, height = 50,
 --	all_remembered = true,
 --	all_lited = true,
+	no_worldport = true,
 	persistent = "zone",
 	ambient_music = "Swashing the buck.ogg",
 	generator =  {
@@ -65,10 +66,15 @@ return {
 			}, },
 		},
 		[5] = {
-			generator = { map = {
-				class = "engine.generator.map.Static",
-				map = "zones/reknor-escape-last",
-			}, },
+			generator = {
+				map = {
+					class = "engine.generator.map.Static",
+					map = "zones/reknor-escape-last",
+				},
+				actor = {
+					nb_npc = {0, 0},
+				},
+			},
 		},
 	},
 
@@ -91,7 +97,7 @@ return {
 		local norgan = game.party:findMember{type="squadmate"}
 		if norgan then game.player:setQuestStatus("start-dwarf", engine.Quest.COMPLETED, "norgan") end
 		game.player:setQuestStatus("start-dwarf", engine.Quest.COMPLETED)
-		if norgan then
+		if norgan and not norgan.dead then
 			local chat = require("engine.Chat").new("norgan-saved", norgan, game.player)
 			chat:invoke()
 		end
