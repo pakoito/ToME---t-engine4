@@ -1188,7 +1188,7 @@ function _M:die(src)
 	-- Increase vim
 	if src and src.knowTalent and src:knowTalent(src.T_VIM_POOL) then src:incVim(1 + src:getWil() / 10) end
 	if src and src.attr and src:attr("vim_on_death") and not self:attr("undead") then src:incVim(src:attr("vim_on_death")) end
-	if src and src.last_vim_turn and src.last_vim_turn == game.turn then src:incVim(src.last_vim_spent) src.last_vim_turn = nil end
+	if src and src.last_vim_turn and src.last_vim_turn >= game.turn - 30 then src:incVim(src.last_vim_spent) src.last_vim_turn = nil end
 
 	if src and src.resolveSource and src:resolveSource().player then
 		-- Achievements
