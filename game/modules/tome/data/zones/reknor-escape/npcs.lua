@@ -44,7 +44,7 @@ newEntity{ define_as = "BROTOQ",
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	equipment = resolvers.equip{
-		{type="weapon", subtype="longsword", autoreq=true},
+		{type="weapon", subtype="waraxe", defined="SKULLCLEAVER", random_art_replace={chance=75}, autoreq=true},
 		{type="weapon", subtype="longsword", autoreq=true},
 		{type="armor", subtype="light", autoreq=true},
 	},

@@ -16,82 +16,17 @@
 --
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
-
-local function combatTalentDamage(self, t, min, max)
-	return self:combatTalentSpellDamage(t, min, max, self.level + self:getWil())
+local function aura_strength(self, t)
+	local add = 0
+	if self:knowTalent(self.T_FOCUSED_CHANNELING) then
+		add = getGemLevel(self)*(1 + 0.1*(self:getTalentLevel(self.T_FOCUSED_CHANNELING) or 0))
+	end
+	--return 5 + (1+ self:getWil(5))*self:getTalentLevel(t) + add
+	return self:combatTalentIntervalDamage(t, "wil", 10, 50) + add
 end
 
--- damage: initial physical damage and used for fractional knockback damage
--- knockback: distance to knockback
--- knockbackDamage: when knockback strikes something, both parties take damage - percent of damage * remaining knockback
--- power: used to determine the initial radius of particles
-local function forceHit(self, target, sourceX, sourceY, damage, knockback, knockbackDamage, power)
-	-- apply initial damage
-	if not target then return end
-	if damage > 0 then
-		self:project(target, target.x, target.y, DamageType.PHYSICAL, damage)
-		game.level.map:particleEmitter(target.x, target.y, 1, "force_hit", {power=power, dx=target.x - sourceX, dy=target.y - sourceY})
-	end
-
-	-- knockback?
-	if not target.dead and knockback and knockback > 0 and target:canBe("knockback") and (target.never_move or 0) < 1 then
-		-- give direct hit a direction?
-		if sourceX == target.x and sourceY == target.y then
-			local newDirection = rng.range(1, 8)
-			sourceX = sourceX + dir_to_coord[newDirection][1]
-			sourceY = sourceY + dir_to_coord[newDirection][2]
-		end
-
-		local lineFunction = line.new(sourceX, sourceY, target.x, target.y, true)
-		local finalX, finalY = target.x, target.y
-		local knockbackCount = 0
-		local blocked = false
-		while knockback > 0 do
-			blocked = true
-			local x, y = lineFunction(true)
-
-			if not game.level.map:isBound(x, y) or game.level.map:checkAllEntities(x, y, "block_move", target) then
-				-- blocked
-				local nextTarget = game.level.map(x, y, Map.ACTOR)
-				if nextTarget then
-					if knockbackCount > 0 then
-						game.logPlayer(self, "%s was blasted %d spaces into %s!", target.name:capitalize(), knockbackCount, nextTarget.name)
-					else
-						game.logPlayer(self, "%s was blasted into %s!", target.name:capitalize(), nextTarget.name)
-					end
-				elseif knockbackCount > 0 then
-					game.logPlayer(self, "%s was smashed back %d spaces!", target.name:capitalize(), knockbackCount)
-				else
-					game.logPlayer(self, "%s was smashed!", target.name:capitalize())
-				end
-
-				-- take partial damage
-				local blockDamage = damage * knockback * knockbackDamage / 100
-				self:project(target, target.x, target.y, DamageType.PHYSICAL, blockDamage)
-
-				if nextTarget then
-					-- start a new force hit with the knockback damage and current knockback
-
-					forceHit(self, nextTarget, sourceX, sourceY, blockDamage, knockback, knockbackDamage, power / 2)
-				end
-
-				knockback = 0
-			else
-				-- allow move
-				finalX, finalY = x, y
-				knockback = knockback - 1
-				knockbackCount = knockbackCount + 1
-			end
-		end
-
-		if not blocked and knockbackCount > 0 then
-			game.logPlayer(self, "%s was blasted back %d spaces!", target.name:capitalize())
-		end
-
-		if not target.dead and (finalX ~= target.x or finalY ~= target.y) then
-			target:move(finalX, finalY, true)
-		end
-	end
+local function aura_mastery(self, t)
+	return 10 + (self:getTalentLevel(self.T_AURA_DISCIPLINE) or 0) + getGemLevel(self)
 end
 
 local function aura_range(self, t)
@@ -142,6 +77,13 @@ newTalent{
 		return 15 - (self:getTalentLevelRaw(self.T_AURA_DISCIPLINE) or 0)
 	end,
 	tactical = { ATTACKAREA = 2 },
+	on_pre_use = function(self, t, silent)
+		if self:isTalentActive(self.T_THERMAL_AURA) and self:isTalentActive(self.T_CHARGED_AURA) then
+			if not silent then game.logSeen(self, "You may only sustain two auras at once. Aura activation cancelled.") end
+			return false
+		end
+		return true
+	end,
 	range = aura_range,
 	radius = aura_radius,
 	target = aura_target,
@@ -180,33 +122,28 @@ newTalent{
 		return t.sustain_psi - 2*getGemLevel(self)
 	end,
 	getAuraStrength = function(self, t)
-		local add = 0
-		if self:knowTalent(self.T_FOCUSED_CHANNELING) then
-			add = getGemLevel(self)*(1 + 0.1*(self:getTalentLevel(self.T_FOCUSED_CHANNELING) or 0))
-		end
-		--return 5 + (1+ self:getWil(5))*self:getTalentLevel(t) + add
-		return self:combatTalentIntervalDamage(t, "wil", 6, 50) + add
+		return aura_strength(self, t)
 	end,
 	getKnockback = function(self, t)
 		return 3 + math.floor(self:getTalentLevel(t))
 	end,
 	do_kineticaura = function(self, t)
-		local mast = 5 + (self:getTalentLevel(self.T_AURA_DISCIPLINE) or 0) + getGemLevel(self)
+		local mast = aura_mastery(self, t)
 		local dam = t.getAuraStrength(self, t)
 		local tg = t.getNormalTarget(self, t)
 		self:project(tg, self.x, self.y, function(tx, ty)
-			DamageType:get(DamageType.PHYSICAL).projector(self, tx, ty, DamageType.PHYSICAL, dam)
 			local act = game.level.map(tx, ty, engine.Map.ACTOR)
 			if act then
 				self:incPsi(-dam/mast)
 			end
+			DamageType:get(DamageType.PHYSICAL).projector(self, tx, ty, DamageType.PHYSICAL, dam)
 		end)
 	end,
 	activate = function(self, t)
-		if self:isTalentActive(self.T_THERMAL_AURA) and self:isTalentActive(self.T_CHARGED_AURA) then
-			game.logSeen(self, "You may only sustain two auras at once. Aura activation cancelled.")
-			return false
-		end
+		--if self:isTalentActive(self.T_THERMAL_AURA) and self:isTalentActive(self.T_CHARGED_AURA) then
+		--	game.logSeen(self, "You may only sustain two auras at once. Aura activation cancelled.")
+		--	return false
+		--end
 		return true
 	end,
 	deactivate = function(self, t, p)
@@ -234,7 +171,7 @@ newTalent{
 	info = function(self, t)
 		local dam = t.getAuraStrength(self, t)
 		local spikedam = 50 + 0.4 * dam * dam
-		local mast = 5 + (self:getTalentLevel(self.T_AURA_DISCIPLINE) or 0) + getGemLevel(self)
+		local mast = aura_mastery(self, t)
 		local spikecost = t.getSpikeCost(self, t)
 		return ([[Fills the air around you with reactive currents of force that do %d physical damage to all who approach. All damage done by the aura will drain one point of energy per %0.2f points of damage dealt.
 		When deactivated, if you have at least %d energy, a massive spike of kinetic energy is released as a beam, smashing targets for %d physical damage and sending them flying. Telekinetically wielding a gem instead of a weapon will result in improved spike efficiency.
@@ -256,6 +193,13 @@ newTalent{
 		return 15 - (self:getTalentLevelRaw(self.T_AURA_DISCIPLINE) or 0)
 	end,
 	tactical = { ATTACKAREA = 2 },
+	on_pre_use = function(self, t, silent)
+		if self:isTalentActive(self.T_KINETIC_AURA) and self:isTalentActive(self.T_CHARGED_AURA) then
+			if not silent then game.logSeen(self, "You may only sustain two auras at once. Aura activation cancelled.") end
+			return false
+		end
+		return true
+	end,
 	range = aura_range,
 	radius = aura_radius,
 	target = aura_target,
@@ -290,33 +234,28 @@ newTalent{
 		end
 	end,
 	getAuraStrength = function(self, t)
-		local add = 0
-		if self:knowTalent(self.T_FOCUSED_CHANNELING) then
-			add = getGemLevel(self)*(1 + 0.1*(self:getTalentLevel(self.T_FOCUSED_CHANNELING) or 0))
-		end
-		--return 5 + (1+ self:getWil(5))*self:getTalentLevel(t) + add
-		return self:combatTalentIntervalDamage(t, "wil", 6, 50) + add
+		return aura_strength(self, t)
 	end,
 	getSpikeCost = function(self, t)
 		return t.sustain_psi - 2*getGemLevel(self)
 	end,
 	do_thermalaura = function(self, t)
-		local mast = 5 + (self:getTalentLevel(self.T_AURA_DISCIPLINE) or 0) + getGemLevel(self)
+		local mast = aura_mastery(self, t)
 		local dam = t.getAuraStrength(self, t)
 		local tg = t.getNormalTarget(self, t)
 		self:project(tg, self.x, self.y, function(tx, ty)
-			DamageType:get(DamageType.FIRE).projector(self, tx, ty, DamageType.FIRE, dam)
 			local act = game.level.map(tx, ty, engine.Map.ACTOR)
 			if act then
 				self:incPsi(-dam/mast)
 			end
+			DamageType:get(DamageType.FIRE).projector(self, tx, ty, DamageType.FIRE, dam)
 		end)
 	end,
 	activate = function(self, t)
-		if self:isTalentActive(self.T_KINETIC_AURA) and self:isTalentActive(self.T_CHARGED_AURA) then
-			game.logSeen(self, "You may only sustain two auras at once. Aura activation cancelled.")
-			return false
-		end
+		--if self:isTalentActive(self.T_KINETIC_AURA) and self:isTalentActive(self.T_CHARGED_AURA) then
+		--	game.logSeen(self, "You may only sustain two auras at once. Aura activation cancelled.")
+		--	return false
+		--end
 		return true
 	end,
 	deactivate = function(self, t, p)
@@ -345,7 +284,7 @@ newTalent{
 		local dam = t.getAuraStrength(self, t)
 		local rad = self:getTalentRange(t)
 		local spikedam = 50 + 0.4 * dam * dam
-		local mast = 5 + (self:getTalentLevel(self.T_AURA_DISCIPLINE) or 0) + getGemLevel(self)
+		local mast = aura_mastery(self, t)
 		local spikecost = t.getSpikeCost(self, t)
 		return ([[Fills the air around you with reactive currents of furnace-like heat that do %d fire damage to all who approach. All damage done by the aura will drain one point of energy per %0.2f points of damage dealt.
 		When deactivated, if you have at least %d energy, a massive spike of thermal energy is released as a conical blast (radius %d) of superheated air. Anybody caught in it will suffer %d fire damage. Telekinetically wielding a gem instead of a weapon will result in improved spike efficiency.
@@ -367,6 +306,13 @@ newTalent{
 		return 15 - (self:getTalentLevelRaw(self.T_AURA_DISCIPLINE) or 0)
 	end,
 	tactical = { ATTACKAREA = 2 },
+	on_pre_use = function(self, t, silent)
+		if self:isTalentActive(self.T_KINETIC_AURA) and self:isTalentActive(self.T_THERMAL_AURA) then
+			if not silent then game.logSeen(self, "You may only sustain two auras at once. Aura activation cancelled.") end
+			return false
+		end
+		return true
+	end,
 	range = aura_range,
 	radius = aura_radius,
 	target = aura_target,
@@ -405,33 +351,28 @@ newTalent{
 		return t.sustain_psi - 2*getGemLevel(self)
 	end,
 	getAuraStrength = function(self, t)
-		local add = 0
-		if self:knowTalent(self.T_FOCUSED_CHANNELING) then
-			add = getGemLevel(self)*(1 + 0.1*(self:getTalentLevel(self.T_FOCUSED_CHANNELING) or 0))
-		end
-		--return 5 + (1+ self:getWil(5))*self:getTalentLevel(t) + add
-		return self:combatTalentIntervalDamage(t, "wil", 6, 50) + add
+		return aura_strength(self, t)
 	end,
 	getNumSpikeTargets = function(self, t)
 		return 1 + math.floor(0.5*self:getTalentLevel(t)) + getGemLevel(self)
 	end,
 	do_chargedaura = function(self, t)
-		local mast = 5 + (self:getTalentLevel(self.T_AURA_DISCIPLINE) or 0) + getGemLevel(self)
+		local mast = aura_mastery(self, t)
 		local dam = t.getAuraStrength(self, t)
 		local tg = t.getNormalTarget(self, t)
 		self:project(tg, self.x, self.y, function(tx, ty)
-			DamageType:get(DamageType.LIGHTNING).projector(self, tx, ty, DamageType.LIGHTNING, dam)
 			local act = game.level.map(tx, ty, engine.Map.ACTOR)
 			if act then
 				self:incPsi(-dam/mast)
 			end
+			DamageType:get(DamageType.LIGHTNING).projector(self, tx, ty, DamageType.LIGHTNING, dam)
 		end)
 	end,
 	activate = function(self, t)
-		if self:isTalentActive(self.T_THERMAL_AURA) and self:isTalentActive(self.T_KINETIC_AURA) then
-			game.logSeen(self, "You may only sustain two auras at once. Aura activation cancelled.")
-			return false
-		end
+		--if self:isTalentActive(self.T_THERMAL_AURA) and self:isTalentActive(self.T_KINETIC_AURA) then
+		--	game.logSeen(self, "You may only sustain two auras at once. Aura activation cancelled.")
+		--	return false
+		--end
 		game:playSoundNear(self, "talents/thunderstorm")
 		return true
 	end,
@@ -500,7 +441,7 @@ newTalent{
 	info = function(self, t)
 		local dam = t.getAuraStrength(self, t)
 		local spikedam = 50 + 0.4 * dam * dam
-		local mast = 5 + (self:getTalentLevel(self.T_AURA_DISCIPLINE) or 0) + getGemLevel(self)
+		local mast = aura_mastery(self, t)
 		local spikecost = t.getSpikeCost(self, t)
 		local nb = t.getNumSpikeTargets(self, t)
 		return ([[Fills the air around you with crackling energy, doing %d lightning damage to all who stand nearby. All damage done by the aura will drain one point of energy per %0.2f points of damage dealt.

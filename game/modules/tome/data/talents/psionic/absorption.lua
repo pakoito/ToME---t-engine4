@@ -48,7 +48,13 @@ newTalent{
 	range = 10,
 	no_energy = true,
 	tactical = { DEFEND = 2 },
-
+	on_pre_use = function(self, t, silent)
+		if self:isTalentActive(self.T_THERMAL_SHIELD) and self:isTalentActive(self.T_CHARGED_SHIELD) then
+			if not silent then game.logSeen(self, "You may only sustain two shields at once. Shield activation cancelled.") end
+			return false
+		end
+		return true
+	end,
 	--called when damage gets absorbed by kinetic shield
 	ks_on_damage = function(self, t, damtype, dam)
 		local mast = 30 - (2*self:getTalentLevel(self.T_SHIELD_DISCIPLINE) or 0) - 0.4*getGemLevel(self)
@@ -71,10 +77,10 @@ newTalent{
 
 
 	activate = function(self, t)
-		if self:isTalentActive(self.T_THERMAL_SHIELD) and self:isTalentActive(self.T_CHARGED_SHIELD) then
-			game.logSeen(self, "You may only sustain two shields at once. Shield activation cancelled.")
-			return false
-		end
+		--if self:isTalentActive(self.T_THERMAL_SHIELD) and self:isTalentActive(self.T_CHARGED_SHIELD) then
+		--	game.logSeen(self, "You may only sustain two shields at once. Shield activation cancelled.")
+		--	return false
+		--end
 		game:playSoundNear(self, "talents/heal")
 		local s_str = getShieldStrength(self, t)
 		return {
@@ -145,6 +151,13 @@ newTalent{
 	range = 10,
 	no_energy = true,
 	tactical = { DEFEND = 2 },
+	on_pre_use = function(self, t, silent)
+		if self:isTalentActive(self.T_KINETIC_SHIELD) and self:isTalentActive(self.T_CHARGED_SHIELD) then
+			if not silent then game.logSeen(self, "You may only sustain two shields at once. Shield activation cancelled.") end
+			return false
+		end
+		return true
+	end,
 
 	--called when damage gets absorbed by thermal shield
 	ts_on_damage = function(self, t, damtype, dam)
@@ -167,10 +180,10 @@ newTalent{
 
 
 	activate = function(self, t)
-		if self:isTalentActive(self.T_KINETIC_SHIELD) and self:isTalentActive(self.T_CHARGED_SHIELD) then
-			game.logSeen(self, "You may only sustain two shields at once. Shield activation cancelled.")
-			return false
-		end
+		--if self:isTalentActive(self.T_KINETIC_SHIELD) and self:isTalentActive(self.T_CHARGED_SHIELD) then
+		--	game.logSeen(self, "You may only sustain two shields at once. Shield activation cancelled.")
+		--	return false
+		--end
 		game:playSoundNear(self, "talents/heal")
 		local s_str = getShieldStrength(self, t)
 		return {
@@ -239,7 +252,13 @@ newTalent{
 	range = 10,
 	no_energy = true,
 	tactical = { DEFEND = 2 },
-
+	on_pre_use = function(self, t, silent)
+		if self:isTalentActive(self.T_KINETIC_SHIELD) and self:isTalentActive(self.T_THERMAL_SHIELD) then
+			if not silent then game.logSeen(self, "You may only sustain two shields at once. Shield activation cancelled.") end
+			return false
+		end
+		return true
+	end,
 	--called when damage gets absorbed by charged shield
 	cs_on_damage = function(self, t, damtype, dam)
 		local mast = 30 - (2*self:getTalentLevel(self.T_SHIELD_DISCIPLINE) or 0) - 0.4*getGemLevel(self)
@@ -261,10 +280,10 @@ newTalent{
 
 
 	activate = function(self, t)
-		if self:isTalentActive(self.T_KINETIC_SHIELD) and self:isTalentActive(self.T_THERMAL_SHIELD) then
-			game.logSeen(self, "You may only sustain two shields at once. Shield activation cancelled.")
-			return false
-		end
+		--if self:isTalentActive(self.T_KINETIC_SHIELD) and self:isTalentActive(self.T_THERMAL_SHIELD) then
+		--	game.logSeen(self, "You may only sustain two shields at once. Shield activation cancelled.")
+		--	return false
+		--end
 		game:playSoundNear(self, "talents/heal")
 		local s_str = getShieldStrength(self, t)
 		return {

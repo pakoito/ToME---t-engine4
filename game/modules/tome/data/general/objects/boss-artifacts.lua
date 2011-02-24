@@ -842,3 +842,25 @@ newEntity{ base = "BASE_WAND", define_as = "ROD_OF_ANNULMENT",
 		end
 	},
 }
+
+newEntity{ base = "BASE_WARAXE",
+	power_source = {arcane=true},
+	define_as = "SKULLCLEAVER", rarity=false,
+	unided_name = "crimson waraxe",
+	name = "Skullcleaver", unique=true,
+	desc = [[A small but sharp axe, with a handle made of polished bone.  The blade has chopped through the skulls of many, and has been stained a deep crimson.]],
+	require = { stat = { str=18 }, },
+	level_range = {5, 12},
+	rarity = 220,
+	cost = 50,
+	combat = {
+		dam = 16,
+		apr = 3,
+		physcrit = 12,
+		dammod = {str=1},
+		talent_on_hit = { [Talents.T_GREATER_WEAPON_FOCUS] = {level=2, chance=10} },
+	},
+	wielder = {
+		inc_damage = { [DamageType.BLIGHT] = 8 },
+	},
+}

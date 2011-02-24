@@ -21,7 +21,9 @@ newTalent{
 	name = "Mindhook",
 	type = {"psionic/augmented-mobility", 1},
 	require = psi_wil_high1,
-	cooldown = 40,
+	cooldown = function(self, t)
+		return math.ceil(20 - self:getTalentLevel(t)*2)
+	end,
 	psi = 20,
 	points = 5,
 	tactical = { CLOSEIN = 2 },
@@ -55,7 +57,7 @@ newTalent{
 	info = function(self, t)
 		local range = self:getTalentRange(t)
 		return ([[Briefly extend your telekinetic reach to grab an enemy and haul them towards you.
-		Works on enemies up to %d squares away.]]):
+		Works on enemies up to %d squares away. The cooldown decreases and the range increases with additional talent points spent.]]):
 		format(range)
 	end,
 }

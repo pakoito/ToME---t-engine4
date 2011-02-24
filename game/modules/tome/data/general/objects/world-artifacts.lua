@@ -1279,6 +1279,10 @@ newEntity{ base = "BASE_GEM",
 		fear_immune = 0.7,
 		resists={[DamageType.MIND] = 35,},
 	},
+	wielder = {
+		inc_stats = { [Stats.STAT_STR] = 5, [Stats.STAT_DEX] = 5, [Stats.STAT_MAG] = 5, [Stats.STAT_WIL] = 5, [Stats.STAT_CUN] = 5, [Stats.STAT_CON] = 5, },
+		lite = 2,
+	},
 	imbue_powers = {
 		inc_stats = { [Stats.STAT_STR] = 5, [Stats.STAT_DEX] = 5, [Stats.STAT_MAG] = 5, [Stats.STAT_WIL] = 5, [Stats.STAT_CUN] = 5, [Stats.STAT_CON] = 5, },
 		lite = 2,

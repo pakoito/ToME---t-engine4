@@ -57,26 +57,6 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			end
 		end
 
-		-- Reduce damage with resistance
-		if target.resists then
-			local pen = 0
-			if src.resists_pen then pen = (src.resists_pen.all or 0) + (src.resists_pen[type] or 0) end
-			local res = math.min((target.resists.all or 0) + (target.resists[type] or 0), (target.resists_cap.all or 0) + (target.resists_cap[type] or 0))
-			res = res * (100 - pen) / 100
-			print("[PROJECTOR] res", res, (100 - res) / 100, " on dam", dam)
-			if res >= 100 then dam = 0
-			elseif res <= -100 then dam = dam * 2
-			else dam = dam * ((100 - res) / 100)
-			end
-		end
-		print("[PROJECTOR] after resists dam", dam)
-
-		-- Static reduce damage
-		if target.isTalentActive and target:isTalentActive(target.T_ANTIMAGIC_SHIELD) then
-			local t = target:getTalentFromId(target.T_ANTIMAGIC_SHIELD)
-			dam = t.on_damage(target, t, type, dam)
-		end
-
 		-- Static reduce damage for psionic kinetic shield
 		if target.isTalentActive and target:isTalentActive(target.T_KINETIC_SHIELD) then
 			local t = target:getTalentFromId(target.T_KINETIC_SHIELD)
@@ -106,6 +86,26 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		if target:attr("chargespike_shield") then
 			local t = target:getTalentFromId(target.T_CHARGED_SHIELD)
 			dam = t.css_on_damage(target, t, type, dam)
+		end
+		
+		-- Reduce damage with resistance
+		if target.resists then
+			local pen = 0
+			if src.resists_pen then pen = (src.resists_pen.all or 0) + (src.resists_pen[type] or 0) end
+			local res = math.min((target.resists.all or 0) + (target.resists[type] or 0), (target.resists_cap.all or 0) + (target.resists_cap[type] or 0))
+			res = res * (100 - pen) / 100
+			print("[PROJECTOR] res", res, (100 - res) / 100, " on dam", dam)
+			if res >= 100 then dam = 0
+			elseif res <= -100 then dam = dam * 2
+			else dam = dam * ((100 - res) / 100)
+			end
+		end
+		print("[PROJECTOR] after resists dam", dam)
+
+		-- Static reduce damage
+		if target.isTalentActive and target:isTalentActive(target.T_ANTIMAGIC_SHIELD) then
+			local t = target:getTalentFromId(target.T_ANTIMAGIC_SHIELD)
+			dam = t.on_damage(target, t, type, dam)
 		end
 
 		print("[PROJECTOR] final dam", dam)
