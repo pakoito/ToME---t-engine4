@@ -30,6 +30,7 @@ Welcome, master.]],
 		{"Master? I am not your mas..", jump="master", cond=isNotSet"master", action=set"master"},
 		{"Why do I understand you, the texts are unreadable to me.", jump="understand", cond=isNotSet"understand", action=set"understand"},
 		{"What can I do here?", jump="storage", cond=isNotSet"storage", action=set"storage"},
+		{"What else can this place do?", jump="energy", cond=isNotSet"energy", action=set"energy"},
 		{"[leave]"},
 	}
 }
@@ -86,6 +87,17 @@ You are the master. You can use this place as you desire. However, most of the e
 To the south you will find the storage room.]],
 	answers = {
 		{"Thanks.", jump="welcome"},
+	}
+}
+
+newChat{ id="energy",
+	text = [[This Fortress is designed as a mobile base for the Godslayers - it can fly.
+It is also equiped with various facilities: exploratory farportal, emergency containment field, remote storage, ...
+However the Fortess is badly damaged and laid dormant for too long, its energies are nearly depleted.
+Take this Transmogrification Chest, it is linked by a permanent farportal to the Fortress. Any item you put inside will be sent to the power core and dismantled for energy.
+There are however unwanted byproducts to this operation, the generation of a metal known as gold, it has no use for the Fortress and thus will be sent back to you.]],
+	answers = {
+		{"I will, thanks.", jump="welcome", action=function() q:spawn_transmo_chest() end},
 	}
 }
 

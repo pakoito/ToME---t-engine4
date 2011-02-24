@@ -31,7 +31,14 @@ desc = function(self, who)
 	if self:isCompleted("butler") then
 		desc[#desc+1] = "You have activated what seems to be a ... butler? with your rod of recall."
 	end
+	if self.shertul_energy > 0 then
+		desc[#desc+1] = ("The Fortress current energy level is: %d."):format(self.shertul_energy)
+	end
 	return table.concat(desc, "\n")
+end
+
+on_grant = function(self, who)
+	self.shertul_energy = 0
 end
 
 spawn_butler = function(self)
@@ -43,4 +50,16 @@ spawn_butler = function(self)
 	game.player:setQuestStatus(self.id, self.COMPLETED, "butler")
 
 	world:gainAchievement("SHERTUL_FORTRESS", game.player)
+end
+
+spawn_transmo_chest = function(self, energy)
+	local spot = game.level:pickSpot{type="spawn", subtype="butler"}
+	local chest = game.zone:makeEntityByName(game.level, "object", "TRANSMO_CHEST")
+	game.zone:addEntity(game.level, chest, "object", spot.x + 1, spot.y)
+	game.level.map:particleEmitter(spot.x, spot.y, 1, "demon_teleport")
+	game.player:setQuestStatus(self.id, self.COMPLETED, "transmo-chest")
+end
+
+gain_energy = function(self, energy)
+	self.shertul_energy = self.shertul_energy + energy
 end

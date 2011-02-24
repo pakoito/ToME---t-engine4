@@ -53,26 +53,32 @@ function _M:setupOnGame()
 	}
 end
 
+function _M:addMessage(channel, user, msg)
+	local log = self.channels[channel].log
+	table.insert(log, 1, {user=user, msg=msg})
+	while #log > self.max do table.remove(log) end
+	self.changed = true
+end
+
 function _M:event(e)
 	if e.se == "Talk" then
 		e.msg = e.msg:removeColorCodes()
 
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
-		local log = self.channels[e.channel].log
-		table.insert(log, 1, {user=e.user, msg=e.msg})
-		while #log > self.max do table.remove(log) end
-		self.changed = true
+		self:addMessage(e.channel, e.user, e.msg)
 
 		if type(game) == "table" and game.log then game.log("#YELLOW#<%s> %s", e.user, e.msg) end
 	elseif e.se == "Join" then
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
 		self.channels[e.channel].users[e.user] = true
 		self.channels_changed = true
+		self:addMessage(e.channel, e.user, "#{italic}##FIREBRICK#has joined the channel#{normal}#")
 		if type(game) == "table" and game.log and e.channel == self.cur_channel then game.log("#{italic}##FIREBRICK#%s has joined channel %s (press space to talk).#{normal}#", e.user, e.channel) end
 	elseif e.se == "Part" then
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
 		self.channels[e.channel].users[e.user] = nil
 		self.channels_changed = true
+		self:addMessage(e.channel, e.user, "#{italic}##FIREBRICK#has left the channel#{normal}#")
 		if type(game) == "table" and game.log and e.channel == self.cur_channel then game.log("#{italic}##FIREBRICK#%s has left channel %s.#{normal}#", e.user, e.channel) end
 	elseif e.se == "UserInfo" then
 		local info = e.data:unserialize()
@@ -225,7 +231,7 @@ function _M:display()
 	local old_style = self.font:getStyle()
 	for z = 1 + self.scroll, #log do
 		local stop = false
-		local tstr = ("<%s> %s"):format(log[z].user, log[z].msg)
+		local tstr = ("<%s> %s"):format(log[z].user, log[z].msg):toTString()
 		local gen = tstring.makeLineTextures(tstr, self.w - 4, self.font_mono)
 		for i = #gen, 1, -1 do
 			self.dlist[#self.dlist+1] = gen[i]
