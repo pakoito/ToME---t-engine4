@@ -60,6 +60,19 @@ return {
 		-- Everything hates you in the infinite dungeon!
 		for uid, e in pairs(level.entities) do e.faction="enemies" end
 
+		-- Some lore
+		if level.level == 1 or level.level == 10 or level.level == 20 or level.level == 30 or level.level == 40 then
+			local l = game.zone:makeEntityByName(level, "terrain", "ID_HISTORY"..level.level)
+			if not l then return end
+			for i = -1, 1 do for j = -1, 1 do
+				local x, y = level.default_up.x + i, level.default_up.y + j
+				if game.level.map:isBound(x, y) and (i ~= 0 or j ~= 0) and not game.level.map:checkEntity(x, y, engine.Map.TERRAIN, "block_move") then
+					game.zone:addEntity(level, l, "terrain", x, y)
+					return
+				end
+			end end
+		end
+
 		-- Provide some achievements
 		if level.level == 10 then world:gainAchievement("INFINITE_X10", game.player)
 		elseif level.level == 20 then world:gainAchievement("INFINITE_X20", game.player)
