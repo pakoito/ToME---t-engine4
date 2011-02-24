@@ -25,7 +25,11 @@ newEntity{ base = "BASE_LORE",
 	name = "torn diary page", lore="maze-note-"..i,
 	desc = [[A diary, left by an adventurer.]],
 	rarity = false,
-	is_magic_device = false,
-	encumberance = 0,
 }
 end
+
+newEntity{ base = "BASE_LORE", define_as = "NOTE_LEARN_TRAP",
+	name = "the perfect killing device", lore="maze-note-trap", unique=true, no_unique_lore=true,
+	desc = [[Some notes describing how to create poison gas traps, left by an unfortunate rogue.]],
+	rarity = false,
+}

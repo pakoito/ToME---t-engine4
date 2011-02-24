@@ -101,7 +101,7 @@ newEntity{
 
 newEntity{
 	define_as = "BASE_LORE",
-	type = "lore", subtype="lore", not_in_stores=true,
+	type = "lore", subtype="lore", not_in_stores=true, no_unique_lore=true,
 	unided_name = "scroll", identified=true,
 	display = "?", color=colors.ANTIQUE_WHITE, image="object/scroll-lore.png",
 	encumber = 0,

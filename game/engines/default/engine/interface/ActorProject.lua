@@ -38,11 +38,6 @@ end
 -- @param dam damage to be done
 -- @param particles particles effect configuration, or nil
 function _M:project(t, x, y, damtype, dam, particles)
-	-- Call the on project of the target grid if possible
-	if not t.bypass and game.level.map:checkAllEntities(x, y, "on_project", self, t, x, y, damtype, dam, particles) then
-		return
-	end
-
 	if type(particles) ~= "table" then particles = nil end
 
 --	if type(dam) == "number" and dam < 0 then return end
@@ -69,6 +64,11 @@ function _M:project(t, x, y, damtype, dam, particles)
 
 		-- Deal damage: beam
 		if typ.line then addGrid(lx, ly) end
+
+		-- Call the on project of the target grid if possible
+		if not t.bypass and game.level.map:checkAllEntities(lx, ly, "on_project", self, t, lx, ly, damtype, dam, particles) then
+			return
+		end
 
 		lx, ly = l()
 	end
@@ -181,11 +181,6 @@ end
 -- @param dam damage to be done
 -- @param particles particles effect configuration, or nil
 function _M:projectile(t, x, y, damtype, dam, particles)
-	-- Call the on project of the target grid if possible
---	if not t.bypass and game.level.map:checkAllEntities(x, y, "on_project", self, t, x, y, damtype, dam, particles) then
---		return
---	end
-
 	if type(particles) ~= "function" and type(particles) ~= "table" then particles = nil end
 
 --	if type(dam) == "number" and dam < 0 then return end

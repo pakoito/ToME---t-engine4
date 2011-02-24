@@ -69,5 +69,18 @@ return {
 	post_process = function(level)
 		-- Place a lore note on each level
 		game:placeRandomLoreObject("NOTE"..level.level)
+
+		local p = game.party:findMember{main=true}
+		if level.level == 5 and p:knowTalent(p.T_TRAP_MASTERY) then
+			local l = game.zone:makeEntityByName(level, "object", "NOTE_LEARN_TRAP")
+			if not l then return end
+			for i = -1, 1 do for j = -1, 1 do
+				local x, y = level.default_down.x + i, level.default_down.y + j
+				if game.level.map:isBound(x, y) and (i ~= 0 or j ~= 0) and not game.level.map:checkEntity(x, y, engine.Map.TERRAIN, "block_move") then
+					game.zone:addEntity(level, l, "object", x, y)
+					return
+				end
+			end end
+		end
 	end,
 }
