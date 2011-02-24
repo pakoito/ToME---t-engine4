@@ -63,7 +63,10 @@ It slowly decreases and is replenished by using some talents.
 ]]
 
 TOOLTIP_VIM = [[#GOLD#Vim#LAST#
-Vim represents the amount of life energy/souls you have stolen. Each corruption talent requires some.
+Vim represents the amount of life energy you control. Each corruption talent requires some.
+It does not regenerates naturally, you need to drain it from yourself or you victims.
+Each time you kill a creature you drain 10% of your Willpower as Vim.
+Also if you used a Corruption spell that costed Vim to kill a creature, that cost is refunded on death.
 ]]
 
 TOOLTIP_EQUILIBRIUM = [[#GOLD#Equilibrium#LAST#
@@ -172,7 +175,7 @@ It represents the fatigue created by wearing heavy equipment.
 Not all talents are affected, notably Wild Gifts are not.
 ]]
 TOOLTIP_ARMOR = [[#GOLD#Armour#LAST#
-Armour value is a flat damage reduction subtracted from every incoming melee and ranged physical attacks.
+Armour value is a damage reduction from every incoming melee and ranged physical attacks.
 This is countered by armour penetration and is applied before all kinds of critical damage increase, talent multipliers and damage multiplier, thus making even small amounts have greater effects.
 ]]
 TOOLTIP_DEFENSE = [[#GOLD#Defense#LAST#

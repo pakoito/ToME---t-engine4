@@ -105,7 +105,7 @@ newBirthDescriptor{
 	},
 	talents = {
 		[ActorTalents.T_DRAIN] = 1,
-		[ActorTalents.T_BLOOD_GRASP] = 1,
+		[ActorTalents.T_BLOOD_SPRAY] = 1,
 		[ActorTalents.T_SOUL_ROT] = 1,
 		[ActorTalents.T_PACIFICATION_HEX] = 1,
 	},

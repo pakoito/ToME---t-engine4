@@ -72,7 +72,7 @@ newTalent{
 			return
 		end
 
-		self:incVim(30 + self:combatTalentSpellDamage(t, 5, 200))
+		self:incVim(30 + self:combatTalentSpellDamage(t, 5, 150))
 		self:takeHit(self.max_life * 0.4, self)
 		game:playSoundNear(self, "talents/spell_generic2")
 		return true
@@ -81,7 +81,7 @@ newTalent{
 		return ([[Sacrifices 40%% of your life to restore %d vim.
 		This only works if there is at least one foe in sight.
 		The effect will increase with your Magic stat.]]):
-		format(30 + self:combatTalentSpellDamage(t, 5, 200))
+		format(30 + self:combatTalentSpellDamage(t, 5, 150))
 	end,
 }
 
