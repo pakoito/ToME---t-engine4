@@ -55,3 +55,66 @@ newLore{
 
 Sadly, such desires are denied to me at this moment. Plans are in motion, and we are scant weeks away from finally crushing the accursed sun paladins and their tin-plated harlot ruler. Even once the Sunwall lies in ruins I must be careful - the horde of sub-orc savages Grushnak calls a pride are ever at my door, claiming we do not follow Garkul's "true path". He is a fool, but dangerous, and I must be vigilant.]],
 }
+
+--------------------------------------------------------------------------
+-- History of the orc race
+--------------------------------------------------------------------------
+
+newLore{
+	id = "orc-history-1",
+	category = "orc prides",
+	name = "Records of Lorekeeper Hadak part one",
+	lore = [[Our history is a history of battles, a history of wars. We orcs have always been under attack from the other races, always having to defend ourselves against their ruthless advances. The other races paint us as evil, they think of us as purely beasts. Not so! If we are cruel, it is because they made us cruel. If we are heartless, it is because they ripped our beating hearts from our chests and stamped them beneath their feet!
+
+It was the halflings we first did war with, in the Age of Allure. We were weak then, and disorganised, and in their arrogance they sought to enslave us. But we fought back! And we have been fighting back ever since. They used magic on us, though we had never come in touch with the arts before. They used whips and chains and tried to beat us down. They used us for labour, butchering any young that were not strong enough for them, burning any constructions we tried to make for ourselves.
+
+At first we escaped and fled, and hid in dark caves. Our numbers grew, though we had to endure squalor and hardship. After many years we could hide no longer, as starvation and disease threatened to kill us all. And so seeing our enemy weak we rose upon them in wrath. We were not organised, but we were determined. The elves and the humans and the dwarves tried to oppose us too, but we would not allow ourselves to be beaten! They tried to use their magics against us, but we overcame them with numbers, five of us dying for every mage we managed to kill. With blood we paid and finally we had lands for our own!]],
+}
+
+newLore{
+	id = "orc-history-2",
+	category = "orc prides",
+	name = "Records of Lorekeeper Hadak part two",
+	lore = [[Our history is a history of battles, a history of wars. We orcs have always been under attack from the other races, always having to defend ourselves against their ruthless advances. The other races paint us as evil, they think of us as purely beasts. Not so! If we are cruel, it is because they made us cruel. If we are heartless, it is because they ripped our beating hearts from our chests and stamped them beneath their feet!
+
+It was the halflings we first did war with, in the Age of Allure. We were weak then, and disorganised, and in their arrogance they sought to enslave us. But we fought back! And we have been fighting back ever since. They used magic on us, though we had never come in touch with the arts before. They used whips and chains and tried to beat us down. They used us for labour, butchering any young that were not strong enough for them, burning any constructions we tried to make for ourselves.
+
+At first we escaped and fled, and hid in dark caves. Our numbers grew, though we had to endure squalor and hardship. After many years we could hide no longer, as starvation and disease threatened to kill us all. And so seeing our enemy weak we rose upon them in wrath. We were not organised, but we were determined. The elves and the humans and the dwarves tried to oppose us too, but we would not allow ourselves to be beaten! They tried to use their magics against us, but we overcame them with numbers, five of us dying for every mage we managed to kill. With blood we paid and finally we had lands for our own!]],
+}
+
+newLore{
+	id = "orc-history-3",
+	category = "orc prides",
+	name = "Records of Lorekeeper Hadak part three",
+	lore = [[During the Age of Dusk we lay hidden, nursing our wounds and plotting our revenge. But this turned against us, as centuries after the Spellblaze had torn our race apart, the Cataclysm would bring ruin upon us again. We were finally recovering our numbers when earthquakes tore through all of our settlements. Falling rocks crushed and smothered us, thousands of us were left trapped to die beneath the ground. What few of us were left came out to a changed world.
+
+The effects of magic left a grave impression on us then, and we knew we must learn its secrets in order to compete. For centuries we studied the effects of the Spellblaze, and captured enemy mages to experiment on them. Finally we were able to master the arts of magic and use them for ourselves. We built up our capabilities in secret, waiting for the right moment to strike a decisive vengeance. Garkul the Devourer, the greatest of our race, brought the plans to fruition. Under his awe-inspiring leadership we marched out upon the halfling kingdoms and burnt all before us. What glorious retribution we had! Whole cities were felled beneath our wrath. Everywhere we went we piled the bodies of our victims high and lit them in blazing pyres, as a symbol of our indomitable strength.
+
+The Age of Pyre was our age, the time when we showed ourselves the strongest of the races, standing alone and unbeatable.]],
+}
+
+newLore{
+	id = "orc-history-4",
+	category = "orc prides",
+	name = "Records of Lorekeeper Hadak part four",
+	lore = [[How greatly our race advanced during the Age of Pyre! Truly none of the weaker races can compare. For it was vengeance that drove us, and so fervently we pursued our goals at the thought of our just retribution on the races that had punished us and beaten us for so long before.
+
+During the Age of Pyre we discovered the farportal, deep beneath the dwarven cities. We were more cautious than the foolish elves before us, and managed to harness the portal's power to open a gateway to the lost east. We sent military forces over, and easily beat back the puny elves and humans that were hoveling there already. We established the Prides there - training camps for our soldiers where they could hone their battle skills before returning to fight the wars in the west.
+
+But all in the west did not go well. We conquered many lands, and came close to wiping out many races, but we became spread thin. As the other races began to fight back our Age of Pyre was to dwindle.]],
+}
+
+newLore{
+	id = "orc-history-5",
+	category = "orc prides",
+	name = "Records of Lorekeeper Hadak part five",
+	lore = [[The humans and the halflings made an alliance to defend their kingdoms, and soon the elves and the dwarves joined too, and we were pushed back. Our tactics became increasingly defensive as they made greater advances into our territory.
+
+We fought well and hard, but we were not prepared for the terrible tactics they would use. Instead of attacking our military bases they went for our towns and cities, killing all of our civilians. Babes were slaughtered in their mother's arms, and every last woman and child was hunted down and murdered. It was genocide of the highest order.
+
+What forces we could muster we sent east, leaving behind token troops who bravely sacrificed themselves against the enemy attacks, convincing them that their genocide had been complete.
+
+But what was left of our people in the east was a broken picture. Gone were the majority of our women and children, gone were our centres of culture, gone was all softness that ever lived in us. Our military forces were all that were left, consolidated in the Prides. By arcane experimentation we found ways to breed again, but we are left a hollow people. Until we are free from the threats of the other races we can focus on only one thing - revenge.
+
+We still have a secret presence in the west, in our rightful lands across which we have spilled rivers of our own blood. We are building up our military force at an accelerating rate, and when the time comes we shall sweep across Maj'Eyal with a vengeance that cannot be held back. The other races will suffer as they have made us suffer, and all that they have built will be brought to ruin.]],
+}

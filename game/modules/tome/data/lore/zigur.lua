@@ -27,7 +27,7 @@ newLore{
 	name = "Rules of the Ziguranth",
 	lore = [[1. You will not talk about Zigur to the wider world, lest evil ears be listening.
 2. You will shun the use of all spells and witchcraft.
-3. You will shun the use of magic-cursed wands.
+3. You will shun the use of magic-cursed items.
 4. You will shun the baneful influence of arcane runes and burn any skin that comes in contact with them.
 5. You will not aid or abet any you suspect of wizardry or conjuration.
 6. You will take note of any you suspect of spellweaving and report their name and address to the elders.
@@ -60,4 +60,26 @@ But we are not clear of danger yet. Magic still exists, though oft it lies secre
 We must never forget the terrors of the Great Evil, and the suffering brought upon us by those who choose to corrupt nature with arcane powers. Be wary in your travels, and be thorough in your duties. Our fight is difficult, but it is just and true, and not until all Maj'Eyal is cleansed of the impurities of magic can we ever know peace. We are the protectors of the world, and by our strength and our union with nature we shall be its saviours.
 
 -- Protector Myssil]],
+}
+
+newLore{
+	id = "zigur-potion",
+	category = "zigur",
+	name = "The story of my salvation",
+	lore = [[I used to be a potion merchant in Derth. I brewed alchemical tonics and elixirs for locals and travellers. My trade was good, and I lived very happily from the gold I earned. For a young woman to have such a business I was very proud.
+
+One day however several people in the town fell ill from a mystery disease. Rumours spread that my potions were to blame, and people stopped coming to my shop. My business was in ruins, and I soon ran the risk of becoming destitute. Then one of the elders died, and though he had been ill for some time, I was blamed for his death. People said I had laid a hex on him, and murmurs arose of witchcraft.
+
+I still remember how peaceful the evening had seemed when the townsfolk came for me. I was looking up at the brightness of the stars and the clear crescent moon, thinking of how I should restart my business, when I heard shouts from the distance. I saw the crowd appear from round the corner, advancing with their torches. I screamed for help, but they broke through my door, smashed through my windows and grabbed me. They dragged me outside and set their torches to my house. I was stripped to my skin and beaten heavily whilst they cursed and jeered, and even the man who had been my fiancé spat on my face and cursed me.
+
+They pulled me over grass and stone to the town square, and though half-blinded by the tears and my swollen flesh I could still make out the wooden stake they were erecting. I tried to cry out, I tried to beg for mercy, but their response was to hold me down by my throat and pull out my tongue with the blacksmith's tongs. As I coughed up blood they put me against the wooden pole and used barbed chords to tie my wrists to it above my head. The pain was unbearable and I passed out, and did not wake until I could feel the burning at my feet. The crowd were cheering as the smoke began to wrap around me, and they cheered louder with every pained scream I released from my lungs.
+
+I was choking from the smoke, barely able to breathe, and I could no longer feel my legs. Just when I felt my consciousness slipping away again I heard a commotion and a woman's voice shouted out, "She is no witch!" Then I saw some people coming towards me, and at the front was a halfling woman in dark armour. She rushed towards me, unheeding of the flames, and with a swift flick from her long sword she cut my bounds. She caught me as I fell and pulled me away from the fire, laying me down on the ground. I saw her soft face above mine as she whispered to me, "Tell me child, do you reject magic in all its forms?" I nodded my head \u2013 I could not say no to those bright eyes. She wiped the tears streaming down my face and kissed my forehead. "Then you will be safe - rest now." At once I passed out.
+
+When I awoke I was in another village in a soft bed. There were wrappings round my legs and bandages covering the cuts and bruises over the rest of my body. Healers tended to me, using natural remedies and herbal balms. The halfling woman would come and see me every day to check up on me. I longed for her every visit. She would speak to me sometimes. She explained how the townsfolk weren't to blame for their actions. It was all the mages' fault. They were corrupting the world, spreading chaos, and turning people against each other. I realised I was wrong for ever brewing potions - they were infested with arcane energies and could only bring harm to the world.
+
+She explained how she and her friends were helping to save the world, to rid our lands of all magic. And she has saved me. Not just from a terrible death, but also from the evil influences of the arcane. Even if I still had a tongue I could not find words to express my thanks to her, and my joy at the new life I lead, free from the abominations of magic. Thanks to her help I can now walk again with the aid of a crutch, and I can find true happiness in my rightful place in nature.
+
+I have no voice now to tell my story to others, and so I write it down instead, and I spread it to the winds. I have suffered from my contact with magic, and others will suffer too. Do not trust in the terrible powers of these devious arts. They will only betray you and bring you to harm. Turn your back on magic, and make others repent too. Find your own salvation in nature's joys before it is too late.
+]],
 }

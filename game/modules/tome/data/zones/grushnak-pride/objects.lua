@@ -19,6 +19,7 @@
 
 load("/data/general/objects/objects-far-east.lua")
 load("/data/general/objects/lore/sunwall.lua")
+load("/data/general/objects/lore/orc-prides.lua")
 
 newEntity{ base = "BASE_LORE",
 	define_as = "NOTE_LORE",

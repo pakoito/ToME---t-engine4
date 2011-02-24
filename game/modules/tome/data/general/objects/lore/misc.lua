@@ -17,15 +17,10 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/objects/objects-far-east.lua")
-load("/data/general/objects/lore/sunwall.lua")
-load("/data/general/objects/lore/orc-prides.lua")
-
 newEntity{ base = "BASE_LORE",
-	define_as = "NOTE_LORE",
-	name = "draft note", lore="gorbat-pride-note",
-	desc = [[A note.]],
-	rarity = false,
-	is_magic_device = false,
-	encumberance = 0,
+	name = "The story of my salvation", lore="zigur-potion", unique=true,
+	desc = [[An old tale about the fear of magic]],
+	level_range = {1, 20},
+	rarity = 20,
+	encumber = 0,
 }

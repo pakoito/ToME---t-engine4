@@ -17,15 +17,16 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/objects/objects-far-east.lua")
-load("/data/general/objects/lore/sunwall.lua")
-load("/data/general/objects/lore/orc-prides.lua")
+-- Randomly found only in the prides
 
+for i = 1, 5 do
 newEntity{ base = "BASE_LORE",
-	define_as = "NOTE_LORE",
-	name = "draft note", lore="gorbat-pride-note",
-	desc = [[A note.]],
-	rarity = false,
+	define_as = "ORC_HISTORY"..i,
+	name = "Records of Lorekeeper Hadak", lore="orc-history-"..i, unique="Records of Lorekeeper Hadak "..i,
+	desc = [[Part of the long history of the Orc race.]],
+	level_range = {1, 50},
+	rarity = 30,
 	is_magic_device = false,
-	encumberance = 0,
+	encumber = 0,
 }
+end

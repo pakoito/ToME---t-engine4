@@ -64,6 +64,11 @@ return {
 		},
 	},
 
+	post_process = function(level)
+		-- Place a lore note on each level
+		game:placeRandomLoreObject("NOTE"..level.level)
+	end,
+
 	foreground = function(level, dx, dx, nb_keyframes)
 		local tick = core.game.getTime()
 		local sr, sg, sb
