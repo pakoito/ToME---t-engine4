@@ -52,13 +52,22 @@ end
 --- Restock based on player level
 function _M:canRestock()
 	local s = self.store
-	local p = game.party:findMember{main=true}
-	if self.last_filled and p and self.last_filled >= p.level - s.restock_every then
-		print("[STORE] not restocking yet [player level]", p.level, s.restock_every, self.last_filled)
+	if self.last_filled and self.last_filled >= game.state.boss_killed - s.restock_every then
+		print("[STORE] not restocking yet [bosses killed]", game.state.boss_killed, s.restock_every, self.last_filled)
 		return false
 	end
 	return true
 end
+
+--- Fill the store with goods
+-- @param level the level to generate for (instance of type engine.Level)
+-- @param zone the zone to generate for
+function _M:loadup(level, zone)
+	if Store.loadup(self, level, zone) then
+		self.last_filled = game.state.boss_killed
+	end
+end
+
 
 --- Called on object purchase try
 -- @param who the actor buying

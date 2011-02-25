@@ -31,6 +31,16 @@ function _M:init(t, no_default)
 
 	self.allow_backup_guardians = {}
 	self.world_artifacts_pool = {}
+	self.boss_killed = 0
+end
+
+-- Number of bosses killed
+function _M:bossKilled(rank)
+	if rank == 3.5 then
+		self.boss_killed = self.boss_killed + 0.5
+	else
+		self.boss_killed = self.boss_killed + 1
+	end
 end
 
 --- Allow dropping the rod of recall

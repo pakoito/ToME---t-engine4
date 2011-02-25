@@ -103,6 +103,7 @@ function _M:loadup(level, zone)
 
 	self:sortInven(inven)
 	self.last_filled = game.turn
+	return true
 end
 
 --- Actor interacts with the store
