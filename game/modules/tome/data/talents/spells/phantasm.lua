@@ -44,7 +44,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local radius = t.getRadius(self, t)
+		local radius = self:getTalentRadius(t)
 		return ([[Creates a globe of pure light with a radius of %d that illuminates the area.
 		At level 3 it also blinds all who see it (except the caster).]]):
 		format(radius)

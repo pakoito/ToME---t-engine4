@@ -61,5 +61,16 @@ return {
 				up = "IRON_COUNCIL",
 			}, },
 		},
+		[5] = {
+			generator = {
+				map = {
+					class = "engine.generator.map.Static",
+					map = "zones/deep-bellow-last",
+				},
+				actor = {
+					nb_npc = {0, 0},
+				},
+			},
+		},
 	},
 }

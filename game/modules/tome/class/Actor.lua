@@ -422,6 +422,17 @@ function _M:knockback(srcx, srcy, dist, recursive)
 	end
 end
 
+--- Pull in the actor
+-- Overloaded to add move anim
+function _M:pull(srcx, srcy, dist, recursive)
+	local ox, oy = self.x, self.y
+	engine.Actor.pull(self, srcx, srcy, dist, recursive)
+	if config.settings.tome.smooth_move > 0 then
+		self:resetMoveAnim()
+		self:setMoveAnim(ox, oy, 9, 5)
+	end
+end
+
 --- Get the "path string" for this actor
 -- See Map:addPathString() for more info
 function _M:getPathString()
@@ -1579,7 +1590,7 @@ function _M:paradoxFailChance(pa)
 	--print("[Paradox] Will modifier: ", modifier, "::", self:getParadox())
 	local chance = math.pow (((self:getParadox() - modifier)/200), 2)*((100 + self:combatFatigue()) / 100)
 	--print("[Paradox] Fail chance: ", chance, "::", self:getParadox())
-	return rng.percent(chance)
+	return rng.percent(chance), chance
 end
 
 --- Called before a talent is used

@@ -36,26 +36,25 @@ newEntity{ base="BASE_NPC_CORRUPTED_HORROR", define_as = "THE_MOUTH",
 	size_category = 4,
 	infravision = 20,
 	instakill_immune = 1,
+	never_move = true,
+
+	-- Bad idea to melee it
+	combat = {dam=100, atk=1000, apr=1000, physcrit=1000},
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	resolvers.drops{chance=100, nb=1, {defined="CRYSTAL_FOCUS", random_art_replace={chance=75}} },
+	resolvers.drops{chance=100, nb=1, {defined="RING_OF_HORRORS", random_art_replace={chance=75}} },
 	resolvers.drops{chance=100, nb=3, {ego_chance=100} },
 
 	resolvers.talents{
-		[Talents.T_FLAME]=1,
-		[Talents.T_ICE_SHARDS]=1,
-		[Talents.T_SOUL_ROT]=1,
-		[Talents.T_ELEMENTAL_BOLT]=1,
+		[Talents.T_CALL_OF_AMAKTHEL]=1,
+		[Talents.T_DRAIN]=1,
 	},
-	resolvers.inscriptions(1, {"manasurge rune"}),
-	inc_damage = { all = -35 },
 
 	autolevel = "caster",
 	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
 	ai_tactic = resolvers.tactic"ranged",
 
 	on_die = function(self, who)
-		game.player:resolveSource():grantQuest("start-shaloren")
-		game.player:resolveSource():setQuestStatus("start-shaloren", engine.Quest.COMPLETED, "spellblaze")
+		game.player:resolveSource():setQuestStatus("deep-bellow", engine.Quest.COMPLETED)
 	end,
 }

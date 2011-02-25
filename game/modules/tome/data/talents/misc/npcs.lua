@@ -1240,3 +1240,35 @@ newTalent{
 		]]):format()
 	end,
 }
+
+newTalent{
+	name = "Call of Amakthel",
+	type = {"technique/other", 1},
+	points = 5,
+	cooldown = 2,
+	tactical = { DISABLE = 2 },
+	range = 0,
+	radius = function(self, t)
+		return 10
+	end,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), friendlyfire=false, radius=self:getTalentRadius(t), talent=t}
+	end,
+	action = function(self, t)
+		local tg = self:getTalentTarget(t)
+		local tgts = {}
+		self:project(tg, self.x, self.y, function(px, py)
+			local target = game.level.map(px, py, Map.ACTOR)
+			if not target then return end
+			if self:reactionToward(target) < 0 and not tgts[target] then
+				tgts[target] = true
+				target:pull(self.x, self.y, 1)
+				game.logSeen(target, "%s is pulled in!", target.name:capitalize())
+			end
+		end)
+		return true
+	end,
+	info = function(self, t)
+		return ([[Pull all foes toward you.]])
+	end,
+}

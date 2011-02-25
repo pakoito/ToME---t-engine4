@@ -285,6 +285,23 @@ newEntity{ base = "BASE_RING",
 	use_talent = { id = Talents.T_DARK_TENDRILS, level=2, power = 40 },
 }
 
+newEntity{ base = "BASE_RING",
+	power_source = {arcane=true},
+	define_as = "RING_OF_HORROR", rarity=false,
+	name = "Ring of Horrors", unique=true,
+	desc = [[Fleshy tentacles seem to crawl under yoru skin as you put this ring on.]],
+	unided_name = "fleshy ring",
+	level_range = {5, 12},
+	rarity = 250,
+	cost = 50,
+	material_level = 2,
+	wielder = {
+		combat_mentalresist = -20,
+		combat_spellresist = -20,
+		inc_damage={ all = 15, },
+	},
+}
+
 newEntity{ base = "BASE_HELM",
 	power_source = {nature=true},
 	define_as = "HELM_OF_GARKUL",
