@@ -238,56 +238,6 @@ function _M:toScreen(x, y, nb_keyframes)
 	end
 end
 
-function _M:addControl(control)
-	control.tabindex = self.tabindex
-	self.tabindex = self.tabindex + 1
-	self.controls[control.name] = control
-	table.sort(self.controls, function(a,b) return a.tabindex<b.tabindex end)
-end
-
-function _M:changeFocus(up)
-	local add = 1
-	if not up then add = -1 end
-	self.currenttabindex = self.currenttabindex + add
-	if (self.currenttabindex==self.tabindex) then self.currenttabindex = 0 end
-	if self.currenttabindex==-1 then self.currenttabindex=self.tabindex-1 end
-	local name = ""
-	for i, cntrl in pairs(self.controls) do
-		if cntrl.tabindex==self.currenttabindex then
-			if self.controls[self.state] and self.controls[self.state].unFocus then self.controls[self.state]:unFocus() end
-			cntrl.focused=true
-			name=i
-		end
-	end
-	return name
-end
-
-function _M:focusControl(focusOn)
-	if focusOn==self.state then return end
-	local oldstate = self.state
-	for i, cntrl in pairs(self.controls) do
-		if i==focusOn then cntrl.focused=true self.state=i self.currenttabindex=cntrl.tabindex end
-		if i==oldstate and cntrl.unFocus then cntrl:unFocus() end
-	end
-end
-
-
-function _M:databind()
-	local result = { }
-	for i, cntrl in pairs(self.controls or { }) do
-		if cntrl.type and (cntrl.type=="TextBox" or cntrl.type=="NumberBox") then
-			result[cntrl.name] = cntrl.text
-		end
-	end
-	return result
-end
-
-
-function _M:drawControls(s)
-	for i, cntrl in pairs(self.controls or { }) do
-		cntrl:drawControl(s)
-	end
-end
 
 function _M:drawDialog(s)
 end
