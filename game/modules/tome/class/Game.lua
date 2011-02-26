@@ -917,8 +917,8 @@ function _M:setupCommands()
 		HOTKEY_THIRD_10 = not_wild(function() self.player:activateHotkey(34) end),
 		HOTKEY_THIRD_11 = not_wild(function() self.player:activateHotkey(35) end),
 		HOTKEY_THIRD_12 = not_wild(function() self.player:activateHotkey(36) end),
---		HOTKEY_PREV_PAGE = not_wild(function() self.player:prevHotkeyPage() self.log("Hotkey page %d is now displayed.", self.player.hotkey_page) end),
---		HOTKEY_NEXT_PAGE = not_wild(function() self.player:nextHotkeyPage() self.log("Hotkey page %d is now displayed.", self.player.hotkey_page) end),
+		HOTKEY_PREV_PAGE = not_wild(function() self.player:prevHotkeyPage() self.log("Hotkey page %d is now displayed.", self.player.hotkey_page) end),
+		HOTKEY_NEXT_PAGE = not_wild(function() self.player:nextHotkeyPage() self.log("Hotkey page %d is now displayed.", self.player.hotkey_page) end),
 
 		-- Party commands
 		SWITCH_PARTY_1 = not_wild(function() self.party:select(1) end),
