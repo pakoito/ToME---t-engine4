@@ -41,48 +41,29 @@ function _M:generate()
 	self.sel = 1
 	self.max = #self.list
 
-	local vs7, vs7_w, vs7_h = self:getImage("ui/varsel-7-sel.png")
-	local vs9, vs9_w, vs9_h = self:getImage("ui/varsel-9-sel.png")
-	local vs3, vs3_w, vs3_h = self:getImage("ui/varsel-3-sel.png")
-	local vs1, vs1_w, vs1_h = self:getImage("ui/varsel-1-sel.png")
-	local vs2, vs2_w, vs2_h = self:getImage("ui/varsel-2-sel.png")
-	local vs8, vs8_w, vs8_h = self:getImage("ui/varsel-8-sel.png")
-	local vs4, vs4_w, vs4_h = self:getImage("ui/varsel-4-sel.png")
-	local vs6, vs6_w, vs6_h = self:getImage("ui/varsel-6-sel.png")
-	local vsc, vsc_w, vsc_h = self:getImage("ui/varsel-repeat-sel.png")
-
 	local fw, fh = self.w, self.font_h
 	self.fw, self.fh = fw, fh
+
+	self.frame = self:makeFrame(nil, fw, fh)
+	self.frame_sel = self:makeFrame("ui/selector-sel", fw, fh)
+	self.frame_usel = self:makeFrame("ui/selector", fw, fh)
 
 	-- Draw the list items
 	self.h = 0
 	for i, item in ipairs(self.list) do
 		local color = item.color or {255,255,255}
-		local text = item[self.display_prop]:splitLines(fw - vs7_w - vs9_w, self.font)
-		local fh = fh * #text + vs7_h / 3 * 2
-		local ss = core.display.newSurface(fw, fh)
-		local sus = core.display.newSurface(fw, fh)
+		local text = item[self.display_prop]:splitLines(fw - self.frame_sel.b4.w - self.frame_sel.b6.w, self.font)
+		local fh = fh * #text + self.frame_sel.b8.w / 3 * 2
 		local s = core.display.newSurface(fw, fh)
 
-		for i = 0, fw, vsc_w do for j = 0, fh, vsc_h do ss:merge(vsc, i, j) end end
-		for i = 0, fw, vs8_w do ss:merge(vs8, i, 0) ss:merge(vs2, i, fh - vs2_h) end
-		for j = 0, fh, vs4_h do ss:merge(vs4, 0, j) ss:merge(vs6, fw - vs6_w, j) end
-		ss:merge(vs7, 0, 0)
-		ss:merge(vs9, fw - vs9_w, 0)
-		ss:merge(vs1, 0, fh - vs1_h)
-		ss:merge(vs3, fw - vs3_w, fh - vs3_h)
-
-		s:erase(0, 0, 0)
-
+		s:erase(0, 0, 0, 0)
 		local color_r, color_g, color_b = color[1], color[2], color[3]
 		for z = 1, #text do
-			s:drawColorStringBlended(self.font, text[z], vs7_w, vs7_h / 3 + self.font_h * (z-1), color_r, color_g, color_b)
-			color_r, color_g, color_b = ss:drawColorStringBlended(self.font, text[z], vs7_w, vs7_h / 3 + self.font_h * (z-1), color_r, color_g, color_b)
+			color_r, color_g, color_b = s:drawColorStringBlended(self.font, text[z], self.frame_sel.b4.w, self.frame_sel.b8.w / 3 + self.font_h * (z-1), color_r, color_g, color_b, true)
 		end
 
 		item.fh = fh
-		item._tex, item._tex_w, item._tex_h = s:glTexture()
-		item._stex = ss:glTexture()
+		item._tex = {s:glTexture()}
 
 		self.mouse:registerZone(0, self.h, self.w, fh, function(button, x, y, xrel, yrel, bx, by, event)
 			if self.sel and self.list[self.sel] then self.list[self.sel].focus_decay = self.focus_decay_max end
@@ -126,18 +107,24 @@ function _M:display(x, y, nb_keyframes)
 	for i = 1, self.max do
 		local item = self.list[i]
 		if not item then break end
+
+		self.frame.h = item.fh
+		self.frame_sel.h = item.fh
+		self.frame_usel.h = item.fh
+
 		if self.sel == i then
-			if self.focused then item._stex:toScreenFull(x, y, self.fw, item.fh, item._tex_w, item._tex_h)
-			else item._tex:toScreenFull(x, y, self.fw, item.fh, item._tex_w, item._tex_h) end
+			if self.focused then self:drawFrame(self.frame_sel, x, y)
+			else self:drawFrame(self.frame_usel, x, y) end
 		else
-			item._tex:toScreenFull(x, y, self.fw, item.fh, item._tex_w, item._tex_h)
+			self:drawFrame(self.frame, x, y)
 			if item.focus_decay then
-				if self.focused then item._stex:toScreenFull(x, y, self.fw, item.fh, item._tex_w, item._tex_h, 1, 1, 1, item.focus_decay / self.focus_decay_max_d)
-				else item._tex:toScreenFull(x, y, self.fw, item.fh, item._tex_w, item._tex_h, 1, 1, 1, item.focus_decay / self.focus_decay_max_d) end
+				if self.focused then self:drawFrame(self.frame_sel, x, y, 1, 1, 1, item.focus_decay / self.focus_decay_max_d)
+				else self:drawFrame(self.frame_usel, x, y, 1, 1, 1, item.focus_decay / self.focus_decay_max_d) end
 				item.focus_decay = item.focus_decay - nb_keyframes
 				if item.focus_decay <= 0 then item.focus_decay = nil end
 			end
 		end
+		item._tex[1]:toScreenFull(x + self.frame_sel.b4.w, y, self.fw, item.fh, item._tex[2], item._tex[3])
 		y = y + item.fh
 	end
 end

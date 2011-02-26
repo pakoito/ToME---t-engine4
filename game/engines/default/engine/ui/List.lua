@@ -21,7 +21,6 @@ require "engine.class"
 local Base = require "engine.ui.Base"
 local Focusable = require "engine.ui.Focusable"
 local Slider = require "engine.ui.Slider"
-local Slider = require "engine.ui.Slider"
 
 --- A generic UI list
 module(..., package.seeall, class.inherit(Base, Focusable))
