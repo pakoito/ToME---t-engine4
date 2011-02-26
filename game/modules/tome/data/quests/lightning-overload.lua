@@ -58,11 +58,12 @@ on_grant = function(self, who)
 		local m = game.zone:makeEntity(game.level, "actor", {special_rarity="derth_rarity"}, nil, true)
 		local spot = game.level:pickSpot{type="npc", subtype="elemental"}
 		if m and spot then
+			local x, y = util.findFreeGrid(spot.x, spot.y, 5, true, {[engine.Map.ACTOR]=true})
 			m.quest = true
 			m.on_die = function(self)
 				game.player:resolveSource():hasQuest("lightning-overload"):kill_one()
 			end
-			game.zone:addEntity(game.level, m, "actor", spot.x, spot.y)
+			game.zone:addEntity(game.level, m, "actor", x, y)
 			self.max_count = self.max_count + 1
 		end
 	end

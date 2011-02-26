@@ -481,6 +481,17 @@ end
 --- Compute a day/night cycle
 -- Works by changing the tint of the map gradualy
 function _M:dayNightCycle()
+	local map = game.level.map
+	local shown = map.color_shown
+	local obscure = map.color_obscure
+
+	if not config.settings.tome.daynight then
+		-- Restore defaults
+		map._map:setShown(unpack(shown))
+		map._map:setObscure(unpack(obscure))
+		return
+	end
+
 	local hour, minute = game.calendar:getTimeOfDay(game.turn)
 	hour = hour + (minute / 60)
 	local tint = {r = 0.1, g = 0.1, b = 0.1}
@@ -505,9 +516,6 @@ function _M:dayNightCycle()
 		endTint = { r = 0.1, g = 0.1, b = 0.1 }
 		tint = doTint(startTint, endTint, (hour - 18) / 6)
 	end
-	local map = game.level.map
-	local shown = map.color_shown
-	local obscure = map.color_obscure
 	map._map:setShown(shown[1] * (tint.r+0.4), shown[2] * (tint.g+0.4), shown[3] * (tint.b+0.4), shown[4])
 	map._map:setObscure(obscure[1] * (tint.r+0.2), obscure[2] * (tint.g+0.2), obscure[3] * (tint.b+0.2), obscure[4])
 end
