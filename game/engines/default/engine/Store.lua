@@ -131,7 +131,7 @@ function _M:interact(who)
 		return self:descObject(who, what, o)
 	end, function(what, o)
 		return self:descObjectPrice(who, what, o)
-	end, self.allow_sell, self.allow_buy)
+	end, self.allow_sell, self.allow_buy, function(item) self:on_select(item) end)
 	game:registerDialog(d)
 end
 

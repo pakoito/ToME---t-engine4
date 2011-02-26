@@ -26,7 +26,8 @@ local Separator = require "engine.ui.Separator"
 
 module(..., package.seeall, class.inherit(Dialog))
 
-function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, action, desc, descprice, allow_sell, allow_buy)
+function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, action, desc, descprice, allow_sell, allow_buy, on_select)
+	self.on_select = on_select
 	self.allow_sell, self.allow_buy = allow_sell, allow_buy
 	self.action = action
 	self.desc = desc
@@ -37,11 +38,7 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 	self.actor_filter = actor_filter
 	Dialog.init(self, title or "Store", math.max(800, game.w * 0.8), math.max(600, game.h * 0.8))
 
-	self:maxH()
-
-	self.c_desc = TextzoneList.new{width=self.iw, height=self.max_h*self.font_h, no_color_bleed=true}
-
-	self.c_inven = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.max_h*self.font_h - 10, sortable=true, scrollbar=true, columns={
+	self.c_inven = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 10, sortable=true, scrollbar=true, columns={
 		{name="", width={20,"fixed"}, display_prop="char", sort="id"},
 		{name="", width={24,"fixed"}, display_prop="object", direct_draw=function(item, x, y) item.object:toScreen(nil, x+4, y, 16, 16) end},
 		{name="Inventory", width=80, display_prop="name", sort="name"},
@@ -49,7 +46,7 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 		{name="Price", width={50,"fixed"}, display_prop="desc_price", sort=function(a, b) return descprice("sell", a.object) <descprice("sell", b.object) end},
 	}, list={}, fct=function(item, sel) self:use(item) end, select=function(item, sel) self:select(item) end}
 
-	self.c_store = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.max_h*self.font_h - 10, sortable=true, scrollbar=true, columns={
+	self.c_store = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 10, sortable=true, scrollbar=true, columns={
 		{name="", width={20,"fixed"}, display_prop="char", sort="id"},
 		{name="", width={24,"fixed"}, display_prop="object", direct_draw=function(item, x, y) item.object:toScreen(nil, x+4, y, 16, 16) end},
 		{name="Store", width=80, display_prop="name"},
@@ -62,9 +59,7 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 	self:loadUI{
 		{left=0, top=0, ui=self.c_store},
 		{right=0, top=0, ui=self.c_inven},
-		{left=0, bottom=0, ui=self.c_desc},
-		{hcenter=0, top=5, ui=Separator.new{dir="horizontal", size=self.ih - self.c_desc.h - 10}},
-		{left=5, bottom=self.c_desc.h, ui=Separator.new{dir="vertical", size=self.iw - 10}},
+		{hcenter=0, top=5, ui=Separator.new{dir="horizontal", size=self.ih - 10}},
 	}
 	self:setFocus(self.c_inven)
 	self:setupUI()
@@ -91,7 +86,7 @@ end
 
 function _M:select(item)
 	if item then
-		self.c_desc:switchItem(item, item.desc)
+		if self.on_select then self.on_select(item) end
 	end
 end
 
@@ -105,20 +100,6 @@ function _M:use(item)
 			if util.getval(self.allow_sell, item.object, item.item) then
 				self.action("sell", item.object, item.item)
 			end
-		end
-	end
-end
-
-function _M:maxH()
-	self.max_h = 0
-	for item, o in ipairs(self.store_inven) do
-		if not self.store_filter or self.store_filter(o) then
-			self.max_h = math.max(self.max_h, o:getDesc():splitLines(self.iw - 10, self.font):countLines())
-		end
-	end
-	for item, o in ipairs(self.actor_inven) do
-		if not self.actor_filter or self.actor_filter(o) then
-			self.max_h = math.max(self.max_h, o:getDesc():splitLines(self.iw - 10, self.font):countLines())
 		end
 	end
 end
