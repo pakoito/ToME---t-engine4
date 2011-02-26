@@ -59,9 +59,15 @@ function _M:generate()
 	self.rw, self.rh = w, h
 	self.frame = self:makeFrame("ui/button", self.w, self.h)
 	self.frame_sel = self:makeFrame("ui/button_sel", self.w, self.h)
+
+	-- Add a bit of padding
+	self.w = self.w + 6
+	self.h = self.h + 6
 end
 
 function _M:display(x, y, nb_keyframes)
+	x = x + 3
+	y = y + 3
 	if self.focused then
 		self:drawFrame(self.frame_sel, x, y)
 		self.tex[1]:toScreenFull(x-frame_ox1, y-frame_oy1, self.rw, self.rh, self.tex[2], self.tex[3])

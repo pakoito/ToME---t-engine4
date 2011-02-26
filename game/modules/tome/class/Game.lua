@@ -788,7 +788,8 @@ function _M:display(nb_keyframes)
 
 		-- Minimap display
 		self.minimap_bg:toScreen(0, 35, 200, 200)
-		map:minimapDisplay(0, 35, util.bound(self.player.x - 25, 0, map.w - 50), util.bound(self.player.y - 25, 0, map.h - 50), 50, 50, 1)
+		self.minimap_scroll_x, self.minimap_scroll_y = util.bound(self.player.x - 25, 0, map.w - 50), util.bound(self.player.y - 25, 0, map.h - 50)
+		map:minimapDisplay(0, 35, self.minimap_scroll_x, self.minimap_scroll_y, 50, 50, 1)
 	end
 
 	-- We display the player's interface
@@ -1129,7 +1130,10 @@ function _M:setupMouse(reset)
 	self.mouse:registerZone(0, 35, 200, 200, function(button, mx, my, xrel, yrel, bx, by, event)
 		if button == "left" and not xrel and not yrel and event == "button" then
 			local tmx, tmy = math.floor(bx / 4), math.floor(by / 4)
-			self.player:mouseMove(tmx, tmy)
+			self.player:mouseMove(tmx + self.minimap_scroll_x, tmy + self.minimap_scroll_y)
+		elseif button == "right" then
+			local tmx, tmy = math.floor(bx / 4), math.floor(by / 4)
+			game.level.map:moveViewSurround(tmx + self.minimap_scroll_x, tmy + self.minimap_scroll_y, 1000, 1000)
 		end
 	end)
 	if not reset then self.mouse:setCurrent() end
