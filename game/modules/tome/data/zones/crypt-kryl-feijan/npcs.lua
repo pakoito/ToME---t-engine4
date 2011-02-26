@@ -133,6 +133,8 @@ newEntity{ define_as = "ACOLYTE",
 
 	on_die = function(self)
 		if not game.level.turn_counter then return end
+		game.level.turn_counter = game.level.turn_counter + 6
+
 		local nb = 0
 		local melinda
 		for uid, e in pairs(game.level.entities) do
