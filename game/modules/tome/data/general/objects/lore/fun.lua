@@ -33,6 +33,15 @@ newEntity{ base = "BASE_LORE",
 	encumber = 0,
 }
 
+for i = 1, 4 do
+newEntity{ base = "BASE_LORE",
+	name = "how to become a necromancer, part "..i, lore="necromancer-primer-"..i, unique=true,
+	desc = [[How to become a powerful Necromancer!]],
+	level_range = {15, 50},
+	rarity = 40,
+}
+end
+
 for i = 1, 5 do
 local who
 if i == 1 then who = "Rolf" nb = 1
