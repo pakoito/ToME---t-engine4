@@ -28,6 +28,7 @@ newTalent{
 	no_npc_use = true,
 	no_energy = true,
 	getAnomaly = function(self, t) return 6 - (self:getTalentLevelRaw(self.T_STATIC_HISTORY) or 0) end,
+	getPower = function(self, t) return math.floor(self:getWil()/2) end,
 	action = function(self, t)
 		-- open dialog to get desired paradox
 		local q = engine.dialogs.GetQuantity.new("Retuning the fabric of spacetime...", 
@@ -35,13 +36,13 @@ newTalent{
 			
 			-- get reduction amount and find duration
 			amount = qty - self.paradox
-			local dur = math.floor(math.abs(qty-self.paradox)/self:getWil())
-			
+			local dur = math.floor(math.abs(qty-self.paradox)/t.getPower(self, t))
+						
 			-- set tuning effect
 			if amount >= 0 then
-				self:setEffect(self.EFF_SPACETIME_TUNING, dur, {power = self:getWil()})
+				self:setEffect(self.EFF_SPACETIME_TUNING, dur, {power = t.getPower(self, t)})
 			elseif amount < 0 then
-				self:setEffect(self.EFF_SPACETIME_TUNING, dur, {power = -self:getWil()})
+				self:setEffect(self.EFF_SPACETIME_TUNING, dur, {power = - t.getPower(self, t)})
 			end
 			
 		end)
@@ -50,8 +51,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local chance = t.getAnomaly(self, t)
-		return ([[Retunes your Paradox towards the desired level and informs you of failure, anomaly, and backfire chances when you finish tuning.  You will be dazed while tuning and each turn your Paradox will increase or decrease by an amount equal to your Willpower stat.
-		Each turn you have a %d%% chance of triggering a temporal anomaly which will end the tuning process.]]):
+		return ([[Retunes your Paradox towards the desired level and informs you of failure, anomaly, and backfire chances when you finish tuning.  You will be dazed while tuning and each turn your Paradox will increase or decrease by an amount equal to one half of your Willpower stat.
+		Each turn you spend increasing Paradox will have a %d%% chance of triggering a temporal anomaly which will end the tuning process.  Decreasing Paradox has no chance of triggering an anomaly.]]):
 		format(chance)
 	end,
 }

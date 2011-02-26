@@ -157,7 +157,7 @@ function _M:init(t, no_default)
 
 	t.equilibrium = t.equilibrium or 0
 
-	t.paradox = t.paradox or 300
+	t.paradox = t.paradox or 150
 
 	t.money = t.money or 0
 
@@ -1593,6 +1593,34 @@ function _M:paradoxFailChance(pa)
 	return rng.percent(chance), chance
 end
 
+-- Overwrite incParadox to set up threshold log messages
+local previous_incParadox = _M.incParadox
+
+function _M:incParadox(paradox)
+	-- Failure checks
+	if self:getParadox() < 200 and self:getParadox() + paradox >= 200 then
+		game.logPlayer(self, "#LIGHT_RED#You feel the edges of time begin to fray!")
+	end
+	if self:getParadox() > 200 and self:getParadox() + paradox <= 200 then
+		game.logPlayer(self, "#LIGHT_BLUE#Time feels more stable.")
+	end
+	-- Backfire checks
+	if self:getParadox() < 300 and self:getParadox() + paradox >= 300 then
+		game.logPlayer(self, "#LIGHT_RED#You feel the edges of space begin to ripple and bend!")
+	end
+	if self:getParadox() > 300 and self:getParadox() + paradox <= 300 then
+		game.logPlayer(self, "#LIGHT_BLUE#Space feels more stable.")
+	end
+	-- Anomaly checks
+	if self:getParadox() < 400 and self:getParadox() + paradox >= 400 then
+		game.logPlayer(self, "#LIGHT_RED#Space and time both fight against your control!")
+	end	
+	if self:getParadox() > 400 and self:getParadox() + paradox <= 400 then
+		game.logPlayer(self, "#LIGHT_BLUE#Space and time have calmed...  somewhat.")
+	end	
+	return previous_incParadox(self, paradox)
+end
+
 --- Called before a talent is used
 -- Check the actor can cast it
 -- @param ab the talent (not the id, the table)
@@ -1689,13 +1717,13 @@ function _M:preUseTalent(ab, silent, fake)
 	-- Paradox is special, it has no max, but the higher it is the higher the chance of something bad happening
 	if (ab.paradox or ab.sustain_paradox) and not fake then
 		-- Check failure first
-		if not self:attr("no_paradox_fail") and self:paradoxFailChance(ab.paradox or ab.sustain_paradox) then
+		if not self:attr("no_paradox_fail") and self:paradoxFailChance(ab.paradox or ab.sustain_paradox) and self:getParadox() > 200 then
 			if not silent then game.logPlayer(self, "You fail to use %s due to your paradox!", ab.name) end
 			self:incParadox(ab.paradox or ab.sustain_paradox / 10)
 			self:useEnergy()
 			return false
 		-- Now Check Anomalies
-		elseif not game.zone.no_anomalies and not self:attr("no_paradox_fail") and rng.percent(math.pow((self:getParadox()/400), 4)) then
+		elseif not game.zone.no_anomalies and not self:attr("no_paradox_fail") and rng.percent(math.pow((self:getParadox()/400), 4)) and self:getParadox() > 400 then
 			-- Random anomaly
 			self:incParadox(ab.paradox or ab.sustain_paradox / 2)
 			local ts = {}

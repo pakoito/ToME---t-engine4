@@ -26,7 +26,7 @@ newTalent{
 	range = 10,
 	direct_hit = true,
 	type_no_req = true,
-	getTargetCount = function(self, t) return math.floor(self:getParadox()/200) end,
+	getTargetCount = function(self, t) return math.ceil(self:getParadox()/200) end,
 	getRange = function(self, t) return math.ceil(self:getParadox()/10) end,
 	message = "Reality has shifted.",
 	action = function(self, t)
@@ -66,7 +66,7 @@ newTalent{
 	range = 10,
 	direct_hit = true,
 	type_no_req = true,
-	getTargetCount = function(self, t) return math.floor(self:getParadox()/50) end,
+	getTargetCount = function(self, t) return math.ceil(self:getParadox()/50) end,
 	getRange = function(self, t) return math.ceil(self:getParadox()/100) end,
 	message = "@Source@ has caused a hiccup in the fabric of spacetime.",
 	action = function(self, t)
@@ -188,7 +188,7 @@ newTalent{
 	range = 6,
 	direct_hit = true,
 	type_no_req = true,
-	getTargetCount = function(self, t) return math.floor(self:getParadox()/300) end,
+	getTargetCount = function(self, t) return math.ceil(self:getParadox()/300) end,
 	getPower = function(self, t) return ((self:getParadox()/15) / 100) end,
 	message = "@Source@ has sped up several threads of time.",
 	action = function(self, t)
@@ -254,7 +254,7 @@ newTalent{
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
 	type_no_req = true,
-	getDamage = function(self, t) return self:getParadox()/25 end,
+	getDamage = function(self, t) return self:getParadox()/40 end,
 	getDuration = function(self, t) return math.ceil (self:getParadox()/50) end,
 	message = "A temporal storm rages around @Source@.",
 	action = function(self, t)
@@ -284,8 +284,8 @@ newTalent{
 	range = 10,
 	direct_hit = true,
 	type_no_req = true,
-	getTargetCount = function(self, t) return math.floor(self:getParadox()/200) end,
-	getSummonTime = function(self, t) return math.floor(self:getParadox()/50) end,
+	getTargetCount = function(self, t) return math.ceil(self:getParadox()/200) end,
+	getSummonTime = function(self, t) return math.ceil(self:getParadox()/50) end,
 	message = "Some Time Elementals have been attracted by @Source@'s meddling.",
 	action = function(self, t)
 		local tgts = {}
@@ -371,7 +371,7 @@ newTalent{
 	points = 1,
 	range = 10,
 	type_no_req = true,
-	getTargetCount = function(self, t) return math.floor(self:getParadox()/200) end,
+	getTargetCount = function(self, t) return math.ceil(self:getParadox()/200) end,
 	getDuration = function(self, t) return math.ceil(self:getParadox()/100) end,
 	message = "@Source@ has paused a temporal thread.",
 	action = function(self, t)
@@ -469,16 +469,16 @@ newTalent{
 	name = "Anomaly Gravity Spike",
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
-	range = 6,
+	range = 10,
 	direct_hit = true,
 	type_no_req = true,
 	getTargetCount = function(self, t) return 1 end,
-	getRadius = function(self, t) return math.floor(self:getParadox()/100) end,
-	getDamage = function(self, t) return self:getParadox()/10 end,
+	getRadius = function(self, t) return math.ceil(self:getParadox()/100) end,
+	getDamage = function(self, t) return self:getParadox()/20 end,
 	message = "@Source@ has caused a Gravity Spike.",
 	action = function(self, t)
 		local tgts = {}
-		local grids = core.fov.circle_grids(self.x, self.y, 6, true)
+		local grids = core.fov.circle_grids(self.x, self.y, 10, true)
 		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
 			local a = game.level.map(x, y, Map.ACTOR)
 			if a then
@@ -522,9 +522,9 @@ newTalent{
 	range = 6,
 	direct_hit = true,
 	type_no_req = true,
-	getTargetCount = function(self, t) return math.floor(self:getParadox()/100) end,
+	getTargetCount = function(self, t) return math.ceil(self:getParadox()/100) end,
 	getPower = function(self, t) return math.ceil(self:getParadox()/50) end,
-	getTalentCount = function(self, t) return math.floor(self:getParadox()/200) end,
+	getTalentCount = function(self, t) return math.ceil(self:getParadox()/200) end,
 	message = "@Source@ has increased local entropy.",
 	action = function(self, t)
 		local tgts = {}
@@ -576,8 +576,8 @@ newTalent{
 	range = 10,
 	direct_hit = true,
 	type_no_req = true,
-	getTargetCount = function(self, t) return math.floor(self:getParadox()/200) end,
-	getSummonTime = function(self, t) return math.floor(self:getParadox()/20) end,
+	getTargetCount = function(self, t) return math.ceil(self:getParadox()/200) end,
+	getSummonTime = function(self, t) return math.ceil(self:getParadox()/20) end,
 	message = "Some innocent bystanders have been pulled out of their timeline.",
 	action = function(self, t)
 		local tgts = {}
@@ -686,7 +686,7 @@ newTalent{
 	direct_hit = true,
 	type_no_req = true,
 	getRange = function(self, t) return math.ceil(self:getParadox()/10) end,
-	getTargetCount = function(self, t) return math.floor(self:getParadox()/200) end,
+	getTargetCount = function(self, t) return math.ceil(self:getParadox()/200) end,
 	message = "Poof!!",
 	action = function(self, t)
 		local tgts = {}
@@ -729,7 +729,7 @@ newTalent{
 	range = 6,
 	direct_hit = true,
 	type_no_req = true,
-	getTargetCount = function(self, t) return math.floor(self:getParadox()/150) end,
+	getTargetCount = function(self, t) return math.ceil(self:getParadox()/150) end,
 	getPower = function(self, t) return (self:getParadox()/30) end,
 	message = "@Source@ has inadvertently weakened several creatures.",
 	action = function(self, t)
@@ -750,7 +750,7 @@ newTalent{
 			table.remove(tgts, id)
 
 			a:setEffect(self.EFF_FLAWED_DESIGN, 10, {power=t.getPower(self, t)})
-			a:setEffect(self.EFF_TURN_BACK_THE_CLOCK, 10, {power=t.getPower(self, t)})
+			a:setEffect(self.EFF_TURN_BACK_THE_CLOCK, 10, {power=t.getPower(self, t)/2})
 			game.level.map:particleEmitter(a.x, a.y, 1, "temporal_teleport")
 			game:playSoundNear(self, "talents/spell_generic")
 		end

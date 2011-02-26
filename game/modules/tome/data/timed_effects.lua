@@ -3385,7 +3385,7 @@ newEffect{
 		local anomaly = t.getAnomaly(self, t)
 
 		-- first check for anomaly
-		if rng.percent(anomaly) and not game.zone.no_anomalies then
+		if rng.percent(anomaly) and not game.zone.no_anomalies and eff.power > 0 then
 			-- Random anomaly
 			local ts = {}
 			for id, t in pairs(self.talents_def) do
@@ -3412,9 +3412,9 @@ newEffect{
 		else
 			modifier = self:getWil()
 		end
-		local failure = math.pow(((self:getParadox() - modifier)/200), 2)*((100 + self:combatFatigue()) / 100)
-		local anomaly = math.pow((self:getParadox()/400), 4)
-		local backfire = math.pow (((self:getParadox() - modifier)/300), 3)*((100 + self:combatFatigue()) / 100)
+		local failure = math.floor( math.pow(((self:getParadox() - modifier)/200), 2)*((100 + self:combatFatigue()) / 100))
+		local anomaly = math.floor(math.pow((self:getParadox()/400), 4))
+		local backfire = math.floor(math.pow (((self:getParadox() - modifier)/300), 3)*((100 + self:combatFatigue()) / 100))
 		self:removeTemporaryValue("dazed", eff.tmpid)
 		game.logPlayer(self, "Your current failure chance is %d%%, your current anomoly chance is %d%%, and your current backfire chance is %d%%.", failure, anomaly, backfire)
 	end,

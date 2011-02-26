@@ -44,7 +44,7 @@ newEntity{
 newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 	dredge = 1,
 	name = "dremling", color=colors.SLATE,
-	desc = "A small disfigured humanoid with vaguely dwarven features.  It's waraxe and shield look battered, rusted, and generally in ill repair.",
+	desc = "A small faceless humanoid with vaguely dwarven features.  It's waraxe and shield look battered, rusted, and generally in ill repair.",
 	level_range = {1, nil}, exp_worth = 1,
 
 	combat = { atk=6, dammod={str=0.6} },
@@ -78,7 +78,7 @@ newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 	dredge = 1,
 	name = "drem", color=colors.DARK_SLATE_GRAY,
-	desc = "A giant black-skinned humanoid covered in spikey scabrous deposits.",
+	desc = "A giant black-skinned humanoid covered in spikey scabrous deposits.  Its face is featureless and its eyesockets empty and hollow.",
 	level_range = {3, nil}, exp_worth = 1,
 
 	combat_armor = 4, combat_def = 0,
@@ -115,7 +115,7 @@ newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 	dredge = 1,
 	name = "drem master", color=colors.LIGHT_GREY,
-	desc = "A disfigured humanoid with vaguely dwarven features dressed in patched together and rusted mail armor.  It seems to be in command of the others.",
+	desc = "A disfigured humanoid with vaguely dwarven features dressed in patched together and rusted mail armor.  It seems to be in command of the others though it's mouth is sown shut.",
 	level_range = {3, nil}, exp_worth = 1,
 
 	combat = { atk=10, dammod={str=0.6} },
@@ -158,7 +158,7 @@ newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 
 newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 	name = "brecklorn", color=colors.PINK,  -- gloom bat
-	desc = "A giant hairless bat.  Pestulant sores cover it's malformed body and your heart weakens as it nears.",
+	desc = "A giant hairless bat with the face of a dwarven man twisted into a constant scream.  Pestulant sores cover it's malformed body and your heart weakens as it nears.",
 	level_range = {1, nil}, exp_worth = 1,
 
 	energy = { mod=0.7 },
@@ -188,7 +188,7 @@ newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 
 newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 	name = "grannor'vor", color=colors.GREEN,  -- acid slug
-	desc = "A large sluglike creature that moves slowly, leaving a trail of acid in its wake.",
+	desc = "A large sluglike creature that moves slowly, leaving a trail of acid in its wake.  Its head has strangely humanoid features.",
 	level_range = {2, nil}, exp_worth = 1,
 
 	combat = { dam=5, atk=15, apr=5, damtype=DamageType.ACID },
@@ -203,6 +203,8 @@ newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 	energy = { mod=0.8 },
 
 	resists = { [DamageType.ACID] = 50, [DamageType.DARKNESS] = 20,  [DamageType.LIGHT] = - 20 },
+	
+	clone_on_hit = {min_dam_pct=15, chance=30},
 
 	resolvers.talents{
 		[Talents.T_CRAWL_ACID]=2,
@@ -214,7 +216,7 @@ newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 
 newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 	name = "grannor'vin", color=colors.BLACK,  -- shadow slug
-	desc = "A large sluglike creature that moves slowly.  Shadows seem to be drawn to it's massive form and your light dims as it approaches.",
+	desc = "A large sluglike creature with the face of a man.  Shadows seem to be drawn to it's massive form and your light dims as it approaches.",
 	level_range = {2, nil}, exp_worth = 1,
 
 	combat = { dam=5, atk=15, apr=5, damtype=DamageType.DARKNESS },
@@ -224,16 +226,18 @@ newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 
 	rarity = 4,
 	rank = 2,
-	size_category = 3,
+	size_category = 4,
 	autolevel = "caster",
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
 
 	energy = { mod=0.8 },
 
 	resists = { [DamageType.DARKNESS] = 50,  [DamageType.LIGHT] = - 20 },
 
 	resolvers.talents{
-		[Talents.T_CALL_SHADOWS]=2,
+		[Talents.T_CALL_SHADOWS]=3,
 		[Talents.T_CREEPING_DARKNESS]=2,
+		[Talents.T_DARK_TORRENT]=1,
 	},
 
 	resolvers.sustains_at_birth(),
