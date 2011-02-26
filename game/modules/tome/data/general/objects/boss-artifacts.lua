@@ -84,7 +84,7 @@ newEntity{ base = "BASE_AMULET",
 	desc = [[A choker made of pure flame, forever shifting patterns around the neck of its wearer. Its fire seems to not harm the wearer.]],
 	level_range = {32, 42},
 	rarity = 220,
-	cost = 50,
+	cost = 190,
 	wielder = {
 		inc_stats = { [Stats.STAT_MAG] = 5, [Stats.STAT_WIL] = 4, [Stats.STAT_CUN] = 3 },
 		combat_spellpower = 7,
