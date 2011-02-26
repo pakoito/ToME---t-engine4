@@ -23,6 +23,7 @@ load("/data/general/npcs/crystal.lua")
 load("/data/general/npcs/bone-giant.lua")
 load("/data/general/npcs/ritch.lua")
 load("/data/general/npcs/ziguranth.lua")
+load("/data/general/npcs/horror-corrupted.lua")
 
 local Talents = require("engine.interface.ActorTalents")
 

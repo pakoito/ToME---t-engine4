@@ -89,6 +89,17 @@ local give_healinfu = function(self, player)
 	end
 end
 
+local give_moveinfu = function(self, player)
+	local o = game.zone:makeEntity(game.level, "object", {name="movement infusion"}, 1, true)
+	if o then
+		o:identify(true)
+		player:addObject(player.INVEN_INVEN, o)
+		o.inscription_data.dur = o.inscription_data.dur + 2
+		game.zone:addEntity(game.level, o, "object")
+		game.level.arena.perk = "Move"..game.level.arena.modeString
+	end
+end
+
 local give_imbue = function(self, player)
 	player:learnTalent(player.T_IMBUE_ITEM, true, 4)
 	player.changed = true
@@ -158,7 +169,7 @@ newChat{ id="perks",
 		{"A pair of boots of disengagement...", action=give_boots_dise},
 		{"A pair of boots of rushing...", action=give_boots_rush},
 		{"A pair of boots of phasing...", action=give_boots_phas},
-		--{"#DARK_BLUE#A pair of boots of lightning speed...", action=give_boots_lspeed},
+		{"A movement infusion...", action=give_moveinfu},
 		{"A healing infusion...", action=give_healinfu},
 		{"A bow of piercing arrows...", action=give_bow},
 		{"A sling of flare...", action=give_sling},
