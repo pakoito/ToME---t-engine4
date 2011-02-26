@@ -58,6 +58,7 @@ newLore{
 	id = "trollmire-note-5",
 	category = "trollmire",
 	name = "tattered paper scrap (trollmire)",
+	bloodstains = 3,
 	lore = [[You find a tattered page scrap. Perhaps this is part of a diary entry.
 "...writing this in a tree and he's at the bottom of it. Waiting. His club is the size of a tall dwarf. Don't think I'm going to make it."]],
 }

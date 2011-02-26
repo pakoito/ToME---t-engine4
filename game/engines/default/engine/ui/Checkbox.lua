@@ -37,44 +37,21 @@ function _M:generate()
 	self.mouse:reset()
 	self.key:reset()
 
-	local ls, ls_w, ls_h = self:getImage("ui/textbox-left-sel.png")
-	local ms, ms_w, ms_h = self:getImage("ui/textbox-middle-sel.png")
-	local rs, rs_w, rs_h = self:getImage("ui/textbox-right-sel.png")
-	local l, l_w, l_h = self:getImage("ui/textbox-left.png")
-	local m, m_w, m_h = self:getImage("ui/textbox-middle.png")
-	local r, r_w, r_h = self:getImage("ui/textbox-right.png")
-	local c, c_w, c_h = self:getImage("ui/textbox-cursor.png")
-	local chk, chk_w, chk_h = self:getImage("ui/checkbox-ok.png")
+	self.check = self:getTexture("ui/checkbox.png")
+	self.tick = self:getTexture("ui/checkbox-ok.png")
 
 	self.h = r_h
 
 	-- Draw UI
-	local title_w = self.font:size(self.title)
-	self.w = title_w + chk_w
-	local w, h = self.w, r_h
-	local fw, fh = w - title_w - ls_w - rs_w, self.font_h
-	self.fw, self.fh = fw, fh
-	self.text_x = ls_w + title_w
-	self.text_y = (h - fh) / 2
-	self.max_display = math.floor(fw / self.font_mono_w)
-	local ss = core.display.newSurface(w, h)
-	local s = core.display.newSurface(w, h)
+	self.title_w, self.title_h = self.font:size(self.title)
+	self.w, self.h = self.title_w + self.check.w, math.max(self.font_h, self.check.h)
 
-	ss:merge(ls, title_w, 0)
-	for i = title_w + ls_w, w - rs_w do ss:merge(ms, i, 0) end
-	ss:merge(rs, w - rs_w, 0)
-	ss:drawColorStringBlended(self.font, self.title, 0, (h - fh) / 2, 255, 255, 255, true)
-
-	s:merge(l, title_w, 0)
-	for i = title_w + l_w, w - r_w do s:merge(m, i, 0) end
-	s:merge(r, w - r_w, 0)
-	s:drawColorStringBlended(self.font, self.title, 0, (h - fh) / 2, 255, 255, 255, true)
-
-	self.chk_tex, self.chk_tex_w, self.chk_tex_h = chk:glTexture()
-	self.chk_w, self.chk_h = chk_w, chk_h
+	local s = core.display.newSurface(self.title_w, self.title_h)
+	s:drawColorStringBlended(self.font, self.title, 0, 0, 255, 255, 255, true)
+	self.tex = {s:glTexture()}
 
 	-- Add UI controls
-	self.mouse:registerZone(title_w + ls_w, 0, fw, h, function(button, x, y, xrel, yrel, bx, by, event)
+	self.mouse:registerZone(0, 0, self.w, self.h, function(button, x, y, xrel, yrel, bx, by, event)
 		if event == "button" then
 			self:select()
 		end
@@ -83,9 +60,6 @@ function _M:generate()
 	self.key:addCommands{
 		_SPACE = function() self:select() end,
 	}
-
-	self.tex, self.tex_w, self.tex_h = s:glTexture()
-	self.stex = ss:glTexture()
 end
 
 function _M:select()
@@ -93,17 +67,18 @@ function _M:select()
 end
 
 function _M:display(x, y, nb_keyframes)
+	self.tex[1]:toScreenFull(x, y + (self.h - self.title_h) / 2, self.title_w, self.title_h, self.tex[2], self.tex[3])
 	if self.focused then
-		self.stex:toScreenFull(x, y, self.w, self.h, self.tex_w, self.tex_h)
+		self.check.t:toScreenFull(x + self.title_w, y, self.check.w, self.check.h, self.check.tw, self.check.th)
 	else
-		self.tex:toScreenFull(x, y, self.w, self.h, self.tex_w, self.tex_h)
+		self.check.t:toScreenFull(x + self.title_w, y, self.check.w, self.check.h, self.check.tw, self.check.th)
 		if self.focus_decay then
-			self.stex:toScreenFull(x, y, self.w, self.h, self.tex_w, self.tex_h, 1, 1, 1, self.focus_decay / self.focus_decay_max_d)
+--			self.check.t:toScreenFull(x + self.title_w, y, self.check.w, self.check.h, self.check.tw, self.check.th)
 			self.focus_decay = self.focus_decay - nb_keyframes
 			if self.focus_decay <= 0 then self.focus_decay = nil end
 		end
 	end
 	if self.checked then
-		self.chk_tex:toScreenFull(x + self.w - self.chk_w, y, self.chk_w, self.chk_h, self.chk_tex_w, self.chk_tex_h)
+		self.tick.t:toScreenFull(x + self.title_w, y, self.tick.w, self.tick.h, self.tick.tw, self.tick.th)
 	end
 end

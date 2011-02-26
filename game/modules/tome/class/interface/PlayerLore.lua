@@ -19,6 +19,7 @@
 
 require "engine.class"
 local Dialog = require "engine.ui.Dialog"
+local LorePopup = require "mod.dialogs.LorePopup"
 
 module(..., package.seeall, class.make)
 
@@ -75,7 +76,7 @@ end
 function _M:learnLore(lore)
 	if not self:knownLore(lore) then
 		local l = self:getLore(lore)
-		Dialog:simpleLongPopup("Lore found: #0080FF#"..l.name, "#ANTIQUE_WHITE#"..util.getval(l.lore), game.w * 0.6, nil, nil, 0.8)
+		LorePopup.new(l, game.w * 0.6, 0.8)
 		game.logPlayer(self, "Lore found: #0080FF#%s", l.name)
 		game.logPlayer(self, "#ANTIQUE_WHITE#%s", util.getval(l.lore))
 		game.logPlayer(self, "You can read all your collected lore in the game menu, by pressing Escape.")

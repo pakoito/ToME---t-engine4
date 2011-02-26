@@ -647,15 +647,15 @@ function tstring:splitLines(max_width, font)
 	return ret, max_w
 end
 
-function tstring:makeLineTextures(max_width, font, no_split)
+function tstring:makeLineTextures(max_width, font, no_split, r, g, b)
 	local list = no_split and self or self:splitLines(max_width, font)
 	local fh = font:lineSkip()
 	local s = core.display.newSurface(max_width, fh)
 	s:erase(0, 0, 0, 0)
 	local texs = {}
 	local w = 0
-	local r, g, b = 255, 255, 255
-	local oldr, oldg, oldb = 255, 255, 255
+	local r, g, b = r or 255, g or 255, b or 255
+	local oldr, oldg, oldb = r, g, b
 	local v, tv
 	for i = 1, #list do
 		v = list[i]

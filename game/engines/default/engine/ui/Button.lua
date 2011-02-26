@@ -24,6 +24,11 @@ local Focusable = require "engine.ui.Focusable"
 --- A generic UI button
 module(..., package.seeall, class.inherit(Base, Focusable))
 
+frame_ox1 = -5
+frame_ox2 = 5
+frame_oy1 = -5
+frame_oy2 = 5
+
 function _M:init(t)
 	self.text = assert(t.text, "no button text")
 	self.fct = assert(t.fct, "no button fct")
@@ -36,51 +41,37 @@ function _M:generate()
 	self.mouse:reset()
 	self.key:reset()
 
-	local ls, ls_w, ls_h = self:getImage("ui/button-left-sel.png")
-	local ms, ms_w, ms_h = self:getImage("ui/button-middle-sel.png")
-	local rs, rs_w, rs_h = self:getImage("ui/button-right-sel.png")
-	local l, l_w, l_h = self:getImage("ui/button-left.png")
-	local m, m_w, m_h = self:getImage("ui/button-middle.png")
-	local r, r_w, r_h = self:getImage("ui/button-right.png")
-
 	-- Draw UI
 	self.font:setStyle("bold")
 	local w, h = self.font:size(self.text)
 	if self.force_w then w = self.force_w end
-	local fw, fh = w + ls_w + rs_w, ls_h
-	local ss = core.display.newSurface(fw, fh)
-	local s = core.display.newSurface(fw, fh)
+	self.w, self.h = w - frame_ox1 + frame_ox2, h - frame_oy1 + frame_oy2
 
-	ss:merge(ls, 0, 0)
-	for i = ls_w, fw - rs_w do ss:merge(ms, i, 0) end
-	ss:merge(rs, fw - rs_w, 0)
-	ss:drawColorStringBlended(self.font, self.text, ls_w, (fh - h) / 2, 255, 255, 255)
-
-	s:merge(l, 0, 0)
-	for i = l_w, fw - r_w do s:merge(m, i, 0) end
-	s:merge(r, fw - r_w, 0)
-	s:drawColorStringBlended(self.font, self.text, ls_w, (fh - h) / 2, 255, 255, 255)
+	local s = core.display.newSurface(w, h)
+	s:drawColorStringBlended(self.font, self.text, 0, 0, 255, 255, 255, true)
+	self.tex = {s:glTexture()}
 	self.font:setStyle("normal")
 
 	-- Add UI controls
-	self.mouse:registerZone(0, 0, fw, fh, function(button, x, y, xrel, yrel, bx, by, event) if button == "left" and event == "button" then self.fct() end end)
+	self.mouse:registerZone(0, 0, self.w, self.h, function(button, x, y, xrel, yrel, bx, by, event) if button == "left" and event == "button" then self.fct() end end)
 	self.key:addBind("ACCEPT", function() self.fct() end)
 
-	self.tex, self.tex_w, self.tex_h = s:glTexture()
-	self.stex = ss:glTexture()
-	self.rw, self.rh = fw, fh
-	self.w, self.h = fw+10, fh+10
+	self.rw, self.rh = w, h
+	self.frame = self:makeFrame("ui/button", self.w, self.h)
+	self.frame_sel = self:makeFrame("ui/button_sel", self.w, self.h)
 end
 
 function _M:display(x, y, nb_keyframes)
 	if self.focused then
-		self.stex:toScreenFull(x+5, y+5, self.rw, self.rh, self.tex_w, self.tex_h)
+		self:drawFrame(self.frame_sel, x, y)
+		self.tex[1]:toScreenFull(x-frame_ox1, y-frame_oy1, self.rw, self.rh, self.tex[2], self.tex[3])
 	else
-		self.tex:toScreenFull(x+5, y+5, self.rw, self.rh, self.tex_w, self.tex_h)
+		self:drawFrame(self.frame, x, y)
 		if self.focus_decay then
-			self.stex:toScreenFull(x+5, y+5, self.rw, self.rh, self.tex_w, self.tex_h, 1, 1, 1, self.focus_decay / self.focus_decay_max_d)
+			self:drawFrame(self.frame_sel, x, y, 1, 1, 1, self.focus_decay / self.focus_decay_max_d)
 			self.focus_decay = self.focus_decay - nb_keyframes
 			if self.focus_decay <= 0 then self.focus_decay = nil end
 		end
+		self.tex[1]:toScreenFull(x-frame_ox1, y-frame_oy1, self.rw, self.rh, self.tex[2], self.tex[3])
 	end
 end

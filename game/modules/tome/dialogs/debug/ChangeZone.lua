@@ -28,7 +28,7 @@ function _M:init()
 	self:generateList()
 	engine.ui.Dialog.init(self, "Debug/Cheat! It's BADDDD!", 1, 1)
 
-	local list = List.new{width=400, height=500, list=self.list, fct=function(item) self:use(item) end}
+	local list = List.new{width=400, height=500, scrollbar=true, list=self.list, fct=function(item) self:use(item) end}
 
 	self:loadUI{
 		{left=0, top=0, ui=list},

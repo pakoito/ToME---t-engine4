@@ -20,6 +20,7 @@
 require "engine.class"
 local Base = require "engine.ui.Base"
 local Focusable = require "engine.ui.Focusable"
+local Slider = require "engine.ui.Slider"
 
 --- A generic UI list
 module(..., package.seeall, class.inherit(Base, Focusable))
@@ -34,6 +35,7 @@ function _M:init(t)
 	self.no_color_bleed = t.no_color_bleed
 	self.auto_height = t.auto_height
 	self.auto_width = t.auto_width
+	self.color = t.color or {r=255, g=255, b=255}
 
 	if self.auto_width then self.w = 10000 end
 
@@ -64,19 +66,11 @@ function _M:generate()
 	end
 
 	-- Draw the list items
-	self.list = tstring.makeLineTextures(text, self.fw, self.font, true)
+	self.list = tstring.makeLineTextures(text, self.fw, self.font, true, self.color.r, self.color.g, self.color.b)
 
 	-- Draw the scrollbar
 	if self.scrollbar then
-		local sb, sb_w, sb_h = self:getImage("ui/scrollbar.png")
-		local ssb, ssb_w, ssb_h = self:getImage("ui/scrollbar-sel.png")
-
-		self.scrollbar = { bar = {}, sel = {} }
-		self.scrollbar.sel.w, self.scrollbar.sel.h, self.scrollbar.sel.tex, self.scrollbar.sel.texw, self.scrollbar.sel.texh = ssb_w, ssb_h, ssb:glTexture()
-		local s = core.display.newSurface(sb_w, self.h - fh)
-		s:erase(200,0,0)
-		for i = 0, self.h - fh do s:merge(sb, 0, i) end
-		self.scrollbar.bar.w, self.scrollbar.bar.h, self.scrollbar.bar.tex, self.scrollbar.bar.texw, self.scrollbar.bar.texh = ssb_w, self.h - fh, s:glTexture()
+		self.scrollbar = Slider.new{size=self.h - fh, max=self.max - self.max_display + 1}
 	end
 
 	-- Add UI controls
@@ -109,9 +103,7 @@ function _M:display(x, y)
 	end
 
 	if self.focused and self.scrollbar then
-		local pos = self.scroll * (self.h - self.fh) / (self.max - self.max_display + 1)
-
-		self.scrollbar.bar.tex:toScreenFull(bx + self.w - self.scrollbar.bar.w, by + self.fh, self.scrollbar.bar.w, self.scrollbar.bar.h, self.scrollbar.bar.texw, self.scrollbar.bar.texh)
-		self.scrollbar.sel.tex:toScreenFull(bx + self.w - self.scrollbar.sel.w, by + self.fh + pos, self.scrollbar.sel.w, self.scrollbar.sel.h, self.scrollbar.sel.texw, self.scrollbar.sel.texh)
+		self.scrollbar.pos = self.scroll
+		self.scrollbar:display(bx + self.w - self.scrollbar.w, by)
 	end
 end

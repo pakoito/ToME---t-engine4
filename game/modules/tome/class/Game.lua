@@ -853,8 +853,7 @@ function _M:setupCommands()
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
 --			self.nicer_tiles:postProcessLevelTiles(self.level)
-			local m = game.zone:makeEntity(game.level, "object", {properties={"lore"}}, nil, true)
-			game.zone:addEntity(game.level, m, "object", game.player.x, game.player.y)
+			game:registerDialog(require("mod.dialogs.Donation").new())
 		end end,
 	}
 

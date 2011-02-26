@@ -20,23 +20,10 @@
 require "engine.class"
 local Base = require "engine.ui.Base"
 local Focusable = require "engine.ui.Focusable"
+local Slider = require "engine.ui.Slider"
 
 --- A generic UI multi columns list
 module(..., package.seeall, class.inherit(Base, Focusable))
-
-local ls, ls_w, ls_h = _M:getImage("ui/selection-left-sel.png")
-local ms, ms_w, ms_h = _M:getImage("ui/selection-middle-sel.png")
-local rs, rs_w, rs_h = _M:getImage("ui/selection-right-sel.png")
-local l, l_w, l_h = _M:getImage("ui/selection-left.png")
-local m, m_w, m_h = _M:getImage("ui/selection-middle.png")
-local r, r_w, r_h = _M:getImage("ui/selection-right.png")
-
-local cls, cls_w, cls_h = _M:getImage("ui/selection-left-column-sel.png")
-local cms, cms_w, cms_h = _M:getImage("ui/selection-middle-column-sel.png")
-local crs, crs_w, crs_h = _M:getImage("ui/selection-right-column-sel.png")
-local cl, cl_w, cl_h = _M:getImage("ui/selection-left-column.png")
-local cm, cm_w, cm_h = _M:getImage("ui/selection-middle-column.png")
-local cr, cr_w, cr_h = _M:getImage("ui/selection-right-column.png")
 
 function _M:init(t)
 	self.list = assert(t.list, "no list list")
@@ -53,6 +40,8 @@ function _M:init(t)
 	self.hide_columns = t.hide_columns
 
 	self.fh = t.item_height or ls_h
+
+	self.fh = t.item_height or (self.font_h + 6)
 
 	local w = self.w
 	if self.scrollbar then w = w - 10 end
@@ -73,23 +62,11 @@ function _M:init(t)
 		end
 
 		col.surface = core.display.newSurface(col.width, self.fh)
-		col.s = core.display.newSurface(col.width, self.fh)
-		col.ss = core.display.newSurface(col.width, self.fh)
-		col.sus = core.display.newSurface(col.width, self.fh)
-
-		col.ss:merge(ls, 0, 0)
-		for i = ls_w, col.width - rs_w, ms_w do col.ss:merge(ms, i, 0) end
-		col.ss:merge(rs, col.width - rs_w, 0)
-
-		col.s:erase(0, 0, 0)
-
-		col.sus:merge(l, 0, 0)
-		for i = l_w, col.width - r_w, m_w do col.sus:merge(m, i, 0) end
-		col.sus:merge(r, col.width - r_w, 0)
-
-		col._istex = {col.ss:glTexture()}
-		col._itex = {col.s:glTexture()}
-		col._isustex = {col.sus:glTexture()}
+		col.frame = self:makeFrame(nil, col.width, self.fh)
+		col.frame_sel = self:makeFrame("ui/selector-sel", col.width, self.fh)
+		col.frame_usel = self:makeFrame("ui/selector", col.width, self.fh)
+		col.frame_col = self:makeFrame("ui/selector", col.width, self.fh)
+		col.frame_col_sel = self:makeFrame("ui/selector-sel", col.width, self.fh)
 	end
 
 	Base.init(self, t)
@@ -115,7 +92,7 @@ function _M:drawItem(item)
 
 			s:erase(0, 0, 0, 0)
 			-- We use 1000 and do not cut lines to make sure it draws as much as possible
-			text:drawOnSurface(s, 10000, nil, self.font, ls_w, (fh - self.font_h) / 2, color[1], color[2], color[3])
+			text:drawOnSurface(s, 10000, nil, self.font, col.frame_sel.b4.w, (fh - self.font_h) / 2, color[1], color[2], color[3])
 			item._tex = item._tex or {}
 			item._tex[j] = {s:glTexture()}
 		end
@@ -131,8 +108,7 @@ function _M:generate()
 	self.max = #self.list
 	self:selectColumn(1, true)
 
-	local fh = ls_h
-	self.fh = fh
+	local fh = self.fh
 
 	if not self.h then self.h = self.nb_items * fh end
 
@@ -140,14 +116,7 @@ function _M:generate()
 
 	-- Draw the scrollbar
 	if self.scrollbar then
-		local sb, sb_w, sb_h = self:getImage("ui/scrollbar.png")
-		local ssb, ssb_w, ssb_h = self:getImage("ui/scrollbar-sel.png")
-
-		self.scrollbar = { bar = {}, sel = {} }
-		self.scrollbar.sel.w, self.scrollbar.sel.h, self.scrollbar.sel.tex, self.scrollbar.sel.texw, self.scrollbar.sel.texh = ssb_w, ssb_h, ssb:glTexture()
-		local s = core.display.newSurface(sb_w, self.h - fh)
-		for i = 0, self.h - fh do s:merge(sb, 0, i) end
-		self.scrollbar.bar.w, self.scrollbar.bar.h, self.scrollbar.bar.tex, self.scrollbar.bar.texw, self.scrollbar.bar.texh = ssb_w, self.h - fh, s:glTexture()
+		self.scrollbar = Slider.new{size=self.h - fh, max=self.max}
 	end
 
 	-- Draw the list columns
@@ -156,23 +125,14 @@ function _M:generate()
 		local fw = col.width
 		col.fw = fw
 		local text = col.name
-		local ss = core.display.newSurface(fw, fh)
-		local s = core.display.newSurface(fw, fh)
+		local s = col.surface
 
 		self.font:setStyle("bold")
-		ss:merge(cls, 0, 0)
-		for i = cls_w, fw - crs_w do ss:merge(cms, i, 0) end
-		ss:merge(crs, fw - crs_w, 0)
-		ss:drawColorStringBlended(self.font, text, cls_w, (fh - self.font_h) / 2, 255, 255, 255, nil, fw - cls_w - crs_w)
-
-		s:merge(cl, 0, 0)
-		for i = cl_w, fw - cr_w do s:merge(cm, i, 0) end
-		s:merge(cr, fw - cr_w, 0)
-		s:drawColorStringBlended(self.font, text, cl_w, (fh - self.font_h) / 2, 255, 255, 255, nil, fw - cl_w - cr_w)
+		s:erase(0, 0, 0, 0)
+		s:drawColorStringBlended(self.font, text, col.frame_sel.b4.w, (fh - self.font_h) / 2, 255, 255, 255, true, fw - col.frame_sel.b4.w - col.frame_sel.b6.w)
 		self.font:setStyle("normal")
 
 		col._tex, col._tex_w, col._tex_h = s:glTexture()
-		col._stex = ss:glTexture()
 
 		self.mouse:registerZone(colx, 0, col.width, self.fh, function(button, x, y, xrel, yrel, bx, by, event)
 			if button == "left" and event == "button" then self:selectColumn(j) end
@@ -279,17 +239,15 @@ function _M:selectColumn(i, force)
 	end
 end
 
-function _M:display(x, y, nb_keyframes)
+function _M:display(x, y, nb_keyframes, screen_x, screen_y)
 	local bx, by = x, y
 	for j = 1, #self.columns do
 		local col = self.columns[j]
 		local y = y
 		if not self.hide_columns then
-			if self.cur_col == j then
-				col._stex:toScreenFull(x, y, col.fw, self.fh, col._tex_w, col._tex_h)
-			else
-				col._tex:toScreenFull(x, y, col.fw, self.fh, col._tex_w, col._tex_h)
-			end
+			if self.cur_col == j then self:drawFrame(col.frame_col_sel, x, y)
+			else self:drawFrame(col.frame_col_sel, x, y) end
+			col._tex:toScreenFull(x, y, col.fw, self.fh, col._tex_w, col._tex_h)
 			y = y + self.fh
 		end
 
@@ -298,13 +256,13 @@ function _M:display(x, y, nb_keyframes)
 			local item = self.list[i]
 			if not item then break end
 			if self.sel == i then
-				if self.focused then col._istex[1]:toScreenFull(x, y, col.fw, self.fh, col._istex[2], col._istex[3])
-				else col._isustex[1]:toScreenFull(x, y, col.fw, self.fh, col._isustex[2], col._isustex[3]) end
+				if self.focused then self:drawFrame(col.frame_sel, x, y)
+				else self:drawFrame(col.frame_usel, x, y) end
 			else
-				col._itex[1]:toScreenFull(x, y, col.fw, self.fh, col._itex[2], col._itex[3])
+				self:drawFrame(col.frame, x, y)
 				if item.focus_decay then
-					if self.focused then col._istex[1]:toScreenFull(x, y, col.fw, self.fh, col._istex[2], col._istex[3], 1, 1, 1, item.focus_decay / self.focus_decay_max_d)
-					else col._isustex[1]:toScreenFull(x, y, col.fw, self.fh, col._isustex[2], col._isustex[3], 1, 1, 1, item.focus_decay / self.focus_decay_max_d) end
+					if self.focused then self:drawFrame(col.frame_sel, x, y, 1, 1, 1, item.focus_decay / self.focus_decay_max_d)
+					else self:drawFrame(col.frame_usel, x, y, 1, 1, 1, item.focus_decay / self.focus_decay_max_d) end
 					item.focus_decay = item.focus_decay - nb_keyframes
 					if item.focus_decay <= 0 then item.focus_decay = nil end
 				end
@@ -314,8 +272,8 @@ function _M:display(x, y, nb_keyframes)
 			else
 				item._tex[j][1]:toScreenFull(x, y, col.fw, self.fh, item._tex[j][2], item._tex[j][3])
 			end
-			item.last_display_x = x
-			item.last_display_y = y
+			item.last_display_x = screen_x + (x - bx)
+			item.last_display_y = screen_y + (y - by)
 			y = y + self.fh
 		end
 
@@ -323,9 +281,7 @@ function _M:display(x, y, nb_keyframes)
 	end
 
 	if self.focused and self.scrollbar then
-		local pos = self.sel * (self.h - self.fh) / self.max
-
-		self.scrollbar.bar.tex:toScreenFull(bx + self.w - self.scrollbar.bar.w, by + self.fh, self.scrollbar.bar.w, self.scrollbar.bar.h, self.scrollbar.bar.texw, self.scrollbar.bar.texh)
-		self.scrollbar.sel.tex:toScreenFull(bx + self.w - self.scrollbar.sel.w, by + self.fh + pos, self.scrollbar.sel.w, self.scrollbar.sel.h, self.scrollbar.sel.texw, self.scrollbar.sel.texh)
+		self.scrollbar.pos = self.sel
+		self.scrollbar:display(bx + self.w - self.scrollbar.w, by)
 	end
 end

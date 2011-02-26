@@ -128,6 +128,25 @@ function _M:init(title, w, h, x, y, alpha, font, showup)
 		self.__showup = 2
 	end
 
+	self.frame = self.frame or {
+		b7 = "ui/dialogueV3_7.png",
+		b9 = "ui/dialogueV3_9.png",
+		b1 = "ui/dialogueV3_1.png",
+		b3 = "ui/dialogueV3_3.png",
+		b4 = "ui/dialogueV3_4.png",
+		b6 = "ui/dialogueV3_6.png",
+		b8 = "ui/dialogueV3_8.png",
+		b2 = "ui/dialogueV3_2.png",
+		b5 = "ui/dialogueV3_5.png",
+		shadow = {x=15, y=15, a=0.5},
+		a = 1,
+	}
+	self.frame.ox1 = self.frame.ox1 or -42
+	self.frame.ox2 = self.frame.ox2 or 42
+	self.frame.oy1 = self.frame.oy1 or -42
+	self.frame.oy2 = self.frame.oy2 or 42
+	self.frame.a = self.frame.a or 1
+
 	self.uis = {}
 	self.focus_ui = nil
 	self.focus_ui_id = 0
@@ -153,35 +172,37 @@ end
 
 function _M:generate()
 	local gamew, gameh = core.display.size()
-	local s = core.display.newSurface(self.w, self.h)
-	s:alpha(true)
-	s:erase(0, 0, 0, self.alpha)
 
-	local b7, b7_w, b7_h = self:getImage("border_7.png")
-	local b9, b9_w, b9_h = self:getImage("border_9.png")
-	local b1, b1_w, b1_h = self:getImage("border_1.png")
-	local b3, b3_w, b3_h = self:getImage("border_3.png")
-	local b8, b8_w, b8_h = self:getImage("border_8.png")
-	local b4, b4_w, b4_h = self:getImage("border_4.png")
+	self.frame.w = self.w - self.frame.ox1 + self.frame.ox2
+	self.frame.h = self.h - self.frame.oy1 + self.frame.oy2
 
-	s:merge(b7, 0, 0)
-	s:merge(b9, self.w - b9_w, 0)
-	s:merge(b1, 0, self.h - b1_h)
-	s:merge(b3, self.w - b9_w, self.h - b3_h)
+	self.b7 = self:getTexture(self.frame.b7)
+	self.b9 = self:getTexture(self.frame.b9)
+	self.b1 = self:getTexture(self.frame.b1)
+	self.b3 = self:getTexture(self.frame.b3)
+	self.b8 = self:getTexture(self.frame.b8)
+	self.b4 = self:getTexture(self.frame.b4)
+	self.b2 = self:getTexture(self.frame.b2)
+	self.b6 = self:getTexture(self.frame.b6)
+	self.b5 = self:getTexture(self.frame.b5)
 
-	for i = b7_w, self.w - b9_w do
-		s:merge(b8, i, 0)
-		s:merge(b8, i, 20)
-		s:merge(b8, i, self.h - 3)
+	self.overs = {}
+	for i, o in ipairs(self.frame.overlays or {}) do
+		local ov = self:getTexture(o.image)
+		if o.gen then
+			o.gen(ov, self)
+		else
+			ov.x = o.x
+			ov.y = o.y
+			ov.a = o.a
+		end
+		self.overs[#self.overs+1] = ov
 	end
-	for i = b7_h, self.h - b1_h do
-		s:merge(b4, 0, i)
-		s:merge(b4, self.w - 3, i)
-	end
 
+--[[
 	local tw, th = self.font_bold:size(self.title)
 	s:drawColorStringBlended(self.font_bold, self.title, (self.w - tw) / 2, 4, 255,255,255)
-
+]]
 	if self.absolute then
 		self.mouse:registerZone(0, 0, gamew, gameh, function(button, x, y, xrel, yrel, bx, by, event) self:mouseEvent(button, x, y, xrel, yrel, bx - self.display_x, by - self.display_y, event) end)
 	else
@@ -196,8 +217,6 @@ function _M:generate()
 		MOVE_LEFT = "MOVE_UP",
 		MOVE_RIGHT = "MOVE_DOWN",
 	}
-
-	self.tex, self.tex_w, self.tex_h = s:glTexture()
 end
 
 function _M:loadUI(t)
@@ -362,32 +381,67 @@ function _M:makeKeyChar(i)
 	end
 end
 
+function _M:drawFrame(x, y, r, g, b, a)
+	x = x + self.frame.ox1
+	y = y + self.frame.oy1
+
+	-- Corners
+	self.b7.t:toScreenFull(x, y, self.b7.w, self.b7.h, self.b7.tw, self.b7.th, r, g, b, a)
+	self.b1.t:toScreenFull(x, y + self.frame.h - self.b1.h, self.b1.w, self.b1.h, self.b1.tw, self.b1.th, r, g, b, a)
+	self.b9.t:toScreenFull(x + self.frame.w - self.b9.w, y, self.b9.w, self.b9.h, self.b9.tw, self.b9.th, r, g, b, a)
+	self.b3.t:toScreenFull(x + self.frame.w - self.b3.w, y + self.frame.h - self.b3.h, self.b3.w, self.b3.h, self.b3.tw, self.b3.th, r, g, b, a)
+
+	-- Sides
+	self.b8.t:toScreenFull(x + self.b7.w, y, self.frame.w - self.b7.w - self.b9.w, self.b8.h, self.b8.tw, self.b8.th, r, g, b, a)
+	self.b2.t:toScreenFull(x + self.b7.w, y + self.frame.h - self.b3.h, self.frame.w - self.b7.w - self.b9.w, self.b2.h, self.b2.tw, self.b2.th, r, g, b, a)
+	self.b4.t:toScreenFull(x, y + self.b7.h, self.b4.w, self.frame.h - self.b7.h - self.b1.h, self.b4.tw, self.b4.th, r, g, b, a)
+	self.b6.t:toScreenFull(x + self.frame.w - self.b9.w, y + self.b7.h, self.b6.w, self.frame.h - self.b7.h - self.b1.h, self.b6.tw, self.b6.th, r, g, b, a)
+
+	-- Body
+	self.b5.t:toScreenFull(x + self.b7.w, y + self.b7.h, self.frame.w - self.b7.w - self.b3.w , self.frame.h - self.b7.h - self.b3.h, self.b6.tw, self.b6.th, r, g, b, a)
+
+	-- Overlays
+	for i = 1, #self.overs do
+		local ov = self.overs[i]
+		ov.t:toScreenFull(x + ov.x, y + ov.y, ov.w , ov.h, ov.tw, ov.th, r, g, b, a * ov.a)
+	end
+end
+
 function _M:toScreen(x, y, nb_keyframes)
 	if self.__hidden then return end
 
-	-- Draw with only the texture
+	local zoom = 1
 	if self.__showup then
 		local eff = self.__showup_effect or "pop"
 		if eff == "overpop" then
-			local zoom = self.__showup / 7
+			zoom = self.__showup / 7
 			if self.__showup >= 9 then
 				zoom = (9 - (self.__showup - 9)) / 7 - 1
 				zoom = 1 + zoom * 0.5
 			end
-			self.tex:toScreenFull(x + (self.w - self.w * zoom) / 2, y + (self.h - self.h * zoom) / 2, self.w * zoom, self.h * zoom, self.tex_w * zoom, self.tex_h * zoom)
 			self.__showup = self.__showup + nb_keyframes
 			if self.__showup >= 11 then self.__showup = nil end
 		else
-			local zoom = self.__showup / 7
-			self.tex:toScreenFull(x + (self.w - self.w * zoom) / 2, y + (self.h - self.h * zoom) / 2, self.w * zoom, self.h * zoom, self.tex_w * zoom, self.tex_h * zoom)
+			zoom = self.__showup / 7
 			self.__showup = self.__showup + nb_keyframes
 			if self.__showup >= 7 then self.__showup = nil end
 		end
-	else
-		self.tex:toScreenFull(x, y, self.w, self.h, self.tex_w, self.tex_h)
-		for i = 1, #self.uis do
-			local ui = self.uis[i]
-			ui.ui:display(x + ui.x, y + ui.y, nb_keyframes)
-		end
 	end
+
+	local ox, oy = x, y
+	local hw, hh = math.floor(self.w / 2), math.floor(self.h / 2)
+	local tx, ty = x + hw, y + hh
+	x, y = -hw, -hh
+	core.display.glTranslate(tx, ty, 0)
+	if zoom < 1 then core.display.glScale(zoom, zoom, zoom) end
+
+	if self.frame.shadow then self:drawFrame(x + self.frame.shadow.x, y + self.frame.shadow.y, 0, 0, 0, self.frame.shadow.a) end
+	self:drawFrame(x, y, 1, 1, 1, self.frame.a)
+	for i = 1, #self.uis do
+		local ui = self.uis[i]
+		ui.ui:display(x + ui.x, y + ui.y, nb_keyframes, ox + ui.x, oy + ui.y)
+	end
+
+	if zoom < 1 then core.display.glScale() end
+	core.display.glTranslate(-tx, -ty, 0)
 end

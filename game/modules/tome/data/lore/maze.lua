@@ -84,6 +84,7 @@ newLore{
 	id = "maze-note-7",
 	category = "maze",
 	name = "diary (the maze)",
+	bloodstains = 2,
 	lore = [[Dear diary,
 
 #{italic}#This text is unreadable as it is thoroughly caked in blood.#{normal}#]],

@@ -20,18 +20,13 @@
 require "engine.class"
 local Base = require "engine.ui.Base"
 local Focusable = require "engine.ui.Focusable"
+local Slider = require "engine.ui.Slider"
 
 --- A generic UI list
 module(..., package.seeall, class.inherit(Base, Focusable))
 
-local ls, ls_w, ls_h = _M:getImage("ui/selection-left-sel.png")
-local ms, ms_w, ms_h = _M:getImage("ui/selection-middle-sel.png")
-local rs, rs_w, rs_h = _M:getImage("ui/selection-right-sel.png")
-local l, l_w, l_h = _M:getImage("ui/selection-left.png")
-local m, m_w, m_h = _M:getImage("ui/selection-middle.png")
-local r, r_w, r_h = _M:getImage("ui/selection-right.png")
-local plus, plus_w, plus_h = _M:getImage("ui/plus.png")
-local minus, minus_w, minus_h = _M:getImage("ui/minus.png")
+local plus = _M:getTexture("ui/plus.png")
+local minus = _M:getTexture("ui/minus.png")
 
 function _M:init(t)
 	self.tree = assert(t.tree, "no tree tree")
@@ -50,8 +45,7 @@ function _M:init(t)
 	self.key_prop = t.key_prop or "__id"
 	self.sel_by_col = t.sel_by_col and {} or nil
 
-
-	self.fh = ls_h
+	self.fh = t.item_height or (self.font_h + 6)
 
 	local w = self.w
 	if self.scrollbar then w = w - 10 end
@@ -78,6 +72,11 @@ function _M:init(t)
 		end
 
 		col.surface = core.display.newSurface(col.width, self.fh)
+		col.frame = self:makeFrame(nil, col.width, self.fh)
+		col.frame_sel = self:makeFrame("ui/selector-sel", col.width, self.fh)
+		col.frame_usel = self:makeFrame("ui/selector", col.width, self.fh)
+		col.frame_col = self:makeFrame("ui/selector", col.width, self.fh)
+		col.frame_col_sel = self:makeFrame("ui/selector-sel", col.width, self.fh)
 
 		col._backs = {}
 	end
@@ -85,46 +84,6 @@ function _M:init(t)
 	self.items_by_key = {}
 
 	Base.init(self, t)
-end
-
-function _M:getColumnBackground(col, level, sign, shown)
-	if sign then sign = true else sign = false end
-	if shown then shown = true else shown = false end
-	level = (col.id == 1) and level or 0
-	if col._backs[level] and col._backs[level][sign] and col._backs[level][sign][shown] then return col._backs[level][sign][shown] end
-	local backs = {}
-	col._backs[level] = col._backs[level] or {}
-	col._backs[level][sign] = col._backs[level][sign] or {}
-	col._backs[level][sign][shown] = backs
-
-	local s = col.surface
-
-	local offset = 0
-	if col.id == 1 then
-		offset = level * self.level_offset
-		if sign then offset = offset + plus_w end
-	end
-	local startx = ls_w + offset
-
-	s:erase(0, 0, 0)
-	s:merge(ls, offset, 0)
-	for i = offset + ls_w, col.width - rs_w, ms_w do s:merge(ms, i, 0) end
-	s:merge(rs, col.width - rs_w, 0)
-	if col.id == 1 and sign then s:merge(shown and minus or plus, offset - plus_w, 0) end
-	backs._stex, backs._stex_w, backs._stex_h = s:glTexture()
-
-	s:erase(0, 0, 0)
-	if col.id == 1 and sign then s:merge(shown and minus or plus, offset - plus_w, 0) end
-	backs._tex, backs._tex_w, backs._tex_h = s:glTexture()
-
-	s:erase(0, 0, 0)
-	s:merge(l, offset, 0)
-	for i = offset + l_w, col.width - r_w, m_w do s:merge(m, i, 0) end
-	s:merge(r, col.width - r_w, 0)
-	if col.id == 1 and sign then s:merge(shown and minus or plus, offset - plus_w, 0) end
-	backs._sustex, backs._sustex_w, backs._sustex_h = s:glTexture()
-
-	return backs
 end
 
 function _M:drawItem(item)
@@ -147,14 +106,14 @@ function _M:drawItem(item)
 		local offset = 0
 		if i == 1 then
 			offset = level * self.level_offset
-			if item.nodes then offset = offset + plus_w end
+			if item.nodes then offset = offset + plus.w end
 		end
-		local startx = ls_w + offset
+		local startx = col.frame_sel.b4.w + offset
 
 		item.cols[i] = {}
 
 		s:erase(0, 0, 0, 0)
-		text:drawOnSurface(s, col.width - startx - rs_w, 1, self.font, startx, (self.fh - self.font_h) / 2, color[1], color[2], color[3])
+		text:drawOnSurface(s, col.width - startx - col.frame_sel.b6.w, 1, self.font, startx, (self.fh - self.font_h) / 2, color[1], color[2], color[3])
 		item.cols[i]._tex, item.cols[i]._tex_w, item.cols[i]._tex_h = s:glTexture()
 	end
 	if self.on_drawitem then self.on_drawitem(item) end
@@ -176,7 +135,7 @@ function _M:generate()
 	self.mouse:reset()
 	self.key:reset()
 
-	local fw, fh = self.w, ls_h
+	local fw, fh = self.w, self.fh
 	self.fw, self.fh = fw, fh
 
 	if not self.h then self.h = self.nb_items * fh end
@@ -185,14 +144,7 @@ function _M:generate()
 
 	-- Draw the scrollbar
 	if self.scrollbar then
-		local sb, sb_w, sb_h = self:getImage("ui/scrollbar.png")
-		local ssb, ssb_w, ssb_h = self:getImage("ui/scrollbar-sel.png")
-
-		self.scrollbar = { bar = {}, sel = {} }
-		self.scrollbar.sel.w, self.scrollbar.sel.h, self.scrollbar.sel.tex, self.scrollbar.sel.texw, self.scrollbar.sel.texh = ssb_w, ssb_h, ssb:glTexture()
-		local s = core.display.newSurface(sb_w, self.h - fh)
-		for i = 0, self.h - fh do s:merge(sb, 0, i) end
-		self.scrollbar.bar.w, self.scrollbar.bar.h, self.scrollbar.bar.tex, self.scrollbar.bar.texw, self.scrollbar.bar.texh = ssb_w, self.h - fh, s:glTexture()
+		self.scrollbar = Slider.new{size=self.h - fh, max=1}
 	end
 
 	-- Draw the tree items
@@ -212,7 +164,7 @@ function _M:generate()
 			end end
 		end
 		self:onSelect()
-		if self.list[self.sel] and self.list[self.sel].nodes and bx <= plus_w and button ~= "wheelup" and button ~= "wheeldown" and event == "button" then
+		if self.list[self.sel] and self.list[self.sel].nodes and bx <= plus.w and button ~= "wheelup" and button ~= "wheeldown" and event == "button" then
 			self:treeExpand(nil)
 		else
 			if (self.all_clicks or button == "left") and button ~= "wheelup" and button ~= "wheeldown" and event == "button" then self:onUse(button) end
@@ -324,21 +276,24 @@ function _M:display(x, y, nb_keyframes)
 			local col = self.columns[j]
 			local item = self.list[i]
 			if not item then break end
-			local backs = self:getColumnBackground(col, item.level, item.nodes, item.shown)
 			if self.sel == i and (not self.sel_by_col or self.cur_col == j) then
-				if self.focused then backs._stex:toScreenFull(x, y, col.width, self.fh, backs._stex_w, backs._stex_h)
-				else backs._sustex:toScreenFull(x, y, col.width, self.fh, backs._sustex_w, backs._sustex_h) end
+				if self.focused then self:drawFrame(col.frame_sel, x, y)
+				else self:drawFrame(col.frame_usel, x, y) end
 			elseif (not self.sel_by_col or self.cur_col == j) then
-				backs._tex:toScreenFull(x, y, col.width, self.fh, backs._tex_w, backs._tex_h)
+				self:drawFrame(col.frame, x, y)
 				if item.focus_decay then
-					if self.focused then backs._stex:toScreenFull(x, y, col.width, self.fh, backs._stex_w, backs._stex_h, 1, 1, 1, item.focus_decay / self.focus_decay_max_d)
-					else backs._sustex:toScreenFull(x, y, col.width, self.fh, backs._sustex_w, backs._sustex_h, 1, 1, 1, item.focus_decay / self.focus_decay_max_d) end
+					if self.focused then self:drawFrame(col.frame_sel, x, y, 1, 1, 1, item.focus_decay / self.focus_decay_max_d)
+					else self:drawFrame(col.frame_usel, x, y, 1, 1, 1, item.focus_decay / self.focus_decay_max_d) end
 					item.focus_decay = item.focus_decay - nb_keyframes
 					if item.focus_decay <= 0 then item.focus_decay = nil end
 				end
-			else
-				backs._tex:toScreenFull(x, y, col.width, self.fh, backs._tex_w, backs._tex_h)
 			end
+
+			if item.nodes and j == 1 then
+				local s = item.shown and minus or plus
+				s.t:toScreenFull(x, y + (self.fh - s.h) / 2, s.w, s.h, s.th, s.th)
+			end
+
 			item.cols[j]._tex:toScreenFull(x, y, col.width, self.fh, item.cols[j]._tex_w, item.cols[j]._tex_h)
 			x = x + col.width
 		end
@@ -346,9 +301,8 @@ function _M:display(x, y, nb_keyframes)
 	end
 
 	if self.focused and self.scrollbar then
-		local pos = self.sel * (self.h - self.fh) / self.max
-
-		self.scrollbar.bar.tex:toScreenFull(bx + self.w - self.scrollbar.bar.w, by + self.fh, self.scrollbar.bar.w, self.scrollbar.bar.h, self.scrollbar.bar.texw, self.scrollbar.bar.texh)
-		self.scrollbar.sel.tex:toScreenFull(bx + self.w - self.scrollbar.sel.w, by + self.fh + pos, self.scrollbar.sel.w, self.scrollbar.sel.h, self.scrollbar.sel.texw, self.scrollbar.sel.texh)
+		self.scrollbar.pos = self.sel
+		self.scrollbar.max = self.max
+		self.scrollbar:display(bx + self.w - self.scrollbar.w, by)
 	end
 end

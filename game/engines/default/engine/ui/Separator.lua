@@ -32,28 +32,30 @@ end
 
 function _M:generate()
 	if self.dir == "horizontal" then
-		local b4, b4_w, b4_h = self:getImage("border_4.png")
-
-		-- Draw UI
-		self.w, self.h = b4_w, self.size
-		local s = core.display.newSurface(self.w, self.h)
-
-		for i = 0, self.size do s:merge(b4, 0, i) end
-
-		self.tex, self.tex_w, self.tex_h = s:glTexture()
+		self.top = self:getTexture("ui/border_vert_top.png")
+		self.middle = self:getTexture("ui/border_vert_middle.png")
+		self.bottom = self:getTexture("ui/border_vert_bottom.png")
+		self.w, self.h = self.middle.w, self.size
 	else
-		local b8, b8_w, b8_h = self:getImage("border_8.png")
-
-		-- Draw UI
-		self.w, self.h = self.size, b8_h
-		local s = core.display.newSurface(self.w, self.h)
-
-		for i = 0, self.size do s:merge(b8, i, 0) end
-
-		self.tex, self.tex_w, self.tex_h = s:glTexture()
+		self.left = self:getTexture("ui/border_hor_left.png")
+		self.middle = self:getTexture("ui/border_hor_middle.png")
+		self.right = self:getTexture("ui/border_hor_right.png")
+		self.w, self.h = self.size, self.middle.h
 	end
 end
 
 function _M:display(x, y)
-	self.tex:toScreenFull(x, y, self.w, self.h, self.tex_w, self.tex_h)
+	if self.dir == "horizontal" then
+--		x = x - math.floor(self.top.w / 2)
+--		y = y - math.floor(self.top.h / 2)
+		self.top.t:toScreenFull(x, y, self.top.w, self.top.h, self.top.tw, self.top.th)
+		self.bottom.t:toScreenFull(x, y + self.h - self.bottom.h, self.bottom.w, self.bottom.h, self.bottom.tw, self.bottom.th)
+		self.middle.t:toScreenFull(x, y + self.top.h, self.middle.w, self.h - self.top.h - self.bottom.h, self.middle.tw, self.middle.th)
+	else
+--		x = x - math.floor(self.left.w / 2)
+--		y = y - math.floor(self.left.h / 2)
+		self.left.t:toScreenFull(x, y, self.left.w, self.left.h, self.left.tw, self.left.th)
+		self.right.t:toScreenFull(x + self.w - self.right.w, y, self.right.w, self.right.h, self.right.tw, self.right.th)
+		self.middle.t:toScreenFull(x + self.left.w, y, self.w - self.left.w - self.right.w, self.middle.h, self.middle.tw, self.middle.th)
+	end
 end

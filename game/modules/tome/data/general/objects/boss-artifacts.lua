@@ -801,7 +801,7 @@ newEntity{ base = "BASE_GEM", define_as = "CRYSTAL_FOCUS",
 			o.unique = o.name
 			o.no_unique_lore = true
 			if o.combat and o.combat.dam then
-				o.combat.dam = o.combat.dam * 1.5
+				o.combat.dam = o.combat.dam * 1.25
 				o.combat.damtype = engine.DamageType.ARCANE
 			end
 			o.wielder = o.wielder or {}

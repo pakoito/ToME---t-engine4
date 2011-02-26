@@ -75,6 +75,7 @@ newLore{
 	id = "old-forest-note-6",
 	category = "old forest",
 	name = "journal entry (old forest)",
+	bloodstains = 4,
 	lore = [[#{italic}#From the notes of Darwood Oakton, explorer:
 #{bold}#CHAPTER SIX: HORR...
 

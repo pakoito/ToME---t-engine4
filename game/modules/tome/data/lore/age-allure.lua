@@ -116,6 +116,7 @@ newLore{
 	id = "halfling-research-note-4",
 	category = "age of allure",
 	name = "research log of halfling mage Hompalan",
+	bloodstains = 7,
 	lore = [[
 #{bold}#Hompalan's Log Entry 9#{normal}#
 #{italic}#Age of Allure 4549#{normal}#

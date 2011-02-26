@@ -20,16 +20,11 @@
 require "engine.class"
 local Base = require "engine.ui.Base"
 local Focusable = require "engine.ui.Focusable"
+local Slider = require "engine.ui.Slider"
+local Slider = require "engine.ui.Slider"
 
 --- A generic UI list
 module(..., package.seeall, class.inherit(Base, Focusable))
-
-local ls, ls_w, ls_h = _M:getImage("ui/selection-left-sel.png")
-local ms, ms_w, ms_h = _M:getImage("ui/selection-middle-sel.png")
-local rs, rs_w, rs_h = _M:getImage("ui/selection-right-sel.png")
-local l, l_w, l_h = _M:getImage("ui/selection-left.png")
-local m, m_w, m_h = _M:getImage("ui/selection-middle.png")
-local r, r_w, r_h = _M:getImage("ui/selection-right.png")
 
 function _M:init(t)
 	self.list = assert(t.list, "no list list")
@@ -42,23 +37,6 @@ function _M:init(t)
 	self.scrollbar = t.scrollbar
 	self.all_clicks = t.all_clicks
 
-	self.fh = ls_h
-	self.default = {}
-	self.default.surface = core.display.newSurface(self.w, self.fh)
-	self.default.s = core.display.newSurface(self.w, self.fh)
-	self.default.ss = core.display.newSurface(self.w, self.fh)
-	self.default.sus = core.display.newSurface(self.w, self.fh)
-
-	self.default.ss:merge(ls, 0, 0)
-	for i = ls_w, self.w - rs_w, ms_w do self.default.ss:merge(ms, i, 0) end
-	self.default.ss:merge(rs, self.w - rs_w, 0)
-
-	self.default.s:erase(0, 0, 0)
-
-	self.default.sus:merge(l, 0, 0)
-	for i = l_w, self.w - r_w, m_w do self.default.sus:merge(m, i, 0) end
-	self.default.sus:merge(r, self.w - r_w, 0)
-
 	Base.init(self, t)
 end
 
@@ -70,8 +48,14 @@ function _M:generate()
 	self.scroll = 1
 	self.max = #self.list
 
-	local fw, fh = self.w, ls_h
+	local fw, fh = self.w, self.font_h + 6
 	self.fw, self.fh = fw, fh
+	if not self.surf then self.surf = core.display.newSurface(fw, fh) end
+	local s = self.surf
+
+	self.frame = self:makeFrame(nil, fw, fh)
+	self.frame_sel = self:makeFrame("ui/selector-sel", fw, fh)
+	self.frame_usel = self:makeFrame("ui/selector", fw, fh)
 
 	if not self.h then self.h = self.nb_items * fh end
 
@@ -79,39 +63,17 @@ function _M:generate()
 
 	-- Draw the scrollbar
 	if self.scrollbar then
-		local sb, sb_w, sb_h = self:getImage("ui/scrollbar.png")
-		local ssb, ssb_w, ssb_h = self:getImage("ui/scrollbar-sel.png")
-
-		self.scrollbar = { bar = {}, sel = {} }
-		self.scrollbar.sel.w, self.scrollbar.sel.h, self.scrollbar.sel.tex, self.scrollbar.sel.texw, self.scrollbar.sel.texh = ssb_w, ssb_h, ssb:glTexture()
-		local s = core.display.newSurface(sb_w, self.h - fh)
-		for i = 0, self.h - fh do s:merge(sb, 0, i) end
-		self.scrollbar.bar.w, self.scrollbar.bar.h, self.scrollbar.bar.tex, self.scrollbar.bar.texw, self.scrollbar.bar.texh = ssb_w, self.h - fh, s:glTexture()
+		self.scrollbar = Slider.new{size=self.h - fh, max=self.max}
 	end
 
 	-- Draw the list items
 	for i, item in ipairs(self.list) do
 		local color = item.color or {255,255,255}
 		local text = item[self.display_prop]
-		local src_ss = self.default.ss
-		local src_sus = self.default.sus
-		local src_s = self.default.s
-		local ss = self.default.surface
-		local sus = self.default.surface
-		local s = self.default.surface
 
-		ss:erase(0, 0, 0)
-		ss:merge(src_ss, 0, 0)
-		ss:drawColorStringBlended(self.font, text, ls_w, (fh - self.font_h) / 2, color[1], color[2], color[3], nil, fw - ls_w - rs_w)
-		item._stex = ss:glTexture()
-
-		s:merge(src_s, 0, 0)
-		s:drawColorStringBlended(self.font, text, ls_w, (fh - self.font_h) / 2, color[1], color[2], color[3], nil, fw - ls_w - rs_w)
-		item._tex, item._tex_w, item._tex_h = s:glTexture()
-
-		sus:merge(src_sus, 0, 0)
-		sus:drawColorStringBlended(self.font, text, ls_w, (fh - self.font_h) / 2, color[1], color[2], color[3], nil, fw - ls_w - rs_w)
-		item._sustex = sus:glTexture()
+		s:erase(0, 0, 0, 0)
+		s:drawColorStringBlended(self.font, text, 0, (self.fh - self.font_h) / 2, color[1], color[2], color[3], true, fw)
+		item._tex = {s:glTexture()}
 	end
 
 	-- Add UI controls
@@ -179,24 +141,23 @@ function _M:display(x, y, nb_keyframes)
 		local item = self.list[i]
 		if not item then break end
 		if self.sel == i then
-			if self.focused then item._stex:toScreenFull(x, y, self.fw, self.fh, item._tex_w, item._tex_h)
-			else item._sustex:toScreenFull(x, y, self.fw, self.fh, item._tex_w, item._tex_h) end
+			if self.focused then self:drawFrame(self.frame_sel, x, y)
+			else self:drawFrame(self.frame_usel, x, y) end
 		else
-			item._tex:toScreenFull(x, y, self.fw, self.fh, item._tex_w, item._tex_h)
+			self:drawFrame(self.frame, x, y)
 			if item.focus_decay then
-				if self.focused then item._stex:toScreenFull(x, y, self.fw, self.fh, item._tex_w, item._tex_h, 1, 1, 1, item.focus_decay / self.focus_decay_max_d)
-				else item._sustex:toScreenFull(x, y, self.fw, self.fh, item._tex_w, item._tex_h, 1, 1, 1, item.focus_decay / self.focus_decay_max_d) end
+				if self.focused then self:drawFrame(self.frame_sel, x, y, 1, 1, 1, item.focus_decay / self.focus_decay_max_d)
+				else self:drawFrame(self.frame_usel, x, y, 1, 1, 1, item.focus_decay / self.focus_decay_max_d) end
 				item.focus_decay = item.focus_decay - nb_keyframes
 				if item.focus_decay <= 0 then item.focus_decay = nil end
 			end
 		end
+		item._tex[1]:toScreenFull(x + self.frame_sel.b4.w, y, self.fw, self.fh, item._tex[2], item._tex[3])
 		y = y + self.fh
 	end
 
 	if self.focused and self.scrollbar then
-		local pos = self.sel * (self.h - self.fh) / self.max
-
-		self.scrollbar.bar.tex:toScreenFull(bx + self.w - self.scrollbar.bar.w, by + self.fh, self.scrollbar.bar.w, self.scrollbar.bar.h, self.scrollbar.bar.texw, self.scrollbar.bar.texh)
-		self.scrollbar.sel.tex:toScreenFull(bx + self.w - self.scrollbar.sel.w, by + self.fh + pos, self.scrollbar.sel.w, self.scrollbar.sel.h, self.scrollbar.sel.texw, self.scrollbar.sel.texh)
+		self.scrollbar.pos = self.sel
+		self.scrollbar:display(bx + self.w - self.scrollbar.w, by)
 	end
 end

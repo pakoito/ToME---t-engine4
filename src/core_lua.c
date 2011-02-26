@@ -1018,6 +1018,24 @@ static int sdl_texture_toscreen_full(lua_State *L)
 	return 0;
 }
 
+static int gl_scale(lua_State *L)
+{
+	if (lua_isnumber(L, 1))
+	{
+		glPushMatrix();
+		glScalef(lua_tonumber(L, 1), lua_tonumber(L, 2), lua_tonumber(L, 3));
+	}
+	else
+		glPopMatrix();
+	return 0;
+}
+
+static int gl_translate(lua_State *L)
+{
+	glTranslatef(lua_tonumber(L, 1), lua_tonumber(L, 2), lua_tonumber(L, 3));
+	return 0;
+}
+
 static int sdl_texture_bind(lua_State *L)
 {
 	GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 1);
@@ -1520,6 +1538,8 @@ static const struct luaL_reg displaylib[] =
 	{"getModesList", sdl_get_modes_list},
 	{"setMouseCursor", sdl_set_mouse_cursor},
 	{"setGamma", sdl_set_gamma},
+	{"glTranslate", gl_translate},
+	{"glScale", gl_scale},
 	{NULL, NULL},
 };
 
