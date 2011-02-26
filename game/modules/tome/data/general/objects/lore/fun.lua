@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 newEntity{ base = "BASE_LORE",
-	name = "trollish poem, first part", lore="troll-poem-1", unique=true,
+	name = "trollish poem", lore="troll-poem", unique=true,
 	desc = [[A poem written by a... troll?]],
 	level_range = {1, 50},
 	rarity = 20,
@@ -26,23 +26,7 @@ newEntity{ base = "BASE_LORE",
 }
 
 newEntity{ base = "BASE_LORE",
-	name = "trollish poem, second part", lore="troll-poem-2", unique=true,
-	desc = [[A poem written by a... troll?]],
-	level_range = {1, 50},
-	rarity = 20,
-	encumber = 0,
-}
-
-newEntity{ base = "BASE_LORE",
-	name = "necromancer poem, first part", lore="necromancer-poem-1", unique=true,
-	desc = [[A poem written by a... Necromancer?]],
-	level_range = {15, 50},
-	rarity = 20,
-	encumber = 0,
-}
-
-newEntity{ base = "BASE_LORE",
-	name = "necromancer poem, second part", lore="necromancer-poem-2", unique=true,
+	name = "necromancer poem", lore="necromancer-poem", unique=true,
 	desc = [[A poem written by a... Necromancer?]],
 	level_range = {15, 50},
 	rarity = 20,

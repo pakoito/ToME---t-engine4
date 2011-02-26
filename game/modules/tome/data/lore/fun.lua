@@ -18,9 +18,9 @@
 -- darkgod@te4.org
 
 newLore{
-	id = "troll-poem-1",
+	id = "troll-poem",
 	category = "misc",
-	name = "trollish poem (part one)",
+	name = "trollish poem",
 	lore = [[#{bold}#"Me Likes to Club"
 
 #{italic}#Club club club,
@@ -37,15 +37,6 @@ Skinny elf,
 Eyes so blue,
 Crush his bones,
 Make elf stew!
-
-...#{normal}#]],
-}
-
-newLore{
-	id = "troll-poem-2",
-	category = "misc",
-	name = "trollish poem (part two)",
-	lore = [[#{italic}#...
 
 Hairy dwarf,
 Smells like dirt,
@@ -64,9 +55,9 @@ Me likes to club!#{normal}#]],
 }
 
 newLore{
-	id = "necromancer-poem-1",
+	id = "necromancer-poem",
 	category = "misc",
-	name = "necromancer poem (part one)",
+	name = "necromancer poem",
 	lore = [[#{bold}#"The Necromancer's Canticle"
 
 #{italic}#Saved from coffin, casket, urn
@@ -83,15 +74,6 @@ Returning those that we amend
 They hurry home, a distant friend
 But do they cheer? Do they commend?
 They yell! Does rotting flesh offend?
-
-...#{normal}#]],
-}
-
-newLore{
-	id = "necromancer-poem-2",
-	category = "misc",
-	name = "necromancer poem (part two)",
-	lore = [[#{italic}#...
 
 We bring life to lifeless bone
 But do they smile? Do they condone?
