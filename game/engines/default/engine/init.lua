@@ -47,7 +47,6 @@ fs.setWritePath(fs.getHomePath())
 -- Loads default config & user config
 fs.mount(engine.homepath, "/")
 config.loadString[[
-window.size = "800x600"
 sound.enabled = true
 music.volume = 60
 aa_text = true
@@ -63,6 +62,16 @@ for i, file in ipairs(fs.list("/settings/")) do
 	if file:find(".cfg$") then
 		config.load("/settings/"..file)
 	end
+end
+
+-- Default resolution as big as possible
+if not config.settings.window or not config.settings.window.size then
+	local list = core.display.getModesList()
+	table.sort(list, function(a, b) return a.w > b.w end)
+	local r = list[1] or {w=800, h=600}
+	print("[RESOLUTION] no configured resolution, defaulting to biggest possible: ", r.w, r.h)
+	config.settings.window = config.settings.window or {}
+	config.settings.window.size = r.w.."x"..r.h
 end
 
 -- Load default keys

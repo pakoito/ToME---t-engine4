@@ -22,7 +22,7 @@ newChat{ id="welcome",
 I do not think I want to see death so closely for some time now.
 Farewell.]],
 	answers = {
-		{"For the Empite! Take care.", action=function(npc, player)
+		{"For the Empire! Take care.", action=function(npc, player)
 			npc:disappear()
 			world:gainAchievement("NORGAN_SAVED", player)
 		end},
