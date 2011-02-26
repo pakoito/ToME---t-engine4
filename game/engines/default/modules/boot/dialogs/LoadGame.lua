@@ -29,7 +29,7 @@ local Savefile = require "engine.Savefile"
 module(..., package.seeall, class.inherit(Dialog))
 
 function _M:init()
-	Dialog.init(self, "Load Game", game.w, game.h)
+	Dialog.init(self, "Load Game", game.w * 0.8, game.h * 0.8)
 
 	local list = Module:listSavefiles()
 

@@ -45,48 +45,34 @@ function _M:generate()
 	self.mouse:reset()
 	self.key:reset()
 
-	local ls, ls_w, ls_h = self:getImage("ui/textbox-left-sel.png")
-	local ms, ms_w, ms_h = self:getImage("ui/textbox-middle-sel.png")
-	local rs, rs_w, rs_h = self:getImage("ui/textbox-right-sel.png")
-	local l, l_w, l_h = self:getImage("ui/textbox-left.png")
-	local m, m_w, m_h = self:getImage("ui/textbox-middle.png")
-	local r, r_w, r_h = self:getImage("ui/textbox-right.png")
-	local c, c_w, c_h = self:getImage("ui/textbox-cursor.png")
-
-	self.h = r_h
-
 	-- Draw UI
 	local title_w = self.font:size(self.title)
-	self.w = title_w + self.chars * self.font_mono_w + ls_w + rs_w
-	local w, h = self.w, r_h
-	local fw, fh = w - title_w - ls_w - rs_w, self.font_h
+	self.title_w = title_w
+	local frame_w = self.chars * self.font_mono_w + 12
+	self.w = title_w + frame_w
+	self.h = self.font_h + 6
+
+	self.texcursor = self:getTexture("ui/textbox-cursor.png")
+	self.frame = self:makeFrame("ui/textbox", frame_w, self.h)
+
+	local w, h = self.w, self.h
+	local fw, fh = frame_w - 12, self.font_h
 	self.fw, self.fh = fw, fh
-	self.text_x = ls_w + title_w
+	self.text_x = 6 + title_w
 	self.text_y = (h - fh) / 2
+	self.cursor_y = (h - self.texcursor.h) / 2
 	self.max_display = math.floor(fw / self.font_mono_w)
-	local ss = core.display.newSurface(w, h)
-	local s = core.display.newSurface(w, h)
+	local s = core.display.newSurface(title_w, h)
 	self.text_surf = core.display.newSurface(fw, fh)
-	self.text_tex, self.text_tex_w, self.text_tex_h = s:glTexture()
+	self.text_tex, self.text_tex_w, self.text_tex_h = self.text_surf:glTexture()
 	self:updateText()
 
-	ss:merge(ls, title_w, 0)
-	for i = title_w + ls_w, w - rs_w do ss:merge(ms, i, 0) end
-	ss:merge(rs, w - rs_w, 0)
-	ss:drawColorStringBlended(self.font, self.title, 0, (h - fh) / 2, 255, 255, 255, true)
-
-	s:merge(l, title_w, 0)
-	for i = title_w + l_w, w - r_w do s:merge(m, i, 0) end
-	s:merge(r, w - r_w, 0)
+	s:erase(0, 0, 0, 0)
 	s:drawColorStringBlended(self.font, self.title, 0, (h - fh) / 2, 255, 255, 255, true)
-
-	local cursor = core.display.newSurface(c_w, fh)
-	for i = 0, fh - 1 do cursor:merge(c, 0, i) end
-	self.cursor_tex, self.cursor_tex_w, self.cursor_tex_h = cursor:glTexture()
-	self.cursor_w, self.cursor_h = c_w, fh
+	self.tex, self.tex_w, self.tex_h = s:glTexture()
 
 	-- Add UI controls
-	self.mouse:registerZone(title_w + ls_w, 0, fw, h, function(button, x, y, xrel, yrel, bx, by, event)
+	self.mouse:registerZone(title_w + 6, 0, fw, h, function(button, x, y, xrel, yrel, bx, by, event)
 		if event == "button" then
 			self.cursor = util.bound(math.floor(bx / self.font_mono_w) + self.scroll, 1, #self.tmp+1)
 			self:updateText()
@@ -131,9 +117,6 @@ function _M:generate()
 			end
 		end,
 	}
-
-	self.tex, self.tex_w, self.tex_h = s:glTexture()
-	self.stex = ss:glTexture()
 end
 
 function _M:updateText()
@@ -151,13 +134,14 @@ function _M:updateText()
 end
 
 function _M:display(x, y, nb_keyframes)
+	self.tex:toScreenFull(x, y, self.title_w, self.h, self.tex_w, self.tex_h)
+	self:drawFrame(self.frame, x + self.title_w, y)
 	if self.focused then
-		self.stex:toScreenFull(x, y, self.w, self.h, self.tex_w, self.tex_h)
-		self.cursor_tex:toScreenFull(x + self.text_x + (self.cursor-self.scroll) * self.font_mono_w, y + self.text_y, self.cursor_w, self.cursor_h, self.cursor_tex_w, self.cursor_tex_h)
+--		self:drawFrame(self.frame, x + self.title_w, y, 1, 1, 1, self.focus_decay / self.focus_decay_max_d)
+		self.texcursor.t:toScreenFull(x + self.text_x + (self.cursor-self.scroll) * self.font_mono_w, y + self.cursor_y, self.texcursor.w, self.texcursor.h, self.texcursor.tw, self.texcursor.th)
 	else
-		self.tex:toScreenFull(x, y, self.w, self.h, self.tex_w, self.tex_h)
 		if self.focus_decay then
-			self.stex:toScreenFull(x, y, self.w, self.h, self.tex_w, self.tex_h, 1, 1, 1, self.focus_decay / self.focus_decay_max_d)
+--			self:drawFrame(self.frame, x + self.title_w, y, 1, 1, 1, self.focus_decay / self.focus_decay_max_d)
 			self.focus_decay = self.focus_decay - nb_keyframes
 			if self.focus_decay <= 0 then self.focus_decay = nil end
 		end

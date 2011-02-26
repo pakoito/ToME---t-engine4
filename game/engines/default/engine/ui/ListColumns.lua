@@ -65,8 +65,8 @@ function _M:init(t)
 		col.frame = self:makeFrame(nil, col.width, self.fh)
 		col.frame_sel = self:makeFrame("ui/selector-sel", col.width, self.fh)
 		col.frame_usel = self:makeFrame("ui/selector", col.width, self.fh)
-		col.frame_col = self:makeFrame("ui/selector", col.width, self.fh)
-		col.frame_col_sel = self:makeFrame("ui/selector-sel", col.width, self.fh)
+		col.frame_col = self:makeFrame("ui/heading", col.width, self.fh)
+		col.frame_col_sel = self:makeFrame("ui/heading-sel", col.width, self.fh)
 	end
 
 	Base.init(self, t)
@@ -245,7 +245,7 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y)
 		local col = self.columns[j]
 		local y = y
 		if not self.hide_columns then
-			if self.cur_col == j then self:drawFrame(col.frame_col_sel, x, y)
+			if self.cur_col == j then self:drawFrame(col.frame_col, x, y)
 			else self:drawFrame(col.frame_col_sel, x, y) end
 			col._tex:toScreenFull(x, y, col.fw, self.fh, col._tex_w, col._tex_h)
 			y = y + self.fh

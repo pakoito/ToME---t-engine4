@@ -28,7 +28,7 @@ local Button = require "engine.ui.Button"
 module(..., package.seeall, class.inherit(Dialog))
 
 function _M:init()
-	Dialog.init(self, "New Game", game.w, game.h)
+	Dialog.init(self, "New Game", game.w * 0.8, game.h * 0.8)
 
 	self.c_desc = Textzone.new{width=math.floor(self.iw / 3 * 2 - 10), height=self.ih, text=""}
 
