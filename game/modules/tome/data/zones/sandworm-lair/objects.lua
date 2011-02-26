@@ -22,7 +22,7 @@ load("/data/general/objects/objects.lua")
 for i = 1, 7 do
 newEntity{ base = "BASE_LORE",
 	define_as = "NOTE"..i,
-	name = "a poem about sandworms", lore="sandworm-note-"..i,
+	name = "Song of the Sands", lore="sandworm-note-"..i,
 	desc = [[Some people get the weirdest ideas!]],
 	rarity = false,
 }
