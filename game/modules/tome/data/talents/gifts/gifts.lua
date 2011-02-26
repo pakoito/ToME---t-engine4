@@ -98,7 +98,7 @@ function setupSummon(self, m, x, y)
 	m:attr("blind_immune", self:attr("blind_immune"))
 	m:attr("pin_immune", self:attr("pin_immune"))
 	m:attr("confusion_immune", self:attr("confusion_immune"))
-	if self.player then
+	if game.party:hasMember(self) then
 		m.remove_from_party_on_death = true
 		game.party:addMember(m, {
 			control=self:knowTalent(self.T_SUMMON_CONTROL) and "full" or "no",
