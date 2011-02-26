@@ -19,6 +19,15 @@
 
 load("/data/general/objects/objects.lua")
 
+for i = 1, 7 do
+newEntity{ base = "BASE_LORE",
+	define_as = "NOTE"..i,
+	name = "a poem about sandworms", lore="sandworm-note-"..i,
+	desc = [[Some people get the weirdest ideas!]],
+	rarity = false,
+}
+end
+
 -- Artifact, dropped by the sandworm queen
 newEntity{
 	power_source = {nature=true},

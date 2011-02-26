@@ -18,3 +18,19 @@
 -- darkgod@te4.org
 
 load("/data/general/objects/objects.lua")
+
+for i = 1, 5 do
+newEntity{ base = "BASE_LORE",
+	define_as = "NOTE"..i,
+	name = "letter", lore="rhaloren-note-"..i,
+	desc = [[A letter.]],
+	rarity = false,
+}
+end
+
+newEntity{ base = "BASE_LORE",
+	define_as = "NOTE6",
+	name = "a carefully preserved letter", lore="rhaloren-note-6",
+	desc = [[A letter.]],
+	rarity = false,
+}

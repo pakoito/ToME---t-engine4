@@ -75,4 +75,9 @@ return {
 			},
 		},
 	},
+
+	post_process = function(level)
+		-- Place a lore note on each level
+		game:placeRandomLoreObject("NOTE"..level.level)
+	end,
 }
