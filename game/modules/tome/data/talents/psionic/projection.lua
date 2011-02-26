@@ -107,7 +107,7 @@ newTalent{
 		return {type="beam", nolock=true, range=t.getSpikedRange(self, t), talent=t}
 	end,
 	getNormalTarget = function(self, t)
-		return {type="ball", range=t.getNormalRange(self, t), radius=t.getNormalRadius(self, t), selffire=false}
+		return {type="ball", range=t.getNormalRange(self, t), radius=t.getNormalRadius(self, t), selffire=false, friendlyfire=false}
 	end,
 	requires_target = function(self, t)
 		-- Spiked ability
@@ -222,7 +222,7 @@ newTalent{
 		return {type="cone", range=t.getSpikedRange(self, t), radius=t.getSpikedRadius(self, t), selffire=false, talent=t}
 	end,
 	getNormalTarget = function(self, t)
-		return {type="ball", range=t.getNormalRange(self, t), radius=t.getNormalRadius(self, t), selffire=false}
+		return {type="ball", range=t.getNormalRange(self, t), radius=t.getNormalRadius(self, t), selffire=false, friendlyfire=false}
 	end,
 	requires_target = function(self, t)
 		-- Spiked ability
@@ -336,7 +336,7 @@ newTalent{
 		return {type="ball", range=t.getSpikedRange(self, t), radius=t.getSpikedRadius(self, t), friendlyfire=false}
 	end,
 	getNormalTarget = function(self, t)
-		return {type="ball", range=t.getNormalRange(self, t), radius=t.getNormalRadius(self, t), selffire=false}
+		return {type="ball", range=t.getNormalRange(self, t), radius=t.getNormalRadius(self, t), selffire=false, friendlyfire=false}
 	end,
 	requires_target = function(self, t)
 		-- Spiked ability
