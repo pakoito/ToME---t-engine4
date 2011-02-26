@@ -71,7 +71,7 @@ if not config.settings.window or not config.settings.window.size then
 	local r = list[1] or {w=800, h=600}
 	print("[RESOLUTION] no configured resolution, defaulting to biggest possible: ", r.w, r.h)
 	config.settings.window = config.settings.window or {}
-	config.settings.window.size = r.w.."x"..r.h
+	config.settings.window.size = math.floor(r.w * 0.9).."x"..math.floor(r.h*0.9)
 end
 
 -- Load default keys
