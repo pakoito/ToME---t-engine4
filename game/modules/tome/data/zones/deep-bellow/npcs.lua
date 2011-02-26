@@ -85,11 +85,11 @@ newEntity{ base="BASE_NPC_CORRUPTED_HORROR", define_as = "SLIMY_CRAWLER",
 	desc = [[This disgusting... thing crawls on the floor toward you with great speed.
 It seems to come from the digestive system of the mouth.]],
 	level_range = {4, nil}, exp_worth = 0,
-	max_life = 40, life_rating = 5, fixed_rating = true,
+	max_life = 80, life_rating = 10, fixed_rating = true,
 	movement_speed = -0.5,
 	size_category = 1,
 
-	combat = { dam=resolvers.mbonus(15, 15), damtype=DamageType.SLIME, dammod={str=1} },
+	combat = { dam=resolvers.mbonus(25, 15), damtype=DamageType.SLIME, dammod={str=1} },
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { talent_in=4, ai_move="move_astar" },

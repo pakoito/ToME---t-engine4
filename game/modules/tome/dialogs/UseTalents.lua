@@ -44,7 +44,7 @@ Check out the keybinding screen in the game menu to bind hotkeys to a key (defau
 		{name="", width={40,"fixed"}, display_prop="char"},
 		{name="Talent", width=80, display_prop="name"},
 		{name="Status", width=20, display_prop="status"},
-		{name="Hotkey", width={70,"fixed"}, display_prop="hotkey"},
+		{name="Hotkey", width={75,"fixed"}, display_prop="hotkey"},
 		{name="Left Mouse", width={60,"fixed"}, display_prop=function(item)
 			if item.talent and item.talent == self.actor.auto_shoot_talent then return "LeftClick" else return "" end
 		end},

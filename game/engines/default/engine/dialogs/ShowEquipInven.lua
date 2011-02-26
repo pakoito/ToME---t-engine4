@@ -138,9 +138,11 @@ function _M:defineHotkey(id)
 end
 
 function _M:select(item)
+	if self.cur_item == item then return end
 	if item then
 		if self.on_select then self.on_select(item) end
 	end
+	self.cur_item = item
 end
 
 function _M:use(item, button, event)

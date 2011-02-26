@@ -76,7 +76,7 @@ end
 -- @param nb number of items (if stacked) to buy
 -- @return true if allowed to buy
 function _M:tryBuy(who, o, item, nb)
-	local price = o:getPrice() * util.getval(self.store.sell_percent, self, o) / 100
+	local price = self:getObjectPrice(o, "buy")
 	if who.money >= price * nb then
 		return nb, price * nb
 	else
@@ -91,7 +91,7 @@ end
 -- @param nb number of items (if stacked) to sell
 -- @return true if allowed to sell
 function _M:trySell(who, o, item, nb)
-	local price = o:getPrice() * util.getval(self.store.buy_percent, self, o) / 100
+	local price = self:getObjectPrice(o, "sell")
 	if price <= 0 or nb <= 0 then return end
 	price = math.min(price * nb, self.store.purse * nb)
 	return nb, price
@@ -106,7 +106,7 @@ end
 -- @return true if allowed to buy
 function _M:onBuy(who, o, item, nb, before)
 	if before then return end
-	local price = o:getPrice() * util.getval(self.store.sell_percent, self, o) / 100
+	local price = self:getObjectPrice(o, "buy")
 	if who.money >= price * nb then
 		who:incMoney(- price * nb)
 	end
@@ -122,7 +122,7 @@ end
 function _M:onSell(who, o, item, nb, before)
 	if before then o:identify(true) return end
 
-	local price = o:getPrice() * util.getval(self.store.buy_percent, self, o) / 100
+	local price = self:getObjectPrice(o, "sell")
 	if price <= 0 or nb <= 0 then return end
 	price = math.min(price * nb, self.store.purse * nb)
 	who:incMoney(price)
@@ -171,14 +171,19 @@ end
 -- @return a string (possibly multiline) describing the object
 function _M:descObject(who, what, o)
 	if what == "buy" then
-		local desc = tstring({"font", "bold"}, {"color", "GOLD"}, ("Buy for: %0.2f gold (You have %0.2f gold)"):format(o:getPrice() * util.getval(self.store.sell_percent, self, o) / 100, who.money), {"font", "normal"}, {"color", "LAST"}, true, true)
+		local desc = tstring({"font", "bold"}, {"color", "GOLD"}, ("Buy for: %0.2f gold (You have %0.2f gold)"):format(self:getObjectPrice(o, "buy"), who.money), {"font", "normal"}, {"color", "LAST"}, true, true)
 		desc:merge(o:getDesc())
 		return desc
 	else
-		local desc = tstring({"font", "bold"}, {"color", "GOLD"}, ("Sell for: %0.2f gold (You have %0.2f gold)"):format(o:getPrice() * util.getval(self.store.buy_percent, self, o) / 100, who.money), {"font", "normal"}, {"color", "LAST"}, true, true)
+		local desc = tstring({"font", "bold"}, {"color", "GOLD"}, ("Sell for: %0.2f gold (You have %0.2f gold)"):format(self:getObjectPrice(o, "sell"), who.money), {"font", "normal"}, {"color", "LAST"}, true, true)
 		desc:merge(o:getDesc())
 		return desc
 	end
+end
+
+function _M:getObjectPrice(o, what)
+	local v = o:getPrice() * util.getval(what == "buy" and self.store.sell_percent or self.store.buy_percent, self, o) / 100
+	return math.ceil(v * 10) / 10
 end
 
 --- Called to describe an object's price, being to sell or to buy
@@ -187,11 +192,7 @@ end
 -- @param o the object
 -- @return a string describing the price
 function _M:descObjectPrice(who, what, o)
-	if what == "buy" then
-		return o:getPrice() * util.getval(self.store.sell_percent, self, o) / 100, who.money
-	else
-		return o:getPrice() * util.getval(self.store.buy_percent, self, o) / 100, who.money
-	end
+	return self:getObjectPrice(o, what), who.money
 end
 
 --- Actor interacts with the store
@@ -207,11 +208,9 @@ function _M:on_select(item)
 		game.tooltip_x, game.tooltip_y = {}, 1
 		game.tooltip:displayAtMap(nil, nil, item.last_display_x, item.last_display_y, item.desc)
 
-		if item == last or not item.object or item.object.wielded then game.tooltip2_x = nil return end
-		last = item
-
+		if not item.object or item.object.wielded then game.tooltip2_x = nil return end
 		local winven = item.object:wornInven()
-		winven = winven and self:getInven(winven)
+		winven = winven and game.player:getInven(winven)
 		if not winven then game.tooltip2_x = nil return end
 
 		local str = tstring{{"font", "bold"}, {"color", "GREY"}, "Currently equiped:", {"font", "normal"}, {"color", "LAST"}, true}
@@ -225,6 +224,7 @@ function _M:on_select(item)
 			game.tooltip2_x, game.tooltip2_y = {}, 1
 			game.tooltip2:displayAtMap(nil, nil, 1, item.last_display_y, str)
 			game.tooltip2.last_display_x = game.tooltip.last_display_x - game.tooltip2.w
+			last = item
 		else
 			game.tooltip2_x = nil
 		end
