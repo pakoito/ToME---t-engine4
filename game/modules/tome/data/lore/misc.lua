@@ -89,7 +89,6 @@ Times passed and changed, and other creatures were found, and oft they were fell
 In all those centuries I still searched for the woman and found no trace. I know that the gods were all hunted down, and I remember the thorough searches of the Sher'Tul in their holy war. I grow old now, and some of those who first woke with me have passed away, and each passing night seem ever colder and lonelier. But still at times when I lie asleep I see her face or I hear her voice, and I know that one day, somehow, I will see her again.]],
 }
 
-
 newLore{
 	id = "creation-human",
 	category = "myths of creation",
@@ -110,3 +109,25 @@ And Gerlyk walked into the Darkness.
 But Human did not cry, for the coal in his heart burned hot, and he knew he was not truly alone.]],
 }
 
+newLore{
+	id = "creation-halfling",
+	category = "myths of creation",
+	name = "a logical analysis of creation, by philosopher Smythen",
+	lore = [[Many are the tales of how our world was made, from the absurd to the romantic to the horrific. But they are all mere myths, with no more than seeds of truth to even the most reliable. The history of our race goes back far, but it is tantalisingly scant in details from before we met the other races. Indeed, it is only through our battles with the others that we halflings have any ancient records at all.
+
+The elves one would suspect of having the greatest knowledge of elder times, but they are aloof and silent. One must judge from this that either they do not know, or that the truth ashames them. The latter would certainly not surprise me.
+
+The humans have more myths than they have brain cells. It seems that each village has several versions of their own local tales, usually passed down orally over the ages. It is clear that not a single element of any of their myths can be construed to contain any essence of the truth.
+
+The dwarves are reticent about the subject of how they were made. They say that such talk is "not profitable". However upon further pressing (and bribing) they will open up a little further. They as a race are of the most fervent belief that they were the last people to be made in Maj'Eyal. They say they are the "final product". Their word for all other races in fact translates directly to "prototype". This mostly singular outlook does of course seem absurd, but one need only look at the rest of dwarven society to see that they are an absurd race with ridiculous ideals. If they are what they consider perfection then I thank whatever god made me that I am flawed!
+
+The subject of gods is of course a difficult one. Clearly there are no divine forces at work in the world today. But the world as we know it did not come from nothing, and even the great Sher'Tul clearly did naught more than manipulate the world - they did not make it.
+
+By logical conjecture one can only presume that some great being made the world. This must have been a benevolent being, for it is clear that "He" created creatures separate from himself to walk the earth. Clearly this is we halflings. We are the only race that truly appreciates the world. We do not warp it with magic experiments like the Shaloren, nor hide from it like the Thaloren. We do not bring destruction like the orcs, or petty greed like the dwarves. And our understanding and knowledge is so far advanced than the humans that it is hard to understand why we share the same world with them at all. We were quite clearly the first of the current races to be created, and our natural feelings of entitlement to all there is in Maj'Eyal must stem from this.
+
+Now that this has been clearly analysed in logical terms, one must consider the source of the other races. It is impossible that they were made by the same god - truly impossible. What strange being could create our race, so gifted and rounded, and yet make such warped and twisted creatures as the dwarves and humans? No, clearly other gods were responsible, lesser gods than our own which copied his grand design. But with fudging fingers and inelegant touches the works of their design were clearly far inferior to the subtleties and perfection which crafted us.
+
+However there remains the matter of the Sher'Tul. Clearly these were of greater power than us, and yet they disappeared. One must presume that our god made this race before us, but was somehow unhappy with them, and so removed them and made us instead. We are not as powerful as the Sher'Tul - not yet at least - but we have our own gifts that evidently give us a greater place in our creator's heart. This would explain why we were the first race to unlock the powers of the Sher'Tul farportals. We had a natural affinity to the works of our elder brethren.
+
+So what happened to these gods after they had made the races which we see today? One must presume strife between them, and that they killed themselves, or took their battle away from the world. Our creator, seeing the other gods killed or left, must have then entrusted the world to us halflings, knowing that we would rule over it in his stead. This is why at every point in history we have played a pivotal role in the shaping of our world. It is our rightful inheritance, and it is our duty to rule it well.]],
+}

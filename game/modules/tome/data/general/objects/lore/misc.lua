@@ -41,3 +41,12 @@ newEntity{ base = "BASE_LORE",
 	-- Only humans can find it
 	checkFilter = function(e) local p = game.party:findMember{main=true} if p.descriptor.race == "Human" then return true end return false end,
 }
+
+newEntity{ base = "BASE_LORE",
+	name = "a logical analysis of creation, by philosopher Smythen", lore="creation-halfling", unique=true,
+	desc = [[Myth of creation of the halflings]],
+	level_range = {1, 25},
+	rarity = 20,
+	-- Only hhalflings can find it
+	checkFilter = function(e) local p = game.party:findMember{main=true} if p.descriptor.race == "Halfling" then return true end return false end,
+}
