@@ -2238,6 +2238,27 @@ newEffect{
 }
 
 newEffect{
+	name = "WILD_SPEED",
+	desc = "Wild Speed",
+	long_desc = function(self, eff) return ("The movement infusion allows you to run at extreme fast pace. Any other action other than movement will cancel it .Movement is %d%% faster."):format(eff.power) end,
+	type = "physical",
+	status = "beneficial",
+	parameters = {power=1000},
+	on_gain = function(self, err) return "#Target# prepares for the next kill!.", "+Wild Speed" end,
+	on_lose = function(self, err) return "#Target# slows down.", "-Wild Speed" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("wild_speed", 1)
+		eff.moveid = self:addTemporaryValue("energy", {mod=self.energy.mod*eff.power/100})
+		if self.ai_state then eff.aiid = self:addTemporaryValue("ai_state", {no_talents=1}) end -- Make AI not use talents while using it
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("wild_speed", eff.tmpid)
+		if eff.aiid then self:removeTemporaryValue("ai_state", eff.aiid) end
+		self:removeTemporaryValue("energy", eff.moveid)
+	end,
+}
+
+newEffect{
 	name = "STEP_UP",
 	desc = "Step Up",
 	long_desc = function(self, eff) return ("Movement is %d%% faster."):format(eff.power) end,
