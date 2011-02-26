@@ -118,6 +118,7 @@ function _M:yesnoLongPopup(title, text, w, fct, yes_text, no_text, no_leave)
 	return d
 end
 
+title_shadow = true
 
 function _M:init(title, w, h, x, y, alpha, font, showup)
 	self.title = assert(title, "no dialog title")
@@ -127,6 +128,7 @@ function _M:init(title, w, h, x, y, alpha, font, showup)
 	else
 		self.__showup = 2
 	end
+	self.color = self.color or {r=255, g=255, b=255}
 
 	self.frame = self.frame or {
 		b7 = "ui/dialogueV3_7.png",
@@ -199,10 +201,14 @@ function _M:generate()
 		self.overs[#self.overs+1] = ov
 	end
 
---[[
 	local tw, th = self.font_bold:size(self.title)
-	s:drawColorStringBlended(self.font_bold, self.title, (self.w - tw) / 2, 4, 255,255,255)
-]]
+	local s = core.display.newSurface(tw, th)
+	s:erase(0, 0, 0, 0)
+	s:drawColorStringBlended(self.font_bold, self.title, 0, 0, self.color.r, self.color.g, self.color.b, true)
+	self.title_tex = {s:glTexture()}
+	self.title_tex.w = tw
+	self.title_tex.h = th
+
 	if self.absolute then
 		self.mouse:registerZone(0, 0, gamew, gameh, function(button, x, y, xrel, yrel, bx, by, event) self:mouseEvent(button, x, y, xrel, yrel, bx - self.display_x, by - self.display_y, event) end)
 	else
@@ -428,6 +434,7 @@ function _M:toScreen(x, y, nb_keyframes)
 		end
 	end
 
+	-- We translate and scale opengl matrix to make the popup effect easily
 	local ox, oy = x, y
 	local hw, hh = math.floor(self.w / 2), math.floor(self.h / 2)
 	local tx, ty = x + hw, y + hh
@@ -435,13 +442,21 @@ function _M:toScreen(x, y, nb_keyframes)
 	core.display.glTranslate(tx, ty, 0)
 	if zoom < 1 then core.display.glScale(zoom, zoom, zoom) end
 
+	-- Draw the frame and shadow
 	if self.frame.shadow then self:drawFrame(x + self.frame.shadow.x, y + self.frame.shadow.y, 0, 0, 0, self.frame.shadow.a) end
 	self:drawFrame(x, y, 1, 1, 1, self.frame.a)
+
+	-- Title
+	if self.title_shadow then self.title_tex[1]:toScreenFull(x + (self.w - self.title_tex.w) / 2 + 3, y + 3, self.title_tex.w, self.title_tex.h, self.title_tex[2], self.title_tex[3], 0, 0, 0, 0.5) end
+	self.title_tex[1]:toScreenFull(x + (self.w - self.title_tex.w) / 2, y, self.title_tex.w, self.title_tex.h, self.title_tex[2], self.title_tex[3])
+
+	-- UI elements
 	for i = 1, #self.uis do
 		local ui = self.uis[i]
 		ui.ui:display(x + ui.x, y + ui.y, nb_keyframes, ox + ui.x, oy + ui.y)
 	end
 
+	-- Restiore normal opengl matrix
 	if zoom < 1 then core.display.glScale() end
 	core.display.glTranslate(-tx, -ty, 0)
 end

@@ -61,7 +61,7 @@ Mouse: #00FF00#Left click#FFFFFF# to learn; #00FF00#right click#FFFFFF# to unlea
 	self:loadUI{
 		{left=0, top=0, ui=self.c_points},
 		{left=5, top=self.c_points.h+5, ui=Separator.new{dir="vertical", size=math.floor(self.iw / 2) - 10}},
-		{left=0, top=self.c_points.h+15, ui=self.c_tree},
+		{left=0, top=self.c_points.h+20, ui=self.c_tree},
 
 		{hcenter=0, top=5, ui=Separator.new{dir="horizontal", size=self.ih - 10}},
 
