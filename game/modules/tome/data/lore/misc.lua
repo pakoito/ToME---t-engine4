@@ -67,6 +67,77 @@ newLore{
 }
 
 --------------------------------------------------------------
+-- Correspondances
+--------------------------------------------------------------
+newLore{
+	id = "adventurer-letter-1",
+	category = "adventures",
+	name = "letter to Rolf (1)",
+	lore = [[Dear Rolf,
+
+I hope this letter finds you well. I must apologise for this recent dry spell in our communication; my adventures across Maj'Eyal have taken many exciting and perilous turns as of late. What turns do I speak of, you ask? I know how you delight in reading the accounts of my exploits, so I shall waste no further time on this pre-amble.
+
+Imagine, in you will, a wolf. Imagine a beastly wolf, a wolf with strength, ferocity and a lust for flesh matching that of an entire pack of its lesser kind. You too may have some small experience with these "wargs" as the locals are wont to call them. Now... imagine one the size of a bear. Truly, as I travelled the lands surrounding Derth did I come across such a monstrous, awe-inspiring, lupine adversary. With fangs of a length to match my own blade, I entered combat against this lupine lord and its skulking brood. To my regret I failed in slaying the beast, but I assure you - simply surviving against such feral rage is an honour worthy of recognition and renown.
+
+And indeed, would there have been much glory in killing such a creature? True, I would have had enough to fur to line each and every boot and hat in Derth, but legends must live on. They are what give this world its very spirit!
+
+With eager anticipation for your reply,
+Weisman]]}
+newLore{
+	id = "adventurer-letter-2",
+	category = "adventures",
+	name = "letter to Weisman (1)",
+	lore = [[Dear Weisman,
+
+Ah! What feelings your last letters inspired within me... primarily mirth, with a good amount of scorn! Must you continuously assail me with tale after tale of your waving of wooden swords and pestering of toothless mongrels? Allow me to recount your "legends" in a much more succinct manner: One day, I failed to kill a dog. Such bravery! Such pluck and derring-do!
+
+Your petty escapades are made ever more insignificant by the trials I myself have recently overcome. Mere days ago I was trekking through the Old Forest (that's outside Derth, Weisman! Terror must already grip you!) when, by unfortunate happenstance, I came across a most hideous, bloated, oozing and chittering horror! No less than the giant ants' repulsive progenitor! Such hordes of frenzied chitinous young it had at its command, it was as though the ground itself was swarming forward to devour me!
+
+And yet I live. Weisman, I sincerely hope that my letter has revealed to you your folly. Only when you have faced true danger can you call yourself an adventurer. Bore me with your tales no longer.
+
+Rolf]]}
+newLore{
+	id = "adventurer-letter-3",
+	category = "adventures",
+	name = "letter to Rolf (2)",
+	lore = [[Dear Rolf the Antslayer,
+
+Ha! Such trials you have overcome! Forget dragons and demons, here we have a hero who has survived against ants! I shall deliver this joyous news to Last Hope with all haste - perhaps there shall be a parade in your honour!
+
+I hope you registered the sarcasm in my previous words, but I obviously cannot expect much from one who struggles with insects. Allow me to share with you knowledge of a beast rather more fitting for a true adventurer to behold. My travels had taken me south, and as I walked one night along an abandoned mountain pass, imagining what treasures and trials the next day may bring, a brilliant light filled my vision! I stood in its radiance, the land around me illuminated so that it almost appeared to be in broad daylight, and that was when I saw it.
+
+Such a magnificent sight! With wings of fire, leaving the air itself hissing and smouldering in its wake, I could only watch with rapt amazement as it alighted on a rocky outcrop mere yards away from me, the stone beneath its talons warping from its tremendous heat. It was at that moment, Rolf, that I realised that this was what being an adventurer was about - there is always more in this world of ours to amaze and astonish us.
+
+Learn from my experiences,
+Weisman]]}
+newLore{
+	id = "adventurer-letter-4",
+	category = "adventures",
+	name = "letter to Weisman (2)",
+	lore = [[Dearest Weisman,
+
+Sorry to cut your birdwatching session short, but I must bring this badinage to an end. I have tolerated your ridiculous pomposity and false heroics long enough. At first, I took your over-inflated tales of bothering local wildlife with good humour but now I realise, with dread, that you are sincere; you believe your pathetic wanderings to be the stuff of legend.
+
+Well, no more. We shall meet seven days from now in Derth's town square. Come prepared for travel. The number of rumours claiming that a monster has taken up residence within the ruins just north of town have grown to the point where they cannot be considered rumours anymore. You shall come with me, face this creature alongside me, and experience intimately the vast difference between your skills and my own. If we're lucky, you will learn this lesson unscathed, but I fear that such a trial may cost you a limb or two.
+
+Prepare yourself, if you've the courage,
+Rolf]]}
+newLore{
+	id = "adventurer-letter-5",
+	category = "adventures",
+	name = "letter to Weisman (3)",
+	lore = [[Weisman,
+
+The tentacles. I still remember them. They have lashed into my mind as they lashed into my flesh. How can nature abhor such a... a... being in her realm? What dark plane of existence could it have been born from? How can creation itself tolerate such an aberration?!
+
+How did we survive? I have no clue. All I can remember is pain, and panic, and fear. All I could think of was getting away, fleeing... to my shame, all other thoughts left me. Thoughts of you, home, the world... all I could do was keep hacking away at the... things between myself and freedom. Perhaps that is why it didn't... no. I shall not think on it. The beast is certain to fill my nightmares tonight, I won't allow it to fill my waking thoughts.
+
+Rest easy, brother. It may have taken your eye, but think of what else it could have taken. Anyway, I shall be leaving for the tavern soon. Maybe I can drown the images of that monster in a sea of ale.
+
+Make sure you write the words on your next letter nice and big,
+Rolf]]}
+
+--------------------------------------------------------------
 -- Myths of creations
 --------------------------------------------------------------
 

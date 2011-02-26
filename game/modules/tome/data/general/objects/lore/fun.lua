@@ -21,7 +21,7 @@ newEntity{ base = "BASE_LORE",
 	name = "trollish poem", lore="troll-poem", unique=true,
 	desc = [[A poem written by a... troll?]],
 	level_range = {1, 50},
-	rarity = 20,
+	rarity = 40,
 	encumber = 0,
 }
 
@@ -29,6 +29,23 @@ newEntity{ base = "BASE_LORE",
 	name = "necromancer poem", lore="necromancer-poem", unique=true,
 	desc = [[A poem written by a... Necromancer?]],
 	level_range = {15, 50},
-	rarity = 20,
+	rarity = 40,
 	encumber = 0,
 }
+
+for i = 1, 5 do
+local who
+if i == 1 then who = "Rolf" nb = 1
+elseif i == 2 then who = "Weisman" nb = 1
+elseif i == 3 then who = "Rolf" nb = 2
+elseif i == 4 then who = "Weisman" nb = 2
+elseif i == 5 then who = "Weisman" nb = 3
+end
+newEntity{ base = "BASE_LORE",
+	name = "letter to "..who.."("..nb..")", lore="adventurer-letter-"..i, unique=true,
+	desc = [[A part of the correspondance between two adventurers]],
+	level_range = {1, 20},
+	rarity = 20,
+	bloodstains = (i == 5) and 2 or nil,
+}
+end

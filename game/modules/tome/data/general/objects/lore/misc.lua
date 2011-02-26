@@ -21,14 +21,14 @@ newEntity{ base = "BASE_LORE",
 	name = "The story of my salvation", lore="zigur-potion", unique=true,
 	desc = [[An old tale about the fear of magic]],
 	level_range = {1, 20},
-	rarity = 20,
+	rarity = 40,
 }
 
 newEntity{ base = "BASE_LORE",
 	name = "memories of Artelia Firstborn", lore="creation-elf", unique=true,
 	desc = [[The memories of the first elf to have awaken]],
 	level_range = {1, 25},
-	rarity = 20,
+	rarity = 40,
 	-- Only elves can find it
 	checkFilter = function(e) local p = game.party:findMember{main=true} if p.descriptor.race == "Elf" then return true end return false end,
 }
@@ -37,7 +37,7 @@ newEntity{ base = "BASE_LORE",
 	name = "human myth of creation", lore="creation-human", unique=true,
 	desc = [[Myth of creation of the humans]],
 	level_range = {1, 25},
-	rarity = 20,
+	rarity = 40,
 	-- Only humans can find it
 	checkFilter = function(e) local p = game.party:findMember{main=true} if p.descriptor.race == "Human" then return true end return false end,
 }
@@ -46,7 +46,7 @@ newEntity{ base = "BASE_LORE",
 	name = "a logical analysis of creation, by philosopher Smythen", lore="creation-halfling", unique=true,
 	desc = [[Myth of creation of the halflings]],
 	level_range = {1, 25},
-	rarity = 20,
+	rarity = 40,
 	-- Only hhalflings can find it
 	checkFilter = function(e) local p = game.party:findMember{main=true} if p.descriptor.race == "Halfling" then return true end return false end,
 }

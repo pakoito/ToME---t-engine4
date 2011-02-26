@@ -25,7 +25,7 @@ newEntity{ base = "BASE_LORE",
 	name = "Records of Lorekeeper Hadak", lore="orc-history-"..i, unique="Records of Lorekeeper Hadak "..i,
 	desc = [[Part of the long history of the Orc race.]],
 	level_range = {1, 50},
-	rarity = 30,
+	rarity = 40,
 	is_magic_device = false,
 	encumber = 0,
 }
