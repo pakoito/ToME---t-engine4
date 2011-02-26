@@ -70,6 +70,9 @@ return {
 				actor = {
 					nb_npc = {0, 0},
 				},
+				object = {
+					nb_object = {1, 1},
+				},
 			},
 		},
 	},

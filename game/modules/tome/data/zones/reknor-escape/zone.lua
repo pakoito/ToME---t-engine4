@@ -101,5 +101,6 @@ return {
 			local chat = require("engine.Chat").new("norgan-saved", norgan, game.player)
 			chat:invoke()
 		end
+		if norgan then game.party:removeMember(norgan, true) end
 	end,
 }

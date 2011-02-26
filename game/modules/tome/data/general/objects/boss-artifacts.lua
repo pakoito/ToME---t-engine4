@@ -862,7 +862,7 @@ newEntity{ base = "BASE_WAND", define_as = "ROD_OF_ANNULMENT",
 
 newEntity{ base = "BASE_WARAXE",
 	power_source = {arcane=true},
-	define_as = "SKULLCLEAVER", rarity=false,
+	define_as = "SKULLCLEAVER",
 	unided_name = "crimson waraxe",
 	name = "Skullcleaver", unique=true,
 	desc = [[A small but sharp axe, with a handle made of polished bone.  The blade has chopped through the skulls of many, and has been stained a deep crimson.]],
@@ -879,5 +879,22 @@ newEntity{ base = "BASE_WARAXE",
 	},
 	wielder = {
 		inc_damage = { [DamageType.BLIGHT] = 8 },
+	},
+}
+
+newEntity{ base = "BASE_DIGGER",
+	power_source = {unknown=true},
+	define_as = "TOOTH_MOUTH",
+	unided_name = "a tooth", unique = true,
+	name = "Tooth of the Mouth",
+	desc = [[A huge tooth taken from the Mouth, in the Deep Bellow.]],
+	level_range = {5, 12},
+	cost = 50,
+	material_level = 3,
+	digspeed = 12,
+	wielder = {
+		inc_damage = { [DamageType.BLIGHT] = 4 },
+		on_melee_hit = {[DamageType.BLIGHT] = 15},
+		combat_apr = 5,
 	},
 }

@@ -30,7 +30,7 @@ newEntity{ base="BASE_NPC_CORRUPTED_HORROR", define_as = "THE_MOUTH",
 	color=colors.VIOLET,
 	desc = [["From bellow, it devours."]],
 	level_range = {7, nil}, exp_worth = 2,
-	max_life = 150, life_rating = 12, fixed_rating = true,
+	max_life = 10000, life_rating = 0, fixed_rating = true,
 	stats = { str=10, dex=10, cun=12, mag=20, con=10 },
 	rank = 4,
 	size_category = 4,
@@ -42,7 +42,7 @@ newEntity{ base="BASE_NPC_CORRUPTED_HORROR", define_as = "THE_MOUTH",
 	combat = {dam=100, atk=1000, apr=1000, physcrit=1000},
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	resolvers.drops{chance=100, nb=1, {defined="RING_OF_HORRORS", random_art_replace={chance=75}} },
+	resolvers.drops{chance=100, nb=1, {defined="TOOTH_MOUTH", random_art_replace={chance=35}} },
 	resolvers.drops{chance=100, nb=3, {ego_chance=100} },
 
 	resolvers.talents{
@@ -50,11 +50,71 @@ newEntity{ base="BASE_NPC_CORRUPTED_HORROR", define_as = "THE_MOUTH",
 		[Talents.T_DRAIN]=1,
 	},
 
-	autolevel = "caster",
-	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
+	autolevel = "warriormage",
+	ai = "tactical", ai_state = { talent_in=1 },
 	ai_tactic = resolvers.tactic"ranged",
+
+	on_takehit = function(self, value)
+		if value <= 500 then
+			game.logSeen(self, "#CRIMSON#%s seems invulnerable, there must be an other way to kill it!", self.name:capitalize())
+			return 0
+		end
+		return value
+	end,
+
+	-- Invoke crawlers every few turns
+	on_act = function(self)
+		if not self.ai_target.actor or self.ai_target.actor.dead then return end
+		if not self:hasLOS(self.ai_target.actor.x, self.ai_target.actor.y) then return end
+
+		self.last_crawler = self.last_crawler or (game.turn - 100)
+		if game.turn - self.last_crawler >= 100 then -- Summon a crawler every 10 turns
+			self:forceUseTalent(self.T_GIFT_OF_AMAKTHEL, {no_energy=true})
+			self.last_crawler = game.turn
+		end
+	end,
 
 	on_die = function(self, who)
 		game.player:resolveSource():setQuestStatus("deep-bellow", engine.Quest.COMPLETED)
+	end,
+}
+
+newEntity{ base="BASE_NPC_CORRUPTED_HORROR", define_as = "SLIMY_CRAWLER",
+	name = "slimy crawlyer",
+	color = colors.GREEN,
+	desc = [[This disgusting... thing crawls on the floor toward you with great speed.
+It seems to come from the digestive system of the mouth.]],
+	level_range = {4, nil}, exp_worth = 0,
+	max_life = 40, life_rating = 5, fixed_rating = true,
+	movement_speed = -0.5,
+	size_category = 1,
+
+	combat = { dam=resolvers.mbonus(15, 15), damtype=DamageType.SLIME, dammod={str=1} },
+
+	autolevel = "warrior",
+	ai = "dumb_talented_simple", ai_state = { talent_in=4, ai_move="move_astar" },
+
+	resolvers.talents{
+		[Talents.T_KNOCKBACK]=1,
+	},
+
+	on_act = function(self)
+		local tgts = {}
+		for i, actor in ipairs(game.party.m_list) do
+			if not actor.dead then tgts[#tgts+1] = actor end
+		end
+		self:setTarget(rng.table(tgts))
+
+		if self.summoner.dead then
+			self:die()
+			game.logSeen(self, "#AQUAMARINE#With the Mouth death its crawler also falls lifeless on the ground!")
+		end
+	end,
+
+	on_die = function(self, who)
+		if self.summoner and not self.summoner.dead then
+			game.logSeen(self, "#AQUAMARINE#As %s falls you notice that %s seems to shudder in pain!", self.name, self.summoner.name)
+			self.summoner:takeHit(1000, who)
+		end
 	end,
 }

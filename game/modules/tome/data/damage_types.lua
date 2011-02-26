@@ -87,7 +87,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			local t = target:getTalentFromId(target.T_CHARGED_SHIELD)
 			dam = t.css_on_damage(target, t, type, dam)
 		end
-		
+
 		-- Reduce damage with resistance
 		if target.resists then
 			local pen = 0
@@ -110,12 +110,14 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 
 		print("[PROJECTOR] final dam", dam)
 
+		local dead
+		dead, dam = target:takeHit(dam, src)
+
 		-- Log damage for later
 		if not DamageType:get(type).hideMessage then
 			local srcname = src.x and src.y and game.level.map.seens(src.x, src.y) and src.name:capitalize() or "Something"
 			game:delayedLogDamage(src, target, dam, ("%s%d %s#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", math.ceil(dam), DamageType:get(type).name))
 		end
-		target:takeHit(dam, src)
 
 		if src.attr and src:attr("martyrdom") and not no_martyr then
 			DamageType.defaultProjector(target, src.x, src.y, type, dam * src.martyrdom / 100, tmp, true)

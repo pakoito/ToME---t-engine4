@@ -1262,13 +1262,56 @@ newTalent{
 			if not target then return end
 			if self:reactionToward(target) < 0 and not tgts[target] then
 				tgts[target] = true
+				local ox, oy = target.x, target.y
 				target:pull(self.x, self.y, 1)
-				game.logSeen(target, "%s is pulled in!", target.name:capitalize())
+				if target.x ~= ox or target.y ~= oy then game.logSeen(target, "%s is pulled in!", target.name:capitalize()) end
 			end
 		end)
 		return true
 	end,
 	info = function(self, t)
 		return ([[Pull all foes toward you.]])
+	end,
+}
+
+newTalent{
+	name = "Gift of Amakthel",
+	type = {"technique/other", 1},
+	points = 5,
+	cooldown = 6,
+	tactical = { ATTACK = 2 },
+	range = 10,
+	target = function(self, t)
+		return {type="hit", range=self:getTalentRange(t), talent=t}
+	end,
+	action = function(self, t)
+		local tg = self:getTalentTarget(t)
+		local tx, ty = self.x, self.y
+		if not tx or not ty then return nil end
+
+		-- Find space
+		local x, y = util.findFreeGrid(tx, ty, 3, true, {[Map.ACTOR]=true})
+		if not x then
+			game.logPlayer(self, "Not enough space to invoke!")
+			return
+		end
+
+		-- Find an actor with that filter
+		local m = game.zone:makeEntityByName(game.level, "actor", "SLIMY_CRAWLER")
+		if m then
+			m.exp_worth = 0
+			m.summoner = self
+			m.summon_time = 10
+			game.zone:addEntity(game.level, m, "actor", x, y)
+			local target = game.level.map(tx, ty, Map.ACTOR)
+			m:setTarget(target)
+
+			game.logSeen(self, "%s spawns a slimy crawler!", self.name:capitalize())
+		end
+
+		return true
+	end,
+	info = function(self, t)
+		return ([[Invoke a slimy crawler.]])
 	end,
 }
