@@ -89,7 +89,7 @@ project "TEngine"
 	language "C"
 	targetname "t-engine"
 	files { "src/*.c", }
-	links { "physfs", "lua".._OPTIONS.lua, "fov", "luasocket", "luaprofiler", "lualanes", "lpeg", "tcodimport", "lxp", "expatstatic", "luamd5" }
+	links { "physfs", "lua".._OPTIONS.lua, "fov", "luasocket", "luaprofiler", "lualanes", "lpeg", "tcodimport", "lxp", "expatstatic", "luamd5", "luazlib" }
 	defines { "_DEFAULT_VIDEOMODE_FLAGS_='SDL_HWSURFACE|SDL_DOUBLEBUF'" }
 	defines { [[TENGINE_HOME_PATH='".t-engine"']] }
 
@@ -114,7 +114,7 @@ configuration "windows"
 	defines { [[TENGINE_HOME_PATH='"T-Engine"']], 'SELFEXE_WINDOWS' }
 
 configuration "linux"
-	links { "SDL", "SDL_ttf", "SDL_image", "SDL_mixer", "GL", "GLU", "m", "pthread", "uuid" }
+	links { "SDL", "SDL_ttf", "SDL_image", "SDL_mixer", "GL", "GLU", "m", "pthread" }
 	defines { [[TENGINE_HOME_PATH='".t-engine"']], 'SELFEXE_LINUX' }
 
 configuration {"linux", "Debug"}
@@ -266,3 +266,10 @@ project "luamd5"
 	targetname "luamd5"
 
 	files { "src/luamd5/*.c", }
+
+project "luazlib"
+	kind "StaticLib"
+	language "C"
+	targetname "luazlib"
+
+	files { "src/lzlib/*.c", }

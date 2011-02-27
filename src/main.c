@@ -707,6 +707,7 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 		luaopen_shaders(L);
 		luaopen_serial(L);
 		luaopen_profile(L);
+		luaopen_zlib(L);
 
 		// Override "print" if requested
 		if (no_debug)

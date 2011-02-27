@@ -145,7 +145,6 @@ function _M:loadGenericProfile()
 				local field = file:gsub(".profile$", "")
 				self.generic[field] = self.generic[field] or {}
 				self:loadData(f, self.generic[field])
-				if not self.generic[field].__uuid then self.generic[field].__uuid = util.uuid() end
 			end
 		end
 	end
@@ -223,7 +222,6 @@ function _M:loadModuleProfile(short_name)
 					else
 						self.modules[short_name][field] = self.modules[short_name][field] or {}
 						self:loadData(f, self.modules[short_name][field])
-						if not self.modules[short_name][field].__uuid then self.modules[short_name][field].__uuid = util.uuid() end
 					end
 				end
 			end
@@ -379,7 +377,7 @@ function _M:eventGetNews(e)
 end
 
 function _M:eventGetConfigs(e)
-	local data = e.data:unserialize()
+	local data = zlib.decompress(e.data):unserialize()
 	local module = e.module
 	if not data then print("[ONLINE PROFILE] get configs") return end
 	for name, val in pairs(data) do
@@ -464,7 +462,7 @@ function _M:setConfigs(module, name, val)
 	if not self.auth then return end
 	if name == "online" then return end
 	if type(val) ~= "string" then val = serialize(val) end
-	core.profile.pushOrder(table.serialize{o="SetConfigs", module=module, data=table.serialize{[name] = val}})
+	core.profile.pushOrder(table.serialize{o="SetConfigs", module=module, data=zlib.compress(table.serialize{[name] = val})})
 end
 
 function _M:syncOnline(module)
@@ -477,7 +475,7 @@ function _M:syncOnline(module)
 	local data = {}
 	for k, v in pairs(sync) do if k ~= "online" then data[k] = serialize(v) end end
 
-	core.profile.pushOrder(table.serialize{o="SetConfigs", module=module, data=table.serialize(data)})
+	core.profile.pushOrder(table.serialize{o="SetConfigs", module=module, data=zlib.compress(table.serialize(data))})
 end
 
 function _M:checkModuleHash(module, md5)

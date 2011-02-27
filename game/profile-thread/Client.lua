@@ -29,7 +29,7 @@ end
 
 function _M:connected()
 	if self.sock then return true end
-	self.sock = socket.connect("te4.org", 2257)
+	self.sock = socket.connect("te4.org", 2259)
 	if not self.sock then return false end
 --	self.sock:settimeout(10)
 	print("[PROFILE] Thread connected to te4.org")
@@ -40,8 +40,9 @@ end
 --- Connects the second tcp channel to receive data
 function _M:connectedPull()
 	if self.psock then return true end
-	self.psock = socket.connect("te4.org", 2258)
+	self.psock = socket.connect("te4.org", 2260)
 	if not self.psock then return false end
+--	self.psock:settimeout(10)
 	print("[PROFILE] Pull socket connected to te4.org")
 	self.psock:send(self.auth.push_id.."\n") -- Identify ourself
 	return true
@@ -57,8 +58,30 @@ function _M:disconnect()
 	core.game.sleep(5000) -- Wait 5 secs
 end
 
+function _M:receive(size)
+	local try = 0
+	local l, err = nil, "timeout"
+	while not l and err == "timeout" and try < 10 do
+		l, err = self.sock:receive(size)
+		try = try + 1
+	end
+	if not l then
+		if err == "closed" then
+			print("[PROFILE] connection disrupted, trying to reconnect", err)
+			self:disconnect()
+		end
+		return nil
+	end
+	return l
+end
+
 function _M:read(ncode)
-	local l, err = self.sock:receive("*l")
+	local try = 0
+	local l, err = nil, "timeout"
+	while not l and err == "timeout" and try < 10 do
+		l, err = self.sock:receive("*l")
+		try = try + 1
+	end
 	if not l then
 		if err == "closed" then
 			print("[PROFILE] connection disrupted, trying to reconnect", err)
@@ -74,7 +97,12 @@ function _M:read(ncode)
 end
 
 function _M:pread(ncode)
-	local l, err = self.psock:receive("*l")
+	local try = 0
+	local l, err = nil, "timeout"
+	while not l and err == "timeout" and try < 10 do
+		l, err = self.psock:receive("*l")
+		try = try + 1
+	end
 	if not l then
 		if err == "closed" then
 			print("[PROFILE] push connection disrupted, trying to reconnect", err)
@@ -201,7 +229,7 @@ function _M:orderGetNews(o)
 		size = tonumber(size)
 		if not size or size < 1 or not title then cprofile.pushEvent("e='News' news=false") return end
 
-		local body = self.sock:receive(size)
+		local body = self:receive(size)
 		cprofile.pushEvent(string.format("e='GetNews' news=%q", table.serialize{title=title, body=body}))
 	else
 		cprofile.pushEvent("e='GetNews' news=false")
@@ -215,7 +243,7 @@ function _M:orderGetConfigs(o)
 		local _, _, size = self.last_line:find("^([0-9]+)")
 		size = tonumber(size)
 		if not size or size < 1 then return end
-		local body = self.sock:receive(size)
+		local body = self:receive(size)
 		cprofile.pushEvent(string.format("e='GetConfigs' module=%q data=%q", o.module, body))
 	end
 end
@@ -279,7 +307,7 @@ function _M:orderChatUserInfo(o)
 		local _, _, size = self.last_line:find("^([0-9]+)")
 		size = tonumber(size)
 		if not size or size < 1 then return end
-		local body = self.sock:receive(size)
+		local body = self:receive(size)
 		cprofile.pushEvent(string.format("e='Chat' se='UserInfo' user=%q data=%q", o.user, body))
 	end
 end

@@ -82,10 +82,12 @@ function table.serialize(src, sub)
 		local nk, ne = k, e
 		local tk, te = type(k), type(e)
 
-		if tk == "table" then nk = table.serialize(nk, true)
-		elseif tk == "string" then -- nothing, we are good
+		if tk == "table" then nk = "["..table.serialize(nk, true).."]"
+		elseif tk == "string" then nk = string.format("[%q]", nk)
 		else nk = "["..nk.."]"
 		end
+
+		if not sub then nk = "_G"..nk end
 
 		if te == "table" then
 			str = str..string.format("%s=%s ", nk, table.serialize(ne, true))
@@ -106,7 +108,7 @@ function string.unserialize(str)
 	local f, err = loadstring(str)
 	if not f then print("[UNSERIALIZE] error", err, str) return nil end
 	local t = {}
-	setfenv(f, t)
+	setfenv(f, setmetatable(t, {__index={_G=t}}))
 	local ok, err = pcall(f)
-	if ok then return t else print("[UNSERIALIZE] error", err, str) return nil end
+	if ok then return setmetatable(t, nil) else print("[UNSERIALIZE] error", err, str) return nil end
 end
