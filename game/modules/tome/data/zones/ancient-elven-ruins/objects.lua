@@ -20,6 +20,15 @@
 load("/data/general/objects/objects.lua")
 load("/data/general/objects/mummy-wrappings.lua")
 
+for i = 1, 3 do
+newEntity{ base = "BASE_LORE",
+	define_as = "NOTE"..i,
+	name = "ancient papyrus scroll", lore="ancient-elven-ruins-note-"..i,
+	desc = [[This seems to be the recalls of the last days of a great Shaloren mage]],
+	rarity = false,
+}
+end
+
 local Stats = require "engine.interface.ActorStats"
 local Talents = require "engine.interface.ActorTalents"
 

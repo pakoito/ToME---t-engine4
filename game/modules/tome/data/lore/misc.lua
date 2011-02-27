@@ -202,3 +202,31 @@ However there remains the matter of the Sher'Tul. Clearly these were of greater 
 
 So what happened to these gods after they had made the races which we see today? One must presume strife between them, and that they killed themselves, or took their battle away from the world. Our creator, seeing the other gods killed or left, must have then entrusted the world to us halflings, knowing that we would rule over it in his stead. This is why at every point in history we have played a pivotal role in the shaping of our world. It is our rightful inheritance, and it is our duty to rule it well.]],
 }
+
+--------------------------------------------------------------------------
+-- Ancient Elven Ruins
+--------------------------------------------------------------------------
+
+newLore{
+	id = "ancient-elven-ruins-note-1",
+	category = "ancient elven ruins",
+	name = "ancient papyrus scroll",
+	lore = [[Death is nearing. I can feel her chilling breath down the back of my neck. So many of us firstborn have passed on already. I cannot allow it... I will not let myself rot into dirt like the others. I am the mightiest of the Shaloren - I have a right to life!
+]],
+}
+newLore{
+	id = "ancient-elven-ruins-note-2",
+	category = "ancient elven ruins",
+	name = "ancient papyrus scroll",
+	lore = [[Death mocks my experiments. I can preserve the flesh of my servants, tightly wrapped and salted, treated with the correct chemicals. I can animate them, make them shuffle about the empty halls of my mausoleum. But they are but empty shells, devoid of any soul. Is this how my majesty is to end? I demand a greater fate...
+
+My days are numbered. Each night that passes saps strength from me. I must find the way to preserve my soul within my flesh. My greatness cannot be allowed to fade.]],
+}
+newLore{
+	id = "ancient-elven-ruins-note-3",
+	category = "ancient elven ruins",
+	name = "ancient papyrus scroll",
+	lore = [[Death has met her match. My results are complete, and I am ready to step to the Beyond. I have my sword by my side, and its icy edge will freeze even the dark one in her tracks. My powers cannot be denied...
+
+Come, Death, try to lay your bony fingers on me! I will vanish before your very eyes and slice you apart! You and your agents are no threat to me. I am immortal!]],
+}
