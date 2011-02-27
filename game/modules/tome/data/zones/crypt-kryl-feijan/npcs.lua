@@ -133,7 +133,7 @@ newEntity{ define_as = "ACOLYTE",
 
 	on_die = function(self)
 		if not game.level.turn_counter then return end
-		game.level.turn_counter = game.level.turn_counter + 6
+		game.level.turn_counter = game.level.turn_counter + 6 * 10
 
 		local nb = 0
 		local melinda
