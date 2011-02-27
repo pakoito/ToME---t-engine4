@@ -665,7 +665,7 @@ function tstring:makeLineTextures(max_width, font, no_split, r, g, b)
 			w = w + fontoldsize(font, v)
 		elseif tv == "boolean" then
 			w = 0
-			local dat = {}
+			local dat = {w=max_width, h=fh}
 			dat._tex, dat._tex_w, dat._tex_h = s:glTexture()
 			texs[#texs+1] = dat
 			s:erase(0, 0, 0, 0)
@@ -695,7 +695,7 @@ function tstring:makeLineTextures(max_width, font, no_split, r, g, b)
 	end
 
 	-- Last line
-	local dat = {}
+	local dat = {w=max_width, h=fh}
 	dat._tex, dat._tex_w, dat._tex_h = s:glTexture()
 	texs[#texs+1] = dat
 

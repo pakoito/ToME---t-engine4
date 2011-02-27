@@ -71,7 +71,7 @@ function _M:event(e)
 		if type(game) == "table" and game.log then game.log("#YELLOW#<%s> %s", e.user, e.msg) end
 	elseif e.se == "Join" then
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
-		self.channels[e.channel].users[e.user] = true
+		self.channels[e.channel].users[e.user] = {name=e.user}
 		self.channels_changed = true
 		self:addMessage(e.channel, e.user, "#{italic}##FIREBRICK#has joined the channel#{normal}#")
 		if type(game) == "table" and game.log and e.channel == self.cur_channel then game.log("#{italic}##FIREBRICK#%s has joined channel %s (press space to talk).#{normal}#", e.user, e.channel) end
@@ -87,8 +87,14 @@ function _M:event(e)
 	elseif e.se == "ChannelList" then
 		local info = zlib.decompress(e.data):unserialize()
 		if not info then return end
+		self.channels[e.channel].users = {}
 		for _, user in ipairs(info.users) do
-			print(" === ", user.name, user.cur_char and user.cur_char.title, user.cur_char and user.cur_char.valid, user.cur_char and user.cur_char.module)
+			self.channels[e.channel].users[user.name] = {
+				name=user.name,
+				cur_char=user.cur_char and user.cur_char.title or "unknown",
+				module=user.cur_char and user.cur_char.module or "unknown",
+				valid=user.cur_char and user.cur_char.valid and "validate" or "not validated",
+			}
 		end
 		self.channels_changed = true
 	end
@@ -133,6 +139,7 @@ function _M:talkBox()
 		self:talk(text)
 	end)
 	d.key:addBind("EXIT", function() game:unregisterDialog(d) end)
+	d.key:addCommand("_ESCAPE", function() game:unregisterDialog(d) end)
 	game:registerDialog(d)
 
 	self:updateChanList()
@@ -197,10 +204,24 @@ function _M:resize(x, y, w, h, fontname, fontsize, color, bgcolor)
 				if w > x then break end
 			end
 			if last_ok then self:selectChannel(last_ok.name) end
+		else
+			if not self.on_mouse then return end
+			local citem = nil
+			for i = 1, #self.dlist do
+				local item = self.dlist[i]
+				if item.dh and y >= item.dh - self.mouse.delegate_offset_y then citem = item break end
+			end
+			if citem then
+				self.on_mouse(self.channels[self.cur_channel].users[citem.user], button, event)
+			end
 		end
 	end)
 
 	self.last_chan_update = 0
+end
+
+function _M:onMouse(fct)
+	self.on_mouse = fct
 end
 
 function _M:display()
@@ -245,8 +266,9 @@ function _M:display()
 	for z = 1 + self.scroll, #log do
 		local stop = false
 		local tstr = ("<%s> %s"):format(log[z].user, log[z].msg):toTString()
-		local gen = tstring.makeLineTextures(tstr, self.w - 4, self.font_mono)
+		local gen = tstring.makeLineTextures(tstr, self.w, self.font_mono)
 		for i = #gen, 1, -1 do
+			gen[i].user = log[z].user
 			self.dlist[#self.dlist+1] = gen[i]
 			h = h + self.fh
 			if h > self.h - self.fh - ls_h then stop=true break end
@@ -263,7 +285,8 @@ function _M:toScreen()
 	local h = self.display_y + self.h -  self.fh
 	for i = 1, #self.dlist do
 		local item = self.dlist[i]
-		item._tex:toScreenFull(self.display_x, h, self.fw, self.fh, item._tex_w, item._tex_h)
+		item.dh = h
+		item._tex:toScreenFull(self.display_x, h, item.w, item.h, item._tex_w, item._tex_h)
 		h = h - self.fh
 	end
 

@@ -1144,6 +1144,14 @@ function _M:setupMouse(reset)
 			game.level.map:moveViewSurround(tmx + self.minimap_scroll_x, tmy + self.minimap_scroll_y, 1000, 1000)
 		end
 	end)
+	-- Chat tooltips
+	profile.chat:onMouse(function(user, button, event)
+		self.tooltip:displayAtMap(nil, nil, self.w, self.h, tstring{
+			{"color","GOLD"}, {"font","bold"}, user.name, {"color","LAST"}, {"font","normal"}, true,
+			{"color","ANTIQUE_WHITE"}, "Playing: ", {"color", "LAST"}, user.cur_char,true,
+			{"color","ANTIQUE_WHITE"}, "Game: ", {"color", "LAST"}, user.module, "(", user.valid, ")",true,
+		})
+	end)
 	if not reset then self.mouse:setCurrent() end
 end
 
