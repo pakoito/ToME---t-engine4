@@ -54,6 +54,7 @@ function _M:generate()
 
 	self.texcursor = self:getTexture("ui/textbox-cursor.png")
 	self.frame = self:makeFrame("ui/textbox", frame_w, self.h)
+	self.frame_sel = self:makeFrame("ui/textbox-sel", frame_w, self.h)
 
 	local w, h = self.w, self.h
 	local fw, fh = frame_w - 12, self.font_h
@@ -135,13 +136,13 @@ end
 
 function _M:display(x, y, nb_keyframes)
 	self.tex:toScreenFull(x, y, self.title_w, self.h, self.tex_w, self.tex_h)
-	self:drawFrame(self.frame, x + self.title_w, y)
 	if self.focused then
---		self:drawFrame(self.frame, x + self.title_w, y, 1, 1, 1, self.focus_decay / self.focus_decay_max_d)
+		self:drawFrame(self.frame_sel, x + self.title_w, y)
 		self.texcursor.t:toScreenFull(x + self.text_x + (self.cursor-self.scroll) * self.font_mono_w, y + self.cursor_y, self.texcursor.w, self.texcursor.h, self.texcursor.tw, self.texcursor.th)
 	else
+		self:drawFrame(self.frame, x + self.title_w, y)
 		if self.focus_decay then
---			self:drawFrame(self.frame, x + self.title_w, y, 1, 1, 1, self.focus_decay / self.focus_decay_max_d)
+			self:drawFrame(self.frame_sel, x + self.title_w, y, 1, 1, 1, self.focus_decay / self.focus_decay_max_d)
 			self.focus_decay = self.focus_decay - nb_keyframes
 			if self.focus_decay <= 0 then self.focus_decay = nil end
 		end
