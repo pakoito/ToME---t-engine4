@@ -75,19 +75,25 @@ end
 
 --- This is a really naive algorithm, it will not handle objects and such.
 -- Use only for small tables
-function table.serialize(src, sub)
+function table.serialize(src, sub, no_G)
 	local str = ""
 	if sub then str = "{" end
 	for k, e in pairs(src) do
 		local nk, ne = k, e
 		local tk, te = type(k), type(e)
 
-		if tk == "table" then nk = "["..table.serialize(nk, true).."]"
-		elseif tk == "string" then nk = string.format("[%q]", nk)
-		else nk = "["..nk.."]"
+		if no_G then
+			if tk == "table" then nk = "["..table.serialize(nk, true).."]"
+			elseif tk == "string" then -- nothing
+			else nk = "["..nk.."]"
+			end
+		else
+			if tk == "table" then nk = "["..table.serialize(nk, true).."]"
+			elseif tk == "string" then nk = string.format("[%q]", nk)
+			else nk = "["..nk.."]"
+			end
+			if not sub then nk = "_G"..nk end
 		end
-
-		if not sub then nk = "_G"..nk end
 
 		if te == "table" then
 			str = str..string.format("%s=%s ", nk, table.serialize(ne, true))

@@ -96,7 +96,7 @@ function _M:loaded()
 	self:updateZoom()
 
 	-- Serialize arguments for passing into the particles threads
-	local args = table.serialize(self.args or {})
+	local args = table.serialize(self.args or {}, nil, true)
 	args = args.."tile_w="..engine.Map.tile_w.."\ntile_h="..engine.Map.tile_h
 
 	self.update = fct
