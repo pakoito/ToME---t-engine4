@@ -31,7 +31,6 @@ newTalent{
         radius = function(self, t)
             return 1 + self:getTalentLevelRaw(t)
         end,
-	requires_target = true,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,

@@ -25,7 +25,7 @@ newTalent{
 	paradox = 5,
 	cooldown = 12,
 	tactical = { BUFF = 2 },
-	getThread = function(self, t) return 60 + (self:combatTalentSpellDamage(t, 10, 30)*getParadoxModifier(self, pm)) end,
+	getThread = function(self, t) return 20 + (self:combatTalentSpellDamage(t, 10, 40)*getParadoxModifier(self, pm)) end,
 	action = function(self, t)
 		self:setEffect(self.EFF_GATHER_THE_THREADS, 5, {power=t.getThread(self, t)})
 		game:playSoundNear(self, "talents/spell_generic2")
