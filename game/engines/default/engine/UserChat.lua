@@ -211,7 +211,7 @@ function _M:resize(x, y, w, h, fontname, fontsize, color, bgcolor)
 				local item = self.dlist[i]
 				if item.dh and y >= item.dh - self.mouse.delegate_offset_y then citem = item break end
 			end
-			if citem then
+			if citem and citem.user and self.channels[self.cur_channel].users[citem.user] then
 				self.on_mouse(self.channels[self.cur_channel].users[citem.user], button, event)
 			end
 		end
