@@ -19,6 +19,7 @@
 
 require "engine.class"
 require "engine.ui.Base"
+local Slider = require "engine.ui.Slider"
 
 --- Module that handles message history in a mouse wheel scrollable zone
 module(..., package.seeall, class.inherit(engine.ui.Base))
@@ -62,15 +63,7 @@ function _M:resize(x, y, w, h)
 		self.bg_texture, self.bg_texture_w, self.bg_texture_h = self.bg_surface:glTexture()
 	end
 
-	local sb, sb_w, sb_h = self:getImage("ui/scrollbar.png")
-	local ssb, ssb_w, ssb_h = self:getImage("ui/scrollbar-sel.png")
-
-	self.scrollbar = { bar = {}, sel = {} }
-	self.scrollbar.sel.w, self.scrollbar.sel.h, self.scrollbar.sel.tex, self.scrollbar.sel.texw, self.scrollbar.sel.texh = ssb_w, ssb_h, ssb:glTexture()
-	local s = core.display.newSurface(sb_w, self.h)
-	s:erase(200,0,0)
-	for i = 0, self.h do s:merge(sb, 0, i) end
-	self.scrollbar.bar.w, self.scrollbar.bar.h, self.scrollbar.bar.tex, self.scrollbar.bar.texw, self.scrollbar.bar.texh = ssb_w, self.h, s:glTexture()
+	self.scrollbar = Slider.new{size=self.h - 20, max=1, inverse=true}
 end
 
 --- Appends text to the log
@@ -142,10 +135,9 @@ function _M:toScreen()
 	end
 
 	if true then
-		local pos = self.scroll * (self.h - self.fh) / (self.max - self.max_display + 1)
-
-		self.scrollbar.bar.tex:toScreenFull(self.display_x + self.w - self.scrollbar.bar.w, self.display_y, self.scrollbar.bar.w, self.scrollbar.bar.h, self.scrollbar.bar.texw, self.scrollbar.bar.texh)
-		self.scrollbar.sel.tex:toScreenFull(self.display_x + self.w - self.scrollbar.sel.w, self.display_y + self.h - self.scrollbar.sel.h - pos, self.scrollbar.sel.w, self.scrollbar.sel.h, self.scrollbar.sel.texw, self.scrollbar.sel.texh)
+		self.scrollbar.pos = self.scroll
+		self.scrollbar.max = self.max - self.max_display + 1
+		self.scrollbar:display(self.display_x + self.w - self.scrollbar.w, self.display_y)
 	end
 end
 

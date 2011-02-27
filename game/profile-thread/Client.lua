@@ -127,6 +127,7 @@ function _M:login()
 			self.auth = self.last_line:unserialize()
 			cprofile.pushEvent(string.format("e='Auth' ok=%q", self.last_line))
 			self:connectedPull()
+			if self.cur_char then self:orderCurrentCharacter(self.cur_char) end
 			return true
 		else
 			print("[PROFILE] could not log in")
@@ -184,7 +185,7 @@ end
 
 function _M:handleOrder(o)
 	o = o:unserialize()
-	if not self.sock and o.o ~= "Login" then return end -- Dont do stuff without a connection, unless we try to auth
+	if not self.sock and o.o ~= "Login" and o.o ~= "CurrentCharacter" then return end -- Dont do stuff without a connection, unless we try to auth
 	if self["order"..o.o] then self["order"..o.o](self, o) end
 end
 
@@ -291,6 +292,11 @@ function _M:orderSaveChardump(o)
 	cprofile.pushEvent("e='SaveChardump' ok=true")
 end
 
+function _M:orderCurrentCharacter(o)
+	self:command("CHAR", "CUR", table.serialize(o))
+	self.cur_char = o
+end
+
 function _M:orderChatTalk(o)
 	self:command("BRDC", o.channel, o.msg)
 	self:read("200")
@@ -309,6 +315,17 @@ function _M:orderChatUserInfo(o)
 		if not size or size < 1 then return end
 		local body = self:receive(size)
 		cprofile.pushEvent(string.format("e='Chat' se='UserInfo' user=%q data=%q", o.user, body))
+	end
+end
+
+function _M:orderChatChannelList(o)
+	self:command("CLST", o.channel)
+	if self:read("200") then
+		local _, _, size = self.last_line:find("^([0-9]+)")
+		size = tonumber(size)
+		if not size or size < 1 then return end
+		local body = self:receive(size)
+		cprofile.pushEvent(string.format("e='Chat' se='ChannelList' channel=%q data=%q", o.channel, body))
 	end
 end
 

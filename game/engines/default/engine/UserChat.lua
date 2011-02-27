@@ -21,6 +21,7 @@ require "engine.class"
 require "engine.ui.Base"
 local KeyBind = require "engine.KeyBind"
 local Mouse = require "engine.Mouse"
+local Slider = require "engine.ui.Slider"
 
 --- Module that handles multiplayer chats
 module(..., package.seeall, class.inherit(engine.ui.Base))
@@ -83,6 +84,13 @@ function _M:event(e)
 	elseif e.se == "UserInfo" then
 		local info = e.data:unserialize()
 		if not info then return end
+	elseif e.se == "ChannelList" then
+		local info = zlib.decompress(e.data):unserialize()
+		if not info then return end
+		for _, user in ipairs(info.users) do
+			print(" === ", user.name, user.cur_char and user.cur_char.title, user.cur_char and user.cur_char.valid, user.cur_char and user.cur_char.module)
+		end
+		self.channels_changed = true
 	end
 end
 
@@ -93,6 +101,7 @@ function _M:join(channel)
 	self.channels[channel] = self.channels[channel] or {users={}, log={}}
 	self.channels_changed = true
 	self.changed = true
+	self:updateChanList(true)
 end
 
 function _M:selectChannel(channel)
@@ -100,6 +109,7 @@ function _M:selectChannel(channel)
 	self.cur_channel = channel
 	self.channels_changed = true
 	self.changed = true
+	self:updateChanList(true)
 end
 
 function _M:talk(msg)
@@ -124,8 +134,17 @@ function _M:talkBox()
 	end)
 	d.key:addBind("EXIT", function() game:unregisterDialog(d) end)
 	game:registerDialog(d)
+
+	self:updateChanList()
 end
 
+function _M:updateChanList(force)
+	local time = core.game.getTime()
+	if force or not self.last_chan_update or self.last_chan_update + 60000 < time then
+		self.last_chan_update = time
+		core.profile.pushOrder(string.format("o='ChatChannelList' channel=%q", self.cur_channel))
+	end
+end
 
 ----------------------------------------------------------------
 -- UI Section
@@ -162,15 +181,7 @@ function _M:resize(x, y, w, h, fontname, fontsize, color, bgcolor)
 		self.bg_texture, self.bg_texture_w, self.bg_texture_h = self.bg_surface:glTexture()
 	end
 
-	local sb, sb_w, sb_h = self:getImage("ui/scrollbar.png")
-	local ssb, ssb_w, ssb_h = self:getImage("ui/scrollbar-sel.png")
-
-	self.scrollbar = { bar = {}, sel = {} }
-	self.scrollbar.sel.w, self.scrollbar.sel.h, self.scrollbar.sel.tex, self.scrollbar.sel.texw, self.scrollbar.sel.texh = ssb_w, ssb_h, ssb:glTexture()
-	local s = core.display.newSurface(sb_w, self.h)
-	s:erase(200,0,0)
-	for i = 0, self.h do s:merge(sb, 0, i) end
-	self.scrollbar.bar.w, self.scrollbar.bar.h, self.scrollbar.bar.tex, self.scrollbar.bar.texw, self.scrollbar.bar.texh = ssb_w, self.h, s:glTexture()
+	self.scrollbar = Slider.new{size=self.h - 20, max=1, inverse=true}
 
 	self.mouse = Mouse.new()
 	self.mouse.delegate_offset_x = self.display_x
@@ -188,6 +199,8 @@ function _M:resize(x, y, w, h, fontname, fontsize, color, bgcolor)
 			if last_ok then self:selectChannel(last_ok.name) end
 		end
 	end)
+
+	self.last_chan_update = 0
 end
 
 function _M:display()
@@ -262,10 +275,9 @@ function _M:toScreen()
 	end
 
 	if true then
-		local pos = self.scroll * (self.h - self.fh) / (self.max - self.max_display + 1)
-
-		self.scrollbar.bar.tex:toScreenFull(self.display_x + self.w - self.scrollbar.bar.w, self.display_y, self.scrollbar.bar.w, self.scrollbar.bar.h, self.scrollbar.bar.texw, self.scrollbar.bar.texh)
-		self.scrollbar.sel.tex:toScreenFull(self.display_x + self.w - self.scrollbar.sel.w, self.display_y + self.h - self.scrollbar.sel.h - pos, self.scrollbar.sel.w, self.scrollbar.sel.h, self.scrollbar.sel.texw, self.scrollbar.sel.texh)
+		self.scrollbar.pos = self.scroll
+		self.scrollbar.max = self.max - self.max_display + 1
+		self.scrollbar:display(self.display_x + self.w - self.scrollbar.w, self.display_y)
 	end
 end
 

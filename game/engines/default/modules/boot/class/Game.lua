@@ -64,6 +64,7 @@ function _M:init()
 	end
 
 	self:loaded()
+	profile:currentCharacter("Main Menu", "Main Menu")
 end
 
 function _M:loaded()

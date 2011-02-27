@@ -1376,6 +1376,7 @@ function _M:levelup()
 			self.easy_mode_lifes = (self.easy_mode_lifes or 0) + 1
 			game.logPlayer(self, "#AQUAMARINE#You have gained one more life (%d remaining).", self.easy_mode_lifes)
 		end
+		game:updateCurrentChar()
 	end
 end
 

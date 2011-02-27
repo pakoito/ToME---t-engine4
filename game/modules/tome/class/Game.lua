@@ -164,6 +164,7 @@ function _M:newGame()
 
 		-- Register the character online if possible
 		self.player:getUUID()
+		self:updateCurrentChar()
 	end
 
 	-- Load for quick birth
@@ -313,6 +314,7 @@ function _M:loaded()
 
 	if self.always_target then Map:setViewerFaction(self.player.faction) end
 	if self.player and config.settings.cheat then self.player.__cheated = true end
+	self:updateCurrentChar()
 end
 
 function _M:setupDisplayMode(reboot, mode)
@@ -382,6 +384,12 @@ end
 
 function _M:save()
 	return class.save(self, self:defaultSavedFields{difficulty=true, to_re_add_actors=true, party=true, _chronoworlds=true}, true)
+end
+
+function _M:updateCurrentChar()
+	if not self.party then return end
+	local player = self.party:findMember{main=true}
+	profile:currentCharacter(self.__mod_info.name, ("%s the level %d %s %s"):format(player.name, player.level, player.descriptor.subrace, player.descriptor.subclass))
 end
 
 function _M:getSaveDescription()

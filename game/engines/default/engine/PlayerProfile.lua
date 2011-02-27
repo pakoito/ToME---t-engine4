@@ -523,6 +523,16 @@ function _M:registerSaveChardump(module, uuid, title, tags, data)
 	print("[ONLINE PROFILE] saved character ", uuid)
 end
 
+function _M:currentCharacter(module, title)
+	if not self.auth then return end
+	core.profile.pushOrder(table.serialize{o="CurrentCharacter",
+		module=module,
+		title=title,
+		valid=self.hash_valid,
+	})
+	print("[ONLINE PROFILE] current character ", title)
+end
+
 function _M:newProfile(Login, Name, Password, Email)
 	print("[ONLINE PROFILE] profile options ", Login, Email, Name)
 
