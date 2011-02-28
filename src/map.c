@@ -303,7 +303,7 @@ static int map_objects_toscreen(lua_State *L)
 
 		int dx = x, dy = y;
 		int dz = moid;
-		vertices[0] = dx; vertices[1] = dy; vertices[3] = dz;
+		vertices[0] = dx; vertices[1] = dy; vertices[2] = dz;
 		vertices[3] = w + dx; vertices[4] = dy; vertices[5] = dz;
 		vertices[6] = w + dx; vertices[7] = h + dy; vertices[8] = dz;
 		vertices[9] = dx; vertices[10] = h + dy; vertices[11] = dz;
