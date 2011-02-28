@@ -118,7 +118,7 @@ function _M:mountProfile(online, module)
 
 	local path = engine.homepath.."/profiles/"..(online and "online" or "offline")
 	fs.mount(path, "/current-profile")
-	print("[PROFILE] mounted", online and "online" or "offline", "on /current-profile")
+	print("[PROFILE] mounted ", online and "online" or "offline", "on /current-profile")
 	fs.setWritePath(path)
 
 	return restore
@@ -126,7 +126,7 @@ end
 function _M:umountProfile(online, pop)
 	local path = engine.homepath.."/profiles/"..(online and "online" or "offline")
 	fs.umount(path)
-	print("[PROFILE] umounted", online and "online" or "offline", "from /current-profile")
+	print("[PROFILE] unmounted ", online and "online" or "offline", "from /current-profile")
 
 	if pop then fs.setWritePath(pop) end
 end
@@ -245,10 +245,10 @@ function _M:saveGenericProfile(name, data, nosync)
 
 	-- Check for readability
 	local f, err = loadstring(data)
-	if not f then print("[PROFILES] cannot save generic data ", name, data, "it does not parse:") print(err) return end
+	if not f then print("[PROFILE] cannot save generic data ", name, data, "it does not parse:") print(err) return end
 	setfenv(f, {})
 	local ok, err = pcall(f)
-	if not ok and err then print("[PROFILES] cannot save generic data", name, data, "it does not parse") print(err) return end
+	if not ok and err then print("[PROFILE] cannot save generic data", name, data, "it does not parse") print(err) return end
 
 	local pop = self:mountProfile(true)
 	local f = fs.open("/generic/"..name..".profile", "w")
@@ -268,16 +268,26 @@ function _M:saveModuleProfile(name, data, module, nosync)
 
 	-- Check for readability
 	local f, err = loadstring(data)
-	if not f then print("[PROFILES] cannot save module data ", name, data, "it does not parse:") print(err) return end
+	if not f then print("[PROFILE] cannot save module data ", name, data, "it does not parse:") print(err) return end
 	setfenv(f, {})
 	local ok, err = pcall(f)
-	if not ok and err then print("[PROFILES] cannot save module data", name, data, "it does not parse") print(err) return end
+	if not ok and err then print("[PROFILE] cannot save module data", name, data, "it does not parse") print(err) return end
 
 	local online = self:filterSaveData(name)
 	local pop = self:mountProfile(online, module)
-	local f = fs.open("/modules/"..module.."/"..name..".profile", "w")
-	f:write(data)
-	f:close()
+	local path = "current-profile/modules/"..module.."/"..name..".profile"
+	local f, msg = fs.open(path, "w")
+	print("[PROFILE] search path: ")
+	table.foreach(fs.getSearchPath(), print)
+	print("[PROFILE] path: ", path)
+	print("[PROFILE] real path: ", fs.getRealPath(path), "::", fs.exists(path) and "exists" or "does not exist")
+	print("[PROFILE] write path is: ", fs.getWritePath())
+	if f then
+		f:write(data)
+		f:close()
+	else
+		print("[PROFILE] physfs error:", msg)
+	end
 	self:umountProfile(online, pop)
 
 	if not nosync then self:setConfigs(module, name, data) end

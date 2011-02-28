@@ -158,6 +158,17 @@ newTalent{
 			summon_time = t.getSummonTime(self, t),
 		}
 
+	-- Add to the party
+	if self.player then
+		bear.remove_from_party_on_death = true
+		game.party:addMember(bear, {
+			control="no",
+			type="summon",
+			title="Summon",
+			orders = {target=true, leash=true, anchor=true, talents=true},
+		})
+	end
+
 		bear:resolve()
 		game.zone:addEntity(game.level, bear, "actor", x, y)
 

@@ -27,12 +27,13 @@ newAI("dumb_talented", function(self)
 	for tid, _ in pairs(self.talents) do
 		local t = self:getTalentFromId(tid)
 --		print(self.name, self.uid, "dumb ai talents can try use", t.name, tid, "::", t.mode, not self:isTalentCoolingDown(t), target_dist <= self:getTalentRange(t), self:preUseTalent(t, true), self:canProject({type="bolt"}, self.ai_target.actor.x, self.ai_target.actor.y))
+		-- For dumb AI assume we need range and LOS
+		-- No special check for bolts, etc.
+		local total_range = self:getTalentRange(t) + self:getTalentRadius(t)
+		local tg = {type=util.getval(t.direct_hit, self, t) and "hit" or "bolt", range=total_range}
 		if t.mode == "activated" and not t.no_npc_use and
-		   not self:isTalentCoolingDown(t) and
-		   target_dist <= self:getTalentRange(t)
-		   and self:preUseTalent(t, true, true) and
-		   self:canProject({type=util.getval(t.direct_hit, self, t) and "hit" or "bolt"}, self.ai_target.actor.x, self.ai_target.actor.y) and
-		   self:hasLOS(self.ai_target.actor.x, self.ai_target.actor.y)
+		   not self:isTalentCoolingDown(t) and self:preUseTalent(t, true, true) and
+		   (not self:getTalentRequiresTarget(t) or self:canProject(tg, self.ai_target.actor.x, self.ai_target.actor.y))
 		   then
 			avail[#avail+1] = tid
 			print(self.name, self.uid, "dumb ai talents can use", t.name, tid)

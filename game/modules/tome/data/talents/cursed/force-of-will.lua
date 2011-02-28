@@ -258,7 +258,7 @@ newTalent{
 			end,
 			nil, nil)
 
-		local _ _, x, y = self:canProject(tg, blastX, blastY)
+		local _ _, _, _, x, y = self:canProject(tg, blastX, blastY)
 		game.level.map:particleEmitter(x, y, tg.radius, "force_blast", {radius=tg.radius})
 		game:playSoundNear(self, "talents/fireflash")
 

@@ -64,7 +64,7 @@ function _M:init(t, no_default)
 	t.faction = t.faction or "players"
 
 	t.ai = t.ai or "tactical"
-	t.ai_state = t.ai_state or {talent_in=1, ai_move="move_astar", tactic_follow_leader=true}
+	t.ai_state = t.ai_state or {talent_in=1, ai_move="move_astar"}
 
 	if t.fixed_rating == nil then t.fixed_rating = true end
 

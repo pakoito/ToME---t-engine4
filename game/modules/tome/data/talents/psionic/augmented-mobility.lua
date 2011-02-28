@@ -38,18 +38,13 @@ newTalent{
 		local tg = {type="bolt", range=self:getTalentRange(t)}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		if not self:canProject(tg, x, y) then 
+		local _ _, x, y = self:canProject(tg, x, y)
+		local target = game.level.map(px, py, engine.Map.ACTOR)
+		if not target then
 			game.logPlayer(self, "The target is out of range")
 			return
 		end
-		self:project(tg, x, y, function(px, py)
-			local target = game.level.map(px, py, engine.Map.ACTOR)
-			if not target then return end
-			local nx, ny = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
-			if not nx then return end
-			target:move(nx, ny, true)
-
-		end)
+		target:pull(self.x, self.y, tg.range)
 		game:playSoundNear(self, "talents/arcane")
 
 		return true
@@ -104,16 +99,8 @@ newTalent{
 		local tg = {default_target=self, type="ball", nolock=true, pass_terrain=false, nowarning=true, range=self:getTalentRange(t), radius=0, requires_knowledge=false}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		-- Target code does not restrict the target coordinates to the range, it lets the project function do it
-		-- but we cant ...
-		local _ _, x, y = self:canProject(tg, x, y)
-		if self:hasLOS(x, y) and not game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") and not game.level.map:checkEntity(x, y, Map.ACTOR, "block_move") then
-			--self:teleportRandom(x, y, 0)
-			self:move(x, y, true)
-		else
-			game.logSeen(self, "You can't move there.")
-			return nil
-		end
+		local _ _, _, _, x, y = self:canProject(tg, x, y)
+		self:move(x, y, true)
 		return true
 	end,
 	info = function(self, t)

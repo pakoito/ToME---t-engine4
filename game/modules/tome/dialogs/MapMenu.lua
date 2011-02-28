@@ -106,7 +106,21 @@ function _M:generateList()
 		local tals = {}
 		for tid, _ in pairs(player.talents) do
 			local t = player:getTalentFromId(tid)
-			if t.mode ~= "passive" and player:preUseTalent(t, true, true) and not player:isTalentCoolingDown(t) then
+			local t_avail = false
+			local tg = player:getTalentTarget(t)
+			local default_tg = {type=util.getval(t.direct_hit, player, t) and "hit" or "bolt"}
+			local total_dist = (player:getTalentRange(t) + player:getTalentRadius(t))
+			if t.mode == "activated" and not player:isTalentCoolingDown(t) and
+			  player:preUseTalent(t, true, true) and
+			  (not player:getTalentRequiresTarget(t) or
+			   player:canProject(tg or default_tg, self.tmx, self.tmy))
+			  then
+			   	t_avail = true
+			elseif t.mode == "sustained" and not t.no_npc_use and 
+			  not player:isTalentCoolingDown(t) and player:preUseTalent(t, true, true) then
+				t_avail = true
+			end
+			if t_avail then
 				local rt = util.getval(t.requires_target, player, t)
 				if self.on_player and not rt then
 					tals[#tals+1] = {name=t.name, talent=t, action="talent", color=colors.simple(colors.GOLD)}

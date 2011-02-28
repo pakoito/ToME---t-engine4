@@ -106,7 +106,7 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		local _ _, x, y = self:canProject(tg, x, y)
+		local _ _, _, _, x, y = self:canProject(tg, x, y)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			x, y, duration,
@@ -137,7 +137,7 @@ newTalent{
 	equilibrium = 12,
 	cooldown = 12,
 	message = "@Source@ breathes fire!",
-	tactical = { ATTACKAREA = 2 },
+	tactical = { ATTACKAREA = {[DamageType.FIRE] = 2} },
 	range = 0,
 	radius = function(self, t) return 4 + self:getTalentLevelRaw(t) end,
 	direct_hit = true,

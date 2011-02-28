@@ -48,6 +48,7 @@ function _M:addMember(actor, def)
 	def.index = #self.m_list
 
 	actor.ai_state = actor.ai_state or {}
+	actor.ai_state.tactic_leash_anchor = actor.ai_state.tactic_leash_anchor or game.player
 	actor.ai_state.tactic_leash = actor.ai_state.tactic_leash or 10
 
 	actor.addEntityOrder = function(self, level)
@@ -252,13 +253,34 @@ function _M:giveOrder(actor, order)
 	if order == "leash" then
 		game:registerDialog(GetQuantity.new("Set action radius: "..actor.name, "Set the maximun distance this creature can go from the party master", actor.ai_state.tactic_leash, actor.ai_state.tactic_leash_max or 100, function(qty)
 			actor.ai_state.tactic_leash = util.bound(qty, 1, actor.ai_state.tactic_leash_max or 100)
-			game.logPlayer(game.player, "%s maximun action radius set to %d.", actor.name:capitalize(), actor.ai_state.tactic_leash)
+			game.logPlayer(game.player, "%s maximum action radius set to %d.", actor.name:capitalize(), actor.ai_state.tactic_leash)
 		end), 1)
-	elseif order == "follow" then
-		Dialog:yesnoPopup("Follow leader: "..actor.name, actor.name:capitalize().." will move to follow party leader when nothing else to do?", function(ret)
-			actor.ai_state.tactic_follow_leader = ret
-			game.logPlayer(game.player, "%s will %sfollow the leader.", actor.name:capitalize(), ret and "" or "not ")
+	elseif order == "anchor" then
+		local co = coroutine.create(function()
+			local x, y, act = game.player:getTarget({type="hit", range=10})
+			local anchor
+			if x and y then
+				if act then
+					anchor = act
+				else
+					anchor = {x=x, y=y, name="that location"}
+				end
+				actor.ai_state.tactic_leash_anchor = anchor
+				game.logPlayer(game.player, "%s will stay near %s.", actor.name:capitalize(), anchor.name)
+			end
 		end)
+		local ok, err = coroutine.resume(co)
+		if not ok and err then print(debug.traceback(co)) error(err) end
+	elseif order == "target" then
+		local co = coroutine.create(function()
+			local x, y, act = game.player:getTarget({type="hit", range=10})
+			if act then
+				actor:setTarget(act)
+				game.logPlayer(game.player, "%s targets %s.", actor.name:capitalize(), act.name)
+			end
+		end)
+		local ok, err = coroutine.resume(co)
+		if not ok and err then print(debug.traceback(co)) error(err) end
 	elseif order == "behavior" then
 		game:registerDialog(require("mod.dialogs.orders."..order:capitalize()).new(actor, def))
 	elseif order == "talents" then

@@ -27,14 +27,7 @@ newAI("summoned", function(self)
 		end
 	end
 
-	-- Do the normal AI, otherwise follows summoner
-	if self.ai_target.actor == self.summoner then self.ai_target.actor = nil end
 	if self:runAI(self.ai_state.ai_target or "target_simple") then
 		return self:runAI(self.ai_real)
-	else
-		self.ai_target.actor = self.summoner
-		local ret = self:runAI(self.ai_real)
-		self.ai_target.actor = nil
-		return ret
 	end
 end)

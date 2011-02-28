@@ -37,7 +37,6 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.PHYSICAL, self:spellCrit(self:combatTalentSpellDamage(t, 20, 200)), {type="bones"})
-		local _ _, x, y = self:canProject(tg, x, y)
 		game:playSoundNear(self, "talents/arcane")
 		return true
 	end,

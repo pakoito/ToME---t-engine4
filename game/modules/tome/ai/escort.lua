@@ -45,6 +45,10 @@ newAI("escort_quest", function(self)
 		end
 		return true
 	end
+	if not self.energy.used then
+		self:runAI("move_escort")
+		return true
+	end
 end)
 
 newAI("move_escort", function(self)

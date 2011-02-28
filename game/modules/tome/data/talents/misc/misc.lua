@@ -43,7 +43,9 @@ newTalent{
 	tactical = { ATTACK = 1 },
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
-		local x, y, target = self:getTarget(tg)
+		local x, y = self:getTarget(tg)
+		local _ _, x, y = self:canProject(tg, x, y)
+		local target = game.level.map(x, y, engine.Map.ACTOR)
 		if not target then return end
 
 		self:attackTarget(target)

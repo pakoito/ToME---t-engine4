@@ -1,4 +1,44 @@
--- Randomly use talents
+
+-- Internal functions
+local checkLOS = function(sx, sy, tx, ty)
+	what = what or "block_sight"
+	local l = line.new(sx, sy, tx, ty)
+	local lx, ly = l()
+	while lx and ly do
+		if game.level.map:checkAllEntities(lx, ly, what) then break end
+
+		lx, ly = l()
+	end
+	-- Ok if we are at the end reset lx and ly for the next code
+	if not lx and not ly then lx, ly = x, y end
+
+	if lx == x and ly == y then return true, lx, ly end
+	return false, lx, ly
+end
+
+local canFleeDmapKeepLos = function(self)
+	if self.ai_target.actor then
+		local act = self.ai_target.actor
+		local c = act:distanceMap(self.x, self.y)
+		if not c then return end
+		local dir
+		for i = 1, 9 do
+			local sx, sy = util.coordAddDir(self.x, self.y, i)
+			-- Check LOS first
+			if checkLOS(sx, sy, act.x, act.y) then
+				local cd = act:distanceMap(sx, sy)
+	--			print("looking for dmap", dir, i, "::", c, cd)
+				if not cd or (c and (cd < c and self:canMove(sx, sy))) then c = cd; dir = i end
+			end
+		end
+		if dir then
+			return true, self.x+dir_to_coord[dir][1], self.y+dir_to_coord[dir][2]
+		else
+			return false
+		end
+	end
+end
+
 newAI("use_tactical", function(self)
 	-- Find available talents
 	print("============================== TACTICAL AI", self.name)
@@ -16,15 +56,11 @@ newAI("use_tactical", function(self)
 		if t.tactical then
 			local tg = self:getTalentTarget(t)
 			local default_tg = {type=util.getval(t.direct_hit, self, t) and "hit" or "bolt"}
+			-- Only assume range... some talents may no require LOS, etc
+			local within_range = target_dist and target_dist <= (self:getTalentRange(t) + self:getTalentRadius(t))
 			if t.mode == "activated" and not t.no_npc_use and
-			   not self:isTalentCoolingDown(t) and
-			   self:preUseTalent(t, true, true) and
-			   (not self:getTalentRequiresTarget(t) or (
-				 hate and
-				 target_dist <= (self:getTalentRange(t) + self:getTalentRadius(t)) and
-				 self:canProject(tg or default_tg, self.ai_target.actor.x, self.ai_target.actor.y) and
-				 has_los
-			   ))
+			   not self:isTalentCoolingDown(t) and self:preUseTalent(t, true, true) and
+			   (not self:getTalentRequiresTarget(t) or within_range)
 			   then
 			   	t_avail = true
 			elseif t.mode == "sustained" and not t.no_npc_use and not self:isTalentCoolingDown(t) and
@@ -35,25 +71,24 @@ newAI("use_tactical", function(self)
 			end
 			if t_avail then
 				-- Project the talent if possible, counting foes and allies hit
-				local nb_foes_hit, nb_allies_hit, nb_self_hit
+				local foes_hit = {}
+				local allies_hit = {}
+				local self_hit = {}
+				local typ = engine.Target:getType(tg or default_tg)
 				if tg or self:getTalentRequiresTarget(t) then
-					local typ = engine.Target:getType(tg or default_tg)
 					local target_actor = self.ai_target.actor or self
-					nb_foes_hit = 0
-					nb_allies_hit = 0
-					nb_self_hit = 0
 					self:project(typ, target_actor.x, target_actor.y, function(px, py)
 						local act = game.level.map(px, py, engine.Map.ACTOR)
 						if act and not act.dead then
 							if self:reactionToward(act) < 0 then
 								print("[DEBUG] hit a foe!")
-								nb_foes_hit = nb_foes_hit + 1
+								foes_hit[#foes_hit+1] = act
 							elseif (typ.selffire) and (act == self) then
 								print("[DEBUG] hit self!")
-								nb_self_hit = nb_self_hit + (type(typ.selffire) == "number" and typ.selffire / 100 or 1)
+								self_hit[#self_hit+1] = act
 							elseif typ.friendlyfire then
 								print("[DEBUG] hit an ally!")
-								nb_allies_hit = nb_allies_hit + (type(typ.friendlyfire) == "number" and typ.friendlyfire / 100 or 1)
+								allies_hit[#allies_hit+1] = act
 							end
 						end
 					end)
@@ -61,8 +96,39 @@ newAI("use_tactical", function(self)
 				-- Evaluate the tactical weights and weight functions
 				for tact, val in pairs(t.tactical) do
 					if type(val) == "function" then val = val(self, t, self.ai_target.actor) end
+					-- Handle damage_types and resistances
+					local nb_foes_hit, nb_allies_hit, nb_self_hit = 0, 0, 0
+					if type(val) == "table" then
+						for damtype, damweight in pairs(val) do
+							local pen = 0
+							if self.resists_pen then pen = (self.resists_pen.all or 0) + (self.resists_pen[damtype] or 0) end
+							for i, act in ipairs(foes_hit) do
+								local res = math.min((act.resists.all or 0) + (act.resists[damtype] or 0), (act.resists_cap.all or 0) + (act.resists_cap[damtype] or 0))
+								res = res * (100 - pen) / 100
+								nb_foes_hit = nb_foes_hit + damweight * (100 - res) / 100
+							end
+							for i, act in ipairs(self_hit) do
+								local res = math.min((act.resists.all or 0) + (act.resists[damtype] or 0), (act.resists_cap.all or 0) + (act.resists_cap[damtype] or 0))
+								res = res * (100 - pen) / 100
+								nb_self_hit = nb_self_hit + damweight * (100 - res) / 100 * (type(typ.selffire) == "number" and typ.selffire / 100 or 1)
+							end
+							for i, act in ipairs(allies_hit) do
+								local res = math.min((act.resists.all or 0) + (act.resists[damtype] or 0), (act.resists_cap.all or 0) + (act.resists_cap[damtype] or 0))
+								res = res * (100 - pen) / 100
+								nb_allies_hit = nb_allies_hit + damweight * (100 - res) / 100 * (type(typ.friendlyfire) == "number" and typ.friendlyfire / 100 or 1)
+							end
+						end
+						val = 1
+					-- Or assume no resistances
+					else
+						nb_foes_hit = #foes_hit
+						nb_self_hit = #self_hit * (type(typ.selffire) == "number" and typ.selffire / 100 or 1)
+						nb_allies_hit = #allies_hit * (type(typ.friendlyfire) == "number" and typ.friendlyfire / 100 or 1)
+					end
+					-- Use the player set ai_talents weights
 					val = val * (self.ai_talents and self.ai_talents[t.id] or 1) * (1 + lvl / 5)
-					if nb_foes_hit and (nb_foes_hit > 0 or nb_allies_hit > 0 or nb_self_hit > 0) then
+					-- Update the weight by the dummy projection data
+					if nb_foes_hit > 0 or nb_allies_hit > 0 or nb_self_hit > 0 then
 						val = val * (nb_foes_hit - ally_compassion * nb_allies_hit - self_compassion * nb_self_hit)
 					end
 					-- Only take values greater than 0... allows the ai_talents to turn talents off
@@ -171,14 +237,13 @@ newAI("use_tactical", function(self)
 			end
 		end
 
-
 		-- Need closing-in
 		if avail.closein and target_dist and target_dist > 2 and self.ai_tactic.closein then
 			want.closein = 1 + target_dist / 2
 		end
 
-		-- Need escaping
-		if avail.escape and target_dist then
+		-- Need escaping... allow escaping even if there isn't a talent so we can flee
+		if target_dist and (avail.escape or canFleeDmapKeepLos(self)) then
 			want.escape = need_heal / 2
 			if self.ai_tactic.safe_range and target_dist < self.ai_tactic.safe_range then want.escape = want.escape + self.ai_tactic.safe_range / 2 end
 		end
@@ -236,6 +301,7 @@ newAI("use_tactical", function(self)
 		local res = {}
 		for k, v in pairs(want) do
 			if v > 0 then
+				-- Randomize and multiply by the ai_tactic weights (if any)
 				v = (v + v + rng.float(0, 0.9)) * (self.ai_tactic[k] or 1)
 				if v > 0 then
 					print(" * "..k, v)
@@ -243,23 +309,22 @@ newAI("use_tactical", function(self)
 				end
 			end
 		end
+		if #res == 0 then return end
 		table.sort(res, function(a,b) return a[2] > b[2] end)
-		res = res[1]
-		if not res then return end
-		avail = avail[res[1]]
-		table.sort(avail, function(a,b) return a.val > b.val end)
-
-		if avail[1] then
-			local tid = avail[1].tid
-			print("Tactical choice:", res[1], tid)
+		local selected_talents = avail[res[1][1]]
+		if selected_talents then
+			table.sort(selected_talents, function(a,b) return a.val > b.val end)
+			local tid = selected_talents[1].tid
+			print("Tactical choice:", res[1][1], tid)
 			self:useTalent(tid)
 			return true
+		else
+			return nil, res[1][1]
 		end
 	end
 end)
 
 newAI("tactical", function(self)
---	if self.debugme then require "remdebug.engine" remdebug.engine.start() end
 	local targeted = self:runAI(self.ai_state.ai_target or "target_simple")
 
 	-- Keep your distance
@@ -273,9 +338,14 @@ newAI("tactical", function(self)
 		end
 	end
 
+	local used_talent, want
 	-- One in "talent_in" chance of using a talent
 	if (not self.ai_state.no_talents or self.ai_state.no_talents == 0) and rng.chance(self.ai_state.talent_in or 2) then
-		self:runAI("use_tactical")
+		used_talent, want = self:runAI("use_tactical")
+	end
+
+	if want == "escape" then
+		special_move = "flee_dmap_keep_los"
 	end
 
 	if targeted and not self.energy.used then
@@ -288,42 +358,9 @@ newAI("tactical", function(self)
 	return false
 end)
 
-local checkLOS = function(sx, sy, tx, ty)
-	what = what or "block_sight"
-	local l = line.new(sx, sy, tx, ty)
-	local lx, ly = l()
-	while lx and ly do
-		if game.level.map:checkAllEntities(lx, ly, what) then break end
-
-		lx, ly = l()
-	end
-	-- Ok if we are at the end reset lx and ly for the next code
-	if not lx and not ly then lx, ly = x, y end
-
-	if lx == x and ly == y then return true, lx, ly end
-	return false, lx, ly
-end
-
 newAI("flee_dmap_keep_los", function(self)
-	if self.ai_target.actor then
-		local a = self.ai_target.actor
-
-		local c = a:distanceMap(self.x, self.y)
-		if not c then return end
-		local dir = 5
-		for i = 1, 9 do
-			local sx, sy = util.coordAddDir(self.x, self.y, i)
-			-- Check LOS first
-			if checkLOS(sx, sy, a.x, a.y) then
-				local cd = a:distanceMap(sx, sy)
-	--			print("looking for dmap", dir, i, "::", c, cd)
-				if not cd or (c and (cd < c and self:canMove(sx, sy))) then c = cd; dir = i end
-			end
-		end
-
-		-- Check if we are in melee
-		-- EVENTUALLY
-
-		return self:moveDirection(util.coordAddDir(self.x, self.y, dir))
+	local can_flee, fx, fy = canFleeDmapKeepLos(self)
+	if can_flee then
+		return self:move(fx, fy)
 	end
 end)

@@ -26,10 +26,11 @@ module(..., package.seeall, class.inherit(engine.ui.Dialog))
 local orders = {
 	escort_rest = {-100, function(actor) return "Wait a few turns" end},
 	escort_portal = {-99, function(actor) return "Where is the portal?" end},
-	leash = {1, function(actor) return ("Set maximum wander distance [current: %d]"):format(actor.ai_state.tactic_leash) end},
+	target = {1, function(actor) return ("Set the target [current: %s]"):format(actor.ai_target.actor and actor.ai_target.actor.name or "none") end},
 	behavior = {2, function(actor) return ("Set behavior [current: %s]"):format(actor.ai_tactic.type or "default") end},
-	follow = {3, function(actor) return ("Follow party leader [current: %s]"):format(actor.ai_state.tactic_follow_leader and "yes" or "no") end},
-	talents = {4, function(actor) return ("Define tactical talents usage") end},
+	anchor = {3, function(actor) return ("Set the leash anchor [current: %s]"):format(actor.ai_state.tactic_leash_anchor and actor.ai_state.tactic_leash_anchor.name or "none") end},
+	leash = {4, function(actor) return ("Set the leash distance [current: %d]"):format(actor.ai_state.tactic_leash) end},
+	talents = {5, function(actor) return ("Define tactical talents usage") end},
 }
 
 function _M:init(actor, def)

@@ -52,7 +52,7 @@ local possible_types = {
 			name = "%s, the lost warrior",
 			desc = [[He looks tired and wounded.]],
 			autolevel = "warrior",
-			ai = "summoned", ai_real = "escort_quest", ai_state = { talent_in=4, },
+			ai = "escort_quest", ai_state = { talent_in=4, },
 			stats = { str=18, dex=13, mag=5, con=15 },
 
 			body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
@@ -79,7 +79,7 @@ local possible_types = {
 			display = "@", color=colors.LIGHT_BLUE,
 			desc = [[She looks tired and wounded.]],
 			autolevel = "caster",
-			ai = "summoned", ai_real = "escort_quest", ai_state = { talent_in=4, },
+			ai = "escort_quest", ai_state = { talent_in=4, },
 			stats = { str=8, dex=7, mag=18, con=12 },
 
 			body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
@@ -105,7 +105,7 @@ local possible_types = {
 			display = "@", color=colors.BLUE,
 			desc = [[He looks tired and wounded.]],
 			autolevel = "rogue",
-			ai = "summoned", ai_real = "escort_quest", ai_state = { talent_in=4, },
+			ai = "escort_quest", ai_state = { talent_in=4, },
 			stats = { str=8, dex=7, mag=18, con=12 },
 
 			body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
@@ -132,7 +132,7 @@ local possible_types = {
 			display = "@", color=colors.AQUAMARINE,
 			desc = [[He looks tired and wounded.]],
 			autolevel = "rogue",
-			ai = "summoned", ai_real = "escort_quest", ai_state = { talent_in=4, },
+			ai = "escort_quest", ai_state = { talent_in=4, },
 			stats = { str=8, dex=7, mag=18, con=12 },
 
 			body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
@@ -158,7 +158,7 @@ local possible_types = {
 			display = "@", color=colors.GOLD,
 			desc = [[She looks tired and wounded.]],
 			autolevel = "warriormage",
-			ai = "summoned", ai_real = "escort_quest", ai_state = { talent_in=4, },
+			ai = "escort_quest", ai_state = { talent_in=4, },
 			stats = { str=18, dex=7, mag=18, con=12 },
 
 			body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
@@ -185,7 +185,7 @@ local possible_types = {
 			display = "@", color=colors.YELLOW,
 			desc = [[She looks tired and wounded.]],
 			autolevel = "caster",
-			ai = "summoned", ai_real = "escort_quest", ai_state = { talent_in=4, },
+			ai = "escort_quest", ai_state = { talent_in=4, },
 			stats = { str=8, dex=7, mag=18, con=12 },
 
 			body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
@@ -212,7 +212,7 @@ local possible_types = {
 			display = "@", color=colors.LIGHT_GREEN,
 			desc = [[She looks tired and wounded.]],
 			autolevel = "wildcaster",
-			ai = "summoned", ai_real = "escort_quest", ai_state = { talent_in=4, },
+			ai = "escort_quest", ai_state = { talent_in=4, },
 			stats = { str=8, dex=7, mag=18, con=12 },
 
 			body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },

@@ -87,10 +87,14 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
+		local _ _, x, y = self:canProject(tg, x, y)
+		if not self:canBe("teleport") or game.level.map.attrs(x, y, "no_teleport") then
+			game.logSeen(self, "The spell fizzles!")
+			return true
+		end
 		if self:hasLOS(x, y) and not game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then
 			local dam = self:spellCrit(t.getDamage(self, t))
 			self:project(tg, x, y, DamageType.TEMPORAL, dam)
-			local _ _, x, y = self:canProject(tg, x, y)
 			game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "temporal_lightning", {tx=x-self.x, ty=y-self.y})
 			game:playSoundNear(self, "talents/lightning")
 			local tx, ty = util.findFreeGrid(x, y, 5, true, {[Map.ACTOR]=true})

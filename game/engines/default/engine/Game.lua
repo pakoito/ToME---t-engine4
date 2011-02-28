@@ -304,12 +304,12 @@ end
 function _M:saveSettings(file, data)
 	local restore = fs.getWritePath()
 	fs.setWritePath(engine.homepath)
-	local f = fs.open("/settings/"..file..".cfg", "w")
+	local f, msg = fs.open("/settings/"..file..".cfg", "w")
 	if f then
 		f:write(data)
 		f:close()
 	else
-		print("WARNING: could not save settings in ", file, "::", data)
+		print("WARNING: could not save settings in ", file, "::", data, "::", msg)
 	end
 	if restore then fs.setWritePath(restore) end
 end

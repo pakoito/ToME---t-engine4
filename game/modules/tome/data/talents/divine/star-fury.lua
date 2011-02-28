@@ -75,7 +75,7 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		local _ _, x, y = self:canProject(tg, x, y)
+		local _ _, _, _, x, y = self:canProject(tg, x, y)
 		local grids = self:project(tg, x, y, DamageType.DARKNESS, self:spellCrit(t.getDamage(self, t)), {type="shadow"})
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
@@ -164,7 +164,7 @@ newTalent{
 		if not x or not y then return nil end
 		local grids = self:project(tg, x, y, DamageType.DARKSTUN, self:spellCrit(t.getDamage(self, t)))
 
-		local _ _, x, y = self:canProject(tg, x, y)
+		local _ _, _, _, x, y = self:canProject(tg, x, y)
 		game.level.map:particleEmitter(x, y, tg.radius, "shadow_flash", {radius=tg.radius, grids=grids, tx=x, ty=y})
 		game:playSoundNear(self, "talents/fireflash")
 		return true

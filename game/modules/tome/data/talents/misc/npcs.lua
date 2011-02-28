@@ -35,6 +35,7 @@ newTalent{
 	type = {"other/other", 1},
 	cooldown = 3,
 	range = 10,
+	requires_target = true,
 	tactical = { ATTACK = 3 },
 	action = function(self, t)
 		if not self.can_multiply or self.can_multiply <= 0 then print("no more multiply")  return nil end

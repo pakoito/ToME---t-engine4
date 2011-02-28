@@ -2063,6 +2063,9 @@ static int lua_fs_open(lua_State *L)
 	{
 		lua_pop(L, 1);
 		lua_pushnil(L);
+		const char *error = PHYSFS_getLastError();
+		lua_pushstring(L, error);
+		return 2;
 	}
 	return 1;
 }
@@ -2232,8 +2235,16 @@ static int lua_fs_umount(lua_State *L)
 {
 	const char *src = luaL_checkstring(L, 1);
 
-	PHYSFS_removeFromSearchPath(src);
-	return 0;
+	int err = PHYSFS_removeFromSearchPath(src);
+	if (err == 0)
+	{
+		lua_pushnil(L);
+		lua_pushstring(L, PHYSFS_getLastError());
+		return 2;
+	}
+	lua_pushboolean(L, TRUE);
+	
+	return 1;	
 }
 
 static int lua_fs_get_real_path(lua_State *L)
@@ -2248,8 +2259,15 @@ static int lua_fs_get_real_path(lua_State *L)
 static int lua_fs_set_write_dir(lua_State *L)
 {
 	const char *src = luaL_checkstring(L, 1);
-	PHYSFS_setWriteDir(src);
-	return 0;
+	const int error = PHYSFS_setWriteDir(src);
+	if (error == 0)
+	{
+		lua_pushnil(L);
+		lua_pushstring(L, PHYSFS_getLastError());
+		return 2;
+	}
+	lua_pushboolean(L, TRUE);
+	return 1;
 }
 
 static int lua_fs_rename(lua_State *L)

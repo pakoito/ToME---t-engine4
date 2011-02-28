@@ -145,7 +145,7 @@ function _M:newGame()
 		type="player",
 		title="Main character",
 		main=true,
-		orders = {follow=true, behavior=true, leash=true, talents=true},
+		orders = {target=true, anchor=true, behavior=true, leash=true, talents=true},
 	})
 	self.party:setPlayer(player)
 --	self:setupDisplayMode()
@@ -538,6 +538,9 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 		for act, _ in pairs(self.to_re_add_actors) do
 			self.level:addEntity(act)
 			act:setTarget(nil)
+			if act.ai_state and act.ai_state.tactic_leash_anchor then
+				act.ai_state.tactic_leash_anchor = game.player
+			end
 		end
 		self.to_re_add_actors = nil
 	end

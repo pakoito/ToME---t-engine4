@@ -45,7 +45,6 @@ on_grant = function(self, who)
 
 	game.party:addMember(norgan, {
 		control="order", type="squadmate", title="Norgan",
-		orders = {leash=true, follow=true}, -- behavior=true},
+		orders = {leash=true, anchor=true}, -- behavior=true},
 	})
-	norgan.ai_state.tactic_follow_leader = true
 end

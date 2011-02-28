@@ -39,7 +39,7 @@ newTalent{
 		if not x or not y then return nil end
 		x, y = checkBackfire(self, x, y)
 		self:project(tg, x, y, DamageType.MATTER, self:spellCrit(t.getDamage(self, t)))
-		local _ _, x, y = self:canProject(tg, x, y)
+		local _ _, _, _, x, y = self:canProject(tg, x, y)
 		game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "matter_beam", {tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/arcane")
 		return true

@@ -106,7 +106,7 @@ newInscription{
 		local effs = {}
 		local known = false
 
-		-- Go through all spell effects
+		-- Go through all temporary effects
 		for eff_id, p in pairs(target.tmp) do
 			local e = target.tempeffect_def[eff_id]
 			if data.what[e.type] and e.status == "detrimental" then
@@ -459,9 +459,12 @@ newInscription{
 		local data = self:getInscriptionData(t.short_name)
 		return data.range
 	end,
+	target = function(self, t)
+		return {type="beam", range=self:getTalentRange(t), talent=t}
+	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.FIREBURN, {dur=5, initial=0, dam=data.power + data.inc_stat})
@@ -491,9 +494,12 @@ newInscription{
 		local data = self:getInscriptionData(t.short_name)
 		return data.range
 	end,
+	target = function(self, t)
+		return {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_ice", trail="icetrail"}}
+	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_ice", trail="icetrail"}}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:projectile(tg, x, y, DamageType.ICE, data.power + data.inc_stat, {type="freeze"})
@@ -637,7 +643,7 @@ newInscription{
 		if target and not target.player then
 			local hit = self:checkHit(self:combatSpellpower(), target:combatSpellResist() + (target:attr("continuum_destabilization") or 0))
 			if not hit then
-				game.logSeen(target, "The spell fizzles!")
+				game.logSeen(target, "%s resists!", target.name:capitalize())
 				return true
 			end
 		else

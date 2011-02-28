@@ -65,7 +65,9 @@ local function makeGolem()
 		hotkey_page = 1,
 		move_others = true,
 
-		ai = "summoned", ai_real = "tactical", ai_state = { talent_in=1, tactic_follow_leader = true, ai_move="move_astar", ally_compassion=10 },
+		ai = "tactical",
+		ai_state = { talent_in=1, ai_move="move_astar", ally_compassion=10 },
+		ai_tactic = resolvers.tactic"tank",
 		energy = { mod=1 },
 		stats = { str=14, dex=12, mag=12, con=12 },
 
@@ -137,7 +139,7 @@ newTalent{
 			self.alchemy_golem = game.zone:finishEntity(game.level, "actor", makeGolem())
 			game.party:addMember(self.alchemy_golem, {
 				control="full", type="golem", title="Golem",
-				orders = {leash=true, follow=true, talents=true}, -- behavior=true},
+				orders = {target=true, leash=true, anchor=true, talents=true, behavior=true},
 			})
 			if not self.alchemy_golem then return end
 			self.alchemy_golem.faction = self.faction
@@ -206,6 +208,7 @@ newTalent{
 			end
 			game.zone:addEntity(game.level, self.alchemy_golem, "actor", x, y)
 			self.alchemy_golem:setTarget(nil)
+			self.alchemy_golem.ai_state.tactic_leash_anchor = self
 			self.alchemy_golem:removeAllEffects()
 		end
 

@@ -18,26 +18,35 @@
 -- darkgod@te4.org
 
 newAI("party_member", function(self)
-	local master = game.player
+	local anchor = self.ai_state.tactic_leash_anchor
 
-	-- Stay close to the party master
-	if math.floor(core.fov.distance(self.x, self.y, master.x, master.y)) > self.ai_state.tactic_leash then
-		self:setTarget(master)
-		print("[PARTY AI] leashing to master", self.name)
-		return self:runAI(self.ai_state.ai_move or "move_simple")
+	-- Stay close to the leash anchor
+	if anchor and self.ai_state.tactic_leash then
+		local leash_dist = math.floor(core.fov.distance(self.x, self.y, anchor.x, anchor.y))
+		if self.ai_state.tactic_leash < leash_dist then
+			print("[PARTY AI] leashing to anchor", self.name)
+			return self:runAI("move_anchor")
+		end
 	end
-
+	
 	-- Unselect friendly targets
 	if self.ai_target.actor and self:reactionToward(self.ai_target.actor) >= 0 then self:setTarget(nil) end
 
 	-- Run normal AI
 	local ret = self:runAI(self.ai_state.ai_party)
 
-	if not ret and self.ai_state.tactic_follow_leader then
-		self:setTarget(master)
-		print("[PARTY AI] following master", self.name)
-		return self:runAI(self.ai_state.ai_move or "move_simple")
+	if not ret and anchor and not self.energy.used then
+		print("[PARTY AI] moving towards anchor", self.name)
+		return self:runAI("move_anchor")
 	else
 		return ret
+	end
+end)
+
+newAI("move_anchor", function(self)
+	local anchor = self.ai_state.tactic_leash_anchor
+	if anchor then
+		local tx, ty = anchor.x, anchor.y
+		return self:moveDirection(tx, ty)
 	end
 end)

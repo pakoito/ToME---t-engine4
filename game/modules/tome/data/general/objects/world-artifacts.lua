@@ -685,6 +685,17 @@ newEntity{
 			spider.summoner = who
 			spider.summon_time = 10
 
+			-- Add to the party
+			if self.player then
+				spider.remove_from_party_on_death = true
+				game.party:addMember(spider, {
+					control="no",
+					type="summon",
+					title="Summon",
+					orders = {target=true, leash=true, anchor=true, talents=true},
+				})
+			end
+
 			game.zone:addEntity(game.level, spider, "actor", x, y)
 			game.level.map:particleEmitter(x, y, 1, "slime")
 

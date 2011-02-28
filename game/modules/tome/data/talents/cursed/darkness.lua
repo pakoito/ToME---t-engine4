@@ -287,7 +287,7 @@ newTalent{
 		local tg = {type="ball", nolock=true, pass_terrain=false, nowarning=true, friendly_fire=true, default_target=self, range=range, radius=radius, talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		local _ _, x, y = self:canProject(tg, x, y)
+		local _ _, _, _, x, y = self:canProject(tg, x, y)
 
 		-- get locations in line of movement from center
 		local locations = {}
@@ -399,7 +399,6 @@ newTalent{
 			end,
 			nil, nil)
 
-		local _ _, x, y = self:canProject(tg, x, y)
 		game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "dark_torrent", {tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/arcane")
 		return true

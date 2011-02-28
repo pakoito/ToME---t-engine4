@@ -111,7 +111,6 @@ newEntity{ base = "BASE_NPC_MULTIHUED_DRAKE",
 	resists = { [DamageType.PHYSICAL] = 40, [DamageType.FIRE] = 40, [DamageType.COLD] = 40, [DamageType.ACID] = 40, [DamageType.LIGHTNING] = 40, },
 
 	ai = "tactical",
-	ai_status = {ally_compassion = 0},
 	
 	summon = {
 		{type="dragon", name="multi-hued drake", number=1, hasxp=false},

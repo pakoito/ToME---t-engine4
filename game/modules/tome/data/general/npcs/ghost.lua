@@ -48,6 +48,7 @@ newEntity{
 	poison_immune = 1,
 	stun_immune = 1,
 	blind_immune = 1,
+	cut_immune = 1,
 	see_invisible = 80,
 	undead = 1,
 	resolvers.sustains_at_birth(),

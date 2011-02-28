@@ -56,9 +56,9 @@ newTalent{
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
+		local _ _, x, y = self:canProject(tg, x, y)
 		x, y = checkBackfire(self, x, y)
 		self:project(tg, x, y, DamageType.RETHREAD, self:spellCrit(t.getDamage(self, t)))
-		local _ _, x, y = self:canProject(tg, x, y)
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "temporalbeam", {tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/heal")
 		return true

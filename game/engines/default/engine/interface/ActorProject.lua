@@ -54,13 +54,14 @@ function _M:project(t, x, y, damtype, dam, particles)
 
 	-- Stop at range or on block
 	local lx, ly = x, y
+	local stop_x, stop_y = srcx, srcy
 	local stop_radius_x, stop_radius_y = srcx, srcy
 	local l = line.new(srcx, srcy, x, y)
 	lx, ly = l()
 	local initial_dir = lx and coord_to_dir[lx - srcx][ly - srcy] or 5
 	while lx and ly do
-		if typ.block_path and typ:block_path(lx, ly) then break end
-		stop_radius_x, stop_radius_y = lx, ly
+		stop_radius_x, stop_radius_y = stop_x, stop_y
+		stop_x, stop_y = lx, ly
 
 		-- Deal damage: beam
 		if typ.line then addGrid(lx, ly) end
@@ -70,15 +71,14 @@ function _M:project(t, x, y, damtype, dam, particles)
 			return
 		end
 
+		if typ.block_path and typ:block_path(lx, ly) then break end
 		lx, ly = l()
 	end
-	-- Ok if we are at the end reset lx and ly for the next code
-	if not lx and not ly then lx, ly = x, y end
 
 	-- Correct the explosion source position if we exploded on terrain
 	local radius_x, radius_y
 	if typ.block_path then
-		_, radius_x, radius_y = typ:block_path(lx, ly)
+		_, radius_x, radius_y = typ:block_path(stop_x, stop_y)
 	end
 	if not radius_x then
 		radius_x, radius_y = stop_radius_x, stop_radius_y
@@ -89,21 +89,21 @@ function _M:project(t, x, y, damtype, dam, particles)
 			addGrid(px, py)
 			if typ.block_radius and typ:block_radius(px, py) then return true end
 		end, function()end, nil)
-		addGrid(lx, ly)
+		addGrid(stop_x, stop_y)
 	elseif typ.cone and typ.cone > 0 then
 		core.fov.calc_beam(radius_x, radius_y, game.level.map.w, game.level.map.h, typ.cone, initial_dir, typ.cone_angle, function(_, px, py)
 			-- Deal damage: cone
 			addGrid(px, py)
 			if typ.block_radius and typ:block_radius(px, py) then return true end
 		end, function()end, nil)
-		addGrid(lx, ly)
+		addGrid(stop_x, stop_y)
 	else
 		-- Deal damage: single
-		addGrid(lx, ly)
+		addGrid(stop_x, stop_y)
 	end
 
 	-- Check for minimum range
-	if typ.min_range and core.fov.distance(self.x, self.y, lx, ly) < typ.min_range then
+	if typ.min_range and core.fov.distance(self.x, self.y, stop_x, stop_y) < typ.min_range then
 		return
 	end
 
@@ -134,43 +134,48 @@ function _M:project(t, x, y, damtype, dam, particles)
 end
 
 --- Can we project to this grid ?
+-- This function can be used for either just the boolean, or to tell you where the projection stops.
+-- Two sets of coordinates will be returned, one for where the projection stops (stop_x, stop_y) and
+-- one for where any radius effect should start from (radius_x, radius_y).  The distinction is made
+-- because a projection should hit the wall, but explosions should start one tile back to avoid
+-- "leaking" through a one tile thick wall.
 -- @param t a type table describing the attack, passed to engine.Target:getType() for interpretation
 -- @param x target coords
 -- @param y target coords
+-- @return can_project, stop_x, stop_y, radius_x, radius_y.
 function _M:canProject(t, x, y)
 	local typ = Target:getType(t)
 	typ.source_actor = self
 
 	-- Stop at range or on block
 	local lx, ly = x, y
+	local stop_x, stop_y = self.x, self.y
 	local stop_radius_x, stop_radius_y = self.x, self.y
 	local l = line.new(self.x, self.y, x, y)
 	lx, ly = l()
 	while lx and ly do
+		stop_radius_x, stop_radius_y = stop_x, stop_y
+		stop_x, stop_y = lx, ly
 		if typ.block_path and typ:block_path(lx, ly) then break end
-		stop_radius_x, stop_radius_y = lx, ly
-
 		lx, ly = l()
 	end
-	-- Ok if we are at the end reset lx and ly for the next code
-	if not lx and not ly then lx, ly = x, y end
 
 	-- Correct the explosion source position if we exploded on terrain
 	local radius_x, radius_y
 	if typ.block_path then
-		_, radius_x, radius_y = typ:block_path(lx, ly)
+		_, radius_x, radius_y = typ:block_path(stop_x, stop_y)
 	end
 	if not radius_x then
 		radius_x, radius_y = stop_radius_x, stop_radius_y
 	end
 
 	-- Check for minimum range
-	if typ.min_range and core.fov.distance(self.x, self.y, lx, ly) < typ.min_range then
+	if typ.min_range and core.fov.distance(self.x, self.y, stop_x, stop_y) < typ.min_range then
 		return
 	end
 
-	if lx == x and ly == y then return true, lx, ly end
-	return false, lx, ly, radius_x, radius_y
+	if stop_x == x and stop_y == y then return true, stop_x, stop_y, stop_x, stop_y end
+	return false, stop_x, stop_y, radius_x, radius_y
 end
 
 --- Project damage to a distance using a moving projectile

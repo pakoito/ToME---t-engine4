@@ -104,7 +104,7 @@ function setupSummon(self, m, x, y)
 			control=self:knowTalent(self.T_SUMMON_CONTROL) and "full" or "no",
 			type="summon",
 			title="Summon",
-			orders = {leash=true, follow=true, talents=true},
+			orders = {target=true, leash=true, anchor=true, talents=true},
 			on_control = function(self)
 				local summoner = self.summoner
 				self:setEffect(self.EFF_SUMMON_CONTROL, 1000, {incdur=2 + summoner:getTalentLevel(self.T_SUMMON_CONTROL) * 3, res=summoner:getCun(7, true) * summoner:getTalentLevelRaw(self.T_SUMMON_CONTROL)})

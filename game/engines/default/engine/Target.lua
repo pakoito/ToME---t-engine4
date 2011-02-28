@@ -74,17 +74,13 @@ function _M:display(dispx, dispy)
 	local l = line.new(self.source_actor.x, self.source_actor.y, self.target.x, self.target.y)
 	local lx, ly = l()
 	local initial_dir = lx and coord_to_dir[lx - self.source_actor.x][ly - self.source_actor.y] or 5
-	local stopx, stopy = self.source_actor.x, self.source_actor.y
+	local stop_x, stop_y = self.source_actor.x, self.source_actor.y
 	local stop_radius_x, stop_radius_y = stopx, stopy
 	local blocked = false
 	while lx and ly do
 		if s == self.sb then
-			stop_radius_x, stop_radius_y = stopx, stopy
-			stopx, stopy = lx, ly
-		end
-		if self.target_type.block_path and self.target_type:block_path(lx, ly) then
-			s = self.sr
-			blocked = true
+			stop_radius_x, stop_radius_y = stop_x, stop_y
+			stop_x, stop_y = lx, ly
 		end
 		if self.target_type.min_range then
 			-- Check if we should be "red"
@@ -96,6 +92,10 @@ function _M:display(dispx, dispy)
 			end
 		end
 		s:toScreen(self.display_x + (lx - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (ly - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
+		if self.target_type.block_path and self.target_type:block_path(lx, ly) then
+			s = self.sr
+			blocked = true
+		end
 		lx, ly = l()
 	end
 	self.cursor:toScreen(self.display_x + (self.target.x - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (self.target.y - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
@@ -103,7 +103,7 @@ function _M:display(dispx, dispy)
 	-- Correct the explosion source position if we exploded on terrain
 	local radius_x, radius_y
 	if self.target_type.block_path and self.target_type.radius and self.target_type.radius > 0 then
-		_, radius_x, radius_y = self.target_type:block_path(stopx, stopy)
+		_, radius_x, radius_y = self.target_type:block_path(stop_x, stop_y)
 	end
 	if not radius_x then
 		radius_x, radius_y = stop_radius_x, stop_radius_y
@@ -155,7 +155,7 @@ function _M:getType(t)
 				if not typ.pass_terrain and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") then return true
 				-- If we explode due to something other than terrain, then we should explode ON the tile, not before it
 				elseif typ.stop_block and game.level.map:checkAllEntities(lx, ly, "block_move") then return true, lx, ly end
-				if typ.range and typ.source_actor and typ.source_actor.x and math.sqrt((typ.source_actor.x-lx)^2 + (typ.source_actor.y-ly)^2) > typ.range then return true end
+				if typ.range and typ.source_actor and typ.source_actor.x and core.fov.distance(typ.source_actor.x, typ.source_actor.y, lx, ly) > typ.range then return true end
 			end
 			-- If we don't block the path, then the explode point should be here
 			return false, lx, ly

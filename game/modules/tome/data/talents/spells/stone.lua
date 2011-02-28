@@ -149,7 +149,7 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		local _ _, x, y = self:canProject(tg, x, y)
+		local _ _, _, _, x, y = self:canProject(tg, x, y)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			x, y, t.getDuration(self, t),

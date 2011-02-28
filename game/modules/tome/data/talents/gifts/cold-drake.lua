@@ -128,13 +128,13 @@ newTalent{
 	equilibrium = 12,
 	cooldown = 12,
 	message = "@Source@ breathes ice!",
-	tactical = { ATTACKAREA = 2, DISABLE = 1 },
+	tactical = { ATTACKAREA = {[DamageType.COLD] = 2}, DISABLE = 1 },
 	range = 0,
 	radius = function(self, t) return 4 + self:getTalentLevelRaw(t) end,
 	direct_hit = true,
 	requires_target = true,
 	target = function(self, t)
-		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRange(t), selffire=false, talent=t}
+		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)

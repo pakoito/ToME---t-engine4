@@ -113,7 +113,7 @@ newTalent{
 	equilibrium = 12,
 	cooldown = 12,
 	message = "@Source@ breathes sand!",
-	tactical = { ATTACKAREA = 2, DISABLE = 2 },
+	tactical = { ATTACKAREA = {[DamageType.PHYSICAL] = 2}, DISABLE = 2 },
 	range = 0,
 	radius = function(self, t) return 4 + self:getTalentLevelRaw(t) end,
 	direct_hit = true,

@@ -346,7 +346,7 @@ newTalent{
 	range = 10,
 	mana = 20,
 	requires_target = true,
-	tactical = { SURROUNDED = 3 },
+	tactical = { DEFEND = 1, SURROUNDED = 3 },
 	action = function(self, t)
 		self:setEffect(self.EFF_REFLECTIVE_SKIN, 15, {power=20 + self:combatTalentSpellDamage(t, 12, 40)})
 		return true
@@ -375,7 +375,7 @@ newTalent{
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), selffire=false, radius=self:getTalentRadius(t), talent=t}
 	end,
-	tactical = { ATTACKAREA = 2 },
+	tactical = { ATTACKAREA = 2, CLOSEIN = 1 },
 	getDamage = function(self, t)
 		return self:combatTalentSpellDamage(t, 12, 120)
 	end,
