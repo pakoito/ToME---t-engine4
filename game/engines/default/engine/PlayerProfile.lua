@@ -275,6 +275,7 @@ function _M:saveModuleProfile(name, data, module, nosync)
 
 	local online = self:filterSaveData(name)
 	local pop = self:mountProfile(online, module)
+--[[
 	local path = "current-profile/modules/"..module.."/"..name..".profile"
 	local f, msg = fs.open(path, "w")
 	print("[PROFILE] search path: ")
@@ -288,6 +289,11 @@ function _M:saveModuleProfile(name, data, module, nosync)
 	else
 		print("[PROFILE] physfs error:", msg)
 	end
+]]
+	local f = fs.open("/modules/"..module.."/"..name..".profile", "w")
+	f:write(data)
+	f:close()
+
 	self:umountProfile(online, pop)
 
 	if not nosync then self:setConfigs(module, name, data) end
