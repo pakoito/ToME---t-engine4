@@ -39,7 +39,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local _ _, x, y = self:canProject(tg, x, y)
-		local target = game.level.map(px, py, engine.Map.ACTOR)
+		local target = game.level.map(x, y, engine.Map.ACTOR)
 		if not target then
 			game.logPlayer(self, "The target is out of range")
 			return

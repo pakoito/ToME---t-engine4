@@ -50,7 +50,7 @@ newBirthDescriptor
 		"A Human hailing from the northern town of Derth. A common kind of man, unremarkable in all respects.",
 	},
 	copy = {
-		default_wilderness = {1, 1, "wilderness-tutorial"},
+		default_wilderness = {1, 1, "wilderness"},
 		starting_zone = "tutorial",
 		starting_quest = "tutorial",
 		starting_intro = "tutorial",
