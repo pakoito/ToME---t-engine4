@@ -281,6 +281,7 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 			game.log("#LIGHT_RED#Online profile disabled(switching to offline profile) due to %s.", hash_err or "???")
 		end
 	end
+	print("[MODULE LOADER] done loading module", mod.long_name)
 end
 
 --- Setup write dir for a module

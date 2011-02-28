@@ -185,7 +185,7 @@ end
 
 function _M:handleOrder(o)
 	o = o:unserialize()
-	if not self.sock and o.o ~= "Login" and o.o ~= "CurrentCharacter" then return end -- Dont do stuff without a connection, unless we try to auth
+	if not self.sock and o.o ~= "Login" and o.o ~= "CurrentCharacter" and o.o ~= "CheckModuleHash" then return end -- Dont do stuff without a connection, unless we try to auth
 	if self["order"..o.o] then self["order"..o.o](self, o) end
 end
 
@@ -266,6 +266,7 @@ function _M:orderSendError(o)
 end
 
 function _M:orderCheckModuleHash(o)
+	if not self.sock then cprofile.pushEvent("e='CheckModuleHash' ok=false not_connected=true") end
 	self:command("CMD5", o.md5, o.module)
 	if self:read("200") then
 		cprofile.pushEvent("e='CheckModuleHash' ok=true")
