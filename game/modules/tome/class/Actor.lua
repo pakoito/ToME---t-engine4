@@ -1921,7 +1921,7 @@ function _M:forceUseTalent(t, def)
 	if def.no_paradox_fail then self:attr("no_paradox_fail", 1) end
 	self:useTalent(t, nil, def.force_level, def.ignore_cd, def.force_target)
 	if def.no_equilibrium_fail then self:attr("no_equilibrium_fail", -1) end
-	if def.no_paradix_fail then self:attr("no_paradox_fail", -1) end
+	if def.no_paradox_fail then self:attr("no_paradox_fail", -1) end
 
 	if def.ignore_energy then
 		game.paused = oldpause
