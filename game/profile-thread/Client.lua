@@ -24,6 +24,7 @@ local UserChat = require "profile-thread.UserChat"
 module(..., package.seeall, class.make)
 
 function _M:init()
+	self.last_ping = os.time()
 	self.chat = UserChat.new(self)
 end
 
@@ -34,6 +35,7 @@ function _M:connected()
 --	self.sock:settimeout(10)
 	print("[PROFILE] Thread connected to te4.org")
 	self:login()
+	self.chat:reconnect()
 	return true
 end
 
@@ -167,6 +169,13 @@ function _M:step()
 		if rready[self.sock] then
 			local l = self:read()
 			if l then print("[PROFILE] req/rep thread got unwanted data", l) end
+		end
+
+		-- Ping every minute, lest the server kills us
+		local time = os.time()
+		if time - self.last_ping > 60 then
+			self.last_ping = time
+			self:orderPing()
 		end
 		return true
 	end
@@ -328,6 +337,15 @@ function _M:orderChatChannelList(o)
 		local body = self:receive(size)
 		cprofile.pushEvent(string.format("e='Chat' se='ChannelList' channel=%q data=%q", o.channel, body))
 	end
+end
+
+function _M:orderPing(o)
+	local time = core.game.getTime()
+	self:command("PING")
+	self:read("200")
+	local lat = core.game.getTime() - time
+	print("Server latency", lat)
+	self.server_latency = lat
 end
 
 --------------------------------------------------------------------

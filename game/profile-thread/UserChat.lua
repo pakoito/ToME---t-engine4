@@ -25,6 +25,7 @@ module(..., package.seeall, class.make)
 function _M:init(client)
 	self.client = client
 	self.channels = {}
+	self.joined = {}
 end
 
 function _M:event(e)
@@ -41,5 +42,16 @@ function _M:event(e)
 		self.channels[e.channel][e.user] = nil
 		cprofile.pushEvent(string.format("e='Chat' se='Part' channel=%q login=%q name=%q ", e.channel, e.login, e.name))
 		print("[USERCHAT] channel part", e.user, e.channel)
+	end
+end
+
+function _M:joined(channel)
+	self.joined[channel] = true
+end
+
+function _M:reconnect()
+	-- Rejoin every channels
+	for chan, _ in pairs(self.joined) do
+		client:orderChatJoin{channel=chan}
 	end
 end

@@ -192,12 +192,14 @@ static float fov_slope(float dx, float dy) {
 
 /* Octants -------------------------------------------------------- */
 
-#define FOV_DEFINE_OCTANT(signx, signy, rx, ry, nx, ny, nf, apply_edge, apply_diag)             \
+#define FOV_DEFINE_OCTANT(signx, signy, rx, ry, nx, ny, nf)                                     \
     static void fov_octant_##nx##ny##nf(                                                        \
                                         fov_private_data_type *data,                            \
                                         int dx,                                                 \
                                         float start_slope,                                      \
-                                        float end_slope) {                                      \
+                                        float end_slope,                                        \
+                                        bool apply_edge,                                        \
+                                        bool apply_diag) {                                      \
         int x, y, dy, dy0, dy1;                                                                 \
         unsigned h;                                                                             \
         int prev_blocked = -1;                                                                  \
@@ -205,7 +207,7 @@ static float fov_slope(float dx, float dy) {
         fov_settings_type *settings = data->settings;                                           \
                                                                                                 \
         if (dx == 0) {                                                                          \
-            fov_octant_##nx##ny##nf(data, dx+1, start_slope, end_slope);                        \
+            fov_octant_##nx##ny##nf(data, dx+1, start_slope, end_slope, apply_edge, apply_diag); \
             return;                                                                             \
         } else if ((unsigned)dx > data->radius) {                                               \
             return;                                                                             \
@@ -220,6 +222,14 @@ static float fov_slope(float dx, float dy) {
         if (!apply_diag && dy1 == dx) {                                                         \
             /* We do diagonal lines on every second octant, so they don't get done twice. */    \
             --dy1;                                                                              \
+                                                                                                \
+            /* But, we still need to check if we can see past it if the slopes are similar */   \
+            if (dy1 < dy0) {                                                                    \
+                if (settings->opaque(data->map, x, y)) {                                        \
+                    return;                                                                     \
+                }                                                                               \
+                prev_blocked = 0;                                                               \
+            }                                                                                   \
         }                                                                                       \
                                                                                                 \
         switch (settings->shape) {                                                              \
@@ -256,7 +266,7 @@ static float fov_slope(float dx, float dy) {
                 }                                                                               \
                 if (prev_blocked == 0) {                                                        \
                     end_slope_next = fov_slope((float)dx + 0.5f, (float)dy - 0.5f);             \
-                    fov_octant_##nx##ny##nf(data, dx+1, start_slope, end_slope_next);           \
+                    fov_octant_##nx##ny##nf(data, dx+1, start_slope, end_slope_next, apply_edge, apply_diag);           \
                 }                                                                               \
                 prev_blocked = 1;                                                               \
             } else {                                                                            \
@@ -271,18 +281,18 @@ static float fov_slope(float dx, float dy) {
         }                                                                                       \
                                                                                                 \
         if (prev_blocked == 0) {                                                                \
-            fov_octant_##nx##ny##nf(data, dx+1, start_slope, end_slope);                        \
+            fov_octant_##nx##ny##nf(data, dx+1, start_slope, end_slope, apply_edge, apply_diag); \
         }                                                                                       \
     }
 
-FOV_DEFINE_OCTANT(+,+,x,y,p,p,n,true,true)
-FOV_DEFINE_OCTANT(+,+,y,x,p,p,y,true,false)
-FOV_DEFINE_OCTANT(+,-,x,y,p,m,n,false,true)
-FOV_DEFINE_OCTANT(+,-,y,x,p,m,y,false,false)
-FOV_DEFINE_OCTANT(-,+,x,y,m,p,n,true,true)
-FOV_DEFINE_OCTANT(-,+,y,x,m,p,y,true,false)
-FOV_DEFINE_OCTANT(-,-,x,y,m,m,n,false,true)
-FOV_DEFINE_OCTANT(-,-,y,x,m,m,y,false,false)
+FOV_DEFINE_OCTANT(+,+,x,y,p,p,n)
+FOV_DEFINE_OCTANT(+,+,y,x,p,p,y)
+FOV_DEFINE_OCTANT(+,-,x,y,p,m,n)
+FOV_DEFINE_OCTANT(+,-,y,x,p,m,y)
+FOV_DEFINE_OCTANT(-,+,x,y,m,p,n)
+FOV_DEFINE_OCTANT(-,+,y,x,m,p,y)
+FOV_DEFINE_OCTANT(-,-,x,y,m,m,n)
+FOV_DEFINE_OCTANT(-,-,y,x,m,m,y)
 
 
 /* Circle --------------------------------------------------------- */
@@ -304,14 +314,14 @@ static void _fov_circle(fov_private_data_type *data) {
      *    /  |  \
      *   /mmy|mpy\
      */
-    fov_octant_ppn(data, 1, (float)0.0f, (float)1.0f);
-    fov_octant_ppy(data, 1, (float)0.0f, (float)1.0f);
-    fov_octant_pmn(data, 1, (float)0.0f, (float)1.0f);
-    fov_octant_pmy(data, 1, (float)0.0f, (float)1.0f);
-    fov_octant_mpn(data, 1, (float)0.0f, (float)1.0f);
-    fov_octant_mpy(data, 1, (float)0.0f, (float)1.0f);
-    fov_octant_mmn(data, 1, (float)0.0f, (float)1.0f);
-    fov_octant_mmy(data, 1, (float)0.0f, (float)1.0f);
+    fov_octant_ppn(data, 1, (float)0.0f, (float)1.0f, true, true);
+    fov_octant_ppy(data, 1, (float)0.0f, (float)1.0f, true, false);
+    fov_octant_pmy(data, 1, (float)0.0f, (float)1.0f, false, true);
+    fov_octant_mpn(data, 1, (float)0.0f, (float)1.0f, true, false);
+    fov_octant_mmn(data, 1, (float)0.0f, (float)1.0f, false, true);
+    fov_octant_mmy(data, 1, (float)0.0f, (float)1.0f, true, false);
+    fov_octant_mpy(data, 1, (float)0.0f, (float)1.0f, false, true);
+    fov_octant_pmn(data, 1, (float)0.0f, (float)1.0f, false, false);
 }
 
 void fov_circle(fov_settings_type *settings,
@@ -345,48 +355,48 @@ static float betweenf(float x, float a, float b) {
     }
 }
 
-#define BEAM_DIRECTION(d, p1, p2, p3, p4, p5, p6, p7, p8)   \
-    if (direction == d) {                                   \
-        end_slope = betweenf(a, 0.0f, 1.0f);                \
-        fov_octant_##p1(&data, 1, 0.0f, end_slope);         \
-        fov_octant_##p2(&data, 1, 0.0f, end_slope);         \
-        if (a - 1.0f > FLT_EPSILON) { /* a > 1.0f */        \
-            start_slope = betweenf(2.0f - a, 0.0f, 1.0f);   \
-            fov_octant_##p3(&data, 1, start_slope, 1.0f);   \
-            fov_octant_##p4(&data, 1, start_slope, 1.0f);   \
-        }                                                   \
-        if (a - 2.0f > FLT_EPSILON) { /* a > 2.0f */        \
-            end_slope = betweenf(a - 2.0f, 0.0f, 1.0f);     \
-            fov_octant_##p5(&data, 1, 0.0f, end_slope);     \
-            fov_octant_##p6(&data, 1, 0.0f, end_slope);     \
-        }                                                   \
-        if (a - 3.0f > FLT_EPSILON) { /* a > 3.0f */        \
-            start_slope = betweenf(4.0f - a, 0.0f, 1.0f);   \
-            fov_octant_##p7(&data, 1, start_slope, 1.0f);   \
-            fov_octant_##p8(&data, 1, start_slope, 1.0f);   \
-        }                                                   \
+#define BEAM_DIRECTION(d, p1, p2, p3, p4, p5, p6, p7, p8)               \
+    if (direction == d) {                                               \
+        end_slope = betweenf(a, 0.0f, 1.0f);                            \
+        fov_octant_##p1(&data, 1, 0.0f, end_slope, true, true);         \
+        fov_octant_##p2(&data, 1, 0.0f, end_slope, false, true);        \
+        if (a - 1.0f > FLT_EPSILON) { /* a > 1.0f */                    \
+            start_slope = betweenf(2.0f - a, 0.0f, 1.0f);               \
+            fov_octant_##p3(&data, 1, start_slope, 1.0f, true, false);  \
+            fov_octant_##p4(&data, 1, start_slope, 1.0f, true, false);  \
+        }                                                               \
+        if (a - 2.0f > FLT_EPSILON) { /* a > 2.0f */                    \
+            end_slope = betweenf(a - 2.0f, 0.0f, 1.0f);                 \
+            fov_octant_##p5(&data, 1, 0.0f, end_slope, false, true);    \
+            fov_octant_##p6(&data, 1, 0.0f, end_slope, false, true);    \
+        }                                                               \
+        if (a - 3.0f > FLT_EPSILON) { /* a > 3.0f */                    \
+            start_slope = betweenf(4.0f - a, 0.0f, 1.0f);               \
+            fov_octant_##p7(&data, 1, start_slope, 1.0f, true, false);  \
+            fov_octant_##p8(&data, 1, start_slope, 1.0f, false, false); \
+        }                                                               \
     }
 
-#define BEAM_DIRECTION_DIAG(d, p1, p2, p3, p4, p5, p6, p7, p8)  \
-    if (direction == d) {                                       \
-        start_slope = betweenf(1.0f - a, 0.0f, 1.0f);           \
-        fov_octant_##p1(&data, 1, start_slope, 1.0f);           \
-        fov_octant_##p2(&data, 1, start_slope, 1.0f);           \
-        if (a - 1.0f > FLT_EPSILON) { /* a > 1.0f */            \
-            end_slope = betweenf(a - 1.0f, 0.0f, 1.0f);         \
-            fov_octant_##p3(&data, 1, 0.0f, end_slope);         \
-            fov_octant_##p4(&data, 1, 0.0f, end_slope);         \
-        }                                                       \
-        if (a - 2.0f > FLT_EPSILON) { /* a > 2.0f */            \
-            start_slope = betweenf(3.0f - a, 0.0f, 1.0f);       \
-            fov_octant_##p5(&data, 1, start_slope, 1.0f);       \
-            fov_octant_##p6(&data, 1, start_slope, 1.0f);       \
-        }                                                       \
-        if (a - 3.0f > FLT_EPSILON) { /* a > 3.0f */            \
-            end_slope = betweenf(a - 3.0f, 0.0f, 1.0f);         \
-            fov_octant_##p7(&data, 1, 0.0f, end_slope);         \
-            fov_octant_##p8(&data, 1, 0.0f, end_slope);         \
-        }                                                       \
+#define BEAM_DIRECTION_DIAG(d, p1, p2, p3, p4, p5, p6, p7, p8)          \
+    if (direction == d) {                                               \
+        start_slope = betweenf(1.0f - a, 0.0f, 1.0f);                   \
+        fov_octant_##p1(&data, 1, start_slope, 1.0f, true, true);       \
+        fov_octant_##p2(&data, 1, start_slope, 1.0f, true, false);      \
+        if (a - 1.0f > FLT_EPSILON) { /* a > 1.0f */                    \
+            end_slope = betweenf(a - 1.0f, 0.0f, 1.0f);                 \
+            fov_octant_##p3(&data, 1, 0.0f, end_slope, false, true);    \
+            fov_octant_##p4(&data, 1, 0.0f, end_slope, false, true);    \
+        }                                                               \
+        if (a - 2.0f > FLT_EPSILON) { /* a > 2.0f */                    \
+            start_slope = betweenf(3.0f - a, 0.0f, 1.0f);               \
+            fov_octant_##p5(&data, 1, start_slope, 1.0f, true, false);  \
+            fov_octant_##p6(&data, 1, start_slope, 1.0f, true, false);  \
+        }                                                               \
+        if (a - 3.0f > FLT_EPSILON) { /* a > 3.0f */                    \
+            end_slope = betweenf(a - 3.0f, 0.0f, 1.0f);                 \
+            fov_octant_##p7(&data, 1, 0.0f, end_slope, false, true);    \
+            fov_octant_##p8(&data, 1, 0.0f, end_slope, false, false);   \
+        }                                                               \
     }
 
 void fov_beam(fov_settings_type *settings, void *map, void *source,
@@ -418,10 +428,10 @@ void fov_beam(fov_settings_type *settings, void *map, void *source,
 
     BEAM_DIRECTION(FOV_EAST, ppn, pmn, ppy, mpy, pmy, mmy, mpn, mmn);
     BEAM_DIRECTION(FOV_WEST, mpn, mmn, pmy, mmy, ppy, mpy, ppn, pmn);
-    BEAM_DIRECTION(FOV_NORTH, mpy, mmy, mmn, pmn, mpn, ppn, pmy, ppy);
+    BEAM_DIRECTION(FOV_NORTH, mpy, mmy, pmn, mmn, ppn, mpn, ppy, pmy);
     BEAM_DIRECTION(FOV_SOUTH, pmy, ppy, mpn, ppn, mmn, pmn, mmy, mpy);
-    BEAM_DIRECTION_DIAG(FOV_NORTHEAST, pmn, mpy, mmy, ppn, mmn, ppy, mpn, pmy);
+    BEAM_DIRECTION_DIAG(FOV_NORTHEAST, pmn, mpy, ppn, mmy, ppy, mmn, pmy, mpn);
     BEAM_DIRECTION_DIAG(FOV_NORTHWEST, mmn, mmy, mpn, mpy, pmy, pmn, ppy, ppn);
-    BEAM_DIRECTION_DIAG(FOV_SOUTHEAST, ppn, ppy, pmy, pmn, mpn, mpy, mmn, mmy);
+    BEAM_DIRECTION_DIAG(FOV_SOUTHEAST, ppy, ppn, pmy, pmn, mpn, mpy, mmn, mmy);
     BEAM_DIRECTION_DIAG(FOV_SOUTHWEST, pmy, mpn, ppy, mmn, ppn, mmy, pmn, mpy);
 }
