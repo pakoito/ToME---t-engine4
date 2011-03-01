@@ -733,7 +733,7 @@ function _M:playerUseItem(object, item, inven)
 			self.changed = true
 
 			-- Count magic devices
-			if (o.is_magic_device or (o.power_source and o.power_source.arcane)) and self:attr("forbid_arcane") then
+			if (o.power_source and o.power_source.arcane) and self:attr("forbid_arcane") then
 				game.logPlayer(self, "Your antimagic disrupts %s.", o:getName{no_count=true, do_color=true})
 				return true
 			end
