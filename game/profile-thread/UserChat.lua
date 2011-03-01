@@ -29,17 +29,17 @@ end
 
 function _M:event(e)
 	if e.e == "ChatTalk" then
-		cprofile.pushEvent(string.format("e='Chat' se='Talk' channel=%q user=%q msg=%q", e.channel, e.user, e.msg))
+		cprofile.pushEvent(string.format("e='Chat' se='Talk' channel=%q login=%q name=%q msg=%q", e.channel, e.login, e.name, e.msg))
 		print("[USERCHAT] channel talk", e.user, e.channel, e.msg)
 	elseif e.e == "ChatJoin" then
 		self.channels[e.channel] = self.channels[e.channel] or {}
 		self.channels[e.channel][e.user] = true
-		cprofile.pushEvent(string.format("e='Chat' se='Join' channel=%q user=%q", e.channel, e.user))
+		cprofile.pushEvent(string.format("e='Chat' se='Join' channel=%q login=%q name=%q ", e.channel, e.login, e.name))
 		print("[USERCHAT] channel join", e.user, e.channel)
 	elseif e.e == "ChatPart" then
 		self.channels[e.channel] = self.channels[e.channel] or {}
 		self.channels[e.channel][e.user] = nil
-		cprofile.pushEvent(string.format("e='Chat' se='Part' channel=%q user=%q", e.channel, e.user))
+		cprofile.pushEvent(string.format("e='Chat' se='Part' channel=%q login=%q name=%q ", e.channel, e.login, e.name))
 		print("[USERCHAT] channel part", e.user, e.channel)
 	end
 end

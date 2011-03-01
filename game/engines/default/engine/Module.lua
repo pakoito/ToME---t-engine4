@@ -272,6 +272,7 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 	-- Add user chat if needed
 	if mod.allow_userchat and _G.game.key then
 		profile.chat:setupOnGame()
+		profile.chat:join("global")
 		profile.chat:join(mod.short_name)
 	end
 

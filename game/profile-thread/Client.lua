@@ -29,7 +29,7 @@ end
 
 function _M:connected()
 	if self.sock then return true end
-	self.sock = socket.connect("te4.org", 2259)
+	self.sock = socket.connect("te4.org", 2257)
 	if not self.sock then return false end
 --	self.sock:settimeout(10)
 	print("[PROFILE] Thread connected to te4.org")
@@ -40,7 +40,7 @@ end
 --- Connects the second tcp channel to receive data
 function _M:connectedPull()
 	if self.psock then return true end
-	self.psock = socket.connect("te4.org", 2260)
+	self.psock = socket.connect("te4.org", 2258)
 	if not self.psock then return false end
 --	self.psock:settimeout(10)
 	print("[PROFILE] Pull socket connected to te4.org")

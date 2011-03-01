@@ -54,9 +54,9 @@ function _M:setupOnGame()
 	}
 end
 
-function _M:addMessage(channel, user, msg)
+function _M:addMessage(channel, login, name, msg)
 	local log = self.channels[channel].log
-	table.insert(log, 1, {user=user, msg=msg})
+	table.insert(log, 1, {login=login, name=name, msg=msg})
 	while #log > self.max do table.remove(log) end
 	self.changed = true
 end
@@ -66,18 +66,18 @@ function _M:event(e)
 		e.msg = e.msg:removeColorCodes()
 
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
-		self:addMessage(e.channel, e.user, e.msg)
+		self:addMessage(e.channel, e.login, e.name, e.msg)
 
-		if type(game) == "table" and game.log then game.log("#YELLOW#<%s> %s", e.user, e.msg) end
+		if type(game) == "table" and game.log then game.log("#YELLOW#<%s> %s", e.name, e.msg) end
 	elseif e.se == "Join" then
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
-		self.channels[e.channel].users[e.user] = {name=e.user}
+		self.channels[e.channel].users[e.login] = {name=e.name, login=e.login}
 		self.channels_changed = true
 		self:addMessage(e.channel, e.user, "#{italic}##FIREBRICK#has joined the channel#{normal}#")
 		if type(game) == "table" and game.log and e.channel == self.cur_channel then game.log("#{italic}##FIREBRICK#%s has joined channel %s (press space to talk).#{normal}#", e.user, e.channel) end
 	elseif e.se == "Part" then
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
-		self.channels[e.channel].users[e.user] = nil
+		self.channels[e.channel].users[e.login] = nil
 		self.channels_changed = true
 		self:addMessage(e.channel, e.user, "#{italic}##FIREBRICK#has left the channel#{normal}#")
 		if type(game) == "table" and game.log and e.channel == self.cur_channel then game.log("#{italic}##FIREBRICK#%s has left channel %s.#{normal}#", e.user, e.channel) end
@@ -89,7 +89,8 @@ function _M:event(e)
 		if not info then return end
 		self.channels[e.channel].users = {}
 		for _, user in ipairs(info.users) do
-			self.channels[e.channel].users[user.name] = {
+			self.channels[e.channel].users[user.login] = {
+				login=user.login,
 				name=user.name,
 				cur_char=user.cur_char and user.cur_char.title or "unknown",
 				module=user.cur_char and user.cur_char.module or "unknown",
@@ -211,8 +212,8 @@ function _M:resize(x, y, w, h, fontname, fontsize, color, bgcolor)
 				local item = self.dlist[i]
 				if item.dh and y >= item.dh - self.mouse.delegate_offset_y then citem = item break end
 			end
-			if citem and citem.user and self.channels[self.cur_channel].users[citem.user] then
-				self.on_mouse(self.channels[self.cur_channel].users[citem.user], button, event)
+			if citem and citem.login and self.channels[self.cur_channel].users[citem.login] then
+				self.on_mouse(self.channels[self.cur_channel].users[citem.login], button, event)
 			end
 		end
 	end)
@@ -265,10 +266,10 @@ function _M:display()
 	local old_style = self.font:getStyle()
 	for z = 1 + self.scroll, #log do
 		local stop = false
-		local tstr = ("<%s> %s"):format(log[z].user, log[z].msg):toTString()
+		local tstr = ("<%s> %s"):format(log[z].name, log[z].msg):toTString()
 		local gen = tstring.makeLineTextures(tstr, self.w, self.font_mono)
 		for i = #gen, 1, -1 do
-			gen[i].user = log[z].user
+			gen[i].login = log[z].login
 			self.dlist[#self.dlist+1] = gen[i]
 			h = h + self.fh
 			if h > self.h - self.fh - ls_h then stop=true break end

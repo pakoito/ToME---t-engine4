@@ -325,7 +325,7 @@ function _M:checkFirstTime()
 end
 
 function _M:createProfile(loginItem)
-	if loginItem.justlogin then
+	if not loginItem.create then
 		self.auth_tried = nil
 		profile:performlogin(loginItem.login, loginItem.pass)
 		profile:waitFirstAuth()
