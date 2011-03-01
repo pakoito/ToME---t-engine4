@@ -188,8 +188,14 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	info = function(self, t)
+		local theorical_nb = ({ 9, 25, 45, 77, 109, 145 })[1 + self:getTalentLevelRaw(self.T_EXPLOSION_EXPERT)]
+		local min = 1
+		local min = (math.log10(min) / (6 - self:getTalentLevelRaw(self.T_EXPLOSION_EXPERT)))
+		local max = theorical_nb
+		local max = (math.log10(max) / (6 - self:getTalentLevelRaw(self.T_EXPLOSION_EXPERT)))
+
 		return ([[Your alchemist bombs now affect a radius of %d around them.
-		Additionally tiles that would have been lost to terrain will now have the damage spread out over the effect.]]):format(self:getTalentLevelRaw(t))
+		Increases explosion damage by %d%% (one tile less than the full effect) to %d%% (explosion concentrated on only 1 tile)]]):format(self:getTalentLevelRaw(t), min*100, max*100)
 	end,
 }
 
