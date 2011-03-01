@@ -36,7 +36,7 @@ local function makeGolem()
 
 		combat = { dam=10, atk=10, apr=0, dammod={str=1} },
 
-		body = { INVEN = 1000, MAINHAND=1, BODY=1, GEM=2 },
+		body = { INVEN = 1000, QS_MAINHAND = 1, QS_OFFHAND = 1, MAINHAND = 1, OFFHAND = 1, BODY=1, GEM=2 },
 		infravision = 20,
 		rank = 3,
 		size_category = 4,

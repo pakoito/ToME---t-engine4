@@ -28,7 +28,7 @@ newTalent{
 		return math.ceil(5 + self:getDex(6))
 	end,
 	radius = function(self, t)
-		return 1+self:getTalentLevelRaw(self.T_EXPLOSION_EXPERT)
+		return util.bound(1+self:getTalentLevelRaw(self.T_EXPLOSION_EXPERT), 1, 6)
 	end,
 	direct_hit = true,
 	requires_target = true,
@@ -83,6 +83,20 @@ newTalent{
 			golem = game.level:hasEntity(self.alchemy_golem) and self.alchemy_golem or nil
 		end
 		local dam_done = 0
+
+		-- Compare theorical AOE zone with actual zone and adjust damage accordingly
+		if self:knowTalent(self.T_EXPLOSION_EXPERT) then
+			local theorical_nb = ({ 9, 25, 45, 77, 109, 145 })[tg.radius]
+			local nb = 0
+			local grids = self:project(tg, x, y, function(tx, ty) end)
+			for px, ys in pairs(grids) do for py, _ in pairs(ys) do nb = nb + 1 end end
+			nb = theorical_nb - nb
+			if nb > 0 then
+				local mult = (math.log10(nb) / (6 - self:getTalentLevelRaw(self.T_EXPLOSION_EXPERT)))
+				print("Adjusting explosion damage to account for ", nb, " lost tiles => ", mult * 100)
+				dam = dam + dam * mult
+			end
+		end
 
 		local tmp = {}
 		local grids = self:project(tg, x, y, function(tx, ty)
@@ -174,7 +188,8 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	info = function(self, t)
-		return ([[Your alchemist bombs now affect a radius of %d around them.]]):format(self:getTalentLevelRaw(t))
+		return ([[Your alchemist bombs now affect a radius of %d around them.
+		Additionally tiles that would have been lost to terrain will now have the damage spread out over the effect.]]):format(self:getTalentLevelRaw(t))
 	end,
 }
 
