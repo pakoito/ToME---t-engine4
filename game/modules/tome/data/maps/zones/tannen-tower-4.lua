@@ -23,13 +23,13 @@ endx = 12
 endy = 12
 
 -- defineTile section
-defineTile("U", "LAVA_FLOOR", nil, {random_filter={type="demon"}})
+defineTile("U", "FLOOR", nil, {random_filter={type="demon"}})
 defineTile('"', "OLD_FLOOR", nil, {random_filter={name="greater multi-hued wyrm",add_levels=12}})
 defineTile("#", "OLD_WALL")
 defineTile("E", "GRASS", nil, {random_filter={type="elemental"}})
 defineTile("$", "FLOOR", nil, {random_filter={type="undead", subtype="giant"}})
 defineTile("X", "HARDWALL")
-defineTile("~", "LAVA_FLOOR")
+defineTile("~", "FLOOR")
 defineTile("*", "SEALED_DOOR")
 defineTile("+", "DOOR")
 defineTile("<", "UP")
