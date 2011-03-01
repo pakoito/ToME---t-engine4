@@ -75,44 +75,46 @@ function _M:display(dispx, dispy)
 	local lx, ly = l()
 	local initial_dir = lx and coord_to_dir[lx - self.source_actor.x][ly - self.source_actor.y] or 5
 	local stop_x, stop_y = self.source_actor.x, self.source_actor.y
-	local stop_radius_x, stop_radius_y = stopx, stopy
-	local blocked = false
+	local stop_radius_x, stop_radius_y = self.source_actor.x, self.source_actor.y
+	local stopped = false
 	while lx and ly do
-		if s == self.sb then
-			stop_radius_x, stop_radius_y = stop_x, stop_y
-			stop_x, stop_y = lx, ly
+		local block, hit, hit_radius = false, true, true
+		if self.target_type.block_path then
+			block, hit, hit_radius = self.target_type:block_path(lx, ly)
 		end
-		if self.target_type.min_range then
+		
+		-- Update coordinates and set color
+		if hit and not stopped then
+			stop_x, stop_y = lx, ly
+		else
+			s = self.sr
+		end
+		if hit_radius and not stopped then
+			stop_radius_x, stop_radius_y = lx, ly
+		end
+		if self.target_type.min_range and not stopped then
 			-- Check if we should be "red"
 			if core.fov.distance(self.source_actor.x, self.source_actor.y, lx, ly) < self.target_type.min_range then
 				s = self.sr
 			-- Check if we were only "red" because of minimum distance
-			elseif s == self.sr and not blocked then
+			elseif s == self.sr then
 				s = self.sb
 			end
 		end
 		s:toScreen(self.display_x + (lx - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (ly - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
-		if self.target_type.block_path and self.target_type:block_path(lx, ly) then
+		if block then
 			s = self.sr
-			blocked = true
+			stopped = true
 		end
+		
 		lx, ly = l()
 	end
 	self.cursor:toScreen(self.display_x + (self.target.x - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (self.target.y - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
 
-	-- Correct the explosion source position if we exploded on terrain
-	local radius_x, radius_y
-	if self.target_type.block_path and self.target_type.radius and self.target_type.radius > 0 then
-		_, radius_x, radius_y = self.target_type:block_path(stop_x, stop_y)
-	end
-	if not radius_x then
-		radius_x, radius_y = stop_radius_x, stop_radius_y
-	end
-
 	if self.target_type.ball and self.target_type.ball > 0 then
 		core.fov.calc_circle(
-			radius_x,
-			radius_y,
+			stop_radius_x,
+			stop_radius_y,
 			game.level.map.w,
 			game.level.map.h,
 			self.target_type.ball,
@@ -128,8 +130,8 @@ function _M:display(dispx, dispy)
 		nil)
 	elseif self.target_type.cone and self.target_type.cone > 0 then
 		core.fov.calc_beam(
-			radius_x,
-			radius_y,
+			stop_radius_x,
+			stop_radius_y,
 			game.level.map.w,
 			game.level.map.h,
 			self.target_type.cone,
@@ -164,7 +166,7 @@ end
 -- @param t.stop_block Boolean that stops the target on the first tile that has an entity that blocks move.
 -- @param t.range The range the target can be from the origin.
 -- @param t.pass_terrain Boolean that allows the target to pass through terrain to remembered tiles on the other side.
--- @param t.block_path(typ, lx, ly) Function called on each tile to determine if the targeting is blocked.  Automatically set when using t.typ, but the user can provide their own if they know what they are doing.
+-- @param t.block_path(typ, lx, ly) Function called on each tile to determine if the targeting is blocked.  Automatically set when using t.typ, but the user can provide their own if they know what they are doing.  It should return three arguments: block, hit, hit_radius
 -- @param t.block_radius(typ, lx, ly) Function called on each tile when projecting the radius to determine if the radius projection is blocked.  Automatically set when using t.typ, but the user can provide their own if they know what they are doing.
 function _M:getType(t)
 	if not t then return {} end
@@ -177,14 +179,27 @@ function _M:getType(t)
 		friendlyfire=true,
 		block_path = function(typ, lx, ly)
 			if not typ.no_restrict then
-				if typ.requires_knowledge and not game.level.map.remembers(lx, ly) and not game.level.map.seens(lx, ly) then return true end
-				if not typ.pass_terrain and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") then return true
+				if typ.range and typ.source_actor and typ.source_actor.x then
+					local dist = core.fov.distance(typ.source_actor.x, typ.source_actor.y, lx, ly)
+					-- Need to handle range 1 separately to allow diagonal hits
+					if typ.range == 1 then
+						if math.floor(dist) > 1 then return true, false, false end
+					else
+						if dist > typ.range then return true, false, false end
+					end
+				end
+				if typ.requires_knowledge and not game.level.map.remembers(lx, ly) and not game.level.map.seens(lx, ly) then
+					return true, false, false
+				end
+				if not typ.pass_terrain and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") then
+					return true, true, false
 				-- If we explode due to something other than terrain, then we should explode ON the tile, not before it
-				elseif typ.stop_block and game.level.map:checkAllEntities(lx, ly, "block_move") then return true, lx, ly end
-				if typ.range and typ.source_actor and typ.source_actor.x and core.fov.distance(typ.source_actor.x, typ.source_actor.y, lx, ly) > typ.range then return true end
+				elseif typ.stop_block and game.level.map:checkAllEntities(lx, ly, "block_move") then
+					return true, true, true
+				end
 			end
 			-- If we don't block the path, then the explode point should be here
-			return false, lx, ly
+			return false, true, true
 		end,
 		block_radius=function(typ, lx, ly)
 			return not typ.no_restrict and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move")

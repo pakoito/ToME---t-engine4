@@ -60,42 +60,60 @@ function _M:project(t, x, y, damtype, dam, particles)
 	lx, ly = l()
 	local initial_dir = lx and coord_to_dir[lx - srcx][ly - srcy] or 5
 	while lx and ly do
-		stop_radius_x, stop_radius_y = stop_x, stop_y
-		stop_x, stop_y = lx, ly
-
-		-- Deal damage: beam
-		if typ.line then addGrid(lx, ly) end
-
-		-- Call the on project of the target grid if possible
-		if not t.bypass and game.level.map:checkAllEntities(lx, ly, "on_project", self, t, lx, ly, damtype, dam, particles) then
-			return
+		local block, hit, hit_radius = false, true, true
+		if typ.block_path then
+			block, hit, hit_radius = typ:block_path(lx, ly)
+		end
+		if hit then
+			stop_x, stop_y = lx, ly
+			-- Deal damage: beam
+			if typ.line then addGrid(lx, ly) end
+			-- WHAT DOES THIS DO AGAIN?
+			-- Call the on project of the target grid if possible
+			if not t.bypass and game.level.map:checkAllEntities(lx, ly, "on_project", self, t, lx, ly, damtype, dam, particles) then
+				return
+			end
+		end
+		if hit_radius then
+			stop_radius_x, stop_radius_y = lx, ly
 		end
 
-		if typ.block_path and typ:block_path(lx, ly) then break end
+		if block then break end
 		lx, ly = l()
 	end
 
-	-- Correct the explosion source position if we exploded on terrain
-	local radius_x, radius_y
-	if typ.block_path then
-		_, radius_x, radius_y = typ:block_path(stop_x, stop_y)
-	end
-	if not radius_x then
-		radius_x, radius_y = stop_radius_x, stop_radius_y
-	end
 	if typ.ball and typ.ball > 0 then
-		core.fov.calc_circle(radius_x, radius_y, game.level.map.w, game.level.map.h, typ.ball, function(_, px, py)
-			-- Deal damage: ball
-			addGrid(px, py)
-			if typ.block_radius and typ:block_radius(px, py) then return true end
-		end, function()end, nil)
+		core.fov.calc_circle(
+			stop_radius_x,
+			stop_radius_y,
+			game.level.map.w,
+			game.level.map.h,
+			typ.ball,
+			function(_, px, py)
+				if typ.block_radius and typ:block_radius(px, py) then return true end
+			end,
+			function(_, px, py)
+				-- Deal damage: ball
+				addGrid(px, py)
+			end,
+		nil)
 		addGrid(stop_x, stop_y)
 	elseif typ.cone and typ.cone > 0 then
-		core.fov.calc_beam(radius_x, radius_y, game.level.map.w, game.level.map.h, typ.cone, initial_dir, typ.cone_angle, function(_, px, py)
-			-- Deal damage: cone
-			addGrid(px, py)
-			if typ.block_radius and typ:block_radius(px, py) then return true end
-		end, function()end, nil)
+		core.fov.calc_beam(
+			stop_radius_x,
+			stop_radius_y,
+			game.level.map.w,
+			game.level.map.h,
+			typ.cone,
+			initial_dir,
+			typ.cone_angle,
+			function(_, px, py)
+				if typ.block_radius and typ:block_radius(px, py) then return true end
+			end,
+			function(_, px, py)
+				addGrid(px, py)
+			end,
+		nil)
 		addGrid(stop_x, stop_y)
 	else
 		-- Deal damage: single
@@ -154,19 +172,19 @@ function _M:canProject(t, x, y)
 	local l = line.new(self.x, self.y, x, y)
 	lx, ly = l()
 	while lx and ly do
-		stop_radius_x, stop_radius_y = stop_x, stop_y
-		stop_x, stop_y = lx, ly
-		if typ.block_path and typ:block_path(lx, ly) then break end
-		lx, ly = l()
-	end
+		local block, hit, hit_radius = false, true, true
+		if typ.block_path then
+			block, hit, hit_radius = typ:block_path(lx, ly)
+		end
+		if hit then
+			stop_x, stop_y = lx, ly
+		end
+		if hit_radius then
+			stop_radius_x, stop_radius_y = lx, ly
+		end
 
-	-- Correct the explosion source position if we exploded on terrain
-	local radius_x, radius_y
-	if typ.block_path then
-		_, radius_x, radius_y = typ:block_path(stop_x, stop_y)
-	end
-	if not radius_x then
-		radius_x, radius_y = stop_radius_x, stop_radius_y
+		if block then break end
+		lx, ly = l()
 	end
 
 	-- Check for minimum range
@@ -175,7 +193,7 @@ function _M:canProject(t, x, y)
 	end
 
 	if stop_x == x and stop_y == y then return true, stop_x, stop_y, stop_x, stop_y end
-	return false, stop_x, stop_y, radius_x, radius_y
+	return false, stop_x, stop_y, stop_radius_x, stop_radius_y
 end
 
 --- Project damage to a distance using a moving projectile
@@ -196,6 +214,13 @@ function _M:projectile(t, x, y, damtype, dam, particles)
 	game.zone:addEntity(game.level, proj, "projectile", self.x, self.y)
 end
 
+-- @param typ a target type table
+-- @param tgtx the target's x-coordinate
+-- @param tgty the target's y-coordinate
+-- @param x the projectile's x-coordinate
+-- @param y the projectile's x-coordinate
+-- @param srcx the sources's x-coordinate
+-- @param srcx the source's x-coordinate
 -- @return lx x-coordinate the projectile travels to next
 -- @return ly y-coordinate the projectile travels to next
 -- @return act should we call projectDoAct (usually only for beam)
@@ -210,10 +235,24 @@ function _M:projectDoMove(typ, tgtx, tgty, x, y, srcx, srcy)
 	if lx and ly then lx, ly = l() end
 
 	if lx and ly then
-		if typ.block_path and typ:block_path(lx, ly) then return lx, ly, false, true end
+		local block, hit, hit_radius = false, true, true
+		if typ.block_path then
+			block, hit, hit_radius = typ:block_path(lx, ly)
+		end
+
+		if block then
+			if hit then
+				return lx, ly, false, true
+			-- If we don't hit the tile, pass back nils to stop on the current spot
+			else
+				return nil, nil, false, true
+			end
+		end
 
 		-- End of the map
-		if lx < 0 or lx >= game.level.map.w or ly < 0 or ly >= game.level.map.h then return lx, ly, false, true end
+		if lx < 0 or lx >= game.level.map.w or ly < 0 or ly >= game.level.map.h then
+			return nil, nil, false, true
+		end
 
 		-- Deal damage: beam
 		if typ.line and (lx ~= tgtx or ly ~= tgty) then return lx, ly, true, false end
@@ -251,19 +290,39 @@ function _M:projectDoStop(typ, tg, damtype, dam, particles, lx, ly, tmp, rx, ry)
 	end
 
 	if typ.ball and typ.ball > 0 then
-		core.fov.calc_circle(rx, ry, game.level.map.w, game.level.map.h, typ.ball, function(_, px, py)
-			-- Deal damage: ball
-			addGrid(px, py)
-			if typ.block_radius and typ:block_radius(px, py) then return true end
-		end, function()end, nil)
+		core.fov.calc_circle(
+			rx, 
+			ry, 
+			game.level.map.w, 
+			game.level.map.h, 
+			typ.ball, 
+			function(_, px, py)
+				if typ.block_radius and typ:block_radius(px, py) then return true end
+			end,
+			function(_, px, py)
+				-- Deal damage: ball
+				addGrid(px, py)
+			end,
+		nil)
 		addGrid(rx, ry)
 	elseif typ.cone and typ.cone > 0 then
 		local initial_dir = lx and util.getDir(lx, ly, x, y) or 5
-		core.fov.calc_beam(rx, ry, game.level.map.w, game.level.map.h, typ.cone, initial_dir, typ.cone_angle, function(_, px, py)
-			-- Deal damage: cone
-			addGrid(px, py)
-			if typ.block_radius and typ:block_radius(px, py) then return true end
-		end, function()end, nil)
+		core.fov.calc_beam(
+			rx, 
+			ry, 
+			game.level.map.w, 
+			game.level.map.h, 
+			typ.cone, 
+			initial_dir, 
+			typ.cone_angle, 
+			function(_, px, py)
+				if typ.block_radius and typ:block_radius(px, py) then return true end
+			end,
+			function(_, px, py)
+				-- Deal damage: cone
+				addGrid(px, py)
+			end,
+		nil)
 		addGrid(rx, ry)
 	else
 		-- Deal damage: single

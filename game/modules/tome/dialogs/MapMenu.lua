@@ -103,17 +103,26 @@ function _M:generateList()
 
 	-- Talents
 	if game.zone and not game.zone.wilderness then
+		local canHit = function(tg, x, y)
+			local hit = false
+			player:project(tg, x, y, function(px, py)
+				if px == x and py == y then
+					hit = true
+				end
+			end)
+			return hit
+		end
 		local tals = {}
 		for tid, _ in pairs(player.talents) do
 			local t = player:getTalentFromId(tid)
 			local t_avail = false
 			local tg = player:getTalentTarget(t)
-			local default_tg = {type=util.getval(t.direct_hit, player, t) and "hit" or "bolt"}
-			local total_dist = (player:getTalentRange(t) + player:getTalentRadius(t))
+			local total_range = player:getTalentRange(t) + player:getTalentRadius(t)
+			local default_tg = {type=util.getval(t.direct_hit, player, t) and "hit" or "bolt", range=total_range}
 			if t.mode == "activated" and not player:isTalentCoolingDown(t) and
 			  player:preUseTalent(t, true, true) and
 			  (not player:getTalentRequiresTarget(t) or
-			   player:canProject(tg or default_tg, self.tmx, self.tmy))
+			   canHit(tg or default_tg, self.tmx, self.tmy))
 			  then
 			   	t_avail = true
 			elseif t.mode == "sustained" and not t.no_npc_use and 
