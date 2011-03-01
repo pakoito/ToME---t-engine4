@@ -149,15 +149,15 @@ newInscription{
 	tactical = { DEFEND = 1 },
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		self:setEffect(self.EFF_FREE_ACTION, data.dur + data.inc_stat, {power=1})
-		game:onTickEnd(function() self:setEffect(self.EFF_WILD_SPEED, data.dur + data.inc_stat, {power=data.speed}) end)
+		self:setEffect(self.EFF_FREE_ACTION, data.dur, {power=1})
+		game:onTickEnd(function() self:setEffect(self.EFF_WILD_SPEED, data.dur, {power=data.speed + data.inc_stat}) end)
 		return true
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return ([[Activate the infusion to increase movement speed by %d%% for %d turns.
 		Any actions other than movement will cancel the effect.
-		Also prevent stuns, dazes and pinning effects.]]):format(data.speed, data.dur + data.inc_stat)
+		Also prevent stuns, dazes and pinning effects.]]):format(data.speed + data.inc_stat, data.dur)
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)

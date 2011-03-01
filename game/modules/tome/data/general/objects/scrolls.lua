@@ -184,7 +184,7 @@ newEntity{ base = "BASE_INFUSION",
 		cooldown = resolvers.rngrange(13, 20),
 		dur = resolvers.mbonus_level(5, 4, function(e, v) return v * 1 end),
 		speed = resolvers.mbonus_level(700, 500, function(e, v) return v * 0.001 end),
-		use_stat_mod = 0.05,
+		use_stat_mod = 3,
 	},
 	inscription_talent = "INFUSION:_MOVEMENT",
 }
