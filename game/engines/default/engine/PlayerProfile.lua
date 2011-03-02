@@ -327,10 +327,11 @@ end
 -- Events from the profile thread
 -----------------------------------------------------------------------
 
-function _M:waitEvent(name, cb)
+function _M:waitEvent(name, cb, wait_max)
 	-- Wait anwser, this blocks thegame but cant really be avoided :/
 	local stop = false
 	local first = true
+	local tries = 0
 	while not stop do
 		if not first then
 			core.display.forceRedraw()
@@ -349,6 +350,8 @@ function _M:waitEvent(name, cb)
 			evt = core.profile.popEvent()
 		end
 		first = false
+		tries = tries + 1
+		if wait_max and tries * 50 > wait_max then break end
 	end
 end
 

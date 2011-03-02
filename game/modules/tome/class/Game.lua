@@ -1156,10 +1156,7 @@ function _M:setupMouse(reset)
 	-- Chat tooltips
 	profile.chat:onMouse(function(user, button, event)
 		local str = tstring{{"color","GOLD"}, {"font","bold"}, user.name, {"color","LAST"}, {"font","normal"}, true}
-		str:add({"color","ANTIQUE_WHITE"}, "Playing: ", {"color", "LAST"}, user.current_char,true)
-		if user.char_link then
-			str:add({"font","italic"},{"color","LIGHT_BLUE"},user.char_link,{"font","normal"},{"color","LAST"},true)
-		end
+		str:add({"color","ANTIQUE_WHITE"}, "Playing: ", {"color", "LAST"}, user.current_char, true)
 		str:add({"color","ANTIQUE_WHITE"}, "Game: ", {"color", "LAST"}, user.module, "(", user.valid, ")",true)
 		self.tooltip:displayAtMap(nil, nil, self.w, self.h, str)
 

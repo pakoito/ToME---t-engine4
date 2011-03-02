@@ -34,7 +34,7 @@ function _M:init(data)
 	if data.char_link then
 		str:add({"font","italic"},{"color","LIGHT_BLUE"},data.current_char.title or "unknown",{"font","normal"},{"color","LAST"},true)
 	else
-		str:add(data.current_char or "unknown",true)
+		str:add(data.current_char.title or "unknown",true)
 	end
 	str:add({"color","ANTIQUE_WHITE"}, "Game: ", {"color", "LAST"}, data.current_char.module or "unknown", true)
 	str:add({"color","ANTIQUE_WHITE"}, "Validation: ", {"color", "LAST"}, data.current_char.valid and "Game has been validated by the server" or "Game is not validated by the server", true)

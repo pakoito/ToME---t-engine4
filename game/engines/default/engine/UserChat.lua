@@ -101,11 +101,9 @@ function _M:event(e)
 			self.channels[e.channel].users[user.login] = {
 				login=user.login,
 				name=user.name,
-				cur_char=user.cur_char and user.cur_char.title or "unknown",
-				module=user.cur_char and user.cur_char.module or "unknown",
-				valid=user.cur_char and user.cur_char.valid and "validate" or "not validated",
-				char_link=user.cur_char and user.char_link,
-				profile=user.cur_char and user.profile,
+				current_char=user.current_char and user.current_char.title or "unknown",
+				module=user.current_char and user.current_char.module or "unknown",
+				valid=user.current_char and user.current_char.valid and "validate" or "not validated",
 			}
 		end
 		self.channels_changed = true
@@ -170,7 +168,7 @@ function _M:showUserInfo(login)
 
 	core.profile.pushOrder(string.format("o='ChatUserInfo' login=%q", login))
 	local data = nil
-	profile:waitEvent("UserInfo", function(e) data=e.data end)
+	profile:waitEvent("UserInfo", function(e) data=e.data end, 5000)
 	game:unregisterDialog(popup)
 
 	if not data then
