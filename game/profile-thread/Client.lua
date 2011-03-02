@@ -328,6 +328,13 @@ function _M:orderChatJoin(o)
 	end
 end
 
+function _M:orderChatPart(o)
+	self:command("Part", o.channel)
+	if self:read("200") then
+		self.chat:parted(o.channel)
+	end
+end
+
 function _M:orderChatUserInfo(o)
 	self:command("UINF", o.user)
 	if self:read("200") then

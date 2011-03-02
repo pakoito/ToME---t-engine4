@@ -25,33 +25,41 @@ module(..., package.seeall, class.make)
 function _M:init(client)
 	self.client = client
 	self.channels = {}
-	self.joined = {}
+	self.cjoined = {}
 end
 
 function _M:event(e)
 	if e.e == "ChatTalk" then
 		cprofile.pushEvent(string.format("e='Chat' se='Talk' channel=%q login=%q name=%q msg=%q", e.channel, e.login, e.name, e.msg))
-		print("[USERCHAT] channel talk", e.user, e.channel, e.msg)
+		print("[USERCHAT] channel talk", e.login, e.channel, e.msg)
 	elseif e.e == "ChatJoin" then
 		self.channels[e.channel] = self.channels[e.channel] or {}
-		self.channels[e.channel][e.user] = true
+		self.channels[e.channel][e.login] = true
 		cprofile.pushEvent(string.format("e='Chat' se='Join' channel=%q login=%q name=%q ", e.channel, e.login, e.name))
-		print("[USERCHAT] channel join", e.user, e.channel)
+		print("[USERCHAT] channel join", e.login, e.channel)
 	elseif e.e == "ChatPart" then
 		self.channels[e.channel] = self.channels[e.channel] or {}
-		self.channels[e.channel][e.user] = nil
+		self.channels[e.channel][e.login] = nil
 		cprofile.pushEvent(string.format("e='Chat' se='Part' channel=%q login=%q name=%q ", e.channel, e.login, e.name))
-		print("[USERCHAT] channel part", e.user, e.channel)
+		print("[USERCHAT] channel part", e.login, e.channel)
 	end
 end
 
 function _M:joined(channel)
-	self.joined[channel] = true
+	self.cjoined[channel] = true
+	print("[ONLINE PROFILE] connected to channel", channel)
+end
+
+function _M:parted(channel)
+	self.cjoined[channel] = nil
+	print("[ONLINE PROFILE] parted from channel", channel)
 end
 
 function _M:reconnect()
 	-- Rejoin every channels
-	for chan, _ in pairs(self.joined) do
-		client:orderChatJoin{channel=chan}
+	print("[ONLINE PROFILE] reconnecting to channels")
+	for chan, _ in pairs(self.cjoined) do
+		print("[ONLINE PROFILE] reconnecting to channel", chan)
+		self.client:orderChatJoin{channel=chan}
 	end
 end
