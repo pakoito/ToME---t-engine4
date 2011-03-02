@@ -827,6 +827,7 @@ static int map_draw_seen_texture(lua_State *L)
 	SMOOTH_SCROLL();
 	x -= animdx;
 	y -= animdy;
+//	printf("SEEN %3dx%3d :: %fx%f\n",x,y,animdx,animdy);
 
 	tglBindTexture(GL_TEXTURE_2D, map->seens_texture);
 
@@ -1109,6 +1110,7 @@ static int map_to_screen(lua_State *L)
 	SMOOTH_SCROLL();
 	x -= animdx;
 	y -= animdy;
+//	printf("MAP_ %3dx%3d :: %fx%f\n",x,y,animdx,animdy);
 
 	map->used_mx = mx;
 	map->used_my = my;
