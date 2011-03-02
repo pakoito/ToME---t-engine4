@@ -232,6 +232,15 @@ static float fov_slope(float dx, float dy) {
             }                                                                                   \
         }                                                                                       \
                                                                                                 \
+        /* we also need to check if the previous spot is blocked */                             \
+        if (dy0 > 0) {                                                                          \
+            ry -= 1;                                                                            \
+            if (settings->opaque(data->map, x, y)) {                                            \
+                prev_blocked = 1;                                                               \
+            }                                                                                   \
+            ry += 1;                                                                            \
+        }                                                                                       \
+                                                                                                \
         switch (settings->shape) {                                                              \
         case FOV_SHAPE_CIRCLE_PRECALCULATE:                                                     \
             h = height(settings, dx, data->radius);                                             \
