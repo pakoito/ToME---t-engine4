@@ -25,6 +25,7 @@ local c = Client.new()
 function step_profile()
 	local ok, res = xpcall(function() return c:run() end, function(...) server:logError("[profile-thread-error:stacktrace] %s", debug.traceback(...)) end)
 	if not ok and res then
+		print("[PROFILE THREAD] error", res)
 		return false
 	end
 	return res

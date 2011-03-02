@@ -120,6 +120,7 @@ function _M:pread(ncode)
 end
 
 function _M:login()
+print("profile login", self.sock , self.auth , self.user_login , self.user_pass)
 	if self.sock and not self.auth and self.user_login and self.user_pass then
 		self:command("AUTH", self.user_login)
 		self:read("200")
@@ -193,6 +194,7 @@ function _M:run()
 end
 
 function _M:handleOrder(o)
+	print("==== profile order ====", o)
 	o = o:unserialize()
 	if not self.sock and o.o ~= "Login" and o.o ~= "CurrentCharacter" and o.o ~= "CheckModuleHash" then return end -- Dont do stuff without a connection, unless we try to auth
 	if self["order"..o.o] then self["order"..o.o](self, o) end
@@ -212,13 +214,15 @@ function _M:orderNewProfile2(o)
 end
 
 function _M:orderLogin(o)
+	self.user_login = o.l
+	self.user_pass = o.p
+	print("profile strogin login info", o.l, o.p)
+
 	-- Already logged?
 	if self.auth and self.auth.login == o.l then
 		print("[PROFILE] reusing login", self.auth.name)
 		cprofile.pushEvent(string.format("e='Auth' ok=%q", table.serialize(self.auth)))
 	else
-		self.user_login = o.l
-		self.user_pass = o.p
 		self:login()
 	end
 end
@@ -314,7 +318,9 @@ end
 
 function _M:orderChatJoin(o)
 	self:command("JOIN", o.channel)
-	self:read("200")
+	if self:read("200") then
+		self.chat:joined(o.channel)
+	end
 end
 
 function _M:orderChatUserInfo(o)

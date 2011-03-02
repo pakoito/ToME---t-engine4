@@ -67,6 +67,7 @@ int pop_order(lua_State *L)
 
 	if (q)
 	{
+//		printf("[profile event] POP %s\n", q->payload);
 		lua_pushlstring(L, q->payload, q->payload_len);
 		free(q->payload);
 		free(q);
@@ -141,11 +142,6 @@ int thread_profile(void *data)
 	luaL_openlib(L, "cprofile", threadlib, 0); lua_pop(L, 1);
 
 	profile->L = L;
-	profile->iqueue_head = profile->iqueue_tail = profile->oqueue_head = profile->oqueue_tail = NULL;
-	profile->lock_iqueue = SDL_CreateMutex();
-	profile->wait_iqueue = SDL_CreateSemaphore(0);
-	profile->lock_oqueue = SDL_CreateMutex();
-	profile->wait_oqueue = SDL_CreateSemaphore(0);
 
 	// And run the lua engine pre init scripts
 	if (!luaL_loadfile(L, "/loader/pre-init.lua")) docall(L, 0, 0);
@@ -180,6 +176,11 @@ int create_profile_thread(lua_State *L)
 	main_profile = profile;
 
 	profile->running = TRUE;
+	profile->iqueue_head = profile->iqueue_tail = profile->oqueue_head = profile->oqueue_tail = NULL;
+	profile->lock_iqueue = SDL_CreateMutex();
+	profile->wait_iqueue = SDL_CreateSemaphore(0);
+	profile->lock_oqueue = SDL_CreateMutex();
+	profile->wait_oqueue = SDL_CreateSemaphore(0);
 
 	thread = SDL_CreateThread(thread_profile, profile);
 	if (thread == NULL) {
