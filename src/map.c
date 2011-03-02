@@ -765,7 +765,7 @@ static int map_update_seen_texture(lua_State *L)
 	map->seensinfo_w = map->mwidth + 3;
 	map->seensinfo_h = map->mheight + 3;
 
-	for (jj = 0; jj < map->mheight + 3 - 1; jj++)
+	for (jj = 0; jj < map->mheight + 3; jj++)
 	{
 		for (ii = 0; ii < map->mwidth + 3; ii++)
 		{
@@ -816,7 +816,7 @@ static int map_draw_seen_texture(lua_State *L)
 	map_type *map = (map_type*)auxiliar_checkclass(L, "core{map}", 1);
 	int x = lua_tonumber(L, 2);
 	int y = lua_tonumber(L, 3);
-	int nb_keyframes = luaL_checknumber(L, 4);
+	int nb_keyframes = 0;
 	x += -map->tile_w;
 	y += -map->tile_h;
 	int w = (map->mwidth + 3) * map->tile_w;
@@ -905,7 +905,7 @@ static int map_set_scroll(lua_State *L)
 static int map_get_scroll(lua_State *L)
 {
 	map_type *map = (map_type*)auxiliar_checkclass(L, "core{map}", 1);
-	int nb_keyframes = 1;
+	int nb_keyframes = 0;
 	int mx = map->mx;
 	int my = map->my;
 	SMOOTH_SCROLL();

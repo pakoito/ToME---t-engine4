@@ -68,19 +68,25 @@ function _M:event(e)
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
 		self:addMessage(e.channel, e.login, e.name, e.msg)
 
-		if type(game) == "table" and game.log then game.log("#YELLOW#<%s> %s", e.name, e.msg) end
+		if type(game) == "table" and game.logNoNotify then
+			game.logNoNotify("#YELLOW#<%s> %s", e.name, e.msg)
+		end
 	elseif e.se == "Join" then
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
 		self.channels[e.channel].users[e.login] = {name=e.name, login=e.login}
 		self.channels_changed = true
 		self:addMessage(e.channel, e.login, e.name, "#{italic}##FIREBRICK#has joined the channel#{normal}#")
-		if type(game) == "table" and game.log and e.channel == self.cur_channel then game.log("#{italic}##FIREBRICK#%s has joined channel %s (press space to talk).#{normal}#", e.login, e.channel) end
+		if type(game) == "table" and game.logNoNotify and e.channel == self.cur_channel then
+			game.logNoNotify("#{italic}##FIREBRICK#%s has joined channel %s (press space to talk).#{normal}#", e.login, e.channel)
+		end
 	elseif e.se == "Part" then
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
 		self.channels[e.channel].users[e.login] = nil
 		self.channels_changed = true
 		self:addMessage(e.channel, e.login, e.name, "#{italic}##FIREBRICK#has left the channel#{normal}#")
-		if type(game) == "table" and game.log and e.channel == self.cur_channel then game.log("#{italic}##FIREBRICK#%s has left channel %s.#{normal}#", e.login, e.channel) end
+		if type(game) == "table" and game.logNoNotify and e.channel == self.cur_channel then
+			game.logNoNotify("#{italic}##FIREBRICK#%s has left channel %s.#{normal}#", e.login, e.channel)
+		end
 	elseif e.se == "UserInfo" then
 		local info = e.data:unserialize()
 		if not info then return end

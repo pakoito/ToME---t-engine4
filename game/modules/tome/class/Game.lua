@@ -97,6 +97,11 @@ function _M:run()
 	self:createSeparators()
 
 	self.log = function(style, ...) if type(style) == "number" then self.logdisplay(...) self.flash(style, ...) else self.logdisplay(style, ...) self.flash(self.flash.NEUTRAL, style, ...) end end
+	self.logNoNotify = function(style, ...) if type(style) == "number" then
+		local old = self.logdisplay.changed
+		self.logdisplay(...) self.flash(style, ...) else self.logdisplay(style, ...) self.flash(self.flash.NEUTRAL, style, ...) end
+		if self.show_userchat then self.logdisplay.changed = old end
+	end
 	self.logSeen = function(e, style, ...) if e and self.level.map.seens(e.x, e.y) then self.log(style, ...) end end
 	self.logPlayer = function(e, style, ...) if e == self.player or e == self.party then self.log(style, ...) end end
 
@@ -1349,14 +1354,15 @@ function _M:displayUI()
 	if self.show_npc_list then _sel_icon:toScreenFull(x + _talents_icon_w, y, _sel_icon_w, _sel_icon_h, _sel_icon_w, _sel_icon_h) end
 	y = y + _talents_icon_h
 
+	local glow = (1+math.sin(core.game.getTime() / 500)) / 2 * 100 + 77
 	local x, y = icon_x, bottom + _sep_horiz[3] / 2
+	if self.logdisplay.changed then core.display.drawQuad(x, y, _sel_icon_w, _sel_icon_h, 139, 210, 77, glow) end
 	_log_icon:toScreenFull(x, y, _log_icon_w, _log_icon_h, _log_icon_w, _log_icon_h)
-	if not self.show_userchat then _sel_icon:toScreenFull(x, y, _sel_icon_w, _sel_icon_h, _sel_icon_w, _sel_icon_h)
-	elseif self.logdisplay.changed then core.display.drawQuad(x, y, _sel_icon_w, _sel_icon_h, 128, 128, 128, 128) end
+	if not self.show_userchat then _sel_icon:toScreenFull(x, y, _sel_icon_w, _sel_icon_h, _sel_icon_w, _sel_icon_h) end
 	y = y + _log_icon_h
+	if profile.chat.changed then core.display.drawQuad(x, y, _sel_icon_w, _sel_icon_h, 139, 210, 77, glow) end
 	_chat_icon:toScreenFull(x, y, _chat_icon_w, _chat_icon_h, _chat_icon_w, _chat_icon_h)
-	if self.show_userchat then _sel_icon:toScreenFull(x, y, _sel_icon_w, _sel_icon_h, _sel_icon_w, _sel_icon_h)
-	elseif profile.chat.changed then core.display.drawQuad(x, y, _sel_icon_w, _sel_icon_h, 128, 128, 128, 128) end
+	if self.show_userchat then _sel_icon:toScreenFull(x, y, _sel_icon_w, _sel_icon_h, _sel_icon_w, _sel_icon_h) end
 	y = y + _chat_icon_h
 
 	_inventory_icon:toScreenFull(x + _talents_icon_w/2, y, _inventory_icon_w, _inventory_icon_h, _inventory_icon_w, _inventory_icon_h) y = y + _inventory_icon_h
@@ -1408,6 +1414,7 @@ function _M:clickIcon(bx, by)
 			self.player.changed = true
 		else
 			self.show_userchat = false
+			self.logdisplay.changed = true
 		end
 	elseif by < 2*_talents_icon_h then
 		if bx >= _talents_icon_w then
