@@ -83,12 +83,15 @@ function _M:setInscription(id, name, data, cooldown, vocal, src, bypass_max_same
 
 	-- Unlearn old talent
 	local oldname = self.inscriptions[id]
+	local oldpos = nil
 	if oldname then
+		for i = 1, 36 do
+			if self.hotkey[i] and self.hotkey[i][1] == "talent" and self.hotkey[i][2] == "T_"..oldname then oldpos = i break end
+		end
 		self:unlearnTalent(self["T_"..oldname])
 		self.inscriptions_data[oldname] = nil
 	end
 
---	for k, e in pairs(data) do print(" ****",k,e) end
 
 	-- Learn new talent
 	name = name.."_"..id
@@ -103,6 +106,15 @@ function _M:setInscription(id, name, data, cooldown, vocal, src, bypass_max_same
 	if vocal then
 		game.logPlayer(self, "You are now inscribed with %s.", t.name)
 	end
+
+	-- Hotkey
+	if oldpos then
+		for i = 1, 36 do
+			if self.hotkey[i] and self.hotkey[i][1] == "talent" and self.hotkey[i][2] == "T_"..name then self.hotkey[i] = nil end
+		end
+		self.hotkey[oldpos] = {"talent", "T_"..name}
+	end
+
 	return true
 end
 

@@ -394,7 +394,7 @@ end
 function _M:updateCurrentChar()
 	if not self.party then return end
 	local player = self.party:findMember{main=true}
-	profile:currentCharacter(self.__mod_info.name, ("%s the level %d %s %s"):format(player.name, player.level, player.descriptor.subrace, player.descriptor.subclass))
+	profile:currentCharacter(self.__mod_info.name, ("%s the level %d %s %s"):format(player.name, player.level, player.descriptor.subrace, player.descriptor.subclass), player.__te4_uuid)
 end
 
 function _M:getSaveDescription()
