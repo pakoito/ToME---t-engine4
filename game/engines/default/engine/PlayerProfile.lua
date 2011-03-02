@@ -551,6 +551,7 @@ function _M:currentCharacter(module, title, uuid)
 	if not self.auth then return end
 	core.profile.pushOrder(table.serialize{o="CurrentCharacter",
 		module=module,
+		mod_short=(game and type(game)=="table") and game.__mod_info.short_name or "unknown",
 		title=title,
 		valid=self.hash_valid,
 		uuid=uuid,

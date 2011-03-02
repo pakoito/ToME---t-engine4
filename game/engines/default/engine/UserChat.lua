@@ -21,6 +21,7 @@ require "engine.class"
 require "engine.ui.Base"
 local KeyBind = require "engine.KeyBind"
 local Mouse = require "engine.Mouse"
+local Dialog = require "engine.ui.Dialog"
 local Slider = require "engine.ui.Slider"
 
 --- Module that handles multiplayer chats
@@ -79,6 +80,7 @@ function _M:event(e)
 		if type(game) == "table" and game.logNoNotify and e.channel == self.cur_channel then
 			game.logNoNotify("#{italic}##FIREBRICK#%s has joined channel %s (press space to talk).#{normal}#", e.login, e.channel)
 		end
+		self:updateChanList()
 	elseif e.se == "Part" then
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
 		self.channels[e.channel].users[e.login] = nil
@@ -87,6 +89,7 @@ function _M:event(e)
 		if type(game) == "table" and game.logNoNotify and e.channel == self.cur_channel then
 			game.logNoNotify("#{italic}##FIREBRICK#%s has left channel %s.#{normal}#", e.login, e.channel)
 		end
+		self:updateChanList()
 	elseif e.se == "UserInfo" then
 		local info = e.data:unserialize()
 		if not info then return end
@@ -101,6 +104,8 @@ function _M:event(e)
 				cur_char=user.cur_char and user.cur_char.title or "unknown",
 				module=user.cur_char and user.cur_char.module or "unknown",
 				valid=user.cur_char and user.cur_char.valid and "validate" or "not validated",
+				char_link=user.cur_char and user.char_link,
+				profile=user.cur_char and user.profile,
 			}
 		end
 		self.channels_changed = true
@@ -132,17 +137,12 @@ function _M:talk(msg)
 	core.profile.pushOrder(string.format("o='ChatTalk' channel=%q msg=%q", self.cur_channel, msg))
 end
 
-function _M:getUserInfo(user)
-	if not profile.auth then return end
-	if not user then return end
-	core.profile.pushOrder(string.format("o='ChatUserInfo' user=%q", user))
-end
-
 --- Request a line to send
 -- TODO: make it better than a simple dialog
 function _M:talkBox()
 	if not profile.auth then return end
-	local d = require("engine.dialogs.GetText").new("Talk", self.cur_channel, 0, 250, function(text)
+	local GetText = require "engine.dialogs.GetText"
+	local d = GetText.new("Talk", self.cur_channel, 0, 250, function(text)
 		self:talk(text)
 	end)
 	d.key:addBind("EXIT", function() game:unregisterDialog(d) end)
@@ -153,11 +153,34 @@ function _M:talkBox()
 end
 
 function _M:updateChanList(force)
-	local time = core.game.getTime()
-	if force or not self.last_chan_update or self.last_chan_update + 60000 < time then
+	local time = os.time()
+	if force or not self.last_chan_update or self.last_chan_update + 60 < time then
 		self.last_chan_update = time
 		core.profile.pushOrder(string.format("o='ChatChannelList' channel=%q", self.cur_channel))
 	end
+end
+
+--- Display user infos
+function _M:showUserInfo(login)
+	if not profile.auth then return end
+
+	local popup = Dialog:simplePopup("Requesting...", "Requesting user info...", nil, true)
+	popup.__showup = nil
+	core.display.forceRedraw()
+
+	core.profile.pushOrder(string.format("o='ChatUserInfo' login=%q", login))
+	local data = nil
+	profile:waitEvent("UserInfo", function(e) data=e.data end)
+	game:unregisterDialog(popup)
+
+	if not data then
+		Dialog:simplePopup("Error", "The server does not know about this player.")
+		return
+	end
+	data = zlib.decompress(data):unserialize()
+
+	local UserInfo = require "engine.dialogs.UserInfo"
+	game:registerDialog(UserInfo.new(data))
 end
 
 ----------------------------------------------------------------
@@ -212,7 +235,7 @@ function _M:resize(x, y, w, h, fontname, fontsize, color, bgcolor)
 			end
 			if last_ok then self:selectChannel(last_ok.name) end
 		else
-			if not self.on_mouse then return end
+			if not self.on_mouse or not self.dlist then return end
 			local citem = nil
 			for i = 1, #self.dlist do
 				local item = self.dlist[i]

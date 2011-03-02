@@ -336,13 +336,15 @@ function _M:orderChatPart(o)
 end
 
 function _M:orderChatUserInfo(o)
-	self:command("UINF", o.user)
+	self:command("UINF", o.login)
 	if self:read("200") then
 		local _, _, size = self.last_line:find("^([0-9]+)")
 		size = tonumber(size)
 		if not size or size < 1 then return end
 		local body = self:receive(size)
-		cprofile.pushEvent(string.format("e='Chat' se='UserInfo' user=%q data=%q", o.user, body))
+		cprofile.pushEvent(string.format("e='UserInfo' login=%q data=%q", o.login, body))
+	else
+		cprofile.pushEvent(string.format("e='UserInfo' unknown=true login=%q", o.login))
 	end
 end
 
