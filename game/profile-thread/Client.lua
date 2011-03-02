@@ -36,6 +36,7 @@ function _M:connected()
 	print("[PROFILE] Thread connected to te4.org")
 	self:login()
 	self.chat:reconnect()
+	cprofile.pushEvent("e='Connected'")
 	return true
 end
 
@@ -55,6 +56,12 @@ function _M:write(str, ...)
 end
 
 function _M:disconnect()
+	cprofile.pushEvent("e='Disconnected'")
+	if self.psock then
+		self.psock:close()
+		self.psock = nil
+	end
+	self.sock:close()
 	self.sock = nil
 	self.auth = nil
 	core.game.sleep(5000) -- Wait 5 secs
@@ -120,7 +127,6 @@ function _M:pread(ncode)
 end
 
 function _M:login()
-print("profile login", self.sock , self.auth , self.user_login , self.user_pass)
 	if self.sock and not self.auth and self.user_login and self.user_pass then
 		self:command("AUTH", self.user_login)
 		self:read("200")
@@ -194,7 +200,6 @@ function _M:run()
 end
 
 function _M:handleOrder(o)
-	print("==== profile order ====", o)
 	o = o:unserialize()
 	if not self.sock and o.o ~= "Login" and o.o ~= "CurrentCharacter" and o.o ~= "CheckModuleHash" then return end -- Dont do stuff without a connection, unless we try to auth
 	if self["order"..o.o] then self["order"..o.o](self, o) end

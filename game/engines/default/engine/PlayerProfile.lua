@@ -432,6 +432,14 @@ function _M:eventChat(e)
 	self.chat:event(e)
 end
 
+function _M:eventConnected(e)
+	if game and type(game) == "table" and game.log then game.log("#YELLOW#Connection to online server established.") end
+end
+
+function _M:eventDisconnected(e)
+	if game and type(game) == "table" and game.log then game.log("#YELLOW#Connection to online server lost, trying to reconnect.") end
+end
+
 --- Got an event from the profile thread
 function _M:handleEvent(e)
 	e = e:unserialize()
