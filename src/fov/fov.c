@@ -237,7 +237,7 @@ static float fov_slope(float dx, float dy) {
             h = height(settings, dx, data->radius);                                             \
             break;                                                                              \
         case FOV_SHAPE_CIRCLE:                                                                  \
-            h = (unsigned)sqrtf((float)(data->radius*data->radius - dx*dx));                    \
+            h = (unsigned)(sqrt((data->radius)*(data->radius) + data->radius - dx*dx));         \
             break;                                                                              \
         case FOV_SHAPE_OCTAGON:                                                                 \
             h = (data->radius - dx)<<1;                                                         \
@@ -434,4 +434,132 @@ void fov_beam(fov_settings_type *settings, void *map, void *source,
     BEAM_DIRECTION_DIAG(FOV_NORTHWEST, mmn, mmy, mpn, mpy, pmy, pmn, ppy, ppn);
     BEAM_DIRECTION_DIAG(FOV_SOUTHEAST, ppy, ppn, pmy, pmn, mpn, mpy, mmn, mmy);
     BEAM_DIRECTION_DIAG(FOV_SOUTHWEST, pmy, mpn, ppy, mmn, ppn, mmy, pmn, mpy);
+}
+
+#define BEAM_ANY_DIRECTION(offset, p1, p2, p3, p4, p5, p6, p7, p8)       \
+angle_begin -= offset;                                               \
+angle_end -= offset;                                                 \
+start_slope = angle_begin;                                           \
+end_slope = betweenf(angle_end, 0.0f, 1.0f);                         \
+fov_octant_##p1(&data, 1, start_slope, end_slope, true, true);       \
+\
+if (angle_end - 1.0 > FLT_EPSILON) {                                 \
+start_slope = betweenf(2.0f - angle_end, 0.0f, 1.0f);            \
+fov_octant_##p2(&data, 1, start_slope, 1.0f, true, false);       \
+\
+if (angle_end - 2.0 > FLT_EPSILON) {                                 \
+end_slope = betweenf(angle_end - 2.0f, 0.0f, 1.0f);              \
+fov_octant_##p3(&data, 1, 0.0f, end_slope, false, true);         \
+\
+if (angle_end - 3.0 > FLT_EPSILON) {                                 \
+start_slope = betweenf(4.0f - angle_end, 0.0f, 1.0f);            \
+fov_octant_##p4(&data, 1, start_slope, 1.0f, true, false);       \
+\
+if (angle_end - 4.0 > FLT_EPSILON) {                                 \
+end_slope = betweenf(angle_end - 4.0f, 0.0f, 1.0f);              \
+fov_octant_##p5(&data, 1, 0.0f, end_slope, false, true);         \
+\
+if (angle_end - 5.0 > FLT_EPSILON) {                                 \
+start_slope = betweenf(6.0f - angle_end, 0.0f, 1.0f);            \
+fov_octant_##p6(&data, 1, start_slope, 1.0f, true, false);       \
+\
+if (angle_end - 6.0 > FLT_EPSILON) {                                 \
+end_slope = betweenf(angle_end - 6.0f, 0.0f, 1.0f);              \
+fov_octant_##p7(&data, 1, 0.0f, end_slope, false, true);         \
+\
+if (angle_end - 7.0 > FLT_EPSILON) {                                 \
+start_slope = betweenf(8.0f - angle_end, 0.0f, 1.0f);            \
+fov_octant_##p8(&data, 1, start_slope, 1.0f, false, false);      \
+}}}}}}}
+
+#define BEAM_ANY_DIRECTION_DIAG(offset, p1, p2, p3, p4, p5, p6, p7, p8)  \
+angle_begin -= offset;                                               \
+angle_end -= offset;                                                 \
+start_slope = betweenf(1.0 - angle_end, 0.0f, 1.0f);                 \
+end_slope = 1.0 - angle_begin;                                       \
+fov_octant_##p1(&data, 1, start_slope, end_slope, true, true);       \
+\
+if (angle_end - 1.0 > FLT_EPSILON) {                                 \
+end_slope = betweenf(angle_end - 1.0f, 0.0f, 1.0f);              \
+fov_octant_##p2(&data, 1, 0.0f, end_slope, false, true);         \
+\
+if (angle_end - 2.0 > FLT_EPSILON) {                                 \
+start_slope = betweenf(3.0f - angle_end, 0.0f, 1.0f);            \
+fov_octant_##p3(&data, 1, start_slope, 1.0f, true, false);       \
+\
+if (angle_end - 3.0 > FLT_EPSILON) {                                 \
+end_slope = betweenf(angle_end - 3.0f, 0.0f, 1.0f);              \
+fov_octant_##p4(&data, 1, 0.0f, end_slope, false, true);         \
+\
+if (angle_end - 4.0 > FLT_EPSILON) {                                 \
+start_slope = betweenf(5.0f - angle_end, 0.0f, 1.0f);            \
+fov_octant_##p5(&data, 1, start_slope, 1.0f, true, false);       \
+\
+if (angle_end - 5.0 > FLT_EPSILON) {                                 \
+end_slope = betweenf(angle_end - 5.0f, 0.0f, 1.0f);              \
+fov_octant_##p6(&data, 1, 0.0f, end_slope, false, true);         \
+\
+if (angle_end - 6.0 > FLT_EPSILON) {                                 \
+start_slope = betweenf(7.0f - angle_end, 0.0f, 1.0f);            \
+fov_octant_##p7(&data, 1, start_slope, 1.0f, true, false);       \
+\
+if (angle_end - 7.0 > FLT_EPSILON) {                                 \
+end_slope = betweenf(angle_end - 7.0f, 0.0f, 1.0f);              \
+fov_octant_##p8(&data, 1, 0.0f, end_slope, false, false);        \
+}}}}}}}
+
+void fov_beam_any_angle(fov_settings_type *settings, void *map, void *source,
+						int source_x, int source_y, unsigned radius,
+						float dir_angle, float beam_angle) {
+	
+    fov_private_data_type data;
+    float start_slope, end_slope, angle_begin, angle_end;
+	
+    data.settings = settings;
+    data.map = map;
+    data.source = source;
+    data.source_x = source_x;
+    data.source_y = source_y;
+    data.radius = radius;
+	
+    if (beam_angle <= 0.0f) {
+        return;
+    } else if (beam_angle >= 360.0f) {
+        _fov_circle(&data);
+        return;
+    }
+	
+    while (dir_angle >= 360.0f) {
+		dir_angle -= 360.0f;
+    }
+	
+    while (dir_angle < 0.0f) {
+		dir_angle += 360.0f;
+    }
+	
+    /* Calculate the angles as a percentage of 45 degrees */
+    angle_begin = (dir_angle - 0.5*beam_angle) / 45.0f;
+    angle_end = (dir_angle + 0.5*beam_angle) / 45.0f;
+    if (angle_begin < 0.0f) {
+        angle_begin += 8.0f;
+        angle_end += 8.0f;
+    }
+	
+    if (1.0f - angle_begin > FLT_EPSILON) {
+        BEAM_ANY_DIRECTION(0.0f, ppn, ppy, pmy, mpn, mmn, mmy, mpy, pmn);
+    } else if (2.0f - angle_begin > FLT_EPSILON) {
+        BEAM_ANY_DIRECTION_DIAG(1.0f, ppy, pmy, mpn, mmn, mmy, mpy, pmn, ppn);
+    } else if (3.0f - angle_begin > FLT_EPSILON) {
+        BEAM_ANY_DIRECTION(2.0f, pmy, mpn, mmn, mmy, mpy, pmn, ppn, ppy);
+    } else if (4.0f - angle_begin > FLT_EPSILON) {
+        BEAM_ANY_DIRECTION_DIAG(3.0f, mpn, mmn, mmy, mpy, pmn, ppn, ppy, pmy);
+    } else if (5.0f - angle_begin > FLT_EPSILON) {
+        BEAM_ANY_DIRECTION(4.0f, mmn, mmy, mpy, pmn, ppn, ppy, pmy, mpn);
+    } else if (6.0f - angle_begin > FLT_EPSILON) {
+        BEAM_ANY_DIRECTION_DIAG(5.0f, mmy, mpy, pmn, ppn, ppy, pmy, mpn, mmn);
+    } else if (7.0f - angle_begin > FLT_EPSILON) {
+        BEAM_ANY_DIRECTION(6.0f, mpy, pmn, ppn, ppy, pmy, mpn, mmn, mmy);
+    } else if (8.0f - angle_begin > FLT_EPSILON) {
+        BEAM_ANY_DIRECTION_DIAG(7.0f, pmn, ppn, ppy, pmy, mpn, mmn, mmy, mpy);
+    }
 }

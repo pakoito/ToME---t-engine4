@@ -129,13 +129,14 @@ function _M:display(dispx, dispy)
 			end,
 		nil)
 	elseif self.target_type.cone and self.target_type.cone > 0 then
-		core.fov.calc_beam(
+		local dir_angle = math.deg(math.atan2(self.target.y - self.source_actor.y, self.target.x - self.source_actor.x))
+		core.fov.calc_beam_any_angle(
 			stop_radius_x,
 			stop_radius_y,
 			game.level.map.w,
 			game.level.map.h,
 			self.target_type.cone,
-			initial_dir,
+			dir_angle,
 			self.target_type.cone_angle,
 			function(_, px, py)
 				if self.target_type.block_radius and self.target_type:block_radius(px, py) then return true end
@@ -181,12 +182,7 @@ function _M:getType(t)
 			if not typ.no_restrict then
 				if typ.range and typ.source_actor and typ.source_actor.x then
 					local dist = core.fov.distance(typ.source_actor.x, typ.source_actor.y, lx, ly)
-					-- Need to handle range 1 separately to allow diagonal hits
-					if typ.range == 1 then
-						if math.floor(dist) > 1 then return true, false, false end
-					else
-						if dist > typ.range then return true, false, false end
-					end
+					if math.floor(dist - typ.range + 0.5) > 0 then return true, false, false end
 				end
 				if typ.requires_knowledge and not game.level.map.remembers(lx, ly) and not game.level.map.seens(lx, ly) then
 					return true, false, false

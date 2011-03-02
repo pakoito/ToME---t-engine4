@@ -99,13 +99,14 @@ function _M:project(t, x, y, damtype, dam, particles)
 		nil)
 		addGrid(stop_x, stop_y)
 	elseif typ.cone and typ.cone > 0 then
-		core.fov.calc_beam(
+		local dir_angle = math.deg(math.atan2(y - self.y, x - self.x))
+		core.fov.calc_beam_any_angle(
 			stop_radius_x,
 			stop_radius_y,
 			game.level.map.w,
 			game.level.map.h,
 			typ.cone,
-			initial_dir,
+			dir_angle,
 			typ.cone_angle,
 			function(_, px, py)
 				if typ.block_radius and typ:block_radius(px, py) then return true end
@@ -307,7 +308,8 @@ function _M:projectDoStop(typ, tg, damtype, dam, particles, lx, ly, tmp, rx, ry)
 		addGrid(rx, ry)
 	elseif typ.cone and typ.cone > 0 then
 		local initial_dir = lx and util.getDir(lx, ly, x, y) or 5
-		core.fov.calc_beam(
+		local dir_angle = math.deg(math.atan2(ly - typ.source_actor.y, lx - typ.source_actor.x))
+		core.fov.calc_beam_any_angle(
 			rx, 
 			ry, 
 			game.level.map.w, 

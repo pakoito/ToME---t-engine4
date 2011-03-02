@@ -22,21 +22,7 @@ local dir = 0
 local spread = spread or 55/2
 local radius = radius or 6
 
-local max = math.max(math.abs(tx), math.abs(ty))
-tx = tx / max
-ty = ty / max
-if tx >= 0.5 then tx = 1 elseif tx <= -0.5 then tx = -1 else tx = 0 end
-if ty >= 0.5 then ty = -1 elseif ty <= -0.5 then ty = 1 else ty = 0 end -- Why the hell is ty inverted ? .. but it works :/
-
-if tx == 1 and ty == 0 then dir = 0
-elseif tx ==  1 and ty == -1 then dir = 45
-elseif tx ==  0 and ty == -1 then dir = 90
-elseif tx == -1 and ty == -1 then dir = 135
-elseif tx == -1 and ty ==  0 then dir = 180
-elseif tx == -1 and ty ==  1 then dir = 225
-elseif tx ==  0 and ty ==  1 then dir = 270
-elseif tx ==  1 and ty ==  1 then dir = 315
-end
+dir = math.deg(math.atan2(ty, tx))
 
 return { generator = function()
 	local sradius = (radius + 0.5) * (engine.Map.tile_w + engine.Map.tile_h) / 2

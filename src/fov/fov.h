@@ -238,6 +238,28 @@ void fov_beam(fov_settings_type *settings, void *map, void *source,
               fov_direction_type direction, float angle
 );
 
+/**
+ * Calculate a field of view from source at (x,y), pointing
+ * in the given direction (in degrees) and with the given angle. The larger
+ * the angle, the wider, "less focused" the beam. Each side of the
+ * line pointing in the direction from the source will be half the
+ * angle given such that the angle specified will be represented on
+ * the raster.
+ *
+ * \param settings Pointer to data structure containing settings.
+ * \param map Pointer to map data structure to be passed to callbacks.
+ * \param source Pointer to data structure holding source of light.
+ * \param source_x x-axis coordinate from which to start.
+ * \param source_y y-axis coordinate from which to start.
+ * \param radius Euclidean distance from (x,y) after which to stop.
+ * \param dir_angle Direction angle, in degrees.
+ * \param beam_angle The angle at the base of the beam of light, in degrees.
+ */
+void fov_beam_any_angle(fov_settings_type *settings, void *map, void *source,
+						int source_x, int source_y, unsigned radius,
+						float dir_angle, float beam_angle
+);
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif

@@ -73,16 +73,22 @@ newTalent{
 		return 2 + self:getTalentLevel(t) / 2
 	end,
 	no_npc_use = true,
+	getDamage = function(self, t)
+		return self:combatDamage() * 0.8
+	end,
 	action = function(self, t)
 		local tg = {type="ball", range=0, selffire=false, radius=self:getTalentRadius(t), talent=t, no_restrict=true}
-		self:project(tg, self.x, self.y, DamageType.PHYSKNOCKBACK, {dam=self:combatDamage() * 0.8, dist=4})
+		self:project(tg, self.x, self.y, DamageType.PHYSKNOCKBACK, {dam=t.getDamage(self, t), dist=4})
 		self:doQuake(tg, self.x, self.y)
 		return true
 	end,
 	info = function(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[You slam your foot onto the ground, shaking the area around you in a radius of %d, damaging them for %d and knocking back up to 4 titles away.
-		The damage will increase with the Strength stat]]):format(radius, self:combatDamage() * 0.8)
+		local dam = t.getDamage(self, t)
+		return ([[You slam your foot onto the ground, shaking the area around you in a radius of %d.
+		Creatures caught by the quake will be damaged  for %d and knocked back up to 4 titles away.
+		The terrain will also be moved around within the quake's radius.
+		The damage will increase with the Strength stat.]]):format(radius, dam)
 	end,
 }
 

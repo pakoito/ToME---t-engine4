@@ -195,6 +195,48 @@ static int lua_fov_calc_beam(lua_State *L)
 	return 0;
 }
 
+static int lua_fov_calc_beam_any_angle(lua_State *L)
+{
+	int x = luaL_checknumber(L, 1);
+	int y = luaL_checknumber(L, 2);
+	int w = luaL_checknumber(L, 3);
+	int h = luaL_checknumber(L, 4);
+	int radius = luaL_checknumber(L, 5);
+	float dir_angle = luaL_checknumber(L, 6);
+	float beam_angle = luaL_checknumber(L, 7);
+	struct lua_fov fov;
+	if (lua_isuserdata(L, 10))
+	{
+		fov.cache = (struct lua_fovcache*)auxiliar_checkclass(L, "fov{cache}", 10);
+		fov.cache_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+	}
+	else
+	{
+		lua_pop(L, 1);
+		fov.cache_ref = LUA_NOREF;
+		fov.cache = NULL;
+	}
+	fov.L = L;
+	fov.apply_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+	fov.opaque_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+	fov.cache = NULL;
+	fov.w = w;
+	fov.h = h;
+	
+	fov_settings_init(&(fov.fov_settings));
+	fov_settings_set_opacity_test_function(&(fov.fov_settings), map_opaque);
+	fov_settings_set_apply_lighting_function(&(fov.fov_settings), map_seen);
+	fov_beam_any_angle(&(fov.fov_settings), &fov, NULL, x, y, radius+1, dir_angle, beam_angle);
+	map_seen(&fov, x, y, 0, 0, radius, NULL);
+	fov_settings_free(&(fov.fov_settings));
+	
+	luaL_unref(L, LUA_REGISTRYINDEX, fov.apply_ref);
+	luaL_unref(L, LUA_REGISTRYINDEX, fov.opaque_ref);
+	if (fov.cache_ref != LUA_NOREF) luaL_unref(L, LUA_REGISTRYINDEX, fov.cache_ref);
+	
+	return 0;
+}
+
 static int lua_distance(lua_State *L)
 {
 	double x1 = luaL_checknumber(L, 1);
@@ -436,6 +478,7 @@ static const struct luaL_reg fovlib[] =
 	{"calc_default_fov", lua_fov_calc_default_fov},
 	{"calc_circle", lua_fov_calc_circle},
 	{"calc_beam", lua_fov_calc_beam},
+	{"calc_beam_any_angle", lua_fov_calc_beam_any_angle},
 	{NULL, NULL},
 };
 
