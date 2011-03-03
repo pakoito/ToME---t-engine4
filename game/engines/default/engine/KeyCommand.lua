@@ -27,6 +27,7 @@ module(..., package.seeall, class.inherit(engine.Key))
 function _M:init()
 	engine.Key.init(self)
 	self.commands = {}
+	self.ignore = {}
 	self.on_input = false
 	self.locale_convert = {}
 
@@ -53,6 +54,8 @@ function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode, isup)
 	self:handleStatus(sym, ctrl, shift, alt, meta, unicode, isup)
 
 	if isup then return end
+
+	if self.ignore[sym] then return end
 
 	-- Convert locale
 	sym = self.locale_convert[sym] or sym
@@ -108,6 +111,16 @@ function _M:addCommand(sym, mods, fct, anymod)
 		self.commands[sym][table.concat(mods,',')] = fct
 	end
 	if anymod then self.commands[sym].anymod = true end
+end
+
+--- Adds a key to be fully ignored
+-- @param sym the key to handle
+-- @param v boolean to ignore or not
+function _M:addIgnore(sym, v)
+	if type(sym) == "string" then sym = self[sym] end
+	if not sym then return end
+
+	self.ignore[sym] = v
 end
 
 --- Adds many key/command at once

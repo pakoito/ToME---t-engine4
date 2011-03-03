@@ -85,6 +85,7 @@ function _M:generate()
 	self.key:addBind("MOVE_DOWN", function() self.first = false self:updateText(-1) end)
 	self.key:addBind("MOVE_LEFT", function() self.first = false self.cursor = util.bound(self.cursor - 1, 1, #self.tmp+1) self.scroll = util.scroll(self.cursor, self.scroll, self.max_display) self:updateText() end)
 	self.key:addBind("MOVE_RIGHT", function() self.first = false self.cursor = util.bound(self.cursor + 1, 1, #self.tmp+1) self.scroll = util.scroll(self.cursor, self.scroll, self.max_display) self:updateText() end)
+	self.key:addIgnore("_ESCAPE", v)
 	self.key:addCommands{
 		_DELETE = function()
 			if self.first then self.first = false self.tmp = {} self:updateText() end
