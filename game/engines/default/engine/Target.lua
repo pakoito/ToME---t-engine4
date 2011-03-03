@@ -82,7 +82,7 @@ function _M:display(dispx, dispy)
 		if self.target_type.block_path then
 			block, hit, hit_radius = self.target_type:block_path(lx, ly)
 		end
-		
+
 		-- Update coordinates and set color
 		if hit and not stopped then
 			stop_x, stop_y = lx, ly
@@ -106,7 +106,7 @@ function _M:display(dispx, dispy)
 			s = self.sr
 			stopped = true
 		end
-		
+
 		lx, ly = l()
 	end
 	self.cursor:toScreen(self.display_x + (self.target.x - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (self.target.y - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
@@ -202,7 +202,6 @@ function _M:getType(t)
 		end
 	}
 
-	table.update(t, target_type)
 	-- And now modify for the default types
 	if t.type then
 		if t.type:find("ball") then
@@ -211,6 +210,7 @@ function _M:getType(t)
 		if t.type:find("cone") then
 			target_type.cone = t.radius
 			target_type.cone_angle = t.cone_angle or 55
+			target_type.selffire = false
 		end
 		if t.type:find("bolt") then
 			target_type.stop_block = true

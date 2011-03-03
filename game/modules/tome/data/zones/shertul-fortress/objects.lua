@@ -35,10 +35,12 @@ When activated it will prompt to destroy items on the floor, if there are none i
 	max_power = 1000, power_regen = 1,
 	use_power = { name = "open a portal to send items to the Fortress core, extracting energies from it for the Fortress and sending back useless gold.", power = 0,
 		use = function(self, who)
+			local pricemod = function(o) if o.type == "gem" then return 0.40 else return 0.15 end end
+
 			-- On the floor or inventory
 			if game.level.map:getObjectTotal(who.x, who.y) > 0 then
 				local d = require("engine.dialogs.ShowPickupFloor").new("Transmogrify", who.x, who.y, function(o) if o:getPrice() <= 0 or o.quest then return false end return true end, function(o, idx)
-					local price = o:getPrice() * o:getNumber()
+					local price = o:getPrice() * o:getNumber() * pricemod(o)
 					price = math.min(price, 25)
 					game.level.map:removeObject(who.x, who.y, idx)
 					who:incMoney(price)
@@ -48,7 +50,7 @@ When activated it will prompt to destroy items on the floor, if there are none i
 				game:registerDialog(d)
 			else
 				local d = require("engine.dialogs.ShowInventory").new("Transmogrify", who:getInven("INVEN"), function(o) if o:getPrice() <= 0 or o.quest then return false end return true end, function(o, idx)
-					local price = o:getPrice() * o:getNumber()
+					local price = o:getPrice() * o:getNumber() * pricemod(o)
 					price = math.min(price, 25)
 					who:removeObject(who:getInven("INVEN"), idx, true)
 					who:sortInven()
