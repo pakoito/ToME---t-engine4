@@ -23,7 +23,7 @@ local Talents = require("engine.interface.ActorTalents")
 
 newEntity{
 	define_as = "BASE_NPC_ELVALA_TOWN",
-	type = "humanoid", subtype = "elf",
+	type = "humanoid", subtype = "dwarf",
 	display = "p", color=colors.WHITE,
 	faction = "iron-throne",
 	anger_emote = "Catch @himher@!",
