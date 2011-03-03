@@ -340,7 +340,7 @@ function _M:calculateWave()
 			special = function (self) if game.level.arena.currentWave > 35 then self.entity = { name = "high slinger" } end return self end },
 		{ entity = { name = "dremling" },
 			wave = 1, power = 6, delay = 2, bonus = 0.3 , score = 100, entry = 2,
-			special = function (self) if game.level.arena.currentWave > 15 then self.wave = 2 end end },
+			special = function (self) if game.level.arena.currentWave > 15 then self.wave = 2 end return self end },
 		{ entity = { name = "brown bear" },
 			wave = 1, power = 4, delay = 3, bonus = 0.2, score = 100 , entry = 2},
 		{ entity = { type = "animal", subtype = "snake" },

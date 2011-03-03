@@ -23,7 +23,7 @@ return {
 	{ 30, "Gold", },
 	{ 45, "Stralite", },
 	{ 31, "Voratun", },
-	{ 3, "Acuisition", },
+	{ 3, "Acquisition", },
 	{ 45, "Profit", },
 	{ 30, "Wealth", },
 	{ 45, "Dearth", },

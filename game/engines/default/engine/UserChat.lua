@@ -96,6 +96,7 @@ function _M:event(e)
 	elseif e.se == "ChannelList" then
 		local info = zlib.decompress(e.data):unserialize()
 		if not info then return end
+		if not e.channel or not self.channels[e.channel] then return end
 		self.channels[e.channel].users = {}
 		for _, user in ipairs(info.users) do
 			self.channels[e.channel].users[user.login] = {
