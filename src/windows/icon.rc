@@ -1,0 +1,25 @@
+tomeicon ICON "game/engines/default/data/gfx/te4-icon.ico"
+1 VERSIONINFO
+FILEVERSION     1,0,0,0
+PRODUCTVERSION  1,0,0,0
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "080904E4"
+    BEGIN
+      VALUE "CompanyName", "te4.org"
+      VALUE "FileDescription", "Tales of Maj'Eyal"
+      VALUE "FileVersion", "1.0"
+      VALUE "InternalName", "te4"
+      VALUE "LegalCopyright", "ToME"
+      VALUE "OriginalFilename", "t-engine.exe"
+      VALUE "ProductName", "Tales of Maj'Eyal"
+      VALUE "ProductVersion", "1.0"
+    END
+  END
+
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x809, 1252
+  END
+END
