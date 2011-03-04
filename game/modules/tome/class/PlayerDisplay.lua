@@ -23,12 +23,12 @@ local TooltipsData = require "mod.class.interface.TooltipsData"
 
 module(..., package.seeall, class.inherit(TooltipsData))
 
-function _M:init(x, y, w, h, bgcolor)
+function _M:init(x, y, w, h, bgcolor, font, size)
 	self.display_x = x
 	self.display_y = y
 	self.w, self.h = w, h
 	self.bgcolor = bgcolor
-	self.font = core.display.newFont("/data/font/SVBasicManual.ttf", 16)
+	self.font = core.display.newFont(font, size)
 	self.mouse = Mouse.new()
 	self:resize(x, y, w, h)
 end

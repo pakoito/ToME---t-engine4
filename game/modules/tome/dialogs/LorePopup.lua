@@ -32,21 +32,7 @@ function _M:init(l, w, force_height)
 	self.title_shadow = false
 	self.color = {r=0x3a, g=0x35, b=0x33}
 
-	self.ui = ""
-	self.frame = {
-		shadow = {x = 10, y = 10, a = 0.5},
-		ox1 = -16, ox2 = 16,
-		oy1 = -16, oy2 = 16,
-		b7 = "ui/parchment7.png",
-		b9 = "ui/parchment9.png",
-		b1 = "ui/parchment1.png",
-		b3 = "ui/parchment3.png",
-		b4 = "ui/parchment4.png",
-		b6 = "ui/parchment6.png",
-		b8 = "ui/parchment8.png",
-		b2 = "ui/parchment2.png",
-		b5 = "ui/parchment5.png",
-	}
+	self.ui = "parchment"
 	if l.bloodstains then
 		local ovs = {}
 		for i = 1, l.bloodstains do

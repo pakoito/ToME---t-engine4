@@ -38,7 +38,7 @@ _M.font_bold = core.display.newFont("/data/font/VeraBd.ttf", 12)
 _M.font_bold_h = _M.font_bold:lineSkip()
 
 -- Default UI
-_M.ui = "simple"
+_M.ui = "stone"
 _M.defaultui = "stone"
 
 _M.ui_conf = {
@@ -104,13 +104,14 @@ function _M:getImage(file, noerror)
 end
 
 function _M:getUITexture(file)
-	if tcache[file] then return tcache[file] end
-	local i, w, h = self:getImage((self.ui ~= "" and self.ui.."-" or "")..file, true)
+	local uifile = (self.ui ~= "" and self.ui.."-" or "")..file
+	if tcache[uifile] then return tcache[uifile] end
+	local i, w, h = self:getImage(uifile, true)
 	if not i then i, w, h = self:getImage(self.defaultui.."-"..file) end
-	if not i then error("bad UI texture: "..file) return end
+	if not i then error("bad UI texture: "..uifile) return end
 	local t, tw, th = i:glTexture()
 	local r = {t=t, w=w, h=h, tw=tw, th=th}
-	tcache[file] = r
+	tcache[uifile] = r
 	return r
 end
 

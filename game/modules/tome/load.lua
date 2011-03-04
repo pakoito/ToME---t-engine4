@@ -43,8 +43,45 @@ local PlayerLore = require "mod.class.interface.PlayerLore"
 local Quest = require "engine.Quest"
 local UIBase = require "engine.ui.Base"
 
+-- Init settings
 config.settings.tome = config.settings.tome or {}
 profile.mod.allow_build = profile.mod.allow_build or {}
+if type(config.settings.tome.autosave) == "nil" then config.settings.tome.autosave = true end
+if not config.settings.tome.smooth_move then config.settings.tome.smooth_move = 3 end
+if not config.settings.tome.gfx then config.settings.tome.gfx = {size="32x32", tiles="mushroom"} end
+if type(config.settings.tome.weather_effects) == "nil" then config.settings.tome.weather_effects = true end
+if type(config.settings.tome.smooth_fov) == "nil" then config.settings.tome.smooth_fov = true end
+if type(config.settings.tome.daynight) == "nil" then config.settings.tome.daynight = true end
+if type(config.settings.tome.chat_log) == "nil" then config.settings.tome.chat_log = true end
+if not config.settings.tome.fonts then config.settings.tome.fonts = {type="fantasy", size="normal"} end
+if not config.settings.tome.ui_theme then config.settings.tome.ui_theme = "stone" end
+Map.smooth_scroll = config.settings.tome.smooth_move
+
+-- Dialog UI
+UIBase.ui = config.settings.tome.ui_theme
+
+-- Dialogs fonts
+if config.settings.tome.fonts.type == "fantasy" then
+	local size = ({normal=16, small=12, big=18})[config.settings.tome.fonts.size]
+	UIBase.font = core.display.newFont("/data/font/USENET_.ttf", size)
+	UIBase.font_bold = core.display.newFont("/data/font/USENET_.ttf", size)
+	UIBase.font_mono = core.display.newFont("/data/font/SVBasicManual.ttf", size)
+	UIBase.font_bold:setStyle("bold")
+	UIBase.font_h = UIBase.font:lineSkip()
+	UIBase.font_bold_h = UIBase.font_bold:lineSkip()
+	UIBase.font_mono_w = UIBase.font_mono:size(" ")
+	UIBase.font_mono_h = UIBase.font_mono:lineSkip()+2
+else
+	local size = ({normal=12, small=10, big=14})[config.settings.tome.fonts.size]
+	UIBase.font = core.display.newFont("/data/font/Vera.ttf", size)
+	UIBase.font_mono = core.display.newFont("/data/font/VeraMono.ttf", size)
+	UIBase.font_bold = core.display.newFont("/data/font/VeraBd.ttf", size)
+	UIBase.font_h = 	UIBase.font:lineSkip()
+	UIBase.font_mono_w = 	UIBase.font_mono:size(" ")
+	UIBase.font_mono_h = 	UIBase.font_mono:lineSkip()
+	UIBase.font_bold_h = 	UIBase.font_bold:lineSkip()
+end
+
 
 -- Create some noise textures
 local n = core.noise.new(3)
@@ -53,16 +90,6 @@ local n = core.noise.new(2)
 _2DNoise = n:makeTexture2D(64, 64)
 --local n = core.noise.new(3)
 --_2DNoise = n:makeTexture2DStack(64, 64, 64)
-
--- Dialogs fonts
-UIBase.font = core.display.newFont("/data/font/USENET_.ttf", 16)
-UIBase.font_bold = core.display.newFont("/data/font/USENET_.ttf", 16)
-UIBase.font_mono = core.display.newFont("/data/font/SVBasicManual.ttf", 16)
-UIBase.font_bold:setStyle("bold")
-UIBase.font_h = UIBase.font:lineSkip()
-UIBase.font_bold_h = UIBase.font_bold:lineSkip()
-UIBase.font_mono_w = UIBase.font_mono:size(" ")
-UIBase.font_mono_h = UIBase.font_mono:lineSkip()+2
 
 -- Achievements
 WorldAchievements:loadDefinition("/data/achievements/")
@@ -191,15 +218,5 @@ for i, t in ipairs(stype_tot) do
 	print("[SCHOOL TOTAL]", t[2], t[1])
 end
 ------------------------------------------------------------------------
-
--- Init settings
-if type(config.settings.tome.autosave) == "nil" then config.settings.tome.autosave = true end
-if not config.settings.tome.smooth_move then config.settings.tome.smooth_move = 3 end
-if not config.settings.tome.gfx then config.settings.tome.gfx = {size="32x32", tiles="mushroom"} end
-if type(config.settings.tome.weather_effects) == "nil" then config.settings.tome.weather_effects = true end
-if type(config.settings.tome.smooth_fov) == "nil" then config.settings.tome.smooth_fov = true end
-if type(config.settings.tome.daynight) == "nil" then config.settings.tome.daynight = true end
-if type(config.settings.tome.chat_log) == "nil" then config.settings.tome.chat_log = true end
-Map.smooth_scroll = config.settings.tome.smooth_move
 
 return {require "mod.class.Game", require "mod.class.World"}

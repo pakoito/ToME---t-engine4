@@ -80,17 +80,33 @@ function _M:init()
 end
 
 function _M:run()
+	local size, size_mono, font, font_mono
+	local flysize = ({normal=14, small=12, big=16})[config.settings.tome.fonts.size]
+	if config.settings.tome.fonts.type == "fantasy" then
+		size = ({normal=16, small=14, big=18})[config.settings.tome.fonts.size]
+		size_mono = ({normal=14, small=10, big=16})[config.settings.tome.fonts.size]
+		font = "/data/font/USENET_.ttf"
+		font_mono = "/data/font/SVBasicManual.ttf"
+	else
+		size = ({normal=12, small=10, big=14})[config.settings.tome.fonts.size]
+		size_mono = ({normal=12, small=10, big=14})[config.settings.tome.fonts.size]
+		font = "/data/font/Vera.ttf"
+		font_mono = "/data/font/VeraMono.ttf"
+	end
+
 	self.delayed_log_damage = {}
 	self.calendar = Calendar.new("/data/calendar_allied.lua", "Today is the %s %s of the %s year of the Age of Ascendancy of Maj'Eyal.\nThe time is %02d:%02d.", 122, 167, 11)
-	self.flash = LogFlasher.new(0, 0, self.w, 20, nil, "/data/font/USENET_.ttf", 16, {255,255,255}, {0,0,0})
-	self.logdisplay = LogDisplay.new(0, self.h * 0.8 + 7, self.w * 0.5 - 46, self.h * 0.2 - 7, nil, "/data/font/USENET_.ttf", 15, {255,255,255}, "/data/gfx/ui/message-log.png")
-	profile.chat:resize(0, self.h * 0.8 + 7, self.w * 0.5 - 46, self.h * 0.2 - 7, "/data/font/USENET_.ttf", 15, {255,255,255}, "/data/gfx/ui/message-log.png")
-	self.player_display = PlayerDisplay.new(0, 230, 200, self.h * 0.8 - 230, {30,30,0})
-	self.hotkeys_display = HotkeysDisplay.new(nil, self.w * 0.5 + 46, self.h * 0.8 + 7, self.w * 0.5 - 46, self.h * 0.2 - 7, "/data/gfx/ui/talents-list.png", "/data/font/SVBasicManual.ttf", 14)
-	self.npcs_display = ActorsSeenDisplay.new(nil, self.w * 0.5 + 46, self.h * 0.8 + 7, self.w * 0.5 - 46, self.h * 0.2 - 7, "/data/gfx/ui/talents-list.png", "/data/font/SVBasicManual.ttf", 14)
-	self.tooltip = Tooltip.new("/data/font/SVBasicManual.ttf", 16, {255,255,255}, {30,30,30,230})
-	self.tooltip2 = Tooltip.new("/data/font/SVBasicManual.ttf", 16, {255,255,255}, {30,30,30,230})
-	self.flyers = FlyingText.new("/data/font/INSULA__.ttf", 14, "/data/font/INSULA__.ttf", 17)
+
+	self.player_display = PlayerDisplay.new(0, 230, 200, self.h * 0.8 - 230, {30,30,0}, font_mono, size_mono)
+	self.flash = LogFlasher.new(0, 0, self.w, 20, nil, font, size, {255,255,255}, {0,0,0})
+	self.logdisplay = LogDisplay.new(0, self.h * 0.8 + 7, self.w * 0.5 - 46, self.h * 0.2 - 7, nil, font, size, {255,255,255}, "/data/gfx/ui/message-log.png")
+	profile.chat:resize(0, self.h * 0.8 + 7, self.w * 0.5 - 46, self.h * 0.2 - 7, font, size, {255,255,255}, "/data/gfx/ui/message-log.png")
+	self.hotkeys_display = HotkeysDisplay.new(nil, self.w * 0.5 + 46, self.h * 0.8 + 7, self.w * 0.5 - 46, self.h * 0.2 - 7, "/data/gfx/ui/talents-list.png", font_mono, size_mono)
+	self.npcs_display = ActorsSeenDisplay.new(nil, self.w * 0.5 + 46, self.h * 0.8 + 7, self.w * 0.5 - 46, self.h * 0.2 - 7, "/data/gfx/ui/talents-list.png", font_mono, size_mono)
+	self.tooltip = Tooltip.new(font_mono, size, {255,255,255}, {30,30,30,230})
+	self.tooltip2 = Tooltip.new(font_mono, size, {255,255,255}, {30,30,30,230})
+	self.flyers = FlyingText.new("/data/font/INSULA__.ttf", flysize, "/data/font/INSULA__.ttf", flysize + 3)
+
 	self:setFlyingText(self.flyers)
 	self.minimap_bg, self.minimap_bg_w, self.minimap_bg_h = core.display.loadImage("/data/gfx/ui/minimap.png"):glTexture()
 	self.nicer_tiles = NicerTiles.new()
