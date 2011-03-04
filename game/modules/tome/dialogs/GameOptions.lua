@@ -146,5 +146,41 @@ function _M:generateList()
 		self.c_list:drawItem(item)
 	end,}
 
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Select the interface look. Stone is the default one, Simple is basic but takes less screen space.\nYou must restart the game for the change to take effect."}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Interface Style#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.tome.ui_theme):capitalize()
+	end, fct=function(item)
+		Dialog:listPopup("Interface style", "Select style", {{name="Stone", ui="stone"}, {name="Simple", ui="simple"}}, 300, 200, function(sel)
+			if not sel or not sel.ui then return end
+			game:saveSettings("tome.ui_theme", ("tome.ui_theme = %q\n"):format(sel.ui))
+			config.settings.tome.ui_theme = sel.ui
+			self.c_list:drawItem(item)
+		end)
+	end,}
+
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Select the fonts look. fantasy is the default one, Basic is simplied and smaller.\nYou must restart the game for the change to take effect."}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Font Style#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.tome.fonts.type):capitalize()
+	end, fct=function(item)
+		Dialog:listPopup("Font style", "Select font", {{name="Fantasy", type="fantasy"}, {name="Basic", type="basic"}}, 300, 200, function(sel)
+			if not sel or not sel.type then return end
+			game:saveSettings("tome.fonts", ("tome.fonts = { type = %q, size = %q }\n"):format(sel.type, config.settings.tome.fonts.size))
+			config.settings.tome.fonts.type = sel.type
+			self.c_list:drawItem(item)
+		end)
+	end,}
+
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Select the fonts size.\nYou must restart the game for the change to take effect."}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Font Size#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.tome.fonts.size):capitalize()
+	end, fct=function(item)
+		Dialog:listPopup("Font size", "Select font", {{name="Normal", size="normal"},{name="Small", size="small"},{name="Big", size="big"},}, 300, 200, function(sel)
+			if not sel or not sel.size then return end
+			game:saveSettings("tome.fonts", ("tome.fonts = { type = %q, size = %q }\n"):format(config.settings.tome.fonts.type, sel.size))
+			config.settings.tome.fonts.size = sel.size
+			self.c_list:drawItem(item)
+		end)
+	end,}
+
 	self.list = list
 end

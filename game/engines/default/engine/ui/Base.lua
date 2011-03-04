@@ -80,6 +80,8 @@ function _M:init(t, no_gen)
 	self.mouse = Mouse.new()
 	self.key = KeyBind.new()
 
+	if not rawget(self, "ui") then self.ui = self.ui end
+
 	if t.font then
 		if type(t.font) == "table" then
 			self.font = core.display.newFont(t.font[1], t.font[2])
