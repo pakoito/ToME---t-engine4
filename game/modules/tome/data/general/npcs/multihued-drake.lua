@@ -52,7 +52,7 @@ newEntity{ base = "BASE_NPC_MULTIHUED_DRAKE",
 	max_life = resolvers.rngavg(60,80),
 	combat_armor = 5, combat_def = 0,
 	on_melee_hit = {[DamageType.FIRE]=resolvers.mbonus(7, 3), [DamageType.COLD]=resolvers.mbonus(7, 3)},
-	combat = { dam=resolvers.rngavg(25,80), atk=resolvers.rngavg(25,70), apr=25, dammod={str=1.1} },
+	combat = { dam=resolvers.levelup(resolvers.rngavg(25,70), 1, 0.6), atk=resolvers.rngavg(25,70), apr=25, dammod={str=1.1} },
 
 	resists = { [DamageType.PHYSICAL] = 20, [DamageType.FIRE] = 20, [DamageType.COLD] = 20, [DamageType.ACID] = 20, [DamageType.LIGHTNING] = 20, },
 
@@ -60,7 +60,7 @@ newEntity{ base = "BASE_NPC_MULTIHUED_DRAKE",
 		{type="dragon", subtype="multihued", name="multi-hued drake hatchling", number=3, no_subescort=true},
 	},
 	resolvers.talents{
-		[Talents.T_ICE_CLAW]=1,
+		[Talents.T_ICE_CLAW]={base=1, every=10},
 	}
 }
 
@@ -72,27 +72,26 @@ newEntity{ base = "BASE_NPC_MULTIHUED_DRAKE",
 	max_life = resolvers.rngavg(150,170),
 	combat_armor = 12, combat_def = 0,
 	on_melee_hit = {[DamageType.FIRE]=resolvers.mbonus(10, 5), [DamageType.COLD]=resolvers.mbonus(10, 5)},
-	combat = { dam=resolvers.rngavg(25,110), atk=resolvers.rngavg(25,100), apr=25, dammod={str=1.1} },
+	combat = { dam=resolvers.levelup(resolvers.rngavg(25,110), 1, 1.2), atk=resolvers.rngavg(25,100), apr=25, dammod={str=1.1} },
+	stats_per_level = 4,
 	lite = 1,
 
 	resists = { [DamageType.PHYSICAL] = 30, [DamageType.FIRE] = 30, [DamageType.COLD] = 30, [DamageType.ACID] = 30, [DamageType.LIGHTNING] = 30, },
 
-	summon = {
-		{type="dragon", name="multi-hued drake hatchling", number=1, hasxp=false},
---		{type="dragon", name="multi-hued drake", number=1, hasxp=false},
+	make_escort = {
+		{type="dragon", name="multi-hued drake hatchling", number=1},
 	},
 
 	resolvers.talents{
-		[Talents.T_SUMMON]=1,
-		[Talents.T_ICE_CLAW]=3,
-		[Talents.T_WING_BUFFET]=3,
+		[Talents.T_ICE_CLAW]={base=3, every=6, max=6},
+		[Talents.T_WING_BUFFET]={base=2, every=7, max=5},
 
-		[Talents.T_FIRE_BREATH]=4,
-		[Talents.T_ICE_BREATH]=4,
-		[Talents.T_SAND_BREATH]=4,
-		[Talents.T_POISON_BREATH]=4,
-		[Talents.T_LIGHTNING_BREATH]=4,
-		[Talents.T_ACID_BREATH]=4,
+		[Talents.T_FIRE_BREATH]={base=4, every=4, max=11},
+		[Talents.T_ICE_BREATH]={base=4, every=4, max=11},
+		[Talents.T_SAND_BREATH]={base=4, every=4, max=11},
+		[Talents.T_POISON_BREATH]={base=4, every=4, max=11},
+		[Talents.T_LIGHTNING_BREATH]={base=4, every=4, max=11},
+		[Talents.T_ACID_BREATH]={base=4, every=4, max=11},
 	},
 }
 
@@ -105,33 +104,31 @@ newEntity{ base = "BASE_NPC_MULTIHUED_DRAKE",
 	max_life = resolvers.rngavg(220,250),
 	combat_armor = 30, combat_def = 30,
 	on_melee_hit = {[DamageType.FIRE]=resolvers.mbonus(10, 5), [DamageType.COLD]=resolvers.mbonus(10, 5), [DamageType.LIGHTNING]=resolvers.mbonus(10, 5), [DamageType.ACID]=resolvers.mbonus(10, 5)},
-	combat = { dam=resolvers.rngavg(25,150), atk=resolvers.rngavg(25,130), apr=25, dammod={str=1.1} },
+	combat = { dam=resolvers.levelup(resolvers.rngavg(25,150), 1, 2.2), atk=resolvers.rngavg(25,130), apr=25, dammod={str=1.1} },
+	stats_per_level = 5,
 	lite = 1,
 
 	resists = { [DamageType.PHYSICAL] = 40, [DamageType.FIRE] = 40, [DamageType.COLD] = 40, [DamageType.ACID] = 40, [DamageType.LIGHTNING] = 40, },
 
 	ai = "tactical",
-	
-	summon = {
-		{type="dragon", name="multi-hued drake", number=1, hasxp=false},
---		{type="dragon", name="greater multi-hued wyrm", number=1, hasxp=false},
+
+	make_escort = {
+		{type="dragon", name="multi-hued drake", number=1},
+		{type="dragon", name="multi-hued drake", number=1, no_subescort=true},
 	},
 
 	resolvers.talents{
-		[Talents.T_SUMMON]=1,
+		[Talents.T_SILENCE]={base=3, every=6},
+		[Talents.T_DISARM]={base=3, every=6},
+		[Talents.T_ICE_CLAW]={base=3, every=6},
+		[Talents.T_WING_BUFFET]={base=2, every=7},
 
-		[Talents.T_SILENCE]=3,
-		[Talents.T_DISARM]=3,
-		[Talents.T_ICE_CLAW]=8,
-		[Talents.T_WING_BUFFET]=5,
-		[Talents.T_DEVOURING_FLAME]=8,
-
-		[Talents.T_FIRE_BREATH]=13,
-		[Talents.T_ICE_BREATH]=13,
-		[Talents.T_SAND_BREATH]=13,
-		[Talents.T_POISON_BREATH]=13,
-		[Talents.T_LIGHTNING_BREATH]=13,
-		[Talents.T_ACID_BREATH]=13,
+		[Talents.T_FIRE_BREATH]={base=9, every=4},
+		[Talents.T_ICE_BREATH]={base=9, every=4},
+		[Talents.T_SAND_BREATH]={base=9, every=4},
+		[Talents.T_POISON_BREATH]={base=9, every=4},
+		[Talents.T_LIGHTNING_BREATH]={base=9, every=4},
+		[Talents.T_ACID_BREATH]={base=9, every=4},
 	},
 }
 
@@ -139,19 +136,23 @@ newEntity{ base = "BASE_NPC_MULTIHUED_DRAKE",
 	unique = true,
 	name = "Ureslak the Prismatic", color=colors.VIOLET, display="D",
 	desc = [[A huge multi-hued drake. It seems to shift color rapidly.]],
-	level_range = {35, nil}, exp_worth = 2,
+	level_range = {35, nil}, exp_worth = 4,
 	rarity = 50,
 	rank = 3.5,
-	max_life = resolvers.rngavg(320,350),
+	max_life = resolvers.rngavg(320,350), life_rating = 22,
 	combat_armor = 33, combat_def = 40,
 	on_melee_hit = {[DamageType.FIRE]=resolvers.mbonus(10, 5), [DamageType.COLD]=resolvers.mbonus(10, 5), [DamageType.LIGHTNING]=resolvers.mbonus(10, 5), [DamageType.ACID]=resolvers.mbonus(10, 5)},
-	combat = { dam=resolvers.rngavg(35,150), atk=resolvers.rngavg(25,130), apr=32, dammod={str=1.1} },
+	combat = { dam=resolvers.levelup(resolvers.rngavg(25,150), 1, 2.2), atk=resolvers.rngavg(25,130), apr=32, dammod={str=1.1} },
 	lite = 1,
 
 	ai = "tactical",
 	ai_tactic = resolvers.tactic"ranged",
 	ai_status = {ally_compassion = 0},
-	
+
+	make_escort = {
+		{type="dragon", name="greater multi-hued wyrm", number=2, no_subescort=true},
+	},
+
 	no_auto_resists = true,
 	color_switch = 2,
 	resists = { all=50, [DamageType.FIRE] = 100, [DamageType.COLD] = -100 },

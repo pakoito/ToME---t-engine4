@@ -88,6 +88,17 @@ function resolvers.calc.tmasteries(t, e)
 	return nil
 end
 
+--- Levelup resolver
+function resolvers.levelup(base, every, inc, max)
+	return {__resolver="levelup", base, every, inc, max}
+end
+function resolvers.calc.levelup(t, e, _, _, k, kchain)
+	if not e._levelup_info then e._levelup_info = {} end
+	local li = {every=t[2], inc=t[3], max=t[4], kchain=table.clone(kchain), k=k}
+	e._levelup_info[#e._levelup_info+1] = li
+	return t[1]
+end
+
 --- Generic resolver, takes a function
 function resolvers.generic(fct)
 	return {__resolver="generic", fct}

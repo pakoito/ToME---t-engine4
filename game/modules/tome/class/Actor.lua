@@ -65,6 +65,8 @@ _M.__do_distance_map = true
 
 _M.__is_actor = true
 
+_M.stats_per_level = 3
+
 function _M:init(t, no_default)
 	-- Define some basic combat stats
 	self.combat_def = 0
@@ -1258,10 +1260,11 @@ function _M:resetToFull()
 end
 
 function _M:levelup()
+	engine.interface.ActorLevel.levelup(self)
 	engine.interface.ActorTalents.resolveLevelTalents(self)
 
 	if not self.no_points_on_levelup then
-		self.unused_stats = self.unused_stats + 3 + self:getRankStatAdjust()
+		self.unused_stats = self.unused_stats + (self.stats_per_level or 3) + self:getRankStatAdjust()
 		self.unused_talents = self.unused_talents + 1
 		self.unused_generics = self.unused_generics + 1
 		if self.level % 5 == 0 then self.unused_talents = self.unused_talents + 1 end

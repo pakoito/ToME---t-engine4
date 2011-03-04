@@ -32,7 +32,7 @@ newEntity{
 	rank = 2,
 	size_category = 5,
 
-	autolevel = "warrior",
+	autolevel = "drake",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
 	energy = { mod=1 },
 	stats = { str=20, dex=20, mag=30, con=16 },
@@ -51,9 +51,8 @@ newEntity{ base = "BASE_NPC_FIRE_DRAKE",
 	rank = 1, size_category = 2,
 	max_life = resolvers.rngavg(40,60),
 	combat_armor = 5, combat_def = 0,
-	combat = { dam=resolvers.rngavg(25,40), atk=resolvers.rngavg(25,60), apr=25, dammod={str=1.1} },
+	combat = { dam=resolvers.levelup(resolvers.rngavg(25,40), 1, 0.6), atk=resolvers.rngavg(25,60), apr=25, dammod={str=1.1} },
 	on_melee_hit = {[DamageType.FIRE]=resolvers.mbonus(7, 2)},
-	combat = { dam=resolvers.rngavg(10,15), atk=15, apr=5, dammod={str=0.6} },
 
 	make_escort = {
 		{type="dragon", subtype="fire", name="fire drake hatchling", number=3, no_subescort=true},
@@ -67,19 +66,18 @@ newEntity{ base = "BASE_NPC_FIRE_DRAKE",
 	rarity = 3,
 	max_life = resolvers.rngavg(100,110),
 	combat_armor = 12, combat_def = 0,
-	combat = { dam=resolvers.rngavg(25,70), atk=resolvers.rngavg(25,70), apr=25, dammod={str=1.1} },
+	combat = { dam=resolvers.levelup(resolvers.rngavg(25,70), 1, 1.2), atk=resolvers.rngavg(25,70), apr=25, dammod={str=1.1} },
 	on_melee_hit = {[DamageType.FIRE]=resolvers.mbonus(15, 10)},
+	stats_per_level = 4,
 	lite = 1,
 
-	summon = {
-		{type="dragon", name="fire drake hatchling", number=1, hasxp=false},
---		{type="dragon", name="fire drake", number=1, hasxp=false},
+	make_escort = {
+		{type="dragon", name="fire drake hatchling", number=1},
 	},
 
 	resolvers.talents{
-		[Talents.T_SUMMON]=1,
-		[Talents.T_WING_BUFFET]=2,
-		[Talents.T_FIRE_BREATH]=3,
+		[Talents.T_WING_BUFFET]={base=2, every=5, max=7},
+		[Talents.T_FIRE_BREATH]={base=3, every=5, max=9},
 	},
 }
 
@@ -92,22 +90,22 @@ newEntity{ base = "BASE_NPC_FIRE_DRAKE",
 	max_life = resolvers.rngavg(170,190),
 	combat_armor = 30, combat_def = 0,
 	on_melee_hit = {[DamageType.FIRE]=resolvers.mbonus(25, 10)},
-	combat = { dam=resolvers.rngavg(25,110), atk=resolvers.rngavg(25,70), apr=25, dammod={str=1.1} },
+	combat = { dam=resolvers.levelup(resolvers.rngavg(25,110), 1, 2), atk=resolvers.rngavg(25,70), apr=25, dammod={str=1.1} },
+	stats_per_level = 5,
 	lite = 1,
 
 	ai = "tactical",
 	ai_tactic = resolvers.tactic"melee",
 
-	summon = {
-		{type="dragon", name="fire drake", number=1, hasxp=false},
---		{type="dragon", name="fire wyrm", number=1, hasxp=false},
+	make_escort = {
+		{type="dragon", name="fire drake", number=1},
+		{type="dragon", name="fire drake", number=1, no_subescort=true},
 	},
 
 	resolvers.talents{
-		[Talents.T_SUMMON]=1,
-		[Talents.T_WING_BUFFET]=5,
-		[Talents.T_FLAME]=5,
-		[Talents.T_FIRE_BREATH]=5,
-		[Talents.T_DEVOURING_FLAME]=3,
+		[Talents.T_BELLOWING_ROAR]={base=5, every=7},
+		[Talents.T_WING_BUFFET]={base=5, every=5},
+		[Talents.T_FIRE_BREATH]={base=5, every=4},
+		[Talents.T_DEVOURING_FLAME]={base=5, every=6},
 	},
 }

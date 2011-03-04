@@ -327,13 +327,16 @@ end
 -- This is called when generating the final clones of an entity for use in a level.
 -- This can be used to make random enchants on objects, random properties on actors, ...
 -- by default this only looks for properties with a table value containing a __resolver field
-function _M:resolve(t, last, on_entity)
+function _M:resolve(t, last, on_entity, key_chain)
 	t = t or self
+	key_chain = key_chain or {}
 	for k, e in pairs(t) do
 		if type(e) == "table" and e.__resolver and (not e.__resolve_last or last) then
-			t[k] = resolvers.calc[e.__resolver](e, on_entity or self, self, t, k)
+			t[k] = resolvers.calc[e.__resolver](e, on_entity or self, self, t, k, key_chain)
 		elseif type(e) == "table" and not e.__CLASSNAME then
-			self:resolve(e, last, on_entity)
+			local key_chain = table.clone(key_chain)
+			key_chain[#key_chain+1] = k
+			self:resolve(e, last, on_entity, key_chain)
 		end
 	end
 

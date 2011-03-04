@@ -149,13 +149,13 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.FIREBURN, self:combatTalentStatDamage(t, "str", 30, 450))
+		self:project(tg, x, y, DamageType.FIREBURN, {dam=self:combatTalentStatDamage(t, "str", 30, 550), dur=3, initial=70})
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "breath_fire", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/breath")
 		return true
 	end,
 	info = function(self, t)
 		return ([[You breathe fire in a frontal cone. Any target caught in the area will take %0.2f fire damage over 3 turns.
-		The damage will increase with the Strength stat]]):format(damDesc(self, DamageType.FIRE, self:combatTalentStatDamage(t, "str", 30, 450)))
+		The damage will increase with the Strength stat]]):format(damDesc(self, DamageType.FIRE, self:combatTalentStatDamage(t, "str", 30, 550)))
 	end,
 }

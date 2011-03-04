@@ -110,7 +110,24 @@ function _M:worthExp(target)
 end
 
 --- Method called when leveling up, module author rewrite it to do as you please
+-- By default this will use infos left by resolvers.levelup() to increase properties
 function _M:levelup()
+	if not self._levelup_info then return end
+	for what, info in pairs(self._levelup_info) do
+		local base = self
+		for i = 1, #info.kchain do
+--			print(" * ", info.kchain[i])
+			base = base[info.kchain[i]]
+		end
+		if not info.max or base[info.k] < info.max then
+			local last = info.last or self.start_level
+			if self.level - last >= info.every then
+				base[info.k] = base[info.k] + util.getval(info.inc, self)
+				info.last = self.level
+			end
+		end
+--		print(" =>", base[info.k])
+	end
 end
 
 --- Forces an actor to levelup to "lev"

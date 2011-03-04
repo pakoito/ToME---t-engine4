@@ -32,7 +32,7 @@ newEntity{
 	rank = 2,
 	size_category = 5,
 
-	autolevel = "warrior",
+	autolevel = "drake",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
 	energy = { mod=1 },
 	stats = { str=20, dex=20, mag=30, con=16 },
@@ -53,7 +53,6 @@ newEntity{ base = "BASE_NPC_COLD_DRAKE",
 	combat_armor = 5, combat_def = 0,
 	combat = { dam=resolvers.rngavg(25,40), atk=resolvers.rngavg(25,50), apr=25, dammod={str=1.1} },
 	on_melee_hit = {[DamageType.COLD]=resolvers.mbonus(7, 2)},
-	combat = { dam=resolvers.rngavg(10,15), atk=15, apr=5, dammod={str=0.6} },
 
 	make_escort = {
 		{type="dragon", subtype="cold", name="cold drake hatchling", number=3, no_subescort=true},
@@ -96,13 +95,14 @@ newEntity{ base = "BASE_NPC_COLD_DRAKE",
 
 	make_escort = {
 		{type="dragon", name="cold drake", number=1},
+		{type="dragon", name="cold drake", number=1, no_subescort=true},
 	},
 
 	ai = "tactical",
 
 	resolvers.talents{
-		[Talents.T_ICE_CLAW]={base=4, every=5, max=12},
-		[Talents.T_FREEZE]={base=3, every=9, max=6},
-		[Talents.T_ICE_BREATH]={base=5, every=4, max=14},
+		[Talents.T_ICE_CLAW]={base=4, every=5},
+		[Talents.T_ICY_SKIN]={base=3, every=5},
+		[Talents.T_ICE_BREATH]={base=5, every=4},
 	},
 }
