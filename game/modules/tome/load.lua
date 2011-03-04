@@ -199,6 +199,7 @@ if not config.settings.tome.gfx then config.settings.tome.gfx = {size="32x32", t
 if type(config.settings.tome.weather_effects) == "nil" then config.settings.tome.weather_effects = true end
 if type(config.settings.tome.smooth_fov) == "nil" then config.settings.tome.smooth_fov = true end
 if type(config.settings.tome.daynight) == "nil" then config.settings.tome.daynight = true end
+if type(config.settings.tome.chat_log) == "nil" then config.settings.tome.chat_log = true end
 Map.smooth_scroll = config.settings.tome.smooth_move
 
 return {require "mod.class.Game", require "mod.class.World"}

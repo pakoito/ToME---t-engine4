@@ -40,6 +40,8 @@ function _M:init(t)
 	self.exp = t.exp or 0
 	self.exp_mod = t.exp_mod or 1
 	self.exp_worth = t.exp_worth or 1
+	self.level = self.level or 1
+	self.start_level = self.start_level or 1
 
 	if not t.level_range or self._actor_level_init then return end
 

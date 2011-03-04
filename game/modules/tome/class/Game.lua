@@ -97,7 +97,9 @@ function _M:run()
 	self:createSeparators()
 
 	self.log = function(style, ...) if type(style) == "number" then self.logdisplay(...) self.flash(style, ...) else self.logdisplay(style, ...) self.flash(self.flash.NEUTRAL, style, ...) end end
-	self.logNoNotify = function(style, ...) if type(style) == "number" then
+	self.logChat = function(style, ...)
+		if not config.settings.tome.chat_log then return end
+		if type(style) == "number" then
 		local old = self.logdisplay.changed
 		self.logdisplay(...) self.flash(style, ...) else self.logdisplay(style, ...) self.flash(self.flash.NEUTRAL, style, ...) end
 		if self.show_userchat then self.logdisplay.changed = old end
