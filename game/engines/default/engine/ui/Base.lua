@@ -37,6 +37,9 @@ _M.font_mono_h = _M.font_mono:lineSkip()
 _M.font_bold = core.display.newFont("/data/font/VeraBd.ttf", 12)
 _M.font_bold_h = _M.font_bold:lineSkip()
 
+-- Default UI
+_M.ui = "stone"
+
 function _M:init(t, no_gen)
 	self.mouse = Mouse.new()
 	self.key = KeyBind.new()
