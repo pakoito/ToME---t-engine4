@@ -51,7 +51,7 @@ newEntity{ base = "BASE_NPC_COLD_DRAKE",
 	rank = 1, size_category = 2,
 	max_life = resolvers.rngavg(40,60),
 	combat_armor = 5, combat_def = 0,
-	combat = { dam=resolvers.rngavg(25,40), atk=resolvers.rngavg(25,50), apr=25, dammod={str=1.1} },
+	combat = { dam=resolvers.levelup(resolvers.rngavg(25,40), 1, 0.6), atk=resolvers.rngavg(25,50), apr=25, dammod={str=1.1} },
 	on_melee_hit = {[DamageType.COLD]=resolvers.mbonus(7, 2)},
 
 	make_escort = {
@@ -66,7 +66,7 @@ newEntity{ base = "BASE_NPC_COLD_DRAKE", define_as = "NPC_COLD_DRAKE",
 	rarity = 3,
 	max_life = resolvers.rngavg(100,110),
 	combat_armor = 12, combat_def = 0,
-	combat = { dam=resolvers.rngavg(25,70), atk=resolvers.rngavg(25,70), apr=25, dammod={str=1.1} },
+	combat = { dam=resolvers.levelup(resolvers.rngavg(25,70), 1, 1.2), atk=resolvers.rngavg(25,70), apr=25, dammod={str=1.1} },
 	on_melee_hit = {[DamageType.COLD]=resolvers.mbonus(15, 10)},
 	lite = 1,
 
@@ -88,9 +88,8 @@ newEntity{ base = "BASE_NPC_COLD_DRAKE",
 	rank = 3,
 	max_life = resolvers.rngavg(170,190),
 	combat_armor = 30, combat_def = 0,
-	combat = { dam=resolvers.rngavg(25,110), atk=resolvers.rngavg(25,70), apr=25, dammod={str=1.1} },
+	combat = { dam=resolvers.levelup(resolvers.rngavg(25,110), 1, 2), atk=resolvers.rngavg(25,70), apr=25, dammod={str=1.1} },
 	on_melee_hit = {[DamageType.COLD]=resolvers.mbonus(25, 10)},
-	combat = { dam=resolvers.rngavg(25,40), atk=25, apr=25, dammod={str=1.1} },
 	lite = 1,
 
 	make_escort = {

@@ -42,7 +42,10 @@ newEntity{ define_as = "RANTHA_THE_WORM",
 	combat_armor = 17, combat_def = 14,
 	infravision = 20,
 	instakill_immune = 1,
+	stun_immune = 1,
 	move_others=true,
+
+	combat = { dam=resolvers.levelup(resolvers.rngavg(25,110), 1, 2), atk=resolvers.rngavg(25,70), apr=25, dammod={str=1.1} },
 
 	resists = { [DamageType.FIRE] = -20, [DamageType.COLD] = 100 },
 
@@ -57,9 +60,9 @@ newEntity{ define_as = "RANTHA_THE_WORM",
 		[Talents.T_ICE_STORM]=2,
 		[Talents.T_FREEZE]=3,
 
-		[Talents.T_ICE_CLAW]=4,
-		[Talents.T_ICY_SKIN]=3,
-		[Talents.T_ICE_BREATH]=4,
+		[Talents.T_ICE_CLAW]={base=4, every=6},
+		[Talents.T_ICY_SKIN]={base=3, every=7},
+		[Talents.T_ICE_BREATH]={base=4, every=5},
 	},
 	resolvers.sustains_at_birth(),
 
