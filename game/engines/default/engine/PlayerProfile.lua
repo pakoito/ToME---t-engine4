@@ -383,7 +383,7 @@ function _M:eventAuth(e)
 	self.auth_tried = (self.auth_tried or 0) + 1
 	if e.ok then
 		self.auth = e.ok:unserialize()
-		print("[PROFILE] Main thread got authed", self.auth.name, self.auth.email, self.auth.drupid)
+		print("[PROFILE] Main thread got authed", self.auth.name)
 		self:getConfigs("generic", function(e) self:syncOnline(e.module) end)
 	end
 end

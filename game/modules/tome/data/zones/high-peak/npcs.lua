@@ -76,6 +76,8 @@ newEntity{
 	combat_armor = 20,
 	combat_def = 20,
 
+	resists = { all = 45, },
+
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1, FEET=1 },
 	resolvers.equip{
 		{type="weapon", subtype="staff", defined="STAFF_ABSORPTION_AWAKENED", autoreq=true},
@@ -146,6 +148,8 @@ newEntity{
 
 	combat_armor = 20,
 	combat_def = 20,
+
+	resists = { all = 65, },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, FEET=1, HEAD=1, HANDS=1 },
 	resolvers.equip{

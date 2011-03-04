@@ -62,12 +62,6 @@ newEntity{ base = "BASE_NPC_COLD_DRAKE",
 
 newEntity{ base = "BASE_NPC_COLD_DRAKE", define_as = "NPC_COLD_DRAKE",
 	name = "cold drake", color=colors.SLATE, display="D",
---	quadrant_image = {
---		[0] = {[0] = "npc/cold_drake7.png",[1] = "npc/cold_drake1.png",},
---		[1] = {[0] = "npc/cold_drake9.png",[1] = "npc/cold_drake3.png",},
---	},
---	msize_w = 2,
---	msize_h = 2,
 	desc = [[A mature cold drake, armed with a deadly breath weapon and nasty claws.]],
 	level_range = {14, nil}, exp_worth = 1,
 	rarity = 3,
@@ -77,15 +71,13 @@ newEntity{ base = "BASE_NPC_COLD_DRAKE", define_as = "NPC_COLD_DRAKE",
 	on_melee_hit = {[DamageType.COLD]=resolvers.mbonus(15, 10)},
 	lite = 1,
 
-	summon = {
-		{type="dragon", name="cold drake hatchling", number=1, hasxp=false},
---		{type="dragon", name="cold drake", number=1, hasxp=false},
+	make_escort = {
+		{type="dragon", name="cold drake hatchling", number=1},
 	},
 
 	resolvers.talents{
-		[Talents.T_SUMMON]=1,
-		[Talents.T_ICE_CLAW]=2,
-		[Talents.T_ICE_BREATH]=3,
+		[Talents.T_ICE_CLAW]={base=2, every=5, max=7},
+		[Talents.T_ICE_BREATH]={base=3, every=5, max=9},
 	},
 }
 
@@ -102,17 +94,15 @@ newEntity{ base = "BASE_NPC_COLD_DRAKE",
 	combat = { dam=resolvers.rngavg(25,40), atk=25, apr=25, dammod={str=1.1} },
 	lite = 1,
 
-	summon = {
-		{type="dragon", name="cold drake", number=1, hasxp=false},
---		{type="dragon", name="ice wyrm", number=1, hasxp=false},
+	make_escort = {
+		{type="dragon", name="cold drake", number=1},
 	},
 
 	ai = "tactical",
-	
+
 	resolvers.talents{
-		[Talents.T_SUMMON]=1,
-		[Talents.T_ICE_CLAW]=5,
-		[Talents.T_FREEZE]=5,
-		[Talents.T_ICE_BREATH]=5,
+		[Talents.T_ICE_CLAW]={base=4, every=5, max=12},
+		[Talents.T_FREEZE]={base=3, every=9, max=6},
+		[Talents.T_ICE_BREATH]={base=5, every=4, max=14},
 	},
 }

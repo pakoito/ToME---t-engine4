@@ -96,6 +96,20 @@ function _M:init(t)
 	self.sustain_talents = self.sustain_talents or {}
 end
 
+--- Resolve leveling talents
+function _M:resolveLevelTalents()
+	if not self.start_level or not self._levelup_talents then return end
+	for tid, info in pairs(self._levelup_talents) do
+		if not info.max or self.talents[tid] < info.max then
+			local last = info.last or self.start_level
+			if self.level - last >= info.every then
+				self:learnTalent(tid, true)
+				info.last = self.level
+			end
+		end
+	end
+end
+
 --- Make the actor use the talent
 function _M:useTalent(id, who, force_level, ignore_cd, force_target)
 	who = who or self

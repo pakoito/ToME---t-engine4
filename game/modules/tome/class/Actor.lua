@@ -669,7 +669,7 @@ function _M:tooltip(x, y, seen_by)
 	ts:add({"color", 0, 255, 255}, ("Level: %d"):format(self.level), {"color", "WHITE"}, true)
 	ts:add(("Exp: %d/%d"):format(self.exp, self:getExpChart(self.level+1) or "---"), true)
 	ts:add({"color", 255, 0, 0}, ("HP: %d (%d%%)"):format(self.life, self.life * 100 / self.max_life), {"color", "WHITE"}, true)
-	ts:add(("Stats: %d / %d / %d / %d / %d / %d"):format(self:getStr(), self:getDex(), self:getMag(), self:getWil(), self:getCun(), self:getCon()), true)
+	ts:add(("Stats: %d / %d / %d / %d / %d / %d"):format(self:getStr(), self:getDex(), self:getCon(), self:getMag(), self:getWil(), self:getCun()), true)
 	ts:add("Resists: ", table.concat(resists, ','), true)
 	ts:add("Armour/Defense: ", tostring(math.floor(self:combatArmor())), ' / ', tostring(math.floor(self:combatDefense())), true)
 	ts:add("Size: ", {"color", "ANTIQUE_WHITE"}, self:TextSizeCategory(), {"color", "WHITE"}, true)
@@ -1258,6 +1258,8 @@ function _M:resetToFull()
 end
 
 function _M:levelup()
+	engine.interface.ActorTalents.resolveLevelTalents(self)
+
 	if not self.no_points_on_levelup then
 		self.unused_stats = self.unused_stats + 3 + self:getRankStatAdjust()
 		self.unused_talents = self.unused_talents + 1
@@ -1281,6 +1283,8 @@ function _M:levelup()
 				DamageType.FIRE, DamageType.COLD, DamageType.ACID, DamageType.LIGHTNING,
 				DamageType.LIGHT, DamageType.DARKNESS,
 				DamageType.NATURE, DamageType.BLIGHT,
+				DamageType.TEMPORAL,
+				DamageType.MIND,
 			}
 			self.auto_resists_list = {}
 			for i = 1, rng.range(1, self.auto_resists_nb or 2) do

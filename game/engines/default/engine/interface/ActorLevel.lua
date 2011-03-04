@@ -37,7 +37,12 @@ _M.exp_chart = function(level)
 end
 
 function _M:init(t)
-	if self._actor_level_init then return end
+	self.exp = t.exp or 0
+	self.exp_mod = t.exp_mod or 1
+	self.exp_worth = t.exp_worth or 1
+
+	if not t.level_range or self._actor_level_init then return end
+
 	if t.level_range then
 		self.level = 1
 		self.start_level = t.level_range[1]
@@ -46,9 +51,6 @@ function _M:init(t)
 		self.level = 1
 		self.start_level = t.level or 1
 	end
-	self.exp = t.exp or 0
-	self.exp_mod = t.exp_mod or 1
-	self.exp_worth = t.exp_worth or 1
 	self._actor_level_init = true
 end
 

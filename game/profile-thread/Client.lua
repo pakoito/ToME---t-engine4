@@ -221,7 +221,6 @@ end
 function _M:orderLogin(o)
 	self.user_login = o.l
 	self.user_pass = o.p
-	print("profile strogin login info", o.l, o.p)
 
 	-- Already logged?
 	if self.auth and self.auth.login == o.l then
