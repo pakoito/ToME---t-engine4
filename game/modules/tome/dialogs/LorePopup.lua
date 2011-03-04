@@ -32,6 +32,7 @@ function _M:init(l, w, force_height)
 	self.title_shadow = false
 	self.color = {r=0x3a, g=0x35, b=0x33}
 
+	self.ui = ""
 	self.frame = {
 		shadow = {x = 10, y = 10, a = 0.5},
 		ox1 = -16, ox2 = 16,

@@ -27,7 +27,7 @@ newEntity{
 	desc = [[Rings can have magical properties.]],
 	randart_able = { attack=40, physical=40, spell=40, def=40, misc=40 },
 	-- Most rings are ego items
-	egos = "/data/general/objects/egos/rings.lua", egos_chance = resolvers.mbonus(50, 40),
+	egos = "/data/general/objects/egos/rings.lua", egos_chance = { prefix=resolvers.mbonus(50, 40), suffix=resolvers.mbonus(50, 40) }, egos_chance_decay = 0.5,
 }
 newEntity{
 	define_as = "BASE_AMULET",
@@ -37,7 +37,7 @@ newEntity{
 	encumber = 0.1,
 	rarity = 8,
 	desc = [[Amulets can have magical properties.]],
-	egos = "/data/general/objects/egos/amulets.lua", egos_chance = resolvers.mbonus(50, 40),
+	egos = "/data/general/objects/egos/amulets.lua", egos_chance = { prefix=resolvers.mbonus(50, 40), suffix=resolvers.mbonus(50, 40) }, egos_chance_decay = 0.5,
 }
 
 newEntity{ base = "BASE_RING",

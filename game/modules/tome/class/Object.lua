@@ -117,7 +117,7 @@ function _M:descAttribute(attr)
 		return (i > 0 and "+"..i or tostring(i)).."%"
 	elseif attr == "RESIST" then
 		local stat, i = next(self.wielder.resists)
-		return (i > 0 and "+"..i or tostring(i)).."%"
+		return (i and i > 0 and "+"..i or tostring(i)).."%"
 	elseif attr == "REGEN" then
 		local i = self.wielder.mana_regen or self.wielder.stamina_regen or self.wielder.life_regen
 		return ("%s%0.2f/turn"):format(i > 0 and "+" or "-", math.abs(i))

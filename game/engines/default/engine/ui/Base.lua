@@ -38,8 +38,43 @@ _M.font_bold = core.display.newFont("/data/font/VeraBd.ttf", 12)
 _M.font_bold_h = _M.font_bold:lineSkip()
 
 -- Default UI
-_M.ui = "stone-"
-_M.defaultui = "stone-"
+_M.ui = "simple"
+_M.defaultui = "stone"
+
+_M.ui_conf = {
+	stone = {
+		frame_shadow = {x=15, y=15, a=0.5},
+		frame_alpha = 1,
+		frame_ox1 = -42,
+		frame_ox2 =  42,
+		frame_oy1 = -42,
+		frame_oy2 =  42,
+	},
+	simple = {
+		frame_shadow = nil,
+		frame_alpha = 0.9,
+		frame_ox1 = -2,
+		frame_ox2 =  2,
+		frame_oy1 = -2,
+		frame_oy2 =  2,
+	},
+	parchment = {
+		frame_shadow = {x = 10, y = 10, a = 0.5},
+		frame_ox1 = -16,
+		frame_ox2 = 16,
+		frame_oy1 = -16,
+		frame_oy2 = 16,
+		b7 = "ui/parchment7.png",
+		b9 = "ui/parchment9.png",
+		b1 = "ui/parchment1.png",
+		b3 = "ui/parchment3.png",
+		b4 = "ui/parchment4.png",
+		b6 = "ui/parchment6.png",
+		b8 = "ui/parchment8.png",
+		b2 = "ui/parchment2.png",
+		b5 = "ui/parchment5.png",
+	},
+}
 
 function _M:init(t, no_gen)
 	self.mouse = Mouse.new()
@@ -70,9 +105,9 @@ end
 
 function _M:getUITexture(file)
 	if tcache[file] then return tcache[file] end
-	local i, w, h = self:getImage(self.ui..file, true)
-	if not i then i, w, h = self:getImage(self.defaultui..file) end
-	if not i then return end
+	local i, w, h = self:getImage((self.ui ~= "" and self.ui.."-" or "")..file, true)
+	if not i then i, w, h = self:getImage(self.defaultui.."-"..file) end
+	if not i then error("bad UI texture: "..file) return end
 	local t, tw, th = i:glTexture()
 	local r = {t=t, w=w, h=h, tw=tw, th=th}
 	tcache[file] = r

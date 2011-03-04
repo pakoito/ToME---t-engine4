@@ -324,10 +324,11 @@ function _M:finishEntity(level, type, e, ego_filter)
 		if not e.force_ego then
 			if _G.type(e.egos_chance) == "number" then e.egos_chance = {e.egos_chance} end
 			-- Pick an ego, then an other and so until we get no more
+			local chance_decay = 1
 			local picked_etype = {}
 			local etype = e.ego_first_type and e.ego_first_type or rng.tableIndex(e.egos_chance, picked_etype)
 			local echance = etype and e.egos_chance[etype]
-			while etype and rng.percent(util.bound(echance + (ego_chance or 0), 0, 100)) do
+			while etype and rng.percent(util.bound(echance / chance_decay + (ego_chance or 0), 0, 100)) do
 				picked_etype[etype] = true
 				if _G.type(etype) == "number" then etype = "" end
 				local egos = level:getEntitiesList(type.."/"..e.egos..":"..etype)
@@ -344,6 +345,7 @@ function _M:finishEntity(level, type, e, ego_filter)
 
 				etype = rng.tableIndex(e.egos_chance, picked_etype)
 				echance = e.egos_chance[etype]
+				if e.egos_chance_decay then chance_decay = chance_decay * e.egos_chance_decay end
 			end
 		else
 			local name = e.force_ego

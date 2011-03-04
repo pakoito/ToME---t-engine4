@@ -130,6 +130,7 @@ function _M:init(title, w, h, x, y, alpha, font, showup)
 	end
 	self.color = self.color or {r=255, g=255, b=255}
 
+	local conf = self.ui_conf[self.ui]
 	self.frame = self.frame or {
 		b7 = "ui/dialogframe_7.png",
 		b9 = "ui/dialogframe_9.png",
@@ -140,14 +141,13 @@ function _M:init(title, w, h, x, y, alpha, font, showup)
 		b8 = "ui/dialogframe_8.png",
 		b2 = "ui/dialogframe_2.png",
 		b5 = "ui/dialogframe_5.png",
-		shadow = {x=15, y=15, a=0.5},
-		a = 1,
+		shadow = conf.frame_shadow,
+		a = conf.frame_alpha or 1,
 	}
-	self.frame.ox1 = self.frame.ox1 or -42
-	self.frame.ox2 = self.frame.ox2 or 42
-	self.frame.oy1 = self.frame.oy1 or -42
-	self.frame.oy2 = self.frame.oy2 or 42
-	self.frame.a = self.frame.a or 1
+	self.frame.ox1 = self.frame.ox1 or conf.frame_ox1
+	self.frame.ox2 = self.frame.ox2 or conf.frame_ox2
+	self.frame.oy1 = self.frame.oy1 or conf.frame_oy1
+	self.frame.oy2 = self.frame.oy2 or conf.frame_oy2
 
 	self.uis = {}
 	self.focus_ui = nil
