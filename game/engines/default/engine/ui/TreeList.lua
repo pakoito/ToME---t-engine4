@@ -25,9 +25,6 @@ local Slider = require "engine.ui.Slider"
 --- A generic UI list
 module(..., package.seeall, class.inherit(Base, Focusable))
 
-local plus = _M:getTexture("ui/plus.png")
-local minus = _M:getTexture("ui/minus.png")
-
 function _M:init(t)
 	self.tree = assert(t.tree, "no tree tree")
 	self.columns = assert(t.columns, "no list columns")
@@ -46,6 +43,9 @@ function _M:init(t)
 	self.sel_by_col = t.sel_by_col and {} or nil
 
 	self.fh = t.item_height or (self.font_h + 6)
+
+	self.plus = _M:getUITexture("ui/plus.png")
+	self.minus = _M:getUITexture("ui/minus.png")
 
 	local w = self.w
 	if self.scrollbar then w = w - 10 end
@@ -106,7 +106,7 @@ function _M:drawItem(item)
 		local offset = 0
 		if i == 1 then
 			offset = level * self.level_offset
-			if item.nodes then offset = offset + plus.w end
+			if item.nodes then offset = offset + self.plus.w end
 		end
 		local startx = col.frame_sel.b4.w + offset
 
@@ -164,7 +164,7 @@ function _M:generate()
 			end end
 		end
 		self:onSelect()
-		if self.list[self.sel] and self.list[self.sel].nodes and bx <= plus.w and button ~= "wheelup" and button ~= "wheeldown" and event == "button" then
+		if self.list[self.sel] and self.list[self.sel].nodes and bx <= self.plus.w and button ~= "wheelup" and button ~= "wheeldown" and event == "button" then
 			self:treeExpand(nil)
 		else
 			if (self.all_clicks or button == "left") and button ~= "wheelup" and button ~= "wheeldown" and event == "button" then self:onUse(button) end
@@ -290,7 +290,7 @@ function _M:display(x, y, nb_keyframes)
 			end
 
 			if item.nodes and j == 1 then
-				local s = item.shown and minus or plus
+				local s = item.shown and self.minus or self.plus
 				s.t:toScreenFull(x, y + (self.fh - s.h) / 2, s.w, s.h, s.th, s.th)
 			end
 

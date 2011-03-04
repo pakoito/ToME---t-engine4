@@ -33,10 +33,10 @@ function _M:init(t)
 end
 
 function _M:generate()
-	self.top = self:getTexture("ui/scrollbar_top.png")
-	self.middle = self:getTexture("ui/scrollbar.png")
-	self.bottom = self:getTexture("ui/scrollbar_bottom.png")
-	self.sel = self:getTexture("ui/scrollbar-sel.png")
+	self.top = self:getUITexture("ui/scrollbar_top.png")
+	self.middle = self:getUITexture("ui/scrollbar.png")
+	self.bottom = self:getUITexture("ui/scrollbar_bottom.png")
+	self.sel = self:getUITexture("ui/scrollbar-sel.png")
 	self.w, self.h = self.middle.w, self.size
 end
 

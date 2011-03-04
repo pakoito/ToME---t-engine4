@@ -32,14 +32,14 @@ end
 
 function _M:generate()
 	if self.dir == "horizontal" then
-		self.top = self:getTexture("ui/border_vert_top.png")
-		self.middle = self:getTexture("ui/border_vert_middle.png")
-		self.bottom = self:getTexture("ui/border_vert_bottom.png")
+		self.top = self:getUITexture("ui/border_vert_top.png")
+		self.middle = self:getUITexture("ui/border_vert_middle.png")
+		self.bottom = self:getUITexture("ui/border_vert_bottom.png")
 		self.w, self.h = self.middle.w, self.size
 	else
-		self.left = self:getTexture("ui/border_hor_left.png")
-		self.middle = self:getTexture("ui/border_hor_middle.png")
-		self.right = self:getTexture("ui/border_hor_right.png")
+		self.left = self:getUITexture("ui/border_hor_left.png")
+		self.middle = self:getUITexture("ui/border_hor_middle.png")
+		self.right = self:getUITexture("ui/border_hor_right.png")
 		self.w, self.h = self.size, self.middle.h
 	end
 end

@@ -27,12 +27,14 @@ local Slider = require "engine.ui.Slider"
 --- Module that handles multiplayer chats
 module(..., package.seeall, class.inherit(engine.ui.Base))
 
+--[[
 local ls, ls_w, ls_h = _M:getImage("ui/selection-left-sel.png")
 local ms, ms_w, ms_h = _M:getImage("ui/selection-middle-sel.png")
 local rs, rs_w, rs_h = _M:getImage("ui/selection-right-sel.png")
 local l, l_w, l_h = _M:getImage("ui/selection-left.png")
 local m, m_w, m_h = _M:getImage("ui/selection-middle.png")
 local r, r_w, r_h = _M:getImage("ui/selection-right.png")
+]]
 
 --- Creates the log zone
 function _M:init()

@@ -131,15 +131,15 @@ function _M:init(title, w, h, x, y, alpha, font, showup)
 	self.color = self.color or {r=255, g=255, b=255}
 
 	self.frame = self.frame or {
-		b7 = "ui/dialogueV3_7.png",
-		b9 = "ui/dialogueV3_9.png",
-		b1 = "ui/dialogueV3_1.png",
-		b3 = "ui/dialogueV3_3.png",
-		b4 = "ui/dialogueV3_4.png",
-		b6 = "ui/dialogueV3_6.png",
-		b8 = "ui/dialogueV3_8.png",
-		b2 = "ui/dialogueV3_2.png",
-		b5 = "ui/dialogueV3_5.png",
+		b7 = "ui/dialogframe_7.png",
+		b9 = "ui/dialogframe_9.png",
+		b1 = "ui/dialogframe_1.png",
+		b3 = "ui/dialogframe_3.png",
+		b4 = "ui/dialogframe_4.png",
+		b6 = "ui/dialogframe_6.png",
+		b8 = "ui/dialogframe_8.png",
+		b2 = "ui/dialogframe_2.png",
+		b5 = "ui/dialogframe_5.png",
 		shadow = {x=15, y=15, a=0.5},
 		a = 1,
 	}
@@ -178,19 +178,19 @@ function _M:generate()
 	self.frame.w = self.w - self.frame.ox1 + self.frame.ox2
 	self.frame.h = self.h - self.frame.oy1 + self.frame.oy2
 
-	self.b7 = self:getTexture(self.frame.b7)
-	self.b9 = self:getTexture(self.frame.b9)
-	self.b1 = self:getTexture(self.frame.b1)
-	self.b3 = self:getTexture(self.frame.b3)
-	self.b8 = self:getTexture(self.frame.b8)
-	self.b4 = self:getTexture(self.frame.b4)
-	self.b2 = self:getTexture(self.frame.b2)
-	self.b6 = self:getTexture(self.frame.b6)
-	self.b5 = self:getTexture(self.frame.b5)
+	self.b7 = self:getUITexture(self.frame.b7)
+	self.b9 = self:getUITexture(self.frame.b9)
+	self.b1 = self:getUITexture(self.frame.b1)
+	self.b3 = self:getUITexture(self.frame.b3)
+	self.b8 = self:getUITexture(self.frame.b8)
+	self.b4 = self:getUITexture(self.frame.b4)
+	self.b2 = self:getUITexture(self.frame.b2)
+	self.b6 = self:getUITexture(self.frame.b6)
+	self.b5 = self:getUITexture(self.frame.b5)
 
 	self.overs = {}
 	for i, o in ipairs(self.frame.overlays or {}) do
-		local ov = self:getTexture(o.image)
+		local ov = self:getUITexture(o.image)
 		if o.gen then
 			o.gen(ov, self)
 		else

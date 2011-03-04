@@ -37,8 +37,8 @@ function _M:generate()
 	self.mouse:reset()
 	self.key:reset()
 
-	self.check = self:getTexture("ui/checkbox.png")
-	self.tick = self:getTexture("ui/checkbox-ok.png")
+	self.check = self:getUITexture("ui/checkbox.png")
+	self.tick = self:getUITexture("ui/checkbox-ok.png")
 
 	self.h = r_h
 

@@ -52,7 +52,7 @@ function _M:generate()
 	self.w = title_w + frame_w
 	self.h = self.font_h + 6
 
-	self.texcursor = self:getTexture("ui/textbox-cursor.png")
+	self.texcursor = self:getUITexture("ui/textbox-cursor.png")
 	self.frame = self:makeFrame("ui/textbox", frame_w, self.h)
 	self.frame_sel = self:makeFrame("ui/textbox-sel", frame_w, self.h)
 

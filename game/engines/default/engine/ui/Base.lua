@@ -38,7 +38,8 @@ _M.font_bold = core.display.newFont("/data/font/VeraBd.ttf", 12)
 _M.font_bold_h = _M.font_bold:lineSkip()
 
 -- Default UI
-_M.ui = "stone"
+_M.ui = "stone-"
+_M.defaultui = "stone-"
 
 function _M:init(t, no_gen)
 	self.mouse = Mouse.new()
@@ -57,18 +58,20 @@ function _M:init(t, no_gen)
 	if not no_gen then self:generate() end
 end
 
-function _M:getImage(file)
+function _M:getImage(file, noerror)
 	if cache[file] then return unpack(cache[file]) end
 	local s = core.display.loadImage(gfx_prefix..file)
+	if noerror and not s then return end
 	assert(s, "bad UI image: "..file)
 	s:alpha(true)
 	cache[file] = {s, s:getSize()}
 	return unpack(cache[file])
 end
 
-function _M:getTexture(file)
+function _M:getUITexture(file)
 	if tcache[file] then return tcache[file] end
-	local i, w, h = self:getImage(file)
+	local i, w, h = self:getImage(self.ui..file, true)
+	if not i then i, w, h = self:getImage(self.defaultui..file) end
 	if not i then return end
 	local t, tw, th = i:glTexture()
 	local r = {t=t, w=w, h=h, tw=tw, th=th}
@@ -79,15 +82,15 @@ end
 function _M:makeFrame(base, w, h)
 	local f = {}
 	if base then
-		f.b7 = self:getTexture(base.."7.png")
-		f.b9 = self:getTexture(base.."9.png")
-		f.b1 = self:getTexture(base.."1.png")
-		f.b3 = self:getTexture(base.."3.png")
-		f.b8 = self:getTexture(base.."8.png")
-		f.b4 = self:getTexture(base.."4.png")
-		f.b2 = self:getTexture(base.."2.png")
-		f.b6 = self:getTexture(base.."6.png")
-		f.b5 = self:getTexture(base.."5.png")
+		f.b7 = self:getUITexture(base.."7.png")
+		f.b9 = self:getUITexture(base.."9.png")
+		f.b1 = self:getUITexture(base.."1.png")
+		f.b3 = self:getUITexture(base.."3.png")
+		f.b8 = self:getUITexture(base.."8.png")
+		f.b4 = self:getUITexture(base.."4.png")
+		f.b2 = self:getUITexture(base.."2.png")
+		f.b6 = self:getUITexture(base.."6.png")
+		f.b5 = self:getUITexture(base.."5.png")
 	end
 	f.w = w
 	f.h = h
