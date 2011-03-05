@@ -185,7 +185,7 @@ int create_profile_thread(lua_State *L)
 	thread = SDL_CreateThread(thread_profile, profile);
 	if (thread == NULL) {
 		printf("Unable to create profile thread: %s\n", SDL_GetError());
-		return;
+		return -1;
 	}
 	profile->thread = thread;
 
