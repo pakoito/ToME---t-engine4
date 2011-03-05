@@ -23,7 +23,7 @@ newEntity{
 	display = '2', color=colors.UMBER,
 	store = {
 		purse = 25,
-		restock_every = 1,
+		restock_every = 3,
 		empty_before_restock = true,
 		min_fill = 10,
 		max_fill = 20,
@@ -39,7 +39,7 @@ newEntity{
 	display = '3', color=colors.UMBER,
 	store = {
 		purse = 25,
-		restock_every = 1,
+		restock_every = 3,
 		empty_before_restock = true,
 		min_fill = 10,
 		max_fill = 20,
@@ -55,7 +55,7 @@ newEntity{
 	display = '4', color=colors.LIGHT_BLUE,
 	store = {
 		purse = 10,
-		restock_every = 1,
+		restock_every = 3,
 		empty_before_restock = true,
 		min_fill = 4,
 		max_fill = 7,
@@ -71,7 +71,7 @@ newEntity{
 	display = '5', color=colors.WHITE,
 	store = {
 		purse = 10,
-		restock_every = 1,
+		restock_every = 3,
 		empty_before_restock = true,
 		min_fill = 4,
 		max_fill = 7,
@@ -87,7 +87,7 @@ newEntity{
 	display = '9', color=colors.BLUE,
 	store = {
 		purse = 30,
-		restock_every = 1,
+		restock_every = 3,
 		empty_before_restock = true,
 		min_fill = 20,
 		max_fill = 30,
@@ -107,7 +107,7 @@ newEntity{
 	display = '6', color=colors.RED,
 	store = {
 		purse = 25,
-		restock_every = 1,
+		restock_every = 3,
 		empty_before_restock = true,
 		min_fill = 15,
 		max_fill = 25,
@@ -128,7 +128,7 @@ newEntity{
 	display = '2', color=colors.BLUE,
 	store = {
 		purse = 20,
-		restock_every = 1,
+		restock_every = 3,
 		empty_before_restock = true,
 		min_fill = 15,
 		max_fill = 25,
@@ -152,7 +152,7 @@ newEntity{
 	display = '5', color=colors.WHITE,
 	store = {
 		purse = 10,
-		restock_every = 1,
+		restock_every = 3,
 		empty_before_restock = true,
 		min_fill = 5,
 		max_fill = 9,
@@ -174,7 +174,7 @@ newEntity{
 	display = '7', color=colors.BLUE,
 	store = {
 		purse = 35,
-		restock_every = 1,
+		restock_every = 3,
 		empty_before_restock = true,
 		sell_percent = 240,
 		min_fill = 10,
@@ -191,7 +191,7 @@ newEntity{
 	display = '*', color=colors.LIGHT_RED,
 	store = {
 		purse = 5,
-		restock_every = 1,
+		restock_every = 3,
 		empty_before_restock = true,
 		min_fill = 40,
 		max_fill = 40,
@@ -215,7 +215,7 @@ newEntity{
 	display = '*', color=colors.LIGHT_RED,
 	store = {
 		purse = 5,
-		restock_every = 1,
+		restock_every = 3,
 		empty_before_restock = true,
 		min_fill = 40,
 		max_fill = 40,
@@ -231,7 +231,7 @@ newEntity{
 	display = '2', color=colors.UMBER,
 	store = {
 		purse = 25,
-		restock_every = 1,
+		restock_every = 3,
 		empty_before_restock = true,
 		min_fill = 20,
 		max_fill = 30,
@@ -251,7 +251,7 @@ newEntity{
 	display = '3', color=colors.UMBER,
 	store = {
 		purse = 25,
-		restock_every = 1,
+		restock_every = 3,
 		empty_before_restock = true,
 		min_fill = 20,
 		max_fill = 30,
