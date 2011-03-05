@@ -130,6 +130,7 @@ If used near a portal it could probably activate it.]],
 						who:setQuestStatus("east-portal", engine.Quest.COMPLETED, "tricked-demon")
 						local orb = who:findInAllInventoriesBy("define_as", "ORB_MANY_WAYS_DEMON")
 						if orb then orb.name = "Demonic Orb of Many Ways" end
+						require("engine.ui.Dialog"):simplePopup("Demonic Orb of Many Ways", "It felt nothing like your previous uses of the Orb of Many Ways. Tannen must have switched the Orb out for a fake!")
 					end,
 				}
 			else
