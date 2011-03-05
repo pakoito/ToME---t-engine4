@@ -30,6 +30,8 @@ return {
 	day_night = true,
 	persistent = "zone",
 	ambient_music = "World of Ice.ogg",
+	min_material_level = function() return game.state:isAdvanced() and 4 or 2 end,
+	max_material_level = function() return game.state:isAdvanced() and 5 or 3 end,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",

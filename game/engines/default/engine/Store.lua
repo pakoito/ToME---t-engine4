@@ -61,7 +61,9 @@ function _M:loadup(level, zone)
 		for i = #inven, 1, -1 do
 			local e = inven[i]
 			inven[i] = nil
-			e:removed()
+			if not e.__store_forget then
+				e:removed()
+			end
 		end
 	end
 

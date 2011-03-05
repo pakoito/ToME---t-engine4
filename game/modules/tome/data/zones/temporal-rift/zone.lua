@@ -37,6 +37,8 @@ return {
 	all_lited = true,
 	no_worldport = true,
 	persistent = "zone",
+	min_material_level = 2,
+	max_material_level = 3,
 	generator =  {
 	},
 	color_shown = {0.7, 0.6, 0.8, 1},

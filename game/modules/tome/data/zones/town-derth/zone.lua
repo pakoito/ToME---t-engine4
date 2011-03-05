@@ -31,6 +31,9 @@ return {
 	all_lited = true,
 	day_night = true,
 	ambient_music = "Virtue lost.ogg",
+
+	max_material_level = 2,
+
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",
@@ -45,7 +48,6 @@ return {
 			nb_object = {0, 0},
 		},
 	},
-
 	on_enter = function(_, _, newzone)
 		if game.player.level <= 10 and not game.player:hasQuest("arena-unlock") then
 			local spot = game.level:pickSpot{type="npc", subtype="arena"}

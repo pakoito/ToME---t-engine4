@@ -30,6 +30,8 @@ return {
 	all_lited = true,
 	day_night = true,
 	ambient_music = "Breaking the siege.ogg",
+	min_material_level = 4,
+	max_material_level = 5,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Town",

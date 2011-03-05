@@ -31,6 +31,8 @@ return {
 	color_shown = {0.7, 0.7, 0.7, 1},
 	color_obscure = {0.7*0.6, 0.7*0.6, 0.7*0.6, 0.6},
 	ambient_music = "Woods of Eremae.ogg",
+	min_material_level = 2,
+	max_material_level = 3,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",

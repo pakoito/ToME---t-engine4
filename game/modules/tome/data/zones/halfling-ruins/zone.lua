@@ -29,6 +29,8 @@ return {
 --	all_remembered = true,
 	all_lited = true,
 	ambient_music = "Far away.ogg",
+	min_material_level = 2,
+	max_material_level = 3,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",

@@ -33,6 +33,8 @@ return {
 	no_worldport = true,
 	no_teleport_south = true,
 	ambient_music = "Hold the Line.ogg",
+	min_material_level = 4,
+	max_material_level = 5,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",

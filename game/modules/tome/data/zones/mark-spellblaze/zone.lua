@@ -30,6 +30,8 @@ return {
 	day_night = true,
 	persistent = "zone",
 	ambient_music = "Rainy Day.ogg",
+	min_material_level = 2,
+	max_material_level = 3,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Forest",

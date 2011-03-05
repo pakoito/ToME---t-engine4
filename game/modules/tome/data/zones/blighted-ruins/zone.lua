@@ -32,6 +32,7 @@ return {
 	persistent = "zone",
 	ambient_music = "Dark Secrets.ogg",
 	no_worldport = true,
+	max_material_level = 2,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",

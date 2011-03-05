@@ -28,6 +28,8 @@ return {
 --	all_lited = true,
 	persistent = "zone",
 	ambient_music = "Far Away.ogg",
+	min_material_level = 2,
+	max_material_level = 3,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",

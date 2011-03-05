@@ -30,6 +30,8 @@ return {
 	persistent = "zone",
 	ambient_music = "The Ancients.ogg",
 	no_level_connectivity = true,
+	min_material_level = 4,
+	max_material_level = 5,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",

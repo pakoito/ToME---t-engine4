@@ -51,12 +51,17 @@ end
 
 --- Discovered the far east
 function _M:goneEast()
-	self.gone_east = true
+	self.is_advanced = true
+end
+
+--- Is the game in an advanced state (gone east ? others ?)
+function _M:isAdvanced()
+	return self.is_advanced
 end
 
 --- Setup a backup guardian for the given zone
 function _M:activateBackupGuardian(guardian, on_level, zonelevel, rumor, action)
-	if self.gone_east then return end
+	if self.is_advanced then return end
 	print("Zone guardian dead, setting up backup guardian", guardian, zonelevel)
 	self.allow_backup_guardians[game.zone.short_name] =
 	{
@@ -71,7 +76,7 @@ end
 
 --- Activate a backup guardian & settings, if available
 function _M:zoneCheckBackupGuardian()
-	if not self.gone_east then print("Not gone east, no backup guardian") return end
+	if not self.is_advanced then print("Not gone east, no backup guardian") return end
 
 	-- Adjust level of the zone
 	if self.allow_backup_guardians[game.zone.short_name] then
@@ -583,5 +588,32 @@ function _M:checkDonation(back_insert)
 		game:registerDialogAt(Donation.new(), 2)
 	else
 		game:registerDialog(Donation.new())
+	end
+end
+
+--------------------------------------------------------------
+-- Loot filters
+--------------------------------------------------------------
+
+function _M:defaultEntityFilter(zone, level, type)
+	-- By default we dont apply special filters, but we always provide one so that entityFilter is called
+	return {}
+end
+
+function _M:entityFilter(zone, e, filter, type)
+	if type == "object" then
+		local min_mlvl = util.getval(zone.min_material_level)
+		local max_mlvl = util.getval(zone.max_material_level)
+		if min_mlvl then
+			if not e.material_level then return true end
+			if e.material_level < min_mlvl then return false end
+		end
+		if max_mlvl then
+			if not e.material_level then return true end
+			if e.material_level > max_mlvl then return false end
+		end
+		return true
+	else
+		return true
 	end
 end

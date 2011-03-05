@@ -32,6 +32,10 @@ return {
 	day_night = true,
 	all_lited = true,
 	ambient_music = "Straight Into Ambush.ogg",
+
+	min_material_level = function() return game.state:isAdvanced() and 3 or 2 end,
+	max_material_level = function() return game.state:isAdvanced() and 4 or 3 end,
+
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",

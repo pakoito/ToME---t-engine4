@@ -34,6 +34,8 @@ return {
 	persistent = "zone",
 	no_worldport = true,
 	ambient_music = "Through the Dark Portal.ogg",
+	min_material_level = 5,
+	max_material_level = 5,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",

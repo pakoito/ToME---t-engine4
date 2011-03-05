@@ -29,6 +29,8 @@ return {
 	all_lited = true,
 	persistent = "zone",
 	ambient_music = "Virtue lost.ogg",
+	min_material_level = 2,
+	max_material_level = 2,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",

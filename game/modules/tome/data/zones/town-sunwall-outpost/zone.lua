@@ -30,6 +30,7 @@ return {
 	all_lited = true,
 	day_night = true,
 	ambient_music = "Straight Into Ambush.ogg",
+	max_material_level = 2,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Town",

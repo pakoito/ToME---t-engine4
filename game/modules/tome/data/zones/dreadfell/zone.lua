@@ -29,6 +29,8 @@ return {
 --	all_lited = true,
 	persistent = "zone",
 	ambient_music = "Dark Secrets.ogg",
+	min_material_level = function() return game.state:isAdvanced() and 4 or 3 end,
+	max_material_level = function() return game.state:isAdvanced() and 5 or 4 end,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",

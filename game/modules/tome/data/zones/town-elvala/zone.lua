@@ -31,6 +31,9 @@ return {
 	day_night = true,
 	all_lited = true,
 	ambient_music = "Virtue lost.ogg",
+
+	max_material_level = 2,
+
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",

@@ -30,6 +30,7 @@ return {
 	persistent = "zone",
 	ambient_music = "Thrall's Theme.ogg",
 	no_level_connectivity = true,
+	max_material_level = 5,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",

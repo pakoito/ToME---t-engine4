@@ -126,6 +126,7 @@ function _M:onSell(who, o, item, nb, before)
 	if price <= 0 or nb <= 0 then return end
 	price = math.min(price * nb, self.store.purse * nb)
 	who:incMoney(price)
+	o:forAllStack(function(so) so.__store_forget = true end) -- Make sure the store does never forget about it
 end
 
 --- Override the default

@@ -28,6 +28,7 @@ return {
 --	all_remembered = true,
 --	all_lited = true,
 	persistent = "zone",
+	max_material_level = 2,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",

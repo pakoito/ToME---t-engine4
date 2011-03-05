@@ -29,6 +29,7 @@ return {
 	all_lited = true,
 	persistent = "zone",
 	ambient_music = "World of Ice.ogg",
+	max_material_level = 2,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Cavern",

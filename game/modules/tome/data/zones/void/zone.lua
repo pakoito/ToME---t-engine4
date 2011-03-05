@@ -36,6 +36,7 @@ return {
 	color_shown = {0.7, 0.6, 0.8, 1},
 	color_obscure = {0.7*0.6, 0.6*0.6, 0.8*0.6, 0.6},
 	ambient_music = "Through the Dark Portal.ogg",
+	min_material_level = 5,
 	generator = {
 		map = {
 			class = "engine.generator.map.Forest",

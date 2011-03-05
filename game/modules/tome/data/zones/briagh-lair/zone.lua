@@ -28,6 +28,8 @@ return {
 --	all_remembered = true,
 --	all_lited = true,
 	persistent = "zone",
+	min_material_level = 3,
+	max_material_level = 5,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Cavern",

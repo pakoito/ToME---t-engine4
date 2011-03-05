@@ -31,6 +31,10 @@ return {
 	all_lited = true,
 	day_night = true,
 	ambient_music = "For the king and the country!.ogg",
+
+	min_material_level = 3,
+	max_material_level = 4,
+
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",

@@ -330,6 +330,9 @@ function _M:loaded()
 			end
 		end,
 	}
+	Zone.check_filter = function(...) return self.state:entityFilter(...) end
+	Zone.default_prob_filter = true
+	Zone.default_filter = function(...) return self.state:defaultEntityFilter(...) end
 	Map:setViewerActor(self.player)
 	self:setupDisplayMode(false, "init")
 	if self.player then self.player.changed = true end

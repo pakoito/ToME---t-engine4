@@ -30,6 +30,8 @@ return {
 	day_night = true,
 	persistent = "zone",
 	ambient_music = "Bazaar of Tal-Mashad.ogg",
+	min_material_level = 4,
+	max_material_level = 4,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Forest",

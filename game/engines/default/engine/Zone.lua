@@ -163,11 +163,11 @@ function _M:computeRarities(type, list, level, filter, add_level, rarity_field)
 end
 
 --- Checks an entity against a filter
-function _M:checkFilter(e, filter)
+function _M:checkFilter(e, filter, type)
 	if e.unique and game.uniques[e.__CLASSNAME.."/"..e.unique] then print("refused unique", e.name, e.__CLASSNAME.."/"..e.unique) return false end
 
 	if not filter then return true end
-	if filter.ignore and self:checkFilter(e, filter.ignore) then return false end
+	if filter.ignore and self:checkFilter(e, filter.ignore, type) then return false end
 
 	print("Checking filter", filter.type, filter.subtype)
 	if filter.type and filter.type ~= e.type then return false end
@@ -182,6 +182,7 @@ function _M:checkFilter(e, filter)
 	end
 	if e.checkFilter and not e:checkFilter(filter) then return false end
 	if filter.special and not filter.special(e) then return false end
+	if self.check_filter and not self:check_filter(e, filter, type) then return false end
 	if filter.max_ood and resolvers.current_level and e.level_range and resolvers.current_level + filter.max_ood < e.level_range[1] then print("Refused max_ood", e.name, e.level_range[1]) return false end
 
 	if e.unique then print("accepted unique", e.name, e.__CLASSNAME.."/"..e.unique) end
@@ -236,6 +237,9 @@ function _M:makeEntity(level, type, filter, force_level, prob_filter)
 	resolvers.current_level = self.base_level + level.level - 1
 	if force_level then resolvers.current_level = force_level end
 
+	if prob_filter == nil then prob_filter = util.getval(self.default_prob_filter, self, type) end
+	if filter == nil then filter = util.getval(self.default_filter, self, type) end
+
 	local e
 	-- No probability list, use the default one and apply filter
 	if not prob_filter then
@@ -244,7 +248,7 @@ function _M:makeEntity(level, type, filter, force_level, prob_filter)
 		-- CRUDE ! Brute force ! Make me smarter !
 		while tries > 0 do
 			e = self:pickEntity(list)
-			if e and self:checkFilter(e, filter) then break end
+			if e and self:checkFilter(e, filter, type) then break end
 			tries = tries - 1
 		end
 		if tries == 0 then return nil end
@@ -255,7 +259,7 @@ function _M:makeEntity(level, type, filter, force_level, prob_filter)
 		elseif type == "object" then base_list = self.object_list
 		elseif type == "trap" then base_list = self.trap_list
 		else base_list = level:getEntitiesList(type) if not base_list then return nil end end
-		local list = self:computeRarities(type, base_list, level, function(e) return self:checkFilter(e, filter) end, filter.add_levels, filter.special_rarity)
+		local list = self:computeRarities(type, base_list, level, function(e) return self:checkFilter(e, filter, type) end, filter.add_levels, filter.special_rarity)
 		e = self:pickEntity(list)
 		print("[MAKE ENTITY] prob list generation", e and e.name, "from list size", #list)
 		if not e then return nil end
@@ -265,7 +269,7 @@ function _M:makeEntity(level, type, filter, force_level, prob_filter)
 		local tries = filter and filter.nb_tries or 50 -- A little crude here too but we only check 50 times, this is simply to prevent duplicate uniques
 		while tries > 0 do
 			e = self:pickEntity(list)
-			if e and self:checkFilter(e, nil) then break end
+			if e and self:checkFilter(e, nil, type) then break end
 			tries = tries - 1
 		end
 		if tries == 0 then return nil end

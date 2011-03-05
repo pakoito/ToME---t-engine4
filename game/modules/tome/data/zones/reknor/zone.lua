@@ -29,6 +29,8 @@ return {
 --	all_lited = true,
 	persistent = "zone",
 	ambient_music = "a_lomos_del_dragon_blanco.ogg",
+	min_material_level = 3,
+	max_material_level = 4,
 	generator =  {
 		map = {
 			class = "engine.generator.map.TileSet",

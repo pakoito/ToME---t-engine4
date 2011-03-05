@@ -30,6 +30,8 @@ return {
 	day_night = true,
 	persistent = "zone",
 	ambient_music = "Rainy Day.ogg",
+	min_material_level = function() return game.state:isAdvanced() and 3 or 1 end,
+	max_material_level = function() return game.state:isAdvanced() and 4 or 2 end,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Forest",

@@ -29,6 +29,7 @@ return {
 	all_lited = true,
 	persistent = "zone",
 	ambient_music = "Straight Into Ambush.ogg",
+	max_material_level = 24,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Cavern",

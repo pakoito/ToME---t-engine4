@@ -29,6 +29,8 @@ return {
 --	all_lited = true,
 	persistent = "zone",
 	ambient_music = "The Ancients.ogg",
+	min_material_level = function() return game.state:isAdvanced() and 2 or 1 end,
+	max_material_level = function() return game.state:isAdvanced() and 4 or 3 end,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Maze",
