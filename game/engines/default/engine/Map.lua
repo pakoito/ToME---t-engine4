@@ -575,7 +575,7 @@ end
 -- @param y position
 -- @param what property to check
 function _M:checkAllEntities(x, y, what, ...)
-	if x < 0 or x >= self.w or y < 0 or y >= self.h then return end
+	if not x or not y or x < 0 or x >= self.w or y < 0 or y >= self.h then return end
 	if self.map[x + y * self.w] then
 		return self._check_entities[x + y * self.w](self, x, y, what, ...)
 	end
@@ -589,7 +589,7 @@ end
 -- @param what property to check
 -- @return a table containing all return values, indexed by the entities
 function _M:checkAllEntitiesNoStop(x, y, what, ...)
-	if x < 0 or x >= self.w or y < 0 or y >= self.h then return {} end
+	if not x or not y or x < 0 or x >= self.w or y < 0 or y >= self.h then return {} end
 	local ret = {}
 	local tile = self.map[x + y * self.w]
 	if tile then
@@ -615,7 +615,7 @@ end
 -- @param pos entity position in the grid
 -- @param what property to check
 function _M:checkEntity(x, y, pos, what, ...)
-	if x < 0 or x >= self.w or y < 0 or y >= self.h then return end
+	if not x or not y or x < 0 or x >= self.w or y < 0 or y >= self.h then return end
 	if self.map[x + y * self.w] then
 		if self.map[x + y * self.w][pos] then
 			local p = self.map[x + y * self.w][pos]:check(what, x, y, ...)
