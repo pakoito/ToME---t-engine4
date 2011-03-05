@@ -28,7 +28,7 @@ local answers = {}
 for i = 1, player.max_inscriptions do
 	local name = player.inscriptions[i]
 	local t = player:getTalentFromId("T_"..name)
-	if not replace_same or replace_same.."_"..i == name then
+	if (not replace_same or replace_same.."_"..i == name) then
 		answers[#answers+1] = {t.name, action=function(npc, player)
 			player:setInscription(i, iname, idata, true, true, {obj=obj}, replace_same)
 			player:removeObject(inven, item)
@@ -39,7 +39,7 @@ for i = 1, player.max_inscriptions do
 	end
 end
 
-if player.inscriptions_slots_added < 2 and player.unused_talents_types > 0 then
+if not replace_same and player.inscriptions_slots_added < 2 and player.unused_talents_types > 0 then
 	answers[#answers+1] = {"Buy a new slot with one #{bold}#talent category point#{normal}#.", action=function(npc, player)
 		player.unused_talents_types = player.unused_talents_types - 1
 		player.max_inscriptions = player.max_inscriptions + 1
