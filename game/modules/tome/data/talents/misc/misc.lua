@@ -44,7 +44,9 @@ newTalent{
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
+		if not x then return end
 		local _ _, x, y = self:canProject(tg, x, y)
+		if not x then return end
 		local target = game.level.map(x, y, engine.Map.ACTOR)
 		if not target then return end
 
