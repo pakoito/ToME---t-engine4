@@ -33,6 +33,9 @@ function _M:init(l, w, force_height)
 	self.color = {r=0x3a, g=0x35, b=0x33}
 
 	self.ui = "parchment"
+
+	Dialog.init(self, "Lore found: #0080FF#"..l.name, 1, 1)
+
 	if l.bloodstains then
 		local ovs = {}
 		for i = 1, l.bloodstains do
@@ -44,8 +47,6 @@ function _M:init(l, w, force_height)
 		end
 		self.frame.overlays = ovs
 	end
-
-	Dialog.init(self, "Lore found: #0080FF#"..l.name, 1, 1)
 
 	local h = math.min(force_height and (force_height * game.h) or 999999999, self.font_h * #list)
 	self:loadUI{
