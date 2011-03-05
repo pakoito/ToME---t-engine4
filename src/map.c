@@ -624,7 +624,16 @@ static int map_set_grid(lua_State *L)
 		// We use the pointer value directly as an index
 		if (map->grids[x][y][i])
 		{
+#if defined(__PTRDIFF_TYPE__)
+			if(sizeof(__PTRDIFF_TYPE__) == sizeof(long int))
+				lua_pushnumber(L, (unsigned long int)map->grids[x][y][i]);
+			else if(sizeof(__PTRDIFF_TYPE__) == sizeof(long long))
+				lua_pushnumber(L, (long long)map->grids[x][y][i]);
+			else
+				lua_pushnumber(L, (int)map->grids[x][y][i]);
+#else
 			lua_pushnumber(L, (long long)map->grids[x][y][i]);
+#endif
 			lua_pushnil(L);
 			lua_settable(L, 5); // Access the list of all mos for the map
 		}

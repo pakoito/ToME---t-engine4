@@ -155,7 +155,16 @@ void stackDump (lua_State *L) {
 		case LUA_TNUMBER:
 			printf("%d: %g\n",  i, lua_tonumber(L, i));
 			break;
-		default: printf("%d: %s // %x\n", i, lua_typename(L, t), lua_topointer(L, i)); break;
+		default:
+#if defined(__PTRDIFF_TYPE__)
+			if((sizeof(__PTRDIFF_TYPE__) == sizeof(long int)))
+				printf("%d: %s // %lx\n", i, lua_typename(L, t), (unsigned long int)lua_topointer(L, i));
+			else
+				printf("%d: %s // %x\n", i, lua_typename(L, t), (unsigned int)lua_topointer(L, i));
+#else
+			printf("%d: %s // %x\n", i, lua_typename(L, t), lua_topointer(L, i));
+#endif
+			break;
 		}
 		i--;
 	}
