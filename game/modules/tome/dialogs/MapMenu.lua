@@ -35,7 +35,7 @@ function _M:init(mx, my, tmx, tmy)
 	local w = self.font_bold:size(name)
 	engine.ui.Dialog.init(self, name, 1, 100, mx, my)
 
-	local list = List.new{width=math.max(w, self.max) + 10, nb_items=#self.list, list=self.list, fct=function(item) self:use(item) end}
+	local list = List.new{width=math.max(w, self.max) + 10, nb_items=#self.list, list=self.list, fct=function(item) self:use(item) end, select=function(item) self:select(item) end}
 
 	self:loadUI{
 		{left=0, top=0, ui=list},
@@ -52,9 +52,16 @@ function _M:init(mx, my, tmx, tmy)
 	self.key:addBinds{ EXIT = function() game:unregisterDialog(self) end, }
 end
 
+function _M:unload()
+	engine.ui.Dialog.unload(self)
+	game:targetMode(false, false)
+	self.exited = true
+end
+
 function _M:use(item)
 	if not item then return end
 	game:unregisterDialog(self)
+	game:targetMode(false, false)
 
 	local act = item.action
 
@@ -80,6 +87,17 @@ function _M:use(item)
 	end
 end
 
+local olditem = nil
+function _M:select(item)
+	if self.exited then return end
+	if not item then return end
+	if olditem and olditem == item then return end
+	if not item.set_target then game:targetMode(false, false) return end
+
+	game:targetMode(true, nil, nil, item.set_target)
+	game.target:setSpot(self.tmx, self.tmy, "forced")
+end
+
 function _M:generateList()
 	local list = {}
 	local player = game.player
@@ -103,7 +121,7 @@ function _M:generateList()
 
 	-- Talents
 	if game.zone and not game.zone.wilderness then
-		local canHit = function(tg, x, y)
+		local canHit = function(tg, x, y) do return true end
 			local hit = false
 			player:project(tg, x, y, function(px, py)
 				if px == x and py == y then
@@ -125,7 +143,7 @@ function _M:generateList()
 			   canHit(tg or default_tg, self.tmx, self.tmy))
 			  then
 			   	t_avail = true
-			elseif t.mode == "sustained" and not t.no_npc_use and 
+			elseif t.mode == "sustained" and not t.no_npc_use and
 			  not player:isTalentCoolingDown(t) and player:preUseTalent(t, true, true) then
 				t_avail = true
 			end
@@ -134,7 +152,7 @@ function _M:generateList()
 				if self.on_player and not rt then
 					tals[#tals+1] = {name=t.name, talent=t, action="talent", color=colors.simple(colors.GOLD)}
 				elseif not self.on_player and rt then
-					tals[#tals+1] = {name=t.name, talent=t, action="talent", set_target=true, color=colors.simple(colors.GOLD)}
+					tals[#tals+1] = {name=t.name, talent=t, action="talent", set_target=tg or default_tg, color=colors.simple(colors.GOLD)}
 				end
 			end
 		end
