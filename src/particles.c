@@ -22,6 +22,7 @@
 #include "lua.h"
 #include "lauxlib.h"
 #include "lualib.h"
+#include "core_lua.h"
 #include "auxiliar.h"
 #include "types.h"
 #include "particles.h"
@@ -79,7 +80,7 @@ static int particles_new(lua_State *L)
 {
 	const char *name_def = luaL_checkstring(L, 1);
 	const char *args = luaL_checkstring(L, 2);
-	float zoom =luaL_checknumber(L, 3);
+	// float zoom = luaL_checknumber(L, 3);
 	int density = luaL_checknumber(L, 4);
 
 	particles_type *ps = (particles_type*)lua_newuserdata(L, sizeof(particles_type));
@@ -176,7 +177,6 @@ static int particles_to_screen(lua_State *L)
 	GLfloat *vertices = ps->vertices;
 	GLfloat *colors = ps->colors;
 	GLshort *texcoords = ps->texcoords;
-	bool alive;
 
 	SDL_mutexP(ps->lock);
 
