@@ -198,8 +198,8 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		self:project(tg, x, y, DamageType.LITE, 1)
 		if self:getTalentLevel(t) >= 3 then
-			tg.selffire= false
-			self:project(tg, self.x, self.y, DamageType.BLINDPHYSICAL, 3)
+			tg.selffire = false
+			self:project(tg, x, y, DamageType.BLINDPHYSICAL, 3)
 		end
 		game.level.map:particleEmitter(x, y, tg.radius, "ball_light", {radius=tg.radius})
 	end,
