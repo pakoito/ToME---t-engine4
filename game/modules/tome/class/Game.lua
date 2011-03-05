@@ -120,7 +120,7 @@ function _M:run()
 		self.logdisplay(...) self.flash(style, ...) else self.logdisplay(style, ...) self.flash(self.flash.NEUTRAL, style, ...) end
 		if self.show_userchat then self.logdisplay.changed = old end
 	end
-	self.logSeen = function(e, style, ...) if e and self.level.map.seens(e.x, e.y) then self.log(style, ...) end end
+	self.logSeen = function(e, style, ...) if e and e.x and e.y and self.level.map.seens(e.x, e.y) then self.log(style, ...) end end
 	self.logPlayer = function(e, style, ...) if e == self.player or e == self.party then self.log(style, ...) end end
 
 	self.log(self.flash.GOOD, "Welcome to #00FF00#Tales of Maj'Eyal!")

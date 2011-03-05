@@ -66,8 +66,8 @@ newEntity{
 	wielder = {
 		inc_damage = { [DamageType.FIRE] = resolvers.mbonus_material(10, 10, function(e, v) return v * 0.8 end) },
 		resists = {},
-		resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.FIRE] = (e.wielder.resists[engine.DamageType.FIRE] or 0) + e.wielder.inc_damage[engine.DamageType.FIRE] end),
 	},
+	resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.FIRE] = (e.wielder.resists[engine.DamageType.FIRE] or 0) + e.wielder.inc_damage[engine.DamageType.FIRE] end),
 }
 
 newEntity{
@@ -79,8 +79,8 @@ newEntity{
 	wielder = {
 		inc_damage = { [DamageType.TEMPORAL] = resolvers.mbonus_material(10, 10, function(e, v) return v * 0.8 end) },
 		resists = {},
-		resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.TEMPORAL] = (e.wielder.resists[engine.DamageType.TEMPORAL] or 0) + e.wielder.inc_damage[engine.DamageType.TEMPORAL] end),
 	},
+	resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.TEMPORAL] = (e.wielder.resists[engine.DamageType.TEMPORAL] or 0) + e.wielder.inc_damage[engine.DamageType.TEMPORAL] end),
 }
 
 newEntity{
@@ -92,8 +92,8 @@ newEntity{
 	wielder = {
 		inc_damage = { [DamageType.COLD] = resolvers.mbonus_material(10, 10, function(e, v) return v * 0.8 end) },
 		resists = {},
-		resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.COLD] = (e.wielder.resists[engine.DamageType.COLD] or 0) + e.wielder.inc_damage[engine.DamageType.COLD] end),
 	},
+	resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.COLD] = (e.wielder.resists[engine.DamageType.COLD] or 0) + e.wielder.inc_damage[engine.DamageType.COLD] end),
 }
 
 newEntity{
@@ -105,8 +105,8 @@ newEntity{
 	wielder = {
 		inc_damage = { [DamageType.NATURE] = resolvers.mbonus_material(10, 10, function(e, v) return v * 0.8 end) },
 		resists = {},
-		resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.NATURE] = (e.wielder.resists[engine.DamageType.NATURE] or 0) + e.wielder.inc_damage[engine.DamageType.NATURE] end),
 	},
+	resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.NATURE] = (e.wielder.resists[engine.DamageType.NATURE] or 0) + e.wielder.inc_damage[engine.DamageType.NATURE] end),
 }
 
 newEntity{
@@ -118,8 +118,8 @@ newEntity{
 	wielder = {
 		inc_damage = { [DamageType.LIGHTNING] = resolvers.mbonus_material(10, 10, function(e, v) return v * 0.8 end) },
 		resists = {},
-		resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.LIGHTNING] = (e.wielder.resists[engine.DamageType.LIGHTNING] or 0) + e.wielder.inc_damage[engine.DamageType.LIGHTNING] end),
 	},
+	resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.LIGHTNING] = (e.wielder.resists[engine.DamageType.LIGHTNING] or 0) + e.wielder.inc_damage[engine.DamageType.LIGHTNING] end),
 }
 
 newEntity{
@@ -131,8 +131,8 @@ newEntity{
 	wielder = {
 		inc_damage = { [DamageType.ACID] = resolvers.mbonus_material(10, 10, function(e, v) return v * 0.8 end) },
 		resists = {},
-		resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.ACID] = (e.wielder.resists[engine.DamageType.ACID] or 0) + e.wielder.inc_damage[engine.DamageType.ACID] end),
 	},
+	resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.LIGHTNING] = (e.wielder.resists[engine.DamageType.LIGHTNING] or 0) + e.wielder.inc_damage[engine.DamageType.LIGHTNING] end),
 }
 
 newEntity{
@@ -144,8 +144,8 @@ newEntity{
 	wielder = {
 		inc_damage = { [DamageType.BLIGHT] = resolvers.mbonus_material(10, 10, function(e, v) return v * 0.8 end) },
 		resists = {},
-		resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.BLIGHT] = (e.wielder.resists[engine.DamageType.BLIGHT] or 0) + e.wielder.inc_damage[engine.DamageType.BLIGHT] end),
 	},
+	resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.BLIGHT] = (e.wielder.resists[engine.DamageType.BLIGHT] or 0) + e.wielder.inc_damage[engine.DamageType.BLIGHT] end),
 }
 
 newEntity{
@@ -191,8 +191,8 @@ newEntity{
 	cost = 6,
 	wielder = {
 		inc_stats = { [Stats.STAT_STR] = resolvers.mbonus_material(8, 2, function(e, v) return v * 3 end) },
-		resolvers.genericlast(function(e) e.wielder.combat_def = (e.wielder.combat_def or 0) + e.wielder.inc_stats[engine.interface.ActorStats.STAT_STR] end),
 	},
+	resolvers.genericlast(function(e) e.wielder.combat_def = (e.wielder.combat_def or 0) + e.wielder.inc_stats[engine.interface.ActorStats.STAT_STR] end),
 }
 
 newEntity{
@@ -203,8 +203,8 @@ newEntity{
 	cost = 6,
 	wielder = {
 		inc_stats = { [Stats.STAT_CON] = resolvers.mbonus_material(8, 2, function(e, v) return v * 3 end) },
-		resolvers.genericlast(function(e) e.wielder.combat_physresist = (e.wielder.combat_physresist or 0) + e.wielder.inc_stats[engine.interface.ActorStats.STAT_CON] end),
 	},
+	resolvers.genericlast(function(e) e.wielder.combat_physresist = (e.wielder.combat_physresist or 0) + e.wielder.inc_stats[engine.interface.ActorStats.STAT_CON] end),
 }
 
 newEntity{
@@ -215,8 +215,8 @@ newEntity{
 	cost = 6,
 	wielder = {
 		inc_stats = { [Stats.STAT_DEX] = resolvers.mbonus_material(8, 2, function(e, v) return v * 3 end) },
-		resolvers.genericlast(function(e) e.wielder.combat_atk = (e.wielder.combat_atk or 0) + e.wielder.inc_stats[engine.interface.ActorStats.STAT_DEX] end),
 	},
+	resolvers.genericlast(function(e) e.wielder.combat_atk = (e.wielder.combat_atk or 0) + e.wielder.inc_stats[engine.interface.ActorStats.STAT_DEX] end),
 }
 
 newEntity{ define_as = "RING_MAGIC",
@@ -227,8 +227,8 @@ newEntity{ define_as = "RING_MAGIC",
 	cost = 6,
 	wielder = {
 		inc_stats = { [Stats.STAT_MAG] = resolvers.mbonus_material(8, 2, function(e, v) return v * 3 end) },
-		resolvers.genericlast(function(e) e.wielder.combat_spellresist = (e.wielder.combat_spellresist or 0) + e.wielder.inc_stats[engine.interface.ActorStats.STAT_MAG] end),
 	},
+	resolvers.genericlast(function(e) e.wielder.combat_spellresist = (e.wielder.combat_spellresist or 0) + e.wielder.inc_stats[engine.interface.ActorStats.STAT_MAG] end),
 }
 
 newEntity{
@@ -331,6 +331,5 @@ newEntity{
 		max_life=resolvers.mbonus_material(60, 40, function(e, v) return v * 0.1 end),
 		life_regen = resolvers.mbonus_material(15, 5, function(e, v) v=v/10 return v * 10, v end),
 		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
-
 	},
 }
