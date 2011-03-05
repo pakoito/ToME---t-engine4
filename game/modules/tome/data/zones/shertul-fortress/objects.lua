@@ -35,7 +35,7 @@ When activated it will prompt to destroy items on the floor, if there are none i
 	max_power = 1000, power_regen = 1,
 	use_power = { name = "open a portal to send items to the Fortress core, extracting energies from it for the Fortress and sending back useless gold.", power = 0,
 		use = function(self, who)
-			local pricemod = function(o) if o.type == "gem" then return 0.40 else return 0.15 end end
+			local pricemod = function(o) if o.type == "gem" then return 0.40 else return 0.5 end end
 
 			-- On the floor or inventory
 			if game.level.map:getObjectTotal(who.x, who.y) > 0 then
