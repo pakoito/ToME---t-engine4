@@ -5,7 +5,7 @@ uniform float tick;
 uniform sampler2D noisevol;
 uniform vec2 texSize;
 uniform sampler2D tex;
-uniform vec3 colorize;
+uniform vec4 colorize;
 
 void main(void)
 {
@@ -95,8 +95,8 @@ void main(void)
 
 	if (colorize.r > 0.0 || colorize.g > 0.0 || colorize.b > 0.0)
 	{
-		float grey = gl_FragColor.r*0.3+gl_FragColor.g*0.59+gl_FragColor.b*0.11;
-		gl_FragColor = vec4(vec3(colorize*grey),1.0);
+		float grey = (gl_FragColor.r*0.3+gl_FragColor.g*0.59+gl_FragColor.b*0.11) * colorize.a;
+		gl_FragColor = gl_FragColor * (1.0 - colorize.a) + (vec4(colorize.r, colorize.g, colorize.b, 1.0) * grey);
 	}
 
 	if (hp_warning > 0.0)
