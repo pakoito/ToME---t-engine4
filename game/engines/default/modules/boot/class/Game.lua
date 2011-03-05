@@ -35,6 +35,7 @@ local Map = require "engine.Map"
 local Level = require "engine.Level"
 local FlyingText = require "engine.FlyingText"
 
+local NicerTiles = require "mod.class.NicerTiles"
 local Grid = require "mod.class.Grid"
 local Actor = require "mod.class.Actor"
 local Player = require "mod.class.Player"
@@ -79,6 +80,7 @@ function _M:run()
 	self.log = function(style, ...) end
 	self.logSeen = function(e, style, ...) end
 	self.logPlayer = function(e, style, ...) end
+	self.nicer_tiles = NicerTiles.new()
 
 	-- Starting from here we create a new game
 	self:newGame()
@@ -141,7 +143,7 @@ function _M:newGame()
 	self.player.energy.value = self.energy_to_act
 
 	Zone:setup{npc_class="mod.class.NPC", grid_class="mod.class.Grid", }
-	self:changeLevel(1, "dungeon")
+	self:changeLevel(rng.range(1, 3), "dungeon")
 end
 
 function _M:onResolutionChange()
@@ -172,7 +174,7 @@ function _M:setupDisplayMode()
 		if not self.fbo_shader.shad then
 			self.fbo = nil self.fbo_shader = nil
 		else
-			self.fbo_shader:setUniform("colorize", {1,1,1})
+			self.fbo_shader:setUniform("colorize", {1,1,1,0.9})
 		end
 	end
 end
@@ -191,6 +193,7 @@ function _M:changeLevel(lev, zone)
 		end
 	end
 	self.zone:getLevel(self, lev, old_lev)
+	self.nicer_tiles:postProcessLevelTiles(self.level)
 
 	if lev > old_lev then
 		self.player:move(self.level.default_up.x, self.level.default_up.y, true)
@@ -232,6 +235,8 @@ end
 --- Called every game turns
 -- Does nothing, you can override it
 function _M:onTurn()
+	if self.turn % 600 == 0 then self:changeLevel(util.boundWrap(self.level.level + 1, 1, 3)) end
+
 	-- The following happens only every 10 game turns (once for every turn of 1 mod speed actors)
 	if self.turn % 10 ~= 0 then return end
 
@@ -262,7 +267,9 @@ function _M:display(nb_keyframes)
 			self.player:playerFOV()
 		end
 
-		self.level.map:display(nil, nil, nb_keyframes)
+		self.level.map:display(nil, nil, nb_keyframes, true)
+		self.level.map._map:updateSeensTexture()
+		self.level.map._map:drawSeensTexture(0, 0, nb_keyframes)
 	end
 
 	-- Draw it here, inside the FBO

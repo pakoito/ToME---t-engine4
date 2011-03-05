@@ -167,3 +167,30 @@ newTalent{
 	end,
 }
 
+newTalent{
+	name = "Flameshock",
+	type = {"misc/misc",2},
+	points = 5,
+	cooldown = 20,
+	range = 0,
+	radius = function(self, t)
+		return 4 + self:getTalentLevelRaw(t)
+	end,
+	requires_target = true,
+	target = function(self, t)
+		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
+	end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 120) end,
+	getStunDuration = function(self, t) return self:getTalentLevelRaw(t) + 2 end,
+	action = function(self, t)
+		local tg = self:getTalentTarget(t)
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, DamageType.FIRE, rng.range(15, 30) * self:getTalentLevel(t))
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "breath_fire", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
+		return true
+	end,
+	info = function(self, t)
+		return "swooosh"
+	end,
+}

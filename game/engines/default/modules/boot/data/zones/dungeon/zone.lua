@@ -27,26 +27,67 @@ return {
 	width = 50, height = 50,
 --	all_remembered = true,
 	all_lited = true,
-	generator =  {
-		map = {
-			class = "engine.generator.map.Forest",
-			edge_entrances = {4,6},
-			zoom = 4,
-			sqrt_percent = 30,
-			noise = "fbm_perlin",
-			floor = function() if rng.chance(20) then return "FLOWER" else return "GRASS" end end,
-			wall = {"TREE","TREE2","TREE3","TREE4","TREE5","TREE6","TREE7","TREE8","TREE9","TREE10","TREE11","TREE12","TREE13","TREE14","TREE15","TREE16","TREE17","TREE18","TREE19","TREE20",},
-			up = "GRASS",
-			down = "GRASS",
-			do_ponds =  {
-				nb = {1, 2},
-				size = {w=25, h=25},
-				pond = {{0.6, "DEEP_WATER"}, {0.8, "DEEP_WATER"}},
+	levels = {
+		[1] = {
+			generator =  {
+				map = {
+					class = "engine.generator.map.Forest",
+					edge_entrances = {4,6},
+					zoom = 4,
+					sqrt_percent = 30,
+					noise = "fbm_perlin",
+					floor = function() if rng.chance(20) then return "FLOWER" else return "GRASS" end end,
+					wall = {"TREE","TREE2","TREE3","TREE4","TREE5","TREE6","TREE7","TREE8","TREE9","TREE10","TREE11","TREE12","TREE13","TREE14","TREE15","TREE16","TREE17","TREE18","TREE19","TREE20",},
+					up = "GRASS",
+					down = "GRASS",
+					do_ponds =  {
+						nb = {0, 2},
+						size = {w=25, h=25},
+						pond = {{0.6, "DEEP_WATER"}, {0.8, "DEEP_WATER"}},
+					},
+				},
+				actor = {
+					class = "engine.generator.actor.Random",
+					nb_npc = {20, 30},
+				},
 			},
 		},
-		actor = {
-			class = "engine.generator.actor.Random",
-			nb_npc = {20, 30},
+		[2] = {
+			generator =  {
+				map = {
+					class = "engine.generator.map.Roomer",
+					nb_rooms = 10,
+					rooms = {"random_room"},
+					lite_room_chance = 100,
+					['.'] = "FLOOR",
+					['#'] = "WALL",
+					up = "FLOOR",
+					down = "FLOOR",
+					door = "DOOR",
+				},
+				actor = {
+					class = "engine.generator.actor.Random",
+					nb_npc = {20, 30},
+				},
+			},
+		},
+		[3] = {
+			generator =  {
+				map = {
+					class = "engine.generator.map.Cavern",
+					zoom = 14,
+					min_floor = 500,
+					floor = "CRYSTAL_FLOOR",
+					wall = {"CRYSTAL_WALL","CRYSTAL_WALL2","CRYSTAL_WALL3","CRYSTAL_WALL4","CRYSTAL_WALL5","CRYSTAL_WALL6","CRYSTAL_WALL7","CRYSTAL_WALL8","CRYSTAL_WALL9","CRYSTAL_WALL10","CRYSTAL_WALL11","CRYSTAL_WALL12","CRYSTAL_WALL13","CRYSTAL_WALL14","CRYSTAL_WALL15","CRYSTAL_WALL16","CRYSTAL_WALL17","CRYSTAL_WALL18","CRYSTAL_WALL19","CRYSTAL_WALL20",},
+					up = "CRYSTAL_FLOOR",
+					down = "CRYSTAL_FLOOR",
+					door = "CRYSTAL_FLOOR",
+				},
+				actor = {
+					class = "engine.generator.actor.Random",
+					nb_npc = {20, 30},
+				},
+			},
 		},
 	},
 }

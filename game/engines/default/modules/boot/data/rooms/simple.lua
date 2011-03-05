@@ -1,4 +1,4 @@
--- ToME - Tales of Middle-Earth
+-- ToME - Tales of Maj'Eyal
 -- Copyright (C) 2009, 2010 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -25,10 +25,10 @@ return function(gen, id)
 			for j = 1, self.h do
 				if i == 1 or i == self.w or j == 1 or j == self.h then
 					gen.map.room_map[i-1+x][j-1+y].can_open = true
-					gen.map(i-1+x, j-1+y, Map.TERRAIN, gen.grid_list[gen:resolve('#')])
+					gen.map(i-1+x, j-1+y, Map.TERRAIN, gen:resolve('#'))
 				else
 					gen.map.room_map[i-1+x][j-1+y].room = id
-					gen.map(i-1+x, j-1+y, Map.TERRAIN, gen.grid_list[gen:resolve('.')])
+					gen.map(i-1+x, j-1+y, Map.TERRAIN, gen:resolve('.'))
 				end
 				if is_lit then gen.map.lites(i-1+x, j-1+y, true) end
 			end

@@ -41,24 +41,6 @@ newEntity{ base = "BASE_NPC_CANINE",
 }
 
 newEntity{ base = "BASE_NPC_CANINE",
-	name = "great wolf", color=colors.UMBER, image="npc/canine_gw.png",
-	desc = [[Larger than a normal wolf, it prowls and snaps at you.]],
-	rarity = 3,
-	max_life = resolvers.rngavg(60,90),
-	combat_armor =2, combat_def = 4,
-	combat = { dam=6, atk=15, apr=3 },
-}
-
-newEntity{ base = "BASE_NPC_CANINE",
-	name = "dire wolf", color=colors.DARK_UMBER, image="npc/canine_dw.png",
-	desc = [[Easily as big as a horse, this wolf menaces you with its claws and fangs.]],
-	rarity = 3,
-	max_life = resolvers.rngavg(80,110),
-	combat_armor = 3, combat_def = 5,
-	combat = { dam=9, atk=15, apr=4 },
-}
-
-newEntity{ base = "BASE_NPC_CANINE",
 	name = "white wolf", color=colors.WHITE, image="npc/canine_ww.png",
 	desc = [[A large and muscled wolf from the northern wastes. Its breath is cold and icy and its fur coated in frost.]],
 	rarity = 3,

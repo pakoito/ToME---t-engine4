@@ -52,6 +52,7 @@ function _M:init(t, no_default)
 	self:learnTalent(self.T_FIREFLASH, true, 2)
 	self:learnTalent(self.T_LIGHTNING, true, 2)
 	self:learnTalent(self.T_SUNSHIELD, true, 2)
+	self:learnTalent(self.T_FLAMESHOCK, true, 2)
 end
 
 function _M:move(x, y, force)
@@ -69,14 +70,15 @@ end
 -- Precompute FOV form, for speed
 local fovdist = {}
 for i = 0, 30 * 30 do
-	fovdist[i] = math.max((20 - math.sqrt(i)) / 14, 0.6)
+	fovdist[i] = math.max((20 - math.sqrt(i)) / 17, 0.6)
 end
 
 function _M:playerFOV()
 	-- Clean FOV before computing it
 	game.level.map:cleanFOV()
 	-- Compute both the normal and the lite FOV, using cache
-	self:computeFOV(self.sight or 20, "block_sight", function(x, y, dx, dy, sqdist)
+	-- Do it last so it overrides others
+	self:computeFOV(self.sight or 10, "block_sight", function(x, y, dx, dy, sqdist)
 		game.level.map:apply(x, y, fovdist[sqdist])
 	end, true, false, true)
 	self:computeFOV(self.lite, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y) end, true, true, true)

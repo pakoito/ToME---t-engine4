@@ -62,8 +62,8 @@ function _M:makeTrees(base, max)
 		return engine.Entity.new{
 			z = z,
 			display_scale = rng.float(0.5 + inb / 6, 1.3),
-			display_x = rng.range(-engine.Map.tile_w / 3 * nb / 3, engine.Map.tile_w / 3 * nb / 3),
-			display_y = rng.range(-engine.Map.tile_h / 3 * nb / 3, engine.Map.tile_h / 3 * nb / 3),
+			display_x = rng.float(-1 / 3 * nb / 3, 1 / 3 * nb / 3),
+			display_y = rng.float(-1 / 3 * nb / 3, 1 / 3 * nb / 3),
 			display_on_seen = true,
 			display_on_remember = true,
 			image = (base or "terrain/tree_alpha")..rng.range(1,max or 5)..".png",
@@ -79,7 +79,47 @@ function _M:makeTrees(base, max)
 	else
 		tbl = { makeTree(1, 16), }
 	end
-	table.sort(tbl, function(a,b) return a.display_y < b.display_y end)
+	table.sort(tbl, function(a,b) return a.display_scale < b.display_scale end)
+	for i = 1, #tbl do tbl[i].z = 16 + i - 1 end
+	return tbl
+end
+
+--- Generate sub entities to make nice crystals, same as trees but change tint
+function _M:makeCrystals(base, max)
+	local function makeTree(nb, z)
+		local inb = 4 - nb
+		local r = rng.range(1, 100)
+		local g = rng.range(1, 100)
+		local b = rng.range(1, 100)
+		local maxcol = math.max(r, g, b)
+		r = r / maxcol
+		g = g / maxcol
+		b = b / maxcol
+		return engine.Entity.new{
+			z = z,
+			display_scale = rng.float(0.5 + inb / 6, 1.3),
+			display_x = rng.float(-1 / 3 * nb / 3, 1 / 3 * nb / 3),
+			display_y = rng.float(-1 / 3 * nb / 3, 1 / 3 * nb / 3),
+			display_on_seen = true,
+			display_on_remember = true,
+			tint_r = r,
+			tint_g = g,
+			tint_b = b,
+			image = (base or "terrain/crystal_alpha")..rng.range(1,max or 6)..".png",
+		}
+	end
+
+	local v = rng.range(0, 100)
+	local tbl
+	if v < 33 then
+		tbl = { makeTree(3, 16), makeTree(3, 17), makeTree(3, 18), }
+	elseif v < 66 then
+		tbl = { makeTree(2, 16), makeTree(2, 17), }
+	else
+		tbl = { makeTree(1, 16), }
+	end
+	table.sort(tbl, function(a,b) return a.display_scale < b.display_scale end)
+	for i = 1, #tbl do tbl[i].z = 16 + i - 1 end
 	return tbl
 end
 
