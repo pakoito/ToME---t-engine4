@@ -24,6 +24,10 @@
 		2844E3B312C8FB3F0021A2F5 /* md5lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 2844E3AF12C8FB3F0021A2F5 /* md5lib.c */; };
 		285E4C5011B3B41C00E7CAD8 /* noise_c.c in Sources */ = {isa = PBXBuildFile; fileRef = 285E4C4F11B3B41C00E7CAD8 /* noise_c.c */; };
 		285E4C5211B3B42700E7CAD8 /* noise.c in Sources */ = {isa = PBXBuildFile; fileRef = 285E4C5111B3B42700E7CAD8 /* noise.c */; };
+		2862D3FA1322A90D0034F6B7 /* lgzip.c in Sources */ = {isa = PBXBuildFile; fileRef = 2862D3F31322A90D0034F6B7 /* lgzip.c */; };
+		2862D3FB1322A90D0034F6B7 /* lzlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 2862D3F41322A90D0034F6B7 /* lzlib.c */; };
+		2862D3FF1322A90D0034F6B7 /* test_gzip.lua in Resources */ = {isa = PBXBuildFile; fileRef = 2862D3F81322A90D0034F6B7 /* test_gzip.lua */; };
+		2862D4001322A90D0034F6B7 /* test_zlib.lua in Resources */ = {isa = PBXBuildFile; fileRef = 2862D3F91322A90D0034F6B7 /* test_zlib.lua */; };
 		28786CDD129A437700285801 /* serial.c in Sources */ = {isa = PBXBuildFile; fileRef = 28786CDB129A437700285801 /* serial.c */; };
 		289E379711D86DC00065B265 /* sdnoise1234.c in Sources */ = {isa = PBXBuildFile; fileRef = 289E379611D86DC00065B265 /* sdnoise1234.c */; };
 		28B4238A119F50AE00562F94 /* SDL_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28B42386119F50AE00562F94 /* SDL_image.framework */; };
@@ -228,6 +232,15 @@
 		285E4C4E11B3B41C00E7CAD8 /* noise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = noise.h; sourceTree = "<group>"; };
 		285E4C4F11B3B41C00E7CAD8 /* noise_c.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = noise_c.c; sourceTree = "<group>"; };
 		285E4C5111B3B42700E7CAD8 /* noise.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = noise.c; path = ../src/noise.c; sourceTree = SOURCE_ROOT; };
+		2862D3F31322A90D0034F6B7 /* lgzip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lgzip.c; sourceTree = "<group>"; };
+		2862D3F41322A90D0034F6B7 /* lzlib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lzlib.c; sourceTree = "<group>"; };
+		2862D3F81322A90D0034F6B7 /* test_gzip.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test_gzip.lua; sourceTree = "<group>"; };
+		2862D3F91322A90D0034F6B7 /* test_zlib.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test_zlib.lua; sourceTree = "<group>"; };
+		2862D4041322A9960034F6B7 /* lua_externs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lua_externs.h; path = ../src/lua_externs.h; sourceTree = SOURCE_ROOT; };
+		2862D4051322A9AA0034F6B7 /* shaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = shaders.h; path = ../src/shaders.h; sourceTree = SOURCE_ROOT; };
+		2862D4061322A9B60034F6B7 /* tSDL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tSDL.h; path = ../src/tSDL.h; sourceTree = SOURCE_ROOT; };
+		2862D4071322A9BC0034F6B7 /* tgl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tgl.h; path = ../src/tgl.h; sourceTree = SOURCE_ROOT; };
+		2862D4081322A9CB0034F6B7 /* useshader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = useshader.h; path = ../src/useshader.h; sourceTree = SOURCE_ROOT; };
 		28786CDB129A437700285801 /* serial.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = serial.c; path = ../src/serial.c; sourceTree = SOURCE_ROOT; };
 		28786CDC129A437700285801 /* serial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = serial.h; path = ../src/serial.h; sourceTree = SOURCE_ROOT; };
 		289E379611D86DC00065B265 /* sdnoise1234.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sdnoise1234.c; path = ../src/sdnoise1234.c; sourceTree = SOURCE_ROOT; };
@@ -533,6 +546,18 @@
 			path = ../src/libtcod_import;
 			sourceTree = SOURCE_ROOT;
 		};
+		2862D3F21322A90D0034F6B7 /* lzlib */ = {
+			isa = PBXGroup;
+			children = (
+				2862D3F31322A90D0034F6B7 /* lgzip.c */,
+				2862D3F41322A90D0034F6B7 /* lzlib.c */,
+				2862D3F81322A90D0034F6B7 /* test_gzip.lua */,
+				2862D3F91322A90D0034F6B7 /* test_zlib.lua */,
+			);
+			name = lzlib;
+			path = ../src/lzlib;
+			sourceTree = SOURCE_ROOT;
+		};
 		28B424F7119F51A600562F94 /* dynasm */ = {
 			isa = PBXGroup;
 			children = (
@@ -819,18 +844,24 @@
 				28B42608119F520F00562F94 /* getself.h */,
 				28133EFA11C9095100A7FDAC /* glew.h */,
 				28133EFB11C9095500A7FDAC /* glxew.h */,
+				2862D4041322A9960034F6B7 /* lua_externs.h */,
 				28B42609119F520F00562F94 /* main.h */,
 				28B4260A119F520F00562F94 /* map.h */,
 				28B4260B119F520F00562F94 /* music.h */,
 				28B4260C119F520F00562F94 /* particles.h */,
 				28139876127C20F000AC3C20 /* particles_gas.h */,
+				012D6668130CBA6D00CC3D6D /* profile.h */,
 				28B4260D119F520F00562F94 /* script.h */,
 				289E379F11D86EE20065B265 /* sdnoise1234.h */,
 				28786CDC129A437700285801 /* serial.h */,
 				28B4260E119F520F00562F94 /* SFMT-params.h */,
 				28B4260F119F520F00562F94 /* SFMT-params19937.h */,
 				28B42610119F520F00562F94 /* SFMT.h */,
+				2862D4051322A9AA0034F6B7 /* shaders.h */,
+				2862D4071322A9BC0034F6B7 /* tgl.h */,
+				2862D4061322A9B60034F6B7 /* tSDL.h */,
 				28B42611119F520F00562F94 /* types.h */,
+				2862D4081322A9CB0034F6B7 /* useshader.h */,
 				28133EFE11C9097600A7FDAC /* wglew.h */,
 				28B42613119F520F00562F94 /* core_lua.c */,
 				28B42614119F520F00562F94 /* display_sdl.c */,
@@ -843,7 +874,6 @@
 				28B42619119F520F00562F94 /* particles.c */,
 				28139875127C20F000AC3C20 /* particles_gas.c */,
 				012D6667130CBA6D00CC3D6D /* profile.c */,
-				012D6668130CBA6D00CC3D6D /* profile.h */,
 				289E379611D86DC00065B265 /* sdnoise1234.c */,
 				28786CDB129A437700285801 /* serial.c */,
 				28B4261A119F520F00562F94 /* SFMT.c */,
@@ -860,6 +890,7 @@
 				2844E3A812C8FB3F0021A2F5 /* luamd5 */,
 				28B4253F119F51A600562F94 /* luaprofiler */,
 				28B4254D119F51A600562F94 /* luasocket */,
+				2862D3F21322A90D0034F6B7 /* lzlib */,
 				28B4256D119F51A700562F94 /* mac */,
 				28B42570119F51A700562F94 /* physfs */,
 			);
@@ -921,6 +952,7 @@
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "T-Engine" */;
 			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				English,
@@ -945,6 +977,8 @@
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				28B429EF119F708400562F94 /* bootstrap in Resources */,
 				28B429FF119F761700562F94 /* te4.icns in Resources */,
+				2862D3FF1322A90D0034F6B7 /* test_gzip.lua in Resources */,
+				2862D4001322A90D0034F6B7 /* test_zlib.lua in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1083,6 +1117,8 @@
 				2844E3B212C8FB3F0021A2F5 /* md5.c in Sources */,
 				2844E3B312C8FB3F0021A2F5 /* md5lib.c in Sources */,
 				012D6669130CBA6D00CC3D6D /* profile.c in Sources */,
+				2862D3FA1322A90D0034F6B7 /* lgzip.c in Sources */,
+				2862D3FB1322A90D0034F6B7 /* lzlib.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
