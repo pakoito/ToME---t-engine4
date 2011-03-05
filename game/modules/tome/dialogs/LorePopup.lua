@@ -55,9 +55,8 @@ function _M:init(l, w, force_height)
 			}
 		}
 	}
-	if not no_leave then
-		self.key:addBind("EXIT", function() game:unregisterDialog(self) if fct then fct() end end)
-	end
+	self.key:addBind("EXIT", function() game:unregisterDialog(self) if fct then fct() end end)
+	self.key:addBind("ACCEPT", function() game:unregisterDialog(self) if fct then fct() end end)
 	self:setupUI(true, true)
 	game:registerDialog(self)
 end
