@@ -50,7 +50,7 @@ newTalent{
 	action = function(self, t)
 		if not self:hasArcheryWeapon("sling") then game.logPlayer(self, "You must wield a sling!") return nil end
 
-		local targets = self:archeryAcquireTargets()
+		local targets = self:archeryAcquireTargets(nil, {one_shot=true})
 		if not targets then return end
 		self:archeryShoot(targets, t, nil, {mult=self:combatTalentWeaponDamage(t, 1, 1.5)})
 		return true
@@ -86,7 +86,7 @@ newTalent{
 	action = function(self, t)
 		if not self:hasArcheryWeapon("sling") then game.logPlayer(self, "You must wield a sling!") return nil end
 
-		local targets = self:archeryAcquireTargets()
+		local targets = self:archeryAcquireTargets(nil, {one_shot=true})
 		if not targets then return end
 		self:archeryShoot(targets, t, nil, {mult=self:combatTalentWeaponDamage(t, 1, 1.5)})
 		return true

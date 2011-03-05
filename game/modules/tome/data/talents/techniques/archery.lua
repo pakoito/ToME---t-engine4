@@ -31,7 +31,7 @@ newTalent{
 	tactical = { ATTACK = 1 },
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	action = function(self, t)
-		local targets = self:archeryAcquireTargets()
+		local targets = self:archeryAcquireTargets(nil, {one_shot=true})
 		if not targets then return end
 		self:archeryShoot(targets, t)
 		return true
@@ -55,7 +55,7 @@ newTalent{
 	tactical = { ATTACK = 2 },
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	action = function(self, t)
-		local targets = self:archeryAcquireTargets()
+		local targets = self:archeryAcquireTargets(nil, {one_shot=true})
 		if not targets then return end
 		self:archeryShoot(targets, t, nil, {mult=self:combatTalentWeaponDamage(t, 1.1, 2.2)})
 		return true
@@ -159,7 +159,7 @@ newTalent{
 	tactical = { ATTACK = 3 },
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	action = function(self, t)
-		local targets = self:archeryAcquireTargets()
+		local targets = self:archeryAcquireTargets(nil, {one_shot=true})
 		if not targets then return end
 		self:archeryShoot(targets, t, nil, {mult=self:combatTalentWeaponDamage(t, 0.5, 1.1)})
 		self:incStamina(12 + self:getTalentLevel(t) * 8)
@@ -240,7 +240,7 @@ newTalent{
 		end
 	end,
 	action = function(self, t)
-		local targets = self:archeryAcquireTargets()
+		local targets = self:archeryAcquireTargets(nil, {one_shot=true})
 		if not targets then return end
 		self:archeryShoot(targets, t, nil, {mult=self:combatTalentWeaponDamage(t, 1, 1.5)})
 		return true
@@ -271,7 +271,7 @@ newTalent{
 		end
 	end,
 	action = function(self, t)
-		local targets = self:archeryAcquireTargets()
+		local targets = self:archeryAcquireTargets(nil, {one_shot=true})
 		if not targets then return end
 		self:archeryShoot(targets, t, nil, {mult=self:combatTalentWeaponDamage(t, 1, 1.4)})
 		return true
