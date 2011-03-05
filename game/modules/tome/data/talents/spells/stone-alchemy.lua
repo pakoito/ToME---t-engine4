@@ -67,6 +67,7 @@ newTalent{
 	no_npc_use = true,
 	action = function(self, t)
 		self:showEquipInven("Try to extract gems from which metallic item?", function(o) return o.metallic and (o.material_level or 1) <= self:getTalentLevelRaw(t) end, function(o, inven, item)
+			if not o then return end
 			self:removeObject(inven, item)
 
 			local level = o.material_level or 1
