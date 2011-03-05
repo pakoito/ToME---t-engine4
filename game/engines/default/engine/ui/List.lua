@@ -32,7 +32,7 @@ function _M:init(t)
 	self.nb_items = t.nb_items
 	assert(self.h or self.nb_items, "no list height/nb_items")
 	self.fct = t.fct
-	self.select = t.select
+	self.on_select = t.select
 	self.display_prop = t.display_prop or "name"
 	self.scrollbar = t.scrollbar
 	self.all_clicks = t.all_clicks
@@ -132,7 +132,7 @@ function _M:onSelect()
 	local item = self.list[self.sel]
 	if not item then return end
 
-	if rawget(self, "select") then self.select(item, self.sel) end
+	if rawget(self, "on_select") then self.on_select(item, self.sel) end
 end
 
 function _M:onUse(...)
