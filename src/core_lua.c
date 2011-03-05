@@ -2373,10 +2373,17 @@ static int lua_zlib_compress(lua_State *L)
 	uLongf len;
 	const char *data = luaL_checklstring(L, 1, (size_t*)&len);
 	uLongf reslen = len * 1.1 + 12;
+#ifdef __APPLE__
+	unsigned
+#endif
 	char *res = malloc(reslen);
 	z_stream zi;
 
-	zi.next_in = data;
+	zi.next_in = (
+#ifdef __APPLE__
+	unsigned
+#endif
+	char *)data;
 	zi.avail_in = len;
 	zi.total_in = 0;
 
@@ -2411,7 +2418,7 @@ static int lua_zlib_compress(lua_State *L)
 
 	if (deflateStatus == Z_STREAM_END)
 	{
-		lua_pushlstring(L, res, zi.total_out);
+		lua_pushlstring(L, (char *)res, zi.total_out);
 		free(res);
 		return 1;
 	}
