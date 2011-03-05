@@ -18,23 +18,14 @@
 -- darkgod@te4.org
 
 require "engine.class"
-require "engine.ui.Base"
 local KeyBind = require "engine.KeyBind"
 local Mouse = require "engine.Mouse"
 local Dialog = require "engine.ui.Dialog"
 local Slider = require "engine.ui.Slider"
+local Base = require "engine.ui.Base"
 
 --- Module that handles multiplayer chats
-module(..., package.seeall, class.inherit(engine.ui.Base))
-
---[[
-local ls, ls_w, ls_h = _M:getImage("ui/selection-left-sel.png")
-local ms, ms_w, ms_h = _M:getImage("ui/selection-middle-sel.png")
-local rs, rs_w, rs_h = _M:getImage("ui/selection-right-sel.png")
-local l, l_w, l_h = _M:getImage("ui/selection-left.png")
-local m, m_w, m_h = _M:getImage("ui/selection-middle.png")
-local r, r_w, r_h = _M:getImage("ui/selection-right.png")
-]]
+module(..., package.seeall, class.inherit(Base))
 
 --- Creates the log zone
 function _M:init()
@@ -203,6 +194,9 @@ function _M:resize(x, y, w, h, fontname, fontsize, color, bgcolor)
 	self.scroll = 0
 	self.changed = true
 
+	self.frame_sel = self:makeFrame("ui/selector-sel", 1, 5 + self.font_h)
+	self.frame = self:makeFrame("ui/selector", 1, 5 + self.font_h)
+
 	self.display_x, self.display_y = math.floor(x), math.floor(y)
 	self.w, self.h = math.floor(w), math.floor(h)
 	self.fw, self.fh = self.w - 4, self.font:lineSkip()
@@ -225,7 +219,7 @@ function _M:resize(x, y, w, h, fontname, fontsize, color, bgcolor)
 	self.mouse.delegate_offset_x = self.display_x
 	self.mouse.delegate_offset_y = self.display_y
 	self.mouse:registerZone(0, 0, self.w, self.h, function(button, x, y, xrel, yrel, bx, by, event)
-		if event == "button" and button == "left" and y <= ls_h then
+		if event == "button" and button == "left" and y <= self.frame.h then
 			local w = 0
 			local last_ok = nil
 			for i = 1, #self.display_chans do
@@ -267,17 +261,11 @@ function _M:display()
 			local nb_users = 0
 			for _, _ in pairs(self.channels[name].users) do nb_users = nb_users + 1 end
 			name = "["..name:capitalize().." ("..nb_users..")]"
-			local len = self.font_mono:size(name)
+			local len, lenh = self.font_mono:size(name)
 
-			local s = core.display.newSurface(len + ls_w + rs_w, ls_h)
-			s:erase(0, 0, 0, 0)
-			if oname == self.cur_channel then
-				s:merge(ls, 0, 0)
-				for i = ls_w, len + ls_w, ms_w do s:merge(ms, i, 0) end
-				s:merge(rs, len + ls_w, 0)
-			end
-			s:drawColorStringBlended(self.font_mono, name, ls_w, (ls_h - self.font_mono_h) / 2, 0x8d, 0x55, 0xff, oname ~= self.cur_channel, len)
-			local item = {name=oname, w=len + ls_w + rs_w, h=ls_h}
+			local s = core.display.newSurface(len + self.frame.b4.w + self.frame.b6.w, self.frame.h)
+			s:drawColorStringBlended(self.font_mono, name, self.frame.b4.w, (self.frame.h - self.font_h) / 2, 0xFF, 0xFF, 0xFF, true, len)
+			local item = {name=oname, w=len + self.frame.b4.w + self.frame.b6.w, h=self.frame.h, sel=oname == self.cur_channel}
 			item._tex, item._tex_w, item._tex_h = s:glTexture()
 			self.display_chans[#self.display_chans+1] = item
 		end
@@ -302,7 +290,7 @@ function _M:display()
 			gen[i].login = log[z].login
 			self.dlist[#self.dlist+1] = gen[i]
 			h = h + self.fh
-			if h > self.h - self.fh - ls_h then stop=true break end
+			if h > self.h - self.fh - self.fh then stop=true break end
 		end
 		if stop then break end
 	end
@@ -324,6 +312,9 @@ function _M:toScreen()
 	local w = 0
 	for i = 1, #self.display_chans do
 		local item = self.display_chans[i]
+		local f = item.sel and self.frame_sel or self.frame
+		f.w = item.w
+		Base:drawFrame(f, self.display_x + w, self.display_y)
 		item._tex:toScreenFull(self.display_x + w, self.display_y, item.w, item.h, item._tex_w, item._tex_h)
 		w = w + item.w + 4
 	end
