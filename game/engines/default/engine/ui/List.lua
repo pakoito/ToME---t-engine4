@@ -128,6 +128,13 @@ function _M:generate()
 	self:onSelect()
 end
 
+function _M:select(i)
+	if self.sel and self.list[self.sel] then self.list[self.sel].focus_decay = self.focus_decay_max end
+	self.sel = util.bound(i, 1, #self.list)
+	self.scroll = util.scroll(self.sel, self.scroll, self.max_display)
+	self:onSelect()
+end
+
 function _M:onSelect()
 	local item = self.list[self.sel]
 	if not item then return end
