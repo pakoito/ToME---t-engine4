@@ -301,10 +301,9 @@ function _M:act()
 
 	-- We compute turns at "default" speed, and only fire some actions when chaning turn
 	local actturn = math.floor(game.turn / 10)
-	if not self.last_act_turn or self.last_act_turn < actturn then
-		self:actTurn()
-		self.last_act_turn = actturn
-	end
+	if not self.last_act_turn then self.last_act_turn = actturn - 1 end
+	for i = 1, actturn - self.last_act_turn do self:actTurn() end
+	self.last_act_turn = actturn
 
 	-- Conduit talent prevents all auras from cooling down
 	if self:isTalentActive(self.T_CONDUIT) then
