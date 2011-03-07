@@ -96,6 +96,10 @@ function _M:leave()
 	game.level = nil
 end
 
+function _M:level_adjust_level(level, type)
+	return self.base_level + (self.specific_base_level[type] or 0) + (level.level - 1) + (add_level or 0)
+end
+
 --- Parses the npc/objects list and compute rarities for random generation
 -- ONLY entities with a rarity properties will be considered.<br/>
 -- This means that to get a never-random entity you simply do not put a rarity property on it.
@@ -104,12 +108,7 @@ function _M:computeRarities(type, list, level, filter, add_level, rarity_field)
 	local r = { total=0 }
 	print("******************", level.level, type)
 
-	local lev
-	if self.level_adjust_level then
-		lev = self:level_adjust_level(level, self, type) + (add_level or 0)
-	else
-		lev = self.base_level + (self.specific_base_level[type] or 0) + (level.level - 1) + (add_level or 0)
-	end
+	local lev = self:level_adjust_level(level, self, type) + (add_level or 0)
 
 	for i, e in ipairs(list) do
 		if e[rarity_field] and e.level_range and (not filter or filter(e)) then
@@ -238,7 +237,8 @@ function _M:makeEntity(level, type, filter, force_level, prob_filter)
 	if force_level then resolvers.current_level = force_level end
 
 	if prob_filter == nil then prob_filter = util.getval(self.default_prob_filter, self, type) end
-	if filter == nil then filter = util.getval(self.default_filter, self, type) end
+	if filter == nil then filter = util.getval(self.default_filter, self, level, type) end
+	if filter and self.alter_filter then filter = util.getval(self.alter_filter, self, level, type, filter) end
 
 	local e
 	-- No probability list, use the default one and apply filter
@@ -311,6 +311,22 @@ function _M:makeEntityByName(level, type, name, force_unique)
 	return e, forced
 end
 
+local pick_ego = function(self, level, e, egos_list, type, picked_etype, etype, ego_filter)
+	picked_etype[etype] = true
+	if _G.type(etype) == "number" then etype = "" end
+	local egos = level:getEntitiesList(type.."/"..e.egos..":"..etype)
+
+	-- Filter the egos if needed
+	if ego_filter then
+		local list = {}
+		for z = 1, #egos do list[#list+1] = egos[z].e end
+		egos = self:computeRarities(type, list, level, function(e) return self:checkFilter(e, ego_filter) end, ego_filter.add_levels, ego_filter.special_rarity)
+	end
+	egos_list[#egos_list+1] = self:pickEntity(egos)
+
+	if egos_list[#egos_list] then print("Picked ego", type.."/"..e.egos..":"..etype, ":=>", egos_list[#egos_list].name) else print("Picked ego", type.."/"..e.egos..":"..etype, ":=>", #egos_list) end
+end
+
 --- Finishes generating an entity
 function _M:finishEntity(level, type, e, ego_filter)
 	e = e:clone()
@@ -327,31 +343,48 @@ function _M:finishEntity(level, type, e, ego_filter)
 
 		if not e.force_ego then
 			if _G.type(e.egos_chance) == "number" then e.egos_chance = {e.egos_chance} end
-			-- Pick an ego, then an other and so until we get no more
-			local chance_decay = 1
-			local picked_etype = {}
-			local etype = e.ego_first_type and e.ego_first_type or rng.tableIndex(e.egos_chance, picked_etype)
-			local echance = etype and e.egos_chance[etype]
-			while etype and rng.percent(util.bound(echance / chance_decay + (ego_chance or 0), 0, 100)) do
-				picked_etype[etype] = true
-				if _G.type(etype) == "number" then etype = "" end
-				local egos = level:getEntitiesList(type.."/"..e.egos..":"..etype)
 
-				-- Filter the egos if needed
-				if ego_filter then
-					local list = {}
-					for z = 1, #egos do list[#list+1] = egos[z].e end
-					egos = self:computeRarities(type, list, level, function(e) return self:checkFilter(e, ego_filter) end, ego_filter.add_levels, ego_filter.special_rarity)
+			if not ego_filter or not ego_filter.tries then
+				--------------------------------------
+				-- Natural ego
+				--------------------------------------
+
+				-- Pick an ego, then an other and so until we get no more
+				local chance_decay = 1
+				local picked_etype = {}
+				local etype = e.ego_first_type and e.ego_first_type or rng.tableIndex(e.egos_chance, picked_etype)
+				local echance = etype and e.egos_chance[etype]
+				while etype and rng.percent(util.bound(echance / chance_decay + (ego_chance or 0), 0, 100)) do
+					pick_ego(self, level, e, egos_list, type, picked_etype, etype, ego_filter)
+
+					etype = rng.tableIndex(e.egos_chance, picked_etype)
+					echance = e.egos_chance[etype]
+					if e.egos_chance_decay then chance_decay = chance_decay * e.egos_chance_decay end
 				end
-				egos_list[#egos_list+1] = self:pickEntity(egos)
 
-				if egos_list[#egos_list] then print("Picked ego", type.."/"..e.egos..":"..etype, ":=>", egos_list[#egos_list].name) else print("Picked ego", type.."/"..e.egos..":"..etype, ":=>", #egos_list) end
+			else
+				--------------------------------------
+				-- Semi Natural ego
+				--------------------------------------
 
-				etype = rng.tableIndex(e.egos_chance, picked_etype)
-				echance = e.egos_chance[etype]
-				if e.egos_chance_decay then chance_decay = chance_decay * e.egos_chance_decay end
+				-- Pick an ego, then an other and so until we get no more
+				local picked_etype = {}
+				for i = 1, #ego_filter.tries do
+					local try = ego_filter.tries[i]
+
+					local etype = (i == 1 and e.ego_first_type and e.ego_first_type) or rng.tableIndex(e.egos_chance, picked_etype)
+					if not etype then break end
+					local echance = etype and try[etype]
+					forceprint("EGO TRY", i, ":", etype, echance, try)
+
+					pick_ego(self, level, e, egos_list, type, picked_etype, etype, try)
+				end
 			end
 		else
+			--------------------------------------
+			-- Forced ego
+			--------------------------------------
+
 			local name = e.force_ego
 			if _G.type(name) == "table" then name = rng.table(name) end
 			print("Forcing ego", name)

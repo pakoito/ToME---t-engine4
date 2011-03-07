@@ -53,7 +53,7 @@ return {
 		},
 		object = {
 			class = "engine.generator.object.Random",
-			nb_object = {6, 9},
+			nb_object = {60, 90},
 			filters = { {} }
 		},
 		trap = {

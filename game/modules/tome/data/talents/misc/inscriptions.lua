@@ -150,18 +150,19 @@ newInscription{
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:setEffect(self.EFF_FREE_ACTION, data.dur, {power=1})
-		game:onTickEnd(function() self:setEffect(self.EFF_WILD_SPEED, data.dur, {power=data.speed + data.inc_stat}) end)
+		game:onTickEnd(function() self:setEffect(self.EFF_WILD_SPEED, 1, {power=data.speed + data.inc_stat}) end)
 		return true
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[Activate the infusion to increase movement speed by %d%% for %d turns.
+		return ([[Activate the infusion to increase movement speed by %d%% for 1 game turn.
 		Any actions other than movement will cancel the effect.
-		Also prevent stuns, dazes and pinning effects.]]):format(data.speed + data.inc_stat, data.dur)
+		Also prevent stuns, dazes and pinning effects for %d turns.
+		Note: since you will be moving very fast, game turns will pass very slowly.]]):format(data.speed + data.inc_stat, data.dur)
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[%d%% speed; %d turns]]):format(data.speed, data.dur + data.inc_stat)
+		return ([[%d%% speed; %d turns]]):format(data.speed + data.inc_stat, data.dur)
 	end,
 }
 
@@ -594,6 +595,9 @@ newInscription{
 	points = 1,
 	is_spell = true,
 	tactical = { MANA = 1 },
+	on_pre_use = function(self, t)
+		return self:knowTalent(self.T_MANA_POOL)
+	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:incMana((data.mana + data.inc_stat) / 20)

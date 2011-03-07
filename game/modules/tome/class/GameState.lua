@@ -595,9 +595,129 @@ end
 -- Loot filters
 --------------------------------------------------------------
 
+local default_drops = function(zone, level)
+	if zone.default_drops then return zone.default_drops end
+	local lev = util.bound(math.ceil(zone:level_adjust_level(level, "object") / 10), 1, 5)
+	return ({
+		[1] = {
+			uniques = 0.5,
+			double_greater = 2,
+			greater_normal = 4,
+			greater = 12,
+			double_ego = 25,
+			ego = 45,
+			basic = 35,
+		},
+		[2] = {
+			uniques = 0.7,
+			double_greater = 6,
+			greater_normal = 10,
+			greater = 20,
+			double_ego = 45,
+			ego = 45,
+			basic = 35,
+		},
+		[3] = {
+			uniques = 1,
+			double_greater = 15,
+			greater_normal = 20,
+			greater = 30,
+			double_ego = 30,
+			ego = 20,
+			basic = 25,
+		},
+		[4] = {
+			uniques = 1.1,
+			double_greater = 19,
+			greater_normal = 25,
+			greater = 30,
+			double_ego = 25,
+			ego = 15,
+			basic = 15,
+		},
+		[5] = {
+			uniques = 1.2,
+			double_greater = 25,
+			greater_normal = 20,
+			greater = 24,
+			double_ego = 15,
+			ego = 10,
+			basic = 5,
+		},
+	})[lev]
+end
+
 function _M:defaultEntityFilter(zone, level, type)
+	if type ~= "object" then return end
+
 	-- By default we dont apply special filters, but we always provide one so that entityFilter is called
-	return {}
+	return {
+		tome = default_drops(zone, level),
+	}
+end
+
+function _M:entityFilterAlter(zone, level, type, filter)
+	if type ~= "object" then return end
+
+	if not filter.tome  then filter.tome = default_drops(zone, level) end
+
+	if filter.tome then
+		local t = (filter.tome == true) and default_drops(zone, level) or filter.tome
+		filter.tome = nil
+
+		local u, dg, ge, g, de, e, total =
+			t.uniques,
+			t.uniques + t.double_greater,
+			t.uniques + t.double_greater + t.greater_normal,
+			t.uniques + t.double_greater + t.greater_normal + t.greater,
+			t.uniques + t.double_greater + t.greater_normal + t.greater + t.double_ego,
+			t.uniques + t.double_greater + t.greater_normal + t.greater + t.double_ego + t.ego,
+			t.uniques + t.double_greater + t.greater_normal + t.greater + t.double_ego + t.ego + t.basic
+
+		local r = rng.float(0, total)
+		if r < u then
+			print("[TOME ENTITY FILTER] selected Uniques", r, u)
+			filter.unique = true
+
+		elseif r < dg then
+			print("[TOME ENTITY FILTER] selected Double Greater", r, dg)
+			filter.not_properties = filter.not_properties or {}
+			filter.not_properties[#filter.not_properties+1] = "unique"
+			filter.ego_chance={tries = { {ego_chance=100, properties={"greater_ego"}}, {ego_chance=100, properties={"greater_ego"}} } }
+
+		elseif r < ge then
+			print("[TOME ENTITY FILTER] selected Greater + Ego", r, ge)
+			filter.not_properties = filter.not_properties or {}
+			filter.not_properties[#filter.not_properties+1] = "unique"
+			filter.ego_chance={tries = { {ego_chance=100, properties={"greater_ego"}}, {ego_chance=100, not_properties={"greater_ego"}} }}
+
+		elseif r < g then
+			print("[TOME ENTITY FILTER] selected Greater", r, g)
+			filter.not_properties = filter.not_properties or {}
+			filter.not_properties[#filter.not_properties+1] = "unique"
+			filter.ego_chance={tries = { ego_chance=100, properties={"greater_ego"} } }
+
+		elseif r < de then
+			print("[TOME ENTITY FILTER] selected Double Ego", r, de)
+			filter.not_properties = filter.not_properties or {}
+			filter.not_properties[#filter.not_properties+1] = "unique"
+			filter.ego_chance={tries = { {ego_chance=100, not_properties={"greater_ego"}}, {ego_chance=100, not_properties={"greater_ego"}} }}
+
+		elseif r < e then
+			print("[TOME ENTITY FILTER] selected Ego", r, e)
+			filter.not_properties = filter.not_properties or {}
+			filter.not_properties[#filter.not_properties+1] = "unique"
+			filter.ego_chance={tries = { ego_chance=100, not_properties={"greater_ego"} } }
+		else
+			print("[TOME ENTITY FILTER] selected basic", r, total)
+			filter.not_properties = filter.not_properties or {}
+			filter.not_properties[#filter.not_properties+1] = "unique"
+			filter.ego_chance = -1000
+		end
+	end
+
+	-- By default we dont apply special filters, but we always provide one so that entityFilter is called
+	return filter
 end
 
 function _M:entityFilter(zone, e, filter, type)
@@ -608,6 +728,7 @@ function _M:entityFilter(zone, e, filter, type)
 			if not e.material_level then return true end
 			if e.material_level < min_mlvl then return false end
 		end
+
 		if max_mlvl then
 			if not e.material_level then return true end
 			if e.material_level > max_mlvl then return false end

@@ -30,13 +30,14 @@ newTalent{
 	tactical = { CLOSEIN = 2, ESCAPE = 2 },
 	requires_target = true,
 	action = function(self, t)
-		self:setEffect(self.EFF_LIGHTNING_SPEED, math.ceil(6 + self:getTalentLevel(t) * 1.2), {power=400 + self:getTalentLevel(t) * 70})
+		self:setEffect(self.EFF_LIGHTNING_SPEED, math.ceil(1 + self:getTalentLevel(t) * 0.3), {power=400 + self:getTalentLevel(t) * 70})
 		return true
 	end,
 	info = function(self, t)
-		return ([[You transform into pure lightning, moving %d%% faster for %d turns.
+		return ([[You transform into pure lightning, moving %d%% faster for %d game turns.
 		Also provides 30%% physical damage resistance and 100%% lightning resistance.
-		Any actions other than moving will stop this effect.]]):format(400 + self:getTalentLevel(t) * 70, math.ceil(6 + self:getTalentLevel(t) * 1.2))
+		Any actions other than moving will stop this effect.
+		Note: since you will be moving very fast, game turns will pass very slowly.]]):format(400 + self:getTalentLevel(t) * 70, math.ceil(1 + self:getTalentLevel(t) * 0.3))
 	end,
 }
 

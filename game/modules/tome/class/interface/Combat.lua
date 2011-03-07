@@ -738,7 +738,7 @@ end
 
 --- Computes movement speed
 function _M:combatMovementSpeed()
-	return 1 + (self.movement_speed or 0)
+	return util.bound(1 + (self.movement_speed or 0), 0.2, 10)
 end
 
 --- Check if the actor has a gem bomb in quiver

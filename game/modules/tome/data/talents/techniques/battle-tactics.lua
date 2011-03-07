@@ -45,8 +45,9 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	info = function(self, t)
-		return ([[After killing a foe you have %d%% chances to gain a 1000%% movement speed bonus for 6 turns.
-		The bonus disappears as soon as any action other than moving is done.]]):format(self:getTalentLevelRaw(t) * 20)
+		return ([[After killing a foe you have %d%% chances to gain a 1000%% movement speed bonus for 1 game turns.
+		The bonus disappears as soon as any action other than moving is done.
+		Note: since you will be moving very fast, game turns will pass very slowly.]]):format(self:getTalentLevelRaw(t) * 20)
 	end,
 }
 

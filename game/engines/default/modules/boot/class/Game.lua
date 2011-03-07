@@ -273,7 +273,7 @@ function _M:display(nb_keyframes)
 	end
 
 	-- Draw it here, inside the FBO
-	self.flyers:display(nb_keyframes)
+	if self.flyers then self.flyers:display(nb_keyframes) end
 
 	-- Display using Framebuffer, so that we can use shaders and all
 	if self.fbo then

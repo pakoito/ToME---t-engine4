@@ -206,23 +206,7 @@ function _M:useEnergy(val)
 
 end
 
-function _M:act()
-	if not engine.Actor.act(self) then return end
-
-	self.changed = true
-
-	-- If resources are too low, disable sustains
-	if self.mana < 1 or self.stamina < 1 or self.psi < 1 then
-		for tid, _ in pairs(self.sustain_talents) do
-			local t = self:getTalentFromId(tid)
-			if (t.sustain_mana and self.mana < 1) or (t.sustain_stamina and self.stamina < 1) then
-				self:forceUseTalent(tid, {ignore_energy=true})
-			elseif (t.sustain_psi and self.psi < 1) and t.remove_on_zero then
-				self:forceUseTalent(tid, {ignore_energy=true})
-			end
-		end
-	end
-
+function _M:actTurn()
 	if self:isTalentActive (self.T_DARKEST_LIGHT) and self.positive > self.negative then
 		self:forceUseTalent(self.T_DARKEST_LIGHT, {ignore_energy=true})
 		game.logSeen(self, "%s's darkness can no longer hold back the light!", self.name:capitalize())
@@ -288,6 +272,40 @@ function _M:act()
 		local t = self:getTalentFromId(self.T_UNSEEN_FORCE)
 		t.do_unseenForce(self, t)
 	end
+
+	-- Suffocate ?
+	local air_level, air_condition = game.level.map:checkEntity(self.x, self.y, Map.TERRAIN, "air_level"), game.level.map:checkEntity(self.x, self.y, Map.TERRAIN, "air_condition")
+	if air_level then
+		if not air_condition or not self.can_breath[air_condition] or self.can_breath[air_condition] <= 0 then
+			self:suffocate(-air_level, self)
+		end
+	end
+end
+
+function _M:act()
+	if not engine.Actor.act(self) then return end
+
+	self.changed = true
+
+	-- If resources are too low, disable sustains
+	if self.mana < 1 or self.stamina < 1 or self.psi < 1 then
+		for tid, _ in pairs(self.sustain_talents) do
+			local t = self:getTalentFromId(tid)
+			if (t.sustain_mana and self.mana < 1) or (t.sustain_stamina and self.stamina < 1) then
+				self:forceUseTalent(tid, {ignore_energy=true})
+			elseif (t.sustain_psi and self.psi < 1) and t.remove_on_zero then
+				self:forceUseTalent(tid, {ignore_energy=true})
+			end
+		end
+	end
+
+	-- We compute turns at "default" speed, and only fire some actions when chaning turn
+	local actturn = math.floor(game.turn / 10)
+	if not self.last_act_turn or self.last_act_turn < actturn then
+		self:actTurn()
+		self.last_act_turn = actturn
+	end
+
 	-- Conduit talent prevents all auras from cooling down
 	if self:isTalentActive(self.T_CONDUIT) then
 		local auras = self:isTalentActive(self.T_CONDUIT)
@@ -326,14 +344,6 @@ function _M:act()
 	if self:attr("encased_in_ice") then self.energy.value = 0 end
 	if self:attr("stoned") then self.energy.value = 0 end
 	if self:attr("dazed") then self.energy.value = 0 end
-
-	-- Suffocate ?
-	local air_level, air_condition = game.level.map:checkEntity(self.x, self.y, Map.TERRAIN, "air_level"), game.level.map:checkEntity(self.x, self.y, Map.TERRAIN, "air_condition")
-	if air_level then
-		if not air_condition or not self.can_breath[air_condition] or self.can_breath[air_condition] <= 0 then
-			self:suffocate(-air_level, self)
-		end
-	end
 
 	-- Regain natural balance?
 	local equilibrium_level = game.level.map:checkEntity(self.x, self.y, Map.TERRAIN, "equilibrium_level")
@@ -382,7 +392,9 @@ function _M:move(x, y, force)
 		else
 			moved = engine.Actor.move(self, x, y, force)
 		end
-		if not force and moved and (self.x ~= ox or self.y ~= oy) and not self.did_energy then self:useEnergy(game.energy_to_act * self:combatMovementSpeed()) end
+		if not force and moved and (self.x ~= ox or self.y ~= oy) and not self.did_energy then
+			self:useEnergy(game.energy_to_act * self:combatMovementSpeed())
+		end
 	end
 	self.did_energy = nil
 
@@ -1195,7 +1207,7 @@ function _M:die(src)
 	end
 
 	if src and src.knowTalent and src:knowTalent(src.T_STEP_UP) and rng.percent(src:getTalentLevelRaw(src.T_STEP_UP) * 20) then
-		src:setEffect(self.EFF_STEP_UP, 6, {})
+		game:onTickEnd(function() src:setEffect(self.EFF_STEP_UP, 1, {}) end)
 	end
 
 	if self:hasEffect(self.EFF_CORROSIVE_WORM) then
