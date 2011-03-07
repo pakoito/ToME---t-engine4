@@ -70,7 +70,7 @@ newBirthDescriptor{
 	},
 	copy = {
 		resolvers.equip{ id=true,
-			{type="weapon", subtype="longbow", name="elm longbow", autoreq=true},
+			{type="weapon", subtype="longbow", name="elm longbow", autoreq=true, ego_chance=-1000},
 		},
 		resolvers.generic(function(e)
 			e.auto_shoot_talent = e.T_SHOOT
@@ -111,7 +111,7 @@ newBirthDescriptor{
 	},
 	copy = {
 		equipment = resolvers.equip{ id=true,
-			{type="weapon", subtype="sling", name="rough leather sling", autoreq=true},
+			{type="weapon", subtype="sling", name="rough leather sling", autoreq=true, ego_chance=-1000},
 		},
 	},
 }

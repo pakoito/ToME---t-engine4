@@ -62,8 +62,8 @@ newBirthDescriptor{
 	copy = {
 		unused_stats = 0, unused_talents = 0, unused_generics = 0, unused_talents_types = 0,
 		resolvers.equip{ id=true,
-			{type="weapon", subtype="longsword", name="iron longsword", autoreq=true},
-			{type="armor", subtype="shield", name="iron shield", autoreq=true},
+			{type="weapon", subtype="longsword", name="iron longsword", autoreq=true, ego_chance=-1000},
+			{type="armor", subtype="shield", name="iron shield", autoreq=true, ego_chance=-1000},
 		},
 	},
 }

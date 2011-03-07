@@ -73,9 +73,9 @@ newBirthDescriptor{
 	},
 	copy = {
 		resolvers.equip{ id=true,
-			{type="weapon", subtype="longsword", name="iron longsword", autoreq=true},
-			{type="armor", subtype="shield", name="iron shield", autoreq=true},
-			{type="armor", subtype="heavy", name="iron mail armour", autoreq=true}
+			{type="weapon", subtype="longsword", name="iron longsword", autoreq=true, ego_chance=-1000, ego_chance=-1000},
+			{type="armor", subtype="shield", name="iron shield", autoreq=true, ego_chance=-1000, ego_chance=-1000},
+			{type="armor", subtype="heavy", name="iron mail armour", autoreq=true, ego_chance=-1000, ego_chance=-1000}
 		},
 	},
 	copy_add = {
@@ -118,8 +118,8 @@ newBirthDescriptor{
 	},
 	copy = {
 		resolvers.equip{ id=true,
-			{type="weapon", subtype="greatsword", name="iron greatsword", autoreq=true},
-			{type="armor", subtype="heavy", name="iron mail armour", autoreq=true},
+			{type="weapon", subtype="greatsword", name="iron greatsword", autoreq=true, ego_chance=-1000, ego_chance=-1000},
+			{type="armor", subtype="heavy", name="iron mail armour", autoreq=true, ego_chance=-1000, ego_chance=-1000},
 		},
 	},
 	copy_add = {
@@ -165,8 +165,8 @@ newBirthDescriptor{
 		max_life = 100,
 		talent_cd_reduction={[ActorTalents.T_FLAME]=-3, [ActorTalents.T_LIGHTNING]=-3, },
 		resolvers.equip{ id=true,
-			{type="weapon", subtype="greatsword", name="iron greatsword", autoreq=true},
-			{type="armor", subtype="light", name="rough leather armour", autoreq=true},
+			{type="weapon", subtype="greatsword", name="iron greatsword", autoreq=true, ego_chance=-1000, ego_chance=-1000},
+			{type="armor", subtype="light", name="rough leather armour", autoreq=true, ego_chance=-1000, ego_chance=-1000},
 		},
 		resolvers.inscription("RUNE:_MANASURGE", {cooldown=25, dur=10, mana=620}),
 	},

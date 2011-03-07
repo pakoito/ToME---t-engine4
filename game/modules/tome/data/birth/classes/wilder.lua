@@ -69,7 +69,7 @@ newBirthDescriptor{
 	copy = {
 		max_life = 90,
 		resolvers.equip{ id=true,
-			{type="armor", subtype="light", name="rough leather armour", autoreq=true}
+			{type="armor", subtype="light", name="rough leather armour", autoreq=true, ego_chance=-1000}
 		},
 	},
 }
@@ -108,8 +108,8 @@ newBirthDescriptor{
 	copy = {
 		max_life = 110,
 		resolvers.equip{ id=true,
-			{type="weapon", subtype="battleaxe", name="iron battleaxe", autoreq=true},
-			{type="armor", subtype="light", name="rough leather armour", autoreq=true}
+			{type="weapon", subtype="battleaxe", name="iron battleaxe", autoreq=true, ego_chance=-1000},
+			{type="armor", subtype="light", name="rough leather armour", autoreq=true, ego_chance=-1000}
 		},
 	},
 	copy_add = {

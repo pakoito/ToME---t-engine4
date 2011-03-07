@@ -758,7 +758,7 @@ local default_drops = function(zone, level, what)
 	if zone.default_drops then return zone.default_drops end
 	local lev = util.bound(math.ceil(zone:level_adjust_level(level, "object") / 10), 1, 5)
 	print("[TOME ENTITY FILTER] making default loot table for", what, lev)
-	return drop_tables[what][lev]
+	return table.clone(drop_tables[what][lev])
 end
 
 function _M:defaultEntityFilter(zone, level, type)
@@ -773,11 +773,14 @@ end
 function _M:entityFilterAlter(zone, level, type, filter)
 	if type ~= "object" then return end
 
-	if not filter.tome and not filter.special and not filter.unique and not filter.ego_chance and not filter.ego_filter and not filter.no_tome_drops then filter.tome = default_drops(zone, level, filter.tome_drops or "normal") end
+	if not filter.tome and not filter.defined and not filter.special and not filter.unique and not filter.ego_chance and not filter.ego_filter and not filter.no_tome_drops then filter.tome = default_drops(zone, level, filter.tome_drops or "normal") end
 
 	if filter.tome then
 		local t = (filter.tome == true) and default_drops(zone, level, "normal") or filter.tome
 		filter.tome = nil
+
+		-- If we request a specific type/subtype, we dont waht categories that could make that not happen
+		if filter.type or filter.subtype or filter.name then t.money = 0 end
 
 		local u = t.uniques or 0
 		local dg = u + (t.double_greater or 0)

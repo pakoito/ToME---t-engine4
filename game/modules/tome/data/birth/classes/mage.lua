@@ -79,8 +79,8 @@ newBirthDescriptor{
 		faction = "angolwen",
 		max_life = 90,
 		resolvers.equip{ id=true,
-			{type="weapon", subtype="staff", name="elm staff", autoreq=true},
-			{type="armor", subtype="cloth", name="linen robe", autoreq=true},
+			{type="weapon", subtype="staff", name="elm staff", autoreq=true, ego_chance=-1000},
+			{type="armor", subtype="cloth", name="linen robe", autoreq=true, ego_chance=-1000},
 		},
 		resolvers.generic(function(self)
 			if profile.mod.allow_build.mage_pyromancer then self:learnTalentType("spell/wildfire", false) self:setTalentTypeMastery("spell/wildfire", 1.3) end
@@ -129,8 +129,8 @@ newBirthDescriptor{
 	copy = {
 		max_life = 90,
 		resolvers.equip{ id=true,
-			{type="weapon", subtype="staff", name="elm staff", autoreq=true},
-			{type="armor", subtype="cloth", name="linen robe", autoreq=true}
+			{type="weapon", subtype="staff", name="elm staff", autoreq=true, ego_chance=-1000},
+			{type="armor", subtype="cloth", name="linen robe", autoreq=true, ego_chance=-1000}
 		},
 		resolvers.inventory{ id=true,
 			{type="gem",},

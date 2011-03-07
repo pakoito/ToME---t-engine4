@@ -73,8 +73,8 @@ newBirthDescriptor{
 	copy = {
 		max_life = 110,
 		resolvers.equip{ id=true,
-			{type="armor", subtype="cloth", name="linen robe", autoreq=true},
-			{type="weapon", subtype="greatsword", name="iron greatsword", autoreq=true},
+			{type="armor", subtype="cloth", name="linen robe", autoreq=true, ego_chance=-1000},
+			{type="weapon", subtype="greatsword", name="iron greatsword", autoreq=true, ego_chance=-1000},
 		},
 		resolvers.generic(function(self)
 			-- Make and wield some alchemist gems

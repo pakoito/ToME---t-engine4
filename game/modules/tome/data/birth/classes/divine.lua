@@ -74,9 +74,9 @@ newBirthDescriptor{
 	copy = {
 		max_life = 110,
 		resolvers.equip{ id=true,
-			{type="weapon", subtype="mace", name="iron mace", autoreq=true},
-			{type="armor", subtype="shield", name="iron shield", autoreq=true},
-			{type="armor", subtype="heavy", name="iron mail armour", autoreq=true},
+			{type="weapon", subtype="mace", name="iron mace", autoreq=true, ego_chance=-1000},
+			{type="armor", subtype="shield", name="iron shield", autoreq=true, ego_chance=-1000},
+			{type="armor", subtype="heavy", name="iron mail armour", autoreq=true, ego_chance=-1000},
 		},
 	},
 	copy_add = {
@@ -119,8 +119,8 @@ newBirthDescriptor{
 	copy = {
 		max_life = 90,
 		resolvers.equip{ id=true,
-			{type="weapon", subtype="staff", name="elm staff", autoreq=true},
-			{type="armor", subtype="cloth", name="linen robe", autoreq=true}
+			{type="weapon", subtype="staff", name="elm staff", autoreq=true, ego_chance=-1000},
+			{type="armor", subtype="cloth", name="linen robe", autoreq=true, ego_chance=-1000}
 		},
 	},
 }

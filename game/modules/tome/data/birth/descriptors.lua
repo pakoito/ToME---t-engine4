@@ -78,7 +78,7 @@ newBirthDescriptor{
 		max_level = 50,
 		money = 10,
 		resolvers.equip{ id=true,
-			{type="lite", subtype="lite", name="brass lantern"},
+			{type="lite", subtype="lite", name="brass lantern", ego_chance=-1000},
 		},
 		make_tile = function(e)
 			if not e.image then

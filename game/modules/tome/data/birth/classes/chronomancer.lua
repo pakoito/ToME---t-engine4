@@ -73,8 +73,8 @@ newBirthDescriptor{
 	copy = {
 		max_life = 90,
 		resolvers.equip{ id=true,
-			{type="weapon", subtype="staff", name="elm staff", autoreq=true},
-			{type="armor", subtype="cloth", name="linen robe", autoreq=true},
+			{type="weapon", subtype="staff", name="elm staff", autoreq=true, ego_chance=-1000},
+			{type="armor", subtype="cloth", name="linen robe", autoreq=true, ego_chance=-1000},
 		},
 	},
 	copy_add = {
@@ -121,12 +121,12 @@ newBirthDescriptor{
 	copy = {
 		max_life = 100,
 		resolvers.equip{ id=true,
-			{type="weapon", subtype="longsword", name="iron longsword", autoreq=true},
-			{type="weapon", subtype="dagger", name="iron dagger", autoreq=true},
-			{type="armor", subtype="light", name="rough leather armour", autoreq=true},
+			{type="weapon", subtype="longsword", name="iron longsword", autoreq=true, ego_chance=-1000},
+			{type="weapon", subtype="dagger", name="iron dagger", autoreq=true, ego_chance=-1000},
+			{type="armor", subtype="light", name="rough leather armour", autoreq=true, ego_chance=-1000},
 		},
 		resolvers.inventory{ id=true, inven="QS_MAINHAND",
-			{type="weapon", subtype="longbow", name="elm longbow", autoreq=true},
+			{type="weapon", subtype="longbow", name="elm longbow", autoreq=true, ego_chance=-1000},
 		},
 	},
 }
