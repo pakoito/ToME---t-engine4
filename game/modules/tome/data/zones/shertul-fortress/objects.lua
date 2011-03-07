@@ -39,10 +39,11 @@ When activated it will prompt to destroy items on the floor, if there are none i
 
 			-- On the floor or inventory
 			if game.level.map:getObjectTotal(who.x, who.y) > 0 then
-				local d = require("engine.dialogs.ShowPickupFloor").new("Transmogrify", who.x, who.y, function(o) if o:getPrice() <= 0 or o.quest then return false end return true end, function(o, idx)
+				local x, y = who.x, who.y
+				local d = require("engine.dialogs.ShowPickupFloor").new("Transmogrify", x, y, function(o) if o:getPrice() <= 0 or o.quest then return false end return true end, function(o, idx)
 					local price = o:getPrice() * o:getNumber() * pricemod(o)
 					price = math.min(price, 25)
-					game.level.map:removeObject(who.x, who.y, idx)
+					game.level.map:removeObject(x, y, idx)
 					who:incMoney(price)
 					who:hasQuest("shertul-fortress"):gain_energy(price/10)
 					game.log("You gain %0.2f gold from the transmogrification of %s.", price, o:getName{do_count=true, do_color=true})
