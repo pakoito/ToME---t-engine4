@@ -75,7 +75,7 @@ newEntity{ base = "BASE_NPC_SNOW_GIANT",
 }
 
 newEntity{ base = "BASE_NPC_SNOW_GIANT",
-	name = "snow giant boulder thrower", color=colors.LIGHT_UMBER,
+	name = "snow giant boulder thrower", color=colors.UMBER,
 	desc = [[A towering creature, humanoid but huge. It wields a giant maul and does not look friendly.]],
 	level_range = {15, nil}, exp_worth = 1,
 	rarity = 3,
