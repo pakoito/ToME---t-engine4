@@ -770,6 +770,8 @@ function _M:defaultEntityFilter(zone, level, type)
 	}
 end
 
+--- Alter any entity filters to process tome specific loot tables
+-- Here be magic! We tweak and convert and turn and create filters! It's magic but it works :)
 function _M:entityFilterAlter(zone, level, type, filter)
 	if type ~= "object" then return end
 
