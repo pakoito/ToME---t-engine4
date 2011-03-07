@@ -28,7 +28,7 @@ newEntity{
 		min_fill = 10,
 		max_fill = 20,
 		filters = function()
-			return {type="armor", id=true, ego_chance={ego_chance=100, properties=rng.percent(game.player.level) and {"greater_ego"}}}
+			return {type="armor", id=true, tome_drops="store"}
 		end,
 	},
 }
@@ -44,7 +44,7 @@ newEntity{
 		min_fill = 10,
 		max_fill = 20,
 		filters = function()
-			return {type="weapon", id=true, ego_chance={ego_chance=100, properties=rng.percent(game.player.level) and {"greater_ego"}}}
+			return {type="weapon", id=true, tome_drops="store"}
 		end,
 	},
 }
@@ -113,10 +113,10 @@ newEntity{
 		max_fill = 25,
 		filters = function()
 			return rng.table{
-				{type="weapon", subtype="staff", id=true, ego_chance={ego_chance=100, properties=rng.percent(game.player.level) and {"greater_ego"}}},
-				{type="weapon", subtype="staff", id=true, ego_chance={ego_chance=100, properties=rng.percent(game.player.level) and {"greater_ego"}}},
-				{type="weapon", subtype="staff", id=true, ego_chance={ego_chance=100, properties=rng.percent(game.player.level) and {"greater_ego"}}},
-				{type="wand", subtype="wand", id=true, ego_chance={ego_chance=100, properties=rng.percent(game.player.level) and {"greater_ego"}}},
+				{type="weapon", subtype="staff", id=true, tome_drops="store"},
+				{type="weapon", subtype="staff", id=true, tome_drops="store"},
+				{type="weapon", subtype="staff", id=true, tome_drops="store"},
+				{type="wand", subtype="wand", id=true, tome_drops="store"},
 			}
 		end,
 	},
@@ -138,9 +138,9 @@ newEntity{
 		filters = function()
 			return rng.table{
 				{type="jewelry", subtype="ring", id=true, ego_chance=-1000},
-				{type="jewelry", id=true, ego_chance={ego_chance=100, properties=rng.percent(game.player.level) and {"greater_ego"}}},
-				{type="jewelry", id=true, ego_chance={ego_chance=100, properties=rng.percent(game.player.level) and {"greater_ego"}}},
-				{type="jewelry", id=true, ego_chance={ego_chance=100, properties=rng.percent(game.player.level) and {"greater_ego"}}},
+				{type="jewelry", id=true, tome_drops="store"},
+				{type="jewelry", id=true, tome_drops="store"},
+				{type="jewelry", id=true, tome_drops="store"},
 			}
 		end,
 	},
@@ -180,7 +180,7 @@ newEntity{
 		min_fill = 10,
 		max_fill = 20,
 		filters = function()
-			return {id=true, ignore={type="money"}, add_levels=10, ego_chance={ego_chance=100, properties=rng.percent(game.player.level * 2) and {"greater_ego"}}}
+			return {id=true, ignore={type="money"}, add_levels=10, tome_drops="boss"}
 		end,
 	},
 }
@@ -236,7 +236,7 @@ newEntity{
 		min_fill = 20,
 		max_fill = 30,
 		filters = function()
-			return {type="armor", id=true, ego_chance={ego_chance=100, properties=rng.percent(game.player.level) and {"greater_ego"}}}
+			return {type="armor", id=true, tome_drops="store"}
 		end,
 		post_filter = function(e)
 			if e.power_source and e.power_source.arcane then return false end
@@ -256,7 +256,7 @@ newEntity{
 		min_fill = 20,
 		max_fill = 30,
 		filters = function()
-			return {type="weapon", id=true, ego_chance={ego_chance=100, properties=rng.percent(game.player.level) and {"greater_ego"}}}
+			return {type="weapon", id=true, tome_drops="store"}
 		end,
 		post_filter = function(e)
 			if e.power_source and e.power_source.arcane then return false end
