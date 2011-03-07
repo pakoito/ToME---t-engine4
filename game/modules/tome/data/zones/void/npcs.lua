@@ -54,7 +54,7 @@ Now you have come to finish what the Sher'tul began. Become a Godslayer yourself
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.equip{
 	},
-	resolvers.drops{chance=100, nb=1, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=10, {tome_drops="boss"} },
 
 -- give him a special shield talent that only the staff of absorption can remove
 	resolvers.talents{

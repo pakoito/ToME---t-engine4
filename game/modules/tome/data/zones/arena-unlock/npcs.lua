@@ -127,7 +127,7 @@ newEntity{ name = "arcane blade",
 
 	combat = { dam=resolvers.rngavg(6,12), atk=3, apr=6, physspeed=2 },
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
-	resolvers.drops{chance=100, nb=1, {type="weapon", ego_chance=100}},
+	resolvers.drops{chance=100, nb=1, {type="weapon", tome_drops="boss"}},
 	resolvers.drops{chance=100, nb=2, {type="money"} },
 	resolvers.inscriptions(1, "shielding rune"),
 	stun_immune = 0.4,

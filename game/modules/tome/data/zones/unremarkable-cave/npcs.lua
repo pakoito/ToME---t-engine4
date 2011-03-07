@@ -46,10 +46,10 @@ newEntity{ define_as = "FILLAREL",
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	equipment = resolvers.equip{
-		{type="weapon", subtype="staff", ego_chance=100, autoreq=true},
-		{type="armor", subtype="cloth", ego_chance=100, autoreq=true},
+		{type="weapon", subtype="staff", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="cloth", force_drop=true, tome_drops="boss", autoreq=true},
 	},
-	drops = resolvers.drops{chance=100, nb=3, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 
 	resolvers.talents{
 		[Talents.T_MOONLIGHT_RAY]=4,
@@ -105,10 +105,10 @@ newEntity{ define_as = "CORRUPTOR",
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	equipment = resolvers.equip{
-		{type="weapon", subtype="staff", ego_chance=100, autoreq=true},
-		{type="armor", subtype="heavy", ego_chance=100, autoreq=true},
+		{type="weapon", subtype="staff", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="heavy", force_drop=true, tome_drops="boss", autoreq=true},
 	},
-	drops = resolvers.drops{chance=100, nb=3, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 
 	resolvers.talents{
 		[Talents.T_HEAVY_ARMOUR_TRAINING]=3,

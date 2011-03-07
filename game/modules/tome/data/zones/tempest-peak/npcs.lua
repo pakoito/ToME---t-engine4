@@ -46,10 +46,10 @@ newEntity{ define_as = "URKIS",
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	equipment = resolvers.equip{
-		{type="weapon", subtype="staff", ego_chance=100, autoreq=true},
-		{type="armor", subtype="cloth", ego_chance=100, autoreq=true},
+		{type="weapon", subtype="staff", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="cloth", force_drop=true, tome_drops="boss", autoreq=true},
 	},
-	resolvers.drops{chance=100, nb=4, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
 	resolvers.drops{chance=100, nb=1, {unique=true} },
 
 	resists = { [DamageType.LIGHTNING] = 100, },

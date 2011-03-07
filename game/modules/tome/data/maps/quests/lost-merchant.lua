@@ -33,9 +33,9 @@ defineTile('P', "FLOOR", nil, mod.class.NPC.new{
 
 	resolvers.drops{chance=20, nb=1, {} },
 	resolvers.equip{
-		{type="weapon", subtype="dagger", autoreq=true, ego_change=50},
-		{type="weapon", subtype="dagger", autoreq=true, ego_change=50},
-		{type="armor", subtype="light", autoreq=true}
+		{type="weapon", subtype="dagger", autoreq=true, force_drop=true, tome_drops="boss"},
+		{type="weapon", subtype="dagger", autoreq=true, force_drop=true, tome_drops="boss"},
+		{type="armor", subtype="light", autoreq=true, force_drop=true, tome_drops="boss"}
 	},
 	resolvers.drops{chance=100, nb=2, {type="money"} },
 

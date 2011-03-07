@@ -373,9 +373,9 @@ function _M:finishEntity(level, type, e, ego_filter)
 					local try = ego_filter.tries[i]
 
 					local etype = (i == 1 and e.ego_first_type and e.ego_first_type) or rng.tableIndex(e.egos_chance, picked_etype)
+--					forceprint("EGO TRY", i, ":", etype, echance, try)
 					if not etype then break end
 					local echance = etype and try[etype]
-					forceprint("EGO TRY", i, ":", etype, echance, try)
 
 					pick_ego(self, level, e, egos_list, type, picked_etype, etype, try)
 				end

@@ -49,13 +49,13 @@ newEntity{ define_as = "SUPREME_ARCHMAGE_LINANIIL",
 	resolvers.inscriptions(1, {"manasurge rune"}),
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	resolvers.drops{chance=100, nb=3, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
 
 	resists = {[DamageType.FIRE]=100, [DamageType.LIGHTNING]=100},
 
 	resolvers.equip{
-		{type="weapon", subtype="staff", autoreq=true},
-		{type="armor", subtype="cloth", autoreq=true},
+		{type="weapon", subtype="staff", autoreq=true, tome_drops="boss"},
+		{type="armor", subtype="cloth", autoreq=true, tome_drops="boss"},
 	},
 
 	talent_cd_reduction = {all=23},

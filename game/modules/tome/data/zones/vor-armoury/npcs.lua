@@ -57,9 +57,9 @@ newEntity{ base="BASE_NPC_ORC_GRUSHNAK", define_as = "GNARG",
 
 	resolvers.equip{
 		{type="weapon", subtype="greatsword", defined="MURDERBLADE", random_art_replace={chance=75}, autoreq=true},
-		{type="armor", subtype="massive", ego_change=100, autoreq=true},
+		{type="armor", subtype="massive", force_drop=true, tome_drops="boss", autoreq=true},
 	},
-	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
 
 	-- Reduce cooldowns
 	talent_cd_reduction={[Talents.T_RUSH]=35,},

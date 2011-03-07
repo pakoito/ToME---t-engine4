@@ -44,7 +44,7 @@ newEntity{ define_as = "SUN_PALADIN_TORNUK",
 	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_astar", },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	resolvers.drops{chance=100, nb=3, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 
 	resolvers.equip{
 		{type="weapon", subtype="mace", autoreq=true},

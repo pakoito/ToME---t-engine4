@@ -62,7 +62,7 @@ newEntity{ define_as = "SHADE_OF_TELOS",
 		{type="weapon", subtype="staff", defined="TELOS_TOP_HALF", random_art_replace={chance=75}, autoreq=true},
 		{type="weapon", subtype="staff", defined="TELOS_BOTTOM_HALF", autoreq=true},
 	},
-	resolvers.drops{chance=100, nb=2, {type="wand"} },
+	resolvers.drops{chance=100, nb=4, {tome_drops="boss"} },
 
 	resolvers.talents{
 		[Talents.T_ICE_SHARDS]=5,

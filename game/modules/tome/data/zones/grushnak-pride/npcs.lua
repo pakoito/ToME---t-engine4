@@ -50,18 +50,18 @@ newEntity{ base="BASE_NPC_ORC_GRUSHNAK", define_as = "GRUSHNAK",
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1, FEET=1, FINGER=2, NECK=1 },
 
 	resolvers.equip{
-		{type="weapon", subtype="waraxe", ego_change=100, autoreq=true},
-		{type="armor", subtype="shield", ego_change=100, autoreq=true},
-		{type="armor", subtype="massive", ego_chance=100, autoreq=true},
-		{type="armor", subtype="head", ego_chance=100, autoreq=true},
-		{type="armor", subtype="feet", ego_chance=100, autoreq=true},
+		{type="weapon", subtype="waraxe", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="shield", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="massive", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="head", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="feet", force_drop=true, tome_drops="boss", autoreq=true},
 --		Commented because this can generate rings of invis or amulets of telepathy and drain the life of the boss
---		{type="jewelry", subtype="amulet", ego_chance=100, autoreq=true},
---		{type="jewelry", subtype="ring", ego_chance=100, autoreq=true},
+--		{type="jewelry", subtype="amulet", force_drop=true, tome_drops="boss", autoreq=true},
+--		{type="jewelry", subtype="ring", force_drop=true, tome_drops="boss", autoreq=true},
 		{type="jewelry", subtype="ring", defined="PRIDE_GLORY", random_art_replace={chance=75}, autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=1, {defined="ORB_DESTRUCTION"} },
-	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
 	resolvers.drops{chance=100, nb=1, {defined="NOTE_LORE"} },
 
 	make_escort = {

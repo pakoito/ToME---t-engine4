@@ -112,6 +112,7 @@ function resolvers.calc.drops(t, e)
 	-- Iterate of object requests, try to create them and drops them
 	for i = 1, (t.nb or 1) do
 		local filter = t[rng.range(1, #t)]
+		filter = table.clone(filter)
 
 		-- Make sure if we request uniques we do not get lore, it would be kinda deceptive
 		if filter.unique then

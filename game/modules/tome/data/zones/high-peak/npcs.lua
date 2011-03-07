@@ -81,11 +81,11 @@ newEntity{
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1, FEET=1 },
 	resolvers.equip{
 		{type="weapon", subtype="staff", defined="STAFF_ABSORPTION_AWAKENED", autoreq=true},
-		{type="armor", subtype="cloth", ego_chance=100, autoreq=true},
-		{type="armor", subtype="head", ego_chance=100, autoreq=true},
-		{type="armor", subtype="feet", ego_chance=100, autoreq=true},
+		{type="armor", subtype="cloth", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="head", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="feet", force_drop=true, tome_drops="boss", autoreq=true},
 	},
-	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
 
 	resolvers.talents{
 		[Talents.T_STONE_SKIN]=7,
@@ -153,15 +153,15 @@ newEntity{
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, FEET=1, HEAD=1, HANDS=1 },
 	resolvers.equip{
-		{type="weapon", subtype="sword", ego_chance=100, autoreq=true},
-		{type="weapon", subtype="waraxe", ego_chance=100, autoreq=true},
-		{type="armor", subtype="massive", ego_chance=100, autoreq=true},
-		{type="armor", subtype="feet", name="pair of voratun boots",ego_chance=100, autoreq=true},
-		{type="armor", subtype="head", name="voratun helm",ego_chance=100, autoreq=true},
-		{type="armor", subtype="hands", name="voratun gauntlets",ego_chance=100, autoreq=true},
+		{type="weapon", subtype="sword", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="weapon", subtype="waraxe", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="massive", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="feet", name="pair of voratun boots", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="head", name="voratun helm", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="hands", name="voratun gauntlets", force_drop=true, tome_drops="boss", autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=1, {defined="PEARL_LIFE_DEATH"} },
-	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
 
 	resolvers.talents{
 		[Talents.T_RUSH]=6,
@@ -228,14 +228,14 @@ newEntity{ define_as = "FALLEN_SUN_PALADIN_AERYN",
 	resolvers.inscriptions(4, {}),
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1, FEET=1 },
-	resolvers.drops{chance=100, nb=3, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 
 	resolvers.equip{
-		{type="weapon", subtype="mace", ego_chance=100, autoreq=true},
-		{type="armor", subtype="shield", ego_chance=100, autoreq=true},
-		{type="armor", subtype="massive", ego_chance=100, autoreq=true},
-		{type="armor", subtype="feet", ego_chance=100, autoreq=true},
-		{type="armor", subtype="head", ego_chance=100, autoreq=true},
+		{type="weapon", subtype="mace", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="shield", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="massive", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="feet", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="head", force_drop=true, tome_drops="boss", autoreq=true},
 	},
 
 	die = function(self, src)
@@ -299,14 +299,14 @@ newEntity{ define_as = "HIGH_SUN_PALADIN_AERYN",
 	resolvers.inscriptions(4, {}),
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1, FEET=1 },
-	resolvers.drops{chance=100, nb=3, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 
 	resolvers.equip{
-		{type="weapon", subtype="mace", ego_chance=100, autoreq=true},
-		{type="armor", subtype="shield", ego_chance=100, autoreq=true},
-		{type="armor", subtype="massive", ego_chance=100, autoreq=true},
-		{type="armor", subtype="feet", ego_chance=100, autoreq=true},
-		{type="armor", subtype="head", ego_chance=100, autoreq=true},
+		{type="weapon", subtype="mace", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="shield", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="massive", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="feet", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="head", force_drop=true, tome_drops="boss", autoreq=true},
 	},
 
 	positive_regen = 25,

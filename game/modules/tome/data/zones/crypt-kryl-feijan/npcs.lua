@@ -52,7 +52,7 @@ newEntity{ base="BASE_NPC_MAJOR_DEMON", define_as = "KRYL_FEIJAN",
 
 	combat = { dam=resolvers.mbonus(86, 20), atk=50, apr=30, dammod={str=1.1} },
 
-	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
 
 	resolvers.talents{
 		[Talents.T_DARKFIRE]=4,

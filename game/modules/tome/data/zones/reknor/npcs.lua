@@ -44,12 +44,12 @@ newEntity{ define_as = "GOLBUG",
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, NECK=1, HEAD=1, },
 	equipment = resolvers.equip{
-		{type="weapon", subtype="mace", ego_chance=100, autoreq=true},
-		{type="armor", subtype="shield", ego_chance=100, autoreq=true},
+		{type="weapon", subtype="mace", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="shield", force_drop=true, tome_drops="boss", autoreq=true},
 		{type="armor", subtype="head", autoreq=true},
-		{type="armor", subtype="massive", ego_chance=50, autoreq=true},
+		{type="armor", subtype="massive", force_drop=true, tome_drops="boss", autoreq=true},
 	},
-	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
 	resolvers.drops{chance=100, nb=1, {type="jewelry", subtype="orb", defined="ORB_MANY_WAYS"} },
 
 	stun_immune = 1,
@@ -174,7 +174,7 @@ newEntity{ define_as = "LITHFENGEL", -- Lord of Ash; backup guardian
 	resolvers.equip{
 		{type="weapon", subtype="waraxe", defined="MALEDICTION", random_art_replace={chance=75}, autoreq=true},
 	},
-	resolvers.drops{chance=100, nb=4, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=4, {tome_drops="boss"} },
 	resolvers.drops{chance=100, nb=1, {defined="ATHAME_WEST"} },
 	resolvers.drops{chance=100, nb=1, {defined="RESONATING_DIAMOND_WEST"} },
 

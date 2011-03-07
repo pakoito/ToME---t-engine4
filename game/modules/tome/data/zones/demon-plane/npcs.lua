@@ -49,7 +49,7 @@ newEntity{ define_as = "DRAEBOR",
 	resists = { [DamageType.FIRE] = 50, [DamageType.DARKNESS] = 50, },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	resolvers.drops{chance=100, nb=4, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=4, {tome_drops="boss"} },
 	resolvers.drops{chance=100, nb=1, {defined="BOOTS_OF_PHASING"} },
 
 	summon = {

@@ -51,8 +51,8 @@ newEntity{ define_as = "UKLLMSWWIK",
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.drops{chance=100, nb=1, {defined="TRIDENT_TIDES", random_art_replace={chance=50}, autoreq=true} },
-	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
-	resolvers.drops{chance=100, nb=10, {type="money"} },
+	resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
+	resolvers.drops{chance=100, nb=10, {tome={money=1}} },
 
 	resolvers.talents{
 		[Talents.T_WEAPON_COMBAT]=5,

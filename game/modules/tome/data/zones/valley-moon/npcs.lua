@@ -46,7 +46,7 @@ newEntity{ define_as = "CORRUPTED_DAELACH",
 	resolvers.equip{
 		{type="weapon", subtype="whip", defined="WHIP_URH_ROK", random_art_replace={chance=75}, autoreq=true},
 	},
-	resolvers.drops{chance=100, nb=3, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
 
 	resolvers.talents{
 		[Talents.T_FIREBEAM]=5,

@@ -42,7 +42,7 @@ newEntity{ define_as = "UNGOLE", base = "BASE_NPC_SPIDER",
 	combat = { dam=resolvers.rngavg(40,58), atk=16, apr=9, damtype=DamageType.NATURE, dammod={str=0.8} },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
 	resolvers.drops{chance=100, nb=1, {type="wand", subtype="wand", defined="ROD_SPYDRIC_POISON"} },
 	resolvers.drops{chance=100, nb=1, {unique=true} },
 

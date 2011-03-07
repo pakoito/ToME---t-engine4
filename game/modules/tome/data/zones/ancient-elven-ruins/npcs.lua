@@ -48,10 +48,10 @@ newEntity{ define_as = "GREATER_MUMMY_LORD",
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1, },
 	equipment = resolvers.equip{
 		{type="weapon", subtype="longsword", defined="LONGSWORD_WINTERTIDE", random_art_replace={chance=75}, autoreq=true},
-		{type="armor", subtype="shield", ego_chance=100, autoreq=true},
-		{type="armor", subtype="mummy", ego_chance=100, autoreq=true},
+		{type="armor", subtype="shield", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="mummy", force_drop=true, tome_drops="boss", autoreq=true},
 	},
-	drops = resolvers.drops{chance=100, nb=4, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=4, {tome_drops="boss"} },
 
 	resolvers.talents{
 		[Talents.T_SHIELD_PUMMEL]=5,
@@ -101,7 +101,7 @@ newEntity{ base = "BASE_NPC_MUMMY",
 		[Talents.T_MANATHRUST]=3,
 	},
 	resolvers.inscriptions(1, "rune"),
-	drops = resolvers.drops{chance=70, nb=1, {type="money"}, {} },
+	resolvers.drops{chance=70, nb=1, {tome={money=1}} },
 }
 
 newEntity{ base = "BASE_NPC_MUMMY",
@@ -116,7 +116,7 @@ newEntity{ base = "BASE_NPC_MUMMY",
 	infravision = 20,
 
 	resolvers.equip{
-		{type="armor", subtype="mummy", ego_chance=100, autoreq=true},
+		{type="armor", subtype="mummy", force_drop=true, autoreq=true},
 	},
 	autolevel = "caster",
 	resolvers.talents{

@@ -44,9 +44,10 @@ newEntity{ base = "BASE_NPC_HORROR", define_as="WEIRDLING_BEAST",
 	negative_regen = 15,
 
 	resolvers.equip{
-		{type="weapon", subtype="staff", autoreq=true, ego_chance=100},
-		{type="armor", subtype="light", autoreq=true, ego_chance=100}
+		{type="weapon", subtype="staff", autoreq=true, force_drop=true, tome_drops="boss"},
+		{type="armor", subtype="light", autoreq=true, force_drop=true, tome_drops="boss"}
 	},
+	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 
 	resolvers.talents{
 		[Talents.T_ACID_BLOOD]=4,

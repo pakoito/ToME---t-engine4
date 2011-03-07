@@ -40,8 +40,8 @@ newEntity{ define_as = "BEN_CRUTHDAR_ABOMINATION",
 	resists = { [DamageType.COLD] = 25 },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	resolvers.equip{ {type="weapon", subtype="battleaxe", ego_chance=100, autoreq=true}, },
-	resolvers.drops{chance=100, nb=1, {ego_chance=100} },
+	resolvers.equip{ {type="weapon", subtype="battleaxe", force_drop=true, tome_drops="boss", autoreq=true}, },
+	resolvers.drops{chance=100, nb=1, {tome_drops="boss"} },
 
 	resolvers.talents{
 		[Talents.T_GLOOM]=3,
@@ -149,10 +149,10 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "CHRONOLITH_TWIN",
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	equipment = resolvers.equip{
-		{type="weapon", subtype="staff", ego_chance=100, autoreq=true},
-		{type="armor", subtype="cloth", ego_chance=100, autoreq=true},
+		{type="weapon", subtype="staff", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="cloth", force_drop=true, tome_drops="boss", autoreq=true},
 	},
-	resolvers.drops{chance=100, nb=4, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=2, {tome_drops="boss"} },
 	resolvers.drops{chance=100, nb=1, {unique=true} },
 
 	resists = { [DamageType.TEMPORAL] = 50, },
@@ -197,10 +197,10 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "CHRONOLITH_CLONE",
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	equipment = resolvers.equip{
-		{type="weapon", subtype="staff", ego_chance=100, autoreq=true},
-		{type="armor", subtype="cloth", ego_chance=100, autoreq=true},
+		{type="weapon", subtype="staff", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="cloth", force_drop=true, tome_drops="boss", autoreq=true},
 	},
-	resolvers.drops{chance=100, nb=4, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=2, {tome_drops="boss"} },
 	resolvers.drops{chance=100, nb=1, {unique=true} },
 
 	resists = { [DamageType.TEMPORAL] = 50, },

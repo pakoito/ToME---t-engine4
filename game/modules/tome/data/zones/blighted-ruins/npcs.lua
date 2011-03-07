@@ -83,7 +83,7 @@ This specimen looks like it was hastily assembled and is not really complete yet
 	resolvers.talents{ [Talents.T_BONE_ARMOUR]=3, [Talents.T_THROW_BONES]=1, [Talents.T_STUN]=1, },
 	resolvers.sustains_at_birth(),
 
-	resolvers.drops{chance=100, nb=3, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 	resolvers.drops{chance=100, nb=1, {defined="WINTERTIDE_PHIAL", random_art_replace={chance=75}} },
 
 	ai = "tactical", ai_state = { talent_in=3, ai_move="move_astar", },

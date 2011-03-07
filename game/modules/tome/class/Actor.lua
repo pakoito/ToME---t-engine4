@@ -1120,7 +1120,7 @@ function _M:die(src)
 						o.no_drop = true
 
 						-- Drop a random artifact instead
-						local ro = game.zone:makeEntity(game.level, "object", {unique=true, not_properties={"lore"}}, nil, true)
+						local ro = game.zone:makeEntity(game.level, "object", {no_tome_drops=true, unique=true, not_properties={"lore"}}, nil, true)
 						if ro then game.zone:addEntity(game.level, ro, "object", self.x, self.y) end
 					end
 

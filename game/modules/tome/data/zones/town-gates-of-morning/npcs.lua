@@ -47,7 +47,7 @@ newEntity{ define_as = "HIGH_SUN_PALADIN_AERYN",
 	resolvers.inscriptions(3, {}),
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	resolvers.drops{chance=100, nb=3, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 
 	resolvers.equip{
 		{type="weapon", subtype="mace", autoreq=true},

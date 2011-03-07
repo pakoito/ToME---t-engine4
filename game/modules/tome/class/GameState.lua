@@ -191,7 +191,7 @@ function _M:generateRandart(add, base, lev)
 	game.level.level = lev
 
 	-- Get a base object
-	base = base or game.zone:makeEntity(game.level, "object", {ego_filter={keep_egos=true, ego_chance=-1000}, special=function(e)
+	base = base or game.zone:makeEntity(game.level, "object", {no_tome_drops=true, ego_filter={keep_egos=true, ego_chance=-1000}, special=function(e)
 		return (not e.unique and e.randart_able) and (not e.material_level or e.material_level >= 2) and true or false
 	end}, nil, true)
 	if not base then game.level.level = oldlev return end
@@ -595,56 +595,118 @@ end
 -- Loot filters
 --------------------------------------------------------------
 
-local default_drops = function(zone, level)
-	if zone.default_drops then return zone.default_drops end
-	local lev = util.bound(math.ceil(zone:level_adjust_level(level, "object") / 10), 1, 5)
-	return ({
+local drop_tables = {
+	normal = {
 		[1] = {
 			uniques = 0.5,
 			double_greater = 2,
 			greater_normal = 4,
 			greater = 12,
-			double_ego = 25,
-			ego = 45,
-			basic = 35,
+			double_ego = 20,
+			ego = 35,
+			basic = 20,
+			money = 7000,
 		},
 		[2] = {
 			uniques = 0.7,
 			double_greater = 6,
 			greater_normal = 10,
 			greater = 20,
-			double_ego = 45,
-			ego = 45,
-			basic = 35,
+			double_ego = 35,
+			ego = 20,
+			basic = 15,
+			money = 8,
 		},
 		[3] = {
 			uniques = 1,
-			double_greater = 15,
-			greater_normal = 20,
-			greater = 30,
-			double_ego = 30,
-			ego = 20,
-			basic = 25,
+			double_greater = 10,
+			greater_normal = 15,
+			greater = 35,
+			double_ego = 25,
+			ego = 15,
+			basic = 10,
+			money = 8.5,
 		},
 		[4] = {
 			uniques = 1.1,
-			double_greater = 19,
-			greater_normal = 25,
-			greater = 30,
-			double_ego = 25,
-			ego = 15,
-			basic = 15,
+			double_greater = 15,
+			greater_normal = 35,
+			greater = 25,
+			double_ego = 20,
+			ego = 5,
+			basic = 5,
+			money = 8,
 		},
 		[5] = {
 			uniques = 1.2,
-			double_greater = 25,
-			greater_normal = 20,
-			greater = 24,
-			double_ego = 15,
-			ego = 10,
+			double_greater = 35,
+			greater_normal = 30,
+			greater = 20,
+			double_ego = 10,
+			ego = 5,
 			basic = 5,
+			money = 8,
 		},
-	})[lev]
+	},
+	boss = {
+		[1] = {
+			uniques = 3,
+			double_greater = 10,
+			greater_normal = 15,
+			greater = 25,
+			double_ego = 45,
+			ego = 0,
+			basic = 0,
+			money = 4,
+		},
+		[2] = {
+			uniques = 4,
+			double_greater = 20,
+			greater_normal = 18,
+			greater = 25,
+			double_ego = 35,
+			ego = 0,
+			basic = 0,
+			money = 4,
+		},
+		[3] = {
+			uniques = 5,
+			double_greater = 30,
+			greater_normal = 22,
+			greater = 25,
+			double_ego = 25,
+			ego = 0,
+			basic = 0,
+			money = 4,
+		},
+		[4] = {
+			uniques = 6,
+			double_greater = 40,
+			greater_normal = 30,
+			greater = 25,
+			double_ego = 20,
+			ego = 0,
+			basic = 0,
+			money = 4,
+		},
+		[5] = {
+			uniques = 7,
+			double_greater = 50,
+			greater_normal = 30,
+			greater = 25,
+			double_ego = 10,
+			ego = 0,
+			basic = 0,
+			money = 4,
+		},
+	},
+}
+
+local default_drops = function(zone, level, what)
+	if zone.default_drops then return zone.default_drops end
+	local lev = util.bound(math.ceil(zone:level_adjust_level(level, "object") / 10), 1, 5)
+	print("[TOME ENTITY FILTER] making default loot table for", what, lev)
+	return drop_tables[what][lev]
 end
 
 function _M:defaultEntityFilter(zone, level, type)
@@ -652,27 +714,27 @@ function _M:defaultEntityFilter(zone, level, type)
 
 	-- By default we dont apply special filters, but we always provide one so that entityFilter is called
 	return {
-		tome = default_drops(zone, level),
+		tome = default_drops(zone, level, "normal"),
 	}
 end
 
 function _M:entityFilterAlter(zone, level, type, filter)
 	if type ~= "object" then return end
 
-	if not filter.tome  then filter.tome = default_drops(zone, level) end
+	if not filter.tome and not filter.special and not filter.unique and not filter.ego_chance and not filter.ego_filter and not filter.no_tome_drops then filter.tome = default_drops(zone, level, filter.tome_drops or "normal") end
 
 	if filter.tome then
-		local t = (filter.tome == true) and default_drops(zone, level) or filter.tome
+		local t = (filter.tome == true) and default_drops(zone, level, "normal") or filter.tome
 		filter.tome = nil
 
-		local u, dg, ge, g, de, e, total =
-			t.uniques,
-			t.uniques + t.double_greater,
-			t.uniques + t.double_greater + t.greater_normal,
-			t.uniques + t.double_greater + t.greater_normal + t.greater,
-			t.uniques + t.double_greater + t.greater_normal + t.greater + t.double_ego,
-			t.uniques + t.double_greater + t.greater_normal + t.greater + t.double_ego + t.ego,
-			t.uniques + t.double_greater + t.greater_normal + t.greater + t.double_ego + t.ego + t.basic
+		local u = t.uniques or 0
+		local dg = u + (t.double_greater or 0)
+		local ge = dg + (t.greater_normal or 0)
+		local g = ge + (t.greater or 0)
+		local de = g + (t.double_ego or 0)
+		local e = de + (t.ego or 0)
+		local m = e + (t.money or 0)
+		local total = m + (t.basic or 0)
 
 		local r = rng.float(0, total)
 		if r < u then
@@ -695,7 +757,7 @@ function _M:entityFilterAlter(zone, level, type, filter)
 			print("[TOME ENTITY FILTER] selected Greater", r, g)
 			filter.not_properties = filter.not_properties or {}
 			filter.not_properties[#filter.not_properties+1] = "unique"
-			filter.ego_chance={tries = { ego_chance=100, properties={"greater_ego"} } }
+			filter.ego_chance={tries = { {ego_chance=100, properties={"greater_ego"}} } }
 
 		elseif r < de then
 			print("[TOME ENTITY FILTER] selected Double Ego", r, de)
@@ -707,7 +769,12 @@ function _M:entityFilterAlter(zone, level, type, filter)
 			print("[TOME ENTITY FILTER] selected Ego", r, e)
 			filter.not_properties = filter.not_properties or {}
 			filter.not_properties[#filter.not_properties+1] = "unique"
-			filter.ego_chance={tries = { ego_chance=100, not_properties={"greater_ego"} } }
+			filter.ego_chance={tries = { {ego_chance=100, not_properties={"greater_ego"}} } }
+
+		elseif r < m then
+			print("[TOME ENTITY FILTER] selected Money", r, m)
+			filter.special = function(e) return e.type == "money" or e.type == "gem" end
+
 		else
 			print("[TOME ENTITY FILTER] selected basic", r, total)
 			filter.not_properties = filter.not_properties or {}

@@ -51,7 +51,7 @@ newEntity{ define_as = "SHADE",
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	equipment = resolvers.equip{ {type="weapon", subtype="staff", defined="STAFF_KOR", random_art_replace={chance=75}, autoreq=true}, {type="armor", subtype="light", autoreq=true}, },
-	drops = resolvers.drops{chance=100, nb=3, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 
 	resolvers.talents{
 		[Talents.T_MANATHRUST]=4, [Talents.T_FREEZE]=4, [Talents.T_TIDAL_WAVE]=2,
@@ -104,11 +104,11 @@ newEntity{ define_as = "KOR_FURY",
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, NECK=1 },
 	resolvers.equip{
-		{type="weapon", subtype="staff", ego_chance=100, autoreq=true},
+		{type="weapon", subtype="staff", force_drop=true, tome_drops="boss", autoreq=true},
 		{type="armor", subtype="light", autoreq=true},
 		{type="jewelry", subtype="amulet", defined="VOX", random_art_replace={chance=75}, autoreq=true},
 	},
-	resolvers.drops{chance=100, nb=3, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 
 	resolvers.talents{
 		[Talents.T_MANATHRUST]=5,

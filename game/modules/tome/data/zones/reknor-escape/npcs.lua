@@ -48,7 +48,7 @@ newEntity{ define_as = "BROTOQ",
 		{type="weapon", subtype="longsword", autoreq=true},
 		{type="armor", subtype="light", autoreq=true},
 	},
-	drops = resolvers.drops{chance=100, nb=3, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 
 	resolvers.talents{
 		[Talents.T_VIRULENT_DISEASE]=2,

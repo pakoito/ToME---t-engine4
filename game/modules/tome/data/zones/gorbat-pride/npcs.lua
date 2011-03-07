@@ -50,11 +50,11 @@ newEntity{ base="BASE_NPC_ORC_GORBAT", define_as = "GORBAT",
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1 },
 
 	resolvers.equip{
-		{type="weapon", subtype="greatmaul", ego_change=100, autoreq=true},
+		{type="weapon", subtype="greatmaul", force_drop=true, tome_drops="boss", autoreq=true},
 		{type="armor", subtype="light", defined="CHROMATIC_HARNESS", random_art_replace={chance=75}, autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=1, {defined="ORB_DRAGON"} },
-	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
 	resolvers.drops{chance=100, nb=1, {defined="NOTE_LORE"} },
 
 	talent_cd_reduction={[Talents.T_ICE_BREATH]=3, [Talents.T_FIRE_BREATH]=3, [Talents.T_SAND_BREATH]=3, },

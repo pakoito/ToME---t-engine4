@@ -49,14 +49,14 @@ newEntity{ base="BASE_NPC_ORC_VOR", define_as = "VOR",
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1 },
 
 	resolvers.equip{
-		{type="weapon", subtype="staff", ego_change=100, autoreq=true},
-		{type="armor", subtype="cloth", ego_change=100, autoreq=true},
+		{type="weapon", subtype="staff", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="cloth", force_drop=true, tome_drops="boss", autoreq=true},
 		{type="armor", subtype="head", defined="CROWN_ELEMENTS", random_art_replace={chance=75}, autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=1, {defined="ORB_ELEMENTS"} },
 	resolvers.drops{chance=20, nb=1, {defined="JEWELER_TOME"} },
 	resolvers.drops{chance=100, nb=1, {defined="NOTE_LORE"} },
-	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
 
 	resolvers.talents{
 		[Talents.T_FLAME]=5,

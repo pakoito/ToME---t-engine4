@@ -51,7 +51,7 @@ newEntity{ define_as = "RANTHA_THE_WORM",
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.drops{chance=100, nb=1, {defined="FROST_TREADS", random_art_replace={chance=75}}, },
-	resolvers.drops{chance=100, nb=3, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 	resolvers.drops{chance=100, nb=10, {type="money"} },
 
 	resolvers.talents{
@@ -106,12 +106,12 @@ newEntity{ base="BASE_NPC_ORC_GRUSHNAK", define_as = "MASSOK",
 	resists = { [DamageType.COLD] = 100 },
 
 	resolvers.equip{
-		{type="weapon", subtype="battleaxe", ego_change=100, autoreq=true},
-		{type="armor", subtype="massive", ego_chance=100, autoreq=true},
+		{type="weapon", subtype="battleaxe", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="massive", force_drop=true, tome_drops="boss", autoreq=true},
 		{type="armor", subtype="head", defined="DRAGON_SKULL", random_art_replace={chance=75}, autoreq=true},
-		{type="armor", subtype="feet", ego_chance=100, autoreq=true},
+		{type="armor", subtype="feet", force_drop=true, tome_drops="boss", autoreq=true},
 	},
-	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
 
 	resolvers.talents{
 		[Talents.T_WEAPON_COMBAT]=7,

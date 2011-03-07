@@ -178,10 +178,10 @@ newEntity{
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.equip{
-		{type="weapon", subtype="staff", ego_chance=100, autoreq=true},
-		{type="armor", subtype="cloth", ego_chance=100, autoreq=true},
+		{type="weapon", subtype="staff", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="cloth", force_drop=true, tome_drops="boss", autoreq=true},
 	},
-	resolvers.drops{chance=100, nb=10, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=10, {tome_drops="boss"} },
 
 	resolvers.talents{
 		[Talents.T_FLAME]=5,
@@ -234,10 +234,10 @@ newEntity{
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.equip{
-		{type="weapon", subtype="staff", ego_chance=100, autoreq=true},
-		{type="armor", subtype="cloth", ego_chance=100, autoreq=true},
+		{type="weapon", subtype="staff", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="cloth", force_drop=true, tome_drops="boss", autoreq=true},
 	},
-	resolvers.drops{chance=100, nb=10, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=10, {tome_drops="boss"} },
 
 	resolvers.talents{
 		[Talents.T_FLAME]=5,
@@ -285,7 +285,7 @@ This one looks even nastier and looks toward you with what seems to be disdain. 
 		{type="jewelry", subtype="amulet", defined="FIERY_CHOKER", random_art_replace={chance=75}},
 	},
 	resolvers.drops{chance=20, nb=1, {defined="JEWELER_TOME"} },
-	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
 
 	resolvers.talents{
 		[Talents.T_FLAME]=4,

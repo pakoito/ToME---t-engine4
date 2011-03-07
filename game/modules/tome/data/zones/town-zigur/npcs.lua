@@ -82,7 +82,7 @@ newEntity{ base = "BASE_NPC_ZIGURANTH", define_as = "PROTECTOR_MYSSIL",
 		{type="armor", subtype="massive", autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=1, {unique=true} },
-	resolvers.drops{chance=100, nb=3, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=4, {tome_drops="boss"} },
 
 	combat_armor = 5, combat_def = 10,
 	resolvers.talents{

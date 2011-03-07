@@ -51,8 +51,8 @@ newEntity{ define_as = "WRATHROOT",
 	resists = { [DamageType.FIRE] = -50 },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	equipment = resolvers.equip{ {type="armor", subtype="shield", defined="WRATHROOT_SHIELD", random_art_replace={chance=75}, autoreq=true}, },
-	drops = resolvers.drops{chance=100, nb=5, {ego_chance=100} },
+	resolvers.equip{ {type="armor", subtype="shield", defined="WRATHROOT_SHIELD", random_art_replace={chance=75}, autoreq=true}, },
+	resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
 
 	resolvers.talents{
 		[Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=2,
@@ -111,7 +111,8 @@ newEntity{ define_as = "SNAPROOT", -- backup guardian
 	resists = { [DamageType.FIRE] = -20, [DamageType.PHYSICAL] = 50, [DamageType.COLD] = 50, [DamageType.NATURE] = 25 },
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.drops{chance=100, nb=1, {defined="PETRIFIED_WOOD", random_art_replace={chance=75}}},
-	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
+	resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
+
 	resolvers.talents{
 		[Talents.T_STUN]=5,
 		[Talents.T_GRAB]=5,
