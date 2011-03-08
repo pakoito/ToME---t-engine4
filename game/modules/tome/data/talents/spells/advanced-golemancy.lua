@@ -19,38 +19,9 @@
 local Chat = require "engine.Chat"
 
 newTalent{
-	name = "Mana Tap",
+	name = "Life Tap", short_name = "GOLEMANCY_LIFE_TAP",
 	type = {"spell/advanced-golemancy", 1},
 	require = spells_req_high1,
-	points = 5,
-	mana = 0,
-	cooldown = 14,
-	tactical = { MANA = 2 },
-	getPower = function(self, t) return 40 + self:combatTalentSpellDamage(t, 15, 150) end,
-	action = function(self, t)
-		local mover, golem = getGolem(self)
-		if not golem then
-			game.logPlayer(self, "Your golem is currently inactive.")
-			return
-		end
-
-		local power = math.min(t.getPower(self, t), golem:getMana())
-		golem:incMana(-power)
-		self:incMana(power)
-		game:playSoundNear(self, "talents/arcane")
-		return true
-	end,
-	info = function(self, t)
-		local power=t.getPower(self, t)
-		return ([[You tap into your golem's mana pool to replenish your own. Drains %d mana.]]):
-		format(power)
-	end,
-}
-
-newTalent{
-	name = "Life Tap", short_name = "GOLEMANCY_LIFE_TAP",
-	type = {"spell/advanced-golemancy", 2},
-	require = spells_req_high2,
 	points = 5,
 	mana = 25,
 	cooldown = 12,
@@ -79,8 +50,8 @@ newTalent{
 
 newTalent{
 	name = "Gem Golem",
-	type = {"spell/advanced-golemancy",3},
-	require = spells_req_high3,
+	type = {"spell/advanced-golemancy",2},
+	require = spells_req_high2,
 	mode = "passive",
 	points = 5,
 	info = function(self, t)
@@ -89,6 +60,57 @@ newTalent{
 		Gem changing is done when refitting your golem (use Refit Golem at full life).]]):format(self:getTalentLevelRaw(t))
 	end,
 }
+
+newTalent{
+	name = "Supercharge Golem",
+	type = {"spell/advanced-golemancy", 3},
+	require = spells_req_high3,
+	points = 5,
+	mana = 20,
+	cooldown = function(self, t) return math.floor(25 - self:getTalentLevel(t)) end,
+	tactical = { DEFEND = 1, ATTACK=1 },
+	getPower = function(self, t) return (60 + self:combatTalentSpellDamage(t, 15, 450)) / 7, 7, 20 + self:getTalentLevel(t) * 7 end,
+	action = function(self, t)
+		local regen, dur, hp = t.getPower(self, t)
+
+		-- ressurect the golem
+		if not game.level:hasEntity(self.alchemy_golem) or self.alchemy_golem.dead then
+			self.alchemy_golem.dead = nil
+			self.alchemy_golem.life = self.alchemy_golem.max_life / 100 * hp
+
+			-- Find space
+			local x, y = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
+			if not x then
+				game.logPlayer(self, "Not enough space to supercharge!")
+				return
+			end
+			game.zone:addEntity(game.level, self.alchemy_golem, "actor", x, y)
+			self.alchemy_golem:setTarget(nil)
+			self.alchemy_golem.ai_state.tactic_leash_anchor = self
+			self.alchemy_golem:removeAllEffects()
+		end
+
+		local mover, golem = getGolem(self)
+		if not golem then
+			game.logPlayer(self, "Your golem is currently inactive.")
+			return
+		end
+
+		golem:setEffect(golem.EFF_SUPERCHARGE_GOLEM, dur, {regen=regen})
+
+		game:playSoundNear(self, "talents/arcane")
+		return true
+	end,
+	info = function(self, t)
+		local regen, turns, life = t.getPower(self, t)
+		return ([[You activate a special mode of your golem, boosting its regeneration rate by %0.2f life per turn for %d turns.
+		If your golem was dead it is instantly brought back to life with %d%% life.
+		While supercharged your golem enrages and deals 25%% more damage.]]):
+		format(regen, turns, life)
+	end,
+}
+
+
 
 newTalent{
 	name = "Runic Golem",

@@ -2320,4 +2320,6 @@ function _M:addedToLevel(level, x, y)
 		self.make_escort = nil
 	end
 	self:check("on_added_to_level", level, x, y)
+
+	self.last_act_turn = math.floor(game.turn / 10)
 end

@@ -805,6 +805,25 @@ newEffect{
 }
 
 newEffect{
+	name = "SUPERCHARGE_GOLEM",
+	desc = "Supercharge Golem",
+	long_desc = function(self, eff) return ("The target is supercharged, increasing life regen by %0.2f and damage done by 20%%."):format(eff.regen) end,
+	type = "magical",
+	status = "beneficial",
+	parameters = { regen=10 },
+	on_gain = function(self, err) return "#Target# is overloaded with power.", "+Supercharge" end,
+	on_lose = function(self, err) return "#Target# seems less dangerous.", "-Supercharge" end,
+	activate = function(self, eff)
+		eff.pid = self:addTemporaryValue("inc_damage", {all=25})
+		eff.lid = self:addTemporaryValue("life_regen", eff.regen)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("inc_damage", eff.pid)
+		self:removeTemporaryValue("life_regen", eff.lid)
+	end,
+}
+
+newEffect{
 	name = "POWER_OVERLOAD",
 	desc = "Power Overload",
 	long_desc = function(self, eff) return ("The target radiates incredible power, increasing all damage done by %d%%."):format(eff.power) end,
