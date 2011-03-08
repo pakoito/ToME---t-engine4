@@ -186,13 +186,12 @@ function _M:checkHit(atk, def, min, max, factor)
 	if atk == 0 then atk = 1 end
 	local hit = nil
 	factor = factor or 5
-	if atk > def then
-		local d = atk - def
-		hit = math.log10(1 + 5 * d / 50) * 100 + 50
-	else
-		local d = def - atk
-		hit = -math.log10(1 + 5 * d / 50) * 100 + 50
-	end
+
+	local one = 1 / (1 + math.exp(-(atk - def) / 7))
+	local two = 0
+	if atk + def ~= 0 then two = atk / (atk + def) end
+	hit = 50 * (one + two)
+
 	hit = util.bound(hit, min or 5, max or 95)
 	print("=> chance to hit", hit)
 	return rng.percent(hit), hit
