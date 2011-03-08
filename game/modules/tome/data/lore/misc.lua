@@ -128,7 +128,7 @@ newLore{
 	name = "letter to Weisman (3)",
 	lore = [[Weisman,
 
-The tentacles. I still remember them. They have lashed into my mind as they lashed into my flesh. How can nature abhor such a... a... being in her realm? What dark plane of existence could it have been born from? How can creation itself tolerate such an aberration?!
+The tentacles. I still remember them. They have lashed into my mind as they lashed into my flesh. How can nature abide such a... a... being in her realm? What dark plane of existence could it have been born from? How can creation itself tolerate such an aberration?!
 
 How did we survive? I have no clue. All I can remember is pain, and panic, and fear. All I could think of was getting away, fleeing... to my shame, all other thoughts left me. Thoughts of you, home, the world... all I could do was keep hacking away at the... things between myself and freedom. Perhaps that is why it didn't... no. I shall not think on it. The beast is certain to fill my nightmares tonight, I won't allow it to fill my waking thoughts.
 
