@@ -1499,7 +1499,7 @@ end
 --- Returns the possible offslot
 function _M:getObjectOffslot(o)
 	if o.dual_wieldable and self:attr("allow_any_dual_weapons") then
-		return self.INVEN_OFFHAND
+		return "OFFHAND"
 	else
 		return o.offslot
 	end
