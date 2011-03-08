@@ -712,7 +712,7 @@ end
 
 --- Regenerate life, call it from your actor class act() method
 function _M:regenLife()
-	if self.life_regen then
+	if self.life_regen and not self:attr("no_life_regen") then
 		self.life = util.bound(self.life + self.life_regen * util.bound((self.healing_factor or 1), 0, 2.5), 0, self.max_life)
 	end
 end

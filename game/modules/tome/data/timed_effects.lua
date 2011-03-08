@@ -1524,10 +1524,10 @@ newEffect{
 		DamageType:get(DamageType.DARKNESS).projector(eff.src, self.x, self.y, DamageType.DARKNESS, eff.dam)
 	end,
 	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("life_regen", -self.life_regen)
+		eff.tmpid = self:addTemporaryValue("no_life_regen", 1)
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("life_regen", eff.tmpid)
+		self:removeTemporaryValue("no_life_regen", eff.tmpid)
 	end,
 }
 
