@@ -32,8 +32,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Concentrate on your blows, each strike has %d%% chance to deal an other similar blow for %d turns.
-		This works for all blows, even ones form other talents and shield bashes.
+		return ([[Concentrate on your blows, each strike has %d%% chance to deal another similar blow for %d turns.
+		This works for all blows, even ones from other talents and shield bashes.
 		The chance increases with your Dexterity.]]):format(self:combatTalentStatDamage(t, "dex", 10, 90), math.floor(4 + self:getTalentLevel(t) * 1.3))
 	end,
 }
