@@ -1252,7 +1252,7 @@ function _M:learnStats(statorder)
 
 	while self.unused_stats > 0 do
 		if self:getStat(statorder[self.auto_stat_cnt]) < max then
-			self:incStat(statorder[self.auto_stat_cnt], 1)
+			self:incIncStat(statorder[self.auto_stat_cnt], 1)
 			self.unused_stats = self.unused_stats - 1
 		end
 		self.auto_stat_cnt = util.boundWrap(self.auto_stat_cnt + 1, 1, #statorder)
