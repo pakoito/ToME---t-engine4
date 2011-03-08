@@ -27,9 +27,9 @@ local Separator = require "engine.ui.Separator"
 module(..., package.seeall, class.inherit(Dialog))
 
 local _points_left = [[
-Categories points left: #00FF00#%d#WHITE#
-Class Talents points left: #00FF00#%d#WHITE#
-Generic Talents points left: #00FF00#%d#WHITE#]]
+Category points left: #00FF00#%d#WHITE#
+Class talent points left: #00FF00#%d#WHITE#
+Generic talent points left: #00FF00#%d#WHITE#]]
 
 function _M:init(actor, on_finish)
 	self.actor = actor
