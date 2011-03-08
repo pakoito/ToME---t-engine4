@@ -99,7 +99,7 @@ newTalent{
 	require = spells_req3,
 	points = 5,
 	mode = "sustained",
-	sustain_mana = 150,
+	sustain_mana = 80,
 	cooldown = 30,
 	tactical = { BUFF = 2 },
 	getCooldownReduction = function(self, t) return util.bound(self:getTalentLevelRaw(t) / 15, 0.05, 0.3) end,
