@@ -137,6 +137,10 @@ reenter_derth = function(self)
 		game.level.data.background = nil
 
 		game.player:setQuestStatus(self.id, engine.Quest.COMPLETED, "restored-derth")
-		require("engine.ui.Dialog"):simpleLongPopup("Clear sky", "It seems the mages have kept their word.\nDerth is free of the storm cloud.", 400)
+		if self:isCompleted("tempest-entrance") then
+			require("engine.ui.Dialog"):simpleLongPopup("Clear sky", "It seems the ziguranth have kept their word.\nDerth is free of the storm cloud.", 400)
+		else
+			require("engine.ui.Dialog"):simpleLongPopup("Clear sky", "It seems the mages have kept their word.\nDerth is free of the storm cloud.", 400)
+		end
 	end
 end
