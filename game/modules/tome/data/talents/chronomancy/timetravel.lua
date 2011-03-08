@@ -63,7 +63,7 @@ newTalent{
 	cooldown = 20,
 	no_energy = true,
 	tactical = { ESCAPE = 2, CLOSEIN = 2, BUFF = 2 },
-	getDuration = function(self, t) return 2 + math.floor(self:getTalentLevelRaw(t)/4) end,
+	getDuration = function(self, t) return 1 + math.floor(self:getTalentLevelRaw(t)/4) end,
 	getStun = function(self, t) return 6 - self:getTalentLevelRaw(t) end,
 	action = function(self, t)
 		self:setEffect(self.EFF_BORROWED_TIME, t.getDuration(self, t), {power=t.getStun(self,t)})
@@ -73,7 +73,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local stun = t.getStun(self, t)
 		return ([[You borrow some energy from the future, greatly increasing your global speed for %d turns.  At the end of this time though you'll be stunned for %d turns as you pay back the time you borrowed.
-		]]):format(duration, stun)
+		]]):format(duration + 1, stun)
 	end,
 }
 

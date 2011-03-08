@@ -27,7 +27,7 @@ newTalent{
 	cooldown = 10,
 	tactical = { BUFF = 1, CLOSEIN = 1, ESCAPE = 1 },
 	no_energy = true, 
-	getPower = function(self, t) return 1 - 1 / (1 + ((10 + self:combatTalentSpellDamage(t, 10, 50))/ 100)) end,
+	getPower = function(self, t) return 1 - 1 / (1 + ((10 + self:combatTalentSpellDamage(t, 10, 30))/ 100)) end,
 	activate = function(self, t)
 		local power = t.getPower(self, t)
 		return {

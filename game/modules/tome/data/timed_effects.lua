@@ -3130,6 +3130,7 @@ newEffect{
 	end,
 }
 
+-- Borrowed Time and the Borrowed Time stun effect
 newEffect{
 	name = "BORROWED_TIME",
 	desc = "Borrowed Time",
@@ -3142,7 +3143,25 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("energy", eff.tmpid)
-		self:setEffect(self.EFF_STUNNED, eff.power, {})
+		self:setEffect(self.EFF_TEMPORAL_STUN, eff.power, {})
+	end,
+}
+
+newEffect{
+	name = "TEMPORAL_STUN",
+	desc = "Temporal Stun",
+	long_desc = function(self, eff) return "The target is stunned, preventing any actions." end,
+	type = "time",  -- Time so very little can remove it.
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# is stunned!", "+Stunned" end,
+	on_lose = function(self, err) return "#Target# is not stunned anymore.", "-Stunned" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("time_stun", 1)
+		eff.dur = self:updateEffectDuration(eff.dur, "time_stun")
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("time_stun", eff.tmpid)
 	end,
 }
 

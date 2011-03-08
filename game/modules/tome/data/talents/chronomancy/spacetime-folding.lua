@@ -26,8 +26,8 @@ newTalent{
 	cooldown = 10,
 	tactical = { BUFF = 2 },
 	points = 5,
-	getDamage = function(self, t) return 3 + ((self:combatSpellpower() / 10) * self:getTalentLevel(t)) end,
-	getArmorPen = function(self, t) return 2 + ((self:combatSpellpower() / 20) * self:getTalentLevel(t)) end,
+	getDamage = function(self, t) return (2 * self:getTalentLevel(t)) + self:combatTalentSpellDamage(t, 10, 70) end,
+	getArmorPen = function(self, t) return (1 * self:getTalentLevel(t)) + self:combatTalentSpellDamage(t, 5, 15) end,
 	activate = function(self, t)
 		return {}
 	end,

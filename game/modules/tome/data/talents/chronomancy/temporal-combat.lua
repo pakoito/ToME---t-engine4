@@ -26,13 +26,12 @@ newTalent{
 	sustain_paradox = 75,
 	cooldown = 18,
 	tactical = { BUFF = 2 },
-	getPercentage = function(self, t) return ((15 + (self:getTalentLevel(t) * 5)) / 100) end,
-	getPower = function(self, t) return math.floor (self:getWil() * t.getPercentage(self, t)) end,
+	getPower = function(self, t) return math.ceil((self:getTalentLevel(t) * 1.5) + self:combatTalentStatDamage(t, "wil", 5, 20)) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/arcane")
 		return {
 			stats = self:addTemporaryValue("inc_stats", {[self.STAT_STR] = t.getPower(self, t)}),
-			phys = self:addTemporaryValue("combat_physresist", t.getPower(self, t)/2),
+			phys = self:addTemporaryValue("combat_physresist", t.getPower(self, t)),
 			particle = self:addParticles(Particles.new("temporal_focus", 1)),
 		}
 	end,
@@ -43,11 +42,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local percentage = t.getPercentage(self, t) * 100
 		local power = t.getPower(self, t)
-		return ([[You've learned to overcome physical obstacles through mental determination.  Increases your strength by %d%% of your willpower and your physical saves by %d%% of your willpower.
-		Strength increase: %d.
-		Physical Save increase: %d.]]):format(percentage, percentage/2, power, power/2)
+		return ([[You've learned to boost your strength through your control of the spacetime continuum.  Increases your strength and your physical saves by %d.
+		The effect will scale with your Willpower stat.]]):format(power)
 	end
 }
 
@@ -80,13 +77,12 @@ newTalent{
 	sustain_paradox = 75,
 	cooldown = 18,
 	tactical = { BUFF = 2 },
-	getPercentage = function(self, t) return ((15 + (self:getTalentLevel(t) * 5)) / 100) end,
-	getPower = function(self, t) return math.floor (self:getWil() * t.getPercentage(self, t)) end,
+	getPower = function(self, t) return math.ceil((self:getTalentLevel(t) * 1.5) + self:combatTalentStatDamage(t, "wil", 5, 20)) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/arcane")
 		return {
 			stats = self:addTemporaryValue("inc_stats", {[self.STAT_MAG] = t.getPower(self, t)}),
-			spell = self:addTemporaryValue("combat_spellresist", t.getPower(self, t)/2),
+			spell = self:addTemporaryValue("combat_spellresist", t.getPower(self, t)),
 			particle = self:addParticles(Particles.new("arcane_power", 1)),
 		}
 	end,
@@ -97,11 +93,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local percentage = t.getPercentage(self, t) * 100
 		local power = t.getPower(self, t)
-		return ([[You've learned to use some of your physical reserves to improve your control over the spacetime continuum.  Increases your magic by %d%% of your willpower and your spell saves by %d%% of your willpower.
-		Magic increase: %d.
-		Spell Save increase: %d.]]):format(percentage, percentage/2, power, power/2)
+		return ([[You've learned to boost your magic through your control over the spacetime continuum.  Increases your magic and your spell saves by %d.
+		The effect will scale with your Willpower stat.]]):format(power)
 	end
 }
 
