@@ -399,6 +399,7 @@ newInscription{
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_spell = true,
+	no_energy = true,
 	tactical = { BUFF = 2 },
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
