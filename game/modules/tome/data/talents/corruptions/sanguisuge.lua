@@ -54,7 +54,8 @@ newTalent{
 	range = 10,
 	tactical = { VIM = 1 },
 	action = function(self, t)
-		if self.max_life * 0.4 >= self.life then
+		local amount = self.max_life * 0.4
+		if self.life <= amount + 1 then
 			game.logPlayer(self, "Doing this would kill you.")
 			return
 		end
@@ -73,7 +74,7 @@ newTalent{
 		end
 
 		self:incVim(30 + self:combatTalentSpellDamage(t, 5, 150))
-		self:takeHit(self.max_life * 0.4, self)
+		self:takeHit(amount, self)
 		game:playSoundNear(self, "talents/spell_generic2")
 		return true
 	end,
