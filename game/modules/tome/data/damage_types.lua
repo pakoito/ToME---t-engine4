@@ -176,7 +176,11 @@ newDamageType{
 		if src.fire_convert_to then
 			return DamageType:get(src.fire_convert_to[1]).projector(src, x, y, src.fire_convert_to[1], dam * src.fire_convert_to[2] / 100)
 		end
-		return DamageType.defaultProjector(src, x, y, type, dam)
+		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
+		if realdam > 0 then
+			if src.player then world:gainAchievement("PYROMANCER", src, realdam) end
+		end
+		return realdam
 	end,
 }
 newDamageType{
@@ -184,6 +188,9 @@ newDamageType{
 	antimagic_resolve = true,
 	projector = function(src, x, y, type, dam)
 		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
+		if realdam > 0 then
+			if src.player then world:gainAchievement("CRYOMANCER", src, realdam) end
+		end
 		return realdam
 	end,
 }
