@@ -773,7 +773,7 @@ end
 --- Alter any entity filters to process tome specific loot tables
 -- Here be magic! We tweak and convert and turn and create filters! It's magic but it works :)
 function _M:entityFilterAlter(zone, level, type, filter)
-	if type ~= "object" then return end
+	if type ~= "object" then return filter end
 
 	if not filter.tome and not filter.defined and not filter.special and not filter.unique and not filter.ego_chance and not filter.ego_filter and not filter.no_tome_drops then filter.tome = default_drops(zone, level, filter.tome_drops or "normal") end
 
