@@ -36,7 +36,12 @@ newTalent{
 	tactical = { DEFEND = 1, DISABLE = 3 },
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
-		self:project(tg, self.x, self.y, DamageType.CONFUSION, {dur=3, dam=40 + 6 * self:getTalentLevel(t)}, {type="flame"})
+		self:project(tg, self.x, self.y, DamageType.CONFUSION, {
+			dur=3,
+			dam=40 + 6 * self:getTalentLevel(t),
+			power_check=function() return self:combatAttackStr() end,
+			resist_check=self.combatPhysicalResist,
+		}, {type="flame"})
 		return true
 	end,
 	info = function(self, t)
