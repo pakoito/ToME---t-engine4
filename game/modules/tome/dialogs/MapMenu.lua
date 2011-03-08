@@ -65,7 +65,7 @@ function _M:use(item)
 
 	local act = item.action
 
-	if act == "move_to" then game.player:mouseMove(self.tmx, self.tmy)
+	if act == "move_to" then game.player:mouseMove(self.tmx, self.tmy, true)
 	elseif act == "control" then game.party:setPlayer(item.actor)
 	elseif act == "order" then game.party:giveOrders(item.actor)
 	elseif act == "change_level" then game.key:triggerVirtual("CHANGE_LEVEL")

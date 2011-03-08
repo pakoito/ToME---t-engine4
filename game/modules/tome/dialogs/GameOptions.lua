@@ -110,21 +110,12 @@ function _M:generateList()
 		self.c_list:drawItem(item)
 	end,}
 
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Enables of disables day/night light variations effects..#WHITE#"}
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Enables or disables day/night light variations effects..#WHITE#"}
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Day/night light cycle#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.tome.daynight and "enabled" or "disabled")
 	end, fct=function(item)
 		config.settings.tome.daynight = not config.settings.tome.daynight
 		game:saveSettings("tome.daynight", ("tome.daynight = %s\n"):format(tostring(config.settings.tome.daynight)))
-		self.c_list:drawItem(item)
-	end,}
-
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Enables smooth fog-of-war.\nDisabling it will make the fog of war look 'blocky' but might gain a slight performance increase.#WHITE#"}
-	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Smooth fog of war#WHITE##{normal}#", status=function(item)
-		return tostring(config.settings.tome.smooth_fov and "enabled" or "disabled")
-	end, fct=function(item)
-		config.settings.tome.smooth_fov = not config.settings.tome.smooth_fov
-		game:saveSettings("tome.smooth_fov", ("tome.smooth_fov = %s\n"):format(tostring(config.settings.tome.smooth_fov)))
 		self.c_list:drawItem(item)
 	end,}
 
@@ -180,6 +171,15 @@ function _M:generateList()
 			config.settings.tome.fonts.size = sel.size
 			self.c_list:drawItem(item)
 		end)
+	end,}
+
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Enables easy movement using the mouse by left-clicking on the map.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Use mouse to move#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.mouse_move and "enabled" or "disabled")
+	end, fct=function(item)
+		config.settings.mouse_move = not config.settings.mouse_move
+		game:saveSettings("mouse_move", ("mouse_move = %s\n"):format(tostring(config.settings.mouse_move)))
+		self.c_list:drawItem(item)
 	end,}
 
 	self.list = list

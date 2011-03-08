@@ -556,14 +556,14 @@ end
 
 --- Move with the mouse
 -- We just feed our spotHostile to the interface mouseMove
-function _M:mouseMove(tmx, tmy)
+function _M:mouseMove(tmx, tmy, force_move)
 	local astar_check = function(x, y)
 		-- Dont do traps
 		local trap = game.level.map(x, y, Map.TRAP)
 		if trap and trap:knownBy(self) and trap:canTrigger(x, y, self, true) then return false end
 		return true
 	end
-	return engine.interface.PlayerMouse.mouseMove(self, tmx, tmy, spotHostiles, astar_check)
+	return engine.interface.PlayerMouse.mouseMove(self, tmx, tmy, spotHostiles, astar_check, force_move)
 end
 
 --- Called after running a step

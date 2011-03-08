@@ -20,6 +20,7 @@
 require "engine.class"
 local Astar = require"engine.Astar"
 local DirectPath = require"engine.DirectPath"
+local Map = require "engine.Map"
 
 --- Handles player default mouse actions
 -- Defines some methods to help use the mouse in an uniform way in all modules
@@ -33,7 +34,7 @@ module(..., package.seeall, class.make)
 -- @param tmy the coords clicked
 -- @param spotHostiles a function taking only the player as a parameter that must return true if hostiles are in sight
 -- @param astar_check nil or a function to check each tile on the astar path for passability
-function _M:mouseMove(tmx, tmy, spotHostiles, astar_check)
+function _M:mouseMove(tmx, tmy, spotHostiles, astar_check, force_move)
 	tmx = util.bound(tmx, 0, game.level.map.w - 1)
 	tmy = util.bound(tmy, 0, game.level.map.h - 1)
 
@@ -45,30 +46,36 @@ function _M:mouseMove(tmx, tmy, spotHostiles, astar_check)
 		if self.x == tmx and self.y == tmy then self:useEnergy() return end
 
 		-- If hostiles, attack!
-		if (spotHostiles and spotHostiles(self)) or math.floor(core.fov.distance(self.x, self.y, tmx, tmy)) == 1 then
+		-- Expand logic for clarity
+		local test_actor = game.level.map(tmx, tmy, Map.ACTOR)
+		local test_hostile = spotHostiles and spotHostiles(self)
+		local test_adjacent = math.floor(core.fov.distance(self.x, self.y, tmx, tmy)) == 1
+		if ((config.settings.mouse_move or force_move) and (test_hostile or test_adjacent)) or (not config.settings.mouse_move and test_adjacent and test_actor) then
 			local l = line.new(self.x, self.y, tmx, tmy)
 			local nx, ny = l()
 			self:move(nx or self.x, ny or self.y)
 			return
 		end
 
-		local a = Astar.new(game.level.map, self)
-		local path = a:calc(self.x, self.y, tmx, tmy, true, nil, astar_check)
-		-- No Astar path ? just be dumb and try direct line
-		if not path then
-			local d = DirectPath.new(game.level.map, self)
-			path = d:calc(self.x, self.y, tmx, tmy, true)
-		end
-
-		if path then
-			-- Should we just try to move in the direction, aka: attack!
-			if path[1] and game.level.map:checkAllEntities(path[1].x, path[1].y, "block_move", self) then self:move(path[1].x, path[1].y) return end
-
-			 -- Insert the player coords, running needs to find the player
-			table.insert(path, 1, {x=self.x, y=self.y})
-
-			-- Move along the projected A* path
-			self:runFollow(path)
+		if config.settings.mouse_move or force_move then
+			local a = Astar.new(game.level.map, self)
+			local path = a:calc(self.x, self.y, tmx, tmy, true, nil, astar_check)
+			-- No Astar path ? just be dumb and try direct line
+			if not path then
+				local d = DirectPath.new(game.level.map, self)
+				path = d:calc(self.x, self.y, tmx, tmy, true)
+			end
+	
+			if path then
+				-- Should we just try to move in the direction, aka: attack!
+				if path[1] and game.level.map:checkAllEntities(path[1].x, path[1].y, "block_move", self) then self:move(path[1].x, path[1].y) return end
+	
+				 -- Insert the player coords, running needs to find the player
+				table.insert(path, 1, {x=self.x, y=self.y})
+	
+				-- Move along the projected A* path
+				self:runFollow(path)
+			end
 		end
 	end
 end
