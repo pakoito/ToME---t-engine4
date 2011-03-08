@@ -19,7 +19,7 @@
 
 local Map = require "engine.Map"
 
-local trap_range = function(self, t) return 0 + math.floor(self:getTalentLevel(self.T_TRAP_LAUNCHER) * 1.2) end
+local trap_range = function(self, t) return 1 + math.floor(self:getTalentLevel(self.T_TRAP_LAUNCHER) * 1.2) end
 
 ----------------------------------------------------------------
 -- Trapping
