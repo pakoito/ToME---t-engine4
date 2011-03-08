@@ -18,10 +18,11 @@
 -- darkgod@te4.org
 
 -- Undead talents
-newTalentType{ type="undead/ghoul", name = "ghoul", generic = true, description = "Ghouls' innate abilities." }
-newTalentType{ type="undead/skeleton", name = "skeleton", generic = true, description = "Skeletons' innate abilities." }
-newTalentType{ type="undead/vampire", name = "vampire", generic = true, description = "Vampires' innate abilities." }
-newTalentType{ type="undead/lich", name = "lich", generic = true, description = "Liches' innate abilities." }
+newTalentType{ type="undead/base", name = "base", generic = true, description = "Undead's innate abilities." }
+newTalentType{ type="undead/ghoul", name = "ghoul", generic = true, description = "Ghoul's innate abilities." }
+newTalentType{ type="undead/skeleton", name = "skeleton", generic = true, description = "Skeleton's innate abilities." }
+newTalentType{ type="undead/vampire", name = "vampire", generic = true, description = "Vampire's innate abilities." }
+newTalentType{ type="undead/lich", name = "lich", generic = true, description = "Liches innate abilities." }
 
 -- Generic requires for undeads based on talent level
 undeads_req1 = {
@@ -42,3 +43,22 @@ undeads_req5 = {
 
 load("/data/talents/undeads/ghoul.lua")
 load("/data/talents/undeads/skeleton.lua")
+
+
+-- Undeads's power: ID
+newTalent{
+	short_name = "UNDEAD_ID",
+	name = "Knowledge of the Past",
+	type = {"undead/base", 1},
+	no_npc_use = true,
+	on_learn = function(self, t) self.auto_id = 2 end,
+	action = function(self, t)
+		local Chat = require("engine.Chat")
+		local chat = Chat.new("elisa-orb-scrying", {name="Past memories"}, self, {version="undead"})
+		chat:invoke()
+		return true
+	end,
+	info = function(self)
+		return ([[You concentrate for a moment to recall some of your memories as a living being and look for knowledge to identify rare objects.]])
+	end,
+}

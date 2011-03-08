@@ -74,6 +74,7 @@ newBirthDescriptor
 	},
 	inc_stats = { str=1, mag=1, dex=1, wil=1 },
 	experience = 1.15,
+	talents_types = { ["race/higher"]={true, 0} },
 	talents = {
 		[ActorTalents.T_HIGHER_HEAL]=1,
 	},
