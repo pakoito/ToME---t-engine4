@@ -344,7 +344,7 @@ function _M:act()
 	if self:attr("stoned") then self.energy.value = 0 end
 	if self:attr("dazed") then self.energy.value = 0 end
 	if self:attr("time_stun") then self.energy.value = 0 end
-	
+
 	-- Regain natural balance?
 	local equilibrium_level = game.level.map:checkEntity(self.x, self.y, Map.TERRAIN, "equilibrium_level")
 	if equilibrium_level then self:incEquilibrium(equilibrium_level) end
@@ -2214,7 +2214,7 @@ function _M:canBe(what)
 	if what == "pin" and rng.percent(100 * (self:attr("pin_immune") or 0)) then return false end
 	if what == "stun" and rng.percent(100 * (self:attr("stun_immune") or 0)) then return false end
 	if what == "fear" and rng.percent(100 * (self:attr("fear_immune") or 0)) then return false end
-	if what == "knockback" and rng.percent(100 * (self:attr("knockback_immune") or 0)) then return false end
+	if what == "knockback" and (rng.percent(100 * (self:attr("knockback_immune") or 0)) or self:attr("never_move")) then return false end
 	if what == "stone" and rng.percent(100 * (self:attr("stone_immune") or 0)) then return false end
 	if what == "instakill" and rng.percent(100 * (self:attr("instakill_immune") or 0)) then return false end
 	if what == "teleport" and rng.percent(100 * (self:attr("teleport_immune") or 0)) then return false end
