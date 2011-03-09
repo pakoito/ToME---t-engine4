@@ -42,6 +42,7 @@
 #include "serial.h"
 #include "profile.h"
 #include "main.h"
+#include "runner/core.h"
 
 #define WIDTH 800
 #define HEIGHT 600
@@ -794,8 +795,10 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 /**
  * Core entry point.
  */
-int _te4_export te4main(int argc, char *argv[])
+void _te4_export te4main(int argc, char *argv[], core_boot_type *core_def)
 {
+	core_def->corenum = 0;
+
 	// Get cpu cores
 	nb_cpus = get_number_cpus();
 	printf("[CPU] Detected %d CPUs\n", nb_cpus);
@@ -821,7 +824,7 @@ int _te4_export te4main(int argc, char *argv[])
 	Uint32 flags=SDL_INIT_VIDEO | SDL_INIT_TIMER;
 	if (SDL_Init (flags) < 0) {
 		printf("cannot initialize SDL: %s\n", SDL_GetError ());
-		return -1;
+		return;
 	}
 
 	// Filter events, to catch the quit event
@@ -836,7 +839,7 @@ int _te4_export te4main(int argc, char *argv[])
 	do_resize(WIDTH, HEIGHT, FALSE);
 	if (screen==NULL) {
 		printf("error opening screen: %s\n", SDL_GetError());
-		return -1;
+		return;
 	}
 	SDL_WM_SetCaption("T4Engine", NULL);
 	SDL_EnableUNICODE(TRUE);
@@ -963,13 +966,13 @@ int _te4_export te4main(int argc, char *argv[])
 				free_profile_thread();
 				lua_close(L);
 				PHYSFS_deinit();
+
+				core_def->corenum = reboot_lua;
+
 				break;
 			}
 		}
 	}
 
 	SDL_Quit();
-
-	// We return the new core to run, if any
-	return reboot_lua;
 }

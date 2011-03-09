@@ -32,11 +32,13 @@
 #include "lauxlib.h"
 #include "lualib.h"
 #include "physfs.h"
+#include "core.h"
+#include "getself.h"
 
 // Load the shared lib containing the core and calls te4main inside it, passing control to that core
-int run_core(int corenum, int argc, char **argv)
+void run_core(core_boot_type *core_def, int argc, char **argv)
 {
-	int (*te4main)(int, char**);
+	int (*te4main)(int, char**, core_boot_type*);
 
 	/******************************************************************
 	 ** Find a core file
@@ -76,9 +78,10 @@ int run_core(int corenum, int argc, char **argv)
 
 	// Get the core
 	lua_getglobal(L, "get_core");
-	lua_pushnumber(L, corenum);
-	lua_call(L, 1, 1);
-	char *core = lua_tostring(L, -1);
+	lua_pushstring(L, core_def->coretype);
+	lua_pushnumber(L, core_def->corenum);
+	lua_call(L, 2, 1);
+	char *core = (char*)lua_tostring(L, -1);
 
 	lua_close(L);
 	PHYSFS_deinit();
@@ -95,13 +98,13 @@ int run_core(int corenum, int argc, char **argv)
 
 	HINSTANCE handle = LoadLibrary(core);
 	if (!handle) {
-		fprintf(stderr, "Error loading core %d (%s): %d\n", corenum, core, GetLastError());
+		fprintf(stderr, "Error loading core %d (%s): %d\n", core_def->corenum, core, GetLastError());
 		exit(EXIT_FAILURE);
 	}
 
 	te4main = GetProcAddress(handle, "te4main");
 	if (te4main == NULL)  {
-		fprintf(stderr, "Error binding to core %d (%s): %d\n", corenum, core, GetLastError());
+		fprintf(stderr, "Error binding to core %d (%s): %d\n", core_def->corenum, core, GetLastError());
 		exit(EXIT_FAILURE);
 	}
 
@@ -118,7 +121,7 @@ int run_core(int corenum, int argc, char **argv)
 
 	void *handle = dlopen(core, RTLD_LAZY);
 	if (!handle) {
-		fprintf(stderr, "Error loading core %d (%s): %s\n", corenum, core, dlerror());
+		fprintf(stderr, "Error loading core %d (%s): %s\n", core_def->corenum, core, dlerror());
 		exit(EXIT_FAILURE);
 	}
 
@@ -134,19 +137,17 @@ int run_core(int corenum, int argc, char **argv)
 	*(void **) (&te4main) = dlsym(handle, "te4main");
 
 	if ((error = dlerror()) != NULL)  {
-		fprintf(stderr, "Error binding to core %d (%s): %s\n", corenum, core, error);
+		fprintf(stderr, "Error binding to core %d (%s): %s\n", core_def->corenum, core, error);
 		exit(EXIT_FAILURE);
 	}
 
 	// Run the core
-	corenum = te4main(argc, argv);
+	te4main(argc, argv, core_def);
 
 	dlclose(handle);
 #endif
 
 	free(core);
-
-	return corenum;
 }
 
 // Let some platforms use a different entry point
@@ -159,10 +160,19 @@ int run_core(int corenum, int argc, char **argv)
 
 int main(int argc, char **argv)
 {
-	int core = 12;
+	core_boot_type core_def;
+
+	core_def.corenum = -1; // Start with latest core
+	core_def.coretype = "te4core";
+	core_def.reboot_engine = NULL;
+	core_def.reboot_engine_version = NULL;
+	core_def.reboot_module = NULL;
+	core_def.reboot_name = NULL;
+	core_def.reboot_einfo = NULL;
+	core_def.reboot_new = 0;
 
 	// Run the requested cores until we want no more
-	while (core) core = run_core(core, argc, argv);
+	while (core_def.corenum) run_core(&core_def, argc, argv);
 
 	exit(EXIT_SUCCESS);
 }
