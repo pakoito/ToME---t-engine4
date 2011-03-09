@@ -52,7 +52,8 @@ bool no_debug = FALSE;
 int current_mousehandler = LUA_NOREF;
 int current_keyhandler = LUA_NOREF;
 int current_game = LUA_NOREF;
-bool reboot_lua = FALSE, reboot_new = FALSE;
+int reboot_lua = 0;
+bool reboot_new = FALSE;
 char *request_profile = "default";
 char *reboot_engine = NULL, *reboot_engine_version = NULL, *reboot_module = NULL, *reboot_name = NULL, *reboot_einfo = NULL;
 bool exit_engine = FALSE;
@@ -666,7 +667,7 @@ void do_resize(int w, int h, bool fullscreen)
 
 void boot_lua(int state, bool rebooting, int argc, char *argv[])
 {
-	reboot_lua = FALSE;
+	reboot_lua = 0;
 
 	if (state == 1)
 	{
@@ -791,18 +792,9 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 }
 
 /**
- * Program entry point.
+ * Core entry point.
  */
-
-// Let some platforms use a different entry point
-#ifdef USE_TENGINE_MAIN
-#ifdef main
-#undef main
-#endif
-#define main tengine_main
-#endif
-
-int main(int argc, char *argv[])
+int _te4_export te4main(int argc, char *argv[])
 {
 	// Get cpu cores
 	nb_cpus = get_number_cpus();
@@ -810,9 +802,6 @@ int main(int argc, char *argv[])
 
 	// RNG init
 	init_gen_rand(time(NULL));
-
-	// Change to line buffering
-//	setvbuf(stdout, (char *) NULL, _IOLBF, 0);
 
 	// Parse arguments
 	int i;
@@ -825,6 +814,7 @@ int main(int argc, char *argv[])
 		if (!strncmp(arg, "-E", 2)) reboot_einfo = strdup(arg+2);
 		if (!strncmp(arg, "-n", 2)) reboot_new = TRUE;
 		if (!strncmp(arg, "--no-debug", 10)) no_debug = TRUE;
+		if (!strncmp(arg, "--flush-stdout", 14)) setvbuf(stdout, (char *) NULL, _IOLBF, 0);;
 	}
 
 	// initialize engine and set up resolution and depth
@@ -958,14 +948,28 @@ int main(int argc, char *argv[])
 		/* Reboot the lua engine */
 		if (reboot_lua)
 		{
-			tickPaused = FALSE;
-			setupRealtime(0);
-			boot_lua(1, TRUE, argc, argv);
-			boot_lua(2, TRUE, argc, argv);
+			// Just reboot the lua VM
+			if (reboot_lua == TE4CORE_VERSION)
+			{
+				tickPaused = FALSE;
+				setupRealtime(0);
+				boot_lua(1, TRUE, argc, argv);
+				boot_lua(2, TRUE, argc, argv);
+			}
+			// Clean up and tell the runner to run a different core
+			else
+			{
+				free_particles_thread();
+				free_profile_thread();
+				lua_close(L);
+				PHYSFS_deinit();
+				break;
+			}
 		}
 	}
 
 	SDL_Quit();
 
-	return 0;
+	// We return the new core to run, if any
+	return reboot_lua;
 }

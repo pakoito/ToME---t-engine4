@@ -949,7 +949,7 @@ function util.showMainMenu(no_reboot, reboot_engine, reboot_engine_version, rebo
 	else
 		-- Tell the C engine to discard the current lua state and make a new one
 		print("[MAIN] rebooting lua state: ", reboot_engine, reboot_engine_version, reboot_module, reboot_name, reboot_new)
-		core.game.reboot(reboot_engine or "te4", reboot_engine_version or "LATEST", reboot_module or "boot", reboot_name or "player", reboot_new, reboot_einfo or "")
+		core.game.reboot(-1, reboot_engine or "te4", reboot_engine_version or "LATEST", reboot_module or "boot", reboot_name or "player", reboot_new, reboot_einfo or "")
 	end
 end
 

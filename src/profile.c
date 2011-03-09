@@ -167,6 +167,22 @@ int thread_profile(void *data)
 }
 
 // Runs on main thread
+void free_profile_thread()
+{
+	if (!main_profile) return;
+	profile_type *profile = main_profile;
+	profile->running = FALSE;
+
+	int status;
+	SDL_WaitThread(profile->thread, &status);
+
+	SDL_DestroyMutex(profile->lock_iqueue);
+	SDL_DestroySemaphore(profile->wait_iqueue);
+	SDL_DestroyMutex(profile->lock_oqueue);
+	SDL_DestroySemaphore(profile->wait_oqueue);
+}
+
+// Runs on main thread
 int create_profile_thread(lua_State *L)
 {
 	if (main_profile) return 0;

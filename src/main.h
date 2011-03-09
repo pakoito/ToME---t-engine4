@@ -21,6 +21,16 @@
 #ifndef _MAIN_H_
 #define _MAIN_H_
 
+#if defined(SELFEXE_LINUX)
+#define _te4_export
+#elif defined(SELFEXE_WINDOWS)
+#define _te4_export __declspec(dllexport)
+#elif defined(SELFEXE_MACOSX)
+#define _te4_export
+#else
+#define _te4_export
+#endif
+
 extern int resizeWindow(int width, int height);
 extern void do_resize(int w, int h, bool fullscreen);
 extern void setupRealtime(float freq);

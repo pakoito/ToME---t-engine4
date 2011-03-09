@@ -142,7 +142,8 @@ static int lua_exit_engine(lua_State *L)
 	exit_engine = TRUE;
 	return 0;
 }
-extern bool reboot_lua, reboot_new;
+extern int reboot_lua;
+extern bool reboot_new;
 extern char *reboot_engine, *reboot_engine_version, *reboot_module, *reboot_name, *reboot_einfo;
 static int lua_reboot_lua(lua_State *L)
 {
@@ -152,12 +153,16 @@ static int lua_reboot_lua(lua_State *L)
 	if (reboot_name) free(reboot_name);
 	if (reboot_einfo) free(reboot_einfo);
 
-	reboot_engine = (char *)luaL_checkstring(L, 1);
-	reboot_engine_version = (char *)luaL_checkstring(L, 2);
-	reboot_module = (char *)luaL_checkstring(L, 3);
-	reboot_name = (char *)luaL_checkstring(L, 4);
-	reboot_new = lua_toboolean(L, 5);
-	reboot_einfo = (char *)luaL_checkstring(L, 6);
+	reboot_lua = luaL_checknumber(L, 1);
+	reboot_engine = (char *)luaL_checkstring(L, 2);
+	reboot_engine_version = (char *)luaL_checkstring(L, 3);
+	reboot_module = (char *)luaL_checkstring(L, 4);
+	reboot_name = (char *)luaL_checkstring(L, 5);
+	reboot_new = lua_toboolean(L, 6);
+	reboot_einfo = (char *)luaL_checkstring(L, 7);
+
+	// By default reboot the same core -- this skips some initializations
+	if (reboot_lua == -1) reboot_lua = TE4CORE_VERSION;
 
 	if (reboot_engine) reboot_engine = strdup(reboot_engine);
 	if (reboot_engine_version) reboot_engine_version = strdup(reboot_engine_version);
@@ -165,7 +170,6 @@ static int lua_reboot_lua(lua_State *L)
 	if (reboot_name) reboot_name = strdup(reboot_name);
 	if (reboot_einfo) reboot_einfo = strdup(reboot_einfo);
 
-	reboot_lua = TRUE;
 	return 0;
 }
 static int lua_get_time(lua_State *L)
@@ -2243,8 +2247,8 @@ static int lua_fs_umount(lua_State *L)
 		return 2;
 	}
 	lua_pushboolean(L, TRUE);
-	
-	return 1;	
+
+	return 1;
 }
 
 static int lua_fs_get_real_path(lua_State *L)
@@ -2452,7 +2456,7 @@ int luaopen_core(lua_State *L)
 
 	luaL_openlib(L, "core.game", gamelib, 0);
 	lua_pushstring(L, "VERSION");
-	lua_pushnumber(L, 11);
+	lua_pushnumber(L, TE4CORE_VERSION);
 	lua_settable(L, -3);
 
 	luaL_openlib(L, "rng", rnglib, 0);

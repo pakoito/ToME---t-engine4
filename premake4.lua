@@ -27,6 +27,9 @@ newoption {
 
 _OPTIONS.lua = _OPTIONS.lua or "default"
 
+TE4CORE_VERSION = 12
+corename = "te4core-"..TE4CORE_VERSION
+
 solution "TEngine"
 	configurations { "Debug", "Release" }
 	objdir "obj"
@@ -84,14 +87,32 @@ configuration "Release"
 	buildoptions { "-O3" }
 	targetdir "bin/Release"
 
-project "TEngine"
+project "TEngineRunner"
 	kind "WindowedApp"
 	language "C"
 	targetname "t-engine"
+	files { "src/runner/*.c", }
+	links { "dl" }
+configuration {"linux", "Debug"}
+	postbuildcommands { "cp bin/Debug/t-engine t-engine", }
+configuration {"linux", "Release"}
+	postbuildcommands { "cp bin/Release/t-engine t-engine", }
+configuration "linux"
+        defines { 'SELFEXE_LINUX'  }
+configuration "windows"
+        defines { 'SELFEXE_WINDOWS'  }
+configuration "macosx"
+        defines { "USE_TENGINE_MAIN", 'SELFEXE_MACOSX'  }
+
+project "TEngine"
+	targetprefix ""
+	kind "SharedLib"
+	language "C"
+	targetname(corename)
 	files { "src/*.c", }
 	links { "physfs", "lua".._OPTIONS.lua, "fov", "luasocket", "luaprofiler", "lualanes", "lpeg", "tcodimport", "lxp", "expatstatic", "luamd5", "luazlib" }
 	defines { "_DEFAULT_VIDEOMODE_FLAGS_='SDL_HWSURFACE|SDL_DOUBLEBUF'" }
-	defines { [[TENGINE_HOME_PATH='".t-engine"']] }
+	defines { [[TENGINE_HOME_PATH='".t-engine"']], "TE4CORE_VERSION="..TE4CORE_VERSION }
 
 configuration "macosx"
 	linkoptions { "-framework SDL", "-framework SDL_image", "-framework SDL_ttf", "-framework SDL_mixer", "-framework Cocoa", "-framework OpenGL" }
@@ -112,7 +133,7 @@ configuration "windows"
 	linkoptions { "-mwindows" }
 	links { "mingw32", "SDLmain", "SDL", "SDL_ttf", "SDL_image", "SDL_mixer", "OPENGL32", "GLU32", "wsock32" }
 	defines { [[TENGINE_HOME_PATH='"T-Engine"']], 'SELFEXE_WINDOWS' }
-	prebuildcommands { "windres src/windows/icon.rc -O coff -o src/windows/icon.res" } 
+	prebuildcommands { "windres src/windows/icon.rc -O coff -o src/windows/icon.res" }
 	linkoptions { "src/windows/icon.res" }
 
 
@@ -121,9 +142,9 @@ configuration "linux"
 	defines { [[TENGINE_HOME_PATH='".t-engine"']], 'SELFEXE_LINUX' }
 
 configuration {"linux", "Debug"}
-	postbuildcommands { "cp bin/Debug/t-engine t-engine", }
+	postbuildcommands { "cp bin/Debug/"..corename.."* game/engines/cores/", }
 configuration {"linux", "Release"}
-	postbuildcommands { "cp bin/Release/t-engine t-engine", }
+	postbuildcommands { "cp bin/Release/"..corename.."* game/engines/cores/", }
 
 
 ----------------------------------------------------------------
