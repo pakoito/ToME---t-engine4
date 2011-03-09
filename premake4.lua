@@ -91,15 +91,15 @@ project "TEngineRunner"
 	kind "WindowedApp"
 	language "C"
 	targetname "t-engine"
-	files { "src/runner/*.c", "src/getself.c" }
-	links { "physfs", "lua".._OPTIONS.lua }
+	files { "src/runner/*.c", "src/getself.c", "src/physfs.c", "src/auxiliar.c" }
+	links { "physfs", "lua".._OPTIONS.lua, "m" }
 configuration "linux"
 	links { "dl" }
-        defines { 'SELFEXE_LINUX'  }
+        defines { [[TENGINE_HOME_PATH='".t-engine"']], 'SELFEXE_LINUX'  }
 configuration "windows"
-        defines { 'SELFEXE_WINDOWS'  }
+        defines { [[TENGINE_HOME_PATH='"T-Engine"']], 'SELFEXE_WINDOWS'  }
 configuration "macosx"
-        defines { "USE_TENGINE_MAIN", 'SELFEXE_MACOSX'  }
+        defines { [[TENGINE_HOME_PATH='".t-engine"']], "USE_TENGINE_MAIN", 'SELFEXE_MACOSX'  }
 configuration {"Debug"}
 	postbuildcommands { "cp bin/Debug/t-engine t-engine", }
 configuration {"Release"}
@@ -107,6 +107,7 @@ configuration {"Release"}
 
 project "TEngine"
 	targetprefix ""
+	targetextension ".tec"
 	kind "SharedLib"
 	language "C"
 	targetname(corename)

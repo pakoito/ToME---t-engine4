@@ -687,9 +687,8 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 		PHYSFS_init(argv[0]);
 
 		selfexe = get_self_executable(argc, argv);
-		if (selfexe)
+		if (selfexe && PHYSFS_mount(selfexe, "/", 1))
 		{
-			PHYSFS_mount(selfexe, "/", 1);
 		}
 		else
 		{
@@ -700,6 +699,7 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 		/***************** Lua Init *****************/
 		L = lua_open();  /* create state */
 		luaL_openlibs(L);  /* open libraries */
+		luaopen_physfs(L);
 		luaopen_core(L);
 		luaopen_fov(L);
 		luaopen_socket_core(L);

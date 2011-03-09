@@ -19,19 +19,25 @@ if __SELFEXE then
 	print("SelfExe gave us app directory of:", dir)
 	fs.mount(dir..fs.getPathSeparator().."game"..fs.getPathSeparator().."thirdparty", "/", true)
 	fs.mount(dir..fs.getPathSeparator().."game", "/", true)
-	if fs.exists("/engine.teae") and fs.exists("/thirdparty.teae") then
-		fs.mount(dir..fs.getPathSeparator().."game/engine.teae", "/", true)
-		fs.mount(dir..fs.getPathSeparator().."game/thirdparty.teae", "/", true)
-		print("Using engine.teae")
-	end
 else
 	fs.mount("game"..fs.getPathSeparator().."thirdparty", "/", true)
 	fs.mount("game", "/", true)
-	if fs.exists("/engine.teae") and fs.exists("/thirdparty.teae") then
-		fs.mount(dir..fs.getPathSeparator().."game/engine.teae", "/", true)
-		fs.mount(dir..fs.getPathSeparator().."game/thirdparty.teae", "/", true)
-		print("Using engine.teae")
+end
+
+-- Look for a core
+function get_core(id)
+	for i, file in ipairs(fs.list("/engines/cores/")) do
+		if file:find("%.tec$") then
+			print("Possible engine core", file)
+		end
 	end
+	local core = "/engines/cores/te4core-"..id..".tec"
+	if fs.exists(core) then
+		local rcore = fs.getRealPath(core)
+		print("Using TE4CORE: ", core, rcore)
+		return rcore
+	end
+	return "NO CORE"
 end
 
 -- We need it no more, lets forget about it just it case some malovelant script tried something silly
