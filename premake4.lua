@@ -91,18 +91,19 @@ project "TEngineRunner"
 	kind "WindowedApp"
 	language "C"
 	targetname "t-engine"
-	files { "src/runner/*.c", }
-	links { "dl" }
-configuration {"linux", "Debug"}
-	postbuildcommands { "cp bin/Debug/t-engine t-engine", }
-configuration {"linux", "Release"}
-	postbuildcommands { "cp bin/Release/t-engine t-engine", }
+	files { "src/runner/*.c", "src/getself.c" }
+	links { "physfs", "lua".._OPTIONS.lua }
 configuration "linux"
+	links { "dl" }
         defines { 'SELFEXE_LINUX'  }
 configuration "windows"
         defines { 'SELFEXE_WINDOWS'  }
 configuration "macosx"
         defines { "USE_TENGINE_MAIN", 'SELFEXE_MACOSX'  }
+configuration {"Debug"}
+	postbuildcommands { "cp bin/Debug/t-engine t-engine", }
+configuration {"Release"}
+	postbuildcommands { "cp bin/Release/t-engine t-engine", }
 
 project "TEngine"
 	targetprefix ""
