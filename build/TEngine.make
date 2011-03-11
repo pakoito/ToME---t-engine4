@@ -29,7 +29,7 @@ ifeq ($(config),debug)
   CFLAGS    += $(CPPFLAGS) $(ARCH) -g -fPIC -ggdb -fPIC
   CXXFLAGS  += $(CFLAGS) 
   LDFLAGS   += -shared -L../bin/Debug
-  LIBS      += -lphysfs -llua -lfov -lluasocket -lluaprofiler -llualanes -llpeg -ltcodimport -llxp -lexpatstatic -lluamd5 -lluazlib -lSDL -lSDL_ttf -lSDL_image -lSDL_mixer -lGL -lGLU -lm -lpthread
+  LIBS      += -lphysfs -llua -lfov -lluasocket -lluaprofiler -llualanes -llpeg -ltcodimport -llxp -lexpatstatic -lluamd5 -lluazlib
   RESFLAGS  += $(DEFINES) $(INCLUDES) 
   LDDEPS    += ../bin/Debug/libphysfs.a ../bin/Debug/liblua.a ../bin/Debug/libfov.a ../bin/Debug/libluasocket.a ../bin/Debug/libluaprofiler.a ../bin/Debug/liblualanes.a ../bin/Debug/liblpeg.a ../bin/Debug/libtcodimport.a ../bin/Debug/liblxp.a ../bin/Debug/libexpatstatic.a ../bin/Debug/libluamd5.a ../bin/Debug/libluazlib.a
   LINKCMD    = $(CC) -o $(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(ARCH) $(LIBS)
@@ -53,7 +53,7 @@ ifeq ($(config),release)
   CFLAGS    += $(CPPFLAGS) $(ARCH) -O2 -fomit-frame-pointer -fPIC -O3 -fPIC
   CXXFLAGS  += $(CFLAGS) 
   LDFLAGS   += -s -shared -L../bin/Release
-  LIBS      += -lphysfs -llua -lfov -lluasocket -lluaprofiler -llualanes -llpeg -ltcodimport -llxp -lexpatstatic -lluamd5 -lluazlib -lSDL -lSDL_ttf -lSDL_image -lSDL_mixer -lGL -lGLU -lm -lpthread
+  LIBS      += -lphysfs -llua -lfov -lluasocket -lluaprofiler -llualanes -llpeg -ltcodimport -llxp -lexpatstatic -lluamd5 -lluazlib
   RESFLAGS  += $(DEFINES) $(INCLUDES) 
   LDDEPS    += ../bin/Release/libphysfs.a ../bin/Release/liblua.a ../bin/Release/libfov.a ../bin/Release/libluasocket.a ../bin/Release/libluaprofiler.a ../bin/Release/liblualanes.a ../bin/Release/liblpeg.a ../bin/Release/libtcodimport.a ../bin/Release/liblxp.a ../bin/Release/libexpatstatic.a ../bin/Release/libluamd5.a ../bin/Release/libluazlib.a
   LINKCMD    = $(CC) -o $(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(ARCH) $(LIBS)

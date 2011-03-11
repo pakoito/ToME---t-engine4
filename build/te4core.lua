@@ -29,9 +29,7 @@ project "TEngine"
 	defines { [[TENGINE_HOME_PATH='".t-engine"']], "TE4CORE_VERSION="..TE4CORE_VERSION }
 
 configuration "macosx"
-	linkoptions { "-framework SDL", "-framework SDL_image", "-framework SDL_ttf", "-framework SDL_mixer", "-framework Cocoa", "-framework OpenGL" }
 	files { "../src/mac/SDL*" }
-        links { "IOKit" }
         includedirs {
               "/System/Library/Frameworks/OpenGL.framework/Headers",
               "/Library/Frameworks/SDL.framework/Headers",
@@ -45,7 +43,7 @@ configuration "macosx"
 
 configuration "windows"
 	linkoptions { "-mwindows" }
-	links { "mingw32", "SDLmain", "SDL", "SDL_ttf", "SDL_image", "SDL_mixer", "OPENGL32", "GLU32", "wsock32" }
+	links { "mingw32" }
 	defines { [[TENGINE_HOME_PATH='"T-Engine"']], 'SELFEXE_WINDOWS' }
 	prebuildcommands { "windres src/windows/icon.rc -O coff -o src/windows/icon.res" }
 	linkoptions { "src/windows/icon.res" }
@@ -53,7 +51,6 @@ configuration "windows"
 
 configuration "linux"
 	buildoptions { "-fPIC" }
-	links { "SDL", "SDL_ttf", "SDL_image", "SDL_mixer", "GL", "GLU", "m", "pthread" }
 	defines { [[TENGINE_HOME_PATH='".t-engine"']], 'SELFEXE_LINUX' }
 
 configuration {"linux", "Debug"}

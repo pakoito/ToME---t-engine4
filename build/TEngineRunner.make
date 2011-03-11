@@ -29,7 +29,7 @@ ifeq ($(config),debug)
   CFLAGS    += $(CPPFLAGS) $(ARCH) -g -ggdb
   CXXFLAGS  += $(CFLAGS) 
   LDFLAGS   += -L../bin/Debug
-  LIBS      += -lrunner-physfs -lrunner-lua -lm -ldl -lpthread
+  LIBS      += -lrunner-physfs -lrunner-lua -lm -ldl -lSDL -lSDL_ttf -lSDL_image -lSDL_mixer -lGL -lGLU -lpthread
   RESFLAGS  += $(DEFINES) $(INCLUDES) 
   LDDEPS    += ../bin/Debug/librunner-physfs.a ../bin/Debug/librunner-lua.a
   LINKCMD    = $(CC) -o $(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(ARCH) $(LIBS)
@@ -53,7 +53,7 @@ ifeq ($(config),release)
   CFLAGS    += $(CPPFLAGS) $(ARCH) -O2 -fomit-frame-pointer -O3
   CXXFLAGS  += $(CFLAGS) 
   LDFLAGS   += -s -L../bin/Release
-  LIBS      += -lrunner-physfs -lrunner-lua -lm -ldl -lpthread
+  LIBS      += -lrunner-physfs -lrunner-lua -lm -ldl -lSDL -lSDL_ttf -lSDL_image -lSDL_mixer -lGL -lGLU -lpthread
   RESFLAGS  += $(DEFINES) $(INCLUDES) 
   LDDEPS    += ../bin/Release/librunner-physfs.a ../bin/Release/librunner-lua.a
   LINKCMD    = $(CC) -o $(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(ARCH) $(LIBS)
