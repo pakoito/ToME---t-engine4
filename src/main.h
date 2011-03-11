@@ -21,6 +21,8 @@
 #ifndef _MAIN_H_
 #define _MAIN_H_
 
+#include "runner/core.h"
+
 #if defined(SELFEXE_LINUX)
 #define _te4_export
 #elif defined(SELFEXE_WINDOWS)
@@ -51,6 +53,7 @@ struct lua_err_type_s {
 typedef struct lua_err_type_s lua_err_type;
 extern lua_err_type *last_lua_error_head, *last_lua_error_tail;
 extern void del_lua_error();
+extern core_boot_type *core_def;
 
 #endif
 

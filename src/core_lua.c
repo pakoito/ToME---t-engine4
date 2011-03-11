@@ -142,33 +142,22 @@ static int lua_exit_engine(lua_State *L)
 	exit_engine = TRUE;
 	return 0;
 }
-extern int reboot_lua;
-extern bool reboot_new;
-extern char *reboot_engine, *reboot_engine_version, *reboot_module, *reboot_name, *reboot_einfo;
 static int lua_reboot_lua(lua_State *L)
 {
-	if (reboot_engine) free(reboot_engine);
-	if (reboot_engine_version) free(reboot_engine_version);
-	if (reboot_module) free(reboot_module);
-	if (reboot_name) free(reboot_name);
-	if (reboot_einfo) free(reboot_einfo);
-
-	reboot_lua = luaL_checknumber(L, 1);
-	reboot_engine = (char *)luaL_checkstring(L, 2);
-	reboot_engine_version = (char *)luaL_checkstring(L, 3);
-	reboot_module = (char *)luaL_checkstring(L, 4);
-	reboot_name = (char *)luaL_checkstring(L, 5);
-	reboot_new = lua_toboolean(L, 6);
-	reboot_einfo = (char *)luaL_checkstring(L, 7);
+	core_def->define(
+		core_def,
+		luaL_checkstring(L, 1),
+		luaL_checknumber(L, 2),
+		luaL_checkstring(L, 3),
+		luaL_checkstring(L, 4),
+		luaL_checkstring(L, 5),
+		luaL_checkstring(L, 6),
+		lua_toboolean(L, 7),
+		luaL_checkstring(L, 8)
+		);
 
 	// By default reboot the same core -- this skips some initializations
-	if (reboot_lua == -1) reboot_lua = TE4CORE_VERSION;
-
-	if (reboot_engine) reboot_engine = strdup(reboot_engine);
-	if (reboot_engine_version) reboot_engine_version = strdup(reboot_engine_version);
-	if (reboot_module) reboot_module = strdup(reboot_module);
-	if (reboot_name) reboot_name = strdup(reboot_name);
-	if (reboot_einfo) reboot_einfo = strdup(reboot_einfo);
+	if (core_def->corenum == -1) core_def->corenum = TE4CORE_VERSION;
 
 	return 0;
 }

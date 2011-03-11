@@ -53,10 +53,7 @@ bool no_debug = FALSE;
 int current_mousehandler = LUA_NOREF;
 int current_keyhandler = LUA_NOREF;
 int current_game = LUA_NOREF;
-int reboot_lua = 0;
-bool reboot_new = FALSE;
-char *request_profile = "default";
-char *reboot_engine = NULL, *reboot_engine_version = NULL, *reboot_module = NULL, *reboot_name = NULL, *reboot_einfo = NULL;
+core_boot_type *core_def = NULL;
 bool exit_engine = FALSE;
 bool no_sound = FALSE;
 bool isActive = TRUE;
@@ -668,7 +665,7 @@ void do_resize(int w, int h, bool fullscreen)
 
 void boot_lua(int state, bool rebooting, int argc, char *argv[])
 {
-	reboot_lua = 0;
+	core_def->corenum = 0;
 
 	if (state == 1)
 	{
@@ -776,14 +773,13 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 		// And run the lua engine scripts
 		if (!luaL_loadfile(L, "/loader/init.lua"))
 		{
-			if (reboot_engine) lua_pushstring(L, reboot_engine); else lua_pushnil(L);
-			if (reboot_engine_version) lua_pushstring(L, reboot_engine_version); else lua_pushnil(L);
-			if (reboot_module) lua_pushstring(L, reboot_module); else lua_pushnil(L);
-			if (reboot_name) lua_pushstring(L, reboot_name); else lua_pushnil(L);
-			lua_pushboolean(L, reboot_new);
-			if (reboot_einfo) lua_pushstring(L, reboot_einfo); else lua_pushnil(L);
-			if (request_profile) lua_pushstring(L, request_profile); else lua_pushnil(L);
-			docall(L, 7, 0);
+			if (core_def->reboot_engine) lua_pushstring(L, core_def->reboot_engine); else lua_pushnil(L);
+			if (core_def->reboot_engine_version) lua_pushstring(L, core_def->reboot_engine_version); else lua_pushnil(L);
+			if (core_def->reboot_module) lua_pushstring(L, core_def->reboot_module); else lua_pushnil(L);
+			if (core_def->reboot_name) lua_pushstring(L, core_def->reboot_name); else lua_pushnil(L);
+			lua_pushboolean(L, core_def->reboot_new);
+			if (core_def->reboot_einfo) lua_pushstring(L, core_def->reboot_einfo); else lua_pushnil(L);
+			docall(L, 6, 0);
 		}
 		else
 		{
@@ -795,8 +791,9 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 /**
  * Core entry point.
  */
-void _te4_export te4main(int argc, char *argv[], core_boot_type *core_def)
+void _te4_export te4main(int argc, char *argv[], core_boot_type *given_core_def)
 {
+	core_def = given_core_def;
 	core_def->corenum = 0;
 
 	// Get cpu cores
@@ -811,13 +808,7 @@ void _te4_export te4main(int argc, char *argv[], core_boot_type *core_def)
 	for (i = 1; i < argc; i++)
 	{
 		char *arg = argv[i];
-		if (!strncmp(arg, "-P", 2)) request_profile = strdup(arg+2);
-		if (!strncmp(arg, "-M", 2)) reboot_module = strdup(arg+2);
-		if (!strncmp(arg, "-u", 2)) reboot_name = strdup(arg+2);
-		if (!strncmp(arg, "-E", 2)) reboot_einfo = strdup(arg+2);
-		if (!strncmp(arg, "-n", 2)) reboot_new = TRUE;
-		if (!strncmp(arg, "--no-debug", 10)) no_debug = TRUE;
-		if (!strncmp(arg, "--flush-stdout", 14)) setvbuf(stdout, (char *) NULL, _IOLBF, 0);;
+		if (!strncmp(arg, "--no-debug", 10)) no_debug = 0;
 	}
 
 	// initialize engine and set up resolution and depth
@@ -949,10 +940,10 @@ void _te4_export te4main(int argc, char *argv[], core_boot_type *core_def)
 		if (!realtime_timer_id && isActive && !tickPaused) on_tick();
 
 		/* Reboot the lua engine */
-		if (reboot_lua)
+		if (core_def->corenum)
 		{
 			// Just reboot the lua VM
-			if (reboot_lua == TE4CORE_VERSION && 0)
+			if (core_def->corenum == TE4CORE_VERSION && 0)
 			{
 				tickPaused = FALSE;
 				setupRealtime(0);
@@ -962,13 +953,10 @@ void _te4_export te4main(int argc, char *argv[], core_boot_type *core_def)
 			// Clean up and tell the runner to run a different core
 			else
 			{
+				lua_close(L);
 				free_particles_thread();
 				free_profile_thread();
-				lua_close(L);
 				PHYSFS_deinit();
-
-				core_def->corenum = reboot_lua;
-
 				break;
 			}
 		}

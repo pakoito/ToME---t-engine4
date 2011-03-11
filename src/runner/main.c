@@ -21,6 +21,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #ifdef SELFEXE_WINDOWS
 #include <windows.h>
@@ -34,6 +35,26 @@
 #include "physfs.h"
 #include "core.h"
 #include "getself.h"
+
+// Update core to run
+void define_core(core_boot_type *core_def, const char *coretype, int id, const char *reboot_engine, const char *reboot_engine_version, const char *reboot_module, const char *reboot_name, int reboot_new, const char *reboot_einfo)
+{
+	if (core_def->coretype) free(core_def->coretype);
+	if (core_def->reboot_engine) free(core_def->reboot_engine);
+	if (core_def->reboot_engine_version) free(core_def->reboot_engine_version);
+	if (core_def->reboot_module) free(core_def->reboot_module);
+	if (core_def->reboot_name) free(core_def->reboot_name);
+	if (core_def->reboot_einfo) free(core_def->reboot_einfo);
+
+	core_def->corenum = id;
+	core_def->coretype = coretype ? strdup(coretype) : NULL;
+	core_def->reboot_engine = reboot_engine ? strdup(reboot_engine) : NULL;
+	core_def->reboot_engine_version = reboot_engine_version ? strdup(reboot_engine_version) : NULL;
+	core_def->reboot_module = reboot_module ? strdup(reboot_module) : NULL;
+	core_def->reboot_name = reboot_name ? strdup(reboot_name) : NULL;
+	core_def->reboot_einfo = reboot_einfo ? strdup(reboot_einfo) : NULL;
+	core_def->reboot_new = reboot_new;
+}
 
 // Load the shared lib containing the core and calls te4main inside it, passing control to that core
 void run_core(core_boot_type *core_def, int argc, char **argv)
@@ -78,7 +99,7 @@ void run_core(core_boot_type *core_def, int argc, char **argv)
 
 	// Get the core
 	lua_getglobal(L, "get_core");
-	lua_pushstring(L, core_def->coretype);
+	if (core_def->coretype) lua_pushstring(L, core_def->coretype); else lua_pushnil(L);
 	lua_pushnumber(L, core_def->corenum);
 	lua_call(L, 2, 1);
 	char *core = strdup((char*)lua_tostring(L, -1));
@@ -160,19 +181,25 @@ void run_core(core_boot_type *core_def, int argc, char **argv)
 
 int main(int argc, char **argv)
 {
-	core_boot_type core_def;
+	core_boot_type *core_def = calloc(1, sizeof(core_boot_type));
 
-	core_def.corenum = -1; // Start with latest core
-	core_def.coretype = "te4core";
-	core_def.reboot_engine = NULL;
-	core_def.reboot_engine_version = NULL;
-	core_def.reboot_module = NULL;
-	core_def.reboot_name = NULL;
-	core_def.reboot_einfo = NULL;
-	core_def.reboot_new = 0;
+	core_def->define = &define_core;
+	core_def->define(core_def, "te4core", -1, NULL, NULL, NULL, NULL, 0, NULL);
+
+	// Parse arguments
+	int i;
+	for (i = 1; i < argc; i++)
+	{
+		char *arg = argv[i];
+		if (!strncmp(arg, "-M", 2)) core_def->reboot_module = strdup(arg+2);
+		if (!strncmp(arg, "-u", 2)) core_def->reboot_name = strdup(arg+2);
+		if (!strncmp(arg, "-E", 2)) core_def->reboot_einfo = strdup(arg+2);
+		if (!strncmp(arg, "-n", 2)) core_def->reboot_new = 0;
+		if (!strncmp(arg, "--flush-stdout", 14)) setvbuf(stdout, (char *) NULL, _IOLBF, 0);;
+	}
 
 	// Run the requested cores until we want no more
-	while (core_def.corenum) run_core(&core_def, argc, argv);
+	while (core_def->corenum) run_core(core_def, argc, argv);
 
 	exit(EXIT_SUCCESS);
 }

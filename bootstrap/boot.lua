@@ -25,7 +25,9 @@ else
 end
 
 -- Look for a core
-function get_core(type, id)
+function get_core(coretype, id)
+	coretype = coretype or "te4core"
+
 	local homepath = fs.getUserPath()..fs.getPathSeparator()..fs.getHomePath()..fs.getPathSeparator().."4.0"
 	fs.mount(homepath, "/", 1)
 
@@ -33,20 +35,23 @@ function get_core(type, id)
 	local usable = {}
 	for i, file in ipairs(fs.list("/engines/cores/")) do
 		if file:find("%.tec$") then
-			print("Possible engine core", file)
-			if id > 0 and file == type.."-"..id..".tec" then usable[#usable+1] = {file=file, id=id}
-			elseif id == -1 and file:find(type) then
+			print("Looking for cores", coretype, id, " <=> ", file)
+			if id > 0 and file == coretype.."-"..id..".tec" then
+				usable[#usable+1] = {file=file, id=id}
+				print("Possible engine core", file)
+			elseif id == -1 and file:find(coretype) then
 				local _, _, cid = file:find("%-([0-9]+)%.tec$")
 				cid = tonumber(cid)
 				if cid then
 					usable[#usable+1] = {file=file, id=cid}
+					print("Possible engine core", file)
 				end
 			end
 		end
 	end
 	-- Order the cores to find the newest
 	table.sort(usable, function(a, b) return b.id < a.id end)
-	for i, file in ipairs(usable) do print("Selected cores:", file.file) end
+	for i, file in ipairs(usable) do print("Selected cores:", file.id, file.file) end
 
 	-- Check for sanity and tell the runner to use it
 	local core = "/engines/cores/"..usable[1].file
