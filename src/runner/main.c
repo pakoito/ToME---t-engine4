@@ -102,14 +102,14 @@ void run_core(core_boot_type *core_def, int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 
-	te4main = GetProcAddress(handle, "te4main");
+	*(void **) (&te4main) = GetProcAddress(handle, "te4main");
 	if (te4main == NULL)  {
 		fprintf(stderr, "Error binding to core %d (%s): %d\n", core_def->corenum, core, GetLastError());
 		exit(EXIT_FAILURE);
 	}
 
 	// Run the core
-	corenum = te4main(argc, argv);
+	te4main(argc, argv, core_def);
 
 	FreeLibrary(handle);
 
