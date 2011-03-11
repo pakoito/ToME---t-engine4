@@ -43,19 +43,17 @@ configuration "macosx"
 
 configuration "windows"
 	linkoptions { "-mwindows" }
-	links { "mingw32" }
+	links { "mingw32", "SDLmain", "SDL", "SDL_ttf", "SDL_image", "SDL_mixer", "OPENGL32", "GLU32", "wsock32" }
 	defines { [[TENGINE_HOME_PATH='"T-Engine"']], 'SELFEXE_WINDOWS' }
-	prebuildcommands { "windres src/windows/icon.rc -O coff -o src/windows/icon.res" }
-	linkoptions { "src/windows/icon.res" }
 
 
 configuration "linux"
 	buildoptions { "-fPIC" }
 	defines { [[TENGINE_HOME_PATH='".t-engine"']], 'SELFEXE_LINUX' }
 
-configuration {"linux", "Debug"}
+configuration {"Debug"}
 	postbuildcommands { "cp ../bin/Debug/"..corename.."* ../game/engines/cores/", }
-configuration {"linux", "Release"}
+configuration {"Release"}
 	postbuildcommands { "cp ../bin/Release/"..corename.."* ../game/engines/cores/", }
 
 
