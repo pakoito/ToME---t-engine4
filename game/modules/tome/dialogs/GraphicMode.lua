@@ -26,10 +26,12 @@ module(..., package.seeall, class.inherit(Dialog))
 local tiles_packs = {
 	shockbolt = {name= "Shockbolt", order=1},
 	mushroom = {name= "Mushroom", order=2},
-	altefcat = {name= "Altefcat/Gervais", order=3},
-	ascii = {name= "ASCII", order=4},
-	ascii_full = {name= "ASCII with background", order=5},
+	ascii = {name= "ASCII", order=5},
+	ascii_full = {name= "ASCII with background", order=6},
 }
+if fs.exists("/data/gfx/altefcat") then tiles_packs.altefcat = {name= "Altefcat/Gervais", order=3} end
+if fs.exists("/data/gfx/oldrpg") then tiles_packs.oldrpg = {name= "Old RPG", order=4} end
+
 
 function _M:init()
 	self.cur_sel = "main"
@@ -75,8 +77,9 @@ function _M:generateList()
 	local list
 
 	if self.cur_sel == "main" then
+		local cur = tiles_packs[config.settings.tome.gfx.tiles]
 		list = {
-			{name="Select style [current: "..tiles_packs[config.settings.tome.gfx.tiles].name.."]", change_sel="tiles"},
+			{name="Select style [current: "..(cur and cur.name or "???").."]", change_sel="tiles"},
 			{name="Select tiles size [current: "..config.settings.tome.gfx.size.."]", change_sel="size"},
 		}
 	elseif self.cur_sel == "tiles" then

@@ -48,7 +48,7 @@ config.settings.tome = config.settings.tome or {}
 profile.mod.allow_build = profile.mod.allow_build or {}
 if type(config.settings.tome.autosave) == "nil" then config.settings.tome.autosave = true end
 if not config.settings.tome.smooth_move then config.settings.tome.smooth_move = 3 end
-if not config.settings.tome.gfx then config.settings.tome.gfx = {size="32x32", tiles="mushroom"} end
+if not config.settings.tome.gfx then config.settings.tome.gfx = {size="32x32", tiles="shockbolt"} end
 if type(config.settings.tome.weather_effects) == "nil" then config.settings.tome.weather_effects = true end
 if type(config.settings.tome.smooth_fov) == "nil" then config.settings.tome.smooth_fov = true end
 if type(config.settings.tome.daynight) == "nil" then config.settings.tome.daynight = true end

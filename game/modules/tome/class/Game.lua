@@ -383,6 +383,7 @@ function _M:setupDisplayMode(reboot, mode)
 		if gfx.tiles == "ascii" then Map.tiles.use_images = false Map.tiles.force_back_color = {r=0, g=0, b=0, a=255} end
 		if gfx.tiles == "ascii_full" then Map.tiles.use_images = false end
 		if gfx.tiles == "shockbolt" then Map.tiles.nicer_tiles = true end
+		if gfx.tiles == "oldrpg" then Map.tiles.nicer_tiles = true end
 
 		-- Create the framebuffer
 		self.fbo = core.display.newFBO(Map.viewport.width, Map.viewport.height)

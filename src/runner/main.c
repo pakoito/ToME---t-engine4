@@ -81,7 +81,7 @@ void run_core(core_boot_type *core_def, int argc, char **argv)
 	lua_pushstring(L, core_def->coretype);
 	lua_pushnumber(L, core_def->corenum);
 	lua_call(L, 2, 1);
-	char *core = (char*)lua_tostring(L, -1);
+	char *core = strdup((char*)lua_tostring(L, -1));
 
 	lua_close(L);
 	PHYSFS_deinit();

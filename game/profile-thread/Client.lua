@@ -190,13 +190,13 @@ function _M:step()
 end
 
 function _M:run()
-	while true do
+--	while true do
 		local order = cprofile.popOrder()
 		while order do self:handleOrder(order) order = cprofile.popOrder() end
 
 		self:step()
 		core.game.sleep(50)
-	end
+--	end
 end
 
 function _M:handleOrder(o)

@@ -952,7 +952,7 @@ void _te4_export te4main(int argc, char *argv[], core_boot_type *core_def)
 		if (reboot_lua)
 		{
 			// Just reboot the lua VM
-			if (reboot_lua == TE4CORE_VERSION)
+			if (reboot_lua == TE4CORE_VERSION && 0)
 			{
 				tickPaused = FALSE;
 				setupRealtime(0);
