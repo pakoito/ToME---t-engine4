@@ -57,7 +57,7 @@ newEntity{
 
 		game:setAllowedBuild("wilder_wyrmic", true)
 
-		return "destroy", true
+		return true, "destroy", true
 	end}
 }
 
@@ -84,6 +84,6 @@ newEntity{
 		who:incStat("con", con) if con >= 0 then con="+"..con end
 		game.logPlayer(who, "#00FF00#Your stats have changed! (Str %s, Dex %s, Mag %s, Wil %s, Cun %s, Con %s)", str, dex, mag, wil, cun, con)
 
-		return "destroy", true
+		return true, "destroy", true
 	end}
 }

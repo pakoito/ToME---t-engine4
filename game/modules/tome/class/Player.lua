@@ -738,7 +738,8 @@ function _M:playerUseItem(object, item, inven)
 				return true
 			end
 
-			local ret, id = o:use(self, nil, inven, item)
+			local used, ret, id = o:use(self, nil, inven, item)
+			if not used then return end
 			if id then
 				o:identify(true)
 			end

@@ -107,6 +107,7 @@ newEntity{ base = "BASE_STAFF",
 				end
 			end
 			game.logSeen(who, "%s is cured of diseases!", who.name:capitalize())
+			return true
 		end
 	},
 }
@@ -142,6 +143,7 @@ newEntity{ base = "BASE_RING",
 				false
 			)
 			game.logSeen(who, "%s brandishes the %s, calling forth the might of the oceans!", who.name:capitalize(), self:getName())
+			return true
 		end
 	},
 	wielder = {
@@ -219,6 +221,7 @@ newEntity{ base = "BASE_AMULET",
 			who:project({type="ball", range=0, selffire=false, radius=3}, who.x, who.y, engine.DamageType.DIG, 1)
 			who:project({type="ball", range=0, selffire=false, radius=3}, who.x, who.y, engine.DamageType.PHYSICAL, 100 + who:getMag() * 2)
 			game.logSeen(who, "%s uses the %s!", who.name:capitalize(), self:getName())
+			return true
 		end
 	},
 }
@@ -305,6 +308,7 @@ newEntity{ base = "BASE_LITE",
 		use = function(self, who)
 			who:project({type="ball", range=0, radius=20}, who.x, who.y, engine.DamageType.LITE, 100)
 			game.logSeen(who, "%s brandishes the %s and banishes all shadows!", who.name:capitalize(), self:getName())
+			return true
 		end
 	},
 	wielder = {
@@ -330,6 +334,7 @@ This star is the culmination of their craft. Light radiates from its ever-shifti
 		use = function(self, who)
 			who:magicMap(20)
 			game.logSeen(who, "%s brandishes the %s which radiates in all directions!", who.name:capitalize(), self:getName())
+			return true
 		end
 	},
 	wielder = {
@@ -381,7 +386,7 @@ newEntity{
 		else
 			game.logPlayer(who, "The Blood of Life seems to have no effect on you.")
 		end
-		return "destroy", true
+		return true, "destroy", true
 	end},
 }
 
@@ -567,6 +572,7 @@ newEntity{ base = "BASE_LEATHER_BOOT",
 	use_power = { name = "boost speed", power = 50,
 		use = function(self, who)
 			who:setEffect(who.EFF_SPEED, 8, {power=0.20 + who:getCun() / 80})
+			return true
 		end
 	},
 }
@@ -700,6 +706,7 @@ newEntity{
 			game.level.map:particleEmitter(x, y, 1, "slime")
 
 			game:playSoundNear(who, "talents/slime")
+			return true
 		end
 	end },
 }
@@ -1324,6 +1331,7 @@ newEntity{ base = "BASE_GEM",
 				game.logPlayer(who, "The fusing fails!")
 			end
 		end)
+		return true
 	end },
 }
 
@@ -1372,6 +1380,7 @@ newEntity{ base = "BASE_WAND",
 			local x, y = who:getTarget(tg)
 			if not x or not y then return nil end
 			who:project(tg, x, y, engine.DamageType.FIRE, 80 + who:getMag() * 1.2, {type="flame"})
+			return true
 		end
 	},
 }

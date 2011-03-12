@@ -25,6 +25,7 @@ newEntity{ base = "BASE_SCROLL", define_as = "NOTE_FROM_LAST_HOPE",
 
 	use_simple = { name="open the seal and read the message", use = function(self, who)
 		game:registerDialog(require("engine.dialogs.ShowText").new(self:getName{do_color=true}, "message-last-hope", {playername=who.name}, game.w * 0.6))
+		return true
 	end}
 }
 

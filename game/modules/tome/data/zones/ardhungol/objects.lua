@@ -36,6 +36,7 @@ newEntity{ base = "BASE_WAND",
 			local x, y = who:getTarget(tg)
 			if not x or not y then return nil end
 			who:project(tg, x, y, engine.DamageType.SPYDRIC_POISON, {dam=200 + who:getMag() * 4, dur=6}, {type="slime"})
+			return true
 		end
 	},
 }

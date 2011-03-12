@@ -52,6 +52,7 @@ Light around it seems to dim and you can feel its tremendous power simply by tou
 	use_power = { name = "absorb energies", power = 1000,
 		use = function(self, who)
 			game.logPlayer(who, "This power seems too much to wield, you fear it might absorb YOU.")
+			return true
 		end
 	},
 
@@ -92,6 +93,7 @@ If used near a portal it could probably activate it.]],
 			else
 				game.logPlayer(who, "There is no portal to activate here.")
 			end
+			return true
 		end
 	},
 
@@ -136,6 +138,7 @@ If used near a portal it could probably activate it.]],
 			else
 				game.logPlayer(who, "There is no portal to activate here.")
 			end
+			return true
 		end
 	},
 
@@ -170,7 +173,7 @@ newEntity{ define_as = "ORB_UNDEATH",
 
 	max_power = 1, power_regen = 1,
 	use_power = { name = "use the orb", power = 1,
-		use = function(self, who) who:useCommandOrb(self) end
+		use = function(self, who) who:useCommandOrb(self) return true end
 	},
 
 	carrier = {
@@ -199,7 +202,7 @@ newEntity{ define_as = "ORB_DRAGON",
 
 	max_power = 1, power_regen = 1,
 	use_power = { name = "use the orb", power = 1,
-		use = function(self, who) who:useCommandOrb(self) end
+		use = function(self, who) who:useCommandOrb(self) return true end
 	},
 
 	carrier = {
@@ -228,7 +231,7 @@ newEntity{ define_as = "ORB_ELEMENTS",
 
 	max_power = 1, power_regen = 1,
 	use_power = { name = "use the orb", power = 1,
-		use = function(self, who) who:useCommandOrb(self) end
+		use = function(self, who) who:useCommandOrb(self) return true end
 	},
 
 	carrier = {
@@ -257,7 +260,7 @@ newEntity{ define_as = "ORB_DESTRUCTION",
 
 	max_power = 1, power_regen = 1,
 	use_power = { name = "use the orb", power = 1,
-		use = function(self, who) who:useCommandOrb(self) end
+		use = function(self, who) who:useCommandOrb(self) return true end
 	},
 
 	carrier = {
@@ -289,6 +292,7 @@ newEntity{ define_as = "ORB_SCRYING",
 			local Chat = require("engine.Chat")
 			local chat = Chat.new("elisa-orb-scrying", {name="Elisa the Scryer"}, who, {version="elisa"})
 			chat:invoke()
+			return true
 		end
 	},
 
@@ -316,6 +320,7 @@ You have heard of such items before, they are very useful to adventurers, allowi
 			else
 				game.logPlayer(who, "The rod emits a strange noise, glows briefly and returns to normal.")
 			end
+			return true
 		end
 	},
 }

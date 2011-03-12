@@ -579,6 +579,7 @@ newEntity{ base = "BASE_AMULET",
 		game.zone:addEntity(game.level, vampire, "actor", x, y)
 
 		game:playSoundNear(who, "talents/spell_generic")
+		return true
 	end },
 }
 
@@ -799,6 +800,7 @@ newEntity{ base = "BASE_GEM", define_as = "CRYSTAL_FOCUS",
 			who.changed = true
 
 			game.logPlayer(who, "You fix the crystal on the %s and create the %s.", oldname, o:getName{do_color=true})
+			return true
 		end)
 	end },
 }
@@ -839,6 +841,7 @@ newEntity{ base = "BASE_WAND", define_as = "ROD_OF_ANNULMENT",
 				end
 				target.changed = true
 			end, nil, {type="flame"})
+			return true
 		end
 	},
 }

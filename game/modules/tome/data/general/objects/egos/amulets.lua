@@ -114,7 +114,7 @@ newEntity{
 		who:teleportRandom(who.x, who.y, 200)
 		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
-		return nil, true
+		return true, nil, true
 	end}
 }
 

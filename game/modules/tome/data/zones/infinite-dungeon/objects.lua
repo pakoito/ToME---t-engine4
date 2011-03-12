@@ -48,6 +48,7 @@ newEntity{ define_as = "ORB_KNOWLEDGE",
 					end
 				end
 			end
+			return true
 		end
 	},
 

@@ -61,6 +61,7 @@ When activated it will prompt to destroy items on the floor, if there are none i
 				end, who)
 				game:registerDialog(d)
 			end
+			return true
 		end
 	},
 }

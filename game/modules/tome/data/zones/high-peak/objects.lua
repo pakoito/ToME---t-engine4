@@ -67,6 +67,7 @@ The Sorcerers seem to have awakened its power.
 			game.logPlayer(who, "You brandish the staff, draining your foe.")
 			who:setEffect(who.EFF_POWER_OVERLOAD, 7, {power=30})
 			target:takeHit(target.life * 0.3, who)
+			return true
 		end
 	},
 }
