@@ -125,7 +125,7 @@ function _M:targetMode(v, msg, co, typ)
 				end
 			end
 			if self.target_warning and self.target.target.x == self.player.x and self.target.target.y == self.player.y then
-				Dialog:yesnoPopup(type(self.target_warning) == "string" and self.target_warning or "Target yourself?", "Are you sure you want to target yourself?", fct, "No", "Yes")
+				Dialog:yesnoPopup(type(self.target_warning) == "string" and self.target_warning or "Target yourself?", "Are you sure you want to target yourself?", fct, "No", "Yes", nil, true)
 			else
 				fct(false)
 			end
