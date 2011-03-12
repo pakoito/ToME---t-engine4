@@ -18,9 +18,11 @@
 -- darkgod@te4.org
 
 require "engine.class"
-require "engine.Dialog"
+local ispatch = require "dispatch"
+local Dialog = require "engine.ui.Dialog"
+local Textzone = require "engine.ui.Textzone"
 
-module(..., package.seeall, class.inherit(engine.Dialog))
+module(..., package.seeall, class.inherit(Dialog))
 
 function _M:init(title, url, on_chunk, on_finish, on_error)
 	self.url = url
@@ -29,48 +31,22 @@ function _M:init(title, url, on_chunk, on_finish, on_error)
 	self.on_finish = on_finish
 	self.on_error = on_error
 
-	local font = core.display.newFont("/data/font/Vera.ttf", 12)
-	engine.Dialog.init(self, title or "Downloading...", math.max(400, font:size("From: "..url) + 10), 75, nil, nil, nil, font)
+	Dialog.init(self, title or "Download", 1, 1)
 
-	self:keyCommands({
-	},{
-	})
-end
+	local desc = Textzone.new{text="Downloading from "..url, width=400, auto_height=true}
 
-function _M:drawDialog(s)
-	if self.th then
-		local ck = self.linda:receive(0, "received")
-		while ck do
-			if ck then
-				if not ck.error then
-					self.received = ck.size
-					self.on_chunk(ck.chunk)
-				else
-					self.on_error(ck.error)
-					break
-				end
-			end
-			ck = self.linda:receive(0, "received")
-		end
-		local t = self.linda:receive(0, "final")
+	self:loadUI{
+		{left=0, top=0, ui=desc},
+	}
+	self:setupUI(true, true)
 
-		local v, err = self.th:join(0)
-		if err then error(err) end
-
-		if t then
-			self.changed = false
-			self.linda = nil
-			self.th = nil
-			game:unregisterDialog(self)
-			self:on_finish()
-		end
-	end
-
-	s:drawStringBlended(self.font, "From: "..self.url, 2, 2, 255, 255, 255)
-	s:drawStringBlended(self.font, "Received: "..self.received, 2, 25, 255, 255, 255)
+	self.key:addBinds{
+		EXIT = function() game:unregisterDialog(self) end,
+	}
 end
 
 function _M:startDownload()
+--[[
 	local l = lanes.linda()
 
 	function list_handler(src)
@@ -94,4 +70,38 @@ function _M:startDownload()
 
 	self.th = lanes.gen("*", list_handler)(self.url)
 	self.linda = l
+-- ]]
+--[[
+	local co = coroutine.create(function()
+		local http = require "socket.http"
+		local ltn12 = require "ltn12"
+
+		local size = 0
+		http.TIMEOUT = 1200
+		print("Downloading from", self.url)
+		http.request{url = self.url, sink = function(chunk, err)
+			coroutine.yield()
+			return 1
+		end}
+
+		game:unregisterDialog(self)
+	end)
+	game:registerCoroutine("download module list", co)
+]]
+	local http = require "socket.http"
+	local ltn12 = require "ltn12"
+	local handler = dispatch.newhandler("coroutine")
+	local done = false
+	handler:start(function()
+		http.request{
+			url = self.url,
+			sink = function(chunk, err) print("=====") end,
+			create = handler.tcp,
+		}
+		done = true
+	end)
+	while not done do
+		handler:step()
+		coroutine.yield()
+	end
 end

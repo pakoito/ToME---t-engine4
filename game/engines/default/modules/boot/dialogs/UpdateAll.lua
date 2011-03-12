@@ -62,10 +62,9 @@ function _M:display(...)
 end
 
 function _M:generateList()
-	local linda, th = Module:loadRemoteList()
+	local list = Module:loadRemoteList()
 	local mod_list = Module:listModules()
-	local rawdllist = linda:receive("moduleslist")
-	th:join()
+do return end
 
 	local dllist = {}
 	for i, mod in ipairs(rawdllist) do

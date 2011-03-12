@@ -67,6 +67,7 @@ newTalent{
 		end
 
 		-- Find space
+		if game.level.map:checkEntity(tx, ty, Map.TERRAIN, "block_move", self) then return nil end
 		local fx, fy = util.findFreeGrid(tx, ty, 5, true, {[Map.ACTOR]=true})
 		if not fx then
 			return

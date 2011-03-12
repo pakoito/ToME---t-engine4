@@ -60,8 +60,10 @@ next_combat = function(self)
 	elseif self.wave < 9 then
 		self:add_foe(true, false, 4)
 	else
-		local spot = game.level:pickSpot{type="quest", subtype="outside-arena"}
-		game.player:move(spot.x, spot.y, true)
+		local spot = game.level:pickSpot{type="quest", subtype="sealed-gate"}
+		local g = game.zone:makeEntityByName(game.level, "terrain", "OPEN_GATE")
+		game.zone:addEntity(game.level, g, "terrain", spot.x, spot.y)
+
 		local p = game.party:findMember{main=true}
 		p.entered_level = {x=game.level.default_up.x, y=game.level.default_up.y}
 

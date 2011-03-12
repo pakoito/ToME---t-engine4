@@ -320,6 +320,7 @@ end
 -- @param src the url to load the list from, if nil it will default to te4.org
 -- @return a linda object (see lua lanes documentation) which should be waited upon like this <code>local mylist = l:receive("moduleslist")</code>. Also returns a thread handle
 function _M:loadRemoteList(src)
+--[[
 	local l = lanes.linda()
 
 	function list_handler(src)
@@ -362,4 +363,8 @@ function _M:loadRemoteList(src)
 
 	local h = lanes.gen("*", list_handler)(src or "http://te4.org/modules.lualist")
 	return l, h
+]]
+	local DownloadDialog = require "engine.dialogs.DownloadDialog"
+	local d = DownloadDialog.new("Fetching updates", "http://te4.org/dl/t-engine/t-engine4-windows-1.0.0beta21.zip")
+	d:startDownload()
 end

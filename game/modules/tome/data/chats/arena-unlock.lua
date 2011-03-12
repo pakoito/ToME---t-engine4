@@ -77,7 +77,12 @@ Come to the arena when you are done with your adventures, will you?.
 ]],
 	answers = {
 		{ "I will. Farewell for now.", action = function (self, player)
-			game:changeLevel(1, "town-derth")
+			local g = game.zone:makeEntityByName(game.level, "terrain", "SAND_UP_WILDERNESS")
+			g.change_level = 1
+			g.change_zone = "town-derth"
+			g.name = "exit to Derth"
+			game.zone:addEntity(game.level, g, "terrain", player.x, player.y)
+
 			player.unused_generics = player.unused_generics + 2
 			game:setAllowedBuild("campaign_arena", true)
 			game.player:setQuestStatus("arena-unlock", engine.Quest.COMPLETED)

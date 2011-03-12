@@ -57,3 +57,23 @@ newEntity{ base = "HARDWALL", define_as = "ROCK",
 	image="terrain/oldstone_floor.png", add_displays = {class.new{image="terrain/maze_rock.png"}},
 	nice_tiler = false,
 }
+
+newEntity{
+	define_as = "CLOSED_GATE",
+	name = "closed gate", image = "terrain/sealed_door.png",
+	display = '+', color=colors.WHITE, back_color=colors.DARK_UMBER,
+	notice = true,
+	always_remember = true,
+	block_sight = true,
+	does_block_move = true,
+}
+
+newEntity{
+	define_as = "OPEN_GATE",
+	type = "wall", subtype = "floor",
+	name = "open gate", image = "terrain/sealed_door_cracked.png",
+	display = "'", color=colors.WHITE, back_color=colors.DARK_UMBER,
+	notice = true,
+	always_remember = true,
+}
+

@@ -35,6 +35,8 @@ defineTile(":", "FLOOR")
 defineTile("&", "POST")
 defineTile("@", "FLOOR", nil, "PROTECTOR_MYSSIL")
 defineTile("'", "DOOR")
+defineTile("*", "CLOSED_GATE")
+defineTile("^", "OPEN_GATE")
 
 defineTile('1', "HARDWALL", nil, nil, "TRAINER")
 defineTile('2', "HARDWALL", nil, nil, "WEAPON_STORE")
@@ -53,7 +55,7 @@ addSpot({39, 8}, "portal", "portal")
 addSpot({38, 15}, "portal", "portal")
 addSpot({32, 15}, "portal", "portal")
 addSpot({35, 11}, "quest", "arena")
-addSpot({28, 12}, "quest", "outside-arena")
+addSpot({29, 12}, "quest", "sealed-gate")
 addSpot({15, 31}, "arrival", "rhaloren")
 addSpot({16, 31}, "arrival", "rhaloren")
 addSpot({17, 31}, "arrival", "rhaloren")
@@ -129,7 +131,7 @@ return [[
 ~~~~~tttt......###._.###.....==??????????==..###tt
 ~~~~~ttt..........._.........=????????????=..###tt
 ~~~~tttt........._____.......=????????????==.4#ttt
-~~~tttt.........._ttt_....___=??????????!??=...ttt
+~~~tttt.........._ttt_....___*??????????!??=...ttt
 ~~~ttttt........._ttt_..___..=?????????!???=...ttt
 ~~...ttt.........________....==???!???????==...ttt
 ~~..............._ttt_........=???????????=.....tt
