@@ -48,7 +48,7 @@ if zone == "Maj'Eyal" then
 		local type = encounter_chance(game.player)
 		if type then
 			game.level:setEntitiesList("maj_eyal_encounters_rng", game.zone:computeRarities("maj_eyal_encounters_rng", game.level:getEntitiesList("maj_eyal_encounters"), game.level, nil))
-			local e = game.zone:makeEntity(game.level, "maj_eyal_encounters_rng", {type=type, mapx=game.player.x, mapy=game.player.y, nb_tries=10})
+			local e = game.zone:makeEntity(game.level, "maj_eyal_encounters_rng", {type=type, mapx=game.player.x, mapy=game.player.y, nb_tries=10}, nil, false)
 			if e then
 				if e:check("on_encounter", game.player) then
 					e:added()
@@ -101,7 +101,7 @@ elseif zone == "Far East" then
 		local type = encounter_chance(game.player)
 		if type then
 			game.level:setEntitiesList("fareast_encounters_rng", game.zone:computeRarities("fareast_encounters_rng", game.level:getEntitiesList("fareast_encounters"), game.level, nil))
-			local e = game.zone:makeEntity(game.level, "fareast_encounters_rng", {type=type, mapx=game.player.x, mapy=game.player.y, nb_tries=10})
+			local e = game.zone:makeEntity(game.level, "fareast_encounters_rng", {type=type, mapx=game.player.x, mapy=game.player.y, nb_tries=10}, nil, false)
 			if e then
 				if e:check("on_encounter", game.player) then
 					e:added()
