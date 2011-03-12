@@ -287,7 +287,7 @@ newEntity{ define_as = "ORB_SCRYING",
 	use_power = { name = "use the orb", power = 1,
 		use = function(self, who)
 			local Chat = require("engine.Chat")
-			local chat = Chat.new("elisa-orb-scrying", {name="Elisa the Scyer"}, who, {version="elisa"})
+			local chat = Chat.new("elisa-orb-scrying", {name="Elisa the Scryer"}, who, {version="elisa"})
 			chat:invoke()
 		end
 	},
