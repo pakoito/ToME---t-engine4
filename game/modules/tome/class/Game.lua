@@ -1140,6 +1140,9 @@ function _M:setupMouse(reset)
 		-- Default left button action
 		if button == "left" and not xrel and not yrel and event == "button" and self.zone and not self.zone.wilderness then if self:mouseLeftClick(mx, my) then return end end
 
+		-- Default middle button action
+		if button == "middle" and not xrel and not yrel and event == "button" and self.zone and not self.zone.wilderness then if self:mouseMiddleClick(mx, my) then return end end
+
 		-- Handle the mouse movement/scrolling
 		self.player:mouseHandleDefault(self.key, self.key == self.normal_key, button, mx, my, xrel, yrel, event)
 	end)
@@ -1198,6 +1201,24 @@ function _M:mouseLeftClick(mx, my)
 	if not a then return end
 	if not p.auto_shoot_talent then return end
 	local t = p:getTalentFromId(p.auto_shoot_talent)
+	if not t then return end
+
+	local target_dist = math.floor(core.fov.distance(p.x, p.y, a.x, a.y))
+
+	if p:enoughEnergy() and p:reactionToward(a) < 0 and not p:isTalentCoolingDown(t) and p:preUseTalent(t, true, true) and target_dist <= p:getTalentRange(t) and p:canProject({type="hit"}, a.x, a.y) then
+		p:useTalent(t.id, nil, nil, nil, a)
+		return true
+	end
+end
+
+--- Middle mouse click on the map
+function _M:mouseMiddleClick(mx, my)
+	local tmx, tmy = self.level.map:getMouseTile(mx, my)
+	local p = self.player
+	local a = game.level.map(tmx, tmy, Map.ACTOR)
+	if not a then return end
+	if not p.auto_shoot_midclick_talent then return end
+	local t = p:getTalentFromId(p.auto_shoot_midclick_talent)
 	if not t then return end
 
 	local target_dist = math.floor(core.fov.distance(p.x, p.y, a.x, a.y))

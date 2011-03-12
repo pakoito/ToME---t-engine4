@@ -134,6 +134,7 @@ function _M:use(item, button)
 		local list = {
 			{name="Unbind", what="unbind"},
 			{name="Bind to left mouse click (on a target)", what="left"},
+			{name="Bind to middle mouse click (on a target)", what="middle"},
 		}
 		for i = 1, 36 do list[#list+1] = {name="Hotkey "..i, what=i} end
 		Dialog:listPopup("Bind talent: "..item.name, "How do you want to bind this talent?", list, 400, 500, function(b)
@@ -144,11 +145,15 @@ function _M:use(item, button)
 				end
 				self.actor.hotkey[b.what] = {"talent", item.talent}
 				self:simplePopup("Hotkey "..b.what.." assigned", self.actor:getTalentFromId(item.talent).name:capitalize().." assigned to hotkey "..b.what)
+			elseif b.what == "middle" then
+				self.actor.auto_shoot_midclick_talent = item.talent
+				self:simplePopup("Middle mouse click assigned", self.actor:getTalentFromId(item.talent).name:capitalize().." assigned to middle mouse click on an hostile target.")
 			elseif b.what == "left" then
 				self.actor.auto_shoot_talent = item.talent
 				self:simplePopup("Left mouse click assigned", self.actor:getTalentFromId(item.talent).name:capitalize().." assigned to left mouse click on an hostile target.")
 			elseif b.what == "unbind" then
 				if self.actor.auto_shoot_talent == item.talent then self.actor.auto_shoot_talent = nil end
+				if self.actor.auto_shoot_midclick_talent == item.talent then self.actor.auto_shoot_midclick_talent = nil end
 				for i = 1, 36 do
 					if self.actor.hotkey[i] and self.actor.hotkey[i][1] == "talent" and self.actor.hotkey[i][2] == item.talent then self.actor.hotkey[i] = nil end
 				end
