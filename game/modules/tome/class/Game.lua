@@ -894,7 +894,7 @@ function _M:setupCommands()
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
 --			self.nicer_tiles:postProcessLevelTiles(self.level)
 --			game:registerDialog(require("mod.dialogs.Donation").new())
-			error("plop")
+			self.state:debugRandomZone()
 		end end,
 	}
 

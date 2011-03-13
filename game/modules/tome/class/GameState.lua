@@ -862,3 +862,123 @@ function _M:entityFilter(zone, e, filter, type)
 		return true
 	end
 end
+
+--------------------------------------------------------------
+-- Random zones
+--------------------------------------------------------------
+
+local random_zone_layouts = {
+	-- Forest
+	function(data) return {
+		class = "engine.generator.map.Forest",
+		edge_entrances = {data.less_dir, data.more_dir},
+		zoom = rng.range(2,6),
+		sqrt_percent = rng.range(20, 50),
+		noise = "fbm_perlin",
+		floor = data:getFloor(),
+		wall = data:getWall(),
+		up = data:getUp(),
+		down = data:getDown(),
+	} end,
+	-- Cavern
+	function(data)
+		local floors = data.w * data.h * 0.4
+		return {
+		class = "engine.generator.map.Cavern",
+		zoom = rng.range(10, 20),
+		min_floor = rng.range(floors / 2, floors),
+		floor = data:getFloor(),
+		wall = data:getWall(),
+		up = data:getUp(),
+		down = data:getDown(),
+	} end,
+	-- Forest
+	function(data)
+		local rooms = {"random_room"}
+		if rng.percent(30) then rooms = {"forest_clearing"} end
+		return {
+		class = "engine.generator.map.Roomer",
+		nb_rooms = math.floor(data.w * data.h / 250),
+		rooms = rooms,
+		lite_room_chance = rng.range(0, 100),
+		['.'] = data:getFloor(),
+		['#'] = data:getWall(),
+		up = data:getUp(),
+		door = data:getDown(),
+	} end,
+}
+
+local random_zone_themes = {
+	-- Trees
+	{ name="trees", rarity=3, gen=function() return {
+		load_grids = {"/data/general/grids/forest.lua"},
+		getFloor = function(self) return function() if rng.chance(20) then return "FLOWER" else return "GRASS" end end end,
+		getWall = function(self) return {"TREE","TREE2","TREE3","TREE4","TREE5","TREE6","TREE7","TREE8","TREE9","TREE10","TREE11","TREE12","TREE13","TREE14","TREE15","TREE16","TREE17","TREE18","TREE19","TREE20",} end,
+		getUp = function(self) return "GRASS_UP"..self.less_dir end,
+		getDown = function(self) return "GRASS_DOWN"..self.more_dir end,
+	} end },
+	-- Walls
+	{ name="walls", rarity=2, gen=function() return {
+		load_grids = {"/data/general/grids/basic.lua"},
+		getFloor = function(self) return "FLOOR" end,
+		getWall = function(self) return "WALL" end,
+		getUp = function(self) return "UP" end,
+		getDown = function(self) return "DOWN" end,
+	} end },
+	-- Underground
+	{ name="underground", rarity=6, gen=function() return {
+		load_grids = {"/data/general/grids/underground.lua"},
+		getFloor = function(self) return "UNDERGROUND_FLOOR" end,
+		getWall = function(self) return {"UNDERGROUND_TREE","UNDERGROUND_TREE2","UNDERGROUND_TREE3","UNDERGROUND_TREE4","UNDERGROUND_TREE5","UNDERGROUND_TREE6","UNDERGROUND_TREE7","UNDERGROUND_TREE8","UNDERGROUND_TREE9","UNDERGROUND_TREE10","UNDERGROUND_TREE11","UNDERGROUND_TREE12","UNDERGROUND_TREE13","UNDERGROUND_TREE14","UNDERGROUND_TREE15","UNDERGROUND_TREE16","UNDERGROUND_TREE17","UNDERGROUND_TREE18","UNDERGROUND_TREE19","UNDERGROUND_TREE20",} end,
+		getUp = function(self) return "UNDERGROUND_LADDER_UP" end,
+		getDown = function(self) return "UNDERGROUND_LADDER_DOWN" end,
+	} end },
+	-- Crystals
+	{ name="crystal", rarity=6, gen=function() return {
+		load_grids = {"/data/general/grids/underground.lua"},
+		getFloor = function(self) return "CRYSTAL_FLOOR" end,
+		getWall = function(self) return {"CRYSTAL_WALL","CRYSTAL_WALL2","CRYSTAL_WALL3","CRYSTAL_WALL4","CRYSTAL_WALL5","CRYSTAL_WALL6","CRYSTAL_WALL7","CRYSTAL_WALL8","CRYSTAL_WALL9","CRYSTAL_WALL10","CRYSTAL_WALL11","CRYSTAL_WALL12","CRYSTAL_WALL13","CRYSTAL_WALL14","CRYSTAL_WALL15","CRYSTAL_WALL16","CRYSTAL_WALL17","CRYSTAL_WALL18","CRYSTAL_WALL19","CRYSTAL_WALL20",} end,
+		getUp = function(self) return "CRYSTAL_LADDER_UP" end,
+		getDown = function(self) return "CRYSTAL_LADDER_DOWN" end,
+	} end },
+}
+
+function _M:debugRandomZone()
+	local theme = rng.table(random_zone_themes)
+	print("[RANDOM ZONE] Using theme", theme.name)
+	local data = theme.gen()
+
+	data.depth = rng.range(2, 4)
+	data.min_lev, data.max_lev = game.player.level, game.player.level + 15
+	data.w, data.h = rng.range(20, 60), rng.range(20, 60)
+
+	data.less_dir = rng.table{2, 4, 6, 8}
+	data.more_dir = ({[2]=8, [8]=2, [4]=6, [6]=4})[data.less_dir]
+
+	local layout = rng.table(random_zone_layouts)(data)
+
+	local grids = {}
+	for i, file in ipairs(data.load_grids) do
+		mod.class.Grid:loadList(file, nil, grids)
+	end
+
+	local zone = engine.Zone.new("random_zone", {
+		name = "Random Zone!!",
+		level_range = {data.min_lev, data.max_lev},
+		level_scheme = "player",
+		max_level = data.depth,
+		actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
+		width = data.w, height = data.h,
+		ambient_music = "a_lomos_del_dragon_blanco.ogg",
+		generator =  {
+			map = layout,
+			actor = { class = "engine.generator.actor.Random",nb_npc = {5, 7}, },
+			trap = { class = "engine.generator.trap.Random", nb_trap = {3, 3}, },
+		},
+		npc_list = mod.class.NPC:loadList("/data/general/npcs/thieve.lua"),
+		grid_list = grids,
+		object_list = mod.class.Object:loadList("/data/general/objects/objects.lua"),
+		trap_list = mod.class.Trap:loadList("/data/general/traps/alarm.lua"),
+	})
+	game:changeLevel(1, zone)
+end

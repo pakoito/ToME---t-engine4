@@ -221,28 +221,3 @@ newEntity{
 		return true
 	end,
 }
---[[
-newEntity{
-	name = "Temporal Rift",
-	type = "harmless", subtype = "special", unique = true,
-	level_range = {16, 26},
-	rarity = 8,
-	on_world_encounter = "mark-spellblaze",
-	on_encounter = function(self, who)
-		local x, y = self:findSpot(who)
-		if not x then return end
-
-		local g = mod.class.Grid.new{
-			show_tooltip=true,
-			name="Temporal Rift",
-			display='>', color=colors.VIOLET, image = "terrain/grass.png", add_displays = {mod.class.Grid.new{image = "object/temporal_instability.png"}},
-			notice = true,
-			change_level=1, change_zone="temporal-rift",
-		}
-		g:resolve() g:resolve(nil, true)
-		game.zone:addEntity(game.level, g, "terrain", x, y)
-		game.logPlayer(who, "#LIGHT_BLUE#You notice a strange disturbance. It seems to be a rift in reality itself.")
-		return true
-	end,
-}
-]]
