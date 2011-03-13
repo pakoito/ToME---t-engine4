@@ -20,7 +20,7 @@
 name = "Back and Back and Back to the Future"
 desc = function(self, who)
 	local desc = {}
-	desc[#desc+1] = "After passing through some kind of time anomaly you met a temporal warden who told you to destroy to abominations of this alternate timeline.\n"
+	desc[#desc+1] = "After passing through some kind of time anomaly you met a temporal warden who told you to destroy the abominations of this alternate timeline.\n"
 	return table.concat(desc, "\n")
 end
 
