@@ -633,7 +633,7 @@ function _M:showEquipInven(title, filter, action)
 	end)
 end
 
-function _M:doDrop(inven, item)
+function _M:doDrop(inven, item, on_done)
 	if game.zone.wilderness then
 		Dialog:yesnoLongPopup("Warning", "You cannot drop items on the world map.\nIf you drop it, it will be lost forever.", 300, function(ret)
 			-- The test is reversed because the buttons are reversed, to prevent mistakes
@@ -642,6 +642,7 @@ function _M:doDrop(inven, item)
 				game.logPlayer(self, "You destroy %s.", o:getName{do_colour=true, do_count=true})
 				self:sortInven()
 				self:useEnergy()
+				if on_done then on_done() end
 			end
 		end, "Cancel", "Destroy")
 		return
@@ -650,6 +651,7 @@ function _M:doDrop(inven, item)
 	self:sortInven(inven)
 	self:useEnergy()
 	self.changed = true
+	if on_done then on_done() end
 end
 
 function _M:doWear(inven, item, o)

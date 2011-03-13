@@ -60,13 +60,18 @@ function _M:use(item)
 	local act = item.action
 
 	local stop = false
-	if act == "use" then self.actor:playerUseItem(self.object, self.item, self.inven, self.onuse) stop = true
-	elseif act == "drop" then self.actor:doDrop(self.inven, self.item)
-	elseif act == "wear" then self.actor:doWear(self.inven, self.item, self.object)
-	elseif act == "takeoff" then self.actor:doTakeoff(self.inven, self.item, self.object)
+	if act == "use" then
+		self.actor:playerUseItem(self.object, self.item, self.inven, self.onuse) stop = true
+		self.onuse(self.inven, self.item, self.object, stop)
+	elseif act == "drop" then
+		self.actor:doDrop(self.inven, self.item, function() self.onuse(self.inven, self.item, self.object, stop) end)
+	elseif act == "wear" then
+		self.actor:doWear(self.inven, self.item, self.object)
+		self.onuse(self.inven, self.item, self.object, stop)
+	elseif act == "takeoff" then
+		self.actor:doTakeoff(self.inven, self.item, self.object)
+		self.onuse(self.inven, self.item, self.object, stop)
 	end
-
-	self.onuse(self.inven, self.item, self.object, stop)
 end
 
 function _M:generateList()
