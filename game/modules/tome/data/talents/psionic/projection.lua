@@ -153,7 +153,7 @@ newTalent{
 			game.logPlayer(self, "The aura dissipates without producing a spike.")
 			return true
 		end
-		
+
 		local tg = t.getSpikedTarget(self, t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
@@ -282,7 +282,7 @@ newTalent{
 
 	info = function(self, t)
 		local dam = t.getAuraStrength(self, t)
-		local rad = self:getTalentRange(t)
+		local rad = self:getTalentRadius(t)
 		local spikedam = 50 + 0.4 * dam * dam
 		local mast = aura_mastery(self, t)
 		local spikecost = t.getSpikeCost(self, t)

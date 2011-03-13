@@ -52,7 +52,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local range = self:getTalentRange(t)
+		local range = self:getTalentRadius(t)
 		local slow = 3 * self:getTalentLevel(t) + 10
 		local en = ( 3 + self:getTalentLevel(t)) * (100 + self:getWil())/100
 		return ([[You suck the kinetic energy out of your surroundings, slowing all enemies in a radius of %d by %d%% for four turns.
@@ -95,7 +95,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local range = self:getTalentRange(t)
+		local range = self:getTalentRadius(t)
 		local dam = math.ceil(1 + 0.5*self:getTalentLevel(t))
 		local en = ( 4 + self:getTalentLevel(t)) * (100 + self:getWil())/85
 		--local duration = self:getTalentLevel(t) + 2
@@ -152,7 +152,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local range = self:getTalentRange(t)
+		local range = self:getTalentRadius(t)
 		local en = ( 5 + self:getTalentLevel(t)) * (100 + self:getWil())/75
 		local dam = damDesc(self, DamageType.LIGHTNING, self:combatTalentMindDamage(t, 28, 270))
 		return ([[You pull electric potential from the foes around you in a radius of %d, gaining %d energy for each one affected and giving them a nasty shock in the process. Deals between %d and %d damage.
