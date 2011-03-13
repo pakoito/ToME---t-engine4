@@ -654,14 +654,14 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup name="addZone#pops" width="170" height="100" visible="0">
+ <objectgroup name="addZone#pops" width="170" height="100">
   <object name="Lumjberjack quest" x="1759" y="741" width="348" height="469">
    <properties>
     <property name="subtype" value="&quot;lumberjack-cursed&quot;"/>
     <property name="type" value="&quot;world-encounter&quot;"/>
    </properties>
   </object>
-  <object name="Angolwen quest" x="123" y="485" width="480" height="651">
+  <object name="Angolwen quest" x="421" y="577" width="220" height="383">
    <properties>
     <property name="subtype" value="&quot;angolwen&quot;"/>
     <property name="type" value="&quot;world-encounter&quot;"/>
@@ -706,6 +706,12 @@
   <object name="Mark of the Spellblaze" x="1222" y="1128" width="502" height="344">
    <properties>
     <property name="subtype" value="&quot;mark-spellblaze&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
+  <object name="Angolwen quest" x="123" y="513" width="98" height="479">
+   <properties>
+    <property name="subtype" value="&quot;angolwen&quot;"/>
     <property name="type" value="&quot;world-encounter&quot;"/>
    </properties>
   </object>

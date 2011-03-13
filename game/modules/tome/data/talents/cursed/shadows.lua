@@ -397,7 +397,7 @@ newTalent{
 		local target = { type="hit", range=range, nowarning=true }
 		local x, y, target = self:getTarget(target)
 		if not x or not y or not target or core.fov.distance(self.x, self.y, x, y) > range then return nil end
-		
+
 		if self:reactionToward(target) < 0 then
 			-- attack the target
 			local blindsideChance = t.getBlindsideChance(self, t)
@@ -500,7 +500,7 @@ newTalent{
 	info = function(self, t)
 		local closeAttackSpellChance = t.getCloseAttackSpellChance(self, t)
 		local farAttackSpellChance = t.getFarAttackSpellChance(self, t)
-		
+
 		local level = self:getTalentLevelRaw(t)
 		if level < 3 then
 			return ([[Infuse magic into your shadows to give them fearsome spells.
@@ -547,7 +547,7 @@ newTalent{
 				end
 			end
 		end
-		
+
 		return { }
 	end,
 	on_unlearn = function(self, t, p)
@@ -565,6 +565,6 @@ newTalent{
 		local combatAtk = t.getCombatAtk(self, t)
 		local incDamage = t.getIncDamage(self, t)
 		local dominateChance = t.getDominateChance(self, t)
-		return ([[Instill hate in your shadows strengthening their attacks. They gain %d%% extra attack and %d%% extra damage. The fury of their attacks gives them the ability to try to Dominate their foes, increasing all damage taken by that foe for 4 turns. (%d%% chance at range 1)]]):format(combatAtk, incDamage, dominateChance)
+		return ([[Instill hate in your shadows strengthening their attacks. They gain %d%% extra accuracy and %d%% extra damage. The fury of their attacks gives them the ability to try to Dominate their foes, increasing all damage taken by that foe for 4 turns. (%d%% chance at range 1)]]):format(combatAtk, incDamage, dominateChance)
 	end,
 }

@@ -193,7 +193,7 @@ addZone({64, 52, 66, 53}, "zonename", "Tar'Eyal")
 addZone({11, 87, 16, 94}, "zonename", "Tar'Eyal")
 addZone({40, 43, 66, 47}, "zonename", "Maj'Eyal")
 addZone({54, 23, 65, 37}, "world-encounter", "lumberjack-cursed")
-addZone({3, 15, 18, 35}, "world-encounter", "angolwen")
+addZone({13, 18, 20, 30}, "world-encounter", "angolwen")
 addZone({136, 43, 145, 55}, "world-encounter", "shadow-crypt")
 addZone({45, 3, 51, 8}, "world-encounter", "infinite-dungeon")
 addZone({75, 6, 78, 9}, "world-encounter", "infinite-dungeon")
@@ -201,6 +201,7 @@ addZone({61, 8, 64, 10}, "world-encounter", "infinite-dungeon")
 addZone({20, 1, 31, 9}, "world-encounter", "infinite-dungeon")
 addZone({59, 41, 65, 46}, "world-encounter", "infinite-dungeon")
 addZone({38, 35, 53, 46}, "world-encounter", "mark-spellblaze")
+addZone({3, 16, 10, 28}, "world-encounter", "angolwen")
 
 -- ASCII map section
 return {

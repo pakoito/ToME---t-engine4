@@ -113,7 +113,7 @@ function _M:dumpToJSON(js)
 				dam = (self:getInven("QUIVER")[1] and self:getInven("QUIVER")[1].combat) or o.basic_ammo
 			end
 			if mean and dam then
-				c[#c+1] = { ["attack (main hand)"] = string.format("%d", self:combatAttack(mean)) }
+				c[#c+1] = { ["accuracy (main hand)"] = string.format("%d", self:combatAttack(mean)) }
 				c[#c+1] = { ["damage (main hand)"] = string.format("%d", self:combatDamage(dam)) }
 				c[#c+1] = { ["APR (main hand)"] = string.format("%d", self:combatAPR(dam)) }
 				c[#c+1] = { ["crit (main hand)"] = string.format("%d%%", self:combatCrit(dam)) }
@@ -130,7 +130,7 @@ function _M:dumpToJSON(js)
 				dam = (self:getInven("QUIVER")[1] and self:getInven("QUIVER")[1].combat) or o.basic_ammo
 			end
 			if mean and dam then
-				c[#c+1] = { ["attack (off hand)"] = string.format("%d", self:combatAttack(mean)) }
+				c[#c+1] = { ["accuracy (off hand)"] = string.format("%d", self:combatAttack(mean)) }
 				c[#c+1] = { ["damage (off hand)"] = string.format("%d", self:combatDamage(dam) * offmult) }
 				c[#c+1] = { ["APR (off hand)"] = string.format("%d", self:combatAPR(dam)) }
 				c[#c+1] = { ["crit(off hand)"] = string.format("%d%%", self:combatCrit(dam)) }

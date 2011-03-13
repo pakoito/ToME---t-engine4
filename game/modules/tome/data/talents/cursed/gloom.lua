@@ -208,7 +208,7 @@ newTalent{
 		local damage = (2 + self:getTalentLevel(t)) * 3.5
 		local attackStrength = 0.3 + self:getTalentLevel(t) * 0.12
 		local effectiveness = getWillFailureEffectiveness(self, 10, 60, attackStrength)
-		return ([[The weak-minded caught in your gloom are crippled by fear for %d turns. (-%d%% attack, -%d%% damage, %d effectiveness)]]):format(turns, attack, damage, effectiveness)
+		return ([[The weak-minded caught in your gloom are crippled by fear for %d turns. (-%d%% accuracy, -%d%% damage, %d effectiveness)]]):format(turns, attack, damage, effectiveness)
 	end,
 }
 

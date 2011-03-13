@@ -92,9 +92,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Enters an aggressive battle stance, increasing attack by %d and damage by %d at the cost of -10 defense and -10 armor.
+		return ([[Enters an aggressive battle stance, increasing accuracy by %d and damage by %d at the cost of -10 defense and -10 armor.
 		While berserking you are nearly unstoppable, granting %d%% stun and pinning resistance.
-		Attack increase with your Dexterity stat and damage with your Strength stat]]):
+		Accuracy increase with your Dexterity stat and damage with your Strength stat]]):
 		format(
 			5 + self:getDex(7) * self:getTalentLevel(t),
 			5 + self:getStr(7) * self:getTalentLevel(t),

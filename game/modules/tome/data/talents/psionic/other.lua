@@ -168,7 +168,7 @@ newTalent{
 		return ([[Allows you to wield a weapon telekinetically, directing it with your willpower and cunning rather than crude flesh. When activated, the telekinetically-wielded weapon will attack a random melee-range target each turn.
 		The telekinetically-wielded weapon uses Willpower in place of Strength and Cunning in place of Dexterity to determine attack and damage.
 		Combat stats:
-		Attack %d
+		Accuracy: %d
 		Damage: %d
 		APR: %d
 		Crit: %0.2f

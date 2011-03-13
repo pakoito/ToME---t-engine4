@@ -73,7 +73,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local weapon_boost = t.boost(self, t)
-		return ([[Manipulate forces on the molecular level to realign, rebalance, and hone your weapon. Permanently increases the attack and damage of any weapon by %d.
+		return ([[Manipulate forces on the molecular level to realign, rebalance, and hone your weapon. Permanently increases the accuracy and damage of any weapon by %d.
 		This value scales with Willpower.]]):
 		format(weapon_boost)
 	end,

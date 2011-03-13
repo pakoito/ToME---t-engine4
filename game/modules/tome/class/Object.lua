@@ -133,7 +133,7 @@ function _M:descAttribute(attr)
 	elseif attr == "ARMOR" then
 		return (self.wielder and self.wielder.combat_def or 0).." def, "..(self.wielder and self.wielder.combat_armor or 0).." armor"
 	elseif attr == "ATTACK" then
-		return (self.wielder and self.wielder.combat_atk or 0).." attack, "..(self.wielder and self.wielder.combat_apr or 0).." apr, "..(self.wielder and self.wielder.combat_dam or 0).." power"
+		return (self.wielder and self.wielder.combat_atk or 0).." accuracy, "..(self.wielder and self.wielder.combat_apr or 0).." apr, "..(self.wielder and self.wielder.combat_dam or 0).." power"
 	elseif attr == "MONEY" then
 		return ("worth %0.2f"):format(self.money_value / 10)
 	elseif attr == "USE_TALENT" then
@@ -239,7 +239,7 @@ function _M:getTextualDesc()
 			dm[#dm+1] = ("+%d%% %s"):format(i * 100, Stats.stats_def[stat].name)
 		end
 		if #dm > 0 or (combat.dam or 0) ~= 0 or combat.damrange or (combat.atk or 0) ~= 0 or (combat.apr or 0) ~= 0 or (combat.physcrit or 0) ~= 0 then
-			desc:add(("%d Power [Range %0.2f] (%s), %d Attack, %d Armor Penetration, Crit %d%%"):format(combat.dam or 0, combat.damrange or 1.1, table.concat(dm, ','), combat.atk or 0, combat.apr or 0, combat.physcrit or 0), true)
+			desc:add(("%d Power [Range %0.2f] (%s), %d Accuracy, %d Armor Penetration, Crit %d%%"):format(combat.dam or 0, combat.damrange or 1.1, table.concat(dm, ','), combat.atk or 0, combat.apr or 0, combat.physcrit or 0), true)
 			desc:add("Damage type: "..DamageType:get(combat.damtype or DamageType.PHYSICAL).name, true)
 		end
 		if combat.range then desc:add("Firing range: "..combat.range, true) end
@@ -287,7 +287,7 @@ function _M:getTextualDesc()
 	end
 
 	local desc_wielder = function(w)
-	if w.combat_atk or w.combat_dam or w.combat_apr then desc:add(("Attack %d, Armor Penetration %d, Physical Crit %d%%, Physical power %d"):format(w.combat_atk or 0, w.combat_apr or 0, w.combat_physcrit or 0, w.combat_dam or 0), true) end
+	if w.combat_atk or w.combat_dam or w.combat_apr then desc:add(("Accuracy %d, Armor Penetration %d, Physical Crit %d%%, Physical power %d"):format(w.combat_atk or 0, w.combat_apr or 0, w.combat_physcrit or 0, w.combat_dam or 0), true) end
 	if w.combat_armor or w.combat_def or w.combat_def_ranged then desc:add(("Armor %d, Defense %d, Ranged Defense %d"):format(w.combat_armor or 0, w.combat_def or 0, w.combat_def_ranged or 0), true) end
 	if w.fatigue then desc:add(("Fatigue %d%%"):format(w.fatigue), true) end
 

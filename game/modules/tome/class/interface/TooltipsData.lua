@@ -135,8 +135,8 @@ TOOLTIP_MAGWILCUN = "#AQUAMARINE#Mental stats#LAST#\n---\n"..TOOLTIP_MAG.."\n---
 -------------------------------------------------------------
 -- Melee
 -------------------------------------------------------------
-TOOLTIP_COMBAT_ATTACK = [[#GOLD#Attack chance#LAST#
-Your attack value represents your chance to hit your opponents, it is measured directly against the target's defense rating.
+TOOLTIP_COMBAT_ATTACK = [[#GOLD#Accuracy chance#LAST#
+Your accuracy value represents your chance to hit your opponents, it is measured directly against the target's defense rating.
 It is improved by both Strength and Dexterity.
 ]]
 TOOLTIP_COMBAT_DAMAGE = [[#GOLD#Damage#LAST#
@@ -179,14 +179,14 @@ Armour value is a damage reduction from every incoming melee and ranged physical
 This is countered by armour penetration and is applied before all kinds of critical damage increase, talent multipliers and damage multiplier, thus making even small amounts have greater effects.
 ]]
 TOOLTIP_DEFENSE = [[#GOLD#Defense#LAST#
-Defense represents your chance to avoid being hit at all by a melee attack, it is measured against the attacker's attack chance.
+Defense represents your chance to avoid being hit at all by a melee attack, it is measured against the attacker's accuracy chance.
 ]]
 TOOLTIP_RDEFENSE = [[#GOLD#Ranged Defense#LAST#
-Ranged defense represents your chance to avoid being hit at all by a ranged attack, it is measured against the attacker's attack chance.
+Ranged defense represents your chance to avoid being hit at all by a ranged attack, it is measured against the attacker's accuracy chance.
 ]]
 TOOLTIP_PHYS_SAVE = [[#GOLD#Physical saving throw#LAST#
 This value represents your resistance against physical attacks induced special effects, like bleeding, stuns, knockbacks, ...
-It is measured against your target's attack.
+It is measured against your target's accuracy.
 ]]
 TOOLTIP_SPELL_SAVE = [[#GOLD#Spell saving throw#LAST#
 This value represents your resistance against spell attacks induced special effects, like freezes, knockbacks, ...

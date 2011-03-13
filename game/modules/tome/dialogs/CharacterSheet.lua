@@ -143,11 +143,11 @@ function _M:drawDialog(s)
 				dam = (player:getInven("QUIVER")[1] and player:getInven("QUIVER")[1].combat) or o.basic_ammo
 			end
 			if mean and dam then
-				self:mouseTooltip(self.TOOLTIP_COMBAT_ATTACK, s:drawColorStringBlended(self.font, ("Attack(Main Hand): #00ff00#%3d"):format(player:combatAttack(mean)), w, h, 255, 255, 255)) h = h + self.font_h
-				self:mouseTooltip(self.TOOLTIP_COMBAT_DAMAGE, s:drawColorStringBlended(self.font, ("Damage(Main Hand): #00ff00#%3d"):format(player:combatDamage(dam)), w, h, 255, 255, 255)) h = h + self.font_h
-				self:mouseTooltip(self.TOOLTIP_COMBAT_APR,    s:drawColorStringBlended(self.font, ("APR   (Main Hand): #00ff00#%3d"):format(player:combatAPR(dam)), w, h, 255, 255, 255)) h = h + self.font_h
-				self:mouseTooltip(self.TOOLTIP_COMBAT_CRIT,   s:drawColorStringBlended(self.font, ("Crit  (Main Hand): #00ff00#%3d%%"):format(player:combatCrit(dam)), w, h, 255, 255, 255)) h = h + self.font_h
-				self:mouseTooltip(self.TOOLTIP_COMBAT_SPEED,  s:drawColorStringBlended(self.font, ("Speed (Main Hand): #00ff00#%0.2f"):format(player:combatSpeed(mean)), w, h, 255, 255, 255)) h = h + self.font_h
+				self:mouseTooltip(self.TOOLTIP_COMBAT_ATTACK, s:drawColorStringBlended(self.font, ("Accuracy(Main Hand): #00ff00#%3d"):format(player:combatAttack(mean)), w, h, 255, 255, 255)) h = h + self.font_h
+				self:mouseTooltip(self.TOOLTIP_COMBAT_DAMAGE, s:drawColorStringBlended(self.font, ("Damage  (Main Hand): #00ff00#%3d"):format(player:combatDamage(dam)), w, h, 255, 255, 255)) h = h + self.font_h
+				self:mouseTooltip(self.TOOLTIP_COMBAT_APR,    s:drawColorStringBlended(self.font, ("APR     (Main Hand): #00ff00#%3d"):format(player:combatAPR(dam)), w, h, 255, 255, 255)) h = h + self.font_h
+				self:mouseTooltip(self.TOOLTIP_COMBAT_CRIT,   s:drawColorStringBlended(self.font, ("Crit    (Main Hand): #00ff00#%3d%%"):format(player:combatCrit(dam)), w, h, 255, 255, 255)) h = h + self.font_h
+				self:mouseTooltip(self.TOOLTIP_COMBAT_SPEED,  s:drawColorStringBlended(self.font, ("Speed   (Main Hand): #00ff00#%0.2f"):format(player:combatSpeed(mean)), w, h, 255, 255, 255)) h = h + self.font_h
 			end
 			if mean and mean.range then self:mouseTooltip(self.TOOLTIP_COMBAT_RANGE, s:drawColorStringBlended(self.font, ("Range (Main Hand): #00ff00#%3d"):format(mean.range), w, h, 255, 255, 255)) h = h + self.font_h end
 		end
@@ -163,11 +163,11 @@ function _M:drawDialog(s)
 				dam = (player:getInven("QUIVER")[1] and player:getInven("QUIVER")[1].combat) or o.basic_ammo
 			end
 			if mean and dam then
-				self:mouseTooltip(self.TOOLTIP_COMBAT_ATTACK, s:drawColorStringBlended(self.font, ("Attack (Off Hand): #00ff00#%3d"):format(player:combatAttack(mean)), w, h, 255, 255, 255)) h = h + self.font_h
-				self:mouseTooltip(self.TOOLTIP_COMBAT_DAMAGE, s:drawColorStringBlended(self.font, ("Damage (Off Hand): #00ff00#%3d"):format(player:combatDamage(dam) * offmult), w, h, 255, 255, 255)) h = h + self.font_h
-				self:mouseTooltip(self.TOOLTIP_COMBAT_APR   , s:drawColorStringBlended(self.font, ("APR    (Off Hand): #00ff00#%3d"):format(player:combatAPR(dam)), w, h, 255, 255, 255)) h = h + self.font_h
-				self:mouseTooltip(self.TOOLTIP_COMBAT_CRIT  , s:drawColorStringBlended(self.font, ("Crit   (Off Hand): #00ff00#%3d%%"):format(player:combatCrit(dam)), w, h, 255, 255, 255)) h = h + self.font_h
-				self:mouseTooltip(self.TOOLTIP_COMBAT_SPEED , s:drawColorStringBlended(self.font, ("Speed  (Off Hand): #00ff00#%0.2f"):format(player:combatSpeed(mean)), w, h, 255, 255, 255)) h = h + self.font_h
+				self:mouseTooltip(self.TOOLTIP_COMBAT_ATTACK, s:drawColorStringBlended(self.font, ("Accuracy(Off Hand): #00ff00#%3d"):format(player:combatAttack(mean)), w, h, 255, 255, 255)) h = h + self.font_h
+				self:mouseTooltip(self.TOOLTIP_COMBAT_DAMAGE, s:drawColorStringBlended(self.font, ("Damage  (Off Hand): #00ff00#%3d"):format(player:combatDamage(dam) * offmult), w, h, 255, 255, 255)) h = h + self.font_h
+				self:mouseTooltip(self.TOOLTIP_COMBAT_APR   , s:drawColorStringBlended(self.font, ("APR     (Off Hand): #00ff00#%3d"):format(player:combatAPR(dam)), w, h, 255, 255, 255)) h = h + self.font_h
+				self:mouseTooltip(self.TOOLTIP_COMBAT_CRIT  , s:drawColorStringBlended(self.font, ("Crit    (Off Hand): #00ff00#%3d%%"):format(player:combatCrit(dam)), w, h, 255, 255, 255)) h = h + self.font_h
+				self:mouseTooltip(self.TOOLTIP_COMBAT_SPEED , s:drawColorStringBlended(self.font, ("Speed   (Off Hand): #00ff00#%0.2f"):format(player:combatSpeed(mean)), w, h, 255, 255, 255)) h = h + self.font_h
 			end
 			if mean and mean.range then self:mouseTooltip(self.TOOLTIP_COMBAT_RANGE, s:drawColorStringBlended(self.font, ("Range (Off Hand): #00ff00#%3d"):format(mean.range), w, h, 255, 255, 255)) h = h + self.font_h end
 		end
@@ -288,11 +288,11 @@ function _M:dump()
 				dam = (player:getInven("QUIVER")[1] and player:getInven("QUIVER")[1].combat) or o.basic_ammo
 			end
 			if mean and dam then
-				strings[1] = ("Attack(Main Hand): %3d"):format(player:combatAttack(mean))
-				strings[2] = ("Damage(Main Hand): %3d"):format(player:combatDamage(dam))
-				strings[3] = ("APR   (Main Hand): %3d"):format(player:combatAPR(dam))
-				strings[4] = ("Crit  (Main Hand): %3d%%"):format(player:combatCrit(dam))
-				strings[5] = ("Speed (Main Hand): %0.2f"):format(player:combatSpeed(mean))
+				strings[1] = ("Accuracy(Main Hand): %3d"):format(player:combatAttack(mean))
+				strings[2] = ("Damage  (Main Hand): %3d"):format(player:combatDamage(dam))
+				strings[3] = ("APR     (Main Hand): %3d"):format(player:combatAPR(dam))
+				strings[4] = ("Crit    (Main Hand): %3d%%"):format(player:combatCrit(dam))
+				strings[5] = ("Speed   (Main Hand): %0.2f"):format(player:combatSpeed(mean))
 			end
 			if mean and mean.range then strings[6] = ("Range (Main Hand): %3d"):format(mean.range) end
 		end
@@ -355,11 +355,11 @@ function _M:dump()
 			end
 			if mean and dam then
 				nl()
-				nl(("Attack (Off Hand): %3d"):format(player:combatAttack(mean)))
-				nl(("Damage (Off Hand): %3d"):format(player:combatDamage(dam) * offmult))
-				nl(("APR    (Off Hand): %3d"):format(player:combatAPR(dam)))
-				nl(("Crit   (Off Hand): %3d%%"):format(player:combatCrit(dam)))
-				nl(("Speed  (Off Hand): %0.2f"):format(player:combatSpeed(mean)))
+				nl(("Accuracy(Off Hand): %3d"):format(player:combatAttack(mean)))
+				nl(("Damage  (Off Hand): %3d"):format(player:combatDamage(dam) * offmult))
+				nl(("APR     (Off Hand): %3d"):format(player:combatAPR(dam)))
+				nl(("Crit    (Off Hand): %3d%%"):format(player:combatCrit(dam)))
+				nl(("Speed   (Off Hand): %0.2f"):format(player:combatSpeed(mean)))
 			end
 			if mean and mean.range then strings[6] = ("Range (Off Hand): %3d"):format(mean.range) end
 		end

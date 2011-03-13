@@ -101,7 +101,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You enter a calm, focused stance, increasing your damage(+%d), attack(+%d), armor penetration(+%d), and critical chance(+%d%%) but reducing your firing speed by %d%% and making you unable to move.
+		return ([[You enter a calm, focused stance, increasing your damage(+%d), accuracy(+%d), armor penetration(+%d), and critical chance(+%d%%) but reducing your firing speed by %d%% and making you unable to move.
 		The effects will increase with your Dexterity stat.]]):
 		format(4 + self:getTalentLevel(t) * self:getDex(10), 4 + self:getTalentLevel(t) * self:getDex(10),
 		3 + self:getTalentLevel(t) * self:getDex(10), 7 + self:getTalentLevel(t) * self:getDex(10),

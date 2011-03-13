@@ -152,7 +152,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local attackpen = t.getAttackPenalty(self, t)
 		local damagepen = t.getDamagePenalty(self, t)
-		return ([[You hit your target doing %d%% damage. If your attack hits, the target is crippled for %d turns, losing %d%% attack and %d%% damage.
+		return ([[You hit your target doing %d%% damage. If your attack hits, the target is crippled for %d turns, losing %d%% accuracy and %d%% damage.
 		Hit chance improves with talent level and your Dexterity stat.]]):
 		format(100 * damage, duration, attackpen, damagepen)
 	end,

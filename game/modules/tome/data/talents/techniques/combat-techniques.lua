@@ -43,7 +43,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You focus your strikes, reducing your attack speed by %d%% and increasing your attack by %d and critical chance by %d%%.
+		return ([[You focus your strikes, reducing your attack speed by %d%% and increasing your accuracy by %d and critical chance by %d%%.
 		The effects will increase with your Dexterity stat.]]):
 		format((1.3 * 8), 4 + (self:getTalentLevel(t) * self:getDex()) / 15, 4 + (self:getTalentLevel(t) * self:getDex()) / 25)
 	end,
@@ -122,7 +122,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You have learned to focus your blows to hit your target, granting +100 attack for %d turns.]]):format(1 + self:getTalentLevel(t))
+		return ([[You have learned to focus your blows to hit your target, granting +100 accuracy for %d turns.]]):format(1 + self:getTalentLevel(t))
 	end,
 }
 
