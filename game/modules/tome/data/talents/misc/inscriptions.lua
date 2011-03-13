@@ -302,7 +302,7 @@ newInscription{
 
 		-- Check LOS
 		local rad = 3
-		if not self:hasLOS(x, y) and rng.percent(35) then
+		if not self:hasLOS(x, y) and rng.percent(35 + (game.level.map.attrs(self.x, self.y, "control_teleport_fizzle") or 0)) then
 			game.logPlayer(self, "The targetted phase door fizzles and works randomly!")
 			x, y = self.x, self.y
 			rad = tg.range

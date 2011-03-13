@@ -17,27 +17,29 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+setStatusAll{control_teleport_fizzle=30}
+
 defineTile('<', "UP")
 defineTile(',', "FLOOR")
-defineTile('.', "FLOOR", nil, nil, nil, {lite=true, no_teleport=true})
+defineTile('.', "FLOOR", nil, nil, nil, {lite=true})
 defineTile('#', "WALL", nil, nil, nil, {lite=true})
-defineTile('*', "HARDWALL", nil, nil, nil, {lite=true, no_teleport=true})
+defineTile('*', "HARDWALL", nil, nil, nil, {lite=true})
 
 -- Portals
-defineTile('&', "FAR_EAST_PORTAL", nil, nil, nil, {lite=true, no_teleport=true})
-defineTile('"', "WEST_PORTAL", nil, nil, nil, {lite=true, no_teleport=true})
-defineTile('V', "VOID_PORTAL", nil, nil, nil, {lite=true, no_teleport=true})
-defineTile('!', "CFAR_EAST_PORTAL", nil, nil, nil, {lite=true, no_teleport=true})
-defineTile("'", "CWEST_PORTAL", nil, nil, nil, {lite=true, no_teleport=true})
-defineTile('v', "CVOID_PORTAL", nil, nil, nil, {lite=true, no_teleport=true})
-defineTile('d', "ORB_DESTRUCTION", nil, nil, nil, {lite=true, no_teleport=true})
-defineTile('D', "ORB_DRAGON", nil, nil, nil, {lite=true, no_teleport=true})
-defineTile('E', "ORB_ELEMENTS", nil, nil, nil, {lite=true, no_teleport=true})
-defineTile('U', "ORB_UNDEATH", nil, nil, nil, {lite=true, no_teleport=true})
+defineTile('&', "FAR_EAST_PORTAL", nil, nil, nil, {lite=true})
+defineTile('"', "WEST_PORTAL", nil, nil, nil, {lite=true})
+defineTile('V', "VOID_PORTAL", nil, nil, nil, {lite=true})
+defineTile('!', "CFAR_EAST_PORTAL", nil, nil, nil, {lite=true})
+defineTile("'", "CWEST_PORTAL", nil, nil, nil, {lite=true})
+defineTile('v', "CVOID_PORTAL", nil, nil, nil, {lite=true})
+defineTile('d', "ORB_DESTRUCTION", nil, nil, nil, {lite=true})
+defineTile('D', "ORB_DRAGON", nil, nil, nil, {lite=true})
+defineTile('E', "ORB_ELEMENTS", nil, nil, nil, {lite=true})
+defineTile('U', "ORB_UNDEATH", nil, nil, nil, {lite=true})
 
 -- Bosses
-defineTile('A', "FLOOR", nil, "ELANDAR", nil, {lite=true, no_teleport=true})
-defineTile('P', "FLOOR", nil, "ARGONIEL", nil, {lite=true, no_teleport=true})
+defineTile('A', "FLOOR", nil, "ELANDAR", nil, {lite=true})
+defineTile('P', "FLOOR", nil, "ARGONIEL", nil, {lite=true})
 
 addSpot({16, 4}, "portal", "demon")
 addSpot({33, 4}, "portal", "dragon")
