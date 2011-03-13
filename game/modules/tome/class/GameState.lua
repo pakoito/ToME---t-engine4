@@ -538,32 +538,32 @@ function _M:checkDonation(back_insert)
 	local min_interval = 30 * 24 * 60 * 60 -- 1 month
 	if os.time() < last + min_interval then
 		print("Donation check: too soon")
---		return
+		return
 	end
 
 	-- Not as soon as they start playing, wait 15 minutes
 	if os.time() - game.real_starttime < 15 * 60 then
 		print("Donation check: not started tome long enough")
---		return
+		return
 	end
 
 	-- Total playtime must be over a few hours
 	local total = profile.generic.modules_played and profile.generic.modules_played.tome or 0
 	if total + (os.time() - game.real_starttime) < 7 * 60 * 60 then
 		print("Donation check: total time too low")
---		return
+		return
 	end
 
 	-- Dont ask low level characters, they are probably still pissed to not have progressed further
 	if game.player.level < 15 then
 		print("Donation check: too low level")
---		return
+		return
 	end
 
 	-- Dont ask people in immediate danger
 	if game.player.life / game.player.max_life < 0.7 then
 		print("Donation check: too low life")
---		return
+		return
 	end
 
 	-- Dont ask people that already have their hands full
@@ -577,7 +577,7 @@ function _M:checkDonation(back_insert)
 	end
 	if nb_foes > 2 then
 		print("Donation check: too many foes")
---		return
+		return
 	end
 
 	-- Request money! Even a god has to eat :)

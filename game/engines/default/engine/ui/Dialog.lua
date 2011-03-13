@@ -48,7 +48,7 @@ function _M:simplePopup(title, text, fct, no_leave, any_leave)
 	local d = new(title, 1, 1)
 	d:loadUI{{left = 3, top = 3, ui=require("engine.ui.Textzone").new{width=w+10, height=h+5, text=text}}}
 	if not no_leave then
-		d.key:addBind("EXIT", function() print("==============exiting", d) game:unregisterDialog(d) if fct then fct() end end)
+		d.key:addBind("EXIT", function() game:unregisterDialog(d) if fct then fct() end end)
 		if any_leave then d.key:addCommand("__DEFAULT", function() game:unregisterDialog(d) if fct then fct() end end) end
 		local close = require("engine.ui.Button").new{text="Close", fct=function() d.key:triggerVirtual("EXIT") end}
 		d:loadUI{no_reset=true, {hcenter = 0, bottom = 3, ui=close}}
