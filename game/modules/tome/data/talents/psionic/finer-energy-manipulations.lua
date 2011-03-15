@@ -51,7 +51,7 @@ newTalent{
 
 	end,
 	action = function(self, t)
-		self:showInventory("Reshape which weapon?", self:getInven("INVEN"), function(o) return o.type == "weapon" and not o.fully_reshaped end, function(o, item)
+		self:showInventory("Reshape which weapon?", self:getInven("INVEN"), function(o) return not o.quest and o.type == "weapon" and not o.fully_reshaped end, function(o, item)
 			--o.wielder = o.wielder or {}
 			if (o.old_atk or 0) < t.boost(self, t) then
 				o.combat.atk = (o.combat.atk or 0) - (o.old_atk or 0)
@@ -95,7 +95,7 @@ newTalent{
 		return math.floor(0.1*self:combatTalentIntervalDamage(t, "wil", 50, 100))
 	end,
 	action = function(self, t)
-		self:showInventory("Reshape which piece of armor?", self:getInven("INVEN"), function(o) return o.type == "armor" and not o.fully_reshaped end, function(o, item)
+		self:showInventory("Reshape which piece of armor?", self:getInven("INVEN"), function(o) return not o.quest and o.type == "armor" and not o.fully_reshaped end, function(o, item)
 			if (o.old_fat or 0) < t.fat_red(self, t) then
 				o.wielder = o.wielder or {}
 				if not o.been_reshaped then

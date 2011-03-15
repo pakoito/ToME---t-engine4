@@ -983,7 +983,7 @@ function _M:debugRandomZone()
 	------------------------------------------------------------
 	data.depth = rng.range(2, 4)
 	data.min_lev, data.max_lev = game.player.level, game.player.level + 15
-	data.w, data.h = rng.range(20, 60), rng.range(20, 60)
+	data.w, data.h = rng.range(40, 60), rng.range(40, 60)
 
 	data.less_dir = rng.table{2, 4, 6, 8}
 	data.more_dir = ({[2]=8, [8]=2, [4]=6, [6]=4})[data.less_dir]
