@@ -22,13 +22,13 @@ racial_req1 = {
 	level = function(level) return 0 + (level-1)  end,
 }
 racial_req2 = {
-	level = function(level) return 4 + (level-1)  end,
-}
-racial_req3 = {
 	level = function(level) return 8 + (level-1)  end,
 }
+racial_req3 = {
+	level = function(level) return 16 + (level-1)  end,
+}
 racial_req4 = {
-	level = function(level) return 12 + (level-1)  end,
+	level = function(level) return 24 + (level-1)  end,
 }
 
 ------------------------------------------------------------------
@@ -38,7 +38,7 @@ newTalentType{ type="race/higher", name = "higher", generic = true, description 
 
 newTalent{
 	short_name = "HIGHER_HEAL",
-	name = "Gift of the Pureborn",
+	name = "Gift of the Highborn",
 	type = {"race/higher", 1},
 	require = racial_req1,
 	points = 5,
@@ -49,8 +49,8 @@ newTalent{
 		self:setEffect(self.EFF_REGENERATION, 10, {power=5 + self:getWil() * 0.5})
 		return true
 	end,
-	info = function(self)
-		return ([[Call upon the gift of the pureborn to regenerate your body for %d life every turn for 10 turns.
+	info = function(self, t)
+		return ([[Call upon the gift of the highborn to regenerate your body for %d life every turn for 10 turns.
 		The life healed will increase with the Willpower stat]]):format(5 + self:getWil() * 0.6)
 	end,
 }
@@ -67,8 +67,67 @@ newTalent{
 	on_unlearn = function(self, t)
 		self.sight = self.sight - 1
 	end,
-	info = function(self)
-		return ([[]]):format(5 + self:getWil() * 0.6)
+	info = function(self, t)
+		return ([[While Highers are not meant to rule other humans - and show no particular will to do so - they are frequently called to higher duties.
+		Their nature grants them better sense than other humans.
+		Increase maximun sight range by %d.]]):format(self:getTalentLevelRaw(t))
+	end,
+}
+
+newTalent{
+	name = "Born into Magic",
+	type = {"race/higher", 3},
+	require = racial_req3,
+	points = 5,
+	mode = "passive",
+	on_learn = function(self, t)
+		self.combat_spellresist = self.combat_spellresist + 3
+		self.resists[DamageType.ARCANE] = (self.resists[DamageType.ARCANE] or 0) + 5
+	end,
+	on_unlearn = function(self, t)
+		self.combat_spellresist = self.combat_spellresist - 3
+		self.resists[DamageType.ARCANE] = (self.resists[DamageType.ARCANE] or 0) - 5
+	end,
+	info = function(self, t)
+		return ([[Highers have originaly been created during the Age of Allure by the human Conclave. They are imbued with magic at the very core of their being.
+		Increase spell save by +%d and Arcane resistance by %d%%.]]):format(self:getTalentLevel(t) * 3, self:getTalentLevel(t) * 5)
+	end,
+}
+
+newTalent{
+	name = "Highborn's Bloom",
+	type = {"race/higher", 4},
+	require = racial_req4,
+	points = 5,
+	no_energy = true,
+	cooldown = function(self, t) return 100 - self:getTalentLevel(t) * 5 end,
+	tactical = { MANA = 2, VIM = 2, EQUILIBRIUM = 2, STAMINA = 2, POSITIVE = 2, NEGATIVE = 2, PARADOX = 2, PSI = 2 },
+	getData = function(self, t)
+		local base = self:combatTalentStatDamage(t, "con", 10, 90)
+		return {
+			stamina = base,
+			mana = base * 1.8,
+			equilibrium = -base * 1.5,
+			vim = base,
+			positive = base / 2,
+			negative = base / 2,
+			paradox = -base * 1.5,
+			psi = base * 0.7,
+		}
+	end,
+	action = function(self, t)
+		local data = t.getData(self, t)
+		for name, v in pairs(data) do
+			local inc = "inc"..name:capitalize()
+			if self[inc] then self[inc](self, v) end
+		end
+		return true
+	end,
+	info = function(self, t)
+		local d = t.getData(self, t)
+		return ([[Activate some of your inner magic, manipulating the world to be in a better shape for you.
+		Restores %d stamina, %d mana, %d equilibrium, %d vim, %d positive and negative energies, -%d paradox and %d psi energy.
+		The effect increases with your Constitution.]]):format(d.stamina, d.mana, d.equilibrium, d.vim, d.positive, d.paradox, d.psi)
 	end,
 }
 
@@ -88,7 +147,7 @@ newTalent{
 		self:setEffect(self.EFF_SPEED, 8, {power=1 - 1 / (1 + power)})
 		return true
 	end,
-	info = function(self)
+	info = function(self, t)
 		return ([[Call upon the grace of the Eternals to increase your general speed by %d%% for 8 turns.
 		The speed bonus will increase with the Dexterity stat]]):format((0.1 + self:getDex() / 210) * 100)
 	end,
@@ -113,7 +172,7 @@ newTalent{
 		})
 		return true
 	end,
-	info = function(self)
+	info = function(self, t)
 		return ([[Call upon the legendary resilience of the Dwarven race to increase your armor(+%d), spell(+%d) and physical(+%d) saves for 8 turns.
 		The bonus will increase with the Constitution stat]]):format(5 + self:getCon() / 5, 10 + self:getCon() / 5, 10 + self:getCon() / 5)
 	end,
@@ -137,7 +196,7 @@ newTalent{
 		})
 		return true
 	end,
-	info = function(self)
+	info = function(self, t)
 		return ([[Call upon the luck and cunning of the Little Folk to increase your physical and spell critical strike chance by %d%% for 5 turns.
 		The bonus will increase with the Cunning stat]]):format(10 + self:getCun() / 5, 10 + self:getCun() / 5)
 	end,
@@ -158,7 +217,7 @@ newTalent{
 		self:setEffect(self.EFF_ETERNAL_WRATH, 5, {power=7 + self:getWil(10)})
 		return true
 	end,
-	info = function(self)
+	info = function(self, t)
 		return ([[Call upon the power of the Eternals, increasing all damage by %d%% and reducing all damage taken by %d%% for 5 turns.
 		The bonus will increase with the Willpower stat]]):format(7 + self:getWil(10), 7 + self:getWil(10))
 	end,
@@ -179,7 +238,7 @@ newTalent{
 		self:setEffect(self.EFF_ORC_FURY, 5, {power=10 + self:getWil(20)})
 		return true
 	end,
-	info = function(self)
+	info = function(self, t)
 		return ([[Summons your lust for blood and destruction, increasing all damage by %d%% for 5 turns.
 		The bonus will increase with the Willpower stat]]):format(10 + self:getWil(20))
 	end,
@@ -212,7 +271,7 @@ newTalent{
 		end)
 		return true
 	end,
-	info = function(self)
+	info = function(self, t)
 		return ([[Shatters the mind of your victim, giving your full control over its actions for %s turns.
 		When the effect ends you pull out your mind and the victim's body colapses dead.
 		This effect does not work on elite or undeads.
@@ -233,7 +292,7 @@ newTalent{
 		chat:invoke()
 		return true
 	end,
-	info = function(self)
+	info = function(self, t)
 		return ([[You merge your mind with the rest of the Way for a brief moment, the sum of all yeek knowledge gathers in your mind
 		and allows you to identify any item you could not recognize yourself.]])
 	end,
