@@ -1351,7 +1351,7 @@ function _M:levelup()
 	if self.alchemy_golem then self.alchemy_golem:forceLevelup(self.level) end
 
 	-- Notify party levelups
-	if self.x and self.y and game.party:hasMember(self) then
+	if self.x and self.y and game.party:hasMember(self) and not self.silent_levelup then
 		local x, y = game.level.map:getTileToScreen(self.x, self.y)
 		game.flyers:add(x, y, 80, 0.5, -2, "LEVEL UP!", {0,255,255})
 		game.log("#00ffff#Welcome to level %d [%s].", self.level, self.name:capitalize())

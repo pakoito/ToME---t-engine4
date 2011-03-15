@@ -73,6 +73,7 @@ newBirthDescriptor
 		"#GOLD#Confusion resistance:#LIGHT_BLUE# 35%",
 	},
 	inc_stats = { str=-3, con=-5, cun=4, wil=6, mag=0, dex=-2 },
+	talents_types = { ["race/yeek"]={true, 0} },
 	talents = {
 		[ActorTalents.T_YEEK_WILL]=1,
 		[ActorTalents.T_YEEK_ID]=1,

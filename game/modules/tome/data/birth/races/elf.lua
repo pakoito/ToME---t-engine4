@@ -70,6 +70,7 @@ newBirthDescriptor
 	},
 	inc_stats = { str=-2, mag=2, wil=3, cun=1, dex=1, con=0 },
 	experience = 1.3,
+	talents_types = { ["race/shalore"]={true, 0} },
 	talents = { [ActorTalents.T_SHALOREN_SPEED]=1 },
 	copy = {
 		default_wilderness = {"playerpop", "shaloren"},
@@ -102,6 +103,7 @@ newBirthDescriptor
 	},
 	inc_stats = { str=2, mag=-2, wil=1, cun=0, dex=3, con=1 },
 	experience = 1.3,
+	talents_types = { ["race/thalore"]={true, 0} },
 	talents = { [ActorTalents.T_THALOREN_WRATH]=1 },
 	copy = {
 		faction = "thalore",

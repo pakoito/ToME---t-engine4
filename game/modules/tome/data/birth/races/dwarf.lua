@@ -69,6 +69,7 @@ newBirthDescriptor
 		"#GOLD#Experience penalty:#LIGHT_BLUE# 25%",
 	},
 	inc_stats = { str=4, con=3, wil=3, mag=-2, dex=-2 },
+	talents_types = { ["race/dwarf"]={true, 0} },
 	talents = {
 		[ActorTalents.T_DWARF_RESILIENCE]=1,
 	},

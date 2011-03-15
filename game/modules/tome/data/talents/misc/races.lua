@@ -90,7 +90,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Highers have originaly been created during the Age of Allure by the human Conclave. They are imbued with magic at the very core of their being.
-		Increase spell save by +%d and Arcane resistance by %d%%.]]):format(self:getTalentLevel(t) * 3, self:getTalentLevel(t) * 5)
+		Increase spell save by +%d and Arcane resistance by %d%%.]]):format(self:getTalentLevelRaw(t) * 3, self:getTalentLevelRaw(t) * 5)
 	end,
 }
 
@@ -126,7 +126,7 @@ newTalent{
 	info = function(self, t)
 		local d = t.getData(self, t)
 		return ([[Activate some of your inner magic, manipulating the world to be in a better shape for you.
-		Restores %d stamina, %d mana, %d equilibrium, %d vim, %d positive and negative energies, -%d paradox and %d psi energy.
+		Restores %d stamina, %d mana, %d equilibrium, %d vim, %d positive and negative energies, %d paradox and %d psi energy.
 		The effect increases with your Constitution.]]):format(d.stamina, d.mana, d.equilibrium, d.vim, d.positive, d.paradox, d.psi)
 	end,
 }
@@ -139,8 +139,9 @@ newTalent{
 	short_name = "SHALOREN_SPEED",
 	name = "Grace of the Eternals",
 	type = {"race/shalore", 1},
+	require = racial_req1,
 	no_energy = true,
-	cooldown = 50,
+	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 5 end,
 	tactical = { DEFEND = 1 },
 	action = function(self, t)
 		local power = 0.1 + self:getDex() / 210
@@ -154,6 +155,137 @@ newTalent{
 }
 
 ------------------------------------------------------------------
+-- Thaloren powers
+------------------------------------------------------------------
+newTalentType{ type="race/thalore", name = "thalore", generic = true, description = "The various racial bonuses a character can have." }
+newTalent{
+	short_name = "THALOREN_WRATH",
+	name = "Wrath of the Woods",
+	type = {"race/thalore", 1},
+	require = racial_req1,
+	points = 5,
+	no_energy = true,
+	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 5 end,
+	tactical = { ATTACK = 1, DEFEND = 1 },
+	action = function(self, t)
+		self:setEffect(self.EFF_ETERNAL_WRATH, 5, {power=7 + self:getWil(10)})
+		return true
+	end,
+	info = function(self, t)
+		return ([[Call upon the power of the Eternals, increasing all damage by %d%% and reducing all damage taken by %d%% for 5 turns.
+		The bonus will increase with the Willpower stat]]):format(7 + self:getWil(10), 7 + self:getWil(10))
+	end,
+}
+
+newTalent{
+	name = "Unshackled",
+	type = {"race/thalore", 2},
+	require = racial_req2,
+	points = 5,
+	mode = "passive",
+	on_learn = function(self, t)
+		self.combat_physresist = self.combat_physresist + 5
+		self.combat_mentalresist = self.combat_mentalresist + 5
+	end,
+	on_unlearn = function(self, t)
+		self.combat_physresist = self.combat_physresist - 5
+		self.combat_mentalresist = self.combat_mentalresist - 5
+	end,
+	info = function(self, t)
+		return ([[Thaloren have always been a free people, living in their beloved forest, never carrying much about the world outside.
+		Increase physical and mental save by +%d.]]):format(self:getTalentLevelRaw(t) * 5)
+	end,
+}
+
+newTalent{
+	name = "Guardian of the Wood",
+	type = {"race/thalore", 3},
+	require = racial_req3,
+	points = 5,
+	mode = "passive",
+	on_learn = function(self, t)
+		self.disease_immune = self.disease_immune + 0.12
+		self.resists[DamageType.BLIGHT] = (self.resists[DamageType.BLIGHT] or 0) + 4
+	end,
+	on_unlearn = function(self, t)
+		self.disease_immune = self.disease_immune - 0.12
+		self.resists[DamageType.BLIGHT] = (self.resists[DamageType.BLIGHT] or 0) - 4
+	end,
+	info = function(self, t)
+		return ([[You are part of the wood, it shields you from corruption.
+		Increase diseases immunity by %d%% and Blight resistance by %d%%.]]):format(self:getTalentLevel(t) * 12, self:getTalentLevel(t) * 4)
+	end,
+}
+
+newTalent{
+	name = "Nature's Pride",
+	type = {"race/thalore", 4},
+	require = racial_req4,
+	points = 5,
+	no_energy = true,
+	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 3 end,
+	tactical = { ATTACK = 2 },
+	action = function(self, t)
+		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
+		local tx, ty, target = self:getTarget(tg)
+		if not tx or not ty then return nil end
+		local _ _, tx, ty = self:canProject(tg, tx, ty)
+		target = game.level.map(tx, ty, Map.ACTOR)
+		if target == self then target = nil end
+
+		-- Find space
+		for i = 1, 2 do
+			local x, y = util.findFreeGrid(tx, ty, 5, true, {[Map.ACTOR]=true})
+			if not x then
+				game.logPlayer(self, "Not enough space to summon!")
+				return
+			end
+
+			local NPC = require "mod.class.NPC"
+			local m = NPC.new{
+				type = "immovable", subtype = "plants",
+				display = "#",
+				name = "treant", color=colors.GREEN,
+				desc = "A very strong near-sentient tree.",
+
+				body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+
+				rank = 3,
+				life_rating = 13,
+				max_life = resolvers.rngavg(50,80),
+				infravision = 20,
+
+				autolevel = "none",
+				ai = "summoned", ai_real = "tactical", ai_state = { talent_in=2, },
+				stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
+				combat = { dam=resolvers.levelup(resolvers.rngavg(15,25), 1, 1.3), atk=resolvers.levelup(resolvers.rngavg(15,25), 1, 1.3), dammod={str=1.1} },
+				inc_stats = { str=25 + self:getWil() * self:getTalentLevel(t) / 5, dex=18, con=10 + self:getTalentLevel(t) * 2, },
+
+				level_range = {1, nil}, exp_worth = 0,
+				silent_levelup = true,
+
+				combat_armor = 13, combat_def = 8,
+				resolvers.talents{ [Talents.T_STUN]=3, [Talents.T_KNOCKBACK]=2, },
+
+				faction = self.faction,
+				summoner = self, summoner_gain_exp=true,
+				summon_time = 6,
+				ai_target = {actor=target}
+			}
+			setupSummon(self, m, x, y)
+		end
+
+		game:playSoundNear(self, "talents/spell_generic")
+		return true
+	end,
+	info = function(self, t)
+		return ([[Nature is with you, you can always feel the call of the woods.
+		Summons two elite Treants to your side for 6 turns.
+		Their strength increase with your Willpower stat]]):format()
+	end,
+}
+
+------------------------------------------------------------------
 -- Dwarvess powers
 ------------------------------------------------------------------
 newTalentType{ type="race/dwarf", name = "dwarf", generic = true, description = "The various racial bonuses a character can have." }
@@ -161,8 +293,9 @@ newTalent{
 	short_name = "DWARF_RESILIENCE",
 	name = "Resilience of the Dwarves",
 	type = {"race/dwarf", 1},
+	require = racial_req1,
 	no_energy = true,
-	cooldown = 50,
+	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 5 end,
 	tactical = { DEFEND = 2 },
 	action = function(self, t)
 		self:setEffect(self.EFF_DWARVEN_RESILIENCE, 8, {
@@ -186,8 +319,9 @@ newTalent{
 	short_name = "HALFLING_LUCK",
 	name = "Luck of the Little Folk",
 	type = {"race/halfling", 1},
+	require = racial_req1,
 	no_energy = true,
-	cooldown = 50,
+	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 5 end,
 	tactical = { ATTACK = 2 },
 	action = function(self, t)
 		self:setEffect(self.EFF_HALFLING_LUCK, 5, {
@@ -203,27 +337,6 @@ newTalent{
 }
 
 ------------------------------------------------------------------
--- Thaloren powers
-------------------------------------------------------------------
-newTalentType{ type="race/thalore", name = "thalore", generic = true, description = "The various racial bonuses a character can have." }
-newTalent{
-	short_name = "THALOREN_WRATH",
-	name = "Wrath of the Eternals",
-	type = {"race/thalore", 1},
-	no_energy = true,
-	cooldown = 50,
-	tactical = { ATTACK = 1, DEFEND = 1 },
-	action = function(self, t)
-		self:setEffect(self.EFF_ETERNAL_WRATH, 5, {power=7 + self:getWil(10)})
-		return true
-	end,
-	info = function(self, t)
-		return ([[Call upon the power of the Eternals, increasing all damage by %d%% and reducing all damage taken by %d%% for 5 turns.
-		The bonus will increase with the Willpower stat]]):format(7 + self:getWil(10), 7 + self:getWil(10))
-	end,
-}
-
-------------------------------------------------------------------
 -- Orcs powers
 ------------------------------------------------------------------
 newTalentType{ type="race/orc", name = "orc", generic = true, description = "The various racial bonuses a character can have." }
@@ -231,8 +344,9 @@ newTalent{
 	short_name = "ORC_FURY",
 	name = "Orcish Fury",
 	type = {"race/orc", 1},
+	require = racial_req1,
 	no_energy = true,
-	cooldown = 50,
+	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 5 end,
 	tactical = { ATTACK = 2 },
 	action = function(self, t)
 		self:setEffect(self.EFF_ORC_FURY, 5, {power=10 + self:getWil(20)})
@@ -252,8 +366,9 @@ newTalent{
 	short_name = "YEEK_WILL",
 	name = "Dominant Will",
 	type = {"race/yeek", 1},
+	require = racial_req1,
 	no_energy = true,
-	cooldown = 50,
+	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 3 end,
 	range = 4,
 	no_npc_use = true,
 	action = function(self, t)

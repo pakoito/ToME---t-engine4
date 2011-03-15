@@ -82,7 +82,7 @@ function checkMaxSummon(self, silent)
 	end
 end
 
-function setupSummon(self, m, x, y)
+function setupSummon(self, m, x, y, no_control)
 	m.unused_stats = 0
 	m.unused_talents = 0
 	m.unused_generics = 0
@@ -99,9 +99,11 @@ function setupSummon(self, m, x, y)
 	m:attr("pin_immune", self:attr("pin_immune"))
 	m:attr("confusion_immune", self:attr("confusion_immune"))
 	if game.party:hasMember(self) then
+		local can_control = not no_controll and self:knowTalent(self.T_SUMMON_CONTROL)
+
 		m.remove_from_party_on_death = true
 		game.party:addMember(m, {
-			control=self:knowTalent(self.T_SUMMON_CONTROL) and "full" or "no",
+			control=can_control and "full" or "no",
 			type="summon",
 			title="Summon",
 			orders = {target=true, leash=true, anchor=true, talents=true},
