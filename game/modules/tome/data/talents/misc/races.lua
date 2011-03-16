@@ -201,7 +201,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[As the only immortal race of Eyal, Shaloren have learnt to use their innate inner magic to protect themselves.
+		return ([[As the only immortal race of Eyal, Shaloren have learnt, over the long years, to use their innate inner magic to protect themselves.
 		%d%% chances to become invisible (power %d) for 5 turns when hit by a blow doing at least 15%% of their total life.]]):
 		format(self:getTalentLevelRaw(t) * 5, 5 + self:getMag(20))
 	end,
@@ -216,62 +216,23 @@ newTalent{
 	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 3 end,
 	tactical = { ATTACK = 2 },
 	action = function(self, t)
-		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
-		local tx, ty, target = self:getTarget(tg)
-		if not tx or not ty then return nil end
-		local _ _, tx, ty = self:canProject(tg, tx, ty)
-		target = game.level.map(tx, ty, Map.ACTOR)
-		if target == self then target = nil end
-
-		-- Find space
-		for i = 1, 2 do
-			local x, y = util.findFreeGrid(tx, ty, 5, true, {[Map.ACTOR]=true})
-			if not x then
-				game.logPlayer(self, "Not enough space to summon!")
-				return
+		local target = self
+		for eff_id, p in pairs(target.tmp) do
+			local e = target.tempeffect_def[eff_id]
+			if e.status == "beneficial" then
+				p.dur = p.dur + self:getTalentLevelRaw(t)
+			elseif e.status == "detrimental" then
+				p.dur = p.dur - self:getTalentLevelRaw(t) * 2
 			end
-
-			local NPC = require "mod.class.NPC"
-			local m = NPC.new{
-				type = "immovable", subtype = "plants",
-				display = "#",
-				name = "treant", color=colors.GREEN,
-				desc = "A very strong near-sentient tree.",
-
-				body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-
-				rank = 3,
-				life_rating = 13,
-				max_life = resolvers.rngavg(50,80),
-				infravision = 20,
-
-				autolevel = "none",
-				ai = "summoned", ai_real = "tactical", ai_state = { talent_in=2, },
-				stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
-				combat = { dam=resolvers.levelup(resolvers.rngavg(15,25), 1, 1.3), atk=resolvers.levelup(resolvers.rngavg(15,25), 1, 1.3), dammod={str=1.1} },
-				inc_stats = { str=25 + self:getWil() * self:getTalentLevel(t) / 5, dex=18, con=10 + self:getTalentLevel(t) * 2, },
-
-				level_range = {1, nil}, exp_worth = 0,
-				silent_levelup = true,
-
-				combat_armor = 13, combat_def = 8,
-				resolvers.talents{ [Talents.T_STUN]=3, [Talents.T_KNOCKBACK]=2, },
-
-				faction = self.faction,
-				summoner = self, summoner_gain_exp=true,
-				summon_time = 6,
-				ai_target = {actor=target}
-			}
-			setupSummon(self, m, x, y)
 		end
 
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Nature is with you, you can always feel the call of the woods.
-		Summons two elite Treants to your side for 6 turns.
-		Their strength increase with your Willpower stat]]):format()
+		return ([[The world grows old as you stand the ages. To you time is different.
+		Reduces the time remaining on detrimental effects by %d and increases the time remaining on beneficial effects by %d.]]):
+		format(self:getTalentLevelRaw(t) * 2, self:getTalentLevelRaw(t))
 	end,
 }
 
