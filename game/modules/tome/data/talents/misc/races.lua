@@ -182,7 +182,7 @@ newTalent{
 	type = {"race/shalore", 3},
 	require = racial_req3,
 	points = 5,
-	cooldown = 50,
+	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 3 end,
 	mode = "sustained",
 	activate = function(self, t)
 		self.invis_on_hit_disable = self.invis_on_hit_disable or {}

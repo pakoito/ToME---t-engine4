@@ -37,10 +37,10 @@ local imbue_ring = function(npc, player)
 	end)
 end
 
-local artifact_imbue_ring = function(npc, player)
-	player:showInventory("Imbue which ring?", player:getInven("INVEN"), function(o) return o.type == "jewelry" and o.subtype == "ring" and not o.egoed and not o.unique end, function(ring, ring_item)
-		player:showInventory("Use which first gem?", player:getInven("INVEN"), function(gem1) return gem1.type == "gem" and (gem1.material_level or 99) <= ring.material_level and not gem1.unique end, function(gem1, gem1_item)
-			player:showInventory("Use which second gem?", player:getInven("INVEN"), function(gem2) return gem2.type == "gem" and (gem2.material_level or 99) <= ring.material_level and gem1.name ~= gem2.name and not gem2.unique end, function(gem2, gem2_item)
+local artifact_imbue_amulet = function(npc, player)
+	player:showInventory("Imbue which amulet?", player:getInven("INVEN"), function(o) return o.type == "jewelry" and o.subtype == "amulet" and not o.egoed and not o.unique end, function(amulet, amulet_item)
+		player:showInventory("Use which first gem?", player:getInven("INVEN"), function(gem1) return gem1.type == "gem" and (gem1.material_level or 99) <= amulet.material_level and not gem1.unique end, function(gem1, gem1_item)
+			player:showInventory("Use which second gem?", player:getInven("INVEN"), function(gem2) return gem2.type == "gem" and (gem2.material_level or 99) <= amulet.material_level and gem1.name ~= gem2.name and not gem2.unique end, function(gem2, gem2_item)
 				local price = 390
 				if price > player.money then require("engine.ui.Dialog"):simplePopup("Not enough money", "Limmir needs more gold for the magical plating.") return end
 
@@ -56,14 +56,14 @@ local artifact_imbue_ring = function(npc, player)
 						player:removeObject(player:getInven("INVEN"), gem2_item)
 						player:removeObject(player:getInven("INVEN"), gem1_item)
 					end
-					ring.wielder = ring.wielder or {}
-					table.mergeAdd(ring.wielder, gem1.imbue_powers, true)
-					table.mergeAdd(ring.wielder, gem2.imbue_powers, true)
-					table.mergeAdd(ring.wielder, gem3.imbue_powers, true)
-					ring.name = "Limmir's Ring of the Moon"
-					ring.been_imbued = true
-					ring.unique = util.uuid()
-					game.logPlayer(player, "%s creates: %s", npc.name:capitalize(), ring:getName{do_colour=true, no_count=true})
+					amulet.wielder = amulet.wielder or {}
+					table.mergeAdd(amulet.wielder, gem1.imbue_powers, true)
+					table.mergeAdd(amulet.wielder, gem2.imbue_powers, true)
+					table.mergeAdd(amulet.wielder, gem3.imbue_powers, true)
+					amulet.name = "Limmir's Amulet of the Moon"
+					amulet.been_imbued = true
+					amulet.unique = util.uuid()
+					game.logPlayer(player, "%s creates: %s", npc.name:capitalize(), amulet:getName{do_colour=true, no_count=true})
 				end end)
 			end)
 		end)
@@ -78,7 +78,7 @@ newChat{ id="welcome",
 			npc.store:interact(player)
 		end, cond=function(npc, player) return npc.store and true or false end},
 		{"I am looking for special jewelry.", jump="jewelry"},
-		{"So you can make better rings in this place?", jump="artifact_jewelry", cond=function(npc, player) return npc.can_craft and player:hasQuest("master-jeweler") and player:isQuestStatus("master-jeweler", engine.Quest.COMPLETED, "limmir-survived") end},
+		{"So you can infused amulets in this place?", jump="artifact_jewelry", cond=function(npc, player) return npc.can_craft and player:hasQuest("master-jeweler") and player:isQuestStatus("master-jeweler", engine.Quest.COMPLETED, "limmir-survived") end},
 		{"I have found this tome; it looked important.", jump="quest", cond=function(npc, player) return npc.can_quest and player:hasQuest("master-jeweler") and player:hasQuest("master-jeweler"):has_tome(player) end},
 		{"Sorry I have to go!"},
 	}
@@ -95,18 +95,18 @@ There is a small fee dependent on the level of the ring, and you need a quality 
 }
 
 newChat{ id="artifact_jewelry",
-	text = [[Yes! Thanks to you this place is now free from the corruption. I will stay on this island to study the magical aura, and as promised I can make you better rings.
-Bring me a non-magical ring and two different gems and I will turn them into a powerful ring.
+	text = [[Yes! Thanks to you this place is now free from the corruption. I will stay on this island to study the magical aura, and as promised I can make you powerful amulets.
+Bring me a non-magical amulet and two different gems and I will turn them into a powerful amulet.
 I will not make you pay a fee for it since you helped me so much, but I am afraid the ritual requires a gold plating. This should be equal to about 390 gold pieces.]],
 	answers = {
-		{"I need your services.", action=artifact_imbue_ring},
+		{"I need your services.", action=artifact_imbue_amulet},
 		{"Not now, thanks."},
 	}
 }
 
 newChat{ id="quest",
 	text = [[#LIGHT_GREEN#*He quickly looks at the tome and looks amazed.*#WHITE# This is an amazing find! Truly amazing!
-With this knowledge I could create much more potent rings. However, this requires a special place of power to craft such items.
+With this knowledge I could create much potent amulets. However, this requires a special place of power to craft such items.
 There are rumours about a site of power in the southern mountains. Old legends tell about a place where a part of the Moon melted when it got too close to the Sun and fell from the sky.
 A lake formed in the crater of the crash. The water of this lake, soaked in intense Moonlight for eons, should be sufficient to forge powerful artifacts!
 Go to the lake and then summon me with this scroll. I will retire to study the tome, awaiting your summon.]],
