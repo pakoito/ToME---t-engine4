@@ -164,12 +164,12 @@ newTalent{
 	on_learn = function(self, t)
 		self.combat_physcrit = self.combat_physcrit + 2
 		self.combat_spellcrit = self.combat_spellcrit + 2
-		self.combat_mindcrit = self.combat_mindscrit + 2
+		self.combat_mindcrit = self.combat_mindcrit + 2
 	end,
 	on_unlearn = function(self, t)
 		self.combat_physcrit = self.combat_physcrit - 2
 		self.combat_spellcrit = self.combat_spellcrit - 2
-		self.combat_mindcrit = self.combat_mindscrit - 2
+		self.combat_mindcrit = self.combat_mindcrit - 2
 	end,
 	info = function(self, t)
 		return ([[Reality bends slightly in the presence of a Shaloren due to their inherent magical nature.
