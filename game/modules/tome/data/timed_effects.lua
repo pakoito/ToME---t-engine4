@@ -2013,6 +2013,18 @@ newEffect{
 	parameters = { hp=10, regen=10 },
 	on_gain = function(self, err) return nil, "+Bloodbath" end,
 	on_lose = function(self, err) return nil, "-Bloodbath" end,
+	on_merge = function(self, old_eff, new_eff)
+		self:removeTemporaryValue("max_life", old_eff.life_id)
+		self:removeTemporaryValue("life_regen", old_eff.life_regen_id)
+		self:removeTemporaryValue("stamina_regen", old_eff.stamina_regen_id)
+
+		-- Take the new values, dont heal, otherwise you get a free heal each crit .. which is totaly broken
+		local v = new_eff.hp * self.max_life / 100
+		new_eff.life_id = self:addTemporaryValue("max_life", v)
+		new_eff.life_regen_id = self:addTemporaryValue("life_regen", new_eff.regen * self.life_regen / 100)
+		new_eff.stamina_regen_id = self:addTemporaryValue("stamina_regen", new_eff.regen * self.stamina_regen / 100)
+		return new_eff
+	end,
 	activate = function(self, eff)
 		local v = eff.hp * self.max_life / 100
 		eff.life_id = self:addTemporaryValue("max_life", v)

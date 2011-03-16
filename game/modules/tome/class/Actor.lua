@@ -80,6 +80,7 @@ function _M:init(t, no_default)
 	self.combat_spellcrit = 0
 	self.combat_spellpower = 0
 	self.combat_mindpower = 0
+	self.combat_mindcrit = 0
 
 	self.combat_physresist = 0
 	self.combat_spellresist = 0
@@ -1067,6 +1068,11 @@ function _M:onTakeHit(value, src)
 		self:incVim(3 + self:getTalentLevel(self.T_LEECH) * 0.7)
 		self:heal(5 + self:getTalentLevel(self.T_LEECH) * 3)
 		game.logPlayer(self, "#AQUAMARINE#You leech a part of %s vim.", src.name:capitalize())
+	end
+
+	if value >= self.max_life * 0.15 and self:attr("invis_on_hit") and rng.percent(self:attr("invis_on_hit")) then
+		self:setEffect(self.EFF_INVISIBILITY, 5, {power=self:attr("invis_on_hit_power")})
+		for tid, _ in pairs(self.invis_on_hit_disable) do self:forceUseTalent(tid, {ignore_energy=true}) end
 	end
 
 	return value
