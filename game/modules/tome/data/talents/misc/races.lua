@@ -286,11 +286,11 @@ newTalent{
 	points = 5,
 	mode = "passive",
 	on_learn = function(self, t)
-		self.disease_immune = self.disease_immune + 0.12
+		self:attr("disease_immune", 0.12)
 		self.resists[DamageType.BLIGHT] = (self.resists[DamageType.BLIGHT] or 0) + 4
 	end,
 	on_unlearn = function(self, t)
-		self.disease_immune = self.disease_immune - 0.12
+		self:attr("disease_immune", -0.12)
 		self.resists[DamageType.BLIGHT] = (self.resists[DamageType.BLIGHT] or 0) - 4
 	end,
 	info = function(self, t)
@@ -480,11 +480,129 @@ newTalent{
 	end,
 }
 
+newTalent{
+	name = "Unity",
+	type = {"race/yeek", 2},
+	require = racial_req2,
+	points = 5,
+	mode = "passive",
+	on_learn = function(self, t)
+		self:attr("confusion_immune", 0.12)
+		self:attr("silence_immune", 0.12)
+		self.combat_mentalresist = self.combat_mentalresist + 4
+	end,
+	on_unlearn = function(self, t)
+		self:attr("confusion_immune", -0.12)
+		self:attr("silence_immune", -0.12)
+		self.combat_mentalresist = self.combat_mentalresist - 4
+	end,
+	info = function(self, t)
+		return ([[Your mind becomes more attuned to the Way and is shielded from outside effects.
+		Increase confusion and silence immunities by %d%% and your mental save by +%d.]]):format(self:getTalentLevelRaw(t) * 12, self:getTalentLevelRaw(t) * 4)
+	end,
+}
+
+newTalent{
+	name = "Quickened",
+	type = {"race/yeek", 3},
+	require = racial_req3,
+	points = 5,
+	mode = "passive",
+	on_learn = function(self, t)
+		self.energy.mod = self.energy.mod + 0.03
+	end,
+	on_unlearn = function(self, t)
+		self.energy.mod = self.energy.mod - 0.03
+	end,
+	info = function(self, t)
+		return ([[Yeeks live fast, think fast, and sacrifice fast for the Way.
+		Increase global speed by %d%%.]]):format(self:getTalentLevelRaw(t) * 3)
+	end,
+}
+
+newTalent{
+	name = "Wayist",
+	type = {"race/yeek", 4},
+	require = racial_req4,
+	points = 5,
+	no_energy = true,
+	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 3 end,
+	range = 4,
+	no_npc_use = true,
+	action = function(self, t)
+		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
+		local tx, ty, target = self:getTarget(tg)
+		if not tx or not ty then return nil end
+		local _ _, tx, ty = self:canProject(tg, tx, ty)
+		target = game.level.map(tx, ty, Map.ACTOR)
+		if target == self then target = nil end
+
+		-- Find space
+		for i = 1, 3 do
+			local x, y = util.findFreeGrid(tx, ty, 5, true, {[Map.ACTOR]=true})
+			if not x then
+				game.logPlayer(self, "Not enough space to summon!")
+				return
+			end
+
+			local NPC = require "mod.class.NPC"
+			local m = NPC.new{
+				type = "humanoid", subtype = "yeek",
+				display = "y",
+				name = "yeek mindslayer", color=colors.YELLOW,
+				desc = "A wayist that came to help.",
+
+				body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+
+				rank = 3,
+				life_rating = 8,
+				max_life = resolvers.rngavg(50,80),
+				infravision = 20,
+
+				autolevel = "none",
+				ai = "summoned", ai_real = "tactical", ai_state = { talent_in=2, },
+				stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
+				inc_stats = { str=25 + self:getWil() * self:getTalentLevel(t) / 5, dex=18, con=10 + self:getTalentLevel(t) * 2, },
+
+				resolvers.equip{
+					{type="weapon", subtype="longsword", autoreq=true},
+					{type="weapon", subtype="dagger", autoreq=true},
+				},
+
+				level_range = {1, nil}, exp_worth = 0,
+				silent_levelup = true,
+
+				combat_armor = 13, combat_def = 8,
+				resolvers.talents{
+					[Talents.T_KINETIC_SHIELD]={base=1, every=5, max=5},
+					[Talents.T_KINETIC_AURA]={base=1, every=5, max=5},
+					[Talents.T_CHARGED_AURA]={base=1, every=5, max=5},
+				},
+
+				faction = self.faction,
+				summoner = self, summoner_gain_exp=true,
+				summon_time = 6,
+				ai_target = {actor=target}
+			}
+			setupSummon(self, m, x, y)
+		end
+
+		game:playSoundNear(self, "talents/spell_generic")
+		return true
+	end,
+	info = function(self, t)
+		return ([[Shatters the mind of your victim, giving your full control over its actions for %s turns.
+		When the effect ends you pull out your mind and the victim's body colapses dead.
+		This effect does not work on elite or undeads.
+		The duration will increase with the Willpower stat]]):format(4 + self:getWil(10))
+	end,
+}
+
 -- Yeek's power: ID
 newTalent{
 	short_name = "YEEK_ID",
 	name = "Knowledge of the Way",
-	type = {"race/yeek", 1},
+	type = {"base/race", 1},
 	no_npc_use = true,
 	on_learn = function(self, t) self.auto_id = 2 end,
 	action = function(self, t)
