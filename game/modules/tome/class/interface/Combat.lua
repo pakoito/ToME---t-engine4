@@ -367,6 +367,11 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 		t.do_terror(self, t, target, dam)
 	end
 
+	-- Mortal Terror
+	if hitted and not target.dead and target:knowTalent(target.T_STONESKIN) and rng.percent(15) then
+		target:setEffect(target.EFF_STONE_SKIN, 5, {power=target:getTalentLevelRaw(target.T_STONESKIN)*3})
+	end
+
 	-- Conduit (Psi)
 	if hitted and not target.dead and self:knowTalent(self.T_CONDUIT) and self:isTalentActive(self.T_CONDUIT) and self.use_psi_combat then
 		local t =  self:getTalentFromId(self.T_CONDUIT)
@@ -522,6 +527,14 @@ function _M:combatDamageRange(weapon)
 	return (self.combat_damrange or 0) + (weapon.damrange or 1.1)
 end
 
+
+--- Scale damage values
+-- This makes low damage values equal to what they should be and puts disminishing returns to super high values
+function _M:rescaleDamage(dam)
+	if dam <= 0 then return dam end
+	return dam * (1 - math.log10(dam * 2) / 7)
+end
+
 --- Gets the damage
 function _M:combatDamage(weapon)
 	weapon = weapon or self.combat or {}
@@ -551,7 +564,7 @@ function _M:combatDamage(weapon)
 	local power = math.max(self.combat_dam + (weapon.dam or 1) + add, 1)
 	power = (math.sqrt(power / 10) - 1) * 0.8 + 1
 	print(("[COMBAT DAMAGE] power(%f) totstat(%f) talent_mod(%f)"):format(power, totstat, talented_mod))
-	return (totstat / 1.5 * power * talented_mod) * 0.75
+	return self:rescaleDamage(totstat / 1.5 * power * talented_mod)
 end
 
 --- Gets spellpower
@@ -576,7 +589,7 @@ function _M:combatTalentSpellDamage(t, base, max, spellpower_override)
 	-- Compute at "max"
 	local mod = max / ((base + 100) * ((math.sqrt(5) - 1) * 0.8 + 1))
 	-- Compute real
-	return ((base + (spellpower_override or self:combatSpellpower())) * ((math.sqrt(self:getTalentLevel(t)) - 1) * 0.8 + 1) * mod) * 0.75
+	return self:rescaleDamage((base + (spellpower_override or self:combatSpellpower())) * ((math.sqrt(self:getTalentLevel(t)) - 1) * 0.8 + 1) * mod)
 end
 
 --- Gets weapon damage mult based on talent
@@ -704,7 +717,7 @@ function _M:combatTalentMindDamage(t, base, max)
 	-- Compute at "max"
 	local mod = max / ((base + 100) * ((math.sqrt(5) - 1) * 0.8 + 1))
 	-- Compute real
-	return ((base + (self:combatMindpower())) * ((math.sqrt(self:getTalentLevel(t)) - 1) * 0.8 + 1) * mod) * 0.75
+	return self:rescaleDamage((base + (self:combatMindpower())) * ((math.sqrt(self:getTalentLevel(t)) - 1) * 0.8 + 1) * mod)
 end
 
 --- Gets damage based on talent
@@ -712,27 +725,39 @@ function _M:combatTalentStatDamage(t, stat, base, max)
 	-- Compute at "max"
 	local mod = max / ((base + 100) * ((math.sqrt(5) - 1) * 0.8 + 1))
 	-- Compute real
-	return ((base + (self:getStat(stat))) * ((math.sqrt(self:getTalentLevel(t)) - 1) * 0.8 + 1) * mod) * 0.75
+	return self:rescaleDamage((base + (self:getStat(stat))) * ((math.sqrt(self:getTalentLevel(t)) - 1) * 0.8 + 1) * mod)
 end
 
 --- Gets damage based on talent, stat, and interval
 function _M:combatTalentIntervalDamage(t, stat, min, max)
-	return (min + (1 + (self:getStat(stat) / 100) * (max / 6.5 - 1)) * self:getTalentLevel(t)) * 0.75
+	return self:rescaleDamage(min + (1 + (self:getStat(stat) / 100) * (max / 6.5 - 1)) * self:getTalentLevel(t))
 end
 
 --- Computes physical resistance
 function _M:combatPhysicalResist()
-	return self.combat_physresist + (self:getCon() + self:getStr() + (self:getLck() - 50) * 0.5) * 0.35
+	local add = 0
+	if self:knowTalent(self.T_POWER_IS_MONEY) then
+		add = add + util.bound(self.money / (80 - self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 5), 0, self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 10)
+	end
+	return self.combat_physresist + (self:getCon() + self:getStr() + (self:getLck() - 50) * 0.5) * 0.35 + add
 end
 
 --- Computes spell resistance
 function _M:combatSpellResist()
-	return self.combat_spellresist + (self:getMag() + self:getWil() + (self:getLck() - 50) * 0.5) * 0.35
+	local add = 0
+	if self:knowTalent(self.T_POWER_IS_MONEY) then
+		add = add + util.bound(self.money / (60 - self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 5), 0, self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 10)
+	end
+	return self.combat_spellresist + (self:getMag() + self:getWil() + (self:getLck() - 50) * 0.5) * 0.35 + add
 end
 
 --- Computes mental resistance
 function _M:combatMentalResist()
-	return self.combat_mentalresist + (self:getCun() + self:getWil() + (self:getLck() - 50) * 0.5) * 0.35
+	local add = 0
+	if self:knowTalent(self.T_POWER_IS_MONEY) then
+		add = add + util.bound(self.money / (60 - self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 5), 0, self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 10)
+	end
+	return self.combat_mentalresist + (self:getCun() + self:getWil() + (self:getLck() - 50) * 0.5) * 0.35 + add
 end
 
 --- Computes movement speed

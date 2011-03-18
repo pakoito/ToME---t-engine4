@@ -394,6 +394,64 @@ newTalent{
 	end,
 }
 
+newTalent{
+	name = "Stoneskin",
+	type = {"race/dwarf", 2},
+	require = racial_req2,
+	points = 5,
+	mode = "passive",
+	on_learn = function(self, t)
+		self:attr("auto_stoneskin", 3)
+	end,
+	on_unlearn = function(self, t)
+		self:attr("auto_stoneskin", -3)
+	end,
+	info = function(self, t)
+		return ([[Dwarves skin is a complex structure, it can automatically react to physical blows to harden itself.
+		15%% chances when hit in melee to increase armour total by %d for 5 turns.]]):format(self:getTalentLevelRaw(t) * 3)
+	end,
+}
+
+newTalent{
+	name = "Power is Money",
+	type = {"race/dwarf", 3},
+	require = racial_req3,
+	points = 5,
+	mode = "passive",
+	info = function(self, t)
+		return ([[Money is the heart of the dwarven Empire, it rules over all other considerations.
+		Increases physical, mental and spell saves based on the amount of gold you possess.
+		+1 save every %d gold, up to +%d.]]):format(80 - self:getTalentLevelRaw(t) * 5, self:getTalentLevelRaw(t) * 10)
+	end,
+}
+
+newTalent{
+	name = "Stone Walking",
+	type = {"race/dwarf", 4},
+	require = racial_req4,
+	points = 5,
+	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 5 end,
+	range = 1,
+	no_npc_use = true,
+	getRange = function(self, t) return math.floor(1 + self:getCon(4) + self:getTalentLevel(t)) end,
+	action = function(self, t)
+		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		local _ _, x, y = self:canProject(tg, x, y)
+		self:probabilityTravel(x, y, t.getRange(self, t))
+		game:playSoundNear(self, "talents/earth")
+		return true
+	end,
+	info = function(self, t)
+		local range = t.getRange(self, t)
+		return ([[While the origins of the dwarves remain clouded in mysteries to the other races it is obvious they share strong ties to the stone.
+		You can target any walls and immediately enter it and appear on the other side of the obstacle.
+		Works up to %d grids away (increases with Constitution and talent level).]]):
+		format(range)
+	end,
+}
+
 ------------------------------------------------------------------
 -- Halflings powers
 ------------------------------------------------------------------

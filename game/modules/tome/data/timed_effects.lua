@@ -717,6 +717,21 @@ newEffect{
 }
 
 newEffect{
+	name = "STONE_SKIN",
+	desc = "Stoneskin",
+	long_desc = function(self, eff) return ("The target's skin reacts to damage, granting %d armour."):format(eff.power) end,
+	type = "physical",
+	status = "beneficial",
+	parameters = { power=10 },
+	activate = function(self, eff)
+		eff.aid = self:addTemporaryValue("combat_armor", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_armor", eff.aid)
+	end,
+}
+
+newEffect{
 	name = "HALFLING_LUCK",
 	desc = "Halflings's Luck",
 	long_desc = function(self, eff) return ("The target's luck and cunning combine to grant it %d%% higher combat critical chance and %d%% higher spell critical chance."):format(eff.physical, eff.spell) end,
