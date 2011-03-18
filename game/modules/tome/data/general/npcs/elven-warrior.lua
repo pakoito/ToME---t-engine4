@@ -23,7 +23,7 @@ local Talents = require("engine.interface.ActorTalents")
 
 newEntity{
 	define_as = "BASE_NPC_ELVEN_WARRIOR",
-	type = "humanoid", subtype = "elf",
+	type = "humanoid", subtype = "shalore",
 	display = "p", color=colors.UMBER,
 	faction = "rhalore",
 
@@ -41,6 +41,7 @@ newEntity{
 
 	open_door = true,
 
+	resolvers.racial(),
 	resolvers.talents{ [Talents.T_HEAVY_ARMOUR_TRAINING]=1, },
 
 	autolevel = "warrior",

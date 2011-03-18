@@ -56,7 +56,7 @@ newEntity{ base="BASE_NPC_MAJOR_DEMON", define_as = "KRYL_FEIJAN",
 
 	resolvers.talents{
 		[Talents.T_DARKFIRE]=4,
-		[Talents["T_FLAME_OF_URH'ROK"]]=5,
+		[Talents.T_FLAME_OF_URH_ROK]=5,
 		[Talents.T_SOUL_ROT]=5,
 		[Talents.T_BLOOD_BOIL]=5,
 		[Talents.T_FLAME]=5,

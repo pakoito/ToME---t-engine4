@@ -214,7 +214,7 @@ newTalent{
 	points = 5,
 	no_energy = true,
 	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 3 end,
-	tactical = { ATTACK = 2 },
+	tactical = { DEFEND = 2 },
 	action = function(self, t)
 		local target = self
 		for eff_id, p in pairs(target.tmp) do
@@ -533,7 +533,7 @@ newTalent{
 	require = racial_req1,
 	points = 5,
 	no_energy = true,
-	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 5 end,
+	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 4 end,
 	tactical = { ATTACK = 2 },
 	action = function(self, t)
 		self:setEffect(self.EFF_ORC_FURY, 5, {power=10 + self:getWil(20)})
@@ -542,6 +542,82 @@ newTalent{
 	info = function(self, t)
 		return ([[Summons your lust for blood and destruction, increasing all damage by %d%% for 5 turns.
 		The bonus will increase with the Willpower stat]]):format(10 + self:getWil(20))
+	end,
+}
+
+newTalent{
+	name = "Hold the Ground",
+	type = {"race/orc", 2},
+	require = racial_req2,
+	points = 5,
+	mode = "passive",
+	on_learn = function(self, t)
+		self.combat_physresist = self.combat_physresist + 5
+		self.combat_mentalresist = self.combat_mentalresist + 5
+	end,
+	on_unlearn = function(self, t)
+		self.combat_physresist = self.combat_physresist - 5
+		self.combat_mentalresist = self.combat_mentalresist - 5
+	end,
+	info = function(self, t)
+		return ([[Orcs have been the prey of the other races for thousands of years, with or without reasons. THey have learnt to withstand things that would break weaker races.
+		Increase physical and mental save by +%d.]]):format(self:getTalentLevelRaw(t) * 5)
+	end,
+}
+
+newTalent{
+	name = "Skirmisher",
+	type = {"race/orc", 3},
+	require = racial_req3,
+	points = 5,
+	mode = "passive",
+	on_learn = function(self, t)
+		self.resists_pen.all = self.resists_pen.all + 5
+	end,
+	on_unlearn = function(self, t)
+		self.resists_pen.all = self.resists_pen.all - 5
+	end,
+	info = function(self, t)
+		return ([[Orcs have seen many battles, and won many of them.
+		Increase all damage penetration by %d%%.]]):format(self:getTalentLevelRaw(t) * 5)
+	end,
+}
+
+newTalent{
+	name = "Pride of the Orcs",
+	type = {"race/orc", 4},
+	require = racial_req4,
+	points = 5,
+	no_energy = true,
+	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 4 end,
+	tactical = { DEFEND = 1, HEAL = 2 },
+	action = function(self, t)
+		local target = self
+		local effs = {}
+
+		-- Go through all temporary effects
+		for eff_id, p in pairs(target.tmp) do
+			local e = target.tempeffect_def[eff_id]
+			if data.what[e.type] and e.status == "detrimental" and (e.type == "physical" or e.type == "magical" or e.type == "mental") then
+				effs[#effs+1] = {"effect", eff_id}
+			end
+		end
+
+		for i = 1, math.ceil(self:getTalentLevel(t) * 3 / 5) do
+			if #effs == 0 then break end
+			local eff = rng.tableRemove(effs)
+
+			if eff[1] == "effect" then
+				target:removeEffect(eff[2])
+			end
+		end
+		self:heal(25 + self:getCon() * 2.3)
+		return true
+	end,
+	info = function(self, t)
+		return ([[Call upon the will of all the Orc Prides to survive this battle.
+		Heal for %d life and removes up to %d detrimental effects.
+		The bonus will increase with the Constitution stat]]):format(25 + self:getCon() * 2.3, math.ceil(self:getTalentLevel(t) * 3 / 5))
 	end,
 }
 

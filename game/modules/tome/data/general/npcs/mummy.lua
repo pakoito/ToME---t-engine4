@@ -36,6 +36,8 @@ newEntity{
 	rank = 2,
 	size_category = 3,
 
+	resolvers.racial("shalore"),
+
 	open_door = true,
 
 	resolvers.inscriptions(1, "rune"),

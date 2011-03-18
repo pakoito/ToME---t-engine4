@@ -441,3 +441,62 @@ function resolvers.calc.tactic(t, e)
 	end
 	return {}
 end
+
+--- Racial Talents resolver
+
+local racials = {
+	halfling = {
+		T_HALFLING_LUCK = {last=10, base=0, every=4, max=5},
+		T_DUCK_AND_DODGE = {base=0, every=4, max=5},
+		T_INDOMITABLE = {last=20, base=0, every=4, max=5},
+	},
+	human = {
+		T_HIGHER_HEAL = {last=20, base=0, every=4, max=5},
+		T_BORN_INTO_MAGIC = {base=0, every=4, max=5},
+		T_HIGHBORN_S_BLOOM = {last=10, base=0, every=4, max=5},
+	},
+	shalore = {
+		T_SHALOREN_SPEED = {last=30, base=0, every=4, max=5},
+		T_MAGIC_OF_THE_ETERNALS = {base=0, every=4, max=5},
+		T_SECRETS_OF_THE_ETERNALS = {last=20, base=0, every=4, max=5},
+		T_TIMELESS = {last=10, base=0, every=4, max=5},
+	},
+	thalore = {
+		T_THALOREN_WRATH = {last=10, base=0, every=4, max=5},
+		T_UNSHACKLED = {base=0, every=4, max=5},
+		T_GUARDIAN_OF_THE_WOOD = {last=20, base=0, every=4, max=5},
+		T_NATURE_S_PRIDE = {last=30, base=0, every=4, max=5},
+	},
+	yeek = {
+		T_UNITY = {base=0, every=4, max=5},
+		T_QUICKENED = {last=10, base=0, every=4, max=5},
+		T_WAYIST = {last=20, base=0, every=4, max=5},
+	},
+	dwarf = {
+		T_POWER_IS_MONEY = {last=20, base=0, every=4, max=5},
+		T_STONESKIN = {base=0, every=4, max=5},
+		T_DWARF_RESILIENCE = {last=10, base=0, every=4, max=5},
+	},
+	orc = {
+		T_ORC_FURY = {last=20, base=0, every=4, max=5},
+		T_HOLD_THE_GROUND = {base=0, every=4, max=5},
+		T_SKIRMISHER = {last=10, base=0, every=4, max=5},
+		T_PRIDE_OF_THE_ORCS = {last=30, base=0, every=4, max=5},
+	},
+}
+
+function resolvers.racial(race)
+	return {__resolver="racial", race}
+end
+function resolvers.calc.racial(t, e)
+	if e.type ~= "humanoid" then return end
+	local race = t[1] or e.subtype
+	if not racials[race] then return end
+
+	local levelup_talents = e._levelup_talents or {}
+	for tid, level in pairs(racials[race]) do
+		levelup_talents[tid] = table.clone(level)
+	end
+	e._levelup_talents = levelup_talents
+	return nil
+end

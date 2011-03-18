@@ -39,6 +39,7 @@ newEntity{
 
 	open_door = true,
 
+	resolvers.racial(),
 	resolvers.inscriptions(1, "infusion"),
 
 	autolevel = "warrior",

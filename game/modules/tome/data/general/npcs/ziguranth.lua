@@ -40,6 +40,8 @@ newEntity{
 
 	open_door = true,
 
+	resolvers.racial(),
+
 	resolvers.talents{ [Talents.T_HEAVY_ARMOUR_TRAINING]=1, },
 	resolvers.inscriptions(1, "infusion"),
 
@@ -75,7 +77,7 @@ newEntity{ base = "BASE_NPC_ZIGURANTH",
 newEntity{ base = "BASE_NPC_ZIGURANTH",
 	name = "ziguranth summoner", color=colors.CRIMSON,
 	desc = [[A ziguranth wilder, attuned to nature.]],
-	subtype = "elf",
+	subtype = "thalore",
 	level_range = {20, nil}, exp_worth = 1,
 	rarity = 2,
 	max_life = resolvers.rngavg(100,110),

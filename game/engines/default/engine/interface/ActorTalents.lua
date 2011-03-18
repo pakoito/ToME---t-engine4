@@ -62,7 +62,7 @@ function _M:newTalent(t)
 	if type(t.type) == "string" then t.type = {t.type, 1} end
 	if not t.type[2] then t.type[2] = 1 end
 	t.short_name = t.short_name or t.name
-	t.short_name = t.short_name:upper():gsub("[ ]", "_")
+	t.short_name = t.short_name:upper():gsub("[ ']", "_")
 	t.mode = t.mode or "activated"
 	t.points = t.points or 1
 	assert(t.mode == "activated" or t.mode == "sustained" or t.mode == "passive", "wrong talent mode, requires either 'activated' or 'sustained'")
@@ -100,7 +100,7 @@ end
 function _M:resolveLevelTalents()
 	if not self.start_level or not self._levelup_talents then return end
 	for tid, info in pairs(self._levelup_talents) do
-		if not info.max or self.talents[tid] < info.max then
+		if not info.max or (self.talents[tid] or 0) < info.max then
 			local last = info.last or self.start_level
 			if self.level - last >= info.every then
 				self:learnTalent(tid, true)

@@ -40,6 +40,7 @@ newEntity{
 	rank = 2,
 	size_category = 3,
 
+	resolvers.racial(),
 	resolvers.sustains_at_birth(),
 
 	open_door = true,

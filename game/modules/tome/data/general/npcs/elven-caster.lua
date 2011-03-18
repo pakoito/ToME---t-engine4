@@ -23,7 +23,7 @@ local Talents = require("engine.interface.ActorTalents")
 
 newEntity{
 	define_as = "BASE_NPC_ELVEN_CASTER",
-	type = "humanoid", subtype = "elf",
+	type = "humanoid", subtype = "shalore",
 	display = "p", color=colors.UMBER,
 	faction = "rhalore",
 
@@ -42,6 +42,7 @@ newEntity{
 	open_door = true,
 	silence_immune = 0.5,
 
+	resolvers.racial(),
 	resolvers.talents{ [Talents.T_HEAVY_ARMOUR_TRAINING]=1, },
 
 	autolevel = "caster",
@@ -101,7 +102,7 @@ newEntity{ base = "BASE_NPC_ELVEN_CASTER",
 		[Talents.T_DARK_PORTAL]=3,
 		[Talents.T_SOUL_ROT]=4,
 		[Talents.T_VIRULENT_DISEASE]=4,
-		[Talents["T_FLAME_OF_URH'ROK"]]=3,
+		[Talents.T_FLAME_OF_URH_ROK]=3,
 		[Talents.T_DARK_RITUAL]=3,
 	},
 	resolvers.sustains_at_birth(),

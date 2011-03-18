@@ -33,6 +33,8 @@ newEntity{
 	infravision = 20,
 	lite = 2,
 
+	resolvers.racial(),
+
 	life_rating = 11,
 	rank = 2,
 	size_category = 3,

@@ -23,7 +23,7 @@ local Talents = require("engine.interface.ActorTalents")
 
 newEntity{
 	define_as = "BASE_NPC_ELVALA_TOWN",
-	type = "humanoid", subtype = "elf",
+	type = "humanoid", subtype = "shalore",
 	display = "p", color=colors.WHITE,
 	faction = "shalore",
 	anger_emote = "Catch @himher@!",
@@ -39,6 +39,7 @@ newEntity{
 
 	open_door = true,
 
+	resolvers.racial(),
 	resolvers.inscriptions(1, "rune"),
 
 	autolevel = "warrior",

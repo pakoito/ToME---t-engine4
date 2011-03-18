@@ -41,6 +41,8 @@ newEntity{ define_as = "HIGH_SUN_PALADIN_AERYN",
 
 	open_door = true,
 
+	resolvers.racial(),
+
 	autolevel = "warriormage",
 	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
 	ai_tactic = resolvers.tactic"melee",

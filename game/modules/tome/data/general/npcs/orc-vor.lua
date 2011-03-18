@@ -40,6 +40,8 @@ newEntity{
 
 	open_door = true,
 
+	resolvers.racial(),
+
 	resolvers.inscriptions(2, "rune"),
 
 	autolevel = "caster",

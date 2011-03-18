@@ -37,6 +37,8 @@ newEntity{
 	rank = 2,
 	size_category = 3,
 
+	resolvers.racial(),
+
 	open_door = true,
 	resolvers.sustains_at_birth(),
 	resolvers.inscriptions(3, "infusion"),

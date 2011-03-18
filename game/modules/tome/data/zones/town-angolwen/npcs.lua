@@ -85,10 +85,12 @@ newEntity{ define_as = "SUPREME_ARCHMAGE_LINANIIL",
 
 newEntity{
 	define_as = "BASE_NPC_ANGOLWEN_TOWN",
-	type = "humanoid", subtype = "human",
+	type = "humanoid", subtype = resolvers.rngtable{"human","shalore","halfling"},
 	display = "p", color=colors.WHITE,
 	faction = "angolwen",
 	anger_emote = "Catch @himher@!",
+
+	resolvers.racial(),
 
 	combat = { dam=resolvers.rngavg(1,2), atk=2, apr=0, dammod={str=0.4} },
 
