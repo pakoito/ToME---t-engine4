@@ -478,6 +478,50 @@ newTalent{
 	end,
 }
 
+newTalent{
+	name = "Duck and Dodge",
+	type = {"race/halfling", 2},
+	require = racial_req2,
+	points = 5,
+	mode = "passive",
+	info = function(self, t)
+		return ([[Halfling have long learnt to use their small stature as an advantage when fighting the other races.
+		Increases defense in melee based on the size difference between the attacker and you (+%d defence per size).]]):
+		format(self:getTalentLevelRaw(t) * 1.2)
+	end,
+}
+
+newTalent{
+	name = "Militant Mind",
+	type = {"race/halfling", 3},
+	require = racial_req3,
+	points = 5,
+	mode = "passive",
+	info = function(self, t)
+		return ([[Halfling have always been a very organised and methodical race, the more foes they face the more organised they are.
+		If two or more foes are in sight your physical power, spellpower and mindpower are increased by %0.1f per foes (up to %d foes).]]):
+		format(self:getTalentLevel(t) * 0.6, self:getTalentLevel(t))
+	end,
+}
+
+newTalent{
+	name = "Indomitable",
+	type = {"race/halfling", 4},
+	require = racial_req4,
+	points = 5,
+	no_energy = true,
+	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 5 end,
+	tactical = { DEFEND = 1 },
+	action = function(self, t)
+		self:setEffect(self.EFF_FREE_ACTION, 3 + self:getTalentLevel(t), {})
+		return true
+	end,
+	info = function(self, t)
+		return ([[Halflings are one of the more powerful military force of the known world, they have been at war with most other races for thousand of years.
+		Instantly makes you immune to stuns, dazes and pinning effects for %d turns.]]):format(3 + self:getTalentLevel(t))
+	end,
+}
+
 ------------------------------------------------------------------
 -- Orcs powers
 ------------------------------------------------------------------

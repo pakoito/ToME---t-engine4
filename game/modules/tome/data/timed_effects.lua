@@ -3518,3 +3518,22 @@ newEffect{
 	deactivate = function(self, eff)
 	end,
 }
+
+newEffect{
+	name = "MILITANT_MIND",
+	desc = "Militant Mind",
+	long_desc = function(self, eff) return ("Increases physical power, spellpower and mindpower by %d."):format(eff.power) end,
+	type = "other",
+	status = "beneficial",
+	parameters = { power=10 },
+	activate = function(self, eff)
+		eff.damid = self:addTemporaryValue("combat_dam", eff.power)
+		eff.spellid = self:addTemporaryValue("combat_spellpower", eff.power)
+		eff.mindid = self:addTemporaryValue("combat_mindpower", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_dam", eff.damid)
+		self:removeTemporaryValue("combat_spellpower", eff.spellid)
+		self:removeTemporaryValue("combat_mindpower", eff.mindid)
+	end,
+}

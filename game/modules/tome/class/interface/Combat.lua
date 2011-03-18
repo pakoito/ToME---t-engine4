@@ -217,7 +217,12 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	local atk, def = self:combatAttack(weapon), target:combatDefense()
 	if not self:canSee(target) then atk = atk / 3 end
 	local dam, apr, armor = self:combatDamage(weapon), self:combatAPR(weapon), target:combatArmor()
-	print("[ATTACK] to ", target.name, " :: ", dam, apr, armor, "::", mult)
+	print("[ATTACK] to ", target.name, " :: ", dam, apr, armor, def, "::", mult)
+
+	if target:knowTalent(target.T_DUCK_AND_DODGE) then
+		local diff = util.bound((self.size_category or 3) - (target.size_category or 2), 0, 5)
+		def = def + diff * target:getTalentLevelRaw(target.T_DUCK_AND_DODGE) * 1.2
+	end
 
 	-- If hit is over 0 it connects, if it is 0 we still have 50% chance
 	local hitted = false

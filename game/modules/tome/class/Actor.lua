@@ -366,6 +366,20 @@ function _M:act()
 
 	if self.never_act then return false end
 
+	-- Compute bonuses based on actors in FOV
+	if self:knowTalent(self.T_MILITANT_MIND) and not self:hasEffect(self.EFF_MILITANT_MIND) then
+		local nb_foes = 0
+		local act
+		for i = 1, #self.fov.actors_dist do
+			act = self.fov.actors_dist[i]
+			if self:reactionToward(act) < 0 and self:canSee(act) then nb_foes = nb_foes + 1 end
+		end
+		if nb_foes > 1 then
+			nb_foes = math.min(nb_foes, self:getTalentLevel(self.T_MILITANT_MIND))
+			self:setEffect(self.EFF_MILITANT_MIND, 4, {power=self:getTalentLevel(self.T_MILITANT_MIND) * nb_foes * 0.6})
+		end
+	end
+
 	return true
 end
 
