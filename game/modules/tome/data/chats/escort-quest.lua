@@ -48,6 +48,20 @@ local reward_types = {
 			[Stats.STAT_MAG] = 2,
 			[Stats.STAT_WIL] = 1,
 		},
+		antimagic = {
+			types = {
+				["wild-gift/slime"] = 0.7,
+			},
+			saves = { mind = 4 },
+			talents = {
+				[Talents.T_SLIME_SPIT] = 1,
+				[Talents.T_SLIME_ROOTS] = 1,
+			},
+			stats = {
+				[Stats.STAT_CUN] = 1,
+				[Stats.STAT_WIL] = 2,
+			},
+		},
 	},
 	alchemy = {
 		types = {
@@ -63,6 +77,20 @@ local reward_types = {
 		stats = {
 			[Stats.STAT_MAG] = 2,
 			[Stats.STAT_DEX] = 1,
+		},
+		antimagic = {
+			types = {
+				["wild-gift/slime"] = 0.7,
+			},
+			talents = {
+				[Talents.T_SLIME_SPIT] = 1,
+				[Talents.T_POISONOUS_SPORES] = 1,
+			},
+			saves = { spell = 4 },
+			stats = {
+				[Stats.STAT_CUN] = 1,
+				[Stats.STAT_DEX] = 2,
+			},
 		},
 	},
 	survival = {
@@ -91,6 +119,20 @@ local reward_types = {
 			[Stats.STAT_STR] = 2,
 			[Stats.STAT_MAG] = 1,
 		},
+		antimagic = {
+			types = {
+				["wild-gift/slime"] = 0.7,
+			},
+			talents = {
+				[Talents.T_POISONOUS_SPORES] = 1,
+				[Talents.T_ACIDIC_SKIN] = 1,
+			},
+			saves = { spell = 4, phys = 4 },
+			stats = {
+				[Stats.STAT_CUN] = 1,
+				[Stats.STAT_WIL] = 2,
+			},
+		},
 	},
 	anorithil = {
 		types = {
@@ -103,6 +145,20 @@ local reward_types = {
 		stats = {
 			[Stats.STAT_CUN] = 2,
 			[Stats.STAT_MAG] = 1,
+		},
+		antimagic = {
+			types = {
+				["wild-gift/slime"] = 0.7,
+			},
+			talents = {
+				[Talents.T_SLIME_SPIT] = 1,
+				[Talents.T_ACIDIC_SKIN] = 1,
+			},
+			saves = { spell = 4, mind = 4 },
+			stats = {
+				[Stats.STAT_CUN] = 1,
+				[Stats.STAT_WIL] = 2,
+			},
 		},
 	},
 	exotic = {
@@ -123,6 +179,11 @@ local reward_types = {
 	},
 }
 local reward = reward_types[npc.reward_type]
+local quest = game.player:hasQuest(npc.quest_id)
+if quest.to_zigur and reward.antimagic then reward = reward.antimagic reward.is_antimagic = true end
+
+local saves_name = { mind="mental", spell="spell", phys="physical"}
+local saves_tooltips = { mind="MENTAL", spell="SPELL", phys="PHYS"}
 
 local function generate_rewards()
 	local answers = {}
@@ -144,6 +205,24 @@ local function generate_rewards()
 				end,
 			}
 		end end
+	end
+	if reward.saves then
+		for save, v in pairs(reward.saves) do
+			local doit = function(npc, player)
+				player:attr("combat_"..save.."resist", v)
+				player.changed = true
+				player:hasQuest(npc.quest_id).reward_message = ("improved %s save by +%d"):format(saves_name[save], v)
+			end
+			answers[#answers+1] = {("[Improve %s save by +%d]"):format(saves_name[save], v),
+				jump="done",
+				action=doit,
+				on_select=function(npc, player)
+					game.tooltip_x, game.tooltip_y = 1, 1
+					local TooltipsData = require("mod.class.interface.TooltipsData")
+					game.tooltip:displayAtMap(nil, nil, game.w, game.h, TooltipsData["TOOLTIP_"..saves_tooltips[save]:upper().."_SAVE"])
+				end,
+			}
+		end
 	end
 	if reward.talents then
 		for tid, level in pairs(reward.talents) do
@@ -191,7 +270,9 @@ local function generate_rewards()
 end
 
 newChat{ id="welcome",
-	text = [[Thank you, my friend. I do not think I would have survived without you.
+	text = reward.is_antimagic and [[At the last moment you invoke the power of nature, the portal fizzles and transports @npcname@ to Zigur.
+You can feel Nature thanking you.]] or
+	[[Thank you, my friend. I do not think I would have survived without you.
 Please let me reward you:]],
 	answers = generate_rewards(),
 }

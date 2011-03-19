@@ -118,7 +118,7 @@ newTalent{
 		return util.bound(5 - self:getTalentLevel(t) / 2, 2, 7)
 	end,
 	action = function(self, t)
-		local x, y = self:getTarget{type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
+		local tg = {type="ball", nolock=true, pass_terrain=true, nowarning=true, range=rad, radius=radius, requires_knowledge=false}
 		if not x then return nil end
 		-- Target code does not restrict the self coordinates to the range, it lets the project function do it
 		-- but we cant ...
