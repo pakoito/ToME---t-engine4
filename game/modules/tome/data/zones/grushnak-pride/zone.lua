@@ -56,6 +56,9 @@ return {
 		},
 	},
 	post_process = function(level)
+		-- Place a lore note on each level
+		game:placeRandomLoreObject("GARKUL_HISTORY"..level.level)
+
 		for uid, e in pairs(level.entities) do e.faction="orc-pride" end
 	end,
 	levels =

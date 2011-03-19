@@ -18,15 +18,3 @@
 -- darkgod@te4.org
 
 -- Randomly found only in the prides
-
-for i = 1, 5 do
-newEntity{ base = "BASE_LORE",
-	define_as = "ORC_HISTORY"..i,
-	name = "Records of Lorekeeper Hadak", lore="orc-history-"..i, unique="Records of Lorekeeper Hadak "..i,
-	desc = [[Part of the long history of the Orc race.]],
-	level_range = {1, 50},
-	rarity = 40,
-	is_magic_device = false,
-	encumber = 0,
-}
-end

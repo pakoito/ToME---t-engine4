@@ -29,3 +29,12 @@ newEntity{ base = "BASE_LORE",
 	is_magic_device = false,
 	encumberance = 0,
 }
+
+for i = 1, 5 do
+newEntity{ base = "BASE_LORE",
+	define_as = "GARKUL_HISTORY"..i,
+	name = "The Legend of Garkul", lore="garkul-history-"..i,
+	desc = [[The Legend of Garkul the Devourer, mightiest of all orcs.]],
+	rarity = false,
+}
+end

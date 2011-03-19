@@ -58,3 +58,11 @@ newEntity{ base = "BASE_LORE",
 	bloodstains = (i == 5) and 2 or nil,
 }
 end
+
+newEntity{ base = "BASE_LORE",
+	name = "of halfling feet", lore="halfling-feet", unique=true,
+	desc = [[Notes about .. halfling feet ??]],
+	level_range = {10, 30},
+	rarity = 40,
+	encumber = 0,
+}

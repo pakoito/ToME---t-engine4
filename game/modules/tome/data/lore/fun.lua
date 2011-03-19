@@ -148,3 +148,14 @@ The greatest enemy of the necromancer is other necromancers. Well, apart from th
 
 No further aid awaits you, for we do not tolerate the dependent. All that remains is for you to prove yourself worthy of practising this glorious art...]]
 }
+
+newLore{
+	id = "halfling-feet",
+	category = "misc",
+	name = "of halfling feet",
+	lore = [[Some men have said that the feet of halflings can nay be harmed, not by fire, blade nor magic. And they do say that this is a truly astounding thing. And some men consider the foot of a halfling to be an item of great luck and protection, and many have one hung above their door or mantle. Though these days 'tis frowned upon to go hunt for one, so 'tis considered a prized heirloom to be passed from father to son.
+
+But women do look upon men and declare them fools. "For how," say they, "Can the foot of a halfling be a lucky thing, when with their large uncomely feet they are not able to wear shoes and footwear of elegant crafts and beauteous materials? And especially 'tis a great misfortune unto them, as with their short stature they could really do with a decent pair of heels..."
+
+And lo, 'tis little mystery why halflings do look upon humans and say "The Big Folk really are very dumb."]]
+}
