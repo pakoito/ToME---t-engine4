@@ -103,6 +103,7 @@ void run_core(core_boot_type *core_def, int argc, char **argv)
 	lua_pushnumber(L, core_def->corenum);
 	lua_call(L, 2, 1);
 	char *core = strdup((char*)lua_tostring(L, -1));
+	printf("Runner booting core: %s\n", core);
 
 	lua_close(L);
 	PHYSFS_deinit();
