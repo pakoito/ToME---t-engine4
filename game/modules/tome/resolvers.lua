@@ -483,13 +483,25 @@ local racials = {
 		T_SKIRMISHER = {last=10, base=0, every=4, max=5},
 		T_PRIDE_OF_THE_ORCS = {last=30, base=0, every=4, max=5},
 	},
+	skeleton = {
+		T_BONE_ARMOUR = {last=30, base=0, every=4, max=5},
+		["T_RE-ASSEMBLE"] = {last=40, base=0, every=4, max=5},
+		T_SHARP_BONES = {last=20, base=0, every=4, max=5},
+		T_SKELETON = {last=10, base=0, every=4, max=5},
+	},
+	ghoul = {
+		T_GHOUL = {last=10, base=0, every=4, max=5},
+		T_GHOULISH_LEAP = {last=20, base=0, every=4, max=5},
+		T_GNAW = {last=40, base=0, every=4, max=5},
+		T_RETCH = {last=30, base=0, every=4, max=5},
+	},
 }
 
 function resolvers.racial(race)
 	return {__resolver="racial", race}
 end
 function resolvers.calc.racial(t, e)
-	if e.type ~= "humanoid" then return end
+	if e.type ~= "humanoid" and e.type ~= "undead" then return end
 	local race = t[1] or e.subtype
 	if not racials[race] then return end
 

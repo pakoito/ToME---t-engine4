@@ -39,6 +39,7 @@ newEntity{
 	energy = { mod=1 },
 	stats = { str=14, dex=12, mag=10, con=12 },
 
+	resolvers.racial(),
 	resolvers.tmasteries{ ["technique/other"]=0.3, ["technique/2hweapon-offense"]=0.3, ["technique/2hweapon-cripple"]=0.3 },
 
 	open_door = true,

@@ -36,6 +36,7 @@ newEntity{
 	size_category = 3,
 	infravision = 20,
 
+	resolvers.racial(),
 	resolvers.tmasteries{ ["technique/other"]=1, },
 
 	open_door = true,
