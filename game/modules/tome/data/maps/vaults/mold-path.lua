@@ -30,7 +30,7 @@ defineTile('!', "ROCK_VAULT")
 defineTile('m', "GRASS", nil, {random_filter={subtype="molds", add_levels=2}})
 defineTile('j', "GRASS", nil, {random_filter={subtype="oozes", add_levels=2}})
 
-defineTile('$', "GRASS", {random_filter={add_levels=5, ego_chance=25}})
+defineTile('$', "GRASS", {random_filter={add_levels=5, tome_mod="vault"}})
 
 startx = 19
 starty = 7

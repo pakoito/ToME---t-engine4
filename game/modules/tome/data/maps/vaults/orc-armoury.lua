@@ -38,25 +38,25 @@ defineTile('O', 'FLOOR', nil, {random_filter={name='orc', add_levels=20}})
 defineTile('n', 'FLOOR', nil, {random_filter={name='orc master assassin', add_levels=10}})
 defineTile('N', 'FLOOR', nil, {random_filter={name='orc grand master assassin', add_levels=15}})
 
-defineTile('m', 'FLOOR', {random_filter={type='weapon', subtype='mace', add_levels=10, ego_chance=25}})
-defineTile('M', 'FLOOR', {random_filter={type='weapon', subtype='greatmaul', add_levels=10, ego_chance=25}})
+defineTile('m', 'FLOOR', {random_filter={type='weapon', subtype='mace', add_levels=10, tome_mod="gvault"}})
+defineTile('M', 'FLOOR', {random_filter={type='weapon', subtype='greatmaul', add_levels=10, tome_mod="gvault"}})
 
-defineTile('x', 'FLOOR', {random_filter={type='weapon', subtype='axe', add_levels=10, ego_chance=25}})
-defineTile('X', 'FLOOR', {random_filter={type='weapon', subtype='battleaxe', add_levels=10, ego_chance=25}})
+defineTile('x', 'FLOOR', {random_filter={type='weapon', subtype='axe', add_levels=10, tome_mod="gvault"}})
+defineTile('X', 'FLOOR', {random_filter={type='weapon', subtype='battleaxe', add_levels=10, tome_mod="gvault"}})
 
-defineTile('s', 'FLOOR', {random_filter={type='weapon', subtype='sword', add_levels=10, ego_chance=25}})
-defineTile('S', 'FLOOR', {random_filter={type='weapon', subtype='greatsword', add_levels=10, ego_chance=25}})
+defineTile('s', 'FLOOR', {random_filter={type='weapon', subtype='sword', add_levels=10, tome_mod="gvault"}})
+defineTile('S', 'FLOOR', {random_filter={type='weapon', subtype='greatsword', add_levels=10, tome_mod="gvault"}})
 
-defineTile('b', 'FLOOR', {random_filter={type='weapon', subtype='longbow', add_levels=10, ego_chance=25}})
-defineTile('B', 'FLOOR', {random_filter={type='ammo', subtype='arrow', add_levels=10, ego_chance=25}})
+defineTile('b', 'FLOOR', {random_filter={type='weapon', subtype='longbow', add_levels=10, tome_mod="gvault"}})
+defineTile('B', 'FLOOR', {random_filter={type='ammo', subtype='arrow', add_levels=10, tome_mod="gvault"}})
 
-defineTile('w', 'FLOOR', {random_filter={type='weapon', subtype='sling', add_levels=10, ego_chance=25}})
-defineTile('W', 'FLOOR', {random_filter={type='ammo', subtype='shot', add_levels=10, ego_chance=25}})
+defineTile('w', 'FLOOR', {random_filter={type='weapon', subtype='sling', add_levels=10, tome_mod="gvault"}})
+defineTile('W', 'FLOOR', {random_filter={type='ammo', subtype='shot', add_levels=10, tome_mod="gvault"}})
 
-defineTile('k', 'FLOOR', {random_filter={type='weapon', subtype='knife', add_levels=10, ego_chance=25}})
+defineTile('k', 'FLOOR', {random_filter={type='weapon', subtype='knife', add_levels=10, tome_mod="gvault"}})
 
-defineTile('t', 'FLOOR', {random_filter={type='weapon', subtype='mace', add_levels=10, ego_chance=25}}, {random_filter={type='giant', subtype='troll', add_levels=10}})
-defineTile('T', 'FLOOR', {random_filter={type='weapon', subtype='greatmaul', add_levels=10, ego_chance=25}}, {random_filter={type='giant', subtype='troll', add_levels=15}})
+defineTile('t', 'FLOOR', {random_filter={type='weapon', subtype='mace', add_levels=10, tome_mod="gvault"}}, {random_filter={type='giant', subtype='troll', add_levels=10}})
+defineTile('T', 'FLOOR', {random_filter={type='weapon', subtype='greatmaul', add_levels=10, tome_mod="gvault"}}, {random_filter={type='giant', subtype='troll', add_levels=15}})
 
 return {
 

@@ -28,7 +28,7 @@ defineTile('X', "TREE")
 defineTile('+', "DOOR")
 defineTile('x', "DOOR_VAULT")
 
-defineTile('T', "FLOOR", {random_filter={type="scroll", ego_chance=25}}, {random_filter={name="forest troll", add_levels=4}})
+defineTile('T', "FLOOR", {random_filter={type="scroll", tome_mod="vault"}}, {random_filter={name="forest troll", add_levels=4}})
 
 return {
 [[,,,,,,,,,,,,,]],

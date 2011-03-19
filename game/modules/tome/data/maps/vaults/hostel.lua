@@ -25,12 +25,12 @@ defineTile(' ', "FLOOR")
 defineTile('+', "DOOR")
 defineTile('!', "DOOR_VAULT")
 defineTile('X', "HARDWALL")
-defineTile('$', "FLOOR", {random_filter={add_levels=10, ego_chance=25}})
+defineTile('$', "FLOOR", {random_filter={add_levels=10, tome_mod="vault"}})
 defineTile('~', "FLOOR", {random_filter={add_levels=5}}, nil, {random_filter={add_levels=5}})
 defineTile('^', "FLOOR", nil, nil, {random_filter={add_levels=5}})
-defineTile('o', "FLOOR", {random_filter={add_levels=10, ego_chance=25}}, {random_filter={add_levels=10}})
-defineTile('O', "FLOOR", {random_filter={add_levels=15, ego_chance=25}}, {random_filter={add_levels=15}})
-defineTile('P', "FLOOR", {random_filter={add_levels=20, ego_chance=25}}, {random_filter={add_levels=20}})
+defineTile('o', "FLOOR", {random_filter={add_levels=10, tome_mod="vault"}}, {random_filter={add_levels=10}})
+defineTile('O', "FLOOR", {random_filter={add_levels=15, tome_mod="vault"}}, {random_filter={add_levels=15}})
+defineTile('P', "FLOOR", {random_filter={add_levels=20, tome_mod="gvault"}}, {random_filter={add_levels=20}})
 
 startx = 28
 starty = 8

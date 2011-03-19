@@ -26,7 +26,7 @@ defineTile('%', "POISON_DEEP_WATER")
 
 defineTile('$', "GRASS_DARK1", {random_filter={add_levels=25, type="money"}})
 defineTile('*', "GRASS", {random_filter={add_levels=25, type="gem"}})
-defineTile('&', "TREE_DARK", {random_filter={add_levels=15, subtype="amulet"}})
+defineTile('&', "TREE_DARK", {random_filter={add_levels=15, subtype="amulet", tome_mod="vault"}})
 
 defineTile('^', "GRASS_DARK1", nil, nil, {random_filter={add_levels=15, name="poison vine"}})
 defineTile('+', "GRASS", nil, nil, {random_filter={add_levels=15, name="poison vine"}})

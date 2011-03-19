@@ -29,7 +29,7 @@ defineTile('X', "HARDWALL")
 defineTile('+', "DOOR")
 
 defineTile('^', "FLOOR", nil, nil, {random_filter={name="summoning alarm"}})
-defineTile('$', "FLOOR", {random_filter={add_levels=5, ego_chance=40}})
+defineTile('$', "FLOOR", {random_filter={add_levels=5, tome_mod="vault"}})
 
 return {
 [[XXXXXXXXXXXXXXXXXXX]],

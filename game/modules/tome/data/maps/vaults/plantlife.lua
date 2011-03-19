@@ -27,7 +27,7 @@ defineTile('X', {"HARDTREE","HARDTREE2","HARDTREE3","HARDTREE4","HARDTREE5","HAR
 defineTile('!', "ROCK_VAULT")
 
 defineTile('V', "GRASS", nil, {random_filter={name="poison ivy"}})
-defineTile('H', "GRASS", {random_filter={add_levels=5, ego_chance=50}}, {random_filter={name="treant", add_levels=3}})
+defineTile('H', "GRASS", {random_filter={add_levels=5, tome_mod="vault"}}, {random_filter={name="treant", add_levels=3}})
 
 startx = 4
 starty = 6

@@ -23,7 +23,7 @@ defineTile(' ', "FLOOR")
 defineTile('#', "HARDWALL")
 defineTile(':', "WALL")
 defineTile('^', "FLOOR", {random_filter={add_levels=20, type='jewelry'}}, nil, {random_filter={add_levels=50, name='lethargy trap'}})
-defineTile('X', "FLOOR", {random_filter={add_levels=15, ego_chance=50}}, {random_filter={add_levels=15, subtype="xorn"}})
+defineTile('X', "FLOOR", {random_filter={add_levels=15, tome_mod="gvault"}}, {random_filter={add_levels=15, subtype="xorn"}})
 
 startx = 4
 starty = 4

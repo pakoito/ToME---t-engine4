@@ -572,10 +572,10 @@ newTalent{
 	points = 5,
 	mode = "passive",
 	on_learn = function(self, t)
-		self.resists_pen.all = self.resists_pen.all + 5
+		self.resists_pen.all = (self.resists_pen.all or 0) + 5
 	end,
 	on_unlearn = function(self, t)
-		self.resists_pen.all = self.resists_pen.all - 5
+		self.resists_pen.all = (self.resists_pen.all or 0) - 5
 	end,
 	info = function(self, t)
 		return ([[Orcs have seen many battles, and won many of them.
@@ -598,7 +598,7 @@ newTalent{
 		-- Go through all temporary effects
 		for eff_id, p in pairs(target.tmp) do
 			local e = target.tempeffect_def[eff_id]
-			if data.what[e.type] and e.status == "detrimental" and (e.type == "physical" or e.type == "magical" or e.type == "mental") then
+			if e.status == "detrimental" and (e.type == "physical" or e.type == "magical" or e.type == "mental") then
 				effs[#effs+1] = {"effect", eff_id}
 			end
 		end

@@ -33,7 +33,7 @@ defineTile('~', "DEEP_WATER")
 defineTile('n', "FLOOR", nil, {random_filter={subtype="naga", add_levels=10}})
 defineTile('1', "FLOOR", nil, {random_filter={no_breath=1, add_levels=5}})
 
-defineTile('$', "FLOOR", {random_filter={add_levels=10, ego_chance=20}})
+defineTile('$', "FLOOR", {random_filter={add_levels=10, tome_mod="gvault"}})
 
 return {
 [[#XXXXX###############XXXXX#]],

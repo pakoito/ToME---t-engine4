@@ -25,8 +25,8 @@ defineTile('X', "HARDWALL")
 defineTile('!', "DOOR_VAULT")
 defineTile('D', "DOOR")
 defineTile('^', "FLOOR", nil, nil, {random_filter={add_levels=4}})
-defineTile('S', "FLOOR", {random_filter={add_levels=4}}, {random_filter={name="degenerated skeleton warrior", add_levels=4}})
-defineTile('A', "FLOOR", {random_filter={type="armor", ego_chance=25}}, nil)
+defineTile('S', "FLOOR", {random_filter={add_levels=4, tome_mod="vault"}}, {random_filter={name="degenerated skeleton warrior", add_levels=4}})
+defineTile('A', "FLOOR", {random_filter={type="armor", tome_mod="vault"}}, nil)
 defineTile('G', "FLOOR", nil, {random_filter={name="armoured skeleton warrior", add_levels=4}})
 rotates = {"default", "90", "180", "270", "flipx", "flipy"}
 

@@ -23,7 +23,7 @@ defineTile('.', "FLOOR")
 defineTile('D', "DOOR")
 defineTile('!', "DOOR_VAULT")
 defineTile('X', "HARDWALL")
-defineTile('W', "FLOOR", {random_filter={subtype="staff", ego_chance=25, add_levels=4}})
+defineTile('W', "FLOOR", {random_filter={subtype="staff", tome_mod="vault", add_levels=4}})
 defineTile('S', "FLOOR", {random_filter={type="scroll", ego_chance=25, add_levels=4}})
 defineTile('M', "FLOOR", nil, {random_filter={name="skeleton mage", add_levels=4}})
 

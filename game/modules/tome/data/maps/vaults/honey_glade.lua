@@ -25,8 +25,8 @@ defineTile('+', "DOOR")
 defineTile('X', {"HARDTREE","HARDTREE2","HARDTREE3","HARDTREE4","HARDTREE5","HARDTREE6","HARDTREE7","HARDTREE8","HARDTREE9","HARDTREE10","HARDTREE11","HARDTREE12","HARDTREE13","HARDTREE14","HARDTREE15","HARDTREE16","HARDTREE17","HARDTREE18","HARDTREE19","HARDTREE20"})
 defineTile('^', "GRASS", nil, nil, {random_filter={add_levels=5}})
 defineTile('#', "GRASS", nil, {random_filter={name="honey tree"}})
-defineTile('q', "GRASS", {random_filter={add_levels=10, ego_chance=25}}, {random_filter={name="brown bear", add_levels=10}})
-defineTile('Q', "GRASS", {random_filter={add_levels=20, ego_chance=25}}, {random_filter={name="grizzly bear", add_levels=20}})
+defineTile('q', "GRASS", {random_filter={add_levels=10, tome_mod="vault"}}, {random_filter={name="brown bear", add_levels=10}})
+defineTile('Q', "GRASS", {random_filter={add_levels=20, tome_mod="vault"}}, {random_filter={name="grizzly bear", add_levels=20}})
 
 startx = 2
 starty = 10

@@ -23,8 +23,8 @@ defineTile('.', "FLOOR")
 defineTile('X', "HARDWALL")
 defineTile('!', "DOOR_VAULT")
 defineTile('D', "DOOR")
-defineTile('1', "FLOOR", {random_filter={add_levels=15, ego_chance=25}}, {random_filter={add_levels=20}})
-defineTile('2', "FLOOR", {random_filter={add_levels=12, ego_chance=25}}, {random_filter={add_levels=17}})
+defineTile('1', "FLOOR", {random_filter={add_levels=15, tome_mod="vault"}}, {random_filter={add_levels=20}})
+defineTile('2', "FLOOR", {random_filter={add_levels=12, tome_mod="vault"}}, {random_filter={add_levels=17}})
 defineTile('3', "FLOOR", {random_filter={add_levels=5}}, nil)
 
 rotates = {"default", "90", "180", "270", "flipx", "flipy"}

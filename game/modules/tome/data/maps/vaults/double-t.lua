@@ -24,7 +24,7 @@ defineTile('!', "DOOR_VAULT", nil, nil, nil, {room_map={special=false, room=fals
 defineTile('+', "DOOR")
 defineTile('X', "HARDWALL")
 defineTile('^', "FLOOR", nil, nil, {random_filter={add_levels=10}})
-defineTile('$', "FLOOR", {random_filter={add_levels=15, ego_chance=25}})
+defineTile('$', "FLOOR", {random_filter={add_levels=15, tome_mod="gvault"}})
 defineTile('m', "FLOOR", nil, {random_filter={add_levels=20}})
 defineTile('o', "FLOOR", nil, "HILL_ORC_ARCHER")
 

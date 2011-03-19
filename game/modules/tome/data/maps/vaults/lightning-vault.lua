@@ -37,8 +37,8 @@ defineTile('E', "FLOOR", nil, {random_filter={name="ultimate gwelgoroth", add_le
 defineTile('D', "FLOOR", nil, {random_filter={name="storm wyrm", add_levels=20}})
 
 defineTile('$', "FLOOR", "MONEY_BIG")
-defineTile('1', "FLOOR", {random_filter={add_levels=15, ego_chance=45}})
-defineTile('2', "FLOOR", {random_filter={type="ammo", add_levels=10, ego_chance=80}})
+defineTile('1', "FLOOR", {random_filter={add_levels=15, tome_mod="gvault"}})
+defineTile('2', "FLOOR", {random_filter={type="ammo", add_levels=10, tome_mod="vault"}})
 
 return {
 [[XXXXXXXXXXXXXXXXX]],

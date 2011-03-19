@@ -28,15 +28,15 @@ defineTile(' ', "FLOOR")
 defineTile('!', "DOOR_VAULT")
 defineTile('+', "DOOR")
 defineTile('#', "HARDWALL")
-defineTile('c', "FLOOR", {random_filter={add_levels=10, ego_chance=25}})
-defineTile('$', "FLOOR", {random_filter={add_levels=25, ego_chance=25}})
-defineTile('~', "FLOOR", {random_filter={add_levels=10, ego_chance=25}}, nil, {random_filter={add_levels=10}})
+defineTile('c', "FLOOR", {random_filter={add_levels=10, tome_mod="vault"}})
+defineTile('$', "FLOOR", {random_filter={add_levels=25, tome_mod="vault"}})
+defineTile('~', "FLOOR", {random_filter={add_levels=10, tome_mod="vault"}}, nil, {random_filter={add_levels=10}})
 defineTile('^', "FLOOR", nil, nil, {random_filter={add_levels=5}})
 
 defineTile('s', "FLOOR", nil, {random_filter={add_levels=5, name="master skeleton archer"}})
 defineTile('o', "FLOOR", {random_filter={add_levels=5}}, {random_filter={add_levels=5}})
-defineTile('O', "FLOOR", {random_filter={add_levels=10, ego_chance=25}}, {random_filter={add_levels=10}})
-defineTile('P', "FLOOR", {random_filter={add_levels=15, ego_chance=25}}, {random_filter={add_levels=15}})
+defineTile('O', "FLOOR", {random_filter={add_levels=10, tome_mod="vault"}}, {random_filter={add_levels=10}})
+defineTile('P', "FLOOR", {random_filter={add_levels=15, tome_mod="vault"}}, {random_filter={add_levels=15}})
 
 return {
 [[#################]],

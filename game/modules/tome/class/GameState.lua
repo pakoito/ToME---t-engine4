@@ -754,6 +754,39 @@ local drop_tables = {
 	},
 }
 
+local loot_mod = {
+	uvault = { -- Uber vault
+		uniques = 40,
+		double_greater = 8,
+		greater_normal = 5,
+		greater = 3,
+		double_ego = 0,
+		ego = 0,
+		basic = 0,
+		money = 0,
+	},
+	gvault = { -- Greater vault
+		uniques = 10,
+		double_greater = 2,
+		greater_normal = 2,
+		greater = 2,
+		double_ego = 1,
+		ego = 0,
+		basic = 0,
+		money = 0,
+	},
+	vault = { -- Default vault
+		uniques = 5,
+		double_greater = 2,
+		greater_normal = 3,
+		greater = 3,
+		double_ego = 2,
+		ego = 0,
+		basic = 0,
+		money = 0,
+	},
+}
+
 local default_drops = function(zone, level, what)
 	if zone.default_drops then return zone.default_drops end
 	local lev = util.bound(math.ceil(zone:level_adjust_level(level, "object") / 10), 1, 5)
@@ -781,6 +814,15 @@ function _M:entityFilterAlter(zone, level, type, filter)
 		local t = (filter.tome == true) and default_drops(zone, level, "normal") or filter.tome
 		filter.tome = nil
 
+		if filter.tome_mod then
+			t = table.clone(t)
+			if _G.type(filter.tome_mod) == "string" then filter.tome_mod = loot_mod[filter.tome_mod] end
+			for k, v in pairs(filter.tome_mod) do
+				print(" ***** LOOT MOD", k, v)
+				t[k] = (t[k] or 0) * v
+			end
+		end
+
 		-- If we request a specific type/subtype, we dont waht categories that could make that not happen
 		if filter.type or filter.subtype or filter.name then t.money = 0 end
 
@@ -797,6 +839,8 @@ function _M:entityFilterAlter(zone, level, type, filter)
 		if r < u then
 			print("[TOME ENTITY FILTER] selected Uniques", r, u)
 			filter.unique = true
+			filter.not_properties = filter.not_properties or {}
+			filter.not_properties[#filter.not_properties+1] = "lore"
 
 		elseif r < dg then
 			print("[TOME ENTITY FILTER] selected Double Greater", r, dg)

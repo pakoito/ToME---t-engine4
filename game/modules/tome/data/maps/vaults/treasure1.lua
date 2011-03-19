@@ -25,7 +25,7 @@ defineTile('#', "HARDWALL")
 defineTile('!', "DOOR_VAULT")
 defineTile('+', "DOOR")
 defineTile('X', "FLOOR", nil, {random_filter={add_levels=15}})
-defineTile('$', "FLOOR", {random_filter={add_levels=10, ego_chance=25}})
+defineTile('$', "FLOOR", {random_filter={add_levels=10, tome_mod="gvault"}})
 
 rotates = {"default", "90", "180", "270", "flipx", "flipy"}
 

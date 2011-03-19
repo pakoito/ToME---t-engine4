@@ -26,11 +26,11 @@ defineTile('#', "HARDWALL")
 defineTile('%', "WALL")
 defineTile('+', "DOOR")
 defineTile('X', "DOOR_VAULT")
-defineTile('$', "FLOOR", {random_filter={add_levels=15, ego_chance=100}}, {random_filter={add_levels=15, name="dreadmaster"}})
+defineTile('$', "FLOOR", {random_filter={add_levels=15, tome_mod="vault"}}, {random_filter={add_levels=15, name="dreadmaster"}})
 --the above is a floor tile with a +15 level guaranteed ego and a +15 level dreadmaster?
-defineTile('\\', "FLOOR", {random_filter={subtype="staff", ego_chance=25, add_levels=5}}, nil)
+defineTile('\\', "FLOOR", {random_filter={subtype="staff", tome_mod="vault", add_levels=5}}, nil)
 --the above is a floor tile with a staff and no monster?
-defineTile('(', "FLOOR", {random_filter={subtype="cloth", ego_chance=25, add_levels=5}}, nil)
+defineTile('(', "FLOOR", {random_filter={subtype="cloth", tome_mod="uvault", add_levels=5}}, nil)
 --robe with no monster?
 defineTile('o', "FLOOR", nil, {random_filter={subtype="orc", add_levels=5}})
 --floor tile with no object and a random +5 level orc from npcs/orc.lua?
