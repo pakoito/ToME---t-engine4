@@ -58,8 +58,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local penetration = t.getDuration(self, t)
-		local duration = t.getResistancePenetration(self, t)
+		local duration = t.getDuration(self, t)
+		local penetration = t.getResistancePenetration(self, t)
 		local cooldownreduction = t.getCooldownReduction(self, t)
 		return ([[Increases your light and darkness resistance penetration by %d%% for %d turns and brings all your divine talents on cooldown, %d turns closer to being off cooldown.
 		The resistance penetration will increase with your Cunning stat.]]):

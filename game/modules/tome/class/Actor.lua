@@ -111,7 +111,7 @@ function _M:init(t, no_default)
 	t.vim_rating = t.vim_rating or 4
 	t.stamina_rating = t.stamina_rating or 3
 	t.positive_negative_rating = t.positive_negative_rating or 3
-	t.psi_rating = t.psi_rating or 1
+	t.psi_rating = t.psi_rating or 0
 
 	t.esp = t.esp or {}
 

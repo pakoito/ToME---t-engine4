@@ -106,7 +106,11 @@ newTalent{
 				o.wielder.fatigue = o.orig_fat
 				o.wielder.combat_armor = (o.wielder.combat_armor or 0) + t.arm_boost(self, t)
 				o.wielder.fatigue = (o.wielder.fatigue or 0) - t.fat_red(self, t)
-				if o.wielder.fatigue < 0 then o.wielder.fatigue = 0 end
+				if o.wielder.fatigue < 0 and not (o.orig_fat < 0) then
+					o.wielder.fatigue = 0
+				elseif o.wielder.fatigue < 0 and o.orig_fat < 0 then
+					o.wielder.fatigue = o.orig_fat
+				end
 				o.old_fat = t.fat_red(self, t)
 				game.logPlayer(self, "You reshape your %s.", o:getName{do_colour=true, no_count=true})
 				if not o.been_reshaped then

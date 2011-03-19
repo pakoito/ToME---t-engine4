@@ -25,6 +25,10 @@ local function aura_strength(self, t)
 	return self:combatTalentIntervalDamage(t, "wil", 10, 50) + add
 end
 
+local function aura_spike_strength(self, t)
+	return (40 + 10*self:getTalentLevel(t))*math.sqrt(aura_strength(self, t))
+end
+
 local function aura_mastery(self, t)
 	return 10 + (self:getTalentLevel(self.T_AURA_DISCIPLINE) or 0) + getGemLevel(self)
 end
@@ -124,6 +128,9 @@ newTalent{
 	getAuraStrength = function(self, t)
 		return aura_strength(self, t)
 	end,
+	getAuraSpikeStrength = function(self, t)
+		return aura_spike_strength(self, t)
+	end,
 	getKnockback = function(self, t)
 		return 3 + math.floor(self:getTalentLevel(t))
 	end,
@@ -135,6 +142,7 @@ newTalent{
 			local act = game.level.map(tx, ty, engine.Map.ACTOR)
 			if act then
 				self:incPsi(-dam/mast)
+				self:breakStepUp()
 			end
 			DamageType:get(DamageType.PHYSICAL).projector(self, tx, ty, DamageType.PHYSICAL, dam)
 		end)
@@ -147,7 +155,7 @@ newTalent{
 		return true
 	end,
 	deactivate = function(self, t, p)
-		local dam = 50 + 0.4 * t.getAuraStrength(self, t)*t.getAuraStrength(self, t)
+		local dam = t.getAuraSpikeStrength(self, t)
 		local cost = t.getSpikeCost(self, t)
 		if self:getPsi() <= cost then
 			game.logPlayer(self, "The aura dissipates without producing a spike.")
@@ -170,7 +178,7 @@ newTalent{
 
 	info = function(self, t)
 		local dam = t.getAuraStrength(self, t)
-		local spikedam = 50 + 0.4 * dam * dam
+		local spikedam = t.getAuraSpikeStrength(self, t)
 		local mast = aura_mastery(self, t)
 		local spikecost = t.getSpikeCost(self, t)
 		return ([[Fills the air around you with reactive currents of force that do %d physical damage to all who approach. All damage done by the aura will drain one point of energy per %0.2f points of damage dealt.
@@ -236,6 +244,9 @@ newTalent{
 	getAuraStrength = function(self, t)
 		return aura_strength(self, t)
 	end,
+	getAuraSpikeStrength = function(self, t)
+		return 0.8*aura_spike_strength(self, t)
+	end,
 	getSpikeCost = function(self, t)
 		return t.sustain_psi - 2*getGemLevel(self)
 	end,
@@ -247,6 +258,7 @@ newTalent{
 			local act = game.level.map(tx, ty, engine.Map.ACTOR)
 			if act then
 				self:incPsi(-dam/mast)
+				self:breakStepUp()
 			end
 			DamageType:get(DamageType.FIRE).projector(self, tx, ty, DamageType.FIRE, dam)
 		end)
@@ -259,7 +271,7 @@ newTalent{
 		return true
 	end,
 	deactivate = function(self, t, p)
-		local dam = 50 + 0.4 * t.getAuraStrength(self, t)*t.getAuraStrength(self, t)
+		local dam = t.getAuraSpikeStrength(self, t)
 		local cost = t.getSpikeCost(self, t)
 		--if self:isTalentActive(self.T_CONDUIT) then return true end
 		if self:getPsi() <= cost then
@@ -283,7 +295,7 @@ newTalent{
 	info = function(self, t)
 		local dam = t.getAuraStrength(self, t)
 		local rad = self:getTalentRadius(t)
-		local spikedam = 50 + 0.4 * dam * dam
+		local spikedam = t.getAuraSpikeStrength(self, t)
 		local mast = aura_mastery(self, t)
 		local spikecost = t.getSpikeCost(self, t)
 		return ([[Fills the air around you with reactive currents of furnace-like heat that do %d fire damage to all who approach. All damage done by the aura will drain one point of energy per %0.2f points of damage dealt.
@@ -353,6 +365,9 @@ newTalent{
 	getAuraStrength = function(self, t)
 		return aura_strength(self, t)
 	end,
+	getAuraSpikeStrength = function(self, t)
+		return aura_spike_strength(self, t)
+	end,
 	getNumSpikeTargets = function(self, t)
 		return 1 + math.floor(0.5*self:getTalentLevel(t)) + getGemLevel(self)
 	end,
@@ -364,6 +379,7 @@ newTalent{
 			local act = game.level.map(tx, ty, engine.Map.ACTOR)
 			if act then
 				self:incPsi(-dam/mast)
+				self:breakStepUp()
 			end
 			DamageType:get(DamageType.LIGHTNING).projector(self, tx, ty, DamageType.LIGHTNING, dam)
 		end)
@@ -377,7 +393,7 @@ newTalent{
 		return true
 	end,
 	deactivate = function(self, t, p)
-		local dam = 50 + 0.4 * t.getAuraStrength(self, t)*t.getAuraStrength(self, t)
+		local dam = t.getAuraSpikeStrength(self, t)
 		local cost = t.getSpikeCost(self, t)
 		--if self:isTalentActive(self.T_CONDUIT) then return true end
 		if self:getPsi() <= cost then
@@ -440,7 +456,7 @@ newTalent{
 
 	info = function(self, t)
 		local dam = t.getAuraStrength(self, t)
-		local spikedam = 50 + 0.4 * dam * dam
+		local spikedam = t.getAuraSpikeStrength(self, t)
 		local mast = aura_mastery(self, t)
 		local spikecost = t.getSpikeCost(self, t)
 		local nb = t.getNumSpikeTargets(self, t)

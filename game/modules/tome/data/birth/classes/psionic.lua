@@ -34,7 +34,7 @@ newBirthDescriptor{
 	copy = {
 
 	},
-	body = { PSIONIC_FOCUS = 1, },
+	body = { PSIONIC_FOCUS = 1, QS_PSIONIC_FOCUS = 1,},
 }
 
 newBirthDescriptor{

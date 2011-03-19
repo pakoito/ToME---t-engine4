@@ -106,7 +106,7 @@ dofile("/mod/resolvers.lua")
 -- Body parts
 ActorInventory:defineInventory("MAINHAND", "In main hand", true, "Most weapons are wielded in the main hand.")
 ActorInventory:defineInventory("OFFHAND", "In off hand", true, "You can use shields or a second weapon in your off-hand, if you have the talents for it.")
-ActorInventory:defineInventory("PSIONIC_FOCUS", "Psionic Focus", true, "Object help in your telekinetic grasp. It can be a weapon or some other item to provide a benefit to your psionic powers.")
+ActorInventory:defineInventory("PSIONIC_FOCUS", "Psionic focus", true, "Object held in your telekinetic grasp. It can be a weapon or some other item to provide a benefit to your psionic powers.")
 ActorInventory:defineInventory("FINGER", "On fingers", true, "Rings are worn on fingers.")
 ActorInventory:defineInventory("NECK", "Around neck", true, "Amulets are worn around the neck.")
 ActorInventory:defineInventory("LITE", "Light source", true, "A light source allows you to see in the dark places of the world.")
@@ -123,6 +123,7 @@ ActorInventory:defineInventory("GEM", "Socketed Gems", true, "Socketed gems.")
 ActorInventory:defineInventory("MOUNT", "Mount", false, "Your mount.")
 ActorInventory:defineInventory("QS_MAINHAND", "Second weapon set: In main hand", false, "Weapon Set 2: Most weapons are wielded in the main hand. Press 'x' to switch weapon sets.", true)
 ActorInventory:defineInventory("QS_OFFHAND", "Second weapon set: In off hand", false, "Weapon Set 2: You can use shields or a second weapon in your off-hand, if you have the talents for it. Press 'x' to switch weapon sets.", true)
+ActorInventory:defineInventory("QS_PSIONIC_FOCUS", "Second weapon set: psionic focus", false, "Weapon Set 2: Object held in your telekinetic grasp. It can be a weapon or some other item to provide a benefit to your psionic powers. Press 'x' to switch weapon sets.", true)
 
 -- Damage types
 DamageType:loadDefinition("/data/damage_types.lua")

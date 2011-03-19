@@ -790,26 +790,48 @@ end
 function _M:quickSwitchWeapons()
 	local mh1, mh2 = self.inven[self.INVEN_MAINHAND], self.inven[self.INVEN_QS_MAINHAND]
 	local oh1, oh2 = self.inven[self.INVEN_OFFHAND], self.inven[self.INVEN_QS_OFFHAND]
+	local pf1, pf2 = self.inven[self.INVEN_PSIONIC_FOCUS], self.inven[self.INVEN_QS_PSIONIC_FOCUS]
 
 	local mhset1, mhset2 = {}, {}
 	local ohset1, ohset2 = {}, {}
+	local pfset1, pfset2 = {}, {}
 	-- Remove them all
 	for i = #mh1, 1, -1 do mhset1[#mhset1+1] = self:removeObject(mh1, i, true) end
 	for i = #mh2, 1, -1 do mhset2[#mhset2+1] = self:removeObject(mh2, i, true) end
 	for i = #oh1, 1, -1 do ohset1[#ohset1+1] = self:removeObject(oh1, i, true) end
 	for i = #oh2, 1, -1 do ohset2[#ohset2+1] = self:removeObject(oh2, i, true) end
-
+	if pf1 and pf2 then
+		for i = #pf1, 1, -1 do pfset1[#pfset1+1] = self:removeObject(pf1, i, true) end
+		for i = #pf2, 1, -1 do pfset2[#pfset2+1] = self:removeObject(pf2, i, true) end
+	end
 	-- Put them all back
 	for i = 1, #mhset1 do self:addObject(mh2, mhset1[i]) end
 	for i = 1, #mhset2 do self:addObject(mh1, mhset2[i]) end
 	for i = 1, #ohset1 do self:addObject(oh2, ohset1[i]) end
 	for i = 1, #ohset2 do self:addObject(oh1, ohset2[i]) end
-
+	if pf1 and pf2 then
+		for i = 1, #pfset1 do self:addObject(pf2, pfset1[i]) end
+		for i = 1, #pfset2 do self:addObject(pf1, pfset2[i]) end
+	end
 	if not self:isTalentActive(T_CELERITY) then self:useEnergy() end
 	local names = ""
-	if mh1[1] and oh1[1] then names = mh1[1]:getName{do_color=true}.." and "..oh1[1]:getName{do_color=true}
-	elseif mh1[1] and not oh1[1] then names = mh1[1]:getName{do_color=true}
-	elseif not mh1[1] and oh1[1] then names = oh1[1]:getName{do_color=true}
+	if pf1 and pf2 then
+		if not pf1[1] then
+			if mh1[1] and oh1[1] then names = mh1[1]:getName{do_color=true}.." and "..oh1[1]:getName{do_color=true}
+			elseif mh1[1] and not oh1[1] then names = mh1[1]:getName{do_color=true}
+			elseif not mh1[1] and oh1[1] then names = oh1[1]:getName{do_color=true}
+			end
+		else
+			if mh1[1] and oh1[1] then names = mh1[1]:getName{do_color=true}.." and "..oh1[1]:getName{do_color=true}.." and "..pf1[1]:getName{do_color=true}
+			elseif mh1[1] and not oh1[1] then names = mh1[1]:getName{do_color=true}.." and "..pf1[1]:getName{do_color=true}
+			elseif not mh1[1] and oh1[1] then names = oh1[1]:getName{do_color=true}.." and "..pf1[1]:getName{do_color=true}
+			end
+		end
+	else
+		if mh1[1] and oh1[1] then names = mh1[1]:getName{do_color=true}.." and "..oh1[1]:getName{do_color=true}
+		elseif mh1[1] and not oh1[1] then names = mh1[1]:getName{do_color=true}
+		elseif not mh1[1] and oh1[1] then names = oh1[1]:getName{do_color=true}
+		end
 	end
 	game.logPlayer(self, "You switch your weapons to: %s.", names)
 	self.changed = true

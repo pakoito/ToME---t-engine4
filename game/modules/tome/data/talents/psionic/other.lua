@@ -122,6 +122,7 @@ newTalent{
 						if hit and not sound then sound = o.combat.sound
 						elseif not hit and not sound_miss then sound_miss = o.combat.sound_miss end
 						if not o.combat.no_stealth_break then break_stealth = true end
+						self:breakStepUp()
 					end
 				end
 			else

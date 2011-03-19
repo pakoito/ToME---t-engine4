@@ -24,7 +24,7 @@ newTalent{
 	points = 5,
 	psi = 0,
 	cooldown = function(self, t)
-		return math.ceil(40 - self:getTalentLevel(t)*4)
+		return math.ceil(25 - self:getTalentLevelRaw(t)*3)
 	end,
 	tactical = { DEFEND = 1, DISABLE = 2 },
 	direct_hit = true,
@@ -43,11 +43,11 @@ newTalent{
 		local dam = .1 + 0.03*self:getTalentLevel(t)
 		local tg = self:getTalentTarget(t)
 		self:project(tg, self.x, self.y, function(tx, ty)
-			DamageType:get(DamageType.MINDSLOW).projector(self, tx, ty, DamageType.MINDSLOW, dam)
 			local act = game.level.map(tx, ty, engine.Map.ACTOR)
 			if act then
 				self:incPsi(en)
 			end
+			DamageType:get(DamageType.MINDSLOW).projector(self, tx, ty, DamageType.MINDSLOW, dam)
 		end)
 		return true
 	end,
@@ -67,7 +67,7 @@ newTalent{
 	require = psi_wil_req2,
 	points = 5,
 	cooldown = function(self, t)
-		return math.ceil(50 - self:getTalentLevel(t)*4)
+		return math.ceil(25 - self:getTalentLevelRaw(t)*3)
 	end,
 	psi = 0,
 	tactical = { DEFEND = 2, DISABLE = 2 },
@@ -86,11 +86,11 @@ newTalent{
 		local dam = math.ceil(1 + 0.5*self:getTalentLevel(t))
 		local tg = self:getTalentTarget(t)
 		self:project(tg, self.x, self.y, function(tx, ty)
-			DamageType:get(DamageType.MINDFREEZE).projector(self, tx, ty, DamageType.MINDFREEZE, dam)
 			local act = game.level.map(tx, ty, engine.Map.ACTOR)
 			if act then
 				self:incPsi(en)
 			end
+			DamageType:get(DamageType.MINDFREEZE).projector(self, tx, ty, DamageType.MINDFREEZE, dam)
 		end)
 		return true
 	end,
@@ -112,7 +112,7 @@ newTalent{
 	points = 5,
 	psi = 0,
 	cooldown = function(self, t)
-		return math.ceil(50 - self:getTalentLevel(t)*5)
+		return math.ceil(25 - self:getTalentLevelRaw(t)*3)
 	end,
 	tactical = { DEFEND = 2, ATTACKAREA = 2, DISABLE = 1 },
 	direct_hit = true,
@@ -131,11 +131,11 @@ newTalent{
 		local dam = self:spellCrit(self:combatTalentMindDamage(t, 28, 270))
 		local tg = self:getTalentTarget(t)
 		self:project(tg, self.x, self.y, function(tx, ty)
-			DamageType:get(DamageType.LIGHTNING_DAZE).projector(self, tx, ty, DamageType.LIGHTNING_DAZE, dam)
 			local act = game.level.map(tx, ty, engine.Map.ACTOR)
 			if act then
 				self:incPsi(en)
 			end
+			DamageType:get(DamageType.LIGHTNING_DAZE).projector(self, tx, ty, DamageType.LIGHTNING_DAZE, dam)
 		end)
 		-- Lightning ball gets a special treatment to make it look neat
 		local sradius = (tg.radius + 0.5) * (engine.Map.tile_w + engine.Map.tile_h) / 2
