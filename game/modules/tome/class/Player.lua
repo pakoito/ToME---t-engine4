@@ -522,8 +522,10 @@ function _M:restCheck()
 end
 
 --- Can we continue running?
--- We can run if no hostiles are in sight, and if we no interesting terrains are next to us
-function _M:runCheck()
+-- We can run if no hostiles are in sight, and if no interesting terrain or characters are next to us.
+-- Known traps aren't interesting.  We let the engine run around traps, or stop if it can't.
+-- 'ignore_memory' is only used when checking for paths around traps.  This ensures we don't remember items "obj_seen" that we aren't supposed to
+function _M:runCheck(ignore_memory)
 	local spotted = spotHostiles(self)
 	if spotted then return false, ("hostile spotted (%s%s)"):format(spotted.actor.name, game.level.map:isOnScreen(spotted.x, spotted.y) and "" or " - offscreen") end
 
@@ -532,22 +534,27 @@ function _M:runCheck()
 	-- Notice any noticeable terrain
 	local noticed = false
 	self:runScan(function(x, y, what)
-		-- Only notice interesting terrains
-		local grid = game.level.map(x, y, Map.TERRAIN)
-		if grid and grid.notice then noticed = "interesting terrain" end
-
 		-- Objects are always interesting, only on curent spot
 		if what == "self" and not game.level.map.attrs(x, y, "obj_seen") then
 			local obj = game.level.map:getObject(x, y, 1)
 			if obj then
 				noticed = "object seen"
-				game.level.map.attrs(x, y, "obj_seen", true)
+				if not ignore_memory then game.level.map.attrs(x, y, "obj_seen", true) end
+				return
 			end
 		end
 
-		-- Traps are always interesting if known
-		local trap = game.level.map(x, y, Map.TRAP)
-		if trap and trap:knownBy(self) then noticed = "trap spotted" end
+		-- Only notice interesting terrains
+		local grid = game.level.map(x, y, Map.TERRAIN)
+		if grid and grid.notice then noticed = "interesting terrain"; return end
+		if grid and grid.type and grid.type == "store" then noticed = "store entrance spotted"; return end
+
+		-- Only notice interesting characters
+		local actor = game.level.map(x, y, Map.ACTOR)
+		if actor and actor.can_talk then noticed = "interesting character"; return end
+
+		-- We let the engine take care of traps, but we should still notice "trap" stores.
+		if game.level.map:checkAllEntities(x, y, "store") then noticed = "store entrance spotted"; return end
 	end)
 	if noticed then return false, noticed end
 

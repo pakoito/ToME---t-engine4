@@ -178,7 +178,7 @@ newTalent{
 	no_npc_use = true,
 	no_silence=true, is_spell=true,
 	action = function(self, t)
-		if not self:canBe("worldport") then
+		if not self:canBe("worldport") or self:attr("never_move") then
 			game.logPlayer(self, "The spell fizzles...")
 			return
 		end

@@ -2206,7 +2206,7 @@ newEffect{
 	activate = function(self, eff)
 	end,
 	deactivate = function(self, eff)
-		if self:canBe("worldport") then
+		if self:canBe("worldport") and not self:attr("never_move") then
 			game:onTickEnd(function()
 				game.logPlayer(self, "You are yanked out of this place!")
 				game:changeLevel(1, game.player.last_wilderness)
@@ -2238,7 +2238,7 @@ newEffect{
 			return
 		end
 
-		if self:canBe("worldport") then
+		if self:canBe("worldport") and not self:attr("never_move") then
 			game:onTickEnd(function()
 				game.logPlayer(self, "You are yanked out of this place!")
 				game:changeLevel(1, "town-angolwen")

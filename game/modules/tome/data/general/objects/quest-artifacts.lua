@@ -314,7 +314,7 @@ You have heard of such items before, they are very useful to adventurers, allowi
 	max_power = 1000, power_regen = 1,
 	use_power = { name = "recall the user to the worldmap", power = 1000,
 		use = function(self, who)
-			if who:canBe("worldport") then
+			if who:canBe("worldport") and not self:attr("never_move") then
 				who:setEffect(who.EFF_RECALL, 40, {})
 				game.logPlayer(who, "Space around you starts to dissolve...")
 			else
