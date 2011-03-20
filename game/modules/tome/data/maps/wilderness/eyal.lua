@@ -202,6 +202,7 @@ addZone({20, 1, 31, 9}, "world-encounter", "infinite-dungeon")
 addZone({59, 41, 65, 46}, "world-encounter", "infinite-dungeon")
 addZone({38, 35, 53, 46}, "world-encounter", "mark-spellblaze")
 addZone({3, 16, 10, 28}, "world-encounter", "angolwen")
+addZone({153, 15, 160, 22}, "world-encounter", "orc-breeding-pit")
 
 -- ASCII map section
 return {

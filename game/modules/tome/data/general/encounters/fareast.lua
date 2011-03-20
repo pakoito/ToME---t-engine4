@@ -48,6 +48,7 @@ newEntity{
 	type = "hostile", subtype = "special", unique = true,
 	level_range = {34, 45},
 	rarity = 6,
+	on_world_encounter = "shadow-crypt",
 	on_encounter = function(self, who)
 		local x, y = self:findSpot(who)
 		if not x then return end
@@ -62,6 +63,30 @@ newEntity{
 		g:resolve() g:resolve(nil, true)
 		game.zone:addEntity(game.level, g, "terrain", x, y)
 		game.logPlayer(who, "#LIGHT_BLUE#You notice an entrance to a dark crypt. Fetid wind seems to come out of it.")
+		return true
+	end
+}
+
+newEntity{
+	name = "Orc Breeding Pit",
+	type = "hostile", subtype = "special", unique = true,
+	level_range = {30, 45},
+	rarity = 6,
+	on_world_encounter = "orc-breeding-pit",
+	on_encounter = function(self, who)
+		local x, y = self:findSpot(who)
+		if not x then return end
+
+		local g = mod.class.Grid.new{
+			show_tooltip=true,
+			name="Entrance to the orc breeding pit",
+			display='>', color=colors.GREEN,
+			notice = true,
+			change_level=1, change_zone="orc-breeding-pit"
+		}
+		g:resolve() g:resolve(nil, true)
+		game.zone:addEntity(game.level, g, "terrain", x, y)
+		game.logPlayer(who, "#LIGHT_BLUE#You find an entrance to a dim, moist cavern. The stench of the warm air rising from it is almost unbearable.")
 		return true
 	end
 }

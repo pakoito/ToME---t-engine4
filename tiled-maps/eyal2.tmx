@@ -715,5 +715,11 @@
     <property name="type" value="&quot;world-encounter&quot;"/>
    </properties>
   </object>
+  <object name="Orc breeding pits" x="4903" y="483" width="244" height="245">
+   <properties>
+    <property name="subtype" value="&quot;orc-breeding-pit&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>
