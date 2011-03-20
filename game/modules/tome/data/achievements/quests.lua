@@ -161,3 +161,7 @@ newAchievement{
 	name = "Squadmate", id = "NORGAN_SAVED",
 	desc = [[Escaped from Reknor alive with your squadmate Norgan.]],
 }
+newAchievement{
+	name = "Genocide", id = "GREATMOTHER_DEAD",
+	desc = [[Killed the Orc Greatmother in the breeding pits, thus dealing a terrible blow to the orc race.]],
+}

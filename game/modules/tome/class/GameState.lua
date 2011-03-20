@@ -32,6 +32,7 @@ function _M:init(t, no_default)
 	self.allow_backup_guardians = {}
 	self.world_artifacts_pool = {}
 	self.boss_killed = 0
+	self.east_orc_patrols = 4
 end
 
 -- Number of bosses killed
@@ -57,6 +58,16 @@ end
 --- Is the game in an advanced state (gone east ? others ?)
 function _M:isAdvanced()
 	return self.is_advanced
+end
+
+--- Reduce the chance of orc patrols
+function _M:eastPatrolsReduce()
+	self.east_orc_patrols = self.east_orc_patrols / 2
+end
+
+--- Get the chance of orc patrols
+function _M:canEastPatrol()
+	return self.east_orc_patrols
 end
 
 --- Setup a backup guardian for the given zone

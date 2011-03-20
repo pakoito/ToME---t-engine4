@@ -326,7 +326,7 @@ newTalent{
 		local filter = rng.table(filters)
 
 		-- Apply summon destabilization
-		self:setEffect(self.EFF_SUMMON_DESTABILIZATION, 500, {power=5})
+		if self:getTalentLevel(t) < 5 then self:setEffect(self.EFF_SUMMON_DESTABILIZATION, 500, {power=5}) end
 
 		for i = 1, filter.number do
 			-- Find space
@@ -351,7 +351,9 @@ newTalent{
 				game.logSeen(self, "%s summons %s!", self.name:capitalize(), m.name)
 
 				-- Apply summon destabilization
-				m:setEffect(m.EFF_SUMMON_DESTABILIZATION, 500, {power=self:hasEffect(self.EFF_SUMMON_DESTABILIZATION).power})
+				if self:hasEffect(self.EFF_SUMMON_DESTABILIZATION) then
+					m:setEffect(m.EFF_SUMMON_DESTABILIZATION, 500, {power=self:hasEffect(self.EFF_SUMMON_DESTABILIZATION).power})
+				end
 
 				-- Learn about summoners
 				if game.level.map.seens(self.x, self.y) then

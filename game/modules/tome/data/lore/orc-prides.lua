@@ -262,3 +262,76 @@ But the fight could not carry on forever. A stab from a sword crippled his leg, 
 
 Our forces never full recovered from the loss of our great leader. The wars continued, but without his strategies failure became more frequent. Eventually the other races began to fight back, and we were driven from our homeland. But the spirit of Garkul remains with us all, and his lessons stay in our hearts and minds. One day we will return to the place of his birth, and the glory he began shall be completed - Maj'Eyal will be ours.]],
 }
+
+--------------------------------------------------------------------------
+-- Orc breeding pits lore
+--------------------------------------------------------------------------
+
+newLore{
+	id = "orc-breeding-1",
+	category = "orc prides",
+	name = "Clinician Korbek's experimental notes part one",
+	lore = [[#{bold}#Clinician Korbek's experimental notes part one#{normal}#
+
+What a dread and woeful task I have been given - the revival of our race. The swine humans and halflings have destroyed our whole society, and only the brutes of the military remain to rule our people. We are left with just a handful of women left, and without drastic measures we shall soon be extinct.
+
+And those drastic measures come down to me. I am the sole orc left with any advanced medical knowledge, as I evacuated to the East before our settlement was wiped out. I must find a way to prolong the lives of our remaining females and have them breed at far faster rates. I will use all natural and magical means at my disposal.
+
+I have taken this cavern up as a secret base, far away from the main encampment. I must do dark deeds here, and I wish them to remain hidden...]]
+}
+
+newLore{
+	id = "orc-breeding-2",
+	category = "orc prides",
+	name = "Clinician Korbek's experimental notes part one",
+	lore = [[#{bold}#Clinician Korbek's experimental notes part two#{normal}#
+
+I have begun work on several of the females. They are being kept in a coma for the duration of the experiments - it's far better that way. Initially I have subjected them to very high levels of wild infusion and arcane regeneration fields, whilst also keeping a direct feed into their stomachs high in protein. Corrupted blood is being pumped into their ovaries with a temporal acceleration field surrounding them. The leaders of each Pride have donated their seed for use in the experiments.
+
+Initial results have mostly been immensely successful. Body mass has grown significantly, especially in the abdominal region. One has even begun developing extra ovaries and sexual organs. I have managed to increase their fertility immensely, and the stimulated foetal growth rate means that new orcs take only eight weeks from conception to birth. The young also seem to be progressing in their development at a very advanced pace, with particularly accelerated muscle development.
+
+Some females have died during the procedures. I can only presume these were the weaker subjects, but it is a tragic loss regardless.]]
+}
+
+newLore{
+	id = "orc-breeding-3",
+	category = "orc prides",
+	name = "Clinician Korbek's experimental notes part one",
+	lore = [[#{bold}#Clinician Korbek's experimental notes part three#{normal}#
+
+My work is continuing with tremendous success. All subjects now have multiple operational wombs, thanks to the corrupted blood infusions coupled with arcane regeneration fields to quickly repair the corrupted tissues. With greater advances in accelerating the foetal growth stage we are now seeing new orcs every few days! I believe this can be pushed even further.
+
+Though the wombs operate at an advanced rate, we are keeping their vital organs suppressed to extend their lifespans. Perhaps they can live for hundreds, if not thousands of years.
+
+Pumping nutrients directly into their stomach is proving a difficulty with the increased activity in the abdominal region. I am currently investigating ways to condense nutrients into the atmosphere so that the subjects can be passively fed through breathing. Initial tests show a slimy build-up on the skin but no other negative side-effects.]]
+}
+
+newLore{
+	id = "orc-breeding-4",
+	category = "orc prides",
+	name = "Clinician Korbek's experimental notes part one",
+	lore = [[#{bold}#Clinician Korbek's experimental notes part four#{normal}#
+
+Oh horrors... Oh black bilious terrors! What have I done? What vile and black sin have I done?!
+
+I have so long been concentrating on my objectives that I never stopped to think of the monstrous acts I was performing on these women. But last night I decided to take one out of her coma to see what reactions there might be. What reaction indeed! Her first action was to moan in pain - her swollen lungs have deprived her of any other form of communication. But then she opened her eyes and saw herself, and saw the others around her, and the panic and disgust that filled those eyes reached into my very soul.
+
+She wanted to die. I know she wanted to die, I could see her accusing eyes on me begging to let her die. But I cannot, I cannot... This is too terrible. I should burn this cave to the ground, and erase my horrible actions from existence! But where would that leave our people...
+
+My mind is in torment. I cannot live like this any longer... I cannot live...]]
+}
+
+newLore{
+	id = "orc-breeding-5",
+	category = "orc prides",
+	name = "Captain Gumlarat's report",
+	lore = [[#{bold}#Captain Gumlarat's report#{normal}#
+
+I have found clinician Korbek's body in his study. It seems he slit his own throat. This would explain the lack of reports in the last few days.
+
+The reason for suicide is beyond understanding. His research has been immensely successful. Our race can now return to strength! I have read through his notes and based on his findings I will increase the procedures being used to allow for even faster birth rates. The Pride leaders will be pleased.
+
+I see his notes also suggest the mothers may be in pain. I will allow a doping infusion to be administered to alleviate this. We would not wish our women to suffer...
+
+]]
+}

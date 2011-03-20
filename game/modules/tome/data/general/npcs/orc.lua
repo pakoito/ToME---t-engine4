@@ -33,8 +33,6 @@ newEntity{
 	infravision = 20,
 	lite = 2,
 
-	resolvers.racial(),
-
 	life_rating = 11,
 	rank = 2,
 	size_category = 3,
@@ -61,6 +59,7 @@ newEntity{ base = "BASE_NPC_ORC",
 	resolvers.inscriptions(1, "infusion"),
 	combat_armor = 2, combat_def = 0,
 	resolvers.talents{ [Talents.T_SHIELD_PUMMEL]=1, },
+	resolvers.racial(),
 }
 
 newEntity{ base = "BASE_NPC_ORC",
@@ -80,6 +79,7 @@ newEntity{ base = "BASE_NPC_ORC",
 		{type="weapon", subtype="longbow", autoreq=true},
 		{type="ammo", subtype="arrow", autoreq=true},
 	},
+	resolvers.racial(),
 }
 
 newEntity{ base = "BASE_NPC_ORC", define_as = "ORC",
@@ -95,6 +95,7 @@ newEntity{ base = "BASE_NPC_ORC", define_as = "ORC",
 	combat_armor = 2, combat_def = 0,
 	resolvers.inscriptions(1, "infusion"),
 	resolvers.talents{ [Talents.T_SUNDER_ARMOUR]=2, [Talents.T_CRUSH]=2, },
+	resolvers.racial(),
 }
 
 newEntity{ base = "BASE_NPC_ORC", define_as = "ORC_FIRE_WYRMIC",
@@ -122,6 +123,7 @@ newEntity{ base = "BASE_NPC_ORC", define_as = "ORC_FIRE_WYRMIC",
 		[Talents.T_WING_BUFFET]=2,
 		[Talents.T_FIRE_BREATH]=2,
 	},
+	resolvers.racial(),
 }
 
 newEntity{ base = "BASE_NPC_ORC",
@@ -149,6 +151,7 @@ newEntity{ base = "BASE_NPC_ORC",
 		[Talents.T_ICY_SKIN]=2,
 		[Talents.T_ICE_BREATH]=2,
 	},
+	resolvers.racial(),
 }
 
 newEntity{ base = "BASE_NPC_ORC",
@@ -173,6 +176,7 @@ newEntity{ base = "BASE_NPC_ORC",
 
 	resolvers.sustains_at_birth(),
 	autolevel = "rogue",
+	resolvers.racial(),
 }
 
 newEntity{ base = "BASE_NPC_ORC",
@@ -202,6 +206,7 @@ newEntity{ base = "BASE_NPC_ORC",
 
 	resolvers.sustains_at_birth(),
 	autolevel = "rogue",
+	resolvers.racial(),
 }
 
 newEntity{ base = "BASE_NPC_ORC",
@@ -232,4 +237,5 @@ newEntity{ base = "BASE_NPC_ORC",
 
 	resolvers.sustains_at_birth(),
 	autolevel = "rogue",
+	resolvers.racial(),
 }
