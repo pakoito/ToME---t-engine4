@@ -1,0 +1,170 @@
+-- ToME - Tales of Maj'Eyal
+-- Copyright (C) 2009, 2010 Nicolas Casalini
+--
+-- This program is free software: you can redistribute it and/or modify
+-- it under the terms of the GNU General Public License as published by
+-- the Free Software Foundation, either version 3 of the License, or
+-- (at your option) any later version.
+--
+-- This program is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
+--
+-- You should have received a copy of the GNU General Public License
+-- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+--
+-- Nicolas Casalini "DarkGod"
+-- darkgod@te4.org
+
+local Talents = require("engine.interface.ActorTalents")
+
+newEntity{
+	define_as = "BASE_NPC_LICH",
+	type = "undead", subtype = "lich",
+	desc = [[Only the most powerful spellcasters raised to unlife become liches, doomed to haunt the world for an eternity, they have grown to hate all that breathes or trespasses on their domain, unfortunately that includes you.]],
+	display = "L", color=colors.WHITE,
+	rank = 3, size = 3,
+
+	combat = { dam=resolvers.rngavg(16,27), atk=16, apr=9, damtype=DamageType.DARKSTUN, dammod={mag=0.9} },
+
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+	equipment = resolvers.equip{
+		{type="armor", subtype="cloth", ego_chance=75, autoreq=true},
+		{type="armor", subtype="head", ego_chance=75, autoreq=true},
+		{type="armor", subtype="feet", ego_chance=75, autoreq=true},
+		{type="armor", subtype="cloak", ego_chance=75, autoreq=true},
+		{type="jewelry", subtype="amulet", ego_chance=100, autoreq=true},
+		{type="jewelry", subtype="ring", ego_chance=100, autoreq=true},
+		{type="jewelry", subtype="ring", ego_chance=100, autoreq=true},
+	},
+
+	autolevel = "caster",
+	ai = "tactical", ai_state = { talent_in=1, },
+	ai_tactic = resolvers.tactic"ranged",
+	energy = { mod=1 },
+	stats = { str=8, dex=15, mag=20, wil=18, con=10, cun=18 },
+
+	resists = { [DamageType.NATURE] = 90, [DamageType.FIRE] = 20, [DamageType.MIND] = 100, [DamageType.LIGHT] = -60, [DamageType.DARKNESS] = 95, [DamageType.BLIGHT] = 90 },
+
+	resolvers.inscriptions(3, "rune"),
+
+	instakill_immune = 1,
+	stun_immune = 1,
+	poison_immune = 1,
+	undead = 1,
+	blind_immune = 1,
+	see_invisible = 100,
+	infravision = 10,
+	silence_immune = 0.7,
+	fear_immune = 1,
+	negative_regen = 0.4,	-- make their negative energies slowly increase
+	mana_regen = 0.3,
+	hate_regen = 0.2,
+	open_door = 1,
+	combat_spellpower = resolvers.mbonus(20, 10),
+	combat_spellcrit = resolvers.mbonus(5, 5),
+
+	resolvers.sustains_at_birth(),
+}
+
+newEntity{ base = "BASE_NPC_LICH",
+	name = "lich", color=colors.DARK_BLUE,
+	desc=[[Having thought to discover life eternal, undeath has robbed these beings of the joys of life, and now they seek to destroy it as well.]],
+	level_range = {35, nil}, exp_worth = 1,
+	rarity = 20,
+	max_life = resolvers.rngavg(70,80),
+	combat_armor = 10, combat_def = 20,
+
+	resolvers.talents{
+		[Talents.T_HYMN_OF_SHADOWS]=4,
+		[Talents.T_MOONLIGHT_RAY]=5,
+		[Talents.T_SHADOW_BLAST]=5,
+		[Talents.T_TWILIGHT_SURGE]=3,
+		[Talents.T_STARFALL]=3,
+		[Talents.T_FREEZE]=3,
+		[Talents.T_MANATHRUST]=5,
+		[Talents.T_CONGEAL_TIME]=5,
+		[Talents.T_CREEPING_DARKNESS]=4,
+		[Talents.T_DARK_VISION]=4,
+		[Talents.T_DARK_TORRENT]=4,
+		[Talents.T_DARK_TENDRILS]=4,
+-- Utility spells
+		[Talents.T_PHASE_DOOR]=5,
+		[Talents.T_TELEPORT]=5,
+		[Talents.T_STONE_SKIN]=5,
+
+		[Talents.T_CALL_SHADOWS]=3,
+		[Talents.T_FOCUS_SHADOWS]=3,
+		[Talents.T_SHADOW_MAGES]=1,
+		[Talents.T_SHADOW_WARRIORS]=1,
+	},
+}
+
+newEntity{ base = "BASE_NPC_LICH",
+	name = "ancient lich", color=colors.DARK_RED,
+	desc=[[An elder being from a now forgotten age, filled and fueled by its hate and rage towards all things living, it seeks to deprive those of a prize it cannot have... life.]],
+	level_range = {40, nil}, exp_worth = 1,
+	rarity = 25,
+	max_life = resolvers.rngavg(80,90),
+	combat_armor = 12, combat_def = 22,
+
+	resolvers.talents{
+		[Talents.T_HYMN_OF_SHADOWS]=5,
+		[Talents.T_MOONLIGHT_RAY]=5,
+		[Talents.T_SHADOW_BLAST]=5,
+		[Talents.T_TWILIGHT_SURGE]=5,
+		[Talents.T_STARFALL]=5,
+		[Talents.T_FREEZE]=5,
+		[Talents.T_MANATHRUST]=5,
+		[Talents.T_CONGEAL_TIME]=5,
+		[Talents.T_CREEPING_DARKNESS]=6,
+		[Talents.T_DARK_VISION]=6,
+		[Talents.T_DARK_TORRENT]=6,
+		[Talents.T_DARK_TENDRILS]=6,
+-- Utility spells
+		[Talents.T_PHASE_DOOR]=7,
+		[Talents.T_TELEPORT]=7,
+		[Talents.T_STONE_SKIN]=7,
+
+		[Talents.T_CALL_SHADOWS]=5,
+		[Talents.T_FOCUS_SHADOWS]=5,
+		[Talents.T_SHADOW_MAGES]=3,
+		[Talents.T_SHADOW_WARRIORS]=3,
+	},
+}
+
+newEntity{ base = "BASE_NPC_LICH",
+	name = "archlich", color=colors.SLATE,
+	desc=[[Darker than the deepest night, you shudder as this cold cruel form of darkness approaches.  Long ago it has laid aside its mortality, but it has not forgotten its power, rather, its malice and hate have bent this undead on the destruction of all things living.]],
+	level_range = {45, nil}, exp_worth = 1,
+	rarity = 30,
+	max_life = resolvers.rngavg(100,150),
+	combat_armor = 15, combat_def = 25,
+
+	self_resurrect = 1,
+
+	resolvers.talents{
+		[Talents.T_HYMN_OF_SHADOWS]=6,
+		[Talents.T_MOONLIGHT_RAY]=6,
+		[Talents.T_SHADOW_BLAST]=6,
+		[Talents.T_TWILIGHT_SURGE]=6,
+		[Talents.T_STARFALL]=6,
+		[Talents.T_FREEZE]=6,
+		[Talents.T_MANATHRUST]=6,
+		[Talents.T_CONGEAL_TIME]=6,
+		[Talents.T_CREEPING_DARKNESS]=10,
+		[Talents.T_DARK_VISION]=10,
+		[Talents.T_DARK_TORRENT]=10,
+		[Talents.T_DARK_TENDRILS]=10,
+-- Utility spells
+		[Talents.T_PHASE_DOOR]=10,
+		[Talents.T_TELEPORT]=10,
+		[Talents.T_STONE_SKIN]=10,
+
+		[Talents.T_CALL_SHADOWS]=8,
+		[Talents.T_FOCUS_SHADOWS]=5,
+		[Talents.T_SHADOW_MAGES]=5,
+		[Talents.T_SHADOW_WARRIORS]=5,
+	},
+}
