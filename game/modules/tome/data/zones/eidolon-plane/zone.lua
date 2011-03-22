@@ -96,7 +96,17 @@ return {
 
 			for _, act in ipairs(acts) do
 				local x, y = util.findFreeGrid(oldlevel.data.eidolon_exit_x or 1, oldlevel.data.eidolon_exit_y or 1, 20, true, {[engine.Map.ACTOR]=true})
+				if not x then
+					x, y = rng.range(0, game.level.map.w - 1), rng.range(0, game.level.map.h - 1)
+					local tries = 0
+					while not act:canMove(x, y) and tries < 100 do
+						x, y = rng.range(0, game.level.map.w - 1), rng.range(0, game.level.map.h - 1)
+						tries = tries + 1
+					end
+					if tries >= 100 then x = nil end
+				end
 				if x then
+					act.x, act.y = nil, nil
 					level:addEntity(act)
 					act:move(x, y, true)
 					act.changed = true
