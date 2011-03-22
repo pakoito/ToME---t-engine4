@@ -712,6 +712,7 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 		luaopen_gas(L);
 		luaopen_sound(L);
 		luaopen_noise(L);
+		luaopen_diamond_square(L);
 		luaopen_shaders(L);
 		luaopen_serial(L);
 		luaopen_profile(L);
