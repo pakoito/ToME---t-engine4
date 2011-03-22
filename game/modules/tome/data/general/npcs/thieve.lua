@@ -53,7 +53,7 @@ newEntity{
 	stats = { str=8, dex=15, mag=6, cun=15, con=7 },
 
 	resolvers.tmasteries{ ["technique/other"]=0.3, ["cunning/stealth"]=1, ["cunning/dirty"]=0.3, ["technique/dualweapon-training"]=0.3 },
-	resolvers.talents{ [Talents.T_LETHALITY]=1, },
+	resolvers.talents{ [Talents.T_LETHALITY]={base=1, every=6, max=5}, },
 }
 
 newEntity{ base = "BASE_NPC_THIEF",
@@ -72,7 +72,7 @@ newEntity{ base = "BASE_NPC_THIEF",
 	level_range = {2, nil}, exp_worth = 1,
 	rarity = 1,
 	combat_armor = 2, combat_def = 5,
-	resolvers.talents{ [Talents.T_STEALTH]=1,  },
+	resolvers.talents{ [Talents.T_STEALTH]={base=1, every=6, max=5},  },
 	max_life = resolvers.rngavg(70,90),
 }
 
@@ -82,7 +82,7 @@ newEntity{ base = "BASE_NPC_THIEF",
 	level_range = {3, nil}, exp_worth = 1,
 	rarity = 1,
 	combat_armor = 3, combat_def = 5,
-	resolvers.talents{ [Talents.T_STEALTH]=2, [Talents.T_DISARM]=2, },
+	resolvers.talents{ [Talents.T_STEALTH]={base=2, every=6, max=6}, [Talents.T_DISARM]={base=2, every=6, max=6}, },
 	max_life = resolvers.rngavg(70,90),
 }
 
@@ -92,7 +92,7 @@ newEntity{ base = "BASE_NPC_THIEF", define_as = "THIEF_BANDIT",
 	level_range = {5, nil}, exp_worth = 1,
 	rarity = 2,
 	combat_armor = 4, combat_def = 6,
-	resolvers.talents{ [Talents.T_STEALTH]=3, [Talents.T_LETHALITY]=2, },
+	resolvers.talents{ [Talents.T_STEALTH]={base=3, every=6, max=7}, [Talents.T_LETHALITY]={base=2, every=6, max=6}, },
 	max_life = resolvers.rngavg(80,100),
 }
 
@@ -115,7 +115,7 @@ newEntity{ base = "BASE_NPC_THIEF",
 		{type="humanoid", subtype="human", name="thief", number=1, hasxp=false},
 		{type="humanoid", subtype="human", name="rogue", number=2, hasxp=false},
 	},
-	resolvers.talents{ [Talents.T_STEALTH]=3, [Talents.T_SUMMON]=1, [Talents.T_LETHALITY]=3, },
+	resolvers.talents{ [Talents.T_STEALTH]={base=3, every=6, max=7}, [Talents.T_SUMMON]=1, [Talents.T_LETHALITY]={base=3, every=6, max=6}, },
 }
 
 newEntity{ base = "BASE_NPC_THIEF", define_as = "THIEF_ASSASSIN",
@@ -124,7 +124,17 @@ newEntity{ base = "BASE_NPC_THIEF", define_as = "THIEF_ASSASSIN",
 	level_range = {12, nil}, exp_worth = 1,
 	rarity = 3,
 	combat_armor = 3, combat_def = 10,
-	resolvers.talents{ [Talents.T_STEALTH]=3, [Talents.T_PRECISION]=3, [Talents.T_DUAL_WEAPON_TRAINING]=2, [Talents.T_DUAL_WEAPON_DEFENSE]=2, [Talents.T_DUAL_STRIKE]=1, [Talents.T_SWEEP]=1, [Talents.T_SHADOWSTRIKE]=2, [Talents.T_LETHALITY]=5, [Talents.T_DISARM]=3, },
+	resolvers.talents{
+		[Talents.T_STEALTH]={base=3, every=6, max=7},
+		[Talents.T_PRECISION]={base=3, every=6, max=7},
+		[Talents.T_DUAL_WEAPON_TRAINING]={base=2, every=6, max=6},
+		[Talents.T_DUAL_WEAPON_DEFENSE]={base=2, every=6, max=6},
+		[Talents.T_DUAL_STRIKE]={base=1, every=6, max=6},
+		[Talents.T_SWEEP]={base=1, every=6, max=6},
+		[Talents.T_SHADOWSTRIKE]={base=2, every=6, max=6},
+		[Talents.T_LETHALITY]={base=5, every=6, max=8},
+		[Talents.T_DISARM]={base=3, every=6, max=6},
+	},
 	max_life = resolvers.rngavg(70,90),
 
 	resolvers.sustains_at_birth(),

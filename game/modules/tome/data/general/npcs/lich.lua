@@ -28,7 +28,7 @@ newEntity{
 
 	combat = { dam=resolvers.rngavg(16,27), atk=16, apr=9, damtype=DamageType.DARKSTUN, dammod={mag=0.9} },
 
-	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+	body = { INVEN = 10, MAINHAND = 1, OFFHAND = 1, FINGER = 2, NECK = 1, LITE = 1, BODY = 1, HEAD = 1, CLOAK = 1, HANDS = 1, BELT = 1, FEET = 1},
 	equipment = resolvers.equip{
 		{type="armor", subtype="cloth", ego_chance=75, autoreq=true},
 		{type="armor", subtype="head", ego_chance=75, autoreq=true},

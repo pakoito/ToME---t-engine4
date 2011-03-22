@@ -25,7 +25,7 @@ newEntity{
 	blood_color = colors.AQUAMARINE,
 	display = "E", color=colors.AQUAMARINE,
 
-	combat = { dam=resolvers.mbonus(40, 15), atk=15, apr=15, dammod={mag=0.8}, damtype=DamageType.LIGHTNING },
+	combat = { dam=resolvers.levelup(resolvers.mbonus(40, 15), 1, 1.2), atk=15, apr=15, dammod={mag=0.8}, damtype=DamageType.LIGHTNING },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 
@@ -56,7 +56,7 @@ newEntity{ base = "BASE_NPC_GWELGOROTH",
 	on_melee_hit = { [DamageType.LIGHTNING] = resolvers.mbonus(20, 10), },
 
 	resolvers.talents{
-		[Talents.T_LIGHTNING]=3,
+		[Talents.T_LIGHTNING]={base=3, every=10, max=7},
 	},
 }
 
@@ -70,8 +70,8 @@ newEntity{ base = "BASE_NPC_GWELGOROTH",
 	on_melee_hit = { [DamageType.LIGHTNING] = resolvers.mbonus(20, 10), },
 
 	resolvers.talents{
-		[Talents.T_LIGHTNING]=4,
-		[Talents.T_SHOCK]=3,
+		[Talents.T_LIGHTNING]={base=4, every=10, max=8},
+		[Talents.T_SHOCK]={base=3, every=10, max=7},
 	},
 	resolvers.sustains_at_birth(),
 }
@@ -89,10 +89,10 @@ newEntity{ base = "BASE_NPC_GWELGOROTH",
 	ai = "tactical",
 
 	resolvers.talents{
-		[Talents.T_LIGHTNING]=5,
-		[Talents.T_SHOCK]=4,
-		[Talents.T_HURRICANE]=3,
-		[Talents.T_CHAIN_LIGHTNING]=4,
+		[Talents.T_LIGHTNING]={base=4, every=7},
+		[Talents.T_SHOCK]={base=4, every=7},
+		[Talents.T_HURRICANE]={base=3, every=7},
+		[Talents.T_CHAIN_LIGHTNING]={base=3, every=7},
 	},
 	resolvers.sustains_at_birth(),
 }

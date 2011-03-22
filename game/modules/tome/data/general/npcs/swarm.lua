@@ -78,5 +78,5 @@ newEntity{ base = "BASE_NPC_INSECT",
 	combat = { dam=10, atk=15, apr=20 },
 	can_multiply = 4,
 
-	resolvers.talents{ [Talents.T_BITE_POISON]=3 },
+	resolvers.talents{ [Talents.T_BITE_POISON]={base=3, every=10, max=8} },
 }

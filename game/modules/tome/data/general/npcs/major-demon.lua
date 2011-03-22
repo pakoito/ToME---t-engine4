@@ -53,7 +53,7 @@ newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 	rank = 2,
 	autolevel = "warrior",
 	combat_armor = 26, combat_def = 0,
-	combat = { dam=resolvers.mbonus(56, 30), atk=35, apr=18, dammod={str=1}, damtype=DamageType.ACID },
+	combat = { dam=resolvers.levelup(resolvers.mbonus(56, 30), 1, 1), atk=35, apr=18, dammod={str=1}, damtype=DamageType.ACID },
 
 	resists={[DamageType.ACID] = resolvers.mbonus(30, 20)},
 
@@ -61,8 +61,8 @@ newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 	stun_immune = 1,
 
 	resolvers.talents{
-		[Talents.T_ACIDIC_SKIN]=5,
-		[Talents.T_SLIME_SPIT]=4,
+		[Talents.T_ACIDIC_SKIN]={base=5, every=5, max=10},
+		[Talents.T_SLIME_SPIT]={base=4, every=5, max=8},
 	},
 }
 
@@ -75,7 +75,7 @@ newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 	rank = 2,
 	autolevel = "warrior",
 	combat_armor = 0, combat_def = 26,
-	combat = { dam=resolvers.mbonus(46, 30), atk=35, apr=18, dammod={str=1}, damtype=DamageType.DARKNESS },
+	combat = { dam=resolvers.levelup(resolvers.mbonus(46, 30), 1, 1), atk=35, apr=18, dammod={str=1}, damtype=DamageType.DARKNESS },
 
 	resists={[DamageType.DARKNESS] = resolvers.mbonus(30, 20)},
 
@@ -83,8 +83,8 @@ newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 	disease_immune = 1,
 
 	resolvers.talents{
-		[Talents.T_DARKNESS]=3,
-		[Talents.T_BLOOD_GRASP]=5,
+		[Talents.T_DARKNESS]={base=3, every=5, max=8},
+		[Talents.T_BLOOD_GRASP]={base=5, every=5, max=10},
 	},
 }
 
@@ -111,12 +111,12 @@ Oh, and it is twice as big, too.]],
 	stun_immune = 1,
 
 	resolvers.talents{
-		[Talents.T_DISARM]=3,
-		[Talents.T_RUSH]=5,
+		[Talents.T_DISARM]={base=3, every=7, max=6},
+		[Talents.T_RUSH]={base=5, every=15, max=7},
 		[Talents.T_BATTLE_CALL]=5,
-		[Talents.T_WEAPON_COMBAT]=8,
-		[Talents.T_WEAPONS_MASTERY]=10,
-		[Talents.T_FIRE_STORM]=5,
+		[Talents.T_WEAPON_COMBAT]={base=8, every=8},
+		[Talents.T_WEAPONS_MASTERY]={base=10, every=7},
+		[Talents.T_FIRE_STORM]={base=5, every=6, max=10},
 	},
 }
 
@@ -140,13 +140,13 @@ newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 	blind_immune = 1,
 
 	resolvers.talents{
-		[Talents.T_MANATHRUST]=5,
-		[Talents.T_ICE_STORM]=5,
-		[Talents.T_BLOOD_GRASP]=5,
-		[Talents.T_SOUL_ROT]=5,
-		[Talents.T_SHRIEK]=5,
-		[Talents.T_SILENCE]=2,
-		[Talents.T_BONE_SHIELD]=4,
+		[Talents.T_MANATHRUST]={base=5, every=8, max=8},
+		[Talents.T_ICE_STORM]={base=5, every=8, max=8},
+		[Talents.T_BLOOD_GRASP]={base=5, every=8, max=8},
+		[Talents.T_SOUL_ROT]={base=5, every=8, max=8},
+		[Talents.T_SHRIEK]={base=5, every=8, max=8},
+		[Talents.T_SILENCE]={base=2, every=12, max=5},
+		[Talents.T_BONE_SHIELD]={base=4, every=8, max=8},
 	},
 	resolvers.sustains_at_birth(),
 }
@@ -177,14 +177,14 @@ It moves swiftly toward you, casting terrible spells and swinging its weapons at
 	knockback_immune = 1,
 
 	resolvers.talents{
-		[Talents.T_CORRUPTED_STRENGTH]=5,
-		[Talents.T_DISARM]=5,
-		[Talents.T_RUSH]=8,
-		[Talents.T_WEAPON_COMBAT]=8,
-		[Talents.T_WEAPONS_MASTERY]=7,
-		[Talents.T_FIRE_STORM]=5,
-		[Talents.T_FIREBEAM]=5,
-		[Talents.T_SHADOW_BLAST]=5,
-		[Talents.T_TWILIGHT_SURGE]=5,
+		[Talents.T_CORRUPTED_STRENGTH]={base=5, every=8, max=8},
+		[Talents.T_DISARM]={base=5, every=8, max=8},
+		[Talents.T_RUSH]={base=8, every=8, max=12},
+		[Talents.T_WEAPON_COMBAT]={base=8, every=5, max=12},
+		[Talents.T_WEAPONS_MASTERY]={base=7, every=8, max=14},
+		[Talents.T_FIRE_STORM]={base=5, every=8, max=8},
+		[Talents.T_FIREBEAM]={base=5, every=8, max=8},
+		[Talents.T_SHADOW_BLAST]={base=5, every=8, max=8},
+		[Talents.T_TWILIGHT_SURGE]={base=5, every=8, max=8},
 	},
 }

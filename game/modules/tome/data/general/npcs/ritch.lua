@@ -27,7 +27,7 @@ newEntity{
 	desc = [[Ritchs are giant insects native to the arid wastes of the southern parts of the Far East.
 Vicious predators, they inject corrupting diseases into their foes, and their sharp claws cut through most armours.]],
 
-	combat = { dam=resolvers.rngavg(30,35), atk=16, apr=70, damtype=DamageType.BLIGHT, dammod={dex=1.2} },
+	combat = { dam=resolvers.levelup(resolvers.rngavg(30,35), 1, 1), atk=16, apr=70, damtype=DamageType.BLIGHT, dammod={dex=1.2} },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 
@@ -56,7 +56,7 @@ newEntity{ base = "BASE_NPC_RITCH",
 	combat_armor = 5, combat_def = 5,
 
 	resolvers.talents{
-		[Talents.T_ROTTING_DISEASE]=3,
+		[Talents.T_ROTTING_DISEASE]={base=3, every=7, max=6},
 		[Talents.T_SHRIEK]=1,
 	},
 }
@@ -72,9 +72,9 @@ newEntity{ base = "BASE_NPC_RITCH",
 	combat_armor = 12, combat_def = 5,
 
 	resolvers.talents{
-		[Talents.T_ROTTING_DISEASE]=4,
+		[Talents.T_ROTTING_DISEASE]={base=4, every=7, max=8},
 		[Talents.T_RUSH]=5,
-		[Talents.T_FLAME]=5,
+		[Talents.T_FLAME]={base=5, every=7, max=9},
 		[Talents.T_SHRIEK]=3,
 	},
 
@@ -102,8 +102,8 @@ newEntity{ base = "BASE_NPC_RITCH",
 	},
 
 	resolvers.talents{
-		[Talents.T_ROTTING_DISEASE]=5,
-		[Talents.T_FLAME]=5,
+		[Talents.T_ROTTING_DISEASE]={base=5, every=7, max=9},
+		[Talents.T_FLAME]={base=5, every=7, max=9},
 		[Talents.T_SUMMON]=1,
 		[Talents.T_SHRIEK]=4,
 	},

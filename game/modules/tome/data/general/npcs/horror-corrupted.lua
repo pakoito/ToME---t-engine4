@@ -69,7 +69,7 @@ newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 	},
 
 	resolvers.talents{
-		[Talents.T_DWARF_RESILIENCE]=1,
+		[Talents.T_DWARF_RESILIENCE]={base=1, every=5, max=5},
 	},
 
 	resolvers.sustains_at_birth(),
@@ -104,9 +104,8 @@ newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 	resolvers.drops{chance=60, nb=1, {type="money"} },
 
 	resolvers.talents{
-		[Talents.T_CARBON_SPIKES]=3,
-		[Talents.T_STAMINA_POOL]=1,
-		[Talents.T_STUN]=1,
+		[Talents.T_CARBON_SPIKES]={base=3, every=7, max=6},
+		[Talents.T_STUN]={base=1, every=10, max=5},
 	},
 
 	resolvers.sustains_at_birth(),
@@ -148,9 +147,9 @@ newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 	},
 
 	resolvers.talents{
-		[Talents.T_DWARF_RESILIENCE]=1,
-		[Talents.T_DREDGE_FRENZY]=3,
-		[Talents.T_DOMINATE]=1,
+		[Talents.T_DWARF_RESILIENCE]={base=1, every=5, max=5},
+		[Talents.T_DREDGE_FRENZY]={base=3, every=10, max=5},
+		[Talents.T_DOMINATE]={base=1, every=5, max=5},
 	},
 
 	resolvers.sustains_at_birth(),
@@ -178,9 +177,9 @@ newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 	resists = { [DamageType.BLIGHT] = 50, [DamageType.DARKNESS] = 20,  [DamageType.LIGHT] = - 20 },
 
 	resolvers.talents{
-		[Talents.T_SPIT_BLIGHT]=1,
-		[Talents.T_SHRIEK]=1,
-		[Talents.T_GLOOM]=1,
+		[Talents.T_SPIT_BLIGHT]={base=1, every=5, max=5},
+		[Talents.T_SHRIEK]={base=1, every=5, max=5},
+		[Talents.T_GLOOM]={base=1, every=5, max=5},
 	},
 
 	resolvers.sustains_at_birth(),
@@ -191,7 +190,7 @@ newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 	desc = "A large sluglike creature that moves slowly, leaving a trail of acid in its wake.  Its head has strangely humanoid features.",
 	level_range = {2, nil}, exp_worth = 1,
 
-	combat = { dam=5, atk=15, apr=5, damtype=DamageType.ACID },
+	combat = { dam=resolvers.levelup(5, 1, 0.6), atk=15, apr=5, damtype=DamageType.ACID },
 	combat_armor = 6, combat_def = 0,
 	max_life = resolvers.rngavg(40, 60),
 
@@ -203,12 +202,12 @@ newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 	energy = { mod=0.8 },
 
 	resists = { [DamageType.ACID] = 50, [DamageType.DARKNESS] = 20,  [DamageType.LIGHT] = - 20 },
-	
+
 	clone_on_hit = {min_dam_pct=15, chance=30},
 
 	resolvers.talents{
-		[Talents.T_CRAWL_ACID]=2,
-		[Talents.T_ACID_BLOOD]=1,
+		[Talents.T_CRAWL_ACID]={base=2, every=5, max=5},
+		[Talents.T_ACID_BLOOD]={base=1, every=5, max=5},
 	},
 
 	resolvers.sustains_at_birth(),
@@ -235,9 +234,9 @@ newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 	resists = { [DamageType.DARKNESS] = 50,  [DamageType.LIGHT] = - 20 },
 
 	resolvers.talents{
-		[Talents.T_CALL_SHADOWS]=3,
-		[Talents.T_CREEPING_DARKNESS]=2,
-		[Talents.T_DARK_TORRENT]=1,
+		[Talents.T_CALL_SHADOWS]={base=3, every=6, max=7},
+		[Talents.T_CREEPING_DARKNESS]={base=2, every=5, max=5},
+		[Talents.T_DARK_TORRENT]={base=1, every=5, max=5},
 	},
 
 	resolvers.sustains_at_birth(),

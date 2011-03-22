@@ -53,10 +53,14 @@ newEntity{ base = "BASE_NPC_GHOUL",
 	rarity = 1,
 	max_life = resolvers.rngavg(90,100),
 	combat_armor = 2, combat_def = 7,
-	resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=1, [Talents.T_BITE_POISON]=1, [Talents.T_ROTTING_DISEASE]=1, },
+	resolvers.talents{
+		[Talents.T_STUN]={base=1, every=10, max=5},
+		[Talents.T_BITE_POISON]={base=1, every=10, max=5},
+		[Talents.T_ROTTING_DISEASE]={base=1, every=10, max=5},
+	},
 	ai_state = { talent_in=4, },
 
-	combat = { dam=10, atk=5, apr=3, dammod={str=0.6} },
+	combat = { dam=resolvers.levelup(10, 1, 1), atk=resolvers.levelup(5, 1, 1), apr=3, dammod={str=0.6} },
 }
 
 newEntity{ base = "BASE_NPC_GHOUL",
@@ -68,10 +72,16 @@ newEntity{ base = "BASE_NPC_GHOUL",
 	combat_armor = 2, combat_def = 8,
 	ai_state = { talent_in=3, },
 
-	combat = { dam=17, atk=6, apr=3, dammod={str=0.6} },
+	combat = { dam=resolvers.levelup(17, 1, 1.1), atk=resolvers.levelup(6, 1, 1), apr=3, dammod={str=0.6} },
 
 	summon = {{type="undead", subtype="ghoul", name="ghoul", number=1, hasxp=false}, },
-	resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=2, [Talents.T_BITE_POISON]=2,  [Talents.T_SUMMON]=1, [Talents.T_ROTTING_DISEASE]=2, [Talents.T_DECREPITUDE_DISEASE]=2, },
+	resolvers.talents{
+		[Talents.T_STUN]={base=2, every=9, max=5},
+		[Talents.T_BITE_POISON]={base=2, every=9, max=5},
+		[Talents.T_SUMMON]=1,
+		[Talents.T_ROTTING_DISEASE]={base=2, every=9, max=5},
+		[Talents.T_DECREPITUDE_DISEASE]={base=2, every=9, max=5},
+	},
 }
 
 newEntity{ base = "BASE_NPC_GHOUL",
@@ -88,7 +98,7 @@ newEntity{ base = "BASE_NPC_GHOUL",
 	ai = "tactical",
 	ai_tactic = resolvers.tactic"melee",
 
-	combat = { dam=30, atk=8, apr=4, dammod={str=0.6} },
+	combat = { dam=resolvers.levelup(30, 1, 1.2), atk=resolvers.levelup(8, 1, 1), apr=4, dammod={str=0.6} },
 
 	summon = {
 		{type="undead", subtype="ghoul", name="ghoul", number=1, hasxp=false},
@@ -96,7 +106,11 @@ newEntity{ base = "BASE_NPC_GHOUL",
 	},
 
 	resolvers.talents{
-		[Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=3, [Talents.T_BITE_POISON]=3,  [Talents.T_SUMMON]=1,
-		[Talents.T_ROTTING_DISEASE]=4, [Talents.T_DECREPITUDE_DISEASE]=3, [Talents.T_WEAKNESS_DISEASE]=3,
+		[Talents.T_STUN]={base=3, every=9, max=7},
+		[Talents.T_BITE_POISON]={base=3, every=9, max=7},
+		[Talents.T_SUMMON]=1,
+		[Talents.T_ROTTING_DISEASE]={base=4, every=9, max=7},
+		[Talents.T_DECREPITUDE_DISEASE]={base=3, every=9, max=7},
+		[Talents.T_WEAKNESS_DISEASE]={base=3, every=9, max=7},
 	},
 }

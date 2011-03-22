@@ -25,7 +25,7 @@ newEntity{
 	display = "S", color=colors.WHITE,
 	desc = [[Arachnophobia...]],
 
-	combat = { dam=resolvers.mbonus(40, 70), atk=16, apr=9, damtype=DamageType.NATURE, dammod={dex=1.2} },
+	combat = { dam=resolvers.levelup(resolvers.mbonus(40, 70), 1, 0.9), atk=16, apr=9, damtype=DamageType.NATURE, dammod={dex=1.2} },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 
@@ -58,8 +58,8 @@ newEntity{ base = "BASE_NPC_SPIDER",
 	combat_armor = 5, combat_def = 5,
 
 	resolvers.talents{
-		[Talents.T_SPIDER_WEB]=1,
-		[Talents.T_LAY_WEB]=1,
+		[Talents.T_SPIDER_WEB]={base=1, every=10, max=5},
+		[Talents.T_LAY_WEB]={base=1, every=10, max=5},
 	},
 
 }
@@ -75,9 +75,9 @@ newEntity{ base = "BASE_NPC_SPIDER",
 	combat_armor = 5, combat_def = 10,
 
 	resolvers.talents{
-		[Talents.T_SPIDER_WEB]=3,
-		[Talents.T_SPIT_POISON]=3,
-		[Talents.T_LAY_WEB]=3,
+		[Talents.T_SPIDER_WEB]={base=3, every=10, max=6},
+		[Talents.T_SPIT_POISON]={base=3, every=10, max=6},
+		[Talents.T_LAY_WEB]={base=3, every=10, max=6},
 	},
 
 }
@@ -93,8 +93,8 @@ newEntity{ base = "BASE_NPC_SPIDER",
 	combat_armor = 10, combat_def = 14,
 
 	resolvers.talents{
-		[Talents.T_SPIDER_WEB]=3,
-		[Talents.T_LAY_WEB]=3,
+		[Talents.T_SPIDER_WEB]={base=3, every=10, max=6},
+		[Talents.T_LAY_WEB]={base=3, every=10, max=6},
 	},
 
 }
@@ -114,12 +114,12 @@ newEntity{ base = "BASE_NPC_SPIDER",
 	resolvers.tmasteries{ ["cunning/stealth"]=0.3},
 
 	resolvers.talents{
-		[Talents.T_RUSH]=5,
-		[Talents.T_SPIDER_WEB]=5,
-		[Talents.T_LAY_WEB]=5,
-		[Talents.T_STEALTH]=5,
-		[Talents.T_SHADOWSTRIKE]=4,
-		[Talents.T_STUN]=2,
+		[Talents.T_RUSH]={base=4, every=6, max=7},
+		[Talents.T_SPIDER_WEB]={base=4, every=6, max=7},
+		[Talents.T_LAY_WEB]={base=4, every=6, max=7},
+		[Talents.T_STEALTH]={base=4, every=6, max=7},
+		[Talents.T_SHADOWSTRIKE]={base=4, every=6, max=7},
+		[Talents.T_STUN]={base=2, every=6, max=5},
 	},
 
 }
@@ -138,13 +138,13 @@ newEntity{ base = "BASE_NPC_SPIDER",
 	resolvers.tmasteries{ ["wild-gift/slime"]=0.3, ["spell/water"]=0.3 },
 
 	resolvers.talents{
-		[Talents.T_RUSH]=5,
-		[Talents.T_SPIDER_WEB]=5,
-		[Talents.T_LAY_WEB]=5,
-		[Talents.T_ACIDIC_SKIN]=5,
-		[Talents.T_CORROSIVE_VAPOUR]=5,
-		[Talents.T_CRAWL_ACID]=3,
-		[Talents.T_STUN]=2,
+		[Talents.T_RUSH]={base=5, every=6, max=8},
+		[Talents.T_SPIDER_WEB]={base=5, every=6, max=8},
+		[Talents.T_LAY_WEB]={base=5, every=6, max=8},
+		[Talents.T_ACIDIC_SKIN]={base=5, every=6, max=8},
+		[Talents.T_CORROSIVE_VAPOUR]={base=5, every=6, max=8},
+		[Talents.T_CRAWL_ACID]={base=3, every=6, max=6},
+		[Talents.T_STUN]={base=2, every=6, max=7},
 	},
 
 }
@@ -167,14 +167,14 @@ newEntity{ base = "BASE_NPC_SPIDER",
 	resolvers.tmasteries{ ["spell/phantasm"]=0.3, ["spell/water"]=0.3, ["spell/arcane"]=0.3 },
 
 	resolvers.talents{
-		[Talents.T_SPIDER_WEB]=5,
-		[Talents.T_LAY_WEB]=5,
-		[Talents.T_PHANTASMAL_SHIELD]=5,
-		[Talents.T_PHASE_DOOR]=5,
-		[Talents.T_MANATHRUST]=5,
-		[Talents.T_MANAFLOW]=5,
-		[Talents.T_DISRUPTION_SHIELD]=3,
-		[Talents.T_ARCANE_POWER]=3,
+		[Talents.T_SPIDER_WEB]={base=5, every=6, max=8},
+		[Talents.T_LAY_WEB]={base=5, every=6, max=8},
+		[Talents.T_PHANTASMAL_SHIELD]={base=5, every=6, max=8},
+		[Talents.T_PHASE_DOOR]={base=5, every=6, max=8},
+		[Talents.T_MANATHRUST]={base=5, every=6, max=8},
+		[Talents.T_MANAFLOW]={base=5, every=6, max=8},
+		[Talents.T_DISRUPTION_SHIELD]={base=3, every=6, max=6},
+		[Talents.T_ARCANE_POWER]={base=3, every=6, max=6},
 	},
 
 }
@@ -197,13 +197,13 @@ newEntity{ base = "BASE_NPC_SPIDER",
 	resolvers.tmasteries{ ["spell/nature"]=0.9 },
 
 	resolvers.talents{
-		[Talents.T_SPIDER_WEB]=5,
-		[Talents.T_LAY_WEB]=5,
-		[Talents.T_REGENERATION]=5,
-		[Talents.T_BITE_POISON]=5,
-		[Talents.T_DARKNESS]=5, -- new spell, will create a zone of darkness that not even a lantern can penetrate (only the phial of Galadrial can), also turns lit squares dark in its radius.
+		[Talents.T_SPIDER_WEB]={base=5, every=6, max=8},
+		[Talents.T_LAY_WEB]={base=5, every=6, max=8},
+		[Talents.T_REGENERATION]={base=5, every=6, max=8},
+		[Talents.T_BITE_POISON]={base=5, every=6, max=8},
+		[Talents.T_DARKNESS]={base=5, every=6, max=8},
 		[Talents.T_RUSH]=5,
-		[Talents.T_STUN]=3,
+		[Talents.T_STUN]={base=3, every=6, max=6},
 	},
 
 }
@@ -225,14 +225,14 @@ newEntity{ base = "BASE_NPC_SPIDER",
 	resolvers.tmasteries{ ["spell/enhancement"]=0.7, ["wild-gift/cold-drake"]=0.7, ["spell/water"]=0.7 },
 
 	resolvers.talents{
-		[Talents.T_RUSH]=5,
-		[Talents.T_SPIDER_WEB]=5,
-		[Talents.T_LAY_WEB]=5,
-		[Talents.T_FREEZE]=5,
-		[Talents.T_ICY_SKIN]=5,
-		[Talents.T_TIDAL_WAVE]=3,
-		[Talents.T_ICE_STORM]=2,
-		[Talents.T_FROST_HANDS]=5,
+		[Talents.T_RUSH]={base=5, every=6, max=8},
+		[Talents.T_SPIDER_WEB]={base=5, every=6, max=8},
+		[Talents.T_LAY_WEB]={base=5, every=6, max=8},
+		[Talents.T_FREEZE]={base=5, every=6, max=8},
+		[Talents.T_ICY_SKIN]={base=5, every=6, max=8},
+		[Talents.T_TIDAL_WAVE]={base=3, every=6, max=6},
+		[Talents.T_ICE_STORM]={base=2, every=6, max=6},
+		[Talents.T_FROST_HANDS]={base=5, every=6, max=8},
 	},
 
 }

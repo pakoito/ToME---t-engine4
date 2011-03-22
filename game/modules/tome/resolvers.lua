@@ -223,7 +223,7 @@ function resolvers.calc.chatfeature(t, e)
 end
 
 --- Random bonus based on level (sets the mbonus max level, we use 60 instead of 50 to get some forced randomness at high level)
-resolvers.mbonus_max_level = 60
+resolvers.mbonus_max_level = 90
 
 --- Random bonus based on level and material quality
 resolvers.current_level = 1

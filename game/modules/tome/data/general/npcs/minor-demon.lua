@@ -57,7 +57,7 @@ newEntity{ base = "BASE_NPC_DEMON",
 	resists={[DamageType.FIRE] = resolvers.mbonus(12, 5)},
 
 	resolvers.talents{
-		[Talents.T_RITCH_FLAMESPITTER_BOLT]=4,
+		[Talents.T_RITCH_FLAMESPITTER_BOLT]={base=4, every=8, max=8},
 		[Talents.T_PHASE_DOOR]=2,
 	},
 }
@@ -77,8 +77,8 @@ newEntity{ base = "BASE_NPC_DEMON",
 
 	resolvers.talents{
 		[Talents.T_RUSH]=6,
-		[Talents.T_ACID_BLOOD]=3,
-		[Talents.T_CORROSIVE_VAPOUR]=3,
+		[Talents.T_ACID_BLOOD]={base=3, every=10, max=6},
+		[Talents.T_CORROSIVE_VAPOUR]={base=3, every=10, max=6},
 	},
 
 	make_escort = {
@@ -98,10 +98,10 @@ newEntity{ base = "BASE_NPC_DEMON",
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 
 	resolvers.talents{
-		[Talents.T_HEAVY_ARMOUR_TRAINING]=1,
-		[Talents.T_SHIELD_PUMMEL]=2,
-		[Talents.T_RIPOSTE]=3,
-		[Talents.T_OVERPOWER]=1,
+		[Talents.T_HEAVY_ARMOUR_TRAINING]={base=1, every=6, max=5},
+		[Talents.T_SHIELD_PUMMEL]={base=2, every=6, max=5},
+		[Talents.T_RIPOSTE]={base=3, every=6, max=6},
+		[Talents.T_OVERPOWER]={base=1, every=6, max=5},
 		[Talents.T_RUSH]=6,
 	},
 	resolvers.equip{

@@ -24,7 +24,7 @@ newEntity{
 	type = "giant", subtype = "troll",
 	display = "T", color=colors.UMBER,
 
-	combat = { dam=resolvers.mbonus(45, 10), atk=2, apr=6, physspeed=2, dammod={str=0.8} },
+	combat = { dam=resolvers.levelup(resolvers.mbonus(45, 10), 1, 1), atk=2, apr=6, physspeed=2, dammod={str=0.8} },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.drops{chance=20, nb=1, {} },
@@ -67,7 +67,7 @@ newEntity{ base = "BASE_NPC_TROLL",
 	rarity = 1,
 	max_life = resolvers.rngavg(120,140),
 	combat_armor = 7, combat_def = 0,
-	resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=1, [Talents.T_KNOCKBACK]=1, },
+	resolvers.talents{ [Talents.T_STUN]={base=1, every=7, max=5}, [Talents.T_KNOCKBACK]={base=1, every=7, max=5}, },
 }
 
 newEntity{ base = "BASE_NPC_TROLL",
@@ -77,7 +77,7 @@ newEntity{ base = "BASE_NPC_TROLL",
 	rarity = 2,
 	max_life = resolvers.rngavg(120,140),
 	combat_armor = 9, combat_def = 3,
-	resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=1, [Talents.T_KNOCKBACK]=1, [Talents.T_KNOCKBACK]=2, },
+	resolvers.talents{ [Talents.T_STUN]={base=1, every=7, max=5}, [Talents.T_KNOCKBACK]={base=1, every=7, max=5}, [Talents.T_KNOCKBACK]={base=2, every=7, max=5}, },
 }
 
 newEntity{ base = "BASE_NPC_TROLL",
@@ -87,7 +87,7 @@ newEntity{ base = "BASE_NPC_TROLL",
 	rarity = 3,
 	max_life = resolvers.rngavg(120,140),
 	combat_armor = 12, combat_def = 4,
-	resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=3, [Talents.T_KNOCKBACK]=3, [Talents.T_RUSH]=3, [Talents.T_DISARM]=3, },
+	resolvers.talents{ [Talents.T_STUN]={base=3, every=7, max=8}, [Talents.T_KNOCKBACK]={base=3, every=7, max=8}, [Talents.T_RUSH]={base=3, every=7, max=8}, [Talents.T_DISARM]={base=3, every=7, max=8}, },
 }
 
 newEntity{ base = "BASE_NPC_TROLL",
@@ -103,8 +103,9 @@ newEntity{ base = "BASE_NPC_TROLL",
 	ai = "tactical",
 	resolvers.inscriptions(1, "rune"),
 	resolvers.talents{
-		[Talents.T_STUN]=4, [Talents.T_KNOCKBACK]=3,
-		[Talents.T_LIGHTNING]=4,
-		[Talents.T_THUNDERSTORM]=3,
+		[Talents.T_STUN]={base=4, every=6, max=8},
+		[Talents.T_KNOCKBACK]={base=3, every=7, max=8},
+		[Talents.T_LIGHTNING]={base=4, every=7, max=8},
+		[Talents.T_THUNDERSTORM]={base=3, every=7, max=8},
 	},
 }

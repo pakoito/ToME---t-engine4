@@ -26,7 +26,7 @@ newEntity{
 	level_range = {7, nil},
 	body = { INVEN = 10 },
 
-	combat = { dam=resolvers.mbonus(25, 15), atk=15, apr=0, dammod={str=0.7} },
+	combat = { dam=resolvers.levelup(resolvers.mbonus(25, 15), 1, 1), atk=15, apr=0, dammod={str=0.7} },
 
 	infravision = 20,
 	max_life = 40, life_rating = 5,
@@ -58,9 +58,8 @@ newEntity{ base = "BASE_NPC_SANDWORM",
 	rarity = 3,
 
 	resolvers.talents{
-		[Talents.T_STAMINA_POOL]=1,
-		[Talents.T_STUN]=2,
-		[Talents.T_KNOCKBACK]=2,
+		[Talents.T_STUN]={base=2, every=10, max=5},
+		[Talents.T_KNOCKBACK]={base=2, every=10, max=5},
 	},
 }
 
@@ -76,9 +75,8 @@ newEntity{ base = "BASE_NPC_SANDWORM",
 	ai_tactic = resolvers.tactic"melee",
 
 	resolvers.talents{
-		[Talents.T_STAMINA_POOL]=1,
-		[Talents.T_SAND_BREATH]=3,
-		[Talents.T_KNOCKBACK]=2,
+		[Talents.T_SAND_BREATH]={base=3, every=5, max=7},
+		[Talents.T_KNOCKBACK]={base=2, every=10, max=5},
 	},
 }
 
@@ -90,7 +88,7 @@ newEntity{ base = "BASE_NPC_SANDWORM",
 	size_category = 4,
 	max_life = 120, life_rating = 13,
 	combat_armor = 1, combat_def = 0,
-	combat = { dam=resolvers.mbonus(55, 15), atk=15, apr=0, dammod={str=1} },
+	combat = { dam=resolvers.levelup(resolvers.mbonus(55, 15), 1, 1), atk=15, apr=0, dammod={str=1} },
 
 	ai = "dumb_talented_simple", ai_state = { ai_target="target_player_radius", sense_radius=40, talent_in=2, },
 	stats = { str=30, dex=7, mag=3, con=3 },
@@ -101,8 +99,8 @@ newEntity{ base = "BASE_NPC_SANDWORM",
 	move_project = {[DamageType.DIG]=1},
 
 	resolvers.talents{
-		[Talents.T_RUSH]=5,
-		[Talents.T_GRAB]=5,
+		[Talents.T_RUSH]={base=5, every=10, max=8},
+		[Talents.T_GRAB]={base=5, every=10, max=8},
 	},
 }
 
@@ -114,15 +112,15 @@ newEntity{ base = "BASE_NPC_SANDWORM",
 	size_category = 4,
 	max_life = 100, life_rating = 14,
 	combat_armor = 1, combat_def = 0,
-	combat = { dam=resolvers.mbonus(45, 15), atk=15, apr=0, dammod={str=1} },
+	combat = { dam=resolvers.levelup(resolvers.mbonus(45, 15), 1, 0.9), atk=15, apr=0, dammod={str=1} },
 
 	stats = { str=20, dex=7, mag=30, con=3 },
 	autolevel = "warriormage",
 
 	resolvers.talents{
-		[Talents.T_GRAVITY_WELL]=3,
-		[Talents.T_GRAVITY_SPIKE]=5,
-		[Talents.T_DAMAGE_SMEARING]=5,
+		[Talents.T_GRAVITY_WELL]={base=3, every=10, max=6},
+		[Talents.T_GRAVITY_SPIKE]={base=5, every=10, max=8},
+		[Talents.T_DAMAGE_SMEARING]={base=5, every=10, max=8},
 	},
 }
 
@@ -134,7 +132,7 @@ newEntity{ base = "BASE_NPC_SANDWORM",
 	size_category = 4,
 	max_life = 80, life_rating = 10,
 	combat_armor = 1, combat_def = 0,
-	combat = { dam=resolvers.mbonus(55, 15), atk=15, apr=50, damtype=DamageType.ACID, dammod={str=1} },
+	combat = { dam=resolvers.levelup(resolvers.mbonus(55, 15), 1, 1), atk=15, apr=50, damtype=DamageType.ACID, dammod={str=1} },
 	resists={[DamageType.ACID] = 100},
 
 	stats = { str=30, dex=7, mag=3, con=3 },
@@ -145,7 +143,7 @@ newEntity{ base = "BASE_NPC_SANDWORM",
 	move_project = {[DamageType.DIG]=1},
 
 	resolvers.talents{
-		[Talents.T_ACID_BLOOD]=3,
+		[Talents.T_ACID_BLOOD]={base=3, every=10, max=6},
 	},
 
 	on_die = function(self, src)

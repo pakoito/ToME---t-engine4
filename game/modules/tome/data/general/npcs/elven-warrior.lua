@@ -42,7 +42,7 @@ newEntity{
 	open_door = true,
 
 	resolvers.racial(),
-	resolvers.talents{ [Talents.T_HEAVY_ARMOUR_TRAINING]=1, },
+	resolvers.talents{ [Talents.T_HEAVY_ARMOUR_TRAINING]=1, [Talents.T_WEAPON_COMBAT]={base=1, every=5, max=10}, [Talents.T_WEAPONS_MASTERY]={base=1, every=5, max=10} },
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
@@ -61,7 +61,7 @@ newEntity{ base = "BASE_NPC_ELVEN_WARRIOR",
 		{type="armor", subtype="shield", autoreq=true},
 	},
 	combat_armor = 0, combat_def = 6,
-	resolvers.talents{ [Talents.T_SHIELD_PUMMEL]=1, },
+	resolvers.talents{ [Talents.T_SHIELD_PUMMEL]={base=1, every=10, max=5}, },
 }
 
 newEntity{ base = "BASE_NPC_ELVEN_WARRIOR",
@@ -75,7 +75,7 @@ newEntity{ base = "BASE_NPC_ELVEN_WARRIOR",
 		{type="armor", subtype="shield", autoreq=true},
 	},
 	combat_armor = 0, combat_def = 6,
-	resolvers.talents{ [Talents.T_BLEEDING_EDGE]=1, },
+	resolvers.talents{ [Talents.T_BLEEDING_EDGE]={base=1, every=10, max=5}, },
 }
 
 newEntity{ base = "BASE_NPC_ELVEN_WARRIOR",
@@ -90,7 +90,7 @@ newEntity{ base = "BASE_NPC_ELVEN_WARRIOR",
 		{type="armor", subtype="heavy", autoreq=true},
 	},
 	combat_armor = 0, combat_def = 6,
-	resolvers.talents{ [Talents.T_SHIELD_PUMMEL]=2, },
+	resolvers.talents{ [Talents.T_SHIELD_PUMMEL]={base=2, every=10, max=6}, },
 	resolvers.inscriptions(1, "rune"),
 }
 
@@ -110,8 +110,8 @@ newEntity{ base = "BASE_NPC_ELVEN_WARRIOR",
 	},
 	combat_armor = 0, combat_def = 6,
 	resolvers.talents{
-		[Talents.T_SHIELD_PUMMEL]=2,
-		[Talents.T_ASSAULT]=3,
+		[Talents.T_SHIELD_PUMMEL]={base=2, every=10, max=7},
+		[Talents.T_ASSAULT]={base=3, every=7, max=7},
 	},
 	resolvers.inscriptions(1, "rune"),
 }

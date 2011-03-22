@@ -25,7 +25,7 @@ newEntity{
 	blood_color = colors.PURPLE,
 	display = "E", color=colors.YELLOW,
 
-	combat = { dam=resolvers.mbonus(40, 15), atk=15, apr=15, dammod={mag=0.8}, damtype=DamageType.TEMPORAL },
+	combat = { dam=resolvers.levelup(resolvers.mbonus(40, 15), 1, 1.2), atk=15, apr=15, dammod={mag=0.8}, damtype=DamageType.TEMPORAL },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 
@@ -56,7 +56,7 @@ newEntity{ base = "BASE_NPC_TELUGOROTH",
 	on_melee_hit = { [DamageType.TEMPORAL] = resolvers.mbonus(20, 10), },
 
 	resolvers.talents{
-		[Talents.T_TURN_BACK_THE_CLOCK]=3,
+		[Talents.T_TURN_BACK_THE_CLOCK]={base=3, every=10, max=7},
 	},
 }
 
@@ -70,8 +70,8 @@ newEntity{ base = "BASE_NPC_TELUGOROTH",
 	on_melee_hit = { [DamageType.TEMPORAL] = resolvers.mbonus(20, 10), },
 
 	resolvers.talents{
-		[Talents.T_TURN_BACK_THE_CLOCK]=4,
-		[Talents.T_ECHOES_FROM_THE_PAST]=3,
+		[Talents.T_TURN_BACK_THE_CLOCK]={base=4, every=10, max=8},
+		[Talents.T_ECHOES_FROM_THE_PAST]={base=3, every=10, max=7},
 	},
 	resolvers.sustains_at_birth(),
 }
@@ -89,10 +89,10 @@ newEntity{ base = "BASE_NPC_TELUGOROTH",
 	ai = "tactical",
 
 	resolvers.talents{
-		[Talents.T_TURN_BACK_THE_CLOCK]=5,
-		[Talents.T_ECHOES_FROM_THE_PAST]=4,
-		[Talents.T_RETHREAD]=3,
-		[Talents.T_STOP]=4,
+		[Talents.T_TURN_BACK_THE_CLOCK]={base=5, every=7},
+		[Talents.T_ECHOES_FROM_THE_PAST]={base=4, every=7},
+		[Talents.T_RETHREAD]={base=3, every=7},
+		[Talents.T_STOP]={base=4, every=7},
 	},
 	resolvers.sustains_at_birth(),
 }
@@ -114,7 +114,7 @@ newEntity{ base = "BASE_NPC_TELUGOROTH",
 
 	resolvers.talents{
 		[Talents.T_ANOMALY_REARRANGE]=1,
-		[Talents.T_TEMPORAL_WAKE]=3,
+		[Talents.T_TEMPORAL_WAKE]={base=3, every=10, max=7},
 	},
 	resolvers.sustains_at_birth(),
 }
@@ -135,9 +135,9 @@ newEntity{ base = "BASE_NPC_TELUGOROTH",
 	pin_immune = 1,
 
 	resolvers.talents{
-		[Talents.T_DIMENSIONAL_STEP]=5,
+		[Talents.T_DIMENSIONAL_STEP]={base=5, every=10, max=9},
 		[Talents.T_ANOMALY_REARRANGE]=1,
-		[Talents.T_TEMPORAL_WAKE]=4,
+		[Talents.T_TEMPORAL_WAKE]={base=4, every=10, max=8},
 	},
 	resolvers.sustains_at_birth(),
 }
@@ -161,10 +161,10 @@ newEntity{ base = "BASE_NPC_TELUGOROTH",
 
 	resolvers.talents{
 		[Talents.T_ANOMALY_TEMPORAL_STORM]=1,
-		[Talents.T_QUANTUM_SPIKE]=5,
-		[Talents.T_DIMENSIONAL_STEP]=5,
+		[Talents.T_QUANTUM_SPIKE]={base=5, every=7},
+		[Talents.T_DIMENSIONAL_STEP]={base=5, every=7},
 		[Talents.T_ANOMALY_REARRANGE]=1,
-		[Talents.T_TEMPORAL_WAKE]=4,
+		[Talents.T_TEMPORAL_WAKE]={base=4, every=7},
 	},
 	resolvers.sustains_at_birth(),
 }

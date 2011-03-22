@@ -70,7 +70,7 @@ newEntity{ base = "BASE_NPC_ORC_RAK_SHOR",
 
 	resolvers.talents{
 		[Talents.T_SUMMON]=1,
-		[Talents.T_SOUL_ROT]=5,
+		[Talents.T_SOUL_ROT]={base=5, every=10, max=8},
 	},
 }
 
@@ -90,9 +90,9 @@ newEntity{ base = "BASE_NPC_ORC_RAK_SHOR",
 	talent_cd_reduction={[Talents.T_SOUL_ROT]=2, [Talents.T_BLOOD_GRASP]=4, },
 
 	resolvers.talents{
-		[Talents.T_SOUL_ROT]=5,
-		[Talents.T_BLOOD_GRASP]=5,
-		[Talents.T_CURSE_OF_VULNERABILITY]=5,
+		[Talents.T_SOUL_ROT]={base=5, every=10, max=8},
+		[Talents.T_BLOOD_GRASP]={base=5, every=10, max=8},
+		[Talents.T_CURSE_OF_VULNERABILITY]={base=5, every=10, max=8},
 	},
 	resolvers.sustains_at_birth(),
 }
@@ -116,11 +116,11 @@ newEntity{ base = "BASE_NPC_ORC_RAK_SHOR",
 	inc_damage = { [DamageType.BLIGHT] = resolvers.mbonus(20, 10) },
 
 	resolvers.talents{
-		[Talents.T_SOUL_ROT]=5,
-		[Talents.T_BLOOD_GRASP]=5,
-		[Talents.T_CURSE_OF_VULNERABILITY]=5,
-		[Talents.T_BLIGHTZONE]=3,
-		[Talents.T_BONE_SHIELD]=5,
-		[Talents.T_BLOOD_SPRAY]=4,
+		[Talents.T_SOUL_ROT]={base=5, every=10, max=8},
+		[Talents.T_BLOOD_GRASP]={base=5, every=10, max=8},
+		[Talents.T_CURSE_OF_VULNERABILITY]={base=5, every=10, max=8},
+		[Talents.T_BLIGHTZONE]={base=3, every=10, max=6},
+		[Talents.T_BONE_SHIELD]={base=5, every=150, max=8},
+		[Talents.T_BLOOD_SPRAY]={base=4, every=10, max=8},
 	},
 }

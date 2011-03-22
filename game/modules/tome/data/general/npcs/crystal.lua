@@ -77,7 +77,7 @@ newEntity{ base = "BASE_NPC_CRYSTAL",
 	rarity = 1,
 	resists = { [DamageType.FIRE] = 100, [DamageType.ICE] = -100 },
 	resolvers.talents{
-		[Talents.T_FLAME]=1,
+		[Talents.T_FLAME]={base=1, every=7, max=5},
 	}
 }
 
@@ -88,7 +88,7 @@ newEntity{ base = "BASE_NPC_CRYSTAL",
 	rarity = 1,
 	resists = { [DamageType.ICE] = 100, [DamageType.FIRE] = -100 },
 	resolvers.talents{
-		[Talents.T_ICE_SHARDS]=1,
+		[Talents.T_ICE_SHARDS]={base=1, every=7, max=5},
 	}
 }
 
@@ -99,7 +99,7 @@ newEntity{ base = "BASE_NPC_CRYSTAL",
 	rarity = 2,
 	resists = { [DamageType.LIGHT] = 100 ,[DamageType.DARKNESS] = -100 },
 	resolvers.talents{
-		[Talents.T_SOUL_ROT]=1,
+		[Talents.T_SOUL_ROT]={base=1, every=7, max=5},
 	}
 }
 
@@ -110,7 +110,7 @@ newEntity{ base = "BASE_NPC_CRYSTAL",
 	rarity = 3,
 	resists = { [DamageType.LIGHT] = -100 },
 	resolvers.talents{
-		[Talents.T_BLOOD_GRASP]=1,
+		[Talents.T_BLOOD_GRASP]={base=1, every=7, max=5},
 	}
 }
 
@@ -121,7 +121,7 @@ newEntity{ base = "BASE_NPC_CRYSTAL",
 	rarity = 4,
 	resists = { [DamageType.ICE] = -100 },
 	resolvers.talents{
-		[Talents.T_TIDAL_WAVE]=3,
+		[Talents.T_TIDAL_WAVE]={base=3, every=9, max=5},
 	}
 }
 
@@ -133,7 +133,7 @@ newEntity{ base = "BASE_NPC_CRYSTAL",
 	rarity = 4,
 	resists = { [DamageType.LIGHT] = 100 },
 	resolvers.talents{
-		[Talents.T_ELEMENTAL_BOLT]=1,
+		[Talents.T_ELEMENTAL_BOLT]={base=1, every=7, max=5},
 	},
 	talent_cd_reduction={
 		[Talents.T_ELEMENTAL_BOLT]=2,

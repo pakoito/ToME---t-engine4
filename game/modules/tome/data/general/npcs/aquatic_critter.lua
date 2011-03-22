@@ -31,7 +31,7 @@ newEntity{
 	stats = { str=12, dex=10, mag=3, con=13 },
 	energy = { mod=1 },
 	combat_armor = 1, combat_def = 1,
-	combat = { dam=resolvers.mbonus(36, 10), atk=15, apr=7, dammod={str=0.6} },
+	combat = { dam=resolvers.levelup(resolvers.mbonus(36, 10), 1, 1), atk=15, apr=7, dammod={str=0.6} },
 	max_life = resolvers.rngavg(10,20), life_rating = 6,
 	infravision = 20,
 	rank = 1,

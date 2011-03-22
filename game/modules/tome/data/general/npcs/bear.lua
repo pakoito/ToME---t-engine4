@@ -38,7 +38,7 @@ newEntity{
 	size_category = 4,
 
 	combat_armor = 1, combat_def = 1,
-	combat = { dam=resolvers.rngavg(12,25), atk=10, apr=3, physspeed=2, dammod={str=0.8} },
+	combat = { dam=resolvers.levelup(resolvers.rngavg(12, 25), 1, 1), atk=10, apr=3, physspeed=2, dammod={str=0.8} },
 	life_rating = 12,
 	resolvers.tmasteries{ ["technique/other"]=0.25 },
 
@@ -72,7 +72,7 @@ newEntity{ base = "BASE_NPC_BEAR",
 	rarity = 3,
 	max_life = resolvers.rngavg(100,110),
 	combat_armor = 9, combat_def = 4,
-	combat = { dam=resolvers.rngavg(13,17), atk=7, apr=2, physspeed=2 },
+	combat = { dam=resolvers.levelup(resolvers.rngavg(13, 17), 1, 1), atk=7, apr=2, physspeed=2 },
 	resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=2, [Talents.T_KNOCKBACK]=1,},
 }
 
@@ -83,7 +83,7 @@ newEntity{ base = "BASE_NPC_BEAR",
 	rarity = 3,
 	max_life = resolvers.rngavg(100,120),
 	combat_armor = 9, combat_def = 4,
-	combat = { dam=resolvers.rngavg(13,17), atk=10, apr=3, physspeed=2 },
+	combat = { dam=resolvers.levelup(resolvers.rngavg(13, 17), 1, 1), atk=10, apr=3, physspeed=2 },
 	resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=2, [Talents.T_KNOCKBACK]=1, [Talents.T_DISARM]=3,},
 }
 
@@ -94,7 +94,7 @@ newEntity{ base = "BASE_NPC_BEAR",
 	rarity = 4,
 	max_life = resolvers.rngavg(110,120),
 	combat_armor = 10, combat_def = 5,
-	combat = { dam=resolvers.rngavg(15,20), atk=10, apr=3, physspeed=2 },
+	combat = { dam=resolvers.levelup(resolvers.rngavg(15, 20), 1, 1), atk=10, apr=3, physspeed=2 },
 	resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=3, [Talents.T_KNOCKBACK]=2, [Talents.T_DISARM]=3,},
 }
 
@@ -105,7 +105,7 @@ newEntity{ base = "BASE_NPC_BEAR",
 	rarity = 6,
 	max_life = resolvers.rngavg(110,120),
 	combat_armor = 10, combat_def = 7,
-	combat = { dam=resolvers.rngavg(15,20), atk=12, apr=3, physspeed=2 },
+	combat = { dam=resolvers.levelup(resolvers.rngavg(15, 20), 1, 1), atk=12, apr=3, physspeed=2 },
 	resolvers.talents{ [Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=3, [Talents.T_KNOCKBACK]=2, [Talents.T_DISARM]=3,},
 	resists = { [DamageType.COLD] = 100, },
 }

@@ -45,7 +45,7 @@ newEntity{ base = "BASE_NPC_SNAKE",
 	rarity = 1,
 	max_life = resolvers.rngavg(20,30),
 	combat_armor = 1, combat_def = 3,
-	combat = { dam=2, atk=30, apr=10 },
+	combat = { dam=resolvers.levelup(2, 1, 0.7), atk=30, apr=10 },
 }
 
 newEntity{ base = "BASE_NPC_SNAKE",
@@ -55,7 +55,7 @@ newEntity{ base = "BASE_NPC_SNAKE",
 	rarity = 1,
 	max_life = resolvers.rngavg(20,30),
 	combat_armor = 1, combat_def = 3,
-	combat = { dam=2, atk=30, apr=10 },
+	combat = { dam=resolvers.levelup(2, 1, 0.7), atk=30, apr=10 },
 }
 
 newEntity{ base = "BASE_NPC_SNAKE",
@@ -65,7 +65,7 @@ newEntity{ base = "BASE_NPC_SNAKE",
 	rarity = 1,
 	max_life = resolvers.rngavg(30,40),
 	combat_armor = 2, combat_def = 5,
-	combat = { dam=3, atk=30, apr=10 },
+	combat = { dam=resolvers.levelup(3, 1, 0.7), atk=30, apr=10 },
 
 	resolvers.talents{ [Talents.T_BITE_POISON]=1 },
 }
@@ -77,7 +77,7 @@ newEntity{ base = "BASE_NPC_SNAKE",
 	rarity = 1,
 	max_life = resolvers.rngavg(30,50),
 	combat_armor = 2, combat_def = 8,
-	combat = { dam=5, atk=30, apr=10 },
+	combat = { dam=resolvers.levelup(5, 1, 0.7), atk=30, apr=10 },
 
 	resolvers.talents{ [Talents.T_BITE_POISON]=1 },
 }
@@ -89,7 +89,7 @@ newEntity{ base = "BASE_NPC_SNAKE",
 	rarity = 4,
 	max_life = resolvers.rngavg(40,70),
 	combat_armor = 3, combat_def = 11,
-	combat = { dam=7, atk=30, apr=10 },
+	combat = { dam=resolvers.levelup(7, 1, 0.7), atk=30, apr=10 },
 
 	resolvers.talents{ [Talents.T_BITE_POISON]=2 },
 }
@@ -101,7 +101,7 @@ newEntity{ base = "BASE_NPC_SNAKE",
 	rarity = 4,
 	max_life = resolvers.rngavg(50,80),
 	combat_armor = 4, combat_def = 12,
-	combat = { dam=10, atk=30, apr=10 },
+	combat = { dam=resolvers.levelup(10, 1, 0.7), atk=30, apr=10 },
 
 	resolvers.talents{ [Talents.T_BITE_POISON]=3 },
 }
@@ -114,7 +114,7 @@ newEntity{ base = "BASE_NPC_SNAKE",
 	rank = 3,
 	max_life = resolvers.rngavg(100,120),
 	combat_armor = 14, combat_def = 5,
-	combat = { dam=12, atk=10, apr=10 },
+	combat = { dam=resolvers.levelup(12, 1, 0.7), atk=10, apr=10 },
 	energy = { mod=0.8 },
 
 	resolvers.talents{ [Talents.T_CONSTRICT]=5 },

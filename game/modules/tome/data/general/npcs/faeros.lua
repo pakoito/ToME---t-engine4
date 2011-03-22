@@ -25,7 +25,7 @@ newEntity{
 	blood_color = colors.ORANGE,
 	display = "E", color=colors.ORANGE,
 
-	combat = { dam=resolvers.mbonus(40, 15), atk=15, apr=15, dammod={mag=0.8}, damtype=DamageType.FIRE },
+	combat = { dam=resolvers.levelup(resolvers.mbonus(40, 15), 1, 1.2), atk=15, apr=15, dammod={mag=0.8}, damtype=DamageType.FIRE },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	lite = 1,
@@ -57,7 +57,7 @@ newEntity{ base = "BASE_NPC_FAEROS",
 	on_melee_hit = { [DamageType.FIRE] = resolvers.mbonus(20, 10), },
 
 	resolvers.talents{
-		[Talents.T_FLAME]=3,
+		[Talents.T_FLAME]={base=3, every=10, max=7},
 	},
 }
 
@@ -71,8 +71,8 @@ newEntity{ base = "BASE_NPC_FAEROS",
 	on_melee_hit = { [DamageType.FIRE] = resolvers.mbonus(20, 10), },
 
 	resolvers.talents{
-		[Talents.T_FLAME]=4,
-		[Talents.T_FIERY_HANDS]=3,
+		[Talents.T_FLAME]={base=4, every=10, max=8},
+		[Talents.T_FIERY_HANDS]={base=3, every=10, max=7},
 	},
 	resolvers.sustains_at_birth(),
 }
@@ -90,10 +90,10 @@ newEntity{ base = "BASE_NPC_FAEROS",
 	ai = "tactical",
 
 	resolvers.talents{
-		[Talents.T_FLAME]=4,
-		[Talents.T_FIERY_HANDS]=3,
-		[Talents.T_FLAMESHOCK]=3,
-		[Talents.T_INFERNO]=3,
+		[Talents.T_FLAME]={base=4, every=7},
+		[Talents.T_FIERY_HANDS]={base=3, every=7},
+		[Talents.T_FLAMESHOCK]={base=3, every=7},
+		[Talents.T_INFERNO]={base=3, every=7},
 	},
 	resolvers.sustains_at_birth(),
 }

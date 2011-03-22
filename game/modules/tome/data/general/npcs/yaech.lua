@@ -69,8 +69,8 @@ newEntity{ base = "BASE_NPC_YAECH",
 		{type="weapon", subtype="trident", autoreq=true, special_rarity="trident_rarity"},
 	},
 	resolvers.talents{
-		[Talents.T_MINDHOOK]=1,
-		[Talents.T_PERFECT_CONTROL]=2,
+		[Talents.T_MINDHOOK]={base=1, every=7, max=5},
+		[Talents.T_PERFECT_CONTROL]={base=2, every=7, max=5},
 	},
 }
 
@@ -84,10 +84,10 @@ newEntity{ base = "BASE_NPC_YAECH",
 		{type="weapon", subtype="trident", autoreq=true, special_rarity="trident_rarity"},
 	},
 	resolvers.talents{
-		[Talents.T_KINETIC_AURA]=1,
-		[Talents.T_CHARGED_AURA]=1,
-		[Talents.T_KINETIC_SHIELD]=2,
-		[Talents.T_EXOTIC_WEAPONS_MASTERY]=1,
+		[Talents.T_KINETIC_AURA]={base=1, every=7, max=5},
+		[Talents.T_CHARGED_AURA]={base=1, every=7, max=5},
+		[Talents.T_KINETIC_SHIELD]={base=2, every=7, max=5},
+		[Talents.T_EXOTIC_WEAPONS_MASTERY]={base=1, every=7, max=10},
 	},
 }
 
@@ -101,8 +101,8 @@ newEntity{ base = "BASE_NPC_YAECH",
 		{type="weapon", subtype="trident", autoreq=true, special_rarity="trident_rarity"},
 	},
 	resolvers.talents{
-		[Talents.T_REACH]=3,
-		[Talents.T_PYROKINESIS]=2,
-		[Talents.T_MINDLASH]=1,
+		[Talents.T_REACH]={base=3, every=7, max=5},
+		[Talents.T_PYROKINESIS]={base=2, every=7, max=5},
+		[Talents.T_MINDLASH]={base=1, every=7, max=5},
 	},
 }

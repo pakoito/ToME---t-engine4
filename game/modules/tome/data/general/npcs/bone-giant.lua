@@ -25,7 +25,7 @@ newEntity{
 	blood_color = colors.GREY,
 	display = "K", color=colors.WHITE,
 
-	combat = { dam=resolvers.mbonus(45, 20), atk=15, apr=10, dammod={str=0.8} },
+	combat = { dam=resolvers.levelup(resolvers.mbonus(45, 20), 1, 1), atk=15, apr=10, dammod={str=0.8} },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 
@@ -62,7 +62,7 @@ newEntity{ base = "BASE_NPC_BONE_GIANT",
 	combat_armor = 20, combat_def = 0,
 	on_melee_hit = {[DamageType.BLIGHT]=resolvers.mbonus(15, 5)},
 	melee_project = {[DamageType.BLIGHT]=resolvers.mbonus(15, 5)},
-	resolvers.talents{ [Talents.T_BONE_ARMOUR]=3, [Talents.T_STUN]=3, },
+	resolvers.talents{ [Talents.T_BONE_ARMOUR]={base=3, every=10, max=5}, [Talents.T_STUN]={base=3, every=10, max=5}, },
 }
 
 newEntity{ base = "BASE_NPC_BONE_GIANT",
@@ -76,7 +76,7 @@ newEntity{ base = "BASE_NPC_BONE_GIANT",
 	melee_project = {[DamageType.BLIGHT]=resolvers.mbonus(15, 5)},
 	autolevel = "warriormage",
 	resists = {all = 50},
-	resolvers.talents{ [Talents.T_BONE_ARMOUR]=5, [Talents.T_STUN]=3, [Talents.T_SKELETON_REASSEMBLE]=5, },
+	resolvers.talents{ [Talents.T_BONE_ARMOUR]={base=5, every=10, max=7}, [Talents.T_STUN]={base=3, every=10, max=5}, [Talents.T_SKELETON_REASSEMBLE]=5, },
 }
 
 newEntity{ base = "BASE_NPC_BONE_GIANT",
@@ -88,5 +88,5 @@ newEntity{ base = "BASE_NPC_BONE_GIANT",
 	combat_armor = 20, combat_def = 0,
 	on_melee_hit = {[DamageType.BLIGHT]=resolvers.mbonus(15, 5)},
 	melee_project = {[DamageType.BLIGHT]=resolvers.mbonus(15, 5)},
-	resolvers.talents{ [Talents.T_BONE_ARMOUR]=3, [Talents.T_THROW_BONES]=4, [Talents.T_STUN]=3, },
+	resolvers.talents{ [Talents.T_BONE_ARMOUR]={base=3, every=10, max=5}, [Talents.T_THROW_BONES]={base=4, every=10, max=7}, [Talents.T_STUN]={base=3, every=10, max=5}, },
 }

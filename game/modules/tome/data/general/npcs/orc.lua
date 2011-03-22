@@ -43,6 +43,7 @@ newEntity{
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
 	energy = { mod=1 },
 	stats = { str=20, dex=8, mag=6, con=16 },
+	resolvers.talents{ [Talents.T_WEAPON_COMBAT]={base=1, every=5, max=10}, },
 }
 
 newEntity{ base = "BASE_NPC_ORC",
@@ -58,7 +59,10 @@ newEntity{ base = "BASE_NPC_ORC",
 	},
 	resolvers.inscriptions(1, "infusion"),
 	combat_armor = 2, combat_def = 0,
-	resolvers.talents{ [Talents.T_SHIELD_PUMMEL]=1, },
+	resolvers.talents{
+		[Talents.T_WEAPONS_MASTERY]={base=1, every=5, max=10},
+		[Talents.T_SHIELD_PUMMEL]={base=1, every=6, max=5},
+	},
 	resolvers.racial(),
 }
 
@@ -70,7 +74,10 @@ newEntity{ base = "BASE_NPC_ORC",
 	rarity = 3,
 	max_life = resolvers.rngavg(70,80),
 	combat_armor = 5, combat_def = 1,
-	resolvers.talents{ [Talents.T_SHOOT]=1, },
+	resolvers.talents{
+		[Talents.T_BOW_MASTERY]={base=1, every=5, max=10},
+		[Talents.T_SHOOT]=1,
+	},
 	ai_state = { talent_in=1, },
 
 	autolevel = "archer",
@@ -94,7 +101,11 @@ newEntity{ base = "BASE_NPC_ORC", define_as = "ORC",
 	},
 	combat_armor = 2, combat_def = 0,
 	resolvers.inscriptions(1, "infusion"),
-	resolvers.talents{ [Talents.T_SUNDER_ARMOUR]=2, [Talents.T_CRUSH]=2, },
+	resolvers.talents{
+		[Talents.T_WEAPONS_MASTERY]={base=1, every=5, max=10},
+		[Talents.T_SUNDER_ARMOUR]={base=1, every=7, max=5},
+		[Talents.T_CRUSH]={base=1, every=4, max=5},
+	},
 	resolvers.racial(),
 }
 
@@ -119,9 +130,10 @@ newEntity{ base = "BASE_NPC_ORC", define_as = "ORC_FIRE_WYRMIC",
 	},
 
 	resolvers.talents{
-		[Talents.T_BELLOWING_ROAR]=2,
-		[Talents.T_WING_BUFFET]=2,
-		[Talents.T_FIRE_BREATH]=2,
+		[Talents.T_WEAPONS_MASTERY]={base=3, every=5, max=10},
+		[Talents.T_BELLOWING_ROAR]={base=2, every=6, max=5},
+		[Talents.T_WING_BUFFET]={base=2, every=5, max=5},
+		[Talents.T_FIRE_BREATH]={base=2, every=5, max=5},
 	},
 	resolvers.racial(),
 }
@@ -147,9 +159,10 @@ newEntity{ base = "BASE_NPC_ORC",
 	},
 
 	resolvers.talents{
-		[Talents.T_ICE_CLAW]=2,
-		[Talents.T_ICY_SKIN]=2,
-		[Talents.T_ICE_BREATH]=2,
+		[Talents.T_WEAPONS_MASTERY]={base=3, every=5, max=10},
+		[Talents.T_ICE_CLAW]={base=2, every=6, max=5},
+		[Talents.T_ICY_SKIN]={base=2, every=5, max=5},
+		[Talents.T_ICE_BREATH]={base=2, every=5, max=5},
 	},
 	resolvers.racial(),
 }
@@ -167,9 +180,10 @@ newEntity{ base = "BASE_NPC_ORC",
 		{type="armor", subtype="light", autoreq=true}
 	},
 	resolvers.talents{
+		[Talents.T_KNIFE_MASTERY]={base=3, every=5, max=10},
 		[Talents.T_STEALTH]=5,
 		[Talents.T_LETHALITY]=4,
-		[Talents.T_SHADOWSTRIKE]=3,
+		[Talents.T_SHADOWSTRIKE]={base=3, every=6, max=5},
 	},
 	max_life = resolvers.rngavg(80,100),
 	resolvers.inscriptions(1, "infusion"),
@@ -197,10 +211,11 @@ newEntity{ base = "BASE_NPC_ORC",
 	ai_tactic = resolvers.tactic"melee",
 	resolvers.inscriptions(1, "infusion"),
 	resolvers.talents{
+		[Talents.T_KNIFE_MASTERY]={base=3, every=5, max=10},
 		[Talents.T_STEALTH]=5,
 		[Talents.T_LETHALITY]=4,
 		[Talents.T_SHADOWSTRIKE]=5,
-		[Talents.T_HIDE_IN_PLAIN_SIGHT]=2,
+		[Talents.T_HIDE_IN_PLAIN_SIGHT]={base=2, every=6, max=5},
 	},
 	max_life = resolvers.rngavg(80,100),
 
@@ -227,11 +242,12 @@ newEntity{ base = "BASE_NPC_ORC",
 	ai_tactic = resolvers.tactic"melee",
 	resolvers.inscriptions(3, "infusion"),
 	resolvers.talents{
+		[Talents.T_KNIFE_MASTERY]={base=3, every=5, max=10},
 		[Talents.T_STEALTH]=5,
-		[Talents.T_LETHALITY]=4,
+		[Talents.T_LETHALITY]={base=4, every=5, max=6},
 		[Talents.T_SHADOWSTRIKE]=5,
-		[Talents.T_HIDE_IN_PLAIN_SIGHT]=3,
-		[Talents.T_UNSEEN_ACTIONS]=3,
+		[Talents.T_HIDE_IN_PLAIN_SIGHT]={base=3, every=5, max=5},
+		[Talents.T_UNSEEN_ACTIONS]={base=3, every=5, max=5},
 	},
 	max_life = resolvers.rngavg(80,100),
 

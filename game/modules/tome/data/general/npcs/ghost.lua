@@ -67,8 +67,8 @@ newEntity{ base = "BASE_NPC_GHOST",
 	combat = { dam=resolvers.mbonus(45, 45), atk=resolvers.mbonus(25, 45), apr=100, dammod={str=0.5, mag=0.5} },
 
 	resolvers.talents{
-		[Talents.T_BURNING_HEX]=3,
-		[Talents.T_BLUR_SIGHT]=4,
+		[Talents.T_BURNING_HEX]={base=3, every=5, max=7},
+		[Talents.T_BLUR_SIGHT]={base=4, every=6, max=8},
 	},
 }
 
@@ -91,11 +91,11 @@ newEntity{ base = "BASE_NPC_GHOST",
 	resolvers.talents{
 		[Talents.T_SUMMON]=1,
 		[Talents.T_PHASE_DOOR]=2,
-		[Talents.T_BLUR_SIGHT]=4,
-		[Talents.T_DISPERSE_MAGIC]=3,
-		[Talents.T_SILENCE]=2,
-		[Talents.T_MIND_DISRUPTION]=3,
-		[Talents.T_BURNING_HEX]=5,
+		[Talents.T_BLUR_SIGHT]={base=4, every=6, max=8},
+		[Talents.T_DISPERSE_MAGIC]={base=3, every=7, max=6},
+		[Talents.T_SILENCE]={base=2, every=10, max=6},
+		[Talents.T_MIND_DISRUPTION]={base=3, every=7, max=8},
+		[Talents.T_BURNING_HEX]={base=5, every=6, max=8},
 	},
 }
 
@@ -114,8 +114,8 @@ newEntity{ base = "BASE_NPC_GHOST",
 	resolvers.talents{
 		[Talents.T_SHRIEK]=4,
 		[Talents.T_PHASE_DOOR]=2,
-		[Talents.T_BLUR_SIGHT]=3,
-		[Talents.T_SILENCE]=2,
-		[Talents.T_MIND_DISRUPTION]=3,
+		[Talents.T_BLUR_SIGHT]={base=3, every=6, max=6},
+		[Talents.T_SILENCE]={base=2, every=10, max=5},
+		[Talents.T_MIND_DISRUPTION]={base=3, every=7, max=6},
 	},
 }

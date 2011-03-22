@@ -24,7 +24,7 @@ newEntity{
 	type = "giant", subtype = "ice",
 	display = "P", color=colors.WHITE,
 
-	combat = { dam=resolvers.mbonus(50, 10), atk=15, apr=15, dammod={str=0.8} },
+	combat = { dam=resolvers.levelup(resolvers.mbonus(50, 10), 1, 1), atk=15, apr=15, dammod={str=0.8} },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.drops{chance=100, nb=1, {type="money"} },
@@ -58,7 +58,7 @@ newEntity{ base = "BASE_NPC_SNOW_GIANT",
 	combat_armor = 0, combat_def = 0,
 	on_melee_hit = {[DamageType.COLD]=resolvers.mbonus(15, 5)},
 	melee_project = {[DamageType.COLD]=resolvers.mbonus(15, 5)},
-	resolvers.talents{ [Talents.T_MIND_DISRUPTION]=2, },
+	resolvers.talents{ [Talents.T_MIND_DISRUPTION]={base=2, every=10, max=5}, },
 }
 
 newEntity{ base = "BASE_NPC_SNOW_GIANT",
@@ -71,7 +71,7 @@ newEntity{ base = "BASE_NPC_SNOW_GIANT",
 	on_melee_hit = {[DamageType.COLD]=resolvers.mbonus(15, 5)},
 	melee_project = {[DamageType.COLD]=resolvers.mbonus(15, 5)},
 	autolevel = "warriormage",
-	resolvers.talents{ [Talents.T_LIGHTNING]=3, [Talents.T_CHAIN_LIGHTNING]=3, },
+	resolvers.talents{ [Talents.T_LIGHTNING]={base=3, every=6, max=6}, [Talents.T_CHAIN_LIGHTNING]={base=3, every=6, max=6}, },
 }
 
 newEntity{ base = "BASE_NPC_SNOW_GIANT",
@@ -83,7 +83,7 @@ newEntity{ base = "BASE_NPC_SNOW_GIANT",
 	combat_armor = 0, combat_def = 0,
 	on_melee_hit = {[DamageType.COLD]=resolvers.mbonus(15, 5)},
 	melee_project = {[DamageType.COLD]=resolvers.mbonus(15, 5)},
-	resolvers.talents{ [Talents.T_THROW_BOULDER]=3, },
+	resolvers.talents{ [Talents.T_THROW_BOULDER]={base=3, every=6, max=6}, },
 }
 
 newEntity{ base = "BASE_NPC_SNOW_GIANT",
@@ -96,7 +96,7 @@ newEntity{ base = "BASE_NPC_SNOW_GIANT",
 	combat_armor = 12, combat_def = 12,
 	on_melee_hit = {[DamageType.COLD]=resolvers.mbonus(15, 10)},
 	melee_project = {[DamageType.COLD]=resolvers.mbonus(15, 10)},
-	resolvers.talents{ [Talents.T_KNOCKBACK]=3, [Talents.T_STUN]=3, },
+	resolvers.talents{ [Talents.T_KNOCKBACK]={base=3, every=6, max=6}, [Talents.T_STUN]={base=3, every=6, max=6}, },
 	make_escort = {
 		{type="giant", subtype="ice", number=3},
 	},

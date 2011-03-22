@@ -63,11 +63,11 @@ newEntity{ base = "BASE_NPC_ORC_VOR",
 	combat_armor = 0, combat_def = 5,
 
 	resolvers.talents{
-		[Talents.T_FLAME]=4,
-		[Talents.T_FLAMESHOCK]=3,
-		[Talents.T_FIREFLASH]=3,
-		[Talents.T_SPELL_SHAPING]=3,
-		[Talents.T_PHASE_DOOR]=1,
+		[Talents.T_FLAME]={base=4, every=10, max=8},
+		[Talents.T_FLAMESHOCK]={base=3, every=10, max=7},
+		[Talents.T_FIREFLASH]={base=3, every=10, max=7},
+		[Talents.T_SPELL_SHAPING]={base=3, every=10, max=7},
+		[Talents.T_PHASE_DOOR]=2,
 	},
 }
 
@@ -87,14 +87,15 @@ newEntity{ base = "BASE_NPC_ORC_VOR",
 	rank = 3,
 
 	resolvers.talents{
-		[Talents.T_FLAME]=5,
-		[Talents.T_FLAMESHOCK]=5,
-		[Talents.T_FIREFLASH]=5,
-		[Talents.T_INFERNO]=5,
-		[Talents.T_BLASTWAVE]=5,
-		[Talents.T_BURNING_WAKE]=5,
+		[Talents.T_FLAME]={base=5, every=10, max=9},
+		[Talents.T_FLAMESHOCK]={base=5, every=10, max=9},
+		[Talents.T_FIREFLASH]={base=5, every=10, max=9},
+		[Talents.T_INFERNO]={base=5, every=10, max=9},
+		[Talents.T_BLASTWAVE]={base=5, every=10, max=9},
+		[Talents.T_BURNING_WAKE]={base=5, every=10, max=9},
 		[Talents.T_SPELL_SHAPING]=5,
-		[Talents.T_ESSENCE_OF_SPEED]=1,
+		[Talents.T_PHASE_DOOR]=2,
+		[Talents.T_ESSENCE_OF_SPEED]={base=1, every=10, max=5},
 	},
 }
 
@@ -111,11 +112,11 @@ newEntity{ base = "BASE_NPC_ORC_VOR",
 	combat_armor = 0, combat_def = 5,
 
 	resolvers.talents{
-		[Talents.T_FREEZE]=4,
-		[Talents.T_ICE_STORM]=5,
-		[Talents.T_TIDAL_WAVE]=3,
-		[Talents.T_SPELL_SHAPING]=3,
-		[Talents.T_PHASE_DOOR]=1,
+		[Talents.T_FREEZE]={base=4, every=10, max=8},
+		[Talents.T_ICE_STORM]={base=5, every=10, max=9},
+		[Talents.T_TIDAL_WAVE]={base=3, every=10, max=7},
+		[Talents.T_SPELL_SHAPING]={base=3, every=10, max=7},
+		[Talents.T_PHASE_DOOR]=2,
 	},
 }
 
@@ -136,13 +137,13 @@ newEntity{ base = "BASE_NPC_ORC_VOR",
 	ai_tactic = resolvers.tactic"ranged",
 
 	resolvers.talents{
-		[Talents.T_FREEZE]=5,
-		[Talents.T_ICE_STORM]=5,
-		[Talents.T_TIDAL_WAVE]=5,
-		[Talents.T_ICE_SHARDS]=5,
-		[Talents.T_FROZEN_GROUND]=5,
-		[Talents.T_SPELL_SHAPING]=5,
-		[Talents.T_PHASE_DOOR]=1,
-		[Talents.T_ESSENCE_OF_SPEED]=1,
+		[Talents.T_FREEZE]={base=5, every=10, max=9},
+		[Talents.T_ICE_STORM]={base=5, every=10, max=9},
+		[Talents.T_TIDAL_WAVE]={base=5, every=10, max=9},
+		[Talents.T_ICE_SHARDS]={base=5, every=10, max=9},
+		[Talents.T_FROZEN_GROUND]={base=5, every=10, max=9},
+		[Talents.T_SPELL_SHAPING]={base=5, every=10, max=9},
+		[Talents.T_PHASE_DOOR]=2,
+		[Talents.T_ESSENCE_OF_SPEED]={base=1, every=10, max=5},
 	},
 }

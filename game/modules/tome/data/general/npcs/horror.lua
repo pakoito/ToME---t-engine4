@@ -70,17 +70,17 @@ newEntity{ base = "BASE_NPC_HORROR",
 	},
 
 	resolvers.talents{
-		[Talents.T_BONE_GRAB]=4,
-		[Talents.T_DRAIN]=5,
-		[Talents.T_CORRUPTED_STRENGTH]=3,
-		[Talents.T_VIRULENT_DISEASE]=3,
-		[Talents.T_CURSE_OF_DEATH]=5,
-		[Talents.T_REND]=4,
-		[Talents.T_BLOODLUST]=3,
-		[Talents.T_RUIN]=2,
+		[Talents.T_BONE_GRAB]={base=4, every=10},
+		[Talents.T_DRAIN]={base=5, every=12},
+		[Talents.T_CORRUPTED_STRENGTH]={base=3, every=15},
+		[Talents.T_VIRULENT_DISEASE]={base=3, every=12},
+		[Talents.T_CURSE_OF_DEATH]={base=5, every=15},
+		[Talents.T_REND]={base=4, every=12},
+		[Talents.T_BLOODLUST]={base=3, every=12},
+		[Talents.T_RUIN]={base=2, every=12},
 
-		[Talents.T_WEAPON_COMBAT]=5,
-		[Talents.T_WEAPONS_MASTERY]=3,
+		[Talents.T_WEAPON_COMBAT]={base=5, every=10, max=10},
+		[Talents.T_WEAPONS_MASTERY]={base=3, every=10, max=10},
 	},
 	resolvers.sustains_at_birth(),
 
@@ -101,18 +101,18 @@ newEntity{ base = "BASE_NPC_HORROR",
 	size_category = 4,
 	autolevel = "caster",
 	combat_armor = 1, combat_def = 0,
-	combat = {dam=resolvers.mbonus(25, 15), apr=0, atk=resolvers.mbonus(30, 15), dammod={mag=0.6}},
+	combat = {dam=resolvers.levelup(resolvers.mbonus(25, 15), 1, 1.1), apr=0, atk=resolvers.mbonus(30, 15), dammod={mag=0.6}},
 
 	never_move = 1,
 
 	resists = {all = 35, [DamageType.LIGHT] = -30},
 
 	resolvers.talents{
-		[Talents.T_FEATHER_WIND]=5,
+		[Talents.T_FEATHER_WIND]={base=5, every=10, max=10},
 		[Talents.T_PHASE_DOOR]=2,
-		[Talents.T_MIND_DISRUPTION]=4,
-		[Talents.T_MIND_SEAR]=4,
-		[Talents.T_TELEKINETIC_BLAST]=4,
+		[Talents.T_MIND_DISRUPTION]={base=4, every=14, max=7},
+		[Talents.T_MIND_SEAR]={base=4, every=14, max=7},
+		[Talents.T_TELEKINETIC_BLAST]={base=4, every=14, max=7},
 	},
 
 	resolvers.sustains_at_birth(),
@@ -129,7 +129,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	autolevel = "warriormage",
 	stats = { str=15, dex=20, mag=20, wil=20, con=15 },
 	combat_armor = 1, combat_def = 10,
-	combat = { dam=20, atk=20, apr=50, dammod={str=0.6}, damtype=DamageType.DARKNESS},
+	combat = { dam=resolvers.levelup(20, 1, 1.1), atk=20, apr=50, dammod={str=0.6}, damtype=DamageType.DARKNESS},
 
 	ai = "tactical", ai_state = { ai_target="target_player_radius", sense_radius=40, talent_in=2, },
 
@@ -141,15 +141,15 @@ newEntity{ base = "BASE_NPC_HORROR",
 	no_breath = 1,
 
 	resolvers.talents{
-		[Talents.T_STALK]=5,
-		[Talents.T_GLOOM]=3,
-		[Talents.T_WEAKNESS]=3,
-		[Talents.T_TORMENT]=3,
-		[Talents.T_DOMINATE]=3,
-		[Talents.T_BLINDSIDE]=3,
-		[Talents.T_LIFE_LEECH]=5,
-		[Talents.T_SHADOW_BLAST]=4,
-		[Talents.T_HYMN_OF_SHADOWS]=3,
+		[Talents.T_STALK]={base=5, every=12, max=8},
+		[Talents.T_GLOOM]={base=3, every=12, max=8},
+		[Talents.T_WEAKNESS]={base=3, every=12, max=8},
+		[Talents.T_TORMENT]={base=3, every=12, max=8},
+		[Talents.T_DOMINATE]={base=3, every=12, max=8},
+		[Talents.T_BLINDSIDE]={base=3, every=12, max=8},
+		[Talents.T_LIFE_LEECH]={base=5, every=12, max=9},
+		[Talents.T_SHADOW_BLAST]={base=4, every=8, max=8},
+		[Talents.T_HYMN_OF_SHADOWS]={base=3, every=9, max=8},
 	},
 
 	resolvers.sustains_at_birth(),
@@ -177,8 +177,8 @@ newEntity{ base = "BASE_NPC_HORROR",
 	--blind= 1,
 
 	resolvers.talents{
-		[Talents.T_MANA_CLASH]=5,
-		[Talents.T_GRAB]=5,
+		[Talents.T_MANA_CLASH]={base=4, every=5, max=8},
+		[Talents.T_GRAB]={base=4, every=6, max=8},
 	},
 
 	-- Add eyes
@@ -376,12 +376,12 @@ newEntity{ base = "BASE_NPC_HORROR",
 	see_invisible = 10,
 
 	resolvers.talents{
-		[Talents.T_CHANT_OF_FORTITUDE]=3,
-		[Talents.T_SEARING_LIGHT]=3,
-		[Talents.T_FIREBEAM]=3,
-		[Talents.T_PROVIDENCE]=3,
-		[Talents.T_HEALING_LIGHT]=3,
-		[Talents.T_BARRIER]=3,
+		[Talents.T_CHANT_OF_FORTITUDE]={base=3, every=10, max=6},
+		[Talents.T_SEARING_LIGHT]={base=3, every=10, max=6},
+		[Talents.T_FIREBEAM]={base=3, every=10, max=6},
+		[Talents.T_PROVIDENCE]={base=3, every=10, max=6},
+		[Talents.T_HEALING_LIGHT]={base=3, every=10, max=6},
+		[Talents.T_BARRIER]={base=3, every=10, max=6},
 	},
 
 	resolvers.sustains_at_birth(),
@@ -410,15 +410,15 @@ newEntity{ base = "BASE_NPC_HORROR",
 	see_invisible = 20,
 
 	resolvers.talents{
-		[Talents.T_CHANT_OF_FORTITUDE]=10,
-		[Talents.T_CIRCLE_OF_BLAZING_LIGHT]=10,
-		[Talents.T_SEARING_LIGHT]=10,
-		[Talents.T_FIREBEAM]=10,
-		[Talents.T_SUNBURST]=10,
-		[Talents.T_SUN_FLARE]=10,
-		[Talents.T_PROVIDENCE]=10,
-		[Talents.T_HEALING_LIGHT]=10,
-		[Talents.T_BARRIER]=10,
+		[Talents.T_CHANT_OF_FORTITUDE]={base=10, every=15},
+		[Talents.T_CIRCLE_OF_BLAZING_LIGHT]={base=10, every=15},
+		[Talents.T_SEARING_LIGHT]={base=10, every=15},
+		[Talents.T_FIREBEAM]={base=10, every=15},
+		[Talents.T_SUNBURST]={base=10, every=15},
+		[Talents.T_SUN_FLARE]={base=10, every=15},
+		[Talents.T_PROVIDENCE]={base=10, every=15},
+		[Talents.T_HEALING_LIGHT]={base=10, every=15},
+		[Talents.T_BARRIER]={base=10, every=15},
 	},
 
 	resolvers.sustains_at_birth(),
@@ -441,14 +441,9 @@ newEntity{ base = "BASE_NPC_HORROR",
 	autolevel = "warrior",
 	max_life = resolvers.rngavg(50, 80),
 	combat_armor = 1, combat_def = 10,
-	combat = { dam=resolvers.rngavg(20,30), atk=resolvers.rngavg(10,20), apr=5, dammod={str=1} },
+	combat = { dam=resolvers.levelup(resolvers.rngavg(20,30), 1, 1.2), atk=resolvers.rngavg(10,20), apr=5, dammod={str=1} },
 
 	resists = { [DamageType.TEMPORAL] = 5},
-
-	resolvers.talents{
-	},
-
-	resolvers.sustains_at_birth(),
 }
 
 newEntity{ base = "BASE_NPC_HORROR",
@@ -463,12 +458,12 @@ newEntity{ base = "BASE_NPC_HORROR",
 	autolevel = "warriormage",
 	max_life = resolvers.rngavg(50, 80),
 	combat_armor = 1, combat_def = 10,
-	combat = { dam=resolvers.rngavg(15,20), atk=resolvers.rngavg(5,15), apr=5, dammod={str=1} },
+	combat = { dam=resolvers.levelup(resolvers.rngavg(15,20), 1, 1.1), atk=resolvers.rngavg(5,15), apr=5, dammod={str=1} },
 
 	resists = { [DamageType.TEMPORAL] = 5},
 
 	resolvers.talents{
-		[Talents.T_DUST_TO_DUST]=1,
+		[Talents.T_DUST_TO_DUST]={base=1, every=7, max=5},
 	},
 
 	resolvers.sustains_at_birth(),
@@ -487,13 +482,13 @@ newEntity{ base = "BASE_NPC_HORROR",
 	max_life = resolvers.rngavg(120, 150),
 	energy = { mod=0.7 },
 	combat_armor = 1, combat_def = 0,
-	combat = { dam=resolvers.rngavg(25,150), atk=resolvers.rngavg(25,130), apr=1, dammod={str=1.1} },
+	combat = { dam=resolvers.levelup(resolvers.rngavg(25,150), 1, 1.2), atk=resolvers.rngavg(25,130), apr=1, dammod={str=1.1} },
 
 	resists = {all = 10, [DamageType.TEMPORAL] = 50, [DamageType.PHYSICAL] = 25},
 
 	resolvers.talents{
-		[Talents.T_STUN]=3,
-		[Talents.T_SPEED_SAP]=2,
+		[Talents.T_STUN]={base=3, every=7, max=7},
+		[Talents.T_SPEED_SAP]={base=2, every=7, max=6},
 	},
 
 	resolvers.sustains_at_birth(),
@@ -520,8 +515,8 @@ newEntity{ base = "BASE_NPC_HORROR",
 	},
 
 	resolvers.talents{
-		[Talents.T_DREDGE_FRENZY]=5,
-		[Talents.T_SPEED_SAP]=3,
+		[Talents.T_DREDGE_FRENZY]={base=5, every=7, max=9},
+		[Talents.T_SPEED_SAP]={base=3, every=7, max=9},
 	},
 
 	resolvers.sustains_at_birth(),
@@ -539,16 +534,16 @@ newEntity{ base = "BASE_NPC_HORROR",
 	autolevel = "rogue",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
 	combat_armor = 10, combat_def = 10,
-	combat = { dam=resolvers.rngavg(25,100), atk=resolvers.rngavg(25,100), apr=25, dammod={dex=1.1} },
+	combat = { dam=resolvers.levelup(resolvers.rngavg(25,100), 1, 1.2), atk=resolvers.rngavg(25,100), apr=25, dammod={dex=1.1} },
 
 	resists = {all = 10, [DamageType.TEMPORAL] = 50},
 
 	resolvers.talents{
-		[Talents.T_PERFECT_AIM]=3,
-		[Talents.T_FORESIGHT]=5,
-		[Talents.T_STEALTH]=3,
-		[Talents.T_SHADOWSTRIKE]=3,
-		[Talents.T_UNSEEN_ACTIONS]=3,
+		[Talents.T_PERFECT_AIM]={base=3, every=7, max=5},
+		[Talents.T_FORESIGHT]={base=5, every=7, max=8},
+		[Talents.T_STEALTH]={base=3, every=7, max=5},
+		[Talents.T_SHADOWSTRIKE]={base=3, every=7, max=5},
+		[Talents.T_UNSEEN_ACTIONS]={base=3, every=7, max=5},
 	},
 
 	resolvers.sustains_at_birth(),
@@ -571,8 +566,8 @@ newEntity{ base = "BASE_NPC_HORROR",
 	resists = {[DamageType.TEMPORAL] = 50},
 
 	resolvers.talents{
-		[Talents.T_DISPERSE_MAGIC]=3,
-		[Talents.T_ENTROPIC_FIELD]=3,
+		[Talents.T_DISPERSE_MAGIC]={base=3, every=7, max=5},
+		[Talents.T_ENTROPIC_FIELD]={base=3, every=7, max=5},
 	},
 	-- Random Anomaly on Death
 	on_die = function(self, who)
@@ -608,7 +603,7 @@ You can discern a huge round mouth covered in razor-sharp teeth.]],
 	stun_immune = 1,
 	knockback_immune = 1,
 
-	combat = { dam=resolvers.mbonus(100, 15), atk=500, apr=0, dammod={str=1.2} },
+	combat = { dam=resolvers.levelup(resolvers.mbonus(100, 15), 1, 1), atk=500, apr=0, dammod={str=1.2} },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 		  resolvers.drops{chance=100, nb=1, {unique=true} },
@@ -617,10 +612,10 @@ You can discern a huge round mouth covered in razor-sharp teeth.]],
 	resists = { all=500 },
 
 	resolvers.talents{
-		[Talents.T_STARFALL]=4,
-		[Talents.T_MOONLIGHT_RAY]=4,
-		[Talents.T_PACIFICATION_HEX]=4,
-		[Talents.T_BURNING_HEX]=4,
+		[Talents.T_STARFALL]={base=4, every=7},
+		[Talents.T_MOONLIGHT_RAY]={base=4, every=7},
+		[Talents.T_PACIFICATION_HEX]={base=4, every=7},
+		[Talents.T_BURNING_HEX]={base=4, every=7},
 	},
 	resolvers.sustains_at_birth(),
 

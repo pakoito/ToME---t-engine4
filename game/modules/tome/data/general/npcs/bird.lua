@@ -59,7 +59,7 @@ newEntity{ base="BASE_NPC_BIRD", define_as = "NPC_PHOENIX",
 	ai = "tactical",
 
 	stats = { str=20, dex=60, cun=60, mag=30, con=40, wil=40 },
-	combat = { dam=50, atk=50, apr=12, dammod={mag=1.3} },
+	combat = { dam=resolvers.levelup(50, 1, 1), atk=50, apr=12, dammod={mag=1.3} },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
         resolvers.drops{chance=100, nb=1, {unique=true} },

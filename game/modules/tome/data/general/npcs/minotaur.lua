@@ -58,7 +58,12 @@ newEntity{ base = "BASE_NPC_MINOTAUR",
 	level_range = {10, nil}, exp_worth = 1,
 	rarity = 1,
 	combat_armor = 13, combat_def = 8,
-	resolvers.talents{ [Talents.T_WARSHOUT]=3, [Talents.T_STUNNING_BLOW]=3, [Talents.T_SUNDER_ARMOUR]=2, [Talents.T_SUNDER_ARMS]=2, },
+	resolvers.talents{
+		[Talents.T_WARSHOUT]={base=3, every=10, max=6},
+		[Talents.T_STUNNING_BLOW]={base=3, every=10, max=6},
+		[Talents.T_SUNDER_ARMOUR]={base=2, every=10, max=5},
+		[Talents.T_SUNDER_ARMS]={base=2, every=10, max=5},
+	},
 }
 
 newEntity{ base = "BASE_NPC_MINOTAUR",
@@ -72,5 +77,8 @@ newEntity{ base = "BASE_NPC_MINOTAUR",
 	autolevel = "caster",
 	resists = { [DamageType.FIRE] = 100 },
 	max_mana = 100,
-	resolvers.talents{ [Talents.T_MANA_POOL]=1, [Talents.T_FLAME]=3, [Talents.T_FIREFLASH]=2 },
+	resolvers.talents{
+		[Talents.T_FLAME]={base=3, every=8, max=6},
+		[Talents.T_FIREFLASH]={base=2, every=10, max=6}
+	},
 }

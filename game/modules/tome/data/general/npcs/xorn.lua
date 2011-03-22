@@ -25,7 +25,7 @@ newEntity{
 	display = "X", color=colors.UMBER,
 
 	blood_color = colors.UMBER,
-	combat = { dam=resolvers.mbonus(46, 15), atk=15, apr=15, dammod={str=0.8} },
+	combat = { dam=resolvers.levelup(resolvers.mbonus(46, 15), 1, 0.8), atk=15, apr=15, dammod={str=0.8} },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.drops{chance=100, nb=1, {type="money"} },
@@ -61,7 +61,7 @@ newEntity{ base = "BASE_NPC_XORN",
 	max_life = resolvers.rngavg(100,120),
 	combat_armor = 12, combat_def = 0,
 	move_project = {[DamageType.DIG]=1},
-	resolvers.talents{ [Talents.T_MIND_DISRUPTION]=2, },
+	resolvers.talents{ [Talents.T_MIND_DISRUPTION]={base=2, every=5, max=6}, },
 }
 
 newEntity{ base = "BASE_NPC_XORN",
@@ -72,7 +72,7 @@ newEntity{ base = "BASE_NPC_XORN",
 	max_life = resolvers.rngavg(130,140),
 	combat_armor = 15, combat_def = 10,
 	combat = { damtype=DamageType.ACID },
-	resolvers.talents{ [Talents.T_CONSTRICT]=4, },
+	resolvers.talents{ [Talents.T_CONSTRICT]={base=4, every=7, max=8}, },
 }
 
 newEntity{ base = "BASE_NPC_XORN",
@@ -83,7 +83,7 @@ newEntity{ base = "BASE_NPC_XORN",
 	max_life = resolvers.rngavg(130,140),
 	combat_armor = 15, combat_def = 10,
 	combat = { damtype=DamageType.ACID },
-	resolvers.talents{ [Talents.T_CONSTRICT]=4, [Talents.T_RUSH]=2, },
+	resolvers.talents{ [Talents.T_CONSTRICT]={base=4, every=7, max=8}, [Talents.T_RUSH]=2, },
 }
 
 newEntity{ base = "BASE_NPC_XORN",
@@ -176,14 +176,14 @@ newEntity{ base = "BASE_NPC_XORN", define_as = "FULL_HARKOR_ZUN",
 	ai_tactic = resolvers.tactic"melee",
 
 	resolvers.talents{
-		[Talents.T_CONSTRICT]=4,
+		[Talents.T_CONSTRICT]={base=4, every=7, max=8},
 		[Talents.T_RUSH]=4,
-		[Talents.T_STONE_SKIN]=4,
-		[Talents.T_STRIKE]=4,
-		[Talents.T_EARTHQUAKE]=5,
-		[Talents.T_EARTHEN_MISSILES]=5,
-		[Talents.T_CRYSTALLINE_FOCUS]=5,
-		[Talents.T_STONE_SKIN]=5,
+		[Talents.T_STONE_SKIN]={base=4, every=7, max=8},
+		[Talents.T_STRIKE]={base=4, every=7, max=8},
+		[Talents.T_EARTHQUAKE]={base=5, every=7, max=9},
+		[Talents.T_EARTHEN_MISSILES]={base=4, every=7, max=8},
+		[Talents.T_CRYSTALLINE_FOCUS]={base=4, every=7, max=8},
+		[Talents.T_STONE_SKIN]={base=4, every=7, max=8},
 	},
 	resolvers.sustains_at_birth(),
 
