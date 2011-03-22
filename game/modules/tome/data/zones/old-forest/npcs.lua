@@ -46,7 +46,7 @@ newEntity{ define_as = "WRATHROOT",
 	instakill_immune = 1,
 	move_others=true,
 
-	combat = { dam=27, atk=10, apr=0, dammod={str=1.2} },
+	combat = { dam=resolvers.levelup(27, 1, 0.8), atk=10, apr=0, dammod={str=1.2} },
 
 	resists = { [DamageType.FIRE] = -50 },
 
@@ -55,12 +55,10 @@ newEntity{ define_as = "WRATHROOT",
 	resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
 
 	resolvers.talents{
-		[Talents.T_STAMINA_POOL]=1, [Talents.T_STUN]=2,
-
-		[Talents.T_MANA_POOL]=1,
-		[Talents.T_ICE_STORM]=1,
-		[Talents.T_TIDAL_WAVE]=1,
-		[Talents.T_FREEZE]=2,
+		[Talents.T_STUN]={base=2, every=6, max=6},
+		[Talents.T_ICE_STORM]={base=1, every=6, max=6},
+		[Talents.T_TIDAL_WAVE]={base=1, every=6, max=6},
+		[Talents.T_FREEZE]={base=2, every=6, max=6},
 	},
 
 	autolevel = "caster",

@@ -80,12 +80,10 @@ newEntity{ define_as = "SANDWORM_QUEEN",
 	resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
 
 	resolvers.talents{
-		[Talents.T_STAMINA_POOL]=1,
-		[Talents.T_MANA_POOL]=1,
 		[Talents.T_SUMMON]=1,
-		[Talents.T_CRAWL_POISON]=5,
-		[Talents.T_CRAWL_ACID]=3,
-		[Talents.T_SAND_BREATH]=4,
+		[Talents.T_CRAWL_POISON]={base=5, every=6, max=8},
+		[Talents.T_CRAWL_ACID]={base=3, every=6, max=7},
+		[Talents.T_SAND_BREATH]={base=4, every=6, max=8},
 	},
 
 	summon = {

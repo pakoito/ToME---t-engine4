@@ -75,11 +75,11 @@ newEntity{ base="BASE_NPC_ORC_RAK_SHOR", define_as = "RAK_SHOR",
 	resolvers.talents{
 		[Talents.T_SUMMON]=1,
 
-		[Talents.T_SOUL_ROT]=5,
-		[Talents.T_BLOOD_GRASP]=5,
-		[Talents.T_CURSE_OF_VULNERABILITY]=5,
-		[Talents.T_BONE_SHIELD]=8,
-		[Talents.T_BLOOD_SPRAY]=5,
+		[Talents.T_SOUL_ROT]={base=5, every=6, max=8},
+		[Talents.T_BLOOD_GRASP]={base=5, every=6, max=8},
+		[Talents.T_CURSE_OF_VULNERABILITY]={base=5, every=6, max=8},
+		[Talents.T_BONE_SHIELD]={base=8, every=8, max=11},
+		[Talents.T_BLOOD_SPRAY]={base=5, every=6, max=8},
 	},
 	resolvers.sustains_at_birth(),
 

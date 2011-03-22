@@ -61,28 +61,28 @@ newEntity{ base="BASE_NPC_ORC_GORBAT", define_as = "GORBAT",
 	equilibrium_regen = -8,
 
 	resolvers.talents{
-		[Talents.T_NATURE_TOUCH]=5,
+		[Talents.T_NATURE_TOUCH]={base=5, every=6, max=7},
 
-		[Talents.T_ICE_BREATH]=10,
-		[Talents.T_FIRE_BREATH]=10,
-		[Talents.T_SAND_BREATH]=10,
+		[Talents.T_ICE_BREATH]={base=10, every=6, max=12},
+		[Talents.T_FIRE_BREATH]={base=10, every=6, max=12},
+		[Talents.T_SAND_BREATH]={base=10, every=6, max=12},
 
-		[Talents.T_ICY_SKIN]=5,
-		[Talents.T_ICE_CLAW]=7,
+		[Talents.T_ICY_SKIN]={base=5, every=6, max=7},
+		[Talents.T_ICE_CLAW]={base=7, every=6, max=10},
 
-		[Talents.T_BELLOWING_ROAR]=7,
-		[Talents.T_WING_BUFFET]=5,
-		[Talents.T_ACIDIC_SKIN]=7,
+		[Talents.T_BELLOWING_ROAR]={base=7, every=6, max=10},
+		[Talents.T_WING_BUFFET]={base=5, every=6, max=7},
+		[Talents.T_ACIDIC_SKIN]={base=7, every=6, max=10},
 
-		[Talents.T_WARPER]=7,
-		[Talents.T_RITCH_FLAMESPITTER]=10,
-		[Talents.T_RESILIENCE]=5,
+		[Talents.T_WARPER]={base=7, every=6, max=10},
+		[Talents.T_RITCH_FLAMESPITTER]={base=10, every=6, max=12},
+		[Talents.T_RESILIENCE]={base=5, every=6, max=7},
 
-		[Talents.T_HOWL]=5,
+		[Talents.T_HOWL]={base=5, every=6, max=7},
 
-		[Talents.T_DISARM]=5,
-		[Talents.T_WEAPON_COMBAT]=7,
-		[Talents.T_WEAPONS_MASTERY]=5,
+		[Talents.T_DISARM]={base=5, every=6, max=7},
+		[Talents.T_WEAPON_COMBAT]={base=7, every=4, max=10},
+		[Talents.T_WEAPONS_MASTERY]={base=6, every=4, max=10},
 
 		[Talents.T_MASSIVE_ARMOUR_TRAINING]=5,
 	},

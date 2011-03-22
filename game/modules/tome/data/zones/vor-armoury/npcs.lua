@@ -66,12 +66,12 @@ newEntity{ base="BASE_NPC_ORC_GRUSHNAK", define_as = "GNARG",
 
 	resolvers.talents{
 		[Talents.T_RUSH]=5,
-		[Talents.T_WARSHOUT]=5,
-		[Talents.T_STUNNING_BLOW]=5,
-		[Talents.T_SUNDER_ARMOUR]=5,
-		[Talents.T_SLOW_MOTION]=5,
-		[Talents.T_SHATTERING_SHOUT]=5,
-		[Talents.T_SECOND_WIND]=5,
+		[Talents.T_WARSHOUT]={base=5, every=7, max=7},
+		[Talents.T_STUNNING_BLOW]={base=5, every=7, max=7},
+		[Talents.T_SUNDER_ARMOUR]={base=5, every=7, max=7},
+		[Talents.T_SLOW_MOTION]={base=5, every=7, max=7},
+		[Talents.T_SHATTERING_SHOUT]={base=5, every=7, max=7},
+		[Talents.T_SECOND_WIND]={base=5, every=7, max=7},
 	},
 	resolvers.sustains_at_birth(),
 }

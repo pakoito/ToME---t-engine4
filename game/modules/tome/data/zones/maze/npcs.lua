@@ -56,13 +56,13 @@ newEntity{ define_as = "MINOTAUR_MAZE",
 	resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
 
 	resolvers.talents{
-		[Talents.T_HEAVY_ARMOUR_TRAINING]=1,
-		[Talents.T_STAMINA_POOL]=1,
-		[Talents.T_WARSHOUT]=1,
-		[Talents.T_STUNNING_BLOW]=1,
-		[Talents.T_SUNDER_ARMOUR]=1,
-		[Talents.T_SUNDER_ARMS]=1,
-		[Talents.T_CRUSH]=1,
+		[Talents.T_HEAVY_ARMOUR_TRAINING]={base=1, every=6, max=5},
+		[Talents.T_STAMINA_POOL]={base=1, every=6, max=5},
+		[Talents.T_WARSHOUT]={base=1, every=6, max=5},
+		[Talents.T_STUNNING_BLOW]={base=1, every=6, max=5},
+		[Talents.T_SUNDER_ARMOUR]={base=1, every=6, max=5},
+		[Talents.T_SUNDER_ARMS]={base=1, every=6, max=5},
+		[Talents.T_CRUSH]={base=1, every=6, max=5},
 	},
 
 	autolevel = "warrior",
@@ -103,14 +103,14 @@ newEntity{ base = "BASE_NPC_SPIDER", define_as = "NIMISIL",
 	inc_damage = {all=40},
 
 	resolvers.talents{
-		[Talents.T_SPIDER_WEB]=5,
-		[Talents.T_LAY_WEB]=5,
-		[Talents.T_PHASE_DOOR]=5,
+		[Talents.T_SPIDER_WEB]={base=5, every=5, max=7},
+		[Talents.T_LAY_WEB]={base=5, every=5, max=7},
+		[Talents.T_PHASE_DOOR]={base=5, every=5, max=7},
 
-		[Talents.T_HYMN_OF_MOONLIGHT]=4,
-		[Talents.T_MOONLIGHT_RAY]=5,
-		[Talents.T_SHADOW_BLAST]=5,
+		[Talents.T_HYMN_OF_MOONLIGHT]={base=5, every=5, max=7},
+		[Talents.T_MOONLIGHT_RAY]={base=5, every=5, max=7},
+		[Talents.T_SHADOW_BLAST]={base=5, every=5, max=7},
 
-		[Talents.T_SEARING_LIGHT]=4,
+		[Talents.T_SEARING_LIGHT]={base=5, every=5, max=7},
 	},
 }
