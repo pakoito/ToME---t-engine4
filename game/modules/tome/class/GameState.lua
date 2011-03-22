@@ -626,7 +626,7 @@ local drop_tables = {
 			double_ego = 20,
 			ego = 35,
 			basic = 20,
-			money = 7000,
+			money = 7,
 		},
 		[2] = {
 			uniques = 0.7,
@@ -1090,7 +1090,7 @@ function _M:createRandomZone()
 		width = data.w, height = data.h,
 		color_shown = data.tint_s,
 		color_obscure = data.tint_o,
-		ambient_music = music,
+		ambient_music = rng.table(musics),
 		generator =  {
 			map = layout.gen(data),
 			actor = { class = "engine.generator.actor.Random",nb_npc = {5, 7}, },
