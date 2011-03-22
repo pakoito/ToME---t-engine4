@@ -288,12 +288,12 @@ This one looks even nastier and looks toward you with what seems to be disdain. 
 	resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
 
 	resolvers.talents{
-		[Talents.T_FLAME]=4,
-		[Talents.T_FIERY_HANDS]=5,
-		[Talents.T_FLAMESHOCK]=5,
-		[Talents.T_INFERNO]=5,
-		[Talents.T_KNOCKBACK]=5,
-		[Talents.T_STUN]=2,
+		[Talents.T_FLAME]={base=4, every=5, max=8},
+		[Talents.T_FIERY_HANDS]={base=5, every=5, max=8},
+		[Talents.T_FLAMESHOCK]={base=5, every=5, max=8},
+		[Talents.T_INFERNO]={base=5, every=5, max=8},
+		[Talents.T_KNOCKBACK]={base=5, every=5, max=8},
+		[Talents.T_STUN]={base=2, every=5, max=5},
 	},
 	resolvers.sustains_at_birth(),
 

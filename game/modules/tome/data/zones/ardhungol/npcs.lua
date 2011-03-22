@@ -39,7 +39,7 @@ newEntity{ define_as = "UNGOLE", base = "BASE_NPC_SPIDER",
 	combat_armor = 17, combat_def = 17,
 	resists = { [DamageType.FIRE] = 20, [DamageType.ACID] = 20, [DamageType.COLD] = 20, [DamageType.LIGHTNING] = 20, },
 
-	combat = { dam=resolvers.rngavg(40,58), atk=16, apr=9, damtype=DamageType.NATURE, dammod={str=0.8} },
+	combat = { dam=resolvers.levelup(resolvers.rngavg(40,58), 1, 1), atk=16, apr=9, damtype=DamageType.NATURE, dammod={str=0.8} },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
@@ -47,14 +47,14 @@ newEntity{ define_as = "UNGOLE", base = "BASE_NPC_SPIDER",
 	resolvers.drops{chance=100, nb=1, {unique=true} },
 
 	resolvers.talents{
-		[Talents.T_KNOCKBACK]=4,
-		[Talents.T_DARKNESS]=5,
-		[Talents.T_SPIT_POISON]=5,
-		[Talents.T_SPIDER_WEB]=5,
-		[Talents.T_LAY_WEB]=5,
+		[Talents.T_KNOCKBACK]={base=4, every=5, max=7},
+		[Talents.T_DARKNESS]={base=5, every=5, max=8},
+		[Talents.T_SPIT_POISON]={base=5, every=5, max=8},
+		[Talents.T_SPIDER_WEB]={base=5, every=5, max=8},
+		[Talents.T_LAY_WEB]={base=5, every=5, max=8},
 
-		[Talents.T_CORROSIVE_VAPOUR]=5,
-		[Talents.T_PHANTASMAL_SHIELD]=5,
+		[Talents.T_CORROSIVE_VAPOUR]={base=5, every=5, max=8},
+		[Talents.T_PHANTASMAL_SHIELD]={base=5, every=5, max=8},
 	},
 	resolvers.sustains_at_birth(),
 

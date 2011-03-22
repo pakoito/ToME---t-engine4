@@ -56,9 +56,9 @@ newEntity{ define_as = "BRIAGH",
 	resolvers.talents{
 		[Talents.T_PROBABILITY_TRAVEL]=10,
 		[Talents.T_SUMMON]=1,
-		[Talents.T_SAND_BREATH]=8,
-		[Talents.T_STUN]=5,
-		[Talents.T_KNOCKBACK]=5,
+		[Talents.T_SAND_BREATH]={base=8, every=8, max=12},
+		[Talents.T_STUN]={base=5, every=5, max=8},
+		[Talents.T_KNOCKBACK]={base=5, every=5, max=8},
 	},
 	resolvers.sustains_at_birth(),
 
