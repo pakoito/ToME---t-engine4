@@ -119,8 +119,9 @@ newTalent{
 	require = undeads_req4,
 	points = 5,
 	cooldown = 25,
-	tactical = { ATTACK = 1, DEFEND = 1 },
+	tactical = { ATTACK = 1, HEAL = 1 },
 	range=1,
+	requires_target = true,
 	action = function(self, t)
 		local duration = self:getTalentLevel(t) / 2 + 4
 		local radius = 3

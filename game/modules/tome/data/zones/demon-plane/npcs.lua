@@ -60,12 +60,12 @@ newEntity{ define_as = "DRAEBOR",
 
 	resolvers.talents{
 		[Talents.T_SUMMON]=1,
-		[Talents.T_FLAME]=5,
-		[Talents.T_BLOOD_GRASP]=5,
-		[Talents.T_WILDFIRE]=5,
+		[Talents.T_FLAME]={base=5, every=5, max=8},
+		[Talents.T_BLOOD_GRASP]={base=5, every=5, max=8},
+		[Talents.T_WILDFIRE]={base=5, every=5, max=8},
 		[Talents.T_PHASE_DOOR]=2,
-		[Talents.T_CURSE_OF_VULNERABILITY]=5,
-		[Talents.T_BONE_SHIELD]=3,
+		[Talents.T_CURSE_OF_VULNERABILITY]={base=5, every=5, max=8},
+		[Talents.T_BONE_SHIELD]={base=3, every=10, max=5},
 	},
 	resolvers.sustains_at_birth(),
 

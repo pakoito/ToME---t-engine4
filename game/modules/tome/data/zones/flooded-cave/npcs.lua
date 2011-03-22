@@ -55,17 +55,17 @@ newEntity{ define_as = "UKLLMSWWIK",
 	resolvers.drops{chance=100, nb=10, {tome={money=1}} },
 
 	resolvers.talents{
-		[Talents.T_WEAPON_COMBAT]=5,
-		[Talents.T_KNOCKBACK]=3,
+		[Talents.T_WEAPON_COMBAT]={base=5, every=5, max=10},
+		[Talents.T_KNOCKBACK]={base=3, every=5, max=8},
 
-		[Talents.T_ICE_STORM]=4,
-		[Talents.T_FREEZE]=3,
+		[Talents.T_ICE_STORM]={base=4, every=5, max=8},
+		[Talents.T_FREEZE]={base=3, every=5, max=7},
 
-		[Talents.T_ICE_CLAW]=5,
-		[Talents.T_ICY_SKIN]=5,
-		[Talents.T_ICE_BREATH]=5,
-		[Talents.T_LIGHTNING_BREATH]=5,
-		[Talents.T_POISON_BREATH]=5,
+		[Talents.T_ICE_CLAW]={base=5, every=5, max=8},
+		[Talents.T_ICY_SKIN]={base=5, every=5, max=8},
+		[Talents.T_ICE_BREATH]={base=5, every=5, max=8},
+		[Talents.T_LIGHTNING_BREATH]={base=5, every=5, max=8},
+		[Talents.T_POISON_BREATH]={base=5, every=5, max=8},
 	},
 	resolvers.sustains_at_birth(),
 

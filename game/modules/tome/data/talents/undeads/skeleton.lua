@@ -48,6 +48,7 @@ newTalent{
 	cooldown = 15,
 	tactical = { ATTACK = 2 },
 	range = 1,
+	requires_target = true,
 	action = function(self, t)
 		local x, y = self.x, self.y
 		if game.level.map(x, y, game.level.map.TRAP) then

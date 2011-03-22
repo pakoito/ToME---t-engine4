@@ -630,9 +630,9 @@ function _M:getRankLifeAdjust(value)
 	if self.rank == 1 then return value * (level_adjust - 0.2)
 	elseif self.rank == 2 then return value * (level_adjust - 0.1)
 	elseif self.rank == 3 then return value * (level_adjust + 0.1)
-	elseif self.rank == 3.5 then return value * (level_adjust + 0.3)
-	elseif self.rank == 4 then return value * (level_adjust + 0.3)
-	elseif self.rank >= 5 then return value * (level_adjust + 0.5)
+	elseif self.rank == 3.5 then return value * (level_adjust + 1)
+	elseif self.rank == 4 then return value * (level_adjust + 2)
+	elseif self.rank >= 5 then return value * (level_adjust + 3)
 	else return 0
 	end
 end
