@@ -512,3 +512,19 @@ function resolvers.calc.racial(t, e)
 	e._levelup_talents = levelup_talents
 	return nil
 end
+
+
+function resolvers.emote_random(def)
+	return {__resolver="emote_random", def}
+end
+function resolvers.calc.emote_random(t, e)
+	local def = t[1]
+	def.chance = def.chance or 0.1
+	if def.allow_backup_guardian then
+		def[#def+1] = function()
+			local t = game.state:getBackupGuardianEmotes{}
+			return #t > 0 and rng.table(t) or nil
+		end
+	end
+	return def
+end

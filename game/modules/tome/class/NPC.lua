@@ -46,8 +46,12 @@ function _M:act()
 		-- If AI did nothing, use energy anyway
 		self:doAI()
 
-		if self.emote_random and rng.percent(self.emote_random.chance) then
-			self:doEmote(rng.table(self.emote_random))
+		if self.emote_random and self.x and self.y and game.level.map.seens(self.x, self.y) and rng.range(0, 999) < self.emote_random.chance * 10 then
+			local e = util.getval(rng.table(self.emote_random))
+			if e then
+				local dur = util.bound(#e, 30, 90)
+				self:doEmote(e, dur)
+			end
 		end
 
 		if not self.energy.used then self:useEnergy() end

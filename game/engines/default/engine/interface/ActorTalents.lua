@@ -367,7 +367,7 @@ function _M:getTalentReqDesc(t_id, levmod)
 	if t.type[2] and t.type[2] > 1 then
 		local known = self:numberKnownTalent(t.type[1], t.id)
 		local c = (known >= t.type[2] - 1) and {"color", 0x00,0xff,0x00} or {"color", 0xff,0x00,0x00}
-		str:add("- ", c, ("Talents of the same category: %d"):format(t.type[2] - 1), true)
+		str:add(c, ("- Talents of the same category: %d"):format(t.type[2] - 1), true)
 	end
 
 	-- Obviously this requires the ActorStats interface
@@ -375,27 +375,27 @@ function _M:getTalentReqDesc(t_id, levmod)
 		for s, v in pairs(req.stat) do
 			v = util.getval(v, tlev)
 			local c = (self:getStat(s) >= v) and {"color", 0x00,0xff,0x00} or {"color", 0xff,0x00,0x00}
-			str:add("- ", c, ("%s %d"):format(self.stats_def[s].name, v), true)
+			str:add(c, ("- %s %d"):format(self.stats_def[s].name, v), true)
 		end
 	end
 	if req.level then
 		local v = util.getval(req.level, tlev)
 		local c = (self.level >= v) and {"color", 0x00,0xff,0x00} or {"color", 0xff,0x00,0x00}
-		str:add("- ", c, ("Level %d\n"):format(v), true)
+		str:add(c, ("- Level %d\n"):format(v), true)
 	end
 	if req.talent then
 		for _, tid in ipairs(req.talent) do
 			if type(tid) == "table" then
 				if type(tid[2]) == "boolean" and tid[2] == false then
 					local c = (not self:knowTalent(tid[1])) and {"color", 0x00,0xff,0x00} or {"color", 0xff,0x00,0x00}
-					str:add("- ", c, ("Talent %s (not known)\n"):format(self:getTalentFromId(tid[1]).name), true)
+					str:add(c, ("- Talent %s (not known)\n"):format(self:getTalentFromId(tid[1]).name), true)
 				else
 					local c = (self:getTalentLevelRaw(tid[1]) >= tid[2]) and {"color", 0x00,0xff,0x00} or {"color", 0xff,0x00,0x00}
-					str:add("- ", c, ("Talent %s (%d)\n"):format(self:getTalentFromId(tid[1]).name, tid[2]), true)
+					str:add(c, ("- Talent %s (%d)\n"):format(self:getTalentFromId(tid[1]).name, tid[2]), true)
 				end
 			else
 				local c = self:knowTalent(tid) and {"color", 0x00,0xff,0x00} or {"color", 0xff,0x00,0x00}
-				str:add("- ", c, ("Talent %s\n"):format(self:getTalentFromId(tid).name), true)
+				str:add(c, ("- Talent %s\n"):format(self:getTalentFromId(tid).name), true)
 			end
 		end
 	end

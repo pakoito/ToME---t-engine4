@@ -85,6 +85,16 @@ function _M:activateBackupGuardian(guardian, on_level, zonelevel, rumor, action)
 	}
 end
 
+--- Get random emote for townpeople based on backup guardians
+function _M:getBackupGuardianEmotes(t)
+	if not self.is_advanced then return t end
+	for zone, data in pairs(self.allow_backup_guardians) do
+		print("possible chatter", zone, data.rumor)
+		t[#t+1] = data.rumor
+	end
+	return t
+end
+
 --- Activate a backup guardian & settings, if available
 function _M:zoneCheckBackupGuardian()
 	if not self.is_advanced then print("Not gone east, no backup guardian") return end
