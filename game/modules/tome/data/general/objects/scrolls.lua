@@ -88,7 +88,7 @@ newEntity{
 	use_no_silence = true,
 	is_magic_device = true,
 	fire_destroy = {{10,1}, {20,2}, {40,5}, {60,10}, {120,20}},
-	desc = [[Corrupted taints may be inscribes onto your body, granting you an on-demand ability.]],
+	desc = [[Corrupted taints may be inscribed onto your body, granting you an on-demand ability.]],
 	egos = "/data/general/objects/egos/infusions.lua", egos_chance = resolvers.mbonus(30, 5),
 
 	power_source = {arcane=true},
