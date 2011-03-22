@@ -1030,7 +1030,7 @@ local random_zone_themes = {
 	} end },
 }
 
-function _M:debugRandomZone()
+function _M:createRandomZone()
 	------------------------------------------------------------
 	-- Select theme
 	------------------------------------------------------------
@@ -1073,6 +1073,14 @@ function _M:debugRandomZone()
 	local layout = rng.table(random_zone_layouts)
 	print("[RANDOM ZONE] Using layout", layout.name)
 
+	------------------------------------------------------------
+	-- Select Music
+	------------------------------------------------------------
+	local musics = {}
+	for i, file in ipairs(fs.list("/data/music/")) do
+		if file:find("%.ogg$") then musics[#musics+1] = file end
+	end
+
 	local zone = engine.Zone.new("random_zone", {
 		name = "Random Zone!!",
 		level_range = {data.min_lev, data.max_lev},
@@ -1082,7 +1090,7 @@ function _M:debugRandomZone()
 		width = data.w, height = data.h,
 		color_shown = data.tint_s,
 		color_obscure = data.tint_o,
-		ambient_music = "a_lomos_del_dragon_blanco.ogg",
+		ambient_music = music,
 		generator =  {
 			map = layout.gen(data),
 			actor = { class = "engine.generator.actor.Random",nb_npc = {5, 7}, },
@@ -1093,5 +1101,9 @@ function _M:debugRandomZone()
 		object_list = mod.class.Object:loadList("/data/general/objects/objects.lua"),
 		trap_list = mod.class.Trap:loadList("/data/general/traps/alarm.lua"),
 	})
-	game:changeLevel(1, zone)
+	return zone
+end
+
+function _M:debugRandomZone()
+	game:changeLevel(1, self:createRandomZone())
 end
