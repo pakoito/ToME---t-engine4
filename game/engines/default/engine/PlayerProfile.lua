@@ -134,6 +134,9 @@ end
 --- Loads profile generic profile from disk
 -- Generic profile is always read from the "online" profile
 function _M:loadGenericProfile()
+	-- Delay when we are currently saving
+	if savefile_pipe and savefile_pipe.saving then savefile_pipe:pushGeneric("loadGenericProfile", function() self:loadGenericProfile() end) return end
+
 	local pop = self:mountProfile(true)
 	local d = "/current-profile/generic/"
 	for i, file in ipairs(fs.list(d)) do
@@ -207,6 +210,9 @@ end
 function _M:loadModuleProfile(short_name)
 	if short_name == "boot" then return end
 
+	-- Delay when we are currently saving
+	if savefile_pipe and savefile_pipe.saving then savefile_pipe:pushGeneric("loadModuleProfile", function() self:loadModuleProfile(short_name) end) return end
+
 	local function load(online)
 		local pop = self:mountProfile(online, short_name)
 		local d = "/current-profile/modules/"..short_name.."/"
@@ -241,6 +247,9 @@ end
 
 --- Saves a profile data
 function _M:saveGenericProfile(name, data, nosync)
+	-- Delay when we are currently saving
+	if savefile_pipe and savefile_pipe.saving then savefile_pipe:pushGeneric("saveGenericProfile", function() self:saveGenericProfile(name, data, nosync) end) return end
+
 	data = serialize(data)
 
 	-- Check for readability
@@ -262,6 +271,9 @@ end
 --- Saves a module profile data
 function _M:saveModuleProfile(name, data, module, nosync)
 	if module == "boot" then return end
+
+	-- Delay when we are currently saving
+	if savefile_pipe and savefile_pipe.saving then savefile_pipe:pushGeneric("saveModuleProfile", function() self:saveModuleProfile(name, data, module, nosync) end) return end
 
 	data = serialize(data)
 	module = module or self.mod_name

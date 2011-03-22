@@ -37,6 +37,7 @@ function _M:init(class, max_before_wait)
 
 	self.saveclass = class or "engine.Savefile"
 	self.pipe = {}
+	self.on_done = {}
 	self.max_before_wait = max_before_wait or 4
 	self.co = nil
 	self.current_nb = 0
@@ -73,6 +74,11 @@ function _M:push(savename, type, object, class)
 	end
 end
 
+--- Push a generic action to be done once saves complete
+function _M:pushGeneric(name, fct)
+	self.on_done[#self.on_done+1] = {name=name, fct=fct}
+end
+
 --- Actually do the saves
 -- This should run in a coroutine.<br/>
 -- Do not call this, this is automatic!
@@ -99,6 +105,14 @@ function _M:doThread()
 --	collectgarbage("restart")
 	self.saving = false
 	if game:getPlayer() then game:getPlayer().changed = true end
+
+	-- Run the generic stuff
+	while #self.on_done > 0 do
+		local p = self.on_done[1]
+		print("[SAVEFILE PIPE] on end", p.name)
+		p.fct()
+		table.remove(self.on_done, 1)
+	end
 end
 
 --- Force to wait for the saves
