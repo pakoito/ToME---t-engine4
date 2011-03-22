@@ -769,10 +769,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Shatters the mind of your victim, giving your full control over its actions for %s turns.
-		When the effect ends you pull out your mind and the victim's body colapses dead.
-		This effect does not work on elite or undeads.
-		The duration will increase with the Willpower stat]]):format(4 + self:getWil(10))
+		return ([[Reach through the collective psionic gestalt of the yeeks, the Way, to call for immediate help.
+		Summons up to 3 yeek mindslayers to your side.]])
 	end,
 }
 

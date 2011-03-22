@@ -35,7 +35,7 @@ newTalentType{ allow_random=true, type="technique/warcries", name = "warcries", 
 newTalentType{ allow_random=true, type="technique/bloodthirst", name = "bloodthirst", description = "Delight in the act of battle and the spilling of blood." }
 newTalentType{ allow_random=true, type="technique/field-control", name = "field control", generic = true, description = "Control the battlefield using various techniques." }
 newTalentType{ allow_random=true, type="technique/combat-techniques-active", name = "combat techniques", description = "Generic combat oriented techniques." }
-newTalentType{ allow_random=true, type="technique/combat-techniques-passive", name = "combat veterant", description = "Generic combat oriented techniques." }
+newTalentType{ allow_random=true, type="technique/combat-techniques-passive", name = "combat veteran", description = "Generic combat oriented techniques." }
 newTalentType{ allow_random=true, type="technique/combat-training", name = "combat training", generic = true, description = "Teaches to use various armors and improves health." }
 newTalentType{ allow_random=true, type="technique/magical-combat", name = "magical combat", description = "The blending together of magic and melee prowess." }
 
