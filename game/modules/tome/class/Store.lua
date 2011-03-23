@@ -32,6 +32,7 @@ end
 function _M:init(t, no_default)
 	t.store.buy_percent = t.store.buy_percent or function(self, o) if o.type == "gem" then return 40 else return 5 end end
 	t.store.sell_percent = t.store.sell_percent or function(self, o) return 120 + 3 * (o.__store_level or 0) end -- Stores prices goes up with item level
+	t.store.nb_fill = t.store.nb_fill or 10
 	t.store.purse = t.store.purse or 20
 	Store.init(self, t, no_default)
 
@@ -63,7 +64,7 @@ end
 -- @param level the level to generate for (instance of type engine.Level)
 -- @param zone the zone to generate for
 function _M:loadup(level, zone)
-	if Store.loadup(self, level, zone) then
+	if Store.loadup(self, level, zone, self.store.nb_fill) then
 		self.last_filled = game.state.stores_restock
 	end
 end

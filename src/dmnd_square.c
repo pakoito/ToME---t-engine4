@@ -486,7 +486,6 @@ void freeFractArray (float *fa)
 }
 
 
-
 static int dmnd_2d(lua_State *L)
 {
 	int size = luaL_checknumber(L, 1);
@@ -503,7 +502,7 @@ static int dmnd_2d(lua_State *L)
 		lua_createtable(L, size, 0);
 		for (i = 0; i < size; i++)
 		{
-			lua_pushnumber(L, fa[j * size + j]);
+			lua_pushnumber(L, fa[j * size + i]);
 			lua_rawseti(L, -2, i + 1);
 		}
 		lua_rawseti(L, -2, j + 1);
@@ -513,8 +512,30 @@ static int dmnd_2d(lua_State *L)
 	return 1;
 }
 
+static int dmnd_1d(lua_State *L)
+{
+	int size = luaL_checknumber(L, 1);
+	float heightScale = luaL_checknumber(L, 2);
+	float h = luaL_checknumber(L, 3);
+
+	float *fa = alloc1DFractArray(size);
+	fill1DFractArray(fa, size, heightScale, h);
+
+	int i;
+	lua_createtable(L, size, 0);
+	for (i = 0; i < size; i++)
+	{
+		lua_pushnumber(L, fa[i]);
+		lua_rawseti(L, -2, i + 1);
+	}
+
+	freeFractArray(fa);
+	return 1;
+}
+
 static const struct luaL_reg dmndlib[] =
 {
+	{"get1D", dmnd_1d},
 	{"get2D", dmnd_2d},
 	{NULL, NULL},
 };

@@ -19,7 +19,7 @@
 
 newEntity{
 	define_as = "ARMOR",
-	name = "armour smith",
+	name = "heavy armour smith",
 	display = '2', color=colors.UMBER,
 	store = {
 		purse = 25,
@@ -27,7 +27,38 @@ newEntity{
 		min_fill = 10,
 		max_fill = 20,
 		filters = function()
-			return {type="armor", id=true, tome_drops="store"}
+			return {type="armor", subtype="heavy", id=true, tome_drops="store"}
+			return {type="armor", subtype="massive", id=true, tome_drops="store"}
+		end,
+	},
+}
+
+newEntity{
+	define_as = "ARMOR",
+	name = "tanner",
+	display = '2', color=colors.LIGHT_UMBER,
+	store = {
+		purse = 25,
+		empty_before_restock = false,
+		min_fill = 10,
+		max_fill = 20,
+		filters = function()
+			return {type="armor", subtype="light", id=true, tome_drops="store"}
+		end,
+	},
+}
+
+newEntity{
+	define_as = "ARMOR",
+	name = "tailor",
+	display = '2', color=colors.WHITE,
+	store = {
+		purse = 25,
+		empty_before_restock = false,
+		min_fill = 10,
+		max_fill = 20,
+		filters = function()
+			return {type="armor", subtype="cloth", id=true, tome_drops="store"}
 		end,
 	},
 }
@@ -42,7 +73,7 @@ newEntity{
 		min_fill = 10,
 		max_fill = 20,
 		filters = function()
-			return {type="weapon", id=true, tome_drops="store"}
+			return {type="weapon", subtype="sword", id=true, tome_drops="store"}
 		end,
 	},
 }

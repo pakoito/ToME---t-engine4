@@ -51,7 +51,7 @@ end
 --- Fill the store with goods
 -- @param level the level to generate for (instance of type engine.Level)
 -- @param zone the zone to generate for
-function _M:loadup(level, zone)
+function _M:loadup(level, zone, force_nb)
 	local s = self.store
 	if not s then error("Store without a store field") end
 	if not self:canRestock() then return end
@@ -68,7 +68,7 @@ function _M:loadup(level, zone)
 	end
 
 	local i = 1
-	local rngfill = rng.range(s.min_fill, s.max_fill) - #inven
+	local rngfill = force_nb or (rng.range(s.min_fill, s.max_fill) - #inven)
 	while i <= rngfill do
 		local filter = util.getval(s.filters)
 		local e
