@@ -43,6 +43,9 @@
 #include "profile.h"
 #include "main.h"
 #include "runner/core.h"
+#ifdef SELFEXE_WINDOWS
+#include <windows.h>
+#endif
 
 #define WIDTH 800
 #define HEIGHT 600
@@ -798,6 +801,10 @@ void _te4_export te4main(int argc, char *argv[], core_boot_type *given_core_def)
 {
 	core_def = given_core_def;
 	core_def->corenum = 0;
+	
+#ifdef SELFEXE_WINDOWS
+	freopen ("te4_log.txt", "w", stdout);
+#endif
 
 	// Get cpu cores
 	nb_cpus = get_number_cpus();
@@ -966,4 +973,8 @@ void _te4_export te4main(int argc, char *argv[], core_boot_type *given_core_def)
 	}
 
 	SDL_Quit();
+
+#ifdef SELFEXE_WINDOWS
+	fclose(stdout);
+#endif	
 }

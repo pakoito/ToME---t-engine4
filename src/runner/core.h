@@ -23,7 +23,7 @@
 
 struct core_def_s {
 	void (*define)(struct core_def_s *core_def, const char *coretype, int id, const char *reboot_engine, const char *reboot_engine_version, const char *reboot_module, const char *reboot_name, int reboot_new, const char *reboot_einfo);
-
+	
 	int corenum;
 	char *coretype;
 
@@ -33,6 +33,7 @@ struct core_def_s {
 	char *reboot_name;
 	char *reboot_einfo;
 	int reboot_new;
+
 };
 
 typedef struct core_def_s core_boot_type;
