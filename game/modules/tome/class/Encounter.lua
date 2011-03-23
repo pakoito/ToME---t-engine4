@@ -23,7 +23,6 @@ require "engine.Entity"
 module(..., package.seeall, class.inherit(engine.Entity))
 
 function _M:init(t, no_default)
-	assert(t.level_range, "no encounter level_range")
 	assert(t.on_encounter, "no encounter on_encounter")
 
 	engine.Entity.init(self, t, no_default)
@@ -65,7 +64,7 @@ function _M:checkFilter(filter)
 		local we = game.level.map.attrs(filter.mapx, filter.mapy, "world-encounter")
 		if not we or not we[self.on_world_encounter] then return false end
 	end
-	if self.min_level and game.player.level < self.min_level then print("==============") return false end
+	if self.min_level and game.player.level < self.min_level then return false end
 	return true
 end
 

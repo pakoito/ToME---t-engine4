@@ -20,9 +20,7 @@
 newEntity{
 	name = "Novice mage",
 	type = "harmless", subtype = "special", unique = true,
-	level_range = {1, 10},
-	rarity = 1,
-	on_world_encounter = "angolwen",
+	immediate = {"world-encounter", "angolwen"},
 	-- Spawn the novice mage near the player
 	on_encounter = function(self, who)
 		local x, y = self:findSpot(who)
@@ -37,7 +35,6 @@ newEntity{
 		}
 		g:resolve() g:resolve(nil, true)
 		game.zone:addEntity(game.level, g, "actor", x, y)
-		game.logPlayer(who, "#LIGHT_BLUE#You notice a novice mage nearby.")
 		return true
 	end,
 }
@@ -140,8 +137,7 @@ newEntity{
 newEntity{
 	name = "Ancient Elven Ruins",
 	type = "harmless", subtype = "special", unique = true,
-	level_range = {30, 40},
-	rarity = 8,
+	immediate = {"world-encounter", "maj-eyal"},
 	on_encounter = function(self, who)
 		local x, y = self:findSpot(who)
 		if not x then return end
@@ -155,7 +151,6 @@ newEntity{
 		}
 		g:resolve() g:resolve(nil, true)
 		game.zone:addEntity(game.level, g, "terrain", x, y)
-		game.logPlayer(who, "#LIGHT_BLUE#You notice an entrance to what seems to be ancient elven ruins...")
 		return true
 	end,
 }
@@ -177,9 +172,7 @@ newEntity{
 newEntity{
 	name = "Ruined Dungeon",
 	type = "harmless", subtype = "special", unique = true,
-	level_range = {10, 30},
-	rarity = 1,
-	on_world_encounter = "infinite-dungeon",
+	immediate = {"world-encounter", "maj-eyal"},
 	on_encounter = function(self, who)
 		local x, y = self:findSpot(who)
 		if not x then return end
@@ -193,7 +186,6 @@ newEntity{
 		}
 		g:resolve() g:resolve(nil, true)
 		game.zone:addEntity(game.level, g, "terrain", x, y)
-		game.logPlayer(who, "#LIGHT_BLUE#You notice an entrance to a ruined dungeon. The air around it feels stale.")
 		return true
 	end,
 }
@@ -201,9 +193,7 @@ newEntity{
 newEntity{
 	name = "Mark of the Spellblaze",
 	type = "harmless", subtype = "special", unique = true,
-	level_range = {22, 33},
-	rarity = 4,
-	on_world_encounter = "mark-spellblaze",
+	immediate = {"world-encounter", "mark-spellblaze"},
 	on_encounter = function(self, who)
 		local x, y = self:findSpot(who)
 		if not x then return end
@@ -217,7 +207,27 @@ newEntity{
 		}
 		g:resolve() g:resolve(nil, true)
 		game.zone:addEntity(game.level, g, "terrain", x, y)
-		game.logPlayer(who, "#LIGHT_BLUE#You notice an area where the effects of the spellblaze seem to persist still.")
+		return true
+	end,
+}
+
+newEntity{
+	name = "Golem Graveyard",
+	type = "harmless", subtype = "special", unique = true,
+	immediate = {"world-encounter", "maj-eyal"},
+	on_encounter = function(self, who)
+		local x, y = self:findSpot(who)
+		if not x then return end
+
+		local g = mod.class.Grid.new{
+			show_tooltip=true,
+			name="Golem Graveyard",
+			display='>', color=colors.GREEN,
+			notice = true,
+			change_level=1, change_zone="golem-graveyard"
+		}
+		g:resolve() g:resolve(nil, true)
+		game.zone:addEntity(game.level, g, "terrain", x, y)
 		return true
 	end,
 }

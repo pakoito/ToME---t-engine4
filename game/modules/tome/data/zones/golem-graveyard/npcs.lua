@@ -29,6 +29,7 @@ newEntity{ define_as = "ATAMATHON", base = "BASE_NPC_CONSTRUCT",
 	desc = [[This giant golem was constructed by the halflings during the Pyre Wars to fight the orcs, but was felled by Garkul the Devourer. Someone foolish has tried to reconstruct it, but has lost control of it, and now it rampages in search of its original creators, who are long dead. Its body is made of marble, its joints of solid voratun, and its eyes of purest ruby. At over 40 feet high it towers above you, and its crimson orbs seem to glow with rage.]],
 	level_range = {70, nil}, exp_worth = 2,
 	max_life = 350, life_rating = 30, fixed_rating = true,
+	life_regen = 0,
 	stats = { str=35, dex=10, cun=8, mag=30, con=30 },
 	rank = 3.5,
 	size_category = 5,
@@ -54,12 +55,7 @@ newEntity{ define_as = "ATAMATHON", base = "BASE_NPC_CONSTRUCT",
 
 	no_auto_resists = true,
 	resists = {
-		all = 40,
-		[DamageType.PHYSICAL] = 30,
-		[DamageType.FIRE] = 40,
-		[DamageType.LIGHTNING] = 40,
-		[DamageType.ACID] = 40,
-		[DamageType.COLD] = 40,
+		all = 80,
 	},
 
 	resolvers.talents{
@@ -77,4 +73,8 @@ newEntity{ define_as = "ATAMATHON", base = "BASE_NPC_CONSTRUCT",
 
 	autolevel = "warriormage",
 	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
+
+	on_die = function()
+		world:gainAchievement("ATAMATHON", game.player)
+	end
 }

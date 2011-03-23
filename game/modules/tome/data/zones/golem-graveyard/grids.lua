@@ -53,7 +53,7 @@ Someone foolish has tried to reconstruct it, but it seems like it misses an eye 
 					game.log("#LIGHT_RED#Atamathon walks the world again, but without control.")
 					game.zone:addEntity(game.level, grass, "terrain", x, y)
 					game.zone:addEntity(game.level, atamathon, "actor", x, y)
-					atamathon:doEmote("Activating defenses. Targetting hostile. #{bold}#DESTRUCTION!#{normal}#", 60)
+					atamathon:doEmote("Activating defenses. Targetting hostile. **DESTRUCTION**!", 60)
 					atamathon:setTarget(e)
 				end, "Insert", "Cancel")
 			end

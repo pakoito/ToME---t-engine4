@@ -37,40 +37,42 @@ newEntity{
 	air_level = -20,
 	dig = "ROCKY_GROUND",
 	nice_tiler = { method="mountain3d",
-		base="MOUNTAIN_5",
-		wall8="MOUNTAIN_8", wall87="MOUNTAIN_8", wall88="MOUNTAIN_8", wall89="MOUNTAIN_8",
-		wall2="MOUNTAIN_2", wall21="MOUNTAIN_2", wall22="MOUNTAIN_2", wall23="MOUNTAIN_2",
-		wall4="MOUNTAIN_4", wall47="MOUNTAIN_4", wall44="MOUNTAIN_4", wall41="MOUNTAIN_4",
-		wall6="MOUNTAIN_6", wall69="MOUNTAIN_6", wall66="MOUNTAIN_6", wall63="MOUNTAIN_6",
-		wall1="MOUNTAIN_1", wall3="MOUNTAIN_3", wall7="MOUNTAIN_7", wall9="MOUNTAIN_9",
-		wall11="MOUNTAIN_1", wall33="MOUNTAIN_3", wall77="MOUNTAIN_7", wall98="MOUNTAIN_9",
-		inner_wall1="MOUNTAIN_1I", inner_wall3="MOUNTAIN_3I", inner_wall7="MOUNTAIN_7I", inner_wall9="MOUNTAIN_9I",
-		pillar = "MOUNTAIN_SINGLE",
-		pillar4 = "MOUNTAIN_PILLAR4", pillar6 = "MOUNTAIN_PILLAR6", pillar2 = "MOUNTAIN_PILLAR2", pillar8 = "MOUNTAIN_PILLAR8",
-		pillar82 = "MOUNTAIN_PILLAR82", pillar46 = "MOUNTAIN_PILLAR46",
+		base={"MOUNTAIN_5", 100, 1, 6},
+		wall8={"MOUNTAIN_8", 100, 1, 6}, wall87={"MOUNTAIN_8", 100, 1, 6}, wall88={"MOUNTAIN_8", 100, 1, 6}, wall89={"MOUNTAIN_8", 100, 1, 6},
+		wall2={"MOUNTAIN_2", 100, 1, 6}, wall21={"MOUNTAIN_2", 100, 1, 6}, wall22={"MOUNTAIN_2", 100, 1, 6}, wall23={"MOUNTAIN_2", 100, 1, 6},
+		wall4={"MOUNTAIN_4", 100, 1, 6}, wall47={"MOUNTAIN_4", 100, 1, 6}, wall44={"MOUNTAIN_4", 100, 1, 6}, wall41={"MOUNTAIN_4", 100, 1, 6},
+		wall6={"MOUNTAIN_6", 100, 1, 6}, wall69={"MOUNTAIN_6", 100, 1, 6}, wall66={"MOUNTAIN_6", 100, 1, 6}, wall63={"MOUNTAIN_6", 100, 1, 6},
+		wall1={"MOUNTAIN_1", 100, 1, 6}, wall3={"MOUNTAIN_3", 100, 1, 6}, wall7={"MOUNTAIN_7", 100, 1, 6}, wall9={"MOUNTAIN_9", 100, 1, 6},
+		wall11={"MOUNTAIN_1", 100, 1, 6}, wall33={"MOUNTAIN_3", 100, 1, 6}, wall77={"MOUNTAIN_7", 100, 1, 6}, wall98={"MOUNTAIN_9", 100, 1, 6},
+		inner_wall1={"MOUNTAIN_1I", 100, 1, 6}, inner_wall3={"MOUNTAIN_3I", 100, 1, 6}, inner_wall7={"MOUNTAIN_7I", 100, 1, 6}, inner_wall9={"MOUNTAIN_9I", 100, 1, 6},
+		pillar={"MOUNTAIN_SINGLE", 100, 1, 6},
+		pillar4={"MOUNTAIN_PILLAR4", 100, 1, 6}, pillar6={"MOUNTAIN_PILLAR6", 100, 1, 6}, pillar2={"MOUNTAIN_PILLAR2", 100, 1, 6}, pillar8={"MOUNTAIN_PILLAR8", 100, 1, 6},
+		pillar82={"MOUNTAIN_PILLAR82", 100, 1, 6}, pillar46={"MOUNTAIN_PILLAR46", 100, 1, 6},
 	},
 }
 
-newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_5", image="terrain/mountain5.png"}
-newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_8", image="terrain/mountain5.png", add_displays = {class.new{z=18, display_y=-1, image="terrain/mountain8.png"}}}
-newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_2", image="terrain/mountain5.png", add_displays = {class.new{display_y=1, image="terrain/mountain2.png"}}}
-newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_4", image="terrain/mountain5.png", add_displays = {class.new{display_x=-1, image="terrain/mountain4.png"}}}
-newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_6", image="terrain/mountain5.png", add_displays = {class.new{display_x=1, image="terrain/mountain6.png"}}}
-newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_7", image="terrain/mountain5.png", add_displays = {class.new{z=18, display_y=-1, display_x=-1, image="terrain/mountain7.png", add_mos = {{display_y=-1, image="terrain/mountain8.png"}, {display_x=-1, image="terrain/mountain4.png"}}}}}
-newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_9", image="terrain/mountain5.png", add_displays = {class.new{z=18, display_y=-1, display_x=1, image="terrain/mountain9.png", add_mos = {{display_y=-1, image="terrain/mountain8.png"}, {display_x=1, image="terrain/mountain6.png"}}}}}
-newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_1", image="terrain/mountain5.png", add_displays = {class.new{display_y=1, display_x=-1, image="terrain/mountain1.png", add_mos = {{display_y=1, image="terrain/mountain2.png"}, {display_x=-1, image="terrain/mountain4.png"}}}}}
-newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_3", image="terrain/mountain5.png", add_displays = {class.new{display_y=1, display_x=1, image="terrain/mountain3.png", add_mos = {{display_y=1, image="terrain/mountain2.png"}, {display_x=1, image="terrain/mountain6.png"}}}}}
-newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_1I", image="terrain/mountain5.png", add_displays = {class.new{z=18, display_y=-1, display_x=1, image="terrain/mountain1i.png"}}}
-newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_3I", image="terrain/mountain5.png", add_displays = {class.new{z=18, display_y=-1, display_x=-1, image="terrain/mountain3i.png"}}}
-newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_7I", image="terrain/mountain5.png", add_displays = {class.new{display_y=1, display_x=1, image="terrain/mountain7i.png"}}}
-newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_9I", image="terrain/mountain5.png", add_displays = {class.new{display_y=1, display_x=-1, image="terrain/mountain9i.png"}}}
-newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_SINGLE", image="terrain/mountain5.png", add_displays = {class.new{z=18, display_y=-1, display_x=-1, image="terrain/mountain7.png", add_mos = {{display_y=-1, image="terrain/mountain8.png"}, {display_x=1, display_y=-1, image="terrain/mountain9.png"}}}, class.new{display_y=1, display_x=-1, image="terrain/mountain1.png", add_mos = {{display_y=1, image="terrain/mountain2.png"}, {display_x=1, display_y=1, image="terrain/mountain3.png"}, {display_x=-1, image="terrain/mountain4.png"}, {display_x=1, image="terrain/mountain6.png"}}}}}
-newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_PILLAR4", image="terrain/mountain5.png", add_displays = {class.new{z=18, display_y=-1, display_x=-1, image="terrain/mountain7.png", add_mos = {{display_y=-1, image="terrain/mountain8.png"}}}, class.new{display_y=1, display_x=-1, image="terrain/mountain1.png", add_mos = {{display_y=1, image="terrain/mountain2.png"}, {display_x=-1, image="terrain/mountain4.png"}}}}}
-newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_PILLAR6", image="terrain/mountain5.png", add_displays = {class.new{z=18, display_y=-1, display_x=1, image="terrain/mountain9.png", add_mos = {{display_y=-1, image="terrain/mountain8.png"}}}, class.new{display_y=1, display_x=1, image="terrain/mountain3.png", add_mos = {{display_y=1, image="terrain/mountain2.png"}, {display_x=1, image="terrain/mountain6.png"}}}}}
-newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_PILLAR46", image="terrain/mountain5.png", add_displays = {class.new{z=18, display_y=-1, image="terrain/mountain8.png"}, class.new{display_y=1, image="terrain/mountain2.png"}}}
-newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_PILLAR8", image="terrain/mountain5.png", add_displays = {class.new{z=18, display_y=-1, display_x=-1, image="terrain/mountain7.png", add_mos = {{display_y=-1, image="terrain/mountain8.png"}, {display_x=1, display_y=-1, image="terrain/mountain9.png"}}}, class.new{display_x=-1, image="terrain/mountain4.png", add_mos = {{display_x=1, image="terrain/mountain6.png"}}}}}
-newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_PILLAR2", image="terrain/mountain5.png", add_displays = {class.new{z=18, display_y=1, display_x=-1, image="terrain/mountain1.png", add_mos = {{display_y=1, image="terrain/mountain2.png"}, {display_x=1, display_y=1, image="terrain/mountain3.png"}}}, class.new{display_x=-1, image="terrain/mountain4.png", add_mos = {{display_x=1, image="terrain/mountain6.png"}}}}}
-newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_PILLAR82", image="terrain/mountain5.png", add_displays = {class.new{display_x=-1, image="terrain/mountain4.png", add_mos = {{display_x=1, image="terrain/mountain6.png"}}}}}
+for i = 1, 6 do
+newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_5"..i, image="terrain/mountain5_"..i..".png"}
+newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_8"..i, image="terrain/mountain5_"..i..".png", add_displays = {class.new{z=18, display_y=-1, image="terrain/mountain8.png"}}}
+newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_2"..i, image="terrain/mountain5_"..i..".png", add_displays = {class.new{display_y=1, image="terrain/mountain2.png"}}}
+newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_4"..i, image="terrain/mountain5_"..i..".png", add_displays = {class.new{display_x=-1, image="terrain/mountain4.png"}}}
+newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_6"..i, image="terrain/mountain5_"..i..".png", add_displays = {class.new{display_x=1, image="terrain/mountain6.png"}}}
+newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_7"..i, image="terrain/mountain5_"..i..".png", add_displays = {class.new{z=18, display_y=-1, display_x=-1, image="terrain/mountain7.png", add_mos = {{display_y=-1, image="terrain/mountain8.png"}, {display_x=-1, image="terrain/mountain4.png"}}}}}
+newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_9"..i, image="terrain/mountain5_"..i..".png", add_displays = {class.new{z=18, display_y=-1, display_x=1, image="terrain/mountain9.png", add_mos = {{display_y=-1, image="terrain/mountain8.png"}, {display_x=1, image="terrain/mountain6.png"}}}}}
+newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_1"..i, image="terrain/mountain5_"..i..".png", add_displays = {class.new{display_y=1, display_x=-1, image="terrain/mountain1.png", add_mos = {{display_y=1, image="terrain/mountain2.png"}, {display_x=-1, image="terrain/mountain4.png"}}}}}
+newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_3"..i, image="terrain/mountain5_"..i..".png", add_displays = {class.new{display_y=1, display_x=1, image="terrain/mountain3.png", add_mos = {{display_y=1, image="terrain/mountain2.png"}, {display_x=1, image="terrain/mountain6.png"}}}}}
+newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_1I"..i, image="terrain/mountain5_"..i..".png", add_displays = {class.new{z=18, display_y=-1, display_x=1, image="terrain/mountain1i.png"}}}
+newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_3I"..i, image="terrain/mountain5_"..i..".png", add_displays = {class.new{z=18, display_y=-1, display_x=-1, image="terrain/mountain3i.png"}}}
+newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_7I"..i, image="terrain/mountain5_"..i..".png", add_displays = {class.new{display_y=1, display_x=1, image="terrain/mountain7i.png"}}}
+newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_9I"..i, image="terrain/mountain5_"..i..".png", add_displays = {class.new{display_y=1, display_x=-1, image="terrain/mountain9i.png"}}}
+newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_SINGLE"..i, image="terrain/mountain5_"..i..".png", add_displays = {class.new{z=18, display_y=-1, display_x=-1, image="terrain/mountain7.png", add_mos = {{display_y=-1, image="terrain/mountain8.png"}, {display_x=1, display_y=-1, image="terrain/mountain9.png"}}}, class.new{display_y=1, display_x=-1, image="terrain/mountain1.png", add_mos = {{display_y=1, image="terrain/mountain2.png"}, {display_x=1, display_y=1, image="terrain/mountain3.png"}, {display_x=-1, image="terrain/mountain4.png"}, {display_x=1, image="terrain/mountain6.png"}}}}}
+newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_PILLAR4"..i, image="terrain/mountain5_"..i..".png", add_displays = {class.new{z=18, display_y=-1, display_x=-1, image="terrain/mountain7.png", add_mos = {{display_y=-1, image="terrain/mountain8.png"}}}, class.new{display_y=1, display_x=-1, image="terrain/mountain1.png", add_mos = {{display_y=1, image="terrain/mountain2.png"}, {display_x=-1, image="terrain/mountain4.png"}}}}}
+newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_PILLAR6"..i, image="terrain/mountain5_"..i..".png", add_displays = {class.new{z=18, display_y=-1, display_x=1, image="terrain/mountain9.png", add_mos = {{display_y=-1, image="terrain/mountain8.png"}}}, class.new{display_y=1, display_x=1, image="terrain/mountain3.png", add_mos = {{display_y=1, image="terrain/mountain2.png"}, {display_x=1, image="terrain/mountain6.png"}}}}}
+newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_PILLAR46"..i, image="terrain/mountain5_"..i..".png", add_displays = {class.new{z=18, display_y=-1, image="terrain/mountain8.png"}, class.new{display_y=1, image="terrain/mountain2.png"}}}
+newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_PILLAR8"..i, image="terrain/mountain5_"..i..".png", add_displays = {class.new{z=18, display_y=-1, display_x=-1, image="terrain/mountain7.png", add_mos = {{display_y=-1, image="terrain/mountain8.png"}, {display_x=1, display_y=-1, image="terrain/mountain9.png"}}}, class.new{display_x=-1, image="terrain/mountain4.png", add_mos = {{display_x=1, image="terrain/mountain6.png"}}}}}
+newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_PILLAR2"..i, image="terrain/mountain5_"..i..".png", add_displays = {class.new{z=18, display_y=1, display_x=-1, image="terrain/mountain1.png", add_mos = {{display_y=1, image="terrain/mountain2.png"}, {display_x=1, display_y=1, image="terrain/mountain3.png"}}}, class.new{display_x=-1, image="terrain/mountain4.png", add_mos = {{display_x=1, image="terrain/mountain6.png"}}}}}
+newEntity{base="MOUNTAIN_WALL", define_as = "MOUNTAIN_PILLAR82"..i, image="terrain/mountain5_"..i..".png", add_displays = {class.new{display_x=-1, image="terrain/mountain4.png", add_mos = {{display_x=1, image="terrain/mountain6.png"}}}}}
+end
 
 newEntity{
 	define_as = "ROCKY_SNOWY_TREE",

@@ -46,9 +46,7 @@ newEntity{
 newEntity{
 	name = "Shadow Crypt",
 	type = "hostile", subtype = "special", unique = true,
-	level_range = {34, 45},
-	rarity = 6,
-	on_world_encounter = "shadow-crypt",
+	immediate = {"world-encounter", "fareast"},
 	on_encounter = function(self, who)
 		local x, y = self:findSpot(who)
 		if not x then return end
@@ -70,9 +68,7 @@ newEntity{
 newEntity{
 	name = "Orc Breeding Pit",
 	type = "hostile", subtype = "special", unique = true,
-	level_range = {30, 45},
-	rarity = 6,
-	on_world_encounter = "orc-breeding-pit",
+	immediate = {"world-encounter", "fareast"},
 	on_encounter = function(self, who)
 		local x, y = self:findSpot(who)
 		if not x then return end

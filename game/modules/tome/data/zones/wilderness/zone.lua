@@ -54,5 +54,23 @@ return {
 		-- The shield protecting the sorcerer hideout
 		local spot = level:pickSpot{type="zone-pop", subtype="high-peak"}
 		local p = level.map:particleEmitter(spot.x, spot.y, 3, "istari_shield_map")
+
+		-- Place immediate "encounters"
+		local function place_list(list)
+			for i = 1, #list do
+				local e = list[i]
+				if e.immediate then
+					e = e:clone()
+					e:resolve() e:resolve(nil, true)
+					local where = game.level:pickSpotRemove{type=e.immediate[1], subtype=e.immediate[2]}
+					while where and (game.level.map:checkAllEntities(where.x, where.y, "block_move") or not game.level.map:checkAllEntities(where.x, where.y, "can_encounter")) do where = game.level:pickSpotRemove{type=e.immediate[1], subtype=e.immediate[2]} end
+					if e:check("on_encounter", where) then
+						e:added()
+					end
+				end
+			end
+		end
+		place_list(game.level:getEntitiesList("maj_eyal_encounters"))
+		place_list(game.level:getEntitiesList("fareast_encounters"))
 	end,
 }

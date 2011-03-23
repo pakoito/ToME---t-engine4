@@ -82,3 +82,9 @@ newAchievement{
 	desc = [[Killed Bill in the Trollmire with a level one character]],
 	mode = "player",
 }
+
+newAchievement{
+	name = "Atamathoned!", id = "ATAMATHON",
+	desc = [[Killed the giant golem Atamathon after foolishly reactivating it.]],
+	mode = "player",
+}
