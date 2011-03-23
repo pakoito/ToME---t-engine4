@@ -67,7 +67,7 @@ local function createDarkTendrils(summoner, x, y, target, damage, duration, pinD
 					local nextX = self.x + (i % 3) - 1
 					local nextY = self.y + math.floor((i % 9) / 3) - 1
 					if not (nextX == self.x and nextY == self.y) and tCreepingDarkness.canCreep(nextX, nextY, true) then
-						local distance = core.fov.distance(nextX, nextY, target.x, target.y)
+						local distance = core.fov.distance(nextX, nextY, self.target.x, self.target.y)
 						if distance < bestDistance then
 							bestDistance, bestX, bestY = distance, nextX, nextY
 						end
@@ -81,7 +81,7 @@ local function createDarkTendrils(summoner, x, y, target, damage, duration, pinD
 						tCreepingDarkness.createDark(self.summoner, self.x, self.y, damage, 3, 2, 33, 0)
 					end
 
-					if self.x == target.x and self.y == target.y then
+					if self.x == self.target.x and self.y == self.target.y then
 						hitTarget = true
 					end
 				else

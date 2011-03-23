@@ -688,6 +688,7 @@ function _M:tooltip(x, y, seen_by)
 
 	local resists = {}
 	for t, v in pairs(self.resists) do
+		if t ~= "all" then v = v + (self.resists.all or 0) end
 		resists[#resists+1] = string.format("%d%% %s", v, t == "all" and "all" or DamageType:get(t).name)
 	end
 
@@ -1738,7 +1739,7 @@ function _M:preUseTalent(ab, silent, fake)
 			if not silent then game.logPlayer(self, "You do not have enough hate to use %s.", ab.name) end
 			return false
 		end
-		if ab.psi and self:getPsi() < ab.psi * (100 + 2 * self.fatigue) / 100 then
+		if ab.psi and self:getPsi() < ab.psi * (100 + 2 * self:combatFatigue()) / 100 then
 			if not silent then game.logPlayer(self, "You do not have enough energy to cast %s.", ab.name) end
 			return false
 		end
@@ -2240,7 +2241,7 @@ function _M:canBe(what)
 	if what == "stone" and rng.percent(100 * (self:attr("stone_immune") or 0)) then return false end
 	if what == "instakill" and rng.percent(100 * (self:attr("instakill_immune") or 0)) then return false end
 	if what == "teleport" and rng.percent(100 * (self:attr("teleport_immune") or 0)) then return false end
-	if what == "worldport" and game.zone.no_worldport then return false end
+	if what == "worldport" and game.level.data and game.level.data.no_worldport then return false end
 	if what == "summon" and self:attr("suppress_summon") then return false end
 	return true
 end

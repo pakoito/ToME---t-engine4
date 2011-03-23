@@ -70,6 +70,8 @@ static int map_object_new(lua_State *L)
 		obj->textures_ref[i] = LUA_NOREF;
 	}
 
+	obj->next = NULL;
+
 	return 1;
 }
 
@@ -86,8 +88,24 @@ static int map_object_free(lua_State *L)
 	free(obj->textures_ref);
 	free(obj->textures_is3d);
 
+	if (obj->next)
+	{
+		luaL_unref(L, LUA_REGISTRYINDEX, obj->next_ref);
+		obj->next = NULL;
+	}
+
 	lua_pushnumber(L, 1);
 	return 1;
+}
+
+static int map_object_chain(lua_State *L)
+{
+	map_object *obj = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 1);
+	map_object *obj2 = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 2);
+	if (obj->next) return 0;
+	obj->next = obj2;
+	obj->next_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+	return 0;
 }
 
 static int map_object_on_seen(lua_State *L)
@@ -925,7 +943,7 @@ static int map_get_scroll(lua_State *L)
 }
 
 
-#define DO_QUAD(dx, dy, dw, dh, zoom, r, g, b, a) {\
+#define DO_QUAD(dx, dy, dw, dh, zoom, r, g, b, a, force) {\
 	vertices[(*vert_idx)] = (dx); vertices[(*vert_idx)+1] = (dy); \
 	vertices[(*vert_idx)+2] = map->tile_w * (dw) * (zoom) + (dx); vertices[(*vert_idx)+3] = (dy); \
 	vertices[(*vert_idx)+4] = map->tile_w * (dw) * (zoom) + (dx); vertices[(*vert_idx)+5] = map->tile_h * (dh) * (zoom) + (dy); \
@@ -943,7 +961,7 @@ static int map_get_scroll(lua_State *L)
 	\
 	(*vert_idx) += 8; \
 	(*col_idx) += 16; \
-	if ((*vert_idx) >= 8*QUADS_PER_BATCH) {\
+	if ((*vert_idx) >= 8*QUADS_PER_BATCH || force) {\
 		glDrawArrays(GL_QUADS, 0, (*vert_idx) / 2); \
 		(*vert_idx) = 0; \
 		(*col_idx) = 0; \
@@ -953,6 +971,7 @@ static int map_get_scroll(lua_State *L)
 inline void display_map_quad(GLuint *cur_tex, int *vert_idx, int *col_idx, map_type *map, int dx, int dy, float dz, map_object *m, int i, int j, float a, float seen, int nb_keyframes, bool always_show) ALWAYS_INLINE;
 void display_map_quad(GLuint *cur_tex, int *vert_idx, int *col_idx, map_type *map, int dx, int dy, float dz, map_object *m, int i, int j, float a, float seen, int nb_keyframes, bool always_show)
 {
+	map_object *dm;
 	float r, g, b;
 	GLfloat *vertices = map->vertices;
 	GLfloat *colors = map->colors;
@@ -1056,7 +1075,13 @@ void display_map_quad(GLuint *cur_tex, int *vert_idx, int *col_idx, map_type *ma
 					{
 						animdx = map->tile_w * (adx * step / (float)m->move_max - adx);
 						animdy = map->tile_h * (ady * step / (float)m->move_max - ady);
-						DO_QUAD(dx + m->dx * map->tile_w + animdx, dy + m->dy * map->tile_h + animdy, m->dw, m->dh, m->scale, r, g, b, a * 2 / (3 + z));
+						dm = m;
+						while (dm)
+						{
+							tglBindTexture(GL_TEXTURE_2D, dm->textures[0]);
+							DO_QUAD(dx + dm->dx * map->tile_w + animdx, dy + dm->dy * map->tile_h + animdy, dm->dw, dm->dh, dm->scale, r, g, b, a * 2 / (3 + z), m->next);
+							dm = dm->next;
+						}
 					}
 				}
 			}
@@ -1070,12 +1095,18 @@ void display_map_quad(GLuint *cur_tex, int *vert_idx, int *col_idx, map_type *ma
 	/********************************************************
 	 ** Display the entity
 	 ********************************************************/
-	DO_QUAD(dx + m->dx * map->tile_w + animdx, dy + m->dy * map->tile_h + animdy, m->dw, m->dh, m->scale, r, g, b, a);
+	dm = m;
+	while (dm)
+	{
+		tglBindTexture(GL_TEXTURE_2D, dm->textures[0]);
+		DO_QUAD(dx + dm->dx * map->tile_w + animdx, dy + dm->dy * map->tile_h + animdy, dm->dw, dm->dh, dm->scale, r, g, b, a, m->next);
+		dm = dm->next;
+	}
 
 	/********************************************************
 	 ** Cleanup
 	 ********************************************************/
-	if (m->shader || m->nb_textures)
+	if (m->shader || m->nb_textures || m->next)
 	{
 		/* Draw remaining ones */
 		if (vert_idx) glDrawArrays(GL_QUADS, 0, (*vert_idx) / 2);
@@ -1295,6 +1326,7 @@ static const struct luaL_reg map_object_reg[] =
 {
 	{"__gc", map_object_free},
 	{"texture", map_object_texture},
+	{"chain", map_object_chain},
 	{"tint", map_object_tint},
 	{"shader", map_object_shader},
 	{"print", map_object_print},

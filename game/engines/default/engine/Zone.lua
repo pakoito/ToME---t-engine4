@@ -679,6 +679,10 @@ function _M:newLevel(level_data, lev, old_lev, game)
 	-- Call a finisher
 	if level_data.post_process then
 		level_data.post_process(level)
+		if level.force_recreate then
+			level:removed()
+			return self:newLevel(level_data, lev, old_lev, game)
+		end
 	end
 
 	-- Delete the room_map, now useless

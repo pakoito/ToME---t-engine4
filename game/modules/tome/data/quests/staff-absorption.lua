@@ -56,7 +56,7 @@ start_ambush = function(self, who)
 		self.die = nil
 		self.life = 1
 		for _, e in pairs(game.level.entities) do
-			if e ~= self then
+			if e ~= self and self:reactionToward(e) < 0 then
 				game.level:removeEntity(e)
 				e.dead = true
 			end

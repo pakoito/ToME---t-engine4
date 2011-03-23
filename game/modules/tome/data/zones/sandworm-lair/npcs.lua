@@ -137,6 +137,7 @@ newEntity{ define_as = "CORRUPTED_SAND_WYRM",
 	move_project = {[DamageType.DIG]=1},
 
 	resolvers.drops{chance=100, nb=1, {defined="PUTRESCENT_POTION"}, },
+	resolvers.drops{chance=100, nb=1, {defined="ATAMATHON_ACTIVATE"}, },
 	resolvers.drops{chance=100, nb=5, {type="gem"} },
 
 	resolvers.talents{

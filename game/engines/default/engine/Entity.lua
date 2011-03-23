@@ -194,6 +194,19 @@ function _M:makeMapObject(tiles, idx)
 	-- Texture 0 is always the normal image/ascii tile
 	self._mo:texture(0, tiles:get(self.display, self.color_r, self.color_g, self.color_b, self.color_br, self.color_bg, self.color_bb, self.image, self._noalpha and 255, self.ascii_outline))
 
+	-- Additional MO chained to the same Z order
+	if tiles.use_images and self.add_mos then
+		local cmo = self._mo
+		for i = 1, #self.add_mos do
+			local amo = self.add_mos[i]
+			-- Create a simple additional chained MO
+			local mo = core.map.newObject(self.uid, 1, false, false, false, amo.display_x or 0, amo.display_y or 0, amo.display_w or 1, amo.display_h or 1, amo.display_scale or 1)
+			mo:texture(0, tiles:get("", 0, 0, 0, 0, 0, 0, amo.image, false, false))
+			cmo:chain(mo)
+			cmo = mo
+		end
+	end
+
 	-- Setup additional textures
 	if tiles.use_images and self.textures then
 		for i = 1, #self.textures do

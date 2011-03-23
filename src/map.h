@@ -24,7 +24,7 @@
 #include "tgl.h"
 #include "useshader.h"
 
-typedef struct {
+struct s_map_object {
 	int nb_textures;
 	int *textures_ref;
 	GLuint *textures;
@@ -46,7 +46,11 @@ typedef struct {
 	int move_step, move_max, move_blur;
 	enum {DL_NONE, DL_TRUE_LAST, DL_TRUE} display_last;
 	long uid;
-} map_object;
+
+	struct s_map_object *next;
+	int next_ref;
+};
+typedef struct s_map_object map_object;
 
 typedef struct {
 	map_object* ***grids;

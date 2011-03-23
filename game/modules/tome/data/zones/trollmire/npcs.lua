@@ -38,7 +38,7 @@ newEntity{ define_as = "TROLL_BILL",
 	desc = [[Big, brawny, powerful and with a taste for Halfling.
 He is wielding a small tree trunk and lumbering toward you.]],
 	level_range = {7, nil}, exp_worth = 2,
-	max_life = 150, life_rating = 16, fixed_rating = true,
+	max_life = 150, life_rating = 12, fixed_rating = true,
 	max_stamina = 85,
 	stats = { str=25, dex=10, cun=8, mag=10, con=20 },
 	rank = 4,

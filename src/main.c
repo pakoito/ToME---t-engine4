@@ -363,7 +363,7 @@ void on_tick()
 		if (t - T0 >= 10000) {
 			float seconds = (t - T0) / 1000.0;
 			float fps = Frames / seconds;
-			printf("%d ticks  in %g seconds = %g TPS\n", Frames, seconds, fps);
+//			printf("%d ticks  in %g seconds = %g TPS\n", Frames, seconds, fps);
 			T0 = t;
 			Frames = 0;
 		}
@@ -441,7 +441,7 @@ void on_redraw()
 			float seconds = (t - T0) / 1000.0;
 			float fps = Frames / seconds;
 			reference_fps = fps;
-			printf("%d frames in %g seconds = %g FPS (%d keyframes)\n", Frames, seconds, fps, count_keyframes);
+//			printf("%d frames in %g seconds = %g FPS (%d keyframes)\n", Frames, seconds, fps, count_keyframes);
 			T0 = t;
 			Frames = 0;
 			last_keyframe = 0;
@@ -704,6 +704,7 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 		luaopen_mime_core(L);
 		luaopen_struct(L);
 		luaopen_profiler(L);
+		luaopen_bit(L);
 		luaopen_lpeg(L);
 		luaopen_lxp(L);
 		luaopen_md5_core(L);
@@ -717,6 +718,7 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 		luaopen_serial(L);
 		luaopen_profile(L);
 		luaopen_zlib(L);
+		luaopen_bit(L);
 
 		// Override "print" if requested
 		if (no_debug)
