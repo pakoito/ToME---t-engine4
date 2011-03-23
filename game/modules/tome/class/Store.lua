@@ -52,8 +52,8 @@ end
 --- Restock based on player level
 function _M:canRestock()
 	local s = self.store
-	if self.last_filled and self.last_filled >= game.state.boss_killed - s.restock_every then
-		print("[STORE] not restocking yet [bosses killed]", game.state.boss_killed, s.restock_every, self.last_filled)
+	if self.last_filled and self.last_filled >= game.state.stores_restock then
+		print("[STORE] not restocking yet [stores_restock]", game.state.stores_restock, s.restock_every, self.last_filled)
 		return false
 	end
 	return true
@@ -64,7 +64,7 @@ end
 -- @param zone the zone to generate for
 function _M:loadup(level, zone)
 	if Store.loadup(self, level, zone) then
-		self.last_filled = game.state.boss_killed
+		self.last_filled = game.state.stores_restock
 	end
 end
 

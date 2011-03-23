@@ -98,7 +98,7 @@ newEntity{ define_as = "THE_MASTER",
 
 		world:gainAchievement("VAMPIRE_CRUSHER", game.player:resolveSource())
 		game.player:resolveSource():grantQuest("dreadfell")
-		game.player:resolveSource():setQuestStatus("dreadfell", engine.Quest.DONE)
+		game.player:resolveSource():setQuestStatus("dreadfell", engine.Quest.COMPLETED)
 
 		local ud = {}
 		if not profile.mod.allow_build.undead_skeleton then ud[#ud+1] = "undead_skeleton" end

@@ -26,3 +26,10 @@ desc = function(self, who)
 	desc[#desc+1] = "Perhaps you should explore it and find the truth, and the treasures, for yourself!"
 	return table.concat(desc, "\n")
 end
+
+on_status_change = function(self, who, status, sub)
+	if self:isCompleted() then
+		who:setQuestStatus(self.id, engine.Quest.DONE)
+		game.state:storesRestock()
+	end
+end

@@ -32,16 +32,19 @@ function _M:init(t, no_default)
 	self.allow_backup_guardians = {}
 	self.world_artifacts_pool = {}
 	self.boss_killed = 0
+	self.stores_restock = 1
 	self.east_orc_patrols = 4
 end
 
--- Number of bosses killed
+--- Restock all stores
+function _M:storesRestock()
+	self.stores_restock = self.stores_restock + 1
+	print("[STORES] restocking")
+end
+
+--- Number of bosses killed
 function _M:bossKilled(rank)
-	if rank == 3.5 then
-		self.boss_killed = self.boss_killed + 0.5
-	else
-		self.boss_killed = self.boss_killed + 1
-	end
+	self.boss_killed = self.boss_killed + 1
 end
 
 --- Allow dropping the rod of recall

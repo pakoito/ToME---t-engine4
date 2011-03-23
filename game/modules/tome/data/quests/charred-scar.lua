@@ -73,4 +73,5 @@ start_fyrk = function(self)
 		world:gainAchievement("CHARRED_SCAR_SUCCESS", game.player)
 	end
 	game.player:setQuestStatus("charred-scar", engine.Quest.COMPLETED)
+	game.state:storesRestock()
 end
