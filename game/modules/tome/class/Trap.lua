@@ -44,7 +44,9 @@ end
 --- Returns a tooltip for the trap
 function _M:tooltip()
 	if self:knownBy(game.player) then
-		return tstring{{"uid", self.uid}, self:getName()}
+		local res = tstring{{"uid", self.uid}, self:getName()}
+		if self.is_store then res:add(true, {"font","italic"}, "<Store>", {"font","normal"}) end
+		return res
 	end
 end
 

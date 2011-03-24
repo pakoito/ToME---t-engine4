@@ -20,7 +20,7 @@
 load("/data/general/traps/store.lua")
 
 newEntity{ base = "BASE_STORE", define_as = "JEWELRY",
-	name="Jewelry",
+	name="Shining Jewel",
 	display='2', color=colors.BLUE,
 	resolvers.store("ANGOLWEN_JEWELRY", "angolwen"),
 	resolvers.chatfeature("jewelry-store", "angolwen"),
@@ -39,7 +39,7 @@ newEntity{ base = "BASE_STORE", define_as = "LIBRARY",
 }
 
 newEntity{ base = "BASE_STORE", define_as = "STAVES",
-	name="Staves and Wands",
+	name="Tools of the Art",
 	display='6', color=colors.UMBER,
 	resolvers.store("ANGOLWEN_STAFF_WAND", "angolwen"),
 }

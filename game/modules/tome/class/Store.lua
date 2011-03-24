@@ -199,9 +199,9 @@ end
 
 --- Actor interacts with the store
 -- @param who the actor who interacts
-function _M:interact(who)
+function _M:interact(who, name)
 	who:sortInven()
-	Store.interact(self, who)
+	Store.interact(self, who, name)
 end
 
 --- Display tooltips

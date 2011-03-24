@@ -20,33 +20,33 @@
 load("/data/general/traps/store.lua")
 
 newEntity{ base = "BASE_STORE", define_as = "HEAVY_ARMOR_STORE",
-	name="Armoury",
+	name="Horman's Plates",
 	display='2', color=colors.UMBER,
 	resolvers.store("ZIGUR_HARMOR", "zigur"),
 }
 newEntity{ base = "BASE_STORE", define_as = "LIGHT_ARMOR_STORE",
-	name="Tanner",
+	name="Infused Leather",
 	display='2', color=colors.UMBER,
 	resolvers.store("ZIGUR_LARMOR", "zigur"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "SWORD_WEAPON_STORE",
-	name="Sword smith",
+	name="Slash & Dash",
 	display='3', color=colors.UMBER,
 	resolvers.store("ZIGUR_SWORD_WEAPON", "zigur"),
 }
 newEntity{ base = "BASE_STORE", define_as = "MACE_WEAPON_STORE",
-	name="Mace smith",
+	name="Nature's Punch",
 	display='3', color=colors.UMBER,
 	resolvers.store("ZIGUR_MACE_WEAPON", "zigur"),
 }
 newEntity{ base = "BASE_STORE", define_as = "AXE_WEAPON_STORE",
-	name="Axe smith",
+	name="Slice & Dice",
 	display='3', color=colors.UMBER,
 	resolvers.store("ZIGUR_AXE_WEAPON", "zigur"),
 }
 newEntity{ base = "BASE_STORE", define_as = "KNIFE_WEAPON_STORE",
-	name="Knife smith",
+	name="Millions Cuts",
 	display='3', color=colors.UMBER,
 	resolvers.store("ZIGUR_KNIFE_WEAPON", "zigur"),
 }
@@ -64,7 +64,7 @@ newEntity{ base = "BASE_STORE", define_as = "TRAINER",
 }
 
 newEntity{ base = "BASE_STORE", define_as = "HERBALIST",
-	name="Herbalist",
+	name="Nature's Emporium",
 	display='4', color=colors.GREEN,
 	resolvers.store("POTION", "zigur"),
 }

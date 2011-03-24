@@ -110,9 +110,9 @@ end
 
 --- Actor interacts with the store
 -- @param who the actor who interacts
-function _M:interact(who)
+function _M:interact(who, name)
 	local store, inven = self:getInven("INVEN"), who:getInven("INVEN")
-	local d; d = ShowStore.new("Store: "..self.name, store, inven, self.store.store_filter, self.store.actor_filter, function(what, o, item)
+	local d; d = ShowStore.new("Store: "..(name or self.name), store, inven, self.store.store_filter, self.store.actor_filter, function(what, o, item)
 		if what == "buy" then
 			if o:getNumber() > 1 then
 				local q = GetQuantity.new(nil, nil, o:getNumber(), o:getNumber(), function(qty) self:doBuy(who, o, item, qty, d) end)

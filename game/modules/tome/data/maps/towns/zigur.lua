@@ -118,6 +118,7 @@ addSpot({31, 23}, "arrival", "ziguranth")
 addSpot({32, 23}, "arrival", "ziguranth")
 addSpot({31, 24}, "arrival", "ziguranth")
 addSpot({32, 24}, "arrival", "ziguranth")
+addSpot({29, 12}, "quest", "sealed-gate")
 
 -- addZone section
 
