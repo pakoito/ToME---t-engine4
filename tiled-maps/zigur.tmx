@@ -90,6 +90,41 @@
     <property name="display" value="6"/>
    </properties>
   </tile>
+  <tile id="19">
+   <properties>
+    <property name="display" value="1"/>
+   </properties>
+  </tile>
+  <tile id="20">
+   <properties>
+    <property name="display" value="2"/>
+   </properties>
+  </tile>
+  <tile id="21">
+   <properties>
+    <property name="display" value="3"/>
+   </properties>
+  </tile>
+  <tile id="22">
+   <properties>
+    <property name="display" value="5"/>
+   </properties>
+  </tile>
+  <tile id="23">
+   <properties>
+    <property name="display" value="6"/>
+   </properties>
+  </tile>
+  <tile id="24">
+   <properties>
+    <property name="display" value="7"/>
+   </properties>
+  </tile>
+  <tile id="25">
+   <properties>
+    <property name="display" value="8"/>
+   </properties>
+  </tile>
   <tile id="35">
    <properties>
     <property name="display" value="&amp;"/>
@@ -141,7 +176,7 @@
  </tileset>
  <layer name="Terrain" width="50" height="50">
   <data encoding="base64" compression="zlib">
-   eJzt2DtOA0EMBuCljUSVA0TiElw3LQfgLqSAmg5RpkOR1pJlje3f43kFiGQBYVj5W48nXo7bth07x/OA6G2IOg57jHAcwJCOCwv0GqirR/5aDhmHZ8kYLkBo67P3JOqwrnnL58EIxPHkBGoZ7fhk71Ou2kuz0L1AHfIM0Rx03Sv7vuTg4RksS8RROgstx+3nk/K+5qDXyx6WRduflkM7060+lw6rn9FacAe31DgiZ8kJXBcxcEvEgdZC5i+jh4MsX5vdHzUGcvC/Kzm4MeLgfSP7BHVE6qE5SjVCHbL3EYf2+9p9Ze2xUp9b5xUZoo5oIPsq2yPeZ3uLObDWgZy/6IzSYq6NnleaJzJj9XDMjJb7KhrIjB8x/FbHKAvl/b5//a5weM8fjyxG1SeTP+JYyVL7f4ZWnujMXGNAnmszltJ84/W2XI8YEAe3ZO8h4uA1RA1RR8TiOT4MR7QWNY7auvTsDdQx8zzu6Rhp+XdgjtUsqGO2xfNkHat4Io6VLVGHZ+llOhci64h4WnlLDm7JOFqZMg7aY60cWf+9O8jytrBD7h9rnTdLznJQ7tSHloWvm93nVm7SUgr5nLKyo+Tx5qYVHEieaFiGUX3eyiJrdO+OFnPiX3W8DnL8AI2uPAk=
+   eJzt2EtOAzEMBuBhW6mrHqASl+C6bDkAh+BR1vQG3SGW7GCkWLKs2PkdJ5kUqGT1lY78TeKMp4dlWQ6d425A9DZ4HbsUIxw7MKTjzAI9Burqkb+WQ8RRskQMZyC08dFz4nVYx1zzuTECcdwWArWMdlzY55Sr9tAsdC5Qh9xDNAcd94u9zjl4lAyWxePI7YWWY31/VD7XHPR4SGFZtPVpObQ93apz6bDqGZ0L7uCWGodnLzmC4zwGbvE40LmQ+cvo4SDLx2LXR42BHPx3OQc3ehy8bmSdoA7PfGiO3ByhDln7iEP7vnZdWWssV+fWfkUGr8MbyLqK1kjp2u65dmu9U60D2X/RHiXSE9buV5rH02NFHE/p+Xmxr9Ujw7uuWgbS43sMv9UxyrLm/PYTp/T6s8JRuv/Ysxg1P5H8EcdMltr/GVp5vD1zjQG5r41Ycv1Nqb7leMSAOLgleg4RB59D1OB1eCyW4yU9vyoO71zUOGrnpWdtoI4t9+OejpGWfwfmmM2COra2lDxRxywej2Nmi9dRsvQy3Wci6vB4WnlzDm6JOFqZIg5aY60cUf+1O8jyPrFDrh9rXKmX3MpBuVMdWhY+bus6t3KTllzI+5SZHTlPqW+awYHkiYZlGFXnrSxyjq7d0aJP/KuOx0GOb8vTSj0=
   </data>
  </layer>
  <objectgroup name="addSpot" width="50" height="50">

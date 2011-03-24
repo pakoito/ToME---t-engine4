@@ -39,8 +39,12 @@ defineTile("*", "CLOSED_GATE")
 defineTile("^", "OPEN_GATE")
 
 defineTile('1', "HARDWALL", nil, nil, "TRAINER")
-defineTile('2', "HARDWALL", nil, nil, "WEAPON_STORE")
-defineTile('3', "HARDWALL", nil, nil, "ARMOR_STORE")
+defineTile('2', "HARDWALL", nil, nil, "SWORD_WEAPON_STORE")
+defineTile('3', "HARDWALL", nil, nil, "AXE_WEAPON_STORE")
+defineTile('5', "HARDWALL", nil, nil, "MACE_WEAPON_STORE")
+defineTile('6', "HARDWALL", nil, nil, "KNIFE_WEAPON_STORE")
+defineTile('7', "HARDWALL", nil, nil, "LIGHT_ARMOR_STORE")
+defineTile('8', "HARDWALL", nil, nil, "HEAVY_ARMOR_STORE")
 defineTile('4', "HARDWALL", nil, nil, "HERBALIST")
 defineTile('9', "HARDWALL", nil, nil, "LIBRARY")
 
@@ -55,7 +59,7 @@ addSpot({39, 8}, "portal", "portal")
 addSpot({38, 15}, "portal", "portal")
 addSpot({32, 15}, "portal", "portal")
 addSpot({35, 11}, "quest", "arena")
-addSpot({29, 12}, "quest", "sealed-gate")
+addSpot({28, 12}, "quest", "outside-arena")
 addSpot({15, 31}, "arrival", "rhaloren")
 addSpot({16, 31}, "arrival", "rhaloren")
 addSpot({17, 31}, "arrival", "rhaloren")
@@ -131,22 +135,22 @@ return [[
 ~~~~~tttt......###._.###.....==??????????==..###tt
 ~~~~~ttt..........._.........=????????????=..###tt
 ~~~~tttt........._____.......=????????????==.4#ttt
-~~~tttt.........._ttt_....___*??????????!??=...ttt
+~~~tttt.........._ttt_....___=??????????!??=...ttt
 ~~~ttttt........._ttt_..___..=?????????!???=...ttt
 ~~...ttt.........________....==???!???????==...ttt
 ~~..............._ttt_........=???????????=.....tt
-~~~.............._ttt_........===???????===.....tt
-~~~~~............_____..........=========.......tt
-~~~~~...........................................tt
+~~~.......#####.._ttt_........===???????===.....tt
+~~~~~.....#####.._____..........=========.......tt
+~~~~~.....#2#3#.................................tt
 ~~~..........................######............ttt
 ~~~..........................######............ttt
-~~~~.........................##3#9#...........tttt
+~~~~.........................#87#9#...........tttt
 ~~~~,,,.....................................tttttt
 ~~~~,,,,..................................tttttttt
 ~~~~~~,,,,..............t................ttttttttt
-~~~~~~~~,,,............ttt..####....tt..tttttttttt
-~~~~~~~~~,,...........ttttt.####.....t.ttttttttttt
-~~~~~~~~~,,,..........ttttt.##2#.......ttttttttttt
+~~~~~~~~,,,............ttt..#####...tt..tttttttttt
+~~~~~~~~~,,...........ttttt.#####....t.ttttttttttt
+~~~~~~~~~,,,..........ttttt.#5#6#......ttttttttttt
 ~~~~~~~~~,,,,...........tt..............tttttttttt
 ~~~~~~~~~~,,,...........................tttttttttt
 ~~~~~~~~~~,,,,..........................tttttttttt
@@ -166,6 +170,6 @@ return [[
 ~~~~~~~~~~~~~~~~~~~~~~,tttttt,,,tttttttt..------tt
 ~~~~~~~~~~~~~~~~~~~~~~,,tttttttttttttttttt-----ttt
 ~~~~~~~~~~~~~~~~~~~~~~~,,tttttttttttttttttttt..ttt
-~~~~~~~~~~~~~~~~~~~~~~~~,ttttttttttttttttttttttttt
-~~~~~~~~~~~~~~~~~~~~~~~~,ttttttttttttttttttttttttt
-~~~~~~~~~~~~~~~~~~~~~~~~<ttttttttttttttttttttttttt]]
+~~~~~~~~~~~~~~~~~~~~~~~,,ttttttttttttttttttttttttt
+~~~~~~~~~~~~~~~~~~~~~~~,,ttttttttttttttttttttttttt
+~~~~~~~~~~~~~~~~~~~~~~~,<ttttttttttttttttttttttttt]]
