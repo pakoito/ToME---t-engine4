@@ -19,16 +19,26 @@
 
 load("/data/general/traps/store.lua")
 
-newEntity{ base = "BASE_STORE", define_as = "ARMOR_STORE",
-	name="Armoury",
+newEntity{ base = "BASE_STORE", define_as = "CLOTH_ARMOR_STORE",
+	name="Tailor",
+	display='2', color=colors.RED,
+	resolvers.store("CLOTH_ARMOR"),
+}
+newEntity{ base = "BASE_STORE", define_as = "LIGHT_ARMOR_STORE",
+	name="Tanner",
 	display='2', color=colors.UMBER,
-	resolvers.store("ARMOR"),
+	resolvers.store("LIGHT_ARMOR"),
 }
 
-newEntity{ base = "BASE_STORE", define_as = "WEAPON_STORE",
-	name="Weapon Store",
+newEntity{ base = "BASE_STORE", define_as = "SWORD_WEAPON_STORE",
+	name="Swordsmith",
 	display='3', color=colors.UMBER,
-	resolvers.store("WEAPON"),
+	resolvers.store("SWORD_WEAPON"),
+}
+newEntity{ base = "BASE_STORE", define_as = "STAFF_WEAPON_STORE",
+	name="Staff carver",
+	display='3', color=colors.RED,
+	resolvers.store("STAFF_WEAPON"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "RUNEMASTER",

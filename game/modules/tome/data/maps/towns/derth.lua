@@ -33,8 +33,10 @@ defineTile(":", "FLOOR")
 defineTile("&", "POST")
 defineTile("'", "DOOR")
 
-defineTile('2', "HARDWALL", nil, nil, "WEAPON_STORE")
-defineTile('3', "HARDWALL", nil, nil, "ARMOR_STORE")
+defineTile('2', "HARDWALL", nil, nil, "SWORD_WEAPON_STORE")
+defineTile('5', "HARDWALL", nil, nil, "KNIFE_WEAPON_STORE")
+defineTile('3', "HARDWALL", nil, nil, "HEAVY_ARMOR_STORE")
+defineTile('1', "HARDWALL", nil, nil, "LIGHT_ARMOR_STORE")
 defineTile('4', "HARDWALL", nil, nil, "HERBALIST")
 defineTile('9', "HARDWALL", nil, nil, "JEWELRY")
 
@@ -98,14 +100,14 @@ ttttttt~~~tt.__.........._......_.......t~~~tttttt
 ttttttt~~~t.._.#####....._......_.###...t~~~tttttt
 ttttttt~~~t.._.#####....._.####._.###...t~~~tttttt
 ttttttt~~~t.._.#####....._.####._.###...t~~~tttttt
-ttttttt~~~t.._.###2#....___####._.###...t~~~tttttt
+ttttttt~~~t.._.#5#2#....___####._.###...t~~~tttttt
 ttttttt~~~t.._______..___._.._.._.###...t~~~tttttt
 ttttttt~~~t......._..__..._______.###..tt~~~tttttt
 ttttttt~~~tt......_.._.........._.._...t~~~ttttttt
 tttttttt~~~tt.....____.####.....____...t~~~ttttttt
 ttttttttt~~~tt......_..####....._......t~~~ttttttt
 ttttttttt~~~~tt.....__.####....._.....tt~~~ttttttt
-tttttttttt~~~~ttt....__##3#....._.....t~~~tttttttt
+tttttttttt~~~~ttt....__#13#....._.....t~~~tttttttt
 tttttttttttt~~~~tt....___________...tt~~~~tttttttt
 ttttttttttttt~~~~ttttt............ttt~~~~ttttttttt
 tttttttttttttt~~~~~~~ttttttt...tttt~~~~~~ttttttttt

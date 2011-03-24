@@ -18,30 +18,26 @@
 -- darkgod@te4.org
 
 newEntity{
-	define_as = "ARMOR",
+	define_as = "HEAVY_ARMOR",
 	name = "heavy armour smith",
 	display = '2', color=colors.UMBER,
 	store = {
 		purse = 25,
 		empty_before_restock = false,
-		min_fill = 10,
-		max_fill = 20,
-		filters = function()
-			return {type="armor", subtype="heavy", id=true, tome_drops="store"}
-			return {type="armor", subtype="massive", id=true, tome_drops="store"}
-		end,
+		filters = {
+			{type="armor", subtype="heavy", id=true, tome_drops="store"},
+			{type="armor", subtype="massive", id=true, tome_drops="store"},
+		},
 	},
 }
 
 newEntity{
-	define_as = "ARMOR",
+	define_as = "LIGHT_ARMOR",
 	name = "tanner",
 	display = '2', color=colors.LIGHT_UMBER,
 	store = {
 		purse = 25,
 		empty_before_restock = false,
-		min_fill = 10,
-		max_fill = 20,
 		filters = function()
 			return {type="armor", subtype="light", id=true, tome_drops="store"}
 		end,
@@ -49,14 +45,12 @@ newEntity{
 }
 
 newEntity{
-	define_as = "ARMOR",
+	define_as = "CLOTH_ARMOR",
 	name = "tailor",
 	display = '2', color=colors.WHITE,
 	store = {
 		purse = 25,
 		empty_before_restock = false,
-		min_fill = 10,
-		max_fill = 20,
 		filters = function()
 			return {type="armor", subtype="cloth", id=true, tome_drops="store"}
 		end,
@@ -64,16 +58,68 @@ newEntity{
 }
 
 newEntity{
-	define_as = "WEAPON",
-	name = "weapon smith",
+	define_as = "SWORD_WEAPON",
+	name = "sword smith",
 	display = '3', color=colors.UMBER,
 	store = {
 		purse = 25,
 		empty_before_restock = false,
-		min_fill = 10,
-		max_fill = 20,
+		filters = {
+			{type="weapon", subtype="greatsword", id=true, tome_drops="store"},
+			{type="weapon", subtype="longsword", id=true, tome_drops="store"},
+		},
+	},
+}
+
+newEntity{
+	define_as = "AXE_WEAPON",
+	name = "axe smith",
+	display = '3', color=colors.UMBER,
+	store = {
+		purse = 25,
+		empty_before_restock = false,
+		filters = {
+			{type="weapon", subtype="waraxe", id=true, tome_drops="store"},
+			{type="weapon", subtype="battleaxe", id=true, tome_drops="store"},
+		},
+	},
+}
+
+newEntity{
+	define_as = "MAUL_WEAPON",
+	name = "mace smith",
+	display = '3', color=colors.UMBER,
+	store = {
+		purse = 25,
+		empty_before_restock = false,
+		filters = {
+			{type="weapon", subtype="greatmaul", id=true, tome_drops="store"},
+			{type="weapon", subtype="mace", id=true, tome_drops="store"},
+		},
+	},
+}
+
+newEntity{
+	define_as = "KNIFE_WEAPON",
+	name = "knife smith",
+	display = '3', color=colors.UMBER,
+	store = {
+		purse = 25,
+		empty_before_restock = false,
 		filters = function()
-			return {type="weapon", subtype="sword", id=true, tome_drops="store"}
+			return {type="weapon", subtype="dagger", id=true, tome_drops="store"}
+		end,
+	},
+}
+newEntity{
+	define_as = "STAFF_WEAPON",
+	name = "staff carver",
+	display = '3', color=colors.RED,
+	store = {
+		purse = 25,
+		empty_before_restock = false,
+		filters = function()
+			return {type="weapon", subtype="staff", id=true, tome_drops="store"}
 		end,
 	},
 }
@@ -85,8 +131,6 @@ newEntity{
 	store = {
 		purse = 10,
 		empty_before_restock = false,
-		min_fill = 4,
-		max_fill = 7,
 		filters = {
 			{type="scroll", subtype="infusion", id=true},
 		},
@@ -100,8 +144,6 @@ newEntity{
 	store = {
 		purse = 10,
 		empty_before_restock = false,
-		min_fill = 4,
-		max_fill = 7,
 		filters = {
 			{type="scroll", subtype="rune", id=true},
 		},
@@ -115,8 +157,6 @@ newEntity{
 	store = {
 		purse = 30,
 		empty_before_restock = false,
-		min_fill = 20,
-		max_fill = 30,
 		filters = {
 			{type="gem", id=true},
 		},
@@ -134,8 +174,6 @@ newEntity{
 	store = {
 		purse = 25,
 		empty_before_restock = false,
-		min_fill = 15,
-		max_fill = 25,
 		filters = function()
 			return rng.table{
 				{type="weapon", subtype="staff", id=true, tome_drops="store"},
@@ -154,8 +192,6 @@ newEntity{
 	store = {
 		purse = 20,
 		empty_before_restock = false,
-		min_fill = 15,
-		max_fill = 25,
 		filters = {
 			{type="jewelry", id=true},
 		},
@@ -177,8 +213,6 @@ newEntity{
 	store = {
 		purse = 10,
 		empty_before_restock = false,
-		min_fill = 5,
-		max_fill = 9,
 		filters = {
 			{type="scroll", subtype="rune", id=true},
 		},
@@ -199,8 +233,6 @@ newEntity{
 		purse = 35,
 		empty_before_restock = false,
 		sell_percent = 240,
-		min_fill = 10,
-		max_fill = 20,
 		filters = function()
 			return {id=true, ignore={type="money"}, add_levels=10, tome_drops="boss"}
 		end,
@@ -214,8 +246,6 @@ newEntity{
 	store = {
 		purse = 5,
 		empty_before_restock = false,
-		min_fill = 40,
-		max_fill = 40,
 		filters = {
 			{id=true, defined="FOUNDATION_NOTE1"},
 			{id=true, defined="FOUNDATION_NOTE2"},
@@ -237,8 +267,6 @@ newEntity{
 	store = {
 		purse = 5,
 		empty_before_restock = false,
-		min_fill = 40,
-		max_fill = 40,
 		filters = {
 			{id=true, defined="ZIGUR_HISTORY"},
 		},
@@ -246,16 +274,31 @@ newEntity{
 }
 
 newEntity{
-	define_as = "ZIGUR_ARMOR",
+	define_as = "ZIGUR_HARMOR",
 	name = "armour smith",
 	display = '2', color=colors.UMBER,
 	store = {
 		purse = 25,
 		empty_before_restock = false,
-		min_fill = 20,
-		max_fill = 30,
+		filters = {
+			{type="armor", subtype="heavy", id=true, tome_drops="store"},
+			{type="armor", subtype="massive", id=true, tome_drops="store"},
+		},
+		post_filter = function(e)
+			if e.power_source and e.power_source.arcane then return false end
+			return true
+		end,
+	},
+}
+newEntity{
+	define_as = "ZIGUR_LARMOR",
+	name = "tanner",
+	display = '2', color=colors.UMBER,
+	store = {
+		purse = 25,
+		empty_before_restock = false,
 		filters = function()
-			return {type="armor", id=true, tome_drops="store"}
+			return {type="armor", subtype="light", id=true, tome_drops="store"}
 		end,
 		post_filter = function(e)
 			if e.power_source and e.power_source.arcane then return false end
@@ -265,16 +308,68 @@ newEntity{
 }
 
 newEntity{
-	define_as = "ZIGUR_WEAPON",
-	name = "weapon smith",
+	define_as = "ZIGUR_SWORD_WEAPON",
+	name = "sword smith",
 	display = '3', color=colors.UMBER,
 	store = {
 		purse = 25,
 		empty_before_restock = false,
-		min_fill = 20,
-		max_fill = 30,
+		filters = {
+			{type="weapon", subtype="greatsword", id=true, tome_drops="store"},
+			{type="weapon", subtype="longsword", id=true, tome_drops="store"},
+		},
+		post_filter = function(e)
+			if e.power_source and e.power_source.arcane then return false end
+			return true
+		end,
+	},
+}
+
+newEntity{
+	define_as = "ZIGUR_AXE_WEAPON",
+	name = "axe smith",
+	display = '3', color=colors.UMBER,
+	store = {
+		purse = 25,
+		empty_before_restock = false,
+		filters = {
+			{type="weapon", subtype="waraxe", id=true, tome_drops="store"},
+			{type="weapon", subtype="battleaxe", id=true, tome_drops="store"},
+		},
+		post_filter = function(e)
+			if e.power_source and e.power_source.arcane then return false end
+			return true
+		end,
+	},
+}
+
+newEntity{
+	define_as = "ZIGUR_MACE_WEAPON",
+	name = "mace smith",
+	display = '3', color=colors.UMBER,
+	store = {
+		purse = 25,
+		empty_before_restock = false,
+		filters = {
+			{type="weapon", subtype="greatmaul", id=true, tome_drops="store"},
+			{type="weapon", subtype="mace", id=true, tome_drops="store"},
+		},
+		post_filter = function(e)
+			if e.power_source and e.power_source.arcane then return false end
+			return true
+		end,
+	},
+}
+
+newEntity{
+	define_as = "ZIGUR_KNIFE_WEAPON",
+	name = "knife smith",
+	display = '3', color=colors.UMBER,
+	store = {
+		purse = 25,
+		empty_before_restock = false,
 		filters = function()
-			return {type="weapon", id=true, tome_drops="store"}
+			return {type="weapon", subtype="dagger", id=true, tome_drops="store"}
 		end,
 		post_filter = function(e)
 			if e.power_source and e.power_source.arcane then return false end

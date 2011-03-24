@@ -19,16 +19,28 @@
 
 load("/data/general/traps/store.lua")
 
-newEntity{ base = "BASE_STORE", define_as = "ARMOR_STORE",
+newEntity{ base = "BASE_STORE", define_as = "HEAVY_ARMOR_STORE",
 	name="Armoury",
 	display='2', color=colors.UMBER,
-	resolvers.store("ARMOR", "allied-kingdoms"),
+	resolvers.store("HEAVY_ARMOR", "allied-kingdoms"),
 }
 
-newEntity{ base = "BASE_STORE", define_as = "WEAPON_STORE",
-	name="Weapon Store",
+newEntity{ base = "BASE_STORE", define_as = "LIGHT_ARMOR_STORE",
+	name="Tanner",
+	display='2', color=colors.UMBER,
+	resolvers.store("LIGHT_ARMOR", "allied-kingdoms"),
+}
+
+newEntity{ base = "BASE_STORE", define_as = "SWORD_WEAPON_STORE",
+	name="Swordsmith",
 	display='3', color=colors.UMBER,
-	resolvers.store("WEAPON", "allied-kingdoms"),
+	resolvers.store("SWORD_WEAPON", "allied-kingdoms"),
+}
+
+newEntity{ base = "BASE_STORE", define_as = "KNIFE_WEAPON_STORE",
+	name="Knives and daggers",
+	display='3', color=colors.UMBER,
+	resolvers.store("KNIFE_WEAPON", "allied-kingdoms"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "HERBALIST",

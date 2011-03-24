@@ -19,16 +19,36 @@
 
 load("/data/general/traps/store.lua")
 
-newEntity{ base = "BASE_STORE", define_as = "ARMOR_STORE",
+newEntity{ base = "BASE_STORE", define_as = "HEAVY_ARMOR_STORE",
 	name="Armoury",
 	display='2', color=colors.UMBER,
-	resolvers.store("ZIGUR_ARMOR", "zigur"),
+	resolvers.store("ZIGUR_HARMOR", "zigur"),
+}
+newEntity{ base = "BASE_STORE", define_as = "LIGHT_ARMOR_STORE",
+	name="Tanner",
+	display='2', color=colors.UMBER,
+	resolvers.store("ZIGUR_LARMOR", "zigur"),
 }
 
-newEntity{ base = "BASE_STORE", define_as = "WEAPON_STORE",
-	name="Weapon Store",
+newEntity{ base = "BASE_STORE", define_as = "SWORD_WEAPON_STORE",
+	name="Sword smith",
 	display='3', color=colors.UMBER,
-	resolvers.store("ZIGUR_WEAPON", "zigur"),
+	resolvers.store("ZIGUR_SWORD_WEAPON", "zigur"),
+}
+newEntity{ base = "BASE_STORE", define_as = "MACE_WEAPON_STORE",
+	name="Mace smith",
+	display='3', color=colors.UMBER,
+	resolvers.store("ZIGUR_MACE_WEAPON", "zigur"),
+}
+newEntity{ base = "BASE_STORE", define_as = "AXE_WEAPON_STORE",
+	name="Axe smith",
+	display='3', color=colors.UMBER,
+	resolvers.store("ZIGUR_AXE_WEAPON", "zigur"),
+}
+newEntity{ base = "BASE_STORE", define_as = "KNIFE_WEAPON_STORE",
+	name="Knife smith",
+	display='3', color=colors.UMBER,
+	resolvers.store("ZIGUR_KNIFE_WEAPON", "zigur"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "LIBRARY",

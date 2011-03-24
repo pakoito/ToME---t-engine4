@@ -31,8 +31,12 @@ defineTile(".", "OLD_FLOOR")
 defineTile("s", "STATUE")
 defineTile("R", "ESCAPE_REKNOR")
 
-defineTile("2", "HARDWALL", nil, nil, "ARMOR_STORE")
-defineTile("3", "HARDWALL", nil, nil, "WEAPON_STORE")
+defineTile("1", "HARDWALL", nil, nil, "HEAVY_ARMOR_STORE")
+defineTile("2", "HARDWALL", nil, nil, "LIGHT_ARMOR_STORE")
+defineTile("7", "HARDWALL", nil, nil, "CLOTH_ARMOR_STORE")
+defineTile("3", "HARDWALL", nil, nil, "AXE_WEAPON_STORE")
+defineTile("4", "HARDWALL", nil, nil, "MACE_WEAPON_STORE")
+defineTile("6", "HARDWALL", nil, nil, "SWORD_WEAPON_STORE")
 defineTile("5", "HARDWALL", nil, nil, "RUNIC_STORE")
 defineTile("9", "HARDWALL", nil, nil, "GEM_STORE")
 
@@ -53,12 +57,12 @@ return [[
 ####.......####........####......####........#####
 ####.......####........####......####.........####
 ####.......####........####......####.........####
-####........###........2##3......###..........####
+####........#1#........2##3......#4#..........####
 ####....................##....................####
 ####...###............................###.....####
 ####...####..........................####.....####
 ####...####..........................####.....####
-####...####..........................####.....####
+####...##7#..........................#6##.....####
 ####.............s..............s.............####
 ####..........................................####
 ####..........................................####

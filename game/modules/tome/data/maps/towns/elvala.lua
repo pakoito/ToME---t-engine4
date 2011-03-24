@@ -30,8 +30,10 @@ defineTile("_", "OLD_FLOOR")
 defineTile(".", "GRASS")
 defineTile("t", {"TREE","TREE2","TREE3","TREE4","TREE5","TREE6","TREE7","TREE8","TREE9","TREE10","TREE11","TREE12","TREE13","TREE14","TREE15","TREE16","TREE17","TREE18","TREE19","TREE20"})
 
-defineTile("2", "HARDWALL", nil, nil, "ARMOR_STORE")
-defineTile("3", "HARDWALL", nil, nil, "WEAPON_STORE")
+defineTile("1", "HARDWALL", nil, nil, "CLOTH_ARMOR_STORE")
+defineTile("2", "HARDWALL", nil, nil, "LIGHT_ARMOR_STORE")
+defineTile("3", "HARDWALL", nil, nil, "STAFF_WEAPON_STORE")
+defineTile("4", "HARDWALL", nil, nil, "SWORD_WEAPON_STORE")
 defineTile("5", "HARDWALL", nil, nil, "RUNEMASTER")
 
 -- addSpot section
@@ -59,7 +61,7 @@ return [[
 ~~...............##___________##......ttt..~~~~~~~
 ~~....ttt........#__#########__#...........~~~~~~~
 ~....ttt.........#_###########_#...........~~~~~~~
-~...ttt.....######__#5#######__######.......~~~~~~
+~...ttt.....######__#5#####1#__######.......~~~~~~
 ~...t....####_______________________####......~~~~
 ~......###_______#_____..._____#_______###.....~~~
 ~.....##________###___.....___###________##....~~~
@@ -71,7 +73,7 @@ return [[
 ~~.......####_______________________####........~~
 ~~..........######__#########__######..........~~~
 ~~...............#_###########_#...............~~~
-~.....t.tt.......#__#########__#...............~~~
+~.....t.tt.......#__####4####__#...............~~~
 ~....ttttt.......##___________##..............~~~~
 ~....ttttt........#___________#......tt.......~~~~
 ~~...tttt.....t...#___________#.....tttt.....~~~~~
