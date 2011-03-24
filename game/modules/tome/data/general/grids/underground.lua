@@ -23,7 +23,11 @@ newEntity{
 	name = "floor", image = "terrain/underground_floor.png",
 	display = '.', color=colors.LIGHT_UMBER, back_color=colors.UMBER,
 	grow = "UNDERGROUND_TREE",
+	nice_tiler = { method="replace", base={"UNDERGROUND_FLOOR", 30, 1, 8}},
 }
+for i = 1, 8 do
+newEntity{base = "UNDERGROUND_FLOOR", define_as = "UNDERGROUND_FLOOR"..i, image = "terrain/underground_floor"..i..".png"}
+end
 
 for i = 1, 20 do
 newEntity{
@@ -31,7 +35,7 @@ newEntity{
 	type = "wall", subtype = "underground",
 	name = "underground thick vegetation",
 	image = "terrain/underground_floor.png",
-	add_displays = class:makeTrees("terrain/underground_tree_alpha", 7),
+	add_displays = class:makeSubTrees("terrain/underground_tree_alpha", 10),
 	display = '#', color=colors.PURPLE, back_color=colors.UMBER,
 	always_remember = true,
 	can_pass = {pass_tree=1},

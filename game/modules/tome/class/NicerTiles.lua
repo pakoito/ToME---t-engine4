@@ -32,7 +32,6 @@ function _M:getTile(name)
 
 	if type(name) == "table" then
 		local n = name[1]
-		print("replaceing",n)
 		if rng.percent(name[2]) then n = n..rng.range(name[3], name[4]) end
 		name = n
 	end
