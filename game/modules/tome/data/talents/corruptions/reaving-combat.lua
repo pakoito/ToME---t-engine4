@@ -57,10 +57,10 @@ newTalent{
 	require = str_corrs_req3,
 	points = 5,
 	on_learn = function(self, t)
-		self:attr("disease_immune", 0.2 * self:getTalentLevelRaw(t))
+		self:attr("disease_immune", 0.2)
 	end,
 	on_unlearn = function(self, t)
-		self:attr("disease_immune", -0.2 * self:getTalentLevelRaw(t))
+		self:attr("disease_immune", -0.2)
 	end,
 	info = function(self, t)
 		return ([[You gain a %d%% resistance to diseases and have a %d%% chance on melee attacks to spread any existing diseases on your target.]]):

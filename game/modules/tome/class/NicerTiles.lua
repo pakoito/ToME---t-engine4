@@ -195,7 +195,7 @@ function _M:niceTileGenericBorders(level, i, j, g, nt, type, allow)
 	elseif g2==type and allow[g3] and g6==type then self:replace(i, j, self:getTile(nt["inner_"..g3.."7"]))
 	elseif g6==type and allow[g9] and g8==type then self:replace(i, j, self:getTile(nt["inner_"..g9.."1"]))
 	-- Full
-	elseif g1==type and g2==type and g3==type and g4==type and g6==type and g7==type and g8==type and g9==type then self:replace(i, j, self:getTile(nt[type]))
+	elseif (g1==type or not allow[g1]) and (g2==type or not allow[g2]) and (g3==type or not allow[g3]) and (g4==type or not allow[g4]) and (g6==type or not allow[g6]) and (g7==type or not allow[g7]) and (g8==type or not allow[g8]) and (g9==type or not allow[g9]) then self:replace(i, j, self:getTile(nt[type]))
 	end
 end
 

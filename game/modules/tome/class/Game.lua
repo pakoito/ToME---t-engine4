@@ -907,7 +907,7 @@ function _M:setupCommands()
 --			self.nicer_tiles:postProcessLevelTiles(self.level)
 --			game:registerDialog(require("mod.dialogs.Donation").new())
 --			self.state:debugRandomZone()
-			self.state:storesRestock()
+			game.player:hasQuest("east-portal"):back_to_last_hope()
 		end end,
 	}
 

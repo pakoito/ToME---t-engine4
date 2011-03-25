@@ -70,15 +70,16 @@ create_portal = function(self, npc, player)
 	-- Farportal
 	local g1 = game.zone:makeEntityByName(game.level, "terrain", "FAR_EAST_PORTAL")
 	local g2 = game.zone:makeEntityByName(game.level, "terrain", "CFAR_EAST_PORTAL")
-	game.zone:addEntity(game.level, g1, "terrain", 12, 42)
-	game.zone:addEntity(game.level, g1, "terrain", 13, 42)
-	game.zone:addEntity(game.level, g1, "terrain", 14, 42)
-	game.zone:addEntity(game.level, g1, "terrain", 12, 43)
-	game.zone:addEntity(game.level, g2, "terrain", 13, 43)
-	game.zone:addEntity(game.level, g1, "terrain", 14, 43)
-	game.zone:addEntity(game.level, g1, "terrain", 12, 44)
-	game.zone:addEntity(game.level, g1, "terrain", 13, 44)
-	game.zone:addEntity(game.level, g1, "terrain", 14, 44)
+	local spot = game.level:pickSpot{type="pop-quest", subtype="farportal"}
+	game.zone:addEntity(game.level, g1, "terrain", spot.x, spot.y)
+	game.zone:addEntity(game.level, g1, "terrain", spot.x+1, spot.y)
+	game.zone:addEntity(game.level, g1, "terrain", spot.x+2, spot.y)
+	game.zone:addEntity(game.level, g1, "terrain", spot.x, spot.y+1)
+	game.zone:addEntity(game.level, g2, "terrain", spot.x+1, spot.y+1)
+	game.zone:addEntity(game.level, g1, "terrain", spot.x+2, spot.y+1)
+	game.zone:addEntity(game.level, g1, "terrain", spot.x, spot.y+2)
+	game.zone:addEntity(game.level, g1, "terrain", spot.x+1, spot.y+2)
+	game.zone:addEntity(game.level, g1, "terrain", spot.x+2, spot.y+2)
 
 	player:setQuestStatus(self.id, engine.Quest.DONE)
 	world:gainAchievement("EAST_PORTAL", game.player)
@@ -157,9 +158,11 @@ back_to_last_hope = function(self)
 	-- TP last hope
 	game:changeLevel(1, "town-last-hope")
 	-- Move to the portal spot
-	game.player:move(12, 43, true)
+	local spot = game.level:pickSpot{type="pop-quest", subtype="farportal-player"}
+	game.player:move(spot.x, spot.y, true)
 	-- Remove tannen
-	game.level.map(10, 6, engine.Map.TERRAIN, game.level.map(10, 5, engine.Map.TERRAIN))
+	local spot = game.level:pickSpot{type="pop-quest", subtype="tannen-remove"}
+	game.level.map(spot.x, spot.y, engine.Map.TERRAIN, game.level.map(spot.x, spot.y-1, engine.Map.TERRAIN))
 
 	-- Add the mage
 	local g = mod.class.NPC.new{
@@ -168,8 +171,10 @@ back_to_last_hope = function(self)
 		display='p', color=colors.RED,
 	}
 	g:resolve() g:resolve(nil, true)
-	game.zone:addEntity(game.level, g, "actor", 12, 42)
-	game.level.map:particleEmitter(12, 42, 1, "teleport")
+	local spot = game.level:pickSpot{type="pop-quest", subtype="farportal-npc"}
+	game.zone:addEntity(game.level, g, "actor", spot.x, spot.y)
+	game.level.map:particleEmitter(spot.x, spot.y, 1, "teleport")
+	self.nicer_tiles:postProcessLevelTiles(self.level)
 
 	local Chat = require("engine.Chat")
 	local chat = Chat.new("east-portal-end", g, game.player)
