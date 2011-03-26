@@ -116,6 +116,12 @@ newEntity{ base = "BASE_NPC_HORROR",
 	},
 
 	resolvers.sustains_at_birth(),
+	on_die = function(self, who)
+		local part = "BLOATED_HORROR_HEART"
+		if game.player:hasQuest("brotherhood-of-alchemists") then 
+			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
+		end
+	end,
 }
 
 newEntity{ base = "BASE_NPC_HORROR",
@@ -204,12 +210,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	end,
 
 	-- Needs an on death affect that kills off any remaining eyes.
-	on_die = function(self, src, who)
-		local part = "HEADLESS_HORROR_HEART"
-		if game.player:hasQuest("brotherhood-of-alchemists") then 
-			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
-		end
-
+	on_die = function(self, src)
 		local nb = 0
 		for eye, _ in pairs(self.eyes) do
 			if not eye.dead then eye:die(src) nb = nb + 1 end

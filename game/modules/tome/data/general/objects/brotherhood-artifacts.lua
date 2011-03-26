@@ -134,7 +134,7 @@ newEntity{
 
 	use_simple = { name="grant you four additional stat points", use = function(self, who)
 		game.logPlayer(who, "#00FFFF#You drink the elixir and feel forever transformed!")
-		who.unused_stats = who.unused_stats + 3
+		who.unused_stats = who.unused_stats + 4
 		game.logPlayer(who, "#00FF00#The elixir has greatly expanded your capacity for improving your mind and body.")
 		game.logPlayer(who, "You have %d stat point(s) to spend. Press G to use them.", who.unused_stats)
 		return true, "destroy", true

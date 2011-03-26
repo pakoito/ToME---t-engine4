@@ -361,7 +361,7 @@ newChat{ id="totally-complete2",
 --Not final elixir:
 newChat{ id="complete3",
 	text = [[#LIGHT_GREEN#*The dwarf finally returns with a vial.*#WHITE#
-It tastes like Urh'Rok's own piss, but gets the job done.]],
+Tastes like Urh'Rok's own piss, but it gets the job done.]],
 	answers = {
 		{"Thank you. I'll be off.", 
 			cond = function(npc, player) return q and q:isCompleted(e[1].almost) and not q:isCompleted(e[1].full) end,
