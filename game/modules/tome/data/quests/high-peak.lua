@@ -114,9 +114,51 @@ function win(self, how)
 	if how == "full" then world:gainAchievement("WIN_FULL", game.player)
 	elseif how == "aeryn-sacrifice" then world:gainAchievement("WIN_AERYN", game.player)
 	elseif how == "self-sacrifice" then world:gainAchievement("WIN_SACRIFICE", game.player)
+	elseif how == "yeek-sacrifice" then world:gainAchievement("YEEK_SACRIFICE", game.player)
 	end
 
 	game.player.winner = how
 	game:registerDialog(require("engine.dialogs.ShowText").new("Winner", "win", {playername=game.player.name, how=how}, game.w * 0.6))
 end
 
+function onWin(self, who)
+	local desc = {}
+
+	desc[#desc+1] = "#GOLD#Well done! You have won the Tales of Maj'Eyal: the Fourth Age#WHITE#"
+	desc[#desc+1] = ""
+	desc[#desc+1] = "The Sorcerers are dead, and the Orc Pride lies in ruins, thanks to your efforts."
+	desc[#desc+1] = ""
+
+	-- Yeeks are special
+	if who:isQuestStatus("high-peak", engine.Quest.COMPLETED, "yeek") then
+		desc[#desc+1] = "Your sacrifice worked, your mental energies were imbued with farportal energies. The Way radiated from the High Peak toward the rest of Eyal like a mental tidal wave."
+		desc[#desc+1] = "Every sentient being in Eyal is now part of the Way. Peace and happiness are enforced to all."
+		desc[#desc+1] = "Only the mages of Angolwen were able to withstand the mental shock and thus are the only unsafe people left. But what can they do against the migth of the Way?"
+		return 0, desc
+	end
+
+	if who.winner == "full" then
+		desc[#desc+1] = "You have prevented the portal to the Void from opening and thus stopped the Creator from bringing about the end of the world."
+	elseif who.winner == "aeryn-sacrifice" then
+		desc[#desc+1] = "In a selfless act, High Sun Paladin Aeryn sacrificed herself to close the portal to the Void and thus stopped the Creator from bringing about the end of the world."
+	elseif who.winner == "self-sacrifice" then
+		desc[#desc+1] = "In a selfless act, you sacrificed yourself to close the portal to the Void and thus stopped the Creator from bringing about the end of the world."
+	end
+
+	if who:isQuestStatus("high-peak", engine.Quest.COMPLETED, "gates-of-morning-destroyed") then
+		desc[#desc+1] = ""
+		desc[#desc+1] = "The Gates of Morning have been destroyed and the Sunwall has fallen. The last remnants of the free people in the Far East will surely diminish, and soon only orcs will inhabit this land."
+	else
+		desc[#desc+1] = ""
+		desc[#desc+1] = "The orc presence in the Far East has greatly been diminished by the loss of their leaders and the destruction of the Sorcerers. The free people of the Sunwall will be able to prosper and thrive on this land."
+	end
+
+	desc[#desc+1] = ""
+	desc[#desc+1] = "Maj'Eyal will once more know peace. Most of its inhabitants will never know they even were on the verge of destruction, but then this is what being a true hero means: to do the right thing even though nobody will know about it."
+
+	if who.winner ~= "self-sacrifice" then
+		desc[#desc+1] = ""
+		desc[#desc+1] = "You may continue playing and enjoy the rest of the world."
+	end
+	return 0, desc
+end

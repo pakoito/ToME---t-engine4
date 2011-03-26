@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local p = game.party:findMember{main=true}
+
 local function void_portal_open(npc, player)
 	-- Charred scar was successful
 	if player:hasQuest("charred-scar") and player:hasQuest("charred-scar"):isCompleted("stopped") then return false end
@@ -28,8 +30,55 @@ local function aeryn_alive(npc, player)
 	end
 end
 
+
+--------------------------------------------------------
+-- Yeeks have a .. plan
+--------------------------------------------------------
+if p.descriptor.race == "Yeek" then
+newChat{ id="welcome",
+	text = [[#LIGHT_GREEN#*The two Sorcerers lie dead before you.*#WHITE#
+#LIGHT_GREEN#*Their bodies vanish in a small cloud of mist, quickly fading away.*#WHITE#
+#LIGHT_GREEN#*You feel the Way reaching out to you, the whole yeek race speaks to you.*#WHITE#
+You have done something incredible ]]..(p.female and "sister" or "brother")..[[! You also have created a unique opportunity for the yeek race!
+The energies of those farportals are incredible, using them we could make the Way radiate all over Eyal, forcing it down on the other races, bringing them the same peace and happiness we feel in the Way.
+You must go through the farportal and willingly sacrifice yourself inside. Your mind will embed itself into the farportal network, spreading the Way far and wide!
+Even though you will die you will bring the world, and the yeeks, ultimate peace.
+The Way will never forget you. Now go and make history!
+]],
+	answers = {
+		{"#LIGHT_GREEN#[sacrifice yourself to bring the Way to every sentient creature.]", action=function(npc, player)
+			player.no_resurrect = true
+			player:die(player)
+			player:setQuestStatus("high-peak", engine.Quest.COMPLETED, "yeek")
+			player:hasQuest("high-peak"):win("yeek-sacrifice")
+		end},
+		{"But... I did so much, I could do so much more for the Way by staying alive!", jump="yeek-unsure"},
+	}
+}
+
+newChat{ id="yeek-unsure",
+	text = [[#LIGHT_GREEN#*You feel the Way taking over your mind, your body.*#WHITE#
+You will do as asked, for the good of all Yeeks! The Way is always right.
+]],
+	answers = {
+		{"#LIGHT_GREEN#[sacrifice yourself to bring the Way to every sentient creature.]", action=function(npc, player)
+			player.no_resurrect = true
+			player:die(player)
+			player:setQuestStatus("high-peak", engine.Quest.COMPLETED, "yeek")
+			player:hasQuest("high-peak"):win("yeek-sacrifice")
+		end},
+	}
+}
+
+return "welcome"
+end
+
+--------------------------------------------------------
+-- Default
+--------------------------------------------------------
+
 ---------- If the void portal has been opened
-if void_portal_open(nil, game.player) then
+if void_portal_open(nil, p) then
 newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*The two Sorcerers lie dead before you.*#WHITE#
 #LIGHT_GREEN#*Their bodies vanish in a small cloud of mist, quickly fading away.*#WHITE#

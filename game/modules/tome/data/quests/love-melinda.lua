@@ -28,3 +28,11 @@ desc = function(self, who)
 	end
 	return table.concat(desc, "\n")
 end
+
+function onWin(self, who)
+	if who.dead then return end
+	return 10, {
+		"After your victory you came back to Last Hope and reunited with Melinda, who showned no signs of demonic corruption for the many years to come.",
+		"You lived together and led a happy life, Melinda even learned a few adventurers tricks and you both traveled Eyal, making new legends.",
+	}
+end

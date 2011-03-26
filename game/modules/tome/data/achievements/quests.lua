@@ -84,6 +84,10 @@ newAchievement{
 	desc = [[Won ToME by closing the Void portal using yourself as a sacrifice.]],
 }
 newAchievement{
+	name = "Triumph of the Way", id = "YEEK_SACRIFICE",
+	desc = [[Won ToME by sacrificing yourself to forcefully spread the Way to every other sentient being on Eyal.]],
+}
+newAchievement{
 	name = "Tactical master", id = "SORCERER_NO_PORTAL",
 	desc = [[Fought the two Sorcerers without closing any invocation portals.]],
 }
