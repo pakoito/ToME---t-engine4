@@ -723,7 +723,7 @@
     <property name="type" value="&quot;world-encounter&quot;"/>
    </properties>
   </object>
-  <object name="Random Zone" x="1193" y="229" width="200" height="51">
+  <object name="Random Zone" x="1193" y="229" width="140" height="20">
    <properties>
     <property name="subtype" value="&quot;maj-eyal&quot;"/>
     <property name="type" value="&quot;world-encounter&quot;"/>
@@ -828,6 +828,36 @@
   <object name="Random Zone" x="5088" y="1376" width="64" height="64">
    <properties>
     <property name="subtype" value="&quot;fareast&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
+  <object name="Brotherhood of alchemists" x="1220" y="265" width="19" height="19">
+   <properties>
+    <property name="subtype" value="&quot;brotherhood-alchemist&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
+  <object name="Brotherhood of alchemists" x="391" y="455" width="19" height="19">
+   <properties>
+    <property name="subtype" value="&quot;brotherhood-alchemist&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
+  <object name="Brotherhood of alchemists" x="1125" y="903" width="19" height="19">
+   <properties>
+    <property name="subtype" value="&quot;brotherhood-alchemist&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
+  <object name="Brotherhood of alchemists" x="2055" y="323" width="19" height="19">
+   <properties>
+    <property name="subtype" value="&quot;brotherhood-alchemist&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
+  <object name="Brotherhood of alchemists" x="2375" y="1031" width="19" height="19">
+   <properties>
+    <property name="subtype" value="&quot;brotherhood-alchemist&quot;"/>
     <property name="type" value="&quot;world-encounter&quot;"/>
    </properties>
   </object>

@@ -235,7 +235,7 @@ newEntity{
 newEntity{
 	name = "Agrimley the Hermit",
 	type = "harmless", subtype = "special", unique = true,
-	immediate = {"world-encounter", "maj-eyal"},
+	immediate = {"world-encounter", "brotherhood-alchemist"},
 	-- Spawn the hermit
 	on_encounter = function(self, who)
 		local x, y = self:findSpot(who)
