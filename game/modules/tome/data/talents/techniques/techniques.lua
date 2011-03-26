@@ -39,6 +39,18 @@ newTalentType{ allow_random=true, type="technique/combat-techniques-passive", na
 newTalentType{ allow_random=true, type="technique/combat-training", name = "combat training", generic = true, description = "Teaches to use various armors and improves health." }
 newTalentType{ allow_random=true, type="technique/magical-combat", name = "magical combat", description = "The blending together of magic and melee prowess." }
 
+-- Unarmed Combat
+newTalentType{ is_unarmed=true, allow_random=true, type="technique/pugilism", name = "pugilism", description = "Boxing techniques." }
+newTalentType{ is_unarmed=true, allow_random=true, type="technique/finishing-moves", name = "finishing moves", description = "Finishing moves that use combo points." }
+newTalentType{ is_unarmed=true, allow_random=true, type="technique/grappling", name = "grappling", description = "Grappling techniques." }
+newTalentType{ is_unarmed=true, allow_random=true, type="technique/unarmed-discipline", name = "unarmed discipline", description = "Advanced unarmed techniques including kicks and throws." }
+newTalentType{ is_unarmed=true, allow_random=true, type="technique/unarmed-training", name = "unarmed training", generic = true, description = "Teaches various martial arts techniques." }
+newTalentType{ allow_random=true, type="technique/conditioning", name = "conditioning", generic = true, description = "Physical conditioning." }
+
+newTalentType{ is_unarmed=true, type="technique/unarmed-other", name = "unarmed other", generic = true, description = "Base martial arts attack and stances." }
+
+
+
 -- Generic requires for techs based on talent level
 -- Uses STR
 techs_req1 = function(self, t) local stat = "str"; return {
@@ -126,12 +138,62 @@ techs_strdex_req5 = function(self, t) local stat = self:getStr() >= self:getDex(
 	level = function(level) return 16 + (level-1)  end,
 } end
 
+-- Generic requires for techs_con based on talent level
+techs_con_req1 = {
+	stat = { con=function(level) return 12 + (level-1) * 2 end },
+	level = function(level) return 0 + (level-1)  end,
+}
+techs_con_req2 = {
+	stat = { con=function(level) return 20 + (level-1) * 2 end },
+	level = function(level) return 4 + (level-1)  end,
+}
+techs_con_req3 = {
+	stat = { con=function(level) return 28 + (level-1) * 2 end },
+	level = function(level) return 8 + (level-1)  end,
+}
+techs_con_req4 = {
+	stat = { con=function(level) return 36 + (level-1) * 2 end },
+	level = function(level) return 12 + (level-1)  end,
+}
+techs_con_req5 = {
+	stat = { con=function(level) return 44 + (level-1) * 2 end },
+	level = function(level) return 16 + (level-1)  end,
+}
 
 -- Archery range talents
 archery_range = function(self, t)
 	local weapon = self:hasArcheryWeapon()
 	if not weapon or not weapon.combat then return 1 end
 	return weapon.combat.range or 6
+end
+
+-- Unarmed stance changes and stance damage bonuses
+
+getGrapplingStyle = function(self, dam)
+	local dam = 0
+	if self:isTalentActive(self.T_GRAPPLING_STANCE) then
+		local t = self:getTalentFromId(self.T_GRAPPLING_STANCE)
+		dam = t.getDamage(self, t)
+	end
+		return dam / 100
+end
+
+getStrikingStyle = function(self, dam)
+	local dam = 0
+	if self:isTalentActive(self.T_STRIKING_STANCE) then
+		local t = self:getTalentFromId(self.T_STRIKING_STANCE)
+		dam = t.getDamage(self, t)
+	end
+		return dam / 100
+end
+
+cancelStances = function(self)
+	local stances = {self.T_STRIKING_STANCE, self.T_GRAPPLING_STANCE}
+	for i, t in ipairs(stances) do
+		if self:isTalentActive(t) then
+			self:forceUseTalent(t, {ignore_energy=true, ignore_cd=true})
+		end
+	end
 end
 
 load("/data/talents/techniques/2hweapon.lua")
@@ -148,3 +210,10 @@ load("/data/talents/techniques/bow.lua")
 load("/data/talents/techniques/sling.lua")
 load("/data/talents/techniques/archery.lua")
 load("/data/talents/techniques/magical-combat.lua")
+
+load("/data/talents/techniques/pugilism.lua")
+load("/data/talents/techniques/unarmed-discipline.lua")
+load("/data/talents/techniques/finishing-moves.lua")
+load("/data/talents/techniques/grappling.lua")
+load("/data/talents/techniques/unarmed-training.lua")
+load("/data/talents/techniques/conditioning.lua")

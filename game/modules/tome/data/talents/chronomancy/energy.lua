@@ -137,7 +137,7 @@ newTalent{
 		-- Go through all sustained spells
 		for tid, act in pairs(target.sustain_talents) do
 		local talent = target:getTalentFromId(tid)
-			  if talent.is_spell then
+			if talent.is_spell then
 				effs[#effs+1] = {"talent", tid}
 			end
 		end

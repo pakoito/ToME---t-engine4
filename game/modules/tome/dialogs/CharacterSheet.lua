@@ -136,7 +136,8 @@ function _M:drawDialog(s)
 	h = basey
 	w = 200
 	-- All weapons in main hands
-	if player:getInven(player.INVEN_MAINHAND) then
+	local mainhand = player:getInven(player.INVEN_MAINHAND)
+	if mainhand and (#mainhand > 0) then
 		for i, o in ipairs(player:getInven(player.INVEN_MAINHAND)) do
 			local mean, dam = o.combat, o.combat
 			if o.archery and mean then
@@ -151,7 +152,19 @@ function _M:drawDialog(s)
 			end
 			if mean and mean.range then self:mouseTooltip(self.TOOLTIP_COMBAT_RANGE, s:drawColorStringBlended(self.font, ("Range (Main Hand): #00ff00#%3d"):format(mean.range), w, h, 255, 255, 255)) h = h + self.font_h end
 		end
+	-- Handle bare-handed combat
+	else
+		local mean, dam = player.combat, player.combat
+		if mean and dam then
+			self:mouseTooltip(self.TOOLTIP_COMBAT_ATTACK, s:drawColorStringBlended(self.font, ("Accuracy(Unarmed): #00ff00#%3d"):format(player:combatAttack(mean)), w, h, 255, 255, 255)) h = h + self.font_h
+			self:mouseTooltip(self.TOOLTIP_COMBAT_DAMAGE, s:drawColorStringBlended(self.font, ("Damage  (Unarmed): #00ff00#%3d"):format(player:combatDamage(dam)), w, h, 255, 255, 255)) h = h + self.font_h
+			self:mouseTooltip(self.TOOLTIP_COMBAT_APR,    s:drawColorStringBlended(self.font, ("APR     (Unarmed): #00ff00#%3d"):format(player:combatAPR(dam)), w, h, 255, 255, 255)) h = h + self.font_h
+			self:mouseTooltip(self.TOOLTIP_COMBAT_CRIT,   s:drawColorStringBlended(self.font, ("Crit    (Unarmed): #00ff00#%3d%%"):format(player:combatCrit(dam)), w, h, 255, 255, 255)) h = h + self.font_h
+			self:mouseTooltip(self.TOOLTIP_COMBAT_SPEED,  s:drawColorStringBlended(self.font, ("Speed   (Unarmed): #00ff00#%0.2f"):format(player:combatSpeed(mean)), w, h, 255, 255, 255)) h = h + self.font_h
+		end
+		if mean and mean.range then self:mouseTooltip(self.TOOLTIP_COMBAT_RANGE, s:drawColorStringBlended(self.font, ("Range (Main Hand): #00ff00#%3d"):format(mean.range), w, h, 255, 255, 255)) h = h + self.font_h end
 	end
+	
 	h = h + self.font_h
 	-- All weapons in off hands
 	-- Offhand attacks are with a damage penalty, that can be reduced by talents
@@ -172,6 +185,7 @@ function _M:drawDialog(s)
 			if mean and mean.range then self:mouseTooltip(self.TOOLTIP_COMBAT_RANGE, s:drawColorStringBlended(self.font, ("Range (Off Hand): #00ff00#%3d"):format(mean.range), w, h, 255, 255, 255)) h = h + self.font_h end
 		end
 	end
+	
 	h = h + self.font_h
 	self:mouseTooltip(self.TOOLTIP_SPELL_POWER, s:drawColorStringBlended(self.font, ("Spellpower:  #00ff00#%3d"):format(player:combatSpellpower()), w, h, 255, 255, 255)) h = h + self.font_h
 	self:mouseTooltip(self.TOOLTIP_SPELL_CRIT, s:drawColorStringBlended(self.font, ("Spell Crit:  #00ff00#%3d%%"):format(player:combatSpellCrit()), w, h, 255, 255, 255)) h = h + self.font_h

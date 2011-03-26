@@ -3552,3 +3552,293 @@ newEffect{
 		self:removeTemporaryValue("combat_mentalresist", eff.mindid)
 	end,
 }
+
+-- Grappling stuff
+newEffect{
+	name = "GRAPPLING",
+	desc = "Grappling",
+	long_desc = function(self, eff) return ("The target is engaged in a grapple.  Any movement will break the effect as will some unarmed talents."):format() end,
+	type = "physical",
+	status = "beneficial",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# is engaged in a grapple!", "+Grappling" end,
+	on_lose = function(self, err) return "#Target# has released the hold.", "-Grappling" end,
+	on_timeout = function(self, eff)
+		if math.floor(core.fov.distance(self.x, self.y, eff.src.x, eff.src.y)) > 1 or eff.src.dead or not eff.src:hasEffect(self.EFF_GRAPPLED) then
+			if eff.src:hasEffect(self.EFF_GRAPPLED) then
+				eff.src:removeEffect(self.EFF_GRAPPLED)
+			end
+			return true
+		end
+	end,
+	activate = function(self, eff)
+		local drain = 6 - (self:getTalentLevelRaw(self.T_CLINCH) or 0)
+		eff.tmpid = self:addTemporaryValue("stamina_regen", - drain)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("stamina_regen", eff.tmpid)
+		-- clears debuffs from the grappled opponent; grapple break is set to silent so it won't spam everytime a grapple is reapplied
+		if eff.src:hasEffect(self.EFF_GRAPPLED) then
+			eff.src:removeEffect(self.EFF_GRAPPLED, true)
+		end
+		if eff.src:hasEffect(self.EFF_CRUSHING_HOLD) then
+			eff.src:removeEffect(self.EFF_CRUSHING_HOLD)
+		end
+		if eff.src:hasEffect(self.EFF_STRANGLE_HOLD) then
+			eff.src:removeEffect(self.EFF_STRANGLE_HOLD)
+		end
+	end,
+}
+
+newEffect{
+	name = "GRAPPLED",
+	desc = "Grappled",
+	long_desc = function(self, eff) return ("The target is grappled, unable to move, and has it's defense and attack reduced by %d."):format(eff.power) end,
+	type = "physical",
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# is grappled!", "+Grappled" end,
+	on_lose = function(self, err) return "#Target# is free from the grapple.", "-Grappled" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("never_move", 1)
+		eff.def = self:addTemporaryValue("combat_def", -eff.power)
+		eff.atk = self:addTemporaryValue("combat_atk", -eff.power)
+	end,
+	on_timeout = function(self, eff)
+		if math.floor(core.fov.distance(self.x, self.y, eff.src.x, eff.src.y)) > 1 or eff.src.dead or not eff.src:hasEffect(self.EFF_GRAPPLING) then
+			if eff.src:hasEffect(self.EFF_GRAPPLING) then
+				eff.src:removeEffect(self.EFF_GRAPPLING)
+			end
+			return true
+		end
+	end,
+	deactivate = function(self, eff)
+		-- clears the grappling effect from the attacker; this will in turn remove all other holds.
+		if eff.src:hasEffect(self.EFF_GRAPPLING) then
+			eff.src:removeEffect(self.EFF_GRAPPLING)
+		end
+		self:removeTemporaryValue("combat_atk", eff.atk)
+		self:removeTemporaryValue("combat_def", eff.def)
+		self:removeTemporaryValue("never_move", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "CRUSHING_HOLD",
+	desc = "Crushing Hold",
+	long_desc = function(self, eff) return ("The target is being crushed and suffers %d damage each turn"):format(eff.power) end,
+	type = "physical",
+	status = "detrimental",
+	parameters = { power=1 },
+	on_gain = function(self, err) return "#Target# is being crushed.", "+Crushing Hold" end,
+	on_lose = function(self, err) return "#Target# has escaped the crushing hold.", "-Crushing Hold" end,
+	on_timeout = function(self, eff)
+		DamageType:get(DamageType.PHYSICAL).projector(eff.src or self, self.x, self.y, DamageType.PHYSICAL, eff.power)
+	end,
+}
+
+newEffect{
+	name = "STRANGLE_HOLD",
+	desc = "Strangle Hold",
+	long_desc = function(self, eff) return ("The target is being strangled and may not cast spells and suffers %d damage each turn."):format(eff.power) end,
+	type = "physical",
+	status = "detrimental",
+	parameters = { power=1 },
+	on_gain = function(self, err) return "#Target# is being strangled.", "+Strangle Hold" end,
+	on_lose = function(self, err) return "#Target# has escaped the strangle hold.", "-Strangle Hold" end,
+	on_timeout = function(self, eff)
+		DamageType:get(DamageType.PHYSICAL).projector(eff.src or self, self.x, self.y, DamageType.PHYSICAL, eff.power)
+	end,
+	activate = function(self, eff)
+		if self:canBe("silence") then
+			eff.tmpid = self:addTemporaryValue("silence", 1)
+			eff.dur = self:updateEffectDuration(eff.dur, "silence")
+		end
+		silenced = true
+	end,
+	deactivate = function(self, eff)
+		if silenced then
+			self:removeTemporaryValue("silence", eff.tmpid)
+		end
+	end,
+}
+
+newEffect{
+	name = "MAIMED",
+	desc = "Maimed",
+	long_desc = function(self, eff) return ("The target is maimed, reducing attack and damage by %d and global speed by 30%%."):format(eff.power) end,
+	type = "physical",
+	status = "detrimental",
+	parameters = { atk=10, dam=10 },
+	on_gain = function(self, err) return "#Target# is maimed.", "+Maimed" end,
+	on_lose = function(self, err) return "#Target# has recovered from the maiming.", "-Maimed" end,
+	activate = function(self, eff)
+		eff.atkid = self:addTemporaryValue("combat_atk", -eff.atk)
+		eff.damid = self:addTemporaryValue("combat_dam", -eff.dam)
+		eff.tmpid = self:addTemporaryValue("energy", {mod=-0.3})
+		eff.dur = self:updateEffectDuration(eff.dur, "slow")
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_atk", eff.atkid)
+		self:removeTemporaryValue("combat_dam", eff.damid)
+		self:removeTemporaryValue("energy", eff.tmpid)
+		self:removeTemporaryValue("combat_mindpower", eff.mindid)
+	end,
+}
+
+newEffect{
+	name = "COMBO",
+	desc = "Combo",
+	display_desc = function(self, eff) return eff.cur_power.." Combo" end,
+	long_desc = function(self, eff) return ("The target is in the middle of a combo chain and has earned %d combo points."):format(eff.cur_power) end,
+	type = "physical",
+	status = "beneficial",
+	parameters = { power=1, max=5 },
+	on_merge = function(self, old_eff, new_eff)
+		self:removeTemporaryValue("combo", old_eff.tmpid)
+		old_eff.cur_power = math.min(old_eff.cur_power + new_eff.power, new_eff.max)
+		old_eff.tmpid = self:addTemporaryValue("combo", {power = old_eff.cur_power})
+
+		old_eff.dur = new_eff.dur
+		return old_eff
+	end,
+	activate = function(self, eff)
+		eff.cur_power = eff.power
+		eff.tmpid = self:addTemporaryValue("combo", {eff.power})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combo", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "RELENTLESS_STRIKES",
+	desc = "Relentless Strikes",
+	long_desc = function(self, eff) return ("The target is attacking relentlessly, increasing it's stamina regen by %d and gaining increased effect from combo point gains."):format(eff.power) end,
+	type = "physical",
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# is striking relentlessly!", "+Relentless Strikes" end,
+	on_lose = function(self, err) return "#Target#'s striking ability has returned to normal.", "-Relentless Strikes" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("stamina_regen", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("stamina_regen", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "DEFENSIVE_MANEUVER",
+	desc = "Defensive Maneuver",
+	long_desc = function(self, eff) return ("The target's defense is increased by %d."):format(eff.power) end,
+	type = "physical",
+	status = "beneficial",
+	parameters = {power = 1},
+	on_gain = function(self, err) return "#Target# is moving defensively!", "+Defensive Maneuver" end,
+	on_lose = function(self, err) return "#Target# isn't moving as defensively anymore.", "-Defensive Maneuver" end,
+	activate = function(self, eff)
+		eff.defense = self:addTemporaryValue("combat_def", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_def", eff.defense)
+	end,
+}
+
+newEffect{
+	name = "SET_UP",
+	desc = "Set Up",
+	long_desc = function(self, eff) return ("The target is off balance and is %d%% more likely to be crit by the target that set it up.  In addition all it's saves are reduced by %d."):format(eff.power, eff.power) end,
+	type = "physical",
+	status = "detrimental",
+	parameters = {power = 1},
+	on_gain = function(self, err) return "#Target# has been set up!", "+Set Up" end,
+	on_lose = function(self, err) return "#Target# has survived the set up.", "-Set Up" end,
+	activate = function(self, eff)
+		eff.mental = self:addTemporaryValue("combat_mentalresist", -eff.power)
+		eff.spell = self:addTemporaryValue("combat_spellresist", -eff.power)
+		eff.physical = self:addTemporaryValue("combat_physresist", -eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_mentalresist", eff.mental)
+		self:removeTemporaryValue("combat_spellresist", eff.spell)
+		self:removeTemporaryValue("combat_physresist", eff.physical)
+	end,
+}
+
+newEffect{
+	name = "RECOVERY",
+	desc = "Recovery",
+	long_desc = function(self, eff) return ("The target is recovering from a damaging blow and regaining %d life each turn."):format(eff.power) end,
+	type = "physical",
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# is recovering from the attack!", "+Recovery" end,
+	on_lose = function(self, err) return "#Target# has finished recovering from the attack.", "-Recovery" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("life_regen", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("life_regen", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "REFLEXIVE_DODGING",
+	desc = "Reflexive Dodging",
+	long_desc = function(self, eff) return ("Increases global action speed by %d%%."):format(eff.power * 100) end,
+	type = "physical",
+	status = "beneficial",
+	parameters = { power=0.1 },
+	on_gain = function(self, err) return "#Target# speeds up.", "+Reflexive Dodging" end,
+	on_lose = function(self, err) return "#Target# slows down.", "-Reflexive Dodging" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("energy", {mod=eff.power})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("energy", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "WEAKENED_DEFENSES",
+	desc = "Weakened Defenses",
+	long_desc = function(self, eff) return ("The target's physical resistance has been reduced by %d%%."):format(eff.inc) end,
+	type = "physical",
+	status = "detrimental",
+	parameters = { inc=1, max=5 },
+	on_merge = function(self, old_eff, new_eff)
+		self:removeTemporaryValue("resists", old_eff.tmpid)
+		old_eff.cur_inc = math.max(old_eff.cur_inc + new_eff.inc, new_eff.max)
+		old_eff.tmpid = self:addTemporaryValue("resists", {[DamageType.PHYSICAL] = old_eff.cur_inc})
+
+		old_eff.dur = new_eff.dur
+		return old_eff
+	end,
+	activate = function(self, eff)
+		eff.cur_inc = eff.inc
+		eff.tmpid= self:addTemporaryValue("resists", {
+			[DamageType.PHYSICAL]= eff.inc,
+		})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("resists", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "SPRINT",
+	desc = "Sprint",
+	long_desc = function(self, eff) return ("Increases movement speed by %d%%."):format(eff.power*100) end,
+	type = "physical",
+	status = "beneficial",
+	parameters = { power=0.1 },
+	on_gain = function(self, err) return "#Target# speeds up.", "+Sprint" end,
+	on_lose = function(self, err) return "#Target# slows down.", "-Sprint" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("movement_speed", -eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("movement_speed", eff.tmpid)
+	end,
+}

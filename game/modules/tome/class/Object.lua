@@ -413,6 +413,7 @@ function _M:getTextualDesc()
 	if w.fear_immune then desc:add(("Increases fear immunity: %d%%."):format(w.fear_immune * 100), true) end
 	if w.knockback_immune then desc:add(("Increases knockback immunity: %d%%."):format(w.knockback_immune * 100), true) end
 	if w.instakill_immune then desc:add(("Increases instant-death immunity: %d%%."):format(w.instakill_immune * 100), true) end
+	if w.teleport_immune then desc:add(("Increases teleport immunity: %d%%."):format(w.teleport_immune * 100), true) end
 
 	if w.life_regen then desc:add(("Regenerates %0.2f hitpoints each turn."):format(w.life_regen), true) end
 	if w.stamina_regen then desc:add(("Regenerates %0.2f stamina each turn."):format(w.stamina_regen), true) end
@@ -450,7 +451,7 @@ function _M:getTextualDesc()
 		desc:add({"color","YELLOW"}, "When used to attack (with talents):", {"color", "LAST"}, true)
 		desc_combat(self.special_combat)
 	end
-
+	
 	if self.no_teleport then
 		desc:add("It is immune to teleportation, if you teleport it will fall on the ground.", true)
 	end

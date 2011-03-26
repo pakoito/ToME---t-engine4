@@ -30,6 +30,7 @@ newBirthDescriptor{
 			__ALL__ = "disallow",
 			Fighter = "allow",
 			Berserker = "allow",
+			Brawler = function() return profile.mod.allow_build.warrior_brawler and "allow" or "disallow" end,
 			["Arcane Blade"] = "allow",
 		},
 	},
@@ -169,6 +170,56 @@ newBirthDescriptor{
 			{type="armor", subtype="light", name="rough leather armour", autoreq=true, ego_chance=-1000, ego_chance=-1000},
 		},
 		resolvers.inscription("RUNE:_MANASURGE", {cooldown=25, dur=10, mana=620}),
+	},
+	copy_add = {
+		life_rating = 2,
+	},
+}
+
+newBirthDescriptor{
+	type = "subclass",
+	name = "Brawler",
+	desc = {
+		"The ravages of the Spellblaze stretched armies thin and left many unprotected. Not everyone could afford the luxury of a weapon.",
+		"Without steel or iron, poor communities of all races turned to the strength of their own bodies for defense against the darkness.",
+		"Rather a pit-fighter, a boxer, or just a practitioner the occupation known as brawler still exists today.",
+		"Many of the brawler's abilities will earn combo points which they can use on finishing moves that will have added effect.",
+		"The unarmed fighting styles the brawler uses rely on maneuverability and having both hands available, as such they may not be practiced in massive armor or while a weapon or shield is equipped.",
+		"Their most important stats are: Strength, Dexterity, and Cunning",
+		"#GOLD#Stat modifiers:",
+		"#LIGHT_BLUE# * +3 Strength, +3 Dexterity, +0 Constitution",
+		"#LIGHT_BLUE# * +0 Magic, +0 Willpower, +3 Cunning",
+	},
+	stats = { str=3, dex=3, cun=3},
+	talents_types = {
+		["cunning/dirty"]={true, 0},
+		["cunning/tactical"]={true, 0.3},
+		["cunning/survival"]={false, 0},
+		["technique/combat-training"]={true, 0.1},
+		["technique/field-control"]={false, 0.3},
+		["technique/combat-techniques-active"]={false, 0},
+		["technique/combat-techniques-passive"]={true, 0.1},
+		["technique/pugilism"]={true, 0.3},
+		["technique/finishing-moves"]={true, 0.3},
+		["technique/grappling"]={false, 0.3},
+		["technique/unarmed-discipline"]={false, 0.3},
+		["technique/unarmed-training"]={true, 0.3},
+		["technique/conditioning"]={true, 0.3},
+	},
+	talents = {
+		[ActorTalents.T_UPPERCUT] = 1,
+		[ActorTalents.T_DOUBLE_STRIKE] = 1,
+		[ActorTalents.T_WEAPON_COMBAT] = 1,
+		[ActorTalents.T_HEAVY_ARMOUR_TRAINING] = 1,
+		
+		-- base monk attack
+		[ActorTalents.T_EMPTY_HAND] = 1,
+	},
+	copy = {
+		resolvers.equip{ id=true,
+			{type="armor", subtype="hands", name="iron gauntlets", autoreq=true, ego_chance=-1000, ego_chance=-1000},
+			{type="armor", subtype="light", name="rough leather armour", autoreq=true, ego_chance=-1000, ego_chance=-1000},
+		},
 	},
 	copy_add = {
 		life_rating = 2,

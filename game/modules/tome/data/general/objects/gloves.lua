@@ -28,6 +28,7 @@ newEntity{
 	image = resolvers.image_material("gloves", "leather"),
 	encumber = 1,
 	rarity = 9,
+	unarmed_combat = { talented = "unarmed", damrange = 1.4, sound = "actions/melee", sound_miss = "actions/melee_miss", },
 	desc = [[Light gloves which do not seriously hinder finger movements, while still protecting the hands somewhat.]],
 	randart_able = { attack=10, physical=10, spell=10, def=30, misc=10 },
 	egos = "/data/general/objects/egos/gloves.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
@@ -40,6 +41,14 @@ newEntity{ base = "BASE_GLOVES",
 	material_level = 1,
 	wielder = {
 		combat_armor = 1,
+		combat = {
+			dam = resolvers.rngavg(5, 8),
+			apr = 1,
+			physcrit = 4,
+			physspeed = -0.4,
+			dammod = {dex=0.4, str=-0.6, cun=0.4 },
+			damrange = 1.2,
+		},
 	},
 }
 
@@ -50,6 +59,14 @@ newEntity{ base = "BASE_GLOVES",
 	material_level = 3,
 	wielder = {
 		combat_armor = 2,
+		combat = {
+			dam = resolvers.rngavg(14, 18),
+			apr = 1,
+			physcrit = 7,
+			physspeed = -0.4,
+			dammod = {dex=0.4, str=-0.6, cun=0.4 },
+			damrange = 1.2,
+		},
 	},
 }
 
@@ -60,5 +77,13 @@ newEntity{ base = "BASE_GLOVES",
 	material_level = 5,
 	wielder = {
 		combat_armor = 3,
+		combat = {
+			dam = resolvers.rngavg(23, 28),
+			apr = 3,
+			physcrit = 10,
+			physspeed = -0.4,
+			dammod = {dex=0.4, str=-0.6, cun=0.4 },
+			damrange = 1.2,
+		},
 	},
 }

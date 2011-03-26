@@ -177,7 +177,7 @@ function _M:init(t, no_default)
 	mod.class.interface.ActorInscriptions.init(self, t)
 
 	-- Default melee barehanded damage
-	self.combat = self.combat or { dam=1, atk=1, apr=0, dammod={str=1} }
+	self.combat = self.combat or { dam=1, atk=1, apr=0, physcrit=0, physspeed =1, dammod={str=1} }
 	self.talents[self.T_ATTACK] = self.talents[self.T_ATTACK] or 1
 
 	self:resetCanSeeCache()
@@ -430,7 +430,7 @@ function _M:move(x, y, force)
 	if moved and self:isTalentActive(self.T_BODY_OF_STONE) then
 		self:forceUseTalent(self.T_BODY_OF_STONE, {ignore_energy=true})
 	end
-
+		
 	if moved and not force and ox and oy and (ox ~= self.x or oy ~= self.y) and config.settings.tome.smooth_move > 0 then
 		local blur = 0
 		if self:attr("lightning_speed") or self:attr("step_up") or self:attr("wild_speed") then blur = 3 end
@@ -1069,6 +1069,13 @@ function _M:onTakeHit(value, src)
 		self:forceUseTalent(self.T_SECOND_LIFE, {ignore_energy=true})
 	end
 
+	-- Unflinching Resolve
+	if self:knowTalent(self.T_UNFLINCHING_RESOLVE) and value >= (self.max_life / 10) then
+		local t = self:getTalentFromId(self.T_UNFLINCHING_RESOLVE)
+		local dam = value
+		t.on_hit(self, t, dam)
+	end	
+		
 	if value >= self.life and self.ai_state and self.ai_state.can_reform then
 		local t = self:getTalentFromId(self.T_SHADOW_REFORM)
 		if rng.percent(t.getChance(self, t)) then
@@ -1442,6 +1449,9 @@ function _M:updateConDamageReduction()
 		self.resists.all = self.resists.all - self.temp_con_perc
 	end
 	local inc = self:getCon() / 7
+	if self:knowTalent(self.T_IRON_SKIN) then
+		inc = inc * (1 + (self:getTalentLevel(self.T_IRON_SKIN) * 0.2))
+	end
 	self.temp_con_perc = inc
 	self.resists.all = self.resists.all + inc
 end
@@ -1682,6 +1692,20 @@ function _M:preUseTalent(ab, silent, fake)
 		if not silent then game.logSeen(self, "The spell fizzles.") end
 		return false
 	end
+	
+	-- when using unarmed techniques check for weapons and heavy armor
+	if ab.is_unarmed then
+		-- first check for heavy and massive armor
+		if self:hasMassiveArmor() then
+			if not silent then game.logSeen(self, "You are to heavily armored to use this talent.") end
+			return false
+		-- next make sure we're unarmed
+		elseif not self:isUnarmed() then
+			if not silent then game.logSeen(self, "You can't use this talent while holding a weapon or shield.") end
+			return false
+		end
+	end
+	
 
 	if not self:enoughEnergy() and not fake then return false end
 
@@ -1994,6 +2018,9 @@ function _M:breakStepUp()
 	end
 	if self:hasEffect(self.EFF_WILD_SPEED) then
 		self:removeEffect(self.EFF_WILD_SPEED)
+	end
+	if self:hasEffect(self.EFF_REFLEXIVE_DODGING) then
+		self:removeEffect(self.EFF_REFLEXIVE_DODGING)
 	end
 end
 
@@ -2318,6 +2345,10 @@ function _M:on_projectile_target(x, y, p)
 		print("Projectile slowing down from", p.energy.mod)
 		p.energy.mod = p.energy.mod * (100 - self.slow_projectiles) / 100
 		print("Projectile slowing down to", p.energy.mod)
+	end
+	if self:knowTalent(self.T_HEIGHTENED_REFLEXES) then
+		local t = self:getTalentFromId(self.T_HEIGHTENED_REFLEXES)
+		t.do_reflexes(self, t)
 	end
 end
 

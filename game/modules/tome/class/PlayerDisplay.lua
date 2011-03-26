@@ -291,11 +291,13 @@ function _M:display()
 	for eff_id, p in pairs(player.tmp) do
 		local e = player.tempeffect_def[eff_id]
 		local dur = p.dur + 1
+		local name = e.desc
+		if e.display_desc then name = e.display_desc(self, p) end
 		local desc = e.long_desc(player, p)
 		if e.status == "detrimental" then
-			self:mouseTooltip(desc, self:makeTexture(("#LIGHT_RED#%s(%d)"):format(e.desc,dur), x, h, 255, 255, 255)) h = h + self.font_h
+			self:mouseTooltip(desc, self:makeTexture(("#LIGHT_RED#%s(%d)"):format(name, dur), x, h, 255, 255, 255)) h = h + self.font_h
 		else
-			self:mouseTooltip(desc, self:makeTexture(("#LIGHT_GREEN#%s(%d)"):format(e.desc,dur), x, h, 255, 255, 255)) h = h + self.font_h
+			self:mouseTooltip(desc, self:makeTexture(("#LIGHT_GREEN#%s(%d)"):format(name, dur), x, h, 255, 255, 255)) h = h + self.font_h
 		end
 	end
 	if game.level and game.level.arena then

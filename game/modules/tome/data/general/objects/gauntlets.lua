@@ -30,6 +30,7 @@ newEntity{
 	encumber = 1.5,
 	rarity = 9,
 	metallic = true,
+	combat = { 	talented = "unarmed" ,},
 	desc = [[Metal gloves protecting the hands up to the middle of the lower arm.]],
 	randart_able = { attack=10, physical=10, spell=10, def=40, misc=30 },
 	egos = "/data/general/objects/egos/gloves.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
@@ -42,6 +43,14 @@ newEntity{ base = "BASE_GAUNTLETS",
 	material_level = 1,
 	wielder = {
 		combat_armor = 1,
+		combat = {
+			dam = resolvers.rngavg(7, 12),
+			apr = 4,
+			physcrit = 1,
+			physspeed = -0.2,
+			dammod = {dex=0.4, str=-0.6, cun=0.4 },
+			damrange = 1.4,
+		},
 	},
 }
 
@@ -52,6 +61,14 @@ newEntity{ base = "BASE_GAUNTLETS",
 	material_level = 3,
 	wielder = {
 		combat_armor = 2,
+		combat = {
+			dam = resolvers.rngavg(16, 22),
+			apr = 7,
+			physcrit = 1,
+			physspeed = -0.2,
+			dammod = {dex=0.4, str=-0.6, cun=0.4 },
+			damrange = 1.4,
+		},
 	},
 }
 
@@ -62,5 +79,13 @@ newEntity{ base = "BASE_GAUNTLETS",
 	material_level = 5,
 	wielder = {
 		combat_armor = 3,
+		unarmed_combat = {
+			dam = resolvers.rngavg(25, 32),
+			apr = 10,
+			physcrit = 3,
+			physspeed = -0.2,
+			dammod = {dex=0.4, str=-0.6, cun=0.4 },
+			damrange = 1.4,
+		},
 	},
 }

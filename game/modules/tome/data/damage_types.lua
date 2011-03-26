@@ -642,7 +642,7 @@ newDamageType{
 				target:knockback(src.x, src.y, dam.dist)
 				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
 			else
-				game.logSeen(target, "%s resists the punch!", target.name:capitalize())
+				game.logSeen(target, "%s resists the knockback!", target.name:capitalize())
 			end
 		end
 	end,

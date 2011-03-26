@@ -107,7 +107,7 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 	end
 
 	local break_stealth = false
-	if not self:attr("disarmed") then
+	if not self:attr("disarmed") and not self:isUnarmed() then
 		-- All weapons in main hands
 		if self:getInven(self.INVEN_MAINHAND) then
 			for i, o in ipairs(self:getInven(self.INVEN_MAINHAND)) do
@@ -382,6 +382,12 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 		local t =  self:getTalentFromId(self.T_CONDUIT)
 		t.do_combat(self, t, target)
 	end
+	
+	-- Exploit Weakness
+	if hitted and not target.dead and self:knowTalent(self.T_EXPLOIT_WEAKNESS) and self:isTalentActive(self.T_EXPLOIT_WEAKNESS) then
+		local t = self:getTalentFromId(self.T_EXPLOIT_WEAKNESS)
+		t.do_weakness(self, t, target)
+	end
 
 	-- Special effect
 	if hitted and not target.dead and weapon.special_on_hit and weapon.special_on_hit.fct then
@@ -407,6 +413,27 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_RIPOSTE) and rng.percent(target:getTalentLevel(target.T_RIPOSTE) * (5 + target:getDex(5))) then
 		game.logSeen(self, "%s ripostes!", target.name:capitalize())
 		target:attackTarget(self, nil, nil, true)
+	end
+	
+	-- Set Up
+	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:hasEffect(target.EFF_DEFENSIVE_MANEUVER) then
+		local t = target:getTalentFromId(target.T_SET_UP)
+		local power = t.getPower(target, t)
+		self:setEffect(self.EFF_SET_UP, 2, {src = target, power=power})
+	end
+	
+	-- Defensive Throw!
+	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_DEFENSIVE_THROW) and rng.percent(target:getTalentLevel(target.T_DEFENSIVE_THROW) * (5 + target:getCun(5))) then
+		local t = target:getTalentFromId(target.T_DEFENSIVE_THROW)
+		t.do_throw(target, self, t)
+	end
+	
+	-- Counter Attack!
+	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_COUNTER_ATTACK) and rng.percent(target:getTalentLevel(target.T_COUNTER_ATTACK) * (5 + target:getCun(5))) then
+		game.logSeen(self, "%s counters the attack!", target.name:capitalize())
+		local t = target:getTalentFromId(target.T_COUNTER_ATTACK)
+		local damage = t.getDamage(target, t)
+		local hit = target:attackTarget(self, nil, damage, true)
 	end
 
 	-- Greater Weapon Focus
@@ -448,6 +475,14 @@ function _M:combatDefense()
 	if self:hasDualWeapon() and self:knowTalent(self.T_DUAL_WEAPON_DEFENSE) then
 		add = add + 4 + (self:getTalentLevel(self.T_DUAL_WEAPON_DEFENSE) * self:getDex()) / 12
 	end
+	if self:knowTalent(self.T_TACTICAL_EXPERT) then
+		local t = self:getTalentFromId(self.T_TACTICAL_EXPERT)
+		add = add + t.do_tact_update(self, t)
+	end
+	if self:knowTalent(self.T_STEADY_MIND) then
+		local t = self:getTalentFromId(self.T_STEADY_MIND)
+		add = add + t.getDefense(self, t)
+	end
 	return self.combat_def + (self:getDex() - 10) * 0.35 + add + (self:getLck() - 50) * 0.4
 end
 
@@ -464,6 +499,10 @@ function _M:combatArmor()
 	end
 	if self:hasMassiveArmor() and self:knowTalent(self.T_MASSIVE_ARMOUR_TRAINING) then
 		add = add + self:getTalentLevel(self.T_MASSIVE_ARMOUR_TRAINING) * 1.6
+	end
+	if self:knowTalent(self.T_PHYSICAL_CONDITIONING) then
+		local t = self:getTalentFromId(self.T_PHYSICAL_CONDITIONING)
+		add = add + t.getArmor(self, t)
 	end
 	if self:knowTalent(self.T_CARBON_SPIKES) and self:isTalentActive(self.T_CARBON_SPIKES) then
 		add = add + self.carbon_armor
@@ -564,8 +603,18 @@ function _M:combatDamage(weapon)
 	if self:isTalentActive(Talents.T_BLOOD_FRENZY) then
 		add = add + self.blood_frenzy
 	end
-
-	local talented_mod = math.sqrt(self:combatCheckTraining(weapon) / 10) + 1
+	if self:knowTalent(self.T_EMPTY_HAND) and weapon == self.combat then
+		local t = self:getTalentFromId(self.T_EMPTY_HAND)
+		add = add + t.getDamage(self, t)
+	end
+	
+	if weapon == self.combat then 
+		-- Handles unarmed mastery
+		talented_mod = math.sqrt(self:getTalentLevel(Talents.T_UNARMED_MASTERY) / 10) + 1 or 0
+	else 
+		talented_mod = math.sqrt(self:combatCheckTraining(weapon) / 10) + 1
+	end
+	
 	local power = math.max(self.combat_dam + (weapon.dam or 1) + add, 1)
 	power = (math.sqrt(power / 10) - 1) * 0.8 + 1
 	print(("[COMBAT DAMAGE] power(%f) totstat(%f) talent_mod(%f)"):format(power, totstat, talented_mod))
@@ -653,7 +702,14 @@ function _M:physicalCrit(dam, weapon, target)
 	if target:attr("combat_critical") then
 		chance = chance + target:attr("combat_critical")
 	end
-	if target:knowTalent(target.T_PROBABILITY_WEAVING) and target:isTalentActive(T_PROBABILIT_WEAVING) then
+	if target:hasEffect(target.EFF_SET_UP) then
+		local p = target:hasEffect(target.EFF_SET_UP)
+		if p and p.src == self then	
+			chance = chance + p.power
+		end
+	end
+		
+	if target:knowTalent(target.T_PROBABILITY_WEAVING) and target:isTalentActive(T_PROBABILITY_WEAVING) then
 		chance = chance - target:getTalentLevel(target.T_PROBABILITY_WEAVING)
 	end
 	if target:hasHeavyArmor() and target:knowTalent(target.T_HEAVY_ARMOUR_TRAINING) then
@@ -669,6 +725,7 @@ function _M:physicalCrit(dam, weapon, target)
 	if rng.percent(chance) then
 		dam = dam * (1.5 + (self.combat_critical_power or 0) / 100)
 		crit = true
+		
 	end
 	return dam, crit
 end
@@ -741,6 +798,10 @@ end
 --- Computes physical resistance
 function _M:combatPhysicalResist()
 	local add = 0
+	if self:knowTalent(self.T_PHYSICAL_CONDITIONING) then
+		local t = self:getTalentFromId(self.T_PHYSICAL_CONDITIONING)
+		add = add + t.getPhysical(self, t)
+	end
 	if self:knowTalent(self.T_POWER_IS_MONEY) then
 		add = add + util.bound(self.money / (80 - self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 5), 0, self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 10)
 	end
@@ -759,9 +820,15 @@ end
 --- Computes mental resistance
 function _M:combatMentalResist()
 	local add = 0
+	if self:knowTalent(self.T_STEADY_MIND) then
+		local t = self:getTalentFromId(self.T_STEADY_MIND)
+		add = add + t.getMental(self, t)
+	end
+	local add = 0
 	if self:knowTalent(self.T_POWER_IS_MONEY) then
 		add = add + util.bound(self.money / (60 - self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 5), 0, self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 10)
 	end
+		add = add + t.getMental(self, t)
 	return self.combat_mentalresist + (self:getCun() + self:getWil() + (self:getLck() - 50) * 0.5) * 0.35 + add
 end
 
@@ -839,6 +906,18 @@ function _M:hasShield()
 	return shield
 end
 
+-- Check if actor is unarmed
+function _M:isUnarmed()
+	local unarmed = true
+	if not self:getInven("MAINHAND") or not self:getInven("OFFHAND") then return end
+	local weapon = self:getInven("MAINHAND")[1]
+	local offweapon = self:getInven("OFFHAND")[1]
+	if weapon or offweapon then
+		unarmed = false
+	end
+	return unarmed
+end
+
 --- Check if the actor dual wields
 function _M:hasDualWeapon()
 	if self:attr("disarmed") then
@@ -882,4 +961,107 @@ function _M:hasMount()
 		return nil
 	end
 	return mount
+end
+
+-- Unarmed Combat; this handles grapple checks and building combo points
+
+-- Builds Comob; reduces the cooldown on all unarmed abilities on cooldown by one
+function _M:buildCombo()
+
+	local duration = 3
+	local power = 1
+	-- Combo String bonuses
+	if self:knowTalent(self.T_COMBO_STRING) then
+		local t= self:getTalentFromId(self.T_COMBO_STRING)
+		if rng.percent(t.getChance(self, t)) then
+			power = 2
+		end
+		duration = 3 + math.ceil(t.getDuration(self, t))
+	end
+	-- Relentless Strike bonus
+	if self:hasEffect(self.EFF_RELENTLESS_STRIKES) then
+		for tid, cd in pairs(self.talents_cd) do
+			local tt = self:getTalentFromId(tid)
+			if tt.type[1]:find("^technique/") then
+				self.talents_cd[tid] = cd - 1
+			end
+		end
+	end
+	
+	self:setEffect(self.EFF_COMBO, duration, {power=power})
+	
+end
+
+function _M:getCombo(combo)
+	local combo = 0
+	local p = self:hasEffect(self.EFF_COMBO)
+	if p then	
+		combo = p.cur_power
+	end
+		return combo
+end
+
+function _M:clearCombo()
+	if self:hasEffect(self.EFF_COMBO) then
+		self:removeEffect(self.EFF_COMBO)
+	end
+end
+
+-- Check to see if the target is already being grappled; many talents have extra effects on grappled targets
+function _M:isGrappled(source)
+	local p = self:hasEffect(self.EFF_GRAPPLED)
+	if p and p.src == source then	
+		return true
+	else
+		return false
+	end
+end
+
+-- Breaks active grapples; called by a few talents that involve a lot of movement
+function _M:breakGrapples()
+	if self:hasEffect(self.EFF_GRAPPLING) then
+		-- deactivating GRAPPLING will clear the target's Grappled effect as well
+		self:removeEffect(self.EFF_GRAPPLING)
+	end
+end
+
+-- grapple size check; compares attackers size and targets size
+function _M:grappleSizeCheck(target)
+	size = target.size_category - self.size_category
+	if size > 1 then
+		game.logSeen(target, "%s fails because %s is too big!", self.name:capitalize(), target.name:capitalize())
+		return true
+	else
+		return false
+	end
+end
+
+-- Starts the grapple
+function _M:startGrapple(target)
+	-- pulls boosted grapple effect from the clinch talent if known
+	if self:knowTalent(self.T_CLINCH) then
+		local t = self:getTalentFromId(self.T_CLINCH)
+		power = t.getPower(self, t)
+		duration = t.getDuration(self, t)
+		hitbonus = self:getTalentLevel(t)/2
+	else
+		power = 5
+		duration = 4
+		hitbonus = 0
+	end
+	-- Breaks the grapple before reapplying
+	if self:hasEffect(self.EFF_GRAPPLING) then
+		-- deactivating GRAPPLING will clear the targets Grappled effect and various holds
+		self:removeEffect(self.EFF_GRAPPLING, true)
+		target:setEffect(target.EFF_GRAPPLED, duration, {src=self, power=power}, true)
+		self:setEffect(self.EFF_GRAPPLING, duration, {src=target}, true)
+		return true
+	elseif target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 5 - hitbonus) and target:canBe("pin") then
+		target:setEffect(target.EFF_GRAPPLED, duration, {src=self, power=power})
+		self:setEffect(self.EFF_GRAPPLING, duration, {src=target}, true)
+		return true
+	else
+		game.logSeen(target, "%s resists the grapple!", target.name:capitalize())
+		return false
+	end
 end
