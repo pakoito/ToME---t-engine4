@@ -46,6 +46,12 @@ newEntity{
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },
 	energy = { mod=1 },
 	stats = { str=20, dex=8, mag=6, con=16 },
+	on_die = function(self, who)
+		local part = "ORC_HEART"
+		if game.player:hasQuest("brotherhood-of-alchemists") then 
+			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
+		end
+	end,
 }
 
 newEntity{ base = "BASE_NPC_ORC_RAK_SHOR",

@@ -259,6 +259,39 @@ newInscription{
 	end,
 }
 
+newInscription{
+	name = "Infusion: Wild Growth",
+	type = {"inscriptions/infusions", 1},
+	points = 1,
+	tactical = { ATTACKAREA = 2, DISABLE = 3 },
+	range = 0,
+	radius = 5,
+	direct_hit = true,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
+	end,
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 3, 20) end,
+	action = function(self, t)
+		local dam = t.getDamage(self, t)
+		local tg = self:getTalentTarget(t)
+		self:project(tg, self.x, self.y, function(tx, ty)
+			DamageType:get(DamageType.ENTANGLE).projector(self, tx, ty, DamageType.ENTANGLE, dam)
+		end)
+		game:playSoundNear(self, "talents/earth")
+		return true
+	end,
+	info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		local damage = t.getDamage(self, t)
+		return ([[Causes thick vines to spring from the ground and entangle all targets within %d squares for %d turns, pinning them in place and dealing %0.2f physical damage and %0.2f nature damage each turn.]]):
+		format(self:getTalentRadius(t), data.dur, damDesc(self, DamageType.PHYSICAL, damage)/3, damDesc(self, DamageType.Nature, 2*damage)/3)
+	end,
+	short_info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[Rad %d for %d turns]]):format(self:getTalentRadius(t), data.dur)
+	end,
+}
+
 -----------------------------------------------------------------------
 -- Runes
 -----------------------------------------------------------------------
@@ -790,5 +823,31 @@ newInscription{
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return ([[%d effects / %d heal]]):format(data.effects, data.heal + data.inc_stat)
+	end,
+}
+
+
+newInscription{
+	name = "Taint: Telepathy",
+	type = {"inscriptions/taints", 1},
+	points = 1,
+	is_spell = true,
+	range = 10,
+	action = function(self, t)
+		local rad = self:getTalentRange(t)
+		self:setEffect(self.EFF_SENSE, 5, {
+			range = rad,
+			actor = 1,
+		})
+		self:setEffect(self.EFF_WEAKENED_MIND, 10, {power=20})
+		return true
+	end,
+	info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[Strip the protective barriers from your mind for %d turns, allowing in the thoughts all creatures within %d squares but reducing mind save by %d for 10 turns.]]):format(data.dur, self:getTalentRange(t), 20)
+	end,
+	short_info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[Range %d telepathy for %d turns]]):format(self:getTalentRange(t), data.dur)
 	end,
 }

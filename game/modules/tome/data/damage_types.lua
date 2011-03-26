@@ -1369,3 +1369,19 @@ newDamageType{
 		end
 	end,
 }
+
+newDamageType{
+	name = "entangle", type = "ENTANGLE",
+	projector = function(src, x, y, type, dam)
+		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam/3)
+		DamageType:get(DamageType.NATURE).projector(src, x, y, DamageType.NATURE, 2*dam/3)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			if target:canBe("pin") then
+				target:setEffect(target.EFF_PINNED, 5, {})
+			else
+				game.logSeen(target, "%s resists!", target.name:capitalize())
+			end
+		end	
+	end,
+}

@@ -44,6 +44,12 @@ newEntity{
 	blind_immune = 1,
 	see_invisible = 2,
 	undead = 1,
+	on_die = function(self, who)
+		local part = "GHOUL_FLESH"
+		if game.player:hasQuest("brotherhood-of-alchemists") then 
+			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
+		end
+	end,
 }
 
 newEntity{ base = "BASE_NPC_GHOUL",

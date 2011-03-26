@@ -61,7 +61,12 @@ newEntity{ base = "BASE_NPC_SPIDER",
 		[Talents.T_SPIDER_WEB]={base=1, every=10, max=5},
 		[Talents.T_LAY_WEB]={base=1, every=10, max=5},
 	},
-
+	on_die = function(self, who)
+		local part = "SPIDER_SPINNERET"
+		if game.player:hasQuest("brotherhood-of-alchemists") then 
+			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
+		end
+	end,
 }
 
 newEntity{ base = "BASE_NPC_SPIDER",
@@ -176,6 +181,12 @@ newEntity{ base = "BASE_NPC_SPIDER",
 		[Talents.T_DISRUPTION_SHIELD]={base=3, every=6, max=6},
 		[Talents.T_ARCANE_POWER]={base=3, every=6, max=6},
 	},
+	on_die = function(self, who)
+		local part = "FAERLHING_FANG"
+		if game.player:hasQuest("brotherhood-of-alchemists") then 
+			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
+		end
+	end,
 
 }
 

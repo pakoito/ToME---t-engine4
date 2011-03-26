@@ -204,7 +204,12 @@ newEntity{ base = "BASE_NPC_HORROR",
 	end,
 
 	-- Needs an on death affect that kills off any remaining eyes.
-	on_die = function(self, src)
+	on_die = function(self, src, who)
+		local part = "HEADLESS_HORROR_HEART"
+		if game.player:hasQuest("brotherhood-of-alchemists") then 
+			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
+		end
+
 		local nb = 0
 		for eye, _ in pairs(self.eyes) do
 			if not eye.dead then eye:die(src) nb = nb + 1 end
@@ -389,6 +394,12 @@ newEntity{ base = "BASE_NPC_HORROR",
 	make_escort = {
 		{type="horror", subtype="eldritch", name="luminous horror", number=2, no_subescort=true},
 	},
+	on_die = function(self, who)
+		local part = "LUMINOUS_HORROR_DUST"
+		if game.player:hasQuest("brotherhood-of-alchemists") then 
+			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
+		end
+	end,
 }
 
 newEntity{ base = "BASE_NPC_HORROR",

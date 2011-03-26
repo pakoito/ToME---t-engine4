@@ -108,4 +108,10 @@ newEntity{ base = "BASE_NPC_STORM_DRAKE",
 		[Talents.T_STATIC_FIELD]={base=3, every=10},
 		[Talents.T_TORNADO]={base=5, every=4},
 	},
+	on_die = function(self, who)
+		local part = "STORM_WYRM_CLAW"
+		if game.player:hasQuest("brotherhood-of-alchemists") then 
+			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
+		end
+	end,
 }

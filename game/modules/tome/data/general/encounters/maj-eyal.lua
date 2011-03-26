@@ -231,3 +231,25 @@ newEntity{
 		return true
 	end,
 }
+
+newEntity{
+	name = "Agrimley the Hermit",
+	type = "harmless", subtype = "special", unique = true,
+	immediate = {"world-encounter", "maj-eyal"},
+	-- Spawn the hermit
+	on_encounter = function(self, who)
+		local x, y = self:findSpot(who)
+		if not x then return end
+
+		local g = mod.class.WorldNPC.new{
+			name="Agrimley the Hermit",
+			type="humanoid", subtype="elf", faction="angolwen",
+			display='@', color=colors.BLUE,
+			can_talk = "alchemist-hermit",
+			unit_power = 300,
+		}
+		g:resolve() g:resolve(nil, true)
+		game.zone:addEntity(game.level, g, "actor", x, y)
+		return true
+	end,
+}

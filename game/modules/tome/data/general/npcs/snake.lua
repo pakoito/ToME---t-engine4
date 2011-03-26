@@ -104,6 +104,12 @@ newEntity{ base = "BASE_NPC_SNAKE",
 	combat = { dam=resolvers.levelup(10, 1, 0.7), atk=30, apr=10 },
 
 	resolvers.talents{ [Talents.T_BITE_POISON]=3 },
+	on_die = function(self, who)
+		local part = "BLACK_MAMBA_HEAD"
+		if game.player:hasQuest("brotherhood-of-alchemists") then 
+			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
+		end
+	end,
 }
 
 newEntity{ base = "BASE_NPC_SNAKE",

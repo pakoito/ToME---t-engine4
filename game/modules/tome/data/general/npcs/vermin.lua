@@ -56,6 +56,12 @@ newEntity{ base = "BASE_NPC_WORM",
 	combat = { dam=1, atk=15, apr=100 },
 
 	resolvers.talents{ [Talents.T_CRAWL_ACID]=2, [Talents.T_MULTIPLY]=1 },
+	on_die = function(self, who)
+		local part = "GREEN_WORM"
+		if game.player:hasQuest("brotherhood-of-alchemists") then 
+			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
+		end
+	end,
 }
 
 newEntity{ base = "BASE_NPC_WORM",

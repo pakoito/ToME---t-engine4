@@ -46,4 +46,10 @@ newEntity{
 	blind_immune = 1,
 	see_invisible = 4,
 	undead = 1,
+	on_die = function(self, who)
+		local part = "MUMMY_BONE"
+		if game.player:hasQuest("brotherhood-of-alchemists") then 
+			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
+		end
+	end,
 }

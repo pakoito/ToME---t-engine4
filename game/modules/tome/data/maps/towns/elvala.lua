@@ -35,6 +35,7 @@ defineTile("2", "HARDWALL", nil, nil, "LIGHT_ARMOR_STORE")
 defineTile("3", "HARDWALL", nil, nil, "STAFF_WEAPON_STORE")
 defineTile("4", "HARDWALL", nil, nil, "SWORD_WEAPON_STORE")
 defineTile("5", "HARDWALL", nil, nil, "RUNEMASTER")
+quickEntity('a', {show_tooltip=true, name="Home of Marus the Alchemist", display='+', color=colors.LIGHT_UMBER, resolvers.chatfeature("alchemist-elvala"), image="terrain/wood_store_closed.png"}, {no_teleport=true})
 
 -- addSpot section
 
@@ -61,7 +62,7 @@ return [[
 ~~...............##___________##......ttt..~~~~~~~
 ~~....ttt........#__#########__#...........~~~~~~~
 ~....ttt.........#_###########_#...........~~~~~~~
-~...ttt.....######__#5#####1#__######.......~~~~~~
+~...ttt.....######__#5#a###1#__######.......~~~~~~
 ~...t....####_______________________####......~~~~
 ~......###_______#_____..._____#_______###.....~~~
 ~.....##________###___.....___###________##....~~~

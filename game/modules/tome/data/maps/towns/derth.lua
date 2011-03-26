@@ -39,6 +39,7 @@ defineTile('3', "HARDWALL", nil, nil, "HEAVY_ARMOR_STORE")
 defineTile('1', "HARDWALL", nil, nil, "LIGHT_ARMOR_STORE")
 defineTile('4', "HARDWALL", nil, nil, "HERBALIST")
 defineTile('9', "HARDWALL", nil, nil, "JEWELRY")
+quickEntity('a', {show_tooltip=true, name="Home of Stire the Alchemist", display='+', color=colors.LIGHT_UMBER, resolvers.chatfeature("alchemist-derth"), image="terrain/wood_store_closed.png"}, {no_teleport=true})
 
 startx = 0
 starty = 20
@@ -100,7 +101,7 @@ ttttttt~~~tt.__.........._......_.......t~~~tttttt
 ttttttt~~~t.._.#####....._......_.###...t~~~tttttt
 ttttttt~~~t.._.#####....._.####._.###...t~~~tttttt
 ttttttt~~~t.._.#####....._.####._.###...t~~~tttttt
-ttttttt~~~t.._.#5#2#....___####._.###...t~~~tttttt
+ttttttt~~~t.._.#5#2#....___##a#._.###...t~~~tttttt
 ttttttt~~~t.._______..___._.._.._.###...t~~~tttttt
 ttttttt~~~t......._..__..._______.###..tt~~~tttttt
 ttttttt~~~tt......_.._.........._.._...t~~~ttttttt

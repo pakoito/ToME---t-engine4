@@ -56,6 +56,12 @@ newEntity{ base = "BASE_NPC_AQUATIC_CRITTER",
 	autolevel = "warriormage",
 	combat = {damtype=DamageType.LIGHTNING},
 	resolvers.talents{ [Talents.T_CHAIN_LIGHTNING]=3, [Talents.T_LIGHTNING]=3 },
+	on_die = function(self, who)
+		local part = "ELECTRIC_EEL_TAIL"
+		if game.player:hasQuest("brotherhood-of-alchemists") then 
+			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
+		end
+	end,
 }
 
 newEntity{ base = "BASE_NPC_AQUATIC_CRITTER",
@@ -87,6 +93,12 @@ newEntity{ base = "BASE_NPC_AQUATIC_CRITTER",
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 1,
 	resolvers.talents{ [Talents.T_GRAB]=3, },
+	on_die = function(self, who)
+		local part = "SQUID_INK"
+		if game.player:hasQuest("brotherhood-of-alchemists") then 
+			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
+		end
+	end,
 }
 
 newEntity{ base = "BASE_NPC_AQUATIC_CRITTER",
@@ -96,4 +108,10 @@ newEntity{ base = "BASE_NPC_AQUATIC_CRITTER",
 	rarity = 2,
 	stats = { mag=30, },
 	resolvers.talents{ [Talents.T_GRAB]=3, [Talents.T_BLINDING_INK]=3, },
+	on_die = function(self, who)
+		local part = "SQUID_INK"
+		if game.player:hasQuest("brotherhood-of-alchemists") then 
+			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
+		end
+	end,
 }

@@ -118,6 +118,12 @@ It can summon the very shades of its victims from beyond the grave to come ensla
 	resolvers.inscriptions(1, "rune"),
 	summon = {{type="undead", number=1, hasxp=false}, },
 	resolvers.talents{ [Talents.T_STUN]={base=2, every=7, max=6}, [Talents.T_SUMMON]=1, [Talents.T_BLUR_SIGHT]={base=3, every=7, max=7}, [Talents.T_PHANTASMAL_SHIELD]={base=2, every=7, max=6}, [Talents.T_ROTTING_DISEASE]={base=3, every=7, max=7}, },
+	on_die = function(self, who)
+		local part = "ELDER_VAMPIRE_BLOOD"
+		if game.player:hasQuest("brotherhood-of-alchemists") then 
+			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
+		end
+	end,
 }
 
 newEntity{ base = "BASE_NPC_VAMPIRE",
@@ -135,4 +141,10 @@ newEntity{ base = "BASE_NPC_VAMPIRE",
 	make_escort = {
 		{type="undead", number=resolvers.mbonus(2, 2)},
 	},
+	on_die = function(self, who)
+		local part = "VAMPIRE_LORD_FANG"
+		if game.player:hasQuest("brotherhood-of-alchemists") then 
+			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
+		end
+	end,
 }

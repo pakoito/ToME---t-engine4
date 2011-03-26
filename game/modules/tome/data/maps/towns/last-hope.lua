@@ -53,6 +53,7 @@ quickEntity('g', {type="store", show_tooltip=true, name="Rich merchant", display
 ]]
 quickEntity('E', {type="store", show_tooltip=true, name="The Elder", display='*', color=colors.VIOLET, resolvers.chatfeature("last-hope-elder"), image="terrain/wood_store_closed.png"})
 quickEntity('T', {type="store", show_tooltip=true, name="Tannen's Tower", display='*', color=colors.VIOLET, resolvers.chatfeature("tannen"), image="terrain/wood_store_closed.png"})
+quickEntity('h', {show_tooltip=true, name="Home of Ungrol the Alchemist", display='+', color=colors.LIGHT_UMBER, resolvers.chatfeature("alchemist-last-hope"), image="terrain/wood_store_closed.png"}, {no_teleport=true})
 
 quickEntity('@', {show_tooltip=true, name="Statue of King Tolak the Fair", display='@', image="terrain/grass.png", add_displays = {mod.class.Grid.new{image="terrain/statue1.png"}}, color=colors.LIGHT_BLUE, block_move=function(self, x, y, e, act, couldpass) if e and e.player and act then e:learnLore("last-hope-tolak-statue") end return true end})
 quickEntity('Z', {show_tooltip=true, name="Statue of King Toknor the Brave", display='@', image="terrain/grass.png", add_displays = {mod.class.Grid.new{image="terrain/statue1.png"}}, color=colors.LIGHT_BLUE, block_move=function(self, x, y, e, act, couldpass) if e and e.player and act then e:learnLore("last-hope-toknor-statue") end return true end})
@@ -130,7 +131,7 @@ tt~~~##          __~~###ttt###~~__          ##~~~t
 tt~~~~#           __~~~#####~~~__           #~~~~t
 ttt~~~##           ___~~~~~~~___      #    ##~~~tt
 ttt~~~~#     #       _________       ###   #~~~~tt
-tttt~~~##   ###     #         #     ###   ##~~~ttt
+tttt~~~##   ###     #         #     ##h   ##~~~ttt
 tttt~~~~##   ###    ###     ###    ###   ##~~~~ttt
 ttttt~~~~#    ###    #### ####      #    #~~~~tttt
 tttttt~~~##    #      #######           ##~~~ttttt

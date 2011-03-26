@@ -58,6 +58,12 @@ newEntity{
 	undead = 1,
 --	free_action = 1,
 --	sleep_immune = 1,
+	on_die = function(self, who)
+		local part = "WIGHT_ECTOPLASM"
+		if game.player:hasQuest("brotherhood-of-alchemists") then 
+			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
+		end
+	end,
 }
 
 newEntity{ base = "BASE_NPC_WIGHT",

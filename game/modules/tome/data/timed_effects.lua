@@ -3537,3 +3537,18 @@ newEffect{
 		self:removeTemporaryValue("combat_mindpower", eff.mindid)
 	end,
 }
+
+newEffect{
+	name = "WEAKENED_MIND",
+	desc = "Weakened Mind",
+	long_desc = function(self, eff) return ("Decreases mind save by %d."):format(eff.power) end,
+	type = "mental",
+	status = "detrimental",
+	parameters = { power=10 },
+	activate = function(self, eff)
+		eff.mindid = self:addTemporaryValue("combat_mentalresist", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_mentalresist", eff.mindid)
+	end,
+}

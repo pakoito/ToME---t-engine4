@@ -51,6 +51,12 @@ newEntity{
 	confusion_immune = 1,
 	poison_immune = 1,
 	stone_immune = 1,
+	on_die = function(self, who)
+		local part = "XORN_FRAGMENT"
+		if game.player:hasQuest("brotherhood-of-alchemists") then 
+			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
+		end
+	end,
 }
 
 newEntity{ base = "BASE_NPC_XORN",
