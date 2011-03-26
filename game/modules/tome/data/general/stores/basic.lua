@@ -230,11 +230,12 @@ newEntity{
 	name = "rare goods",
 	display = '7', color=colors.BLUE,
 	store = {
+		nb_fill = 20,
 		purse = 35,
 		empty_before_restock = false,
 		sell_percent = 240,
 		filters = function()
-			return {id=true, ignore={type="money"}, add_levels=10, tome_drops="boss"}
+			return {id=true, ignore={type="money"}, add_levels=10, force_tome_drops=true, tome_drops="boss", tome_mod={money=0, basic=0}, special=function(o) return o.type ~= "scroll" end}
 		end,
 	},
 }
