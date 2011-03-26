@@ -169,3 +169,7 @@ newAchievement{
 	name = "Genocide", id = "GREATMOTHER_DEAD",
 	desc = [[Killed the Orc Greatmother in the breeding pits, thus dealing a terrible blow to the orc race.]],
 }
+newAchievement{
+	name = "Savior of the damsels in distress", id = "MELINDA_SAVED",
+	desc = [[Saved Melinda from her terrible fate in the Crypt of Kryl-Feijan.]],
+}

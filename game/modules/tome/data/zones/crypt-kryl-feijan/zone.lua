@@ -106,6 +106,7 @@ return {
 
 		if not game.player:isQuestStatus("kryl-feijan-escape", engine.Quest.FAILED) then
 			game.player:setQuestStatus("kryl-feijan-escape", engine.Quest.DONE)
+			world:gainAchievemnt("MELINDA_SAVED", game.player)
 		end
 	end,
 
