@@ -111,3 +111,12 @@ myssil_dies = function(self)
 	corr:doEmote("Victory is mine!", 60)
 	game.player:setQuestStatus(self.id, self.COMPLETED)
 end
+
+function onWin(self, who)
+	if not self:isStatus(self.DONE) then return end
+	return 10, {
+		"While you were in the Far East, the Grand Corruptor was busy in the Maj'Eyal.",
+		"With the fall of Zigur he was able to attack and take control of Elvala, the Shaloren capital city.",
+		"His plans however do not stop there.",
+	}
+end
