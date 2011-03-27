@@ -824,7 +824,6 @@ function _M:combatMentalResist()
 		local t = self:getTalentFromId(self.T_STEADY_MIND)
 		add = add + t.getMental(self, t)
 	end
-	local add = 0
 	if self:knowTalent(self.T_POWER_IS_MONEY) then
 		add = add + util.bound(self.money / (60 - self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 5), 0, self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 10)
 	end

@@ -299,7 +299,7 @@ newTalent{
 		local mast = aura_mastery(self, t)
 		local spikecost = t.getSpikeCost(self, t)
 		return ([[Fills the air around you with reactive currents of furnace-like heat that do %d fire damage to all who approach. All damage done by the aura will drain one point of energy per %0.2f points of damage dealt.
-		When deactivated, if you have at least %d energy, a massive spike of thermal energy is released as a conical blast (radius %d) of superheated air. Anybody caught in it will suffer %d fire damage. Telekinetically wielding a gem instead of a weapon will result in improved spike efficiency.
+		When deactivated, if you have at least %d energy, a massive spike of thermal energy is released as a conical blast (radius %d) of superheated air. Anybody caught in it will suffer %d fire damage over several turns. Telekinetically wielding a gem instead of a weapon will result in improved spike efficiency.
 		The damage will increase with the Willpower stat.
 		To turn off an aura without spiking it, deactivate it and target yourself.]]):format(dam, mast, spikecost, rad, spikedam)
 	end,
