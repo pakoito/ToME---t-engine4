@@ -67,7 +67,7 @@ function _M:useObject(who, ...)
 	if self.use_power then
 		if self.power >= self.use_power.power then
 			local rets = { self.use_power.use(self, who, ...) }
-			local no_power = rets[3]
+			local no_power = rets[4]
 			if not no_power then self.power = self.power - self.use_power.power end
 			return unpack(rets)
 		else
