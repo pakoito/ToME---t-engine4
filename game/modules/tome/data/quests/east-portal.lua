@@ -65,7 +65,7 @@ on_status_change = function(self, who, status, sub)
 end
 
 create_portal = function(self, npc, player)
---	self:remove_materials(player)
+	self:remove_materials(player)
 
 	-- Farportal
 	local g1 = game.zone:makeEntityByName(game.level, "terrain", "FAR_EAST_PORTAL")
@@ -174,7 +174,7 @@ back_to_last_hope = function(self)
 	local spot = game.level:pickSpot{type="pop-quest", subtype="farportal-npc"}
 	game.zone:addEntity(game.level, g, "actor", spot.x, spot.y)
 	game.level.map:particleEmitter(spot.x, spot.y, 1, "teleport")
-	self.nicer_tiles:postProcessLevelTiles(self.level)
+	game.nicer_tiles:postProcessLevelTiles(game.level)
 
 	local Chat = require("engine.Chat")
 	local chat = Chat.new("east-portal-end", g, game.player)
