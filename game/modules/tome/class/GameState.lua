@@ -215,7 +215,7 @@ function _M:generateRandart(add, base, lev)
 	game.level.level = lev
 
 	-- Get a base object
-	base = base or game.zone:makeEntity(game.level, "object", {no_tome_drops=true, ego_filter={keep_egos=true, ego_chance=-1000}, special=function(e)
+	base = base or game.zone:makeEntity(game.level, "object", {ingore_material_restriction=true, no_tome_drops=true, ego_filter={keep_egos=true, ego_chance=-1000}, special=function(e)
 		return (not e.unique and e.randart_able) and (not e.material_level or e.material_level >= 2) and true or false
 	end}, nil, true)
 	if not base then game.level.level = oldlev return end
@@ -914,16 +914,18 @@ end
 
 function _M:entityFilter(zone, e, filter, type)
 	if type == "object" then
-		local min_mlvl = util.getval(zone.min_material_level)
-		local max_mlvl = util.getval(zone.max_material_level)
-		if min_mlvl then
-			if not e.material_level then return true end
-			if e.material_level < min_mlvl then return false end
-		end
+		if not filter.ingore_material_restriction then
+			local min_mlvl = util.getval(zone.min_material_level)
+			local max_mlvl = util.getval(zone.max_material_level)
+			if min_mlvl then
+				if not e.material_level then return true end
+				if e.material_level < min_mlvl then return false end
+			end
 
-		if max_mlvl then
-			if not e.material_level then return true end
-			if e.material_level > max_mlvl then return false end
+			if max_mlvl then
+				if not e.material_level then return true end
+				if e.material_level > max_mlvl then return false end
+			end
 		end
 		return true
 	else
