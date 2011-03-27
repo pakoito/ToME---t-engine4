@@ -41,7 +41,7 @@ return {
 			edge_entrances = {4,6},
 			rooms = {"forest_clearing", {"lesser_vault",8}},
 			rooms_config = {forest_clearing={pit_chance=5, filters={{type="insect", subtype="ant"}, {type="insect"}, {type="animal", subtype="snake"}, {type="animal", subtype="canine"}}}},
-			lesser_vaults_list = {"honey_glade", "troll-hideout", "mage-hideout", "thief-hideout", "plantlife", "mold-path"},
+			lesser_vaults_list = {"honey_glade", "troll-hideout", "mage-hideout", "thief-hideout", "plantlife", "mold-path", "bandit-fortress",},
 			['.'] = "GRASS",
 			['#'] = {"TREE","TREE2","TREE3","TREE4","TREE5","TREE6","TREE7","TREE8","TREE9","TREE10","TREE11","TREE12","TREE13","TREE14","TREE15","TREE16","TREE17","TREE18","TREE19","TREE20",},
 			up = "GRASS_UP4",
