@@ -105,6 +105,11 @@ generate = function(self, player, x, y)
 			game.logSeen(self, "#LIGHT_BLUE#All those events never happened. Except they did, somewhen.")
 			game:setAllowedBuild("chronomancer_paradox_mage", true)
 			world:gainAchievement("PARADOX_NOW", p)
+
+			local rift = game.zone:makeEntityByName(game.level, "terrain", "RIFT")
+			rift.change_level_check = function() game.log("This rift in time has been created by the paradox. You dare not enter it, it could make things worse. An other one will have to fix you mess.") return true end
+			game.zone:addEntity(game.level, rift, "terrain", self.x, self.y)
+
 			self.on_die = nil
 			self:die()
 			return true
