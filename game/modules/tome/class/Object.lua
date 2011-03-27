@@ -226,6 +226,8 @@ end
 function _M:getTextualDesc()
 	local desc = tstring{}
 
+	if self.quest then desc:add({"color", "VIOLET"}, "{Plot Item}", {"color", "LAST"}, true) end
+
 	desc:add(("Type: %s / %s"):format(self.type or "unknown", self.subtype or "unknown"), true)
 	if self.slot_forbid == "OFFHAND" then desc:add("It must be held with both hands.", true) end
 	desc:add(true)
@@ -451,7 +453,7 @@ function _M:getTextualDesc()
 		desc:add({"color","YELLOW"}, "When used to attack (with talents):", {"color", "LAST"}, true)
 		desc_combat(self.special_combat)
 	end
-	
+
 	if self.no_teleport then
 		desc:add("It is immune to teleportation, if you teleport it will fall on the ground.", true)
 	end
@@ -578,6 +580,9 @@ end
 
 --- Called when trying to pickup
 function _M:on_prepickup(who, idx)
+	if self.quest and who ~= game.party:findMember{main=true} then
+		return true
+	end
 	if who.player and self.lore then
 		game.level.map:removeObject(who.x, who.y, idx)
 		who:learnLore(self.lore)
