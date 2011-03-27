@@ -89,6 +89,7 @@ typedef struct {
 	float used_animdx, used_animdy;
 	int seensinfo_w;
 	int seensinfo_h;
+	bool seen_changed;
 } map_type;
 
 #endif

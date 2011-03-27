@@ -526,8 +526,9 @@ static int map_new(lua_State *L)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, 4, map->mwidth + 3, map->mheight + 3, 0, GL_BGRA, GL_UNSIGNED_BYTE, NULL);
-	map->seens_map = calloc((map->mwidth + 3)*(map->mheight + 3)*4, sizeof(GLubyte));
+	glTexImage2D(GL_TEXTURE_2D, 0, 4, map->mwidth + 7, map->mheight + 7, 0, GL_BGRA, GL_UNSIGNED_BYTE, NULL);
+	map->seens_map = calloc((map->mwidth + 7)*(map->mheight + 7)*4, sizeof(GLubyte));
+	map->seen_changed = TRUE;
 
 	for (i = 0; i < w; i++)
 	{
@@ -586,6 +587,7 @@ static int map_set_zoom(lua_State *L)
 	map->tile_h = tile_h;
 	map->mwidth = mwidth;
 	map->mheight = mheight;
+	map->seen_changed = TRUE;
 	return 0;
 }
 
@@ -600,6 +602,7 @@ static int map_set_obscure(lua_State *L)
 	map->obscure_g = g;
 	map->obscure_b = b;
 	map->obscure_a = a;
+	map->seen_changed = TRUE;
 	return 0;
 }
 
@@ -614,6 +617,7 @@ static int map_set_shown(lua_State *L)
 	map->shown_g = g;
 	map->shown_b = b;
 	map->shown_a = a;
+	map->seen_changed = TRUE;
 	return 0;
 }
 
@@ -684,6 +688,7 @@ static int map_set_seen(lua_State *L)
 
 	if (x < 0 || y < 0 || x >= map->w || y >= map->h) return 0;
 	map->grids_seens[y*map->w+x] = v;
+	map->seen_changed = TRUE;
 	return 0;
 }
 
@@ -696,6 +701,7 @@ static int map_set_remember(lua_State *L)
 
 	if (x < 0 || y < 0 || x >= map->w || y >= map->h) return 0;
 	map->grids_remembers[x][y] = v;
+	map->seen_changed = TRUE;
 	return 0;
 }
 
@@ -708,6 +714,7 @@ static int map_set_lite(lua_State *L)
 
 	if (x < 0 || y < 0 || x >= map->w || y >= map->h) return 0;
 	map->grids_lites[x][y] = v;
+	map->seen_changed = TRUE;
 	return 0;
 }
 
@@ -719,6 +726,7 @@ static int map_clean_seen(lua_State *L)
 	for (i = 0; i < map->w; i++)
 		for (j = 0; j < map->h; j++)
 			map->grids_seens[j*map->w+i] = 0;
+	map->seen_changed = TRUE;
 	return 0;
 }
 
@@ -730,6 +738,7 @@ static int map_clean_remember(lua_State *L)
 	for (i = 0; i < map->w; i++)
 		for (j = 0; j < map->h; j++)
 			map->grids_remembers[i][j] = FALSE;
+	map->seen_changed = TRUE;
 	return 0;
 }
 
@@ -741,6 +750,7 @@ static int map_clean_lite(lua_State *L)
 	for (i = 0; i < map->w; i++)
 		for (j = 0; j < map->h; j++)
 			map->grids_lites[i][j] = FALSE;
+	map->seen_changed = TRUE;
 	return 0;
 }
 
@@ -778,10 +788,8 @@ static int map_get_seensinfo(lua_State *L)
 	}
 
 
-static int map_update_seen_texture(lua_State *L)
+static void map_update_seen_texture(map_type *map)
 {
-	map_type *map = (map_type*)auxiliar_checkclass(L, "core{map}", 1);
-
 	tglBindTexture(GL_TEXTURE_2D, map->seens_texture);
 
 	int mx = map->used_mx;
@@ -789,14 +797,14 @@ static int map_update_seen_texture(lua_State *L)
 	GLubyte *seens = map->seens_map;
 	int ptr = 0;
 	int ii, jj;
-	map->seensinfo_w = map->mwidth + 3;
-	map->seensinfo_h = map->mheight + 3;
+	map->seensinfo_w = map->mwidth + 7;
+	map->seensinfo_h = map->mheight + 7;
 
-	for (jj = 0; jj < map->mheight + 3; jj++)
+	for (jj = 0; jj < map->mheight + 7; jj++)
 	{
-		for (ii = 0; ii < map->mwidth + 3; ii++)
+		for (ii = 0; ii < map->mwidth + 7; ii++)
 		{
-			int i = mx - 1 + ii, j = my - 1 + jj;
+			int i = mx - 3 + ii, j = my - 3 + jj;
 			if ((i < 0) || (j < 0) || (i >= map->w) || (j >= map->h))
 			{
 				seens[ptr] = 0;
@@ -833,9 +841,7 @@ static int map_update_seen_texture(lua_State *L)
 			ptr += 4;
 		}
 	}
-	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, map->mwidth + 3, map->mheight + 3, GL_BGRA, GL_UNSIGNED_BYTE, seens);
-
-	return 0;
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, map->mwidth + 7, map->mheight + 7, GL_BGRA, GL_UNSIGNED_BYTE, seens);
 }
 
 static int map_draw_seen_texture(lua_State *L)
@@ -844,10 +850,10 @@ static int map_draw_seen_texture(lua_State *L)
 	int x = lua_tonumber(L, 2);
 	int y = lua_tonumber(L, 3);
 	int nb_keyframes = 0;
-	x += -map->tile_w;
-	y += -map->tile_h;
-	int w = (map->mwidth + 3) * map->tile_w;
-	int h = (map->mheight + 3) * map->tile_h;
+	x += -map->tile_w * 3;
+	y += -map->tile_h * 3;
+	int w = (map->mwidth + 7) * map->tile_w;
+	int h = (map->mheight + 7) * map->tile_h;
 
 	int mx = map->mx;
 	int my = map->my;
@@ -927,6 +933,7 @@ static int map_set_scroll(lua_State *L)
 
 	map->mx = x;
 	map->my = y;
+	map->seen_changed = TRUE;
 	return 0;
 }
 
@@ -1201,6 +1208,12 @@ static int map_to_screen(lua_State *L)
 	/* Disables Depth Testing, we do not need it for the rest of the display */
 	glDisable(GL_DEPTH_TEST);
 
+	if (always_show && map->seen_changed)
+	{
+		map_update_seen_texture(map);
+		map->seen_changed = FALSE;
+	}
+
 	return 0;
 }
 
@@ -1300,7 +1313,7 @@ static const struct luaL_reg map_reg[] =
 {
 	{"__gc", map_free},
 	{"close", map_free},
-	{"updateSeensTexture", map_update_seen_texture},
+//	{"updateSeensTexture", map_update_seen_texture},
 	{"bindSeensTexture", map_bind_seen_texture},
 	{"drawSeensTexture", map_draw_seen_texture},
 	{"setZoom", map_set_zoom},
