@@ -47,6 +47,8 @@ return {
 				wall = {"SPACE_TURBULENCE1","SPACE_TURBULENCE2"},
 				up = "VOID",
 				down = "RIFT",
+				sqrt_percent = 50,
+				noise = "fbm_perlin",
 				edge_entrances = {4,6},
 			},
 			actor = {
