@@ -172,7 +172,7 @@ newChat{ id="choice",
 				local o = art_list[e[1].id]
 				o:identify(true)
 				game.tooltip_x, game.tooltip_y = 1, 1
-				game.tooltip:displayAtMap(nil, nil, game.w, game.h, "#GOLD#"..o.name.."#LAST#\n"..tostring(o:getDesc()))
+				game.tooltip:displayAtMap(nil, nil, game.w, game.h, tostring(o:getDesc()))
 			end,
 		},
 		{"The "..e[2].name..".", jump="list", 
@@ -185,7 +185,7 @@ newChat{ id="choice",
 				local o = art_list[e[2].id]
 				o:identify(true)
 				game.tooltip_x, game.tooltip_y = 1, 1
-				game.tooltip:displayAtMap(nil, nil, game.w, game.h, "#GOLD#"..o.name.."#LAST#\n"..tostring(o:getDesc()))
+				game.tooltip:displayAtMap(nil, nil, game.w, game.h, tostring(o:getDesc()))
 			end,
 		},
 		{"The "..e[3].name..".", jump="list", 
@@ -198,7 +198,7 @@ newChat{ id="choice",
 				local o = art_list[e[3].id]
 				o:identify(true)
 				game.tooltip_x, game.tooltip_y = 1, 1
-				game.tooltip:displayAtMap(nil, nil, game.w, game.h, "#GOLD#"..o.name.."#LAST#\n"..tostring(o:getDesc()))
+				game.tooltip:displayAtMap(nil, nil, game.w, game.h, tostring(o:getDesc()))
 			end,
 		},
 		{"[leave]"},
@@ -445,7 +445,7 @@ newChat{ id="choice",
 				local o = art_list[e[1].id]
 				o:identify(true)
 				game.tooltip_x, game.tooltip_y = 1, 1
-				game.tooltip:displayAtMap(nil, nil, game.w, game.h, "#GOLD#"..o.name.."#LAST#\n"..tostring(o:getDesc()))
+				game.tooltip:displayAtMap(nil, nil, game.w, game.h, tostring(o:getDesc()))
 			end,
 		},
 		{"The "..e[2].name..".", jump="list",
@@ -458,7 +458,7 @@ newChat{ id="choice",
 				local o = art_list[e[2].id]
 				o:identify(true)
 				game.tooltip_x, game.tooltip_y = 1, 1
-				game.tooltip:displayAtMap(nil, nil, game.w, game.h, "#GOLD#"..o.name.."#LAST#\n"..tostring(o:getDesc()))
+				game.tooltip:displayAtMap(nil, nil, game.w, game.h, tostring(o:getDesc()))
 			end,
 		},
 		{"The "..e[3].name..".", jump="list",
@@ -471,7 +471,7 @@ newChat{ id="choice",
 				local o = art_list[e[3].id]
 				o:identify(true)
 				game.tooltip_x, game.tooltip_y = 1, 1
-				game.tooltip:displayAtMap(nil, nil, game.w, game.h, "#GOLD#"..o.name.."#LAST#\n"..tostring(o:getDesc()))
+				game.tooltip:displayAtMap(nil, nil, game.w, game.h, tostring(o:getDesc()))
 			end,
 		},
 		{"[leave]"},
