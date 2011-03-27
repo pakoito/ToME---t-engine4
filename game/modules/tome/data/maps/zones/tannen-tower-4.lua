@@ -59,7 +59,7 @@ addData{post_process = function(level)
 					if a.faction and game.player:reactionToward(a) < 0 and ga and ga == a and not a.dead then nb = nb + 1 end
 				end
 				if nb <= 0 then game.level.open_doors() end
-				a:check("old_on_die")
+				self:check("old_on_die")
 			end
 		end
 	end
