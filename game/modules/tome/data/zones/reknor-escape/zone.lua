@@ -63,7 +63,7 @@ return {
 	{
 		[1] = {
 			generator = { map = {
-				up = "UP_WILDERNESS",
+				up = "FLOOR",
 			}, },
 		},
 		[5] = {
