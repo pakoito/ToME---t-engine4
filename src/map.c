@@ -1208,7 +1208,8 @@ static int map_to_screen(lua_State *L)
 	/* Disables Depth Testing, we do not need it for the rest of the display */
 	glDisable(GL_DEPTH_TEST);
 
-	if (always_show && map->seen_changed)
+//	if (always_show && map->seen_changed)
+	if (always_show)
 	{
 		map_update_seen_texture(map);
 		map->seen_changed = FALSE;
