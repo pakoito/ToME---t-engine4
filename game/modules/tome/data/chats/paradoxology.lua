@@ -17,17 +17,15 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/objects/objects.lua")
-
-newEntity{ base = "BASE_RUNE", define_as = "RUNE_RIFT",
-	power_source = {arcane=true},
-	name = "Rune of the Rift", unique = true, identified = true,
-	rarity = false,
-	cost = 100,
-	material_level = 3,
-
-	inscription_data = {
-		cooldown = 14,
-	},
-	inscription_talent = "RUNE_OF_THE_RIFT",
+newChat{ id="welcome",
+	text = [[#LIGHT_GREEN#*Before you stands... you. You seem to be slightly older, and by the look of it you have been through hell.*#WHITE#
+NO! YOU CAN'T! NO GOING THERE! YOU... I... YOU MUST NOT GO THERE!
+THIS CAN NOT BE AVOIDED! I MUST STOP IT! PLEASE DONT!
+I MUST KILL MYSELF TO PROTECT MYSELF!
+]],
+	answers = {
+		{"What the.."},
+	}
 }
+
+return "welcome"

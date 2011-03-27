@@ -250,7 +250,7 @@ newEntity{
 	rarity = 25,
 	cost = 30,
 	wielder = {
-		combat_physspeed = -0.1,
+		physspeed = -0.1,
 		combat_atk = resolvers.mbonus_material(20, 2, function(e, v) return v * 0.3 end),
 		inc_stats = {
 			[Stats.STAT_DEX] = resolvers.mbonus_material(4, 3, function(e, v) return v * 3 end),

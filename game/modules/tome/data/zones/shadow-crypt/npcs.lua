@@ -93,7 +93,7 @@ newEntity{ base="BASE_NPC_ORC_RAK_SHOR", define_as = "CULTIST_RAK_SHOR",
 				game:setAllowedBuild("afflicted")
 				game:setAllowedBuild("afflicted_doomed", true)
 				game.level.map(self.x, self.y, game.level.map.TERRAIN, game.zone.grid_list.UP_WILDERNESS)
-				game.logSeen(who, "As your shade dies, the magical veil protecting the stairs out vanishes.")
+				game.logSeen(self, "As your shade dies, the magical veil protecting the stairs out vanishes.")
 			end
 
 			-- Remove some talents

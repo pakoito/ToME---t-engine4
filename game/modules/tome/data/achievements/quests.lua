@@ -173,3 +173,21 @@ newAchievement{
 	name = "Savior of the damsels in distress", id = "MELINDA_SAVED",
 	desc = [[Saved Melinda from her terrible fate in the Crypt of Kryl-Feijan.]],
 }
+newAchievement{
+	name = "Impossible Death", id = "PARADOX_NOW",
+	desc = [[Being killed by your future self.]],
+	on_gain = function(_, src, personal)
+		if world:hasAchievement("PARADOX_FUTURE") then world:gainAchievement("PARADOX_FULL", src) end
+	end,
+}
+newAchievement{
+	name = "Self-killer", id = "PARADOX_FUTURE",
+	desc = [[Killed your future self.]],
+	on_gain = function(_, src, personal)
+		if world:hasAchievement("PARADOX_NOW") then world:gainAchievement("PARADOX_FULL", src) end
+	end,
+}
+newAchievement{
+	name = "Paradoxology", id = "PARADOX_FULL",
+	desc = [[Both killed your future self and got killed by your future self.]],
+}

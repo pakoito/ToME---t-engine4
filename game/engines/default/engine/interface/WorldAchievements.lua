@@ -143,3 +143,8 @@ end
 function _M:achievementWho(src)
 	return src.name
 end
+
+--- Do we have this one ?
+function _M:hasAchievement(id)
+	return self.achieved[id] and true or false
+end

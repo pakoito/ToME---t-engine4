@@ -74,16 +74,26 @@ return {
 		game:placeRandomLoreObject("NOTE"..level.level)
 
 		-- Temporal rift on level 4
+		local p = game.party:findMember{main=true}
 		if level.level == 4 then
-			local g = game.zone:makeEntityByName(game.level, "terrain", "RIFT")
-			local x, y = rng.range(0, game.level.map.w-1), rng.range(0, game.level.map.h-1)
-			local tries = 0
-				while game.level.map:checkEntity(x, y, engine.Map.TERRAIN, "block_move") and tries < 100 do
-				x, y = rng.range(0, game.level.map.w-1), rng.range(0, game.level.map.h-1)
-				tries = tries + 1
-			end
-			if tries < 100 then
-				game.zone:addEntity(game.level, g, "terrain", x, y)
+			if p.descriptor.subclass == "Temporal Warden" then
+				local x, y = util.findFreeGrid(level.default_up.x, level.default_up.y, 10, true, {[engine.Map.ACTOR]=true})
+				if x and y then
+					p:grantQuest("paradoxology")
+					p:hasQuest("paradoxology"):generate(p, x, y)
+				end
+			-- Normal time rift for others
+			else
+				local g = game.zone:makeEntityByName(game.level, "terrain", "RIFT")
+				local x, y = rng.range(0, game.level.map.w-1), rng.range(0, game.level.map.h-1)
+				local tries = 0
+					while game.level.map:checkEntity(x, y, engine.Map.TERRAIN, "block_move") and tries < 100 do
+					x, y = rng.range(0, game.level.map.w-1), rng.range(0, game.level.map.h-1)
+					tries = tries + 1
+				end
+				if tries < 100 then
+					game.zone:addEntity(game.level, g, "terrain", x, y)
+				end
 			end
 		end
 

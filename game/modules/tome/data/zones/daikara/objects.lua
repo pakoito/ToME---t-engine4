@@ -29,3 +29,16 @@ newEntity{ base = "BASE_LORE",
 	encumberance = 0,
 }
 end
+
+newEntity{ base = "BASE_RUNE", define_as = "RUNE_RIFT",
+	power_source = {arcane=true},
+	name = "Rune of the Rift", unique = true, identified = true,
+	rarity = false,
+	cost = 100,
+	material_level = 3,
+
+	inscription_data = {
+		cooldown = 14,
+	},
+	inscription_talent = "RUNE_OF_THE_RIFT",
+}

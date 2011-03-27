@@ -1364,6 +1364,7 @@ function _M:countBirthUnlocks()
 		afflicted_doomed = true,
 
 		chronomancer_temporal_warden = true,
+		chronomancer_paradox_mage = true,
 
 		psionic_mindslayer = true,
 	}

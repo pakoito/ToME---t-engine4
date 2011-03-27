@@ -17,17 +17,25 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/objects/objects.lua")
+load("/data/general/grids/basic.lua")
+load("/data/general/grids/forest.lua")
+load("/data/general/grids/water.lua")
+load("/data/general/grids/mountain.lua")
+load("/data/general/grids/sand.lua")
+load("/data/general/grids/void.lua")
 
-newEntity{ base = "BASE_RUNE", define_as = "RUNE_RIFT",
-	power_source = {arcane=true},
-	name = "Rune of the Rift", unique = true, identified = true,
-	rarity = false,
-	cost = 100,
-	material_level = 3,
+-- Override exits
+newEntity { base = "GRASS", define_as = "GRASS_UP_WILDERNESS" }
+newEntity { base = "DEEP_OCEAN_WATER", define_as = "WATER_DOWN" }
+newEntity { base = "GRASS", define_as = "OLD_FOREST" }
 
-	inscription_data = {
-		cooldown = 14,
-	},
-	inscription_talent = "RUNE_OF_THE_RIFT",
+newEntity{
+	define_as = "RIFT",
+	name = "Temporal Rift", image="terrain/demon_portal2.png",
+	display = '&', color_r=255, color_g=0, color_b=220, back_color=colors.VIOLET,
+	notice = true,
+	always_remember = true,
+	show_tooltip = true,
+	desc = [[The rift leads somewhere ..]],
+	change_level = 4, change_zone = "daikara",
 }

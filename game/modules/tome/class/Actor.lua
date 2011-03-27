@@ -430,7 +430,7 @@ function _M:move(x, y, force)
 	if moved and self:isTalentActive(self.T_BODY_OF_STONE) then
 		self:forceUseTalent(self.T_BODY_OF_STONE, {ignore_energy=true})
 	end
-		
+
 	if moved and not force and ox and oy and (ox ~= self.x or oy ~= self.y) and config.settings.tome.smooth_move > 0 then
 		local blur = 0
 		if self:attr("lightning_speed") or self:attr("step_up") or self:attr("wild_speed") then blur = 3 end
@@ -1074,8 +1074,8 @@ function _M:onTakeHit(value, src)
 		local t = self:getTalentFromId(self.T_UNFLINCHING_RESOLVE)
 		local dam = value
 		t.on_hit(self, t, dam)
-	end	
-		
+	end
+
 	if value >= self.life and self.ai_state and self.ai_state.can_reform then
 		local t = self:getTalentFromId(self.T_SHADOW_REFORM)
 		if rng.percent(t.getChance(self, t)) then
@@ -1692,7 +1692,7 @@ function _M:preUseTalent(ab, silent, fake)
 		if not silent then game.logSeen(self, "The spell fizzles.") end
 		return false
 	end
-	
+
 	-- when using unarmed techniques check for weapons and heavy armor
 	if ab.is_unarmed then
 		-- first check for heavy and massive armor
@@ -1705,7 +1705,7 @@ function _M:preUseTalent(ab, silent, fake)
 			return false
 		end
 	end
-	
+
 
 	if not self:enoughEnergy() and not fake then return false end
 

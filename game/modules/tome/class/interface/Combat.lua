@@ -382,7 +382,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 		local t =  self:getTalentFromId(self.T_CONDUIT)
 		t.do_combat(self, t, target)
 	end
-	
+
 	-- Exploit Weakness
 	if hitted and not target.dead and self:knowTalent(self.T_EXPLOIT_WEAKNESS) and self:isTalentActive(self.T_EXPLOIT_WEAKNESS) then
 		local t = self:getTalentFromId(self.T_EXPLOIT_WEAKNESS)
@@ -414,20 +414,20 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 		game.logSeen(self, "%s ripostes!", target.name:capitalize())
 		target:attackTarget(self, nil, nil, true)
 	end
-	
+
 	-- Set Up
 	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:hasEffect(target.EFF_DEFENSIVE_MANEUVER) then
 		local t = target:getTalentFromId(target.T_SET_UP)
 		local power = t.getPower(target, t)
 		self:setEffect(self.EFF_SET_UP, 2, {src = target, power=power})
 	end
-	
+
 	-- Defensive Throw!
 	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_DEFENSIVE_THROW) and rng.percent(target:getTalentLevel(target.T_DEFENSIVE_THROW) * (5 + target:getCun(5))) then
 		local t = target:getTalentFromId(target.T_DEFENSIVE_THROW)
 		t.do_throw(target, self, t)
 	end
-	
+
 	-- Counter Attack!
 	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_COUNTER_ATTACK) and rng.percent(target:getTalentLevel(target.T_COUNTER_ATTACK) * (5 + target:getCun(5))) then
 		game.logSeen(self, "%s counters the attack!", target.name:capitalize())
@@ -607,14 +607,14 @@ function _M:combatDamage(weapon)
 		local t = self:getTalentFromId(self.T_EMPTY_HAND)
 		add = add + t.getDamage(self, t)
 	end
-	
-	if weapon == self.combat then 
+
+	if weapon == self.combat then
 		-- Handles unarmed mastery
 		talented_mod = math.sqrt(self:getTalentLevel(Talents.T_UNARMED_MASTERY) / 10) + 1 or 0
-	else 
+	else
 		talented_mod = math.sqrt(self:combatCheckTraining(weapon) / 10) + 1
 	end
-	
+
 	local power = math.max(self.combat_dam + (weapon.dam or 1) + add, 1)
 	power = (math.sqrt(power / 10) - 1) * 0.8 + 1
 	print(("[COMBAT DAMAGE] power(%f) totstat(%f) talent_mod(%f)"):format(power, totstat, talented_mod))
@@ -704,11 +704,11 @@ function _M:physicalCrit(dam, weapon, target)
 	end
 	if target:hasEffect(target.EFF_SET_UP) then
 		local p = target:hasEffect(target.EFF_SET_UP)
-		if p and p.src == self then	
+		if p and p.src == self then
 			chance = chance + p.power
 		end
 	end
-		
+
 	if target:knowTalent(target.T_PROBABILITY_WEAVING) and target:isTalentActive(T_PROBABILITY_WEAVING) then
 		chance = chance - target:getTalentLevel(target.T_PROBABILITY_WEAVING)
 	end
@@ -725,7 +725,7 @@ function _M:physicalCrit(dam, weapon, target)
 	if rng.percent(chance) then
 		dam = dam * (1.5 + (self.combat_critical_power or 0) / 100)
 		crit = true
-		
+
 	end
 	return dam, crit
 end
@@ -828,7 +828,6 @@ function _M:combatMentalResist()
 	if self:knowTalent(self.T_POWER_IS_MONEY) then
 		add = add + util.bound(self.money / (60 - self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 5), 0, self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 10)
 	end
-		add = add + t.getMental(self, t)
 	return self.combat_mentalresist + (self:getCun() + self:getWil() + (self:getLck() - 50) * 0.5) * 0.35 + add
 end
 
@@ -987,15 +986,15 @@ function _M:buildCombo()
 			end
 		end
 	end
-	
+
 	self:setEffect(self.EFF_COMBO, duration, {power=power})
-	
+
 end
 
 function _M:getCombo(combo)
 	local combo = 0
 	local p = self:hasEffect(self.EFF_COMBO)
-	if p then	
+	if p then
 		combo = p.cur_power
 	end
 		return combo
@@ -1010,7 +1009,7 @@ end
 -- Check to see if the target is already being grappled; many talents have extra effects on grappled targets
 function _M:isGrappled(source)
 	local p = self:hasEffect(self.EFF_GRAPPLED)
-	if p and p.src == source then	
+	if p and p.src == source then
 		return true
 	else
 		return false

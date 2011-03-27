@@ -57,6 +57,7 @@ newTalent{
 		print("[MULTIPLY]", x, y, "::", game.level.map(x,y,Map.ACTOR))
 		print("[MULTIPLY]", a.can_multiply, "uids", self.uid,"=>",a.uid, "::", self.player, a.player)
 		game.zone:addEntity(game.level, a, "actor", x, y)
+		a:check("on_multiply", self)
 		return true
 	end,
 	info = function(self, t)

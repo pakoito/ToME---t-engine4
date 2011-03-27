@@ -17,17 +17,5 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/objects/objects.lua")
-
-newEntity{ base = "BASE_RUNE", define_as = "RUNE_RIFT",
-	power_source = {arcane=true},
-	name = "Rune of the Rift", unique = true, identified = true,
-	rarity = false,
-	cost = 100,
-	material_level = 3,
-
-	inscription_data = {
-		cooldown = 14,
-	},
-	inscription_talent = "RUNE_OF_THE_RIFT",
-}
+load("/data/general/traps/elemental.lua")
+load("/data/general/traps/alarm.lua")
