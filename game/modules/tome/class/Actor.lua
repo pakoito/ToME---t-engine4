@@ -1076,6 +1076,7 @@ function _M:onTakeHit(value, src)
 		t.on_hit(self, t, dam)
 	end
 
+	-- Shade's reform
 	if value >= self.life and self.ai_state and self.ai_state.can_reform then
 		local t = self:getTalentFromId(self.T_SHADOW_REFORM)
 		if rng.percent(t.getChance(self, t)) then
@@ -1088,15 +1089,24 @@ function _M:onTakeHit(value, src)
 		end
 	end
 
+	-- Vim leech
 	if self:knowTalent(self.T_LEECH) and src.hasEffect and src:hasEffect(src.EFF_VIMSENSE) then
 		self:incVim(3 + self:getTalentLevel(self.T_LEECH) * 0.7)
 		self:heal(5 + self:getTalentLevel(self.T_LEECH) * 3)
 		game.logPlayer(self, "#AQUAMARINE#You leech a part of %s vim.", src.name:capitalize())
 	end
 
+	-- Invisible on hit
 	if value >= self.max_life * 0.15 and self:attr("invis_on_hit") and rng.percent(self:attr("invis_on_hit")) then
 		self:setEffect(self.EFF_INVISIBILITY, 5, {power=self:attr("invis_on_hit_power")})
 		for tid, _ in pairs(self.invis_on_hit_disable) do self:forceUseTalent(tid, {ignore_energy=true}) end
+	end
+
+	-- Life leech
+	if value > 0 and src and src:attr("life_leech_chance") and rng.percent(src.life_leech_chance) then
+		local leech = math.min(value, self.life) * src.life_leech_value / 100
+		src:heal(leech)
+		game.logSeen(src, "#CRIMSON#%s leeches life from its victim!", src.name:capitalize())
 	end
 
 	return value

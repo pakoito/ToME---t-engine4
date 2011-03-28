@@ -443,6 +443,8 @@ function _M:getTextualDesc()
 
 	if w.healing_factor then desc:add(("Increases all healing by %d%%"):format(w.healing_factor * 100), true) end
 
+	if w.life_leech_chance then desc:add(("%d%% chances on all damage dealt to leech %d%% of the damage done as health."):format(w.life_leech_chance, w.life_leech_value), true) end
+
 	if w.size_category then desc:add(("Increases size category by %d."):format(w.size_category), true) end
 
 	end

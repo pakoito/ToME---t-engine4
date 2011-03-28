@@ -44,6 +44,17 @@ function resolvers.calc.rngtable(t)
 	return rng.table(t[1])
 end
 
+--- Random color
+function resolvers.rngcolor(t)
+	return {__resolver="rngcolor", t}
+end
+function resolvers.calc.rngcolor(t, e)
+	local c = rng.table(t[1])
+	e.color_r = c.r
+	e.color_g = c.g
+	e.color_b = c.b
+end
+
 --- Random bonus based on level
 resolvers.current_level = 1
 resolvers.mbonus_max_level = 50
