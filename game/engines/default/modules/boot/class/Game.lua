@@ -268,7 +268,6 @@ function _M:display(nb_keyframes)
 		end
 
 		self.level.map:display(nil, nil, nb_keyframes, true)
-		self.level.map._map:updateSeensTexture()
 		self.level.map._map:drawSeensTexture(0, 0, nb_keyframes)
 	end
 
