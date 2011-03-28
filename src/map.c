@@ -790,7 +790,8 @@ static int map_get_seensinfo(lua_State *L)
 
 static void map_update_seen_texture(map_type *map)
 {
-	tglBindTexture(GL_TEXTURE_2D, map->seens_texture);
+	glBindTexture(GL_TEXTURE_2D, map->seens_texture);
+	gl_c_texture = -1;
 
 	int mx = map->used_mx;
 	int my = map->used_my;
