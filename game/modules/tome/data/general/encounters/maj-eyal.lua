@@ -253,3 +253,24 @@ newEntity{
 		return true
 	end,
 }
+
+newEntity{
+	name = "Ring of Blood",
+	type = "harmless", subtype = "special", unique = true,
+	immediate = {"world-encounter", "maj-eyal"},
+	on_encounter = function(self, who)
+		local x, y = self:findSpot(who)
+		if not x then return end
+
+		local g = mod.class.Grid.new{
+			show_tooltip=true,
+			name="Ring of Blood",
+			display='>', color=colors.CRIMSON,
+			notice = true,
+			change_level=1, change_zone="ring-of-blood"
+		}
+		g:resolve() g:resolve(nil, true)
+		game.zone:addEntity(game.level, g, "terrain", x, y)
+		return true
+	end,
+}
