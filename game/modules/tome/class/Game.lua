@@ -225,7 +225,11 @@ function _M:newGame()
 
 		-- Generate
 		if self.player.__game_difficulty then self:setupDifficulty(self.player.__game_difficulty) end
-		self:changeLevel(self.player.starting_level or 1, self.player.starting_zone, nil, self.player.starting_level_force_down)
+		if self.player.starting_zone ~= self.player.last_wilderness then
+			self:changeLevel(self.player.starting_level or 1, self.player.starting_zone, nil, self.player.starting_level_force_down)
+		else
+			self.player:move(self.player.wild_x, self.player.wild_y, true)
+		end
 		print("[PLAYER BIRTH] resolve...")
 		self.player:resolve()
 		self.player:resolve(nil, true)
