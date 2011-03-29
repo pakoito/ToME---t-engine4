@@ -30,6 +30,7 @@ newEntity{
 	rarity = 4,
 	combat = {
 		talented = "staff",
+		physspeed = 1,
 		damrange = 1.2,
 		sound = "actions/melee", sound_miss = "actions/melee_miss",
 		damtype = resolvers.rngtable{DamageType.FIRE, DamageType.COLD, DamageType.ACID, DamageType.LIGHTNING, DamageType.LIGHT, DamageType.DARKNESS, DamageType.NATURE, DamageType.BLIGHT},

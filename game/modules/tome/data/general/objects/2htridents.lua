@@ -28,7 +28,7 @@ newEntity{
 	trident_rarity = 5, -- Special rarity field, converted to "rarity" when needed
 	metallic = true,
 	no_rust = true,
-	combat = { talented = "trident", damrange = 1.6, sound = "actions/melee", sound_miss = "actions/melee_miss", },
+	combat = { talented = "trident", damrange = 1.6, physspeed = 1, sound = "actions/melee", sound_miss = "actions/melee_miss", },
 	desc = [[A two-handed massive trident.
 Tridents require the exotic weapons mastery talent to use correctly.]],
 	twohanded = true,

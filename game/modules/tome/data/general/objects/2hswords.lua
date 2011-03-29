@@ -26,7 +26,7 @@ newEntity{
 	display = "/", color=colors.SLATE, image = resolvers.image_material("2hsword", "metal"),
 	encumber = 3,
 	rarity = 5,
-	combat = { talented = "sword", damrange = 1.6, sound = "actions/melee", sound_miss = "actions/melee_miss", },
+	combat = { talented = "sword", damrange = 1.6, physspeed = 1, sound = "actions/melee", sound_miss = "actions/melee_miss", },
 	desc = [[Massive two-handed swords.]],
 	twohanded = true,
 	metallic = true,

@@ -27,7 +27,7 @@ newEntity{
 	encumber = 5,
 	rarity = 5,
 	metallic = true,
-	combat = { talented = "mace", damrange = 1.5, sound = "actions/melee", sound_miss = "actions/melee_miss", },
+	combat = { talented = "mace", damrange = 1.5, physspeed = 1, sound = "actions/melee", sound_miss = "actions/melee_miss", },
 	desc = [[Massive two-handed maul.]],
 	twohanded = true,
 	randart_able = { attack=40, physical=80, spell=20, def=10, misc=10 },
