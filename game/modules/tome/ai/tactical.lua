@@ -304,7 +304,7 @@ newAI("use_tactical", function(self)
 				-- Randomize and multiply by the ai_tactic weights (if any)
 				v = (v + v + rng.float(0, 0.9)) * (self.ai_tactic[k] or 1)
 				if v > 0 then
-					print(" * "..k, v)
+					print(" * "..k, v, "(mult)", self.ai_tactic[k])
 					res[#res+1] = {k,v}
 				end
 			end

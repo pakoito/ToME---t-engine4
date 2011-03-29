@@ -117,11 +117,14 @@ function setupSummon(self, m, x, y, no_control)
 			end,
 		})
 	end
-
 	m:resolve() m:resolve(nil, true)
 	m:forceLevelup(self.level)
 	game.zone:addEntity(game.level, m, "actor", x, y)
 	game.level.map:particleEmitter(x, y, 1, "summon")
+
+	-- Summons never flee
+	m.ai_tactic = m.ai_tactic or {}
+	m.ai_tactic.escape = 0
 end
 
 load("/data/talents/gifts/summon-melee.lua")

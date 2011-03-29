@@ -1454,6 +1454,7 @@ function _M:onStatChange(stat, v)
 end
 
 function _M:updateConDamageReduction()
+	self.resists = self.resists or {}
 	self.resists.all = self.resists.all or 0
 	if self.temp_con_perc then
 		self.resists.all = self.resists.all - self.temp_con_perc
