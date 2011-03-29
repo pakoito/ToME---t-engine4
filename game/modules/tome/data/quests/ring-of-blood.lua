@@ -67,6 +67,8 @@ start_game = function(self)
 	game.party:setPlayer(slave)
 	game.player:hotkeyAutoTalents()
 	game.party.members[p].control = "no"
+	p.slaver_old_ai = p.ai
+	p.ai = "none"
 
 	slave.on_die = function(self)
 		game.player:hasQuest("ring-of-blood"):stop_game(false)
@@ -118,6 +120,7 @@ end
 stop_game = function(self, win)
 	local p = game.party:findMember{main=true}
 	local slave = game.player
+	p.ai = p.slaver_old_ai
 	game.party.members[p].control = "full"
 	game.party:setPlayer(p)
 	game.party:removeMember(slave)
