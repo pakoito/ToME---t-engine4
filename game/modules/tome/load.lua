@@ -56,6 +56,7 @@ if type(config.settings.tome.chat_log) == "nil" then config.settings.tome.chat_l
 if not config.settings.tome.fonts then config.settings.tome.fonts = {type="fantasy", size="normal"} end
 if not config.settings.tome.ui_theme then config.settings.tome.ui_theme = "stone" end
 Map.smooth_scroll = config.settings.tome.smooth_move
+Map.faction_danger_check = function(self, e) return e.rank > 3 end
 
 -- Dialog UI
 UIBase.ui = config.settings.tome.ui_theme

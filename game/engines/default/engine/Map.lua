@@ -61,6 +61,13 @@ color_shown   = { 1, 1, 1, 1 }
 color_obscure = { 0.6, 0.6, 0.6, 0.5 }
 smooth_scroll = 0
 
+faction_friend = "tactical_friend.png"
+faction_neutral = "tactical_neutral.png"
+faction_enemy = "tactical_enemy.png"
+faction_danger = "tactical_danger.png"
+faction_self = "tactical_self.png"
+faction_danger_check = function(self, e) return e.unique end
+
 --- Sets the viewport size
 -- Static
 -- @param x screen coordinate where the map will be displayed (this has no impact on the real display). This is used to compute mouse clicks
@@ -132,11 +139,8 @@ end
 
 --- Defines the faction of the person seeing the map
 -- Usually this will be the player's faction. If you do not want to use tactical display, dont use it
-function _M:setViewerFaction(faction, friend, neutral, enemy)
+function _M:setViewerFaction(faction)
 	self.view_faction = faction
-	self.faction_friend = "tactical_friend.png"
-	self.faction_neutral = "tactical_neutral.png"
-	self.faction_enemy = "tactical_enemy.png"
 end
 
 --- Defines the actor that sees the map
@@ -474,7 +478,11 @@ function _M:display(x, y, nb_keyframe, always_show)
 						if not self.actor_player then friend = Faction:factionReaction(self.view_faction, e.faction)
 						else friend = self.actor_player:reactionToward(e) end
 						if e._mo then adx, ady = e._mo:getMoveAnim(self._map, i, j) else adx, ady = 0, 0 end -- Make sure we display on the real screen coords: handle current move anim position
-						if friend > 0 then
+						if e == self.actor_player then
+							self.tilesTactic:get(nil, 0,0,0, 0,0,0, self.faction_self):toScreen(self.display_x + (adx + i - self.mx) * self.tile_w * self.zoom, self.display_y + (ady + j - self.my) * self.tile_h * self.zoom, self.tile_w * self.zoom, self.tile_h * self.zoom)
+						elseif self:faction_danger_check(e) then
+							self.tilesTactic:get(nil, 0,0,0, 0,0,0, self.faction_danger):toScreen(self.display_x + (adx + i - self.mx) * self.tile_w * self.zoom, self.display_y + (ady + j - self.my) * self.tile_h * self.zoom, self.tile_w * self.zoom, self.tile_h * self.zoom)
+						elseif friend > 0 then
 							self.tilesTactic:get(nil, 0,0,0, 0,0,0, self.faction_friend):toScreen(self.display_x + (adx + i - self.mx) * self.tile_w * self.zoom, self.display_y + (ady + j - self.my) * self.tile_h * self.zoom, self.tile_w * self.zoom, self.tile_h * self.zoom)
 						elseif friend < 0 then
 							self.tilesTactic:get(nil, 0,0,0, 0,0,0, self.faction_enemy):toScreen(self.display_x + (adx + i - self.mx) * self.tile_w * self.zoom, self.display_y + (ady + j - self.my) * self.tile_h * self.zoom, self.tile_w * self.zoom, self.tile_h * self.zoom)
