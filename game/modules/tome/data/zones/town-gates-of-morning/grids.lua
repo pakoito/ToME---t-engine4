@@ -19,6 +19,14 @@
 
 load("/data/general/grids/basic.lua")
 load("/data/general/grids/forest.lua")
+load("/data/general/grids/mountain.lua")
+load("/data/general/grids/water.lua")
+load("/data/general/grids/sand.lua")
+
+newEntity{ base = "FLOOR", define_as = "ROAD",
+	name="cobblestone road",
+	display='.', image="terrain/stone_road1.png"
+}
 
 newEntity{
 	define_as = "WEST_PORTAL",
@@ -51,3 +59,51 @@ newEntity{ base = "WEST_PORTAL", define_as = "CWEST_PORTAL",
 		level.map:particleEmitter(y, y, 3, "farportal_lightning")
 	end,
 }
+
+newEntity{
+	define_as = "GOLDEN_MOUNTAIN",
+	name = "sunwall mountain", image = "terrain/golden_mountain5_1.png",
+	display = '#', color=colors.GOLD, back_color={r=44,g=95,b=43},
+	always_remember = true,
+	does_block_move = true,
+	block_sight = true,
+	block_sense = true,
+	block_esp = true,
+	air_level = -20,
+	nice_tiler = { method="mountain3d",
+		base={"GOLDENMOUNTAIN_5", 100, 1, 6},
+		wall8={"GOLDENMOUNTAIN_8", 100, 1, 6}, wall87={"GOLDENMOUNTAIN_8", 100, 1, 6}, wall88={"GOLDENMOUNTAIN_8", 100, 1, 6}, wall89={"GOLDENMOUNTAIN_8", 100, 1, 6},
+		wall2={"GOLDENMOUNTAIN_2", 100, 1, 6}, wall21={"GOLDENMOUNTAIN_2", 100, 1, 6}, wall22={"GOLDENMOUNTAIN_2", 100, 1, 6}, wall23={"GOLDENMOUNTAIN_2", 100, 1, 6},
+		wall4={"GOLDENMOUNTAIN_4", 100, 1, 6}, wall47={"GOLDENMOUNTAIN_4", 100, 1, 6}, wall44={"GOLDENMOUNTAIN_4", 100, 1, 6}, wall41={"GOLDENMOUNTAIN_4", 100, 1, 6},
+		wall6={"GOLDENMOUNTAIN_6", 100, 1, 6}, wall69={"GOLDENMOUNTAIN_6", 100, 1, 6}, wall66={"GOLDENMOUNTAIN_6", 100, 1, 6}, wall63={"GOLDENMOUNTAIN_6", 100, 1, 6},
+		wall1={"GOLDENMOUNTAIN_1", 100, 1, 6}, wall3={"GOLDENMOUNTAIN_3", 100, 1, 6}, wall7={"GOLDENMOUNTAIN_7", 100, 1, 6}, wall9={"GOLDENMOUNTAIN_9", 100, 1, 6},
+		wall11={"GOLDENMOUNTAIN_1", 100, 1, 6}, wall33={"GOLDENMOUNTAIN_3", 100, 1, 6}, wall77={"GOLDENMOUNTAIN_7", 100, 1, 6}, wall98={"GOLDENMOUNTAIN_9", 100, 1, 6},
+		inner_wall1={"GOLDENMOUNTAIN_1I", 100, 1, 6}, inner_wall3={"GOLDENMOUNTAIN_3I", 100, 1, 6}, inner_wall7={"GOLDENMOUNTAIN_7I", 100, 1, 6}, inner_wall9={"GOLDENMOUNTAIN_9I", 100, 1, 6},
+		pillar={"GOLDENMOUNTAIN_SINGLE", 100, 1, 6},
+		pillar4={"GOLDENMOUNTAIN_PILLAR4", 100, 1, 6}, pillar6={"GOLDENMOUNTAIN_PILLAR6", 100, 1, 6}, pillar2={"GOLDENMOUNTAIN_PILLAR2", 100, 1, 6}, pillar8={"GOLDENMOUNTAIN_PILLAR8", 100, 1, 6},
+		pillar82={"GOLDENMOUNTAIN_PILLAR82", 100, 1, 6}, pillar46={"GOLDENMOUNTAIN_PILLAR46", 100, 1, 6},
+	},
+}
+
+for i = 1, 6 do
+newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_5"..i, image="terrain/golden_mountain5_"..i..".png"}
+newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_8"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{z=18, display_y=-1, image="terrain/golden_mountain8.png"}}}
+newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_2"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{display_y=1, image="terrain/golden_mountain2.png"}}}
+newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_4"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{display_x=-1, image="terrain/golden_mountain4.png"}}}
+newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_6"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{display_x=1, image="terrain/golden_mountain6.png"}}}
+newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_7"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{z=18, display_y=-1, display_x=-1, image="terrain/golden_mountain7.png", add_mos = {{display_y=-1, image="terrain/golden_mountain8.png"}, {display_x=-1, image="terrain/golden_mountain4.png"}}}}}
+newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_9"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{z=18, display_y=-1, display_x=1, image="terrain/golden_mountain9.png", add_mos = {{display_y=-1, image="terrain/golden_mountain8.png"}, {display_x=1, image="terrain/golden_mountain6.png"}}}}}
+newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_1"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{display_y=1, display_x=-1, image="terrain/golden_mountain1.png", add_mos = {{display_y=1, image="terrain/golden_mountain2.png"}, {display_x=-1, image="terrain/golden_mountain4.png"}}}}}
+newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_3"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{display_y=1, display_x=1, image="terrain/golden_mountain3.png", add_mos = {{display_y=1, image="terrain/golden_mountain2.png"}, {display_x=1, image="terrain/golden_mountain6.png"}}}}}
+newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_1I"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{z=18, display_y=-1, display_x=1, image="terrain/golden_mountain1i.png"}}}
+newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_3I"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{z=18, display_y=-1, display_x=-1, image="terrain/golden_mountain3i.png"}}}
+newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_7I"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{display_y=1, display_x=1, image="terrain/golden_mountain7i.png"}}}
+newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_9I"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{display_y=1, display_x=-1, image="terrain/golden_mountain9i.png"}}}
+newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_SINGLE"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{z=18, display_y=-1, display_x=-1, image="terrain/golden_mountain7.png", add_mos = {{display_y=-1, image="terrain/golden_mountain8.png"}, {display_x=1, display_y=-1, image="terrain/golden_mountain9.png"}}}, class.new{display_y=1, display_x=-1, image="terrain/golden_mountain1.png", add_mos = {{display_y=1, image="terrain/golden_mountain2.png"}, {display_x=1, display_y=1, image="terrain/golden_mountain3.png"}, {display_x=-1, image="terrain/golden_mountain4.png"}, {display_x=1, image="terrain/golden_mountain6.png"}}}}}
+newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_PILLAR4"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{z=18, display_y=-1, display_x=-1, image="terrain/golden_mountain7.png", add_mos = {{display_y=-1, image="terrain/golden_mountain8.png"}}}, class.new{display_y=1, display_x=-1, image="terrain/golden_mountain1.png", add_mos = {{display_y=1, image="terrain/golden_mountain2.png"}, {display_x=-1, image="terrain/golden_mountain4.png"}}}}}
+newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_PILLAR6"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{z=18, display_y=-1, display_x=1, image="terrain/golden_mountain9.png", add_mos = {{display_y=-1, image="terrain/golden_mountain8.png"}}}, class.new{display_y=1, display_x=1, image="terrain/golden_mountain3.png", add_mos = {{display_y=1, image="terrain/golden_mountain2.png"}, {display_x=1, image="terrain/golden_mountain6.png"}}}}}
+newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_PILLAR46"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{z=18, display_y=-1, image="terrain/golden_mountain8.png"}, class.new{display_y=1, image="terrain/golden_mountain2.png"}}}
+newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_PILLAR8"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{z=18, display_y=-1, display_x=-1, image="terrain/golden_mountain7.png", add_mos = {{display_y=-1, image="terrain/golden_mountain8.png"}, {display_x=1, display_y=-1, image="terrain/golden_mountain9.png"}}}, class.new{display_x=-1, image="terrain/golden_mountain4.png", add_mos = {{display_x=1, image="terrain/golden_mountain6.png"}}}}}
+newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_PILLAR2"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{z=18, display_y=1, display_x=-1, image="terrain/golden_mountain1.png", add_mos = {{display_y=1, image="terrain/golden_mountain2.png"}, {display_x=1, display_y=1, image="terrain/golden_mountain3.png"}}}, class.new{display_x=-1, image="terrain/golden_mountain4.png", add_mos = {{display_x=1, image="terrain/golden_mountain6.png"}}}}}
+newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_PILLAR82"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{display_x=-1, image="terrain/golden_mountain4.png", add_mos = {{display_x=1, image="terrain/golden_mountain6.png"}}}}}
+end

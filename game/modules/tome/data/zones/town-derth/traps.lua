@@ -43,6 +43,12 @@ newEntity{ base = "BASE_STORE", define_as = "KNIFE_WEAPON_STORE",
 	resolvers.store("KNIFE_WEAPON", "allied-kingdoms"),
 }
 
+newEntity{ base = "BASE_STORE", define_as = "ARCHER_WEAPON_STORE",
+	name="Death from Afar",
+	display='3', color=colors.UMBER,
+	resolvers.store("ARCHER_WEAPON", "allied-kingdoms"),
+}
+
 newEntity{ base = "BASE_STORE", define_as = "HERBALIST",
 	name="Herbalist",
 	display='4', color=colors.LIGHT_BLUE,

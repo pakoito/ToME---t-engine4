@@ -17,21 +17,33 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-defineTile(' ', "FLOOR", nil, nil, nil, {no_teleport=true})
-quickEntity('M', {always_remember = true, show_tooltip=true, name='Sun Wall', display='^', color=colors.GOLD, back_color=colors.CRIMSON, image="terrain/mountain.png", tint=colors.GOLD, block_move=true}, {no_teleport=true})
-quickEntity('<', {show_tooltip=true, name='into the wild', display='<', color=colors.WHITE, change_level=1, change_zone="wilderness", image="terrain/grass.png", add_displays = {mod.class.Grid.new{image="terrain/worldmap.png"}}}, {no_teleport=true})
-quickEntity('S', {name='brick roof top', display='#', color=colors.RED, block_move=true, block_sight=true, image="terrain/wood_wall1.png"}, {no_teleport=true})
-quickEntity('s', {name='brick roof', display='#', color=colors.RED, block_move=true, block_sight=true, image="terrain/wood_wall1.png"}, {no_teleport=true})
-quickEntity('t', {name='brick roof chimney', display='#', color=colors.LIGHT_RED, block_move=true, block_sight=true, image="terrain/wood_wall1.png"}, {no_teleport=true})
-quickEntity('#', {name='wall', display='#', color=colors.WHITE, block_move=true, block_sight=true, image="terrain/wood_wall1.png"}, {no_teleport=true})
-quickEntity('T', {name='tree', display='#', color=colors.LIGHT_GREEN, block_move=true, block_sight=true, image="terrain/grass.png", add_displays = {mod.class.Grid.new{image="terrain/tree_alpha2.png"}}}, {no_teleport=true})
-quickEntity('P', {name='palm tree', display='#', color=colors.LIGHT_GREEN, back_color={r=163,g=149,b=42}, image="terrain/sand.png", add_displays = {mod.class.Grid.new{image="terrain/palmtree_alpha1.png"}}, block_move=true}, {no_teleport=true})
-quickEntity('~', {name='river', display='~', color=colors.BLUE, block_move=true, image="terrain/river.png", add_displays = mod.class.Grid:makeWater(true)}, {no_teleport=true})
-quickEntity('O', {name='cobblestone road', display='.', color=colors.WHITE, image="terrain/stone_road1.png"}, {no_teleport=true})
-quickEntity(':', {name='sand', display='.', color={r=203,g=189,b=72}, back_color={r=163,g=149,b=42}, image="terrain/sand.png", can_encounter="desert", equilibrium_level=-10}, {no_teleport=true})
-quickEntity('"', {name='grass', display='.', color=colors.LIGHT_GREEN, image="terrain/grass.png"}, {no_teleport=true})
-quickEntity('-', {name='grass', display='.', color=colors.LIGHT_GREEN, image="terrain/grass.png"})
-quickEntity('^', {name='hills', display='^', color=colors.SLATE, image="terrain/mountain.png", block_move=true, block_sight=true}, {no_teleport=true})
+
+-- defineTile section
+defineTile("<", "GRASS_UP_WILDERNESS")
+defineTile("#", "HARDWALL")
+defineTile("m", "GOLDEN_MOUNTAIN")
+defineTile("~", "DEEP_WATER")
+defineTile(":", "DEEP_OCEAN_WATER")
+defineTile("*", "SAND")
+defineTile("_", "ROAD")
+defineTile("p", {"PALMTREE","PALMTREE2","PALMTREE3","PALMTREE4","PALMTREE5","PALMTREE6","PALMTREE7","PALMTREE8","PALMTREE9","PALMTREE10","PALMTREE11","PALMTREE12","PALMTREE13","PALMTREE14","PALMTREE15","PALMTREE16","PALMTREE17","PALMTREE18","PALMTREE19","PALMTREE20",})
+defineTile(".", "FLOOR")
+defineTile("t", {"TREE","TREE2","TREE3","TREE4","TREE5","TREE6","TREE7","TREE8","TREE9","TREE10","TREE11","TREE12","TREE13","TREE14","TREE15","TREE16","TREE17","TREE18","TREE19","TREE20"})
+defineTile(" ", "GRASS")
+
+defineTile('1', "HARDWALL", nil, nil, "SWORD_WEAPON_STORE")
+defineTile('2', "HARDWALL", nil, nil, "AXE_WEAPON_STORE")
+defineTile('3', "HARDWALL", nil, nil, "KNIFE_WEAPON_STORE")
+defineTile('4', "HARDWALL", nil, nil, "MAUL_WEAPON_STORE")
+defineTile('5', "HARDWALL", nil, nil, "ARCHER_WEAPON_STORE")
+defineTile('A', "HARDWALL", nil, nil, "STAFF_WEAPON_STORE")
+defineTile('6', "HARDWALL", nil, nil, "HEAVY_ARMOR_STORE")
+defineTile('7', "HARDWALL", nil, nil, "LIGHT_ARMOR_STORE")
+defineTile('8', "HARDWALL", nil, nil, "CLOTH_ARMOR_STORE")
+defineTile('9', "HARDWALL", nil, nil, "HERBALIST")
+defineTile('0', "HARDWALL", nil, nil, "RUNES")
+
+defineTile('Z', "HARDWALL", nil, nil, "ZEMEKKYS")
 
 defineTile('@', "GRASS", nil, "HIGH_SUN_PALADIN_AERYN")
 defineTile('j', "GRASS", nil, mod.class.NPC.new{
@@ -47,7 +59,7 @@ defineTile('j', "GRASS", nil, mod.class.NPC.new{
 
 defineTile('s', "FLOOR", nil, mod.class.NPC.new{
 	type = "humanoid", subtype = "human",
-	display = "p", color=colors.GOLD,
+	display = "p", color=colors.BLUE,
 	name = "Melnela",
 	size_category = 3, rank = 2,
 	ai = "simple",
@@ -56,75 +68,66 @@ defineTile('s', "FLOOR", nil, mod.class.NPC.new{
 	can_quest = true,
 })
 
-quickEntity('1', {type="store", show_tooltip=true, name="Closed store", display='1', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"}, {no_teleport=true})
-quickEntity('2', {type="store", show_tooltip=true, name="Armour Smith", display='2', color=colors.UMBER, resolvers.store("ARMOR"), image="terrain/wood_store_armor.png"}, {no_teleport=true})
-quickEntity('3', {type="store", show_tooltip=true, name="Weapon Smith", display='3', color=colors.UMBER, resolvers.store("WEAPON"), image="terrain/wood_store_weapon.png"}, {no_teleport=true})
-quickEntity('4', {type="store", show_tooltip=true, name="Alchemist", display='4', color=colors.LIGHT_BLUE, resolvers.store("POTION"), image="terrain/wood_store_potion.png"}, {no_teleport=true})
-quickEntity('5', {type="store", show_tooltip=true, name="Scribe", display='5', color=colors.WHITE, resolvers.store("SCROLL"), resolvers.chatfeature("magic-store"), image="terrain/wood_store_book.png"}, {no_teleport=true})
-quickEntity('6', {type="store", show_tooltip=true, name="Closed store", display='6', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"}, {no_teleport=true})
-quickEntity('7', {type="store", show_tooltip=true, name="Closed store", display='7', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"}, {no_teleport=true})
-quickEntity('8', {type="store", show_tooltip=true, name="Closed store", display='8', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"}, {no_teleport=true})
-quickEntity('9', {type="store", show_tooltip=true, name="Closed store", display='9', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"}, {no_teleport=true})
-quickEntity('0', {type="store", show_tooltip=true, name="Closed store", display='0', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"}, {no_teleport=true})
-quickEntity('a', {type="store", show_tooltip=true, name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"}, {no_teleport=true})
-quickEntity('b', {type="store", show_tooltip=true, name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"}, {no_teleport=true})
-quickEntity('c', {type="store", show_tooltip=true, name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"}, {no_teleport=true})
-quickEntity('d', {type="store", show_tooltip=true, name="Closed store", display='*', color=colors.LIGHT_UMBER, block_move=true, block_sight=true, image="terrain/wood_store_closed.png"}, {no_teleport=true})
-quickEntity('e', {type="store", show_tooltip=true, name="Zemekkys Home", display='+', color=colors.LIGHT_UMBER, resolvers.chatfeature("zemekkys"), image="terrain/wood_store_closed.png"}, {no_teleport=true})
-
 startx = 0
-starty = 27
-endx = 0
-endy = 27
+starty = 26
 
+-- addSpot section
+addSpot({42, 26}, "npc", "aeryn-main")
+addSpot({43, 21}, "pop-quest", "farportal")
+addSpot({43, 20}, "pop-quest", "farportal-npc")
+addSpot({42, 21}, "pop-quest", "farportal-player")
+
+-- addZone section
+
+-- ASCII map section
 return [[
-MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
-MMMMMMMMMMMMMMMMMMMM     MMMMMMMMMMMMMMMMMMMMMMMMM
-MMMMMMMMMMMMMM                MMMMMMMMMMMMMMMMMMMM
-MMMMMMMMMMMM                             MMMMMMMMM
-MMMMMMMMMM                     ###          MMMMMM
-MMMMMMMMM                     #####          MMMMM
-MMMMMMMM                      #####          MMMMM
-MMMMMMM                       #4O5#          MMMMM
-MMMMMM                          O            MMMMM
-MMMMMM                          O             MMMM
-MMMMMM     #####                O             MMMM
-MMMMMM    ######                O            MMMMM
-MMMMM     #####3OOO            OO    ###    MMMMMM
-MMMMM     ######  OOOO       s O     ###    MMMMMM
-MMMMM      #####     OOOOO     O     #e#    MMMMMM
-MMMMM                    OOOO  O      O     MMMMMM
-MMMMM                       OOOO      O      MMMMM
-MMMM          ###             O      OO       MMMM
-MMMM       #########          O      O       MMMMM
-MMM        #########          OOOOOOOOOOOOOOOOMMMM
-MMM        ####2####         OO                MMM
-MMMMM          O             O                 MMM
-MMMMMM         O            OO                 MMM
----MMM         O           OO                  MMM
-----MM        OO          OO                   MMM
-----MM        O          OO                     MM
----MMMM       O          O                       M
-<---@OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO  M
----MMMM                   O                     MM
----MMM                    O                 MMMMMM
--MMMM                     O                  MMMMM
--MMM                      O                     MM
-MMM                       O                    MMM
-MMM                      OO                   MMMM
-MMM          TTTTT       O                   MMMMM
-MMM       TTTT"""""""""""O"""""""            MMMMM
-MMMM     TT"""""~~~""""""""""""""""""""""    MMMMM
-MMMMMM  TT"""""~~~~~""""""""""""""""""::""""MMMMMM
-MMMMMMMMM""""""~~~~~"""""""TT"""""""::P:::::MMMMMM
-MMMMMMMMM"""j"""~~~"""""TT"T""""""::::::::::MMMMMM
-MMMMMMMMM"""""""~~""""""TTTT"""""::::::::P:::MMMMM
-MMMMMMMMM"""""TT~"""""""TT"""""":::::P:::::MMMMMMM
-MMMMMMMMM"""TTTT~""""""""""""""::::::::::::MMMMMMM
-MMMMMMMMMM""TTT~~""""""""""""::::P::::::::::MMMMMM
-MMMMMMMMMMM"TT~~"""""""""""""::::::::::::P::::MMMM
-MMMMMMMMMMMMMM~MMMMMMMMMM""""::::P:::P::::::::MMMM
-MMMMMMMMMMMMM~~MMMMMMMMMMM""::::::P::::::::::::MMM
-MMMMMMMM~~~~~~MMMMMMMMMMMMMM:::::::::::::::::MMMMM
-MMMMMMM~~MMMMMMMMMMMMMMMMMMMMMM::::MMMMMMMMMMMMMMM
-MMMMMMM~MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM]]
+mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
+mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
+mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
+mmmmmmmmmmmmmmm.........mmmmmmmmmmmmmmmmmmmmmmmmmm
+mmmmmmmmmmmmm..............mmmmmm..........mmmmmmm
+mmmmmmmmmmmmm................mm..............mmmmm
+mmmmmmmmmmmm.........................####.....mmmm
+mmmmmmmmm............................####.....mmmm
+mmmmmmmm.......###...................####.....mmmm
+mmmmmmmm......######..................8A.....mmmmm
+mmmmmmmm......######...#####....._______.....mmmmm
+mmmmmmmm......##6###...#####..____....._....mmmmmm
+mmmmmmmm........_......###7#.._.......__....mmmmmm
+mmmmmmmm........_........._..__......__.....mmmmmm
+mmmmmmm.........______________..#####_......mmmmmm
+mmmmmm.........._........._....######_.......mmmmm
+mmmmmm.........._..####..._....######_.......mmmmm
+mmmmm...###....__..#####.._..s..##345_...###..mmmm
+mmmmm...###...._...#####.._.......____...#Z#..mmmm
+mmmmm..#####..._...#12#..._......__......._...mmmm
+mmmmm..#0#9#..._....__....________......___....mmm
+ mmmm...___....______.....__...._......__......mmm
+ mmm....._....._.........._.....________........mm
+  mm.....___..__.........._..........._.........mm
+   mm......____..........._..........._........mmm
+   mm...#..._..#......#..._.#.....#..._.#......mmm
+<  _@_________________________________________mmmm
+   mm...#......#......#..._.#.....#.....#....mmmmm
+   mm....................__.................mmmmmm
+m mmm...................._.................mmmmmmm
+mmmm....................__.................mmmmmmm
+mmmm.................  ._..................mmmmmmm
+mmmm.........ttt.               ...........mmmmmmm
+mmmm...tttttttt                             mmmmmm
+mmmm.ttttttttt                              mmmmmm
+mmmmtt                          ******       mmmmm
+mmmmt       ~~~~              ****pp*******  mmmmm
+mmmm       ~~~~~~            ****************mmmmm
+mmmm       ~~~~~~ttt j       *p********p*****mmmmm
+mmmmm       ~~~~~ttt        ***********p**p**mmmmm
+mmmmmm     tt~~~~tt         *****p**p********mmmmm
+mmmmmm    ttt~~~           **p***************mmmmm
+mmmmm    ttt~~~            ******************mmmmm
+mmmmm    ttt~~            *****:::::::*******mmmmm
+mmmmm      ~~             ****:::::::::::::*mmmmmm
+mmmmmmm   ~~~            ***:::::::::::::::mmmmmmm
+mmmmmmm  ~~~  mmmm     ****:::::::::::::::mmmmmmmm
+mmmmmm~~~~~mmmmmmmm    **mmmmm::::::::::mmmmmmmmmm
+mmmmmm~mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
+mmmmmm~mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm]]

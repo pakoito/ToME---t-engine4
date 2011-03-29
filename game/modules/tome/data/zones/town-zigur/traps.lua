@@ -45,6 +45,11 @@ newEntity{ base = "BASE_STORE", define_as = "AXE_WEAPON_STORE",
 	display='3', color=colors.UMBER,
 	resolvers.store("ZIGUR_AXE_WEAPON", "zigur"),
 }
+newEntity{ base = "BASE_STORE", define_as = "ARCHER_WEAPON_STORE",
+	name="Nature's Reach",
+	display='3', color=colors.UMBER,
+	resolvers.store("ZIGUR_ARCHER_WEAPON", "zigur"),
+}
 newEntity{ base = "BASE_STORE", define_as = "KNIFE_WEAPON_STORE",
 	name="Millions Cuts",
 	display='3', color=colors.UMBER,

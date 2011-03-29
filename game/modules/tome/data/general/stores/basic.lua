@@ -100,6 +100,20 @@ newEntity{
 }
 
 newEntity{
+	define_as = "ARCHER_WEAPON",
+	name = "archery",
+	display = '3', color=colors.UMBER,
+	store = {
+		purse = 25,
+		empty_before_restock = false,
+		filters = {
+			{type="weapon", subtype="longbow", id=true, tome_drops="store"},
+			{type="weapon", subtype="sling", id=true, tome_drops="store"},
+		},
+	},
+}
+
+newEntity{
 	define_as = "KNIFE_WEAPON",
 	name = "knife smith",
 	display = '3', color=colors.UMBER,
@@ -245,9 +259,12 @@ newEntity{
 	name = "library",
 	display = '*', color=colors.LIGHT_RED,
 	store = {
-		purse = 5,
+		purse = 10,
 		empty_before_restock = false,
 		filters = {
+			{type="scroll", subtype="rune", id=true},
+		},
+		fixed = {
 			{id=true, defined="FOUNDATION_NOTE1"},
 			{id=true, defined="FOUNDATION_NOTE2"},
 			{id=true, defined="FOUNDATION_NOTE3"},
@@ -372,6 +389,24 @@ newEntity{
 		filters = function()
 			return {type="weapon", subtype="dagger", id=true, tome_drops="store"}
 		end,
+		post_filter = function(e)
+			if e.power_source and e.power_source.arcane then return false end
+			return true
+		end,
+	},
+}
+
+newEntity{
+	define_as = "ZIGUR_ARCHER_WEAPON",
+	name = "archery",
+	display = '3', color=colors.UMBER,
+	store = {
+		purse = 25,
+		empty_before_restock = false,
+		filters = {
+			{type="weapon", subtype="sling", id=true, tome_drops="store"},
+			{type="weapon", subtype="longbow", id=true, tome_drops="store"},
+		},
 		post_filter = function(e)
 			if e.power_source and e.power_source.arcane then return false end
 			return true

@@ -40,6 +40,7 @@ defineTile('6', "HARDWALL", nil, nil, "LIGHT_ARMOR_STORE")
 defineTile('7', "HARDWALL", nil, nil, "CLOTH_ARMOR_STORE")
 defineTile('8', "HARDWALL", nil, nil, "HERBALIST")
 defineTile('9', "HARDWALL", nil, nil, "RUNES")
+defineTile('A', "HARDWALL", nil, nil, "ARCHER_WEAPON_STORE")
 
 defineTile('E', "HARDWALL", nil, nil, "ELDER")
 defineTile('T', "HARDWALL", nil, nil, "TANNEN")
@@ -85,11 +86,11 @@ tt~~~##  ###     __~~###@_t###~~__          ##~~~t
 tt~~~#   #T#    __~~##ttY_Ztt##~~__          #~~~t
 tt~~~#       ## _~~##tt_____tt##~~_ ##       #~~~t
 t~~~##      ## __~##t___&_&___t##~__ ##      ##~~~
-t~~~#      ### _~~#tt_&&&_&&&_tt#~~_ ###      #~~~
+t~~~#      ##A _~~#tt_&&&_&&&_tt#~~_ ###      #~~~
 t~~~#      ##  _~##t__&&&_&&&__t##~_  ##      #~~~
 t~~~#  #####1  _~#tt_&&_____&&_tt#~_  3#####  #~~~
 t~~~#  #####   _~#tt_&&_###_&&_tt#~_   #####  #~~~
-t~~~#  #8###2  _~#tt_&&_#E#_&&_tt#~_  4###9#  #~~~
+t~~~#  #8###2  _~#tt_&&_#E#_&&_tt#~_  4#####  #~~~
 t~~~#      ##  _~##t__&_____&__t##~_  ##      #~~~
 t~~~#      ### _~~#tt_&&&&&&&_tt#~~_ ###      #~~~
 t~~~##      ## __~##t___&&&___t##~__ ##      ##~~~

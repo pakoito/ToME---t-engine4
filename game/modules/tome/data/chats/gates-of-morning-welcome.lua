@@ -52,7 +52,8 @@ They roam the lands freely, ever assaulting us.
 		{"Thank you, my lady.", action=function(npc, player)
 			world:gainAchievement("STRANGE_NEW_WORLD", game.player)
 			player:setQuestStatus("strange-new-world", engine.Quest.DONE)
-			npc:move(46, 27, true)
+			local spot = game.level:pickSpot{type="npc", subtype="aeryn-main"}
+			npc:move(spot.x, spot.y, true)
 			npc.can_talk = "gates-of-morning-main"
 		end},
 	}

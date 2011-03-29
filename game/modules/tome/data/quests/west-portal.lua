@@ -99,18 +99,22 @@ create_portal = function(self, npc, player)
 	}
 	zemekkys:resolve() zemekkys:resolve(nil, true)
 
-	game.zone:addEntity(game.level, zemekkys, "actor", 39, 17)
-	game.zone:addEntity(game.level, g1, "terrain", 40, 15)
-	game.zone:addEntity(game.level, g1, "terrain", 41, 15)
-	game.zone:addEntity(game.level, g1, "terrain", 42, 15)
-	game.zone:addEntity(game.level, g1, "terrain", 40, 16)
-	game.zone:addEntity(game.level, g2, "terrain", 41, 16)
-	game.zone:addEntity(game.level, g1, "terrain", 42, 16)
-	game.zone:addEntity(game.level, g1, "terrain", 40, 17)
-	game.zone:addEntity(game.level, g1, "terrain", 41, 17)
-	game.zone:addEntity(game.level, g1, "terrain", 42, 17)
+	local spot = game.level:pickSpot{type="pop-quest", subtype="farportal-npc"}
+	game.zone:addEntity(game.level, zemekkys, "actor", spot.x, spot.y)
 
-	player:move(39, 16, true)
+	local spot = game.level:pickSpot{type="pop-quest", subtype="farportal"}
+	game.zone:addEntity(game.level, g1, "terrain", spot.x, spot.y)
+	game.zone:addEntity(game.level, g1, "terrain", spot.x+1, spot.y)
+	game.zone:addEntity(game.level, g1, "terrain", spot.x+2, spot.y)
+	game.zone:addEntity(game.level, g1, "terrain", spot.x, spot.y+1)
+	game.zone:addEntity(game.level, g2, "terrain", spot.x+1, spot.y+1)
+	game.zone:addEntity(game.level, g1, "terrain", spot.x+2, spot.y+1)
+	game.zone:addEntity(game.level, g1, "terrain", spot.x, spot.y+2)
+	game.zone:addEntity(game.level, g1, "terrain", spot.x+1, spot.y+2)
+	game.zone:addEntity(game.level, g1, "terrain", spot.x+2, spot.y+2)
+
+	local spot = game.level:pickSpot{type="pop-quest", subtype="farportal-player"}
+	player:move(spot.x, spot.y, true)
 
 	player:setQuestStatus(self.id, engine.Quest.DONE)
 	world:gainAchievement("WEST_PORTAL", game.player)

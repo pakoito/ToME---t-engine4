@@ -35,6 +35,7 @@ defineTile("'", "DOOR")
 
 defineTile('2', "HARDWALL", nil, nil, "SWORD_WEAPON_STORE")
 defineTile('5', "HARDWALL", nil, nil, "KNIFE_WEAPON_STORE")
+defineTile('6', "HARDWALL", nil, nil, "ARCHER_WEAPON_STORE")
 defineTile('3', "HARDWALL", nil, nil, "HEAVY_ARMOR_STORE")
 defineTile('1', "HARDWALL", nil, nil, "LIGHT_ARMOR_STORE")
 defineTile('4', "HARDWALL", nil, nil, "HERBALIST")
@@ -103,7 +104,7 @@ ttttttt~~~t.._.#####....._.####._.###...t~~~tttttt
 ttttttt~~~t.._.#####....._.####._.###...t~~~tttttt
 ttttttt~~~t.._.#5#2#....___##a#._.###...t~~~tttttt
 ttttttt~~~t.._______..___._.._.._.###...t~~~tttttt
-ttttttt~~~t......._..__..._______.###..tt~~~tttttt
+ttttttt~~~t......._..__..._______.#6#..tt~~~tttttt
 ttttttt~~~tt......_.._.........._.._...t~~~ttttttt
 tttttttt~~~tt.....____.####.....____...t~~~ttttttt
 ttttttttt~~~tt......_..####....._......t~~~ttttttt

@@ -41,7 +41,7 @@ return {
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
-			nb_npc = {0, 0},
+			nb_npc = {10, 10},
 		},
 		object = {
 			class = "engine.generator.object.Random",

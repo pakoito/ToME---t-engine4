@@ -47,6 +47,7 @@ defineTile('7', "HARDWALL", nil, nil, "LIGHT_ARMOR_STORE")
 defineTile('8', "HARDWALL", nil, nil, "HEAVY_ARMOR_STORE")
 defineTile('4', "HARDWALL", nil, nil, "HERBALIST")
 defineTile('9', "HARDWALL", nil, nil, "LIBRARY")
+defineTile('A', "HARDWALL", nil, nil, "ARCHER_WEAPON_STORE")
 
 startx = 24
 starty = 49
@@ -149,7 +150,7 @@ return [[
 ~~~~,,,.....................................tttttt
 ~~~~,,,,..................................tttttttt
 ~~~~~~,,,,..............t................ttttttttt
-~~~~~~~~,,,............ttt..#####...tt..tttttttttt
+~~~~~~~~,,,............ttt..##A##...tt..tttttttttt
 ~~~~~~~~~,,...........ttttt.#####....t.ttttttttttt
 ~~~~~~~~~,,,..........ttttt.#5#6#......ttttttttttt
 ~~~~~~~~~,,,,...........tt..............tttttttttt
