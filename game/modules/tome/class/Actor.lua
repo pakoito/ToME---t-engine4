@@ -301,7 +301,7 @@ function _M:act()
 	end
 
 	-- We compute turns at "default" speed, and only fire some actions when chaning turn
-	local actturn = math.floor(game.turn / 10)
+	local actturn = math.floor(game.turn / (game.zone.wilderness and 10000 or 10))
 	if not self.last_act_turn then self.last_act_turn = actturn - 1 end
 	for i = 1, actturn - self.last_act_turn do self:actTurn() end
 	self.last_act_turn = actturn
