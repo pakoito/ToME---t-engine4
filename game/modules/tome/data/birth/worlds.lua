@@ -192,7 +192,7 @@ newBirthDescriptor{
 newBirthDescriptor{
 	type = "world",
 	name = "Trolls",
-	display_name = "Trolls: Terror of the Woods",
+	display_name = "Trolls: Pirates of the Kar'Haib",
 	desc =
 	{
 		"",
