@@ -81,9 +81,7 @@ newBirthDescriptor{
 			{type="lite", subtype="lite", name="brass lantern", ego_chance=-1000},
 		},
 		make_tile = function(e)
-			if not e.image then
-				e.image = "player/"..e.descriptor.subrace:lower().."_"..e.descriptor.subclass:lower()..".png"
-			end
+			e.image = "player/"..e.descriptor.subrace:lower().."_"..e.descriptor.sex:lower()..".png"
 		end,
 	},
 }
