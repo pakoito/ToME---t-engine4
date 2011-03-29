@@ -301,7 +301,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	end
 
 	-- Temporal cast
-	if hitted and not target.dead and self:knowTalent(self.T_WEAPON_FOLDING) and self:isTalentActive(self.T_WEAPON_FOLDING) and weapon.talented and weapon.talented ~= "bow" and weapon.talented ~= "sling" then
+	if hitted and not target.dead and self:knowTalent(self.T_WEAPON_FOLDING) and self:isTalentActive(self.T_WEAPON_FOLDING) then
 		local t = self:getTalentFromId(self.T_WEAPON_FOLDING)
 		local dam = t.getDamage(self, t)
 		DamageType:get(DamageType.TEMPORAL).projector(self, target.x, target.y, DamageType.TEMPORAL, dam)
@@ -542,7 +542,7 @@ end
 function _M:combatAPR(weapon)
 	weapon = weapon or self.combat or {}
 	local addapr = 0
-	if weapon.talented and weapon.talented ~= "bow" and weapon.talented ~= "sling" and self:knowTalent(Talents.T_WEAPON_FOLDING) and self:isTalentActive(self.T_WEAPON_FOLDING) then
+	if self:knowTalent(Talents.T_WEAPON_FOLDING) and self:isTalentActive(self.T_WEAPON_FOLDING) then
 		local t = self:getTalentFromId(self.T_WEAPON_FOLDING)
 		addapr = t.getArmorPen(self, t)
 	end

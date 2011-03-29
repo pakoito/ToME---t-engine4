@@ -104,7 +104,7 @@ newBirthDescriptor{
 		["cunning/survival"]={false, 0},
 		["chronomancy/chronomancy"]={true, 0.1},
 		["chronomancy/speed-control"]={true, 0.1},
-		["chronomancy/temporal-archery"]={true, 0.3},
+	--	["chronomancy/temporal-archery"]={true, 0.3},
 		["chronomancy/temporal-combat"]={true, 0.3},
 		["chronomancy/timetravel"]={false, 0},
 		["chronomancy/spacetime-weaving"]={true, 0},

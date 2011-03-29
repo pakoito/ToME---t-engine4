@@ -795,7 +795,7 @@ function _M:onTakeHit(value, src)
 	if self:knowTalent(self.T_DISPLACE_DAMAGE) and self:isTalentActive(self.T_DISPLACE_DAMAGE) and rng.percent(5 + (self:getTalentLevel(self.T_DISPLACE_DAMAGE) * 5)) then
 		-- find available targets
 		local tgts = {}
-		local grids = core.fov.circle_grids(self.x, self.y, self:getTalentLevelRaw(self.T_DISPLACE_DAMAGE), true)
+		local grids = core.fov.circle_grids(self.x, self.y, self:getTalentLevelRaw(self.T_DISPLACE_DAMAGE) * 2, true)
 		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
 			local a = game.level.map(x, y, Map.ACTOR)
 			if a and self:reactionToward(a) < 0 then
@@ -928,7 +928,7 @@ function _M:onTakeHit(value, src)
 		value = 0
 	end
 
-	if self:hasEffect(self.EFF_FORESIGHT) then
+	if self:hasEffect(self.EFF_FORESIGHT) and value >= (self.max_life / 10) then
 		self:removeEffect(self.EFF_FORESIGHT)
 		game.logSeen(self, "%s avoids the attack.", self.name:capitalize())
 		value = 0

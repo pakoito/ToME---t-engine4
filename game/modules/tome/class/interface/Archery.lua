@@ -170,6 +170,14 @@ local function archery_projectile(tx, ty, tg, self)
 		end
 	end end
 
+	-- Temporal cast
+	if hitted and not target.dead and self:knowTalent(self.T_WEAPON_FOLDING) and self:isTalentActive(self.T_WEAPON_FOLDING) then
+		local t = self:getTalentFromId(self.T_WEAPON_FOLDING)
+		local dam = t.getDamage(self, t)
+		DamageType:get(DamageType.TEMPORAL).projector(self, target.x, target.y, DamageType.TEMPORAL, dam)
+	end
+
+	
 	-- Regen on being hit
 	if hitted and not target.dead and target:attr("stamina_regen_on_hit") then target:incStamina(target.stamina_regen_on_hit) end
 	if hitted and not target.dead and target:attr("mana_regen_on_hit") then target:incMana(target.mana_regen_on_hit) end

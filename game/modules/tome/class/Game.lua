@@ -1371,6 +1371,8 @@ function _M:countBirthUnlocks()
 		chronomancer_paradox_mage = true,
 
 		psionic_mindslayer = true,
+
+		warrior_brawler = true,
 	}
 
 	for name, _ in pairs(list) do

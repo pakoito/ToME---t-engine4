@@ -3166,7 +3166,7 @@ newEffect{
 	status = "beneficial",
 	parameters = { power=10 },
 	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("energy", {mod=3})
+		eff.tmpid = self:addTemporaryValue("energy", {mod=1})
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("energy", eff.tmpid)

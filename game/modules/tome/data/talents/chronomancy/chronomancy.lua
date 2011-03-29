@@ -107,7 +107,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[You avoid all damage from a single damage source that occurs within the next %d turns.
+		return ([[You avoid all damage from a single damage source as long as it occurs within the next %d turns and deals at least 10%% of your maximum life in a single hit.  Once an attack is avoided the spell will end.
 		Additional talent points will lower the cooldown and the duration will scale with your Paradox.]]):
 		format(duration)
 	end,

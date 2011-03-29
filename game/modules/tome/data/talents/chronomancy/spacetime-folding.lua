@@ -37,16 +37,87 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local ap = t.getArmorPen(self, t)
-		return ([[Folds a single dimension of your melee weapons, allowing them to penetrate %d armor and adding %0.2f temporal damage to your strikes.
+		return ([[Folds a single dimension of your weapons (or ammo), allowing them to penetrate %d armor and adding %0.2f temporal damage to your strikes.
 		The armor penetration and damage will increase with the Magic stat.]]):format(ap, damDesc(self, DamageType.TEMPORAL, damage))
 	end,
 }
 
 newTalent{
-	name = "Displace Damage",
+	name = "Swap",
 	type = {"chronomancy/spacetime-folding", 2},
-	mode = "sustained",
 	require = temporal_req2,
+	points = 5,
+	paradox = 5,
+	cooldown = 10,
+	tactical = { ESCAPE = 2, CLOSEIN = 2, DISABLE = 2, },
+	requires_target = true,
+	direct_hit = true,
+	range = function(self, t)
+		return 5 + (self:getTalentLevelRaw(t))
+	end,
+	getConfuseDuration = function(self, t) return math.floor((self:getTalentLevel(t) + 2) * getParadoxModifier(self, pm)) end,
+	getConfuseEfficency = function(self, t) return (50 + self:getTalentLevelRaw(t) * 10) end,
+	action = function(self, t)
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local tx, ty, target = self:getTarget(tg)
+		if not tx or not ty then return nil end
+		if math.floor(core.fov.distance(self.x, self.y, tx, ty)) > self:getTalentRange(t) then return nil end
+		if not self:canBe("teleport") or game.level.map.attrs(tx, ty, "no_teleport") or game.level.map.attrs(self.x, self.y, "no_teleport") then
+			game.logSeen(self, "The spell fizzles!")
+			return true
+		end
+		if tx then
+			local _ _, tx, ty = self:canProject(tg, tx, ty)
+			if tx then
+				target = game.level.map(tx, ty, Map.ACTOR)
+				if not target then return nil end
+			end
+		end
+		if target:canBe("teleport") then
+			local hit = self:checkHit(self:combatSpellpower(), target:combatSpellResist() + (target:attr("continuum_destabilization") or 0))
+			if not hit then
+				game.logSeen(target, "The spell fizzles!")
+				return true
+			else 
+				self:project(tg, tx, ty, DamageType.CONFUSION, {
+					dur = t.getConfuseDuration(self, t),
+					dam = t.getConfuseEfficency(self, t),
+				})
+			end
+		end
+
+		-- Annoy them!
+		if target ~= self and target:reactionToward(self) < 0 then target:setTarget(self) end
+
+		game.level.map:remove(self.x, self.y, Map.ACTOR)
+		game.level.map:remove(target.x, target.y, Map.ACTOR)
+		game.level.map(self.x, self.y, Map.ACTOR, target)
+		game.level.map(target.x, target.y, Map.ACTOR, self)
+		self.x, self.y, target.x, target.y = target.x, target.y, self.x, self.y
+		game.level.map:particleEmitter(target.x, target.y, 1, "temporal_teleport")
+		game.level.map:particleEmitter(self.x, self.y, 1, "temporal_teleport")
+
+
+		if target ~= self then
+			target:setEffect(target.EFF_CONTINUUM_DESTABILIZATION, 100, {power=self:combatSpellpower(0.3)})
+		end
+
+		game:playSoundNear(self, "talents/teleport")
+		return true
+	end,
+	info = function(self, t)
+		local range = self:getTalentRange(t)
+		local duration = t.getConfuseDuration(self, t)
+		return ([[You manipulate the spacetime continuum in such a way that you switch places with another creature with in a range of %d.  The targeted creature will be confused for %d turns.
+		The confusion chance will increase with your magic stat.]]):format (range, duration)
+	end,
+}
+
+newTalent{
+	name = "Displace Damage",
+	type = {"chronomancy/spacetime-folding", 3},
+	mode = "sustained",
+	require = temporal_req3,
 	sustain_paradox = 150,
 	cooldown = 10,
 	tactical = { BUFF = 2 },
@@ -60,14 +131,14 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Space bends around you, giving you a %d%% chance to displace half of any damage you recieve onto a random enemy within a range of %d.
-		]]):format(5 + self:getTalentLevel(t) * 5, self:getTalentLevelRaw(t))
+		]]):format(5 + self:getTalentLevel(t) * 5, self:getTalentLevelRaw(t) * 2)
 	end,
 }
 
 newTalent{
 	name = "Temporal Wake",
-	type = {"chronomancy/spacetime-folding", 3},
-	require = temporal_req3,
+	type = {"chronomancy/spacetime-folding", 4},
+	require = temporal_req4,
 	points = 5,
 	random_ego = "attack",
 	paradox = 10,
@@ -116,7 +187,7 @@ newTalent{
 	end,
 }
 
-newTalent{
+--[=[newTalent{
 	name = "Kinetic Folding",
 	type = {"chronomancy/spacetime-folding", 4},
 	require = temporal_req4,
@@ -151,4 +222,4 @@ newTalent{
 		The damage will scale with your Paradox.]]):
 		format (damage*100)
 	end,
-}
+}]=]
