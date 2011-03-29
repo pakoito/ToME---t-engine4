@@ -19,9 +19,14 @@
 
 return {
 	name = "Ring of Blood",
+	display_name = function(x, y)
+		if game.level.level < 3 then return "Slavers Compound ("..game.level.level..")" end
+		return "Ring of Blood"
+	end,
+	variable_zone_name = true,
 	level_range = {10, 25},
 	level_scheme = "player",
-	max_level = 1,
+	max_level = 3,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	width = 50, height = 50,
@@ -32,20 +37,55 @@ return {
 	max_material_level = 2,
 	generator =  {
 		map = {
-			class = "engine.generator.map.Static",
-			map = "zones/ring-of-blood",
+			class = "engine.generator.map.Forest",
+			zoom = 5,
+			sqrt_percent = 30,
+			noise = "fbm_perlin",
+			floor = "FLOOR",
+			wall = "WALL",
+			up = "UP",
+			down = "DOWN",
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
-			nb_npc = {0, 0},
+			nb_npc = {10, 15},
 		},
 		object = {
 			class = "engine.generator.object.Random",
-			nb_object = {0, 0},
+			nb_object = {3, 5},
 		},
 		trap = {
 			class = "engine.generator.trap.Random",
-			nb_trap = {0, 0},
+			nb_trap = {6, 9},
+		},
+	},
+	levels = {
+		[1] = {
+			generator =  {
+				map = {
+					up = "UP_WILDERNESS",
+				},
+			},
+		},
+		[3] = {
+			generator =  {
+				map = {
+					class = "engine.generator.map.Static",
+					map = "zones/ring-of-blood",
+				},
+				actor = {
+					class = "engine.generator.actor.Random",
+					nb_npc = {0, 0},
+				},
+				object = {
+					class = "engine.generator.object.Random",
+					nb_object = {0, 0},
+				},
+				trap = {
+					class = "engine.generator.trap.Random",
+					nb_trap = {0, 0},
+				},
+			},
 		},
 	},
 	post_process = function(level)

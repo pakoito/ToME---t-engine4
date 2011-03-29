@@ -17,13 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/npcs/rodent.lua", rarity(5))
-load("/data/general/npcs/vermin.lua", rarity(5))
-load("/data/general/npcs/molds.lua", rarity(5))
-load("/data/general/npcs/elven-warrior.lua", rarity(0))
-load("/data/general/npcs/elven-caster.lua", rarity(0))
-
-load("/data/general/npcs/all.lua", rarity(4, 35))
+load("/data/general/npcs/all.lua", function(e) e.slaver_rarity, e.rarity = e.rarity, nil end)
 
 local Talents = require("engine.interface.ActorTalents")
 
@@ -116,7 +110,7 @@ newEntity{ define_as = "PLAYER_SLAVE",
 	resolvers.equip{ {type="armor", subtype="light", auto_req=true} },
 
 	resolvers.talents{
-		[Talents.T_STRIKING_STANCE] = 1,
+		[Talents.T_EMPTY_HAND] = 1,
 		[Talents.T_DOUBLE_STRIKE] = 4,
 		[Talents.T_BODY_SHOT] = 3,
 		[Talents.T_RUSHING_STRIKE] = 1,
@@ -134,4 +128,76 @@ newEntity{ define_as = "PLAYER_SLAVE",
 	autolevel = "warrior",
 
 	faction = "slavers",
+}
+
+
+-------------------------------------- NPCs
+
+newEntity{
+	define_as = "BASE_NPC_SLAVER",
+	type = "humanoid", subtype = "human",
+	display = "p", color=colors.DARK_KHAKI,
+--	faction = "slavers",
+
+	combat = { dam=resolvers.rngavg(5,12), atk=2, apr=6, physspeed=2 },
+
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
+	resolvers.drops{chance=20, nb=1, {} },
+	resolvers.drops{chance=10, nb=1, {type="money"} },
+	infravision = 20,
+	lite = 1,
+
+	life_rating = 15,
+	rank = 2,
+	size_category = 3,
+
+	open_door = true,
+
+	resolvers.racial(),
+	resolvers.talents{ [Talents.T_HEAVY_ARMOUR_TRAINING]=1, [Talents.T_WEAPON_COMBAT]={base=1, every=5, max=10}, [Talents.T_WEAPONS_MASTERY]={base=1, every=5, max=10} },
+
+	autolevel = "warrior",
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
+	energy = { mod=1 },
+	stats = { str=20, dex=8, mag=6, con=16 },
+}
+
+newEntity{ base = "BASE_NPC_SLAVER",
+	name = "slaver", color=colors.TEAL,
+	desc = [[A slaver.]],
+	level_range = {10, nil}, exp_worth = 1,
+	rarity = 1,
+	max_life = resolvers.rngavg(80,90), life_rating = 11,
+	resolvers.equip{
+		{type="weapon", subtype="staff", autoreq=true},
+	},
+	combat_armor = 0, combat_def = 6,
+	resolvers.talents{
+		[Talents.T_MANATHRUST]={base=3, every=5, max=6},
+		[Talents.T_FLAME]={base=3, every=5, max=6},
+		[Talents.T_LIGHTNING]={base=3, every=5, max=6},
+		[Talents.T_FLAMESHOCK]={base=3, every=5, max=6},
+	},
+
+	make_escort = {
+		{type="humanoid", subtype="human", name="enthralled slave", number=2},
+	}
+}
+
+newEntity{ base = "BASE_NPC_SLAVER",
+	name = "enthralled slave", color=colors.KHAKI,
+	desc = [[A slave.]],
+	level_range = {10, nil}, exp_worth = 1,
+	rarity = 20,
+	max_life = resolvers.rngavg(80,90), life_rating = 13,
+	combat_armor = 0, combat_def = 6,
+
+	resolvers.talents{
+		[Talents.T_UPPERCUT] = {base=3, every=5, max=6},
+		[Talents.T_EMPTY_HAND] = 1,
+		[Talents.T_CLINCH] = {base=3, every=5, max=6},
+		[Talents.T_MAIM] = {base=3, every=5, max=6},
+		[Talents.T_UNARMED_MASTERY] = {base=3, every=3, max=8},
+		[Talents.T_WEAPON_COMBAT] = {base=3, every=3, max=8},
+	},
 }

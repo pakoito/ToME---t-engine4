@@ -264,7 +264,7 @@ newEntity{
 
 		local g = mod.class.Grid.new{
 			show_tooltip=true,
-			name="Ring of Blood",
+			name="Hidden compound",
 			display='>', color=colors.CRIMSON,
 			notice = true,
 			change_level=1, change_zone="ring-of-blood"

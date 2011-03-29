@@ -27,7 +27,7 @@ endy = 23
 -- defineTile section
 defineTile("#", "HARDWALL")
 defineTile("~", "LAVA_WALL")
-defineTile("<", "UP_WILDERNESS")
+defineTile("<", "UP")
 defineTile("-", "SAND")
 defineTile("O", "CONTROL_ORB")
 defineTile(".", "FLOOR")

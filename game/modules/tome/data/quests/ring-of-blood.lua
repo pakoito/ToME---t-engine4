@@ -92,7 +92,7 @@ on_turn = function(self)
 
 	local oldlev = game.zone.base_level
 	game.zone.base_level = 10
-	local filter = {type=rng.table{"animal", "humanoid"}, max_ood=3}
+	local filter = {type=rng.table{"animal", "humanoid"}, max_ood=3, special_rarity="slaver_rarity"}
 	local foe = game.zone:makeEntity(game.level, "actor", filter, nil, true)
 	local spot = game.level:pickSpot{type="arena", subtype="npc"}
 	local x, y = util.findFreeGrid(spot.x, spot.y, 20, true, {[engine.Map.ACTOR]=true})
