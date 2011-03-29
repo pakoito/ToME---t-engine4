@@ -203,6 +203,7 @@ function _M:selectType(type)
 	self.current_type = type
 	self:updateList()
 	self.c_list.sel = default
+	self.c_list:onSelect()
 end
 
 function _M:makeKey(letter)

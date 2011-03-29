@@ -17,43 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-newBirthDescriptor{
-	type = "world",
-	name = "Tutorial",
-	desc =
-	{
-		"The tutorial will explain the basics of the game to get you started.",
-	},
---	on_select = function(what)
---		setAuto("subclass", false)
---		setAuto("subrace", false)
---	end,
-	descriptor_choices =
-	{
-		race =
-		{
-			__ALL__ = "forbid",
-			["Tutorial Human"] = "allow",
-		},
-		subrace =
-		{
-			__ALL__ = "forbid",
-			["Tutorial Human"] = "allow",
-		},
-		class =
-		{
-			__ALL__ = "forbid",
-			["Tutorial Adventurer"] = "allow",
-		},
-		subclass =
-		{
-			__ALL__ = "forbid",
-			["Tutorial Adventurer"] = "allow",
-		},
-	},
-}
-
-local default_eyal_descriptors = {
+local default_eyal_descriptors = function(add)
+	local base = {
 	race =
 	{
 		__ALL__ = "disallow",
@@ -87,6 +52,9 @@ local default_eyal_descriptors = {
 		Psionic = function() return profile.mod.allow_build.psionic and "allow" or "disallow" end,
 	},
 }
+	if add then table.merge(base, add) end
+	return base
+end
 
 -- Player worlds/campaigns
 newBirthDescriptor{
@@ -100,7 +68,7 @@ newBirthDescriptor{
 		"You are an adventurer, setting out to find lost treasure and glory.",
 		"But what lurks in the shadows of the world?",
 	},
-	descriptor_choices = default_eyal_descriptors,
+	descriptor_choices = default_eyal_descriptors{},
 	copy = {
 		__allow_rod_recall = true,
 	}
@@ -115,7 +83,7 @@ newBirthDescriptor{
 		"Play as your favorite race and class and venture into the infinite dungeon.",
 		"The only limit to how far you can go is your own skill!",
 	},
-	descriptor_choices = default_eyal_descriptors,
+	descriptor_choices = default_eyal_descriptors{ difficulty = { Tutorial = "never"} },
 	copy = {
 		-- Give the orb of knowledge
 		resolvers.inventory{ id=true, {defined="ORB_KNOWLEDGE"}},
@@ -143,7 +111,7 @@ newBirthDescriptor{
 		"See how far you can go! Can you become the new Master of the Arena?",
 		"If so, you will battle your own champion next time!",
 	},
-	descriptor_choices = default_eyal_descriptors,
+	descriptor_choices = default_eyal_descriptors{ difficulty = { Tutorial = "never", Easy = "never", Normal = "never" } },
 	copy = {
 		death_dialog = "ArenaFinish",
 

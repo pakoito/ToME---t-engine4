@@ -201,7 +201,7 @@ function _M:newGame()
 	local nb_unlocks, max_unlocks = self:countBirthUnlocks()
 
 	self.creating_player = true
-	local birth; birth = Birther.new("Character Creation: "..self.player.name.." ("..nb_unlocks.."/"..max_unlocks.." unlocked birth options)", self.player, {"base", "difficulty", "world", "race", "subrace", "sex", "class", "subclass" }, function()
+	local birth; birth = Birther.new("Character Creation: "..self.player.name.." ("..nb_unlocks.."/"..max_unlocks.." unlocked birth options)", self.player, {"base", "world", "difficulty", "race", "subrace", "sex", "class", "subclass" }, function()
 		self.calendar = Calendar.new("/data/calendar_"..(self.player.calendar or "allied")..".lua", "Today is the %s %s of the %s year of the Age of Ascendancy of Maj'Eyal.\nThe time is %02d:%02d.", 122, 167, 11)
 		self.player:check("make_tile")
 		self.player.make_tile = nil

@@ -102,11 +102,26 @@ newBirthDescriptor{
 	},
 	descriptor_choices =
 	{
-		world =
+		race =
 		{
-			__ALL__ = "disallow",
-			Tutorial = "allow",
-		}
+			__ALL__ = "forbid",
+			["Tutorial Human"] = "allow",
+		},
+		subrace =
+		{
+			__ALL__ = "forbid",
+			["Tutorial Human"] = "allow",
+		},
+		class =
+		{
+			__ALL__ = "forbid",
+			["Tutorial Adventurer"] = "allow",
+		},
+		subclass =
+		{
+			__ALL__ = "forbid",
+			["Tutorial Adventurer"] = "allow",
+		},
 	},
 	copy = {
 		no_birth_levelup = true,
