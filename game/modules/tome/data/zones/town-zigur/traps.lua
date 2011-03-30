@@ -51,7 +51,7 @@ newEntity{ base = "BASE_STORE", define_as = "ARCHER_WEAPON_STORE",
 	resolvers.store("ZIGUR_ARCHER_WEAPON", "zigur"),
 }
 newEntity{ base = "BASE_STORE", define_as = "KNIFE_WEAPON_STORE",
-	name="Millions Cuts",
+	name="A Million Cuts",
 	display='3', color=colors.UMBER,
 	resolvers.store("ZIGUR_KNIFE_WEAPON", "zigur"),
 }

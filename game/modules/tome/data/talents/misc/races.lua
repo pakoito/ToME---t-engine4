@@ -307,6 +307,7 @@ newTalent{
 	no_energy = true,
 	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 3 end,
 	tactical = { ATTACK = 2 },
+	range = 4,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
