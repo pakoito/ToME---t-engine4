@@ -104,14 +104,14 @@ temporal_req5 = {
 -- Backfire Function
 
 checkBackfire = function(self, x, y)
-	
+
 	--check for Paradox Mastery
 	if self:knowTalent(self.T_PARADOX_MASTERY) and self:isTalentActive(self.T_PARADOX_MASTERY) then
 		modifier = self:getWil() * (1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10) or 0 )
 	else
 		modifier = self:getWil()
 	end
-	
+
 	local backfire = math.pow (((self:getParadox() - modifier)/300), 3)*((100 + self:combatFatigue()) / 100)
 --	print("[Paradox] Backfire chance: ", backfire, "::", self:getParadox())
 	if rng.percent(backfire) and self:getParadox() > 300 and not self:attr("no_paradox_fail") then
@@ -135,8 +135,8 @@ end
 -- Note that 300 is the optimal balance and going below this number will decrease the effect of chronomancy spells.
 
 getParadoxModifier = function (self, pm)
-	local pm = (1 + (self:getParadox()/300))/2
-		return pm
+	local pm = math.sqrt((1 + (self:getParadox()/300))/2)
+	return pm
 end
 
 load("/data/talents/chronomancy/age-manipulation.lua")
