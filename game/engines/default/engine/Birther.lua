@@ -94,7 +94,7 @@ Mouse: #00FF00#Left click#FFFFFF# to accept; #00FF00#right click#FFFFFF# to go b
 ]]}
 
 	self.c_random = Button.new{text="Random", width=math.floor(self.iw / 2 - 40), fct=function() self:randomSelect() end}
-	self.c_desc = Textzone.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.c_tut.h - 20, no_color_bleed=true, text=""}
+	self.c_desc = Textzone.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.c_tut.h - 20, scrollbar=true, no_color_bleed=true, text=""}
 
 	self.c_list = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 10 - self.c_random.h, scrollbar=true, all_clicks=true, columns={
 		{name="", width=8, display_prop="char"},

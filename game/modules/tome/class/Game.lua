@@ -705,8 +705,9 @@ function _M:tick()
 
 	-- Run tick end stuff
 	if #self.on_tick_end > 0 then
-		for i = 1, #self.on_tick_end do self.on_tick_end[i]() end
+		local fs = self.on_tick_end
 		self.on_tick_end = {}
+		for i = 1, #fs do fs[i]() end
 	end
 
 	-- Check damages to log

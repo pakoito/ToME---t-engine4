@@ -17,10 +17,6 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local function attack(str)
-	return function(npc, player) engine.Faction:setFactionReaction(player.faction, npc.faction, -100, true) npc:doEmote(str, 150) end
-end
-
 newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*You place your hands on the orb.*#WHITE#
 You must provide 150 golds to take part in the fight.]],

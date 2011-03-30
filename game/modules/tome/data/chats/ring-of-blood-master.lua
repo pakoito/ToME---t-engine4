@@ -23,7 +23,7 @@ end
 
 newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*Before you stands a small humanoid creature with a disproportionate head.*#WHITE#
-Ah, what have we here? @playerdescription.race@, I believe you have turned at the wrong corner.]],
+Ah, what have we here? @playerdescriptor.race@, I believe you have turned at the wrong corner.]],
 	answers = {
 		{"So it would seem, what is going on here?", jump="what"},
 	}
