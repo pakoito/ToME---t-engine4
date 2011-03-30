@@ -51,7 +51,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Call upon the gift of the highborn to regenerate your body for %d life every turn for 10 turns.
-		The life healed will increase with the Willpower stat]]):format(5 + self:getWil() * 0.6)
+		The life healed will increase with the Willpower stat]]):format(5 + self:getWil() * 0.5)
 	end,
 }
 

@@ -55,8 +55,8 @@ newTalent{
 		local range = self:getTalentRadius(t)
 		local slow = 3 * self:getTalentLevel(t) + 10
 		local en = ( 3 + self:getTalentLevel(t)) * (100 + self:getWil())/100
-		return ([[You suck the kinetic energy out of your surroundings, slowing all enemies in a radius of %d by %d%% for four turns.
-		For each enemy drained, you gain %d energy.
+		return ([[You suck the kinetic energy out of your surroundings, slowing all targets in a radius of %d by %d%% for four turns.
+		For each target drained, you gain %d energy.
 		The energy gained scales with Willpower.]]):format(range, slow, en)
 	end,
 }
@@ -99,7 +99,7 @@ newTalent{
 		local dam = math.ceil(1 + 0.5*self:getTalentLevel(t))
 		local en = ( 4 + self:getTalentLevel(t)) * (100 + self:getWil())/85
 		--local duration = self:getTalentLevel(t) + 2
-		return ([[You leech the heat out of all foes in a radius of %d, freezing them for up to %d turns and gaining %d energy for each enemy frozen.
+		return ([[You leech the heat out of all targets in a radius of %d, freezing them for up to %d turns and gaining %d energy for each target frozen.
 		The energy gained scales with Willpower.]]):
 		format(range, dam, en)
 	end,
@@ -155,7 +155,7 @@ newTalent{
 		local range = self:getTalentRadius(t)
 		local en = ( 5 + self:getTalentLevel(t)) * (100 + self:getWil())/75
 		local dam = damDesc(self, DamageType.LIGHTNING, self:combatTalentMindDamage(t, 28, 270))
-		return ([[You pull electric potential from the foes around you in a radius of %d, gaining %d energy for each one affected and giving them a nasty shock in the process. Deals between %d and %d damage.
+		return ([[You pull electric potential from all targets around you in a radius of %d, gaining %d energy for each one affected and giving them a nasty shock in the process. Deals between %d and %d damage.
 		The energy gained scales with Willpower.]]):format(range, en, dam / 3, dam)
 	end,
 }
