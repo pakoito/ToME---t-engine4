@@ -3682,7 +3682,6 @@ newEffect{
 		self:removeTemporaryValue("combat_atk", eff.atkid)
 		self:removeTemporaryValue("combat_dam", eff.damid)
 		self:removeTemporaryValue("energy", eff.tmpid)
-		self:removeTemporaryValue("combat_mindpower", eff.mindid)
 	end,
 }
 

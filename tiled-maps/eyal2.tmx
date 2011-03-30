@@ -681,7 +681,7 @@
     <property name="type" value="&quot;world-encounter&quot;"/>
    </properties>
   </object>
-  <object name="Random Zone" x="1955" y="257" width="62" height="27">
+  <object name="Random Zone" x="1958" y="258" width="55" height="25">
    <properties>
     <property name="subtype" value="&quot;maj-eyal&quot;"/>
     <property name="type" value="&quot;world-encounter&quot;"/>
@@ -735,7 +735,7 @@
     <property name="type" value="&quot;world-encounter&quot;"/>
    </properties>
   </object>
-  <object name="Random Zone" x="2272" y="512" width="52" height="45">
+  <object name="Random Zone" x="2278" y="521" width="52" height="45">
    <properties>
     <property name="subtype" value="&quot;maj-eyal&quot;"/>
     <property name="type" value="&quot;world-encounter&quot;"/>
