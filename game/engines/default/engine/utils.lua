@@ -857,7 +857,7 @@ function core.fov.circle_grids(x, y, radius, block)
 	core.fov.calc_circle(x, y, game.level.map.w, game.level.map.h, radius, function(_, lx, ly)
 		if block and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") then return true end
 	end,
-	function()
+	function(_, lx, ly)
 		if not grids[lx] then grids[lx] = {} end
 		grids[lx][ly] = true
 	end, nil)
@@ -875,7 +875,7 @@ function core.fov.beam_grids(x, y, radius, dir, angle, block)
 	core.fov.calc_beam(x, y, game.level.map.w, game.level.map.h, radius, dir, angle, function(_, lx, ly)
 		if block and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") then return true end
 	end,
-	function()
+	function(_, lx, ly)
 		if not grids[lx] then grids[lx] = {} end
 		grids[lx][ly] = true
 	end, nil)
