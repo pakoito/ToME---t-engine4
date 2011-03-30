@@ -977,7 +977,16 @@ function _M:displayParticles(nb_keyframes)
 	local del = {}
 	local e = next(self.particles)
 	while e do
-		if e._mo and e.x and e.y then adx, ady = e._mo:getMoveAnim(self._map, e.x, e.y) else adx, ady = 0, 0 end -- Make sure we display on the real screen coords: handle current move anim position
+		adx, ady = 0, 0
+		if e.x and e.y then
+			-- Make sure we display on the real screen coords: handle current move anim position
+			if e._mo then
+				adx, ady = e._mo:getMoveAnim(self._map, e.x, e.y)
+			else
+				adx, ady = self._map:getScroll()
+				adx, ady = adx / self.tile_w, ady / self.tile_h
+			end
+		end
 
 		if nb_keyframes == 0 and e.x and e.y then
 			-- Just display it, not updating, no emitting
