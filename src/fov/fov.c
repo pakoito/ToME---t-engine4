@@ -123,7 +123,7 @@ void fov_settings_set_apply_lighting_function(fov_settings_type *settings,
     unsigned *result = (unsigned *)malloc((maxdist+2)*sizeof(unsigned));
     if (result) {
         for (i = 0; i <= maxdist; ++i) {
-            result[i] = (unsigned)sqrtf((float)(maxdist*maxdist - i*i));
+            result[i] = (unsigned)sqrtf((float)(maxdist*maxdist + maxdist - i*i));
         }
         result[maxdist+1] = 0;
     }
@@ -217,7 +217,6 @@ static float fov_slope(float dx, float dy) {
         dy1 = (int)(0.5f + ((float)dx)*end_slope);                                              \
                                                                                                 \
         rx = data->source_##rx signx dx;                                                        \
-        ry = data->source_##ry signy dy0;                                                       \
                                                                                                 \
         if (!apply_diag && dy1 == dx) {                                                         \
             /* We do diagonal lines on every second octant, so they don't get done twice. */    \
@@ -225,6 +224,7 @@ static float fov_slope(float dx, float dy) {
                                                                                                 \
             /* But, we still need to check if we can see past it if the slopes are similar */   \
             if (dy1 < dy0) {                                                                    \
+                ry = data->source_##ry signy dy0;                                               \
                 if (settings->opaque(data->map, x, y)) {                                        \
                     return;                                                                     \
                 }                                                                               \
@@ -234,11 +234,12 @@ static float fov_slope(float dx, float dy) {
                                                                                                 \
         /* we also need to check if the previous spot is blocked */                             \
         if (dy0 > 0) {                                                                          \
-            ry -= 1;                                                                            \
+            ry = data->source_##ry signy (dy0-1);                                               \
             if (settings->opaque(data->map, x, y)) {                                            \
                 prev_blocked = 1;                                                               \
+            } else {                                                                            \
+                prev_blocked = 0;                                                               \
             }                                                                                   \
-            ry += 1;                                                                            \
         }                                                                                       \
                                                                                                 \
         switch (settings->shape) {                                                              \

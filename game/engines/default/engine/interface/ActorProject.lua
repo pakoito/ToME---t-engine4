@@ -315,7 +315,7 @@ function _M:projectDoStop(typ, tg, damtype, dam, particles, lx, ly, tmp, rx, ry)
 			game.level.map.w, 
 			game.level.map.h, 
 			typ.cone, 
-			initial_dir, 
+			dir_angle, 
 			typ.cone_angle, 
 			function(_, px, py)
 				if typ.block_radius and typ:block_radius(px, py) then return true end
