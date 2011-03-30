@@ -561,7 +561,7 @@ newTalent{
 		self.combat_mentalresist = self.combat_mentalresist - 5
 	end,
 	info = function(self, t)
-		return ([[Orcs have been the prey of the other races for thousands of years, with or without reasons. THey have learnt to withstand things that would break weaker races.
+		return ([[Orcs have been the prey of the other races for thousands of years, with or without reasons. They have learnt to withstand things that would break weaker races.
 		Increase physical and mental save by +%d.]]):format(self:getTalentLevelRaw(t) * 5)
 	end,
 }
