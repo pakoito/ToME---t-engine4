@@ -32,6 +32,9 @@ function _M:event(e)
 	if e.e == "ChatTalk" then
 		cprofile.pushEvent(string.format("e='Chat' se='Talk' channel=%q login=%q name=%q msg=%q", e.channel, e.login, e.name, e.msg))
 		print("[USERCHAT] channel talk", e.login, e.channel, e.msg)
+	elseif e.e == "ChatAchievement" then
+		cprofile.pushEvent(string.format("e='Chat' se='Achievement' channel=%q login=%q name=%q msg=%q", e.channel, e.login, e.name, e.msg))
+		print("[USERCHAT] channel achievement", e.login, e.channel, e.msg)
 	elseif e.e == "ChatJoin" then
 		self.channels[e.channel] = self.channels[e.channel] or {}
 		self.channels[e.channel][e.login] = true

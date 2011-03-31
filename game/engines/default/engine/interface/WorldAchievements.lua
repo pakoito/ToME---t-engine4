@@ -92,6 +92,7 @@ function _M:gainPersonalAchievement(silent, id, src, ...)
 	if not silent then
 		game.log("#LIGHT_GREEN#Personal New Achievement: %s!", a.name)
 		Dialog:simplePopup("Personal New Achievement: #LIGHT_GREEN#"..a.name, a.desc)
+		profile.chat:achievement(a.name)
 	end
 	if a.on_gain then a:on_gain(src, true) end
 	return true
@@ -132,6 +133,7 @@ function _M:gainAchievement(id, src, ...)
 	profile:saveModuleProfile("achievement."..id, self.achieved[id])
 	game.log("#LIGHT_GREEN#New Achievement: %s!", a.name)
 	Dialog:simplePopup("New Achievement: #LIGHT_GREEN#"..a.name, a.desc)
+	profile.chat:achievement(a.name)
 
 	if a.on_gain then a:on_gain(src) end
 	return true

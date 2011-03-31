@@ -320,6 +320,11 @@ function _M:orderChatTalk(o)
 	self:read("200")
 end
 
+function _M:orderChatAchievement(o)
+	self:command("ACHV", o.channel, o.msg)
+	self:read("200")
+end
+
 function _M:orderChatJoin(o)
 	self:command("JOIN", o.channel)
 	if self:read("200") then

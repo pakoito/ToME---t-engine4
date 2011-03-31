@@ -65,6 +65,15 @@ function _M:event(e)
 		if type(game) == "table" and game.logChat then
 			game.logChat("#YELLOW#<%s> %s", e.name, e.msg)
 		end
+	elseif e.se == "Achievement" then
+		e.msg = e.msg:removeColorCodes()
+
+		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
+		self:addMessage(e.channel, e.login, e.name, "has earned the achievement <"..e.msg..">")
+
+		if type(game) == "table" and game.logChat then
+			game.logChat("#LIGHT_BLUE#%s has earned the achievement <%s>", e.name, e.msg)
+		end
 	elseif e.se == "Join" then
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
 		self.channels[e.channel].users[e.login] = {name=e.name, login=e.login}
@@ -127,6 +136,11 @@ function _M:talk(msg)
 	if not msg or msg == "" then return end
 	msg = msg:removeColorCodes()
 	core.profile.pushOrder(string.format("o='ChatTalk' channel=%q msg=%q", self.cur_channel, msg))
+end
+
+function _M:achievement(name)
+	if not profile.auth then return end
+	core.profile.pushOrder(string.format("o='ChatAchievement' channel=%q msg=%q", self.cur_channel, name))
 end
 
 --- Request a line to send
