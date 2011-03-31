@@ -104,7 +104,7 @@ on_turn = function(self)
 	game.zone.base_level = oldlev
 
 	foe.is_ring_foe = true
-	foe.faction = "slavers"
+	foe.faction = "neutral"
 	foe.arena_old_on_die = foe.on_die
 	foe.on_die = function(self, ...)
 		local q = game.player:hasQuest("ring-of-blood")

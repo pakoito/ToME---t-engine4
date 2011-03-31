@@ -65,14 +65,14 @@ generate = function(self, player, x, y)
 	end
 
 	-- Add talents
-	a:learnTalent(a.T_TURN_BACK_THE_CLOCK, true, 5)
-	a:learnTalent(a.T_BODY_REVERSION, true, 5)
-	a:learnTalent(a.T_TEMPORAL_FUGUE, true, 5)
-	a:learnTalent(a.T_RETHREAD, true, 5)
-	a:learnTalent(a.T_GATHER_THE_THREADS, true, 5)
-	a:learnTalent(a.T_DAMAGE_SHUNT, true, 5)
-	a:learnTalent(a.T_FLAWED_DESIGN, true, 5)
-	a:learnTalent(a.T_QUANTUM_SPIKE, true, 5)
+	a:learnTalent(a.T_TURN_BACK_THE_CLOCK, true, 3)
+	a:learnTalent(a.T_BODY_REVERSION, true, 3)
+	a:learnTalent(a.T_TEMPORAL_FUGUE, true, 4)
+	a:learnTalent(a.T_RETHREAD, true, 3)
+	a:learnTalent(a.T_GATHER_THE_THREADS, true, 3)
+	a:learnTalent(a.T_DAMAGE_SHUNT, true, 3)
+	a:learnTalent(a.T_FLAWED_DESIGN, true, 4)
+	a:learnTalent(a.T_QUANTUM_SPIKE, true, 3)
 
 	a:forceLevelup(a.level + 7)
 

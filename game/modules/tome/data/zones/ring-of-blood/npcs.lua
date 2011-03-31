@@ -127,7 +127,7 @@ newEntity{ define_as = "PLAYER_SLAVE",
 
 	autolevel = "warrior",
 
-	faction = "slavers",
+	faction = "neutral",
 }
 
 
