@@ -41,6 +41,7 @@ newEntity{ base = "BASE_STORE", define_as = "SWORD_WEAPON_STORE",
 	name="Herk's Cutting Edge",
 	display='3', color=colors.UMBER,
 	resolvers.store("SWORD_WEAPON", "allied-kingdoms"),
+	resolvers.chatfeature("last-hope-weapon-store", "allied-kingdoms"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "KNIFE_WEAPON_STORE",
