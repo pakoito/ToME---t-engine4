@@ -189,7 +189,7 @@ function _M:checkHit(atk, def, min, max, factor)
 
 	local one = 1 / (1 + math.exp(-(atk - def) / 7))
 	local two = 0
-	if atk + def ~= 0 then two = atk / (atk + def) end
+	if atk + def ~= 0 then two = math.min(atk / (2*def) , 1) end
 	hit = 50 * (one + two)
 
 	hit = util.bound(hit, min or 5, max or 95)
