@@ -23,7 +23,7 @@ short_name = "example"
 author = { "DarkGod", "darkgod@te4.org" }
 homepage = "http://te4.org/modules:example"
 version = {1,0,0}
-engine = {0,9,22,"te4"}
+engine = {0,9,23,"te4"}
 description = [[
 This is *NOT* a game, just an example/template to make your own using the T-Engine4.
 ]]
