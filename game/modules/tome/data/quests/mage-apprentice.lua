@@ -156,7 +156,7 @@ end
 ring_gift = function(self, player)
 	if player:hasQuest("antimagic") and not player:hasQuest("antimagic"):isEnded() then player:setQuestStatus("antimagic", engine.Quest.FAILED) end -- Fail antimagic quest
 
-	local o = game.zone:makeEntity(game.level, "object", {type="jewelry", subtype="ring", force_ego={"RING_ARCANE_POWER","RING_BURNING","RING_FREEZING","RING_SHOCK","RING_MAGIC"}}, player.level + 3, true)
+	local o = game.zone:makeEntity(game.level, "object", {type="jewelry", subtype="ring", tome_drops="boss"}, player.level + 5, true)
 	if o then
 		o:identify(true)
 		player:addObject(player.INVEN_INVEN, o)
