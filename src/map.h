@@ -30,7 +30,9 @@ struct s_map_object {
 	GLuint *textures;
 	bool *textures_is3d;
 	shader_type *shader;
+	int cur_x, cur_y;
 	float dx, dy, scale;
+	float animdx, animdy;
 	int dw, dh;
 	float tint_r;
 	float tint_g;

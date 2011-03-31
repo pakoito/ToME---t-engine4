@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-TE4CORE_VERSION = 12
+TE4CORE_VERSION = 13
 corename = "te4core-"..TE4CORE_VERSION
 
 newoption {

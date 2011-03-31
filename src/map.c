@@ -210,6 +210,7 @@ static int map_object_reset_move_anim(lua_State *L)
 {
 	map_object *obj = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 1);
 	obj->move_max = 0;
+	obj->animdx = obj->animdy = 0;
 	return 0;
 }
 
@@ -225,12 +226,10 @@ static int map_object_set_move_anim(lua_State *L)
 	// If already moving, compute starting point
 	else
 	{
-		float nx = luaL_checknumber(L, 4);
-		float ny = luaL_checknumber(L, 5);
-		float adx = nx - obj->oldx;
-		float ady = ny - obj->oldy;
-		obj->oldx = adx * obj->move_step / (float)obj->move_max + obj->oldx;
-		obj->oldy = ady * obj->move_step / (float)obj->move_max + obj->oldy;
+		int ox = luaL_checknumber(L, 2);
+		int oy = luaL_checknumber(L, 3);
+		obj->oldx = obj->animdx + ox;
+		obj->oldy = obj->animdy + oy;
 	}
 	obj->move_step = 0;
 	obj->move_max = luaL_checknumber(L, 6);
@@ -262,10 +261,8 @@ static int map_object_get_move_anim(lua_State *L)
 	}
 	else
 	{
-		float adx = (float)i - obj->oldx;
-		float ady = (float)j - obj->oldy;
-		lua_pushnumber(L, mapdx + (adx * obj->move_step / (float)obj->move_max - adx));
-		lua_pushnumber(L, mapdy + (ady * obj->move_step / (float)obj->move_max - ady));
+		lua_pushnumber(L, mapdx + obj->animdx);
+		lua_pushnumber(L, mapdy + obj->animdy);
 	}
 	return 2;
 }
@@ -686,6 +683,11 @@ static int map_set_grid(lua_State *L)
 		lua_pushnumber(L, i + 1);
 		lua_gettable(L, 4); // Access the table of mos for this spot
 		map->grids[x][y][i] = lua_isnoneornil(L, -1) ? NULL : (map_object*)auxiliar_checkclass(L, "core{mapobj}", -1);
+		if (map->grids[x][y][i])
+		{
+			map->grids[x][y][i]->cur_x = x;
+			map->grids[x][y][i]->cur_y = y;
+		}
 
 		// Set the object in the mo list
 		// We use the pointer value directly as an index
@@ -787,30 +789,6 @@ static int map_get_seensinfo(lua_State *L)
 	return 4;
 }
 
-#define SMOOTH_SCROLL()  \
-	float animdx = 0, animdy = 0; \
-	if (map->move_max) \
-	{ \
-		map->move_step += nb_keyframes; \
-		if (map->move_step >= map->move_max) \
-		{ \
-			map->move_max = 0; \
-			map->oldmx = map->mx; \
-			map->oldmy = map->my; \
-		} \
- \
-		if (map->move_max) \
-		{ \
-			float adx = (float)map->mx - map->oldmx; \
-			float ady = (float)map->my - map->oldmy; \
-			animdx = map->tile_w * (adx * map->move_step / (float)map->move_max - adx); \
-			animdy = map->tile_h * (ady * map->move_step / (float)map->move_max - ady); \
-			mx = map->mx + (int)(adx * map->move_step / (float)map->move_max - adx); \
-			my = map->my + (int)(ady * map->move_step / (float)map->move_max - ady); \
-		} \
-	}
-
-
 static void map_update_seen_texture(map_type *map)
 {
 	glBindTexture(GL_TEXTURE_2D, map->seens_texture);
@@ -881,10 +859,8 @@ static int map_draw_seen_texture(lua_State *L)
 
 	int mx = map->mx;
 	int my = map->my;
-	SMOOTH_SCROLL();
-	x -= animdx;
-	y -= animdy;
-//	printf("SEEN %3dx%3d :: %fx%f\n",x,y,animdx,animdy);
+	x -= map->tile_w * map->used_animdx;
+	y -= map->tile_h * map->used_animdy;
 
 	tglBindTexture(GL_TEXTURE_2D, map->seens_texture);
 
@@ -946,10 +922,8 @@ static int map_set_scroll(lua_State *L)
 		// Already moving, compute starting point
 		else
 		{
-			float adx = map->mx - map->oldmx;
-			float ady = map->my - map->oldmy;
-			map->oldmx = -adx * map->move_step / (float)map->move_max + map->mx;
-			map->oldmy = -ady * map->move_step / (float)map->move_max + map->my;
+			map->oldmx = map->oldmx - map->used_animdx;
+			map->oldmy = map->oldmy - map->used_animdy;
 		}
 		map->move_step = 0;
 		map->move_max = smooth;
@@ -964,12 +938,8 @@ static int map_set_scroll(lua_State *L)
 static int map_get_scroll(lua_State *L)
 {
 	map_type *map = (map_type*)auxiliar_checkclass(L, "core{map}", 1);
-	int nb_keyframes = 0;
-	int mx = map->mx;
-	int my = map->my;
-	SMOOTH_SCROLL();
-	lua_pushnumber(L, -animdx);
-	lua_pushnumber(L, -animdy);
+	lua_pushnumber(L, -map->used_animdx);
+	lua_pushnumber(L, -map->used_animdy);
 	return 2;
 }
 
@@ -1138,8 +1108,8 @@ void display_map_quad(GLuint *cur_tex, int *vert_idx, int *col_idx, map_type *ma
 			}
 
 			// Final step
-			animdx = map->tile_w * (adx * m->move_step / (float)m->move_max - adx);
-			animdy = map->tile_h * (ady * m->move_step / (float)m->move_max - ady);
+			animdx = adx * m->move_step / (float)m->move_max - adx;
+			animdy = ady * m->move_step / (float)m->move_max - ady;
 		}
 	}
 
@@ -1150,7 +1120,9 @@ void display_map_quad(GLuint *cur_tex, int *vert_idx, int *col_idx, map_type *ma
 	while (dm)
 	{
 		tglBindTexture(GL_TEXTURE_2D, dm->textures[0]);
-		DO_QUAD(dm, dx + dm->dx * map->tile_w + animdx, dy + dm->dy * map->tile_h + animdy, dm->dw, dm->dh, dm->scale, r, g, b, a, m->next);
+		DO_QUAD(dm, dx + (dm->dx + animdx) * map->tile_w, dy + (dm->dy + animdy) * map->tile_h, dm->dw, dm->dh, dm->scale, r, g, b, a, m->next);
+		dm->animdx = animdx;
+		dm->animdy = animdy;
 		dm = dm->next;
 	}
 
@@ -1198,10 +1170,31 @@ static int map_to_screen(lua_State *L)
 
 	// Smooth scrolling
 	// If we use shaders for FOV display it means we must uses fbos for smooth scroll too
-	SMOOTH_SCROLL();
-	x -= animdx;
-	y -= animdy;
-//	printf("MAP_ %3dx%3d :: %fx%f\n",x,y,animdx,animdy);
+	float animdx = 0, animdy = 0;
+	if (map->move_max)
+	{
+		map->move_step += nb_keyframes;
+		if (map->move_step >= map->move_max)
+		{
+			map->move_max = 0;
+			map->oldmx = map->mx;
+			map->oldmy = map->my;
+		}
+
+		if (map->move_max)
+		{
+			float adx = (float)map->mx - map->oldmx;
+			float ady = (float)map->my - map->oldmy;
+			animdx = adx * map->move_step / (float)map->move_max - adx;
+			animdy = ady * map->move_step / (float)map->move_max - ady;
+			mx = map->mx + (int)(adx * map->move_step / (float)map->move_max - adx);
+			my = map->my + (int)(ady * map->move_step / (float)map->move_max - ady);
+		}
+	}
+	x -= map->tile_w * animdx;
+	y -= map->tile_h * animdy;
+	map->used_animdx = animdx;
+	map->used_animdy = animdy;
 
 	map->used_mx = mx;
 	map->used_my = my;
@@ -1253,7 +1246,7 @@ static int map_to_screen(lua_State *L)
 	glDisable(GL_DEPTH_TEST);
 
 //	if (always_show && map->seen_changed)
-	if (always_show)
+	if (always_show && map->seen_changed)
 	{
 		map_update_seen_texture(map);
 		map->seen_changed = FALSE;
