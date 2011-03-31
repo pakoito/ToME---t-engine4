@@ -26,7 +26,7 @@ newEntity{
 	encumber = 3,
 	rarity = 5,
 	metallic = true,
-	combat = { talented = "mace", damrange = 1.4, sound = "actions/melee", sound_miss = "actions/melee_miss",},
+	combat = { talented = "mace", damrange = 1.4, physspeed = 1, sound = "actions/melee", sound_miss = "actions/melee_miss",},
 	desc = [[Blunt and deadly.]],
 	randart_able = { attack=40, physical=80, spell=20, def=10, misc=10 },
 	egos = "/data/general/objects/egos/weapon.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
