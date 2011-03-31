@@ -71,27 +71,6 @@ function _M:setupMinimapInfo(mo, map)
 	end
 end
 
---- Adds a particles emitter following the actor
-function _M:addParticles(ps)
-	self.__particles[ps] = true
-	if self.x and self.y and game.level and game.level.map then
-		ps.x = self.x
-		ps.y = self.y
-		game.level.map:addParticleEmitter(ps)
-	end
-	return ps
-end
-
---- Removes a particles emitter following the actor
-function _M:removeParticles(ps)
-	self.__particles[ps] = nil
-	if self.x and self.y and game.level and game.level.map then
-		ps.x = nil
-		ps.y = nil
-		game.level.map:removeParticleEmitter(ps)
-	end
-end
-
 --- Set the current emote
 function _M:setEmote(e)
 	-- Remove previous
@@ -104,6 +83,28 @@ function _M:setEmote(e)
 		e.y = self.y
 		game.level.map:addEmote(e)
 	end
+end
+
+--- Attach or remove a display callback
+-- Defines particles to display
+function _M:defineDisplayCallback()
+	if not self._mo then return end
+
+	local ps = {}
+	for e, _ in pairs(self.__particles) do
+		ps[#ps+1] = e
+	end
+
+	self._mo:displayCallback(function(x, y, w, h)
+		local e
+		for i = 1, #ps do
+			e = ps[i]
+			if e.ps:isAlive() then e.ps:toScreen(x + w / 2, y + h / 2, true)
+			else self:removeParticles(e)
+			end
+		end
+		return true
+	end)
 end
 
 --- Moves an actor on the map
@@ -135,20 +136,6 @@ function _M:move(x, y, force)
 	self.old_x, self.old_y = self.x or x, self.y or y
 	self.x, self.y = x, y
 	map(x, y, Map.ACTOR, self)
-
-	-- Update particle emitters attached to that actor
-	local del = {}
-	for e, _ in pairs(self.__particles) do
-		if e.dead then del[#del+1] = e
-		else
-			e.x = x
-			e.y = y
-			map.particles[e] = true
-			-- Give it our main _mo for display coords
-			e._mo = self._mo
-		end
-	end
-	for i = 1, #del do self.__particles[del[i]] = nil end
 
 	-- Move emote
 	if self.__emote then
@@ -309,11 +296,6 @@ end
 function _M:deleteFromMap(map)
 	if self.x and self.y and map then
 		map:remove(self.x, self.y, engine.Map.ACTOR)
-		for e, _ in pairs(self.__particles) do
-			e.x = nil
-			e.y = nil
-			map:removeParticleEmitter(e)
-		end
 	end
 end
 

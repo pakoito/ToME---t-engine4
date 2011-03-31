@@ -47,6 +47,8 @@ struct s_map_object {
 	enum {DL_NONE, DL_TRUE_LAST, DL_TRUE} display_last;
 	long uid;
 
+	int cb_ref;
+
 	struct s_map_object *next;
 	int next_ref;
 };

@@ -161,6 +161,51 @@ end
 function _M:setupMinimapInfo(mo, map)
 end
 
+--- Adds a particles emitter following the entity
+function _M:addParticles(ps)
+	self.__particles[ps] = true
+	if self.x and self.y and game.level and game.level.map then
+		ps.x = self.x
+		ps.y = self.y
+		self:defineDisplayCallback()
+	end
+	return ps
+end
+
+--- Removes a particles emitter following the entity
+function _M:removeParticles(ps)
+	self.__particles[ps] = nil
+	if self.x and self.y and game.level and game.level.map then
+		ps.x = nil
+		ps.y = nil
+		self:defineDisplayCallback()
+	end
+end
+
+
+--- Attach or remove a display callback
+-- Defines particles to display
+function _M:defineDisplayCallback()
+	if not self._mo then return end
+	if not next(self.__particles) then self._mo:displayCallback(nil) return end
+
+	local ps = {}
+	for e, _ in pairs(self.__particles) do
+		ps[#ps+1] = e
+	end
+
+	self._mo:displayCallback(function(x, y, w, h)
+		local e
+		for i = 1, #ps do
+			e = ps[i]
+			if e.ps:isAlive() then e.ps:toScreen(x + w / 2, y + h / 2, true)
+			else
+			end
+		end
+		return true
+	end)
+end
+
 --- Create the "map object" representing this entity
 -- Do not touch unless you *KNOW* what you are doing.<br/>
 -- You do *NOT* need this, this is used by the engine.Map class automatically.<br/>
@@ -187,6 +232,8 @@ function _M:makeMapObject(tiles, idx)
 		self:check("display_scale") or 1
 	)
 	_M.__mo_repo[self._mo] = true
+
+	self:defineDisplayCallback()
 
 	-- Setup tint
 	self._mo:tint(self.tint_r, self.tint_g, self.tint_b)
