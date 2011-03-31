@@ -20,7 +20,7 @@
 load("/data/general/npcs/rodent.lua", rarity(0))
 load("/data/general/npcs/vermin.lua", rarity(2))
 load("/data/general/npcs/molds.lua", rarity(1))
-load("/data/general/npcs/orc.lua", function(e) if e.level_range and e.level_range[1] == 10 then e.level_range[1] = 1 end end) -- Make orcs lower level, not a problem we have norgan to help!
+load("/data/general/npcs/orc.lua", function(e) if e.level_range and e.level_range[1] == 10 then e.level_range[1] = 1 e.start_level = 1 end end) -- Make orcs lower level, not a problem we have norgan to help!
 load("/data/general/npcs/snake.lua", rarity(2))
 
 load("/data/general/npcs/all.lua", rarity(4, 35))
