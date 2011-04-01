@@ -222,13 +222,12 @@ function _M:newGame()
 			local spot = self.level:pickSpot{type=self.player.wild_x, subtype=self.player.wild_y} or {x=1,y=1}
 			self.player.wild_x, self.player.wild_y = spot.x, spot.y
 		end
+		self.player:move(self.player.wild_x, self.player.wild_y, true)
 
 		-- Generate
 		if self.player.__game_difficulty then self:setupDifficulty(self.player.__game_difficulty) end
 		if self.player.starting_zone ~= self.player.last_wilderness then
-			self:changeLevel(self.player.starting_level or 1, self.player.starting_zone, nil, self.player.starting_level_force_down)
-		else
-			self.player:move(self.player.wild_x, self.player.wild_y, true)
+			self:onTickEnd(function() self:changeLevel(self.player.starting_level or 1, self.player.starting_zone, nil, self.player.starting_level_force_down) end)
 		end
 		print("[PLAYER BIRTH] resolve...")
 		self.player:resolve()
