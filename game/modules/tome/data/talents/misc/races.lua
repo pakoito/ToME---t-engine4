@@ -32,7 +32,7 @@ racial_req4 = {
 }
 
 ------------------------------------------------------------------
--- Highers's powers
+-- Highers' powers
 ------------------------------------------------------------------
 newTalentType{ type="race/higher", name = "higher", generic = true, description = "The various racial bonuses a character can have." }
 
@@ -51,7 +51,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Call upon the gift of the highborn to regenerate your body for %d life every turn for 10 turns.
-		The life healed will increase with the Willpower stat]]):format(5 + self:getWil() * 0.5)
+		The life healed will increase with the Willpower stat.]]):format(5 + self:getWil() * 0.5)
 	end,
 }
 
@@ -69,8 +69,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[While Highers are not meant to rule other humans - and show no particular will to do so - they are frequently called to higher duties.
-		Their nature grants them better sense than other humans.
-		Increase maximun sight range by %d.]]):format(self:getTalentLevelRaw(t))
+		Their nature grants them better senses than other humans.
+		Increase maximum sight range by %d.]]):format(self:getTalentLevelRaw(t))
 	end,
 }
 
@@ -89,8 +89,8 @@ newTalent{
 		self.resists[DamageType.ARCANE] = (self.resists[DamageType.ARCANE] or 0) - 5
 	end,
 	info = function(self, t)
-		return ([[Highers have originaly been created during the Age of Allure by the human Conclave. They are imbued with magic at the very core of their being.
-		Increase spell save by +%d and Arcane resistance by %d%%.]]):format(self:getTalentLevelRaw(t) * 3, self:getTalentLevelRaw(t) * 5)
+		return ([[Highers were originally created during the Age of Allure by the human Conclave. They are imbued with magic at the very core of their being.
+		Increase spell save by +%d and arcane resistance by %d%%.]]):format(self:getTalentLevelRaw(t) * 3, self:getTalentLevelRaw(t) * 5)
 	end,
 }
 
@@ -151,7 +151,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Call upon the grace of the Eternals to increase your general speed by %d%% for 8 turns.
-		The speed bonus will increase with the Dexterity stat]]):format((0.1 + self:getDex() / 210) * 100)
+		The speed bonus will increase with the Dexterity stat.]]):format((0.1 + self:getDex() / 210) * 100)
 	end,
 }
 
@@ -202,7 +202,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[As the only immortal race of Eyal, Shaloren have learnt, over the long years, to use their innate inner magic to protect themselves.
-		%d%% chances to become invisible (power %d) for 5 turns when hit by a blow doing at least 15%% of their total life.]]):
+		%d%% chance to become invisible (power %d) for 5 turns when hit by a blow doing at least 15%% of their total life.]]):
 		format(self:getTalentLevelRaw(t) * 5, 5 + self:getMag(20))
 	end,
 }
@@ -237,7 +237,7 @@ newTalent{
 }
 
 ------------------------------------------------------------------
--- Thaloren powers
+-- Thaloren's powers
 ------------------------------------------------------------------
 newTalentType{ type="race/thalore", name = "thalore", generic = true, description = "The various racial bonuses a character can have." }
 newTalent{
@@ -255,7 +255,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Call upon the power of the Eternals, increasing all damage by %d%% and reducing all damage taken by %d%% for 5 turns.
-		The bonus will increase with the Willpower stat]]):format(7 + self:getWil(10), 7 + self:getWil(10))
+		The bonus will increase with the Willpower stat.]]):format(7 + self:getWil(10), 7 + self:getWil(10))
 	end,
 }
 
@@ -274,7 +274,7 @@ newTalent{
 		self.combat_mentalresist = self.combat_mentalresist - 5
 	end,
 	info = function(self, t)
-		return ([[Thaloren have always been a free people, living in their beloved forest, never carrying much about the world outside.
+		return ([[Thaloren have always been a free people, living in their beloved forest, never caring much about the world outside.
 		Increase physical and mental save by +%d.]]):format(self:getTalentLevelRaw(t) * 5)
 	end,
 }
@@ -295,7 +295,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You are part of the wood, it shields you from corruption.
-		Increase diseases immunity by %d%% and Blight resistance by %d%%.]]):format(self:getTalentLevel(t) * 12, self:getTalentLevel(t) * 4)
+		Increase disease immunity by %d%% and blight resistance by %d%%.]]):format(self:getTalentLevel(t) * 12, self:getTalentLevel(t) * 4)
 	end,
 }
 
@@ -364,12 +364,12 @@ newTalent{
 	info = function(self, t)
 		return ([[Nature is with you, you can always feel the call of the woods.
 		Summons two elite Treants to your side for 6 turns.
-		Their strength increase with your Willpower stat]]):format()
+		Their strength increases with your Willpower stat.]]):format()
 	end,
 }
 
 ------------------------------------------------------------------
--- Dwarvess powers
+-- Dwarves' powers
 ------------------------------------------------------------------
 newTalentType{ type="race/dwarf", name = "dwarf", generic = true, description = "The various racial bonuses a character can have." }
 newTalent{
@@ -391,7 +391,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Call upon the legendary resilience of the Dwarven race to increase your armor(+%d), spell(+%d) and physical(+%d) saves for 8 turns.
-		The bonus will increase with the Constitution stat]]):format(5 + self:getCon() / 5, 10 + self:getCon() / 5, 10 + self:getCon() / 5)
+		The bonus will increase with the Constitution stat.]]):format(5 + self:getCon() / 5, 10 + self:getCon() / 5, 10 + self:getCon() / 5)
 	end,
 }
 
@@ -408,8 +408,8 @@ newTalent{
 		self:attr("auto_stoneskin", -3)
 	end,
 	info = function(self, t)
-		return ([[Dwarves skin is a complex structure, it can automatically react to physical blows to harden itself.
-		15%% chances when hit in melee to increase armour total by %d for 5 turns.]]):format(self:getTalentLevelRaw(t) * 3)
+		return ([[Dwarf skin is a complex structure, it can automatically react to physical blows to harden itself.
+		15%% chance when hit in melee to increase armour total by %d for 5 turns.]]):format(self:getTalentLevelRaw(t) * 3)
 	end,
 }
 
@@ -447,14 +447,14 @@ newTalent{
 	info = function(self, t)
 		local range = t.getRange(self, t)
 		return ([[While the origins of the dwarves remain clouded in mysteries to the other races it is obvious they share strong ties to the stone.
-		You can target any walls and immediately enter it and appear on the other side of the obstacle.
+		You can target any wall and immediately enter it and appear on the other side of the obstacle.
 		Works up to %d grids away (increases with Constitution and talent level).]]):
 		format(range)
 	end,
 }
 
 ------------------------------------------------------------------
--- Halflings powers
+-- Halflings' powers
 ------------------------------------------------------------------
 newTalentType{ type="race/halfling", name = "halfling", generic = true, description = "The various racial bonuses a character can have." }
 newTalent{
@@ -475,7 +475,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Call upon the luck and cunning of the Little Folk to increase your physical and spell critical strike chance by %d%% for 5 turns.
-		The bonus will increase with the Cunning stat]]):format(10 + self:getCun() / 5, 10 + self:getCun() / 5)
+		The bonus will increase with the Cunning stat.]]):format(10 + self:getCun() / 2, 10 + self:getCun() / 2)
 	end,
 }
 
@@ -499,7 +499,7 @@ newTalent{
 	points = 5,
 	mode = "passive",
 	info = function(self, t)
-		return ([[Halfling have always been a very organised and methodical race, the more foes they face the more organised they are.
+		return ([[Halflings have always been a very organised and methodical race, the more foes they face the more organised they are.
 		If two or more foes are in sight your physical power, spellpower and mindpower are increased by %0.1f per foes (up to %d foes).]]):
 		format(self:getTalentLevel(t) * 0.6, self:getTalentLevel(t))
 	end,
@@ -524,7 +524,7 @@ newTalent{
 }
 
 ------------------------------------------------------------------
--- Orcs powers
+-- Orcs' powers
 ------------------------------------------------------------------
 newTalentType{ type="race/orc", name = "orc", generic = true, description = "The various racial bonuses a character can have." }
 newTalent{
@@ -542,7 +542,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Summons your lust for blood and destruction, increasing all damage by %d%% for 5 turns.
-		The bonus will increase with the Willpower stat]]):format(10 + self:getWil(20))
+		The bonus will increase with the Willpower stat.]]):format(10 + self:getWil(20))
 	end,
 }
 
@@ -617,13 +617,13 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Call upon the will of all the Orc Prides to survive this battle.
-		Heal for %d life and removes up to %d detrimental effects.
-		The bonus will increase with the Constitution stat]]):format(25 + self:getCon() * 2.3, math.ceil(self:getTalentLevel(t) * 3 / 5))
+		Heals for %d life and removes up to %d detrimental effects.
+		The bonus will increase with the Constitution stat.]]):format(25 + self:getCon() * 2.3, math.ceil(self:getTalentLevel(t) * 3 / 5))
 	end,
 }
 
 ------------------------------------------------------------------
--- Yeeks powers
+-- Yeeks' powers
 ------------------------------------------------------------------
 newTalentType{ type="race/yeek", name = "yeek", generic = true, description = "The various racial bonuses a character can have." }
 newTalent{
@@ -652,10 +652,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Shatters the mind of your victim, giving your full control over its actions for %s turns.
-		When the effect ends you pull out your mind and the victim's body colapses dead.
+		return ([[Shatters the mind of your victim, giving you full control over its actions for %s turns.
+		When the effect ends you pull out your mind and the victim's body collapses dead.
 		This effect does not work on elite or undeads.
-		The duration will increase with the Willpower stat]]):format(4 + self:getWil(10))
+		The duration will increase with the Willpower stat.]]):format(4 + self:getWil(10))
 	end,
 }
 
