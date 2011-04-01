@@ -70,7 +70,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Weapon Combat",
+	name = "Combat Accuracy", short_name = "WEAPON_COMBAT",
 	type = {"technique/combat-training", 1},
 	points = 10,
 	require = { level=function(level) return (level - 1) * 2 end },
@@ -78,7 +78,7 @@ newTalent{
 	getAttack = function(self, t) return self:getTalentLevel(t) * 5 end,
 	info = function(self, t)
 		local attack = t.getAttack(self, t)
-		return ([[Increases accuracy of melee and ranged weapons by %d.]]):
+		return ([[Increases accuracy of unarmed, melee and ranged weapons by %d.]]):
 		format(attack)
 	end,
 }

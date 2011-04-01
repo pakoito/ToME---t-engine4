@@ -31,7 +31,7 @@ newTalent{
 	tactical = { BUFF = 1 },
 	activate = function(self, t)
 		return {
-			speed = self:addTemporaryValue("combat_physspeed", self:combatSpeed() - 1 / (1 + 0.08 * 1.3)),
+			speed = self:addTemporaryValue("combat_physspeed", self:combatSpeed() + 1 / (1 + 0.08 * 1.3)),
 			atk = self:addTemporaryValue("combat_atk", 4 + (self:getTalentLevel(t) * self:getDex()) / 15),
 			crit = self:addTemporaryValue("combat_physcrit", 4 + (self:getTalentLevel(t) * self:getDex()) / 25),
 		}

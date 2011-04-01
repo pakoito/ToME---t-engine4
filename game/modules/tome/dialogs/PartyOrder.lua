@@ -61,7 +61,9 @@ function _M:generateList()
 	local list = {}
 
 	for o, _ in pairs(self.def.orders) do
-		list[#list+1] = {name=orders[o][2](self.actor), order=o, sort=orders[o][1]}
+		if orders[o] then
+			list[#list+1] = {name=orders[o][2](self.actor), order=o, sort=orders[o][1]}
+		end
 	end
 	table.sort(list, function(a,b) return a.sort < b.sort end)
 

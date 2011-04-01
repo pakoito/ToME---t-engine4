@@ -799,6 +799,8 @@ function _M:quickSwitchWeapons()
 	local oh1, oh2 = self.inven[self.INVEN_OFFHAND], self.inven[self.INVEN_QS_OFFHAND]
 	local pf1, pf2 = self.inven[self.INVEN_PSIONIC_FOCUS], self.inven[self.INVEN_QS_PSIONIC_FOCUS]
 
+	if not mh1 or not mh2 or not oh1 or not oh2 then return end
+
 	local mhset1, mhset2 = {}, {}
 	local ohset1, ohset2 = {}, {}
 	local pfset1, pfset2 = {}, {}
