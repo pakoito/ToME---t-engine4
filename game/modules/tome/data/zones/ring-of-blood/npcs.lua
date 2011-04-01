@@ -116,14 +116,14 @@ newEntity{ define_as = "PLAYER_SLAVE",
 		[Talents.T_RUSHING_STRIKE] = 1,
 		[Talents.T_STRIKING_STANCE] = 1,
 		[Talents.T_UPPERCUT] = 3,
-		[Talents.T_RELENTLESS_STRIKES] = 1,
+		[Talents.T_RELENTLESS_STRIKES] = 3,
 		[Talents.T_CLINCH] = 2,
 		[Talents.T_MAIM] = 2,
 		[Talents.T_UNARMED_MASTERY] = 4,
 		[Talents.T_WEAPON_COMBAT] = 4,
 	},
 
-	resolvers.inscriptions(1, {"regeneration infusion"}),
+	resolvers.inscriptions(2, {"regeneration infusion","regeneration infusion"}),
 
 	autolevel = "warrior",
 
