@@ -22,7 +22,7 @@ dir = math.rad(110)
 return { generator = function()
 	local x, y = rng.range(-width/2, width), rng.range(-height/2, height)
 	local vel = rng.float(60, 120)
-	local dir = dir + math.rad(rng.float(-7, 7))
+	local dir = dir + math.rad(rng.float(-5, 5))
 
 	return {
 		trail = 1,
