@@ -491,23 +491,29 @@ function _M:addTemporaryValue(prop, v, noupdate)
 
 	-- The recursive enclosure
 	local recursive
-	recursive = function(base, prop, v)
+	recursive = function(base, prop, v, method)
+		method = self.temporary_values_conf[prop] or method
 		if type(v) == "number" then
 			-- Simple addition
-			if self.temporary_values_conf[prop] == "mult" then
+			if method == "mult" then
 				base[prop] = (base[prop] or 1) * v
-			elseif self.temporary_values_conf[prop] == "mult0" then
+			elseif method == "mult0" then
 				base[prop] = (base[prop] or 1) * (1 + v)
+			elseif method == "perc_inv" then
+				v = v / 100
+				local b = (base[prop] or 0) / 100
+				b = 1 - (1 - b) * (1 - v)
+				base[prop] = b * 100
 			else
 				base[prop] = (base[prop] or 0) + v
 			end
 			self:onTemporaryValueChange(prop, v, base)
-			print("addTmpVal", base, prop, v, " :=: ", #t, id)
+			print("addTmpVal", base, prop, v, " :=: ", #t, id, method)
 		elseif type(v) == "table" then
 			for k, e in pairs(v) do
 				print("addTmpValTable", base[prop], k, e)
 				base[prop] = base[prop] or {}
-				recursive(base[prop], k, e)
+				recursive(base[prop], k, e, method)
 			end
 		else
 			error("unsupported temporary value type: "..type(v).." :=: "..tostring(v))
@@ -516,7 +522,7 @@ function _M:addTemporaryValue(prop, v, noupdate)
 
 	-- Update the base prop
 	if not noupdate then
-		recursive(initial_base, initial_prop, v)
+		recursive(initial_base, initial_prop, v, "add")
 	end
 
 	return id
@@ -549,12 +555,18 @@ function _M:removeTemporaryValue(prop, id, noupdate)
 	-- The recursive enclosure
 	local recursive
 	recursive = function(base, prop, v)
+		method = self.temporary_values_conf[prop] or method
 		if type(v) == "number" then
 			-- Simple addition
-			if self.temporary_values_conf[prop] == "mult" then
+			if method == "mult" then
 				base[prop] = base[prop] / v
-			elseif self.temporary_values_conf[prop] == "mult0" then
+			elseif method == "mult0" then
 				base[prop] = base[prop] / (1 + v)
+			elseif method == "perc_inv" then
+				v = v / 100
+				local b = base[prop] / 100
+				b = 1 - (1 - b) / (1 - v)
+				base[prop] = b * 100
 			else
 				base[prop] = base[prop] - v
 			end
@@ -562,7 +574,7 @@ function _M:removeTemporaryValue(prop, id, noupdate)
 			print("delTmpVal", prop, v)
 		elseif type(v) == "table" then
 			for k, e in pairs(v) do
-				recursive(base[prop], k, e)
+				recursive(base[prop], k, e, method)
 			end
 		else
 			error("unsupported temporary value type: "..type(v).." :=: "..v)
@@ -571,7 +583,7 @@ function _M:removeTemporaryValue(prop, id, noupdate)
 
 	-- Update the base prop
 	if not noupdate then
-		recursive(initial_base, initial_prop, oldval)
+		recursive(initial_base, initial_prop, oldval, "add")
 	end
 end
 

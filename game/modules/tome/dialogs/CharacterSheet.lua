@@ -164,7 +164,7 @@ function _M:drawDialog(s)
 		end
 		if mean and mean.range then self:mouseTooltip(self.TOOLTIP_COMBAT_RANGE, s:drawColorStringBlended(self.font, ("Range (Main Hand): #00ff00#%3d"):format(mean.range), w, h, 255, 255, 255)) h = h + self.font_h end
 	end
-	
+
 	h = h + self.font_h
 	-- All weapons in off hands
 	-- Offhand attacks are with a damage penalty, that can be reduced by talents
@@ -185,7 +185,7 @@ function _M:drawDialog(s)
 			if mean and mean.range then self:mouseTooltip(self.TOOLTIP_COMBAT_RANGE, s:drawColorStringBlended(self.font, ("Range (Off Hand): #00ff00#%3d"):format(mean.range), w, h, 255, 255, 255)) h = h + self.font_h end
 		end
 	end
-	
+
 	h = h + self.font_h
 	self:mouseTooltip(self.TOOLTIP_SPELL_POWER, s:drawColorStringBlended(self.font, ("Spellpower:  #00ff00#%3d"):format(player:combatSpellpower()), w, h, 255, 255, 255)) h = h + self.font_h
 	self:mouseTooltip(self.TOOLTIP_SPELL_CRIT, s:drawColorStringBlended(self.font, ("Spell Crit:  #00ff00#%3d%%"):format(player:combatSpellCrit()), w, h, 255, 255, 255)) h = h + self.font_h
@@ -215,7 +215,7 @@ function _M:drawDialog(s)
 	if player.resists.all then self:mouseTooltip(self.TOOLTIP_RESIST_ALL, s:drawColorStringBlended(self.font, ("All Resists(cap): #00ff00#%3d%%(%3d%%)"):format(player.resists.all, player.resists_cap.all or 0), w, h, 255, 255, 255)) h = h + self.font_h end
 	for i, t in ipairs(DamageType.dam_def) do
 		if player.resists[DamageType[t.type]] and player.resists[DamageType[t.type]] ~= 0 then
-			self:mouseTooltip(self.TOOLTIP_RESIST, s:drawColorStringBlended(self.font, ("%s Resist(cap): #00ff00#%3d%%(%3d%%)"):format(t.name:capitalize(), player.resists[DamageType[t.type]] + (player.resists.all or 0), (player.resists_cap[DamageType[t.type]] or 0) + (player.resists_cap.all or 0)), w, h, 255, 255, 255)) h = h + self.font_h
+			self:mouseTooltip(self.TOOLTIP_RESIST, s:drawColorStringBlended(self.font, ("%s Resist(cap): #00ff00#%3d%%(%3d%%)"):format(t.name:capitalize(), player:combatGetResist(DamageType[t.type]), (player.resists_cap[DamageType[t.type]] or 0) + (player.resists_cap.all or 0)), w, h, 255, 255, 255)) h = h + self.font_h
 		end
 	end
 
@@ -406,7 +406,7 @@ function _M:dump()
 	if player.resists.all then nl(("All Resists: %3d%%"):format(player.resists.all, player.resists_cap.all or 0)) end
 	for i, t in ipairs(DamageType.dam_def) do
 		if player.resists[DamageType[t.type]] and player.resists[DamageType[t.type]] ~= 0 then
-			nl(("%s Resist(cap): %3d%%(%3d%%)"):format(t.name:capitalize(), player.resists[DamageType[t.type]] + (player.resists.all or 0), (player.resists_cap[DamageType[t.type]] or 0) + (player.resists_cap.all or 0)))
+			nl(("%s Resist(cap): %3d%%(%3d%%)"):format(t.name:capitalize(), player:combatGetResist(DamageType[t.type]), (player.resists_cap[DamageType[t.type]] or 0) + (player.resists_cap.all or 0)))
 		end
 	end
 

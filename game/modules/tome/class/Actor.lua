@@ -72,6 +72,7 @@ _M.temporary_values_conf.global_speed = "mult0"
 _M.temporary_values_conf.movement_speed = "mult0"
 _M.temporary_values_conf.combat_physspeed = "mult0"
 _M.temporary_values_conf.combat_spellspeed = "mult0"
+_M.temporary_values_conf.resists = "perc_inv"
 
 function _M:init(t, no_default)
 	-- Define some basic combat stats
@@ -696,7 +697,7 @@ function _M:tooltip(x, y, seen_by)
 
 	local resists = {}
 	for t, v in pairs(self.resists) do
-		if t ~= "all" then v = v + (self.resists.all or 0) end
+		if t ~= "all" then v = self:combatGetResist(t) end
 		resists[#resists+1] = string.format("%d%% %s", v, t == "all" and "all" or DamageType:get(t).name)
 	end
 

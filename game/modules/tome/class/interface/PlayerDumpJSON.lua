@@ -164,7 +164,7 @@ function _M:dumpToJSON(js)
 	if self.resists.all then d[#d+1] = { ["all resists(cap)"] = string.format("%3d%%(%3d%%)", self.resists.all, self.resists_cap.all or 0) } end
 	for i, t in ipairs(DamageType.dam_def) do
 		if self.resists[DamageType[t.type]] and self.resists[DamageType[t.type]] ~= 0 then
-			d[#d+1] = { [t.name.." resist(cap)"] =  string.format("%3d%%(%3d%%)", self.resists[DamageType[t.type]] + (self.resists.all or 0), (self.resists_cap[DamageType[t.type]] or 0) + (self.resists_cap.all or 0)) }
+			d[#d+1] = { [t.name.." resist(cap)"] =  string.format("%3d%%(%3d%%)", self:combatGetResist(DamageType[t.type]), (self.resists_cap[DamageType[t.type]] or 0) + (self.resists_cap.all or 0)) }
 		end
 	end
 	immune_type = "poison_immune" immune_name = "Poison Resistance" if self:attr(immune_type) then d[#d+1] = { [immune_name] = string.format("%d%%", util.bound(self:attr(immune_type) * 100, 0, 100)) } end

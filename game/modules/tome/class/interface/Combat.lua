@@ -830,6 +830,14 @@ function _M:combatMentalResist()
 	return self.combat_mentalresist + (self:getCun() + self:getWil() + (self:getLck() - 50) * 0.5) * 0.35 + add
 end
 
+--- Returns the resistance
+function _M:combatGetResist(type)
+	local a = (self.resists.all or 0) / 100
+	local b = (self.resists[type] or 0) / 100
+	local r = math.min(100 * (1 - (1 - a) * (1 - b)), (self.resists_cap.all or 0) + (self.resists_cap[type] or 0))
+	return r
+end
+
 --- Computes movement speed
 function _M:combatMovementSpeed()
 	return (self.base_movement_speed or 1) / self.movement_speed

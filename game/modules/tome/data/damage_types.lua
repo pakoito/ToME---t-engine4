@@ -92,7 +92,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		if target.resists then
 			local pen = 0
 			if src.resists_pen then pen = (src.resists_pen.all or 0) + (src.resists_pen[type] or 0) end
-			local res = math.min((target.resists.all or 0) + (target.resists[type] or 0), (target.resists_cap.all or 0) + (target.resists_cap[type] or 0))
+			local res = target:combatGetResist(type)
 			res = res * (100 - pen) / 100
 			print("[PROJECTOR] res", res, (100 - res) / 100, " on dam", dam)
 			if res >= 100 then dam = 0
@@ -1382,6 +1382,6 @@ newDamageType{
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end
-		end	
+		end
 	end,
 }
