@@ -739,8 +739,8 @@ end
 --- Get the screen offset where to start drawing (upper corner)
 function _M:getScreenUpperCorner()
 	local sx, sy = self._map:getScroll()
-	local x = -self.mx * self.tile_w * self.zoom + self.display_x + sx
-	local y = -self.my * self.tile_h * self.zoom + self.display_y + sy
+	local x = -self.mx * self.tile_w * self.zoom + self.display_x + sx * self.tile_w * zoom
+	local y = -self.my * self.tile_h * self.zoom + self.display_y + sy * self.tile_h * zoom
 	return x, y
 end
 

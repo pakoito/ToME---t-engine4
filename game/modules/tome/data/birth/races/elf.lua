@@ -27,7 +27,6 @@ newBirthDescriptor{
 		"The second race to awaken, thousands of years after the Sher'Tul.",
 		"Elves are split into three subraces, of which only two remain in the current age.",
 		"They are tolerated by most races but not usually well liked, due to their role in the Spellblaze.",
-		"Unlike other races, Elves are not subject to death by old age.",
 	},
 	descriptor_choices =
 	{
