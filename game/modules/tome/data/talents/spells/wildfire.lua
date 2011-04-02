@@ -117,6 +117,7 @@ newTalent{
 		return {
 			dam = self:addTemporaryValue("inc_damage", {[DamageType.FIRE] = t.getFireDamageIncrease(self, t)}),
 			resist = self:addTemporaryValue("resists_pen", {[DamageType.FIRE] = t.getResistPenalty(self, t)}),
+--			particle = self:addParticles(Particles.new("ultrashield", 1, {rm=180,rM=255, gm=100, gM=200, bm=0, bM=0, am=70, aM=255, radius=0.4, density=60, life=14, instop=20})),
 			particle = self:addParticles(Particles.new("wildfire", 1)),
 		}
 	end,
