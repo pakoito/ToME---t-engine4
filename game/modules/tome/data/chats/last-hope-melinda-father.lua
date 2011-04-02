@@ -49,6 +49,7 @@ newChat{ id="reward",
 			if ro then
 				ro:identify(true)
 				game.logPlayer(player, "Melinda's father gives you: %s", ro:getName{do_color=true})
+				game.zone:addEntity(game.level, ro, "object")
 				player:addObject(player:getInven("INVEN"), ro)
 			end
 		end},
