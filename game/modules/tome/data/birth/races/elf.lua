@@ -24,9 +24,10 @@ newBirthDescriptor{
 	type = "race",
 	name = "Elf",
 	desc = {
-		"The second race to awaken, thousands of years after the Sher'Tul.",
-		"Elves are split into three subraces, of which only two remain in the current age.",
-		"They are tolerated by most races but not usually well liked, due to their role in the Spellblaze.",
+		"The elven races are usually named as a whole 'elves', but this is incorrect.",
+		"Elves are split into three separate races - albeit related - of which only two remain in the current age.",
+		"Elves usualy live about one thousand year, except for the shaloren who magically sustain themselves forever.",
+		"Their view of the world varies wildly between the different elven races.",
 	},
 	descriptor_choices =
 	{
@@ -59,7 +60,7 @@ newBirthDescriptor
 	name = "Shalore",
 	desc = {
 		"Shaloren Elves have close ties with the magic of the world, and produced in the past many great mages.",
-		"Yet they remain quiet and try to prevent the teaching of magic to their people, for fear of another Spellblaze.",
+		"Yet they remain quiet and try to hide their magic to the world, for they remember too well the Spellblaze - and the spellhunt that followed.",
 		"They possess the #GOLD#Grace of the Eternals#WHITE# talent which allows them a boost of speed every once in a while.",
 		"#GOLD#Stat modifiers:",
 		"#LIGHT_BLUE# * -2 Strength, +1 Dexterity, +0 Constitution",
@@ -92,7 +93,7 @@ newBirthDescriptor
 	desc = {
 		"Thaloren elves have spent most of the ages hidden within their forests, seldom leaving them.",
 		"The ages of the world passed by and yet they remained unchanged.",
-		"Their affinity for nature and their reclusion have made them great protectors of the natural order, often opposing their Shaloren brothers.",
+		"Their affinity for nature and their reclusion have made them great protectors of the natural order, often opposing their Shaloren cousins.",
 		"They possess the #GOLD#Wrath of the Eternals#WHITE# talent, which allows them a boost to the damage both inflicted and resisted once in a while.",
 		"#GOLD#Stat modifiers:",
 		"#LIGHT_BLUE# * +2 Strength, +3 Dexterity, +1 Constitution",

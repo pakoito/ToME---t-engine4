@@ -26,6 +26,7 @@ newBirthDescriptor{
 	desc = {
 		"Dwarves are a secretive people, hailing from their underground home of the Iron Throne.",
 		"They are a sturdy race and are known for their masterwork, yet they are not well loved, having left other races to fend for themselves in past conflicts.",
+		"All dwarves are united under the Empire and their love of money.",
 	},
 	descriptor_choices =
 	{

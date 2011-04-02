@@ -22,8 +22,10 @@ dir = math.rad(110)
 return { generator = function()
 	local x, y = rng.range(-width/2, width), rng.range(-height/2, height)
 	local vel = rng.float(60, 120)
+	local dir = dir + math.rad(rng.float(-7, 7))
 
 	return {
+		trail = 1,
 		life = 30,
 		size = rng.float(3, 6), sizev = 0, sizea = 0,
 
@@ -42,7 +44,7 @@ function(self)
 	if first then
 		self.ps:emit(700)
 	else
-		self.ps:emit(1)
+		self.ps:emit(2)
 	end
 	first = false
 end,

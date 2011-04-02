@@ -25,7 +25,7 @@ newBirthDescriptor{
 	name = "Halfling",
 	desc = {
 		"Halflings are a race of very short stature, rarely exceeding four feet in height.",
-		"Most of them are happy to live a quiet life of farming and gardening, yet they are not to be taken lightly.",
+		"They are as humans in that they can do just about anything they set their mind to, yet they excel at ordering and studying things.",
 		"Halfling armies have brought many kingdoms to their knees and they kept a balance of power with the Human kingdoms during the Age of Allure.",
 		"Halflings are agile, lucky, and resilient but lacking in strength.",
 	},
@@ -62,7 +62,7 @@ newBirthDescriptor
 	name = "Halfling",
 	desc = {
 		"Halflings are a race of very short stature, rarely exceeding four feet in height.",
-		"Most of them are happy to live a quiet life of farming and gardening, yet they are not to be taken lightly.",
+		"They are as humans in that they can do just about anything they set their mind to, yet they excel at ordering and studying things.",
 		"Halfling armies have brought many kingdoms to their knees and they kept a balance of power with the Human kingdoms during the Age of Allure.",
 		"They possess the #GOLD#Luck of the Little Folk#WHITE# which allows them to increase their critical strike chance for a few turns.",
 		"#GOLD#Stat modifiers:",
