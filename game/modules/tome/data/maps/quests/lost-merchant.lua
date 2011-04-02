@@ -46,7 +46,6 @@ defineTile('P', "FLOOR", nil, mod.class.NPC.new{
 
 	autolevel = "rogue",
 	ai = "dumb_talented_simple", ai_state = { talent_in=5, },
-	energy = { mod=1 },
 	stats = { str=8, dex=15, mag=6, cun=15, con=7 },
 
 	resolvers.tmasteries{ ["technique/other"]=0.3, ["cunning/stealth"]=1.3, ["cunning/dirty"]=0.3, ["technique/dualweapon-training"]=0.3 },

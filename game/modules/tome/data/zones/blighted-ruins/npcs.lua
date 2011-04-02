@@ -48,7 +48,6 @@ newEntity{
 
 	autolevel = "caster",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },
-	energy = { mod=1 },
 	stats = { str=10, dex=8, mag=16, con=6 },
 
 	max_life = resolvers.rngavg(70,80), life_rating = 7,

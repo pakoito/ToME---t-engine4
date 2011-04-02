@@ -86,7 +86,7 @@ newEntity{ base="BASE_NPC_CORRUPTED_HORROR", define_as = "SLIMY_CRAWLER",
 It seems to come from the digestive system of the mouth.]],
 	level_range = {4, nil}, exp_worth = 0,
 	max_life = 80, life_rating = 10, fixed_rating = true,
-	movement_speed = 0.2,
+	movement_speed = 3,
 	size_category = 1,
 
 	combat = { dam=resolvers.mbonus(25, 15), damtype=DamageType.SLIME, dammod={str=1} },

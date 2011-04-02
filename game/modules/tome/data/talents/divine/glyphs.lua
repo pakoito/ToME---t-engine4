@@ -246,7 +246,7 @@ newTalent{
 		local trap = game.level.map(tx, ty, Map.TRAP)
 		if trap then return end
 
-		local dam = -1 + 1 / (1 + (t.getSlow(self, t)))
+		local dam = t.getSlow(self, t)
 		local trap = Trap.new{
 			name = "glyph of fatigue",
 			type = "elemental", id_by_type=true, unided_name = "trap",
@@ -257,7 +257,7 @@ newTalent{
 				return false
 			end,
 			triggered = function(self, x, y, who)
-				who:setEffect(who.EFF_SLOW, 5, {power=-self.dam})
+				who:setEffect(who.EFF_SLOW, 5, {power=self.dam})
 				return true
 			end,
 			temporary = t.getDuration(self, t),

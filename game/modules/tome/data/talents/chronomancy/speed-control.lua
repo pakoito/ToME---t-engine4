@@ -26,12 +26,12 @@ newTalent{
 	sustain_paradox = 75,
 	cooldown = 10,
 	tactical = { BUFF = 1, CLOSEIN = 1, ESCAPE = 1 },
-	no_energy = true, 
-	getPower = function(self, t) return 1 - 1 / (1 + ((10 + self:combatTalentSpellDamage(t, 10, 30))/ 100)) end,
+	no_energy = true,
+	getPower = function(self, t) return self:combatTalentSpellDamage(t, 10, 40) / 100 end,
 	activate = function(self, t)
 		local power = t.getPower(self, t)
 		return {
-		move = self:addTemporaryValue("movement_speed", -power)
+		move = self:addTemporaryValue("movement_speed", power)
 		}
 	end,
 	deactivate = function(self, t, p)
@@ -71,7 +71,7 @@ newTalent{
 		local _ _, _, _, x, y = self:canProject(tg, x, y)
 		x, y = checkBackfire(self, x, y)
 		local grids = self:project(tg, x, y, DamageType.STOP, t.getDuration(self, t))
-		
+
 		game.level.map:particleEmitter(x, y, tg.radius, "temporal_flash", {radius=tg.radius, tx=x, ty=y})
 		game:playSoundNear(self, "talents/tidalwave")
 		return true

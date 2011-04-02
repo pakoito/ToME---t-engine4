@@ -31,7 +31,6 @@ newEntity{
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
 
 	stats = { str=22, dex=20, wil=15, con=15 },
-	energy = { mod=1 },
 	combat_armor = 0, combat_def = 0,
 	combat = { dam=5, atk=15, apr=7, dammod={str=0.6} },
 	infravision = 20,
@@ -118,7 +117,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	resolvers.sustains_at_birth(),
 	on_die = function(self, who)
 		local part = "BLOATED_HORROR_HEART"
-		if game.player:hasQuest("brotherhood-of-alchemists") then 
+		if game.player:hasQuest("brotherhood-of-alchemists") then
 			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
 		end
 	end,
@@ -397,7 +396,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	},
 	on_die = function(self, who)
 		local part = "LUMINOUS_HORROR_DUST"
-		if game.player:hasQuest("brotherhood-of-alchemists") then 
+		if game.player:hasQuest("brotherhood-of-alchemists") then
 			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
 		end
 	end,
@@ -492,7 +491,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	size_category = 4,
 	autolevel = "warrior",
 	max_life = resolvers.rngavg(120, 150),
-	energy = { mod=0.7 },
+	global_speed = 0.7,
 	combat_armor = 1, combat_def = 0,
 	combat = { dam=resolvers.levelup(resolvers.rngavg(25,150), 1, 1.2), atk=resolvers.rngavg(25,130), apr=1, dammod={str=1.1} },
 
@@ -542,7 +541,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	rarity = 6,
 	size_category = 3,
 	max_life = resolvers.rngavg(50,70),
-	energy = { mod=1.2 },
+	global_speed = 1.2,
 	autolevel = "rogue",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
 	combat_armor = 10, combat_def = 10,
@@ -610,7 +609,7 @@ You can discern a huge round mouth covered in razor-sharp teeth.]],
 	rank = 3.5,
 	no_breath = 1,
 	size_category = 4,
-	movement_speed = 1.2,
+	movement_speed = 0.8,
 
 	stun_immune = 1,
 	knockback_immune = 1,

@@ -177,7 +177,6 @@ local function createShadow(self, level, duration, target)
 		exp_worth=0,
 
 		max_life = resolvers.rngavg(15,20), life_rating = 4,
-		energy = { mod=1 },
 		stats = {
 			str=10 + math.floor(level * 0.2),
 			dex=15 + math.floor(level * 0.8),

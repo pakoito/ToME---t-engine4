@@ -42,7 +42,6 @@ newEntity{
 	autolevel = "caster",
 	ai = "tactical", ai_state = { talent_in=1, },
 	ai_tactic = resolvers.tactic"ranged",
-	energy = { mod=1 },
 	stats = { str=8, dex=15, mag=20, wil=18, con=10, cun=18 },
 
 	resists = { [DamageType.NATURE] = 90, [DamageType.FIRE] = 20, [DamageType.MIND] = 100, [DamageType.LIGHT] = -60, [DamageType.DARKNESS] = 95, [DamageType.BLIGHT] = 90 },

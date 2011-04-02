@@ -440,6 +440,8 @@ function _M:getTextualDesc()
 	if w.invisible then desc:add(("Invisibility: %d"):format(w.invisible), true) end
 
 	if w.movement_speed then desc:add(("Movement speed: %d%%"):format(w.movement_speed * 100), true) end
+	if w.combat_physspeed then desc:add(("Combat speed: %d%%"):format(w.combat_physspeed * 100), true) end
+	if w.combat_spellspeed then desc:add(("Casting speed: %d%%"):format(w.combat_spellspeed * 100), true) end
 
 	if w.healing_factor then desc:add(("Increases all healing by %d%%"):format(w.healing_factor * 100), true) end
 

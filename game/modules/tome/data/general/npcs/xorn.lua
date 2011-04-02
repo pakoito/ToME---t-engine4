@@ -42,7 +42,6 @@ newEntity{
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { ai_target="target_player_radius", sense_radius=6, talent_in=3, },
-	energy = { mod=1 },
 	stats = { str=20, dex=8, mag=6, con=16 },
 
 	resists = { [DamageType.PHYSICAL] = 20, [DamageType.FIRE] = 50, },
@@ -53,7 +52,7 @@ newEntity{
 	stone_immune = 1,
 	on_die = function(self, who)
 		local part = "XORN_FRAGMENT"
-		if game.player:hasQuest("brotherhood-of-alchemists") then 
+		if game.player:hasQuest("brotherhood-of-alchemists") then
 			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
 		end
 	end,

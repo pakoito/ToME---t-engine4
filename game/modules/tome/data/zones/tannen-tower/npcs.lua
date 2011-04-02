@@ -43,7 +43,6 @@ newEntity{ define_as = "TANNEN",
 	size_category = 2,
 	infravision = 20,
 	stats = { str=10, dex=12, cun=14, mag=25, con=16 },
-	movement_speed = 1.4,
 
 	instakill_immune = 1,
 	blind_immune = 1,
@@ -139,7 +138,6 @@ It is so huge that it blocks sight beyond it.]],
 	ai_tactic = resolvers.tactic"melee",
 	resolvers.inscriptions(6, "rune"),
 
-	energy = { mod=1 },
 	stats = { str=14, dex=12, mag=10, wil=67, con=12 },
 
 	open_door = true,

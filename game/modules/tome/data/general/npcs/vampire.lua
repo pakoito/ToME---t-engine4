@@ -49,7 +49,6 @@ newEntity{
 
 	autolevel = "warriormage",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=9, },
-	energy = { mod=1 },
 	stats = { str=12, dex=12, mag=12, con=12 },
 	infravision = 20,
 	life_regen = 3,
@@ -120,7 +119,7 @@ It can summon the very shades of its victims from beyond the grave to come ensla
 	resolvers.talents{ [Talents.T_STUN]={base=2, every=7, max=6}, [Talents.T_SUMMON]=1, [Talents.T_BLUR_SIGHT]={base=3, every=7, max=7}, [Talents.T_PHANTASMAL_SHIELD]={base=2, every=7, max=6}, [Talents.T_ROTTING_DISEASE]={base=3, every=7, max=7}, },
 	on_die = function(self, who)
 		local part = "ELDER_VAMPIRE_BLOOD"
-		if game.player:hasQuest("brotherhood-of-alchemists") then 
+		if game.player:hasQuest("brotherhood-of-alchemists") then
 			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
 		end
 	end,
@@ -143,7 +142,7 @@ newEntity{ base = "BASE_NPC_VAMPIRE",
 	},
 	on_die = function(self, who)
 		local part = "VAMPIRE_LORD_FANG"
-		if game.player:hasQuest("brotherhood-of-alchemists") then 
+		if game.player:hasQuest("brotherhood-of-alchemists") then
 			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
 		end
 	end,

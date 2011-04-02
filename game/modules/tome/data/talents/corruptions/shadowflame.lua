@@ -90,10 +90,10 @@ newTalent{
 		game:playSoundNear(self, "talents/flame")
 		self.__old_type = {self.type, self.subtype}
 		self.type, self.subtype = "demon", "major"
-		local power = 1 - 1 / (1 + self:getTalentLevel(t) * 0.03)
+		local power = self:getTalentLevel(t) * 0.03
 		return {
 			demon = self:addTemporaryValue("demon", 1),
-			speed = self:addTemporaryValue("energy", {mod=power}),
+			speed = self:addTemporaryValue("global_speed", power),
 			res = self:addTemporaryValue("resists", {[DamageType.FIRE]=self:combatTalentSpellDamage(t, 20, 30), [DamageType.DARKNESS]=self:combatTalentSpellDamage(t, 20, 35)}),
 			particle = self:addParticles(Particles.new("shadowfire", 1)),
 		}
@@ -102,7 +102,7 @@ newTalent{
 		self.type, self.subtype = unpack(self.__old_type)
 		self.__old_type = nil
 		self:removeTemporaryValue("resists", p.res)
-		self:removeTemporaryValue("energy", p.speed)
+		self:removeTemporaryValue("global_speed", p.speed)
 		self:removeTemporaryValue("demon", p.demon)
 		self:removeParticles(p.particle)
 		return true

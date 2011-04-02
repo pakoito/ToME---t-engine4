@@ -31,7 +31,7 @@ newEntity{
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=5, },
-	energy = { mod=0.9 },
+	global_speed = 0.9,
 	stats = { str=18, dex=13, mag=5, con=15 },
 	infravision = 20,
 	rank = 2,
@@ -45,7 +45,7 @@ newEntity{
 	resists = { [DamageType.FIRE] = 20, [DamageType.COLD] = 20, [DamageType.POISON] = 20 },
 	on_die = function(self, who)
 		local part = "BEAR_PAW"
-		if game.player:hasQuest("brotherhood-of-alchemists") then 
+		if game.player:hasQuest("brotherhood-of-alchemists") then
 			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
 		end
 	end,

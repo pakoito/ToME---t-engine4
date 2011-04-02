@@ -35,7 +35,7 @@ newEntity{
 
 	autolevel = "spider",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=4, },
-	energy = { mod=1.2 },
+	global_speed = 1.2,
 	stats = { str=15, dex=15, mag=8, con=10 },
 
 	resolvers.inscriptions(2, "infusion"),
@@ -63,7 +63,7 @@ newEntity{ base = "BASE_NPC_SPIDER",
 	},
 	on_die = function(self, who)
 		local part = "SPIDER_SPINNERET"
-		if game.player:hasQuest("brotherhood-of-alchemists") then 
+		if game.player:hasQuest("brotherhood-of-alchemists") then
 			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
 		end
 	end,
@@ -183,7 +183,7 @@ newEntity{ base = "BASE_NPC_SPIDER",
 	},
 	on_die = function(self, who)
 		local part = "FAERLHING_FANG"
-		if game.player:hasQuest("brotherhood-of-alchemists") then 
+		if game.player:hasQuest("brotherhood-of-alchemists") then
 			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
 		end
 	end,

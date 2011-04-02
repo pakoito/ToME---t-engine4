@@ -34,7 +34,7 @@ newEntity{
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
-	energy = { mod=1.1 },
+	global_speed = 1.2,
 	stats = { str=10, dex=17, mag=3, con=7 },
 	combat = { dammod={str=0.6} },
 	combat_armor = 1, combat_def = 1,
@@ -96,7 +96,7 @@ newEntity{ base = "BASE_NPC_CANINE",
 	resolvers.talents{ [Talents.T_HOWL]=3, },
 	on_die = function(self, who)
 		local part = "WARG_CLAW"
-		if game.player:hasQuest("brotherhood-of-alchemists") then 
+		if game.player:hasQuest("brotherhood-of-alchemists") then
 			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
 		end
 	end,

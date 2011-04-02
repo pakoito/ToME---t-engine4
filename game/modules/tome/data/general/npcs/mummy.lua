@@ -30,7 +30,7 @@ newEntity{
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
-	energy = { mod=0.8 },
+	global_speed = 0.8,
 	stats = { str=14, dex=12, mag=10, con=12 },
 	infravision = 20,
 	rank = 2,
@@ -48,7 +48,7 @@ newEntity{
 	undead = 1,
 	on_die = function(self, who)
 		local part = "MUMMY_BONE"
-		if game.player:hasQuest("brotherhood-of-alchemists") then 
+		if game.player:hasQuest("brotherhood-of-alchemists") then
 			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
 		end
 	end,

@@ -30,7 +30,6 @@ newEntity{
 	drops = resolvers.drops{chance=70, nb=1, {type="money"}, {} },
 	autolevel = "ghoul",
 	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_ghoul", },
-	energy = { mod=1 },
 	stats = { str=14, dex=12, mag=10, con=12 },
 	rank = 2,
 	size_category = 3,
@@ -46,7 +45,7 @@ newEntity{
 	undead = 1,
 	on_die = function(self, who)
 		local part = "GHOUL_FLESH"
-		if game.player:hasQuest("brotherhood-of-alchemists") then 
+		if game.player:hasQuest("brotherhood-of-alchemists") then
 			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
 		end
 	end,

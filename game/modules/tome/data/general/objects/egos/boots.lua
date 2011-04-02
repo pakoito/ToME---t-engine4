@@ -63,7 +63,7 @@ newEntity{
 	rarity = 20,
 	cost = 60,
 	wielder = {
-		movement_speed = -0.2,
+		movement_speed = 0.2,
 	},
 }
 
@@ -197,7 +197,7 @@ newEntity{
 	wielder = {
 		fatigue = resolvers.mbonus_material(6, 4, function(e, v) return v * 1, -v end),
 		max_life=resolvers.mbonus_material(30, 30, function(e, v) return v * 0.1 end),
-		movement_speed = -0.1,
+		movement_speed = 0.1,
 	},
 }
 

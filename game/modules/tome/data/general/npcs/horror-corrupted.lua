@@ -32,7 +32,6 @@ newEntity{
 	combat = { atk=2, dammod={str=0.6} },
 --	max_life = resolvers.rngavg(30, 50),
 	stats = { str=16, con=16 },
-	energy = { mod=1 },
 	infravision = 20,
 	rank = 2,
 	size_category = 3,
@@ -160,8 +159,6 @@ newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 	desc = "A giant hairless bat with the face of a dwarven man twisted into a constant scream.  Pestulant sores cover it's malformed body and your heart weakens as it nears.",
 	level_range = {1, nil}, exp_worth = 1,
 
-	energy = { mod=0.7 },
-
 	combat = { atk=10, dammod={dex=0.6} },
 	combat_armor = 0, combat_def = 6,
 	max_life = resolvers.rngavg(10, 20),
@@ -172,7 +169,7 @@ newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 	autolevel = "rogue",
 	ai = "tactical", ai_state = { talent_in=2, ai_move="move_astar", },
 	ai_tactic = resolvers.tactic "ranged",
-	energy = { mod=1.2 },
+	global_speed = 1.2,
 
 	resists = { [DamageType.BLIGHT] = 50, [DamageType.DARKNESS] = 20,  [DamageType.LIGHT] = - 20 },
 
@@ -199,7 +196,7 @@ newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 	size_category = 3,
 	autolevel = "warrior",
 
-	energy = { mod=0.8 },
+	global_speed = 0.8,
 
 	resists = { [DamageType.ACID] = 50, [DamageType.DARKNESS] = 20,  [DamageType.LIGHT] = - 20 },
 
@@ -229,7 +226,7 @@ newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 	autolevel = "caster",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
 
-	energy = { mod=0.8 },
+	global_speed = 0.8,
 
 	resists = { [DamageType.DARKNESS] = 50,  [DamageType.LIGHT] = - 20 },
 

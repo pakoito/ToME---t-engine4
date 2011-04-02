@@ -315,7 +315,7 @@ newEntity{
 	cost = 35,
 	wielder = {
 		combat_spellpower = resolvers.mbonus_material(7, 3, function(e, v) return v * 0.6 end),
-		movement_speed = -0.1,
+		movement_speed = 0.1,
 		inc_damage = {
 			[DamageType.TEMPORAL] = resolvers.mbonus_material(20, 5, function(e, v) return v * 0.25 end),
 		},

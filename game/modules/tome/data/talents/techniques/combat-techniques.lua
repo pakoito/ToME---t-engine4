@@ -31,7 +31,7 @@ newTalent{
 	tactical = { BUFF = 1 },
 	activate = function(self, t)
 		return {
-			speed = self:addTemporaryValue("combat_physspeed", self:combatSpeed() + 1 / (1 + 0.08 * 1.3)),
+			speed = self:addTemporaryValue("combat_physspeed", -0.10),
 			atk = self:addTemporaryValue("combat_atk", 4 + (self:getTalentLevel(t) * self:getDex()) / 15),
 			crit = self:addTemporaryValue("combat_physcrit", 4 + (self:getTalentLevel(t) * self:getDex()) / 25),
 		}
@@ -45,7 +45,7 @@ newTalent{
 	info = function(self, t)
 		return ([[You focus your strikes, reducing your attack speed by %d%% and increasing your accuracy by %d and critical chance by %d%%.
 		The effects will increase with your Dexterity stat.]]):
-		format((1.3 * 8), 4 + (self:getTalentLevel(t) * self:getDex()) / 15, 4 + (self:getTalentLevel(t) * self:getDex()) / 25)
+		format(10, 4 + (self:getTalentLevel(t) * self:getDex()) / 15, 4 + (self:getTalentLevel(t) * self:getDex()) / 25)
 	end,
 }
 
@@ -137,11 +137,11 @@ newTalent{
 	require = techs_strdex_req4,
 	tactical = { BUFF = 2, CLOSEIN = 2, ESCAPE = 2 },
 	action = function(self, t)
-		self:setEffect(self.EFF_SPEED, 5, {power=1 - (1 / (1 + self:getTalentLevel(t) * 0.06))})
+		self:setEffect(self.EFF_SPEED, 5, {power=self:getTalentLevel(t) * 0.09})
 		return true
 	end,
 	info = function(self, t)
-		return ([[Through rigorous training you have learned to focus your actions for a short while, increasing your speed by %d%% for 5 turns.]]):format(self:getTalentLevel(t) * 6)
+		return ([[Through rigorous training you have learned to focus your actions for a short while, increasing your speed by %d%% for 5 turns.]]):format(self:getTalentLevel(t) * 9)
 	end,
 }
 

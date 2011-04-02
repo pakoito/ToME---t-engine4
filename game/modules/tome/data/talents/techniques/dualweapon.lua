@@ -88,7 +88,7 @@ newTalent{
 		end
 
 		return {
-			combat_physspeed = self:addTemporaryValue("combat_physspeed", -self:combatSpeed(weapon.combat) + 1 / (1 + self:getTalentLevel(t) * 0.09)),
+			combat_physspeed = self:addTemporaryValue("combat_physspeed", self:getTalentLevel(t) * 0.14),
 			stamina_regen = self:addTemporaryValue("stamina_regen", -6),
 		}
 	end,
@@ -100,7 +100,7 @@ newTalent{
 	info = function(self, t)
 		local weapon, offweapon = self:hasDualWeapon()
 		weapon = weapon or {}
-		return ([[Increases attack speed by %d%%, but drains stamina quickly(-6 stamina/turn).]]):format(self:combatSpeed(weapon.combat) * (self:getTalentLevel(t) * 9))
+		return ([[Increases attack speed by %d%%, but drains stamina quickly(-6 stamina/turn).]]):format(self:getTalentLevel(t) * 14)
 	end,
 }
 

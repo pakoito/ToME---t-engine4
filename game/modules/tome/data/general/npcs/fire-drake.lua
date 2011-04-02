@@ -34,7 +34,6 @@ newEntity{
 
 	autolevel = "drake",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
-	energy = { mod=1 },
 	stats = { str=20, dex=20, mag=30, con=16 },
 
 	resists = { [DamageType.FIRE] = 100, },
@@ -110,7 +109,7 @@ newEntity{ base = "BASE_NPC_FIRE_DRAKE",
 	},
 	on_die = function(self, who)
 		local part = "FIRE_WYRM_SALIVA"
-		if game.player:hasQuest("brotherhood-of-alchemists") then 
+		if game.player:hasQuest("brotherhood-of-alchemists") then
 			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
 		end
 	end,

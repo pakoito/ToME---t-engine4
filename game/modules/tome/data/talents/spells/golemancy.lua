@@ -68,7 +68,6 @@ local function makeGolem()
 		ai = "tactical",
 		ai_state = { talent_in=1, ai_move="move_astar", ally_compassion=10 },
 		ai_tactic = resolvers.tactic"tank",
-		energy = { mod=1 },
 		stats = { str=14, dex=12, mag=12, con=12 },
 
 		-- No natural exp gain

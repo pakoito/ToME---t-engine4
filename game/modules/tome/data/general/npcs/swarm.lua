@@ -31,7 +31,7 @@ newEntity{
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },
 	stats = { str=1, dex=20, mag=3, con=1 },
-	energy = { mod=2 },
+	global_speed = 2,
 	infravision = 20,
 	combat_armor = 1, combat_def = 10,
 	rank = 1,
@@ -81,7 +81,7 @@ newEntity{ base = "BASE_NPC_INSECT",
 	resolvers.talents{ [Talents.T_BITE_POISON]={base=3, every=10, max=8} },
 	on_die = function(self, who)
 		local part = "HUMMERHORN_WING"
-		if game.player:hasQuest("brotherhood-of-alchemists") then 
+		if game.player:hasQuest("brotherhood-of-alchemists") then
 			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
 		end
 	end,

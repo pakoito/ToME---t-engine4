@@ -36,7 +36,6 @@ newEntity{
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=4, },
-	energy = { mod=1 },
 	stats = { str=14, dex=12, mag=10, con=12 },
 
 	resolvers.racial(),
@@ -87,7 +86,7 @@ newEntity{ base = "BASE_NPC_SKELETON",
 	ai = "dumb_talented_simple", ai_state = { talent_in=3, },
 	on_die = function(self, who)
 		local part = "SKELETON_MAGE_SKULL"
-		if game.player:hasQuest("brotherhood-of-alchemists") then 
+		if game.player:hasQuest("brotherhood-of-alchemists") then
 			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
 		end
 	end,

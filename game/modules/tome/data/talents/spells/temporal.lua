@@ -112,16 +112,16 @@ newTalent{
 	sustain_mana = 250,
 	cooldown = 30,
 	tactical = { BUFF = 2 },
-	getHaste = function(self, t) return self:getTalentLevel(t) * 0.07 end,
+	getHaste = function(self, t) return self:getTalentLevel(t) * 0.9 end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic")
-		local power = 1 - 1 / (1 + t.getHaste(self, t))
+		local power = t.getHaste(self, t)
 		return {
-			speed = self:addTemporaryValue("energy", {mod=power}),
+			speed = self:addTemporaryValue("global_speed", power),
 		}
 	end,
 	deactivate = function(self, t, p)
-		self:removeTemporaryValue("energy", p.speed)
+		self:removeTemporaryValue("global_speed", p.speed)
 		return true
 	end,
 	info = function(self, t)

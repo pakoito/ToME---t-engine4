@@ -33,7 +33,7 @@ newEntity{
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { talent_in=3, ai_move="move_snake" },
-	energy = { mod=1.3 },
+	global_speed = 1.3,
 	stats = { str=14, dex=23, mag=5, con=5 },
 	combat_armor = 1, combat_def = 1,
 }
@@ -106,7 +106,7 @@ newEntity{ base = "BASE_NPC_SNAKE",
 	resolvers.talents{ [Talents.T_BITE_POISON]=3 },
 	on_die = function(self, who)
 		local part = "BLACK_MAMBA_HEAD"
-		if game.player:hasQuest("brotherhood-of-alchemists") then 
+		if game.player:hasQuest("brotherhood-of-alchemists") then
 			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
 		end
 	end,
@@ -121,7 +121,7 @@ newEntity{ base = "BASE_NPC_SNAKE",
 	max_life = resolvers.rngavg(100,120),
 	combat_armor = 14, combat_def = 5,
 	combat = { dam=resolvers.levelup(12, 1, 0.7), atk=10, apr=10 },
-	energy = { mod=0.8 },
+	global_speed = 1,
 
 	resolvers.talents{ [Talents.T_CONSTRICT]=5 },
 }

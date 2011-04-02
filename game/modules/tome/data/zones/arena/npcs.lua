@@ -47,7 +47,6 @@ newEntity{ define_as = "BASE_NPC_ARENA1",
 	confusion_immune = 0.1,
 	fear_immune = 0.1,
 	ai = "tactical", ai_state = { ai_move = "move_dmap", talent_in = 1 },
-	energy = { mod = 1 },
 	stats = { str = 10, dex = 10, mag = 10, con = 10 },
 	resolvers.talents{ [Talents.T_HEAVY_ARMOUR_TRAINING] = 2, },
 	resolvers.equip{

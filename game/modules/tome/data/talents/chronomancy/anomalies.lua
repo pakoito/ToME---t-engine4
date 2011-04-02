@@ -319,7 +319,7 @@ newTalent{
 				combat = { dam=resolvers.mbonus(40, 15), atk=15, apr=15, dammod={mag=0.8}, damtype=DamageType.TEMPORAL },
 				body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 				autolevel = "none",
-				energy = { mod=1.5 },
+				global_speed = 1.5,
 				stats = { str=8, dex=12, mag=12, wil= 12, con=10 },
 				ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=2, },
 				level_range = {self.level, self.level},
@@ -446,7 +446,7 @@ newTalent{
 			if #tgts <= 0 then break end
 			local a, id = rng.table(tgts)
 			table.remove(tgts, id)
-	
+
 		local px, py = self.x, self.y
 		local gx, gy = a.x, a.y
 
@@ -456,7 +456,7 @@ newTalent{
 		a:move(px, py, true)
 		game.level.map:particleEmitter(px, py, 1, "teleport")
 		game.level.map:particleEmitter(gx, gy, 1, "teleport")
-		
+
 		end
 		return true
 	end,
@@ -502,11 +502,11 @@ newTalent{
 					game.logSeen(target, "%s is drawn in by the gravity spike!", target.name:capitalize())
 				end
 			end)
-			
+
 			self:project (tg, a.x, a.y, DamageType.PHYSICAL, self:spellCrit(t.getDamage(self, t)))
 			game.level.map:particleEmitter(a.x, a.y, tg.radius, "gravity_spike", {radius=tg.radius, grids=grids, tx=a.x, ty=a.y})
 			game:playSoundNear(self, "talents/earth")
-			
+
 		end
 		return true
 	end,
@@ -597,7 +597,7 @@ newTalent{
 			table.remove(tgts, id)
 			-- Randomly pick a race
 			local race = rng.range(1, 4)
-			
+
 			-- Find space
 			for i = 1, 4 do
 				local x, y = util.findFreeGrid(a.x, a.y, 5, true, {[Map.ACTOR]=true})
@@ -605,12 +605,12 @@ newTalent{
 					game.logPlayer(self, "Not enough space to summon!")
 					return
 				end
-						
+
 				local NPC = require "mod.class.NPC"
 				local m = NPC.new{
-					type = "humanoid", display = "p", 
+					type = "humanoid", display = "p",
 					color=colors.WHITE,
-				
+
 					combat = { dam=resolvers.rngavg(1,2), atk=2, apr=0, dammod={str=0.4} },
 
 					body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
@@ -623,21 +623,20 @@ newTalent{
 					open_door = true,
 
 					autolevel = "warrior",
-					energy = { mod=1 },
 					stats = { str=12, dex=8, mag=6, con=10 },
 					ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=2, },
 					level_range = {1, 3},
-						
+
 					max_life = resolvers.rngavg(30,40),
 					combat_armor = 2, combat_def = 0,
-		
+
 				--	summoner = self,
 					summoner_gain_exp=false,
 					summon_time = t.getSummonTime(self, t),
 				}
-							
+
 				m.level = 1
-		
+
 				if race == 1 then
 					m.name = "human farmer"
 					m.subtype = "human"
@@ -704,16 +703,16 @@ newTalent{
 			if #tgts <= 0 then break end
 			local a, id = rng.table(tgts)
 			table.remove(tgts, id)
-	
+
 			local x, y = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
 			if not x then
 				game.logPlayer(self, "Not enough space to summon!")
 				return
 			end
-	
+
 			a:move(x, y, true)
 			game.level.map:particleEmitter(x, y, 1, "teleport")
-				
+
 		end
 		return true
 	end,

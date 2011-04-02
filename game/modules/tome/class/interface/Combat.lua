@@ -552,7 +552,7 @@ end
 --- Gets the weapon speed
 function _M:combatSpeed(weapon)
 	weapon = weapon or self.combat or {}
-	return self.combat_physspeed + (weapon.physspeed or 1)
+	return (weapon.physspeed or 1) / self.combat_physspeed
 end
 
 --- Gets the crit rate
@@ -679,7 +679,7 @@ end
 
 --- Gets spellspeed
 function _M:combatSpellSpeed()
-	return self.combat_spellspeed + 1
+	return 1 / self.combat_spellspeed
 end
 
 --- Computes physical crit for a damage
@@ -832,10 +832,7 @@ end
 
 --- Computes movement speed
 function _M:combatMovementSpeed()
-	local v = util.bound(1 + (self.movement_speed or 0), 0.2, 10)
-	if v >= 1 then return v
-	else return math.pow(0.4, 1 - v)
-	end
+	return (self.base_movement_speed or 1) / self.movement_speed
 end
 
 --- Check if the actor has a gem bomb in quiver

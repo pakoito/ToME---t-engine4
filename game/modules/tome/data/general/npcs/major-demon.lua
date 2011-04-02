@@ -30,7 +30,6 @@ newEntity{
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },
 	stats = { str=22, dex=10, mag=20, con=13 },
-	energy = { mod=1 },
 	combat_armor = 1, combat_def = 1,
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
 	combat = { dam=resolvers.mbonus(46, 20), atk=15, apr=7, dammod={str=0.7} },
@@ -45,7 +44,7 @@ newEntity{
 	resolvers.inscriptions(1, "rune"),
 	on_die = function(self, who)
 		local part = "GREATER_DEMON_BILE"
-		if game.player:hasQuest("brotherhood-of-alchemists") then 
+		if game.player:hasQuest("brotherhood-of-alchemists") then
 			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
 		end
 	end,
@@ -101,7 +100,7 @@ Oh, and it is twice as big, too.]],
 	level_range = {35, nil}, exp_worth = 1,
 	rarity = 4,
 	rank = 3,
-	energy = {mod=1.4},
+	global_speed = 1.4,
 	size_category = 5,
 	autolevel = "warriormage",
 	life_rating = 20,
@@ -132,7 +131,7 @@ newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 	level_range = {35, nil}, exp_worth = 1,
 	rarity = 4,
 	rank = 3,
-	energy = {mod=1.2},
+	global_speed = 1.2,
 	size_category = 3,
 	autolevel = "caster",
 	life_rating = 6,
@@ -164,7 +163,7 @@ It moves swiftly toward you, casting terrible spells and swinging its weapons at
 	level_range = {39, nil}, exp_worth = 1,
 	rarity = 6,
 	rank = 3,
-	energy = {mod=1.3},
+	global_speed = 1.3,
 	size_category = 4,
 	autolevel = "warriormage",
 	life_rating = 25,

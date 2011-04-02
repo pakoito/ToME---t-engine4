@@ -45,13 +45,13 @@ newEntity{
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=5, },
-	energy = { mod=1.2 },
+	global_speed = 1.2,
 	stats = { str=15, dex=12, mag=6, cun=12, con=15 },
 
 	resolvers.tmasteries{ ["technique/2hweapon-offense"]=0.3, ["technique/2hweapon-cripple"]=0.3, ["technique/combat-training"]=0.3, },
 	on_die = function(self, who)
 		local part = "MINOTAUR_NOSE"
-		if game.player:hasQuest("brotherhood-of-alchemists") then 
+		if game.player:hasQuest("brotherhood-of-alchemists") then
 			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
 		end
 	end,

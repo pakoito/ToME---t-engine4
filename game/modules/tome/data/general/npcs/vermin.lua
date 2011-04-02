@@ -28,7 +28,7 @@ newEntity{
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
-	energy = { mod=0.9 },
+	global_speed = 0.9,
 	stats = { str=10, dex=15, mag=3, con=3 },
 	combat_armor = 1, combat_def = 1,
 	infravision = 20,
@@ -58,7 +58,7 @@ newEntity{ base = "BASE_NPC_WORM",
 	resolvers.talents{ [Talents.T_CRAWL_ACID]=2, [Talents.T_MULTIPLY]=1 },
 	on_die = function(self, who)
 		local part = "GREEN_WORM"
-		if game.player:hasQuest("brotherhood-of-alchemists") then 
+		if game.player:hasQuest("brotherhood-of-alchemists") then
 			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
 		end
 	end,

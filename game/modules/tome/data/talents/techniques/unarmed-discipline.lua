@@ -40,10 +40,10 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		
+
 		local hit = target:checkHit(self:combatAttack(), target:combatDefense(), 0, 95, 5 - self:getTalentLevel(t) / 2)
 	--	local hit = self:attackTarget(target, nil, nil, true)
-		
+
 		-- Try to knockback !
 		if hit then
 			local can = function(target)
@@ -54,20 +54,20 @@ newTalent{
 					self:project(target, target.x, target.y, DamageType.PHYSICAL, t.getDamage(self, t))
 					game.logSeen(target, "%s resists the knockback!", target.name:capitalize())
 				end
-					
+
 			end
-			
+
 			if can(target) then target:knockback(self.x, self.y, t.getPush(self, t), can) end
-				
+
 			-- move the attacker back
 			self:knockback(target.x, target.y, 1)
 			self:breakGrapples()
 			self:buildCombo()
-			
+
 		else
 			game.logSeen(target, "%s misses %s.", self.name:capitalize(), target.name:capitalize())
 		end
-		
+
 		return true
 	end,
 	info = function(self, t)
@@ -89,16 +89,16 @@ newTalent{
 	getDamage = function(self, t) return getTriStat(self, t, 10, 100) * (1 + getGrapplingStyle(self, dam)) end,
 	getDamageTwo = function(self, t) return getTriStat(self, t, 10, 100) * (1.5 + getGrapplingStyle(self, dam)) end,
 	do_throw = function(self, target, t)
-			
+
 		local hit = self:checkHit(self:combatAttack(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2)
-		
+
 		-- if grappled stun
 		if hit and target:canBe("knockback") and target:isGrappled(self) then
 			self:project(target, target.x, target.y, DamageType.PHYSICAL, self:physicalCrit(t.getDamageTwo(self, t), nil, target))
 			game.logSeen(target, "%s has been slammed into the ground!", target.name:capitalize())
 			-- see if the throw stuns the enemy
 			if hit and target:canBe("stun")then
-				target:setEffect(target.EFF_STUNNED, 2, {})		
+				target:setEffect(target.EFF_STUNNED, 2, {})
 			end
 		-- if not grappled daze
 		elseif hit and target:canBe("knockback") then
@@ -106,10 +106,10 @@ newTalent{
 			game.logSeen(target, "%s has been thrown to the ground!", target.name:capitalize())
 			-- see if the throw dazes the enemy
 			if hit and target:canBe("stun")then
-				target:setEffect(target.EFF_DAZED, 2, {})		
+				target:setEffect(target.EFF_DAZED, 2, {})
 			end
 		end
-		
+
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
@@ -130,15 +130,15 @@ newTalent{
 	sustain_stamina = 30,
 	tactical = { BUFF = 1, STAMINA = 2 },
 	getSpeed = function(self, t) return 0.1 end,
-	getStamina = function(self, t) return self:getTalentLevel(t) * 1.5 end,
+	getStamina = function(self, t) return self:getTalentLevel(t) * 0.015 end,
 	activate = function(self, t)
 		return {
-			speed = self:addTemporaryValue("energy", {mod = -t.getSpeed(self, t)}),
+			speed = self:addTemporaryValue("global_speed", -t.getSpeed(self, t)),
 			stamina = self:addTemporaryValue("stamina_regen", t.getStamina(self, t)),
 		}
 	end,
 	deactivate = function(self, t, p)
-		self:removeTemporaryValue("energy", p.speed)
+		self:removeTemporaryValue("global_speed", p.speed)
 		self:removeTemporaryValue("stamina_regen", p.stamina)
 		return true
 	end,
@@ -170,13 +170,13 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y, target = self:getTarget(tg)
 		if not x or not y then return nil end
-		
+
 		self:breakGrapples()
-		
+
 		self:project(tg, x, y, DamageType.PHYSKNOCKBACK, {dam=self:physicalCrit(t.getDamage(self, t), nil, target), dist=4})
-		
+
 		self:buildCombo()
-		
+
 		return true
 	end,
 	info = function(self, t)

@@ -43,7 +43,6 @@ newEntity{
 
 	autolevel = "warriormage",
 	ai = "dumb_talented_simple", ai_state = { talent_in=3, },
-	energy = { mod=1 },
 	stats = { str=12, dex=8, mag=6, con=10 },
 }
 
@@ -128,7 +127,6 @@ newEntity{
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { ai_target="charred_scar_target", talent_in=2, },
-	energy = { mod=1 },
 	stats = { str=20, dex=8, mag=6, con=16 },
 	resolvers.inscriptions(2, {}),
 }

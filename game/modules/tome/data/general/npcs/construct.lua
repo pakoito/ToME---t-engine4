@@ -46,7 +46,6 @@ newEntity{
 
 	autolevel = "warriormage",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
-	energy = { mod=1 },
 	stats = { str=20, mag=16, con=22 },
 	resolvers.talents{
 		[Talents.T_STAMINA_POOL]=1, [Talents.T_MANA_POOL]=1,

@@ -74,9 +74,11 @@ function _M:init(t, no_default)
 	self.combat_atk = 0
 	self.combat_apr = 0
 	self.combat_dam = 0
+	self.global_speed = 1
+	self.movement_speed = 1
 	self.combat_physcrit = 0
-	self.combat_physspeed = 0
-	self.combat_spellspeed = 0
+	self.combat_physspeed = 1
+	self.combat_spellspeed = 1
 	self.combat_spellcrit = 0
 	self.combat_spellpower = 0
 	self.combat_mindpower = 0

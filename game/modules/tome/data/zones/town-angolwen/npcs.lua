@@ -105,7 +105,6 @@ newEntity{
 
 	autolevel = "caster",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
-	energy = { mod=1 },
 	stats = { str=8, dex=8, mag=16, wil=18, con=10 },
 
 	emote_random = resolvers.emote_random{allow_backup_guardian=true},

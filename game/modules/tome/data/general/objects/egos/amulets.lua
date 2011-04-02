@@ -294,7 +294,7 @@ newEntity{
 	wielder = {
 		combat_dam = resolvers.mbonus_material(5, 5, function(e, v) return v * 3 end),
 		inc_damage = { [DamageType.PHYSICAL] = resolvers.mbonus_material(5, 5, function(e, v) return v * 0.8 end) },
-		combat_physspeed = -0.1,
+		combat_physspeed = 0.1,
 	},
 }
 

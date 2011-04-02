@@ -599,10 +599,10 @@ newEffect{
 	on_gain = function(self, err) return "#Target# speeds up.", "+Fast" end,
 	on_lose = function(self, err) return "#Target# slows down.", "-Fast" end,
 	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("energy", {mod=eff.power})
+		eff.tmpid = self:addTemporaryValue("global_speed", eff.power)
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("energy", eff.tmpid)
+		self:removeTemporaryValue("global_speed", eff.tmpid)
 	end,
 }
 
@@ -616,11 +616,11 @@ newEffect{
 	on_gain = function(self, err) return "#Target# slows down.", "+Slow" end,
 	on_lose = function(self, err) return "#Target# speeds up.", "-Slow" end,
 	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("energy", {mod=-eff.power})
+		eff.tmpid = self:addTemporaryValue("global_speed", -eff.power)
 		eff.dur = self:updateEffectDuration(eff.dur, "slow")
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("energy", eff.tmpid)
+		self:removeTemporaryValue("global_speed", eff.tmpid)
 	end,
 }
 
@@ -1783,11 +1783,11 @@ newEffect{
 	on_lose = function(self, err) return "#Target# overcomes the gloom.", "-Slow" end,
 	activate = function(self, eff)
 		eff.particle = self:addParticles(Particles.new("gloom_slow", 1))
-		eff.tmpid = self:addTemporaryValue("energy", {mod=-eff.power})
+		eff.tmpid = self:addTemporaryValue("global_speed", -eff.power)
 		eff.dur = self:updateEffectDuration(eff.dur, "slow")
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("energy", eff.tmpid)
+		self:removeTemporaryValue("global_speed", eff.tmpid)
 		self:removeParticles(eff.particle)
 	end,
 }
@@ -1934,7 +1934,7 @@ newEffect{
 		if eff.hateLoss or 0 > 0 then eff.hateLossId = self:addTemporaryValue("hate_regen", -eff.hateLoss) end
 		if eff.critical or 0 > 0 then eff.criticalId = self:addTemporaryValue("combat_physcrit", eff.critical) end
 		if eff.damage or 0 > 0 then eff.damageId = self:addTemporaryValue("inc_damage", {[DamageType.PHYSICAL]=eff.damage}) end
-		if eff.speed or 0 > 0 then eff.speedId = self:addTemporaryValue("energy", {mod=eff.speed * 0.01}) end
+		if eff.speed or 0 > 0 then eff.speedId = self:addTemporaryValue("global_speed", eff.speed * 0.01) end
 		if eff.attack or 0 > 0 then eff.attackId = self:addTemporaryValue("combat_atk", self:combatAttack() * eff.attack * 0.01) end
 		if eff.evasion or 0 > 0 then eff.evasionId = self:addTemporaryValue("evasion", eff.evasion) end
 
@@ -1944,7 +1944,7 @@ newEffect{
 		if eff.hateLossId then self:removeTemporaryValue("hate_regen", eff.hateLossId) end
 		if eff.criticalId then self:removeTemporaryValue("combat_physcrit", eff.criticalId) end
 		if eff.damageId then self:removeTemporaryValue("inc_damage", eff.damageId) end
-		if eff.speedId then self:removeTemporaryValue("energy", eff.speedId) end
+		if eff.speedId then self:removeTemporaryValue("global_speed", eff.speedId) end
 		if eff.attackId then self:removeTemporaryValue("combat_atk", eff.attackId) end
 		if eff.evasionId then self:removeTemporaryValue("evasion", eff.evasionId) end
 
@@ -2008,10 +2008,10 @@ newEffect{
 	on_gain = function(self, err) return nil, "+Invigorated" end,
 	on_lose = function(self, err) return nil, "-Invigorated" end,
 	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("energy", {mod=eff.speed * 0.01})
+		eff.tmpid = self:addTemporaryValue("global_speed", eff.speed * 0.01)
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("energy", eff.tmpid)
+		self:removeTemporaryValue("global_speed", eff.tmpid)
 	end,
 	on_merge = function(self, old_eff, new_eff)
 		old_eff.dur = math.min(old_eff.dur + new_eff.dur, 15)
@@ -2294,13 +2294,13 @@ newEffect{
 	on_lose = function(self, err) return "#Target# slows down.", "-Wild Speed" end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("wild_speed", 1)
-		eff.moveid = self:addTemporaryValue("energy", {mod=self.energy.mod*eff.power/100})
+		eff.moveid = self:addTemporaryValue("global_speed", eff.power/100)
 		if self.ai_state then eff.aiid = self:addTemporaryValue("ai_state", {no_talents=1}) end -- Make AI not use talents while using it
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("wild_speed", eff.tmpid)
 		if eff.aiid then self:removeTemporaryValue("ai_state", eff.aiid) end
-		self:removeTemporaryValue("energy", eff.moveid)
+		self:removeTemporaryValue("global_speed", eff.moveid)
 	end,
 }
 
@@ -2315,13 +2315,13 @@ newEffect{
 	on_lose = function(self, err) return "#Target# slows down.", "-Step Up" end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("step_up", 1)
-		eff.moveid = self:addTemporaryValue("energy", {mod=self.energy.mod*eff.power/100})
+		eff.moveid = self:addTemporaryValue("global_speed", eff.power/100)
 		if self.ai_state then eff.aiid = self:addTemporaryValue("ai_state", {no_talents=1}) end -- Make AI not use talents while using it
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("step_up", eff.tmpid)
 		if eff.aiid then self:removeTemporaryValue("ai_state", eff.aiid) end
-		self:removeTemporaryValue("energy", eff.moveid)
+		self:removeTemporaryValue("global_speed", eff.moveid)
 	end,
 }
 
@@ -2336,7 +2336,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is back to normal.", "-Lightning Speed" end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("lightning_speed", 1)
-		eff.moveid = self:addTemporaryValue("energy", {mod=self.energy.mod*eff.power/100})
+		eff.moveid = self:addTemporaryValue("global_speed", eff.power/100)
 		eff.resistsid = self:addTemporaryValue("resists", {
 			[DamageType.PHYSICAL]=30,
 			[DamageType.LIGHTNING]=100,
@@ -2349,7 +2349,7 @@ newEffect{
 		self:removeTemporaryValue("lightning_speed", eff.tmpid)
 		self:removeTemporaryValue("resists", eff.resistsid)
 		if eff.aiid then self:removeTemporaryValue("ai_state", eff.aiid) end
-		self:removeTemporaryValue("energy", eff.moveid)
+		self:removeTemporaryValue("global_speed", eff.moveid)
 	end,
 }
 
@@ -2811,7 +2811,7 @@ newEffect{
 newEffect{
 	name = "MADNESS_SLOW",
 	desc = "Slowed by madness",
-	long_desc = function(self, eff) return ("Madness reduces the target's global speed by %d%%."):format((1 / (1 - eff.power) - 1) * 100) end,
+	long_desc = function(self, eff) return ("Madness reduces the target's global speed by %d%%."):format(eff.power * 100) end,
 	type = "mental",
 	status = "detrimental",
 	parameters = { power=0.1 },
@@ -2819,11 +2819,11 @@ newEffect{
 	on_lose = function(self, err) return "#Target# overcomes the madness.", "-Slow" end,
 	activate = function(self, eff)
 		eff.particle = self:addParticles(Particles.new("gloom_slow", 1))
-		eff.tmpid = self:addTemporaryValue("energy", {mod=-eff.power})
+		eff.tmpid = self:addTemporaryValue("global_speed", -eff.power)
 		eff.dur = self:updateEffectDuration(eff.dur, "slow")
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("energy", eff.tmpid)
+		self:removeTemporaryValue("global_speed", eff.tmpid)
 		self:removeParticles(eff.particle)
 	end,
 }
@@ -2954,19 +2954,17 @@ newEffect{
 newEffect{
 	name = "QUICKNESS",
 	desc = "Quick",
-	long_desc = function(self, eff) return ("Increases run speed by %d%%."):format((1 / (1 - eff.power) - 1) * 100) end,
+	long_desc = function(self, eff) return ("Increases run speed by %d%%."):format(eff.power * 100) end,
 	type = "mental",
 	status = "beneficial",
 	parameters = { power=0.1 },
 	on_gain = function(self, err) return "#Target# speeds up.", "+Quick" end,
 	on_lose = function(self, err) return "#Target# slows down.", "-Quick" end,
 	activate = function(self, eff)
-		--eff.tmpid = self:addTemporaryValue("movement_speed", {mod=-eff.power})
-		self.movement_speed = (self.movement_speed or 0) - eff.power
+		eff.tmpid = self:addTemporaryValue("movement_speed", {mod=eff.power})
 	end,
 	deactivate = function(self, eff)
-		--self:removeTemporaryValue("movement_speed", eff.tmpid)
-		self.movement_speed = self.movement_speed + eff.power
+		self:removeTemporaryValue("movement_speed", eff.tmpid)
 	end,
 }
 newEffect{
@@ -3166,10 +3164,10 @@ newEffect{
 	status = "beneficial",
 	parameters = { power=10 },
 	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("energy", {mod=1})
+		eff.tmpid = self:addTemporaryValue("global_speed", 1)
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("energy", eff.tmpid)
+		self:removeTemporaryValue("global_speed", eff.tmpid)
 		self:setEffect(self.EFF_TEMPORAL_STUN, eff.power, {})
 	end,
 }
@@ -3675,13 +3673,13 @@ newEffect{
 	activate = function(self, eff)
 		eff.atkid = self:addTemporaryValue("combat_atk", -eff.atk)
 		eff.damid = self:addTemporaryValue("combat_dam", -eff.dam)
-		eff.tmpid = self:addTemporaryValue("energy", {mod=-0.3})
+		eff.tmpid = self:addTemporaryValue("global_speed", -0.3)
 		eff.dur = self:updateEffectDuration(eff.dur, "slow")
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("combat_atk", eff.atkid)
 		self:removeTemporaryValue("combat_dam", eff.damid)
-		self:removeTemporaryValue("energy", eff.tmpid)
+		self:removeTemporaryValue("global_speed", eff.tmpid)
 	end,
 }
 
@@ -3792,10 +3790,10 @@ newEffect{
 	on_gain = function(self, err) return "#Target# speeds up.", "+Reflexive Dodging" end,
 	on_lose = function(self, err) return "#Target# slows down.", "-Reflexive Dodging" end,
 	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("energy", {mod=eff.power})
+		eff.tmpid = self:addTemporaryValue("global_speed", eff.power)
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("energy", eff.tmpid)
+		self:removeTemporaryValue("global_speed", eff.tmpid)
 	end,
 }
 
@@ -3835,7 +3833,7 @@ newEffect{
 	on_gain = function(self, err) return "#Target# speeds up.", "+Sprint" end,
 	on_lose = function(self, err) return "#Target# slows down.", "-Sprint" end,
 	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("movement_speed", -eff.power)
+		eff.tmpid = self:addTemporaryValue("movement_speed", eff.power)
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("movement_speed", eff.tmpid)

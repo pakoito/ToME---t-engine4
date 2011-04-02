@@ -37,7 +37,6 @@ newEntity{
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
-	energy = { mod=1 },
 	stats = { str=20, dex=8, mag=6, con=16 },
 
 	resolvers.inscriptions(1, "infusion"),
@@ -49,7 +48,7 @@ newEntity{
 	poison_immune = 1,
 	on_die = function(self, who)
 		local part = "SNOW_GIANT_KIDNEY"
-		if game.player:hasQuest("brotherhood-of-alchemists") then 
+		if game.player:hasQuest("brotherhood-of-alchemists") then
 			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
 		end
 	end,

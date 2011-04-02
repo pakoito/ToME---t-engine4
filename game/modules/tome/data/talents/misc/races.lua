@@ -146,7 +146,7 @@ newTalent{
 	tactical = { DEFEND = 1 },
 	action = function(self, t)
 		local power = 0.1 + self:getDex() / 210
-		self:setEffect(self.EFF_SPEED, 8, {power=1 - 1 / (1 + power)})
+		self:setEffect(self.EFF_SPEED, 8, {power=power})
 		return true
 	end,
 	info = function(self, t)
@@ -688,10 +688,10 @@ newTalent{
 	points = 5,
 	mode = "passive",
 	on_learn = function(self, t)
-		self.energy.mod = self.energy.mod + 0.03
+		self.global_speed = self.global_speed + 0.03
 	end,
 	on_unlearn = function(self, t)
-		self.energy.mod = self.energy.mod - 0.03
+		self.global_speed = self.global_speed - 0.03
 	end,
 	info = function(self, t)
 		return ([[Yeeks live fast, think fast, and sacrifice fast for the Way.

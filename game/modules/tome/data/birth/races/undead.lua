@@ -104,7 +104,7 @@ newBirthDescriptor
 		cut_immune = 1,
 		stun_immune = 0.5,
 		fear_immune = 1,
-		energy = {mod=0.8},
+		global_speed = 0.8,
 	},
 	experience = 1.4,
 }

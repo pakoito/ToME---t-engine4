@@ -71,8 +71,9 @@ newTalent{
 	mode = "sustained",
 	points = 5,
 	require = techs_dex_req2,
-	cooldown = 30,
+	cooldown = 8,
 	sustain_stamina = 20,
+	no_energy = true,
 	tactical = { BUFF = 2 },
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	activate = function(self, t)
@@ -82,9 +83,11 @@ newTalent{
 			return nil
 		end
 
+		if self:isTalentActive(self.T_RAPID_SHOT) then self:forceUseTalent(self.T_RAPID_SHOT, {ignore_energy=true}) end
+
 		return {
 			move = self:addTemporaryValue("never_move", 1),
-			speed = self:addTemporaryValue("combat_physspeed", self:combatSpeed(weapon.combat) - 1 / (1 + self:getTalentLevel(t) * 0.1)),
+			speed = self:addTemporaryValue("combat_physspeed", -self:getTalentLevel(t) * 0.05),
 			crit = self:addTemporaryValue("combat_physcrit", 7 + self:getTalentLevel(t) * self:getDex(10)),
 			atk = self:addTemporaryValue("combat_dam", 4 + self:getTalentLevel(t) * self:getDex(10)),
 			dam = self:addTemporaryValue("combat_atk", 4 + self:getTalentLevel(t) * self:getDex(10)),
@@ -105,7 +108,7 @@ newTalent{
 		The effects will increase with your Dexterity stat.]]):
 		format(4 + self:getTalentLevel(t) * self:getDex(10), 4 + self:getTalentLevel(t) * self:getDex(10),
 		3 + self:getTalentLevel(t) * self:getDex(10), 7 + self:getTalentLevel(t) * self:getDex(10),
-		self:getTalentLevelRaw(t) * 10)
+		self:getTalentLevelRaw(t) * 5)
 	end,
 }
 
@@ -115,8 +118,9 @@ newTalent{
 	mode = "sustained",
 	points = 5,
 	require = techs_dex_req3,
-	cooldown = 30,
+	cooldown = 8,
 	sustain_stamina = 20,
+	no_energy = true,
 	tactical = { BUFF = 2 },
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	activate = function(self, t)
@@ -126,8 +130,10 @@ newTalent{
 			return nil
 		end
 
+		if self:isTalentActive(self.T_AIM) then self:forceUseTalent(self.T_AIM, {ignore_energy=true}) end
+
 		return {
-			speed = self:addTemporaryValue("combat_physspeed", -self:combatSpeed(weapon.combat) + 1 / (1 + self:getTalentLevel(t) * 0.09)),
+			speed = self:addTemporaryValue("combat_physspeed", self:getTalentLevel(t) * 0.1),
 			atk = self:addTemporaryValue("combat_dam", -8 - self:getTalentLevelRaw(t) * 2.4),
 			dam = self:addTemporaryValue("combat_atk", -8 - self:getTalentLevelRaw(t) * 2.4),
 			crit = self:addTemporaryValue("combat_physcrit", -8 - self:getTalentLevelRaw(t) * 2.4),
@@ -142,7 +148,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You switch to a fluid and fast battle stance, increasing your firing speed by %d%% at the cost of your accuracy(%d), damage(%d), and critical chance(%d).]]):
-		format(self:getTalentLevel(t) * 9, -8 - self:getTalentLevelRaw(t) * 2.4, -8 - self:getTalentLevelRaw(t) * 2.4, -8 - self:getTalentLevelRaw(t) * 2.4)
+		format(self:getTalentLevel(t) * 10, -8 - self:getTalentLevelRaw(t) * 2.4, -8 - self:getTalentLevelRaw(t) * 2.4, -8 - self:getTalentLevelRaw(t) * 2.4)
 	end,
 }
 

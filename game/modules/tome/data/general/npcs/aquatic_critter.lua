@@ -29,7 +29,6 @@ newEntity{
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },
 	stats = { str=12, dex=10, mag=3, con=13 },
-	energy = { mod=1 },
 	combat_armor = 1, combat_def = 1,
 	combat = { dam=resolvers.levelup(resolvers.mbonus(36, 10), 1, 1), atk=15, apr=7, dammod={str=0.6} },
 	max_life = resolvers.rngavg(10,20), life_rating = 6,
@@ -58,7 +57,7 @@ newEntity{ base = "BASE_NPC_AQUATIC_CRITTER",
 	resolvers.talents{ [Talents.T_CHAIN_LIGHTNING]=3, [Talents.T_LIGHTNING]=3 },
 	on_die = function(self, who)
 		local part = "ELECTRIC_EEL_TAIL"
-		if game.player:hasQuest("brotherhood-of-alchemists") then 
+		if game.player:hasQuest("brotherhood-of-alchemists") then
 			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
 		end
 	end,
@@ -95,7 +94,7 @@ newEntity{ base = "BASE_NPC_AQUATIC_CRITTER",
 	resolvers.talents{ [Talents.T_GRAB]=3, },
 	on_die = function(self, who)
 		local part = "SQUID_INK"
-		if game.player:hasQuest("brotherhood-of-alchemists") then 
+		if game.player:hasQuest("brotherhood-of-alchemists") then
 			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
 		end
 	end,
@@ -110,7 +109,7 @@ newEntity{ base = "BASE_NPC_AQUATIC_CRITTER",
 	resolvers.talents{ [Talents.T_GRAB]=3, [Talents.T_BLINDING_INK]=3, },
 	on_die = function(self, who)
 		local part = "SQUID_INK"
-		if game.player:hasQuest("brotherhood-of-alchemists") then 
+		if game.player:hasQuest("brotherhood-of-alchemists") then
 			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
 		end
 	end,

@@ -36,7 +36,7 @@ newEntity{
 
 	autolevel = "dexmage",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
-	energy = { mod=1.5 },
+	global_speed = 1.5,
 	stats = { str=8, dex=12, mag=12, wil=12, con=10 },
 
 	resists = { [DamageType.PHYSICAL] = 10, [DamageType.TEMPORAL] = 100, },

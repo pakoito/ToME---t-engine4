@@ -66,7 +66,7 @@ function _M:tick()
 			if e and e.act and e.energy then
 --				print("<ENERGY", e.name, e.uid, "::", e.energy.value, self.paused, "::", e.player)
 				if e.energy.value < self.energy_to_act then
-					e.energy.value = (e.energy.value or 0) + self.energy_per_tick * (e.energy.mod or 1)
+					e.energy.value = (e.energy.value or 0) + self.energy_per_tick * (e.energy.mod or 1) * (e.global_speed or 1)
 				end
 				if e.energy.value >= self.energy_to_act then
 					e.energy.used = false
@@ -82,7 +82,7 @@ function _M:tick()
 		e = arr[i]
 		if e and e.act and e.energy then
 			if e.energy.value < self.energy_to_act then
-				e.energy.value = (e.energy.value or 0) + self.energy_per_tick * (e.energy.mod or 1)
+				e.energy.value = (e.energy.value or 0) + self.energy_per_tick * (e.energy.mod or 1) * (e.global_speed or 1)
 			end
 			if e.energy.value >= self.energy_to_act then
 				e.energy.used = false

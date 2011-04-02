@@ -548,7 +548,6 @@ newEntity{ base = "BASE_AMULET",
 
 			autolevel = "warriormage",
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=3, },
-			energy = { mod=1 },
 			stats = { str=12, dex=12, mag=12, con=12 },
 			life_regen = 3,
 			size_category = 3,

@@ -37,7 +37,7 @@ Vicious predators, they inject corrupting diseases into their foes, and their sh
 
 	autolevel = "slinger",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
-	energy = { mod=1.2 },
+	global_speed = 1.2,
 	stats = { str=15, dex=15, mag=8, con=10 },
 
 	poison_immune = 0.5,
@@ -45,7 +45,7 @@ Vicious predators, they inject corrupting diseases into their foes, and their sh
 	resists = { [DamageType.BLIGHT] = 20, [DamageType.FIRE] = 100 },
 	on_die = function(self, who)
 		local part = "RITCH_STINGER"
-		if game.player:hasQuest("brotherhood-of-alchemists") then 
+		if game.player:hasQuest("brotherhood-of-alchemists") then
 			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
 		end
 	end,

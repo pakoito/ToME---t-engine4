@@ -40,7 +40,6 @@ newEntity{
 
 	autolevel = "caster",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=4, },
-	energy = { mod=1 },
 	stats = { str=11, dex=11, mag=15, con=12 },
 	infravision = 20,
 	rank = 2,
@@ -60,7 +59,7 @@ newEntity{
 --	sleep_immune = 1,
 	on_die = function(self, who)
 		local part = "WIGHT_ECTOPLASM"
-		if game.player:hasQuest("brotherhood-of-alchemists") then 
+		if game.player:hasQuest("brotherhood-of-alchemists") then
 			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
 		end
 	end,
