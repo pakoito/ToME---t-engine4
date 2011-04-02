@@ -112,7 +112,7 @@ newTalent{
 	sustain_mana = 250,
 	cooldown = 30,
 	tactical = { BUFF = 2 },
-	getHaste = function(self, t) return self:getTalentLevel(t) * 0.9 end,
+	getHaste = function(self, t) return self:getTalentLevel(t) * 0.09 end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic")
 		local power = t.getHaste(self, t)
@@ -130,4 +130,3 @@ newTalent{
 		format(100 * haste)
 	end,
 }
-

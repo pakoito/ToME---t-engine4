@@ -454,6 +454,8 @@ function _M:check(prop, ...)
 	end
 end
 
+_M.temporary_values_conf = {}
+
 --- Computes a "temporary" value into a property
 -- Example: You cant to give an actor a boost to life_regen, but you do not want it to be permanent<br/>
 -- You cannot simply increase life_regen, so you use this method which will increase it AND
@@ -492,7 +494,13 @@ function _M:addTemporaryValue(prop, v, noupdate)
 	recursive = function(base, prop, v)
 		if type(v) == "number" then
 			-- Simple addition
-			base[prop] = (base[prop] or 0) + v
+			if self.temporary_values_conf[prop] == "mult" then
+				base[prop] = (base[prop] or 1) * v
+			elseif self.temporary_values_conf[prop] == "mult0" then
+				base[prop] = (base[prop] or 1) * (1 + v)
+			else
+				base[prop] = (base[prop] or 0) + v
+			end
 			self:onTemporaryValueChange(prop, v, base)
 			print("addTmpVal", base, prop, v, " :=: ", #t, id)
 		elseif type(v) == "table" then
@@ -543,7 +551,13 @@ function _M:removeTemporaryValue(prop, id, noupdate)
 	recursive = function(base, prop, v)
 		if type(v) == "number" then
 			-- Simple addition
-			base[prop] = base[prop] - v
+			if self.temporary_values_conf[prop] == "mult" then
+				base[prop] = base[prop] / v
+			elseif self.temporary_values_conf[prop] == "mult0" then
+				base[prop] = base[prop] / (1 + v)
+			else
+				base[prop] = base[prop] - v
+			end
 			self:onTemporaryValueChange(prop, -v, base)
 			print("delTmpVal", prop, v)
 		elseif type(v) == "table" then

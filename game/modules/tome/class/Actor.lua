@@ -67,6 +67,12 @@ _M.__is_actor = true
 
 _M.stats_per_level = 3
 
+-- Speeds are multiplicative, not additive
+_M.temporary_values_conf.global_speed = "mult0"
+_M.temporary_values_conf.movement_speed = "mult0"
+_M.temporary_values_conf.combat_physspeed = "mult0"
+_M.temporary_values_conf.combat_spellspeed = "mult0"
+
 function _M:init(t, no_default)
 	-- Define some basic combat stats
 	self.combat_def = 0

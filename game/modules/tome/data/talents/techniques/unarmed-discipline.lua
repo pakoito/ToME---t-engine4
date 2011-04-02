@@ -130,7 +130,7 @@ newTalent{
 	sustain_stamina = 30,
 	tactical = { BUFF = 1, STAMINA = 2 },
 	getSpeed = function(self, t) return 0.1 end,
-	getStamina = function(self, t) return self:getTalentLevel(t) * 0.015 end,
+	getStamina = function(self, t) return self:getTalentLevel(t) * 1.5 end,
 	activate = function(self, t)
 		return {
 			speed = self:addTemporaryValue("global_speed", -t.getSpeed(self, t)),
