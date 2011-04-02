@@ -630,6 +630,7 @@ local drop_tables = {
 			ego = 45,
 			basic = 20,
 			money = 7,
+			lore = 5,
 		},
 		[2] = {
 			uniques = 0.7,
@@ -640,6 +641,7 @@ local drop_tables = {
 			ego = 30,
 			basic = 15,
 			money = 8,
+			lore = 6,
 		},
 		[3] = {
 			uniques = 1,
@@ -650,6 +652,7 @@ local drop_tables = {
 			ego = 15,
 			basic = 10,
 			money = 8.5,
+			lore = 6.5,
 		},
 		[4] = {
 			uniques = 1.1,
@@ -660,6 +663,7 @@ local drop_tables = {
 			ego = 5,
 			basic = 5,
 			money = 8,
+			lore = 6,
 		},
 		[5] = {
 			uniques = 1.2,
@@ -670,6 +674,7 @@ local drop_tables = {
 			ego = 5,
 			basic = 5,
 			money = 8,
+			lore = 6,
 		},
 	},
 	store = {
@@ -682,6 +687,7 @@ local drop_tables = {
 			ego = 10,
 			basic = 0,
 			money = 0,
+			lore = 0,
 		},
 		[2] = {
 			uniques = 0.5,
@@ -692,6 +698,7 @@ local drop_tables = {
 			ego = 8,
 			basic = 0,
 			money = 0,
+			lore = 0,
 		},
 		[3] = {
 			uniques = 0.5,
@@ -702,6 +709,7 @@ local drop_tables = {
 			ego = 6,
 			basic = 0,
 			money = 0,
+			lore = 0,
 		},
 		[4] = {
 			uniques = 0.5,
@@ -712,6 +720,7 @@ local drop_tables = {
 			ego = 4,
 			basic = 0,
 			money = 0,
+			lore = 0,
 		},
 		[5] = {
 			uniques = 0.5,
@@ -722,6 +731,7 @@ local drop_tables = {
 			ego = 0,
 			basic = 0,
 			money = 0,
+			lore = 0,
 		},
 	},
 	boss = {
@@ -734,6 +744,7 @@ local drop_tables = {
 			ego = 0,
 			basic = 0,
 			money = 4,
+			lore = 0,
 		},
 		[2] = {
 			uniques = 4,
@@ -744,6 +755,7 @@ local drop_tables = {
 			ego = 0,
 			basic = 0,
 			money = 4,
+			lore = 0,
 		},
 		[3] = {
 			uniques = 5,
@@ -754,6 +766,7 @@ local drop_tables = {
 			ego = 0,
 			basic = 0,
 			money = 4,
+			lore = 0,
 		},
 		[4] = {
 			uniques = 6,
@@ -764,6 +777,7 @@ local drop_tables = {
 			ego = 0,
 			basic = 0,
 			money = 4,
+			lore = 0,
 		},
 		[5] = {
 			uniques = 7,
@@ -774,6 +788,7 @@ local drop_tables = {
 			ego = 0,
 			basic = 0,
 			money = 4,
+			lore = 0,
 		},
 	},
 }
@@ -788,6 +803,7 @@ local loot_mod = {
 		ego = 0,
 		basic = 0,
 		money = 0,
+		lore = 0,
 	},
 	gvault = { -- Greater vault
 		uniques = 10,
@@ -798,6 +814,7 @@ local loot_mod = {
 		ego = 0,
 		basic = 0,
 		money = 0,
+		lore = 0,
 	},
 	vault = { -- Default vault
 		uniques = 5,
@@ -808,6 +825,7 @@ local loot_mod = {
 		ego = 0,
 		basic = 0,
 		money = 0,
+		lore = 0,
 	},
 }
 
@@ -857,7 +875,8 @@ function _M:entityFilterAlter(zone, level, type, filter)
 		local de = g + (t.double_ego or 0)
 		local e = de + (t.ego or 0)
 		local m = e + (t.money or 0)
-		local total = m + (t.basic or 0)
+		local l = m + (t.lore or 0)
+		local total = l + (t.basic or 0)
 
 		local r = rng.float(0, total)
 		if r < u then
@@ -899,6 +918,10 @@ function _M:entityFilterAlter(zone, level, type, filter)
 		elseif r < m then
 			print("[TOME ENTITY FILTER] selected Money", r, m)
 			filter.special = function(e) return e.type == "money" or e.type == "gem" end
+
+		elseif r < l then
+			print("[TOME ENTITY FILTER] selected Lore", r, m)
+			filter.special = function(e) return e.lore and true or false end
 
 		else
 			print("[TOME ENTITY FILTER] selected basic", r, total)
