@@ -157,6 +157,7 @@ newTalent{
 			local zone = engine.Zone.new("demon-plane-spell")
 			local level = zone:getLevel(game, 1, 0)
 			level.demonfire_dam = dam
+			level.plane_owner = self
 
 			if oldlevel:hasEntity(self) then oldlevel:removeEntity(self) end
 			level:addEntity(self)
@@ -197,6 +198,7 @@ newTalent{
 			end
 
 			game.logPlayer(game.player, "#LIGHT_RED#You are taken to the demon plane!")
+			level.allow_demon_plane_damage = true
 		end)
 
 		local ret = {
