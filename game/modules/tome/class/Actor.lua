@@ -851,6 +851,7 @@ function _M:onTakeHit(value, src)
 
 	if self:attr("time_shield") then
 		-- Absorb damage into the time shield
+		self.time_shield_absorb = self.time_shield_absorb or 0
 		if value <= self.time_shield_absorb then
 			self.time_shield_absorb = self.time_shield_absorb - value
 			value = 0
@@ -868,6 +869,7 @@ function _M:onTakeHit(value, src)
 
 	if self:attr("damage_shield") then
 		-- Absorb damage into the shield
+		self.damage_shield_absorb = self.damage_shield_absorb or 0
 		if value <= self.damage_shield_absorb then
 			self.damage_shield_absorb = self.damage_shield_absorb - value
 			value = 0

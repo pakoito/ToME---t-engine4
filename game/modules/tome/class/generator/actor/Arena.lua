@@ -114,14 +114,14 @@ function _M:generateMiniboss(e)
 		m:setTarget(game.player)
 		if m.on_added then m.on_added_orig = m.on_added end
 		m.on_added = function (self)
-			if m.on_added_orig then m.on_added_orig(self) end
+			if self.on_added_orig then self.on_added_orig(self) end
 			game.level.arena.danger = game.level.arena.danger + self.arenaPower
 			game.level.map:particleEmitter(self.x, self.y, 1, "teleport")
 			game.level.arena.pinchValue = game.level.arena.pinchValue + self.arenaPower
 		end
 		if m.on_die then m.on_die_orig = m.on_die end
 		m.on_die = function (self)
-			if m.on_die_orig then m.on_die_orig(self) end
+			if self.on_die_orig then self.on_die_orig(self) end
 			game.level.arena.danger = game.level.arena.danger - self.arenaPower
 			game.level.arena.bonus = game.level.arena.bonus + self.arenaScore
 			game.level.arena.raiseRank(self.arenaRank)

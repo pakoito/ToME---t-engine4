@@ -31,6 +31,7 @@ newTalent{
 			return (o.type == "weapon" or o.type == "gem") and o.subtype ~= "longbow" and o.subtype ~= "sling"
 		end, function(o, item)
 			local pf = self:getInven("PSIONIC_FOCUS")
+			if not pf then return end
 			-- Put back the old one in inventory
 			local old = self:removeObject(pf, 1, true)
 			if old then
@@ -133,6 +134,7 @@ newTalent{
 		return hit
 	end,
 	activate = function (self, t)
+		if not self:getInven("PSIONIC_FOCUS") then return end
 		local tkweapon = self:getInven("PSIONIC_FOCUS")[1]
 		if type(tkweapon) == "boolean" then tkweapon = nil end
 		if not tkweapon or tkweapon.type == "gem" then

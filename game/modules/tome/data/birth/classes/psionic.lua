@@ -81,8 +81,10 @@ newBirthDescriptor{
 			local gs = game.zone:makeEntity(game.level, "object", {type="weapon", subtype="greatsword", name="iron greatsword", ego_chance=-1000}, nil, true)
 			if gs then
 				local pf = self:getInven("PSIONIC_FOCUS")
-				self:addObject(pf, gs)
-				gs:identify(true)
+				if pf then
+					self:addObject(pf, gs)
+					gs:identify(true)
+				end
 			end
 		end),
 	},
