@@ -27,6 +27,8 @@ newEntity{
 		filters = {
 			{type="armor", subtype="heavy", id=true, tome_drops="store"},
 			{type="armor", subtype="massive", id=true, tome_drops="store"},
+			{type="armor", subtype="shield", id=true, tome_drops="store"},
+			{type="armor", subtype="head", id=true, tome_drops="store"},
 		},
 	},
 }
@@ -38,9 +40,12 @@ newEntity{
 	store = {
 		purse = 25,
 		empty_before_restock = false,
-		filters = function()
-			return {type="armor", subtype="light", id=true, tome_drops="store"}
-		end,
+		filters = {
+			{type="armor", subtype="light", id=true, tome_drops="store"},
+			{type="armor", subtype="hands", id=true, tome_drops="store"},
+			{type="armor", subtype="feet", id=true, tome_drops="store"},
+			{type="armor", subtype="belt", id=true, tome_drops="store"},
+		},
 	},
 }
 
@@ -51,9 +56,12 @@ newEntity{
 	store = {
 		purse = 25,
 		empty_before_restock = false,
-		filters = function()
-			return {type="armor", subtype="cloth", id=true, tome_drops="store"}
-		end,
+		filters = {
+			{type="armor", subtype="cloth", id=true, tome_drops="store"},
+			{type="armor", subtype="robe", id=true, tome_drops="store"},
+			{type="armor", subtype="cloak", id=true, tome_drops="store"},
+			{type="armor", subtype="belt", id=true, tome_drops="store"},
+		},
 	},
 }
 
@@ -109,6 +117,7 @@ newEntity{
 		filters = {
 			{type="weapon", subtype="longbow", id=true, tome_drops="store"},
 			{type="weapon", subtype="sling", id=true, tome_drops="store"},
+			{type="ammo", id=true, tome_drops="store"},
 		},
 	},
 }
@@ -298,10 +307,12 @@ newEntity{
 	store = {
 		purse = 25,
 		empty_before_restock = false,
-		filters = {
-			{type="armor", subtype="heavy", id=true, tome_drops="store"},
-			{type="armor", subtype="massive", id=true, tome_drops="store"},
-		},
+                filters = {
+                        {type="armor", subtype="heavy", id=true, tome_drops="store"},
+                        {type="armor", subtype="massive", id=true, tome_drops="store"},
+                        {type="armor", subtype="shield", id=true, tome_drops="store"},
+                        {type="armor", subtype="head", id=true, tome_drops="store"},
+                },
 		post_filter = function(e)
 			if e.power_source and e.power_source.arcane then return false end
 			return true
@@ -315,9 +326,12 @@ newEntity{
 	store = {
 		purse = 25,
 		empty_before_restock = false,
-		filters = function()
-			return {type="armor", subtype="light", id=true, tome_drops="store"}
-		end,
+                filters = {
+                        {type="armor", subtype="light", id=true, tome_drops="store"},
+                        {type="armor", subtype="hands", id=true, tome_drops="store"},
+                        {type="armor", subtype="feet", id=true, tome_drops="store"},
+                        {type="armor", subtype="belt", id=true, tome_drops="store"},
+                },
 		post_filter = function(e)
 			if e.power_source and e.power_source.arcane then return false end
 			return true
@@ -406,6 +420,7 @@ newEntity{
 		filters = {
 			{type="weapon", subtype="sling", id=true, tome_drops="store"},
 			{type="weapon", subtype="longbow", id=true, tome_drops="store"},
+			{type="ammo", id=true, tome_drops="store"},
 		},
 		post_filter = function(e)
 			if e.power_source and e.power_source.arcane then return false end
