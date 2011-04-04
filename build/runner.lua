@@ -21,8 +21,8 @@ project "TEngineRunner"
 	kind "WindowedApp"
 	language "C"
 	targetname "t-engine"
-	files { "../src/runner/*.c", "../src/getself.c", "../src/physfs.c", "../src/auxiliar.c" }
-	links { "runner-physfs", "runner-lua", "m" }
+	files { "../src/runner/main.c", "../src/getself.c" }
+	links { "m" }
 
 	configuration "linux"
 		links { "dl", "SDL", "SDL_ttf", "SDL_image", "SDL_mixer", "GL", "GLU", "m", "pthread" }
@@ -41,14 +41,36 @@ project "TEngineRunner"
 
 	configuration {"Debug"}
 		postbuildcommands { "cp ../bin/Debug/t-engine ../t-engine", }
-
 	configuration {"Release"}
 		postbuildcommands { "cp ../bin/Release/t-engine ../t-engine", }
+
+project "te4runner"
+	kind "SharedLib"
+	language "C"
+	targetname "te4runner"
+	targetprefix ""
+	targetextension ".tec"
+
+	files { "../src/runner/runner.c", "../src/physfs.c", "../src/auxiliar.c" }
+	links { "runner-physfs", "runner-lua", "m" }
+
+	configuration "linux"
+		defines { [[TENGINE_HOME_PATH='".t-engine"']], 'SELFEXE_LINUX'  }
+	configuration "windows"
+		defines { [[TENGINE_HOME_PATH='"T-Engine"']], 'SELFEXE_WINDOWS'  }
+	configuration "macosx"
+		defines { [[TENGINE_HOME_PATH='".t-engine"']], "USE_TENGINE_MAIN", 'SELFEXE_MACOSX'  }
+
+	configuration {"Debug"}
+		postbuildcommands { "cp ../bin/Debug/te4runner.tec ../", }
+	configuration {"Release"}
+		postbuildcommands { "cp ../bin/Release/te4runner.tec ../", }
 
 project "runner-physfs"
 	kind "StaticLib"
 	language "C"
 	targetname "runner-physfs"
+	buildoptions { "-fPIC" }
 
 	defines {"PHYSFS_SUPPORTS_ZIP"}
 
@@ -66,5 +88,6 @@ project "runner-lua"
 	kind "StaticLib"
 	language "C"
 	targetname "runner-lua"
+	buildoptions { "-fPIC" }
 
 	files { "../src/lua/*.c", }
