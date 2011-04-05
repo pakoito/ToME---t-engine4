@@ -142,11 +142,13 @@ newTalent{
 
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local tx, ty, target = self:getTarget(tg)
+		if not tx or not ty or not target then return nil end
 		local _ _, tx, ty = self:canProject(tg, tx, ty)
 		if not tx or not ty or not target then return nil end
 		target = game.level.map(tx, ty, Map.ACTOR)
 		if not tx or not ty or not target then return nil end
 		if not (target.player and target.game_ender) and not (self.player and self.game_ender) then return nil end
+		if target == self then return end
 
 		game:playSoundNear(self, "talents/flame")
 		local dam = self:combatTalentSpellDamage(t, 12, 140)
@@ -154,14 +156,17 @@ newTalent{
 		game:onTickEnd(function()
 			local oldzone = game.zone
 			local oldlevel = game.level
+
+			-- Remove them before making the new elvel, this way party memebrs are not removed from the old
+			if oldlevel:hasEntity(self) then oldlevel:removeEntity(self) end
+			if oldlevel:hasEntity(target) then oldlevel:removeEntity(target) end
+
 			local zone = engine.Zone.new("demon-plane-spell")
 			local level = zone:getLevel(game, 1, 0)
 			level.demonfire_dam = dam
 			level.plane_owner = self
 
-			if oldlevel:hasEntity(self) then oldlevel:removeEntity(self) end
 			level:addEntity(self)
-			if oldlevel:hasEntity(target) then oldlevel:removeEntity(target) end
 			level:addEntity(target)
 
 			level.source_zone = oldzone

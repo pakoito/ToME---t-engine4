@@ -24,7 +24,7 @@ newEntity{
 	name = "lava floor", image = "terrain/lava_floor.png",
 	display = '.', color=colors.RED, back_color=colors.DARK_GREY,
 	shader = "lava",
-	on_move = function(self, x, y, who)
+	on_stand = function(self, x, y, who)
 		if not game.level.allow_demon_plane_damage then return end
 		local DT = engine.DamageType
 		local dam = DT:get(DT.DEMONFIRE).projector(game.level.plane_owner, x, y, DT.DEMONFIRE, game.level.demonfire_dam or 1)
