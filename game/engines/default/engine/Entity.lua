@@ -554,7 +554,7 @@ function _M:removeTemporaryValue(prop, id, noupdate)
 
 	-- The recursive enclosure
 	local recursive
-	recursive = function(base, prop, v)
+	recursive = function(base, prop, v, method)
 		method = self.temporary_values_conf[prop] or method
 		if type(v) == "number" then
 			-- Simple addition
@@ -571,7 +571,7 @@ function _M:removeTemporaryValue(prop, id, noupdate)
 				base[prop] = base[prop] - v
 			end
 			self:onTemporaryValueChange(prop, -v, base)
-			print("delTmpVal", prop, v)
+			print("delTmpVal", prop, v, method)
 		elseif type(v) == "table" then
 			for k, e in pairs(v) do
 				recursive(base[prop], k, e, method)
