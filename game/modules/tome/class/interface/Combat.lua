@@ -659,9 +659,9 @@ end
 function _M:getOffHandMult(mult)
 	local offmult = (mult or 1) / 2
 	if self:knowTalent(Talents.T_DUAL_WEAPON_TRAINING) then
-		offmult = (mult or 1) / (2 - (self:getTalentLevel(Talents.T_DUAL_WEAPON_TRAINING) / 6))
+		offmult = (mult or 1) / (2 - (math.max(self:getTalentLevel(Talents.T_DUAL_WEAPON_TRAINING), 8) / 6))
 	elseif self:knowTalent(Talents.T_CORRUPTED_STRENGTH) then
-		offmult = (mult or 1) / (2 - (self:getTalentLevel(Talents.T_CORRUPTED_STRENGTH) / 9))
+		offmult = (mult or 1) / (2 - (math.max(self:getTalentLevel(Talents.T_CORRUPTED_STRENGTH), 8) / 9))
 	end
 	return offmult
 end
