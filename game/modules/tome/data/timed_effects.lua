@@ -3500,7 +3500,7 @@ newEffect{
 		local anomaly = math.floor(math.pow((self:getParadox()/400), 4))
 		local backfire = math.floor(math.pow (((self:getParadox() - modifier)/300), 3)*((100 + self:combatFatigue()) / 100))
 		self:removeTemporaryValue("dazed", eff.tmpid)
-		game.logPlayer(self, "Your current failure chance is %d%%, your current anomoly chance is %d%%, and your current backfire chance is %d%%.", failure, anomaly, backfire)
+		game.logPlayer(self, "Your current failure chance is %d%%, your current anomaly chance is %d%%, and your current backfire chance is %d%%.", failure, anomaly, backfire)
 	end,
 }
 
