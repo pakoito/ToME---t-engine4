@@ -8,6 +8,48 @@
 
 /* Begin PBXBuildFile section */
 		012D6669130CBA6D00CC3D6D /* profile.c in Sources */ = {isa = PBXBuildFile; fileRef = 012D6667130CBA6D00CC3D6D /* profile.c */; };
+		0473F7FA134D17A2009C7011 /* te4-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0473F7F9134D17A2009C7011 /* te4-icon.png */; };
+		0473F7FD134D1804009C7011 /* dmnd_square.c in Sources */ = {isa = PBXBuildFile; fileRef = 0473F7FC134D1804009C7011 /* dmnd_square.c */; };
+		0473F7FF134D1813009C7011 /* bit.c in Sources */ = {isa = PBXBuildFile; fileRef = 0473F7FE134D1813009C7011 /* bit.c */; };
+		0473F826134D187F009C7011 /* begin_code.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F800134D187F009C7011 /* begin_code.h */; };
+		0473F827134D187F009C7011 /* close_code.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F801134D187F009C7011 /* close_code.h */; };
+		0473F828134D187F009C7011 /* SDL_active.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F802134D187F009C7011 /* SDL_active.h */; };
+		0473F829134D187F009C7011 /* SDL_audio.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F803134D187F009C7011 /* SDL_audio.h */; };
+		0473F82A134D187F009C7011 /* SDL_byteorder.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F804134D187F009C7011 /* SDL_byteorder.h */; };
+		0473F82B134D187F009C7011 /* SDL_cdrom.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F805134D187F009C7011 /* SDL_cdrom.h */; };
+		0473F82C134D1880009C7011 /* SDL_config_dreamcast.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F806134D187F009C7011 /* SDL_config_dreamcast.h */; };
+		0473F82D134D1880009C7011 /* SDL_config_macos.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F807134D187F009C7011 /* SDL_config_macos.h */; };
+		0473F82E134D1880009C7011 /* SDL_config_macosx.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F808134D187F009C7011 /* SDL_config_macosx.h */; };
+		0473F82F134D1880009C7011 /* SDL_config_os2.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F809134D187F009C7011 /* SDL_config_os2.h */; };
+		0473F830134D1880009C7011 /* SDL_config_win32.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F80A134D187F009C7011 /* SDL_config_win32.h */; };
+		0473F831134D1880009C7011 /* SDL_config.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F80B134D187F009C7011 /* SDL_config.h */; };
+		0473F832134D1880009C7011 /* SDL_copying.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F80C134D187F009C7011 /* SDL_copying.h */; };
+		0473F833134D1880009C7011 /* SDL_cpuinfo.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F80D134D187F009C7011 /* SDL_cpuinfo.h */; };
+		0473F834134D1880009C7011 /* SDL_endian.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F80E134D187F009C7011 /* SDL_endian.h */; };
+		0473F835134D1880009C7011 /* SDL_error.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F80F134D187F009C7011 /* SDL_error.h */; };
+		0473F836134D1881009C7011 /* SDL_events.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F810134D187F009C7011 /* SDL_events.h */; };
+		0473F837134D1881009C7011 /* SDL_getenv.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F811134D187F009C7011 /* SDL_getenv.h */; };
+		0473F838134D1881009C7011 /* SDL_joystick.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F812134D187F009C7011 /* SDL_joystick.h */; };
+		0473F839134D1881009C7011 /* SDL_keyboard.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F813134D187F009C7011 /* SDL_keyboard.h */; };
+		0473F83A134D1881009C7011 /* SDL_keysym.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F814134D187F009C7011 /* SDL_keysym.h */; };
+		0473F83B134D1881009C7011 /* SDL_loadso.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F815134D187F009C7011 /* SDL_loadso.h */; };
+		0473F83C134D1881009C7011 /* SDL_main.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F816134D187F009C7011 /* SDL_main.h */; };
+		0473F83D134D1881009C7011 /* SDL_mouse.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F817134D187F009C7011 /* SDL_mouse.h */; };
+		0473F83E134D1882009C7011 /* SDL_mutex.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F818134D187F009C7011 /* SDL_mutex.h */; };
+		0473F83F134D1882009C7011 /* SDL_name.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F819134D187F009C7011 /* SDL_name.h */; };
+		0473F840134D1882009C7011 /* SDL_opengl.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F81A134D187F009C7011 /* SDL_opengl.h */; };
+		0473F841134D1882009C7011 /* SDL_platform.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F81B134D187F009C7011 /* SDL_platform.h */; };
+		0473F842134D1882009C7011 /* SDL_quit.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F81C134D187F009C7011 /* SDL_quit.h */; };
+		0473F843134D1882009C7011 /* SDL_rwops.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F81D134D187F009C7011 /* SDL_rwops.h */; };
+		0473F844134D1882009C7011 /* SDL_stdinc.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F81E134D187F009C7011 /* SDL_stdinc.h */; };
+		0473F845134D1882009C7011 /* SDL_syswm.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F81F134D187F009C7011 /* SDL_syswm.h */; };
+		0473F846134D1883009C7011 /* SDL_thread.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F820134D187F009C7011 /* SDL_thread.h */; };
+		0473F847134D1883009C7011 /* SDL_timer.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F821134D187F009C7011 /* SDL_timer.h */; };
+		0473F848134D1883009C7011 /* SDL_types.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F822134D187F009C7011 /* SDL_types.h */; };
+		0473F849134D1883009C7011 /* SDL_version.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F823134D187F009C7011 /* SDL_version.h */; };
+		0473F84A134D1883009C7011 /* SDL_video.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F824134D187F009C7011 /* SDL_video.h */; };
+		0473F84B134D1883009C7011 /* SDL.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F825134D187F009C7011 /* SDL.h */; };
+		0473F84D134D197D009C7011 /* physfs.c in Sources */ = {isa = PBXBuildFile; fileRef = 0473F84C134D197D009C7011 /* physfs.c */; };
 		28133EF911C9094A00A7FDAC /* glew.c in Sources */ = {isa = PBXBuildFile; fileRef = 28133EF811C9094900A7FDAC /* glew.c */; };
 		28133EFD11C9096E00A7FDAC /* shaders.c in Sources */ = {isa = PBXBuildFile; fileRef = 28133EFC11C9096E00A7FDAC /* shaders.c */; };
 		28139877127C20F000AC3C20 /* particles_gas.c in Sources */ = {isa = PBXBuildFile; fileRef = 28139875127C20F000AC3C20 /* particles_gas.c */; };
@@ -186,6 +228,48 @@
 /* Begin PBXFileReference section */
 		012D6667130CBA6D00CC3D6D /* profile.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = profile.c; path = ../src/profile.c; sourceTree = SOURCE_ROOT; };
 		012D6668130CBA6D00CC3D6D /* profile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = profile.h; path = ../src/profile.h; sourceTree = SOURCE_ROOT; };
+		0473F7F9134D17A2009C7011 /* te4-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "te4-icon.png"; path = "../game/engines/default/data/gfx/te4-icon.png"; sourceTree = "<group>"; };
+		0473F7FC134D1804009C7011 /* dmnd_square.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dmnd_square.c; path = ../src/dmnd_square.c; sourceTree = "<group>"; };
+		0473F7FE134D1813009C7011 /* bit.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = bit.c; path = ../src/luabitop/bit.c; sourceTree = "<group>"; };
+		0473F800134D187F009C7011 /* begin_code.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = begin_code.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/begin_code.h; sourceTree = "<group>"; };
+		0473F801134D187F009C7011 /* close_code.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = close_code.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/close_code.h; sourceTree = "<group>"; };
+		0473F802134D187F009C7011 /* SDL_active.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_active.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL_active.h; sourceTree = "<group>"; };
+		0473F803134D187F009C7011 /* SDL_audio.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_audio.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL_audio.h; sourceTree = "<group>"; };
+		0473F804134D187F009C7011 /* SDL_byteorder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_byteorder.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL_byteorder.h; sourceTree = "<group>"; };
+		0473F805134D187F009C7011 /* SDL_cdrom.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_cdrom.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL_cdrom.h; sourceTree = "<group>"; };
+		0473F806134D187F009C7011 /* SDL_config_dreamcast.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_config_dreamcast.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL_config_dreamcast.h; sourceTree = "<group>"; };
+		0473F807134D187F009C7011 /* SDL_config_macos.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_config_macos.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL_config_macos.h; sourceTree = "<group>"; };
+		0473F808134D187F009C7011 /* SDL_config_macosx.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_config_macosx.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL_config_macosx.h; sourceTree = "<group>"; };
+		0473F809134D187F009C7011 /* SDL_config_os2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_config_os2.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL_config_os2.h; sourceTree = "<group>"; };
+		0473F80A134D187F009C7011 /* SDL_config_win32.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_config_win32.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL_config_win32.h; sourceTree = "<group>"; };
+		0473F80B134D187F009C7011 /* SDL_config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_config.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL_config.h; sourceTree = "<group>"; };
+		0473F80C134D187F009C7011 /* SDL_copying.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_copying.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL_copying.h; sourceTree = "<group>"; };
+		0473F80D134D187F009C7011 /* SDL_cpuinfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_cpuinfo.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL_cpuinfo.h; sourceTree = "<group>"; };
+		0473F80E134D187F009C7011 /* SDL_endian.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_endian.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL_endian.h; sourceTree = "<group>"; };
+		0473F80F134D187F009C7011 /* SDL_error.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_error.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL_error.h; sourceTree = "<group>"; };
+		0473F810134D187F009C7011 /* SDL_events.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_events.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL_events.h; sourceTree = "<group>"; };
+		0473F811134D187F009C7011 /* SDL_getenv.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_getenv.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL_getenv.h; sourceTree = "<group>"; };
+		0473F812134D187F009C7011 /* SDL_joystick.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_joystick.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL_joystick.h; sourceTree = "<group>"; };
+		0473F813134D187F009C7011 /* SDL_keyboard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_keyboard.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL_keyboard.h; sourceTree = "<group>"; };
+		0473F814134D187F009C7011 /* SDL_keysym.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_keysym.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL_keysym.h; sourceTree = "<group>"; };
+		0473F815134D187F009C7011 /* SDL_loadso.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_loadso.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL_loadso.h; sourceTree = "<group>"; };
+		0473F816134D187F009C7011 /* SDL_main.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_main.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL_main.h; sourceTree = "<group>"; };
+		0473F817134D187F009C7011 /* SDL_mouse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_mouse.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL_mouse.h; sourceTree = "<group>"; };
+		0473F818134D187F009C7011 /* SDL_mutex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_mutex.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL_mutex.h; sourceTree = "<group>"; };
+		0473F819134D187F009C7011 /* SDL_name.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_name.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL_name.h; sourceTree = "<group>"; };
+		0473F81A134D187F009C7011 /* SDL_opengl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_opengl.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL_opengl.h; sourceTree = "<group>"; };
+		0473F81B134D187F009C7011 /* SDL_platform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_platform.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL_platform.h; sourceTree = "<group>"; };
+		0473F81C134D187F009C7011 /* SDL_quit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_quit.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL_quit.h; sourceTree = "<group>"; };
+		0473F81D134D187F009C7011 /* SDL_rwops.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_rwops.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL_rwops.h; sourceTree = "<group>"; };
+		0473F81E134D187F009C7011 /* SDL_stdinc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_stdinc.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL_stdinc.h; sourceTree = "<group>"; };
+		0473F81F134D187F009C7011 /* SDL_syswm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_syswm.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL_syswm.h; sourceTree = "<group>"; };
+		0473F820134D187F009C7011 /* SDL_thread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_thread.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL_thread.h; sourceTree = "<group>"; };
+		0473F821134D187F009C7011 /* SDL_timer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_timer.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL_timer.h; sourceTree = "<group>"; };
+		0473F822134D187F009C7011 /* SDL_types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_types.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL_types.h; sourceTree = "<group>"; };
+		0473F823134D187F009C7011 /* SDL_version.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_version.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL_version.h; sourceTree = "<group>"; };
+		0473F824134D187F009C7011 /* SDL_video.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_video.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL_video.h; sourceTree = "<group>"; };
+		0473F825134D187F009C7011 /* SDL.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL.h; sourceTree = "<group>"; };
+		0473F84C134D197D009C7011 /* physfs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = physfs.c; path = ../src/physfs.c; sourceTree = "<group>"; };
 		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
@@ -823,6 +907,44 @@
 		29B97314FDCFA39411CA2CEA /* T-Engine */ = {
 			isa = PBXGroup;
 			children = (
+				0473F800134D187F009C7011 /* begin_code.h */,
+				0473F801134D187F009C7011 /* close_code.h */,
+				0473F802134D187F009C7011 /* SDL_active.h */,
+				0473F803134D187F009C7011 /* SDL_audio.h */,
+				0473F804134D187F009C7011 /* SDL_byteorder.h */,
+				0473F805134D187F009C7011 /* SDL_cdrom.h */,
+				0473F806134D187F009C7011 /* SDL_config_dreamcast.h */,
+				0473F807134D187F009C7011 /* SDL_config_macos.h */,
+				0473F808134D187F009C7011 /* SDL_config_macosx.h */,
+				0473F809134D187F009C7011 /* SDL_config_os2.h */,
+				0473F80A134D187F009C7011 /* SDL_config_win32.h */,
+				0473F80B134D187F009C7011 /* SDL_config.h */,
+				0473F80C134D187F009C7011 /* SDL_copying.h */,
+				0473F80D134D187F009C7011 /* SDL_cpuinfo.h */,
+				0473F80E134D187F009C7011 /* SDL_endian.h */,
+				0473F80F134D187F009C7011 /* SDL_error.h */,
+				0473F810134D187F009C7011 /* SDL_events.h */,
+				0473F811134D187F009C7011 /* SDL_getenv.h */,
+				0473F812134D187F009C7011 /* SDL_joystick.h */,
+				0473F813134D187F009C7011 /* SDL_keyboard.h */,
+				0473F814134D187F009C7011 /* SDL_keysym.h */,
+				0473F815134D187F009C7011 /* SDL_loadso.h */,
+				0473F816134D187F009C7011 /* SDL_main.h */,
+				0473F817134D187F009C7011 /* SDL_mouse.h */,
+				0473F818134D187F009C7011 /* SDL_mutex.h */,
+				0473F819134D187F009C7011 /* SDL_name.h */,
+				0473F81A134D187F009C7011 /* SDL_opengl.h */,
+				0473F81B134D187F009C7011 /* SDL_platform.h */,
+				0473F81C134D187F009C7011 /* SDL_quit.h */,
+				0473F81D134D187F009C7011 /* SDL_rwops.h */,
+				0473F81E134D187F009C7011 /* SDL_stdinc.h */,
+				0473F81F134D187F009C7011 /* SDL_syswm.h */,
+				0473F820134D187F009C7011 /* SDL_thread.h */,
+				0473F821134D187F009C7011 /* SDL_timer.h */,
+				0473F822134D187F009C7011 /* SDL_types.h */,
+				0473F823134D187F009C7011 /* SDL_version.h */,
+				0473F824134D187F009C7011 /* SDL_video.h */,
+				0473F825134D187F009C7011 /* SDL.h */,
 				28F1A76113006FFF0082CA27 /* Modules */,
 				28F1A75C13006FD40082CA27 /* Game */,
 				29B97315FDCFA39411CA2CEA /* Sources */,
@@ -836,6 +958,9 @@
 		29B97315FDCFA39411CA2CEA /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				0473F84C134D197D009C7011 /* physfs.c */,
+				0473F7FE134D1813009C7011 /* bit.c */,
+				0473F7FC134D1804009C7011 /* dmnd_square.c */,
 				256AC3F00F4B6AF500CF3369 /* T_Engine_Prefix.pch */,
 				28B42605119F520F00562F94 /* core_lua.h */,
 				28B42606119F520F00562F94 /* display_sdl.h */,
@@ -900,6 +1025,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				0473F7F9134D17A2009C7011 /* te4-icon.png */,
 				28B429EC119F708400562F94 /* bootstrap */,
 				28B429FE119F761700562F94 /* te4.icns */,
 				8D1107310486CEB800E47090 /* T_Engine-Info.plist */,
@@ -979,6 +1105,7 @@
 				28B429FF119F761700562F94 /* te4.icns in Resources */,
 				2862D3FF1322A90D0034F6B7 /* test_gzip.lua in Resources */,
 				2862D4001322A90D0034F6B7 /* test_zlib.lua in Resources */,
+				0473F7FA134D17A2009C7011 /* te4-icon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1003,7 +1130,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\n[ \"$ACTION\" = build ] || exit 0\n[ \"$BUILD_VARIANTS\" = \"normal\" ] || exit 0\n[ \"$BUILD_STYLE\" = \"Release\" ] || exit 0\n\ndir=\"$DERIVED_FILES_DIR/disk\"\ndmg=\"$SCRIPT_OUTPUT_FILE_0\"\necho Creating Disk Image....\nrm -rf \"$dir\"\nmkdir -p \"$dir\"\necho - Assembling Disk Image...\nfor a in `ruby -e \"(0...(ENV['SCRIPT_INPUT_FILE_COUNT'].to_i)).to_a.collect { |i| print (ENV['SCRIPT_INPUT_FILE_' + i.to_s] + ' ') }\"`\ndo\n\tcp -R \"$a\" \"$dir\"\ndone\nrm -f \"$dmg\"\necho - Creating Disk Image...\nhdiutil create -format UDZO -srcfolder \"$dir\" -volname \"$TARGET_NAME\" \"$dmg\"\necho - Removing Intermediate...\nrm -rf \"$dir\"\necho Done.";
-			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1012,6 +1138,44 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0473F826134D187F009C7011 /* begin_code.h in Sources */,
+				0473F827134D187F009C7011 /* close_code.h in Sources */,
+				0473F828134D187F009C7011 /* SDL_active.h in Sources */,
+				0473F829134D187F009C7011 /* SDL_audio.h in Sources */,
+				0473F82A134D187F009C7011 /* SDL_byteorder.h in Sources */,
+				0473F82B134D187F009C7011 /* SDL_cdrom.h in Sources */,
+				0473F82C134D1880009C7011 /* SDL_config_dreamcast.h in Sources */,
+				0473F82D134D1880009C7011 /* SDL_config_macos.h in Sources */,
+				0473F82E134D1880009C7011 /* SDL_config_macosx.h in Sources */,
+				0473F82F134D1880009C7011 /* SDL_config_os2.h in Sources */,
+				0473F830134D1880009C7011 /* SDL_config_win32.h in Sources */,
+				0473F831134D1880009C7011 /* SDL_config.h in Sources */,
+				0473F832134D1880009C7011 /* SDL_copying.h in Sources */,
+				0473F833134D1880009C7011 /* SDL_cpuinfo.h in Sources */,
+				0473F834134D1880009C7011 /* SDL_endian.h in Sources */,
+				0473F835134D1880009C7011 /* SDL_error.h in Sources */,
+				0473F836134D1881009C7011 /* SDL_events.h in Sources */,
+				0473F837134D1881009C7011 /* SDL_getenv.h in Sources */,
+				0473F838134D1881009C7011 /* SDL_joystick.h in Sources */,
+				0473F839134D1881009C7011 /* SDL_keyboard.h in Sources */,
+				0473F83A134D1881009C7011 /* SDL_keysym.h in Sources */,
+				0473F83B134D1881009C7011 /* SDL_loadso.h in Sources */,
+				0473F83C134D1881009C7011 /* SDL_main.h in Sources */,
+				0473F83D134D1881009C7011 /* SDL_mouse.h in Sources */,
+				0473F83E134D1882009C7011 /* SDL_mutex.h in Sources */,
+				0473F83F134D1882009C7011 /* SDL_name.h in Sources */,
+				0473F840134D1882009C7011 /* SDL_opengl.h in Sources */,
+				0473F841134D1882009C7011 /* SDL_platform.h in Sources */,
+				0473F842134D1882009C7011 /* SDL_quit.h in Sources */,
+				0473F843134D1882009C7011 /* SDL_rwops.h in Sources */,
+				0473F844134D1882009C7011 /* SDL_stdinc.h in Sources */,
+				0473F845134D1882009C7011 /* SDL_syswm.h in Sources */,
+				0473F846134D1883009C7011 /* SDL_thread.h in Sources */,
+				0473F847134D1883009C7011 /* SDL_timer.h in Sources */,
+				0473F848134D1883009C7011 /* SDL_types.h in Sources */,
+				0473F849134D1883009C7011 /* SDL_version.h in Sources */,
+				0473F84A134D1883009C7011 /* SDL_video.h in Sources */,
+				0473F84B134D1883009C7011 /* SDL.h in Sources */,
 				28B425A1119F51A700562F94 /* fov.c in Sources */,
 				28B425A2119F51A700562F94 /* lpeg.c in Sources */,
 				28B425A3119F51A700562F94 /* lapi.c in Sources */,
@@ -1119,6 +1283,9 @@
 				012D6669130CBA6D00CC3D6D /* profile.c in Sources */,
 				2862D3FA1322A90D0034F6B7 /* lgzip.c in Sources */,
 				2862D3FB1322A90D0034F6B7 /* lzlib.c in Sources */,
+				0473F7FD134D1804009C7011 /* dmnd_square.c in Sources */,
+				0473F7FF134D1813009C7011 /* bit.c in Sources */,
+				0473F84D134D197D009C7011 /* physfs.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1147,6 +1314,13 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = T_Engine_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"USE_TENGINE_MAIN=1",
+					"NULL=0",
+					"TENGINE_HOME_PATH=\"\\\"/Library/Application Support/T-Engine/\\\"\"",
+					"PHYSFS_SUPPORTS_ZIP=1",
+					"TE4CORE_VERSION=14",
+				);
 				INFOPLIST_FILE = "T_Engine-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				PRODUCT_NAME = "T-Engine";
@@ -1161,6 +1335,13 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = T_Engine_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"USE_TENGINE_MAIN=1",
+					"NULL=0",
+					"TENGINE_HOME_PATH=\"\\\"/Library/Application Support/T-Engine/\\\"\"",
+					"PHYSFS_SUPPORTS_ZIP=1",
+					"TE4CORE_VERSION=14",
+				);
 				INFOPLIST_FILE = "T_Engine-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				PRODUCT_NAME = "T-Engine";
