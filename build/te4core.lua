@@ -57,9 +57,9 @@ project "TEngine"
 		defines { [[TENGINE_HOME_PATH='".t-engine"']], 'SELFEXE_LINUX' }
 
 	configuration {"Debug"}
-		postbuildcommands { "cp ../bin/Debug/"..corename.."* ../game/engines/cores/", }
+		postbuildcommands { "cp ../bin/Debug/t-engine ../", }
 	configuration {"Release"}
-		postbuildcommands { "cp ../bin/Release/"..corename.."* ../game/engines/cores/", }
+		postbuildcommands { "cp ../bin/Release/t-engine ../", }
 
 
 ----------------------------------------------------------------

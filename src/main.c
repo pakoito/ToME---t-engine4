@@ -839,6 +839,11 @@ int main(int argc, char *argv[])
 	for (i = 1; i < argc; i++)
 	{
 		char *arg = argv[i];
+		if (!strncmp(arg, "-M", 2)) core_def->reboot_module = strdup(arg+2);
+		if (!strncmp(arg, "-u", 2)) core_def->reboot_name = strdup(arg+2);
+		if (!strncmp(arg, "-E", 2)) core_def->reboot_einfo = strdup(arg+2);
+		if (!strncmp(arg, "-n", 2)) core_def->reboot_new = 1;
+		if (!strncmp(arg, "--flush-stdout", 14)) setvbuf(stdout, (char *) NULL, _IOLBF, 0);;
 		if (!strncmp(arg, "--no-debug", 10)) no_debug = 0;
 	}
 

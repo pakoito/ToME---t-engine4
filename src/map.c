@@ -1341,9 +1341,9 @@ static int minimap_to_screen(lua_State *L)
 					{
 						r = mo->mm_r * 0.6; g = mo->mm_g * 0.6; b = mo->mm_b * 0.6; a = transp * 0.6;
 					}
-					mm[ptr] = r * 255;
+					mm[ptr] = b * 255;
 					mm[ptr+1] = g * 255;
-					mm[ptr+2] = b * 255;
+					mm[ptr+2] = r * 255;
 					mm[ptr+3] = a * 255;
 				}
 			}
