@@ -141,6 +141,7 @@ end
 
 reward = function(self, who)
 	local o = game.zone:makeEntityByName(game.level, "object", "RING_OF_BLOOD")
+	if not o then return end
 	o:identify(true)
 	game.zone:addEntity(game.level, o, "object")
 	who:addObject(who:getInven("INVEN"), o)
