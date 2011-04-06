@@ -182,7 +182,7 @@ function _M:dumpToJSON(js)
 	immune_type = "teleport_immune" immune_name = "Teleport Resistance" if self:attr(immune_type) then d[#d+1] = { [immune_name] = string.format("%d%%", util.bound(self:attr(immune_type) * 100, 0, 100)) } end
 
 	-------------------------------------------------------------------
-	-- Effects
+	-- Talents
 	-------------------------------------------------------------------
 	local tdef = js:newSection("talents", "talents", "pairs", "add")
 	for i, tt in ipairs(self.talents_types_def) do
@@ -199,7 +199,8 @@ function _M:dumpToJSON(js)
 						local typename = "class"
 						if t.generic then typename = "generic" end
 						local skillname = ("<ul><li>%s (%s)</li></ul>"):format(t.name, typename)
-						tdef[#tdef+1] = { [skillname] = ("%d/%d"):format(self:getTalentLevelRaw(t.id), t.points) }
+						local desc = self:getTalentFullDescription(t):toString()
+						tdef[#tdef+1] = { [skillname] = {val=("%d/%d"):format(self:getTalentLevelRaw(t.id), t.points), tooltip=desc} }
 					end
 				end
 			end
@@ -241,7 +242,7 @@ function _M:dumpToJSON(js)
 	local achs = js:newSection("achievements", "achievements", "pairs", "break")
 	for id, data in pairs(self.achievements or {}) do
 		local a = world:getAchievementFromId(id)
-		achs[#achs+1] = { [a.name] = {val=game.calendar:getTimeDate(data.turn, "%s %s %s year of Ascendancy at %02d:%02d"), tooltip=a.desc} }
+		achs[#achs+1] = { [a.name] = {val=game.calendar:getTimeDate(data.turn, "%s %s %s year of Ascendancy at %02d:%02d"), tooltip=a.desc.."\nBy "..data.who} }
 	end
 	table.sort(achs, function(a, b) local aname = next(a) local bname = next(b) return aname < bname end)
 

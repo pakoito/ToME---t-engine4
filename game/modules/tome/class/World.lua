@@ -41,7 +41,8 @@ end
 --- Format an achievement source
 -- @param src the actor who did it
 function _M:achievementWho(src)
-	return src.name.." the "..game.player.descriptor.subrace.." "..game.player.descriptor.subclass
+	local p = game.party:findMember{main=true}
+	return p.name.." the "..p.descriptor.subrace.." "..p.descriptor.subclass.." level "..p.level
 end
 
 --- Gain an achievement

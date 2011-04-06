@@ -88,7 +88,7 @@ function _M:gainPersonalAchievement(silent, id, src, ...)
 	src.achievements = src.achievements or {}
 	if src.achievements[id] then return end
 
-	src.achievements[id] = {turn=game.turn, when=os.date("%Y-%m-%d %H:%M:%S")}
+	src.achievements[id] = {turn=game.turn, who=self:achievementWho(src), when=os.date("%Y-%m-%d %H:%M:%S")}
 	if not silent then
 		game.log("#LIGHT_GREEN#Personal New Achievement: %s!", a.name)
 		Dialog:simplePopup("Personal New Achievement: #LIGHT_GREEN#"..a.name, a.desc)
