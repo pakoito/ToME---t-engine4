@@ -819,8 +819,7 @@ static void define_core(core_boot_type *core_def, const char *coretype, int id, 
  */
 int main(int argc, char *argv[])
 {
-	core_boot_type given_core_def;
-	core_def = &given_core_def;
+	core_def = calloc(1, sizeof(core_boot_type));
 	core_def->define = &define_core;
 	core_def->define(core_def, "te4core", -1, NULL, NULL, NULL, NULL, 0, NULL);
 
