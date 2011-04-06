@@ -62,8 +62,9 @@ newTalent{
 			type = "physical", subtype="sharp", id_by_type=true, unided_name = "trap", identified=true,
 			name = "sharp bones",
 			display = '^', color=colors.ANTIQUE_WHITE,
+			dam = dam,
 			triggered = function(self, x, y, who)
-				self:project({type="hit",x=x,y=y}, x, y, engine.DamageType.BLEED, dam)
+				self:project({type="hit",x=x,y=y}, x, y, engine.DamageType.BLEED, self.dam)
 				return true, true
 			end,
 			summoner_gain_exp = true,
