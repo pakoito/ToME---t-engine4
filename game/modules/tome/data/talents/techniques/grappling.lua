@@ -183,7 +183,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local damage = t.getDamage(self, t)
 		local maim = t.getMaim(self, t)
-		return ([[Grapples the target and inflicts %0.2f physical damage.  If the target is already grappled the target will be maimed as well, reducing attack and damage by %d and global speed by 30%% for %d turns.
+		return ([[Grapples the target and inflicts %0.2f physical damage.  If the target is already grappled the target will be maimed as well, reducing damage by %d and global speed by 30%% for %d turns.
 		The grapple effects will be based off your grapple talent effect if you have it and the damage will scale with the strength stat.]])
 		:format(damDesc(self, DamageType.PHYSICAL, (damage)), maim, duration)
 	end,

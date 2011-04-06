@@ -448,7 +448,12 @@ function _M:getTextualDesc()
 	if w.life_leech_chance then desc:add(("%d%% chances on all damage dealt to leech %d%% of the damage done as health."):format(w.life_leech_chance, w.life_leech_value), true) end
 
 	if w.size_category then desc:add(("Increases size category by %d."):format(w.size_category), true) end
-
+	
+	if w.combat then
+		desc:add({"color","YELLOW"}, "When used to modify unarmed attacks:", {"color", "LAST"}, true)
+		desc_combat(w.combat)
+	end
+	
 	end
 
 	if self.combat then desc_combat(self.combat) end

@@ -3664,20 +3664,18 @@ newEffect{
 newEffect{
 	name = "MAIMED",
 	desc = "Maimed",
-	long_desc = function(self, eff) return ("The target is maimed, reducing attack and damage by %d and global speed by 30%%."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target is maimed, reducing damage by %d and global speed by 30%%."):format(eff.power) end,
 	type = "physical",
 	status = "detrimental",
 	parameters = { atk=10, dam=10 },
 	on_gain = function(self, err) return "#Target# is maimed.", "+Maimed" end,
 	on_lose = function(self, err) return "#Target# has recovered from the maiming.", "-Maimed" end,
 	activate = function(self, eff)
-		eff.atkid = self:addTemporaryValue("combat_atk", -eff.atk)
 		eff.damid = self:addTemporaryValue("combat_dam", -eff.dam)
 		eff.tmpid = self:addTemporaryValue("global_speed", -0.3)
 		eff.dur = self:updateEffectDuration(eff.dur, "slow")
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("combat_atk", eff.atkid)
 		self:removeTemporaryValue("combat_dam", eff.damid)
 		self:removeTemporaryValue("global_speed", eff.tmpid)
 	end,
