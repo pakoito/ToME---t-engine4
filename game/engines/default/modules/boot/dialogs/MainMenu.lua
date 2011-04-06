@@ -29,23 +29,23 @@ function _M:init()
 	Dialog.init(self, "Main Menu", 300, 400, 450, 50)
 	self.absolute = true
 
-	self.list = {
-		{name="New Game", fct=function() game:registerDialog(require("mod.dialogs.NewGame").new()) end},
-		{name="Load Game", fct=function() game:registerDialog(require("mod.dialogs.LoadGame").new()) end},
-		{name="Player Profile", fct=function() game:registerDialog(require("mod.dialogs.Profile").new()) end},
---		{name="Install Module", fct=function() end},
---		{name="Update", fct=function() game:registerDialog(require("mod.dialogs.UpdateAll").new()) end},
-		{name="Options", fct=function()
-			local menu menu = require("engine.dialogs.GameMenu").new{
-				"resume",
-				"keybinds_all",
-				"video",
-				"sound",
-			}
-			game:registerDialog(menu)
-		end},
-		{name="Exit", fct=function() game:onQuit() end},
-	}
+	local l = {}
+	self.list = l
+	l[#l+1] = {name="New Game", fct=function() game:registerDialog(require("mod.dialogs.NewGame").new()) end}
+	l[#l+1] = {name="Load Game", fct=function() game:registerDialog(require("mod.dialogs.LoadGame").new()) end}
+	l[#l+1] = {name="Player Profile", fct=function() game:registerDialog(require("mod.dialogs.Profile").new()) end}
+	if config.settings.install_remote then l[#l+1] = {name="Install Module", fct=function() end} end
+	if config.settings.update_remote then l[#l+1] = {name="Update", fct=function() game:registerDialog(require("mod.dialogs.UpdateAll").new()) end} end
+	l[#l+1] = {name="Options", fct=function()
+		local menu menu = require("engine.dialogs.GameMenu").new{
+			"resume",
+			"keybinds_all",
+			"video",
+			"sound",
+		}
+		game:registerDialog(menu)
+	end}
+	l[#l+1] = {name="Exit", fct=function() game:onQuit() end}
 
 	self.c_background = Button.new{text=game.stopped and "Enable background" or "Disable background", width=150, fct=function() self:switchBackground() end}
 	self.c_version = Textzone.new{auto_width=true, auto_height=true, text=("#{bold}##B9E100#T-Engine4 version: %d.%d.%d"):format(engine.version[1], engine.version[2], engine.version[3])}

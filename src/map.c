@@ -475,6 +475,21 @@ static int map_objects_display(lua_State *L)
 	return 1;
 }
 
+static void setup_seens_texture(map_type *map)
+{
+	if (map->seens_texture) glDeleteTextures(1, &(map->seens_texture));
+	if (map->seens_map) free(map->seens_map);
+
+	glGenTextures(1, &(map->seens_texture));
+	printf("C Map seens texture: %d (%dx%d)\n", map->seens_texture, map->mwidth + 7, map->mheight + 7);
+	tglBindTexture(GL_TEXTURE_2D, map->seens_texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, 4, map->mwidth + 7, map->mheight + 7, 0, GL_BGRA, GL_UNSIGNED_BYTE, NULL);
+	map->seens_map = calloc((map->mwidth + 7)*(map->mheight + 7)*4, sizeof(GLubyte));
+	map->seen_changed = TRUE;
+}
 
 #define QUADS_PER_BATCH 500
 
@@ -498,6 +513,10 @@ static int map_new(lua_State *L)
 	map->obscure_a = 1;
 	map->shown_r = map->shown_g = map->shown_b = 1;
 	map->shown_a = 1;
+
+	map->minimap = NULL;
+	map->mm_texture = 0;
+	map->mm_w = map->mm_h = 0;
 
 	map->minimap_gridsize = 4;
 
@@ -538,17 +557,11 @@ static int map_new(lua_State *L)
 	map->grids_seens = calloc(w * h, sizeof(float));
 	map->grids_remembers = calloc(w, sizeof(bool*));
 	map->grids_lites = calloc(w, sizeof(bool*));
-	map->minimap = calloc(w, sizeof(unsigned char*));
 	printf("C Map size %d:%d :: %d\n", mwidth, mheight,mwidth * mheight);
 
-	glGenTextures(1, &(map->seens_texture));
-	tglBindTexture(GL_TEXTURE_2D, map->seens_texture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, 4, map->mwidth + 7, map->mheight + 7, 0, GL_BGRA, GL_UNSIGNED_BYTE, NULL);
-	map->seens_map = calloc((map->mwidth + 7)*(map->mheight + 7)*4, sizeof(GLubyte));
-	map->seen_changed = TRUE;
+	map->seens_texture = 0;
+	map->seens_map = NULL;
+	setup_seens_texture(map);
 
 	for (i = 0; i < w; i++)
 	{
@@ -557,7 +570,6 @@ static int map_new(lua_State *L)
 //		map->grids_seens[i] = calloc(h, sizeof(float));
 		map->grids_remembers[i] = calloc(h, sizeof(bool));
 		map->grids_lites[i] = calloc(h, sizeof(bool));
-		map->minimap[i] = calloc(h, sizeof(unsigned char));
 	}
 
 	return 1;
@@ -575,13 +587,11 @@ static int map_free(lua_State *L)
 //		free(map->grids_seens[i]);
 		free(map->grids_remembers[i]);
 		free(map->grids_lites[i]);
-		free(map->minimap[i]);
 	}
 	free(map->grids);
 	free(map->grids_seens);
 	free(map->grids_remembers);
 	free(map->grids_lites);
-	free(map->minimap);
 
 	free(map->colors);
 	free(map->texcoords);
@@ -591,6 +601,9 @@ static int map_free(lua_State *L)
 
 	glDeleteTextures(1, &map->seens_texture);
 	free(map->seens_map);
+
+	if (map->minimap) free(map->minimap);
+	if (map->mm_texture) glDeleteTextures(1, &map->mm_texture);
 
 	lua_pushnumber(L, 1);
 	return 1;
@@ -608,6 +621,7 @@ static int map_set_zoom(lua_State *L)
 	map->mwidth = mwidth;
 	map->mheight = mheight;
 	map->seen_changed = TRUE;
+	setup_seens_texture(map);
 	return 0;
 }
 
@@ -792,6 +806,10 @@ static int map_get_seensinfo(lua_State *L)
 static void map_update_seen_texture(map_type *map)
 {
 	glBindTexture(GL_TEXTURE_2D, map->seens_texture);
+//	int zx, zy;
+//	glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &zx);
+//	glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &zy);
+//	printf("UPDATE SEENS: %dx%d vs %dx%d\n", zx,zy, map->mwidth + 7, map->mheight + 7);
 	gl_c_texture = -1;
 
 	int mx = map->used_mx;
@@ -1270,16 +1288,30 @@ static int minimap_to_screen(lua_State *L)
 	int col_idx = 0;
 	GLfloat r, g, b, a;
 
-	GLfloat *vertices = map->vertices;
-	GLfloat *colors = map->colors;
-	GLfloat *texcoords = map->texcoords;
-	glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
-	glVertexPointer(2, GL_FLOAT, 0, vertices);
-	glColorPointer(4, GL_FLOAT, 0, colors);
+	// Create/recreate the minimap data if needed
+	if (map->mm_w != mdw || map->mm_h != mdh)
+	{
+		if (map->mm_texture) glDeleteTextures(1, &(map->mm_texture));
+		if (map->minimap) free(map->minimap);
 
-	tglBindTexture(GL_TEXTURE_2D, 0);
+		glGenTextures(1, &(map->mm_texture));
+		map->mm_w = mdw;
+		map->mm_h = mdh;
+		printf("C Map minimap texture: %d (%dx%d)\n", map->mm_texture, mdw, mdh);
+		tglBindTexture(GL_TEXTURE_2D, map->mm_texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexImage2D(GL_TEXTURE_2D, 0, 4, mdw, mdh, 0, GL_BGRA, GL_UNSIGNED_BYTE, NULL);
+		map->minimap = calloc(mdw*mdh*4, sizeof(GLubyte));
+	}
 
-	// Always display some more of the map to make sure we always see it all
+	tglBindTexture(GL_TEXTURE_2D, map->mm_texture);
+
+	int ptr;
+	GLubyte *mm = map->minimap;
+	memset(mm, 0, mdw * mdh * 4 * sizeof(GLubyte));
 	for (z = 0; z < map->zdepth; z++)
 	{
 		for (i = mdx; i < mdx + mdw; i++)
@@ -1287,54 +1319,55 @@ static int minimap_to_screen(lua_State *L)
 			for (j = mdy; j < mdy + mdh; j++)
 			{
 				if ((i < 0) || (j < 0) || (i >= map->w) || (j >= map->h)) continue;
-
-				int dx = x + (i - mdx) * map->minimap_gridsize;
-				int dy = y + (j - mdy) * map->minimap_gridsize;
 				map_object *mo = map->grids[i][j][z];
 				if (!mo || mo->mm_r < 0) continue;
+				ptr = (j * mdw + i) * 4;
 
 				if ((mo->on_seen && map->grids_seens[j*map->w+i]) || (mo->on_remember && map->grids_remembers[i][j]) || mo->on_unknown)
 				{
 					if (map->grids_seens[j*map->w+i])
 					{
 						r = mo->mm_r; g = mo->mm_g; b = mo->mm_b; a = transp;
-						colors[col_idx] = r; colors[col_idx+1] = g; colors[col_idx+2] = b; colors[col_idx+3] = (a);
-						colors[col_idx+4] = r; colors[col_idx+5] = g; colors[col_idx+6] = b; colors[col_idx+7] = (a);
-						colors[col_idx+8] = r; colors[col_idx+9] = g; colors[col_idx+10] = b; colors[col_idx+11] = (a);
-						colors[col_idx+12] = r; colors[col_idx+13] = g; colors[col_idx+14] = b; colors[col_idx+15] = (a);
 					}
 					else
 					{
 						r = mo->mm_r * 0.6; g = mo->mm_g * 0.6; b = mo->mm_b * 0.6; a = transp * 0.6;
-						colors[col_idx] = r; colors[col_idx+1] = g; colors[col_idx+2] = b; colors[col_idx+3] = (a);
-						colors[col_idx+4] = r; colors[col_idx+5] = g; colors[col_idx+6] = b; colors[col_idx+7] = (a);
-						colors[col_idx+8] = r; colors[col_idx+9] = g; colors[col_idx+10] = b; colors[col_idx+11] = (a);
-						colors[col_idx+12] = r; colors[col_idx+13] = g; colors[col_idx+14] = b; colors[col_idx+15] = (a);
 					}
-
-					vertices[vert_idx] = (dx); vertices[vert_idx+1] = (dy);
-					vertices[vert_idx+2] = map->minimap_gridsize + (dx); vertices[vert_idx+3] = (dy);
-					vertices[vert_idx+4] = map->minimap_gridsize + (dx); vertices[vert_idx+5] = map->minimap_gridsize + (dy);
-					vertices[vert_idx+6] = (dx); vertices[vert_idx+7] = map->minimap_gridsize + (dy);
-
-					texcoords[vert_idx] = 0; texcoords[vert_idx+1] = 0;
-					texcoords[vert_idx+2] = 1; texcoords[vert_idx+3] = 0;
-					texcoords[vert_idx+4] = 1; texcoords[vert_idx+5] = 1;
-					texcoords[vert_idx+6] = 0; texcoords[vert_idx+7] = 1;
-
-					vert_idx += 8;
-					col_idx += 16;
-					if (vert_idx >= 8*QUADS_PER_BATCH) {
-						glDrawArrays(GL_QUADS, 0, vert_idx / 2);
-						vert_idx = 0;
-						col_idx = 0;
-					}
+					mm[ptr] = r * 255;
+					mm[ptr+1] = g * 255;
+					mm[ptr+2] = b * 255;
+					mm[ptr+3] = a * 255;
 				}
 			}
 		}
 	}
-	if (vert_idx) glDrawArrays(GL_QUADS, 0, vert_idx / 2);
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, mdw, mdh, GL_BGRA, GL_UNSIGNED_BYTE, mm);
 
+	// Display it
+	GLfloat texcoords[2*4] = {
+		0, 0,
+		0, 1,
+		1, 1,
+		1, 0,
+	};
+	GLfloat colors[4*4] = {
+		1,1,1,1,
+		1,1,1,1,
+		1,1,1,1,
+		1,1,1,1,
+	};
+	glColorPointer(4, GL_FLOAT, 0, colors);
+	glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
+
+	GLfloat vertices[2*4] = {
+		x, y,
+		x, y + mdh * map->minimap_gridsize,
+		x + mdw * map->minimap_gridsize, y + mdh * map->minimap_gridsize,
+		x + mdw * map->minimap_gridsize, y,
+	};
+	glVertexPointer(2, GL_FLOAT, 0, vertices);
+	glDrawArrays(GL_QUADS, 0, 4);
+//	printf("display mm %dx%d :: %dx%d\n",x,y,mdw,mdh);
 	return 0;
 }
 

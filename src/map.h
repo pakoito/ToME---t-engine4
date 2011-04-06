@@ -61,7 +61,10 @@ typedef struct {
 	float *grids_seens;
 	bool **grids_remembers;
 	bool **grids_lites;
-	unsigned char **minimap;
+
+	GLubyte *minimap;
+	GLuint mm_texture;
+	int mm_w, mm_h;
 
 	GLfloat *vertices;
 	GLfloat *colors;
