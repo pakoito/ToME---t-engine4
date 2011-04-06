@@ -814,6 +814,15 @@ static void define_core(core_boot_type *core_def, const char *coretype, int id, 
 	core_def->reboot_new = reboot_new;
 }
 
+// Let some platforms use a different entry point
+#ifdef USE_TENGINE_MAIN
+#ifdef main
+#undef main
+#endif
+#define main tengine_main
+#endif
+
+
 /**
  * Core entry point.
  */
