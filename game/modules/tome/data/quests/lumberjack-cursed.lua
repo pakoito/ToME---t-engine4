@@ -38,7 +38,7 @@ on_grant = function(self, who)
 		change_level=1, change_zone="town-lumberjack-village",
 	}
 	g:resolve() g:resolve(nil, true)
-	local level = game.level
+	local level = game.memory_levels["wilderness-1"]
 	local spot = level:pickSpot{type="zone-pop", subtype="lumberjack-town"}
 	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 
