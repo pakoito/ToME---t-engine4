@@ -583,13 +583,13 @@ end
 function _M:combatDamage(weapon)
 	weapon = weapon or self.combat or {}
 
-	local sub_con_to_str = false
-	if weapon.talented and weapon.talented == "knife" and self:knowTalent(Talents.T_LETHALITY) then sub_con_to_str = true end
+	local sub_cun_to_str = false
+	if weapon.talented and weapon.talented == "knife" and self:knowTalent(Talents.T_LETHALITY) then sub_cun_to_str = true end
 
 	local totstat = 0
 	local dammod = weapon.dammod or {str=0.6}
 	for stat, mod in pairs(dammod) do
-		if sub_con_to_str and stat == "str" then stat = "cun" end
+		if sub_cun_to_str and stat == "str" then stat = "cun" end
 		if self.use_psi_combat and stat == "str" then stat = "wil" end
 		if self.use_psi_combat and stat == "dex" then stat = "cun" end
 		totstat = totstat + self:getStat(stat) * mod
