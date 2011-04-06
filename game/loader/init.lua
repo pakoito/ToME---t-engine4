@@ -78,6 +78,8 @@ local load load = function(...)
 
 	__available_engines = engines
 
+	print("[ENGINE LOADER] found engines", table.serialize(engines, nil, true))
+
 	local use_engine = nil
 	if req_version == "LATEST" then
 		-- Sort engines
