@@ -20,7 +20,7 @@
 project "TEngine"
 	kind "WindowedApp"
 	language "C"
-	targetname("t-engine-")
+	targetname("t-engine")
 	files { "../src/*.c", }
 	links { "physfs", "lua".._OPTIONS.lua, "fov", "luasocket", "luaprofiler", "lualanes", "lpeg", "tcodimport", "lxp", "expatstatic", "luamd5", "luazlib", "luabitop" }
 	defines { "_DEFAULT_VIDEOMODE_FLAGS_='SDL_HWSURFACE|SDL_DOUBLEBUF'" }
