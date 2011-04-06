@@ -18,43 +18,48 @@
 -- darkgod@te4.org
 
 project "TEngine"
-	targetprefix ""
-	targetextension ".tec"
-	kind "SharedLib"
+	kind "WindowedApp"
 	language "C"
-	targetname(corename)
+	targetname("t-engine-")
 	files { "../src/*.c", }
 	links { "physfs", "lua".._OPTIONS.lua, "fov", "luasocket", "luaprofiler", "lualanes", "lpeg", "tcodimport", "lxp", "expatstatic", "luamd5", "luazlib", "luabitop" }
 	defines { "_DEFAULT_VIDEOMODE_FLAGS_='SDL_HWSURFACE|SDL_DOUBLEBUF'" }
 	defines { [[TENGINE_HOME_PATH='".t-engine"']], "TE4CORE_VERSION="..TE4CORE_VERSION }
 
-configuration "macosx"
-	files { "../src/mac/SDL*" }
-        includedirs {
-              "/System/Library/Frameworks/OpenGL.framework/Headers",
-              "/Library/Frameworks/SDL.framework/Headers",
-              "/Library/Frameworks/SDL_net.framework/Headers",
-              "/Library/Frameworks/SDL_image.framework/Headers",
-              "/Library/Frameworks/SDL_ttf.framework/Headers",
-              "/Library/Frameworks/SDL_mixer.framework/Headers"
-        }
-        defines { "USE_TENGINE_MAIN", 'SELFEXE_MACOSX'  }
-	targetdir "."
+	links { "m" }
 
-configuration "windows"
-	linkoptions { "-mwindows" }
-	links { "mingw32", "SDLmain", "SDL", "SDL_ttf", "SDL_image", "SDL_mixer", "OPENGL32", "GLU32", "wsock32" }
-	defines { [[TENGINE_HOME_PATH='"T-Engine"']], 'SELFEXE_WINDOWS' }
+	configuration "macosx"
+		files { "../src/mac/SDL*" }
+	        includedirs {
+        	      "/System/Library/Frameworks/OpenGL.framework/Headers",
+	              "/Library/Frameworks/SDL.framework/Headers",
+        	      "/Library/Frameworks/SDL_net.framework/Headers",
+	              "/Library/Frameworks/SDL_image.framework/Headers",
+        	      "/Library/Frameworks/SDL_ttf.framework/Headers",
+	              "/Library/Frameworks/SDL_mixer.framework/Headers"
+        	}
+	        defines { "USE_TENGINE_MAIN", 'SELFEXE_MACOSX'  }
+		linkoptions { "-framework SDL", "-framework SDL_image", "-framework SDL_ttf", "-framework SDL_mixer", "-framework Cocoa", "-framework OpenGL" }
+		targetdir "."
+        	links { "IOKit" }
+
+	configuration "windows"
+		links { "mingw32", "SDLmain", "SDL", "SDL_ttf", "SDL_image", "SDL_mixer", "OPENGL32", "GLU32", "wsock32" }
+		defines { [[TENGINE_HOME_PATH='"T-Engine"']], 'SELFEXE_WINDOWS'  }
+		prebuildcommands { "windres ../src/windows/icon.rc -O coff -o ../src/windows/icon.res" }
+		linkoptions { "../src/windows/icon.res" }
+		linkoptions { "-mwindows" }
+		defines { [[TENGINE_HOME_PATH='"T-Engine"']], 'SELFEXE_WINDOWS' }
 
 
-configuration "linux"
-	buildoptions { "-fPIC" }
-	defines { [[TENGINE_HOME_PATH='".t-engine"']], 'SELFEXE_LINUX' }
+	configuration "linux"
+		links { "dl", "SDL", "SDL_ttf", "SDL_image", "SDL_mixer", "GL", "GLU", "m", "pthread" }
+		defines { [[TENGINE_HOME_PATH='".t-engine"']], 'SELFEXE_LINUX' }
 
-configuration {"Debug"}
-	postbuildcommands { "cp ../bin/Debug/"..corename.."* ../game/engines/cores/", }
-configuration {"Release"}
-	postbuildcommands { "cp ../bin/Release/"..corename.."* ../game/engines/cores/", }
+	configuration {"Debug"}
+		postbuildcommands { "cp ../bin/Debug/"..corename.."* ../game/engines/cores/", }
+	configuration {"Release"}
+		postbuildcommands { "cp ../bin/Release/"..corename.."* ../game/engines/cores/", }
 
 
 ----------------------------------------------------------------
@@ -66,7 +71,6 @@ project "physfs"
 	kind "StaticLib"
 	language "C"
 	targetname "physfs"
-	buildoptions { "-fPIC" }
 
 	defines {"PHYSFS_SUPPORTS_ZIP"}
 
@@ -85,7 +89,6 @@ if _OPTIONS.lua == "default" then
 		kind "StaticLib"
 		language "C"
 		targetname "lua"
-		buildoptions { "-fPIC" }
 
 		files { "../src/lua/*.c", }
 elseif _OPTIONS.lua == "jitx86" then
@@ -93,7 +96,6 @@ elseif _OPTIONS.lua == "jitx86" then
 		kind "StaticLib"
 		language "C"
 		targetname "lua"
-		buildoptions { "-fPIC" }
 
 		files { "../src/luajit/*.c", }
 		configuration "linux"
@@ -103,7 +105,6 @@ elseif _OPTIONS.lua == "jit2" then
 		kind "StaticLib"
 		language "C"
 		targetname "lua"
-		buildoptions { "-fPIC" }
 
 		files { "../src/luajit2/src/*.c", "../src/luajit2/src/*.s", }
 --		configuration "linux"
@@ -114,7 +115,6 @@ project "luasocket"
 	kind "StaticLib"
 	language "C"
 	targetname "luasocket"
-	buildoptions { "-fPIC" }
 
 	configuration "not windows"
 		files {
@@ -153,7 +153,6 @@ project "fov"
 	kind "StaticLib"
 	language "C"
 	targetname "fov"
-	buildoptions { "-fPIC" }
 
 	files { "../src/fov/*.c", }
 
@@ -161,7 +160,6 @@ project "lpeg"
 	kind "StaticLib"
 	language "C"
 	targetname "lpeg"
-	buildoptions { "-fPIC" }
 
 	files { "../src/lpeg/*.c", }
 
@@ -169,7 +167,6 @@ project "luaprofiler"
 	kind "StaticLib"
 	language "C"
 	targetname "luaprofiler"
-	buildoptions { "-fPIC" }
 
 	files { "../src/luaprofiler/*.c", }
 
@@ -177,7 +174,6 @@ project "lualanes"
 	kind "StaticLib"
 	language "C"
 	targetname "lualanes"
-	buildoptions { "-fPIC" }
 
 	files { "../src/lualanes/*.c", }
 
@@ -185,7 +181,6 @@ project "tcodimport"
 	kind "StaticLib"
 	language "C"
 	targetname "tcodimport"
-	buildoptions { "-fPIC" }
 
 	files { "../src/libtcod_import/*.c", }
 
@@ -194,7 +189,6 @@ project "expatstatic"
 	language "C"
 	targetname "expatstatic"
 	defines{ "HAVE_MEMMOVE" }
-	buildoptions { "-fPIC" }
 
 	files { "../src/expat/*.c", }
 
@@ -202,7 +196,6 @@ project "lxp"
 	kind "StaticLib"
 	language "C"
 	targetname "lxp"
-	buildoptions { "-fPIC" }
 
 	files { "../src/lxp/*.c", }
 
@@ -210,7 +203,6 @@ project "luamd5"
 	kind "StaticLib"
 	language "C"
 	targetname "luamd5"
-	buildoptions { "-fPIC" }
 
 	files { "../src/luamd5/*.c", }
 
@@ -218,7 +210,6 @@ project "luazlib"
 	kind "StaticLib"
 	language "C"
 	targetname "luazlib"
-	buildoptions { "-fPIC" }
 
 	files { "../src/lzlib/*.c", }
 
@@ -226,6 +217,5 @@ project "luabitop"
 	kind "StaticLib"
 	language "C"
 	targetname "luabitop"
-	buildoptions { "-fPIC" }
 
 	files { "../src/luabitop/*.c", }

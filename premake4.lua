@@ -55,5 +55,5 @@ configuration "Release"
 	targetdir "bin/Release"
 
 
-dofile("build/runner.lua")
+--dofile("build/runner.lua")
 dofile("build/te4core.lua")

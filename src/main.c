@@ -794,14 +794,36 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 	}
 }
 
+// Update core to run
+static void define_core(core_boot_type *core_def, const char *coretype, int id, const char *reboot_engine, const char *reboot_engine_version, const char *reboot_module, const char *reboot_name, int reboot_new, const char *reboot_einfo)
+{
+	if (core_def->coretype) free(core_def->coretype);
+	if (core_def->reboot_engine) free(core_def->reboot_engine);
+	if (core_def->reboot_engine_version) free(core_def->reboot_engine_version);
+	if (core_def->reboot_module) free(core_def->reboot_module);
+	if (core_def->reboot_name) free(core_def->reboot_name);
+	if (core_def->reboot_einfo) free(core_def->reboot_einfo);
+
+	core_def->corenum = id;
+	core_def->coretype = coretype ? strdup(coretype) : NULL;
+	core_def->reboot_engine = reboot_engine ? strdup(reboot_engine) : NULL;
+	core_def->reboot_engine_version = reboot_engine_version ? strdup(reboot_engine_version) : NULL;
+	core_def->reboot_module = reboot_module ? strdup(reboot_module) : NULL;
+	core_def->reboot_name = reboot_name ? strdup(reboot_name) : NULL;
+	core_def->reboot_einfo = reboot_einfo ? strdup(reboot_einfo) : NULL;
+	core_def->reboot_new = reboot_new;
+}
+
 /**
  * Core entry point.
  */
-void _te4_export te4main(int argc, char *argv[], core_boot_type *given_core_def)
+int main(int argc, char *argv[])
 {
-	core_def = given_core_def;
-	core_def->corenum = 0;
-	
+	core_boot_type given_core_def;
+	core_def = &given_core_def;
+	core_def->define = &define_core;
+	core_def->define(core_def, "te4core", -1, NULL, NULL, NULL, NULL, 0, NULL);
+
 #ifdef SELFEXE_WINDOWS
 	freopen ("te4_log.txt", "w", stdout);
 #endif
@@ -976,5 +998,5 @@ void _te4_export te4main(int argc, char *argv[], core_boot_type *given_core_def)
 
 #ifdef SELFEXE_WINDOWS
 	fclose(stdout);
-#endif	
+#endif
 }
