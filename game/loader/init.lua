@@ -79,6 +79,8 @@ local load load = function(...)
 	__available_engines = engines
 
 	print("[ENGINE LOADER] found engines", table.serialize(engines, nil, true))
+	print("[ENGINE LOADER] looked in:")
+	for i, m in ipairs(fs.getSearchPath()) do print('', m) end
 
 	local use_engine = nil
 	if req_version == "LATEST" then
