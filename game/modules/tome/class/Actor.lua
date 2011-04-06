@@ -962,7 +962,7 @@ function _M:onTakeHit(value, src)
 	end
 
 	-- Achievements
-	if src and src.resolveSource and src:resolveSource().player and value >= 600 then
+	if not self.no_take_hit_achievements and src and src.resolveSource and src:resolveSource().player and value >= 600 then
 		world:gainAchievement("SIZE_MATTERS", src:resolveSource())
 	end
 

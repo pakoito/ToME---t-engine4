@@ -114,7 +114,9 @@ It seems to come from the digestive system of the mouth.]],
 	on_die = function(self, who)
 		if self.summoner and not self.summoner.dead then
 			game.logSeen(self, "#AQUAMARINE#As %s falls you notice that %s seems to shudder in pain!", self.name, self.summoner.name)
+			self.summoner.no_take_hit_achievements = true
 			self.summoner:takeHit(1000, who)
+			self.summoner.no_take_hit_achievements = nil
 		end
 	end,
 }
