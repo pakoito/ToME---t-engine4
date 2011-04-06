@@ -64,7 +64,7 @@ _te4_export char* find_te4_core(core_boot_type *core_def, const char *selfexe)
 
 	// Will be useful
 #ifdef __APPLE__
-	lua_pushboolean(L, TRUE);
+	lua_pushboolean(L, 1);
 	lua_setglobal(L, "__APPLE__");
 #endif
 
