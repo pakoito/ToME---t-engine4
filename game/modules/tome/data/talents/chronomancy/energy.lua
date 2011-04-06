@@ -35,15 +35,14 @@ newTalent{
 		local tx, ty = self:getTarget(tg)
 		if not tx or not ty then return nil end
 		tx, ty = checkBackfire(self, tx, ty)
-		if game.level.map(tx, ty, Map.ACTOR) then
-			target = game.level.map(tx, ty, Map.ACTOR)
-		end
-		
+		local target = game.level.map(tx, ty, Map.ACTOR)
+		if not target then return end
+
 		if not self:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) then
 			game.logSeen(target, "%s resists!", target.name:capitalize())
 			return true
 		end
-		
+
 		local tids = {}
 		for tid, _ in pairs(target.talents) do
 			local tt = target:getTalentFromId(tid)
@@ -51,14 +50,14 @@ newTalent{
 				tids[#tids+1] = tid
 			end
 		end
-		
+
 		for i = 1, t.getTalentCount(self, t) do
 			if #tids == 0 then break end
 			local tid = rng.tableRemove(tids)
 			target.talents_cd[tid] = t.getCooldown(self, t)
 		end
 		self.changed = true
-		
+
 		game.logSeen(target, "%s feels the effects of entropy!", target.name:capitalize())
 		game.level.map:particleEmitter(tx, ty, 1, "entropythrust")
 		game:playSoundNear(self, "talents/spell_generic")
@@ -120,10 +119,9 @@ newTalent{
 		local tx, ty = self:getTarget(tg)
 		if not tx or not ty then return nil end
 		tx, ty = checkBackfire(self, tx, ty)
-		if game.level.map(tx, ty, Map.ACTOR) then
-			target = game.level.map(tx, ty, Map.ACTOR)
-		end
-		
+		local target = game.level.map(tx, ty, Map.ACTOR)
+		if not target then return end
+
 		local effs = {}
 
 		-- Go through all spell effects
@@ -145,7 +143,7 @@ newTalent{
 		for i = 1, t.getRemoveCount(self, t) do
 			if #effs == 0 then break end
 			local eff = rng.tableRemove(effs)
-			
+
 			if eff[1] == "effect" then
 				target:removeEffect(eff[2])
 			else
