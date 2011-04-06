@@ -1294,17 +1294,25 @@ static int minimap_to_screen(lua_State *L)
 		if (map->mm_texture) glDeleteTextures(1, &(map->mm_texture));
 		if (map->minimap) free(map->minimap);
 
+		// In case we can't support NPOT textures round up to nearest POT
+		int realw=1;
+		int realh=1;
+		while (realw < mdw) realw *= 2;
+		while (realh < mdh) realh *= 2;
+
 		glGenTextures(1, &(map->mm_texture));
 		map->mm_w = mdw;
 		map->mm_h = mdh;
-		printf("C Map minimap texture: %d (%dx%d)\n", map->mm_texture, mdw, mdh);
+		map->mm_rw = realw;
+		map->mm_rh = realh;
+		printf("C Map minimap texture: %d (%dx%d; %dx%d)\n", map->mm_texture, mdw, mdh, realw, realh);
 		tglBindTexture(GL_TEXTURE_2D, map->mm_texture);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexImage2D(GL_TEXTURE_2D, 0, 4, mdw, mdh, 0, GL_BGRA, GL_UNSIGNED_BYTE, NULL);
-		map->minimap = calloc(mdw*mdh*4, sizeof(GLubyte));
+		glTexImage2D(GL_TEXTURE_2D, 0, 4, realw, realh, 0, GL_BGRA, GL_UNSIGNED_BYTE, NULL);
+		map->minimap = calloc(realw*realh*4, sizeof(GLubyte));
 	}
 
 	tglBindTexture(GL_TEXTURE_2D, map->mm_texture);
@@ -1321,7 +1329,7 @@ static int minimap_to_screen(lua_State *L)
 				if ((i < 0) || (j < 0) || (i >= map->w) || (j >= map->h)) continue;
 				map_object *mo = map->grids[i][j][z];
 				if (!mo || mo->mm_r < 0) continue;
-				ptr = (j * mdw + i) * 4;
+				ptr = (j * map->mm_rw + i) * 4;
 
 				if ((mo->on_seen && map->grids_seens[j*map->w+i]) || (mo->on_remember && map->grids_remembers[i][j]) || mo->on_unknown)
 				{
@@ -1341,14 +1349,14 @@ static int minimap_to_screen(lua_State *L)
 			}
 		}
 	}
-	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, mdw, mdh, GL_BGRA, GL_UNSIGNED_BYTE, mm);
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, map->mm_rw, map->mm_rh, GL_BGRA, GL_UNSIGNED_BYTE, mm);
 
 	// Display it
 	GLfloat texcoords[2*4] = {
 		0, 0,
-		0, 1,
-		1, 1,
-		1, 0,
+		0, (float)mdh/(float)map->mm_rh,
+		(float)mdw/(float)map->mm_rw, (float)mdh/(float)map->mm_rh,
+		(float)mdw/(float)map->mm_rw, 0,
 	};
 	GLfloat colors[4*4] = {
 		1,1,1,1,

@@ -65,6 +65,7 @@ typedef struct {
 	GLubyte *minimap;
 	GLuint mm_texture;
 	int mm_w, mm_h;
+	int mm_rw, mm_rh;
 
 	GLfloat *vertices;
 	GLfloat *colors;
