@@ -21,8 +21,8 @@
 newTalentType{ type="base/class", name = "class", hide = true, description = "The basic talents defining a class." }
 newTalentType{ type="base/race", name = "race", hide = true, description = "The various racial bonuses a character can have." }
 newTalentType{ type="inscriptions/infusions", name = "infusions", hide = true, description = "Infusions are not class abilities, you must find them or learn them from other people." }
-newTalentType{ is_spell=true, type="inscriptions/runes", name = "runes", hide = true, description = "Runes are not class abilities, you must find them or learn them from other people." }
-newTalentType{ is_spell=true, type="inscriptions/taints", name = "taints", hide = true, description = "Taints are not class abilities, you must find them or learn them from other people." }
+newTalentType{ is_spell=true, no_silence=true, type="inscriptions/runes", name = "runes", hide = true, description = "Runes are not class abilities, you must find them or learn them from other people." }
+newTalentType{ is_spell=true, no_silence=true, type="inscriptions/taints", name = "taints", hide = true, description = "Taints are not class abilities, you must find them or learn them from other people." }
 
 -- Load other misc things
 load("/data/talents/misc/inscriptions.lua")
