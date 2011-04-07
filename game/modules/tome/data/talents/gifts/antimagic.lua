@@ -66,9 +66,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Let out a burst of sound that silences for %d turns all those affected, including the user.
+		local rad = self:getTalentRadius(t)
+		return ([[Let out a burst of sound that silences for %d turns all those affected in a radius of %d, including the user.
 		The silence chance will increase with your Willpower stat.]]):
-		format(3 + math.floor(self:getTalentLevel(t) / 2))
+		format(3 + math.floor(self:getTalentLevel(t) / 2), rad)
 	end,
 }
 
