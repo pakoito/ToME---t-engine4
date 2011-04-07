@@ -43,7 +43,7 @@ newEntity{
 	silence_immune = 0.5,
 
 	resolvers.racial(),
-	resolvers.talents{ [Talents.T_HEAVY_ARMOUR_TRAINING]=1, },
+	resolvers.talents{ [Talents.T_ARMOUR_TRAINING]=1, },
 
 	autolevel = "caster",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },

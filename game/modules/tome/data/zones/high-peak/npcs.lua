@@ -189,7 +189,7 @@ newEntity{
 
 		[Talents.T_WEAPON_COMBAT]=10,
 		[Talents.T_WEAPONS_MASTERY]={base=7, every=6},
-		[Talents.T_MASSIVE_ARMOUR_TRAINING]={base=7, every=6},
+		[Talents.T_ARMOUR_TRAINING]={base=7, every=6},
 	},
 	resolvers.sustains_at_birth(),
 
@@ -250,7 +250,7 @@ newEntity{ define_as = "FALLEN_SUN_PALADIN_AERYN",
 	positive_regen = 25,
 
 	resolvers.talents{
-		[Talents.T_MASSIVE_ARMOUR_TRAINING]=7,
+		[Talents.T_ARMOUR_TRAINING]=7,
 		[Talents.T_WEAPON_COMBAT]=10,
 		[Talents.T_WEAPONS_MASTERY]=10,
 		[Talents.T_RUSH]=3,
@@ -314,7 +314,7 @@ newEntity{ define_as = "HIGH_SUN_PALADIN_AERYN",
 	positive_regen = 25,
 
 	resolvers.talents{
-		[Talents.T_MASSIVE_ARMOUR_TRAINING]=5,
+		[Talents.T_ARMOUR_TRAINING]=5,
 		[Talents.T_WEAPON_COMBAT]=10,
 		[Talents.T_WEAPONS_MASTERY]=10,
 		[Talents.T_RUSH]=8,

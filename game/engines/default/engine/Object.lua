@@ -203,8 +203,13 @@ function _M:getRequirementDesc(who)
 	end
 	if req.talent then
 		for _, tid in ipairs(req.talent) do
-			local c = who:knowTalent(tid) and {"color", 0x00,0xff,0x00} or {"color", 0xff,0x00,0x00}
-			str:add(c, "- ", ("Talent %s\n"):format(who:getTalentFromId(tid).name), {"color", "LAST"}, true)
+			if type(tid) == "table" then
+				local c = (who:getTalentLevelRaw(tid[1]) >= tid[2]) and {"color", 0x00,0xff,0x00} or {"color", 0xff,0x00,0x00}
+				str:add(c, "- ", ("Talent %s (level %d)\n"):format(who:getTalentFromId(tid[1]).name, tid[2]), {"color", "LAST"}, true)
+			else
+				local c = who:knowTalent(tid) and {"color", 0x00,0xff,0x00} or {"color", 0xff,0x00,0x00}
+				str:add(c, "- ", ("Talent %s\n"):format(who:getTalentFromId(tid).name), {"color", "LAST"}, true)
+			end
 		end
 	end
 	return str

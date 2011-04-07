@@ -115,8 +115,7 @@ newEntity{ base="BASE_NPC_ORC_GRUSHNAK", define_as = "MASSOK",
 
 	resolvers.talents{
 		[Talents.T_WEAPON_COMBAT]=7,
-		[Talents.T_HEAVY_ARMOUR_TRAINING]=7,
-		[Talents.T_MASSIVE_ARMOUR_TRAINING]=7,
+		[Talents.T_ARMOUR_TRAINING]=7,
 		[Talents.T_WEAPONS_MASTERY]=7,
 		[Talents.T_RUSH]=9,
 		[Talents.T_BATTLE_CALL]=5,

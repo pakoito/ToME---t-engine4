@@ -99,7 +99,7 @@ newEntity{ define_as = "ALUIN",
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 
 	resolvers.talents{
-		[Talents.T_MASSIVE_ARMOUR_TRAINING]=5,
+		[Talents.T_ARMOUR_TRAINING]=5,
 		[Talents.T_WEAPON_COMBAT]={base=5, every=5, max=10},
 		[Talents.T_WEAPONS_MASTERY]={base=5, every=5, max=10},
 		[Talents.T_RUSH]={base=4, every=7, max=6},

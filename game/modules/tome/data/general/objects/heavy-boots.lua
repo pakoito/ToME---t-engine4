@@ -25,7 +25,7 @@ newEntity{
 	type = "armor", subtype="feet", image = resolvers.image_material("hboots", "metal"),
 	add_name = " (#ARMOR#)",
 	display = "]", color=colors.SLATE,
-	require = { talent = { Talents.T_HEAVY_ARMOUR_TRAINING }, },
+	require = { talent = { Talents.T_ARMOUR_TRAINING }, },
 	encumber = 3,
 	rarity = 7,
 	metallic = true,

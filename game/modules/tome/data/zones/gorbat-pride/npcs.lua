@@ -84,7 +84,7 @@ newEntity{ base="BASE_NPC_ORC_GORBAT", define_as = "GORBAT",
 		[Talents.T_WEAPON_COMBAT]={base=7, every=4, max=10},
 		[Talents.T_WEAPONS_MASTERY]={base=6, every=4, max=10},
 
-		[Talents.T_MASSIVE_ARMOUR_TRAINING]=5,
+		[Talents.T_ARMOUR_TRAINING]=5,
 	},
 	resolvers.sustains_at_birth(),
 

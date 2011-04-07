@@ -25,7 +25,7 @@ newEntity{
 	type = "armor", subtype="massive",
 	add_name = " (#ARMOR#)",
 	display = "[", color=colors.SLATE, image = resolvers.image_material("plate", "metal"),
-	require = { talent = { Talents.T_MASSIVE_ARMOUR_TRAINING }, },
+	require = { talent = { {Talents.T_ARMOUR_TRAINING,4} }, },
 	encumber = 17,
 	rarity = 5,
 	metallic = true,

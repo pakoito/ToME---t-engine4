@@ -494,11 +494,8 @@ end
 --- Gets the armor
 function _M:combatArmor()
 	local add = 0
-	if self:hasHeavyArmor() and self:knowTalent(self.T_HEAVY_ARMOUR_TRAINING) then
-		add = add + self:getTalentLevel(self.T_HEAVY_ARMOUR_TRAINING) * 1.4
-	end
-	if self:hasMassiveArmor() and self:knowTalent(self.T_MASSIVE_ARMOUR_TRAINING) then
-		add = add + self:getTalentLevel(self.T_MASSIVE_ARMOUR_TRAINING) * 1.6
+	if self:hasHeavyArmor() and self:knowTalent(self.T_ARMOUR_TRAINING) then
+		add = add + self:getTalentLevel(self.T_ARMOUR_TRAINING) * 1.4
 	end
 	if self:knowTalent(self.T_PHYSICAL_CONDITIONING) then
 		local t = self:getTalentFromId(self.T_PHYSICAL_CONDITIONING)
@@ -712,11 +709,8 @@ function _M:physicalCrit(dam, weapon, target)
 	if target:knowTalent(target.T_PROBABILITY_WEAVING) and target:isTalentActive(target.T_PROBABILITY_WEAVING) then
 		chance = chance - target:getTalentLevel(target.T_PROBABILITY_WEAVING)
 	end
-	if target:hasHeavyArmor() and target:knowTalent(target.T_HEAVY_ARMOUR_TRAINING) then
-		chance = chance - target:getTalentLevel(target.T_HEAVY_ARMOUR_TRAINING) * 1.9
-	end
-	if target:hasMassiveArmor() and target:knowTalent(target.T_MASSIVE_ARMOUR_TRAINING) then
-		chance = chance - target:getTalentLevel(target.T_MASSIVE_ARMOUR_TRAINING) * 1.5
+	if target:hasHeavyArmor() and target:knowTalent(target.T_ARMOUR_TRAINING) then
+		chance = chance - target:getTalentLevel(target.T_ARMOUR_TRAINING) * 1.9
 	end
 
 	chance = util.bound(chance, 0, 100)
@@ -940,7 +934,7 @@ end
 function _M:hasHeavyArmor()
 	if not self:getInven("BODY") then return end
 	local armor = self:getInven("BODY")[1]
-	if not armor or armor.subtype ~= "heavy" then
+	if not armor or (armor.subtype ~= "heavy" and armor.subtype ~= "massive") then
 		return nil
 	end
 	return armor

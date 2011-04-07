@@ -92,7 +92,7 @@ newEntity{ define_as = "NORGAN",
 
 	resolvers.talents{
 		[Talents.T_DWARF_RESILIENCE]=1,
-		[Talents.T_HEAVY_ARMOUR_TRAINING]=1,
+		[Talents.T_ARMOUR_TRAINING]=2,
 		[Talents.T_STUNNING_BLOW]=2,
 		[Talents.T_WEAPON_COMBAT]=2,
 		[Talents.T_WEAPONS_MASTERY]=2,

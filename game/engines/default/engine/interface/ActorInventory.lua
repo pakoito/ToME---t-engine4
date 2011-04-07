@@ -280,7 +280,11 @@ function _M:canWearObject(o, try_slot)
 		end
 		if req.talent then
 			for _, tid in ipairs(req.talent) do
-				if not self:knowTalent(tid) then return nil, "missing dependency" end
+				if type(tid) == "table" then
+					if self:getTalentLevelRaw(tid[1]) < tid[2] then return nil, "missing dependency" end
+				else
+					if not self:knowTalent(tid) then return nil, "missing dependency" end
+				end
 			end
 		end
 	end

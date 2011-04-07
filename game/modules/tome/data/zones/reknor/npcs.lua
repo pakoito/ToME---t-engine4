@@ -56,8 +56,7 @@ newEntity{ define_as = "GOLBUG",
 	see_invisible = 5,
 
 	resolvers.talents{
-		[Talents.T_HEAVY_ARMOUR_TRAINING]={base=1, every=6, max=5},
-		[Talents.T_MASSIVE_ARMOUR_TRAINING]={base=3, every=6, max=5},
+		[Talents.T_ARMOUR_TRAINING]={base=4, every=6, max=8},
 		[Talents.T_WEAPON_COMBAT]={base=6, every=5, max=10},
 		[Talents.T_WEAPONS_MASTERY]={base=6, every=5, max=10},
 		[Talents.T_SHIELD_PUMMEL]={base=4, every=5, max=6},

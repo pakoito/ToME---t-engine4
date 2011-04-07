@@ -71,7 +71,7 @@ newEntity{ define_as = "THE_MASTER",
 
 	resolvers.talents{
 		[Talents.T_SUMMON]=1,
-		[Talents.T_HEAVY_ARMOUR_TRAINING]={base=1, every=5, max=5},
+		[Talents.T_ARMOUR_TRAINING]={base=3, every=5, max=10},
 
 		[Talents.T_CONGEAL_TIME]={base=2, every=5, max=5},
 		[Talents.T_MANATHRUST]={base=4, every=5, max=8},

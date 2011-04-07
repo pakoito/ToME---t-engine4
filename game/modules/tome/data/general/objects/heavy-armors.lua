@@ -25,7 +25,7 @@ newEntity{
 	type = "armor", subtype="heavy", image = resolvers.image_material("mail", "metal"),
 	add_name = " (#ARMOR#)",
 	display = "[", color=colors.SLATE,
-	require = { talent = { Talents.T_HEAVY_ARMOUR_TRAINING }, },
+	require = { talent = { {Talents.T_ARMOUR_TRAINING,2} }, },
 	encumber = 14,
 	rarity = 5,
 	metallic = true,

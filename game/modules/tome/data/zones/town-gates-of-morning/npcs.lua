@@ -57,7 +57,7 @@ newEntity{ define_as = "HIGH_SUN_PALADIN_AERYN",
 		{type="armor", subtype="massive", autoreq=true},
 	},
 	resolvers.talents{
-		[Talents.T_MASSIVE_ARMOUR_TRAINING]=5,
+		[Talents.T_ARMOUR_TRAINING]=5,
 		[Talents.T_CHANT_OF_LIGHT]=5,
 		[Talents.T_SEARING_LIGHT]=5,
 		[Talents.T_MARTYRDOM]=5,

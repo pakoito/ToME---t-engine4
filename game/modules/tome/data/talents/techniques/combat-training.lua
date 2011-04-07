@@ -18,38 +18,6 @@
 -- darkgod@te4.org
 
 newTalent{
-	name = "Heavy Armour Training",
-	type = {"technique/combat-training", 1},
-	mode = "passive",
-	points = 5,
-	require = { stat = { str=18 }, },
-	getArmor = function(self, t) return self:getTalentLevel(t) * 1.4 end,
-	getCriticalChanceReduction = function(self, t) return self:getTalentLevel(t) * 1.9 end,
-	info = function(self, t)
-		local armor = t.getArmor(self, t)
-		local criticalreduction = t.getCriticalChanceReduction(self, t)
-		return ([[Teaches the usage of heavy mail armours. Increases armour value by %d and reduces chance to be critically hit by %d%% when wearing a heavy mail armour.]]):
-		format(armor, criticalreduction)
-	end,
-}
-
-newTalent{
-	name = "Massive Armour Training",
-	type = {"technique/combat-training", 2},
-	mode = "passive",
-	points = 5,
-	require = { stat = { str=22 }, talent = { Talents.T_HEAVY_ARMOUR_TRAINING }, },
-	getArmor = function(self, t) return self:getTalentLevel(t) * 1.6 end,
-	getCriticalChanceReduction = function(self, t) return self:getTalentLevel(t) * 1.5 end,
-	info = function(self, t)
-		local armor = t.getArmor(self, t)
-		local criticalreduction = t.getCriticalChanceReduction(self, t)
-		return ([[Teaches the usage of massive plate armours. Increases armour value by %d and reduces chance to be critically hit by %d%%  when wearing a massive plate armour.]]):
-		format(armor, criticalreduction)
-	end,
-}
-
-newTalent{
 	name = "Health",
 	type = {"technique/combat-training", 1},
 	mode = "passive",
@@ -66,6 +34,26 @@ newTalent{
 		local health = t.getHealth(self, t)
 		return ([[Increases your maximum life by %d]]):
 		format(health)
+	end,
+}
+
+newTalent{
+	name = "Armour Training",
+	type = {"technique/combat-training", 1},
+	mode = "passive",
+	points = 10,
+	require = { stat = { str=function(level) return 18 + level - 1 end }, },
+	getArmor = function(self, t) return self:getTalentLevel(t) * 1.4 end,
+	getCriticalChanceReduction = function(self, t) return self:getTalentLevel(t) * 1.9 end,
+	info = function(self, t)
+		local armor = t.getArmor(self, t)
+		local criticalreduction = t.getCriticalChanceReduction(self, t)
+		return ([[Teaches the usage of armours. Increases armour value by %d and reduces chance to be critically hit by %d%% when wearing a heavy mail armour or a massive plate armour.
+		At level 1 it allows you to wear gauntlets, helms and heavy boots.
+		At level 2 it allows you to wear heavy mail armour.
+		At level 3 it allows you to wear shields.
+		At level 4 it allows you to wear massive plate armour.]]):
+		format(armor, criticalreduction)
 	end,
 }
 

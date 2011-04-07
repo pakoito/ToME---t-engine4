@@ -26,7 +26,7 @@ newEntity{
 	add_name = " (#ARMOR#)",
 	display = "[", color=colors.SLATE,
 	image = resolvers.image_material("hgloves", "metal"),
-	require = { talent = { Talents.T_HEAVY_ARMOUR_TRAINING }, },
+	require = { talent = { Talents.T_ARMOUR_TRAINING }, },
 	encumber = 1.5,
 	rarity = 9,
 	metallic = true,

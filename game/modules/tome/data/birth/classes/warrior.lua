@@ -70,7 +70,7 @@ newBirthDescriptor{
 		[ActorTalents.T_SHIELD_PUMMEL] = 1,
 		[ActorTalents.T_SHIELD_WALL] = 1,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
-		[ActorTalents.T_HEAVY_ARMOUR_TRAINING] = 1,
+		[ActorTalents.T_ARMOUR_TRAINING] = 3,
 	},
 	copy = {
 		resolvers.equip{ id=true,
@@ -115,7 +115,7 @@ newBirthDescriptor{
 		[ActorTalents.T_DEATH_DANCE] = 1,
 		[ActorTalents.T_STUNNING_BLOW] = 1,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
-		[ActorTalents.T_HEAVY_ARMOUR_TRAINING] = 1,
+		[ActorTalents.T_ARMOUR_TRAINING] = 2,
 	},
 	copy = {
 		resolvers.equip{ id=true,
@@ -210,8 +210,8 @@ newBirthDescriptor{
 		[ActorTalents.T_UPPERCUT] = 1,
 		[ActorTalents.T_DOUBLE_STRIKE] = 1,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
-		[ActorTalents.T_HEAVY_ARMOUR_TRAINING] = 1,
-		
+		[ActorTalents.T_ARMOUR_TRAINING] = 1,
+
 		-- base monk attack
 		[ActorTalents.T_EMPTY_HAND] = 1,
 	},

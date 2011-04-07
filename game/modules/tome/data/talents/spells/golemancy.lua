@@ -42,8 +42,7 @@ local function makeGolem()
 		size_category = 4,
 
 		resolvers.talents{
-			[Talents.T_MASSIVE_ARMOUR_TRAINING]=1,
-			[Talents.T_HEAVY_ARMOUR_TRAINING]=1,
+			[Talents.T_ARMOUR_TRAINING]=4,
 			[Talents.T_WEAPON_COMBAT]=2,
 			[Talents.T_MANA_POOL]=1,
 			[Talents.T_STAMINA_POOL]=1,
@@ -253,20 +252,17 @@ newTalent{
 	points = 5,
 	on_learn = function(self, t)
 		self.alchemy_golem:learnTalent(Talents.T_HEALTH, true)
-		self.alchemy_golem:learnTalent(Talents.T_HEAVY_ARMOUR_TRAINING, true)
-		self.alchemy_golem:learnTalent(Talents.T_MASSIVE_ARMOUR_TRAINING, true)
+		self.alchemy_golem:learnTalent(Talents.T_ARMOUR_TRAINING, true)
 	end,
 	on_unlearn = function(self, t)
 		self.alchemy_golem:unlearnTalent(Talents.T_HEALTH, true)
-		self.alchemy_golem:unlearnTalent(Talents.T_HEAVY_ARMOUR_TRAINING, true)
-		self.alchemy_golem:unlearnTalent(Talents.T_MASSIVE_ARMOUR_TRAINING, true)
+		self.alchemy_golem:unlearnTalent(Talents.T_ARMOUR_TRAINING, true)
 	end,
 	info = function(self, t)
 		local health = self:getTalentFromId(Talents.T_HEALTH).getHealth(self, t)
-		local heavyarmor = self:getTalentFromId(Talents.T_HEAVY_ARMOUR_TRAINING).getArmor(self, t)
-		local massivearmor = self:getTalentFromId(Talents.T_MASSIVE_ARMOUR_TRAINING).getArmor(self, t)
-		return ([[Improves your golem armour training and health. Increases armor by %d when wearing heavy armor or by %d when wearing massive armor also increases health by %d.]]):
-		format(heavyarmor, massivearmor, health)
+		local heavyarmor = self:getTalentFromId(Talents.T_ARMOUR_TRAINING).getArmor(self, t)
+		return ([[Improves your golem armour training and health. Increases armor by %d when wearing armor also increases health by %d.]]):
+		format(heavyarmor, health)
 	end,
 }
 

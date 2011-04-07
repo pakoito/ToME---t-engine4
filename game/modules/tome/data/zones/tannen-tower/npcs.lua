@@ -114,8 +114,7 @@ It is so huge that it blocks sight beyond it.]],
 	move_others=true,
 
 	resolvers.talents{
-		[Talents.T_MASSIVE_ARMOUR_TRAINING]=5,
-		[Talents.T_HEAVY_ARMOUR_TRAINING]=5,
+		[Talents.T_ARMOUR_TRAINING]=8,
 		[Talents.T_WEAPON_COMBAT]=7,
 		[Talents.T_POISON_BREATH]=6,
 		[Talents.T_WEAPONS_MASTERY]=11,
