@@ -82,7 +82,7 @@ function _M:init()
 	self.config_settings =
 	{
 		[checkstats]     = { invalid = { read={online=true}, write="online" }, valid = { read={online=true}, write="online" } },
-		["^allow_build$"] = { invalid = { read={offline=true,online=true}, write="offline" }, valid = { read={online=true}, write="online" } },
+		["^allow_build$"] = { invalid = { read={offline=true,online=true}, write="offline" }, valid = { read={offline=true,online=true}, write="online" } },
 		["^achievement%..*$"] = { invalid = { read={offline=true,online=true}, write="offline" }, valid = { read={online=true}, write="online" } },
 	}
 
