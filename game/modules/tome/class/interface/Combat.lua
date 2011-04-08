@@ -665,9 +665,9 @@ end
 function _M:getOffHandMult(mult)
 	local offmult = (mult or 1) / 2
 	if self:knowTalent(Talents.T_DUAL_WEAPON_TRAINING) then
-		offmult = (mult or 1) / (2 - (math.max(self:getTalentLevel(Talents.T_DUAL_WEAPON_TRAINING), 8) / 6))
+		offmult = (mult or 1) / (2 - (math.min(self:getTalentLevel(Talents.T_DUAL_WEAPON_TRAINING), 8) / 6))
 	elseif self:knowTalent(Talents.T_CORRUPTED_STRENGTH) then
-		offmult = (mult or 1) / (2 - (math.max(self:getTalentLevel(Talents.T_CORRUPTED_STRENGTH), 8) / 9))
+		offmult = (mult or 1) / (2 - (math.min(self:getTalentLevel(Talents.T_CORRUPTED_STRENGTH), 8) / 9))
 	end
 	return offmult
 end
@@ -746,7 +746,7 @@ function _M:spellCrit(dam, add_chance)
 	if rng.percent(chance) then
 		dam = dam * (1.5 + (self.combat_critical_power or 0) / 100)
 		crit = true
-		game.logSeen(self, "%s's spell looks more powerful!", self.name:capitalize())
+		game.logSeen(self, "%s's spell attains critical power!", self.name:capitalize())
 
 		if self:isTalentActive(self.T_BLOOD_FURY) then
 			local t = self:getTalentFromId(self.T_BLOOD_FURY)
