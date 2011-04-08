@@ -72,12 +72,12 @@ _M.temporary_values_conf.global_speed = "mult0"
 _M.temporary_values_conf.movement_speed = "mult0"
 _M.temporary_values_conf.combat_physspeed = "mult0"
 _M.temporary_values_conf.combat_spellspeed = "mult0"
-_M.temporary_values_conf.resists = "perc_inv"
 
 function _M:init(t, no_default)
 	-- Define some basic combat stats
 	self.combat_def = 0
 	self.combat_armor = 0
+	self.combat_armor_hardiness = 0
 	self.combat_atk = 0
 	self.combat_apr = 0
 	self.combat_dam = 0

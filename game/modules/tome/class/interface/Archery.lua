@@ -132,12 +132,10 @@ local function archery_projectile(tx, ty, tg, self)
 		apr = apr + (tg.archery.apr or 0)
 		print("[ATTACK ARCHERY] raw dam", dam, "versus", armor, "with APR", apr)
 
-		apr = 1-math.pow(0.99, apr)
-		armor = 1-math.pow(0.99, armor)
-		print("[ATTACK] raw dam", dam, "versus", armor, "with APR", apr)
+		local pres = util.bound(self:combatArmorHardiness() / 100, 0, 1)
 		armor = math.max(0, armor - apr)
-		dam = dam * (1 - armor)
-		print("[ATTACK] after armor", dam)
+		dam = math.max(dam * pres - armor, 0) + (dam * (1 - pres))
+		print("[ATTACK ARCHERY] after armor", dam)
 
 		local damrange = self:combatDamageRange(ammo)
 		dam = rng.range(dam, dam * damrange)
@@ -177,21 +175,21 @@ local function archery_projectile(tx, ty, tg, self)
 		DamageType:get(DamageType.TEMPORAL).projector(self, target.x, target.y, DamageType.TEMPORAL, dam)
 	end
 
-	
+
 	-- Regen on being hit
 	if hitted and not target.dead and target:attr("stamina_regen_on_hit") then target:incStamina(target.stamina_regen_on_hit) end
 	if hitted and not target.dead and target:attr("mana_regen_on_hit") then target:incMana(target.mana_regen_on_hit) end
-	
+
 	-- Ablative armor
 	if hitted and not target.dead and target:attr("carbon_spikes") then
 		if target.carbon_armor >= 1 then
-			target.carbon_armor = target.carbon_armor - 1 
+			target.carbon_armor = target.carbon_armor - 1
 		else
 			-- Deactivate without loosing energy
 			target:forceUseTalent(target.T_CARBON_SPIKES, {ignore_energy=true})
 		end
 	end
-	
+
 end
 
 --- Shoot at one target

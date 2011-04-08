@@ -203,6 +203,7 @@ function _M:drawDialog(s)
 	w = 400
 	self:mouseTooltip(self.TOOLTIP_FATIGUE, s:drawColorStringBlended(self.font, ("Fatigue:        #00ff00#%3d%%"):format(player:combatFatigue()), w, h, 255, 255, 255)) h = h + self.font_h
 	self:mouseTooltip(self.TOOLTIP_ARMOR,   s:drawColorStringBlended(self.font, ("Armor:          #00ff00#%3d"):format(player:combatArmor()), w, h, 255, 255, 255)) h = h + self.font_h
+	self:mouseTooltip(self.TOOLTIP_ARMOR_HARDINESS,   s:drawColorStringBlended(self.font, ("Armor Hardiness:#00ff00#%3d%%"):format(player:combatArmorHardiness()), w, h, 255, 255, 255)) h = h + self.font_h
 	self:mouseTooltip(self.TOOLTIP_DEFENSE, s:drawColorStringBlended(self.font, ("Defense:        #00ff00#%3d"):format(player:combatDefense()), w, h, 255, 255, 255)) h = h + self.font_h
 	self:mouseTooltip(self.TOOLTIP_RDEFENSE,s:drawColorStringBlended(self.font, ("Ranged Defense: #00ff00#%3d"):format(player:combatDefenseRanged()), w, h, 255, 255, 255)) h = h + self.font_h
 
@@ -384,10 +385,11 @@ function _M:dump()
 	nl(makelabel("Spellpower", player:combatSpellpower() ..""))
 	nnl(("%-32s"):format(makelabel("Armor", player:combatArmor() .. "")))
 	nl(makelabel("Spell Crit", player:combatSpellCrit() .."%"))
-	nnl(("%-32s"):format(makelabel("Defense", player:combatDefense() .. "")))
+	nnl(("%-32s"):format(makelabel("Armor Hardiness", player:combatArmorHardiness() .. "%")))
 	nl(makelabel("Spell Speed", player:combatSpellSpeed() ..""))
-	nnl(("%-32s"):format(makelabel("Ranged Defense", player:combatDefenseRanged() .. "")))
+	nnl(("%-32s"):format(makelabel("Defense", player:combatDefense() .. "")))
 	nl()
+	nnl(("%-32s"):format(makelabel("Ranged Defense", player:combatDefenseRanged() .. "")))
 
 	nl()
 	if player.inc_damage.all then nl(makelabel("All damage", player.inc_damage.all.."%")) end

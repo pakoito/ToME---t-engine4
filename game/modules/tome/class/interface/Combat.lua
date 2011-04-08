@@ -232,11 +232,10 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 		evaded = true
 		game.logSeen(target, "%s evades %s.", target.name:capitalize(), self.name)
 	elseif self:checkHit(atk, def) then
-		apr = 1-math.pow(0.99, apr)
-		armor = 1-math.pow(0.99, armor)
-		print("[ATTACK] raw dam", dam, "versus", armor, "with APR", apr)
+		local pres = util.bound(self:combatArmorHardiness() / 100, 0, 1)
+		print("[ATTACK] raw dam", dam, "versus", armor, pres, "with APR", apr)
 		armor = math.max(0, armor - apr)
-		dam = dam * (1 - armor)
+		dam = math.max(dam * pres - armor, 0) + (dam * (1 - pres))
 		print("[ATTACK] after armor", dam)
 		local damrange = self:combatDamageRange(weapon)
 		dam = rng.range(dam, dam * damrange)
@@ -505,6 +504,16 @@ function _M:combatArmor()
 		add = add + self.carbon_armor
 	end
 	return self.combat_armor + add
+end
+
+--- Gets armor hardiness
+-- This is how much % of a blow we can reduce with armor
+function _M:combatArmorHardiness()
+	local add = 0
+	if self:hasHeavyArmor() and self:knowTalent(self.T_ARMOUR_TRAINING) then
+		add = add + self:getTalentLevel(self.T_ARMOUR_TRAINING) * 5
+	end
+	return 30 + self.combat_armor_hardiness + add
 end
 
 --- Gets the attack

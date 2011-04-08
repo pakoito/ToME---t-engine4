@@ -43,17 +43,20 @@ newTalent{
 	mode = "passive",
 	points = 10,
 	require = { stat = { str=function(level) return 18 + level - 1 end }, },
+	getArmorHardiness = function(self, t) return self:getTalentLevel(t) * 5 end,
 	getArmor = function(self, t) return self:getTalentLevel(t) * 1.4 end,
 	getCriticalChanceReduction = function(self, t) return self:getTalentLevel(t) * 1.9 end,
 	info = function(self, t)
+		local hardiness = t.getArmorHardiness(self, t)
 		local armor = t.getArmor(self, t)
 		local criticalreduction = t.getCriticalChanceReduction(self, t)
 		return ([[Teaches the usage of armours. Increases armour value by %d and reduces chance to be critically hit by %d%% when wearing a heavy mail armour or a massive plate armour.
+		It also increases armour hardiness by %d%%.
 		At level 1 it allows you to wear gauntlets, helms and heavy boots.
 		At level 2 it allows you to wear heavy mail armour.
 		At level 3 it allows you to wear shields.
 		At level 4 it allows you to wear massive plate armour.]]):
-		format(armor, criticalreduction)
+		format(armor, criticalreduction, hardiness)
 	end,
 }
 
