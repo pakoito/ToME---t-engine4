@@ -23,7 +23,7 @@ short_name = "angband"
 author = { "DarkGod", "darkgod@te4.org" }
 homepage = "http://te4.org/modules:angband"
 version = {1,0,0}
-engine = {0,9,24,"te4"}
+engine = {0,9,25,"te4"}
 description = [[
 This is a port of Angband to T-Engine4.
 ]]

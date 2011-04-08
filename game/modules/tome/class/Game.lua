@@ -668,6 +668,7 @@ function _M:chronoRestore(name, remove)
 	game:run()
 	game.key:setCurrent()
 	game.mouse:setCurrent()
+	profile.chat:setupOnGame()
 	return true
 end
 
