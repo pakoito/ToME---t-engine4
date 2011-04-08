@@ -109,16 +109,19 @@ newTalent{
 	tactical = { CLOSEIN = 2 },
 	requires_target = true,
 	range = function(self, t)
-		return 20 + self:getTalentLevel(t)
+		return 5 + self:getTalentLevel(t)
 	end,
 	radius = function(self, t)
-		return 7 - self:getTalentLevel(t)
+		return util.bound(4 - self:getTalentLevel(t) / 2, 1, 4)
 	end,
 	getDuration = function(self, t)
-		return util.bound(5 - self:getTalentLevel(t) / 2, 2, 7)
+		return util.bound(7 - self:getTalentLevel(t) / 2, 2, 7)
 	end,
 	action = function(self, t)
-		local tg = {type="ball", nolock=true, pass_terrain=true, nowarning=true, range=rad, radius=radius, requires_knowledge=false}
+		local range = self:getTalentRange(t)
+		local radius = self:getTalentRadius(t)
+		local tg = {type="ball", nolock=true, pass_terrain=true, nowarning=true, range=range, radius=radius, requires_knowledge=false}
+		local x, y = self:getTarget(tg)
 		if not x then return nil end
 		-- Target code does not restrict the self coordinates to the range, it lets the project function do it
 		-- but we cant ...
@@ -127,8 +130,14 @@ newTalent{
 		self:teleportRandom(x, y, self:getTalentRadius(t))
 		game.level.map:particleEmitter(self.x, self.y, 1, "slime")
 
-		-- Stunned!
-		self:setEffect(self.EFF_STUNNED, t.getDuration(self, t), {})
+		local duration = t.getDuration(self, t)
+
+		for tid, lev in pairs(self.talents) do
+			local t = self:getTalentFromId(tid)
+			if t.mode == "activated" and not t.innate then
+				self.talents_cd[t.id] = duration
+			end
+		end
 		game:playSoundNear(self, "talents/slime")
 		return true
 	end,
@@ -137,6 +146,6 @@ newTalent{
 		local radius = self:getTalentRadius(t)
 		local duration = t.getDuration(self, t)
 		return ([[You extend slimy roots into the ground, follow them, and re-appear somewhere else in a range of %d with error margin of %d.
-		The process is quite a strain on your body and you will be stunned for %d turns.]]):format(range, radius, duration)
+		The process is quite a strain on your body and all your talents will be put on cooldown for %d turns.]]):format(range, radius, duration)
 	end,
 }
