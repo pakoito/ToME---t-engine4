@@ -73,4 +73,11 @@ return {
 		place_list(game.level:getEntitiesList("maj_eyal_encounters"))
 		place_list(game.level:getEntitiesList("fareast_encounters"))
 	end,
+	on_enter = function(_, _, newzone)
+		if game.player.level >= 12 and game.player.level <= 20 and not game.player:hasQuest("lightning-overload") then
+			game.player:grantQuest("lightning-overload")
+		elseif game.player:hasQuest("lightning-overload") then
+			game.player:hasQuest("lightning-overload"):on_wilderness()
+		end
+	end
 }

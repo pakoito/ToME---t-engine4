@@ -56,10 +56,8 @@ return {
 				game.zone:addEntity(game.level, m, "actor", spot.x, spot.y)
 			end
 		end
-		if game.player.level >= 12 and game.player.level <= 20 and not game.player:hasQuest("lightning-overload") then
-			game.player:grantQuest("lightning-overload")
-		elseif game.player:hasQuest("lightning-overload") then
-			game.player:hasQuest("lightning-overload"):reenter_derth()
+		if game.player:hasQuest("lightning-overload") then
+			game.player:hasQuest("lightning-overload"):enter_derth()
 		end
 	end
 }

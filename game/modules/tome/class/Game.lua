@@ -912,7 +912,8 @@ function _M:setupCommands()
 --			self.nicer_tiles:postProcessLevelTiles(self.level)
 --			game:registerDialog(require("mod.dialogs.Donation").new())
 --			self.state:debugRandomZone()
-			game.player:hasQuest("east-portal"):back_to_last_hope()
+			game.level.map:particleEmitter(game.player.x, game.player.y, 3, "stormclouds")
+			game.level.map:particleEmitter(game.player.x, game.player.y, 3, "storm_lightning")
 		end end,
 	}
 
