@@ -232,7 +232,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 		evaded = true
 		game.logSeen(target, "%s evades %s.", target.name:capitalize(), self.name)
 	elseif self:checkHit(atk, def) then
-		local pres = util.bound(self:combatArmorHardiness() / 100, 0, 1)
+		local pres = util.bound(target:combatArmorHardiness() / 100, 0, 1)
 		print("[ATTACK] raw dam", dam, "versus", armor, pres, "with APR", apr)
 		armor = math.max(0, armor - apr)
 		dam = math.max(dam * pres - armor, 0) + (dam * (1 - pres))
