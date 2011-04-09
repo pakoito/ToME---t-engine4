@@ -21,9 +21,9 @@ return {
 	name = "Blighted Ruins",
 	level_range = {1, 8},
 	level_scheme = "player",
-	max_level = 8,
+	max_level = 6,
 	decay = {300, 800},
-	-- 8 levels but actors gain one level every 2 levels
+	-- 6 levels but actors gain one level every 2 levels
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + math.floor((zone.max_level - level.level) / 2) + rng.range(-1,2) end,
 	level_adjust_level = function(zone, level) return zone.base_level + math.floor((zone.max_level - level.level) / 2) end,
 	width = 50, height = 50,
@@ -79,7 +79,7 @@ return {
 	},
 	on_enter = function(_, _, newzone)
 		if newzone and not game.zone.created_lore then
-			local levels = {2,3,4,5,6,7}
+			local levels = {2,3,4,5,6}
 			game.zone.created_lore = {}
 			for i = 1, 4 do
 				local lev = rng.tableRemove(levels)

@@ -678,7 +678,7 @@ function _M:newLevel(level_data, lev, old_lev, game)
 
 	-- Call a finisher
 	if level_data.post_process then
-		level_data.post_process(level)
+		level_data.post_process(level, self)
 		if level.force_recreate then
 			level:removed()
 			return self:newLevel(level_data, lev, old_lev, game)

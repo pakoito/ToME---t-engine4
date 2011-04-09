@@ -21,7 +21,7 @@ return {
 	name = "The Maze",
 	level_range = {7, 16},
 	level_scheme = "player",
-	max_level = 7,
+	max_level = 5,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	width = 40, height = 40,
@@ -60,7 +60,7 @@ return {
 				up = "UP_WILDERNESS",
 			}, },
 		},
-		[7] = {
+		[5] = {
 			generator = { map = {
 				force_last_stair = true,
 				down = "QUICK_EXIT",
@@ -70,10 +70,10 @@ return {
 
 	post_process = function(level)
 		-- Place a lore note on each level
-		game:placeRandomLoreObject("NOTE"..level.level)
+		game:placeRandomLoreObjectScale("NOTE", 7, level.level)
 
 		local p = game.party:findMember{main=true}
-		if level.level == 5 and p:knowTalent(p.T_TRAP_MASTERY) then
+		if level.level == 4 and p:knowTalent(p.T_TRAP_MASTERY) then
 			local l = game.zone:makeEntityByName(level, "object", "NOTE_LEARN_TRAP")
 			if not l then return end
 			for i = -1, 1 do for j = -1, 1 do

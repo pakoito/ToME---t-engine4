@@ -1321,7 +1321,18 @@ function _M:playSoundNear(who, ...)
 end
 
 --- Create a random lore object and place it
-function _M:placeRandomLoreObject(define)
+function _M:placeRandomLoreObjectScale(base, nb, level)
+	local dist = ({
+		[5] = { {1}, {2,3}, {4,5} }, -- 5 => 3
+		korpul = { {1,2}, {3,4} }, -- 5 => 3
+		[7] = { {1}, {2,3}, {4}, {5, 6}, {7} }, -- 7 => 5
+	})[nb][level]
+	if not dist then return end
+	for _, i in ipairs(dist) do self:placeRandomLoreObject(base..i) end
+end
+
+--- Create a random lore object and place it
+function _M:placeRandomLoreObject(define, zone)
 	if type(define) == "table" then define = rng.table(define) end
 	local o = self.zone:makeEntityByName(self.level, "object", define)
 	if not o then return end

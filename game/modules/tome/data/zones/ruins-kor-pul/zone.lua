@@ -21,7 +21,7 @@ return {
 	name = "Ruins of Kor'Pul",
 	level_range = {1, 5},
 	level_scheme = "player",
-	max_level = 5,
+	max_level = 3,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	width = 50, height = 50,
@@ -67,7 +67,7 @@ return {
 				up = "UP_WILDERNESS",
 			}, },
 		},
-		[5] = {
+		[3] = {
 			generator = { map = {
 				class = "engine.generator.map.Static",
 				map = "zones/ruins-kor-pul-last",
@@ -77,6 +77,6 @@ return {
 
 	post_process = function(level)
 		-- Place a lore note on each level
-		if level.level <= 4 then game:placeRandomLoreObject("NOTE"..level.level) end
+		game:placeRandomLoreObjectScale("NOTE", "korpul", level.level)
 	end,
 }

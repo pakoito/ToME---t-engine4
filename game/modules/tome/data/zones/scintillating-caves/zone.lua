@@ -21,7 +21,7 @@ return {
 	name = "Scintillating Caves",
 	level_range = {1, 5},
 	level_scheme = "player",
-	max_level = 5,
+	max_level = 3,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	width = 50, height = 50,
@@ -67,7 +67,7 @@ return {
 
 	post_process = function(level)
 		-- Place a lore note on each level
-		game:placeRandomLoreObject("NOTE"..level.level)
+		game:placeRandomLoreObjectScale("NOTE", 5, level.level)
 	end,
 
 	foreground = function(level, dx, dx, nb_keyframes)

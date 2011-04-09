@@ -21,7 +21,7 @@ return {
 	name = "Murgol Lair",
 	level_range = {1, 5},
 	level_scheme = "player",
-	max_level = 5,
+	max_level = 3,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	width = 50, height = 50,

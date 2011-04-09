@@ -21,7 +21,7 @@ return {
 	name = "Old Forest",
 	level_range = {7, 16},
 	level_scheme = "player",
-	max_level = 7,
+	max_level = 5,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	width = 50, height = 50,
@@ -71,7 +71,7 @@ return {
 				up = "GRASS_UP_WILDERNESS",
 			}, },
 		},
-		[7] = {
+		[5] = {
 			generator =  { map = {
 				edge_entrances = {4,2},
 				down = "LAKE_NUR",
@@ -82,7 +82,7 @@ return {
 
 	post_process = function(level)
 		-- Place a lore note on each level
-		game:placeRandomLoreObject("NOTE"..level.level)
+		game:placeRandomLoreObjectScale("NOTE", 7, level.level)
 
 		if not config.settings.tome.weather_effects then return end
 

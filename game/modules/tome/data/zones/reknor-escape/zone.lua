@@ -21,7 +21,7 @@ return {
 	name = "Escape from Reknor",
 	level_range = {1, 5},
 	level_scheme = "player",
-	max_level = 5,
+	max_level = 3,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	width = 50, height = 50,
@@ -66,7 +66,7 @@ return {
 				up = "FLOOR",
 			}, },
 		},
-		[5] = {
+		[3] = {
 			generator = {
 				map = {
 					class = "engine.generator.map.Static",
@@ -85,7 +85,7 @@ return {
 			local norgan = game.party:findMember{type="squadmate"}
 			if norgan then norgan:forceLevelup(2) end
 		end
-		if lev == 4 then
+		if lev == 3 then
 			game.player:forceLevelup(3)
 			local norgan = game.party:findMember{type="squadmate"}
 			if norgan then norgan:forceLevelup(3) end
