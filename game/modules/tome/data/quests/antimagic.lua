@@ -35,6 +35,7 @@ on_status_change = function(self, who, status, sub)
 		p:attr("forbid_arcane", 1)
 		p:learnTalentType("wild-gift/antimagic", true)
 		p:learnTalent(p.T_RESOLVE, true)
+		world:gainAchievement("ANTIMAGIC", game.player)
 	end
 end
 
