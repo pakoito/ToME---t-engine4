@@ -25,7 +25,8 @@ local Separator = require "engine.ui.Separator"
 
 module(..., package.seeall, class.inherit(Dialog))
 
-function _M:init(title)
+function _M:init(title, player)
+	self.player = player
 	local total = #world.achiev_defs
 	local nb = 0
 	for id, data in pairs(world.achieved) do nb = nb + 1 end
@@ -57,7 +58,11 @@ end
 
 function _M:select(item)
 	if item then
-		self.c_desc:switchItem(item, ("#GOLD#Achieved on:#LAST# %s\n#GOLD#Achieved by:#LAST# %s\n\n#GOLD#Description:#LAST# %s"):format(item.when, item.who, item.desc))
+		local also = ""
+		if self.player and self.player.achievements and self.player.achievements[item.id] then
+			also = "#GOLD#Also achieved by your current character#LAST#\n"
+		end
+		self.c_desc:switchItem(item, ("#GOLD#Achieved on:#LAST# %s\n#GOLD#Achieved by:#LAST# %s\n%s\n#GOLD#Description:#LAST# %s"):format(item.when, item.who, also, item.desc))
 	end
 end
 
@@ -67,7 +72,11 @@ function _M:generateList()
 	local i = 0
 	for id, data in pairs(world.achieved) do
 		local a = world:getAchievementFromId(id)
-		list[#list+1] = { name=a.name,  desc=a.desc, when=data.when, who=data.who, order=a.order }
+		local color = nil
+		if self.player and self.player.achievements and self.player.achievements[id] then
+			color = colors.simple(colors.LIGHT_GREEN)
+		end
+		list[#list+1] = { name=a.name, color=color, desc=a.desc, when=data.when, who=data.who, order=a.order, id=id }
 		i = i + 1
 	end
 	table.sort(list, function(a, b) return a.name < b.name end)

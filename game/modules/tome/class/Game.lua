@@ -631,7 +631,7 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 end
 
 function _M:getPlayer()
-	return self.player
+	return self.party:findMember{main=true}
 end
 
 --- Clones the game world for chronomancy spells

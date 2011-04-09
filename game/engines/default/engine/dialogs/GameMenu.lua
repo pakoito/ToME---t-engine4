@@ -70,7 +70,7 @@ function _M:generateList(actions)
 		end },
 		achievements = { "Show Achievements", function()
 			game:unregisterDialog(self)
-			local menu = require("engine.dialogs.ShowAchievements").new()
+			local menu = require("engine.dialogs.ShowAchievements").new(nil, game:getPlayer())
 			game:registerDialog(menu)
 		end },
 		sound = { "Sound & Music", function()
