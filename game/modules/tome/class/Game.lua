@@ -630,8 +630,12 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 	if self.level.data.day_night then self.state:dayNightCycle() end
 end
 
-function _M:getPlayer()
-	return self.party:findMember{main=true}
+function _M:getPlayer(main)
+	if main then
+		return self.party:findMember{main=true}
+	else
+		return self.player
+	end
 end
 
 --- Clones the game world for chronomancy spells
