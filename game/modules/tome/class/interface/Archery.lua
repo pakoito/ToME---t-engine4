@@ -132,7 +132,7 @@ local function archery_projectile(tx, ty, tg, self)
 		apr = apr + (tg.archery.apr or 0)
 		print("[ATTACK ARCHERY] raw dam", dam, "versus", armor, "with APR", apr)
 
-		local pres = util.bound(self:combatArmorHardiness() / 100, 0, 1)
+		local pres = util.bound(target:combatArmorHardiness() / 100, 0, 1)
 		armor = math.max(0, armor - apr)
 		dam = math.max(dam * pres - armor, 0) + (dam * (1 - pres))
 		print("[ATTACK ARCHERY] after armor", dam)
