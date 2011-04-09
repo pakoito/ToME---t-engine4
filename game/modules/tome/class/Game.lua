@@ -565,11 +565,9 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 
 	-- Re add entities
 	self.level:addEntity(self.player)
-	self.player.last_act_turn = math.floor(self.turn / (self.zone.wilderness and 1000 or 10))
 	if self.to_re_add_actors and not self.zone.wilderness then
 		for act, _ in pairs(self.to_re_add_actors) do
 			self.level:addEntity(act)
-			act.last_act_turn = math.floor(self.turn / (self.zone.wilderness and 1000 or 10))
 			act:setTarget(nil)
 			if act.ai_state and act.ai_state.tactic_leash_anchor then
 				act.ai_state.tactic_leash_anchor = game.player
@@ -583,6 +581,11 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 	end
 
 	self.player:onEnterLevel(self.zone, self.level)
+
+	-- All entities on the level remember acting not long ago, this prevents long "update" time upon re-entry
+	for uid, act in pairs(self.level.entities) do
+		act.last_act_turn = math.floor(self.turn / (self.zone.wilderness and 1000 or 10))
+	end
 
 	if self.level.data.ambient_music then
 		if self.level.data.ambient_music ~= "last" then
