@@ -311,8 +311,8 @@ You have heard of such items before, they are very useful to adventurers, allowi
 	cost = 0, quest=true,
 	elec_proof = true,
 
-	max_power = 1000, power_regen = 1,
-	use_power = { name = "recall the user to the worldmap", power = 1000,
+	max_power = 400, power_regen = 1,
+	use_power = { name = "recall the user to the worldmap", power = 400,
 		use = function(self, who)
 			if who:canBe("worldport") and not self:attr("never_move") then
 				who:setEffect(who.EFF_RECALL, 40, {})

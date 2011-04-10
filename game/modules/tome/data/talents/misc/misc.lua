@@ -174,7 +174,7 @@ newTalent{
 	short_name = "TELEPORT_ANGOLWEN",
 	name = "Teleport: Angolwen",
 	type = {"base/class", 1},
-	cooldown = 1000,
+	cooldown = 400,
 	no_npc_use = true,
 	no_silence=true, is_spell=true,
 	action = function(self, t)
