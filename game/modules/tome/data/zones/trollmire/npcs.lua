@@ -30,15 +30,55 @@ load("/data/general/npcs/all.lua", rarity(4, 35))
 
 local Talents = require("engine.interface.ActorTalents")
 
+newEntity{ define_as = "TROLL_PROX",
+	allow_infinite_dungeon = true,
+	type = "giant", subtype = "troll", unique = true,
+	name = "Prox the Mighty",
+	display = "T", color=colors.VIOLET, image="npc/troll_bill.png",
+	desc = [[A huge troll, he might move slowly but he does look dangerous nonetheless.]],
+	level_range = {7, nil}, exp_worth = 2,
+	max_life = 150, life_rating = 15, fixed_rating = true,
+	max_stamina = 85,
+	stats = { str=20, dex=10, cun=8, mag=10, con=20 },
+	rank = 4,
+	size_category = 4,
+	infravision = 20,
+	instakill_immune = 1,
+	move_others=true,
+
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+	resolvers.equip{ {type="weapon", subtype="greatmaul", autoreq=true}, },
+	resolvers.drops{chance=100, nb=1, {unique=true, not_properties={"lore"}} },
+	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
+	resolvers.drops{chance=100, nb=1, {defined="PROX_NOTE"} },
+
+	resolvers.talents{
+		[Talents.T_KNOCKBACK]=1,
+	},
+	resolvers.inscriptions(1, {"movement infusion"}),
+	inc_damage = { all = -40 },
+
+	autolevel = "warrior",
+	ai = "tactical", ai_state = { talent_in=3, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"melee",
+
+	on_die = function(self, who)
+		game.state:activateBackupGuardian("ALUIN", 2, 35, "... and we thought the trollmire was safer now!")
+		game.player:resolveSource():grantQuest("start-allied")
+		game.player:resolveSource():setQuestStatus("start-allied", engine.Quest.COMPLETED, "trollmire")
+	end,
+}
+
 newEntity{ define_as = "TROLL_BILL",
 	allow_infinite_dungeon = true,
 	type = "giant", subtype = "troll", unique = true,
 	name = "Bill the Stone Troll",
 	display = "T", color=colors.VIOLET, image="npc/troll_bill.png",
 	desc = [[Big, brawny, powerful and with a taste for Halfling.
-He is wielding a small tree trunk and lumbering toward you.]],
+He is wielding a small tree trunk and lumbering toward you.
+This is the troll the notes spoke about, no doubt.]],
 	level_range = {7, nil}, exp_worth = 2,
-	max_life = 150, life_rating = 12, fixed_rating = true,
+	max_life = 250, life_rating = 18, fixed_rating = true,
 	max_stamina = 85,
 	stats = { str=25, dex=10, cun=8, mag=10, con=20 },
 	rank = 4,
@@ -52,20 +92,16 @@ He is wielding a small tree trunk and lumbering toward you.]],
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 
 	resolvers.talents{
-		[Talents.T_RUSH]=3,
-		[Talents.T_KNOCKBACK]=1,
+		[Talents.T_RUSH]=4,
+		[Talents.T_KNOCKBACK]=3,
 	},
 	resolvers.inscriptions(1, {"wild infusion", "heroism infusion"}),
-	inc_damage = { all = -35 },
 
 	autolevel = "warrior",
 	ai = "tactical", ai_state = { talent_in=3, ai_move="move_astar", },
 	ai_tactic = resolvers.tactic"melee",
 
 	on_die = function(self, who)
-		game.state:activateBackupGuardian("ALUIN", 2, 35, "... and we thought the trollmire was safer now!")
-		game.player:resolveSource():grantQuest("start-allied")
-		game.player:resolveSource():setQuestStatus("start-allied", engine.Quest.COMPLETED, "trollmire")
 		if who and who.level and who.level == 1 then
 			world:gainAchievement("KILL_BILL", game.player)
 		end

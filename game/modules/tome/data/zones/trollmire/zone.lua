@@ -59,7 +59,7 @@ return {
 			nb_npc = {20, 30},
 			filters = { {max_ood=2}, },
 			nb_spots = 2, on_spot_chance = 35,
-			guardian = "TROLL_BILL",
+			guardian = "TROLL_PROX",
 		},
 		object = {
 			class = "engine.generator.object.OnSpots",
@@ -78,13 +78,48 @@ return {
 				up = "GRASS_UP_WILDERNESS",
 			}, },
 		},
+		[3] = {
+			generator = { map = {
+				force_last_stair = true,
+				down = "GRASS",
+			}, },
+		},
+		-- Hidden treasure level
+		[4] = {
+			generator = {
+				map = {
+					class = "engine.generator.map.Static",
+					map = "zones/trollmire-treasure",
+				},
+				trap = { nb_trap = {0, 0} },
+				object = { nb_object = {3, 4} },
+				actor = { nb_npc = {2, 2} },
+			},
+		},
 	},
 
 	post_process = function(level)
 		-- Place a lore note on each level
 		game:placeRandomLoreObjectScale("NOTE", 5, level.level)
 
+		-- Rain on bill
+		if level.level == 4 and config.settings.tome.weather_effects then
+			local Map = require "engine.Map"
+			level.foreground_particle = require("engine.Particles").new("raindrops", 1, {width=Map.viewport.width, height=Map.viewport.height})
+		end
+
 		-- Some clouds floating happily over the trollmire
 		game.state:makeWeather(level, 7, {max_nb=1, speed={0.5, 1.6}, shadow=true, alpha={0.23, 0.35}, particle_name="weather/grey_cloud_%02d"})
+	end,
+
+	foreground = function(level, x, y, nb_keyframes)
+		if not config.settings.tome.weather_effects or not level.foreground_particle then return end
+		level.foreground_particle.ps:toScreen(x, y, true, 1)
+	end,
+
+	on_enter = function(lev, old_lev, newzone)
+		if lev == 3 and game.player:hasQuest("trollmire-treasure") then
+			game.player:hasQuest("trollmire-treasure"):enter_level3()
+		end
 	end,
 }

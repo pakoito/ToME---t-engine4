@@ -1,0 +1,44 @@
+-- ToME - Tales of Maj'Eyal
+-- Copyright (C) 2009, 2010, 2011 Nicolas Casalini
+--
+-- This program is free software: you can redistribute it and/or modify
+-- it under the terms of the GNU General Public License as published by
+-- the Free Software Foundation, either version 3 of the License, or
+-- (at your option) any later version.
+--
+-- This program is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
+--
+-- You should have received a copy of the GNU General Public License
+-- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+--
+-- Nicolas Casalini "DarkGod"
+-- darkgod@te4.org
+
+name = "Hidden treasure"
+desc = function(self, who)
+	local desc = {}
+	desc[#desc+1] = "You have found all the clues leading to the hidden treasure, there should be a way on the third level of the trollmire."
+	desc[#desc+1] = "It looks extremely dangerous however, beware."
+	return table.concat(desc, "\n")
+end
+
+on_grant = function(self)
+	if game.level.level == 3 then
+		self:enter_level3()
+	end
+end
+
+enter_level3 = function(self)
+	-- Reveal entrance to level 4
+	local g = game.zone:makeEntityByName(game.level, "terrain", "GRASS_DOWN6"):clone()
+	g.name = "way to the hidden trollmire treasure"
+	g.desc = "Beware!"
+	local level = game.level
+	local spot = level.default_down
+	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
+
+	require("engine.ui.Dialog"):simplePopup("Hidden treasure", "The way to the treasure is to the east. But beware, death probably awaits there.")
+end

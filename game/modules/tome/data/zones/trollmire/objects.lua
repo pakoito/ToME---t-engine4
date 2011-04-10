@@ -19,7 +19,7 @@
 
 load("/data/general/objects/objects.lua")
 
-for i = 1, 5 do
+for i = 1, 4 do
 newEntity{ base = "BASE_LORE",
 	define_as = "NOTE"..i,
 	name = "tattered paper scrap", lore="trollmire-note-"..i,
@@ -29,3 +29,12 @@ newEntity{ base = "BASE_LORE",
 	encumberance = 0,
 }
 end
+
+newEntity{ base = "BASE_LORE",
+	define_as = "PROX_NOTE",
+	name = "tattered paper scrap", lore="trollmire-note-5",
+	desc = [[A paper scrap, left by an adventurer.]],
+	rarity = false,
+	is_magic_device = false,
+	encumberance = 0,
+}
