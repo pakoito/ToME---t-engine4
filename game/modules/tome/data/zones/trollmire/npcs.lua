@@ -102,6 +102,7 @@ This is the troll the notes spoke about, no doubt.]],
 	ai_tactic = resolvers.tactic"melee",
 
 	on_die = function(self, who)
+		game.player:resolveSource():grantQuest("trollmire-treasure")
 		if who and who.level and who.level == 1 then
 			world:gainAchievement("KILL_BILL", game.player)
 		end

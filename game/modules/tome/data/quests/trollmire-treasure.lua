@@ -22,7 +22,18 @@ desc = function(self, who)
 	local desc = {}
 	desc[#desc+1] = "You have found all the clues leading to the hidden treasure, there should be a way on the third level of the trollmire."
 	desc[#desc+1] = "It looks extremely dangerous however, beware."
+	if self:isEnded() then
+		desc[#desc+1] = "You have slain Bill and took his treasure."
+	end
 	return table.concat(desc, "\n")
+end
+
+on_status_change = function(self, who, status, sub)
+	if sub then
+		if self:isCompleted() then
+			who:setQuestStatus(self.id, engine.Quest.DONE)
+		end
+	end
 end
 
 on_grant = function(self)
