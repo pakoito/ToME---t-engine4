@@ -71,7 +71,7 @@ newEntity{ define_as = "MINOTAUR_MAZE",
 	resolvers.inscriptions(2, "infusion"),
 
 	on_die = function(self, who)
-		game.state:activateBackupGuardian("NIMISIL", rng.range(1, 5), 40, "Have you hard about the patrol that disappeared in the maze in the west?")
+		game.state:activateBackupGuardian("NIMISIL", 2, 40, "Have you hard about the patrol that disappeared in the maze in the west?")
 		game.player:resolveSource():grantQuest("starter-zones")
 		game.player:resolveSource():setQuestStatus("starter-zones", engine.Quest.COMPLETED, "maze")
 	end,
