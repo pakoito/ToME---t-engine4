@@ -1329,7 +1329,7 @@ static int minimap_to_screen(lua_State *L)
 				if ((i < 0) || (j < 0) || (i >= map->w) || (j >= map->h)) continue;
 				map_object *mo = map->grids[i][j][z];
 				if (!mo || mo->mm_r < 0) continue;
-				ptr = (j * map->mm_rw + i) * 4;
+				ptr = ((j-mdy) * map->mm_rw + (i-mdx)) * 4;
 
 				if ((mo->on_seen && map->grids_seens[j*map->w+i]) || (mo->on_remember && map->grids_remembers[i][j]) || mo->on_unknown)
 				{

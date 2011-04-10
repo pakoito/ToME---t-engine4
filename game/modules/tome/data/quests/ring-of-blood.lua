@@ -72,7 +72,7 @@ start_game = function(self)
 
 	slave.on_die = function(self)
 		game.player:hasQuest("ring-of-blood"):stop_game(false)
-		game.log("#CRIMSON#The crowd yells: 'LOOSER!'")
+		game.log("#CRIMSON#The crowd yells: 'LOSER!'")
 	end
 
 	game.log("#LIGHT_GREEN#As you touch the orb your will fills the slave's body. You take full control of his actions!")
