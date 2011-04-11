@@ -24,21 +24,21 @@ return {
 	max_level = 4,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
-	width = 90, height = 90,
+	width = 50, height = 50,
 	all_remembered = true,
 	all_lited = true,
 --	persistent = "zone",
 	generator =  {
 		map = {
-			class = "engine.generator.map.Forest",
-			floor = "FLOOR",
-			wall = "FLOOR",
+			class = "engine.generator.map.Octopus",
+			['.'] = "FLOOR",
+			['#'] = "WALL",
 			up = "FLOOR",
 			down = "FLOOR",
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
-			nb_npc = {100, 100},
+			nb_npc = {0, 0},
 		},
 --[[
 		object = {

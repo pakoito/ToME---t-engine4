@@ -919,8 +919,7 @@ function _M:setupCommands()
 --			self.nicer_tiles:postProcessLevelTiles(self.level)
 --			game:registerDialog(require("mod.dialogs.Donation").new())
 --			self.state:debugRandomZone()
-			game.level.map:particleEmitter(game.player.x, game.player.y, 3, "stormclouds")
-			game.level.map:particleEmitter(game.player.x, game.player.y, 3, "storm_lightning")
+			self:changeLevel(1, "test")
 		end end,
 	}
 

@@ -413,7 +413,6 @@ function resolvers.calc.inscriptions(t, e)
 				local name = rng.tableRemove(t[2])
 				if not name then return nil end
 				o = game.zone:makeEntity(game.level, "object", {special=kind, name=name}, nil, true)
-				print("======>>>", name, kind, o, o and o.name)
 			else
 				o = game.zone:makeEntity(game.level, "object", {special=kind, type="scroll"}, nil, true)
 			end

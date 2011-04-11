@@ -86,7 +86,7 @@ newEntity{ base = "BASE_NPC_GHOST",
 
 	combat = { dam=resolvers.mbonus(65, 65), atk=resolvers.mbonus(25, 45), apr=100, dammod={str=0.5, mag=0.5} },
 
-	summon = {{type="undead", subtype="ghost", name="dead", number=3, hasxp=false}, },
+	summon = {{type="undead", subtype="ghost", name="dread", number=3, hasxp=false}, },
 	resolvers.talents{
 		[Talents.T_SUMMON]=1,
 		[Talents.T_PHASE_DOOR]=2,
