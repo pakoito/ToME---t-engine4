@@ -383,23 +383,25 @@ local inscriptions_max = {
 	teleport = 0, -- Annoying
 }
 
-function resolvers.inscriptions(nb, list, kind)
-	return {__resolver="inscriptions", nb, list, kind}
+function resolvers.inscriptions(nb, list, kind, ignore_limits)
+	return {__resolver="inscriptions", nb, list, kind, ignore_limits}
 end
 function resolvers.calc.inscriptions(t, e)
 	local kind = nil
-	if t[3] then
-		kind = function(o)
-			if 	o.incription_kind == t[3] and
-				(e.__npc_inscription_kinds[o.inscription_kind] or 0) < (inscriptions_max[o.inscription_kind] or 0)
-				then return true
-			end return false
-		end
-	else
-		kind = function(o)
-			if 	(e.__npc_inscription_kinds[o.inscription_kind] or 0) < (inscriptions_max[o.inscription_kind] or 0)
-				then return true
-			end return false
+	if not t[4] then
+		if t[3] then
+			kind = function(o)
+				if 	o.incription_kind == t[3] and
+					(e.__npc_inscription_kinds[o.inscription_kind] or 0) < (inscriptions_max[o.inscription_kind] or 0)
+					then return true
+				end return false
+			end
+		else
+			kind = function(o)
+				if 	(e.__npc_inscription_kinds[o.inscription_kind] or 0) < (inscriptions_max[o.inscription_kind] or 0)
+					then return true
+				end return false
+			end
 		end
 	end
 
@@ -411,6 +413,7 @@ function resolvers.calc.inscriptions(t, e)
 				local name = rng.tableRemove(t[2])
 				if not name then return nil end
 				o = game.zone:makeEntity(game.level, "object", {special=kind, name=name}, nil, true)
+				print("======>>>", name, kind, o, o and o.name)
 			else
 				o = game.zone:makeEntity(game.level, "object", {special=kind, type="scroll"}, nil, true)
 			end

@@ -123,7 +123,7 @@ newEntity{ define_as = "PLAYER_SLAVE",
 		[Talents.T_WEAPON_COMBAT] = 4,
 	},
 
-	resolvers.inscriptions(2, {"regeneration infusion","regeneration infusion"}),
+	resolvers.inscriptions(2, {"regeneration infusion","healing infusion"}, nil, true),
 
 	autolevel = "warrior",
 
