@@ -66,7 +66,7 @@ newTalent{
 	info = function(self, t)
 		local talentcount = t.getTalentCount(self, t)
 		local cooldown = t.getCooldown(self, t)
-		return ([[You sap the energy out of %d of the targets runes or infusions, placing them on cooldown for %d turns.]]):
+		return ([[You sap the energy out of %d of the targets inscriptions, placing them on cooldown for %d turns.]]):
 		format(talentcount, cooldown)
 	end,
 }

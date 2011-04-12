@@ -3479,6 +3479,10 @@ newEffect{
 			self:forceUseTalent(rng.table(ts), {ignore_energy=true})
 			-- cancel tuning
 			self:removeEffect(self.EFF_SPACETIME_TUNING)
+		-- prevent abusive shananigans
+		elseif self.paradox > math.max(self:getWil() * 20, 500) and eff.power > 0 then
+			game.logPlayer(self, "Space time resists your will, you can raise Paradox no further.")
+			self:removeEffect(self.EFF_SPACETIME_TUNING)
 		else
 			self:incParadox(eff.power)
 		end

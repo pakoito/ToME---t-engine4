@@ -22,7 +22,7 @@ local Object = require "engine.Object"
 newTalent{
 	name = "Echoes From The Past",
 	type = {"chronomancy/timetravel", 1},
-	require = chrono_req_1,
+	require = chrono_req1,
 	points = 5,
 	paradox = 10,
 	cooldown = 6,
@@ -185,7 +185,7 @@ newTalent{
 	require = chrono_req4, no_sustain_autoreset = true,
 	points = 5,
 	mode = "sustained",
-	sustain_paradox = 300,
+	sustain_paradox = 150,
 	cooldown = 50,
 	no_npc_use = true,
 	getParadoxIncrease = function(self, t) return 28 - (self:getTalentLevelRaw(t) * 4) end,

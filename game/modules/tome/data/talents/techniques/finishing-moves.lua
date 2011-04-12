@@ -151,7 +151,7 @@ newTalent{
 	points = 5,
 	random_ego = "utility",
 	cooldown = function(self, t) return math.floor(26 - self:getTalentLevelRaw(t) * 2) end,
-	stamina = 20,
+	stamina = 10,
 	tactical = { BUFF = 2 },
 	on_pre_use = function(self, t, silent) if not self:hasEffect(self.EFF_COMBO) then if not silent then game.logPlayer(self, "You must have a combo going to use this ability.") end return false end return true end,
 	getStamina = function(self, t) return self:getTalentLevel(t) * 2 end,

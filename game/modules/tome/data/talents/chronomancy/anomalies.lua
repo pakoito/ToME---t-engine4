@@ -770,7 +770,6 @@ newTalent{
 	getTargetCount = function(self, t) return 1 end,
 	getHastePower = function(self, t) return ((self:getParadox()/15) / 100) end,
 	getRegenPower = function(self, t) return (self:getParadox()/15) end,
-	getStatPower = function(self, t) return (self:getParadox()/30) end,
 	message = "The odds have tilted.",
 	action = function(self, t)
 		local tgts = {}
@@ -791,8 +790,7 @@ newTalent{
 
 			a:setEffect(self.EFF_SPEED, 8, {power=t.getHastePower(self, t)})
 			a:setEffect(self.EFF_REGENERATION, 8, {power=t.getRegenPower(self, t)})
-			a:setEffect(self.EFF_ALL_STAT, 8, {power=t.getStatPower(self, t)})
-			a:setEffect(self.EFF_PAIN_SUPPRESSION, 8, {power=t.getStatPower(self, t)})
+			a:setEffect(self.EFF_PAIN_SUPPRESSION, 8, {power=t.getRegenPower(self, t)})
 			game.level.map:particleEmitter(a.x, a.y, 1, "temporal_teleport")
 			game:playSoundNear(self, "talents/spell_generic")
 		end

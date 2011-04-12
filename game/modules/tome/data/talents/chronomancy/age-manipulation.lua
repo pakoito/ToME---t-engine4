@@ -28,7 +28,7 @@ newTalent{
 	range = 10,
 	reflectable = true,
 	requires_target = true,
-	proj_speed = 3,
+	proj_speed = 5,
 	direct_hit = true,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 200)*getParadoxModifier(self, pm) end,
 	getDamageStat = function(self, t) return 2 + math.ceil(t.getDamage(self, t) / 15) end,
@@ -37,22 +37,119 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		x, y = checkBackfire(self, x, y)
-		self:projectile(tg, x, y, DamageType.CLOCK, self:spellCrit(t.getDamage(self, t)))
+		self:projectile(tg, x, y, DamageType.CLOCK, self:spellCrit(t.getDamage(self, t)), nil)
 		game:playSoundNear(self, "talents/spell_generic2")
+		
+		--bolt #2 (Talent Level 4 Bonus Bolt)
+		if self:getTalentLevel(t) >= 4 then
+			local tg2 = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="temporal_bolt"}}
+			local x, y = self:getTarget(tg2)
+			x, y = checkBackfire(self, x, y)
+			if x and y then
+				self:projectile(tg2, x, y, DamageType.CLOCK, self:spellCrit(t.getDamage(self, t)), nil)
+				game:playSoundNear(self, "talents/spell_generic2")
+			end
+		else end
+	
 		return true
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local damagestat = t.getDamageStat(self, t)
 		return ([[Project a bolt of temporal energy, dealing %0.2f temporal damage and reducing all of the target's stats by %d for 3 turns.
+		At talent level 4 you may project a second bolt.
 		The damage will scale with your Paradox and Magic stat.]]):format(damDesc(self, DamageType.TEMPORAL, damage), damagestat)
 	end,
 }
 
 newTalent{
-	name = "Body Reversion",
+	name = "Temporal Fugue",
 	type = {"chronomancy/age-manipulation", 2},
 	require = chrono_req2,
+	points = 5,
+	paradox = 15,
+	cooldown = 15,
+	tactical = { ATTACKAREA = 2, DISABLE= 2 },
+	range = 0,
+	radius = function(self, t)
+		return 4 + math.floor(self:getTalentLevelRaw (t)/2)
+	end,
+	requires_target = true,
+	target = function(self, t)
+		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
+	end,
+	getConfuseDuration = function(self, t) return math.floor((self:getTalentLevel(t) + 2) * getParadoxModifier(self, pm)) end,
+	getConfuseEfficency = function(self, t) return (50 + self:getTalentLevelRaw(t) * 10) * getParadoxModifier(self, pm) end,
+	action = function(self, t)
+		local tg = self:getTalentTarget(t)
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		print (check)
+		self:project(tg, x, y, DamageType.CONFUSION, {
+			dur = t.getConfuseDuration(self, t),
+			dam = t.getConfuseEfficency(self, t)
+		})
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "temporal_breath", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
+		game:playSoundNear(self, "talents/tidalwave")
+		return true
+	end,
+	info = function(self, t)
+		local duration = t.getConfuseDuration(self, t)
+		local radius = self:getTalentRadius(t)
+		return ([[Reverts the minds of all creatures in a %d radius cone to an infantile state, in effect confusing them for %d turns.
+		The duration and power of the confusion effect will scale with your Paradox.]]):
+		format(radius, duration)
+	end,
+}
+
+newTalent{
+	name = "Ashes to Ashes",
+	type = {"chronomancy/age-manipulation",3},
+	require = chrono_req3,
+	points = 5,
+	paradox = 20,
+	cooldown = 20,
+	tactical = { ATTACKAREA = 2 },
+	range = 0,
+	radius = function(self, t)
+		return 3 + math.floor(self:getTalentLevel(t)/4)
+	end,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false}
+	end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 8, 135)*getParadoxModifier(self, pm) end,
+	getDuration = function(self, t) return 5 + math.ceil(self:getTalentLevel(t)) end,
+	action = function(self, t)
+		local tg = self:getTalentTarget(t)
+		game.level.map:addEffect(self,
+			self.x, self.y, t.getDuration(self, t),
+			DamageType.WASTING, t.getDamage(self, t),
+			tg.radius,
+			5, nil,
+			engine.Entity.new{alpha=100, display='', color_br=176, color_bg=196, color_bb=222},
+			function(e)
+				e.x = e.src.x
+				e.y = e.src.y
+				return true
+			end,
+			tg.selffire
+		)
+		game:playSoundNear(self, "talents/cloud")
+		return true
+	end,
+	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		local duration = t.getDuration(self, t)
+		local radius = self:getTalentRadius(t)
+		return ([[You surround yourself with a radius %d aura of time distortion that lasts %d turns and deals %0.2f stacking temporal damage over 3 turns to all other creatures.
+		The damage will scale with your Paradox and Magic stat]]):format(radius, duration, damDesc(self, DamageType.TEMPORAL, damage))
+	end,
+}
+
+newTalent{
+	name = "Body Reversion",
+	type = {"chronomancy/age-manipulation", 4},
+	require = chrono_req4,
 	points = 5,
 	paradox = 10,
 	cooldown = 10,
@@ -89,88 +186,5 @@ newTalent{
 		return ([[You revert your body to a previous state, healing yourself for %0.2f life and removing %d status effects (both good and bad).
 		The life healed will scale with your Paradox and Magic stat.]]):
 		format(heal, count)
-	end,
-}
-
-newTalent{
-	name = "Temporal Fugue",
-	type = {"chronomancy/age-manipulation", 3},
-	require = chrono_req3,
-	points = 5,
-	paradox = 15,
-	cooldown = 15,
-	tactical = { ATTACKAREA = 2, DISABLE= 2 },
-	range = 0,
-	radius = function(self, t)
-		return 4 + math.floor(self:getTalentLevelRaw (t)/2)
-	end,
-	requires_target = true,
-	target = function(self, t)
-		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
-	end,
-	getConfuseDuration = function(self, t) return math.floor((self:getTalentLevel(t) + 2) * getParadoxModifier(self, pm)) end,
-	getConfuseEfficency = function(self, t) return (50 + self:getTalentLevelRaw(t) * 10) * getParadoxModifier(self, pm) end,
-	action = function(self, t)
-		local tg = self:getTalentTarget(t)
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		print (check)
-		self:project(tg, x, y, DamageType.CONFUSION, {
-			dur = t.getConfuseDuration(self, t),
-			dam = t.getConfuseEfficency(self, t)
-		})
-		game.level.map:particleEmitter(self.x, self.y, tg.radius, "temporal_breath", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
-		game:playSoundNear(self, "talents/tidalwave")
-		return true
-	end,
-	info = function(self, t)
-		local duration = t.getConfuseDuration(self, t)
-		local radius = self:getTalentRadius(t)
-		return ([[Reverts the minds of all creatures in a %d radius cone to an infantile state, in effect confusing them for %d turns.
-		The duration and power of the confuse will scale with your Paradox.]]):
-		format(radius, duration)
-	end,
-}
-
-newTalent{
-	name = "Ashes to Ashes",
-	type = {"chronomancy/age-manipulation",4},
-	require = chrono_req4,
-	points = 5,
-	paradox = 20,
-	cooldown = 20,
-	tactical = { ATTACKAREA = 2 },
-	range = 0,
-	radius = 3,
-	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false}
-	end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 8, 135)*getParadoxModifier(self, pm) end,
-	getDuration = function(self, t) return 5 + math.ceil(self:getTalentLevel(t)) end,
-	getRadius = function(self, t) return 3 + math.floor(self:getTalentLevel(t)/4)end,
-	action = function(self, t)
-		local tg = self:getTalentTarget(t)
-		game.level.map:addEffect(self,
-			self.x, self.y, t.getDuration(self, t),
-			DamageType.WASTING, t.getDamage(self, t),
-			tg.radius,
-			5, nil,
-			engine.Entity.new{alpha=100, display='', color_br=176, color_bg=196, color_bb=222},
-			function(e)
-				e.x = e.src.x
-				e.y = e.src.y
-				return true
-			end,
-			tg.selffire
-		)
-		game:playSoundNear(self, "talents/cloud")
-		return true
-	end,
-	info = function(self, t)
-		local damage = t.getDamage(self, t)
-		local duration = t.getDuration(self, t)
-		local radius = t.getRadius(self, t)
-		return ([[You surround yourself with a radius %d aura of time distortion for %d turns that deals %0.2f stacking temporal damage over 3 turns to all other creatures.
-		The damage will scale with your Paradox and Magic stat]]):format(radius, duration, damDesc(self, DamageType.TEMPORAL, damage))
 	end,
 }

@@ -421,18 +421,18 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 		self:setEffect(self.EFF_SET_UP, 2, {src = target, power=power})
 	end
 
-	-- Defensive Throw!
-	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_DEFENSIVE_THROW) and rng.percent(target:getTalentLevel(target.T_DEFENSIVE_THROW) * (5 + target:getCun(5))) then
-		local t = target:getTalentFromId(target.T_DEFENSIVE_THROW)
-		t.do_throw(target, self, t)
-	end
-
 	-- Counter Attack!
 	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_COUNTER_ATTACK) and rng.percent(target:getTalentLevel(target.T_COUNTER_ATTACK) * (5 + target:getCun(5))) then
 		game.logSeen(self, "%s counters the attack!", target.name:capitalize())
 		local t = target:getTalentFromId(target.T_COUNTER_ATTACK)
 		local damage = t.getDamage(target, t)
 		local hit = target:attackTarget(self, nil, damage, true)
+	end
+	
+	-- Defensive Throw!
+	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_DEFENSIVE_THROW) and rng.percent(target:getTalentLevel(target.T_DEFENSIVE_THROW) * (5 + target:getCun(5))) then
+		local t = target:getTalentFromId(target.T_DEFENSIVE_THROW)
+		t.do_throw(target, self, t)
 	end
 
 	-- Greater Weapon Focus
@@ -616,7 +616,7 @@ function _M:combatDamage(weapon)
 
 	if weapon == self.combat then
 		-- Handles unarmed mastery
-		talented_mod = math.sqrt(self:getTalentLevel(Talents.T_UNARMED_MASTERY) / 10) + 1 or 0
+		talented_mod = math.sqrt((self:getTalentLevel(Talents.T_UNARMED_MASTERY) / 10) or 0) + 1
 	else
 		talented_mod = math.sqrt(self:combatCheckTraining(weapon) / 10) + 1
 	end

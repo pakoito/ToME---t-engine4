@@ -153,7 +153,7 @@ newTalent{
 newTalent{
 	name = "Roundhouse Kick",
 	type = {"technique/unarmed-discipline", 4},
-	require = techs_dex_req3,
+	require = techs_dex_req4,
 	points = 5,
 	random_ego = "attack",
 	cooldown = 12,
@@ -162,7 +162,7 @@ newTalent{
 	radius = function(self, t) return 1 end,
 	tactical = { ATTACKAREA = 2, DISABLE = 2 },
 	requires_target = true,
-	getDamage = function(self, t) return getTriStat(self, t, 20, 600) * (1 + getStrikingStyle(self, dam)) end,
+	getDamage = function(self, t) return getTriStat(self, t, 20, 500) * (1 + getStrikingStyle(self, dam)) end,
 	target = function(self, t)
 		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,

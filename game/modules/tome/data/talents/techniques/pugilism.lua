@@ -26,25 +26,25 @@ newTalent{
 	cooldown = 12,
 	tactical = { BUFF = 2 },
 	type_no_req = true,
-	getCriticalPower = function(self, t) return 10 + self:getDex(20) end,
+	getAttack = function(self, t) return 5 + self:getDex(20) end,
 	getDamage = function(self, t) return 20 + self:getDex(20) end,
 	activate = function(self, t)
 		cancelStances(self)
 		local ret = {
-			critpower = self:addTemporaryValue("combat_critical_power", t.getCriticalPower(self, t)),
+			atk = self:addTemporaryValue("combat_atk", t.getAttack(self, t)),
 		}
 		return ret
 	end,
 	deactivate = function(self, t, p)
-		self:removeTemporaryValue("combat_critical_power", p.critpower)
+		self:removeTemporaryValue("combat_atk", p.atk)
 		return true
 	end,
 	info = function(self, t)
-		local critpower = t.getCriticalPower(self, t)
+		local attack = t.getAttack(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Increases your critical damage multiplier by %d%% and the damage multiplier of your pugilism talents by %d%%.
+		return ([[Increases your accuracy by %d and the damage multiplier of your pugilism talents by %d%%.
 		The bonuses will scale with the Dexterity stat.]]):
-		format(critpower, damage)
+		format(attack, damage)
 	end,
 }
 
@@ -104,7 +104,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t) * 100
-		return ([[Two quick punches that deal %d%% damage each.
+		return ([[Two quick punches that deal %d%% damage each and switches your stance to Striking Stance.
 		Each jab that connects will earn one combo point.]])
 		:format(damage)
 	end,
@@ -178,7 +178,7 @@ newTalent{
 	tactical = { ATTACK = 2, DISABLE = 2, CLOSEIN = 2 },
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.8, 1.4)  + getStrikingStyle(self, dam) end,
-	getDuration = function(self, t) return 1 + math.ceil(self:getTalentLevel(t)) end,
+	getDuration = function(self, t) return 1 + math.ceil(self:getTalentLevel(t)/2) end,
 	action = function(self, t)
 		if self:attr("never_move") then game.logPlayer(self, "You can not do that currently.") return end
 	
@@ -188,7 +188,8 @@ newTalent{
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > self:getTalentRange(t) then return nil end
 
 		-- bonus damage for charging
-		local charge  = math.floor((core.fov.distance(self.x, self.y, x, y)) -1) / 5
+		local charge  = math.floor((core.fov.distance(self.x, self.y, x, y)) -1) / 20
+		local damage = t.getDamage(self, t) + charge
 		
 		-- do the rush
 		local l = line.new(self.x, self.y, x, y)
@@ -206,17 +207,12 @@ newTalent{
 			self:resetMoveAnim()
 			self:setMoveAnim(ox, oy, 8, 5)
 		end
-				
-		-- force stance change
-		if target and not self:isTalentActive(self.T_STRIKING_STANCE) then	
-			self:forceUseTalent(self.T_STRIKING_STANCE, {ignore_energy=true, ignore_cd = true})
-		end
-		
+	
 		-- break grabs
 		self:breakGrapples()
 		
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) == 1 then
-			local hit =  self:attackTarget(target, nil, t.getDamage(self, t), true)
+			local hit =  self:attackTarget(target, nil, damage, true)
 
 			-- Try to stun !
 			if hit then
@@ -237,8 +233,8 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		local damage = t.getDamage(self, t) * 100
-		return ([[Attacks the target with a vicious rushing strike that deals %d%% and may stun the target for %d turns.  If the target is at range you'll rush towards them and deal 20%% bonus damage per tile traveled.
-		This attack will remove any grapples you're maintaining, switch your stance to Striking Stance, and earn one combo point if the blow connects.
+		return ([[Attacks the target with a vicious rushing strike that deals %d%% and may stun the target for %d turns.  If the target is at range you'll rush towards them and deal 5%% bonus damage per tile traveled.
+		This attack will remove any grapples you're maintaining and earn one combo point if the blow connects.
 		The stun chance will increase with the strength stat.]])
 		:format(damage, duration)
 	end,

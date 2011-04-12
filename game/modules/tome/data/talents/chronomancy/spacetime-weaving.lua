@@ -176,9 +176,10 @@ newTalent{
 	radius = function(self, t)
 		return math.floor(7 - self:getTalentLevel(t))
 	end,
-	requires_target = function(self, t) return self:getTalentLevel(t) >= 4 end,
+	requires_target = true,
 	getDuration = function (self, t) return 5 + math.floor(self:getTalentLevel(t)*getParadoxModifier(self, pm)) end,
 	no_npc_use = true,
+	no_energy = true,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local entrance_x, entrance_y = self:getTarget(tg)
@@ -286,8 +287,9 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[You fold the space between two points, allowing travel back and forth between them for the next %d turns.
-		At level 4 you may choose the exit location target area (radius %d).  The duration will scale with your Paradox.]])
+		return ([[You fold the space between two points, allowing travel back and forth between them for the next %d turns.  You may choose the entrance location but the exit location will be random.
+		At level 4 you may choose the exit location target area (radius %d).  The duration will scale with your Paradox.
+		This spell takes no time to cast.]])
 		:format(duration, radius)
 	end,
 }

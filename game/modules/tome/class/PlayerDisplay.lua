@@ -250,9 +250,9 @@ function _M:display()
 		)) h = h + self.font_h
 	end
 	if player:knowTalent(player.T_PARADOX_POOL) then
-		self:mouseTooltip(self.TOOLTIP_PARADOX, self:makeTextureBar("#LIGHT_STEEL_BLUE#Paradox:", ("%d"):format(player:getParadox()), math.min(1, math.log(1 + player:getParadox() / 100)), 100, x, h, 255, 255, 255,
-			{r=176 / 2, 196 / 2, 222 / 2},
-			{r=176 / 5, 196 / 5, 222 / 5}
+		self:mouseTooltip(self.TOOLTIP_PARADOX, self:makeTextureBar("#LIGHT_STEEL_BLUE#Paradox:", ("       %d"):format(player:getParadox()), math.min(1, math.log(1 + player:getParadox() / 100)), 100, x, h, 255, 255, 255,
+			{r=176 / 2, g=196 / 2, b=222 / 2},
+			{r=176 / 2, g=196 / 2, b=222 / 2}
 		)) h = h + self.font_h
 	end
 	if player:knowTalent(player.T_PSI_POOL) then
