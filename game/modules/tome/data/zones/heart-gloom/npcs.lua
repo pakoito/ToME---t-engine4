@@ -55,7 +55,7 @@ newEntity{ base="BASE_NPC_CANINE", define_as = "WITHERING_THING",
 	combat = { dam=resolvers.levelup(8, 1, 0.9), atk=15, apr=3 },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
---	resolvers.drops{chance=100, nb=1, {defined="TOOTH_MOUTH", random_art_replace={chance=35}} },
+	resolvers.drops{chance=100, nb=1, {unique=true, not_properties={"lore"}} },
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 
 	resolvers.talents{
