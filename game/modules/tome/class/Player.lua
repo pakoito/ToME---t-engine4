@@ -928,7 +928,7 @@ end
 
 ------ Quest Events
 function _M:on_quest_grant(quest)
-	game.logPlayer(game.player, "#LIGHT_GREEN#Accepted quest '%s'! #WHITE#(Press CTRL+Q to see the quest log)", quest.name)
+	game.logPlayer(game.player, "#LIGHT_GREEN#Accepted quest '%s'! #WHITE#(Press 'j' to see the quest log)", quest.name)
 end
 
 function _M:on_quest_status(quest, status, sub)
