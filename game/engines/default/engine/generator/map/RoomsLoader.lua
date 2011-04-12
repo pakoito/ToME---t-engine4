@@ -75,6 +75,50 @@ function _M:loadRoom(file)
 	return t
 end
 
+--- Easy way to make an irregular shapped room
+function _M:makePod(x, y, radius, room_id, data)
+	self.map(x, y, Map.TERRAIN, self:resolve('.'))
+	self.map.room_map[x][y].room = room_id
+
+	local lowest = {x=x, y=y}
+
+	local noise = core.noise.new(1, data.hurst, data.lacunarity)
+
+	local idx = 0
+	local quadrant = function(i, j)
+		local breakdist = radius
+		local n = noise[data.noise](noise, data.zoom * idx / (radius * 4), data.octave)
+		n = (n + 1) / 2
+		breakdist = data.base_breakpoint * breakdist + ((1 - data.base_breakpoint) * breakdist * n)
+		idx = idx + 1
+
+		local l = line.new(lowest.x, lowest.y, i, j)
+		local lx, ly = l()
+		while lx do
+			if core.fov.distance(lowest.x, lowest.y, lx, ly) >= breakdist then break end
+			if self.map:isBound(lx, ly) then
+				self.map(lx, ly, Map.TERRAIN, self:resolve('.'))
+				self.map.room_map[lx][ly].room = room_id
+			end
+			lx, ly = l()
+		end
+	end
+	local idx = 0
+	for i = -radius + x, radius + x do
+		quadrant(i, -radius + y)
+	end
+	for i = -radius + y, radius + y do
+		quadrant(radius + x, i)
+	end
+	for i = -radius + x, radius + x do
+		quadrant(i, radius + y)
+	end
+	for i = -radius + y, radius + y do
+		quadrant(-radius + x, i)
+	end
+end
+
+
 --- Generates a room
 function _M:roomGen(room, id, lev, old_lev)
 	if type(room) == 'function' then

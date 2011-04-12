@@ -96,11 +96,6 @@ function _M:canDoor(x, y)
 	local w8 = not g8
 	local w9 = not g9
 
-	print("============", x, y, "::", w1,w2,w3,w4,w6,w7,w8,w9)
-	print(("%s%s%s"):format(w7 and "X" or " ", w8 and "X" or " ", w9 and "X" or " "))
-	print(("%s%s%s"):format(w4 and "X" or " "," ", w6 and "X" or " "))
-	print(("%s%s%s"):format(w1 and "X" or " ", w2 and "X" or " ", w3 and "X" or " "))
-
 	if
 		(not w1 and not w4 and not w6 and not w3 and w2 and w8) or
 		(not w7 and not w8 and not w1 and not w2 and w4 and w6) or

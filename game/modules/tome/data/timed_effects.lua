@@ -2697,7 +2697,7 @@ newEffect{
 newEffect{
 	name = "AGONY",
 	desc = "Agony",
-	long_desc = function(self, eff) return ("%s is writhing in agony, suffering from %d to %d damage over %d turns."):format(self.name:capitalize(), eff.damage / duration, eff.damage, eff.duration) end,
+	long_desc = function(self, eff) return ("%s is writhing in agony, suffering from %d to %d damage over %d turns."):format(self.name:capitalize(), eff.damage / eff.duration, eff.damage, eff.duration) end,
 	type = "mental",
 	status = "detrimental",
 	parameters = { damage=10, mindpower=10, range=10, minPercent=10 },
