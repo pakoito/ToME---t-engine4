@@ -919,7 +919,7 @@ function _M:setupCommands()
 --			self.nicer_tiles:postProcessLevelTiles(self.level)
 --			game:registerDialog(require("mod.dialogs.Donation").new())
 --			self.state:debugRandomZone()
-			self:changeLevel(1, "heart-gloom")
+			self:changeLevel(1, "norgos-lair")
 		end end,
 	}
 
