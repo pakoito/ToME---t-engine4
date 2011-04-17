@@ -22,7 +22,7 @@ newTalent{
 	type = {"corruption/shadowflame", 1},
 	require = corrs_req1,
 	points = 5,
-	sustain_vim = 20,
+	vim = 20,
 	cooldown = 30,
 	tactical = { BUFF = 2, ESCAPE = 1, CLOSEIN = 1 },
 	action = function(self, t)
