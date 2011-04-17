@@ -68,11 +68,11 @@ function _M:display()
 
 	-- initialize the array
 	for i, act in ipairs(a.fov.actors_dist) do
-		if a:canSee(act) then
+		if a:canSee(act) and a ~= act then
 			local n = act.name:capitalize()
 			list[n] = list[n] or { name=n, nb=0, dist={} }
 			list[n].nb = list[n].nb + 1
-			list[n].dist[#list[n].dist+1] = math.floor(math.sqrt(a.fov.actors[act].sqdist))
+			list[n].dist[#list[n].dist+1] = math.floor(math.sqrt(a.fov.actors[act] and a.fov.actors[act].sqdist or 1))
 
 			local r = a:reactionToward(act)
 			if r > 0 then list[n].color={0,255,0}
