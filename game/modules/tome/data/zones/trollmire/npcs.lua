@@ -50,7 +50,6 @@ newEntity{ define_as = "TROLL_PROX",
 	resolvers.equip{ {type="weapon", subtype="greatmaul", autoreq=true}, },
 	resolvers.drops{chance=100, nb=1, {unique=true, not_properties={"lore"}} },
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
-	resolvers.drops{chance=100, nb=1, {defined="PROX_NOTE"} },
 
 	resolvers.talents{
 		[Talents.T_KNOCKBACK]=1,
@@ -61,6 +60,18 @@ newEntity{ define_as = "TROLL_PROX",
 	autolevel = "warrior",
 	ai = "tactical", ai_state = { talent_in=3, ai_move="move_astar", },
 	ai_tactic = resolvers.tactic"melee",
+
+	-- Drop the note when near death (but before death, so that Kill bill achievement is possible)
+	on_takehit = function(self, val)
+		if self.life - val < self.max_life * 0.4 then
+			local n = game.zone:makeEntityByName(game.level, "object", "PROX_NOTE")
+			if n then
+				game.zone:addEntity(game.level, n, "object", self.x, self.y)
+				game.logSeen(self, "Prox staggers for a moment. A note seems to drop at his feet.")
+			end
+		end
+		return val
+	end,
 
 	on_die = function(self, who)
 		game.state:activateBackupGuardian("ALUIN", 2, 35, "... and we thought the trollmire was safer now!")
