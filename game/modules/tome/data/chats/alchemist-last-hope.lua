@@ -206,7 +206,7 @@ newChat{ id="choice",
 }
 
 newChat{ id="list",
-	text = [[Right, here's the list. Hurry back.]],
+	text = [[Right, here's the list. Oh, one more thing. Got me some fellas already out hunting for this stuff, and I'll not play favorites. One of them brings me those ingredients before you do, and you're out of luck. Hurry back.]],
 	answers = {
 		{"I'll be off."},
 	}

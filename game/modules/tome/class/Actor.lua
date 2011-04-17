@@ -1793,7 +1793,7 @@ function _M:preUseTalent(ab, silent, fake)
 
 	-- Equilibrium is special, it has no max, but the higher it is the higher the chance of failure (and loss of the turn)
 	-- But it is not affected by fatigue
-	if (ab.equilibrium or ab.sustain_equilibrium) and not fake then
+	if (ab.equilibrium or (ab.sustain_equilibrium and not self:isTalentActive(ab.id)) and not fake then
 		-- Fail ? lose energy and 1/10 more equilibrium
 		if not self:attr("no_equilibrium_fail") and not self:equilibriumChance(ab.equilibrium or ab.sustain_equilibrium) then
 			if not silent then game.logPlayer(self, "You fail to use %s due to your equilibrium!", ab.name) end
@@ -1804,7 +1804,7 @@ function _M:preUseTalent(ab, silent, fake)
 	end
 
 	-- Paradox is special, it has no max, but the higher it is the higher the chance of something bad happening
-	if (ab.paradox or ab.sustain_paradox) and not fake then
+	if (ab.paradox or (ab.sustain_paradox and not self:isTalentActive(ab.id)) and not fake then
 		-- Check failure first
 		if not self:attr("no_paradox_fail") and self:paradoxFailChance(ab.paradox or ab.sustain_paradox) and self:getParadox() > 200 then
 			if not silent then game.logPlayer(self, "You fail to use %s due to your paradox!", ab.name) end

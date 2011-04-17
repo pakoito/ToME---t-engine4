@@ -230,7 +230,7 @@ newEntity{
 	use_simple = { name="permanently increase your armor by four", use = function(self, who)
 		game.logPlayer(who, "#00FFFF#You drink the elixir and feel forever transformed!")
 		who.combat_armor = who.combat_armor + 4
-		game.logPlayer(who, "#00FF00#The elixir has thickened and toughened your skin!")
+		game.logPlayer(who, "#00FF00#The elixir has reinforced your entire body!")
 		return true, "destroy", true
 	end}
 }

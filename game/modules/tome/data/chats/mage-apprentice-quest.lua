@@ -74,7 +74,7 @@ newChat{ id="quest2",
 	text = [[Well, if you insist...
 I am a novice mage, as you might have noticed, and my goal is to be accepted by the people of Angolwen and be taught the secrets of the arcane.]],
 	answers = {
-		{"Who are the Elves of Angolwen?", jump="quest3", cond=function(npc, player) return player.faction ~= "angolwen" end,},
+		{"Who are the people of Angolwen?", jump="quest3", cond=function(npc, player) return player.faction ~= "angolwen" end,},
 		{"Ah yes, Angolwen, I have called it home for many years...", jump="quest3_mage", cond=function(npc, player) return player.faction == "angolwen" end,},
 		{"Well, good luck, bye!"},
 	}

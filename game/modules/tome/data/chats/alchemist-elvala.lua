@@ -207,7 +207,7 @@ newChat{ id="choice",
 }
 
 newChat{ id="list",
-	text = [[Here's a list of the monster bits I need. Now hurry up; I'm not getting any saner here.]],
+	text = [[Here's a list of the monster bits I need. I've already got a bunch of idiots out looking for these, by the way, so you best hurry up; they've got a head start on you and I'm not getting any saner here.]],
 	answers = {
 		{"So I see. I'll be off."},
 	}

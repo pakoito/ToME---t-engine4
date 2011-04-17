@@ -205,7 +205,7 @@ newEntity{ define_as = "SQUID_INK",
 	encumber = 0,
 	unided_name = "black liquid",
 	name = "vial of squid ink",
-	display = "~", color=colors.DARK_GREY,
+	display = "~", color=colors.VIOLET,
 	desc = [[Thick, black and opaque.]],
 	alch = "However annoying this will be for you to gather, I promise that the reek it produces in my lab will prove even more annoying.",
 }

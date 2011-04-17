@@ -28,11 +28,12 @@ defineTile('#', "HARDWALL")
 defineTile('+', "DOOR")
 defineTile('X', "DOOR_VAULT")
 defineTile('.', "LAVA_FLOOR")
+defineTile('-', "FLOOR")
 defineTile('$', "LAVA_FLOOR", {random_filter={add_levels=25, type="money"}})
 defineTile('*', "LAVA_FLOOR", {random_filter={type="gem"}})
 defineTile('/', "LAVA_FLOOR", {random_filter={add_levels=10, tome_mod="vault"}})
 defineTile('L', "LAVA_FLOOR", {random_filter={add_levels=25, tome_mod="gvault"}})
-defineTile('^', "LAVA_FLOOR", nil, nil, {random_filter={add_levels=20}})
+defineTile('^', "FLOOR", nil, nil, {random_filter={add_levels=20}})
 defineTile('u', "LAVA_FLOOR", nil, {random_filter={add_levels=20, type = "demon", subtype = "minor"}})
 defineTile('h', "LAVA_FLOOR", nil, {random_filter={add_levels=10, type = "horror", subtype = "eldritch"}})
 defineTile('U', "LAVA_FLOOR", {random_filter={add_levels=25, tome_mod="gvault"}}, {random_filter={add_levels=30, type = "demon", subtype = "major"}})
@@ -41,23 +42,23 @@ defineTile('D', "LAVA_FLOOR", {random_filter={add_levels=25, tome_mod="gvault"}}
 return {
 
 [[%%%%%%%%#####%%%%%%%%]],
-[[%%%%%%###u%*###%%%%%%]],
-[[%%%%###uuu%$*$###%%%%]],
+[[%%%%%%###-%*###%%%%%%]],
+[[%%%%###uu-%$*$###%%%%]],
 [[%%%##uuuuu%$$$$$##%%%]],
 [[%%###%#############%%]],
 [[%%#.h^.....h....+.#%%]],
-[[%##...h...h...h.#.##%]],
-[[%#U.....h....h..#.L#%]],
-[[#################..##]],
+[[%##...h...h.-.h.#.##%]],
+[[%#U..-..h....h..#.L#%]],
+[[#################-.##]],
 [[#.U.$..*/.$../...$.D#]],
-[[X.U../$...*../.$...L#]],
-[[#.U.$.*$./.$..*/..$D#]],
+[[X.U../$..-*../.$...L#]],
+[[#.U.$-*$./.$..*/..$D#]],
 [[#################..##]],
 [[%#U..h........h.#.L#%]],
-[[%##.h...h...h...#.##%]],
-[[%%#...h......h..+.#%%]],
+[[%##.h...h.-.h...#.##%]],
+[[%%#.--h......h..+.#%%]],
 [[%%###%#############%%]],
-[[%%%##uuuuu%$$$$$##%%%]],
+[[%%%##uuuu-%$$$$$##%%%]],
 [[%%%%###uuu%$*$###%%%%]],
 [[%%%%%%###u%*###%%%%%%]],
 [[%%%%%%%%#####%%%%%%%%]],

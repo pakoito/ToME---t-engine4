@@ -31,7 +31,7 @@ newEntity{
 	change_level = 1, change_zone = "temporal-rift",
 	change_level_check = function() -- Forbid going back
 		if not game.player:hasQuest("temporal-rift") then return false end
-		game.log("The rift is too instable to cross it again.")
+		game.log("The rift is too unstable to cross it.")
 		return true
 	end
 }

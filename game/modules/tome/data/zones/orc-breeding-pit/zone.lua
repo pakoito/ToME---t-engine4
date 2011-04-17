@@ -60,7 +60,7 @@ return {
 	end,
 	on_enter = function(lev, old_lev, newzone)
 		if newzone and not game.level.shown_warning then
-			require("engine.ui.Dialog"):simplePopup("Orc Breeding Pit", "You arrive in a small underground structure. There are orcs there and as soon as they ntoice you they scream 'Protect the mothers!'.")
+			require("engine.ui.Dialog"):simplePopup("Orc Breeding Pit", "You arrive in a small underground structure. There are orcs there and as soon as they notice you they scream 'Protect the mothers!'.")
 			game.level.shown_warning = true
 		end
 	end,

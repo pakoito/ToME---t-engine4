@@ -206,7 +206,7 @@ newChat{ id="choice",
 }
 
 newChat{ id="list",
-	text = [[Here's a list of the ingredients I'm missing. Please attempt to not lose your life in their pursuit. I'll be most put out if I must wait another year.]],
+	text = [[Here's a list of the ingredients I'm missing. Please attempt to not lose your life in their pursuit. I'll be most put out if I must wait another year. Oh, and I suppose I should tell you that I've already a handful of adventurers out scouring the unpleasant places of the world for these ingredients. Dally and one of them shall claim the prize while you're out.]],
 	answers = {
 		{"I'll be off."},
 	}
