@@ -87,7 +87,7 @@ return {
 				local g = game.zone:makeEntityByName(game.level, "terrain", "RIFT")
 				local x, y = rng.range(0, game.level.map.w-1), rng.range(0, game.level.map.h-1)
 				local tries = 0
-					while game.level.map:checkEntity(x, y, engine.Map.TERRAIN, "block_move") and tries < 100 do
+					while (game.level.map:checkEntity(x, y, engine.Map.TERRAIN, "block_move") or game.level.map:checkEntity(x, y, engine.Map.TERRAIN, "change_level")) and tries < 100 do
 					x, y = rng.range(0, game.level.map.w-1), rng.range(0, game.level.map.h-1)
 					tries = tries + 1
 				end
