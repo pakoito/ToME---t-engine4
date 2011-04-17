@@ -56,6 +56,6 @@ function _M:onPartyDeath(src)
 			game:registerDialog(dialog)
 		end
 		game.player:saveUUID()
-		profile.chat:talk("%s has died a painful death to %s.", self.name:capitalize(), src and src.name or "<unknown>")
+		profile.chat:talk(("%s has died a painful death to %s."):format(self.name:capitalize(), src and src.name or "<unknown>"))
 	end
 end
