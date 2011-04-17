@@ -322,10 +322,12 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	end
 
 	-- Shattering Impact
-	if hitted and self:attr("shattering_impact") then
+	if hitted and self:attr("shattering_impact") and (not self.shattering_impact_last_turn or self.shattering_impact_last_turn < game.turn) then
 		local dam = dam * self.shattering_impact
 		self:project({type="ball", radius=1, selffire=false}, target.x, target.y, DamageType.PHYSICAL, dam)
 		self:incStamina(-15)
+		self.shattering_impact_last_turn = game.turn
+		print"===========IMPACT"
 	end
 
 	-- Onslaught
@@ -428,7 +430,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 		local damage = t.getDamage(target, t)
 		local hit = target:attackTarget(self, nil, damage, true)
 	end
-	
+
 	-- Defensive Throw!
 	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_DEFENSIVE_THROW) and rng.percent(target:getTalentLevel(target.T_DEFENSIVE_THROW) * (5 + target:getCun(5))) then
 		local t = target:getTalentFromId(target.T_DEFENSIVE_THROW)
