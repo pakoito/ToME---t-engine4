@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="50" height="50" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="dg_grounds32" tilewidth="32" tileheight="32">
+  <image source="gfx/dg_grounds32.gif" width="288" height="640"/>
+  <tile id="0">
+   <properties>
+    <property name="display" value="."/>
+    <property name="value" value="&quot;OLD_FLOOR&quot;"/>
+   </properties>
+  </tile>
+  <tile id="9">
+   <properties>
+    <property name="display" value="."/>
+    <property name="value" value="&quot;GRASS&quot;"/>
+   </properties>
+  </tile>
+  <tile id="30">
+   <properties>
+    <property name="display" value="_"/>
+    <property name="value" value="&quot;ROAD&quot;"/>
+   </properties>
+  </tile>
+  <tile id="54">
+   <properties>
+    <property name="display" value="t"/>
+    <property name="value" value="{&quot;TREE&quot;,&quot;TREE2&quot;,&quot;TREE3&quot;,&quot;TREE4&quot;,&quot;TREE5&quot;,&quot;TREE6&quot;,&quot;TREE7&quot;,&quot;TREE8&quot;,&quot;TREE9&quot;,&quot;TREE10&quot;,&quot;TREE11&quot;,&quot;TREE12&quot;,&quot;TREE13&quot;,&quot;TREE14&quot;,&quot;TREE15&quot;,&quot;TREE16&quot;,&quot;TREE17&quot;,&quot;TREE18&quot;,&quot;TREE19&quot;,&quot;TREE20&quot;}"/>
+   </properties>
+  </tile>
+  <tile id="72">
+   <properties>
+    <property name="display" value="~"/>
+    <property name="value" value="&quot;DEEP_WATER&quot;"/>
+   </properties>
+  </tile>
+  <tile id="117">
+   <properties>
+    <property name="display" value="^"/>
+   </properties>
+  </tile>
+  <tile id="159">
+   <properties>
+    <property name="display" value="-"/>
+   </properties>
+  </tile>
+  <tile id="168">
+   <properties>
+    <property name="display" value="*"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="181" name="numbers" tilewidth="32" tileheight="32">
+  <image source="gfx/numbers.png" width="192" height="192"/>
+  <tile id="0">
+   <properties>
+    <property name="display" value="1"/>
+   </properties>
+  </tile>
+  <tile id="1">
+   <properties>
+    <property name="display" value="2"/>
+   </properties>
+  </tile>
+  <tile id="2">
+   <properties>
+    <property name="display" value="@"/>
+   </properties>
+  </tile>
+  <tile id="3">
+   <properties>
+    <property name="display" value="4"/>
+   </properties>
+  </tile>
+  <tile id="4">
+   <properties>
+    <property name="display" value="5"/>
+   </properties>
+  </tile>
+  <tile id="5">
+   <properties>
+    <property name="display" value="6"/>
+   </properties>
+  </tile>
+  <tile id="6">
+   <properties>
+    <property name="display" value="7"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="217" name="tome-terrains" tilewidth="32" tileheight="32">
+  <image source="gfx/tome-terrains.png" width="256" height="576"/>
+  <tile id="1">
+   <properties>
+    <property name="display" value="#"/>
+    <property name="value" value="&quot;HARDWALL&quot;"/>
+   </properties>
+  </tile>
+  <tile id="73">
+   <properties>
+    <property name="display" value="D"/>
+    <property name="value" value="&quot;DEEP_BELLOW&quot;"/>
+   </properties>
+  </tile>
+  <tile id="76">
+   <properties>
+    <property name="display" value="s"/>
+   </properties>
+  </tile>
+  <tile id="85">
+   <properties>
+    <property name="display" value="&amp;"/>
+    <property name="value" value="{&quot;CRYSTAL_WALL&quot;,&quot;CRYSTAL_WALL2&quot;,&quot;CRYSTAL_WALL3&quot;,&quot;CRYSTAL_WALL4&quot;,&quot;CRYSTAL_WALL5&quot;,&quot;CRYSTAL_WALL6&quot;,&quot;CRYSTAL_WALL7&quot;,&quot;CRYSTAL_WALL8&quot;,&quot;CRYSTAL_WALL9&quot;,&quot;CRYSTAL_WALL10&quot;,&quot;CRYSTAL_WALL11&quot;,&quot;CRYSTAL_WALL12&quot;,&quot;CRYSTAL_WALL13&quot;,&quot;CRYSTAL_WALL14&quot;,&quot;CRYSTAL_WALL15&quot;,&quot;CRYSTAL_WALL16&quot;,&quot;CRYSTAL_WALL17&quot;,&quot;CRYSTAL_WALL18&quot;,&quot;CRYSTAL_WALL19&quot;,&quot;CRYSTAL_WALL20&quot;,}"/>
+   </properties>
+  </tile>
+  <tile id="135">
+   <properties>
+    <property name="display" value="&lt;"/>
+    <property name="value" value="&quot;UP_WILDERNESS&quot;"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="361" name="dg_town132" tilewidth="32" tileheight="32">
+  <image source="gfx/dg_town132.gif" width="288" height="128"/>
+  <tile id="4">
+   <properties>
+    <property name="display" value="2"/>
+    <property name="value" value="&quot;ARMOR_STORE&quot;"/>
+   </properties>
+  </tile>
+  <tile id="5">
+   <properties>
+    <property name="display" value="3"/>
+    <property name="value" value="&quot;WEAPON_STORE&quot;"/>
+   </properties>
+  </tile>
+  <tile id="8">
+   <properties>
+    <property name="display" value="9"/>
+    <property name="value" value="&quot;GEM_STORE&quot;"/>
+   </properties>
+  </tile>
+  <tile id="22">
+   <properties>
+    <property name="display" value="4"/>
+   </properties>
+  </tile>
+  <tile id="24">
+   <properties>
+    <property name="display" value="5"/>
+    <property name="value" value="&quot;RUNIC_STORE&quot;"/>
+   </properties>
+  </tile>
+  <tile id="29">
+   <properties>
+    <property name="display" value="R"/>
+    <property name="value" value="&quot;ESCAPE_REKNOR&quot;"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="Terrain" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt1sENwjAMBdB6FSSuzMQCIDECFzZCQrBJp+GAol4qYrvfjtP48G+N7ae4VedpmuZMJlAOhKv1ANZaC20Mok7L+ZEOrQdlQDuklsgOrkVyXtrPqm6vDo5lBEc5/2Q+e6Gl7pX+13wJDAiHNNZ1OQ5Ln2ROpMPTwuk7suPTwPEGOrg5kn5m7Vnv75XX7qUjHT06TvRLBIfWWgwaS61nzcGN1CCxoGbcgyPKXt1o6XdfOTvyex4x6WgzH9JRewb5v9vSsZf7sLRYOVrMjHJY2hD9tQ7knvXikO55RIfl9wH1fnjv36gOZD+vup534n0XJWeK6ZAYkL0tamnT2rF1/kxm9HwB3/lgzQ==
+  </data>
+ </layer>
+</map>

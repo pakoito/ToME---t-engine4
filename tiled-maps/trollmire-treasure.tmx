@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="20" height="20" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="dg_grounds32" tilewidth="32" tileheight="32">
+  <image source="gfx/dg_grounds32.gif" width="288" height="640"/>
+  <tile id="0">
+   <properties>
+    <property name="display" value=":"/>
+   </properties>
+  </tile>
+  <tile id="9">
+   <properties>
+    <property name="display" value="."/>
+    <property name="value" value="&quot;GRASS&quot;"/>
+   </properties>
+  </tile>
+  <tile id="12">
+   <properties>
+    <property name="display" value=","/>
+   </properties>
+  </tile>
+  <tile id="18">
+   <properties>
+    <property name="display" value="~"/>
+   </properties>
+  </tile>
+  <tile id="30">
+   <properties>
+    <property name="display" value="_"/>
+   </properties>
+  </tile>
+  <tile id="33">
+   <properties>
+    <property name="display" value="="/>
+   </properties>
+  </tile>
+  <tile id="54">
+   <properties>
+    <property name="display" value="t"/>
+    <property name="value" value="{&quot;HARDTREE&quot;,&quot;HARDTREE2&quot;,&quot;HARDTREE3&quot;,&quot;HARDTREE4&quot;,&quot;HARDTREE5&quot;,&quot;HARDTREE6&quot;,&quot;HARDTREE7&quot;,&quot;HARDTREE8&quot;,&quot;HARDTREE9&quot;,&quot;HARDTREE10&quot;,&quot;HARDTREE11&quot;,&quot;HARDTREE12&quot;,&quot;HARDTREE13&quot;,&quot;HARDTREE14&quot;,&quot;HARDTREE15&quot;,&quot;HARDTREE16&quot;,&quot;HARDTREE17&quot;,&quot;HARDTREE18&quot;,&quot;HARDTREE19&quot;,&quot;HARDTREE20&quot;}"/>
+   </properties>
+  </tile>
+  <tile id="72">
+   <properties>
+    <property name="display" value="~"/>
+   </properties>
+  </tile>
+  <tile id="117">
+   <properties>
+    <property name="display" value="^"/>
+   </properties>
+  </tile>
+  <tile id="159">
+   <properties>
+    <property name="display" value="-"/>
+   </properties>
+  </tile>
+  <tile id="168">
+   <properties>
+    <property name="display" value="!"/>
+    <property name="value" value="&quot;ROCK_VAULT&quot;"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="181" name="numbers" tilewidth="32" tileheight="32">
+  <image source="gfx/numbers.png" width="192" height="192"/>
+  <tile id="0">
+   <properties>
+    <property name="display" value="&lt;"/>
+    <property name="value" value="&quot;GRASS_UP4&quot;"/>
+   </properties>
+  </tile>
+  <tile id="1">
+   <properties>
+    <property name="display" value="2"/>
+   </properties>
+  </tile>
+  <tile id="2">
+   <properties>
+    <property name="display" value="@"/>
+   </properties>
+  </tile>
+  <tile id="3">
+   <properties>
+    <property name="display" value="4"/>
+   </properties>
+  </tile>
+  <tile id="4">
+   <properties>
+    <property name="display" value="5"/>
+   </properties>
+  </tile>
+  <tile id="5">
+   <properties>
+    <property name="display" value="6"/>
+   </properties>
+  </tile>
+  <tile id="19">
+   <properties>
+    <property name="display" value="1"/>
+   </properties>
+  </tile>
+  <tile id="20">
+   <properties>
+    <property name="display" value="2"/>
+   </properties>
+  </tile>
+  <tile id="21">
+   <properties>
+    <property name="display" value="3"/>
+   </properties>
+  </tile>
+  <tile id="22">
+   <properties>
+    <property name="display" value="5"/>
+   </properties>
+  </tile>
+  <tile id="23">
+   <properties>
+    <property name="display" value="6"/>
+   </properties>
+  </tile>
+  <tile id="24">
+   <properties>
+    <property name="display" value="7"/>
+   </properties>
+  </tile>
+  <tile id="25">
+   <properties>
+    <property name="display" value="8"/>
+   </properties>
+  </tile>
+  <tile id="26">
+   <properties>
+    <property name="display" value="A"/>
+   </properties>
+  </tile>
+  <tile id="35">
+   <properties>
+    <property name="display" value="&amp;"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="217" name="dg_town632" tilewidth="32" tileheight="32">
+  <image source="gfx/dg_town632.gif" width="288" height="128"/>
+  <tile id="0">
+   <properties>
+    <property name="display" value="#"/>
+   </properties>
+  </tile>
+  <tile id="4">
+   <properties>
+    <property name="display" value="3"/>
+   </properties>
+  </tile>
+  <tile id="5">
+   <properties>
+    <property name="display" value="2"/>
+   </properties>
+  </tile>
+  <tile id="15">
+   <properties>
+    <property name="display" value="1"/>
+   </properties>
+  </tile>
+  <tile id="22">
+   <properties>
+    <property name="display" value="4"/>
+   </properties>
+  </tile>
+  <tile id="24">
+   <properties>
+    <property name="display" value="9"/>
+   </properties>
+  </tile>
+  <tile id="30">
+   <properties>
+    <property name="display" value="+"/>
+   </properties>
+  </tile>
+  <tile id="32">
+   <properties>
+    <property name="display" value="'"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="Terrain" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJwzZ2BgMB8mmIsG5lHTTErMw6aPXPO4iMTUNIsUd1Ji5lYs8qSYh8+d5JhHTJySYi65aYRa5hFjLjXNI8d9lKRlXGxccqT6ZyUJ7hkKGABHfkHJ
+  </data>
+ </layer>
+ <objectgroup name="Actor" width="20" height="20">
+  <object name="Bill" x="197" y="262" width="17" height="19">
+   <properties>
+    <property name="display" value="@"/>
+    <property name="value" value="&quot;TROLL_BILL&quot;"/>
+   </properties>
+  </object>
+  <object name="Troll" x="364" y="163" width="17" height="19">
+   <properties>
+    <property name="display" value="T"/>
+    <property name="value" value="{random_filter={type=&quot;giant&quot;, subtype=&quot;troll&quot;}}"/>
+   </properties>
+  </object>
+  <object name="Troll" x="519" y="297" width="17" height="19">
+   <properties>
+    <property name="display" value="T"/>
+    <property name="value" value="{random_filter={type=&quot;giant&quot;, subtype=&quot;troll&quot;}}"/>
+   </properties>
+  </object>
+  <object name="Troll" x="519" y="426" width="17" height="19">
+   <properties>
+    <property name="display" value="T"/>
+    <property name="value" value="{random_filter={type=&quot;giant&quot;, subtype=&quot;troll&quot;}}"/>
+   </properties>
+  </object>
+  <object name="Troll" x="294" y="550" width="17" height="19">
+   <properties>
+    <property name="display" value="T"/>
+    <property name="value" value="{random_filter={type=&quot;giant&quot;, subtype=&quot;troll&quot;}}"/>
+   </properties>
+  </object>
+  <object name="Troll" x="103" y="453" width="17" height="19">
+   <properties>
+    <property name="display" value="T"/>
+    <property name="value" value="{random_filter={type=&quot;giant&quot;, subtype=&quot;troll&quot;}}"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="Object" width="20" height="20">
+  <object name="money" x="167" y="203" width="87" height="40">
+   <properties>
+    <property name="display" value="$"/>
+    <property name="value" value="{random_filter={type=&quot;money&quot;}}"/>
+   </properties>
+  </object>
+  <object name="gems" x="166" y="304" width="87" height="40">
+   <properties>
+    <property name="display" value="*"/>
+    <property name="value" value="{random_filter={type=&quot;gem&quot;}}"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

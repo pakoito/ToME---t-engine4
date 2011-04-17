@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="19" height="20" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="tome-terrains" tilewidth="32" tileheight="32">
+  <image source="gfx/tome-terrains.png" width="256" height="576"/>
+  <tile id="0">
+   <properties>
+    <property name="display" value="."/>
+   </properties>
+  </tile>
+  <tile id="16">
+   <properties>
+    <property name="display" value="#"/>
+   </properties>
+  </tile>
+  <tile id="74">
+   <properties>
+    <property name="display" value="&lt;"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="Terrain" width="19" height="20">
+  <data encoding="base64" compression="zlib">
+   eJwTZGBgEBzCmBGKydGDD1PLHGLMJNUcfObhUkcts4g1n1p+pJdZ5Jo7GPyIrp5W6cubTv7DJ0/NPEluWUOpOQOJAQEIDTc=
+  </data>
+ </layer>
+ <objectgroup name="Actor" width="19" height="20">
+  <object name="the mouth" x="305" y="307">
+   <properties>
+    <property name="display" value="M"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

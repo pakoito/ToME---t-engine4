@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="50" height="50" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="dg_dungeon32" tilewidth="32" tileheight="32">
+  <image source="gfx/dg_dungeon32.gif" width="288" height="320"/>
+  <tile id="0">
+   <properties>
+    <property name="display" value="#"/>
+    <property name="value" value="&quot;WALL&quot;"/>
+   </properties>
+  </tile>
+  <tile id="21">
+   <properties>
+    <property name="display" value="&lt;"/>
+    <property name="value" value="&quot;UP&quot;"/>
+   </properties>
+  </tile>
+  <tile id="22">
+   <properties>
+    <property name="display" value="&gt;"/>
+    <property name="value" value="&quot;IRON_COUNCIL&quot;"/>
+   </properties>
+  </tile>
+  <tile id="51">
+   <properties>
+    <property name="display" value="."/>
+    <property name="value" value="&quot;FLOOR&quot;"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="Terrain" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztlUEOgCAMBOET+hH+/zY9eCBESIxg23EPk14I2QkL5JRSXkA52a65Yv+vKBXWWeTB8qhnVEgelF7Jww+k+0HxoPQqokd5gHXWP3mMeiUP9UoeDI87r94aj9A8KL2K7jHyss4iD5ZHPaNCOg95+IF0P9pzifg/trl6uSN4PMU68yxf6yzykIc3iP+MdZa3HpReycMP8vAF6b2ieFB6tU/wOAAWGjjB
+  </data>
+ </layer>
+ <objectgroup name="Actor" width="50" height="50">
+  <object name="Boss" x="752" y="581">
+   <properties>
+    <property name="display" value="O"/>
+    <property name="value" value="&quot;BROTOQ&quot;"/>
+   </properties>
+  </object>
+  <object name="Guard" x="785" y="580">
+   <properties>
+    <property name="display" value="o"/>
+    <property name="value" value="&quot;ORC_GUARD&quot;"/>
+   </properties>
+  </object>
+  <object name="Guard" x="719" y="579">
+   <properties>
+    <property name="display" value="o"/>
+    <property name="value" value="&quot;ORC_GUARD&quot;"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

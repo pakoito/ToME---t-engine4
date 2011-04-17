@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="25" height="25" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="tome-terrains" tilewidth="32" tileheight="32">
+  <image source="gfx/tome-terrains.png" width="256" height="576"/>
+  <tile id="0">
+   <properties>
+    <property name="display" value="."/>
+   </properties>
+  </tile>
+  <tile id="14">
+   <properties>
+    <property name="display" value="+"/>
+   </properties>
+  </tile>
+  <tile id="16">
+   <properties>
+    <property name="display" value="#"/>
+   </properties>
+  </tile>
+  <tile id="73">
+   <properties>
+    <property name="display" value="&gt;"/>
+   </properties>
+  </tile>
+  <tile id="75">
+   <properties>
+    <property name="display" value="&lt;"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="Terrain" width="25" height="25">
+  <data encoding="base64" compression="zlib">
+   eJwTZGBgEBzFo3iYYkYopoWZ6Hi42kGsG3zwmImO+fHIeQ2wHfQIq8Ee57Swk5Z2jOJRPFIxAPk7JWY=
+  </data>
+ </layer>
+ <objectgroup name="Object" width="25" height="25">
+  <object name="lore" x="585" y="331" width="17" height="15">
+   <properties>
+    <property name="display" value="~"/>
+   </properties>
+  </object>
+  <object name="archer" x="296" y="231" width="48" height="17">
+   <properties>
+    <property name="display" value="a"/>
+   </properties>
+  </object>
+  <object name="archer" x="295" y="517" width="48" height="17">
+   <properties>
+    <property name="display" value="a"/>
+   </properties>
+  </object>
+  <object name="warriors" x="331" y="325" width="15" height="124">
+   <properties>
+    <property name="display" value="o"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

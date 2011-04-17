@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="50" height="50" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="dg_grounds32" tilewidth="32" tileheight="32">
+  <image source="gfx/dg_grounds32.gif" width="288" height="640"/>
+  <tile id="0">
+   <properties>
+    <property name="display" value="."/>
+    <property name="value" value="&quot;FLOOR&quot;"/>
+   </properties>
+  </tile>
+  <tile id="9">
+   <properties>
+    <property name="display" value="."/>
+    <property name="value" value="&quot;GRASS&quot;"/>
+   </properties>
+  </tile>
+  <tile id="30">
+   <properties>
+    <property name="display" value="_"/>
+    <property name="value" value="&quot;ROAD&quot;"/>
+   </properties>
+  </tile>
+  <tile id="54">
+   <properties>
+    <property name="display" value="t"/>
+    <property name="value" value="{&quot;TREE&quot;,&quot;TREE2&quot;,&quot;TREE3&quot;,&quot;TREE4&quot;,&quot;TREE5&quot;,&quot;TREE6&quot;,&quot;TREE7&quot;,&quot;TREE8&quot;,&quot;TREE9&quot;,&quot;TREE10&quot;,&quot;TREE11&quot;,&quot;TREE12&quot;,&quot;TREE13&quot;,&quot;TREE14&quot;,&quot;TREE15&quot;,&quot;TREE16&quot;,&quot;TREE17&quot;,&quot;TREE18&quot;,&quot;TREE19&quot;,&quot;TREE20&quot;}"/>
+   </properties>
+  </tile>
+  <tile id="72">
+   <properties>
+    <property name="display" value="~"/>
+    <property name="value" value="&quot;DEEP_WATER&quot;"/>
+   </properties>
+  </tile>
+  <tile id="81">
+   <properties>
+    <property name="display" value="&amp;"/>
+    <property name="value" value="&quot;HARDMOUNTAINWALL&quot;"/>
+   </properties>
+  </tile>
+  <tile id="117">
+   <properties>
+    <property name="display" value="^"/>
+   </properties>
+  </tile>
+  <tile id="159">
+   <properties>
+    <property name="display" value="-"/>
+   </properties>
+  </tile>
+  <tile id="168">
+   <properties>
+    <property name="display" value="*"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="181" name="numbers" tilewidth="32" tileheight="32">
+  <image source="gfx/numbers.png" width="192" height="192"/>
+  <tile id="0">
+   <properties>
+    <property name="display" value="1"/>
+   </properties>
+  </tile>
+  <tile id="1">
+   <properties>
+    <property name="display" value="2"/>
+   </properties>
+  </tile>
+  <tile id="2">
+   <properties>
+    <property name="display" value="3"/>
+   </properties>
+  </tile>
+  <tile id="3">
+   <properties>
+    <property name="display" value="4"/>
+   </properties>
+  </tile>
+  <tile id="4">
+   <properties>
+    <property name="display" value="5"/>
+   </properties>
+  </tile>
+  <tile id="5">
+   <properties>
+    <property name="display" value="6"/>
+   </properties>
+  </tile>
+  <tile id="6">
+   <properties>
+    <property name="display" value="7"/>
+   </properties>
+  </tile>
+  <tile id="7">
+   <properties>
+    <property name="display" value="8"/>
+   </properties>
+  </tile>
+  <tile id="8">
+   <properties>
+    <property name="display" value="9"/>
+   </properties>
+  </tile>
+  <tile id="9">
+   <properties>
+    <property name="display" value="A"/>
+   </properties>
+  </tile>
+  <tile id="31">
+   <properties>
+    <property name="display" value="F"/>
+   </properties>
+  </tile>
+  <tile id="32">
+   <properties>
+    <property name="display" value="H"/>
+   </properties>
+  </tile>
+  <tile id="33">
+   <properties>
+    <property name="display" value="M"/>
+   </properties>
+  </tile>
+  <tile id="34">
+   <properties>
+    <property name="display" value="T"/>
+   </properties>
+  </tile>
+  <tile id="35">
+   <properties>
+    <property name="display" value="E"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="217" name="tome-terrains" tilewidth="32" tileheight="32">
+  <image source="gfx/tome-terrains.png" width="256" height="576"/>
+  <tile id="1">
+   <properties>
+    <property name="display" value="#"/>
+    <property name="value" value="&quot;HARDWALL&quot;"/>
+   </properties>
+  </tile>
+  <tile id="135">
+   <properties>
+    <property name="display" value="&lt;"/>
+    <property name="value" value="&quot;GRASS_UP_WILDERNESS&quot;"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="361" name="dg_town132" tilewidth="32" tileheight="32">
+  <image source="gfx/dg_town132.gif" width="288" height="128"/>
+  <tile id="3">
+   <properties>
+    <property name="display" value="5"/>
+   </properties>
+  </tile>
+  <tile id="4">
+   <properties>
+    <property name="display" value="2"/>
+   </properties>
+  </tile>
+  <tile id="5">
+   <properties>
+    <property name="display" value="3"/>
+   </properties>
+  </tile>
+  <tile id="16">
+   <properties>
+    <property name="display" value="1"/>
+   </properties>
+  </tile>
+  <tile id="22">
+   <properties>
+    <property name="display" value="4"/>
+   </properties>
+  </tile>
+  <tile id="24">
+   <properties>
+    <property name="display" value="5"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="Terrain" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzdmNltwzAQRO3fNKEyXEN+XUGazH1UkQuuJjYgAYvBXrMkpcAfC4W0SM7jLA/lsNvtDoPjbj9+jBFxK+LmHNP8lPVba4x0Y1gcGP9VP8uxBU+k5QQxKXVb8zDarcgybaV/L2KCslW/Jg+jH/XiexZfxDOSQdNT5UCeniysB4vOJSwO+TvrTS+GyAMv/6N3s95UOSwGWYe6cE/SeKosLV543mPeL/XP53iZ614dFm1ecCzWk0w+eXqiNWTxe+0q+VVhQD1enuDcW7nYkl+ZfLK0TvB3FFq7S3wHLBlP2P1J23+WkH1pZW//jXLS4/C8YM4NbS7knUrjyc5VxhPPi8wdZFLan+a+p/mpnW8sS+SJty4u5R+Dw2KQfU9Q7sFS4bDmZOGwGLT17bFg3ywHs761uxIySN1HeEoeyaLdydjcynqxtP8wvJA+HEVoZemL5UmkpZVDrg3LC6nZqtM8scZq4cD73SXuDQ7NC/yGxd/QE8nxaIzfiwP3qgzHb4EjGp/leIN+HkgOjCzHU0eOa1kfFod1dlj7FcZa+1Xv80PzZsT5cS3nOcuBe1Z0v8LQGEbdr3qwII+sX+O+y3qisSCPNv6I749WTyQL8mB434JSL+tFj+9zi8eKTO7gOBkvWv9fkmWM3vMYMl54njAsGc6o7VeCIeLI5leW5V2pi864ytqu5leUQ9peVdk72Hyq5Bejo6Vt1YuIhdHU2qaVwWJhvWE5LP0tDBmWzJ3uM/neSAaPpZprjP6eDCwPM/dr68+wePfDrPa1GBieSqypfwTPlvpbuHqP+QdWcrDH
+  </data>
+ </layer>
+ <objectgroup name="Trap" width="50" height="50">
+  <object x="782" y="1008" width="2"/>
+  <object name="Statue Toknor" x="835" y="611" width="24" height="25">
+   <properties>
+    <property name="display" value="Z"/>
+   </properties>
+  </object>
+  <object name="Statue Mirvenia" x="771" y="615" width="21" height="20">
+   <properties>
+    <property name="display" value="Y"/>
+   </properties>
+  </object>
+  <object name="Statue Tolak" x="773" y="583" width="21" height="21">
+   <properties>
+    <property name="display" value="@"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="addSpot" width="50" height="50">
+  <object name="Farportal east" x="197" y="643" width="21" height="22">
+   <properties>
+    <property name="subtype" value="&quot;farportal&quot;"/>
+    <property name="type" value="&quot;pop-quest&quot;"/>
+   </properties>
+  </object>
+  <object name="Farportal east" x="231" y="612" width="21" height="22">
+   <properties>
+    <property name="subtype" value="&quot;farportal-player&quot;"/>
+    <property name="type" value="&quot;pop-quest&quot;"/>
+   </properties>
+  </object>
+  <object name="Tannen" x="325" y="613" width="21" height="22">
+   <properties>
+    <property name="subtype" value="&quot;tannen-remove&quot;"/>
+    <property name="type" value="&quot;pop-quest&quot;"/>
+   </properties>
+  </object>
+  <object name="Farportal east" x="197" y="611" width="21" height="22">
+   <properties>
+    <property name="subtype" value="&quot;farportal-npc&quot;"/>
+    <property name="type" value="&quot;pop-quest&quot;"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>
