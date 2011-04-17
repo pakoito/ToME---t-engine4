@@ -392,6 +392,18 @@ function _M:act()
 	return true
 end
 
+--- Setup minimap color for this entity
+-- You may overload this method to customize your minimap
+function _M:setupMinimapInfo(mo, map)
+	if map.actor_player and not map.actor_player:canSee(self) then return end
+	if self.rank > 3 then mo:minimap(0xC0, 0x00, 0xAF) return end
+	local r = map.actor_player and map.actor_player:reactionToward(self) or -100
+	if r < 0 then mo:minimap(240, 0, 0)
+	elseif r > 0 then mo:minimap(0, 240, 0)
+	else mo:minimap(0, 0, 240)
+	end
+end
+
 --- Attach or remove a display callback
 -- Defines particles to display
 function _M:defineDisplayCallback()
