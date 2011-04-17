@@ -74,6 +74,8 @@ newEntity{ define_as = "MELINDA",
 	name = "Melinda",
 	type = "humanoid", subtype = "human", female=true,
 	display = "@", color=colors.LIGHT_BLUE,
+	image = "terrain/woman_naked_altar.png",
+	resolvers.generic(function(e) if engine.Map.tiles.nicer_tiles then e.display_w = 2 end end),
 	desc = [[A female human with twisted sigils scored into her naked flesh. Her wrists and ankles are sore and hurt by ropes and chains. You can discern great beauty beyond the stains of blood covering her skin.]],
 	autolevel = "tank",
 	ai = "summoned", ai_real = "move_dmap", ai_state = { ai_target="target_player", talent_in=4, },
@@ -150,6 +152,10 @@ newEntity{ define_as = "ACOLYTE",
 
 			if melinda then
 				melinda:removeEffect(melinda.EFF_TIME_PRISON)
+				melinda.display_w = nil
+				melinda.image = "npc/woman_redhair_naked.png"
+				if melinda._mo then melinda._mo:invalidate() melinda._mo = nil end
+				game.level.map:updateMap(melinda.x, melinda.y)
 				require("engine.ui.Dialog"):simpleLongPopup("Melinda", "The woman seems to be freed from her bonds.\nShe stumbles on her feet, her naked body still dripping in blood. 'Please get me out of here!'", 400)
 			end
 		end
