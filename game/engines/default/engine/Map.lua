@@ -459,42 +459,6 @@ function _M:display(x, y, nb_keyframe, always_show)
 	self.display_x, self.display_y = x or self.display_x, y or self.display_y
 
 	self._map:toScreen(self.display_x, self.display_y, nb_keyframe, always_show)
-
-	-- Tactical display
-	if self.view_faction then
-		local e
-		local z
-		local adx, ady
-		local friend
-		for i = self.mx, self.mx + self.viewport.mwidth do
-		for j = self.my, self.my + self.viewport.mheight do
-			local z = i + j * self.w
-
-			if self.seens[z] then
-				e = self(i, j, ACTOR)
-				if e and (not self.actor_player or self.actor_player:canSee(e)) then
-					-- Tactical overlay ?
-					if e.faction then
-						if not self.actor_player then friend = Faction:factionReaction(self.view_faction, e.faction)
-						else friend = self.actor_player:reactionToward(e) end
-						if e._mo then adx, ady = e._mo:getMoveAnim(self._map, i, j) else adx, ady = 0, 0 end -- Make sure we display on the real screen coords: handle current move anim position
-						if e == self.actor_player then
-							self.tilesTactic:get(nil, 0,0,0, 0,0,0, self.faction_self):toScreen(self.display_x + (adx + i - self.mx) * self.tile_w * self.zoom, self.display_y + (ady + j - self.my) * self.tile_h * self.zoom, self.tile_w * self.zoom, self.tile_h * self.zoom)
-						elseif self:faction_danger_check(e) then
-							self.tilesTactic:get(nil, 0,0,0, 0,0,0, self.faction_danger):toScreen(self.display_x + (adx + i - self.mx) * self.tile_w * self.zoom, self.display_y + (ady + j - self.my) * self.tile_h * self.zoom, self.tile_w * self.zoom, self.tile_h * self.zoom)
-						elseif friend > 0 then
-							self.tilesTactic:get(nil, 0,0,0, 0,0,0, self.faction_friend):toScreen(self.display_x + (adx + i - self.mx) * self.tile_w * self.zoom, self.display_y + (ady + j - self.my) * self.tile_h * self.zoom, self.tile_w * self.zoom, self.tile_h * self.zoom)
-						elseif friend < 0 then
-							self.tilesTactic:get(nil, 0,0,0, 0,0,0, self.faction_enemy):toScreen(self.display_x + (adx + i - self.mx) * self.tile_w * self.zoom, self.display_y + (ady + j - self.my) * self.tile_h * self.zoom, self.tile_w * self.zoom, self.tile_h * self.zoom)
-						else
-							self.tilesTactic:get(nil, 0,0,0, 0,0,0, self.faction_neutral):toScreen(self.display_x + (adx + i - self.mx) * self.tile_w * self.zoom, self.display_y + (ady + j - self.my) * self.tile_h * self.zoom, self.tile_w * self.zoom, self.tile_h * self.zoom)
-						end
-					end
-				end
-			end
-		end end
-	end
-
 	self:displayParticles(nb_keyframe)
 	self:displayEffects()
 	self:displayEmotes(nb_keyframe)

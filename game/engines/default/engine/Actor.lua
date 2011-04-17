@@ -95,12 +95,49 @@ function _M:defineDisplayCallback()
 		ps[#ps+1] = e
 	end
 
+	local f_self = nil
+	local f_danger = nil
+	local f_friend = nil
+	local f_enemy = nil
+	local f_neutral = nil
+
 	self._mo:displayCallback(function(x, y, w, h)
 		local e
 		for i = 1, #ps do
 			e = ps[i]
 			if e.ps:isAlive() then e.ps:toScreen(x + w / 2, y + h / 2, true)
 			else self:removeParticles(e)
+			end
+		end
+
+		-- Tactical info
+		if game.level and game.level.map.view_faction then
+			local map = game.level.map
+
+			if not f_self then
+				f_self = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_self)
+				f_danger = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_danger)
+				f_friend = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_friend)
+				f_enemy = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_enemy)
+				f_neutral = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_neutral)
+			end
+
+			if self.faction then
+				local friend
+				if not map.actor_player then friend = Faction:factionReaction(map.view_faction, self.faction)
+				else friend = map.actor_player:reactionToward(self) end
+
+				if self == map.actor_player then
+					f_self:toScreen(x, y, w, h)
+				elseif map:faction_danger_check(self) then
+					f_danger:toScreen(x, y, w, h)
+				elseif friend > 0 then
+					f_friend:toScreen(x, y, w, h)
+				elseif friend < 0 then
+					f_enemy:toScreen(x, y, w, h)
+				else
+					f_neutral:toScreen(x, y, w, h)
+				end
 			end
 		end
 		return true
