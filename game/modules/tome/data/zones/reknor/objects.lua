@@ -21,6 +21,7 @@ load("/data/general/objects/objects.lua")
 
 newEntity{ base = "BASE_SCROLL", define_as = "NOTE_FROM_LAST_HOPE",
 	name = "Sealed Scroll of Last Hope", identified=true, unique=true, no_unique_lore=true,
+	image = "object/letter1.png",
 	fire_proof = true,
 
 	use_simple = { name="open the seal and read the message", use = function(self, who)

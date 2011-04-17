@@ -329,10 +329,12 @@ newTalent{
 		game.level.map:particleEmitter(gx, gy, 1, "teleport")
 
 		for uid, e in pairs(game.level.entities) do
-			local _, _, tgt = e:getTarget()
-			if e:reactionToward(self) < 0 and tgt == self and rng.percent(chance) then
-				e:setTarget(golem)
-				game.logSeen(e, "%s focuses on %s.", e.name:capitalize(), golem.name)
+			if e.getTarget then
+				local _, _, tgt = e:getTarget()
+				if e:reactionToward(self) < 0 and tgt == self and rng.percent(chance) then
+					e:setTarget(golem)
+					game.logSeen(e, "%s focuses on %s.", e.name:capitalize(), golem.name)
+				end
 			end
 		end
 
