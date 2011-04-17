@@ -515,7 +515,7 @@ function _M:combatArmorHardiness()
 	if self:hasHeavyArmor() and self:knowTalent(self.T_ARMOUR_TRAINING) then
 		add = add + self:getTalentLevel(self.T_ARMOUR_TRAINING) * 5
 	end
-	return 30 + self.combat_armor_hardiness + add
+	return util.bound(30 + self.combat_armor_hardiness + add, 0, 100)
 end
 
 --- Gets the attack

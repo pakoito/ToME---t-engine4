@@ -55,6 +55,7 @@ newEntity{ define_as = "WRATHROOT",
 	resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
 
 	resolvers.talents{
+		[Talents.T_ARMOUR_TRAINING]={base=4, every=5, max=15},
 		[Talents.T_STUN]={base=2, every=6, max=6},
 		[Talents.T_ICE_STORM]={base=1, every=6, max=6},
 		[Talents.T_TIDAL_WAVE]={base=1, every=6, max=6},

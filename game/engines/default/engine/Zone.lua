@@ -299,7 +299,7 @@ function _M:makeEntityByName(level, type, name, force_unique)
 	local forced = false
 	if e.unique and game.uniques[e.__CLASSNAME.."/"..e.unique] then
 		if not force_unique then
-			print("refused unique", e.name, e.__CLASSNAME.."/"..e.unique)
+			forceprint("Refused unique by name ", e.name, e.__CLASSNAME.."/"..e.unique)
 			return nil
 		else
 			forced = true
