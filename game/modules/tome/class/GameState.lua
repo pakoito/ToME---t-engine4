@@ -850,7 +850,10 @@ end
 function _M:entityFilterAlter(zone, level, type, filter)
 	if type ~= "object" then return filter end
 
-	if filter.force_tome_drops or (not filter.tome and not filter.defined and not filter.special and not filter.unique and not filter.ego_chance and not filter.ego_filter and not filter.no_tome_drops) then filter.tome = default_drops(zone, level, filter.tome_drops or "normal") end
+	if filter.force_tome_drops or (not filter.tome and not filter.defined and not filter.special and not filter.unique and not filter.ego_chance and not filter.ego_filter and not filter.no_tome_drops) then
+		filter = table.clone(filter)
+		filter.tome = default_drops(zone, level, filter.tome_drops or "normal")
+	end
 
 	if filter.tome then
 		local t = (filter.tome == true) and default_drops(zone, level, "normal") or filter.tome
