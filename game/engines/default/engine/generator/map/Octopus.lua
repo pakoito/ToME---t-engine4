@@ -68,8 +68,6 @@ function _M:generate(lev, old_lev)
 	end
 
 	-- Always starts at 1, 1
-	self.map(1, 1, Map.TERRAIN, self.up)
-	self.map.room_map[1][1].special = "exit"
 	return self:makeStairsInside(lev, old_lev, self.spots)
 end
 
