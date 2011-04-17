@@ -187,7 +187,7 @@ function _M:move(x, y, force)
 	end
 
 	-- Update wilderness coords
-	if game.zone.wilderness then
+	if game.zone.wilderness and not force then
 		-- Cheat with time
 		game.turn = game.turn + 1000
 		self.wild_x, self.wild_y = self.x, self.y
