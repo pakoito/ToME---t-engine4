@@ -217,13 +217,18 @@ newTalent{
 	tactical = { DEFEND = 2 },
 	action = function(self, t)
 		local target = self
+		local todel = {}
 		for eff_id, p in pairs(target.tmp) do
 			local e = target.tempeffect_def[eff_id]
 			if e.status == "beneficial" then
 				p.dur = p.dur + self:getTalentLevelRaw(t)
 			elseif e.status == "detrimental" then
 				p.dur = p.dur - self:getTalentLevelRaw(t) * 2
+				if p.dur <= 0 then todel[#todel+1] = eff end
 			end
+		end
+		while #todel > 0 do
+			target:removeEffect(table.remove(todel))
 		end
 
 		game:playSoundNear(self, "talents/spell_generic")
