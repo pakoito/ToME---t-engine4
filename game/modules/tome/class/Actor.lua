@@ -2454,6 +2454,7 @@ end
 --- Call when added to a level
 -- Used to make escorts and such
 function _M:addedToLevel(level, x, y)
+	self:resetToFull()
 	if self.make_escort then
 		for _, filter in ipairs(self.make_escort) do
 			for i = 1, filter.number do
