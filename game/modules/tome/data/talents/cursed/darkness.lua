@@ -93,7 +93,7 @@ local function createDarkTendrils(summoner, x, y, target, damage, duration, pinD
 
 			if hitTarget then
 				-- attack the target
-				game.logSeen(self, "The dark tendrils lash at %s.", target.name)
+				game.logSeen(self, "The dark tendrils lash at %s.", self.target.name)
 
 				-- pin target
 				self.target:setEffect(self.target.EFF_PINNED, self.pinDuration, {})

@@ -243,7 +243,7 @@ function _M:dumpToJSON(js)
 	local achs = js:newSection("achievements", "achievements", "pairs", "break")
 	for id, data in pairs(self.achievements or {}) do
 		local a = world:getAchievementFromId(id)
-		achs[#achs+1] = { [a.name] = {val=game.calendar:getTimeDate(data.turn, "%s %s %s year of Ascendancy at %02d:%02d"), tooltip=a.desc.."\nBy "..data.who} }
+		achs[#achs+1] = { [a.name] = {val=game.calendar:getTimeDate(data.turn, "%s %s %s year of Ascendancy at %02d:%02d"), tooltip=a.desc.."\nBy "..(data.who or "???")} }
 	end
 	table.sort(achs, function(a, b) local aname = next(a) local bname = next(b) return aname < bname end)
 
