@@ -228,7 +228,7 @@ function _M:getTextualDesc()
 
 	if self.quest then desc:add({"color", "VIOLET"}, "{Plot Item}", {"color", "LAST"}, true) end
 
-	desc:add(("Type: %s / %s"):format(self.type or "unknown", self.subtype or "unknown"), true)
+	desc:add(("Type: %s / %s"):format(rawget(self, 'type') or "unknown", self.subtype or "unknown"), true)
 	if self.slot_forbid == "OFFHAND" then desc:add("It must be held with both hands.", true) end
 	desc:add(true)
 
@@ -448,12 +448,12 @@ function _M:getTextualDesc()
 	if w.life_leech_chance then desc:add(("%d%% chances on all damage dealt to leech %d%% of the damage done as health."):format(w.life_leech_chance, w.life_leech_value), true) end
 
 	if w.size_category then desc:add(("Increases size category by %d."):format(w.size_category), true) end
-	
+
 	if w.combat then
 		desc:add({"color","YELLOW"}, "When used to modify unarmed attacks:", {"color", "LAST"}, true)
 		desc_combat(w.combat)
 	end
-	
+
 	end
 
 	if self.combat then desc_combat(self.combat) end
