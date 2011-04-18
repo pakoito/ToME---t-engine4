@@ -148,7 +148,7 @@ newEntity{
 	does_block_move = true,
 	block_sight = true,
 	air_level = -10,
-	dig = "SAND",
+	dig = "UNDERGROUND_SAND",
 	nice_tiler = { method="roundwall3d",
 		inner={"SANDWALL_STABLE", 100, 1, 1},
 		wall8={"SANDWALL_STABLE_8", 100, 1, 1},
