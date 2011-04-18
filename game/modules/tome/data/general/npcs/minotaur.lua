@@ -74,7 +74,7 @@ newEntity{ base = "BASE_NPC_MINOTAUR",
 
 newEntity{ base = "BASE_NPC_MINOTAUR",
 	name = "maulotaur", color=colors.SLATE,
-	desc = [[It is a belligerent minotaur with a destructive magical arsenal, armed with a hammer.]],
+	desc = [[A belligerent minotaur with a destructive magical arsenal, and armed with a hammer.]],
 	level_range = {20, nil}, exp_worth = 1,
 	rarity = 4,
 	combat_armor = 15, combat_def = 7,

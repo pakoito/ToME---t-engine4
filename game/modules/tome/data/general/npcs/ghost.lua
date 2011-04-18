@@ -55,7 +55,7 @@ newEntity{
 
 newEntity{ base = "BASE_NPC_GHOST",
 	name = "dread", color=colors.ORANGE, image="npc/dread.png",
-	desc = [[It is a form that screams its presence against the eye. Death incarnate, its hideous black body seems to struggle against reality as the universe itself struggles to banish it.]],
+	desc = [[It is a form that screams its presence against the eye. Death incarnate, its hideous black body seems to struggle against reality as the universe itself strives to banish it.]],
 	level_range = {25, nil}, exp_worth = 1,
 	rarity = 10,
 	max_life = resolvers.rngavg(90,100),
@@ -73,7 +73,7 @@ newEntity{ base = "BASE_NPC_GHOST",
 
 newEntity{ base = "BASE_NPC_GHOST",
 	name = "dreadmaster", color=colors.YELLOW, image="npc/dreadmaster.png",
-	desc = [[It is an unlife of power almost unequalled. An affront to existence, its very touch abuses and disrupts the flow of life, and its unearthly limbs, of purest black, crush rock and flesh with ease.]],
+	desc = [[It is an unlife of power almost unequalled. An affront to existence, its very touch abuses and disrupts the flow of life, and its unearthly limbs, of purest black, crumble rock and wither flesh with ease.]],
 	level_range = {32, nil}, exp_worth = 1,
 	rarity = 15,
 	rank = 3,

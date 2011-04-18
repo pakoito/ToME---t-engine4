@@ -27,7 +27,7 @@ newEntity{
 	combat = { talented = "sling", sound = "actions/arrow", sound_miss = "actions/arrow", },
 	archery = "sling",
 	basic_ammo = { talented = "sling", damrange = 1.2},
-	desc = [[Slings are used to shoot pebbles at your foes.]],
+	desc = [[Slings are used to hurl stones or metal shots at your foes.]],
 	randart_able = { attack=40, physical=80, spell=20, def=10, misc=10 },
 	egos = "/data/general/objects/egos/sling.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 }

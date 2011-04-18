@@ -87,7 +87,7 @@ newBirthDescriptor{
 	name = "Temporal Warden",
 	desc = {
 		"The Temporal Wardens have learned to blend archery, dual-weapon fighting, and chronomancy into a fearsome whole.",
-		"Through their use of the chronomantic arts, the Temporal Wardens seek to control the battlefield while peppering their foes with arrows or engage in hand-to-hand combat.",
+		"Through their use of the chronomantic arts, the Temporal Wardens seek to control the battlefield while peppering their foes with arrows or engaging in hand-to-hand combat.",
 		"Their study of chronomancy enables them to amplify their own physical and magical abilities, and to manipulate the speed of themselves and those around them.",
 		"Their most important stats are: Strength, Dexterity, Willpower, and Magic",
 		"#GOLD#Stat modifiers:",

@@ -21,7 +21,7 @@ newBirthDescriptor{
 	type = "class",
 	name = "Divine",
 	desc = {
-		"Divine classes are composed of worshippers of various gods and entities.",
+		"Divine classes are worshippers of various gods and entities.",
 		"They include the worship of the Sun, the Moon, powerful spirits, ...",
 	},
 	descriptor_choices =
@@ -46,7 +46,7 @@ newBirthDescriptor{
 		"Sun Paladins hail from the Gates of Morning, the last bastion of the free people in the Far East.",
 		"Their way of life is well represented by their motto 'The Sun is our giver, our purity, our essence. We carry the light into dark places, and against our strength none shall pass.'",
 		"They can channel the power of the Sun to smite all who seek to destroy the Sunwall.",
-		"Competent in both weapon and shield combat and magic, they usually burn their foes from afar before engaging in melee.",
+		"Competent in both weapon and shield combat and magic, they usually burn their foes from afar before bashing them in melee.",
 		"Their most important stats are: Strength and Magic",
 		"#GOLD#Stat modifiers:",
 		"#LIGHT_BLUE# * +5 Strength, +0 Dexterity, +0 Constitution",

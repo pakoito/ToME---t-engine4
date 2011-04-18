@@ -114,7 +114,7 @@ newEntity{ base = "BASE_NPC_CANINE",
 
 newEntity{ base = "BASE_NPC_CANINE",
 	name = "Rungof the Warg Titan", color=colors.VIOLET, unique=true, image="npc/canine_rungof.png",
-	desc = [[It is a large wolf with eyes full of cunning, only 3 times bigger than a normal warg.]],
+	desc = [[It is a large wolf with eyes full of cunning, thrice the size of a normal warg.]],
 	level_range = {20, nil}, exp_worth = 2,
 	rank = 3.5,
 	size_category = 4,

@@ -146,7 +146,7 @@ newEntity{ define_as = "MULTIHUED_WYRM_SCALE",
 	unided_name = "shimmering scale",
 	name = "multi-hued wyrm scale",
 	display = "~", color=colors.VIOLET,
-	desc = [[Beautiful and nearly impregnable. Separating it from the dragon was hard work.]],
+	desc = [[Beautiful and nearly impregnable. Separating it from the dragon must have been hard work.]],
 	alch = "If you think collecting one of these is hard, try liquefying one.",
 }
 
@@ -242,7 +242,7 @@ newEntity{ define_as = "RED_CRYSTAL_SHARD",
 	unided_name = "red crystal shard",
 	name = "red crystal shard",
 	display = "/", color=colors.RED,
-	desc = [[Tiny flames still dance etherally inside this transparent crystal, though its heat has faded.]],
+	desc = [[Tiny flames still dance etherally inside this transparent crystal, though its heat seems to have faded... you hope.]],
 	alch = "I hear these can be found in a cave near Elvala. I also hear that they can cause you to spontaneously combust, so no need to explain if you come back hideously scarred.",
 }
 

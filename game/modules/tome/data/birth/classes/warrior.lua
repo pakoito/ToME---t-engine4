@@ -21,7 +21,7 @@ newBirthDescriptor{
 	type = "class",
 	name = "Warrior",
 	desc = {
-		"Warriors train in all aspects of physical combat. They can be juggernauts of destruction wielding a two-handed greatsword, or massive iron-clad protectors with a shield.",
+		"Warriors train in all aspects of physical combat. They can be juggernauts of destruction wielding two-handed greatswords, or massive iron-clad protectors with gleaming shields.",
 	},
 	descriptor_choices =
 	{
@@ -182,9 +182,9 @@ newBirthDescriptor{
 	desc = {
 		"The ravages of the Spellblaze stretched armies thin and left many unprotected. Not everyone could afford the luxury of a weapon.",
 		"Without steel or iron, poor communities of all races turned to the strength of their own bodies for defense against the darkness.",
-		"Rather a pit-fighter, a boxer, or just a practitioner the occupation known as brawler still exists today.",
-		"Many of the brawler's abilities will earn combo points which they can use on finishing moves that will have added effect.",
-		"The unarmed fighting styles the brawler uses rely on maneuverability and having both hands available, as such they may not be practiced in massive armor or while a weapon or shield is equipped.",
+		"Whether a pit-fighter, a boxer, or just an amateur practitioner, the Brawler's skills are still handy today.",
+		"Many of the Brawler's abilities will earn combo points which they can use on finishing moves that will have added effect.",
+		"The unarmed fighting styles the Brawler uses rely on maneuverability and having both hands available. As such, they may not be practiced in massive armor or while a weapon or shield is equipped.",
 		"Their most important stats are: Strength, Dexterity, and Cunning",
 		"#GOLD#Stat modifiers:",
 		"#LIGHT_BLUE# * +3 Strength, +3 Dexterity, +0 Constitution",

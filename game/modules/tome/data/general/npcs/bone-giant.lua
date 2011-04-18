@@ -60,7 +60,7 @@ newEntity{
 
 newEntity{ base = "BASE_NPC_BONE_GIANT",
 	name = "bone giant", color=colors.WHITE,
-	desc = [[A towering creature, made from the bones of hundreds of dead bodies. It is covered by an unholy aura.]],
+	desc = [[A towering creature, made from the bones of dozens of dead bodies. It is covered by an unholy aura.]],
 	level_range = {25, nil}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(100,120),

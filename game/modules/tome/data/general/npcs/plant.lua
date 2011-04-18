@@ -41,7 +41,7 @@ newEntity{
 
 newEntity{ base = "BASE_NPC_PLANT",
 	name = "giant venus flytrap", color=colors.GREEN,
-	desc = "This flesh-eating plant has grown to enormous proportions and seeks to quell its hunger",
+	desc = "This flesh-eating plant has grown to enormous proportions and seeks to quell its hunger.",
 	level_range = {7, 17}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(5,9),

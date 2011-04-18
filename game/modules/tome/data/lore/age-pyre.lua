@@ -25,7 +25,7 @@ newLore{
 	id = "broken-atamathon",
 	category = "age of pyre",
 	name = "Atamathon, the giant golem",
-	lore = [[This giant golem was constructed by the halflings during the Pyre Wars to fight the orcs, but was felled by Garkul the Devourer.
+	lore = [[This giant golem was constructed by the Halflings during the Pyre Wars to fight the orcs, but was felled by Garkul the Devourer.
 Its body is made of marble, its joints of solid voratun, and its eyes of purest ruby. One of its eyes seems to be missing. At over 40 feet high it towers above you.
 Someone foolish has tried to reconstruct it, but it seems like it misses an eye to be completed.]]
 }

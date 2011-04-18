@@ -22,7 +22,7 @@ local Talents = require("engine.interface.ActorTalents")
 newEntity{
 	define_as = "BASE_NPC_LICH",
 	type = "undead", subtype = "lich",
-	desc = [[Only the most powerful spellcasters raised to unlife become liches, doomed to haunt the world for an eternity, they have grown to hate all that breathes or trespasses on their domain, unfortunately that includes you.]],
+	desc = [[Only the most powerful spellcasters raised to unlife become liches. Doomed to haunt the world for an eternity, they have grown to hate all that breathes or trespasses on their domain. Unfortunately that includes you.]],
 	display = "L", color=colors.WHITE,
 	rank = 3, size = 3,
 
@@ -69,7 +69,7 @@ newEntity{
 
 newEntity{ base = "BASE_NPC_LICH",
 	name = "lich", color=colors.DARK_BLUE,
-	desc=[[Having thought to discover life eternal, undeath has robbed these beings of the joys of life, and now they seek to destroy it as well.]],
+	desc=[[Having thought to discover life eternal, these beings have allowed undeath to rob them of the joys of life. Now they seek to destroy it as well.]],
 	level_range = {35, nil}, exp_worth = 1,
 	rarity = 20,
 	max_life = resolvers.rngavg(70,80),
@@ -102,7 +102,7 @@ newEntity{ base = "BASE_NPC_LICH",
 
 newEntity{ base = "BASE_NPC_LICH",
 	name = "ancient lich", color=colors.DARK_RED,
-	desc=[[An elder being from a now forgotten age, filled and fueled by its hate and rage towards all things living, it seeks to deprive those of a prize it cannot have... life.]],
+	desc=[[An elder being from a now-forgotten age, filled and fueled by its hate and rage toward all things living, it seeks to deprive all others of a prize it cannot have... life.]],
 	level_range = {40, nil}, exp_worth = 1,
 	rarity = 25,
 	max_life = resolvers.rngavg(80,90),
@@ -135,7 +135,7 @@ newEntity{ base = "BASE_NPC_LICH",
 
 newEntity{ base = "BASE_NPC_LICH",
 	name = "archlich", color=colors.SLATE,
-	desc=[[Darker than the deepest night, you shudder as this cold cruel form of darkness approaches.  Long ago it has laid aside its mortality, but it has not forgotten its power, rather, its malice and hate have bent this undead on the destruction of all things living.]],
+	desc=[[Blacker than the deepest night, this cold cruel form of darkness approaches.  Long ago it laid aside its mortality, but it has not forgotten its power; rather, its malice and hate have bent this undead entity on the destruction of all things living.]],
 	level_range = {45, nil}, exp_worth = 1,
 	rarity = 30,
 	max_life = resolvers.rngavg(100,150),

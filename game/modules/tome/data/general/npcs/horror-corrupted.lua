@@ -43,7 +43,7 @@ newEntity{
 newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 	dredge = 1,
 	name = "dremling", color=colors.SLATE,
-	desc = "A small faceless humanoid with vaguely dwarven features.  It's waraxe and shield look battered, rusted, and generally in ill repair.",
+	desc = "A small faceless humanoid with vaguely Dwarven features.  Its waraxe and shield look battered, rusted, and generally in ill repair.",
 	level_range = {1, nil}, exp_worth = 1,
 
 	combat = { atk=6, dammod={str=0.6} },
@@ -77,7 +77,7 @@ newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 	dredge = 1,
 	name = "drem", color=colors.DARK_SLATE_GRAY,
-	desc = "A giant black-skinned humanoid covered in spikey scabrous deposits.  Its face is featureless and its eyesockets empty and hollow.",
+	desc = "A giant black-skinned humanoid covered in spikey scabrous deposits.  Its face is featureless; its eyesockets, empty and hollow.",
 	level_range = {3, nil}, exp_worth = 1,
 
 	combat_armor = 4, combat_def = 0,
@@ -113,7 +113,7 @@ newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 	dredge = 1,
 	name = "drem master", color=colors.LIGHT_GREY,
-	desc = "A disfigured humanoid with vaguely dwarven features dressed in patched together and rusted mail armor.  It seems to be in command of the others though it's mouth is sown shut.",
+	desc = "A disfigured humanoid with vaguely Dwarven features dressed in patched-together and rusted mail armor.  It seems to be in command of others, though its mouth is sewn shut.",
 	level_range = {3, nil}, exp_worth = 1,
 
 	combat = { atk=10, dammod={str=0.6} },
@@ -156,7 +156,7 @@ newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 
 newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 	name = "brecklorn", color=colors.PINK,  -- gloom bat
-	desc = "A giant hairless bat with the face of a dwarven man twisted into a constant scream.  Pestulant sores cover it's malformed body and your heart weakens as it nears.",
+	desc = "A giant hairless bat with the face of a Dwarf twisted into a constant scream.  Pestulant sores cover its malformed body, and your heart weakens as it nears.",
 	level_range = {1, nil}, exp_worth = 1,
 
 	combat = { atk=10, dammod={dex=0.6} },
@@ -212,7 +212,7 @@ newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 
 newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 	name = "grannor'vin", color=colors.BLACK,  -- shadow slug
-	desc = "A large sluglike creature with the face of a man.  Shadows seem to be drawn to it's massive form and your light dims as it approaches.",
+	desc = "A large sluglike creature with the face of a man.  Shadows seem to be drawn to its massive form, and your light dims as it approaches.",
 	level_range = {2, nil}, exp_worth = 1,
 
 	combat = { dam=5, atk=15, apr=5, damtype=DamageType.DARKNESS },

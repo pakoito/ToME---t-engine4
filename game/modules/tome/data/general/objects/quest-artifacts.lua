@@ -306,8 +306,8 @@ newEntity{ base = "BASE_WAND",
 	define_as = "ROD_OF_RECALL",
 	unided_name = "unstable wand", identified=true, force_lore_artifact=true,
 	name = "Rod of Recall", color=colors.LIGHT_BLUE, unique=true, image = "object/artifact/rod_of_recall.png",
-	desc = [[This rod is made entirely of voratun, infused with raw magical energies it can bend space itself.
-You have heard of such items before, they are very useful to adventurers, allowing faster travel.]],
+	desc = [[This rod is made entirely of voratun, infused with raw magical energies that can bend space itself.
+You have heard of such items before. They are very useful to adventurers, allowing faster travel.]],
 	cost = 0, quest=true,
 	elec_proof = true,
 

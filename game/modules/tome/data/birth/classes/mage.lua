@@ -21,7 +21,7 @@ newBirthDescriptor{
 	type = "class",
 	name = "Mage",
 	desc = {
-		"Mages are the wielders of the arcane powers, able to cast powerful spells of destruction or to heal their wounds with nothing but a thought.",
+		"Mages are the wielders of arcane powers, able to cast powerful spells of destruction or to heal their wounds with nothing but a thought.",
 	},
 	descriptor_choices =
 	{
@@ -45,7 +45,7 @@ newBirthDescriptor{
 	desc = {
 		"An Archmage devotes his whole life to the study of magic above anything else.",
 		"Most Archmagi lack basic skills that others take for granted (like general fighting sense), but they make up for it by their raw magical power.",
-		"Archmagi know all schools of magic but the more intricate (Temporal and Meta) from the start. However, they usually refuse to have anything to do with Necromancy.",
+		"Archmagi start knowing all schools of magic but the more intricate (Temporal and Meta). However, they usually refuse to have anything to do with Necromancy.",
 		"All Archmagi have been trained in the secret town of Angolwen and possess a unique spell to teleport to it directly.",
 		"Their most important stats are: Magic and Willpower",
 		"#GOLD#Stat modifiers:",
@@ -99,7 +99,7 @@ newBirthDescriptor{
 	name = "Alchemist",
 	desc = {
 		"An Alchemist is a manipulator of materials using magic.",
-		"They do not use the forbidden arcane arts practised by the mages of old - such pervertors of nature using willpower alone have been shunned or actively hunted down since the Spellblaze.",
+		"They do not use the forbidden arcane arts practised by the mages of old - such perverters of nature have been shunned or actively hunted down since the Spellblaze.",
 		"Alchemists can transmute gems to bring forth elemental effects, turning them into balls of fire, torrents of acid, and other effects.  They can also reinforce armour with magical effects using gems, and channel arcane staffs to produce bolts of energy.",
 		"Though normally physically weak, most alchemists are accompanied by magical golems which they construct and use as bodyguards.  These golems are enslaved to their master's will, and can grow in power as their master advances through the arts.",
 		"Their most important stats are: Magic and Dexterity",

@@ -127,7 +127,7 @@ Oh, and it is twice as big, too.]],
 
 newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 	name = "thaurhereg", color=colors.RED, -- Terrible blood
-	desc = [[This terrible demon is covered in blood, which flows *on* its skin in ever changing patterns that disturb you simply when looking at it.]],
+	desc = [[This terrible demon is covered in blood, which flows *on* its skin in ever-changing patterns that disturb you simply when looking at it.]],
 	level_range = {35, nil}, exp_worth = 1,
 	rarity = 4,
 	rank = 3,

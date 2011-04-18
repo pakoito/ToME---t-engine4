@@ -114,7 +114,7 @@ newEntity{ base = "BASE_NPC_ANT",
 
 newEntity{ base = "BASE_NPC_ANT",
 	name = "giant ice ant", color=colors.WHITE, image="npc/ice_ant.png",
-	desc = "It's a large white ant. The air is frigid around this ant.",
+	desc = "It's a large white ant. The air is frigid around it.",
 	level_range = {15, nil}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(20,40),

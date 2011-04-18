@@ -101,7 +101,7 @@ function _M:generateList()
 		end))
 	end,}
 
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Enables or disables weather effects in some zones.\nDisabling it can gain some performance, it will not affect previously visited zones.#WHITE#"}
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Enables or disables weather effects in some zones.\nDisabling it can gain some performance. It will not affect previously visited zones.#WHITE#"}
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Weather effects#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.tome.weather_effects and "enabled" or "disabled")
 	end, fct=function(item)
@@ -128,7 +128,7 @@ function _M:generateList()
 		self.c_list:drawItem(item)
 	end,}
 
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"If enabled the chats between players will also appear in the game log, in addition to the normal chat log.#WHITE#"}
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"If enabled, the chats between players will also appear in the game log, in addition to the normal chat log.#WHITE#"}
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Community chat appears in the game log#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.tome.chat_log and "enabled" or "disabled")
 	end, fct=function(item)
@@ -137,7 +137,7 @@ function _M:generateList()
 		self.c_list:drawItem(item)
 	end,}
 
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Select the interface look. Stone is the default one, Simple is basic but takes less screen space.\nYou must restart the game for the change to take effect."}
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Select the interface look. Stone is the default one. Simple is basic but takes less screen space.\nYou must restart the game for the change to take effect."}
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Interface Style#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.tome.ui_theme):capitalize()
 	end, fct=function(item)
@@ -149,7 +149,7 @@ function _M:generateList()
 		end)
 	end,}
 
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Select the fonts look. fantasy is the default one, Basic is simplied and smaller.\nYou must restart the game for the change to take effect."}
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Select the fonts look. Fantasy is the default one. Basic is simplified and smaller.\nYou must restart the game for the change to take effect."}
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Font Style#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.tome.fonts.type):capitalize()
 	end, fct=function(item)

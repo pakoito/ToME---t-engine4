@@ -66,6 +66,7 @@ newEntity{ define_as = "TROLL_PROX",
 		if self.life - val < self.max_life * 0.4 then
 			local n = game.zone:makeEntityByName(game.level, "object", "PROX_NOTE")
 			if n then
+				self.on_takehit = nil
 				game.zone:addEntity(game.level, n, "object", self.x, self.y)
 				game.logSeen(self, "Prox staggers for a moment. A note seems to drop at his feet.")
 			end

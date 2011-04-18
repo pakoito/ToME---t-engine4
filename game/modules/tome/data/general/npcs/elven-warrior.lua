@@ -65,7 +65,7 @@ newEntity{ base = "BASE_NPC_ELVEN_WARRIOR",
 
 newEntity{ base = "BASE_NPC_ELVEN_WARRIOR",
 	name = "mean looking elven guard", color=colors.UMBER,
-	desc = [[An elven guard.]],
+	desc = [[An elven guard, scarred and sullen.]],
 	level_range = {3, nil}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(100,110), life_rating = 11,
