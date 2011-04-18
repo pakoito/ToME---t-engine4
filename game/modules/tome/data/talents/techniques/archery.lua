@@ -87,7 +87,7 @@ newTalent{
 
 		return {
 			move = self:addTemporaryValue("never_move", 1),
-			speed = self:addTemporaryValue("combat_physspeed", -self:getTalentLevel(t) * 0.05),
+			speed = self:addTemporaryValue("combat_physspeed", -self:getTalentLevelRaw(t) * 0.05),
 			crit = self:addTemporaryValue("combat_physcrit", 7 + self:getTalentLevel(t) * self:getDex(10)),
 			atk = self:addTemporaryValue("combat_dam", 4 + self:getTalentLevel(t) * self:getDex(10)),
 			dam = self:addTemporaryValue("combat_atk", 4 + self:getTalentLevel(t) * self:getDex(10)),
