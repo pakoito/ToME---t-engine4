@@ -397,16 +397,18 @@ function _M:loadGame()
 	local loadedGame = self:loadReal("main")
 
 	-- Delay loaded must run
-	for i, o in ipairs(self.delayLoad) do
---		print("loader executed for class", o, o.__CLASSNAME)
-		o:loaded()
+	local delay_fct = function()
+		for i, o in ipairs(self.delayLoad) do
+--			print("loader executed for class", o, o.__CLASSNAME)
+			o:loaded()
+		end
 	end
 
 	fs.umount(path)
 
 	game:unregisterDialog(popup)
 
-	return loadedGame
+	return loadedGame, delay_fct
 end
 
 --- Loads a zone

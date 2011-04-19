@@ -260,7 +260,9 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 	-- Load the savefile if it exists, or create a new one if not (or if requested)
 	local save = engine.Savefile.new(_G.game.save_name)
 	if save:check() and not new_game then
-		_G.game = save:loadGame()
+		local delay
+		_G.game, delay = save:loadGame()
+		delay()
 	else
 		save:delete()
 	end

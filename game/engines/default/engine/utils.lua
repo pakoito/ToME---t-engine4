@@ -37,27 +37,33 @@ function table.print(src, offset)
 	end
 end
 
-function table.clone(tbl, deep)
+function table.clone(tbl, deep, k_filter)
 	local n = {}
+	k_filter = k_filter or {}
 	for k, e in pairs(tbl) do
-		-- Deep copy subtables, but not objects!
-		if deep and type(e) == "table" and not e.__CLASSNAME then
-			n[k] = table.clone(e, true)
-		else
-			n[k] = e
+		if not k_filter[k] then
+			-- Deep copy subtables, but not objects!
+			if deep and type(e) == "table" and not e.__CLASSNAME then
+				n[k] = table.clone(e, true, k_filter)
+			else
+				n[k] = e
+			end
 		end
 	end
 	return n
 end
 
-function table.merge(dst, src, deep)
+function table.merge(dst, src, deep, k_filter)
+	k_filter = k_filter or {}
 	for k, e in pairs(src) do
-		if deep and dst[k] and type(e) == "table" and type(dst[k]) == "table" and not e.__CLASSNAME then
-			table.merge(dst[k], e, true)
-		elseif deep and not dst[k] and type(e) == "table" and not e.__CLASSNAME then
-			dst[k] = table.clone(e, true)
-		else
-			dst[k] = e
+		if not k_filter[k] then
+			if deep and dst[k] and type(e) == "table" and type(dst[k]) == "table" and not e.__CLASSNAME then
+				table.merge(dst[k], e, true, k_filter)
+			elseif deep and not dst[k] and type(e) == "table" and not e.__CLASSNAME then
+				dst[k] = table.clone(e, true, k_filter)
+			else
+				dst[k] = e
+			end
 		end
 	end
 end

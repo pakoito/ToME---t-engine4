@@ -30,6 +30,7 @@ function _M:init(level, map)
 	self.e_array = {}
 	self.entities = {}
 	self.entities_list = {}
+	self.perm_entities_list = {}
 end
 
 --- Adds an entity to the level
@@ -95,8 +96,7 @@ end
 
 --- Serialization
 function _M:save()
-	return class.save(self, {
-	})
+	return class.save(self, {entities_list=true})
 end
 function _M:loaded()
 	-- Loading the game has defined new uids for entities, yet we hard referenced the old ones
@@ -106,17 +106,22 @@ function _M:loaded()
 		nes[e.uid] = e
 	end
 	self.entities = nes
+	self.entities_list = {}
 end
 
 --- Setup an entity list for the level, this allows the Zone to pick objects/actors/...
-function _M:setEntitiesList(type, list)
-	self.entities_list[type] = list
+function _M:setEntitiesList(type, list, permanent)
+	if permanent then
+		self.perm_entities_list[type] = list
+	else
+		self.entities_list[type] = list
+	end
 	print("Stored entities list", type, list)
 end
 
 --- Gets an entity list for the level, this allows the Zone to pick objects/actors/...
 function _M:getEntitiesList(type)
-	return self.entities_list[type]
+	return self.entities_list[type] or self.perm_entities_list[type]
 end
 
 --- Removed, so we remove all entities

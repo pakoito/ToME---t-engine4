@@ -28,6 +28,8 @@ local print = function() end
 --- Defines a zone: a set of levels, with depth, npcs, objects, level generator, ...
 module(..., package.seeall, class.make)
 
+_no_save_fields = {}
+
 --- Setup classes to use for level generation
 -- Static method
 -- @param t table that contains the name of the classes to use
@@ -57,12 +59,7 @@ function _M:init(short_name, dynamic)
 		self.level_scheme = self.level_scheme or "fixed"
 		assert(self.max_level, "no zone max level")
 		self.levels = self.levels or {}
-		if not dynamic then
-			self.npc_list = self.npc_class:loadList("/data/zones/"..self.short_name.."/npcs.lua")
-			self.grid_list = self.grid_class:loadList("/data/zones/"..self.short_name.."/grids.lua")
-			self.object_list = self.object_class:loadList("/data/zones/"..self.short_name.."/objects.lua")
-			self.trap_list = self.trap_class:loadList("/data/zones/"..self.short_name.."/traps.lua")
-		end
+		if not dynamic then self:loadBaseLists() end
 
 		if self.on_setup then self:on_setup() end
 
@@ -82,6 +79,14 @@ function _M:updateBaseLevel()
 		local plev = game:getPlayer().level
 		self.base_level = util.bound(plev, self.level_range[1], self.level_range[2])
 	end
+end
+
+--- Loads basic entities lists
+function _M:loadBaseLists()
+	self.npc_list = self.npc_class:loadList("/data/zones/"..self.short_name.."/npcs.lua")
+	self.grid_list = self.grid_class:loadList("/data/zones/"..self.short_name.."/grids.lua")
+	self.object_list = self.object_class:loadList("/data/zones/"..self.short_name.."/objects.lua")
+	self.trap_list = self.trap_class:loadList("/data/zones/"..self.short_name.."/traps.lua")
 end
 
 --- Leaves a zone
@@ -128,13 +133,7 @@ function _M:computeRarities(type, list, level, filter, add_level, rarity_field)
 					local etype = ie
 					if _G.type(ie) == "number" then etype = "" end
 					if not level:getEntitiesList(type.."/"..e.egos..":"..etype) then
-						print("Generating specific ego list", type.."/"..e.egos..":"..etype)
-						local egos = self:getEgosList(level, type, e.egos, e.__CLASSNAME)
-						if egos then
-							local egos_prob = self:computeRarities(type, egos, level, etype ~= "" and function(e) return e[etype] end or nil)
-							level:setEntitiesList(type.."/"..e.egos..":"..etype, egos_prob)
-							level:setEntitiesList(type.."/base/"..e.egos..":"..etype, egos)
-						end
+						self:generateEgoEntities(level, type, etype, e.egos, e.__CLASSNAME)
 					end
 				end
 			end
@@ -212,6 +211,18 @@ function _M:pickEntity(list)
 	return nil
 end
 
+--- Compute posible egos for this list
+function _M:generateEgoEntities(level, type, etype, e_egos, e___CLASSNAME)
+	print("Generating specific ego list", type.."/"..e_egos..":"..etype)
+	local egos = self:getEgosList(level, type, e_egos, e___CLASSNAME)
+	if egos then
+		local egos_prob = self:computeRarities(type, egos, level, etype ~= "" and function(e) return e[etype] end or nil)
+		level:setEntitiesList(type.."/"..e_egos..":"..etype, egos_prob)
+		level:setEntitiesList(type.."/base/"..e_egos..":"..etype, egos)
+		return egos
+	end
+end
+
 --- Gets the possible egos
 function _M:getEgosList(level, type, group, class)
 	-- Already loaded ? use it
@@ -222,6 +233,13 @@ function _M:getEgosList(level, type, group, class)
 	list = require(class):loadList(group, true)
 	level:setEntitiesList(type.."/"..group, list)
 
+	return list
+end
+
+function _M:getEntities(level, type)
+	local list = level:getEntitiesList(type)
+	if not list then
+	end
 	return list
 end
 
@@ -243,7 +261,7 @@ function _M:makeEntity(level, type, filter, force_level, prob_filter)
 	local e
 	-- No probability list, use the default one and apply filter
 	if not prob_filter then
-		local list = level:getEntitiesList(type)
+		local list = self:getEntities(level, type)
 		local tries = filter and filter.nb_tries or 500
 		-- CRUDE ! Brute force ! Make me smarter !
 		while tries > 0 do
@@ -258,14 +276,14 @@ function _M:makeEntity(level, type, filter, force_level, prob_filter)
 		if type == "actor" then base_list = self.npc_list
 		elseif type == "object" then base_list = self.object_list
 		elseif type == "trap" then base_list = self.trap_list
-		else base_list = level:getEntitiesList(type) if not base_list then return nil end end
+		else base_list = self:getEntities(level, type) if not base_list then return nil end end
 		local list = self:computeRarities(type, base_list, level, function(e) return self:checkFilter(e, filter, type) end, filter.add_levels, filter.special_rarity)
 		e = self:pickEntity(list)
 		print("[MAKE ENTITY] prob list generation", e and e.name, "from list size", #list)
 		if not e then return nil end
 	-- No filter
 	else
-		local list = level:getEntitiesList(type)
+		local list = self:getEntities(level, type)
 		local tries = filter and filter.nb_tries or 50 -- A little crude here too but we only check 50 times, this is simply to prevent duplicate uniques
 		while tries > 0 do
 			e = self:pickEntity(list)
@@ -315,6 +333,7 @@ local pick_ego = function(self, level, e, egos_list, type, picked_etype, etype, 
 	picked_etype[etype] = true
 	if _G.type(etype) == "number" then etype = "" end
 	local egos = level:getEntitiesList(type.."/"..e.egos..":"..etype)
+	if not egos then egos = self:generateEgoEntities(level, type, etype, e.egos, e.__CLASSNAME) end
 
 	-- Filter the egos if needed
 	if ego_filter then
@@ -478,19 +497,25 @@ function _M:addEntity(level, e, typ, x, y, no_added)
 	e:check("on_added", level, x, y)
 end
 
+--- If we are loaded we need a new uid
+function _M:loaded()
+	if self.reload_lists then self:loadBaseLists() end
+end
+
 function _M:load(dynamic)
 	local ret = true
 	-- Try to load from a savefile
 	local data = savefile_pipe:doLoad(game.save_name, "zone", nil, self.short_name)
---	local save = Savefile.new(game.save_name)
---	local data = save:loadZone(self.short_name)
---	save:close()
 
 	if not data and not dynamic then
 		local f, err = loadfile("/data/zones/"..self.short_name.."/zone.lua")
 		if err then error(err) end
 		data = f()
 		ret = false
+
+		if type(data.reload_lists) ~= "boolean" or data.reload_lists then
+			self._no_save_fields = {npc_list=true,grid_list=true,object_list=true,trap_list=true}
+		end
 	elseif not data and dynamic then
 		data = dynamic
 		ret = false
@@ -505,9 +530,9 @@ local recurs = function(t)
 	return nt
 end
 function _M:getLevelData(lev)
-	local res = table.clone(self, true)
+	local res = table.clone(self, true, self._no_save_fields)
 	if self.levels[lev] then
-		table.merge(res, self.levels[lev], true)
+		table.merge(res, self.levels[lev], true, self._no_save_fields)
 	end
 	-- Make sure it is not considered a class
 	res.__CLASSNAME = nil
