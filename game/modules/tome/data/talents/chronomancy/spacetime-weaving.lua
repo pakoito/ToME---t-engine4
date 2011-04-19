@@ -181,7 +181,7 @@ newTalent{
 	no_npc_use = true,
 	no_energy = true,
 	action = function(self, t)
-		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
+		local tg = {type="bolt", nowarning=true, range=1, nolock=true, talent=t}
 		local entrance_x, entrance_y = self:getTarget(tg)
 		if not entrance_x or not entrance_y then return nil end
 		local _ _, entrance_x, entrance_y = self:canProject(tg, entrance_x, entrance_y)
@@ -287,7 +287,7 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[You fold the space between two points, allowing travel back and forth between them for the next %d turns.  You may choose the entrance location but the exit location will be random.
+		return ([[You fold the space between yourself and another point, allowing travel back and forth between them for the next %d turns.
 		At level 4 you may choose the exit location target area (radius %d).  The duration will scale with your Paradox.
 		This spell takes no time to cast.]])
 		:format(duration, radius)

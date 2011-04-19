@@ -117,7 +117,7 @@ newTalent{
 		target.forceLevelup = false
 		-- Create an object to time the effect and store the creature
 		-- First, clone the terrain that we are replacing
-		local terrain = game.level.map(game.player.x, game.player.y, engine.Map.TERRAIN)
+		local terrain = game.level.map(target.x, target.y, engine.Map.TERRAIN)
 		local temporal_instability = mod.class.Object.new{
 			old_feat = game.level.map(target.x, target.y, engine.Map.TERRAIN),
 			name = "temporal instability", type="temporal", subtype="anomaly",
