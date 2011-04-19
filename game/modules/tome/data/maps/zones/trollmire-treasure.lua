@@ -27,6 +27,9 @@ defineTile("t", {"HARDTREE","HARDTREE2","HARDTREE3","HARDTREE4","HARDTREE5","HAR
 defineTile("T", "GRASS", nil, {random_filter={type="giant", subtype="troll"}})
 defineTile("!", "ROCK_VAULT")
 
+startx = 0
+starty = 9
+
 -- addSpot section
 
 -- addZone section

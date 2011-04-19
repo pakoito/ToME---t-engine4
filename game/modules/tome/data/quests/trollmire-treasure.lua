@@ -47,6 +47,12 @@ enter_level3 = function(self)
 	local g = game.zone:makeEntityByName(game.level, "terrain", "GRASS_DOWN6"):clone()
 	g.name = "way to the hidden trollmire treasure"
 	g.desc = "Beware!"
+	g.change_level_check = function()
+		require("engine.ui.Dialog"):yesnoPopup("Danger...", "This way lead to the lair of a mighty troll, traces of blood are everywhere. Are you sure?", function(ret)
+			if ret then game:changeLevel(4, "trollmire") end
+		end)
+		return true
+	end
 	local level = game.level
 	local spot = level.default_down
 	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)

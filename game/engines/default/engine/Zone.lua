@@ -499,7 +499,9 @@ end
 
 --- If we are loaded we need a new uid
 function _M:loaded()
-	if self.reload_lists then self:loadBaseLists() end
+	if type(self.reload_lists) ~= "boolean" or self.reload_lists then
+		self:loadBaseLists()
+	end
 end
 
 function _M:load(dynamic)
