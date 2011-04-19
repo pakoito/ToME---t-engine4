@@ -1319,7 +1319,7 @@ static int minimap_to_screen(lua_State *L)
 
 	int ptr;
 	GLubyte *mm = map->minimap;
-	memset(mm, 0, mdw * mdh * 4 * sizeof(GLubyte));
+	memset(mm, 0, map->mm_rw * map->mm_rh * 4 * sizeof(GLubyte));
 	for (z = 0; z < map->zdepth; z++)
 	{
 		for (i = mdx; i < mdx + mdw; i++)
