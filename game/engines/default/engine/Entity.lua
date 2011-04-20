@@ -684,8 +684,7 @@ function _M:loadList(file, no_default, res, mod, loaded)
 			end
 
 			local e = newenv.class.new(t, no_default)
-
-			if mod then mod(e) end
+			if type(mod) == "function" then mod(e) end
 
 			res[#res+1] = e
 			if t.define_as then res[t.define_as] = e end

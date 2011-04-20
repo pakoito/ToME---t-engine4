@@ -91,7 +91,7 @@ function setupSummon(self, m, x, y, no_control)
 	m.ai_state.tactic_leash = 100
 	-- Try to use stored AI talents to preserve tweaking over multiple summons
 	m.ai_talents = self.stored_ai_talents and self.stored_ai_talents[m.name] or {}
-	local main_weapon = self:getInven("MAINHAND")[1]
+	local main_weapon = self:getInven("MAINHAND") and self:getInven("MAINHAND")[1]
 	m:attr("combat_apr", self:combatAPR(main_weapon))
 	m.inc_damage = table.clone(self.inc_damage, true)
 	m:attr("stun_immune", self:attr("stun_immune"))

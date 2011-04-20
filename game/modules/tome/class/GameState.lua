@@ -1101,6 +1101,8 @@ function _M:createRandomZone()
 	data.depth = rng.range(2, 4)
 	data.min_lev, data.max_lev = game.player.level, game.player.level + 15
 	data.w, data.h = rng.range(40, 60), rng.range(40, 60)
+	data.max_material_level = util.bound(math.ceil(data.min_lev / 10), 1, 5)
+	data.min_material_level = data.max_material_level - 1
 
 	data.less_dir = rng.table{2, 4, 6, 8}
 	data.more_dir = ({[2]=8, [8]=2, [4]=6, [6]=4})[data.less_dir]
@@ -1138,7 +1140,7 @@ function _M:createRandomZone()
 	------------------------------------------------------------
 	-- Create a boss
 	------------------------------------------------------------
-	local npcs = mod.class.NPC:loadList("/data/general/npcs/all.lua")
+	local npcs = mod.class.NPC:loadList("/data/general/npcs/random_zone.lua")
 	local list = {}
 	for _, e in ipairs(npcs) do
 		if e.rarity and e.level_range and e.level_range[1] <= data.min_lev and (not e.level_range[2] or e.level_range[2] >= data.min_lev) and e.rank > 1 and not e.unique then
@@ -1149,9 +1151,26 @@ function _M:createRandomZone()
 	local boss, boss_id = self:createRandomBoss(base, data.min_lev + data.depth + rng.range(2, 4))
 	npcs[boss_id] = boss
 
+	------------------------------------------------------------
+	-- Entities
+	------------------------------------------------------------
+	local base_nb = math.sqrt(data.w * data.h)
+	local nb_npc = { math.ceil(base_nb * 0.4), math.ceil(base_nb * 0.6) }
+	local nb_trap = { math.ceil(base_nb * 0.1), math.ceil(base_nb * 0.2) }
+	local nb_object = { math.ceil(base_nb * 0.06), math.ceil(base_nb * 0.12) }
+	if rng.percent(20) then nb_trap = {0,0} end
+	if rng.percent(10) then nb_object = {0,0} end
+
+	------------------------------------------------------------
+	-- Name
+	------------------------------------------------------------
 	local ngd = NameGenerator.new(randart_name_rules.default2)
 	local name = ngd:generate()
 	local short_name = name:lower():gsub("[^a-z]", "_")
+
+	------------------------------------------------------------
+	-- Final glue
+	------------------------------------------------------------
 	local zone = engine.Zone.new(short_name, {
 		name = name,
 		level_range = {data.min_lev, data.max_lev},
@@ -1162,10 +1181,13 @@ function _M:createRandomZone()
 		color_shown = data.tint_s,
 		color_obscure = data.tint_o,
 		ambient_music = rng.table(musics),
+		min_material_level = data.min_material_level,
+		max_material_level = data.max_material_level,
 		generator =  {
 			map = layout.gen(data),
-			actor = { class = "engine.generator.actor.Random", nb_npc = {5, 7}, guardian = boss_id },
-			trap = { class = "engine.generator.trap.Random", nb_trap = {3, 3}, },
+			actor = { class = "engine.generator.actor.Random", nb_npc = nb_npc, guardian = boss_id },
+			trap = { class = "engine.generator.trap.Random", nb_trap = nb_trap, },
+			object = { class = "engine.generator.object.Random", nb_object = nb_object, },
 		},
 		npc_list = npcs,
 		grid_list = grids,
@@ -1179,6 +1201,9 @@ function _M:createRandomBoss(base, level)
 	local boss_id = "RND_ZONE_BOSS"
 	local b = base:clone()
 
+	------------------------------------------------------------
+	-- Basic stuff, name, rank, ...
+	------------------------------------------------------------
 	local ngd = NameGenerator.new(randart_name_rules.default)
 	local name = ngd:generate()
 	b.name = name.." the "..b.name
@@ -1217,6 +1242,10 @@ function _M:createRandomBoss(base, level)
 	-- Boss worthy drops
 	b[#b+1] = resolvers.drops{chance=100, nb=3, {tome_drops="boss"} }
 	b[#b+1] = resolvers.drop_randart{}
+
+	------------------------------------------------------------
+	-- Apply talents from classes
+	------------------------------------------------------------
 
 	-- Apply a class
 	b.learn_tids = {}

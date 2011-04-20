@@ -31,6 +31,7 @@ newTalent{
 		if self:getTalentLevel(t) >= 3 then
 			return 2
 		end
+		return 0
 	end},
 	getBlindPower = function(self, t) return 3 + self:getTalentLevel(t) end,
 	action = function(self, t)

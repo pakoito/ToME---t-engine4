@@ -17,9 +17,16 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local loadIfNot = function(f)
+local random_zone_mode = false
+if type(entity_mod) == "table" then
+	random_zone_mode = entity_mod.random_zone_mode
+	entity_mod = false
+end
+local todo = {}
+
+local loadIfNot = loadIfNot or function(f)
 	if loaded[f] then return end
-	load(f, entity_mod)
+	todo[#todo+1] = {f=f, mod=entity_mod}
 end
 
 -- Load all NPCs anyway but with higher rarity
@@ -73,3 +80,18 @@ loadIfNot("/data/general/npcs/vermin.lua")
 loadIfNot("/data/general/npcs/wight.lua")
 loadIfNot("/data/general/npcs/xorn.lua")
 
+-- Select some random dominant ones for random zones
+if random_zone_mode then
+	local nt = {}
+	local nb = #todo
+	for i = 1, nb do nt[#nt+1] = rng.tableRemove(todo) end
+	todo = nt
+	-- The first 4 are much more likely
+	for i = 4, #todo do
+		todo[i].mod = rarity(4, 35)
+	end
+end
+
+for i = 1, #todo do
+	load(todo[i].f, todo[i].mod)
+end
