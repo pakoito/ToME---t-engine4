@@ -135,10 +135,12 @@ newTalent{
 	action = function(self, t)
 		if not self.alchemy_golem then
 			self.alchemy_golem = game.zone:finishEntity(game.level, "actor", makeGolem())
-			game.party:addMember(self.alchemy_golem, {
-				control="full", type="golem", title="Golem",
-				orders = {target=true, leash=true, anchor=true, talents=true, behavior=true},
-			})
+			if game.party:hasMember(self) then
+				game.party:addMember(self.alchemy_golem, {
+					control="full", type="golem", title="Golem",
+					orders = {target=true, leash=true, anchor=true, talents=true, behavior=true},
+				})
+			end
 			if not self.alchemy_golem then return end
 			self.alchemy_golem.faction = self.faction
 			self.alchemy_golem.name = "golem (servant of "..self.name..")"

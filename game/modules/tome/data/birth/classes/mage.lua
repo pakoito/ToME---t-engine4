@@ -137,7 +137,8 @@ newBirthDescriptor{
 			{type="gem",},
 			{type="gem",},
 		},
-		resolvers.generic(function(self)
+		resolvers.generic(function(self) self:birth_create_alchemist_golem() end),
+		birth_create_alchemist_golem = function(self)
 			-- Make and wield some alchemist gems
 			local t = self:getTalentFromId(self.T_CREATE_ALCHEMIST_GEMS)
 			local gem = t.make_gem(self, t, "GEM_AGATE")
@@ -145,9 +146,11 @@ newBirthDescriptor{
 			self:sortInven()
 
 			-- Invoke the golem
-			local t = self:getTalentFromId(self.T_REFIT_GOLEM)
-			t.action(self, t)
-		end),
+			if not self.alchemy_golem then
+				local t = self:getTalentFromId(self.T_REFIT_GOLEM)
+				t.action(self, t)
+			end
+		end,
 	},
 	copy_add = {
 		life_rating = -1,

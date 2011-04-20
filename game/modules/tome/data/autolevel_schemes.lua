@@ -93,3 +93,7 @@ end}
 Autolevel:registerScheme{ name = "warriorwill", levelup = function(self)
 	self:learnStats{ self.STAT_STR, self.STAT_WIL, self.STAT_STR, self.STAT_WIL, self.STAT_DEX, }
 end}
+
+Autolevel:registerScheme{ name = "random_boss", levelup = function(self)
+	self:learnStats(self.auto_stats)
+end}

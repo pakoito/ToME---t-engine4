@@ -1003,6 +1003,16 @@ local random_zone_layouts = {
 		down = data:getDown(),
 		door = data:getDoor(),
 	} end },
+	-- Maze
+	{ name="maze", rarity=3, gen=function(data)
+		return {
+		class = "engine.generator.map.Maze",
+		floor = data:getFloor(),
+		wall = data:getWall(),
+		up = data:getUp(),
+		down = data:getDown(),
+		door = data:getDoor(),
+	} end },
 	-- Sets
 	{ name="sets", rarity=3, gen=function(data)
 		local set = rng.table{
@@ -1059,13 +1069,24 @@ local random_zone_themes = {
 		getUp = function(self) return "CRYSTAL_LADDER_UP" end,
 		getDown = function(self) return "CRYSTAL_LADDER_DOWN" end,
 	} end },
+	-- Sand
+	{ name="sand", rarity=3, gen=function() return {
+		load_grids = {"/data/general/grids/sand.lua"},
+		getDoor = function(self) return "UNDERGROUND_SAND" end,
+		getFloor = function(self) return "UNDERGROUND_SAND" end,
+		getWall = function(self) return "SANDWALL" end,
+		getUp = function(self) return "SAND_LADDER_UP" end,
+		getDown = function(self) return "SAND_LADDER_DOWN" end,
+	} end },
 }
 
 function _M:createRandomZone()
 	------------------------------------------------------------
 	-- Select theme
 	------------------------------------------------------------
-	local theme = rng.table(random_zone_themes)
+	local themes = {}
+	for i, theme in ipairs(random_zone_themes) do for j = 1, 100 / theme.rarity do themes[#themes+1] = theme end end
+	local theme = rng.table(themes)
 	print("[RANDOM ZONE] Using theme", theme.name)
 	local data = theme.gen()
 
@@ -1101,7 +1122,9 @@ function _M:createRandomZone()
 	------------------------------------------------------------
 	-- Select layout
 	------------------------------------------------------------
-	local layout = rng.table(random_zone_layouts)
+	local layouts = {}
+	for i, layout in ipairs(random_zone_layouts) do for j = 1, 100 / layout.rarity do layouts[#layouts+1] = layout end end
+	local layout = rng.table(layouts)
 	print("[RANDOM ZONE] Using layout", layout.name)
 
 	------------------------------------------------------------
@@ -1112,8 +1135,25 @@ function _M:createRandomZone()
 		if file:find("%.ogg$") then musics[#musics+1] = file end
 	end
 
-	local zone = engine.Zone.new("random_zone", {
-		name = "Random Zone!!",
+	------------------------------------------------------------
+	-- Create a boss
+	------------------------------------------------------------
+	local npcs = mod.class.NPC:loadList("/data/general/npcs/all.lua")
+	local list = {}
+	for _, e in ipairs(npcs) do
+		if e.rarity and e.level_range and e.level_range[1] <= data.min_lev and (not e.level_range[2] or e.level_range[2] >= data.min_lev) and e.rank > 1 and not e.unique then
+			list[#list+1] = e
+		end
+	end
+	local base = rng.table(list)
+	local boss, boss_id = self:createRandomBoss(base, data.min_lev + data.depth + rng.range(2, 4))
+	npcs[boss_id] = boss
+
+	local ngd = NameGenerator.new(randart_name_rules.default2)
+	local name = ngd:generate()
+	local short_name = name:lower():gsub("[^a-z]", "_")
+	local zone = engine.Zone.new(short_name, {
+		name = name,
 		level_range = {data.min_lev, data.max_lev},
 		level_scheme = "player",
 		max_level = data.depth,
@@ -1124,10 +1164,10 @@ function _M:createRandomZone()
 		ambient_music = rng.table(musics),
 		generator =  {
 			map = layout.gen(data),
-			actor = { class = "engine.generator.actor.Random",nb_npc = {5, 7}, },
+			actor = { class = "engine.generator.actor.Random", nb_npc = {5, 7}, guardian = boss_id },
 			trap = { class = "engine.generator.trap.Random", nb_trap = {3, 3}, },
 		},
-		npc_list = mod.class.NPC:loadList("/data/general/npcs/thieve.lua"),
+		npc_list = npcs,
 		grid_list = grids,
 		object_list = mod.class.Object:loadList("/data/general/objects/objects.lua"),
 		trap_list = mod.class.Trap:loadList("/data/general/traps/alarm.lua"),
@@ -1135,6 +1175,152 @@ function _M:createRandomZone()
 	return zone
 end
 
+function _M:createRandomBoss(base, level)
+	local boss_id = "RND_ZONE_BOSS"
+	local b = base:clone()
+
+	local ngd = NameGenerator.new(randart_name_rules.default)
+	local name = ngd:generate()
+	b.name = name.." the "..b.name
+	b.color = colors.VIOLET
+	b.rank = rng.percent(30) and 4 or 3.5
+	b.level_range[1] = level
+	b.fixed_rating = true
+	b.life_rating = b.life_rating * 1.7 + rng.range(4, 9)
+	b.max_life = b.max_life or 150
+
+	-- Force resolving some stuff
+	if type(b.max_life) == "table" and b.max_life.__resolver then b.max_life = resolvers.calc[b.max_life.__resolver](b.max_life, b, b, b, "max_life", {}) end
+
+	-- All bosses have alll body parts .. yes snake bosses can use archery and so on ..
+	-- This is to prevent them from having unusable talents
+	b.body = { INVEN = 1000, QS_MAINHAND = 1, QS_OFFHAND = 1, MAINHAND = 1, OFFHAND = 1, FINGER = 2, NECK = 1, LITE = 1, BODY = 1, HEAD = 1, CLOAK = 1, HANDS = 1, BELT = 1, FEET = 1, TOOL = 1, QUIVER = 1, MOUNT = 1 }
+
+	b:resolve()
+
+	-- Start with sustains sustained
+	b[#b+1] = resolvers.sustains_at_birth()
+
+	-- Leveling stats
+	b.autolevel = "random_boss"
+	b.auto_stats = {}
+
+	-- Always smart
+	b.ai = "tactical"
+	b.ai_state = { talent_in=1, ai_move="move_astar" }
+
+	-- Remove default equipment, if any
+	local todel = {}
+	for k, resolver in pairs(b) do if type(resolver) == "table" and resolver.__resolver and (resolver.__resolver == "equip" or resolver.__resolver == "drops") then todel[#todel+1] = k end end
+	for _, k in ipairs(todel) do b[k] = nil end
+
+	-- Boss worthy drops
+	b[#b+1] = resolvers.drops{chance=100, nb=3, {tome_drops="boss"} }
+	b[#b+1] = resolvers.drop_randart{}
+
+	-- Apply a class
+	b.learn_tids = {}
+	local function apply_class(class)
+		print("Adding to random boss class", class.name)
+		if config.settings.cheat then b.desc = (b.desc or "").."\nClass: "..class.name end
+
+		-- Add stats
+		b.stats = b.stats or {}
+		for stat, v in pairs(class.stats or {}) do
+			b.stats[stat] = (b.stats[stat] or 10) + v
+			for i = 1, v do b.auto_stats[#b.auto_stats+1] = b.stats_def[stat].id end
+		end
+
+		-- Add talent categories
+		for tt, d in pairs(class.talents_types or {}) do b:learnTalentType(tt, true) b:setTalentTypeMastery(tt, d[2]) end
+
+		-- Add starting equipment
+		for k, resolver in pairs(class.copy or {}) do
+			if type(resolver) == "table" and resolver.__resolver and resolver.__resolver == "equip" then
+				resolver[1].id = nil
+				-- Make sure we equip some nifty stuff instead of player's starting iron stuff
+				for i, d in ipairs(resolver[1]) do
+					d.name = nil
+					d.ego_chance = nil
+					d.tome_drops = "boss"
+					d.force_drop = true
+				end
+				b[#b+1] = resolver
+			elseif k == "birth_create_alchemist_golem" then
+				b.birth_create_alchemist_golem = resolver
+			end
+		end
+
+		-- Starting talents are autoleveling
+		local tres = nil
+		for k, resolver in pairs(b) do if type(resolver) == "table" and resolver.__resolver and resolver.__resolver == "talents" then tres = resolver break end end
+		if not tres then tres = resolvers.talents{} b[#b+1] = tres end
+		for tid, v in pairs(class.talents or {}) do
+			local t = b:getTalentFromId(tid)
+			if not t.no_npc_use then
+				local max = (t.points == 1) and 1 or math.ceil(t.points * 1.6)
+				local step = max / 50
+				tres[1][tid] = v + math.ceil(step * level)
+			end
+		end
+
+		-- Select additional talents from the class
+		local list = {}
+		for _, t in pairs(b.talents_def) do if b.talents_types[t.type[1]] and not t.no_npc_use then list[t.id] = true end end
+		local nb = 4 + (level / 7)
+		nb = math.max(rng.range(math.floor(nb * 0.7), math.ceil(nb * 1.3)), 1)
+		print("Adding "..nb.." random class talents to boss")
+
+		for i = 1, nb do
+			local tid = rng.tableIndex(list, b.learn_tids)
+			local t = b:getTalentFromId(tid)
+			if t then
+				print(" * talent", tid)
+				local max = (t.points == 1) and 1 or math.ceil(t.points * 1.6)
+				local step = max / 50
+				b.learn_tids[tid] = math.ceil(step * level)
+			end
+		end
+	end
+
+	-- Select two classes
+	local Birther = require "engine.Birther"
+	local classes = Birther.birth_descriptor_def.subclass
+	local list = {}
+	for name, data in pairs(classes) do if not data.not_on_random_boss then list[#list+1] = data end end
+	local c1, c2 = rng.tableRemove(list), rng.tableRemove(list)
+
+	apply_class(table.clone(c1, true))
+	apply_class(table.clone(c2, true))
+
+	b.rnd_boss_on_added_to_level = b.on_added_to_level
+	b.on_added_to_level = function(self, ...)
+		self:check("birth_create_alchemist_golem")
+		for tid, lev in pairs(self.learn_tids) do
+			self:learnTalent(tid, true, lev)
+		end
+		self:check("rnd_boss_on_added_to_level", ...)
+		self.rnd_boss_on_added_to_level = nil
+		self.learn_tids = nil
+		self.on_added_to_level = nil
+	end
+
+	return b, boss_id
+end
+
 function _M:debugRandomZone()
-	game:changeLevel(1, self:createRandomZone())
+	local zone = self:createRandomZone()
+	game:changeLevel(zone.max_level, zone)
+
+		game.level.map:liteAll(0, 0, game.level.map.w, game.level.map.h)
+		game.level.map:rememberAll(0, 0, game.level.map.w, game.level.map.h)
+		for i = 0, game.level.map.w - 1 do
+			for j = 0, game.level.map.h - 1 do
+				local trap = game.level.map(i, j, game.level.map.TRAP)
+				if trap then
+					trap:setKnown(game.player, true)
+					game.level.map:updateMap(i, j)
+				end
+			end
+		end
 end
