@@ -191,3 +191,7 @@ newAchievement{
 	name = "Paradoxology", id = "PARADOX_FULL",
 	desc = [[Both killed your future self and got killed by your future self.]],
 }
+newAchievement{
+	name = "Explorer", id = "EXPLORER",
+	desc = [[Use the Sher'Tul fortress exploratory farportal at least 7 times with the same character.]],
+}

@@ -34,11 +34,23 @@
   </tile>
  </tileset>
  <tileset firstgid="91" name="tome-terrains" tilewidth="32" tileheight="32">
-  <image source="gfx/tome-terrains.png" width="256" height="544"/>
+  <image source="gfx/tome-terrains.png" width="256" height="576"/>
   <tile id="1">
    <properties>
     <property name="display" value="#"/>
     <property name="value" value="&quot;HARD_BIGWALL&quot;"/>
+   </properties>
+  </tile>
+  <tile id="9">
+   <properties>
+    <property name="display" value="&amp;"/>
+    <property name="value" value="&quot;FARPORTAL&quot;"/>
+   </properties>
+  </tile>
+  <tile id="10">
+   <properties>
+    <property name="display" value="F"/>
+    <property name="value" value="&quot;CFARPORTAL&quot;"/>
    </properties>
   </tile>
   <tile id="27">
@@ -62,7 +74,7 @@
  </tileset>
  <layer name="Terrain" width="60" height="60">
   <data encoding="base64" compression="zlib">
-   eJzt1sENwyAMBVBuvXYYpC6REToHa2TC7lLlEAkhYozVgn/4h69KtJX8YjDZQgibMu8bRGulFzP00ksvbuill17c0EsvvbZEeuG9SXBJ6zuoNxaRvNJvUb09uYP37v1d7fy2ej/C5MXrIf/w1s6kdm2296zH6vU0myVvWY/kLWcNmrdWz5W3VvPeaU0TvblPs5+P716VHnns7enV1HQ1s1pzyJv5MDyVNT2MljMfJ17tfs77G7NPtP5a5lXuRTu/lvtI6m+q/F/KqHdnyduaz6XP2lsP+1nzPinVuLK3dw3RKz2HUa5feq37lF7/3t67ZuZdO7u/HkKvbj6jhl566cUNvfTSixt66aUXN/TSSy9uVvN+AbgwtF4=
+   eJzt1sENgzAMBVBuvXaYSF2CEXqkK7AGE3aXigNSFBnjuEnIh3/4qgRt8cPBYRyGYTTmfYFYrfRihl566cUNvfTSixt66aXXl0AvvHdWXNrxBdQbkmhe7buo3pxcwXv1/t7t+T3qfQtTL94eUsMrPZPWY2d7t3q83p5ms+ZN69G86awp5U3/d67klerZ80o1L5lWyVFrLWjr17Ke13MvoY5/e1vTa6lpb2YdzSGvOT43RSnhfRprejgtW77Oa6zOT0GvdT3H/Q3RJ1p/PfMq9qI9v579SOvvLPxei/Tu3Np7NJ9Tn7e3mqHV/mt5n9TucylvjdT25h5D9Gr3oZWrpNe7Tunt35u715w1l3robw+h1zafUUMvvfTihl566cUNvfTSixt66aUXN3fz/gBlv640
   </data>
  </layer>
  <objectgroup color="#ff0000" name="Actor" width="60" height="60">
@@ -104,6 +116,18 @@
     <property name="type" value="&quot;spawn&quot;"/>
    </properties>
   </object>
+  <object x="1160" y="932" width="19" height="23">
+   <properties>
+    <property name="subtype" value="&quot;farportal&quot;"/>
+    <property name="type" value="&quot;door&quot;"/>
+   </properties>
+  </object>
+  <object name="Farportal guardian" x="1285" y="929" width="19" height="23">
+   <properties>
+    <property name="subtype" value="&quot;farportal&quot;"/>
+    <property name="type" value="&quot;spawn&quot;"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="addZone#rooms" width="60" height="60" visible="0">
   <object name="control room" x="673" y="738" width="412" height="408">
@@ -122,6 +146,12 @@
    <properties>
     <property name="sort_drops" value="true"/>
     <property name="subtype" value="&quot;Storage Room&quot;"/>
+    <property name="type" value="&quot;zonename&quot;"/>
+   </properties>
+  </object>
+  <object name="Farportal" x="1220" y="835" width="219" height="215">
+   <properties>
+    <property name="subtype" value="&quot;Exploratory Farportal&quot;"/>
     <property name="type" value="&quot;zonename&quot;"/>
    </properties>
   </object>

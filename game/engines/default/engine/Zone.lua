@@ -295,6 +295,8 @@ function _M:makeEntity(level, type, filter, force_level, prob_filter)
 
 	if filter then e.force_ego = filter.force_ego end
 
+	if filter and self.post_filter then e = util.getval(self.post_filter, self, level, type, e, filter) or e end
+
 	e = self:finishEntity(level, type, e, (filter and filter.ego_filter) or (filter and filter.ego_chance))
 	e.__forced_level = filter and filter.add_levels
 

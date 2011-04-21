@@ -26,6 +26,7 @@ newChat{ id="welcome",
 	text = [[*#LIGHT_GREEN#The creature slowly turns to you. You hear its terrible voice directly in your head.#WHITE#*
 Welcome, master.]],
 	answers = {
+		{"You asked me to come, about a farportal?", jump="farportal", cond=function() return q:isCompleted("farportal") and not q:isCompleted("farportal-spawn") end},
 		{"What are you and what is this place?", jump="what", cond=isNotSet"what", action=set"what"},
 		{"Master? I am not your mas..", jump="master", cond=isNotSet"master", action=set"master"},
 		{"Why do I understand you, the texts are unreadable to me.", jump="understand", cond=isNotSet"understand", action=set"understand"},
@@ -98,6 +99,15 @@ Take this Transmogrification Chest, it is linked by a permanent farportal to the
 There are however unwanted byproducts to this operation, the generation of a metal known as gold, it has no use for the Fortress and thus will be sent back to you.]],
 	answers = {
 		{"I will, thanks.", jump="welcome", action=function() q:spawn_transmo_chest() end},
+	}
+}
+
+newChat{ id="farportal",
+	text = [[Long ago the Sher'tuls used farportals not only for transportation to know locations but also to explore new parts of the new world, or even other worlds.
+This Fortress is equiped with an exploratory farportal, and now has enough energy to allow one teleportation. Each teleportation will take you to a random part of the universe and use 30 energy.
+You maye use the farportal, however beware I sense a strange presence in the farportal room.]],
+	answers = {
+		{"I will check it out, thanks.", action=function() q:spawn_farportal_guardian() end},
 	}
 }
 

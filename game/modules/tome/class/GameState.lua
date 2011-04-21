@@ -959,6 +959,16 @@ function _M:entityFilter(zone, e, filter, type)
 	end
 end
 
+function _M:entityFilterPost(zone, level, type, e, filter)
+	if type == "actor" then
+		if filter.random_boss then
+			e = self:createRandomBoss(e, zone:level_adjust_level(level, zone, type))
+		end
+	end
+
+	return e
+end
+
 --------------------------------------------------------------
 -- Random zones
 --------------------------------------------------------------
@@ -1196,7 +1206,7 @@ function _M:createRandomZone(zbase)
 		object_list = mod.class.Object:loadList("/data/general/objects/objects.lua"),
 		trap_list = mod.class.Trap:loadList("/data/general/traps/alarm.lua"),
 	})
-	return zone
+	return zone, boss
 end
 
 function _M:createRandomBoss(base, level)

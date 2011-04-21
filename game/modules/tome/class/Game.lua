@@ -337,6 +337,7 @@ function _M:loaded()
 	Zone.default_prob_filter = true
 	Zone.default_filter = function(...) return self.state:defaultEntityFilter(...) end
 	Zone.alter_filter = function(...) return self.state:entityFilterAlter(...) end
+	Zone.post_filter = function(...) return self.state:entityFilterPost(...) end
 	Map:setViewerActor(self.player)
 	self:setupDisplayMode(false, "init")
 	if self.player then self.player.changed = true end
@@ -916,9 +917,9 @@ function _M:setupCommands()
 			print(("	[ [[\n%d%d%d\n%d %d\n%d%d%d]] ] = '',"):format(g7,g8,g9,g4,g6,g1,g2,g3))
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
---			self.nicer_tiles:postProcessLevelTiles(self.level)
---			game:registerDialog(require("mod.dialogs.Donation").new())
-			self.state:debugRandomZone()
+--			self.state:debugRandomZone()
+			local m = game.zone:makeEntity(game.level, "actor", {random_boss=true}, nil, true)
+			if m then game.zone:addEntity(game.level, m, "actor", game.player.x, game.player.y + 1) end
 		end end,
 	}
 

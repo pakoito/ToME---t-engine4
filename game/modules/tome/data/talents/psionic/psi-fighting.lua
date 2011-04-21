@@ -38,7 +38,7 @@ newTalent{
 	requires_target = true,
 	tactical = { ATTACK = 2 },
 	action = function(self, t)
-		local tkweapon = self:getInven("MAINHAND")[1]
+		local tkweapon = self:getInven("MAINHAND") and self:getInven("MAINHAND")[1]
 		if type(tkweapon) == "boolean" then tkweapon = nil end
 		if not tkweapon then
 			game.logPlayer(self, "You cannot do that without a weapon in your hands.")

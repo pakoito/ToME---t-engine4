@@ -31,6 +31,13 @@ desc = function(self, who)
 	if self:isCompleted("butler") then
 		desc[#desc+1] = "You have activated what seems to be a ... butler? with your rod of recall."
 	end
+	if self:isCompleted("farportal") then
+		if self:isCompleted("farportal-done") then
+			desc[#desc+1] = "You have entered the exploratory farportal room and defeated the horror lurking there, you can now use the farportal."
+		else
+			desc[#desc+1] = "The fortress shadow has asked that you come back as soon as possible."
+		end
+	end
 	if self.shertul_energy > 0 then
 		desc[#desc+1] = ("The Fortress current energy level is: %d."):format(self.shertul_energy)
 	end
@@ -39,6 +46,7 @@ end
 
 on_grant = function(self, who)
 	self.shertul_energy = 0
+	self.explored = 0
 end
 
 spawn_butler = function(self)
@@ -62,4 +70,40 @@ end
 
 gain_energy = function(self, energy)
 	self.shertul_energy = self.shertul_energy + energy
+
+	if self.shertul_energy >= 30 and not self:isCompleted("farportal") then
+		game.player:setQuestStatus(self.id, self.COMPLETED, "farportal")
+		local Dialog = require "engine.ui.Dialog"
+		Dialog:simpleLongPopup("Fortress Shadow", "Master, you have sent enough energy to activate the exploratory farportal.\nHowever there seems to be a disturbance in that room, please return as soon as possible.", 400)
+	end
+end
+
+exploratory_energy = function(self, check_only)
+	if self.shertul_energy < 30 then return false end
+	if not self:isCompleted("farportal-done") then return false end
+	if check_only then return true end
+
+	self.shertul_energy = self.shertul_energy - 30
+	self.explored = self.explored + 1
+	if self.explored == 7 then world:gainAchievement("EXPLORER", game.player) end
+	return true
+end
+
+spawn_farportal_guardian = function(self)
+	game.player:setQuestStatus("shertul-fortress", self.COMPLETED, "farportal-spawn")
+
+	-- Pop a random boss
+	local spot = game.level:pickSpot{type="spawn", subtype="farportal"}
+	local boss = game.zone:makeEntity(game.level, "actor", {type="horror", not_properties={"unique"}, random_boss=true}, nil, true)
+	boss.shertul_on_die = boss.on_die
+	boss.on_die = function(self, ...)
+		game.player:setQuestStatus("shertul-fortress", engine.Quest.COMPLETED, "farportal-done")
+		self:check("shertul_on_die", ...)
+	end
+	game.zone:addEntity(game.level, boss, "actor", spot.x, spot.y)
+
+	-- Open the door, destroy the stairs
+	local g = game.zone:makeEntityByName(game.level, "terrain", "OLD_FLOOR")
+	local spot = game.level:pickSpot{type="door", subtype="farportal"}
+	game.zone:addEntity(game.level, g, "terrain", spot.x, spot.y)
 end
