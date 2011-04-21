@@ -520,19 +520,19 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 	if self.level.last_turn and self.level.data.decay and self.level.last_turn + self.level.data.decay[1] * 10 < self.turn then
 		local only = self.level.data.decay.only or nil
 		if not only or only.actor then
-			local nb_actor, remain_actor = self.level:decay(Map.ACTOR, function(e) return not e.unique and not e.lore and not e.quest and self.level.last_turn + rng.range(self.level.data.decay[1], self.level.data.decay[2]) < self.turn * 10 end)
-			if not self.level.data.decay.no_respawn then
-				local gen = self.zone:getGenerator("actor", self.level)
-				if gen.regenFrom then gen:regenFrom(remain_actor) end
-			end
+--			local nb_actor, remain_actor = self.level:decay(Map.ACTOR, function(e) return not e.unique and not e.lore and not e.quest and self.level.last_turn + rng.range(self.level.data.decay[1], self.level.data.decay[2]) < self.turn * 10 end)
+--			if not self.level.data.decay.no_respawn then
+--				local gen = self.zone:getGenerator("actor", self.level)
+--				if gen.regenFrom then gen:regenFrom(remain_actor) end
+--			end
 		end
 
 		if not only or only.object then
 			local nb_object, remain_object = self.level:decay(Map.OBJECT, function(e) return not e.unique and not e.lore and not e.quest and self.level.last_turn + rng.range(self.level.data.decay[1], self.level.data.decay[2]) < self.turn * 10 end)
-			if not self.level.data.decay.no_respawn then
-				local gen = self.zone:getGenerator("object", self.level)
-				if gen.regenFrom then gen:regenFrom(remain_object) end
-			end
+--			if not self.level.data.decay.no_respawn then
+--				local gen = self.zone:getGenerator("object", self.level)
+--				if gen.regenFrom then gen:regenFrom(remain_object) end
+--			end
 		end
 	end
 

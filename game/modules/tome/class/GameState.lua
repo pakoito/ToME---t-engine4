@@ -1080,7 +1080,9 @@ local random_zone_themes = {
 	} end },
 }
 
-function _M:createRandomZone()
+function _M:createRandomZone(zbase)
+	zbase = zbase or {}
+
 	------------------------------------------------------------
 	-- Select theme
 	------------------------------------------------------------
@@ -1098,9 +1100,9 @@ function _M:createRandomZone()
 	------------------------------------------------------------
 	-- Misc data
 	------------------------------------------------------------
-	data.depth = rng.range(2, 4)
-	data.min_lev, data.max_lev = game.player.level, game.player.level + 15
-	data.w, data.h = rng.range(40, 60), rng.range(40, 60)
+	data.depth = zbase.depth or rng.range(2, 4)
+	data.min_lev, data.max_lev = zbase.min_lev or game.player.level, zbase.max_lev or game.player.level + 15
+	data.w, data.h = zbase.w or rng.range(40, 60), zbase.h or rng.range(40, 60)
 	data.max_material_level = util.bound(math.ceil(data.min_lev / 10), 1, 5)
 	data.min_material_level = data.max_material_level - 1
 
@@ -1198,7 +1200,6 @@ function _M:createRandomZone()
 end
 
 function _M:createRandomBoss(base, level)
-	local boss_id = "RND_ZONE_BOSS"
 	local b = base:clone()
 
 	------------------------------------------------------------
@@ -1207,6 +1208,8 @@ function _M:createRandomBoss(base, level)
 	local ngd = NameGenerator.new(randart_name_rules.default)
 	local name = ngd:generate()
 	b.name = name.." the "..b.name
+	b.unique = b.name
+	local boss_id = "RND_BOSS_"..b.name:upper():gsub("[^A-Z]", "_")
 	b.color = colors.VIOLET
 	b.rank = rng.percent(30) and 4 or 3.5
 	b.level_range[1] = level
