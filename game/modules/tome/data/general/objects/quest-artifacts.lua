@@ -315,7 +315,7 @@ You have heard of such items before. They are very useful to adventurers, allowi
 	use_power = { name = "recall the user to the worldmap", power = 400,
 		use = function(self, who)
 			if who:canBe("worldport") and not self:attr("never_move") then
-				who:setEffect(who.EFF_RECALL, 40, {})
+				who:setEffect(who.EFF_RECALL, 40, { where = self.shertul_fortress and "shertul-fortress" or nil })
 				game.logPlayer(who, "Space around you starts to dissolve...")
 			else
 				game.logPlayer(who, "The rod emits a strange noise, glows briefly and returns to normal.")

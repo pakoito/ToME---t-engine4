@@ -27,6 +27,7 @@ newChat{ id="welcome",
 Welcome, master.]],
 	answers = {
 		{"You asked me to come, about a farportal?", jump="farportal", cond=function() return q:isCompleted("farportal") and not q:isCompleted("farportal-spawn") end},
+		{"You asked me to come, about the rod of recall?", jump="recall", cond=function() return q:isCompleted("recall") and not q:isCompleted("recall-done") end},
 		{"What are you and what is this place?", jump="what", cond=isNotSet"what", action=set"what"},
 		{"Master? I am not your mas..", jump="master", cond=isNotSet"master", action=set"master"},
 		{"Why do I understand you, the texts are unreadable to me.", jump="understand", cond=isNotSet"understand", action=set"understand"},
@@ -108,6 +109,15 @@ This Fortress is equiped with an exploratory farportal, and now has enough energ
 You maye use the farportal, however beware I sense a strange presence in the farportal room.]],
 	answers = {
 		{"I will check it out, thanks.", action=function() q:spawn_farportal_guardian() end},
+	}
+}
+
+newChat{ id="recall",
+	text = [[The rod of recall you possess is not a Sher'tul artifact but it is based on Sher'tul design.
+The Fortress now has enough energy to upgrade it. It can be changed to recall you to the Fortess.]],
+	answers = {
+		{"I like it the way it is now, thanks anyway."},
+		{"That could be quite useful yes, please do it.", action=function() q:upgrade_rod() end},
 	}
 }
 

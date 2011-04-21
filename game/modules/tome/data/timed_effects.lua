@@ -2209,7 +2209,7 @@ newEffect{
 		if self:canBe("worldport") and not self:attr("never_move") then
 			game:onTickEnd(function()
 				game.logPlayer(self, "You are yanked out of this place!")
-				game:changeLevel(1, game.player.last_wilderness)
+				game:changeLevel(1, eff.where or game.player.last_wilderness)
 			end)
 		else
 			game.logPlayer(self, "Space restabilizes around you.")

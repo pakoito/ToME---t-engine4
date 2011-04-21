@@ -31,6 +31,13 @@ desc = function(self, who)
 	if self:isCompleted("butler") then
 		desc[#desc+1] = "You have activated what seems to be a ... butler? with your rod of recall."
 	end
+	if self:isCompleted("recall") then
+		if self:isCompleted("recall-done") then
+			desc[#desc+1] = "You have upgraded your rod of recall to transport you to the Fortress."
+		else
+			desc[#desc+1] = "The fortress shadow has asked that you come back as soon as possible."
+		end
+	end
 	if self:isCompleted("farportal") then
 		if self:isCompleted("farportal-done") then
 			desc[#desc+1] = "You have entered the exploratory farportal room and defeated the horror lurking there, you can now use the farportal."
@@ -71,6 +78,12 @@ end
 gain_energy = function(self, energy)
 	self.shertul_energy = self.shertul_energy + energy
 
+	if self.shertul_energy >= 15 and not self:isCompleted("recall") then
+		game.player:setQuestStatus(self.id, self.COMPLETED, "recall")
+		local Dialog = require "engine.ui.Dialog"
+		Dialog:simpleLongPopup("Fortress Shadow", "Master, you have sent enough energy to improve your rod of recall, please return to the fortress.", 400)
+	end
+
 	if self.shertul_energy >= 30 and not self:isCompleted("farportal") then
 		game.player:setQuestStatus(self.id, self.COMPLETED, "farportal")
 		local Dialog = require "engine.ui.Dialog"
@@ -106,4 +119,20 @@ spawn_farportal_guardian = function(self)
 	local g = game.zone:makeEntityByName(game.level, "terrain", "OLD_FLOOR")
 	local spot = game.level:pickSpot{type="door", subtype="farportal"}
 	game.zone:addEntity(game.level, g, "terrain", spot.x, spot.y)
+end
+
+upgrade_rod = function(self)
+	if self.shertul_energy < 15 then
+		local Dialog = require "engine.ui.Dialog"
+		Dialog:simplePopup("Fortress Shadow", "The energy is too low, it needs to go back to at least 15.")
+		return
+	end
+	self.shertul_energy = self.shertul_energy - 15
+
+	local rod = game.player:findInAllInventoriesBy("define_as", "ROD_OF_RECALL")
+	if not rod then return end
+
+	game.player:setQuestStatus("shertul-fortress", self.COMPLETED, "recall-done")
+	rod.shertul_fortress = true
+	game.log("#VIOLET#Your rod of recall glows brightly for a moment.")
 end
