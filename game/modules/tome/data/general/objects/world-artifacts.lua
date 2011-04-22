@@ -1911,7 +1911,6 @@ newEntity{ base = "BASE_GAUNTLETS",
 	wielder = {
 		talent_cd_reduction={
 			[Talents.T_CLINCH]=2,
-			[Talents.T_CRUSHING_HOLD]=2,
 		},
 		fatigue = 10,
 		inc_damage = { [DamageType.PHYSICAL]=5, [DamageType.ACID]=10, },

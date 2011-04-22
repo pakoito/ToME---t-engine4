@@ -1398,7 +1398,7 @@ function _M:resetToFull()
 	self.mana = self.max_mana
 	self.vim = self.max_vim
 	self.stamina = self.max_stamina
-	self.equilibrium = 0
+	self.equilibrium = self.min_equilibrium
 	self.air = self.max_air
 	self.psi = self.max_psi
 end
