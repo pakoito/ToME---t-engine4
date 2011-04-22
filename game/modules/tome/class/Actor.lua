@@ -1352,6 +1352,7 @@ function _M:die(src)
 		-- Achievements
 		local p = game.party:findMember{main=true}
 		if math.floor(p.life) <= 1 and not p.dead then world:gainAchievement("THAT_WAS_CLOSE", p) end
+		world:gainAchievement("BOSS_REVENGE", p, self)
 		world:gainAchievement("EMANCIPATION", p, self)
 		world:gainAchievement("EXTERMINATOR", p, self)
 		world:gainAchievement("PEST_CONTROL", p, self)
