@@ -367,7 +367,7 @@ static int particles_emit(lua_State *L)
 {
 	plist *l = (plist*)lua_touserdata(L, lua_upvalueindex(1)); // The first upvalue, store in the closure, is the particle's plist
 	particles_type *ps = l->ps;
-	if (!ps->init) return 0;
+	if (!ps || !ps->init) return 0;
 	int nb = luaL_checknumber(L, 2);
 	if (!nb) return 0;
 //	printf("Emitting %d particles out of %d for system %x\n", nb, ps->nb, (int)ps);
