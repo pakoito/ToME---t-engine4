@@ -80,6 +80,8 @@ loadIfNot("/data/general/npcs/vermin.lua")
 loadIfNot("/data/general/npcs/wight.lua")
 loadIfNot("/data/general/npcs/xorn.lua")
 
+loadIfNot("/data/general/npcs/humanoid_random_boss.lua")
+
 -- Select some random dominant ones for random zones
 if random_zone_mode then
 	local nt = {}

@@ -78,3 +78,28 @@ newEntity{
 	ai = "world_hostile", ai_state = {chase_distance=3},
 	on_encounter = {type="ambush", width=10, height=10, nb={1,1}, filters={{type="dragon"}}},
 }
+
+newEntity{
+	name = "adventurers party",
+	type = "hostile", subtype = "humanoid",
+	display = '@', color = colors.UMBER,
+	level_range = {14, nil},
+	sight = 1,
+	rarity = 12,
+	unit_power = 14,
+	ai = "world_hostile", ai_state = {chase_distance=3},
+	on_encounter = {
+		type="ambush",
+		width=14,
+		height=14,
+		nb={2, 4},
+		filters={{special_rarity="humanoid_random_boss", random_boss={
+			nb_classes=1,
+			rank=3,
+			life_rating=function(v) return v * 1.3 + 2 end,
+			loot_quality = "store",
+			loot_quantity = 1,
+			no_loot_randart = true,
+		}}}
+	},
+}

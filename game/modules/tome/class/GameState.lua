@@ -962,7 +962,10 @@ end
 function _M:entityFilterPost(zone, level, type, e, filter)
 	if type == "actor" then
 		if filter.random_boss then
-			e = self:createRandomBoss(e, zone:level_adjust_level(level, zone, type))
+			if _G.type(filter.random_boss) == "boolean" then filter.random_boss = {}
+			else filter.random_boss = table.clone(filter.random_boss, true) end
+			filter.random_boss.level = filter.random_boss.level or zone:level_adjust_level(level, zone, type)
+			e = self:createRandomBoss(e, filter.random_boss)
 		end
 	end
 
@@ -1209,7 +1212,7 @@ function _M:createRandomZone(zbase)
 	return zone, boss
 end
 
-function _M:createRandomBoss(base, level)
+function _M:createRandomBoss(base, data)
 	local b = base:clone()
 
 	------------------------------------------------------------
@@ -1221,10 +1224,14 @@ function _M:createRandomBoss(base, level)
 	b.unique = b.name
 	local boss_id = "RND_BOSS_"..b.name:upper():gsub("[^A-Z]", "_")
 	b.color = colors.VIOLET
-	b.rank = rng.percent(30) and 4 or 3.5
-	b.level_range[1] = level
+	b.rank = data.rank or (rng.percent(30) and 4 or 3.5)
+	b.level_range[1] = data.level
 	b.fixed_rating = true
-	b.life_rating = b.life_rating * 1.7 + rng.range(4, 9)
+	if data.life_rating then
+		b.life_rating = data.life_rating(b.life_rating)
+	else
+		b.life_rating = b.life_rating * 1.7 + rng.range(4, 9)
+	end
 	b.max_life = b.max_life or 150
 
 	-- Force resolving some stuff
@@ -1255,8 +1262,8 @@ function _M:createRandomBoss(base, level)
 	for _, k in ipairs(todel) do b[k] = nil end
 
 	-- Boss worthy drops
-	b[#b+1] = resolvers.drops{chance=100, nb=3, {tome_drops="boss"} }
-	b[#b+1] = resolvers.drop_randart{}
+	b[#b+1] = resolvers.drops{chance=100, nb=data.loot_quantity or 3, {tome_drops=data.loot_quality or "boss"} }
+	if not data.no_loot_randart then b[#b+1] = resolvers.drop_randart{} end
 
 	------------------------------------------------------------
 	-- Apply talents from classes
@@ -1286,7 +1293,7 @@ function _M:createRandomBoss(base, level)
 				for i, d in ipairs(resolver[1]) do
 					d.name = nil
 					d.ego_chance = nil
-					d.tome_drops = "boss"
+					d.tome_drops = data.loot_quality or "boss"
 					d.force_drop = true
 				end
 				b[#b+1] = resolver
@@ -1304,14 +1311,14 @@ function _M:createRandomBoss(base, level)
 			if not t.no_npc_use then
 				local max = (t.points == 1) and 1 or math.ceil(t.points * 1.6)
 				local step = max / 50
-				tres[1][tid] = v + math.ceil(step * level)
+				tres[1][tid] = v + math.ceil(step * data.level)
 			end
 		end
 
 		-- Select additional talents from the class
 		local list = {}
 		for _, t in pairs(b.talents_def) do if b.talents_types[t.type[1]] and not t.no_npc_use then list[t.id] = true end end
-		local nb = 4 + (level / 7)
+		local nb = 4 + (data.level / 7)
 		nb = math.max(rng.range(math.floor(nb * 0.7), math.ceil(nb * 1.3)), 1)
 		print("Adding "..nb.." random class talents to boss")
 
@@ -1322,7 +1329,7 @@ function _M:createRandomBoss(base, level)
 				print(" * talent", tid)
 				local max = (t.points == 1) and 1 or math.ceil(t.points * 1.6)
 				local step = max / 50
-				b.learn_tids[tid] = math.ceil(step * level)
+				b.learn_tids[tid] = math.ceil(step * data.level)
 			end
 		end
 	end
@@ -1332,10 +1339,11 @@ function _M:createRandomBoss(base, level)
 	local classes = Birther.birth_descriptor_def.subclass
 	local list = {}
 	for name, data in pairs(classes) do if not data.not_on_random_boss then list[#list+1] = data end end
-	local c1, c2 = rng.tableRemove(list), rng.tableRemove(list)
-
-	apply_class(table.clone(c1, true))
-	apply_class(table.clone(c2, true))
+	for i = 1, data.nb_classes or 2 do
+		local c = rng.tableRemove(list)
+		if not c then break end
+		apply_class(table.clone(c, true))
+	end
 
 	b.rnd_boss_on_added_to_level = b.on_added_to_level
 	b.on_added_to_level = function(self, ...)
@@ -1347,6 +1355,14 @@ function _M:createRandomBoss(base, level)
 		self.rnd_boss_on_added_to_level = nil
 		self.learn_tids = nil
 		self.on_added_to_level = nil
+
+		-- Cheat a bit with ressources
+		self.max_mana = self.max_mana * 3 self.mana_regen = self.mana_regen + 1
+		self.max_vim = self.max_vim * 3 self.vim_regen = self.vim_regen + 1
+		self.max_stamina = self.max_stamina * 3 self.stamina_regen = self.stamina_regen + 1
+		self.max_psi = self.max_psi * 3 self.psi_regen = self.psi_regen + 2
+		self.equilibrium_regen = self.equilibrium_regen - 2
+		self:resetToFull()
 	end
 
 	return b, boss_id

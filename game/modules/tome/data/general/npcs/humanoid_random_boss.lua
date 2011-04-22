@@ -1,0 +1,66 @@
+-- ToME - Tales of Maj'Eyal
+-- Copyright (C) 2009, 2010, 2011 Nicolas Casalini
+--
+-- This program is free software: you can redistribute it and/or modify
+-- it under the terms of the GNU General Public License as published by
+-- the Free Software Foundation, either version 3 of the License, or
+-- (at your option) any later version.
+--
+-- This program is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
+--
+-- You should have received a copy of the GNU General Public License
+-- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+--
+-- Nicolas Casalini "DarkGod"
+-- darkgod@te4.org
+
+-- Those are never generated randomly, but used when we want humanoid random bosses
+
+newEntity{
+	define_as = "BASE_NPC_HUMANOID_RANDOM_BOSS",
+	type = "humanoid", subtype = "human",
+	display = "p", color=colors.UMBER,
+
+	level_range = {1, nil},
+	infravision = 20,
+	lite = 1,
+
+	life_rating = 10,
+	rank = 3,
+	size_category = 3,
+
+	open_door = true,
+}
+
+newEntity{ base = "BASE_NPC_HUMANOID_RANDOM_BOSS",
+	name = "human", subtype = "human", color=colors.LIGHT_UMBER,
+	humanoid_random_boss = 1,
+	resolvers.racial(),
+}
+
+newEntity{ base = "BASE_NPC_HUMANOID_RANDOM_BOSS",
+	name = "thalore", subtype = "thalore", color=colors.LIGHT_GREEN,
+	humanoid_random_boss = 1,
+	resolvers.racial(),
+}
+
+newEntity{ base = "BASE_NPC_HUMANOID_RANDOM_BOSS",
+	name = "shalore", subtype = "shalore", color=colors.LIGHT_BLUE,
+	humanoid_random_boss = 1,
+	resolvers.racial(),
+}
+
+newEntity{ base = "BASE_NPC_HUMANOID_RANDOM_BOSS",
+	name = "halflint", subtype = "halfling", color=colors.BLUE,
+	humanoid_random_boss = 1,
+	resolvers.racial(),
+}
+
+newEntity{ base = "BASE_NPC_HUMANOID_RANDOM_BOSS",
+	name = "dwarf", subtype = "dwarf", color=colors.UMBER,
+	humanoid_random_boss = 2,
+	resolvers.racial(),
+}
