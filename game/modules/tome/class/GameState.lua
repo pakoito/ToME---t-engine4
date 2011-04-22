@@ -291,7 +291,7 @@ function _M:generateRandart(add, base, lev)
 		table.insert(legos, game.level:getEntitiesList("object/"..o.egos..":prefix"))
 		table.insert(legos, game.level:getEntitiesList("object/"..o.egos..":suffix"))
 		table.insert(legos, game.level:getEntitiesList("object/"..o.egos..":"))
-		for i = 1, 2 do
+		for i = 1, 3 do
 			local egos = rng.table(legos)
 			local list = {}
 			local filter = nil
@@ -1232,7 +1232,9 @@ function _M:createRandomBoss(base, level)
 
 	-- All bosses have alll body parts .. yes snake bosses can use archery and so on ..
 	-- This is to prevent them from having unusable talents
+	b.inven = {}
 	b.body = { INVEN = 1000, QS_MAINHAND = 1, QS_OFFHAND = 1, MAINHAND = 1, OFFHAND = 1, FINGER = 2, NECK = 1, LITE = 1, BODY = 1, HEAD = 1, CLOAK = 1, HANDS = 1, BELT = 1, FEET = 1, TOOL = 1, QUIVER = 1, MOUNT = 1 }
+	b:initBody()
 
 	b:resolve()
 
