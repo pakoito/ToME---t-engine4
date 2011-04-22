@@ -1348,11 +1348,11 @@ function _M:die(src)
 	if src and src.attr and src:attr("vim_on_death") and not self:attr("undead") then src:incVim(src:attr("vim_on_death")) end
 	if src and src.last_vim_turn and src.last_vim_turn >= game.turn - 30 then src:incVim(src.last_vim_spent) src.last_vim_turn = nil end
 
-	if src and src.resolveSource and src:resolveSource().player then
+	if src and src.resolveSource and src:resolveSource().player or src.player then
 		-- Achievements
 		local p = game.party:findMember{main=true}
 		if math.floor(p.life) <= 1 and not p.dead then world:gainAchievement("THAT_WAS_CLOSE", p) end
-		if p.dead and self.rank >= 3.5 then world:gainAchievement("EMANCIPATION", p, self) end
+		world:gainAchievement("EMANCIPATION", p, self)
 		world:gainAchievement("EXTERMINATOR", p, self)
 		world:gainAchievement("PEST_CONTROL", p, self)
 		world:gainAchievement("REAVER", p, self)

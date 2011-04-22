@@ -39,7 +39,7 @@ newEntity{
 	cost = 3000,
 
 	use_simple = { name="consume the heart", use = function(self, who)
-		game.logPlayer(who, "#00FFFF#You consume the heart and feel the knowledge of this very old creature fills you!")
+		game.logPlayer(who, "#00FFFF#You consume the heart and feel the knowledge of this very old creature fill you!")
 		who.unused_stats = who.unused_stats + 3
 		who.unused_talents = who.unused_talents + 1
 		who.unused_generics = who.unused_generics + 1

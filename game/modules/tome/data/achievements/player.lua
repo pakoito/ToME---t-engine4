@@ -54,7 +54,10 @@ newAchievement{
 	mode = "player",
 	can_gain = function(self, who, target)
 		local p = game.party:findMember{main=true}
-		if p.dead and p.descriptor.subclass == "Alchemist" then return true end
+		print("===========================", target.rank >= 3.5, p.dead , p.descriptor.subclass == "Alchemist" , p.alchemy_golem , game.level:hasEntity(p.alchemy_golem) , not p.alchemy_golem.dead)
+		if target.rank >= 3.5 and p.dead and p.descriptor.subclass == "Alchemist" and p.alchemy_golem and game.level:hasEntity(p.alchemy_golem) and not p.alchemy_golem.dead then
+			return true
+		end
 	end,
 	on_gain = function(_, src, personal)
 --		game:setAllowedBuild("construct")
