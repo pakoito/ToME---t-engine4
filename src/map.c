@@ -347,6 +347,22 @@ static int map_objects_toscreen(lua_State *L)
 		vertices[9] = dx; vertices[10] = h + dy; vertices[11] = dz;
 		glDrawArrays(GL_QUADS, 0, 4);
 
+		if (m->cb_ref != LUA_NOREF)
+		{
+			lua_rawgeti(L, LUA_REGISTRYINDEX, m->cb_ref);
+			lua_pushnumber(L, dx);
+			lua_pushnumber(L, dy);
+			lua_pushnumber(L, w);
+			lua_pushnumber(L, h);
+			lua_pushnumber(L, 1);
+			if (lua_pcall(L, 5, 1, 0))
+			{
+				printf("Display callback error: UID %ld: %sn", m->uid, lua_tostring(L, -1));
+				lua_pop(L, 1);
+			}
+			lua_pop(L, 1);
+		}
+
 		if (m->shader) glUseProgramObjectARB(0);
 
 		moid++;
@@ -993,7 +1009,8 @@ static int map_get_scroll(lua_State *L)
 		lua_pushnumber(L, dy); \
 		lua_pushnumber(L, map->tile_w * (dw) * (zoom)); \
 		lua_pushnumber(L, map->tile_h * (dh) * (zoom)); \
-		if (lua_pcall(L, 4, 1, 0)) \
+		lua_pushnumber(L, (zoom)); \
+		if (lua_pcall(L, 5, 1, 0)) \
 		{ \
 			printf("Display callback error: UID %ld: %s\n", dm->uid, lua_tostring(L, -1)); \
 			lua_pop(L, 1); \

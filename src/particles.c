@@ -173,6 +173,7 @@ static int particles_to_screen(lua_State *L)
 	int x = luaL_checknumber(L, 2);
 	int y = luaL_checknumber(L, 3);
 	bool show = lua_toboolean(L, 4);
+	float zoom = lua_isnumber(L, 5) ? lua_tonumber(L, 5) : 1;
 	if (!show || !ps->init) return 0;
 	GLfloat *vertices = ps->vertices;
 	GLfloat *colors = ps->colors;
@@ -211,7 +212,7 @@ static int particles_to_screen(lua_State *L)
 	glVertexPointer(2, GL_FLOAT, 0, vertices);
 	glTranslatef(x, y, 0);
 	glPushMatrix();
-	glScalef(ps->zoom, ps->zoom, ps->zoom);
+	glScalef(ps->zoom * zoom, ps->zoom * zoom, ps->zoom * zoom);
 	glRotatef(ps->rotate, 0, 0, 1);
 
 	int remaining = ps->batch_nb;

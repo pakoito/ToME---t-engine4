@@ -424,7 +424,7 @@ function _M:defineDisplayCallback()
 		local e
 		for i = 1, #ps do
 			e = ps[i]
-			if e.ps:isAlive() then e.ps:toScreen(x + w / 2, y + h / 2, true)
+			if e.ps:isAlive() then e.ps:toScreen(x + w / 2, y + h / 2, true, w / game.level.map.tile_w)
 			else self:removeParticles(e)
 			end
 		end
@@ -1238,7 +1238,10 @@ function _M:die(src)
 	-- Drop stuff
 	if not self.keep_inven_on_death then
 		if not self.no_drops then
-			for inven_id, inven in pairs(self.inven) do
+			local invens = {}
+			for inven_id, inven in pairs(self.inven) do invens[#invens+1] = inven end
+			table.sort(invens, function(a,b) if a.id == 1 then return false elseif b.id == 1 then return true else return a.id < b.id end end)
+			for _, inven in ipairs(invens) do
 				for i, o in ipairs(inven) do
 					-- Handle boss wielding artifacts
 					if o.__special_boss_drop and rng.percent(o.__special_boss_drop.chance) then

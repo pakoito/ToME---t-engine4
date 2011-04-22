@@ -158,6 +158,7 @@ end
 --- Gets the "power rank" of an object
 -- Possible values are 0 (normal, lore), 1 (ego), 2 (greater ego), 3 (artifact)
 function _M:getPowerRank()
+	if self.godslayer then return 10 end
 	if self.unique then return 3 end
 	if self.egoed and self.greater_ego then return 2 end
 	if self.egoed then return 1 end

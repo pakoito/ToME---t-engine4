@@ -51,6 +51,9 @@ The Sorcerers seem to have awakened its power.
 		inc_stats = { [Stats.STAT_MAG] = 10, [Stats.STAT_WIL] = 10 },
 	},
 
+	-- This is not a simple artifact, it is a godslayer, show off!
+	resolvers.generic(function(e) e:addParticles(engine.Particles.new("godslayer_swirl", 1, {})) end),
+
 	max_power = 200, power_regen = 1,
 	use_power = { name = "absorb energies", power = 200,
 		use = function(self, who)
