@@ -263,6 +263,11 @@ newTalent{
 				end
 			end
 
+			-- All entities on the level remember acting not long ago, this prevents long "update" time upon re-entry
+			for uid, act in pairs(game.level.entities) do
+				act.last_act_turn = math.floor(game.turn / (game.zone.wilderness and 1000 or 10))
+			end
+
 			game.logPlayer(game.player, "#LIGHT_RED#You are brought back from the demon plane!")
 		end)
 
