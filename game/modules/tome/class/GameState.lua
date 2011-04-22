@@ -287,7 +287,7 @@ function _M:generateRandart(add, base, lev)
 	-----------------------------------------------------------
 	if o.egos then
 		local legos = {}
-		local been_greater = false
+		local been_greater = 0
 		table.insert(legos, game.level:getEntitiesList("object/"..o.egos..":prefix"))
 		table.insert(legos, game.level:getEntitiesList("object/"..o.egos..":suffix"))
 		table.insert(legos, game.level:getEntitiesList("object/"..o.egos..":"))
@@ -295,7 +295,7 @@ function _M:generateRandart(add, base, lev)
 			local egos = rng.table(legos)
 			local list = {}
 			local filter = nil
-			if rng.percent(lev) and not been_greater then been_greater = true filter = function(e) return e.greater_ego end end
+			if rng.percent(lev) and been_greater < 2 then been_greater = been_greater + 1 filter = function(e) return e.greater_ego end end
 			for z = 1, #egos do list[#list+1] = egos[z].e end
 			local pick_egos = game.zone:computeRarities("object", list, game.level, filter, nil, nil)
 			local ego = game.zone:pickEntity(pick_egos)
