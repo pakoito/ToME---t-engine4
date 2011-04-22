@@ -65,7 +65,7 @@ newEntity{
 	negative_regen = 10,
 	rank = 5,
 	size_category = 3,
-	stats = { str=40, dex=60, cun=60, mag=30, con=40 },
+	stats = { str=40, dex=30, cun=60, mag=60, con=40 },
 
 	see_invisible = 100,
 	instakill_immune = 1,
@@ -77,7 +77,7 @@ newEntity{
 	combat_def = 20,
 
 	no_auto_resists = true,
-	resists = { all = 45, },
+	resists = { all = 40, },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1, FEET=1 },
 	resolvers.equip{
@@ -151,7 +151,7 @@ newEntity{
 	combat_def = 20,
 
 	no_auto_resists = true,
-	resists = { all = 65, },
+	resists = { all = 45, },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, FEET=1, HEAD=1, HANDS=1 },
 	resolvers.equip{

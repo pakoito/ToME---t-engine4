@@ -23,7 +23,7 @@ desc = function(self, who)
 	desc[#desc+1] = "You have found all the clues leading to the hidden treasure, there should be a way on the third level of the trollmire."
 	desc[#desc+1] = "It looks extremely dangerous however, beware."
 	if self:isEnded() then
-		desc[#desc+1] = "You have slain Bill and took his treasure."
+		desc[#desc+1] = "You have slain Bill. His treasure is yours for the taking."
 	end
 	return table.concat(desc, "\n")
 end
@@ -43,6 +43,8 @@ on_grant = function(self)
 end
 
 enter_level3 = function(self)
+	if game.level.hidden_way_to_bill then return end
+
 	-- Reveal entrance to level 4
 	local g = game.zone:makeEntityByName(game.level, "terrain", "GRASS_DOWN6"):clone()
 	g.name = "way to the hidden trollmire treasure"
@@ -56,6 +58,7 @@ enter_level3 = function(self)
 	local level = game.level
 	local spot = level.default_down
 	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
+	level.hidden_way_to_bill = true
 
 	require("engine.ui.Dialog"):simplePopup("Hidden treasure", "The way to the treasure is to the east. But beware, death probably awaits there.")
 end
