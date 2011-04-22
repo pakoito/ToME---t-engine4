@@ -242,7 +242,7 @@ function _M:loadUI(t)
 	end
 end
 
-function _M:setupUI(resizex, resizey, on_resize)
+function _M:setupUI(resizex, resizey, on_resize, addmw, addmh)
 	local mw, mh = nil, nil
 
 --	resizex, resizey = true, true
@@ -265,8 +265,8 @@ function _M:setupUI(resizex, resizey, on_resize)
 			end
 		end
 --		print("===", mw, addw)
-		mw = mw + addw + 5 * 2
-		mh = mh + addh + 5 + 22 + 3
+		mw = mw + addw + 5 * 2 + (addmw or 0)
+		mh = mh + addh + 5 + 22 + 3 + (addmh or 0)
 --		print("===", mw, addw)
 
 		local tw, th = self.font_bold:size(self.title)

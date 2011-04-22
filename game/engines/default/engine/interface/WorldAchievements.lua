@@ -19,6 +19,7 @@
 
 require "engine.class"
 local Dialog = require "engine.ui.Dialog"
+local Achievement = require "engine.dialogs.Achievement"
 
 --- Handles achievements in a world
 module(..., package.seeall, class.make)
@@ -91,7 +92,7 @@ function _M:gainPersonalAchievement(silent, id, src, ...)
 	src.achievements[id] = {turn=game.turn, who=self:achievementWho(src), when=os.date("%Y-%m-%d %H:%M:%S")}
 	if not silent then
 		game.log("#LIGHT_GREEN#Personal New Achievement: %s!", a.name)
-		Dialog:simplePopup("Personal New Achievement: #LIGHT_GREEN#"..a.name, a.desc)
+		self:showAchievement("Personal New Achievement: #LIGHT_GREEN#"..a.name, a)
 		profile.chat:achievement(a.name)
 	end
 	if a.on_gain then a:on_gain(src, true) end
@@ -132,11 +133,16 @@ function _M:gainAchievement(id, src, ...)
 	self.achieved[id] = {turn=game.turn, who=self:achievementWho(src), when=os.date("%Y-%m-%d %H:%M:%S")}
 	profile:saveModuleProfile("achievement."..id, self.achieved[id])
 	game.log("#LIGHT_GREEN#New Achievement: %s!", a.name)
-	Dialog:simplePopup("New Achievement: #LIGHT_GREEN#"..a.name, a.desc)
+	self:showAchievement("New Achievement: #LIGHT_GREEN#"..a.name, a)
 	profile.chat:achievement(a.name)
 
 	if a.on_gain then a:on_gain(src) end
 	return true
+end
+
+--- Show an achievement gain dialog
+function _M:showAchievement(title, a)
+	game:registerDialog(Achievement.new("New Achievement: #LIGHT_GREEN#"..a.name, a))
 end
 
 --- Format an achievement source

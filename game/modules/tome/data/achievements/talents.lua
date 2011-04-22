@@ -50,11 +50,13 @@ newAchievement{
 newAchievement{
 	name = "Pyromancer",
 	desc = [[Unlocked Archmage class and did over one million fire damage (with any item/talent/class).]],
+	show = "full",
 	mode = "world",
 	can_gain = function(self, who, dam)
 		self.nb = (self.nb or 0) + dam
 		return self.nb > 1000000 and profile.mod.allow_build.mage
 	end,
+	track = function(self) return tstring{tostring(math.floor(self.nb or 0))," / 1000000"} end,
 	on_gain = function(_, src, personal)
 		game:setAllowedBuild("mage_pyromancer", true)
 		local p = game.party:findMember{main=true}
@@ -69,11 +71,13 @@ newAchievement{
 newAchievement{
 	name = "Cryomancer",
 	desc = [[Unlocked Archmage class and did over one million cold damage (with any item/talent/class).]],
+	show = "full",
 	mode = "world",
 	can_gain = function(self, who, dam)
 		self.nb = (self.nb or 0) + dam
 		return self.nb > 1000000 and profile.mod.allow_build.mage
 	end,
+	track = function(self) return tstring{tostring(math.floor(self.nb or 0))," / 1000000"} end,
 	on_gain = function(_, src, personal)
 		game:setAllowedBuild("mage_cryomancer", true)
 		local p = game.party:findMember{main=true}

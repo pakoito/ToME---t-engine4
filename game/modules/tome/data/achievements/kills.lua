@@ -19,23 +19,29 @@
 
 newAchievement{
 	name = "That was close",
+	show = "full",
 	desc = [[Kill your target while having only 1 life left.]],
 }
 newAchievement{
 	name = "Size matters",
+	show = "full",
 	desc = [[Do over 600 damage in one attack]],
 }
 newAchievement{
 	name = "Exterminator",
+	show = "full",
 	desc = [[Killed 1000 creatures]],
 	mode = "player",
 	can_gain = function(self, who)
 		self.nb = (self.nb or 0) + 1
 		if self.nb >= 1000 then return true end
-	end
+	end,
+	track = function(self) return tstring{tostring(self.nb or 0)," / 1000"} end,
 }
 newAchievement{
 	name = "Pest Control",
+	image = "npc/vermin_worms_green_worm_mass.png",
+	show = "full",
 	desc = [[Killed 1000 reproducing vermin]],
 	mode = "player",
 	can_gain = function(self, who, target)
@@ -43,10 +49,12 @@ newAchievement{
 			self.nb = (self.nb or 0) + 1
 			if self.nb >= 1000 then return true end
 		end
-	end
+	end,
+	track = function(self) return tstring{tostring(self.nb or 0)," / 1000"} end,
 }
 newAchievement{
 	name = "Reaver",
+	show = "full",
 	desc = [[Killed 1000 humanoids]],
 	mode = "world",
 	can_gain = function(self, who, target)
@@ -55,6 +63,7 @@ newAchievement{
 			if self.nb >= 1000 then return true end
 		end
 	end,
+	track = function(self) return tstring{tostring(self.nb or 0)," / 1000"} end,
 	on_gain = function(_, src, personal)
 		game:setAllowedBuild("corrupter")
 		game:setAllowedBuild("corrupter_reaver", true)
@@ -63,28 +72,36 @@ newAchievement{
 
 newAchievement{
 	name = "Backstabbing Traitor", id = "ESCORT_KILL",
+	image = "object/knife_stralite.png",
+	show = "full",
 	desc = [[Killed 6 escorted adventurers while you were supposed to save them]],
 	mode = "player",
 	can_gain = function(self, who, target)
 		self.nb = (self.nb or 0) + 1
 		if self.nb >= 6 then return true end
 	end,
+	track = function(self) return tstring{tostring(self.nb or 0)," / 6"} end,
 }
 
 newAchievement{
 	name = "Earth Master", id = "GEOMANCER",
+	show = "name",
 	desc = [[Killed Harkor'Zun and unlocked Stone magic]],
 	mode = "player",
 }
 
 newAchievement{
 	name = "Kill Bill!", id = "KILL_BILL",
+	image = "object/artifact/bill_treestump.png",
+	show = "full",
 	desc = [[Killed Bill in the Trollmire with a level one character]],
 	mode = "player",
 }
 
 newAchievement{
 	name = "Atamathoned!", id = "ATAMATHON",
+	image = "npc/atamathon.png",
+	show = "name",
 	desc = [[Killed the giant golem Atamathon after foolishly reactivating it.]],
 	mode = "player",
 }

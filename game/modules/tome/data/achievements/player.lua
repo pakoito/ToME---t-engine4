@@ -19,37 +19,46 @@
 
 newAchievement{
 	name = "Level 10",
+	show = "full",
 	desc = [[Got a character to level 10.]],
 }
 newAchievement{
 	name = "Level 20",
+	show = "full",
 	desc = [[Got a character to level 20.]],
 }
 newAchievement{
 	name = "Level 30",
+	show = "full",
 	desc = [[Got a character to level 30.]],
 }
 newAchievement{
 	name = "Level 40",
+	show = "full",
 	desc = [[Got a character to level 40.]],
 }
 newAchievement{
 	name = "Level 50",
+	show = "full",
 	desc = [[Got a character to level 50.]],
 }
 
 newAchievement{
 	name = "Unstoppable",
+	show = "full",
 	desc = [[Has returned from the dead.]],
 }
 
 newAchievement{
 	name = "Utterly Destroyed", id = "EIDOLON_DEATH",
+	show = "name",
 	desc = [[Died on the Eidolon Plane.]],
 }
 
 newAchievement{
 	name = "Emancipation", id = "EMANCIPATION",
+	image = "npc/alchemist_golem.png",
+	show = "name",
 	desc = [[Have the golem kill a boss while its master is already dead.]],
 	mode = "player",
 	can_gain = function(self, who, target)
@@ -66,6 +75,7 @@ newAchievement{
 
 newAchievement{
 	name = "Take you with me", id = "BOSS_REVENGE",
+	show = "full",
 	desc = [[Kill a boss while already dead.]],
 	mode = "player",
 	can_gain = function(self, who, target)

@@ -30,6 +30,8 @@ newAchievement{
 
 newAchievement{
 	name = "Treasure Hunter",
+	image = "object/money_large.png",
+	show = "name",
 	desc = [[Amass 1000 gold pieces.]],
 	can_gain = function(self, who)
 		return who.money >= 1000
@@ -38,6 +40,8 @@ newAchievement{
 
 newAchievement{
 	name = "Treasure Hoarder",
+	image = "object/money_large.png",
+	show = "name",
 	desc = [[Amass 3000 gold pieces.]],
 	can_gain = function(self, who)
 		return who.money >= 3000
@@ -46,6 +50,8 @@ newAchievement{
 
 newAchievement{ id = "DRAGON_GREED",
 	name = "Dragon's Greed",
+	image = "object/money_large.png",
+	show = "name",
 	desc = [[Amass 8000 gold pieces.]],
 	can_gain = function(self, who)
 		return who.money >= 8000

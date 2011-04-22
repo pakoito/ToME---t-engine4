@@ -29,6 +29,7 @@ function _M:init(t)
 	self.text = t.text or ""
 	self.checked = t.default
 	self.fct = assert(t.fct, "no checkbox fct")
+	self.on_change = t.on_change
 
 	Base.init(self, t)
 end
@@ -64,6 +65,7 @@ end
 
 function _M:select()
 	self.checked = not self.checked
+	if self.on_change then self.on_change(self.checked) end
 end
 
 function _M:display(x, y, nb_keyframes)
