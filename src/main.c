@@ -160,9 +160,9 @@ void stackDump (lua_State *L) {
 		default:
 #if defined(__PTRDIFF_TYPE__)
 			if((sizeof(__PTRDIFF_TYPE__) == sizeof(long int)))
-				printf("%d: %s // %lx\n", i, lua_typename(L, t), (unsigned long int)lua_topointer(L, i));
+			{ printf("%d: %s // %lx\n", i, lua_typename(L, t), (unsigned long int)lua_topointer(L, i)); }
 			else
-				printf("%d: %s // %x\n", i, lua_typename(L, t), (unsigned int)lua_topointer(L, i));
+			{ printf("%d: %s // %x\n", i, lua_typename(L, t), (unsigned int)lua_topointer(L, i)); }
 #else
 			printf("%d: %s // %x\n", i, lua_typename(L, t), lua_topointer(L, i));
 #endif
@@ -832,17 +832,6 @@ int main(int argc, char *argv[])
 	core_def->define = &define_core;
 	core_def->define(core_def, "te4core", -1, NULL, NULL, NULL, NULL, 0, NULL);
 
-#ifdef SELFEXE_WINDOWS
-	freopen ("te4_log.txt", "w", stdout);
-#endif
-
-	// Get cpu cores
-	nb_cpus = get_number_cpus();
-	printf("[CPU] Detected %d CPUs\n", nb_cpus);
-
-	// RNG init
-	init_gen_rand(time(NULL));
-
 	// Parse arguments
 	int i;
 	for (i = 1; i < argc; i++)
@@ -853,8 +842,19 @@ int main(int argc, char *argv[])
 		if (!strncmp(arg, "-E", 2)) core_def->reboot_einfo = strdup(arg+2);
 		if (!strncmp(arg, "-n", 2)) core_def->reboot_new = 1;
 		if (!strncmp(arg, "--flush-stdout", 14)) setvbuf(stdout, (char *) NULL, _IOLBF, 0);;
-		if (!strncmp(arg, "--no-debug", 10)) no_debug = 0;
+		if (!strncmp(arg, "--no-debug", 10)) no_debug = TRUE;
 	}
+
+#ifdef SELFEXE_WINDOWS
+	freopen ("te4_log.txt", "w", stdout);
+#endif
+
+	// Get cpu cores
+	nb_cpus = get_number_cpus();
+	printf("[CPU] Detected %d CPUs\n", nb_cpus);
+
+	// RNG init
+	init_gen_rand(time(NULL));
 
 	// initialize engine and set up resolution and depth
 	Uint32 flags=SDL_INIT_VIDEO | SDL_INIT_TIMER;

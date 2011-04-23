@@ -116,3 +116,41 @@ newBirthDescriptor{
 		life_rating = 2,
 	},
 }
+
+newBirthDescriptor{
+	type = "subclass",
+	name = "Stone Warden",
+	desc = {
+		"",
+		"#GOLD#Stat modifiers:",
+		"#LIGHT_BLUE# * +3 Strength, +0 Dexterity, +0 Constitution",
+		"#LIGHT_BLUE# * +3 Magic, +3 Willpower, +0 Cunning",
+	},
+	stats = { str=3, wil=3, mag=3, },
+	talents_types = {
+		["wild-gift/call"]={true, 0.2},
+		["wild-gift/stone-mastery"]={true, 0.3},
+		["spell/earth"]={true, 0.3},
+		["spell/stone"]={true, 0.3},
+		["cunning/survival"]={false, 0},
+		["technique/shield-offense"]={true, 0.1},
+		["technique/combat-techniques-passive"]={true, 0},
+		["technique/combat-training"]={true, 0},
+	},
+	talents = {
+		[ActorTalents.T_ICE_CLAW] = 1,
+		[ActorTalents.T_MEDITATION] = 1,
+		[ActorTalents.T_WEAPONS_MASTERY] = 1,
+		[ActorTalents.T_WEAPON_COMBAT] = 1,
+	},
+	copy = {
+		max_life = 110,
+		resolvers.equip{ id=true,
+			{type="weapon", subtype="battleaxe", name="iron battleaxe", autoreq=true, ego_chance=-1000},
+			{type="armor", subtype="light", name="rough leather armour", autoreq=true, ego_chance=-1000}
+		},
+	},
+	copy_add = {
+		life_rating = 2,
+	},
+}

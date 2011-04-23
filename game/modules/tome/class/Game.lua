@@ -238,7 +238,7 @@ function _M:newGame()
 		self.paused = true
 		print("[PLAYER BIRTH] resolved!")
 		local birthend = function()
-			self:registerDialog(require("engine.dialogs.ShowText").new("Welcome to ToME", "intro-"..self.player.starting_intro, {name=self.player.name}, nil, nil, function()
+			local d = require("engine.dialogs.ShowText").new("Welcome to ToME", "intro-"..self.player.starting_intro, {name=self.player.name}, nil, nil, function()
 				self.player:resetToFull()
 				self.player:registerCharacterPlayed()
 				self.player:onBirth(birth)
@@ -253,10 +253,14 @@ function _M:newGame()
 
 				birth_done()
 				self.player:check("on_birth_done")
-			end, true))
+
+				if __module_extra_info.birth_done_script then loadstring(__module_extra_info.birth_done_script)() end
+			end, true)
+			self:registerDialog(d)
+			if __module_extra_info.no_birth_popup then d.key:triggerVirtual("ACCEPT") end
 		end
 
-		if self.player.no_birth_levelup then birthend()
+		if self.player.no_birth_levelup or __module_extra_info.no_birth_popup then birthend()
 		else self.player:playerLevelup(birthend) end
 	end, quickbirth, 720, 500)
 

@@ -108,7 +108,6 @@ Mouse: #00FF00#Left click#FFFFFF# to accept; #00FF00#right click#FFFFFF# to go b
 
 	self.cur_order = 1
 	self.sel = 1
-	self:next()
 
 	self:loadUI{
 		{left=0, top=0, ui=self.c_list},
@@ -121,7 +120,6 @@ Mouse: #00FF00#Left click#FFFFFF# to accept; #00FF00#right click#FFFFFF# to go b
 	}
 	self:setFocus(self.c_list)
 	self:setupUI()
-	self:select(self.list[self.c_list.sel])
 --	self.c_list:selectColumn(2)
 
 	self.key:addCommands{
@@ -137,6 +135,10 @@ Mouse: #00FF00#Left click#FFFFFF# to accept; #00FF00#right click#FFFFFF# to go b
 end
 
 function _M:on_register()
+	self:next()
+	self:select(self.list[self.c_list.sel])
+
+	if __module_extra_info.no_quickbirth then return end
 	if self.quickbirth then
 		if __module_extra_info.auto_quickbirth then
 			self.do_quickbirth = true
@@ -160,7 +162,7 @@ function _M:quickBirth()
 	-- Find the correct descriptor
 	for i, d in ipairs(self.list) do
 		if self.quickbirth[self.current_type] == d.name then
-			print("[QUICK BIRTH] using", d.name, "for", self.current_type)
+			print("[BIRTHER QUICK] using", d.name, "for", self.current_type)
 			self.sel = i
 			self:next()
 			return true
@@ -254,6 +256,7 @@ function _M:next()
 			game:unregisterDialog(self)
 			self:apply()
 			self.at_end()
+			print("[BIRTHER] Finished!")
 			return
 		end
 	end
@@ -262,9 +265,23 @@ function _M:next()
 	if self:quickBirth() then return end
 
 	if #self.list == 0 then
-		self:next()
+		return self:next()
 	elseif #self.list == 1 and self.birth_auto[self.current_type] ~= false then
-		self:next()
+		return self:next()
+	end
+
+	if __module_extra_info.auto_birth and __module_extra_info.auto_birth[self.current_type] then
+		-- Random
+		if __module_extra_info.auto_birth[self.current_type] == '*' then
+			return self:randomSelect()
+		else
+			for i = 1, #self.list do
+				if __module_extra_info.auto_birth[self.current_type] == self.list[i].name then
+					self.sel = i
+					return self:next()
+				end
+			end
+		end
 	end
 end
 
@@ -285,7 +302,7 @@ function _M:apply()
 	self.actor.descriptor = {}
 	local stats, inc_stats = {}, {}
 	for i, d in ipairs(self.descriptors) do
-		print("[BIRTH] Applying descriptor "..(d.name or "none"))
+		print("[BIRTHER] Applying descriptor "..(d.name or "none"))
 		self.actor.descriptor[d.type or "none"] = (d.name or "none")
 
 		if d.copy then

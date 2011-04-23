@@ -766,6 +766,13 @@ int thread_particles(void *data)
 	luaopen_particles(L);
 	pt->L = L;
 
+	// Override "print" if requested
+	if (no_debug)
+	{
+		lua_pushcfunction(L, noprint);
+		lua_setglobal(L, "print");
+	}
+
 	// And run the lua engine pre init scripts
 	if (!luaL_loadfile(L, "/loader/pre-init.lua")) docall(L, 0, 0);
 	else lua_pop(L, 1);

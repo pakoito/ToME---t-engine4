@@ -141,6 +141,13 @@ int thread_profile(void *data)
 	luaopen_mime_core(L);
 	luaL_openlib(L, "cprofile", threadlib, 0); lua_pop(L, 1);
 
+	// Override "print" if requested
+	if (no_debug)
+	{
+		lua_pushcfunction(L, noprint);
+		lua_setglobal(L, "print");
+	}
+
 	profile->L = L;
 
 	// And run the lua engine pre init scripts

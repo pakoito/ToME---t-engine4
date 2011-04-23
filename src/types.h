@@ -36,4 +36,10 @@ typedef char bool;
 #endif
 #endif
 
+extern bool no_debug;
+extern int noprint(lua_State *L);
+#ifdef REWRITE_PRINTF
+#define printf(...) { if (!no_debug) printf(__VA_ARGS__); }
+#endif
+
 #endif
