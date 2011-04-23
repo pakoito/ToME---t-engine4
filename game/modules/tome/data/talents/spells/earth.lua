@@ -50,9 +50,38 @@ newTalent{
 }
 
 newTalent{
-	name = "Dig",
+	name = "Strike",
 	type = {"spell/earth",2},
 	require = spells_req2,
+	points = 5,
+	random_ego = "attack",
+	mana = 18,
+	cooldown = 6,
+	tactical = { ATTACK = 1, DISABLE = 2, ESCAPE = 2 },
+	range = 10,
+	reflectable = true,
+	proj_speed = 6,
+	requires_target = true,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 8, 230) end,
+	action = function(self, t)
+		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_earth", trail="earthtrail"}}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:projectile(tg, x, y, DamageType.SPELLKNOCKBACK, self:spellCrit(t.getDamage(self, t)))
+		game:playSoundNear(self, "talents/earth")
+		return true
+	end,
+	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		return ([[Conjures up a fist of stone doing %0.2f physical damage and knocking the target back.
+		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.PHYSICAL, damage))
+	end,
+}
+
+newTalent{
+	name = "Dig",
+	type = {"spell/earth",3},
+	require = spells_req3,
 	points = 5,
 	random_ego = "utility",
 	mana = 40,
@@ -75,35 +104,6 @@ newTalent{
 		local range = t.getRange(self, t)
 		return ([[Digs up to %d grids into walls, trees or other impassable terrain]]):
 		format(range)
-	end,
-}
-
-newTalent{
-	name = "Strike",
-	type = {"spell/earth",3},
-	require = spells_req3,
-	points = 5,
-	random_ego = "attack",
-	mana = 18,
-	cooldown = 6,
-	tactical = { ATTACK = 1, DISABLE = 2, ESCAPE = 2 },
-	range = 10,
-	reflectable = true,
-	proj_speed = 6,
-	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 8, 170) end,
-	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_earth", trail="earthtrail"}}
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		self:projectile(tg, x, y, DamageType.SPELLKNOCKBACK, self:spellCrit(t.getDamage(self, t)))
-		game:playSoundNear(self, "talents/earth")
-		return true
-	end,
-	info = function(self, t)
-		local damage = t.getDamage(self, t)
-		return ([[Conjures up a fist of stone doing %0.2f physical damage and knocking the target back.
-		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.PHYSICAL, damage))
 	end,
 }
 
