@@ -54,7 +54,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_NPC_CONSTRUCT",
-	name = "broken golem", color=colors.LIGHT_UMBER, image = "npc/summoner_golem.png",
+	name = "broken golem", color=colors.LIGHT_UMBER,
 	desc = [[This golem is badly damaged.]],
 	level_range = {6, nil}, exp_worth = 1,
 	rarity = 1,

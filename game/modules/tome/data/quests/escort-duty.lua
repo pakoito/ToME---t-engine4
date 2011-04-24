@@ -47,7 +47,7 @@ local possible_types = {
 	{ name="lost warrior", random="male", chance=70,
 		text = [[Please help me! I am afraid I lost myself in this place. I know there is a recall portal left around here by a friend, but I have fought too many battles, and I fear I will not make it. Would you help me?]],
 		actor = {
-			type = "humanoid", subtype = "human",
+			type = "humanoid", subtype = "human", image = "player/higher_male.png",
 			display = "@", color=colors.UMBER,
 			name = "%s, the lost warrior",
 			desc = [[He looks tired and wounded.]],
@@ -75,7 +75,7 @@ local possible_types = {
 		text = [[Please help me! I am afraid I lost myself in this place. I know there is a recall portal left around here by a friend, but I will not be able to continue the road alone. Would you help me?]],
 		actor = {
 			name = "%s, the injured seer",
-			type = "humanoid", subtype = "elf", female=true,
+			type = "humanoid", subtype = "elf", female=true, image = "player/halfling_female.png",
 			display = "@", color=colors.LIGHT_BLUE,
 			desc = [[She looks tired and wounded.]],
 			autolevel = "caster",
@@ -101,7 +101,7 @@ local possible_types = {
 		text = [[Please help me! I am afraid I lost myself in this place. I know there is a recall portal left around here by a friend, but I have fought too many battles, and I fear I will not make it. Would you help me?]],
 		actor = {
 			name = "%s, the repented thief",
-			type = "humanoid", subtype = "halfling",
+			type = "humanoid", subtype = "halfling", image = "player/cornac_male.png",
 			display = "@", color=colors.BLUE,
 			desc = [[He looks tired and wounded.]],
 			autolevel = "rogue",
@@ -128,7 +128,7 @@ local possible_types = {
 		text = [[Please help me! I am afraid I lost myself in this place. I know there is a recall portal left around here by a friend, but I have fought too many battles, and I fear I will not make it. Would you help me?]],
 		actor = {
 			name = "%s, the lone alchemist",
-			type = "humanoid", subtype = "human",
+			type = "humanoid", subtype = "human", image = "player/shalore_male.png",
 			display = "@", color=colors.AQUAMARINE,
 			desc = [[He looks tired and wounded.]],
 			autolevel = "rogue",
@@ -154,7 +154,7 @@ local possible_types = {
 		text = [[Please help me! I am afraid I lost myself in this place. I know there is a recall portal left around here by a friend, but I have fought too many battles, and I fear I will not make it. Would you help me?]],
 		actor = {
 			name = "%s, the lost sun paladin",
-			type = "humanoid", subtype = "human", female=true,
+			type = "humanoid", subtype = "human", female=true, image = "player/higher_female.png",
 			display = "@", color=colors.GOLD,
 			desc = [[She looks tired and wounded.]],
 			autolevel = "warriormage",
@@ -181,7 +181,7 @@ local possible_types = {
 		text = [[Please help me! I am afraid I lost myself in this place. I know there is a recall portal left around here by a friend, but I have fought too many battles, and I fear I will not make it. Would you help me?]],
 		actor = {
 			name = "%s, the lost anorithil",
-			type = "humanoid", subtype = "human", female=true,
+			type = "humanoid", subtype = "human", female=true, image = "player/higher_female.png",
 			display = "@", color=colors.YELLOW,
 			desc = [[She looks tired and wounded.]],
 			autolevel = "caster",
@@ -208,7 +208,7 @@ local possible_types = {
 		text = [[Please help me! I am afraid I lost myself in this place. I know there is a recall portal left around here by a friend, but I have fought too many battles, and I fear I will not make it. Would you help me?]],
 		actor = {
 			name = "%s, the worried loremaster",
-			type = "humanoid", subtype = "human", female=true,
+			type = "humanoid", subtype = "human", female=true, image = "player/thalore_female.png",
 			display = "@", color=colors.LIGHT_GREEN,
 			desc = [[She looks tired and wounded.]],
 			autolevel = "wildcaster",

@@ -29,6 +29,8 @@ newTalentType{ allow_random=true, type="wild-gift/sand-drake", name = "sand drak
 newTalentType{ allow_random=true, type="wild-gift/fire-drake", name = "fire drake aspect", description = "Take on the defining aspects of a Fire Drake." }
 newTalentType{ allow_random=true, type="wild-gift/cold-drake", name = "cold drake aspect", description = "Take on the defining aspects of a Cold Drake." }
 newTalentType{ allow_random=true, type="wild-gift/storm-drake", name = "storm drake aspect", description = "Take on the defining aspects of a Storm Drake." }
+newTalentType{ allow_random=true, type="wild-gift/earthen-power", name = "earthen power", description = "Dwarves have learned to imbue their shields with the power of stone itself." }
+newTalentType{ allow_random=true, type="wild-gift/earthen-vines", name = "earthen vines", description = "Control the stone itself and bring it alive in the form of dreadful vines." }
 
 -- Generic requires for gifts based on talent level
 gifts_req1 = {
@@ -131,3 +133,6 @@ load("/data/talents/gifts/summon-melee.lua")
 load("/data/talents/gifts/summon-distance.lua")
 load("/data/talents/gifts/summon-utility.lua")
 load("/data/talents/gifts/summon-augmentation.lua")
+
+load("/data/talents/gifts/earthen-power.lua")
+load("/data/talents/gifts/earthen-vines.lua")

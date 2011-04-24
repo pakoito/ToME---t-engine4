@@ -92,7 +92,7 @@ newEntity{
 		type="ambush",
 		width=14,
 		height=14,
-		nb={2, 4},
+		nb={2, 3},
 		filters={{special_rarity="humanoid_random_boss", random_boss={
 			nb_classes=1,
 			rank=3,

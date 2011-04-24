@@ -52,6 +52,9 @@ newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/st
 newTalentType{ type="golem/fighting", name = "fighting", description = "Golem melee capacity." }
 newTalentType{ type="golem/arcane", name = "arcane", description = "Golem arcane capacity." }
 
+-- Stone Warden spells
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/arcane-shield", name = "arcane shield", description = "Infuse arcane forces in your shield." }
+
 -- Generic requires for spells based on talent level
 spells_req1 = {
 	stat = { mag=function(level) return 12 + (level-1) * 2 end },
@@ -119,3 +122,5 @@ load("/data/talents/spells/staff-combat.lua")
 load("/data/talents/spells/fire-alchemy.lua")
 load("/data/talents/spells/stone-alchemy.lua")
 load("/data/talents/spells/golem.lua")
+
+load("/data/talents/spells/arcane-shield.lua")

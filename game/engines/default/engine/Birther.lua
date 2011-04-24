@@ -87,6 +87,7 @@ function _M:init(title, actor, order, at_end, quickbirth, w, h)
 	Dialog.init(self, title and title or ("Character Creation: "..actor.name), w or 600, h or 400)
 
 	self.descriptors = {}
+	self.descriptors_by_type = {}
 
 	self.c_tut = Textzone.new{width=math.floor(self.iw / 2 - 10), height=1, auto_height=true, no_color_bleed=true, text=[[
 Keyboard: #00FF00#up key/down key#FFFFFF# to select an option; #00FF00#Enter#FFFFFF# to accept; #00FF00#Backspace#FFFFFF# to go back.
@@ -183,7 +184,7 @@ function _M:selectType(type)
 		print("[BIRTHER] checking allowance for ", d.name)
 		for j, od in ipairs(self.descriptors) do
 			if od.descriptor_choices and od.descriptor_choices[type] then
-				local what = util.getval(od.descriptor_choices[type][d.name]) or util.getval(od.descriptor_choices[type].__ALL__)
+				local what = util.getval(od.descriptor_choices[type][d.name], self) or util.getval(od.descriptor_choices[type].__ALL__, self)
 				if what and what == "allow" then
 					allowed = true
 				elseif what and (what == "never" or what == "disallow") then
@@ -235,6 +236,7 @@ function _M:prev()
 	end
 	if not self.list then return end
 	self.changed = true
+	self.descriptors_by_type[self.current_type] = nil
 	table.remove(self.descriptors)
 	self.cur_order = self.cur_order - 1
 	self:selectType(self.order[self.cur_order])
@@ -248,6 +250,7 @@ end
 function _M:next()
 	self.changed = true
 	if self.list then
+		self.descriptors_by_type[self.current_type] = self.list[self.sel] or "none"
 		table.insert(self.descriptors, self.list[self.sel] or "none")
 		if self.list[self.sel] and self.list[self.sel].on_select then self.list[self.sel]:on_select() end
 

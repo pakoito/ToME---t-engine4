@@ -127,14 +127,16 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 		if self:getInven(self.INVEN_OFFHAND) then
 			local offmult = self:getOffHandMult(mult)
 			for i, o in ipairs(self:getInven(self.INVEN_OFFHAND)) do
-				if o.combat and not o.archery then
+				local combat = o.combat
+				if o.special_combat and o.subtype == "shield" and self:knowTalent(self.T_STONESHIELD) then combat = o.special_combat end
+				if combat and not o.archery then
 					print("[ATTACK] attacking with", o.name)
-					local s, h = self:attackTargetWith(target, o.combat, damtype, offmult)
+					local s, h = self:attackTargetWith(target, combat, damtype, offmult)
 					speed = math.max(speed or 0, s)
 					hit = hit or h
-					if hit and not sound then sound = o.combat.sound
-					elseif not hit and not sound_miss then sound_miss = o.combat.sound_miss end
-					if not o.combat.no_stealth_break then break_stealth = true end
+					if hit and not sound then sound = combat.sound
+					elseif not hit and not sound_miss then sound_miss = combat.sound_miss end
+					if not combat.no_stealth_break then break_stealth = true end
 				end
 			end
 		end
@@ -399,6 +401,13 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	if hitted and not target.dead and target:attr("stamina_regen_on_hit") then target:incStamina(target.stamina_regen_on_hit) end
 	if hitted and not target.dead and target:attr("mana_regen_on_hit") then target:incMana(target.mana_regen_on_hit) end
 	if hitted and not target.dead and target:attr("equilibrium_regen_on_hit") then target:incEquilibrium(-target.equilibrium_regen_on_hit) end
+
+	if hitted and not target.dead and target:knowTalent(target.T_STONESHIELD) then
+		local t = target:getTalentFromId(target.T_STONESHIELD)
+		local m, mm, e, em = t.getValues(self, t)
+		target:incMana(math.min(dam * m, mm))
+		target:incEquilibrium(-math.min(dam * e, em))
+	end
 
 	-- Ablative Armor
 	if hitted and not target.dead and target:attr("carbon_spikes") then

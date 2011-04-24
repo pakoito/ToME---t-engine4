@@ -19,6 +19,7 @@
 
 local default_eyal_descriptors = function(add)
 	local base = {
+
 	race =
 	{
 		__ALL__ = "disallow",

@@ -71,7 +71,7 @@ newEntity{ define_as = "BROTOQ",
 -- Your ally
 newEntity{ define_as = "NORGAN",
 	type = "humanoid", subtype = "dwarf", unique = true,
-	name = "Norgan",
+	name = "Norgan", image = "player/dwarf_male.png",
 	display = "@", color=colors.UMBER,
 	faction = "iron-throne",
 	desc = [[Norgan and you are the sole survivors of the Reknor expedition, your duty is to make sure the news come back to the Iron Council.]],

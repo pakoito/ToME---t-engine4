@@ -88,6 +88,10 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			dam = t.css_on_damage(target, t, type, dam)
 		end
 
+		if type ~= DamageType.PHYSICAL and target.knowTalent and target:knowTalent(target.T_STONE_FORTRESS) and target:hasEffect(target.EFF_DWARVEN_RESILIENCE) then
+			dam = math.max(0, dam - target:combatArmor() * (50 + target:getTalentLevel(target.T_STONE_FORTRESS) * 10) / 100)
+		end
+
 		-- Reduce damage with resistance
 		if target.resists then
 			local pen = 0

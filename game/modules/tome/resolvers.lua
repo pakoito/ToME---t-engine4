@@ -530,3 +530,13 @@ function resolvers.calc.emote_random(t, e)
 	end
 	return def
 end
+
+function resolvers.nice_tile(def)
+	return {__resolver="nice_tile", def}
+end
+function resolvers.calc.nice_tile(t, e)
+	if engine.Map.tiles.nicer_tiles then
+		table.merge(e, t[1])
+	end
+	return nil
+end

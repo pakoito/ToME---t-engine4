@@ -75,7 +75,7 @@ newEntity{ base = "BASE_NPC_AQUATIC_CRITTER",
 
 newEntity{ base = "BASE_NPC_AQUATIC_CRITTER",
 	name = "ancient dragon turtle", color=colors.DARK_SEA_GREEN,
-	desc = "A snake-like being, radiating electricity.",
+	desc = "A huge, elongated sea-green reptile, it looks old and impenetrable.",
 	level_range = {20, nil}, exp_worth = 1,
 	rarity = 10,
 	rank = 3,

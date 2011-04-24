@@ -54,7 +54,7 @@ newEntity{ base = "BASE_NPC_HUMANOID_RANDOM_BOSS",
 }
 
 newEntity{ base = "BASE_NPC_HUMANOID_RANDOM_BOSS",
-	name = "halflint", subtype = "halfling", color=colors.BLUE,
+	name = "halfling", subtype = "halfling", color=colors.BLUE,
 	humanoid_random_boss = 1,
 	resolvers.racial(),
 }
