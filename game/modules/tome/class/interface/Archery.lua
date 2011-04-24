@@ -108,6 +108,7 @@ end
 
 --- Archery projectile code
 local function archery_projectile(tx, ty, tg, self)
+	local DamageType = require "engine.DamageType"
 	local weapon, ammo = tg.archery.weapon, tg.archery.ammo
 	local talent = self:getTalentFromId(tg.talent_id)
 
@@ -117,7 +118,7 @@ local function archery_projectile(tx, ty, tg, self)
 	end
 	if not target then return end
 
-	local damtype = tg.archery.damtype or ammo.damtype or engine.DamageType.PHYSICAL
+	local damtype = tg.archery.damtype or ammo.damtype or DamageType.PHYSICAL
 	local mult = tg.archery.mult or 1
 
 	-- Does the blow connect? yes .. complex :/
@@ -151,7 +152,7 @@ local function archery_projectile(tx, ty, tg, self)
 		print("[ATTACK ARCHERY] after mult", dam)
 
 		if crit then game.logSeen(self, "%s performs a critical strike!", self.name:capitalize()) end
-		engine.DamageType:get(damtype).projector(self, target.x, target.y, damtype, math.max(0, dam))
+		DamageType:get(damtype).projector(self, target.x, target.y, damtype, math.max(0, dam))
 		game.level.map:particleEmitter(target.x, target.y, 1, "archery")
 		hitted = true
 
