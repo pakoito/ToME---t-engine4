@@ -21,6 +21,8 @@ local Stats = require "engine.interface.ActorStats"
 local Particles = require "engine.Particles"
 local Entity = require "engine.Entity"
 local Chat = require "engine.Chat"
+local Map = require "engine.Map"
+local Level = require "engine.Level"
 
 newEffect{
 	name = "INFUSION_COOLDOWN",
@@ -258,7 +260,7 @@ newEffect{
 newEffect{
 	name = "FROZEN",
 	desc = "Frozen",
-	long_desc = function(self, eff) return "The target is encased in ice, completely unable to act. The ice increases all your resistances by 20%." end,
+	long_desc = function(self, eff) return ("The target is encased in ice. All damage done to you will be split in half, a part absorbed by the ice. Your defense is nullified while in the ice and you may only attack the ice. %d HP on the iceblock remaining."):format(eff.hp) end,
 	type = "magical",
 	status = "detrimental",
 	parameters = {},
@@ -279,21 +281,32 @@ newEffect{
 		if self._mo then self._mo:invalidate() self._mo = nil end
 		game.level.map:updateMap(self.x, self.y)
 
+		eff.hp = eff.hp or 100
 		eff.tmpid = self:addTemporaryValue("encased_in_ice", 1)
+		eff.moveid = self:addTemporaryValue("never_move", 1)
 		eff.frozid = self:addTemporaryValue("frozen", 1)
+		eff.defid = self:addTemporaryValue("combat_def", -1000)
+		eff.rdefid = self:addTemporaryValue("combat_def_ranged", -1000)
 		eff.dur = self:updateEffectDuration(eff.dur, "freeze")
-		eff.resistsid = self:addTemporaryValue("resists", {all=20})
+
+		self:setTarget(self)
+	end,
+	on_timeout = function(self, eff)
+		self:setTarget(self)
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("encased_in_ice", eff.tmpid)
+		self:removeTemporaryValue("never_move", eff.moveid)
 		self:removeTemporaryValue("frozen", eff.frozid)
-		self:removeTemporaryValue("resists", eff.resistsid)
+		self:removeTemporaryValue("combat_def", eff.defid)
+		self:removeTemporaryValue("combat_def_ranged", eff.rdefid)
 		self.color_r = eff.old_r
 		self.color_g = eff.old_g
 		self.color_b = eff.old_b
 		if eff.added_display then self.add_displays = nil end
 		if self._mo then self._mo:invalidate() self._mo = nil end
 		game.level.map:updateMap(self.x, self.y)
+		self:setTarget(nil)
 	end,
 }
 

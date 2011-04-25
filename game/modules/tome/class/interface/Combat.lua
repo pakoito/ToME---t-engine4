@@ -493,12 +493,12 @@ function _M:combatDefense()
 		local t = self:getTalentFromId(self.T_STEADY_MIND)
 		add = add + t.getDefense(self, t)
 	end
-	return self.combat_def + (self:getDex() - 10) * 0.35 + add + (self:getLck() - 50) * 0.4
+	return math.max(0, self.combat_def + (self:getDex() - 10) * 0.35 + add + (self:getLck() - 50) * 0.4)
 end
 
 --- Gets the defense ranged
 function _M:combatDefenseRanged()
-	return self:combatDefense() + (self.combat_def_ranged or 0)
+	return math.max(0, self:combatDefense() + (self.combat_def_ranged or 0))
 end
 
 --- Gets the armor

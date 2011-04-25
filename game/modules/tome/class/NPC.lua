@@ -227,6 +227,14 @@ function _M:tooltip(x, y, seen_by)
 	return str
 end
 
+function _M:getTarget(typ)
+	if self:attr("encased_in_ice") then
+		return self.x, self.y, self
+	else
+		return mod.class.Actor.getTarget(self, typ)
+	end
+end
+
 --- Make emotes appear in the log too
 function _M:setEmote(e)
 	game.logSeen(self, "%s says: '%s'", self.name:capitalize(), e.text)

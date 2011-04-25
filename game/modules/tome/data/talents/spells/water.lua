@@ -79,8 +79,9 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.COLD, self:spellCrit(t.getDamage(self, t)), {type="freeze"})
-		self:project(tg, x, y, DamageType.FREEZE, 3)
+		local dam = self:spellCrit(t.getDamage(self, t))
+		self:project(tg, x, y, DamageType.COLD, dam, {type="freeze"})
+		self:project(tg, x, y, DamageType.FREEZE, {dur=3, hp=70 + dam * 1.5})
 		game:playSoundNear(self, "talents/ice")
 		return true
 	end,

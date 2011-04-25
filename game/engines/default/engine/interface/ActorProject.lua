@@ -126,6 +126,8 @@ function _M:project(t, x, y, damtype, dam, particles)
 		return
 	end
 
+	self:check("on_project_grids", grids)
+
 	-- Now project on each grid, one type
 	local tmp = {}
 	local stop = false
@@ -292,11 +294,11 @@ function _M:projectDoStop(typ, tg, damtype, dam, particles, lx, ly, tmp, rx, ry)
 
 	if typ.ball and typ.ball > 0 then
 		core.fov.calc_circle(
-			rx, 
-			ry, 
-			game.level.map.w, 
-			game.level.map.h, 
-			typ.ball, 
+			rx,
+			ry,
+			game.level.map.w,
+			game.level.map.h,
+			typ.ball,
 			function(_, px, py)
 				if typ.block_radius and typ:block_radius(px, py) then return true end
 			end,
@@ -310,13 +312,13 @@ function _M:projectDoStop(typ, tg, damtype, dam, particles, lx, ly, tmp, rx, ry)
 		local initial_dir = lx and util.getDir(lx, ly, x, y) or 5
 		local dir_angle = math.deg(math.atan2(ly - typ.source_actor.y, lx - typ.source_actor.x))
 		core.fov.calc_beam_any_angle(
-			rx, 
-			ry, 
-			game.level.map.w, 
-			game.level.map.h, 
-			typ.cone, 
-			dir_angle, 
-			typ.cone_angle, 
+			rx,
+			ry,
+			game.level.map.w,
+			game.level.map.h,
+			typ.cone,
+			dir_angle,
+			typ.cone_angle,
 			function(_, px, py)
 				if typ.block_radius and typ:block_radius(px, py) then return true end
 			end,
@@ -330,6 +332,8 @@ function _M:projectDoStop(typ, tg, damtype, dam, particles, lx, ly, tmp, rx, ry)
 		-- Deal damage: single
 		addGrid(lx, ly)
 	end
+
+	self:check("on_project_grids", grids)
 
 	for px, ys in pairs(grids) do
 		for py, _ in pairs(ys) do

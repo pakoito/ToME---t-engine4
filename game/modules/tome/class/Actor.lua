@@ -354,7 +354,6 @@ function _M:act()
 			game.logSeen(self, "%s temporarily fights the stun.", self.name:capitalize())
 		end
 	end
-	if self:attr("encased_in_ice") then self.energy.value = 0 end
 	if self:attr("stoned") then self.energy.value = 0 end
 	if self:attr("dazed") then self.energy.value = 0 end
 	if self:attr("time_stun") then self.energy.value = 0 end
@@ -580,6 +579,7 @@ end
 --- Blink through walls
 function _M:probabilityTravel(x, y, dist)
 	if game.zone.wilderness then return true end
+	if self:attr("encased_in_ice") then return end
 
 	local dirx, diry = x - self.x, y - self.y
 	local tx, ty = x, y
@@ -605,6 +605,7 @@ end
 -- @param min_dist the minimum radius of of the effect, will never teleport closer. Defaults to 0 if not set
 -- @return true if the teleport worked
 function _M:teleportRandom(x, y, dist, min_dist)
+	if self:attr("encased_in_ice") then return end
 	if game.level.data.no_teleport_south and y + dist > self.y then
 		y = self.y - dist
 	end
@@ -671,6 +672,8 @@ end
 --- What is our reaction toward the target
 -- This can modify faction reaction using specific actor to actor reactions
 function _M:reactionToward(target, no_reflection)
+	if target == self and self:attr("encased_in_ice") then return -100 end
+
 	local v = engine.Actor.reactionToward(self, target)
 
 	if self.reaction_actor and self.reaction_actor[target.unique or target.name] then v = v + self.reaction_actor[target.unique or target.name] end
@@ -789,6 +792,10 @@ function _M:tooltip(x, y, seen_by)
 	ts:add({"color", 0, 255, 255}, ("Level: %d"):format(self.level), {"color", "WHITE"}, true)
 	ts:add(("Exp: %d/%d"):format(self.exp, self:getExpChart(self.level+1) or "---"), true)
 	ts:add({"color", 255, 0, 0}, ("HP: %d (%d%%)"):format(self.life, self.life * 100 / self.max_life), {"color", "WHITE"}, true)
+	if self:attr("encased_in_ice") then
+		local eff = self:hasEffect(self.EFF_FROZEN)
+		ts:add({"color", 0, 255, 128}, ("Iceblock: %d"):format(eff.hp), {"color", "WHITE"}, true)
+	end
 	ts:add(("Stats: %d / %d / %d / %d / %d / %d"):format(self:getStr(), self:getDex(), self:getCon(), self:getMag(), self:getWil(), self:getCun()), true)
 	ts:add("Resists: ", table.concat(resists, ','), true)
 	ts:add("Armour/Defense: ", tostring(math.floor(self:combatArmor())), ' / ', tostring(math.floor(self:combatDefense())), true)
@@ -826,6 +833,9 @@ end
 --- Called before healing
 function _M:onHeal(value, src)
 	if self:hasEffect(self.EFF_UNSTOPPABLE) then
+		return 0
+	end
+	if self:attr("encased_in_ice") then
 		return 0
 	end
 	value = value * util.bound((self.healing_factor or 1), 0, 2.5)
@@ -1052,6 +1062,14 @@ function _M:onTakeHit(value, src)
 		-- Make the damage high enough to kill it
 		value = self.max_life + 1
 		game.logSeen(self, "%s shatters into pieces!", self.name:capitalize())
+	end
+
+	-- Frozen: absorb some damage into the iceblock
+	if self:attr("encased_in_ice") then
+		local eff = self:hasEffect(self.EFF_FROZEN)
+		value = value / 2
+		eff.hp = eff.hp - value
+		if eff.hp < 0 then self:removeEffect(self.EFF_FROZEN) end
 	end
 
 	-- Adds hate
@@ -2456,6 +2474,15 @@ function _M:on_projectile_target(x, y, p)
 	if self:knowTalent(self.T_HEIGHTENED_REFLEXES) then
 		local t = self:getTalentFromId(self.T_HEIGHTENED_REFLEXES)
 		t.do_reflexes(self, t)
+	end
+end
+
+--- Called when we have acquired grids
+function _M:on_project_grids(grids)
+	if self:attr("encased_in_ice") then
+		-- Only hit yourself
+		while next(grids) do grids[next(grids)] = nil end
+		grids[self.x] = {[self.y]=true}
 	end
 end
 

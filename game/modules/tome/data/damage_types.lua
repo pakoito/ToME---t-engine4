@@ -44,6 +44,20 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			dam = dam + (dam * inc / 100)
 		end
 
+		-- Blast the iceblock
+		if src.attr and src:attr("encased_in_ice") then
+			local eff = src:hasEffect(src.EFF_FROZEN)
+			eff.hp = eff.hp - dam
+			local srcname = src.x and src.y and game.level.map.seens(src.x, src.y) and src.name:capitalize() or "Something"
+			if eff.hp < 0 then
+				game.logSeen(src, "%s forces the iceblock to shatter.", src.name:capitalize())
+				src:removeEffect(src.EFF_FROZEN)
+			else
+				game:delayedLogDamage(src, {name="Iceblock", x=src.x, y=src.y}, dam, ("%s%d %s#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", math.ceil(dam), DamageType:get(type).name))
+			end
+			return 0
+		end
+
 		-- dark vision increases damage done in the dark
 		if src.knowTalent and src:knowTalent(src.T_DARK_VISION) then
 			local t = src:getTalentFromId(src.T_DARK_VISION)
@@ -461,7 +475,7 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local realdam = DamageType:get(DamageType.COLD).projector(src, x, y, DamageType.COLD, dam)
 		if rng.percent(25) then
-			DamageType:get(DamageType.FREEZE).projector(src, x, y, DamageType.FREEZE, 2)
+			DamageType:get(DamageType.FREEZE).projector(src, x, y, DamageType.FREEZE, {dur=2, hp=70+dam*1.5})
 		end
 		return realdam
 	end,
@@ -490,7 +504,7 @@ newDamageType{
 			-- Freeze it, if we pass the test
 			local sx, sy = game.level.map:getTileToScreen(x, y)
 			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("stun") then
-				target:setEffect(target.EFF_FROZEN, dam, {src=src})
+				target:setEffect(target.EFF_FROZEN, dam.dur, {hp=dam.hp * 1.5})
 
 				game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -3, "Frozen!", {0,255,155})
 			else
@@ -1228,7 +1242,7 @@ newDamageType{
 			-- Freeze it, if we pass the test
 			local sx, sy = game.level.map:getTileToScreen(x, y)
 			if target:checkHit(src:combatMindpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("stun") then
-				target:setEffect(target.EFF_FROZEN, dam, {src=src})
+				target:setEffect(target.EFF_FROZEN, dam, {hp=70 + src:combatMindpower() * 10})
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end

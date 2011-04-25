@@ -922,8 +922,9 @@ function _M:setupCommands()
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
 --			self.state:debugRandomZone()
-			local m = game.zone:makeEntity(game.level, "actor", {random_boss=true}, nil, true)
-			if m then game.zone:addEntity(game.level, m, "actor", game.player.x, game.player.y + 1) end
+--			local m = game.zone:makeEntity(game.level, "actor", {random_boss=true}, nil, true)
+--			if m then game.zone:addEntity(game.level, m, "actor", game.player.x, game.player.y + 1) end
+			self.player:setEffect(self.player.EFF_FROZEN, 10, {})
 		end end,
 	}
 

@@ -463,7 +463,11 @@ end
 
 --- Tries to get a target from the user
 function _M:getTarget(typ)
-	return game:targetGetForPlayer(typ)
+	if self:attr("encased_in_ice") then
+		return self.x, self.y, self
+	else
+		return game:targetGetForPlayer(typ)
+	end
 end
 
 --- Sets the current target
