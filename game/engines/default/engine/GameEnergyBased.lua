@@ -59,22 +59,15 @@ function _M:tick()
 
 	-- Give some energy to entities
 	if self.level then
-		local i, e
-		local arr = self.level.e_array
-		for i = 1, #arr do
-			e = arr[i]
-			if e and e.act and e.energy then
---				print("<ENERGY", e.name, e.uid, "::", e.energy.value, self.paused, "::", e.player)
-				if e.energy.value < self.energy_to_act then
-					e.energy.value = (e.energy.value or 0) + self.energy_per_tick * (e.energy.mod or 1) * (e.global_speed or 1)
-				end
-				if e.energy.value >= self.energy_to_act then
-					e.energy.used = false
-					e:act(self)
-				end
---				print(">ENERGY", e.name, e.uid, "::", e.energy.value, self.paused, "::", e.player)
-			end
+		self:tickLevel(self.level)
+		local mainlev = self.level
+
+		for name, level in pairs(self.level.sublevels) do
+			self.level = level
+			self:tickLevel(level)
+			if self.level ~= level then mainlev = self.level end
 		end
+		self.level = mainlev
 	end
 
 	local arr = self.entities
@@ -97,6 +90,26 @@ function _M:tick()
 	-- Try to join threads if any, every hundred turns
 	if self.turn % 100 == 0 then
 		self:joinThreads(0)
+	end
+end
+
+--- Run tick on a level
+function _M:tickLevel(level)
+	local i, e
+	local arr = level.e_array
+	for i = 1, #arr do
+		e = arr[i]
+		if e and e.act and e.energy then
+--				print("<ENERGY", e.name, e.uid, "::", e.energy.value, self.paused, "::", e.player)
+			if e.energy.value < self.energy_to_act then
+				e.energy.value = (e.energy.value or 0) + self.energy_per_tick * (e.energy.mod or 1) * (e.global_speed or 1)
+			end
+			if e.energy.value >= self.energy_to_act then
+				e.energy.used = false
+				e:act(self)
+			end
+--				print(">ENERGY", e.name, e.uid, "::", e.energy.value, self.paused, "::", e.player)
+		end
 	end
 end
 

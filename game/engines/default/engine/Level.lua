@@ -31,6 +31,39 @@ function _M:init(level, map)
 	self.entities = {}
 	self.entities_list = {}
 	self.perm_entities_list = {}
+	self.sublevels = {}
+	self.sublevel_id = "__main__"
+	self.data = {}
+end
+
+--- Adds a sublevel
+function _M:addSublevel(name, level)
+	if self.sublevels[name] then error("Sublevel already exists: "..name) end
+	self.sublevels[name] = level
+	level.sublevel_id = name
+	print("[LEVEL] new sublevel", name)
+end
+
+--- Removes a sublevel
+function _M:removeSublevel(name)
+	self.sublevels[name] = nil
+	print("[LEVEL] del sublevel", name)
+end
+
+--- Activate the given sublevel to become the new main one
+function _M:selectSublevel(name)
+	if not self.sublevels[name] then error("Sublevel does not exist, cant switch: "..name) end
+	if game.level ~= self then error("Switching sublevel on a level that is not active") end
+	local level = self.sublevels[name]
+	game.level = level
+
+	level.sublevels = self.sublevels
+	self.sublevels = {}
+
+	level.sublevels[level.sublevel_id] = nil
+	level.sublevels[self.sublevel_id] = self
+
+	print("[LEVEL] switch to sublevel", level.sublevel_id, "from", self.sublevel_id)
 end
 
 --- Adds an entity to the level
