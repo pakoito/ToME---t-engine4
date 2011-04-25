@@ -35,7 +35,7 @@ newTalent{
 
 		if self:getTalentLevel(t) >= 3 then
 			local tx, ty = self:getTarget{type="hit", range=self:getTalentRange(t)}
-			if game.level.map(tx, ty, Map.ACTOR) then
+			if tx and ty and game.level.map(tx, ty, Map.ACTOR) then
 				target = game.level.map(tx, ty, Map.ACTOR)
 			end
 		end

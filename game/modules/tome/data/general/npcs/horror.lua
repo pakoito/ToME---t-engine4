@@ -599,6 +599,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 newEntity{ base="BASE_NPC_HORROR",
 	name = "Grgglck the Devouring Darkness", unique = true,
 	color = colors.DARK_GREY,
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/horror_eldritch_grgglck.png", display_h=2, display_y=-1}}},
 	rarity = 50,
 	desc = [[A horror from the deepest pits of the earth. It looks like a huge pile of tentacles all trying to reach for you.
 You can discern a huge round mouth covered in razor-sharp teeth.]],
