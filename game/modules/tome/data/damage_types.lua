@@ -126,6 +126,10 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			dam = t.on_damage(target, t, type, dam)
 		end
 
+		if src:attr("stunned") then
+			dam = dam * 0.2
+		end
+
 		print("[PROJECTOR] final dam", dam)
 
 		local dead

@@ -1067,8 +1067,8 @@ function _M:onTakeHit(value, src)
 	-- Frozen: absorb some damage into the iceblock
 	if self:attr("encased_in_ice") then
 		local eff = self:hasEffect(self.EFF_FROZEN)
-		value = value / 2
-		eff.hp = eff.hp - value
+		eff.hp = eff.hp - value * 0.25
+		value = value * 0.75
 		if eff.hp < 0 then self:removeEffect(self.EFF_FROZEN) end
 	end
 

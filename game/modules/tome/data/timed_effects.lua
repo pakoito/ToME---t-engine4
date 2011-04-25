@@ -260,7 +260,7 @@ newEffect{
 newEffect{
 	name = "FROZEN",
 	desc = "Frozen",
-	long_desc = function(self, eff) return ("The target is encased in ice. All damage done to you will be split in half, a part absorbed by the ice. Your defense is nullified while in the ice and you may only attack the ice. %d HP on the iceblock remaining."):format(eff.hp) end,
+	long_desc = function(self, eff) return ("The target is encased in ice. All damage done to you will be split, 25% absorbed by the ice and 75% by yourself. Your defense is nullified while in the ice and you may only attack the ice. %d HP on the iceblock remaining."):format(eff.hp) end,
 	type = "magical",
 	status = "detrimental",
 	parameters = {},

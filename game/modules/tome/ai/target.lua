@@ -21,7 +21,7 @@
 -- this requires the ActorFOV interface, or an interface that provides self.fov.actors*
 -- This is ToME specific, overriding the engine default target_simple to account for lite, infravision, ...
 newAI("target_simple", function(self)
-	if self.ai_target.actor and not self.ai_target.actor.dead and game.level:hasEntity(self.ai_target.actor) and rng.percent(90) then return true end
+	if self.ai_target.actor and not self.ai_target.actor.dead and game.level:hasEntity(self.ai_target.actor) and rng.percent(90) and not self.ai_target.actor:attr("invulnerable") then return true end
 
 	-- Find closer enemy and target it
 	-- Get list of actors ordered by distance
@@ -40,7 +40,7 @@ newAI("target_simple", function(self)
 				or
 				-- Otherwise check if we can see it with our "senses"
 				(self:canSee(act) and (self.fov.actors[act].sqdist <= sqsense) or game.level.map.lites(act.x, act.y))
-			) then
+			) and not act:attr("invulnerable") then
 
 			self.ai_target.actor = act
 			self:check("on_acquire_target", act)
