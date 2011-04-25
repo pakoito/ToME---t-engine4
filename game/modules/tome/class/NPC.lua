@@ -231,7 +231,7 @@ function _M:getTarget(typ)
 	if self:attr("encased_in_ice") then
 		return self.x, self.y, self
 	else
-		return mod.class.Actor.getTarget(self, typ)
+		return ActorAI.getTarget(self, typ)
 	end
 end
 
