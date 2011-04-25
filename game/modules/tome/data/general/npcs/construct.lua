@@ -71,7 +71,7 @@ newEntity{ base = "BASE_NPC_CONSTRUCT",
 }
 
 newEntity{ base = "BASE_NPC_CONSTRUCT",
-	name = "golem", color=colors.BLUE, image = "npc/golem.png",
+	name = "golem", color=colors.BLUE,
 	desc = [[This golem's eyes glow with magical energies.]],
 	level_range = {8, nil}, exp_worth = 1,
 	rarity = 1,
@@ -89,7 +89,7 @@ newEntity{ base = "BASE_NPC_CONSTRUCT",
 }
 
 newEntity{ base = "BASE_NPC_CONSTRUCT",
-	name = "alchemist golem", color=colors.YELLOW, image = "npc/alchemist_golem.png",
+	name = "alchemist golem", color=colors.YELLOW,
 	desc = [[This golem's eyes glow with magical energies.]],
 	level_range = {14, nil}, exp_worth = 1,
 	rarity = 4,

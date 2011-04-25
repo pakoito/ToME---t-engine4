@@ -81,7 +81,7 @@ newEntity{ base = "BASE_NPC_MOLD",
 newEntity{ base = "BASE_NPC_MOLD",
 	unique = true,
 	type = "undead", subtype = "molds",
-	name = "Z'quikzshl the skeletal mold",
+	name = "Z'quikzshl the skeletal mold", image = "npc/immovable_molds_skeletal_mold.png",
 	display = 'm', color=colors.PURPLE,
 	desc = [[Steeped in fungal malevolence, this mold refused to die.  How a mold becomes a skeleton, though, is beyond you.  Are those its own bones, or the bones of hapless adventurers?]],
 
