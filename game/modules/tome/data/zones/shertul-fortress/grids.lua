@@ -89,6 +89,7 @@ This farportal is not connected to any other portal, it is made for exploration,
 It should automatically create a portal back, but it might not be near your arrival zone.]],
 
 	on_move = function(self, x, y, who)
+		if not who.player then return end
 		local Dialog = require "engine.ui.Dialog"
 		local q = who:hasQuest("shertul-fortress")
 		if not q then Dialog:simplePopup("Exploratory Farportal", "The farportal seems to be inactive") return end
