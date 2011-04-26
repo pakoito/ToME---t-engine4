@@ -223,7 +223,7 @@ function _M:actTurn()
 	end
 
 	-- Cooldown talents
-	self:cooldownTalents()
+	if not self:attr("stunned") then self:cooldownTalents() end
 	-- Regen resources
 	self:regenLife()
 	if self:knowTalent(self.T_UNNATURAL_BODY) then
@@ -344,14 +344,14 @@ function _M:act()
 		end
 	end
 
-	if self:attr("stunned") then
-		self.stunned_counter = (self.stunned_counter or 0) + (self:attr("stun_immune") or 0) * 100
-		if self.stunned_counter < 100 then
+	if self:attr("paralyzed") then
+		self.paralyzed_counter = (self.paralyzed_counter or 0) + (self:attr("stun_immune") or 0) * 100
+		if self.paralyzed_counter < 100 then
 			self.energy.value = 0
 		else
 			-- We are saved for this turn
-			self.stunned_counter = self.stunned_counter - 100
-			game.logSeen(self, "%s temporarily fights the stun.", self.name:capitalize())
+			self.paralyzed_counter = self.paralyzed_counter - 100
+			game.logSeen(self, "%s temporarily fights the paralyzation.", self.name:capitalize())
 		end
 	end
 	if self:attr("stoned") then self.energy.value = 0 end

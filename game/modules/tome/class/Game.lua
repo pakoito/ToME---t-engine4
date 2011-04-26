@@ -924,7 +924,7 @@ function _M:setupCommands()
 --			self.state:debugRandomZone()
 --			local m = game.zone:makeEntity(game.level, "actor", {random_boss=true}, nil, true)
 --			if m then game.zone:addEntity(game.level, m, "actor", game.player.x, game.player.y + 1) end
-			self.player:setEffect(self.player.EFF_FROZEN, 10, {})
+			self.player:setEffect(self.player.EFF_STUNNED, 10, {})
 		end end,
 	}
 

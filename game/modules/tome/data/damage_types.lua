@@ -127,7 +127,8 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		end
 
 		if src:attr("stunned") then
-			dam = dam * 0.2
+			dam = dam * 0.3
+			print("[PROJECTOR] stunned dam", dam)
 		end
 
 		print("[PROJECTOR] final dam", dam)

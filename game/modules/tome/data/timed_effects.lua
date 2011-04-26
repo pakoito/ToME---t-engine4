@@ -260,7 +260,7 @@ newEffect{
 newEffect{
 	name = "FROZEN",
 	desc = "Frozen",
-	long_desc = function(self, eff) return ("The target is encased in ice. All damage done to you will be split, 25% absorbed by the ice and 75% by yourself. Your defense is nullified while in the ice and you may only attack the ice. %d HP on the iceblock remaining."):format(eff.hp) end,
+	long_desc = function(self, eff) return ("The target is encased in ice. All damage done to you will be split, 25%% absorbed by the ice and 75%% by yourself. Your defense is nullified while in the ice and you may only attack the ice. %d HP on the iceblock remaining."):format(eff.hp) end,
 	type = "magical",
 	status = "detrimental",
 	parameters = {},
@@ -361,27 +361,27 @@ newEffect{
 	type = "magical",
 	status = "detrimental",
 	parameters = {},
-	on_gain = function(self, err) return "#Target# is stunned by the burning flame!", "+Burning Shock" end,
-	on_lose = function(self, err) return "#Target# is not stunned anymore.", "-Burning Shock" end,
+	on_gain = function(self, err) return "#Target# is paralyzed by the burning flame!", "+Burning Shock" end,
+	on_lose = function(self, err) return "#Target# is not paralyzed anymore.", "-Burning Shock" end,
 	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("stunned", 1)
+		eff.tmpid = self:addTemporaryValue("paralyzed", 1)
 		-- Start the stun counter only if this is the first stun
-		if self.stunned == 1 then self.stunned_counter = (self:attr("stun_immune") or 0) * 100 end
+		if self.paralyzed == 1 then self.paralyzed_counter = (self:attr("stun_immune") or 0) * 100 end
 		eff.dur = self:updateEffectDuration(eff.dur, "stun")
 	end,
 	on_timeout = function(self, eff)
 		DamageType:get(DamageType.FIRE).projector(eff.src, self.x, self.y, DamageType.FIRE, eff.power)
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("stunned", eff.tmpid)
-		if not self:attr("stunned") then self.stunned_counter = nil end
+		self:removeTemporaryValue("paralyzed", eff.tmpid)
+		if not self:attr("paralyzed") then self.paralyzed_counter = nil end
 	end,
 }
 
 newEffect{
 	name = "STUNNED",
 	desc = "Stunned",
-	long_desc = function(self, eff) return "The target is stunned, preventing any actions." end,
+	long_desc = function(self, eff) return ("The target is stunned, reducing damage by 70%%, putting random talents on cooldown and reducing movement speed by 50%%. While stunned talents do not cooldown."):format() end,
 	type = "physical",
 	status = "detrimental",
 	parameters = {},
@@ -389,13 +389,24 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is not stunned anymore.", "-Stunned" end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("stunned", 1)
-		-- Start the stun counter only if this is the first stun
-		if self.stunned == 1 then self.stunned_counter = (self:attr("stun_immune") or 0) * 100 end
+		eff.speedid = self:addTemporaryValue("movement_speed", -0.5)
+
+		local tids = {}
+		for tid, lev in pairs(self.talents) do
+			local t = self:getTalentFromId(tid)
+			if not self.talents_cd[tid] and t.mode == "activated" and not t.innate then tids[#tids+1] = t end
+		end
+		for i = 1, 4 do
+			local t = rng.tableRemove(tids)
+			if not t then break end
+			self.talents_cd[t.id] = 1 -- Just set cooldown to 1 since cooldown does not decrease while stunned
+		end
+
 		eff.dur = self:updateEffectDuration(eff.dur, "stun")
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("stunned", eff.tmpid)
-		if not self:attr("stunned") then self.stunned_counter = nil end
+		self:removeTemporaryValue("movement_speed", eff.speedid)
 	end,
 }
 
@@ -1807,24 +1818,24 @@ newEffect{
 
 newEffect{
 	name = "GLOOM_STUNNED",
-	desc = "Stunned by the gloom",
-	long_desc = function(self, eff) return "The gloom has stunned the target, rendering it unable to act." end,
+	desc = "Paralyzed by the gloom",
+	long_desc = function(self, eff) return "The gloom has paralyzed the target, rendering it unable to act." end,
 	type = "mental",
 	status = "detrimental",
 	parameters = {},
-	on_gain = function(self, err) return "#F53CBE##Target# is paralyzed with fear!", "+Stunned" end,
-	on_lose = function(self, err) return "#Target# overcomes the gloom", "-Stunned" end,
+	on_gain = function(self, err) return "#F53CBE##Target# is paralyzed with fear!", "+Paralyzed" end,
+	on_lose = function(self, err) return "#Target# overcomes the gloom", "-Paralyzed" end,
 	activate = function(self, eff)
 		eff.particle = self:addParticles(Particles.new("gloom_stunned", 1))
-		eff.tmpid = self:addTemporaryValue("stunned", 1)
+		eff.tmpid = self:addTemporaryValue("paralyzed", 1)
 		-- Start the stun counter only if this is the first stun
-		if self.stunned == 1 then self.stunned_counter = (self:attr("stun_immune") or 0) * 100 end
+		if self.paralyzed == 1 then self.paralyzed_counter = (self:attr("stun_immune") or 0) * 100 end
 		eff.dur = self:updateEffectDuration(eff.dur, "stun")
 	end,
 	deactivate = function(self, eff)
 		self:removeParticles(eff.particle)
-		self:removeTemporaryValue("stunned", eff.tmpid)
-		if not self:attr("stunned") then self.stunned_counter = nil end
+		self:removeTemporaryValue("paralyzed", eff.tmpid)
+		if not self:attr("paralyzed") then self.paralyzed_counter = nil end
 	end,
 }
 
@@ -2843,24 +2854,24 @@ newEffect{
 
 newEffect{
 	name = "MADNESS_STUNNED",
-	desc = "Stunned by madness",
-	long_desc = function(self, eff) return "Madness has stunned the target, rendering it unable to act." end,
+	desc = "Paralyzed by madness",
+	long_desc = function(self, eff) return "Madness has paralyzed the target, rendering it unable to act." end,
 	type = "mental",
 	status = "detrimental",
 	parameters = {},
-	on_gain = function(self, err) return "#F53CBE##Target# is paralyzed by madness!", "+Stunned" end,
-	on_lose = function(self, err) return "#Target# overcomes the madness", "-Stunned" end,
+	on_gain = function(self, err) return "#F53CBE##Target# is paralyzed by madness!", "+Paralyzed" end,
+	on_lose = function(self, err) return "#Target# overcomes the madness", "-Paralyzed" end,
 	activate = function(self, eff)
 		eff.particle = self:addParticles(Particles.new("gloom_stunned", 1))
-		eff.tmpid = self:addTemporaryValue("stunned", 1)
+		eff.tmpid = self:addTemporaryValue("paralyzed", 1)
 		-- Start the stun counter only if this is the first stun
-		if self.stunned == 1 then self.stunned_counter = (self:attr("stun_immune") or 0) * 100 end
+		if self.paralyzed == 1 then self.paralyzed_counter = (self:attr("stun_immune") or 0) * 100 end
 		eff.dur = self:updateEffectDuration(eff.dur, "stun")
 	end,
 	deactivate = function(self, eff)
 		self:removeParticles(eff.particle)
-		self:removeTemporaryValue("stunned", eff.tmpid)
-		if not self:attr("stunned") then self.stunned_counter = nil end
+		self:removeTemporaryValue("paralyzed", eff.tmpid)
+		if not self:attr("paralyzed") then self.paralyzed_counter = nil end
 	end,
 }
 
@@ -3188,12 +3199,12 @@ newEffect{
 newEffect{
 	name = "TEMPORAL_STUN",
 	desc = "Temporal Stun",
-	long_desc = function(self, eff) return "The target is stunned, preventing any actions." end,
+	long_desc = function(self, eff) return "The target is paralyzed, preventing any actions." end,
 	type = "time",  -- Time so very little can remove it.
 	status = "detrimental",
 	parameters = {},
-	on_gain = function(self, err) return "#Target# is stunned!", "+Stunned" end,
-	on_lose = function(self, err) return "#Target# is not stunned anymore.", "-Stunned" end,
+	on_gain = function(self, err) return "#Target# is paralyzed!", "+Paralyzed" end,
+	on_lose = function(self, err) return "#Target# is not paralyzed anymore.", "-Paralyzed" end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("time_stun", 1)
 		eff.dur = self:updateEffectDuration(eff.dur, "time_stun")
