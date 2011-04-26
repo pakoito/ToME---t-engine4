@@ -31,11 +31,24 @@ With gold you can buy items in the various stores in town.
 You can gain money by looting it from your foes, by selling items and by doing some quests.
 ]]
 
+TOOLTIP_LIVES = [[#GOLD#Lives#LAST#
+How many lives you have and how many you lost.
+Your total number of lives depends on the difficulty setting you choose.
+You may find other ways to save yourself but they are not considered extra lives.]]
+
 TOOLTIP_LIFE = [[#GOLD#Life#LAST#
 This is your life force, when you take damage this is reduced more and more.
 If it reaches below zero you die.
 Death is usually permanent so beware!
 It is increased by Constitution.]]
+
+TOOLTIP_LIFE_REGEN = [[#GOLD#Life Regeneration#LAST#
+How many life you regenerate per turn.
+This value can be improved with spells, talents, infusions, equipment.]]
+
+TOOLTIP_LIFE = [[#GOLD#Healing mod#LAST#
+This represents how effective is healing for you.
+All healing values are multiplied by this value (including life regeneration).]]
 
 TOOLTIP_AIR = [[#GOLD#Air#LAST#
 The breath counter only appears when you are suffocating.
@@ -106,6 +119,30 @@ You can not move while encumbered, drop some items.
 TOOLTIP_INSCRIPTIONS = [[#GOLD#Inscriptions#LAST#
 The people of Eyal have found a way to create herbal infusions and runes that can be inscribed on the skin of a creature.
 Those inscriptions give the bearer always accessible powers. Usually most people have a simple regeneration infusion, but there are other kind of potion inscriptions.
+]]
+
+-------------------------------------------------------------
+-- Speeds
+-------------------------------------------------------------
+TOOLTIP_SPEED_GLOBAL = [[#GOLD#Global Speed#LAST#
+Global speed affects everything you do.
+It represents how much "energy" you get per game turn, once you reach a certain point you can act.
+I.E: at 200% global speed you get twice as much energy per game turn and thus can act twice when other creatures only act once.
+]]
+TOOLTIP_SPEED_MOVEMENT = [[#GOLD#Movement Speed#LAST#
+The time it takes you to move.
+It represents how many movements you can do in the same time.
+I.E: at 100% you will be able to do 100% more movements (aka twice as many) in the same time it would have taken you to do one at 0% speed.
+]]
+TOOLTIP_SPEED_SPELL = [[#GOLD#Spell Speed#LAST#
+The time it takes you to cast a spell.
+It represents how many spells you can do in the same time.
+I.E: at 100% you will be able to cast 100% more spells (aka twice as many) in the same time it would have taken you to do one at 0% speed.
+]]
+TOOLTIP_SPEED_ATTACK = [[#GOLD#Attack Speed#LAST#
+The time it takes you to attack (in melee or ranged).
+It represents how many attacks you can do in the same time.
+I.E: at 100% you will be able to do 100% more attacks (aka twice as many) in the same time it would have taken you to do one at 0% speed.
 ]]
 
 -------------------------------------------------------------
