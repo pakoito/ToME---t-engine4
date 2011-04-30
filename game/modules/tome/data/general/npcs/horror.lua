@@ -535,6 +535,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 
 newEntity{ base = "BASE_NPC_HORROR",
 	subtype = "temporal",
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/horror_temporal_temporal_stalker.png", display_h=2, display_y=-1}}},
 	name = "temporal stalker", color=colors.STEEL_BLUE,
 	desc = "A slender metallic monstrosity with long claws in place of fingers, and razor-sharp teeth.",
 	level_range = {20, nil}, exp_worth = 1,
