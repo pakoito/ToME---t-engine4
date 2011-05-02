@@ -118,7 +118,6 @@ enter_derth = function(self)
 	self.old_obscure = game.level.map.color_obscure
 	game.level.map:setShown(0.3, 0.3, 0.3, 1)
 	game.level.map:setObscure(0.3*0.6, 0.3*0.6, 0.3*0.6, 0.6)
-	game.level.level = util.bound(game.player.level, 12, 20)
 
 	-- Add random lightning firing off
 	game.level.data.background = function(level)

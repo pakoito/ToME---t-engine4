@@ -53,6 +53,20 @@ newEffect{
 }
 
 newEffect{
+	name = "TAINT_COOLDOWN",
+	desc = "Tainted",
+	long_desc = function(self, eff) return ("The more you use taints, the longer they will take to recharge (+%d cooldowns)."):format(eff.power) end,
+	type = "taint",
+	status = "detrimental",
+	parameters = { power=1 },
+	on_merge = function(self, old_eff, new_eff)
+		old_eff.dur = new_eff.dur
+		old_eff.power = old_eff.power + new_eff.power
+		return old_eff
+	end,
+}
+
+newEffect{
 	name = "CUT",
 	desc = "Bleeding",
 	long_desc = function(self, eff) return ("Huge cut that bleeds, doing %0.2f physical damage per turn."):format(eff.power) end,
