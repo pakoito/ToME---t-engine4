@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/objects/objects.lua")
+load("/data/general/objects/objects-maj-eyal.lua")
 
 newEntity{ base = "BASE_SCROLL", define_as = "NOTE_FROM_LAST_HOPE",
 	name = "Sealed Scroll of Last Hope", identified=true, unique=true, no_unique_lore=true,

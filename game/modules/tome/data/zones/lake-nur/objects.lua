@@ -21,4 +21,4 @@ local Talents = require "engine.interface.ActorTalents"
 local Stats = require "engine.interface.ActorStats"
 local DamageType = require "engine.DamageType"
 
-load("/data/general/objects/objects.lua")
+load("/data/general/objects/objects-maj-eyal.lua")

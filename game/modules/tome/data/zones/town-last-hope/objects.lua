@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/objects/objects.lua")
+load("/data/general/objects/objects-maj-eyal.lua")
 
 for i = 1, 6 do
 newEntity{ base = "BASE_LORE",
@@ -25,6 +25,18 @@ newEntity{ base = "BASE_LORE",
 	subtype = "last hope foundation", unique=true, no_unique_lore=true, not_in_stores=false,
 	name = "The Diaries of King Toknor the Brave ("..i..")", lore="last-hope-foundation-note-"..i,
 	desc = [[A part of the history of Last Hope, and king Toknor the Brave.]],
+	rarity = false,
+	encumberance = 0,
+	cost = 2,
+}
+end
+
+for i = 0, 2 do
+local l = mod.class.interface.PlayerLore.lore_defs["races-"..i]
+newEntity{ base = "BASE_LORE",
+	define_as = "RACES_NOTE"..i,
+	subtype = "analysis", unique=true, no_unique_lore=true, not_in_stores=false,
+	name = l.name, lore="races-"..i,
 	rarity = false,
 	encumberance = 0,
 	cost = 2,

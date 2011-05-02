@@ -280,12 +280,15 @@ newEntity{
 			{id=true, defined="FOUNDATION_NOTE4"},
 			{id=true, defined="FOUNDATION_NOTE5"},
 			{id=true, defined="FOUNDATION_NOTE6"},
+			{id=true, defined="RACES_NOTE0"},
+			{id=true, defined="RACES_NOTE1"},
+			{id=true, defined="RACES_NOTE2"},
 		},
 	},
 }
 
 -------------------------------------------------------------
--- Last Hope
+-- Zigu
 -------------------------------------------------------------
 newEntity{
 	define_as = "ZIGUR_LIBRARY",

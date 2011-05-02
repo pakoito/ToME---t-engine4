@@ -17,15 +17,12 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/objects/objects-maj-eyal.lua")
-
-for i = 1, 4 do
-newEntity{ base = "BASE_LORE",
-	define_as = "NOTE"..i,
-	name = "research log of halfling mage Hompalan", lore="halfling-research-note-"..i,
-	desc = [[A very research note, nearly unreadable.]],
-	rarity = false,
-	is_magic_device = false,
-	encumberance = 0,
-}
+local loadIfNot = function(f)
+	if loaded[f] then return end
+	load(f, entity_mod)
 end
+
+loadIfNot("/data/general/objects/objects.lua")
+
+-- Special lore
+loadIfNot("/data/general/objects/lore/maj-eyal.lua")

@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 load("/data/general/objects/2htridents.lua", function(e) e.rarity = e.trident_rarity end)
-load("/data/general/objects/objects.lua")
+load("/data/general/objects/objects-far-east.lua")
 
 local Talents = require "engine.interface.ActorTalents"
 local Stats = require "engine.interface.ActorStats"

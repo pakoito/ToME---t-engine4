@@ -77,7 +77,7 @@ newEntity{
 					},
 					npc_list = mod.class.NPC:loadList("/data/general/npcs/thieve.lua"),
 					grid_list = mod.class.Grid:loadList("/data/general/grids/basic.lua"),
-					object_list = mod.class.Object:loadList("/data/general/objects/objects.lua"),
+					object_list = mod.class.Object:loadList("/data/general/objects/objects-maj-eyal.lua"),
 					trap_list = mod.class.Trap:loadList("/data/general/traps/alarm.lua"),
 					levels = { [2] = {
 						all_lited=true, all_remembered=true,

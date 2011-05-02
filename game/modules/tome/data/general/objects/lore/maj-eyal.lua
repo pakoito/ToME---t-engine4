@@ -17,15 +17,15 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/objects/objects-maj-eyal.lua")
-
-for i = 1, 4 do
+for i = 3, 10 do
+local l = mod.class.interface.PlayerLore.lore_defs["races-"..i]
 newEntity{ base = "BASE_LORE",
-	define_as = "NOTE"..i,
-	name = "research log of halfling mage Hompalan", lore="halfling-research-note-"..i,
-	desc = [[A very research note, nearly unreadable.]],
-	rarity = false,
-	is_magic_device = false,
+	define_as = "RACES_NOTE"..i,
+	subtype = "analysis", unique=true,
+	name = l.name, lore="races-"..i,
+	level_range = {20, 50},
+	rarity = 40,
 	encumberance = 0,
+	cost = 2,
 }
 end
