@@ -2030,31 +2030,31 @@ function _M:postUseTalent(ab, ret)
 			end
 		else
 			if ab.sustain_mana then
-				trigger = true; self:incMaxMana(ab.sustain_mana)
+				self:incMaxMana(ab.sustain_mana)
 			end
 			if ab.sustain_stamina then
-				trigger = true; self:incMaxStamina(ab.sustain_stamina)
+				self:incMaxStamina(ab.sustain_stamina)
 			end
 			if ab.sustain_vim then
-				trigger = true; self:incMaxVim(ab.sustain_vim)
+				self:incMaxVim(ab.sustain_vim)
 			end
 			if ab.sustain_equilibrium then
-				trigger = true; self:incMinEquilibrium(-ab.sustain_equilibrium)
+				self:incMinEquilibrium(-ab.sustain_equilibrium)
 			end
 			if ab.sustain_positive then
-				trigger = true; self:incMaxPositive(ab.sustain_positive)
+				self:incMaxPositive(ab.sustain_positive)
 			end
 			if ab.sustain_negative then
-				trigger = true; self:incMaxNegative(ab.sustain_negative)
+				self:incMaxNegative(ab.sustain_negative)
 			end
 			if ab.sustain_hate then
-				trigger = true; self:incMaxHate(ab.sustain_hate)
+				self:incMaxHate(ab.sustain_hate)
 			end
 			if ab.sustain_paradox then
-				trigger = true; self:incMinParadox(-ab.sustain_paradox)
+				self:incMinParadox(-ab.sustain_paradox)
 			end
 			if ab.sustain_psi then
-				trigger = true; self:incMaxPsi(ab.sustain_psi)
+				self:incMaxPsi(ab.sustain_psi)
 			end
 		end
 	else
@@ -2089,6 +2089,7 @@ function _M:postUseTalent(ab, ret)
 			trigger = true; self:incPsi(-ab.psi * (100 + 2 * self.fatigue) / 100)
 		end
 	end
+
 	if trigger and self:hasEffect(self.EFF_BURNING_HEX) then
 		local p = self:hasEffect(self.EFF_BURNING_HEX)
 		DamageType:get(DamageType.FIRE).projector(p.src, self.x, self.y, DamageType.FIRE, p.dam)
