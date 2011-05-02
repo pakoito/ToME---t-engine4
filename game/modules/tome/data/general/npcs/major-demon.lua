@@ -52,6 +52,7 @@ newEntity{
 
 newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 	name = "dolleg", color=colors.GREEN, -- Dark thorn
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/demon_major_dolleg.png", display_h=2, display_y=-1}}},
 	desc = "A monstrous demon, covered in acidic thorns.",
 	level_range = {30, nil}, exp_worth = 1,
 	rarity = 1,
@@ -74,6 +75,7 @@ newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 
 newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 	name = "dúathedlen", color=colors.GREY, -- Darkness exiled
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/demon_major_duathedlen.png", display_h=2, display_y=-1}}},
 	desc = "Under a shroud of darkness you discern an evil shape.",
 	level_range = {30, nil}, exp_worth = 1,
 	rarity = 1,
@@ -95,6 +97,7 @@ newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 
 newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 	name = "uruivellas", color=colors.LIGHT_RED, -- Hot strength
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/demon_major_uruivellas.png", display_h=2, display_y=-1}}},
 	desc = [[This demon would look like a minotaur, if a minotaur had a fiery aura surrounding it and horns all over the body.
 Oh, and it is twice as big, too.]],
 	level_range = {35, nil}, exp_worth = 1,
@@ -127,6 +130,7 @@ Oh, and it is twice as big, too.]],
 
 newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 	name = "thaurhereg", color=colors.RED, -- Terrible blood
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/demon_major_thaurhereg.png", display_h=2, display_y=-1}}},
 	desc = [[This terrible demon is covered in blood, which flows *on* its skin in ever-changing patterns that disturb you simply when looking at it.]],
 	level_range = {35, nil}, exp_worth = 1,
 	rarity = 4,
@@ -158,6 +162,7 @@ newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 
 newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 	name = "daelach", color=colors.PURPLE, -- Shadow flame
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/demon_major_daelach.png", display_h=2, display_y=-1}}},
 	desc = [[You can only guess at the real shape of this demon. Its body is surrounded by a cloud of fiery darkness.
 It moves swiftly toward you, casting terrible spells and swinging its weapons at you.]],
 	level_range = {39, nil}, exp_worth = 1,
