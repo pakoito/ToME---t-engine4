@@ -61,7 +61,6 @@ newEntity{ define_as = "INQUISITOR",
 	ai = "tactical", ai_state = { talent_in=2, ai_move="move_astar", },
 
 	on_die = function(self, who)
-		game.player:resolveSource():grantQuest("start-shaloren")
 		game.player:resolveSource():setQuestStatus("start-shaloren", engine.Quest.COMPLETED, "rhaloren")
 	end,
 }

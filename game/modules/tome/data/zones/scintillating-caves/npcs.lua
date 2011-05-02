@@ -60,7 +60,6 @@ newEntity{ base="BASE_NPC_CRYSTAL", define_as = "SPELLBLAZE_CRYSTAL",
 	ai_tactic = resolvers.tactic"ranged",
 
 	on_die = function(self, who)
-		game.player:resolveSource():grantQuest("start-shaloren")
 		game.player:resolveSource():setQuestStatus("start-shaloren", engine.Quest.COMPLETED, "spellblaze")
 	end,
 }
