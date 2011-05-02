@@ -488,7 +488,7 @@ local racials = {
 	skeleton = {
 		T_BONE_ARMOUR = {last=30, base=0, every=4, max=5},
 		T_SKELETON_REASSEMBLE = {last=40, base=0, every=4, max=5},
-		T_SHARP_BONES = {last=20, base=0, every=4, max=5},
+		T_RESILIENT_BONES = {last=20, base=0, every=4, max=5},
 		T_SKELETON = {last=10, base=0, every=4, max=5},
 	},
 	ghoul = {

@@ -96,6 +96,7 @@ function _M:setEffect(eff_id, dur, p, silent)
 		if not p[k] then p[k] = e end
 	end
 	p.dur = dur
+	self:check("on_set_temporary_effect", eff_id, _M.tempeffect_def[eff_id], p)
 
 	-- If we already have it, we check if it knows how to "merge", or else we remove it and re-add it
 	if self:hasEffect(eff_id) then

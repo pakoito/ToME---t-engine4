@@ -2439,6 +2439,13 @@ function _M:updateEffectDuration(dur, what)
 	return dur
 end
 
+--- Adjust temporary effects
+function _M:on_set_temporary_effect(eff_id, e, p)
+	if e.status == "detrimental" and self:knowTalent(self.T_RESILIENT_BONES) then
+		p.dur = math.ceil(p.dur * (1 - (self:getTalentLevel(self.T_RESILIENT_BONES) / 12)))
+	end
+end
+
 --- Called when we are projected upon
 -- This is used to do spell reflection, antimagic, ...
 function _M:on_project(tx, ty, who, t, x, y, damtype, dam, particles)

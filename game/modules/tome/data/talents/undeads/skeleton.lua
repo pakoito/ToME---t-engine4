@@ -41,61 +41,33 @@ newTalent{
 }
 
 newTalent{
-	name = "Sharp Bones",
+	name = "Bone Armour",
 	type = {"undead/skeleton", 2},
 	require = undeads_req2,
-	points = 5,
-	cooldown = 15,
-	tactical = { ATTACK = 2 },
-	range = 1,
-	requires_target = true,
-	action = function(self, t)
-		local x, y = self.x, self.y
-		if game.level.map(x, y, game.level.map.TRAP) then
-			game.logPlayer(self, "There is already a trap here!")
-			return
-		end
-
-		local dam = (10 + self:getStr(20)) * self:getTalentLevel(t)
-
-		local e = require("mod.class.Trap").new{
-			type = "physical", subtype="sharp", id_by_type=true, unided_name = "trap", identified=true,
-			name = "sharp bones",
-			display = '^', color=colors.ANTIQUE_WHITE,
-			dam = dam,
-			triggered = function(self, x, y, who)
-				self:project({type="hit",x=x,y=y}, x, y, engine.DamageType.BLEED, self.dam)
-				return true, true
-			end,
-			summoner_gain_exp = true,
-			summoner = self,
-		}
-		game.zone:addEntity(game.level, e, "trap", x, y)
-
-		game:playSoundNear(self, "talents/earth")
-		return true
-	end,
-	info = function(self, t)
-		return ([[Lay down some sharpened bones to make a simple trap that will cause anyone stepping on it to bleed for %d damage.]]):
-		format(damDesc(self, DamageType.PHYSICAL, (10 + self:getStr(20)) * self:getTalentLevel(t)))
-	end,
-}
-
-newTalent{
-	name = "Bone Armour",
-	type = {"undead/skeleton", 3},
-	require = undeads_req3,
 	points = 5,
 	cooldown = 30,
 	tactical = { DEFEND = 2 },
 	action = function(self, t)
-		self:setEffect(self.EFF_DAMAGE_SHIELD, 10, {power=(8 + self:getDex(20)) * self:getTalentLevel(t)})
+		self:setEffect(self.EFF_DAMAGE_SHIELD, 10, {power=50 + 70 * self:getTalentLevel(t) + self:getDex(350)})
 		return true
 	end,
 	info = function(self, t)
 		return ([[Creates a shield of bones absorbing %d damage. Lasts for 10 turns.
 		The damage absorbed increases with dexterity.]]):
-		format((5 + self:getDex(20)) * self:getTalentLevel(t))
+		format(50 + 70 * self:getTalentLevel(t) + self:getDex(350))
+	end,
+}
+
+newTalent{
+	name = "Resilient Bones",
+	type = {"undead/skeleton", 3},
+	require = undeads_req3,
+	points = 5,
+	mode = "passive",
+	range = 1,
+	info = function(self, t)
+		return ([[Your undead bones are very resilient, reducing the duration of all detrimental effects on you by %d%%.]]):
+		format(100 * (self:getTalentLevel(self.T_RESILIENT_BONES) / 12))
 	end,
 }
 
@@ -104,7 +76,7 @@ newTalent{ short_name = "SKELETON_REASSEMBLE",
 	type = {"undead/skeleton",4},
 	require = undeads_req4,
 	points = 5,
-	cooldown = 45,
+	cooldown = function(self, t) return 45 - self:getTalentLevelRaw(t) * 4 end,
 	tactical = { HEAL = 2 },
 	on_learn = function(self, t)
 		if self:getTalentLevelRaw(t) == 5 then
@@ -117,13 +89,13 @@ newTalent{ short_name = "SKELETON_REASSEMBLE",
 		end
 	end,
 	action = function(self, t)
-		self:heal(self:getTalentLevel(t) * self.level * 2.5, self)
+		self:heal(100 * self:getTalentLevel(t), self)
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
 	info = function(self, t)
 		return ([[Re-position some of your bones, healing yourself for %d.
 		At level 5 you will gain the ability to completely re-assemble your body should it be destroyed (can only be used once)]]):
-		format(self:getTalentLevel(t) * self.level  * 2.5)
+		format(100 * self:getTalentLevel(t))
 	end,
 }
