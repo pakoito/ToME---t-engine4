@@ -461,7 +461,6 @@ function _M:display(x, y, nb_keyframe, always_show)
 	self._map:toScreen(self.display_x, self.display_y, nb_keyframe, always_show)
 	self:displayParticles(nb_keyframe)
 	self:displayEffects()
-	self:displayEmotes(nb_keyframe)
 
 	self.display_x, self.display_y = ox, oy
 

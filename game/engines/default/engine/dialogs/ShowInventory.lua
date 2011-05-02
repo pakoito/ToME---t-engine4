@@ -74,7 +74,8 @@ function _M:use(item)
 	if item and item.object then
 		self.action(item.object, item.item)
 	end
-	game:unregisterDialog(self)
+	self:generateList()
+	--game:unregisterDialog(self)
 end
 
 function _M:generateList()

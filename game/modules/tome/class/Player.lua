@@ -690,7 +690,9 @@ end
 function _M:getEncumberTitleUpdator(title)
 	return function()
 		local enc, max = self:getEncumbrance(), self:getMaxEncumbrance()
-		return ("%s - Encumbered %d/%d"):format(title, enc, max)
+		local color = "#00ff00#"
+		if enc > max then color = "#ff0000#" end
+		return ("%s - %sEncumbered %d/%d"):format(title, color, enc, max)
 	end
 end
 
@@ -701,7 +703,7 @@ function _M:playerPickup()
 		local d d = self:showPickupFloor(titleupdator(), nil, function(o, item)
 			self:pickupFloor(item, true)
 			self.changed = true
-			d.title = titleupdator()
+			d:updateTitle(titleupdator())
 			d:used()
 		end)
 	else
@@ -715,25 +717,28 @@ end
 function _M:playerDrop()
 	local inven = self:getInven(self.INVEN_INVEN)
 	local titleupdator = self:getEncumberTitleUpdator("Drop object")
-	self:showInventory(titleupdator(), inven, nil, function(o, item)
+	local d d = self:showInventory(titleupdator(), inven, nil, function(o, item)
 		self:doDrop(inven, item)
+		d:updateTitle(titleupdator())
 	end)
 end
 
 function _M:playerWear()
 	local inven = self:getInven(self.INVEN_INVEN)
 	local titleupdator = self:getEncumberTitleUpdator("Wield/wear object")
-	self:showInventory(titleupdator(), inven, function(o)
+	local d d = self:showInventory(titleupdator(), inven, function(o)
 		return o:wornInven() and self:getInven(o:wornInven())  and true or false
 	end, function(o, item)
 		self:doWear(inven, item, o)
+		d:updateTitle(titleupdator())
 	end)
 end
 
 function _M:playerTakeoff()
 	local titleupdator = self:getEncumberTitleUpdator("Take off object")
-	self:showEquipment(titleupdator(), nil, function(o, inven, item)
+	local d d = self:showEquipment(titleupdator(), nil, function(o, inven, item)
 		self:doTakeoff(inven, item, o)
+		d:updateTitle(titleupdator())
 	end)
 end
 

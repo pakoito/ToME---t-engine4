@@ -64,11 +64,13 @@ function _M:display(dispx, dispy)
 	self.target.x = self.target.x or self.source_actor.x
 	self.target.y = self.target.y or self.source_actor.y
 
-	-- Do not display if not requested
-	if not self.active then return end
-
 	local ox, oy = self.display_x, self.display_y
 	self.display_x, self.display_y = dispx or self.display_x, dispy or self.display_y
+
+--	self.cursor:toScreen(self.display_x + (self.target.x - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (self.target.y - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
+
+	-- Do not display if not requested
+	if not self.active then return end
 
 	local s = self.sb
 	local l = line.new(self.source_actor.x, self.source_actor.y, self.target.x, self.target.y)
@@ -249,6 +251,9 @@ function _M:setSpot(x, y, how)
 	self.target.x = x
 	self.target.y = y
 	self.target.entity = game.level.map(self.target.x, self.target.y, engine.Map.ACTOR)
+end
+
+function _M:setSpotInMotion(x, y, how)
 	if self.on_set_target then self:on_set_target(how) end
 end
 

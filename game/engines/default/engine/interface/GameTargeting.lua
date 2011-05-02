@@ -219,11 +219,11 @@ function _M:targetMouse(button, mx, my, xrel, yrel, event)
 	-- Move tooltip
 	self.tooltip_x, self.tooltip_y = mx, my
 	local tmx, tmy = self.level.map:getMouseTile(mx, my)
-
+	self.target:setSpot(tmx, tmy, "mouse")
 	if self.key == self.targetmode_key then
 		-- Target with mouse
 		if button == "none" and xrel and yrel and event == "motion" then
-			self.target:setSpot(tmx, tmy, "mouse")
+			self.target:setSpotInMotion(tmx, tmy, "mouse")
 		-- Accept target
 		elseif button == "left" and not xrel and not yrel and event == "button" then
 			self:targetMode(false, false)

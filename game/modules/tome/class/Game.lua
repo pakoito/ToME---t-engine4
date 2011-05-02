@@ -841,6 +841,9 @@ function _M:display(nb_keyframes)
 			self.zone_name_w, self.zone_name_h,
 			self.zone_name_tw, self.zone_name_th
 		)
+		
+		-- emotes display
+		map:displayEmotes(nb_keyframe or 1)
 
 		-- Minimap display
 		self.minimap_bg:toScreen(0, 35, 200, 200)
@@ -868,7 +871,14 @@ function _M:display(nb_keyframes)
 	engine.GameTurnBased.display(self, nb_keyframes)
 
 	-- Tooltip is displayed over all else, even dialogs
-	self:targetDisplayTooltip(self.w, self.h)
+	
+	local mx, my, button = core.mouse.get()
+	
+	if self.tooltip.w and mx > self.w - self.tooltip.w and my > self.h - self.tooltip.h then
+		self:targetDisplayTooltip(self.level.map.display_x, self.h)
+	else
+		self:targetDisplayTooltip(self.w, self.h)
+	end
 end
 
 --- Called when a dialog is registered to appear on screen
@@ -1049,9 +1059,9 @@ function _M:setupCommands()
 			d = self.player:showEquipInven(titleupdator(), nil, function(o, inven, item, button, event)
 				if not o then return end
 				local ud = require("mod.dialogs.UseItemDialog").new(event == "button", self.player, o, item, inven, function(_, _, _, stop)
-					d.title = titleupdator()
 					d:generate()
 					d:generateList()
+					d:updateTitle(titleupdator())
 					if stop then self:unregisterDialog(d) end
 				end)
 				self:registerDialog(ud)

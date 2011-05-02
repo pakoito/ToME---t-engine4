@@ -201,13 +201,7 @@ function _M:generate()
 		self.overs[#self.overs+1] = ov
 	end
 
-	local tw, th = self.font_bold:size(self.title)
-	local s = core.display.newSurface(tw, th)
-	s:erase(0, 0, 0, 0)
-	s:drawColorStringBlended(self.font_bold, self.title, 0, 0, self.color.r, self.color.g, self.color.b, true)
-	self.title_tex = {s:glTexture()}
-	self.title_tex.w = tw
-	self.title_tex.h = th
+	self:updateTitle(self.title)
 
 	if self.absolute then
 		self.mouse:registerZone(0, 0, gamew, gameh, function(button, x, y, xrel, yrel, bx, by, event) self:mouseEvent(button, x, y, xrel, yrel, bx - self.display_x, by - self.display_y, event) end)
@@ -223,6 +217,18 @@ function _M:generate()
 		MOVE_LEFT = "MOVE_UP",
 		MOVE_RIGHT = "MOVE_DOWN",
 	}
+end
+
+function _M:updateTitle(title)
+	local title = title
+	if type(title)=="function" then title = title() end
+	local tw, th = self.font_bold:size(title)
+	local s = core.display.newSurface(tw, th)
+	s:erase(0, 0, 0, 0)
+	s:drawColorStringBlended(self.font_bold, title, 0, 0, self.color.r, self.color.g, self.color.b, true)
+	self.title_tex = {s:glTexture()}
+	self.title_tex.w = tw
+	self.title_tex.h = th
 end
 
 function _M:loadUI(t)
@@ -268,7 +274,6 @@ function _M:setupUI(resizex, resizey, on_resize, addmw, addmh)
 		mw = mw + addw + 5 * 2 + (addmw or 0)
 		mh = mh + addh + 5 + 22 + 3 + (addmh or 0)
 --		print("===", mw, addw)
-
 		local tw, th = self.font_bold:size(self.title)
 		mw = math.max(tw + 6, mw)
 
@@ -415,6 +420,8 @@ end
 
 function _M:toScreen(x, y, nb_keyframes)
 	if self.__hidden then return end
+	x = util.bound(x, 0, game.w - (self.w+self.frame.ox2))
+	y = util.bound(y, 0, game.h - (self.h+self.frame.oy2))
 
 	local zoom = 1
 	if self.__showup then
