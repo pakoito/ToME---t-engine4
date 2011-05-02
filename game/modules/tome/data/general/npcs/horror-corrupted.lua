@@ -77,6 +77,7 @@ newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 	dredge = 1,
 	name = "drem", color=colors.DARK_SLATE_GRAY,
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/horror_corrupted_drem.png", display_h=2, display_y=-1}}},
 	desc = "A giant black-skinned humanoid covered in spikey scabrous deposits.  Its face is featureless; its eyesockets, empty and hollow.",
 	level_range = {3, nil}, exp_worth = 1,
 
