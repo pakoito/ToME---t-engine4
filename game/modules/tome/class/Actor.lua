@@ -1809,7 +1809,7 @@ function _M:preUseTalent(ab, silent, fake)
 		return false
 	end
 	-- When silenced you can deactivate spells but not activate them
-	if ab.no_silence and self:attr("silence") and (ab.mode ~= "sustained" or self:isTalentActive(ab.id)) then
+	if ab.no_silence and self:attr("silence") and (ab.mode ~= "sustained" or not self:isTalentActive(ab.id)) then
 		if not silent then game.logSeen(self, "%s is silenced and cannot use %s.", self.name:capitalize(), ab.name) end
 		return false
 	end
