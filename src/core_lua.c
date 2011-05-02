@@ -45,12 +45,13 @@
 static int lua_get_mouse(lua_State *L)
 {
 	int x = 0, y = 0;
-	(void)SDL_GetMouseState(&x, &y);
+	int buttons = SDL_GetMouseState(&x, &y);
 
 	lua_pushnumber(L, x);
 	lua_pushnumber(L, y);
+	lua_pushnumber(L, SDL_BUTTON(buttons));
 
-	return 2;
+	return 3;
 }
 static int lua_set_mouse(lua_State *L)
 {

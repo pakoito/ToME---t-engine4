@@ -198,7 +198,7 @@ function _M:drawDialog(kind)
 		local StatVal = self.actor:getStr(nil, nil, true)
 		local StatTxt = ""
 		if StatVal > player:getStr() then
-			StatTxt = ("Strength    : #ff0000#%3d / %3"):format(player:getStr(nil, nil, true), player:getStr())
+			StatTxt = ("Strength    : #ff0000#%3d / %d"):format(player:getStr(nil, nil, true), player:getStr())
 		else
 			StatTxt = ("Strength    : #00ff00#%3d / %d"):format(player:getStr(nil, nil, true), player:getStr())
 		end

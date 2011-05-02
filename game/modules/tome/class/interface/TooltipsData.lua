@@ -46,7 +46,7 @@ TOOLTIP_LIFE_REGEN = [[#GOLD#Life Regeneration#LAST#
 How many life you regenerate per turn.
 This value can be improved with spells, talents, infusions, equipment.]]
 
-TOOLTIP_LIFE = [[#GOLD#Healing mod#LAST#
+TOOLTIP_HEALING_MOD = [[#GOLD#Healing mod#LAST#
 This represents how effective is healing for you.
 All healing values are multiplied by this value (including life regeneration).]]
 
@@ -130,18 +130,18 @@ It represents how much "energy" you get per game turn, once you reach a certain 
 I.E: at 200% global speed you get twice as much energy per game turn and thus can act twice when other creatures only act once.
 ]]
 TOOLTIP_SPEED_MOVEMENT = [[#GOLD#Movement Speed#LAST#
-The time it takes you to move.
-It represents how many movements you can do in the same time.
+The additional time you have to move.
+It represents how many more movements you can do in the same time.
 I.E: at 100% you will be able to do 100% more movements (aka twice as many) in the same time it would have taken you to do one at 0% speed.
 ]]
 TOOLTIP_SPEED_SPELL = [[#GOLD#Spell Speed#LAST#
-The time it takes you to cast a spell.
-It represents how many spells you can do in the same time.
+The additional time you have cast a spell.
+It represents how many more spells you can cast in the same time.
 I.E: at 100% you will be able to cast 100% more spells (aka twice as many) in the same time it would have taken you to do one at 0% speed.
 ]]
 TOOLTIP_SPEED_ATTACK = [[#GOLD#Attack Speed#LAST#
-The time it takes you to attack (in melee or ranged).
-It represents how many attacks you can do in the same time.
+The additional time you have to attack (in melee or ranged).
+It represents how many more attacks you can do in the same time.
 I.E: at 100% you will be able to do 100% more attacks (aka twice as many) in the same time it would have taken you to do one at 0% speed.
 ]]
 
