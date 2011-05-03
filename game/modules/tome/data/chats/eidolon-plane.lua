@@ -27,7 +27,10 @@ As for your probable many questions, they will stay unanswered. I may help, but 
 	answers = {
 		{"Thank you. I will rest for a while."},
 		{"Thank you. I am ready to go back!", action=function() game.level.data.eidolon_exit(false) end},
-		{"Thank you, but I fear I will not survive anyway, can you send me back somewhere else please?", action=function() game.level.data.eidolon_exit(true) end},
+		{"Thank you, but I fear I will not survive anyway, can you send me back somewhere else please?",
+			cond=function() return not game.level.source_level.data or not game.level.source_level.data.no_worldport end,
+			action=function() game.level.data.eidolon_exit(true) end
+		},
 	}
 }
 
