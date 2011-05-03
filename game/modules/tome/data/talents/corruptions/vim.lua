@@ -20,6 +20,7 @@
 newTalent{
 	name = "Soul Rot",
 	type = {"corruption/vim", 1},
+	require = corrs_req1,
 	points = 5,
 	cooldown = 4,
 	vim = 10,
