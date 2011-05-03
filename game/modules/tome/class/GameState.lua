@@ -410,7 +410,7 @@ function _M:worldDirectorAI()
 	if not ok and err then error(err) end
 end
 
-function _M:spawnWorldAmbush(enc)
+function _M:spawnWorldAmbush(enc, dx, dy)
 	game:onTickEnd(function()
 
 	local gen = { class = "engine.generator.map.Forest",
@@ -422,7 +422,10 @@ function _M:spawnWorldAmbush(enc)
 		down = "DOWN",
 		up = "GRASS_UP_WILDERNESS",
 	}
-	local g = game.level.map(game.player.x, game.player.y, engine.Map.TERRAIN)
+	local g1 = game.level.map(dx, dy, engine.Map.TERRAIN)
+	local g2 = game.level.map(game.player.x, game.player.y, engine.Map.TERRAIN)
+	local g = g1
+	if not g.can_encounter then g = g2 end
 	if not g.can_encounter then return false end
 
 	if g.can_encounter == "desert" then gen.floor = "SAND" gen.wall = "PALMTREE" end
@@ -470,7 +473,10 @@ function _M:handleWorldEncounter(target)
 	local enc = target.on_encounter
 	if type(enc) == "function" then return enc() end
 	if type(enc) == "table" then
-		if enc.type == "ambush" then target:die() self:spawnWorldAmbush(enc)
+		if enc.type == "ambush" then
+			local x, y = target.x, target.y
+			target:die()
+			self:spawnWorldAmbush(enc, x, y)
 		end
 	end
 end
