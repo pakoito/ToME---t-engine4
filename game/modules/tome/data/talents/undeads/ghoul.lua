@@ -82,9 +82,42 @@ newTalent{
 }
 
 newTalent{
-	name = "Gnaw",
-	type = {"undead/ghoul", 3},
+	name = "Retch",
+	type = {"undead/ghoul",3},
 	require = undeads_req3,
+	points = 5,
+	cooldown = 25,
+	tactical = { ATTACK = 1, HEAL = 1 },
+	range=1,
+	requires_target = true,
+	action = function(self, t)
+		local duration = self:getTalentLevelRaw(t) * 2 + 5
+		local radius = 3
+		local dam = 10 + self:combatTalentStatDamage(t, "con", 10, 60)
+		local tg = {type="ball", range=self:getTalentRange(t), radius=radius}
+		-- Add a lasting map effect
+		game.level.map:addEffect(self,
+			self.x, self.y, duration,
+			DamageType.RETCH, dam,
+			radius,
+			5, nil,
+			engine.Entity.new{alpha=100, display='', color_br=30, color_bg=180, color_bb=60},
+			nil, self:spellFriendlyFire()
+		)
+		game:playSoundNear(self, "talents/cloud")
+		return true
+	end,
+	info = function(self, t)
+		local dam = 10 + self:combatTalentStatDamage(t, "con", 10, 60)
+		return ([[Vomit on the ground around you, healing any undead in the area and damaging others.
+		Lasts %d turns and deals %d blight damage or heals %d life.]]):format(self:getTalentLevelRaw(t) * 2 + 5, damDesc(self, DamageType.BLIGHT, dam), dam * 1.5)
+	end,
+}
+
+newTalent{
+	name = "Gnaw",
+	type = {"undead/ghoul", 4},
+	require = undeads_req4,
 	points = 5,
 	cooldown = 15,
 	tactical = { ATTACK = 1, DISABLE = 2 },
@@ -113,34 +146,3 @@ newTalent{
 	end,
 }
 
-newTalent{
-	name = "Retch",
-	type = {"undead/ghoul",4},
-	require = undeads_req4,
-	points = 5,
-	cooldown = 25,
-	tactical = { ATTACK = 1, HEAL = 1 },
-	range=1,
-	requires_target = true,
-	action = function(self, t)
-		local duration = self:getTalentLevel(t) / 2 + 4
-		local radius = 3
-		local dam = (2 + self:getCon(8)) * self:getTalentLevel(t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=radius}
-		-- Add a lasting map effect
-		game.level.map:addEffect(self,
-			self.x, self.y, duration,
-			DamageType.RETCH, dam,
-			radius,
-			5, nil,
-			engine.Entity.new{alpha=100, display='', color_br=30, color_bg=180, color_bb=60},
-			nil, self:spellFriendlyFire()
-		)
-		game:playSoundNear(self, "talents/cloud")
-		return true
-	end,
-	info = function(self, t)
-		return ([[Vomit on the ground around you, healing any undead in the area and damaging others.
-		Lasts %d turns and deals %d blight damage.]]):format(self:getTalentLevel(t) / 2 + 4, damDesc(self, DamageType.BLIGHT, (2 + self:getCon(8)) * self:getTalentLevel(t)))
-	end,
-}

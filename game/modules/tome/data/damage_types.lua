@@ -984,7 +984,7 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and target.undead then
-			target:heal(dam)
+			target:heal(dam * 1.5)
 		elseif target then
 			DamageType:get(DamageType.BLIGHT).projector(src, x, y, DamageType.BLIGHT, dam)
 		end
