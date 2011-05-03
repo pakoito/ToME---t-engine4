@@ -66,7 +66,6 @@ newEntity{ define_as = "SHADE",
 
 	on_die = function(self, who)
 		game.state:activateBackupGuardian("KOR_FURY", 3, 35, ".. yes I tell you! The old ruins of Kor'Pul are still haunted!")
-		game.player:resolveSource():grantQuest("start-allied")
 		game.player:resolveSource():setQuestStatus("start-allied", engine.Quest.COMPLETED, "kor-pul")
 	end,
 }

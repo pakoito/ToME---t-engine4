@@ -17,13 +17,13 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-name = "Madness of the ages"
+name = "Madness of the Ages"
 desc = function(self, who)
 	local desc = {}
 	desc[#desc+1] = "The Thaloren forest is disrupted, corruption is spreading. Norgos the guardian bear is said to have gone mad.\n"
 	desc[#desc+1] = "On the western border of the forest a gloomy aura has been setup, things inside are... twisted.\n"
 	if self:isCompleted("norgos") then
-		desc[#desc+1] = "#LIGHT_GREEN#* You have explored norgos lair and put it at rest.#WHITE#"
+		desc[#desc+1] = "#LIGHT_GREEN#* You have explored Norgos' Lair and put it at rest.#WHITE#"
 	else
 		desc[#desc+1] = "#SLATE#* You must explore norgos lair.#WHITE#"
 	end

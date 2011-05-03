@@ -76,7 +76,6 @@ newEntity{ define_as = "TROLL_PROX",
 
 	on_die = function(self, who)
 		game.state:activateBackupGuardian("ALUIN", 2, 35, "... and we thought the trollmire was safer now!")
-		game.player:resolveSource():grantQuest("start-allied")
 		game.player:resolveSource():setQuestStatus("start-allied", engine.Quest.COMPLETED, "trollmire")
 	end,
 }
