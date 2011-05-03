@@ -75,7 +75,7 @@ return {
 		who:addObject(who.INVEN_INVEN, o)
 	end,
 
-	eidolon_exit = function()
+	eidolon_exit = function(to_worldmap)
 		game:onTickEnd(function()
 			local oldzone = game.zone
 			local oldlevel = game.level
@@ -117,6 +117,10 @@ return {
 			-- All entities on the level remember acting not long ago, this prevents long "update" time upon re-entry
 			for uid, act in pairs(game.level.entities) do
 				act.last_act_turn = math.floor(game.turn / (game.zone.wilderness and 1000 or 10))
+			end
+
+			if to_worldmap then
+				game:changeLevel(1, game.player.last_wilderness or "wilderness")
 			end
 
 			game.logPlayer(game.player, "#LIGHT_RED#You are sent back to the material plane!")

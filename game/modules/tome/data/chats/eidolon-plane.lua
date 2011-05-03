@@ -26,7 +26,8 @@ But do not abuse my help. I am not your servant, and someday I might just let yo
 As for your probable many questions, they will stay unanswered. I may help, but I am not here to explain why.]],
 	answers = {
 		{"Thank you. I will rest for a while."},
-		{"Thank you. I am ready to go back!", action=function() game.level.data.eidolon_exit() end},
+		{"Thank you. I am ready to go back!", action=function() game.level.data.eidolon_exit(false) end},
+		{"Thank you, but I fear I will not survive anyway, can you send me back somewhere else please?", action=function() game.level.data.eidolon_exit(true) end},
 	}
 }
 
