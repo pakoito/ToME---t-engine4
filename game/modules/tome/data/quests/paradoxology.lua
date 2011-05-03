@@ -68,11 +68,15 @@ generate = function(self, player, x, y)
 	a:learnTalent(a.T_TURN_BACK_THE_CLOCK, true, 3)
 	a:learnTalent(a.T_BODY_REVERSION, true, 3)
 	a:learnTalent(a.T_TEMPORAL_FUGUE, true, 4)
+	a:learnTalent(a.T_STATIC_HISTORY, true, 4)
 	a:learnTalent(a.T_RETHREAD, true, 3)
 	a:learnTalent(a.T_GATHER_THE_THREADS, true, 3)
 	a:learnTalent(a.T_DAMAGE_SHUNT, true, 3)
 	a:learnTalent(a.T_FLAWED_DESIGN, true, 4)
 	a:learnTalent(a.T_QUANTUM_SPIKE, true, 3)
+
+	a.talent_cd_reduction = a.talent_cd_reduction or {}
+	a.talent_cd_reduction[a.T_STATIC_HISTORY] = 15
 
 	a:forceLevelup(a.level + 7)
 
