@@ -46,7 +46,9 @@ local artifact_imbue_amulet = function(npc, player)
 
 				require("engine.ui.Dialog"):yesnoPopup("Imbue cost", "You need to use "..price.." gold for the plating, do you accept?", function(ret) if ret then
 					player:incMoney(-price)
-					local gem3 = game.zone:makeEntity(game.level, "object", {type="gem"}, nil, true)
+					local gem3, tries = nil, 10
+					while gem3 == nil and tries > 0 do gem3 = game.zone:makeEntity(game.level, "object", {type="gem"}, nil, true) tries = tries - 1 end
+					if not gem3 then gem3 = rng.percent(50) and gem1 or gem2 end
 					print("Imbue third gem", gem3.name)
 
 					if gem1_item > gem2_item then
