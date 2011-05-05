@@ -49,7 +49,7 @@ end)
 
 newAI("world_patrol", function(self)
 	if not self.energy.used then
-		if self:runAI("target_world") and self:reactionToward(self.ai_target.actor) < 0 then
+		if self:runAI("target_world") and self:reactionToward(self.ai_target.actor) < 0 and game.level.map:isBound(self.ai_target.actor.x, self.ai_target.actor.y) then
 			self:runAI("move_dmap")
 		else
 			self:runAI("move_world_patrol")

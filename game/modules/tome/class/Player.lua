@@ -183,7 +183,7 @@ function _M:move(x, y, force)
 		game.level.map:moveViewSurround(self.x, self.y, 8, 8)
 		game.level.map.attrs(self.x, self.y, "walked", true)
 
-		self:describeFloor(self.x, self.y)
+		if self.describeFloor then self:describeFloor(self.x, self.y) end
 	end
 
 	-- Update wilderness coords

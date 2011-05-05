@@ -82,6 +82,7 @@ newEntity{ define_as = "NORGAN",
 	move_others=true,
 	never_anger = true,
 	remove_from_party_on_death = true,
+	silent_levelup = true,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, LITE=1 },
 	equipment = resolvers.equip{

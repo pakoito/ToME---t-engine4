@@ -102,9 +102,11 @@ newEntity{ define_as = "GOLBUG",
 		game.player:setQuestStatus("orc-hunt", engine.Quest.DONE)
 		game.player:grantQuest("wild-wild-east")
 
-		-- Add the herald
-		local harno = game.zone:makeEntityByName(game.level, "actor", "HARNO")
-		game.zone:addEntity(game.level, harno, "actor", 0, 13)
+		-- Add the herald, at the end of tick because we might have changed levels (like with a Demon Plane spell)
+		game:onTickEnd(function()
+			local harno = game.zone:makeEntityByName(game.level, "actor", "HARNO")
+			game.zone:addEntity(game.level, harno, "actor", 0, 13)
+		end)
 	end,
 }
 
