@@ -78,7 +78,7 @@ local function createDarkTendrils(summoner, x, y, target, damage, duration, pinD
 				if bestX and bestY then
 					self.x, self.y = bestX, bestY
 					if not game.level.map:checkAllEntities(self.x, self.y, "creepingDark") then
-						tCreepingDarkness.createDark(self.summoner, self.x, self.y, damage, 3, 2, 33, 0)
+						tCreepingDarkness.createDark(self.summoner, self.x, self.y, self.damage, 3, 2, 33, 0)
 					end
 
 					if self.x == self.target.x and self.y == self.target.y then
