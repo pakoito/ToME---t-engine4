@@ -1231,7 +1231,7 @@ function _M:resolveSource()
 end
 
 function _M:die(src)
-	if self.dead then return true end
+	if self.dead then self:disappear(src) return true end
 
 	engine.interface.ActorLife.die(self, src)
 
