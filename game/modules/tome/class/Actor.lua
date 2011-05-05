@@ -1231,7 +1231,7 @@ function _M:resolveSource()
 end
 
 function _M:die(src)
-	if self.dead then self:disappear(src) return true end
+	if self.dead then self:disappear(src) self:deleteFromMap(game.level.map) return true end
 
 	engine.interface.ActorLife.die(self, src)
 
@@ -2498,7 +2498,7 @@ end
 --- Call when added to a level
 -- Used to make escorts and such
 function _M:addedToLevel(level, x, y)
-	self:resetToFull()
+	if not self._rst_full then self:resetToFull() self._rst_full = true end -- Only do it once, the first time we come into being
 	if self.make_escort then
 		for _, filter in ipairs(self.make_escort) do
 			for i = 1, filter.number do

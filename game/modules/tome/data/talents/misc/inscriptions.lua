@@ -688,8 +688,6 @@ newInscription{
 			return
 		end
 
-		-- Keep the Actor from leveling on return
-		target.forceLevelup = false
 		-- Create an object to time the effect and store the creature
 		-- First, clone the terrain that we are replacing
 		local terrain = game.level.map(target.x, target.y, engine.Map.TERRAIN)

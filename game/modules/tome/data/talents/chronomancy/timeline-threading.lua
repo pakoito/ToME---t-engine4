@@ -120,7 +120,7 @@ newTalent{
 
 		m.energy.value = 0
 		m.life = m.life
-		m.forceLevelup = false
+		m.forceLevelup = function() end
 		-- Handle special things
 		m.on_die = nil
 		m.on_acquire_target = nil

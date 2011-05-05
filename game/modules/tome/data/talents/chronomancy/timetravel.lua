@@ -113,8 +113,6 @@ newTalent{
 			return
 		end
 
-		-- Keep the Actor from leveling on return
-		target.forceLevelup = false
 		-- Create an object to time the effect and store the creature
 		-- First, clone the terrain that we are replacing
 		local terrain = game.level.map(target.x, target.y, engine.Map.TERRAIN)
@@ -200,11 +198,11 @@ newTalent{
 		end
 	end,
 	activate = function(self, t)
-	
+
 		if checkTimeline(self) == true then
 			return
 		end
-		
+
 		game:playSoundNear(self, "talents/arcane")
 		return {
 			game:chronoClone("revision"),
@@ -237,25 +235,25 @@ newTalent{
 	no_npc_use = true,
 	on_pre_use = function(self, t, silent) if not self:isTalentActive(self.T_DOOR_TO_THE_PAST) then if not silent then game.logPlayer(self, "Door to the Past must be active to use this talent.") end return false end return true end,
 	action = function(self, t)
-	
+
 		-- Prevent Revision After Death
 		if game._chronoworlds == nil then
 			game.logPlayer(game.player, "#LIGHT_RED#Your spell fizzles.")
 			return
-		end		
-	
+		end
+
 		game:onTickEnd(function()
 			if not game:chronoRestore("revision", true) then
 				game.logSeen(self, "#LIGHT_RED#The spell fizzles.")
 				return
 			end
 			game.logPlayer(game.player, "#LIGHT_BLUE#You unfold the spacetime continuum to a previous state!")
-						
+
 			-- Manualy start the cooldown of the "old player"
 			game.player:startTalentCooldown(t)
 			game.player:incParadox(t.paradox * (1 + (game.player.paradox / 300)))
 		end)
-				
+
 		return true
 	end,
 	info = function(self, t)
