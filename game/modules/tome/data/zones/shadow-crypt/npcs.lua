@@ -127,6 +127,12 @@ newEntity{ base="BASE_NPC_ORC_RAK_SHOR", define_as = "CULTIST_RAK_SHOR",
 				self:doEmote("Ra'kk kor merk ZUR!!!", 120)
 				self.copied_player = true
 			end
+
+			if a.alchemy_golem then
+				a.alchemy_golem = nil
+				local t = a:getTalentFromId(a.T_REFIT_GOLEM)
+				t.action(a, t)
+			end
 		end
 		return value
 	end,
