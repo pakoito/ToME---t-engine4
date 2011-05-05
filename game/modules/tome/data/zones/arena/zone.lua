@@ -248,7 +248,7 @@ return {
 						i = i + 1
 					end
 					p = world.arena.lastScore
-					tmp = "\n#YELLOW#LAST:"..stri:format(p.name:capitalize(), p.sex, p.race, p.class, p.score, p.perk, p.wave)
+					tmp = "\n#YELLOW#LAST:"..stri:format(p.name:capitalize(), p.sex or "unknown", p.race or "unknown", p.class or "unknown", p.score or 0, p.perk or "", p.wave or 0)
 					return text..line(tmp, "#YELLOW#")
 				end
 			end,
