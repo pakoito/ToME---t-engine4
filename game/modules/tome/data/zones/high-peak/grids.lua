@@ -109,9 +109,10 @@ newEntity{ base = "VOID_PORTAL", define_as = "CVOID_PORTAL",
 
 local invocation_close = function(self, who)
 	if not who:hasQuest("high-peak") or who:hasQuest("high-peak"):isEnded() then return end
-	game.logPlayer(who, "#LIGHT_BLUE#You use the orb on the portal, shutting it down easily.")
 	-- Remove the level spot
 	local spot = game.level:pickSpot{type="portal", subtype=self.summon}
+	if not spot then return end
+	game.logPlayer(who, "#LIGHT_BLUE#You use the orb on the portal, shutting it down easily.")
 	for i = 1, #game.level.spots do if game.level.spots[i] == spot then table.remove(game.level.spots, i) break end end
 	local g = game.level.map(spot.x, spot.y, engine.Map.TERRAIN)
 	g.name = g.name .. " (disabled)"
