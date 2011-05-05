@@ -1220,6 +1220,7 @@ end
 
 function _M:createRandomBoss(base, data)
 	local b = base:clone()
+	data = data or {level=1}
 
 	------------------------------------------------------------
 	-- Basic stuff, name, rank, ...
