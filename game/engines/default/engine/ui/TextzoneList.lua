@@ -69,7 +69,7 @@ function _M:createItem(item, text)
 	local old_style = self.font:getStyle()
 
 	-- Handle normal text
-	if type(text) == "string" then
+	if false and type(text) == "string" then
 		local list = text:splitLines(self.w, self.font)
 		local scroll = 1
 		local max = #list
@@ -98,7 +98,7 @@ function _M:createItem(item, text)
 	-- Handle "pre formated" text, as a table
 	else
 		-- Draw the list items
-		local gen = tstring.makeLineTextures(text, self.fw, self.font)
+		local gen = self.font:draw(text:toString(), self.fw, 255, 255, 255)
 
 		local scroll = 1
 		local max = #gen

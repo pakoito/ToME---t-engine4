@@ -488,7 +488,7 @@ static int sdl_surface_drawstring_newsurface_aa(lua_State *L)
 
 static font_make_texture_line(lua_State *L, SDL_Surface *s, int id)
 {
-	lua_newtable(L);
+	lua_createtable(L, 0, 5);
 
 	lua_pushstring(L, "_tex");
 	GLuint *t = (GLuint*)lua_newuserdata(L, sizeof(GLuint));
@@ -520,7 +520,6 @@ static font_make_texture_line(lua_State *L, SDL_Surface *s, int id)
 
 static int sdl_font_draw(lua_State *L)
 {
-//	if (no_text_aa) return sdl_surface_drawstring(L);
 	TTF_Font **f = (TTF_Font**)auxiliar_checkclass(L, "sdl{font}", 1);
 	const char *str = luaL_checkstring(L, 2);
 	int max_width = luaL_checknumber(L, 3);
@@ -528,6 +527,7 @@ static int sdl_font_draw(lua_State *L)
 	int g = luaL_checknumber(L, 5);
 	int b = luaL_checknumber(L, 6);
 	int h = TTF_FontLineSkip(*f);
+	SDL_Color color = {r,g,b};
 
 	int space_w = 0, space_h = 0;
 	TTF_SizeUTF8(*f, " ", &space_w, &space_h);
@@ -538,16 +538,8 @@ static int sdl_font_draw(lua_State *L)
 #else
 	rmask = 0x000000ff; gmask = 0x0000ff00; bmask = 0x00ff0000; amask = 0xff000000;
 #endif
-	SDL_Surface *s = SDL_CreateRGBSurface(
-		SDL_SWSURFACE | SDL_SRCALPHA,
-		max_width,
-		h,
-		32,
-		rmask, gmask, bmask, amask
-		);
+	SDL_Surface *s = SDL_CreateRGBSurface(SDL_SWSURFACE | SDL_SRCALPHA, max_width, h, 32, rmask, gmask, bmask, amask);
 	SDL_FillRect(s, NULL, SDL_MapRGBA(s->format, 0, 0, 0, 0));
-
-	SDL_Color color = {r,g,b};
 
 	lua_newtable(L);
 
@@ -568,7 +560,8 @@ static int sdl_font_draw(lua_State *L)
 			char old = *next;
 			*next = '\0';
 			if (txt) SDL_FreeSurface(txt);
-			txt = TTF_RenderUTF8_Blended(*f, start, color);
+			if (no_text_aa) txt = TTF_RenderUTF8_Solid(*f, start, color);
+			else txt = TTF_RenderUTF8_Blended(*f, start, color);
 
 			// If we must do a newline, flush the previous word and the start the new line
 			if (force_nl || (txt && (size + txt->w + space_w > max_width)))
@@ -688,7 +681,7 @@ static int sdl_font_draw(lua_State *L)
 						color.g = gh;
 						color.b = bh;
 					}
-					lua_pop(L, 1);
+					lua_pop(L, 2);
 				}
 
 				char old = *codestop;
@@ -705,6 +698,7 @@ static int sdl_font_draw(lua_State *L)
 	}
 
 	font_make_texture_line(L, s, nb_lines);
+	if (size > max_size) max_size = size;
 
 	if (txt) SDL_FreeSurface(txt);
 	SDL_FreeSurface(s);

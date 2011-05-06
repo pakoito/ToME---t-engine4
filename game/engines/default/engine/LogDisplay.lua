@@ -40,6 +40,7 @@ function _M:init(x, y, w, h, max, fontname, fontsize, color, bgcolor)
 	self.max_log = max or 4000
 	self.scroll = 0
 	self.changed = true
+	self.cache = {}
 
 	self:resize(x, y, w, h)
 end
@@ -80,7 +81,8 @@ function _M:call(str, ...)
 	local tstr = str:toString()
 	table.insert(self.log, 1, tstr)
 	while #self.log > self.max_log do
-		table.remove(self.log)
+		local old = table.remove(self.log)
+		self.cache[old] = nil
 	end
 	self.max = #self.log
 	self.changed = true
@@ -88,6 +90,7 @@ end
 
 --- Clear the log
 function _M:empty()
+	self.cache = {}
 	self.log = {}
 	self.changed = true
 end
@@ -116,8 +119,13 @@ function _M:display()
 	for z = 1 + self.scroll, #self.log do
 		local stop = false
 		local tstr = self.log[z]
---		local gen = tstring.makeLineTextures(tstr, self.w - 4, self.font)
-		local gen = self.font:draw(tstr, self.w, 255, 255, 255)
+		local gen
+		if self.cache[tstr] then
+			gen = self.cache[tstr]
+		else
+			gen = self.font:draw(tstr, self.w, 255, 255, 255)
+			self.cache[tstr] = gen
+		end
 		for i = #gen, 1, -1 do
 			self.dlist[#self.dlist+1] = gen[i]
 			h = h + self.fh
