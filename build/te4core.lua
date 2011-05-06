@@ -219,3 +219,10 @@ project "luabitop"
 	targetname "luabitop"
 
 	files { "../src/luabitop/*.c", }
+
+project "utf8proc"
+	kind "StaticLib"
+	language "C"
+	targetname "utf8proc"
+
+	files { "../src/utf8proc/utf8proc.c", }

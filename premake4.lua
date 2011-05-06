@@ -14,6 +14,7 @@ solution "TEngine"
 		"src/expat",
 		"src/lxp",
 		"src/libtcod_import",
+		"src/utf8proc",
 		"src/physfs",
 		"src/physfs/zlib123",
 		"/usr/include/SDL",

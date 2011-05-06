@@ -100,12 +100,14 @@ function _M:run()
 	self.player_display = PlayerDisplay.new(0, 230, 200, self.h * 0.8 - 230, {30,30,0}, font_mono, size_mono)
 	self.flash = LogFlasher.new(0, 0, self.w, 20, nil, font, size, {255,255,255}, {0,0,0})
 	self.logdisplay = LogDisplay.new(0, self.h * 0.8 + 7, self.w * 0.5 - 46, self.h * 0.2 - 7, nil, font, size, {255,255,255}, "/data/gfx/ui/message-log.png")
+	self.logdisplay:enableShadow(0.6)
 	profile.chat:resize(0, self.h * 0.8 + 7, self.w * 0.5 - 46, self.h * 0.2 - 7, font, size, {255,255,255}, "/data/gfx/ui/message-log.png")
 	self.hotkeys_display = HotkeysDisplay.new(nil, self.w * 0.5 + 46, self.h * 0.8 + 7, self.w * 0.5 - 46, self.h * 0.2 - 7, "/data/gfx/ui/talents-list.png", font_mono, size_mono)
 	self.npcs_display = ActorsSeenDisplay.new(nil, self.w * 0.5 + 46, self.h * 0.8 + 7, self.w * 0.5 - 46, self.h * 0.2 - 7, "/data/gfx/ui/talents-list.png", font_mono, size_mono)
 	self.tooltip = Tooltip.new(font_mono, size, {255,255,255}, {30,30,30,230})
 	self.tooltip2 = Tooltip.new(font_mono, size, {255,255,255}, {30,30,30,230})
 	self.flyers = FlyingText.new("/data/font/INSULA__.ttf", flysize, "/data/font/INSULA__.ttf", flysize + 3)
+	self.flyers:enableShadow(0.6)
 
 	self:setFlyingText(self.flyers)
 	self.minimap_bg, self.minimap_bg_w, self.minimap_bg_h = core.display.loadImage("/data/gfx/ui/minimap.png"):glTexture()
@@ -879,6 +881,13 @@ function _M:display(nb_keyframes)
 	else
 		self:targetDisplayTooltip(self.w, self.h)
 	end
+
+	if self.test then
+		for i = 1, #self.test do
+			local item = self.test[i]
+			item._tex:toScreenFull(300, 300 + item.h * i, item.w, item.h, item._tex_w, item._tex_h)
+		end
+	end
 end
 
 --- Called when a dialog is registered to appear on screen
@@ -934,6 +943,8 @@ function _M:setupCommands()
 --			self.state:debugRandomZone()
 --			local m = game.zone:makeEntity(game.level, "actor", {random_boss=true}, nil, true)
 --			if m then game.zone:addEntity(game.level, m, "actor", game.player.x, game.player.y + 1) end
+			local font = core.display.newFont("/data/font/Vera.ttf", 18)
+			self.test = font:draw("test #8810FF#plop #{italic}#zogzog#{normal}##LAST# tolopalak looooooooooooooooooooooooooonnnnng toto\nto\noooo", 200, 255, 255, 255)
 		end end,
 	}
 

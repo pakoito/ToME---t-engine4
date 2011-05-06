@@ -44,6 +44,10 @@ function _M:init(x, y, w, h, max, fontname, fontsize, color, bgcolor)
 	self:resize(x, y, w, h)
 end
 
+function _M:enableShadow(v)
+	self.shadow = v
+end
+
 --- Resize the display area
 function _M:resize(x, y, w, h)
 	self.display_x, self.display_y = math.floor(x), math.floor(y)
@@ -73,7 +77,7 @@ end
 function _M:call(str, ...)
 	str = str:format(...)
 	print("[LOG]", str)
-	local tstr = str:toTString()
+	local tstr = str:toString()
 	table.insert(self.log, 1, tstr)
 	while #self.log > self.max_log do
 		table.remove(self.log)
@@ -112,7 +116,8 @@ function _M:display()
 	for z = 1 + self.scroll, #self.log do
 		local stop = false
 		local tstr = self.log[z]
-		local gen = tstring.makeLineTextures(tstr, self.w - 4, self.font)
+--		local gen = tstring.makeLineTextures(tstr, self.w - 4, self.font)
+		local gen = self.font:draw(tstr, self.w, 255, 255, 255)
 		for i = #gen, 1, -1 do
 			self.dlist[#self.dlist+1] = gen[i]
 			h = h + self.fh
@@ -130,6 +135,7 @@ function _M:toScreen()
 	local h = self.display_y + self.h -  self.fh
 	for i = 1, #self.dlist do
 		local item = self.dlist[i]
+		if self.shadow then item._tex:toScreenFull(self.display_x+2, h+2, self.fw, self.fh, item._tex_w, item._tex_h, 0,0,0, self.shadow) end
 		item._tex:toScreenFull(self.display_x, h, self.fw, self.fh, item._tex_w, item._tex_h)
 		h = h - self.fh
 	end

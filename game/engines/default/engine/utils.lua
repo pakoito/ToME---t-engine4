@@ -306,6 +306,15 @@ function string.parseHex(str)
 	return res
 end
 
+function __get_uid_surface(uid, w, h)
+	uid = tonumber(uid)
+	local e = uid and __uids[uid]
+	if e and game.level then
+		return e:getEntityFinalSurface(game.level.map.tiles, w, h)
+	end
+	return nil
+end
+
 local tmps = core.display.newSurface(1, 1)
 getmetatable(tmps).__index.drawColorString = function(s, font, str, x, y, r, g, b, alpha_from_texture, limit_w)
 	local list = str:split("#" * (Puid + Pcolorcodefull + Pcolorname + Pfontstyle) * "#", true)

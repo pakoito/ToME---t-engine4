@@ -33,9 +33,85 @@
 #include "mzip.h"
 #include "zlib.h"
 #include "main.h"
+#include "utf8proc.h"
 #include "useshader.h"
 #include <math.h>
 #include <time.h>
+
+
+/***** Helpers *****/
+static GLenum sdl_gl_texture_format(SDL_Surface *s) {
+	// get the number of channels in the SDL surface
+	GLint nOfColors = s->format->BytesPerPixel;
+	GLenum texture_format;
+	if (nOfColors == 4)     // contains an alpha channel
+	{
+		if (s->format->Rmask == 0x000000ff)
+			texture_format = GL_RGBA;
+		else
+			texture_format = GL_BGRA;
+	} else if (nOfColors == 3)     // no alpha channel
+	{
+		if (s->format->Rmask == 0x000000ff)
+			texture_format = GL_RGB;
+		else
+			texture_format = GL_BGR;
+	} else {
+		printf("warning: the image is not truecolor..  this will probably break %d\n", nOfColors);
+		// this error should not go unhandled
+	}
+
+	return texture_format;
+}
+
+
+// allocate memory for a texture without copying pixels in
+// caller binds texture
+void make_texture_for_surface(SDL_Surface *s, int *fw, int *fh) {
+	// Paramétrage de la texture.
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	// get the number of channels in the SDL surface
+	GLint nOfColors = s->format->BytesPerPixel;
+	GLenum texture_format = sdl_gl_texture_format(s);
+
+	// In case we can't support NPOT textures round up to nearest POT
+	int realw=1;
+	int realh=1;
+
+	while (realw < s->w) realw *= 2;
+	while (realh < s->h) realh *= 2;
+
+	if (fw) *fw = realw;
+	if (fh) *fh = realh;
+	//printf("request size (%d,%d), producing size (%d,%d)\n",s->w,s->h,realw,realh);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, nOfColors, realw, realh, 0, texture_format, GL_UNSIGNED_BYTE, NULL);
+
+#ifdef _DEBUG
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR) {
+		printf("make_texture_for_surface: glTexImage2D : %s\n",gluErrorString(err));
+	}
+#endif
+}
+
+// copy pixels into previous allocated surface
+void copy_surface_to_texture(SDL_Surface *s) {
+	GLenum texture_format = sdl_gl_texture_format(s);
+
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, s->w, s->h, texture_format, GL_UNSIGNED_BYTE, s->pixels);
+
+#ifdef _DEBUG
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR) {
+		printf("copy_surface_to_texture : glTexSubImage2D : %s\n",gluErrorString(err));
+	}
+#endif
+}
+
 
 /******************************************************************
  ******************************************************************
@@ -410,6 +486,234 @@ static int sdl_surface_drawstring_newsurface_aa(lua_State *L)
 	return 1;
 }
 
+static font_make_texture_line(lua_State *L, SDL_Surface *s, int id)
+{
+	lua_newtable(L);
+
+	lua_pushstring(L, "_tex");
+	GLuint *t = (GLuint*)lua_newuserdata(L, sizeof(GLuint));
+	auxiliar_setclass(L, "gl{texture}", -1);
+	lua_rawset(L, -3);
+
+	glGenTextures(1, t);
+	tglBindTexture(GL_TEXTURE_2D, *t);
+	int fw, fh;
+	make_texture_for_surface(s, &fw, &fh);
+	copy_surface_to_texture(s);
+
+	lua_pushstring(L, "_tex_w");
+	lua_pushnumber(L, fw);
+	lua_rawset(L, -3);
+	lua_pushstring(L, "_tex_h");
+	lua_pushnumber(L, fh);
+	lua_rawset(L, -3);
+
+	lua_pushstring(L, "w");
+	lua_pushnumber(L, s->w);
+	lua_rawset(L, -3);
+	lua_pushstring(L, "h");
+	lua_pushnumber(L, s->h);
+	lua_rawset(L, -3);
+
+	lua_rawseti(L, -2, id);
+}
+
+static int sdl_font_draw(lua_State *L)
+{
+//	if (no_text_aa) return sdl_surface_drawstring(L);
+	TTF_Font **f = (TTF_Font**)auxiliar_checkclass(L, "sdl{font}", 1);
+	const char *str = luaL_checkstring(L, 2);
+	int max_width = luaL_checknumber(L, 3);
+	int r = luaL_checknumber(L, 4);
+	int g = luaL_checknumber(L, 5);
+	int b = luaL_checknumber(L, 6);
+	int h = TTF_FontLineSkip(*f);
+
+	int space_w = 0, space_h = 0;
+	TTF_SizeUTF8(*f, " ", &space_w, &space_h);
+
+	Uint32 rmask, gmask, bmask, amask;
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+	rmask = 0xff000000; gmask = 0x00ff0000; bmask = 0x0000ff00; amask = 0x000000ff;
+#else
+	rmask = 0x000000ff; gmask = 0x0000ff00; bmask = 0x00ff0000; amask = 0xff000000;
+#endif
+	SDL_Surface *s = SDL_CreateRGBSurface(
+		SDL_SWSURFACE | SDL_SRCALPHA,
+		max_width,
+		h,
+		32,
+		rmask, gmask, bmask, amask
+		);
+	SDL_FillRect(s, NULL, SDL_MapRGBA(s->format, 0, 0, 0, 0));
+
+	SDL_Color color = {r,g,b};
+
+	lua_newtable(L);
+
+	int nb_lines = 1;
+	char *start = (char*)str, *stop = (char*)str, *next = (char*)str;
+	int max_size = 0;
+	int size = 0;
+	int i;
+	bool force_nl = FALSE;
+	SDL_Surface *txt = NULL;
+	while (TRUE)
+	{
+		if ((*next == '\n') || (*next == ' ') || (*next == '\0') || (*next == '#'))
+		{
+			stop = next - 1;
+
+			// Make a surface for the word
+			char old = *next;
+			*next = '\0';
+			if (txt) SDL_FreeSurface(txt);
+			txt = TTF_RenderUTF8_Blended(*f, start, color);
+
+			// If we must do a newline, flush the previous word and the start the new line
+			if (force_nl || (txt && (size + txt->w + space_w > max_width)))
+			{
+				// Push it & reset the surface
+				font_make_texture_line(L, s, nb_lines);
+				SDL_FillRect(s, NULL, SDL_MapRGBA(s->format, 0, 0, 0, 0));
+//				printf("Ending previous line at size %d\n", size);
+				if (size > max_size) max_size = size;
+				size = 0;
+				nb_lines++;
+				force_nl = FALSE;
+			}
+
+			if (txt)
+			{
+//				printf("Drawing word '%s'\n", start);
+				SDL_SetAlpha(txt, 0, 0);
+				sdlDrawImage(s, txt, size, 0);
+				size += txt->w + space_w;
+			}
+			*next = old;
+			start = next + 1;
+
+			// Force a linefeed
+			if (*next == '\n') force_nl = TRUE;
+
+			// Handle special codes
+			else if (*next == '#')
+			{
+				char *codestop = next + 1;
+				while (*codestop && *codestop != '#') codestop++;
+				// Font style
+				if (*(next+1) == '{') {
+					if (*(next+2) == 'n') TTF_SetFontStyle(*f, 0);
+					else if (*(next+2) == 'b') TTF_SetFontStyle(*f, TTF_STYLE_BOLD);
+					else if (*(next+2) == 'i') TTF_SetFontStyle(*f, TTF_STYLE_ITALIC);
+					else if (*(next+2) == 'u') TTF_SetFontStyle(*f, TTF_STYLE_UNDERLINE);
+				}
+				// Entity UID
+				else if ((codestop - (next+1) > 4) && (*(next+1) == 'U') && (*(next+2) == 'I') && (*(next+3) == 'D') && (*(next+4) == ':')) {
+					lua_getglobal(L, "__get_uid_surface");
+					char *colon = next + 5;
+					while (*colon && *colon != ':') colon++;
+					lua_pushlstring(L, next+5, colon - (next+5));
+//					printf("Drawing UID %s\n", lua_tostring(L,-1));
+					lua_pushnumber(L, h);
+					lua_pushnumber(L, h);
+					lua_call(L, 3, 1);
+					if (lua_isuserdata(L, -1))
+					{
+						SDL_Surface **img = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", -1);
+						sdlDrawImage(s, *img, size, 0);
+						size += (*img)->w;
+					}
+					lua_pop(L, 1);
+				}
+				// Color
+				else {
+					if ((codestop - (next+1) == 4) && (*(next+1) == 'L') && (*(next+2) == 'A') && (*(next+3) == 'S') && (*(next+4) == 'T'))
+					{
+						color.r = r;
+						color.g = g;
+						color.b = b;
+					}
+
+					lua_getglobal(L, "colors");
+					lua_pushlstring(L, next+1, codestop - (next+1));
+					lua_rawget(L, -2);
+					if (lua_istable(L, -1)) {
+						r = color.r;
+						g = color.g;
+						b = color.b;
+
+						lua_pushstring(L, "r");
+						lua_rawget(L, -2);
+						color.r = lua_tonumber(L, -1);
+						lua_pushstring(L, "g");
+						lua_rawget(L, -3);
+						color.g = lua_tonumber(L, -1);
+						lua_pushstring(L, "b");
+						lua_rawget(L, -4);
+						color.b = lua_tonumber(L, -1);
+						lua_pop(L, 3);
+					}
+					// Hexacolor
+					else if (codestop - (next+1) == 6)
+					{
+						r = color.r;
+						g = color.g;
+						b = color.b;
+
+						int rh = 0, gh = 0, bh = 0;
+
+						if ((*(next+1) >= '0') && (*(next+1) <= '9')) rh += 16 * (*(next+1) - '0');
+						else if ((*(next+1) >= 'a') && (*(next+1) <= 'f')) rh += 16 * (10 + *(next+1) - 'a');
+						else if ((*(next+1) >= 'A') && (*(next+1) <= 'F')) rh += 16 * (10 + *(next+1) - 'A');
+						if ((*(next+2) >= '0') && (*(next+2) <= '9')) rh += (*(next+2) - '0');
+						else if ((*(next+2) >= 'a') && (*(next+2) <= 'f')) rh += (10 + *(next+2) - 'a');
+						else if ((*(next+2) >= 'A') && (*(next+2) <= 'F')) rh += (10 + *(next+2) - 'A');
+
+						if ((*(next+3) >= '0') && (*(next+3) <= '9')) gh += 16 * (*(next+3) - '0');
+						else if ((*(next+3) >= 'a') && (*(next+3) <= 'f')) gh += 16 * (10 + *(next+3) - 'a');
+						else if ((*(next+3) >= 'A') && (*(next+3) <= 'F')) gh += 16 * (10 + *(next+3) - 'A');
+						if ((*(next+4) >= '0') && (*(next+4) <= '9')) gh += (*(next+4) - '0');
+						else if ((*(next+4) >= 'a') && (*(next+4) <= 'f')) gh += (10 + *(next+4) - 'a');
+						else if ((*(next+4) >= 'A') && (*(next+4) <= 'F')) gh += (10 + *(next+4) - 'A');
+
+						if ((*(next+5) >= '0') && (*(next+5) <= '9')) bh += 16 * (*(next+5) - '0');
+						else if ((*(next+5) >= 'a') && (*(next+5) <= 'f')) bh += 16 * (10 + *(next+5) - 'a');
+						else if ((*(next+5) >= 'A') && (*(next+5) <= 'F')) bh += 16 * (10 + *(next+5) - 'A');
+						if ((*(next+6) >= '0') && (*(next+6) <= '9')) bh += (*(next+6) - '0');
+						else if ((*(next+6) >= 'a') && (*(next+6) <= 'f')) bh += (10 + *(next+6) - 'a');
+						else if ((*(next+6) >= 'A') && (*(next+6) <= 'F')) bh += (10 + *(next+6) - 'A');
+
+						color.r = rh;
+						color.g = gh;
+						color.b = bh;
+					}
+					lua_pop(L, 1);
+				}
+
+				char old = *codestop;
+				*codestop = '\0';
+//				printf("Found code: %s\n", next+1);
+				*codestop = old;
+
+				start = codestop + 1;
+				next = codestop; // The while will increment it, so we dont so it here
+			}
+		}
+		if (*next == '\0') break;
+		next++;
+	}
+
+	font_make_texture_line(L, s, nb_lines);
+
+	if (txt) SDL_FreeSurface(txt);
+	SDL_FreeSurface(s);
+
+	lua_pushnumber(L, nb_lines);
+	lua_pushnumber(L, max_size);
+
+	return 3;
+}
 
 
 static int sdl_new_tile(lua_State *L)
@@ -679,77 +983,6 @@ static void draw_textured_quad(int x, int y, int w, int h) {
 	};
 	glVertexPointer(2, GL_FLOAT, 0, vertices);
 	glDrawArrays(GL_QUADS, 0, 4);
-}
-
-static GLenum sdl_gl_texture_format(SDL_Surface *s) {
-	// get the number of channels in the SDL surface
-	GLint nOfColors = s->format->BytesPerPixel;
-	GLenum texture_format;
-	if (nOfColors == 4)     // contains an alpha channel
-	{
-		if (s->format->Rmask == 0x000000ff)
-			texture_format = GL_RGBA;
-		else
-			texture_format = GL_BGRA;
-	} else if (nOfColors == 3)     // no alpha channel
-	{
-		if (s->format->Rmask == 0x000000ff)
-			texture_format = GL_RGB;
-		else
-			texture_format = GL_BGR;
-	} else {
-		printf("warning: the image is not truecolor..  this will probably break %d\n", nOfColors);
-		// this error should not go unhandled
-	}
-
-	return texture_format;
-}
-
-// allocate memory for a texture without copying pixels in
-// caller binds texture
-void make_texture_for_surface(SDL_Surface *s, int *fw, int *fh) {
-	// Paramétrage de la texture.
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-	// get the number of channels in the SDL surface
-	GLint nOfColors = s->format->BytesPerPixel;
-	GLenum texture_format = sdl_gl_texture_format(s);
-
-	// In case we can't support NPOT textures round up to nearest POT
-	int realw=1;
-	int realh=1;
-
-	while (realw < s->w) realw *= 2;
-	while (realh < s->h) realh *= 2;
-
-	if (fw) *fw = realw;
-	if (fh) *fh = realh;
-	//printf("request size (%d,%d), producing size (%d,%d)\n",s->w,s->h,realw,realh);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, nOfColors, realw, realh, 0, texture_format, GL_UNSIGNED_BYTE, NULL);
-
-#ifdef _DEBUG
-	GLenum err = glGetError();
-	if (err != GL_NO_ERROR) {
-		printf("make_texture_for_surface: glTexImage2D : %s\n",gluErrorString(err));
-	}
-#endif
-}
-
-// copy pixels into previous allocated surface
-void copy_surface_to_texture(SDL_Surface *s) {
-	GLenum texture_format = sdl_gl_texture_format(s);
-
-	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, s->w, s->h, texture_format, GL_UNSIGNED_BYTE, s->pixels);
-
-#ifdef _DEBUG
-	GLenum err = glGetError();
-	if (err != GL_NO_ERROR) {
-		printf("copy_surface_to_texture : glTexSubImage2D : %s\n",gluErrorString(err));
-	}
-#endif
 }
 
 static int sdl_surface_toscreen(lua_State *L)
@@ -1576,6 +1809,7 @@ static const struct luaL_reg sdl_font_reg[] =
 	{"lineSkip", sdl_font_lineskip},
 	{"setStyle", sdl_font_style},
 	{"getStyle", sdl_font_style_get},
+	{"draw", sdl_font_draw},
 	{NULL, NULL},
 };
 

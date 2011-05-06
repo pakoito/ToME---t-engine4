@@ -28,6 +28,10 @@ function _M:init(fontname, fontsize, bigfontname, bigfontsize)
 	self.flyers = {}
 end
 
+function _M:enableShadow(v)
+	self.shadow = v
+end
+
 function _M:add(x, y, duration, xvel, yvel, str, color, bigfont)
 	assert(x, "no x flyer")
 	assert(y, "no y flyer")
@@ -61,6 +65,7 @@ function _M:display(nb_keyframes)
 	local dels = {}
 
 	for fl, _ in pairs(self.flyers) do
+		if self.shadow then fl.t:toScreenFull(fl.x+1, fl.y+1, fl.w, fl.h, fl.tw, fl.th, 0, 0, 0, self.shadow) end
 		fl.t:toScreenFull(fl.x, fl.y, fl.w, fl.h, fl.tw, fl.th)
 		fl.x = fl.x + fl.xvel * nb_keyframes
 		fl.y = fl.y + fl.yvel * nb_keyframes

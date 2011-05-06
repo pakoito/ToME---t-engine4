@@ -46,8 +46,7 @@ function _M:generate()
 	self.mouse:reset()
 	self.key:reset()
 
-	local text, max_w = self.text:toTString():splitLines(self.w, self.font)
-	local max_lines = text:countLines()
+	local text, max_lines, max_w = self.font:draw(self.text:toString(), self.w, self.color.r, self.color.g, self.color.b)
 	if self.auto_width then
 		self.w = max_w
 	end
@@ -66,7 +65,7 @@ function _M:generate()
 	end
 
 	-- Draw the list items
-	self.list = tstring.makeLineTextures(text, self.fw, self.font, true, self.color.r, self.color.g, self.color.b)
+	self.list = text
 
 	-- Draw the scrollbar
 	if self.scrollbar then
