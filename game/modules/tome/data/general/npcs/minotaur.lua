@@ -75,6 +75,7 @@ newEntity{ base = "BASE_NPC_MINOTAUR",
 
 newEntity{ base = "BASE_NPC_MINOTAUR",
 	name = "maulotaur", color=colors.SLATE,
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/giant_minotaur_maulotaur.png", display_h=2, display_y=-1}}},
 	desc = [[A belligerent minotaur with a destructive magical arsenal, and armed with a hammer.]],
 	level_range = {20, nil}, exp_worth = 1,
 	rarity = 4,
