@@ -526,11 +526,9 @@ static int sdl_font_draw(lua_State *L)
 	int r = luaL_checknumber(L, 4);
 	int g = luaL_checknumber(L, 5);
 	int b = luaL_checknumber(L, 6);
+	bool no_linefeed = lua_toboolean(L, 7);
 	int h = TTF_FontLineSkip(*f);
 	SDL_Color color = {r,g,b};
-
-	int space_w = 0, space_h = 0;
-	TTF_SizeUTF8(*f, " ", &space_w, &space_h);
 
 	Uint32 rmask, gmask, bmask, amask;
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
@@ -554,7 +552,14 @@ static int sdl_font_draw(lua_State *L)
 	{
 		if ((*next == '\n') || (*next == ' ') || (*next == '\0') || (*next == '#'))
 		{
-			stop = next - 1;
+			bool inced = FALSE;
+			if (*next == ' ' && *(next+1))
+			{
+				inced = TRUE;
+				stop = next;
+				next++;
+			}
+			else stop = next - 1;
 
 			// Make a surface for the word
 			char old = *next;
@@ -564,7 +569,7 @@ static int sdl_font_draw(lua_State *L)
 			else txt = TTF_RenderUTF8_Blended(*f, start, color);
 
 			// If we must do a newline, flush the previous word and the start the new line
-			if (force_nl || (txt && (size + txt->w + space_w > max_width)))
+			if (!no_linefeed && (force_nl || (txt && (size + txt->w > max_width))))
 			{
 				// Push it & reset the surface
 				font_make_texture_line(L, s, nb_lines);
@@ -581,9 +586,10 @@ static int sdl_font_draw(lua_State *L)
 //				printf("Drawing word '%s'\n", start);
 				SDL_SetAlpha(txt, 0, 0);
 				sdlDrawImage(s, txt, size, 0);
-				size += txt->w + space_w;
+				size += txt->w;
 			}
 			*next = old;
+			if (inced) next--;
 			start = next + 1;
 
 			// Force a linefeed

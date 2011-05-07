@@ -41,6 +41,7 @@ function _M:init(x, y, w, h, max, fontname, fontsize, color, bgcolor)
 	self.scroll = 0
 	self.changed = true
 	self.cache = {}
+	setmetatable(self.cache, {__mode="v"})
 
 	self:resize(x, y, w, h)
 end

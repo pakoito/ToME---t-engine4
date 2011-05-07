@@ -32,7 +32,14 @@ function _M:init(actor, x, y, w, h, bgcolor, fontname, fontsize)
 	self.font = core.display.newFont(fontname or "/data/font/VeraMono.ttf", fontsize or 10)
 	self.font_h = self.font:lineSkip()
 	self.clics = {}
+	self.items = {}
+	self.cache = {}
+	setmetatable(self.cache, {__mode="v"})
 	self:resize(x, y, w, h)
+end
+
+function _M:enableShadow(v)
+	self.shadow = v
 end
 
 --- Resize the display area
@@ -55,6 +62,7 @@ function _M:resize(x, y, w, h)
 		for i = 0, w, fw do for j = 0, h, fh do
 			self.bg_surface:merge(fill, i, j)
 		end end
+		self.bg_texture, self.bg_texture_w, self.bg_texture_h = self.bg_surface:glTexture()
 	end
 end
 
@@ -82,6 +90,7 @@ function _M:display()
 	local x = 0
 	local y = 0
 	self.clics = {}
+	self.items = {}
 
 	for ii, ts in ipairs(hks) do
 		local s
@@ -114,9 +123,18 @@ function _M:display()
 		end
 
 		txt = ("%1d/%2d) %-"..(self.max_char_w-4-24).."s Key: %s"):format(a.hotkey_page, i - (a.hotkey_page-1) * 12, txt, ts[4])
-		local w, h = self.font:size(txt)
-		if self.cur_sel and self.cur_sel == i then self.surface:erase(0, 50, 120, nil, x, y, w+4, h+4) end
-		self.surface:drawStringBlended(self.font, txt, x+2, y+2, color[1], color[2], color[3])
+		local w, h, gen
+		if self.cache[txt] then
+			gen = self.cache[txt]
+			w, h = gen.fw, gen.fh
+		else
+			w, h = self.font:size(txt)
+			gen = self.font:draw(txt, self.w, color[1], color[2], color[3], true)[1]
+			gen.fw, gen.fh = w, h
+		end
+		gen.x, gen.y = x, y
+		gen.i = i
+		self.items[#self.items+1] = gen
 		self.clics[i] = {x,y,w+4,h+4}
 
 		if y + self.font_h * 2 > self.h then
@@ -126,14 +144,17 @@ function _M:display()
 			y = y + self.font_h
 		end
 	end
-
-	self.surface:updateTexture(self.texture)
-	return self.surface
 end
 
 function _M:toScreen()
 	self:display()
-	self.texture:toScreenFull(self.display_x, self.display_y, self.w, self.h, self.texture_w, self.texture_h)
+	if self.bg_texture then self.bg_texture:toScreenFull(self.display_x, self.display_y, self.w, self.h, self.bg_texture_w, self.bg_texture_h) end
+	for i = 1, #self.items do
+		local item = self.items[i]
+		if self.cur_sel == item.i then core.display.drawQuad(self.display_x + item.x, self.display_y + item.y, item.w, item.h, 0, 50, 120, 180) end
+		if self.shadow then item._tex:toScreenFull(self.display_x + item.x + 2, self.display_y + item.y + 2, item.w, item.h, item._tex_w, item._tex_h, 0, 0, 0, self.shadow) end
+		item._tex:toScreenFull(self.display_x + item.x, self.display_y + item.y, item.w, item.h, item._tex_w, item._tex_h)
+	end
 end
 
 --- Call when a mouse event arrives in this zone
