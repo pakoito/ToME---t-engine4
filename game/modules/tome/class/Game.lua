@@ -882,13 +882,6 @@ function _M:display(nb_keyframes)
 	else
 		self:targetDisplayTooltip(self.w, self.h)
 	end
-
-	if self.test then
-		for i = 1, #self.test do
-			local item = self.test[i]
-			item._tex:toScreenFull(300, 300 + item.h * i, item.w, item.h, item._tex_w, item._tex_h)
-		end
-	end
 end
 
 --- Called when a dialog is registered to appear on screen
@@ -944,8 +937,7 @@ function _M:setupCommands()
 --			self.state:debugRandomZone()
 --			local m = game.zone:makeEntity(game.level, "actor", {random_boss=true}, nil, true)
 --			if m then game.zone:addEntity(game.level, m, "actor", game.player.x, game.player.y + 1) end
-			local font = core.display.newFont("/data/font/Vera.ttf", 18)
-			self.test = font:draw("test #8810FF#plop #{italic}#zogzog#{normal}##LAST# tolopalak looooooooooooooooooooooooooonnnnng toto\nto\noooo", 200, 255, 255, 255)
+			self:registerDialog(require("mod.dialogs.Donation").new())
 		end end,
 	}
 

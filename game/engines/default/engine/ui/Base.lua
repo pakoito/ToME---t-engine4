@@ -153,3 +153,7 @@ function _M:drawFrame(f, x, y, r, g, b, a)
 	f.b9.t:toScreenFull(x + f.w - f.b9.w, y, f.b9.w, f.b9.h, f.b9.tw, f.b9.th, r, g, b, a)
 	f.b3.t:toScreenFull(x + f.w - f.b3.w, y + f.h - f.b3.h, f.b3.w, f.b3.h, f.b3.tw, f.b3.th, r, g, b, a)
 end
+
+function _M:setTextShadow(v)
+	self.text_shadow = v
+end

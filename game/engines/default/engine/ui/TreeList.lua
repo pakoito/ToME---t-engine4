@@ -294,6 +294,7 @@ function _M:display(x, y, nb_keyframes)
 				s.t:toScreenFull(x, y + (self.fh - s.h) / 2, s.w, s.h, s.th, s.th)
 			end
 
+			if self.text_shadow then item.cols[j]._tex:toScreenFull(x+1, y+1, col.width, self.fh, item.cols[j]._tex_w, item.cols[j]._tex_h, 0, 0, 0, self.text_shadow) end
 			item.cols[j]._tex:toScreenFull(x, y, col.width, self.fh, item.cols[j]._tex_w, item.cols[j]._tex_h)
 			x = x + col.width
 		end

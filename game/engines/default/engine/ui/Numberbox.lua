@@ -151,6 +151,7 @@ function _M:updateText(v)
 end
 
 function _M:display(x, y, nb_keyframes)
+	if self.text_shadow then self.tex:toScreenFull(x+1, y+1, self.title_w, self.h, self.tex_w, self.tex_h, 0, 0, 0, self.text_shadow) end
 	self.tex:toScreenFull(x, y, self.title_w, self.h, self.tex_w, self.tex_h)
 	if self.focused then
 		self:drawFrame(self.frame_sel, x + self.title_w, y)
@@ -163,5 +164,6 @@ function _M:display(x, y, nb_keyframes)
 			if self.focus_decay <= 0 then self.focus_decay = nil end
 		end
 	end
+	if self.text_shadow then self.text_tex:toScreenFull(x+1 + self.text_x, y+1 + self.text_y, self.fw, self.fh, self.text_tex_w, self.text_tex_h, 0, 0, 0, self.text_shadow) end
 	self.text_tex:toScreenFull(x + self.text_x, y + self.text_y, self.fw, self.fh, self.text_tex_w, self.text_tex_h)
 end

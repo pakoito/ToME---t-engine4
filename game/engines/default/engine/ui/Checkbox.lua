@@ -69,6 +69,7 @@ function _M:select()
 end
 
 function _M:display(x, y, nb_keyframes)
+	if self.text_shadow then self.tex[1]:toScreenFull(x+1, y+1 + (self.h - self.title_h) / 2, self.title_w, self.title_h, self.tex[2], self.tex[3], 0, 0, 0, self.text_shadow) end
 	self.tex[1]:toScreenFull(x, y + (self.h - self.title_h) / 2, self.title_w, self.title_h, self.tex[2], self.tex[3])
 	if self.focused then
 		self.check.t:toScreenFull(x + self.title_w, y, self.check.w, self.check.h, self.check.tw, self.check.th)

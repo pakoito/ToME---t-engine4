@@ -98,7 +98,6 @@ function _M:display(x, y, nb_keyframes)
 	y = y + 4
 	if self.selected then
 		self:drawFrame(self.frame_sel, x, y)
-		self.tex[1]:toScreenFull(x-frame_ox1, y-frame_oy1, self.rw, self.rh, self.tex[2], self.tex[3])
 	elseif not self.focused then
 		self:drawFrame(self.frame, x, y, 1, 1, 1, 1)
 		if self.focus_decay then
@@ -106,9 +105,9 @@ function _M:display(x, y, nb_keyframes)
 			self.focus_decay = self.focus_decay - nb_keyframes
 			if self.focus_decay <= 0 then self.focus_decay = nil end
 		end
-		self.tex[1]:toScreenFull(x-frame_ox1, y-frame_oy1, self.rw, self.rh, self.tex[2], self.tex[3])
 	else
 		self:drawFrame(self.frame_sel, x, y, 1, 0.5, 0.5, 1)
-		self.tex[1]:toScreenFull(x-frame_ox1, y-frame_oy1, self.rw, self.rh, self.tex[2], self.tex[3])
 	end
+	if self.text_shadow then self.tex[1]:toScreenFull(x+1-frame_ox1, y+1-frame_oy1, self.rw, self.rh, self.tex[2], self.tex[3], 0, 0, 0, self.text_shadow) end
+	self.tex[1]:toScreenFull(x-frame_ox1, y-frame_oy1, self.rw, self.rh, self.tex[2], self.tex[3])
 end

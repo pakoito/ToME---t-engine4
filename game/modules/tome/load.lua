@@ -60,6 +60,7 @@ Map.faction_danger_check = function(self, e) return e.rank > 3 end
 
 -- Dialog UI
 UIBase.ui = config.settings.tome.ui_theme
+UIBase:setTextShadow(0.6)
 
 -- Dialogs fonts
 if config.settings.tome.fonts.type == "fantasy" then

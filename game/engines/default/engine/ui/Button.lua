@@ -74,10 +74,8 @@ function _M:display(x, y, nb_keyframes, ox, oy)
 	if self.focused then
 			if button == 1 and mx > ox and mx < ox+self.w and my > oy and my < oy+self.h then
 				self:drawFrame(self.frame, x, y, 0, 1, 0, 1)
-				self.tex[1]:toScreenFull(x-frame_ox1, y-frame_oy1, self.rw, self.rh, self.tex[2], self.tex[3])
 			else
 				self:drawFrame(self.frame_sel, x, y)
-				self.tex[1]:toScreenFull(x-frame_ox1, y-frame_oy1, self.rw, self.rh, self.tex[2], self.tex[3])
 			end
 	else
 		self:drawFrame(self.frame, x, y)
@@ -86,6 +84,7 @@ function _M:display(x, y, nb_keyframes, ox, oy)
 			self.focus_decay = self.focus_decay - nb_keyframes
 			if self.focus_decay <= 0 then self.focus_decay = nil end
 		end
-		self.tex[1]:toScreenFull(x-frame_ox1, y-frame_oy1, self.rw, self.rh, self.tex[2], self.tex[3])
 	end
+	if self.text_shadow then self.tex[1]:toScreenFull(x-frame_ox1+1, y-frame_oy1+1, self.rw, self.rh, self.tex[2], self.tex[3], 0, 0, 0, self.text_shadow) end
+	self.tex[1]:toScreenFull(x-frame_ox1, y-frame_oy1, self.rw, self.rh, self.tex[2], self.tex[3])
 end
