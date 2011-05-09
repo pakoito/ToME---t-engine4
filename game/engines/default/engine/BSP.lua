@@ -27,6 +27,7 @@ function _M:init(w, h, min_w, min_h, max_depth)
 	self.max_depth = max_depth or 8
 	self.min_w, self.min_h = min_w, min_h
 	self.node_id = 1
+	self.splits = { vert={}, hor={} }
 	self.leafs = {}
 	self.bsp = {x=0, y=0, rx=0, ry=0, w=w, h=h, nodes={}, id=0, depth=0}
 	print("[BSP] ", w, h)
@@ -52,6 +53,7 @@ function _M:partition(store)
 --		print("[BSP] vertical split", s)
 		store.nodes[1] = {depth=store.depth+1, x=0, y=0, rx=store.rx, ry=store.ry, w=store.w, h=s, nodes={}, id=self.node_id} self.node_id = self.node_id + 1
 		store.nodes[2] = {depth=store.depth+1, x=0, y=s, rx=store.rx, ry=store.ry + s, w=store.w, h=store.h - s, nodes={}, id=self.node_id} self.node_id = self.node_id + 1
+		self.splits.vert[store.ry + s] = true
 		self:partition(store.nodes[1])
 		self:partition(store.nodes[2])
 
@@ -60,6 +62,7 @@ function _M:partition(store)
 --		print("[BSP] horizontal split", s)
 		store.nodes[1] = {depth=store.depth+1, x=0, y=0, rx=store.rx, ry=store.ry, w=s, h=store.h, nodes={}, id=self.node_id} self.node_id = self.node_id + 1
 		store.nodes[2] = {depth=store.depth+1, x=s, y=0, rx=store.rx + s, ry=store.ry, w=store.w -s , h=store.h, nodes={}, id=self.node_id} self.node_id = self.node_id + 1
+		self.splits.hor[store.rx + s] = true
 		self:partition(store.nodes[1])
 		self:partition(store.nodes[2])
 	end

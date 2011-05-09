@@ -937,7 +937,7 @@ function _M:setupCommands()
 --			self.state:debugRandomZone()
 --			local m = game.zone:makeEntity(game.level, "actor", {random_boss=true}, nil, true)
 --			if m then game.zone:addEntity(game.level, m, "actor", game.player.x, game.player.y + 1) end
-			self:registerDialog(require("mod.dialogs.Donation").new())
+			self:changeLevel(1, "test")
 		end end,
 	}
 

@@ -49,11 +49,13 @@ function _M:init(l, w, force_height)
 	end
 
 	local h = math.min(force_height and (force_height * game.h) or 999999999, self.font_h * #list)
+	local c_text = require("engine.ui.Textzone").new{
+		width=w+10, height=h, scrollbar=(h < self.font_h * #list) and true or false, text=text, color={r=0x3a, g=0x35, b=0x33},
+	}
+	c_text:setTextShadow(false)
+
 	self:loadUI{
-		{left = 3, top = 3, ui=require("engine.ui.Textzone").new{
-				width=w+10, height=h, scrollbar=(h < self.font_h * #list) and true or false, text=text, color={r=0x3a, g=0x35, b=0x33},
-			}
-		}
+		{left = 3, top = 3, ui=c_text}
 	}
 	self.key:addBind("EXIT", function() game:unregisterDialog(self) if fct then fct() end end)
 	self.key:addBind("ACCEPT", function() game:unregisterDialog(self) if fct then fct() end end)
