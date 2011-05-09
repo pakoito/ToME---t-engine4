@@ -1049,6 +1049,19 @@ local random_zone_layouts = {
 		door = data:getDoor(),
 		["'"] = data:getDoor(),
 	} end },
+	-- Building
+	{ name="building", rarity=1, gen=function(data)
+		return {
+		class = "engine.generator.map.Building",
+		lite_room_chance = rng.range(0, 100),
+		max_block_w = rng.range(14, 20), max_block_h = rng.range(14, 20),
+		max_building_w = rng.range(4, 8), max_building_h = rng.range(4, 8),
+		floor = data:getFloor(),
+		wall = data:getWall(),
+		up = data:getUp(),
+		down = data:getDown(),
+		door = data:getDoor(),
+	} end },
 }
 
 local random_zone_themes = {
@@ -1169,7 +1182,7 @@ function _M:createRandomZone(zbase)
 		end
 	end
 	local base = rng.table(list)
-	local boss, boss_id = self:createRandomBoss(base, data.min_lev + data.depth + rng.range(2, 4))
+	local boss, boss_id = self:createRandomBoss(base, {level=data.min_lev + data.depth + rng.range(2, 4)})
 	npcs[boss_id] = boss
 
 	------------------------------------------------------------
@@ -1379,15 +1392,15 @@ function _M:debugRandomZone()
 	local zone = self:createRandomZone()
 	game:changeLevel(zone.max_level, zone)
 
-		game.level.map:liteAll(0, 0, game.level.map.w, game.level.map.h)
-		game.level.map:rememberAll(0, 0, game.level.map.w, game.level.map.h)
-		for i = 0, game.level.map.w - 1 do
-			for j = 0, game.level.map.h - 1 do
-				local trap = game.level.map(i, j, game.level.map.TRAP)
-				if trap then
-					trap:setKnown(game.player, true)
-					game.level.map:updateMap(i, j)
-				end
+	game.level.map:liteAll(0, 0, game.level.map.w, game.level.map.h)
+	game.level.map:rememberAll(0, 0, game.level.map.w, game.level.map.h)
+	for i = 0, game.level.map.w - 1 do
+		for j = 0, game.level.map.h - 1 do
+			local trap = game.level.map(i, j, game.level.map.TRAP)
+			if trap then
+				trap:setKnown(game.player, true)
+				game.level.map:updateMap(i, j)
 			end
 		end
+	end
 end

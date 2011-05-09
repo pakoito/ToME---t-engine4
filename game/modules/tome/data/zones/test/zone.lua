@@ -32,6 +32,7 @@ return {
 	generator =  {
 		map = {
 			class = "engine.generator.map.Building",
+			max_block_w = 15, max_block_h = 15,
 			max_building_w = 5, max_building_h = 5,
 			floor = "FLOOR",
 			external_floor = "FLOOR",

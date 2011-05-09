@@ -27,9 +27,12 @@ local ActorAI = require "engine.interface.ActorAI"
 local ActorLevel = require "engine.interface.ActorLevel"
 local ActorTemporaryEffects = require "engine.interface.ActorTemporaryEffects"
 local Birther = require "engine.Birther"
+local UIBase = require "engine.ui.Base"
 
 local n = core.noise.new(2)
 _2DNoise = n:makeTexture2D(64, 64)
+
+UIBase:setTextShadow(0.6)
 
 -- Usefull keybinds
 KeyBind:load("move,hotkeys,inventory,actions,interface,debug")
