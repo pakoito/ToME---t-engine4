@@ -497,13 +497,13 @@ static void setup_seens_texture(map_type *map)
 	if (map->seens_map) free(map->seens_map);
 
 	glGenTextures(1, &(map->seens_texture));
-	printf("C Map seens texture: %d (%dx%d)\n", map->seens_texture, map->mwidth + 7, map->mheight + 7);
+	printf("C Map seens texture: %d (%dx%d)\n", map->seens_texture, map->w, map->h);
 	tglBindTexture(GL_TEXTURE_2D, map->seens_texture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, 4, map->mwidth + 7, map->mheight + 7, 0, GL_BGRA, GL_UNSIGNED_BYTE, NULL);
-	map->seens_map = calloc((map->mwidth + 7)*(map->mheight + 7)*4, sizeof(GLubyte));
+	glTexImage2D(GL_TEXTURE_2D, 0, 4, map->w, map->h, 0, GL_BGRA, GL_UNSIGNED_BYTE, NULL);
+	map->seens_map = calloc((map->w)*(map->h)*4, sizeof(GLubyte));
 	map->seen_changed = TRUE;
 }
 
@@ -822,10 +822,6 @@ static int map_get_seensinfo(lua_State *L)
 static void map_update_seen_texture(map_type *map)
 {
 	glBindTexture(GL_TEXTURE_2D, map->seens_texture);
-//	int zx, zy;
-//	glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &zx);
-//	glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &zy);
-//	printf("UPDATE SEENS: %dx%d vs %dx%d\n", zx,zy, map->mwidth + 7, map->mheight + 7);
 	gl_c_texture = -1;
 
 	int mx = map->used_mx;
@@ -833,14 +829,14 @@ static void map_update_seen_texture(map_type *map)
 	GLubyte *seens = map->seens_map;
 	int ptr = 0;
 	int ii, jj;
-	map->seensinfo_w = map->mwidth + 7;
-	map->seensinfo_h = map->mheight + 7;
+	map->seensinfo_w = map->w;
+	map->seensinfo_h = map->h;
 
-	for (jj = 0; jj < map->mheight + 7; jj++)
+	for (jj = 0; jj < map->h; jj++)
 	{
-		for (ii = 0; ii < map->mwidth + 7; ii++)
+		for (ii = 0; ii < map->w; ii++)
 		{
-			int i = mx - 3 + ii, j = my - 3 + jj;
+			int i = ii, j = jj;
 			if ((i < 0) || (j < 0) || (i >= map->w) || (j >= map->h))
 			{
 				seens[ptr] = 0;
@@ -877,7 +873,14 @@ static void map_update_seen_texture(map_type *map)
 			ptr += 4;
 		}
 	}
-	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, map->mwidth + 7, map->mheight + 7, GL_BGRA, GL_UNSIGNED_BYTE, seens);
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, map->w, map->h, GL_BGRA, GL_UNSIGNED_BYTE, seens);
+}
+
+static int map_update_seen_texture_lua(lua_State *L)
+{
+	map_type *map = (map_type*)auxiliar_checkclass(L, "core{map}", 1);
+	map_update_seen_texture(map);
+	return 0;
 }
 
 static int map_draw_seen_texture(lua_State *L)
@@ -886,15 +889,15 @@ static int map_draw_seen_texture(lua_State *L)
 	int x = lua_tonumber(L, 2);
 	int y = lua_tonumber(L, 3);
 	int nb_keyframes = 0;
-	x += -map->tile_w * 3;
-	y += -map->tile_h * 3;
-	int w = (map->mwidth + 7) * map->tile_w;
-	int h = (map->mheight + 7) * map->tile_h;
+//	x += -map->tile_w * 3;
+//	y += -map->tile_h * 3;
+	int w = (map->w) * map->tile_w;
+	int h = (map->h) * map->tile_h;
 
 	int mx = map->mx;
 	int my = map->my;
-	x -= map->tile_w * map->used_animdx;
-	y -= map->tile_h * map->used_animdy;
+	x -= map->tile_w * (map->used_animdx + map->used_mx);
+	y -= map->tile_h * (map->used_animdy + map->used_my);
 
 	tglBindTexture(GL_TEXTURE_2D, map->seens_texture);
 
@@ -1186,6 +1189,7 @@ static int map_to_screen(lua_State *L)
 	int y = luaL_checknumber(L, 3);
 	int nb_keyframes = luaL_checknumber(L, 4);
 	bool always_show = lua_toboolean(L, 5);
+	bool changed = lua_toboolean(L, 6);
 	int i = 0, j = 0, z = 0;
 	int vert_idx = 0;
 	int col_idx = 0;
@@ -1194,7 +1198,7 @@ static int map_to_screen(lua_State *L)
 	int my = map->my;
 
 	/* Enables Depth Testing */
-	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_DEPTH_TEST);
 
 	GLfloat *vertices = map->vertices;
 	GLfloat *colors = map->colors;
@@ -1225,6 +1229,7 @@ static int map_to_screen(lua_State *L)
 			mx = map->mx + (int)(adx * map->move_step / (float)map->move_max - adx);
 			my = map->my + (int)(ady * map->move_step / (float)map->move_max - ady);
 		}
+		changed = TRUE;
 	}
 	x -= map->tile_w * animdx;
 	y -= map->tile_h * animdy;
@@ -1278,11 +1283,19 @@ static int map_to_screen(lua_State *L)
 	}
 
 	/* Disables Depth Testing, we do not need it for the rest of the display */
-	glDisable(GL_DEPTH_TEST);
+	//glDisable(GL_DEPTH_TEST);
 
-//	if (always_show && map->seen_changed)
-	if (always_show)
+	if (always_show && changed)
 	{
+		lua_getglobal(L, "game");
+		lua_pushstring(L, "updateFOV");
+		lua_gettable(L, -2);
+		if (lua_isfunction(L, -1)) {
+			lua_pushvalue(L, -2);
+			lua_call(L, 1, 0);
+			lua_pop(L, 1);
+		}
+		else lua_pop(L, 2);
 		map_update_seen_texture(map);
 		map->seen_changed = FALSE;
 	}
@@ -1409,7 +1422,7 @@ static const struct luaL_reg map_reg[] =
 {
 	{"__gc", map_free},
 	{"close", map_free},
-//	{"updateSeensTexture", map_update_seen_texture},
+	{"updateSeensTexture", map_update_seen_texture_lua},
 	{"bindSeensTexture", map_bind_seen_texture},
 	{"drawSeensTexture", map_draw_seen_texture},
 	{"setZoom", map_set_zoom},

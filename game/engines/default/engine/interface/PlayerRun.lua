@@ -301,7 +301,7 @@ function _M:runCheck()
 				end
 			end
 		end
-		
+
 		if not self.running.ignore_left and (self.running.block_left ~= blocked_soft_left or self.running.block_left ~= blocked_hard_left) then
 			return false, "terrain change on left side"
 		end
@@ -326,6 +326,7 @@ function _M:runStop(msg)
 		game.log("Ran for %d turns (stop reason: %s).", self.running.cnt, msg)
 	end
 
+	self:runStopped(self.running.cnt, msg)
 	self.running = nil
 	return true
 end
@@ -368,4 +369,8 @@ end
 
 --- Called after running a step
 function _M:runMoved()
+end
+
+--- Called after stopping running
+function _M:runStopped()
 end

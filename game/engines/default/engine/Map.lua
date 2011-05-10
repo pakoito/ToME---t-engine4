@@ -458,7 +458,7 @@ function _M:display(x, y, nb_keyframe, always_show)
 	local ox, oy = self.display_x, self.display_y
 	self.display_x, self.display_y = x or self.display_x, y or self.display_y
 
-	self._map:toScreen(self.display_x, self.display_y, nb_keyframe, always_show)
+	self._map:toScreen(self.display_x, self.display_y, nb_keyframe, always_show, self.changed)
 	self:displayParticles(nb_keyframe)
 	self:displayEffects()
 

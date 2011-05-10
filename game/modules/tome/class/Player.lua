@@ -582,6 +582,11 @@ function _M:runMoved()
 	self:playerFOV()
 end
 
+--- Called after stopping running
+function _M:runStopped()
+	self:playerFOV()
+end
+
 --- Activates a hotkey with a type "inventory"
 function _M:hotkeyInventory(name)
 	local find = function(name)

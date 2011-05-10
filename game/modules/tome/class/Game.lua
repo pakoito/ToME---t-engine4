@@ -800,6 +800,10 @@ function _M:onTurn()
 	end
 end
 
+function _M:updateFOV()
+	self.player:playerFOV()
+end
+
 function _M:display(nb_keyframes)
 	-- If switching resolution, blank everything but the dialog
 	if self.change_res_dialog then engine.GameTurnBased.display(self, nb_keyframes) return end
@@ -810,9 +814,7 @@ function _M:display(nb_keyframes)
 
 		-- Display the map and compute FOV for the player if needed
 		local changed = map.changed
-		if changed then
-			self.player:playerFOV()
-		end
+		if changed then self:updateFOV() end
 
 		-- Display using Framebuffer, so that we can use shaders and all
 		if self.fbo then
