@@ -1050,7 +1050,7 @@ local random_zone_layouts = {
 		["'"] = data:getDoor(),
 	} end },
 	-- Building
-	{ name="building", rarity=1, gen=function(data)
+	{ name="building", rarity=4, gen=function(data)
 		return {
 		class = "engine.generator.map.Building",
 		lite_room_chance = rng.range(0, 100),
@@ -1058,6 +1058,20 @@ local random_zone_layouts = {
 		max_building_w = rng.range(4, 8), max_building_h = rng.range(4, 8),
 		floor = data:getFloor(),
 		wall = data:getWall(),
+		up = data:getUp(),
+		down = data:getDown(),
+		door = data:getDoor(),
+	} end },
+	-- "Octopus"
+	{ name="octopus", rarity=6, gen=function(data)
+		return {
+		class = "engine.generator.map.Octopus",
+		main_radius = {0.3, 0.4},
+		arms_radius = {0.1, 0.2},
+		arms_range = {0.7, 0.8},
+		nb_rooms = {5, 9},
+		['.'] = data:getFloor(),
+		['#'] = data:getWall(),
 		up = data:getUp(),
 		down = data:getDown(),
 		door = data:getDoor(),

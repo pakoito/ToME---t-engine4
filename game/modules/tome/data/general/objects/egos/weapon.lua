@@ -139,7 +139,6 @@ newEntity{
 			if eff == "stun" then target:setEffect(target.EFF_STUNNED, 3, {})
 			elseif eff == "blind" then target:setEffect(target.EFF_BLINDED, 3, {})
 			elseif eff == "pin" then target:setEffect(target.EFF_PINNED, 3, {})
-			elseif eff == "stone" then target:setEffect(target.EFF_STONED, 3, {})
 			elseif eff == "confusion" then target:setEffect(target.EFF_CONFUSED, 3, {power=60})
 			elseif eff == "silence" then target:setEffect(target.EFF_SILENCED, 3, {})
 			elseif eff == "knockback" then target:knockback(who.x, who.y, 3)
