@@ -38,7 +38,7 @@ newEntity{ define_as = "SLASUL",
 	rank = 4,
 	size_category = 3,
 	can_breath={water=1},
-	infravision = 20,
+	infravision = 10,
 	move_others=true,
 
 	instakill_immune = 1,

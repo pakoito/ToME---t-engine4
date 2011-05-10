@@ -39,7 +39,7 @@ newEntity{ base="BASE_NPC_CRYSTAL", define_as = "SPELLBLAZE_CRYSTAL",
 	stats = { str=10, dex=10, cun=12, mag=20, con=10 },
 	rank = 4,
 	size_category = 4,
-	infravision = 20,
+	infravision = 10,
 	instakill_immune = 1,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },

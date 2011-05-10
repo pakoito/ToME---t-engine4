@@ -33,7 +33,7 @@ newEntity{
 	stats = { str=14, dex=18, mag=20, con=12 },
 	rank = 2,
 	size_category = 3,
-	infravision = 20,
+	infravision = 10,
 
 	can_pass = {pass_wall=70},
 	resists = {all = 35, [DamageType.LIGHT] = -70, [DamageType.DARKNESS] = 65},

@@ -35,7 +35,7 @@ Vicious predators, they inject corrupting diseases into their foes, and their sh
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 
-	infravision = 20,
+	infravision = 10,
 	size_category = 1,
 	rank = 2,
 
@@ -99,7 +99,7 @@ newEntity{ base = "BASE_NPC_RITCH_REL", define_as = "HIVE_MOTHER",
 	level_range = {7, nil}, exp_worth = 2,
 	max_life = 120, life_rating = 14, fixed_rating = true,
 	equilibrium_regen = -50,
-	infravision = 20,
+	infravision = 10,
 	stats = { str=15, dex=10, cun=8, mag=16, wil=16, con=10 },
 	move_others=true,
 

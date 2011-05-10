@@ -32,7 +32,7 @@ newEntity{
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },
 	stats = { str=1, dex=20, mag=3, con=1 },
 	global_speed = 2,
-	infravision = 20,
+	infravision = 10,
 	combat_armor = 1, combat_def = 10,
 	rank = 1,
 	size_category = 1,

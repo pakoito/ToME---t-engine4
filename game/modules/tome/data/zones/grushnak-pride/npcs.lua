@@ -31,7 +31,7 @@ newEntity{ base="BASE_NPC_ORC_GRUSHNAK", define_as = "GRUSHNAK",
 	level_range = {45, nil}, exp_worth = 2,
 	rank = 5,
 	max_life = 700, life_rating = 25, fixed_rating = true,
-	infravision = 20,
+	infravision = 10,
 	stats = { str=15, dex=10, cun=12, wil=45, mag=16, con=14 },
 	move_others=true,
 

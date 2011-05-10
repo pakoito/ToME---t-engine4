@@ -31,7 +31,7 @@ newEntity{
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { talent_in=3, },
 	stats = { str=10, dex=10, mag=3, con=10 },
-	infravision = 20,
+	infravision = 10,
 	combat_armor = 1, combat_def = 1,
 	rank = 1,
 	size_category = 1,

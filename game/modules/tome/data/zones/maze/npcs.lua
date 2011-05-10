@@ -44,7 +44,7 @@ newEntity{ define_as = "MINOTAUR_MAZE",
 	stats = { str=25, dex=10, cun=8, mag=20, wil=20, con=20 },
 	rank = 4,
 	size_category = 4,
-	infravision = 20,
+	infravision = 10,
 	move_others=true,
 	instakill_immune = 1,
 

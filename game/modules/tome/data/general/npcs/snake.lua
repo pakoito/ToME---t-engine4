@@ -25,7 +25,7 @@ newEntity{
 	display = "J", color=colors.WHITE,
 	body = { INVEN = 10 },
 
-	infravision = 20,
+	infravision = 10,
 	max_stamina = 110,
 	rank = 2,
 	size_category = 2,

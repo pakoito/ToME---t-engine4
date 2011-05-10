@@ -37,7 +37,7 @@ newEntity{ define_as = "UKLLMSWWIK",
 	rank = 4,
 	size_category = 4,
 	can_breath={water=1},
-	infravision = 20,
+	infravision = 10,
 	move_others=true,
 
 	instakill_immune = 1,

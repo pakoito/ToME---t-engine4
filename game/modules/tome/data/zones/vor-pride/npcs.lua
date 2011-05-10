@@ -32,7 +32,7 @@ newEntity{ base="BASE_NPC_ORC_VOR", define_as = "VOR",
 	level_range = {40, nil}, exp_worth = 2,
 	rank = 5,
 	max_life = 250, life_rating = 19, fixed_rating = true,
-	infravision = 20,
+	infravision = 10,
 	stats = { str=12, dex=10, cun=12, mag=21, con=14 },
 	move_others=true,
 

@@ -25,7 +25,7 @@ newEntity{
 	display = "p", color=colors.UMBER,
 
 	level_range = {1, nil},
-	infravision = 20,
+	infravision = 10,
 	lite = 1,
 
 	life_rating = 10,

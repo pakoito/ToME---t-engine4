@@ -28,7 +28,7 @@ newEntity{
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.drops{chance=100, nb=1, {type="money"} },
 
-	infravision = 20,
+	infravision = 10,
 	life_rating = 18,
 	rank = 2,
 	size_category = 5,

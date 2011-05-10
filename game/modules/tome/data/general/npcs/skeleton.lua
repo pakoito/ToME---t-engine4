@@ -30,7 +30,7 @@ newEntity{
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
 	resolvers.drops{chance=20, nb=1, {} },
 	resolvers.drops{chance=60, nb=1, {type="money"} },
-	infravision = 20,
+	infravision = 10,
 	rank = 2,
 	size_category = 3,
 

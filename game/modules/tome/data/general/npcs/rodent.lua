@@ -25,7 +25,7 @@ newEntity{ --rodent base
 	display = "r", color=colors.WHITE,
 	can_multiply = 2,
 	body = { INVEN = 10 },
-	infravision = 20,
+	infravision = 10,
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },

@@ -31,7 +31,7 @@ newEntity{ define_as = "BRIAGH",
 	max_life = 350, life_rating = 29, fixed_rating = true,
 	max_mana = 900, mana_regen=100,
 	equilibrium_regen = -50,
-	infravision = 20,
+	infravision = 10,
 	stats = { str=25, dex=10, cun=8, mag=80, wil=20, con=20 },
 	move_others=true,
 

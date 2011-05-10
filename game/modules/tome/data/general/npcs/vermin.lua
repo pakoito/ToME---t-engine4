@@ -31,7 +31,7 @@ newEntity{
 	global_speed = 0.9,
 	stats = { str=10, dex=15, mag=3, con=3 },
 	combat_armor = 1, combat_def = 1,
-	infravision = 20,
+	infravision = 10,
 	rank = 1,
 	size_category = 1,
 	blind_immune = 1,

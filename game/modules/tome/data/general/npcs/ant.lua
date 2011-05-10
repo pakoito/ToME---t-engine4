@@ -33,7 +33,7 @@ newEntity{
 	energy = { mod=1 },
 	combat_armor = 1, combat_def = 1,
 	combat = { dam=resolvers.levelup(resolvers.rngavg(5,5), 1, 1), atk=15, apr=7, dammod={str=0.6} },
-	infravision = 20,
+	infravision = 10,
 	max_life = resolvers.rngavg(10,20),
 	rank = 1,
 	size_category = 1,
@@ -123,7 +123,7 @@ newEntity{ base = "BASE_NPC_ANT",
 	on_melee_hit = {[DamageType.ICE]=5},
 	on_die = function(self, who)
 		local part = "FROST_ANT_STINGER"
-		if game.player:hasQuest("brotherhood-of-alchemists") then 
+		if game.player:hasQuest("brotherhood-of-alchemists") then
 			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
 		end
 	end,

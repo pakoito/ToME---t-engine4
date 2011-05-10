@@ -100,7 +100,7 @@ newEntity{ base="BASE_NPC_ORC", define_as = "GREATMOTHER",
 	level_range = {40, nil}, exp_worth = 1,
 	rank = 5,
 	max_life = 700, life_rating = 25, fixed_rating = true,
-	infravision = 20,
+	infravision = 10,
 	move_others=true,
 	never_move = 1,
 

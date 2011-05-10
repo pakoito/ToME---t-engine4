@@ -36,7 +36,7 @@ newEntity{ define_as = "SHADE_OF_TELOS",
 	max_life = 250, life_rating = 22, fixed_rating = true,
 	rank = 4,
 	size_category = 3,
-	infravision = 20,
+	infravision = 10,
 	stats = { str=1, dex=14, cun=34, mag=25, con=10 },
 
 	combat_def = 40, combat_armor = 30,

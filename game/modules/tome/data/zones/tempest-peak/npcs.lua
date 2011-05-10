@@ -37,7 +37,7 @@ newEntity{ define_as = "URKIS",
 	max_mana = 850, mana_regen = 40,
 	rank = 4,
 	size_category = 2,
-	infravision = 20,
+	infravision = 10,
 	stats = { str=10, dex=12, cun=14, mag=25, con=16 },
 
 	instakill_immune = 1,

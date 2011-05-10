@@ -33,7 +33,7 @@ newEntity{ define_as = "ATAMATHON", base = "BASE_NPC_CONSTRUCT",
 	stats = { str=35, dex=10, cun=8, mag=30, con=30 },
 	rank = 3.5,
 	size_category = 5,
-	infravision = 20,
+	infravision = 10,
 	instakill_immune = 1,
 	move_others=true,
 

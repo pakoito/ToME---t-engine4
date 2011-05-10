@@ -30,7 +30,7 @@ newEntity{ base = "BASE_NPC_YAECH", define_as = "MURGOL",
 	level_range = {7, nil}, exp_worth = 2,
 	max_life = 100, life_rating = 13, fixed_rating = true,
 	psi_regen = 10,
-	infravision = 20,
+	infravision = 10,
 	stats = { str=10, dex=10, cun=15, mag=16, wil=16, con=10 },
 	move_others=true,
 

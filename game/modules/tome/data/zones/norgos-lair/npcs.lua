@@ -40,7 +40,7 @@ newEntity{ base="BASE_NPC_BEAR", define_as = "NORGOS",
 	stats = { str=25, dex=15, cun=8, mag=10, wil=20, con=20 },
 	rank = 4,
 	size_category = 5,
-	infravision = 20,
+	infravision = 10,
 	instakill_immune = 1,
 	move_others=true,
 

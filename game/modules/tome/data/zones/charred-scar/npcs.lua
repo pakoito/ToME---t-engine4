@@ -116,7 +116,7 @@ newEntity{
 	combat = { dam=resolvers.rngavg(5,12), atk=2, apr=6, physspeed=2 },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
-	infravision = 20,
+	infravision = 10,
 	lite = 2,
 
 	life_rating = 11,

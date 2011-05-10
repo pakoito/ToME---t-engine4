@@ -28,7 +28,7 @@ newEntity{
 
 	combat = { dam=resolvers.levelup(resolvers.mbonus(25, 15), 1, 1), atk=15, apr=0, dammod={str=0.7} },
 
-	infravision = 20,
+	infravision = 10,
 	max_life = 40, life_rating = 5,
 	max_stamina = 85,
 	max_mana = 85,
@@ -45,7 +45,7 @@ newEntity{
 	combat_armor = 1, combat_def = 1,
 	on_die = function(self, who)
 		local part = "SANDWORM_TOOTH"
-		if game.player:hasQuest("brotherhood-of-alchemists") then 
+		if game.player:hasQuest("brotherhood-of-alchemists") then
 			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
 		end
 	end,

@@ -50,7 +50,7 @@ newEntity{
 	autolevel = "warriormage",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=9, },
 	stats = { str=12, dex=12, mag=12, con=12 },
-	infravision = 20,
+	infravision = 10,
 	life_regen = 3,
 	size_category = 3,
 	rank = 2,

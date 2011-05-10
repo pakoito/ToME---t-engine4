@@ -29,7 +29,7 @@ newEntity{
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 
-	infravision = 20,
+	infravision = 10,
 	life_rating = 12,
 	max_stamina = 90,
 	rank = 2,

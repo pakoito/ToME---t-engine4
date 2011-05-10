@@ -35,7 +35,7 @@ newEntity{ base="BASE_NPC_ORC_GORBAT", define_as = "GORBAT",
 	level_range = {40, nil}, exp_worth = 2,
 	rank = 5,
 	max_life = 250, life_rating = 29, fixed_rating = true,
-	infravision = 20,
+	infravision = 10,
 	stats = { str=12, dex=10, cun=100, mag=21, con=14 },
 	move_others=true,
 

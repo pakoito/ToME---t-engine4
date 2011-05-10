@@ -34,7 +34,7 @@ newEntity{ base="BASE_NPC_CORRUPTED_HORROR", define_as = "THE_MOUTH",
 	stats = { str=10, dex=10, cun=12, mag=20, con=10 },
 	rank = 4,
 	size_category = 4,
-	infravision = 20,
+	infravision = 10,
 	instakill_immune = 1,
 	never_move = true,
 

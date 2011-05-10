@@ -34,7 +34,7 @@ newEntity{
 	combat_armor = 1, combat_def = 1,
 	rank = 1,
 	size_category = 3,
-	infravision = 20,
+	infravision = 10,
 	blind_immune = 1,
 
 	clone_on_hit = {min_dam_pct=15, chance=30},

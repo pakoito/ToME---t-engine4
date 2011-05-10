@@ -35,7 +35,7 @@ newEntity{
 	rank = 2,
 	blind_immune = 1,
 	size_category = 3,
-	infravision = 20,
+	infravision = 10,
 	no_breath = 1,
 
 	drops = resolvers.drops{chance=60, nb=1, {type="money"} },

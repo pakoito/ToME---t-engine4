@@ -32,7 +32,7 @@ A gloomy aura emanates from him.]],
 	stats = { str=20, dex=15, wil=18, con=20 },
 	rank = 4,
 	size_category = 2,
-	infravision = 20,
+	infravision = 10,
 	instakill_immune = 1,
 	move_others=true,
 
@@ -74,7 +74,7 @@ newEntity{ defined_as = "LUMBERJACK",
 	stats = { str=20 },
 	rank = 2,
 	size_category = 2,
-	infravision = 20,
+	infravision = 10,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 

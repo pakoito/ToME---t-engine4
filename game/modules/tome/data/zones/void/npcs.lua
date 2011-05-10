@@ -42,7 +42,7 @@ Now you have come to finish what the Sher'tul began. Become a Godslayer yourself
 	inc_stats = { str=80, dex=80, con=80, mag=80, wil=80, cun=80 },
 	rank = 5,
 	size_category = 5,
-	infravision = 20,
+	infravision = 10,
 
 	instakill_immune = 1,
 	stun_immune = 1,

@@ -34,7 +34,7 @@ newEntity{
 
 	can_pass = {pass_wall=20},
 
-	infravision = 20,
+	infravision = 10,
 	life_rating = 12,
 	max_stamina = 90,
 	rank = 2,

@@ -34,7 +34,7 @@ newEntity{
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
 	combat = { dam=resolvers.mbonus(46, 20), atk=15, apr=7, dammod={str=0.7} },
 	max_life = resolvers.rngavg(100,120),
-	infravision = 20,
+	infravision = 10,
 	open_door = true,
 	rank = 2,
 	size_category = 3,

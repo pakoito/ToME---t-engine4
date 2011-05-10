@@ -31,7 +31,7 @@ Vicious predators, they inject corrupting diseases into their foes, and their sh
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 
-	infravision = 20,
+	infravision = 10,
 	size_category = 1,
 	rank = 2,
 

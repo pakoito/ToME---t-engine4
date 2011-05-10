@@ -41,7 +41,7 @@ newEntity{
 	autolevel = "caster",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=4, },
 	stats = { str=11, dex=11, mag=15, con=12 },
-	infravision = 20,
+	infravision = 10,
 	rank = 2,
 	size_category = 3,
 

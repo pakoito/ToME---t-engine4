@@ -41,7 +41,7 @@ newEntity{ define_as = "EPOCH",
 	poison_immune = 1,
 	disease_immune = 1,
 	size_category = 5,
-	infravision = 20,
+	infravision = 10,
 	instakill_immune = 1,
 	move_others=true,
 

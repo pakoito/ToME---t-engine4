@@ -30,7 +30,7 @@ newEntity{
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	lite = 1,
 
-	infravision = 20,
+	infravision = 10,
 	life_rating = 8,
 	rank = 2,
 	size_category = 3,

@@ -42,7 +42,7 @@ newEntity{ define_as = "WRATHROOT",
 	stats = { str=25, dex=10, cun=8, mag=20, wil=20, con=20 },
 	rank = 4,
 	size_category = 5,
-	infravision = 20,
+	infravision = 10,
 	instakill_immune = 1,
 	move_others=true,
 
@@ -102,7 +102,7 @@ newEntity{ define_as = "SNAPROOT", -- backup guardian
 
 	rank = 4,
 	size_category = 5,
-	infravision = 20,
+	infravision = 10,
 	instakill_immune = 1,
 	stun_immune = 1,
 	move_others = true,

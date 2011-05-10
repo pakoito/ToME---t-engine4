@@ -28,7 +28,7 @@ newEntity{
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
 	resolvers.drops{chance=30, nb=1, {type="gem"} },
-	infravision = 20,
+	infravision = 10,
 
 	life_rating = 20,
 	rank = 2,

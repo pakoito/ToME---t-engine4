@@ -32,7 +32,7 @@ newEntity{
 	combat = { atk=2, dammod={str=0.6} },
 --	max_life = resolvers.rngavg(30, 50),
 	stats = { str=16, con=16 },
-	infravision = 20,
+	infravision = 10,
 	rank = 2,
 	size_category = 3,
 

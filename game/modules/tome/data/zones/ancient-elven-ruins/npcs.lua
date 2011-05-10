@@ -43,7 +43,7 @@ newEntity{ define_as = "GREATER_MUMMY_LORD",
 	size_category = 2,
 	open_door = true,
 	move_others=true,
-	infravision = 20,
+	infravision = 10,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1, },
 	equipment = resolvers.equip{
@@ -89,7 +89,7 @@ newEntity{ base = "BASE_NPC_MUMMY",
 	max_life = resolvers.rngavg(120,140),
 	ai_state = { talent_in=4, },
 	stats = { mag=25, wil=20, },
-	infravision = 20,
+	infravision = 10,
 
 	resolvers.equip{
 		{type="weapon", subtype="greatsword", autoreq=true},
@@ -113,7 +113,7 @@ newEntity{ base = "BASE_NPC_MUMMY",
 	max_life = resolvers.rngavg(20,40), life_rating=4,
 	ai_state = { talent_in=2, },
 	never_move = 1,
-	infravision = 20,
+	infravision = 10,
 
 	resolvers.equip{
 		{type="armor", subtype="mummy", force_drop=true, autoreq=true},
@@ -136,7 +136,7 @@ newEntity{ base = "BASE_NPC_MUMMY",
 	rarity = 2,
 	max_life = resolvers.rngavg(60,80), life_rating=7,
 	ai_state = { talent_in=4, },
-	infravision = 20,
+	infravision = 10,
 
 	resolvers.equip{
 		{type="armor", subtype="mummy", autoreq=true},

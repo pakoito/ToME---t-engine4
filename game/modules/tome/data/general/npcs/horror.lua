@@ -33,7 +33,7 @@ newEntity{
 	stats = { str=22, dex=20, wil=15, con=15 },
 	combat_armor = 0, combat_def = 0,
 	combat = { dam=5, atk=15, apr=7, dammod={str=0.6} },
-	infravision = 20,
+	infravision = 10,
 	max_life = resolvers.rngavg(10,20),
 	rank = 2,
 	size_category = 3,

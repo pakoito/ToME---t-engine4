@@ -30,7 +30,7 @@ newEntity{ base="BASE_NPC_ORC_RAK_SHOR", define_as = "CULTIST_RAK_SHOR",
 	level_range = {35, nil}, exp_worth = 2,
 	rank = 4,
 	max_life = 150, life_rating = 17, fixed_rating = true,
-	infravision = 20,
+	infravision = 10,
 	stats = { str=15, dex=10, cun=42, mag=16, con=14 },
 	move_others=true,
 

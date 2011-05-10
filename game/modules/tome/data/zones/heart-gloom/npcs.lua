@@ -49,7 +49,7 @@ newEntity{ base="BASE_NPC_CANINE", define_as = "WITHERING_THING",
 	stats = { str=20, dex=20, cun=12, wil=20, con=10 },
 	rank = 4,
 	size_category = 3,
-	infravision = 20,
+	infravision = 10,
 	instakill_immune = 1,
 
 	combat = { dam=resolvers.levelup(8, 1, 0.9), atk=15, apr=3 },

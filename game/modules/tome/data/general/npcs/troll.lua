@@ -30,7 +30,7 @@ newEntity{
 	resolvers.drops{chance=20, nb=1, {} },
 	resolvers.drops{chance=60, nb=1, {type="money"} },
 
-	infravision = 20,
+	infravision = 10,
 	life_rating = 15,
 	life_regen = 2,
 	max_stamina = 90,

@@ -33,7 +33,7 @@ newEntity{
 	global_speed = 1.2,
 	combat_armor = 1, combat_def = 5,
 	combat = { dam=5, atk=15, apr=7, dammod={str=0.6} },
-	infravision = 20,
+	infravision = 10,
 	max_life = resolvers.rngavg(10,20),
 	rank = 1,
 	size_category = 1,
