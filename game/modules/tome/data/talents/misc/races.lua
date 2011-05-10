@@ -45,6 +45,7 @@ newTalent{
 	no_energy = true,
 	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 5 end,
 	tactical = { HEAL = 2 },
+	on_pre_use = function(self, t) return not self:hasEffect(self.EFF_REGENERATION) end,
 	action = function(self, t)
 		self:setEffect(self.EFF_REGENERATION, 10, {power=5 + self:getWil() * 0.5})
 		return true

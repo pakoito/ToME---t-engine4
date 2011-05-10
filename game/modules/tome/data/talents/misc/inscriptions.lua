@@ -58,6 +58,7 @@ newInscription{
 	type = {"inscriptions/infusions", 1},
 	points = 1,
 	tactical = { HEAL = 2 },
+	on_pre_use = function(self, t) return not self:hasEffect(self.EFF_REGENERATION) end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:setEffect(self.EFF_REGENERATION, data.dur, {power=(data.heal + data.inc_stat) / data.dur})

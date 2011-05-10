@@ -28,6 +28,7 @@ newTalent{
 	cooldown = 10,
 	tactical = { HEAL = 2 },
 	getRegeneration = function(self, t) return self:combatTalentSpellDamage(t, 5, 25) end,
+	on_pre_use = function(self, t) return not self:hasEffect(self.EFF_REGENERATION) end,
 	action = function(self, t)
 		self:setEffect(self.EFF_REGENERATION, 10, {power=t.getRegeneration(self, t)})
 		game:playSoundNear(self, "talents/heal")
