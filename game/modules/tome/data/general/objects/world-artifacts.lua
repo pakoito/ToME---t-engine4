@@ -400,7 +400,7 @@ newEntity{ base = "BASE_LONGBOW",
 	cost = 800,
 	material_level = 5,
 	combat = {
-		range = 18,
+		range = 10,
 		physspeed = 0.7,
 		apr = 12,
 	},

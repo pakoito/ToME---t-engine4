@@ -1288,7 +1288,7 @@ static int map_to_screen(lua_State *L)
 	if (always_show && changed)
 	{
 		lua_getglobal(L, "game");
-		lua_pushstring(L, "updateFOV");
+		lua_pushliteral(L, "updateFOV");
 		lua_gettable(L, -2);
 		if (lua_isfunction(L, -1)) {
 			lua_pushvalue(L, -2);
