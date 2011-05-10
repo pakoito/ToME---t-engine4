@@ -54,7 +54,7 @@ newTalent{
 	paradox = 10,
 	cooldown = 15,
 	tactical = { DEFEND = 2 },
-	no_energy = true, 
+	no_energy = true,
 	getAbsorb = function(self, t) return self:combatTalentSpellDamage(t, 30, 470) * getParadoxModifier(self, pm) end,
 	action = function(self, t)
 		self:setEffect(self.EFF_DAMAGE_SHUNT, 10, {power=t.getAbsorb(self, t)})
@@ -100,7 +100,7 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		local reduction = t.getReduction(self, t)
-		return ([[By altering the target's past you change it's present, reducing all of it's resistances by %d%% for %d turns.
+		return ([[By altering the target's past you change its present, reducing all of its resistances by %d%% for %d turns.
 		The duration and reduction will scale with your Paradox.  The reduction will increase with your Magic stat.]]):
 		format(reduction, duration)
 	end,
@@ -123,11 +123,11 @@ newTalent{
 		if checkTimeline(self) == true then
 			return
 		end
-		
+
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local tx, ty = self:getTarget(tg)
 		if not tx or not ty then return nil end
-				
+
 		local sex = game.player.female and "she" or "he"
 		local a = mod.class.NPC.new{}
 		a:replaceWith(game.player:resolveSource():cloneFull())

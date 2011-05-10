@@ -38,7 +38,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local weapon = 100 * (self:combatTalentWeaponDamage(t, 1.1, 1.9) * getParadoxModifier(self, pm))
-		return ([[You fire a shot that phases out of time and space allowing it to virtually ignore armor.  The shot will deal %d%% weapon damage as temporal damage to it's target.
+		return ([[You fire a shot that phases out of time and space allowing it to virtually ignore armor.  The shot will deal %d%% weapon damage as temporal damage to its target.
 		The damage will scale with your Paradox.]]):
 		format(damDesc(self, DamageType.TEMPORAL, weapon))
 	end
@@ -81,7 +81,7 @@ newTalent{
 	sustain_paradox = 225,
 	cooldown = 10,
 	tactical = { BUFF = 2 },
-	no_energy = true, 
+	no_energy = true,
 	getPower = function(self, t) return 10 + (self:combatTalentSpellDamage(t, 10, 40)) end,
 	activate = function(self, t)
 		local power = t.getPower(self, t)

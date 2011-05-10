@@ -315,7 +315,7 @@ newTalent{
 				type = "elemental", subtype = "temporal",
 				display = "E", color=colors.YELLOW,
 				name = "Telugoroth", faction = a.faction,
-				desc = [[A temporal elemental, rarely encountered except by those who travel through time itself.  It's blurred form constantly shifts before your eyes.]],
+				desc = [[A temporal elemental, rarely encountered except by those who travel through time itself.  Its blurred form constantly shifts before your eyes.]],
 				combat = { dam=resolvers.mbonus(40, 15), atk=15, apr=15, dammod={mag=0.8}, damtype=DamageType.TEMPORAL },
 				body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 				autolevel = "none",

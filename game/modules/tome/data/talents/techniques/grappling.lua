@@ -73,54 +73,54 @@ newTalent{
 		end
 	end,
 	action = function(self, t)
-	
+
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		
+
 		local grappled = false
-		
+
 		-- force stance change
-		if target and not self:isTalentActive(self.T_GRAPPLING_STANCE) then	
+		if target and not self:isTalentActive(self.T_GRAPPLING_STANCE) then
 			self:forceUseTalent(self.T_GRAPPLING_STANCE, {ignore_energy=true, ignore_cd = true})
 		end
-				
+
 		-- breaks active grapples if the target is not grappled
 		if target:isGrappled(self) then
 			grappled = true
 		else
 			self:breakGrapples()
 		end
-		
+
 		-- end the talent without effect if the target is to big
 		if self:grappleSizeCheck(target) then
 			return true
 		end
-	
+
 		-- start the grapple
 		local hit = self:startGrapple(target)
-		
+
 		local duration = t.getDuration(self, t)
-			
+
 		-- do crushing hold if we know it
 		if hit and self:knowTalent(self.T_CRUSHING_HOLD) then
-			local t = self:getTalentFromId(self.T_CRUSHING_HOLD)			
+			local t = self:getTalentFromId(self.T_CRUSHING_HOLD)
 			if grappled and not target.no_breath and not target.undead and target:canBe("silence") then
 				target:setEffect(target.EFF_STRANGLE_HOLD, duration, {src=self, power=t.getDamage(self, t) * 1.5})
 			else
 				target:setEffect(target.EFF_CRUSHING_HOLD, duration, {src=self, power=t.getDamage(self, t)})
 			end
-			
+
 		end
-				
+
 		return true
 	end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		local power = t.getPower(self, t)
 		local drain = t.getDrain(self, t)
-		return ([[Grapples the target for %d turns. A grappled opponent will be unable to move and it's attack and defense will be reduced by %d.  Any movement from the target or you will break the grapple.  Maintaining a grapple drains %d stamina per turn.
+		return ([[Grapples the target for %d turns. A grappled opponent will be unable to move and its attack and defense will be reduced by %d.  Any movement from the target or you will break the grapple.  Maintaining a grapple drains %d stamina per turn.
 		You may only grapple a single target at a time and using any targeted unarmed talent on a target that you're not grappling will break the grapple.
 		The grapple attack and defense reduction as well as success chance will scale with the strength stat.
 		Performing this action will switch your stance to Grappling Stance.]])
@@ -143,40 +143,40 @@ newTalent{
 	getMaim = function(self, t) return 10 + self:combatTalentStatDamage(t, "str", 5, 20) * (1 + getGrapplingStyle(self, dam)) end,
 	-- Learn the appropriate stance
 	action = function(self, t)
-	
+
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		
+
 		local grappled = false
-		
+
 		-- breaks active grapples if the target is not grappled
 		if target:isGrappled(self) then
 			grappled = true
 		else
 			self:breakGrapples()
 		end
-		
+
 		-- end the talent without effect if the target is to big
 		if self:grappleSizeCheck(target) then
 			return true
 		end
-		
+
 		local hit = self:startGrapple (target)
-		
+
 		-- deal damage and maim if appropriate
 		if hit then
-					
+
 			if grappled then
 				self:project(target, x, y, DamageType.PHYSICAL, self:physicalCrit(t.getDamage(self, t), nil, target))
 				target:setEffect(target.EFF_MAIMED, t.getDuration(self, t), {power=t.getMaim(self, t)})
 			else
 				self:project(target, x, y, DamageType.PHYSICAL, self:physicalCrit(t.getDamage(self, t), nil, target))
 			end
-			
+
 		end
-		
+
 		return true
 	end,
 	info = function(self, t)
@@ -222,14 +222,14 @@ newTalent{
 	getSlam = function(self, t) return 20 + self:combatTalentStatDamage(t, "str", 30, 500) * (1 + getGrapplingStyle(self, dam)) end,
 	-- Learn the appropriate stance
 	action = function(self, t)
-	
+
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > self:getTalentRange(t) then return nil end
-		
+
 		local grappled = false
-		
+
 		-- do the rush
 		local l = line.new(self.x, self.y, x, y)
 		local tx, ty = self.x, self.y
@@ -253,18 +253,18 @@ newTalent{
 		else
 			self:breakGrapples()
 		end
-		
+
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) == 1 then
 			-- end the talent without effect if the target is to big
 			if self:grappleSizeCheck(target) then
 				return true
 			end
-			
+
 			local hit = self:startGrapple (target)
-			
+
 			-- takedown or slam as appropriate
 			if hit then
-				
+
 				if grappled then
 					self:project(target, x, y, DamageType.PHYSICAL, self:physicalCrit(t.getSlam(self, t), nil, target))
 					if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
@@ -280,10 +280,10 @@ newTalent{
 						game.logSeen(target, "%s resists the daze!", target.name:capitalize())
 					end
 				end
-				
+
 			end
 		end
-		
+
 		return true
 	end,
 	info = function(self, t)

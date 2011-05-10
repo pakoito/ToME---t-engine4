@@ -123,8 +123,8 @@ checkBackfire = function(self, x, y)
 end
 
 checkTimeline = function(self)
-	if self:isTalentActive(self.T_DOOR_TO_THE_PAST) or self:hasEffect(self.EFF_SEE_THE_THREADS) or self:hasEffect(self.EFF_PRECOGNITION) or self:hasEffect(self.EFF_PARADOX_CLONE) or self:hasEffect(self.EFF_IMMINENT_PARADOX_CLONE) then
-		game.logPlayer(self, "The timeline is to fractured right now to use this ability.")
+	if self:isTalentActive(self.T_DOOR_TO_THE_PAST) or self:hasEffect(self.EFF_SEE_THREADS) or self:hasEffect(self.EFF_PRECOGNITION) or self:hasEffect(self.EFF_PARADOX_CLONE) or self:hasEffect(self.EFF_IMMINENT_PARADOX_CLONE) then
+		game.logPlayer(self, "The timeline is too fractured right now to use this ability.")
 		return true
 	else
 		return false
