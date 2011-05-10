@@ -395,3 +395,28 @@ All corners of Maj'Eyal show some trace of different types of dragons. The Daika
 Attacks from dragons on humans and halfling settlements are fairly rare, but when they occur they can be truly devastating. Usually they are to feed on livestock, but now and then come attacks from newly matured drakes, seeking out precious metals and gemstones to build up a hoard. Dragon hoards have become a thing of legend, with the greatest wyrms rumoured to protect literal mountains of gold, but in modern times truly sizeable hoards are rare. The dwarves farmed hoarding dragons almost to extinction in the Age of Allure, and most dragons these days retain only modest treasures in their lairs.
 
 Dragons are regularly hunted for their thick scales and their elementally imbued bones. Dragonskin leather is prized amongst armour-workers, as when properly treated it is both light and tough, and oft retains some inkling of the original wyrm's power. Dragon-bone is highly favoured by staff-crafters for its natural attunement to elemental forces, and is sometimes used by fletchers in the crafting of the most delicate yet resilient bows and arrows. However the hunting of dragons for their skin and bones is greatly opposed by many wyrmics, and there is an increasing market for "naturally harvested" drake materials - those taken from dragons which have died of natural causes. Still, demand for all dragon materials is strong with exceptionally high prices paid, and many are the greedy souls that lose their lives each year at the fangs and claws of these magnificent creatures.]]}
+
+
+--------------------------------------------------------------
+-- Misc
+--------------------------------------------------------------
+
+newLore{
+	id = "thaloren-lament",
+	category = "heart of the gloom",
+	name = "Lament for Lands now Lost",
+	lore = [[Where bright and berried yews did stand,
+Where the eldest oaks grew so grand,
+Where singing birds once flew to land,
+All is dust, all is dead.
+
+Once flowers rose to reach the sky,
+Once blossoms fell from beech on high,
+Once thrush and owl did screech and cry,
+Now all lost, now all fled.
+
+Oaths from Shaloren mages sworn,
+Yet spells of fiery rages born,
+Our lands of bygone ages torn,
+Gone is trust, wrath is red.
+]] }

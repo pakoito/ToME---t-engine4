@@ -19,13 +19,8 @@
 
 load("/data/general/objects/objects-maj-eyal.lua")
 
-for i = 1, 5 do
 newEntity{ base = "BASE_LORE",
-	define_as = "NOTE"..i,
-	name = "research log", lore="scintillating-caves-note-"..i,
-	desc = [[A paper scrap, left by an adventurer.]],
+	define_as = "NOTE",
+	name = "thaloren poem", lore="thaloren-lament",
 	rarity = false,
-	is_magic_device = false,
-	encumberance = 0,
 }
-end
