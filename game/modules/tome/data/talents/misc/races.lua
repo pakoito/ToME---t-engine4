@@ -652,6 +652,9 @@ newTalent{
 				game.logSeen(target, "%s resists the mental assault!", target.name:capitalize())
 				return
 			end
+			target:takeHit(1, self)
+			target:takeHit(1, self)
+			target:takeHit(1, self)
 			target:setEffect(target.EFF_DOMINANT_WILL, 4 + self:getWil(10), {src=self})
 		end)
 		return true
