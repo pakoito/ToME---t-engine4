@@ -46,6 +46,7 @@ newEntity{
 	fire_destroy = {{100,1}, {200,2}, {400,5}, {600,10}, {1200,20}},
 	desc = [[Natural infusions may be grafted onto your body, granting you an on-demand ability.]],
 	egos = "/data/general/objects/egos/infusions.lua", egos_chance = resolvers.mbonus(30, 5),
+	material_level_min_only = true,
 
 	power_source = {nature=true},
 	use_simple = { name="inscribe your skin with the infusion.", use = function(self, who, inven, item)
@@ -68,6 +69,7 @@ newEntity{
 	fire_destroy = {{10,1}, {20,2}, {40,5}, {60,10}, {120,20}},
 	desc = [[Magical runes may be inscribed onto your body, granting you an on-demand ability.]],
 	egos = "/data/general/objects/egos/infusions.lua", egos_chance = resolvers.mbonus(30, 5),
+	material_level_min_only = true,
 
 	power_source = {arcane=true},
 	use_simple = { name="inscribe your skin with the rune.", use = function(self, who, inven, item)
@@ -356,7 +358,7 @@ newEntity{ base = "BASE_RUNE",
 		dur = resolvers.mbonus_level(4, 3),
 		power = resolvers.mbonus_level(30, 30, function(e, v) return v * 0.3 end),
 		use_stat_mod = 0.3,
-		nb_uses = resolvers.mbonus_level(7, 4),
+		nb_uses = 2, --resolvers.mbonus_level(7, 4),
 	},
 	inscription_talent = "RUNE:_SPEED",
 }

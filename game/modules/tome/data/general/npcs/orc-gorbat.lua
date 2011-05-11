@@ -42,7 +42,7 @@ newEntity{
 	open_door = true,
 	resolvers.sustains_at_birth(),
 
-	resolvers.inscriptions(2, "infusion"),
+--	resolvers.inscriptions(2, "infusion"),
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
@@ -53,6 +53,17 @@ newEntity{
 			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
 		end
 	end,
+}
+
+newEntity{ base = "BASE_NPC_ORC_GORBAT",
+	name = "orc TEST", color=colors.YELLOW,
+	desc = [[A fierce orc attuned to the wilds.]],
+	level_range = {30, nil}, exp_worth = 1,
+	rarity = 1,
+	ai = "tactical",
+	ai_state = { talent_in=1, },
+	rank=3,
+	resolvers.inscriptions(1, {"speed rune"}),
 }
 
 newEntity{ base = "BASE_NPC_ORC_GORBAT",
@@ -110,7 +121,7 @@ newEntity{ base = "BASE_NPC_ORC_GORBAT",
 	resolvers.racial(),
 }
 
-newEntity{ base = "BASE_NPC_ORC",
+newEntity{ base = "BASE_NPC_ORC_GORBAT",
 	name = "orc master wyrmic", color=colors.LIGHT_STEEL_BLUE,
 	desc = [[A fierce soldier-orc highly trained in the discipline of dragons.]],
 	level_range = {30, nil}, exp_worth = 1,
@@ -143,7 +154,7 @@ newEntity{ base = "BASE_NPC_ORC",
 	resolvers.racial(),
 }
 
-newEntity{ base = "BASE_NPC_ORC",
+newEntity{ base = "BASE_NPC_ORC_GORBAT",
 	name = "orc mage-hunter", color=colors.HONEYDEW,
 	desc = [[An orc clad in massive armour, magic seems to die down all around him.]],
 	level_range = {30, nil}, exp_worth = 1,

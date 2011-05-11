@@ -478,7 +478,7 @@ function _M:generateOne(e)
 			end
 		else
 			m.on_added = function (self)
-				if m.on_added_orig then m.on_added_orig(self) end
+				if self.on_added_orig then self.on_added_orig(self) end
 				game.level.arena.danger = game.level.arena.danger + self.arenaPower
 			end
 		end

@@ -410,7 +410,7 @@ newInscription{
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_spell = true,
-	tactical = { DEFEND = 1, ESCAPE = 1 },
+	tactical = { DEFEND = 3, ESCAPE = 2 },
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:setEffect(self.EFF_INVISIBILITY, data.dur, {power=data.power + data.inc_stat})
@@ -434,7 +434,7 @@ newInscription{
 	points = 1,
 	is_spell = true,
 	no_energy = true,
-	tactical = { BUFF = 2 },
+	tactical = { BUFF = 4 },
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:setEffect(self.EFF_SPEED, data.dur, {power=(data.power + data.inc_stat) / 100})

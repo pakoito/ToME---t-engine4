@@ -279,22 +279,22 @@ newAI("use_tactical", function(self)
 		if avail.attack and self.ai_target.actor then
 			-- Use the foe/ally ratio from the best attack talent
 			table.sort(avail.attack, function(a,b) return a.val > b.val end)
-			want.attack = (avail.attack[1].nb_foes_hit or 1) - ally_compassion * (avail.attack[1].nb_allies_hit or 0) - self_compassion * (avail.attack[1].nb_self_hit or 0)
+			want.attack = avail.attack[1].val
 		end
 		if avail.disable and self.ai_target.actor then
 			-- Use the foe/ally ratio from the best disable talent
 			table.sort(avail.disable, function(a,b) return a.val > b.val end)
-			want.disable = (want.attack or 0) + (avail.disable[1].nb_foes_hit or 1) - ally_compassion * (avail.disable[1].nb_allies_hit or 0) - self_compassion * (avail.disable[1].nb_self_hit or 0)
+			want.disable = (want.attack or 0) + avail.disable[1].val
 		end
 		if avail.attackarea and self.ai_target.actor then
 			-- Use the foe/ally ratio from the best attackarea talent
 			table.sort(avail.attackarea, function(a,b) return a.val > b.val end)
-			want.attackarea = (want.attack or 0) + (avail.attackarea[1].nb_foes_hit or nb_foes_seen) - ally_compassion * (avail.attackarea[1].nb_allies_hit or nb_allies_seen) - self_compassion * (avail.attackarea[1].nb_self_hit or 0)
+			want.attackarea = avail.attackarea[1].val
 		end
 
 		-- Need buffs
 		if avail.buff and want.attack and want.attack > 0 then
-			want.buff = math.max(0.01, want.attack - 1)
+			want.buff = math.max(0.01, want.attack + 0.5)
 		end
 
 		print("Tactical ai report for", self.name)
