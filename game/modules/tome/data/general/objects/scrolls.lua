@@ -358,7 +358,7 @@ newEntity{ base = "BASE_RUNE",
 		dur = resolvers.mbonus_level(4, 3),
 		power = resolvers.mbonus_level(30, 30, function(e, v) return v * 0.3 end),
 		use_stat_mod = 0.3,
-		nb_uses = 2, --resolvers.mbonus_level(7, 4),
+		nb_uses = resolvers.mbonus_level(7, 4),
 	},
 	inscription_talent = "RUNE:_SPEED",
 }

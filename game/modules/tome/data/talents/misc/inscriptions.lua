@@ -411,6 +411,10 @@ newInscription{
 	points = 1,
 	is_spell = true,
 	tactical = { DEFEND = 3, ESCAPE = 2 },
+	on_pre_use = function(self, t)
+		local ok, data = pcall(self.getInscriptionData, self, t.short_name)
+		return ok and data.nb_uses > 0
+	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:setEffect(self.EFF_INVISIBILITY, data.dur, {power=data.power + data.inc_stat})
@@ -435,6 +439,10 @@ newInscription{
 	is_spell = true,
 	no_energy = true,
 	tactical = { BUFF = 4 },
+	on_pre_use = function(self, t)
+		local ok, data = pcall(self.getInscriptionData, self, t.short_name)
+		return ok and data.nb_uses > 0
+	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:setEffect(self.EFF_SPEED, data.dur, {power=(data.power + data.inc_stat) / 100})
