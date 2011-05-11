@@ -82,7 +82,7 @@ function _M:useObject(who, ...)
 	elseif self.use_talent then
 		if not self.use_talent.power or self.power >= self.use_talent.power then
 			self.power = self.power - self.use_talent.power
-			return self:useTalent(self.use_talent.id, who, self.use_talent.level, true)
+			return self:forceUseTalent(self.use_talent.id, {force_who=who, force_level=self.use_talent.level, ignore_cd=true, ignore_ressources=true})
 		else
 			if self.power_regen and self.power_regen ~= 0 then
 				game.logPlayer(who, "%s is still recharging.", self:getName{no_count=true})

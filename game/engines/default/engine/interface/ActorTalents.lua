@@ -210,6 +210,25 @@ function _M:postUseTalent(talent, ret)
 	return true
 end
 
+--- Force a talent to activate without using energy or such
+-- "def" can have a field "ignore_energy" to not consume energy; other parameters can be passed and handled by an overload of this method.
+-- Object activation interface calls this method with an "ignore_ressources" parameter
+function _M:forceUseTalent(t, def)
+	local oldpause = game.paused
+	local oldenergy = self.energy.value
+	if def.ignore_energy then self.energy.value = 10000 end
+
+	if def.ignore_ressources then self:attr("force_talent_ignore_ressources", 1) end
+	local ret = {self:useTalent(t, def.force_who, def.force_level, def.ignore_cd, def.force_target)}
+	if def.ignore_ressources then self:attr("force_talent_ignore_ressources", -1) end
+
+	if def.ignore_energy then
+		game.paused = oldpause
+		self.energy.value = oldenergy
+	end
+	return unpack(ret)
+end
+
 --- Is the sustained talent activated ?
 function _M:isTalentActive(t_id)
 	return self.sustain_talents[t_id]

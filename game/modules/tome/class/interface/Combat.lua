@@ -318,7 +318,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	if hitted and not target.dead and weapon.talent_on_hit and next(weapon.talent_on_hit) then
 		for tid, data in pairs(weapon.talent_on_hit) do
 			if rng.percent(data.chance) then
-				self:forceUseTalent(tid, {ignore_energy=true, force_target=target, force_level=data.level})
+				self:forceUseTalent(tid, {ignore_cd=true, ignore_energy=true, force_target=target, force_level=data.level, ignore_ressources=true})
 			end
 		end
 	end

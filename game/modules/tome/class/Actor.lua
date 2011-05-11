@@ -1834,7 +1834,9 @@ function _M:preUseTalent(ab, silent, fake)
 
 	if not self:enoughEnergy() and not fake then return false end
 
-	if ab.mode == "sustained" then
+	if self:attr("force_talent_ignore_ressources") then
+		-- nothing
+	elseif ab.mode == "sustained" then
 		if ab.sustain_mana and self.max_mana < ab.sustain_mana and not self:isTalentActive(ab.id) then
 			if not silent then game.logPlayer(self, "You do not have enough mana to activate %s.", ab.name) end
 			return false
@@ -1864,6 +1866,7 @@ function _M:preUseTalent(ab, silent, fake)
 			return false
 		end
 	else
+		if ab.mana then print("============ CHECKE MANA", ab.mana, self:getMana(), ab.mana * (100 + 2 * self:combatFatigue()) / 100) end
 		if ab.mana and self:getMana() < ab.mana * (100 + 2 * self:combatFatigue()) / 100 then
 			if not silent then game.logPlayer(self, "You do not have enough mana to cast %s.", ab.name) end
 			return false
@@ -1896,7 +1899,7 @@ function _M:preUseTalent(ab, silent, fake)
 
 	-- Equilibrium is special, it has no max, but the higher it is the higher the chance of failure (and loss of the turn)
 	-- But it is not affected by fatigue
-	if (ab.equilibrium or (ab.sustain_equilibrium and not self:isTalentActive(ab.id))) and not fake then
+	if (ab.equilibrium or (ab.sustain_equilibrium and not self:isTalentActive(ab.id))) and not fake and not self:attr("force_talent_ignore_ressources") then
 		-- Fail ? lose energy and 1/10 more equilibrium
 		if not self:attr("no_equilibrium_fail") and not self:equilibriumChance(ab.equilibrium or ab.sustain_equilibrium) then
 			if not silent then game.logPlayer(self, "You fail to use %s due to your equilibrium!", ab.name) end
@@ -1907,7 +1910,7 @@ function _M:preUseTalent(ab, silent, fake)
 	end
 
 	-- Paradox is special, it has no max, but the higher it is the higher the chance of something bad happening
-	if (ab.paradox or (ab.sustain_paradox and not self:isTalentActive(ab.id))) and not fake then
+	if (ab.paradox or (ab.sustain_paradox and not self:isTalentActive(ab.id))) and not fake and not self:attr("force_talent_ignore_ressources") then
 		-- Check failure first
 		if not self:attr("no_paradox_fail") and self:paradoxFailChance(ab.paradox or ab.sustain_paradox) and self:getParadox() > 200 then
 			if not silent then game.logPlayer(self, "You fail to use %s due to your paradox!", ab.name) end
@@ -1999,7 +2002,9 @@ function _M:postUseTalent(ab, ret)
 	end
 
 	local trigger = false
-	if ab.mode == "sustained" then
+	if self:attr("force_talent_ignore_ressources") then
+		-- nothing
+	elseif ab.mode == "sustained" then
 		if not self:isTalentActive(ab.id) then
 			if ab.sustain_mana then
 				trigger = true; self:incMaxMana(-ab.sustain_mana)
@@ -2105,20 +2110,12 @@ end
 
 --- Force a talent to activate without using energy or such
 function _M:forceUseTalent(t, def)
-	local oldpause = game.paused
-	local oldenergy = self.energy.value
-	if def.ignore_energy then self.energy.value = 10000 end
-
 	if def.no_equilibrium_fail then self:attr("no_equilibrium_fail", 1) end
 	if def.no_paradox_fail then self:attr("no_paradox_fail", 1) end
-	self:useTalent(t, nil, def.force_level, def.ignore_cd, def.force_target)
+	local ret = {engine.interface.ActorTalents.forceUseTalent(self, t, def)}
 	if def.no_equilibrium_fail then self:attr("no_equilibrium_fail", -1) end
 	if def.no_paradox_fail then self:attr("no_paradox_fail", -1) end
-
-	if def.ignore_energy then
-		game.paused = oldpause
-		self.energy.value = oldenergy
-	end
+	return unpack(ret)
 end
 
 --- Breaks stealth if active
