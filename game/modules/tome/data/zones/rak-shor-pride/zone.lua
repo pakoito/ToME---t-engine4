@@ -24,7 +24,7 @@ return {
 	max_level = 5,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
-	width = 50, height = 50,
+	width = 64, height = 64,
 	persistent = "zone",
 --	all_remembered = true,
 	all_lited = true,
@@ -34,21 +34,29 @@ return {
 	max_material_level = 5,
 	generator =  {
 		map = {
-			class = "engine.generator.map.Town",
-			building_chance = 70,
-			max_building_w = 8, max_building_h = 8,
-			edge_entrances = {6,4},
-			floor = "FLOOR",
-			external_floor = "SAND",
-			wall = "WALL",
+			class = "engine.generator.map.Static",
+			map = "zones/prides",
 			up = "SAND_UP6",
 			down = "SAND_DOWN4",
-			door = "DOOR",
+			floor = "SAND",
+			sublevel = {
+				class = "engine.generator.map.Town",
+				pride = "rak-shor",
+				building_chance = 70,
+				max_building_w = 8, max_building_h = 8,
+				edge_entrances = {6,4},
+				floor = "FLOOR",
+				external_floor = "SAND",
+				wall = "WALL",
+				up = "SAND",
+				down = "SAND",
+				door = "DOOR",
 
-			nb_rooms = {0,0,0,1},
-			rooms = {"lesser_vault"},
-			lesser_vaults_list = {"orc-armoury", "double-t", "crypt", "hostel"},
-			lite_room_chance = 100,
+				nb_rooms = {0,0,0,1},
+				rooms = {"lesser_vault"},
+				lesser_vaults_list = {"orc-armoury", "double-t", "crypt", "hostel"},
+				lite_room_chance = 100,
+			},
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
@@ -68,6 +76,11 @@ return {
 		[1] = {
 			generator = { map = {
 				up = "SAND_UP_WILDERNESS",
+			}, },
+		},
+		[5] = {
+			generator = { map = {
+				down = "SAND_UP_WILDERNESS",
 			}, },
 		},
 	},

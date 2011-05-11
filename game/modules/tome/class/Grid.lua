@@ -43,6 +43,10 @@ function _M:block_move(x, y, e, act, couldpass)
 					if ret then game.level.map(x, y, engine.Map.TERRAIN, game.zone.grid_list[self.door_opened]) end
 				end, "Open", "Leave")
 			end
+		elseif self.door_player_stop then
+			if e.player then
+				Dialog:simplePopup(self.name, self.door_player_stop)
+			end
 		else
 			game.level.map(x, y, engine.Map.TERRAIN, game.zone.grid_list[self.door_opened])
 		end

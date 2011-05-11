@@ -45,6 +45,9 @@ function _M:loadMap(file)
 	local f, err = loadfile("/data/maps/"..file..".lua")
 	if not f and err then error(err) end
 	local g = {
+		level = self.level,
+		zone = self.zone,
+		data = self.data,
 		Map = require("engine.Map"),
 		subGenerator = function(g)
 			self.subgen[#self.subgen+1] = g
@@ -211,31 +214,31 @@ function _M:generate(lev, old_lev)
 		local define_spot = self.tiles[c] and self.tiles[c].define_spot
 
 		if object then
-			local o
+			local o, mod
 			if type(object) == "string" then o = self.zone:makeEntityByName(self.level, "object", object)
-			elseif type(object) == "table" and object.random_filter then o = self.zone:makeEntity(self.level, "object", object.random_filter, nil, true)
+			elseif type(object) == "table" and object.random_filter then mod = object.entity_mod o = self.zone:makeEntity(self.level, "object", object.random_filter, nil, true)
 			else o = self.zone:finishEntity(self.level, "object", object)
 			end
 
-			if o then self:roomMapAddEntity(i-1, j-1, "object", o) end
+			if o then if mod then o = mod(o) end self:roomMapAddEntity(i-1, j-1, "object", o) end
 		end
 
 		if trap then
-			local t
+			local t, mod
 			if type(trap) == "string" then t = self.zone:makeEntityByName(self.level, "trap", trap)
-			elseif type(trap) == "table" and trap.random_filter then t = self.zone:makeEntity(self.level, "trap", trap.random_filter, nil, true)
+			elseif type(trap) == "table" and trap.random_filter then mod = trap.entity_mod t = self.zone:makeEntity(self.level, "trap", trap.random_filter, nil, true)
 			else t = self.zone:finishEntity(self.level, "trap", trap)
 			end
-			if t then self:roomMapAddEntity(i-1, j-1, "trap", t) end
+			if t then if mod then t = mod(t) end self:roomMapAddEntity(i-1, j-1, "trap", t) end
 		end
 
 		if actor then
-			local m
+			local m, mod
 			if type(actor) == "string" then m = self.zone:makeEntityByName(self.level, "actor", actor)
-			elseif type(actor) == "table" and actor.random_filter then m = self.zone:makeEntity(self.level, "actor", actor.random_filter, nil, true)
+			elseif type(actor) == "table" and actor.random_filter then mod = actor.entity_mod m = self.zone:makeEntity(self.level, "actor", actor.random_filter, nil, true)
 			else m = self.zone:finishEntity(self.level, "actor", actor)
 			end
-			if m then self:roomMapAddEntity(i-1, j-1, "actor", m) end
+			if m then if mod then m = mod(m) end self:roomMapAddEntity(i-1, j-1, "actor", m) end
 		end
 
 		if status then

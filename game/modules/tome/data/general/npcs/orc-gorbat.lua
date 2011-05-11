@@ -23,7 +23,7 @@ newEntity{
 	define_as = "BASE_NPC_ORC_GORBAT",
 	type = "humanoid", subtype = "orc",
 	display = "o", color=colors.GREEN,
-	faction = "orc-pride",
+	faction = "orc-pride", pride = "gorbat",
 
 	combat = { dam=resolvers.rngavg(5,12), atk=2, apr=6, physspeed=2 },
 
@@ -53,4 +53,92 @@ newEntity{
 			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
 		end
 	end,
+}
+
+newEntity{ base = "BASE_NPC_ORC_GORBAT",
+	name = "orc summoner", color=colors.YELLOW,
+	desc = [[A fierce orc attuned to the wilds.]],
+	level_range = {30, nil}, exp_worth = 1,
+	rarity = 1,
+	rank = 2,
+	max_life = resolvers.rngavg(80,110),
+	life_rating = 12,
+	resolvers.equip{
+		{type="weapon", subtype="sling", autoreq=true},
+	},
+	combat_armor = 2, combat_def = 0,
+
+	resolvers.inscriptions(1, "infusion"),
+
+	autolevel = "summoner",
+	resolvers.talents{
+		[Talents.T_SLING_MASTERY]={base=3, every=5, max=10},
+		[Talents.T_MINOTAUR]={base=4, every=6, max=7},
+		[Talents.T_RITCH_FLAMESPITTER]={base=4, every=5, max=7},
+		[Talents.T_SPIDER]={base=3, every=5, max=6},
+	},
+	resolvers.racial(),
+}
+
+newEntity{ base = "BASE_NPC_ORC_GORBAT",
+	name = "orc grand summoner", color=colors.SALMON,
+	desc = [[A fierce orc attuned to the wilds.]],
+	level_range = {30, nil}, exp_worth = 1,
+	rarity = 4,
+	rank = 3,
+	max_life = resolvers.rngavg(100,110),
+	life_rating = 13,
+	resolvers.equip{
+		{type="weapon", subtype="sling", autoreq=true},
+	},
+	combat_armor = 2, combat_def = 0,
+
+	autolevel = "summoner",
+	ai = "tactical",
+	resolvers.inscriptions(2, "infusion"),
+
+	resolvers.talents{
+		[Talents.T_SLING_MASTERY]={base=5, every=5, max=10},
+		[Talents.T_MINOTAUR]={base=5, every=6, max=9},
+		[Talents.T_STONE_GOLEM]={base=5, every=6, max=9},
+		[Talents.T_RITCH_FLAMESPITTER]={base=4, every=5, max=9},
+		[Talents.T_SPIDER]={base=5, every=5, max=8},
+		[Talents.T_RESOLVE]={base=4, every=5, max=6},
+		[Talents.T_NATURE_TOUCH]={base=3, every=5, max=8},
+		[Talents.T_NATURE_S_BALANCE]=5,
+	},
+	resolvers.racial(),
+}
+
+newEntity{ base = "BASE_NPC_ORC",
+	name = "orc master wyrmic", color=colors.LIGHT_STEEL_BLUE,
+	desc = [[A fierce soldier-orc highly trained in the discipline of dragons.]],
+	level_range = {30, nil}, exp_worth = 1,
+	rarity = 4,
+	rank = 3,
+	max_life = resolvers.rngavg(120,150),
+	life_rating = 15,
+	resolvers.equip{
+		{type="weapon", subtype="battleaxe", autoreq=true},
+		{type="armor", subtype="light", autoreq=true},
+	},
+	combat_armor = 2, combat_def = 3,
+
+	autolevel = "warriorwill",
+	ai = "tactical",
+	ai_tactic = resolvers.tactic"melee",
+	resolvers.inscriptions(1, "infusion"),
+
+	resolvers.talents{
+		[Talents.T_WEAPONS_MASTERY]={base=5, every=5, max=14},
+		[Talents.T_ICE_CLAW]={base=4, every=6, max=8},
+		[Talents.T_ICY_SKIN]={base=4, every=5, max=8},
+		[Talents.T_ICE_BREATH]={base=4, every=5, max=9},
+		[Talents.T_FIRE_BREATH]={base=4, every=5, max=9},
+		[Talents.T_SAND_BREATH]={base=4, every=5, max=9},
+		[Talents.T_TORNADO]={base=4, every=5, max=9},
+		[Talents.T_LIGHTNING_SPEED]={base=4, every=5, max=9},
+		[Talents.T_BELLOWING_ROAR]={base=4, every=5, max=9},
+	},
+	resolvers.racial(),
 }

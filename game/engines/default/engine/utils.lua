@@ -66,6 +66,7 @@ function table.merge(dst, src, deep, k_filter)
 			end
 		end
 	end
+	return dst
 end
 
 function table.mergeAdd(dst, src, deep)
@@ -80,6 +81,7 @@ function table.mergeAdd(dst, src, deep)
 			dst[k] = e
 		end
 	end
+	return dst
 end
 
 --- Merges additively the named fields and append the array part

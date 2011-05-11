@@ -23,7 +23,7 @@ newEntity{
 	define_as = "BASE_NPC_ORC_VOR",
 	type = "humanoid", subtype = "orc",
 	display = "o", color=colors.RED,
-	faction = "orc-pride",
+	faction = "orc-pride", pride = "vor",
 
 	combat = { dam=resolvers.rngavg(5,12), atk=2, apr=6, physspeed=2 },
 
