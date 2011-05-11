@@ -142,3 +142,35 @@ newEntity{ base = "BASE_NPC_ORC",
 	},
 	resolvers.racial(),
 }
+
+newEntity{ base = "BASE_NPC_ORC",
+	name = "orc mage-hunter", color=colors.HONEYDEW,
+	desc = [[An orc clad in massive armour, magic seems to die down all around him.]],
+	level_range = {30, nil}, exp_worth = 1,
+	rarity = 4,
+	rank = 3,
+	max_life = resolvers.rngavg(120,150),
+	life_rating = 15,
+	resolvers.equip{
+		{type="weapon", subtype="waraxe", autoreq=true},
+		{type="armor", subtype="shield", autoreq=true},
+		{type="armor", subtype="massive", autoreq=true},
+	},
+	combat_armor = 2, combat_def = 3,
+
+	autolevel = "warriorwill",
+	ai = "tactical",
+	ai_tactic = resolvers.tactic"melee",
+	resolvers.inscriptions(2, "infusion"),
+
+	resolvers.talents{
+		[Talents.T_WEAPONS_MASTERY]={base=5, every=5, max=14},
+		[Talents.T_WEAPON_COMBAT]={base=5, every=5, max=14},
+		[Talents.T_ARMOUR_TRAINING]={base=5, every=5, max=14},
+		[Talents.T_RESOLVE]={base=4, every=5, max=9},
+		[Talents.T_ANTIMAGIC_SHIELD]={base=4, every=5, max=9},
+		[Talents.T_AURA_OF_SILENCE]={base=4, every=5, max=9},
+		[Talents.T_MANA_CLASH]={base=4, every=5, max=9},
+	},
+	resolvers.racial(),
+}
