@@ -26,7 +26,7 @@ mkdir t-engine4-linux32-"$ver"
 # src
 echo "******************** Src"
 cd t-engine4-src-"$ver"
-cp -a ../../bootstrap/  ../../game/ ../../C* ../../premake4.lua ../../src/ .
+cp -a ../../bootstrap/  ../../game/ ../../C* ../../premake4.lua ../../src/ ../../build/ ../../mac/  .
 rm -rf game/modules/angband
 rm -rf game/modules/rogue
 rm -rf game/modules/gruesome
@@ -48,7 +48,6 @@ tar cvjf t-engine4-src-"$ver".tar.bz2 t-engine4-src-"$ver"
 echo "******************** Windows"
 cd t-engine4-windows-"$ver"
 cp -a ../../bootstrap/  ../../game/ ../../C* ../../dlls/* .
-mv te4core-* game/engines/cores/
 find . -name '*~' -or -name '.svn' | xargs rm -rf
 rm -rf game/modules/angband
 rm -rf game/modules/rogue
@@ -60,7 +59,6 @@ zip -r -9 t-engine4-windows-"$ver".zip t-engine4-windows-"$ver"
 echo "******************** linux32"
 cd t-engine4-linux32-"$ver"
 cp -a ../../bootstrap/  ../../game/ ../../C* ../../linux-bin/* .
-mv te4core-* game/engines/cores/
 find . -name '*~' -or -name '.svn' | xargs rm -rf
 rm -rf game/modules/angband
 rm -rf game/modules/rogue
