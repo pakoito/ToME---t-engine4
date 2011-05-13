@@ -455,7 +455,7 @@ newEntity{ base = "BASE_SLING",
 	cost = 350,
 	material_level = 3,
 	combat = {
-		range = 18,
+		range = 10,
 		physspeed = 0.7,
 	},
 	basic_ammo = {
