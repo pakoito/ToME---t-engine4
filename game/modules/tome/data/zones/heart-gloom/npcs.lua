@@ -24,7 +24,7 @@ local gloomify = function(add, mult)
 	mult = mult or 1
 	return function(e)
 		if e.rarity then
-			local list = {"T_GLOOM", "T_AGONY", "T_REPROACH", "T_DARK_TENDRILS", "T_BLINDSIDE", "T_RADIANT_FEAR"}
+			local list = {"T_GLOOM", "T_AGONY", "T_REPROACH", "T_DARK_TENDRILS", "T_BLINDSIDE"}
 			e[#e+1] = resolvers.talents{[ Talents[rng.table(list)] ] = {base=1, every=5, max=6}}
 			e.rarity = math.ceil(e.rarity * mult + add)
 			e.name = rng.table{"gloomy ", "deformed ", "sick "}..e.name
