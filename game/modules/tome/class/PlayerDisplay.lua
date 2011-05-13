@@ -220,7 +220,8 @@ function _M:display()
 		)) h = h + self.font_h
 	end
 	if player:knowTalent(player.T_EQUILIBRIUM_POOL) then
-		self:mouseTooltip(self.TOOLTIP_EQUILIBRIUM, self:makeTextureBar("#00ff74#Equi:", ("%d"):format(player:getEquilibrium()), math.min(1, math.log(1 + player:getEquilibrium() / 100)), 100, x, h, 255, 255, 255,
+		local _, chance = player:equilibriumChance()
+		self:mouseTooltip(self.TOOLTIP_EQUILIBRIUM, self:makeTextureBar("#00ff74#Equi:", ("%d"):format(player:getEquilibrium()), 100 - chance, 100, x, h, 255, 255, 255,
 			{r=0x00 / 2, g=0xff / 2, b=0x74 / 2},
 			{r=0x00 / 5, g=0xff / 5, b=0x74 / 5}
 		)) h = h + self.font_h
@@ -250,7 +251,8 @@ function _M:display()
 		)) h = h + self.font_h
 	end
 	if player:knowTalent(player.T_PARADOX_POOL) then
-		self:mouseTooltip(self.TOOLTIP_PARADOX, self:makeTextureBar("#LIGHT_STEEL_BLUE#Paradox:", ("       %d"):format(player:getParadox()), math.min(1, math.log(1 + player:getParadox() / 100)), 100, x, h, 255, 255, 255,
+		local _, chance = player:paradoxFailChance()
+		self:mouseTooltip(self.TOOLTIP_PARADOX, self:makeTextureBar("#LIGHT_STEEL_BLUE#Paradox:", ("       %d"):format(player:getParadox()), chance, 100, x, h, 255, 255, 255,
 			{r=176 / 2, g=196 / 2, b=222 / 2},
 			{r=176 / 2, g=196 / 2, b=222 / 2}
 		)) h = h + self.font_h

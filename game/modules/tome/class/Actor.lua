@@ -1753,13 +1753,15 @@ function _M:equilibriumChance(eq)
 	if eq < wil then return true, 100 end
 	eq = eq - wil
 	local chance = math.sqrt(eq) / 60
-	print("[Equilibrium] Use chance: ", 100 - chance * 100, "::", self:getEquilibrium())
+	--print("[Equilibrium] Use chance: ", 100 - chance * 100, "::", self:getEquilibrium())
+	chance = util.bound(chance, 0, 1)
 	return rng.percent(100 - chance * 100), 100 - chance * 100
 end
 
 --- Paradox check
 function _M:paradoxFailChance(pa)
 	--check for Paradox Mastery
+	local modifier
 	if self:knowTalent(self.T_PARADOX_MASTERY) and self:isTalentActive(self.T_PARADOX_MASTERY) then
 		modifier = self:getWil() * (1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10) or 0 )
 	else
@@ -1768,6 +1770,7 @@ function _M:paradoxFailChance(pa)
 	--print("[Paradox] Will modifier: ", modifier, "::", self:getParadox())
 	local chance = math.pow (((self:getParadox() - modifier)/200), 2)*((100 + self:combatFatigue()) / 100)
 	--print("[Paradox] Fail chance: ", chance, "::", self:getParadox())
+	chance = util.bound(chance, 0, 100)
 	return rng.percent(chance), chance
 end
 
