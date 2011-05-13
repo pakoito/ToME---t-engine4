@@ -254,7 +254,7 @@ function _M:display()
 		local _, chance = player:paradoxFailChance()
 		self:mouseTooltip(self.TOOLTIP_PARADOX, self:makeTextureBar("#LIGHT_STEEL_BLUE#Paradox:", ("       %d"):format(player:getParadox()), chance, 100, x, h, 255, 255, 255,
 			{r=176 / 2, g=196 / 2, b=222 / 2},
-			{r=176 / 2, g=196 / 2, b=222 / 2}
+			{r=176 / 5, g=196 / 5, b=222 / 5}
 		)) h = h + self.font_h
 	end
 	if player:knowTalent(player.T_PSI_POOL) then

@@ -124,8 +124,10 @@ newTalent{
 			return
 		end
 
-		local tg = {type="hit", range=self:getTalentRange(t)}
+		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty = self:getTarget(tg)
+		if not tx or not ty then return nil end
+		local _ _, tx, ty = self:canProject(tg, tx, ty)
 		if not tx or not ty then return nil end
 
 		local sex = game.player.female and "she" or "he"
