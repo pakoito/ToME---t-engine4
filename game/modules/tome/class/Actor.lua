@@ -242,49 +242,51 @@ function _M:actTurn()
 	self:timedEffects()
 
 	-- Handle thunderstorm, even if the actor is stunned or incapacitated it still works
-	if self:isTalentActive(self.T_THUNDERSTORM) then
-		local t = self:getTalentFromId(self.T_THUNDERSTORM)
-		t.do_storm(self, t)
-	end
-	if self:isTalentActive(self.T_STONE_VINES) then
-		local t = self:getTalentFromId(self.T_STONE_VINES)
-		t.do_vines(self, t)
-	end
-	if self:isTalentActive(self.T_BODY_OF_FIRE) then
-		local t = self:getTalentFromId(self.T_BODY_OF_FIRE)
-		t.do_fire(self, t)
-	end
-	if self:isTalentActive(self.T_HYMN_OF_MOONLIGHT) then
-		local t = self:getTalentFromId(self.T_HYMN_OF_MOONLIGHT)
-		t.do_beams(self, t)
-	end
-	if self:isTalentActive(self.T_BLOOD_FRENZY) then
-		local t = self:getTalentFromId(self.T_BLOOD_FRENZY)
-		t.do_turn(self, t)
-	end
-	if self:isTalentActive(self.T_TRUE_GRIT) then
-		local t = self:getTalentFromId(self.T_TRUE_GRIT)
-		t.do_turn(self, t)
-	end
-	-- this handles cursed gloom turn based effects
-	if self:isTalentActive(self.T_GLOOM) then
-		local t = self:getTalentFromId(self.T_GLOOM)
-		t.do_gloom(self, t)
-	end
-	-- this handles cursed call shadows turn based effects
-	if self:isTalentActive(self.T_CALL_SHADOWS) then
-	    local t = self:getTalentFromId(self.T_CALL_SHADOWS)
-		t.do_callShadows(self, t)
-	end
-	-- this handles cursed deflection turn based effects
-	if self:isTalentActive(self.T_DEFLECTION) then
-	    local t = self:getTalentFromId(self.T_DEFLECTION)
-		t.do_act(self, t, self:isTalentActive(self.T_DEFLECTION))
-	end
-	-- this handles doomed unseen force turn based effects
-	if self.unseenForce then
-		local t = self:getTalentFromId(self.T_UNSEEN_FORCE)
-		t.do_unseenForce(self, t)
+	if not game.zone.wilderness then
+		if self:isTalentActive(self.T_THUNDERSTORM) then
+			local t = self:getTalentFromId(self.T_THUNDERSTORM)
+			t.do_storm(self, t)
+		end
+		if self:isTalentActive(self.T_STONE_VINES) then
+			local t = self:getTalentFromId(self.T_STONE_VINES)
+			t.do_vines(self, t)
+		end
+		if self:isTalentActive(self.T_BODY_OF_FIRE) then
+			local t = self:getTalentFromId(self.T_BODY_OF_FIRE)
+			t.do_fire(self, t)
+		end
+		if self:isTalentActive(self.T_HYMN_OF_MOONLIGHT) then
+			local t = self:getTalentFromId(self.T_HYMN_OF_MOONLIGHT)
+			t.do_beams(self, t)
+		end
+		if self:isTalentActive(self.T_BLOOD_FRENZY) then
+			local t = self:getTalentFromId(self.T_BLOOD_FRENZY)
+			t.do_turn(self, t)
+		end
+		if self:isTalentActive(self.T_TRUE_GRIT) then
+			local t = self:getTalentFromId(self.T_TRUE_GRIT)
+			t.do_turn(self, t)
+		end
+		-- this handles cursed gloom turn based effects
+		if self:isTalentActive(self.T_GLOOM) then
+			local t = self:getTalentFromId(self.T_GLOOM)
+			t.do_gloom(self, t)
+		end
+		-- this handles cursed call shadows turn based effects
+		if self:isTalentActive(self.T_CALL_SHADOWS) then
+			local t = self:getTalentFromId(self.T_CALL_SHADOWS)
+			t.do_callShadows(self, t)
+		end
+		-- this handles cursed deflection turn based effects
+		if self:isTalentActive(self.T_DEFLECTION) then
+			local t = self:getTalentFromId(self.T_DEFLECTION)
+			t.do_act(self, t, self:isTalentActive(self.T_DEFLECTION))
+		end
+		-- this handles doomed unseen force turn based effects
+		if self.unseenForce then
+			local t = self:getTalentFromId(self.T_UNSEEN_FORCE)
+			t.do_unseenForce(self, t)
+		end
 	end
 
 	-- Suffocate ?
