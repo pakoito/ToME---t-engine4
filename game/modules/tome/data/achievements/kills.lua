@@ -105,3 +105,16 @@ newAchievement{
 	desc = [[Killed the giant golem Atamathon after foolishly reactivating it.]],
 	mode = "player",
 }
+
+newAchievement{
+	name = "Huge Appetite", id = "EAT_BOSSES",
+	show = "full",
+	desc = [[Ate 20 bosses.]],
+	mode = "player",
+	can_gain = function(self, who)
+		if who.rank < 35 then return false end
+		self.nb = (self.nb or 0) + 1
+		if self.nb >= 20 then return true end
+	end,
+	track = function(self) return tstring{tostring(self.nb or 0)," / 20"} end,
+}
