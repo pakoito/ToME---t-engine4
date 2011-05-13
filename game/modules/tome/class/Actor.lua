@@ -1870,7 +1870,6 @@ function _M:preUseTalent(ab, silent, fake)
 			return false
 		end
 	else
-		if ab.mana then print("============ CHECKE MANA", ab.mana, self:getMana(), ab.mana * (100 + 2 * self:combatFatigue()) / 100) end
 		if ab.mana and self:getMana() < ab.mana * (100 + 2 * self:combatFatigue()) / 100 then
 			if not silent then game.logPlayer(self, "You do not have enough mana to cast %s.", ab.name) end
 			return false
