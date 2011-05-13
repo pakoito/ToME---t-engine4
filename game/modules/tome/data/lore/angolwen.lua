@@ -42,3 +42,26 @@ Aye, and humility is what I teach to ye now. Know ye well that there are forces 
 
 Our mission is to help the world. Our penance is to act in secret. Old wounds remain and new threats do arise, but all must be dealt with from behind our cloak of silence. The mistrust of our ilk still lies deep in people's minds, and there are even those who hate us with a violent passion. But the world is changing, and perhaps one day we shall be accepted again in society. Until then remember well this lesson of humility, and in the open world keep ye secret, and keep ye safe.]],
 }
+
+newLore{
+	id = "angolwen-tarelion-magic",
+	category = "angolwen",
+	name = "Lecture on the nature of magic by Archmage Tarelion",
+	lore = [[#{bold}#"What is Magic?"
+#{italic}#A study by Archmage Tazimar Tarelion#{normal}#
+
+How uncouth and common a question it must seem, and yet it is the one I am asked most often, even by some of our most learned students. Too often we teach The Art by practise and imitation and concentration on the end effects, without teaching in greater detail of the underlying principles. Just as a musician may merrily play on his harp without knowing how the sound arises from the vibration of the strings, so a mage may make use of magic without realising the true forces at work. In this document I hope to give learning on the nature of magic, and how the underlying effects give rise to all the wondrous fruits we can produce.
+
+Alchemists will tell you that the world is made up of many base materials - lead, copper, iron, gold and so on. They are fixated on splitting things down into these components and investigating how they react with each other. However there is more to the world than this. Certainly they represent the physical make-up of things, but they do not show the forces and energy that bring everything into motion. The forces of fire, cold, lightning and life itself are all very real effects, and these we call the Elements of Eyal. The true archmage is interested in the interactions of the elemental forces of the world, and manipulating them to his or her need.
+
+The elemental forces exist naturally in the world, and are weaved around all things in an all-encompassing canvas. They move, vibrate and resonate with the materials of the world, and the effects of each play heavily on one another. All creatures naturally make use of these elements, and some are more attuned to these threads than others. With great training and practise we can become more attuned to these wild forces ourselves, and in so doing some can match the speed of wolves, the strength of bears, the tenacity of treants and even the immense natural powers of dragons.
+
+But there is another way of gaining access to these elemental forces - a more direct way, though some would call it unnatural. Long ago people discovered with much training how to concentrate their wills to pluck the elemental threads directly. This can release great energies, and these can be shaped to produce real effects in the world. Plumes of fire, bolts of lightning and blasts of ice can all be called forth by those suitably trained. The true masters of magic can go much further, combining many resonant forces to create complex physical effects.
+
+The tapping of threads can be a draining task, requiring much effort of will to sustain. This is what we versed in the arcane call "mana", that mental stamina dedicated to the interaction with the elements of the world. Continual use of magic is like the constant lifting and holding of heavy weights, and eventually one will find one's capacity drained. Practise allows one to build up greater pools of mana, and certain runes and spells can gradually build extra reserves to be called upon as needed.
+
+Magical runes and items are imbued with an attachment to certain elemental threads. This requires delicate work by experienced and gifted enchanters. The most intricate of magical artifacts demand many years of work, using intense mental effort to permanently attune the core materials to the right elemental energies. Gemstones are especially easy to work with in this craft, and alchemists use them often to bring about elemental effects.
+
+Some believe that magic is inherently wrong, that the so-called twisting of the elements with one's will can only lead to terrible things. As students of Angolwen I assume you disagree! Magic is simply an extension of the forces of nature, and are we not natural creatures that use it? But remember that magic is still a powerful force that can be used for good or ill. Magic is indeed a tool of immense value - use it wisely.
+]],
+}

@@ -241,6 +241,7 @@ newEntity{
 		},
 		fixed = {
 			{id=true, defined="LINANIIL_LECTURE"},
+			{id=true, defined="TARELION_LECTURE_MAGIC"},
 		},
 	},
 }

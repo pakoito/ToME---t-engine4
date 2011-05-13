@@ -70,6 +70,11 @@
     <property name="display" value="6"/>
    </properties>
   </tile>
+  <tile id="6">
+   <properties>
+    <property name="display" value="T"/>
+   </properties>
+  </tile>
  </tileset>
  <tileset firstgid="217" name="dg_dungeon32" tilewidth="32" tileheight="32">
   <image source="gfx/dg_dungeon32.gif" width="288" height="320"/>
@@ -81,7 +86,7 @@
  </tileset>
  <layer name="Terrain" width="50" height="50">
   <data encoding="base64" compression="zlib">
-   eJztmMsNwyAMhnPOEh0jM3Qh5uk1A/S5SbdpD1iyLAeBCbZBHH6lgQb85Y95hWVZwtSUU60CWcfMxX8RyBMP5oDfGym7kHL6f2sG4Pj+9YjXFZW94vXN1H1QmTXDkR+0LFXnkaPn/MAsND+O8sbrmJVi4r4p6xhLebbIAT5Yx1TDAn5YxzI5Joc34Ty3jgXeKx4zc8dQb35MDl8cIcaTuh+Zw1ue9+oH128JR2qdqMnA9ZnLQRnoXkODJXWmUcoB8V8ZltYMO8Mh2eNhBhBXnyMJx7OyLfwMxL8xLLltSjlG8MNjfkg5KEuqTY3xqoYjHPRlMX/UcuS02WI+577rs89atDhuCVlxlK4TW3No7T9G5dgH4Tjbjxr+ETi85bmmH63nDw0Or5ocvuTx3EfqBV63W8ck8QE47oijR19G8AOzWI77PeoHvmDfOg==
+   eJztmMsNwyAMhnPOEhmDGboQ8/SaAfqepNu0ByxZloPABGwQh19poAF/+WNeflkWPzVlVKtA2jFz8W8CWeLBHPDbkbKNlNP/azMAx/eve7iuqOwZri+m7o3KtBmO/KBlsTqLHD3nB2ah+XGUN1bHrBgT/aY+BmLM5XGBA3zQjqmEBfzQjmVyTA5rwnmuHQu8Vzzep47/1vyYHLY4fIgndj8yh7U879UPrt8cjtg6sSUD12cqB2Wge40WLLEzjVwOiP/CsNRm2BkOyR4PM4C4+hRJOB6FbeFnIH7HsKS2KeUYwQ+L+SHloCyxNluMVyUc/qAvjfmjlCOlzRrzOfddn31O1IrjGpEWR+46sTZHq/3HqBz7IBxn+1HCPwKHtTxv6Uft+aMFh1VNDluyeO4j9QKv27VjkvgAHDfE0aMvI/iBWTTH/R71Aw163+s=
   </data>
  </layer>
 </map>

@@ -25,7 +25,15 @@ newEntity{ base = "BASE_LORE",
 	name = "Lecture on Humility by Archmage Linaniil", lore="angolwen-linaniil-lecture",
 	desc = [[Lecture on Humility by Archmage Linaniil. A tale of the first ages and the Spellblaze.]],
 	rarity = false,
-	encumberance = 0,
+	cost = 2,
+}
+
+newEntity{ base = "BASE_LORE",
+	define_as = "TARELION_LECTURE_MAGIC",
+	subtype = "magic teaching", unique=true, no_unique_lore=true, not_in_stores=false,
+	name = "'What is Magic' by Archmage Teralion", lore="angolwen-tarelion-magic",
+	desc = [[Lecture on the nature of magic by Archmage Tarelion.]],
+	rarity = false,
 	cost = 2,
 }
 
