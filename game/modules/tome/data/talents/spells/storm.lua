@@ -126,7 +126,6 @@ newTalent{
 		local radius = t.getRadius(self, t)
 		return ([[Each time one of your lightning spell dazes a target it has %d%% chances to creates a chain reaction that summons a mighty Hurricane that last for 10 turns around the target with radius of %d.
 		Each turn all creatures around it will take %0.2f to %0.2f lightning damage.
-		Only 2 hurricanes can exist at the same time.
 		The damage will increase with the Magic stat]]):format(chance, radius, damage / 3, damage)
 	end,
 }
