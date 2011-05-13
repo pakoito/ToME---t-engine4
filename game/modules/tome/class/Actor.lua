@@ -1891,7 +1891,7 @@ function _M:preUseTalent(ab, silent, fake)
 			if not silent then game.logPlayer(self, "You do not have enough negative energy to use %s.", ab.name) end
 			return false
 		end
-		if ab.hate and self:getHate() < ab.hate * (100 + self:combatFatigue()) / 100 then
+		if ab.hate and self:getHate() < ab.hate then
 			if not silent then game.logPlayer(self, "You do not have enough hate to use %s.", ab.name) end
 			return false
 		end
