@@ -841,6 +841,11 @@ function _M:onHeal(value, src)
 		return 0
 	end
 	value = value * util.bound((self.healing_factor or 1), 0, 2.5)
+
+	if src:attr("stunned") then
+		value = value / 2
+	end
+
 	print("[HEALING]", self.uid, self.name, "for", value)
 	return value
 end
