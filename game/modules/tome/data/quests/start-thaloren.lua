@@ -25,7 +25,7 @@ desc = function(self, who)
 	if self:isCompleted("norgos") then
 		desc[#desc+1] = "#LIGHT_GREEN#* You have explored Norgos' Lair and put it at rest.#WHITE#"
 	else
-		desc[#desc+1] = "#SLATE#* You must explore norgos lair.#WHITE#"
+		desc[#desc+1] = "#SLATE#* You must explore Norgos' Lair.#WHITE#"
 	end
 	if self:isCompleted("heart-gloom") then
 		desc[#desc+1] = "#LIGHT_GREEN#* You have explored the Heart of the Gloom and slew the Withering Thing.#WHITE#"

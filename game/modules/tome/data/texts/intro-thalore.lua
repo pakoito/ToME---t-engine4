@@ -24,8 +24,8 @@ You lived a peaceful life deep in the forest for many years, but lately you have
 
 You have decided to venture into the old and wild places looking for ancient treasures and glory.
 
-You have come to the western side of the thaloren forest, to the lair of norgos. Norgos always was an ally of the thaloren, protecting the western border, but as of late he has grown corrupt and started attacking even thaloren.
-To the east of Shatur, the thaloren main city, lies a dark part of the wood, ever since the spellblaze this area has grown corrupt, the wildlife there has been transformed.
+You have come to the western side of the Thaloren forest, to the lair of Norgos. Norgos was a steadfast ally of the Thaloren, protecting the western border. But lately he has grown corrupt, even attacking the Thaloren.
+To the east of Shatur, the Thaloren Capital, lies a dark part of the woods. Ever since the Spellblaze this area has been corrupted. The wildlife there has been transformed.
 
-After days of travel, you have found norgos lair and entered it. What will you find there...?
+After days of travel, you have found Norgos' Lair and entered it. What will you find there...?
 ]]

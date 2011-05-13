@@ -65,7 +65,7 @@ quickEntity('charred-scar', {always_remember = true, show_tooltip=true, name='Ch
 quickEntity('halfling-ruins', {always_remember = true, show_tooltip=true, name="Very old halfling ruins", display='>', color=colors.RED, notice = true, change_level=1, change_zone="halfling-ruins"})
 quickEntity('scintillating-caves', {always_remember = true, show_tooltip=true, name="Entrance to the Scintillating Caves", display='>', color={r=0, g=255, b=0}, notice = true, change_level=1, change_zone="scintillating-caves"})
 quickEntity('rhaloren-camp', {always_remember = true, show_tooltip=true, name="Stairway into the Rhaloren Camp", display='>', color={r=0, g=255, b=255}, notice = true, change_level=1, change_zone="rhaloren-camp"})
-quickEntity('norgos-lair', {always_remember = true, show_tooltip=true, name="Passageway into Norgos lair", display='>', color={r=255, g=255, b=255}, notice = true, change_level=1, change_zone="norgos-lair"})
+quickEntity('norgos-lair', {always_remember = true, show_tooltip=true, name="Passageway into Norgos' Lair", display='>', color={r=255, g=255, b=255}, notice = true, change_level=1, change_zone="norgos-lair"})
 quickEntity('heart-gloom', {always_remember = true, show_tooltip=true, name="Way into the heart of the gloom", display='>', color={r=255, g=255, b=0}, notice = true, change_level=1, change_zone="heart-gloom"})
 
 quickEntity('derth', {always_remember = true, show_tooltip=true, name="Derth (Town)", desc="A quiet town at the crossroads of the north", display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, image="terrain/town1.png", notice = true, change_level=1, change_zone="town-derth"})
