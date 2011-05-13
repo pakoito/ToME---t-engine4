@@ -145,6 +145,7 @@ newTalent{
 		a.faction = self.faction
 		a.max_life = a.max_life
 		a.life = a.max_life
+		a.die = nil
 		a.summoner = self
 		a.summoner_gain_exp=true
 		a.summon_time = t.getDuration(self, t)

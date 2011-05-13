@@ -187,7 +187,7 @@ function _M:generateList()
 	local list = self.inven_list
 	local chars = {}
 	local i = 1
-	for item, o in ipairs(self.actor:getInven("INVEN")) do
+	for item, o in ipairs(self.actor:getInven("INVEN") or {}) do
 		if not self.filter or self.filter(o) then
 			local char = self:makeKeyChar(i)
 

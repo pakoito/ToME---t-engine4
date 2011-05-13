@@ -83,7 +83,7 @@ function _M:generateList()
 	local list = {}
 	list.chars = {}
 	local i = 1
-	for item, o in ipairs(self.inven) do
+	for item, o in ipairs(self.inven or {}) do
 		if not self.filter or self.filter(o) then
 			local char = self:makeKeyChar(i)
 

@@ -1050,7 +1050,7 @@ local random_zone_layouts = {
 		["'"] = data:getDoor(),
 	} end },
 	-- Building
-	{ name="building", rarity=4, gen=function(data)
+--[[ not yet	{ name="building", rarity=4, gen=function(data)
 		return {
 		class = "engine.generator.map.Building",
 		lite_room_chance = rng.range(0, 100),
@@ -1062,6 +1062,7 @@ local random_zone_layouts = {
 		down = data:getDown(),
 		door = data:getDoor(),
 	} end },
+]]
 	-- "Octopus"
 	{ name="octopus", rarity=6, gen=function(data)
 		return {

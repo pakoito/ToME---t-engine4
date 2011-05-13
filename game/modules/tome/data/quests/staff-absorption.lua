@@ -77,8 +77,10 @@ start_ambush = function(self, who)
 		self:setEffect(self.EFF_DAMAGE_SHIELD, 3, {power=1000000})
 
 		local o, item, inven_id = self:findInAllInventories("Staff of Absorption")
-		self:removeObject(inven_id, item, true)
-		o:removed()
+		if o then
+			self:removeObject(inven_id, item, true)
+			o:removed()
+		end
 
 		game.logPlayer(self, "#VIOLET#You wake up after a few hours, surprised to be alive, but the staff is gone!")
 		game.logPlayer(self, "#VIOLET#Go at once to Last Hope to report those events!")
