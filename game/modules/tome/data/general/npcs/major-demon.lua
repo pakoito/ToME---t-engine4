@@ -198,3 +198,85 @@ It moves swiftly toward you, casting terrible spells and swinging its weapons at
 		[Talents.T_TWILIGHT_SURGE]={base=5, every=8, max=8},
 	},
 }
+
+newEntity{ base = "BASE_NPC_MAJOR_DEMON",
+	name = "champion of Urh'Rok", color=colors.GREY,
+	--resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/demon_major_daelach.png", display_h=2, display_y=-1}}},
+	desc = [[One of Urh'Rok's own champions. A thousand nightmares made flesh and screaming steel towering before you in the form of a massive, armored humanoid.]],
+	level_range = {43, nil}, exp_worth = 1,
+	rarity = 7,
+	rank = 3,
+	global_speed = 1.3,
+	size_category = 4,
+	autolevel = "warrior",
+	life_rating = 25,
+	combat_armor = 90, combat_def = 60,
+	mana_regen = 100, positive_regen = 100, negative_regen = 100, equilibrium_regen = -100, vim_regen = 100, stamina_regen = 100,
+
+	ai = "tactical",
+
+	resolvers.equip{ {type="weapon", subtype="greatsword", autoreq=true}, },
+
+	resists={all = resolvers.mbonus(25, 20)},
+
+	stun_immune = 1,
+	blind_immune = 1,
+	knockback_immune = 1,
+
+	resolvers.talents{
+		[Talents.T_CORRUPTED_STRENGTH]={base=5, every=8, max=8},
+		[Talents.T_DISARM]=5,
+		[Talents.T_RUSH]={base=8, every=8, max=8},
+		[Talents.T_WEAPON_COMBAT]={base=8, every=5, max=12},
+		[Talents.T_GHOULISH_LEAP]={base=1, every=8, max=5},
+		[Talents.T_DEATH_DANCE]={base=5, every=8, max=10},
+		[Talents.T_STUNNING_BLOW]={base=5, every=8, max=8},
+		[Talents.T_SUNDER_ARMOUR]={base=5, every=8, max=10},
+		[Talents.T_SUNDER_ARMS]={base=5, every=8, max=10},
+	},
+}
+
+newEntity{ base = "BASE_NPC_MAJOR_DEMON",
+	name = "forge-giant", color=colors.RED,
+	--resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/demon_major_daelach.png", display_h=2, display_y=-1}}},
+	desc = [[A burning giant wielding a forge hammer of the underworld in each hand-- weapons imbued by Urh'Rok himself with the power to crush and shape felsteel. Enter their range at your peril.]],
+	level_range = {47, nil}, exp_worth = 1,
+	rarity = 8,
+	rank = 3,
+	global_speed = 1,
+	size_category = 5,
+	autolevel = "warriormage",
+	life_rating = 30,
+	combat_armor = 32, combat_def = 40,
+	mana_regen = 100, positive_regen = 100, negative_regen = 100, equilibrium_regen = -100, vim_regen = 100, stamina_regen = 100,
+
+	ai = "tactical",
+
+	resolvers.equip{ {type="weapon", subtype="mace", autoreq=true}, },
+	resolvers.equip{ {type="weapon", subtype="mace", autoreq=true}, },
+
+	resists={[DamageType.PHYSICAL] = resolvers.mbonus(15, 10), [DamageType.FIRE] = 100},
+	on_melee_hit = {[DamageType.FIRE]=resolvers.mbonus(25, 25)},
+	melee_project = {[DamageType.FIRE]=resolvers.mbonus(25, 35)},
+
+	stun_immune = 1,
+	knockback_immune = 1,
+
+
+	resolvers.talents{
+		[Talents.T_CORRUPTED_STRENGTH]={base=5, every=8, max=8},
+		[Talents.T_DUAL_WEAPON_TRAINING]={base=1, every=8, max=6},
+		[Talents.T_DUAL_WEAPON_DEFENSE]={base=5, every=8, max=8},
+		[Talents.T_WEAPON_COMBAT]={base=8, every=5, max=12},
+		[Talents.T_WEAPONS_MASTERY]={base=7, every=8, max=14},
+		[Talents.T_THROW_BOULDER]={base=5, every=8, max=14},
+		[Talents.T_FIREBEAM]={base=5, every=8, max=8},
+		[Talents.T_WILDFIRE]={base=5, every=8, max=8},
+		[Talents.T_INFERNO]={base=5, every=8, max=8},
+		[Talents.T_FLAME]={base=5, every=8, max=10},
+		[Talents.T_FLAMESHOCK]={base=5, every=8, max=10},
+		[Talents.T_FIREFLASH]={base=5, every=8, max=10},
+		[Talents.T_BURNING_WAKE]={base=5, every=8, max=10},
+		[Talents.T_CLEANSING_FLAMES]={base=5, every=8, max=10},
+	},
+}

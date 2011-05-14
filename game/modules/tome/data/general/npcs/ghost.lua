@@ -118,3 +118,32 @@ newEntity{ base = "BASE_NPC_GHOST",
 		[Talents.T_MIND_DISRUPTION]={base=3, every=7, max=6},
 	},
 }
+
+newEntity{ base = "BASE_NPC_GHOST",
+	name = "ruin banshee", color=colors.GREY, image="npc/ruin_banshee.png",
+	desc = [[A vengeful, screaming soul given form with the breath of Urh'Rok himself. The vapors of the Fearscape seep from its dimension-bending form, withering and searing.]],
+	level_range = {42, nil}, exp_worth = 1,
+	rarity = 15,
+	rank = 3,
+	max_life = resolvers.rngavg(240,270),
+
+	ai = "tactical",
+
+	combat_armor = 0, combat_def = resolvers.mbonus(10, 50),
+	on_melee_hit = {[DamageType.BLIGHT]=resolvers.mbonus(25, 25)},
+	melee_project = {[DamageType.BLIGHT]=resolvers.mbonus(25, 25)},
+	invisibility = resolvers.mbonus(10, 20),
+
+	combat = { dam=resolvers.mbonus(85, 85), atk=resolvers.mbonus(45, 45), apr=100, dammod={str=0.7, mag=0.7} },
+
+	resolvers.talents{
+		[Talents.T_PHASE_DOOR]=10,
+		[Talents.T_SILENCE]={base=2, every=10, max=6},
+		[Talents.T_MIND_DISRUPTION]={base=3, every=7, max=8},
+		[Talents.T_CORRUPTED_NEGATION]={base=5, every=6, max=8},
+		[Talents.T_CORROSIVE_WORM]={base=4, every=5, max=12},
+		[Talents.T_POISON_STORM]={base=4, every=5, max=12},
+		[Talents.T_CURSE_OF_DEATH]={base=5, every=6, max=8},
+		[Talents.T_CURSE_OF_IMPOTENCE]={base=5, every=6, max=8},
+	},
+}

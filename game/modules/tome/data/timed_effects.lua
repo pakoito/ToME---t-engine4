@@ -395,7 +395,7 @@ newEffect{
 newEffect{
 	name = "STUNNED",
 	desc = "Stunned",
-	long_desc = function(self, eff) return ("The target is stunned, reducing damage by 70%%, healing received by 50%, putting random talents on cooldown and reducing movement speed by 50%%. While stunned talents do not cooldown."):format() end,
+	long_desc = function(self, eff) return ("The target is stunned, reducing damage by 70%%, healing received by 50%%, putting random talents on cooldown and reducing movement speed by 50%%. While stunned talents do not cooldown."):format() end,
 	type = "physical",
 	status = "detrimental",
 	parameters = {},

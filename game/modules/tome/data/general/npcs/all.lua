@@ -78,6 +78,7 @@ loadIfNot("/data/general/npcs/troll.lua")
 loadIfNot("/data/general/npcs/vampire.lua")
 loadIfNot("/data/general/npcs/vermin.lua")
 loadIfNot("/data/general/npcs/wight.lua")
+loadIfNot("/data/general/npcs/wild-drake.lua")
 loadIfNot("/data/general/npcs/xorn.lua")
 
 loadIfNot("/data/general/npcs/humanoid_random_boss.lua")

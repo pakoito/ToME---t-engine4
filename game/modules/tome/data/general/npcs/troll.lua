@@ -114,3 +114,33 @@ newEntity{ base = "BASE_NPC_TROLL",
 		[Talents.T_THUNDERSTORM]={base=3, every=7, max=8},
 	},
 }
+
+newEntity{ base = "BASE_NPC_TROLL",
+	name = "patchwork troll", color=colors.PURPLE, image="npc/troll_patchwork.png",
+	desc = [[A disgusting and mismatched construct of necromantically-enhanced troll bits and shattered weapons. Confused and furious, it rends and shatters its surroundings with impossible strength, moving with speed found nowhere in nature.]],
+	level_range = {38, nil}, exp_worth = 1,
+	rarity = 6,
+	rank = 3,
+	global_speed = 1.6,
+	life_rating = 25,
+	max_life = resolvers.rngavg(220,240),
+
+	combat_armor = 60, combat_def = 0,
+	combat = { dam=resolvers.levelup(resolvers.rngavg(25,110), 1, 2), atk=resolvers.rngavg(25,70), apr=15, dammod={str=1.5} },
+	autolevel = "warrior",
+	ai = "tactical",
+	stamina_regen = 100,
+	stun_immune = 1,
+	knockback_immune = 1,
+	blind_immune = 1,
+
+	resolvers.talents{
+		[Talents.T_STUN]={base=5, every=6, max=12},
+		[Talents.T_RUSH]=8,
+		[Talents.T_BLINDING_SPEED]={base=4, every=7, max=10},
+		[Talents.T_FAST_METABOLISM]={base=5, every=5, max=30},
+		[Talents.T_UNFLINCHING_RESOLVE]={base=5, every=5, max=10},
+		[Talents.T_JUGGERNAUT]={base=5, every=5, max=10},
+	},
+	resolvers.sustains_at_birth(),
+}

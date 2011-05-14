@@ -154,10 +154,15 @@ newTalent{
 				end
 				local dam = self:spellCrit(self:combatTalentMindDamage(t, 20, 600))
 				self:project(tg, x, y, DamageType.BATTER, self:spellCrit(rng.avg(2*dam/3, dam, 3)))
-				local _ _, x, y = self:canProject(tg, x, y)
+				--local _ _, x, y = self:canProject(tg, x, y)
 				game.level.map:particleEmitter(self.x, self.y, tg.radius, "flamebeam", {tx=x-self.x, ty=y-self.y})
 				game:playSoundNear(self, "talents/lightning")
-				self:move(x, y, true)
+				--self:move(x, y, true)
+				local fx, fy = util.findFreeGrid(x, y, 5, true, {[Map.ACTOR]=true})
+				if not fx then
+					return
+				end
+				self:move(fx, fy, true)
 			else
 				game.logSeen(self, "You can't move there.")
 				return nil
@@ -189,7 +194,12 @@ newTalent{
 				tx, ty = lx, ly
 				lx, ly = l()
 			end
-			self:move(tx, ty, true)
+			--self:move(tx, ty, true)
+			local fx, fy = util.findFreeGrid(tx, ty, 5, true, {[Map.ACTOR]=true})
+			if not fx then
+				return
+			end
+			self:move(fx, fy, true)
 			return true
 		end
 	end,

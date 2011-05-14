@@ -29,11 +29,11 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	cooldown = function(self, t)
-		local c = 15
+		local c = 5
 		local gem_level = getGemLevel(self)
-		return c - gem_level
+		return math.max(c - gem_level, 0)
 	end,
-	psi = 15,
+	psi = 10,
 	tactical = { ATTACK = 2 },
 	range = function(self, t)
 		local r = 5
