@@ -19,6 +19,7 @@
 
 -- Wild Gifts
 newTalentType{ allow_random=true, type="wild-gift/call", name = "call of the wild", generic = true, description = "Be at one with nature." }
+newTalentType{ allow_random=true, type="wild-gift/harmony", name = "harmony", generic = true, description = "Nature heals and cleans you." }
 newTalentType{ allow_random=true, type="wild-gift/antimagic", name = "antimagic", generic = true, description = "The way to combat magic, or even nullify it.\nUsing a magical device or a spell will put all antimagic talents on cooldown for a few turns." }
 newTalentType{ allow_random=true, type="wild-gift/summon-melee", name = "summoning (melee)", description = "The art of calling creatures to your aid." }
 newTalentType{ allow_random=true, type="wild-gift/summon-distance", name = "summoning (distance)", description = "The art of calling creatures to your aid." }
@@ -55,6 +56,7 @@ gifts_req5 = {
 }
 
 load("/data/talents/gifts/call.lua")
+load("/data/talents/gifts/harmony.lua")
 
 load("/data/talents/gifts/antimagic.lua")
 

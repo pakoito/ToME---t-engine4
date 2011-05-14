@@ -226,7 +226,9 @@ newEffect{
 		return old_eff
 	end,
 	on_timeout = function(self, eff)
-		DamageType:get(DamageType.NATURE).projector(eff.src, self.x, self.y, DamageType.NATURE, eff.power)
+		if self:attr("purify_poison") then self:heal(eff.power)
+		else DamageType:get(DamageType.NATURE).projector(eff.src, self.x, self.y, DamageType.NATURE, eff.power)
+		end
 	end,
 }
 
@@ -244,7 +246,9 @@ newEffect{
 		eff.dur = self:updateEffectDuration(eff.dur, "pin")
 	end,
 	on_timeout = function(self, eff)
-		DamageType:get(DamageType.NATURE).projector(eff.src, self.x, self.y, DamageType.NATURE, eff.power)
+		if self:attr("purify_poison") then self:heal(eff.power)
+		else DamageType:get(DamageType.NATURE).projector(eff.src, self.x, self.y, DamageType.NATURE, eff.power)
+		end
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("never_move", eff.tmpid)
@@ -264,7 +268,9 @@ newEffect{
 		eff.healid = self:addTemporaryValue("healing_factor", -eff.heal_factor / 100)
 	end,
 	on_timeout = function(self, eff)
-		DamageType:get(DamageType.NATURE).projector(eff.src, self.x, self.y, DamageType.NATURE, eff.power)
+		if self:attr("purify_poison") then self:heal(eff.power)
+		else DamageType:get(DamageType.NATURE).projector(eff.src, self.x, self.y, DamageType.NATURE, eff.power)
+		end
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("healing_factor", eff.healid)
@@ -1317,7 +1323,9 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is free from the rotting disease." end,
 	-- Damage each turn
 	on_timeout = function(self, eff)
-		DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
+		if self:attr("purify_disease") then self:heal(eff.dam)
+		else DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
+		end
 	end,
 	-- Lost of CON
 	activate = function(self, eff)
@@ -1339,7 +1347,9 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is free from the decrepitude disease." end,
 	-- Damage each turn
 	on_timeout = function(self, eff)
-		DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
+		if self:attr("purify_disease") then self:heal(eff.dam)
+		else DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
+		end
 	end,
 	-- Lost of CON
 	activate = function(self, eff)
@@ -1361,7 +1371,9 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is free from the weakness disease." end,
 	-- Damage each turn
 	on_timeout = function(self, eff)
-		DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
+		if self:attr("purify_disease") then self:heal(eff.dam)
+		else DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
+		end
 	end,
 	-- Lost of CON
 	activate = function(self, eff)
@@ -1383,7 +1395,9 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is free from the epidemic." end,
 	-- Damage each turn
 	on_timeout = function(self, eff)
-		DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
+		if self:attr("purify_disease") then self:heal(eff.dam)
+		else DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
+		end
 	end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("diseases_spread_on_blight", 1)
@@ -3915,5 +3929,22 @@ newEffect{
 		end
 		eff.last_x = eff.src.x
 		eff.last_y = eff.src.y
+	end,
+}
+
+newEffect{
+	name = "WATERS_OF_LIFE",
+	desc = "Waters of Life",
+	long_desc = function(self, eff) return ("The target purifies all diseases and poisons, turning them into healing effects.") end,
+	type = "physical",
+	status = "beneficial",
+	parameters = { },
+	activate = function(self, eff)
+		eff.poisid = self:addTemporaryValue("purify_poison", 1)
+		eff.diseid = self:addTemporaryValue("purify_disease", 1)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("purify_poison", eff.poisid)
+		self:removeTemporaryValue("purify_disease", eff.diseid)
 	end,
 }

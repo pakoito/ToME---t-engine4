@@ -19,11 +19,19 @@
 
 return {
 	name = "Grushnak Pride",
+	display_name = function()
+		if game.level.level % 2 == 0 then return "Grushnak Pride ("..(game.level.level/2)..")"
+		else return "Grushnak Pride (guarded barracks)"
+		end
+	end,
+	variable_zone_name = true,
 	level_range = {35, 60},
 	level_scheme = "player",
-	max_level = 5,
+	max_level = 10,
 	decay = {300, 800},
-	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
+	-- 10 levels but really only 5, the 5 others are just transitions
+	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + math.floor(level.level / 2) + rng.range(-1,2) end,
+	level_adjust_level = function(zone, level) return zone.base_level + math.floor(level.level / 2) end,
 	width = 50, height = 50,
 	persistent = "zone",
 --	all_remembered = true,
@@ -34,6 +42,7 @@ return {
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",
+			pride = "grushnak",
 			nb_rooms = 10,
 			lite_room_chance = 20,
 			rooms = {"forest_clearing", {"money_vault",5}, {"pit",7}, {"greater_vault",8}},
@@ -57,18 +66,40 @@ return {
 	},
 	post_process = function(level)
 		-- Place a lore note on each level
-		game:placeRandomLoreObject("GARKUL_HISTORY"..level.level)
+		if level.level == 2 or level.level == 4 or level.level == 6 or level.level == 8 or level.level == 10 then
+			game:placeRandomLoreObject("GARKUL_HISTORY"..(level.level/2))
+		end
 
 		for uid, e in pairs(level.entities) do e.faction="orc-pride" end
 	end,
 	levels =
 	{
-		[1] = {
-			generator = { map = {
-				up = "UNDERGROUND_LADDER_UP_WILDERNESS",
-			}, },
-		},
-		[5] = {
+		[1] = { generator = {
+			map = { class = "engine.generator.map.Static", map = "zones/prides-middle" },
+			actor = { nb_npc = {0, 0} },
+			object = { nb_object = {0, 0} },
+		}},
+		[3] = { generator = {
+			map = { class = "engine.generator.map.Static", map = "zones/prides-middle" },
+			actor = { nb_npc = {0, 0} },
+			object = { nb_object = {0, 0} },
+		}},
+		[5] = { generator = {
+			map = { class = "engine.generator.map.Static", map = "zones/prides-middle" },
+			actor = { nb_npc = {0, 0} },
+			object = { nb_object = {0, 0} },
+		}},
+		[7] = { generator = {
+			map = { class = "engine.generator.map.Static", map = "zones/prides-middle" },
+			actor = { nb_npc = {0, 0} },
+			object = { nb_object = {0, 0} },
+		}},
+		[9] = { generator = {
+			map = { class = "engine.generator.map.Static", map = "zones/prides-middle" },
+			actor = { nb_npc = {0, 0} },
+			object = { nb_object = {0, 0} },
+		}},
+		[10] = {
 			generator = { map = {
 				down = "SLIME_TUNNELS",
 				force_last_stair = true,
