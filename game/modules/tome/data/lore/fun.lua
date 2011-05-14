@@ -159,3 +159,53 @@ But women do look upon men and declare them fools. "For how," say they, "Can the
 
 And lo, 'tis little mystery why halflings do look upon humans and say "The Big Folk really are very dumb."]]
 }
+
+newLore{
+	id = "rogue-poem",
+	category = "misc",
+	name = "Rogues do it from behind",
+	lore = [[An archer from the northern lands
+Claimed of his great renown
+With peerless skill and countless trials
+His name known town to town
+
+He spoke of facing vampire lords
+Who promised years of pain
+The archer gave a stern retort
+An arrow through the brain
+
+A fighter from the southern lands
+Claimed armies fled his might
+With dragons slain 'most every day
+And demons crushed by night
+
+He spoke of ancient sprawling ruins
+Home to a ghastly shade
+Its years of madness, hate and rage
+Were ended on his blade
+
+An archmage from the western lands
+Claimed kingdoms feared his name
+With countless legends, songs and myths
+Attesting to his fame
+
+He spoke of fire, storm and hail
+To match the fiercest wyrm
+To see one man hold so much power
+Can make an empire squirm
+
+A rogue who came from unknown lands
+Not known for anything
+A leap, a flash, a concealed blade
+Three heroes felt its sting
+
+The archer dropped, his bow unplucked
+The fighter died as well
+The archmage found its poison
+Far too potent to dispel
+
+The rogue is unknown to this day
+Though rumours persist still
+Rogues aren't known by name or deed
+But by the names they kill]]
+}

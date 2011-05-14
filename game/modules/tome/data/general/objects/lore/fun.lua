@@ -33,6 +33,14 @@ newEntity{ base = "BASE_LORE",
 	encumber = 0,
 }
 
+newEntity{ base = "BASE_LORE",
+	name = "rogues do it from behind", lore="rogue-poem", unique=true,
+	desc = [[A poem written for a rogue?]],
+	level_range = {15, 50},
+	rarity = 40,
+	encumber = 0,
+}
+
 for i = 1, 4 do
 newEntity{ base = "BASE_LORE",
 	name = "how to become a necromancer, part "..i, lore="necromancer-primer-"..i, unique=true,
