@@ -1288,7 +1288,9 @@ function _M:createRandomBoss(base, data)
 	b.auto_stats = {}
 
 	-- Always smart
-	b.ai = "tactical"
+	if data.ai then b.ai = data.ai
+	else b.ai = (b.rank > 3) and "tactical" or b.ai
+	end
 	b.ai_state = { talent_in=1, ai_move="move_astar" }
 
 	-- Remove default equipment, if any
