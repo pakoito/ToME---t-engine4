@@ -65,3 +65,15 @@ Magical runes and items are imbued with an attachment to certain elemental threa
 Some believe that magic is inherently wrong, that the so-called twisting of the elements with one's will can only lead to terrible things. As students of Angolwen I assume you disagree! Magic is simply an extension of the forces of nature, and are we not natural creatures that use it? But remember that magic is still a powerful force that can be used for good or ill. Magic is indeed a tool of immense value - use it wisely.
 ]],
 }
+
+newLore{
+	id = "spellblade",
+	category = "angolwen",
+	name = "The spellblade",
+	lore = [[From the desk of Archmage Varil,
+Another day dawns on Angolwen. I hesitate to write this, but it almost feels as if peace is once again returning to Eyal. Saying this, I almost expect war and destruction to erupt immediately - fate is anything if not spiteful. Regardless, my sleep grows less disturbed by my memories of the Spellhunt day by day, and I can now devote myself wholly to the betterment of our cloistered community here in the mountains.
+
+This is not to say that life has been without conflict at all. An agent of the Ziguranth infiltrated Angolwen under the guise of a travelling alchemist a few days ago; an unhappy first, I'm afraid. Having used choking powder to incapacitate the guards and rob the surrounding mages of their voices, things may have turned ugly if Linaniil hadn't been passing by on one of her walks. Little was left of that man... or the tree he hid behind... or many of the surrounding buildings, to be honest.
+
+In a way, the incident lit a fire under me to pursue my studies and develop my powers, but I must admit that my interest in staff practice has waned as of late. My fencing, on the other hand, improves by the day. Hmm... I wonder if I can get some of the enchanters to help me "augment" my old sword. After all, what is a blade but a sharpened metal staff?]],
+}

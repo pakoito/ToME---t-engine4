@@ -420,3 +420,22 @@ Yet spells of fiery rages born,
 Our lands of bygone ages torn,
 Gone is trust, wrath is red.
 ]] }
+
+newLore{
+	id = "eden-guile",
+	category = "artifacts",
+	name = "Running man",
+	lore = [[Running man, running man
+Your time is ending soon
+Running man, running man
+Will not save sun nor moon
+
+Running man, running man
+Survival growing slim
+Running man, running man
+You know your fate is grim
+
+Running man, running man
+Now's the time to choose
+Running man, running man
+Your honour or your shoes!]] }
