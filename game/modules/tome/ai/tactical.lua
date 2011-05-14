@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local print = function() end
+--local print = function() end
 
 -- Internal functions
 local checkLOS = function(sx, sy, tx, ty)
