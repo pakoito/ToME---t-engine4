@@ -955,14 +955,13 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is returned to normal time.", "-Out of Time" end,
 	activate = function(self, eff)
 		eff.iid = self:addTemporaryValue("invulnerable", 1)
+		eff.sid = self:addTemporaryValue("time_prison", 1)
 		eff.particle = self:addParticles(Particles.new("time_prison", 1))
-		self.energy.value = 0
-	end,
-	on_timeout = function(self, eff)
 		self.energy.value = 0
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("invulnerable", eff.iid)
+		self:removeTemporaryValue("time_prison", eff.sid)
 		self:removeParticles(eff.particle)
 	end,
 }

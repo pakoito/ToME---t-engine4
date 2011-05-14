@@ -359,6 +359,7 @@ function _M:act()
 	if self:attr("stoned") then self.energy.value = 0 end
 	if self:attr("dazed") then self.energy.value = 0 end
 	if self:attr("time_stun") then self.energy.value = 0 end
+	if self:attr("time_prison") then self.energy.value = 0 end
 
 	-- Regain natural balance?
 	local equilibrium_level = game.level.map:checkEntity(self.x, self.y, Map.TERRAIN, "equilibrium_level")
@@ -842,7 +843,7 @@ function _M:onHeal(value, src)
 	end
 	value = value * util.bound((self.healing_factor or 1), 0, 2.5)
 
-	if src:attr("stunned") then
+	if self:attr("stunned") then
 		value = value / 2
 	end
 
