@@ -837,16 +837,25 @@ end
 
 --- Called before healing
 function _M:onHeal(value, src)
-	if self:hasEffect(self.EFF_UNSTOPPABLE) then
-		return 0
-	end
-	if self:attr("encased_in_ice") then
-		return 0
-	end
+	if self:hasEffect(self.EFF_UNSTOPPABLE) then return 0 end
+	if self:attr("encased_in_ice") then return 0 end
+
 	value = value * util.bound((self.healing_factor or 1), 0, 2.5)
 
-	if self:attr("stunned") then
-		value = value / 2
+	if self:attr("stunned") then value = value / 2 end
+
+	local eff = self:hasEffect(self.EFF_HEALING_NEXUS)
+	if eff and value > 0 and not self.heal_leech_active then
+		eff.src.heal_leech_active = true
+		eff.src:heal(value * eff.pct, src)
+		eff.src.heal_leech_active = nil
+		eff.src:incEquilibrium(-eff.eq)
+		if eff.src == self then
+			game.logSeen(self, "%s heal is doubled!", self.name)
+		else
+			game.logSeen(self, "%s steals %s heal!", eff.src.name:capitalize(), self.name)
+			return 0
+		end
 	end
 
 	print("[HEALING]", self.uid, self.name, "for", value)

@@ -128,34 +128,34 @@ newTalent{
 }
 
 newTalent{
-	name = "Natural Perfection",
+	name = "Healing Nexus",
 	type = {"wild-gift/harmony", 4},
 	require = gifts_req4,
 	points = 5,
-	equilibrium = 20,
-	cooldown = 50,
+	equilibrium = 24,
+	cooldown = 20,
 	range = 10,
-	tactical = { BUFF = 2 },
+	tactical = { DISABLE = 3, HEAL = 0.5 },
+	direct_hit = true,
+	requires_target = true,
+	range = 0,
+	radius = function(self, t) return 1 + self:getTalentLevelRaw(t) end,
+	target = function(self, t) return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=true, talent=t} end,
 	action = function(self, t)
-		local nb = math.ceil(self:getTalentLevel(t) + 2)
-		local tids = {}
-		for tid, _ in pairs(self.talents_cd) do
-			local tt = self:getTalentFromId(tid)
-			if tt.type[2] <= self:getTalentLevelRaw(t) and tt.type[1]:find("^wild%-gift/") then
-				tids[#tids+1] = tid
-			end
-		end
-		for i = 1, nb do
-			if #tids == 0 then break end
-			local tid = rng.tableRemove(tids)
-			self.talents_cd[tid] = nil
-		end
-		self.changed = true
+		local tg = self:getTalentTarget(t)
+		local grids = self:project(tg, self.x, self.y, function(px, py)
+			local target = game.level.map(px, py, Map.ACTOR)
+			if not target then return end
+			target:setEffect(target.EFF_HEALING_NEXUS, 3 + self:getTalentLevelRaw(t), {src=self, pct=0.4 + self:getTalentLevel(t) / 10, eq=5 + self:getTalentLevel(t)})
+		end)
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_acid", {radius=tg.radius})
 		game:playSoundNear(self, "talents/spell_generic2")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your deep link with Nature allows you to reset the cooldown of %d of your wild gifts of level %d or less.]]):
-		format(math.ceil(self:getTalentLevel(t) + 2), self:getTalentLevelRaw(t))
+		return ([[A wave a natural energies flow around you in a radius of %d, all creatures hit will suffer healing nexus for %d turns.
+		While under the effect all healing done to the creature will instead heal you for %d%% of the heal value (and no healing at all goes to the target).
+		Each heal leeched will also restore %d equilibrium]]):
+		format(self:getTalentRadius(t), 3 + self:getTalentLevelRaw(t), (0.4 + self:getTalentLevel(t) / 10) * 100, 5 + self:getTalentLevel(t))
 	end,
 }

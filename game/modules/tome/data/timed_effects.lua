@@ -3998,3 +3998,16 @@ newEffect{
 		end
 	end,
 }
+
+newEffect{
+	name = "HEALING_NEXUS",
+	desc = "Healing Nexus",
+	long_desc = function(self, eff) return ("All healing done to the target is instead redirected to %s by %d%%."):format(eff.src.name, eff.pct * 100, eff.src.name) end,
+	type = "physical",
+	status = "beneficial",
+	parameters = { pct = 1 },
+	activate = function(self, eff)
+	end,
+	deactivate = function(self, eff)
+	end,
+}
