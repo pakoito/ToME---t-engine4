@@ -426,7 +426,7 @@ function _M:defineDisplayCallback()
 	local f_enemy = nil
 	local f_neutral = nil
 
-	self._mo:displayCallback(function(x, y, w, h)
+	self._mo:displayCallback(function(x, y, w, h, zoom, on_map)
 		local e
 		for i = 1, #ps do
 			e = ps[i]
@@ -440,33 +440,35 @@ function _M:defineDisplayCallback()
 			local map = game.level.map
 
 			-- Tactical life info
-			local dh = h * 0.1
-			core.display.drawQuad(x, y + h - dh, w, dh, 139, 210, 77, 128)
-			core.display.drawQuad(x, y + h - dh, w * self.life / self.max_life, dh, 50, 220, 77, 255)
+			if on_map then
+				local dh = h * 0.1
+				core.display.drawQuad(x, y + h - dh, w, dh, 139, 210, 77, 128)
+				core.display.drawQuad(x, y + h - dh, w * self.life / self.max_life, dh, 50, 220, 77, 255)
 
-			if not f_self then
-				f_self = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_self)
-				f_danger = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_danger)
-				f_friend = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_friend)
-				f_enemy = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_enemy)
-				f_neutral = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_neutral)
-			end
+				if not f_self then
+					f_self = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_self)
+					f_danger = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_danger)
+					f_friend = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_friend)
+					f_enemy = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_enemy)
+					f_neutral = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_neutral)
+				end
 
-			if self.faction then
-				local friend
-				if not map.actor_player then friend = Faction:factionReaction(map.view_faction, self.faction)
-				else friend = map.actor_player:reactionToward(self) end
+				if self.faction then
+					local friend
+					if not map.actor_player then friend = Faction:factionReaction(map.view_faction, self.faction)
+					else friend = map.actor_player:reactionToward(self) end
 
-				if self == map.actor_player then
-					f_self:toScreen(x, y, w, h)
-				elseif map:faction_danger_check(self) then
-					f_danger:toScreen(x, y, w, h)
-				elseif friend > 0 then
-					f_friend:toScreen(x, y, w, h)
-				elseif friend < 0 then
-					f_enemy:toScreen(x, y, w, h)
-				else
-					f_neutral:toScreen(x, y, w, h)
+					if self == map.actor_player then
+						f_self:toScreen(x, y, w, h)
+					elseif map:faction_danger_check(self) then
+						f_danger:toScreen(x, y, w, h)
+					elseif friend > 0 then
+						f_friend:toScreen(x, y, w, h)
+					elseif friend < 0 then
+						f_enemy:toScreen(x, y, w, h)
+					else
+						f_neutral:toScreen(x, y, w, h)
+					end
 				end
 			end
 		end

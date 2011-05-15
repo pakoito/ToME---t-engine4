@@ -355,7 +355,8 @@ static int map_objects_toscreen(lua_State *L)
 			lua_pushnumber(L, w);
 			lua_pushnumber(L, h);
 			lua_pushnumber(L, 1);
-			if (lua_pcall(L, 5, 1, 0))
+			lua_pushboolean(L, FALSE);
+			if (lua_pcall(L, 6, 1, 0))
 			{
 				printf("Display callback error: UID %ld: %sn", m->uid, lua_tostring(L, -1));
 				lua_pop(L, 1);
@@ -1013,7 +1014,8 @@ static int map_get_scroll(lua_State *L)
 		lua_pushnumber(L, map->tile_w * (dw) * (zoom)); \
 		lua_pushnumber(L, map->tile_h * (dh) * (zoom)); \
 		lua_pushnumber(L, (zoom)); \
-		if (lua_pcall(L, 5, 1, 0)) \
+		lua_pushboolean(L, TRUE); \
+		if (lua_pcall(L, 6, 1, 0)) \
 		{ \
 			printf("Display callback error: UID %ld: %s\n", dm->uid, lua_tostring(L, -1)); \
 			lua_pop(L, 1); \
