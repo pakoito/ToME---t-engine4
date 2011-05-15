@@ -37,30 +37,35 @@ newEntity{
 
 newEntity{ base = "BASE_NPC_HUMANOID_RANDOM_BOSS",
 	name = "human", subtype = "human", color=colors.LIGHT_UMBER,
+	image = "player/cornac_male.png",
 	humanoid_random_boss = 1,
 	resolvers.racial(),
 }
 
 newEntity{ base = "BASE_NPC_HUMANOID_RANDOM_BOSS",
 	name = "thalore", subtype = "thalore", color=colors.LIGHT_GREEN,
+	image = "player/thalore_female.png",
 	humanoid_random_boss = 1,
 	resolvers.racial(),
 }
 
 newEntity{ base = "BASE_NPC_HUMANOID_RANDOM_BOSS",
 	name = "shalore", subtype = "shalore", color=colors.LIGHT_BLUE,
+	image = "player/shalore_male.png",
 	humanoid_random_boss = 1,
 	resolvers.racial(),
 }
 
 newEntity{ base = "BASE_NPC_HUMANOID_RANDOM_BOSS",
 	name = "halfling", subtype = "halfling", color=colors.BLUE,
+	image = "player/halfling_female.png",
 	humanoid_random_boss = 1,
 	resolvers.racial(),
 }
 
 newEntity{ base = "BASE_NPC_HUMANOID_RANDOM_BOSS",
 	name = "dwarf", subtype = "dwarf", color=colors.UMBER,
+	image = "player/dwarf_male.png",
 	humanoid_random_boss = 2,
 	resolvers.racial(),
 }

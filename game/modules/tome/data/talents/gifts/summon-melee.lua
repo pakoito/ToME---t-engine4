@@ -209,7 +209,7 @@ newTalent{
 		local m = NPC.new{
 			type = "giant", subtype = "minotaur",
 			display = "H",
-			name = "minotaur", color=colors.UMBER, image = "npc/summoner_minotaur.png",
+			name = "minotaur", color=colors.UMBER, resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/giant_minotaur_minotaur.png", display_h=2, display_y=-1}}},
 
 			body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 

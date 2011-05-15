@@ -52,7 +52,15 @@ return {
 			door = "DOOR",
 		},
 		actor = {
-			class = "engine.generator.actor.Random",
+			class = "mod.class.generator.actor.RandomStairGuard",
+			guard = {
+				{special_rarity="humanoid_random_boss", random_boss={rank = 3.5, loot_quantity = 2,}},
+				{type="demon", subtype="major", random_boss={rank = 3.5, loot_quantity = 2,}},
+				{type="humanoid", subtype="naga", random_boss={rank = 3.5, loot_quantity = 2,}},
+				{type="humanoid", subtype="orc", random_boss={rank = 3.5, loot_quantity = 2,}},
+				{type="undead", subtype="giant", random_boss={rank = 3.5, loot_quantity = 2,}},
+				{type="horror", random_boss={rank = 3.5, loot_quantity = 2,}},
+			},
 			nb_npc = {20, 30},
 		},
 		object = {
@@ -97,6 +105,7 @@ return {
 					map = "zones/high-peak-last",
 				},
 				actor = {
+					class = "engine.generator.actor.Random",
 					nb_npc = {0, 0},
 				},
 			},

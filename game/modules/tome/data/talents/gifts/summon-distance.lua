@@ -407,9 +407,9 @@ newTalent{
 		local NPC = require "mod.class.NPC"
 		local m = NPC.new{
 			type = "dragon", subtype = "fire",
-			display = "D", color=colors.RED, image = "npc/summoner_fire_drake.png",
+			display = "D", color=colors.RED, image = "npc/dragon_fire_fire_drake.png",
 			name = "fire drake", faction = self.faction,
-			desc = [[A mighty fire drake, an Uruloki.]],
+			desc = [[A mighty fire drake.]],
 			autolevel = "none",
 			ai = "summoned", ai_real = "tactical", ai_state = { talent_in=1, ally_compassion=10},
 			ai_tactic = resolvers.tactic"melee",
