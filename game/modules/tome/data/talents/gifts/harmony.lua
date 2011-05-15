@@ -62,28 +62,34 @@ newTalent{
 	name = "Elemental Harmony",
 	type = {"wild-gift/harmony", 2},
 	require = gifts_req2,
-	random_ego = "defensive",
 	points = 5,
-	equilibrium = 10,
-	cooldown = 20,
-	range = 1,
-	requires_target = true,
-	no_npc_use = true,
-	action = function(self, t)
-		local tg = {default_target=self, type="hit", nowarning=true, range=self:getTalentRange(t), first_target="friend"}
-		local x, y, target = self:getTarget(tg)
-		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		if not target.undead then
-			target:heal(20 + self:getWil(50) * self:getTalentLevel(t))
-		end
-		game:playSoundNear(self, "talents/heal")
+	mode = "sustained",
+	equilibrium = 20,
+	cooldown = 30,
+	activate = function(self, t)
+		return {
+			tmpid = self:addTemporaryValue("elemental_harmony", self:getTalentLevel(t)),
+		}
+	end,
+	deactivate = function(self, t, p)
+		self:removeTemporaryValue("elemental_harmony", p.tmpid)
 		return true
 	end,
 	info = function(self, t)
-		return ([[Touch a target (or yourself) to infuse it with Nature, healing it for %d(heal does not work on undead).
-		Heal will increase with your Willpower stat.]]):
-		format(20 + self:getWil(50) * self:getTalentLevel(t))
+		local power = self:getTalentLevel(t)
+		local turns = 5 + math.ceil(power)
+		local fire = 100 * (0.1 + power / 11)
+		local cold = 3 + power * 2
+		local lightning = math.floor(power)
+		local acid = 5 + power * 2
+		local nature = 5 + power * 1.4
+		return ([[Befriend the natural elements that constitute nature. Each time you are hit by one of the elements you gain a special effect for %d turns. This can only happen every %d turns.
+		Fire: +%d%% global speed
+		Cold: +%d armour
+		Lightning: +%d to all stats
+		Acid: +%0.2f life regen
+		Nature: +%d%% to all resists]]):
+		format(turns, turns, fire, cold, lightning, acid, nature)
 	end,
 }
 

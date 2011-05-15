@@ -52,6 +52,7 @@ newBirthDescriptor{
 	stats = { wil=5, cun=3, dex=1, },
 	talents_types = {
 		["wild-gift/call"]={true, 0.2},
+		["wild-gift/harmony"]={true, 0.1},
 		["wild-gift/summon-melee"]={true, 0.3},
 		["wild-gift/summon-distance"]={true, 0.3},
 		["wild-gift/summon-utility"]={true, 0.3},

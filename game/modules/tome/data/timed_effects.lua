@@ -3948,3 +3948,53 @@ newEffect{
 		self:removeTemporaryValue("purify_disease", eff.diseid)
 	end,
 }
+
+newEffect{
+	name = "ELEMENTAL_HARMONY",
+	desc = "Elemental Harmony",
+	long_desc = function(self, eff)
+		if eff.type == DamageType.FIRE then return ("Increases global speed by %d%%."):format(100 * (0.1 + eff.power / 11))
+		elseif eff.type == DamageType.COLD then return ("Increases armour by %d."):format(3 + eff.power *2)
+		elseif eff.type == DamageType.LIGHTNING then return ("Increases all stats by %d."):format(math.floor(eff.power))
+		elseif eff.type == DamageType.ACID then return ("Increases life regen by %0.2f%%."):format(5 + eff.power * 2)
+		elseif eff.type == DamageType.NATURE then return ("Increases all resists by %d%%."):format(5 + eff.power * 1.4)
+		end
+	end,
+	type = "physical",
+	status = "beneficial",
+	parameters = { },
+	activate = function(self, eff)
+		if eff.type == DamageType.FIRE then
+			eff.tmpid = self:addTemporaryValue("global_speed", 0.1 + eff.power / 11)
+		elseif eff.type == DamageType.COLD then
+			eff.tmpid = self:addTemporaryValue("combat_armor", 3 + eff.power * 2)
+		elseif eff.type == DamageType.LIGHTNING then
+			eff.tmpid = self:addTemporaryValue("inc_stats",
+			{
+				[Stats.STAT_STR] = math.floor(eff.power),
+				[Stats.STAT_DEX] = math.floor(eff.power),
+				[Stats.STAT_MAG] = math.floor(eff.power),
+				[Stats.STAT_WIL] = math.floor(eff.power),
+				[Stats.STAT_CUN] = math.floor(eff.power),
+				[Stats.STAT_CON] = math.floor(eff.power),
+			})
+		elseif eff.type == DamageType.ACID then
+			eff.tmpid = self:addTemporaryValue("life_regen", 5 + eff.power * 2)
+		elseif eff.type == DamageType.NATURE then
+			eff.tmpid = self:addTemporaryValue("resists", {all=5 + eff.power * 1.4})
+		end
+	end,
+	deactivate = function(self, eff)
+		if eff.type == DamageType.FIRE then
+			self:removeTemporaryValue("global_speed", eff.tmpid)
+		elseif eff.type == DamageType.COLD then
+			self:removeTemporaryValue("combat_armor", eff.tmpid)
+		elseif eff.type == DamageType.LIGHTNING then
+			self:removeTemporaryValue("inc_stats", eff.tmpid)
+		elseif eff.type == DamageType.ACID then
+			self:removeTemporaryValue("life_regen", eff.tmpid)
+		elseif eff.type == DamageType.NATURE then
+			self:removeTemporaryValue("resists", eff.tmpid)
+		end
+	end,
+}

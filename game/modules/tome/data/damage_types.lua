@@ -156,6 +156,12 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			t.doMadness(target, t, src)
 		end
 
+		if not target.dead and dam > 0 and target:attr("elemental_harmony") and not target:hasEffect(target.EFF_ELEMENTAL_HARMONY) then
+			if type == DamageType.FIRE or type == DamageType.COLD or type == DamageType.LIGHTNING or type == DamageType.ACID or type == DamageType.NATURE then
+				target:setEffect(target.EFF_ELEMENTAL_HARMONY, 5 + math.ceil(target:attr("elemental_harmony")), {power=target:attr("elemental_harmony"), type=type})
+			end
+		end
+
 		return dam
 	end
 	return 0
