@@ -22,5 +22,6 @@
 #define _CORELUA_H_
 
 extern int luaopen_core(lua_State *L);
+extern int init_blank_surface();
 
 #endif

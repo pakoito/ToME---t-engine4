@@ -908,6 +908,7 @@ int main(int argc, char *argv[])
 	}
 
 //	setupDisplayTimer(30);
+	init_blank_surface();
 
 	boot_lua(2, FALSE, argc, argv);
 

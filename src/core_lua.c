@@ -832,6 +832,38 @@ static int gl_texture_to_sdl(lua_State *L)
 	return 1;
 }
 
+static int gl_tex_white = 0;
+int init_blank_surface()
+{
+	Uint32 rmask, gmask, bmask, amask;
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+	rmask = 0xff000000;
+	gmask = 0x00ff0000;
+	bmask = 0x0000ff00;
+	amask = 0x000000ff;
+#else
+	rmask = 0x000000ff;
+	gmask = 0x0000ff00;
+	bmask = 0x00ff0000;
+	amask = 0xff000000;
+#endif
+	SDL_Surface *s = SDL_CreateRGBSurface(
+		SDL_SWSURFACE | SDL_SRCALPHA,
+		4,
+		4,
+		32,
+		rmask, gmask, bmask, amask
+		);
+	SDL_FillRect(s, NULL, SDL_MapRGBA(s->format, 255, 255, 255, 255));
+
+	glGenTextures(1, &gl_tex_white);
+	tglBindTexture(GL_TEXTURE_2D, gl_tex_white);
+	int fw, fh;
+	make_texture_for_surface(s, &fw, &fh);
+	copy_surface_to_texture(s);
+	return gl_tex_white;
+}
+
 static int gl_draw_quad(lua_State *L)
 {
 	int x = luaL_checknumber(L, 1);
@@ -854,7 +886,7 @@ static int gl_draw_quad(lua_State *L)
 	}
 	else
 	{
-		tglBindTexture(GL_TEXTURE_2D, 0);
+		tglBindTexture(GL_TEXTURE_2D, gl_tex_white);
 	}
 
 	GLfloat texcoords[2*4] = {
