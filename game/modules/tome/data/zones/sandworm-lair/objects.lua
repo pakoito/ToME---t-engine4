@@ -47,13 +47,13 @@ newEntity{
 		game.logPlayer(who, "You have %d class talent point(s) to spend. Press G to use them.", who.unused_talents)
 		game.logPlayer(who, "You have %d generic talent point(s) to spend. Press G to use them.", who.unused_generics)
 
-		if who:knowTalentType("wild-gift/sand-drake") then
-			who:setTalentTypeMastery("wild-gift/sand-drake", who:getTalentTypeMastery("wild-gift/sand-drake") + 0.1)
+		if who:knowTalentType("wild-gift/") then
+			who:setTalentTypeMastery("wild-gift/harmony", who:getTalentTypeMastery("wild-gift/harmony") + 0.1)
 		else
-			who:learnTalentType("wild-gift/sand-drake", false)
+			who:learnTalentType("wild-gift/harmony", false)
 		end
 		game.logPlayer(who, "You are transformed by the heart of the Queen!.")
-		game.logPlayer(who, "#00FF00#You gain an affinity for sand. You can now learn new sand talents (press G).")
+		game.logPlayer(who, "#00FF00#You gain an affinity for nature. You can now learn new Harmony talents (press G).")
 
 		game:setAllowedBuild("wilder_wyrmic", true)
 
