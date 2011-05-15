@@ -28,7 +28,7 @@ function _M:init(t)
 	self.title = assert(t.title, "no checkbox title")
 	self.text = t.text or ""
 	self.checked = t.default
-	self.fct = assert(t.fct, "no checkbox fct")
+	self.fct = t.fct or function() end
 	self.on_change = t.on_change
 
 	Base.init(self, t)

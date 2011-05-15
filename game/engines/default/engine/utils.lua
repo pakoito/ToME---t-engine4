@@ -962,7 +962,7 @@ function util.showMainMenu(no_reboot, reboot_engine, reboot_engine_version, rebo
 
 	if no_reboot then
 		local Module = require("engine.Module")
-		local ms = Module:listModules()
+		local ms = Module:listModules(true)
 		local mod = ms[__load_module]
 		Module:instanciate(mod, __player_name, __player_new, true)
 	else

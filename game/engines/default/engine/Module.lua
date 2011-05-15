@@ -34,14 +34,14 @@ end
 
 --- List all available modules
 -- Static
-function _M:listModules()
+function _M:listModules(incompatible)
 	local ms = {}
 	fs.mount(engine.homepath, "/")
 --	print("Search Path: ") for k,e in ipairs(fs.getSearchPath()) do print("*",k,e) end
 
 	local knowns = {}
 	for i, short_name in ipairs(fs.list("/modules/")) do
-		local mod = self:createModule(short_name)
+		local mod = self:createModule(short_name, incompatible)
 		if mod then
 			if not knowns[mod.short_name] then
 				table.insert(ms, {short_name=mod.short_name, name=mod.name, versions={}})
@@ -76,11 +76,11 @@ function _M:listModules()
 	return ms
 end
 
-function _M:createModule(short_name)
+function _M:createModule(short_name, incompatible)
 	local dir = "/modules/"..short_name
 	print("Creating module", short_name, ":: (as dir)", fs.exists(dir.."/init.lua"), ":: (as team)", short_name:find(".team$"), "")
 	if fs.exists(dir.."/init.lua") then
-		local mod = self:loadDefinition(dir)
+		local mod = self:loadDefinition(dir, nil, incompatible)
 		if mod and mod.short_name then
 			return mod
 		end
@@ -88,7 +88,7 @@ function _M:createModule(short_name)
 		fs.mount(fs.getRealPath(dir), "/testload", false)
 		local mod
 		if fs.exists("/testload/mod/init.lua") then
-			mod = self:loadDefinition("/testload", dir)
+			mod = self:loadDefinition("/testload", dir, incompatible)
 		end
 		fs.umount(fs.getRealPath(dir))
 		if mod and mod.short_name then return mod end
@@ -96,7 +96,7 @@ function _M:createModule(short_name)
 end
 
 --- Get a module definition from the module init.lua file
-function _M:loadDefinition(dir, team)
+function _M:loadDefinition(dir, team, incompatible)
 	local mod_def = loadfile(team and (dir.."/mod/init.lua") or (dir.."/init.lua"))
 --	print("Loading module definition from", team and (dir.."/mod/init.lua") or (dir.."/init.lua"))
 	if mod_def then
@@ -116,7 +116,8 @@ function _M:loadDefinition(dir, team)
 		mod.version_string = self:versionString(mod)
 		if not __available_engines.__byname[eng_req] then
 			print("Module mismatch engine version "..mod.version_string.." using engine "..eng_req)
-			return
+			if incompatible then mod.incompatible = true
+			else return end
 		end
 
 		-- Make a function to activate it
@@ -186,7 +187,9 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 		popup.__showup = nil
 		core.display.forceRedraw()
 
-		util.showMainMenu(false, mod.engine[4], ("%d.%d.%d"):format(mod.engine[1], mod.engine[2], mod.engine[3]), mod.version_string, name, new_game)
+		local eng_v = nil
+		if not mod.incompatible then eng_v = ("%d.%d.%d"):format(mod.engine[1], mod.engine[2], mod.engine[3]) end
+		util.showMainMenu(false, mod.engine[4], eng_v, mod.version_string, name, new_game)
 		return
 	end
 
