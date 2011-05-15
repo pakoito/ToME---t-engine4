@@ -418,6 +418,9 @@ function _M:drawFrame(x, y, r, g, b, a)
 	end
 end
 
+function _M:innerDisplay(x, y, nb_keyframes)
+end
+
 function _M:toScreen(x, y, nb_keyframes)
 	if self.__hidden then return end
 	x = util.bound(x, 0, game.w - (self.w+self.frame.ox2))
@@ -462,6 +465,8 @@ function _M:toScreen(x, y, nb_keyframes)
 		local ui = self.uis[i]
 		ui.ui:display(x + ui.x, y + ui.y, nb_keyframes, ox + ui.x, oy + ui.y)
 	end
+
+	self:innerDisplay(x, y, nb_keyframes)
 
 	-- Restiore normal opengl matrix
 	if zoom < 1 then core.display.glScale() end

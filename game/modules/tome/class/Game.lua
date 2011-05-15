@@ -1106,6 +1106,10 @@ function _M:setupCommands()
 			self:registerDialog(require("mod.dialogs.CharacterSheet").new(self.party:findMember{main=true}))
 		end,
 
+		SHOW_MESSAGE_LOG = function()
+			self.logdisplay:showLogDialog(nil, 0.6)
+		end,
+
 		-- Show time
 		SHOW_TIME = function()
 			self.log(self.calendar:getTimeDate(self.turn))
@@ -1197,6 +1201,7 @@ function _M:setupMouse(reset)
 		else
 			if button == "wheelup" then self.logdisplay:scrollUp(1) end
 			if button == "wheeldown" then self.logdisplay:scrollUp(-1) end
+			if button == "left" then self.logdisplay:showLogDialog(nil, 0.6) end
 		end
 	end)
 	-- Use hotkeys with mouse

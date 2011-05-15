@@ -72,6 +72,12 @@ function _M:resize(x, y, w, h)
 	self.scrollbar = Slider.new{size=self.h - 20, max=1, inverse=true}
 end
 
+--- Make a dialog popup with the full log
+function _M:showLogDialog(title, shadow)
+	local d = require("engine.dialogs.ShowLog").new(title or "Message Log", shadow, self)
+	game:registerDialog(d)
+end
+
 --- Appends text to the log
 -- This method is set as the call methamethod too, this means it is usable like this:<br/>
 -- log = LogDisplay.new(...)<br/>

@@ -23,3 +23,10 @@ defineAction{
 	group = "actions",
 	name = "Toggle list of seen creatures",
 }
+
+defineAction{
+	default = { "sym:109:true:false:false:false" },
+	type = "SHOW_MESSAGE_LOG",
+	group = "actions",
+	name = "Show message log",
+}
