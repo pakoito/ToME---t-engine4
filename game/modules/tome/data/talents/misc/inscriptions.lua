@@ -441,7 +441,7 @@ newInscription{
 	tactical = { BUFF = 4 },
 	on_pre_use = function(self, t)
 		local ok, data = pcall(self.getInscriptionData, self, t.short_name)
-		return ok and data.nb_uses > 0
+		return ok and data and data.nb_uses and data.nb_uses > 0
 	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
