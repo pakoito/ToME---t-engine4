@@ -51,6 +51,7 @@ newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/st
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/staff-combat", name = "staff combat", generic = true, description = "Harness the power of magical staves." }
 newTalentType{ type="golem/fighting", name = "fighting", description = "Golem melee capacity." }
 newTalentType{ type="golem/arcane", name = "arcane", description = "Golem arcane capacity." }
+newTalentType{ type="golem/golem", name = "golem", description = "Golem basic capacity." }
 
 -- Stone Warden spells
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/arcane-shield", name = "arcane shield", description = "Infuse arcane forces in your shield." }

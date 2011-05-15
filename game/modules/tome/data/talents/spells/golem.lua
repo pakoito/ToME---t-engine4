@@ -446,3 +446,32 @@ newTalent{
 		The damage and resistance will increase with the Magic stat]]):format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 12, 120)), 5 + self:getTalentLevel(t), 30 + self:combatTalentSpellDamage(t, 12, 60))
 	end,
 }
+
+newTalent{
+	name = "Self-destruction", short_name = "GOLEM_DESTRUCT",
+	type = {"golem/golem", 1},
+	points = 1,
+	range = 0,
+	radius = 4,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), selffire=false, radius=self:getTalentRadius(t)}
+	end,
+	tactical = { ATTACKAREA = 3 },
+	no_npc_use = true,
+	on_pre_use = function(self, t)
+		return self.summoner and self.summoner.dead
+	end,
+	action = function(self, t)
+		local tg = self:getTalentTarget(t)
+		self:project(tg, self.x, self.y, DamageType.FIRE, 50 + 10 * self.level)
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_fire", {radius=tg.radius})
+		game:playSoundNear(self, "talents/fireflash")
+		self:die(self)
+		return true
+	end,
+	info = function(self, t)
+		local rad = self:getTalentRadius(t)
+		return ([[The golem self-destructs, destroying itself and generating a blast of fire in a radius of %d, doing %0.2f fire damage.
+		This spell is only usable when the golem's master is dead.]]):format(rad, damDesc(self, DamageType.FIRE, 50 + 10 * self.level))
+	end,
+}

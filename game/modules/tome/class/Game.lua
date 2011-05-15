@@ -876,7 +876,6 @@ function _M:display(nb_keyframes)
 	engine.GameTurnBased.display(self, nb_keyframes)
 
 	-- Tooltip is displayed over all else, even dialogs
-
 	local mx, my, button = core.mouse.get()
 
 	if self.tooltip.w and mx > self.w - self.tooltip.w and my > self.h - self.tooltip.h then

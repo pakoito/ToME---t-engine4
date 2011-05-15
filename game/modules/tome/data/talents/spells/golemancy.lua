@@ -47,6 +47,7 @@ local function makeGolem()
 			[Talents.T_MANA_POOL]=1,
 			[Talents.T_STAMINA_POOL]=1,
 			[Talents.T_GOLEM_KNOCKBACK]=1,
+			[Talents.T_GOLEM_DESTRUCT]=1,
 		},
 
 		resolvers.equip{
