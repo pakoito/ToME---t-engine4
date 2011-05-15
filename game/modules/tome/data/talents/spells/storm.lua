@@ -67,7 +67,7 @@ newTalent{
 	require = spells_req_high2,
 	points = 5,
 	mana = 8,
-	cooldown = 3,
+	cooldown = 4,
 	tactical = { ATTACK = 2 },
 	range = 10,
 	requires_target = true,

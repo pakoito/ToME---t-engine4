@@ -33,7 +33,7 @@ newTalent{
 	target = function(self, t)
 		return {type="beam", range=self:getTalentRange(t), talent=t}
 	end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 290) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 350) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
@@ -67,7 +67,7 @@ newTalent{
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 200) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 250) end,
 	getTargetCount = function(self, t) return 3 + self:getTalentLevelRaw(t) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
