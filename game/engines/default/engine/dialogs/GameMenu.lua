@@ -50,12 +50,12 @@ function _M:generateList(actions)
 		resume = { "Resume", function() game:unregisterDialog(self) end },
 		keybinds = { "Key Bindings", function()
 			game:unregisterDialog(self)
-			local menu = require("engine.dialogs.KeyBinder").new(game.normal_key)
+			local menu = require("engine.dialogs.KeyBinder").new(game.normal_key, nil, game.gestures)
 			game:registerDialog(menu)
 		end },
 		keybinds_all = { "Key Bindings", function()
 			game:unregisterDialog(self)
-			local menu = require("engine.dialogs.KeyBinder").new(game.normal_key, true)
+			local menu = require("engine.dialogs.KeyBinder").new(game.normal_key, true, game.gestures)
 			game:registerDialog(menu)
 		end },
 		video = { "Video Options", function()

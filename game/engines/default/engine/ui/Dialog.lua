@@ -169,6 +169,9 @@ function _M:resize(w, h, nogen)
 	self.ix, self.iy = 5, 8 + 3 + self.font_bold_h
 	self.iw, self.ih = w - 2 * 5, h - 8 - 8 - 3 - self.font_bold_h
 
+--	self.display_x = util.bound(self.display_x, 0, game.w - (self.w+self.frame.ox2))
+--	self.display_y = util.bound(self.display_y, 0, game.h - (self.h+self.frame.oy2))
+
 	if not nogen then self:generate() end
 end
 
@@ -423,8 +426,6 @@ end
 
 function _M:toScreen(x, y, nb_keyframes)
 	if self.__hidden then return end
-	x = util.bound(x, 0, game.w - (self.w+self.frame.ox2))
-	y = util.bound(y, 0, game.h - (self.h+self.frame.oy2))
 
 	local zoom = 1
 	if self.__showup then

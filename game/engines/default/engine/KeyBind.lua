@@ -83,17 +83,23 @@ function _M:saveRemap(file)
 	end
 
 	local f = fs.open(file, "w")
+	
+	local k1, k2, k3
 
 	for virtual, keys in pairs(_M.binds_remap) do
-		if keys[1] and not keys[2] then
-			f:write(("%s = {%q,nil}\n"):format(virtual, keys[1]))
-		elseif not keys[1] and keys[2] then
-			f:write(("%s = {nil,%q}\n"):format(virtual, keys[2]))
-		elseif keys[1] and keys[2] then
-			f:write(("%s = {%q,%q}\n"):format(virtual, keys[1], keys[2]))
-		elseif not keys[1] and not keys[2] then
-			f:write(("%s = {nil,nil}\n"):format(virtual))
+		k1 = "nil"
+		k2 = "nil"
+		k3 = "nil"
+		if keys[1] then
+			k1 = ("%q"):format(keys[1])
 		end
+		if keys[2] then
+			k2 = ("%q"):format(keys[2])
+		end
+		if keys[3] then
+			k3 = ("%q"):format(keys[3])
+		end
+		f:write(("%s = {%s,%s,%s}\n"):format(virtual, k1, k2, k3))
 	end
 
 	f:close()
@@ -138,6 +144,10 @@ function _M:makeKeyString(sym, ctrl, shift, alt, meta, unicode)
 	return ("sym:%s:%s:%s:%s:%s"):format(tostring(sym), tostring(ctrl), tostring(shift), tostring(alt), tostring(meta)), unicode and "uni:"..unicode
 end
 
+function _M:makeGestureString(gesture)
+	return ("gest:%s"):format(tostring(gesture))
+end
+
 function _M:makeMouseString(button, ctrl, shift, alt, meta)
 	return ("mouse:%s:%s:%s:%s:%s"):format(tostring(button), tostring(ctrl), tostring(shift), tostring(alt), tostring(meta))
 end
@@ -180,6 +190,10 @@ function _M:formatKeyString(ks)
 		if alt then sym = "[alt]+"..sym end
 		if meta then sym = "[meta]+"..sym end
 
+		return sym
+	elseif ks:find("^gest:") then
+		local i, j, sym = ks:find("^gest:([a-zA-Z0-9]+)$")
+		if not i then return "--" end
 		return sym
 	end
 end

@@ -25,11 +25,12 @@ local Textbox = require "engine.ui.Textbox"
 
 module(..., package.seeall, class.inherit(Dialog))
 
-function _M:init(title, text, min, max, action, cancel)
+function _M:init(title, text, min, max, action, cancel, absolute)
 	self.action = action
 	self.cancel = cancel
 	self.min = min or 2
 	self.max = max or 25
+	self.absolute = absolute
 
 	Dialog.init(self, title, 320, 110)
 
@@ -53,11 +54,11 @@ end
 
 function _M:okclick()
 	self.name = self.c_box.text
-	if self.name:len() >= self.min then
+	if self.name:len() >= self.min and self.name:len() <= self.max then
 		game:unregisterDialog(self)
 		self.action(self.name)
 	else
-		Dialog:simplePopup("Error", "Must be between 2 and 25 characters.")
+		Dialog:simplePopup("Error", ("Must be between %i and %i characters."):format(self.min, self.max))
 	end
 end
 

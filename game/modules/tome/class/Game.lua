@@ -54,6 +54,7 @@ local DebugConsole = require "engine.DebugConsole"
 local FlyingText = require "engine.FlyingText"
 local Tooltip = require "engine.Tooltip"
 local Calendar = require "engine.Calendar"
+local Gestures = require "engine.ui.Gestures"
 
 local Dialog = require "engine.ui.Dialog"
 local MapMenu = require "mod.dialogs.MapMenu"
@@ -854,6 +855,10 @@ function _M:display(nb_keyframes)
 		self.minimap_bg:toScreen(0, 35, 200, 200)
 		self.minimap_scroll_x, self.minimap_scroll_y = util.bound(self.player.x - 25, 0, map.w - 50), util.bound(self.player.y - 25, 0, map.h - 50)
 		map:minimapDisplay(0, 35, self.minimap_scroll_x, self.minimap_scroll_y, 50, 50, 1)
+
+		-- Mouse gestures
+		self.gestures:update()
+		self.gestures:display(map.display_x, map.display_y + map.viewport.height - self.gestures.font_h - 5)
 	end
 
 	-- We display the player's interface
@@ -906,6 +911,9 @@ function _M:setupCommands()
 
 	-- Activate profiler keybinds
 	self.key:setupProfiler()
+
+	-- Activate mouse gestures
+	self.gestures = Gestures.new("Gesture: ", self.key, true)
 
 	-- Helper function to not allow some actions on the wilderness map
 	local not_wild = function(f) return function() if self.zone and not self.zone.wilderness then f() else self.logPlayer(self.player, "You cannot do that on the world map.") end end end
@@ -1183,7 +1191,24 @@ function _M:setupMouse(reset)
 		if self:targetMouse(button, mx, my, xrel, yrel, event) then return end
 
 		-- Handle Use menu
-		if button == "right" and not xrel and not yrel and event == "button" then self:mouseRightClick(mx, my) return end
+		if button == "right" then
+			if event == "motion" then
+				self.gestures:changeMouseButton(true)
+				self.gestures:mouseMove(mx, my)
+			elseif event == "button" then
+				if not self.gestures:isGesturing() then
+					if not xrel and not yrel then
+						-- Handle Use menu
+						self:mouseRightClick(mx, my)
+						return
+					end
+				else
+					self.gestures:changeMouseButton(false)
+					self.gestures:useGesture()
+					self.gestures:reset()
+				end
+			end
+		end
 
 		-- Default left button action
 		if button == "left" and not xrel and not yrel and event == "button" and self.zone and not self.zone.wilderness then if self:mouseLeftClick(mx, my) then return end end
