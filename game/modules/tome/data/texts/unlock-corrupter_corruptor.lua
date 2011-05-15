@@ -29,7 +29,7 @@ Class features:#YELLOW#
 - Plague your foes with deadly and contagious diseases
 - Hex and curse your foes, hindering and withering them away
 - Sap the life of your victims to heal yourself
-- Master demonic energies to burn and destroy. You can even summon a part of the demon plane.#WHITE#
+- Master demonic energies to burn and destroy. You can even summon a part of the demon plane, the Fearscape, to trap your foes.#WHITE#
 
 Corruptors use "vim" to power their special abilities.
 Vim is the life force of all beings. It does not regenerate, and can only be stolen from your foes.

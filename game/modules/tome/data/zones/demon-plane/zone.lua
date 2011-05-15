@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 return {
-	name = "Demon Plane",
+	name = "Fearscape",
 	level_range = {35, 45},
 	level_scheme = "player",
 	max_level = 1,

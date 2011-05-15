@@ -110,7 +110,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Call upon the essence of the supreme demon overlord Urh'Rok to turn into a demon.
 		While in demon form you gain %d%% fire resistance, %d%% darkness resistance and your global speed is increased by %d%%.
-		The flames of the demon plane will heal you while in demon form.
+		The flames of the fearscape will heal you while in demon form.
 		The resistances and heal will increase with Magic stat.]]):
 		format(
 			self:combatTalentSpellDamage(t, 20, 30), self:combatTalentSpellDamage(t, 20, 35),
@@ -120,7 +120,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Demon Plane",
+	name = "Fearscape", short_name = "DEMON_PLANE",
 	type = {"corruption/shadowflame", 4},
 	require = corrs_req4,
 	mode = "sustained",
@@ -132,7 +132,7 @@ newTalent{
 	range = 5,
 	activate = function(self, t)
 		if game.zone.is_demon_plane then
-			game.logPlayer(self, "This spell can not be used from within the demon place.")
+			game.logPlayer(self, "This spell can not be used from within the Fearscape.")
 			return
 		end
 		if not self:canBe("worldport") then
@@ -202,7 +202,7 @@ newTalent{
 				self.on_die, self.demon_plane_on_die = self.demon_plane_on_die, nil
 			end
 
-			game.logPlayer(game.player, "#LIGHT_RED#You are taken to the demon plane!")
+			game.logPlayer(game.player, "#LIGHT_RED#You are taken to the Fearscape!")
 			level.allow_demon_plane_damage = true
 		end)
 
@@ -268,18 +268,18 @@ newTalent{
 				act.last_act_turn = math.floor(game.turn / (game.zone.wilderness and 1000 or 10))
 			end
 
-			game.logPlayer(game.player, "#LIGHT_RED#You are brought back from the demon plane!")
+			game.logPlayer(game.player, "#LIGHT_RED#You are brought back from the Fearscape!")
 		end)
 
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summon a part of the demon plane to intersect with the current level.
-		Your target and yourself are taken to the demon plane, trapped there until you end the spell or until your target dies.
-		While in the demon plane a constant aura of flames will burn both of you (unless you are a demon) for %0.2f fire damage.
-		When the spell ends only you and the target (if still alive) are taken back to your home plane, all summons are left in the demon plane.
+		return ([[Summon a part of the Fearscape to intersect with the current level.
+		Your target and yourself are taken to the Fearscape, trapped there until you end the spell or until your target dies.
+		While inside a constant aura of flames will burn both of you (unless you are a demon) for %0.2f fire damage.
+		When the spell ends only you and the target (if still alive) are taken back to your home plane, all summons are left in the Fearscape.
 		Objects will be moved as well.
-		This spell has no effect if cast when already inside the demon plane.
+		This spell has no effect if cast when already inside the Fearscape.
 		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 12, 140)))
 	end,
 }
