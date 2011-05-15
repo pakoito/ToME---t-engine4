@@ -68,7 +68,7 @@ newTalent{ short_name = "NATURE_TOUCH",
 	random_ego = "defensive",
 	points = 5,
 	equilibrium = 10,
-	cooldown = 20,
+	cooldown = 15,
 	range = 1,
 	requires_target = true,
 	no_npc_use = true,
@@ -78,7 +78,7 @@ newTalent{ short_name = "NATURE_TOUCH",
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
 		if not target.undead then
-			target:heal(20 + self:getWil(50) * self:getTalentLevel(t))
+			target:heal(20 + self:combatTalentStatDamage(t, "wil", 30, 500))
 		end
 		game:playSoundNear(self, "talents/heal")
 		return true
@@ -86,7 +86,7 @@ newTalent{ short_name = "NATURE_TOUCH",
 	info = function(self, t)
 		return ([[Touch a target (or yourself) to infuse it with Nature, healing it for %d(heal does not work on undead).
 		Heal will increase with your Willpower stat.]]):
-		format(20 + self:getWil(50) * self:getTalentLevel(t))
+		format(20 + self:combatTalentStatDamage(t, "wil", 30, 500))
 	end,
 }
 
