@@ -422,6 +422,7 @@ function _M:defineDisplayCallback()
 
 	local f_self = nil
 	local f_danger = nil
+	local f_powerful = nil
 	local f_friend = nil
 	local f_enemy = nil
 	local f_neutral = nil
@@ -447,6 +448,7 @@ function _M:defineDisplayCallback()
 
 				if not f_self then
 					f_self = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_self)
+					f_powerful = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_powerful)
 					f_danger = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_danger)
 					f_friend = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_friend)
 					f_enemy = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_enemy)
@@ -461,7 +463,8 @@ function _M:defineDisplayCallback()
 					if self == map.actor_player then
 						f_self:toScreen(x, y, w, h)
 					elseif map:faction_danger_check(self) then
-						f_danger:toScreen(x, y, w, h)
+						if friend >= 0 then f_powerful:toScreen(x, y, w, h)
+						else f_danger:toScreen(x, y, w, h) end
 					elseif friend > 0 then
 						f_friend:toScreen(x, y, w, h)
 					elseif friend < 0 then

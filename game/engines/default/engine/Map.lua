@@ -65,6 +65,7 @@ faction_friend = "tactical_friend.png"
 faction_neutral = "tactical_neutral.png"
 faction_enemy = "tactical_enemy.png"
 faction_danger = "tactical_danger.png"
+faction_powerful = "tactical_powerful.png"
 faction_self = "tactical_self.png"
 faction_danger_check = function(self, e) return e.unique end
 
