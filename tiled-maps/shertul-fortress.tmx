@@ -65,6 +65,11 @@
     <property name="value" value="&quot;PURPLE_DRAPPING&quot;"/>
    </properties>
   </tile>
+  <tile id="86">
+   <properties>
+    <property name="display" value="L"/>
+   </properties>
+  </tile>
   <tile id="130">
    <properties>
     <property name="display" value="*"/>
@@ -74,7 +79,7 @@
  </tileset>
  <layer name="Terrain" width="60" height="60">
   <data encoding="base64" compression="zlib">
-   eJzt1sENgzAMBVBuvXaYSF2CEXqkK7AGE3aXigNSFBnjuEnIh3/4qgRt8cPBYRyGYTTmfYFYrfRihl566cUNvfTSixt66aXXl0AvvHdWXNrxBdQbkmhe7buo3pxcwXv1/t7t+T3qfQtTL94eUsMrPZPWY2d7t3q83p5ms+ZN69G86awp5U3/d67klerZ80o1L5lWyVFrLWjr17Ke13MvoY5/e1vTa6lpb2YdzSGvOT43RSnhfRprejgtW77Oa6zOT0GvdT3H/Q3RJ1p/PfMq9qI9v579SOvvLPxei/Tu3Np7NJ9Tn7e3mqHV/mt5n9TucylvjdT25h5D9Gr3oZWrpNe7Tunt35u715w1l3robw+h1zafUUMvvfTihl566cUNvfTSixt66aUXN3fz/gBlv640
+   eJzt1sENgzAMBVBuvXYYpC7BCD22K7AGs3Sg7tJyQIoi4zgmTmL4h69KoLZ+OHGYhmGYhHmeIFIrvD4DL7zw+g288MLrN/DCC6/fwHvMO/8zduCq5R2jtPZZez+EuSd/zf6e0cvt3zN6U72H17+X2r/Sa629Wz1arzStvXE9nHcx8sa/Oxt5qXr2vFTNS6aVclitBW79Stbzeu9B1HG0t5ZeSU17Mys1h7Tm8N4rSAnvXVjTTWnZ8lX+x+p8F/RK13PY3zH49NZfzbwKvd72r+Y84vo7E9/nEp87Lbyp+Rz7tL3lDLXOX8n7JPecS3ktYu3NvebRyz2HWq6SXu06hbd/b+5Z02ou9dDfHgKvbD57Dbzwwus38MILr9/ACy+8fgMvvPD6zdW8P5jwsWs=
   </data>
  </layer>
  <objectgroup color="#ff0000" name="Actor" width="60" height="60">
@@ -129,7 +134,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup name="addZone#rooms" width="60" height="60" visible="0">
+ <objectgroup name="addZone#rooms" width="60" height="60">
   <object name="control room" x="673" y="738" width="412" height="408">
    <properties>
     <property name="subtype" value="&quot;Control Room&quot;"/>
@@ -152,6 +157,12 @@
   <object name="Farportal" x="1220" y="835" width="219" height="215">
    <properties>
     <property name="subtype" value="&quot;Exploratory Farportal&quot;"/>
+    <property name="type" value="&quot;zonename&quot;"/>
+   </properties>
+  </object>
+  <object name="Library" x="644" y="515" width="118" height="151">
+   <properties>
+    <property name="subtype" value="&quot;Library of Lost Mysteries&quot;"/>
     <property name="type" value="&quot;zonename&quot;"/>
    </properties>
   </object>

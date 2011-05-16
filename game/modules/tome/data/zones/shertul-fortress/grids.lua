@@ -138,3 +138,20 @@ newEntity{ base = "FARPORTAL", define_as = "CFARPORTAL",
 		level.map:particleEmitter(y, y, 3, "farportal_lightning")
 	end,
 }
+
+newEntity{
+	define_as = "LIBRARY",
+	name = "Library of Lost Mysteries", image = "terrain/maze_floor.png", add_displays = {class.new{image="terrain/temporal_instability_blue.png"}},
+	display = '*', color=colors.BLUE,
+	notice = true,
+	always_remember = true,
+	block_move = function(self, x, y, e, act, couldpass)
+		if e and e.player and act then
+			if profile.mod.lore and profile.mod.lore.lore then
+				for lore, _ in pairs(profile.mod.lore.lore) do game.player:learnLore(lore, true) end
+			end
+			game:registerDialog(require("mod.dialogs.ShowLore").new("Yiilkgur's Library of Lost Mysteries", game.player))
+		end
+		return true
+	end,
+}

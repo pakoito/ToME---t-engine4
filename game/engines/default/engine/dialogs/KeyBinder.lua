@@ -143,8 +143,8 @@ function _M:use(item)
 					KeyBind.binds_remap[t.type][curcol] = nil
 				else
 					KeyBind.binds_remap[t.type][curcol] = KeyBind:makeGestureString(gesture)
+					self.gesture:addGesture(gesture, function() self.key_source:triggerVirtual(t.type) end, t.sortname)
 				end
-				self.gesture:addGesture(gesture, function() self.key_source:triggerVirtual(t.type) end, t.sortname)
 				self.c_tree:drawItem(item)
 			end,
 			function()

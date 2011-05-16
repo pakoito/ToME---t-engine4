@@ -73,19 +73,21 @@ function _M:additionalLore(id, name, category, lore)
 	self.additional_lore[id] = {id=id, name=name, category=category, lore=lore, order=self.additional_lore_nb + #self.lore_defs}
 end
 
-function _M:learnLore(lore)
+function _M:learnLore(lore, nopopup)
 	local l = self:getLore(lore)
 	local learnt = false
 	if not self:knownLore(lore) then
-		LorePopup.new(l, game.w * 0.6, 0.8)
 		game.logPlayer(self, "Lore found: #0080FF#%s", l.name)
-		game.logPlayer(self, "#ANTIQUE_WHITE#%s", util.getval(l.lore))
-		game.logPlayer(self, "You can read all your collected lore in the game menu, by pressing Escape.")
+		if not nopopup then
+			LorePopup.new(l, game.w * 0.6, 0.8)
+			game.logPlayer(self, "#ANTIQUE_WHITE#%s", util.getval(l.lore))
+			game.logPlayer(self, "You can read all your collected lore in the game menu, by pressing Escape.")
+		end
 		learnt = true
 	end
 
 	self.lore_known[lore] = true
-	if not self.additional_lore[lore] and self.registerLoreFound then self:registerLoreFound(lore) end
+	if learnt and not self.additional_lore[lore] and self.registerLoreFound then self:registerLoreFound(lore) end
 	print("[LORE] learnt", lore)
 	if learnt then if l.on_learn then l.on_learn(self) end end
 end
