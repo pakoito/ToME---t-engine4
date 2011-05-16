@@ -64,4 +64,7 @@ return {
 			nb_trap = {12, 15},
 		},
 	},
+	on_enter = function(lev, old_lev, newzone)
+		if newzone then game.player:learnLore("fearscape-entry") end
+	end,
 }

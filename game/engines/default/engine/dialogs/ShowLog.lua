@@ -79,7 +79,7 @@ function _M:setScroll(i)
 		local tstr = self.lines[z]
 		if not tstr then break end
 		local gen = self.font:draw(tstr, self.iw - 10, 255, 255, 255)
-		for i = #gen, 1, -1 do
+		for i = 1, #gen do
 			self.dlist[#self.dlist+1] = gen[i]
 			nb = nb + 1
 			if nb >= self.max_display then stop = true break end
