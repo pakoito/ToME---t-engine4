@@ -85,6 +85,7 @@ function _M:learnLore(lore)
 	end
 
 	self.lore_known[lore] = true
+	if not self.additional_lore[lore] and self.registerLoreFound then self:registerLoreFound(lore) end
 	print("[LORE] learnt", lore)
 	if learnt then if l.on_learn then l.on_learn(self) end end
 end
