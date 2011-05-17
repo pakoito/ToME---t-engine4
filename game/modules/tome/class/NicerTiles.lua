@@ -36,11 +36,16 @@ function _M:getTile(name)
 		name = n
 	end
 
-	if self.repo[name] then return self.repo[name]
+	local e
+	if self.repo[name] then e = self.repo[name]
 	else
 		self.repo[name] = game.zone:makeEntityByName(game.level, "terrain", name)
-		return self.repo[name]
+		e = self.repo[name]
 	end
+	if e.force_clone then
+		e = e:clone()
+	end
+	return e
 end
 
 function _M:replace(i, j, g)
