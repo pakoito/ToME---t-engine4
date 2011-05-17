@@ -26,3 +26,7 @@ desc = function(self, who)
 	end
 	return table.concat(desc, "\n")
 end
+
+on_status_change = function(self, who, status, sub)
+	if self:isCompleted() then who:setQuestStatus(self.id, engine.Quest.DONE) end
+end

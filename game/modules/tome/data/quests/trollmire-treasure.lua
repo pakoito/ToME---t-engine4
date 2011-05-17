@@ -29,11 +29,7 @@ desc = function(self, who)
 end
 
 on_status_change = function(self, who, status, sub)
-	if sub then
-		if self:isCompleted() then
-			who:setQuestStatus(self.id, engine.Quest.DONE)
-		end
-	end
+	if self:isCompleted() then who:setQuestStatus(self.id, engine.Quest.DONE) end
 end
 
 on_grant = function(self)
