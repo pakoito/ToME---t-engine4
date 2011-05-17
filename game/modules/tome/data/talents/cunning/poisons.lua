@@ -221,7 +221,7 @@ newTalent{
 	no_energy = true,
 	tactical = { BUFF = 2 },
 	getDuration = function(self, t) return 5 + self:getTalentLevel(self.T_VILE_POISONS) end,
-	getDOT = function(self, t) return 8 + self:combatTalentStatDamage(self.T_VILE_POISONS, "cun", 10, 60) * 0.6 end,
+	getDOT = function(self, t) return 8 + self:combatTalentStatDamage(self.T_VILE_POISONS, "cun", 10, 60) * 0.4 end,
 	proc = function(self, t, target)
 		if not checkChance(self, target) then return end
 		target:setEffect(target.EFF_POISONED, t.getDuration(self, t), {src=self, power=t.getDOT(self, t), max_power=t.getDOT(self, t) * 4})
@@ -253,7 +253,7 @@ newTalent{
 	no_energy = true,
 	tactical = { BUFF = 2 },
 	getDuration = function(self, t) return 5 + self:getTalentLevel(self.T_VILE_POISONS) end,
-	getDOT = function(self, t) return 8 + self:combatTalentStatDamage(self.T_VILE_POISONS, "cun", 10, 50) * 0.6 end,
+	getDOT = function(self, t) return 8 + self:combatTalentStatDamage(self.T_VILE_POISONS, "cun", 10, 50) * 0.4 end,
 	getEffect = function(self, t) return 10 + self:getTalentLevel(self.T_VILE_POISONS) * 3 end,
 	proc = function(self, t, target)
 		if not checkChance(self, target) then return end
@@ -286,7 +286,7 @@ newTalent{
 	no_energy = true,
 	tactical = { BUFF = 2 },
 	getDuration = function(self, t) return 5 + self:getTalentLevel(self.T_VILE_POISONS) end,
-	getDOT = function(self, t) return 8 + self:combatTalentStatDamage(self.T_VILE_POISONS, "cun", 10, 50) * 0.6 end,
+	getDOT = function(self, t) return 8 + self:combatTalentStatDamage(self.T_VILE_POISONS, "cun", 10, 50) * 0.4 end,
 	getEffect = function(self, t) return 30 + self:getTalentLevel(self.T_VILE_POISONS) * 5.5 end,
 	proc = function(self, t, target)
 		if not checkChance(self, target) then return end
@@ -319,7 +319,7 @@ newTalent{
 	no_energy = true,
 	tactical = { BUFF = 2 },
 	getDuration = function(self, t) return 3 + self:getTalentLevel(self.T_VILE_POISONS) end,
-	getDOT = function(self, t) return 8 + self:combatTalentStatDamage(self.T_VILE_POISONS, "cun", 10, 50) * 0.6 end,
+	getDOT = function(self, t) return 8 + self:combatTalentStatDamage(self.T_VILE_POISONS, "cun", 10, 50) * 0.4 end,
 	getEffect = function(self, t) return 10 + self:getTalentLevel(self.T_VILE_POISONS) * 3 end,
 	proc = function(self, t, target)
 		if not checkChance(self, target) then return end
@@ -352,7 +352,7 @@ newTalent{
 	no_energy = true,
 	tactical = { BUFF = 2 },
 	getDuration = function(self, t) return 12 - self:getTalentLevel(self.T_VILE_POISONS) end,
-	getDOT = function(self, t) return 8 + self:combatTalentStatDamage(self.T_VILE_POISONS, "cun", 10, 30) * 0.6 end,
+	getDOT = function(self, t) return 8 + self:combatTalentStatDamage(self.T_VILE_POISONS, "cun", 10, 30) * 0.4 end,
 	getEffect = function(self, t) return math.ceil(2 + self:getTalentLevel(t) / 2) end,
 	proc = function(self, t, target)
 		if not checkChance(self, target) then return end
