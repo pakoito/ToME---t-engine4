@@ -70,7 +70,8 @@ newTalent{
 		Also increases the effectiveness of your poisons by %d%%. (The effect varies for each poison).
 		Coating your weapons in poisons does not break stealth.
 		You may only have two poisons active at once.
-		Every time your hit a creature with your weapons you have %d%% chance to randomly apply one of your active poisons.]]):
+		Every time you hit a creature with one of your weapons you have %d%% chance to randomly apply one of your active poisons.
+		The chance to apply a poison lowers if the target already has poisons.]]):
 		format(self:getTalentLevel(t) * 20, 20 + self:getTalentLevel(t) * 5)
 	end,
 }
@@ -189,6 +190,16 @@ newTalent{
 -- Poisons effects
 ----------------------------------------------------------------
 
+local function checkChance(self, target)
+	local chance = 20 + self:getTalentLevel(self.T_VILE_POISONS) * 5
+	local nb = 1
+	for eff_id, p in pairs(target.tmp) do
+		local e = target.tempeffect_def[eff_id]
+		if e.type == "poison" then nb = nb + 1 end
+	end
+	return rng.percent(chance / nb)
+end
+
 local function cancelPoisons(self)
 	local todel = {}
 	for tid, p in pairs(self.sustain_talents) do
@@ -211,7 +222,10 @@ newTalent{
 	tactical = { BUFF = 2 },
 	getDuration = function(self, t) return 5 + self:getTalentLevel(self.T_VILE_POISONS) end,
 	getDOT = function(self, t) return 8 + self:combatTalentStatDamage(self.T_VILE_POISONS, "cun", 10, 60) * 0.6 end,
-	proc = function(self, t, target) target:setEffect(target.EFF_POISONED, t.getDuration(self, t), {src=self, power=t.getDOT(self, t), max_power=t.getDOT(self, t) * 4}) end,
+	proc = function(self, t, target)
+		if not checkChance(self, target) then return end
+		target:setEffect(target.EFF_POISONED, t.getDuration(self, t), {src=self, power=t.getDOT(self, t), max_power=t.getDOT(self, t) * 4})
+	end,
 	activate = function(self, t)
 		cancelPoisons(self)
 		self.vile_poisons[t.id] = true
@@ -241,7 +255,10 @@ newTalent{
 	getDuration = function(self, t) return 5 + self:getTalentLevel(self.T_VILE_POISONS) end,
 	getDOT = function(self, t) return 8 + self:combatTalentStatDamage(self.T_VILE_POISONS, "cun", 10, 50) * 0.6 end,
 	getEffect = function(self, t) return 10 + self:getTalentLevel(self.T_VILE_POISONS) * 3 end,
-	proc = function(self, t, target) target:setEffect(target.EFF_NUMBING_POISON, t.getDuration(self, t), {src=self, power=t.getDOT(self, t), reduce=t.getEffect(self, t)}) end,
+	proc = function(self, t, target)
+		if not checkChance(self, target) then return end
+		target:setEffect(target.EFF_NUMBING_POISON, t.getDuration(self, t), {src=self, power=t.getDOT(self, t), reduce=t.getEffect(self, t)})
+	end,
 	activate = function(self, t)
 		cancelPoisons(self)
 		self.vile_poisons[t.id] = true
@@ -271,7 +288,10 @@ newTalent{
 	getDuration = function(self, t) return 5 + self:getTalentLevel(self.T_VILE_POISONS) end,
 	getDOT = function(self, t) return 8 + self:combatTalentStatDamage(self.T_VILE_POISONS, "cun", 10, 50) * 0.6 end,
 	getEffect = function(self, t) return 30 + self:getTalentLevel(self.T_VILE_POISONS) * 5.5 end,
-	proc = function(self, t, target) target:setEffect(target.EFF_INSIDIOUS_POISON, t.getDuration(self, t), {src=self, power=t.getDOT(self, t), heal_factor=t.getEffect(self, t)}) end,
+	proc = function(self, t, target)
+		if not checkChance(self, target) then return end
+		target:setEffect(target.EFF_INSIDIOUS_POISON, t.getDuration(self, t), {src=self, power=t.getDOT(self, t), heal_factor=t.getEffect(self, t)})
+	end,
 	activate = function(self, t)
 		cancelPoisons(self)
 		self.vile_poisons[t.id] = true
@@ -301,7 +321,10 @@ newTalent{
 	getDuration = function(self, t) return 3 + self:getTalentLevel(self.T_VILE_POISONS) end,
 	getDOT = function(self, t) return 8 + self:combatTalentStatDamage(self.T_VILE_POISONS, "cun", 10, 50) * 0.6 end,
 	getEffect = function(self, t) return 10 + self:getTalentLevel(self.T_VILE_POISONS) * 3 end,
-	proc = function(self, t, target) target:setEffect(target.EFF_CRIPPLING_POISON, t.getDuration(self, t), {src=self, power=t.getDOT(self, t), fail=t.getEffect(self, t)}) end,
+	proc = function(self, t, target)
+		if not checkChance(self, target) then return end
+		target:setEffect(target.EFF_CRIPPLING_POISON, t.getDuration(self, t), {src=self, power=t.getDOT(self, t), fail=t.getEffect(self, t)})
+	end,
 	activate = function(self, t)
 		cancelPoisons(self)
 		self.vile_poisons[t.id] = true
@@ -332,6 +355,7 @@ newTalent{
 	getDOT = function(self, t) return 8 + self:combatTalentStatDamage(self.T_VILE_POISONS, "cun", 10, 30) * 0.6 end,
 	getEffect = function(self, t) return math.ceil(2 + self:getTalentLevel(t) / 2) end,
 	proc = function(self, t, target)
+		if not checkChance(self, target) then return end
 		if target:hasEffect(target.EFF_STONED) or target:hasEffect(target.EFF_STONE_POISON) then return end
 		target:setEffect(target.EFF_STONE_POISON, t.getDuration(self, t), {src=self, power=t.getDOT(self, t), stone=t.getEffect(self, t)})
 	end,

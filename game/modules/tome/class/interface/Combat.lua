@@ -398,7 +398,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	end
 
 	-- Poison coating
-	if hitted and not target.dead and self.vile_poisons and next(self.vile_poisons) and rng.percent(20 + self:getTalentLevel(self.T_VILE_POISONS) * 5) and target:canBe("poison") then
+	if hitted and not target.dead and self.vile_poisons and next(self.vile_poisons) and target:canBe("poison") then
 		local tid = rng.table(table.keys(self.vile_poisons))
 		if tid then
 			local t = self:getTalentFromId(tid)
