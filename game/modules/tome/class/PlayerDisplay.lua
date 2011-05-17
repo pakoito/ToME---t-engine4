@@ -82,15 +82,19 @@ function _M:makeTexture(text, x, y, r, g, b, max_w)
 	return item.w, item.h, item.x, item.y
 end
 
-function _M:makeTextureBar(text, nfmt, val, max, x, y, r, g, b, bar_col, bar_bgcol)
+function _M:makeTextureBar(text, nfmt, val, max, reg, x, y, r, g, b, bar_col, bar_bgcol)
 	local s = self.surface_line
 	s:erase(0, 0, 0, 0)
 	s:erase(bar_bgcol.r, bar_bgcol.g, bar_bgcol.b, 255, self.bars_x, h, self.bars_w, self.font_h)
 	s:erase(bar_col.r, bar_col.g, bar_col.b, 255, self.bars_x, h, self.bars_w * val / max, self.font_h)
 
 	s:drawColorStringBlended(self.font, text, 0, 0, r, g, b, true)
-	s:drawColorStringBlended(self.font, (nfmt or "%d/%d"):format(val, max), self.bars_x, 0, r, g, b)
-
+	s:drawColorStringBlended(self.font, (nfmt or "%d/%d"):format(val, max), self.bars_x + 5, 0, r, g, b)
+	if reg and reg ~= 0 then
+		local reg_txt = (" (%s%.2f)"):format((reg > 0 and "+") or "",reg)
+		local reg_txt_w = self.font:size(reg_txt)
+		s:drawColorStringBlended(self.font, reg_txt, self.bars_x + self.bars_w - reg_txt_w - 3, 0, r, g, b)
+	end
 	local item = { s:glTexture() }
 	item.x = x
 	item.y = y
@@ -208,57 +212,57 @@ function _M:display()
 	self:mouseTooltip(self.TOOLTIP_MAGWILCUN, self:makeTexture(("Mag/Wil/Cun: #00ff00#%3d/%3d/%3d"):format(player:getMag(), player:getWil(), player:getCun()), x, h, 255, 255, 255)) h = h + self.font_h
 	h = h + self.font_h
 
-	self:mouseTooltip(self.TOOLTIP_LIFE, self:makeTextureBar("#c00000#Life:", nil, player.life, player.max_life, x, h, 255, 255, 255, colors.DARK_RED, colors.VERY_DARK_RED)) h = h + self.font_h
+	self:mouseTooltip(self.TOOLTIP_LIFE, self:makeTextureBar("#c00000#Life:", nil, player.life, player.max_life, player.life_regen * util.bound((player.healing_factor or 1), 0, 2.5), x, h, 255, 255, 255, colors.DARK_RED, colors.VERY_DARK_RED)) h = h + self.font_h
 
 	if player:knowTalent(player.T_STAMINA_POOL) then
-		self:mouseTooltip(self.TOOLTIP_STAMINA, self:makeTextureBar("#ffcc80#Stamina:", nil, player:getStamina(), player.max_stamina, x, h, 255, 255, 255, {r=0xff / 3, g=0xcc / 3, b=0x80 / 3}, {r=0xff / 6, g=0xcc / 6, b=0x80 / 6})) h = h + self.font_h
+		self:mouseTooltip(self.TOOLTIP_STAMINA, self:makeTextureBar("#ffcc80#Stamina:", nil, player:getStamina(), player.max_stamina, player.stamina_regen, x, h, 255, 255, 255, {r=0xff / 3, g=0xcc / 3, b=0x80 / 3}, {r=0xff / 6, g=0xcc / 6, b=0x80 / 6})) h = h + self.font_h
 	end
 	if player:knowTalent(player.T_MANA_POOL) then
-		self:mouseTooltip(self.TOOLTIP_MANA, self:makeTextureBar("#7fffd4#Mana:", nil, player:getMana(), player.max_mana, x, h, 255, 255, 255,
+		self:mouseTooltip(self.TOOLTIP_MANA, self:makeTextureBar("#7fffd4#Mana:", nil, player:getMana(), player.max_mana, player.mana_regen, x, h, 255, 255, 255,
 			{r=0x7f / 2, g=0xff / 2, b=0xd4 / 2},
 			{r=0x7f / 5, g=0xff / 5, b=0xd4 / 5}
 		)) h = h + self.font_h
 	end
 	if player:knowTalent(player.T_EQUILIBRIUM_POOL) then
 		local _, chance = player:equilibriumChance()
-		self:mouseTooltip(self.TOOLTIP_EQUILIBRIUM, self:makeTextureBar("#00ff74#Equi:", ("%d"):format(player:getEquilibrium()), 100 - chance, 100, x, h, 255, 255, 255,
+		self:mouseTooltip(self.TOOLTIP_EQUILIBRIUM, self:makeTextureBar("#00ff74#Equi:", ("%d"):format(player:getEquilibrium()), 100 - chance, 100, player.equilibrium_regen, x, h, 255, 255, 255,
 			{r=0x00 / 2, g=0xff / 2, b=0x74 / 2},
 			{r=0x00 / 5, g=0xff / 5, b=0x74 / 5}
 		)) h = h + self.font_h
 	end
 	if player:knowTalent(player.T_POSITIVE_POOL) then
-		self:mouseTooltip(self.TOOLTIP_POSITIVE, self:makeTextureBar("#7fffd4#Positive:", nil, player:getPositive(), player.max_positive, x, h, 255, 255, 255,
+		self:mouseTooltip(self.TOOLTIP_POSITIVE, self:makeTextureBar("#7fffd4#Positive:", nil, player:getPositive(), player.max_positive, player.positive_regen, x, h, 255, 255, 255,
 			{r=colors.GOLD.r / 2, g=colors.GOLD.g / 2, b=colors.GOLD.b / 2},
 			{r=colors.GOLD.r / 5, g=colors.GOLD.g / 5, b=colors.GOLD.b / 5}
 		)) h = h + self.font_h
 	end
 	if player:knowTalent(player.T_NEGATIVE_POOL) then
-		self:mouseTooltip(self.TOOLTIP_NEGATIVE, self:makeTextureBar("#7fffd4#Negative:", nil, player:getNegative(), player.max_negative, x, h, 255, 255, 255,
+		self:mouseTooltip(self.TOOLTIP_NEGATIVE, self:makeTextureBar("#7fffd4#Negative:", nil, player:getNegative(), player.max_negative, player.negative_regen, x, h, 255, 255, 255,
 			{r=colors.GREY.r / 2, g=colors.GREY.g / 2, b=colors.GREY.b / 2},
 			{r=colors.GREY.r / 5, g=colors.GREY.g / 5, b=colors.GREY.b / 5}
 		)) h = h + self.font_h
 	end
 	if player:knowTalent(player.T_VIM_POOL) then
-		self:mouseTooltip(self.TOOLTIP_VIM, self:makeTextureBar("#904010#Vim:", nil, player:getVim(), player.max_vim, x, h, 255, 255, 255,
+		self:mouseTooltip(self.TOOLTIP_VIM, self:makeTextureBar("#904010#Vim:", nil, player:getVim(), player.max_vim, player.vim_regen, x, h, 255, 255, 255,
 			{r=0x90 / 3, g=0x40 / 3, b=0x10 / 3},
 			{r=0x90 / 6, g=0x40 / 6, b=0x10 / 6}
 		)) h = h + self.font_h
 	end
 	if player:knowTalent(player.T_HATE_POOL) then
-		self:mouseTooltip(self.TOOLTIP_HATE, self:makeTextureBar("#F53CBE#Hate:", "%0.1f/%d", player:getHate(), 10, x, h, 255, 255, 255,
+		self:mouseTooltip(self.TOOLTIP_HATE, self:makeTextureBar("#F53CBE#Hate:", "%0.1f/%d", player:getHate(), player.hate_regen, 10, x, h, 255, 255, 255,
 			{r=colors.GREY.r / 2, g=colors.GREY.g / 2, b=colors.GREY.b / 2},
 			{r=colors.GREY.r / 5, g=colors.GREY.g / 5, b=colors.GREY.b / 5}
 		)) h = h + self.font_h
 	end
 	if player:knowTalent(player.T_PARADOX_POOL) then
 		local _, chance = player:paradoxFailChance()
-		self:mouseTooltip(self.TOOLTIP_PARADOX, self:makeTextureBar("#LIGHT_STEEL_BLUE#Paradox:", ("       %d"):format(player:getParadox()), chance, 100, x, h, 255, 255, 255,
+		self:mouseTooltip(self.TOOLTIP_PARADOX, self:makeTextureBar("#LIGHT_STEEL_BLUE#Paradox:", ("       %d"):format(player:getParadox()), chance, 100, player.paradox_regen, x, h, 255, 255, 255,
 			{r=176 / 2, g=196 / 2, b=222 / 2},
 			{r=176 / 5, g=196 / 5, b=222 / 5}
 		)) h = h + self.font_h
 	end
 	if player:knowTalent(player.T_PSI_POOL) then
-		self:mouseTooltip(self.TOOLTIP_PSI, self:makeTextureBar("#7fffd4#Psi:", nil, player:getPsi(), player.max_psi, x, h, 255, 255, 255,
+		self:mouseTooltip(self.TOOLTIP_PSI, self:makeTextureBar("#7fffd4#Psi:", nil, player:getPsi(), player.max_psi, player.psi_regen, x, h, 255, 255, 255,
 			{r=colors.BLUE.r / 2, g=colors.BLUE.g / 2, b=colors.BLUE.b / 2},
 			{r=colors.BLUE.r / 5, g=colors.BLUE.g / 5, b=colors.BLUE.b / 5}
 		)) h = h + self.font_h
@@ -272,7 +276,7 @@ function _M:display()
 
 	if savefile_pipe.saving then
 		h = h + self.font_h
-		self:makeTextureBar("Saving:", "%d%%", 100 * savefile_pipe.current_nb / savefile_pipe.total_nb, 100, x, h, colors.YELLOW.r, colors.YELLOW.g, colors.YELLOW.b,
+		self:makeTextureBar("Saving:", "%d%%", 100 * savefile_pipe.current_nb / savefile_pipe.total_nb, 100, nil, x, h, colors.YELLOW.r, colors.YELLOW.g, colors.YELLOW.b,
 			{r=0x95 / 3, g=0xa2 / 3,b= 0x80 / 3},
 			{r=0x68 / 6, g=0x72 / 6, b=0x00 / 6}
 		)
