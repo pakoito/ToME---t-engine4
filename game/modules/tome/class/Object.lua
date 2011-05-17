@@ -95,9 +95,13 @@ function _M:use(who, typ, inven, item)
 end
 
 --- Returns a tooltip for the object
-function _M:tooltip()
+function _M:tooltip(x, y)
 	local str = self:getDesc{do_color=true}
 	if config.settings.cheat then str:add(true, "UID: "..self.uid, true, self.image) end
+	local nb = game.level.map:getObjectTotal(x, y)
+	if nb == 2 then str:add(true, "---", true, "You see one more object.")
+	elseif nb > 2 then str:add(true, "---", true, "You see "..(nb-1).." more objects.")
+	end
 	return str
 end
 

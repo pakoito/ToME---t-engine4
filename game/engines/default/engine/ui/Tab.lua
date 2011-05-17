@@ -52,7 +52,7 @@ function _M:generate()
 	self.tex = {s:glTexture()}
 
 	-- Add UI controls
-	self.mouse:registerZone(0, 0, self.w, self.h, function(button, x, y, xrel, yrel, bx, by, event)
+	self.mouse:registerZone(0, 0, self.w+1, self.h+6, function(button, x, y, xrel, yrel, bx, by, event)
 		if event == "button" then
 			self:select()
 		end

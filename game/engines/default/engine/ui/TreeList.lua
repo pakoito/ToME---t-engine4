@@ -86,9 +86,11 @@ function _M:init(t)
 	Base.init(self, t)
 end
 
-function _M:drawItem(item)
+function _M:drawItem(item, nb_keyframes)
+	nb_keyframes = (nb_keyframes or 0) / 2
 	item.cols = {}
 	for i, col in ipairs(self.columns) do
+		local fw = col.width
 		local level = item.level
 		local color = util.getval(item.color, item) or {255,255,255}
 		local text
@@ -113,7 +115,35 @@ function _M:drawItem(item)
 		item.cols[i] = {}
 
 		s:erase(0, 0, 0, 0)
-		text:drawOnSurface(s, col.width - startx - col.frame_sel.b6.w, 1, self.font, startx, (self.fh - self.font_h) / 2, color[1], color[2], color[3])
+		local test_text = text:toString()
+		local font_w, _ = self.font:size(test_text)
+		font_w = font_w + startx
+
+		if font_w > fw then
+			item.displayx_offset = item.displayx_offset or {}
+			item.displayx_offset[i] = item.displayx_offset[i] or 0
+			item.dir = item.dir or {}
+			item.dir[i] = item.dir[i] or 0
+
+			if item.dir[i] == 0 then
+				item.displayx_offset[i] = item.displayx_offset[i] - nb_keyframes
+				if -item.displayx_offset[i] >= font_w - fw + 15 then
+					item.dir[i] = 1
+				end
+			elseif item.dir[i] == 1 then
+				item.displayx_offset[i] = item.displayx_offset[i] + nb_keyframes
+				if item.displayx_offset[i] >= 0 then
+					item.dir[i] = 0
+				end
+			end
+
+			-- We use 1000 and do not cut lines to make sure it draws as much as possible
+			text:drawOnSurface(s, 10000, nil, self.font, startx + item.displayx_offset[i], (self.fh - self.font_h) / 2, color[1], color[2], color[3])
+		else
+			text:drawOnSurface(s, 10000, nil, self.font, startx, (self.fh - self.font_h) / 2, color[1], color[2], color[3])
+		end
+
+		--text:drawOnSurface(s, col.width - startx - col.frame_sel.b6.w, 1, self.font, startx, (self.fh - self.font_h) / 2, color[1], color[2], color[3])
 		item.cols[i]._tex, item.cols[i]._tex_w, item.cols[i]._tex_h = s:glTexture()
 	end
 	if self.on_drawitem then self.on_drawitem(item) end
@@ -268,6 +298,18 @@ end
 
 function _M:display(x, y, nb_keyframes)
 	local bx, by = x, y
+	if self.sel then
+		local item = self.list[self.sel]
+		if self.previtem and self.previtem~=item then
+			self.previtem.displayx_offset = {}
+			self:drawItem(self.previtem)
+			self.previtem = nil
+		end
+		if item then
+			self:drawItem(item, nb_keyframes)
+			self.previtem = item
+		end
+	end
 
 	local max = math.min(self.scroll + self.max_display - 1, self.max)
 	for i = self.scroll, max do
@@ -289,13 +331,14 @@ function _M:display(x, y, nb_keyframes)
 				end
 			end
 
+			if self.text_shadow then item.cols[j]._tex:toScreenFull(x+1, y+1, col.width, self.fh, item.cols[j]._tex_w, item.cols[j]._tex_h, 0, 0, 0, self.text_shadow) end
+			item.cols[j]._tex:toScreenFull(x, y, col.width, self.fh, item.cols[j]._tex_w, item.cols[j]._tex_h)
+
 			if item.nodes and j == 1 then
 				local s = item.shown and self.minus or self.plus
 				s.t:toScreenFull(x, y + (self.fh - s.h) / 2, s.w, s.h, s.th, s.th)
 			end
 
-			if self.text_shadow then item.cols[j]._tex:toScreenFull(x+1, y+1, col.width, self.fh, item.cols[j]._tex_w, item.cols[j]._tex_h, 0, 0, 0, self.text_shadow) end
-			item.cols[j]._tex:toScreenFull(x, y, col.width, self.fh, item.cols[j]._tex_w, item.cols[j]._tex_h)
 			x = x + col.width
 		end
 		y = y + self.fh

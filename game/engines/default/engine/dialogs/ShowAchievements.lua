@@ -158,7 +158,7 @@ function _M:generateList(kind)
 			i = i + 1
 		end
 	end
-	if kind == "self" and self.player then
+	if kind == "self" and self.player and self.player.achievements then
 		for id, data in pairs(self.player.achievements) do handle(id, world.achieved[id]) end
 	elseif kind == "main" then
 		for id, data in pairs(world.achieved) do handle(id, data) end

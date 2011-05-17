@@ -72,7 +72,8 @@ function _M:init(t)
 	Base.init(self, t)
 end
 
-function _M:drawItem(item)
+function _M:drawItem(item, nb_keyframes)
+	nb_keyframes = (nb_keyframes or 0) / 2
 	for j, col in ipairs(self.columns) do
 		if not col.direct_draw then
 			local fw, fh = col.fw, self.fh
@@ -91,8 +92,33 @@ function _M:drawItem(item)
 			local s = col.surface
 
 			s:erase(0, 0, 0, 0)
-			-- We use 1000 and do not cut lines to make sure it draws as much as possible
-			text:drawOnSurface(s, 10000, nil, self.font, col.frame_sel.b4.w, (fh - self.font_h) / 2, color[1], color[2], color[3])
+			local test_text = text:toString()
+			local font_w, _ = self.font:size(test_text)
+
+			if font_w > fw then
+				item.displayx_offset = item.displayx_offset or {}
+				item.displayx_offset[j] = item.displayx_offset[j] or 0
+				item.dir = item.dir or {}
+				item.dir[j] = item.dir[j] or 0
+
+				if item.dir[j] == 0 then
+					item.displayx_offset[j] = item.displayx_offset[j] - nb_keyframes
+					if -item.displayx_offset[j] >= font_w - fw + 15 then
+						item.dir[j] = 1
+					end
+				elseif item.dir[j] == 1 then
+					item.displayx_offset[j] = item.displayx_offset[j] + nb_keyframes
+					if item.displayx_offset[j] >= 0 then
+						item.dir[j] = 0
+					end
+				end
+
+				-- We use 1000 and do not cut lines to make sure it draws as much as possible
+				text:drawOnSurface(s, 10000, nil, self.font, col.frame_sel.b4.w+item.displayx_offset[j], (fh - self.font_h) / 2, color[1], color[2], color[3])
+			else
+				text:drawOnSurface(s, 10000, nil, self.font, col.frame_sel.b4.w, (fh - self.font_h) / 2, color[1], color[2], color[3])
+			end
+
 			item._tex = item._tex or {}
 			item._tex[j] = {s:glTexture()}
 		end
@@ -241,6 +267,19 @@ end
 
 function _M:display(x, y, nb_keyframes, screen_x, screen_y)
 	local bx, by = x, y
+	if self.sel then
+		local item = self.list[self.sel]
+		if self.previtem and self.previtem~=item then
+			self.previtem.displayx_offset = {}
+			self:drawItem(self.previtem)
+			self.previtem = nil
+		end
+		if item then
+			self:drawItem(item, nb_keyframes)
+			self.previtem = item
+		end
+	end
+
 	for j = 1, #self.columns do
 		local col = self.columns[j]
 		local y = y

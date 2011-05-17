@@ -53,7 +53,7 @@ function _M:generate()
 	self.font:setStyle("normal")
 
 	-- Add UI controls
-	self.mouse:registerZone(0, 0, self.w, self.h, function(button, x, y, xrel, yrel, bx, by, event) if button == "left" and event == "button" then self.fct() end end)
+	self.mouse:registerZone(0, 0, self.w+6, self.h+6, function(button, x, y, xrel, yrel, bx, by, event) if button == "left" and event == "button" then self.fct() end end)
 	self.key:addBind("ACCEPT", function() self.fct() end)
 
 	self.rw, self.rh = w, h
