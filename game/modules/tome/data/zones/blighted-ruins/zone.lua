@@ -69,7 +69,7 @@ return {
 				up = "UP_WILDERNESS",
 			}, },
 		},
-		[8] = {
+		[6] = {
 			no_level_connectivity = true,
 			generator = { map = {
 				class = "engine.generator.map.Static",
