@@ -179,7 +179,7 @@ function _M:drawDialog(kind)
 		self:mouseTooltip(self.TOOLTIP_SPEED_ATTACK,   s:drawColorStringBlended(self.font, ("Attack speed  : #00ff00#%.2f%%"):format((player.combat_physspeed-1)*100), w, h, 255, 255, 255)) h = h + self.font_h
 		h = h + self.font_h
 		self:mouseTooltip(self.TOOLTIP_LIVES,       s:drawColorStringBlended(self.font, ("Times died : #00ff00#%3d"):format(#player.died_times), w, h, 255, 255, 255)) h = h + self.font_h
-		if player.easy_mode_life then sself:mouseTooltip(self.TOOLTIP_LIVES,       s:drawColorStringBlended(self.font, ("Lifes left : #00ff00#%3d"):format(player.easy_mode_lifes), w, h, 255, 255, 255)) h = h + self.font_h end
+		if player.easy_mode_life then self:mouseTooltip(self.TOOLTIP_LIVES, s:drawColorStringBlended(self.font, ("Lives left : #00ff00#%3d"):format(player.easy_mode_lifes), w, h, 255, 255, 255)) h = h + self.font_h end
 		self:mouseTooltip(self.TOOLTIP_HEALING_MOD, s:drawColorStringBlended(self.font, ("Healing mod: #00ff00#%.2f%%"):format(player.healing_factor*100), w, h, 255, 255, 255)) h = h + self.font_h
 		self:mouseTooltip(self.TOOLTIP_LIFE_REGEN,  s:drawColorStringBlended(self.font, ("Life regen : #00ff00#%.2f (%.2f)"):format(player.life_regen,player.life_regen*player.healing_factor), w, h, 255, 255, 255)) h = h + self.font_h
 
