@@ -37,6 +37,7 @@ newEntity{
 	max_life = resolvers.rngavg(10,20),
 	rank = 1,
 	size_category = 1,
+	levitation = 1,
 
 	can_pass = {pass_tree=10},
 }

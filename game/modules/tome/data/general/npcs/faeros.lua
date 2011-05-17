@@ -34,6 +34,7 @@ newEntity{
 	life_rating = 8,
 	rank = 2,
 	size_category = 3,
+	levitation = 1,
 
 	autolevel = "dexmage",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
