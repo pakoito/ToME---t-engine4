@@ -869,6 +869,7 @@ function util.getval(val, ...)
 end
 
 function core.fov.circle_grids(x, y, radius, block)
+	if not x or not y then return {} end
 	if radius == 0 then return {[x]={[y]=true}} end
 	local grids = {}
 	core.fov.calc_circle(x, y, game.level.map.w, game.level.map.h, radius, function(_, lx, ly)
@@ -887,6 +888,7 @@ function core.fov.circle_grids(x, y, radius, block)
 end
 
 function core.fov.beam_grids(x, y, radius, dir, angle, block)
+	if not x or not y then return {} end
 	if radius == 0 then return {[x]={[y]=true}} end
 	local grids = {}
 	core.fov.calc_beam(x, y, game.level.map.w, game.level.map.h, radius, dir, angle, function(_, lx, ly)
@@ -912,6 +914,7 @@ end
 -- @param block true if we only consider line of sight
 -- @param what a table which can have the fields Map.ACTOR, Map.OBJECT, ..., set to true. If so it will only return grids that are free of this kind of entities.
 function util.findFreeGrid(sx, sy, radius, block, what)
+	if not sx or not sy then return nil, nil, {} end
 	what = what or {}
 	local grids = core.fov.circle_grids(sx, sy, radius, block)
 	local gs = {}

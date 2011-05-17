@@ -239,6 +239,11 @@ end
 function _M:getEntities(level, type)
 	local list = level:getEntitiesList(type)
 	if not list then
+		if type == "actor" then level:setEntitiesList("actor", self:computeRarities("actor", self.npc_list, level, nil))
+		elseif type == "object" then level:setEntitiesList("object", self:computeRarities("object", self.object_list, level, nil))
+		elseif type == "trap" then level:setEntitiesList("trap", self:computeRarities("trap", self.trap_list, level, nil))
+		end
+		list = level:getEntitiesList(type)
 	end
 	return list
 end

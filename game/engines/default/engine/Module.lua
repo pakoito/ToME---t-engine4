@@ -242,7 +242,7 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 
 	profile:addStatFields(unpack(mod.profile_stats_fields or {}))
 	profile:loadModuleProfile(mod.short_name)
-	profile:currentCharacter(mod.name, "game did not tell us")
+	profile:currentCharacter(mod.version_string, "game did not tell us")
 
 	-- Init the module code
 	local M, W = mod.load("init")

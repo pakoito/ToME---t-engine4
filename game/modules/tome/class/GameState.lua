@@ -1232,6 +1232,7 @@ function _M:createRandomZone(zbase)
 		ambient_music = rng.table(musics),
 		min_material_level = data.min_material_level,
 		max_material_level = data.max_material_level,
+		reload_lists = false,
 		generator =  {
 			map = layout.gen(data),
 			actor = { class = "engine.generator.actor.Random", nb_npc = nb_npc, guardian = boss_id },
