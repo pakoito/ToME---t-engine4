@@ -223,6 +223,7 @@ newEffect{
 		local dur = math.ceil((old_eff.dur + new_eff.dur) / 2)
 		old_eff.dur = dur
 		old_eff.power = (olddam + newdam) / dur
+		if new_eff.max_power then old_eff.power = math.min(old_eff.power, new_eff.max_power) end
 		return old_eff
 	end,
 	on_timeout = function(self, eff)
@@ -274,6 +275,74 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("healing_factor", eff.healid)
+	end,
+}
+
+newEffect{
+	name = "CRIPPLING_POISON",
+	desc = "Crippling Poison",
+	long_desc = function(self, eff) return ("The target is poisoned and sick, doing %0.2f nature damage per turn. Each time it tries to use a talent there is %d%% chance of failure."):format(eff.power, eff.fail) end,
+	type = "poison",
+	status = "detrimental",
+	parameters = {power=10, fail=5},
+	on_gain = function(self, err) return "#Target# is poisoned!", "+Crippling Poison" end,
+	on_lose = function(self, err) return "#Target# is no longer poisoned.", "-Crippling Poison" end,
+	-- Damage each turn
+	on_timeout = function(self, eff)
+		if self:attr("purify_poison") then self:heal(eff.power)
+		else DamageType:get(DamageType.NATURE).projector(eff.src, self.x, self.y, DamageType.NATURE, eff.power)
+		end
+	end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("talent_fail_chance", eff.fail)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("talent_fail_chance", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "NUMBING_POISON",
+	desc = "Numbing Poison",
+	long_desc = function(self, eff) return ("The target is poisoned and sick, doing %0.2f nature damage per turn. All damage it does is reduced by %d%%."):format(eff.power, eff.reduce) end,
+	type = "poison",
+	status = "detrimental",
+	parameters = {power=10, reduce=5},
+	on_gain = function(self, err) return "#Target# is poisoned!", "+Numbing Poison" end,
+	on_lose = function(self, err) return "#Target# is no longer poisoned.", "-Numbing Poison" end,
+	-- Damage each turn
+	on_timeout = function(self, eff)
+		if self:attr("purify_poison") then self:heal(eff.power)
+		else DamageType:get(DamageType.NATURE).projector(eff.src, self.x, self.y, DamageType.NATURE, eff.power)
+		end
+	end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("numbed", eff.reduce)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("numbed", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "STONE_POISON",
+	desc = "Stoning Poison",
+	long_desc = function(self, eff) return ("The target is poisoned and sick, doing %0.2f nature damage per turn. When the effect ends the target will turn to stone for %d turns."):format(eff.power, eff.stone) end,
+	type = "poison",
+	status = "detrimental",
+	parameters = {power=10, reduce=5},
+	on_gain = function(self, err) return "#Target# is poisoned!", "+Stoning Poison" end,
+	on_lose = function(self, err) return "#Target# is no longer poisoned.", "-Stoning Poison" end,
+	-- Damage each turn
+	on_timeout = function(self, eff)
+		if self:attr("purify_poison") then self:heal(eff.power)
+		else DamageType:get(DamageType.NATURE).projector(eff.src, self.x, self.y, DamageType.NATURE, eff.power)
+		end
+	end,
+	activate = function(self, eff)
+	end,
+	deactivate = function(self, eff)
+		self:setEffect(self.EFF_STONED, eff.stone, {})
 	end,
 }
 

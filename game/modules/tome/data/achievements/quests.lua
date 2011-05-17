@@ -136,6 +136,11 @@ newAchievement{
 	desc = [[Rescued the merchant from the assassin lord.]],
 }
 newAchievement{
+	name = "Poisonous", id = "LOST_MERCHANT_EVIL",
+	show = "name",
+	desc = [[Sided with the assassin lord.]],
+}
+newAchievement{
 	name = "Destroyer of the creation", id = "SLASUL_DEAD",
 	show = "name",
 	desc = [[Killed Slasul.]],

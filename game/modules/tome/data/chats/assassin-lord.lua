@@ -17,6 +17,21 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local function evil(npc, player)
+	engine.Faction:setFactionReaction(player.faction, npc.faction, 100, true)
+	player:setQuestStatus("lost-merchant", engine.Quest.COMPLETED, "evil")
+	player:setQuestStatus("lost-merchant", engine.Quest.COMPLETED)
+	world:gainAchievement("LOST_MERCHANT_EVIL", player)
+	game:setAllowedBuild("rogue_poisons", true)
+	local p = game.party:findMember{main=true}
+	if p.descriptor.subclass == "Rogue"  then
+		if p:knowTalentType("cunning/poisons") == nil then
+			p:learnTalentType("cunning/poisons", false)
+			p:setTalentTypeMastery("cunning/poisons", 1.3)
+		end
+	end
+end
+
 newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*Before you stands a menacing man clothed in black.*#WHITE#
 Ahh, the intruder at last... And what shall we do with you? Why did you kill my men?]],
@@ -55,16 +70,8 @@ newChat{ id="offer",
 You will have to do some dirty work for me, though, and you will be bound to me.  Nevertheless, you may make quite a profit from this venture, if you are as good as you seem to be.
 And do not think of crossing me.  That would be... unwise.]],
 	answers = {
-		{"Well, I suppose it is better than dying.", action=function(npc, player)
-			engine.Faction:setFactionReaction(player.faction, npc.faction, 100, true)
-			player:setQuestStatus("lost-merchant", engine.Quest.COMPLETED, "evil")
-			player:setQuestStatus("lost-merchant", engine.Quest.COMPLETED)
-		end},
-		{"Money? I'm in!", action=function(npc, player)
-			engine.Faction:setFactionReaction(player.faction, npc.faction, 100, true)
-			player:setQuestStatus("lost-merchant", engine.Quest.COMPLETED, "evil")
-			player:setQuestStatus("lost-merchant", engine.Quest.COMPLETED)
-		end},
+		{"Well, I suppose it is better than dying.", action=evil},
+		{"Money? I'm in!", action=evil},
 		{"Just let me and the merchant get out of here and you may live!", action=function(npc, player) engine.Faction:setFactionReaction(player.faction, npc.faction, -100, true) end},
 	}
 }

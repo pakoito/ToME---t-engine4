@@ -22,6 +22,8 @@ newTalentType{ allow_random=true, type="cunning/stealth-base", name = "stealth",
 newTalentType{ allow_random=true, type="cunning/stealth", name = "stealth", description = "Allows the user to enter stealth." }
 newTalentType{ allow_random=true, type="cunning/trapping", name = "trapping", description = "The knowledge of trap laying and assorted trickeries." }
 newTalentType{ allow_random=true, type="cunning/traps", name = "traps", description = "Collection of known traps." }
+newTalentType{ allow_random=true, type="cunning/poisons", name = "poisons", description = "The knowledge of poisons and how to apply them to 'good' effects." }
+newTalentType{ allow_random=true, type="cunning/poisons-effects", name = "poisons", description = "Collection of known poisons." }
 newTalentType{ allow_random=true, type="cunning/dirty", name = "dirty fighting", description = "Teaches various talents to cripple your foes." }
 newTalentType{ allow_random=true, type="cunning/lethality", name = "lethality", description = "How to make your foes feel the pain." }
 newTalentType{ allow_random=true, type="cunning/shadow-magic", name = "shadow magic", description = "Blending magic and shadows." }
@@ -49,9 +51,30 @@ cuns_req5 = {
 	stat = { cun=function(level) return 44 + (level-1) * 2 end },
 	level = function(level) return 16 + (level-1)  end,
 }
+cuns_req_high1 = {
+	stat = { cun=function(level) return 22 + (level-1) * 2 end },
+	level = function(level) return 10 + (level-1)  end,
+}
+cuns_req_high2 = {
+	stat = { cun=function(level) return 30 + (level-1) * 2 end },
+	level = function(level) return 14 + (level-1)  end,
+}
+cuns_req_high3 = {
+	stat = { cun=function(level) return 38 + (level-1) * 2 end },
+	level = function(level) return 18 + (level-1)  end,
+}
+cuns_req_high4 = {
+	stat = { cun=function(level) return 46 + (level-1) * 2 end },
+	level = function(level) return 22 + (level-1)  end,
+}
+cuns_req_high5 = {
+	stat = { cun=function(level) return 54 + (level-1) * 2 end },
+	level = function(level) return 26 + (level-1)  end,
+}
 
 load("/data/talents/cunning/stealth.lua")
 load("/data/talents/cunning/traps.lua")
+load("/data/talents/cunning/poisons.lua")
 load("/data/talents/cunning/dirty.lua")
 load("/data/talents/cunning/lethality.lua")
 load("/data/talents/cunning/tactical.lua")

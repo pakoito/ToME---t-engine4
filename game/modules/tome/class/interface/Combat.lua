@@ -397,6 +397,15 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 		weapon.special_on_hit.fct(weapon, self, target)
 	end
 
+	-- Poison coating
+	if hitted and not target.dead and self.vile_poisons and next(self.vile_poisons) and rng.percent(20 + self:getTalentLevel(self.T_VILE_POISONS) * 5) and target:canBe("poison") then
+		local tid = rng.table(table.keys(self.vile_poisons))
+		if tid then
+			local t = self:getTalentFromId(tid)
+			t.proc(self, t, target, weapon)
+		end
+	end
+
 	-- Regen on being hit
 	if hitted and not target.dead and target:attr("stamina_regen_on_hit") then target:incStamina(target.stamina_regen_on_hit) end
 	if hitted and not target.dead and target:attr("mana_regen_on_hit") then target:incMana(target.mana_regen_on_hit) end

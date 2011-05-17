@@ -73,6 +73,11 @@ newBirthDescriptor{
 		[ActorTalents.T_LETHALITY] = 1,
 		[ActorTalents.T_DUAL_STRIKE] = 1,
 	},
+	copy = {
+		resolvers.generic(function(self)
+			if profile.mod.allow_build.rogue_poisons then self:learnTalentType("cunning/poisons", false) self:setTalentTypeMastery("cunning/poisons", 1.3) end
+		end),
+	},
 }
 
 newBirthDescriptor{
