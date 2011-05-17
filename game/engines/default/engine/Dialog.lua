@@ -51,8 +51,9 @@ function _M:simpleLongPopup(title, text, w, fct, no_leave)
 	local font = core.display.newFont("/data/font/Vera.ttf", 12)
 	local list = text:splitLines(w - 10, font)
 
-	local th = font:lineSkip()
-	local d = new(title, w + 8, th * #list + 35, nil, nil, nil, font)
+	local fh = font:lineSkip()
+	local th = font:size(title)
+	local d = new(title, w + 8, th + fh * #list + 50, nil, nil, nil, font)
 	if no_leave then
 		d:keyCommands{}
 	else

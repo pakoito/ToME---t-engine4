@@ -143,14 +143,17 @@ function _M:generateList()
 		if not tt.hide and not (self.actor.talents_types[tt.type] == nil) then
 			local cat = tt.type:gsub("/.*", "")
 			local ttknown = self.actor:knowTalentType(tt.type)
+			local isgeneric = self.actor.talents_types_def[tt.type].generic
 			local tshown = (self.actor.__hidden_talent_types[tt.type] == nil and ttknown) or (self.actor.__hidden_talent_types[tt.type] ~= nil and not self.actor.__hidden_talent_types[tt.type])
 			local node = {
-				name=function(item) return tstring{{"font", "bold"}, cat:capitalize().." / "..tt.name:capitalize() ..(" (mastery %.02f)"):format(self.actor:getTalentTypeMastery(tt.type)), {"font", "normal"}} end,
-				rawname=function(item) return cat:capitalize().." / "..tt.name:capitalize() ..(" (mastery %.02f)"):format(self.actor:getTalentTypeMastery(tt.type)) end,
+				name=function(item) return tstring{{"font", "bold"}, cat:capitalize().." / "..tt.name:capitalize() ..(" (%s)"):format((isgeneric and "generic" or "class")), {"font", "normal"}} end,
+				rawname=function(item) return cat:capitalize().." / "..tt.name:capitalize() ..(" (%s, mastery %.2f)"):format((isgeneric and "generic" or "class"), self.actor:getTalentTypeMastery(item.type)) end,
 				type=tt.type,
-				color=function(item) return self.actor:knowTalentType(item.type) and {0,200,0} or {175,175,175} end,
+				color=function(item) 
+				return ((self.actor:knowTalentType(item.type) ~= self.actor_dup:knowTalentType(item.type)) or ((self.actor.__increased_talent_types[item.type] or 0) ~= (self.actor_dup.__increased_talent_types[item.type] or 0))) and {255, 215, 0} or self.actor:knowTalentType(item.type) and {0,200,0} or {175,175,175} 
+				end,
 				shown = tshown,
-				status = function(item) return self.actor:knowTalentType(item.type) and tstring{{"color", 0x00, 0xC8, 0x00}, "known"} or tstring{{"color", 0x00, 0xC8, 0x00}, "0/1"} end,
+				status = function(item) return self.actor:knowTalentType(item.type) and tstring{{"font", "bold"}, {"color", 0x00, 0xFF, 0x00}, ("%.2f"):format(self.actor:getTalentTypeMastery(item.type)), {"font", "normal"}} or tstring{{"color",  0xFF, 0x00, 0x00}, "unknown"} end,
 				nodes = {},
 			}
 			tree[#tree+1] = node
@@ -161,26 +164,20 @@ function _M:generateList()
 			for j, t in ipairs(tt.talents) do
 				if not t.hide or self.actor.__show_special_talents[t.id] then
 					self:computeDeps(t)
-
-					local typename = "class"
-					if t.generic then typename = "generic" end
+					local isgeneric = self.actor.talents_types_def[tt.type].generic
 					list[#list+1] = {
 						__id=t.id,
-						name=t.name.." ("..typename..")",
-						rawname=t.name.." ("..typename..")",
+						name=t.name,
+						rawname=t.name..(isgeneric and " (generic talent)" or " (class talent)"),
 						talent=t.id,
 						_type=tt.type,
-						color=function(item) return self.actor:knowTalentType(item._type) and {255,255,255} or {175,175,175} end,
+						color=function(item) return ((self.actor.talents[item.talent] or 0) ~= (self.actor_dup.talents[item.talent] or 0)) and {255, 215, 0} or self.actor:knowTalentType(item._type) and {255,255,255} or {175,175,175} end,
 					}
 					list[#list].status = function(item)
 						local t = self.actor:getTalentFromId(item.talent)
 						local ttknown = self.actor:knowTalentType(item._type)
 						if self.actor:getTalentLevelRaw(t.id) == t.points then
-							if ttknown then
-								return tstring{{"color", "LIGHT_GREEN"}, "known"}
-							else
-								return tstring{{"color", 0x80, 0x80, 0x80}, "known"}
-							end
+							return tstring{{"color", 0x00, 0xFF, 0x00}, self.actor:getTalentLevelRaw(t.id).."/"..t.points}
 						else
 							if not self.actor:canLearnTalent(t) then
 								return tstring{(ttknown and {"color", 0xFF, 0x00, 0x00} or {"color", 0x80, 0x80, 0x80}), self.actor:getTalentLevelRaw(t.id).."/"..t.points}
@@ -227,33 +224,33 @@ function _M:onDrawItem(item)
 	if item.type then
 		text:add({"color",0x00,0xFF,0xFF}, "Talent Category", true)
 		text:add({"color",0x00,0xFF,0xFF}, "A talent category allows you to learn talents of this category. You gain a talent category point at level 10, 20 and 30. You may also find trainers or artifacts that allow you to learn more.\nA talent category point can be used either to learn a new category or increase the mastery of a known one.", true, true, {"color", "WHITE"})
-		text:add(self.actor:getTalentTypeFrom(item.type).description)
-	else
-		local t = self.actor:getTalentFromId(item.talent)
-
-		local what
-		if t.generic then
-			what = "generic talent"
-			text:add({"color",0x00,0xFF,0xFF}, "Generic Talent", true)
+		
+		if self.actor.talents_types_def[item.type].generic then
+			text:add({"color",0x00,0xFF,0xFF}, "Generic talent tree", true)
 			text:add({"color",0x00,0xFF,0xFF}, "A generic talent allows you to perform various utility actions and improve your character. It represents talents anybody can learn (should they find a trainer for it). You gain one point every level (except every 5th level). You may also find trainers or artifacts that allow you to learn more.", true, true, {"color", "WHITE"})
 		else
-			what = "class talent"
-			text:add({"color",0x00,0xFF,0xFF}, "Class talent", true)
+			text:add({"color",0x00,0xFF,0xFF}, "Class talent tree", true)
 			text:add({"color",0x00,0xFF,0xFF}, "A class talent allows you to perform new combat moves, cast spells, and improve your character. It represents the core function of your class. You gain one point every level and two every 5th level. You may also find trainers or artifacts that allow you to learn more.", true, true, {"color", "WHITE"})
 		end
+		
+		text:add(self.actor:getTalentTypeFrom(item.type).description)
+		
+	else
+		local t = self.actor:getTalentFromId(item.talent)
 
 		if self.actor:getTalentLevelRaw(t.id) > 0 then
 			local req = self.actor:getTalentReqDesc(item.talent, 0)
 			text:add{"color","WHITE"}
-			text:add({"font", "bold"}, "Current "..what.." level: "..(self.actor:getTalentLevelRaw(t.id)), {"font", "normal"})
+			text:add({"font", "bold"}, "Current talent level: "..(self.actor:getTalentLevelRaw(t.id)), {"font", "normal"})
 			text:add(true)
 			text:merge(req)
 			text:merge(self.actor:getTalentFullDescription(t))
+			text:add(true,true)
 		end
 
 		if self.actor:getTalentLevelRaw(t.id) < t.points then
 			local req2 = self.actor:getTalentReqDesc(item.talent, 1)
-			text:add(true, true, {"font", "bold"}, "Next "..what.." level: "..(self.actor:getTalentLevelRaw(t.id)+1), {"font", "normal"})
+			text:add({"font", "bold"}, "Next talent level: "..(self.actor:getTalentLevelRaw(t.id)+1), {"font", "normal"})
 			text:add(true)
 			text:merge(req2)
 			text:merge(self.actor:getTalentFullDescription(t, 1))
@@ -304,11 +301,16 @@ function _M:learn(v)
 end
 
 function _M:checkDeps()
+	local talents = ""
 	for t_id, _ in pairs(self.talents_changed) do
 		local t = self.actor:getTalentFromId(t_id)
-		if not self.actor:canLearnTalent(t, 0) and self.actor:knowTalent(t) then return false, t.name end
+		if not self.actor:canLearnTalent(t, 0) and self.actor:knowTalent(t) then talents = talents.."\n#GOLD##{bold}#    - "..t.name.."#{normal}##LAST#" end
 	end
-	return true
+	if talents ~="" then
+		return false, talents
+	else
+		return true
+	end
 end
 
 function _M:learnTalent(t_id, v)
@@ -344,7 +346,7 @@ function _M:learnTalent(t_id, v)
 			if ok then
 				self.actor.unused_talents = self.actor.unused_talents + 1
 			else
-				self:simplePopup("Impossible", "You cannot unlearn this talent because of talent: "..dep_miss)
+				self:simpleLongPopup("Impossible", "You cannot unlearn this talent because of talent(s): "..dep_miss, game.w * 0.4)
 				self.actor:learnTalent(t_id)
 				return
 			end
@@ -380,7 +382,7 @@ function _M:learnTalent(t_id, v)
 			if ok then
 				self.actor.unused_generics = self.actor.unused_generics + 1
 			else
-				self:simplePopup("Impossible", "You can not unlearn this talent because of talent: "..dep_miss)
+				self:simpleLongPopup("Impossible", "You can not unlearn this talent because of talent(s): "..dep_miss, game.w * 0.4)
 				self.actor:learnTalent(t_id)
 				return
 			end
@@ -429,7 +431,7 @@ function _M:learnType(tt, v)
 			if ok then
 				self.actor.unused_talents_types = self.actor.unused_talents_types + 1
 			else
-				self:simplePopup("Impossible", "You cannot unlearn this category because of: "..dep_miss)
+				self:simpleLongPopup("Impossible", "You cannot unlearn this category because of: "..dep_miss, game.w * 0.4)
 				self.actor:learnTalentType(tt)
 				return
 			end
