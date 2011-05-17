@@ -92,12 +92,12 @@ end
 --- Leaves a zone
 -- Saves the zone to a .teaz file if requested with persistent="zone" flag
 function _M:leave()
-	if type(self.persistent) == "string" and self.persistent == "zone" then
-		savefile_pipe:push(game.save_name, "zone", self)
---		local save = Savefile.new(game.save_name)
---		save:saveZone(self)
---		save:close()
+	if type(self.persistent) == "string" and self.persistent == "zone" then savefile_pipe:push(game.save_name, "zone", self) end
+	for id, level in pairs(self.memory_levels or {}) do
+		level.map:close()
+		forceprint("[ZONE] Closed level map", id)
 	end
+	forceprint("[ZONE] Left zone", self.name)
 	game.level = nil
 end
 
@@ -560,11 +560,11 @@ function _M:leaveLevel(no_close, lev, old_lev)
 		elseif game.level.data.persistent then
 			print("[LEVEL] persisting to disk file", game.level.id)
 			savefile_pipe:push(game.save_name, "level", game.level)
+			game.level.map:close()
 		else
 			game.level:removed()
+			game.level.map:close()
 		end
-
-		game.level.map:close()
 	end
 end
 

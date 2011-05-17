@@ -275,7 +275,6 @@ function _M:generate(lev, old_lev)
 		local ux, uy, dx, dy, subspots = generator:generate(lev, old_lev)
 
 		self.map:import(map, g.x, g.y)
-		map:close()
 
 		table.append(self.spots, subspots)
 

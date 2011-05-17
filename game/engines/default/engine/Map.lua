@@ -313,6 +313,24 @@ end
 -- to the map. Cyclic references! BAD BAD BAD !<br/>
 -- The closing should be handled automatically by the Zone class so no bother for authors
 function _M:close()
+	if self.closed then return end
+	for i = 0, self.w * self.h - 1 do
+		for pos, e in pairs(self.map[i]) do
+			if e and e._mo then
+				e._mo:invalidate()
+				e._mo = nil
+			end
+			if e and e.add_displays then for i, se in ipairs(e.add_displays) do
+				if se._mo then
+					se._mo:invalidate()
+					se._mo = nil
+				end
+			end end
+			self.map[i][pos] = nil
+		end
+	end
+	self.closed = true
+	self.changed = true
 end
 
 --- Cleans the FOV infos (seens table)

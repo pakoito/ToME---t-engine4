@@ -44,7 +44,6 @@ return function(gen, id, lev, old_lev)
 	local h = vault_map.h
 	return { name="greater_vault-"..vaultid.."-"..w.."x"..h, w=w, h=h, generator = function(self, x, y, is_lit)
 		gen.map:import(vault_map, x, y)
-		vault_map:close()
 		-- Make it a room, and make it special so that we do not tunnel through
 		for i = x, x + w - 1 do for j = y, y + h - 1 do
 			gen.map.room_map[i][j].special = true

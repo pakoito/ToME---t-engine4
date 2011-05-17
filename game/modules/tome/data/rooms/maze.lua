@@ -26,7 +26,6 @@ return function(gen, id, lev, old_lev)
 		local maze = Maze.new(gen.zone, map, gen.grid_list, gen.data)
 		maze:generate(lev, old_lev)
 		gen.map:import(map, x, y)
-		map:close()
 		-- Make it a room, and make it special so that we do not tunnel through
 		for i = x, x + w - 1 do for j = y, y + h - 1 do
 			gen.map.room_map[i][j].special = true
