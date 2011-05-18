@@ -42,7 +42,7 @@ function _M:getTile(name)
 		self.repo[name] = game.zone:makeEntityByName(game.level, "terrain", name)
 		e = self.repo[name]
 	end
-	if e.force_clone then
+	if e and e.force_clone then
 		e = e:clone()
 	end
 	return e
