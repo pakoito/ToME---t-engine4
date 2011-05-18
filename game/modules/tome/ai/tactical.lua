@@ -148,7 +148,8 @@ newAI("use_tactical", function(self)
 					-- Use the player set ai_talents weights
 					val = val * (self.ai_talents and self.ai_talents[t.id] or 1) * (1 + lvl / 5)
 					-- Update the weight by the dummy projection data
-					if nb_foes_hit > 0 or nb_allies_hit > 0 or nb_self_hit > 0 then
+					-- Also force scaling if the talent requires a target (stand-in for canProject)
+					if self:getTalentRequiresTarget(t) or nb_foes_hit > 0 or nb_allies_hit > 0 or nb_self_hit > 0 then
 						val = val * (nb_foes_hit - ally_compassion * nb_allies_hit - self_compassion * nb_self_hit)
 					end
 					-- Only take values greater than 0... allows the ai_talents to turn talents off
