@@ -906,6 +906,25 @@ function core.fov.beam_grids(x, y, radius, dir, angle, block)
 	return grids
 end
 
+function core.fov.beam_any_angle_grids(x, y, radius, dir_angle, angle, block)
+	if not x or not y then return {} end
+	if radius == 0 then return {[x]={[y]=true}} end
+	local grids = {}
+	core.fov.calc_beam_any_angle(x, y, game.level.map.w, game.level.map.h, radius, dir_angle, angle, function(_, lx, ly)
+		if block and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") then return true end
+	end,
+	function(_, lx, ly)
+		if not grids[lx] then grids[lx] = {} end
+		grids[lx][ly] = true
+	end, nil)
+
+	-- point of origin
+	if not grids[x] then grids[x] = {} end
+	grids[x][y] = true
+
+	return grids
+end
+
 --- Finds free grids around coords in a radius.
 -- This will return a random grid, the closest possible to the epicenter
 -- @param sx the epicenter coordinates

@@ -108,7 +108,7 @@ newTalent{
 				self.x, self.y, 4,
 				DamageType.INFERNO, self:attr("burning_wake"),
 				tg.radius,
-				dir, 55,
+				{angle=math.deg(math.atan2(y - self.y, x - self.x))}, 55,
 				{type="inferno"},
 				nil, self:spellFriendlyFire()
 			)

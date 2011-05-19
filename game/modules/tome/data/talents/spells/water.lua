@@ -132,8 +132,8 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[A wall of water rushes out from the caster doing %0.2f cold damage and %0.2f physical damage as well as knocking back targets each turn for %d turns.
-	        The damage and duration will increase with the Magic stat]]):
-			format(damDesc(self, DamageType.COLD, damage/2), damDesc(self, DamageType.PHYSICAL, damage/2), duration)
+		The damage and duration will increase with the Magic stat]]):
+		format(damDesc(self, DamageType.COLD, damage/2), damDesc(self, DamageType.PHYSICAL, damage/2), duration)
 	end,
 }
 
@@ -161,7 +161,6 @@ newTalent{
 			3,
 			5, nil,
 			{type="icestorm", only_one=true},
---			engine.Entity.new{alpha=100, display='', color_br=30, color_bg=60, color_bb=200},
 			function(e)
 				e.x = e.src.x
 				e.y = e.src.y
