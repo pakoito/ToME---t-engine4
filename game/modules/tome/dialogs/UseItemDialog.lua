@@ -72,8 +72,11 @@ function _M:use(item)
 		self.actor:doTakeoff(self.inven, self.item, self.object)
 		self.onuse(self.inven, self.item, self.object, stop)
 	elseif act == "transmo" then
-		item.transmo:transmo_inven(self.actor, self.inven, self.item, self.object)
-		self.onuse(self.inven, self.item, self.object, stop)
+		self:yesnoPopup("Transmogrify", "Really transmogrify "..self.object:getName{}, function(ret)
+			if not ret then return end
+			item.transmo:transmo_inven(self.actor, self.inven, self.item, self.object)
+			self.onuse(self.inven, self.item, self.object, stop)
+		end)
 	end
 end
 

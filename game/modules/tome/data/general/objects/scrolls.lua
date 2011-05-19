@@ -107,7 +107,7 @@ newEntity{
 	unided_name = "scroll", identified=true,
 	display = "?", color=colors.ANTIQUE_WHITE, image="object/scroll-lore.png",
 	encumber = 0,
-	checkFilter = function(self) if self.lore and game:getPlayer(true):knownLore(self.lore) then return false else return true end end,
+	checkFilter = function(self) if self.lore and game:getPlayer(true):knownLore(self.lore) then print('[LORE] refusing', self.lore) return false else return true end end,
 	desc = [[This parchment contains some lore.]],
 }
 

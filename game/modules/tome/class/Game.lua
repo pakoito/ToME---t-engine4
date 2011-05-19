@@ -1394,6 +1394,7 @@ function _M:placeRandomLoreObject(define, zone)
 	if type(define) == "table" then define = rng.table(define) end
 	local o = self.zone:makeEntityByName(self.level, "object", define)
 	if not o then return end
+	if o.checkFilter and not o:checkFilter({}) then return end
 
 	local x, y = rng.range(0, self.level.map.w-1), rng.range(0, self.level.map.h-1)
 	local tries = 0
