@@ -71,16 +71,22 @@ function _M:use(item)
 	elseif act == "takeoff" then
 		self.actor:doTakeoff(self.inven, self.item, self.object)
 		self.onuse(self.inven, self.item, self.object, stop)
+	elseif act == "transmo" then
+		item.transmo:transmo_inven(self.actor, self.inven, self.item, self.object)
+		self.onuse(self.inven, self.item, self.object, stop)
 	end
 end
 
 function _M:generateList()
 	local list = {}
 
+	local transmo_chest = self.actor:findInAllInventoriesBy("define_as", "TRANSMO_CHEST")
+
 	if self.object:canUseObject() then list[#list+1] = {name="Use", action="use"} end
 	if self.inven == self.actor.INVEN_INVEN and self.object:wornInven() and self.actor:getInven(self.object:wornInven()) then list[#list+1] = {name="Wield/Wear", action="wear"} end
 	if self.inven ~= self.actor.INVEN_INVEN and self.object:wornInven() then list[#list+1] = {name="Take off", action="takeoff"} end
 	if self.inven == self.actor.INVEN_INVEN then list[#list+1] = {name="Drop", action="drop"} end
+	if self.inven == self.actor.INVEN_INVEN and transmo_chest then list[#list+1] = {name="Transmogrify", action="transmo", transmo=transmo_chest} end
 
 	self.max = 0
 	self.maxh = 0

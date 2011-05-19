@@ -33,15 +33,24 @@ When activated it will prompt to destroy items on the floor, if there are none i
 	cost = 0, quest=true,
 
 	max_power = 1000, power_regen = 1,
+	pricemod = function(o) if o.type == "gem" then return 0.40 else return 0.05 end end,
+	transmo_filter = function(o) if o:getPrice() <= 0 or o.quest then return false end return true end,
+	transmo_inven = function(self, who, inven, idx, o)
+		local price = o:getPrice() * o:getNumber() * self.pricemod(o)
+		price = math.min(price, 25)
+		who:removeObject(who:getInven("INVEN"), idx, true)
+		who:sortInven()
+		who:incMoney(price)
+		who:hasQuest("shertul-fortress"):gain_energy(price/10)
+		game.log("You gain %0.2f gold from the transmogrification of %s.", price, o:getName{do_count=true, do_color=true})
+	end,
 	use_power = { name = "open a portal to send items to the Fortress core, extracting energies from it for the Fortress and sending back useless gold.", power = 0,
 		use = function(self, who)
-			local pricemod = function(o) if o.type == "gem" then return 0.40 else return 0.05 end end
-
 			-- On the floor or inventory
 			if game.level.map:getObjectTotal(who.x, who.y) > 0 then
 				local x, y = who.x, who.y
-				local d = require("engine.dialogs.ShowPickupFloor").new("Transmogrify", x, y, function(o) if o:getPrice() <= 0 or o.quest then return false end return true end, function(o, idx)
-					local price = o:getPrice() * o:getNumber() * pricemod(o)
+				local d = require("engine.dialogs.ShowPickupFloor").new("Transmogrify", x, y, self.transmo_filter, function(o, idx)
+					local price = o:getPrice() * o:getNumber() * self.pricemod(o)
 					price = math.min(price, 25)
 					game.level.map:removeObject(x, y, idx)
 					who:incMoney(price)
@@ -50,14 +59,8 @@ When activated it will prompt to destroy items on the floor, if there are none i
 				end, "Transmogrify all")
 				game:registerDialog(d)
 			else
-				local d = require("engine.dialogs.ShowInventory").new("Transmogrify", who:getInven("INVEN"), function(o) if o:getPrice() <= 0 or o.quest then return false end return true end, function(o, idx)
-					local price = o:getPrice() * o:getNumber() * pricemod(o)
-					price = math.min(price, 25)
-					who:removeObject(who:getInven("INVEN"), idx, true)
-					who:sortInven()
-					who:incMoney(price)
-					who:hasQuest("shertul-fortress"):gain_energy(price/10)
-					game.log("You gain %0.2f gold from the transmogrification of %s.", price, o:getName{do_count=true, do_color=true})
+				local d = require("engine.dialogs.ShowInventory").new("Transmogrify", who:getInven("INVEN"), self.transmo_filter, function(o, idx)
+					self:transmo_inven(who, inven, idx, o)
 				end, who)
 				game:registerDialog(d)
 			end

@@ -383,6 +383,9 @@ function _M:setupDisplayMode(reboot, mode)
 		if gfx.size == "64x64" then
 			Map:setViewPort(216, 36, self.w - 216, math.floor(self.h * 0.80) - 36, 64, 64, nil, 44, do_bg)
 			Map:resetTiles()
+		elseif gfx.size == "48x48" then
+			Map:setViewPort(216, 36, self.w - 216, math.floor(self.h * 0.80) - 36, 48, 48, nil, 36, do_bg)
+			Map:resetTiles()
 		elseif gfx.size == "32x32" then
 			Map:setViewPort(216, 36, self.w - 216, math.floor(self.h * 0.80) - 36, 32, 32, nil, 22, do_bg)
 			Map:resetTiles()
@@ -884,7 +887,7 @@ function _M:display(nb_keyframes)
 	local mx, my, button = core.mouse.get()
 
 	if self.tooltip.w and mx > self.w - self.tooltip.w and my > self.h - self.tooltip.h then
-		self:targetDisplayTooltip(self.level.map.display_x, self.h)
+		self:targetDisplayTooltip(Map.display_x, self.h)
 	else
 		self:targetDisplayTooltip(self.w, self.h)
 	end

@@ -299,6 +299,7 @@ function _M:pull(srcx, srcy, dist, recursive)
 	dist = dist - 1
 
 	print("[PULL] try", lx, ly, dist)
+	if not lx or not ly then return end
 
 	if recursive then
 		local target = game.level.map(lx, ly, Map.ACTOR)
