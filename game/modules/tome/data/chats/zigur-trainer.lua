@@ -30,8 +30,6 @@ end
 local sex = game.player.female and "Sister" or "Brother"
 
 local remove_magic = function(npc, player)
-	player:attr("forbid_arcane", 1)
-
 	for tid, _ in pairs(player.sustain_talents) do
 		local t = player:getTalentFromId(tid)
 		if t.is_spell then player:forceUseTalent(tid, {ignore_energy=true}) end
@@ -49,6 +47,7 @@ local remove_magic = function(npc, player)
 			end
 		end
 	end
+	player:attr("forbid_arcane", 1)
 	player.changed = true
 end
 
