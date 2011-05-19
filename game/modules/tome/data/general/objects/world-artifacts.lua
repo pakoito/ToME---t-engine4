@@ -1582,7 +1582,7 @@ newEntity{ base = "BASE_LEATHER_BELT",
 	wielder = {
 		inc_stats = { [Stats.STAT_MAG] = 4, [Stats.STAT_WIL] = 3, },
 		combat_spellpower = 8,
-		talents_types_mastery = { ["spell/nature"] = 0.2 },
+		talents_types_mastery = { ["spell/aegis"] = 0.2 },
 	},
 }
 

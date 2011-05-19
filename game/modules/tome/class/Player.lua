@@ -495,7 +495,10 @@ function _M:restCheck()
 
 	-- Resting improves regen
 	local perc = math.min(self.resting.cnt / 10, 4)
+	local old_shield = self.arcane_shield
+	self.arcane_shield = nil
 	self:heal(self.life_regen * perc)
+	self.arcane_shield = old_shield
 	self:incStamina(self.stamina_regen * perc)
 	self:incMana(self.mana_regen * perc)
 

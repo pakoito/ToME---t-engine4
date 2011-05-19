@@ -205,7 +205,7 @@ newEntity{ base = "BASE_NPC_SPIDER",
 
 	combat_armor = 75, combat_def = 12,  -- perhaps too impenetrable?  though at this level people should be doing over 100 damage each hit, so it could be more :D
 
-	resolvers.tmasteries{ ["spell/nature"]=0.9 },
+	resolvers.tmasteries{ ["spell/aegis"]=0.9 },
 
 	resolvers.talents{
 		[Talents.T_SPIDER_WEB]={base=5, every=6, max=8},

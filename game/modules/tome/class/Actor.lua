@@ -861,6 +861,10 @@ function _M:onHeal(value, src)
 		end
 	end
 
+	if self:attr("arcane_shield") and value > 0 then
+		self:setEffect(self.EFF_DAMAGE_SHIELD, 3, {power=value * self.arcane_shield / 100})
+	end
+
 	print("[HEALING]", self.uid, self.name, "for", value)
 	return value
 end

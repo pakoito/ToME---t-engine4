@@ -64,7 +64,7 @@ newTalent{
 	require = gifts_req2,
 	points = 5,
 	mode = "sustained",
-	equilibrium = 20,
+	sustain_equilibrium = 20,
 	cooldown = 30,
 	activate = function(self, t)
 		return {

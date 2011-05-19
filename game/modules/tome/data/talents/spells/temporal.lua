@@ -53,10 +53,10 @@ newTalent{
 	require = spells_req2,
 	points = 5,
 	mana = 50,
-	cooldown = 30,
+	cooldown = 18,
 	tactical = { DEFEND = 2 },
 	range = 10,
-	getMaxAbsorb = function(self, t) return 50 + self:combatTalentSpellDamage(t, 50, 350) end,
+	getMaxAbsorb = function(self, t) return 50 + self:combatTalentSpellDamage(t, 50, 450) end,
 	getDuration = function(self, t) return util.bound(5 + math.floor(self:getTalentLevel(t)), 5, 15) end,
 	action = function(self, t)
 		self:setEffect(self.EFF_TIME_SHIELD, t.getDuration(self, t), {power=t.getMaxAbsorb(self, t)})

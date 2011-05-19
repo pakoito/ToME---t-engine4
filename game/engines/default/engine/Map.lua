@@ -800,9 +800,14 @@ function _M:addEffect(src, x, y, duration, damtype, dam, radius, dir, angle, ove
 
 	if not overlay.__CLASSNAME then
 		e.particles = {}
-		for lx, ys in pairs(grids) do
-			for ly, _ in pairs(ys) do
-				e.particles[#e.particles+1] = self:particleEmitter(lx, ly, 1, overlay.type, overlay.args)
+		if overlay.only_one then
+			e.particles[#e.particles+1] = self:particleEmitter(x, y, 1, overlay.type, overlay.args)
+			e.particles_only_one = true
+		else
+			for lx, ys in pairs(grids) do
+				for ly, _ in pairs(ys) do
+					e.particles[#e.particles+1] = self:particleEmitter(lx, ly, 1, overlay.type, overlay.args)
+				end
 			end
 		end
 	end
@@ -857,11 +862,16 @@ function _M:processEffects()
 				if e.dir == 5 then e.grids = core.fov.circle_grids(e.x, e.y, e.radius, true)
 				else e.grids = core.fov.beam_grids(e.x, e.y, e.radius, e.dir, e.angle, true) end
 				if e.particles then
-					for j, ps in ipairs(e.particles) do self:removeParticleEmitter(ps) end
-					e.particles = {}
-					for lx, ys in pairs(grids) do
-						for ly, _ in pairs(ys) do
-							e.particles[#e.particles+1] = self:particleEmitter(lx, ly, 1, overlay.type, overlay.args)
+					if e.particles_only_one then
+						e.particles[1].x = e.x
+						e.particles[1].y = e.y
+					else
+						for j, ps in ipairs(e.particles) do self:removeParticleEmitter(ps) end
+						e.particles = {}
+						for lx, ys in pairs(e.grids) do
+							for ly, _ in pairs(ys) do
+								e.particles[#e.particles+1] = self:particleEmitter(lx, ly, 1, overlay.type, overlay.args)
+							end
 						end
 					end
 				end

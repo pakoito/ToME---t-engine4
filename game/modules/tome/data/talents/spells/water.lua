@@ -160,7 +160,8 @@ newTalent{
 			DamageType.ICE, t.getDamage(self, t),
 			3,
 			5, nil,
-			engine.Entity.new{alpha=100, display='', color_br=30, color_bg=60, color_bb=200},
+			{type="icestorm", only_one=true},
+--			engine.Entity.new{alpha=100, display='', color_br=30, color_bg=60, color_bb=200},
 			function(e)
 				e.x = e.src.x
 				e.y = e.src.y

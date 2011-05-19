@@ -64,7 +64,7 @@ newBirthDescriptor{
 		["spell/meta"]={false, 0.3},
 		["spell/divination"]={true, 0.3},
 		["spell/conveyance"]={true, 0.3},
-		["spell/nature"]={true, 0.3},
+		["spell/aegis"]={true, 0.3},
 		["cunning/survival"]={false, -0.1},
 	},
 	talents = {

@@ -37,7 +37,7 @@ newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/ph
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/enhancement", name = "enhancement", description = "Magical enhancement of your body." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/conveyance", name = "conveyance", generic = true, description = "Conveyance is the school of travel. It allows you to travel faster and to track others." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/divination", name = "divination", generic = true, description = "Divination allows the caster to sense its surroundings, find hidden things." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/nature", name = "nature", generic = true, description = "Summons the power of nature to rejuvenate yourself and the world." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/aegis", name = "aegis", generic = true, description = "Command the arcane forces into healing and protection." }
 
 -- Alchemist spells
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/explosives", name = "explosive admixtures", description = "Manipulate gems to turn them into explosive magical bombs." }
@@ -108,7 +108,7 @@ load("/data/talents/spells/ice.lua")
 load("/data/talents/spells/air.lua")
 load("/data/talents/spells/storm.lua")
 load("/data/talents/spells/conveyance.lua")
-load("/data/talents/spells/nature.lua")
+load("/data/talents/spells/aegis.lua")
 load("/data/talents/spells/meta.lua")
 load("/data/talents/spells/divination.lua")
 load("/data/talents/spells/temporal.lua")

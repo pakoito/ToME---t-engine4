@@ -244,7 +244,7 @@ newEntity{
 
 newEntity{
 	power_source = {nature=true},
-	name = "naturalist's ", prefix=true, instant_resolve=true,
+	name = "defender ", prefix=true, instant_resolve=true,
 	level_range = {10, 50},
 	greater_ego = 1,
 	rarity = 11,
@@ -253,7 +253,7 @@ newEntity{
 		max_life=resolvers.mbonus_material(30, 30, function(e, v) return v * 0.1 end),
 		life_regen = resolvers.mbonus_material(15, 5, function(e, v) v=v/10 return v * 10, v end),
 		talents_types_mastery = {
-			["spell/nature"] = resolvers.mbonus_material(30, 10, function(e, v) v=v/100 return v * 80, v end),
+			["spell/aegis"] = resolvers.mbonus_material(30, 10, function(e, v) v=v/100 return v * 80, v end),
 		},
 	},
 }
