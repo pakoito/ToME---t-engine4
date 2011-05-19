@@ -104,7 +104,7 @@ return {
 			return nil, nil, true
 		end
 
-		if not game.player:isQuestStatus("kryl-feijan-escape", engine.Quest.FAILED) then
+		if melinda and not melinda.dead and not game.player:isQuestStatus("kryl-feijan-escape", engine.Quest.FAILED) then
 			game.player:setQuestStatus("kryl-feijan-escape", engine.Quest.DONE)
 			world:gainAchievement("MELINDA_SAVED", game.player)
 		end
