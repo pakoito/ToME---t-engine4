@@ -68,13 +68,13 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	mana = 14,
-	cooldown = 5,
+	cooldown = function(self, t) return 5 + self:getTalentLevelRaw(t) end,
 	tactical = { ATTACK = 1, DISABLE = 3 },
 	range = 10,
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 12, 180) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 12, 180) * (5 + self:getTalentLevelRaw(t)) / 5 end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
