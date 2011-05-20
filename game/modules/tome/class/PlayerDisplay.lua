@@ -299,7 +299,7 @@ function _M:display()
 		local dur = p.dur + 1
 		local name = e.desc
 		if e.display_desc then name = e.display_desc(self, p) end
-		local desc = e.long_desc(player, p)
+		local desc = ("#{bold}##GOLD#%s (%s / %s)#WHITE##{normal}#\n"):format(name, e.type, e.status)..e.long_desc(player, p)
 		if e.status == "detrimental" then
 			self:mouseTooltip(desc, self:makeTexture(("#LIGHT_RED#%s(%d)"):format(name, dur), x, h, 255, 255, 255)) h = h + self.font_h
 		else
