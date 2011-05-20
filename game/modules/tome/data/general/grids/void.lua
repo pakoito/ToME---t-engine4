@@ -29,6 +29,17 @@ newEntity{
 }
 
 newEntity{
+	define_as = "VOID_WALL",
+	name = "void",
+	display = ' ',
+	_noalpha = false,
+	always_remember = true,
+	does_block_move = true,
+	pass_projectile = true,
+	air_level = -40,
+}
+
+newEntity{
 	define_as = "SPACE_TURBULENCE1",
 	name = "space turbulence",
 	display = '#', color=colors.YELLOW, image="terrain/temporal_instability_yellow.png",

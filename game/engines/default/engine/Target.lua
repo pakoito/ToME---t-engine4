@@ -189,11 +189,14 @@ function _M:getType(t)
 				if typ.requires_knowledge and not game.level.map.remembers(lx, ly) and not game.level.map.seens(lx, ly) then
 					return true, false, false
 				end
-				if not typ.pass_terrain and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") then
+				if not typ.pass_terrain and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") and not game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "pass_projectile") then
 					return true, true, false
 				-- If we explode due to something other than terrain, then we should explode ON the tile, not before it
-				elseif typ.stop_block and game.level.map:checkAllEntities(lx, ly, "block_move") then
-					return true, true, true
+				elseif typ.stop_block then
+					local nb = game.level.map:checkAllEntitiesCount(lx, ly, "block_move")
+					if nb > 1 or (game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") and not game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "pass_projectile")) then
+						return true, true, true
+					end
 				end
 			end
 			-- If we don't block the path, then the explode point should be here

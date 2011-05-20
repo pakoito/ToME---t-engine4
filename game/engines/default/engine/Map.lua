@@ -599,6 +599,29 @@ function _M:checkAllEntitiesNoStop(x, y, what, ...)
 	return ret
 end
 
+--- Check all entities of the grid for a property, counting the results
+-- This will iterate over all entities without stopping.
+-- No guaranty is given about the iteration order
+-- @param x position
+-- @param y position
+-- @param what property to check
+-- @return the number of times the property returned a non false value
+function _M:checkAllEntitiesCount(x, y, what, ...)
+	if not x or not y or x < 0 or x >= self.w or y < 0 or y >= self.h then return {} end
+	local ret = {}
+	local tile = self.map[x + y * self.w]
+	local nb = 0
+	if tile then
+		-- Collect the keys so we can modify the table while iterating
+		local k, e = next(tile)
+		while k do
+			if e:check(what, x, y, ...) then nb = nb + 1 end
+			k, e = next(tile, k)
+		end
+	end
+	return nb
+end
+
 --- Check specified entity position of the grid for a property
 -- @param x position
 -- @param y position
