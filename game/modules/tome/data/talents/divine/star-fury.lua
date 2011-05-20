@@ -116,7 +116,7 @@ newTalent{
 	radius = 2,
 	direct_hit = true,
 	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, friendlyfire=false}
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, selffire=false}
 	end,
 	getLightDamage = function(self, t) return 10 + self:combatSpellpower(0.2) * self:getTalentLevel(t) end,
 	getDarknessDamage = function(self, t) return 10 + self:combatSpellpower(0.2) * self:getTalentLevel(t) end,

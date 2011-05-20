@@ -107,7 +107,7 @@ newTalent{
 	range = 0,
 	radius = 3,
 	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false}
 	end,
 	tactical = { ATTACKAREA = 2 },
 	getDuration = function(self, t) return 5 + self:combatSpellpower(0.05) + self:getTalentLevel(t) end,
@@ -119,7 +119,7 @@ newTalent{
 			DamageType.FIRE, t.getDamage(self, t),
 			3,
 			5, nil,
-			engine.Entity.new{alpha=100, display='', color_br=200, color_bg=60, color_bb=30},
+			{type="firestorm", only_one=true},
 			function(e)
 				e.x = e.src.x
 				e.y = e.src.y
