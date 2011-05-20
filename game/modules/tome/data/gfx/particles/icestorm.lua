@@ -24,7 +24,7 @@ return { generator = function()
 	local a = math.rad(ad)
 	local dir = math.rad(ad + 90)
 	local r = rng.avg(1, 40 * 3)
-	local dirv = math.rad(3)
+	local dirv = math.rad(5)
 
 	return {
 		trail = 1,
@@ -34,7 +34,7 @@ return { generator = function()
 		x = r * math.cos(a), xv = 0, xa = 0,
 		y = r * math.sin(a), yv = 0, ya = 0,
 		dir = dir, dirv = dirv, dira = 0,
-		vel = 3, velv = 0, vela = 0,
+		vel = 5, velv = 0, vela = 0,
 
 		r = 1, rv = 0, ra = 0,
 		g = 1, gv = 0, ga = 0,
