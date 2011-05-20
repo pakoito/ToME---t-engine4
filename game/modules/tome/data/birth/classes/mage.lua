@@ -75,6 +75,12 @@ newBirthDescriptor{
 		[ActorTalents.T_TELEPORT_ANGOLWEN]=1,
 	},
 	copy = {
+		-- Mages start in angolwen
+		default_wilderness = {"zone-pop", "angolwen"},
+		starting_zone = "town-angolwen",
+		starting_quest = "start-archmage",
+		starting_intro = "archmage",
+
 		-- All mages are of angolwen faction
 		faction = "angolwen",
 		max_life = 90,

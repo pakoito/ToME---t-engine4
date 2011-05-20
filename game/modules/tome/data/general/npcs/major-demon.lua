@@ -173,6 +173,7 @@ It moves swiftly toward you, casting terrible spells and swinging its weapons at
 	autolevel = "warriormage",
 	life_rating = 25,
 	combat_armor = 12, combat_def = 20,
+	max_mana = 1000,
 	mana_regen = 100, positive_regen = 100, negative_regen = 100, equilibrium_regen = -100, vim_regen = 100,
 
 	ai = "tactical",

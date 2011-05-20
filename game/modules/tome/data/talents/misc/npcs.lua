@@ -541,6 +541,67 @@ newTalent{
 }
 
 newTalent{
+	name = "Restoration",
+	type = {"spell/other", 1},
+	points = 5,
+	mana = 30,
+	cooldown = 15,
+	tactical = { PROTECT = 1 },
+	getCureCount = function(self, t) return math.floor(self:getTalentLevel(t)) end,
+	action = function(self, t)
+		local target = self
+		local effs = {}
+
+		-- Go through all spell effects
+		for eff_id, p in pairs(target.tmp) do
+			local e = target.tempeffect_def[eff_id]
+			if e.type == "poison" or e.type == "disease" then
+				effs[#effs+1] = {"effect", eff_id}
+			end
+		end
+
+		for i = 1, t.getCureCount(self, t) do
+			if #effs == 0 then break end
+			local eff = rng.tableRemove(effs)
+
+			if eff[1] == "effect" then
+				target:removeEffect(eff[2])
+			end
+		end
+
+		game:playSoundNear(self, "talents/heal")
+		return true
+	end,
+	info = function(self, t)
+		local curecount = t.getCureCount(self, t)
+		return ([[Call upon the forces of nature to cure your body of %d poisons and diseases (at level 3).]]):
+		format(curecount)
+	end,
+}
+
+newTalent{
+	name = "Regeneration",
+	type = {"spell/other", 1},
+	points = 5,
+	mana = 30,
+	cooldown = 10,
+	tactical = { HEAL = 2 },
+	getRegeneration = function(self, t) return 5 + self:combatTalentSpellDamage(t, 5, 25) end,
+	on_pre_use = function(self, t) return not self:hasEffect(self.EFF_REGENERATION) end,
+	action = function(self, t)
+		self:setEffect(self.EFF_REGENERATION, 10, {power=t.getRegeneration(self, t)})
+		game:playSoundNear(self, "talents/heal")
+		return true
+	end,
+	info = function(self, t)
+		local regen = t.getRegeneration(self, t)
+		return ([[Call upon the forces of nature to regenerate your body for %d life every turn for 10 turns.
+		The life healed will increase with the Magic stat]]):
+		format(regen)
+	end,
+}
+
+newTalent{
 	name = "Grab",
 	type = {"technique/other", 1},
 	points = 5,

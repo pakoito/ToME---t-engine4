@@ -51,6 +51,7 @@ function _M:add(x, y, duration, xvel, yvel, str, color, bigfont)
 		yvel = yvel or 0,
 		t = t,
 	}
+	f.popout_dur = math.max(3, math.floor(f.duration / 4))
 	self.flyers[f] = true
 	return f
 end
@@ -65,11 +66,26 @@ function _M:display(nb_keyframes)
 	local dels = {}
 
 	for fl, _ in pairs(self.flyers) do
-		if self.shadow then fl.t:toScreenFull(fl.x+1, fl.y+1, fl.w, fl.h, fl.tw, fl.th, 0, 0, 0, self.shadow) end
-		fl.t:toScreenFull(fl.x, fl.y, fl.w, fl.h, fl.tw, fl.th)
+		local zoom = nil
+		local x, y = fl.x, fl.y
+		local tx, ty = fl.x, fl.y
+		if fl.duration <= fl.popout_dur then
+			zoom = (fl.duration / fl.popout_dur)
+			x, y = -fl.w / 2 * zoom, -fl.h / 2 * zoom
+			core.display.glTranslate(tx, ty, 0)
+			core.display.glScale(zoom, zoom, zoom)
+		end
+
+		if self.shadow then fl.t:toScreenFull(x+1, y+1, fl.w, fl.h, fl.tw, fl.th, 0, 0, 0, self.shadow) end
+		fl.t:toScreenFull(x, y, fl.w, fl.h, fl.tw, fl.th)
 		fl.x = fl.x + fl.xvel * nb_keyframes
 		fl.y = fl.y + fl.yvel * nb_keyframes
 		fl.duration = fl.duration - nb_keyframes
+
+		if zoom then
+			core.display.glScale()
+			core.display.glTranslate(-tx, -ty, 0)
+		end
 
 		-- Delete the flyer
 		if fl.duration <= 0 then

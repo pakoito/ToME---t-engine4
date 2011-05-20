@@ -24,9 +24,9 @@ newTalent{
 	require = spells_req1,
 	points = 5,
 	mana = 25,
-	cooldown = 14,
+	cooldown = 16,
 	tactical = { HEAL = 2 },
-	getHeal = function(self, t) return 40 + self:combatTalentSpellDamage(t, 40, 420) end,
+	getHeal = function(self, t) return 40 + self:combatTalentSpellDamage(t, 140, 520) end,
 	action = function(self, t)
 		self:heal(self:spellCrit(t.getHeal(self, t)), self)
 		game:playSoundNear(self, "talents/heal")
@@ -41,72 +41,50 @@ newTalent{
 }
 
 newTalent{
-	name = "Regeneration",
+	name = "Contingency",
 	type = {"spell/aegis", 2},
 	require = spells_req2,
 	points = 5,
-	mana = 30,
-	cooldown = 10,
-	tactical = { HEAL = 2 },
-	getRegeneration = function(self, t) return self:combatTalentSpellDamage(t, 5, 25) end,
-	on_pre_use = function(self, t) return not self:hasEffect(self.EFF_REGENERATION) end,
-	action = function(self, t)
-		self:setEffect(self.EFF_REGENERATION, 10, {power=t.getRegeneration(self, t)})
-		game:playSoundNear(self, "talents/heal")
+	mode = "sustained",
+	sustain_mana = 40,
+	cooldown = 14,
+	tactical = { BUFF = 2 },
+	getValue = function(self, t) return 50 - self:getTalentLevelRaw(t) * 6 end,
+	getShield = function(self, t) return 20 + self:combatTalentSpellDamage(t, 5, 400) / 10 end,
+	activate = function(self, t)
+		self.contingency_disable = self.contingency_disable or {}
+		local value = t.getValue(self, t)
+		local shield = t.getShield(self, t)
+		game:playSoundNear(self, "talents/arcane")
+		local ret = {
+			value = self:addTemporaryValue("contingency", value),
+			shield = self:addTemporaryValue("contingency_shield", shield),
+			disable = self:addTemporaryValue("contingency_disable", {[t.id] = 1}),
+		}
+		self:checkEncumbrance()
+		return ret
+	end,
+	deactivate = function(self, t, p)
+		self:removeTemporaryValue("contingency", p.value)
+		self:removeTemporaryValue("contingency_shield", p.shield)
+		self:removeTemporaryValue("contingency_disable", p.disable)
 		return true
 	end,
 	info = function(self, t)
-		local regen = t.getRegeneration(self, t)
-		return ([[Call upon the forces of nature to regenerate your body for %d life every turn for 10 turns.
-		The life healed will increase with the Magic stat]]):
-		format(regen)
-	end,
-}
-
-newTalent{
-	name = "Restoration",
-	type = {"spell/aegis", 3},
-	require = spells_req3,
-	points = 5,
-	mana = 30,
-	cooldown = 15,
-	tactical = { PROTECT = 1 },
-	getCureCount = function(self, t) return math.floor(self:getTalentLevel(t)) end,
-	action = function(self, t)
-		local target = self
-		local effs = {}
-
-		-- Go through all spell effects
-		for eff_id, p in pairs(target.tmp) do
-			local e = target.tempeffect_def[eff_id]
-			if e.type == "poison" or e.type == "disease" then
-				effs[#effs+1] = {"effect", eff_id}
-			end
-		end
-
-		for i = 1, t.getCureCount(self, t) do
-			if #effs == 0 then break end
-			local eff = rng.tableRemove(effs)
-
-			if eff[1] == "effect" then
-				target:removeEffect(eff[2])
-			end
-		end
-
-		game:playSoundNear(self, "talents/heal")
-		return true
-	end,
-	info = function(self, t)
-		local curecount = t.getCureCount(self, t)
-		return ([[Call upon the forces of nature to cure your body of %d poisons and diseases (at level 3).]]):
-		format(curecount)
+		local value = t.getValue(self, t)
+		local shield = t.getShield(self, t)
+		return ([[Surround yourself with protective arcane forces.
+		Each time you are hit for over %d%% of your total life you automatically get a damage shield of %d%% of the life lost for 3 turns.
+		The spell will then unsustain itself.
+		The shield value will increase with your Magic stat.]]):
+		format(value, shield)
 	end,
 }
 
 newTalent{
 	name = "Arcane Shield",
-	type = {"spell/aegis", 4},
-	require = spells_req4,
+	type = {"spell/aegis", 3},
+	require = spells_req3,
 	points = 5,
 	mode = "sustained",
 	sustain_mana = 60,
@@ -129,7 +107,56 @@ newTalent{
 	info = function(self, t)
 		local shield = t.getShield(self, t)
 		return ([[Surround yourself with protective arcane forces.
-		Each time you receive a direct heal (not a life regeneration effect) you automatically get a damage shield of %d%% of the heal value for 3 turns.]]):
+		Each time you receive a direct heal (not a life regeneration effect) you automatically get a damage shield of %d%% of the heal value for 3 turns.
+		The shield value will increase with your Magic stat.]]):
 		format(shield)
+	end,
+}
+
+newTalent{
+	name = "Aegis",
+	type = {"spell/aegis", 4},
+	require = spells_req4,
+	points = 5,
+	mana = 50,
+	cooldown = 25,
+	tactical = { HEAL = 2 },
+	getShield = function(self, t) return 50 + self:combatTalentSpellDamage(t, 5, 500) / 10 end,
+	on_pre_use = function(self, t)
+		for eff_id, p in pairs(self.tmp) do
+			local e = self.tempeffect_def[eff_id]
+			if e.on_aegis then return true end
+		end
+	end,
+	action = function(self, t)
+		local target = self
+		local shield = t.getShield(self, t)
+		local effs = {}
+
+		-- Go through all spell effects
+		for eff_id, p in pairs(target.tmp) do
+			local e = target.tempeffect_def[eff_id]
+			if e.on_aegis then
+				effs[#effs+1] = {id=eff_id, e=e, p=p}
+			end
+		end
+
+		for i = 1, self:getTalentLevelRaw(t) do
+			if #effs == 0 then break end
+			local eff = rng.tableRemove(effs)
+
+			eff.p.dur = eff.p.dur * 2
+			eff.e.on_aegis(self, eff.p, shield)
+		end
+
+		game:playSoundNear(self, "talents/heal")
+		return true
+	end,
+	info = function(self, t)
+		local shield = t.getShield(self, t)
+		return ([[Release arcane energies into any magical shield currently protection you, doubling its remaining time and increasing its remaining absorb value by %d%%.
+		It will affect at most %d shield effects.
+		Affected shields are: Damage Shield, Time Shield, Displacement Shield]]):
+		format(shield, self:getTalentLevelRaw(t))
 	end,
 }

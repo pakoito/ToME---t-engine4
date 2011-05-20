@@ -861,7 +861,7 @@ function _M:onHeal(value, src)
 		end
 	end
 
-	if self:attr("arcane_shield") and value > 0 then
+	if self:attr("arcane_shield") and value > 0 and not self:hasEffect(self.EFF_DAMAGE_SHIELD) then
 		self:setEffect(self.EFF_DAMAGE_SHIELD, 3, {power=value * self.arcane_shield / 100})
 	end
 
@@ -1236,6 +1236,12 @@ function _M:onTakeHit(value, src)
 	if value >= self.max_life * 0.15 and self:attr("invis_on_hit") and rng.percent(self:attr("invis_on_hit")) then
 		self:setEffect(self.EFF_INVISIBILITY, 5, {power=self:attr("invis_on_hit_power")})
 		for tid, _ in pairs(self.invis_on_hit_disable) do self:forceUseTalent(tid, {ignore_energy=true}) end
+	end
+
+	-- Damage shield on hit
+	if self:attr("contingency") and value >= self.max_life * self:attr("contingency") / 100 and not self:hasEffect(self.EFF_DAMAGE_SHIELD) then
+		self:setEffect(self.EFF_DAMAGE_SHIELD, 3, {power=value * self:attr("contingency_shield") / 100})
+		for tid, _ in pairs(self.contingency_disable) do self:forceUseTalent(tid, {ignore_energy=true}) end
 	end
 
 	-- Life leech
