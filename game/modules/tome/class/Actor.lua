@@ -485,6 +485,7 @@ function _M:move(x, y, force)
 	local ox, oy = self.x, self.y
 
 	if force or self:enoughEnergy() then
+
 		-- Confused ?
 		if not force and self:attr("confused") then
 			if rng.percent(self:attr("confused")) then
@@ -492,8 +493,12 @@ function _M:move(x, y, force)
 			end
 		end
 
+		-- Encased in ice, attack the ice
+		if self:attr("encased_in_ice") then
+			self:attackTarget(self)
+			moved = true
 		-- Should we prob travel through walls ?
-		if not force and self:attr("prob_travel") and game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move", self) then
+		elseif not force and self:attr("prob_travel") and game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move", self) then
 			moved = self:probabilityTravel(x, y, self:attr("prob_travel"))
 		-- Never move but tries to attack ? ok
 		elseif not force and self:attr("never_move") then
