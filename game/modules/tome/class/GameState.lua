@@ -1232,6 +1232,7 @@ function _M:createRandomZone(zbase)
 		ambient_music = rng.table(musics),
 		min_material_level = data.min_material_level,
 		max_material_level = data.max_material_level,
+		persistent = "zone_temporary",
 		reload_lists = false,
 		generator =  {
 			map = layout.gen(data),
@@ -1239,6 +1240,7 @@ function _M:createRandomZone(zbase)
 			trap = { class = "engine.generator.trap.Random", nb_trap = nb_trap, },
 			object = { class = "engine.generator.object.Random", nb_object = nb_object, },
 		},
+		levels = { [1] = { generator = { map = { up = data:getFloor() } } } },
 		npc_list = npcs,
 		grid_list = grids,
 		object_list = mod.class.Object:loadList("/data/general/objects/objects.lua"),
