@@ -28,8 +28,10 @@ newEntity{
 		if not game.level.allow_demon_plane_damage then return end
 		local DT = engine.DamageType
 		local dam = DT:get(DT.DEMONFIRE).projector(game.level.plane_owner, x, y, DT.DEMONFIRE, game.level.demonfire_dam or 1)
-		if dam > 0 then game.logPlayer(who, "The lava burns you!")
-		elseif dam < 0 then game.logPlayer(who, "The lava heals you!") end
+		if dam then
+			if dam > 0 then game.logPlayer(who, "The lava burns you!")
+			elseif dam < 0 then game.logPlayer(who, "The lava heals you!") end
+		end
 	end,
 }
 
