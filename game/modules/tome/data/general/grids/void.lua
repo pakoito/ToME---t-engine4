@@ -37,6 +37,7 @@ newEntity{
 	does_block_move = true,
 	pass_projectile = true,
 	air_level = -40,
+	is_void = true,
 }
 
 newEntity{
