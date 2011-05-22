@@ -120,7 +120,7 @@ newEntity{ base = "BASE_NPC_GHOST",
 }
 
 newEntity{ base = "BASE_NPC_GHOST",
-	name = "ruin banshee", color=colors.GREY, image="npc/ruin_banshee.png",
+	name = "ruin banshee", color=colors.GREY,
 	desc = [[A vengeful, screaming soul given form with the breath of Urh'Rok himself. The vapors of the Fearscape seep from its dimension-bending form, withering and searing.]],
 	level_range = {42, nil}, exp_worth = 1,
 	rarity = 15,

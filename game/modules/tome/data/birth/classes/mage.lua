@@ -76,7 +76,7 @@ newBirthDescriptor{
 	},
 	copy = {
 		-- Mages start in angolwen
-		default_wilderness = {"zone-pop", "angolwen"},
+		default_wilderness = {"zone-pop", "angolwen-portal"},
 		starting_zone = "town-angolwen",
 		starting_quest = "start-archmage",
 		starting_intro = "archmage",
