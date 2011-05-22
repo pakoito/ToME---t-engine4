@@ -75,6 +75,24 @@ return {
 		who:addObject(who.INVEN_INVEN, o)
 	end,
 
+	on_turn = function()
+		local eidolon = nil
+		for uid, e in pairs(game.level.entities) do
+			if e.define_as == "EIDOLON" then eidolon = e end
+		end
+		if not eidolon then
+			eidolon = game.zone:makeEntityByName(game.level, "actor", "EIDOLON")
+			local x, y = util.findFreeGrid(game.player.x, game.player.y, 10, true, {[engine.Map.ACTOR] = true})
+			if x and y then game.zone:addEntity(game.level, eidolon, "actor", x, y) end
+		elseif not eidolon.x or game.level.map(eidolon.x, eidolon.y, engine.Map.ACTOR) ~= eidolon then
+			eidolon.deleteFromMap = false
+			game.level:removeEntity(eidolon, true)
+			local x, y = util.findFreeGrid(game.player.x, game.player.y, 10, true, {[engine.Map.ACTOR] = true})
+			if x and y then game.zone:addEntity(game.level, eidolon, "actor", x, y) end
+			eidolon.deleteFromMap = nil
+		end
+	end,
+
 	eidolon_exit = function(to_worldmap)
 		game:onTickEnd(function()
 			local oldzone = game.zone
