@@ -17,29 +17,31 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-require "engine.class"
-require "engine.Projectile"
+base_size = 64
 
-module(..., package.seeall, class.inherit(engine.Projectile))
+local bars = {}
+for i = 1, 10 do bars[#bars+1] = rng.range(-30, 30) end
 
-function _M:init(t, no_default)
-	engine.Projectile.init(self, t, no_default)
+return { generator = function()
+	return {
+		life = 10,
+		size = rng.range(8, 16), sizev = -0.1, sizea = 0,
 
-	if game.level and game.level.data and game.level.data.projectile_speed_mod then
-		self.energy.mod = self.energy.mod * game.level.data.projectile_speed_mod
+		x = rng.avg(-20, 20), xv = 0, xa = 0,
+		y = rng.table(bars), yv = rng.float(-0.5, 0.5), ya = 0,
+		dir = 0, dirv = 0, dira = 0,
+		vel = 0, velv = 0, vela = 0,
+
+		r = rng.range(220, 255)/255,  rv = 0, ra = 0,
+		g = rng.range(200, 230)/255,  gv = 0, ga = 0,
+		b = 0,                        bv = 0, ba = 0,
+		a = rng.range(25, 220)/255,   av = 0, aa = 0,
+	}
+end, },
+function(self)
+	self.nb = (self.nb or 0) + 1
+	if self.nb < 3 then
+		self.ps:emit(15)
 	end
-end
-
---- Moves a projectile on the map
--- We override it to allow for movement animations
-function _M:move(x, y, force)
-	local ox, oy = self.x, self.y
-
-	local moved = engine.Projectile.move(self, x, y, force)
-
-	if moved and not force and ox and oy and (ox ~= self.x or oy ~= self.y) and config.settings.tome.smooth_move > 0 then
-		self:setMoveAnim(ox, oy, config.settings.tome.smooth_move)
-	end
-
-	return moved
-end
+end,
+45, "line_particle"

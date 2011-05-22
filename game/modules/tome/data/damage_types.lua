@@ -19,6 +19,9 @@
 
 -- The basic stuff used to damage a grid
 setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
+	local terrain = game.level.map(x, y, Map.TERRAIN)
+	if terrain then terrain:check("damage_project", src, x, y, type, dam) end
+
 	local target = game.level.map(x, y, Map.ACTOR)
 	if target then
 		local rsrc = src.resolveSource and src:resolveSource() or src

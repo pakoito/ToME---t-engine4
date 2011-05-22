@@ -46,5 +46,6 @@ newEntity{
 	name = "molten lava", image = "terrain/lava.png",
 	display = '%', color=colors.LIGHT_RED, back_color=colors.RED,
 	does_block_move = true,
+	pass_projectile = true,
 	shader = "lava",
 }

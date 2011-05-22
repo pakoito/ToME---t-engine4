@@ -17,12 +17,18 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-name = "Unstable!"
+name = "Spellblaze Fallouts"
+stables = 0
 desc = function(self, who)
 	local desc = {}
-	desc[#desc+1] = "Investigate the Abashed Expanse looking for the source of the recent unstability.\n"
+	desc[#desc+1] = "The Abashed Expanse is a part of Eyal torn apart by the Spellblaze and thrown into the void between the stars.\n"
+	desc[#desc+1] = "It has recently begun to destabilize threatening to crash onto Eyal, destroying everything in its path.\n"
+	desc[#desc+1] = "You have entered it and must now stabilize three wormholes by firing any spell at them.\n"
+	desc[#desc+1] = "Remember, the floating islands are not stable and might teleport randomly, however the disturbances also help you, your Phase Door spell is fully controllable even if not of high level yet.\n"
 	if self:isCompleted("abashed") then
-		desc[#desc+1] = "#LIGHT_GREEN#* You have explored the expanse and destroyed the spacial disturbance.#WHITE#"
+		desc[#desc+1] = "#LIGHT_GREEN#* You have explored the expanse and closed all three wormholes.#WHITE#"
+	else
+		desc[#desc+1] = "#SLATE#* You have closed "..self.stables.." wormhole(s).#WHITE#"
 	end
 	return table.concat(desc, "\n")
 end
@@ -34,4 +40,8 @@ on_status_change = function(self, who, status, sub)
 			who:grantQuest("starter-allied")
 		end
 	end
+end
+
+stabilized = function(self)
+	self.stables = self.stables + 1
 end
