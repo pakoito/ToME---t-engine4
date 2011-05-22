@@ -70,7 +70,7 @@ newEntity{ base = "BASE_NPC_STORM_DRAKE",
 	stats_per_level = 4,
 	lite = 1,
 
-	summon = {
+	make_escort = {
 		{type="dragon", name="storm drake hatchling", number=1},
 	},
 
@@ -83,6 +83,7 @@ newEntity{ base = "BASE_NPC_STORM_DRAKE",
 newEntity{ base = "BASE_NPC_STORM_DRAKE",
 	name = "storm wyrm", color=colors.LIGHT_BLUE, display="D",
 	desc = [[An old and powerful storm drake, armed with a deadly breath weapon and nasty claws.]],
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/dragon_storm_storm_wyrm.png", display_h=2, display_y=-1}}},
 	level_range = {25, nil}, exp_worth = 1,
 	rarity = 5,
 	rank = 3,
@@ -96,7 +97,7 @@ newEntity{ base = "BASE_NPC_STORM_DRAKE",
 	ai = "tactical",
 	ai_tactic = resolvers.tactic"melee",
 
-	summon = {
+	make_escort = {
 		{type="dragon", name="storm drake", number=1},
 		{type="dragon", name="storm drake", number=1, no_subescort=true},
 	},

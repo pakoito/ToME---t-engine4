@@ -56,7 +56,7 @@ newTalent{
 		local x, y = self.x, self.y
 		local rad = t.getRange(self, t)
 		local radius = t.getRadius(self, t)
-		if self:getTalentLevel(t) >= 5 then
+		if self:getTalentLevel(t) >= 5 or game.zone.force_controlled_teleport then
 			game.logPlayer(self, "Selects a teleport location...")
 			local tg = {type="ball", nolock=true, pass_terrain=true, nowarning=true, range=rad, radius=radius, requires_knowledge=false}
 			x, y = self:getTarget(tg)

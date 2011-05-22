@@ -946,10 +946,11 @@ function _M:setupCommands()
 			print(("	[ [[\n%d%d%d\n%d %d\n%d%d%d]] ] = '',"):format(g7,g8,g9,g4,g6,g1,g2,g3))
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			self.state:debugRandomZone()
+--			self.state:debugRandomZone()
 --			local m = game.zone:makeEntity(game.level, "actor", {random_boss=true}, nil, true)
 --			if m then game.zone:addEntity(game.level, m, "actor", game.player.x, game.player.y + 1) end
 --			self:changeLevel(1, "test")
+			self.level.map:particleEmitter(game.player.x, game.player.y, 1, "teleport_line")
 		end end,
 	}
 

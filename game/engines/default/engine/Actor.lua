@@ -168,7 +168,7 @@ function _M:move(x, y, force)
 	if self.x and self.y then
 		map:remove(self.x, self.y, Map.ACTOR)
 	else
-		print("[MOVE] actor moved without a starting position", self.name, x, y)
+--		print("[MOVE] actor moved without a starting position", self.name, x, y)
 	end
 	self.old_x, self.old_y = self.x or x, self.y or y
 	self.x, self.y = x, y
