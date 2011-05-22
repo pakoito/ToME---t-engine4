@@ -57,7 +57,7 @@ newEntity{ base = "BASE_NPC_SUNWALL_TOWN",
 }
 
 newEntity{ base = "BASE_NPC_SUNWALL_TOWN",
-	name = "elven archer", color=colors.UMBER,
+	name = "elven archer", subtype = "elf", color=colors.UMBER,
 	desc = [[A stern-looking guard, he will not let you disturb the town.]],
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 3,
@@ -91,7 +91,7 @@ newEntity{ base = "BASE_NPC_SUNWALL_TOWN",
 }
 
 newEntity{ base = "BASE_NPC_SUNWALL_TOWN",
-	name = "elven sun-mage", color=colors.YELLOW,
+	name = "elven sun-mage", subtype = "elf", color=colors.YELLOW,
 	desc = [[An elf dressed in glowing robes.]],
 	level_range = {3, nil}, exp_worth = 1,
 	rarity = 3,
