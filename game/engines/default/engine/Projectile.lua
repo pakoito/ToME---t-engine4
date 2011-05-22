@@ -37,27 +37,6 @@ function _M:init(t, no_default)
 	Entity.init(self, t, no_default)
 end
 
---- Adds a particles emitter following the actor
-function _M:addParticles(ps)
-	self.__particles[ps] = true
-	if self.x and self.y and game.level and game.level.map then
-		ps.x = self.x
-		ps.y = self.y
-		game.level.map:addParticleEmitter(ps)
-	end
-	return ps
-end
-
---- Removes a particles emitter following the actor
-function _M:removeParticles(ps)
-	self.__particles[ps] = nil
-	if self.x and self.y and game.level and game.level.map then
-		ps.x = nil
-		ps.y = nil
-		game.level.map:removeParticleEmitter(ps)
-	end
-end
-
 --- Moves a projectile on the map
 -- *WARNING*: changing x and y properties manually is *WRONG* and will blow up in your face. Use this method. Always.
 -- @param map the map to move onto
@@ -109,6 +88,8 @@ function _M:move(x, y, force)
 	for i = 1, #del do self.__particles[del[i] ] = nil end
 
 	self:useEnergy()
+
+	map:checkAllEntities(x, y, "on_projectile_move", self, force)
 
 	return true
 end

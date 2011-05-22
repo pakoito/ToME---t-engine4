@@ -38,6 +38,10 @@ newEntity{
 	pass_projectile = true,
 	air_level = -40,
 	is_void = true,
+	--- Called when we are targeted by a projectile
+	on_projectile_move = function(self, x, y, p)
+		p:useEnergy(game.energy_to_act * 5) -- Projectiles move much slower in the void
+	end,
 }
 
 newEntity{
