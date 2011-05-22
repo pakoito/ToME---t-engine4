@@ -75,6 +75,7 @@ return {
 		who:addObject(who.INVEN_INVEN, o)
 	end,
 
+	-- The Eidolon can *never* not exist
 	on_turn = function()
 		local eidolon = nil
 		for uid, e in pairs(game.level.entities) do
