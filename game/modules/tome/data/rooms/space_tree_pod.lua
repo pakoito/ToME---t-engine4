@@ -56,10 +56,10 @@ return function(gen, id)
 			for j = y, y + mh do
 				local nb, own = check_borders(gen.map.room_map, i, j, id)
 				if nb > 0 then pod[#pod+1] = {x=i-x, y=j-y} end
-				if nb >= 4 and own and rng.percent(10) then
+				if nb >= 9 and own and rng.percent(is_first and 10 or 40) then
 					gen.map(i, j, Map.TERRAIN, gen:resolve('T'))
 				end
-				if is_first and nb >= 5 and own then wormholes[#wormholes+1] = {i,j} end
+				if is_first and nb >= 9 and own then wormholes[#wormholes+1] = {i,j} end
 			end
 		end
 		if is_first then

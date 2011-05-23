@@ -29,7 +29,8 @@ newEntity{
 }
 
 newEntity{
-	define_as = "VOID_WALL",
+	define_as = "OUTERSPACE",
+	type = "void", subtype = "void",
 	name = "void",
 	display = ' ',
 	_noalpha = false,
@@ -57,3 +58,29 @@ newEntity{
 	does_block_move = true,
 	_noalpha = false,
 }
+
+-----------------------------------------
+-- Floating platforms
+-----------------------------------------
+
+newEntity{
+	define_as = "FLOATING_ROCKS",
+	type = "floor", subtype = "rocks",
+	name = "floating rocks", image = "terrain/floating_rocks05_01.png",
+	display = '.', color_r=255, color_g=255, color_b=255,
+	_noalpha = false,
+	nice_tiler = { method="outerSpace",
+		replace_wrong="OUTERSPACE",
+		rocks="FLOATING_ROCKS_5",
+		void8={"FLOATING_ROCKS_8", 100, 1, 1}, void2={"FLOATING_ROCKS_2", 100, 1, 1}, void4={"FLOATING_ROCKS_4", 100, 1, 1}, void6={"FLOATING_ROCKS_6", 100, 1, 1}, void1={"FLOATING_ROCKS_1", 100, 1, 1}, void3={"FLOATING_ROCKS_3", 100, 1, 1}, void7={"FLOATING_ROCKS_7", 100, 1, 1}, void9={"FLOATING_ROCKS_9", 100, 1, 1}, inner_void1="FLOATING_ROCKS_1I", inner_void3="FLOATING_ROCKS_3I", inner_void7="FLOATING_ROCKS_7I", inner_void9="FLOATING_ROCKS_9I",
+	},
+}
+
+newEntity{base="FLOATING_ROCKS", define_as = "FLOATING_ROCKS_5", image="terrain/floating_rocks05_01.png"}
+for i = 1, 9 do for j = 1, 1 do
+	if i ~= 5 then newEntity{base="FLOATING_ROCKS", define_as = "FLOATING_ROCKS_"..i..j, image="terrain/floating_rocks0"..i.."_0"..j..".png"} end
+end end
+newEntity{base="FLOATING_ROCKS", define_as = "FLOATING_ROCKS_1I", image="terrain/floating_rocks_inner01_01.png"}
+newEntity{base="FLOATING_ROCKS", define_as = "FLOATING_ROCKS_3I", image="terrain/floating_rocks_inner03_01.png"}
+newEntity{base="FLOATING_ROCKS", define_as = "FLOATING_ROCKS_7I", image="terrain/floating_rocks_inner07_01.png"}
+newEntity{base="FLOATING_ROCKS", define_as = "FLOATING_ROCKS_9I", image="terrain/floating_rocks_inner09_01.png"}

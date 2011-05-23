@@ -40,11 +40,11 @@ return {
 			nb_rooms = 20,
 			no_tunnels = true,
 			rooms = {"space_tree_pod"},
-			['.'] = function() if rng.chance(20) then return "FLOWER" else return "GRASS" end end,
+			['.'] = "FLOATING_ROCKS",
 --			['T'] = {"TREE","TREE2","TREE3","TREE4","TREE5","TREE6","TREE7","TREE8","TREE9","TREE10","TREE11","TREE12","TREE13","TREE14","TREE15","TREE16","TREE17","TREE18","TREE19","TREE20",},
 --			['.'] = {"BURNT_GROUND1","BURNT_GROUND2","BURNT_GROUND3","BURNT_GROUND4",},
 			['T'] = {"BURNT_TREE1","BURNT_TREE2","BURNT_TREE3","BURNT_TREE4","BURNT_TREE5","BURNT_TREE6","BURNT_TREE7","BURNT_TREE8","BURNT_TREE9","BURNT_TREE10","BURNT_TREE11","BURNT_TREE12","BURNT_TREE13","BURNT_TREE14","BURNT_TREE15","BURNT_TREE16","BURNT_TREE17","BURNT_TREE18","BURNT_TREE19","BURNT_TREE20",},
-			['#'] = "VOID_WALL",
+			['#'] = "OUTERSPACE",
 --			up = "GRASS",
 --			down = "GRASS",
 			wormhole = "WORMHOLE",
@@ -73,9 +73,9 @@ return {
 		if game.turn % 10 ~= 0 or not game.level.data.teleport_zones then return end
 		game.level.data.next_move = game.level.data.next_move - 1
 		if game.level.data.next_move <= 0 then
-			game.level.data.next_move = rng.range(4, 12)
+			game.level.data.next_move = rng.range(3, 7)
 
-			local void = game.zone.grid_list.VOID_WALL
+			local void = game.zone.grid_list.OUTERSPACE
 			local map = game.level.map
 			local pods = table.clone(game.level.pods)
 
@@ -150,7 +150,7 @@ return {
 		if game.level.data.next_move <= 0 then
 			game.level.data.next_move = 1
 
-			local void = game.zone.grid_list.VOID_WALL
+			local void = game.zone.grid_list.OUTERSPACE
 			local map = game.level.map
 			local pods = table.clone(game.level.pods)
 
@@ -218,7 +218,7 @@ return {
 
 	post_process = function(level)
 		local Map = require "engine.Map"
-		level.background_particle = require("engine.Particles").new("starfield", 1, {width=Map.viewport.width, height=Map.viewport.height})
+		level.background_particle = require("engine.Particles").new("starfield", 1, {width=Map.viewport.width, height=Map.viewport.height, vel_min=0, vel_max=0.5})
 	end,
 
 	background = function(level, x, y, nb_keyframes)

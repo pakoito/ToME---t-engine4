@@ -19,10 +19,10 @@
 
 load("/data/general/grids/basic.lua")
 load("/data/general/grids/forest.lua")
-load("/data/general/grids/burntland.lua", function(e) if e.image == "terrain/grass_burnt1.png" then e.image = "terrain/grass.png" end end)
+load("/data/general/grids/burntland.lua", function(e) if e.image == "terrain/grass_burnt1.png" then e.image = "terrain/floating_rocks05_01.png" end end)
 load("/data/general/grids/void.lua")
 
-newEntity{ base="GRASS", define_as = "WORMHOLE", nice_tiler = false,
+newEntity{ base="FLOATING_ROCKS", define_as = "WORMHOLE", nice_tiler = false,
 	name = "unstable wormhole",
 	display = '*', color = colors.GREY,
 	add_mos = {{image="terrain/wormhole.png"}},

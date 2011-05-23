@@ -524,6 +524,7 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 
 	-- Post process walls
 	self.nicer_tiles:postProcessLevelTiles(self.level)
+	self.nicer_tiles:postProcessLevelTiles(self.level)
 
 	-- Check if we need to switch the current guardian
 	self.state:zoneCheckBackupGuardian()

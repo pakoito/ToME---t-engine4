@@ -212,6 +212,10 @@ function _M:niceTileGrassSand(level, i, j, g, nt)
 	self:niceTileGenericBorders(level, i, j, g, nt, "sand", {grass=true})
 end
 
+function _M:niceTileOuterSpace(level, i, j, g, nt)
+	self:niceTileGenericBorders(level, i, j, g, nt, "rocks", {void=true})
+end
+
 -- This array is precomputed, it holds the possible combinations of walls and the nice tile they generate
 -- The data is bit-encoded
 local full_wall3d = {

@@ -98,28 +98,22 @@ function _M:addPond(x, y, spots)
 	end
 
 	-- Smooth the pond
-	for i = 1, self.do_ponds.size.w do
-		for j = 1, self.do_ponds.size.h do
-			if not pmap[i][j] then
-				local nb = 0
-				for ii = -1, 1 do for jj = -1, 1 do if (ii ~= 0 or jj ~= 0) and pmap[i+ii] then
-					if pmap[i+ii][j+jj] then nb = nb + 1 end
-				end end end
-				if nb >= 4 then pmap[i][j] = self.do_ponds.pond[1][2] end
-			end
+	for i = 1, self.do_ponds.size.w do for j = 1, self.do_ponds.size.h do
+		local g1 = pmap[i-1] and pmap[i-1][j+1]
+		local g2 = pmap[i] and pmap[i][j+1]
+		local g3 = pmap[i+1] and pmap[i+1][j+1]
+		local g4 = pmap[i-1] and pmap[i-1][j]
+		local g6 = pmap[i+1] and pmap[i+1][j]
+		local g7 = pmap[i-1] and pmap[i-1][j-1]
+		local g8 = pmap[i] and pmap[i][j-1]
+		local g9 = pmap[i+1] and pmap[i+1][j-1]
+
+		if     not g8 and not g4 and not g6 and g2 then pmap[i][j] = nil
+		elseif not g2 and not g4 and not g6 and g8 then pmap[i][j] = nil
+		elseif not g6 and not g2 and not g8 and g4 then pmap[i][j] = nil
+		elseif not g4 and not g2 and not g8 and g6 then pmap[i][j] = nil
 		end
-	end
-	for i = 1, self.do_ponds.size.w do
-		for j = 1, self.do_ponds.size.h do
-			if pmap[i][j] then
-				local nb = 0
-				for ii = -1, 1 do for jj = -1, 1 do if (ii ~= 0 or jj ~= 0) and pmap[i+ii] then
-					if pmap[i+ii][j+jj] then nb = nb + 1 end
-				end end end
-				if nb <= 3 then pmap[i][j] = nil end
-			end
-		end
-	end
+	end end
 
 	-- Draw the pond
 	for i = 1, self.do_ponds.size.w do

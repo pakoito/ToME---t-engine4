@@ -42,7 +42,7 @@ return { generator = function()
 		else x = width y = rng.range(0, height)
 		end
 	end
-	local vel = rng.float(0.3, 2)
+	local vel = rng.float(vel_min or 0.3, vel_max or 2)
 
 	return {
 		life = life / vel,
