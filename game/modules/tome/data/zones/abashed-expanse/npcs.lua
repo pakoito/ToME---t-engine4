@@ -21,18 +21,18 @@
 --load("/data/general/npcs/vermin.lua", rarity(2))
 --load("/data/general/npcs/snake.lua", rarity(3))
 --load("/data/general/npcs/bear.lua", rarity(2))
-load("/data/general/npcs/crystal.lua", rarity(1))
+--load("/data/general/npcs/crystal.lua", rarity(10))
+load("/data/general/npcs/losgoroth.lua", rarity(1))
 
 --load("/data/general/npcs/all.lua", rarity(4, 35))
 
 local Talents = require("engine.interface.ActorTalents")
 
-newEntity{ base="BASE_NPC_CRYSTAL", define_as = "SPELLBLAZE_CRYSTAL",
-	allow_infinite_dungeon = true,
+newEntity{ base="BASE_NPC_LOSGOROTH", define_as = "SPACIAL_DISTURBANCE",
 	unique = true,
-	name = "Spellblaze Crystal", tint=colors.PURPLE, image = "npc/spellblaze_crystal.png",
+	name = "Spacial Disturbance",
 	color=colors.VIOLET,
-	desc = [[A formation of purple crystal. It seems strangely aware.]],
+	desc = [[A hole in the fabric of space, it seems to be the source of hte expanse unstability.]],
 	level_range = {7, nil}, exp_worth = 2,
 	max_life = 150, life_rating = 12, fixed_rating = true,
 	mana_regen = 3,

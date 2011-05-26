@@ -541,6 +541,32 @@ newTalent{
 }
 
 newTalent{
+	name = "Void Blast",
+	type = {"spell/other", },
+	points = 5,
+	mana = 3,
+	cooldown = 2,
+	tactical = { ATTACK = 7 },
+	range = 10,
+	reflectable = true,
+	requires_target = true,
+	proj_speed = 2,
+	target = function(self, t) return {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_void", trail="voidtrail"}} end,
+	action = function(self, t)
+		local tg = self:getTalentTarget(t)
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:projectile(tg, x, y, DamageType.ARCANE, self:spellCrit(self:combatTalentSpellDamage(t, 15, 240)), {type="voidblast"})
+		game:playSoundNear(self, "talents/arcane")
+		return true
+	end,
+	info = function(self, t)
+		return ([[Fires a blast of void energies that slowly travel to their target, dealing %0.2f% arcane damage on impact.
+		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.ARCANE, self:combatTalentSpellDamage(t, 15, 240)))
+	end,
+}
+
+newTalent{
 	name = "Restoration",
 	type = {"spell/other", 1},
 	points = 5,

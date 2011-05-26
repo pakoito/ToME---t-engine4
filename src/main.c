@@ -637,7 +637,7 @@ int resizeWindow(int width, int height)
 
 	/* Set our perspective */
 	//gluPerspective( 45.0f, ratio, 0.1f, 100.0f );
-	glOrtho(0, width, height, 0, -101, 101);
+	glOrtho(0, width, height, 0, -1001, 1001);
 
 	/* Make sure we're chaning the model view and not the projection */
 	glMatrixMode( GL_MODELVIEW );

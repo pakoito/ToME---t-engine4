@@ -1,4 +1,4 @@
--- ToME - Tales of Maj'Eyal
+-- TE4 - T-Engine 4
 -- Copyright (C) 2009, 2010, 2011 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -17,31 +17,28 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-base_size = 64
+require "engine.class"
 
-local r = 1
-local g = 1
-local b = 1
-local a = 1
+--- Handles a 3D "quadratic" object
+-- It's mostly undeed, it simply allows quadratic to be serialized
+module(..., package.seeall, class.make)
 
-return { generator = function()
-	return {
-		life = 1,
-		size = size, sizev = 0, sizea = 0,
+--- Make a particle emitter
+function _M:init()
+	self:loaded()
+end
 
-		x = x, xv = 0, xa = 0,
-		y = y, yv = 0, ya = 0,
-		dir = 0, dirv = dirv, dira = 0,
-		vel = 0, velv = 0, vela = 0,
+--- Serialization
+function _M:save()
+	return class.save(self, {
+		q = true,
+	})
+end
 
-		r = r, rv = 0, ra = 0,
-		g = g, gv = 0, ga = 0,
-		b = b, bv = 0, ba = 0,
-		a = a, av = 0, aa = 0,
-	}
-end, },
-function(self)
-	self.ps:emit(1)
-end,
-1,
-image
+function _M:cloned()
+	self:loaded()
+end
+
+function _M:loaded()
+	self.q = core.display.newQuadratic()
+end

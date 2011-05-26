@@ -1421,3 +1421,20 @@ newDamageType{
 		end
 	end,
 }
+
+newDamageType{
+	name = "manaworm", type = "MANAWORM",
+	projector = function(src, x, y, type, dam)
+		local realdam = DamageType:get(DamageType.ARCANE).projector(src, x, y, DamageType.ARCANE, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			if target:knowTalent(target.T_MANA_POOL) then
+				target:setEffect(target.EFF_MANAWORM, 5, {power=dam * 5, src=src})
+				src:disappear(src)
+			else
+				game.logSeen(target, "%s is unaffected.", target.name:capitalize())
+			end
+		end
+		return realdam
+	end,
+}

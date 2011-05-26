@@ -1295,6 +1295,19 @@ static int gl_translate(lua_State *L)
 	return 0;
 }
 
+static int gl_rotate(lua_State *L)
+{
+	glRotatef(lua_tonumber(L, 1), lua_tonumber(L, 2), lua_tonumber(L, 3), lua_tonumber(L, 4));
+	return 0;
+}
+
+static int gl_matrix(lua_State *L)
+{
+	if (lua_toboolean(L, 1)) glPushMatrix();
+	else glPopMatrix();
+	return 0;
+}
+
 static int sdl_texture_bind(lua_State *L)
 {
 	GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 1);
@@ -1523,6 +1536,55 @@ static int sdl_set_mouse_cursor(lua_State *L)
 }
 
 /**************************************************************
+ * Quadratic Objects
+ **************************************************************/
+static int gl_new_quadratic(lua_State *L)
+{
+	GLUquadricObj **quadratic = (GLUquadricObj**)lua_newuserdata(L, sizeof(GLUquadricObj*));
+	auxiliar_setclass(L, "gl{quadratic}", -1);
+
+	*quadratic = gluNewQuadric( );
+	gluQuadricNormals(*quadratic, GLU_SMOOTH);
+	gluQuadricTexture(*quadratic, GL_TRUE);
+
+	return 1;
+}
+
+static int gl_free_quadratic(lua_State *L)
+{
+	GLUquadricObj **quadratic = (GLUquadricObj**)auxiliar_checkclass(L, "gl{quadratic}", 1);
+
+	gluDeleteQuadric(*quadratic);
+
+	lua_pushnumber(L, 1);
+	return 1;
+}
+
+static int gl_quadratic_sphere(lua_State *L)
+{
+	GLUquadricObj **quadratic = (GLUquadricObj**)auxiliar_checkclass(L, "gl{quadratic}", 1);
+	float x = luaL_checknumber(L, 2);
+	float y = luaL_checknumber(L, 3);
+	float rad = luaL_checknumber(L, 4);
+	float rot = luaL_checknumber(L, 5);
+	float rot_x = luaL_checknumber(L, 6);
+	float rot_y = luaL_checknumber(L, 7);
+	float rot_z = luaL_checknumber(L, 8);
+
+	glPushMatrix();
+	glTranslatef(x, y, 0);
+	glRotatef(rot, rot_x, rot_y, rot_z);
+
+	glEnable(GL_DEPTH_TEST);
+	gluSphere(*quadratic, rad, 64, 64);
+	glDisable(GL_DEPTH_TEST);
+
+	glPopMatrix();
+
+	return 0;
+}
+
+/**************************************************************
  * Framebuffer Objects
  **************************************************************/
 typedef struct
@@ -1596,7 +1658,7 @@ static int gl_fbo_use(lua_State *L)
 		glMatrixMode(GL_PROJECTION);
 		glPushMatrix();
 		glLoadIdentity();
-		glOrtho(0, fbo->w, fbo->h, 0, -101, 101);
+		glOrtho(0, fbo->w, fbo->h, 0, -1001, 1001);
 		glMatrixMode(GL_MODELVIEW);
 
 		// Reset The View
@@ -1786,6 +1848,7 @@ static const struct luaL_reg displaylib[] =
 	{"newSurface", sdl_new_surface},
 	{"newTile", sdl_new_tile},
 	{"newFBO", gl_new_fbo},
+	{"newQuadratic", gl_new_quadratic},
 	{"drawQuad", gl_draw_quad},
 	{"FBOActive", gl_fbo_is_active},
 	{"disableFBO", gl_fbo_disable},
@@ -1799,6 +1862,8 @@ static const struct luaL_reg displaylib[] =
 	{"setGamma", sdl_set_gamma},
 	{"glTranslate", gl_translate},
 	{"glScale", gl_scale},
+	{"glRotate", gl_rotate},
+	{"glMatrix", gl_matrix},
 	{NULL, NULL},
 };
 
@@ -1850,6 +1915,13 @@ static const struct luaL_reg gl_fbo_reg[] =
 	{"__gc", gl_free_fbo},
 	{"toScreen", gl_fbo_toscreen},
 	{"use", gl_fbo_use},
+	{NULL, NULL},
+};
+
+static const struct luaL_reg gl_quadratic_reg[] =
+{
+	{"__gc", gl_free_quadratic},
+	{"sphere", gl_quadratic_sphere},
 	{NULL, NULL},
 };
 
@@ -2310,6 +2382,7 @@ int luaopen_core(lua_State *L)
 	auxiliar_newclass(L, "line{core}", line_reg);
 	auxiliar_newclass(L, "gl{texture}", sdl_texture_reg);
 	auxiliar_newclass(L, "gl{fbo}", gl_fbo_reg);
+	auxiliar_newclass(L, "gl{quadratic}", gl_quadratic_reg);
 	auxiliar_newclass(L, "sdl{surface}", sdl_surface_reg);
 	auxiliar_newclass(L, "sdl{font}", sdl_font_reg);
 	luaL_openlib(L, "core.display", displaylib, 0);

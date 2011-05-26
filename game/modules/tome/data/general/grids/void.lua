@@ -39,6 +39,7 @@ newEntity{
 	pass_projectile = true,
 	air_level = -40,
 	is_void = true,
+	can_pass = {pass_void=1},
 }
 
 newEntity{

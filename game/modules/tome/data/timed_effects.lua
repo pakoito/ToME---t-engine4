@@ -4092,3 +4092,21 @@ newEffect{
 	deactivate = function(self, eff)
 	end,
 }
+
+newEffect{
+	name = "MANAWORM",
+	desc = "Manaworm",
+	long_desc = function(self, eff) return ("The target is infected by a manaworm, draining %0.2f mana per turns and releasing it as arcane damage to the target."):format(eff.power) end,
+	type = "magical",
+	status = "detrimental",
+	parameters = {power=10},
+	on_gain = function(self, err) return "#Target# is infected by a manaworm!", "+Manaworm" end,
+	on_lose = function(self, err) return "#Target# is no longer infected.", "-Manaworm" end,
+	on_timeout = function(self, eff)
+		local dam = eff.power
+		if dam > self:getMana() then dam = self:getMana() end
+		self:incMana(-dam)
+		DamageType:get(DamageType.ARCANE).projector(eff.src, self.x, self.y, DamageType.ARCANE, dam)
+	end,
+}
+

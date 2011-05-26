@@ -17,31 +17,26 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-base_size = 64
+base_size = 32
 
-local r = 1
-local g = 1
-local b = 1
-local a = 1
+return {
+	base = 1000,
 
-return { generator = function()
-	return {
-		life = 1,
-		size = size, sizev = 0, sizea = 0,
+	angle = { 0, 360 }, anglev = { 2000, 4000 }, anglea = { 20, 60 },
 
-		x = x, xv = 0, xa = 0,
-		y = y, yv = 0, ya = 0,
-		dir = 0, dirv = dirv, dira = 0,
-		vel = 0, velv = 0, vela = 0,
+	life = { 5, 10 },
+	size = { 4, 6 }, sizev = {0, 0}, sizea = {0, 0},
 
-		r = r, rv = 0, ra = 0,
-		g = g, gv = 0, ga = 0,
-		b = b, bv = 0, ba = 0,
-		a = a, av = 0, aa = 0,
-	}
-end, },
-function(self)
-	self.ps:emit(1)
+	r = {80, 140}, rv = {0, 10}, ra = {0, 0},
+	g = {80, 140}, gv = {0, 0}, ga = {0, 0},
+	b = {80, 140}, bv = {0, 10}, ba = {0, 0},
+	a = {180, 255}, av = {0, 0}, aa = {0, 0},
+
+}, function(self)
+	self.nb = (self.nb or 0) + 1
+	if self.nb < 6 then
+		self.ps:emit(20)
+	end
 end,
-1,
-image
+600,
+"particle_torus"

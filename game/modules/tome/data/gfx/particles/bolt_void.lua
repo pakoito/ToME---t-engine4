@@ -17,31 +17,36 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-base_size = 64
-
-local r = 1
-local g = 1
-local b = 1
-local a = 1
-
 return { generator = function()
+	local radius = 0
+	local sradius = (radius + 0.5) * (engine.Map.tile_w + engine.Map.tile_h) / 2
+	local ad = rng.float(0, 360)
+	local a = math.rad(ad)
+	local r = rng.float(0, sradius / 4)
+	local x = r * math.cos(a)
+	local y = r * math.sin(a)
+	local bx = math.floor(x / engine.Map.tile_w)
+	local by = math.floor(y / engine.Map.tile_h)
+	local static = rng.percent(40)
+	local c = rng.range(40, 100)/255
+
 	return {
-		life = 1,
-		size = size, sizev = 0, sizea = 0,
+		trail = 1,
+		life = 6,
+		size = 3, sizev = 0, sizea = 0,
 
 		x = x, xv = 0, xa = 0,
 		y = y, yv = 0, ya = 0,
-		dir = 0, dirv = dirv, dira = 0,
-		vel = 0, velv = 0, vela = 0,
+		dir = a, dirv = 0, dira = 0,
+		vel = sradius / 2 / 6, velv = 0, vela = 0,
 
-		r = r, rv = 0, ra = 0,
-		g = g, gv = 0, ga = 0,
-		b = b, bv = 0, ba = 0,
-		a = a, av = 0, aa = 0,
+		r = c,   rv = 0, ra = 0,
+		g = c,   gv = 0.005, ga = 0.0005,
+		b = c,      bv = 0, ba = 0,
+		a = rng.range(140, 255)/255,    av = static and -0.034 or 0, aa = 0.005,
 	}
 end, },
 function(self)
-	self.ps:emit(1)
+	self.ps:emit(30)
 end,
-1,
-image
+30*6

@@ -41,28 +41,24 @@ return {
 			no_tunnels = true,
 			rooms = {"space_tree_pod"},
 			['.'] = "FLOATING_ROCKS",
---			['T'] = {"TREE","TREE2","TREE3","TREE4","TREE5","TREE6","TREE7","TREE8","TREE9","TREE10","TREE11","TREE12","TREE13","TREE14","TREE15","TREE16","TREE17","TREE18","TREE19","TREE20",},
---			['.'] = {"BURNT_GROUND1","BURNT_GROUND2","BURNT_GROUND3","BURNT_GROUND4",},
 			['T'] = {"BURNT_TREE1","BURNT_TREE2","BURNT_TREE3","BURNT_TREE4","BURNT_TREE5","BURNT_TREE6","BURNT_TREE7","BURNT_TREE8","BURNT_TREE9","BURNT_TREE10","BURNT_TREE11","BURNT_TREE12","BURNT_TREE13","BURNT_TREE14","BURNT_TREE15","BURNT_TREE16","BURNT_TREE17","BURNT_TREE18","BURNT_TREE19","BURNT_TREE20",},
 			['#'] = "OUTERSPACE",
---			up = "GRASS",
---			down = "GRASS",
 			wormhole = "WORMHOLE",
 			door = "GRASS",
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
-			nb_npc = {10, 15},
+			nb_npc = {20, 30},
 			filters = { {max_ood=2}, },
 			guardian = "SPACIAL_DISTURBANCE",
 		},
 		object = {
 			class = "engine.generator.object.Random",
-			nb_object = {6, 9},
+			nb_object = {0, 0},
 		},
 		trap = {
 			class = "engine.generator.trap.Random",
-			nb_trap = {6, 9},
+			nb_trap = {0, 0},
 		},
 	},
 
@@ -73,13 +69,13 @@ return {
 		if game.turn % 10 ~= 0 or not game.level.data.teleport_zones then return end
 		game.level.data.next_move = game.level.data.next_move - 1
 		if game.level.data.next_move <= 0 then
-			game.level.data.next_move = rng.range(3, 7)
+			game.level.data.next_move = 1
 
 			local void = game.zone.grid_list.OUTERSPACE
 			local map = game.level.map
 			local pods = table.clone(game.level.pods)
 
-			for __ = 1, 10 do
+			for __ = 1, 1 do
 			local pod = rng.tableRemove(pods)
 --			print("====== MOVING POD", table.serialize(pod,nil,true))
 			local x, y = pod.x1, pod.y1
@@ -218,9 +214,12 @@ return {
 
 	post_process = function(level)
 		local Map = require "engine.Map"
+		local Quadratic = require "engine.Quadratic"
 		level.background_particle1 = require("engine.Particles").new("starfield_static", 1, {width=Map.viewport.width, height=Map.viewport.height, nb=300, a_min=0.5, a_max = 0.8, size_min = 1, size_max = 3})
 		level.background_particle2 = require("engine.Particles").new("starfield_static", 1, {width=Map.viewport.width, height=Map.viewport.height, nb=300, a_min=0.5, a_max = 0.9, size_min = 4, size_max = 8})
-		level.world_particle = require("engine.Particles").new("image", 1, {size=512, image="shockbolt/terrain/eyal-world", x=400, y=400})
+		level.world_particle = require("engine.Particles").new("image", 1, {size=1, image="shockbolt/terrain/eyal-world", x=400, y=400})
+		level.world_sphere = Quadratic.new()
+		game.zone.world_sphere_rot = (game.zone.world_sphere_rot or 0)
 	end,
 
 	background = function(level, x, y, nb_keyframes)
@@ -229,5 +228,14 @@ return {
 		local parx, pary = level.map.mx / (level.map.w - Map.viewport.mwidth), level.map.my / (level.map.h - Map.viewport.mheight)
 		level.background_particle2.ps:toScreen(x - parx * 40, y - pary * 40, true, 1)
 		level.world_particle.ps:toScreen(x - parx * 60, y - pary * 60, true, 1)
+
+		core.display.glMatrix(true)
+		core.display.glTranslate(x + 350 - parx * 60, y + 350 - pary * 60, 0)
+		core.display.glRotate(120, 0, 1, 0)
+		core.display.glRotate(300, 1, 0, 0)
+		level.world_sphere.q:sphere(0, 0, 300, game.zone.world_sphere_rot, 0, 0, 1)
+		game.zone.world_sphere_rot = game.zone.world_sphere_rot + 0.01
+
+		core.display.glMatrix(false)
 	end,
 }

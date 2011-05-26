@@ -95,7 +95,7 @@ newEntity{ base = "BASE_NPC_SPIDER", define_as = "NIMISIL",
 
 	combat_armor = 25, combat_def = 33,
 
-	combat = {dam=80, atk=30, apr=15, dammod={mag=1.1}, damtype="ARCANE"},
+	combat = {dam=80, atk=30, apr=15, dammod={mag=1.1}, damtype=DamageType.ARCANE},
 
 	autolevel = "caster",
 	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },

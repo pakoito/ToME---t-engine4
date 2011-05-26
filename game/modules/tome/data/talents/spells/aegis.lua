@@ -26,7 +26,7 @@ newTalent{
 	mana = 25,
 	cooldown = 16,
 	tactical = { HEAL = 2 },
-	getHeal = function(self, t) return 40 + self:combatTalentSpellDamage(t, 140, 520) end,
+	getHeal = function(self, t) return 40 + self:combatTalentSpellDamage(t, 10, 520) end,
 	action = function(self, t)
 		self:heal(self:spellCrit(t.getHeal(self, t)), self)
 		game:playSoundNear(self, "talents/heal")
