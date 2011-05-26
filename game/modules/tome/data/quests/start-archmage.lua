@@ -42,6 +42,22 @@ on_status_change = function(self, who, status, sub)
 	end
 end
 
+on_grant = function(self, who)
+	local npc
+	for uid, e in pairs(game.level.entities) do
+		if e.define_as and e.define_as == "TARELION" then npc = e break end
+	end
+	if not npc then return end
+	local x, y = util.findFreeGrid(npc.x, npc.y, 10, true, {[Map.ACTOR]=true})
+	if not x or not y then return end
+
+	who:move(x, y, true)
+
+	local Chat = require"engine.Chat"
+	local chat = Chat.new("tarelion-start-archmage", npc, who)
+	chat:invoke()
+end
+
 stabilized = function(self)
 	self.stables = self.stables + 1
 end
