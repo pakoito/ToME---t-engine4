@@ -62,7 +62,7 @@ return function(gen, id)
 				if is_first and nb >= 9 and own then wormholes[#wormholes+1] = {i,j} end
 			end
 		end
-		if is_first then
+		if is_first and gen.level.level < gen.zone.max_level then
 			if #wormholes >= 1 then
 				local g = rng.table(wormholes)
 				gen.map(g[1], g[2], Map.TERRAIN, gen:resolve('wormhole'))

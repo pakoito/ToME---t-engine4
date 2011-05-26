@@ -32,6 +32,7 @@ newEntity{
 
 	infravision = 10,
 	life_rating = 8,
+	life_regen = 0,
 	rank = 2,
 	size_category = 3,
 	levitation = 1,

@@ -32,10 +32,10 @@ newEntity{ base="BASE_NPC_LOSGOROTH", define_as = "SPACIAL_DISTURBANCE",
 	unique = true,
 	name = "Spacial Disturbance",
 	color=colors.VIOLET,
-	desc = [[A hole in the fabric of space, it seems to be the source of hte expanse unstability.]],
+	desc = [[A hole in the fabric of space, it seems to be the source of the expanse unstability.]],
 	level_range = {7, nil}, exp_worth = 2,
-	max_life = 150, life_rating = 12, fixed_rating = true,
-	mana_regen = 3,
+	max_life = 150, life_rating = 10, fixed_rating = true,
+	mana_regen = 7,
 	stats = { str=10, dex=10, cun=12, mag=20, con=10 },
 	rank = 4,
 	size_category = 4,
@@ -47,19 +47,20 @@ newEntity{ base="BASE_NPC_LOSGOROTH", define_as = "SPACIAL_DISTURBANCE",
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 
 	resolvers.talents{
-		[Talents.T_FLAME]=1,
-		[Talents.T_ICE_SHARDS]=1,
-		[Talents.T_SOUL_ROT]=1,
-		[Talents.T_ELEMENTAL_BOLT]=1,
+		[Talents.T_VOID_BLAST]={base=1, every=7, max=7},
+		[Talents.T_MANATHRUST]={base=1, every=7, max=7},
+		[Talents.T_PHASE_DOOR]=2,
+		[Talents.T_CONTINGENCY]=5,
 	},
 	resolvers.inscriptions(1, {"manasurge rune"}),
-	inc_damage = { all = -35 },
 
 	autolevel = "caster",
 	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
 	ai_tactic = resolvers.tactic"ranged",
 
 	on_die = function(self, who)
-		game.player:resolveSource():setQuestStatus("start-shaloren", engine.Quest.COMPLETED, "spellblaze")
+		local q = game.player:hasQuest("start-archmage")
+		if q then q:stabilized() end
+		game.player:resolveSource():setQuestStatus("start-archmage", engine.Quest.COMPLETED, "expanse")
 	end,
 }

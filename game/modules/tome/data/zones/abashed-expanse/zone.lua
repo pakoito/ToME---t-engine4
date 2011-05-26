@@ -48,7 +48,7 @@ return {
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
-			nb_npc = {20, 30},
+			nb_npc = {20, 20},
 			filters = { {max_ood=2}, },
 			guardian = "SPACIAL_DISTURBANCE",
 		},
