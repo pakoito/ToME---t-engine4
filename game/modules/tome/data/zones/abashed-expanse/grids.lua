@@ -25,7 +25,6 @@ load("/data/general/grids/void.lua")
 newEntity{ base="FLOATING_ROCKS", define_as = "WORMHOLE", nice_tiler = false,
 	name = "unstable wormhole",
 	display = '*', color = colors.GREY,
-	add_mos = {{image="terrain/wormhole.png"}},
 	damage_project = function(self, src, x, y, type, dam)
 		if type ~= engine.DamageType.PHYSICAL and game.party:hasMember(src) and not self.change_level then
 			self.change_level = 1
@@ -35,4 +34,5 @@ newEntity{ base="FLOATING_ROCKS", define_as = "WORMHOLE", nice_tiler = false,
 			if q then q:stabilized() end
 		end
 	end,
+	resolvers.generic(function(e) e:addParticles(engine.Particles.new("wormhole", 1, {})) end),
 }
