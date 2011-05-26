@@ -218,11 +218,16 @@ return {
 
 	post_process = function(level)
 		local Map = require "engine.Map"
-		level.background_particle = require("engine.Particles").new("starfield", 1, {width=Map.viewport.width, height=Map.viewport.height, vel_min=0, vel_max=0.5})
+		level.background_particle1 = require("engine.Particles").new("starfield_static", 1, {width=Map.viewport.width, height=Map.viewport.height, nb=300, a_min=0.5, a_max = 0.8, size_min = 1, size_max = 3})
+		level.background_particle2 = require("engine.Particles").new("starfield_static", 1, {width=Map.viewport.width, height=Map.viewport.height, nb=300, a_min=0.5, a_max = 0.9, size_min = 4, size_max = 8})
+		level.world_particle = require("engine.Particles").new("image", 1, {size=512, image="shockbolt/terrain/eyal-world", x=400, y=400})
 	end,
 
 	background = function(level, x, y, nb_keyframes)
 		local Map = require "engine.Map"
-		level.background_particle.ps:toScreen(x, y, true, 1)
+		level.background_particle1.ps:toScreen(x, y, true, 1)
+		local parx, pary = level.map.mx / (level.map.w - Map.viewport.mwidth), level.map.my / (level.map.h - Map.viewport.mheight)
+		level.background_particle2.ps:toScreen(x - parx * 40, y - pary * 40, true, 1)
+		level.world_particle.ps:toScreen(x - parx * 60, y - pary * 60, true, 1)
 	end,
 }

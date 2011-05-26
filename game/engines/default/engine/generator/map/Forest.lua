@@ -107,12 +107,9 @@ function _M:addPond(x, y, spots)
 		local g7 = pmap[i-1] and pmap[i-1][j-1]
 		local g8 = pmap[i] and pmap[i][j-1]
 		local g9 = pmap[i+1] and pmap[i+1][j-1]
+		local nb = (g1 and 1 or 0) + (g2 and 1 or 0) + (g3 and 1 or 0) + (g4 and 1 or 0) + (g6 and 1 or 0) + (g7 and 1 or 0) + (g8 and 1 or 0) + (g9 and 1 or 0)
 
-		if     not g8 and not g4 and not g6 and g2 then pmap[i][j] = nil
-		elseif not g2 and not g4 and not g6 and g8 then pmap[i][j] = nil
-		elseif not g6 and not g2 and not g8 and g4 then pmap[i][j] = nil
-		elseif not g4 and not g2 and not g8 and g6 then pmap[i][j] = nil
-		end
+		if nb < 4 then pmap[i][j] = nil end
 	end end
 
 	-- Draw the pond

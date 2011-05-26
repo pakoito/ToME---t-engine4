@@ -118,14 +118,14 @@ function _M:makePod(x, y, radius, room_id, data)
 	end
 
 	for i = -radius + x, radius + x do for j = -radius + y, radius + y do
-		local g1 = self.map.room_map[i-1] and self.map.room_map[i-1][j+1].room == room_id
-		local g2 = self.map.room_map[i] and self.map.room_map[i][j+1].room == room_id
-		local g3 = self.map.room_map[i+1] and self.map.room_map[i+1][j+1].room == room_id
-		local g4 = self.map.room_map[i-1] and self.map.room_map[i-1][j].room == room_id
-		local g6 = self.map.room_map[i+1] and self.map.room_map[i+1][j].room == room_id
-		local g7 = self.map.room_map[i-1] and self.map.room_map[i-1][j-1].room == room_id
-		local g8 = self.map.room_map[i] and self.map.room_map[i][j-1].room == room_id
-		local g9 = self.map.room_map[i+1] and self.map.room_map[i+1][j-1].room == room_id
+		local g1 = self.map.room_map[i-1] and self.map.room_map[i-1][j+1] and self.map.room_map[i-1][j+1].room == room_id
+		local g2 = self.map.room_map[i] and self.map.room_map[i][j+1] and self.map.room_map[i][j+1].room == room_id
+		local g3 = self.map.room_map[i+1] and self.map.room_map[i+1][j+1] and self.map.room_map[i+1][j+1].room == room_id
+		local g4 = self.map.room_map[i-1] and self.map.room_map[i-1][j] and self.map.room_map[i-1][j].room == room_id
+		local g6 = self.map.room_map[i+1] and self.map.room_map[i+1][j] and self.map.room_map[i+1][j].room == room_id
+		local g7 = self.map.room_map[i-1] and self.map.room_map[i-1][j-1] and self.map.room_map[i-1][j-1].room == room_id
+		local g8 = self.map.room_map[i] and self.map.room_map[i][j-1] and self.map.room_map[i][j-1].room == room_id
+		local g9 = self.map.room_map[i+1] and self.map.room_map[i+1][j-1] and self.map.room_map[i+1][j-1].room == room_id
 
 		if     not g8 and not g4 and not g6 and g2 then self.map(i, j, Map.TERRAIN, self:resolve('#')) self.map.room_map[i][j].room = nil
 		elseif not g2 and not g4 and not g6 and g8 then self.map(i, j, Map.TERRAIN, self:resolve('#')) self.map.room_map[i][j].room = nil
