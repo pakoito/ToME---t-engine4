@@ -37,7 +37,7 @@ on_status_change = function(self, who, status, sub)
 	if sub then
 		if self:isCompleted("abashed") then
 			who:setQuestStatus(self.id, engine.Quest.DONE)
-			who:grantQuest("starter-allied")
+			who:grantQuest(who.archmage_race_start_quest)
 		end
 	end
 end

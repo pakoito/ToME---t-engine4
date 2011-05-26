@@ -61,6 +61,6 @@ newEntity{ base="BASE_NPC_LOSGOROTH", define_as = "SPACIAL_DISTURBANCE",
 	on_die = function(self, who)
 		local q = game.player:hasQuest("start-archmage")
 		if q then q:stabilized() end
-		game.player:resolveSource():setQuestStatus("start-archmage", engine.Quest.COMPLETED, "expanse")
+		game.player:resolveSource():setQuestStatus("start-archmage", engine.Quest.COMPLETED, "abashed")
 	end,
 }

@@ -76,10 +76,15 @@ newBirthDescriptor{
 	},
 	copy = {
 		-- Mages start in angolwen
-		default_wilderness = {"zone-pop", "angolwen-portal"},
-		starting_zone = "town-angolwen",
-		starting_quest = "start-archmage",
-		starting_intro = "archmage",
+		class_start_check = function(self)
+			if self.descriptor.race == "Human" or self.descriptor.race == "Elf" or self.descriptor.race == "Halfling" then
+				self.archmage_race_start_quest = self.starting_quest
+				self.default_wilderness = {"zone-pop", "angolwen-portal"}
+				self.starting_zone = "town-angolwen"
+				self.starting_quest = "start-archmage"
+				self.starting_intro = "archmage"
+			end
+		end,
 
 		-- All mages are of angolwen faction
 		faction = "angolwen",

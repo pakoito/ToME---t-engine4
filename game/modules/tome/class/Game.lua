@@ -216,6 +216,7 @@ function _M:newGame()
 		save:close()
 
 		self.player:check("before_starting_zone")
+		self.player:check("class_start_check")
 
 		-- Configure & create the worldmap
 		self.player.last_wilderness = self.player.default_wilderness[3] or "wilderness"
