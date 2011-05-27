@@ -959,6 +959,7 @@ function _M:entityFilter(zone, e, filter, type)
 				if e.material_level > max_mlvl then return false end
 			end
 		end
+		if e.lore and e.rarity and util.getval(zone.no_random_lore) then return false end
 		return true
 	else
 		return true
@@ -1232,6 +1233,7 @@ function _M:createRandomZone(zbase)
 		ambient_music = rng.table(musics),
 		min_material_level = data.min_material_level,
 		max_material_level = data.max_material_level,
+		no_random_lore = true,
 		persistent = "zone_temporary",
 		reload_lists = false,
 		generator =  {
