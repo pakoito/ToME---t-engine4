@@ -112,7 +112,7 @@ newAchievement{
 	desc = [[Ate 20 bosses.]],
 	mode = "player",
 	can_gain = function(self, who)
-		if who.rank < 35 then return false end
+		if who.rank < 3.5 then return false end
 		self.nb = (self.nb or 0) + 1
 		if self.nb >= 20 then return true end
 	end,
