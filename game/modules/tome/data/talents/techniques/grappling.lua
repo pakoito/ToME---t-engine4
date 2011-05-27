@@ -26,6 +26,7 @@ newTalent{
 	cooldown = 12,
 	tactical = { BUFF = 2 },
 	type_no_req = true,
+	no_npc_use = true, -- They dont need it since it auto switches anyway
 	getSave = function(self, t) return 5 + self:getStr(20) end,
 	getDamage = function(self, t) return 20 + self:getStr(20) end,
 	activate = function(self, t)

@@ -35,6 +35,7 @@ newTalent{
 	cooldown = 12,
 	tactical = { BUFF = 2 },
 	type_no_req = true,
+	no_npc_use = true, -- They dont need it since it auto switches anyway
 	getAttack = function(self, t) return 5 + self:getDex(20) end,
 	getDamage = function(self, t) return 20 + self:getDex(20) end,
 	activate = function(self, t)
@@ -85,32 +86,32 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		
+
 		-- force stance change
-		if target and not self:isTalentActive(self.T_STRIKING_STANCE) then	
+		if target and not self:isTalentActive(self.T_STRIKING_STANCE) then
 			self:forceUseTalent(self.T_STRIKING_STANCE, {ignore_energy=true, ignore_cd = true})
 		end
-		
+
 		-- breaks active grapples if the target is not grappled
 		if target:isGrappled(self) then
 			grappled = true
 		else
 			self:breakGrapples()
 		end
-		
+
 		local hit1 = false
 		local hit2 = false
-				
+
 		hit1 = self:attackTarget(target, nil, t.getDamage(self, t), true)
 		hit2 = self:attackTarget(target, nil, t.getDamage(self, t), true)
-		
+
 		-- build combo points
 		local combo = false
-		
+
 		if self:getTalentLevel(t) >= 4 then
 			combo = true
 		end
-		
+
 		if combo then
 			if hit1 then
 				self:buildCombo()
@@ -121,9 +122,9 @@ newTalent{
 		elseif hit1 or hit2 then
 			self:buildCombo()
 		end
-				
+
 		return true
-		
+
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t) * 100
@@ -170,11 +171,11 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > self:getTalentRange(t) then return nil end
-		
+
 		-- bonus damage for charging
 		local charge  = math.floor((core.fov.distance(self.x, self.y, x, y)) -1) / 10
 		local damage = t.getDamage(self, t) + charge
-		
+
 		-- do the rush
 		local l = line.new(self.x, self.y, x, y)
 		local tx, ty = self.x, self.y
@@ -191,11 +192,11 @@ newTalent{
 			self:resetMoveAnim()
 			self:setMoveAnim(ox, oy, 8, 5)
 		end
-	
+
 		local hit1 = false
 		local hit2 = false
 		local hit3 = false
-		
+
 		-- do the backhand
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) == 1 then
 			-- get left and right side
@@ -203,9 +204,9 @@ newTalent{
 			local lx, ly = util.coordAddDir(self.x, self.y, dir_sides[dir].left)
 			local rx, ry = util.coordAddDir(self.x, self.y, dir_sides[dir].right)
 			local lt, rt = game.level.map(lx, ly, Map.ACTOR), game.level.map(rx, ry, Map.ACTOR)
-							
+
 			hit1 = self:attackTarget(target, nil, damage, true)
-														
+
 			--left hit
 			if lt then
 				hit2 = self:attackTarget(lt, nil, damage, true)
@@ -214,19 +215,19 @@ newTalent{
 			if rt then
 				hit3 = self:attackTarget(rt, nil, damage, true)
 			end
-					
+
 		end
-									
+
 		-- remove grappls
 		self:breakGrapples()
-		
+
 		-- build combo points
 		local combo = false
-		
+
 		if self:getTalentLevel(t) >= 4 then
 			combo = true
 		end
-		
+
 		if combo then
 			if hit1 then
 				self:buildCombo()
@@ -240,7 +241,7 @@ newTalent{
 		elseif hit1 or hit2 or hit3 then
 			self:buildCombo()
 		end
-		
+
 		return true
 	end,
 	info = function(self, t)
@@ -268,29 +269,29 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		
+
 		-- breaks active grapples if the target is not grappled
 		if target:isGrappled(self) then
 			grappled = true
 		else
 			self:breakGrapples()
 		end
-		
+
 		local hit1 = false
 		local hit2 = false
 		local hit3 = false
-		
+
 		hit1 = self:attackTarget(target, nil, t.getDamage(self, t), true)
 		hit2 = self:attackTarget(target, nil, t.getDamage(self, t), true)
 		hit3 = self:attackTarget(target, nil, t.getDamage(self, t), true)
-		
+
 		--build combo points
 		local combo = false
-		
+
 		if self:getTalentLevel(t) >= 4 then
 			combo = true
 		end
-		
+
 		if combo then
 			if hit1 then
 				self:buildCombo()
@@ -304,7 +305,7 @@ newTalent{
 		elseif hit1 or hit2 or hit3 then
 			self:buildCombo()
 		end
-	
+
 		return true
 	end,
 	info = function(self, t)

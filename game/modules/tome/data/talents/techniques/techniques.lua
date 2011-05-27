@@ -210,12 +210,15 @@ getStrikingStyle = function(self, dam)
 end
 
 cancelStances = function(self)
+	if self.cancelling_stances then return end
 	local stances = {self.T_STRIKING_STANCE, self.T_GRAPPLING_STANCE}
+	self.cancelling_stances = true
 	for i, t in ipairs(stances) do
 		if self:isTalentActive(t) then
 			self:forceUseTalent(t, {ignore_energy=true, ignore_cd=true})
 		end
 	end
+	self.cancelling_stances = nil
 end
 
 load("/data/talents/techniques/2hweapon.lua")
