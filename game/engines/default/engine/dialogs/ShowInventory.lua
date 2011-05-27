@@ -71,11 +71,12 @@ function _M:select(item)
 	end
 end
 function _M:use(item)
+	local dont_end = false
 	if item and item.object then
-		self.action(item.object, item.item)
+		dont_end = self.action(item.object, item.item)
 	end
 	self:generateList()
-	--game:unregisterDialog(self)
+	if not dont_end then game:unregisterDialog(self) end
 end
 
 function _M:generateList()

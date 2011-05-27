@@ -728,6 +728,7 @@ function _M:playerDrop()
 	local d d = self:showInventory(titleupdator(), inven, nil, function(o, item)
 		self:doDrop(inven, item)
 		d:updateTitle(titleupdator())
+		return true
 	end)
 end
 
@@ -739,6 +740,7 @@ function _M:playerWear()
 	end, function(o, item)
 		self:doWear(inven, item, o)
 		d:updateTitle(titleupdator())
+		return true
 	end)
 end
 
@@ -747,6 +749,7 @@ function _M:playerTakeoff()
 	local d d = self:showEquipment(titleupdator(), nil, function(o, inven, item)
 		self:doTakeoff(inven, item, o)
 		d:updateTitle(titleupdator())
+		return true
 	end)
 end
 

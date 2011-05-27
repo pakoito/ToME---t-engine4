@@ -104,7 +104,8 @@ return {
 			return nil, nil, true
 		end
 
-		if melinda and not melinda.dead and not game.player:isQuestStatus("kryl-feijan-escape", engine.Quest.FAILED) then
+		local g = game.level.map(game.player.x, game.player.y, engine.Map.TERRAIN)
+		if melinda and not melinda.dead and not game.player:isQuestStatus("kryl-feijan-escape", engine.Quest.FAILED) and g and g.change_level then
 			game.player:setQuestStatus("kryl-feijan-escape", engine.Quest.DONE)
 			world:gainAchievement("MELINDA_SAVED", game.player)
 		end
