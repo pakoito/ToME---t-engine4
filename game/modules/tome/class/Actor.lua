@@ -1907,7 +1907,7 @@ function _M:preUseTalent(ab, silent, fake)
 			return false
 		end
 	else
-		if ab.mana and self:getMana() < ab.mana * (100 + 2 * self:combatFatigue()) / 100 then
+		if ab.mana and self:getMana() < util.getval(ab.mana, self, ab) * (100 + 2 * self:combatFatigue()) / 100 then
 			if not silent then game.logPlayer(self, "You do not have enough mana to cast %s.", ab.name) end
 			return false
 		end
@@ -2113,7 +2113,7 @@ function _M:postUseTalent(ab, ret)
 		end
 	else
 		if ab.mana then
-			trigger = true; self:incMana(-ab.mana * (100 + 2 * self:combatFatigue()) / 100)
+			trigger = true; self:incMana(-util.getval(ab.mana, self, ab) * (100 + 2 * self:combatFatigue()) / 100)
 		end
 		if ab.stamina then
 			trigger = true; self:incStamina(-ab.stamina * (100 + self:combatFatigue()) / 100)
@@ -2224,7 +2224,7 @@ function _M:getTalentFullDescription(t, addlevel)
 	else d:add({"color",0x6f,0xff,0x83}, "Use mode: ", {"color",0x00,0xFF,0x00}, "Activated", true)
 	end
 
-	if t.mana or t.sustain_mana then d:add({"color",0x6f,0xff,0x83}, "Mana cost: ", {"color",0x7f,0xff,0xd4}, ""..(t.sustain_mana or t.mana * (100 + 2 * self:combatFatigue()) / 100), true) end
+	if t.mana or t.sustain_mana then d:add({"color",0x6f,0xff,0x83}, "Mana cost: ", {"color",0x7f,0xff,0xd4}, ""..(util.getval(t.sustain_mana or t.mana, self, t) * (100 + 2 * self:combatFatigue()) / 100), true) end
 	if t.stamina or t.sustain_stamina then d:add({"color",0x6f,0xff,0x83}, "Stamina cost: ", {"color",0xff,0xcc,0x80}, ""..(t.sustain_stamina or t.stamina * (100 + self:combatFatigue()) / 100), true) end
 	if t.equilibrium or t.sustain_equilibrium then d:add({"color",0x6f,0xff,0x83}, "Equilibrium cost: ", {"color",0x00,0xff,0x74}, ""..(t.equilibrium or t.sustain_equilibrium), true) end
 	if t.vim or t.sustain_vim then d:add({"color",0x6f,0xff,0x83}, "Vim cost: ", {"color",0x88,0x88,0x88}, ""..(t.sustain_vim or t.vim), true) end
@@ -2440,7 +2440,7 @@ function _M:canBe(what)
 	if what == "knockback" and (rng.percent(100 * (self:attr("knockback_immune") or 0)) or self:attr("never_move")) then return false end
 	if what == "stone" and rng.percent(100 * (self:attr("stone_immune") or 0)) then return false end
 	if what == "instakill" and rng.percent(100 * (self:attr("instakill_immune") or 0)) then return false end
-	if what == "teleport" and rng.percent(100 * (self:attr("teleport_immune") or 0)) then return false end
+	if what == "teleport" and (rng.percent(100 * (self:attr("teleport_immune") or 0)) or self:attr("encased_in_ice")) then return false end
 	if what == "worldport" and game.level.data and game.level.data.no_worldport then return false end
 	if what == "summon" and self:attr("suppress_summon") then return false end
 	return true

@@ -329,7 +329,7 @@ function _M:loaded()
 	Actor.projectile_class = "mod.class.Projectile"
 	Zone:setup{
 		npc_class="mod.class.NPC", grid_class="mod.class.Grid", object_class="mod.class.Object", trap_class="mod.class.Trap",
-		on_setup = function(zone)
+		on_setup_level = function(zone)
 			-- Increases zone level for higher difficulties
 			if not zone.__applied_difficulty then
 				zone.__applied_difficulty = true
