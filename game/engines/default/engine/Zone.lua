@@ -63,23 +63,22 @@ function _M:init(short_name, dynamic)
 
 		if self.on_setup then self:on_setup() end
 
-		self:updateBaseLevel(true)
+		self:updateBaseLevel()
 		forceprint("Initiated zone", self.name, "with base_level", self.base_level)
 	else
-		if self.update_base_level_on_enter then self:updateBaseLevel(false) end
+		if self.update_base_level_on_enter then self:updateBaseLevel() end
 		forceprint("Loaded zone", self.name, "with base_level", self.base_level)
 	end
 end
 
 --- Computes the current base level based on the zone infos
-function _M:updateBaseLevel(first)
+function _M:updateBaseLevel()
 	-- Determine a zone base level
 	self.base_level = self.level_range[1]
 	if self.level_scheme == "player" then
 		local plev = game:getPlayer().level
 		self.base_level = util.bound(plev, self.level_range[1], self.level_range[2])
 	end
-	if self.on_setup_level then self:on_setup_level(first) end
 end
 
 --- Loads basic entities lists
