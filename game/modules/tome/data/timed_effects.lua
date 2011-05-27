@@ -2539,20 +2539,20 @@ newEffect{
 	on_gain = function(self, err) return "The fabric of time alters around #target#.", "+Damage Smearing" end,
 	on_lose = function(self, err) return "The fabric of time around #target# stabilizes.", "-Damage Smearing" end,
 	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("damage_smearing", eff.power)
+	--	eff.tmpid = self:addTemporaryValue("damage_smearing", eff.power)
 		--- Warning there can be only one time shield active at once for an actor
 		eff.particle = self:addParticles(Particles.new("time_shield", 1))
 	end,
 	deactivate = function(self, eff)
 		self:removeParticles(eff.particle)
-		self:removeTemporaryValue("damage_smearing", eff.tmpid)
+	--	self:removeTemporaryValue("damage_smearing", eff.tmpid)
 	end,
 }
 
 newEffect{
 	name = "SMEARED",
 	desc = "Smeared",
-	long_desc = function(self, eff) return ("Damage received in the past is returned as %0.2f arcane damage per turn."):format(eff.power) end,
+	long_desc = function(self, eff) return ("Damage received in the past is returned as %0.2f temporal damage per turn."):format(eff.power) end,
 	type = "time",
 	status = "detrimental",
 	parameters = { power=10 },
@@ -2568,7 +2568,7 @@ newEffect{
 		return old_eff
 	end,
 	on_timeout = function(self, eff)
-		DamageType:get(DamageType.ARCANE).projector(eff.src, self.x, self.y, DamageType.ARCANE, eff.power)
+		DamageType:get(DamageType.TEMPORAL).projector(eff.src, self.x, self.y, DamageType.TEMPORAL, eff.power)
 	end,
 }
 

@@ -105,7 +105,7 @@ newTalent{
 	require = temporal_req4,
 	points = 5,
 	paradox = 25,
-	cooldown = 50,
+	cooldown = 25,
 	tactical = { DEFEND = 2 },
 	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
 	action = function(self, t)
@@ -115,7 +115,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[For the next %d turns you spread all damage that deals 10 or more points out over five turns rather then taking it all at once.
+		return ([[For the next %d turns you convert all non-temporal damage you receive into temporal damage spread out over six turns.
 		The duration will scale with your Paradox.]]):format (duration)
 	end,
 }

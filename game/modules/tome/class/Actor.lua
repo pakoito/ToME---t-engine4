@@ -1180,12 +1180,7 @@ function _M:onTakeHit(value, src)
 
 	if self.on_takehit then value = self:check("on_takehit", value, src) end
 
-	-- Chronomancy
-	if self:attr("damage_smearing") and value >= 10 then
-		self:setEffect(self.EFF_SMEARED, 5, {src=src, power=value/6})
-		value = value / 6
-	end
-
+	-- Shield of Light
 	if value > 0 and self:isTalentActive(self.T_SHIELD_OF_LIGHT) then
 		if value <= 2 then
 			drain = value
