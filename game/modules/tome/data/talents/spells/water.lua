@@ -68,7 +68,7 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	mana = 14,
-	cooldown = function(self, t) return 5 + self:getTalentLevelRaw(t) end,
+	cooldown = function(self, t) return 7 + self:getTalentLevelRaw(t) end,
 	tactical = { ATTACK = 1, DISABLE = 3 },
 	range = 10,
 	direct_hit = true,
