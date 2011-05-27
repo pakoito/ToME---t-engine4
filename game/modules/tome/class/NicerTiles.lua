@@ -93,23 +93,24 @@ end
 function _M:niceTileWall3d(level, i, j, g, nt)
 	local s = level.map:checkEntity(i, j, Map.TERRAIN, "type") or "wall"
 	local gn = level.map:checkEntity(i, j-1, Map.TERRAIN, "type") or "wall"
+	local dn = level.map:checkEntity(i, j-1, Map.TERRAIN, "door_opened")
 	local gs = level.map:checkEntity(i, j+1, Map.TERRAIN, "type") or "wall"
+	local ds = level.map:checkEntity(i, j+1, Map.TERRAIN, "door_opened")
 	local gw = level.map:checkEntity(i-1, j, Map.TERRAIN, "type") or "wall"
 	local ge = level.map:checkEntity(i+1, j, Map.TERRAIN, "type") or "wall"
-
---	local gnc = level.map:checkEntity(i, j-1, Map.TERRAIN, "block_move", {open_door=true}, false, true) and true or false
---	local gsc = level.map:checkEntity(i, j+1, Map.TERRAIN, "block_move", {open_door=true}, false, true) and true or false
-	local gnc = gn
-	local gsc = gs
 
 	if gs ~= s and gn ~= s and gw ~= s and ge ~= s then self:replace(i, j, self:getTile(nt.small_pillar))
 	elseif gs ~= s and gn ~= s and gw ~= s and ge == s then self:replace(i, j, self:getTile(nt.pillar_4))
 	elseif gs ~= s and gn ~= s and gw == s and ge ~= s then self:replace(i, j, self:getTile(nt.pillar_6))
 	elseif gs == s and gn ~= s and gw ~= s and ge ~= s then self:replace(i, j, self:getTile(nt.pillar_8))
 	elseif gs ~= s and gn == s and gw ~= s and ge ~= s then self:replace(i, j, self:getTile(nt.pillar_2))
-	elseif gsc ~= s and gnc ~= s then self:replace(i, j, self:getTile(nt.north_south))
-	elseif gsc ~= s then self:replace(i, j, self:getTile(nt.south))
-	elseif gnc ~= s then self:replace(i, j, self:getTile(nt.north))
+	elseif gs ~= s and gn ~= s then self:replace(i, j, self:getTile(nt.north_south))
+	elseif gs == s and ds and gn ~= s then self:replace(i, j, self:getTile(nt.north_south))
+	elseif gs ~= s and gn == s and dn then self:replace(i, j, self:getTile(nt.north_south))
+	elseif gs ~= s then self:replace(i, j, self:getTile(nt.south))
+	elseif gs == s and ds then self:replace(i, j, self:getTile(nt.south))
+	elseif gn ~= s then self:replace(i, j, self:getTile(nt.north))
+	elseif gn == s and dn then self:replace(i, j, self:getTile(nt.north))
 	elseif nt.inner then self:replace(i, j, self:getTile(nt.inner))
 	end
 end

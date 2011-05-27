@@ -23,6 +23,7 @@ starty = 34
 defineTile(".", "FLOOR")
 defineTile("~", "DEEP_WATER")
 defineTile("#", "HARDWALL")
+defineTile('&', "DOOR_VAULT")
 defineTile("$", "FLOOR", {random_filter={add_levels=5, ego_chance=30}})
 defineTile("%", "LAVA_FLOOR")
 defineTile("*", "FLOOR", {random_filter={add_levels=20}}, {random_filter={name="greater multi-hued wyrm", add_levels=50}})
@@ -41,8 +42,8 @@ return [[
 ....~~#..#..........#.............#
 ....~##..#..........#.$$$$...$$$$.#
 ....~#...#..........#.$##$...$##$.#
-...~~#...+....**....#.$##$...$##$.#
-..~~##...+....**....#.$$$$...$$$$.#
+...~~#...&....**....#.$##$...$##$.#
+..~~##...&....**....#.$$$$...$$$$.#
 ..~##....#..........#%.o.o###o.o..#
 ..~#.....#..........#%%...###...%%#
 .~~#.....#..........#%%...$$$..%%$#

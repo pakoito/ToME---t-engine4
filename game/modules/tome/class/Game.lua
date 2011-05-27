@@ -934,8 +934,9 @@ function _M:setupCommands()
 			if add then for i, e in ipairs(add) do print(" -", e.image) end end
 		end end,
 		[{"_f","ctrl"}] = function() if config.settings.cheat then
---			self.nicer_tiles:handle(self.level, game.player.x, game.player.y)
+			self.nicer_tiles:updateAround(self.level, game.player.x, game.player.y)
 --			self.nicer_tiles:replaceAll(self.level)
+--[[
 			local i,j = game.player.x, game.player.y
 			local level=self.level
 			local s = level.map:checkEntity(i, j, Map.TERRAIN, "type") or "wall"
@@ -947,7 +948,8 @@ function _M:setupCommands()
 			local g7 = level.map:checkEntity(i-1, j-1, Map.TERRAIN, "type") == s and 1 or 0
 			local g8 = level.map:checkEntity(i, j-1, Map.TERRAIN, "type")   == s and 1 or 0
 			local g9 = level.map:checkEntity(i+1, j-1, Map.TERRAIN, "type") == s and 1 or 0
-			print(("	[ [[\n%d%d%d\n%d %d\n%d%d%d]] ] = '',"):format(g7,g8,g9,g4,g6,g1,g2,g3))
+			print(("	[ [=[\n%d%d%d\n%d %d\n%d%d%d]=] ] = '',"):format(g7,g8,g9,g4,g6,g1,g2,g3))
+--]]
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
 --			self.state:debugRandomZone()
