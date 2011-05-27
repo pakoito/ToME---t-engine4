@@ -30,3 +30,8 @@ on_status_change = function(self, who, status, sub)
 		world:gainAchievement("TUTORIAL_DONE", game.player)
 	end
 end
+
+on_grant = function(self)
+	local d = require("engine.dialogs.ShowText").new("Tutorial: Movement", "tutorial/move")
+	game:registerDialog(d)
+end

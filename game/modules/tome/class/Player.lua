@@ -100,11 +100,6 @@ function _M:onBirth(birther)
 			self.random_escort_levels[z[1]][z[2]] = true
 		end
 	end
-
-	if self.descriptor.world == "Tutorial" then
-		local d = require("engine.dialogs.ShowText").new("Tutorial: Movement", "tutorial/move")
-		game:registerDialog(d)
-	end
 end
 
 function _M:onEnterLevel(zone, level)
