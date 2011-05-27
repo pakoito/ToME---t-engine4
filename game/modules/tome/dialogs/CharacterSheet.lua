@@ -347,13 +347,13 @@ function _M:drawDialog(kind)
 		self:mouseTooltip(self.TOOLTIP_SPELL_CRIT, s:drawColorStringBlended(self.font,  ("Crit. chance: #00ff00#%d%%"):format(player:combatSpellCrit()), w, h, 255, 255, 255)) h = h + self.font_h
 		self:mouseTooltip(self.TOOLTIP_SPELL_SPEED, s:drawColorStringBlended(self.font, ("Spell speed : #00ff00#%.2f%%"):format(player:combatSpellSpeed()*100), w, h, 255, 255, 255)) h = h + self.font_h
 		h = h + self.font_h
-		self:mouseTooltip(self.TOOLTIP_STR, s:drawColorStringBlended(self.font, ("Mindpower: #00ff00#%3d"):format(player:combatMindpower()), w, h, 255, 255, 255)) h = h + self.font_h
+		self:mouseTooltip(self.TOOLTIP_MINDPOWER, s:drawColorStringBlended(self.font, ("Mindpower: #00ff00#%3d"):format(player:combatMindpower()), w, h, 255, 255, 255)) h = h + self.font_h
 
 		h = 0
 		w = 400
 
 		s:drawColorStringBlended(self.font, "#LIGHT_BLUE#Damage mods.:", w, h, 255, 255, 255) h = h + self.font_h
-		self:mouseTooltip(self.TOOLTIP_STR  , s:drawColorStringBlended(self.font, ("Critical mult.: #00ff00#%3d%%"):format(150 + (player.combat_critical_power or 0)), w, h, 255, 255, 255)) h = h + self.font_h
+		self:mouseTooltip(self.TOOLTIP_INC_CRIT_POWER , s:drawColorStringBlended(self.font, ("Critical mult.: #00ff00#%3d%%"):format(150 + (player.combat_critical_power or 0)), w, h, 255, 255, 255)) h = h + self.font_h
 		if player.inc_damage.all then self:mouseTooltip(self.TOOLTIP_INC_DAMAGE_ALL, s:drawColorStringBlended(self.font, ("All damage: #00ff00#%3d%%"):format(player.inc_damage.all), w, h, 255, 255, 255)) h = h + self.font_h end
 		for i, t in ipairs(DamageType.dam_def) do
 			if player.inc_damage[DamageType[t.type]] and player.inc_damage[DamageType[t.type]] ~= 0 then

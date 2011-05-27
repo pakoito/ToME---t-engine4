@@ -254,6 +254,10 @@ TOOLTIP_SPELL_SPEED = [[#GOLD#Spellcasting speed#LAST#
 Spellcasting speed represents how fast your spellcasting is compared to a normal turn.
 The lower it is the faster it is.
 ]]
+TOOLTIP_MINDPOWER = [[#GOLD#Mindpower#LAST#
+Your mindpower value represents how effective/powerful your mental effects are.
+It is improved by both Willpower and Cunning, some talents can change the stats that affect it.
+]]
 
 -------------------------------------------------------------
 -- Damage and resists
@@ -264,6 +268,9 @@ This stacks with individual damage type increases.
 ]]
 TOOLTIP_INC_DAMAGE = [[#GOLD#Damage increase: specific#LAST#
 All damage of this type that you deal, through any means, is increased by this percentage.
+]]
+TOOLTIP_INC_CRIT_POWER = [[#GOLD#Critical multiplicator#LAST#
+All critical damage (melee, spells, ...) do this much damage.
 ]]
 TOOLTIP_RESIST_ALL = [[#GOLD#Damage resistance: all#LAST#
 All damage you receive, through any means, is decreased by this percentage.
