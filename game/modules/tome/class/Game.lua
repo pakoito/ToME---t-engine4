@@ -619,7 +619,6 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 		end
 	end
 	self.zone_name_s = nil
-	self.level.map:redisplay()
 
 	-- Level feeling
 	local feeling
@@ -645,6 +644,9 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 
 	-- Day/Night cycle
 	if self.level.data.day_night then self.state:dayNightCycle() end
+
+	self.level.map:redisplay()
+	self.level.map:reopen()
 end
 
 function _M:getPlayer(main)

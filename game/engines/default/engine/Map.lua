@@ -332,10 +332,6 @@ function _M:close()
 	self.changed = true
 end
 
---- Closes things in the object to allow it to be garbage collected
--- Map objects are NOT automatically garbage collected because they contain FOV C structure, which themselves have a reference
--- to the map. Cyclic references! BAD BAD BAD !<br/>
--- The closing should be handled automatically by the Zone class so no bother for authors
 function _M:reopen()
 	if not self.closed then return end
 	self:redisplay()
