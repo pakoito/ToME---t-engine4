@@ -651,6 +651,9 @@ function _M:getLevel(game, lev, old_lev, no_close)
 	-- Clean up things
 	collectgarbage("collect")
 
+	-- Re-open the level if needed (the method does the check itself)
+	level.map:reopen()
+
 	return level
 end
 
