@@ -100,8 +100,9 @@ newTalent{
 		local tg = {default_target=self, type="ball", nolock=true, pass_terrain=false, nowarning=true, range=self:getTalentRange(t), radius=0, requires_knowledge=false}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		--local _ _, _, _, x, y = self:canProject(tg, x, y)
-		--self:move(x, y, true)
+		local _ _, x, y = self:canProject(tg, x, y)
+		if not x or not y then return nil end
+
 		local fx, fy = util.findFreeGrid(x, y, 5, true, {[Map.ACTOR]=true})
 		if not fx then
 			return
