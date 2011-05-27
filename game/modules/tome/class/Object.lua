@@ -456,7 +456,18 @@ function _M:getTextualDesc()
 
 	if w.combat then
 		desc:add({"color","YELLOW"}, "When used to modify unarmed attacks:", {"color", "LAST"}, true)
-		desc_combat(w.combat)
+		
+		-- clone the table to show modified values
+		local unarmed = table.clone(w.combat)
+		if unarmed.damrange then unarmed.damrange = unarmed.damrange + 1.1 end
+		if unarmed.dammod.str then unarmed.dammod.str = unarmed.dammod.str + 1 end
+		
+		desc_combat(unarmed)
+		
+		-- subtract the modified values to keep the tooltips correct
+		if unarmed.damrange then unarmed.damrange = unarmed.damrange - 1.1 end
+		if unarmed.dammod.str then unarmed.dammod.str = unarmed.dammod.str - 1 end
+		
 	end
 
 	end
