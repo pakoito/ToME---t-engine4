@@ -171,7 +171,7 @@ newTalent{
 		for eff_id, p in pairs(target.tmp) do
 			local e = target.tempeffect_def[eff_id]
 			if e.type == "poison" and p.src == self then
-				for i, tgt in ipairs(possible) do if rng.percent(20 + self:getTalentLevelRaw(t) * 8) and not tgt:hasEffect(eff_id) then
+				for i, tgt in ipairs(possible) do if rng.percent(20 + self:getTalentLevelRaw(t) * 8) and not tgt:hasEffect(eff_id) and self:reactionToward(tgt) < 0 then
 					p.src = nil
 					local pp = table.clone(p)
 					pp.src = self
