@@ -194,7 +194,7 @@ function _M:getType(t)
 				-- If we explode due to something other than terrain, then we should explode ON the tile, not before it
 				elseif typ.stop_block then
 					local nb = game.level.map:checkAllEntitiesCount(lx, ly, "block_move")
-					if nb > 1 or (game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") and not game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "pass_projectile")) then
+					if nb > 1 or (nb == 1 and game.level.map:checkAllEntities(lx, ly, "block_move") and not game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "pass_projectile")) then
 						return true, true, true
 					end
 				end
