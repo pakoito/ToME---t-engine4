@@ -1305,6 +1305,16 @@ function _M:createRandomBoss(base, data)
 	b[#b+1] = resolvers.drops{chance=100, nb=data.loot_quantity or 3, {tome_drops=data.loot_quality or "boss"} }
 	if not data.no_loot_randart then b[#b+1] = resolvers.drop_randart{} end
 
+	-- On die
+	if data.on_die then
+		b.rng_boss_on_die = b.on_die
+		b.rng_boss_on_die_custom = data.on_die
+		b.on_die = function(self, src)
+			self:check("rng_boss_on_die_custom", src)
+			self:check("rng_boss_on_die", src)
+		end
+	end
+
 	------------------------------------------------------------
 	-- Apply talents from classes
 	------------------------------------------------------------

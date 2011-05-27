@@ -73,7 +73,7 @@ if zone == "Maj'Eyal" then
 	end
 
 	-- Spawn some hostiles
-	if wda.cur_hostiles < 4 and rng.percent(5) then
+	if wda.cur_hostiles < 5 and rng.percent(5) then
 		local e = game.zone:makeEntity(game.level, "maj_eyal_encounters_npcs", {type="hostile"}, nil, true)
 		if e then
 			local spot = game.level:pickSpot{type="hostile", subtype="maj-eyal"}

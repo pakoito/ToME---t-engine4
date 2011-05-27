@@ -213,12 +213,12 @@ winner_is = function(self, player, alchemist_num)
 end
 
 --list of object definitions used to randomly generate ingredients for the elixirs in the table e in the recipes function.
-local monster_parts = { "TROLL_INTESTINE", "SKELETON_MAGE_SKULL", "RITCH_STINGER", "ORC_HEART", "NAGA_TONGUE", "GREATER_DEMON_BILE", "BONE_GOLEM_DUST", "FROST_ANT_STINGER", "MINOTAUR_NOSE",
-					"ELDER_VAMPIRE_BLOOD", "MULTIHUED_WYRM_SCALE", "SPIDER_SPINNERET", "HONEY_TREE_ROOT", "BLOATED_HORROR_HEART", "ELECTRIC_EEL_TAIL", "SQUID_INK", "BEAR_PAW", "ICE_WYRM_TOOTH",
-					"RED_CRYSTAL_SHARD", "FIRE_WYRM_SALIVA", "GHOUL_FLESH", "MUMMY_BONE", "SANDWORM_TOOTH", "BLACK_MAMBA_HEAD", "SNOW_GIANT_KIDNEY", "STORM_WYRM_CLAW", "GREEN_WORM",
-					"WIGHT_ECTOPLASM", "XORN_FRAGMENT", "WARG_CLAW", "FAEROS_ASH", "WRETCHLING_EYE", "FAERLHING_FANG", "VAMPIRE_LORD_FANG", "HUMMERHORN_WING", "LUMINOUS_HORROR_DUST" }
+monster_parts = { "TROLL_INTESTINE", "SKELETON_MAGE_SKULL", "RITCH_STINGER", "ORC_HEART", "NAGA_TONGUE", "GREATER_DEMON_BILE", "BONE_GOLEM_DUST", "FROST_ANT_STINGER", "MINOTAUR_NOSE",
+		  "ELDER_VAMPIRE_BLOOD", "MULTIHUED_WYRM_SCALE", "SPIDER_SPINNERET", "HONEY_TREE_ROOT", "BLOATED_HORROR_HEART", "ELECTRIC_EEL_TAIL", "SQUID_INK", "BEAR_PAW", "ICE_WYRM_TOOTH",
+		  "RED_CRYSTAL_SHARD", "FIRE_WYRM_SALIVA", "GHOUL_FLESH", "MUMMY_BONE", "SANDWORM_TOOTH", "BLACK_MAMBA_HEAD", "SNOW_GIANT_KIDNEY", "STORM_WYRM_CLAW", "GREEN_WORM",
+		  "WIGHT_ECTOPLASM", "XORN_FRAGMENT", "WARG_CLAW", "FAEROS_ASH", "WRETCHLING_EYE", "FAERLHING_FANG", "VAMPIRE_LORD_FANG", "HUMMERHORN_WING", "LUMINOUS_HORROR_DUST" }
 
-recipes = function()
+recipes = function(self)
 	local ing_list = mod.class.Object:loadList("/data/general/objects/elixir-ingredients.lua")
 	local e = {
 		{
@@ -234,9 +234,9 @@ recipes = function()
 			poached = "fox_poached",
 			alchemist = "Stire of Derth",
 			ingredients = {
-				ing_list[rng.tableRemove(monster_parts)],
-				ing_list[rng.tableRemove(monster_parts)],
-				ing_list[rng.tableRemove(monster_parts)],
+				ing_list[rng.tableRemove(self.monster_parts)],
+				ing_list[rng.tableRemove(self.monster_parts)],
+				ing_list[rng.tableRemove(self.monster_parts)],
 				},
 			},
 			{
@@ -251,9 +251,9 @@ recipes = function()
 			poached = "avoidance_poached",
 			alchemist = "Stire of Derth",
 			ingredients = {
-				ing_list[rng.tableRemove(monster_parts)],
-				ing_list[rng.tableRemove(monster_parts)],
-				ing_list[rng.tableRemove(monster_parts)],
+				ing_list[rng.tableRemove(self.monster_parts)],
+				ing_list[rng.tableRemove(self.monster_parts)],
+				ing_list[rng.tableRemove(self.monster_parts)],
 				},
 			},
 			{
@@ -268,9 +268,9 @@ recipes = function()
 			poached = "precision_poached",
 			alchemist = "Stire of Derth",
 			ingredients = {
-				ing_list[rng.tableRemove(monster_parts)],
-				ing_list[rng.tableRemove(monster_parts)],
-				ing_list[rng.tableRemove(monster_parts)],
+				ing_list[rng.tableRemove(self.monster_parts)],
+				ing_list[rng.tableRemove(self.monster_parts)],
+				ing_list[rng.tableRemove(self.monster_parts)],
 				},
 			},
 		},
@@ -287,9 +287,9 @@ recipes = function()
 			poached = "mysticism_poached",
 			alchemist = "Marus of Elvala",
 			ingredients = {
-				ing_list[rng.tableRemove(monster_parts)],
-				ing_list[rng.tableRemove(monster_parts)],
-				ing_list[rng.tableRemove(monster_parts)],
+				ing_list[rng.tableRemove(self.monster_parts)],
+				ing_list[rng.tableRemove(self.monster_parts)],
+				ing_list[rng.tableRemove(self.monster_parts)],
 				},
 			},
 			{
@@ -304,9 +304,9 @@ recipes = function()
 			poached = "savior_poached",
 			alchemist = "Marus of Elvala",
 			ingredients = {
-				ing_list[rng.tableRemove(monster_parts)],
-				ing_list[rng.tableRemove(monster_parts)],
-				ing_list[rng.tableRemove(monster_parts)],
+				ing_list[rng.tableRemove(self.monster_parts)],
+				ing_list[rng.tableRemove(self.monster_parts)],
+				ing_list[rng.tableRemove(self.monster_parts)],
 				},
 			},
 			{
@@ -321,9 +321,9 @@ recipes = function()
 			poached = "mastery_poached",
 			alchemist = "Marus of Elvala",
 			ingredients = {
-				ing_list[rng.tableRemove(monster_parts)],
-				ing_list[rng.tableRemove(monster_parts)],
-				ing_list[rng.tableRemove(monster_parts)],
+				ing_list[rng.tableRemove(self.monster_parts)],
+				ing_list[rng.tableRemove(self.monster_parts)],
+				ing_list[rng.tableRemove(self.monster_parts)],
 				},
 			},
 		},
@@ -340,9 +340,9 @@ recipes = function()
 			poached = "force_poached",
 			alchemist = "Agrimley the hermit",
 			ingredients = {
-				ing_list[rng.tableRemove(monster_parts)],
-				ing_list[rng.tableRemove(monster_parts)],
-				ing_list[rng.tableRemove(monster_parts)],
+				ing_list[rng.tableRemove(self.monster_parts)],
+				ing_list[rng.tableRemove(self.monster_parts)],
+				ing_list[rng.tableRemove(self.monster_parts)],
 				},
 			},
 			{
@@ -357,9 +357,9 @@ recipes = function()
 			poached = "serendipity_poached",
 			alchemist = "Agrimley the hermit",
 			ingredients = {
-				ing_list[rng.tableRemove(monster_parts)],
-				ing_list[rng.tableRemove(monster_parts)],
-				ing_list[rng.tableRemove(monster_parts)],
+				ing_list[rng.tableRemove(self.monster_parts)],
+				ing_list[rng.tableRemove(self.monster_parts)],
+				ing_list[rng.tableRemove(self.monster_parts)],
 				},
 			},
 			{
@@ -374,9 +374,9 @@ recipes = function()
 			poached = "focus_poached",
 			alchemist = "Agrimley the hermit",
 			ingredients = {
-				ing_list[rng.tableRemove(monster_parts)],
-				ing_list[rng.tableRemove(monster_parts)],
-				ing_list[rng.tableRemove(monster_parts)],
+				ing_list[rng.tableRemove(self.monster_parts)],
+				ing_list[rng.tableRemove(self.monster_parts)],
+				ing_list[rng.tableRemove(self.monster_parts)],
 				},
 			},
 		},
@@ -393,9 +393,9 @@ recipes = function()
 			poached = "brawn_poached",
 			alchemist = "Ungrol of Last Hope",
 			ingredients = {
-				ing_list[rng.tableRemove(monster_parts)],
-				ing_list[rng.tableRemove(monster_parts)],
-				ing_list[rng.tableRemove(monster_parts)],
+				ing_list[rng.tableRemove(self.monster_parts)],
+				ing_list[rng.tableRemove(self.monster_parts)],
+				ing_list[rng.tableRemove(self.monster_parts)],
 				},
 			},
 			{
@@ -410,9 +410,9 @@ recipes = function()
 			poached = "stoneskin_poached",
 			alchemist = "Ungrol of Last Hope",
 			ingredients = {
-				ing_list[rng.tableRemove(monster_parts)],
-				ing_list[rng.tableRemove(monster_parts)],
-				ing_list[rng.tableRemove(monster_parts)],
+				ing_list[rng.tableRemove(self.monster_parts)],
+				ing_list[rng.tableRemove(self.monster_parts)],
+				ing_list[rng.tableRemove(self.monster_parts)],
 				},
 			},
 			{
@@ -427,9 +427,9 @@ recipes = function()
 			poached = "foundations_poached",
 			alchemist = "Ungrol of Last Hope",
 			ingredients = {
-				ing_list[rng.tableRemove(monster_parts)],
-				ing_list[rng.tableRemove(monster_parts)],
-				ing_list[rng.tableRemove(monster_parts)],
+				ing_list[rng.tableRemove(self.monster_parts)],
+				ing_list[rng.tableRemove(self.monster_parts)],
+				ing_list[rng.tableRemove(self.monster_parts)],
 				},
 			},
 		},
