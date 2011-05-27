@@ -36,6 +36,7 @@ newEntity{
 	rank = 2,
 	size_category = 3,
 	levitation = 1,
+	can_pass = {pass_void=70},
 
 	autolevel = "dexmage",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
@@ -58,7 +59,6 @@ newEntity{ base = "BASE_NPC_LOSGOROTH",
 
 	resolvers.talents{
 		[Talents.T_VOID_BLAST]={base=1, every=7, max=7},
-		[Talents.T_PHASE_DOOR]=2,
 	},
 }
 
@@ -71,6 +71,5 @@ newEntity{ base = "BASE_NPC_LOSGOROTH",
 	movement_speed = 0.7,
 	combat_armor = 0, combat_def = 20,
 	on_melee_hit = { [DamageType.ARCANE] = resolvers.mbonus(20, 10), },
-	can_pass = {pass_void=70},
 	combat = { atk=10000, apr=10000, damtype=DamageType.MANAWORM }, -- They can not miss
 }

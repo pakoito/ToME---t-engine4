@@ -234,6 +234,7 @@ return {
 		core.display.glRotate(120, 0, 1, 0)
 		core.display.glRotate(300, 1, 0, 0)
 		core.display.glRotate(game.zone.world_sphere_rot, 0, 0, 1)
+		core.display.glColor(1, 1, 1, 1)
 
 		local tex = Map.tiles:get('', 0, 0, 0, 0, 0, 0, "shockbolt/terrain/eyal-world.png")
 		tex:bind(0)
@@ -244,8 +245,8 @@ return {
 		core.display.glRotate(game.zone.cloud_sphere_rot, 0, 0, 1)
 		level.world_sphere.q:sphere(304)
 
-		game.zone.world_sphere_rot = game.zone.world_sphere_rot + 0.01
-		game.zone.cloud_sphere_rot = game.zone.cloud_sphere_rot + rng.float(0.01, 0.02)
+		game.zone.world_sphere_rot = game.zone.world_sphere_rot + 0.01 * nb_keyframes
+		game.zone.cloud_sphere_rot = game.zone.cloud_sphere_rot + rng.float(0.01, 0.02) * nb_keyframes
 
 		core.display.glMatrix(false)
 		core.display.glDepthTest(false)

@@ -1315,6 +1315,12 @@ static int gl_depth_test(lua_State *L)
 	return 0;
 }
 
+static int gl_color(lua_State *L)
+{
+	tglColor4f(luaL_checknumber(L, 1), luaL_checknumber(L, 2), luaL_checknumber(L, 3), luaL_checknumber(L, 4));
+	return 0;
+}
+
 static int sdl_texture_bind(lua_State *L)
 {
 	GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 1);
@@ -1856,6 +1862,7 @@ static const struct luaL_reg displaylib[] =
 	{"glTranslate", gl_translate},
 	{"glScale", gl_scale},
 	{"glRotate", gl_rotate},
+	{"glColor", gl_color},
 	{"glMatrix", gl_matrix},
 	{"glDepthTest", gl_depth_test},
 	{NULL, NULL},
