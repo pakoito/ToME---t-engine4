@@ -349,7 +349,7 @@ newEffect{
 newEffect{
 	name = "FROZEN",
 	desc = "Frozen",
-	long_desc = function(self, eff) return ("The target is encased in ice. All damage done to you will be split, 25%% absorbed by the ice and 75%% by yourself. Your defense is nullified while in the ice and you may only attack the ice. %d HP on the iceblock remaining."):format(eff.hp) end,
+	long_desc = function(self, eff) return ("The target is encased in ice. All damage done to you will be split, 40%% absorbed by the ice and 60%% by yourself. Your defense is nullified while in the ice and you may only attack the ice but you are also immune to any new detrimental status effects. %d HP on the iceblock remaining."):format(eff.hp) end,
 	type = "magical",
 	status = "detrimental",
 	parameters = {},
@@ -376,6 +376,7 @@ newEffect{
 		eff.frozid = self:addTemporaryValue("frozen", 1)
 		eff.defid = self:addTemporaryValue("combat_def", -1000)
 		eff.rdefid = self:addTemporaryValue("combat_def_ranged", -1000)
+		eff.sefid = self:addTemporaryValue("negative_status_effect_immune", 1)
 		eff.dur = self:updateEffectDuration(eff.dur, "freeze")
 
 		self:setTarget(self)
@@ -389,6 +390,7 @@ newEffect{
 		self:removeTemporaryValue("frozen", eff.frozid)
 		self:removeTemporaryValue("combat_def", eff.defid)
 		self:removeTemporaryValue("combat_def_ranged", eff.rdefid)
+		self:removeTemporaryValue("negative_status_effect_immune", eff.sefid)
 		self.color_r = eff.old_r
 		self.color_g = eff.old_g
 		self.color_b = eff.old_b

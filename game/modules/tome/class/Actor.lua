@@ -1098,8 +1098,8 @@ function _M:onTakeHit(value, src)
 	-- Frozen: absorb some damage into the iceblock
 	if self:attr("encased_in_ice") then
 		local eff = self:hasEffect(self.EFF_FROZEN)
-		eff.hp = eff.hp - value * 0.25
-		value = value * 0.75
+		eff.hp = eff.hp - value * 0.4
+		value = value * 0.6
 		if eff.hp < 0 then self:removeEffect(self.EFF_FROZEN) end
 	end
 
@@ -2496,6 +2496,9 @@ end
 function _M:on_set_temporary_effect(eff_id, e, p)
 	if e.status == "detrimental" and self:knowTalent(self.T_RESILIENT_BONES) then
 		p.dur = math.ceil(p.dur * (1 - (self:getTalentLevel(self.T_RESILIENT_BONES) / 12)))
+	end
+	if e.status == "detrimental" and self:attr("negative_status_effect_immune") then
+		p.dur = 0
 	end
 end
 
