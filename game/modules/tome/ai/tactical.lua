@@ -37,6 +37,7 @@ local checkLOS = function(sx, sy, tx, ty)
 end
 
 local canFleeDmapKeepLos = function(self)
+	if self.never_move then return false end -- Dont move, dont flee
 	if self.ai_target.actor then
 		local act = self.ai_target.actor
 		local c = act:distanceMap(self.x, self.y)
