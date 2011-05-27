@@ -335,6 +335,7 @@ newTalent{
 				type = "immovable", subtype = "plants",
 				display = "#",
 				name = "treant", color=colors.GREEN,
+				resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/immovable_plants_treant.png", display_h=2, display_y=-1}}},
 				desc = "A very strong near-sentient tree.",
 
 				body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
@@ -642,8 +643,11 @@ newTalent{
 	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 3 end,
 	range = 4,
 	no_npc_use = true,
+	requires_target = true,
+	direct_hit = true,
+	target = function(self, t) return {type="hit", range=self:getTalentRange(t), talent=t} end,
 	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, function(px, py)
