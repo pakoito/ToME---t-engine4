@@ -253,7 +253,6 @@ newTalent{
 			desc = [[A strange reptilian creature with three smouldering heads.]],
 			autolevel = "none",
 			ai = "summoned", ai_real = "tactical", ai_state = { talent_in=1, ally_compassion=10},
-			ai_tactic = resolvers.tactic"melee",
 
 			stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
 			inc_stats = { wil=15 + self:getWil() * self:getTalentLevel(t) / 5, str=18, con=10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2},
@@ -412,7 +411,6 @@ newTalent{
 			desc = [[A mighty fire drake.]],
 			autolevel = "none",
 			ai = "summoned", ai_real = "tactical", ai_state = { talent_in=1, ally_compassion=10},
-			ai_tactic = resolvers.tactic"melee",
 			stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
 			inc_stats = { str=15 + self:getWil() * self:getTalentLevel(t) / 5, wil=38, con=20 + self:getTalentLevel(t) * 3 + self:getTalentLevelRaw(self.T_RESILIENCE) * 2, },
 			level_range = {self.level, self.level}, exp_worth = 0,
