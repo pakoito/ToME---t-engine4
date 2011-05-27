@@ -29,8 +29,9 @@ function _M:init(t)
 		self.tex = t.tex
 	else
 		self.file = tostring(assert(t.file, "no image file"))
-		self.image = assert(Tiles:loadImage(self.file), "can not load image "..self.file)
-		local iw, ih = self.image:getSize()
+		self.image = Tiles:loadImage(self.file)
+		local iw, ih = 0, 0
+		if self.image then iw, ih = self.image:getSize() end
 		if t.auto_width then t.width = iw end
 		if t.auto_height then t.height = ih end
 	end
@@ -46,10 +47,11 @@ function _M:generate()
 	self.mouse:reset()
 	self.key:reset()
 
-	self.item = self.tex or {self.image:glTexture()}
+	if self.image then self.item = self.tex or {self.image:glTexture()} end
 end
 
 function _M:display(x, y)
+	if not self.item then return end
 	if self.shadow then
 		self.item[1]:toScreenFull(x + 5, y + 5, self.w, self.h, self.item[2], self.item[3], 0, 0, 0, 0.5)
 	end
