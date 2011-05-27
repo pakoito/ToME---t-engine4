@@ -45,7 +45,7 @@ newEntity{
 
 newEntity{
 	name = "lone bear",
-	type = "hostile", subtype = "animal",
+	type = "hostile", subtype = "animal", image = "npc/black_bear.png",
 	display = 'q', color = colors.UMBER,
 	level_range = {1, nil},
 	sight = 3,
@@ -70,13 +70,13 @@ newEntity{
 newEntity{
 	name = "dragon",
 	type = "hostile", subtype = "dragon",
-	display = 'D', color = colors.RED,
+	display = 'D', color = colors.RED, image = "npc/dragon_fire_fire_drake.png",
 	level_range = {12, nil},
 	sight = 3,
 	rarity = 12,
 	unit_power = 7,
 	ai = "world_hostile", ai_state = {chase_distance=3},
-	on_encounter = {type="ambush", width=10, height=10, nb={1,1}, filters={{type="dragon"}}},
+	on_encounter = {type="ambush", width=10, height=10, nb={1,1}, filters={{type="dragon", special=function(e) if not e.name or e.name:find("hatchling") then return false end return true end}}},
 }
 
 newEntity{
@@ -95,7 +95,7 @@ newEntity{
 		nb={2, 3},
 		filters={{special_rarity="humanoid_random_boss", random_boss={
 			nb_classes=1,
-			rank=3,
+			rank=3, ai = "tactical",
 			life_rating=function(v) return v * 1.3 + 2 end,
 			loot_quality = "store",
 			loot_quantity = 1,
