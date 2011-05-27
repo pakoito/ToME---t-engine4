@@ -39,6 +39,7 @@ newTalent{
 	points = 1,
 	range = 1,
 	message = false,
+	no_break_stealth = true, -- stealth is broken in attackTarget
 	requires_target = true,
 	target = {type="hit", range=1},
 	tactical = { ATTACK = 1 },
