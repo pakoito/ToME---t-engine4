@@ -52,7 +52,7 @@ newEntity{ base = "BASE_NPC_LOSGOROTH",
 	name = "losgoroth", color=colors.GREY,
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 1,
-	max_life = resolvers.rngavg(70,80),
+	max_life = resolvers.rngavg(40,60),
 	combat_armor = 0, combat_def = 20,
 	on_melee_hit = { [DamageType.ARCANE] = resolvers.mbonus(20, 10), },
 

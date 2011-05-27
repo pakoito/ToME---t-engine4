@@ -43,7 +43,7 @@ newEntity{ base="BASE_NPC_LOSGOROTH", define_as = "SPACIAL_DISTURBANCE",
 	instakill_immune = 1,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	resolvers.drops{chance=100, nb=1, {defined="CRYSTAL_FOCUS", random_art_replace={chance=75}} },
+	resolvers.drops{chance=100, nb=1, {defined="VOID_STAR"} },
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 
 	resolvers.talents{

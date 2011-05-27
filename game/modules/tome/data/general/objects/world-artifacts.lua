@@ -186,7 +186,7 @@ newEntity{ base = "BASE_RING",
 	material_level = 3,
 
 	wielder = {
-		inc_stats = { [Stats.STAT_CUN] = 3,[Stats.STAT_CUN] = 3, },
+		inc_stats = { [Stats.STAT_MAG] = 3,[Stats.STAT_CUN] = 3, },
 		inc_damage = {
 			[DamageType.ARCANE]    = 10,
 			[DamageType.FIRE]      = 10,
