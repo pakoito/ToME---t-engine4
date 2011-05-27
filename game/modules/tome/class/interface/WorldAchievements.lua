@@ -31,10 +31,10 @@ function _M:newAchievement(t)
 	WA.newAchievement(self, t)
 
 	if not t.no_difficulty_duplicate then
-		local t2 = table.clone(t)
-		t2.id = "NIGHTMARE_"..t2.id
-		t2.name = t2.name.." (Nightmare difficulty)"
-		WA.newAchievement(self, t2)
+--		local t2 = table.clone(t)
+--		t2.id = "NIGHTMARE_"..t2.id
+--		t2.name = t2.name.." (Nightmare difficulty)"
+--		WA.newAchievement(self, t2)
 
 		local t2 = table.clone(t)
 		t2.id = "INSANE_"..t2.id
