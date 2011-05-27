@@ -217,9 +217,9 @@ return {
 		local Quadratic = require "engine.Quadratic"
 		level.background_particle1 = require("engine.Particles").new("starfield_static", 1, {width=Map.viewport.width, height=Map.viewport.height, nb=300, a_min=0.5, a_max = 0.8, size_min = 1, size_max = 3})
 		level.background_particle2 = require("engine.Particles").new("starfield_static", 1, {width=Map.viewport.width, height=Map.viewport.height, nb=300, a_min=0.5, a_max = 0.9, size_min = 4, size_max = 8})
-		level.world_particle = require("engine.Particles").new("image", 1, {size=1, image="shockbolt/terrain/eyal-world", x=400, y=400})
 		level.world_sphere = Quadratic.new()
 		game.zone.world_sphere_rot = (game.zone.world_sphere_rot or 0)
+		game.zone.cloud_sphere_rot = (game.zone.world_cloud_rot or 0)
 	end,
 
 	background = function(level, x, y, nb_keyframes)
@@ -227,15 +227,27 @@ return {
 		level.background_particle1.ps:toScreen(x, y, true, 1)
 		local parx, pary = level.map.mx / (level.map.w - Map.viewport.mwidth), level.map.my / (level.map.h - Map.viewport.mheight)
 		level.background_particle2.ps:toScreen(x - parx * 40, y - pary * 40, true, 1)
-		level.world_particle.ps:toScreen(x - parx * 60, y - pary * 60, true, 1)
 
+		core.display.glDepthTest(true)
 		core.display.glMatrix(true)
 		core.display.glTranslate(x + 350 - parx * 60, y + 350 - pary * 60, 0)
 		core.display.glRotate(120, 0, 1, 0)
 		core.display.glRotate(300, 1, 0, 0)
-		level.world_sphere.q:sphere(0, 0, 300, game.zone.world_sphere_rot, 0, 0, 1)
+		core.display.glRotate(game.zone.world_sphere_rot, 0, 0, 1)
+
+		local tex = Map.tiles:get('', 0, 0, 0, 0, 0, 0, "shockbolt/terrain/eyal-world.png")
+		tex:bind(0)
+		level.world_sphere.q:sphere(300)
+
+		local tex = Map.tiles:get('', 0, 0, 0, 0, 0, 0, "shockbolt/terrain/cloud-world.png")
+		tex:bind(0)
+		core.display.glRotate(game.zone.cloud_sphere_rot, 0, 0, 1)
+		level.world_sphere.q:sphere(304)
+
 		game.zone.world_sphere_rot = game.zone.world_sphere_rot + 0.01
+		game.zone.cloud_sphere_rot = game.zone.cloud_sphere_rot + rng.float(0.01, 0.02)
 
 		core.display.glMatrix(false)
+		core.display.glDepthTest(false)
 	end,
 }

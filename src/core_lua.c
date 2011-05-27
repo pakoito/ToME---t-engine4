@@ -1308,6 +1308,13 @@ static int gl_matrix(lua_State *L)
 	return 0;
 }
 
+static int gl_depth_test(lua_State *L)
+{
+	if (lua_toboolean(L, 1)) glEnable(GL_DEPTH_TEST);
+	else glDisable(GL_DEPTH_TEST);
+	return 0;
+}
+
 static int sdl_texture_bind(lua_State *L)
 {
 	GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 1);
@@ -1563,23 +1570,9 @@ static int gl_free_quadratic(lua_State *L)
 static int gl_quadratic_sphere(lua_State *L)
 {
 	GLUquadricObj **quadratic = (GLUquadricObj**)auxiliar_checkclass(L, "gl{quadratic}", 1);
-	float x = luaL_checknumber(L, 2);
-	float y = luaL_checknumber(L, 3);
-	float rad = luaL_checknumber(L, 4);
-	float rot = luaL_checknumber(L, 5);
-	float rot_x = luaL_checknumber(L, 6);
-	float rot_y = luaL_checknumber(L, 7);
-	float rot_z = luaL_checknumber(L, 8);
+	float rad = luaL_checknumber(L, 2);
 
-	glPushMatrix();
-	glTranslatef(x, y, 0);
-	glRotatef(rot, rot_x, rot_y, rot_z);
-
-	glEnable(GL_DEPTH_TEST);
 	gluSphere(*quadratic, rad, 64, 64);
-	glDisable(GL_DEPTH_TEST);
-
-	glPopMatrix();
 
 	return 0;
 }
@@ -1864,6 +1857,7 @@ static const struct luaL_reg displaylib[] =
 	{"glScale", gl_scale},
 	{"glRotate", gl_rotate},
 	{"glMatrix", gl_matrix},
+	{"glDepthTest", gl_depth_test},
 	{NULL, NULL},
 };
 
