@@ -55,7 +55,7 @@ newTalent{
 	info = function(self, t)
 		local defense = t.getDefense(self, t)
 		local maximum = t.getMaximum(self, t)
-		return ([[Your defense is increased by %d for every visible foe that is adjacent too you up to a maximum of +%d defense.
+		return ([[Your defense is increased by %d for every adjacent visible foe up to a maximum of +%d defense.
 		The maximum defense increase will scale with the cunning stat.]]):format(defense, maximum)
 	end,
 }
@@ -69,8 +69,8 @@ newTalent{
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.5, 0.9) + getStrikingStyle(self, dam) end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t) * 100
-		return ([[When you avoid a melee blow you have a %d%% chance to get a free, automatic melee attack against your foe for %d%% damage.
-		The is considered a strike for the purpose of stance damage bonuses (if you have any).
+		return ([[When you avoid a melee blow you have a %d%% chance to get a free, automatic unarmed attack against your foe for %d%% damage.
+		The is considered a strike for the purpose of stance damage bonuses (if have any) and will only trigger while unarmed.
 		The chance of countering increases with the cunning stat.]]):format(self:getTalentLevel(t) * (5 + self:getCun(5)), damage)
 	end,
 }

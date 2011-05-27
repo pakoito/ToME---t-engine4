@@ -44,7 +44,7 @@ newTalentType{ is_unarmed=true, allow_random=true, type="technique/pugilism", na
 newTalentType{ is_unarmed=true, allow_random=true, type="technique/finishing-moves", name = "finishing moves", description = "Finishing moves that use combo points." }
 newTalentType{ is_unarmed=true, allow_random=true, type="technique/grappling", name = "grappling", description = "Grappling techniques." }
 newTalentType{ is_unarmed=true, allow_random=true, type="technique/unarmed-discipline", name = "unarmed discipline", description = "Advanced unarmed techniques including kicks and throws." }
-newTalentType{ is_unarmed=true, allow_random=true, type="technique/unarmed-training", name = "unarmed training", generic = true, description = "Teaches various martial arts techniques." }
+newTalentType{ is_unarmed=true, allow_random=true, type="technique/unarmed-training", name = "unarmed training", description = "Teaches various martial arts techniques." }
 newTalentType{ allow_random=true, type="technique/conditioning", name = "conditioning", generic = true, description = "Physical conditioning." }
 
 newTalentType{ is_unarmed=true, type="technique/unarmed-other", name = "unarmed other", generic = true, description = "Base martial arts attack and stances." }
@@ -157,6 +157,28 @@ techs_con_req4 = {
 }
 techs_con_req5 = {
 	stat = { con=function(level) return 44 + (level-1) * 2 end },
+	level = function(level) return 16 + (level-1)  end,
+}
+
+-- Generic requires for techs_cun based on talent level
+techs_cun_req1 = {
+	stat = { cun=function(level) return 12 + (level-1) * 2 end },
+	level = function(level) return 0 + (level-1)  end,
+}
+techs_cun_req2 = {
+	stat = { cun=function(level) return 20 + (level-1) * 2 end },
+	level = function(level) return 4 + (level-1)  end,
+}
+techs_cun_req3 = {
+	stat = { cun=function(level) return 28 + (level-1) * 2 end },
+	level = function(level) return 8 + (level-1)  end,
+}
+techs_cun_req4 = {
+	stat = { cun=function(level) return 36 + (level-1) * 2 end },
+	level = function(level) return 12 + (level-1)  end,
+}
+techs_cun_req5 = {
+	stat = { cun=function(level) return 44 + (level-1) * 2 end },
 	level = function(level) return 16 + (level-1)  end,
 }
 

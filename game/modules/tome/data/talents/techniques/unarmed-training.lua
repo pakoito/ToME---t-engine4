@@ -41,7 +41,7 @@ newTalent{
 	name = "Unarmed Mastery",
 	type = {"technique/unarmed-training", 1},
 	points = 10,
-	require = { stat = { dex=function(level) return 12 + level * 3 end }, },
+	require = { stat = { cun=function(level) return 12 + level * 3 end }, },
 	mode = "passive",
 	getDamage = function(self, t) return math.sqrt(self:getTalentLevel(t) / 10) end,
 	info = function(self, t)
@@ -56,9 +56,9 @@ newTalent{
 	type = {"technique/unarmed-training", 2},
 	mode = "passive",
 	points = 5,
-	require = techs_dex_req2,
-	getDefense = function(self, t) return 4 + self:combatTalentStatDamage(t, "dex", 1, 20) end,
-	getMental = function(self, t) return 4 + self:combatTalentStatDamage(t, "cun", 1, 20) end,
+	require = techs_cun_req2,
+	getDefense = function(self, t) return self:combatTalentStatDamage(t, "cun", 5, 35) end,
+	getMental = function(self, t) return self:combatTalentStatDamage(t, "cun", 5, 35) end,
 	info = function(self, t)
 		local defense = t.getDefense(self, t)
 		local saves = t.getMental(self, t)
@@ -71,27 +71,27 @@ newTalent{
 newTalent{
 	name = "Heightened Reflexes",
 	type = {"technique/unarmed-training", 3},
-	require = techs_dex_req3,
+	require = techs_cun_req3,
 	mode = "passive",
 	points = 5,
-	getDuration = function(self, t) return 1 + math.floor(self:getTalentLevel(t)) end,
+	getPower = function(self, t) return self:getTalentLevel(t)/2 end,
 	do_reflexes = function(self, t)
-		self:setEffect(self.EFF_REFLEXIVE_DODGING, t.getDuration(self, t), {power=1})
+		self:setEffect(self.EFF_REFLEXIVE_DODGING, 1, {power=t.getPower(self, t)})
 	end,
 	info = function(self, t)
-		local duration = t.getDuration(self, t)
-		return ([[When you're targeted by a projectile your global speed is increased by 100%% for %d turns.  Taking any action other then movement will break the effect.]]):
-		format(duration)
+		local power = t.getPower(self, t)
+		return ([[When you're targeted by a projectile your global speed is increased by %d%% for 1 turn.  Taking any action other then movement will break the effect.]]):
+		format(power * 100)
 	end,
 }
 
 newTalent{
 	name = "Combo String",
 	type = {"technique/unarmed-training", 4},
-	require = techs_dex_req4,
+	require = techs_cun_req4,
 	mode = "passive",
 	points = 5,
-	getDuration = function(self, t) return math.floor(self:getTalentLevel(t)/2) end,
+	getDuration = function(self, t) return math.ceil(self:getTalentLevel(t)/2) end,
 	getChance = function(self, t) return self:getTalentLevel(t) * (5 + self:getCun(5)) end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)

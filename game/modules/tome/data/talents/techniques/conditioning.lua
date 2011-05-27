@@ -20,16 +20,16 @@
 newTalent{
 	name = "Physical Conditioning",
 	type = {"technique/conditioning", 1},
-	require = techs_con_req1,
+	require = techs_req1,
 	mode = "passive",
 	points = 5,
-	getArmor = function(self, t) return 4 + self:combatTalentStatDamage(t, "con", 1, 20) end,
-	getPhysical = function(self, t) return 4 + self:combatTalentStatDamage(t, "con", 1, 20) end,
+	getArmor = function(self, t) return self:combatTalentStatDamage(t, "str", 5, 35) end,
+	getPhysical = function(self, t) return self:combatTalentStatDamage(t, "str", 5, 35) end,
 	info = function(self, t)
 		local armor = t.getArmor(self, t)
 		local saves = t.getPhysical(self, t)
 		return ([[Physical conditioning that increases armor by %d and physical saves by %d.
-		The bonuses will scale with your Constitution stat.]]):
+		The bonuses will scale with your Strength stat.]]):
 		format(armor, saves)
 	end,
 }
@@ -37,7 +37,7 @@ newTalent{
 newTalent{
 	name = "Firm Footing",
 	type = {"technique/conditioning", 2},
-	require = techs_con_req2,
+	require = techs_req2,
 	mode = "passive",
 	points = 5,
 	getResists = function(self, t) return self:getTalentLevelRaw(t) * 15 end,
@@ -59,7 +59,7 @@ newTalent{
 newTalent{
 	name = "Iron Skin",
 	type = {"technique/conditioning", 3},
-	require = techs_con_req3,
+	require = techs_req3,
 	mode = "passive",
 	points = 5,
 	getPercent = function (self, t) return self:getTalentLevel(t) * 20 end,
@@ -79,7 +79,7 @@ newTalent{
 newTalent{
 	name = "Unflinching Resolve",
 	type = {"technique/conditioning", 4},
-	require = techs_con_req4,
+	require = techs_req4,
 	mode = "passive",
 	points = 5,
 	getRegen = function(self, t) return self:getTalentLevel(t) * 0.05 end,
@@ -97,7 +97,7 @@ newTalent{
 	info = function(self, t)
 		local resist = t.getResist(self, t)
 		local regen = t.getRegen(self, t)
-		return ([[After being hit for 10%% or more of your maximum life in a single blow you recover %d%% of the damage over three turns.  Additionally your stun immunity is increased by %d%%.]]):
-		format(regen * 100, resist)
+		return ([[Your stun immunity is increased by %d%%.  Also anytime you're hit for 10%% or more of your maximum life in a single blow you recover %d%% of the damage over three turns.]]):
+		format(resist, regen * 100)
 	end,
 }

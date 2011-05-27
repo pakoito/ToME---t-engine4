@@ -101,14 +101,14 @@ newTalent{
 	equilibrium = 15,
 	cooldown = 30,
 	tactical = { BUFF=2 },
-	on_pre_use = function(self, t) return self:hasEffect(self.EFF_INFUSION_SATURATION) end,
+	on_pre_use = function(self, t) return self:hasEffect(self.EFF_INFUSION_COOLDOWN) end,
 	action = function(self, t)
-		self:removeEffect(self.EFF_INFUSION_SATURATION)
+		self:removeEffect(self.EFF_INFUSION_COOLDOWN)
 		local tids = {}
 		local nb = self:getTalentLevelRaw(t)
 		for tid, _ in pairs(self.talents_cd) do
 			local tt = self:getTalentFromId(tid)
-			if tt.type[1] == "inscriptions/infusions" and self:isTalentCoolingDown(t) then tids[#tids+1] = tid end
+			if tt.type[1] == "inscriptions/infusions" and self:isTalentCoolingDown(tt) then tids[#tids+1] = tid end
 		end
 		for i = 1, nb do
 			if #tids == 0 then break end

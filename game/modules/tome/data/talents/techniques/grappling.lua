@@ -120,7 +120,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local power = t.getPower(self, t)
 		local drain = t.getDrain(self, t)
-		return ([[Grapples the target for %d turns. A grappled opponent will be unable to move and its attack and defense will be reduced by %d.  Any movement from the target or you will break the grapple.  Maintaining a grapple drains %d stamina per turn.
+		return ([[Grapples a target up to one size category larger then yourself for %d turns. A grappled opponent will be unable to move and its attack and defense will be reduced by %d.  Any movement from the target or you will break the grapple.  Maintaining a grapple drains %d stamina per turn.
 		You may only grapple a single target at a time and using any targeted unarmed talent on a target that you're not grappling will break the grapple.
 		The grapple attack and defense reduction as well as success chance will scale with the strength stat.
 		Performing this action will switch your stance to Grappling Stance.]])
@@ -201,6 +201,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[Your clinch talent now starts a crushing hold that deals %0.2f physical damage each turn.  If the target is already grappled the hold will instead become a strangle hold, silencing the target and inflicting %0.2f physical damage each turn.
+		Undead, targets immune to silence, and creatures that do not breathe are immune to the strangle effect and will only be affected by the crushing hold.
 		The damage will scale with the strength stat.]])
 		:format(damDesc(self, DamageType.PHYSICAL, (damage)), damDesc(self, DamageType.PHYSICAL, (damage * 1.5)))
 	end,

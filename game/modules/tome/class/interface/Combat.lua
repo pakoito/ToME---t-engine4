@@ -442,7 +442,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	end
 
 	-- Counter Attack!
-	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_COUNTER_ATTACK) and rng.percent(target:getTalentLevel(target.T_COUNTER_ATTACK) * (5 + target:getCun(5))) then
+	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_COUNTER_ATTACK) and target:isUnarmed() and rng.percent(target:getTalentLevel(target.T_COUNTER_ATTACK) * (5 + target:getCun(5))) then
 		game.logSeen(self, "%s counters the attack!", target.name:capitalize())
 		local t = target:getTalentFromId(target.T_COUNTER_ATTACK)
 		local damage = t.getDamage(target, t)
@@ -1002,20 +1002,15 @@ function _M:buildCombo()
 		if rng.percent(t.getChance(self, t)) then
 			power = 2
 		end
-		duration = 3 + math.ceil(t.getDuration(self, t))
+		duration = 3 + t.getDuration(self, t)
 	end
-	-- Relentless Strike bonus
-	if self:hasEffect(self.EFF_RELENTLESS_STRIKES) then
-		for tid, cd in pairs(self.talents_cd) do
-			local tt = self:getTalentFromId(tid)
-			if tt.type[1]:find("^technique/") then
-				self.talents_cd[tid] = cd - 1
-			end
-		end
+	
+	if self:knowTalent(self.T_RELENTLESS_STRIKES) then
+		local t= self:getTalentFromId(self.T_RELENTLESS_STRIKES)
+		self:incStamina(t.getStamina(self, t))
 	end
 
 	self:setEffect(self.EFF_COMBO, duration, {power=power})
-
 end
 
 function _M:getCombo(combo)

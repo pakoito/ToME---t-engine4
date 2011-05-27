@@ -33,7 +33,7 @@ newTalent{
 	stamina = 12,
 	tactical = { ATTACK = 2, ESCAPE = 2 },
 	requires_target = true,
-	getDamage = function(self, t) return getTriStat(self, t, 30, 300) * (1 + getStrikingStyle(self, dam)) end,
+	getDamage = function(self, t) return getTriStat(self, t, 10, 300) * (1 + getStrikingStyle(self, dam)) end,
 	getPush = function(self, t) return 1 + math.ceil(self:getTalentLevel(t)/4) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
@@ -127,7 +127,7 @@ newTalent{
 	mode = "sustained",
 	points = 5,
 	cooldown = 30,
-	sustain_stamina = 30,
+	sustain_stamina = 15,
 	tactical = { BUFF = 1, STAMINA = 2 },
 	getSpeed = function(self, t) return 0.1 end,
 	getStamina = function(self, t) return self:getTalentLevel(t) * 1.5 end,
@@ -162,7 +162,7 @@ newTalent{
 	radius = function(self, t) return 1 end,
 	tactical = { ATTACKAREA = 2, DISABLE = 2 },
 	requires_target = true,
-	getDamage = function(self, t) return getTriStat(self, t, 20, 500) * (1 + getStrikingStyle(self, dam)) end,
+	getDamage = function(self, t) return getTriStat(self, t, 10, 500) * (1 + getStrikingStyle(self, dam)) end,
 	target = function(self, t)
 		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
@@ -173,16 +173,14 @@ newTalent{
 
 		self:breakGrapples()
 
-		self:project(tg, x, y, DamageType.PHYSKNOCKBACK, {dam=self:physicalCrit(t.getDamage(self, t), nil, target), dist=4})
-
-		self:buildCombo()
+		self:project(tg, x, y, DamageType.PHYSKNOCKBACK, {dam=t.getDamage(self, t), dist=4})
 
 		return true
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[Attack your foes in a frontal arc with a roundhouse kick that deals %0.2f physical damage and knocks your foes back.
-		This is considered a strike for the purposes of stance damage bonuses, will earn one combo point, and break any grapples you're maintaining.
+		This is considered a strike for the purposes of stance damage bonuses and will break any grapples you're maintaining.
 		The knockback chance will increase with the strength stat and the damage will scale with the strength, dexterity, and cunning stats.]])
 		:format(damDesc(self, DamageType.PHYSICAL, (damage)))
 	end,

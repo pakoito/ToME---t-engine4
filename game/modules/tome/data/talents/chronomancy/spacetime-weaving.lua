@@ -23,7 +23,7 @@ newTalent{
 	hide = true,
 	points = 1,
 	message = "@Source@ retunes the fabric of spacetime.",
-	cooldown = 100,
+	cooldown = 50,
 	tactical = { PARADOX = 2 },
 	no_npc_use = true,
 	no_energy = true,

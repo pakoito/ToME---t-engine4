@@ -3816,23 +3816,6 @@ newEffect{
 }
 
 newEffect{
-	name = "RELENTLESS_STRIKES",
-	desc = "Relentless Strikes",
-	long_desc = function(self, eff) return ("The target is attacking relentlessly, increasing it's stamina regen by %d and gaining increased effect from combo point gains."):format(eff.power) end,
-	type = "physical",
-	status = "beneficial",
-	parameters = { power=10 },
-	on_gain = function(self, err) return "#Target# is striking relentlessly!", "+Relentless Strikes" end,
-	on_lose = function(self, err) return "#Target#'s striking ability has returned to normal.", "-Relentless Strikes" end,
-	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("stamina_regen", eff.power)
-	end,
-	deactivate = function(self, eff)
-		self:removeTemporaryValue("stamina_regen", eff.tmpid)
-	end,
-}
-
-newEffect{
 	name = "DEFENSIVE_MANEUVER",
 	desc = "Defensive Maneuver",
 	long_desc = function(self, eff) return ("The target's defense is increased by %d."):format(eff.power) end,
