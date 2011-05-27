@@ -316,7 +316,10 @@ function _M:playerFOV()
 			eff.x, eff.y, game.level.map.w, game.level.map.h, eff.radius, function(_, x, y) if map:checkAllEntities(x, y, "block_sight", self) then return true end end,
 			function(_, x, y)
 				local t = map(x, y, map.ACTOR)
-				if t and (eff.true_seeing or self:canSee(t)) then map.seens(x, y, 1) self.can_see_cache[t]["nil/nil"] = {true,100} end
+				if t and (eff.true_seeing or self:canSee(t)) then
+					map.seens(x, y, 1)
+					if self.can_see_cache[t] then self.can_see_cache[t]["nil/nil"] = {true, 100} end
+				end
 			end,
 			cache and map._fovcache["block_sight"]
 		)
