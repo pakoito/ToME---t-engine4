@@ -97,16 +97,14 @@ newTalent{
 	type = {"spell/arcane", 3},
 	require = spells_req3,
 	points = 5,
-	random_ego = "utility",
 	mana = 0,
-	cooldown = 40,
+	cooldown = 25,
 	tactical = { MANA = 3 },
-	getManaRestoration = function(self, t) return self:combatTalentSpellDamage(t, 10, 20) end,
+	getManaRestoration = function(self, t) return 5 + self:combatTalentSpellDamage(t, 10, 20) end,
+	on_pre_use = function(self, t) return not self:hasEffect(self.EFF_MANASURGE) end,
 	action = function(self, t)
-		if not self:hasEffect(self.EFF_MANAFLOW) then
-			self:setEffect(self.EFF_MANAFLOW, 10, {power=t.getManaRestoration(self, t)})
-			game:playSoundNear(self, "talents/arcane")
-		end
+		self:setEffect(self.EFF_MANASURGE, 10, {power=t.getManaRestoration(self, t)})
+		game:playSoundNear(self, "talents/arcane")
 		return true
 	end,
 	info = function(self, t)

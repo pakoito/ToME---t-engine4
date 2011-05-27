@@ -639,7 +639,7 @@ newInscription{
 	is_spell = true,
 	tactical = { MANA = 1 },
 	on_pre_use = function(self, t)
-		return self:knowTalent(self.T_MANA_POOL)
+		return self:knowTalent(self.T_MANA_POOL) and not self:hasEffect(self.EFF_MANASURGE)
 	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
