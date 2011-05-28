@@ -287,6 +287,11 @@ function _M:actTurn()
 			local t = self:getTalentFromId(self.T_UNSEEN_FORCE)
 			t.do_unseenForce(self, t)
 		end
+		-- this handles Door to the Past random anomalies
+		if self:isTalentActive(self.T_DOOR_TO_THE_PAST) then
+			local t = self:getTalentFromId(self.T_DOOR_TO_THE_PAST)
+			t.do_anomalyCount(self, t)
+		end
 	end
 
 	-- Suffocate ?

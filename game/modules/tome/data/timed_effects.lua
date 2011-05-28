@@ -3359,8 +3359,8 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		game:onTickEnd(function()
-			if not game:chronoRestore("precognition") then
-				game.logSeen(self, "#LIGHT_RED#The precognition spell fizzles and cancels.")
+			if game._chronoworlds == nil then
+				game.logSeen(self, "#LIGHT_RED#The precognition spell fizzles and cancels, leaving you in this timeline.")
 				return
 			end
 			game.logPlayer(game.player, "#LIGHT_BLUE#You unfold the space time continuum to a previous state!")
@@ -3385,6 +3385,12 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		game:onTickEnd(function()
+		
+			if game._chronoworlds == nil then
+				game.logSeen(self, "#LIGHT_RED#The see the threads spell fizzles and cancels, leaving you in this timeline.")
+				return
+			end
+			
 			if eff.thread < 3 then
 				local worlds = game._chronoworlds
 
@@ -3477,6 +3483,12 @@ newEffect{
 		local t = self:getTalentFromId(self.T_PARADOX_CLONE)
 		local base = t.getDuration(self, t) - 2
 		game:onTickEnd(function()
+		
+			if game._chronoworlds == nil then
+				game.logSeen(self, "#LIGHT_RED#You've altered your destiny and will not be pulled into the past.")
+				return
+			end
+			
 			local worlds = game._chronoworlds
 			-- save the players health so we can reload it
 			local oldplayer = game.player

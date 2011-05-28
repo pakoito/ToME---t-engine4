@@ -186,7 +186,7 @@ newTalent{
 	sustain_paradox = 150,
 	cooldown = 50,
 	no_npc_use = true,
-	getParadoxIncrease = function(self, t) return 28 - (self:getTalentLevelRaw(t) * 4) end,
+	getAnomalyCount = function(self, t) return math.ceil(self:getTalentLevel(t)) end,
 	on_learn = function(self, t)
 		if not self:knowTalent(self.T_REVISION) then
 			self:learnTalent(self.T_REVISION)
@@ -197,30 +197,49 @@ newTalent{
 			self:unlearnTalent(self.T_REVISION)
 		end
 	end,
+	do_anomalyCount = function(self, t)
+		if self.dttp_anomaly_count == 0 then
+			-- check for anomaly
+			if not game.zone.no_anomalies and not self:attr("no_paradox_fail") and rng.percent(math.pow((self:getParadox()/400), 4)) and self:getParadox() > 400 then
+				-- Random anomaly
+				local ts = {}
+				for id, t in pairs(self.talents_def) do
+					if t.type[1] == "chronomancy/anomalies" then ts[#ts+1] = id end
+				end
+				if not silent then game.logPlayer(self, "Your Door to the Past has caused an anomaly!") end
+				self:forceUseTalent(rng.table(ts), {ignore_energy=true})
+			end
+			-- reset count
+			self.dttp_anomaly_count = t.getAnomalyCount(self, t)
+		else
+			self.dttp_anomaly_count = self.dttp_anomaly_count - 1
+		end
+	end,
 	activate = function(self, t)
-
 		if checkTimeline(self) == true then
 			return
 		end
 
+		-- set the counter
+		self.dttp_anomaly_count = t.getAnomalyCount(self, t)
+
 		game:playSoundNear(self, "talents/arcane")
 		return {
 			game:chronoClone("revision"),
-			drain = self:addTemporaryValue("paradox_regen", t.getParadoxIncrease(self, t)),
 			particle = self:addParticles(Particles.new("temporal_aura", 1)),
 		}
 	end,
 	deactivate = function(self, t, p)
 		if game._chronoworlds then game._chronoworlds = nil end
+		self.dttp_anomaly_count = nil
 		self:removeParticles(p.particle)
-		self:removeTemporaryValue("paradox_regen", p.drain)
 		return true
 	end,
 	info = function(self, t)
-		local paradox = t.getParadoxIncrease(self, t)
-		return ([[This powerful spell allows you to mark a point in time that you can later return to by casting Revision.  Maintaining such a doorway causes constant damage to the spacetime continuum and will increase your paradox by %d each turn.
-		Additional talent points will lower the paradox increase incurred each turn.]]):
-		format(paradox)
+		local count = t.getAnomalyCount(self, t)
+		return ([[This powerful spell allows you to mark a point in time that you can later return to by casting Revision (which you'll automatically learn upon learning this spell).  Maintaining such a doorway causes constant strain on the spacetime continuum and can possibly trigger an anomaly (using your current anomaly chance) once every %d turns.
+		Additional talent points will increase the time between anomaly checks.]]):
+		format(count)
 	end,
 }
 
@@ -252,6 +271,9 @@ newTalent{
 			-- Manualy start the cooldown of the "old player"
 			game.player:startTalentCooldown(t)
 			game.player:incParadox(t.paradox * (1 + (game.player.paradox / 300)))
+
+			-- remove anomaly count
+			if self.dttp_anomaly_count then self.dttp_anomaly_count = nil end
 		end)
 
 		return true

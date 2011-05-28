@@ -486,16 +486,26 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 		self.logPlayer(self.player, "#LIGHT_RED#You may not leave the zone with this character!")
 		return
 	end
+	if game.player:hasEffect(game.player.EFF_PARADOX_CLONE) or game.player:hasEffect(game.player.EFF_IMMINENT_PARADOX_CLONE) then
+		self.logPlayer(self.player, "#LIGHT_RED#You cannot escape your fate by leaving the level!")
+		return
+	end
 
 	if game.player:isTalentActive(game.player.T_JUMPGATE) then
 		game.player:forceUseTalent(game.player.T_JUMPGATE, {ignore_energy=true})
 	end
-
+	
 	if game.player:isTalentActive(game.player.T_JUMPGATE_TWO) then
 		game.player:forceUseTalent(game.player.T_JUMPGATE_TWO, {ignore_energy=true})
 	end
 
-
+	-- clear chrono worlds and their various effects
+	if game._chronoworlds then game._chronoworlds = nil end
+	
+	if game.player:isTalentActive(game.player.T_DOOR_TO_THE_PAST) then
+		game.player:forceUseTalent(game.player.T_DOOR_TO_THE_PAST, {ignore_energy=true})
+	end
+	
 	local left_zone = self.zone
 
 	if self.zone and self.zone.on_leave then
