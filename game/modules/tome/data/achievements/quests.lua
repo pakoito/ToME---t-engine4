@@ -241,3 +241,8 @@ newAchievement{
 	show = "name",
 	desc = [[Use the Sher'Tul fortress exploratory farportal at least 7 times with the same character.]],
 }
+newAchievement{
+	name = "Orbituary", id = "ABASHED_EXPANSE",
+	show = "name",
+	desc = [[Stabilized the Abashed Expanse to maintain it in orbit.]],
+}

@@ -41,6 +41,7 @@ newEntity{ base="BASE_NPC_LOSGOROTH", define_as = "SPACIAL_DISTURBANCE",
 	size_category = 4,
 	infravision = 10,
 	instakill_immune = 1,
+	can_pass = {pass_void=0},
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.drops{chance=100, nb=1, {defined="VOID_STAR"} },

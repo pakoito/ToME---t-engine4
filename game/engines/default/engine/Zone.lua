@@ -527,6 +527,7 @@ function _M:load(dynamic)
 		ret = false
 
 		if type(data.reload_lists) ~= "boolean" or data.reload_lists then
+			self._no_save_fields = table.clone(self._no_save_fields, true)
 			self._no_save_fields.npc_list = true
 			self._no_save_fields.grid_list = true
 			self._no_save_fields.object_list = true
