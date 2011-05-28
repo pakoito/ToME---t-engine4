@@ -59,6 +59,7 @@ typedef struct {
 	GLfloat *colors;
 	GLshort *texcoords;
 	bool alive;
+	bool i_want_to_die;
 	bool init;
 
 	// R/W only by thread

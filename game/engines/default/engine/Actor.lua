@@ -90,10 +90,7 @@ end
 function _M:defineDisplayCallback()
 	if not self._mo then return end
 
-	local ps = {}
-	for e, _ in pairs(self.__particles) do
-		ps[#ps+1] = e
-	end
+	local ps = self:getParticlesList()
 
 	local f_self = nil
 	local f_danger = nil
@@ -334,6 +331,7 @@ end
 function _M:deleteFromMap(map)
 	if self.x and self.y and map then
 		map:remove(self.x, self.y, engine.Map.ACTOR)
+		self:closeParticles()
 	end
 end
 

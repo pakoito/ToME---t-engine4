@@ -91,6 +91,7 @@ static int particles_new(lua_State *L)
 	ps->args = strdup(args);
 	ps->density = density;
 	ps->alive = TRUE;
+	ps->i_want_to_die = FALSE;
 	ps->l = NULL;
 	ps->texcoords = NULL;
 	ps->vertices = NULL;
@@ -134,6 +135,15 @@ static int particles_is_alive(lua_State *L)
 	particles_type *ps = (particles_type*)auxiliar_checkclass(L, "core{particles}", 1);
 
 	lua_pushboolean(L, ps->alive);
+	return 1;
+}
+
+// Runs into main thread
+static int particles_die(lua_State *L)
+{
+	particles_type *ps = (particles_type*)auxiliar_checkclass(L, "core{particles}", 1);
+
+	ps->i_want_to_die = TRUE;
 	return 1;
 }
 
@@ -496,6 +506,7 @@ static const struct luaL_reg particles_reg[] =
 	{"__gc", particles_free},
 	{"toScreen", particles_to_screen},
 	{"isAlive", particles_is_alive},
+	{"die", particles_die},
 	{NULL, NULL},
 };
 
@@ -524,7 +535,7 @@ void thread_particle_run(particle_thread *pt, plist *l)
 {
 	lua_State *L = pt->L;
 	particles_type *ps = l->ps;
-	if (!ps || !ps->l || !ps->init || !ps->alive) return;
+	if (!ps || !ps->l || !ps->init || !ps->alive || ps->i_want_to_die) return;
 
 	// Update
 	lua_rawgeti(L, LUA_REGISTRYINDEX, l->updator_ref);
@@ -788,12 +799,12 @@ int thread_particles(void *data)
 		if (!pt->running) break;
 
 		SDL_mutexP(pt->lock);
-//		int nb = 0;
+		int nb = 0;
 		l = pt->list;
 		prev = NULL;
 		while (l)
 		{
-			if (l->ps && l->ps->alive)
+			if (l->ps && l->ps->alive && !l->ps->i_want_to_die)
 			{
 				if (l->ps->init) thread_particle_run(pt, l);
 				else thread_particle_init(pt, l);
@@ -811,7 +822,7 @@ int thread_particles(void *data)
 
 				l = l->next;
 			}
-//			nb++;
+			nb++;
 		}
 //		printf("Particles thread %d has %d systems\n", pt->id, nb);
 		SDL_mutexV(pt->lock);

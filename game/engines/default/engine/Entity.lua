@@ -175,6 +175,7 @@ end
 --- Removes a particles emitter following the entity
 function _M:removeParticles(ps)
 	self.__particles[ps] = nil
+	ps:dieDisplay()
 	if self.x and self.y and game.level and game.level.map then
 		ps.x = nil
 		ps.y = nil
@@ -182,6 +183,22 @@ function _M:removeParticles(ps)
 	end
 end
 
+--- Get the particle emitters of this entity
+function _M:getParticlesList()
+	local ps = {}
+	for e, _ in pairs(self.__particles) do
+		e:checkDisplay()
+		ps[#ps+1] = e
+	end
+	return ps
+end
+
+--- Removes the particles from the running threads but keep the data for later
+function _M:closeParticles()
+	for e, _ in pairs(self.__particles) do
+		e:dieDisplay()
+	end
+end
 
 --- Attach or remove a display callback
 -- Defines particles to display
@@ -189,11 +206,7 @@ function _M:defineDisplayCallback()
 	if not self._mo then return end
 	if not next(self.__particles) then self._mo:displayCallback(nil) return end
 
-	local ps = {}
-	for e, _ in pairs(self.__particles) do
-		ps[#ps+1] = e
-	end
-
+	local ps = self:getParticlesList()
 	self._mo:displayCallback(function(x, y, w, h)
 		local e
 		for i = 1, #ps do

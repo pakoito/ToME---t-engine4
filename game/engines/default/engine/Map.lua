@@ -326,6 +326,7 @@ function _M:close()
 					se._mo = nil
 				end
 			end end
+			if e then e:closeParticles() end
 		end
 	end
 	self.closed = true

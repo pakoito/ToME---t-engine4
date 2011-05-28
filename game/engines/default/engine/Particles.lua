@@ -109,3 +109,14 @@ function _M:updateZoom()
 		self.zoom = ((engine.Map.tile_w + engine.Map.tile_h) / 2) / self.base_size
 	end
 end
+
+function _M:checkDisplay()
+	if self.ps then return end
+	self:loaded()
+end
+
+function _M:dieDisplay()
+	if not self.ps then return end
+	self.ps:die()
+	self.ps = nil
+end

@@ -36,6 +36,7 @@ const char *get_self_executable(int argc, char **argv)
 int get_number_cpus()
 {
 	return sysconf(_SC_NPROCESSORS_ONLN);
+//	return 1;
 }
 
 #elif defined(SELFEXE_WINDOWS)

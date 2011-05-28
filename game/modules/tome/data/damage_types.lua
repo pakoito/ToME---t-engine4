@@ -19,6 +19,7 @@
 
 -- The basic stuff used to damage a grid
 setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
+	if not game.level.map(x, y) then return 0 end
 	local terrain = game.level.map(x, y, Map.TERRAIN)
 	if terrain then terrain:check("damage_project", src, x, y, type, dam) end
 
@@ -108,7 +109,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		if type ~= DamageType.PHYSICAL and target.knowTalent and target:knowTalent(target.T_STONE_FORTRESS) and target:hasEffect(target.EFF_DWARVEN_RESILIENCE) then
 			dam = math.max(0, dam - target:combatArmor() * (50 + target:getTalentLevel(target.T_STONE_FORTRESS) * 10) / 100)
 		end
-		
+
 		-- Damage Smearing
 		if type ~= DamageType.TEMPORAL and target:hasEffect(target.EFF_DAMAGE_SMEARING) then
 			local smear = dam

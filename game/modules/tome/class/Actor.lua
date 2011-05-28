@@ -420,10 +420,7 @@ end
 function _M:defineDisplayCallback()
 	if not self._mo then return end
 
-	local ps = {}
-	for e, _ in pairs(self.__particles) do
-		ps[#ps+1] = e
-	end
+	local ps = self:getParticlesList()
 
 	local f_self = nil
 	local f_danger = nil

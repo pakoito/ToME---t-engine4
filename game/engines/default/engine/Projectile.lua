@@ -102,6 +102,7 @@ function _M:deleteFromMap(map)
 			e.y = nil
 			map:removeParticleEmitter(e)
 		end
+		self:closeParticles()
 	end
 end
 
