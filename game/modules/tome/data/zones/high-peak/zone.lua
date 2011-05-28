@@ -74,7 +74,7 @@ return {
 	},
 	post_process = function(level)
 		game.player:grantQuest("high-peak")
-		for uid, e in pairs(level.entities) do e.faction="sorcerers" e.never_anger = true end
+		for uid, e in pairs(level.entities) do e.faction = e.hard_faction or "sorcerers" end
 
 		-- if we failed at charred scar (or did not do it at all) the gate of morning is destroyed and Aeryn turned to the service of the sorcerers
 		if level.level == 15 then

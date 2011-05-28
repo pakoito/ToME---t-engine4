@@ -119,3 +119,20 @@ newEntity{ base = "BASE_NPC_GHOUL",
 		[Talents.T_WEAKNESS_DISEASE]={base=3, every=9, max=7},
 	},
 }
+
+newEntity{ base = "BASE_NPC_GHOUL", define_as = "RISEN_CORPSE",
+	display = "z", color=colors.GREY, image="npc/undead_ghoul_ghoul.png",
+	name = "risen corpse",
+	desc = [[a body raised through dark magic]],
+	exp_worth = 1,
+	combat_armor = 5, combat_def = 3,
+	resolvers.equip{
+		{type="weapon", subtype="longsword", autoreq=true},
+	},
+	resolvers.talents{
+		[Talents.T_STUN]={base=3, every=9, max=7},
+		[Talents.T_BITE_POISON]={base=3, every=9, max=7},
+		[Talents.T_ROTTING_DISEASE]={base=4, every=9, max=7},
+		},     
+}
+

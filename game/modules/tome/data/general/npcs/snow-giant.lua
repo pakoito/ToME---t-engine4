@@ -115,3 +115,35 @@ newEntity{ base = "BASE_NPC_SNOW_GIANT",
 
 	resolvers.drops{chance=100, nb=1, {ego_chance=10} },
 }
+
+newEntity{ base = "BASE_NPC_SNOW_GIANT",
+	define_as = "BURB_SNOW_GIANT",
+	name = "Burb the snow giant champion", color=colors.VIOLET, unique=true,
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/giant_ice_snow_giant_chieftain.png", display_h=2, display_y=-1}}},
+	desc = [[A maddened, enraged snow giant that towers over his comrades. You've heard legends mentioning this particular monstrosity; they say that when he's not rampaging around frothing at the mouth, he sits, almost childlike, engraving stories and mysterious patterns on any flat stone surface he can find.]],
+	level_range = {25, nil}, exp_worth = 10,
+	autolevel = "warriormage",
+	rarity = 10,
+	rank = 3.5,
+	life_rating = 25,
+	max_life = resolvers.rngavg(150,170),
+	combat_armor = 32, combat_def = 30,
+	on_melee_hit = {[DamageType.COLD]=resolvers.mbonus(25, 20)},
+	melee_project = {[DamageType.COLD]=resolvers.mbonus(25, 20)},
+	resolvers.talents{ 
+		[Talents.T_KNOCKBACK]={base=4, every=6, max=10},
+		[Talents.T_STUN]={base=5, every=6, max=10},
+		[Talents.T_THROW_BOULDER]={base=4, every=6, max=10},
+		[Talents.T_ICE_SHARDS]={base=4, every=6, max=8},
+		[Talents.T_UTTERCOLD]={base=4, every=6, max=8},
+		[Talents.T_FREEZE]={base=4, every=6, max=8},
+		[Talents.T_ICE_STORM]={base=4, every=6, max=8},
+		},
+	make_escort = {
+		{type="giant", subtype="ice", number=3},
+	},
+	lite = 1,
+	ai = "tactical",
+
+	resolvers.drops{chance=100, nb=1, {ego_chance=10} },
+}

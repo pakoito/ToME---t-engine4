@@ -54,7 +54,7 @@ return {
 
 				nb_rooms = {0,0,0,1},
 				rooms = {"lesser_vault"},
-				lesser_vaults_list = {"orc-armoury", "double-t", "circle", "hostel", "orc-necromancer"},
+				lesser_vaults_list = {"orc-armoury", "double-t", "circle", "hostel", "orc-necromancer", "horror-chamber"},
 				lite_room_chance = 100,
 			},
 		},
@@ -72,7 +72,7 @@ return {
 		-- Place a lore note on each level
 		game:placeRandomLoreObject("ORC_HISTORY"..level.level)
 
-		for uid, e in pairs(level.entities) do e.faction="orc-pride" end
+		for uid, e in pairs(level.entities) do e.faction = e.hard_faction or "orc-pride" end
 	end,
 	levels =
 	{

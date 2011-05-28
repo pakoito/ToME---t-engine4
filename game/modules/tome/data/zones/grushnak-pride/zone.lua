@@ -70,7 +70,7 @@ return {
 			game:placeRandomLoreObject("GARKUL_HISTORY"..(level.level/2))
 		end
 
-		for uid, e in pairs(level.entities) do e.faction="orc-pride" end
+		for uid, e in pairs(level.entities) do e.faction = e.hard_faction or "orc-pride" end
 	end,
 	levels =
 	{

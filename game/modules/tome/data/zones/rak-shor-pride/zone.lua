@@ -54,7 +54,7 @@ return {
 
 				nb_rooms = {0,0,0,1},
 				rooms = {"lesser_vault"},
-				lesser_vaults_list = {"orc-armoury", "double-t", "crypt", "hostel"},
+				lesser_vaults_list = {"orc-armoury", "double-t", "crypt", "hostel", "horror-chamber"},
 				lite_room_chance = 100,
 			},
 		},
@@ -69,7 +69,7 @@ return {
 		},
 	},
 	post_process = function(level)
-		for uid, e in pairs(level.entities) do e.faction="orc-pride" end
+		for uid, e in pairs(level.entities) do e.faction = e.hard_faction or "orc-pride" end
 	end,
 	levels =
 	{
