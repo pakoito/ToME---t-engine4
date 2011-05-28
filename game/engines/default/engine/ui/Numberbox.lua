@@ -141,7 +141,7 @@ function _M:updateText(v)
 		self.number = util.bound(self.number + v, self.min, self.max)
 		text = tostring(self.number)
 		self.tmp = {}
-		for i = 1, #text do self.tmp[#self.tmp+1] = text:sub(i, i) end
+		for i = 1, #text do self.tmp[#self.tmp+1] = text:sub(i, i) if not self.tmp[#self.tmp] then break end end
 		self.cursor = #self.tmp + 1
 	end
 
