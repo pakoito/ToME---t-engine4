@@ -51,6 +51,7 @@ return {
 			nb_npc = {20, 20},
 			filters = { {max_ood=2}, },
 			guardian = "SPACIAL_DISTURBANCE",
+			guardian_no_connectivity = true,
 		},
 		object = {
 			class = "engine.generator.object.Random",
