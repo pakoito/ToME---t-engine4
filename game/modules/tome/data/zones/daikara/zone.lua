@@ -37,7 +37,7 @@ return {
 			class = "engine.generator.map.Roomer",
 			nb_rooms = 10,
 			edge_entrances = {2,8},
-			rooms = {"forest_clearing", "rocky_snowy_trees", "lesser_vault"},
+			rooms = {"forest_clearing", "rocky_snowy_trees", {"lesser_vault",7}},
 			rooms_config = {forest_clearing={pit_chance=5, filters={{}}}},
 			lesser_vaults_list = {"snow-giant-camp"},
 			['.'] = "ROCKY_GROUND",
