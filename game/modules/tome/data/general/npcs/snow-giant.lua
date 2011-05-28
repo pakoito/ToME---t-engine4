@@ -130,7 +130,7 @@ newEntity{ base = "BASE_NPC_SNOW_GIANT",
 	combat_armor = 32, combat_def = 30,
 	on_melee_hit = {[DamageType.COLD]=resolvers.mbonus(25, 20)},
 	melee_project = {[DamageType.COLD]=resolvers.mbonus(25, 20)},
-	resolvers.talents{ 
+	resolvers.talents{
 		[Talents.T_KNOCKBACK]={base=4, every=6, max=10},
 		[Talents.T_STUN]={base=5, every=6, max=10},
 		[Talents.T_THROW_BOULDER]={base=4, every=6, max=10},
@@ -145,5 +145,5 @@ newEntity{ base = "BASE_NPC_SNOW_GIANT",
 	lite = 1,
 	ai = "tactical",
 
-	resolvers.drops{chance=100, nb=1, {ego_chance=10} },
+	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 }
