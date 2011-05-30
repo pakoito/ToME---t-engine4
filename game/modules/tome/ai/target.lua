@@ -21,6 +21,7 @@
 -- this requires the ActorFOV interface, or an interface that provides self.fov.actors*
 -- This is ToME specific, overriding the engine default target_simple to account for lite, infravision, ...
 newAI("target_simple", function(self)
+	if not self.x then return end
 	if self.ai_target.actor and not self.ai_target.actor.dead and game.level:hasEntity(self.ai_target.actor) and rng.percent(90) and not self.ai_target.actor:attr("invulnerable") then return true end
 
 	-- Find closer enemy and target it
@@ -33,7 +34,7 @@ newAI("target_simple", function(self)
 		act = self.fov.actors_dist[i]
 --		print("AI looking for target", self.uid, self.name, "::", act.uid, act.name, self.fov.actors[act].sqdist)
 		-- find the closest enemy
-		if act and self:reactionToward(act) < 0 and not act.dead and
+		if act and self:reactionToward(act) < 0 and not act.dead and act.x and game.level.map:isBound(act.x, act.y) and
 			(
 				-- If it has lite we can always see it
 				((act.lite or 0) > 0)

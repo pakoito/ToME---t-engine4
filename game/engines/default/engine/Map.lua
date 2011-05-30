@@ -736,7 +736,7 @@ end
 
 --- Checks the given coords to see if they are in bound
 function _M:isBound(x, y)
-	if x < 0 or x >= self.w or y < 0 or y >= self.h then return false end
+	if x and y and x < 0 or x >= self.w or y < 0 or y >= self.h then return false end
 	return true
 end
 

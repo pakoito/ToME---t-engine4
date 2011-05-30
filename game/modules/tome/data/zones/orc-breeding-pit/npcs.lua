@@ -99,6 +99,7 @@ newEntity{ base = "BASE_NPC_ORC",
 
 newEntity{ base="BASE_NPC_ORC", define_as = "GREATMOTHER",
 	name = "Orc Greatmother", color=colors.VIOLET, unique = true,
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/humanoid_orc_orc_greatmother.png", display_h=2, display_y=-1}}},
 	desc = [[Here stands a tremendous form almost the size of a dragon.  Bloated skin rises in thick folds, seeping viscous slime from its wide pores.  Hundreds of hanging teats feed a small army of squabbling, fighting young orcs - only the toughest of them are able to gain the precious nutrients to grow stronger, the weaker ones left to wither on the mouldy floor.  Dozens of gaping vulvae squelch and pulsate, pushing out new young with alarming rapidity.  At the top of this towering hulk is a shrivelled head coated in long tangled hair.  Dazed eyes peer out with a mixture of sadness and pain, but as they fix on you they turn to anger, the creature's face contorted with the fierce desire to protect its young.]],
 	level_range = {40, nil}, exp_worth = 1,
 	rank = 5,
