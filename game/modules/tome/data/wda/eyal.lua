@@ -118,6 +118,7 @@ elseif zone == "Far East" then
 			if spot and not game.level.map(spot.x, spot.y, Map.ACTOR) and not game.level.map.seens(spot.x, spot.y) then
 				print("Spawned sunwall patrol", spot.x, spot.y, e.name)
 				game.zone:addEntity(game.level, e, "actor", spot.x, spot.y)
+				wda.cur_patrols = math.max(wda.cur_patrols, 0)
 				wda.cur_patrols = wda.cur_patrols + 1
 				e.world_zone = zone
 				e.on_die = function(self) game.level.data.wda.zones[self.world_zone].cur_patrols = game.level.data.wda.zones[self.world_zone].cur_patrols - 1 end
@@ -131,6 +132,7 @@ elseif zone == "Far East" then
 			if spot and not game.level.map(spot.x, spot.y, Map.ACTOR) and not game.level.map.seens(spot.x, spot.y) then
 				print("Spawned sunwall patrol", spot.x, spot.y, e.name)
 				game.zone:addEntity(game.level, e, "actor", spot.x, spot.y)
+				wda.cur_orc_patrols = math.max(wda.cur_orc_patrols, 0)
 				wda.cur_orc_patrols = wda.cur_orc_patrols + 1
 				e.world_zone = zone
 				e.on_die = function(self) game.level.data.wda.zones[self.world_zone].cur_orc_patrols = game.level.data.wda.zones[self.world_zone].cur_orc_patrols - 1 end
@@ -147,6 +149,7 @@ elseif zone == "Far East" then
 				print("Spawned hostile", spot.x, spot.y, e.name)
 				game.zone:addEntity(game.level, e, "actor", spot.x, spot.y)
 				wda.cur_hostiles = wda.cur_hostiles + 1
+				wda.cur_hostiles = math.max(wda.cur_hostiles, 0)
 				e.world_zone = zone
 				e.on_die = function(self) game.level.data.wda.zones[self.world_zone].cur_hostiles = game.level.data.wda.zones[self.world_zone].cur_hostiles - 1 end
 			end

@@ -773,8 +773,10 @@ newEffect{
 	on_gain = function(self, err) return "#Target# wanders around!.", "+Confused" end,
 	on_lose = function(self, err) return "#Target# seems more focused.", "-Confused" end,
 	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("confused", eff.power)
 		eff.dur = self:updateEffectDuration(eff.dur, "confusion")
+		eff.power = eff.power - (self:attr("confusion_immune") or 0) / 2
+		eff.tmpid = self:addTemporaryValue("confused", eff.power)
+		if eff.power <= 0 then eff.dur = 0 end
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("confused", eff.tmpid)
@@ -3385,12 +3387,12 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		game:onTickEnd(function()
-		
+
 			if game._chronoworlds == nil then
 				game.logSeen(self, "#LIGHT_RED#The see the threads spell fizzles and cancels, leaving you in this timeline.")
 				return
 			end
-			
+
 			if eff.thread < 3 then
 				local worlds = game._chronoworlds
 
@@ -3483,12 +3485,12 @@ newEffect{
 		local t = self:getTalentFromId(self.T_PARADOX_CLONE)
 		local base = t.getDuration(self, t) - 2
 		game:onTickEnd(function()
-		
+
 			if game._chronoworlds == nil then
 				game.logSeen(self, "#LIGHT_RED#You've altered your destiny and will not be pulled into the past.")
 				return
 			end
-			
+
 			local worlds = game._chronoworlds
 			-- save the players health so we can reload it
 			local oldplayer = game.player
