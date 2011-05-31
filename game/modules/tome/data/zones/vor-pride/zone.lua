@@ -21,7 +21,7 @@ return {
 	name = "Vor Pride",
 	level_range = {35, 60},
 	level_scheme = "player",
-	max_level = 5,
+	max_level = 4,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	width = 64, height = 64,
@@ -70,7 +70,7 @@ return {
 	},
 	post_process = function(level)
 		-- Place a lore note on each level
-		game:placeRandomLoreObject("ORC_HISTORY"..level.level)
+		game:placeRandomLoreObjectScale("ORC_HISTORY", 5, level.level)
 
 		for uid, e in pairs(level.entities) do e.faction = e.hard_faction or "orc-pride" end
 	end,
@@ -81,7 +81,7 @@ return {
 				up = "FLAT_UP_WILDERNESS",
 			}, },
 		},
-		[5] = {
+		[4] = {
 			generator = { map = {
 				down = "FLAT_UP_WILDERNESS",
 			}, },

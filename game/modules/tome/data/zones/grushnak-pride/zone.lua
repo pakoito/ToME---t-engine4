@@ -27,7 +27,7 @@ return {
 	variable_zone_name = true,
 	level_range = {35, 60},
 	level_scheme = "player",
-	max_level = 10,
+	max_level = 8,
 	decay = {300, 800},
 	-- 10 levels but really only 5, the 5 others are just transitions
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + math.floor(level.level / 2) + rng.range(-1,2) end,
@@ -66,8 +66,9 @@ return {
 	},
 	post_process = function(level)
 		-- Place a lore note on each level
-		if level.level == 2 or level.level == 4 or level.level == 6 or level.level == 8 or level.level == 10 then
+		if level.level == 2 or level.level == 4 or level.level == 6 or level.level == 8 then
 			game:placeRandomLoreObject("GARKUL_HISTORY"..(level.level/2))
+			if level.level == 8 then game:placeRandomLoreObject("GARKUL_HISTORY5") end
 		end
 
 		for uid, e in pairs(level.entities) do e.faction = e.hard_faction or "orc-pride" end
@@ -94,12 +95,7 @@ return {
 			actor = { nb_npc = {0, 0} },
 			object = { nb_object = {0, 0} },
 		}},
-		[9] = { generator = {
-			map = { class = "engine.generator.map.Static", map = "zones/prides-middle" },
-			actor = { nb_npc = {0, 0} },
-			object = { nb_object = {0, 0} },
-		}},
-		[10] = {
+		[8] = {
 			generator = { map = {
 				down = "SLIME_TUNNELS",
 				force_last_stair = true,

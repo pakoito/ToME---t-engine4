@@ -20,12 +20,12 @@
 return {
 	name = "High Peak",
 	display_name = function(x, y)
-		if game.level.level == 16 then return "High Peak: The Sanctum" end
+		if game.level.level == 11 then return "High Peak: The Sanctum" end
 		return "High Peak ("..game.level.level..")"
 	end,
 	level_range = {55, 80},
 	level_scheme = "player",
-	max_level = 15,
+	max_level = 10,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	width = 50, height = 75,
@@ -77,7 +77,7 @@ return {
 		for uid, e in pairs(level.entities) do e.faction = e.hard_faction or "sorcerers" end
 
 		-- if we failed at charred scar (or did not do it at all) the gate of morning is destroyed and Aeryn turned to the service of the sorcerers
-		if level.level == 15 then
+		if level.level == 10 then
 			local mtdm = game.player:hasQuest("charred-scar")
 			if not mtdm or mtdm:isCompleted("not-stopped") then
 				game.player:hasQuest("high-peak"):failed_charred_scar(level)
@@ -90,7 +90,7 @@ return {
 	end,
 	levels =
 	{
-		[15] = {
+		[10] = {
 			generator = {
 				map = {
 					down = "PORTAL_BOSS",
@@ -98,7 +98,7 @@ return {
 				}
 			}
 		},
-		[16] = {
+		[11] = {
 			generator = {
 				map = {
 					class = "engine.generator.map.Static",
