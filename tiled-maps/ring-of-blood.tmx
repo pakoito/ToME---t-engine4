@@ -32,6 +32,12 @@
     <property name="value" value="&quot;LAVA_WALL&quot;"/>
    </properties>
   </tile>
+  <tile id="36">
+   <properties>
+    <property name="display" value="&amp;"/>
+    <property name="value" value="&quot;LAVA_WALL_OPAQUE&quot;"/>
+   </properties>
+  </tile>
   <tile id="54">
    <properties>
     <property name="display" value="t"/>
@@ -195,7 +201,7 @@
  </tileset>
  <layer name="Terrain" width="50" height="50">
   <data encoding="base64" compression="zlib">
-   eJzt18sNwjAQBFC7gDSBKIy6Uw1XCynrnbX3QzKHOfAT8xiFJGdr7WQYhnlYuiLZHVf7V/ZY+lfy7Oif7fEwRFs0XV5CKliQ/pbXIywr/a3vj3Qg/dHPVjBoj41IC/L9Y+9jiOSRLBFbXPU5hEgWz020W2gMksVzE+0WiGFm8dgE2QIxjJaITVa2OCeP0U0iHJYtpE2iHZ++1/Hu3OPJx8cd/q+QTaqcP9BNqp7PkU20lqzrK2ST8flq17uzTf7p/sNqmSXaIDl+f3ukf8b9+cyi6Yd4vQxay9WxgezlbUAs1kQZPC3Rht2ezP47PNmdVz3ZHRmGYRjmjvkCT1JFsw==
+   eJztmEsOwjAMBZMD9BII7sW5cxq2EQLHz0lst32LWSCKeKMR9NNKKY0QQm5GVRC9cXZ/Zh/L/kw+K/ZH++xw8HbRbHkIZHBB9lve93CZ2W893tMD2Y9+NoPD6wfRLsj397uPDslHcvFo8c/hEJBcdjbRttA4SC47m2hbIA4jlx1NkBaIQ+/i0WSmRRu8Rpt4eFhaSE28Pd51rcezssedfx9X+L9CmmQ5f6BNsp7PkSZal6jrK6RJ75LtenfU5Ez3H1aXEd4Okke/5wz35yMXzb4Mz0u0Lt97Mz6/QlyseDnsdPF2WO0TuX+FT/TmWZ/ojYQQQsgV+QDdM0Zz
   </data>
  </layer>
  <objectgroup name="addSpot" width="50" height="50">

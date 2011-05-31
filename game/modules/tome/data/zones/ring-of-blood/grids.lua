@@ -27,6 +27,16 @@ newEntity{ define_as = "LAVA_WALL",
 	image="terrain/lava_floor.png",
 }
 
+newEntity{ define_as = "LAVA_WALL_OPAQUE",
+	name='lava pit',
+	display='~', color=colors.LIGHT_RED, back_color=colors.RED,
+	always_remember = true, does_block_move = true,
+	block_sight = true,
+	block_sense = true,
+	block_esp = true,
+	image="terrain/lava_floor.png",
+}
+
 newEntity{
 	define_as = "CONTROL_ORB",
 	name = "Slave Control Orb", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/worldmap.png"}},
