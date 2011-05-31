@@ -24,7 +24,7 @@ newTalent{
 	points = 5,
 	psi = 0,
 	cooldown = function(self, t)
-		return math.ceil(25 - self:getTalentLevelRaw(t)*3)
+		return math.max(6, math.ceil(25 - self:getTalentLevelRaw(t)*3))
 	end,
 	tactical = { DEFEND = 1, DISABLE = 2 },
 	direct_hit = true,
@@ -67,7 +67,7 @@ newTalent{
 	require = psi_wil_req2,
 	points = 5,
 	cooldown = function(self, t)
-		return math.ceil(25 - self:getTalentLevelRaw(t)*3)
+		return math.max(6, math.ceil(25 - self:getTalentLevelRaw(t)*3))
 	end,
 	psi = 0,
 	tactical = { DEFEND = 2, DISABLE = 2 },
@@ -112,7 +112,7 @@ newTalent{
 	points = 5,
 	psi = 0,
 	cooldown = function(self, t)
-		return math.ceil(25 - self:getTalentLevelRaw(t)*3)
+		return math.max(6, math.ceil(25 - self:getTalentLevelRaw(t)*3))
 	end,
 	tactical = { DEFEND = 2, ATTACKAREA = 2, DISABLE = 1 },
 	direct_hit = true,
