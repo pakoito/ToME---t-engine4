@@ -425,8 +425,8 @@ function _M:spawnWorldAmbush(enc, dx, dy)
 	local g1 = game.level.map(dx, dy, engine.Map.TERRAIN)
 	local g2 = game.level.map(game.player.x, game.player.y, engine.Map.TERRAIN)
 	local g = g1
-	if not g.can_encounter then g = g2 end
-	if not g.can_encounter then return false end
+	if not g or not g.can_encounter then g = g2 end
+	if not g or not g.can_encounter then return false end
 
 	if g.can_encounter == "desert" then gen.floor = "SAND" gen.wall = "PALMTREE" end
 

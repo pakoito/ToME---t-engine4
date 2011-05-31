@@ -20,7 +20,7 @@
 base_size = 64
 
 return {
-	system_rotation = 0, system_rotationv = 0.5,
+	system_rotation = 0, system_rotationv = speed or 0.5,
 
 	base = 1000,
 
@@ -36,4 +36,4 @@ return {
 
 }, function(self)
 	self.ps:emit(1)
-end, 1, "shockbolt/terrain/wormhole", true
+end, 1, image or "shockbolt/terrain/wormhole", true

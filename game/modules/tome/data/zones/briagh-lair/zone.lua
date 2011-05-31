@@ -34,7 +34,7 @@ return {
 		map = {
 			class = "engine.generator.map.Cavern",
 			zoom = 16,
-			min_floor = 1200,
+			min_floor = 1000,
 			floor = "UNDERGROUND_SAND",
 			wall = "SANDWALL_STABLE",
 			up = "SAND_LADDER_UP",

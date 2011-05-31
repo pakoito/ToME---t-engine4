@@ -29,7 +29,7 @@ local Talents = require("engine.interface.ActorTalents")
 
 newEntity{ define_as = "INQUISITOR",
 	allow_infinite_dungeon = true,
-	type = "humanoid", subtype = "elf", unique = true,
+	type = "humanoid", subtype = "shalore", unique = true,
 	name = "Rhaloren Inquisitor",
 	display = "p", color=colors.VIOLET, female = true,
 	desc = [[This tall elf rush to you, wielding both her greatsword and magical spells.]],

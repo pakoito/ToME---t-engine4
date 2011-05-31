@@ -41,7 +41,7 @@ load("/data/general/npcs/plant.lua", gloomify(0))
 
 newEntity{ base="BASE_NPC_CANINE", define_as = "WITHERING_THING",
 	unique = true,
-	name = "The Withering Thing", tint=colors.PURPLE, image = "npc/the_withering_thing.png",
+	name = "The Withering Thing", tint=colors.PURPLE,
 	color=colors.VIOLET,
 	desc = [[This deformed beast might have been a wolf before, but now it is just.. terrible.]],
 	level_range = {7, nil}, exp_worth = 2,

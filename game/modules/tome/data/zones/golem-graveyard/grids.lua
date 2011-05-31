@@ -24,14 +24,8 @@ load("/data/general/grids/water.lua")
 newEntity{base="HARDWALL", define_as = "ATAMATHON_BROKEN",
 	nice_tiler = false,
 	display = 'g', color = colors.RED,
-	resolvers.generic(function(e)
-		if engine.Map.tiles.nicer_tiles then
-			e.image = "terrain/grass.png"
-			e.add_mos = {{image = "npc/atamathon_broken.png"}}
-		else
-			e.image = "npc/atamathon_broken.png"
-		end
-	end),
+	image = "npc/atamathon_broken.png",
+	resolvers.nice_tile{image="terrain/grass.png", add_displays = {class.new{image="npc/construct_golem_athamathon_the_giant_golem.png", display_y=-1, display_h=2}}},
 	name = "the remains of Atamathon",
 	show_tooltip = true,
 	desc = [[This giant golem was constructed by the halflings during the Pyre Wars to fight the orcs, but was felled by Garkul the Devourer.

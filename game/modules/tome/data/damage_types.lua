@@ -19,7 +19,7 @@
 
 -- The basic stuff used to damage a grid
 setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
-	if not game.level.map(x, y) then return 0 end
+	if not game.level.map:isBound(x, y) then return 0 end
 	local terrain = game.level.map(x, y, Map.TERRAIN)
 	if terrain then terrain:check("damage_project", src, x, y, type, dam) end
 
