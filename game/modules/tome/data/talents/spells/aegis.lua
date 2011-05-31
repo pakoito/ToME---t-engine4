@@ -41,7 +41,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Contingency",
+	name = "Shielding",
 	type = {"spell/aegis", 2},
 	require = spells_req2,
 	points = 5,
@@ -49,35 +49,31 @@ newTalent{
 	sustain_mana = 40,
 	cooldown = 14,
 	tactical = { BUFF = 2 },
-	getValue = function(self, t) return 50 - self:getTalentLevelRaw(t) * 6 end,
+	getDur = function(self, t) return math.ceil(2 + self:getTalentLevel(t) / 2) end,
 	getShield = function(self, t) return 20 + self:combatTalentSpellDamage(t, 5, 400) / 10 end,
 	activate = function(self, t)
-		self.contingency_disable = self.contingency_disable or {}
-		local value = t.getValue(self, t)
+		local dur = t.getDur(self, t)
 		local shield = t.getShield(self, t)
 		game:playSoundNear(self, "talents/arcane")
 		local ret = {
-			value = self:addTemporaryValue("contingency", value),
-			shield = self:addTemporaryValue("contingency_shield", shield),
-			disable = self:addTemporaryValue("contingency_disable", {[t.id] = 1}),
+			shield = self:addTemporaryValue("shield_factor", shield),
+			dur = self:addTemporaryValue("shield_dur", dur),
 		}
 		self:checkEncumbrance()
 		return ret
 	end,
 	deactivate = function(self, t, p)
-		self:removeTemporaryValue("contingency", p.value)
-		self:removeTemporaryValue("contingency_shield", p.shield)
-		self:removeTemporaryValue("contingency_disable", p.disable)
+		self:removeTemporaryValue("shield_factor", p.shield)
+		self:removeTemporaryValue("shield_dur", p.dur)
 		return true
 	end,
 	info = function(self, t)
-		local value = t.getValue(self, t)
 		local shield = t.getShield(self, t)
-		return ([[Surround yourself with protective arcane forces.
-		Each time you are hit for over %d%% of your total life you automatically get a damage shield of %d%% of the life lost for 3 turns.
-		The spell will then unsustain itself.
+		local dur = t.getDur(self, t)
+		return ([[Surround yourself with strengthening arcane forces.
+		Every damage shield, time shield or displacement shield affecting you has its power increased by %d%% and duration increased by %d.
 		The shield value will increase with your Magic stat.]]):
-		format(value, shield)
+		format(shield, dur)
 	end,
 }
 
@@ -87,7 +83,7 @@ newTalent{
 	require = spells_req3,
 	points = 5,
 	mode = "sustained",
-	sustain_mana = 60,
+	sustain_mana = 50,
 	cooldown = 30,
 	tactical = { BUFF = 2 },
 	getShield = function(self, t) return 20 + self:combatTalentSpellDamage(t, 5, 500) / 10 end,
@@ -120,8 +116,9 @@ newTalent{
 	points = 5,
 	mana = 50,
 	cooldown = 25,
+	no_energy = true,
 	tactical = { HEAL = 2 },
-	getShield = function(self, t) return 50 + self:combatTalentSpellDamage(t, 5, 500) / 10 end,
+	getShield = function(self, t) return 40 + self:combatTalentSpellDamage(t, 5, 500) / 10 end,
 	on_pre_use = function(self, t)
 		for eff_id, p in pairs(self.tmp) do
 			local e = self.tempeffect_def[eff_id]
@@ -145,7 +142,6 @@ newTalent{
 			if #effs == 0 then break end
 			local eff = rng.tableRemove(effs)
 
-			eff.p.dur = eff.p.dur * 2
 			eff.e.on_aegis(self, eff.p, shield)
 		end
 
@@ -154,7 +150,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local shield = t.getShield(self, t)
-		return ([[Release arcane energies into any magical shield currently protection you, doubling its remaining time and increasing its remaining absorb value by %d%%.
+		return ([[Release arcane energies into any magical shield currently protection you, replenishing %d%% of its max absorb value.
 		It will affect at most %d shield effects.
 		Affected shields are: Damage Shield, Time Shield, Displacement Shield]]):
 		format(shield, self:getTalentLevelRaw(t))

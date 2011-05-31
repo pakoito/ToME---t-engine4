@@ -80,7 +80,7 @@ newChat{ id="welcome",
 			npc.store:interact(player)
 		end, cond=function(npc, player) return npc.store and true or false end},
 		{"I am looking for special jewelry.", jump="jewelry"},
-		{"So you can infused amulets in this place?", jump="artifact_jewelry", cond=function(npc, player) return npc.can_craft and player:hasQuest("master-jeweler") and player:isQuestStatus("master-jeweler", engine.Quest.COMPLETED, "limmir-survived") end},
+		{"So you can infuse amulets in this place?", jump="artifact_jewelry", cond=function(npc, player) return npc.can_craft and player:hasQuest("master-jeweler") and player:isQuestStatus("master-jeweler", engine.Quest.COMPLETED, "limmir-survived") end},
 		{"I have found this tome; it looked important.", jump="quest", cond=function(npc, player) return npc.can_quest and player:hasQuest("master-jeweler") and player:hasQuest("master-jeweler"):has_tome(player) end},
 		{"Sorry I have to go!"},
 	}

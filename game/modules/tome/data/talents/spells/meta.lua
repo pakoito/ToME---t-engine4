@@ -134,7 +134,7 @@ newTalent{
 		local tids = {}
 		for tid, _ in pairs(self.talents_cd) do
 			local tt = self:getTalentFromId(tid)
-			if tt.type[2] <= t.getMaxLevel(self, t) and tt.type[1]:find("^spell/") then
+			if tt.type[2] <= t.getMaxLevel(self, t) and tt.is_spell then
 				tids[#tids+1] = tid
 			end
 		end

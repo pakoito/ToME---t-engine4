@@ -1137,6 +1137,8 @@ newEffect{
 	on_gain = function(self, err) return "The very fabric of space alters around #target#.", "+Displacement Shield" end,
 	on_lose = function(self, err) return "The fabric of space around #target# stabilizes to normal.", "-Displacement Shield" end,
 	activate = function(self, eff)
+		if self:attr("shield_factor") then eff.power = eff.power * (100 + self:attr("shield_factor")) / 100 end
+		if self:attr("shield_dur") then eff.dur = eff.dur + self:attr("shield_dur") end
 		self.displacement_shield = eff.power
 		self.displacement_shield_chance = eff.chance
 		--- Warning there can be only one time shield active at once for an actor
@@ -1144,8 +1146,7 @@ newEffect{
 		eff.particle = self:addParticles(Particles.new("displacement_shield", 1))
 	end,
 	on_aegis = function(self, eff, aegis)
-		self.displacement_shield = self.displacement_shield * (100 + aegis) / 100
-		eff.power = eff.power * (100 + aegis) / 100
+		self.displacement_shield = self.displacement_shield + eff.power * aegis / 100
 	end,
 	on_timeout = function(self, eff)
 		if eff.target.dead then
@@ -1171,10 +1172,11 @@ newEffect{
 	on_gain = function(self, err) return "A shield forms around #target#.", "+Shield" end,
 	on_lose = function(self, err) return "The shield around #target# crumbles.", "-Shield" end,
 	on_aegis = function(self, eff, aegis)
-		self.damage_shield_absorb = self.damage_shield_absorb * (100 + aegis) / 100
-		eff.power = eff.power * (100 + aegis) / 100
+		self.damage_shield_absorb = self.damage_shield_absorb + eff.power * aegis / 100
 	end,
 	activate = function(self, eff)
+		if self:attr("shield_factor") then eff.power = eff.power * (100 + self:attr("shield_factor")) / 100 end
+		if self:attr("shield_dur") then eff.dur = eff.dur + self:attr("shield_dur") end
 		eff.tmpid = self:addTemporaryValue("damage_shield", eff.power)
 		--- Warning there can be only one time shield active at once for an actor
 		self.damage_shield_absorb = eff.power
@@ -1197,10 +1199,11 @@ newEffect{
 	on_gain = function(self, err) return "The very fabric of time alters around #target#.", "+Time Shield" end,
 	on_lose = function(self, err) return "The fabric of time around #target# stabilizes to normal.", "-Time Shield" end,
 	on_aegis = function(self, eff, aegis)
-		self.time_shield_absorb = self.time_shield_absorb * (100 + aegis) / 100
-		eff.power = eff.power * (100 + aegis) / 100
+		self.time_shield_absorb = self.time_shield_absorb + eff.power * aegis / 100
 	end,
 	activate = function(self, eff)
+		if self:attr("shield_factor") then eff.power = eff.power * (100 + self:attr("shield_factor")) / 100 end
+		if self:attr("shield_dur") then eff.dur = eff.dur + self:attr("shield_dur") end
 		eff.tmpid = self:addTemporaryValue("time_shield", eff.power)
 		--- Warning there can be only one time shield active at once for an actor
 		self.time_shield_absorb = eff.power
