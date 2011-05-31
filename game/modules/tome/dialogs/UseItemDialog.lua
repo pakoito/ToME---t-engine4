@@ -89,7 +89,7 @@ function _M:generateList()
 	if self.inven == self.actor.INVEN_INVEN and self.object:wornInven() and self.actor:getInven(self.object:wornInven()) then list[#list+1] = {name="Wield/Wear", action="wear"} end
 	if self.inven ~= self.actor.INVEN_INVEN and self.object:wornInven() then list[#list+1] = {name="Take off", action="takeoff"} end
 	if self.inven == self.actor.INVEN_INVEN then list[#list+1] = {name="Drop", action="drop"} end
-	if self.inven == self.actor.INVEN_INVEN and transmo_chest then list[#list+1] = {name="Transmogrify", action="transmo", transmo=transmo_chest} end
+	if self.inven == self.actor.INVEN_INVEN and transmo_chest and transmo_chest.transmo_filter(self.object) then list[#list+1] = {name="Transmogrify", action="transmo", transmo=transmo_chest} end
 
 	self.max = 0
 	self.maxh = 0
