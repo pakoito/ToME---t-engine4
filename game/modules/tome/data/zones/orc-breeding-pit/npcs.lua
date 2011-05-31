@@ -69,6 +69,7 @@ newEntity{ base = "BASE_NPC_ORC",
 
 newEntity{ base = "BASE_NPC_ORC",
 	name = "orc mother", color=colors.YELLOW,
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/humanoid_orc_orc_mother.png", display_h=2, display_y=-1}}},
 	desc = [[This giant, bloated form towers above you. Mucus and slime ooze from every orifice, dripping onto the cavern floor. Orc children fight over the right to feed from her distended teats whilst small babies are regularly pushed out from her many pulsating vulvas. The sight and the smell make you retch.]],
 	level_range = {25, nil}, exp_worth = 1,
 	rarity = 8,
