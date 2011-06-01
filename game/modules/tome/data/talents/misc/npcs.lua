@@ -211,8 +211,7 @@ newTalent{
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
 		local hit = self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.5, 1), true)
 
-		-- No check to see if the attack hit
-		if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("disarm") then
+		if hit and target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("disarm") then
 			target:setEffect(target.EFF_DISARMED, 2 + self:getTalentLevel(t), {})
 		else
 			game.logSeen(target, "%s resists the blow!", target.name:capitalize())
