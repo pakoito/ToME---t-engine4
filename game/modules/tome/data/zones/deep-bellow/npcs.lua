@@ -81,7 +81,7 @@ newEntity{ base="BASE_NPC_CORRUPTED_HORROR", define_as = "THE_MOUTH",
 }
 
 newEntity{ base="BASE_NPC_CORRUPTED_HORROR", define_as = "SLIMY_CRAWLER",
-	name = "slimy crawlyer",
+	name = "slimy crawler",
 	color = colors.GREEN,
 	desc = [[This disgusting... thing crawls on the floor toward you with great speed.
 It seems to come from the digestive system of the mouth.]],
