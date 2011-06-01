@@ -19,6 +19,7 @@
 
 load("/data/general/grids/basic.lua")
 load("/data/general/grids/sand.lua")
+load("/data/general/grids/forest.lua")
 
 newEntity{
 	define_as = "WALL_SEE",
