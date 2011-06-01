@@ -46,7 +46,7 @@ startx = 0
 starty = 20
 
 -- addSpot section
-addSpot({29, 13}, "npc", "arena")
+addSpot({28, 12}, "npc", "arena")
 addSpot({21, 11}, "npc", "elemental")
 addSpot({16, 16}, "npc", "elemental")
 addSpot({12, 25}, "npc", "elemental")

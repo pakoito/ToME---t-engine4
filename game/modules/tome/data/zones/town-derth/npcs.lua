@@ -103,4 +103,9 @@ newEntity{ base = "BASE_NPC_DERTH_TOWN",
 	never_move = 1,
 	rarity = false,
 	max_life = resolvers.rngavg(70,80),
+	seen_by = function(self, who)
+		if not game.party:hasMember(who) then return end
+		self.seen_by = nil
+		self:doEmote("Hey you, come here you seem worthy..", 60)
+	end,
 }

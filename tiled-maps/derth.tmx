@@ -160,7 +160,7 @@
   </data>
  </layer>
  <objectgroup name="addSpot" width="50" height="50">
-  <object name="arena quest" x="948" y="428">
+  <object name="arena quest" x="912" y="400">
    <properties>
     <property name="subtype" value="&quot;arena&quot;"/>
     <property name="type" value="&quot;npc&quot;"/>
