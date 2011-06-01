@@ -31,8 +31,7 @@ require "mod.class.interface.PartyDeath"
 local Map = require "engine.Map"
 local Dialog = require "engine.ui.Dialog"
 local ActorTalents = require "engine.interface.ActorTalents"
-local LevelupStatsDialog = require "mod.dialogs.LevelupStatsDialog"
-local LevelupTalentsDialog = require "mod.dialogs.LevelupTalentsDialog"
+local LevelupDialog = require "mod.dialogs.LevelupDialog"
 
 --- Defines the player for ToME
 -- It is a normal actor, with some redefined methods to handle user interaction.<br/>
@@ -865,13 +864,8 @@ function _M:quickSwitchWeapons()
 end
 
 function _M:playerLevelup(on_finish)
-	if self.unused_stats > 0 then
-		local ds = LevelupStatsDialog.new(self, on_finish)
-		game:registerDialog(ds)
-	else
-		local dt = LevelupTalentsDialog.new(self, on_finish)
-		game:registerDialog(dt)
-	end
+	local ds = LevelupDialog.new(self, on_finish)
+	game:registerDialog(ds)
 end
 
 --- Use a portal with the orb of many ways

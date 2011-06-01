@@ -49,6 +49,11 @@ newBirthDescriptor{
 		"#LIGHT_BLUE# * +0 Strength, +1 Dexterity, +0 Constitution",
 		"#LIGHT_BLUE# * +0 Magic, +5 Willpower, +3 Cunning",
 	},
+	getStatDesc = function(stat, actor)
+		if stat == actor.STAT_CUN then
+			return "Max summons: "..math.floor(actor:getCun()/10)
+		end
+	end,
 	stats = { wil=5, cun=3, dex=1, },
 	talents_types = {
 		["wild-gift/call"]={true, 0.2},

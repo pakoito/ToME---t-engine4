@@ -89,6 +89,11 @@ function _M:drawItem(item, nb_keyframes)
 				if type(text) ~= "table" then text = tstring.from(tostring(text)) end
 			end
 			local color = item.color or {255,255,255}
+
+			if item.color and type(item.color[1]) == "table" then
+				color = item.color[j]
+			end
+
 			local s = col.surface
 
 			s:erase(0, 0, 0, 0)
@@ -231,11 +236,12 @@ function _M:setList(list)
 	for i, item in ipairs(self.list) do self:drawItem(item) end
 end
 
-function _M:onSelect()
+function _M:onSelect(force_refresh)
 	local item = self.list[self.sel]
-	if not item then return end
+	if not item or not force_refresh and self.previtem and self.previtem==item then return end
 
 	if rawget(self, "select") then self.select(item, self.sel) end
+--	self.previtem = item
 end
 
 function _M:onUse(...)

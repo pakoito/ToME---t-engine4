@@ -62,9 +62,10 @@ end
 --- Requests a simple, press any key, dialog
 function _M:simpleLongPopup(title, text, w, fct, no_leave, force_height)
 	local list = text:splitLines(w - 10, self.font)
+	local _, th = self.font:size(title)
 	local d = new(title, 1, 1)
-	local h = math.min(force_height and (force_height * game.h) or 999999999, self.font_h * #list)
-	d:loadUI{{left = 3, top = 3, ui=require("engine.ui.Textzone").new{width=w+10, height=h, scrollbar=(h < self.font_h * #list) and true or false, text=text}}}
+	local h = math.min(force_height and (force_height * game.h) or 999999999, self.font_h * #list + th )
+	d:loadUI{{left = 3, top = 3, ui=require("engine.ui.Textzone").new{width=w+10, height=h + 10, scrollbar=(h < self.font_h * #list) and true or false, text=text}}}
 	if not no_leave then
 		d.key:addBind("EXIT", function() game:unregisterDialog(d) if fct then fct() end end)
 		local close = require("engine.ui.Button").new{text="Close", fct=function() d.key:triggerVirtual("EXIT") end}
@@ -117,6 +118,30 @@ function _M:yesnoLongPopup(title, text, w, fct, yes_text, no_text, no_leave, esc
 	game:registerDialog(d)
 	return d
 end
+
+--- Requests a simple yes-no dialog
+function _M:yesnocancelLongPopup(title, text, fct, yes_text, no_text, cancel_text, no_leave, escape)
+	local w, h = self.font:size(text)
+	local d = new(title, 1, 1)
+
+--	d.key:addBind("EXIT", function() game:unregisterDialog(d) fct(false) end)
+	local ok = require("engine.ui.Button").new{text=yes_text or "Yes", fct=function() game:unregisterDialog(d) fct(true, false) end}
+	local no = require("engine.ui.Button").new{text=no_text or "No", fct=function() game:unregisterDialog(d) fct(false, false) end}
+	local cancel = require("engine.ui.Button").new{text=cancel_text or "Cancel", fct=function() game:unregisterDialog(d) fct(false, true) end}
+	if not no_leave then d.key:addBind("EXIT", function() game:unregisterDialog(d) game:unregisterDialog(d) fct(false,not escape) end) end
+	d:loadUI{
+		{left = 3, top = 3, ui=require("engine.ui.Textzone").new{width=w+20, height=h + 5, text=text}},
+		{left = 3, bottom = 3, ui=ok},
+		{left = 3 + ok.w, bottom = 3, ui=no},
+		{right = 3, bottom = 3, ui=cancel},
+	}
+	d:setFocus(ok)
+	d:setupUI(true, true)
+
+	game:registerDialog(d)
+	return d
+end
+
 
 title_shadow = true
 
@@ -275,10 +300,12 @@ function _M:setupUI(resizex, resizey, on_resize, addmw, addmh)
 		end
 --		print("===", mw, addw)
 		mw = mw + addw + 5 * 2 + (addmw or 0)
-		mh = mh + addh + 5 + 22 + 3 + (addmh or 0)
+		
 --		print("===", mw, addw)
 		local tw, th = self.font_bold:size(self.title)
 		mw = math.max(tw + 6, mw)
+		
+		mh = mh + addh + 5 + 22 + 3 + (addmh or 0) + th
 
 		if on_resize then on_resize(resizex and mw or self.w, resizey and mh or self.h) end
 		self:resize(resizex and mw or self.w, resizey and mh or self.h)
@@ -339,6 +366,31 @@ function _M:setFocus(id)
 	self.focus_ui = ui
 	self.focus_ui_id = id
 	ui.ui:setFocus(true)
+end
+
+function _M:moveUIElement(id, left, right, top, bottom)
+	if type(id) == "table" then
+		for i = 1, #self.uis do
+			if self.uis[i].ui == id then id = i break end
+		end
+		if type(id) == "table" then return end
+	end
+
+	self.uis[id].left = left or self.uis[id].left
+	self.uis[id].right = right or self.uis[id].right
+	self.uis[id].top = top or self.uis[id].top
+	self.uis[id].bottom = bottom or self.uis[id].bottom
+end
+
+function _M:getUIElement(id)
+	if type(id) == "table" then
+		for i = 1, #self.uis do
+			if self.uis[i].ui == id then id = i break end
+		end
+		if type(id) == "table" then return end
+	end
+	
+	return self.uis[id]
 end
 
 function _M:moveFocus(v)
