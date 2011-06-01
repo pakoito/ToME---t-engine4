@@ -53,7 +53,6 @@ newEntity{ base="BASE_NPC_LOSGOROTH", define_as = "SPACIAL_DISTURBANCE",
 		[Talents.T_VOID_BLAST]={base=1, every=7, max=7},
 		[Talents.T_MANATHRUST]={base=1, every=7, max=7},
 		[Talents.T_PHASE_DOOR]=2,
-		[Talents.T_CONTINGENCY]=5,
 	},
 	resolvers.inscriptions(1, {"manasurge rune"}),
 
