@@ -101,8 +101,7 @@ It should automatically create a portal back, but it might not be near your arri
 			boss.explo_portal_on_die = boss.on_die
 			boss.on_die = function(self, ...)
 				local x, y = self.x or game.player.x, self.y or game.player.y
-				local g = game.level.map(x, y, engine.Map.TERRAIN)
-				g = g:cloneFull()
+				local g = game.zone:makeEntityByName(game.level, "terrain", game.zone.basic_floor)
 				g.show_tooltip = true
 				g.name = "Exploratory Farportal exit"
 				g.display = '&' g.color_r = colors.VIOLET.r g.color_g = colors.VIOLET.g g.color_b = colors.VIOLET.b
@@ -110,8 +109,6 @@ It should automatically create a portal back, but it might not be near your arri
 				g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/maze_teleport.png"}
 				g.notice = true
 				g.change_level = 1 g.change_zone = "shertul-fortress"
-				g._mo = nil
-				g:resolve() g:resolve(nil, true)
 				game.zone:addEntity(game.level, g, "terrain", x, y)
 				game.logSeen(self, "#VIOLET#As %s falls you notice a portal appearing.", self.name)
 
