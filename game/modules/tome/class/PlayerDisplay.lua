@@ -225,7 +225,7 @@ function _M:display()
 	end
 	if player:knowTalent(player.T_EQUILIBRIUM_POOL) then
 		local _, chance = player:equilibriumChance()
-		self:mouseTooltip(self.TOOLTIP_EQUILIBRIUM, self:makeTextureBar("#00ff74#Equi:", ("%d"):format(player:getEquilibrium()), 100 - chance, 100, player.equilibrium_regen, x, h, 255, 255, 255,
+		self:mouseTooltip(self.TOOLTIP_EQUILIBRIUM, self:makeTextureBar("#00ff74#Equi:", ("%d (%d%s)"):format(player:getEquilibrium(),100 - chance, "%%"), 100 - chance, 100, player.equilibrium_regen, x, h, 255, 255, 255,
 			{r=0x00 / 2, g=0xff / 2, b=0x74 / 2},
 			{r=0x00 / 5, g=0xff / 5, b=0x74 / 5}
 		)) h = h + self.font_h
@@ -249,14 +249,14 @@ function _M:display()
 		)) h = h + self.font_h
 	end
 	if player:knowTalent(player.T_HATE_POOL) then
-		self:mouseTooltip(self.TOOLTIP_HATE, self:makeTextureBar("#F53CBE#Hate:", "%0.1f/%d", player:getHate(), player.hate_regen, 10, x, h, 255, 255, 255,
+		self:mouseTooltip(self.TOOLTIP_HATE, self:makeTextureBar("#F53CBE#Hate:", "%0.1f/%d", player:getHate(), 10, -math.max(0.02, 0.07 * math.pow(player.hate / 10, 2)) + player.hate_regen, x, h, 255, 255, 255,
 			{r=colors.GREY.r / 2, g=colors.GREY.g / 2, b=colors.GREY.b / 2},
 			{r=colors.GREY.r / 5, g=colors.GREY.g / 5, b=colors.GREY.b / 5}
 		)) h = h + self.font_h
 	end
 	if player:knowTalent(player.T_PARADOX_POOL) then
 		local _, chance = player:paradoxFailChance()
-		self:mouseTooltip(self.TOOLTIP_PARADOX, self:makeTextureBar("#LIGHT_STEEL_BLUE#Paradox:", ("       %d"):format(player:getParadox()), chance, 100, player.paradox_regen, x, h, 255, 255, 255,
+		self:mouseTooltip(self.TOOLTIP_PARADOX, self:makeTextureBar("#LIGHT_STEEL_BLUE#Paradox:", ("%d (%d%s)"):format(player:getParadox(), chance, "%%"), chance, 100, player.paradox_regen, x, h, 255, 255, 255,
 			{r=176 / 2, g=196 / 2, b=222 / 2},
 			{r=176 / 5, g=196 / 5, b=222 / 5}
 		)) h = h + self.font_h
