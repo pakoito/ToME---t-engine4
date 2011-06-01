@@ -258,7 +258,7 @@ end
 -- @param filter nil or a function that filters the objects to list
 -- @param action a function called when an object is selected
 function _M:showPickupFloor(title, filter, action)
-	local d = ShowPickupFloor.new(title, self.x, self.y, filter, action, self)
+	local d = ShowPickupFloor.new(title, self.x, self.y, filter, action, nil, self)
 	game:registerDialog(d)
 	return d
 end

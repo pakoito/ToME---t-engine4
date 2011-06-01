@@ -27,10 +27,11 @@ local Separator = require "engine.ui.Separator"
 
 module(..., package.seeall, class.inherit(Dialog))
 
-function _M:init(title, x, y, filter, action, takeall)
+function _M:init(title, x, y, filter, action, takeall, actor)
 	self.x, self.y = x, y
 	self.filter = filter
 	self.action = action
+	self.actor = actor
 	Dialog.init(self, title or "Pickup", math.max(800, game.w * 0.8), math.max(600, game.h * 0.8))
 
 	local takeall = Button.new{text=takeall or "(*) Take all", width=self.iw - 40, fct=function() self:takeAll() end}
