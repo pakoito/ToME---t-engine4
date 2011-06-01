@@ -46,11 +46,13 @@ newTalent{
 		local gem_level = getGemLevel(self)
 		return self:combatTalentIntervalDamage(t, "wil", 6, 265)*(1 + 0.3*gem_level)
 	end,
+	requires_target = true,
+	target = function(self, t) return {type="ball", range=self:getTalentRange(t), radius=0, selffire=false, talent=t} end,
 	action = function(self, t)
 		--local gem_level = getGemLevel(self)
 		--local dam = (5 + self:getTalentLevel(t) * self:getWil(40))*(1 + 0.3*gem_level)
 		local dam = t.getDamage(self, t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=0, selffire=false, talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.PHYSICAL, self:spellCrit(rng.avg(0.8*dam, dam)), {type="flame"})
