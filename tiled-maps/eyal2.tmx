@@ -676,14 +676,56 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup name="addZone#pops" width="170" height="100" visible="0">
+ <objectgroup name="addZone#pops" width="170" height="100">
   <object name="Lumjberjack quest" x="1837" y="747" width="174" height="551">
    <properties>
     <property name="subtype" value="&quot;lumberjack-cursed&quot;"/>
     <property name="type" value="&quot;world-encounter&quot;"/>
    </properties>
   </object>
-  <object name="Trapped merchant quest" x="577" y="329" width="432" height="801">
+  <object name="Trapped merchant quest" x="267" y="459" width="138" height="271">
+   <properties>
+    <property name="subtype" value="&quot;merchant-quest&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
+  <object name="Trapped merchant quest" x="77" y="101" width="382" height="305">
+   <properties>
+    <property name="subtype" value="&quot;merchant-quest&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
+  <object name="Trapped merchant quest" x="747" y="41" width="240" height="263">
+   <properties>
+    <property name="subtype" value="&quot;merchant-quest&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
+  <object name="Trapped merchant quest" x="1197" y="163" width="428" height="145">
+   <properties>
+    <property name="subtype" value="&quot;merchant-quest&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
+  <object name="Trapped merchant quest" x="1803" y="259" width="298" height="185">
+   <properties>
+    <property name="subtype" value="&quot;merchant-quest&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
+  <object name="Trapped merchant quest" x="2089" y="689" width="234" height="203">
+   <properties>
+    <property name="subtype" value="&quot;merchant-quest&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
+  <object name="Trapped merchant quest" x="2221" y="103" width="266" height="465">
+   <properties>
+    <property name="subtype" value="&quot;merchant-quest&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
+  <object name="Trapped merchant quest" x="973" y="909" width="172" height="167">
    <properties>
     <property name="subtype" value="&quot;merchant-quest&quot;"/>
     <property name="type" value="&quot;world-encounter&quot;"/>
@@ -880,42 +922,6 @@
   <object name="Brotherhood of alchemists" x="2375" y="1031" width="19" height="19">
    <properties>
     <property name="subtype" value="&quot;brotherhood-alchemist&quot;"/>
-    <property name="type" value="&quot;world-encounter&quot;"/>
-   </properties>
-  </object>
-  <object name="Lost merchant quest" x="264" y="103" width="270" height="222">
-   <properties>
-    <property name="subtype" value="&quot;lost-merchant&quot;"/>
-    <property name="type" value="&quot;world-encounter&quot;"/>
-   </properties>
-  </object>
-  <object name="Lost merchant quest" x="676" y="38" width="310" height="262">
-   <properties>
-    <property name="subtype" value="&quot;lost-merchant&quot;"/>
-    <property name="type" value="&quot;world-encounter&quot;"/>
-   </properties>
-  </object>
-  <object name="Lost merchant quest" x="1250" y="68" width="310" height="262">
-   <properties>
-    <property name="subtype" value="&quot;lost-merchant&quot;"/>
-    <property name="type" value="&quot;world-encounter&quot;"/>
-   </properties>
-  </object>
-  <object name="Lost merchant quest" x="1791" y="263" width="310" height="262">
-   <properties>
-    <property name="subtype" value="&quot;lost-merchant&quot;"/>
-    <property name="type" value="&quot;world-encounter&quot;"/>
-   </properties>
-  </object>
-  <object name="Lost merchant quest" x="2056" y="878" width="310" height="262">
-   <properties>
-    <property name="subtype" value="&quot;lost-merchant&quot;"/>
-    <property name="type" value="&quot;world-encounter&quot;"/>
-   </properties>
-  </object>
-  <object name="Lost merchant quest" x="887" y="910" width="258" height="194">
-   <properties>
-    <property name="subtype" value="&quot;lost-merchant&quot;"/>
     <property name="type" value="&quot;world-encounter&quot;"/>
    </properties>
   </object>

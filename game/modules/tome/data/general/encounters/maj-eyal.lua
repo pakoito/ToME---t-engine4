@@ -44,7 +44,8 @@ newEntity{
 	type = "hostile", subtype = "special", unique = true,
 	level_range = {10, 20},
 	rarity = 7,
-	coords = {{ x=0, y=0, w=100, h=100}},
+	min_level = 6,
+	on_world_encounter = "merchant-quest",
 	on_encounter = function(self, who)
 		who:runStop()
 		engine.ui.Dialog:yesnoPopup("Encounter", "You find a hidden trap door, and hear cries for help from within...", function(ok)
