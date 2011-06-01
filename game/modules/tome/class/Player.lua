@@ -49,6 +49,9 @@ module(..., package.seeall, class.inherit(
 	mod.class.interface.PartyDeath
 ))
 
+-- Allow character registration even after birth
+allow_late_uuid = true
+
 function _M:init(t, no_default)
 	t.display=t.display or '@'
 	t.color_r=t.color_r or 230

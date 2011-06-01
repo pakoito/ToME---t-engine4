@@ -524,7 +524,7 @@ function _M:checkModuleHash(module, md5)
 	if game and game:isTainted() then return nil, "savefile tainted" end
 	core.profile.pushOrder(table.serialize{o="CheckModuleHash", module=module, md5=md5})
 
-	self:waitEvent("CheckModuleHash", function(e) ok = e.ok end)
+	self:waitEvent("CheckModuleHash", function(e) ok = e.ok end, 10000)
 
 	if not ok then return nil, "bad game version" end
 	print("[ONLINE PROFILE] module hash is valid")
@@ -543,7 +543,7 @@ function _M:registerNewCharacter(module)
 
 	core.profile.pushOrder(table.serialize{o="RegisterNewCharacter", module=module})
 	local uuid = nil
-	self:waitEvent("RegisterNewCharacter", function(e) uuid = e.uuid end)
+	self:waitEvent("RegisterNewCharacter", function(e) uuid = e.uuid end, 10000)
 
 	game:unregisterDialog(dialog)
 	if not uuid then return end

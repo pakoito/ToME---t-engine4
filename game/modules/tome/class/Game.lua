@@ -159,7 +159,7 @@ function _M:run()
 end
 
 --- Checks if the current character is "tainted" by cheating
-function _M:isTainted()
+function _M:isTainted() do
 	if config.settings.cheat then return true end
 	return (game.player and game.player.__cheated) and true or false
 end
@@ -494,18 +494,18 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 	if game.player:isTalentActive(game.player.T_JUMPGATE) then
 		game.player:forceUseTalent(game.player.T_JUMPGATE, {ignore_energy=true})
 	end
-	
+
 	if game.player:isTalentActive(game.player.T_JUMPGATE_TWO) then
 		game.player:forceUseTalent(game.player.T_JUMPGATE_TWO, {ignore_energy=true})
 	end
 
 	-- clear chrono worlds and their various effects
 	if game._chronoworlds then game._chronoworlds = nil end
-	
+
 	if game.player:isTalentActive(game.player.T_DOOR_TO_THE_PAST) then
 		game.player:forceUseTalent(game.player.T_DOOR_TO_THE_PAST, {ignore_energy=true})
 	end
-	
+
 	local left_zone = self.zone
 
 	if self.zone and self.zone.on_leave then

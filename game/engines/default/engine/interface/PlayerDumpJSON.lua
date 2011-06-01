@@ -24,6 +24,8 @@ require "Json2"
 -- This is used for auto uploads to te4.org, could be for other stuff too
 module(..., package.seeall, class.make)
 
+allow_late_uuid = false
+
 --- Register the character on te4.org and return a UUID for it
 function _M:getUUID()
 	local uuid = profile:registerNewCharacter(game.__mod_info.short_name)
@@ -34,7 +36,11 @@ end
 
 --- Call this when a character is saved to upload data to te4.org
 function _M:saveUUID()
-	if not self.__te4_uuid then return end
+	if not self.__te4_uuid then
+		-- Try to grab an UUID even after char reg
+		if self.allow_late_uuid and not game:isTainted() then self:getUUID() end
+		if not self.__te4_uuid then return end
+	end
 	local data = {sections={}}
 	setmetatable(data, {__index={
 		newSection = function(self, display, table, type, column, sectable)
