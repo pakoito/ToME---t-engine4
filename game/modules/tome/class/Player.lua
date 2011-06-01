@@ -175,6 +175,7 @@ function _M:describeFloor(x, y)
 end
 
 function _M:move(x, y, force)
+	local ox, oy = self.x, self.y
 	local moved = mod.class.Actor.move(self, x, y, force)
 	if moved then
 		game.level.map:moveViewSurround(self.x, self.y, 8, 8)
@@ -188,7 +189,9 @@ function _M:move(x, y, force)
 		-- Cheat with time
 		game.turn = game.turn + 1000
 		self.wild_x, self.wild_y = self.x, self.y
-		game.state:worldDirectorAI()
+		if self.x ~= ox or self.y ~= oy then
+			game.state:worldDirectorAI()
+		end
 	end
 
 	-- Update zone name
