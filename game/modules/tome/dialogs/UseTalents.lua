@@ -114,6 +114,10 @@ function _M:defineHotkey(id)
 	local item = self.cur_item
 	if not item or not item.talent then return end
 
+	for i = 1, 36 do
+		if self.actor.hotkey[i] and self.actor.hotkey[i][1] == "talent" and self.actor.hotkey[i][2] == item.talent then self.actor.hotkey[i] = nil end
+	end
+
 	self.actor.hotkey[id] = {"talent", item.talent}
 	self:simplePopup("Hotkey "..id.." assigned", self.actor:getTalentFromId(item.talent).name:capitalize().." assigned to hotkey "..id)
 	self.c_list:drawTree()
