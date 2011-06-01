@@ -44,11 +44,13 @@ newEntity{
 newEntity{ base = "BASE_NPC_HORROR",
 	name = "worm that walks", color=colors.SANDY_BROWN,
 	desc = [[A maggot-filled robe with a vaguely humanoid shape.]],
-	level_range = {15, nil}, exp_worth = 1,
+	level_range = {25, nil}, exp_worth = 1,
 	rarity = 5,
-	max_life = 120,
+	max_life = resolvers.rngavg(150,170),
 	life_rating = 16,
 	rank = 3,
+	hate_regen = 1,
+	vim_regen = 1,
 
 	ai = "tactical", ai_state = { ai_move="move_dmap", talent_in=1, },
 	ai_tactic = resolvers.tactic "melee",
@@ -57,37 +59,49 @@ newEntity{ base = "BASE_NPC_HORROR",
 	instakill_immune = 1,
 	stun_immune = 1,
 	blind_immune = 1,
+	disease_immune = 1,
+	move_others=true,
 
-	resists = { [DamageType.PHYSICAL] = 50, [DamageType.FIRE] = -50},
+	resists = { [DamageType.PHYSICAL] = 50, [DamageType.BLIGHT] = 100, [DamageType.FIRE] = -50},
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.drops{chance=20, nb=1, {} },
 	resolvers.equip{
-		{type="weapon", subtype="sword", autoreq=true},
+		{type="weapon", subtype="waraxe", autoreq=true},
 		{type="weapon", subtype="waraxe", autoreq=true},
 		{type="armor", subtype="robe", autoreq=true}
 	},
 
+	talent_cd_reduction = {[Talents.T_BLINDSIDE]=4},
+	
+	resolvers.inscriptions(1, {"regeneration infusion"}),
+	
 	resolvers.talents{
-		[Talents.T_BONE_GRAB]={base=4, every=10},
-		[Talents.T_DRAIN]={base=5, every=12},
+		--[Talents.T_BONE_GRAB]={base=4, every=10},
+		[Talents.T_BLINDSIDE]={base=5, every=12},
 		[Talents.T_CORRUPTED_STRENGTH]={base=3, every=15},
-		[Talents.T_VIRULENT_DISEASE]={base=3, every=12},
-		[Talents.T_CURSE_OF_DEATH]={base=5, every=15},
+		[Talents.T_SLASH]={base=4, every=12},
+		[Talents.T_FRENZY]={base=4, every=15},
 		[Talents.T_REND]={base=4, every=12},
 		[Talents.T_BLOODLUST]={base=3, every=12},
 		[Talents.T_RUIN]={base=2, every=12},
+		[Talents.T_SUMMON]=1,
 
 		[Talents.T_WEAPON_COMBAT]={base=5, every=10, max=10},
 		[Talents.T_WEAPONS_MASTERY]={base=3, every=10, max=10},
 	},
+	
 	resolvers.sustains_at_birth(),
 
+	on_takehit = function(self, value, src) 
+		if value >= (self.max_life * 0.1) then
+			self:forceUseTalent(self.T_SUMMON, {ignore_energy=true, ignore_cd=true})
+		end
+		return value
+	end,
+	
 	summon = {
 		{type="vermin", subtype="worms", name="carrion worm mass", number=2, hasxp=false},
-	},
-	make_escort = {
-		{type="vermin", subtype="worms", name="carrion worm mass", number=2},
 	},
 }
 
@@ -113,6 +127,8 @@ newEntity{ base = "BASE_NPC_HORROR",
 		[Talents.T_MIND_SEAR]={base=4, every=14, max=7},
 		[Talents.T_TELEKINETIC_BLAST]={base=4, every=14, max=7},
 	},
+	
+	resolvers.inscriptions(1, {"shielding rune"}),
 
 	resolvers.sustains_at_birth(),
 	on_die = function(self, who)
@@ -128,17 +144,19 @@ newEntity{ base = "BASE_NPC_HORROR",
 	desc ="A shifting form of darkest night that seems to reflect your deepest fears.",
 	level_range = {30, nil}, exp_worth = 1,
 	negative_regen = 10,
-	rarity = 7,
+	hate_regen = 1,
+	rarity = 5,
 	rank = 3,
-	life_rating = 7,
-	autolevel = "warriormage",
+	max_life = resolvers.rngavg(150,170),
+	life_rating = 16,
+	autolevel = "caster",
 	stats = { str=15, dex=20, mag=20, wil=20, con=15 },
-	combat_armor = 1, combat_def = 10,
-	combat = { dam=resolvers.levelup(20, 1, 1.1), atk=20, apr=50, dammod={str=0.6}, damtype=DamageType.DARKNESS},
+	combat_armor = 1, combat_def = 30,
+	combat = { dam=resolvers.levelup(20, 1, 1.1), atk=20, apr=50, dammod={mag=1}, damtype=DamageType.DARKNESS},
 
-	ai = "tactical", ai_state = { ai_target="target_player_radius", sense_radius=40, talent_in=2, },
+	ai = "dumb_talented_simple", ai_state = { ai_target="target_player_radius", sense_radius=10, talent_in=2, },
 
-	can_pass = {pass_wall=70},
+	can_pass = {pass_wall=20},
 	resists = {all = 35, [DamageType.LIGHT] = -50, [DamageType.DARKNESS] = 100},
 
 	blind_immune = 1,
@@ -146,17 +164,18 @@ newEntity{ base = "BASE_NPC_HORROR",
 	no_breath = 1,
 
 	resolvers.talents{
-		[Talents.T_STALK]={base=5, every=12, max=8},
+		[Talents.T_STEALTH]={base=5, every=12, max=8},
 		[Talents.T_GLOOM]={base=3, every=12, max=8},
 		[Talents.T_WEAKNESS]={base=3, every=12, max=8},
 		[Talents.T_TORMENT]={base=3, every=12, max=8},
 		[Talents.T_DOMINATE]={base=3, every=12, max=8},
-		[Talents.T_BLINDSIDE]={base=3, every=12, max=8},
 		[Talents.T_LIFE_LEECH]={base=5, every=12, max=9},
 		[Talents.T_SHADOW_BLAST]={base=4, every=8, max=8},
 		[Talents.T_HYMN_OF_SHADOWS]={base=3, every=9, max=8},
 	},
-
+	
+	resolvers.inscriptions(1, {"shielding rune"}),
+	
 	resolvers.sustains_at_birth(),
 }
 
@@ -168,13 +187,16 @@ newEntity{ base = "BASE_NPC_HORROR",
 	name = "headless horror", color=colors.TAN,
 	desc ="A headless, gangly humanoid with a large distended stomach.",
 	level_range = {30, nil}, exp_worth = 1,
-	rarity = 3,
+	rarity = 5,
 	rank = 3,
+	max_life = resolvers.rngavg(200,220),
+	life_rating = 16,
 	autolevel = "warrior",
 	ai = "tactical", ai_state = { ai_move="move_dmap", talent_in=1, },
 	combat = { dam=20, atk=20, apr=10, dammod={str=1} },
 	combat = {damtype=DamageType.PHYSICAL},
 	no_auto_resists = true,
+	move_others=true,
 
 	-- Should get resists based on eyes generated, 30% all per eye and 100% to the eyes element.  Should lose said resists when the eyes die.
 
@@ -183,9 +205,14 @@ newEntity{ base = "BASE_NPC_HORROR",
 
 	resolvers.talents{
 		[Talents.T_MANA_CLASH]={base=4, every=5, max=8},
-		[Talents.T_GRAB]={base=4, every=6, max=8},
+		[Talents.T_CLINCH]={base=4, every=6, max=8},
+		[Talents.T_TAKE_DOWN]={base=4, every=5, max=8},
+		[Talents.T_CRUSHING_HOLD]={base=4, every=5, max=8},
 	},
-
+	
+	resolvers.inscriptions(1, {"healing infusion"}),
+	--resolvers.inscriptions(2, "rune"),
+	
 	-- Add eyes
 	on_added_to_level = function(self)
 		local eyes = {}
@@ -410,6 +437,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	rank = 3,
 	autolevel = "caster",
 	max_life = resolvers.rngavg(220,250),
+	life_rating = 16,
 	combat_armor = 1, combat_def = 10,
 	combat = { dam=20, atk=30, apr=40, dammod={wil=1}, damtype=DamageType.LIGHT},
 	ai = "tactical", ai_state = { ai_move="move_dmap", talent_in=1, },
@@ -446,8 +474,9 @@ newEntity{ base = "BASE_NPC_HORROR",
 	name = "temporal devourer", color=colors.CRIMSON,
 	desc = "A headless, round creature with stubby legs and arms.  Its body seems to be all teeth.",
 	level_range = {10, nil}, exp_worth = 1,
-	rarity = 1,
+	rarity = 2,
 	rank = 2,
+	movement_speed = 0.8,
 	size_category = 2,
 	autolevel = "warrior",
 	max_life = resolvers.rngavg(50, 80),
@@ -455,6 +484,10 @@ newEntity{ base = "BASE_NPC_HORROR",
 	combat = { dam=resolvers.levelup(resolvers.rngavg(20,30), 1, 1.2), atk=resolvers.rngavg(10,20), apr=5, dammod={str=1} },
 
 	resists = { [DamageType.TEMPORAL] = 5},
+	
+	make_escort = {
+		{type="horror", subtype="temporal", name="temporal devourer", number=2, no_subescort=true},
+	},
 }
 
 newEntity{ base = "BASE_NPC_HORROR",
@@ -486,11 +519,12 @@ newEntity{ base = "BASE_NPC_HORROR",
 	name = "temporal dredge", color=colors.PINK,
 	desc = "A hulking pink-skinned creature with long arms as thick as tree trunks.  It drags its knuckles on the ground as it lumbers toward you.",
 	level_range = {15, nil}, exp_worth = 1,
-	rarity = 4,
+	rarity = 2,
 	rank = 2,
 	size_category = 4,
 	autolevel = "warrior",
 	max_life = resolvers.rngavg(120, 150),
+	life_rating = 16,
 	global_speed = 0.7,
 	combat_armor = 1, combat_def = 0,
 	combat = { dam=resolvers.levelup(resolvers.rngavg(25,150), 1, 1.2), atk=resolvers.rngavg(25,130), apr=1, dammod={str=1.1} },
@@ -500,6 +534,8 @@ newEntity{ base = "BASE_NPC_HORROR",
 	resolvers.talents{
 		[Talents.T_STUN]={base=3, every=7, max=7},
 		[Talents.T_SPEED_SAP]={base=2, every=7, max=6},
+		[Talents.T_CLINCH]={base=2, every=6, max=8},
+		[Talents.T_CRUSHING_HOLD]={base=2, every=6, max=8},
 	},
 
 	resolvers.sustains_at_birth(),
@@ -511,7 +547,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	name = "dredge captain", color=colors.SALMON,
 	desc = "A thin pink-skinned creature with long spindly arms.  Half its body is old and wrinkly, and the other half appears quite young.",
 	level_range = {20, nil}, exp_worth = 1,
-	rarity = 6,
+	rarity = 5,
 	rank = 3,
 	size_category = 3,
 	max_life = resolvers.rngavg(60,80),
@@ -524,6 +560,9 @@ newEntity{ base = "BASE_NPC_HORROR",
 	make_escort = {
 		{type="horror", subtype="temporal", name="temporal dredge", number=3, no_subescort=true},
 	},
+	
+	resolvers.inscriptions(1, {"shielding rune"}),
+	resolvers.inscriptions(1, "infusion"),
 
 	resolvers.talents{
 		[Talents.T_DREDGE_FRENZY]={base=5, every=7, max=9},
@@ -539,9 +578,10 @@ newEntity{ base = "BASE_NPC_HORROR",
 	name = "temporal stalker", color=colors.STEEL_BLUE,
 	desc = "A slender metallic monstrosity with long claws in place of fingers, and razor-sharp teeth.",
 	level_range = {20, nil}, exp_worth = 1,
-	rarity = 6,
+	rarity = 3,
 	size_category = 3,
-	max_life = resolvers.rngavg(50,70),
+	max_life = resolvers.rngavg(100,180),
+	life_rating = 12,
 	global_speed = 1.2,
 	autolevel = "rogue",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
@@ -558,6 +598,9 @@ newEntity{ base = "BASE_NPC_HORROR",
 		[Talents.T_UNSEEN_ACTIONS]={base=3, every=7, max=5},
 	},
 
+	resolvers.inscriptions(1, "rune"),
+	resolvers.inscriptions(1, "infusion"),
+	
 	resolvers.sustains_at_birth(),
 }
 

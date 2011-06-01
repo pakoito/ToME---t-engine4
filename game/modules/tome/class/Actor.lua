@@ -292,6 +292,11 @@ function _M:actTurn()
 			local t = self:getTalentFromId(self.T_DOOR_TO_THE_PAST)
 			t.do_anomalyCount(self, t)
 		end
+		-- this handles Carbon Spike regrowth
+		if self:isTalentActive(self.T_CARBON_SPIKES) then
+			local t = self:getTalentFromId(self.T_CARBON_SPIKES)
+			t.do_carbonRegrowth(self, t)
+		end
 	end
 
 	-- Suffocate ?
@@ -1801,18 +1806,36 @@ function _M:equilibriumChance(eq)
 	return rng.percent(100 - chance * 100), 100 - chance * 100
 end
 
---- Paradox check
-function _M:paradoxFailChance(pa)
-	--check for Paradox Mastery
-	local modifier
+--- Paradox checks
+function _M:paradoxChanceModifier()
+	local modifier = self:getWil()
 	if self:knowTalent(self.T_PARADOX_MASTERY) and self:isTalentActive(self.T_PARADOX_MASTERY) then
-		modifier = self:getWil() * (1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10) or 0 )
-	else
-		modifier = self:getWil()
+		modier = self:getWil() * (1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10) or 0 )
 	end
 	--print("[Paradox] Will modifier: ", modifier, "::", self:getParadox())
-	local chance = math.pow (((self:getParadox() - modifier)/200), 2)*((100 + self:combatFatigue()) / 100)
+	return modifier
+end
+
+function _M:paradoxFailChance(pa)
+	local chance = math.pow(((self:getParadox() - self:paradoxChanceModifier())/200), 2)*((100 + self:combatFatigue()) / 100)
+	if self:getParadox() < 200 then chance = 0 end
 	--print("[Paradox] Fail chance: ", chance, "::", self:getParadox())
+	chance = util.bound(chance, 0, 100)
+	return rng.percent(chance), chance
+end
+
+function _M:paradoxAnomalyChance(pa)
+	local chance = math.pow(((self:getParadox() - self:paradoxChanceModifier())/300), 3)*((100 + self:combatFatigue()) / 100)
+	if self:getParadox() < 300 then chance = 0 end
+	--print("[Paradox] Anomaly chance: ", chance, "::", self:getParadox())
+	chance = util.bound(chance, 0, 100)
+	return rng.percent(chance), chance
+end
+
+function _M:paradoxBackfireChance(pa)
+	local chance = math.pow (((self:getParadox() - self:paradoxChanceModifier())/400), 4)*((100 + self:combatFatigue()) / 100)
+	if self:getParadox() < 400 then chance = 0 end
+	--print("[Paradox] Backfire chance: ", chance, "::", self:getParadox())
 	chance = util.bound(chance, 0, 100)
 	return rng.percent(chance), chance
 end
@@ -1828,14 +1851,14 @@ function _M:incParadox(paradox)
 	if self:getParadox() > 200 and self:getParadox() + paradox <= 200 then
 		game.logPlayer(self, "#LIGHT_BLUE#Time feels more stable.")
 	end
-	-- Backfire checks
+	-- Anomaly checks
 	if self:getParadox() < 300 and self:getParadox() + paradox >= 300 then
 		game.logPlayer(self, "#LIGHT_RED#You feel the edges of space begin to ripple and bend!")
 	end
 	if self:getParadox() > 300 and self:getParadox() + paradox <= 300 then
 		game.logPlayer(self, "#LIGHT_BLUE#Space feels more stable.")
 	end
-	-- Anomaly checks
+	-- Backfire checks
 	if self:getParadox() < 400 and self:getParadox() + paradox >= 400 then
 		game.logPlayer(self, "#LIGHT_RED#Space and time both fight against your control!")
 	end
@@ -1957,13 +1980,13 @@ function _M:preUseTalent(ab, silent, fake)
 	-- Paradox is special, it has no max, but the higher it is the higher the chance of something bad happening
 	if (ab.paradox or (ab.sustain_paradox and not self:isTalentActive(ab.id))) and not fake and not self:attr("force_talent_ignore_ressources") then
 		-- Check failure first
-		if not self:attr("no_paradox_fail") and self:paradoxFailChance(ab.paradox or ab.sustain_paradox) and self:getParadox() > 200 then
+		if not self:attr("no_paradox_fail") and self:paradoxFailChance(ab.paradox or ab.sustain_paradox) then
 			if not silent then game.logPlayer(self, "You fail to use %s due to your paradox!", ab.name) end
 			self:incParadox(ab.paradox or ab.sustain_paradox / 10)
 			self:useEnergy()
 			return false
 		-- Now Check Anomalies
-		elseif not game.zone.no_anomalies and not self:attr("no_paradox_fail") and rng.percent(math.pow((self:getParadox()/400), 4)) and self:getParadox() > 400 then
+		elseif not game.zone.no_anomalies and not self:attr("no_paradox_fail") and self:paradoxAnomalyChance(ab.paradox or ab.sustain_paradox) then
 			-- Random anomaly
 			self:incParadox(ab.paradox or ab.sustain_paradox / 2)
 			local ts = {}

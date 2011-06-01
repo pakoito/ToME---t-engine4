@@ -101,20 +101,9 @@ temporal_req5 = {
 	level = function(level) return 16 + (level-1)  end,
 }
 
--- Backfire Function
-
+-- Backfire Function; this does the actual backfire even though the chance is calculated in Actor
 checkBackfire = function(self, x, y)
-
-	--check for Paradox Mastery
-	if self:knowTalent(self.T_PARADOX_MASTERY) and self:isTalentActive(self.T_PARADOX_MASTERY) then
-		modifier = self:getWil() * (1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10) or 0 )
-	else
-		modifier = self:getWil()
-	end
-
-	local backfire = math.pow (((self:getParadox() - modifier)/300), 3)*((100 + self:combatFatigue()) / 100)
---	print("[Paradox] Backfire chance: ", backfire, "::", self:getParadox())
-	if rng.percent(backfire) and self:getParadox() > 300 and not self:attr("no_paradox_fail") then
+	if self:paradoxBackfireChance() and not self:attr("no_paradox_fail") then
 		game.logPlayer(self, "The fabric of spacetime ripples and your spell backfires!!")
 		return self.x, self.y
 	else
@@ -122,6 +111,7 @@ checkBackfire = function(self, x, y)
 	end
 end
 
+-- Make sure we don't run concurrent chronoworlds; to prevent lag and possible game breaking bugs or exploits
 checkTimeline = function(self)
 	if self:isTalentActive(self.T_DOOR_TO_THE_PAST) or self:hasEffect(self.EFF_SEE_THREADS) or self:hasEffect(self.EFF_PRECOGNITION) or self:hasEffect(self.EFF_PARADOX_CLONE) or self:hasEffect(self.EFF_IMMINENT_PARADOX_CLONE) then
 		game.logPlayer(self, "The timeline is too fractured right now to use this ability.")
@@ -133,7 +123,6 @@ end
 
 -- Paradox modifier.  This controls how much extra effect chronomancy spells have at high paradox.
 -- Note that 300 is the optimal balance and going below this number will decrease the effect of chronomancy spells.
-
 getParadoxModifier = function (self, pm)
 	local pm = math.sqrt((1 + (self:getParadox()/300))/2)
 	return pm

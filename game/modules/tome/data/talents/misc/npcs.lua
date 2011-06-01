@@ -1309,7 +1309,6 @@ newTalent{
 	name = "Dredge Frenzy",
 	type = {"chronomancy/other", 1},
 	points = 5,
-	paradox = 10,
 	cooldown = 6,
 	tactical = {
 		BUFF = 10,

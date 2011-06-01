@@ -90,8 +90,22 @@ newTalent{
 	sustain_paradox = 150,
 	cooldown = 12,
 	tactical = { BUFF =2, DEFEND = 2 },
-	getDamageOnMeleeHit = function(self, t) return self:combatTalentSpellDamage(t, 10, 50) end,
-	getArmor = function(self, t) return math.ceil (self:combatTalentSpellDamage(t, 20, 40)) end,
+	getDamageOnMeleeHit = function(self, t) return self:combatTalentSpellDamage(t, 10, 100) end,
+	getArmor = function(self, t) return math.ceil (self:combatTalentSpellDamage(t, 20, 50)) end,
+	do_carbonRegrowth = function(self, t)
+		local maxspikes = t.getArmor(self, t)
+		if self.carbon_armor < maxspikes then
+			self.carbon_armor = self.carbon_armor + 1
+		end
+	end,
+	do_carbonLoss = function(self, t)
+		if self.carbon_armor >= 1 then
+			self.carbon_armor = self.carbon_armor - 1
+		else
+			-- Deactivate without loosing energy
+			self:forceUseTalent(self.T_CARBON_SPIKES, {ignore_energy=true})
+		end
+	end,
 	activate = function(self, t)
 		local power = t.getArmor(self, t)
 		self.carbon_armor = power
@@ -110,7 +124,8 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamageOnMeleeHit(self, t)
 		local armor = t.getArmor(self, t)
-		return ([[Fragile spikes of carbon protrude from your clothing and armor, increasing your armor rating by %d and inflicting %0.2f bleed damage over six turns on attackers.   Each time you're struck the armor increase will be reduced by 1 until the bonus is less then 1, at which point the spikes will crumble completely and the spell will end.
+		return ([[Fragile spikes of carbon protrude from your flesh, clothing, and armor, increasing your armor rating by %d and inflicting %0.2f bleed damage over six turns on attackers.   Each time you're struck the armor increase will be reduced by 1.  Each turn the spell will regenerate 1 armor up to it's starting value.
+		If the armor increase from the spell ever falls below 1 the sustain will deactivate and the effect will end.
 		The armor and bleed damage will increase with the Magic stat.]]):
 		format(armor, damDesc(self, DamageType.PHYSICAL, damage))
 	end,

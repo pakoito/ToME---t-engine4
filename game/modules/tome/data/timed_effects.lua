@@ -3270,7 +3270,7 @@ newEffect{
 newEffect{
 	name = "BORROWED_TIME",
 	desc = "Borrowed Time",
-	long_desc = function(self, eff) return ("The target's global speed has been increased by %d%%."):format(300) end,
+	long_desc = function(self, eff) return ("The target's global speed has been increased by %d%%."):format(100) end,
 	type = "magical",
 	status = "beneficial",
 	parameters = { power=10 },
@@ -3369,6 +3369,7 @@ newEffect{
 				game.logSeen(self, "#LIGHT_RED#The precognition spell fizzles and cancels, leaving you in this timeline.")
 				return
 			end
+			game:chronoRestore("precognition", true)
 			game.logPlayer(game.player, "#LIGHT_BLUE#You unfold the space time continuum to a previous state!")
 			game.player.tmp[self.EFF_PRECOGNITION] = nil
 		end)
@@ -3618,14 +3619,10 @@ newEffect{
 		eff.tmpid = self:addTemporaryValue("dazed", 1)
 	end,
 	deactivate = function(self, eff)
-		if self:knowTalent(self.T_PARADOX_MASTERY) and self:isTalentActive(self.T_PARADOX_MASTERY) then
-			modifier = self:getWil() * (1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10) or 0 )
-		else
-			modifier = self:getWil()
-		end
-		local failure = math.floor( math.pow(((self:getParadox() - modifier)/200), 2)*((100 + self:combatFatigue()) / 100))
-		local anomaly = math.floor(math.pow((self:getParadox()/400), 4))
-		local backfire = math.floor(math.pow (((self:getParadox() - modifier)/300), 3)*((100 + self:combatFatigue()) / 100))
+		local modifier = self:paradoxChanceModifier()
+		local _, failure = self:paradoxFailChance()
+		local _, anomaly = self:paradoxAnomalyChance()
+		local _, backfire = self:paradoxBackfireChance()
 		self:removeTemporaryValue("dazed", eff.tmpid)
 		game.logPlayer(self, "Your current failure chance is %d%%, your current anomaly chance is %d%%, and your current backfire chance is %d%%.", failure, anomaly, backfire)
 	end,

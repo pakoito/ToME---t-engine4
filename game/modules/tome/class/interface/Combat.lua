@@ -420,12 +420,8 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 
 	-- Ablative Armor
 	if hitted and not target.dead and target:attr("carbon_spikes") then
-		if target.carbon_armor >= 1 then
-			target.carbon_armor = target.carbon_armor - 1
-		else
-			-- Deactivate without loosing energy
-			target:forceUseTalent(target.T_CARBON_SPIKES, {ignore_energy=true})
-		end
+		local t = target:getTalentFromId(target.T_CARBON_SPIKES)
+		t.do_carbonLoss(target, t)
 	end
 
 	-- Riposte!

@@ -40,7 +40,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local resist = t.getResist(self, t)
-		return ([[You've learned to focus your control over the spacetime continuum and resist anomalous effects.  Increases your effective willpower for static history, failure, and backfire calculations by %d%% and increases your Temporal resistance by %d%%.
+		return ([[You've learned to focus your control over the spacetime continuum and resist anomalous effects.  Increases your effective willpower for static history, failure, anomaly, and backfire calculations by %d%% and increases your Temporal resistance by %d%%.
 		The resistance will scale with the Magic stat.]]):
 		format(self:getTalentLevel(t) * 10, resist)
 	end,

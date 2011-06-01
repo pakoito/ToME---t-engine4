@@ -246,8 +246,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t) * 100
-		return ([[Attack your foes in a frontal arc with a spinning backhand doing %d%% damage.  If your not adjacent to the target you'll step forward as you spin, gaining 10%% bonus damage for each tile you move.
-		This attack will remove any grapples you're maintaining and earn one combo point (or one combo point per attack that connects if your talent level is four or greater.]])
+		return ([[Attack your foes in a frontal arc with a spinning backhand doing %d%% damage.  If you're not adjacent to the target you'll step forward as you spin, gaining 10%% bonus damage for each tile you move.
+		This attack will remove any grapples you're maintaining and earn one combo point (or one combo point per attack that connects if your talent level is four or greater).]])
 		:format(damage)
 	end,
 }

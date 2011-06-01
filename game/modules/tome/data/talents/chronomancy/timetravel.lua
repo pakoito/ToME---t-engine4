@@ -72,7 +72,7 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		local stun = t.getStun(self, t)
-		return ([[You borrow some energy from the future, greatly increasing your global speed for %d turns.  At the end of this time though you'll be stunned for %d turns as you pay back the time you borrowed.
+		return ([[You borrow some energy from the future, greatly increasing your global speed for %d turns.  At the end of this time though you'll be paralyzed (no chance of resisting) for %d turns as you pay back the time you borrowed.
 		]]):format(duration + 1, stun)
 	end,
 }
@@ -200,7 +200,7 @@ newTalent{
 	do_anomalyCount = function(self, t)
 		if self.dttp_anomaly_count == 0 then
 			-- check for anomaly
-			if not game.zone.no_anomalies and not self:attr("no_paradox_fail") and rng.percent(math.pow((self:getParadox()/400), 4)) and self:getParadox() > 400 then
+			if not game.zone.no_anomalies and not self:attr("no_paradox_fail") and self:paradoxAnomalyChance() then
 				-- Random anomaly
 				local ts = {}
 				for id, t in pairs(self.talents_def) do

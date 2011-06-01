@@ -70,7 +70,20 @@ newEntity{ base = "BASE_NPC_WORM",
 	rarity = 4,
 	max_life = resolvers.rngavg(5,9),
 	combat = { dam=1, atk=15, apr=100 },
+	
+	resists = {[DamageType.BLIGHT] = 100},
 
 	autolevel = "warriormage",
 	resolvers.talents{ [Talents.T_CRAWL_POISON]=2, [Talents.T_ROTTING_DISEASE]=4, [Talents.T_MULTIPLY]=1 },
+	
+	on_die = function(self, src)
+		game.level.map:addEffect(self,
+			self.x, self.y, 5,
+			engine.DamageType.BLIGHT, self:getStr(90),
+			2,
+			5, nil,
+			engine.Entity.new{alpha=100, display='', color_br=30, color_bg=180, color_bb=60}
+		)
+		game.logSeen(self, "%s exudes a corrupted gas as it dies.", self.name:capitalize())
+	end,
 }
