@@ -889,6 +889,7 @@ newEffect{
 		self.ai_state = self.ai_state or {}
 		self.ai_state.tactic_leash = 100
 		self.remove_from_party_on_death = true
+		self.no_inventory_access = true
 		self.move_others = true
 		self.summoner = eff.src
 		self.summoner_gain_exp = true

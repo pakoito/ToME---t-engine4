@@ -436,7 +436,7 @@ end
 -- @param pos what kind of entity to set(Map.TERRAIN, Map.OBJECT, Map.ACTOR)
 -- @param e the entity to set, if null it will return the current one
 function _M:call(x, y, pos, e)
-	if x < 0 or y < 0 or x >= self.w or y >= self.h then return end
+	if not x or not y or x < 0 or y < 0 or x >= self.w or y >= self.h then return end
 	if e then
 		self.map[x + y * self.w][pos] = e
 		if e.__position_aware then e.x = x e.y = y end
@@ -736,7 +736,7 @@ end
 
 --- Checks the given coords to see if they are in bound
 function _M:isBound(x, y)
-	if x and y and x < 0 or x >= self.w or y < 0 or y >= self.h then return false end
+	if not x or not y or x < 0 or x >= self.w or y < 0 or y >= self.h then return false end
 	return true
 end
 

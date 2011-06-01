@@ -101,6 +101,7 @@ newEntity{
 
 					on_leave = function(lev, old_lev, newzone)
 						if not newzone then return end
+						game.player:grantQuest("lost-merchant")
 						game.player:hasQuest("lost-merchant"):leave_zone(game.player)
 					end,
 				})

@@ -1084,12 +1084,15 @@ function _M:setupCommands()
 		end,
 
 		PICKUP_FLOOR = not_wild(function()
+			if self.player.no_inventory_access then return end
 			self.player:playerPickup()
 		end),
 		DROP_FLOOR = function()
+			if self.player.no_inventory_access then return end
 			self.player:playerDrop()
 		end,
 		SHOW_INVENTORY = function()
+			if self.player.no_inventory_access then return end
 			local d
 			local titleupdator = self.player:getEncumberTitleUpdator("Inventory")
 			d = self.player:showEquipInven(titleupdator(), nil, function(o, inven, item, button, event)
@@ -1105,16 +1108,20 @@ function _M:setupCommands()
 		end,
 		SHOW_EQUIPMENT = "SHOW_INVENTORY",
 		WEAR_ITEM = function()
+			if self.player.no_inventory_access then return end
 			self.player:playerWear()
 		end,
 		TAKEOFF_ITEM = function()
+			if self.player.no_inventory_access then return end
 			self.player:playerTakeoff()
 		end,
 		USE_ITEM = not_wild(function()
+			if self.player.no_inventory_access then return end
 			self.player:playerUseItem()
 		end),
 
 		QUICK_SWITCH_WEAPON = function()
+			if self.player.no_inventory_access then return end
 			self.player:quickSwitchWeapons()
 		end,
 

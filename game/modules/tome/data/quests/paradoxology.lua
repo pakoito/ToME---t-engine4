@@ -103,7 +103,7 @@ generate = function(self, player, x, y)
 	end
 	a.on_kill = function(self, who)
 		local p = game.party:findMember{main=true}
-		if who == p then                util.show_backtrace()
+		if who == p then
 			p:setQuestStatus("paradoxology", engine.Quest.COMPLETED, "now-died")
 			game.logSeen(self, "#LIGHT_BLUE#Your future self kills you! The timestreams are broken by the paradox!")
 			game.logSeen(self, "#LIGHT_BLUE#All those events never happened. Except they did, somewhen.")

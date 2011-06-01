@@ -497,7 +497,7 @@ function _M:move(x, y, force)
 		end
 
 		-- Encased in ice, attack the ice
-		if self:attr("encased_in_ice") then
+		if not force and self:attr("encased_in_ice") then
 			self:attackTarget(self)
 			moved = true
 		-- Should we prob travel through walls ?

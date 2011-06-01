@@ -39,11 +39,11 @@ newTalent{
 		local act
 		for i = 1, #self.fov.actors_dist do
 			act = self.fov.actors_dist[i]
-			if self:reactionToward(act) < 0 and self:canSee(act) and act["__sqdist"] <= 2 then nb_foes = nb_foes + 1 end
+			if act and game.level:hasEntity(act) and self:reactionToward(act) < 0 and self:canSee(act) and act["__sqdist"] <= 2 then nb_foes = nb_foes + 1 end
 		end
-			
+
 		local defense = nb_foes * t.getDefense(self, t)
-		
+
 		if defense <= t.getMaximum(self, t) then
 			defense = defense
 		else
@@ -90,7 +90,7 @@ newTalent{
 	action = function(self, t)
 
 		self:setEffect(self.EFF_DEFENSIVE_MANEUVER, t.getDuration(self, t), {power=t.getDefense(self, t)})
-		
+
 		return true
 	end,
 	info = function(self, t)
@@ -115,9 +115,9 @@ newTalent{
 	getMovement = function(self, t) return 1 - 1 / (1 + (100)/ 100) end,
 	getDuration = function(self, t) return 4 + math.ceil(self:getTalentLevel(t)) end,
 	action = function(self, t)
-		
+
 		self:setEffect(self.EFF_SPRINT, t.getDuration(self, t), {power=t.getMovement(self, t)})
-		
+
 		return true
 	end,
 	info = function(self, t)
