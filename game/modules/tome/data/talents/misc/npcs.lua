@@ -1333,6 +1333,37 @@ newTalent{
 }
 
 newTalent{
+	name = "Sever Lifeline",
+	type = {"chronomancy/other", 1},
+	points = 5,
+	paradox = 1,
+	cooldown = 20,
+	tactical = {
+		ATTACK = 1000,
+	},
+	range = 10,
+	direct_hit = true,
+	requires_target = true,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 220) * 10000 *getParadoxModifier(self, pm) end,
+	action = function(self, t)
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		local _ _, x, y = self:canProject(tg, x, y)
+		if not x or not y then return nil end
+		local target = game.level.map(x, y, Map.ACTOR)
+		if not target then return nil end
+
+		target:setEffect(target.EFF_SEVER_LIFELINE, 4, {src=self, power=t.getDamage(self, t)})
+		game:playSoundNear(self, "talents/arcane")
+		return true
+	end,
+	info = function(self, t)
+		return ([[Start to sever the lifeline of the target. If after 4 turns the target is still in line of sight, it will die.]])
+	end,
+}
+
+newTalent{
 	name = "Call of Amakthel",
 	type = {"technique/other", 1},
 	points = 5,

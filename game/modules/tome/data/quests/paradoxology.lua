@@ -74,11 +74,15 @@ generate = function(self, player, x, y)
 	a:learnTalent(a.T_DAMAGE_SHUNT, true, 3)
 	a:learnTalent(a.T_FLAWED_DESIGN, true, 4)
 	a:learnTalent(a.T_QUANTUM_SPIKE, true, 3)
+	a:learnTalent(a.T_SEVER_LIFELINE, true, 5)
 
 	a.talent_cd_reduction = a.talent_cd_reduction or {}
 	a.talent_cd_reduction[a.T_STATIC_HISTORY] = 15
+	a.talents_cd[a.T_SEVER_LIFELINE] = 20
 
 	a:forceLevelup(a.level + 7)
+
+	a:incIncStat("wil", 200)
 
 	a.on_die = function(self)
 		local o = game.zone:makeEntityByName(game.level, "object", "RUNE_RIFT")
@@ -116,6 +120,8 @@ generate = function(self, player, x, y)
 
 			self.on_die = nil
 			self:die()
+			who.changed = true
+			who.life = math.max(who.life, who.max_life * 0.3)
 			return true
 		end
 	end

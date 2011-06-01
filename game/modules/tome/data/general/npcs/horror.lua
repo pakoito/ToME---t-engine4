@@ -73,9 +73,9 @@ newEntity{ base = "BASE_NPC_HORROR",
 	},
 
 	talent_cd_reduction = {[Talents.T_BLINDSIDE]=4},
-	
+
 	resolvers.inscriptions(1, {"regeneration infusion"}),
-	
+
 	resolvers.talents{
 		--[Talents.T_BONE_GRAB]={base=4, every=10},
 		[Talents.T_BLINDSIDE]={base=5, every=12},
@@ -90,18 +90,18 @@ newEntity{ base = "BASE_NPC_HORROR",
 		[Talents.T_WEAPON_COMBAT]={base=5, every=10, max=10},
 		[Talents.T_WEAPONS_MASTERY]={base=3, every=10, max=10},
 	},
-	
+
 	resolvers.sustains_at_birth(),
 
-	on_takehit = function(self, value, src) 
+	on_takehit = function(self, value, src)
 		if value >= (self.max_life * 0.1) then
 			self:forceUseTalent(self.T_SUMMON, {ignore_energy=true, ignore_cd=true})
 		end
 		return value
 	end,
-	
+
 	summon = {
-		{type="vermin", subtype="worms", name="carrion worm mass", number=2, hasxp=false},
+		{type="vermin", subtype="worms", name="carrion worm mass", number=1, hasxp=false},
 	},
 }
 
@@ -127,7 +127,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 		[Talents.T_MIND_SEAR]={base=4, every=14, max=7},
 		[Talents.T_TELEKINETIC_BLAST]={base=4, every=14, max=7},
 	},
-	
+
 	resolvers.inscriptions(1, {"shielding rune"}),
 
 	resolvers.sustains_at_birth(),
@@ -173,9 +173,9 @@ newEntity{ base = "BASE_NPC_HORROR",
 		[Talents.T_SHADOW_BLAST]={base=4, every=8, max=8},
 		[Talents.T_HYMN_OF_SHADOWS]={base=3, every=9, max=8},
 	},
-	
+
 	resolvers.inscriptions(1, {"shielding rune"}),
-	
+
 	resolvers.sustains_at_birth(),
 }
 
@@ -209,10 +209,10 @@ newEntity{ base = "BASE_NPC_HORROR",
 		[Talents.T_TAKE_DOWN]={base=4, every=5, max=8},
 		[Talents.T_CRUSHING_HOLD]={base=4, every=5, max=8},
 	},
-	
+
 	resolvers.inscriptions(1, {"healing infusion"}),
 	--resolvers.inscriptions(2, "rune"),
-	
+
 	-- Add eyes
 	on_added_to_level = function(self)
 		local eyes = {}
@@ -484,7 +484,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	combat = { dam=resolvers.levelup(resolvers.rngavg(20,30), 1, 1.2), atk=resolvers.rngavg(10,20), apr=5, dammod={str=1} },
 
 	resists = { [DamageType.TEMPORAL] = 5},
-	
+
 	make_escort = {
 		{type="horror", subtype="temporal", name="temporal devourer", number=2, no_subescort=true},
 	},
@@ -560,7 +560,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	make_escort = {
 		{type="horror", subtype="temporal", name="temporal dredge", number=3, no_subescort=true},
 	},
-	
+
 	resolvers.inscriptions(1, {"shielding rune"}),
 	resolvers.inscriptions(1, "infusion"),
 
@@ -600,7 +600,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 
 	resolvers.inscriptions(1, "rune"),
 	resolvers.inscriptions(1, "infusion"),
-	
+
 	resolvers.sustains_at_birth(),
 }
 

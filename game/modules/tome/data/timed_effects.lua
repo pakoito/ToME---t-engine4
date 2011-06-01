@@ -4080,3 +4080,19 @@ newEffect{
 		DamageType:get(DamageType.ARCANE).projector(eff.src, self.x, self.y, DamageType.ARCANE, dam)
 	end,
 }
+
+newEffect{
+	name = "SEVER_LIFELINE",
+	desc = "Sever Lifeline",
+	long_desc = function(self, eff) return ("The target lifeline is being cut. When the effect ends %0.2f temporal damage will hit the target."):format(eff.power) end,
+	type = "time",
+	status = "detrimental",
+	parameters = {power=10000},
+	on_gain = function(self, err) return "#Target# lifeline is being severed!", "+Sever Lifeline" end,
+	deactivate = function(self, eff)
+		if not eff.src or eff.src.dead then return end
+		if not eff.src:hasLOS(self.x, self.y) then return end
+		if eff.dur >= 1 then return end
+		DamageType:get(DamageType.TEMPORAL).projector(eff.src, self.x, self.y, DamageType.TEMPORAL, eff.power)
+	end,
+}
