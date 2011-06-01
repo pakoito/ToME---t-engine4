@@ -883,5 +883,47 @@
     <property name="type" value="&quot;world-encounter&quot;"/>
    </properties>
   </object>
+  <object name="Lost merchant quest" x="264" y="103" width="270" height="222">
+   <properties>
+    <property name="subtype" value="&quot;lost-merchant&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
+  <object name="Lost merchant quest" x="676" y="38" width="310" height="262">
+   <properties>
+    <property name="subtype" value="&quot;lost-merchant&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
+  <object name="Lost merchant quest" x="1250" y="68" width="310" height="262">
+   <properties>
+    <property name="subtype" value="&quot;lost-merchant&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
+  <object name="Lost merchant quest" x="1791" y="263" width="310" height="262">
+   <properties>
+    <property name="subtype" value="&quot;lost-merchant&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
+  <object name="Lost merchant quest" x="2056" y="878" width="310" height="262">
+   <properties>
+    <property name="subtype" value="&quot;lost-merchant&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
+  <object name="Lost merchant quest" x="887" y="910" width="258" height="194">
+   <properties>
+    <property name="subtype" value="&quot;lost-merchant&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
+  <object name="Lost merchant quest" x="1034" y="683" width="171" height="135">
+   <properties>
+    <property name="subtype" value="&quot;lost-merchant&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

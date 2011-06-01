@@ -70,6 +70,7 @@ newEntity{ base = "BASE_NPC_ELVALA_TOWN",
 
 newEntity{ base = "BASE_NPC_ELVALA_TOWN",
 	name = "thalore wilder", color=colors.GREEN,
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/humanoid_thalore_thalore_wilder.png", display_h=2, display_y=-1}}},
 	desc = [[A tall elf, his skin covered in green moss.]],
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 3,

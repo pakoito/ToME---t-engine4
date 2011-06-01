@@ -31,6 +31,7 @@ local Talents = require("engine.interface.ActorTalents")
 newEntity{ base="BASE_NPC_ORC_GORBAT", define_as = "GORBAT",
 	allow_infinite_dungeon = true,
 	name = "Gorbat, Supreme Wyrmic of the Pride", color=colors.VIOLET, unique = true,
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/humanoid_orc_gorbat__supreme_wyrmic_of_the_pride.png", display_h=2, display_y=-1}}},
 	desc = [[An orc with scaly skin, claws and a pair of small wings on his back.]],
 	level_range = {40, nil}, exp_worth = 2,
 	rank = 5,
