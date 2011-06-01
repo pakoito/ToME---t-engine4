@@ -1174,6 +1174,8 @@ function _M:onTakeHit(value, src)
 			a.energy.val = 0
 			a.exp_worth = 0.1
 			a.inven = {}
+			a._mo:invalidate()
+			a._mo = nil
 			a.x, a.y = nil, nil
 			game.zone:addEntity(game.level, a, "actor", x, y)
 			game.logSeen(self, "%s is split in two!", self.name:capitalize())

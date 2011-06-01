@@ -51,6 +51,7 @@ newTalent{
 		a.exp_worth = 0.1
 		a.inven = {}
 		a.x, a.y = nil, nil
+		a._mo:invalidate()
 		a._mo = nil
 		if a.can_multiply <= 0 then a:unlearnTalent(t.id) end
 
