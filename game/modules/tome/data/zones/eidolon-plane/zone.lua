@@ -138,6 +138,9 @@ return {
 				act.last_act_turn = math.floor(game.turn / (game.zone.wilderness and 1000 or 10))
 			end
 
+			-- Reload MOs
+			game.level.map:redisplay()
+
 			if to_worldmap then
 				game:changeLevel(1, game.player.last_wilderness or "wilderness")
 			end
