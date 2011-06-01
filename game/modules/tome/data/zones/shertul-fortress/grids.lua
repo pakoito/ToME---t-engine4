@@ -102,6 +102,7 @@ It should automatically create a portal back, but it might not be near your arri
 			boss.on_die = function(self, ...)
 				local x, y = self.x or game.player.x, self.y or game.player.y
 				local g = game.zone:makeEntityByName(game.level, "terrain", game.zone.basic_floor)
+				g.nice_tiler = nil
 				g.show_tooltip = true
 				g.name = "Exploratory Farportal exit"
 				g.display = '&' g.color_r = colors.VIOLET.r g.color_g = colors.VIOLET.g g.color_b = colors.VIOLET.b

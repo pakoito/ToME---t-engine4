@@ -579,7 +579,7 @@ function _M:mouseMove(tmx, tmy, force_move)
 		if trap and trap:knownBy(self) and trap:canTrigger(x, y, self, true) then return false end
 		return true
 	end
-	return engine.interface.PlayerMouse.mouseMove(self, tmx, tmy, spotHostiles, astar_check, force_move)
+	return engine.interface.PlayerMouse.mouseMove(self, tmx, tmy, spotHostiles, {recheck=true, astar_check=astar_check}, force_move)
 end
 
 --- Called after running a step

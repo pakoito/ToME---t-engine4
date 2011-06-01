@@ -59,20 +59,23 @@ function _M:mouseMove(tmx, tmy, spotHostiles, astar_check, force_move)
 
 		if config.settings.mouse_move or force_move then
 			local a = Astar.new(game.level.map, self)
+			local recheck = false
+			if type(astar_check) == "table" then recheck = astar_check.recheck astar_check = astar_check.astar_check end
 			local path = a:calc(self.x, self.y, tmx, tmy, true, nil, astar_check)
+			if recheck and not path then path = a:calc(self.x, self.y, tmx, tmy, true, nil, nil) end
 			-- No Astar path ? just be dumb and try direct line
 			if not path then
 				local d = DirectPath.new(game.level.map, self)
 				path = d:calc(self.x, self.y, tmx, tmy, true)
 			end
-	
+
 			if path then
 				-- Should we just try to move in the direction, aka: attack!
 				if path[1] and game.level.map:checkAllEntities(path[1].x, path[1].y, "block_move", self) then self:move(path[1].x, path[1].y) return end
-	
+
 				 -- Insert the player coords, running needs to find the player
 				table.insert(path, 1, {x=self.x, y=self.y})
-	
+
 				-- Move along the projected A* path
 				self:runFollow(path)
 			end

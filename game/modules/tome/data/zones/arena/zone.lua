@@ -203,7 +203,7 @@ return {
 				game.player:setQuestStatus("arena", engine.Quest.COMPLETED)
 				local master = game.player:cloneFull()
 				game.level.arena.rank = -1
-				game.player:die(game.player)
+--				game.player:die(game.player)
 				master.version = game.__mod_info.version
 				master.no_drops = true
 				master.energy.value = 0
@@ -234,7 +234,7 @@ return {
 			end,
 			printRankings = function (val)
 				local scores = world.arena.scores
-				if not scores[1].name then return "#LIGHT_GREEN#...but it's been wiped out recently."
+				if not scores or not scores[1] or not scores[1].name then return "#LIGHT_GREEN#...but it's been wiped out recently."
 				else
 					local text = ""
 					local tmp = ""

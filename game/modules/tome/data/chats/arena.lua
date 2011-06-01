@@ -187,9 +187,9 @@ But meanwhile, this is your place! Welcome to paradise, @playerdescriptor.race@!
 #YELLOW#Next time you play, you shall battle this new champion instead!
 ]],
 	answers = {
-		{"WEALTH!! AND!! GLORYYYYY!!"},
-		{"I won't need to save chicks from cults anymore!", cond=function(npc, player) if player.female == true then return false else return true end end },
-		{"I hereby stand victorious, awaiting future challenges!"},
-		{"#LIGHT_GREEN#*dance*"},
+		{"WEALTH!! AND!! GLORYYYYY!!", action=function(npc, player) player:hasQuest("arena"):win() end},
+		{"I won't need to save chicks from cults anymore!", cond=function(npc, player) if player.female == true then return false else return true end end, action=function(npc, player) player:hasQuest("arena"):win() end},
+		{"I hereby stand victorious, awaiting future challenges!", action=function(npc, player) player:hasQuest("arena"):win() end},
+		{"#LIGHT_GREEN#*dance*", action=function(npc, player) player:hasQuest("arena"):win() end},
 	}
 }

@@ -24,3 +24,20 @@ desc = function(self, who)
 	desc[#desc+1] = "Can you defeat your foes and become Master of Arena?"
 	return table.concat(desc, "\n")
 end
+
+function win(self)
+	game:playMusic("Lords of the Sky.ogg")
+
+	game.player.winner = "arena"
+	game:registerDialog(require("engine.dialogs.ShowText").new("Winner", "win", {playername=game.player.name, how="arena"}, game.w * 0.6))
+end
+
+function onWin(self, who)
+	local desc = {}
+
+	desc[#desc+1] = "#GOLD#Well done! You have won the Arena: Challenge of the Master#WHITE#"
+	desc[#desc+1] = ""
+	desc[#desc+1] = "You valiantly fought every creature the arena could throw on you and you emerged victorious!"
+	desc[#desc+1] = "Glory to you, you are now the new master and your future characters will challenge you."
+	return 0, desc
+end
