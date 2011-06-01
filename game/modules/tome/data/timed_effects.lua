@@ -769,7 +769,7 @@ newEffect{
 	long_desc = function(self, eff) return ("The target is confused, acting randomly (chance %d%%) and unable to perform complex actions."):format(eff.power) end,
 	type = "magical",
 	status = "detrimental",
-	parameters = {},
+	parameters = { power=50 },
 	on_gain = function(self, err) return "#Target# wanders around!.", "+Confused" end,
 	on_lose = function(self, err) return "#Target# seems more focused.", "-Confused" end,
 	activate = function(self, eff)

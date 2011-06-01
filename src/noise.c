@@ -233,6 +233,13 @@ static float tilablenoise3d(noise_t *n, double ix, double iy, double iz, double 
 	double y = fmod(iy,h);
 	double z = fmod(iz,d);
 
+	w /= 2;
+	h /= 2;
+	d /= 2;
+	x += w;
+	y += h;
+	z += d;
+
 	return(( 	noise3d(n, x, y, z) * (w-x) * (h-y) * (d-z) +
 			noise3d(n, x-w, y, z) * (x) * (h-y) * (d-z) +
 			noise3d(n, x-w, y-h, z) * (x) * (y) * (d-z) +
