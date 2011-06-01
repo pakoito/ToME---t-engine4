@@ -652,7 +652,7 @@ newTalent{
 		if not x or not y then return nil end
 		self:project(tg, x, y, function(px, py)
 			local target = game.level.map(px, py, Map.ACTOR)
-			if not target then return end
+			if not target or target.dead then return end
 			if not target:canBe("instakill") or target.rank > 2 or target.undead or not target:checkHit(self:getWil(20) + self.level * 1.5, target.level) then
 				game.logSeen(target, "%s resists the mental assault!", target.name:capitalize())
 				return
