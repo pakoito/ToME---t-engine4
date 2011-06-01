@@ -75,3 +75,18 @@ newEntity{ base="BASE_NPC_ORC_GRUSHNAK", define_as = "GNARG",
 	},
 	resolvers.sustains_at_birth(),
 }
+
+newEntity{ base="GREATER_MULTI_HUED_WYRM", define_as="OVERPOWERED_WYRM",
+	name = "overpowered greater multi-hued wyrm",
+	image = "npc/dragon_multihued_greater_multi_hued_wyrm.png",
+	level_range = {100, nil}, exp_worth = 10,
+	rank = 3.5,
+	seen_by = function(self, who)
+		if game:getPlayer(true) ~= who then return end
+		world:gainAchievement("UBER_WYRMS_OPEN", who)
+		self:setTarget(who)
+	end,
+	on_die = function(self, who)
+		world:gainAchievement("UBER_WYRMS", game:getPlayer(true))
+	end,
+}

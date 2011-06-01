@@ -118,3 +118,23 @@ newAchievement{
 	end,
 	track = function(self) return tstring{tostring(self.nb or 0)," / 20"} end,
 }
+
+newAchievement{
+	name = "Are you out of your mind?!", id = "UBER_WYRMS_OPEN",
+	image = "npc/dragon_multihued_multi_hued_drake.png",
+	show = "name",
+	desc = [[Caught the attention of overpowered greater multi-hued wyrms in Vor Armoury. Perhaps fleeing is in order.]],
+	mode = "player",
+}
+
+newAchievement{
+	name = "I cleared the room of death and all I got was this lousy achievement!", id = "UBER_WYRMS",
+	image = "npc/dragon_multihued_multi_hued_drake.png",
+	show = "name",
+	desc = [[Killed the seven overpowered wyrms in the "Room of Death" in Vor Armoury.]],
+	mode = "player",
+	can_gain = function(self, who)
+		self.nb = (self.nb or 0) + 1
+		if self.nb >= 7 then return true end
+	end,
+}

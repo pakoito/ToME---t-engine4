@@ -1049,3 +1049,16 @@ end
 function __dump_fct(f)
 	return string.format("%q", string.dump(f))
 end
+
+-- Tries to load a lua module from a list, returns the first available
+function require_first(...)
+	local list = {...}
+	for i = 1, #list do
+		local ok, m = xpcall(function() return require(list[i]) end, function(...)
+			local str = debug.traceback(...)
+			if not str:find("No such file or directory") then print(str) end
+		end)
+		if ok then return m end
+	end
+	return nil
+end

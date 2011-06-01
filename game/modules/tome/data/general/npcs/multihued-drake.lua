@@ -23,7 +23,7 @@ newEntity{
 	define_as = "BASE_NPC_MULTIHUED_DRAKE",
 	type = "dragon", subtype = "multihued",
 	display = "D", color=colors.PURPLE,
-	shader = "quad_hue",
+	shader = "quad_hue", resolvers.nice_tile{shader = false},
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.drops{chance=100, nb=1, {type="money"} },
@@ -94,7 +94,7 @@ newEntity{ base = "BASE_NPC_MULTIHUED_DRAKE",
 	},
 }
 
-newEntity{ base = "BASE_NPC_MULTIHUED_DRAKE",
+newEntity{ base = "BASE_NPC_MULTIHUED_DRAKE", define_as = "GREATER_MULTI_HUED_WYRM",
 	name = "greater multi-hued wyrm", color=colors.PURPLE, display="D",
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/dragon_multihued_greater_multi_hued_wyrm.png", display_h=2, display_y=-1}}},
 	desc = [[An old and powerful multi-hued drake, armed with many deadly breath weapons and nasty claws.]],

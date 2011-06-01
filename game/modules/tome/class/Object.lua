@@ -96,7 +96,7 @@ end
 
 --- Returns a tooltip for the object
 function _M:tooltip(x, y)
-	local str = self:getDesc{do_color=true}
+	local str = self:getDesc({do_color=true}, game.player:getInven(self:wornInven()))
 	if config.settings.cheat then str:add(true, "UID: "..self.uid, true, self.image) end
 	local nb = game.level.map:getObjectTotal(x, y)
 	if nb == 2 then str:add(true, "---", true, "You see one more object.")
@@ -228,10 +228,11 @@ function _M:getName(t)
 end
 
 --- Gets the full textual desc of the object without the name and requirements
-function _M:getTextualDesc()
+function _M:getTextualDesc(compare_with)
+	compare_with = compare_with or {}
 	local desc = tstring{}
 
-	if self.quest then desc:add({"color", "VIOLET"}, "{Plot Item}", {"color", "LAST"}, true) end
+	if self.quest then desc:add({"color", "VIOLET"},"[Plot Item]", {"color", "LAST"}, true) end
 
 	desc:add(("Type: %s / %s"):format(rawget(self, 'type') or "unknown", self.subtype or "unknown"), true)
 	if self.slot_forbid == "OFFHAND" then desc:add("It must be held with both hands.", true) end
@@ -240,16 +241,67 @@ function _M:getTextualDesc()
 	-- Stop here if unided
 	if not self:isIdentified() then return desc end
 
-	local desc_combat = function(combat)
+	local compare_fields = function(item1, items, infield, field, outformat, text, mod, isinversed)
+		mod = mod or 1
+		isinversed = isinversed or false
+		local ret = tstring{}
+		local added = 0
+		local add = false
+		ret:add(text)
+		if isinversed then
+			ret:add((item1[field] or 0) > 0 and {"color","RED"} or {"color","LIGHT_GREEN"}, outformat:format((item1[field] or 0) * mod), {"color", "LAST"})
+		else
+			ret:add((item1[field] or 0) < 0 and {"color","RED"} or {"color","LIGHT_GREEN"}, outformat:format((item1[field] or 0) * mod), {"color", "LAST"})
+		end
+		if item1[field] then
+			add = true
+		end
+		for i=1, #items do
+			if items[i][infield] and items[i][infield][field] and items[i][infield][field] ~= (item1[field] or 0) then
+				if added == 0 then
+					ret:add(" (")
+				elseif added > 1 then
+					ret:add(" / ")
+				end
+				added = added + 1
+				add = true
+				if isinversed then
+					ret:add(items[i][infield][field] < (item1[field] or 0) and {"color","RED"} or {"color","LIGHT_GREEN"}, outformat:format(((item1[field] or 0) - items[i][infield][field]) * mod), {"color", "LAST"})
+				else
+					ret:add(items[i][infield][field] > (item1[field] or 0) and {"color","RED"} or {"color","LIGHT_GREEN"}, outformat:format(((item1[field] or 0) - items[i][infield][field]) * mod), {"color", "LAST"})
+				end
+			end
+			if added > 0 then
+				ret:add(")")
+			end
+		end
+		if add then
+			desc:merge(ret)
+			desc:add(true)
+		end
+	end
+
+	local desc_combat = function(combat, compare_with, field)
+		compare_with = compare_with or {}
 		local dm = {}
+		local total_power = 0
 		for stat, i in pairs(combat.dammod or {}) do
-			dm[#dm+1] = ("+%d%% %s"):format(i * 100, Stats.stats_def[stat].name)
+			dm[#dm+1] = ("%d%% %s"):format(i * 100, Stats.stats_def[stat].short_name:capitalize())
+			total_power = total_power + game.player:getStat(stat) * i
 		end
-		if #dm > 0 or (combat.dam or 0) ~= 0 or combat.damrange or (combat.atk or 0) ~= 0 or (combat.apr or 0) ~= 0 or (combat.physcrit or 0) ~= 0 then
-			desc:add(("%d Power [Range %0.2f] (%s), %d Accuracy, %d Armor Penetration, Crit %d%%"):format(combat.dam or 0, combat.damrange or 1.1, table.concat(dm, ','), combat.atk or 0, combat.apr or 0, combat.physcrit or 0), true)
-			desc:add("Damage type: "..DamageType:get(combat.damtype or DamageType.PHYSICAL).name, true)
+		if #dm > 0 or combat.dam then
+			desc:add(("Base power: %.1f - %.1f"):format(combat.dam or 0, (combat.damrange or 1.1) * (combat.dam or 0)), true)
+			desc:add(("Uses stat%s: %s"):format(#dm > 1 and "s" or "",table.concat(dm, ', ')), true)
+			local col = lpeg.match("#" * lpeg.C((lpeg.R"AZ" + "_")^3) * "#", combat.damtype and DamageType:get(combat.damtype) and DamageType:get(combat.damtype).text_color or "#GREY#")
+
+			desc:add("Damage type: ",col and {"color",col} or {"color","GREY"},DamageType:get(combat.damtype or DamageType.PHYSICAL).name:capitalize(),{"color","LAST"}, true)
 		end
-		if combat.range then desc:add("Firing range: "..combat.range, true) end
+
+		compare_fields(combat, compare_with, field, "atk", "%+d", "Accuracy: ")
+		compare_fields(combat, compare_with, field, "apr", "%+d", "Armor Penetration: ")
+		compare_fields(combat, compare_with, field, "physcri", "%+d%%", "Physical crit. chance: ")
+
+		compare_fields(combat, compare_with, field, "range", "%+d", "Firing range: ")
 
 		if combat.talent_on_hit then
 			for tid, data in pairs(combat.talent_on_hit) do
@@ -265,16 +317,19 @@ function _M:getTextualDesc()
 			desc:add("When used from stealth a simple attack with it will not break stealth.", true)
 		end
 
-		if combat.travel_speed then
-			desc:add("Increase travel speed by "..combat.travel_speed.."%", true)
-		end
+		compare_fields(combat, compare_with, field, "travel_speed", "%+d%%", "Travel speed: ")
 
 		if combat.melee_project then
-			local rs = {}
+			desc:add("Damage on strike(melee):")
+			local count = 0
 			for typ, dam in pairs(combat.melee_project) do
-				rs[#rs+1] = ("%d %s"):format(dam, DamageType.dam_def[typ].name)
+				local color = DamageType.dam_def[typ].text_color and DamageType.dam_def[typ].text_color:gsub("#","") or "GREY"
+				desc:add({"color",color})
+				desc:add(("%s%d %s"):format((count > 0) and " / " or "",dam, DamageType.dam_def[typ].name))
+				desc:add({"color","LAST"})
+				count = count + 1
 			end
-			desc:add(("Damage on strike(melee): %s."):format(table.concat(rs, ',')), true)
+			desc:add(true)
 		end
 
 		if combat.inc_damage_type then
@@ -288,195 +343,236 @@ function _M:getTextualDesc()
 				end
 			end
 			if #idt > 0 then
-				desc:add(("Deals more damage against: %s."):format(table.concat(idt, ',')), true)
+				desc:add(("Deals more damage against: %s."):format(table.concat(idt, ', ')), true)
 			end
 		end
 	end
 
-	local desc_wielder = function(w)
-	if w.combat_atk or w.combat_dam or w.combat_apr then desc:add(("Accuracy %d, Armor Penetration %d, Physical Crit %d%%, Physical power %d"):format(w.combat_atk or 0, w.combat_apr or 0, w.combat_physcrit or 0, w.combat_dam or 0), true) end
-	if w.combat_armor or w.combat_def or w.combat_def_ranged then desc:add(("Armor %d, Defense %d, Ranged Defense %d"):format(w.combat_armor or 0, w.combat_def or 0, w.combat_def_ranged or 0), true) end
-	if w.fatigue then desc:add(("Fatigue %d%%"):format(w.fatigue), true) end
+	local desc_wielder = function(w, compare_with, field)
+		compare_fields(w, compare_with, field, "combat_atk", "%+d", "Accuracy: ")
+		compare_fields(w, compare_with, field, "combat_apr", "%+d", "Armor penetration: ")
+		compare_fields(w, compare_with, field, "combat_physcrit", "%+d%%", "Physical crit. chance: ")
+		compare_fields(w, compare_with, field, "combat_dam", "%+d", "Physical power: ")
 
-	if w.inc_stats then
-		local dm = {}
-		for stat, i in pairs(w.inc_stats) do
-			dm[#dm+1] = ("%d %s"):format(i, Stats.stats_def[stat].name)
+		compare_fields(w, compare_with, field, "combat_armor", "%+d", "Armor: ")
+		compare_fields(w, compare_with, field, "combat_def", "%+d", "Defense: ")
+		compare_fields(w, compare_with, field, "combat_def_ranged", "%+d", "Ranged Defense: ")
+
+		compare_fields(w, compare_with, field, "fatigue", "%+d%%", "Fatigue: ", 1, true)
+
+		if w.inc_stats then
+			desc:add("Changes stats: ")
+			local count = 0
+			for stat, i in pairs(w.inc_stats) do
+				desc:add(("%s"):format((count > 0) and " / " or ""), (i > 0) and {"color","LIGHT_GREEN"} or {"color","RED"}, ("%+d "):format(i), {"color","LAST"}, ("%s"):format(Stats.stats_def[stat].short_name:capitalize()))
+				count = count + 1
+			end
+			desc:add(true)
 		end
-		if #dm > 0 then desc:add(("Increases stats: %s."):format(table.concat(dm, ',')), true) end
-	end
 
-	if w.melee_project then
-		local rs = {}
-		for typ, dam in pairs(w.melee_project) do
-			rs[#rs+1] = ("%d %s"):format(dam, DamageType.dam_def[typ].name)
+		if w.melee_project then
+			desc:add("Damage on hit(melee): ")
+			local count = 0
+			for typ, dam in pairs(w.melee_project) do
+				local color = DamageType.dam_def[typ].text_color and DamageType.dam_def[typ].text_color:gsub("#","") or "GREY"
+				desc:add({"color",color})
+				desc:add(("%s%d %s"):format((count > 0) and " / " or "",dam, DamageType.dam_def[typ].name))
+				desc:add({"color","LAST"})
+				count = count + 1
+			end
+			desc:add(true)
 		end
-		if #rs > 0 then desc:add(("Damage on hit(melee): %s."):format(table.concat(rs, ',')), true) end
-	end
 
-	if w.ranged_project then
-		local rs = {}
-		for typ, dam in pairs(w.ranged_project) do
-			rs[#rs+1] = ("%d %s"):format(dam, DamageType.dam_def[typ].name)
+		if w.ranged_project then
+			desc:add("Damage on hit(ranged): ")
+			local count = 0
+			for typ, dam in pairs(w.ranged_project) do
+				local color = DamageType.dam_def[typ].text_color and DamageType.dam_def[typ].text_color:gsub("#","") or "GREY"
+				desc:add({"color",color})
+				desc:add(("%s%d %s"):format((count > 0) and " / " or "",dam, DamageType.dam_def[typ].name))
+				desc:add({"color","LAST"})
+				count = count + 1
+			end
+			desc:add(true)
 		end
-		if #rs > 0 then desc:add(("Damage on hit(ranged): %s."):format(table.concat(rs, ',')), true) end
-	end
 
-	if w.on_melee_hit then
-		local rs = {}
-		for typ, dam in pairs(w.on_melee_hit) do
-			rs[#rs+1] = ("%d %s"):format(dam, DamageType.dam_def[typ].name)
+		if w.on_melee_hit then
+			desc:add("Damage when hit: ")
+			local count = 0
+			for typ, dam in pairs(w.on_melee_hit) do
+				local color = DamageType.dam_def[typ].text_color and DamageType.dam_def[typ].text_color:gsub("#","") or "GREY"
+				desc:add({"color",color})
+				desc:add(("%s %d %s"):format((count > 0) and " / " or "",dam, DamageType.dam_def[typ].name))
+				desc:add({"color","LAST"})
+				count = count + 1
+			end
+			desc:add(true)
 		end
-		if #rs > 0 then desc:add(("Damage when hit: %s."):format(table.concat(rs, ',')), true) end
-	end
 
-	if w.resists then
-		local rs = {}
-		for res, i in pairs(w.resists) do
-			rs[#rs+1] = ("%d%% %s"):format(i, res == "all" and "all" or DamageType.dam_def[res].name)
+		if w.resists then
+			desc:add("Changes resistances: ")
+			local count = 0
+			for typ, dam in pairs(w.resists) do
+				local col = lpeg.match("#" * lpeg.C((lpeg.R"AZ" + "_")^3) * "#", DamageType.dam_def[typ] and DamageType.dam_def[typ].text_color or "#GREY#")
+				desc:add(("%s"):format((count > 0) and " / " or ""), (dam < 0) and {"color","RED"} or {"color","LIGHT_GREEN"}, ("%+d%% "):format(dam), {"color","LAST"})
+				desc:add(col and {"color",col} or {"color","GREY"}, ("%s"):format(typ == "all" and "all" or DamageType.dam_def[typ].name), {"color","LAST"})
+				count = count + 1
+			end
+			desc:add(true)
 		end
-		if #rs > 0 then desc:add(("Increases resistances: %s."):format(table.concat(rs, ',')), true) end
-	end
 
-	if w.resists_cap then
-		local rs = {}
-		for res, i in pairs(w.resists_cap) do
-			rs[#rs+1] = ("%d%% %s"):format(i, res == "all" and "all" or DamageType.dam_def[res].name)
+		if w.resists_cap then
+			desc:add("Changes resistances cap: ")
+			local count = 0
+			for typ, dam in pairs(w.resists_cap) do
+				local col = lpeg.match("#" * lpeg.C((lpeg.R"AZ" + "_")^3) * "#", DamageType.dam_def[typ] and DamageType.dam_def[typ].text_color or "#GREY#")
+				desc:add(("%s"):format((count > 0) and " / " or ""), (dam < 0) and {"color","RED"} or {"color","LIGHT_GREEN"}, ("%+d%% "):format(dam), {"color","LAST"})
+				desc:add(col and {"color",col} or {"color","GREY"}, ("%s"):format(typ == "all" and "all" or DamageType.dam_def[typ].name), {"color","LAST"})
+				count = count + 1
+			end
+			desc:add(true)
 		end
-		if #rs > 0 then desc:add(("Increases resistances cap: %s."):format(table.concat(rs, ',')), true) end
-	end
 
-	if w.inc_damage then
-		local rs = {}
-		for res, i in pairs(w.inc_damage) do
-			rs[#rs+1] = ("%d%% %s"):format(i, res == "all" and "all" or DamageType.dam_def[res].name)
+		if w.inc_damage then
+			desc:add("Changes damage: ")
+			local count = 0
+			for typ, dam in pairs(w.inc_damage) do
+				local col = lpeg.match("#" * lpeg.C((lpeg.R"AZ" + "_")^3) * "#", DamageType.dam_def[typ] and DamageType.dam_def[typ].text_color or "#GREY#")
+				desc:add(("%s"):format((count > 0) and " / " or ""), (dam < 0) and {"color","RED"} or {"color","LIGHT_GREEN"}, ("%+d%% "):format(dam), {"color","LAST"})
+				desc:add(col and {"color",col} or {"color","GREY"}, ("%s"):format(typ == "all" and "all" or DamageType.dam_def[typ].name), {"color","LAST"})
+				count = count + 1
+			end
+			desc:add(true)
 		end
-		if #rs > 0 then desc:add(("Increases damage type: %s."):format(table.concat(rs, ',')), true) end
-	end
 
-	local esps = {}
-	if w.esp_all then esps[#esps+1] = "all" end
-	if w.esp_range then esps[#esps+1] = "increase range by "..w.esp_range end
-	if w.esp then
-		for type, i in pairs(w.esp) do
-			local _, _, t, st = type:find("^([^/]+)/?(.*)$")
-			if st and st ~= "" then
-				esps[#esps+1] = st
-			else
-				esps[#esps+1] = t
+		local esps = {}
+		if w.esp_all then esps[#esps+1] = "all" end
+		if w.esp_range then esps[#esps+1] = "change range by "..w.esp_range end
+		if w.esp then
+			for type, i in pairs(w.esp) do
+				local _, _, t, st = type:find("^([^/]+)/?(.*)$")
+				if st and st ~= "" then
+					esps[#esps+1] = st
+				else
+					esps[#esps+1] = t
+				end
 			end
 		end
-	end
-	if #esps > 0 then
-		desc:add(("Grants telepathy: %s."):format(table.concat(esps, ',')), true)
-	end
-
-	if w.talents_types_mastery then
-		local tms = {}
-		for ttn, i in pairs(w.talents_types_mastery) do
-			local tt = Talents.talents_types_def[ttn]
-			local cat = tt.type:gsub("/.*", "")
-			local name = cat:capitalize().." / "..tt.name:capitalize()
-			tms[#tms+1] = ("%0.2f %s"):format(i, name)
+		if #esps > 0 then
+			desc:add(("Grants telepathy: %s."):format(table.concat(esps, ', ')), true)
 		end
-		desc:add(("Increases talent masteries: %s."):format(table.concat(tms, ',')), true)
-	end
 
-	if w.talent_cd_reduction then
-		local tcds = {}
-		for tid, cd in pairs(w.talent_cd_reduction) do
-			tcds[#tcds+1] = ("%s (%d)"):format(Talents.talents_def[tid].name, cd)
+		if w.talents_types_mastery then
+			local tms = {}
+			for ttn, i in pairs(w.talents_types_mastery) do
+				local tt = Talents.talents_types_def[ttn]
+				local cat = tt.type:gsub("/.*", "")
+				local name = cat:capitalize().." / "..tt.name:capitalize()
+				tms[#tms+1] = ("%+.2f %s"):format(i, name)
+			end
+			desc:add(("Increases talent masteries: %s."):format(table.concat(tms, ', ')), true)
 		end
-		desc:add(("Reduces talent cooldowns: %s."):format(table.concat(tcds, ',')), true)
-	end
 
-	if w.can_breath then
-		local ts = {}
-		for what, _ in pairs(w.can_breath) do
-			ts[#ts+1] = what
+		if w.talent_cd_reduction then
+			local tcds = {}
+			for tid, cd in pairs(w.talent_cd_reduction) do
+				tcds[#tcds+1] = ("%s (%+d turn%s)"):format(Talents.talents_def[tid].name, -cd, (cd > 1) and "s" or "")
+			end
+			desc:add(("Talent cooldowns: %s."):format(table.concat(tcds, ', ')), true)
 		end
-		desc:add(("Allows you to breathe in: %s."):format(table.concat(ts, ',')), true)
+
+		if w.can_breath then
+			local ts = {}
+			for what, _ in pairs(w.can_breath) do
+				ts[#ts+1] = what
+			end
+			desc:add(("Allows you to breathe in: %s."):format(table.concat(ts, ', ')), true)
+		end
+
+		compare_fields(w, compare_with, field, "combat_critical_power", "%+.2f%%", "Critical mult.: ")
+
+		compare_fields(w, compare_with, field, "disarm_bonus", "%+d", "Trap disarming bonus: ")
+		compare_fields(w, compare_with, field, "inc_stealth", "%+d", "Stealth bonus: ")
+		compare_fields(w, compare_with, field, "max_encumber", "%+d", "Maximum encumberance: ")
+
+		compare_fields(w, compare_with, field, "combat_physresist", "%+d", "Physical save: ")
+		compare_fields(w, compare_with, field, "combat_spellresist", "%+d", "Spell save: ")
+		compare_fields(w, compare_with, field, "combat_mentalresist", "%+d", "Mental save: ")
+
+		compare_fields(w, compare_with, field, "blind_immune", "%+d%%", "Blindness immunity: ", 100)
+		compare_fields(w, compare_with, field, "poison_immune", "%+d%%", "Poison immunity: ", 100)
+		compare_fields(w, compare_with, field, "disease_immune", "%+d%%", "Disease immunity: ", 100)
+		compare_fields(w, compare_with, field, "cut_immune", "%+d%%", "Cut immunity: ", 100)
+
+		compare_fields(w, compare_with, field, "silence_immune", "%+d%%", "Silence immunity: ", 100)
+		compare_fields(w, compare_with, field, "disarm_immune", "%+d%%", "Disarm immunity: ", 100)
+		compare_fields(w, compare_with, field, "confusion_immune", "%+d%%", "Confusion immunity: ", 100)
+		compare_fields(w, compare_with, field, "pin_immune", "%+d%%", "Pinning immunity: ", 100)
+
+		compare_fields(w, compare_with, field, "stun_immune", "%+d%%", "Stun immunity: ", 100)
+		compare_fields(w, compare_with, field, "fear_immune", "%+d%%", "Fear immunity: ", 100)
+		compare_fields(w, compare_with, field, "knockback_immune", "%+d%%", "Knockback immunity: ", 100)
+		compare_fields(w, compare_with, field, "instakill_immune", "%+d%%", "Instant-death immunity: ", 100)
+		compare_fields(w, compare_with, field, "teleport_immune", "%+d%%", "Teleport immunity: ", 100)
+
+		compare_fields(w, compare_with, field, "life_regen", "%+.2f", "Hitpoints each turn: ")
+		compare_fields(w, compare_with, field, "stamina_regen", "%+.2f", "Stamina each turn: ")
+		compare_fields(w, compare_with, field, "mana_regen", "%+.2f", "Mana each turn: ")
+
+		compare_fields(w, compare_with, field, "stamina_regen_on_hit", "%+.2f", "Stamina when hit: ")
+		compare_fields(w, compare_with, field, "mana_regen_on_hit", "%+.2f", "Mana when hit: ")
+		compare_fields(w, compare_with, field, "equilibrium_regen_on_hit", "%+.2f", "Equilibrium when hit: ")
+
+		compare_fields(w, compare_with, field, "max_life", "%+.2f", "Maximum life: ")
+		compare_fields(w, compare_with, field, "max_mana", "%+.2f", "Maximum mana: ")
+		compare_fields(w, compare_with, field, "max_stamina", "%+.2f", "Maximum stamina: ")
+
+		compare_fields(w, compare_with, field, "combat_spellpower", "%+d", "Spellpower: ")
+		compare_fields(w, compare_with, field, "combat_spellcrit", "%+d%%", "Spell crit. chance: ")
+
+		compare_fields(w, compare_with, field, "lite", "%+d", "Light radius: ")
+		compare_fields(w, compare_with, field, "infravision", "%+d", "Infravision radius: ")
+		compare_fields(w, compare_with, field, "heightened_senses", "%+d", "Heightened senses radius: ")
+
+		compare_fields(w, compare_with, field, "see_invisible", "%+d", "See invisible: ")
+		compare_fields(w, compare_with, field, "invisible", "%+d", "Invisibility: ")
+
+		compare_fields(w, compare_with, field, "movement_speed", "%+d%%", "Movement speed: ", 100)
+		compare_fields(w, compare_with, field, "combat_physspeed", "%+d%%", "Combat speed: ", 100)
+		compare_fields(w, compare_with, field, "combat_spellspeed", "%+d%%", "Casting speed: ", 100)
+
+		compare_fields(w, compare_with, field, "healing_factor", "%+d%%", "Healing: ", 100)
+
+		compare_fields(w, compare_with, field, "life_leech_chance", "%+d%%", "Life leech chance: ")
+		compare_fields(w, compare_with, field, "life_leech_value", "%+d%%", "Life leech: ")
+
+		compare_fields(w, compare_with, field, "size_category", "%+d", "Size category: ")
+
+		--compare_fields(w, compare_with, field, "mana_regen", "%+d", "a: ")
+
+		if w.combat then
+			desc:add({"color","YELLOW"}, "When used to modify unarmed attacks:", {"color", "LAST"}, true)
+
+			-- clone the table to show modified values
+			local unarmed = table.clone(w.combat)
+			if unarmed.damrange then unarmed.damrange = unarmed.damrange + 1.1 end
+			if unarmed.dammod.str then unarmed.dammod.str = unarmed.dammod.str + 1 end
+
+			desc_combat(unarmed)
+
+			-- subtract the modified values to keep the tooltips correct
+			if unarmed.damrange then unarmed.damrange = unarmed.damrange - 1.1 end
+			if unarmed.dammod.str then unarmed.dammod.str = unarmed.dammod.str - 1 end
+
+		end
+
 	end
 
-	if w.combat_critical_power then desc:add(("Increases critical damage modifier: +%0.2f%%."):format(w.combat_critical_power), true) end
-
-	if w.disarm_bonus then desc:add(("Increases trap disarming bonus: %d."):format(w.disarm_bonus), true) end
-	if w.inc_stealth then desc:add(("Increases stealth bonus: %d."):format(w.inc_stealth), true) end
-	if w.max_encumber then desc:add(("Increases maximum encumberance: %d."):format(w.max_encumber), true) end
-
-	if w.combat_physresist then desc:add(("Increases physical save: %s."):format(w.combat_physresist), true) end
-	if w.combat_spellresist then desc:add(("Increases spell save: %s."):format(w.combat_spellresist), true) end
-	if w.combat_mentalresist then desc:add(("Increases mental save: %s."):format(w.combat_mentalresist), true) end
-
-	if w.blind_immune then desc:add(("Increases blindness immunity: %d%%."):format(w.blind_immune * 100), true) end
-	if w.poison_immune then desc:add(("Increases poison immunity: %d%%."):format(w.poison_immune * 100), true) end
-	if w.disease_immune then desc:add(("Increases disease immunity: %d%%."):format(w.disease_immune * 100), true) end
-	if w.cut_immune then desc:add(("Increases cut immunity: %d%%."):format(w.cut_immune * 100), true) end
-	if w.silence_immune then desc:add(("Increases silence immunity: %d%%."):format(w.silence_immune * 100), true) end
-	if w.disarm_immune then desc:add(("Increases disarm immunity: %d%%."):format(w.disarm_immune * 100), true) end
-	if w.confusion_immune then desc:add(("Increases confusion immunity: %d%%."):format(w.confusion_immune * 100), true) end
-	if w.pin_immune then desc:add(("Increases pinning immunity: %d%%."):format(w.pin_immune * 100), true) end
-	if w.stun_immune then desc:add(("Increases stun immunity: %d%%."):format(w.stun_immune * 100), true) end
-	if w.fear_immune then desc:add(("Increases fear immunity: %d%%."):format(w.fear_immune * 100), true) end
-	if w.knockback_immune then desc:add(("Increases knockback immunity: %d%%."):format(w.knockback_immune * 100), true) end
-	if w.instakill_immune then desc:add(("Increases instant-death immunity: %d%%."):format(w.instakill_immune * 100), true) end
-	if w.teleport_immune then desc:add(("Increases teleport immunity: %d%%."):format(w.teleport_immune * 100), true) end
-
-	if w.life_regen then desc:add(("Regenerates %0.2f hitpoints each turn."):format(w.life_regen), true) end
-	if w.stamina_regen then desc:add(("Regenerates %0.2f stamina each turn."):format(w.stamina_regen), true) end
-	if w.mana_regen then desc:add(("Regenerates %0.2f mana each turn."):format(w.mana_regen), true) end
-
-	if w.stamina_regen_on_hit then desc:add(("Regenerates %0.2f stamina when hit."):format(w.stamina_regen_on_hit), true) end
-	if w.mana_regen_on_hit then desc:add(("Regenerates %0.2f mana when hit."):format(w.mana_regen_on_hit), true) end
-	if w.equilibrium_regen_on_hit then desc:add(("Regenerates %0.2f equilibrium when hit."):format(w.equilibrium_regen_on_hit), true) end
-
-	if w.max_life then desc:add(("Maximum life %d"):format(w.max_life), true) end
-	if w.max_mana then desc:add(("Maximum mana %d"):format(w.max_mana), true) end
-	if w.max_stamina then desc:add(("Maximum stamina %d"):format(w.max_stamina), true) end
-
-	if w.combat_spellpower or w.combat_spellcrit then desc:add(("Spellpower %d, Spell Crit %d%%"):format(w.combat_spellpower or 0, w.combat_spellcrit or 0), true) end
-	if w.combat_physcrit then desc:add(("Physical Crit %d%%"):format(w.combat_physcrit or 0), true) end
-
-	if w.lite then desc:add(("Light radius %d"):format(w.lite), true) end
-	if w.infravision then desc:add(("Infravision radius %d"):format(w.infravision), true) end
-	if w.heightened_senses then desc:add(("Heightened senses radius %d"):format(w.heightened_senses), true) end
-
-	if w.see_invisible then desc:add(("See invisible: %d"):format(w.see_invisible), true) end
-	if w.invisible then desc:add(("Invisibility: %d"):format(w.invisible), true) end
-
-	if w.movement_speed then desc:add(("Movement speed: %d%%"):format(w.movement_speed * 100), true) end
-	if w.combat_physspeed then desc:add(("Combat speed: %d%%"):format(w.combat_physspeed * 100), true) end
-	if w.combat_spellspeed then desc:add(("Casting speed: %d%%"):format(w.combat_spellspeed * 100), true) end
-
-	if w.healing_factor then desc:add(("Increases all healing by %d%%"):format(w.healing_factor * 100), true) end
-
-	if w.life_leech_chance then desc:add(("%d%% chances on all damage dealt to leech %d%% of the damage done as health."):format(w.life_leech_chance, w.life_leech_value), true) end
-
-	if w.size_category then desc:add(("Increases size category by %d."):format(w.size_category), true) end
-
-	if w.combat then
-		desc:add({"color","YELLOW"}, "When used to modify unarmed attacks:", {"color", "LAST"}, true)
-		
-		-- clone the table to show modified values
-		local unarmed = table.clone(w.combat)
-		if unarmed.damrange then unarmed.damrange = unarmed.damrange + 1.1 end
-		if unarmed.dammod.str then unarmed.dammod.str = unarmed.dammod.str + 1 end
-		
-		desc_combat(unarmed)
-		
-		-- subtract the modified values to keep the tooltips correct
-		if unarmed.damrange then unarmed.damrange = unarmed.damrange - 1.1 end
-		if unarmed.dammod.str then unarmed.dammod.str = unarmed.dammod.str - 1 end
-		
-	end
-
-	end
-
-	if self.combat then desc_combat(self.combat) end
+	if self.combat then desc_combat(self.combat, compare_with, "combat") end
 
 	if self.special_combat then
 		desc:add({"color","YELLOW"}, "When used to attack (with talents):", {"color", "LAST"}, true)
-		desc_combat(self.special_combat)
+		desc_combat(self.special_combat, compare_with, "special_combat")
 	end
 
 	if self.no_teleport then
@@ -485,22 +581,22 @@ function _M:getTextualDesc()
 
 	if self.basic_ammo then
 		desc:add({"color","YELLOW"}, "Default ammo(infinite):", {"color", "LAST"}, true)
-		desc_combat(self.basic_ammo)
+		desc_combat(self.basic_ammo, compare_with, "basic_ammo")
 	end
 
 	if self.wielder then
 		desc:add({"color","YELLOW"}, "When wielded/worn:", {"color", "LAST"}, true)
-		desc_wielder(self.wielder)
+		desc_wielder(self.wielder, compare_with, "wielder")
 	end
 
 	if self.carrier then
 		desc:add({"color","YELLOW"}, "When carried:", {"color", "LAST"}, true)
-		desc_wielder(self.carrier)
+		desc_wielder(self.carrier, compare_with, "carrier")
 	end
 
 	if self.imbue_powers then
 		desc:add({"color","YELLOW"}, "When used to imbue an object:", {"color", "LAST"}, true)
-		desc_wielder(self.imbue_powers)
+		desc_wielder(self.imbue_powers, compare_with, "imbue_powers")
 	end
 
 	if self.alchemist_bomb then
@@ -532,10 +628,11 @@ function _M:getTextualDesc()
 end
 
 --- Gets the full desc of the object
-function _M:getDesc(name_param)
+function _M:getDesc(name_param, compare_with)
 	local desc = tstring{}
 	name_param = name_param or {}
 	name_param.do_color = true
+	compare_with = compare_with or {}
 	if not self:isIdentified() then
 		desc:merge(self:getName(name_param):toTString())
 		desc:add({"color", "WHITE"}, true)
@@ -545,14 +642,12 @@ function _M:getDesc(name_param)
 		desc:add(true)
 		desc:add({"color", "ANTIQUE_WHITE"})
 		desc:merge(self.desc:toTString())
-		desc:add(true)
-		desc:add(true)
+		desc:add(true, true)
 		desc:add({"color", "WHITE"})
 	end
 
 	local reqs = self:getRequirementDesc(game.player)
 	if reqs then
-		desc:add(true)
 		desc:merge(reqs)
 	end
 
@@ -570,7 +665,16 @@ function _M:getDesc(name_param)
 	end
 
 	desc:add(true, true)
-	desc:merge(self:getTextualDesc())
+
+	local could_compare = false
+	if not name_param.force_compare and not core.key.modState("ctrl") then
+		if compare_with[1] then could_compare = true end
+		compare_with = {}
+	end
+
+	desc:merge(self:getTextualDesc(compare_with))
+
+	if could_compare then desc:add(true, {"font","italic"}, {"color","GOLD"}, "Press <control> to compare", {"color","LAST"}, {"font","normal"}) end
 
 	return desc
 end

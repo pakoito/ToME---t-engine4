@@ -19,10 +19,10 @@
 
 require "engine.class"
 local Map = require "engine.Map"
-local ShowInventory = require "engine.dialogs.ShowInventory"
-local ShowEquipment = require "engine.dialogs.ShowEquipment"
-local ShowEquipInven = require "engine.dialogs.ShowEquipInven"
-local ShowPickupFloor = require "engine.dialogs.ShowPickupFloor"
+local ShowInventory = require_first("mod.dialogs.ShowInventory", "engine.dialogs.ShowInventory")
+local ShowEquipment = require_first("mod.dialogs.ShowEquipment", "engine.dialogs.ShowEquipment")
+local ShowEquipInven = require_first("mod.dialogs.ShowEquipInven", "engine.dialogs.ShowEquipInven")
+local ShowPickupFloor = require_first("mod.dialogs.ShowPickupFloor", "engine.dialogs.ShowPickupFloor")
 
 --- Handles actors stats
 module(..., package.seeall, class.make)
@@ -240,7 +240,7 @@ end
 -- @param filter nil or a function that filters the objects to list
 -- @param action a function called when an object is selected
 function _M:showInventory(title, inven, filter, action)
-	local d = ShowInventory.new(title, inven, filter, action)
+	local d = ShowInventory.new(title, inven, filter, action, self)
 	game:registerDialog(d)
 	return d
 end
@@ -258,7 +258,7 @@ end
 -- @param filter nil or a function that filters the objects to list
 -- @param action a function called when an object is selected
 function _M:showPickupFloor(title, filter, action)
-	local d = ShowPickupFloor.new(title, self.x, self.y, filter, action)
+	local d = ShowPickupFloor.new(title, self.x, self.y, filter, action, self)
 	game:registerDialog(d)
 	return d
 end

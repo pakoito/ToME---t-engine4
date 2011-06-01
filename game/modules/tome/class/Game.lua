@@ -970,6 +970,10 @@ function _M:setupCommands()
 		end end,
 	}
 
+	self.key.any_key = function(sym)
+		-- Control resets the tooltip
+		if sym == self.key._LCTRL or sym == self.key._RCTRL then self.tooltip.old_tmx = nil end
+	end
 	self.key:addBinds
 	{
 		-- Movements
