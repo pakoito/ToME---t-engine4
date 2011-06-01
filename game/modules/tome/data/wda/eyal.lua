@@ -125,7 +125,7 @@ elseif zone == "Far East" then
 			end
 		end
 	end
-	if wda.cur_orc_patrols < game.state:canEastPatrol() then
+	if wda.cur_orc_patrols < game.state:canEastPatrol() and rng.percent(5) then
 		local e = game.zone:makeEntity(game.level, "fareast_encounters_npcs", {type="patrol", subtype="orc pride"}, nil, true)
 		if e then
 			local spot = game.level:pickSpot{type="patrol", subtype="orc-pride"}
