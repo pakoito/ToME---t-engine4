@@ -48,5 +48,6 @@ function _M:generate()
 end
 
 function _M:display(x, y)
+	if self.text_shadow then self.texture:toScreenFull(x+2, y+2, self.w, self.h, self.texture_w, self.texture_h, 0, 0, 0, self.text_shadow) end
 	self.texture:toScreenFull(x, y, self.w, self.h, self.texture_w, self.texture_h)
 end
