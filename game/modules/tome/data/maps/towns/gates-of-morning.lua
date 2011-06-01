@@ -49,7 +49,7 @@ defineTile('@', "GRASS", nil, "HIGH_SUN_PALADIN_AERYN")
 defineTile('j', "GRASS", nil, mod.class.NPC.new{
 	type = "humanoid", subtype = "elf",
 	display = "p", color=colors.RED,
-	name = "Limmir, Expert Jeweler",
+	name = "Limmir the Jeweler",
 	size_category = 3, rank = 3,
 	ai = "simple",
 	faction = "sunwall",
