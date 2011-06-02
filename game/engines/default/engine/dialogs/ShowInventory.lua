@@ -76,6 +76,7 @@ function _M:use(item)
 		dont_end = self.action(item.object, item.item)
 	end
 	self:generateList()
+	self:select(self.c_list.list[self.c_list.sel])
 	if not dont_end then game:unregisterDialog(self) end
 end
 
