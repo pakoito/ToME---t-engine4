@@ -2001,7 +2001,7 @@ function _M:preUseTalent(ab, silent, fake)
 	end
 
 	-- Confused ? lose a turn!
-	if self:attr("confused") and ab.no_energy ~= true and not fake then
+	if self:attr("confused") and ab.no_energy ~= true and not fake and not self:attr("force_talent_ignore_ressources") then
 		if rng.percent(self:attr("confused")) then
 			if not silent then game.logSeen(self, "%s is confused and fails to use %s.", self.name:capitalize(), ab.name) end
 			self:useEnergy()
