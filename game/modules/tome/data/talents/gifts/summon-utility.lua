@@ -131,7 +131,7 @@ newTalent{
 
 			max_life = 100,
 			life_rating = 14,
-			infravision = 20,
+			infravision = 10,
 
 			combat_armor = 10, combat_def = 0,
 			combat = { dam=1, atk=1, },
@@ -208,7 +208,7 @@ newTalent{
 
 			max_life = 50,
 			life_rating = 10,
-			infravision = 20,
+			infravision = 10,
 
 			combat_armor = 0, combat_def = 0,
 			combat = { dam=resolvers.rngavg(20,25), atk=16, apr=9, damtype=DamageType.NATURE, dammod={dex=1.2} },

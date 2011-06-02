@@ -552,7 +552,7 @@ newEntity{ base = "BASE_AMULET",
 			life_regen = 3,
 			size_category = 3,
 			rank = 3,
-			infravision = 20,
+			infravision = 10,
 
 			inc_damage = table.clone(who.inc_damage, true),
 

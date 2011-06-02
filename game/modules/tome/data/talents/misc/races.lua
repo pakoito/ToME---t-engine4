@@ -345,7 +345,7 @@ newTalent{
 				rank = 3,
 				life_rating = 13,
 				max_life = resolvers.rngavg(50,80),
-				infravision = 20,
+				infravision = 10,
 
 				autolevel = "none",
 				ai = "summoned", ai_real = "tactical", ai_state = { talent_in=2, },
@@ -751,7 +751,7 @@ newTalent{
 				rank = 3,
 				life_rating = 8,
 				max_life = resolvers.rngavg(50,80),
-				infravision = 20,
+				infravision = 10,
 
 				autolevel = "none",
 				ai = "summoned", ai_real = "tactical", ai_state = { talent_in=2, },
