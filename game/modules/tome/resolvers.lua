@@ -125,7 +125,13 @@ function resolvers.calc.drops(t, e)
 		if not filter.defined then
 			o = game.zone:makeEntity(game.level, "object", filter, nil, true)
 		else
-			o = game.zone:makeEntityByName(game.level, "object", filter.defined)
+			local forced
+			o, forced = game.zone:makeEntityByName(game.level, "object", filter.defined, filter.random_art_replace and true or false)
+			-- If we forced the generation this means it was already found
+			if forced then
+				print("Serving unique "..o.name.." but forcing replacement drop")
+				filter.random_art_replace.chance = 100
+			end
 		end
 		if o then
 			print("Zone made us a drop according to filter!", o:getName())
