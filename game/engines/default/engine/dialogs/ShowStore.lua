@@ -92,6 +92,12 @@ function _M:select(item)
 	self.cur_item = item
 end
 
+function _M:on_focus(id, ui)
+	if self.focus_ui and self.focus_ui.ui == self.c_inven then self:select(self.c_inven.list[self.c_inven.sel])
+	elseif self.focus_ui and self.focus_ui.ui == self.c_store then self:select(self.c_store.list[self.c_store.sel])
+	end
+end
+
 function _M:use(item)
 	if item and item.object then
 		if self.focus_ui and self.focus_ui.ui == self.c_store then

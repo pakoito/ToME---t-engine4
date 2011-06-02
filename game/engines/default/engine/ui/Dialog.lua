@@ -401,11 +401,15 @@ function _M:moveFocus(v)
 	while start ~= id and cnt <= #self.uis do
 		if self.uis[id].ui.can_focus then
 			self:setFocus(id)
+			self:on_focus(id, self.uis[id].ui)
 			break
 		end
 		id = util.boundWrap(id + v, 1, #self.uis)
 		cnt = cnt + 1
 	end
+end
+
+function _M:on_focus(id, ui)
 end
 
 function _M:mouseEvent(button, x, y, xrel, yrel, bx, by, event)
