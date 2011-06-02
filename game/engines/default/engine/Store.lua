@@ -21,7 +21,7 @@ require "engine.class"
 local Entity = require "engine.Entity"
 local Dialog = require "engine.ui.Dialog"
 local Inventory = require "engine.interface.ActorInventory"
-local ShowStore = require "engine.dialogs.ShowStore"
+local ShowStore = require_first("mod.dialogs.ShowStore", "engine.dialogs.ShowStore")
 local GetQuantity = require "engine.dialogs.GetQuantity"
 
 module(..., package.seeall, class.inherit(Entity, Inventory))

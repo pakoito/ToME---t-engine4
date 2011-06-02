@@ -203,32 +203,3 @@ function _M:interact(who, name)
 	who:sortInven()
 	Store.interact(self, who, name)
 end
-
---- Display tooltips
-function _M:on_select(item)
-	if item.last_display_x then
-		game.tooltip_x, game.tooltip_y = {}, 1
-		game.tooltip:displayAtMap(nil, nil, item.last_display_x, item.last_display_y, item.desc)
-
-		if not item.object or item.object.wielded then game.tooltip2_x = nil return end
-		local winven = item.object:wornInven()
-		winven = winven and game.player:getInven(winven)
-		if not winven then game.tooltip2_x = nil return end
-
-		local str = tstring{{"font", "bold"}, {"color", "GREY"}, "Currently equiped:", {"font", "normal"}, {"color", "LAST"}, true}
-		local ok = false
-		for i = 1, #winven do
-			str:merge(winven[i]:getDesc())
-			if i < #winven then str:add{true, "---", true} end
-			ok = true
-		end
-		if ok then
-			game.tooltip2_x, game.tooltip2_y = {}, 1
-			game.tooltip2:displayAtMap(nil, nil, 1, item.last_display_y, str)
-			game.tooltip2.last_display_x = game.tooltip.last_display_x - game.tooltip2.w
-			last = item
-		else
-			game.tooltip2_x = nil
-		end
-	end
-end

@@ -300,11 +300,11 @@ function _M:setupUI(resizex, resizey, on_resize, addmw, addmh)
 		end
 --		print("===", mw, addw)
 		mw = mw + addw + 5 * 2 + (addmw or 0)
-		
+
 --		print("===", mw, addw)
 		local tw, th = self.font_bold:size(self.title)
 		mw = math.max(tw + 6, mw)
-		
+
 		mh = mh + addh + 5 + 22 + 3 + (addmh or 0) + th
 
 		if on_resize then on_resize(resizex and mw or self.w, resizey and mh or self.h) end
@@ -389,7 +389,7 @@ function _M:getUIElement(id)
 		end
 		if type(id) == "table" then return end
 	end
-	
+
 	return self.uis[id]
 end
 
