@@ -2725,6 +2725,8 @@ newEffect{
 
 		eff.extension = eff.extension or 0
 		eff.isSevered = false
+
+		eff.target:setEffect(eff.target.EFF_FED_UPON, eff.dur, {src=self})
 	end,
 	deactivate = function(self, eff)
 		-- hate
@@ -2751,6 +2753,8 @@ newEffect{
 			game.level.map:removeParticleEmitter(eff.particles)
 			eff.particles = nil
 		end
+
+		eff.target:removeEffect(eff.target.EFF_FED_UPON)
 	end,
 	on_timeout = function(self, eff)
 		if eff.isSevered then
@@ -2801,6 +2805,25 @@ newEffect{
 			eff.particles.x = self.x
 			eff.particles.y = self.y
 			game.level.map:addParticleEmitter(eff.particles)
+		end
+	end,
+}
+
+newEffect{
+	name = "FED_UPON",
+	desc = "Fed Upon",
+	long_desc = function(self, eff) return ("%s is fed upon by %s."):format(self.name:capitalize(), eff.src.name) end,
+	type = "mental",
+	status = "detrimental",
+	parameters = { },
+	activate = function(self, eff)
+	end,
+	deactivate = function(self, eff)
+		eff.src:removeEffect(eff.src.EFF_FEED)
+	end,
+	on_timeout = function(self, eff)
+		if eff.src.dead or not game.level:hasEntity(eff.src) then
+			eff.src:removeEffect(eff.src.EFF_FEED)
 		end
 	end,
 }
