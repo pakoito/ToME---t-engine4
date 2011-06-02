@@ -196,6 +196,8 @@ function _M:generate()
 		end,
 	}
 	self.key:addCommands{
+		[{"_UP","ctrl"}] = function() self.key:triggerVirtual("MOVE_UP") end,
+		[{"_DOWN","ctrl"}] = function() self.key:triggerVirtual("MOVE_DOWN") end,
 		_HOME = function()
 			if self.sel and self.list[self.sel] then self.list[self.sel].focus_decay = self.focus_decay_max end
 			self.sel = 1
