@@ -72,7 +72,7 @@ function _M:init(actor, on_finish)
 	self.vs2 = Separator.new{dir="vertical", size=math.floor(self.iw / 2) - 20}
 	
 	self.c_t_tut = Textzone.new{width=math.floor(self.iw / 2 - 10), height=1, auto_height=true, no_color_bleed=true, text=[[
-Keyboard: #00FF00#up key/down key#FFFFFF# to select a stat; #00FF00#right key#FFFFFF# to learn; #00FF00#left key#FFFFFF# to unlearn; #00FF00#+#FFFFFF# to expand a category; #00FF00#-#FFFFFF# to reduce a category. #00FF00#TAB key#FFFFFF# to switch between tabs.
+Keyboard: #00FF00#up key/down key#FFFFFF# to select talent; #00FF00#right key#FFFFFF# to learn; #00FF00#left key#FFFFFF# to unlearn; #00FF00#+#FFFFFF# to expand a category; #00FF00#-#FFFFFF# to reduce a category. #00FF00#TAB key#FFFFFF# to switch between tabs.
 Mouse: #00FF00#Left click#FFFFFF# to learn; #00FF00#right click#FFFFFF# to unlearn.
 ]]}
 	self.c_t_points = Textzone.new{width=math.floor(self.iw / 2 - 10), height=1, auto_height=true, no_color_bleed=true, text=_points_left:format(self.actor.unused_talents_types, self.actor.unused_talents, self.actor.unused_generics)}
@@ -145,7 +145,7 @@ function _M:onSelectStat(item)
 	if ui then
 		local top = ui.top
 		self.c_desc2.h = self.ih - fh + h + top + self.vs.h
-		self:moveUIElement(self.c_desc2, nil, nil, fh + h + top + self.vs.h, nil)
+		self:moveUIElement(self.c_desc2, nil, nil, 2 * fh + h + top + self.vs.h, nil)
 	end
 	text = self:getStatNewTalents(item.stat_id)
 	self.c_desc2:createItem(item, text)
@@ -193,7 +193,7 @@ function _M:generateStatsList()
 								val=self.actor:getCon(), 
 								stat_id=self.actor.STAT_CON},
 	}
-	self.c_list:onSelect()
+	self.c_list:onSelect(true)
 end
 
 function _M:switchTo(kind)

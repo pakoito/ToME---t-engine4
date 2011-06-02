@@ -38,7 +38,8 @@ end
 function _M:select(item)
 	if item then
 		self.cur_item = item
-		if not item.desc then
+		if not item.desc or item.ctrl_state ~= core.key.modState("ctrl") then
+			item.ctrl_state = core.key.modState("ctrl")
 			item.desc = item.object:getDesc({do_color=true}, self.actor:getInven(item.object:wornInven()))
 			self.c_desc:createItem(item, item.desc)
 		end
