@@ -439,6 +439,8 @@ function _M:spawnWorldAmbush(enc, dx, dy)
 		width = enc.width or 20, height = enc.height or 20,
 		all_lited = true,
 		ambient_music = "last",
+		max_material_level = util.bound(math.ceil(game.player.level / 10), 1, 5),
+		min_material_level = util.bound(math.ceil(game.player.level / 10), 1, 5) - 1,
 		generator =  {
 			map = gen,
 			actor = { class = "engine.generator.actor.Random", nb_npc = enc.nb or {1,1}, filters=enc.filters },
