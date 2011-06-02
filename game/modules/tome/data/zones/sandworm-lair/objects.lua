@@ -47,8 +47,10 @@ newEntity{
 		game.logPlayer(who, "You have %d class talent point(s) to spend. Press G to use them.", who.unused_talents)
 		game.logPlayer(who, "You have %d generic talent point(s) to spend. Press G to use them.", who.unused_generics)
 
-		if who:knowTalentType("wild-gift/") then
+		if who:knowTalentType("wild-gift/harmony") then
 			who:setTalentTypeMastery("wild-gift/harmony", who:getTalentTypeMastery("wild-gift/harmony") + 0.1)
+		elseif who:knowTalentType("wild-gift/harmony") == false then
+			who:learnTalentType("wild-gift/harmony", true)
 		else
 			who:learnTalentType("wild-gift/harmony", false)
 		end
