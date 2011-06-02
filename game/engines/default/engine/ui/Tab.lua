@@ -60,7 +60,7 @@ function _M:generate()
 
 	self.rw, self.rh = self.title_w, self.title_h
 	self.frame = self:makeFrame("ui/button", self.w, self.h)
-	self.frame.b2 = self:getUITexture("ui/border_hor_middle.png")
+--	self.frame.b2 = self:getUITexture("ui/border_hor_middle.png")
 
 	self.frame_sel = self:makeFrame("ui/button_sel", self.w, self.h)
 
