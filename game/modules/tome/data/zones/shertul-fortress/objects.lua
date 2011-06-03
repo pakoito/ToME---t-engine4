@@ -36,8 +36,7 @@ When activated it will prompt to destroy items on the floor, if there are none i
 	pricemod = function(o) if o.type == "gem" then return 0.40 else return 0.05 end end,
 	transmo_filter = function(o) if o:getPrice() <= 0 or o.quest then return false end return true end,
 	transmo_inven = function(self, who, inven, idx, o)
-		local price = o:getPrice() * o:getNumber() * self.pricemod(o)
-		price = math.min(price, 25)
+		local price = math.min(o:getPrice(), 25) * o:getNumber() * self.pricemod(o)
 		who:removeObject(who:getInven("INVEN"), idx, true)
 		who:sortInven()
 		who:incMoney(price)
@@ -50,8 +49,7 @@ When activated it will prompt to destroy items on the floor, if there are none i
 			if game.level.map:getObjectTotal(who.x, who.y) > 0 then
 				local x, y = who.x, who.y
 				local d = require("mod.dialogs.ShowPickupFloor").new("Transmogrify", x, y, self.transmo_filter, function(o, idx)
-					local price = o:getPrice() * o:getNumber() * self.pricemod(o)
-					price = math.min(price, 25)
+					local price = math.min(o:getPrice(), 25) * o:getNumber() * self.pricemod(o)
 					game.level.map:removeObject(x, y, idx)
 					who:incMoney(price)
 					who:hasQuest("shertul-fortress"):gain_energy(price/10)
