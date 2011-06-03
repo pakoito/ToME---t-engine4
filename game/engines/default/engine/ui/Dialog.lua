@@ -366,6 +366,7 @@ function _M:setFocus(id)
 	self.focus_ui = ui
 	self.focus_ui_id = id
 	ui.ui:setFocus(true)
+	self:on_focus(id, ui)
 end
 
 function _M:moveUIElement(id, left, right, top, bottom)
@@ -401,7 +402,6 @@ function _M:moveFocus(v)
 	while start ~= id and cnt <= #self.uis do
 		if self.uis[id].ui.can_focus then
 			self:setFocus(id)
-			self:on_focus(id, self.uis[id].ui)
 			break
 		end
 		id = util.boundWrap(id + v, 1, #self.uis)
