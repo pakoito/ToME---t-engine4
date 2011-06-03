@@ -3294,7 +3294,7 @@ newEffect{
 	name = "BORROWED_TIME",
 	desc = "Borrowed Time",
 	long_desc = function(self, eff) return ("The target's global speed has been increased by %d%%."):format(100) end,
-	type = "magical",
+	type = "time",
 	status = "beneficial",
 	parameters = { power=10 },
 	activate = function(self, eff)
