@@ -681,6 +681,7 @@ function _M:playerPickup()
 		local titleupdator = self:getEncumberTitleUpdator("Pickup")
 		local d d = self:showPickupFloor(titleupdator(), nil, function(o, item)
 			self:pickupFloor(item, true)
+			d:select(d.c_list.list[d.c_list.sel])
 			self.changed = true
 			d:updateTitle(titleupdator())
 			d:used()

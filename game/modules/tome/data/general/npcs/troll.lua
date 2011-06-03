@@ -72,9 +72,7 @@ newEntity{ base = "BASE_NPC_TROLL",
 	rarity = 1,
 	max_life = resolvers.rngavg(120,140),
 	combat_armor = 7, combat_def = 0,
-	resolvers.talents{
-	[Talents.T_FEED]=5,[Talents.T_FEED_STRENGTHS]=5,
-	[Talents.T_STUN]={base=1, every=7, max=5}, [Talents.T_KNOCKBACK]={base=1, every=7, max=5}, },
+	resolvers.talents{[Talents.T_STUN]={base=1, every=7, max=5}, [Talents.T_KNOCKBACK]={base=1, every=7, max=5}, },
 }
 
 newEntity{ base = "BASE_NPC_TROLL",

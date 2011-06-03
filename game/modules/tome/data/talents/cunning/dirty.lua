@@ -86,17 +86,19 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		local tx, ty, sx, sy = target.x, target.y, self.x, self.y
 		local hitted = self:attackTarget(target, nil, 0, true)
 
 		if hitted then
 			self:setEffect(self.EFF_EVASION, t.getDuration(self, t), {chance=50})
 
 			-- Displace
-			local tx, ty, sx, sy = target.x, target.y, self.x, self.y
-			target.x = nil target.y = nil
 			self.x = nil self.y = nil
-			target:move(sx, sy, true)
 			self:move(tx, ty, true)
+			if not target.dead then
+				target.x = nil target.y = nil
+				target:move(sx, sy, true)
+			end
 		end
 
 		return true

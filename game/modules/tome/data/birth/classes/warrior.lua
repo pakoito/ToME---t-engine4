@@ -146,7 +146,7 @@ newBirthDescriptor{
 		["spell/fire"]={true, 0.2},
 		["spell/air"]={true, 0.2},
 		["spell/conveyance"]={false, 0.2},
-		["spell/divination"]={false, 0.2},
+		["spell/aegis"]={false, 0.2},
 		["spell/enhancement"]={true, 0.2},
 		["technique/2hweapon-cripple"]={true, 0.1},
 		["technique/combat-techniques-active"]={true, 0.1},
