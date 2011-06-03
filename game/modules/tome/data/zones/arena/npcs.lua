@@ -911,6 +911,7 @@ newEntity{ name = "great gladiator",
 	base = "BASE_NPC_ARENA1",
 	type = "humanoid", subtype = "human",
 	color=colors.VERY_DARK_RED,
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/humanoid_human_great_gladiator.png", display_h=2, display_y=-1}}},
 
 	life_rating = 12,
 

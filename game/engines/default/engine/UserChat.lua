@@ -45,6 +45,16 @@ function _M:setupOnGame()
 		USERCHAT_TALK = function()
 			self:talkBox()
 		end,
+		USERCHAT_SWITCH_CHANNEL = function()
+			if not self.display_chans then return end
+			for i = 1, #self.display_chans do
+				if self.display_chans[i].name == self.cur_channel then
+					self:selectChannel(self.display_chans[util.boundWrap(i + 1, 1, #self.display_chans)].name)
+					if game.logChat then game.logChat("Talking in channel: %s", self.cur_channel) end
+					break
+				end
+			end
+		end,
 	}
 
 	local ok, UC = pcall(require, "mod.class.UserChatExtension")

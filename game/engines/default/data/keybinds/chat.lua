@@ -30,3 +30,10 @@ defineAction{
 	group = "user chat",
 	name = "Display chat log",
 }
+
+defineAction{
+	default = { "sym:32:false:true:false:false" },
+	type = "USERCHAT_SWITCH_CHANNEL",
+	group = "user chat",
+	name = "Cycle chat channels",
+}
