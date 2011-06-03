@@ -969,7 +969,7 @@ newEntity{ name = "martyr",
 
 newEntity{ name = "anorithil",
 	base = "BASE_NPC_ARENA1",
-	type = "humanoid", subtype = "human",
+	type = "humanoid", subtype = "elf",
 	color=colors.GREY,
 	life_rating = 12,
 
