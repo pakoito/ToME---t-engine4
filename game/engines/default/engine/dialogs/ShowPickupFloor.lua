@@ -80,6 +80,7 @@ function _M:used()
 		game:unregisterDialog(self)
 		return false
 	end
+	self:select(self.c_list.list[self.c_list.sel])
 	return true
 end
 
