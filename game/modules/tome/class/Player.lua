@@ -780,8 +780,7 @@ function _M:playerUseItem(object, item, inven)
 		function(o)
 			return o:canUseObject()
 		end,
-		use_fct,
-		true
+		use_fct
 	)
 end
 
