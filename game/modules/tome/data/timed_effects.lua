@@ -2214,10 +2214,12 @@ newEffect{
 	activate = function(self, eff)
 		eff.kills = 0
 		eff.tmpid = self:addTemporaryValue("unstoppable", 1)
+		eff.healid = self:addTemporaryValue("no_life_regen", 1)
 	end,
 	deactivate = function(self, eff)
 		self:heal(eff.kills * eff.hp_per_kill * self.max_life / 100)
 		self:removeTemporaryValue("unstoppable", eff.tmpid)
+		self:removeTemporaryValue("no_life_regen", eff.healid)
 	end,
 }
 
