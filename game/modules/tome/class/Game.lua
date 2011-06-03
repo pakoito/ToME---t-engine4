@@ -1146,7 +1146,11 @@ function _M:setupCommands()
 		end,
 
 		SHOW_MESSAGE_LOG = function()
-			self.logdisplay:showLogDialog(nil, 0.6)
+			if not self.show_userchat then
+				self.logdisplay:showLogDialog(nil, 0.6)
+			else
+				profile.chat:showLogDialog(nil, 0.6)
+			end
 		end,
 
 		-- Show time
