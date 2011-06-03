@@ -1338,7 +1338,7 @@ function _M:createRandomBoss(base, data)
 		end
 
 		-- Add talent categories
-		for tt, d in pairs(class.talents_types or {}) do b:learnTalentType(tt, true) b:setTalentTypeMastery(tt, d[2]) end
+		for tt, d in pairs(class.talents_types or {}) do b:learnTalentType(tt, true) b:setTalentTypeMastery(tt, (b:getTalentTypeMastery(tt) or 1) + d[2]) end
 
 		-- Add starting equipment
 		for k, resolver in pairs(class.copy or {}) do
