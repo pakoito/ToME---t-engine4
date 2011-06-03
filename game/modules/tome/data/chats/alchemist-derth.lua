@@ -89,11 +89,10 @@ end
 
 local function more_aid(npc, player)
 	return not (q:isCompleted(e[1].full) and q:isCompleted(e[2].full) and q:isCompleted(e[3].full)) --make sure all the elixirs aren't already made
-	--Next, for each of the three elixirs, make sure it's not the case that:
-	--1) we're either working on it or... 2) we've started (but not finished) the elixir and it got poached.
-	and not ((q:isCompleted(e[1].start) and not q:isCompleted(e[1].full)) or (q:isCompleted(e[1].start) and q:isCompleted(e[1].poached) and q:isCompleted(e[1].almost)) )
-	and not ((q:isCompleted(e[2].start) and not q:isCompleted(e[2].full)) or (q:isCompleted(e[2].start) and q:isCompleted(e[2].poached) and q:isCompleted(e[2].almost)) )
-	and not ((q:isCompleted(e[3].start) and not q:isCompleted(e[3].full)) or (q:isCompleted(e[3].start) and q:isCompleted(e[3].poached) and q:isCompleted(e[3].almost)) )
+	--Next, for each of the three elixirs, make sure it's not the case that we're still working on it
+	and not (q:isCompleted(e[1].start) and not q:isCompleted(e[1].full))
+	and not (q:isCompleted(e[2].start) and not q:isCompleted(e[2].full))
+	and not (q:isCompleted(e[3].start) and not q:isCompleted(e[3].full))
 end
 
 local function give_bits(npc, player, n) -- n is the index of the elixir we're checking on

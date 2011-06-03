@@ -94,9 +94,7 @@ function _M:moveDirection(x, y)
 
 		-- if we are blocked, try some other way
 		if not self:aiCanPass(lx, ly) then
-			local dirx = lx - self.x
-			local diry = ly - self.y
-			local dir = coord_to_dir[dirx][diry]
+			local dir = util.getDir(lx, ly, self.x, self.y)
 
 			local list = coords[dir]
 			local l = {}
