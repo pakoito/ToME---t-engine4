@@ -64,14 +64,16 @@ function _M:generate()
 	self.text_y = (h - fh) / 2
 	self.cursor_y = (h - self.texcursor.h) / 2
 	self.max_display = math.floor(fw / self.font_mono_w)
-	local s = core.display.newSurface(title_w, h)
 	self.text_surf = core.display.newSurface(fw, fh)
 	self.text_tex, self.text_tex_w, self.text_tex_h = self.text_surf:glTexture()
 	self:updateText()
 
-	s:erase(0, 0, 0, 0)
-	s:drawColorStringBlended(self.font, self.title, 0, (h - fh) / 2, 255, 255, 255, true)
-	self.tex, self.tex_w, self.tex_h = s:glTexture()
+	if title_w > 0 then
+		local s = core.display.newSurface(title_w, h)
+		s:erase(0, 0, 0, 0)
+		s:drawColorStringBlended(self.font, self.title, 0, (h - fh) / 2, 255, 255, 255, true)
+		self.tex, self.tex_w, self.tex_h = s:glTexture()
+	end
 
 	-- Add UI controls
 	self.mouse:registerZone(title_w + 6, 0, fw, h, function(button, x, y, xrel, yrel, bx, by, event)
@@ -151,8 +153,10 @@ function _M:updateText(v)
 end
 
 function _M:display(x, y, nb_keyframes)
-	if self.text_shadow then self.tex:toScreenFull(x+1, y+1, self.title_w, self.h, self.tex_w, self.tex_h, 0, 0, 0, self.text_shadow) end
-	self.tex:toScreenFull(x, y, self.title_w, self.h, self.tex_w, self.tex_h)
+	if self.tex then
+		if self.text_shadow then self.tex:toScreenFull(x+1, y+1, self.title_w, self.h, self.tex_w, self.tex_h, 0, 0, 0, self.text_shadow) end
+		self.tex:toScreenFull(x, y, self.title_w, self.h, self.tex_w, self.tex_h)
+	end
 	if self.focused then
 		self:drawFrame(self.frame_sel, x + self.title_w, y)
 		self.texcursor.t:toScreenFull(x + self.text_x + (self.cursor-self.scroll) * self.font_mono_w, y + self.cursor_y, self.texcursor.w, self.texcursor.h, self.texcursor.tw, self.texcursor.th)
