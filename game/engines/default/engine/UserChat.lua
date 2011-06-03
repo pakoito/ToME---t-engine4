@@ -51,11 +51,12 @@ function _M:setupOnGame()
 	if ok and UC then self.uc_ext = UC.new(self) end
 end
 
-function _M:addMessage(channel, login, name, msg, extra_data)
+function _M:addMessage(channel, login, name, msg, extra_data, no_change)
 	local log = self.channels[channel].log
 	table.insert(log, 1, {login=login, name=name, msg=msg, extra_data=extra_data})
 	while #log > self.max do table.remove(log) end
 	self.changed = true
+	if not no_change and channel ~= self.cur_channel then self.channels[channel].changed = true self.channels_changed = true end
 end
 
 function _M:event(e)
@@ -65,16 +66,16 @@ function _M:event(e)
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
 		self:addMessage(e.channel, e.login, e.name, e.msg)
 
-		if type(game) == "table" and game.logChat then
+		if type(game) == "table" and game.logChat and self.cur_channel == e.channel then
 			game.logChat("#YELLOW#<%s> %s", e.name, e.msg)
 		end
 	elseif e.se == "Achievement" then
 		e.msg = e.msg:removeColorCodes()
 
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
-		self:addMessage(e.channel, e.login, e.name, "#{italic}##LIGHT_BLUE#has earned the achievement <"..e.msg..">#{normal}#")
+		self:addMessage(e.channel, e.login, e.name, "#{italic}##LIGHT_BLUE#has earned the achievement <"..e.msg..">#{normal}#", nil, true)
 
-		if type(game) == "table" and game.logChat then
+		if type(game) == "table" and game.logChat and self.cur_channel == e.channel then
 			game.logChat("#LIGHT_BLUE#%s has earned the achievement <%s>", e.name, e.msg)
 		end
 	elseif e.se == "SerialData" then
@@ -86,7 +87,7 @@ function _M:event(e)
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
 		self.channels[e.channel].users[e.login] = {name=e.name, login=e.login}
 		self.channels_changed = true
-		self:addMessage(e.channel, e.login, e.name, "#{italic}##FIREBRICK#has joined the channel#{normal}#")
+		self:addMessage(e.channel, e.login, e.name, "#{italic}##FIREBRICK#has joined the channel#{normal}#", nil, true)
 		if type(game) == "table" and game.logChat and e.channel == self.cur_channel then
 			game.logChat("#{italic}##FIREBRICK#%s has joined channel %s (press space to talk).#{normal}#", e.login, e.channel)
 		end
@@ -95,7 +96,7 @@ function _M:event(e)
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
 		self.channels[e.channel].users[e.login] = nil
 		self.channels_changed = true
-		self:addMessage(e.channel, e.login, e.name, "#{italic}##FIREBRICK#has left the channel#{normal}#")
+		self:addMessage(e.channel, e.login, e.name, "#{italic}##FIREBRICK#has left the channel#{normal}#", nil, true)
 		if type(game) == "table" and game.logChat and e.channel == self.cur_channel then
 			game.logChat("#{italic}##FIREBRICK#%s has left channel %s.#{normal}#", e.login, e.channel)
 		end
@@ -133,6 +134,7 @@ end
 
 function _M:selectChannel(channel)
 	if not self.channels[channel] then return end
+	self.channels[channel].changed = false
 	self.cur_channel = channel
 	self.channels_changed = true
 	self.changed = true
@@ -361,7 +363,12 @@ function _M:toScreen()
 		local item = self.display_chans[i]
 		local f = item.sel and self.frame_sel or self.frame
 		f.w = item.w
+
 		Base:drawFrame(f, self.display_x + w, self.display_y)
+		if self.channels[item.name].changed then
+			local glow = (1+math.sin(core.game.getTime() / 500)) / 2 * 100 + 120
+			Base:drawFrame(f, self.display_x + w, self.display_y, 139/255, 210/255, 77/255, glow / 255)
+		end
 		item._tex:toScreenFull(self.display_x + w, self.display_y, item.w, item.h, item._tex_w, item._tex_h)
 		w = w + item.w + 4
 	end

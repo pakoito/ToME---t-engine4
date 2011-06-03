@@ -279,6 +279,8 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 		profile.chat:setupOnGame()
 		profile.chat:join("global")
 		profile.chat:join(mod.short_name)
+		profile.chat:join(mod.short_name.."-spoiler")
+		profile.chat:selectChannel(mod.short_name)
 	end
 
 	-- Disable the profile if ungood
