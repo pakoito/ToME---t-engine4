@@ -49,7 +49,7 @@ newBirthDescriptor{
 		resolvers.inscription("INFUSION:_REGENERATION", {cooldown=10, dur=5, heal=60}),
 		resolvers.inscription("INFUSION:_WILD", {cooldown=12, what={poison=true}, dur=4, power=14}),
 	},
-	random_escort_possibilities = { {"trollmire", 2, 3}, {"ruins-kor-pul", 1, 2}, {"daikara", 1, 5}, {"old-forest", 1, 5}, {"dreadfell", 1, 8}, {"iron-throne", 1, 1}, },
+	random_escort_possibilities = { {"trollmire", 2, 3}, {"ruins-kor-pul", 1, 2}, {"daikara", 1, 5}, {"old-forest", 1, 5}, {"dreadfell", 1, 8}, {"reknor", 1, 1}, },
 }
 
 ---------------------------------------------------------

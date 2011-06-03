@@ -35,7 +35,7 @@ newBirthDescriptor{
 			["Runic Golem"] = function() return profile.mod.allow_build.construct_runic_golem and "allow" or "disallow" end,
 		},
 	},
-	random_escort_possibilities = { {"trollmire", 2, 3}, {"ruins-kor-pul", 1, 2}, {"daikara", 1, 5}, {"old-forest", 1, 5}, {"dreadfell", 1, 8}, {"iron-throne", 1, 1}, },
+	random_escort_possibilities = { {"trollmire", 2, 3}, {"ruins-kor-pul", 1, 2}, {"daikara", 1, 5}, {"old-forest", 1, 5}, {"dreadfell", 1, 8}, {"reknor", 1, 1}, },
 }
 
 newBirthDescriptor

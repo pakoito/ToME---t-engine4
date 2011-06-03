@@ -83,7 +83,7 @@ newBirthDescriptor
 		resolvers.inscription("RUNE:_PHASE_DOOR", {cooldown=7, range=10}),
 	},
 	experience = 1.35,
-	random_escort_possibilities = { {"scintillating-caves", 2, 3}, {"daikara", 1, 5}, {"old-forest", 1, 5}, {"dreadfell", 1, 8}, {"iron-throne", 1, 1}, },
+	random_escort_possibilities = { {"scintillating-caves", 2, 3}, {"daikara", 1, 5}, {"old-forest", 1, 5}, {"dreadfell", 1, 8}, {"reknor", 1, 1}, },
 }
 
 newBirthDescriptor
@@ -116,5 +116,5 @@ newBirthDescriptor
 		resolvers.inscription("INFUSION:_WILD", {cooldown=12, what={poison=true}, dur=4, power=14}),
 	},
 	experience = 1.35,
-	random_escort_possibilities = { {"norgos-lair", 2, 3}, {"heart-gloom", 1, 2}, {"daikara", 1, 5}, {"old-forest", 1, 5}, {"dreadfell", 1, 8}, {"iron-throne", 1, 1}, },
+	random_escort_possibilities = { {"norgos-lair", 2, 3}, {"heart-gloom", 1, 2}, {"daikara", 1, 5}, {"old-forest", 1, 5}, {"dreadfell", 1, 8}, {"reknor", 1, 1}, },
 }
