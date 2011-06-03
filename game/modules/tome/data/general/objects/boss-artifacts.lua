@@ -753,6 +753,7 @@ newEntity{ base = "BASE_GLOVES", define_as = "FLAMEWROUGHT",
 		inc_stats = { [Stats.STAT_WIL] = 3, },
 		resists = { [DamageType.FIRE]= 10, },
 		inc_damage = { [DamageType.FIRE]= 5, },
+		combat_armor = 2,
 		combat = {
 			dam = 5,
 			apr = 7,
