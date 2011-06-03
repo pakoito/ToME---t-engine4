@@ -191,10 +191,15 @@ function _M:init(t, no_default)
 		atk=1, apr=0,
 		physcrit=0,
 		physspeed =1,
-		dammod= { str=1 },
+		dammod = { str=1 },
 		damrange=1.1,
 		talented = "unarmed",
 	}
+	-- Insures we have certain values for gloves to modify
+	self.combat.damrange = self.combat.damrange or 1.1
+	self.combat.physspeed = self.combat.physspeed or 1
+	self.combat.dammod = self.combat.dammod or {str=0.6}
+
 	self.talents[self.T_ATTACK] = self.talents[self.T_ATTACK] or 1
 
 	self:resetCanSeeCache()

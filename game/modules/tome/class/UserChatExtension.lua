@@ -51,8 +51,10 @@ function _M:event(e)
 		if not data then return end
 		if data.kind == "object-link" then
 			self.chat:addMessage(e.channel, e.login, e.name, "#ANTIQUE_WHITE#has linked an item: #WHITE# "..data.name, {mode="tooltip", tooltip=data.desc})
+			game.logChat("#LIGHT_BLUE#%s has linked an item <%s>", e.name, data.name)
 		elseif data.kind == "actor-link" then
 			self.chat:addMessage(e.channel, e.login, e.name, "#ANTIQUE_WHITE#has linked a creature: #WHITE# "..data.name, {mode="tooltip", tooltip=data.desc})
+			game.logChat("#LIGHT_BLUE#%s has linked a creature <%s>", e.name, data.name)
 		end
 	end
 end

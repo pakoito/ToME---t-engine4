@@ -33,7 +33,7 @@ function _M:init()
 	self.channels_changed = true
 	self.cur_channel = "global"
 	self.channels = {}
-	self.max = 50
+	self.max = 500
 end
 
 --- Hook up in the current running game
@@ -136,6 +136,7 @@ function _M:selectChannel(channel)
 	self.cur_channel = channel
 	self.channels_changed = true
 	self.changed = true
+	self.scroll = 0
 	self:updateChanList(true)
 end
 
@@ -201,6 +202,18 @@ end
 -- UI Section
 ----------------------------------------------------------------
 
+--- Make a dialog popup with the full log
+function _M:showLogDialog(title, shadow)
+	local log = {}
+	if self.channels[self.cur_channel] then
+		for _, i in ipairs(self.channels[self.cur_channel].log) do
+			log[#log+1] = ("<%s> %s"):format(i.name, i.msg)
+		end
+	end
+	local d = require("engine.dialogs.ShowLog").new(title or "Chat Log", shadow, {log=log})
+	game:registerDialog(d)
+end
+
 --- Resize the display area
 function _M:resize(x, y, w, h, fontname, fontsize, color, bgcolor)
 	self.color = color or {255,255,255}
@@ -241,7 +254,9 @@ function _M:resize(x, y, w, h, fontname, fontsize, color, bgcolor)
 	self.mouse.delegate_offset_x = self.display_x
 	self.mouse.delegate_offset_y = self.display_y
 	self.mouse:registerZone(0, 0, self.w, self.h, function(button, x, y, xrel, yrel, bx, by, event)
-		if event == "button" and button == "left" and y <= self.frame.h then
+		if button == "wheelup" then self:scrollUp(1)
+		elseif button == "wheeldown" then self:scrollUp(-1)
+		elseif event == "button" and button == "left" and y <= self.frame.h then
 			local w = 0
 			local last_ok = nil
 			for i = 1, #self.display_chans do
@@ -250,7 +265,11 @@ function _M:resize(x, y, w, h, fontname, fontsize, color, bgcolor)
 				w = w + item.w + 4
 				if w > x then break end
 			end
-			if last_ok then self:selectChannel(last_ok.name) end
+			if last_ok then
+				local old = self.cur_channel
+				self:selectChannel(last_ok.name)
+				if old == self.cur_channel then self:showLogDialog(nil, self.shadow) end
+			end
 		else
 			if not self.on_mouse or not self.dlist then return end
 			local citem = nil
@@ -357,8 +376,10 @@ end
 --- Scroll the zone
 -- @param i number representing how many lines to scroll
 function _M:scrollUp(i)
+	local log = {}
+	if self.channels[self.cur_channel] then log = self.channels[self.cur_channel].log end
 	self.scroll = self.scroll + i
-	if self.scroll > #self.log - 1 then self.scroll = #self.log - 1 end
+	if self.scroll > #log - 1 then self.scroll = #log - 1 end
 	if self.scroll < 0 then self.scroll = 0 end
 	self.changed = true
 end
