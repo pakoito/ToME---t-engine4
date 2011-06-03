@@ -98,6 +98,7 @@ It should automatically create a portal back, but it might not be near your arri
 		Dialog:yesnoPopup("Exploratory Farportal", "Do you want to travel in the farportal? You can not know where you will end up.", function(ret) if ret then
 			local zone, boss = game.state:createRandomZone()
 			zone.no_worldport = true
+			zone.generator.actor.abord_no_guardian = true
 			boss.explo_portal_on_die = boss.on_die
 			boss.on_die = function(self, ...)
 				local x, y = self.x or game.player.x, self.y or game.player.y

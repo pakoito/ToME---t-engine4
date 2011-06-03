@@ -31,6 +31,7 @@ function _M:init(zone, map, level, spots)
 	else
 		self.adjust_level = {base=zone.base_level, lev = self.level.level, min=0, max=0}
 	end
+	self.abord_no_guardian = data.abord_no_guardian
 	self.filters = data.filters
 	self.nb_npc = data.nb_npc or {10, 20}
 	self.area = data.area or {x1=0, x2=self.map.w-1, y1=0, y2=self.map.h-1}
@@ -53,6 +54,7 @@ end
 
 function _M:generateGuardian(guardian)
 	local m = self.zone:makeEntityByName(self.level, "actor", guardian)
+	local ok = false
 	if m then
 		local x, y = rng.range(self.area.x1, self.area.x2), rng.range(self.area.y1, self.area.y2)
 		local tries = 0
@@ -64,10 +66,13 @@ function _M:generateGuardian(guardian)
 			self.spots[#self.spots+1] = {x=x, y=y, guardian=true, check_connectivity=(not self.guardian_no_connectivity) and "entrance" or nil}
 			self.zone:addEntity(self.level, m, "actor", x, y)
 			print("Guardian allocated: ", self.guardian, m.uid, m.name)
+			ok = true
 		end
 	else
 		print("WARNING: Guardian not found: ", self.guardian)
 	end
+
+	if not ok and self.abord_no_guardian then self.level.force_recreate = true end
 end
 
 function _M:generateOne()
