@@ -66,7 +66,7 @@ newEntity{ name = "gladiator",
 	end
 }
 
-newEntity{ name = "slinger",
+newEntity{ name = "halfling slinger",
 	define_as = "SLINGER",
 	type = "humanoid", subtype = "halfling",
 	color=colors.GOLD, display = "p",
