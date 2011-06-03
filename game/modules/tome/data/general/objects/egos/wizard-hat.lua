@@ -244,7 +244,7 @@ newEntity{
 
 newEntity{
 	power_source = {nature=true},
-	name = "defender's ", prefix=true, instant_resolve=true,
+	name = "aegis ", prefix=true, instant_resolve=true,
 	level_range = {10, 50},
 	greater_ego = 1,
 	rarity = 11,
