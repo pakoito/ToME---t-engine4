@@ -1245,7 +1245,7 @@ function _M:createRandomZone(zbase)
 			object = { class = "engine.generator.object.Random", nb_object = nb_object, },
 		},
 		levels = { [1] = { generator = { map = { up = data:getFloor() } } } },
-		basic_floor = data:getFloor(),
+		basic_floor = util.getval(data:getFloor()),
 		npc_list = npcs,
 		grid_list = grids,
 		object_list = mod.class.Object:loadList("/data/general/objects/objects.lua"),
