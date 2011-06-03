@@ -1029,7 +1029,7 @@ newEntity{ name = "sun paladin",
 
 newEntity{ name = "star crusader",
 	base = "BASE_NPC_ARENA1",
-	type = "humanoid", subtype = "human",
+	type = "humanoid", subtype = "elf",
 	color=colors.GOLD,
 	life_rating = 10,
 
