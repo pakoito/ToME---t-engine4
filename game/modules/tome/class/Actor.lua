@@ -186,7 +186,15 @@ function _M:init(t, no_default)
 	mod.class.interface.ActorInscriptions.init(self, t)
 
 	-- Default melee barehanded damage
-	self.combat = self.combat or { dam=1, atk=1, apr=0, physcrit=0, physspeed =1, dammod={str=1}, damrange=1.1 }
+	self.combat = self.combat or {
+		dam=1,
+		atk=1, apr=0,
+		physcrit=0,
+		physspeed =1,
+		dammod= { str=1 },
+		damrange=1.1,
+		talented = "unarmed",
+	}
 	self.talents[self.T_ATTACK] = self.talents[self.T_ATTACK] or 1
 
 	self:resetCanSeeCache()

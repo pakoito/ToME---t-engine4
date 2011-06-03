@@ -58,7 +58,7 @@ function _M:printRanking()
 		local i = 1
 		while(scores[i] and scores[i].name) do
 			p = scores[i]
-			tmp = stri:format(p.name:capitalize(), p.sex, p.race, p.class, p.score, p.perk, p.wave)
+			tmp = stri:format(p.name:capitalize(), p.sex or "unknown", p.race or "unknown", p.class or "unknown", p.score or "unknown", p.perk or "unknown", p.wave or -1)
 			if p.name == world.arena.lastScore.name and p.score == world.arena.lastScore.score and
 			p.wave == world.arena.lastScore.wave and p.perk == world.arena.lastScore.perk then
 				text = text..line(tmp, "#YELLOW#")

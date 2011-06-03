@@ -466,15 +466,16 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 end
 
 local weapon_talents = {
-	sword = Talents.T_WEAPONS_MASTERY,
-	axe =   Talents.T_WEAPONS_MASTERY,
-	mace =  Talents.T_WEAPONS_MASTERY,
-	knife = Talents.T_KNIFE_MASTERY,
-	whip  = Talents.T_EXOTIC_WEAPONS_MASTERY,
-	trident=Talents.T_EXOTIC_WEAPONS_MASTERY,
-	bow =   Talents.T_BOW_MASTERY,
-	sling = Talents.T_SLING_MASTERY,
-	staff = Talents.T_STAFF_MASTERY,
+	sword =   Talents.T_WEAPONS_MASTERY,
+	axe =     Talents.T_WEAPONS_MASTERY,
+	mace =    Talents.T_WEAPONS_MASTERY,
+	knife =   Talents.T_KNIFE_MASTERY,
+	whip  =   Talents.T_EXOTIC_WEAPONS_MASTERY,
+	trident=  Talents.T_EXOTIC_WEAPONS_MASTERY,
+	bow =     Talents.T_BOW_MASTERY,
+	sling =   Talents.T_SLING_MASTERY,
+	staff =   Talents.T_STAFF_MASTERY,
+	unarmed = Talents.T_UNARMED_MASTERY,
 }
 
 --- Checks weapon training
@@ -630,12 +631,7 @@ function _M:combatDamage(weapon)
 		add = add + t.getDamage(self, t)
 	end
 
-	if weapon == self.combat then
-		-- Handles unarmed mastery
-		talented_mod = math.sqrt((self:getTalentLevel(Talents.T_UNARMED_MASTERY) / 10) or 0) + 1
-	else
-		talented_mod = math.sqrt(self:combatCheckTraining(weapon) / 10) + 1
-	end
+	local talented_mod = math.sqrt(self:combatCheckTraining(weapon) / 10) + 1
 
 	local power = math.max(self.combat_dam + (weapon.dam or 1) + add, 1)
 	power = (math.sqrt(power / 10) - 1) * 0.8 + 1
@@ -1000,7 +996,7 @@ function _M:buildCombo()
 		end
 		duration = 3 + t.getDuration(self, t)
 	end
-	
+
 	if self:knowTalent(self.T_RELENTLESS_STRIKES) then
 		local t= self:getTalentFromId(self.T_RELENTLESS_STRIKES)
 		self:incStamina(t.getStamina(self, t))
