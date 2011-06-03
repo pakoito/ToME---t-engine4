@@ -3693,7 +3693,7 @@ newEffect{
 	status = "detrimental",
 	parameters = { power=10 },
 	activate = function(self, eff)
-		eff.mindid = self:addTemporaryValue("combat_mentalresist", eff.power)
+		eff.mindid = self:addTemporaryValue("combat_mentalresist", -eff.power)
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("combat_mentalresist", eff.mindid)

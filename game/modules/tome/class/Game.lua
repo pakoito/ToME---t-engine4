@@ -1285,14 +1285,20 @@ function _M:setupMouse(reset)
 		end
 	end)
 	-- Chat tooltips
-	profile.chat:onMouse(function(user, button, event)
+	profile.chat:onMouse(function(user, item, button, event)
 		local str = tstring{{"color","GOLD"}, {"font","bold"}, user.name, {"color","LAST"}, {"font","normal"}, true}
 		str:add({"color","ANTIQUE_WHITE"}, "Playing: ", {"color", "LAST"}, user.current_char, true)
 		str:add({"color","ANTIQUE_WHITE"}, "Game: ", {"color", "LAST"}, user.module, "(", user.valid, ")",true)
-		self.tooltip:displayAtMap(nil, nil, self.w, self.h, str)
 
-		if button == "left" and event == "button" then
-			profile.chat:showUserInfo(user.login)
+		if item.extra_data and item.extra_data.mode == "tooltip" then
+			local str = item.extra_data.tooltip.."\n---\nLinked by: "..str:toString()
+			self.tooltip:displayAtMap(nil, nil, self.w, self.h, str)
+		else
+			self.tooltip:displayAtMap(nil, nil, self.w, self.h, str)
+
+			if button == "left" and event == "button" then
+				profile.chat:showUserInfo(user.login)
+			end
 		end
 	end)
 	if not reset then self.mouse:setCurrent() end

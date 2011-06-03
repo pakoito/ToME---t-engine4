@@ -77,6 +77,8 @@ function _M:use(item)
 			item.transmo:transmo_inven(self.actor, self.inven, self.item, self.object)
 			self.onuse(self.inven, self.item, self.object, stop)
 		end)
+	elseif act == "chat-link" then
+		profile.chat.uc_ext:sendObjectLink(self.object)
 	end
 end
 
@@ -90,6 +92,7 @@ function _M:generateList()
 	if self.inven ~= self.actor.INVEN_INVEN and self.object:wornInven() then list[#list+1] = {name="Take off", action="takeoff"} end
 	if self.inven == self.actor.INVEN_INVEN then list[#list+1] = {name="Drop", action="drop"} end
 	if self.inven == self.actor.INVEN_INVEN and transmo_chest and transmo_chest.transmo_filter(self.object) then list[#list+1] = {name="Transmogrify", action="transmo", transmo=transmo_chest} end
+	if profile.auth and profile.hash_valid then list[#list+1] = {name="Link item in chat", action="chat-link"} end
 
 	self.max = 0
 	self.maxh = 0

@@ -224,6 +224,10 @@ function string.removeColorCodes(str)
 	return str:lpegSub("#" * (Puid + Pcolorcodefull + Pcolorname + Pfontstyle) * "#", "")
 end
 
+function string.removeUIDCodes(str)
+	return str:lpegSub("#" * Puid * "#", "")
+end
+
 function string.splitLine(str, max_width, font)
 	local space_w = font:size(" ")
 	local lines = {}

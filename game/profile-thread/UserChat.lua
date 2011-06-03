@@ -35,6 +35,13 @@ function _M:event(e)
 	elseif e.e == "ChatAchievement" then
 		cprofile.pushEvent(string.format("e='Chat' se='Achievement' channel=%q login=%q name=%q msg=%q", e.channel, e.login, e.name, e.msg))
 		print("[USERCHAT] channel achievement", e.login, e.channel, e.msg)
+	elseif e.e == "ChatSerialData" then
+		local data = self.client.psock:receive(e.size)
+		if data then
+			e.msg = data
+			cprofile.pushEvent(string.format("e='Chat' se='SerialData' channel=%q login=%q name=%q msg=%q", e.channel, e.login, e.name, e.msg))
+			print("[USERCHAT] channel serial data", e.login, e.channel, e.size)
+		end
 	elseif e.e == "ChatJoin" then
 		self.channels[e.channel] = self.channels[e.channel] or {}
 		self.channels[e.channel][e.login] = true

@@ -665,7 +665,7 @@ function _M:getTextualDesc(compare_with)
 end
 
 --- Gets the full desc of the object
-function _M:getDesc(name_param, compare_with)
+function _M:getDesc(name_param, compare_with, never_compare)
 	local desc = tstring{}
 	name_param = name_param or {}
 	name_param.do_color = true
@@ -711,7 +711,7 @@ function _M:getDesc(name_param, compare_with)
 
 	desc:merge(self:getTextualDesc(compare_with))
 
-	if could_compare then desc:add(true, {"font","italic"}, {"color","GOLD"}, "Press <control> to compare", {"color","LAST"}, {"font","normal"}) end
+	if could_compare and not never_compare then desc:add(true, {"font","italic"}, {"color","GOLD"}, "Press <control> to compare", {"color","LAST"}, {"font","normal"}) end
 
 	return desc
 end

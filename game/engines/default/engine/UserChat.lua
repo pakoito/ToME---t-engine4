@@ -46,11 +46,14 @@ function _M:setupOnGame()
 			self:talkBox()
 		end,
 	}
+
+	local ok, UC = pcall(require, "mod.class.UserChatExtension")
+	if ok and UC then self.uc_ext = UC.new(self) end
 end
 
-function _M:addMessage(channel, login, name, msg)
+function _M:addMessage(channel, login, name, msg, extra_data)
 	local log = self.channels[channel].log
-	table.insert(log, 1, {login=login, name=name, msg=msg})
+	table.insert(log, 1, {login=login, name=name, msg=msg, extra_data=extra_data})
 	while #log > self.max do table.remove(log) end
 	self.changed = true
 end
@@ -69,10 +72,15 @@ function _M:event(e)
 		e.msg = e.msg:removeColorCodes()
 
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
-		self:addMessage(e.channel, e.login, e.name, "has earned the achievement <"..e.msg..">")
+		self:addMessage(e.channel, e.login, e.name, "#{italic}##LIGHT_BLUE#has earned the achievement <"..e.msg..">#{normal}#")
 
 		if type(game) == "table" and game.logChat then
 			game.logChat("#LIGHT_BLUE#%s has earned the achievement <%s>", e.name, e.msg)
+		end
+	elseif e.se == "SerialData" then
+		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
+		if self.uc_ext then
+			self.uc_ext:event(e)
 		end
 	elseif e.se == "Join" then
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
@@ -251,12 +259,16 @@ function _M:resize(x, y, w, h, fontname, fontsize, color, bgcolor)
 				if item.dh and y >= item.dh - self.mouse.delegate_offset_y then citem = item break end
 			end
 			if citem and citem.login and self.channels[self.cur_channel].users[citem.login] then
-				self.on_mouse(self.channels[self.cur_channel].users[citem.login], button, event)
+				self.on_mouse(self.channels[self.cur_channel].users[citem.login], citem, button, event)
 			end
 		end
 	end)
 
 	self.last_chan_update = 0
+end
+
+function _M:enableShadow(v)
+	self.shadow = v
 end
 
 function _M:onMouse(fct)
@@ -302,6 +314,7 @@ function _M:display()
 		local gen = tstring.makeLineTextures(tstr, self.w, self.font_mono)
 		for i = #gen, 1, -1 do
 			gen[i].login = log[z].login
+			gen[i].extra_data = log[z].extra_data
 			self.dlist[#self.dlist+1] = gen[i]
 			h = h + self.fh
 			if h > self.h - self.fh - self.fh then stop=true break end
@@ -319,6 +332,7 @@ function _M:toScreen()
 	for i = 1, #self.dlist do
 		local item = self.dlist[i]
 		item.dh = h
+		if self.shadow then item._tex:toScreenFull(self.display_x+2, h+2, item.w, item.h, item._tex_w, item._tex_h, 0,0,0, self.shadow) end
 		item._tex:toScreenFull(self.display_x, h, item.w, item.h, item._tex_w, item._tex_h)
 		h = h - self.fh
 	end

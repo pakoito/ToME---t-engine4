@@ -75,6 +75,7 @@ function _M:use(item)
 	elseif act == "levelup" then game.key:triggerVirtual("LEVELUP")
 	elseif act == "inventory" then game.key:triggerVirtual("SHOW_INVENTORY")
 	elseif act == "rest" then game.key:triggerVirtual("REST")
+	elseif act == "chat-link" then profile.chat.uc_ext:sendActorLink(game.level.map(self.tmx, self.tmy, Map.ACTOR))
 	elseif act == "talent" then
 		local d = item
 		if d.set_target then
@@ -117,6 +118,7 @@ function _M:generateList()
 	if self.on_player then list[#list+1] = {name="Inventory", action="inventory", color=colors.simple(colors.ANTIQUE_WHITE)} end
 	if self.on_player then list[#list+1] = {name="Character Sheet", action="character_sheet", color=colors.simple(colors.ANTIQUE_WHITE)} end
 	if self.on_player then list[#list+1] = {name="Quest Log", action="quests", color=colors.simple(colors.ANTIQUE_WHITE)} end
+	if not self.on_player and a and profile.auth and profile.hash_valid then list[#list+1] = {name="Link creature in chat", action="chat-link"} end
 	if self.on_player and (player.unused_stats > 0 or player.unused_talents > 0 or player.unused_generics > 0 or player.unused_talents_types > 0) then list[#list+1] = {name="Levelup!", action="levelup", color=colors.simple(colors.YELLOW)} end
 
 	-- Talents

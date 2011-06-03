@@ -159,12 +159,12 @@ function _M:aiSeeTargetPos(target)
 
 	-- Directly seeing it, no spread at all
 	if see then
-		return tx, ty
+		return util.bound(tx, 0, game.level.map.w - 1), util.bound(ty, 0, game.level.map.h - 1)
 	-- Ok we can see it, spread coords around, the less chance to see it we had the more we spread
 	else
 		chance = math.floor((100 - chance) / 10)
 		tx = tx + rng.range(0, chance * 2) - chance
 		ty = ty + rng.range(0, chance * 2) - chance
-		return tx, ty
+		return util.bound(tx, 0, game.level.map.w - 1), util.bound(ty, 0, game.level.map.h - 1)
 	end
 end
