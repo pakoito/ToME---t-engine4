@@ -112,6 +112,41 @@ newEntity{ base = "BASE_STAFF",
 	},
 }
 
+newEntity{ base = "BASE_STAFF",
+	power_source = {arcane=true},
+	unique = true,
+	name = "Lost Staff of Archmage Tarelion",
+	unided_name = "shining staff",
+	level_range = {37, 50},
+	color=colors.VIOLET,
+	rarity = 250,
+	desc = [[Archmage Tarelion traveled the world in his youth. But the world is not a nice place and it seems he had to run fast.]],
+	cost = 400,
+	material_level = 5,
+
+	require = { stat = { mag=48 }, },
+	combat = {
+		dam = 38,
+		apr = 4,
+		dammod = {mag=1.5},
+		damtype = DamageType.ARCANE,
+	},
+	wielder = {
+		inc_stats = { [Stats.STAT_WIL] = 7, [Stats.STAT_MAG] = 8 },
+		max_mana = 40,
+		combat_spellpower = 35,
+		combat_spellcrit = 15,
+		inc_damage = { [DamageType.ARCANE] = 24, [DamageType.FIRE] = 24, [DamageType.COLD] = 24, [DamageType.LIGHTNING] = 24,  },
+		silence_immune = 0.4,
+		mana_on_crit = 12,
+		talent_cd_reduction={
+			[Talents.T_ICE_STORM] = 2,
+			[Talents.T_FIREFLASH] = 2,
+			[Talents.T_CHAIN_LIGHTNING] = 2,
+		},
+	},
+}
+
 newEntity{ base = "BASE_RING",
 	power_source = {nature=true},
 	unique = true,
@@ -1415,11 +1450,12 @@ newEntity{ base = "BASE_STAFF", define_as = "VOICE_TELOS",
 	combat = { dam = 1, },
 	wielder = {
 		combat_spellpower = 30,
+		combat_spellcrit = 15,
 		max_mana = 100,
 		inc_stats = { [Stats.STAT_MAG] = 6, [Stats.STAT_WIL] = 5, [Stats.STAT_CUN] = 4 },
 		lite = 1,
 
-		inc_damage = { all=7 },
+		inc_damage = { all=14 },
 	},
 }
 

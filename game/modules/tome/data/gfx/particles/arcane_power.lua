@@ -22,19 +22,21 @@ base_size = 32
 return { generator = function()
 	local ad = rng.range(0, 360)
 	local a = math.rad(ad)
-	local dir = math.rad(ad)
+	local dir = math.rad(90)
 	local r = rng.range(18, 22)
 	local dirchance = rng.chance(2)
+	local x = rng.range(-16, 16)
+	local y = 16 - math.abs(math.sin(x / 16) * 8)
 
 	return {
 		trail = 1,
-		life = 10,
-		size = 4, sizev = -0.1, sizea = 0,
+		life = rng.range(10, 18),
+		size = rng.range(2, 3), sizev = 0, sizea = 0.005,
 
-		x = r * math.cos(a), xv = 0, xa = 0,
-		y = r * math.sin(a), yv = 0, ya = 0,
-		dir = dir, dirv = 0.1, dira = 0,
-		vel = dirchance and 0.6 or -0.6, velv = 0, vela = dirchance and -0.02 or 0.02,
+		x = x, xv = 0, xa = 0,
+		y = y, yv = 0, ya = -0.2,
+		dir = 0, dirv = 0, dira = 0,
+		vel = 0, velv = 0, vela = 0,
 
 		r = rng.range(30, 220)/255, rv = rng.range(0, 10)/100, ra = 0,
 		g = 0,   gv = 0, ga = 0,

@@ -448,15 +448,6 @@ function _M:defineDisplayCallback()
 	local f_neutral = nil
 
 	self._mo:displayCallback(function(x, y, w, h, zoom, on_map)
-		local e
-		for i = 1, #ps do
-			e = ps[i]
-			e:checkDisplay()
-			if e.ps:isAlive() then e.ps:toScreen(x + w / 2, y + h / 2, true, w / game.level.map.tile_w)
-			else self:removeParticles(e)
-			end
-		end
-
 		-- Tactical info
 		if game.level and game.level.map.view_faction then
 			local map = game.level.map
@@ -494,6 +485,15 @@ function _M:defineDisplayCallback()
 						f_neutral:toScreen(x, y, w, h)
 					end
 				end
+			end
+		end
+
+		local e
+		for i = 1, #ps do
+			e = ps[i]
+			e:checkDisplay()
+			if e.ps:isAlive() then e.ps:toScreen(x + w / 2, y + h / 2, true, w / game.level.map.tile_w)
+			else self:removeParticles(e)
 			end
 		end
 

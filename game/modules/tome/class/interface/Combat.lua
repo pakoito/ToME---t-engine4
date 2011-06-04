@@ -760,6 +760,8 @@ function _M:spellCrit(dam, add_chance)
 		crit = true
 		game.logSeen(self, "%s's spell attains critical power!", self.name:capitalize())
 
+		if self:attr("mana_on_crit") then self:incMana(self:attr("mana_on_crit")) end
+
 		if self:isTalentActive(self.T_BLOOD_FURY) then
 			local t = self:getTalentFromId(self.T_BLOOD_FURY)
 			t.on_crit(self, t)
