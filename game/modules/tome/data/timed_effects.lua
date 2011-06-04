@@ -2648,10 +2648,10 @@ newEffect{
 	parameters = {},
 	on_timeout = function(self, eff)
 		local effs = {}
-				-- Go through all spell effects
+		-- Go through all spell effects
 		for eff_id, p in pairs(self.tmp) do
 			local e = self.tempeffect_def[eff_id]
-			if e.status == "detrimental" and e.type ~= "time" then
+			if e.status == "detrimental" and e.type ~= "time" and e.type ~= "other" then
 				effs[#effs+1] = {"effect", eff_id}
 			end
 		end
