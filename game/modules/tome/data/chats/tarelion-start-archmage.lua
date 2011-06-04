@@ -34,8 +34,8 @@ Say, maybe you might want to get an adventure and help Angolwen?]],
 }
 
 newChat{ id="next2",
-	text = [[During the Spellblaze the world was torn apart - literally. A part of it, that we now call the Abashed Expanse, was ripped from the world and throw into the void between the stars.
-We managed to stabilize it and it is now orbiting Eyal. Recently we have noticed a disturbance there, if we do nothing it will crash onto Eyal, bringing much destruction in its wake.
+	text = [[During the Spellblaze the world was torn apart - literally. A part of it, that we now call the Abashed Expanse, was ripped from the world and thrown into the void between the stars.
+We managed to stabilize it and it is now orbiting Eyal. Recently we have noticed a disturbance there; if we do nothing it will crash onto Eyal, bringing much destruction in its wake.
 Because it was once part of a land we know well we can teleport you there. You will need to stabilize three wormholes by firing any attack spells at them.
 The instability is also to your advantage there, your simple phase door spell will be fully controllable.
 

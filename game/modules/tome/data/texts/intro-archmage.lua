@@ -18,9 +18,9 @@
 -- darkgod@te4.org
 
 return [[Welcome #LIGHT_GREEN#@name@#WHITE#.
-You are an archmage in a world that still fears magic. The people of Angolwen have been trying to mend the world for well over two thoudands years now, but they had to do so in secret.
+You are an archmage in a world that still fears magic. The people of Angolwen have been trying to mend the world for well over two thousand years now, but they do so in secret.
 
-You have lived and trained most of your life in Angolwen, calling many people there your friends but you have grown restless as of late.
+You have lived and trained most of your life in Angolwen, calling many people there your friends, but you have grown restless as of late.
 You want to see the world, maybe even help in what ways you can.
 
 But for now Angolwen still needs you. The Abashed Expanse, a part of Eyal that was torn appart and thrown into the void during the Spellblaze is quickly becoming unstable.
