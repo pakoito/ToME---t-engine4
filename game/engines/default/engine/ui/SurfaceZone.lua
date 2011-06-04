@@ -28,11 +28,11 @@ function _M:init(t)
 	self.w = assert(t.width, "no surface zone width")
 	self.h = assert(t.height, "no surface zone height")
 	self.alpha = t.alpha or 200
-	
+
 	self.s = core.display.newSurface(self.w, self.h)
-	
+
 	self.texture, self.texture_w, self.texture_h = self.s:glTexture()
-	
+
 	self.color = t.color or {r=255, g=255, b=255}
 
 	Base.init(self, t)
@@ -41,7 +41,7 @@ end
 function _M:generate()
 	self.mouse:reset()
 	self.key:reset()
-	
+
 	self.s:updateTexture(self.texture)
 
 	self.can_focus = false

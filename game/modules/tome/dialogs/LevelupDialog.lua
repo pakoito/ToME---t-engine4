@@ -44,7 +44,7 @@ function _M:init(actor, on_finish)
 	self.unused_stats = self.actor.unused_stats
 	self.new_stats_changed = false
 	self.new_talents_changed = false
-	
+
 	self.talents_changed = {}
 	self.on_finish = on_finish
 	self.running = true
@@ -53,41 +53,41 @@ function _M:init(actor, on_finish)
 	self.talents_learned = {}
 	self.talent_types_learned = {}
 	self.stats_increased = {}
-	
+
 	self.font = core.display.newFont("/data/font/VeraMono.ttf", 12)
 	self.font_h = self.font:lineSkip()
-	
+
 	self.actor.__hidden_talent_types = self.actor.__hidden_talent_types or {}
 	self.actor.__increased_talent_types = self.actor.__increased_talent_types or {}
-	
+
 	self.actor_dup = actor:clone()
-	
+
 	for _, v in pairs(game.engine.Birther.birth_descriptor_def) do
 		if v.type == "subclass" and v.name == actor.descriptor.subclass then self.desc_def = v break end
 	end
-	
+
 	Dialog.init(self, "Stats Levelup: "..actor.name, game.w * 0.9, game.h * 0.9, game.w * 0.05, game.h * 0.05)
-	
+
 	self.vs = Separator.new{dir="vertical", size=self.iw}
 	self.vs2 = Separator.new{dir="vertical", size=math.floor(self.iw / 2) - 20}
-	
+
 	self.c_t_tut = Textzone.new{width=math.floor(self.iw / 2 - 10), height=1, auto_height=true, no_color_bleed=true, text=[[
 Keyboard: #00FF00#up key/down key#FFFFFF# to select talent; #00FF00#right key#FFFFFF# to learn; #00FF00#left key#FFFFFF# to unlearn; #00FF00#+#FFFFFF# to expand a category; #00FF00#-#FFFFFF# to reduce a category. #00FF00#TAB key#FFFFFF# to switch between tabs.
 Mouse: #00FF00#Left click#FFFFFF# to learn; #00FF00#right click#FFFFFF# to unlearn.
 ]]}
 	self.c_t_points = Textzone.new{width=math.floor(self.iw / 2 - 10), height=1, auto_height=true, no_color_bleed=true, text=_points_left:format(self.actor.unused_talents_types, self.actor.unused_talents, self.actor.unused_generics)}
-		
+
 	self:generateList()
-	
+
 	self.stats = Tab.new{title="Stats", default=true, fct=function() end, on_change=function(s) if s then self:switchTo("Stats") end end}
 	self.talents = Tab.new{title="Talents", default=false, fct=function() end, on_change=function(s) if s then self:switchTo("Talents") end end}
 	self.summary = Tab.new{title="Summary", default=false, fct=function() end, on_change=function(s) if s then self:switchTo("Summary") end end}
-	
+
 	self.c_t_desc = TextzoneList.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.c_t_tut.h - self.stats.h - 20 - self.vs.h, scrollbar=true, no_color_bleed=true}
 
-	
+
 	self.hoffset = 17 + self.stats.h + self.vs.h
-	
+
 	self.c_t_tree = TreeList.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.stats.h - 20 - self.c_t_points.h - self.vs.h - self.vs2.h, all_clicks=true, scrollbar=true, columns={
 		{width=80, display_prop="name"},
 		{width=20, display_prop="status"},
@@ -97,7 +97,8 @@ Mouse: #00FF00#Left click#FFFFFF# to learn; #00FF00#right click#FFFFFF# to unlea
 		on_expand=function(item) self.actor.__hidden_talent_types[item.type] = not item.shown end,
 		on_drawitem=function(item) if self.running then self:onDrawItem(item) end end,
 	}
-	
+	self.c_t_tree.key:removeBind("ACCEPT") -- We want the main dialog to handle accept
+
 	self.c_summary_desc = SurfaceZone.new{width=self.iw, height=math.min(game.h * 0.9, 400) - self.stats.h - 40 - self.vs.h,alpha=0}
 
 	self.sel = 1
@@ -124,10 +125,12 @@ Mouse: #00FF00#Left click#FFFFFF# to increase a stat; #00FF00#right click#FFFFFF
 		{name="Constitution", base=self.actor:getCon(nil, nil, true), val=self.actor:getCon(), stat_id=self.actor.STAT_CON},
 	}, fct=function(item, _, v)
 		self:incStat(v == "left" and 1 or -1)
-	end, select=function(item, sel) 
-		self.sel = sel 
+	end, select=function(item, sel)
+		self.sel = sel
 		self:onSelectStat(item)
 	end}
+	self.c_list.key:removeBind("ACCEPT") -- We want the main dialog to handle accept
+
 	self.tab = ""
 	if self.actor.unused_stats > 0 then
 		self.stats:select()
@@ -158,63 +161,64 @@ function _M:generateStatsList()
 	self.c_list.list={
 		{name="Strength",   	color = {(self.actor_dup:getStat(self.actor.STAT_STR, nil, nil, true) == self.actor:getStat(self.actor.STAT_STR, nil, nil, true)) and {255, 255, 255} or {255, 215, 0},
 								(self.actor_dup:getStat(self.actor.STAT_STR, nil, nil, true) == self.actor:getStat(self.actor.STAT_STR, nil, nil, true)) and {255, 255, 255} or {255, 215, 0},
-								(self.actor:getStat(self.actor.STAT_STR, nil, nil, true) - self.actor_dup:getStat(self.actor.STAT_STR, nil, nil, true) + self.actor_dup:getStat(self.actor.STAT_STR) == self.actor:getStat(self.actor.STAT_STR)) and {255, 255, 255} or {255, 215, 0}}, 
-								base=self.actor:getStr(nil, nil, true), 
-								val=self.actor:getStr(), 
+								(self.actor:getStat(self.actor.STAT_STR, nil, nil, true) - self.actor_dup:getStat(self.actor.STAT_STR, nil, nil, true) + self.actor_dup:getStat(self.actor.STAT_STR) == self.actor:getStat(self.actor.STAT_STR)) and {255, 255, 255} or {255, 215, 0}},
+								base=self.actor:getStr(nil, nil, true),
+								val=self.actor:getStr(),
 								stat_id=self.actor.STAT_STR},
-		{name="Dexterity",  	color = {(self.actor_dup:getStat(self.actor.STAT_DEX, nil, nil, true) == self.actor:getStat(self.actor.STAT_DEX, nil, nil, true)) and {255, 255, 255} or {255, 215, 0}, 
-								(self.actor_dup:getStat(self.actor.STAT_DEX, nil, nil, true) == self.actor:getStat(self.actor.STAT_DEX, nil, nil, true)) and {255, 255, 255} or {255, 215, 0}, 
-								(self.actor:getStat(self.actor.STAT_DEX, nil, nil, true) - self.actor_dup:getStat(self.actor.STAT_DEX, nil, nil, true) + self.actor_dup:getStat(self.actor.STAT_DEX) == self.actor:getStat(self.actor.STAT_DEX)) and {255, 255, 255} or {255, 215, 0}}, 
-								base=self.actor:getDex(nil, nil, true), 
-								val=self.actor:getDex(), 
+		{name="Dexterity",  	color = {(self.actor_dup:getStat(self.actor.STAT_DEX, nil, nil, true) == self.actor:getStat(self.actor.STAT_DEX, nil, nil, true)) and {255, 255, 255} or {255, 215, 0},
+								(self.actor_dup:getStat(self.actor.STAT_DEX, nil, nil, true) == self.actor:getStat(self.actor.STAT_DEX, nil, nil, true)) and {255, 255, 255} or {255, 215, 0},
+								(self.actor:getStat(self.actor.STAT_DEX, nil, nil, true) - self.actor_dup:getStat(self.actor.STAT_DEX, nil, nil, true) + self.actor_dup:getStat(self.actor.STAT_DEX) == self.actor:getStat(self.actor.STAT_DEX)) and {255, 255, 255} or {255, 215, 0}},
+								base=self.actor:getDex(nil, nil, true),
+								val=self.actor:getDex(),
 								stat_id=self.actor.STAT_DEX},
-		{name="Magic",        	color = {(self.actor_dup:getStat(self.actor.STAT_MAG, nil, nil, true) == self.actor:getStat(self.actor.STAT_MAG, nil, nil, true)) and {255, 255, 255} or {255, 215, 0}, 
-								(self.actor_dup:getStat(self.actor.STAT_MAG, nil, nil, true) == self.actor:getStat(self.actor.STAT_MAG, nil, nil, true)) and {255, 255, 255} or {255, 215, 0}, 
-								(self.actor:getStat(self.actor.STAT_MAG, nil, nil, true) - self.actor_dup:getStat(self.actor.STAT_MAG, nil, nil, true) + self.actor_dup:getStat(self.actor.STAT_MAG) == self.actor:getStat(self.actor.STAT_MAG)) and {255, 255, 255} or {255, 215, 0}}, 
-								base=self.actor:getMag(nil, nil, true), 
-								val=self.actor:getMag(), 
+		{name="Magic",        	color = {(self.actor_dup:getStat(self.actor.STAT_MAG, nil, nil, true) == self.actor:getStat(self.actor.STAT_MAG, nil, nil, true)) and {255, 255, 255} or {255, 215, 0},
+								(self.actor_dup:getStat(self.actor.STAT_MAG, nil, nil, true) == self.actor:getStat(self.actor.STAT_MAG, nil, nil, true)) and {255, 255, 255} or {255, 215, 0},
+								(self.actor:getStat(self.actor.STAT_MAG, nil, nil, true) - self.actor_dup:getStat(self.actor.STAT_MAG, nil, nil, true) + self.actor_dup:getStat(self.actor.STAT_MAG) == self.actor:getStat(self.actor.STAT_MAG)) and {255, 255, 255} or {255, 215, 0}},
+								base=self.actor:getMag(nil, nil, true),
+								val=self.actor:getMag(),
 								stat_id=self.actor.STAT_MAG},
-		{name="Willpower",    	color = {(self.actor_dup:getStat(self.actor.STAT_WIL, nil, nil, true) == self.actor:getStat(self.actor.STAT_WIL, nil, nil, true)) and {255, 255, 255} or {255, 215, 0}, 
-								(self.actor_dup:getStat(self.actor.STAT_WIL, nil, nil, true) == self.actor:getStat(self.actor.STAT_WIL, nil, nil, true)) and {255, 255, 255} or {255, 215, 0}, 
-								(self.actor:getStat(self.actor.STAT_WIL, nil, nil, true) - self.actor_dup:getStat(self.actor.STAT_WIL, nil, nil, true) + self.actor_dup:getStat(self.actor.STAT_WIL) == self.actor:getStat(self.actor.STAT_WIL)) and {255, 255, 255} or {255, 215, 0}}, 
-								base=self.actor:getWil(nil, nil, true), 
-								val=self.actor:getWil(), 
+		{name="Willpower",    	color = {(self.actor_dup:getStat(self.actor.STAT_WIL, nil, nil, true) == self.actor:getStat(self.actor.STAT_WIL, nil, nil, true)) and {255, 255, 255} or {255, 215, 0},
+								(self.actor_dup:getStat(self.actor.STAT_WIL, nil, nil, true) == self.actor:getStat(self.actor.STAT_WIL, nil, nil, true)) and {255, 255, 255} or {255, 215, 0},
+								(self.actor:getStat(self.actor.STAT_WIL, nil, nil, true) - self.actor_dup:getStat(self.actor.STAT_WIL, nil, nil, true) + self.actor_dup:getStat(self.actor.STAT_WIL) == self.actor:getStat(self.actor.STAT_WIL)) and {255, 255, 255} or {255, 215, 0}},
+								base=self.actor:getWil(nil, nil, true),
+								val=self.actor:getWil(),
 								stat_id=self.actor.STAT_WIL},
-		{name="Cunning",      	color = {(self.actor_dup:getStat(self.actor.STAT_CUN, nil, nil, true) == self.actor:getStat(self.actor.STAT_CUN, nil, nil, true)) and {255, 255, 255} or {255, 215, 0}, 
-								(self.actor_dup:getStat(self.actor.STAT_CUN, nil, nil, true) == self.actor:getStat(self.actor.STAT_CUN, nil, nil, true)) and {255, 255, 255} or {255, 215, 0}, 
-								(self.actor:getStat(self.actor.STAT_CUN, nil, nil, true) - self.actor_dup:getStat(self.actor.STAT_CUN, nil, nil, true) + self.actor_dup:getStat(self.actor.STAT_CUN) == self.actor:getStat(self.actor.STAT_CUN)) and {255, 255, 255} or {255, 215, 0}}, 
-								base=self.actor:getCun(nil, nil, true), 
-								val=self.actor:getCun(), 
+		{name="Cunning",      	color = {(self.actor_dup:getStat(self.actor.STAT_CUN, nil, nil, true) == self.actor:getStat(self.actor.STAT_CUN, nil, nil, true)) and {255, 255, 255} or {255, 215, 0},
+								(self.actor_dup:getStat(self.actor.STAT_CUN, nil, nil, true) == self.actor:getStat(self.actor.STAT_CUN, nil, nil, true)) and {255, 255, 255} or {255, 215, 0},
+								(self.actor:getStat(self.actor.STAT_CUN, nil, nil, true) - self.actor_dup:getStat(self.actor.STAT_CUN, nil, nil, true) + self.actor_dup:getStat(self.actor.STAT_CUN) == self.actor:getStat(self.actor.STAT_CUN)) and {255, 255, 255} or {255, 215, 0}},
+								base=self.actor:getCun(nil, nil, true),
+								val=self.actor:getCun(),
 								stat_id=self.actor.STAT_CUN},
-		{name="Constitution", 	color = {(self.actor_dup:getStat(self.actor.STAT_CON, nil, nil, true) == self.actor:getStat(self.actor.STAT_CON, nil, nil, true)) and {255, 255, 255} or {255, 215, 0}, 
-								(self.actor_dup:getStat(self.actor.STAT_CON, nil, nil, true) == self.actor:getStat(self.actor.STAT_CON, nil, nil, true)) and {255, 255, 255} or {255, 215, 0}, 
-								(self.actor:getStat(self.actor.STAT_CON, nil, nil, true) - self.actor_dup:getStat(self.actor.STAT_CON, nil, nil, true) + self.actor_dup:getStat(self.actor.STAT_CON) == self.actor:getStat(self.actor.STAT_CON)) and {255, 255, 255} or {255, 215, 0}}, 
-								base=self.actor:getCon(nil, nil, true), 
-								val=self.actor:getCon(), 
+		{name="Constitution", 	color = {(self.actor_dup:getStat(self.actor.STAT_CON, nil, nil, true) == self.actor:getStat(self.actor.STAT_CON, nil, nil, true)) and {255, 255, 255} or {255, 215, 0},
+								(self.actor_dup:getStat(self.actor.STAT_CON, nil, nil, true) == self.actor:getStat(self.actor.STAT_CON, nil, nil, true)) and {255, 255, 255} or {255, 215, 0},
+								(self.actor:getStat(self.actor.STAT_CON, nil, nil, true) - self.actor_dup:getStat(self.actor.STAT_CON, nil, nil, true) + self.actor_dup:getStat(self.actor.STAT_CON) == self.actor:getStat(self.actor.STAT_CON)) and {255, 255, 255} or {255, 215, 0}},
+								base=self.actor:getCon(nil, nil, true),
+								val=self.actor:getCon(),
 								stat_id=self.actor.STAT_CON},
 	}
 	self.c_list:onSelect(true)
 end
 
 function _M:switchTo(kind)
-	if kind == "Stats" then 
+	if kind == "Stats" then
 		if self.new_talents_changed == true then
 			self:generateStatsList()
 			self.c_list:generate()
+			self.c_list.key:removeBind("ACCEPT") -- We want the main dialog to handle accept
 			self.new_talents_changed = false
 		end
-		self.talents.selected = false 
+		self.talents.selected = false
 		self.summary.selected = false
-	elseif kind == "Talents" then 	
+	elseif kind == "Talents" then
 		if self.new_stats_changed == true then
 			self:regenerateList()
 			self.new_stats_changed = false
 		end
-		self.stats.selected = false 
+		self.stats.selected = false
 		self.summary.selected = false
 
 	elseif kind == "Summary" then
-		self.talents.selected = false 
+		self.talents.selected = false
 		self.stats.selected = false
 	end
 	self:drawDialog(kind)
@@ -222,23 +226,23 @@ function _M:switchTo(kind)
 end
 
 function _M:updateKeys(kind)
-	self.key:reset() 
-	if kind == "Stats" then 
+	self.key:reset()
+	if kind == "Stats" then
 		self.key:addCommands{
-		_TAB = function() self:tabTabs() end,
+			_TAB = function() self:tabTabs() end,
 		}
 		self.key:addBinds{
 			MOVE_LEFT = function() self:incStat(-1) end,
 			MOVE_RIGHT = function() self:incStat(1) end,
-			ACCEPT = "EXIT",
+			ACCEPT = function() self:tabTabs() end,
 			EXIT = function()
-				if self.actor.unused_stats~=self.actor_dup.unused_stats or self.actor.unused_talents_types~=self.actor_dup.unused_talents_types or 
+				if self.actor.unused_stats~=self.actor_dup.unused_stats or self.actor.unused_talents_types~=self.actor_dup.unused_talents_types or
 				self.actor.unused_talents~=self.actor_dup.unused_talents or self.actor.unused_generics~=self.actor_dup.unused_generics then
-					self:yesnocancelLongPopup("Finish","Do you accept changes?", function(yes, cancel) 
-					if cancel then 
-						return nil 
+					self:yesnocancelLongPopup("Finish","Do you accept changes?", function(yes, cancel)
+					if cancel then
+						return nil
 					else
-						if yes then ok = self:finish() else ok = true self:cancel() end  
+						if yes then ok = self:finish() else ok = true self:cancel() end
 					end
 					if ok then
 						game:unregisterDialog(self)
@@ -251,34 +255,34 @@ function _M:updateKeys(kind)
 					self.actor_dup = {}
 					if self.on_finish then self.on_finish() end
 				end
-			end,	
+			end,
 		}
-	elseif kind == "Talents" then 	
+	elseif kind == "Talents" then
 		self.key:addCommands{
-		_TAB = function() self:tabTabs() end,
-		__TEXTINPUT = function(c)
-			local item = self.c_t_tree.list[self.c_t_tree.sel]
-			if not item or not item.type then return end
-			if c == "+" then
-				self.c_t_tree:treeExpand(true)
-			end
-			if c == "-" then
-				self.c_t_tree:treeExpand(false)
-			end
-		end,
+			_TAB = function() self:tabTabs() end,
+			__TEXTINPUT = function(c)
+				local item = self.c_t_tree.list[self.c_t_tree.sel]
+				if not item or not item.type then return end
+				if c == "+" then
+					self.c_t_tree:treeExpand(true)
+				end
+				if c == "-" then
+					self.c_t_tree:treeExpand(false)
+				end
+			end,
 		}
 		self.key:addBinds{
 			MOVE_LEFT = function() local item=self.c_t_tree.list[self.c_t_tree.sel] self:treeSelect(item, self.c_t_tree.sel, "right") end,
 			MOVE_RIGHT = function() local item=self.c_t_tree.list[self.c_t_tree.sel] self:treeSelect(item, self.c_t_tree.sel, "left") end,
-			ACCEPT = "EXIT",
-			EXIT = function() 
-				if self.actor.unused_stats~=self.actor_dup.unused_stats or self.actor.unused_talents_types~=self.actor_dup.unused_talents_types or 
+			ACCEPT = function() self:tabTabs() end,
+			EXIT = function()
+				if self.actor.unused_stats~=self.actor_dup.unused_stats or self.actor.unused_talents_types~=self.actor_dup.unused_talents_types or
 				self.actor.unused_talents~=self.actor_dup.unused_talents or self.actor.unused_generics~=self.actor_dup.unused_generics  then
-					self:yesnocancelLongPopup("Finish","Do you accept changes?", function(yes, cancel) 
-					if cancel then 
-						return nil 
+					self:yesnocancelLongPopup("Finish","Do you accept changes?", function(yes, cancel)
+					if cancel then
+						return nil
 					else
-						if yes then ok = self:finish() else ok = true self:cancel() end  
+						if yes then ok = self:finish() else ok = true self:cancel() end
 					end
 					if ok then
 						game:unregisterDialog(self)
@@ -295,18 +299,18 @@ function _M:updateKeys(kind)
 		}
 	elseif kind == "Summary" then
 		self.key:addCommands{
-		_TAB = function() self:tabTabs() end,
+			_TAB = function() self:tabTabs() end,
 		}
 		self.key:addBinds{
 			ACCEPT = "EXIT",
 			EXIT = function()
-				if self.actor.unused_stats~=self.actor_dup.unused_stats or self.actor.unused_talents_types ~= self.actor_dup.unused_talents_types or 
+				if self.actor.unused_stats~=self.actor_dup.unused_stats or self.actor.unused_talents_types ~= self.actor_dup.unused_talents_types or
 				self.actor.unused_talents ~= self.actor_dup.unused_talents or self.actor.unused_generics~=self.actor_dup.unused_generics then
-					self:yesnocancelLongPopup("Finish","Do you accept changes?", function(yes, cancel) 
-					if cancel then 
-						return nil 
+					self:yesnocancelLongPopup("Finish","Do you accept changes?", function(yes, cancel)
+					if cancel then
+						return nil
 					else
-						if yes then ok = self:finish() else ok = true self:cancel() end  
+						if yes then ok = self:finish() else ok = true self:cancel() end
 					end
 					if ok then
 						game:unregisterDialog(self)
@@ -319,7 +323,7 @@ function _M:updateKeys(kind)
 					self.actor_dup = {}
 					if self.on_finish then self.on_finish() end
 				end
-			end,	
+			end,
 		}
 	end
 end
@@ -329,21 +333,21 @@ function _M:cancel()
 	self.actor.unused_talents = self.actor_dup.unused_talents
 	self.actor.unused_generics = self.actor_dup.unused_generics
 	self.actor.unused_talents_types = self.actor_dup.unused_talents_types
-	for stat, inc in pairs(self.stats_increased) do 
+	for stat, inc in pairs(self.stats_increased) do
 		self.actor:incStat(stat, -inc)
 	end
-	for tt, inc in pairs(self.talent_types_learned) do 
+	for tt, inc in pairs(self.talent_types_learned) do
 		if inc[2] then
 			self.actor:setTalentTypeMastery(tt, self.actor:getTalentTypeMastery(tt) - 0.2)
 			self.actor.__increased_talent_types[tt] = self.actor_dup.__increased_talent_types[tt]
 		end
-		
+
 		if inc[1] then
 			self.actor:unlearnTalentType(tt)
 		end
 	end
-	for t_id, times in pairs(self.talents_learned) do 
-		for i=1,times do 
+	for t_id, times in pairs(self.talents_learned) do
+		for i=1,times do
 			self.actor:unlearnTalent(t_id)
 		end
 	end
@@ -363,7 +367,7 @@ function _M:getStatDescription(stat_id)
 	local color = diff >= 0 and "#LIGHT_GREEN#" or "#RED#"
 
 	text = text.."#LIGHT_BLUE#Stat gives:#LAST#\n"
-	if stat_id == self.actor.STAT_CON then	
+	if stat_id == self.actor.STAT_CON then
 		text = text.."Max life: "..color..(diff * 4).."#LAST#\n"
 		self.actor:updateConDamageReduction()
 		self.actor_dup:updateConDamageReduction()
@@ -408,7 +412,7 @@ function _M:getStatDescription(stat_id)
 			text = text.."Accuracy: "..color..(diff * 0.35).."#LAST#\n"
 		end
 	end
-	
+
 	if self.actor.player and self.desc_def and self.desc_def.getStatDesc and self.desc_def.getStatDesc(stat_id, self.actor) then
 		text = text.."#LIGHT_BLUE#Class powers:#LAST#\n"
 		text = text..self.desc_def.getStatDesc(stat_id, self.actor)
@@ -438,7 +442,7 @@ function _M:finish()
 		self:simpleLongPopup("Impossible", "You cannot learn this talent(s): "..dep_miss, game.w * 0.4)
 		return nil
 	end
-	
+
 	local txt = "#LIGHT_BLUE#Warning: You have increased some of your statistics or talent. Talent(s) actually sustained: \n %s if it is dependent on one of the stats you changed, you need to re-use it for the changes to take effect."
 	local talents = ""
 	local reset = {}
@@ -493,9 +497,9 @@ function _M:incStat(v)
 	self.c_list.list[sel].val = self.actor:getStat(sel)
 	self.c_list.list[sel].color = 	{(self.actor_dup:getStat(self.sel, nil, nil, true) == self.actor:getStat(self.sel, nil, nil, true)) and {255, 255, 255} or {255, 215, 0},
 									(self.actor_dup:getStat(self.sel, nil, nil, true) == self.actor:getStat(self.sel, nil, nil, true)) and {255, 255, 255} or {255, 215, 0},
-									(self.actor:getStat(self.sel, nil, nil, true) - self.actor_dup:getStat(self.sel, nil, nil, true) + self.actor_dup:getStat(self.sel) == self.actor:getStat(self.sel)) and {255, 255, 255} or {255, 215, 0}}					
+									(self.actor:getStat(self.sel, nil, nil, true) - self.actor_dup:getStat(self.sel, nil, nil, true) + self.actor_dup:getStat(self.sel) == self.actor:getStat(self.sel)) and {255, 255, 255} or {255, 215, 0}}
 	self.c_list.sel = sel
-	
+
 	local stats = { "str", "dex", "mag", "wil", "cun", "con" }
 	for i = 1,6 do
 		stat_sel = stats[i]
@@ -521,9 +525,9 @@ function _M:incStat(v)
 			end
 		end
 	end
-	
+
 	self.stats_increased[sel] = (self.stats_increased[sel] or 0) + v
-	
+
 	self.c_list:onSelect(true)
 	self.c_points.text = _points_text:format(self.actor.unused_stats)
 	self.c_points:generate()
@@ -774,7 +778,7 @@ function _M:onDrawItem(item)
 	if item.type then
 		text:add({"color",0x00,0xFF,0xFF}, "Talent Category", true)
 		text:add({"color",0x00,0xFF,0xFF}, "A talent category allows you to learn talents of this category. You gain a talent category point at level 10, 20 and 30. You may also find trainers or artifacts that allow you to learn more.\nA talent category point can be used either to learn a new category or increase the mastery of a known one.", true, true, {"color", "WHITE"})
-		
+
 		if self.actor.talents_types_def[item.type].generic then
 			text:add({"color",0x00,0xFF,0xFF}, "Generic talent tree", true)
 			text:add({"color",0x00,0xFF,0xFF}, "A generic talent allows you to perform various utility actions and improve your character. It represents talents anybody can learn (should they find a trainer for it). You gain one point every level (except every 5th level). You may also find trainers or artifacts that allow you to learn more.", true, true, {"color", "WHITE"})
@@ -782,9 +786,9 @@ function _M:onDrawItem(item)
 			text:add({"color",0x00,0xFF,0xFF}, "Class talent tree", true)
 			text:add({"color",0x00,0xFF,0xFF}, "A class talent allows you to perform new combat moves, cast spells, and improve your character. It represents the core function of your class. You gain one point every level and two every 5th level. You may also find trainers or artifacts that allow you to learn more.", true, true, {"color", "WHITE"})
 		end
-		
+
 		text:add(self.actor:getTalentTypeFrom(item.type).description)
-		
+
 	else
 		local t = self.actor:getTalentFromId(item.talent)
 
@@ -821,7 +825,7 @@ function _M:generateList()
 	local tree = {}
 	self.talents_deps = {}
 	for i, tt in ipairs(self.actor.talents_types_def) do
-		if not tt.hide and not (self.actor.talents_types[tt.type] == nil) then			
+		if not tt.hide and not (self.actor.talents_types[tt.type] == nil) then
 			local cat = tt.type:gsub("/.*", "")
 			local ttknown = self.actor:knowTalentType(tt.type)
 			local isgeneric = self.actor.talents_types_def[tt.type].generic
@@ -830,8 +834,8 @@ function _M:generateList()
 				name=function(item) return tstring{{"font", "bold"}, cat:capitalize().." / "..tt.name:capitalize() ..(" (%s)"):format((isgeneric and "generic" or "class")), {"font", "normal"}} end,
 				rawname=function(item) return cat:capitalize().." / "..tt.name:capitalize() ..(" (%s, mastery %.2f)"):format((isgeneric and "generic" or "class"), self.actor:getTalentTypeMastery(item.type)) end,
 				type=tt.type,
-				color=function(item) 
-				return ((self.actor:knowTalentType(item.type) ~= self.actor_dup:knowTalentType(item.type)) or ((self.actor.__increased_talent_types[item.type] or 0) ~= (self.actor_dup.__increased_talent_types[item.type] or 0))) and {255, 215, 0} or self.actor:knowTalentType(item.type) and {0,200,0} or {175,175,175} 
+				color=function(item)
+				return ((self.actor:knowTalentType(item.type) ~= self.actor_dup:knowTalentType(item.type)) or ((self.actor.__increased_talent_types[item.type] or 0) ~= (self.actor_dup.__increased_talent_types[item.type] or 0))) and {255, 215, 0} or self.actor:knowTalentType(item.type) and {0,200,0} or {175,175,175}
 				end,
 				shown = tshown,
 				status = function(item) return self.actor:knowTalentType(item.type) and tstring{{"font", "bold"}, ((self.actor.__increased_talent_types[item.type] or 0) >=1) and {"color", 255, 215, 0} or {"color", 0x00, 0xFF, 0x00}, ("%.2f"):format(self.actor:getTalentTypeMastery(item.type)), {"font", "normal"}} or tstring{{"color",  0xFF, 0x00, 0x00}, "unknown"} end,
@@ -843,7 +847,7 @@ function _M:generateList()
 
 			-- Find all talents of this school
 			for j, t in ipairs(tt.talents) do
-				if not t.hide or self.actor.__show_special_talents[t.id] then				
+				if not t.hide or self.actor.__show_special_talents[t.id] then
 					self:computeDeps(t)
 					local isgeneric = self.actor.talents_types_def[tt.type].generic
 					list[#list+1] = {
@@ -867,7 +871,7 @@ function _M:generateList()
 							end
 						end
 					end
-								 
+
 					if t.require then
 						local stats = {}
 						if type(t.require) == "table" and t.require.stat then
@@ -930,17 +934,17 @@ function _M:drawDialog(kind)
 	if game.tooltip then
 		game.tooltip:erase()
 	end
-	
+
 	if kind == "Stats" then
 		self:resize(game.w * 0.9, math.min(game.h * 0.9, 500))
-	
+
 		self:loadUI{
 			{left=0, top=self.stats.h, ui=self.vs},
-			
+
 			{left=15, top=0, ui=self.stats},
 			{left=15+self.stats.w, top=0, ui=self.talents},
 			{left=15+self.stats.w+self.talents.w, top=0, ui=self.summary},
-			
+
 			{left=0, top=self.stats.h + 10 + self.vs.h, ui=self.c_points},
 			{left=5, top=self.stats.h + self.c_points.h + 10 + self.vs.h, ui=self.vs2},
 			{left=0, top=self.stats.h + self.c_points.h + 20 + self.vs.h + self.vs2.h, ui=self.c_list},
@@ -949,24 +953,24 @@ function _M:drawDialog(kind)
 
 			{right=0, top=self.stats.h + self.c_tut.h + 25 + self.vs.h, ui=self.c_desc},
 			{right=0, top=self.stats.h + self.c_tut.h + 150 + self.vs.h, ui=self.c_desc2},
-			
+
 			{right=0, top=self.stats.h + 5 + self.vs.h, ui=self.c_tut},
 		}
 		self:setFocus(self.c_list)
 		self.c_list:onSelect()
-		
+
 		self:setupUI()
 		self:updateTitle("Stats Levelup: "..self.actor.name)
 	elseif kind == "Talents" then
-		self:resize(game.w * 0.9, game.h * 0.9) 
-		
+		self:resize(game.w * 0.9, game.h * 0.9)
+
 		self:loadUI{
 			{left=0, top=self.stats.h, ui=self.vs},
-		
+
 			{left=15, top=0, ui=self.stats},
 			{left=15+self.stats.w, top=0, ui=self.talents},
 			{left=15+self.stats.w+self.talents.w, top=0, ui=self.summary},
-			
+
 			{left=0, top=self.stats.h + self.vs.h, ui=self.c_t_points},
 			{left=5, top=self.stats.h + self.c_t_points.h + 5 + self.vs.h, ui=self.vs2},
 			{left=0, top=self.stats.h + self.c_t_points.h + 15 + self.vs.h + self.vs2.h, ui=self.c_t_tree},
@@ -983,29 +987,29 @@ function _M:drawDialog(kind)
 		self:resize(game.w * 0.9, math.min(game.h * 0.9, 400))
 		self:loadUI{
 			{left=0, top=self.stats.h, ui=self.vs},
-		
+
 			{left=15, top=0, ui=self.stats},
 			{left=15+self.stats.w, top=0, ui=self.talents},
 			{left=15+self.stats.w+self.talents.w, top=0, ui=self.summary},
-			
+
 			{left=0, top=self.stats.h + 5 + self.vs.h, ui=self.c_summary_desc},
 		}
-		
+
 		self:setupUI()
-		
+
 		local s = self.c_summary_desc.s
 		local h = 0
 		local w = 0
 
 		s:erase(0,0,0,0)
-		
+
 		local con_diff = self.actor:getCon() - self.actor_dup:getCon()
 		local wil_diff = self.actor:getWil() - self.actor_dup:getWil()
 		local mag_diff = self.actor:getMag() - self.actor_dup:getMag()
 		local cun_diff = self.actor:getCun() - self.actor_dup:getCun()
 		local str_diff = self.actor:getStr() - self.actor_dup:getStr()
 		local dex_diff = self.actor:getDex() - self.actor_dup:getDex()
-	
+
 		s:drawColorStringBlended(self.font, ("#LIGHT_BLUE#Stats change:"):format(), w, h, 255, 255, 255, true) h = h + self.font_h
 		s:drawColorStringBlended(self.font, ("Strength    : #00c000#%d"):format(str_diff), w, h, 255, 255, 255, true) h = h + self.font_h
 		s:drawColorStringBlended(self.font, ("Dexterity   : #00c000#%d"):format(dex_diff), w, h, 255, 255, 255, true) h = h + self.font_h
@@ -1026,7 +1030,7 @@ function _M:drawDialog(kind)
 				self:mouseTooltip(self.TOOLTIP_RESIST, s:drawColorStringBlended(self.font, ("%s: #00ff00#%.1f%%"):format(t.name:capitalize(), self.actor:combatGetResist(DamageType[t.type]) - (self.actor_dup:combatGetResist(DamageType[t.type]) or 0)), w, h, 255, 255, 255, true)) h = h + self.font_h
 			end
 		end
-		
+
 		h = 0
 		w = 200
 		s:drawColorStringBlended(self.font, ("#LIGHT_BLUE#Stats effect:"):format(), w, h, 255, 255, 255, true) h = h + self.font_h
@@ -1049,7 +1053,7 @@ function _M:drawDialog(kind)
 			self:mouseTooltip(self.TOOLTIP_SPELL_POWER, s:drawColorStringBlended(self.font, ("Spellpower: #00c000#%d"):format(self.actor:combatSpellpower() - self.actor_dup:combatSpellpower()), w, h, 255, 255, 255, true)) h = h + self.font_h
 			self:mouseTooltip(self.TOOLTIP_SPELL_CRIT, s:drawColorStringBlended(self.font, ("Crit. chance: #00c000#%.1f%%"):format(self.actor:combatSpellCrit() - self.actor_dup:combatSpellCrit()), w, h, 255, 255, 255, true)) h = h + self.font_h
 			self:mouseTooltip(self.TOOLTIP_MINDPOWER, s:drawColorStringBlended(self.font, ("Mindpower: #00c000#%.1f"):format(self.actor:combatMindpower() - self.actor_dup:combatMindpower()), w, h, 255, 255, 255, true)) h = h + self.font_h
-		end	
+		end
 		h = h + self.font_h
 		local ArmorTxt = "#LIGHT_BLUE#"
 		if self.actor:hasHeavyArmor() then
@@ -1139,7 +1143,7 @@ function _M:drawDialog(kind)
 		s:drawColorStringBlended(self.font, ("#LIGHT_BLUE#Talents learned:"):format(), w, h, 255, 255, 255, true) h = h + self.font_h
 		local stats = { "str", "dex", "mag", "wil", "cun", "con" }
 		local talents_learned = {}
-		
+
 		for k, _ in pairs(self.talents_changed) do
 			t = self.actor:getTalentFromId(k)
 			if ((self.actor.talents[k] or 0) ~= (self.actor_dup.talents[k] or 0)) then
@@ -1164,9 +1168,11 @@ function _M:drawDialog(kind)
 				end
 			end
 		end
-		
+
 		self.c_summary_desc:generate()
-		
+		self.c_summary_desc.can_focus = true
+		self:setFocus(self.c_summary_desc)
+
 		self:updateTitle("Levelup summary: "..self.actor.name)
 	end
 	self:updateKeys(kind)

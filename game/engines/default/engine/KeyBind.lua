@@ -83,7 +83,7 @@ function _M:saveRemap(file)
 	end
 
 	local f = fs.open(file, "w")
-	
+
 	local k1, k2, k3
 
 	for virtual, keys in pairs(_M.binds_remap) do
@@ -259,4 +259,9 @@ function _M:addBinds(t)
 	for virtual, fct in pairs(later) do
 		self:addBind(virtual, self.virtuals[fct])
 	end
+end
+
+--- Removes a key/command combination
+function _M:removeBind(virtual)
+	self.virtuals[virtual] = nil
 end
