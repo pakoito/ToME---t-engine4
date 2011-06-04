@@ -19,6 +19,7 @@
 
 require "engine.class"
 local Mouse = require "engine.Mouse"
+local Button = require "engine.ui.Button"
 local TooltipsData = require "mod.class.interface.TooltipsData"
 
 module(..., package.seeall, class.inherit(TooltipsData))
@@ -186,6 +187,17 @@ function _M:display()
 	h = h + self.top[3] + 5
 
 	-- Player
+	if player.unused_stats > 0 or player.unused_talents > 0 or player.unused_generics > 0 or player.unused_talents_types > 0 then
+		self.font:setStyle("bold")
+		local fw = self.font:size("LEVELUP!")
+		self:makeTexture("LEVELUP!", self.w - fw, h, colors.VIOLET.r, colors.VIOLET.g, colors.VIOLET.b, fw)
+		self.items[#self.items].glow = true
+		self:mouseTooltip(("#GOLD##{bold}#%s\n#WHITE##{normal}#Unused stats: %d\nUnused class talents: %d\nUnused generic talents: %d\nUnused categories: %d"):format(player.name, player.unused_stats, player.unused_talents, player.unused_generics, player.unused_talents_types), self.w, self.font_h, 0, h, function()
+			player:playerLevelup()
+		end)
+--		h = h + self.font_h
+	end
+
 	self.font:setStyle("bold")
 	self:makeTexture(("%s#{normal}#"):format(player.name), 0, h, colors.GOLD.r, colors.GOLD.g, colors.GOLD.b, self.w) h = h + self.font_h
 	self.font:setStyle("normal")
@@ -349,14 +361,19 @@ function _M:display()
 
 end
 
-function _M:toScreen()
+function _M:toScreen(nb_keyframes)
 	self:display()
 
 	self.bg.tex[1]:toScreen(self.display_x, self.display_y, self.w, self.h)
 	for i = 1, #self.items do
 		local item = self.items[i]
 		if type(item) == "table" then
-			item[1]:toScreenFull(self.display_x + item.x, self.display_y + item.y, item.w, item.h, item[2], item[3])
+			if item.glow then
+				local glow = (1+math.sin(core.game.getTime() / 500)) / 2 * 100 + 120
+				item[1]:toScreenFull(self.display_x + item.x, self.display_y + item.y, item.w, item.h, item[2], item[3], 1, 1, 1, glow / 255)
+			else
+				item[1]:toScreenFull(self.display_x + item.x, self.display_y + item.y, item.w, item.h, item[2], item[3])
+			end
 		else
 			item(self.display_x, self.display_y)
 		end

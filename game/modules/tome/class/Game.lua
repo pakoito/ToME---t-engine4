@@ -884,7 +884,7 @@ function _M:display(nb_keyframes)
 	else self.logdisplay:toScreen()
 	end
 
-	self.player_display:toScreen()
+	self.player_display:toScreen(nb_keyframes)
 	if self.show_npc_list then
 		self.npcs_display:toScreen()
 	else
