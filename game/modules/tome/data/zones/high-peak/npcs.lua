@@ -52,10 +52,11 @@ local Talents = require("engine.interface.ActorTalents")
 -- Alatar & Palando, the final bosses
 newEntity{
 	define_as = "ELANDAR",
-	type = "humanoid", subtype = "sorcerer",
+	type = "humanoid", subtype = "shalore",
 	name = "Elandar",
 	display = "@", color=colors.AQUAMARINE,
 	faction = "sorcerers",
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/humanoid_shalore_elandar.png", display_h=2, display_y=-1}}},
 
 	desc = [[Renegade mages from Angolwen, the Sorcerers have set up in the Far East, slowly growing corrupt. Now they must be stopped.]],
 	level_range = {75, nil}, exp_worth = 15,
@@ -126,10 +127,12 @@ newEntity{
 
 newEntity{
 	define_as = "ARGONIEL",
-	type = "humanoid", subtype = "sorcerer",
+	type = "humanoid", subtype = "human",
 	name = "Argoniel",
 	display = "@", color=colors.ROYAL_BLUE,
 	faction = "sorcerers",
+	female = true,
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/humanoid_human_argoniel.png", display_h=2, display_y=-1}}},
 
 	desc = [[Renegade mages from Angolwen, the Sorcerers have set up in the Far East, slowly growing corrupt. Now they must be stopped.]],
 	level_range = {75, nil}, exp_worth = 15,
@@ -210,6 +213,7 @@ newEntity{ define_as = "FALLEN_SUN_PALADIN_AERYN",
 	type = "humanoid", subtype = "human",
 	display = "p",
 	faction = "sorcerers",
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/humanoid_human_fallen_sun_paladin_aeryn.png", display_h=2, display_y=-1}}},
 	name = "Fallen Sun Paladin Aeryn", color=colors.VIOLET, unique = true,
 	desc = [[A beautiful woman, clad in shining plate armour. Power radiates from her.]],
 	level_range = {56, nil}, exp_worth = 2,
@@ -280,6 +284,7 @@ newEntity{ define_as = "HIGH_SUN_PALADIN_AERYN",
 	display = "p",
 	faction = "sunwall",
 	name = "High Sun Paladin Aeryn", color=colors.VIOLET, unique = "High Sun Paladin Aeryn High Peak Help",
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/humanoid_human_high_sun_paladin_aeryn.png", display_h=2, display_y=-1}}},
 	desc = [[A beautiful woman, clad in shining plate armour. Power radiates from her.]],
 	level_range = {56, 56}, exp_worth = 2,
 	rank = 5,

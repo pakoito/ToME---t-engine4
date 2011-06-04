@@ -158,10 +158,11 @@ newEntity{ base = "BASE_NPC_ORC_ATTACKER", define_as = "ORC_ATTACK",
 
 newEntity{
 	define_as = "ELANDAR",
-	type = "humanoid", subtype = "sorcerer",
+	type = "humanoid", subtype = "shalore",
 	name = "Elandar",
 	display = "@", color=colors.AQUAMARINE,
 	faction = "sorcerers",
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/humanoid_shalore_elandar.png", display_h=2, display_y=-1}}},
 
 	desc = [[Renegade mages from Angolwen, the Sorcerers have set up in the Far East, slowly growing corrupt. Now they must be stopped.]],
 	level_range = {70, nil}, exp_worth = 15,
@@ -214,10 +215,12 @@ newEntity{
 
 newEntity{
 	define_as = "ARGONIEL",
-	type = "humanoid", subtype = "sorcerer",
+	type = "humanoid", subtype = "human",
 	name = "Argoniel",
 	display = "@", color=colors.LIGHT_BLUE,
 	faction = "sorcerers",
+	female = true,
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/humanoid_human_argoniel.png", display_h=2, display_y=-1}}},
 
 	desc = [[Renegade mages from Angolwen, the Sorcerers have set up in the Far East, slowly growing corrupt. Now they must be stopped.]],
 	level_range = {70, nil}, exp_worth = 15,
