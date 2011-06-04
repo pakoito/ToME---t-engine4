@@ -92,6 +92,8 @@ newEntity{ define_as = "TANNEN",
 newEntity{ define_as = "DROLEM",
 	type = "construct", subtype = "golem",
 	display = 'g', color=colors.GREEN,
+	name = "Drolem",
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/construct_golem_drolem.png", display_h=2, display_y=-1}}},
 	desc = [[This is Tannen's construct, a HUGE golem in the rough shape of a dragon.
 It is so huge that it blocks sight beyond it.]],
 	level_range = {35, nil}, exp_worth=2,

@@ -30,7 +30,7 @@ function _M:init(t, no_default)
 	ActorAI.init(self, t)
 
 	-- Grab default image name if none is set
-	if not self.image and self.name ~= "unknown actor" then self.image = "npc/"..tostring(self.type or "unknown").."_"..tostring(self.subtype or "unknown").."_"..(self.name or "unknown"):lower():gsub("[^a-z0-9]", "_")..".png" end
+	if not self.image and self.name ~= "unknown actor" then self.image = "npc/"..tostring(self.type or "unknown").."_"..tostring(self.subtype or "unknown"):lower():gsub("[^a-z0-9]", "_").."_"..(self.name or "unknown"):lower():gsub("[^a-z0-9]", "_")..".png" end
 end
 
 function _M:act()
