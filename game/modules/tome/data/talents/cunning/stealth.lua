@@ -18,44 +18,17 @@
 -- darkgod@te4.org
 
 newTalent{
-	name = "Automatic Stealth",
-	type = {"cunning/stealth-base", 1},
-	tactical = { BUFF = 3 },
-	mode = "sustained", no_sustain_autoreset = true,
-	points = 1,
-	cooldown = 0,
-	activate = function(self, t)
-		return {}
-	end,
-	deactivate = function(self, t, p)
-		return true
-	end,
-	info = function(self, t)
-		return [[When active, automatically try to enter stealth when possible.]]
-	end,
-}
-
-newTalent{
 	name = "Stealth",
 	type = {"cunning/stealth", 1},
 	require = cuns_req1,
 	mode = "sustained", no_sustain_autoreset = true,
 	points = 5,
 	cooldown = 10,
+	allow_autocast = true,
 	no_energy = true,
 	tactical = { BUFF = 3 },
 	getStealthPower = function(self, t) return 4 + self:getCun(10) * self:getTalentLevel(t) end,
 	getRadius = function(self, t) return math.floor(10 - self:getTalentLevel(t) * 1.1) end,
-	on_learn = function(self, t)
-		if self:getTalentLevelRaw(t) == 1 then
-			self:learnTalent(self.T_AUTOMATIC_STEALTH, true, 1)
-		end
-	end,
-	on_unlearn = function(self, t)
-		if self:getTalentLevelRaw(t) == 0 then
-			self:unlearnTalent(self.T_AUTOMATIC_STEALTH)
-		end
-	end,
 	on_pre_use = function(self, t, silent)
 		if self:isTalentActive(t.id) then return true end
 		local armor = self:getInven("BODY") and self:getInven("BODY")[1]

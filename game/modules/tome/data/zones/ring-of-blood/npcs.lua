@@ -168,6 +168,7 @@ newEntity{
 
 newEntity{ base = "BASE_NPC_SLAVER",
 	name = "slaver", color=colors.TEAL,
+	subtype = "yaech",
 	desc = [[A slaver.]],
 	level_range = {10, nil}, exp_worth = 1,
 	rarity = 1,
@@ -190,6 +191,7 @@ newEntity{ base = "BASE_NPC_SLAVER",
 
 newEntity{ base = "BASE_NPC_SLAVER",
 	name = "enthralled slave", color=colors.KHAKI,
+	subtype = "human",
 	desc = [[A slave.]],
 	level_range = {10, nil}, exp_worth = 1,
 	rarity = 20,

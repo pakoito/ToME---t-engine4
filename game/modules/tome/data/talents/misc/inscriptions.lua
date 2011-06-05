@@ -33,6 +33,10 @@ local newInscription = function(t)
 				return t.name
 			end
 		end
+		if tt.type[1] == "inscriptions/infusions" then tt.auto_use_check = function(self, t) return not self:hasEffect(self.EFF_INFUSION_COOLDOWN) end
+		elseif tt.type[1] == "inscriptions/runes" then tt.auto_use_check = function(self, t) return not self:hasEffect(self.EFF_RUNE_COOLDOWN) end
+		elseif tt.type[1] == "inscriptions/taints" then tt.auto_use_check = function(self, t) return not self:hasEffect(self.EFF_TAINT_COOLDOWN) end
+		end
 		tt.cooldown = function(self, t)
 			local data = self:getInscriptionData(t.short_name)
 			return data.cooldown
@@ -171,21 +175,22 @@ newInscription{
 	name = "Infusion: Sun",
 	type = {"inscriptions/infusions", 1},
 	points = 1,
-	no_energy = true,
-	tactical = { BUFF = 2 },
+	tactical = { BUFF = 1, DISABLE = 2 },
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		self:project({type="ball", range=0, selffire=true, radius=data.range + data.inc_stat}, self.x, self.y, engine.DamageType.LITE, 1)
-		self:project({type="ball", range=0, selffire=true, radius=data.range + data.inc_stat}, self.x, self.y, engine.DamageType.BREAK_STEALTH, 1)
+		self:project({type="ball", range=0, selffire=true, radius=data.range}, self.x, self.y, engine.DamageType.LITE, 1)
+		self:project({type="ball", range=0, selffire=true, radius=data.range}, self.x, self.y, engine.DamageType.BREAK_STEALTH, 1)
+		self:project({type="ball", range=0, selffire=false, radius=data.range}, self.x, self.y, engine.DamageType.BLINDCUSTOMMIND, {power=data.power + data.inc_stat, turns=data.turns})
 		return true
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[Activate the infusion to brighten the area in a radius of %d. It also reveals any stealthy creatures.]]):format(data.range + data.inc_stat)
+		return ([[Activate the infusion to brighten the area in a radius of %d, reveals any stealthy creatures.
+		It will also blind any creatures caught inside (power %d) for %d turns.]]):format(data.range, data.power + data.inc_stat, data.turns)
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[radius %d]]):format(data.range + data.inc_stat)
+		return ([[rad %d; power %d; turns %d]]):format(data.range, data.power + data.inc_stat, data.turns)
 	end,
 }
 
@@ -197,33 +202,13 @@ newInscription{
 	tactical = { BUFF = 2 },
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		self:setEffect(self.EFF_STRENGTH, data.dur, {power=data.power + data.inc_stat})
+		self:setEffect(self.EFF_HEROISM, data.dur, {power=data.power + data.inc_stat})
 		return true
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[Activate the infusion to increase strength, dexterity and constitution by %d for %d turns.]]):format(data.power + data.inc_stat, data.dur)
-	end,
-	short_info = function(self, t)
-		local data = self:getInscriptionData(t.short_name)
-		return ([[+%d for %d turns]]):format(data.power + data.inc_stat, data.dur)
-	end,
-}
-
-newInscription{
-	name = "Infusion: Mind Power",
-	type = {"inscriptions/infusions", 1},
-	points = 1,
-	no_energy = true,
-	tactical = { BUFF = 2 },
-	action = function(self, t)
-		local data = self:getInscriptionData(t.short_name)
-		self:setEffect(self.EFF_WILL, data.dur, {power=data.power + data.inc_stat})
-		return true
-	end,
-	info = function(self, t)
-		local data = self:getInscriptionData(t.short_name)
-		return ([[Activate the infusion to increase willpower, cunning and magic by %d for %d turns.]]):format(data.power + data.inc_stat, data.dur)
+		return ([[Activate the infusion to increase three of your primary stats by %d for %d turns.
+		It will always increase your three highest stats.]]):format(data.power + data.inc_stat, data.dur)
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
@@ -385,6 +370,7 @@ newInscription{
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_spell = true,
+	allow_autocast = true,
 	no_energy = true,
 	tactical = { DEFEND = 2 },
 	on_pre_use = function(self, t)

@@ -404,6 +404,8 @@ function _M:act()
 
 	if self.never_act then return false end
 
+	self:automaticTalents()
+
 	-- Compute bonuses based on actors in FOV
 	if self:knowTalent(self.T_MILITANT_MIND) and not self:hasEffect(self.EFF_MILITANT_MIND) then
 		local nb_foes = 0

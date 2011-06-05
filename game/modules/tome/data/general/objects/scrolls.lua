@@ -201,9 +201,11 @@ newEntity{ base = "BASE_INFUSION",
 
 	inscription_kind = "utility",
 	inscription_data = {
-		cooldown = resolvers.rngrange(6, 12),
+		cooldown = resolvers.rngrange(9, 15),
 		range = resolvers.mbonus_level(5, 5, function(e, v) return v * 0.1 end),
-		use_stat_mod = 0.05,
+		turns = resolvers.rngrange(3, 5),
+		power = resolvers.mbonus_level(5, 20, function(e, v) return v * 0.1 end),
+		use_stat_mod = 1.2,
 	},
 	inscription_talent = "INFUSION:_SUN",
 }
@@ -220,26 +222,9 @@ newEntity{ base = "BASE_INFUSION",
 		cooldown = resolvers.rngrange(20, 30),
 		dur = resolvers.mbonus_level(7, 7),
 		power = resolvers.mbonus_level(4, 4, function(e, v) return v * 3 end),
-		use_stat_mod = 0.04,
+		use_stat_mod = 0.14,
 	},
 	inscription_talent = "INFUSION:_HEROISM",
-}
-
-newEntity{ base = "BASE_INFUSION",
-	name = "mind power infusion",
-	level_range = {25, 50},
-	rarity = 16,
-	cost = 40,
-	material_level = 3,
-
-	inscription_kind = "utility",
-	inscription_data = {
-		cooldown = resolvers.rngrange(20, 30),
-		dur = resolvers.mbonus_level(7, 7),
-		power = resolvers.mbonus_level(4, 4, function(e, v) return v * 3 end),
-		use_stat_mod = 0.04,
-	},
-	inscription_talent = "INFUSION:_MIND_POWER",
 }
 
 newEntity{ base = "BASE_INFUSION",

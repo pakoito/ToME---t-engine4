@@ -94,6 +94,7 @@ function _M:init(t)
 	self.talents_types_mastery = self.talents_types_mastery  or {}
 	self.talents_cd = self.talents_cd or {}
 	self.sustain_talents = self.sustain_talents or {}
+	self.talents_auto = self.talents_auto or {}
 end
 
 --- Resolve leveling talents
@@ -312,6 +313,8 @@ function _M:unlearnTalent(t_id)
 	if self.talents[t_id] == 0 then self.talents[t_id] = nil end
 
 	if t.on_unlearn then t.on_unlearn(self, t) end
+
+	self.talents_auto[t_id] = nil
 
 	self.changed = true
 	return true
@@ -583,6 +586,32 @@ function _M:cooldownTalents()
 		if self.talents_cd[tid] <= 0 then
 			self.talents_cd[tid] = nil
 			if self.onTalentCooledDown then self:onTalentCooledDown(tid) end
+		end
+	end
+end
+
+--- Setup the talent as autocast
+function _M:setTalentAuto(tid, v)
+	if type(tid) == "table" then tid = tid.id end
+	if v then self.talents_auto[tid] = true
+	else self.talents_auto[tid] = nil
+	end
+end
+
+
+--- Setup the talent as autocast
+function _M:isTalentAuto(tid)
+	if type(tid) == "table" then tid = tid.id end
+	return self.talents_auto[tid]
+end
+
+--- Try to auto use listed talents
+-- This should be called in your actors "act()" method
+function _M:automaticTalents()
+	for tid, c in pairs(self.talents_auto) do
+		local t = self.talents_def[tid]
+		if (t.mode ~= "sustained" or not self.sustain_talents[tid]) and not self.talents_cd[tid] and self:preUseTalent(t, true, true) and (not t.auto_use_check or t.auto_use_check(self, t)) then
+			self:useTalent(tid)
 		end
 	end
 end

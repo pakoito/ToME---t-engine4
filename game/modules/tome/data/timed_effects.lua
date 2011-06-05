@@ -1089,44 +1089,24 @@ newEffect{
 }
 
 newEffect{
-	name = "STRENGTH",
-	desc = "Strength",
-	long_desc = function(self, eff) return ("Strength, dexterity and constitution increased by %d."):format(eff.power) end,
+	name = "HEROISM",
+	desc = "Heroism",
+	long_desc = function(self, eff) return ("Increases your three highest stats by %d."):format(eff.power) end,
 	type = "physical",
 	status = "beneficial",
 	parameters = { power=1 },
 	activate = function(self, eff)
-		eff.stat = self:addTemporaryValue("inc_stats",
-		{
-			[Stats.STAT_STR] = eff.power,
-			[Stats.STAT_DEX] = eff.power,
-			[Stats.STAT_CON] = eff.power,
-		})
+		local l = { {Stats.STAT_STR, self:getStat("str")}, {Stats.STAT_DEX, self:getStat("dex")}, {Stats.STAT_CON, self:getStat("con")}, {Stats.STAT_MAG, self:getStat("mag")}, {Stats.STAT_WIL, self:getStat("wil")}, {Stats.STAT_CUN, self:getStat("cun")}, }
+		table.sort(l, function(a,b) return a[2] > b[2] end)
+		local inc = {}
+		for i = 1, 3 do inc[l[i][1]] = eff.power end
+		eff.stat = self:addTemporaryValue("inc_stats", inc)
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("inc_stats", eff.stat)
 	end,
 }
 
-newEffect{
-	name = "WILL",
-	desc = "Will",
-	long_desc = function(self, eff) return ("Willpower, cunning and magic increased by %d."):format(eff.power) end,
-	type = "physical",
-	status = "beneficial",
-	parameters = { power=1 },
-	activate = function(self, eff)
-		eff.stat = self:addTemporaryValue("inc_stats",
-		{
-			[Stats.STAT_MAG] = eff.power,
-			[Stats.STAT_WIL] = eff.power,
-			[Stats.STAT_CUN] = eff.power,
-		})
-	end,
-	deactivate = function(self, eff)
-		self:removeTemporaryValue("inc_stats", eff.stat)
-	end,
-}
 
 newEffect{
 	name = "DISPLACEMENT_SHIELD",

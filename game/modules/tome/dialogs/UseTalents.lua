@@ -140,6 +140,14 @@ function _M:use(item, button)
 			{name="Bind to left mouse click (on a target)", what="left"},
 			{name="Bind to middle mouse click (on a target)", what="middle"},
 		}
+
+		local t = self.actor:getTalentFromId(item.talent)
+		if t.allow_autocast then
+			if self.actor:isTalentAuto(t) then table.insert(list, 1, {name="Disable automatic use", what="auto-dis"})
+			else table.insert(list, 1, {name="Enable automatic use", what="auto-en"})
+			end
+		end
+
 		for i = 1, 36 do list[#list+1] = {name="Hotkey "..i, what=i} end
 		Dialog:listPopup("Bind talent: "..item.name, "How do you want to bind this talent?", list, 400, 500, function(b)
 			if not b then return end
@@ -161,6 +169,12 @@ function _M:use(item, button)
 				for i = 1, 36 do
 					if self.actor.hotkey[i] and self.actor.hotkey[i][1] == "talent" and self.actor.hotkey[i][2] == item.talent then self.actor.hotkey[i] = nil end
 				end
+			elseif b.what == "auto-en" then
+				self.actor:setTalentAuto(item.talent, true)
+				self:simplePopup("Automatic use enabled", self.actor:getTalentFromId(item.talent).name:capitalize().." will now be used as often as possible automatically.")
+			elseif b.what == "auto-dis" then
+				self.actor:setTalentAuto(item.talent, false)
+				self:simplePopup("Automatic use disabled", self.actor:getTalentFromId(item.talent).name:capitalize().." will not be used automatically.")
 			end
 			self.c_list:drawTree()
 			self.actor.changed = true
