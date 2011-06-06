@@ -35,6 +35,7 @@ require "mod.class.interface.Combat"
 require "mod.class.interface.Archery"
 require "mod.class.interface.ActorInscriptions"
 local Faction = require "engine.Faction"
+local Dialog = require "engine.ui.Dialog"
 local Map = require "engine.Map"
 local DamageType = require "engine.DamageType"
 
@@ -419,6 +420,9 @@ function _M:act()
 			self:setEffect(self.EFF_MILITANT_MIND, 4, {power=self:getTalentLevel(self.T_MILITANT_MIND) * nb_foes * 0.6})
 		end
 	end
+
+	-- Still enough energy to act ?
+	if self.energy.value < game.energy_to_act then return false end
 
 	return true
 end
@@ -2327,6 +2331,33 @@ function _M:startTalentCooldown(t)
 	if not t.cooldown then return end
 	self.talents_cd[t.id] = self:getTalentCooldown(t)
 	self.changed = true
+end
+
+--- Setups a talent automatic use
+function _M:checkSetTalentAuto(tid, v)
+	local t = self:getTalentFromId(tid)
+	if v then
+		local doit = function()
+			self:setTalentAuto(tid, true)
+			Dialog:simplePopup("Automatic use enabled", t.name:capitalize().." will now be used as often as possible automatically.")
+		end
+
+		local list = {}
+		if t.no_energy ~= true then list[#list+1] = "- requires a turn to use" end
+		if t.requires_target then list[#list+1] = "- requires a target, your last hostile one will be automatically used" end
+		if t.auto_use_warning then list[#list+1] = t.auto_use_warning end
+
+		if #list == 0 then
+			doit()
+		else
+			Dialog:yesnoLongPopup("Automatic use", t.name:capitalize()..":\n"..table.concat(list, "\n").."\n Are you sure?", 500, function(ret)
+				if ret then doit() end
+			end)
+		end
+	else
+		self:setTalentAuto(tid, false)
+		Dialog:simplePopup("Automatic use disabled", t.name:capitalize().." will not be automatically used.")
+	end
 end
 
 --- How much experience is this actor worth

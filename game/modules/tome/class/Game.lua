@@ -1267,7 +1267,20 @@ function _M:setupMouse(reset)
 	-- Use hotkeys with mouse
 	self.mouse:registerZone(self.hotkeys_display.display_x, self.hotkeys_display.display_y, self.w, self.h, function(button, mx, my, xrel, yrel, bx, by, event)
 		if event == "button" and button == "left" and self.zone and self.zone.wilderness then return end
-		self.hotkeys_display:onMouse(button, mx, my, event == "button", function(text) self.tooltip:displayAtMap(nil, nil, self.w, self.h, text) end)
+		self.hotkeys_display:onMouse(button, mx, my, event == "button",
+			function(text)
+				text = text:toTString()
+				text:add(true, "---", true, {"font","italic"}, {"color","GOLD"}, "Left click to use", true, "Right click to configure", true, "Press 'm' to setup", {"color","LAST"}, {"font","normal"})
+				self.tooltip:displayAtMap(nil, nil, self.w, self.h, text)
+			end,
+			function(i, hk)
+				if button == "right" and hk[1] == "talent" then
+					local d = require("mod.dialogs.UseTalents").new(self.player)
+					d:use({talent=hk[2], name=self.player:getTalentFromId(hk[2]).name}, "right")
+					return true
+				end
+			end
+		)
 	end)
 	-- Use icons
 	self.mouse:registerZone(self.icons.display_x, self.icons.display_y, self.icons.w, self.icons.h, function(button, mx, my, xrel, yrel, bx, by)

@@ -37,6 +37,7 @@ local newInscription = function(t)
 		elseif tt.type[1] == "inscriptions/runes" then tt.auto_use_check = function(self, t) return not self:hasEffect(self.EFF_RUNE_COOLDOWN) end
 		elseif tt.type[1] == "inscriptions/taints" then tt.auto_use_check = function(self, t) return not self:hasEffect(self.EFF_TAINT_COOLDOWN) end
 		end
+		tt.auto_use_warning = "- will only auto use when no saturation effect exists"
 		tt.cooldown = function(self, t)
 			local data = self:getInscriptionData(t.short_name)
 			return data.cooldown

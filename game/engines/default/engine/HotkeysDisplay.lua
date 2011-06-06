@@ -159,7 +159,7 @@ end
 
 --- Call when a mouse event arrives in this zone
 -- This is optional, only if you need mouse support
-function _M:onMouse(button, mx, my, click, on_over)
+function _M:onMouse(button, mx, my, click, on_over, on_click)
 	local a = self.actor
 
 	if button == "wheelup" and click then
@@ -173,6 +173,9 @@ function _M:onMouse(button, mx, my, click, on_over)
 	mx, my = mx - self.display_x, my - self.display_y
 	for i, zone in pairs(self.clics) do
 		if mx >= zone[1] and mx < zone[1] + zone[3] and my >= zone[2] and my < zone[2] + zone[4] then
+			if on_click and click then
+				if on_click(i, a.hotkey[i]) then click = false end
+			end
 			if button == "left" and click then
 				a:activateHotkey(i)
 			elseif button == "right" and click then

@@ -35,6 +35,7 @@ function _M:init(actor)
 	self.c_tut = Textzone.new{width=math.floor(self.iw / 2 - 10), height=1, auto_height=true, no_color_bleed=true, text=[[
 You can bind a talent to a hotkey by pressing the corresponding hotkey while selecting a talent or by right-clicking on the talent.
 Check out the keybinding screen in the game menu to bind hotkeys to a key (default is 1-0 plus control or shift).
+Right click or press '*' to configure.
 ]]}
 	self.c_desc = TextzoneList.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.c_tut.h - 20, scrollbar=true, no_color_bleed=true}
 
@@ -67,6 +68,7 @@ Check out the keybinding screen in the game menu to bind hotkeys to a key (defau
 				self:use(self.list.chars[c])
 			end
 		end,
+		_ASTERISK = function() self:use(self.cur_item, "right") end,
 	}
 	self.key:addBinds{
 		HOTKEY_1 = function() self:defineHotkey(1) end,
@@ -142,10 +144,8 @@ function _M:use(item, button)
 		}
 
 		local t = self.actor:getTalentFromId(item.talent)
-		if t.allow_autocast then
-			if self.actor:isTalentAuto(t) then table.insert(list, 1, {name="Disable automatic use", what="auto-dis"})
-			else table.insert(list, 1, {name="Enable automatic use", what="auto-en"})
-			end
+		if self.actor:isTalentAuto(t) then table.insert(list, 1, {name="Disable automatic use", what="auto-dis"})
+		else table.insert(list, 1, {name="Enable automatic use", what="auto-en"})
 		end
 
 		for i = 1, 36 do list[#list+1] = {name="Hotkey "..i, what=i} end
@@ -170,11 +170,9 @@ function _M:use(item, button)
 					if self.actor.hotkey[i] and self.actor.hotkey[i][1] == "talent" and self.actor.hotkey[i][2] == item.talent then self.actor.hotkey[i] = nil end
 				end
 			elseif b.what == "auto-en" then
-				self.actor:setTalentAuto(item.talent, true)
-				self:simplePopup("Automatic use enabled", self.actor:getTalentFromId(item.talent).name:capitalize().." will now be used as often as possible automatically.")
+				self.actor:checkSetTalentAuto(item.talent, true)
 			elseif b.what == "auto-dis" then
-				self.actor:setTalentAuto(item.talent, false)
-				self:simplePopup("Automatic use disabled", self.actor:getTalentFromId(item.talent).name:capitalize().." will not be used automatically.")
+				self.actor:checkSetTalentAuto(item.talent, false)
 			end
 			self.c_list:drawTree()
 			self.actor.changed = true
