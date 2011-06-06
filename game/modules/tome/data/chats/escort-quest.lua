@@ -182,6 +182,8 @@ local reward = reward_types[npc.reward_type]
 local quest = game.player:hasQuest(npc.quest_id)
 if quest.to_zigur and reward.antimagic then reward = reward.antimagic reward.is_antimagic = true end
 
+game.player:registerEscorts(quest.to_zigur and "zigur" or "saved")
+
 local saves_name = { mind="mental", spell="spell", phys="physical"}
 local saves_tooltips = { mind="MENTAL", spell="SPELL", phys="PHYS"}
 

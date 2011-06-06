@@ -35,6 +35,7 @@ newChat{ id="welcome",
 			})
 		end},
 		{"Go away; I do not help filthy arcane users!", action=function(npc, player)
+			game.player:registerEscorts("lost")
 			npc:disappear()
 			npc:removed()
 			player:hasQuest(npc.quest_id).abandoned = true
@@ -59,6 +60,7 @@ newChat{ id="welcome",
 			})
 		end},
 		{"Go away; I do not care for the weak.", action=function(npc, player)
+			game.player:registerEscorts("lost")
 			npc:disappear()
 			npc:removed()
 			player:hasQuest(npc.quest_id).abandoned = true

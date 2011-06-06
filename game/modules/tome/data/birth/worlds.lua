@@ -27,9 +27,9 @@ local default_eyal_descriptors = function(add)
 		Elf = "allow",
 		Dwarf = "allow",
 		Halfling = "allow",
-		Yeek = function() return profile.mod.allow_build.yeek and "allow" or "disallow" end,
-		Undead = function() return profile.mod.allow_build.undead and "allow" or "disallow" end,
-		Construct = function() return profile.mod.allow_build.construct and "allow" or "disallow" end,
+		Yeek = "allow",
+		Undead = "allow",
+		Construct = "allow",
 	},
 
 	class =
@@ -41,16 +41,12 @@ local default_eyal_descriptors = function(add)
 		Archer = "allow",
 		Rogue = "allow",
 		Mage = "allow",
-		Divine = function() return profile.mod.allow_build.divine and "allow" or "disallow" end,
-		Wilder = function() return (
-			profile.mod.allow_build.wilder_summoner or
-			profile.mod.allow_build.wilder_wyrmic
-			) and "allow" or "disallow"
-		end,
-		Corrupter = function() return profile.mod.allow_build.corrupter and "allow" or "disallow" end,
-		Afflicted = function() return profile.mod.allow_build.afflicted and "allow" or "disallow" end,
-		Chronomancer = function() return profile.mod.allow_build.chronomancer and "allow" or "disallow" end,
-		Psionic = function() return profile.mod.allow_build.psionic and "allow" or "disallow" end,
+		Divine = "allow",
+		Wilder = "allow",
+		Corrupter = "allow",
+		Afflicted = "allow",
+		Chronomancer = "allow",
+		Psionic = "allow",
 	},
 }
 	if add then table.merge(base, add) end
@@ -79,6 +75,8 @@ newBirthDescriptor{
 	type = "world",
 	name = "Infinite",
 	display_name = "Infinite Dungeon: The Neverending Descent",
+	locked = function() return profile.mod.allow_build.campaign_infinite_dungeon end,
+	locked_desc = "Ever deeper, never ending, no reprieve, keep descending. In ruins old, through barred gate, once riddle solved, find thy fate.",
 	desc =
 	{
 		"Play as your favorite race and class and venture into the infinite dungeon.",
@@ -105,6 +103,8 @@ newBirthDescriptor{
 	type = "world",
 	name = "Arena",
 	display_name = "The Arena: Challenge of the Master",
+	locked = function() return profile.mod.allow_build.campaign_arena end,
+	locked_desc = "Blood spilled on sand, only the strong survive. Prove yourself worthy to enter.",
 	desc =
 	{
 		"Play as a lone warrior facing the Arena's challenge!",
@@ -135,6 +135,8 @@ newBirthDescriptor{
 	type = "world",
 	name = "Orcs",
 	display_name = "Orcs: The Rise to Power",
+	locked = function() return profile.mod.allow_build.campaign_orc and true or "hide" end,
+	locked_desc = "",
 	desc =
 	{
 		"Baston!",
@@ -153,7 +155,9 @@ newBirthDescriptor{
 newBirthDescriptor{
 	type = "world",
 	name = "Spydre",
-	display_name = "Spydrë: Legacy of Ungoliant",
+	display_name = "Spydrë: Thouch of the Spider",
+	locked = function() return profile.mod.allow_build.campaign_spidre and true or "hide" end,
+	locked_desc = "",
 	desc =
 	{
 		"Spydrë is home to the essence of spiders. The mighty Ungoliant of Arda actually originated from this world.",
@@ -173,27 +177,10 @@ newBirthDescriptor{
 
 newBirthDescriptor{
 	type = "world",
-	name = "Ents",
-	display_name = "Ents: The March of the Entwifes",
-	desc =
-	{
-		"",
-	},
-	descriptor_choices =
-	{
-		race =
-		{
-			__ALL__ = "disallow",
-			Human = "allow",
---			Spider = function() return profile.mod.allow_build.spider and "allow" or "disallow" end,
-		},
-	},
-}
-
-newBirthDescriptor{
-	type = "world",
 	name = "Trolls",
 	display_name = "Trolls: Pirates of the Kar'Haib",
+	locked = function() return profile.mod.allow_build.campaign_troll and true or "hide" end,
+	locked_desc = "",
 	desc =
 	{
 		"",
@@ -213,6 +200,8 @@ newBirthDescriptor{
 	type = "world",
 	name = "Nagas",
 	display_name = "Nagas: Guardians of the Tide",
+	locked = function() return profile.mod.allow_build.campaign_naga and true or "hide" end,
+	locked_desc = "",
 	desc =
 	{
 		"",
@@ -232,6 +221,8 @@ newBirthDescriptor{
 	type = "world",
 	name = "Faeros",
 	display_name = "Urthalath: Treason or the High Guards",
+	locked = function() return profile.mod.allow_build.campaign_faeros and true or "hide" end,
+	locked_desc = "",
 	desc =
 	{
 		"",
@@ -251,6 +242,8 @@ newBirthDescriptor{
 	type = "world",
 	name = "Undeads",
 	display_name = "Broken Oath: The Curse of Undeath",
+	locked = function() return profile.mod.allow_build.campaign_undead and true or "hide" end,
+	locked_desc = "",
 	desc =
 	{
 		"",

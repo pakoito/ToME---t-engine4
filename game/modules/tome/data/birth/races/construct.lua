@@ -23,6 +23,8 @@
 newBirthDescriptor{
 	type = "race",
 	name = "Construct",
+	locked = function() return profile.mod.allow_build.construct and true or "hide" end,
+	locked_desc = "",
 	desc = {
 		"Constructs are not natural creatures.",
 		"The most usual contructs are golems, but they can vary in shape, form and abilities.",
@@ -32,7 +34,7 @@ newBirthDescriptor{
 		subrace =
 		{
 			__ALL__ = "disallow",
-			["Runic Golem"] = function() return profile.mod.allow_build.construct_runic_golem and "allow" or "disallow" end,
+			["Runic Golem"] = "allow",
 		},
 	},
 	random_escort_possibilities = { {"trollmire", 2, 3}, {"ruins-kor-pul", 1, 2}, {"daikara", 1, 5}, {"old-forest", 1, 5}, {"dreadfell", 1, 8}, {"reknor", 1, 1}, },
@@ -42,6 +44,8 @@ newBirthDescriptor
 {
 	type = "subrace",
 	name = "Runic Golem",
+	locked = function() return profile.mod.allow_build.construct_runic_golem and true or "hide" end,
+	locked_desc = "",
 	desc = {
 		"Runic Golems are creatures made of solid rock and animated using arcane forces.",
 		"They can not be of any class, but they have many intrinsinc abilities.",

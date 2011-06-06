@@ -68,9 +68,13 @@ function _M:registerCharacterPlayed()
 end
 
 function _M:registerLoreFound(lore)
-	local pid = self:playerStatGetCharacterIdentifier(game.party:findMember{main=true})
-
 	profile.mod.lore = profile.mod.lore or { lore={} }
 	profile.mod.lore.lore[lore] = true
 	profile:saveModuleProfile("lore", profile.mod.lore)
+end
+
+function _M:registerEscorts(status)
+	profile.mod.escorts = profile.mod.escorts or { saved=0, lost=0, betrayed=0, zigur=0 }
+	profile.mod.escorts[status] = profile.mod.escorts[status] + 1
+	profile:saveModuleProfile("escorts", profile.mod.escorts)
 end

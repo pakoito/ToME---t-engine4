@@ -20,6 +20,8 @@
 newBirthDescriptor{
 	type = "class",
 	name = "Divine",
+	locked = function() return profile.mod.allow_build.divine end,
+	locked_desc = "The magic of the heavens is known to but a few, and that knowledge has long passed east, forgotten.",
 	desc = {
 		"Divine classes are worshippers of various gods and entities.",
 		"They include the worship of the Sun, the Moon, powerful spirits, ...",
@@ -29,8 +31,8 @@ newBirthDescriptor{
 		subclass =
 		{
 			__ALL__ = "disallow",
-			['Sun Paladin'] = function() return profile.mod.allow_build.divine_sun_paladin and "allow" or "disallow" end,
-			Anorithil = function() return profile.mod.allow_build.divine_anorithil and "allow" or "disallow" end,
+			['Sun Paladin'] = "allow",
+			Anorithil = "allow",
 		},
 	},
 	copy = {
@@ -42,6 +44,8 @@ newBirthDescriptor{
 newBirthDescriptor{
 	type = "subclass",
 	name = "Sun Paladin",
+	locked = function() return profile.mod.allow_build.divine_sun_paladin end,
+	locked_desc = "The sun rises in the east in full glory, but you must look for it first amidst the darkest places.",
 	desc = {
 		"Sun Paladins hail from the Gates of Morning, the last bastion of the free people in the Far East.",
 		"Their way of life is well represented by their motto 'The Sun is our giver, our purity, our essence. We carry the light into dark places, and against our strength none shall pass.'",
@@ -87,6 +91,8 @@ newBirthDescriptor{
 newBirthDescriptor{
 	type = "subclass",
 	name = "Anorithil",
+	locked = function() return profile.mod.allow_build.divine_anorithil end,
+	locked_desc = "The balance of the heavens' powers is a daunting task. Mighty are those that stand in the twilight places, wielding both light and darkness in their mind.",
 	desc = {
 		"Anorithils hail from the Gates of Morning, the last bastion of the free people in the Far East.",
 		"Their way of life is well represented by their motto 'We stand betwixt the Sun and Moon, where light and darkness meet. In the grey twilight we seek our destiny.'",

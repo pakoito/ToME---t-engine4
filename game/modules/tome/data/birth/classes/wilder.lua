@@ -20,6 +20,8 @@
 newBirthDescriptor{
 	type = "class",
 	name = "Wilder",
+	locked = function() return profile.mod.allow_build.wilder_wyrmic or profile.mod.allow_build.wilder_summoner or profile.mod.allow_build.wilder_stone_warden end,
+	locked_desc = "Natural abilities can go beyond mere skill. Experience the true powers of nature to learn of its amazing gifts.",
 	desc = {
 		"Wilders are one with nature, in one manner or another. There are as many different Wilders as there are aspects of nature.",
 		"They can take on the aspects of creatures, summon creatures to them, feel the druidic call, ...",
@@ -29,9 +31,9 @@ newBirthDescriptor{
 		subclass =
 		{
 			__ALL__ = "disallow",
-			Summoner = function() return profile.mod.allow_build.wilder_summoner and "allow" or "disallow" end,
-			Wyrmic = function() return profile.mod.allow_build.wilder_wyrmic and "allow" or "disallow" end,
-			["Stone Warden"] = function(birth) return birth.descriptors_by_type.race and birth.descriptors_by_type.race.name == "Dwarf" and profile.mod.allow_build.wilder_stone_warden and "allow" or "disallow" end,
+			Summoner = "allow",
+			Wyrmic = "allow",
+			["Stone Warden"] = "allow",
 		},
 	},
 	copy = {
@@ -41,6 +43,8 @@ newBirthDescriptor{
 newBirthDescriptor{
 	type = "subclass",
 	name = "Summoner",
+	locked = function() return profile.mod.allow_build.wilder_summoner end,
+	locked_desc = "Not all might comes from within. Hear the invocations of nature, hear its calling power. See that from without we can find our true strengths.",
 	desc = {
 		"Summoners never fight alone. They are always ready to summon one of their many minions to fight at their side.",
 		"Summons can range from a combat hound to a fire drake.",
@@ -84,6 +88,8 @@ newBirthDescriptor{
 newBirthDescriptor{
 	type = "subclass",
 	name = "Wyrmic",
+	locked = function() return profile.mod.allow_build.wilder_wyrmic end,
+	locked_desc = "Sleek, majestic, powerful... In the path of dragons we walk, and their breath is our breath. See their beating hearts with your eyes and taste their majesty between your teeth.",
 	desc = {
 		"Wyrmics are fighters who have learnt how to mimic some of the aspects of the dragons.",
 		"They have access to talents normally belonging to the various kind of drakes.",
@@ -128,6 +134,8 @@ newBirthDescriptor{
 newBirthDescriptor{
 	type = "subclass",
 	name = "Stone Warden",
+	locked = function() return profile.mod.allow_build.wilder_stone_warden and true or "hide" end,
+	locked_desc = "",
 	desc = {
 		"Stone Wardens are dwarves trained in both the eldritch arts and the worship of nature.",
 		"While other races are stuck in their belief that arcane forces and natural forces are meant to oppose, dwarves have found a way to combine them in harmony.",

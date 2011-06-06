@@ -20,6 +20,8 @@
 newBirthDescriptor{
 	type = "class",
 	name = "Chronomancer",
+	locked = function() return profile.mod.allow_build.chronomancer end,
+	locked_desc = "Some do not walk upon the straight road others follow. Seek the hidden paths outside the normal course of life.",
 	desc = {
 		"With one foot literally in the past and one in the future, Chronomancers manipulate the present at a whim and wield a power that only bows to nature's own need to keep the balance. The wake in spacetime they leave behind them makes their own Chronomantic abilites that much stronger and that much harder to control.  The wise Chronomancer learns to maintain the balance between his own thirst for cosmic power and the universe's need to flow undisturbed, for the hole he tears that amplifies his own abilities just may be the same hole that one day swallows him.",
 	},
@@ -28,8 +30,8 @@ newBirthDescriptor{
 		subclass =
 		{
 			__ALL__ = "disallow",
-			["Paradox Mage"] = function() return profile.mod.allow_build.chronomancer_paradox_mage and "allow" or "disallow" end,
-			["Temporal Warden"] = function() return profile.mod.allow_build.chronomancer_temporal_warden and "allow" or "disallow" end,
+			["Paradox Mage"] = "allow",
+			["Temporal Warden"] = "allow",
 		},
 	},
 	copy = {
@@ -39,6 +41,8 @@ newBirthDescriptor{
 newBirthDescriptor{
 	type = "subclass",
 	name = "Paradox Mage",
+	locked = function() return profile.mod.allow_build.chronomancer_paradox_mage end,
+	locked_desc = "A hand may clap alone if it returns to clap itself. Search for the power in the paradox.",
 	desc = {
 		"A Paradox Mage studies the very fabric of spacetime, learning not just to bend it but shape it and remake it.",
 		"Most Paradox Mages lack basic skills that others take for granted (like general fighting sense), but they make up for it through control of cosmic forces.",
@@ -85,6 +89,8 @@ newBirthDescriptor{
 newBirthDescriptor{
 	type = "subclass",
 	name = "Temporal Warden",
+	locked = function() return profile.mod.allow_build.chronomancer_temporal_warden end,
+	locked_desc = "We preserve the past to protect the future. The hands of time are guarded by the arms of war.",
 	desc = {
 		"The Temporal Wardens have learned to blend archery, dual-weapon fighting, and chronomancy into a fearsome whole.",
 		"Through their use of the chronomantic arts, the Temporal Wardens seek to control the battlefield while peppering their foes with arrows or engaging in hand-to-hand combat.",

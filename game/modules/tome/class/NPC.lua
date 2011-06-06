@@ -208,6 +208,8 @@ function _M:die(src)
 			game.state:allowRodRecall(false)
 		end
 	end
+	-- Ok the player managed to kill a boss dont bother him with tutorial anymore
+	if self.rank >= 3.5 and not profile.mod.allow_build.tutorial_done then game:setAllowedBuild("tutorial_done") end
 
 	return mod.class.Actor.die(self, src)
 end

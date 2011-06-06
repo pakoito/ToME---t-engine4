@@ -30,7 +30,7 @@ newBirthDescriptor{
 			__ALL__ = "disallow",
 			Fighter = "allow",
 			Berserker = "allow",
-			Brawler = function() return profile.mod.allow_build.warrior_brawler and "allow" or "disallow" end,
+			Brawler = "allow",
 			["Arcane Blade"] = "allow",
 		},
 	},
@@ -179,6 +179,8 @@ newBirthDescriptor{
 newBirthDescriptor{
 	type = "subclass",
 	name = "Brawler",
+	locked = function() return profile.mod.allow_build.warrior_brawler end,
+	locked_desc = "Though you may fight alone against many, destined to fight till you die, still you do not relent. In a ring of blood you learn that a pair of fists can face the world.",
 	desc = {
 		"The ravages of the Spellblaze stretched armies thin and left many unprotected. Not everyone could afford the luxury of a weapon.",
 		"Without steel or iron, poor communities of all races turned to the strength of their own bodies for defense against the darkness.",

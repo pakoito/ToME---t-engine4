@@ -20,6 +20,8 @@
 newBirthDescriptor{
 	type = "class",
 	name = "Corrupter",
+	locked = function() return profile.mod.allow_build.corrupter end,
+	locked_desc = "Dark thoughts, black bloods, vile deeds... Those who spill their brethren's blood will find its power.",
 	desc = {
 		"Corrupters are touched by the mark of evil. They are a blight on the world. Working to promote the cause of evil, they serve their masters, or themselves become masters.",
 	},
@@ -28,8 +30,8 @@ newBirthDescriptor{
 		subclass =
 		{
 			__ALL__ = "disallow",
-			Reaver = function() return profile.mod.allow_build.corrupter_reaver and "allow" or "disallow" end,
-			Corruptor = function() return profile.mod.allow_build.corrupter_corruptor and "allow" or "disallow" end,
+			Reaver = "allow",
+			Corruptor = "allow",
 		},
 	},
 	copy = {
@@ -40,6 +42,8 @@ newBirthDescriptor{
 newBirthDescriptor{
 	type = "subclass",
 	name = "Reaver",
+	locked = function() return profile.mod.allow_build.corrupter_reaver end,
+	locked_desc = "Reap thee the souls of thine enemies, and the powers of darkness shall enter thine flesh.",
 	desc = {
 		"Reavers are terrible foes, charging their enemies with a weapon in each hand.",
 		"They can harness the blight of evil, infecting their foes with terrible contagious diseases while crushing their skulls with devastating combat techniques.",
@@ -81,6 +85,8 @@ newBirthDescriptor{
 newBirthDescriptor{
 	type = "subclass",
 	name = "Corruptor",
+	locked = function() return profile.mod.allow_build.corrupter_corruptor end,
+	locked_desc = "Blight and depravity hold the greatest powers. Accept temptation and become one with corruption.",
 	desc = {
 		"A corruptor is a terrible foe, wielding dark magics that can sap the very soul of her target.",
 		"They can harness the blight of evil, crushing souls, stealing life force to replenish themselves.",

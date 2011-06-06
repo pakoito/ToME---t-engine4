@@ -20,6 +20,8 @@
 newBirthDescriptor{
 	type = "class",
 	name = "Afflicted",
+	locked = function() return profile.mod.allow_build.afflicted end,
+	locked_desc = "Some walk in shadow, alone, unloved, unwanted. What powers they wield may be mighty, but their names are forever cursed.",
 	desc = {
 		"Afflicted classes have been twisted by their association with evil forces.",
 		"They can use these forces to their advantage, but at a cost...",
@@ -29,8 +31,8 @@ newBirthDescriptor{
 		subclass =
 		{
 			__ALL__ = "disallow",
-			Cursed = function() return profile.mod.allow_build.afflicted_cursed and "allow" or "disallow" end,
-			Doomed = function() return profile.mod.allow_build.afflicted_doomed and "allow" or "disallow" end,
+			Cursed = "allow",
+			Doomed = "allow",
 		},
 	},
 	copy = {
@@ -40,6 +42,8 @@ newBirthDescriptor{
 newBirthDescriptor{
 	type = "subclass",
 	name = "Cursed",
+	locked = function() return profile.mod.allow_build.afflicted_cursed end,
+	locked_desc = "Affliction can run to the soul, and hatred can fill one's entire being. Overcome someone else's hated curse to know its dreaded meaning.",
 	desc = {
 		"Through ignorance, greed or folly the Cursed served some dark design and are now doomed to pay for their sins.",
 		"Their only master now is the hatred they carry for every living thing.",
@@ -82,6 +86,8 @@ newBirthDescriptor{
 newBirthDescriptor{
 	type = "subclass",
 	name = "Doomed",
+	locked = function() return profile.mod.allow_build.afflicted_doomed end,
+	locked_desc = "In shaded places in unknown lands thou must overcome thyself and see thy doom.",
 	desc = {
 		"The Doomed are fallen mages who once wielded powerful magic wrought by ambition and dark bargains.",
 		"They now possess only a twisted shadow of that power as they struggle to keep it from consuming them.",

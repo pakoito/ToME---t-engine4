@@ -23,6 +23,8 @@
 newBirthDescriptor{
 	type = "race",
 	name = "Yeek",
+	locked = function() return profile.mod.allow_build.yeek end,
+	locked_desc = "One race, one mind, one way. Our oppression shall end, and we shall inherit Eyal. Do not presume we are weak - our way is true, and only those who help us shall see our strength.",
 	desc = {
 		"Yeeks are a mysterious race of small humanoids native to the tropical island of Rel.",
 		"Their body is covered with white fur and their disproportionate heads give them a ridiculous look.",
@@ -59,6 +61,8 @@ newBirthDescriptor
 {
 	type = "subrace",
 	name = "Yeek",
+	locked = function() return profile.mod.allow_build.yeek end,
+	locked_desc = "One race, one mind, one way. Our oppression shall end, and we shall inherit Eyal. Do not presume we are weak - our way is true, and only those who help us shall see our strength.",
 	desc = {
 		"Yeeks are a mysterious race native to the tropical island of Rel.",
 		"Although they are now nearly unheard of in Maj'Eyal, they spent many centuries as secret slaves to the Halfling nation of Nargol.",

@@ -23,6 +23,8 @@
 newBirthDescriptor{
 	type = "race",
 	name = "Undead",
+	locked = function() return profile.mod.allow_build.undead end,
+	locked_desc = "Grave strength, dread will, this flesh cannot stay still. Kings die, masters fall, we will outlast them all.",
 	desc = {
 		"Undead are humanoids (Humans, Elves, Dwarves, ...) that have been brought back to life by the corruption of dark magics.",
 		"Undead can take many forms, from ghouls to vampires and liches.",
@@ -32,10 +34,10 @@ newBirthDescriptor{
 		subrace =
 		{
 			__ALL__ = "disallow",
-			Ghoul = function() return profile.mod.allow_build.undead_ghoul and "allow" or "disallow" end,
-			Skeleton = function() return profile.mod.allow_build.undead_skeleton and "allow" or "disallow" end,
-			Vampire = function() return profile.mod.allow_build.undead_vampire and "allow" or "disallow" end,
-			Wight = function() return profile.mod.allow_build.undead_wight and "allow" or "disallow" end,
+			Ghoul = "allow",
+			Skeleton = "allow",
+			Vampire = "allow",
+			Wight = "allow",
 		},
 		class =
 		{
@@ -64,6 +66,8 @@ newBirthDescriptor
 {
 	type = "subrace",
 	name = "Ghoul",
+	locked = function() return profile.mod.allow_build.undead_ghoul end,
+	locked_desc = "Slow to shuffle, quick to bite, learn from master, rule the night!",
 	desc = {
 		"Ghouls are dumb, but resilient, rotting undead creatures, making good fighters.",
 		"They have access to #GOLD#special ghoul talents#WHITE# and a wide range of undead abilities:",
@@ -113,6 +117,8 @@ newBirthDescriptor
 {
 	type = "subrace",
 	name = "Skeleton",
+	locked = function() return profile.mod.allow_build.undead_skeleton end,
+	locked_desc = "The marching bones, each step we rattle, but servants no more, we march to battle!",
 	desc = {
 		"Skeletons are animated bones, undead creatures both strong and dexterous.",
 		"They have access to #GOLD#special skeleton talents#WHITE# and a wide range of undead abilities:",

@@ -157,3 +157,6 @@ end
 function _M:setTextShadow(v)
 	self.text_shadow = v
 end
+
+function _M:positioned(x, y)
+end

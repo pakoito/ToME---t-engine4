@@ -29,7 +29,7 @@ local Zone = require "engine.Zone"
 local Tiles = require "engine.Tiles"
 local Map = require "engine.Map"
 local Level = require "engine.Level"
-local Birther = require "engine.Birther"
+local Birther = require "mod.dialogs.Birther"
 local Astar = require "engine.Astar"
 local DirectPath = require "engine.DirectPath"
 local Shader = require "engine.Shader"
@@ -164,6 +164,15 @@ function _M:isTainted()
 	return (game.player and game.player.__cheated) and true or false
 end
 
+--- Sets the player name
+function _M:setPlayerName(name)
+	self.save_name = name
+	self.player_name = name
+	if self.party and self.party:findMember{main=true} then
+		self.party:findMember{main=true}.name = name
+	end
+end
+
 function _M:newGame()
 	self.party = Party.new()
 	local player = Player.new{name=self.player_name, game_ender=true}
@@ -205,7 +214,7 @@ function _M:newGame()
 	local nb_unlocks, max_unlocks = self:countBirthUnlocks()
 
 	self.creating_player = true
-	local birth; birth = Birther.new("Character Creation: "..self.player.name.." ("..nb_unlocks.."/"..max_unlocks.." unlocked birth options)", self.player, {"base", "world", "difficulty", "race", "subrace", "sex", "class", "subclass" }, function()
+	local birth; birth = Birther.new("Character Creation ("..nb_unlocks.."/"..max_unlocks.." unlocked birth options)", self.player, {"base", "world", "difficulty", "race", "subrace", "sex", "class", "subclass" }, function()
 		self.calendar = Calendar.new("/data/calendar_"..(self.player.calendar or "allied")..".lua", "Today is the %s %s of the %s year of the Age of Ascendancy of Maj'Eyal.\nThe time is %02d:%02d.", 122, 167, 11)
 		self.player:check("make_tile")
 		self.player.make_tile = nil
@@ -267,7 +276,7 @@ function _M:newGame()
 
 		if self.player.no_birth_levelup or __module_extra_info.no_birth_popup then birthend()
 		else self.player:playerLevelup(birthend) end
-	end, quickbirth, 720, 500)
+	end, quickbirth, 800, 600)
 
 	-- Load a full player instead of a simpler quickbirthing, if possible
 	birth.quickBirth = function(b)

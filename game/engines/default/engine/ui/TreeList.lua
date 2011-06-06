@@ -268,8 +268,8 @@ function _M:outputList()
 	self.cur_col = self.cur_col or 1
 end
 
-function _M:treeExpand(v)
-	local item = self.list[self.sel]
+function _M:treeExpand(v, item)
+	local item = item or self.list[self.sel]
 	if not item then return end
 	if v == nil then
 		item.shown = not item.shown

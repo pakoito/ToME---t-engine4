@@ -27,7 +27,9 @@ module(..., package.seeall, class.inherit(Base, Focusable))
 function _M:init(t)
 	self.title = assert(t.title, "no textbox title")
 	self.text = t.text or ""
+	self.old_text = self.text
 	self.hide = t.hide
+	self.on_change = t.on_change
 	self.max_len = t.max_len or 999
 	self.fct = assert(t.fct, "no textbox fct")
 	self.chars = assert(t.chars, "no textbox chars")
@@ -82,7 +84,8 @@ function _M:generate()
 		end
 	end)
 	self.key:addBind("ACCEPT", function() self.fct(self.text) end)
-	self.key:addIgnore("_ESCAPE", v)
+	self.key:addIgnore("_ESCAPE", true)
+	self.key:addIgnore("_TAV", true)
 	self.key:addCommands{
 		_LEFT = function() self.cursor = util.bound(self.cursor - 1, 1, #self.tmp+1) self.scroll = util.scroll(self.cursor, self.scroll, self.max_display) self:updateText() end,
 		_RIGHT = function() self.cursor = util.bound(self.cursor + 1, 1, #self.tmp+1) self.scroll = util.scroll(self.cursor, self.scroll, self.max_display) self:updateText() end,
@@ -135,6 +138,8 @@ function _M:updateText()
 	self.text_surf:erase(0, 0, 0, 0)
 	self.text_surf:drawStringBlended(self.font_mono, text, 0, 0, 255, 255, 255, true)
 	self.text_surf:updateTexture(self.text_tex)
+	if self.on_change and self.old_text ~= self.text then self.on_change(self.text) end
+	self.old_text = self.text
 end
 
 function _M:display(x, y, nb_keyframes)

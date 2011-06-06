@@ -330,6 +330,9 @@ on_grant = function(self, who)
 		game.player:hasQuest(self.quest_id).killing_npc = who and who.name or "something"
 		if who.resolveSource and who:resolveSource().player then
 			world:gainAchievement("ESCORT_KILL", game.player)
+			game.player:registerEscorts("betrayed")
+		else
+			game.player:registerEscorts("lost")
 		end
 	end
 

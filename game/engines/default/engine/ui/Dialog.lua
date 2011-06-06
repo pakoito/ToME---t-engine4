@@ -145,8 +145,8 @@ end
 
 title_shadow = true
 
-function _M:init(title, w, h, x, y, alpha, font, showup)
-	self.title = assert(title, "no dialog title")
+function _M:init(title, w, h, x, y, alpha, font, showup, skin)
+	self.title = title
 	self.alpha = self.alpha or 255
 	if showup ~= nil then
 		self.__showup = showup
@@ -154,6 +154,7 @@ function _M:init(title, w, h, x, y, alpha, font, showup)
 		self.__showup = 2
 	end
 	self.color = self.color or {r=255, g=255, b=255}
+	if skin then self.ui = skin end
 
 	local conf = self.ui_conf[self.ui]
 	self.frame = self.frame or {
@@ -175,6 +176,7 @@ function _M:init(title, w, h, x, y, alpha, font, showup)
 	self.frame.oy2 = self.frame.oy2 or conf.frame_oy2
 
 	self.uis = {}
+	self.ui_by_ui = {}
 	self.focus_ui = nil
 	self.focus_ui_id = 0
 
@@ -191,8 +193,13 @@ function _M:resize(w, h, nogen)
 	self.w, self.h = math.floor(w), math.floor(h)
 	self.display_x = math.floor(self.force_x or (gamew - self.w) / 2)
 	self.display_y = math.floor(self.force_y or (gameh - self.h) / 2)
-	self.ix, self.iy = 5, 8 + 3 + self.font_bold_h
-	self.iw, self.ih = w - 2 * 5, h - 8 - 8 - 3 - self.font_bold_h
+	if self.title then
+		self.ix, self.iy = 5, 8 + 3 + self.font_bold_h
+		self.iw, self.ih = w - 2 * 5, h - 8 - 8 - 3 - self.font_bold_h
+	else
+		self.ix, self.iy = 5, 8
+		self.iw, self.ih = w - 2 * 5, h - 8 - 8
+	end
 
 --	self.display_x = util.bound(self.display_x, 0, game.w - (self.w+self.frame.ox2))
 --	self.display_y = util.bound(self.display_y, 0, game.h - (self.h+self.frame.oy2))
@@ -248,6 +255,7 @@ function _M:generate()
 end
 
 function _M:updateTitle(title)
+	if not title then return end
 	local title = title
 	if type(title)=="function" then title = title() end
 	local tw, th = self.font_bold:size(title)
@@ -262,11 +270,13 @@ end
 function _M:loadUI(t)
 	if not t.no_reset then
 		self.uis = {}
+		self.ui_by_ui = {}
 		self.focus_ui = nil
 		self.focus_ui_id = 0
 	end
 	for i, ui in ipairs(t) do
 		self.uis[#self.uis+1] = ui
+		self.ui_by_ui[ui.ui] = ui
 
 		if not self.focus_ui and ui.ui.can_focus then
 			self:setFocus(i)
@@ -302,7 +312,8 @@ function _M:setupUI(resizex, resizey, on_resize, addmw, addmh)
 		mw = mw + addw + 5 * 2 + (addmw or 0)
 
 --		print("===", mw, addw)
-		local tw, th = self.font_bold:size(self.title)
+		local tw, th = 0, 0
+		if self.title then tw, th = self.font_bold:size(self.title) end
 		mw = math.max(tw + 6, mw)
 
 		mh = mh + addh + 5 + 22 + 3 + (addmh or 0) + th
@@ -320,13 +331,27 @@ function _M:setupUI(resizex, resizey, on_resize, addmw, addmh)
 		if not ui.absolute then
 			ux, uy = self.ix, self.iy
 
-			if ui.top then uy = uy + ui.top
-			elseif ui.bottom then uy = uy + self.ih - ui.bottom - ui.ui.h
-			elseif ui.vcenter then uy = uy + math.floor(self.ih / 2) + ui.vcenter - ui.ui.h / 2 end
+			if ui.top then
+				if type(ui.top) == "table" then ui.top = self.ui_by_ui[ui.top].y end
+				uy = uy + ui.top
+			elseif ui.bottom then
+				if type(ui.bottom) == "table" then ui.bottom = self.ui_by_ui[ui.bottom].y end
+				uy = uy + self.ih - ui.bottom - ui.ui.h
+			elseif ui.vcenter then
+				if type(ui.vcenter) == "table" then ui.vcenter = self.ui_by_ui[ui.vcenter].y + ui.vcenter.h end
+				uy = uy + math.floor(self.ih / 2) + ui.vcenter - ui.ui.h / 2
+			end
 
-			if ui.left then ux = ux + ui.left
-			elseif ui.right then ux = ux + self.iw - ui.right - ui.ui.w
-			elseif ui.hcenter then ux = ux + math.floor(self.iw / 2) + ui.hcenter - ui.ui.w / 2 end
+			if ui.left then
+				if type(ui.left) == "table" then ui.left = self.ui_by_ui[ui.left].x + ui.left.w end
+				ux = ux + ui.left
+			elseif ui.right then
+				if type(ui.right) == "table" then ui.right = self.ui_by_ui[ui.right].x end
+				ux = ux + self.iw - ui.right - ui.ui.w
+			elseif ui.hcenter then
+				if type(ui.hcenter) == "table" then ui.hcenter = self.ui_by_ui[ui.hcenter].x + ui.hcenter.w end
+				ux = ux + math.floor(self.iw / 2) + ui.hcenter - ui.ui.w / 2
+			end
 		else
 			ux, uy = 0, 0
 
@@ -346,6 +371,7 @@ function _M:setupUI(resizex, resizey, on_resize, addmw, addmh)
 		ui.y = uy
 		ui.ui.mouse.delegate_offset_x = ux
 		ui.ui.mouse.delegate_offset_y = uy
+		ui.ui:positioned(ux, uy, self.display_x + ux, self.display_y + uy)
 	end
 
 	self.setuped = true
@@ -392,6 +418,11 @@ function _M:getUIElement(id)
 	end
 
 	return self.uis[id]
+end
+
+function _M:toggleDisplay(ui, show)
+	if not self.ui_by_ui[ui] then return end
+	self.ui_by_ui[ui].hidden = not show
 end
 
 function _M:moveFocus(v)
@@ -514,13 +545,15 @@ function _M:toScreen(x, y, nb_keyframes)
 	self:drawFrame(x, y, 1, 1, 1, self.frame.a)
 
 	-- Title
-	if self.title_shadow then self.title_tex[1]:toScreenFull(x + (self.w - self.title_tex.w) / 2 + 3, y + 3, self.title_tex.w, self.title_tex.h, self.title_tex[2], self.title_tex[3], 0, 0, 0, 0.5) end
-	self.title_tex[1]:toScreenFull(x + (self.w - self.title_tex.w) / 2, y, self.title_tex.w, self.title_tex.h, self.title_tex[2], self.title_tex[3])
+	if self.title then
+		if self.title_shadow then self.title_tex[1]:toScreenFull(x + (self.w - self.title_tex.w) / 2 + 3, y + 3, self.title_tex.w, self.title_tex.h, self.title_tex[2], self.title_tex[3], 0, 0, 0, 0.5) end
+		self.title_tex[1]:toScreenFull(x + (self.w - self.title_tex.w) / 2, y, self.title_tex.w, self.title_tex.h, self.title_tex[2], self.title_tex[3])
+	end
 
 	-- UI elements
 	for i = 1, #self.uis do
 		local ui = self.uis[i]
-		ui.ui:display(x + ui.x, y + ui.y, nb_keyframes, ox + ui.x, oy + ui.y)
+		if not ui.hidden then ui.ui:display(x + ui.x, y + ui.y, nb_keyframes, ox + ui.x, oy + ui.y) end
 	end
 
 	self:innerDisplay(x, y, nb_keyframes)
