@@ -184,7 +184,6 @@ function _M:newGame()
 		orders = {target=true, anchor=true, behavior=true, leash=true, talents=true},
 	})
 	self.party:setPlayer(player)
---	self:setupDisplayMode()
 
 	-- Create the entity to store various game state things
 	self.state = GameState.new{}
@@ -203,101 +202,66 @@ function _M:newGame()
 		self:updateCurrentChar()
 	end
 
-	-- Load for quick birth
-	local save = Savefile.new(self.save_name)
-	local quickbirth = save:loadQuickBirth()
-	local quickhotkeys = save:loadQuickHotkeys()
-	save:close()
-
 	self.always_target = true
-
 	local nb_unlocks, max_unlocks = self:countBirthUnlocks()
-
 	self.creating_player = true
-	local birth; birth = Birther.new("Character Creation ("..nb_unlocks.."/"..max_unlocks.." unlocked birth options)", self.player, {"base", "world", "difficulty", "race", "subrace", "sex", "class", "subclass" }, function()
-		self.calendar = Calendar.new("/data/calendar_"..(self.player.calendar or "allied")..".lua", "Today is the %s %s of the %s year of the Age of Ascendancy of Maj'Eyal.\nThe time is %02d:%02d.", 122, 167, 11)
-		self.player:check("make_tile")
-		self.player.make_tile = nil
+	local birth; birth = Birther.new("Character Creation ("..nb_unlocks.."/"..max_unlocks.." unlocked birth options)", self.player, {"base", "world", "difficulty", "race", "subrace", "sex", "class", "subclass" }, function(loaded)
+		if not loaded then
+			self.calendar = Calendar.new("/data/calendar_"..(self.player.calendar or "allied")..".lua", "Today is the %s %s of the %s year of the Age of Ascendancy of Maj'Eyal.\nThe time is %02d:%02d.", 122, 167, 11)
+			self.player:check("make_tile")
+			self.player.make_tile = nil
+			self.player:check("before_starting_zone")
+			self.player:check("class_start_check")
 
-		-- Save for quick birth
-		local save = Savefile.new(self.save_name)
-		save:saveQuickBirth(self.player.descriptor)
-		save:close()
+			-- Configure & create the worldmap
+			self.player.last_wilderness = self.player.default_wilderness[3] or "wilderness"
+			self.player.wild_x, self.player.wild_y = 1, 1
+			self:changeLevel(1, self.player.last_wilderness)
+			self.player.wild_x, self.player.wild_y = self.player.default_wilderness[1], self.player.default_wilderness[2]
+			if type(self.player.wild_x) == "string" and type(self.player.wild_y) == "string" then
+				local spot = self.level:pickSpot{type=self.player.wild_x, subtype=self.player.wild_y} or {x=1,y=1}
+					self.player.wild_x, self.player.wild_y = spot.x, spot.y
+			end
+			self.player:move(self.player.wild_x, self.player.wild_y, true)
 
-		self.player:check("before_starting_zone")
-		self.player:check("class_start_check")
+			-- Generate
+			if self.player.__game_difficulty then self:setupDifficulty(self.player.__game_difficulty) end
+			if self.player.starting_zone ~= self.player.last_wilderness then
+				self:onTickEnd(function() self:changeLevel(self.player.starting_level or 1, self.player.starting_zone, nil, self.player.starting_level_force_down) end)
+			end
+			print("[PLAYER BIRTH] resolve...")
+			self.player:resolve()
+			self.player:resolve(nil, true)
+			self.player.energy.value = self.energy_to_act
+			Map:setViewerFaction(self.player.faction)
 
-		-- Configure & create the worldmap
-		self.player.last_wilderness = self.player.default_wilderness[3] or "wilderness"
-		self.player.wild_x, self.player.wild_y = 1, 1
-		self:changeLevel(1, self.player.last_wilderness)
-		self.player.wild_x, self.player.wild_y = self.player.default_wilderness[1], self.player.default_wilderness[2]
-		if type(self.player.wild_x) == "string" and type(self.player.wild_y) == "string" then
-			local spot = self.level:pickSpot{type=self.player.wild_x, subtype=self.player.wild_y} or {x=1,y=1}
-			self.player.wild_x, self.player.wild_y = spot.x, spot.y
-		end
-		self.player:move(self.player.wild_x, self.player.wild_y, true)
+			self.paused = true
+			print("[PLAYER BIRTH] resolved!")
+			local birthend = function()
+				local d = require("engine.dialogs.ShowText").new("Welcome to ToME", "intro-"..self.player.starting_intro, {name=self.player.name}, nil, nil, function()
+					self.player:resetToFull()
+					self.player:registerCharacterPlayed()
+					self.player:onBirth(birth)
+					-- For quickbirth
+					savefile_pipe:push(self.player.name, "entity", self.party, "engine.CharacterVaultSave")
+					self.creating_player = false
 
-		-- Generate
-		if self.player.__game_difficulty then self:setupDifficulty(self.player.__game_difficulty) end
-		if self.player.starting_zone ~= self.player.last_wilderness then
-			self:onTickEnd(function() self:changeLevel(self.player.starting_level or 1, self.player.starting_zone, nil, self.player.starting_level_force_down) end)
-		end
-		print("[PLAYER BIRTH] resolve...")
-		self.player:resolve()
-		self.player:resolve(nil, true)
-		self.player.energy.value = self.energy_to_act
-		Map:setViewerFaction(self.player.faction)
+					self.player:grantQuest(self.player.starting_quest)
 
-		self.paused = true
-		print("[PLAYER BIRTH] resolved!")
-		local birthend = function()
-			local d = require("engine.dialogs.ShowText").new("Welcome to ToME", "intro-"..self.player.starting_intro, {name=self.player.name}, nil, nil, function()
-				self.player:resetToFull()
-				self.player:registerCharacterPlayed()
-				self.player:onBirth(birth)
-				-- For quickbirth
-				self.party.name = self.player.name
-				self.party.__version = game.__mod_info.version
-				savefile_pipe:push("", "entity", self.party)
-				self.party.__version = nil
-				self.creating_player = false
+					birth_done()
+					self.player:check("on_birth_done")
 
-				self.player:grantQuest(self.player.starting_quest)
+					if __module_extra_info.birth_done_script then loadstring(__module_extra_info.birth_done_script)() end
+				end, true)
+				self:registerDialog(d)
+				if __module_extra_info.no_birth_popup then d.key:triggerVirtual("ACCEPT") end
+			end
 
-				birth_done()
-				self.player:check("on_birth_done")
+			if self.player.no_birth_levelup or __module_extra_info.no_birth_popup then birthend()
+			else self.player:playerLevelup(birthend) end
 
-				if __module_extra_info.birth_done_script then loadstring(__module_extra_info.birth_done_script)() end
-			end, true)
-			self:registerDialog(d)
-			if __module_extra_info.no_birth_popup then d.key:triggerVirtual("ACCEPT") end
-		end
-
-		if self.player.no_birth_levelup or __module_extra_info.no_birth_popup then birthend()
-		else self.player:playerLevelup(birthend) end
-	end, quickbirth, 800, 600)
-
-	-- Load a full player instead of a simpler quickbirthing, if possible
-	birth.quickBirth = function(b)
-		birth.quickBirth = nil
-		if not birth.do_quickbirth then return end
-
-		-- Ignore savefile tokens, as we load an "older" player
-		savefile_pipe:ignoreSaveToken(true)
-		local qb = savefile_pipe:doLoad("", "entity", nil, self.save_name)
-		savefile_pipe:ignoreSaveToken(false)
-
-		-- If we got the player, use it, otherwise quickbirth as normal
-		if qb and qb.__version and qb.__version[1] == game.__mod_info.version[1] and qb.__version[2] == game.__mod_info.version[2] and qb.__version[3] == game.__mod_info.version[3] then
-			-- Disable quickbirth
-			birth.do_quickbirth = false
-			self:unregisterDialog(b)
-
-			-- Load the player directly
-			self.party = qb
-			self.player = nil
-			self.party:setPlayer(1, true)
+		-- Player was loaded from a premade
+		else
 			self.calendar = Calendar.new("/data/calendar_"..(self.player.calendar or "allied")..".lua", "Today is the %s %s of the %s year of the Age of Ascendancy of Maj'Eyal.\nThe time is %02d:%02d.", 122, 167, 11)
 			Map:setViewerFaction(self.player.faction)
 			if self.player.__game_difficulty then self:setupDifficulty(self.player.__game_difficulty) end
@@ -315,15 +279,8 @@ function _M:newGame()
 
 			birth_done()
 			self.player:check("on_birth_done")
-			if quickhotkeys then
-				self.player.quickhotkeys = quickhotkeys.quickhotkeys
-				self.player:sortHotkeys()
-			end
-		else
-			-- Continue as normal
-			return Birther.quickBirth(b)
 		end
-	end
+	end, quickbirth, 800, 600)
 	self:registerDialog(birth)
 end
 
@@ -458,6 +415,21 @@ Exploring level %d of %s.]]):format(
 		player.descriptor.difficulty,
 		player.descriptor.world,
 		self.level.level, self.zone.name
+		),
+	}
+end
+
+function _M:getVaultDescription(e)
+	e = e:findMember{main=true} -- Because vault "chars" are actualy parties for tome
+	return {
+		name = ([[%s the %s %s]]):format(e.name, e.descriptor.subrace, e.descriptor.subclass),
+		descriptors = e.descriptor,
+		description = ([[%s the %s %s.
+Difficulty: %s
+Campaign: %s]]):format(
+		e.name, e.descriptor.subrace, e.descriptor.subclass,
+		e.descriptor.difficulty,
+		e.descriptor.world
 		),
 	}
 end

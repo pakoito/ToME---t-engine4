@@ -177,6 +177,55 @@ function _M:listSavefiles()
 	return mods
 end
 
+--- List all available vault characters
+-- Static
+function _M:listVaultSaves()
+--	fs.mount(engine.homepath, "/tmp/listsaves")
+
+	local mods = self:listModules()
+	for _, mod in ipairs(mods) do
+		local lss = {}
+		for i, short_name in ipairs(fs.list("/"..mod.short_name.."/vault/")) do
+			local dir = "/"..mod.short_name.."/vault/"..short_name
+			if fs.exists(dir.."/character.teac") then
+				local def = self:loadSavefileDescription(dir)
+				if def then
+					table.insert(lss, def)
+				end
+			end
+		end
+		mod.savefiles = lss
+
+		table.sort(lss, function(a, b)
+			return a.name < b.name
+		end)
+	end
+
+--	fs.umount(engine.homepath)
+
+	return mods
+end
+
+--- List all available vault characters for the currently running module
+-- Static
+function _M:listVaultSavesForCurrent()
+	local lss = {}
+	for i, short_name in ipairs(fs.list("/vault/")) do
+		local dir = "/vault/"..short_name
+		if fs.exists(dir.."/character.teac") then
+			local def = self:loadSavefileDescription(dir)
+			if def then
+				table.insert(lss, def)
+			end
+		end
+	end
+
+	table.sort(lss, function(a, b)
+		return a.name < b.name
+	end)
+	return lss
+end
+
 --- Instanciate the given module, loading it and creating a new game / loading an existing one
 -- @param mod the module definition as given by Module:loadDefinition()
 -- @param name the savefile name

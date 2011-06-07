@@ -36,8 +36,8 @@ function _M:init(keyhandler)
 	self.logSeen = function() end
 	self.w, self.h = core.display.size()
 	self.dialogs = {}
-	self.save_name = "player"
-	self.player_name = "player"
+	self.save_name = ""
+	self.player_name = ""
 
 	self.mouse = engine.Mouse.new()
 	self.mouse:setCurrent()

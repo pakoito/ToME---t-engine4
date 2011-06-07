@@ -85,7 +85,7 @@ function _M:generate()
 	end)
 	self.key:addBind("ACCEPT", function() self.fct(self.text) end)
 	self.key:addIgnore("_ESCAPE", true)
-	self.key:addIgnore("_TAV", true)
+	self.key:addIgnore("_TAB", true)
 	self.key:addCommands{
 		_LEFT = function() self.cursor = util.bound(self.cursor - 1, 1, #self.tmp+1) self.scroll = util.scroll(self.cursor, self.scroll, self.max_display) self:updateText() end,
 		_RIGHT = function() self.cursor = util.bound(self.cursor + 1, 1, #self.tmp+1) self.scroll = util.scroll(self.cursor, self.scroll, self.max_display) self:updateText() end,
@@ -124,6 +124,15 @@ function _M:generate()
 			end
 		end,
 	}
+end
+
+function _M:setText(text)
+	self.text = text
+	self.tmp = {}
+	for i = 1, #self.text do self.tmp[#self.tmp+1] = self.text:sub(i, i) end
+	self.cursor = #self.tmp + 1
+	self.scroll = 1
+	self:updateText()
 end
 
 function _M:updateText()
