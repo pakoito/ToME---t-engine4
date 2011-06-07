@@ -27,10 +27,13 @@ local Dropdown = require "engine.ui.Dropdown"
 local Textbox = require "engine.ui.Textbox"
 local Checkbox = require "engine.ui.Checkbox"
 local Textzone = require "engine.ui.Textzone"
+local ImageList = require "engine.ui.ImageList"
 local TextzoneList = require "engine.ui.TextzoneList"
 local Separator = require "engine.ui.Separator"
 local NameGenerator = require "engine.NameGenerator"
 local Module = require "engine.Module"
+local Tiles = require "engine.Tiles"
+local Particles = require "engine.Particles"
 local CharacterVaultSave = require "engine.CharacterVaultSave"
 
 module(..., package.seeall, class.inherit(Birther))
@@ -41,6 +44,7 @@ function _M:init(title, actor, order, at_end, quickbirth, w, h)
 	self.actor = actor
 	self.order = order
 	self.at_end = at_end
+	self.tiles = Tiles.new(64, 64, nil, nil, true, nil)
 
 	Dialog.init(self, title and title or "Character Creation", w or 600, h or 400)
 
@@ -50,6 +54,7 @@ function _M:init(title, actor, order, at_end, quickbirth, w, h)
 	self.c_ok = Button.new{text="     Play!     ", fct=function() self:atEnd("created") end}
 	self.c_random = Button.new{text="Random!", fct=function() self:randomBirth() end}
 	self.c_premade = Button.new{text="Load premade", fct=function() self:loadPremadeUI() end}
+	self.c_tile = Button.new{text="Select custom tile", fct=function() self:selectTile() end}
 	self.c_cancel = Button.new{text="Cancel", fct=function() self:atEnd("quit") end}
 
 	self.c_name = Textbox.new{title="Name: ", text=game.player_name, chars=30, max_len=50, fct=function() end, on_change=function() self:setDescriptor() end}
@@ -122,9 +127,12 @@ function _M:init(title, actor, order, at_end, quickbirth, w, h)
 		{left=0, bottom=0, ui=self.c_ok, hidden=true},
 		{left=self.c_ok, bottom=0, ui=self.c_random},
 		{left=self.c_random, bottom=0, ui=self.c_premade},
+		{left=self.c_premade, bottom=0, ui=self.c_tile},
 		{right=0, bottom=0, ui=self.c_cancel},
 	}
 	self:setupUI()
+
+--	self:toggleDisplay(self.c_tile, profile.)
 
 	if self.descriptors_by_type.difficulty == "Tutorial" then
 		self:raceUse(self.all_races[1], 1)
@@ -152,6 +160,9 @@ end
 function _M:atEnd(v)
 	if v == "created" and not self.ui_by_ui[self.c_ok].hidden then
 		self:checkNew(function()
+			local ps = self.actor:getParticlesList()
+			for i, p in ipairs(ps) do self.actor:removeParticles(p) end
+
 			game:unregisterDialog(self)
 			self:apply()
 			game:setPlayerName(self.c_name.text)
@@ -336,6 +347,7 @@ function _M:setDescriptor(key, val)
 		print("[BIRTHER] set descriptor", key, val)
 	end
 	self:updateDescriptors()
+	self:setTile()
 
 	local ok = self.c_name.text:len() >= 2
 	for i, o in ipairs(self.order) do
@@ -678,4 +690,249 @@ function _M:on_register()
 			end
 		end
 	end
+end
+
+-- Display the player tile
+function _M:innerDisplay(x, y, nb_keyframes)
+	if self.actor.image then
+		self.actor:toScreen(self.tiles, x + self.iw - 64, y, 64, 64)
+	elseif self.actor.image and self.actor.add_mos then
+		self.actor:toScreen(self.tiles, x + self.iw - 64, y - 64, 128, 64)
+	end
+end
+
+function _M:setTile(f, w, h)
+	if not f then
+		if not self.actor.has_custom_tile and self.descriptors_by_type.subrace and self.descriptors_by_type.sex then
+			self.actor.image = "player/"..self.descriptors_by_type.subrace:lower().."_"..self.descriptors_by_type.sex:lower()..".png"
+			self.actor.add_mos = nil
+		end
+	else
+		self.actor.make_tile = nil
+		if h > w then
+			self.actor.image = "invis.png"
+			self.actor.add_mos = {{image=f, display_h=2, display_y=-1}}
+		else
+			self.actor.add_mos = nil
+			self.actor.image = f
+		end
+		self.actor.has_custom_tile = true
+	end
+	if self.actor._mo then self.actor._mo:invalidate() end
+	self.actor._mo = nil
+
+	-- Add an example particles if any
+	local ps = self.actor:getParticlesList()
+	for i, p in ipairs(ps) do self.actor:removeParticles(p) end
+	if self.descriptors_by_type.subclass then
+		local d = self.birth_descriptor_def.subclass[self.descriptors_by_type.subclass]
+		if d and d.birth_example_particles then
+			self.actor:addParticles(Particles.new(d.birth_example_particles, 1))
+		end
+	end
+end
+
+function _M:selectTileNoDonations()
+end
+
+function _M:selectTile()
+	if not profile.auth or not tonumber(profile.auth.donated) or tonumber(profile.auth.donated) <= 1 then return self:selectTileNoDonations() end
+
+	local d = Dialog.new("Select a Tile", 600, 550)
+
+	local list = {
+		"npc/alchemist_golem.png",
+		"npc/armored_skeleton_warrior.png",
+		"npc/barrow_wight.png",
+		"npc/construct_golem_alchemist_golem.png",
+		"npc/degenerated_skeleton_warrior.png",
+		"npc/elder_vampire.png",
+		"npc/emperor_wight.png",
+		"npc/forest_wight.png",
+		"npc/golem.png",
+		"npc/grave_wight.png",
+		"npc/horror_corrupted_dremling.png",
+		"npc/horror_corrupted_drem_master.png",
+		"npc/horror_eldritch_headless_horror.png",
+		"npc/horror_eldritch_luminous_horror.png",
+		"npc/horror_eldritch_worm_that_walks.png",
+		"npc/horror_temporal_cronolith_clone.png",
+		"npc/humanoid_dwarf_dwarven_earthwarden.png",
+		"npc/humanoid_dwarf_dwarven_guard.png",
+		"npc/humanoid_dwarf_dwarven_paddlestriker.png",
+		"npc/humanoid_dwarf_dwarven_summoner.png",
+		"npc/humanoid_dwarf_lumberjack.png",
+		"npc/humanoid_dwarf_norgan.png",
+		"npc/humanoid_dwarf_ziguranth_warrior.png",
+		"npc/humanoid_elenulach_thief.png",
+		"npc/humanoid_elf_anorithil.png",
+		"npc/humanoid_elf_elven_archer.png",
+		"npc/humanoid_elf_elven_sun_mage.png",
+		"npc/humanoid_elf_fillarel_aldaren.png",
+		"npc/humanoid_elf_limmir_the_jeweler.png",
+		"npc/humanoid_elf_star_crusader.png",
+		"npc/humanoid_halfling_derth_guard.png",
+		"npc/humanoid_halfling_halfling_citizen.png",
+		"npc/humanoid_halfling_halfling_gardener.png",
+		"npc/humanoid_halfling_halfling_guard.png",
+		"npc/humanoid_halfling_halfling_slinger.png",
+		"npc/humanoid_halfling_master_slinger.png",
+		"npc/humanoid_halfling_protector_myssil.png",
+		"npc/humanoid_halfling_sm_halfling.png",
+		"npc/humanoid_human_alchemist.png",
+		"npc/humanoid_human_aluin_the_fallen.png",
+		"npc/humanoid_human_apprentice_mage.png",
+		"npc/humanoid_human_arcane_blade.png",
+		"npc/humanoid_human_argoniel.png",
+		"npc/humanoid_human_assassin.png",
+		"npc/humanoid_human_bandit_lord.png",
+		"npc/humanoid_human_bandit.png",
+		"npc/humanoid_human_ben_cruthdar__the_cursed.png",
+		"npc/humanoid_human_blood_mage.png",
+		"npc/humanoid_human_cryomancer.png",
+		"npc/humanoid_human_cutpurse.png",
+		"npc/humanoid_human_derth_guard.png",
+		"npc/humanoid_human_enthralled_slave.png",
+		"npc/humanoid_human_fallen_sun_paladin_aeryn.png",
+		"npc/humanoid_human_fire_wyrmic.png",
+		"npc/humanoid_human_fryjia_loren.png",
+		"npc/humanoid_human_geomancer.png",
+		"npc/humanoid_human_gladiator.png",
+		"npc/humanoid_human_great_gladiator.png",
+		"npc/humanoid_human_harno__herald_of_last_hope.png",
+		"npc/humanoid_human_hexer.png",
+		"npc/humanoid_human_high_gladiator.png",
+		"npc/humanoid_human_high_slinger.png",
+		"npc/humanoid_human_high_sun_paladin_aeryn.png",
+		"npc/humanoid_human_high_sun_paladin_rodmour.png",
+		"npc/humanoid_human_human_citizen.png",
+		"npc/humanoid_human_human_farmer.png",
+		"npc/humanoid_human_human_guard.png",
+		"npc/humanoid_human_human_sun_paladin.png",
+		"npc/humanoid_human_ice_wyrmic.png",
+		"npc/humanoid_human_last_hope_guard.png",
+		"npc/humanoid_human_linaniil_supreme_archmage.png",
+		"npc/humanoid_human_lumberjack.png",
+		"npc/humanoid_human_martyr.png",
+		"npc/humanoid_human_master_alchemist.png",
+		"npc/humanoid_human_multihued_wyrmic.png",
+		"npc/humanoid_human_necromancer.png",
+		"npc/humanoid_human_pyromancer.png",
+		"npc/humanoid_human_reaver.png",
+		"npc/humanoid_human_rej_arkatis.png",
+		"npc/humanoid_human_riala_shalarak.png",
+		"npc/humanoid_human_rogue.png",
+		"npc/humanoid_human_sand_wyrmic.png",
+		"npc/humanoid_human_shadowblade.png",
+		"npc/humanoid_human_shady_cornac_man.png",
+		"npc/humanoid_human_slave_combatant.png",
+		"npc/humanoid_human_slinger.png",
+		"npc/humanoid_human_spectator02.png",
+		"npc/humanoid_human_spectator03.png",
+		"npc/humanoid_human_spectator.png",
+		"npc/humanoid_human_storm_wyrmic.png",
+		"npc/humanoid_human_subject_z.png",
+		"npc/humanoid_human_sun_paladin_guren.png",
+		"npc/humanoid_human_tannen.png",
+		"npc/humanoid_human_tempest.png",
+		"npc/humanoid_human_thief.png",
+		"npc/humanoid_human_trickster.png",
+		"npc/humanoid_human_urkis__the_high_tempest.png",
+		"npc/humanoid_human_valfred_loren.png",
+		"npc/humanoid_human_ziguranth_wyrmic.png",
+		"npc/humanoid_orc_brotoq_the_reaver.png",
+		"npc/humanoid_orc_fiery_orc_wyrmic.png",
+		"npc/humanoid_orc_golbug_the_destroyer.png",
+		"npc/humanoid_orc_gorbat__supreme_wyrmic_of_the_pride.png",
+		"npc/humanoid_orc_grushnak__battlemaster_of_the_pride.png",
+		"npc/humanoid_orc_icy_orc_wyrmic.png",
+		"npc/humanoid_orc_krogar.png",
+		"npc/humanoid_orc_massok_the_dragonslayer.png",
+		"npc/humanoid_orc_orc_archer.png",
+		"npc/humanoid_orc_orc_assassin.png",
+		"npc/humanoid_orc_orc_berserker.png",
+		"npc/humanoid_orc_orc_blood_mage.png",
+		"npc/humanoid_orc_orc_corruptor.png",
+		"npc/humanoid_orc_orc_cryomancer.png",
+		"npc/humanoid_orc_orc_elite_berserker.png",
+		"npc/humanoid_orc_orc_elite_fighter.png",
+		"npc/humanoid_orc_orc_fighter.png",
+		"npc/humanoid_orc_orc_grand_master_assassin.png",
+		"npc/humanoid_orc_orc_grand_summoner.png",
+		"npc/humanoid_orc_orc_high_cryomancer.png",
+		"npc/humanoid_orc_orc_high_pyromancer.png",
+		"npc/humanoid_orc_orc_mage_hunter.png",
+		"npc/humanoid_orc_orc_master_assassin.png",
+		"npc/humanoid_orc_orc_master_wyrmic.png",
+		"npc/humanoid_orc_orc_necromancer.png",
+		"npc/humanoid_orc_orc_pyromancer.png",
+		"npc/humanoid_orc_orc_soldier.png",
+		"npc/humanoid_orc_orc_summoner.png",
+		"npc/humanoid_orc_orc_warrior.png",
+		"npc/humanoid_orc_rak_shor_cultist.png",
+		"npc/humanoid_orc_rak_shor__grand_necromancer_of_the_pride.png",
+		"npc/humanoid_orc_ukruk_the_fierce.png",
+		"npc/humanoid_orc_vor__grand_geomancer_of_the_pride.png",
+		"npc/humanoid_orc_warmaster_gnarg.png",
+		"npc/humanoid_shalore_archmage_tarelion.png",
+		"npc/humanoid_shalore_elandar.png",
+		"npc/humanoid_shalore_elvala_guard.png",
+		"npc/humanoid_shalore_elven_blood_mage.png",
+		"npc/humanoid_shalore_elven_corruptor.png",
+		"npc/humanoid_shalore_elven_cultist.png",
+		"npc/humanoid_shalore_elven_elite_warrior.png",
+		"npc/humanoid_shalore_elven_guard.png",
+		"npc/humanoid_shalore_elven_mage.png",
+		"npc/humanoid_shalore_elven_tempest.png",
+		"npc/humanoid_shalore_elven_warrior.png",
+		"npc/humanoid_shalore_grand_corruptor.png",
+		"npc/humanoid_shalore_mean_looking_elven_guard.png",
+		"npc/humanoid_shalore_rhaloren_inquisitor.png",
+		"npc/humanoid_shalore_shalore_rune_master.png",
+		"npc/humanoid_thalore_thalore_hunter.png",
+		"npc/humanoid_thalore_thalore_wilder.png",
+		"npc/humanoid_thalore_ziguranth_summoner.png",
+		"npc/humanoid_yaech_blood_master.png",
+		"npc/humanoid_yaech_murgol__the_yaech_lord.png",
+		"npc/humanoid_yaech_slaver.png",
+		"npc/humanoid_yaech_yaech_diver.png",
+		"npc/humanoid_yaech_yaech_hunter.png",
+		"npc/humanoid_yaech_yaech_mindslayer.png",
+		"npc/humanoid_yaech_yaech_psion.png",
+		"npc/humanoid_yeek_yeek_wayist.png",
+		"npc/jawa_01.png",
+		"npc/lesser_vampire.png",
+		"npc/master_skeleton_archer.png",
+		"npc/master_skeleton_warrior.png",
+		"npc/master_vampire.png",
+		"npc/skeleton_archer.png",
+		"npc/skeleton_mage.png",
+		"npc/skeleton_warrior.png",
+		"npc/the_master.png",
+		"npc/vampire_lord.png",
+		"npc/vampire.png",
+		"npc/snaproot_pimp.png",
+		"player/ascii_player_dorfhelmet_01_64.png",
+		"player/ascii_player_fedora_feather_04_64.png",
+		"player/ascii_player_helmet_02_64.png",
+		"player/ascii_player_mario_01_64.png",
+		"player/ascii_player_rogue_cloak_01_64.png",
+		"player/ascii_player_wizardhat_01_64.png",
+	}
+	local remove = Button.new{text="Use default tile", width=500, fct=function()
+		game:unregisterDialog(d)
+		self.actor.has_custom_tile = nil
+		self:setTile()
+	end}
+	local list = ImageList.new{width=500, height=500, tile_w=64, tile_h=64, padding=10, list=list, fct=function(item)
+		game:unregisterDialog(d)
+		self:setTile(item.f, item.w, item.h)
+	end}
+	d:loadUI{
+		{left=0, top=0, ui=list},
+		{left=0, bottom=0, ui=remove},
+	}
+	d:setupUI(true, true)
+	d.key:addBind("EXIT", function() game:unregisterDialog(d) end)
+	game:registerDialog(d)
 end

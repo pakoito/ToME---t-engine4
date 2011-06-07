@@ -116,6 +116,7 @@ newBirthDescriptor{
 		["chronomancy/spacetime-weaving"]={true, 0},
 		["chronomancy/spacetime-folding"]={true, 0.3},
 	},
+	birth_example_particles = "temporal_focus",
 	talents = {
 		[ActorTalents.T_SHOOT] = 1,
 		[ActorTalents.T_SPACETIME_TUNING] = 1,

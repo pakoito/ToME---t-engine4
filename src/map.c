@@ -330,6 +330,7 @@ static int map_objects_toscreen(lua_State *L)
 	while (lua_isuserdata(L, moid))
 	{
 		map_object *m = (map_object*)auxiliar_checkclass(L, "core{mapobj}", moid);
+		map_object *dm;
 
 		int z;
 		if (m->shader) useShader(m->shader, 1, 1, 1, 1, 1, 1, 1, 1);
@@ -339,26 +340,38 @@ static int map_objects_toscreen(lua_State *L)
 			tglBindTexture(m->textures_is3d[z] ? GL_TEXTURE_3D : GL_TEXTURE_2D, m->textures[z]);
 		}
 
-		int dx = x, dy = y;
-		int dz = moid;
-		vertices[0] = dx; vertices[1] = dy; vertices[2] = dz;
-		vertices[3] = w + dx; vertices[4] = dy; vertices[5] = dz;
-		vertices[6] = w + dx; vertices[7] = h + dy; vertices[8] = dz;
-		vertices[9] = dx; vertices[10] = h + dy; vertices[11] = dz;
-		glDrawArrays(GL_QUADS, 0, 4);
+		dm = m;
+		while (dm)
+		{
+			tglBindTexture(GL_TEXTURE_2D, dm->textures[0]);
+
+			int dx = x + dm->dx * w, dy = y + dm->dy * h;
+			float dw = w * dm->dw;
+			float dh = h * dm->dh;
+			int dz = moid;
+			vertices[0] = dx; vertices[1] = dy; vertices[2] = dz;
+			vertices[3] = dw + dx; vertices[4] = dy; vertices[5] = dz;
+			vertices[6] = dw + dx; vertices[7] = dh + dy; vertices[8] = dz;
+			vertices[9] = dx; vertices[10] = dh + dy; vertices[11] = dz;
+			glDrawArrays(GL_QUADS, 0, 4);
+			dm = dm->next;
+		}
 
 		if (m->cb_ref != LUA_NOREF)
 		{
+			int dx = x + m->dx * w, dy = y + m->dy * h;
+			float dw = w * m->dw;
+			float dh = h * m->dh;
 			lua_rawgeti(L, LUA_REGISTRYINDEX, m->cb_ref);
 			lua_pushnumber(L, dx);
 			lua_pushnumber(L, dy);
-			lua_pushnumber(L, w);
-			lua_pushnumber(L, h);
+			lua_pushnumber(L, dw);
+			lua_pushnumber(L, dh);
 			lua_pushnumber(L, 1);
 			lua_pushboolean(L, FALSE);
 			if (lua_pcall(L, 6, 1, 0))
 			{
-				printf("Display callback error: UID %ld: %sn", m->uid, lua_tostring(L, -1));
+				printf("Display callback error: UID %ld: %sn", dm->uid, lua_tostring(L, -1));
 				lua_pop(L, 1);
 			}
 			lua_pop(L, 1);

@@ -69,6 +69,7 @@ newBirthDescriptor{
 		["divine/light"]={true, 0.3},
 		["divine/guardian"]={false, 0.3},
 	},
+	birth_example_particles = "golden_shield",
 	talents = {
 		[ActorTalents.T_SEARING_LIGHT] = 1,
 		[ActorTalents.T_WEAPON_OF_LIGHT] = 1,
@@ -116,6 +117,7 @@ newBirthDescriptor{
 		["divine/hymns"]={true, 0.3},
 		["divine/star-fury"]={true, 0.3},
 	},
+	birth_example_particles = "darkness_shield",
 	talents = {
 		[ActorTalents.T_SEARING_LIGHT] = 1,
 		[ActorTalents.T_MOONLIGHT_RAY] = 1,

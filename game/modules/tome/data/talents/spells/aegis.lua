@@ -150,7 +150,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local shield = t.getShield(self, t)
-		return ([[Release arcane energies into any magical shield currently protection you, replenishing %d%% of its max absorb value.
+		return ([[Release arcane energies into any magical shield currently protecting you, further charging it by %d%% of its max absorb value.
 		It will affect at most %d shield effects.
 		Affected shields are: Damage Shield, Time Shield, Displacement Shield]]):
 		format(shield, self:getTalentLevelRaw(t))

@@ -69,6 +69,7 @@ newBirthDescriptor{
 		["spell/aegis"]={true, 0.3},
 		["cunning/survival"]={false, -0.1},
 	},
+	birth_example_particles = "arcane_power",
 	talents = {
 		[ActorTalents.T_ARCANE_POWER] = 1,
 		[ActorTalents.T_FLAME] = 1,
