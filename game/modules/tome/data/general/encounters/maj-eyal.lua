@@ -28,8 +28,9 @@ newEntity{
 
 		local g = mod.class.WorldNPC.new{
 			name="Novice mage",
-			type="humanoid", subtype="elf", faction="angolwen",
+			type="humanoid", subtype="human", faction="angolwen",
 			display='@', color=colors.RED,
+			image = "npc/humanoid_human_apprentice_mage.png",
 			can_talk = "mage-apprentice-quest",
 			unit_power = 300,
 		}
