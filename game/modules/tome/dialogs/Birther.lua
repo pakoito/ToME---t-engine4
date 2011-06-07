@@ -31,6 +31,7 @@ local TextzoneList = require "engine.ui.TextzoneList"
 local Separator = require "engine.ui.Separator"
 local NameGenerator = require "engine.NameGenerator"
 local Module = require "engine.Module"
+local CharacterVaultSave = require "engine.CharacterVaultSave"
 
 module(..., package.seeall, class.inherit(Birther))
 
@@ -46,7 +47,7 @@ function _M:init(title, actor, order, at_end, quickbirth, w, h)
 	self.descriptors = {}
 	self.descriptors_by_type = {}
 
-	self.c_ok = Button.new{text="  Play!  ", fct=function() self:atEnd("created") end}
+	self.c_ok = Button.new{text="     Play!     ", fct=function() self:atEnd("created") end}
 	self.c_random = Button.new{text="Random!", fct=function() self:randomBirth() end}
 	self.c_premade = Button.new{text="Load premade", fct=function() self:loadPremadeUI() end}
 	self.c_cancel = Button.new{text="Cancel", fct=function() self:atEnd("quit") end}
@@ -137,16 +138,32 @@ function _M:init(title, actor, order, at_end, quickbirth, w, h)
 	self:setFocus(self.c_name)
 end
 
-function _M:atEnd(v)
-	if v == "created" then
-		game:unregisterDialog(self)
-		self:apply()
-		game:setPlayerName(self.c_name.text)
-		self.at_end(false)
-	elseif v == "loaded" then
-		game:unregisterDialog(self)
-		self.at_end(true)
+function _M:checkNew(fct)
+	local savename = self.c_name.text:gsub("[^a-zA-Z0-9_-.]", "_")
+	if fs.exists(("/save/%s/game.teag"):format(savename)) then
+		Dialog:yesnoPopup("Overwrite character?", "There is already a character with this name, do you want to overwrite it?", function(ret)
+			if not ret then fct() end
+		end, "No", "Yes")
 	else
+		fct()
+	end
+end
+
+function _M:atEnd(v)
+	if v == "created" and not self.ui_by_ui[self.c_ok].hidden then
+		self:checkNew(function()
+			game:unregisterDialog(self)
+			self:apply()
+			game:setPlayerName(self.c_name.text)
+			self.at_end(false)
+		end)
+	elseif v == "loaded" then
+		self:checkNew(function()
+			game:unregisterDialog(self)
+			game:setPlayerName(self.c_name.text)
+			self.at_end(true)
+		end)
+	elseif v == "quit" then
 		util.showMainMenu()
 	end
 end
@@ -525,10 +542,10 @@ function _M:generateClasses()
 end
 
 function _M:loadPremade(pm)
-	local fallback = false
+	local fallback = pm.force_fallback
 
 	-- Load the entities directly
-	if pm.module_version and pm.module_version[1] == game.__mod_info.version[1] and pm.module_version[2] == game.__mod_info.version[2] and pm.module_version[3] == game.__mod_info.version[3] then
+	if not fallback and pm.module_version and pm.module_version[1] == game.__mod_info.version[1] and pm.module_version[2] == game.__mod_info.version[2] and pm.module_version[3] == game.__mod_info.version[3] then
 		savefile_pipe:ignoreSaveToken(true)
 		local qb = savefile_pipe:doLoad(pm.short_name, "entity", "engine.CharacterVaultSave", "character")
 		savefile_pipe:ignoreSaveToken(false)
@@ -538,6 +555,7 @@ function _M:loadPremade(pm)
 			game.party = qb
 			game.player = nil
 			game.party:setPlayer(1, true)
+			self.c_name:setText(game.player.name)
 			self:atEnd("loaded")
 		else
 			fallback = true
@@ -548,8 +566,57 @@ function _M:loadPremade(pm)
 
 	-- Fill in the descriptors and validate
 	if fallback then
+		local ok = 0
+
+		-- Name
 		self.c_name:setText(pm.short_name)
---		self.
+
+		-- Sex
+		self.c_male.checked = pm.descriptors.sex == "Male"
+		self.c_female.checked = pm.descriptors.sex == "Female"
+		self:setDescriptor("sex", pm.descriptors.sex and "Male" or "Female")
+
+		-- Campaign
+		for i, item in ipairs(self.all_campaigns) do if not item.locked and item.id == pm.descriptors.world then
+			self:campaignUse(item)
+			self.c_campaign.c_list.sel = i
+			ok = ok + 1
+			break
+		end end
+
+		-- Difficulty
+		for i, item in ipairs(self.all_difficulties) do if not item.locked and item.id == pm.descriptors.difficulty then
+			self:difficultyUse(item)
+			self.c_difficulty.c_list.sel = i
+			ok = ok + 1
+			break
+		end end
+
+		-- Race
+		for i, pitem in ipairs(self.all_races) do
+			for j, item in ipairs(pitem.nodes) do
+				if not item.locked and item.id == pm.descriptors.subrace and pitem.id == pm.descriptors.race then
+					self:raceUse(pitem)
+					self:raceUse(item)
+					ok = ok + 1
+					break
+				end
+			end
+		end
+
+		-- Class
+		for i, pitem in ipairs(self.all_classes) do
+			for j, item in ipairs(pitem.nodes) do
+				if not item.locked and item.id == pm.descriptors.subclass and pitem.id == pm.descriptors.class then
+					self:classUse(pitem)
+					self:classUse(item)
+					ok = ok + 1
+					break
+				end
+			end
+		end
+
+		if ok == 4 then self:atEnd("created") end
 	end
 end
 
@@ -558,8 +625,6 @@ function _M:loadPremadeUI()
 	local d = Dialog.new("Characters Vault", 600, 550)
 
 	local sel = nil
-	local load = Button.new{text=" Load ", fct=function() if sel then self:loadPremade(sel) game:unregisterDialog(d) end end}
-	local del = Button.new{text="Delete", fct=function() end}
 	local desc = TextzoneList.new{width=220, height=400}
 	local list list = List.new{width=350, list=lss, height=400,
 		fct=function(item)
@@ -574,6 +639,17 @@ function _M:loadPremadeUI()
 		select=function(item) desc:switchItem(item, item.description) end
 	}
 	local sep = Separator.new{dir="horizontal", size=400}
+
+	local load = Button.new{text=" Load ", fct=function() if sel then self:loadPremade(sel) game:unregisterDialog(d) end end}
+	local del = Button.new{text="Delete", fct=function() if sel then
+		local vault = CharacterVaultSave.new(sel.short_name)
+		vault:delete()
+		vault:close()
+		lss = Module:listVaultSavesForCurrent()
+		list.list = lss
+		list:generate()
+		sel = nil
+	end end}
 
 	d:loadUI{
 		{left=0, top=0, ui=list},
@@ -591,4 +667,15 @@ end
 -- Disable stuff from the base Birther
 function _M:updateList() end
 function _M:selectType(type) end
-function _M:on_register() end
+
+function _M:on_register()
+	if __module_extra_info.auto_quickbirth then
+		local lss = Module:listVaultSavesForCurrent()
+		for i, pm in ipairs(lss) do
+			if pm.short_name == __module_extra_info.auto_quickbirth then
+				self:loadPremade(pm)
+				break
+			end
+		end
+	end
+end

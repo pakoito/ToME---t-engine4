@@ -137,7 +137,9 @@ function _M:use(item)
 		if item.subaction == "none" then
 			util.showMainMenu()
 		elseif item.subaction == "restart" then
-			util.showMainMenu(false, engine.version[4], engine.version[1].."."..engine.version[2].."."..engine.version[3], game.__mod_info.short_name, game.save_name, true, "auto_quickbirth=true")
+			util.showMainMenu(false, engine.version[4], engine.version[1].."."..engine.version[2].."."..engine.version[3], game.__mod_info.short_name, game.save_name, true, ("auto_quickbirth=%q"):format(game:getPlayer(true).name))
+		elseif item.subaction == "restart-new" then
+			util.showMainMenu(false, engine.version[4], engine.version[1].."."..engine.version[2].."."..engine.version[3], game.__mod_info.short_name, game.save_name, true)
 		end
 	elseif act == "cheat" then
 		game.logPlayer(self.actor, "#LIGHT_BLUE#You resurrect! CHEATER !")
@@ -156,6 +158,7 @@ function _M:generateList()
 	if config.settings.cheat then list[#list+1] = {name="Resurrect by cheating", action="cheat"} end
 	list[#list+1] = {name="Character dump", action="dump"}
 	list[#list+1] = {name="Restart the same character", action="exit", subaction="restart"}
+	list[#list+1] = {name="Restart with a new character", action="exit", subaction="restart-new"}
 	list[#list+1] = {name="Exit to main menu", action="exit", subaction="none"}
 
 	self.list = list

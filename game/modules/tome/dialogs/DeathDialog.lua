@@ -54,10 +54,10 @@ end
 --- Clean the actor from debuffs/buffs
 function _M:cleanActor(actor)
 	local effs = {}
-	
+
 	-- Remove chronoworlds
 	if game._chronoworlds then game._chronoworlds = nil end
-	
+
 	-- Go through all spell effects
 	for eff_id, p in pairs(actor.tmp) do
 		local e = actor.tempeffect_def[eff_id]
@@ -174,7 +174,9 @@ function _M:use(item)
 		if item.subaction == "none" then
 			util.showMainMenu()
 		elseif item.subaction == "restart" then
-			util.showMainMenu(false, engine.version[4], engine.version[1].."."..engine.version[2].."."..engine.version[3], game.__mod_info.short_name, game.save_name, true, "auto_quickbirth=true")
+			util.showMainMenu(false, engine.version[4], engine.version[1].."."..engine.version[2].."."..engine.version[3], game.__mod_info.short_name, game.save_name, true, ("auto_quickbirth=%q"):format(game:getPlayer(true).name))
+		elseif item.subaction == "restart-new" then
+			util.showMainMenu(false, engine.version[4], engine.version[1].."."..engine.version[2].."."..engine.version[3], game.__mod_info.short_name, game.save_name, true)
 		end
 	elseif act == "dump" then
 		game:registerDialog(require("mod.dialogs.CharacterSheet").new(self.actor))
@@ -251,6 +253,7 @@ function _M:generateList()
 
 	list[#list+1] = {name="Character dump", action="dump"}
 	list[#list+1] = {name="Restart the same character", action="exit", subaction="restart"}
+	list[#list+1] = {name="Restart with a new character", action="exit", subaction="restart-new"}
 	list[#list+1] = {name="Exit to main menu", action="exit", subaction="none"}
 
 	self.list = list
