@@ -132,7 +132,7 @@ function _M:init(title, actor, order, at_end, quickbirth, w, h)
 	}
 	self:setupUI()
 
---	self:toggleDisplay(self.c_tile, profile.)
+	if not profile.auth or not tonumber(profile.auth.donated) or tonumber(profile.auth.donated) <= 1 then self:toggleDisplay(self.c_tile, false) end
 
 	if self.descriptors_by_type.difficulty == "Tutorial" then
 		self:raceUse(self.all_races[1], 1)
@@ -162,6 +162,7 @@ function _M:atEnd(v)
 		self:checkNew(function()
 			local ps = self.actor:getParticlesList()
 			for i, p in ipairs(ps) do self.actor:removeParticles(p) end
+			self.actor:defineDisplayCallback()
 
 			game:unregisterDialog(self)
 			self:apply()
@@ -733,6 +734,12 @@ function _M:setTile(f, w, h)
 end
 
 function _M:selectTileNoDonations()
+	Dialog:simpleLongPopup("Custom tiles",
+	[[Custom Tiles have been added as a thank you to everyone that's donated to ToME.
+If you'd like to use this (purely cosmetic) feature you should consider donating.
+While this is a free game that I am doing for fun, if it can help feeding my family a bit I certainly will not complain.
+
+]], 400)
 end
 
 function _M:selectTile()
@@ -908,6 +915,7 @@ function _M:selectTile()
 		"npc/skeleton_archer.png",
 		"npc/skeleton_mage.png",
 		"npc/skeleton_warrior.png",
+		"npc/undead_skeleton_cowboy.png",
 		"npc/the_master.png",
 		"npc/vampire_lord.png",
 		"npc/vampire.png",

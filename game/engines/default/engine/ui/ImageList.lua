@@ -91,13 +91,19 @@ function _M:generate()
 	self.key:addBinds{
 		ACCEPT = function() self:onUse() end,
 		MOVE_UP = function()
-			if self.sel and self.list[self.sel] then self.list[self.sel].focus_decay = self.focus_decay_max end
-			self.sel = util.boundWrap(self.sel - 1, 1, self.max) self.scroll = util.scroll(self.sel, self.scroll, self.max_display)
+			self.sel_j = util.boundWrap(self.sel_j - 1, 1, self.max) self.scroll = util.scroll(self.sel_j, self.scroll, self.nb_h)
 			self:onSelect()
 		end,
 		MOVE_DOWN = function()
-			if self.sel and self.list[self.sel] then self.list[self.sel].focus_decay = self.focus_decay_max end
-			self.sel = util.boundWrap(self.sel + 1, 1, self.max) self.scroll = util.scroll(self.sel, self.scroll, self.max_display)
+			self.sel_j = util.boundWrap(self.sel_j + 1, 1, self.max) self.scroll = util.scroll(self.sel_j, self.scroll, self.nb_h)
+			self:onSelect()
+		end,
+		MOVE_RIGHT = function()
+			self.sel_i = util.boundWrap(self.sel_i + 1, 1, self.nb_w)
+			self:onSelect()
+		end,
+		MOVE_LEFT = function()
+			self.sel_i = util.boundWrap(self.sel_i - 1, 1, self.nb_w)
 			self:onSelect()
 		end,
 	}
@@ -105,27 +111,23 @@ function _M:generate()
 		[{"_UP","ctrl"}] = function() self.key:triggerVirtual("MOVE_UP") end,
 		[{"_DOWN","ctrl"}] = function() self.key:triggerVirtual("MOVE_DOWN") end,
 		_HOME = function()
-			if self.sel and self.list[self.sel] then self.list[self.sel].focus_decay = self.focus_decay_max end
-			self.sel = 1
-			self.scroll = util.scroll(self.sel, self.scroll, self.max_display)
+			self.sel_j = 1
+			self.scroll = util.scroll(self.sel_j, self.scroll, self.nb_h)
 			self:onSelect()
 		end,
 		_END = function()
-			if self.sel and self.list[self.sel] then self.list[self.sel].focus_decay = self.focus_decay_max end
-			self.sel = self.max
-			self.scroll = util.scroll(self.sel, self.scroll, self.max_display)
+			self.sel_j = self.max
+			self.scroll = util.scroll(self.sel_j, self.scroll, self.nb_h)
 			self:onSelect()
 		end,
 		_PAGEUP = function()
-			if self.sel and self.list[self.sel] then self.list[self.sel].focus_decay = self.focus_decay_max end
-			self.sel = util.bound(self.sel - self.max_display, 1, self.max)
-			self.scroll = util.scroll(self.sel, self.scroll, self.max_display)
+			self.sel_j = util.bound(self.sel_j - self.nb_h, 1, self.max)
+			self.scroll = util.scroll(self.sel_j, self.scroll, self.nb_h)
 			self:onSelect()
 		end,
 		_PAGEDOWN = function()
-			if self.sel and self.list[self.sel] then self.list[self.sel].focus_decay = self.focus_decay_max end
-			self.sel = util.bound(self.sel + self.max_display, 1, self.max)
-			self.scroll = util.scroll(self.sel, self.scroll, self.max_display)
+			self.sel_j = util.bound(self.sel_j + self.nb_h, 1, self.max)
+			self.scroll = util.scroll(self.sel_j, self.scroll, self.nb_h)
 			self:onSelect()
 		end,
 	}
