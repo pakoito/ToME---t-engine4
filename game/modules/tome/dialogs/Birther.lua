@@ -166,6 +166,7 @@ function _M:atEnd(v)
 
 			game:unregisterDialog(self)
 			self:apply()
+			if self.actor.has_custom_tile then self.actor.make_tile = nil end
 			game:setPlayerName(self.c_name.text)
 			self.at_end(false)
 		end)
@@ -717,7 +718,7 @@ function _M:setTile(f, w, h)
 			self.actor.add_mos = nil
 			self.actor.image = f
 		end
-		self.actor.has_custom_tile = true
+		self.actor.has_custom_tile = f
 	end
 	if self.actor._mo then self.actor._mo:invalidate() end
 	self.actor._mo = nil

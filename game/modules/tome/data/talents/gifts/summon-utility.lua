@@ -196,7 +196,7 @@ newTalent{
 		local NPC = require "mod.class.NPC"
 		local m = NPC.new{
 			type = "animal", subtype = "spider",
-			display = "S", color=colors.LIGHT_DARK, image = "npc/summoner_spider.png",
+			display = "S", color=colors.LIGHT_DARK, image = "npc/spiderkin_spider_giant_spider.png",
 			name = "giant spider", faction = self.faction,
 			desc = [[]],
 			autolevel = "none",

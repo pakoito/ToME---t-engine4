@@ -43,6 +43,10 @@ function _M:saveUUID()
 	end
 	local data = {sections={}}
 	setmetatable(data, {__index={
+		hiddenData = function(self, key, value)
+			self.hidden = self.hidden or {}
+			self.hidden[key] = value
+		end,
 		newSection = function(self, display, table, type, column, sectable)
 			self.sections[#self.sections+1] = {display=display, table=table, type=type, column=column}
 			self[table] = sectable or {}

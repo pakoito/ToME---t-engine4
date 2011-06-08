@@ -296,6 +296,10 @@ function _M:dumpToJSON(js)
 		dead = self.dead and "dead" or nil,
 		winner = self.winner and "winner" or nil,
 	}
+	if self.has_custom_tile then
+		tags.tile = self.has_custom_tile
+		js:hiddenData("tile", self.has_custom_tile)
+	end
 
 	return title, tags
 end
