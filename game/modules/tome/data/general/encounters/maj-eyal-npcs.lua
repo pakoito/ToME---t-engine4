@@ -58,7 +58,7 @@ newEntity{
 newEntity{
 	name = "pack of wolves",
 	type = "hostile", subtype = "animal",
-	display = 'c', color = colors.RED, image="npc/canine_w.png",
+	display = 'C', color = colors.RED, image="npc/canine_w.png",
 	level_range = {1, nil},
 	sight = 3,
 	rarity = 4,
