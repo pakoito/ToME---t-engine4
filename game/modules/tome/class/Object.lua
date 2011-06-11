@@ -685,6 +685,7 @@ function _M:getTextualDesc(compare_with)
 		compare_fields(w, compare_with, field, "max_life", "%+.2f", "Maximum life: ")
 		compare_fields(w, compare_with, field, "max_mana", "%+.2f", "Maximum mana: ")
 		compare_fields(w, compare_with, field, "max_stamina", "%+.2f", "Maximum stamina: ")
+		compare_fields(w, compare_with, field, "max_air", "%+.2f", "Maximum air capacity: ")
 
 		compare_fields(w, compare_with, field, "combat_spellpower", "%+d", "Spellpower: ")
 		compare_fields(w, compare_with, field, "combat_spellcrit", "%+d%%", "Spell crit. chance: ")

@@ -185,6 +185,7 @@ newEntity{ base = "BASE_RING",
 		inc_stats = { [Stats.STAT_WIL] = 4, [Stats.STAT_CON] = 3 },
 		max_mana = 20,
 		max_stamina = 20,
+		max_air = 50,
 		resists = {
 			[DamageType.COLD] = 25,
 			[DamageType.NATURE] = 10,
