@@ -102,7 +102,8 @@ It should automatically create a portal back, but it might not be near your arri
 			boss.explo_portal_on_die = boss.on_die
 			boss.on_die = function(self, ...)
 				local x, y = self.x or game.player.x, self.y or game.player.y
-				local g = game.zone:makeEntityByName(game.level, "terrain", game.zone.basic_floor)
+				local g = game.zone:makeEntityByName(game.level, "terrain", game.zone.basic_floor):clone()
+				g._mo = nil
 				g.nice_tiler = nil
 				g.show_tooltip = true
 				g.name = "Exploratory Farportal exit"

@@ -89,6 +89,9 @@ function _M:use(item)
 		game:registerDialog(GetQuantity.new("Zone: "..game.zone.name, "Level 1-"..game.zone.max_level, game.level.level, game.zone.max_level, function(qty)
 			game:changeLevel(qty)
 		end), 1)
+	elseif act == "shertul-energy" then
+		game.player:grantQuest("shertul-fortress")
+		game.player:hasQuest("shertul-fortress"):gain_energy(1000)
 	end
 end
 
@@ -104,6 +107,7 @@ function _M:generateList()
 	list[#list+1] = {name="Summon Creature", dialog="SummonCreature"}
 	list[#list+1] = {name="Create Item", dialog="CreateItem"}
 	list[#list+1] = {name="Alter Faction", dialog="AlterFaction"}
+	list[#list+1] = {name="Give Sher'tul fortress energy", action="shertul-energy"}
 
 	local chars = {}
 	for i, v in ipairs(list) do
