@@ -283,7 +283,7 @@ I have taken this cavern up as a secret base, far away from the main encampment.
 newLore{
 	id = "orc-breeding-2",
 	category = "orc prides",
-	name = "Clinician Korbek's experimental notes part one",
+	name = "Clinician Korbek's experimental notes part two",
 	lore = [[#{bold}#Clinician Korbek's experimental notes part two#{normal}#
 
 I have begun work on several of the females. They are being kept in a coma for the duration of the experiments - it's far better that way. Initially I have subjected them to very high levels of wild infusion and arcane regeneration fields, whilst also keeping a direct feed into their stomachs high in protein. Corrupted blood is being pumped into their ovaries with a temporal acceleration field surrounding them. The leaders of each Pride have donated their seed for use in the experiments.
@@ -296,7 +296,7 @@ Some females have died during the procedures. I can only presume these were the 
 newLore{
 	id = "orc-breeding-3",
 	category = "orc prides",
-	name = "Clinician Korbek's experimental notes part one",
+	name = "Clinician Korbek's experimental notes part tree",
 	lore = [[#{bold}#Clinician Korbek's experimental notes part three#{normal}#
 
 My work is continuing with tremendous success. All subjects now have multiple operational wombs, thanks to the corrupted blood infusions coupled with arcane regeneration fields to quickly repair the corrupted tissues. With greater advances in accelerating the foetal growth stage we are now seeing new orcs every few days! I believe this can be pushed even further.
@@ -309,7 +309,7 @@ Pumping nutrients directly into their stomach is proving a difficulty with the i
 newLore{
 	id = "orc-breeding-4",
 	category = "orc prides",
-	name = "Clinician Korbek's experimental notes part one",
+	name = "Clinician Korbek's experimental notes part four",
 	lore = [[#{bold}#Clinician Korbek's experimental notes part four#{normal}#
 
 Oh horrors... Oh black bilious terrors! What have I done? What vile and black sin have I done?!
