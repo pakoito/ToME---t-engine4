@@ -755,7 +755,7 @@ function _M:displayDelayedLogDamage()
 				if game.level.map.seens(x, y) and (rsrc == game.player or game.party:hasMember(rsrc)) then
 					game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, rng.float(-3, -2), tostring(-math.ceil(dams.total)), {0,255,0})
 				elseif game.level.map.seens(x, y) and (rtarget == game.player or game.party:hasMember(rtarget)) then
-					game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, rng.float(-3, -2), tostring(-math.ceil(dams.total)), {255,0,0})
+					game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -rng.float(-3, -2), tostring(-math.ceil(dams.total)), {255,0,0})
 				end
 			end
 		end
