@@ -202,7 +202,7 @@ function _M:onTurn()
 	self.level.map:processEffects()
 end
 
-function _M:display()
+function _M:display(nb_keyframe)
 	-- If switching resolution, blank everything but the dialog
 	if self.change_res_dialog then engine.GameEnergyBased.display(self, nb_keyframe) return end
 

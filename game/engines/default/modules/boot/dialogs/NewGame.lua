@@ -60,6 +60,13 @@ function _M:init()
 	}
 end
 
+function _M:on_register()
+	if #self.list == 1 then
+		game:unregisterDialog(self)
+		self.list[1]:fct()
+	end
+end
+
 function _M:select(item)
 	if item and self.uis[2] then
 		self.uis[2].ui = item.zone
@@ -72,7 +79,7 @@ function _M:generateList()
 	for i = 1, #list do
 		for j, mod in ipairs(list[i].versions) do
 			if not self.c_switch.checked and j > 1 then break end
-			if not mod.is_boot then
+			if not mod.is_boot and (not mod.show_only_on_cheat or config.settings.cheat) then
 				mod.name = tstring{{"font","bold"}, {"color","GOLD"}, mod.name, {"font","normal"}}
 				mod.fct = function(mod)
 					if mod.no_get_name then
