@@ -486,7 +486,7 @@ static int sdl_surface_drawstring_newsurface_aa(lua_State *L)
 	return 1;
 }
 
-static font_make_texture_line(lua_State *L, SDL_Surface *s, int id, bool is_separator, int id_real_line, char *line_data)
+static font_make_texture_line(lua_State *L, SDL_Surface *s, int id, bool is_separator, int id_real_line, char *line_data, int line_data_size)
 {
 	lua_createtable(L, 0, 5);
 
@@ -522,7 +522,7 @@ static font_make_texture_line(lua_State *L, SDL_Surface *s, int id, bool is_sepa
 	if (line_data)
 	{
 		lua_pushliteral(L, "line_extra");
-		lua_pushstring(L, line_data);
+		lua_pushlstring(L, line_data, line_data_size);
 		lua_rawset(L, -3);
 	}
 
@@ -562,6 +562,7 @@ static int sdl_font_draw(lua_State *L)
 	int nb_lines = 1;
 	int id_real_line = 1;
 	char *line_data = NULL;
+	int line_data_size = 0;
 	char *start = (char*)str, *stop = (char*)str, *next = (char*)str;
 	int max_size = 0;
 	int size = 0;
@@ -593,7 +594,7 @@ static int sdl_font_draw(lua_State *L)
 			if (!no_linefeed && (force_nl || (txt && (size + txt->w > max_width))))
 			{
 				// Push it & reset the surface
-				font_make_texture_line(L, s, nb_lines, is_separator, id_real_line, line_data);
+				font_make_texture_line(L, s, nb_lines, is_separator, id_real_line, line_data, line_data_size);
 				is_separator = FALSE;
 				SDL_FillRect(s, NULL, SDL_MapRGBA(s->format, 0, 0, 0, 0));
 //				printf("Ending previous line at size %d\n", size);
@@ -603,7 +604,7 @@ static int sdl_font_draw(lua_State *L)
 				if (force_nl)
 				{
 					id_real_line++;
-					if (line_data) { free(line_data); line_data = NULL; }
+					if (line_data) { line_data = NULL; }
 				}
 				force_nl = FALSE;
 			}
@@ -657,8 +658,8 @@ static int sdl_font_draw(lua_State *L)
 				}
 				// Extra data
 				else if ((*(next+1) == '&')) {
-					if (line_data) { free(line_data); line_data = NULL; }
-					line_data = strndup(next + 2, codestop - (next+2));
+					line_data = next + 2;
+					line_data_size = codestop - (next+2);
 				}
 				// Color
 				else {
@@ -738,13 +739,11 @@ static int sdl_font_draw(lua_State *L)
 		next++;
 	}
 
-	font_make_texture_line(L, s, nb_lines, is_separator, id_real_line, line_data);
+	font_make_texture_line(L, s, nb_lines, is_separator, id_real_line, line_data, line_data_size);
 	if (size > max_size) max_size = size;
 
 	if (txt) SDL_FreeSurface(txt);
 	SDL_FreeSurface(s);
-
-	if (line_data) free(line_data);
 
 	lua_pushnumber(L, nb_lines);
 	lua_pushnumber(L, max_size);
