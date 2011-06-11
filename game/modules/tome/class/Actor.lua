@@ -2292,7 +2292,9 @@ function _M:getTalentFullDescription(t, addlevel)
 	if t.no_energy and type(t.no_energy) == "boolean" and t.no_energy == true then uspeed = "instant" end
 	d:add({"color",0x6f,0xff,0x83}, "Usage Speed: ", {"color",0xFF,0xFF,0xFF}, uspeed, true)
 
-	d:add({"color",0x6f,0xff,0x83}, "Description: ", {"color",0xFF,0xFF,0xFF}, t.info(self, t), true)
+	d:add({"color",0x6f,0xff,0x83}, "Description: ", {"color",0xFF,0xFF,0xFF})
+	d:merge(t.info(self, t):toTString():tokenize(" ()[]"))
+	d:add(true)
 
 	self.talents[t.id] = old
 

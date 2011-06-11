@@ -668,6 +668,29 @@ function tstring:splitLines(max_width, font)
 	return ret, max_w
 end
 
+function tstring:tokenize(tokens)
+	local ret = tstring{}
+	local v, tv
+	for i = 1, #self do
+		v = self[i]
+		tv = type(v)
+		if tv == "string" then
+			local ls = v:split(lpeg.S("\n"..tokens), true)
+			for i = 1, #ls do
+				local vv = ls[i]
+				if vv == "\n" then
+					ret[#ret+1] = true
+				else
+					ret[#ret+1] = vv
+				end
+			end
+		else
+			ret[#ret+1] = v
+		end
+	end
+	return ret
+end
+
 function tstring:makeLineTextures(max_width, font, no_split, r, g, b)
 	local list = no_split and self or self:splitLines(max_width, font)
 	local fh = font:lineSkip()
@@ -772,6 +795,20 @@ function tstring:drawOnSurface(s, max_width, max_lines, font, x, y, r, g, b, no_
 			end
 		end
 	end
+end
+
+function tstring:diffWith(str2, on_diff)
+	local res = tstring{}
+	local j = 1
+	for i = 1, #self do
+		if type(self[i]) == "string" and self[i] ~= str2[j] then
+			on_diff(self[i], str2[j], res)
+		else
+			res:add(self[i])
+		end
+		j = j + 1
+	end
+	return res
 end
 
 -- Make tstring into an object

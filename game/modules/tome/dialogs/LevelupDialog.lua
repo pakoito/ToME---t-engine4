@@ -791,23 +791,32 @@ function _M:onDrawItem(item)
 
 	else
 		local t = self.actor:getTalentFromId(item.talent)
-
-		if self.actor:getTalentLevelRaw(t.id) > 0 then
-			local req = self.actor:getTalentReqDesc(item.talent, 0)
+		local traw = self.actor:getTalentLevelRaw(t.id)
+		local diff = function(i1, i2, res)
+			res:add({"color", "LIGHT_GREEN"}, i1, {"color", "LAST"}, " [->", {"color", "YELLOW_GREEN"}, i2, {"color", "LAST"}, "]")
+		end
+		if traw == 0 and t.points >= 2 then
+			local req = self.actor:getTalentReqDesc(item.talent, 1):toTString():tokenize(" ()[]")
+			local req2 = self.actor:getTalentReqDesc(item.talent, 2):toTString():tokenize(" ()[]")
 			text:add{"color","WHITE"}
-			text:add({"font", "bold"}, "Current talent level: "..(self.actor:getTalentLevelRaw(t.id)), {"font", "normal"})
+			text:add({"font", "bold"}, "First talent level: ", tostring(traw+1), " [-> ", tostring(traw + 2), "]", {"font", "normal"})
+			text:add(true)
+			text:merge(req:diffWith(req2, diff))
+			text:merge(self.actor:getTalentFullDescription(t, 1):diffWith(self.actor:getTalentFullDescription(t, 2), diff))
+		elseif traw < t.points then
+			local req = self.actor:getTalentReqDesc(item.talent):toTString():tokenize(" ()[]")
+			local req2 = self.actor:getTalentReqDesc(item.talent, 1):toTString():tokenize(" ()[]")
+			text:add{"color","WHITE"}
+			text:add({"font", "bold"}, traw == 0 and "Next talent level" or "Current talent level: ", tostring(traw), " [-> ", tostring(traw + 1), "]", {"font", "normal"})
+			text:add(true)
+			text:merge(req:diffWith(req2, diff))
+			text:merge(self.actor:getTalentFullDescription(t):diffWith(self.actor:getTalentFullDescription(t, 1), diff))
+		else
+			local req = self.actor:getTalentReqDesc(item.talent)
+			text:add({"font", "bold"}, "Current talent level: "..traw, {"font", "normal"})
 			text:add(true)
 			text:merge(req)
 			text:merge(self.actor:getTalentFullDescription(t))
-			text:add(true,true)
-		end
-
-		if self.actor:getTalentLevelRaw(t.id) < t.points then
-			local req2 = self.actor:getTalentReqDesc(item.talent, 1)
-			text:add({"font", "bold"}, "Next talent level: "..(self.actor:getTalentLevelRaw(t.id)+1), {"font", "normal"})
-			text:add(true)
-			text:merge(req2)
-			text:merge(self.actor:getTalentFullDescription(t, 1))
 		end
 	end
 
