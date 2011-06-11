@@ -461,7 +461,7 @@ function _M:defineDisplayCallback()
 			-- Tactical life info
 			if on_map then
 				local dh = h * 0.1
-				core.display.drawQuad(x, y + h - dh, w, dh, 139, 210, 77, 128)
+				core.display.drawQuad(x, y + h - dh, w, dh, 129, 180, 57, 128)
 				core.display.drawQuad(x, y + h - dh, w * self.life / self.max_life, dh, 50, 220, 77, 255)
 
 				if not f_self then
