@@ -701,6 +701,7 @@ newEntity{
 	rarity = 190,
 	display = "*", color=colors.DARK_GREY, image = "object/bloodstone.png",
 	encumber = 2,
+	not_in_stores = true,
 	desc = [[Dry and dusty to the touch, it still seems to retain some of shadow of life.]],
 
 	carrier = {
