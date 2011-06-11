@@ -211,6 +211,7 @@ function string.lpegSub(s, patt, repl)
 end
 
 -- Those matching patterns are used both by splitLine and drawColorString*
+local Pextra = "&" * -lpeg.S"#"^1
 local Puid = "UID:" * lpeg.R"09"^1 * ":" * lpeg.R"09"
 local Puid_cap = "UID:" * lpeg.C(lpeg.R"09"^1) * ":" * lpeg.C(lpeg.R"09")
 local Pcolorname = (lpeg.R"AZ" + "_")^3
@@ -236,7 +237,7 @@ function string.splitLine(str, max_width, font)
 	local ls = str:split(lpeg.S"\n ")
 	for i = 1, #ls do
 		local v = ls[i]
-		local shortv = v:lpegSub("#" * (Puid + Pcolorcodefull + Pcolorname + Pfontstyle) * "#", "")
+		local shortv = v:lpegSub("#" * (Puid + Pcolorcodefull + Pcolorname + Pfontstyle + Pextra) * "#", "")
 		local w, h = font:size(shortv)
 
 		if cur_size + space_w + w < max_width then
@@ -323,7 +324,7 @@ end
 
 local tmps = core.display.newSurface(1, 1)
 getmetatable(tmps).__index.drawColorString = function(s, font, str, x, y, r, g, b, alpha_from_texture, limit_w)
-	local list = str:split("#" * (Puid + Pcolorcodefull + Pcolorname + Pfontstyle) * "#", true)
+	local list = str:split("#" * (Puid + Pcolorcodefull + Pcolorname + Pfontstyle + Pextra) * "#", true)
 	r = r or 255
 	g = g or 255
 	b = b or 255
@@ -337,6 +338,7 @@ getmetatable(tmps).__index.drawColorString = function(s, font, str, x, y, r, g, 
 		local col = lpeg.match("#" * lpeg.C(Pcolorname) * "#", v)
 		local uid, mo = lpeg.match("#" * Puid_cap * "#", v)
 		local fontstyle = lpeg.match("#" * Pfontstyle_cap * "#", v)
+		local extra = lpeg.match("#" * lpeg.C(Pextra) * "#", v)
 		if nr and ng and nb then
 			oldr, oldg, oldb = r, g, b
 			r, g, b = nr:parseHex(), ng:parseHex(), nb:parseHex()
@@ -364,6 +366,8 @@ getmetatable(tmps).__index.drawColorString = function(s, font, str, x, y, r, g, 
 			end
 		elseif fontstyle then
 			font:setStyle(fontstyle)
+		elseif extra then
+			--
 		else
 			local w, h = font:size(v)
 			local stop = false
@@ -391,7 +395,7 @@ end
 
 
 getmetatable(tmps).__index.drawColorStringBlended = function(s, font, str, x, y, r, g, b, alpha_from_texture, limit_w)
-	local list = str:split("#" * (Puid + Pcolorcodefull + Pcolorname + Pfontstyle) * "#", true)
+	local list = str:split("#" * (Puid + Pcolorcodefull + Pcolorname + Pfontstyle + Pextra) * "#", true)
 	r = r or 255
 	g = g or 255
 	b = b or 255
@@ -405,6 +409,7 @@ getmetatable(tmps).__index.drawColorStringBlended = function(s, font, str, x, y,
 		local col = lpeg.match("#" * lpeg.C(Pcolorname) * "#", v)
 		local uid, mo = lpeg.match("#" * Puid_cap * "#", v)
 		local fontstyle = lpeg.match("#" * Pfontstyle_cap * "#", v)
+		local extra = lpeg.match("#" * lpeg.C(Pextra) * "#", v)
 		if nr and ng and nb then
 			oldr, oldg, oldb = r, g, b
 			r, g, b = nr:parseHex(), ng:parseHex(), nb:parseHex()
@@ -432,6 +437,8 @@ getmetatable(tmps).__index.drawColorStringBlended = function(s, font, str, x, y,
 			end
 		elseif fontstyle then
 			font:setStyle(fontstyle)
+		elseif extra then
+			--
 		else
 			local w, h = font:size(v)
 			local stop = false
@@ -470,7 +477,7 @@ local tmps = core.display.newFont("/data/font/Vera.ttf", 12)
 local word_size_cache = {}
 local fontoldsize = getmetatable(tmps).__index.size
 getmetatable(tmps).__index.size = function(font, str)
-	local list = str:split("#" * (Puid + Pcolorcodefull + Pcolorname + Pfontstyle) * "#", true)
+	local list = str:split("#" * (Puid + Pcolorcodefull + Pcolorname + Pfontstyle + Pextra) * "#", true)
 	local mw, mh = 0, 0
 	local fstyle = font:getStyle()
 	word_size_cache[font] = word_size_cache[font] or {}
@@ -482,6 +489,7 @@ getmetatable(tmps).__index.size = function(font, str)
 		local col = lpeg.match("#" * lpeg.C(Pcolorname) * "#", v)
 		local uid, mo = lpeg.match("#" * Puid_cap * "#", v)
 		local fontstyle = lpeg.match("#" * Pfontstyle_cap * "#", v)
+		local extra = lpeg.match("#" * lpeg.C(Pextra) * "#", v)
 		if nr and ng and nb then
 			-- Ignore
 		elseif col then
@@ -502,6 +510,8 @@ getmetatable(tmps).__index.size = function(font, str)
 			font:setStyle(fontstyle)
 			fstyle = fontstyle
 			word_size_cache[font][fstyle] = word_size_cache[font][fstyle] or {}
+		elseif extra then
+			--
 		else
 			local w, h
 			if word_size_cache[font][fstyle][v] then
@@ -557,13 +567,14 @@ end
 --- Parse a string and return a tstring
 function string.toTString(str)
 	local tstr = tstring{}
-	local list = str:split(("#" * (Puid + Pcolorcodefull + Pcolorname + Pfontstyle) * "#") + lpeg.P"\n", true)
+	local list = str:split(("#" * (Puid + Pcolorcodefull + Pcolorname + Pfontstyle + Pextra) * "#") + lpeg.P"\n", true)
 	for i = 1, #list do
 		v = list[i]
 		local nr, ng, nb = lpeg.match("#" * lpeg.C(Pcolorcode) * lpeg.C(Pcolorcode) * lpeg.C(Pcolorcode) * "#", v)
 		local col = lpeg.match("#" * lpeg.C(Pcolorname) * "#", v)
 		local uid, mo = lpeg.match("#" * Puid_cap * "#", v)
 		local fontstyle = lpeg.match("#" * Pfontstyle_cap * "#", v)
+		local extra = lpeg.match("#" * lpeg.C(Pextra) * "#", v)
 		if nr and ng and nb then
 			tstr:add({"color", nr:parseHex(), ng:parseHex(), nb:parseHex()})
 		elseif col then
@@ -572,6 +583,8 @@ function string.toTString(str)
 			tstr:add({"uid", tonumber(uid)})
 		elseif fontstyle then
 			tstr:add({"font", fontstyle})
+		elseif extra then
+			tstr:add({"extra", extra:sub(2)})
 		elseif v == "\n" then
 			tstr:add(true)
 		else
@@ -596,6 +609,7 @@ function tstring:toString()
 			elseif v[1] == "color" then ret[#ret+1] = ("#%02x%02x%02x#"):format(v[2], v[3], v[4]):upper()
 			elseif v[1] == "font" then ret[#ret+1] = "#{"..v[2].."}#"
 			elseif v[1] == "uid" then ret[#ret+1] = "#UID:"..v[2]..":0#"
+			elseif v[1] == "extra" then ret[#ret+1] = "#&"..v[2].."#"
 			end
 		end
 	end
@@ -638,6 +652,8 @@ function tstring:splitLines(max_width, font)
 			end
 		elseif tv == "table" and v[1] == "font" then
 			font:setStyle(v[2])
+			ret[#ret+1] = v
+		elseif tv == "table" and v[1] == "extra" then
 			ret[#ret+1] = v
 		elseif tv == "table" and v[1] == "uid" then
 			local e = __uids[v[2]]
@@ -724,6 +740,8 @@ function tstring:makeLineTextures(max_width, font, no_split, r, g, b)
 				r, g, b = v[2], v[3], v[4]
 			elseif v[1] == "font" then
 				font:setStyle(v[2])
+			elseif v[1] == "extra" then
+				--
 			elseif v[1] == "uid" then
 				local e = __uids[v[2]]
 				if e then
@@ -782,6 +800,8 @@ function tstring:drawOnSurface(s, max_width, max_lines, font, x, y, r, g, b, no_
 				r, g, b = v[2], v[3], v[4]
 			elseif v[1] == "font" then
 				font:setStyle(v[2])
+			elseif v[1] == "extra" then
+				--
 			elseif v[1] == "uid" then
 				local e = __uids[v[2]]
 				if e then

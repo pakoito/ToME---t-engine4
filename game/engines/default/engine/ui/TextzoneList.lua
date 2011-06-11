@@ -74,7 +74,7 @@ function _M:createItem(item, text)
 	local old_style = self.font:getStyle()
 
 	-- Handle normal text
-	if type(text) == "string" then
+	if false and type(text) == "string" then
 		local list = text:splitLines(self.w, self.font)
 		local scroll = 1
 		local max = #list
@@ -108,6 +108,21 @@ function _M:createItem(item, text)
 	else
 		-- Draw the list items
 		local gen = self.font:draw(text:toString(), self.fw, 255, 255, 255)
+
+		for i = 1, #gen do
+			if gen[i].line_extra then
+				if gen[i].line_extra:sub(1, 7) == "linebg:" then
+					local color = colors[gen[i].line_extra:sub(8)]
+					if color then
+						gen[i].background = colors.simple(color)
+						gen[i].background[4] = 255
+					else
+						local c = gen[i].line_extra
+						gen[i].background = {string.parseHex(c:sub(8, 9)), string.parseHex(c:sub(10, 11)), string.parseHex(c:sub(12, 13)), string.parseHex(c:sub(14, 15))}
+					end
+				end
+			end
+		end
 
 		local scroll = 1
 		local max = #gen
@@ -154,6 +169,11 @@ function _M:display(x, y)
 	for i = self.scroll, max do
 		local item = self.list[i]
 		if not item then break end
+
+		if item.background then
+			core.display.drawQuad(x, y, self.fw, self.fh, item.background[1], item.background[2], item.background[3], item.background[4])
+		end
+
 		if item.is_separator then
 			self.sep:display(x, y + (self.fh - self.sep.h) / 2)
 		else
