@@ -75,9 +75,9 @@ newEntity{
 	force_clone=true,
 	always_remember = true,
 	notice = true,
-	on_move = function(self, x, y, who)
-		if not who.player then return end
-		if not game.level.data.touch_orb then return end
+	block_move = function(self, x, y, who, act, couldpass)
+		if not who or not who.player or not act then return true end
+		if not game.level.data.touch_orb then return true end
 		local text = "???"
 		if self.portal_type == "water" then text = "The orb seems to drip water."
 		elseif self.portal_type == "earth" then text = "The orb is covered in dust."
@@ -91,5 +91,6 @@ newEntity{
 				game.level.data.touch_orb(self.portal_type, x, y)
 			end
 		end)
+		return true
 	end,
 }
