@@ -37,7 +37,7 @@ A gloomy aura emanates from him.]],
 	move_others=true,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	resolvers.equip{ {type="weapon", subtype="battleaxe", ego_chance=100, autoreq=true}, },
+	resolvers.equip{ {type="weapon", subtype="battleaxe", tome_drops="boss", force_drop=true, autoreq=true}, },
 	resolvers.drops{chance=100, nb=2, {tome_drops="boss"} },
 
 	resolvers.talents{
