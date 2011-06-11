@@ -120,6 +120,7 @@ function _M:drawItem(item, nb_keyframes)
 
 				-- We use 1000 and do not cut lines to make sure it draws as much as possible
 				text:drawOnSurface(s, 10000, nil, self.font, col.frame_sel.b4.w+item.displayx_offset[j], (fh - self.font_h) / 2, color[1], color[2], color[3])
+				item.autoscroll = true
 			else
 				text:drawOnSurface(s, 10000, nil, self.font, col.frame_sel.b4.w, (fh - self.font_h) / 2, color[1], color[2], color[3])
 			end
@@ -282,7 +283,7 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y)
 			self:drawItem(self.previtem)
 			self.previtem = nil
 		end
-		if item then
+		if item and item.autoscroll then
 			self:drawItem(item, nb_keyframes)
 			self.previtem = item
 		end

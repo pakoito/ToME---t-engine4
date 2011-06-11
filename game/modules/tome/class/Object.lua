@@ -365,8 +365,8 @@ function _M:getTextualDesc(compare_with)
 		if #dm > 0 or combat.dam then
 			desc:add(("Base power: %.1f - %.1f"):format((combat.dam or 0) + (add_table.dam or 0), ((combat.damrange or 0) + (add_table.damrange or 0)) * ((combat.dam or 0) + (add_table.dam or 0))), true)
 			desc:add(("Uses stat%s: %s"):format(#dm > 1 and "s" or "",table.concat(dm, ', ')), true)
-			local col = lpeg.match("#" * lpeg.C((lpeg.R"AZ" + "_")^3) * "#", combat.damtype and DamageType:get(combat.damtype) and DamageType:get(combat.damtype).text_color or "#WHITE#")
-			desc:add("Damage type: ",col and {"color",col} or {"color","WHITE"},DamageType:get(combat.damtype or DamageType.PHYSICAL).name:capitalize(),{"color","LAST"}, true)
+			local col = (combat.damtype and DamageType:get(combat.damtype) and DamageType:get(combat.damtype).text_color or "#WHITE#"):toTString()
+			desc:add("Damage type: ", col[2],DamageType:get(combat.damtype or DamageType.PHYSICAL).name:capitalize(),{"color","LAST"}, true)
 		end
 
 		compare_fields(combat, compare_with, field, "atk", "%+d", "Accuracy: ", 1, false, false, add_table)
@@ -431,8 +431,8 @@ function _M:getTextualDesc(compare_with)
 		compare_fields(combat, compare_with, field, "travel_speed", "%+d%%", "Travel speed: ", 1, false, false, add_table)
 
 		compare_table_fields(combat, compare_with, field, "melee_project", "%+d", "Damage on strike(melee): ", function(item)
-				local color = DamageType.dam_def[item].text_color and DamageType.dam_def[item].text_color:gsub("#","") or "WHITE"
-				return {"color",color},(" %s"):format(DamageType.dam_def[item].name),{"color","LAST"}
+				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
+				return col[2], (" %s"):format(DamageType.dam_def[item].name),{"color","LAST"}
 			end)
 
 		compare_table_fields(combat, compare_with, field, "inc_damage_type", "%+d%%", "Damage against: ", function(item)
@@ -465,33 +465,33 @@ function _M:getTextualDesc(compare_with)
 			end)
 
 		compare_table_fields(w, compare_with, field, "melee_project", "%d", "Damage on hit(melee): ", function(item)
-				local color = DamageType.dam_def[item].text_color and DamageType.dam_def[item].text_color:gsub("#","") or "WHITE"
-				return {"color",color},(" %s"):format(DamageType.dam_def[item].name),{"color","LAST"}
+				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
+				return col[2],(" %s"):format(DamageType.dam_def[item].name),{"color","LAST"}
 			end)
 
 		compare_table_fields(w, compare_with, field, "ranged_project", "%d", "Damage on hit(ranged): ", function(item)
-				local color = DamageType.dam_def[item].text_color and DamageType.dam_def[item].text_color:gsub("#","") or "WHITE"
-				return {"color",color},(" %s"):format(DamageType.dam_def[item].name),{"color","LAST"}
+				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
+				return col[2],(" %s"):format(DamageType.dam_def[item].name),{"color","LAST"}
 			end)
 
 		compare_table_fields(w, compare_with, field, "on_melee_hit", "%d", "Damage when hit: ", function(item)
-				local color = DamageType.dam_def[item].text_color and DamageType.dam_def[item].text_color:gsub("#","") or "WHITE"
-				return {"color",color},(" %s"):format(DamageType.dam_def[item].name),{"color","LAST"}
+				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
+				return col[2],(" %s"):format(DamageType.dam_def[item].name),{"color","LAST"}
 			end)
 
 		compare_table_fields(w, compare_with, field, "resists", "%+d%%", "Changes resistances: ", function(item)
-				local col = lpeg.match("#" * lpeg.C((lpeg.R"AZ" + "_")^3) * "#", DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#")
-				return col and {"color",col} or {"color","WHITE"}, (" %s"):format(item == "all" and "all" or DamageType.dam_def[item].name), {"color","LAST"}
+				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
+				return col[2], (" %s"):format(item == "all" and "all" or DamageType.dam_def[item].name), {"color","LAST"}
 			end)
 
 		compare_table_fields(w, compare_with, field, "resists_cap", "%+d%%", "Changes resistances cap: ", function(item)
-				local col = lpeg.match("#" * lpeg.C((lpeg.R"AZ" + "_")^3) * "#", DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#")
-				return col and {"color",col} or {"color","WHITE"}, (" %s"):format(item == "all" and "all" or DamageType.dam_def[item].name), {"color","LAST"}
+				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
+				return col[2], (" %s"):format(item == "all" and "all" or DamageType.dam_def[item].name), {"color","LAST"}
 			end)
 
 		compare_table_fields(w, compare_with, field, "inc_damage", "%+d%%", "Changes damage: ", function(item)
-				local col = lpeg.match("#" * lpeg.C((lpeg.R"AZ" + "_")^3) * "#", DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#")
-				return col and {"color",col} or {"color","WHITE"}, (" %s"):format(item == "all" and "all" or DamageType.dam_def[item].name), {"color","LAST"}
+				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
+				return col[2], (" %s"):format(item == "all" and "all" or DamageType.dam_def[item].name), {"color","LAST"}
 			end)
 
 
@@ -817,7 +817,6 @@ function _M:getTextualDesc(compare_with)
 
 	local use_desc = self:getUseDesc()
 	if use_desc then desc:add(use_desc) end
-
 	return desc
 end
 
