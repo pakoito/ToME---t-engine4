@@ -70,27 +70,6 @@ function _M:targetDisplayTooltip(dx, dy)
 		end
 		self.old_tmx, self.old_tmy = tmx, tmy
 	end
-
-	if not self.tooltip2 then return end
-
-	-- Tooltip is displayed over all else
-	if self.level and self.level.map and self.level.map.finished then
-		-- Display a tooltip if available
-		if self.tooltip2_x then
-			if type(self.tooltip2_x) == "table" then
-				self.tooltip2:toScreen(self.tooltip2.last_display_x, self.tooltip2.last_display_y)
-			else
-				local tmx, tmy = self.level.map:getMouseTile(self.tooltip2_x , self.tooltip2_y)
-				self.tooltip2:displayAtMap(tmx, tmy, dx, dy)
-			end
-		end
-
-		-- Move target around
-		if self.old_tmx ~= tmx or self.old_tmy ~= tmy then
-			self.target.target.x, self.target.target.y = tmx, tmy
-		end
-		self.old_tmx, self.old_tmy = tmx, tmy
-	end
 end
 
 --- Enter/leave targeting mode

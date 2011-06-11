@@ -81,9 +81,34 @@ newBirthDescriptor{
 	{
 		"Play as your favorite race and class and venture into the infinite dungeon.",
 		"The only limit to how far you can go is your own skill!",
+		"Inside the infinite dungeon you will yourself be limitless, you can levelup after level 50 and continue to gain stat and talent points (at a reduced rate).",
+		"Every levels after level 50 the maximun of stats will increase by one.",
+		"Every 10 levels after level 50 the maximun points of every talents will increase by one.",
 	},
 	descriptor_choices = default_eyal_descriptors{ difficulty = { Tutorial = "never"} },
 	copy = {
+		-- Can levelup forever
+		resolvers.generic(function(e) e.max_level = nil end),
+		no_points_on_levelup = function(self)
+			if self.level <= 50 then
+				self.unused_stats = self.unused_stats + (self.stats_per_level or 3) + self:getRankStatAdjust()
+				self.unused_talents = self.unused_talents + 1
+				self.unused_generics = self.unused_generics + 1
+				if self.level % 5 == 0 then self.unused_talents = self.unused_talents + 1 end
+				if self.level % 5 == 0 then self.unused_generics = self.unused_generics - 1 end
+				if self.level == 10 or  self.level == 20 or self.level == 30 or self.level == 40 then
+					self.unused_talents_types = self.unused_talents_types + 1
+				end
+			else
+				self.unused_stats = self.unused_stats + 1
+				if self.level % 2 == 0 then
+					self.unused_talents = self.unused_talents + 1
+				elseif self.level % 3 == 0 then
+					self.unused_generics = self.unused_generics + 1
+				end
+			end
+		end,
+
 		-- Give the orb of knowledge
 		resolvers.inventory{ id=true, {defined="ORB_KNOWLEDGE"}},
 		resolvers.equip{ id=true, {name="iron pickaxe", ego_chance=-1000}},

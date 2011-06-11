@@ -369,10 +369,10 @@ static int sdl_font_style_get(lua_State *L)
 	TTF_Font **f = (TTF_Font**)auxiliar_checkclass(L, "sdl{font}", 1);
 	int style = TTF_GetFontStyle(*f);
 
-	if (style & TTF_STYLE_BOLD) lua_pushstring(L, "bold");
-	else if (style & TTF_STYLE_ITALIC) lua_pushstring(L, "italic");
-	else if (style & TTF_STYLE_UNDERLINE) lua_pushstring(L, "underline");
-	else lua_pushstring(L, "normal");
+	if (style & TTF_STYLE_BOLD) lua_pushliteral(L, "bold");
+	else if (style & TTF_STYLE_ITALIC) lua_pushliteral(L, "italic");
+	else if (style & TTF_STYLE_UNDERLINE) lua_pushliteral(L, "underline");
+	else lua_pushliteral(L, "normal");
 
 	return 1;
 }
@@ -486,11 +486,11 @@ static int sdl_surface_drawstring_newsurface_aa(lua_State *L)
 	return 1;
 }
 
-static font_make_texture_line(lua_State *L, SDL_Surface *s, int id)
+static font_make_texture_line(lua_State *L, SDL_Surface *s, int id, bool is_separator)
 {
 	lua_createtable(L, 0, 5);
 
-	lua_pushstring(L, "_tex");
+	lua_pushliteral(L, "_tex");
 	GLuint *t = (GLuint*)lua_newuserdata(L, sizeof(GLuint));
 	auxiliar_setclass(L, "gl{texture}", -1);
 	lua_rawset(L, -3);
@@ -501,19 +501,26 @@ static font_make_texture_line(lua_State *L, SDL_Surface *s, int id)
 	make_texture_for_surface(s, &fw, &fh);
 	copy_surface_to_texture(s);
 
-	lua_pushstring(L, "_tex_w");
+	lua_pushliteral(L, "_tex_w");
 	lua_pushnumber(L, fw);
 	lua_rawset(L, -3);
-	lua_pushstring(L, "_tex_h");
+	lua_pushliteral(L, "_tex_h");
 	lua_pushnumber(L, fh);
 	lua_rawset(L, -3);
 
-	lua_pushstring(L, "w");
+	lua_pushliteral(L, "w");
 	lua_pushnumber(L, s->w);
 	lua_rawset(L, -3);
-	lua_pushstring(L, "h");
+	lua_pushliteral(L, "h");
 	lua_pushnumber(L, s->h);
 	lua_rawset(L, -3);
+
+	if (is_separator)
+	{
+		lua_pushliteral(L, "is_separator");
+		lua_pushboolean(L, TRUE);
+		lua_rawset(L, -3);
+	}
 
 	lua_rawseti(L, -2, id);
 }
@@ -545,6 +552,7 @@ static int sdl_font_draw(lua_State *L)
 	char *start = (char*)str, *stop = (char*)str, *next = (char*)str;
 	int max_size = 0;
 	int size = 0;
+	bool is_separator = FALSE;
 	int i;
 	bool force_nl = FALSE;
 	SDL_Surface *txt = NULL;
@@ -572,7 +580,8 @@ static int sdl_font_draw(lua_State *L)
 			if (!no_linefeed && (force_nl || (txt && (size + txt->w > max_width))))
 			{
 				// Push it & reset the surface
-				font_make_texture_line(L, s, nb_lines);
+				font_make_texture_line(L, s, nb_lines, is_separator);
+				is_separator = FALSE;
 				SDL_FillRect(s, NULL, SDL_MapRGBA(s->format, 0, 0, 0, 0));
 //				printf("Ending previous line at size %d\n", size);
 				if (size > max_size) max_size = size;
@@ -583,6 +592,9 @@ static int sdl_font_draw(lua_State *L)
 
 			if (txt)
 			{
+				// Detect separators
+				if ((*start == '-') && (*(start+1) == '-') && (*(start+2) == '-') && !(*(start+3))) is_separator = TRUE;
+
 //				printf("Drawing word '%s'\n", start);
 				SDL_SetAlpha(txt, 0, 0);
 				sdlDrawImage(s, txt, size, 0);
@@ -642,13 +654,13 @@ static int sdl_font_draw(lua_State *L)
 						g = color.g;
 						b = color.b;
 
-						lua_pushstring(L, "r");
+						lua_pushliteral(L, "r");
 						lua_rawget(L, -2);
 						color.r = lua_tonumber(L, -1);
-						lua_pushstring(L, "g");
+						lua_pushliteral(L, "g");
 						lua_rawget(L, -3);
 						color.g = lua_tonumber(L, -1);
-						lua_pushstring(L, "b");
+						lua_pushliteral(L, "b");
 						lua_rawget(L, -4);
 						color.b = lua_tonumber(L, -1);
 						lua_pop(L, 3);
@@ -703,7 +715,7 @@ static int sdl_font_draw(lua_State *L)
 		next++;
 	}
 
-	font_make_texture_line(L, s, nb_lines);
+	font_make_texture_line(L, s, nb_lines, is_separator);
 	if (size > max_size) max_size = size;
 
 	if (txt) SDL_FreeSurface(txt);
@@ -1809,11 +1821,11 @@ static int sdl_get_modes_list(lua_State *L)
 				lua_pushnumber(L, nb++);
 				lua_newtable(L);
 
-				lua_pushstring(L, "w");
+				lua_pushliteral(L, "w");
 				lua_pushnumber(L, modes[i]->w);
 				lua_settable(L, -3);
 
-				lua_pushstring(L, "h");
+				lua_pushliteral(L, "h");
 				lua_pushnumber(L, modes[i]->h);
 				lua_settable(L, -3);
 
@@ -2411,7 +2423,7 @@ int luaopen_core(lua_State *L)
 	luaL_openlib(L, "core.zlib", zliblib, 0);
 
 	luaL_openlib(L, "core.game", gamelib, 0);
-	lua_pushstring(L, "VERSION");
+	lua_pushliteral(L, "VERSION");
 	lua_pushnumber(L, TE4CORE_VERSION);
 	lua_settable(L, -3);
 

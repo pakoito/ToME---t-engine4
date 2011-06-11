@@ -28,7 +28,7 @@ desc = function(self, who)
 		desc[#desc+1] = "#SLATE#* You must explore the underwater lair of Murgol.#WHITE#"
 	end
 	if self:isCompleted("ritch") then
-		desc[#desc+1] = "#LIGHT_GREEN#* You have explored the ritch'z tunnels and vanquished their queen.#WHITE#"
+		desc[#desc+1] = "#LIGHT_GREEN#* You have explored the ritch's tunnels and vanquished their queen.#WHITE#"
 	else
 		desc[#desc+1] = "#SLATE#* You must explore ritch's tunnels.#WHITE#"
 	end

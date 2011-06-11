@@ -296,7 +296,7 @@ Some females have died during the procedures. I can only presume these were the 
 newLore{
 	id = "orc-breeding-3",
 	category = "orc prides",
-	name = "Clinician Korbek's experimental notes part tree",
+	name = "Clinician Korbek's experimental notes part three",
 	lore = [[#{bold}#Clinician Korbek's experimental notes part three#{normal}#
 
 My work is continuing with tremendous success. All subjects now have multiple operational wombs, thanks to the corrupted blood infusions coupled with arcane regeneration fields to quickly repair the corrupted tissues. With greater advances in accelerating the foetal growth stage we are now seeing new orcs every few days! I believe this can be pushed even further.

@@ -92,6 +92,8 @@ function _M:init(t, no_gen)
 		end
 	end
 
+	if t.ui then self.ui = t.ui end
+
 	if not no_gen then self:generate() end
 end
 

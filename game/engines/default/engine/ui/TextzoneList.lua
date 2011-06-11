@@ -21,24 +21,29 @@ require "engine.class"
 local Base = require "engine.ui.Base"
 local Focusable = require "engine.ui.Focusable"
 local Slider = require "engine.ui.Slider"
+local Separator = require "engine.ui.Separator"
 
 --- A generic UI list
 module(..., package.seeall, class.inherit(Base, Focusable))
 
 function _M:init(t)
 	self.items = {}
+	if t.weakstore then setmetatable(self.items, {__mode="k"}) end
 	self.cur_item = 0
 	self.w = assert(t.width, "no list width")
 	if t.auto_height then t.height = 1 end
 	self.h = assert(t.height, "no list height")
 	self.scrollbar = t.scrollbar
 	self.no_color_bleed = t.no_color_bleed
+	self.variable_height = t.variable_height
 
 	if self.scrollbar then
 		self.can_focus = true
 	end
 
 	Base.init(self, t)
+
+	self.sep = Separator.new{dir="vertical", size=self.w, ui=self.ui}
 end
 
 function _M:generate()
@@ -69,11 +74,15 @@ function _M:createItem(item, text)
 	local old_style = self.font:getStyle()
 
 	-- Handle normal text
-	if false and type(text) == "string" then
+	if type(text) == "string" then
 		local list = text:splitLines(self.w, self.font)
 		local scroll = 1
 		local max = #list
 		local max_display = math.floor(self.h / self.fh)
+		if self.variable_height then
+			self.h = max * self.fh
+			max_display = max
+		end
 
 		-- Draw the list items
 		local gen = {}
@@ -103,6 +112,10 @@ function _M:createItem(item, text)
 		local scroll = 1
 		local max = #gen
 		local max_display = math.floor(self.h / self.fh)
+		if self.variable_height then
+			self.h = max * self.fh
+			max_display = max
+		end
 
 		self.items[item] = {
 			list = gen,
@@ -128,6 +141,11 @@ function _M:switchItem(item, create_if_needed)
 	return true
 end
 
+function _M:erase()
+	self.list = {}
+	self.items = {}
+end
+
 function _M:display(x, y)
 	if not self.list then return end
 
@@ -136,8 +154,12 @@ function _M:display(x, y)
 	for i = self.scroll, max do
 		local item = self.list[i]
 		if not item then break end
-		if self.text_shadow then item._tex:toScreenFull(x+1, y+1, self.fw, self.fh, item._tex_w, item._tex_h, 0, 0, 0, self.text_shadow) end
-		item._tex:toScreenFull(x, y, self.fw, self.fh, item._tex_w, item._tex_h)
+		if item.is_separator then
+			self.sep:display(x, y + (self.fh - self.sep.h) / 2)
+		else
+			if self.text_shadow then item._tex:toScreenFull(x+1, y+1, self.fw, self.fh, item._tex_w, item._tex_h, 0, 0, 0, self.text_shadow) end
+			item._tex:toScreenFull(x, y, self.fw, self.fh, item._tex_w, item._tex_h)
+		end
 		y = y + self.fh
 	end
 

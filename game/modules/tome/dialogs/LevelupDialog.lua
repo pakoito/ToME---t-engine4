@@ -420,6 +420,11 @@ function _M:getStatDescription(stat_id)
 	return text, h * #lines
 end
 
+function _M:getMaxTPoints(t)
+	if t.points == 1 then return 1 end
+	return t.points + math.max(0, math.floor((self.actor.level - 50) / 10))
+end
+
 function _M:getStatNewTalents(stat_id)
 	local text = "#LIGHT_BLUE#New available talents: #LAST#\n"
 	local stats = { "str", "dex", "mag", "wil", "cun", "con" }
@@ -427,7 +432,7 @@ function _M:getStatNewTalents(stat_id)
 	if diff ~= 0 and self.talent_stats_req[stats[stat_id]] then
 		for j=1,#self.talent_stats_req[stats[stat_id]] do
 			local t = self.actor:getTalentFromId(self.talent_stats_req[stats[stat_id]][j][1].talent)
-			if self.actor:canLearnTalent(t) and not self.actor_dup:canLearnTalent(t) and t.points > self.actor:getTalentLevelRaw(t) then
+			if self.actor:canLearnTalent(t) and not self.actor_dup:canLearnTalent(t) and self:getMaxTPoints(t) > self.actor:getTalentLevelRaw(t) then
 				text = text.."#GOLD#  - "..t.name.."#LAST#\n"
 			end
 		end
@@ -479,7 +484,7 @@ function _M:incStat(v)
 			self:simplePopup("Stat is at the maximum for your level", "You cannot increase this stat further until next level!")
 			return
 		end
-		if self.actor:isStatMax(self.sel) or self.actor:getStat(self.sel, nil, nil, true) >= 60 then
+		if self.actor:isStatMax(self.sel) or self.actor:getStat(self.sel, nil, nil, true) >= 60 + math.max(0, (self.actor.level - 50)) then
 			self:simplePopup("Stat is at the maximum", "You cannot increase this stat further!")
 			return
 		end
@@ -635,11 +640,11 @@ function _M:learnTalent(t_id, v)
 				self:simplePopup("Cannot learn talent", "Prerequisites not met!")
 				return
 			end
-			if self.actor:getTalentLevelRaw(t_id) >= t.points then
+			if self.actor:getTalentLevelRaw(t_id) >= self:getMaxTPoints(t) then
 				self:simplePopup("Already known", "You already fully know this talent!")
 				return
 			end
-			self.actor:learnTalent(t_id)
+			self.actor:learnTalent(t_id, true)
 			self.actor.unused_talents = self.actor.unused_talents - 1
 			self.talents_changed[t_id] = true
 			self.talents_learned[t_id] = self.talents_learned[t_id] + 1
@@ -676,7 +681,7 @@ function _M:learnTalent(t_id, v)
 				self:simplePopup("Cannot learn talent", "Prerequisites not met!")
 				return
 			end
-			if self.actor:getTalentLevelRaw(t_id) >= t.points then
+			if self.actor:getTalentLevelRaw(t_id) >= self:getMaxTPoints(t) then
 				self:simplePopup("Already known", "You already fully know this talent!")
 				return
 			end
@@ -792,10 +797,10 @@ function _M:onDrawItem(item)
 	else
 		local t = self.actor:getTalentFromId(item.talent)
 		local traw = self.actor:getTalentLevelRaw(t.id)
-		local diff = function(i1, i2, res)
+		local diff = function(i2, i1, res)
 			res:add({"color", "LIGHT_GREEN"}, i1, {"color", "LAST"}, " [->", {"color", "YELLOW_GREEN"}, i2, {"color", "LAST"}, "]")
 		end
-		if traw == 0 and t.points >= 2 then
+		if traw == 0 and self:getMaxTPoints(t) >= 2 then
 			local req = self.actor:getTalentReqDesc(item.talent, 1):toTString():tokenize(" ()[]")
 			local req2 = self.actor:getTalentReqDesc(item.talent, 2):toTString():tokenize(" ()[]")
 			text:add{"color","WHITE"}
@@ -803,14 +808,14 @@ function _M:onDrawItem(item)
 			text:add(true)
 			text:merge(req:diffWith(req2, diff))
 			text:merge(self.actor:getTalentFullDescription(t, 1):diffWith(self.actor:getTalentFullDescription(t, 2), diff))
-		elseif traw < t.points then
+		elseif traw < self:getMaxTPoints(t) then
 			local req = self.actor:getTalentReqDesc(item.talent):toTString():tokenize(" ()[]")
 			local req2 = self.actor:getTalentReqDesc(item.talent, 1):toTString():tokenize(" ()[]")
 			text:add{"color","WHITE"}
 			text:add({"font", "bold"}, traw == 0 and "Next talent level" or "Current talent level: ", tostring(traw), " [-> ", tostring(traw + 1), "]", {"font", "normal"})
 			text:add(true)
-			text:merge(req:diffWith(req2, diff))
-			text:merge(self.actor:getTalentFullDescription(t):diffWith(self.actor:getTalentFullDescription(t, 1), diff))
+			text:merge(req2:diffWith(req, diff))
+			text:merge(self.actor:getTalentFullDescription(t, 1):diffWith(self.actor:getTalentFullDescription(t), diff))
 		else
 			local req = self.actor:getTalentReqDesc(item.talent)
 			text:add({"font", "bold"}, "Current talent level: "..traw, {"font", "normal"})
@@ -870,13 +875,13 @@ function _M:generateList()
 					list[#list].status = function(item)
 						local t = self.actor:getTalentFromId(item.talent)
 						local ttknown = self.actor:knowTalentType(item._type)
-						if self.actor:getTalentLevelRaw(t.id) == t.points then
-							return tstring{{"color", 0x00, 0xFF, 0x00}, self.actor:getTalentLevelRaw(t.id).."/"..t.points}
+						if self.actor:getTalentLevelRaw(t.id) == self:getMaxTPoints(t) then
+							return tstring{{"color", 0x00, 0xFF, 0x00}, self.actor:getTalentLevelRaw(t.id).."/"..self:getMaxTPoints(t)}
 						else
 							if not self.actor:canLearnTalent(t) then
-								return tstring{(ttknown and {"color", 0xFF, 0x00, 0x00} or {"color", 0x80, 0x80, 0x80}), self.actor:getTalentLevelRaw(t.id).."/"..t.points}
+								return tstring{(ttknown and {"color", 0xFF, 0x00, 0x00} or {"color", 0x80, 0x80, 0x80}), self.actor:getTalentLevelRaw(t.id).."/"..self:getMaxTPoints(t)}
 							else
-								return tstring{(ttknown and {"color", "WHITE"} or {"color", 0x80, 0x80, 0x80}), self.actor:getTalentLevelRaw(t.id).."/"..t.points}
+								return tstring{(ttknown and {"color", "WHITE"} or {"color", 0x80, 0x80, 0x80}), self.actor:getTalentLevelRaw(t.id).."/"..self:getMaxTPoints(t)}
 							end
 						end
 					end
@@ -1169,7 +1174,7 @@ function _M:drawDialog(kind)
 			if self.talent_stats_req[stats[stat_id]] then
 				for j=1,#self.talent_stats_req[stats[stat_id]] do
 					local t = self.actor:getTalentFromId(self.talent_stats_req[stats[stat_id]][j][1].talent)
-					if self.actor:canLearnTalent(t) and not self.actor_dup:canLearnTalent(t) and t.points > self.actor:getTalentLevelRaw(t) and not talents_added[self.talent_stats_req[stats[stat_id]][j][1].talent] and not talents_learned[self.talent_stats_req[stats[stat_id]][j][1].talent] then
+					if self.actor:canLearnTalent(t) and not self.actor_dup:canLearnTalent(t) and self:getMaxTPoints(t) > self.actor:getTalentLevelRaw(t) and not talents_added[self.talent_stats_req[stats[stat_id]][j][1].talent] and not talents_learned[self.talent_stats_req[stats[stat_id]][j][1].talent] then
 						talents_added[self.talent_stats_req[stats[stat_id]][j][1].talent] = true
 						local desc = "#GOLD##{bold}#"..t.name.."#{normal}##WHITE#\n"..tostring(self.actor:getTalentFullDescription(t))
 						self:mouseTooltip(desc, s:drawColorStringBlended(self.font, ("#GOLD#%s"):format(t.name), w, h, 255, 255, 255, true)) h = h + self.font_h
