@@ -829,7 +829,7 @@ end
 function _M:combatSpellResist()
 	local add = 0
 	if self:knowTalent(self.T_POWER_IS_MONEY) then
-		add = add + util.bound(self.money / (60 - self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 5), 0, self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 10)
+		add = add + util.bound(self.money / (80 - self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 5), 0, self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 10)
 	end
 	return self.combat_spellresist + (self:getMag() + self:getWil() + (self:getLck() - 50) * 0.5) * 0.35 + add
 end
@@ -842,7 +842,7 @@ function _M:combatMentalResist()
 		add = add + t.getMental(self, t)
 	end
 	if self:knowTalent(self.T_POWER_IS_MONEY) then
-		add = add + util.bound(self.money / (60 - self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 5), 0, self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 10)
+		add = add + util.bound(self.money / (80 - self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 5), 0, self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 10)
 	end
 	return self.combat_mentalresist + (self:getCun() + self:getWil() + (self:getLck() - 50) * 0.5) * 0.35 + add
 end
