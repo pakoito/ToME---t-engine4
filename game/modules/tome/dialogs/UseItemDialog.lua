@@ -59,23 +59,22 @@ function _M:use(item)
 
 	local act = item.action
 
-	local stop = false
 	if act == "use" then
-		self.actor:playerUseItem(self.object, self.item, self.inven, self.onuse) stop = true
-		self.onuse(self.inven, self.item, self.object, stop)
+		self.actor:playerUseItem(self.object, self.item, self.inven, self.onuse)
+		self.onuse(self.inven, self.item, self.object, true)
 	elseif act == "drop" then
-		self.actor:doDrop(self.inven, self.item, function() self.onuse(self.inven, self.item, self.object, stop) end)
+		self.actor:doDrop(self.inven, self.item, function() self.onuse(self.inven, self.item, self.object, false) end)
 	elseif act == "wear" then
 		self.actor:doWear(self.inven, self.item, self.object)
-		self.onuse(self.inven, self.item, self.object, stop)
+		self.onuse(self.inven, self.item, self.object, false)
 	elseif act == "takeoff" then
 		self.actor:doTakeoff(self.inven, self.item, self.object)
-		self.onuse(self.inven, self.item, self.object, stop)
+		self.onuse(self.inven, self.item, self.object, false)
 	elseif act == "transmo" then
 		self:yesnoPopup("Transmogrify", "Really transmogrify "..self.object:getName{}, function(ret)
 			if not ret then return end
 			item.transmo:transmo_inven(self.actor, self.inven, self.item, self.object)
-			self.onuse(self.inven, self.item, self.object, stop)
+			self.onuse(self.inven, self.item, self.object, false)
 		end)
 	elseif act == "chat-link" then
 		profile.chat.uc_ext:sendObjectLink(self.object)
