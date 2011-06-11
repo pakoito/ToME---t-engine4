@@ -57,7 +57,9 @@ function _M:init(title, actor, order, at_end, quickbirth, w, h)
 	self.c_tile = Button.new{text="Select custom tile", fct=function() self:selectTile() end}
 	self.c_cancel = Button.new{text="Cancel", fct=function() self:atEnd("quit") end}
 
-	self.c_name = Textbox.new{title="Name: ", text=game.player_name, chars=30, max_len=50, fct=function() end, on_change=function() self:setDescriptor() end}
+	self.c_name = Textbox.new{title="Name: ", text=game.player_name, chars=30, max_len=50, fct=function()
+		if config.settings.cheat then self:makeDefault() end
+	end, on_change=function() self:setDescriptor() end}
 
 	self.c_female = Checkbox.new{title="Female", default=true,
 		fct=function() end,
@@ -179,6 +181,19 @@ function _M:atEnd(v)
 	elseif v == "quit" then
 		util.showMainMenu()
 	end
+end
+
+--- Make a default character when using cheat mode, for easier testing
+function _M:makeDefault()
+	self:setDescriptor("sex", "Female")
+	self:setDescriptor("world", "Maj'Eyal")
+	self:setDescriptor("difficulty", "Normal")
+	self:setDescriptor("race", "Human")
+	self:setDescriptor("subrace", "Higher")
+	self:setDescriptor("class", "Warrior")
+	self:setDescriptor("subclass", "Fighter")
+	__module_extra_info.no_birth_popup = true
+	self:atEnd("created")
 end
 
 function _M:randomBirth()

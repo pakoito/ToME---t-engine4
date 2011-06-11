@@ -254,7 +254,7 @@ function _M:newGame()
 					if __module_extra_info.birth_done_script then loadstring(__module_extra_info.birth_done_script)() end
 				end, true)
 				self:registerDialog(d)
-				if __module_extra_info.no_birth_popup then d.key:triggerVirtual("ACCEPT") end
+				if __module_extra_info.no_birth_popup then d.key:triggerVirtual("EXIT") end
 			end
 
 			if self.player.no_birth_levelup or __module_extra_info.no_birth_popup then birthend()
