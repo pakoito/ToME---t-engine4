@@ -543,6 +543,7 @@ void thread_particle_run(particle_thread *pt, plist *l)
 	if (lua_pcall(L, 1, 0, 0))
 	{
 		printf("L(%x) Particle updater error %x (%d, %d): %s\n", (int)L, (int)l, l->updator_ref, l->emit_ref, lua_tostring(L, -1));
+//		ps->i_want_to_die = TRUE;
 		lua_pop(L, 1);
 	}
 
