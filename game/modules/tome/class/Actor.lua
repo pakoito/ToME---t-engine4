@@ -124,6 +124,7 @@ function _M:init(t, no_default)
 	t.psi_rating = t.psi_rating or 0
 
 	t.esp = t.esp or {}
+	t.esp_range = t.esp_range or 10
 
 	t.talent_cd_reduction = t.talent_cd_reduction or {}
 
