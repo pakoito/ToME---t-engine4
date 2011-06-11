@@ -147,6 +147,38 @@ newEntity{ base = "BASE_STAFF",
 	},
 }
 
+newEntity{ base = "BASE_STAFF",
+	power_source = {arcane=true},
+	unique = true,
+	name = "Bolbum's Big Knocker",
+	unided_name = "thick staff",
+	level_range = {20, 35},
+	color=colors.UMBER,
+	rarity = 220,
+	desc = [[A thick staff with a heavy knob on the end.  It was said to be used by the grand alchemist Bolbum in the Age of Allure.  Much renowned is the fear of his students for their master, and the high rate of cranial injuries amongst them.  Bolbum died with seven daggers in his back and his much-cursed staff went missing after.]],
+	cost = 300,
+	material_level = 4,
+
+	require = { stat = { mag=38 }, },
+	combat = {
+		dam = 64,
+		apr = 10,
+		atk = 7,
+		dammod = {mag=1.4},
+		damtype = DamageType.PHYSICAL,
+	},
+	wielder = {
+		combat_spellpower = 12,
+		combat_spellcrit = 18,
+		inc_damage={
+			[DamageType.PHYSICAL] = resolvers.mbonus(20, 8),
+		},
+		talents_types_mastery = {
+			["spell/staff-combat"] = 0.2,
+		}
+	},
+}
+
 newEntity{ base = "BASE_RING",
 	power_source = {nature=true},
 	unique = true,
