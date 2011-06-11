@@ -508,6 +508,7 @@ function _M:restCheck()
 	-- Check resources, make sure they CAN go up, otherwise we will never stop
 	if not self.resting.rest_turns then
 		if self.air_regen < 0 then return false, "loosing breath!" end
+		if self.life_regen < 0 then return false, "loosing health!" end
 		if self:getMana() < self:getMaxMana() and self.mana_regen > 0 then return true end
 		if self:getStamina() < self:getMaxStamina() and self.stamina_regen > 0 then return true end
 		if self.life < self.max_life and self.life_regen> 0 then return true end
