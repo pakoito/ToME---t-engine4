@@ -45,7 +45,16 @@ newEntity{
 	always_remember = true,
 	on_move = function(self, x, y, who)
 		if not who.player then return end
-		require("engine.ui.Dialog"):simplePopup("Infinite Dungeon", "You should not go there, there is no way back. Ever.")
+		local p = game:getPlayer(true)
+		if p.winner then
+			require("engine.ui.Dialog"):yesnoLongPopup("Infinite Dungeon", "You have accomplished great deads, but if you enter the infinite dungeon there will be no way back you will go on and on until you meet your glorious death.", 400, function(ret)
+				if ret then
+					game:changeLevel(math.ceil(game.player.level * 1.5), "infinite-dungeon")
+				end
+			end)
+		else
+			require("engine.ui.Dialog"):simplePopup("Infinite Dungeon", "You should not go there, there is no way back. Ever. Maybe later when you did all you must do.")
+		end
 	end,
 }
 
