@@ -320,6 +320,11 @@ function _M:orderChatTalk(o)
 	self:read("200")
 end
 
+function _M:orderChatWhisper(o)
+	self:command("WHIS", o.target..":=:"..o.msg)
+	self:read("200")
+end
+
 function _M:orderChatAchievement(o)
 	self:command("ACHV", o.channel, o.msg)
 	self:read("200")

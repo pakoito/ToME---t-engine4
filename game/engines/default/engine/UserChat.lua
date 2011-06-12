@@ -79,6 +79,15 @@ function _M:event(e)
 		if type(game) == "table" and game.logChat and self.cur_channel == e.channel then
 			game.logChat("#YELLOW#<%s> %s", e.name, e.msg)
 		end
+	elseif e.se == "Whisper" then
+		e.msg = e.msg:removeColorCodes()
+
+		self.channels[self.cur_channel] = self.channels[self.cur_channel] or {users={}, log={}}
+		self:addMessage(self.cur_channel, e.login, e.name, "#GOLD#<whisper>#LAST#"..e.msg)
+
+		if type(game) == "table" and game.logChat then
+			game.logChat("#GOLD#<Whisper from %s> %s", e.name, e.msg)
+		end
 	elseif e.se == "Achievement" then
 		e.msg = e.msg:removeColorCodes()
 
@@ -159,24 +168,51 @@ function _M:talk(msg)
 	core.profile.pushOrder(string.format("o='ChatTalk' channel=%q msg=%q", self.cur_channel, msg))
 end
 
+function _M:whisper(to, msg)
+	if not profile.auth then return end
+	if not to or not msg or msg == "" then return end
+	msg = msg:removeColorCodes()
+	core.profile.pushOrder(string.format("o='ChatWhisper' target=%q msg=%q", to, msg))
+end
+
 function _M:achievement(name)
 	if not profile.auth then return end
 	core.profile.pushOrder(string.format("o='ChatAchievement' channel=%q msg=%q", self.cur_channel, name))
 end
 
 --- Request a line to send
--- TODO: make it better than a simple dialog
 function _M:talkBox()
 	if not profile.auth then return end
-	local GetText = require "engine.dialogs.GetText"
-	local d = GetText.new("Talk", self.cur_channel, 0, 250, function(text)
-		self:talk(text)
-	end)
-	d.key:addBind("EXIT", function() game:unregisterDialog(d) end)
-	d.key:addCommand("_ESCAPE", function() game:unregisterDialog(d) end)
+	local Talkbox = require "engine.dialogs.Talkbox"
+	local d = Talkbox.new(self)
 	game:registerDialog(d)
 
 	self:updateChanList()
+end
+
+--- Sets the current talk target, channel or whisper
+function _M:setCurrentTarget(channel, name)
+	if channel and not self.channels[name] then return end
+	self.cur_target = {channel and "channel" or "whisper", name}
+	if channel then self:selectChannel(name) end
+end
+
+--- Gets the current talk target, channel or whisper
+function _M:getCurrentTarget()
+	if not self.cur_target then return "channel", self.cur_channel end
+	return self.cur_target[1], self.cur_target[2]
+end
+
+function _M:findChannel(name)
+	for cname, data in pairs(self.channels) do
+		if cname:lower() == name:lower() then return cname end
+	end
+end
+
+function _M:findUser(name)
+	for login, data in pairs(self.channels[self.cur_channel].users) do
+		if data.name:lower() == name:lower() then return data.name end
+	end
 end
 
 function _M:updateChanList(force)

@@ -32,6 +32,9 @@ function _M:event(e)
 	if e.e == "ChatTalk" then
 		cprofile.pushEvent(string.format("e='Chat' se='Talk' channel=%q login=%q name=%q msg=%q", e.channel, e.login, e.name, e.msg))
 		print("[USERCHAT] channel talk", e.login, e.channel, e.msg)
+	elseif e.e == "ChatWhisper" then
+		cprofile.pushEvent(string.format("e='Chat' se='Whisper' login=%q name=%q msg=%q", e.login, e.name, e.msg))
+		print("[USERCHAT] whisper", e.login, e.msg)
 	elseif e.e == "ChatAchievement" then
 		cprofile.pushEvent(string.format("e='Chat' se='Achievement' channel=%q login=%q name=%q msg=%q", e.channel, e.login, e.name, e.msg))
 		print("[USERCHAT] channel achievement", e.login, e.channel, e.msg)
