@@ -187,13 +187,27 @@ function _M:runStep()
 		if self.running.block_left then self.running.ignore_left = nil end
 		if self.running.ignore_left then
 			self.running.ignore_left = self.running.ignore_left - 1
-			if self.running.ignore_left <= 0 then self.running.ignore_left = nil end
+			if self.running.ignore_left <= 0 then
+				self.running.ignore_left = nil
+				-- We do this check here because it is path/time dependent, not terrain configuration dependent
+				if dir_is_cardinal and checkDir(self, sides[self.running.dir].soft_left) and checkDir(self, self.running.dir, 2) then
+					self:runStop("terrain change on the left")
+					return false
+				end
+			end
 			if checkDir(self, sides[self.running.dir].soft_left) and (not checkDir(self, self.running.dir) or not dir_is_cardinal) then self.running.block_left = true end
 		end
 		if self.running.block_right then self.running.ignore_right = nil end
 		if self.running.ignore_right then
 			self.running.ignore_right = self.running.ignore_right - 1
-			if self.running.ignore_right <= 0 then self.running.ignore_right = nil end
+			if self.running.ignore_right <= 0 then
+				self.running.ignore_right = nil
+				-- We do this check here because it is path/time dependent, not terrain configuration dependent
+				if dir_is_cardinal and checkDir(self, sides[self.running.dir].soft_right) and checkDir(self, self.running.dir, 2) then
+					self:runStop("terrain change on the right")
+					return false
+				end
+			end
 			if checkDir(self, sides[self.running.dir].soft_right) and (not checkDir(self, self.running.dir) or not dir_is_cardinal) then self.running.block_right = true end
 		end
 
@@ -278,18 +292,26 @@ function _M:runCheck()
 				-- Favor cardinal directions if possible, otherwise we may miss something interesting
 				if not dir_is_cardinal then
 					-- Turn soft left
-					if blocked_soft_right and blocked_hard_left and not blocked_soft_left and checkDir(self, sides[self.running.dir].soft_left, 2) and (not self.running.ignore_left or self.running.ignore_left ~= 2) then
-						self.running.dir = sides[self.running.dir].soft_left
-						self.running.block_left = true
-						self.running.block_right = true
-						return true
+					if blocked_soft_right and blocked_hard_left and not blocked_soft_left and (blocked_hard_right or self.running.ignore_right) and (not self.running.ignore_left or self.running.ignore_left ~= 2) then
+						if checkDir(self, sides[self.running.dir].soft_left, 2) then
+							self.running.dir = sides[self.running.dir].soft_left
+							self.running.block_left = true
+							self.running.block_right = true
+							return true
+						else
+							return false, "terrain changed ahead"
+						end
 					end
 					-- Turn soft right
-					if blocked_soft_left and blocked_hard_right and not blocked_soft_right and checkDir(self, sides[self.running.dir].soft_right, 2) and (not self.running.ignore_right or self.running.ignore_right ~= 2) then
-						self.running.dir = sides[self.running.dir].soft_right
-						self.running.block_left = true
-						self.running.block_right = true
-						return true
+					if blocked_soft_left and blocked_hard_right and not blocked_soft_right and (blocked_hard_left or self.running.ignore_left) and (not self.running.ignore_right or self.running.ignore_right ~= 2) then
+						if checkDir(self, sides[self.running.dir].soft_right, 2) then
+							self.running.dir = sides[self.running.dir].soft_right
+							self.running.block_left = true
+							self.running.block_right = true
+							return true
+						else
+							return false, "terrain changed ahead"
+						end
 					end
 				end
 				if checkDir(self, self.running.dir, 2) then
