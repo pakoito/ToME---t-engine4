@@ -266,6 +266,11 @@ function _M:display()
 			{r=colors.GREY.r / 5, g=colors.GREY.g / 5, b=colors.GREY.b / 5}
 		)) h = h + self.font_h
 	end
+	if (player.unnatural_body_heal  or 0) > 0 and player:knowTalent(player.T_UNNATURAL_BODY) then
+		local t = player:getTalentFromId(player.T_UNNATURAL_BODY)
+		local regen = t.getRegenRate(player, t)
+		self:mouseTooltip(self.TOOLTIP_LIFE, self:makeTextureBar("#c00000#Blood:", nil, regen, player.unnatural_body_heal, -regen, x, h, 255, 255, 255, colors.DARK_RED, colors.VERY_DARK_RED)) h = h + self.font_h
+	end
 	if player:knowTalent(player.T_PARADOX_POOL) then
 		local _, chance = player:paradoxFailChance()
 		self:mouseTooltip(self.TOOLTIP_PARADOX, self:makeTextureBar("#LIGHT_STEEL_BLUE#Paradox:", ("%d (%d%s)"):format(player:getParadox(), chance, "%%"), chance, 100, player.paradox_regen, x, h, 255, 255, 255,

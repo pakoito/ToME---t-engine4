@@ -393,7 +393,9 @@ function _M:setupMiniMap()
 end
 
 function _M:save()
-	return class.save(self, self:defaultSavedFields{difficulty=true, to_re_add_actors=true, party=true, _chronoworlds=true}, true)
+	self.total_playtime = (self.total_playtime or 0) + (os.time() - (self.last_update or self.real_starttime))
+	self.last_update = os.time()
+	return class.save(self, self:defaultSavedFields{difficulty=true, to_re_add_actors=true, party=true, _chronoworlds=true, total_playtime=true}, true)
 end
 
 function _M:updateCurrentChar()

@@ -363,7 +363,28 @@ function _M:getTextualDesc(compare_with)
 			dm[#dm+1] = ("%d%% %s"):format((i + (add_table.dammod[stat] or 0)) * 100, Stats.stats_def[stat].short_name:capitalize())
 		end
 		if #dm > 0 or combat.dam then
-			desc:add(("Base power: %.1f - %.1f"):format((combat.dam or 0) + (add_table.dam or 0), ((combat.damrange or 0) + (add_table.damrange or 0)) * ((combat.dam or 0) + (add_table.dam or 0))), true)
+			local power_diff = ""
+			local diff_count = 0
+			local any_diff = false
+			for i, v in ipairs(compare_with) do
+				if v[field] then
+					local base_power_diff = ((combat.dam or 0) + (add_table.dam or 0)) - ((v[field].dam or 0) + (add_table.dam or 0))
+					local multi_diff = (((combat.damrange or 1.1) + (add_table.damrange or 0)) * ((combat.dam or 0) + (add_table.dam or 0))) - (((v[field].damrange or (1.1 - (add_table.damrange or 0))) + (add_table.damrange or 0)) * ((v[field].dam or 0) + (add_table.dam or 0)))
+					power_diff = power_diff..("%s%s%+.1f#LAST# - %s%+.1f#LAST#"):format(diff_count > 0 and " / " or "", base_power_diff > 0 and "#00ff00#" or "#ff0000#", base_power_diff, multi_diff > 0 and "#00ff00#" or "#ff0000#", multi_diff)
+					diff_count = diff_count + 1
+					if base_power_diff ~= 0 or multi_diff ~= 0 then
+						any_diff = true
+					end
+				end
+			end
+			if any_diff == false then
+				power_diff = ""
+			else
+				power_diff = ("(%s)"):format(power_diff)
+			end
+			desc:add(("Base power: %.1f - %.1f"):format((combat.dam or 0) + (add_table.dam or 0), ((combat.damrange or (1.1 - (add_table.damrange or 0))) + (add_table.damrange or 0)) * ((combat.dam or 0) + (add_table.dam or 0))))
+			desc:merge(power_diff:toTString())
+			desc:add(true)
 			desc:add(("Uses stat%s: %s"):format(#dm > 1 and "s" or "",table.concat(dm, ', ')), true)
 			local col = (combat.damtype and DamageType:get(combat.damtype) and DamageType:get(combat.damtype).text_color or "#WHITE#"):toTString()
 			desc:add("Damage type: ", col[2],DamageType:get(combat.damtype or DamageType.PHYSICAL).name:capitalize(),{"color","LAST"}, true)
@@ -371,7 +392,7 @@ function _M:getTextualDesc(compare_with)
 
 		compare_fields(combat, compare_with, field, "atk", "%+d", "Accuracy: ", 1, false, false, add_table)
 		compare_fields(combat, compare_with, field, "apr", "%+d", "Armor Penetration: ", 1, false, false, add_table)
-		compare_fields(combat, compare_with, field, "physcrit", "%+d%%", "Physical crit. chance: ", 1, false, false, add_table)
+		compare_fields(combat, compare_with, field, "physcrit", "%+.1f%%", "Physical crit. chance: ", 1, false, false, add_table)
 		compare_fields(combat, compare_with, field, "physspeed", "%.0f%%", "Attack speed: ", 100, false, true, add_table)
 
 		compare_fields(combat, compare_with, field, "range", "%+d", "Firing range: ", 1, false, false, add_table)
@@ -392,9 +413,7 @@ function _M:getTextualDesc(compare_with)
 			end
 		end
 		for tid, data in pairs(talents) do
-			if talents[tid][3] == true then
-				desc:add(talents[tid][3] == true and {"color","WHITE"} or {"color","GREEN"}, ("Talent on hit(melee): %s (%d%% chance level %d)."):format(self:getTalentFromId(tid).name, data.chance, data.level), {"color","LAST"}, true)
-			end
+			desc:add(talents[tid][3] and {"color","WHITE"} or {"color","GREEN"}, ("Talent on hit(melee): %s (%d%% chance level %d)."):format(self:getTalentFromId(tid).name, talents[tid][1], talents[tid][2]), {"color","LAST"}, true)
 		end
 
 		local special = ""
@@ -451,14 +470,14 @@ function _M:getTextualDesc(compare_with)
 		w = w[field] or {}
 		compare_fields(w, compare_with, field, "combat_atk", "%+d", "Accuracy: ")
 		compare_fields(w, compare_with, field, "combat_apr", "%+d", "Armor penetration: ")
-		compare_fields(w, compare_with, field, "combat_physcrit", "%+d%%", "Physical crit. chance: ")
+		compare_fields(w, compare_with, field, "combat_physcrit", "%+.1f%%", "Physical crit. chance: ")
 		compare_fields(w, compare_with, field, "combat_dam", "%+d", "Physical power: ")
 
 		compare_fields(w, compare_with, field, "combat_armor", "%+d", "Armor: ")
 		compare_fields(w, compare_with, field, "combat_def", "%+d", "Defense: ")
 		compare_fields(w, compare_with, field, "combat_def_ranged", "%+d", "Ranged Defense: ")
 
-		compare_fields(w, compare_with, field, "fatigue", "%+d%%", "Fatigue: ", 1, true)
+		compare_fields(w, compare_with, field, "fatigue", "%+d%%", "Fatigue: ", 1, true, true)
 
 		compare_table_fields(w, compare_with, field, "inc_stats", "%+d", "Changes stats: ", function(item)
 				return (" %s"):format(Stats.stats_def[item].short_name:capitalize())
@@ -596,7 +615,7 @@ function _M:getTextualDesc(compare_with)
 				end
 			end
 		end
-		for tid, cd in ipairs(w.talent_cd_reduction or {}) do
+		for tid, cd in pairs(w.talent_cd_reduction or {}) do
 			cd_reductions[tid] = cd_reductions[tid] or {}
 			cd_reductions[tid][2] = cd
 			any_cd_reduction = any_cd_reduction + 1
@@ -672,7 +691,7 @@ function _M:getTextualDesc(compare_with)
 		compare_fields(w, compare_with, field, "instakill_immune", "%+d%%", "Instant-death immunity: ", 100)
 		compare_fields(w, compare_with, field, "teleport_immune", "%+d%%", "Teleport immunity: ", 100)
 
-		compare_fields(w, compare_with, field, "life_regen", "%+.2f", "Hitpoints each turn: ")
+		compare_fields(w, compare_with, field, "life_regen", "%+.2f", "Life regen: ")
 		compare_fields(w, compare_with, field, "stamina_regen", "%+.2f", "Stamina each turn: ")
 		compare_fields(w, compare_with, field, "mana_regen", "%+.2f", "Mana each turn: ")
 
