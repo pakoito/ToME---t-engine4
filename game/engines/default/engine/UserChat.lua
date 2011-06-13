@@ -83,7 +83,7 @@ function _M:event(e)
 		e.msg = e.msg:removeColorCodes()
 
 		self.channels[self.cur_channel] = self.channels[self.cur_channel] or {users={}, log={}}
-		self:addMessage(self.cur_channel, e.login, e.name, "#GOLD#<whisper>#LAST#"..e.msg)
+		self:addMessage(self.cur_channel, e.login, e.name, "#GOLD#<whisper> #LAST#"..e.msg)
 
 		if type(game) == "table" and game.logChat then
 			game.logChat("#GOLD#<Whisper from %s> %s", e.name, e.msg)
@@ -151,7 +151,7 @@ function _M:join(channel)
 	self:updateChanList(true)
 end
 
-function _M:selectChannel(channel)
+function _M:selectChannel(channel, no_recurs)
 	if not self.channels[channel] then return end
 	self.channels[channel].changed = false
 	self.cur_channel = channel
@@ -159,6 +159,7 @@ function _M:selectChannel(channel)
 	self.changed = true
 	self.scroll = 0
 	self:updateChanList(true)
+	if not no_recurs then self:setCurrentTarget(true, channel, true) end
 end
 
 function _M:talk(msg)
@@ -173,6 +174,9 @@ function _M:whisper(to, msg)
 	if not to or not msg or msg == "" then return end
 	msg = msg:removeColorCodes()
 	core.profile.pushOrder(string.format("o='ChatWhisper' target=%q msg=%q", to, msg))
+
+	self:addMessage(self.cur_channel, to, to, "#GOLD#<whisper to "..to.."> #LAST#"..msg)
+	if type(game) == "table" and game.logChat then game.logChat("#GOLD#<Whisper to %s> %s", to, msg) end
 end
 
 function _M:achievement(name)
@@ -191,10 +195,10 @@ function _M:talkBox()
 end
 
 --- Sets the current talk target, channel or whisper
-function _M:setCurrentTarget(channel, name)
+function _M:setCurrentTarget(channel, name, no_switch)
 	if channel and not self.channels[name] then return end
 	self.cur_target = {channel and "channel" or "whisper", name}
-	if channel then self:selectChannel(name) end
+	if channel and not no_switch then self:selectChannel(name) end
 end
 
 --- Gets the current talk target, channel or whisper

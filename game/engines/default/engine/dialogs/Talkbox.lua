@@ -22,6 +22,8 @@ local Module = require "engine.Module"
 local Dialog = require "engine.ui.Dialog"
 local Button = require "engine.ui.Button"
 local Textbox = require "engine.ui.Textbox"
+local Dropdown = require "engine.ui.Dropdown"
+local Textzone = require "engine.ui.Textzone"
 
 module(..., package.seeall, class.inherit(Dialog))
 
@@ -33,21 +35,31 @@ function _M:init(chat)
 
 	Dialog.init(self, self:getTitle(), 320, 110)
 
-	local c_box = Textbox.new{title="Say: ", text="", chars=30, max_len=max,
+	local c_box = Textbox.new{title="Say: ", text="", chars=60, max_len=max,
 		fct=function(text) self:okclick() end,
 		on_change = function(text) self:checkTarget(text) end,
 	}
 	self.c_box = c_box
-	local ok = require("engine.ui.Button").new{text="Accept", fct=function() self:okclick() end}
-	local cancel = require("engine.ui.Button").new{text="Cancel", fct=function() self:cancelclick() end}
+	local ok = Button.new{text="Accept", fct=function() self:okclick() end}
+	local cancel = Button.new{text="Cancel", fct=function() self:cancelclick() end}
+
+	local list = self:getTargets()
+	self.c_list_text = Textzone.new{auto_width=true, auto_height=true, text="Target: "}
+	self.c_list = Dropdown.new{width=250, fct=function(item) self:checkTarget(item.id..":") self:setFocus(c_box) end, list=list, nb_items=math.min(#list, 10), scrollbar=true}
 
 	self:loadUI{
-		{left=0, top=0, padding_h=10, ui=c_box},
+		{left=0, top=0, ui=self.c_box},
+
+		{left=self.c_box.w - self.c_list.w - self.c_list_text.w - 6, top=self.c_box.h + 10, ui=self.c_list_text},
+		{left=self.c_box.w - self.c_list.w, top=self.c_box.h + 10, ui=self.c_list},
+
 		{left=0, bottom=0, ui=ok},
-		{right=0, bottom=0, ui=cancel},
+		{left=self.c_box.w - ok.w, bottom=0, ui=cancel},
 	}
 	self:setFocus(c_box)
 	self:setupUI(true, true)
+
+	self:getTitle()
 
 	self.key:addBinds{
 		EXIT = function() game:unregisterDialog(self) end,
@@ -58,8 +70,20 @@ function _M:init(chat)
 --	end)
 end
 
+function _M:getTargets()
+	local list = {}
+	for name, _ in pairs(self.chat.channels) do list[#list+1] = {name="Channel: "..name, id=name} end
+	if self.chat.channels[self.chat.cur_channel] then
+		for login, data in pairs(self.chat.channels[self.chat.cur_channel].users) do list[#list+1] = {name="User: "..data.name, id=data.name} end
+	end
+	return list
+end
+
 function _M:getTitle()
 	local type, name = self.chat:getCurrentTarget()
+	if self.c_list then for i = 1, #self.c_list.c_list.list do
+		if self.c_list.c_list.list[i].id == name then self.c_list.c_list.sel = i break end
+	end end
 	if type == "channel" then
 		return "Talk on channel: "..name
 	elseif type == "whisper" then
