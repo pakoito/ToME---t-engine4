@@ -81,7 +81,7 @@ newBirthDescriptor{
 			{type="lite", subtype="lite", name="brass lantern", ego_chance=-1000},
 		},
 		make_tile = function(e)
-			e.image = "player/"..e.descriptor.subrace:lower().."_"..e.descriptor.sex:lower()..".png"
+			if not e.image then e.image = "player/"..e.descriptor.subrace:lower():gsub("[^a-z0-9_]", "_").."_"..e.descriptor.sex:lower():gsub("[^a-z0-9_]", "_")..".png" end
 		end,
 	},
 }
@@ -127,6 +127,7 @@ newBirthDescriptor{
 		no_birth_levelup = true,
 		easy_mode_lifes = 99999,
 		__game_difficulty = 1,
+		__allow_rod_recall = false,
 	},
 }
 newBirthDescriptor{

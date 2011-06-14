@@ -34,7 +34,7 @@ on_grant = function(self, who)
 		show_tooltip=true, always_remember = true,
 		name="Small lumberjack village",
 		display='*', color=colors.WHITE,
-		notice = true, image="terrain/town1.png",
+		notice = true, image="terrain/grass.png", add_mos={{image="terrain/town1.png"}},
 		change_level=1, change_zone="town-lumberjack-village",
 	}
 	g:resolve() g:resolve(nil, true)

@@ -51,7 +51,7 @@ quickEntity('{', {always_remember = true, show_tooltip=true, name='Charred Scar'
 quickEntity('!', {always_remember = true, show_tooltip=true, name='hills', display='^', color=colors.GREEN, back_color=colors.DARK_GREEN, image="terrain/hills.png", can_encounter=true, equilibrium_level=-10})
 quickEntity('h', {always_remember = true, show_tooltip=true, name='low hills', display='^', color=colors.GREEN, back_color=colors.DARK_GREEN, image="terrain/hills.png", can_encounter=true, equilibrium_level=-10})
 
-quickEntity('&', {always_remember = true, show_tooltip=true, name='cultivated fields', display=';', color=colors.GREEN, back_color=colors.DARK_GREEN, image="terrain/cultivation.png", can_encounter=true, equilibrium_level=-10})
+quickEntity('&', {always_remember = true, show_tooltip=true, name='cultivated fields', display=';', color=colors.GREEN, back_color=colors.DARK_GREEN, image="terrain/grass.png", add_mos={{image="terrain/cultivation.png"}}, can_encounter=true, equilibrium_level=-10})
 
 -- Maj'Eyal
 quickEntity('kor-pul', {always_remember = true, show_tooltip=true, name="Ruins of Kor'Pul", 	display='>', color={r=0, g=255, b=255}, notice = true, change_level=1, change_zone="ruins-kor-pul"})
@@ -68,10 +68,10 @@ quickEntity('rhaloren-camp', {always_remember = true, show_tooltip=true, name="S
 quickEntity('norgos-lair', {always_remember = true, show_tooltip=true, name="Passageway into Norgos' Lair", display='>', color={r=255, g=255, b=255}, notice = true, change_level=1, change_zone="norgos-lair"})
 quickEntity('heart-gloom', {always_remember = true, show_tooltip=true, name="Way into the heart of the gloom", display='>', color={r=255, g=255, b=0}, notice = true, change_level=1, change_zone="heart-gloom"})
 
-quickEntity('derth', {always_remember = true, show_tooltip=true, name="Derth (Town)", desc="A quiet town at the crossroads of the north", display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, image="terrain/town1.png", notice = true, change_level=1, change_zone="town-derth"})
-quickEntity('last-hope', {always_remember = true, show_tooltip=true, name="Last Hope (Town)", desc="Capital city of the Allied Kingdoms ruled by King Tolak", display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, image="terrain/town1.png", notice = true, change_level=1, change_zone="town-last-hope"})
-quickEntity('shatur', {always_remember = true, show_tooltip=true, name="Shatur (Town)", desc="Capital city of Thaloren lands, ruled by Nessilla Tantaelen", display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, image="terrain/town1.png", notice = true, change_level=1, change_zone="town-shatur"})
-quickEntity('elvala', {always_remember = true, show_tooltip=true, name="Elvala (Town)", desc="Capital city of Shaloren lands, ruled by Aranion Gayaeil", display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, image="terrain/town1.png", notice = true, change_level=1, change_zone="town-elvala"})
+quickEntity('derth', {always_remember = true, show_tooltip=true, name="Derth (Town)", desc="A quiet town at the crossroads of the north", display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, image="terrain/grass.png", add_mos={{image="terrain/town1.png"}}, notice = true, change_level=1, change_zone="town-derth"})
+quickEntity('last-hope', {always_remember = true, show_tooltip=true, name="Last Hope (Town)", desc="Capital city of the Allied Kingdoms ruled by King Tolak", display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, image="terrain/grass.png", add_mos={{image="terrain/town1.png"}}, notice = true, change_level=1, change_zone="town-last-hope"})
+quickEntity('shatur', {always_remember = true, show_tooltip=true, name="Shatur (Town)", desc="Capital city of Thaloren lands, ruled by Nessilla Tantaelen", display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, image="terrain/grass.png", add_mos={{image="terrain/town1.png"}}, notice = true, change_level=1, change_zone="town-shatur"})
+quickEntity('elvala', {always_remember = true, show_tooltip=true, name="Elvala (Town)", desc="Capital city of Shaloren lands, ruled by Aranion Gayaeil", display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, image="terrain/grass.png", add_mos={{image="terrain/town1.png"}}, notice = true, change_level=1, change_zone="town-elvala"})
 
 -- Far East
 quickEntity('gates-of-morning', {always_remember = true, show_tooltip=true, name="Gates of Morning (Town)", desc="A massive hole in the Sunwall.", display='*', color=colors.GOLD, back_color=colors.CRIMSON, image="terrain/gate-morning.png", tint=colors.GOLD, notice = true, change_level=1, change_zone="town-gates-of-morning"})
@@ -79,14 +79,14 @@ quickEntity('high-peak', {always_remember = true, show_tooltip=true, name="High 
 quickEntity('unremarkable-cave', {always_remember = true, show_tooltip=true, name="Unremarkable cave", display='>', color=colors.UMBER, notice = true, change_level=1, change_zone="unremarkable-cave"})
 
 -- Island of Rel
-quickEntity('irkkk', {always_remember = true, show_tooltip=true, name="Irkkk (Town)", desc="Yeek Wayist capital", display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, image="terrain/town1.png", notice = true})
+quickEntity('irkkk', {always_remember = true, show_tooltip=true, name="Irkkk (Town)", desc="Yeek Wayist capital", display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, image="terrain/grass.png", add_mos={{image="terrain/town1.png"}}, notice = true})
 quickEntity('ritch-tunnels', {always_remember = true, show_tooltip=true, name="Tunnel into the ritchs grounds",display='>', color=colors.UMBER, notice = true, change_level=1, change_zone="ritch-tunnels"})
 quickEntity('murgol-lair', {always_remember = true, show_tooltip=true, name="Way into the lair of Murgol",display='>', color=colors.LIGHT_BLUE, notice = true, change_level=1, change_zone="murgol-lair"})
 quickEntity('rel-tunnel', {always_remember = true, show_tooltip=true, name="Tunnel to Maj'Eyal", display='>', color=colors.LIGHT_BLUE, notice = true, force_down=true, change_level=4, change_zone="halfling-ruins", change_level_check = function() local p = game.party:findMember{main=true} if p:hasQuest("start-yeek") and not p:isQuestStatus("start-yeek", engine.Quest.DONE) then require("engine.ui.Dialog"):simplePopup("Long tunnel", "You can not abandon the yeeks of Rel to the dangers that lie within the island.") return true end p:setQuestStatus("rel-tunnel", engine.Quest.DONE) return false end})
 
 -- Angolwen is only know from the start to mages
 if game.player:knowTalent(game.player.T_TELEPORT_ANGOLWEN) then
-	quickEntity('angolwen', {always_remember = true, show_tooltip=true, name="Angolwen, the hidden city of magic", desc="Secret place of magic, set apart from the world to protect it.\nLead by the Supreme Archmage Linaniil.", display='*', color=colors.WHITE, back_color=colors.UMBER, image="terrain/town1.png", notice = true, change_level=1, change_zone="town-angolwen"})
+	quickEntity('angolwen', {always_remember = true, show_tooltip=true, name="Angolwen, the hidden city of magic", desc="Secret place of magic, set apart from the world to protect it.\nLead by the Supreme Archmage Linaniil.", display='*', color=colors.WHITE, back_color=colors.UMBER, image="terrain/grass.png", add_mos={{image="terrain/town1.png"}}, notice = true, change_level=1, change_zone="town-angolwen"})
 	quickEntity('angolwen-teleport', {always_remember = true, show_tooltip=true, name="Hidden teleportation portal to Angolwen, the hidden city of magic", display='&', color=colors.LIGHT_BLUE, back_color=colors.DARK_GREEN, image="terrain/grass.png", add_displays = {mod.class.Grid.new{image="terrain/maze_teleport.png"}}, notice = true, change_level=1, change_zone="town-angolwen", change_level_check = function() local p = game.party:findMember{main=true} if p:attr("forbid_arcane") then game.log("The portal fizzles.") return true end return false end})
 else
 	quickEntity('angolwen', '^')
@@ -95,14 +95,14 @@ end
 
 -- Zigur is only know from the start to non casters
 if not game.player:knowTalent(game.player.T_MANA_POOL) and not game.player:knowTalent(game.player.T_VIM_POOL) and not game.player:knowTalent(game.player.T_VIM_POOL) and not game.player:knowTalent(game.player.T_NEGATIVE_POOL) and not game.player:knowTalent(game.player.T_POSITIVE_POOL) and not game.player:knowTalent(game.player.T_PARADOX_POOL) then
-	quickEntity('zigur', {always_remember = true, show_tooltip=true, name="Zigur (Town)", desc="Ziguranth main training ground", display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, image="terrain/town1.png", notice = true, change_level=1, change_zone="town-zigur"})
+	quickEntity('zigur', {always_remember = true, show_tooltip=true, name="Zigur (Town)", desc="Ziguranth main training ground", display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, image="terrain/grass.png", add_mos={{image="terrain/town1.png"}}, notice = true, change_level=1, change_zone="town-zigur"})
 else
 	quickEntity('zigur', ')')
 end
 
 -- Iron Council is only known to dwarves
 if game.player:knowTalent(game.player.T_DWARF_RESILIENCE) then
-	quickEntity('iron-council', {always_remember = true, show_tooltip=true, name="Iron Council (Town)", desc="Heart of the dwarven Empire", display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, image="terrain/town1.png", notice = true, change_level=1, change_zone="town-iron-council"})
+	quickEntity('iron-council', {always_remember = true, show_tooltip=true, name="Iron Council (Town)", desc="Heart of the dwarven Empire", display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, image="terrain/grass.png", add_mos={{image="terrain/town1.png"}}, notice = true, change_level=1, change_zone="town-iron-council"})
 else
 	quickEntity('iron-council', '#')
 end

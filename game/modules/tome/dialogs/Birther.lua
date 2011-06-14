@@ -165,6 +165,8 @@ function _M:atEnd(v)
 			local ps = self.actor:getParticlesList()
 			for i, p in ipairs(ps) do self.actor:removeParticles(p) end
 			self.actor:defineDisplayCallback()
+			if self.actor._mo then self.actor._mo:invalidate() end
+			self.actor._mo = nil
 
 			game:unregisterDialog(self)
 			self:apply()
@@ -721,7 +723,7 @@ end
 function _M:setTile(f, w, h)
 	if not f then
 		if not self.actor.has_custom_tile and self.descriptors_by_type.subrace and self.descriptors_by_type.sex then
-			self.actor.image = "player/"..self.descriptors_by_type.subrace:lower().."_"..self.descriptors_by_type.sex:lower()..".png"
+			self.actor.image = "player/"..self.descriptors_by_type.subrace:lower():gsub("[^a-z0-9_]", "_").."_"..self.descriptors_by_type.sex:lower():gsub("[^a-z0-9_]", "_")..".png"
 			self.actor.add_mos = nil
 		end
 	else
