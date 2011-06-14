@@ -119,3 +119,48 @@ newLore{
 	name = "Iron Throne Reknor expedition, last words",
 	lore = [[...We are lost. The orcish forces are too great. No matter how many our squad slays, yet more surge from the depths. Where are the cursed creatures coming from?! We have spied their leader, but have had no hope in killing him; he is a beast, a destroyer, burning with fire infernal and ice cruel and chilling. The power these orcs wield now fills me with dread... perhaps they have found new, mighty allies? This news must reach our ruler. My comrades... I am sorry. I will flee once the opportunity arises, but know that your sacrifices will not be in vain. Long may our empire endure.]]
 }
+
+--------------------------------------------------------------------------
+-- Iron Throne: Deep Bellow
+--------------------------------------------------------------------------
+
+newLore{
+	id = "deep-bellow-1",
+	category = "iron throne",
+	name = "Deep Bellow excavation report 1",
+	lore = [[10 days into initial site survey, hmm! Recent tremors have opened deep new chasms, but we must work cautiously to ensure they're stable before conducting major operations, oh yes! Proceeding well at start, with supports being put in place and no flammable gases detected, hmm hmm.
+
+Some Sher'Tul relics have been found. Perhaps great profit to be had here! High margins on Shaloren market, yes yes.
+
+Some miners saying they feel ill, hrm hrm. The drem fools have likely been gorging on too much mead. Will deduct it from their pay, yes yes!
+
+-- Foreman Tamoth]]
+}
+
+newLore{
+	id = "deep-bellow-2",
+	category = "iron throne",
+	name = "Deep Bellow excavation report 2",
+	bloodstains = 3,
+	lore = [[Chasms go deep, yes yes. More relics found, oh yes. Will be mighty profitable! But ah, my secret treasure is even better, indeed! Gold! Beautiful lovely gold, buried deep, so deep... Have kept it hidden, sealed, yes. Looks like the remains of a giant throne. I touched it, yes, I even put my lips to it - ahhh, the taste!
+
+But must stay focussed, much work to be done. Miners are roudy, hrm! One of the drem fools went mad and killed himself with a pickaxe - messy business. Must restore order, yes yes! More Sher'Tul artifacts found, possible even remains of weapons. Imagine the profit! Will keep them hidden yes, the dreams say yes, in the darkness, secret, waiting waiting, for the right time...
+
+Hmm, that fellow's blood was so red, spilling on the cavernous floor. I wonder where they buried him? My mouth... it wants to taste, yes yes...
+
+-- Foreman Tamoth]]
+}
+
+newLore{
+	id = "deep-bellow-3",
+	category = "iron throne",
+	name = "Deep Bellow excavation report 3",
+	bloodstains = 12,
+	lore = [[Hah, my mouth, it tastes, it feels, hmm hmm. It grows, yes yes! The others are changing, flying, screaming, squelching, warping. Bad for profit, hmm hmm. My teeth, they grow, they hunger, yes. They want to escape!
+
+I can feel in my dreams, the dark depths. Bound, buried, forgotten. My mouth wants to open, to scream, to destroy! Hmm hmm, deep below, yes... Want to get out!
+
+Must stay down here to be close to the dreams, yes yes. Must plant my mouth in the soil and watch it grow! It will devour me, and grow and grow, hmm hmm. It will call from the dark place, and bring back Him from the deepest below, oh yes.
+
+-- Ta...moth... The mouth... yes yes!]]
+}

@@ -19,11 +19,11 @@
 
 load("/data/general/objects/objects-maj-eyal.lua")
 
-for i = 1, 5 do
+for i = 1, 3 do
 newEntity{ base = "BASE_LORE",
 	define_as = "NOTE"..i,
-	name = "research log", lore="scintillating-caves-note-"..i,
-	desc = [[A paper scrap, left by an adventurer.]],
+	name = "Deep Bellow excavation report "..i, lore="deep-bellow-"..i,
+	desc = [[A paper scrap.]],
 	rarity = false,
 	is_magic_device = false,
 	encumberance = 0,
