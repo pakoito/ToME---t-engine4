@@ -318,7 +318,7 @@ function _M:loaded()
 	if self.player then self.player.changed = true end
 	self.key = engine.KeyBind.new()
 
-	if self.always_target then Map:setViewerFaction(self.player.faction) end
+	if self.always_target == true then Map:setViewerFaction(self.player.faction) end
 	if self.player and config.settings.cheat then self.player.__cheated = true end
 	self:updateCurrentChar()
 end
@@ -1177,12 +1177,18 @@ function _M:setupCommands()
 		end,
 
 		TACTICAL_DISPLAY = function()
-			if Map.view_faction then
-				self.always_target = nil
+			if self.always_target == true then
+				self.always_target = "health"
 				Map:setViewerFaction(nil)
-			else
+				game.log("Showing healthbars only.")
+			elseif self.always_target == nil then
 				self.always_target = true
 				Map:setViewerFaction(self.player.faction)
+				game.log("Showing healthbars and tactical borders.")
+			elseif self.always_target == "health" then
+				self.always_target = nil
+				Map:setViewerFaction(nil)
+				game.log("Showing no tactical information.")
 			end
 		end,
 

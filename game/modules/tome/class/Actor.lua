@@ -456,15 +456,20 @@ function _M:defineDisplayCallback()
 
 	self._mo:displayCallback(function(x, y, w, h, zoom, on_map)
 		-- Tactical info
-		if game.level and game.level.map.view_faction then
-			local map = game.level.map
-
+		if game.level and game.always_target then
 			-- Tactical life info
 			if on_map then
 				local dh = h * 0.1
+				local lp = self.life / self.max_life + 0.0001
 				core.display.drawQuad(x, y + h - dh, w, dh, 129, 180, 57, 128)
-				core.display.drawQuad(x, y + h - dh, w * self.life / self.max_life, dh, 50, 220, 77, 255)
+				core.display.drawQuad(x, y + h - dh, w * lp, dh, 50, 220, 77, 255)
+			end
+		end
 
+		-- Tactical info
+		if game.level and game.level.map.view_faction then
+			local map = game.level.map
+			if on_map then
 				if not f_self then
 					f_self = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_self)
 					f_powerful = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_powerful)
