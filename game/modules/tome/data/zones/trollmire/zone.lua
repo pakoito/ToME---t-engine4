@@ -40,7 +40,7 @@ return {
 			sqrt_percent = 30,
 			noise = "fbm_perlin",
 			floor = function() if rng.chance(20) then return "FLOWER" else return "GRASS" end end,
-			wall = {"TREE","TREE2","TREE3","TREE4","TREE5","TREE6","TREE7","TREE8","TREE9","TREE10","TREE11","TREE12","TREE13","TREE14","TREE15","TREE16","TREE17","TREE18","TREE19","TREE20",},
+			wall = "TREE",
 			up = "GRASS_UP4",
 			down = "GRASS_DOWN6",
 			do_ponds =  {

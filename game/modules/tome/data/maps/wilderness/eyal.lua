@@ -37,7 +37,7 @@ quickEntity('w', {always_remember = true, show_tooltip=true, name='Sun Wall', di
 quickEntity('p', {always_remember = true, show_tooltip=true, name='palm forest', display='#', color=colors.LIGHT_GREEN, back_color={r=163,g=149,b=42}, image="terrain/sand.png", add_displays = {mod.class.Grid.new{image="terrain/palmtree_alpha1.png"}}, block_move=true})
 quickEntity('t', {always_remember = true, show_tooltip=true, name='cold forest', display='#', color=colors.LIGHT_GREEN, back_color=colors.DARK_GREEN, image="terrain/rocky_snowy_tree.png", block_move=true})
 quickEntity('_', {always_remember = true, show_tooltip=true, name='burnt forest', display='#', color=colors.UMBER, back_color=colors.DARK_GREY, image="terrain/grass_burnt1.png", add_displays = {mod.class.Grid.new{image="terrain/burnttree_alpha1.png"}}, block_move=true})
-defineTile('T', {"TREE1","TREE2","TREE3","TREE4","TREE5","TREE6","TREE7","TREE8","TREE9","TREE10"})
+defineTile('T', "TREE")
 defineTile('v', {"TREE_DARK1","TREE_DARK2","TREE_DARK3","TREE_DARK4","TREE_DARK5","TREE_DARK6","TREE_DARK7","TREE_DARK8","TREE_DARK9","TREE_DARK10"})
 
 quickEntity('.', {always_remember = true, show_tooltip=true, name='plains', display='.', color=colors.LIGHT_GREEN, back_color=colors.DARK_GREEN, image="terrain/grass.png", can_encounter=true, equilibrium_level=-10})

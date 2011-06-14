@@ -1088,7 +1088,7 @@ local random_zone_themes = {
 		load_grids = {"/data/general/grids/forest.lua"},
 		getDoor = function(self) return "GRASS" end,
 		getFloor = function(self) return function() if rng.chance(20) then return "FLOWER" else return "GRASS" end end end,
-		getWall = function(self) return {"TREE","TREE2","TREE3","TREE4","TREE5","TREE6","TREE7","TREE8","TREE9","TREE10","TREE11","TREE12","TREE13","TREE14","TREE15","TREE16","TREE17","TREE18","TREE19","TREE20",} end,
+		getWall = function(self) return "TREE" end,
 		getUp = function(self) return "GRASS_UP"..self.less_dir end,
 		getDown = function(self) return "GRASS_DOWN"..self.more_dir end,
 	} end },

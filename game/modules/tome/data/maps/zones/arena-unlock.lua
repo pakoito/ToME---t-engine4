@@ -22,7 +22,7 @@ defineTile("+", "LOCK")
 defineTile(":", "GRASS", nil, nil, nil, {no_teleport=true})
 defineTile(".", "SAND")
 defineTile("-", "FLOOR")
-defineTile("T", {"TREE","TREE2","TREE3","TREE4","TREE5","TREE6","TREE7","TREE8","TREE9","TREE10","TREE11","TREE12","TREE13","TREE14","TREE15","TREE16","TREE17","TREE18","TREE19","TREE20"}, nil, nil, nil, {no_teleport=true})
+defineTile("T", "TREE", nil, nil, nil, {no_teleport=true})
 
 startx = 8
 starty = 12

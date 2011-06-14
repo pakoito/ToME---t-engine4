@@ -20,7 +20,7 @@
 startx = 49
 starty = 24
 
-defineTile("&", {"TREE","TREE2","TREE3","TREE4","TREE5","TREE6","TREE7","TREE8","TREE9","TREE10","TREE11","TREE12","TREE13","TREE14","TREE15","TREE16","TREE17","TREE18","TREE19","TREE20"}, nil, nil, nil)
+defineTile("&", "TREE", nil, nil, nil)
 defineTile(")", "GRASS", {random_filter={name="ash longbow"}}, nil, nil)
 defineTile("s", "GRASS", nil, "TUTORIAL_NPC_MAGE", nil)
 defineTile(",", "GRASS", nil, nil, nil)

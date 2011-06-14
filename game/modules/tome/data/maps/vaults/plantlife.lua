@@ -22,8 +22,8 @@ setStatusAll{no_teleport=true}
 rotates = {"default", "90", "180", "270", "flipx", "flipy"}
 
 defineTile('.', "GRASS")
-defineTile('#', {"TREE","TREE2","TREE3","TREE4","TREE5","TREE6","TREE7","TREE8","TREE9","TREE10","TREE11","TREE12","TREE13","TREE14","TREE15","TREE16","TREE17","TREE18","TREE19","TREE20"})
-defineTile('X', {"HARDTREE","HARDTREE2","HARDTREE3","HARDTREE4","HARDTREE5","HARDTREE6","HARDTREE7","HARDTREE8","HARDTREE9","HARDTREE10","HARDTREE11","HARDTREE12","HARDTREE13","HARDTREE14","HARDTREE15","HARDTREE16","HARDTREE17","HARDTREE18","HARDTREE19","HARDTREE20"})
+defineTile('#', "TREE")
+defineTile('X', "HARDTREE")
 defineTile('!', "ROCK_VAULT")
 
 defineTile('V', "GRASS", nil, {random_filter={name="poison ivy"}})

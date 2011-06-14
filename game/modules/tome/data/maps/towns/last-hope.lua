@@ -28,7 +28,7 @@ defineTile("&", "HARDMOUNTAIN_WALL")
 defineTile("~", "DEEP_WATER")
 defineTile("_", "ROAD")
 defineTile(".", "GRASS")
-defineTile("t", {"TREE","TREE2","TREE3","TREE4","TREE5","TREE6","TREE7","TREE8","TREE9","TREE10","TREE11","TREE12","TREE13","TREE14","TREE15","TREE16","TREE17","TREE18","TREE19","TREE20"})
+defineTile("t", "TREE")
 defineTile(" ", "FLOOR")
 
 defineTile('1', "HARDWALL", nil, nil, "SWORD_WEAPON_STORE")

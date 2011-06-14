@@ -22,7 +22,7 @@ setStatusAll{no_teleport=true}
 defineTile('!', "ROCK_VAULT", nil, nil, nil, {room_map={special=false, room=false, can_open=true}})
 defineTile(' ', "GRASS")
 defineTile('+', "DOOR")
-defineTile('X', {"HARDTREE","HARDTREE2","HARDTREE3","HARDTREE4","HARDTREE5","HARDTREE6","HARDTREE7","HARDTREE8","HARDTREE9","HARDTREE10","HARDTREE11","HARDTREE12","HARDTREE13","HARDTREE14","HARDTREE15","HARDTREE16","HARDTREE17","HARDTREE18","HARDTREE19","HARDTREE20"})
+defineTile('X', "HARDTREE")
 defineTile('^', "GRASS", nil, nil, {random_filter={add_levels=5}})
 defineTile('#', "GRASS", nil, {random_filter={name="honey tree"}})
 defineTile('q', "GRASS", {random_filter={add_levels=10, tome_mod="vault"}}, {random_filter={name="brown bear", add_levels=10}})

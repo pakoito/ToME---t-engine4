@@ -20,7 +20,7 @@
 setStatusAll{no_teleport=true}
 
 defineTile('<', "GRASS_UP_WILDERNESS")
-defineTile('t', {"TREE","TREE2","TREE3","TREE4","TREE5","TREE6","TREE7","TREE8","TREE9","TREE10","TREE11","TREE12","TREE13","TREE14","TREE15","TREE16","TREE17","TREE18","TREE19","TREE20"})
+defineTile('t', "TREE")
 defineTile('~', "DEEP_OCEAN_WATER")
 defineTile('.', "GRASS")
 defineTile('-', "FIELDS")

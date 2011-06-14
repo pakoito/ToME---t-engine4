@@ -43,7 +43,7 @@ newEntity{
 for i = 1, 30 do newEntity{ base="TREE", define_as = "TREE"..i, image = "terrain/grass.png", add_displays = class:makeTrees("terrain/tree_alpha", 13, 9)} end
 
 newEntity{
-	define_as = "HARDTREE,
+	define_as = "HARDTREE",
 	type = "wall", subtype = "grass",
 	name = "tall thick tree",
 	image = "terrain/tree.png",

@@ -23,7 +23,7 @@ defineTile("*", "GRASS", {random_filter={type="gem"}})
 defineTile("<", "GRASS_UP4")
 defineTile(".", "GRASS")
 defineTile("@", "GRASS", nil, "TROLL_BILL")
-defineTile("t", {"HARDTREE","HARDTREE2","HARDTREE3","HARDTREE4","HARDTREE5","HARDTREE6","HARDTREE7","HARDTREE8","HARDTREE9","HARDTREE10","HARDTREE11","HARDTREE12","HARDTREE13","HARDTREE14","HARDTREE15","HARDTREE16","HARDTREE17","HARDTREE18","HARDTREE19","HARDTREE20"})
+defineTile("t", "HARDTREE")
 defineTile("T", "GRASS", nil, {random_filter={type="giant", subtype="troll"}})
 defineTile("!", "ROCK_VAULT")
 
