@@ -638,7 +638,7 @@ local drop_tables = {
 			ego = 45,
 			basic = 20,
 			money = 7,
-			lore = 5,
+			lore = 2,
 		},
 		[2] = {
 			uniques = 0.7,
@@ -649,7 +649,7 @@ local drop_tables = {
 			ego = 30,
 			basic = 15,
 			money = 8,
-			lore = 6,
+			lore = 2.5,
 		},
 		[3] = {
 			uniques = 1,
@@ -660,7 +660,7 @@ local drop_tables = {
 			ego = 15,
 			basic = 10,
 			money = 8.5,
-			lore = 6.5,
+			lore = 2.5,
 		},
 		[4] = {
 			uniques = 1.1,
@@ -671,7 +671,7 @@ local drop_tables = {
 			ego = 5,
 			basic = 5,
 			money = 8,
-			lore = 6,
+			lore = 3,
 		},
 		[5] = {
 			uniques = 1.2,
@@ -682,7 +682,7 @@ local drop_tables = {
 			ego = 5,
 			basic = 5,
 			money = 8,
-			lore = 6,
+			lore = 3,
 		},
 	},
 	store = {
