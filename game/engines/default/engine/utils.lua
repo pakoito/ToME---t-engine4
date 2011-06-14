@@ -725,6 +725,10 @@ function tstring:extractLines()
 	return rets
 end
 
+function tstring:isEmpty()
+	return #self == 0
+end
+
 function tstring:makeLineTextures(max_width, font, no_split, r, g, b)
 	local list = no_split and self or self:splitLines(max_width, font)
 	local fh = font:lineSkip()

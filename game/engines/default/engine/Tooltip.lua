@@ -246,9 +246,11 @@ function _M:set(str, ...)
 	if str.is_tstring then
 		self:erase()
 		self.default_ui[1]:switchItem(str, str)
+		self.empty = str:isEmpty()
 	else
 		if self.uids == self.default_ui then self.uids = {} end
 		self.uids[#self.uids+1] = str
+		self.empty = false
 	end
 
 	local uih = 0
@@ -260,6 +262,7 @@ end
 function _M:erase()
 	self.uis = self.default_ui
 	self.default_ui[1].list = nil
+	self.empty = true
 end
 
 function _M:display() end
@@ -359,7 +362,7 @@ function _M:displayAtMap(tmx, tmy, mx, my, text)
 		end
 	end
 
---	if self.texture then
+	if not self.empty then
 --		mx = mx - self.w / 2 + game.level.map.tile_w / 2
 --		my = my - self.h
 		if mx < 0 then mx = 0 end
@@ -369,5 +372,5 @@ function _M:displayAtMap(tmx, tmy, mx, my, text)
 		self.last_display_x = mx
 		self.last_display_y = my
 		self:toScreen(mx, my)
---	end
+	end
 end
