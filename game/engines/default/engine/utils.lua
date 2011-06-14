@@ -707,6 +707,24 @@ function tstring:tokenize(tokens)
 	return ret
 end
 
+function tstring:extractLines()
+	local rets = {}
+	local ret = tstring{}
+	local v, tv
+	for i = 1, #self do
+		v = self[i]
+		tv = type(v)
+		if tv == true then
+			rets[#rets+1] = ret
+			ret = tstring{}
+		else
+			ret[#ret+1] = v
+		end
+	end
+	rets[#rets+1] = ret
+	return rets
+end
+
 function tstring:makeLineTextures(max_width, font, no_split, r, g, b)
 	local list = no_split and self or self:splitLines(max_width, font)
 	local fh = font:lineSkip()
