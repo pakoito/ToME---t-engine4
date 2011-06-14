@@ -29,6 +29,12 @@ function _M:init(t, no_default)
 	if type(t.cant_be_moved) == "nil" then t.cant_be_moved = true end
 	mod.class.Actor.init(self, t, no_default)
 	ActorAI.init(self, t)
+
+	-- Grab default image name if none is set
+	if not self.image and self.name ~= "unknown actor" then self.image = "npc/"..tostring(self.type or "unknown").."_"..tostring(self.subtype or "unknown"):lower():gsub("[^a-z0-9]", "_").."_"..(self.name or "unknown"):lower():gsub("[^a-z0-9]", "_")..".png" end
+
+	self.unit_power = self.unit_power or 0
+	self.max_unit_power = self.max_unit_power or self.unit_power
 end
 
 --- Checks what to do with the target
@@ -56,6 +62,79 @@ end
 
 function _M:takeHit()
 	return nil, 0
+end
+
+--- Attach or remove a display callback
+-- Defines particles to display
+function _M:defineDisplayCallback()
+	if not self._mo then return end
+
+	local ps = self:getParticlesList()
+
+	local f_self = nil
+	local f_danger = nil
+	local f_powerful = nil
+	local f_friend = nil
+	local f_enemy = nil
+	local f_neutral = nil
+
+	self._mo:displayCallback(function(x, y, w, h, zoom, on_map)
+		-- Tactical info
+		if game.level and game.always_target then
+			-- Tactical life info
+			if on_map then
+				local dh = h * 0.1
+				local lp = self.unit_power / self.max_unit_power + 0.0001
+				core.display.drawQuad(x, y + h - dh, w, dh, 129, 180, 57, 128)
+				core.display.drawQuad(x, y + h - dh, w * lp, dh, 50, 220, 77, 255)
+			end
+		end
+
+		-- Tactical info
+		if game.level and game.level.map.view_faction then
+			local map = game.level.map
+			if on_map then
+				if not f_self then
+					f_self = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_self)
+					f_powerful = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_powerful)
+					f_danger = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_danger)
+					f_friend = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_friend)
+					f_enemy = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_enemy)
+					f_neutral = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_neutral)
+				end
+
+				if self.faction then
+					local friend
+					if not map.actor_player then friend = Faction:factionReaction(map.view_faction, self.faction)
+					else friend = map.actor_player:reactionToward(self) end
+
+					if self == map.actor_player then
+						f_self:toScreen(x, y, w, h)
+					elseif map:faction_danger_check(self) then
+						if friend >= 0 then f_powerful:toScreen(x, y, w, h)
+						else f_danger:toScreen(x, y, w, h) end
+					elseif friend > 0 then
+						f_friend:toScreen(x, y, w, h)
+					elseif friend < 0 then
+						f_enemy:toScreen(x, y, w, h)
+					else
+						f_neutral:toScreen(x, y, w, h)
+					end
+				end
+			end
+		end
+
+		local e
+		for i = 1, #ps do
+			e = ps[i]
+			e:checkDisplay()
+			if e.ps:isAlive() then e.ps:toScreen(x + w / 2, y + h / 2, true, w / (game.level and game.level.map.tile_w or w))
+			else self:removeParticles(e)
+			end
+		end
+
+		return true
+	end)
 end
 
 function _M:encounterAttack(target)

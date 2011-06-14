@@ -33,7 +33,7 @@ newEntity{
 
 newEntity{
 	name = "Anorithil patrol",
-	type = "patrol", subtype = "allied kingdoms",
+	type = "patrol", subtype = "sunwall",
 	display = 'p', color = colors.YELLOW,
 	faction = "sunwall",
 	level_range = {1, nil},
