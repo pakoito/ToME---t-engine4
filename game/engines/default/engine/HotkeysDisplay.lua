@@ -50,10 +50,6 @@ function _M:resize(x, y, w, h)
 	self.texture, self.texture_w, self.texture_h = self.surface:glTexture()
 	if self.actor then self.actor.changed = true end
 
-	local cw, ch = self.font:size(" ")
-	self.font_w = cw
-	self.max_char_w = math.min(127, math.floor(w / self.font_w))
-
 	if self.bg_image then
 		local fill = core.display.loadImage(self.bg_image)
 		local fw, fh = fill:getSize()
@@ -73,14 +69,17 @@ function _M:display()
 	local a = self.actor
 	if not a or not a.changed then return self.surface end
 
+	local page = a.hotkey_page
+	if page == 1 and core.key.modState("ctrl") then page = 2
+	elseif page == 1 and core.key.modState("shift") then page = 3 end
+
 	local hks = {}
 	for i = 1, 12 do
-		local j = i + (12 * (a.hotkey_page - 1))
-		local ks = game.key:formatKeyString(game.key:findBoundKeys("HOTKEY_"..page_to_hotkey[a.hotkey_page]..i))
+		local j = i + (12 * (page - 1))
 		if a.hotkey[j] and a.hotkey[j][1] == "talent" then
-			hks[#hks+1] = {a.hotkey[j][2], j, "talent", ks}
+			hks[#hks+1] = {a.hotkey[j][2], i, "talent"}
 		elseif a.hotkey[j] and a.hotkey[j][1] == "inventory" then
-			hks[#hks+1] = {a.hotkey[j][2], j, "inventory", ks}
+			hks[#hks+1] = {a.hotkey[j][2], i, "inventory"}
 		end
 	end
 
@@ -122,14 +121,14 @@ function _M:display()
 			end
 		end
 
-		txt = ("%1d/%2d) %-"..(self.max_char_w-4-24).."s Key: %s"):format(a.hotkey_page, i - (a.hotkey_page-1) * 12, txt, ts[4])
+		txt = ("%1d/%2d) %s"):format(page, i, txt)
 		local w, h, gen
 		if self.cache[txt] then
 			gen = self.cache[txt]
 			w, h = gen.fw, gen.fh
 		else
 			w, h = self.font:size(txt)
-			gen = self.font:draw(txt, self.w, color[1], color[2], color[3], true)[1]
+			gen = self.font:draw(txt, self.w / 3, color[1], color[2], color[3], true)[1]
 			gen.fw, gen.fh = w, h
 		end
 		gen.x, gen.y = x, y
@@ -138,7 +137,7 @@ function _M:display()
 		self.clics[i] = {x,y,w+4,h+4}
 
 		if y + self.font_h * 2 > self.h then
-			x = x + self.w / 2
+			x = x + self.w / 3
 			y = 0
 		else
 			y = y + self.font_h

@@ -50,6 +50,10 @@ function _M:enableShadow(v)
 	self.shadow = v
 end
 
+function _M:enableFading(v)
+	self.fading = v
+end
+
 --- Resize the display area
 function _M:resize(x, y, w, h)
 	self.display_x, self.display_y = math.floor(x), math.floor(y)
@@ -72,9 +76,22 @@ function _M:resize(x, y, w, h)
 	self.scrollbar = Slider.new{size=self.h - 20, max=1, inverse=true}
 end
 
+--- Returns the full log
+function _M:getLog()
+	local log = {}
+	for i = 1, #self.log do log[#log+1] = self.log[i].str end
+	return log
+end
+
+function _M:getLogLast(channel)
+	if not self.log[1] then return 0 end
+	return self.log[1].timestamp
+end
+
 --- Make a dialog popup with the full log
 function _M:showLogDialog(title, shadow)
-	local d = require("engine.dialogs.ShowLog").new(title or "Message Log", shadow, self)
+	local log = self:getLog()
+	local d = require_first("mod.dialogs.ShowLog", "engine.dialogs.ShowLog").new(title or "Message Log", shadow, {log=log})
 	game:registerDialog(d)
 end
 
@@ -86,7 +103,7 @@ function _M:call(str, ...)
 	str = str:format(...)
 	print("[LOG]", str)
 	local tstr = str:toString()
-	table.insert(self.log, 1, tstr)
+	table.insert(self.log, 1, {str=tstr, timestamp = core.game.getTime()})
 	while #self.log > self.max_log do
 		local old = table.remove(self.log)
 		self.cache[old] = nil
@@ -109,7 +126,7 @@ function _M:getLines(number)
 	if from > #self.log then from = #self.log end
 	local lines = { }
 	for i = from, 1, -1 do
-		lines[#lines+1] = tostring(self.log[i])
+		lines[#lines+1] = tostring(self.log[i].str)
 	end
 	return lines
 end
@@ -125,7 +142,7 @@ function _M:display()
 	local old_style = self.font:getStyle()
 	for z = 1 + self.scroll, #self.log do
 		local stop = false
-		local tstr = self.log[z]
+		local tstr = self.log[z].str
 		local gen
 		if self.cache[tstr] then
 			gen = self.cache[tstr]
@@ -134,7 +151,7 @@ function _M:display()
 			self.cache[tstr] = gen
 		end
 		for i = #gen, 1, -1 do
-			self.dlist[#self.dlist+1] = gen[i]
+			self.dlist[#self.dlist+1] = {item=gen[i], date=self.log[z].timestamp}
 			h = h + self.fh
 			if h > self.h - self.fh then stop=true break end
 		end
@@ -146,16 +163,29 @@ end
 
 function _M:toScreen()
 	self:display()
+
 	if self.bg_texture then self.bg_texture:toScreenFull(self.display_x, self.display_y, self.w, self.h, self.bg_texture_w, self.bg_texture_h) end
+
+	local now = core.game.getTime()
+
 	local h = self.display_y + self.h -  self.fh
 	for i = 1, #self.dlist do
-		local item = self.dlist[i]
-		if self.shadow then item._tex:toScreenFull(self.display_x+2, h+2, self.fw, self.fh, item._tex_w, item._tex_h, 0,0,0, self.shadow) end
-		item._tex:toScreenFull(self.display_x, h, self.fw, self.fh, item._tex_w, item._tex_h)
+		local item = self.dlist[i].item
+
+		local fade = 1
+		if self.fading then
+			fade = now - self.dlist[i].date
+			if fade < self.fading * 1000 then fade = 1
+			elseif fade < self.fading * 2000 then fade = (self.fading * 2000 - fade) / (self.fading * 1000)
+			else fade = 0 end
+		end
+
+		if self.shadow then item._tex:toScreenFull(self.display_x+2, h+2, self.fw, self.fh, item._tex_w, item._tex_h, 0,0,0, self.shadow * fade) end
+		item._tex:toScreenFull(self.display_x, h, self.fw, self.fh, item._tex_w, item._tex_h, 1, 1, 1, fade)
 		h = h - self.fh
 	end
 
-	if true then
+	if not self.fading then
 		self.scrollbar.pos = self.scroll
 		self.scrollbar.max = self.max - self.max_display + 1
 		self.scrollbar:display(self.display_x + self.w - self.scrollbar.w, self.display_y)

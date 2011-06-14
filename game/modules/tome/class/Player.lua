@@ -219,7 +219,7 @@ function _M:act()
 	self.old_life = self.life
 
 	-- Clean log flasher
-	game.flash:empty()
+--	game.flash:empty()
 
 	-- Resting ? Running ? Otherwise pause
 	if not self:restStep() and not self:runStep() and self.player then

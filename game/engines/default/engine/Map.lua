@@ -182,6 +182,7 @@ function _M:save()
 		_map = true,
 		_fovcache = true,
 		surface = true,
+		finished = true,
 	})
 end
 
@@ -287,6 +288,7 @@ end
 
 --- Recreate the internal map using new dimensions
 function _M:recreate()
+	if not self.finished then return end
 	self:makeCMap()
 	self.changed = true
 

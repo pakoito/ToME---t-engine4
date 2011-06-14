@@ -81,7 +81,7 @@ function _M:init()
 end
 
 function _M:run()
-	local size, size_mono, font, font_mono
+	local size, size_mono, font, font_mono, font_mono_h, font_h
 	local flysize = ({normal=14, small=12, big=16})[config.settings.tome.fonts.size]
 	if config.settings.tome.fonts.type == "fantasy" then
 		size = ({normal=16, small=14, big=18})[config.settings.tome.fonts.size]
@@ -94,16 +94,27 @@ function _M:run()
 		font = "/data/font/Vera.ttf"
 		font_mono = "/data/font/VeraMono.ttf"
 	end
+	local f = core.display.newFont(font, size)
+	font_h = f:lineSkip()
+	f = core.display.newFont(font_mono, size_mono)
+	font_mono_h = f:lineSkip()
 
 	self.delayed_log_damage = {}
 	self.calendar = Calendar.new("/data/calendar_allied.lua", "Today is the %s %s of the %s year of the Age of Ascendancy of Maj'Eyal.\nThe time is %02d:%02d.", 122, 167, 11)
 
-	self.player_display = PlayerDisplay.new(0, 230, 200, self.h * 0.8 - 230, {30,30,0}, font_mono, size_mono)
-	self.flash = LogFlasher.new(0, 0, self.w, 20, nil, font, size, {255,255,255}, {0,0,0})
-	self.logdisplay = LogDisplay.new(0, self.h * 0.8 + 7, self.w * 0.5 - 46, self.h * 0.2 - 7, nil, font, size, {255,255,255}, "/data/gfx/ui/message-log.png")
+	self.player_display = PlayerDisplay.new(0, 200, 200, self.h - 200, {30,30,0}, font_mono, size_mono)
+--	self.flash = LogFlasher.new(0, 0, self.w, 20, nil, font, size, {255,255,255}, {0,0,0})
+	self.map_h_stop = self.h - font_mono_h * 4
+	self.logdisplay = LogDisplay.new(216, self.map_h_stop - font_h * 5 -16, (self.w - 216) / 2, font_h * 5, nil, font, size, nil, nil)
 	self.logdisplay:enableShadow(0.6)
-	profile.chat:resize(0, self.h * 0.8 + 7, self.w * 0.5 - 46, self.h * 0.2 - 7, font, size, {255,255,255}, "/data/gfx/ui/message-log.png")
-	self.hotkeys_display = HotkeysDisplay.new(nil, self.w * 0.5 + 46, self.h * 0.8 + 7, self.w * 0.5 - 46, self.h * 0.2 - 7, "/data/gfx/ui/talents-list.png", font_mono, size_mono)
+	self.logdisplay:enableFading(2)
+
+	profile.chat:resize(216 + (self.w - 216) / 2, self.map_h_stop - font_h * 5 -16, (self.w - 216) / 2, font_h * 5, font, size, nil, nil)
+	profile.chat:enableShadow(0.6)
+	profile.chat:enableFading(6)
+	profile.chat:enableDisplayChans(false)
+
+	self.hotkeys_display = HotkeysDisplay.new(nil, 216, self.h - font_mono_h * 4, self.w - 216, font_mono_h * 4, "/data/gfx/ui/talents-list.png", font_mono, size_mono)
 	self.hotkeys_display:enableShadow(0.6)
 	self.npcs_display = ActorsSeenDisplay.new(nil, self.w * 0.5 + 46, self.h * 0.8 + 7, self.w * 0.5 - 46, self.h * 0.2 - 7, "/data/gfx/ui/talents-list.png", font_mono, size_mono)
 	self.tooltip = Tooltip.new(font_mono, size, {255,255,255}, {30,30,30,230})
@@ -116,33 +127,21 @@ function _M:run()
 	self.nicer_tiles = NicerTiles.new()
 	self:createSeparators()
 
-	self.log = function(style, ...) if type(style) == "number" then self.logdisplay(...) self.flash(style, ...) else self.logdisplay(style, ...) self.flash(self.flash.NEUTRAL, style, ...) end end
+	self.log = function(style, ...) if type(style) == "number" then self.logdisplay(...) else self.logdisplay(style, ...) end end
 	self.logChat = function(style, ...)
-		if not config.settings.tome.chat_log then return end
+		if true or not config.settings.tome.chat_log then return end
 		if type(style) == "number" then
 		local old = self.logdisplay.changed
-		self.logdisplay(...) self.flash(style, ...) else self.logdisplay(style, ...) self.flash(self.flash.NEUTRAL, style, ...) end
+		self.logdisplay(...) else self.logdisplay(style, ...) end
 		if self.show_userchat then self.logdisplay.changed = old end
 	end
 	self.logSeen = function(e, style, ...) if e and e.x and e.y and self.level.map.seens(e.x, e.y) then self.log(style, ...) end end
 	self.logPlayer = function(e, style, ...) if e == self.player or e == self.party then self.log(style, ...) end end
 
-	self.log(self.flash.GOOD, "Welcome to #00FF00#Tales of Maj'Eyal!")
+--	self.log(self.flash.GOOD, "Welcome to #00FF00#Tales of Maj'Eyal!")
 
 	-- List of stuff to do on tick end
 	self.on_tick_end = {}
-
-	-- Setup inputs
-	self:setupCommands()
-	self:setupMouse()
-
-	-- Starting from here we create a new game
-	if not self.player then self:newGame() end
-
-	self.hotkeys_display.actor = self.player
-	self.npcs_display.actor = self.player
-
-	self:initTargeting()
 
 	-- Ok everything is good to go, activate the game in the engine!
 	self:setCurrent()
@@ -153,9 +152,21 @@ function _M:run()
 	-- Start time
 	self.real_starttime = os.time()
 
-	if self.level then self:setupDisplayMode(false, "postinit") end
+	self:setupDisplayMode(false, "postinit")
 	if self.level and self.level.data.day_night then self.state:dayNightCycle() end
 	if self.level and self.player then self.calendar = Calendar.new("/data/calendar_"..(self.player.calendar or "allied")..".lua", "Today is the %s %s of the %s year of the Age of Ascendancy of Maj'Eyal.\nThe time is %02d:%02d.", 122, 167, 11) end
+
+	-- Setup inputs
+	self:setupCommands()
+	self:setupMouse()
+
+	-- Starting from here we create a new game
+	if not self.player then self:newGame() end
+
+	self:initTargeting()
+
+	self.hotkeys_display.actor = self.player
+	self.npcs_display.actor = self.player
 end
 
 --- Checks if the current character is "tainted" by cheating
@@ -315,6 +326,7 @@ function _M:loaded()
 	Zone.post_filter = function(...) return self.state:entityFilterPost(...) end
 	Map:setViewerActor(self.player)
 	self:setupDisplayMode(false, "init")
+	self:setupDisplayMode(false, "postinit")
 	if self.player then self.player.changed = true end
 	self.key = engine.KeyBind.new()
 
@@ -334,6 +346,14 @@ function _M:setupDisplayMode(reboot, mode)
 			util.showMainMenu(false, nil, nil, self.__mod_info.short_name, self.save_name, false)
 		end
 
+		local do_bg = true
+
+		Map:resetTiles()
+	end
+
+	if not mode or mode == "postinit" then
+		local gfx = config.settings.tome.gfx
+
 		-- Show a count for stacked objects
 		Map.object_stack_count = true
 
@@ -345,20 +365,14 @@ function _M:setupDisplayMode(reboot, mode)
 		print("[DISPLAY MODE] Tileset: "..gfx.tiles)
 		print("[DISPLAY MODE] Size: "..gfx.size)
 
-		local do_bg = true
-
 		if gfx.size == "64x64" then
-			Map:setViewPort(216, 36, self.w - 216, math.floor(self.h * 0.80) - 36, 64, 64, nil, 44, do_bg)
-			Map:resetTiles()
+			Map:setViewPort(216, 0, self.w - 216, (self.map_h_stop or 80) - 16, 64, 64, nil, 44, do_bg)
 		elseif gfx.size == "48x48" then
-			Map:setViewPort(216, 36, self.w - 216, math.floor(self.h * 0.80) - 36, 48, 48, nil, 36, do_bg)
-			Map:resetTiles()
+			Map:setViewPort(216, 0, self.w - 216, (self.map_h_stop or 80) - 16, 48, 48, nil, 36, do_bg)
 		elseif gfx.size == "32x32" then
-			Map:setViewPort(216, 36, self.w - 216, math.floor(self.h * 0.80) - 36, 32, 32, nil, 22, do_bg)
-			Map:resetTiles()
+			Map:setViewPort(216, 0, self.w - 216, (self.map_h_stop or 80) - 16, 32, 32, nil, 22, do_bg)
 		elseif gfx.size == "16x16" then
-			Map:setViewPort(216, 36, self.w - 216, math.floor(self.h * 0.80) - 36, 16, 16, "/data/font/FSEX300.ttf", 16, do_bg)
-			Map:resetTiles()
+			Map:setViewPort(216, 0, self.w - 216, (self.map_h_stop or 80) - 16, 16, 16, "/data/font/FSEX300.ttf", 16, do_bg)
 		end
 
 		Map.tiles.use_images = true
@@ -367,19 +381,19 @@ function _M:setupDisplayMode(reboot, mode)
 		if gfx.tiles == "shockbolt" then Map.tiles.nicer_tiles = true end
 		if gfx.tiles == "oldrpg" then Map.tiles.nicer_tiles = true end
 
+		if self.level then
+			if self.level.map.finished then
+				self.level.map:recreate()
+				self.level.map:moveViewSurround(self.player.x, self.player.y, 8, 8)
+			end
+			self:initTargeting()
+		end
+		self:setupMiniMap()
+
 		-- Create the framebuffer
 		self.fbo = core.display.newFBO(Map.viewport.width, Map.viewport.height)
 		if self.fbo then self.fbo_shader = Shader.new("main_fbo") if not self.fbo_shader.shad then self.fbo = nil self.fbo_shader = nil end end
 		if self.player then self.player:updateMainShader() end
-	end
-
-	if not mode or mode == "postinit" then
-		if self.level then
-			self.level.map:recreate()
-			self:initTargeting()
-			self.level.map:moveViewSurround(self.player.x, self.player.y, 8, 8)
-		end
-		self:setupMiniMap()
 	end
 end
 
@@ -389,7 +403,7 @@ end
 
 
 function _M:setupMiniMap()
-	if self.level and self.level.map then self.level.map._map:setupMiniMapGridSize(4) end
+	if self.level and self.level.map and self.level.map.finished then self.level.map._map:setupMiniMapGridSize(4) end
 end
 
 function _M:save()
@@ -736,13 +750,13 @@ end
 function _M:displayDelayedLogDamage()
 	for src, tgts in pairs(self.delayed_log_damage) do
 		for target, dams in pairs(tgts) do
-			local flash = game.flash.NEUTRAL
-			if target == game.player then flash = game.flash.BAD end
-			if src == game.player then flash = game.flash.GOOD end
+--			local flash = game.flash.NEUTRAL
+--			if target == game.player then flash = game.flash.BAD end
+--			if src == game.player then flash = game.flash.GOOD end
 			if #dams.descs > 1 then
-				game.logSeen(target, flash, "%s hits %s for %s damage (total %0.2f).", src.name:capitalize(), target.name, table.concat(dams.descs, ", "), dams.total)
+				game.logSeen(target, "%s hits %s for %s damage (total %0.2f).", src.name:capitalize(), target.name, table.concat(dams.descs, ", "), dams.total)
 			else
-				game.logSeen(target, flash, "%s hits %s for %s damage.", src.name:capitalize(), target.name, table.concat(dams.descs, ", "))
+				game.logSeen(target, "%s hits %s for %s damage.", src.name:capitalize(), target.name, table.concat(dams.descs, ", "))
 			end
 
 			local rsrc = src.resolveSource and src:resolveSource() or src
@@ -852,9 +866,9 @@ function _M:display(nb_keyframes)
 		map:displayEmotes(nb_keyframe or 1)
 
 		-- Minimap display
-		self.minimap_bg:toScreen(0, 35, 200, 200)
+		self.minimap_bg:toScreen(0, 0, 200, 200)
 		self.minimap_scroll_x, self.minimap_scroll_y = util.bound(self.player.x - 25, 0, map.w - 50), util.bound(self.player.y - 25, 0, map.h - 50)
-		map:minimapDisplay(0, 35, self.minimap_scroll_x, self.minimap_scroll_y, 50, 50, 1)
+		map:minimapDisplay(0, 0, self.minimap_scroll_x, self.minimap_scroll_y, 50, 50, 1)
 
 		-- Mouse gestures
 		self.gestures:update()
@@ -862,10 +876,12 @@ function _M:display(nb_keyframes)
 	end
 
 	-- We display the player's interface
-	self.flash:toScreen(nb_keyframe)
-	if self.show_userchat then profile.chat:toScreen()
-	else self.logdisplay:toScreen()
-	end
+--	self.flash:toScreen(nb_keyframe)
+--	if self.show_userchat then profile.chat:toScreen()
+--	else self.logdisplay:toScreen()
+--	end
+	profile.chat:toScreen()
+	self.logdisplay:toScreen()
 
 	self.player_display:toScreen(nb_keyframes)
 	if self.show_npc_list then
@@ -901,7 +917,7 @@ function _M:onUnregisterDialog(d)
 	-- Clean up tooltip
 	self.tooltip_x, self.tooltip_y = nil, nil
 	self.tooltip2_x, self.tooltip2_y = nil, nil
-	if self.player then self.player:updateMainShader() end
+	if self.player then self.player:updateMainShader() self.player.changed = true end
 end
 
 function _M:setupCommands()
@@ -955,7 +971,12 @@ function _M:setupCommands()
 
 	self.key.any_key = function(sym)
 		-- Control resets the tooltip
-		if sym == self.key._LCTRL or sym == self.key._RCTRL then self.tooltip.old_tmx = nil end
+		if sym == self.key._LCTRL or sym == self.key._RCTRL then
+			self.player.changed = true
+			self.tooltip.old_tmx = nil
+		elseif sym == self.key._LSHIFT or sym == self.key._RSHIFT then
+			self.player.changed = true
+		end
 	end
 	self.key:addBinds
 	{
@@ -1129,11 +1150,7 @@ function _M:setupCommands()
 		end,
 
 		SHOW_MESSAGE_LOG = function()
-			if not self.show_userchat then
-				self.logdisplay:showLogDialog(nil, 0.6)
-			else
-				profile.chat:showLogDialog(nil, 0.6)
-			end
+			self:registerDialog(require("mod.dialogs.ShowChatLog").new("Message Log", 0.6, self.logdisplay, profile.chat))
 		end,
 
 		-- Show time
@@ -1193,8 +1210,8 @@ function _M:setupCommands()
 		end,
 
 		LOOK_AROUND = function()
-			self.flash:empty(true)
-			self.flash(self.flash.GOOD, "Looking around... (direction keys to select interesting things, shift+direction keys to move freely)")
+--			self.flash:empty(true)
+			self.log("Looking around... (direction keys to select interesting things, shift+direction keys to move freely)")
 			local co = coroutine.create(function() self.player:getTarget{type="hit", no_restrict=true, range=2000} end)
 			local ok, err = coroutine.resume(co)
 			if not ok and err then print(debug.traceback(co)) error(err) end
@@ -1244,6 +1261,7 @@ function _M:setupMouse(reset)
 		self.player:mouseHandleDefault(self.key, self.key == self.normal_key, button, mx, my, xrel, yrel, event)
 	end)
 	-- Scroll message log
+--[[
 	self.mouse:registerZone(self.logdisplay.display_x, self.logdisplay.display_y, self.w, self.h, function(button, mx, my, xrel, yrel, bx, by, event)
 		if self.show_userchat then
 			profile.chat.mouse:delegate(button, mx, my, xrel, yrel, bx, by, event)
@@ -1253,6 +1271,7 @@ function _M:setupMouse(reset)
 			if button == "left" then self.logdisplay:showLogDialog(nil, 0.6) end
 		end
 	end)
+]]
 	-- Use hotkeys with mouse
 	self.mouse:registerZone(self.hotkeys_display.display_x, self.hotkeys_display.display_y, self.w, self.h, function(button, mx, my, xrel, yrel, bx, by, event)
 		if event == "button" and button == "left" and self.zone and self.zone.wilderness then return end
@@ -1277,11 +1296,11 @@ function _M:setupMouse(reset)
 		if button == "left" then self:clickIcon(bx, by) end
 	end)
 	-- Tooltip over the player pane
-	self.mouse:registerZone(self.player_display.display_x, self.player_display.display_y, self.player_display.w, self.player_display.h, function(button, mx, my, xrel, yrel, bx, by, event)
+	self.mouse:registerZone(self.player_display.display_x, self.player_display.display_y, self.player_display.w, self.player_display.h - self.icons.h, function(button, mx, my, xrel, yrel, bx, by, event)
 		self.player_display.mouse:delegate(button, mx, my, xrel, yrel, bx, by, event)
 	end)
 	-- Move using the minimap
-	self.mouse:registerZone(0, 35, 200, 200, function(button, mx, my, xrel, yrel, bx, by, event)
+	self.mouse:registerZone(0, 0, 200, 200, function(button, mx, my, xrel, yrel, bx, by, event)
 		if button == "left" and not xrel and not yrel and event == "button" then
 			local tmx, tmy = math.floor(bx / 4), math.floor(by / 4)
 			self.player:mouseMove(tmx + self.minimap_scroll_x, tmy + self.minimap_scroll_y)
@@ -1505,6 +1524,7 @@ local _sep_vert = {core.display.loadImage("/data/gfx/ui/separator-vert.png")} _s
 local _sep_top = {core.display.loadImage("/data/gfx/ui/separator-top.png")} _sep_top.tex = {_sep_top[1]:glTexture()}
 local _sep_bottom = {core.display.loadImage("/data/gfx/ui/separator-bottom.png")} _sep_bottom.tex = {_sep_bottom[1]:glTexture()}
 local _sep_bottoml = {core.display.loadImage("/data/gfx/ui/separator-bottom_line_end.png")} _sep_bottoml.tex = {_sep_bottoml[1]:glTexture()}
+local _sep_left = {core.display.loadImage("/data/gfx/ui/separator-left.png")} _sep_left.tex = {_sep_left[1]:glTexture()}
 local _sep_leftl = {core.display.loadImage("/data/gfx/ui/separator-left_line_end.png")} _sep_leftl.tex = {_sep_leftl[1]:glTexture()}
 local _sep_rightl = {core.display.loadImage("/data/gfx/ui/separator-right_line_end.png")} _sep_rightl.tex = {_sep_rightl[1]:glTexture()}
 
@@ -1521,116 +1541,107 @@ function _M:displayUI()
 	local middle = self.w * 0.5
 	local bottom = self.h * 0.8
 	local bottom_h = self.h * 0.2
-	local icon_x = middle - (_talents_icon_w*2) / 2
-	local icon_x2 = middle + (_talents_icon_w*2) / 2
-	local mid_min = icon_x - (_sep_vert[2])
-	local mid_max = icon_x2
+	local icon_x = 0
+	local icon_y = self.h - (_talents_icon_h * 1)
+	local glow = (1+math.sin(core.game.getTime() / 500)) / 2 * 100 + 77
 
 	-- Icons
-	local x, y = icon_x, bottom + _sep_horiz[3] / 2
-	_talents_icon:toScreenFull(x + _talents_icon_w, y, _talents_icon_w, _talents_icon_h, _talents_icon_w, _talents_icon_h)
-	if not self.show_npc_list then _sel_icon:toScreenFull(x + _talents_icon_w, y, _sel_icon_w, _sel_icon_h, _sel_icon_w, _sel_icon_h) end
-	y = y + _talents_icon_h
-	_actors_icon:toScreenFull(x + _talents_icon_w, y, _actors_icon_w, _actors_icon_h, _actors_icon_w, _actors_icon_h)
-	if self.show_npc_list then _sel_icon:toScreenFull(x + _talents_icon_w, y, _sel_icon_w, _sel_icon_h, _sel_icon_w, _sel_icon_h) end
-	y = y + _talents_icon_h
+	local x, y = icon_x, icon_y
+	_talents_icon:toScreenFull(x, y, _talents_icon_w, _talents_icon_h, _talents_icon_w, _talents_icon_h)
+	if not self.show_npc_list then _sel_icon:toScreenFull(x, y, _sel_icon_w, _sel_icon_h, _sel_icon_w, _sel_icon_h) end
+	x = x + _talents_icon_w
+	_actors_icon:toScreenFull(x, y, _actors_icon_w, _actors_icon_h, _actors_icon_w, _actors_icon_h)
+	if self.show_npc_list then _sel_icon:toScreenFull(x, y, _sel_icon_w, _sel_icon_h, _sel_icon_w, _sel_icon_h) end
+	x = x + _talents_icon_w
 
-	local glow = (1+math.sin(core.game.getTime() / 500)) / 2 * 100 + 77
-	local x, y = icon_x, bottom + _sep_horiz[3] / 2
-	if self.logdisplay.changed then core.display.drawQuad(x, y, _sel_icon_w, _sel_icon_h, 139, 210, 77, glow) end
+--	if self.logdisplay.changed then core.display.drawQuad(x, y, _sel_icon_w, _sel_icon_h, 139, 210, 77, glow) end
+--	_log_icon:toScreenFull(x, y, _log_icon_w, _log_icon_h, _log_icon_w, _log_icon_h)
+--	if not self.show_userchat then _sel_icon:toScreenFull(x, y, _sel_icon_w, _sel_icon_h, _sel_icon_w, _sel_icon_h) end
+--	x = x + _talents_icon_w
+
+--	if profile.chat.changed then core.display.drawQuad(x, y, _sel_icon_w, _sel_icon_h, 139, 210, 77, glow) end
+--	_chat_icon:toScreenFull(x, y, _chat_icon_w, _chat_icon_h, _chat_icon_w, _chat_icon_h)
+--	if self.show_userchat then _sel_icon:toScreenFull(x, y, _sel_icon_w, _sel_icon_h, _sel_icon_w, _sel_icon_h) end
+
+--	x = 0
+--	y = y + _chat_icon_h
+--	x = x + _talents_icon_w
+
+	_inventory_icon:toScreenFull(x, y, _inventory_icon_w, _inventory_icon_h, _inventory_icon_w, _inventory_icon_h)
+	x = x + _talents_icon_w
+	_charsheet_icon:toScreenFull(x, y, _charsheet_icon_w, _charsheet_icon_h, _charsheet_icon_w, _charsheet_icon_h)
+	x = x + _talents_icon_w
+	_main_menu_icon:toScreenFull(x, y, _main_menu_icon_w, _main_menu_icon_h, _main_menu_icon_w, _main_menu_icon_h)
+	x = x + _talents_icon_w
 	_log_icon:toScreenFull(x, y, _log_icon_w, _log_icon_h, _log_icon_w, _log_icon_h)
-	if not self.show_userchat then _sel_icon:toScreenFull(x, y, _sel_icon_w, _sel_icon_h, _sel_icon_w, _sel_icon_h) end
-	y = y + _log_icon_h
-	if profile.chat.changed then core.display.drawQuad(x, y, _sel_icon_w, _sel_icon_h, 139, 210, 77, glow) end
-	_chat_icon:toScreenFull(x, y, _chat_icon_w, _chat_icon_h, _chat_icon_w, _chat_icon_h)
-	if self.show_userchat then _sel_icon:toScreenFull(x, y, _sel_icon_w, _sel_icon_h, _sel_icon_w, _sel_icon_h) end
-	y = y + _chat_icon_h
-
-	_inventory_icon:toScreenFull(x + _talents_icon_w/2, y, _inventory_icon_w, _inventory_icon_h, _inventory_icon_w, _inventory_icon_h) y = y + _inventory_icon_h
-	_charsheet_icon:toScreenFull(x + _talents_icon_w/2, y, _charsheet_icon_w, _charsheet_icon_h, _charsheet_icon_w, _charsheet_icon_h) y = y + _charsheet_icon_h
-	_main_menu_icon:toScreenFull(x + _talents_icon_w/2, y, _main_menu_icon_w, _main_menu_icon_h, _main_menu_icon_w, _main_menu_icon_h) y = y + _main_menu_icon_h
 
 	-- Separators
-	_sep_horiz.tex[1]:toScreenFull(0, 20, self.w, _sep_horiz[3], _sep_horiz.tex[2], _sep_horiz.tex[3])
-	_sep_horiz.tex[1]:toScreenFull(0, bottom - _sep_horiz[3] / 2, self.w, _sep_horiz[3], _sep_horiz.tex[2], _sep_horiz.tex[3])
+--	_sep_horiz.tex[1]:toScreenFull(0, 20, self.w, _sep_horiz[3], _sep_horiz.tex[2], _sep_horiz.tex[3])
+	_sep_horiz.tex[1]:toScreenFull(216, self.map_h_stop - _sep_horiz[3], self.w - 216, _sep_horiz[3], _sep_horiz.tex[2], _sep_horiz.tex[3])
 
-	_sep_vert.tex[1]:toScreenFull(mid_min, bottom, _sep_vert[2], bottom_h, _sep_vert.tex[2], _sep_vert.tex[3])
-	_sep_vert.tex[1]:toScreenFull(mid_max, bottom, _sep_vert[2], bottom_h, _sep_vert.tex[2], _sep_vert.tex[3])
+--	_sep_vert.tex[1]:toScreenFull(mid_min, bottom, _sep_vert[2], bottom_h, _sep_vert.tex[2], _sep_vert.tex[3])
+--	_sep_vert.tex[1]:toScreenFull(mid_max, bottom, _sep_vert[2], bottom_h, _sep_vert.tex[2], _sep_vert.tex[3])
 
-	_sep_vert.tex[1]:toScreenFull(200, 20, _sep_vert[2], bottom - 20, _sep_vert.tex[2], _sep_vert.tex[3])
+	_sep_vert.tex[1]:toScreenFull(200, 0, _sep_vert[2], self.h, _sep_vert.tex[2], _sep_vert.tex[3])
 
 	-- Ornaments
-	_sep_top.tex[1]:toScreenFull(mid_min - (-_sep_vert[2] + _sep_top[2]) / 2, bottom - 14, _sep_top[2], _sep_top[3], _sep_top.tex[2], _sep_top.tex[3])
-	_sep_top.tex[1]:toScreenFull(mid_max - (-_sep_vert[2] + _sep_top[2]) / 2, bottom - 14, _sep_top[2], _sep_top[3], _sep_top.tex[2], _sep_top.tex[3])
-	_sep_bottoml.tex[1]:toScreenFull(mid_min - (-_sep_vert[2] + _sep_bottoml[2]) / 2, self.h - _sep_bottoml[3], _sep_bottoml[2], _sep_bottoml[3], _sep_bottoml.tex[2], _sep_bottoml.tex[3])
-	_sep_bottoml.tex[1]:toScreenFull(mid_max - (-_sep_vert[2] + _sep_bottoml[2]) / 2, self.h - _sep_bottoml[3], _sep_bottoml[2], _sep_bottoml[3], _sep_bottoml.tex[2], _sep_bottoml.tex[3])
+--	_sep_top.tex[1]:toScreenFull(mid_min - (-_sep_vert[2] + _sep_top[2]) / 2, bottom - 14, _sep_top[2], _sep_top[3], _sep_top.tex[2], _sep_top.tex[3])
+--	_sep_top.tex[1]:toScreenFull(mid_max - (-_sep_vert[2] + _sep_top[2]) / 2, bottom - 14, _sep_top[2], _sep_top[3], _sep_top.tex[2], _sep_top.tex[3])
+--	_sep_bottoml.tex[1]:toScreenFull(mid_min - (-_sep_vert[2] + _sep_bottoml[2]) / 2, self.h - _sep_bottoml[3], _sep_bottoml[2], _sep_bottoml[3], _sep_bottoml.tex[2], _sep_bottoml.tex[3])
+--	_sep_bottoml.tex[1]:toScreenFull(mid_max - (-_sep_vert[2] + _sep_bottoml[2]) / 2, self.h - _sep_bottoml[3], _sep_bottoml[2], _sep_bottoml[3], _sep_bottoml.tex[2], _sep_bottoml.tex[3])
 
-	_sep_leftl.tex[1]:toScreenFull(0, 20 - _sep_leftl[3] / 2 + 7, _sep_leftl[2], _sep_leftl[3], _sep_leftl.tex[2], _sep_leftl.tex[3])
-	_sep_leftl.tex[1]:toScreenFull(0, bottom - _sep_leftl[3] / 2, _sep_leftl[2], _sep_leftl[3], _sep_leftl.tex[2], _sep_leftl.tex[3])
+--	_sep_leftl.tex[1]:toScreenFull(0, 20 - _sep_leftl[3] / 2 + 7, _sep_leftl[2], _sep_leftl[3], _sep_leftl.tex[2], _sep_leftl.tex[3])
+	_sep_left.tex[1]:toScreenFull(200 - 7, self.map_h_stop - 7 - _sep_left[3] / 2, _sep_left[2], _sep_left[3], _sep_left.tex[2], _sep_left.tex[3])
 
-	_sep_rightl.tex[1]:toScreenFull(self.w - _sep_rightl[2], 20 - _sep_rightl[3] / 2 + 7, _sep_rightl[2], _sep_rightl[3], _sep_rightl.tex[2], _sep_rightl.tex[3])
-	_sep_rightl.tex[1]:toScreenFull(self.w - _sep_rightl[2], bottom - _sep_rightl[3] / 2, _sep_rightl[2], _sep_rightl[3], _sep_rightl.tex[2], _sep_rightl.tex[3])
+--	_sep_rightl.tex[1]:toScreenFull(self.w - _sep_rightl[2], 20 - _sep_rightl[3] / 2 + 7, _sep_rightl[2], _sep_rightl[3], _sep_rightl.tex[2], _sep_rightl.tex[3])
+	_sep_rightl.tex[1]:toScreenFull(self.w - _sep_rightl[2], self.map_h_stop - _sep_left[3] / 2, _sep_rightl[2], _sep_rightl[3], _sep_rightl.tex[2], _sep_rightl.tex[3])
 
-	_sep_top.tex[1]:toScreenFull(200 - (_sep_top[2] - _sep_vert[2]) / 2, 20 - 7, _sep_top[2], _sep_top[3], _sep_top.tex[2], _sep_top.tex[3])
-	_sep_bottom.tex[1]:toScreenFull(200 - (_sep_bottom[2] - _sep_vert[2]) / 2, bottom - 25, _sep_bottom[2], _sep_bottom[3], _sep_bottom.tex[2], _sep_bottom.tex[3])
+	_sep_top.tex[1]:toScreenFull(200 - (_sep_top[2] - _sep_vert[2]) / 2, - 7, _sep_top[2], _sep_top[3], _sep_top.tex[2], _sep_top.tex[3])
+--	_sep_bottom.tex[1]:toScreenFull(200 - (_sep_bottom[2] - _sep_vert[2]) / 2, bottom - 25, _sep_bottom[2], _sep_bottom[3], _sep_bottom.tex[2], _sep_bottom.tex[3])
 
 end
 
 function _M:createSeparators()
-	local middle = self.w * 0.5
-	local bottom = self.h * 0.8
-	local bottom_h = self.h * 0.2
+	local icon_x = 0
+	local icon_y = self.h - (_talents_icon_h * 1)
 	self.icons = {
-		display_x = middle - (_talents_icon_w*2) / 2,
-		display_y = bottom + _sep_horiz[3] / 2,
-		w = _talents_icon_w*2,
-		h = 5*_talents_icon_h
+		display_x = icon_x,
+		display_y = icon_y,
+		w = 200,
+		h = self.h - icon_y,
 	}
 end
 
 function _M:clickIcon(bx, by)
-	if by < _talents_icon_h then
-		if bx >= _talents_icon_w then
-			self.show_npc_list = false
-			self.player.changed = true
-		else
-			self.show_userchat = false
-			self.logdisplay.changed = true
-		end
-	elseif by < 2*_talents_icon_h then
-		if bx >= _talents_icon_w then
-			self.show_npc_list = true
-			self.player.changed = true
-		else
-			self.show_userchat = true
-		end
-	elseif by < 3*_talents_icon_h then
+	if bx < _talents_icon_w then
+		self.show_npc_list = false
+		self.player.changed = true
+	elseif bx < 2*_talents_icon_w then
+		self.show_npc_list = true
+		self.player.changed = true
+	elseif bx < 3*_talents_icon_w then
 		self.key:triggerVirtual("SHOW_INVENTORY")
-	elseif by < 4*_talents_icon_h then
+	elseif bx < 4*_talents_icon_w then
 		self.key:triggerVirtual("SHOW_CHARACTER_SHEET")
-	elseif by < 5*_talents_icon_h then
+	elseif bx < 5*_talents_icon_w then
 		self.key:triggerVirtual("EXIT")
+	elseif bx < 6*_talents_icon_w then
+		self.key:triggerVirtual("SHOW_MESSAGE_LOG")
 	end
 end
 
 function _M:mouseIcon(bx, by)
-	if by < _talents_icon_h then
-		if bx >= _talents_icon_w then
-			self.tooltip:displayAtMap(nil, nil, self.w, self.h, "Display talents\nToggle with [tab]")
-		else
-			self.tooltip:displayAtMap(nil, nil, self.w, self.h, "Display game log\nToggle with [ctrl+space]")
-		end
-	elseif by < 2*_talents_icon_h then
-		if bx >= _talents_icon_w then
-			self.tooltip:displayAtMap(nil, nil, self.w, self.h, "Display creatures\nToggle with [tab]")
-		else
-			self.tooltip:displayAtMap(nil, nil, self.w, self.h, "Display community chat\nToggle with [ctrl+space]")
-		end
-	elseif by < 3*_talents_icon_h then
-		self.tooltip:displayAtMap(nil, nil, self.w, self.h, "Inventory")
-	elseif by < 4*_talents_icon_h then
-		self.tooltip:displayAtMap(nil, nil, self.w, self.h, "Character Sheet")
-	elseif by < 5*_talents_icon_h then
-		self.tooltip:displayAtMap(nil, nil, self.w, self.h, "Main menu")
+	if bx < _talents_icon_w then
+		self.tooltip:displayAtMap(nil, nil, self.w, self.h, "Display talents\nToggle with #{bold}##GOLD#[tab]#LAST##{normal}#")
+	elseif bx < 2*_talents_icon_w then
+		self.tooltip:displayAtMap(nil, nil, self.w, self.h, "Display creatures\nToggle with #{bold}##GOLD#[tab]#LAST##{normal}#")
+	elseif bx < 3*_talents_icon_w then
+		self.tooltip:displayAtMap(nil, nil, self.w, self.h, "#{bold}##GOLD#I#LAST##{normal}#nventory")
+	elseif bx < 4*_talents_icon_w then
+		self.tooltip:displayAtMap(nil, nil, self.w, self.h, "#{bold}##GOLD#C#LAST##{normal}#haracter Sheet")
+	elseif bx < 5*_talents_icon_w then
+		self.tooltip:displayAtMap(nil, nil, self.w, self.h, "Main menu (#{bold}##GOLD#Esc#LAST##{normal}#)")
+	elseif bx < 6*_talents_icon_w then
+		self.tooltip:displayAtMap(nil, nil, self.w, self.h, "Show message/chat log (#{bold}##GOLD#ctrl+m#LAST##{normal}#)")
 	end
 end

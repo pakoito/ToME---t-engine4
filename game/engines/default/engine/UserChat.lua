@@ -34,6 +34,7 @@ function _M:init()
 	self.cur_channel = "global"
 	self.channels = {}
 	self.max = 500
+	self.do_display_chans = true
 end
 
 --- Hook up in the current running game
@@ -63,7 +64,7 @@ end
 
 function _M:addMessage(channel, login, name, msg, extra_data, no_change)
 	local log = self.channels[channel].log
-	table.insert(log, 1, {login=login, name=name, msg=msg, extra_data=extra_data})
+	table.insert(log, 1, {login=login, name=name, msg=msg, extra_data=extra_data, timestamp=core.game.getTime()})
 	while #log > self.max do table.remove(log) end
 	self.changed = true
 	if not no_change and channel ~= self.cur_channel then self.channels[channel].changed = true self.channels_changed = true end
@@ -254,15 +255,32 @@ end
 -- UI Section
 ----------------------------------------------------------------
 
---- Make a dialog popup with the full log
-function _M:showLogDialog(title, shadow)
+--- Returns the full log
+function _M:getLog(channel)
+	channel = channel or self.cur_channel
 	local log = {}
-	if self.channels[self.cur_channel] then
-		for _, i in ipairs(self.channels[self.cur_channel].log) do
+	if self.channels[channel] then
+		for _, i in ipairs(self.channels[channel].log) do
 			log[#log+1] = ("<%s> %s"):format(i.name, i.msg)
 		end
 	end
-	local d = require("engine.dialogs.ShowLog").new(title or "Chat Log", shadow, {log=log})
+	return log
+end
+
+function _M:getLogLast(channel)
+	channel = channel or self.cur_channel
+	if self.channels[channel] then
+		if not self.channels[channel].log[1] then return 0 end
+		return self.channels[channel].log[1].timestamp
+	else
+		return 0
+	end
+end
+
+--- Make a dialog popup with the full log
+function _M:showLogDialog(title, shadow)
+	local log = self:getLog(self.cur_channel)
+	local d = require_first("mod.dialogs.ShowLog", "engine.dialogs.ShowLog").new(title or "Chat Log", shadow, {log=log})
 	game:registerDialog(d)
 end
 
@@ -342,6 +360,14 @@ function _M:enableShadow(v)
 	self.shadow = v
 end
 
+function _M:enableFading(v)
+	self.fading = v
+end
+
+function _M:enableDisplayChans(v)
+	self.do_display_chans = v
+end
+
 function _M:onMouse(fct)
 	self.on_mouse = fct
 end
@@ -386,9 +412,9 @@ function _M:display()
 		for i = #gen, 1, -1 do
 			gen[i].login = log[z].login
 			gen[i].extra_data = log[z].extra_data
-			self.dlist[#self.dlist+1] = gen[i]
+			self.dlist[#self.dlist+1] = {item=gen[i], date=log[z].timestamp}
 			h = h + self.fh
-			if h > self.h - self.fh - self.fh then stop=true break end
+			if h > self.h - self.fh - (self.do_display_chans and self.fh or 0) then stop=true break end
 		end
 		if stop then break end
 	end
@@ -400,30 +426,42 @@ function _M:toScreen()
 	self:display()
 	if self.bg_texture then self.bg_texture:toScreenFull(self.display_x, self.display_y, self.w, self.h, self.bg_texture_w, self.bg_texture_h) end
 	local h = self.display_y + self.h -  self.fh
+	local now = core.game.getTime()
 	for i = 1, #self.dlist do
-		local item = self.dlist[i]
+		local item = self.dlist[i].item
+
+		local fade = 1
+		if self.fading then
+			fade = now - self.dlist[i].date
+			if fade < self.fading * 1000 then fade = 1
+			elseif fade < self.fading * 2000 then fade = (self.fading * 2000 - fade) / (self.fading * 1000)
+			else fade = 0 end
+		end
+
 		item.dh = h
-		if self.shadow then item._tex:toScreenFull(self.display_x+2, h+2, item.w, item.h, item._tex_w, item._tex_h, 0,0,0, self.shadow) end
-		item._tex:toScreenFull(self.display_x, h, item.w, item.h, item._tex_w, item._tex_h)
+		if self.shadow then item._tex:toScreenFull(self.display_x+2, h+2, item.w, item.h, item._tex_w, item._tex_h, 0,0,0, self.shadow * fade) end
+		item._tex:toScreenFull(self.display_x, h, item.w, item.h, item._tex_w, item._tex_h, 1, 1, 1, fade)
 		h = h - self.fh
 	end
 
-	local w = 0
-	for i = 1, #self.display_chans do
-		local item = self.display_chans[i]
-		local f = item.sel and self.frame_sel or self.frame
-		f.w = item.w
+	if self.do_display_chans then
+		local w = 0
+		for i = 1, #self.display_chans do
+			local item = self.display_chans[i]
+			local f = item.sel and self.frame_sel or self.frame
+			f.w = item.w
 
-		Base:drawFrame(f, self.display_x + w, self.display_y)
-		if self.channels[item.name].changed then
-			local glow = (1+math.sin(core.game.getTime() / 500)) / 2 * 100 + 120
-			Base:drawFrame(f, self.display_x + w, self.display_y, 139/255, 210/255, 77/255, glow / 255)
+			Base:drawFrame(f, self.display_x + w, self.display_y)
+			if self.channels[item.name].changed then
+				local glow = (1+math.sin(core.game.getTime() / 500)) / 2 * 100 + 120
+				Base:drawFrame(f, self.display_x + w, self.display_y, 139/255, 210/255, 77/255, glow / 255)
+			end
+			item._tex:toScreenFull(self.display_x + w, self.display_y, item.w, item.h, item._tex_w, item._tex_h)
+			w = w + item.w + 4
 		end
-		item._tex:toScreenFull(self.display_x + w, self.display_y, item.w, item.h, item._tex_w, item._tex_h)
-		w = w + item.w + 4
 	end
 
-	if true then
+	if not self.fading then
 		self.scrollbar.pos = self.scroll
 		self.scrollbar.max = self.max - self.max_display + 1
 		self.scrollbar:display(self.display_x + self.w - self.scrollbar.w, self.display_y)

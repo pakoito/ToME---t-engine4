@@ -195,6 +195,8 @@ end
 --- Handle mouse event for targeting
 -- @return true if the event was handled
 function _M:targetMouse(button, mx, my, xrel, yrel, event)
+	if not self.level then return end
+
 	-- Move tooltip
 	self.tooltip_x, self.tooltip_y = mx, my
 	local tmx, tmy = self.level.map:getMouseTile(mx, my)

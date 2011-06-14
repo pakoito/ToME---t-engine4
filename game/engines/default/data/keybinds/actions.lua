@@ -94,7 +94,7 @@ defineAction{
 }
 
 defineAction{
-	default = { "uni:C" },
+	default = { "uni:c", "uni:C" },
 	type = "SHOW_CHARACTER_SHEET",
 	group = "actions",
 	name = "Show character sheet",

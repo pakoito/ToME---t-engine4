@@ -120,6 +120,7 @@ end
 -- @param key the Key object to which to pass the event if not treated, this should be your game default key handler probably
 -- @param allow_move true if this will allow player movement (you should use it to check that you are not in targetting mode)
 function _M:mouseHandleDefault(key, allow_move, button, mx, my, xrel, yrel, event)
+	if not game.level then return end
 	local tmx, tmy = game.level.map:getMouseTile(mx, my)
 
 	-- Move
