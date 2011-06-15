@@ -806,8 +806,8 @@ function _M:onDrawItem(item)
 			text:add{"color","WHITE"}
 			text:add({"font", "bold"}, "First talent level: ", tostring(traw+1), " [-> ", tostring(traw + 2), "]", {"font", "normal"})
 			text:add(true)
-			text:merge(req:diffWith(req2, diff))
-			text:merge(self.actor:getTalentFullDescription(t, 1):diffWith(self.actor:getTalentFullDescription(t, 2), diff))
+			text:merge(req2:diffWith(req, diff))
+			text:merge(self.actor:getTalentFullDescription(t, 2):diffWith(self.actor:getTalentFullDescription(t, 1), diff))
 		elseif traw < self:getMaxTPoints(t) then
 			local req = self.actor:getTalentReqDesc(item.talent):toTString():tokenize(" ()[]")
 			local req2 = self.actor:getTalentReqDesc(item.talent, 1):toTString():tokenize(" ()[]")
