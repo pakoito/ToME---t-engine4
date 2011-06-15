@@ -139,7 +139,10 @@ Mouse: #00FF00#Left click#FFFFFF# to increase a stat; #00FF00#right click#FFFFFF
 	end
 end
 
+local prev_sel = nil
 function _M:onSelectStat(item)
+	if item == prev_sel then return end
+	prev_sel = item
 	local text , h = self:getStatDescription(item.stat_id)
 	local fh = self.font:lineSkip()
 	self.c_desc:createItem(item, text)
@@ -534,6 +537,7 @@ function _M:incStat(v)
 	self.stats_increased[sel] = (self.stats_increased[sel] or 0) + v
 
 	self.c_list:onSelect(true)
+	self.c_list:drawItem(self.c_list.list[self.c_list.sel])
 	self.c_points.text = _points_text:format(self.actor.unused_stats)
 	self.c_points:generate()
 	self.new_stats_changed = true
