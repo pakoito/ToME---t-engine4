@@ -19,39 +19,39 @@
 
 -- Maj'Eyal, the main continent
 
-quickEntity('~', {always_remember = true, show_tooltip=true, name='the sea of Eyal', display='~', color=colors.DARK_BLUE, back_color=colors.BLUE, image="terrain/river.png", block_move=true, can_encounter="water", shader = "water_ocean", textures = { function() return _3DNoise, true end }, })
-quickEntity('-', {always_remember = true, show_tooltip=true, name='river', display='~', color={r=0, g=80, b=255}, back_color=colors.BLUE, image="terrain/river.png", can_encounter=true, can_encounter="water", equilibrium_level=-10, shader = "water", textures = { function() return _3DNoise, true end }, })
-quickEntity('*', {always_remember = true, show_tooltip=true, name='lake of Nur', display='~', color={r=0, g=80, b=255}, back_color=colors.BLUE, image="terrain/river.png", block_move=true, can_encounter="water", equilibrium_level=-10, shader = "water", textures = { function() return _3DNoise, true end }, })
-quickEntity(')', {always_remember = true, show_tooltip=true, name='sea of Sash', display='~', color={r=0, g=80, b=255}, back_color=colors.BLUE, image="terrain/river.png", block_move=true, can_encounter="water", equilibrium_level=-10, shader = "water", textures = { function() return _3DNoise, true end }, })
-quickEntity('(', {always_remember = true, show_tooltip=true, name='lake', display='~', color={r=0, g=80, b=255}, back_color=colors.BLUE, image="terrain/river.png", block_move=true, can_encounter="water", equilibrium_level=-10, shader = "water", textures = { function() return _3DNoise, true end }, })
-quickEntity('westreach-lake', {always_remember = true, show_tooltip=true, name='Westreach lake', display='~', color={r=0, g=80, b=255}, back_color=colors.BLUE, image="terrain/river.png", block_move=true, can_encounter="water", equilibrium_level=-10, shader = "water", textures = { function() return _3DNoise, true end }, })
-quickEntity('irondeep-lake', {always_remember = true, show_tooltip=true, name='Irondeep lake', display='~', color={r=0, g=80, b=255}, back_color=colors.BLUE, image="terrain/river.png", block_move=true, can_encounter="water", equilibrium_level=-10, shader = "water", textures = { function() return _3DNoise, true end }, })
-quickEntity('spellmurk-lake', {always_remember = true, show_tooltip=true, name='Spellmurk lake', display='~', color={r=0, g=80, b=255}, back_color=colors.BLUE, image="terrain/river.png", block_move=true, can_encounter="water", equilibrium_level=-10, shader = "water", textures = { function() return _3DNoise, true end }, })
+defineTile('~', "SEA_EYAL")
+defineTile('-', "RIVER")
+defineTile('*', "LAKE_NUR")
+defineTile(')', "SEA_SASH")
+defineTile('(', "LAKE")
+defineTile('westreach-lake', "LAKE_WESTREACH")
+defineTile('irondeep-lake', "LAKE_IRONDEEP")
+defineTile('spellmurk-lake', "LAKE_SPELLMURK")
 
-quickEntity('q', {always_remember = true, show_tooltip=true, name='volcanic mountains', display='^', color=colors.LIGHT_UMBER, back_color=colors.UMBER, image="terrain/volcano2.png", block_move=true})
-quickEntity('^', {always_remember = true, show_tooltip=true, name='mountains', display='^', color=colors.LIGHT_UMBER, back_color=colors.UMBER, image="terrain/mountain.png", block_move=true})
-quickEntity('m', {always_remember = true, show_tooltip=true, name='Daikara', display='^', color=colors.LIGHT_UMBER, back_color=colors.UMBER, image="terrain/rocky_mountain.png", block_move=true})
-quickEntity('#', {always_remember = true, show_tooltip=true, name='Iron Throne', display='^', color=colors.SLATE, back_color=colors.UMBER, image="terrain/mountain.png", block_move=true})
-quickEntity('w', {always_remember = true, show_tooltip=true, name='Sun Wall', display='^', color=colors.GOLD, back_color=colors.CRIMSON, image="terrain/mountain.png", tint=colors.GOLD, block_move=true})
+defineTile('q', "VOLCANIC_MOUNTAIN")
+defineTile('^', "MOUNTAIN")
+defineTile('m', "DAIKARA_MOUNTAIN")
+defineTile('#', "IRONTHRONE_MOUNTAIN")
+defineTile('w', "GOLDEN_MOUNTAIN")
 
-quickEntity('p', {always_remember = true, show_tooltip=true, name='palm forest', display='#', color=colors.LIGHT_GREEN, back_color={r=163,g=149,b=42}, image="terrain/sand.png", add_displays = {mod.class.Grid.new{image="terrain/palmtree_alpha1.png"}}, block_move=true})
-quickEntity('t', {always_remember = true, show_tooltip=true, name='cold forest', display='#', color=colors.LIGHT_GREEN, back_color=colors.DARK_GREEN, image="terrain/rocky_snowy_tree.png", block_move=true})
-quickEntity('_', {always_remember = true, show_tooltip=true, name='burnt forest', display='#', color=colors.UMBER, back_color=colors.DARK_GREY, image="terrain/grass_burnt1.png", add_displays = {mod.class.Grid.new{image="terrain/burnttree_alpha1.png"}}, block_move=true})
-defineTile('T', "TREE")
-defineTile('v', {"TREE_DARK1","TREE_DARK2","TREE_DARK3","TREE_DARK4","TREE_DARK5","TREE_DARK6","TREE_DARK7","TREE_DARK8","TREE_DARK9","TREE_DARK10"})
+defineTile('p', "OASIS")
+defineTile('t', "COLD_FOREST")
+defineTile('_', "BURNT_FOREST")
+defineTile('T', "FOREST")
+defineTile('v', "OLD_FOREST")
 
-quickEntity('.', {always_remember = true, show_tooltip=true, name='plains', display='.', color=colors.LIGHT_GREEN, back_color=colors.DARK_GREEN, image="terrain/grass.png", can_encounter=true, equilibrium_level=-10})
-quickEntity('|', {always_remember = true, show_tooltip=true, name='desert', display='.', color={r=203,g=189,b=72}, back_color={r=163,g=149,b=42}, image="terrain/sand.png", can_encounter="desert", equilibrium_level=-10})
+defineTile('.', "PLAINS")
+defineTile('|', "DESERT")
 
-quickEntity('"', {always_remember = true, show_tooltip=true, name='polar cap', display='.', color=colors.LIGHT_BLUE, back_color=colors.WHITE, can_encounter=true, image="terrain/frozen_ground.png", equilibrium_level=-10})
+defineTile('"', "POLAR_CAP")
 quickEntity('=', {always_remember = true, show_tooltip=true, name='frozen sea', display=';', color=colors.LIGHT_BLUE, back_color=colors.WHITE, can_encounter=true, image="terrain/ice_shelf.png", equilibrium_level=-10})
 
 quickEntity('{', {always_remember = true, show_tooltip=true, name='Charred Scar', display='.', color=colors.WHITE, back_color=colors.LIGHT_DARK, image="terrain/lava_floor.png", shader = "lava", can_encounter=true})
 
-quickEntity('!', {always_remember = true, show_tooltip=true, name='hills', display='^', color=colors.GREEN, back_color=colors.DARK_GREEN, image="terrain/hills.png", can_encounter=true, equilibrium_level=-10})
-quickEntity('h', {always_remember = true, show_tooltip=true, name='low hills', display='^', color=colors.GREEN, back_color=colors.DARK_GREEN, image="terrain/hills.png", can_encounter=true, equilibrium_level=-10})
+defineTile('!', "LOW_HILLS")
+defineTile('h', "LOW_HILLS")
 
-quickEntity('&', {always_remember = true, show_tooltip=true, name='cultivated fields', display=';', color=colors.GREEN, back_color=colors.DARK_GREEN, image="terrain/grass.png", add_mos={{image="terrain/cultivation.png"}}, can_encounter=true, equilibrium_level=-10})
+defineTile('&', "CULTIVATION")
 
 -- Maj'Eyal
 quickEntity('kor-pul', {always_remember = true, show_tooltip=true, name="Ruins of Kor'Pul", 	display='>', color={r=0, g=255, b=255}, notice = true, change_level=1, change_zone="ruins-kor-pul"})
@@ -68,25 +68,25 @@ quickEntity('rhaloren-camp', {always_remember = true, show_tooltip=true, name="S
 quickEntity('norgos-lair', {always_remember = true, show_tooltip=true, name="Passageway into Norgos' Lair", display='>', color={r=255, g=255, b=255}, notice = true, change_level=1, change_zone="norgos-lair"})
 quickEntity('heart-gloom', {always_remember = true, show_tooltip=true, name="Way into the heart of the gloom", display='>', color={r=255, g=255, b=0}, notice = true, change_level=1, change_zone="heart-gloom"})
 
-quickEntity('derth', {always_remember = true, show_tooltip=true, name="Derth (Town)", desc="A quiet town at the crossroads of the north", display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, image="terrain/grass.png", add_mos={{image="terrain/town1.png"}}, notice = true, change_level=1, change_zone="town-derth"})
-quickEntity('last-hope', {always_remember = true, show_tooltip=true, name="Last Hope (Town)", desc="Capital city of the Allied Kingdoms ruled by King Tolak", display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, image="terrain/grass.png", add_mos={{image="terrain/town1.png"}}, notice = true, change_level=1, change_zone="town-last-hope"})
-quickEntity('shatur', {always_remember = true, show_tooltip=true, name="Shatur (Town)", desc="Capital city of Thaloren lands, ruled by Nessilla Tantaelen", display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, image="terrain/grass.png", add_mos={{image="terrain/town1.png"}}, notice = true, change_level=1, change_zone="town-shatur"})
-quickEntity('elvala', {always_remember = true, show_tooltip=true, name="Elvala (Town)", desc="Capital city of Shaloren lands, ruled by Aranion Gayaeil", display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, image="terrain/grass.png", add_mos={{image="terrain/town1.png"}}, notice = true, change_level=1, change_zone="town-elvala"})
+defineTile('derth', "TOWN_DERTH")
+defineTile('last-hope', "TOWN_LAST_HOPE")
+defineTile('shatur', "TOWN_SHATUR")
+defineTile('elvala', "TOWN_ELVALA")
 
 -- Far East
-quickEntity('gates-of-morning', {always_remember = true, show_tooltip=true, name="Gates of Morning (Town)", desc="A massive hole in the Sunwall.", display='*', color=colors.GOLD, back_color=colors.CRIMSON, image="terrain/gate-morning.png", tint=colors.GOLD, notice = true, change_level=1, change_zone="town-gates-of-morning"})
+defineTile('gates-of-morning', "TOWN_GATES_OF_MORNING")
 quickEntity('high-peak', {always_remember = true, show_tooltip=true, name="High Peak", display='>', color=colors.VIOLET, notice = true, change_level=1, change_zone="high-peak"})
 quickEntity('unremarkable-cave', {always_remember = true, show_tooltip=true, name="Unremarkable cave", display='>', color=colors.UMBER, notice = true, change_level=1, change_zone="unremarkable-cave"})
 
 -- Island of Rel
-quickEntity('irkkk', {always_remember = true, show_tooltip=true, name="Irkkk (Town)", desc="Yeek Wayist capital", display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, image="terrain/grass.png", add_mos={{image="terrain/town1.png"}}, notice = true})
+defineTile('irkkk', "TOWN_IRKKK")
 quickEntity('ritch-tunnels', {always_remember = true, show_tooltip=true, name="Tunnel into the ritchs grounds",display='>', color=colors.UMBER, notice = true, change_level=1, change_zone="ritch-tunnels"})
 quickEntity('murgol-lair', {always_remember = true, show_tooltip=true, name="Way into the lair of Murgol",display='>', color=colors.LIGHT_BLUE, notice = true, change_level=1, change_zone="murgol-lair"})
 quickEntity('rel-tunnel', {always_remember = true, show_tooltip=true, name="Tunnel to Maj'Eyal", display='>', color=colors.LIGHT_BLUE, notice = true, force_down=true, change_level=4, change_zone="halfling-ruins", change_level_check = function() local p = game.party:findMember{main=true} if p:hasQuest("start-yeek") and not p:isQuestStatus("start-yeek", engine.Quest.DONE) then require("engine.ui.Dialog"):simplePopup("Long tunnel", "You can not abandon the yeeks of Rel to the dangers that lie within the island.") return true end p:setQuestStatus("rel-tunnel", engine.Quest.DONE) return false end})
 
 -- Angolwen is only know from the start to mages
 if game.player:knowTalent(game.player.T_TELEPORT_ANGOLWEN) then
-	quickEntity('angolwen', {always_remember = true, show_tooltip=true, name="Angolwen, the hidden city of magic", desc="Secret place of magic, set apart from the world to protect it.\nLead by the Supreme Archmage Linaniil.", display='*', color=colors.WHITE, back_color=colors.UMBER, image="terrain/grass.png", add_mos={{image="terrain/town1.png"}}, notice = true, change_level=1, change_zone="town-angolwen"})
+	defineTile('angolwen', "TOWN_ANGOLWEN")
 	quickEntity('angolwen-teleport', {always_remember = true, show_tooltip=true, name="Hidden teleportation portal to Angolwen, the hidden city of magic", display='&', color=colors.LIGHT_BLUE, back_color=colors.DARK_GREEN, image="terrain/grass.png", add_displays = {mod.class.Grid.new{image="terrain/maze_teleport.png"}}, notice = true, change_level=1, change_zone="town-angolwen", change_level_check = function() local p = game.party:findMember{main=true} if p:attr("forbid_arcane") then game.log("The portal fizzles.") return true end return false end})
 else
 	quickEntity('angolwen', '^')
@@ -95,14 +95,14 @@ end
 
 -- Zigur is only know from the start to non casters
 if not game.player:knowTalent(game.player.T_MANA_POOL) and not game.player:knowTalent(game.player.T_VIM_POOL) and not game.player:knowTalent(game.player.T_VIM_POOL) and not game.player:knowTalent(game.player.T_NEGATIVE_POOL) and not game.player:knowTalent(game.player.T_POSITIVE_POOL) and not game.player:knowTalent(game.player.T_PARADOX_POOL) then
-	quickEntity('zigur', {always_remember = true, show_tooltip=true, name="Zigur (Town)", desc="Ziguranth main training ground", display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, image="terrain/grass.png", add_mos={{image="terrain/town1.png"}}, notice = true, change_level=1, change_zone="town-zigur"})
+	defineTile('zigur', "TOWN_ZIGUR")
 else
 	quickEntity('zigur', ')')
 end
 
 -- Iron Council is only known to dwarves
 if game.player:knowTalent(game.player.T_DWARF_RESILIENCE) then
-	quickEntity('iron-council', {always_remember = true, show_tooltip=true, name="Iron Council (Town)", desc="Heart of the dwarven Empire", display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, image="terrain/grass.png", add_mos={{image="terrain/town1.png"}}, notice = true, change_level=1, change_zone="town-iron-council"})
+	defineTile('iron-council', "TOWN_IRON_COUNCIL")
 else
 	quickEntity('iron-council', '#')
 end

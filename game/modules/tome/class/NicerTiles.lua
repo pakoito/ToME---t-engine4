@@ -257,7 +257,7 @@ function _M:niceTileOuterSpace(level, i, j, g, nt)
 end
 
 --- Make water have nice transition to other stuff
-function _M:editTileGenericBorders(level, i, j, g, nt, type, allow)
+function _M:editTileGenericBorders(level, i, j, g, nt, type)
 	local g5 = level.map:checkEntity(i, j,   Map.TERRAIN, "subtype") or type
 	local g8 = level.map:checkEntity(i, j-1, Map.TERRAIN, "subtype") or type
 	local g2 = level.map:checkEntity(i, j+1, Map.TERRAIN, "subtype") or type
@@ -267,26 +267,37 @@ function _M:editTileGenericBorders(level, i, j, g, nt, type, allow)
 	local g9 = level.map:checkEntity(i+1, j-1, Map.TERRAIN, "subtype") or type
 	local g1 = level.map:checkEntity(i-1, j+1, Map.TERRAIN, "subtype") or type
 	local g3 = level.map:checkEntity(i+1, j+1, Map.TERRAIN, "subtype") or type
+	if nt.forbid then
+		if nt.forbid[g5] then g5 = type end
+		if nt.forbid[g4] then g4 = type end
+		if nt.forbid[g6] then g6 = type end
+		if nt.forbid[g8] then g8 = type end
+		if nt.forbid[g2] then g2 = type end
+		if nt.forbid[g1] then g1 = type end
+		if nt.forbid[g3] then g3 = type end
+		if nt.forbid[g7] then g7 = type end
+		if nt.forbid[g9] then g9 = type end
+	end
 
 	-- Sides
-	if g5 ~= g8 then self:edit(i, j, nt["default".."8"]) end
-	if g5 ~= g2 then self:edit(i, j, nt["default".."2"]) end
-	if g5 ~= g4 then self:edit(i, j, nt["default".."4"]) end
-	if g5 ~= g6 then self:edit(i, j, nt["default".."6"]) end
+	if g5 ~= g8 then self:edit(i, j, nt[g8.."8"] or nt["default8"]) end
+	if g5 ~= g2 then self:edit(i, j, nt[g2.."2"] or nt["default2"]) end
+	if g5 ~= g4 then self:edit(i, j, nt[g4.."4"] or nt["default4"]) end
+	if g5 ~= g6 then self:edit(i, j, nt[g6.."6"] or nt["default6"]) end
 	-- Corners
-	if g5 ~= g7 and g5 == g4 and g5 == g8 then self:edit(i, j, nt["default".."7"]) end
-	if g5 ~= g9 and g5 == g6 and g5 == g8 then self:edit(i, j, nt["default".."9"]) end
-	if g5 ~= g1 and g5 == g4 and g5 == g2 then self:edit(i, j, nt["default".."1"]) end
-	if g5 ~= g3 and g5 == g6 and g5 == g2 then self:edit(i, j, nt["default".."3"]) end
+	if g5 ~= g7 and g5 == g4 and g5 == g8 then self:edit(i, j, nt[g7.."7"] or nt["default7"]) end
+	if g5 ~= g9 and g5 == g6 and g5 == g8 then self:edit(i, j, nt[g9.."9"] or nt["default9"]) end
+	if g5 ~= g1 and g5 == g4 and g5 == g2 then self:edit(i, j, nt[g1.."1"] or nt["default1"]) end
+	if g5 ~= g3 and g5 == g6 and g5 == g2 then self:edit(i, j, nt[g3.."3"] or nt["default3"]) end
 	-- Inner corners
-	if g5 ~= g7 and g5 ~= g4 and g5 ~= g8 then self:edit(i, j, nt["default".."7i"]) end
-	if g5 ~= g9 and g5 ~= g6 and g5 ~= g8 then self:edit(i, j, nt["default".."9i"]) end
-	if g5 ~= g1 and g5 ~= g4 and g5 ~= g2 then self:edit(i, j, nt["default".."1i"]) end
-	if g5 ~= g3 and g5 ~= g6 and g5 ~= g2 then self:edit(i, j, nt["default".."3i"]) end
+	if g5 ~= g7 and g5 ~= g4 and g5 ~= g8 then self:edit(i, j, nt[g7.."7i"] or nt["default7i"]) end
+	if g5 ~= g9 and g5 ~= g6 and g5 ~= g8 then self:edit(i, j, nt[g9.."9i"] or nt["default9i"]) end
+	if g5 ~= g1 and g5 ~= g4 and g5 ~= g2 then self:edit(i, j, nt[g1.."1i"] or nt["default1i"]) end
+	if g5 ~= g3 and g5 ~= g6 and g5 ~= g2 then self:edit(i, j, nt[g3.."3i"] or nt["default3i"]) end
 end
 
 function _M:editTileGrass(level, i, j, g, nt)
-	self:editTileGenericBorders(level, i, j, g, nt, "grass", {water=true})
+	self:editTileGenericBorders(level, i, j, g, nt, "grass")
 end
 
 -- This array is precomputed, it holds the possible combinations of walls and the nice tile they generate

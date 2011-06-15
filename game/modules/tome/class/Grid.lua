@@ -106,7 +106,7 @@ function _M:tooltip(x, y)
 end
 
 --- Generate sub entities to make nice trees
-function _M:makeTrees(base, max, bigheight_limit)
+function _M:makeTrees(base, max, bigheight_limit, tint)
 	local function makeTree(nb, z)
 		local inb = 4 - nb
 		local treeid = rng.range(1, max or 5)
@@ -120,6 +120,7 @@ function _M:makeTrees(base, max, bigheight_limit)
 			display_on_remember = true,
 			display_h = treeid < (bigheight_limit or 9) and 1 or 2,
 			image = (base or "terrain/tree_alpha")..treeid..".png",
+			tint = tint,
 		}
 	end
 
