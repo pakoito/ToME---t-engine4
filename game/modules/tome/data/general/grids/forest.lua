@@ -17,13 +17,32 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local grass_editer = { method="grass",
+	default8={add_mos={{image="terrain/grass/grass_2_%02d.png", display_y=-1}}, min=1, max=5},
+	default2={add_mos={{image="terrain/grass/grass_8_%02d.png", display_y=1}}, min=1, max=5},
+	default4={add_mos={{image="terrain/grass/grass_6_%02d.png", display_x=-1}}, min=1, max=5},
+	default6={add_mos={{image="terrain/grass/grass_4_%02d.png", display_x=1}}, min=1, max=4},
+
+	default1={add_mos={{image="terrain/grass/grass_9_%02d.png", display_x=-1, display_y=1}}, min=1, max=3},
+	default3={add_mos={{image="terrain/grass/grass_7_%02d.png", display_x=1, display_y=1}}, min=1, max=3},
+	default7={add_mos={{image="terrain/grass/grass_3_%02d.png", display_x=-1, display_y=-1}}, min=1, max=3},
+	default9={add_mos={{image="terrain/grass/grass_1_%02d.png", display_x=1, display_y=-1}}, min=1, max=3},
+
+	default1i={add_mos={{image="terrain/grass/grass_inner_1_%02d.png", display_x=-1, display_y=1}}, min=1, max=3},
+	default3i={add_mos={{image="terrain/grass/grass_inner_3_%02d.png", display_x=1, display_y=1}}, min=1, max=3},
+	default7i={add_mos={{image="terrain/grass/grass_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=3},
+	default9i={add_mos={{image="terrain/grass/grass_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=3},
+}
+
 newEntity{
 	define_as = "GRASS",
 	type = "floor", subtype = "grass",
 	name = "grass", image = "terrain/grass.png",
 	display = '.', color=colors.LIGHT_GREEN, back_color={r=44,g=95,b=43},
 	grow = "TREE",
+	add_displays = {class.new{image="invis.png"}},
 	nice_tiler = { method="replace", base={"GRASS_PATCH", 70, 1, 15}},
+	nice_editer = grass_editer,
 }
 for i = 1, 12 do newEntity{ base = "GRASS", define_as = "GRASS_PATCH"..i, image = "terrain/grass"..(i<7 and "" or "2")..".png" } end
 
@@ -39,6 +58,7 @@ newEntity{
 	block_sight = true,
 	dig = "GRASS",
 	nice_tiler = { method="replace", base={"TREE", 100, 1, 30}},
+	nice_editer = grass_editer,
 }
 for i = 1, 30 do newEntity{ base="TREE", define_as = "TREE"..i, image = "terrain/grass.png", add_displays = class:makeTrees("terrain/tree_alpha", 13, 9)} end
 
@@ -53,48 +73,10 @@ newEntity{
 	block_sight = true,
 	block_sense = true,
 	block_esp = true,
+	nice_tiler = { method="replace", base={"HARDTREE", 100, 1, 30}},
+	nice_editer = grass_editer,
 }
 for i = 1, 30 do newEntity{ define_as = "HARDTREE"..i, image = "terrain/grass.png", add_displays = class:makeTrees("terrain/tree_alpha", 13, 9) } end
-
-newEntity{
-	define_as = "GRASS_DARK1",
-	type = "floor", subtype = "grass",
-	name = "grass", image = "terrain/grass_dark1.png",
-	display = '.', color=colors.GREEN, back_color={r=44,g=95,b=43},
-	grow = "TREE_DARK",
-}
-
-for i = 1, 20 do
-newEntity{
-	define_as = "TREE_DARK"..i,
-	type = "wall", subtype = "grass",
-	name = "tree", image = "terrain/grass_dark1.png",
-	force_clone = true,
-	add_displays = class:makeTrees("terrain/tree_dark_alpha"),
-	display = '#', color=colors.GREEN, back_color={r=44,g=95,b=43},
-	always_remember = true,
-	can_pass = {pass_tree=1},
-	does_block_move = true,
-	block_sight = true,
-	dig = "GRASS_DARK1",
-}
-end
-
-for i = 1, 20 do
-newEntity{
-	define_as = "HARDTREE_DARK"..i,
-	type = "wall", subtype = "grass",
-	name = "tall thick tree", image = "terrain/grass_dark1.png",
-	force_clone = true,
-	add_displays = class:makeTrees("terrain/tree_dark_alpha"),
-	display = '#', color=colors.GREEN, back_color={r=44,g=95,b=43},
-	always_remember = true,
-	does_block_move = true,
-	block_sight = true,
-	block_sense = true,
-	block_esp = true,
-}
-end
 
 newEntity{
 	define_as = "FLOWER",
@@ -103,6 +85,7 @@ newEntity{
 	display = ';', color=colors.YELLOW, back_color={r=44,g=95,b=43},
 	grow = "TREE",
 	nice_tiler = { method="replace", base={"FLOWER", 100, 1, 1}},
+	nice_editer = grass_editer,
 }
 for i = 1, 1 do newEntity{ base = "FLOWER", define_as = "FLOWER"..i, image = "terrain/grass.png", add_mos = {{image = "terrain/flower0"..i..".png"}}} end
 
@@ -119,21 +102,7 @@ newEntity{
 	door_player_check = "This rock is loose, you think you can move it away.",
 	door_opened = "GRASS",
 	dig = "GRASS",
-}
-
-newEntity{
-	define_as = "ROCK_VAULT_DARK",
-	type = "wall", subtype = "grass",
-	name = "huge loose rock", image = "terrain/grass.png", add_mos = {{image="terrain/huge_rock.png"}},
-	display = '+', color=colors.GREY, back_color={r=44,g=95,b=43},
-	notice = true,
-	always_remember = true,
-	block_sight = true,
-	block_sense = true,
-	block_esp = true,
-	door_player_check = "This rock is loose, you think you can move it away.",
-	door_opened = "GRASS_DARK1",
-	dig = "GRASS_DARK1",
+	nice_editer = grass_editer,
 }
 
 -----------------------------------------
@@ -148,6 +117,7 @@ newEntity{
 	notice = true,
 	change_level = 1,
 	change_zone = "wilderness",
+	nice_editer = grass_editer,
 }
 
 newEntity{
@@ -158,6 +128,7 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	change_level = -1,
+	nice_editer = grass_editer,
 }
 newEntity{
 	define_as = "GRASS_UP2",
@@ -167,6 +138,7 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	change_level = -1,
+	nice_editer = grass_editer,
 }
 newEntity{
 	define_as = "GRASS_UP4",
@@ -176,6 +148,7 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	change_level = -1,
+	nice_editer = grass_editer,
 }
 newEntity{
 	define_as = "GRASS_UP6",
@@ -185,6 +158,7 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	change_level = -1,
+	nice_editer = grass_editer,
 }
 
 newEntity{
@@ -195,6 +169,7 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	change_level = 1,
+	nice_editer = grass_editer,
 }
 newEntity{
 	define_as = "GRASS_DOWN2",
@@ -204,6 +179,7 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	change_level = 1,
+	nice_editer = grass_editer,
 }
 newEntity{
 	define_as = "GRASS_DOWN4",
@@ -213,6 +189,7 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	change_level = 1,
+	nice_editer = grass_editer,
 }
 newEntity{
 	define_as = "GRASS_DOWN6",
@@ -222,4 +199,5 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	change_level = 1,
+	nice_editer = grass_editer,
 }

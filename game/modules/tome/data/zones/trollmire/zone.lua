@@ -51,7 +51,7 @@ return {
 
 			nb_rooms = {0,0,0,1},
 			rooms = {"lesser_vault"},
-			lesser_vaults_list = {"honey_glade", "forest-ruined-building1", "forest-ruined-building2", "forest-ruined-building3", "forest-snake-pit", "mage-hideout-dark"},
+			lesser_vaults_list = {"honey_glade", "forest-ruined-building1", "forest-ruined-building2", "forest-ruined-building3", "forest-snake-pit", "mage-hideout"},
 			lite_room_chance = 100,
 		},
 		actor = {

@@ -25,6 +25,7 @@ module(..., package.seeall, class.make)
 function _M:init()
 	self.repo = {}
 	self.repl = {}
+	self.edits = {}
 end
 
 function _M:getTile(name)
@@ -54,10 +55,15 @@ function _M:replace(i, j, g)
 	end
 end
 
+function _M:edit(i, j, e)
+	self.edits[#self.edits+1] = {i, j, add_display=e.add_display, add_mos=e.add_mos, min=e.min, max=e.max}
+end
+
 function _M:handle(level, i, j)
 	local g = level.map(i, j, Map.TERRAIN)
-	if g and Map.tiles.nicer_tiles and g.nice_tiler then
-		self["niceTile"..g.nice_tiler.method:capitalize()](self, level, i, j, g, g.nice_tiler)
+	if g and Map.tiles.nicer_tiles then
+		if g.nice_tiler then self["niceTile"..g.nice_tiler.method:capitalize()](self, level, i, j, g, g.nice_tiler) end
+		if g.nice_editer then self["editTile"..g.nice_editer.method:capitalize()](self, level, i, j, g, g.nice_editer) end
 	end
 end
 
@@ -67,6 +73,32 @@ function _M:replaceAll(level)
 		level.map(r[1], r[2], Map.TERRAIN, r[3])
 	end
 	self.repl = {}
+	for i = 1, #self.edits do
+		local e = self.edits[i]
+		local g = level.map(e[1], e[2], Map.TERRAIN)
+		local cloned = false
+		if not g.force_clone then g = g:clone() g.force_clone = true cloned = true end
+		if e.add_mos then
+			-- Edit the first add_display entity, or add a dummy if none
+			if not g.__edit_d then
+				g.add_displays = g.add_displays or {}
+				g.add_displays[#g.add_displays+1] = require(g.__CLASSNAME).new{image="invis.png", force_clone=true}
+				g.__edit_d = #g.add_displays
+			end
+
+			-- Add all the mos
+			g.add_displays[g.__edit_d].add_mos = g.add_displays[g.__edit_d].add_mos or {}
+			local mos = g.add_displays[g.__edit_d].add_mos
+			for i = 1, #e.add_mos do
+				mos[#mos+1] = e.add_mos[i]
+				mos[#mos].image = mos[#mos].image:format(rng.range(e.min, e.max))
+			end
+			g.add_displays[g.__edit_d]._mo = nil
+		end
+		g._mo = nil
+		level.map(e[1], e[2], Map.TERRAIN, g)
+	end
+	self.edits = {}
 end
 
 function _M:postProcessLevelTiles(level)
@@ -215,6 +247,39 @@ end
 
 function _M:niceTileOuterSpace(level, i, j, g, nt)
 	self:niceTileGenericBorders(level, i, j, g, nt, "rocks", {void=true})
+end
+
+--- Make water have nice transition to other stuff
+function _M:editTileGenericBorders(level, i, j, g, nt, type, allow)
+	local g5 = level.map:checkEntity(i, j,   Map.TERRAIN, "subtype") or type
+	local g8 = level.map:checkEntity(i, j-1, Map.TERRAIN, "subtype") or type
+	local g2 = level.map:checkEntity(i, j+1, Map.TERRAIN, "subtype") or type
+	local g4 = level.map:checkEntity(i-1, j, Map.TERRAIN, "subtype") or type
+	local g6 = level.map:checkEntity(i+1, j, Map.TERRAIN, "subtype") or type
+	local g7 = level.map:checkEntity(i-1, j-1, Map.TERRAIN, "subtype") or type
+	local g9 = level.map:checkEntity(i+1, j-1, Map.TERRAIN, "subtype") or type
+	local g1 = level.map:checkEntity(i-1, j+1, Map.TERRAIN, "subtype") or type
+	local g3 = level.map:checkEntity(i+1, j+1, Map.TERRAIN, "subtype") or type
+
+	-- Sides
+	if g5 ~= g8 then self:edit(i, j, nt["default".."8"]) end
+	if g5 ~= g2 then self:edit(i, j, nt["default".."2"]) end
+	if g5 ~= g4 then self:edit(i, j, nt["default".."4"]) end
+	if g5 ~= g6 then self:edit(i, j, nt["default".."6"]) end
+	-- Corners
+	if g5 ~= g7 and g5 == g4 and g5 == g8 then self:edit(i, j, nt["default".."7"]) end
+	if g5 ~= g9 and g5 == g6 and g5 == g8 then self:edit(i, j, nt["default".."9"]) end
+	if g5 ~= g1 and g5 == g4 and g5 == g2 then self:edit(i, j, nt["default".."1"]) end
+	if g5 ~= g3 and g5 == g6 and g5 == g2 then self:edit(i, j, nt["default".."3"]) end
+	-- Inner corners
+	if g5 ~= g7 and g5 ~= g4 and g5 ~= g8 then self:edit(i, j, nt["default".."7i"]) end
+	if g5 ~= g9 and g5 ~= g6 and g5 ~= g8 then self:edit(i, j, nt["default".."9i"]) end
+	if g5 ~= g1 and g5 ~= g4 and g5 ~= g2 then self:edit(i, j, nt["default".."1i"]) end
+	if g5 ~= g3 and g5 ~= g6 and g5 ~= g2 then self:edit(i, j, nt["default".."3i"]) end
+end
+
+function _M:editTileGrass(level, i, j, g, nt)
+	self:editTileGenericBorders(level, i, j, g, nt, "grass", {water=true})
 end
 
 -- This array is precomputed, it holds the possible combinations of walls and the nice tile they generate

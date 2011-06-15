@@ -23,9 +23,6 @@ newEntity{
 	name = "sand", image = "terrain/sandfloor.png",
 	display = '.', color={r=203,g=189,b=72}, back_color={r=93,g=79,b=22},
 	grow = "SANDWALL_STABLE",
-	nice_tiler = { method="grassSand",
-		grass8={"SAND_GRASS_8", 100, 1, 1}, grass2={"SAND_GRASS_2", 100, 1, 1}, grass4={"SAND_GRASS_4", 100, 1, 1}, grass6={"SAND_GRASS_6", 100, 1, 1}, grass1={"SAND_GRASS_1", 100, 1, 1}, grass3={"SAND_GRASS_3", 100, 1, 1}, grass7={"SAND_GRASS_7", 100, 1, 1}, grass9={"SAND_GRASS_9", 100, 1, 1}, inner_grass1="SAND_GRASS_1I", inner_grass3="SAND_GRASS_3I", inner_grass7="SAND_GRASS_7I", inner_grass9="SAND_GRASS_9I",
-	},
 }
 
 newEntity{
@@ -330,15 +327,3 @@ newEntity{
 	change_level = 1,
 	change_zone = "wilderness",
 }
-
------------------------------------------
--- Grass/sand
------------------------------------------
-
-for i = 1, 9 do for j = 1, 1 do
-	if i ~= 5 then newEntity{base="SAND", define_as = "SAND_GRASS_"..i..j, image="terrain/sand_grass_"..i.."_"..j..".png"} end
-end end
-newEntity{base="SAND", define_as = "SAND_GRASS_1I", image="terrain/sand_grass_1i_1.png"}
-newEntity{base="SAND", define_as = "SAND_GRASS_3I", image="terrain/sand_grass_3i_1.png"}
-newEntity{base="SAND", define_as = "SAND_GRASS_7I", image="terrain/sand_grass_7i_1.png"}
-newEntity{base="SAND", define_as = "SAND_GRASS_9I", image="terrain/sand_grass_9i_1.png"}
