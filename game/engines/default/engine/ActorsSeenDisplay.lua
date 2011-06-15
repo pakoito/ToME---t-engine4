@@ -32,6 +32,7 @@ function _M:init(actor, x, y, w, h, bgcolor, fontname, fontsize)
 	self.font = core.display.newFont(fontname or "/data/font/VeraMono.ttf", fontsize or 10)
 	self.font_h = self.font:lineSkip()
 	self:resize(x, y, w, h)
+	self.nb_cols = 1
 end
 
 --- Resize the display area
@@ -56,7 +57,12 @@ function _M:resize(x, y, w, h)
 	end
 end
 
--- Displays the hotkeys, keybinds & cooldowns
+--- Sets the display into nb columns
+function _M:setColumns(nb)
+	self.nb_cols = nb
+end
+
+--- Displays the hotkeys, keybinds & cooldowns
 function _M:display()
 	local a = self.actor
 	if not a or not a.changed then return self.surface end
@@ -84,8 +90,11 @@ function _M:display()
 	for _, a in pairs(list) do l[#l+1] = a end
 	table.sort(l, function(a, b) return a.name < b.name end)
 
+	local x, y = 0, 0
 	for i, a in ipairs(l) do
-		self.surface:drawColorStringBlended(self.font, ("%s (%d)#WHITE#; distance [%s]"):format(a.name, a.nb, table.concat(a.dist, ",")), 3, 3 + (i - 1) * self.font_h, a.color[1], a.color[2], a.color[3])
+		self.surface:drawColorStringBlended(self.font, ("%s (%d)#WHITE#; distance [%s]"):format(a.name, a.nb, table.concat(a.dist, ",")), x, y, a.color[1], a.color[2], a.color[3])
+		y = y + self.font_h
+		if y + self.font_h >= self.h then y = 0 x = x + math.floor(self.w / self.nb_cols) end
 	end
 
 	self.surface:updateTexture(self.texture)

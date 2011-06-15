@@ -36,6 +36,12 @@ function _M:init(actor, x, y, w, h, bgcolor, fontname, fontsize)
 	self.cache = {}
 	setmetatable(self.cache, {__mode="v"})
 	self:resize(x, y, w, h)
+	self.nb_cols = 1
+end
+
+--- Sets the display into nb columns
+function _M:setColumns(nb)
+	self.nb_cols = nb
 end
 
 function _M:enableShadow(v)
@@ -128,7 +134,7 @@ function _M:display()
 			w, h = gen.fw, gen.fh
 		else
 			w, h = self.font:size(txt)
-			gen = self.font:draw(txt, self.w / 3, color[1], color[2], color[3], true)[1]
+			gen = self.font:draw(txt, self.w / self.nb_cols, color[1], color[2], color[3], true)[1]
 			gen.fw, gen.fh = w, h
 		end
 		gen.x, gen.y = x, y
@@ -137,7 +143,7 @@ function _M:display()
 		self.clics[i] = {x,y,w+4,h+4}
 
 		if y + self.font_h * 2 > self.h then
-			x = x + self.w / 3
+			x = x + self.w / self.nb_cols
 			y = 0
 		else
 			y = y + self.font_h
