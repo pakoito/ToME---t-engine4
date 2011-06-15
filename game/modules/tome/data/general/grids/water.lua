@@ -92,7 +92,19 @@ newEntity{ base="WATER_BASE",
 	define_as = "DEEP_WATER",
 	image="terrain/water_grass_5_1.png",
 --	add_displays = class:makeWater(true),
+--	nice_tiler = { method="water",
+--		water="DEEP_WATER_5",
+--		grass8={"DEEP_WATER_8", 100, 1, 2}, grass2={"DEEP_WATER_2", 100, 1, 2}, grass4={"DEEP_WATER_4", 100, 1, 2}, grass6={"DEEP_WATER_6", 100, 1, 2}, grass1={"DEEP_WATER_1", 100, 1, 2}, grass3={"DEEP_WATER_3", 100, 1, 2}, grass7={"DEEP_WATER_7", 100, 1, 2}, grass9={"DEEP_WATER_9", 100, 1, 2}, inner_grass1="DEEP_WATER_1I", inner_grass3="DEEP_WATER_3I", inner_grass7="DEEP_WATER_7I", inner_grass9="DEEP_WATER_9I",
+--	},
 }
+--newEntity{base="WATER_BASE", define_as = "", image="terrain/water/water_5_1.png"}
+--for i = 1, 9 do for j = 1, 1 do
+--	if i ~= 5 then newEntity{base="WATER_BASE", define_as = "DEEP_WATER_"..i..j, image="terrain/water/water_"..i.."_0"..j..".png"} end
+--end end
+--newEntity{base="WATER_BASE", define_as = "DEEP_WATER_1I", image="terrain/water/water_1i_1.png"}
+--newEntity{base="WATER_BASE", define_as = "DEEP_WATER_3I", image="terrain/water/water_3i_1.png"}
+--newEntity{base="WATER_BASE", define_as = "DEEP_WATER_7I", image="terrain/water/water_7i_1.png"}
+--newEntity{base="WATER_BASE", define_as = "DEEP_WATER_9I", image="terrain/water/water_9i_1.png"}
 
 -----------------------------------------
 -- Water(ocean)/grass

@@ -23,7 +23,7 @@
 newEntity{
 	define_as = "UP_WILDERNESS",
 	type = "floor", subtype = "floor",
-	name = "exit to the worldmap", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/stair_up_wild.png"}},
+	name = "exit to the worldmap", image = "terrain/marble_floor.png", add_mos = {class.new{image="terrain/stair_up_wild.png"}},
 	display = '<', color_r=255, color_g=0, color_b=255,
 	always_remember = true,
 	notice = true,
@@ -32,7 +32,7 @@ newEntity{
 }
 
 newEntity{
-	define_as = "UP", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/stair_up.png"}},
+	define_as = "UP", image = "terrain/marble_floor.png", add_mos = {class.new{image="terrain/stair_up.png"}},
 	type = "floor", subtype = "floor",
 	name = "previous level",
 	display = '<', color_r=255, color_g=255, color_b=0,
@@ -42,7 +42,7 @@ newEntity{
 }
 
 newEntity{
-	define_as = "DOWN", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/stair_down.png"}},
+	define_as = "DOWN", image = "terrain/marble_floor.png", add_mos = {class.new{image="terrain/stair_down.png"}},
 	type = "floor", subtype = "floor",
 	name = "next level",
 	display = '>', color_r=255, color_g=255, color_b=0,
@@ -57,7 +57,7 @@ newEntity{
 newEntity{
 	define_as = "FLAT_UP_WILDERNESS",
 	type = "floor", subtype = "floor",
-	name = "exit to the worldmap", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/worldmap.png"}},
+	name = "exit to the worldmap", image = "terrain/marble_floor.png", add_mos = {class.new{image="terrain/worldmap.png"}},
 	display = '<', color_r=255, color_g=0, color_b=255,
 	always_remember = true,
 	notice = true,
@@ -68,7 +68,7 @@ newEntity{
 newEntity{
 	define_as = "FLAT_UP8",
 	type = "floor", subtype = "floor",
-	name = "way to the previous level", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/way_next_8.png"}},
+	name = "way to the previous level", image = "terrain/marble_floor.png", add_mos = {class.new{image="terrain/way_next_8.png"}},
 	display = '<', color_r=255, color_g=255, color_b=0,
 	notice = true,
 	always_remember = true,
@@ -77,7 +77,7 @@ newEntity{
 newEntity{
 	define_as = "FLAT_UP2",
 	type = "floor", subtype = "floor",
-	name = "way to the previous level", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/way_next_2.png"}},
+	name = "way to the previous level", image = "terrain/marble_floor.png", add_mos = {class.new{image="terrain/way_next_2.png"}},
 	display = '<', color_r=255, color_g=255, color_b=0,
 	notice = true,
 	always_remember = true,
@@ -86,7 +86,7 @@ newEntity{
 newEntity{
 	define_as = "FLAT_UP4",
 	type = "floor", subtype = "floor",
-	name = "way to the previous level", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/way_next_4.png"}},
+	name = "way to the previous level", image = "terrain/marble_floor.png", add_mos = {class.new{image="terrain/way_next_4.png"}},
 	display = '<', color_r=255, color_g=255, color_b=0,
 	notice = true,
 	always_remember = true,
@@ -95,7 +95,7 @@ newEntity{
 newEntity{
 	define_as = "FLAT_UP6",
 	type = "floor", subtype = "floor",
-	name = "way to the previous level", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/way_next_6.png"}},
+	name = "way to the previous level", image = "terrain/marble_floor.png", add_mos = {class.new{image="terrain/way_next_6.png"}},
 	display = '<', color_r=255, color_g=255, color_b=0,
 	notice = true,
 	always_remember = true,
@@ -105,7 +105,7 @@ newEntity{
 newEntity{
 	define_as = "FLAT_DOWN8",
 	type = "floor", subtype = "floor",
-	name = "way to the next level", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/way_next_8.png"}},
+	name = "way to the next level", image = "terrain/marble_floor.png", add_mos = {class.new{image="terrain/way_next_8.png"}},
 	display = '>', color_r=255, color_g=255, color_b=0,
 	notice = true,
 	always_remember = true,
@@ -114,7 +114,7 @@ newEntity{
 newEntity{
 	define_as = "FLAT_DOWN2",
 	type = "floor", subtype = "floor",
-	name = "way to the next level", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/way_next_2.png"}},
+	name = "way to the next level", image = "terrain/marble_floor.png", add_mos = {class.new{image="terrain/way_next_2.png"}},
 	display = '>', color_r=255, color_g=255, color_b=0,
 	notice = true,
 	always_remember = true,
@@ -123,7 +123,7 @@ newEntity{
 newEntity{
 	define_as = "FLAT_DOWN4",
 	type = "floor", subtype = "floor",
-	name = "way to the next level", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/way_next_4.png"}},
+	name = "way to the next level", image = "terrain/marble_floor.png", add_mos = {class.new{image="terrain/way_next_4.png"}},
 	display = '>', color_r=255, color_g=255, color_b=0,
 	notice = true,
 	always_remember = true,
@@ -132,7 +132,7 @@ newEntity{
 newEntity{
 	define_as = "FLAT_DOWN6",
 	type = "floor", subtype = "floor",
-	name = "way to the next level", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/way_next_6.png"}},
+	name = "way to the next level", image = "terrain/marble_floor.png", add_mos = {class.new{image="terrain/way_next_6.png"}},
 	display = '>', color_r=255, color_g=255, color_b=0,
 	notice = true,
 	always_remember = true,
@@ -158,6 +158,7 @@ newEntity{
 	type = "wall", subtype = "floor",
 	name = "wall", image = "terrain/granite_wall1.png",
 	display = '#', color_r=255, color_g=255, color_b=255, back_color=colors.GREY,
+	z = 17,
 	nice_tiler = { method="wall3d", inner={"WALL", 100, 1, 5}, north={"WALL_NORTH", 100, 1, 5}, south={"WALL_SOUTH", 10, 1, 17}, north_south="WALL_NORTH_SOUTH", small_pillar="WALL_SMALL_PILLAR", pillar_2="WALL_PILLAR_2", pillar_8={"WALL_PILLAR_8", 100, 1, 5}, pillar_4="WALL_PILLAR_4", pillar_6="WALL_PILLAR_6" },
 	always_remember = true,
 	does_block_move = true,
@@ -167,17 +168,17 @@ newEntity{
 	dig = "FLOOR",
 }
 for i = 1, 5 do
-	newEntity{ base = "WALL", define_as = "WALL"..i, image = "terrain/granite_wall1_"..i..".png"}
-	newEntity{ base = "WALL", define_as = "WALL_NORTH"..i, image = "terrain/granite_wall1_"..i..".png", add_displays = {class.new{image="terrain/granite_wall3.png", z=18, display_y=-1}}}
-	newEntity{ base = "WALL", define_as = "WALL_PILLAR_8"..i, image = "terrain/granite_wall1_"..i..".png", add_displays = {class.new{image="terrain/granite_wall_pillar_8.png", z=18, display_y=-1}}}
+	newEntity{ base = "WALL", define_as = "WALL"..i, image = "terrain/granite_wall1_"..i..".png", z = 17}
+	newEntity{ base = "WALL", define_as = "WALL_NORTH"..i, image = "terrain/granite_wall1_"..i..".png", z = 17, add_mos = {{image="terrain/granite_wall3.png", z=18, display_y=-1}}}
+	newEntity{ base = "WALL", define_as = "WALL_PILLAR_8"..i, image = "terrain/granite_wall1_"..i..".png", z = 17, add_mos = {{image="terrain/granite_wall_pillar_8.png", z=18, display_y=-1}}}
 end
-newEntity{ base = "WALL", define_as = "WALL_NORTH_SOUTH", image = "terrain/granite_wall2.png", add_displays = {class.new{image="terrain/granite_wall3.png", z=18, display_y=-1}}}
-newEntity{ base = "WALL", define_as = "WALL_SOUTH", image = "terrain/granite_wall2.png"}
-for i = 1, 17 do newEntity{ base = "WALL", define_as = "WALL_SOUTH"..i, image = "terrain/granite_wall2_"..i..".png"} end
-newEntity{ base = "WALL", define_as = "WALL_SMALL_PILLAR", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/granite_wall_pillar_small.png"}, class.new{image="terrain/granite_wall_pillar_small_top.png", z=18, display_y=-1}}}
-newEntity{ base = "WALL", define_as = "WALL_PILLAR_6", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/granite_wall_pillar_3.png"}, class.new{image="terrain/granite_wall_pillar_9.png", z=18, display_y=-1}}}
-newEntity{ base = "WALL", define_as = "WALL_PILLAR_4", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/granite_wall_pillar_1.png"}, class.new{image="terrain/granite_wall_pillar_7.png", z=18, display_y=-1}}}
-newEntity{ base = "WALL", define_as = "WALL_PILLAR_2", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/granite_wall_pillar_2.png"}}}
+newEntity{ base = "WALL", define_as = "WALL_NORTH_SOUTH", image = "terrain/granite_wall2.png", z = 17, add_mos = {{image="terrain/granite_wall3.png", z=18, display_y=-1}}}
+newEntity{ base = "WALL", define_as = "WALL_SOUTH", image = "terrain/granite_wall2.png", z = 17}
+for i = 1, 17 do newEntity{ base = "WALL", define_as = "WALL_SOUTH"..i, image = "terrain/granite_wall2_"..i..".png", z = 17} end
+newEntity{ base = "WALL", define_as = "WALL_SMALL_PILLAR", image = "terrain/marble_floor.png", z = 17, add_mos = {{image="terrain/granite_wall_pillar_small.png"}, {image="terrain/granite_wall_pillar_small_top.png", z=18, display_y=-1}}}
+newEntity{ base = "WALL", define_as = "WALL_PILLAR_6", image = "terrain/marble_floor.png", z = 17, add_mos = {{image="terrain/granite_wall_pillar_3.png"}, {image="terrain/granite_wall_pillar_9.png", z=18, display_y=-1}}}
+newEntity{ base = "WALL", define_as = "WALL_PILLAR_4", image = "terrain/marble_floor.png", z = 17, add_mos = {{image="terrain/granite_wall_pillar_1.png"}, {image="terrain/granite_wall_pillar_7.png", z=18, display_y=-1}}}
+newEntity{ base = "WALL", define_as = "WALL_PILLAR_2", image = "terrain/marble_floor.png", z = 17, add_mos = {{image="terrain/granite_wall_pillar_2.png"}}}
 
 -----------------------------------------
 -- Big Walls
@@ -202,6 +203,7 @@ newEntity{
 	define_as = "HARDWALL",
 	type = "wall", subtype = "floor",
 	name = "wall", image = "terrain/granite_wall1.png",
+	z = 17,
 	display = '#', color_r=255, color_g=255, color_b=255, back_color=colors.GREY,
 	nice_tiler = { method="wall3d", inner={"HARDWALL", 100, 1, 5}, north={"HARDWALL_NORTH", 100, 1, 5}, south={"HARDWALL_SOUTH", 10, 1, 17}, north_south="HARDWALL_NORTH_SOUTH", small_pillar="HARDWALL_SMALL_PILLAR", pillar_2="HARDWALL_PILLAR_2", pillar_8={"HARDWALL_PILLAR_8", 100, 1, 5}, pillar_4="HARDWALL_PILLAR_4", pillar_6="HARDWALL_PILLAR_6" },
 	always_remember = true,
@@ -212,17 +214,17 @@ newEntity{
 	air_level = -20,
 }
 for i = 1, 5 do
-	newEntity{ base = "HARDWALL", define_as = "HARDWALL"..i, image = "terrain/granite_wall1_"..i..".png"}
-	newEntity{ base = "HARDWALL", define_as = "HARDWALL_NORTH"..i, image = "terrain/granite_wall1_"..i..".png", add_displays = {class.new{image="terrain/granite_wall3.png", z=18, display_y=-1}}}
-	newEntity{ base = "HARDWALL", define_as = "HARDWALL_PILLAR_8"..i, image = "terrain/granite_wall1_"..i..".png", add_displays = {class.new{image="terrain/granite_wall_pillar_8.png", z=18, display_y=-1}}}
+	newEntity{ base = "HARDWALL", define_as = "HARDWALL"..i, image = "terrain/granite_wall1_"..i..".png", z = 17}
+	newEntity{ base = "HARDWALL", define_as = "HARDWALL_NORTH"..i, image = "terrain/granite_wall1_"..i..".png", z = 17, add_mos = {{image="terrain/granite_wall3.png", display_y=-1}}}
+	newEntity{ base = "HARDWALL", define_as = "HARDWALL_PILLAR_8"..i, image = "terrain/granite_wall1_"..i..".png", z = 17, add_mos = {{image="terrain/granite_wall_pillar_8.png", display_y=-1}}}
 end
-newEntity{ base = "HARDWALL", define_as = "HARDWALL_NORTH_SOUTH", image = "terrain/granite_wall2.png", add_displays = {class.new{image="terrain/granite_wall3.png", z=18, display_y=-1}}}
-newEntity{ base = "HARDWALL", define_as = "HARDWALL_SOUTH", image = "terrain/granite_wall2.png"}
-for i = 1, 17 do newEntity{ base = "HARDWALL", define_as = "HARDWALL_SOUTH"..i, image = "terrain/granite_wall2_"..i..".png"} end
-newEntity{ base = "HARDWALL", define_as = "HARDWALL_SMALL_PILLAR", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/granite_wall_pillar_small.png"}, class.new{image="terrain/granite_wall_pillar_small_top.png", z=18, display_y=-1}}}
-newEntity{ base = "HARDWALL", define_as = "HARDWALL_PILLAR_6", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/granite_wall_pillar_3.png"}, class.new{image="terrain/granite_wall_pillar_9.png", z=18, display_y=-1}}}
-newEntity{ base = "HARDWALL", define_as = "HARDWALL_PILLAR_4", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/granite_wall_pillar_1.png"}, class.new{image="terrain/granite_wall_pillar_7.png", z=18, display_y=-1}}}
-newEntity{ base = "HARDWALL", define_as = "HARDWALL_PILLAR_2", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/granite_wall_pillar_2.png"}}}
+newEntity{ base = "HARDWALL", define_as = "HARDWALL_NORTH_SOUTH", image = "terrain/granite_wall2.png", z = 17, add_mos = {{image="terrain/granite_wall3.png", display_y=-1}}}
+newEntity{ base = "HARDWALL", define_as = "HARDWALL_SOUTH", image = "terrain/granite_wall2.png", z = 17}
+for i = 1, 17 do newEntity{ base = "HARDWALL", define_as = "HARDWALL_SOUTH"..i, image = "terrain/granite_wall2_"..i..".png", z = 17} end
+newEntity{ base = "HARDWALL", define_as = "HARDWALL_SMALL_PILLAR", image = "terrain/marble_floor.png", z = 17, add_mos = {{image="terrain/granite_wall_pillar_small.png"}, {image="terrain/granite_wall_pillar_small_top.png", display_y=-1}}}
+newEntity{ base = "HARDWALL", define_as = "HARDWALL_PILLAR_6", image = "terrain/marble_floor.png", z = 17, add_mos = {{image="terrain/granite_wall_pillar_3.png"}, {image="terrain/granite_wall_pillar_9.png", display_y=-1}}}
+newEntity{ base = "HARDWALL", define_as = "HARDWALL_PILLAR_4", image = "terrain/marble_floor.png", z = 17, add_mos = {{image="terrain/granite_wall_pillar_1.png"}, {image="terrain/granite_wall_pillar_7.png", display_y=-1}}}
+newEntity{ base = "HARDWALL", define_as = "HARDWALL_PILLAR_2", image = "terrain/marble_floor.png", z = 17, add_mos = {{image="terrain/granite_wall_pillar_2.png"}}}
 
 
 -----------------------------------------
@@ -248,10 +250,10 @@ newEntity{
 	always_remember = true,
 	door_closed = "DOOR",
 }
-newEntity{ base = "DOOR", define_as = "DOOR_HORIZ", image = "terrain/granite_door1.png", add_displays = {class.new{image="terrain/granite_wall3.png", z=18, display_y=-1}}, door_opened = "DOOR_HORIZ_OPEN"}
-newEntity{ base = "DOOR_OPEN", define_as = "DOOR_HORIZ_OPEN", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/granite_door1_open.png", z=17}, class.new{image="terrain/granite_wall3.png", z=18, display_y=-1}}, door_closed = "DOOR_HORIZ"}
-newEntity{ base = "DOOR", define_as = "DOOR_VERT", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/granite_door1_vert.png", z=17}, class.new{image="terrain/granite_door1_vert_north.png", z=18, display_y=-1}}, door_opened = "DOOR_OPEN_VERT", dig = "DOOR_OPEN_VERT"}
-newEntity{ base = "DOOR_OPEN", define_as = "DOOR_OPEN_VERT", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/granite_door1_open_vert.png", z=17}, class.new{image="terrain/granite_door1_open_vert_north.png", z=18, display_y=-1}}, door_closed = "DOOR_VERT"}
+newEntity{ base = "DOOR", define_as = "DOOR_HORIZ", image = "terrain/granite_door1.png", add_displays = {class.new{image="terrain/granite_wall3.png", z = 16, display_y=-1}}, door_opened = "DOOR_HORIZ_OPEN"}
+newEntity{ base = "DOOR_OPEN", define_as = "DOOR_HORIZ_OPEN", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/granite_door1_open.png", z = 16}, class.new{image="terrain/granite_wall3.png", z=17, display_y=-1}}, door_closed = "DOOR_HORIZ"}
+newEntity{ base = "DOOR", define_as = "DOOR_VERT", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/granite_door1_vert.png", z = 16}, class.new{image="terrain/granite_door1_vert_north.png", z=17, display_y=-1}}, door_opened = "DOOR_OPEN_VERT", dig = "DOOR_OPEN_VERT"}
+newEntity{ base = "DOOR_OPEN", define_as = "DOOR_OPEN_VERT", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/granite_door1_open_vert.png", z = 16}, class.new{image="terrain/granite_door1_open_vert_north.png", z=18, display_y=-1}}, door_closed = "DOOR_VERT"}
 
 newEntity{
 	define_as = "DOOR_VAULT",
@@ -267,8 +269,8 @@ newEntity{
 	door_player_check = "This door seems to have been sealed off, you think you can open it.",
 	door_opened = "DOOR_OPEN",
 }
-newEntity{ base = "DOOR_VAULT", define_as = "DOOR_VAULT_HORIZ", image = "terrain/granite_door1.png", add_displays = {class.new{image="terrain/granite_wall3.png", z=18, display_y=-1}}, door_opened = "DOOR_HORIZ_OPEN"}
-newEntity{ base = "DOOR_VAULT", define_as = "DOOR_VAULT_VERT", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/granite_door1_vert.png", z=17}, class.new{image="terrain/granite_door1_vert_north.png", z=18, display_y=-1}}, door_opened = "DOOR_OPEN_VERT"}
+newEntity{ base = "DOOR_VAULT", define_as = "DOOR_VAULT_HORIZ", image = "terrain/granite_door1.png", add_displays = {class.new{image="terrain/granite_wall3.png", z=16, display_y=-1}}, door_opened = "DOOR_HORIZ_OPEN"}
+newEntity{ base = "DOOR_VAULT", define_as = "DOOR_VAULT_VERT", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/granite_door1_vert.png", z=16}, class.new{image="terrain/granite_door1_vert_north.png", z=18, display_y=-1}}, door_opened = "DOOR_OPEN_VERT"}
 
 -----------------------------------------
 -- Old walls
@@ -295,14 +297,14 @@ newEntity{
 }
 for i = 1, 5 do
 	newEntity{ base = "OLD_WALL", define_as = "OLD_WALL"..i, image = "terrain/granite_wall1_"..i..".png"}
-	newEntity{ base = "OLD_WALL", define_as = "OLD_WALL_NORTH"..i, image = "terrain/granite_wall1_"..i..".png", add_displays = {class.new{image="terrain/granite_wall3.png", z=18, display_y=-1}}}
-	newEntity{ base = "OLD_WALL", define_as = "OLD_WALL_PILLAR_8"..i, image = "terrain/granite_wall1_"..i..".png", add_displays = {class.new{image="terrain/granite_wall_pillar_8.png", z=18, display_y=-1}}}
+	newEntity{ base = "OLD_WALL", define_as = "OLD_WALL_NORTH"..i, image = "terrain/granite_wall1_"..i..".png", add_mos = {{image="terrain/granite_wall3.png", z=18, display_y=-1}}}
+	newEntity{ base = "OLD_WALL", define_as = "OLD_WALL_PILLAR_8"..i, image = "terrain/granite_wall1_"..i..".png", add_mos = {{image="terrain/granite_wall_pillar_8.png", z=18, display_y=-1}}}
 end
-newEntity{ base = "OLD_WALL", define_as = "OLD_WALL_NORTH_SOUTH", image = "terrain/granite_wall2.png", add_displays = {class.new{image="terrain/granite_wall3.png", z=18, display_y=-1}}}
-for i = 1, 3 do newEntity{ base = "OLD_WALL", define_as = "OLD_WALL_NORTH_SOUTH"..i, image = "terrain/granite_wall_lichen_"..i..".png", add_displays = {class.new{image="terrain/granite_wall3.png", z=18, display_y=-1}}} end
+newEntity{ base = "OLD_WALL", define_as = "OLD_WALL_NORTH_SOUTH", image = "terrain/granite_wall2.png", add_mos = {{image="terrain/granite_wall3.png", z=18, display_y=-1}}}
+for i = 1, 3 do newEntity{ base = "OLD_WALL", define_as = "OLD_WALL_NORTH_SOUTH"..i, image = "terrain/granite_wall_lichen_"..i..".png", add_mos = {{image="terrain/granite_wall3.png", z=18, display_y=-1}}} end
 newEntity{ base = "OLD_WALL", define_as = "OLD_WALL_SOUTH", image = "terrain/granite_wall2.png"}
 for i = 1, 3 do newEntity{ base = "OLD_WALL", define_as = "OLD_WALL_SOUTH"..i, image = "terrain/granite_wall_lichen_"..i..".png"} end
-newEntity{ base = "OLD_WALL", define_as = "OLD_WALL_SMALL_PILLAR", image = "terrain/oldstone_floor.png", add_displays = {class.new{image="terrain/granite_wall_pillar_small.png"}, class.new{image="terrain/granite_wall_pillar_small_top.png", z=18, display_y=-1}}}
-newEntity{ base = "OLD_WALL", define_as = "OLD_WALL_PILLAR_6", image = "terrain/oldstone_floor.png", add_displays = {class.new{image="terrain/granite_wall_pillar_3.png"}, class.new{image="terrain/granite_wall_pillar_9.png", z=18, display_y=-1}}}
-newEntity{ base = "OLD_WALL", define_as = "OLD_WALL_PILLAR_4", image = "terrain/oldstone_floor.png", add_displays = {class.new{image="terrain/granite_wall_pillar_1.png"}, class.new{image="terrain/granite_wall_pillar_7.png", z=18, display_y=-1}}}
-newEntity{ base = "OLD_WALL", define_as = "OLD_WALL_PILLAR_2", image = "terrain/oldstone_floor.png", add_displays = {class.new{image="terrain/granite_wall_pillar_2.png"}}}
+newEntity{ base = "OLD_WALL", define_as = "OLD_WALL_SMALL_PILLAR", image = "terrain/oldstone_floor.png", add_mos = {{image="terrain/granite_wall_pillar_small.png"}, {image="terrain/granite_wall_pillar_small_top.png", z=18, display_y=-1}}}
+newEntity{ base = "OLD_WALL", define_as = "OLD_WALL_PILLAR_6", image = "terrain/oldstone_floor.png", add_mos = {{image="terrain/granite_wall_pillar_3.png"}, {image="terrain/granite_wall_pillar_9.png", z=18, display_y=-1}}}
+newEntity{ base = "OLD_WALL", define_as = "OLD_WALL_PILLAR_4", image = "terrain/oldstone_floor.png", add_mos = {{image="terrain/granite_wall_pillar_1.png"}, {image="terrain/granite_wall_pillar_7.png", z=18, display_y=-1}}}
+newEntity{ base = "OLD_WALL", define_as = "OLD_WALL_PILLAR_2", image = "terrain/oldstone_floor.png", add_mos = {{image="terrain/granite_wall_pillar_2.png"}}}
