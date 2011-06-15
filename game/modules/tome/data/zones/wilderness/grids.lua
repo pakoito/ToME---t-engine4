@@ -338,7 +338,7 @@ end
 --------------------------------------------------------------------------------
 -- Towns
 --------------------------------------------------------------------------------
-newEntity{ base="PLAINS", define_as = "TOWN", change_level=1, display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN }
+newEntity{ base="PLAINS", define_as = "TOWN", change_level=1, display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, nice_tiler=false }
 
 newEntity{ base="TOWN", define_as = "TOWN_DERTH",
 	name = "Derth (Town)", add_mos = {{image="terrain/town1.png"}},
@@ -373,7 +373,8 @@ newEntity{ base="TOWN", define_as = "TOWN_GATES_OF_MORNING",
 newEntity{ base="TOWN", define_as = "TOWN_IRKKK",
 	name = "Irkkk (Town)", add_mos = {{image="terrain/town1.png"}},
 	desc = "Yeek Wayist capital",
-	change_zone="town-irrk",
+	change_level = false,
+--	change_zone="town-irrk",
 }
 newEntity{ base="TOWN", define_as = "TOWN_ZIGUR",
 	name = "Zigur (Town)", add_mos = {{image="terrain/town1.png"}},
