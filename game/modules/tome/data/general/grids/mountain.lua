@@ -84,13 +84,13 @@ newEntity{
 	does_block_move = true,
 	block_sight = true,
 	dig = "ROCKY_GROUND",
-	nice_tiler = { method="replace", base={"ROCKY_SNOWY_TREE", 100, 1, 20} },
+	nice_tiler = { method="replace", base={"ROCKY_SNOWY_TREE", 100, 1, 30} },
 }
-for i = 1, 20 do
+for i = 1, 30 do
 newEntity{ base="ROCKY_SNOWY_TREE",
 	define_as = "ROCKY_SNOWY_TREE"..i,
 	image = "terrain/rocky_ground.png",
-	add_displays = class:makeTrees("terrain/tree_dark_snow"),
+	add_displays = class:makeTrees("terrain/tree_dark_snow", 13, 10),
 	nice_tiler = false,
 }
 end
