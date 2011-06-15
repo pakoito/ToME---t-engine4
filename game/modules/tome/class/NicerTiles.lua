@@ -56,7 +56,10 @@ function _M:replace(i, j, g)
 end
 
 function _M:edit(i, j, e)
-	self.edits[#self.edits+1] = {i, j, add_display=e.add_display, add_mos=e.add_mos, min=e.min, max=e.max}
+	self.edits[i] = self.edits[i] or {}
+	self.edits[i][j] = self.edits[i][j] or {}
+	local ee = self.edits[i][j]
+	ee[#ee+1] = {add_display=e.add_display, add_mos=e.add_mos, min=e.min, max=e.max}
 end
 
 function _M:handle(level, i, j)
@@ -73,31 +76,35 @@ function _M:replaceAll(level)
 		level.map(r[1], r[2], Map.TERRAIN, r[3])
 	end
 	self.repl = {}
-	for i = 1, #self.edits do
-		local e = self.edits[i]
-		local g = level.map(e[1], e[2], Map.TERRAIN)
+	for i, jj in pairs(self.edits) do for j, ee in pairs(jj) do
+		local g = level.map(i, j, Map.TERRAIN)
 		local cloned = false
 		if not g.force_clone then g = g:clone() g.force_clone = true cloned = true end
-		if e.add_mos then
-			-- Edit the first add_display entity, or add a dummy if none
-			if not g.__edit_d then
-				g.add_displays = g.add_displays or {}
-				g.add_displays[#g.add_displays+1] = require(g.__CLASSNAME).new{image="invis.png", force_clone=true}
-				g.__edit_d = #g.add_displays
-			end
 
-			-- Add all the mos
-			g.add_displays[g.__edit_d].add_mos = g.add_displays[g.__edit_d].add_mos or {}
-			local mos = g.add_displays[g.__edit_d].add_mos
-			for i = 1, #e.add_mos do
-				mos[#mos+1] = e.add_mos[i]
-				mos[#mos].image = mos[#mos].image:format(rng.range(e.min, e.max))
-			end
-			g.add_displays[g.__edit_d]._mo = nil
+		-- Edit the first add_display entity, or add a dummy if none
+		if not g.__edit_d then
+			g.add_displays = g.add_displays or {}
+			g.add_displays[#g.add_displays+1] = require(g.__CLASSNAME).new{image="invis.png", force_clone=true}
+			g.__edit_d = #g.add_displays
 		end
+		local gd = g.add_displays[g.__edit_d]
+
+		for __, e in ipairs(ee) do
+			if e.add_mos then
+				-- Add all the mos
+				gd.add_mos = gd.add_mos or {}
+				local mos = gd.add_mos
+				for i = 1, #e.add_mos do
+					mos[#mos+1] = e.add_mos[i]
+					mos[#mos].image = mos[#mos].image:format(rng.range(e.min, e.max))
+				end
+				gd._mo = nil
+			end
+		end
+
 		g._mo = nil
-		level.map(e[1], e[2], Map.TERRAIN, g)
-	end
+		level.map(i, j, Map.TERRAIN, g)
+	end end
 	self.edits = {}
 end
 

@@ -25,7 +25,7 @@ stopx = 1
 stopy = 29
 
 -- defineTile section
-defineTile("#", "HARD_BIGWALL")
+defineTile("#", "HARDWALL")
 defineTile("F", "CFARPORTAL")
 defineTile("h", "OLD_FLOOR", nil, "WEIRDLING_BEAST")
 defineTile("G", "GREEN_DRAPPING")

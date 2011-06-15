@@ -38,13 +38,6 @@ newEntity{
 	does_block_move = true,
 }
 
-newEntity{ base = "HARDWALL",
-	define_as = "HARD_BIGWALL",
-	block_sense = true,
-	block_esp = true,
-	dig = false,
-}
-
 newEntity{
 	define_as = "TELEPORT_OUT",
 	name = "teleportation circle to the surface", image = "terrain/maze_floor.png", add_displays = {class.new{image="terrain/maze_teleport.png"}},
@@ -68,11 +61,11 @@ newEntity{
 	end,
 }
 
-newEntity{ base = "HARD_BIGWALL",
+newEntity{ base = "HARDWALL",
 	define_as = "GREEN_DRAPPING",
 	add_displays = {class.new{image="terrain/green_drapping.png"}},
 }
-newEntity{ base = "HARD_BIGWALL",
+newEntity{ base = "HARDWALL",
 	define_as = "PURPLE_DRAPPING",
 	add_displays = {class.new{image="terrain/purple_drapping.png"}},
 }

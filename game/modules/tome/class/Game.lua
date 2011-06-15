@@ -939,11 +939,11 @@ function _M:setupCommands()
 		[{"_a","ctrl"}] = function() if config.settings.cheat then game:registerDialog(require("mod.dialogs.debug.DebugMain").new()) end end,
 		[{"_d","ctrl"}] = function() if config.settings.cheat then
 			local g = game.level.map(game.player.x, game.player.y, Map.TERRAIN)
-			print(g.define_as, g.image)
+			print(g.define_as, g.image, g.z)
 			for i, a in ipairs(g.add_mos or {}) do print(" => ", a.image) end
 			local add = g.add_displays
 			if add then for i, e in ipairs(add) do
-				print(" -", e.image)
+				print(" -", e.image, e.z)
 				for i, a in ipairs(e.add_mos or {}) do print("   => ", a.image) end
 			end end
 		end end,

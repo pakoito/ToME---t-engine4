@@ -295,12 +295,14 @@ end
 -- *DO NOT TOUCH!!!*
 function _M:getMapObjects(tiles, mos, z)
 	local i = -1
+	local nextz = 0
 	local mo, dz
 	repeat
 		i = i + 1
 		mo, dz = self:makeMapObject(tiles, 1+i)
 		if mo then
-			mos[dz or z+i] = mo
+			if dz then mos[dz] = mo
+			else mos[z + nextz] = mo nextz = nextz + 1 end
 		end
 	until not mo
 end
