@@ -753,7 +753,7 @@ function _M:newLevel(level_data, lev, old_lev, game)
 	if not level_data.no_level_connectivity then
 		print("[LEVEL GENERATION] checking entrance to exit A*", ux, uy, "to", dx, dy)
 		if ux and uy and dx and dy and (ux ~= dx or uy ~= dy)  and not a:calc(ux, uy, dx, dy) then
-			print("Level unconnected, no way from entrance to exit", ux, uy, "to", dx, dy)
+			forceprint("Level unconnected, no way from entrance to exit", ux, uy, "to", dx, dy)
 			level:removed()
 			return self:newLevel(level_data, lev, old_lev, game)
 		end
@@ -769,7 +769,7 @@ function _M:newLevel(level_data, lev, old_lev, game)
 
 			print("[LEVEL GENERATION] checking A*", spot.x, spot.y, "to", cx, cy)
 			if spot.x and spot.y and cx and cy and (spot.x ~= cx or spot.y ~= cy) and not a:calc(spot.x, spot.y, cx, cy) then
-				print("Level unconnected, no way from", spot.x, spot.y, "to", cx, cy)
+				forceprint("Level unconnected, no way from", spot.x, spot.y, "to", cx, cy)
 				level:removed()
 				return self:newLevel(level_data, lev, old_lev, game)
 			end

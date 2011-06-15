@@ -34,7 +34,6 @@ local sand_editer = { method="borders", type="sand", forbid={grass=true},
 	default9i={add_mos={{image="terrain/sand/sand_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=3},
 }
 
-
 newEntity{
 	define_as = "SAND",
 	type = "floor", subtype = "sand",

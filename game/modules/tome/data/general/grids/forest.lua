@@ -75,7 +75,7 @@ newEntity{
 	nice_tiler = { method="replace", base={"HARDTREE", 100, 1, 30}},
 	nice_editer = grass_editer,
 }
-for i = 1, 30 do newEntity{ define_as = "HARDTREE"..i, image = "terrain/grass.png", add_displays = class:makeTrees("terrain/tree_alpha", 13, 9) } end
+for i = 1, 30 do newEntity{ base="HARDTREE", define_as = "HARDTREE"..i, image = "terrain/grass.png", add_displays = class:makeTrees("terrain/tree_alpha", 13, 9) } end
 
 newEntity{
 	define_as = "FLOWER",

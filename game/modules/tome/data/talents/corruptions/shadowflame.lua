@@ -128,6 +128,7 @@ newTalent{
 	sustain_vim = 90,
 	cooldown = 60,
 	no_sustain_autoreset = true,
+	random_boss_rarity = 10,
 	tactical = { DISABLE = 3 },
 	range = 5,
 	activate = function(self, t)
