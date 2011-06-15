@@ -17,11 +17,30 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local sand_editer = { method="borders", type="sand", forbid={grass=true},
+	default8={add_mos={{image="terrain/sand/sand_2_%02d.png", display_y=-1}}, min=1, max=5},
+	default2={add_mos={{image="terrain/sand/sand_8_%02d.png", display_y=1}}, min=1, max=5},
+	default4={add_mos={{image="terrain/sand/sand_6_%02d.png", display_x=-1}}, min=1, max=5},
+	default6={add_mos={{image="terrain/sand/sand_4_%02d.png", display_x=1}}, min=1, max=4},
+
+	default1={add_mos={{image="terrain/sand/sand_9_%02d.png", display_x=-1, display_y=1}}, min=1, max=3},
+	default3={add_mos={{image="terrain/sand/sand_7_%02d.png", display_x=1, display_y=1}}, min=1, max=3},
+	default7={add_mos={{image="terrain/sand/sand_3_%02d.png", display_x=-1, display_y=-1}}, min=1, max=3},
+	default9={add_mos={{image="terrain/sand/sand_1_%02d.png", display_x=1, display_y=-1}}, min=1, max=3},
+
+	default1i={add_mos={{image="terrain/sand/sand_inner_1_%02d.png", display_x=-1, display_y=1}}, min=1, max=3},
+	default3i={add_mos={{image="terrain/sand/sand_inner_3_%02d.png", display_x=1, display_y=1}}, min=1, max=3},
+	default7i={add_mos={{image="terrain/sand/sand_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=3},
+	default9i={add_mos={{image="terrain/sand/sand_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=3},
+}
+
+
 newEntity{
 	define_as = "SAND",
 	type = "floor", subtype = "sand",
 	name = "sand", image = "terrain/sandfloor.png",
 	display = '.', color={r=203,g=189,b=72}, back_color={r=93,g=79,b=22},
+	nice_editer = sand_editer,
 	grow = "SANDWALL_STABLE",
 }
 

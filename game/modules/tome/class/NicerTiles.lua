@@ -296,8 +296,8 @@ function _M:editTileGenericBorders(level, i, j, g, nt, type)
 	if g5 ~= g3 and g5 ~= g6 and g5 ~= g2 then self:edit(i, j, nt[g3.."3i"] or nt["default3i"]) end
 end
 
-function _M:editTileGrass(level, i, j, g, nt)
-	self:editTileGenericBorders(level, i, j, g, nt, "grass")
+function _M:editTileBorders(level, i, j, g, nt)
+	self:editTileGenericBorders(level, i, j, g, nt, nt.type or "grass")
 end
 
 -- This array is precomputed, it holds the possible combinations of walls and the nice tile they generate

@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local grass_editer = { method="grass",
+local grass_editer = { method="borders", type="grass",
 	default8={add_mos={{image="terrain/grass/grass_2_%02d.png", display_y=-1}}, min=1, max=5},
 	default2={add_mos={{image="terrain/grass/grass_8_%02d.png", display_y=1}}, min=1, max=5},
 	default4={add_mos={{image="terrain/grass/grass_6_%02d.png", display_x=-1}}, min=1, max=5},
@@ -83,10 +83,10 @@ newEntity{
 	name = "flower", image = "terrain/flower.png",
 	display = ';', color=colors.YELLOW, back_color={r=44,g=95,b=43},
 	grow = "TREE",
-	nice_tiler = { method="replace", base={"FLOWER", 100, 1, 1}},
+	nice_tiler = { method="replace", base={"FLOWER", 100, 1, 6+7}},
 	nice_editer = grass_editer,
 }
-for i = 1, 1 do newEntity{ base = "FLOWER", define_as = "FLOWER"..i, image = "terrain/grass.png", add_mos = {{image = "terrain/flower0"..i..".png"}}} end
+for i = 1, 6+7 do newEntity{ base = "FLOWER", define_as = "FLOWER"..i, image = "terrain/grass.png", add_mos = {{image = "terrain/"..(i<=6 and "flower_0"..i..".png" or "mushroom_0"..(i-6)..".png")}}} end
 
 newEntity{
 	define_as = "ROCK_VAULT",

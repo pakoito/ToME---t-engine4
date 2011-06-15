@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local grass_editer = { method="grass",
+local grass_editer = { method="borders", type="grass",
 	default8={add_mos={{image="terrain/grass/grass_2_%02d.png", display_y=-1}}, min=1, max=5},
 	default2={add_mos={{image="terrain/grass/grass_8_%02d.png", display_y=1}}, min=1, max=5},
 	default4={add_mos={{image="terrain/grass/grass_6_%02d.png", display_x=-1}}, min=1, max=5},
@@ -74,7 +74,9 @@ for i = 1, 4 do newEntity{ base = "CULTIVATION", define_as = "CULTIVATION"..i, i
 newEntity{ base="PLAINS", define_as="LOW_HILLS",
 	name="low hills",
 	display=';', color=colors.LIGHT_GREEN, back_color={r=44,g=95,b=43},
+	nice_tiler = { method="replace", base={"LOW_HILLS", 100, 1, 6}},
 }
+for i = 1, 6 do newEntity{ base = "LOW_HILLS", define_as = "LOW_HILLS"..i, image="terrain/grass.png", add_mos={{image="terrain/grass_hill_"..i.."_01.png"}} } end
 
 newEntity{
 	define_as = "FOREST",
