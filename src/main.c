@@ -884,6 +884,7 @@ int main(int argc, char *argv[])
 	if (Mix_OpenAudio(22050, AUDIO_S16, 2, 2048) == -1)
 	{
 		no_sound = TRUE;
+		printf("Disabling sounds: %s", SDL_GetError());
 	}
 	else
 	{
