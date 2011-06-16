@@ -672,6 +672,7 @@ end
 
 function _M:newLevel(level_data, lev, old_lev, game)
 	local map = self.map_class.new(level_data.width, level_data.height)
+	map.updateMap = function() end
 	if level_data.all_lited then map:liteAll(0, 0, map.w, map.h) end
 	if level_data.all_remembered then map:rememberAll(0, 0, map.w, map.h) end
 
@@ -713,6 +714,10 @@ function _M:newLevel(level_data, lev, old_lev, game)
 			end
 		end
 	end end
+
+	-- Now update it all in one go (faster than letter the generators do it since they usualy overlay multiple terrains)
+	map.updateMap = nil
+	map:redisplay()
 
 	-- Generate actors
 	if level_data.generator.actor and level_data.generator.actor.class then

@@ -129,7 +129,7 @@ function _M:targetMode(v, msg, co, typ)
 			self.key = self.targetmode_key
 			self.key:setCurrent()
 
-			if self.target.target.entity and self.level.map.seens(self.target.target.entity.x, self.target.target.entity.y) and self.player ~= self.target.target.entity then
+			if self.target_no_star_scan or (self.target.target.entity and self.level.map.seens(self.target.target.entity.x, self.target.target.entity.y) and self.player ~= self.target.target.entity) then
 			else
 				local filter = nil
 				if type(typ) == "table" and typ.first_target and typ.first_target == "friend" then
@@ -177,14 +177,14 @@ function _M:targetSetupKey()
 		RUN_LEFT_UP = function() self.target:freemove(7) self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
 		RUN_RIGHT_UP = function() self.target:freemove(9) self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
 
-		MOVE_LEFT = function() if self.target_style == "lock" then self.target:scan(4) else self.target:freemove(4) end self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
-		MOVE_RIGHT = function() if self.target_style == "lock" then self.target:scan(6) else self.target:freemove(6) end self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
-		MOVE_UP = function() if self.target_style == "lock" then self.target:scan(8) else self.target:freemove(8) end self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
-		MOVE_DOWN = function() if self.target_style == "lock" then self.target:scan(2) else self.target:freemove(2) end self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
-		MOVE_LEFT_DOWN = function() if self.target_style == "lock" then self.target:scan(1) else self.target:freemove(1) end self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
-		MOVE_RIGHT_DOWN = function() if self.target_style == "lock" then self.target:scan(3) else self.target:freemove(3) end self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
-		MOVE_LEFT_UP = function() if self.target_style == "lock" then self.target:scan(7) else self.target:freemove(7) end self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
-		MOVE_RIGHT_UP = function() if self.target_style == "lock" then self.target:scan(9) else self.target:freemove(9) end self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
+		MOVE_LEFT = function() if self.target_style == "lock" then self.target:scan(4) elseif self.target_style == "immediate" then self.target:setDirFrom(4, self.target.target.entity or self.player) self.targetmode_key:triggerVirtual("ACCEPT") return else self.target:freemove(4) end self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
+		MOVE_RIGHT = function() if self.target_style == "lock" then self.target:scan(6) elseif self.target_style == "immediate" then self.target:setDirFrom(6, self.target.target.entity or self.player) self.targetmode_key:triggerVirtual("ACCEPT") return else self.target:freemove(6) end self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
+		MOVE_UP = function() if self.target_style == "lock" then self.target:scan(8) elseif self.target_style == "immediate" then self.target:setDirFrom(8, self.target.target.entity or self.player) self.targetmode_key:triggerVirtual("ACCEPT") return else self.target:freemove(8) end self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
+		MOVE_DOWN = function() if self.target_style == "lock" then self.target:scan(2) elseif self.target_style == "immediate" then self.target:setDirFrom(2, self.target.target.entity or self.player) self.targetmode_key:triggerVirtual("ACCEPT") return else self.target:freemove(2) end self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
+		MOVE_LEFT_DOWN = function() if self.target_style == "lock" then self.target:scan(1) elseif self.target_style == "immediate" then self.target:setDirFrom(1, self.target.target.entity or self.player) self.targetmode_key:triggerVirtual("ACCEPT") return else self.target:freemove(1) end self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
+		MOVE_RIGHT_DOWN = function() if self.target_style == "lock" then self.target:scan(3) elseif self.target_style == "immediate" then self.target:setDirFrom(3, self.target.target.entity or self.player) self.targetmode_key:triggerVirtual("ACCEPT") return else self.target:freemove(3) end self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
+		MOVE_LEFT_UP = function() if self.target_style == "lock" then self.target:scan(7) elseif self.target_style == "immediate" then self.target:setDirFrom(7, self.target.target.entity or self.player) self.targetmode_key:triggerVirtual("ACCEPT") return else self.target:freemove(7) end self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
+		MOVE_RIGHT_UP = function() if self.target_style == "lock" then self.target:scan(9) elseif self.target_style == "immediate" then self.target:setDirFrom(9, self.target.target.entity or self.player) self.targetmode_key:triggerVirtual("ACCEPT") return else self.target:freemove(9) end self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y) end,
 		MOVE_STAY = function()
 			self.target:setSpot(self.target.source_actor.x, self.target.source_actor.y, "freemove")
 			self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y)
@@ -228,12 +228,17 @@ function _M:targetGetForPlayer(typ)
 	if self.target.forced then return unpack(self.target.forced) end
 	if coroutine.running() and typ then
 		local msg
+		self.target_no_star_scan = nil
 		if type(typ) == "string" then msg, typ = typ, nil
 		elseif type(typ) == "table" then
-			if typ.default_target then self.target.target.entity = typ.default_target end
+			if typ.default_target then
+				self.target.target.entity = typ.default_target
+				self.target_no_star_scan = true
+			end
 			msg = typ.msg
 		end
 		self:targetMode("exclusive", msg, coroutine.running(), typ)
+		if typ.immediate_keys then self.target_style = "immediate" end
 		if typ.nolock then self.target_style = "free" end
 		if typ.nowarning then self.target_warning = false end
 		return coroutine.yield()

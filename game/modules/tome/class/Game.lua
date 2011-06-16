@@ -997,6 +997,15 @@ function _M:setupCommands()
 		MOVE_RIGHT_DOWN = function() self.player:moveDir(3) end,
 		MOVE_STAY = function() if self.player:enoughEnergy() then self.player:describeFloor(self.player.x, self.player.y) self.player:useEnergy() end end,
 
+		RUN = function()
+			game.log("Run in which direction?")
+			local co = coroutine.create(function()
+				local x, y = self.player:getTarget{type="hit", no_restrict=true, range=1, immediate_keys=true, default_target=self.player}
+				if x and y then self.player:runInit(util.getDir(x, y, self.player.x, self.player.y)) end
+			end)
+			local ok, err = coroutine.resume(co)
+			if not ok and err then print(debug.traceback(co)) error(err) end
+		end,
 		RUN_LEFT = function() self.player:runInit(4) end,
 		RUN_RIGHT = function() self.player:runInit(6) end,
 		RUN_UP = function() self.player:runInit(8) end,

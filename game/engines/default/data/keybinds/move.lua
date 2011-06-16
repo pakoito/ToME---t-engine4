@@ -76,6 +76,12 @@ defineAction{
 
 -- Running
 defineAction{
+	default = { "uni:." },
+	type = "RUN",
+	group = "movement",
+	name = "Run",
+}
+defineAction{
 	default = { "sym:276:false:true:false:false", "sym:260:false:true:false:false" },
 	type = "RUN_LEFT",
 	group = "movement",

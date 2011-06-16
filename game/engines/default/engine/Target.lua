@@ -250,6 +250,14 @@ function _M:freemove(dir)
 	if self.on_set_target then self:on_set_target("freemove") end
 end
 
+function _M:setDirFrom(dir, src)
+	local d = dir_to_coord[dir]
+	self.target.x = src.x + d[1]
+	self.target.y = src.y + d[2]
+	self.target.entity = game.level.map(self.target.x, self.target.y, engine.Map.ACTOR)
+	if self.on_set_target then self:on_set_target("dir_from") end
+end
+
 function _M:setSpot(x, y, how)
 	self.target.x = x
 	self.target.y = y
