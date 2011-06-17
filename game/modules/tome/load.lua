@@ -29,6 +29,7 @@ local KeyBind = require "engine.KeyBind"
 local DamageType = require "engine.DamageType"
 local Faction = require "engine.Faction"
 local Map = require "engine.Map"
+local Tiles = require "engine.Tiles"
 local ActorStats = require "engine.interface.ActorStats"
 local ActorResource = require "engine.interface.ActorResource"
 local ActorTalents = require "engine.interface.ActorTalents"
@@ -192,6 +193,9 @@ end
 print("total", tnb, "::", tznb)
 os.exit()
 --]]
+
+-- Load tilesets, to speed up image loads
+Tiles:loadTileset("/data/gfx/ts-shockbolt-all.lua")
 
 -- Factions
 dofile("/data/factions.lua")

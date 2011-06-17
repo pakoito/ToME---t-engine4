@@ -40,6 +40,10 @@ static int map_object_new(lua_State *L)
 	map_object *obj = (map_object*)lua_newuserdata(L, sizeof(map_object));
 	auxiliar_setclass(L, "core{mapobj}", -1);
 	obj->textures = calloc(nb_textures, sizeof(GLuint));
+	obj->tex_x = calloc(nb_textures, sizeof(GLfloat));
+	obj->tex_y = calloc(nb_textures, sizeof(GLfloat));
+	obj->tex_factorx = calloc(nb_textures, sizeof(GLfloat));
+	obj->tex_factory = calloc(nb_textures, sizeof(GLfloat));
 	obj->textures_ref = calloc(nb_textures, sizeof(int));
 	obj->textures_is3d = calloc(nb_textures, sizeof(bool));
 	obj->nb_textures = nb_textures;
@@ -87,6 +91,10 @@ static int map_object_free(lua_State *L)
 			luaL_unref(L, LUA_REGISTRYINDEX, obj->textures_ref[i]);
 
 	free(obj->textures);
+	free(obj->tex_x);
+	free(obj->tex_y);
+	free(obj->tex_factorx);
+	free(obj->tex_factory);
 	free(obj->textures_ref);
 	free(obj->textures_is3d);
 
@@ -157,6 +165,18 @@ static int map_object_texture(lua_State *L)
 //	printf("C Map Object setting texture %d = %d (ref %x)\n", i, *t, obj->textures_ref[i]);
 	obj->textures[i] = *t;
 	obj->textures_is3d[i] = is3d;
+	obj->tex_factorx[i] = lua_tonumber(L, 5);
+	obj->tex_factory[i] = lua_tonumber(L, 6);
+	if (lua_isnumber(L, 7))
+	{
+		obj->tex_x[i] = lua_tonumber(L, 7);
+		obj->tex_y[i] = lua_tonumber(L, 8);
+	}
+	else
+	{
+		obj->tex_x[i] = 0;
+		obj->tex_y[i] = 0;
+	}
 	return 0;
 }
 
@@ -349,6 +369,12 @@ static int map_objects_toscreen(lua_State *L)
 			float dw = w * dm->dw;
 			float dh = h * dm->dh;
 			int dz = moid;
+
+			texcoords[0] = dm->tex_x[0]; texcoords[1] = dm->tex_y[0];
+			texcoords[2] = dm->tex_x[0] + dm->tex_factorx[0]; texcoords[3] = dm->tex_y[0];
+			texcoords[4] = dm->tex_x[0] + dm->tex_factorx[0]; texcoords[5] = dm->tex_y[0] + dm->tex_factory[0];
+			texcoords[6] = dm->tex_x[0]; texcoords[7] = dm->tex_y[0] + dm->tex_factory[0];
+
 			vertices[0] = dx; vertices[1] = dy; vertices[2] = dz;
 			vertices[3] = dw + dx; vertices[4] = dy; vertices[5] = dz;
 			vertices[6] = dw + dx; vertices[7] = dh + dy; vertices[8] = dz;
@@ -467,6 +493,12 @@ static int map_objects_display(lua_State *L)
 
 		int dx = 0, dy = 0;
 		int dz = moid;
+
+		texcoords[0] = m->tex_x[0]; texcoords[1] = m->tex_y[0];
+		texcoords[2] = m->tex_x[0] + m->tex_factorx[0]; texcoords[3] = m->tex_y[0];
+		texcoords[4] = m->tex_x[0] + m->tex_factorx[0]; texcoords[5] = m->tex_y[0] + m->tex_factory[0];
+		texcoords[6] = m->tex_x[0]; texcoords[7] = m->tex_y[0] + m->tex_factory[0];
+
 		vertices[0] = dx; vertices[1] = dy; vertices[3] = dz;
 		vertices[3] = w + dx; vertices[4] = dy; vertices[5] = dz;
 		vertices[6] = w + dx; vertices[7] = h + dy; vertices[8] = dz;
@@ -1001,10 +1033,10 @@ static int map_get_scroll(lua_State *L)
 	vertices[(*vert_idx)+4] = map->tile_w * (dw) * (zoom) + (dx); vertices[(*vert_idx)+5] = map->tile_h * (dh) * (zoom) + (dy); \
 	vertices[(*vert_idx)+6] = (dx); vertices[(*vert_idx)+7] = map->tile_h * (dh) * (zoom) + (dy); \
 	\
-	texcoords[(*vert_idx)] = 0; texcoords[(*vert_idx)+1] = 0; \
-	texcoords[(*vert_idx)+2] = map->tex_tile_w[dw-1]; texcoords[(*vert_idx)+3] = 0; \
-	texcoords[(*vert_idx)+4] = map->tex_tile_w[dw-1]; texcoords[(*vert_idx)+5] = map->tex_tile_h[dh-1]; \
-	texcoords[(*vert_idx)+6] = 0; texcoords[(*vert_idx)+7] = map->tex_tile_h[dh-1]; \
+	texcoords[(*vert_idx)] = dm->tex_x[0]; texcoords[(*vert_idx)+1] = dm->tex_y[0]; \
+	texcoords[(*vert_idx)+2] = dm->tex_x[0] + dm->tex_factorx[0]; texcoords[(*vert_idx)+3] = dm->tex_y[0]; \
+	texcoords[(*vert_idx)+4] = dm->tex_x[0] + dm->tex_factorx[0]; texcoords[(*vert_idx)+5] = dm->tex_y[0] + dm->tex_factory[0]; \
+	texcoords[(*vert_idx)+6] = dm->tex_x[0]; texcoords[(*vert_idx)+7] = dm->tex_y[0] + dm->tex_factory[0]; \
 	\
 	colors[(*col_idx)] = r; colors[(*col_idx)+1] = g; colors[(*col_idx)+2] = b; colors[(*col_idx)+3] = (a); \
 	colors[(*col_idx)+4] = r; colors[(*col_idx)+5] = g; colors[(*col_idx)+6] = b; colors[(*col_idx)+7] = (a); \

@@ -28,6 +28,17 @@ base_prefix = "/data/gfx/"
 use_images = true
 force_back_color = nil
 
+tilesets = {}
+tilesets_texs = {}
+function _M:loadTileset(file)
+	local f, err = loadfile(file)
+	if err then error(err) end
+	local env = {}
+	setfenv(f, setmetatable(self.tilesets, {__index={_G=self.tilesets}}))
+	local ok, err = pcall(f)
+	if not ok then error(err) end
+end
+
 function _M:init(w, h, fontname, fontsize, texture, allow_backcolor)
 	self.allow_backcolor = allow_backcolor
 	self.texture = texture
@@ -43,7 +54,20 @@ function _M:loadImage(image)
 	return s
 end
 
-function _M:get(char, fr, fg, fb, br, bg, bb, image, alpha, do_outline)
+function _M:checkTileset(f)
+	if not self.tilesets[f] then return end
+	local d = self.tilesets[f]
+--	print("Loading tile from tileset", f)
+	local tex = self.tilesets_texs[d.set]
+	if not tex then
+		tex = core.display.loadImage(d.set):glTexture()
+		self.tilesets_texs[d.set] = tex
+		print("Loading tileset", d.set)
+	end
+	return tex, d.factorx, d.factory, d.x, d.y
+end
+
+function _M:get(char, fr, fg, fb, br, bg, bb, image, alpha, do_outline, allow_tileset)
 	if self.force_back_color then br, bg, bb, alpha = self.force_back_color.r, self.force_back_color.g, self.force_back_color.b, self.force_back_color.a end
 
 	alpha = alpha or 0
@@ -59,11 +83,21 @@ function _M:get(char, fr, fg, fb, br, bg, bb, image, alpha, do_outline)
 	if (self.use_images or not dochar) and image then char = image end
 
 	if self.repo[char] and self.repo[char][fgidx] and self.repo[char][fgidx][bgidx] then
-		return self.repo[char][fgidx][bgidx]
+		local s = self.repo[char][fgidx][bgidx]
+		return s[1], s[2], s[3], s[4], s[5]
 	else
-		local s
+		local s, sw, sh
 		local is_image = false
 		if (self.use_images or not dochar) and image then
+			if allow_tileset and self.texture then
+				local ts, fx, fy, tsx, tsy = self:checkTileset(self.prefix..image)
+				if ts then
+					self.repo[char] = self.repo[char] or {}
+					self.repo[char][fgidx] = self.repo[char][fgidx] or {}
+					self.repo[char][fgidx][bgidx] = {ts, fx, fy, tsx, tsy}
+					return ts, fx, fy, tsx, tsy
+				end
+			end
 			print("Loading tile", image)
 			s = core.display.loadImage(self.prefix..image)
 			if not s then s = core.display.loadImage(self.base_prefix..image) end
@@ -71,26 +105,17 @@ function _M:get(char, fr, fg, fb, br, bg, bb, image, alpha, do_outline)
 		end
 		if not s then
 			local w, h = self.font:size(dochar)
---[[
-			s = core.display.newSurface(self.w, self.h)
-			if br >= 0 then
-				s:erase(br, bg, bb, alpha)
-			else
-				s:erase(0, 0, 0, alpha)
-			end
-
-			s:drawString(self.font, char, (self.w - w) / 2, (self.h - h) / 2, fr, fg, fb)
-]]
 			if not self.allow_backcolor or br < 0 then br = nil end
 			if not self.allow_backcolor or bg < 0 then bg = nil end
 			if not self.allow_backcolor or bb < 0 then bb = nil end
 			if not self.allow_backcolor then alpha = 0 end
 			s = core.display.newTile(self.w, self.h, self.font, dochar, (self.w - w) / 2, (self.h - h) / 2, fr, fg, fb, br or 0, bg or 0, bb or 0, alpha, self.use_images)
---			s = core.display.drawStringNewSurface(self.font, char, fr, fg, fb)
 		end
 
 		if self.texture then
-			s = s:glTexture()
+			local w, h = s:getSize()
+			s, sw, sh = s:glTexture()
+			sw, sh = w / sw, h / sh
 			if not is_image and do_outline then
 				if type(do_outline) == "boolean" then
 					s = s:makeOutline(2, 2, self.w, self.h, 0, 0, 0, 1) or s
@@ -98,12 +123,14 @@ function _M:get(char, fr, fg, fb, br, bg, bb, image, alpha, do_outline)
 					s = s:makeOutline(do_outline.x, do_outline.y, self.w, self.h, do_outline.r, do_outline.g, do_outline.b, do_outline.a) or s
 				end
 			end
+		else
+			sw, sh = s:getSize()
 		end
 
 		self.repo[char] = self.repo[char] or {}
 		self.repo[char][fgidx] = self.repo[char][fgidx] or {}
-		self.repo[char][fgidx][bgidx] = s
-		return s
+		self.repo[char][fgidx][bgidx] = {s, sw, sh}
+		return s, sw, sh
 	end
 end
 

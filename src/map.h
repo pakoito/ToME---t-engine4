@@ -28,6 +28,7 @@ struct s_map_object {
 	int nb_textures;
 	int *textures_ref;
 	GLuint *textures;
+	GLfloat *tex_x, *tex_y, *tex_factorx, *tex_factory;
 	bool *textures_is3d;
 	shader_type *shader;
 	int cur_x, cur_y;

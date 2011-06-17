@@ -253,7 +253,8 @@ function _M:makeMapObject(tiles, idx)
 	self._mo:tint(self.tint_r, self.tint_g, self.tint_b)
 
 	-- Texture 0 is always the normal image/ascii tile
-	self._mo:texture(0, tiles:get(self.display, self.color_r, self.color_g, self.color_b, self.color_br, self.color_bg, self.color_bb, self.image, self._noalpha and 255, self.ascii_outline))
+	local tex, texx, texy, pos_x, pos_y = tiles:get(self.display, self.color_r, self.color_g, self.color_b, self.color_br, self.color_bg, self.color_bb, self.image, self._noalpha and 255, self.ascii_outline, true)
+	self._mo:texture(0, tex, false, texx, texy, pos_x, pos_y)
 
 	-- Additional MO chained to the same Z order
 	if tiles.use_images and self.add_mos then
@@ -262,7 +263,8 @@ function _M:makeMapObject(tiles, idx)
 			local amo = self.add_mos[i]
 			-- Create a simple additional chained MO
 			local mo = core.map.newObject(self.uid, 1, false, false, false, amo.display_x or 0, amo.display_y or 0, amo.display_w or 1, amo.display_h or 1, amo.display_scale or 1)
-			mo:texture(0, tiles:get("", 0, 0, 0, 0, 0, 0, amo.image, false, false))
+			tex, texx, texy, pos_x, pos_y = tiles:get("", 0, 0, 0, 0, 0, 0, amo.image, false, false, true)
+			mo:texture(0, tex, false, texx, texy, pos_x, pos_y)
 			cmo:chain(mo)
 			cmo = mo
 		end
@@ -272,9 +274,9 @@ function _M:makeMapObject(tiles, idx)
 	if tiles.use_images and self.textures then
 		for i = 1, #self.textures do
 			local t = self.textures[i]
-			if type(t) == "function" then local tex, is3d = t(self, tiles); if tex then self._mo:texture(i, tex, is3d) tiles.texture_store[tex] = true end
+			if type(t) == "function" then local tex, is3d = t(self, tiles); if tex then self._mo:texture(i, tex, is3d, 1, 1) tiles.texture_store[tex] = true end
 			elseif type(t) == "table" then
-				if t[1] == "image" then local tex = tiles:get('', 0, 0, 0, 0, 0, 0, t[2]); self._mo:texture(i, tex, false) tiles.texture_store[tex] = true
+				if t[1] == "image" then local tex = tiles:get('', 0, 0, 0, 0, 0, 0, t[2]); self._mo:texture(i, tex, false, 1, 1) tiles.texture_store[tex] = true
 				end
 			end
 		end
