@@ -86,6 +86,7 @@ return {
 		},
 		-- Hidden treasure level
 		[4] = {
+			ambient_music = {"Rainy Day.ogg", "weather/rain.ogg"},
 			generator = {
 				map = {
 					class = "engine.generator.map.Static",

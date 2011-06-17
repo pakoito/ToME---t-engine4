@@ -39,12 +39,13 @@
 #include "SDL_thread.h"
 #include "lua.h"
 #include "lauxlib.h"
+#include "types.h"
 
 
 typedef struct Sound {
 	enum { SOUND_STATIC, SOUND_STREAMING } type;
 	char *path;
-	ALuint source;
+	ALuint static_source;
 	ALuint buffers[2];
 	unsigned loop:1, loaderShouldExit:1;
 	SDL_Thread *loaderThread;
@@ -52,6 +53,13 @@ typedef struct Sound {
 	SDL_cond *cond; /*used by the main thread to wake up the loader thread, and by the loader thread to signal the main thread that it is done*/
 	OggVorbis_File *vorbisFile;
 } Sound;
+
+typedef struct SoundSource {
+	int sound_ref;
+	Sound *sound;
+	ALuint source;
+	bool is_static_source;
+} SoundSource;
 
 int init_openal();
 void deinit_openal();

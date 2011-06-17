@@ -116,11 +116,11 @@ static int staticLoader(void *sound) {
 	if (data == NULL) return 1;
 	bufferSize = readSoundData((Sound *)sound, data, bufferSize);
 	alBufferData(((Sound *)sound)->buffers[0], (info->channels > 1) ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16, data, bufferSize, info->rate);
+//	printf("==statuic buffer : %s\n",  alGetString(alGetError()));
 	free(data);
 	ov_clear(((Sound *)sound)->vorbisFile);
 	free(((Sound *)sound)->vorbisFile);
 	((Sound *)sound)->vorbisFile = NULL;
-	alSourcei(((Sound *)sound)->source, AL_BUFFER, ((Sound *)sound)->buffers[0]);
 	return 0;
 }
 
@@ -140,7 +140,7 @@ static int streamingLoader(void *sound) {
 
 	do {
 		testRest = 1;
-		alGetSourcei(((Sound *)sound)->source, AL_BUFFERS_QUEUED, &i);
+		alGetSourcei(((Sound *)sound)->static_source, AL_BUFFERS_QUEUED, &i);
 //		printf("==1: %d\n", i);
 		if (i == 0) { /*fill and queue initial buffers*/
 			readBytes = readSoundData((Sound *)sound, data, STREAMING_BUFFER_SIZE);
@@ -149,11 +149,11 @@ static int streamingLoader(void *sound) {
 			readBytes = readSoundData((Sound *)sound, data, STREAMING_BUFFER_SIZE);
 			alBufferData(((Sound *)sound)->buffers[1], (info->channels > 1) ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16, data, readBytes, info->rate);
 //			printf("==read: %d : %s\n", i, alGetString(alGetError()));
-			alSourceQueueBuffers(((Sound *)sound)->source, 2, ((Sound *)sound)->buffers);
+			alSourceQueueBuffers(((Sound *)sound)->static_source, 2, ((Sound *)sound)->buffers);
 //			printf("==read: %d : %s\n", i, alGetString(alGetError()));
 		}
 		else { /*refill processed buffers*/
-			alGetSourcei(((Sound *)sound)->source, AL_BUFFERS_PROCESSED, &i);
+			alGetSourcei(((Sound *)sound)->static_source, AL_BUFFERS_PROCESSED, &i);
 			while (i-- != 0) {
 				readBytes = readSoundData((Sound *)sound, data, STREAMING_BUFFER_SIZE);
 				if (readBytes == 0) {
@@ -161,9 +161,9 @@ static int streamingLoader(void *sound) {
 					break;
 				}
 				else {
-					alSourceUnqueueBuffers(((Sound *)sound)->source, 1, &buffer);
+					alSourceUnqueueBuffers(((Sound *)sound)->static_source, 1, &buffer);
 					alBufferData(buffer, (info->channels > 1) ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16, data, readBytes, info->rate);
-					alSourceQueueBuffers(((Sound *)sound)->source, 1, &buffer);
+					alSourceQueueBuffers(((Sound *)sound)->static_source, 1, &buffer);
 				}
 			}
 		}
@@ -171,7 +171,7 @@ static int streamingLoader(void *sound) {
 		SDL_CondSignal(((Sound *)sound)->cond); /*tell the main thread we're done, in case it's waiting for us*/
 //		printf("==3: %d\n", i);
 		if (testRest) {
-			alGetSourcei(((Sound *)sound)->source, AL_SOURCE_STATE, &i);
+			alGetSourcei(((Sound *)sound)->static_source, AL_SOURCE_STATE, &i);
 			testRest = (i == AL_PLAYING);
 		}
 		if (testRest) {
@@ -189,6 +189,7 @@ static int streamingLoader(void *sound) {
 
 	SDL_UnlockMutex(((Sound *)sound)->mutex);
 	free(data);
+
 	return 0;
 }
 
@@ -198,9 +199,10 @@ static int loadsoundLua(lua_State *L) {
 
 	luaL_checktype(L, 1, LUA_TSTRING);
 	s = lua_tostring(L, 1);
+	bool is_stream = lua_toboolean(L, 2);
 
 	Sound *sound = (Sound*)lua_newuserdata(L, sizeof(Sound));
-	auxiliar_setclass(L, "sound{source}", -1);
+	auxiliar_setclass(L, "sound{buffer}", -1);
 	sound->type = SOUND_STATIC;
 	sound->loop = 0;
 	sound->loaderShouldExit = 0;
@@ -209,7 +211,6 @@ static int loadsoundLua(lua_State *L) {
 	sound->path = malloc(strlen(s) + 1);
 	if (sound->path == NULL) luaL_error(L, "out of memory");
 	strcpy(sound->path, s);
-	alGenSources(1, &sound->source);
 	alGenBuffers(2, sound->buffers);
 	sound->vorbisFile = malloc(sizeof(OggVorbis_File));
 	if (sound->vorbisFile == NULL) luaL_error(L, "out of memory");
@@ -227,7 +228,8 @@ static int loadsoundLua(lua_State *L) {
 
 	if (ov_streams(sound->vorbisFile) > 1) luaL_error(L, "Error loading sound \"%s\": Ogg files containing multiple logical bitstreams are not supported", s);
 
-	if (ov_time_total(sound->vorbisFile, -1) > 10.0) {
+	if (is_stream) {
+		alGenSources(1, &sound->static_source);
 		sound->type = SOUND_STREAMING;
 		sound->mutex = SDL_CreateMutex();
 		if (sound->mutex == NULL) luaL_error(L, "out of memory");
@@ -236,7 +238,8 @@ static int loadsoundLua(lua_State *L) {
 		sound->loaderThread = SDL_CreateThread(streamingLoader, sound);
 	}
 	else {
-		sound->loaderThread = SDL_CreateThread(staticLoader, sound);
+		sound->static_source = 0;
+		staticLoader(sound);
 	}
 
 	return 1;
@@ -249,14 +252,14 @@ const luaL_reg soundlib[] = {
 
 static int soundTostringLua(lua_State *L) {
 	Sound *s;
-	s = (Sound*)auxiliar_checkclass(L, "sound{source}", 1);
+	s = (Sound*)auxiliar_checkclass(L, "sound{buffer}", 1);
 	lua_pushfstring(L, "sound \"%s\" : %s", s->path, (s->type == SOUND_STREAMING) ? "<stream>" : "<static>");
 	return 1;
 }
 
 static int soundCollectLua(lua_State *L) {
 	Sound *s;
-	s = (Sound*)auxiliar_checkclass(L, "sound{source}", 1);
+	s = (Sound*)auxiliar_checkclass(L, "sound{buffer}", 1);
 
 	if (s->type == SOUND_STREAMING) {
 		s->loaderShouldExit = 1;
@@ -269,7 +272,6 @@ static int soundCollectLua(lua_State *L) {
 		if (s->loaderThread != NULL) SDL_WaitThread(s->loaderThread, NULL);
 	}
 
-	alDeleteSources(1, &s->source);
 	alDeleteBuffers(2, s->buffers);
 	if (s->path != NULL) free(s->path);
 	if (s->vorbisFile != NULL) {
@@ -279,71 +281,102 @@ static int soundCollectLua(lua_State *L) {
 	return 0;
 }
 
+static int sourceCollectLua(lua_State *L) {
+	SoundSource *s = (SoundSource*)auxiliar_checkclass(L, "sound{source}", 1);
+
+	if (!s->is_static_source) alDeleteSources(1, &s->source);
+	luaL_unref(L, LUA_REGISTRYINDEX, s->sound_ref);
+
+	return 0;
+}
+
+static int soundNewSource(lua_State *L) {
+	Sound *s = (Sound*)auxiliar_checkclass(L, "sound{buffer}", 1);
+	int ref = luaL_ref(L, LUA_REGISTRYINDEX);
+
+	SoundSource *source = (SoundSource*)lua_newuserdata(L, sizeof(SoundSource));
+	auxiliar_setclass(L, "sound{source}", -1);
+
+	source->sound_ref = ref;
+	source->sound = s;
+	if (s->static_source)
+	{
+		source->source = s->static_source;
+		source->is_static_source = TRUE;
+	}
+	else
+	{
+		alGenSources(1, &source->source);
+//	printf("==source : %s\n",  alGetString(alGetError()));
+		source->is_static_source = FALSE;
+		alSourcei(source->source, AL_BUFFER, s->buffers[0]);
+//	printf("==source buffer assigned : %s\n",  alGetString(alGetError()));
+	}
+
+	return 1;
+}
+
 static int soundPlayLua(lua_State *L) {
-	Sound *s;
+	SoundSource *s;
 	ALint i;
-	s = (Sound*)auxiliar_checkclass(L, "sound{source}", 1);
-	if (s->type == SOUND_STREAMING) {
+	s = (SoundSource*)auxiliar_checkclass(L, "sound{source}", 1);
+	if (s->sound->type == SOUND_STREAMING) {
 		alGetSourcei(s->source, AL_SOURCE_STATE, &i);
-				printf("====>>play %d\n",i);
+//				printf("====>>play %d\n",i);
 		switch (i) {
 			case AL_PLAYING:
 				alSourceStop(s->source);
 			case AL_STOPPED:
-				ov_raw_seek(s->vorbisFile, 0);
+				ov_raw_seek(s->sound->vorbisFile, 0);
 				alSourcei(s->source, AL_BUFFER, AL_NONE); /*unqueue all buffers*/
 			case AL_INITIAL:
 			case AL_PAUSED:
-				SDL_LockMutex(s->mutex);
-				SDL_CondSignal(s->cond); /*wake up loader*/
-				SDL_CondWait(s->cond, s->mutex); /*wait until loader has queued initial buffers (if necessary), it will have gone to sleep when this returns because the source isn't playing yet*/
+				SDL_LockMutex(s->sound->mutex);
+				SDL_CondSignal(s->sound->cond); /*wake up loader*/
+				SDL_CondWait(s->sound->cond, s->sound->mutex); /*wait until loader has queued initial buffers (if necessary), it will have gone to sleep when this returns because the source isn't playing yet*/
 				alSourcePlay(s->source);
-				SDL_CondSignal(s->cond); /*wake up loader again (it will stay awake this time since the source is playing now)*/
-				SDL_UnlockMutex(s->mutex);
+				SDL_CondSignal(s->sound->cond); /*wake up loader again (it will stay awake this time since the source is playing now)*/
+				SDL_UnlockMutex(s->sound->mutex);
 				break;
 		}
 	}
 	else {
-		if (s->loaderThread != NULL) {
-			SDL_WaitThread(s->loaderThread, NULL);
-			s->loaderThread = NULL;
-		}
 		alSourcePlay(s->source);
 	}
 	return 0;
 }
 
 static int soundPauseLua(lua_State *L) {
-	Sound *s;
-	s = (Sound*)auxiliar_checkclass(L, "sound{source}", 1);
+	SoundSource *s;
+	s = (SoundSource*)auxiliar_checkclass(L, "sound{source}", 1);
 	alSourcePause(s->source);
 	return 0;
 }
 
 static int soundStopLua(lua_State *L) {
-	Sound *s;
-	s = (Sound*)auxiliar_checkclass(L, "sound{source}", 1);
+	SoundSource *s;
+	s = (SoundSource*)auxiliar_checkclass(L, "sound{source}", 1);
 	alSourceStop(s->source);
 	return 0;
 }
 
 static int soundLoopLua(lua_State *L) {
-	Sound *s;
+	SoundSource *s;
 	ALint old;
-	s = (Sound*)auxiliar_checkclass(L, "sound{source}", 1);
+	s = (SoundSource*)auxiliar_checkclass(L, "sound{source}", 1);
 	alGetSourcei(s->source, AL_LOOPING, &old);
 	if (!lua_isnone(L, 2)) {
-		if (s->type == SOUND_STATIC) alSourcei(s->source, AL_LOOPING, lua_toboolean(L, 2));
-		else s->loop = lua_toboolean(L, 2);
+		if (s->sound->type == SOUND_STATIC) alSourcei(s->source, AL_LOOPING, lua_toboolean(L, 2));
+		else s->sound->loop = lua_toboolean(L, 2);
 	}
 	lua_pushboolean(L, old);
 	return 1;
 }
 
 static int soundVolumeLua(lua_State *L) {
-	Sound *s;
+	SoundSource *s;
 	ALfloat old, new;
-	s = (Sound*)auxiliar_checkclass(L, "sound{source}", 1);
+	s = (SoundSource*)auxiliar_checkclass(L, "sound{source}", 1);
 	new = (ALfloat)luaL_optnumber(L, 2, -2893.0);
 	alGetSourcef(s->source, AL_GAIN, &old);
 	if (new != -2893.0) {
@@ -354,9 +387,9 @@ static int soundVolumeLua(lua_State *L) {
 }
 
 static int soundPitchLua(lua_State *L) {
-	Sound *s;
+	SoundSource *s;
 	ALfloat old, new;
-	s = (Sound*)auxiliar_checkclass(L, "sound{source}", 1);
+	s = (SoundSource*)auxiliar_checkclass(L, "sound{source}", 1);
 	new = (ALfloat)luaL_optnumber(L, 2, -2893.0);
 	alGetSourcef(s->source, AL_PITCH, &old);
 	if (new != -2893.0) {
@@ -367,12 +400,12 @@ static int soundPitchLua(lua_State *L) {
 }
 
 static int soundLocationLua(lua_State *L) {
-	Sound *s;
+	SoundSource *s;
 	ALfloat x, y, z;
 	float oldaz, oldel, newaz = 0, newel = 0;
 	int choice;
 
-	s = (Sound*)auxiliar_checkclass(L, "sound{source}", 1);
+	s = (SoundSource*)auxiliar_checkclass(L, "sound{source}", 1);
 	if (lua_isnoneornil(L, 2)) {
 		choice = 0;
 	}
@@ -408,9 +441,9 @@ static int soundLocationLua(lua_State *L) {
 }
 
 static int soundPlayingLua(lua_State *L) {
-	Sound *s;
+	SoundSource *s;
 	ALint i;
-	s = (Sound*)auxiliar_checkclass(L, "sound{source}", 1);
+	s = (SoundSource*)auxiliar_checkclass(L, "sound{source}", 1);
 	alGetSourcei(s->source, AL_SOURCE_STATE, &i);
 	lua_pushboolean(L, (i == AL_PLAYING));
 	return 1;
@@ -419,6 +452,12 @@ static int soundPlayingLua(lua_State *L) {
 const luaL_reg soundFuncs[] = {
 	{"__tostring", soundTostringLua},
 	{"__gc", soundCollectLua},
+	{"use", soundNewSource},
+	{NULL, NULL}
+};
+
+const luaL_reg sourceFuncs[] = {
+	{"__gc", sourceCollectLua},
 	{"play", soundPlayLua},
 	{"pause", soundPauseLua},
 	{"stop", soundStopLua},
@@ -432,7 +471,8 @@ const luaL_reg soundFuncs[] = {
 
 int luaopen_sound(lua_State *L)
 {
-	auxiliar_newclass(L, "sound{source}", soundFuncs);
+	auxiliar_newclass(L, "sound{buffer}", soundFuncs);
+	auxiliar_newclass(L, "sound{source}", sourceFuncs);
 	luaL_openlib(L, "core.sound", soundlib, 0);
 	lua_pop(L, 1);
 	return 1;

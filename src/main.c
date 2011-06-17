@@ -853,6 +853,8 @@ int main(int argc, char *argv[])
 	nb_cpus = get_number_cpus();
 	printf("[CPU] Detected %d CPUs\n", nb_cpus);
 
+	init_openal();
+
 	// RNG init
 	init_gen_rand(time(NULL));
 
@@ -915,7 +917,6 @@ int main(int argc, char *argv[])
 	boot_lua(2, FALSE, argc, argv);
 
 	pass_command_args(argc, argv);
-	init_openal();
 
 	SDL_Event event;
 	while (!exit_engine)

@@ -201,6 +201,8 @@ function _M:tick()
 			print("[COROUTINE] dead", stop[i])
 		end
 	end
+
+	if self.cleanSounds then self:cleanSounds() end
 end
 
 --- Called when a zone leaves a level

@@ -24,12 +24,14 @@ module(..., package.seeall, class.make)
 
 --- Initializes
 function _M:init()
+	self.playing_sounds = {}
 	self.loaded_sounds = {}
 --	setmetatable(self.loaded_sounds, {__mode="v"})
 end
 
 function _M:loaded()
 	self.loaded_sounds = self.loaded_sounds or {}
+	self.playing_sounds = {}
 --	setmetatable(self.loaded_sounds, {__mode="v"})
 end
 
@@ -42,13 +44,12 @@ function _M:playSound(name)
 			setfenv(f, setmetatable({}, {__index=_G}))
 			def = f()
 			print("[SOUND] loading from", "/data/sound/"..name..".lua", ":=:", "/data/sound/"..def.file, ":>")
-			ok, def.sample = pcall(core.sound.load, "/data/sound/"..def.file)
+			ok, def.sample = pcall(core.sound.load, "/data/sound/"..def.file, false)
 			if not ok then return end
 			print("[SOUND] :=>", def.sample)
-			if def.volume and def.sample then def.sample:volume(def.volume / 100) end
 		elseif fs.exists("/data/sound/"..name..".ogg") then
 			def = {}
-			ok, def.sample = pcall(core.sound.load, "/data/sound/"..name..".ogg")
+			ok, def.sample = pcall(core.sound.load, "/data/sound/"..name..".ogg", false)
 			if not ok then return end
 			print("[SOUND] loading from", "/data/sound/"..name..".ogg", ":=:", def.sample)
 		else
@@ -59,6 +60,19 @@ function _M:playSound(name)
 		s = self.loaded_sounds[name]
 	end
 	if not s or not s.sample then return end
-	s.sample:play(s.loop)
-	return s
+	local source = s.sample:use()
+	if s.volume then source:volume(s.volume / 100) end
+	source:play()
+	self.playing_sounds[source] = true
+	return source
+end
+
+--- Called on ticks to free up non playing sources
+function _M:cleanSounds()
+	if not self.playing_sounds then return end
+	local todel = {}
+	for s, _ in pairs(self.playing_sounds) do
+		if not s:playing() then todel[#todel+1] = s end
+	end
+	for i = 1, #todel do self.playing_sounds[todel[i]] = nil end
 end

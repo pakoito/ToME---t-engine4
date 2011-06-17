@@ -62,7 +62,7 @@ return {
 				if e.immediate then
 					e = e:clone()
 					e:resolve() e:resolve(nil, true)
-					for i,s in ipairs(game.level.spots) do print("=====",i,table.serialize(s,nil,true)) end FIX ME !!! angolwen?!
+					for i,s in ipairs(game.level.spots) do print("=====",i,table.serialize(s,nil,true)) end --FIX ME !!! angolwen?!
 					print("<<<", e.immediate[1], e.immediate[2])
 					local where = game.level:pickSpotRemove{type=e.immediate[1], subtype=e.immediate[2]}
 					while where and (game.level.map:checkAllEntities(where.x, where.y, "block_move") or not game.level.map:checkAllEntities(where.x, where.y, "can_encounter")) do where = game.level:pickSpotRemove{type=e.immediate[1], subtype=e.immediate[2]} end

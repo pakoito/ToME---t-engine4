@@ -37,18 +37,21 @@ end
 
 function _M:playMusic(name)
 	if not name then
-		for name, data in pairs(self.playing_musics) do self:playMusic(name, data.loop) end
+		for name, data in pairs(self.playing_musics) do self:playMusic(name) end
 		return
 	end
 	if self.loaded_musics[name] then return end
-	self.loaded_musics[name] = core.sound.load("/data/music/"..name)
+	local ok
+	ok, self.loaded_musics[name] = pcall(core.sound.load, "/data/music/"..name, false)
 	local m = self.loaded_musics[name]
-	if not m then return end
+	print("[MUSIC] loading", name, m)
+	if not ok or not m then self.loaded_musics[name] = nil return end
 
-	print("[MUSIC] playing", name, m, " :: current ? ", self.playing_music)
+	print("[MUSIC] playing", name, m)
+	m = m:use() -- Get the source
 	m:loop(true)
 	m:play()
-	self.playing_musics[name] = {loop=true}
+	self.playing_musics[name] = {source=m}
 end
 
 function _M:stopMusic(name)
@@ -58,7 +61,7 @@ function _M:stopMusic(name)
 	end
 
 	if not self.loaded_musics[name] then return end
-	self.loaded_musics[name]:stop()
+	if self.playing_musics[name].source then self.playing_musics[name].source:stop() end
 	self.loaded_musics[name] = nil
 	self.playing_musics[name] = nil
 	print("[MUSIC] stoping", name)
@@ -76,8 +79,4 @@ do return end
 		self:saveSettings("music", ("music.volume = %q\n"):format(vol))
 	end
 	return core.sound.musicVolume(vol) or 0
-end
-
---- Called by the C core when the current music stops
-function _M:onMusicStop()
 end
