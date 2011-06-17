@@ -109,7 +109,7 @@ function failed_charred_scar(self, level)
 end
 
 function win(self, how)
-	game:playMusic("Lords of the Sky.ogg")
+	game:playAndStopMusic("Lords of the Sky.ogg")
 
 	if how == "full" then world:gainAchievement("WIN_FULL", game.player)
 	elseif how == "aeryn-sacrifice" then world:gainAchievement("WIN_AERYN", game.player)

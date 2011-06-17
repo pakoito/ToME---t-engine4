@@ -1,5 +1,5 @@
 return {
-	file = "talents/ice.wav",
+	file = "talents/ice.ogg",
 	volume = 70,
 	fadeout = 700,
 }

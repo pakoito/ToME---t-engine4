@@ -18,6 +18,6 @@
 -- darkgod@te4.org
 
 load("/data/general/grids/basic.lua")
-load("/data/general/grids/forest.lua", function(e) if e.image == "terrain/grass.png" then e.image = "terrain/underground_floor.png" end end)
+load("/data/general/grids/forest.lua")
 load("/data/general/grids/underground.lua")
 

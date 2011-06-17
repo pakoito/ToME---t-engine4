@@ -25,27 +25,32 @@ module(..., package.seeall, class.make)
 --- Initializes
 function _M:init()
 	self.loaded_sounds = {}
+--	setmetatable(self.loaded_sounds, {__mode="v"})
 end
 
 function _M:loaded()
 	self.loaded_sounds = self.loaded_sounds or {}
+--	setmetatable(self.loaded_sounds, {__mode="v"})
 end
 
 function _M:playSound(name)
 	local s = self.loaded_sounds[name]
 	if not s then
-		local def
+		local def, ok
 		if fs.exists("/data/sound/"..name..".lua") then
 			local f = loadfile("/data/sound/"..name..".lua")
 			setfenv(f, setmetatable({}, {__index=_G}))
 			def = f()
 			print("[SOUND] loading from", "/data/sound/"..name..".lua", ":=:", "/data/sound/"..def.file, ":>")
-			def.file = core.sound.newSound("/data/sound/"..def.file)
-			print("[SOUND] :=>", def.file)
-			if def.volume and def.file then def.file:setVolume(def.volume) end
-		elseif fs.exists("/data/sound/"..name..".wav") then
-			def = {file = core.sound.newSound("/data/sound/"..name..".wav")}
-			print("[SOUND] loading from", "/data/sound/"..name..".wav", ":=:", def.file)
+			ok, def.sample = pcall(core.sound.load, "/data/sound/"..def.file)
+			if not ok then return end
+			print("[SOUND] :=>", def.sample)
+			if def.volume and def.sample then def.sample:volume(def.volume / 100) end
+		elseif fs.exists("/data/sound/"..name..".ogg") then
+			def = {}
+			ok, def.sample = pcall(core.sound.load, "/data/sound/"..name..".ogg")
+			if not ok then return end
+			print("[SOUND] loading from", "/data/sound/"..name..".ogg", ":=:", def.sample)
 		else
 			def = {}
 		end
@@ -53,7 +58,7 @@ function _M:playSound(name)
 		self.loaded_sounds[name] = def
 		s = self.loaded_sounds[name]
 	end
-	if not s or not s.file then return end
-	local chan = s.file:play(s.loop, s.timed)
-	if chan and s.fadeout then core.sound.channelFadeOut(chan, s.fadeout) end
+	if not s or not s.sample then return end
+	s.sample:play(s.loop)
+	return s
 end

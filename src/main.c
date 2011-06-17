@@ -881,7 +881,7 @@ int main(int argc, char *argv[])
 	SDL_EnableUNICODE(TRUE);
 	SDL_EnableKeyRepeat(300, 10);
 	TTF_Init();
-	if (Mix_OpenAudio(22050, AUDIO_S16, 2, 2048) == -1)
+/*	if (Mix_OpenAudio(22050, AUDIO_S16, 2, 2048) == -1)
 	{
 		no_sound = TRUE;
 		printf("Disabling sounds: %s", SDL_GetError());
@@ -892,6 +892,7 @@ int main(int argc, char *argv[])
 		Mix_Volume(-1, SDL_MIX_MAXVOLUME);
 		Mix_AllocateChannels(16);
 	}
+	*/
 
 	/* Sets up OpenGL double buffering */
 	resizeWindow(WIDTH, HEIGHT);
@@ -914,6 +915,7 @@ int main(int argc, char *argv[])
 	boot_lua(2, FALSE, argc, argv);
 
 	pass_command_args(argc, argv);
+	init_openal();
 
 	SDL_Event event;
 	while (!exit_engine)

@@ -1,4 +1,4 @@
 return {
-	file = "talents/fire.wav",
+	file = "talents/fire.ogg",
 	volume = 50,
 }

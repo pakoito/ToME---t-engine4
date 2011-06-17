@@ -27,39 +27,51 @@ function _M:init()
 	self.current_music = nil
 	self.next_music = nil
 	self.loaded_musics = {}
+	self.playing_musics = {}
 end
 
 function _M:loaded()
+	self.playing_musics = self.playing_musics or {}
 	self.loaded_musics = self.loaded_musics or {}
 end
 
-function _M:playMusic(name, loop)
-	name = name or self.current_music
-	if not name then return end
+function _M:playMusic(name)
+	if not name then
+		for name, data in pairs(self.playing_musics) do self:playMusic(name, data.loop) end
+		return
+	end
+	if self.loaded_musics[name] then return end
+	self.loaded_musics[name] = core.sound.load("/data/music/"..name)
 	local m = self.loaded_musics[name]
-	if not m then
-		self.loaded_musics[name] = core.sound.newMusic("/data/music/"..name)
-		m = self.loaded_musics[name]
-	end
 	if not m then return end
+
 	print("[MUSIC] playing", name, m, " :: current ? ", self.playing_music)
-	if self.current_music == name and self.playing_music then return end
-	if self.current_music then
-		core.sound.musicStop()
-	end
-	m:play(loop or -1)
-	self.current_music = name
-	self.playing_music = true
+	m:loop(true)
+	m:play()
+	self.playing_musics[name] = {loop=true}
 end
 
-function _M:stopMusic(fadeout)
-	if not self.loaded_musics[self.current_music] then return end
-	core.sound.musicStop(fadeout)
-	self.current_music = nil
-	self.playing_music = false
+function _M:stopMusic(name)
+	if not name then
+		for name, _ in pairs(self.loaded_musics) do self:stopMusic(name) end
+		return
+	end
+
+	if not self.loaded_musics[name] then return end
+	self.loaded_musics[name]:stop()
+	self.loaded_musics[name] = nil
+	self.playing_musics[name] = nil
+	print("[MUSIC] stoping", name)
+end
+
+function _M:playAndStopMusic(...)
+	local keep = table.reverse{...}
+	for name, _ in pairs(self.loaded_musics) do if not keep[name] then self:stopMusic(name) end end
+	for name, _ in pairs(keep) do if not self.loaded_musics[name] then self:playMusic(name) end end
 end
 
 function _M:volumeMusic(vol)
+do return end
 	if vol then
 		self:saveSettings("music", ("music.volume = %q\n"):format(vol))
 	end
@@ -68,22 +80,4 @@ end
 
 --- Called by the C core when the current music stops
 function _M:onMusicStop()
-end
-
-function _M:soundSystemStatus(act, init_setup)
-	if type(act) == "boolean" then
-		core.sound.soundSystemStatus(act)
-		if not init_setup then
-			self:saveSettings("sound", ("sound.enabled = %s\n"):format(act and "true" or "false"))
-			if act then
-				self:playMusic()
-			else
-				local o = self.current_music
-				self:stopMusic()
-				self.current_music = o
-			end
-		end
-	else
-		return core.sound.soundSystemStatus()
-	end
 end

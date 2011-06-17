@@ -148,9 +148,6 @@ function _M:run()
 	-- Ok everything is good to go, activate the game in the engine!
 	self:setCurrent()
 
-	-- Run the current music if any
-	self:playMusic()
-
 	-- Start time
 	self.real_starttime = os.time()
 
@@ -169,6 +166,9 @@ function _M:run()
 
 	self.hotkeys_display.actor = self.player
 	self.npcs_display.actor = self.player
+
+	-- Run the current music if any
+	self:onTickEnd(function() self:playMusic() end)
 end
 
 --- Checks if the current character is "tainted" by cheating
@@ -609,13 +609,19 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 		act.last_act_turn = math.floor(self.turn / (self.zone.wilderness and 1000 or 10))
 	end
 
+	local musics = {}
+	local keep_musics = false
 	if self.level.data.ambient_music then
 		if self.level.data.ambient_music ~= "last" then
-			self:playMusic(self.level.data.ambient_music)
+			if type(self.level.data.ambient_music) == "string" then musics[#musics+1] = self.level.data.ambient_music
+			elseif type(self.level.data.ambient_music) == "table" then for i, name in ipairs(self.level.data.ambient_music) do musics[#musics+1] = name end
+			elseif type(self.level.data.ambient_music) == "function" then for i, name in ipairs{self.level.data.ambient_music()} do musics[#musics+1] = name end
+			end
+		elseif self.level.data.ambient_music == "last" then
+			keep_musics = true
 		end
-	else
-		self:stopMusic()
 	end
+	if not keep_musics then self:playAndStopMusic(unpack(musics)) end
 
 	-- Update the minimap
 	self:setupMiniMap()

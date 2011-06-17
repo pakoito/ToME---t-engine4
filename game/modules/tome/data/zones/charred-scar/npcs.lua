@@ -132,7 +132,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_NPC_ORC_ATTACKER", define_as = "ORC_ATTACK",
-	name = "orc", color=colors.DARK_RED,
+	name = "orc warrior", color=colors.DARK_RED,
 	desc = [[A fierce soldier-orc.]],
 	level_range = {42, nil}, exp_worth = 1,
 	max_life = resolvers.rngavg(120,140),

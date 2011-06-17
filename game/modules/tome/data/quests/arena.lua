@@ -26,7 +26,7 @@ desc = function(self, who)
 end
 
 function win(self)
-	game:playMusic("Lords of the Sky.ogg")
+	game:playAndStopMusic("Lords of the Sky.ogg")
 
 	game.player.winner = "arena"
 	game:registerDialog(require("engine.dialogs.ShowText").new("Winner", "win", {playername=game.player.name, how="arena"}, game.w * 0.6))

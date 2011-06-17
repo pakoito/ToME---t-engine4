@@ -24,7 +24,6 @@
 #include "lualib.h"
 #include "auxiliar.h"
 #include "types.h"
-#include "music.h"
 #include "script.h"
 #include "useshader.h"
 #include "shaders.h"

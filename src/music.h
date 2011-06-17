@@ -21,7 +21,40 @@
 #ifndef _MUSIC_H_
 #define _MUSIC_H_
 
-extern bool no_sound;
+#if defined(MACOSX)
+#include <OpenAL/al.h>
+#include <OpenAL/alc.h>
+#include <Vorbis/vorbisfile.h>
+#elif defined(WIN32)
+#include <al.h>
+#include <alc.h>
+#include <vorbis/vorbisfile.h>
+#else
+#include <AL/al.h>
+#include <AL/alc.h>
+#include <vorbis/vorbisfile.h>
+#endif
+
+#include "SDL.h"
+#include "SDL_thread.h"
+#include "lua.h"
+#include "lauxlib.h"
+
+
+typedef struct Sound {
+	enum { SOUND_STATIC, SOUND_STREAMING } type;
+	char *path;
+	ALuint source;
+	ALuint buffers[2];
+	unsigned loop:1, loaderShouldExit:1;
+	SDL_Thread *loaderThread;
+	SDL_mutex *mutex; /*used by cond, held by the loader thread while it is working*/
+	SDL_cond *cond; /*used by the main thread to wake up the loader thread, and by the loader thread to signal the main thread that it is done*/
+	OggVorbis_File *vorbisFile;
+} Sound;
+
+int init_openal();
+void deinit_openal();
 
 #endif
 

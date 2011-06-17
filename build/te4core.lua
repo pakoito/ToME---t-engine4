@@ -44,7 +44,7 @@ project "TEngine"
         	links { "IOKit" }
 
 	configuration "windows"
-		links { "mingw32", "SDLmain", "SDL", "SDL_ttf", "SDL_image", "SDL_mixer", "OPENGL32", "GLU32", "wsock32" }
+		links { "mingw32", "SDLmain", "SDL", "SDL_ttf", "SDL_image", "openal", "OPENGL32", "GLU32", "wsock32" }
 		defines { [[TENGINE_HOME_PATH='"T-Engine"']], 'SELFEXE_WINDOWS'  }
 		prebuildcommands { "windres ../src/windows/icon.rc -O coff -o ../src/windows/icon.res" }
 		linkoptions { "../src/windows/icon.res" }
@@ -53,7 +53,7 @@ project "TEngine"
 
 
 	configuration "linux"
-		links { "dl", "SDL", "SDL_ttf", "SDL_image", "SDL_mixer", "GL", "GLU", "m", "pthread" }
+		links { "dl", "SDL", "SDL_ttf", "SDL_image", "openal", "vorbisfile", "GL", "GLU", "m", "pthread" }
 		defines { [[TENGINE_HOME_PATH='".t-engine"']], 'SELFEXE_LINUX' }
 
 	configuration {"Debug"}

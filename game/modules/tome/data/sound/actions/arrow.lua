@@ -1,4 +1,4 @@
 return {
-	file = "actions/arrow.wav",
+	file = "actions/arrow.ogg",
 	volume = 30,
 }
