@@ -19,6 +19,9 @@
 
 local grass_editer = {method="borders_def", def="grass_wm"}
 local sand_editer = {method="borders_def", def="sand"}
+local ice_editer = {method="borders_def", def="ice"}
+local mountain_editer = {method="borders_def", def="mountain"}
+local gold_mountain_editer = {method="borders_def", def="gold_mountain"}
 
 --------------------------------------------------------------------------------
 -- Grassland
@@ -34,6 +37,7 @@ newEntity{
 	nice_editer = grass_editer,
 }
 for i = 1, 12 do newEntity{ base = "PLAINS", define_as = "PLAINS_PATCH"..i, image = "terrain/grass"..(i<7 and "" or "2")..".png" } end
+
 newEntity{ base="PLAINS", define_as="CULTIVATION",
 	name="cultivated fields",
 	display=';', color=colors.GREEN, back_color=colors.DARK_GREEN,
@@ -79,6 +83,21 @@ newEntity{
 }
 for i = 1, 30 do newEntity{ base="OLD_FOREST", define_as = "OLD_FOREST"..i, image = "terrain/grass.png", add_displays = class:makeTrees("terrain/tree_alpha", 13, 9, colors.GREY)} end
 
+--------------------------------------------------------------------------------
+-- Desolation
+--------------------------------------------------------------------------------
+
+newEntity{
+	define_as = "CHARRED_SCAR",
+	type = "floor", subtype = "lava",
+	name = "Charred Scar", image = "terrain/lava_floor.png",
+	display='.', color=colors.WHITE, back_color=colors.LIGHT_DARK,
+	nice_tiler = { method="replace", base={"CHARRED_SCAR_PATCH", 100, 1, 16}},
+	can_encounter=true, equilibrium_level=-10,
+--	nice_editer = grass_editer,
+}
+for i = 1, 16 do newEntity{ base = "CHARRED_SCAR", define_as = "CHARRED_SCAR_PATCH"..i, image = "terrain/lava/lava_floor"..i..".png" } end
+
 newEntity{
 	define_as = "BURNT_FOREST",
 	type = "wall", subtype = "burnt",
@@ -99,15 +118,26 @@ for i = 1, 20 do newEntity{ base="BURNT_FOREST", define_as = "BURNT_FOREST"..i, 
 
 newEntity{
 	define_as = "POLAR_CAP",
-	type = "floor", subtype = "snow",
+	type = "floor", subtype = "ice",
 	name = "polar cap", image = "terrain/frozen_ground.png",
 	display = '.', color=colors.LIGHT_BLUE, back_color=colors.WHITE,
 	can_encounter=true, equilibrium_level=-10,
+	nice_editer = ice_editer,
 }
+newEntity{
+	define_as = "FROZEN_SEA",
+	type = "floor", subtype = "ice",
+	name = "frozen sea", image = "terrain/water_grass_5_1.png",
+	display = ';', color=colors.LIGHT_BLUE, back_color=colors.WHITE,
+	can_encounter=true, equilibrium_level=-10,
+	nice_editer = ice_editer,
+	nice_tiler = { method="replace", base={"FROZEN_SEA", 100, 1, 4}},
+}
+for i = 1, 4 do newEntity{ base="FROZEN_SEA", define_as = "FROZEN_SEA"..i, add_mos = {{image = "terrain/ice/frozen_ground_5_0"..i..".png"}}} end
 
 newEntity{
 	define_as = "COLD_FOREST",
-	type = "wall", subtype = "snow",
+	type = "wall", subtype = "ice",
 	name = "cold forest", image = "terrain/tree_dark_snow1.png",
 	display = '#', color=colors.WHITE, back_color=colors.LIGHT_UMBER,
 	always_remember = true,
@@ -165,43 +195,10 @@ newEntity{
 	does_block_move = true,
 	block_sight = true,
 	air_level = -20,
-	nice_tiler = { method="mountain3d",
-		base={id.."MOUNTAIN_5", 100, 1, 6},
-		wall8={id.."MOUNTAIN_8", 100, 1, 6}, wall87={id.."MOUNTAIN_8", 100, 1, 6}, wall88={id.."MOUNTAIN_8", 100, 1, 6}, wall89={id.."MOUNTAIN_8", 100, 1, 6},
-		wall2={id.."MOUNTAIN_2", 100, 1, 6}, wall21={id.."MOUNTAIN_2", 100, 1, 6}, wall22={id.."MOUNTAIN_2", 100, 1, 6}, wall23={id.."MOUNTAIN_2", 100, 1, 6},
-		wall4={id.."MOUNTAIN_4", 100, 1, 6}, wall47={id.."MOUNTAIN_4", 100, 1, 6}, wall44={id.."MOUNTAIN_4", 100, 1, 6}, wall41={id.."MOUNTAIN_4", 100, 1, 6},
-		wall6={id.."MOUNTAIN_6", 100, 1, 6}, wall69={id.."MOUNTAIN_6", 100, 1, 6}, wall66={id.."MOUNTAIN_6", 100, 1, 6}, wall63={id.."MOUNTAIN_6", 100, 1, 6},
-		wall1={id.."MOUNTAIN_1", 100, 1, 6}, wall3={id.."MOUNTAIN_3", 100, 1, 6}, wall7={id.."MOUNTAIN_7", 100, 1, 6}, wall9={id.."MOUNTAIN_9", 100, 1, 6},
-		wall11={id.."MOUNTAIN_1", 100, 1, 6}, wall33={id.."MOUNTAIN_3", 100, 1, 6}, wall77={id.."MOUNTAIN_7", 100, 1, 6}, wall98={id.."MOUNTAIN_9", 100, 1, 6},
-		inner_wall1={id.."MOUNTAIN_1I", 100, 1, 6}, inner_wall3={id.."MOUNTAIN_3I", 100, 1, 6}, inner_wall7={id.."MOUNTAIN_7I", 100, 1, 6}, inner_wall9={id.."MOUNTAIN_9I", 100, 1, 6},
-		pillar={id.."MOUNTAIN_SINGLE", 100, 1, 6},
-		pillar4={id.."MOUNTAIN_PILLAR4", 100, 1, 6}, pillar6={id.."MOUNTAIN_PILLAR6", 100, 1, 6}, pillar2={id.."MOUNTAIN_PILLAR2", 100, 1, 6}, pillar8={id.."MOUNTAIN_PILLAR8", 100, 1, 6},
-		pillar82={id.."MOUNTAIN_PILLAR82", 100, 1, 6}, pillar46={id.."MOUNTAIN_PILLAR46", 100, 1, 6},
-	},
+	nice_editer = mountain_editer,
+	nice_tiler = { method="replace", base={id.."MOUNTAIN_WALL", 70, 1, 6} },
 }
-
-for i = 1, 6 do
-newEntity{base=id.."MOUNTAIN", define_as = id.."MOUNTAIN_5"..i, image="terrain/mountain5_"..i..".png", z=2}
-newEntity{base=id.."MOUNTAIN", define_as = id.."MOUNTAIN_8"..i, image="terrain/mountain5_"..i..".png", z=2, add_displays = {class.new{z=18, display_y=-1, image="terrain/mountain8.png"}}}
-newEntity{base=id.."MOUNTAIN", define_as = id.."MOUNTAIN_2"..i, image="terrain/mountain5_"..i..".png", z=2, add_mos = {{display_y=1, image="terrain/mountain2.png"}}}
-newEntity{base=id.."MOUNTAIN", define_as = id.."MOUNTAIN_4"..i, image="terrain/mountain5_"..i..".png", z=2, add_mos = {{display_x=-1, image="terrain/mountain4.png"}}}
-newEntity{base=id.."MOUNTAIN", define_as = id.."MOUNTAIN_6"..i, image="terrain/mountain5_"..i..".png", z=2, add_mos = {{display_x=1, image="terrain/mountain6.png"}}}
-newEntity{base=id.."MOUNTAIN", define_as = id.."MOUNTAIN_7"..i, image="terrain/mountain5_"..i..".png", z=2, add_displays = {class.new{z=18, display_y=-1, display_x=-1, image="terrain/mountain7.png", add_mos = {{display_y=-1, image="terrain/mountain8.png"}, {display_x=-1, image="terrain/mountain4.png"}}}}}
-newEntity{base=id.."MOUNTAIN", define_as = id.."MOUNTAIN_9"..i, image="terrain/mountain5_"..i..".png", z=2, add_displays = {class.new{z=18, display_y=-1, display_x=1, image="terrain/mountain9.png", add_mos = {{display_y=-1, image="terrain/mountain8.png"}, {display_x=1, image="terrain/mountain6.png"}}}}}
-newEntity{base=id.."MOUNTAIN", define_as = id.."MOUNTAIN_1"..i, image="terrain/mountain5_"..i..".png", z=2, add_displays = {class.new{display_y=1, z=3, display_x=-1, image="terrain/mountain1.png", add_mos = {{display_y=1, image="terrain/mountain2.png"}, {display_x=-1, image="terrain/mountain4.png"}}}}}
-newEntity{base=id.."MOUNTAIN", define_as = id.."MOUNTAIN_3"..i, image="terrain/mountain5_"..i..".png", z=2, add_displays = {class.new{display_y=1, z=3, display_x=1, image="terrain/mountain3.png", add_mos = {{display_y=1, image="terrain/mountain2.png"}, {display_x=1, image="terrain/mountain6.png"}}}}}
-newEntity{base=id.."MOUNTAIN", define_as = id.."MOUNTAIN_1I"..i, image="terrain/mountain5_"..i..".png", z=2, add_displays = {class.new{z=18, display_y=-1, display_x=1, image="terrain/mountain1i.png"}}}
-newEntity{base=id.."MOUNTAIN", define_as = id.."MOUNTAIN_3I"..i, image="terrain/mountain5_"..i..".png", z=2, add_displays = {class.new{z=18, display_y=-1, display_x=-1, image="terrain/mountain3i.png"}}}
-newEntity{base=id.."MOUNTAIN", define_as = id.."MOUNTAIN_7I"..i, image="terrain/mountain5_"..i..".png", z=2, add_mos = {{display_y=1, display_x=1, image="terrain/mountain7i.png"}}}
-newEntity{base=id.."MOUNTAIN", define_as = id.."MOUNTAIN_9I"..i, image="terrain/mountain5_"..i..".png", z=2, add_mos = {{display_y=1, display_x=-1, image="terrain/mountain9i.png"}}}
-newEntity{base=id.."MOUNTAIN", define_as = id.."MOUNTAIN_SINGLE"..i, image="terrain/mountain5_"..i..".png", z=2, add_displays = {class.new{z=18, display_y=-1, display_x=-1, image="terrain/mountain7.png", add_mos = {{display_y=-1, image="terrain/mountain8.png"}, {display_x=1, display_y=-1, image="terrain/mountain9.png"}}}, class.new{display_y=1, display_x=-1, image="terrain/mountain1.png", add_mos = {{display_y=1, image="terrain/mountain2.png"}, {display_x=1, display_y=1, image="terrain/mountain3.png"}, {display_x=-1, image="terrain/mountain4.png"}, {display_x=1, image="terrain/mountain6.png"}}}}}
-newEntity{base=id.."MOUNTAIN", define_as = id.."MOUNTAIN_PILLAR4"..i, image="terrain/mountain5_"..i..".png", z=2, add_displays = {class.new{z=18, display_y=-1, display_x=-1, image="terrain/mountain7.png", add_mos = {{display_y=-1, image="terrain/mountain8.png"}}}, class.new{display_y=1, display_x=-1, image="terrain/mountain1.png", add_mos = {{display_y=1, image="terrain/mountain2.png"}, {display_x=-1, image="terrain/mountain4.png"}}}}}
-newEntity{base=id.."MOUNTAIN", define_as = id.."MOUNTAIN_PILLAR6"..i, image="terrain/mountain5_"..i..".png", z=2, add_displays = {class.new{z=18, display_y=-1, display_x=1, image="terrain/mountain9.png", add_mos = {{display_y=-1, image="terrain/mountain8.png"}}}, class.new{display_y=1, display_x=1, image="terrain/mountain3.png", add_mos = {{display_y=1, image="terrain/mountain2.png"}, {display_x=1, image="terrain/mountain6.png"}}}}}
-newEntity{base=id.."MOUNTAIN", define_as = id.."MOUNTAIN_PILLAR46"..i, image="terrain/mountain5_"..i..".png", z=2, add_displays = {class.new{z=18, display_y=-1, image="terrain/mountain8.png"}, class.new{display_y=1, image="terrain/mountain2.png"}}}
-newEntity{base=id.."MOUNTAIN", define_as = id.."MOUNTAIN_PILLAR8"..i, image="terrain/mountain5_"..i..".png", z=2, add_displays = {class.new{z=18, display_y=-1, display_x=-1, image="terrain/mountain7.png", add_mos = {{display_y=-1, image="terrain/mountain8.png"}, {display_x=1, display_y=-1, image="terrain/mountain9.png"}}}, class.new{display_x=-1, image="terrain/mountain4.png", add_mos = {{display_x=1, image="terrain/mountain6.png"}}}}}
-newEntity{base=id.."MOUNTAIN", define_as = id.."MOUNTAIN_PILLAR2"..i, image="terrain/mountain5_"..i..".png", z=2, add_displays = {class.new{z=18, display_y=1, display_x=-1, image="terrain/mountain1.png", add_mos = {{display_y=1, image="terrain/mountain2.png"}, {display_x=1, display_y=1, image="terrain/mountain3.png"}}}, class.new{display_x=-1, image="terrain/mountain4.png", add_mos = {{display_x=1, image="terrain/mountain6.png"}}}}}
-newEntity{base=id.."MOUNTAIN", define_as = id.."MOUNTAIN_PILLAR82"..i, image="terrain/mountain5_"..i..".png", z=2, add_displays = {class.new{display_x=-1, z=3, image="terrain/mountain4.png", add_mos = {{display_x=1, image="terrain/mountain6.png"}}}}}
-end
+for i = 1, 6 do newEntity{ base=id.."MOUNTAIN", define_as = id.."MOUNTAIN_WALL"..i, image = "terrain/mountain5_"..i..".png"} end
 end
 
 newEntity{
@@ -215,43 +212,10 @@ newEntity{
 	block_sense = true,
 	block_esp = true,
 	air_level = -20,
-	nice_tiler = { method="mountain3d",
-		base={"GOLDENMOUNTAIN_5", 100, 1, 6},
-		wall8={"GOLDENMOUNTAIN_8", 100, 1, 6}, wall87={"GOLDENMOUNTAIN_8", 100, 1, 6}, wall88={"GOLDENMOUNTAIN_8", 100, 1, 6}, wall89={"GOLDENMOUNTAIN_8", 100, 1, 6},
-		wall2={"GOLDENMOUNTAIN_2", 100, 1, 6}, wall21={"GOLDENMOUNTAIN_2", 100, 1, 6}, wall22={"GOLDENMOUNTAIN_2", 100, 1, 6}, wall23={"GOLDENMOUNTAIN_2", 100, 1, 6},
-		wall4={"GOLDENMOUNTAIN_4", 100, 1, 6}, wall47={"GOLDENMOUNTAIN_4", 100, 1, 6}, wall44={"GOLDENMOUNTAIN_4", 100, 1, 6}, wall41={"GOLDENMOUNTAIN_4", 100, 1, 6},
-		wall6={"GOLDENMOUNTAIN_6", 100, 1, 6}, wall69={"GOLDENMOUNTAIN_6", 100, 1, 6}, wall66={"GOLDENMOUNTAIN_6", 100, 1, 6}, wall63={"GOLDENMOUNTAIN_6", 100, 1, 6},
-		wall1={"GOLDENMOUNTAIN_1", 100, 1, 6}, wall3={"GOLDENMOUNTAIN_3", 100, 1, 6}, wall7={"GOLDENMOUNTAIN_7", 100, 1, 6}, wall9={"GOLDENMOUNTAIN_9", 100, 1, 6},
-		wall11={"GOLDENMOUNTAIN_1", 100, 1, 6}, wall33={"GOLDENMOUNTAIN_3", 100, 1, 6}, wall77={"GOLDENMOUNTAIN_7", 100, 1, 6}, wall98={"GOLDENMOUNTAIN_9", 100, 1, 6},
-		inner_wall1={"GOLDENMOUNTAIN_1I", 100, 1, 6}, inner_wall3={"GOLDENMOUNTAIN_3I", 100, 1, 6}, inner_wall7={"GOLDENMOUNTAIN_7I", 100, 1, 6}, inner_wall9={"GOLDENMOUNTAIN_9I", 100, 1, 6},
-		pillar={"GOLDENMOUNTAIN_SINGLE", 100, 1, 6},
-		pillar4={"GOLDENMOUNTAIN_PILLAR4", 100, 1, 6}, pillar6={"GOLDENMOUNTAIN_PILLAR6", 100, 1, 6}, pillar2={"GOLDENMOUNTAIN_PILLAR2", 100, 1, 6}, pillar8={"GOLDENMOUNTAIN_PILLAR8", 100, 1, 6},
-		pillar82={"GOLDENMOUNTAIN_PILLAR82", 100, 1, 6}, pillar46={"GOLDENMOUNTAIN_PILLAR46", 100, 1, 6},
-	},
+	nice_editer = gold_mountain_editer,
+	nice_tiler = { method="replace", base={"GOLDEN_MOUNTAIN_WALL", 70, 1, 6} },
 }
-
-for i = 1, 6 do
-newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_5"..i, image="terrain/golden_mountain5_"..i..".png"}
-newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_8"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{z=18, display_y=-1, image="terrain/golden_mountain8.png"}}}
-newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_2"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{display_y=1, image="terrain/golden_mountain2.png"}}}
-newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_4"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{display_x=-1, image="terrain/golden_mountain4.png"}}}
-newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_6"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{display_x=1, image="terrain/golden_mountain6.png"}}}
-newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_7"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{z=18, display_y=-1, display_x=-1, image="terrain/golden_mountain7.png", add_mos = {{display_y=-1, image="terrain/golden_mountain8.png"}, {display_x=-1, image="terrain/golden_mountain4.png"}}}}}
-newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_9"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{z=18, display_y=-1, display_x=1, image="terrain/golden_mountain9.png", add_mos = {{display_y=-1, image="terrain/golden_mountain8.png"}, {display_x=1, image="terrain/golden_mountain6.png"}}}}}
-newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_1"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{display_y=1, display_x=-1, image="terrain/golden_mountain1.png", add_mos = {{display_y=1, image="terrain/golden_mountain2.png"}, {display_x=-1, image="terrain/golden_mountain4.png"}}}}}
-newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_3"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{display_y=1, display_x=1, image="terrain/golden_mountain3.png", add_mos = {{display_y=1, image="terrain/golden_mountain2.png"}, {display_x=1, image="terrain/golden_mountain6.png"}}}}}
-newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_1I"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{z=18, display_y=-1, display_x=1, image="terrain/golden_mountain1i.png"}}}
-newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_3I"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{z=18, display_y=-1, display_x=-1, image="terrain/golden_mountain3i.png"}}}
-newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_7I"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{display_y=1, display_x=1, image="terrain/golden_mountain7i.png"}}}
-newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_9I"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{display_y=1, display_x=-1, image="terrain/golden_mountain9i.png"}}}
-newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_SINGLE"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{z=18, display_y=-1, display_x=-1, image="terrain/golden_mountain7.png", add_mos = {{display_y=-1, image="terrain/golden_mountain8.png"}, {display_x=1, display_y=-1, image="terrain/golden_mountain9.png"}}}, class.new{display_y=1, display_x=-1, image="terrain/golden_mountain1.png", add_mos = {{display_y=1, image="terrain/golden_mountain2.png"}, {display_x=1, display_y=1, image="terrain/golden_mountain3.png"}, {display_x=-1, image="terrain/golden_mountain4.png"}, {display_x=1, image="terrain/golden_mountain6.png"}}}}}
-newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_PILLAR4"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{z=18, display_y=-1, display_x=-1, image="terrain/golden_mountain7.png", add_mos = {{display_y=-1, image="terrain/golden_mountain8.png"}}}, class.new{display_y=1, display_x=-1, image="terrain/golden_mountain1.png", add_mos = {{display_y=1, image="terrain/golden_mountain2.png"}, {display_x=-1, image="terrain/golden_mountain4.png"}}}}}
-newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_PILLAR6"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{z=18, display_y=-1, display_x=1, image="terrain/golden_mountain9.png", add_mos = {{display_y=-1, image="terrain/golden_mountain8.png"}}}, class.new{display_y=1, display_x=1, image="terrain/golden_mountain3.png", add_mos = {{display_y=1, image="terrain/golden_mountain2.png"}, {display_x=1, image="terrain/golden_mountain6.png"}}}}}
-newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_PILLAR46"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{z=18, display_y=-1, image="terrain/golden_mountain8.png"}, class.new{display_y=1, image="terrain/golden_mountain2.png"}}}
-newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_PILLAR8"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{z=18, display_y=-1, display_x=-1, image="terrain/golden_mountain7.png", add_mos = {{display_y=-1, image="terrain/golden_mountain8.png"}, {display_x=1, display_y=-1, image="terrain/golden_mountain9.png"}}}, class.new{display_x=-1, image="terrain/golden_mountain4.png", add_mos = {{display_x=1, image="terrain/golden_mountain6.png"}}}}}
-newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_PILLAR2"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{z=18, display_y=1, display_x=-1, image="terrain/golden_mountain1.png", add_mos = {{display_y=1, image="terrain/golden_mountain2.png"}, {display_x=1, display_y=1, image="terrain/golden_mountain3.png"}}}, class.new{display_x=-1, image="terrain/golden_mountain4.png", add_mos = {{display_x=1, image="terrain/golden_mountain6.png"}}}}}
-newEntity{base="GOLDEN_MOUNTAIN", define_as = "GOLDENMOUNTAIN_PILLAR82"..i, image="terrain/golden_mountain5_"..i..".png", add_displays = {class.new{display_x=-1, image="terrain/golden_mountain4.png", add_mos = {{display_x=1, image="terrain/golden_mountain6.png"}}}}}
-end
+for i = 1, 6 do newEntity{ base="GOLDEN_MOUNTAIN", define_as = "GOLDEN_MOUNTAIN_WALL"..i, image = "terrain/golden_mountain5_"..i..".png"} end
 
 
 --------------------------------------------------------------------------------
@@ -339,4 +303,102 @@ newEntity{ base="TOWN", define_as = "TOWN_IRON_COUNCIL",
 	name = "Iron Council (Town)", add_mos = {{image="terrain/town1.png"}},
 	desc = "Heart of the dwarven Empire",
 	change_zone="town-iron-council",
+}
+
+--------------------------------------------------------------------------------
+-- Zones
+--------------------------------------------------------------------------------
+newEntity{ base="PLAINS", define_as = "ZONE_PLAINS", change_level=1, display='>', color=colors.VIOLET, notice = true, nice_tiler=false }
+newEntity{ base="DESERT", define_as = "ZONE_DESERT", change_level=1, display='>', color=colors.VIOLET, notice = true, nice_tiler=false }
+
+newEntity{ base="ZONE_PLAINS", define_as = "MAZE",
+	name="A gate into the Maze",
+	color={r=0, g=255, b=255},
+	add_displays={class.new{image="terrain/dungeon_entrance02.png", z=4}},
+	change_zone="maze",
+}
+
+newEntity{ base="ZONE_PLAINS", define_as = "TROLLMIRE",
+	name="Passageway into the Trollmire",
+	color={r=0, g=255, b=0},
+	add_displays={class.new{image="terrain/road_going_right_01.png", display_w=2}},
+	change_zone="trollmire",
+}
+
+newEntity{ base="ZONE_PLAINS", define_as = "OLD_FOREST_ZONE",
+	name="A path into the Old Forest",
+	color={r=0, g=180, b=0},
+	add_displays={class.new{image="terrain/road_going_right_01.png", display_w=2}},
+	change_zone="old-forest",
+}
+
+newEntity{ base="ZONE_PLAINS", define_as = "NORGOS_LAIR",
+	name="Passageway into Norgos' Lair",
+	color={r=0, g=180, b=0},
+	add_displays={class.new{image="terrain/road_going_left_01.png", display_w=2, display_x=-1, z=4}},
+	change_zone="norgos-lair",
+}
+
+newEntity{ base="ZONE_PLAINS", define_as = "DAIKARA_ZONE",
+	name="Passageway into the Daikara",
+	color=colors.UMBER,
+	add_displays={mod.class.Grid.new{image="terrain/road_upwards_01.png", display_h=2, display_y=-1}},
+	change_zone="daikara",
+}
+
+newEntity{ base="ZONE_PLAINS", define_as = "DREADFELL",
+	name="The entry to the old tower of Dreadfell",
+	color={r=0, g=255, b=255},
+	add_mos={{image="terrain/tower_entrance02.png"}}, add_displays={class.new{image="terrain/tower_entrance_up02.png", z=18, display_y=-1}},
+	change_zone="dreadfell",
+}
+
+newEntity{ base="ZONE_PLAINS", define_as = "KOR_PUL",
+	name="Ruins of Kor'Pul",
+	color={r=0, g=255, b=255},
+	add_displays={class.new{image="terrain/ruin_tower01.png", display_h=2, display_y=-1}},
+	change_zone="ruins-kor-pul",
+}
+
+newEntity{ base="ZONE_PLAINS", define_as = "HALFLING_RUINS",
+	name="Very old halfling ruins",
+	color={r=0, g=255, b=255},
+	add_displays={class.new{image="terrain/road_going_left_01.png", display_w=2, display_x=-1, z=4}},
+	change_zone="halfling-ruins",
+}
+
+newEntity{ base="ZONE_PLAINS", define_as = "SCINTILLATING_CAVES",
+	name="Entrance to the Scintillating Caves",
+	color={r=0, g=255, b=255},
+	add_mos={{image="terrain/cave_entrance02.png"}},
+	change_zone="scintillating-caves",
+}
+
+newEntity{ base="ZONE_PLAINS", define_as = "RHALOREN_CAMP",
+	name="Stairway into the Rhaloren Camp",
+	color={r=0, g=255, b=255},
+	add_mos={{image="terrain/cave_entrance02.png"}},
+	change_zone="rhaloren-camp",
+}
+
+newEntity{ base="ZONE_PLAINS", define_as = "HEART_GLOOM",
+	name="Way into the heart of the gloom",
+	color={r=0, g=255, b=255},
+	add_mos={{image="terrain/cave_entrance_closed01.png"}},
+	change_zone="heart-gloom",
+}
+
+newEntity{ base="ZONE_DESERT", define_as = "SANDWORM_LAIR",
+	name="A mysterious hole in the beach",
+	color={r=200, g=255, b=55},
+	add_mos={{image="terrain/ladder_down.png"}},
+	change_zone="sandworm-lair",
+}
+
+newEntity{ base="CHARRED_SCAR", define_as = "CHARRED_SCAR_VOLCANO",
+	name="Charred Scar Volcano",
+	color={r=200, g=255, b=55},
+	display='>', color=colors.RED, back_color=colors.LIGHT_DARK,
+	image="terrain/volcano1.png",
+	notice = true, change_level=1, change_zone="charred-scar",
 }

@@ -59,7 +59,7 @@ function _M:edit(i, j, e)
 	self.edits[i] = self.edits[i] or {}
 	self.edits[i][j] = self.edits[i][j] or {}
 	local ee = self.edits[i][j]
-	ee[#ee+1] = {add_display=e.add_display, add_mos=e.add_mos, min=e.min, max=e.max}
+	ee[#ee+1] = {add_displays=e.add_displays, add_mos=e.add_mos, image=e.image, min=e.min, max=e.max}
 end
 
 function _M:handle(level, i, j)
@@ -79,7 +79,7 @@ function _M:replaceAll(level)
 	for i, jj in pairs(self.edits) do for j, ee in pairs(jj) do
 		local g = level.map(i, j, Map.TERRAIN)
 		local cloned = false
-		if not g.force_clone then g = g:clone() g.force_clone = true cloned = true end
+		if not g.force_clone then g = g:cloneFull() g.force_clone = true cloned = true end
 
 		-- Edit the first add_display entity, or add a dummy if none
 		if not g.__edit_d then
@@ -95,11 +95,18 @@ function _M:replaceAll(level)
 				gd.add_mos = gd.add_mos or {}
 				local mos = gd.add_mos
 				for i = 1, #e.add_mos do
-					mos[#mos+1] = e.add_mos[i]
+					mos[#mos+1] = table.clone(e.add_mos[i])
 					mos[#mos].image = mos[#mos].image:format(rng.range(e.min, e.max))
 				end
 				gd._mo = nil
 			end
+			if e.add_displays then
+				g.add_displays = g.add_displays or {}
+				for i = 1, #e.add_displays do
+					 g.add_displays[#g.add_displays+1] = require(g.__CLASSNAME).new(e.add_displays[i])
+				end
+			end
+			if e.image then g.image = e.image end
 		end
 
 		g._mo = nil
@@ -274,22 +281,6 @@ grass = { method="borders", type="grass",
 	default7i={add_mos={{image="terrain/grass/grass_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=3},
 	default9i={add_mos={{image="terrain/grass/grass_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=3},
 },
-sand = { method="borders", type="sand", forbid={grass=true},
-	default8={add_mos={{image="terrain/sand/sand_2_%02d.png", display_y=-1}}, min=1, max=5},
-	default2={add_mos={{image="terrain/sand/sand_8_%02d.png", display_y=1}}, min=1, max=5},
-	default4={add_mos={{image="terrain/sand/sand_6_%02d.png", display_x=-1}}, min=1, max=5},
-	default6={add_mos={{image="terrain/sand/sand_4_%02d.png", display_x=1}}, min=1, max=4},
-
-	default1={add_mos={{image="terrain/sand/sand_9_%02d.png", display_x=-1, display_y=1}}, min=1, max=3},
-	default3={add_mos={{image="terrain/sand/sand_7_%02d.png", display_x=1, display_y=1}}, min=1, max=3},
-	default7={add_mos={{image="terrain/sand/sand_3_%02d.png", display_x=-1, display_y=-1}}, min=1, max=3},
-	default9={add_mos={{image="terrain/sand/sand_1_%02d.png", display_x=1, display_y=-1}}, min=1, max=3},
-
-	default1i={add_mos={{image="terrain/sand/sand_inner_1_%02d.png", display_x=-1, display_y=1}}, min=1, max=3},
-	default3i={add_mos={{image="terrain/sand/sand_inner_3_%02d.png", display_x=1, display_y=1}}, min=1, max=3},
-	default7i={add_mos={{image="terrain/sand/sand_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=3},
-	default9i={add_mos={{image="terrain/sand/sand_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=3},
-},
 grass_wm = { method="borders", type="grass",
 	default8={add_mos={{image="terrain/grass/grass_2_%02d.png", display_y=-1}}, min=1, max=5},
 	default2={add_mos={{image="terrain/grass/grass_8_%02d.png", display_y=1}}, min=1, max=5},
@@ -320,21 +311,86 @@ grass_wm = { method="borders", type="grass",
 	water3i={add_mos={{image="terrain/grass/grass_inner_3_%02d.png", display_x=1, display_y=1}}, min=1, max=1},
 	water7i={add_mos={{image="terrain/grass/grass_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=1},
 	water9i={add_mos={{image="terrain/grass/grass_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=1},
-}
+},
+sand = { method="borders", type="sand", forbid={grass=true},
+	default8={add_mos={{image="terrain/sand/sand_2_%02d.png", display_y=-1}}, min=1, max=5},
+	default2={add_mos={{image="terrain/sand/sand_8_%02d.png", display_y=1}}, min=1, max=5},
+	default4={add_mos={{image="terrain/sand/sand_6_%02d.png", display_x=-1}}, min=1, max=5},
+	default6={add_mos={{image="terrain/sand/sand_4_%02d.png", display_x=1}}, min=1, max=4},
+
+	default1={add_mos={{image="terrain/sand/sand_9_%02d.png", display_x=-1, display_y=1}}, min=1, max=3},
+	default3={add_mos={{image="terrain/sand/sand_7_%02d.png", display_x=1, display_y=1}}, min=1, max=3},
+	default7={add_mos={{image="terrain/sand/sand_3_%02d.png", display_x=-1, display_y=-1}}, min=1, max=3},
+	default9={add_mos={{image="terrain/sand/sand_1_%02d.png", display_x=1, display_y=-1}}, min=1, max=3},
+
+	default1i={add_mos={{image="terrain/sand/sand_inner_1_%02d.png", display_x=-1, display_y=1}}, min=1, max=3},
+	default3i={add_mos={{image="terrain/sand/sand_inner_3_%02d.png", display_x=1, display_y=1}}, min=1, max=3},
+	default7i={add_mos={{image="terrain/sand/sand_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=3},
+	default9i={add_mos={{image="terrain/sand/sand_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=3},
+},
+ice = { method="borders", type="ice", forbid={grass=true, sand=true},
+	default8={add_mos={{image="terrain/ice/frozen_ground_2_%02d.png", display_y=-1}}, min=1, max=4},
+	default2={add_mos={{image="terrain/ice/frozen_ground_8_%02d.png", display_y=1}}, min=1, max=3},
+	default4={add_mos={{image="terrain/ice/frozen_ground_6_%02d.png", display_x=-1}}, min=1, max=4},
+	default6={add_mos={{image="terrain/ice/frozen_ground_4_%02d.png", display_x=1}}, min=1, max=4},
+
+	default1={add_mos={{image="terrain/ice/frozen_ground_9_%02d.png", display_x=-1, display_y=1}}, min=1, max=2},
+	default3={add_mos={{image="terrain/ice/frozen_ground_7_%02d.png", display_x=1, display_y=1}}, min=1, max=2},
+	default7={add_mos={{image="terrain/ice/frozen_ground_3_%02d.png", display_x=-1, display_y=-1}}, min=1, max=2},
+	default9={add_mos={{image="terrain/ice/frozen_ground_1_%02d.png", display_x=1, display_y=-1}}, min=1, max=2},
+
+	default1i={add_mos={{image="terrain/ice/frozen_ground_inner_1_%02d.png", display_x=-1, display_y=1}}, min=1, max=2},
+	default3i={add_mos={{image="terrain/ice/frozen_ground_inner_3_%02d.png", display_x=1, display_y=1}}, min=1, max=2},
+	default7i={add_mos={{image="terrain/ice/frozen_ground_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=2},
+	default9i={add_mos={{image="terrain/ice/frozen_ground_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=2},
+},
+mountain = { method="borders", type="mountain", forbid={}, use_type=true,
+	default8={add_displays={{image="terrain/mountain8.png", display_y=-1, z=16}}, min=1, max=1},
+	default2={add_mos={{image="terrain/mountain2.png", display_y=1}}, min=1, max=1},
+	default4={add_mos={{image="terrain/mountain4.png", display_x=-1}}, min=1, max=1},
+	default6={add_mos={{image="terrain/mountain6.png", display_x=1}}, min=1, max=1},
+
+	default1={add_mos={{image="terrain/mountain9i.png", display_x=-1, display_y=1}}, min=1, max=1},
+	default3={add_mos={{image="terrain/mountain7i.png", display_x=1, display_y=1}}, min=1, max=1},
+	default7={add_mos={{image="terrain/mountain3i.png", display_x=-1, display_y=-1}}, min=1, max=1},
+	default9={add_mos={{image="terrain/mountain1i.png", display_x=1, display_y=-1}}, min=1, max=1},
+
+	default1i={add_mos={{image="terrain/mountain1.png", display_x=-1, display_y=1}}, min=1, max=1},
+	default3i={add_mos={{image="terrain/mountain3.png", display_x=1, display_y=1}}, min=1, max=1},
+	default7i={add_displays={{image="terrain/mountain7.png", display_x=-1, display_y=-1, z=17}}, min=1, max=1},
+	default9i={add_displays={{image="terrain/mountain9.png", display_x=1, display_y=-1, z=18}}, min=1, max=1},
+},
+gold_mountain = { method="borders", type="gold_mountain", forbid={}, use_type=true,
+	default8={add_displays={{image="terrain/golden_mountain8.png", display_y=-1, z=16}}, min=1, max=1},
+	default2={add_mos={{image="terrain/golden_mountain2.png", display_y=1}}, min=1, max=1},
+	default4={add_mos={{image="terrain/golden_mountain4.png", display_x=-1}}, min=1, max=1},
+	default6={add_mos={{image="terrain/golden_mountain6.png", display_x=1}}, min=1, max=1},
+
+	default1={add_mos={{image="terrain/golden_mountain9i.png", display_x=-1, display_y=1}}, min=1, max=1},
+	default3={add_mos={{image="terrain/golden_mountain7i.png", display_x=1, display_y=1}}, min=1, max=1},
+	default7={add_mos={{image="terrain/golden_mountain3i.png", display_x=-1, display_y=-1}}, min=1, max=1},
+	default9={add_mos={{image="terrain/vmountain1i.png", display_x=1, display_y=-1}}, min=1, max=1},
+
+	default1i={add_mos={{image="terrain/golden_mountain1.png", display_x=-1, display_y=1}}, min=1, max=1},
+	default3i={add_mos={{image="terrain/golden_mountain3.png", display_x=1, display_y=1}}, min=1, max=1},
+	default7i={add_displays={{image="terrain/golden_mountain7.png", display_x=-1, display_y=-1, z=17}}, min=1, max=1},
+	default9i={add_displays={{image="terrain/golden_mountain9.png", display_x=1, display_y=-1, z=18}}, min=1, max=1},
+},
 }
 
 
 --- Make water have nice transition to other stuff
 function _M:editTileGenericBorders(level, i, j, g, nt, type)
-	local g5 = level.map:checkEntity(i, j,   Map.TERRAIN, "subtype") or type
-	local g8 = level.map:checkEntity(i, j-1, Map.TERRAIN, "subtype") or type
-	local g2 = level.map:checkEntity(i, j+1, Map.TERRAIN, "subtype") or type
-	local g4 = level.map:checkEntity(i-1, j, Map.TERRAIN, "subtype") or type
-	local g6 = level.map:checkEntity(i+1, j, Map.TERRAIN, "subtype") or type
-	local g7 = level.map:checkEntity(i-1, j-1, Map.TERRAIN, "subtype") or type
-	local g9 = level.map:checkEntity(i+1, j-1, Map.TERRAIN, "subtype") or type
-	local g1 = level.map:checkEntity(i-1, j+1, Map.TERRAIN, "subtype") or type
-	local g3 = level.map:checkEntity(i+1, j+1, Map.TERRAIN, "subtype") or type
+	local kind = nt.use_type and "type" or "subtype"
+	local g5 = level.map:checkEntity(i, j,   Map.TERRAIN, kind) or type
+	local g8 = level.map:checkEntity(i, j-1, Map.TERRAIN, kind) or type
+	local g2 = level.map:checkEntity(i, j+1, Map.TERRAIN, kind) or type
+	local g4 = level.map:checkEntity(i-1, j, Map.TERRAIN, kind) or type
+	local g6 = level.map:checkEntity(i+1, j, Map.TERRAIN, kind) or type
+	local g7 = level.map:checkEntity(i-1, j-1, Map.TERRAIN, kind) or type
+	local g9 = level.map:checkEntity(i+1, j-1, Map.TERRAIN, kind) or type
+	local g1 = level.map:checkEntity(i-1, j+1, Map.TERRAIN, kind) or type
+	local g3 = level.map:checkEntity(i+1, j+1, Map.TERRAIN, kind) or type
 	if nt.forbid then
 		if nt.forbid[g5] then g5 = type end
 		if nt.forbid[g4] then g4 = type end

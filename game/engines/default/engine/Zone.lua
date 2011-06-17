@@ -596,6 +596,10 @@ function _M:getLevel(game, lev, old_lev, no_close)
 	local level
 	-- Load persistent level?
 	if type(level_data.persistent) == "string" and level_data.persistent == "zone_temporary" then
+		local popup = Dialog:simplePopup("Loading level", "Please wait while loading the level...", nil, true)
+		popup.__showup = nil
+		core.display.forceRedraw()
+
 		self.temp_memory_levels = self.temp_memory_levels or {}
 		level = self.temp_memory_levels[lev]
 
@@ -606,7 +610,12 @@ function _M:getLevel(game, lev, old_lev, no_close)
 			-- This is not needed in case of a direct to file persistance becuase the map IS recreated each time anyway
 			level.map:recreate()
 		end
+		game:unregisterDialog(popup)
 	elseif type(level_data.persistent) == "string" and level_data.persistent == "zone" and not self.save_per_level then
+		local popup = Dialog:simplePopup("Loading level", "Please wait while loading the level...", nil, true)
+		popup.__showup = nil
+		core.display.forceRedraw()
+
 		self.memory_levels = self.memory_levels or {}
 		level = self.memory_levels[lev]
 
@@ -617,7 +626,12 @@ function _M:getLevel(game, lev, old_lev, no_close)
 			-- This is not needed in case of a direct to file persistance becuase the map IS recreated each time anyway
 			level.map:recreate()
 		end
+		game:unregisterDialog(popup)
 	elseif type(level_data.persistent) == "string" and level_data.persistent == "memory" then
+		local popup = Dialog:simplePopup("Loading level", "Please wait while loading the level...", nil, true)
+		popup.__showup = nil
+		core.display.forceRedraw()
+
 		game.memory_levels = game.memory_levels or {}
 		level = game.memory_levels[self.short_name.."-"..lev]
 
@@ -628,7 +642,12 @@ function _M:getLevel(game, lev, old_lev, no_close)
 			-- This is not needed in case of a direct to file persistance becuase the map IS recreated each time anyway
 			level.map:recreate()
 		end
+		game:unregisterDialog(popup)
 	elseif level_data.persistent then
+		local popup = Dialog:simplePopup("Loading level", "Please wait while loading the level...", nil, true)
+		popup.__showup = nil
+		core.display.forceRedraw()
+
 		-- Try to load from a savefile
 		level = savefile_pipe:doLoad(game.save_name, "level", nil, self.short_name, lev)
 
@@ -636,6 +655,7 @@ function _M:getLevel(game, lev, old_lev, no_close)
 			-- Setup the level in the game
 			game:setLevel(level)
 		end
+		game:unregisterDialog(popup)
 	end
 
 	-- In any cases, make one if none was found
