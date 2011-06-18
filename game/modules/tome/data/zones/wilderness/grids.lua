@@ -110,7 +110,7 @@ newEntity{
 	block_sight = true,
 	nice_tiler = { method="replace", base={"BURNT_FOREST", 100, 1, 20}},
 }
-for i = 1, 20 do newEntity{ base="BURNT_FOREST", define_as = "BURNT_FOREST"..i, name = "burnt tree", image = "terrain/grass_burnt1.png", add_displays = class:makeTrees("terrain/burnttree_alpha")} end
+for i = 1, 20 do newEntity{ base="BURNT_FOREST", define_as = "BURNT_FOREST"..i, name = "burnt tree", image = "terrain/lava_floor.png", add_displays = class:makeTrees("terrain/burnttree_alpha")} end
 
 --------------------------------------------------------------------------------
 -- Iceland
@@ -396,7 +396,7 @@ newEntity{ base="ZONE_DESERT", define_as = "SANDWORM_LAIR",
 }
 
 newEntity{ base="CHARRED_SCAR", define_as = "CHARRED_SCAR_VOLCANO",
-	name="Charred Scar Volcano",
+	name="Charred Scar Volcano", nice_tiler=false,
 	color={r=200, g=255, b=55},
 	display='>', color=colors.RED, back_color=colors.LIGHT_DARK,
 	image="terrain/volcano1.png",

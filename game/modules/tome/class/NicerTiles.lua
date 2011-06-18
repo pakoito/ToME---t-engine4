@@ -79,7 +79,9 @@ function _M:replaceAll(level)
 
 	-- In-place entities edition, now this is becoming tricky, but powerful
 	for i, jj in pairs(self.edits) do for j, ee in pairs(jj) do
-		local id = {}
+		local g = level.map(i, j, Map.TERRAIN)
+
+		local id = {g.name or "???"}
 		for __, e in ipairs(ee) do
 			if not e.use_id then id = nil break end
 			id[#id+1] = e.use_id
@@ -91,7 +93,6 @@ function _M:replaceAll(level)
 			level.map(i, j, Map.TERRAIN, self.edit_entity_store[id])
 		-- Otherwise compute this new combo and store the entity
 		else
-			local g = level.map(i, j, Map.TERRAIN)
 			local cloned = false
 			if not g.force_clone then g = g:cloneFull() g.force_clone = true cloned = true end
 
@@ -387,7 +388,7 @@ gold_mountain = { method="borders", type="gold_mountain", forbid={}, use_type=tr
 	default1={add_mos={{image="terrain/golden_mountain9i.png", display_x=-1, display_y=1}}, min=1, max=1},
 	default3={add_mos={{image="terrain/golden_mountain7i.png", display_x=1, display_y=1}}, min=1, max=1},
 	default7={add_mos={{image="terrain/golden_mountain3i.png", display_x=-1, display_y=-1}}, min=1, max=1},
-	default9={add_mos={{image="terrain/vmountain1i.png", display_x=1, display_y=-1}}, min=1, max=1},
+	default9={add_mos={{image="terrain/golden_mountain1i.png", display_x=1, display_y=-1}}, min=1, max=1},
 
 	default1i={add_mos={{image="terrain/golden_mountain1.png", display_x=-1, display_y=1}}, min=1, max=1},
 	default3i={add_mos={{image="terrain/golden_mountain3.png", display_x=1, display_y=1}}, min=1, max=1},
