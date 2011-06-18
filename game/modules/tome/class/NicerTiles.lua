@@ -55,11 +55,11 @@ function _M:replace(i, j, g)
 	end
 end
 
-function _M:edit(i, j, e)
+function _M:edit(i, j, id, e)
 	self.edits[i] = self.edits[i] or {}
 	self.edits[i][j] = self.edits[i][j] or {}
 	local ee = self.edits[i][j]
-	ee[#ee+1] = {add_displays=e.add_displays, add_mos=e.add_mos, image=e.image, min=e.min, max=e.max}
+	ee[#ee+1] = {use_id=id, add_displays=e.add_displays, add_mos=e.add_mos, image=e.image, min=e.min, max=e.max}
 end
 
 function _M:handle(level, i, j)
@@ -76,47 +76,65 @@ function _M:replaceAll(level)
 		level.map(r[1], r[2], Map.TERRAIN, r[3])
 	end
 	self.repl = {}
+
+	-- In-place entities edition, now this is becoming tricky, but powerful
 	for i, jj in pairs(self.edits) do for j, ee in pairs(jj) do
-		local g = level.map(i, j, Map.TERRAIN)
-		local cloned = false
-		if not g.force_clone then g = g:cloneFull() g.force_clone = true cloned = true end
-
-		-- Edit the first add_display entity, or add a dummy if none
-		if not g.__edit_d then
-			g.add_displays = g.add_displays or {}
-			g.add_displays[#g.add_displays+1] = require(g.__CLASSNAME).new{image="invis.png", force_clone=true}
-			g.__edit_d = #g.add_displays
-		end
-		local gd = g.add_displays[g.__edit_d]
-
+		local id = {}
 		for __, e in ipairs(ee) do
-			if e.add_mos then
-				-- Add all the mos
-				gd.add_mos = gd.add_mos or {}
-				local mos = gd.add_mos
-				for i = 1, #e.add_mos do
-					mos[#mos+1] = table.clone(e.add_mos[i])
-					mos[#mos].image = mos[#mos].image:format(rng.range(e.min, e.max))
-				end
-				gd._mo = nil
-			end
-			if e.add_displays then
-				g.add_displays = g.add_displays or {}
-				for i = 1, #e.add_displays do
-					 g.add_displays[#g.add_displays+1] = require(g.__CLASSNAME).new(e.add_displays[i])
-				end
-			end
-			if e.image then g.image = e.image end
+			if not e.use_id then id = nil break end
+			id[#id+1] = e.use_id
 		end
+		if id then id = table.concat(id, "|") end
 
-		g._mo = nil
-		level.map(i, j, Map.TERRAIN, g)
+		-- If we made this one already, use it
+		if self.edit_entity_store[id] then
+			level.map(i, j, Map.TERRAIN, self.edit_entity_store[id])
+		-- Otherwise compute this new combo and store the entity
+		else
+			local g = level.map(i, j, Map.TERRAIN)
+			local cloned = false
+			if not g.force_clone then g = g:cloneFull() g.force_clone = true cloned = true end
+
+			-- Edit the first add_display entity, or add a dummy if none
+			if not g.__edit_d then
+				g.add_displays = g.add_displays or {}
+				g.add_displays[#g.add_displays+1] = require(g.__CLASSNAME).new{image="invis.png", force_clone=true}
+				g.__edit_d = #g.add_displays
+			end
+			local gd = g.add_displays[g.__edit_d]
+
+			for __, e in ipairs(ee) do
+				if e.add_mos then
+					-- Add all the mos
+					gd.add_mos = gd.add_mos or {}
+					local mos = gd.add_mos
+					for i = 1, #e.add_mos do
+						mos[#mos+1] = table.clone(e.add_mos[i])
+						mos[#mos].image = mos[#mos].image:format(rng.range(e.min, e.max))
+					end
+					gd._mo = nil
+				end
+				if e.add_displays then
+					g.add_displays = g.add_displays or {}
+					for i = 1, #e.add_displays do
+						 g.add_displays[#g.add_displays+1] = require(g.__CLASSNAME).new(e.add_displays[i])
+					end
+				end
+				if e.image then g.image = e.image end
+			end
+
+			g._mo = nil
+			level.map(i, j, Map.TERRAIN, g)
+			self.edit_entity_store[id] = g
+		end
 	end end
 	self.edits = {}
 end
 
 function _M:postProcessLevelTiles(level)
 	if not Map.tiles.nicer_tiles then return end
+
+	self.edit_entity_store = {}
 
 	for i = 0, level.map.w - 1 do for j = 0, level.map.h - 1 do
 		self:handle(level, i, j)
@@ -403,21 +421,23 @@ function _M:editTileGenericBorders(level, i, j, g, nt, type)
 		if nt.forbid[g9] then g9 = type end
 	end
 
+	local id = table.concat({type,tostring(g1==g5),tostring(g2==g5),tostring(g3==g5),tostring(g4==g5),tostring(g5==g5),tostring(g6==g5),tostring(g7==g5),tostring(g8==g5),tostring(g9==g5)}, ",")
+
 	-- Sides
-	if g5 ~= g8 then self:edit(i, j, nt[g8.."8"] or nt["default8"]) end
-	if g5 ~= g2 then self:edit(i, j, nt[g2.."2"] or nt["default2"]) end
-	if g5 ~= g4 then self:edit(i, j, nt[g4.."4"] or nt["default4"]) end
-	if g5 ~= g6 then self:edit(i, j, nt[g6.."6"] or nt["default6"]) end
+	if g5 ~= g8 then self:edit(i, j, id, nt[g8.."8"] or nt["default8"]) end
+	if g5 ~= g2 then self:edit(i, j, id, nt[g2.."2"] or nt["default2"]) end
+	if g5 ~= g4 then self:edit(i, j, id, nt[g4.."4"] or nt["default4"]) end
+	if g5 ~= g6 then self:edit(i, j, id, nt[g6.."6"] or nt["default6"]) end
 	-- Corners
-	if g5 ~= g7 and g5 == g4 and g5 == g8 then self:edit(i, j, nt[g7.."7"] or nt["default7"]) end
-	if g5 ~= g9 and g5 == g6 and g5 == g8 then self:edit(i, j, nt[g9.."9"] or nt["default9"]) end
-	if g5 ~= g1 and g5 == g4 and g5 == g2 then self:edit(i, j, nt[g1.."1"] or nt["default1"]) end
-	if g5 ~= g3 and g5 == g6 and g5 == g2 then self:edit(i, j, nt[g3.."3"] or nt["default3"]) end
+	if g5 ~= g7 and g5 == g4 and g5 == g8 then self:edit(i, j, id, nt[g7.."7"] or nt["default7"]) end
+	if g5 ~= g9 and g5 == g6 and g5 == g8 then self:edit(i, j, id, nt[g9.."9"] or nt["default9"]) end
+	if g5 ~= g1 and g5 == g4 and g5 == g2 then self:edit(i, j, id, nt[g1.."1"] or nt["default1"]) end
+	if g5 ~= g3 and g5 == g6 and g5 == g2 then self:edit(i, j, id, nt[g3.."3"] or nt["default3"]) end
 	-- Inner corners
-	if g5 ~= g7 and g5 ~= g4 and g5 ~= g8 then self:edit(i, j, nt[g7.."7i"] or nt["default7i"]) end
-	if g5 ~= g9 and g5 ~= g6 and g5 ~= g8 then self:edit(i, j, nt[g9.."9i"] or nt["default9i"]) end
-	if g5 ~= g1 and g5 ~= g4 and g5 ~= g2 then self:edit(i, j, nt[g1.."1i"] or nt["default1i"]) end
-	if g5 ~= g3 and g5 ~= g6 and g5 ~= g2 then self:edit(i, j, nt[g3.."3i"] or nt["default3i"]) end
+	if g5 ~= g7 and g5 ~= g4 and g5 ~= g8 then self:edit(i, j, id, nt[g7.."7i"] or nt["default7i"]) end
+	if g5 ~= g9 and g5 ~= g6 and g5 ~= g8 then self:edit(i, j, id, nt[g9.."9i"] or nt["default9i"]) end
+	if g5 ~= g1 and g5 ~= g4 and g5 ~= g2 then self:edit(i, j, id, nt[g1.."1i"] or nt["default1i"]) end
+	if g5 ~= g3 and g5 ~= g6 and g5 ~= g2 then self:edit(i, j, id, nt[g3.."3i"] or nt["default3i"]) end
 end
 
 function _M:editTileBorders(level, i, j, g, nt)

@@ -93,16 +93,19 @@ function _M:on_move(x, y, who, forced)
 end
 
 function _M:tooltip(x, y)
+	local tstr
 	if self.show_tooltip then
 		local name = ((self.show_tooltip == true) and self.name or self.show_tooltip)
 		if self.desc then
-			return tstring{{"uid", self.uid}, name, true, self.desc}
+			tstr = tstring{{"uid", self.uid}, name, true, self.desc}
 		else
-			return tstring{{"uid", self.uid}, name}
+			tstr = tstring{{"uid", self.uid}, name}
 		end
 	else
-		return tstring{{"uid", self.uid}, self.name}
+		tstr = tstring{{"uid", self.uid}, self.name}
 	end
+	if config.settings.cheat then tstr:add(true, "UID: ", tostring(self.uid), true, "Coords: ", tostring(x), "x", tostring(y)) end
+	return tstr
 end
 
 --- Generate sub entities to make nice trees
