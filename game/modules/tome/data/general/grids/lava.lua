@@ -17,8 +17,12 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local lava_editer = {method="borders_def", def="lava"}
+local lava_mountain_editer = {method="borders_def", def="lava_mountain"}
+
 newEntity{
 	define_as = "LAVA_FLOOR",
+	type = "floor", subtype = "lava",
 	name = "lava floor", image = "terrain/lava_floor.png",
 	display = '.', color=colors.RED, back_color=colors.DARK_GREY,
 	shader = "lava",
@@ -29,20 +33,28 @@ newEntity{
 		local dam = DT:get(DT.FIRE).projector(self, x, y, DT.FIRE, rng.range(self.mindam, self.maxdam))
 		if dam > 0 then game.logPlayer(who, "The lava burns you!") end
 	end,
+	nice_tiler = { method="replace", base={"LAVA_FLOOR", 100, 1, 16}},
+	nice_editer = lava_editer,
 }
+for i = 1, 16 do newEntity{ base = "LAVA_FLOOR", define_as = "LAVA_FLOOR"..i, image = "terrain/lava/lava_floor"..i..".png" } end
 
 newEntity{
 	define_as = "LAVA_WALL",
-	name = "lava wall", image = "terrain/granite_wall1.png",
-	display = '#', color=colors.RED, back_color=colors.DARK_GREY, tint=colors.LIGHT_RED,
+	type = "wall", subtype = "lava",
+	name = "lava wall", image = "terrain/lava/lava_mountain5.png",
+	display = '#', color=colors.RED, back_color=colors.DARK_GREY,
 	always_remember = true,
 	does_block_move = true,
 	block_sight = true,
 	air_level = -20,
+	nice_editer = lava_mountain_editer,
+	nice_tiler = { method="replace", base={"LAVA_WALL", 70, 1, 6} },
 }
+for i = 1, 6 do newEntity{ base="LAVA_WALL", define_as = "LAVA_WALL"..i, image = "terrain/lava/lava_mountain5_"..i..".png"} end
 
 newEntity{
 	define_as = "LAVA",
+	type = "floor", subtype = "moltenlava",
 	name = "molten lava", image = "terrain/lava.png",
 	display = '%', color=colors.LIGHT_RED, back_color=colors.RED,
 	does_block_move = true,

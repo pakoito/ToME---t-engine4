@@ -39,7 +39,7 @@ subGenerator{
 		do_ponds =  {
 			nb = {0, 2},
 			size = {w=25, h=25},
-			pond = {{0.6, "DEEP_WATER"}, {0.8, "DEEP_WATER"}},
+			pond = {{0.6, "OCEAN_DEEP_WATER"}, {0.8, "OCEAN_DEEP_WATER"}},
 		},
 	},
 	define_up = true,

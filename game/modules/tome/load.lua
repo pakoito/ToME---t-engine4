@@ -195,7 +195,7 @@ os.exit()
 --]]
 
 -- Load tilesets, to speed up image loads
-Tiles:loadTileset("/data/gfx/ts-shockbolt-all.lua")
+--Tiles:loadTileset("/data/gfx/ts-shockbolt-all.lua")
 
 -- Factions
 dofile("/data/factions.lua")

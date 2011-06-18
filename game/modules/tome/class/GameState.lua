@@ -368,8 +368,8 @@ function _M:generateRandart(add, base, lev)
 	while hpoints > 0 do
 		i = util.boundWrap(i + 1, 1, #bias_powers)
 
-		local p = bias_powers[i]:clone()
-		if p.points <= hpoints * 2 then
+		local p = bias_powers[i] and bias_powers[i]:clone()
+		if p and p.points <= hpoints * 2 then
 			if p.wielder then
 				o.wielder = o.wielder or {}
 				merger(o.wielder, p.wielder)
@@ -377,7 +377,7 @@ function _M:generateRandart(add, base, lev)
 			if p.copy then merger(o, p.copy) end
 --			print(" * adding power: "..p.name)
 		end
-		hpoints = hpoints - p.points * 2
+		hpoints = hpoints - (p and p.points or 1) * 2
 	end
 
 	-- Setup the name
@@ -1127,6 +1127,15 @@ local random_zone_themes = {
 		getWall = function(self) return "SANDWALL" end,
 		getUp = function(self) return "SAND_LADDER_UP" end,
 		getDown = function(self) return "SAND_LADDER_DOWN" end,
+	} end },
+	-- Desert
+	{ name="desert", rarity=3, gen=function() return {
+		load_grids = {"/data/general/grids/sand.lua"},
+		getDoor = function(self) return "SAND" end,
+		getFloor = function(self) return "SAND" end,
+		getWall = function(self) return "PALMTREE" end,
+		getUp = function(self) return "SAND_UP"..self.less_dir end,
+		getDown = function(self) return "SAND_DOWN"..self.more_dir end,
 	} end },
 }
 

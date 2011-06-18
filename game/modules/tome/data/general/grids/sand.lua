@@ -200,20 +200,20 @@ newEntity{ base = "SANDWALL_STABLE", define_as = "SANDWALL_STABLE_PILLAR_6"..i, 
 newEntity{ base = "SANDWALL_STABLE", define_as = "SANDWALL_STABLE_HOLE_2"..i, image = "terrain/sandwall_2h_"..i..".png"}
 newEntity{ base = "SANDWALL_STABLE", define_as = "SANDWALL_STABLE_HOLE_8"..i, image = "terrain/sandwall_5_"..i..".png", add_displays = {class.new{image="terrain/sandwall_8h_1.png", z=18, display_y=-1}}}
 
-for i = 1, 20 do
 newEntity{
-	define_as = "PALMTREE"..(i > 1 and i or ""),
+	define_as = "PALMTREE",
 	type = "wall", subtype = "sand",
-	name = "tree", image = "terrain/sandfloor.png",
+	name = "tree", image = "terrain/palmtree.png",
 	display = '#', color=colors.LIGHT_GREEN, back_color={r=93,g=79,b=22},
-	add_displays = class:makeTrees("terrain/palmtree_alpha", 4),
 	always_remember = true,
 	can_pass = {pass_tree=1},
 	does_block_move = true,
 	block_sight = true,
 	dig = "SAND",
+	nice_tiler = { method="replace", base={"PALMTREE", 100, 1, 20}},
+	nice_editer = sand_editer,
 }
-end
+for i = 1, 20 do newEntity{ base="PALMTREE", define_as = "PALMTREE"..i, image = "terrain/sandfloor.png", add_displays = class:makeTrees("terrain/palmtree_alpha", 4) } end
 
 -----------------------------------------
 -- Sandy exits
@@ -227,6 +227,7 @@ newEntity{
 	notice = true,
 	change_level = 1,
 	change_zone = "wilderness",
+	nice_editer = sand_editer,
 }
 
 newEntity{
@@ -237,6 +238,7 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	change_level = -1,
+	nice_editer = sand_editer,
 }
 newEntity{
 	define_as = "SAND_UP2",
@@ -246,6 +248,7 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	change_level = -1,
+	nice_editer = sand_editer,
 }
 newEntity{
 	define_as = "SAND_UP4",
@@ -255,6 +258,7 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	change_level = -1,
+	nice_editer = sand_editer,
 }
 newEntity{
 	define_as = "SAND_UP6",
@@ -264,6 +268,7 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	change_level = -1,
+	nice_editer = sand_editer,
 }
 
 newEntity{
@@ -274,6 +279,7 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	change_level = 1,
+	nice_editer = sand_editer,
 }
 newEntity{
 	define_as = "SAND_DOWN2",
@@ -283,6 +289,7 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	change_level = 1,
+	nice_editer = sand_editer,
 }
 newEntity{
 	define_as = "SAND_DOWN4",
@@ -292,6 +299,7 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	change_level = 1,
+	nice_editer = sand_editer,
 }
 newEntity{
 	define_as = "SAND_DOWN6",
@@ -301,6 +309,7 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	change_level = 1,
+	nice_editer = sand_editer,
 }
 
 newEntity{
@@ -311,6 +320,7 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	change_level = 1,
+	nice_editer = sand_editer,
 }
 newEntity{
 	define_as = "SAND_LADDER_UP",
@@ -320,6 +330,7 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	change_level = -1,
+	nice_editer = sand_editer,
 }
 newEntity{
 	define_as = "SAND_LADDER_UP_WILDERNESS",
@@ -329,4 +340,5 @@ newEntity{
 	notice = true,
 	change_level = 1,
 	change_zone = "wilderness",
+	nice_editer = sand_editer,
 }

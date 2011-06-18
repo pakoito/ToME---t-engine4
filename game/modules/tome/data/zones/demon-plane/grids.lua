@@ -18,32 +18,7 @@
 -- darkgod@te4.org
 
 load("/data/general/grids/basic.lua")
-
-newEntity{
-	define_as = "LAVA_FLOOR",
-	name = "lava floor", image = "terrain/lava_floor.png",
-	display = '.', color=colors.RED, back_color=colors.DARK_GREY,
-	shader = "lava",
-}
-
-newEntity{
-	define_as = "LAVA_WALL",
-	name = "lava wall", image = "terrain/granite_wall1.png",
-	display = '#', color=colors.RED, back_color=colors.DARK_GREY, tint=colors.LIGHT_RED,
-	always_remember = true,
-	does_block_move = true,
-	block_sight = true,
-	air_level = -20,
-	dig = "LAVA_FLOOR",
-}
-
-newEntity{
-	define_as = "LAVA",
-	name = "molten lava", image = "terrain/lava.png",
-	display = '%', color=colors.LIGHT_RED, back_color=colors.RED,
-	does_block_move = true,
-	shader = "lava",
-}
+load("/data/general/grids/lava.lua", function(e) if e.define_as == "LAVA_FLOOR" then e.on_stand = nil end end)
 
 newEntity{
 	define_as = "PORTAL_BACK",

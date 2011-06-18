@@ -18,41 +18,20 @@
 -- darkgod@te4.org
 
 load("/data/general/grids/basic.lua")
+load("/data/general/grids/lava.lua", function(e) if e.define_as == "LAVA_FLOOR" then e.on_stand = nil end end)
 
-newEntity{
-	define_as = "LAVA_FLOOR",
-	name = "lava floor", image = "terrain/lava_floor.png",
-	display = '.', color=colors.RED, back_color=colors.DARK_GREY,
-	shader = "lava",
-}
-
-newEntity{
-	define_as = "LAVA_WALL",
-	name = "lava wall", image = "terrain/granite_wall1.png",
-	display = '#', color=colors.RED, back_color=colors.DARK_GREY, tint=colors.LIGHT_RED,
-	always_remember = true,
-	does_block_move = true,
-	block_sight = true,
-	no_prob_travel = true,
-	air_level = -20,
-}
-
-newEntity{
-	define_as = "LAVA",
-	name = "molten lava", image = "terrain/lava.png",
-	display = '%', color=colors.LIGHT_RED, back_color=colors.RED,
-	does_block_move = true,
-	shader = "lava",
-}
+local lava_editer = {method="borders_def", def="lava"}
 
 newEntity{
 	define_as = "FAR_EAST_PORTAL",
+	type = "floor", subtype = "lava",
 	name = "Farportal: the Far East",
 	display = '&', color_r=255, color_g=0, color_b=220, back_color=colors.VIOLET, image = "terrain/lava_floor.png",
 	notice = true,
 	always_remember = true,
 	show_tooltip = true,
 	desc = [[A farportal is a way to travel incredible distances in the blink of an eye. They usually require an external item to use.]],
+	nice_editer = lava_editer,
 
 	orb_portal = {
 		change_level = 1,

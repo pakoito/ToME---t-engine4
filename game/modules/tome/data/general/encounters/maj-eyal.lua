@@ -146,14 +146,12 @@ newEntity{
 		local x, y = self:findSpot(who)
 		if not x then return end
 
-		local g = mod.class.Grid.new{
-			show_tooltip=true,
-			name="Entrance to some ancient elven ruins",
-			display='>', color={r=0, g=255, b=255},
-			notice = true,
-			change_level=1, change_zone="ancient-elven-ruins"
-		}
-		g:resolve() g:resolve(nil, true)
+		local g = game.level.map(x, y, engine.Map.TERRAIN):cloneFull()
+		g.name = "Entrance to some ancient elven ruins"
+		g.display='>' g.color_r=0 g.color_g=255 g.color_b=255 g.notice = true
+		g.change_level=1 g.change_zone="ancient-elven-ruins"
+		g.add_displays = g.add_displays or {}
+		g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/dungeon_entrance_closed02.png", z=5}
 		game.zone:addEntity(game.level, g, "terrain", x, y)
 		return true
 	end,
@@ -181,14 +179,12 @@ newEntity{
 		local x, y = self:findSpot(who)
 		if not x then return end
 
-		local g = mod.class.Grid.new{
-			show_tooltip=true,
-			name="Entrance to a ruined dungeon",
-			display='>', color={r=255, g=0, b=0},
-			notice = true,
-			change_level=1, change_zone="ruined-dungeon"
-		}
-		g:resolve() g:resolve(nil, true)
+		local g = game.level.map(x, y, engine.Map.TERRAIN):cloneFull()
+		g.name = "Entrance to a ruined dungeon"
+		g.display='>' g.color_r=255 g.color_g=0 g.color_b=0 g.notice = true
+		g.change_level=1 g.change_zone="ruined-dungeon"
+		g.add_displays = g.add_displays or {}
+		g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/ruin_entrance_closed01.png", z=5}
 		game.zone:addEntity(game.level, g, "terrain", x, y)
 		return true
 	end,
@@ -201,15 +197,13 @@ newEntity{
 	on_encounter = function(self, who)
 		local x, y = self:findSpot(who)
 		if not x then return end
-
-		local g = mod.class.Grid.new{
-			show_tooltip=true,
-			name="Mark of the Spellblaze",
-			display='>', color=colors.VIOLET,
-			notice = true,
-			change_level=1, change_zone="mark-spellblaze"
-		}
-		g:resolve() g:resolve(nil, true)
+FUCKING MAKE ME GENERATE
+		local g = game.level.map(x, y, engine.Map.TERRAIN):cloneFull()
+		g.name = "Mark of the Spellblaze"
+		g.display='>' g.color_r=0 g.color_g=200 g.color_b=0 g.notice = true
+		g.change_level=1 g.change_zone="mark-spellblaze"
+		g.add_displays = g.add_displays or {}
+		g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/floor_pentagram.png", z=5}
 		game.zone:addEntity(game.level, g, "terrain", x, y)
 		return true
 	end,
@@ -223,14 +217,12 @@ newEntity{
 		local x, y = self:findSpot(who)
 		if not x then return end
 
-		local g = mod.class.Grid.new{
-			show_tooltip=true,
-			name="Golem Graveyard",
-			display='>', color=colors.GREEN,
-			notice = true,
-			change_level=1, change_zone="golem-graveyard"
-		}
-		g:resolve() g:resolve(nil, true)
+		local g = game.level.map(x, y, engine.Map.TERRAIN):cloneFull()
+		g.name = "Golem Graveyard"
+		g.display='>' g.color_r=0 g.color_g=200 g.color_b=0 g.notice = true
+		g.change_level=1 g.change_zone="golem-graveyard"
+		g.add_displays = g.add_displays or {}
+		g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="npc/alchemist_golem.png", z=5}
 		game.zone:addEntity(game.level, g, "terrain", x, y)
 		return true
 	end,
@@ -266,14 +258,12 @@ newEntity{
 		local x, y = self:findSpot(who)
 		if not x then return end
 
-		local g = mod.class.Grid.new{
-			show_tooltip=true,
-			name="Hidden compound",
-			display='>', color=colors.CRIMSON,
-			notice = true,
-			change_level=1, change_zone="ring-of-blood"
-		}
-		g:resolve() g:resolve(nil, true)
+		local g = game.level.map(x, y, engine.Map.TERRAIN):cloneFull()
+		g.name = "Hidden compound"
+		g.display='>' g.color_r=200 g.color_g=0 g.color_b=0 g.notice = true
+		g.change_level=1 g.change_zone="ring-of-blood"
+		g.add_displays = g.add_displays or {}
+		g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/cave_entrance_closed02.png", z=5}
 		game.zone:addEntity(game.level, g, "terrain", x, y)
 		return true
 	end,

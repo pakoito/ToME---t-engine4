@@ -67,6 +67,7 @@ function _M:handle(level, i, j)
 	if g and Map.tiles.nicer_tiles then
 		if g.nice_tiler then self["niceTile"..g.nice_tiler.method:capitalize()](self, level, i, j, g, g.nice_tiler) end
 		if g.nice_editer then self["editTile"..g.nice_editer.method:capitalize()](self, level, i, j, g, g.nice_editer) end
+		if g.nice_editer2 then self["editTile"..g.nice_editer2.method:capitalize()](self, level, i, j, g, g.nice_editer2) end
 	end
 end
 
@@ -284,7 +285,7 @@ function _M:niceTileOuterSpace(level, i, j, g, nt)
 end
 
 local defs = {
-grass = { method="borders", type="grass",
+grass = { method="borders", type="grass", forbid={lava=true},
 	default8={add_mos={{image="terrain/grass/grass_2_%02d.png", display_y=-1}}, min=1, max=5},
 	default2={add_mos={{image="terrain/grass/grass_8_%02d.png", display_y=1}}, min=1, max=5},
 	default4={add_mos={{image="terrain/grass/grass_6_%02d.png", display_x=-1}}, min=1, max=5},
@@ -300,7 +301,7 @@ grass = { method="borders", type="grass",
 	default7i={add_mos={{image="terrain/grass/grass_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=3},
 	default9i={add_mos={{image="terrain/grass/grass_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=3},
 },
-grass_wm = { method="borders", type="grass",
+grass_wm = { method="borders", type="grass", forbid={lava=true},
 	default8={add_mos={{image="terrain/grass/grass_2_%02d.png", display_y=-1}}, min=1, max=5},
 	default2={add_mos={{image="terrain/grass/grass_8_%02d.png", display_y=1}}, min=1, max=5},
 	default4={add_mos={{image="terrain/grass/grass_6_%02d.png", display_x=-1}}, min=1, max=5},
@@ -331,7 +332,7 @@ grass_wm = { method="borders", type="grass",
 	water7i={add_mos={{image="terrain/grass/grass_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=1},
 	water9i={add_mos={{image="terrain/grass/grass_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=1},
 },
-sand = { method="borders", type="sand", forbid={grass=true},
+sand = { method="borders", type="sand", forbid={grass=true, lava=true,},
 	default8={add_mos={{image="terrain/sand/sand_2_%02d.png", display_y=-1}}, min=1, max=5},
 	default2={add_mos={{image="terrain/sand/sand_8_%02d.png", display_y=1}}, min=1, max=5},
 	default4={add_mos={{image="terrain/sand/sand_6_%02d.png", display_x=-1}}, min=1, max=5},
@@ -347,7 +348,7 @@ sand = { method="borders", type="sand", forbid={grass=true},
 	default7i={add_mos={{image="terrain/sand/sand_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=3},
 	default9i={add_mos={{image="terrain/sand/sand_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=3},
 },
-ice = { method="borders", type="ice", forbid={grass=true, sand=true},
+ice = { method="borders", type="ice", forbid={grass=true, sand=true, lava=true},
 	default8={add_mos={{image="terrain/ice/frozen_ground_2_%02d.png", display_y=-1}}, min=1, max=4},
 	default2={add_mos={{image="terrain/ice/frozen_ground_8_%02d.png", display_y=1}}, min=1, max=3},
 	default4={add_mos={{image="terrain/ice/frozen_ground_6_%02d.png", display_x=-1}}, min=1, max=4},
@@ -394,6 +395,38 @@ gold_mountain = { method="borders", type="gold_mountain", forbid={}, use_type=tr
 	default3i={add_mos={{image="terrain/golden_mountain3.png", display_x=1, display_y=1}}, min=1, max=1},
 	default7i={add_displays={{image="terrain/golden_mountain7.png", display_x=-1, display_y=-1, z=17}}, min=1, max=1},
 	default9i={add_displays={{image="terrain/golden_mountain9.png", display_x=1, display_y=-1, z=18}}, min=1, max=1},
+},
+lava_mountain = { method="borders", type="lava_mountain", forbid={}, use_type=true,
+	default8={add_displays={{image="terrain/lava/lava_mountain8.png", display_y=-1, z=16}}, min=1, max=1},
+	default2={add_mos={{image="terrain/lava/lava_mountain2_%d.png", display_y=1}}, min=1, max=2},
+	default4={add_mos={{image="terrain/lava/lava_mountain4_%d.png", display_x=-1}}, min=1, max=2},
+	default6={add_mos={{image="terrain/lava/lava_mountain6.png", display_x=1}}, min=1, max=1},
+
+	default1={add_mos={{image="terrain/lava/lava_mountain9i%d.png", display_x=-1, display_y=1}}, min=1, max=2},
+	default3={add_mos={{image="terrain/lava/lava_mountain7i%d.png", display_x=1, display_y=1}}, min=1, max=2},
+	default7={add_mos={{image="terrain/lava/lava_mountain3i%d.png", display_x=-1, display_y=-1}}, min=1, max=2},
+	default9={add_mos={{image="terrain/lava/lava_mountain1i%d.png", display_x=1, display_y=-1}}, min=1, max=2},
+
+	default1i={add_mos={{image="terrain/lava/lava_mountain1.png", display_x=-1, display_y=1}}, min=1, max=1},
+	default3i={add_mos={{image="terrain/lava/lava_mountain3.png", display_x=1, display_y=1}}, min=1, max=1},
+	default7i={add_displays={{image="terrain/lava/lava_mountain7.png", display_x=-1, display_y=-1, z=17}}, min=1, max=1},
+	default9i={add_displays={{image="terrain/lava/lava_mountain9.png", display_x=1, display_y=-1, z=18}}, min=1, max=1},
+},
+lava = { method="borders", type="lava",
+	default8={add_mos={{image="terrain/lava/lava_floor_2_%02d.png", display_y=-1}}, min=1, max=8},
+	default2={add_mos={{image="terrain/lava/lava_floor_8_%02d.png", display_y=1}}, min=1, max=8},
+	default4={add_mos={{image="terrain/lava/lava_floor_6_%02d.png", display_x=-1}}, min=1, max=8},
+	default6={add_mos={{image="terrain/lava/lava_floor_4_%02d.png", display_x=1}}, min=1, max=8},
+
+	default1={add_mos={{image="terrain/lava/lava_floor_9_%02d.png", display_x=-1, display_y=1}}, min=1, max=4},
+	default3={add_mos={{image="terrain/lava/lava_floor_7_%02d.png", display_x=1, display_y=1}}, min=1, max=4},
+	default7={add_mos={{image="terrain/lava/lava_floor_3_%02d.png", display_x=-1, display_y=-1}}, min=1, max=4},
+	default9={add_mos={{image="terrain/lava/lava_floor_1_%02d.png", display_x=1, display_y=-1}}, min=1, max=4},
+
+	default1i={add_mos={{image="terrain/lava/lava_floor_inner_1_%02d.png", display_x=-1, display_y=1}}, min=1, max=4},
+	default3i={add_mos={{image="terrain/lava/lava_floor_inner_3_%02d.png", display_x=1, display_y=1}}, min=1, max=4},
+	default7i={add_mos={{image="terrain/lava/lava_floor_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=4},
+	default9i={add_mos={{image="terrain/lava/lava_floor_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=4},
 },
 }
 

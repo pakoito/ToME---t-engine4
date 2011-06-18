@@ -22,6 +22,7 @@ local sand_editer = {method="borders_def", def="sand"}
 local ice_editer = {method="borders_def", def="ice"}
 local mountain_editer = {method="borders_def", def="mountain"}
 local gold_mountain_editer = {method="borders_def", def="gold_mountain"}
+local lava_editer = {method="borders_def", def="lava"}
 
 --------------------------------------------------------------------------------
 -- Grassland
@@ -94,13 +95,13 @@ newEntity{
 	display='.', color=colors.WHITE, back_color=colors.LIGHT_DARK,
 	nice_tiler = { method="replace", base={"CHARRED_SCAR_PATCH", 100, 1, 16}},
 	can_encounter=true, equilibrium_level=-10,
---	nice_editer = grass_editer,
+	nice_editer = lava_editer,
 }
 for i = 1, 16 do newEntity{ base = "CHARRED_SCAR", define_as = "CHARRED_SCAR_PATCH"..i, image = "terrain/lava/lava_floor"..i..".png" } end
 
 newEntity{
 	define_as = "BURNT_FOREST",
-	type = "wall", subtype = "burnt",
+	type = "wall", subtype = "lava",
 	name = "burnt tree",
 	image = "terrain/burnt_tree.png",
 	display = '#', color=colors.LIGHT_GREEN, back_color={r=44,g=95,b=43},
@@ -109,6 +110,7 @@ newEntity{
 	does_block_move = true,
 	block_sight = true,
 	nice_tiler = { method="replace", base={"BURNT_FOREST", 100, 1, 20}},
+	nice_editer = lava_editer,
 }
 for i = 1, 20 do newEntity{ base="BURNT_FOREST", define_as = "BURNT_FOREST"..i, name = "burnt tree", image = "terrain/lava_floor.png", add_displays = class:makeTrees("terrain/burnttree_alpha")} end
 
@@ -256,7 +258,7 @@ end
 --------------------------------------------------------------------------------
 -- Towns
 --------------------------------------------------------------------------------
-newEntity{ base="PLAINS", define_as = "TOWN", change_level=1, display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, nice_tiler=false }
+newEntity{ base="PLAINS", define_as = "TOWN", notice = true, change_level=1, display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, nice_tiler=false }
 
 newEntity{ base="TOWN", define_as = "TOWN_DERTH",
 	name = "Derth (Town)", add_mos = {{image="terrain/town1.png"}},
@@ -273,6 +275,13 @@ newEntity{ base="TOWN", define_as = "TOWN_ANGOLWEN",
 	desc = "Secret place of magic, set apart from the world to protect it.\nLead by the Supreme Archmage Linaniil.",
 	change_zone="town-angolwen",
 }
+newEntity{ base="TOWN", define_as = "TOWN_ANGOLWEN_PORTAL",
+	name = "Hidden teleportation portal to Angolwen, the hidden city of magic", add_mos = {{image="terrain/town1.png"}},
+	display='&', color=colors.LIGHT_BLUE, back_color=colors.DARK_GREEN,
+	image="terrain/grass.png", add_displays = {mod.class.Grid.new{image="terrain/maze_teleport.png"}},
+	change_level_check = function() local p = game.party:findMember{main=true} if p:attr("forbid_arcane") then game.log("The portal fizzles.") return true end return false end,
+	change_zone="town-angolwen",
+}
 newEntity{ base="TOWN", define_as = "TOWN_SHATUR",
 	name = "Shatur (Town)", add_mos = {{image="terrain/town1.png"}},
 	desc = "Capital city of Thaloren lands, ruled by Nessilla Tantaelen",
@@ -284,8 +293,9 @@ newEntity{ base="TOWN", define_as = "TOWN_ELVALA",
 	change_zone="town-elvala",
 }
 newEntity{ base="TOWN", define_as = "TOWN_GATES_OF_MORNING",
-	name = "Gates of Morning (Town)", add_mos = {{image="terrain/town1.png"}},
+	name = "Gates of Morning (Town)",
 	desc = "A massive hole in the Sunwall.",
+	add_displays = {class.new{image="terrain/golden_cave_entrance02.png", z=8}},
 	change_zone="town-gates-of-morning",
 }
 newEntity{ base="TOWN", define_as = "TOWN_IRKKK",
@@ -300,7 +310,8 @@ newEntity{ base="TOWN", define_as = "TOWN_ZIGUR",
 	change_zone="town-zigur",
 }
 newEntity{ base="TOWN", define_as = "TOWN_IRON_COUNCIL",
-	name = "Iron Council (Town)", add_mos = {{image="terrain/town1.png"}},
+	name = "Iron Council (Town)",
+	add_displays = {class.new{image="terrain/cave_entrance_closed02.png", z=5}},
 	desc = "Heart of the dwarven Empire",
 	change_zone="town-iron-council",
 }
@@ -395,10 +406,32 @@ newEntity{ base="ZONE_DESERT", define_as = "SANDWORM_LAIR",
 	change_zone="sandworm-lair",
 }
 
+newEntity{ base="ZONE_DESERT", define_as = "RITCH_TUNNELS",
+	name="Tunnel into the ritchs grounds",
+	color={r=200, g=255, b=55},
+	add_mos={{image="terrain/ladder_down.png"}},
+	change_zone="ritch-tunnels",
+}
+
 newEntity{ base="CHARRED_SCAR", define_as = "CHARRED_SCAR_VOLCANO",
 	name="Charred Scar Volcano", nice_tiler=false,
 	color={r=200, g=255, b=55},
 	display='>', color=colors.RED, back_color=colors.LIGHT_DARK,
-	image="terrain/volcano1.png",
+	add_mos={{image="terrain/lava/volcano_02.png"}}, add_displays={class.new{image="terrain/lava/volcano_02_up.png", display_y=-1, z=18}},
 	notice = true, change_level=1, change_zone="charred-scar",
+}
+
+newEntity{ base="ZONE_PLAINS", define_as = "REL_TUNNEL",
+	name="Tunnel to Maj'Eyal",
+	colors.LIGHT_BLUE,
+	add_mos={{image="terrain/ruin_entrance01.png"}},
+	force_down=true, change_level=4, change_zone="halfling-ruins",
+	change_level_check = function() local p = game.party:findMember{main=true} if p:hasQuest("start-yeek") and not p:isQuestStatus("start-yeek", engine.Quest.DONE) then require("engine.ui.Dialog"):simplePopup("Long tunnel", "You can not abandon the yeeks of Rel to the dangers that lie within the island.") return true end p:setQuestStatus("rel-tunnel", engine.Quest.DONE) return false end,
+}
+
+newEntity{ base="ZONE_PLAINS", define_as = "UNREMARKABLE_CAVE",
+	name="Unremarkable cave",
+	color={r=0, g=255, b=255},
+	add_displays={class.new{image="terrain/cave_entrance01.png", z=4}},
+	change_zone="unremarkable-cave",
 }
