@@ -197,13 +197,14 @@ newEntity{
 	on_encounter = function(self, who)
 		local x, y = self:findSpot(who)
 		if not x then return end
-FUCKING MAKE ME GENERATE
+
 		local g = game.level.map(x, y, engine.Map.TERRAIN):cloneFull()
 		g.name = "Mark of the Spellblaze"
 		g.display='>' g.color_r=0 g.color_g=200 g.color_b=0 g.notice = true
 		g.change_level=1 g.change_zone="mark-spellblaze"
 		g.add_displays = g.add_displays or {}
-		g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/floor_pentagram.png", z=5}
+		g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/floor_pentagram.png", z=8}
+		g.nice_tiler = nil
 		game.zone:addEntity(game.level, g, "terrain", x, y)
 		return true
 	end,
