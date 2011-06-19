@@ -508,6 +508,11 @@ function _M:getTextualDesc(compare_with)
 				return col[2], (" %s"):format(item == "all" and "all" or DamageType.dam_def[item].name), {"color","LAST"}
 			end)
 
+		compare_table_fields(w, compare_with, field, "resists_pen", "%+d%%", "Changes resistances penetration: ", function(item)
+				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
+				return col[2], (" %s"):format(item == "all" and "all" or DamageType.dam_def[item].name), {"color","LAST"}
+			end)
+
 		compare_table_fields(w, compare_with, field, "inc_damage", "%+d%%", "Changes damage: ", function(item)
 				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
 				return col[2], (" %s"):format(item == "all" and "all" or DamageType.dam_def[item].name), {"color","LAST"}
@@ -724,6 +729,9 @@ function _M:getTextualDesc(compare_with)
 
 		compare_fields(w, compare_with, field, "life_leech_chance", "%+d%%", "Life leech chance: ")
 		compare_fields(w, compare_with, field, "life_leech_value", "%+d%%", "Life leech: ")
+
+		compare_fields(w, compare_with, field, "resource_leech_chance", "%+d%%", "Resource leech chance: ")
+		compare_fields(w, compare_with, field, "resource_leech_value", "%+d", "Resource leech: ")
 
 		compare_fields(w, compare_with, field, "size_category", "%+d", "Size category: ")
 

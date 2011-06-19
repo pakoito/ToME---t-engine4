@@ -1286,6 +1286,20 @@ function _M:onTakeHit(value, src)
 		game.logSeen(src, "#CRIMSON#%s leeches life from its victim!", src.name:capitalize())
 	end
 
+	-- Resource leech
+	if value > 0 and src and src:attr("resource_leech_chance") and rng.percent(src.resource_leech_chance) then
+		local leech = src.resource_leech_value
+		src:incMana(leech)
+		src:incVim(leech * 0.5)
+		src:incPositive(leech * 0.25)
+		src:incNegative(leech * 0.25)
+		src:incEquilibrium(-leech * 0.35)
+		src:incStamina(leech * 0.65)
+		src:incHate(leech * 0.05)
+		src:incPsi(leech * 0.2)
+		game.logSeen(src, "#CRIMSON#%s leeches energies from its victim!", src.name:capitalize())
+	end
+
 	return value
 end
 

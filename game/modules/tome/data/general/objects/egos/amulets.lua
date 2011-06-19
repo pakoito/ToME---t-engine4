@@ -21,8 +21,6 @@ local Stats = require "engine.interface.ActorStats"
 local DamageType = require "engine.DamageType"
 local Talents = require "engine.interface.ActorTalents"
 
---TEST ALL NEW EGOS
-
 --load("/data/general/objects/egos/charged-attack.lua")
 --load("/data/general/objects/egos/charged-defensive.lua")
 --load("/data/general/objects/egos/charged-utility.lua")
