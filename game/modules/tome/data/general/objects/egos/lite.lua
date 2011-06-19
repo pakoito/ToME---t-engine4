@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 local Stats = require "engine.interface.ActorStats"
+local Talents = require "engine.interface.ActorTalents"
 
 --load("/data/general/objects/egos/charged-utility.lua")
 
@@ -75,8 +76,9 @@ newEntity{
 	rarity = 7,
 	cost = 10,
 	wielder = {
-		see_invisible = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.2 end),
-		trap_detect_power = resolvers.mbonus_material(15, 5, function(e, v) return v * 1.2 end),
+		lite = 1,
+		see_invisible = resolvers.mbonus_material(20, 5, function(e, v) return v * 0.2 end),
+		trap_detect_power = resolvers.mbonus_material(15, 10, function(e, v) return v * 1.2 end),
 	},
 }
 
@@ -195,7 +197,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = "ethereal ", prefix=true, instant_resolve=true,
-	level_range = {30, 50},
+	level_range = {10, 50},
 	greater_ego = 1,
 	rarity = 10,
 	cost = 50,
@@ -235,4 +237,166 @@ newEntity{
 		combat_spellcrit = resolvers.mbonus_material(3, 3, function(e, v) return v * 0.4 end),
 		see_invisible = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.2 end),
 	},
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "traitor's ", prefix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 40,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_LCK] = resolvers.mbonus_material(5, 5, function(e, v) return 0, -v end),
+			[Stats.STAT_DEX] = resolvers.mbonus_material(9, 1),
+			[Stats.STAT_CON] = resolvers.mbonus_material(9, 1),
+			[Stats.STAT_WIL] = resolvers.mbonus_material(5, 5, function(e, v) return 0, -v end),
+			[Stats.STAT_CUN] = resolvers.mbonus_material(9, 1),
+		},
+	},	
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "watchleader's ", prefix=true, instant_resolve=true,
+	level_range = {10, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 40,
+	wielder = {
+		stun_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
+		knockback_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
+		pin_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
+		lite = resolvers.mbonus_material(1, 1),
+	},	
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = "faithful ", prefix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 40,
+	wielder = {
+		combat_spellpower = resolvers.mbonus_material(6, 1),
+		inc_damage = {
+			[DamageType.LIGHT] = resolvers.mbonus_material(10, 5),
+			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 5),
+		},
+	},	
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "piercing ", prefix=true, instant_resolve=true,
+	level_range = {40, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 40,
+	wielder = {
+		combat_apr = resolvers.mbonus_material(10, 5),
+		resists_pen = { 
+			[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 5),
+		},
+		lite = resolvers.mbonus_material(1, 1),
+	},	
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "preserving ", prefix=true, instant_resolve=true,
+	level_range = {1, 50},
+	greater_ego = 1,
+	rarity = 10,
+	cost = 20,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_CON] = resolvers.mbonus_material(5, 1),
+		},
+		poison_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
+		disease_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
+		life_regen = resolvers.mbonus_material(27, 3, function(e, v) v=v/10 return 0, v end),
+	},	
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = " of the zealot", suffix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 40,
+	max_power = 80, power_regen = 1,
+	use_talent = { id = Talents.T_ARCANE_EYE, level = 2, power = 80 },
+	wielder = {
+		blind_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, -v end),
+		confusion_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, -v end),
+		inc_damage = {
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(15, 5),
+			[DamageType.FIRE] = resolvers.mbonus_material(15, 5),
+		},
+	},	
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = " of blinding", suffix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 40,
+	max_power = 80, power_regen = 1,
+	use_talent = { id = Talents.T_ILLUMINATE, level = 3, power = 40 },
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = " of refraction", suffix=true, instant_resolve=true,
+	level_range = {10, 50},
+	greater_ego = 1,
+	rarity = 10,
+	cost = 40,
+	wielder = {
+		resists={
+			[DamageType.LIGHT] = resolvers.mbonus_material(7, 3),
+			[DamageType.DARKNESS] = resolvers.mbonus_material(7, 3),
+		},
+
+		resists_pen = { 
+			[DamageType.LIGHT] = resolvers.mbonus_material(7, 3),
+			[DamageType.DARKNESS] = resolvers.mbonus_material(7, 3),
+		},
+	},	
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = " of moonlight", suffix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 40,
+	max_power = 80, power_regen = 1,
+	use_talent = { id = Talents.T_MOONLIGHT_RAY, level = 4, power = 80 },
+	wielder = {
+		combat_spellpower = resolvers.mbonus_material(7, 3),
+	},	
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = " of repulsion", suffix=true, instant_resolve=true,
+	level_range = {1, 50},
+	greater_ego = 1,
+	rarity = 15,
+	cost = 40,
+	max_power = 80, power_regen = 1,
+	use_talent = { id = Talents.T_GLYPH_OF_REPULSION, level = 3, power = 80 },
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_MAG] = resolvers.mbonus_material(5, 1),
+		},
+	},	
 }

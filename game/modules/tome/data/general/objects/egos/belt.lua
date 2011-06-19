@@ -17,6 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 local Stats = require "engine.interface.ActorStats"
+local Talents = require "engine.interface.ActorTalents"
 local DamageType = require "engine.DamageType"
 
 --load("/data/general/objects/egos/charged-defensive.lua")
@@ -29,6 +30,7 @@ newEntity{
 	cost = 6,
 	wielder = {
 		max_encumber = resolvers.mbonus_material(40, 20, function(e, v) return v * 0.4, v end),
+		fatigue = resolvers.mbonus_material(6, 4, function(e, v) return 0, -v end),
 	},
 }
 
@@ -176,6 +178,17 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
+	name = " of clarity", suffix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 9,
+	cost = 9,
+	wielder = {
+		confusion_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
+	},	
+}
+
+newEntity{
 	power_source = {arcane=true},
 	name = " of magery", suffix=true, instant_resolve=true,
 	level_range = {25, 50},
@@ -286,4 +299,183 @@ newEntity{
 		combat_def = resolvers.mbonus_material(4, 4, function(e, v) return v * 1 end),
 		stun_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
 	},
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "ravager's ", prefix=true, instant_resolve=true,
+	level_range = {40, 50},
+	greater_ego = 1,
+	rarity = 40,
+	cost = 100,
+	wielder = {
+		resists={
+			[DamageType.PHYSICAL] = resolvers.mbonus_material(15, 5, function(e, v) return 0, -v end),
+		},
+		inc_damage = {
+			[DamageType.PHYSICAL] = resolvers.mbonus_material(20, 5),
+		},
+		resists_pen = { 
+			[DamageType.PHYSICAL] = resolvers.mbonus_material(15, 5),
+		},
+	},	
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = "draining ", prefix=true, instant_resolve=true,
+	level_range = {45, 50},
+	greater_ego = 1,
+	rarity = 40,
+	cost = 100,
+	wielder = {
+		resource_leech_chance = resolvers.mbonus_material(10, 5),
+		resource_leech_value = resolvers.mbonus_material(1, 1),
+
+		on_melee_hit = {
+			[DamageType.BLIGHT] = resolvers.mbonus_material(10, 5),
+		},
+	},	
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = "nightruned ", prefix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 60,
+	wielder = {
+		resists={
+			[DamageType.LIGHT] = resolvers.mbonus_material(10, 5),
+			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 5),
+		},
+		blind_immune = resolvers.mbonus_material(20, 15, function(e, v) v=v/100 return 0, v end),
+		see_invisible = resolvers.mbonus_material(20, 5),
+	},	
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "skylord's ", prefix=true, instant_resolve=true,
+	level_range = {40, 50},
+	greater_ego = 1,
+	rarity = 35,
+	cost = 70,
+	wielder = {
+
+		inc_stats = {
+			[Stats.STAT_STR] = resolvers.mbonus_material(3, 1),
+			[Stats.STAT_DEX] = resolvers.mbonus_material(3, 1),
+			[Stats.STAT_WIL] = resolvers.mbonus_material(3, 1),
+			[Stats.STAT_CUN] = resolvers.mbonus_material(3, 1),
+		},
+		combat_mentalresist = resolvers.mbonus_material(3, 3),
+		combat_physresist = resolvers.mbonus_material(3, 3),
+		combat_spellresist = resolvers.mbonus_material(3, 3),
+	},	
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = "spiritwalker's ", prefix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 40,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_MAG] = resolvers.mbonus_material(5, 1),
+		},
+		max_mana = resolvers.mbonus_material(40, 20),
+		mana_regen = resolvers.mbonus_material(50, 10, function(e, v) v=v/100 return 0, v end),
+	},	
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = " of containment", suffix=true, instant_resolve=true,
+	level_range = {40, 50},
+	greater_ego = 1,
+	rarity = 35,
+	cost = 70,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_CON] = resolvers.mbonus_material(6, 4),
+		},
+		stun_immune = resolvers.mbonus_material(25, 10, function(e, v) v=v/100 return 0, v end),
+		knockback_immune = resolvers.mbonus_material(25, 10, function(e, v) v=v/100 return 0, v end),
+		pin_immune = resolvers.mbonus_material(25, 10, function(e, v) v=v/100 return 0, -v end),
+		blind_immune = resolvers.mbonus_material(25, 10, function(e, v) v=v/100 return 0, -v end),
+		confusion_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
+		max_stamina = resolvers.mbonus_material(30, 10),
+	},	
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = " of recklessness", suffix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = 1,
+	rarity = 15,
+	cost = 40,
+	wielder = {
+		disarm_immune = resolvers.mbonus_material(15, 5, function(e, v) v=v/100 return 0, v end),
+		confusion_immune = resolvers.mbonus_material(15, 5, function(e, v) v=v/100 return 0, v end),
+		combat_critical_power = resolvers.mbonus_material(10, 5),
+		combat_dam = resolvers.mbonus_material(3, 3),
+	},	
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = " of valiance", suffix=true, instant_resolve=true,
+	level_range = {25, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 60,
+	wielder = {
+		resists={
+			[DamageType.PHYSICAL] = resolvers.mbonus_material(7, 3),
+		},
+		inc_stats = {
+			[Stats.STAT_WIL] = resolvers.mbonus_material(5, 1),
+		},
+		max_life = resolvers.mbonus_material(70, 40),
+	},	
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = " of unlife", suffix=true, instant_resolve=true,
+	level_range = {10, 50},
+	greater_ego = 1,
+	rarity = 15,
+	cost = 30,
+	wielder = {
+		resists={
+			[DamageType.BLIGHT] = resolvers.mbonus_material(10, 5),
+		},
+		inc_stats = {
+			[Stats.STAT_STR] = resolvers.mbonus_material(5, 1),
+		},
+		can_breath = {water=1},
+	},	
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = " of the vagrant", suffix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 40,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_CON] = resolvers.mbonus_material(5, 1),
+		},
+		combat_mentalresist = resolvers.mbonus_material(7, 3),
+		combat_physresist = resolvers.mbonus_material(7, 3),
+		combat_spellresist = resolvers.mbonus_material(7, 3),
+	},	
 }

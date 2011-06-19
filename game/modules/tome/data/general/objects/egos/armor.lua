@@ -324,3 +324,163 @@ newEntity{
 		fatigue = resolvers.mbonus_material(6, 4, function(e, v) return v * 1, -v end),
 	},
 }
+
+newEntity{
+	power_source = {technique=true},
+	name = "marauder's ", prefix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 40,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_STR] = resolvers.mbonus_material(7, 3),
+			[Stats.STAT_DEX] = resolvers.mbonus_material(7, 3),
+		},
+		disarm_immune = resolvers.mbonus_material(25, 15, function(e, v) v=v/100 return 0, v end),
+		combat_physresist = resolvers.mbonus_material(15, 5),
+	},	
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = "verdant ", prefix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = 1,
+	rarity = 15,
+	cost = 30,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_CON] = resolvers.mbonus_material(5, 1),
+		},
+		poison_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
+		disease_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
+		life_regen = resolvers.mbonus_material(30, 5, function(e, v) v=v/10 return 0, v end),
+		fatigue = resolvers.mbonus_material(6, 4, function(e, v) return 0, -v end),
+	},	
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = "sunsealed ", prefix=true, instant_resolve=true,
+	level_range = {40, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 80,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_WIL] = resolvers.mbonus_material(7, 3),
+		},
+		combat_armor = resolvers.mbonus_material(7, 3),
+		combat_physcrit = resolvers.mbonus_material(5, 1),
+		combat_spellcrit = resolvers.mbonus_material(5, 1),
+		combat_atk = resolvers.mbonus_material(10, 5),
+	},	
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = "enlightening ", prefix=true, instant_resolve=true,
+	level_range = {10, 50},
+	greater_ego = 1,
+	rarity = 15,
+	cost = 30,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_CUN] = resolvers.mbonus_material(5, 1),
+		},
+		blind_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
+		confusion_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
+		combat_mentalresist = resolvers.mbonus_material(10, 5),
+		combat_spellresist = resolvers.mbonus_material(10, 5),
+	},	
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = " of the wind", suffix=true, instant_resolve=true,
+	level_range = {40, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 80,
+	max_power = 80, power_regen = 1,
+	use_talent = { id = Talents.T_SECOND_WIND, level = 5, power = 80 },
+	wielder = {
+		max_life = resolvers.mbonus_material(60, 40, function(e, v) return 0, -v end),
+		combat_armor = resolvers.mbonus_material(7, 3, function(e, v) return 0, -v end),
+		
+		combat_physcrit = resolvers.mbonus_material(7, 3),
+		combat_apr = resolvers.mbonus_material(15, 5),
+		combat_def = resolvers.mbonus_material(10, 5),
+	},	
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = " of command", suffix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 40,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_CUN] = resolvers.mbonus_material(5, 1),
+		},
+		combat_mentalresist = resolvers.mbonus_material(10, 5),
+		combat_armor = resolvers.mbonus_material(7, 3),
+		combat_def = resolvers.mbonus_material(10, 5),
+	},	
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = " of delving", suffix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 25,
+	cost = 60,
+	max_power = 80, power_regen = 1,
+	use_talent = { id = Talents.T_TRACK, level = 2, power = 80 },
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_STR] = resolvers.mbonus_material(6, 4),
+		},
+		lite = resolvers.mbonus_material(1, 1),
+	},	
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = " of the deep", suffix=true, instant_resolve=true,
+	level_range = {10, 50},
+	greater_ego = 1,
+	rarity = 15,
+	cost = 20,
+	wielder = {
+		resists={
+			[DamageType.ACID] = resolvers.mbonus_material(10, 5),
+			[DamageType.COLD] = resolvers.mbonus_material(10, 5),
+		},
+		combat_armor = resolvers.mbonus_material(5, 1),
+		can_breath = {water=1},
+	},	
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = " of thunder", suffix=true, instant_resolve=true,
+	level_range = {40, 50},
+	greater_ego = 1,
+	rarity = 40,
+	cost = 100,
+	wielder = {
+
+		inc_stats = {
+			[Stats.STAT_STR] = resolvers.mbonus_material(7, 3),
+			[Stats.STAT_MAG] = resolvers.mbonus_material(7, 3),
+		},
+		combat_physcrit = resolvers.mbonus_material(3, 2),
+		combat_spellcrit = resolvers.mbonus_material(3, 2),
+		combat_dam = resolvers.mbonus_material(7, 3),
+	},	
+}

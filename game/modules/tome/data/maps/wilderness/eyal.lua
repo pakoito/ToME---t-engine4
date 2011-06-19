@@ -88,7 +88,7 @@ defineTile('unremarkable-cave', "UNREMARKABLE_CAVE")
 -- Island of Rel
 defineTile('irkkk', "TOWN_IRKKK")
 defineTile('ritch-tunnels', "RITCH_TUNNELS")
-quickEntity('murgol-lair', {always_remember = true, show_tooltip=true, name="Way into the lair of Murgol",display='>', color=colors.LIGHT_BLUE, notice = true, change_level=1, change_zone="murgol-lair"})
+defineTile('murgol-lair', "MURGOL_LAIR")
 defineTile('rel-tunnel', "REL_TUNNEL")
 
 

@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 local Stats = require "engine.interface.ActorStats"
+local Talents = require "engine.interface.ActorTalents"
 
 --load("/data/general/objects/egos/charged-attack.lua")
 --load("/data/general/objects/egos/charged-defensive.lua")
@@ -256,4 +257,256 @@ newEntity{
 			[Stats.STAT_CON] = resolvers.mbonus_material(4, 3, function(e, v) return v * 3 end),
 			},
 	},
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = "obstinate ", prefix=true, instant_resolve=true,
+	level_range = {40, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 60,
+	encumber = 15,
+	wielder = {
+		resists={
+			[DamageType.ARCANE] = resolvers.mbonus_material(7, 3),
+		},
+		inc_stats = {
+			[Stats.STAT_MAG] = resolvers.mbonus_material(5, 1),
+		},
+		on_melee_hit = {
+			[DamageType.ARCANE] = resolvers.mbonus_material(10, 5),
+		},
+		melee_project = {
+			[DamageType.ARCANE] = resolvers.mbonus_material(10, 5),
+		},
+		fatigue = resolvers.mbonus_material(6, 4, function(e, v) return 0, v end),
+	},	
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = "living ", prefix=true, instant_resolve=true,
+	level_range = {10, 50},
+	greater_ego = 1,
+	rarity = 15,
+	cost = 30,
+	wielder = {
+		resists={
+			[DamageType.NATURE] = resolvers.mbonus_material(10, 5),
+		},
+		max_life = resolvers.mbonus_material(70, 40),
+		melee_project = {
+			[DamageType.NATURE] = resolvers.mbonus_material(10, 5),
+		},
+	},	
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "coruscating ", prefix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 60,
+	wielder = {
+		resists={
+			[DamageType.FIRE] = resolvers.mbonus_material(10, 5),
+		},
+		inc_stats = {
+			[Stats.STAT_STR] = resolvers.mbonus_material(5, 1),
+		},
+		on_melee_hit = {
+			[DamageType.FIRE] = resolvers.mbonus_material(10, 5),
+		},
+		melee_project = {
+			[DamageType.FIRE] = resolvers.mbonus_material(10, 5),
+		},
+	},	
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "crackling ", prefix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 60,
+	wielder = {
+		resists={
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(10, 5),
+		},
+		inc_stats = {
+			[Stats.STAT_DEX] = resolvers.mbonus_material(5, 1),
+		},
+		on_melee_hit = {
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(10, 5),
+		},
+		melee_project = {
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(10, 5),
+		},
+	},	
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "corrosive ", prefix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 60,
+	wielder = {
+		resists={
+			[DamageType.ACID] = resolvers.mbonus_material(10, 5),
+		},
+		inc_stats = {
+			[Stats.STAT_CON] = resolvers.mbonus_material(5, 1),
+		},
+		on_melee_hit = {
+			[DamageType.ACID] = resolvers.mbonus_material(10, 5),
+		},
+		melee_project = {
+			[DamageType.ACID] = resolvers.mbonus_material(10, 5),
+		},
+	},	
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "wintry ", prefix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 60,
+	wielder = {
+		resists={
+			[DamageType.COLD] = resolvers.mbonus_material(10, 5),
+		},
+		inc_stats = {
+			[Stats.STAT_WIL] = resolvers.mbonus_material(5, 1),
+		},
+		on_melee_hit = {
+			[DamageType.COLD] = resolvers.mbonus_material(10, 5),
+		},
+		melee_project = {
+			[DamageType.COLD] = resolvers.mbonus_material(10, 5),
+		},
+	},	
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = " of soul-stealing", suffix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 40,
+	wielder = {
+		resists={
+			[DamageType.MIND] = resolvers.mbonus_material(15, 5),
+		},
+		inc_stats = {
+			[Stats.STAT_WIL] = resolvers.mbonus_material(9, 1),
+		},
+		resource_leech_chance = resolvers.mbonus_material(10, 5),
+		resource_leech_value = resolvers.mbonus_material(1, 1),
+		max_life = resolvers.mbonus_material(70, 40, function(e, v) return 0, -v end),
+		healing_factor = resolvers.mbonus_material(30, 20, function(e, v) v=v/100 return 0, -v end),
+	},	
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = " of displacement", suffix=true, instant_resolve=true,
+	level_range = {10, 50},
+	greater_ego = 1,
+	rarity = 25,
+	cost = 40,
+	max_power = 80, power_regen = 1,
+	use_talent = { id = Talents.T_DISPLACEMENT_SHIELD, level = 5, power = 80 },
+	wielder = {
+		combat_def = resolvers.mbonus_material(10, 5),
+	},	
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = " of the earth", suffix=true, instant_resolve=true,
+	level_range = {10, 50},
+	greater_ego = 1,
+	rarity = 25,
+	cost = 40,
+	max_power = 80, power_regen = 1,
+	use_talent = { id = Talents.T_EARTHEN_BARRIER, level = 5, power = 80 },
+	wielder = {
+		combat_armor = resolvers.mbonus_material(7, 3),
+	},	
+}
+
+newEntity{
+	power_source = {natural=true},
+	name = " of the sun", suffix=true, instant_resolve=true,
+	level_range = {1, 50},
+	greater_ego = 1,
+	rarity = 10,
+	cost = 20,
+	max_power = 10, power_regen = 1,
+	use_talent = { id = Talents.T_ILLUMINATE, level = 2, power = 6 },
+	wielder = {
+		resists={
+			[DamageType.LIGHT] = resolvers.mbonus_material(10, 5),
+			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 5),
+		},
+	},	
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = " of patience", suffix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 40,
+	max_power = 80, power_regen = 1,
+	use_talent = { id = Talents.T_TIME_SHIELD, level = 5, power = 80 },
+	wielder = {
+		resists={
+			[DamageType.TEMPORAL] = resolvers.mbonus_material(10, 5),
+		},
+		melee_project = {
+			[DamageType.TEMPORAL] = resolvers.mbonus_material(7, 3),
+		},
+	},	
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = " of harmony", suffix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 60,
+	max_power = 80, power_regen = 1,
+	use_talent = { id = Talents.T_WATERS_OF_LIFE, level = 4, power = 80 },
+	wielder = {
+		talents_types_mastery = {
+			["gifts/harmony"] = resolvers.mbonus_material(2, 2, function(e, v) v=v/10 return 0, v end),
+		},
+	},	
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = " of faith", suffix=true, instant_resolve=true,
+	level_range = {1, 50},
+	greater_ego = 1,
+	rarity = 10,
+	cost = 20,
+	max_power = 80, power_regen = 1,
+	use_talent = { id = Talents.T_BARRIER, level = 4, power = 80 },
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_WIL] = resolvers.mbonus_material(5, 1),
+		},
+	},	
 }

@@ -17,6 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 local Stats = require "engine.interface.ActorStats"
+local Talents = require "engine.interface.ActorTalents"
 local DamageType = require "engine.DamageType"
 
 --load("/data/general/objects/egos/charged-defensive.lua")
@@ -163,6 +164,17 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
+	name = "lightening ", prefix=true, instant_resolve=true,
+	level_range = {1, 50},
+	rarity = 10,
+	cost = 10,
+	wielder = {
+		fatigue = resolvers.mbonus_material(5, 2, function(e, v) return 0, -v end),
+	},
+}
+
+newEntity{
 	power_source = {arcane=true},
 	name = " of sorcery", suffix=true, instant_resolve=true,
 	level_range = {30, 50},
@@ -240,4 +252,170 @@ newEntity{
 			[DamageType.COLD] = resolvers.mbonus_material(5, 5, function(e, v) return v * 0.15 end),
 		},
 	},
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "battlemaster's ", prefix=true, instant_resolve=true,
+	level_range = {40, 50},
+	greater_ego = 1,
+	rarity = 40,
+	cost = 80,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_STR] = resolvers.mbonus_material(5, 1),
+			[Stats.STAT_DEX] = resolvers.mbonus_material(5, 1),
+			[Stats.STAT_CON] = resolvers.mbonus_material(5, 1),
+		},
+		combat_spellresist = resolvers.mbonus_material(20, 10, function(e, v) return 0, -v end),
+		stamina_regen = resolvers.mbonus_material(12, 3, function(e, v) v=v/10 return 0, -v end),
+		mana_regen = resolvers.mbonus_material(50, 10, function(e, v) v=v/100 return 0, -v end),
+		talents_types_mastery = {
+			["techniques/combat-training"] = resolvers.mbonus_material(2, 2, function(e, v) v=v/10 return 0, v end),
+		},
+	},	
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = "spellcowled ", prefix=true, instant_resolve=true,
+	level_range = {10, 50},
+	greater_ego = 1,
+	rarity = 15,
+	cost = 30,
+	wielder = {
+		blind_immune = resolvers.mbonus_material(10, 5, function(e, v) v=v/100 return 0, v end),
+		confusion_immune = resolvers.mbonus_material(10, 5, function(e, v) v=v/100 return 0, v end),
+		combat_mentalresist = resolvers.mbonus_material(4, 1),
+		combat_physresist = resolvers.mbonus_material(4, 1),
+		combat_spellresist = resolvers.mbonus_material(4, 1),
+	},	
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "marshal's ", prefix=true, instant_resolve=true,
+	level_range = {35, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 40,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_STR] = resolvers.mbonus_material(5, 1),
+			[Stats.STAT_CON] = resolvers.mbonus_material(5, 1),
+		},
+		combat_mentalresist = resolvers.mbonus_material(4, 1),
+		combat_physresist = resolvers.mbonus_material(4, 1),
+		combat_spellresist = resolvers.mbonus_material(4, 1),
+		max_life = resolvers.mbonus_material(70, 40),
+	},	
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "murderer's ", prefix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 40,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_DEX] = resolvers.mbonus_material(5, 1),
+			[Stats.STAT_CUN] = resolvers.mbonus_material(5, 1),
+		},
+		combat_atk = resolvers.mbonus_material(7, 3),
+		combat_apr = resolvers.mbonus_material(7, 3),
+	},	
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = "parasitic ", prefix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 60,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_CON] = resolvers.mbonus_material(6, 4, function(e, v) return 0, -v end),
+		},
+		poison_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
+		resource_leech_chance = resolvers.mbonus_material(10, 5),
+		resource_leech_value = resolvers.mbonus_material(1, 1),
+	},	
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = " of the guardian", suffix=true, instant_resolve=true,
+	level_range = {40, 50},
+	greater_ego = 1,
+	rarity = 35,
+	cost = 40,
+	wielder = {
+		combat_mentalresist = resolvers.mbonus_material(10, 5),
+		combat_physresist = resolvers.mbonus_material(10, 5),
+		combat_spellresist = resolvers.mbonus_material(10, 5),
+		combat_armor = resolvers.mbonus_material(7, 3),
+		combat_def = resolvers.mbonus_material(10, 5),
+	},	
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = " of conjuring", suffix=true, instant_resolve=true,
+	level_range = {40, 50},
+	greater_ego = 1,
+	rarity = 35,
+	cost = 70,
+	wielder = {
+		max_mana = resolvers.mbonus_material(80, 20),
+		combat_spellpower = resolvers.mbonus_material(7, 3),
+		combat_spellcrit = resolvers.mbonus_material(3, 3),
+	},	
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = " of warlust", suffix=true, instant_resolve=true,
+	level_range = {10, 50},
+	greater_ego = 1,
+	rarity = 15,
+	cost = 30,
+	wielder = {
+		disarm_immune = resolvers.mbonus_material(15, 5, function(e, v) v=v/100 return 0, v end),
+		confusion_immune = resolvers.mbonus_material(15, 5, function(e, v) v=v/100 return 0, v end),
+		combat_physcrit = resolvers.mbonus_material(4, 1),
+		combat_dam = resolvers.mbonus_material(4, 1),
+	},	
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = " of the hunt", suffix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 60,
+	max_power = 80, power_regen = 1,
+	use_talent = { id = Talents.T_BLINDING_SPEED, level = 3, power = 80 },
+	wielder = {
+		max_life = resolvers.mbonus_material(70, 40),
+		fatigue = resolvers.mbonus_material(6, 4, function(e, v) return 0, -v end),
+	},	
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = " of backstabbing", suffix=true, instant_resolve=true,
+	level_range = {40, 50},
+	greater_ego = 1,
+	rarity = 35,
+	cost = 70,
+	wielder = {
+		combat_critical_power = resolvers.mbonus_material(30, 10),
+		combat_atk = resolvers.mbonus_material(10, 5),
+		combat_apr = resolvers.mbonus_material(10, 5),
+		inc_stealth = resolvers.mbonus_material(10, 5),
+	},	
 }

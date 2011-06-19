@@ -21,6 +21,7 @@ local Stats = require "engine.interface.ActorStats"
 local DamageType = require "engine.DamageType"
 local Talents = require "engine.interface.ActorTalents"
 
+--TEST ALL NEW EGOS
 
 --load("/data/general/objects/egos/charged-attack.lua")
 --load("/data/general/objects/egos/charged-defensive.lua")
@@ -202,6 +203,18 @@ newEntity{
 }
 
 newEntity{
+	power_source = {technique=true},
+	name = "restful ", prefix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = 1,
+	rarity = 6,
+	cost = 10,
+	wielder = {
+		fatigue = resolvers.mbonus_material(6, 4, function(e, v) return 0, -v end),
+	},
+}
+
+newEntity{
 	power_source = {nature=true},
 	name = "vitalizing ", prefix=true, instant_resolve=true,
 	level_range = {20, 50},
@@ -314,6 +327,182 @@ newEntity{
 			[DamageType.COLD] = resolvers.mbonus_material(4, 4, function(e, v) return v * 0.25 end),
 			[DamageType.ACID] = resolvers.mbonus_material(4, 4, function(e, v) return v * 0.25 end),
 			[DamageType.LIGHTNING] = resolvers.mbonus_material(4, 4, function(e, v) return v * 0.25 end),
+		},
+	},
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "warmaker's ", prefix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 25,
+	cost = 80,
+
+	wielder = {
+		resists={
+			[DamageType.ARCANE] = resolvers.mbonus_material(20, 10, function(e, v) return 0, -v end),
+		},
+		inc_stats = {
+			[Stats.STAT_STR] = resolvers.mbonus_material(6, 4),
+			[Stats.STAT_DEX] = resolvers.mbonus_material(6, 4),
+			[Stats.STAT_WIL] = resolvers.mbonus_material(6, 4),
+		},
+		combat_spellresist = resolvers.mbonus_material(10, 5, function(e, v) return 0, -v end),
+
+	},
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = "mindweaver's ", prefix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = 1,
+	rarity = 15,
+	cost = 30,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_CUN] = resolvers.mbonus_material(5, 1),
+		},
+		confusion_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
+		combat_mentalresist = resolvers.mbonus_material(10, 5),
+		combat_spellresist = resolvers.mbonus_material(10, 5),
+
+	},
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "savior's ", prefix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = 1,
+	rarity = 15,
+	cost = 30,
+	wielder = {
+		combat_mentalresist = resolvers.mbonus_material(10, 5),
+		combat_physresist = resolvers.mbonus_material(10, 5),
+		combat_spellresist = resolvers.mbonus_material(10, 5),
+		combat_def = resolvers.mbonus_material(10, 5),
+	},
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "wanderer's ", prefix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = 1,
+	rarity = 15,
+	cost = 30,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_CON] = resolvers.mbonus_material(7, 3),
+			[Stats.STAT_CUN] = resolvers.mbonus_material(7, 3),
+		},
+		combat_armor = resolvers.mbonus_material(7, 3),
+	},
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = "serendipitous ", prefix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = 1,
+	rarity = 15,
+	cost = 30,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_LCK] = resolvers.mbonus_material(12, 8),
+		},
+	},
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = " of soulsearing", suffix=true, instant_resolve=true,
+	level_range = {40, 50},
+	greater_ego = 1,
+	rarity = 25,
+	cost = 90,
+	wielder = {
+		resists={
+			[DamageType.FIRE] = resolvers.mbonus_material(10, 5, function(e, v) return 0, -v end),
+			[DamageType.MIND] = resolvers.mbonus_material(10, 5, function(e, v) return 0, -v end),
+		},
+		combat_spellpower = resolvers.mbonus_material(10, 5),
+		combat_critical_power = resolvers.mbonus_material(30, 10),
+		inc_damage = {
+			[DamageType.FIRE] = resolvers.mbonus_material(10, 5),
+			[DamageType.MIND] = resolvers.mbonus_material(10, 5),
+		},
+	},
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = " of lifeblood", suffix=true, instant_resolve=true,
+	level_range = {40, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 100,
+	wielder = {
+		resists={
+			[DamageType.LIGHT] = resolvers.mbonus_material(10, 5, function(e, v) return 0, -v end),
+			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 5),
+		},
+		resource_leech_chance = resolvers.mbonus_material(10, 5),
+		resource_leech_value = resolvers.mbonus_material(3, 1),
+	},
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = " of seduction", suffix=true, instant_resolve=true,
+	level_range = {35, 50},
+	greater_ego = 1,
+	rarity = 25,
+	cost = 50,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_WIL] = resolvers.mbonus_material(5, 1),
+		},
+		max_stamina = resolvers.mbonus_material(30, 10),
+		stamina_regen_on_hit = resolvers.mbonus_material(23, 7, function(e, v) v=v/10 return 0, v end),
+	},
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = " of manastreaming", suffix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = 1,
+	rarity = 35,
+	cost = 70,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_MAG] = resolvers.mbonus_material(5, 1),
+		},
+		max_mana = resolvers.mbonus_material(40, 20),
+		mana_regen = resolvers.mbonus_material(50, 10, function(e, v) v=v/100 return 0, v end),
+
+	},
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = " of the chosen", suffix=true, instant_resolve=true,
+	level_range = {25, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 40,
+	wielder = {
+		resists={
+			[DamageType.LIGHT] = resolvers.mbonus_material(10, 5),
+		},
+		on_melee_hit = {
+			[DamageType.LIGHT] = resolvers.mbonus_material(10, 5),
+		},
+		melee_project={
+			[DamageType.LIGHT] = resolvers.mbonus_material(10, 5),
 		},
 	},
 }

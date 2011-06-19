@@ -23,52 +23,92 @@
 
 newEntity{
 	define_as = "WATER_FLOOR",
-	name = "underwater", image = "terrain/water_floor.png",
+	type = "floor", subtype = "underwater",
+	name = "underwater", image = "terrain/underwater/subsea_floor_02.png",
 	display = '.', color=colors.LIGHT_BLUE, back_color=colors.DARK_BLUE,
-	add_displays = class:makeWater(true),
 	air_level = -5, air_condition="water",
+	nice_tiler = { method="replace", base={"WATER_FLOOR", 10, 1, 5}},
 }
-for i = 2, 20 do
-newEntity{
-	define_as = "WATER_FLOOR"..i,
-	name = "underwater", image = "terrain/water_floor.png",
-	display = '.', color=colors.LIGHT_BLUE, back_color=colors.DARK_BLUE,
-	add_displays = class:mergeSubEntities(class:makeWater(true), class:makeShells("terrain/shell")),
-	air_level = -5, air_condition="water",
-}
-end
+for i = 1, 5 do newEntity{ base="WATER_FLOOR", define_as = "WATER_FLOOR"..i, image = "terrain/underwater/subsea_floor_02"..string.char(string.byte('a')+i-1)..".png" } end
 
 newEntity{
 	define_as = "WATER_WALL",
-	name = "coral wall", image = "terrain/water_wall.png",
+	type = "wall", subtype = "underwater",
+	name = "coral wall", image = "terrain/underwater/subsea_granite_wall1.png",
 	display = '#', color=colors.AQUAMARINE, back_color=colors.DARK_BLUE,
-	add_displays = class:makeWater(true),
 	always_remember = true,
 	can_pass = {pass_wall=1},
 	does_block_move = true,
 	block_sight = true,
 	air_level = -5,
+	z = 3,
+	nice_tiler = { method="wall3d", inner={"WATER_WALL", 100, 1, 5}, north={"WATER_WALL_NORTH", 100, 1, 5}, south={"WATER_WALL_SOUTH", 10, 1, 14}, north_south="WATER_WALL_NORTH_SOUTH", small_pillar="WATER_WALL_SMALL_PILLAR", pillar_2="WATER_WALL_PILLAR_2", pillar_8={"WATER_WALL_PILLAR_8", 100, 1, 5}, pillar_4="WATER_WALL_PILLAR_4", pillar_6="WATER_WALL_PILLAR_6" },
+	always_remember = true,
+	does_block_move = true,
+	can_pass = {pass_wall=1},
+	block_sight = true,
+	air_level = -20,
+	dig = "FLOOR",
 }
+
+for i = 1, 5 do
+	newEntity{ base = "WATER_WALL", define_as = "WATER_WALL"..i, image = "terrain/underwater/subsea_granite_wall1_"..i..".png", z = 3}
+	newEntity{ base = "WATER_WALL", define_as = "WATER_WALL_NORTH"..i, image = "terrain/underwater/subsea_granite_wall1_"..i..".png", z = 3, add_displays = {class.new{image="terrain/underwater/subsea_granite_wall3.png", z=18, display_y=-1}}}
+	newEntity{ base = "WATER_WALL", define_as = "WATER_WALL_PILLAR_8"..i, image = "terrain/underwater/subsea_granite_wall1_"..i..".png", z = 3, add_displays = {class.new{image="terrain/underwater/subsea_granite_wall_pillar_8.png", z=18, display_y=-1}}}
+end
+newEntity{ base = "WATER_WALL", define_as = "WATER_WALL_NORTH_SOUTH", image = "terrain/underwater/subsea_granite_wall2.png", z = 3, add_displays = {class.new{image="terrain/underwater/subsea_granite_wall3.png", z=18, display_y=-1}}}
+newEntity{ base = "WATER_WALL", define_as = "WATER_WALL_SOUTH", image = "terrain/underwater/subsea_granite_wall2.png", z = 3}
+for i = 1, 14 do newEntity{ base = "WATER_WALL", define_as = "WATER_WALL_SOUTH"..i, image = "terrain/underwater/subsea_granite_wall2_"..i..".png", z = 3} end
+newEntity{ base = "WATER_WALL", define_as = "WATER_WALL_SMALL_PILLAR", image = "terrain/underwater/subsea_floor_02.png", z=1, add_displays = {class.new{image="terrain/underwater/subsea_granite_wall_pillar_small.png",z=3}, class.new{image="terrain/underwater/subsea_granite_wall_pillar_small_top.png", z=18, display_y=-1}}}
+newEntity{ base = "WATER_WALL", define_as = "WATER_WALL_PILLAR_6", image = "terrain/underwater/subsea_floor_02.png", z=1, add_displays = {class.new{image="terrain/underwater/subsea_granite_wall_pillar_3.png",z=3}, class.new{image="terrain/underwater/subsea_granite_wall_pillar_9.png", z=18, display_y=-1}}}
+newEntity{ base = "WATER_WALL", define_as = "WATER_WALL_PILLAR_4", image = "terrain/underwater/subsea_floor_02.png", z=1, add_displays = {class.new{image="terrain/underwater/subsea_granite_wall_pillar_1.png",z=3}, class.new{image="terrain/underwater/subsea_granite_wall_pillar_7.png", z=18, display_y=-1}}}
+newEntity{ base = "WATER_WALL", define_as = "WATER_WALL_PILLAR_2", image = "terrain/underwater/subsea_floor_02.png", z=1, add_displays = {class.new{image="terrain/underwater/subsea_granite_wall_pillar_2.png",z=3}}}
+
+
 newEntity{
 	define_as = "WATER_DOOR",
-	name = "coral door", image = "terrain/granite_door1.png",
-	display = '+', color=colors.AQUAMARINE, back_color=colors.DARK_BLUE,
-	add_displays = class:makeWater(true),
+	type = "wall", subtype = "floor",
+	name = "door", image = "terrain/underwater/subsea_stone_wall_door_closed.png",
+	display = '+', color_r=238, color_g=154, color_b=77, back_color=colors.DARK_UMBER,
+	nice_tiler = { method="door3d", north_south="WATER_DOOR_VERT", west_east="WATER_DOOR_HORIZ" },
 	notice = true,
 	always_remember = true,
 	block_sight = true,
-	door_opened = "WATER_DOOR_OPEN",
-	dig = "WATER_DOOR_OPEN",
 	air_level = -5, air_condition="water",
+	door_opened = "WATER_DOOR_OPEN",
+	dig = "WATER_FLOOR",
 }
 newEntity{
 	define_as = "WATER_DOOR_OPEN",
-	name = "open coral door", image = "terrain/granite_door1_open.png",
-	display = "'", color=colors.AQUAMARINE, back_color=colors.DARK_BLUE,
-	add_displays = class:makeWater(true),
+	type = "wall", subtype = "floor",
+	name = "open door", image="terrain/underwater/subsea_granite_door1_open.png",
+	display = "'", color_r=238, color_g=154, color_b=77, back_color=colors.DARK_GREY,
 	always_remember = true,
-	door_closed = "WATER_DOOR",
 	air_level = -5, air_condition="water",
+	door_closed = "WATER_DOOR",
+}
+newEntity{ base = "WATER_DOOR", define_as = "WATER_DOOR_HORIZ", image = "terrain/underwater/subsea_stone_wall_door_closed.png", add_displays = {class.new{image="terrain/underwater/subsea_granite_wall3.png", z=18, display_y=-1}}, door_opened = "WATER_DOOR_HORIZ_OPEN"}
+newEntity{ base = "WATER_DOOR_OPEN", define_as = "WATER_DOOR_HORIZ_OPEN", image = "terrain/underwater/subsea_floor_02.png", add_displays = {class.new{image="terrain/underwater/subsea_stone_store_open.png", z=17}, class.new{image="terrain/underwater/subsea_granite_wall3.png", z=18, display_y=-1}}, door_closed = "WATER_DOOR_HORIZ"}
+newEntity{ base = "WATER_DOOR", define_as = "WATER_DOOR_VERT", image = "terrain/underwater/subsea_floor_02.png", add_displays = {class.new{image="terrain/underwater/subsea_granite_door1_vert.png", z=17}, class.new{image="terrain/underwater/subsea_granite_door1_vert_north.png", z=18, display_y=-1}}, door_opened = "WATER_DOOR_OPEN_VERT", dig = "WATER_DOOR_OPEN_VERT"}
+newEntity{ base = "WATER_DOOR_OPEN", define_as = "WATER_DOOR_OPEN_VERT", image = "terrain/underwater/subsea_floor_02.png", add_displays = {class.new{image="terrain/underwater/subsea_granite_door1_open_vert.png", z=17}, class.new{image="terrain/underwater/subsea_granite_door1_open_vert_north.png", z=18, display_y=-1}}, door_closed = "WATER_DOOR_VERT"}
+
+
+newEntity{
+	define_as = "WATER_FLOOR_BUBBLE",
+	name = "underwater air bubble", image = "terrain/underwater/subsea_floor_bubbles.png",
+	display = ':', color=colors.LIGHT_BLUE, back_color=colors.DARK_BLUE,
+	air_level = 15, nb_charges = resolvers.rngrange(4, 7),
+	force_clone = true,
+	on_stand = function(self, x, y, who)
+		if ((who.can_breath.water and who.can_breath.water <= 0) or not who.can_breath.water) and not who:attr("no_breath") then
+			self.nb_charges = self.nb_charges - 1
+			if self.nb_charges <= 0 then
+				game.logSeen(who, "#AQUAMARINE#The air bubbles are depleted!")
+				local g = game.zone:makeEntityByName(game.level, "terrain", "WATER_FLOOR")
+				game.zone:addEntity(game.level, g, "terrain", x, y)
+			end
+		end
+	end,
 }
 
 ------------------------------------------------------------
@@ -91,20 +131,7 @@ newEntity{
 newEntity{ base="WATER_BASE",
 	define_as = "DEEP_WATER",
 	image="terrain/water_grass_5_1.png",
---	add_displays = class:makeWater(true),
---	nice_tiler = { method="water",
---		water="DEEP_WATER_5",
---		grass8={"DEEP_WATER_8", 100, 1, 2}, grass2={"DEEP_WATER_2", 100, 1, 2}, grass4={"DEEP_WATER_4", 100, 1, 2}, grass6={"DEEP_WATER_6", 100, 1, 2}, grass1={"DEEP_WATER_1", 100, 1, 2}, grass3={"DEEP_WATER_3", 100, 1, 2}, grass7={"DEEP_WATER_7", 100, 1, 2}, grass9={"DEEP_WATER_9", 100, 1, 2}, inner_grass1="DEEP_WATER_1I", inner_grass3="DEEP_WATER_3I", inner_grass7="DEEP_WATER_7I", inner_grass9="DEEP_WATER_9I",
---	},
 }
---newEntity{base="WATER_BASE", define_as = "", image="terrain/water/water_5_1.png"}
---for i = 1, 9 do for j = 1, 1 do
---	if i ~= 5 then newEntity{base="WATER_BASE", define_as = "DEEP_WATER_"..i..j, image="terrain/water/water_"..i.."_0"..j..".png"} end
---end end
---newEntity{base="WATER_BASE", define_as = "DEEP_WATER_1I", image="terrain/water/water_1i_1.png"}
---newEntity{base="WATER_BASE", define_as = "DEEP_WATER_3I", image="terrain/water/water_3i_1.png"}
---newEntity{base="WATER_BASE", define_as = "DEEP_WATER_7I", image="terrain/water/water_7i_1.png"}
---newEntity{base="WATER_BASE", define_as = "DEEP_WATER_9I", image="terrain/water/water_9i_1.png"}
 
 -----------------------------------------
 -- Water(ocean)/grass
@@ -113,22 +140,7 @@ newEntity{ base="WATER_BASE",
 newEntity{ base="WATER_BASE",
 	define_as = "DEEP_OCEAN_WATER",
 	image = "terrain/ocean_water_grass_5_1.png",
---	add_displays = class:makeWater(true),
---	nice_tiler = { method="water",
---		water="OCEAN_WATER_GRASS_5",
---		grass8={"OCEAN_WATER_GRASS_8", 100, 1, 2}, grass2={"OCEAN_WATER_GRASS_2", 100, 1, 2}, grass4={"OCEAN_WATER_GRASS_4", 100, 1, 2}, grass6={"OCEAN_WATER_GRASS_6", 100, 1, 2}, grass1={"OCEAN_WATER_GRASS_1", 100, 1, 2}, grass3={"OCEAN_WATER_GRASS_3", 100, 1, 2}, grass7={"OCEAN_WATER_GRASS_7", 100, 1, 2}, grass9={"OCEAN_WATER_GRASS_9", 100, 1, 2}, inner_grass1="OCEAN_WATER_GRASS_1I", inner_grass3="OCEAN_WATER_GRASS_3I", inner_grass7="OCEAN_WATER_GRASS_7I", inner_grass9="OCEAN_WATER_GRASS_9I",
---		sand8={"WATER_SAND_8", 100, 1, 1}, sand2={"WATER_SAND_2", 100, 1, 1}, sand4={"WATER_SAND_4", 100, 1, 1}, sand6={"WATER_SAND_6", 100, 1, 1}, sand1={"WATER_SAND_1", 100, 1, 1}, sand3={"WATER_SAND_3", 100, 1, 1}, sand7={"WATER_SAND_7", 100, 1, 1}, sand9={"WATER_SAND_9", 100, 1, 1}, inner_sand1="WATER_SAND_1I", inner_sand3="WATER_SAND_3I", inner_sand7="WATER_SAND_7I", inner_sand9="WATER_SAND_9I",
---	},
 }
-
---newEntity{base="WATER_BASE", define_as = "OCEAN_WATER_GRASS_5", image="terrain/ocean_water_grass_5_1.png"}
---for i = 1, 9 do for j = 1, 2 do
---	if i ~= 5 then newEntity{base="WATER_BASE", define_as = "OCEAN_WATER_GRASS_"..i..j, image="terrain/ocean_water_grass_"..i.."_"..j..".png"} end
---end end
---newEntity{base="WATER_BASE", define_as = "OCEAN_WATER_GRASS_1I", image="terrain/ocean_water_grass_1i_1.png"}
---newEntity{base="WATER_BASE", define_as = "OCEAN_WATER_GRASS_3I", image="terrain/ocean_water_grass_3i_1.png"}
---newEntity{base="WATER_BASE", define_as = "OCEAN_WATER_GRASS_7I", image="terrain/ocean_water_grass_7i_1.png"}
---newEntity{base="WATER_BASE", define_as = "OCEAN_WATER_GRASS_9I", image="terrain/ocean_water_grass_9i_1.png"}
 
 -----------------------------------------
 -- Water/sand
@@ -165,7 +177,8 @@ newEntity{
 -----------------------------------------
 newEntity{
 	define_as = "WATER_UP_WILDERNESS",
-	name = "exit to the worldmap", image = "terrain/water_stair_up_wild.png",
+	name = "exit to the worldmap",
+	image = "terrain/underwater/subsea_floor_02.png", add_mos = {{image="terrain/underwater/subsea_stair_up_wild.png"}},
 	display = '<', color_r=255, color_g=0, color_b=255,
 	always_remember = true,
 	notice = true,
@@ -175,7 +188,8 @@ newEntity{
 }
 
 newEntity{
-	define_as = "WATER_UP", image = "terrain/water_stair_up.png",
+	define_as = "WATER_UP",
+	image = "terrain/underwater/subsea_floor_02.png", add_mos = {{image="terrain/underwater/subsea_stair_up.png"}},
 	name = "previous level",
 	display = '<', color_r=255, color_g=255, color_b=0,
 	notice = true,
@@ -185,7 +199,8 @@ newEntity{
 }
 
 newEntity{
-	define_as = "WATER_DOWN", image = "terrain/water_stair_down.png",
+	define_as = "WATER_DOWN",
+	image = "terrain/underwater/subsea_floor_02.png", add_mos = {{image="terrain/underwater/subsea_stair_down_03_64.png"}},
 	name = "next level",
 	display = '>', color_r=255, color_g=255, color_b=0,
 	notice = true,

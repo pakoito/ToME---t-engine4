@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 local Stats = require "engine.interface.ActorStats"
+local Talents = require "engine.interface.ActorTalents"
 
 newEntity{
 	power_source = {technique=true},
@@ -160,4 +161,164 @@ newEntity{
 	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 3) end),
 }
 
+newEntity{
+	power_source = {arcane=true},
+	name = "bloodhexed ", prefix=true, instant_resolve=true,
+	level_range = {1, 50},
+	greater_ego = 1,
+	rarity = 15,
+	cost = 30,
+	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_STR] = resolvers.mbonus_material(7, 3),
+		},
+		combat_physcrit = resolvers.mbonus_material(5, 1),
+		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, -v end),
+	},	
+}
 
+newEntity{
+	power_source = {arcane=true},
+	name = "crystalomancer's ", prefix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 40,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_CUN] = resolvers.mbonus_material(5, 1),
+		},
+		max_mana = resolvers.mbonus_material(40, 20),
+		combat_spellcrit = resolvers.mbonus_material(4, 1),
+	},	
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "shattering ", prefix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 60,
+	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 3) end),
+	wielder = {
+		resists_pen = { 
+			[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 5),
+		},
+	},	
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "sapper's ", prefix=true, instant_resolve=true,
+	level_range = {10, 50},
+	greater_ego = 1,
+	rarity = 15,
+	cost = 30,
+	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_CUN] = resolvers.mbonus_material(5, 1),
+		},
+		combat_atk = resolvers.mbonus_material(7, 3),
+		infravision = resolvers.mbonus_material(2, 1),
+	},	
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = "dwarven ", prefix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 60,
+	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
+	wielder = {
+		combat_mentalresist = resolvers.mbonus_material(7, 3),
+		combat_physresist = resolvers.mbonus_material(7, 3),
+		combat_spellresist = resolvers.mbonus_material(7, 3),
+		max_life = resolvers.mbonus_material(70, 40),
+	},	
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = " of avarice", suffix=true, instant_resolve=true,
+	level_range = {40, 50},
+	greater_ego = 1,
+	rarity = 45,
+	cost = 60,
+	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
+	wielder = {
+		blind_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, -v end),
+		combat_mentalresist = resolvers.mbonus_material(10, 5, function(e, v) return 0, -v end),
+		resource_leech_chance = resolvers.mbonus_material(10, 5),
+		resource_leech_value = resolvers.mbonus_material(1, 1),
+	},	
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = " of quickening", suffix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 40,
+	max_power = 80, power_regen = 1,
+	use_talent = { id = Talents.T_QUICKEN_SPELLS, level = 2, power = 80 },
+	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = " of predation", suffix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 40,
+	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_DEX] = resolvers.mbonus_material(5, 1),
+		},
+		pin_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
+		combat_dam = resolvers.mbonus_material(7, 3),
+	},	
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = " of deeplife", suffix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 60,
+	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
+	wielder = {
+		resists={
+			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 5),
+		},
+		blind_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
+		confusion_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
+		infravision = resolvers.mbonus_material(2, 1),
+	},	
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = " of wreckage", suffix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 40,
+	max_power = 80, power_regen = 1,
+	use_talent = { id = Talents.T_PERFECT_STRIKE, level = 3, power = 80 },
+	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_STR] = resolvers.mbonus_material(5, 1),
+		},
+		combat_apr = resolvers.mbonus_material(10, 5),
+	},	
+}

@@ -271,10 +271,11 @@ newEntity{
 	cost = 25,
 	wielder = {
 		resists={
-			[DamageType.LIGHT] = resolvers.mbonus_material(5, 5, function(e, v) return v * 0.15 end),
-			[DamageType.DARKNESS] = resolvers.mbonus_material(5, 5, function(e, v) return v * 0.15 end),
 			[DamageType.NATURE] = resolvers.mbonus_material(5, 5, function(e, v) return v * 0.15 end),
 		},
+		combat_mentalresist = resolvers.mbonus_material(7, 3),
+		combat_physresist = resolvers.mbonus_material(7, 3),
+		combat_spellresist = resolvers.mbonus_material(7, 3),
 	},
 }
 
@@ -346,7 +347,8 @@ newEntity{
 			[Stats.STAT_MAG] = resolvers.mbonus_material(3, 2, function(e, v) return v * 3 end),
 			[Stats.STAT_WIL] = resolvers.mbonus_material(3, 2, function(e, v) return v * 3 end),
 			},
-		combat_spellresist = resolvers.mbonus_material(15, 5, function(e, v) return v * 0.15 end),
+		blind_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
+		confusion_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
 	},
 
 }
@@ -391,4 +393,182 @@ newEntity{
 			physspeed = -0.1,
 		},
 	},
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = " of imperviousness", suffix=true, instant_resolve=true,
+	level_range = {40, 50},
+	greater_ego = 1,
+	rarity = 40,
+	cost = 90,
+	wielder = {
+		resists={
+			[DamageType.PHYSICAL] = resolvers.mbonus_material(7, 3),
+		},
+		inc_stats = {
+			[Stats.STAT_DEX] = resolvers.mbonus_material(5, 1, function(e, v) return 0, -v end),
+			[Stats.STAT_CON] = resolvers.mbonus_material(5, 1),
+		},
+		combat_armor = resolvers.mbonus_material(7, 3),
+		combat_atk = resolvers.mbonus_material(10, 5, function(e, v) return 0, -v end),
+	},	
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = " of dispersion", suffix=true, instant_resolve=true,
+	level_range = {40, 50},
+	greater_ego = 1,
+	rarity = 35,
+	cost = 70,
+	max_power = 80, power_regen = 1,
+	use_talent = { id = Talents.T_DISPERSE_MAGIC, level = 4, power = 80 },
+	wielder = {
+		resists={
+			[DamageType.ARCANE] = resolvers.mbonus_material(7, 3),
+		},
+		inc_stats = {
+			[Stats.STAT_MAG] = resolvers.mbonus_material(7, 3),
+		},
+	},	
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = " of butchering", suffix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 60,
+	wielder = {
+		resists={
+			[DamageType.BLIGHT] = resolvers.mbonus_material(10, 5),
+		},
+		poison_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
+		disease_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
+		combat_atk = resolvers.mbonus_material(7, 3),
+		combat_dam = resolvers.mbonus_material(7, 1),
+	},	
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = " of the juggernaut", suffix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 40,
+	max_power = 80, power_regen = 1,
+	use_talent = { id = Talents.T_JUGGERNAUT, level = 4, power = 80 },
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_CON] = resolvers.mbonus_material(5, 1),
+		},
+		combat_mentalresist = resolvers.mbonus_material(7, 3),
+		combat_physresist = resolvers.mbonus_material(7, 3),
+		combat_spellresist = resolvers.mbonus_material(7, 3),
+	},	
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = " of the beastfinder", suffix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 40,
+	cost = 80,
+	max_power = 80, power_regen = 1,
+	use_talent = { id = Talents.T_TRACK, level = 2, power = 80 },
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_DEX] = resolvers.mbonus_material(5, 1),
+		},
+		combat_atk = resolvers.mbonus_material(7, 3),
+	},	
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = "leeching ", prefix=true, instant_resolve=true,
+	level_range = {10, 50},
+	greater_ego = 1,
+	rarity = 15,
+	cost = 40,
+	wielder = {
+	
+		resource_leech_chance = resolvers.mbonus_material(10, 5),
+		resource_leech_value = resolvers.mbonus_material(1, 1),
+		life_regen = resolvers.mbonus_material(12, 3, function(e, v) v=v/10 return 0, -v end),
+		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, -v end),
+	},	
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "nightfighting ", prefix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 40,
+	wielder = {
+		resists={
+			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 5),
+		},
+		inc_stats = {
+			[Stats.STAT_CUN] = resolvers.mbonus_material(5, 1),
+		},
+		blind_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
+		infravision = resolvers.mbonus_material(1, 1),
+	},	
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = "spellstreaming ", prefix=true, instant_resolve=true,
+	level_range = {10, 50},
+	greater_ego = 1,
+	rarity = 15,
+	cost = 30,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_WIL] = resolvers.mbonus_material(5, 1),
+		},
+		combat_spellpower = resolvers.mbonus_material(7, 1),
+		combat_spellcrit = resolvers.mbonus_material(4, 1),
+	},	
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = "elemental ", prefix=true, instant_resolve=true,
+	level_range = {45, 50},
+	greater_ego = 1,
+	rarity = 50,
+	cost = 100,
+	wielder = {
+		melee_project = {
+			[DamageType.ACID] = resolvers.mbonus_material(7, 3),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(7, 3),
+			[DamageType.FIRE] = resolvers.mbonus_material(7, 3),
+			[DamageType.COLD] = resolvers.mbonus_material(7, 3),
+		},
+	},	
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "contortionist's ", prefix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 60,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_DEX] = resolvers.mbonus_material(7, 3),
+		},
+		stun_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
+		knockback_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
+		pin_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
+	},	
 }

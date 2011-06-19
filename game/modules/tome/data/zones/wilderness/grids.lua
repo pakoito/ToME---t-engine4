@@ -435,3 +435,10 @@ newEntity{ base="ZONE_PLAINS", define_as = "UNREMARKABLE_CAVE",
 	add_displays={class.new{image="terrain/cave_entrance01.png", z=4}},
 	change_zone="unremarkable-cave",
 }
+
+newEntity{ base="WATER_BASE", define_as = "MURGOL_LAIR",
+	name="Way into the lair of Murgol",
+	color={r=0, g=0, b=255},
+	add_displays={class.new{image="terrain/underwater/subsea_cave_entrance_01.png", z=4, display_h=2, display_y=-1}},
+	change_level=1, change_zone="murgol-lair",
+}

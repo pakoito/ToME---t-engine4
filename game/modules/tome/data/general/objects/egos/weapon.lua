@@ -20,6 +20,7 @@
 --load("/data/general/objects/egos/charged-attack.lua")
 
 local Stats = require "engine.interface.ActorStats"
+local Talents = require "engine.interface.ActorTalents"
 
 newEntity{
 	power_source = {arcane=true},
@@ -84,7 +85,7 @@ newEntity{
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 4,
-	combat={atk = resolvers.mbonus_material(20, 2, function(e, v) return v * 0.3 end)},
+	combat={atk = resolvers.mbonus_material(20, 5, function(e, v) return v * 0.3 end)},
 }
 
 newEntity{
@@ -93,7 +94,7 @@ newEntity{
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 6,
-	combat={apr = resolvers.mbonus_material(15, 1, function(e, v) return v * 0.3 end)},
+	combat={apr = resolvers.mbonus_material(20, 5, function(e, v) return v * 0.3 end)},
 }
 
 newEntity{
@@ -120,7 +121,7 @@ newEntity{
 	rarity = 3,
 	cost = 4,
 	combat = {
-		dam = resolvers.mbonus_material(7, 3, function(e, v) return v * 3 end),
+		dam = resolvers.mbonus_material(15, 5, function(e, v) return v * 3 end),
 	},
 }
 
@@ -273,3 +274,225 @@ newEntity{
 		},
 	},
 }
+
+newEntity{
+	power_source = {nature=true},
+	name = "insatiable ", prefix=true, instant_resolve=true,
+	level_range = {1, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 40,
+	wielder = {
+		resource_leech_chance = resolvers.mbonus_material(10, 5),
+		resource_leech_value = resolvers.mbonus_material(1, 1),
+		life_regen = resolvers.mbonus_material(30, 5, function(e, v) v=v/10 return 0, -v end),
+		melee_project = {
+			[DamageType.NATURE] = resolvers.mbonus_material(46, 5),
+		},
+	},	
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "blazebringer's ", prefix=true, instant_resolve=true,
+	level_range = {10, 50},
+	greater_ego = 1,
+	rarity = 35,
+	cost = 40,
+	wielder = {
+		on_melee_hit = {
+			[DamageType.FIRE] = resolvers.mbonus_material(20, 5),
+		},
+		melee_project = {
+			[DamageType.FIRE] = resolvers.mbonus_material(46, 5),
+		},
+		resists_pen = { 
+			[DamageType.FIRE] = resolvers.mbonus_material(50, 5),
+		},
+	},	
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "glacial ", prefix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 45,
+	cost = 40,
+	wielder = {
+		on_melee_hit = {
+			[DamageType.ICE] = resolvers.mbonus_material(20, 5),
+		},
+		melee_project = {
+			[DamageType.COLD] = resolvers.mbonus_material(46, 5),
+		},
+		resists_pen = { 
+			[DamageType.COLD] = resolvers.mbonus_material(50, 5),
+		},
+	},	
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "thunderous ", prefix=true, instant_resolve=true,
+	level_range = {10, 50},
+	greater_ego = 1,
+	rarity = 35,
+	cost = 40,
+	wielder = {
+		on_melee_hit = {
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(20, 5),
+		},
+		melee_project = {
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(46, 5),
+		},
+		resists_pen = { 
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(50, 5),
+		},
+	},	
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "caustic ", prefix=true, instant_resolve=true,
+	level_range = {10, 50},
+	greater_ego = 1,
+	rarity = 35,
+	cost = 40,
+	wielder = {
+		on_melee_hit = {
+			[DamageType.ACID] = resolvers.mbonus_material(20, 5),
+		},
+		melee_project = {
+			[DamageType.ACID] = resolvers.mbonus_material(46, 5),
+		},
+		resists_pen = { 
+			[DamageType.ACID] = resolvers.mbonus_material(50, 5),
+		},
+	},	
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = "vile ", prefix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 45,
+	cost = 40,
+	wielder = {
+		on_melee_hit = {
+			[DamageType.SLIME] = resolvers.mbonus_material(20, 5),
+		},
+		melee_project = {
+			[DamageType.SLIME] = resolvers.mbonus_material(46, 5),
+		},
+		resists_pen = { 
+			[DamageType.NATURE] = resolvers.mbonus_material(50, 5),
+		},
+	},	
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "warbringer's ", prefix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 40,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_CON] = resolvers.mbonus_material(9, 1),
+		},
+		disarm_immune = resolvers.mbonus_material(25, 10, function(e, v) v=v/100 return 0, v end),
+		combat_dam = resolvers.mbonus_material(15, 5),
+		resists_pen = { 
+			[DamageType.PHYSICAL] = resolvers.mbonus_material(15, 5),
+		},
+	},	
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = " of shearing", suffix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 40,
+	wielder = {
+		combat_apr = resolvers.mbonus_material(15, 5),
+		inc_damage = {
+			[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 5),
+		},
+		resists_pen = { 
+			[DamageType.PHYSICAL] = resolvers.mbonus_material(15, 5),
+		},
+	},	
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = " of plague", suffix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 60,
+	max_power = 80, power_regen = 1,
+	use_talent = { id = Talents.T_EPIDEMIC, level = 4, power = 80 },
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_CON] = resolvers.mbonus_material(10, 5, function(e, v) return 0, -v end),
+			[Stats.STAT_MAG] = resolvers.mbonus_material(5, 1),
+		},
+		disease_immune = resolvers.mbonus_material(55, 10, function(e, v) v=v/100 return 0, v end),
+		melee_project = {
+			[DamageType.BLIGHT] = resolvers.mbonus_material(46, 5),
+		},
+	},	
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = " of projection", suffix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 60,
+	max_power = 20, power_regen = 1,
+	use_talent = { id = Talents.T_WAVE_OF_POWER, level = 4, power = 12 },
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = " of sacrifice", suffix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 40,
+	max_power = 80, power_regen = 1,
+	use_talent = { id = Talents.T_LIFE_TAP, level = 3, power = 80 },
+	wielder = {
+		combat_physcrit = resolvers.mbonus_material(4, 3),
+		combat_dam = resolvers.mbonus_material(12, 3),
+	},	
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = " of paradox", suffix=true, instant_resolve=true,
+	level_range = {1, 50},
+	greater_ego = 1,
+	rarity = 15,
+	cost = 30,
+	wielder = {
+		resists={
+			[DamageType.TEMPORAL] = resolvers.mbonus_material(15, 5),
+		},
+		on_melee_hit = {
+			[DamageType.TEMPORAL] = resolvers.mbonus_material(10, 5),
+		},
+		melee_project = {
+			[DamageType.TEMPORAL] = resolvers.mbonus_material(46, 5),
+		},
+	},	
+}
+

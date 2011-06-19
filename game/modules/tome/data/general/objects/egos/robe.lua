@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 local Stats = require "engine.interface.ActorStats"
+local Talents = require "engine.interface.ActorTalents"
 
 --load("/data/general/objects/egos/charged-defensive.lua")
 --load("/data/general/objects/egos/charged-utility.lua")
@@ -298,4 +299,182 @@ newEntity{
 		},
 
 	},
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = " of chaos", suffix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 40,
+	wielder = {
+		resists={
+			[DamageType.FIRE] = resolvers.mbonus_material(10, 5),
+			[DamageType.COLD] = resolvers.mbonus_material(10, 5, function(e, v) return 0, -v end),
+			[DamageType.BLIGHT] = resolvers.mbonus_material(10, 5),
+			[DamageType.NATURE] = resolvers.mbonus_material(10, 5, function(e, v) return 0, -v end),
+			[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 5),
+			[DamageType.ARCANE] = resolvers.mbonus_material(10, 5, function(e, v) return 0, -v end),
+		},
+		resists_pen = { 
+			[DamageType.FIRE] = resolvers.mbonus_material(15, 5),
+			[DamageType.BLIGHT] = resolvers.mbonus_material(15, 5),
+			[DamageType.PHYSICAL] = resolvers.mbonus_material(15, 5),
+		},
+	},	
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = " of gathering", suffix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = 1,
+	rarity = 40,
+	cost = 80,
+	wielder = {
+		resists={
+			[DamageType.NATURE] = resolvers.mbonus_material(10, 5),
+		},
+		resource_leech_chance = resolvers.mbonus_material(10, 5),
+		resource_leech_value = resolvers.mbonus_material(1, 1),
+	},	
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = " of explosions", suffix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 40,
+	max_power = 80, power_regen = 1,
+	use_talent = { id = Talents.T_GLYPH_OF_EXPLOSION, level = 4, power = 80 },
+	wielder = {
+		resists={
+			[DamageType.FIRE] = resolvers.mbonus_material(10, 5),
+		},
+		combat_armor = resolvers.mbonus_material(7, 3),
+	},	
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = " of retribution", suffix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 40,
+	wielder = {
+		on_melee_hit = {
+			[DamageType.ACID] = resolvers.mbonus_material(10, 5),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(10, 5),
+			[DamageType.FIRE] = resolvers.mbonus_material(10, 5),
+			[DamageType.COLD] = resolvers.mbonus_material(10, 5),
+		},
+	},	
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = " of novas", suffix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 60,
+	max_power = 10, power_regen = 1,
+	use_talent = { id = Talents.T_NOVA, level = 4, power = 6 },
+	wielder = {
+		resists={
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(20, 5),
+		},
+	},	
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = "outcast's ", prefix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 60,
+	wielder = {
+		resists={
+			[DamageType.PHYSICAL] = resolvers.mbonus_material(15, 5, function(e, v) return 0, -v end),
+			[DamageType.ARCANE] = resolvers.mbonus_material(7, 3),
+		},
+		inc_stats = {
+			[Stats.STAT_MAG] = resolvers.mbonus_material(7, 3),
+		},
+		combat_mentalresist = resolvers.mbonus_material(10, 5),
+		combat_physresist = resolvers.mbonus_material(10, 5),
+		combat_spellresist = resolvers.mbonus_material(10, 5),
+	},	
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = "stargazer's ", prefix=true, instant_resolve=true,
+	level_range = {10, 50},
+	greater_ego = 1,
+	rarity = 15,
+	cost = 30,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_CUN] = resolvers.mbonus_material(5, 1),
+		},
+		blind_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
+		combat_spellpower = resolvers.mbonus_material(7, 3),
+	},	
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = "ancient ", prefix=true, instant_resolve=true,
+	level_range = {20, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 40,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_MAG] = resolvers.mbonus_material(9, 1),
+		},
+		confusion_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
+		melee_project = {
+			[DamageType.TEMPORAL] = resolvers.mbonus_material(10, 5),
+		},
+	},	
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = "fearwoven ", prefix=true, instant_resolve=true,
+	level_range = {40, 50},
+	greater_ego = 1,
+	rarity = 40,
+	cost = 80,
+	wielder = {
+		resists={
+			[DamageType.BLIGHT] = resolvers.mbonus_material(35, 5),
+		},
+		combat_mentalresist = resolvers.mbonus_material(15, 5),
+		combat_armor = resolvers.mbonus_material(7, 3),
+		combat_spellpower = resolvers.mbonus_material(7, 3),
+	},	
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = "tormentor's ", prefix=true, instant_resolve=true,
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 60,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_CUN] = resolvers.mbonus_material(9, 1),
+		},
+		combat_spellcrit = resolvers.mbonus_material(4, 1),
+		combat_critical_power = resolvers.mbonus_material(30, 10),
+	},	
 }
