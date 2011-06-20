@@ -177,6 +177,20 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			end
 		end
 
+		if dam > 0 and src.__projecting_for and src.__projecting_for.project_type and (src.__projecting_for.project_type.talent_id or src.__projecting_for.project_type.talent) and src.getTalentFromId and not src.__projecting_for.talent_on_hit_done then
+			local t = src:getTalentFromId(src.__projecting_for.project_type.talent or src.__projecting_for.project_type.talent_id)
+			if src.talent_on_spell and next(src.talent_on_spell) and t.is_spell then
+				for id, d in pairs(src.talent_on_spell) do
+					if rng.percent(d.chance) and t.id ~= d.talent then
+						src.__projecting_for.talent_on_hit_done = true
+						local old = src.__projecting_for
+						src:forceUseTalent(d.talent, {ignore_cd=true, ignore_energy=true, force_target=target, force_level=d.level, ignore_ressources=true})
+						src.__projecting_for = old
+					end
+				end
+			end
+		end
+
 		return dam
 	end
 	return 0
@@ -1425,6 +1439,14 @@ newDamageType{
 				game.logSeen(target, "%s resists the slow", target.name:capitalize())
 			end
 		end
+	end,
+}
+
+newDamageType{
+	name = "molten rock", type = "MOLTENROCK",
+	projector = function(src, x, y, type, dam)
+		return DamageType:get(DamageType.FIRE).projector(src, x, y, DamageType.FIRE, dam / 2) +
+		       DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam / 2)
 	end,
 }
 

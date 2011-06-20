@@ -483,6 +483,7 @@ end
 
 --- Return talent definition from id
 function _M:getTalentFromId(id)
+	if type(id) == "table" then return id end
 	return _M.talents_def[id]
 end
 

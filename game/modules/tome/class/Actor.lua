@@ -1719,6 +1719,33 @@ function _M:checkEncumbrance()
 	end
 end
 
+--- Call when an object is worn
+function _M:onWear(o)
+	engine.interface.ActorInventory.onWear(self, o)
+
+	if o.talent_on_spell then
+		self.talent_on_spell = self.talent_on_spell or {}
+		for i = 1, #o.talent_on_spell do
+			local id = util.uuid()
+			self.talent_on_spell[id] = o.talent_on_spell[i]
+			o.talent_on_spell[i]._id = id
+		end
+	end
+end
+
+--- Call when an object is taken off
+function _M:onTakeoff(o)
+	engine.interface.ActorInventory.onTakeoff(self, o)
+
+	if o.talent_on_spell then
+		self.talent_on_spell = self.talent_on_spell or {}
+		for i = 1, #o.talent_on_spell do
+			local id = o.talent_on_spell[i]._id
+			self.talent_on_spell[id] = nil
+		end
+	end
+end
+
 --- Call when an object is added
 function _M:onAddObject(o)
 	engine.interface.ActorInventory.onAddObject(self, o)

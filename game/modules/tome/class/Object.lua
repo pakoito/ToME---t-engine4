@@ -842,6 +842,26 @@ function _M:getTextualDesc(compare_with)
 		desc:add(true)
 	end
 
+	local talents = {}
+	if self.talent_on_spell then
+		for _, data in ipairs(self.talent_on_spell) do
+			talents[data.talent] = {data.chance, data.level}
+		end
+	end
+	for i, v in ipairs(compare_with or {}) do
+		for _, data in ipairs(v[field] and (v[field].talent_on_spell or {})or {}) do
+			local tid = data.talent
+			if not talents[tid] or talents[tid][1]~=data.chance or talents[tid][2]~=data.level then
+				desc:add({"color","RED"}, ("Talent on hit(spell): %s (%d%% chance level %d)."):format(self:getTalentFromId(tid).name, data.chance, data.level), {"color","LAST"}, true)
+			else
+				talents[tid][3] = true
+			end
+		end
+	end
+	for tid, data in pairs(talents) do
+		desc:add(talents[tid][3] and {"color","GREEN"} or {"color","WHITE"}, ("Talent on hit(spell): %s (%d%% chance level %d)."):format(self:getTalentFromId(tid).name, talents[tid][1], talents[tid][2]), {"color","LAST"}, true)
+	end
+
 	local use_desc = self:getUseDesc()
 	if use_desc then desc:add(use_desc) end
 	return desc

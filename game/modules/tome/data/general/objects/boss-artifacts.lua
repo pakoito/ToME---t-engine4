@@ -39,7 +39,7 @@ It is said the Conclave created this weapon for their warmaster during the dark 
 		physcrit = 10,
 		dammod = {str=1},
 		damrange = 1.4,
-		melee_project={[DamageType.ICE] = 15},
+		melee_project={[DamageType.ICE] = 45},
 	},
 	wielder = {
 		lite = 1,
@@ -99,6 +99,7 @@ newEntity{ base = "BASE_AMULET",
 		},
 		blind_immune = 1,
 	},
+	talent_on_spell = { {chance=10, talent=Talents.T_VOLCANO, level=3} },
 }
 
 -- Artifact, dropped by Rantha
@@ -115,11 +116,11 @@ newEntity{ base = "BASE_LEATHER_BOOT",
 
 	wielder = {
 		lite = 1,
-		combat_armor = 2,
+		combat_armor = 4,
 		combat_def = 1,
-		fatigue = 14,
+		fatigue = 7,
 		inc_damage = {
-			[DamageType.COLD] = 5,
+			[DamageType.COLD] = 15,
 		},
 		resists = {
 			[DamageType.COLD] = 20,
@@ -167,7 +168,7 @@ Tridents require the exotic weapons mastery talent to use correctly.]],
 	cost = 300,
 	material_level = 4,
 	combat = {
-		dam = 50,
+		dam = 60,
 		atk = 10,
 		apr = 4,
 		physcrit = 15,
@@ -210,6 +211,7 @@ newEntity{ base = "BASE_LIGHT_ARMOR",
 
 	max_power = 50, power_regen = 1,
 	use_talent = { id = Talents.T_LIGHTNING, level=2, power = 18 },
+	talent_on_spell = { {chance=10, talent=Talents.T_LIGHTNING, level=2} },
 }
 
 newEntity{ base = "BASE_LIGHT_ARMOR",
@@ -297,12 +299,12 @@ newEntity{ base = "BASE_HELM",
 	cost = 20,
 
 	wielder = {
-		combat_armor = 4,
+		combat_armor = 6,
 		fatigue = 8,
-		inc_stats = { [Stats.STAT_STR] = 3, [Stats.STAT_CON] = 3, [Stats.STAT_WIL] = 4 },
-		combat_physresist = 7,
-		combat_mentalresist = 7,
-		combat_spellresist = 7,
+		inc_stats = { [Stats.STAT_STR] = 5, [Stats.STAT_CON] = 5, [Stats.STAT_WIL] = 4 },
+		combat_physresist = 12,
+		combat_mentalresist = 12,
+		combat_spellresist = 12,
 	},
 }
 
@@ -338,6 +340,7 @@ newEntity{ base = "BASE_SHIELD",
 		lite = 1,
 		talents_types_mastery = {["divine/star-fury"]=0.2,["divine/twilight"]=0.1,},
 	},
+	talent_on_spell = { {chance=10, talent=Talents.T_MOONLIGHT_RAY, level=2} },
 }
 
 newEntity{ base = "BASE_SHIELD",
@@ -359,7 +362,7 @@ newEntity{ base = "BASE_SHIELD",
 		dammod = {str=1.5},
 	},
 	wielder = {
-		combat_armor = 5,
+		combat_armor = 10,
 		combat_def = 9,
 		fatigue = 14,
 		resists = {
@@ -401,9 +404,14 @@ newEntity{ base = "BASE_CLOTH_ARMOR",
 		inc_stats = { [Stats.STAT_MAG] = 5, [Stats.STAT_WIL] = 4, [Stats.STAT_CUN] = 3 },
 		see_invisible = 10,
 		blind_immune = 1,
-		combat_spellpower = 10,
+		combat_spellpower = 30,
 		combat_dam = 10,
 		combat_def = 6,
+	},
+	talent_on_spell = {
+		{chance=10, talent=Talents.T_SOUL_ROT, level=3},
+		{chance=10, talent=Talents.T_BLOOD_GRASP, level=3},
+		{chance=10, talent=Talents.T_BONE_SPEAR, level=3},
 	},
 }
 
@@ -556,8 +564,6 @@ newEntity{ base = "BASE_AMULET",
 
 			inc_damage = table.clone(who.inc_damage, true),
 
-			resolvers.tmasteries{ ["technique/other"]=0.5, ["spell/phantasm"]=0.8, },
-
 			resists = { [engine.DamageType.COLD] = 80, [engine.DamageType.NATURE] = 80, [engine.DamageType.LIGHT] = -50,  },
 			blind_immune = 1,
 			confusion_immune = 1,
@@ -571,11 +577,12 @@ newEntity{ base = "BASE_AMULET",
 
 			faction = who.faction,
 			summoner = who,
-			summon_time = 10,
+			summon_time = 15,
 		}
 
 		vampire:resolve()
 		game.zone:addEntity(game.level, vampire, "actor", x, y)
+		vampire:forceUseTalent(vampire.T_TAUNT, {})
 
 		game:playSoundNear(who, "talents/spell_generic")
 		return true

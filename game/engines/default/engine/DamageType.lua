@@ -59,3 +59,7 @@ function _M:get(id)
 	assert(_M.dam_def[id], "damage type "..tostring(id).." used but undefined")
 	return _M.dam_def[id]
 end
+
+function _M:projectingFor(src, v)
+	src.__projecting_for = v
+end

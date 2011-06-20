@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local Object = require "mod.class.Object"
+
 -- race & classes
 newTalentType{ type="technique/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
 newTalentType{ no_silence=true, is_spell=true, type="chronomancy/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
@@ -1238,7 +1240,7 @@ newTalent{
 	mana = 10,
 	message = "@Source@ casts Elemental Bolt!",
 	cooldown = 3,
-	range = 20,
+	range = 10,
 	proj_speed = 2,
 	requires_target = true,
 	tactical = { ATTACK = 2 },
@@ -1265,6 +1267,83 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Fire a slow bolt of a random element. Damage raises with magic stat.]])
+	end,
+}
+
+newTalent{
+	short_name = "VOLCANO",
+	name = "Volcano",
+	type = {"spell/other", 1},
+	points = 5,
+	mana = 10,
+	message = "A volcano erupts!",
+	cooldown = 20,
+	range = 10,
+	proj_speed = 2,
+	requires_target = true,
+	tactical = { ATTACK = 2 },
+	action = function(self, t)
+		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		local _ _, x, y = self:canProject(tg, x, y)
+		if game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then return nil end
+
+		local oe = game.level.map(x, y, Map.TERRAIN)
+		if oe.is_volcano then return end
+
+		local e = Object.new{
+			old_feat = oe,
+			type = oe.type, subtype = oe.subtype,
+			name = "raging volcano", image = oe.image, add_mos = {{image = "terrain/lava/volcano_01.png"}},
+			display = '&', color=colors.LIGHT_RED, back_color=colors.RED,
+			always_remember = true,
+			temporary = 4 + self:getTalentLevel(t),
+			is_volcano = true,
+			x = x, y = y,
+			canAct = false,
+			nb_projs = math.floor(self:getTalentLevel(self.T_VOLCANO)),
+			dam = self:combatTalentSpellDamage(self.T_VOLCANO, 15, 80),
+			act = function(self)
+				local tgts = {}
+				local grids = core.fov.circle_grids(self.x, self.y, 5, true)
+				for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
+					local a = game.level.map(x, y, engine.Map.ACTOR)
+					if a and self.summoner:reactionToward(a) < 0 then tgts[#tgts+1] = a end
+				end end
+
+				-- Randomly take targets
+				local tg = {type="bolt", range=5, x=self.x, y=self.y, talent=self.summoner:getTalentFromId(self.summoner.T_VOLCANO), display={image="object/lava_boulder.png"}}
+				for i = 1, self.nb_projs do
+					if #tgts <= 0 then break end
+					local a, id = rng.table(tgts)
+					table.remove(tgts, id)
+
+					self.summoner:projectile(tg, a.x, a.y, engine.DamageType.MOLTENROCK, self.dam, {type="flame"})
+					game:playSoundNear(self, "talents/fire")
+				end
+
+				self:useEnergy()
+				self.temporary = self.temporary - 1
+				if self.temporary <= 0 then
+					game.level.map(self.x, self.y, engine.Map.TERRAIN, self.old_feat)
+					game.level:removeEntity(self)
+					game.level.map:updateMap(x, y)
+				end
+			end,
+			summoner_gain_exp = true,
+			summoner = self,
+		}
+		game.level:addEntity(e)
+		game.level.map(x, y, Map.TERRAIN, e)
+		game.nicer_tiles:updateAround(game.level, x, y)
+		game.level.map:updateMap(x, y)
+		game:playSoundNear(self, "talents/fire")
+		return true
+	end,
+	info = function(self, t)
+		return ([[Summons a small raging volcano for %d turns. Every turns it will fire %d molten boulders toward your foes, dealing %0.2f fire and %0.2f physical damage.]]):
+		format(4 + self:getTalentLevel(t), math.floor(self:getTalentLevel(self.T_VOLCANO)), damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(self.T_VOLCANO, 15, 80) / 2), damDesc(self, DamageType.PHYSICAL, self:combatTalentSpellDamage(self.T_VOLCANO, 15, 80) / 2))
 	end,
 }
 

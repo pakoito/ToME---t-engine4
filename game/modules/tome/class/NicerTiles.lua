@@ -90,7 +90,7 @@ function _M:replaceAll(level)
 		if id then id = table.concat(id, "|") end
 
 		-- If we made this one already, use it
-		if self.edit_entity_store[id] then
+		if self.edit_entity_store and self.edit_entity_store[id] then
 			level.map(i, j, Map.TERRAIN, self.edit_entity_store[id])
 		-- Otherwise compute this new combo and store the entity
 		else
@@ -127,7 +127,7 @@ function _M:replaceAll(level)
 
 			g._mo = nil
 			level.map(i, j, Map.TERRAIN, g)
-			self.edit_entity_store[id] = g
+			if self.edit_entity_store then self.edit_entity_store[id] = g end
 		end
 	end end
 	self.edits = {}

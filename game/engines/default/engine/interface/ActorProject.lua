@@ -131,6 +131,7 @@ function _M:project(t, x, y, damtype, dam, particles)
 	-- Now project on each grid, one type
 	local tmp = {}
 	local stop = false
+	DamageType:projectingFor(self, {project_type=typ})
 	for px, ys in pairs(grids) do
 		for py, _ in pairs(ys) do
 			-- Call the projected method of the target grid if possible
@@ -142,7 +143,7 @@ function _M:project(t, x, y, damtype, dam, particles)
 				-- Otherwise hit
 				else
 					if type(damtype) == "function" then if damtype(px, py, tg, self) then stop=true break end
-					else DamageType:get(damtype).projector(self, px, py, damtype, dam, tmp) end
+					else DamageType:get(damtype).projector(self, px, py, damtype, dam, tmp, nil) end
 					if particles then
 						game.level.map:particleEmitter(px, py, 1, particles.type, particles.args)
 					end
@@ -151,6 +152,7 @@ function _M:project(t, x, y, damtype, dam, particles)
 		end
 		if stop then break end
 	end
+	DamageType:projectingFor(self, nil)
 	return grids
 end
 
@@ -214,7 +216,7 @@ function _M:projectile(t, x, y, damtype, dam, particles)
 	typ.source_actor = self
 
 	local proj = require(self.projectile_class):makeProject(self, t.display, {x=x, y=y, start_x = t.x or self.x, start_y = t.y or self.y, damtype=damtype, tg=t, typ=typ, dam=dam, particles=particles})
-	game.zone:addEntity(game.level, proj, "projectile", self.x, self.y)
+	game.zone:addEntity(game.level, proj, "projectile", t.x or self.x, t.y or self.y)
 end
 
 -- @param typ a target type table
@@ -276,11 +278,13 @@ function _M:projectDoAct(typ, tg, damtype, dam, particles, px, py, tmp)
 		elseif act and self.reactionToward and (self:reactionToward(act) >= 0) and not ((type(typ.friendlyfire) == "number" and rng.percent(typ.friendlyfire)) or (type(typ.friendlyfire) ~= "number" and typ.friendlyfire)) then
 		-- Otherwise hit
 		else
+			DamageType:projectingFor(self, {project_type=tg})
 			if type(damtype) == "function" then if damtype(px, py, tg, self) then return true end
-			else DamageType:get(damtype).projector(self, px, py, damtype, dam, tmp) end
+			else DamageType:get(damtype).projector(self, px, py, damtype, dam, tmp, nil, tg) end
 			if particles and type(particles) == "table" then
 				game.level.map:particleEmitter(px, py, 1, particles.type, particles.args)
 			end
+			DamageType:projectingFor(self, nil)
 		end
 	end
 end

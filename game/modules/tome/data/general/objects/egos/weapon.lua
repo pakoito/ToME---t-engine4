@@ -280,7 +280,7 @@ newEntity{
 	name = "insatiable ", prefix=true, instant_resolve=true,
 	level_range = {1, 50},
 	greater_ego = 1,
-	rarity = 30,
+	rarity = 60,
 	cost = 40,
 	wielder = {
 		resource_leech_chance = resolvers.mbonus_material(10, 5),
@@ -289,7 +289,7 @@ newEntity{
 		melee_project = {
 			[DamageType.NATURE] = resolvers.mbonus_material(46, 5),
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -306,10 +306,10 @@ newEntity{
 		melee_project = {
 			[DamageType.FIRE] = resolvers.mbonus_material(46, 5),
 		},
-		resists_pen = { 
-			[DamageType.FIRE] = resolvers.mbonus_material(50, 5),
+		resists_pen = {
+			[DamageType.FIRE] = resolvers.mbonus_material(20, 5),
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -326,10 +326,10 @@ newEntity{
 		melee_project = {
 			[DamageType.COLD] = resolvers.mbonus_material(46, 5),
 		},
-		resists_pen = { 
-			[DamageType.COLD] = resolvers.mbonus_material(50, 5),
+		resists_pen = {
+			[DamageType.COLD] = resolvers.mbonus_material(20, 5),
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -346,10 +346,10 @@ newEntity{
 		melee_project = {
 			[DamageType.LIGHTNING] = resolvers.mbonus_material(46, 5),
 		},
-		resists_pen = { 
-			[DamageType.LIGHTNING] = resolvers.mbonus_material(50, 5),
+		resists_pen = {
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(20, 5),
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -366,10 +366,10 @@ newEntity{
 		melee_project = {
 			[DamageType.ACID] = resolvers.mbonus_material(46, 5),
 		},
-		resists_pen = { 
-			[DamageType.ACID] = resolvers.mbonus_material(50, 5),
+		resists_pen = {
+			[DamageType.ACID] = resolvers.mbonus_material(20, 5),
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -386,10 +386,10 @@ newEntity{
 		melee_project = {
 			[DamageType.SLIME] = resolvers.mbonus_material(46, 5),
 		},
-		resists_pen = { 
-			[DamageType.NATURE] = resolvers.mbonus_material(50, 5),
+		resists_pen = {
+			[DamageType.NATURE] = resolvers.mbonus_material(20, 5),
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -405,10 +405,10 @@ newEntity{
 		},
 		disarm_immune = resolvers.mbonus_material(25, 10, function(e, v) v=v/100 return 0, v end),
 		combat_dam = resolvers.mbonus_material(15, 5),
-		resists_pen = { 
+		resists_pen = {
 			[DamageType.PHYSICAL] = resolvers.mbonus_material(15, 5),
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -423,10 +423,10 @@ newEntity{
 		inc_damage = {
 			[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 5),
 		},
-		resists_pen = { 
+		resists_pen = {
 			[DamageType.PHYSICAL] = resolvers.mbonus_material(15, 5),
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -447,7 +447,7 @@ newEntity{
 		melee_project = {
 			[DamageType.BLIGHT] = resolvers.mbonus_material(46, 5),
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -473,7 +473,7 @@ newEntity{
 	wielder = {
 		combat_physcrit = resolvers.mbonus_material(4, 3),
 		combat_dam = resolvers.mbonus_material(12, 3),
-	},	
+	},
 }
 
 newEntity{
@@ -493,6 +493,6 @@ newEntity{
 		melee_project = {
 			[DamageType.TEMPORAL] = resolvers.mbonus_material(46, 5),
 		},
-	},	
+	},
 }
 

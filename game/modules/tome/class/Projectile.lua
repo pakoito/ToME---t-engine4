@@ -24,10 +24,6 @@ module(..., package.seeall, class.inherit(engine.Projectile))
 
 function _M:init(t, no_default)
 	engine.Projectile.init(self, t, no_default)
-
-	if game.level and game.level.data and game.level.data.projectile_speed_mod then
-		self.energy.mod = self.energy.mod * game.level.data.projectile_speed_mod
-	end
 end
 
 --- Moves a projectile on the map
@@ -36,7 +32,6 @@ function _M:move(x, y, force)
 	local ox, oy = self.x, self.y
 
 	local moved = engine.Projectile.move(self, x, y, force)
-
 	if moved and not force and ox and oy and (ox ~= self.x or oy ~= self.y) and config.settings.tome.smooth_move > 0 then
 		self:setMoveAnim(ox, oy, config.settings.tome.smooth_move)
 	end

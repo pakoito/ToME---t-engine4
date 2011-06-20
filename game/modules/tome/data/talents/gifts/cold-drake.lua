@@ -89,7 +89,7 @@ newTalent{
 
 		local e = Object.new{
 			old_feat = game.level.map(x, y, Map.TERRAIN),
-			name = "summoned ice wall",
+			name = "summoned ice wall", image = "npc/iceblock.png",
 			display = '#', color=colors.LIGHT_BLUE, back_color=colors.BLUE,
 			always_remember = true,
 			can_pass = {pass_wall=1},
@@ -112,6 +112,7 @@ newTalent{
 		}
 		game.level:addEntity(e)
 		game.level.map(x, y, Map.TERRAIN, e)
+		game.level.map:redisplay()
 		return true
 	end,
 	info = function(self, t)
