@@ -23,8 +23,8 @@ newBirthDescriptor{
 	locked = function() return profile.mod.allow_build.divine end,
 	locked_desc = "The magic of the heavens is known to but a few, and that knowledge has long passed east, forgotten.",
 	desc = {
-		"Divine classes are worshippers of various gods and entities.",
-		"They include the worship of the Sun, the Moon, powerful spirits, ...",
+		"Celestial classes are arcane users focused on the heavenly bodies.",
+		"Most draw their powers from the Sun and the Moon.",
 	},
 	descriptor_choices =
 	{
