@@ -1939,7 +1939,7 @@ end
 -- @param ab the talent (not the id, the table)
 -- @return true to continue, false to stop
 function _M:preUseTalent(ab, silent, fake)
-	if self:attr("feared") then
+	if self:attr("feared") and (ab.mode ~= "sustained" or not self:isTalentActive(ab.id)) then
 		if not silent then game.logSeen(self, "%s is too afraid to use %s.", self.name:capitalize(), ab.name) end
 		return false
 	end
@@ -1948,7 +1948,7 @@ function _M:preUseTalent(ab, silent, fake)
 		if not silent then game.logSeen(self, "%s is silenced and cannot use %s.", self.name:capitalize(), ab.name) end
 		return false
 	end
-	if ab.is_spell and self:attr("forbid_arcane") then
+	if ab.is_spell and self:attr("forbid_arcane") and (ab.mode ~= "sustained" or not self:isTalentActive(ab.id)) then
 		if not silent then game.logSeen(self, "The spell fizzles.") end
 		return false
 	end
@@ -2067,7 +2067,7 @@ function _M:preUseTalent(ab, silent, fake)
 	end
 
 	-- Confused ? lose a turn!
-	if self:attr("confused") and ab.no_energy ~= true and not fake and not self:attr("force_talent_ignore_ressources") then
+	if self:attr("confused") and (ab.mode ~= "sustained" or not self:isTalentActive(ab.id)) and ab.no_energy ~= true and not fake and not self:attr("force_talent_ignore_ressources") then
 		if rng.percent(self:attr("confused")) then
 			if not silent then game.logSeen(self, "%s is confused and fails to use %s.", self.name:capitalize(), ab.name) end
 			self:useEnergy()
@@ -2076,7 +2076,7 @@ function _M:preUseTalent(ab, silent, fake)
 	end
 
 	-- Failure chance?
-	if self:attr("talent_fail_chance") and ab.no_energy ~= true and not fake and not self:attr("force_talent_ignore_ressources") then
+	if self:attr("talent_fail_chance") and (ab.mode ~= "sustained" or not self:isTalentActive(ab.id)) and ab.no_energy ~= true and not fake and not self:attr("force_talent_ignore_ressources") then
 		if rng.percent(self:attr("talent_fail_chance")) then
 			if not silent then game.logSeen(self, "%s fails to use %s.", self.name:capitalize(), ab.name) end
 			self:useEnergy()
