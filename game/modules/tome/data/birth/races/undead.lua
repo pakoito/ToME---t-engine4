@@ -41,7 +41,7 @@ newBirthDescriptor{
 		},
 		class =
 		{
-			Divine = "disallow",
+			Celestial = "disallow",
 			Wilder = "disallow",
 		},
 	},

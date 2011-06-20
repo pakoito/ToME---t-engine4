@@ -20,7 +20,7 @@
 
 newTalent{
 	name = "Circle of Shifting Shadows",
-	type = {"divine/circles", 1},
+	type = {"celestial/circles", 1},
 	require = divi_req_high1,
 	points = 5,
 	cooldown = 20,
@@ -60,7 +60,7 @@ newTalent{
 
 newTalent{
 	name = "Circle of Blazing Light",
-	type = {"divine/circles", 2},
+	type = {"celestial/circles", 2},
 	require = divi_req_high2,
 	points = 5,
 	cooldown = 20,
@@ -103,7 +103,7 @@ newTalent{
 
 newTalent{
 	name = "Circle of Sanctity",
-	type = {"divine/circles", 3},
+	type = {"celestial/circles", 3},
 	require = divi_req_high3,
 	points = 5,
 	cooldown = 20,
@@ -141,7 +141,7 @@ newTalent{
 
 newTalent{
 	name = "Circle of Warding",
-	type = {"divine/circles", 4},
+	type = {"celestial/circles", 4},
 	require = divi_req_high4,
 	points = 5,
 	cooldown = 20,

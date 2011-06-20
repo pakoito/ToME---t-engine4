@@ -19,7 +19,7 @@
 
 newTalent{
 	name = "Weapon of Light",
-	type = {"divine/combat", 1},
+	type = {"celestial/combat", 1},
 	mode = "sustained",
 	require = divi_req1,
 	points = 5,
@@ -48,7 +48,7 @@ newTalent{
 
 newTalent{
 	name = "Martyrdom",
-	type = {"divine/combat", 2},
+	type = {"celestial/combat", 2},
 	require = divi_req2,
 	points = 5,
 	random_ego = "attack",
@@ -82,7 +82,7 @@ newTalent{
 
 newTalent{
 	name = "Wave of Power",
-	type = {"divine/combat",3},
+	type = {"celestial/combat",3},
 	require = divi_req3,
 	points = 5,
 	random_ego = "attack",
@@ -115,7 +115,7 @@ newTalent{
 
 newTalent{
 	name = "Crusade",
-	type = {"divine/combat", 4},
+	type = {"celestial/combat", 4},
 	require = divi_req4,
 	random_ego = "attack",
 	points = 5,

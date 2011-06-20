@@ -19,7 +19,7 @@
 
 newTalent{
 	name = "Searing Light",
-	type = {"divine/sun", 1},
+	type = {"celestial/sun", 1},
 	require = divi_req1,
 	random_ego = "attack",
 	points = 5,
@@ -66,7 +66,7 @@ newTalent{
 
 newTalent{
 	name = "Sun Flare",
-	type = {"divine/sun", 2},
+	type = {"celestial/sun", 2},
 	require = divi_req2,
 	points = 5,
 	random_ego = "attack",
@@ -110,7 +110,7 @@ newTalent{
 
 newTalent{
 	name = "Firebeam",
-	type = {"divine/sun",3},
+	type = {"celestial/sun",3},
 	require = divi_req3,
 	points = 5,
 	random_ego = "attack",
@@ -145,7 +145,7 @@ newTalent{
 
 newTalent{
 	name = "Sunburst",
-	type = {"divine/sun", 4},
+	type = {"celestial/sun", 4},
 	require = divi_req4,
 	points = 5,
 	random_ego = "attack",

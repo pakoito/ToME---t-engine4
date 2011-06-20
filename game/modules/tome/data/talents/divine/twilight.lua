@@ -21,7 +21,7 @@
 
 newTalent{
 	name = "Twilight",
-	type = {"divine/twilight", 1},
+	type = {"celestial/twilight", 1},
 	require = divi_req1,
 	points = 5,
 	cooldown = 6,
@@ -48,7 +48,7 @@ newTalent{
 
 newTalent{
 	name = "Jumpgate: Teleport To", short_name = "JUMPGATE_TELEPORT",
-	type = {"divine/other", 1},
+	type = {"celestial/other", 1},
 	points = 1,
 	cooldown = 7,
 	negative = 14,
@@ -80,7 +80,7 @@ newTalent{
 
 newTalent{
 	name = "Jumpgate",
-	type = {"divine/twilight", 2},
+	type = {"celestial/twilight", 2},
 	require = divi_req2,
 	mode = "sustained", no_sustain_autoreset = true,
 	points = 5,
@@ -144,7 +144,7 @@ newTalent{
 
 newTalent{
 	name = "Mind Blast",
-	type = {"divine/twilight",3},
+	type = {"celestial/twilight",3},
 	require = divi_req3,
 	points = 5,
 	random_ego = "attack",
@@ -178,7 +178,7 @@ newTalent{
 
 newTalent{
 	name = "Shadow Simulacrum",
-	type = {"divine/twilight", 4},
+	type = {"celestial/twilight", 4},
 	require = divi_req4,
 	random_ego = "attack",
 	points = 5,
@@ -269,7 +269,7 @@ newTalent{
 
 newTalent{
 	name = "Jumpgate Two",
-	type = {"divine/other", 1},
+	type = {"celestial/other", 1},
 	mode = "sustained", no_sustain_autoreset = true,
 	points = 1,
 	cooldown = 20,
@@ -329,7 +329,7 @@ newTalent{
 
 newTalent{
 	name = "Jumpgate Two: Teleport To", short_name = "JUMPGATE_TELEPORT_TWO",
-	type = {"divine/other", 1},
+	type = {"celestial/other", 1},
 	points = 1,
 	cooldown = 7,
 	negative = 14,

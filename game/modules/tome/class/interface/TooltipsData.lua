@@ -66,12 +66,12 @@ Mana represents your reserve of magical energies. Each spell cast consumes mana 
 It is increased by Willpower.]]
 
 TOOLTIP_POSITIVE = [[#GOLD#Positive#LAST#
-Positive energy represents your reserve of positive "divine" power.
+Positive energy represents your reserve of positive "celestial" power.
 It slowly decreases and is replenished by using some talents.
 ]]
 
 TOOLTIP_NEGATIVE = [[#GOLD#Negative#LAST#
-Negative energy represents your reserve of negative "divine" power.
+Negative energy represents your reserve of negative "celestial" power.
 It slowly decreases and is replenished by using some talents.
 ]]
 

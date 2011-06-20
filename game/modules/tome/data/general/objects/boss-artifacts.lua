@@ -338,7 +338,7 @@ newEntity{ base = "BASE_SHIELD",
 		fatigue = 12,
 
 		lite = 1,
-		talents_types_mastery = {["divine/star-fury"]=0.2,["divine/twilight"]=0.1,},
+		talents_types_mastery = {["celestial/star-fury"]=0.2,["celestial/twilight"]=0.1,},
 	},
 	talent_on_spell = { {chance=10, talent=Talents.T_MOONLIGHT_RAY, level=2} },
 }

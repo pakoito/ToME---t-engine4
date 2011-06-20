@@ -19,7 +19,7 @@
 
 newTalent{
 	name = "Moonlight Ray",
-	type = {"divine/star-fury", 1},
+	type = {"celestial/star-fury", 1},
 	require = divi_req1,
 	points = 5,
 	random_ego = "attack",
@@ -54,7 +54,7 @@ newTalent{
 
 newTalent{
 	name = "Shadow Blast",
-	type = {"divine/star-fury", 2},
+	type = {"celestial/star-fury", 2},
 	require = divi_req2,
 	points = 5,
 	random_ego = "attack",
@@ -104,7 +104,7 @@ newTalent{
 
 newTalent{
 	name = "Twilight Surge",
-	type = {"divine/star-fury",3},
+	type = {"celestial/star-fury",3},
 	require = divi_req3,
 	points = 5,
 	random_ego = "attack",
@@ -141,7 +141,7 @@ newTalent{
 
 newTalent{
 	name = "Starfall",
-	type = {"divine/star-fury", 4},
+	type = {"celestial/star-fury", 4},
 	require = divi_req4,
 	points = 5,
 	random_ego = "attack",

@@ -109,7 +109,7 @@ local reward_types = {
 	},
 	sun_paladin = {
 		types = {
-			["divine/chants"] = 0.7,
+			["celestial/chants"] = 0.7,
 		},
 		talents = {
 			[Talents.T_CHANT_OF_FORTITUDE] = 1,
@@ -136,7 +136,7 @@ local reward_types = {
 	},
 	anorithil = {
 		types = {
-			["divine/light"] = 0.7,
+			["celestial/light"] = 0.7,
 		},
 		talents = {
 			[Talents.T_BATHE_IN_LIGHT] = 1,

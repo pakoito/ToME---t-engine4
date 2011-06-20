@@ -28,7 +28,7 @@ end
 
 newTalent{
 	name = "Chant of Fortitude",
-	type = {"divine/chants", 1},
+	type = {"celestial/chants", 1},
 	mode = "sustained",
 	require = divi_req1,
 	points = 5,
@@ -72,7 +72,7 @@ newTalent{
 
 newTalent{
 	name = "Chant of Fortress",
-	type = {"divine/chants", 2},
+	type = {"celestial/chants", 2},
 	mode = "sustained",
 	require = divi_req2,
 	points = 5,
@@ -113,7 +113,7 @@ newTalent{
 
 newTalent{
 	name = "Chant of Resistance",
-	type = {"divine/chants",3},
+	type = {"celestial/chants",3},
 	mode = "sustained",
 	require = divi_req3,
 	points = 5,
@@ -160,7 +160,7 @@ newTalent{
 
 newTalent{
 	name = "Chant of Light",
-	type = {"divine/chants", 4},
+	type = {"celestial/chants", 4},
 	mode = "sustained",
 	require = divi_req4,
 	points = 5,

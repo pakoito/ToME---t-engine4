@@ -19,7 +19,7 @@
 
 newTalent{
 	name = "Blood Red Moon",
-	type = {"divine/eclipse", 1},
+	type = {"celestial/eclipse", 1},
 	mode = "passive",
 	require = divi_req1,
 	points = 5,
@@ -37,7 +37,7 @@ newTalent{
 
 newTalent{
 	name = "Totality",
-	type = {"divine/eclipse", 2},
+	type = {"celestial/eclipse", 2},
 	require = divi_req2,
 	points = 5,
 	cooldown = 30,
@@ -51,7 +51,7 @@ newTalent{
 		self:setEffect(self.EFF_TOTALITY, t.getDuration(self, t), {power=t.getResistancePenetration(self, t)})
 		for tid, cd in pairs(self.talents_cd) do
 			local tt = self:getTalentFromId(tid)
-			if tt.type[1]:find("^divine/") then
+			if tt.type[1]:find("^celestial/") then
 				self.talents_cd[tid] = cd - t.getCooldownReduction(self, t)
 			end
 		end
@@ -61,7 +61,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local penetration = t.getResistancePenetration(self, t)
 		local cooldownreduction = t.getCooldownReduction(self, t)
-		return ([[Increases your light and darkness resistance penetration by %d%% for %d turns and brings all your divine talents on cooldown, %d turns closer to being off cooldown.
+		return ([[Increases your light and darkness resistance penetration by %d%% for %d turns and brings all your celestial talents on cooldown, %d turns closer to being off cooldown.
 		The resistance penetration will increase with your Cunning stat.]]):
 		format(penetration, duration, cooldownreduction)
 	end,
@@ -69,7 +69,7 @@ newTalent{
 
 newTalent{
 	name = "Corona",
-	type = {"divine/eclipse", 3},
+	type = {"celestial/eclipse", 3},
 	mode = "sustained",
 	require = divi_req3,
 	points = 5,
@@ -133,7 +133,7 @@ newTalent{
 
 newTalent{
 	name = "Darkest Light",
-	type = {"divine/eclipse", 4},
+	type = {"celestial/eclipse", 4},
 	mode = "sustained",
 	require = divi_req4,
 	points = 5,

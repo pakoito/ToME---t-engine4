@@ -18,20 +18,20 @@
 -- darkgod@te4.org
 
 -- Corruptions
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="divine/guardian", name = "guardian", description = "Your devotion grants you additional protection." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="divine/chants", name = "chants", generic = true, description = "Chant the glory of the sun." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="divine/light", name = "light", generic = true, description = "Invoke the power of light to heal and mend." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="divine/combat", name = "combat", description = "Your devotion allows you to combat your foes with indomitable determination." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="divine/sun", name = "sun", description = "Summon the power of the Sun to burn your foes." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="divine/glyphs", name = "glyphs", description = "Bind the holy powers into glyphs to trap your foes." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="divine/twilight", name = "twilight", description = "Stand between the darkness and the light, harnessing both." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="divine/star-fury", name = "star fury", description = "Call fury of the stars and moon to destroy your foes." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="divine/hymns", name = "hymns", generic = true, description = "Chant the glory of the moon." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="divine/circles", name = "circles", description = "Bind the power of the moon into circles at your feet." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="divine/eclipse", name = "eclipse", description = "The moment of the Eclipse is the moment of Truth, when Sun and Moon are in tandem and the energies of the world hang in balance. Intense focus allows the greatest Anorithils to harness these energies to unleash devastating forces.." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/guardian", name = "guardian", description = "Your devotion grants you additional protection." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/chants", name = "chants", generic = true, description = "Chant the glory of the sun." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/light", name = "light", generic = true, description = "Invoke the power of light to heal and mend." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/combat", name = "combat", description = "Your devotion allows you to combat your foes with indomitable determination." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/sun", name = "sun", description = "Summon the power of the Sun to burn your foes." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/glyphs", name = "glyphs", description = "Bind the holy powers into glyphs to trap your foes." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/twilight", name = "twilight", description = "Stand between the darkness and the light, harnessing both." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/star-fury", name = "star fury", description = "Call fury of the stars and moon to destroy your foes." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/hymns", name = "hymns", generic = true, description = "Chant the glory of the moon." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/circles", name = "circles", description = "Bind the power of the moon into circles at your feet." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/eclipse", name = "eclipse", description = "The moment of the Eclipse is the moment of Truth, when Sun and Moon are in tandem and the energies of the world hang in balance. Intense focus allows the greatest Anorithils to harness these energies to unleash devastating forces.." }
 
 
-newTalentType{ no_silence=true, is_spell=true, type="divine/other", name = "other", description = "Various divine talents." }
+newTalentType{ no_silence=true, is_spell=true, type="celestial/other", name = "other", description = "Various celestial talents." }
 
 -- Generic requires for corruptions based on talent level
 divi_req1 = {
@@ -75,15 +75,15 @@ divi_req_high5 = {
 	level = function(level) return 26 + (level-1)  end,
 }
 
-load("/data/talents/divine/chants.lua")
-load("/data/talents/divine/sun.lua")
-load("/data/talents/divine/combat.lua")
-load("/data/talents/divine/light.lua")
-load("/data/talents/divine/glyphs.lua")
-load("/data/talents/divine/guardian.lua")
+load("/data/talents/celestial/chants.lua")
+load("/data/talents/celestial/sun.lua")
+load("/data/talents/celestial/combat.lua")
+load("/data/talents/celestial/light.lua")
+load("/data/talents/celestial/glyphs.lua")
+load("/data/talents/celestial/guardian.lua")
 
-load("/data/talents/divine/twilight.lua")
-load("/data/talents/divine/hymns.lua")
-load("/data/talents/divine/star-fury.lua")
-load("/data/talents/divine/eclipse.lua")
-load("/data/talents/divine/circles.lua")
+load("/data/talents/celestial/twilight.lua")
+load("/data/talents/celestial/hymns.lua")
+load("/data/talents/celestial/star-fury.lua")
+load("/data/talents/celestial/eclipse.lua")
+load("/data/talents/celestial/circles.lua")

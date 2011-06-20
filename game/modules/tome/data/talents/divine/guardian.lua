@@ -19,7 +19,7 @@
 
 newTalent{
 	name = "Shield of Light",
-	type = {"divine/guardian", 1},
+	type = {"celestial/guardian", 1},
 	mode = "sustained",
 	require = divi_req_high1,
 	points = 5,
@@ -54,7 +54,7 @@ newTalent{
 
 newTalent{
 	name = "Brandish",
-	type = {"divine/guardian", 2},
+	type = {"celestial/guardian", 2},
 	require = divi_req_high2,
 	points = 5,
 	cooldown = 8,
@@ -109,7 +109,7 @@ newTalent{
 
 newTalent{
 	name = "Retribution",
-	type = {"divine/guardian", 3},
+	type = {"celestial/guardian", 3},
 	require = divi_req_high3, no_sustain_autoreset = true,
 	points = 5,
 	mode = "sustained",
@@ -148,7 +148,7 @@ newTalent{
 
 newTalent{
 	name = "Second Life",
-	type = {"divine/guardian", 4},
+	type = {"celestial/guardian", 4},
 	require = divi_req_high4, no_sustain_autoreset = true,
 	points = 5,
 	mode = "sustained",

@@ -28,7 +28,7 @@ end
 
 newTalent{
 	name = "Hymn of Shadows",
-	type = {"divine/hymns", 1},
+	type = {"celestial/hymns", 1},
 	mode = "sustained",
 	require = divi_req1,
 	points = 5,
@@ -69,7 +69,7 @@ newTalent{
 
 newTalent{
 	name = "Hymn of Detection",
-	type = {"divine/hymns", 2},
+	type = {"celestial/hymns", 2},
 	mode = "sustained",
 	require = divi_req2,
 	points = 5,
@@ -118,7 +118,7 @@ newTalent{
 
 newTalent{
 	name = "Hymn of Perseverance",
-	type = {"divine/hymns",3},
+	type = {"celestial/hymns",3},
 	mode = "sustained",
 	require = divi_req3,
 	points = 5,
@@ -164,7 +164,7 @@ newTalent{
 
 newTalent{
 	name = "Hymn of Moonlight",
-	type = {"divine/hymns",4},
+	type = {"celestial/hymns",4},
 	mode = "sustained",
 	require = divi_req4,
 	points = 5,

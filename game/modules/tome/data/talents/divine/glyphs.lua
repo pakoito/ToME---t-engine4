@@ -21,7 +21,7 @@ local Trap = require "mod.class.Trap"
 
 newTalent{
 	name = "Glyph of Paralysis",
-	type = {"divine/glyphs", 1},
+	type = {"celestial/glyphs", 1},
 	require = divi_req_high1,
 	random_ego = "attack",
 	points = 5,
@@ -86,7 +86,7 @@ newTalent{
 
 newTalent{
 	name = "Glyph of Repulsion",
-	type = {"divine/glyphs", 2},
+	type = {"celestial/glyphs", 2},
 	require = divi_req_high2,
 	random_ego = "attack",
 	points = 5,
@@ -159,7 +159,7 @@ newTalent{
 
 newTalent{
 	name = "Glyph of Explosion",
-	type = {"divine/glyphs", 3},
+	type = {"celestial/glyphs", 3},
 	require = divi_req_high3,
 	random_ego = "attack",
 	points = 5,
@@ -227,7 +227,7 @@ newTalent{
 
 newTalent{
 	name = "Glyph of Fatigue",
-	type = {"divine/glyphs", 4},
+	type = {"celestial/glyphs", 4},
 	require = divi_req_high4,
 	random_ego = "attack",
 	points = 5,

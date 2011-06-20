@@ -19,7 +19,7 @@
 
 newTalent{
 	name = "Healing Light",
-	type = {"divine/light", 1},
+	type = {"celestial/light", 1},
 	require = spells_req1,
 	points = 5,
 	random_ego = "defensive",
@@ -42,7 +42,7 @@ newTalent{
 
 newTalent{
 	name = "Bathe in Light",
-	type = {"divine/light", 2},
+	type = {"celestial/light", 2},
 	require = spells_req2,
 	random_ego = "defensive",
 	points = 5,
@@ -84,7 +84,7 @@ newTalent{
 
 newTalent{
 	name = "Barrier",
-	type = {"divine/light", 3},
+	type = {"celestial/light", 3},
 	require = spells_req3,
 	points = 5,
 	random_ego = "defensive",
@@ -107,7 +107,7 @@ newTalent{
 
 newTalent{
 	name = "Providence",
-	type = {"divine/light", 4},
+	type = {"celestial/light", 4},
 	require = spells_req4,
 	points = 5,
 	random_ego = "defensive",
