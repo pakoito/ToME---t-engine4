@@ -309,6 +309,19 @@ function _M:getMapObjects(tiles, mos, z)
 	until not mo
 end
 
+function _M:removeAllMOs()
+	self._mo:invalidate()
+	self._mo = nil
+
+	if not self.add_displays then return end
+	for i = 1, #self.add_displays do
+		if self.add_displays[i]._mo then
+			self.add_displays[i]._mo:invalidate()
+			self.add_displays[i]._mo = nil
+		end
+	end
+end
+
 --- Setup movement animation for the entity
 -- The entity is supposed to posses a correctly set x and y pair of fields - set to the current (new) position
 -- @param oldx the coords from where the animation will seem to come from

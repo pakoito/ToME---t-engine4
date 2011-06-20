@@ -217,6 +217,7 @@ newTalent{
 		modifier = self:getCun(10) * self:getTalentLevel(t)
 
 		local m = target:clone{
+--			shader = "shadow_simulacrum", textures = { function() return _3DNoise, true end },
 			no_drops = true,
 			faction = self.faction,
 			summoner = self, summoner_gain_exp=true,
@@ -226,6 +227,9 @@ newTalent{
 			resists = { all = modifier, [DamageType.DARKNESS] = 50, [DamageType.LIGHT] = - 50, },
 			desc = [[A dark shadowy shape who's form resembles the creature it was taken from.]],
 		}
+		m:removeAllMOs()
+		m.make_escort = nil
+		m.on_added_to_level = nil
 
 		m.energy.value = 0
 		m.life = m.life / (2 - (modifier / 50))
