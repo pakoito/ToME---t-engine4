@@ -24,11 +24,11 @@ newAI("party_member", function(self)
 	if anchor and self.ai_state.tactic_leash then
 		local leash_dist = math.floor(core.fov.distance(self.x, self.y, anchor.x, anchor.y))
 		if self.ai_state.tactic_leash < leash_dist then
-			print("[PARTY AI] leashing to anchor", self.name)
+--			print("[PARTY AI] leashing to anchor", self.name)
 			return self:runAI("move_anchor")
 		end
 	end
-	
+
 	-- Unselect friendly targets
 	if self.ai_target.actor and self:reactionToward(self.ai_target.actor) >= 0 then self:setTarget(nil) end
 
@@ -36,7 +36,7 @@ newAI("party_member", function(self)
 	local ret = self:runAI(self.ai_state.ai_party)
 
 	if not ret and anchor and not self.energy.used then
-		print("[PARTY AI] moving towards anchor", self.name)
+--		print("[PARTY AI] moving towards anchor", self.name)
 		return self:runAI("move_anchor")
 	else
 		return ret

@@ -53,6 +53,11 @@ newTalentType{ type="golem/fighting", name = "fighting", description = "Golem me
 newTalentType{ type="golem/arcane", name = "arcane", description = "Golem arcane capacity." }
 newTalentType{ type="golem/golem", name = "golem", description = "Golem basic capacity." }
 
+-- Necromancer spells
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/necrotic-minions", name = "necrotic minions", description = "Create and empower dumb undead minions." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/advanced-necrotic-minions", name = "advanced necrotic minions", description = "Create and empower powerful undead minions." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/nightfall", name = "nightfall", description = "Manipulate darkness itself to slaughter your foes." }
+
 -- Stone Warden spells
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/arcane-shield", name = "arcane shield", description = "Infuse arcane forces in your shield." }
 
@@ -98,6 +103,98 @@ spells_req_high5 = {
 	level = function(level) return 26 + (level-1)  end,
 }
 
+-------------------------------------------
+-- Necromancer minions
+function necroGetNbSummon(self)
+	local nb = 0
+	if not game.party or not game.party:hasMember(self) then return 0 end
+	-- Count party members
+	for act, def in pairs(game.party.members) do
+		if act.summoner and act.summoner == self and act.necrotic_minion then nb = nb + 1 end
+	end
+	return nb
+end
+
+function necroSetupSummon(self, m, x, y, level, no_control)
+	m.faction = self.faction
+	m.summoner = self
+	m.summoner_gain_exp = true
+	m.necrotic_minion = true
+	m.life_regen = 0
+	m.unused_stats = 0
+	m.unused_talents = 0
+	m.unused_generics = 0
+	m.unused_talents_types = 0
+	m.silent_levelup = true
+	m.no_points_on_levelup = true
+	m.ai_state = m.ai_state or {}
+	m.ai_state.tactic_leash = 100
+	-- Try to use stored AI talents to preserve tweaking over multiple summons
+	m.ai_talents = self.stored_ai_talents and self.stored_ai_talents[m.name] or {}
+	m.inc_damage = table.clone(self.inc_damage, true)
+
+	if self:knowTalent(self.T_DARK_EMPATHY) then
+		local t = self:getTalentFromId(self.T_DARK_EMPATHY)
+		local perc = t.getPerc(self, t)
+		for k, e in pairs(self.resists) do
+			m.resists[k] = (m.resists[k] or 0) + e * perc / 100
+		end
+		m.combat_physresist = m.combat_physresist + self:combatPhysicalResist() * perc / 100
+		m.combat_spellresist = m.combat_spellresist + self:combatSpellResist() * perc / 100
+		m.combat_mentalresist = m.combat_mentalresist + self:combatMentalResist() * perc / 100
+
+		m.poison_immune = (m.poison_immune or 0) + (self:attr("poison_immune") or 0) * perc / 100
+		m.disease_immune = (m.disease_immune or 0) + (self:attr("disease_immune") or 0) * perc / 100
+		m.cut_immune = (m.cut_immune or 0) + (self:attr("cut_immune") or 0) * perc / 100
+		m.confusion_immune = (m.confusion_immune or 0) + (self:attr("confusion_immune") or 0) * perc / 100
+		m.blind_immune = (m.blind_immune or 0) + (self:attr("blind_immune") or 0) * perc / 100
+		m.silence_immune = (m.silence_immune or 0) + (self:attr("silence_immune") or 0) * perc / 100
+		m.disarm_immune = (m.disarm_immune or 0) + (self:attr("disarm_immune") or 0) * perc / 100
+		m.pin_immune = (m.pin_immune or 0) + (self:attr("pin_immune") or 0) * perc / 100
+		m.stun_immune = (m.stun_immune or 0) + (self:attr("stun_immune") or 0) * perc / 100
+		m.fear_immune = (m.fear_immune or 0) + (self:attr("fear_immune") or 0) * perc / 100
+		m.knockback_immune = (m.knockback_immune or 0) + (self:attr("knockback_immune") or 0) * perc / 100
+		m.stone_immune = (m.stone_immune or 0) + (self:attr("stone_immune") or 0) * perc / 100
+		m.teleport_immune = (m.teleport_immune or 0) + (self:attr("teleport_immune") or 0) * perc / 100
+	end
+
+	if game.party:hasMember(self) then
+		local can_control = not no_control
+
+		m.remove_from_party_on_death = true
+		game.party:addMember(m, {
+			control=can_control and "full" or "no",
+			type="minion",
+			title="Necrotic Minion",
+			orders = {target=true},
+		})
+	end
+	m:resolve() m:resolve(nil, true)
+	m:forceLevelup(math.max(1, self.level + (level or 0)))
+	game.zone:addEntity(game.level, m, "actor", x, y)
+	game.level.map:particleEmitter(x, y, 1, "summon")
+
+	-- Summons decay
+	m.on_act = function(self)
+		local src = self.summoner
+		local p = src:isTalentActive(src.T_NECROTIC_AURA)
+		if p and self.x and self.y and src.x and src.y and core.fov.distance(self.x, self.y, src.x, src.y) <= self.summoner.necrotic_aura_radius then return end
+
+		self.life = self.life - self.max_life * (p and p.necrotic_aura_decay or 10) / 100
+		self.changed = true
+		if self.life <= 0 then
+			game.logSeen(self, "#{bold}#%s decays into a pile of ash!#{normal}#", src.name:capitalize())
+			self:die(self)
+		end
+	end
+
+	-- Summons never flee
+	m.ai_tactic = m.ai_tactic or {}
+	m.ai_tactic.escape = 0
+end
+-------------------------------------------
+
+
 load("/data/talents/spells/arcane.lua")
 load("/data/talents/spells/fire.lua")
 load("/data/talents/spells/wildfire.lua")
@@ -125,3 +222,6 @@ load("/data/talents/spells/stone-alchemy.lua")
 load("/data/talents/spells/golem.lua")
 
 load("/data/talents/spells/arcane-shield.lua")
+
+load("/data/talents/spells/necrotic-minions.lua")
+load("/data/talents/spells/advanced-necrotic-minions.lua")

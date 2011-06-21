@@ -30,6 +30,7 @@ newBirthDescriptor{
 			__ALL__ = "disallow",
 			Alchemist = "allow",
 			Archmage = "allow",
+			Necromancer = "allow",
 		},
 	},
 	copy = {
@@ -168,5 +169,45 @@ newBirthDescriptor{
 	},
 	copy_add = {
 		life_rating = -1,
+	},
+}
+
+newBirthDescriptor{
+	type = "subclass",
+	name = "Necromancer",
+	locked = function() return profile.mod.allow_build.mage_necromancer and true or "hide" end,
+	locked_desc = "The road to necromancy is a macabre path indeed. Walk with the dead, and drink deeply of their black knowledge.",
+	desc = {
+		"While most magic is viewed with suspicion since the Spellblaze, the stigma surrounding the black art of necromancy has been around since time immemorial.",
+		"These dark spellcasters extinguish life, twist death, and raise armies of undead monsters to sate their lust for power and pursue their ultimate goal: Eternal life.",
+		"Their most important stats are: Magic and Willpower",
+		"#GOLD#Stat modifiers:",
+		"#LIGHT_BLUE# * +0 Strength, +0 Dexterity, +0 Constitution",
+		"#LIGHT_BLUE# * +5 Magic, +3 Willpower, +1 Cunning",
+	},
+	stats = { mag=5, wil=3, cun=1, },
+	talents_types = {
+		["spell/ice"]={true, 0},
+		["spell/necrotic-minions"]={true, 0.3},
+		["spell/advanced-necrotic-minions"]={false, 0.3},
+		["spell/death"]={true, 0.3},
+		["spell/nightfall"]={true, 0.3},
+		["cunning/survival"]={false, -0.1},
+	},
+	birth_example_particles = "necrotic-aura",
+	talents = {
+		[ActorTalents.T_NECROTIC_AURA] = 1,
+		[ActorTalents.T_CREATE_MINIONS] = 1,
+	},
+	copy = {
+		necrotic_aura_base_souls = 1,
+		max_life = 90,
+		resolvers.equip{ id=true,
+			{type="weapon", subtype="staff", name="elm staff", autoreq=true, ego_chance=-1000},
+			{type="armor", subtype="cloth", name="linen robe", autoreq=true, ego_chance=-1000},
+		},
+	},
+	copy_add = {
+		life_rating = -3,
 	},
 }

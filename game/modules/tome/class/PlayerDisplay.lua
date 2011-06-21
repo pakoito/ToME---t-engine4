@@ -235,6 +235,13 @@ function _M:display()
 			{r=0x7f / 5, g=0xff / 5, b=0xd4 / 5}
 		)) h = h + self.font_h
 	end
+	if player:isTalentActive(player.T_NECROTIC_AURA) then
+		local p = player:isTalentActive(player.T_NECROTIC_AURA)
+		self:mouseTooltip(self.TOOLTIP_MANA, self:makeTextureBar("#7fffd4#Necrotic", "%d", p.souls, p.souls_max, nil, x, h, 255, 255, 255,
+			{r=colors.GREY.r / 2, g=colors.GREY.g / 2, b=colors.GREY.b / 2},
+			{r=colors.GREY.r / 5, g=colors.GREY.g / 5, b=colors.GREY.b / 5}
+		)) h = h + self.font_h
+	end
 	if player:knowTalent(player.T_EQUILIBRIUM_POOL) then
 		local _, chance = player:equilibriumChance()
 		self:mouseTooltip(self.TOOLTIP_EQUILIBRIUM, self:makeTextureBar("#00ff74#Equi:", ("%d (%d%s)"):format(player:getEquilibrium(),100 - chance, "%%"), 100 - chance, 100, player.equilibrium_regen, x, h, 255, 255, 255,

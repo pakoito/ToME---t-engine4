@@ -4101,3 +4101,30 @@ newEffect{
 		DamageType:get(DamageType.TEMPORAL).projector(eff.src, self.x, self.y, DamageType.TEMPORAL, eff.power)
 	end,
 }
+
+newEffect{
+	name = "SURGE_OF_UNDEATH",
+	desc = "Surge of Undeath",
+	long_desc = function(self, eff) return ("Increases the target combat power, spellpower, accuracy by %d, armour penetration by %d and critical chances by %d."):format(eff.power, eff.apr, eff.crit) end,
+	type = "magical",
+	status = "beneficial",
+	parameters = { power=10, crit=10, apr=10 },
+	on_gain = function(self, err) return "#Target# is engulfed in dark energies.", "+Undeath Surge" end,
+	on_lose = function(self, err) return "#Target# seems less powerful.", "-Undeath Surge" end,
+	activate = function(self, eff)
+		eff.damid = self:addTemporaryValue("combat_dam", eff.power)
+		eff.spellid = self:addTemporaryValue("combat_spellpower", eff.power)
+		eff.accid = self:addTemporaryValue("combat_attack", eff.power)
+		eff.aprid = self:addTemporaryValue("combat_apr", eff.apr)
+		eff.pcritid = self:addTemporaryValue("combat_physcrit", eff.crit)
+		eff.scritid = self:addTemporaryValue("combat_spellcrit", eff.crit)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_dam", eff.damid)
+		self:removeTemporaryValue("combat_spellpower", eff.spellid)
+		self:removeTemporaryValue("combat_attack", eff.accid)
+		self:removeTemporaryValue("combat_apr", eff.aprid)
+		self:removeTemporaryValue("combat_physcrit", eff.pcritid)
+		self:removeTemporaryValue("combat_spellcrit", eff.scritid)
+	end,
+}

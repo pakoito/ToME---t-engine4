@@ -61,7 +61,6 @@ newEntity{
 newEntity{ base = "BASE_NPC_BONE_GIANT",
 	name = "bone giant", color=colors.WHITE,
 	desc = [[A towering creature, made from the bones of dozens of dead bodies. It is covered by an unholy aura.]],
-	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/undead_giant_bone_giant.png", display_h=2, display_y=-1}}},
 	level_range = {25, nil}, exp_worth = 1,
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/undead_giant_bone_giant.png", display_h=2, display_y=-1}}},
 	rarity = 1,

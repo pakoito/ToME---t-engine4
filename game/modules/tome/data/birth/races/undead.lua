@@ -109,6 +109,7 @@ newBirthDescriptor
 		stun_immune = 0.5,
 		fear_immune = 1,
 		global_speed = 0.8,
+		moddable_tile = true,
 	},
 	experience = 1.4,
 }

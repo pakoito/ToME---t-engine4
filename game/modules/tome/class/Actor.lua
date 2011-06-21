@@ -1380,6 +1380,16 @@ function _M:die(src)
 		src.blood_frenzy = src.blood_frenzy + src:getTalentLevel(src.T_BLOOD_FRENZY) * 2
 	end
 
+	-- Increases necrotic aura count
+	if src and src.resolveSource and src:resolveSource().isTalentActive and src:resolveSource():isTalentActive(src.T_NECROTIC_AURA) then
+		local rsrc = src:resolveSource()
+		local p = rsrc:isTalentActive(src.T_NECROTIC_AURA)
+		if self.x and self.y and src.x and src.y and core.fov.distance(self.x, self.y, rsrc.x, rsrc.y) <= rsrc.necrotic_aura_radius then
+			p.souls = math.min(p.souls + 1, p.souls_max)
+			rsrc.changed = true
+		end
+	end
+
 	-- Adds hate
 	if src and src.knowTalent and src:knowTalent(src.T_HATE_POOL) then
 		local hateGain = src.hate_per_kill

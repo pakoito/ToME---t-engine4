@@ -1032,7 +1032,7 @@ newDamageType{
 	name = "retch", type = "RETCH",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
-		if target and target.undead then
+		if target and (target.undead or target.retch_heal) then
 			target:heal(dam * 1.5)
 		elseif target then
 			DamageType:get(DamageType.BLIGHT).projector(src, x, y, DamageType.BLIGHT, dam)
