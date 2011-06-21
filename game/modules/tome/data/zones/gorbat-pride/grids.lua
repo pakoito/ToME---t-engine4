@@ -45,7 +45,7 @@ newEntity{ base = "LEVER_DOOR", define_as = "LEVER_DOOR_VERT", image = "terrain/
 newEntity{
 	define_as = "LEVER",
 	type = "lever", subtype = "floor",
-	name = "huge lever",
+	name = "huge lever", image = "terrain/marble_floor.png", add_mos = {{image="terrain/lever1_state1.png"}},
 	display = '&', color=colors.UMBER, back_color=colors.DARK_UMBER,
 	notice = true,
 	always_remember = true,
@@ -53,6 +53,10 @@ newEntity{
 	force_clone = true,
 	block_move = function(self, x, y, e, act)
 		if act and e.player and self.lever then
+			self.color_r = 255 self.color_g = 255 self.color_b = 255
+			self.add_mos[1].image = "terrain/lever1_state2.png"
+			self:removeAllMOs()
+			game.level.map:updateMap(x, y)
 			self.lever = false
 			local spot = game.level:pickSpot{type="lever", subtype="door"}
 			if not spot then return true end
