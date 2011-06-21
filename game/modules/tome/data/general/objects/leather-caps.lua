@@ -23,6 +23,7 @@ newEntity{
 	type = "armor", subtype="head",
 	add_name = " (#ARMOR#)",
 	display = "]", color=colors.UMBER, image = resolvers.image_material("cap", "leather"),
+	moddable_tile = resolvers.moddable_tile("leather_cap"),
 	encumber = 2,
 	rarity = 6,
 	desc = [[A cap made of leather.]],

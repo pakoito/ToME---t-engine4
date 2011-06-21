@@ -345,6 +345,51 @@ function resolvers.calc.image_material(t, e)
 	return "object/"..t[1].."_"..t[2][ml]..".png"
 end
 
+--- Moddable Image based on material level
+function resolvers.moddable_tile(image, values)
+	return {__resolver="moddable_tile", image}
+end
+function resolvers.calc.moddable_tile(t, e)
+	local slot = t[1]
+	local r, r2
+	if slot == "cloak" then r = {"cloak_%s_01","cloak_%s_02","cloak_%s_03","cloak_%s_04","cloak_%s_05"}
+	elseif slot == "massive" then
+		r = {"upper_body_20","upper_body_21","upper_body_22","upper_body_24","upper_body_23",}
+		r2 = {"lower_body_09","lower_body_10","lower_body_11","lower_body_13","lower_body_12",}
+	elseif slot == "heavy" then
+		r = {"upper_body_11","upper_body_11","upper_body_11","upper_body_11","upper_body_11",}
+		r2 = {"lower_body_08","lower_body_08","lower_body_08","lower_body_08","lower_body_08",}
+	elseif slot == "light" then
+		r = {"upper_body_05","upper_body_06","upper_body_07","upper_body_08","upper_body_19",}
+		r2 = {"lower_body_03","lower_body_04","lower_body_05","lower_body_06","lower_body_06",}
+	elseif slot == "robe" then r = {"upper_body_18","upper_body_16","upper_body_13","upper_body_15","upper_body_17",}
+	elseif slot == "shield" then r = {"%s_hand_10","%s_hand_11","%s_hand_11","%s_hand_12","%s_hand_12",}
+	elseif slot == "staff" then r = {{"%s_hand_08",true}}
+	elseif slot == "leather_boots" then r = {"feet_03","feet_04","feet_04","feet_05","feet_05",}
+	elseif slot == "heavy_boots" then r = {"feet_06","feet_06","feet_07","feet_09","feet_08",}
+	elseif slot == "gauntlets" then r = {"hands_03","hands_04","hands_05","hands_07","hands_06",}
+	elseif slot == "gloves" then r = {"hands_02",}
+	elseif slot == "sword" then r = {"%s_hand_04",}
+	elseif slot == "wizard_hat" then r = {{"head_11",true},{"head_13",true},{"head_17",true},{"head_12",true},{"head_15",true},}
+	elseif slot == "trident" then r = {{"%s_hand_07",true}}
+	elseif slot == "mace" then r = {"%s_hand_05"}
+	elseif slot == "axe" then r = {"%s_hand_06"}
+	elseif slot == "bow" then r = {"%s_hand_01"}
+	elseif slot == "sling" then r = {"%s_hand_02"}
+	elseif slot == "dagger" then r = {"%s_hand_03"}
+	elseif slot == "helm" then r = {"head_05","head_06","head_08","head_10","head_09",}
+	elseif slot == "leather_cap" then r = {"head_03"}
+	elseif slot == "mummy_wrapping" then r = {"upper_body_05","upper_body_06","upper_body_07","upper_body_08","upper_body_19",}
+	end
+	local ml = e.material_level or 1
+	r = r[util.bound(ml, 1, #r)]
+	if r2 then
+		r2 = r2[util.bound(ml, 1, #r2)]
+		e.moddable_tile2 = r2
+	end
+	if type(r) == "string" then return r else e.moddable_tile_big = true return r[1] end
+end
+
 --- Activates all sustains at birth
 function resolvers.sustains_at_birth()
 	return {__resolver="sustains_at_birth", __resolve_last=true}

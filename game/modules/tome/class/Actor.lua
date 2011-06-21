@@ -1729,6 +1729,32 @@ function _M:checkEncumbrance()
 	end
 end
 
+--- Update tile
+function _M:updateModdableTile()
+	if not self.moddable_tile then return end
+	self:removeAllMOs()
+
+	local base = "player/"..self.moddable_tile.."/"
+
+	self.image = base.."base_shadow_01.png"
+	self.add_mos = {}
+	local add = self.add_mos
+	local i
+
+	i = self.inven[self.INVEN_CLOAK]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile):format("behind")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
+	add[#add+1] = {image = base.."base_01.png"}
+	i = self.inven[self.INVEN_CLOAK]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile):format("shoulder")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
+	i = self.inven[self.INVEN_BODY]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile)..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
+	i = self.inven[self.INVEN_BODY]; if i and i[1] and i[1].moddable_tile2 then add[#add+1] = {image = base..(i[1].moddable_tile2)..".png"} end
+	i = self.inven[self.INVEN_MAINHAND]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile):format("right")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
+	i = self.inven[self.INVEN_OFFHAND]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile):format("left")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
+	i = self.inven[self.INVEN_HEAD]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile)..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
+	i = self.inven[self.INVEN_FEET]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile)..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
+	i = self.inven[self.INVEN_HANDS]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile)..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
+
+	if self.x and game.level then game.level.map:updateMap(self.x, self.y) end
+end
+
 --- Call when an object is worn
 function _M:onWear(o)
 	engine.interface.ActorInventory.onWear(self, o)
@@ -1741,6 +1767,8 @@ function _M:onWear(o)
 			o.talent_on_spell[i]._id = id
 		end
 	end
+
+	self:updateModdableTile()
 end
 
 --- Call when an object is taken off
@@ -1754,6 +1782,8 @@ function _M:onTakeoff(o)
 			self.talent_on_spell[id] = nil
 		end
 	end
+
+	self:updateModdableTile()
 end
 
 --- Call when an object is added

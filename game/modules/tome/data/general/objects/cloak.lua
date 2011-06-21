@@ -23,6 +23,7 @@ newEntity{
 	type = "armor", subtype="cloak",
 	add_name = " (#ARMOR#)",
 	display = "(", color=colors.UMBER, image = resolvers.image_material("cloak", "cloth"),
+	moddable_tile = resolvers.moddable_tile("cloak"),
 	encumber = 2,
 	rarity = 6,
 	desc = [[A cloth coat typically worn as a loose outer garment. It is spacious enough to be worn even over bulky metal armour.]],

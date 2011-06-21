@@ -25,6 +25,7 @@ newEntity{
 	type = "armor", subtype="mummy",
 	add_name = " (#ARMOR#)",
 	display = "[", color=colors.ANTIQUE_WHITE, image="object/mummy_wrappings.png",
+	moddable_tile = resolvers.moddable_tile("mummy_wrapping"),
 	encumber = 6,
 	rarity = 5,
 	desc = [[Decaying mummy wrappings.]],

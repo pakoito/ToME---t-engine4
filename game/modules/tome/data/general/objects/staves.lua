@@ -25,6 +25,7 @@ newEntity{
 	twohanded = true,
 	add_name = " (#COMBAT_DAMTYPE#)",
 	display = "\\", color=colors.LIGHT_RED, image = resolvers.image_material("staff", "wood"),
+	moddable_tile = resolvers.moddable_tile("staff"),
 	randart_able = { attack=10, physical=40, spell=80, def=10, misc=10 },
 	encumber = 5,
 	rarity = 4,

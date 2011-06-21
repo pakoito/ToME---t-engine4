@@ -23,6 +23,7 @@ newEntity{
 	type = "weapon", subtype="waraxe",
 	add_name = " (#COMBAT#)",
 	display = "/", color=colors.SLATE, image = resolvers.image_material("axe", "metal"),
+	moddable_tile = resolvers.moddable_tile("axe"),
 	encumber = 3,
 	rarity = 3,
 	metallic = true,

@@ -22,6 +22,7 @@ newEntity{
 	slot = "MAINHAND",
 	type = "weapon", subtype="sling",
 	display = "}", color=colors.UMBER, image = resolvers.image_material("sling", "leather"),
+	moddable_tile = resolvers.moddable_tile("sling"),
 	encumber = 4,
 	rarity = 5,
 	combat = { talented = "sling", sound = "actions/arrow", sound_miss = "actions/arrow", },

@@ -23,6 +23,7 @@ newEntity{
 	type = "weapon", subtype="dagger",
 	add_name = " (#COMBAT#)",
 	display = "/", color=colors.WHITE, image = resolvers.image_material("knife", "metal"),
+	moddable_tile = resolvers.moddable_tile("dagger"),
 	encumber = 1,
 	rarity = 5,
 	metallic = true,

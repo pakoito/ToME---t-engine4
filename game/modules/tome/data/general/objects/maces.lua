@@ -23,6 +23,7 @@ newEntity{
 	type = "weapon", subtype="mace",
 	add_name = " (#COMBAT#)",
 	display = "/", color=colors.SLATE, image = resolvers.image_material("mace", "metal"),
+	moddable_tile = resolvers.moddable_tile("mace"),
 	encumber = 3,
 	rarity = 5,
 	metallic = true,

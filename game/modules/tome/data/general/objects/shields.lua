@@ -25,6 +25,7 @@ newEntity{
 	type = "armor", subtype="shield",
 	add_name = " (#ARMOR#)",
 	display = ")", color=colors.UMBER, image = resolvers.image_material("shield", "metal"),
+	moddable_tile = resolvers.moddable_tile("shield"),
 	rarity = 5,
 	encumber = 7,
 	metallic = true,

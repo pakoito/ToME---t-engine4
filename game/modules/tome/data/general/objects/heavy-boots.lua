@@ -23,6 +23,7 @@ newEntity{
 	define_as = "BASE_HEAVY_BOOTS",
 	slot = "FEET",
 	type = "armor", subtype="feet", image = resolvers.image_material("hboots", "metal"),
+	moddable_tile = resolvers.moddable_tile("heavy_boots"),
 	add_name = " (#ARMOR#)",
 	display = "]", color=colors.SLATE,
 	require = { talent = { Talents.T_ARMOUR_TRAINING }, },

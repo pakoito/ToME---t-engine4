@@ -23,6 +23,7 @@ newEntity{
 	type = "weapon", subtype="whip",
 	add_name = " (#COMBAT#)",
 	display = "|", color=colors.SLATE, image = resolvers.image_material("whip", "leather"),
+	moddable_tile = resolvers.moddable_tile("whip"),
 	encumber = 3,
 	rarity = 5,
 	metallic = true,

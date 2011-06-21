@@ -24,6 +24,7 @@ newEntity{
 	type = "weapon", subtype="greatmaul",
 	add_name = " (#COMBAT#)",
 	display = "\\", color=colors.SLATE, image = resolvers.image_material("2hmace", "metal"),
+	moddable_tile = resolvers.moddable_tile("mace"),
 	encumber = 5,
 	rarity = 5,
 	metallic = true,

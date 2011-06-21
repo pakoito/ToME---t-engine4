@@ -23,6 +23,7 @@ newEntity{
 	define_as = "BASE_HEAVY_ARMOR",
 	slot = "BODY",
 	type = "armor", subtype="heavy", image = resolvers.image_material("mail", "metal"),
+	moddable_tile = resolvers.moddable_tile("heavy"),
 	add_name = " (#ARMOR#)",
 	display = "[", color=colors.SLATE,
 	require = { talent = { {Talents.T_ARMOUR_TRAINING,2} }, },

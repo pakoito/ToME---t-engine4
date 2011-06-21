@@ -23,6 +23,7 @@ newEntity{
 	type = "armor", subtype="cloth",
 	add_name = " (#ARMOR#)",
 	display = "[", color=colors.SLATE, image = resolvers.image_material("robe", "cloth"),
+	moddable_tile = resolvers.moddable_tile("robe"),
 	encumber = 2,
 	rarity = 5,
 	desc = [[A cloth vestment. It offers no intrinsic protection but can be enchanted.]],

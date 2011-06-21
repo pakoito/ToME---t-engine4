@@ -23,6 +23,7 @@ newEntity{
 	type = "armor", subtype="head",
 	add_name = " (#ARMOR#)",
 	display = "]", color=colors.BLUE, image = resolvers.image_material("wizardhat", "cloth"),
+	moddable_tile = resolvers.moddable_tile("wizard_hat"),
 	encumber = 2,
 	rarity = 6,
 	desc = [[A pointy cloth hat, very wizardly...]],

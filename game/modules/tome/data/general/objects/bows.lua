@@ -23,6 +23,7 @@ newEntity{
 	slot_forbid = "OFFHAND",
 	type = "weapon", subtype="longbow",
 	display = "}", color=colors.UMBER, image = resolvers.image_material("longbow", "wood"),
+	moddable_tile = resolvers.moddable_tile("bow"),
 	encumber = 4,
 	rarity = 5,
 	combat = { talented = "bow", sound = "actions/arrow", sound_miss = "actions/arrow",},

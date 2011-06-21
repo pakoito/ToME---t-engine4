@@ -86,6 +86,7 @@ newBirthDescriptor
 		life_rating=7,
 		confusion_immune = 0.35,
 		max_air = 200,
+		moddable_tile = "yeek",
 	},
 	experience = 0.85,
 }

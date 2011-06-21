@@ -22,6 +22,7 @@ newEntity{
 	slot = "MAINHAND",
 	slot_forbid = "OFFHAND",
 	type = "weapon", subtype="trident", image = resolvers.image_material("trident", "sea-metal"),
+	moddable_tile = resolvers.moddable_tile("trident"),
 	add_name = " (#COMBAT#)",
 	display = "|", color=colors.AQUAMARINE,
 	encumber = 3,

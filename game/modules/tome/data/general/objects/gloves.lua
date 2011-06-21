@@ -26,6 +26,7 @@ newEntity{
 	add_name = " (#ARMOR#)",
 	display = "[", color=colors.UMBER,
 	image = resolvers.image_material("gloves", "leather"),
+	moddable_tile = resolvers.moddable_tile("gloves"),
 	encumber = 1,
 	rarity = 9,
 	desc = [[Light gloves which do not seriously hinder finger movements, while still protecting the hands somewhat.]],
