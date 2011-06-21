@@ -308,3 +308,81 @@ newEntity{ base = "OLD_WALL", define_as = "OLD_WALL_SMALL_PILLAR", image = "terr
 newEntity{ base = "OLD_WALL", define_as = "OLD_WALL_PILLAR_6", image = "terrain/oldstone_floor.png", z=1, add_displays = {class.new{image="terrain/granite_wall_pillar_3.png", z=3}, class.new{image="terrain/granite_wall_pillar_9.png", z=18, display_y=-1}}}
 newEntity{ base = "OLD_WALL", define_as = "OLD_WALL_PILLAR_4", image = "terrain/oldstone_floor.png", z=1, add_displays = {class.new{image="terrain/granite_wall_pillar_1.png", z=3}, class.new{image="terrain/granite_wall_pillar_7.png", z=18, display_y=-1}}}
 newEntity{ base = "OLD_WALL", define_as = "OLD_WALL_PILLAR_2", image = "terrain/oldstone_floor.png", z=1, add_displays = {class.new{image="terrain/granite_wall_pillar_2.png", z=3}}}
+
+
+-----------------------------------------
+-- Levers & such tricky tings
+-----------------------------------------
+newEntity{
+	define_as = "GENERIC_LEVER_DOOR",
+	type = "wall", subtype = "floor",
+	name = "sealed door", image = "terrain/granite_door1.png",
+	display = '+', color_r=238, color_g=154, color_b=77, back_color=colors.DARK_UMBER,
+	nice_tiler = { method="door3d", north_south="GENERIC_LEVER_DOOR_VERT", west_east="GENERIC_LEVER_DOOR_HORIZ" },
+	notice = true,
+	always_remember = true,
+	block_sight = true,
+	block_sense = true,
+	block_esp = true,
+	force_clone = true,
+	door_player_stop = "This door seems to have been sealed off, you need to find a way to open it.",
+	door_opened = "DOOR_OPEN",
+	on_lever_change = function(self, x, y, who, val, oldval)
+		local trigger = game.level.map.attrs(x, y, "lever_action")
+		if val > oldval and val >= trigger then
+			game.level.map(x, y, engine.Map.TERRAIN, game.zone.grid_list[self.door_opened])
+			game.log("#VIOLET#You hear a door openning.")
+			return true
+		end
+	end,
+}
+newEntity{ base = "GENERIC_LEVER_DOOR", define_as = "GENERIC_LEVER_DOOR_HORIZ", image = "terrain/granite_door1.png", add_displays = {class.new{image="terrain/granite_wall3.png", z=18, display_y=-1}}, door_opened = "DOOR_HORIZ_OPEN"}
+newEntity{ base = "GENERIC_LEVER_DOOR", define_as = "GENERIC_LEVER_DOOR_VERT", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/granite_door1_vert.png", z=17}, class.new{image="terrain/granite_door1_vert_north.png", z=18, display_y=-1}}, door_opened = "DOOR_OPEN_VERT"}
+
+newEntity{
+	define_as = "GENERIC_LEVER",
+	type = "lever", subtype = "floor",
+	name = "huge lever", image = "terrain/marble_floor.png", add_mos = {{image="terrain/lever1_state1.png"}},
+	display = '&', color=colors.UMBER, back_color=colors.DARK_UMBER,
+	notice = true,
+	always_remember = true,
+	lever = false,
+	force_clone = true,
+	block_move = function(self, x, y, e, act)
+		if act and e.player then
+			local block = game.level.map.attrs(x, y, "lever_block") or nil
+			local radius = game.level.map.attrs(x, y, "lever_radius") or 10
+			local val = game.level.map.attrs(x, y, "lever")
+			local kind = game.level.map.attrs(x, y, "lever_kind")
+			if self.lever then
+				self.color_r = colors.UMBER.r self.color_g = colors.UMBER.g self.color_b = colors.UMBER.b
+				self.add_mos[1].image = "terrain/lever1_state1.png"
+			else
+				self.color_r = 255 self.color_g = 255 self.color_b = 255
+				self.add_mos[1].image = "terrain/lever1_state2.png"
+			end
+			self:removeAllMOs()
+			game.level.map:updateMap(x, y)
+			self.lever = not self.lever
+			game.log("#VIOLET#You hear a mechanism clicking.")
+
+			core.fov.calc_circle(x, y, game.level.map.w, game.level.map.h, radius, function(_, i, j)
+				if block and game.level.map.attrs(i, j, block) then return true end
+			end, function(_, i, j)
+				if game.level.map.attrs(i, j, "lever_action_kind") == kind then
+					local old = game.level.map.attrs(i, j, "lever_action_value")
+					local newval = old + (self.lever and val or -val)
+					game.level.map.attrs(i, j, "lever_action_value", newval)
+					if game.level.map:checkEntity(i, j, engine.Map.TERRAIN, "on_lever_change", e, newval, old) then
+						if game.level.map.attrs(i, j, "lever_action_only_once") then game.level.map.attrs(i, j, "lever_action_kind", false) end
+					end
+					local fct = game.level.map.attrs(i, j, "lever_action_custom")
+					if fct and fct(i, j, e, newval, old) then
+						if game.level.map.attrs(i, j, "lever_action_only_once") then game.level.map.attrs(i, j, "lever_action_kind", false) end
+					end
+				end
+			end, nil)
+		end
+		return true
+	end,
+}
