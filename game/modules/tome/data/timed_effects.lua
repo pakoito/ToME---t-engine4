@@ -2235,10 +2235,9 @@ newEffect{
 	on_lose = function(self, err) return "#Target# bursts out from the egg.", "-Phoenix" end,
 	activate = function(self, eff)
 		self.display = "O"						             -- change the display of the phoenix to an egg, maybe later make it a fiery orb image
-		if self._mo then
-			self._mo:invalidate()
-			game.level.map:updateMap(self.x, self.y)
-		end
+		eff.old_image = self.image
+		self.image = "object/egg_dragons_egg_06_64.png"
+		self:removeAllMOs()
 		eff.life_regen = self:addTemporaryValue("life_regen", 25)	         -- gives it a 10 life regen, should I increase this?
 		eff.mana_regen = self:addTemporaryValue("mana_regen", -9.75)          -- makes the mana regen realistic
 		eff.never_move = self:addTemporaryValue("never_move", 1)	 -- egg form should not move
@@ -2248,10 +2247,8 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self.display = "B"
-		if self._mo then
-			self._mo:invalidate()
-			game.level.map:updateMap(self.x, self.y)
-		end
+		self.image = eff.old_image
+		self:removeAllMOs()
 		self:removeTemporaryValue("life_regen", eff.life_regen)
 		self:removeTemporaryValue("mana_regen", eff.mana_regen)
 		self:removeTemporaryValue("never_move", eff.never_move)

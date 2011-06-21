@@ -33,6 +33,7 @@ newEntity{
 	size_category = 3,
 
 	open_door = true,
+--	moddable_tile = "yeek",
 }
 
 newEntity{ base = "BASE_NPC_HUMANOID_RANDOM_BOSS",

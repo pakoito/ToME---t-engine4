@@ -319,7 +319,7 @@ function _M:getMapObjects(tiles, mos, z)
 end
 
 function _M:removeAllMOs()
-	self._mo:invalidate()
+	if self._mo then self._mo:invalidate() end
 	self._mo = nil
 
 	if not self.add_displays then return end

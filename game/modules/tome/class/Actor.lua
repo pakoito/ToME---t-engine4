@@ -1729,7 +1729,7 @@ function _M:checkEncumbrance()
 	end
 end
 
---- Update tile
+--- Update tile for races that can handle it
 function _M:updateModdableTile()
 	if not self.moddable_tile then return end
 	self:removeAllMOs()
