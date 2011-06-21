@@ -19,8 +19,6 @@
 
 -- This is simply and example of how to use levers, not a real ingame vault
 
-setStatusAll{no_teleport=true}
-
 defineTile('.', "FLOOR")
 defineTile('=', "FLOOR", nil, nil, nil, {foobar=true})
 defineTile('&', "GENERIC_LEVER", nil, nil, nil, {lever=1, lever_kind="foo", lever_radius=10, lever_block="foobar"})
@@ -31,11 +29,6 @@ defineTile('"', "FLOOR", nil, nil, nil, {lever_action_value=0, lever_action_only
 		return true
 	end
 end})
-
-rotates = {"default", "90", "180", "270", "flipx", "flipy"}
-
-startx = 5
-starty = 0
 
 return {
 [[...........]],

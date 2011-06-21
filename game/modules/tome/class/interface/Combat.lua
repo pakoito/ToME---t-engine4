@@ -37,11 +37,11 @@ function _M:bumpInto(target)
 	elseif reaction >= 0 then
 		-- Talk ?
 		if self.player and target.can_talk then
-			local chat = Chat.new(target.can_talk, target, self)
+			local chat = Chat.new(target.can_talk, target, self, {npc=target, player=self})
 			chat:invoke()
 			if target.can_talk_only_once then target.can_talk = nil end
 		elseif target.player and self.can_talk then
-			local chat = Chat.new(self.can_talk, self, target)
+			local chat = Chat.new(self.can_talk, self, target, {npc=self, player=target})
 			chat:invoke()
 			if target.can_talk_only_once then target.can_talk = nil end
 		elseif self.move_others and not target.cant_be_moved then
