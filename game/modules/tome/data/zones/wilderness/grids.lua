@@ -261,12 +261,12 @@ end
 newEntity{ base="PLAINS", define_as = "TOWN", notice = true, change_level=1, display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, nice_tiler=false }
 
 newEntity{ base="TOWN", define_as = "TOWN_DERTH",
-	name = "Derth (Town)", add_mos = {{image="terrain/town1.png"}},
+	name = "Derth (Town)", add_mos = {{image="terrain/village_01.png"}},
 	desc = "A quiet town at the crossroads of the north",
 	change_zone="town-derth",
 }
 newEntity{ base="TOWN", define_as = "TOWN_LAST_HOPE",
-	name = "Last Hope (Town)", add_mos = {{image="terrain/town1.png"}},
+	name = "Last Hope (Town)", add_mos = {{image="terrain/village_01.png"}},
 	desc = "Capital city of the Allied Kingdoms ruled by King Tolak",
 	change_zone="town-last-hope",
 }
@@ -276,7 +276,7 @@ newEntity{ base="TOWN", define_as = "TOWN_ANGOLWEN",
 	change_zone="town-angolwen",
 }
 newEntity{ base="TOWN", define_as = "TOWN_ANGOLWEN_PORTAL",
-	name = "Hidden teleportation portal to Angolwen, the hidden city of magic", add_mos = {{image="terrain/town1.png"}},
+	name = "Hidden teleportation portal to Angolwen, the hidden city of magic",
 	display='&', color=colors.LIGHT_BLUE, back_color=colors.DARK_GREEN,
 	image="terrain/grass.png", add_displays = {mod.class.Grid.new{image="terrain/maze_teleport.png"}},
 	change_level_check = function() local p = game.party:findMember{main=true} if p:attr("forbid_arcane") then game.log("The portal fizzles.") return true end return false end,
@@ -288,7 +288,7 @@ newEntity{ base="TOWN", define_as = "TOWN_SHATUR",
 	change_zone="town-shatur",
 }
 newEntity{ base="TOWN", define_as = "TOWN_ELVALA",
-	name = "Elvala (Town)", add_mos = {{image="terrain/town1.png"}},
+	name = "Elvala (Town)", add_mos = {{image="terrain/village_01.png"}},
 	desc = "Capital city of Shaloren lands, ruled by Aranion Gayaeil",
 	change_zone="town-elvala",
 }
@@ -299,13 +299,13 @@ newEntity{ base="TOWN", define_as = "TOWN_GATES_OF_MORNING",
 	change_zone="town-gates-of-morning",
 }
 newEntity{ base="TOWN", define_as = "TOWN_IRKKK",
-	name = "Irkkk (Town)", add_mos = {{image="terrain/town1.png"}},
+	name = "Irkkk (Town)", add_mos = {{image="terrain/village_01.png"}},
 	desc = "Yeek Wayist capital",
 	change_level = false,
 --	change_zone="town-irrk",
 }
 newEntity{ base="TOWN", define_as = "TOWN_ZIGUR",
-	name = "Zigur (Town)", add_mos = {{image="terrain/town1.png"}},
+	name = "Zigur (Town)", add_mos = {{image="terrain/village_01.png"}},
 	desc = "Ziguranth main training ground",
 	change_zone="town-zigur",
 }

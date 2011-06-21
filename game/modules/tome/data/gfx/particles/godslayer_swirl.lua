@@ -19,21 +19,27 @@
 
 base_size = 64
 
-return {
-	system_rotation = 0, system_rotationv = 0.5,
+return { system_rotation = 0, system_rotationv = 0.5,generator = function()
 
-	base = 1000,
+	local ad = rng.range(0, 360)
+	local a = math.rad(ad)
+	local dir = math.rad(ad + 90)
+	local r = rng.range(15, 20)
 
-	angle = { 0, 0 }, anglev = { 0, 0 }, anglea = { 0, 0 },
+	return {
+		life = 100,
+		size = size or 128, sizev = 0, sizea = 0,
 
-	life = { 100, 100 },
-	size = { 128, 128 }, sizev = {0, 0}, sizea = {0, 0},
+		x = 0, xv = 0, xa = 0,
+		y = 0, yv = 0, ya = 0,
+		dir = 0, dirv = 0, dira = 0,
+		vel = 0, velv = 0, vela = 0,
 
-	r = {255, 255}, rv = {0, 0}, ra = {0, 0},
-	g = {255, 255}, gv = {0, 0}, ga = {0, 0},
-	b = {255, 255}, bv = {0, 0}, ba = {0, 0},
-	a = {255, 255}, av = {0, 0}, aa = {0, 0},
-
-}, function(self)
+		r = 1, rv = 0, ra = 0,
+		g = 1, gv = 0, ga = 0,
+		b = 1, bv = 0, ba = 0,
+		a = 1, av = 0, aa = 0,
+	}
+end }, function(self)
 	self.ps:emit(1)
 end, 1, vortex or "shockbolt/object/artifact/swirl_effect", true

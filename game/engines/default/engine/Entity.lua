@@ -265,6 +265,15 @@ function _M:makeMapObject(tiles, idx)
 			local mo = core.map.newObject(self.uid, 1, false, false, false, amo.display_x or 0, amo.display_y or 0, amo.display_w or 1, amo.display_h or 1, amo.display_scale or 1)
 			tex, texx, texy, pos_x, pos_y = tiles:get("", 0, 0, 0, 0, 0, 0, amo.image, false, false, true)
 			mo:texture(0, tex, false, texx, texy, pos_x, pos_y)
+			if amo.particle then
+				local args = amo.particle_args or {}
+				local e = engine.Particles.new(amo.particle, 1, args)
+				mo:displayCallback(function(x, y, w, h)
+					e:checkDisplay()
+					if e.ps:isAlive() then e.ps:toScreen(x + w / 2 + (args.x or 0), y + h / 2 + (args.y or 0), true, w / game.level.map.tile_w) end
+					return true
+				end)
+			end
 			cmo:chain(mo)
 			cmo = mo
 		end

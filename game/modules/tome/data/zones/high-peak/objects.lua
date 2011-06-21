@@ -53,6 +53,7 @@ The Sorcerers seem to have awakened its power.
 
 	-- This is not a simple artifact, it is a godslayer, show off!
 	resolvers.generic(function(e) e:addParticles(engine.Particles.new("godslayer_swirl", 1, {})) end),
+	moddable_tile_particle = {"godslayer_swirl", {size=64, x=-16}},
 
 	max_power = 200, power_regen = 1,
 	use_power = { name = "absorb energies", power = 200,
