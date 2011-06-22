@@ -134,6 +134,7 @@ function _M:init(title, actor, order, at_end, quickbirth, w, h)
 	}
 	self:setupUI()
 
+	-- If we wanted to hide the custom tile selector for non donators, but we dont want to
 --	if not profile.auth or not tonumber(profile.auth.donated) or tonumber(profile.auth.donated) <= 1 then self:toggleDisplay(self.c_tile, false) end
 
 	if self.descriptors_by_type.difficulty == "Tutorial" then
