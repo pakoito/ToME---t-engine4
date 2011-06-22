@@ -76,7 +76,7 @@ newBirthDescriptor
 	},
 	copy = {
 		moddable_tile = "dwarf_#sex#",
-		moddable_tile_ornament = {male="beard_02"},
+		moddable_tile_ornament = {male="beard_02", female="braid_01"},
 		life_rating=12,
 	},
 	experience = 1.25,

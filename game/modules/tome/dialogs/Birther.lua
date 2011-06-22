@@ -752,17 +752,20 @@ function _M:setTile(f, w, h)
 end
 
 function _M:selectTileNoDonations()
-	Dialog:simpleLongPopup("Custom tiles",
-	[[Custom Tiles have been added as a thank you to everyone that's donated to ToME.
-If you'd like to use this (purely cosmetic) feature you should consider donating.
-While this is a free game that I am doing for fun, if it can help feeding my family a bit I certainly will not complain.
+	Dialog:yesnoLongPopup("Custom tiles",
+	[[Custom Tiles have been added as a thank you to everyone that has donated to ToME.
+They are a fun cosmetic feature that allows you to choose a tile for your character from a list of nearly 180, ranging from special humanoid tiles to downright wonky ones!
 
-]], 400)
+If you'd like to use this feature and find this game good you should consider donating, it will help ensure its survival.
+While this is a free game that I am doing for fun, if it can help feeding my family a bit I certainly will not complain as real life can be harsh sometimes.
+You will need an online profile active and connected for the tile selector to enable. If you choose to donate now you will need to restart the game to be granted access.]], 400, function(ret)
+		if not ret then
+			game:registerDialog(require("mod.dialogs.Donation").new())
+		end
+	end, "Later", "Donate!")
 end
 
 function _M:selectTile()
-	if not profile.auth or not tonumber(profile.auth.donated) or tonumber(profile.auth.donated) <= 1 then return self:selectTileNoDonations() end
-
 	local d = Dialog.new("Select a Tile", 600, 550)
 
 	local list = {
@@ -965,7 +968,11 @@ function _M:selectTile()
 	end}
 	local list = ImageList.new{width=500, height=500, tile_w=64, tile_h=64, padding=10, list=list, fct=function(item)
 		game:unregisterDialog(d)
-		self:setTile(item.f, item.w, item.h)
+		if not profile.auth or not tonumber(profile.auth.donated) or tonumber(profile.auth.donated) <= 1 then
+			self:selectTileNoDonations()
+		else
+			self:setTile(item.f, item.w, item.h)
+		end
 	end}
 	d:loadUI{
 		{left=0, top=0, ui=list},
