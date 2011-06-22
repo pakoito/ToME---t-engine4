@@ -56,6 +56,11 @@ newBirthDescriptor{
 			-- Nobody can be a sun paladin but elves
 			['Anorithil'] = "disallow",
 		},
+		class =
+		{
+			-- Specific to some races
+			None = "disallow",
+		},
 	},
 	talents = {},
 	experience = 1.0,
@@ -246,3 +251,4 @@ load("/data/birth/classes/corrupted.lua")
 load("/data/birth/classes/afflicted.lua")
 load("/data/birth/classes/chronomancer.lua")
 load("/data/birth/classes/psionic.lua")
+load("/data/birth/classes/none.lua")

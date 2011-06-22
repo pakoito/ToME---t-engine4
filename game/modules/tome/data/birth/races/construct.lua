@@ -65,7 +65,7 @@ newBirthDescriptor
 		class =
 		{
 			__ALL__ = "disallow",
-			Warrior = "allow",
+			None = "allow",
 		},
 		subclass =
 		{

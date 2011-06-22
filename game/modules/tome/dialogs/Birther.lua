@@ -569,6 +569,9 @@ function _M:generateClasses()
 		if self.descriptors_by_type.difficulty == "Tutorial" then
 			self:classUse(tree[1], 1)
 			self:classUse(tree[1].nodes[1], 2)
+		elseif tree[1].id == "None" then
+			self:classUse(tree[1], 1)
+			self:classUse(tree[1].nodes[1], 2)
 		end
 	end
 end
