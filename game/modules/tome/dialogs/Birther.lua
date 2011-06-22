@@ -972,11 +972,14 @@ function _M:selectTile()
 	end}
 	local list = ImageList.new{width=500, height=500, tile_w=64, tile_h=64, padding=10, list=list, fct=function(item)
 		game:unregisterDialog(d)
---		if not profile.auth or not tonumber(profile.auth.donated) or tonumber(profile.auth.donated) <= 1 then
---			self:selectTileNoDonations()
---		else
+
+--DONATORS GET REGISTER in IPN and LM_PAYPAL but not in PROFILES !!!!
+
+		if not profile.auth or not tonumber(profile.auth.donated) or tonumber(profile.auth.donated) <= 1 then
+			self:selectTileNoDonations()
+		else
 			self:setTile(item.f, item.w, item.h)
---		end
+		end
 	end}
 	d:loadUI{
 		{left=0, top=0, ui=list},
