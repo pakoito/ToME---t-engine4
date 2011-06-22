@@ -159,6 +159,7 @@ newBirthDescriptor
 		fear_immune = 1,
 		no_breath = 1,
 		blood_color = colors.GREY,
+		moddable_tile = "skeleton",
 	},
 	experience = 1.4,
 }
