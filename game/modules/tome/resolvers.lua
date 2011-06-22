@@ -357,7 +357,7 @@ function resolvers.calc.moddable_tile(t, e)
 		r = {"upper_body_20","upper_body_21","upper_body_22","upper_body_24","upper_body_23",}
 		r2 = {"lower_body_09","lower_body_10","lower_body_11","lower_body_13","lower_body_12",}
 	elseif slot == "heavy" then
-		r = {"upper_body_11","upper_body_11","upper_body_11","upper_body_11","upper_body_11",}
+		r = {"upper_body_25","upper_body_11","upper_body_26","upper_body_28","upper_body_27",}
 		r2 = {"lower_body_08","lower_body_08","lower_body_08","lower_body_08","lower_body_08",}
 	elseif slot == "light" then
 		r = {"upper_body_05","upper_body_06","upper_body_07","upper_body_08","upper_body_19",}

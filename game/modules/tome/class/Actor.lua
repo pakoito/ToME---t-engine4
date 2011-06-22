@@ -1744,7 +1744,7 @@ function _M:updateModdableTile()
 	if not self.moddable_tile then return end
 	self:removeAllMOs()
 
-	local base = "player/"..self.moddable_tile.."/"
+	local base = "player/"..self.moddable_tile:gsub("#sex#", self.female and "female" or "male").."/"
 
 	self.image = base.."base_shadow_01.png"
 	self.add_mos = {}

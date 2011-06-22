@@ -33,40 +33,79 @@ newEntity{
 	size_category = 3,
 
 	open_door = true,
---	moddable_tile = "yeek",
 }
 
 newEntity{ base = "BASE_NPC_HUMANOID_RANDOM_BOSS",
 	name = "human", subtype = "human", color=colors.LIGHT_UMBER,
-	image = "player/cornac_male.png",
-	humanoid_random_boss = 1,
+	resolvers.generic(function(e)
+		if rng.percent(50) then
+			e.female = true
+			image = "player/cornac_female.png"
+		else
+			image = "player/cornac_male.png"
+		end
+		e.moddable_tile = "cornac_#sex#"
+	end),
+	humanoid_random_boss = 10,
 	resolvers.racial(),
 }
 
 newEntity{ base = "BASE_NPC_HUMANOID_RANDOM_BOSS",
 	name = "thalore", subtype = "thalore", color=colors.LIGHT_GREEN,
-	image = "player/thalore_female.png",
-	humanoid_random_boss = 1,
+	resolvers.generic(function(e)
+		if rng.percent(50) then
+			e.female = true
+			image = "player/thalore_female.png"
+		else
+			image = "player/thalore_male.png"
+		end
+		e.moddable_tile = "thalore_#sex#"
+	end),
+	humanoid_random_boss = 10,
 	resolvers.racial(),
 }
 
 newEntity{ base = "BASE_NPC_HUMANOID_RANDOM_BOSS",
 	name = "shalore", subtype = "shalore", color=colors.LIGHT_BLUE,
-	image = "player/shalore_male.png",
-	humanoid_random_boss = 1,
+	resolvers.generic(function(e)
+		if rng.percent(50) then
+			e.female = true
+			image = "player/shalore_female.png"
+		else
+			image = "player/shalore_male.png"
+		end
+		e.moddable_tile = "shalore_#sex#"
+	end),
+	humanoid_random_boss = 10,
 	resolvers.racial(),
 }
 
 newEntity{ base = "BASE_NPC_HUMANOID_RANDOM_BOSS",
 	name = "halfling", subtype = "halfling", color=colors.BLUE,
-	image = "player/halfling_female.png",
-	humanoid_random_boss = 1,
+	resolvers.generic(function(e)
+		if rng.percent(50) then
+			e.female = true
+			image = "player/halfling_female.png"
+		else
+			image = "player/halfling_male.png"
+		end
+		e.moddable_tile = "halfling_#sex#"
+	end),
+	humanoid_random_boss = 10,
 	resolvers.racial(),
 }
 
 newEntity{ base = "BASE_NPC_HUMANOID_RANDOM_BOSS",
 	name = "dwarf", subtype = "dwarf", color=colors.UMBER,
-	image = "player/dwarf_male.png",
-	humanoid_random_boss = 2,
+	resolvers.generic(function(e)
+		if rng.percent(50) then
+			e.female = true
+			image = "player/dwarf_female.png"
+		else
+			image = "player/dwarf_male.png"
+		end
+		e.moddable_tile = "dwarf_#sex#"
+	end),
+	humanoid_random_boss = 1,
 	resolvers.racial(),
 }

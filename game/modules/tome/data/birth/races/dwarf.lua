@@ -75,6 +75,7 @@ newBirthDescriptor
 		[ActorTalents.T_DWARF_RESILIENCE]=1,
 	},
 	copy = {
+		moddable_tile = "dwarf_#sex#",
 		life_rating=12,
 	},
 	experience = 1.25,

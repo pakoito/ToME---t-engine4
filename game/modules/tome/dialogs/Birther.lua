@@ -134,7 +134,7 @@ function _M:init(title, actor, order, at_end, quickbirth, w, h)
 	}
 	self:setupUI()
 
-	if not profile.auth or not tonumber(profile.auth.donated) or tonumber(profile.auth.donated) <= 1 then self:toggleDisplay(self.c_tile, false) end
+--	if not profile.auth or not tonumber(profile.auth.donated) or tonumber(profile.auth.donated) <= 1 then self:toggleDisplay(self.c_tile, false) end
 
 	if self.descriptors_by_type.difficulty == "Tutorial" then
 		self:raceUse(self.all_races[1], 1)
@@ -170,7 +170,7 @@ function _M:atEnd(v)
 
 			game:unregisterDialog(self)
 			self:apply()
-			if self.actor.has_custom_tile then self.actor.make_tile = nil end
+			if self.actor.has_custom_tile then self.actor.make_tile = nil self.actor.moddable_tile = nil end
 			game:setPlayerName(self.c_name.text)
 			self.at_end(false)
 		end)
@@ -761,7 +761,7 @@ While this is a free game that I am doing for fun, if it can help feeding my fam
 end
 
 function _M:selectTile()
-	if not profile.auth or not tonumber(profile.auth.donated) or tonumber(profile.auth.donated) <= 1 then return self:selectTileNoDonations() end
+--	if not profile.auth or not tonumber(profile.auth.donated) or tonumber(profile.auth.donated) <= 1 then return self:selectTileNoDonations() end
 
 	local d = Dialog.new("Select a Tile", 600, 550)
 
@@ -937,6 +937,19 @@ function _M:selectTile()
 		"npc/the_master.png",
 		"npc/vampire_lord.png",
 		"npc/vampire.png",
+		"npc/humanoid_human_townsfolk_aimless_looking_merchant01_64.png",
+		"npc/humanoid_human_townsfolk_battlescarred_veteran01_64.png",
+		"npc/humanoid_human_townsfolk_blubbering_idiot01_64.png",
+		"npc/humanoid_human_townsfolk_boilcovered_wretch01_64.png",
+		"npc/humanoid_human_townsfolk_farmer_maggot01_64.png",
+		"npc/humanoid_human_townsfolk_filthy_street_urchin01_64.png",
+		"npc/humanoid_human_townsfolk_mangy_looking_leper01_64.png",
+		"npc/humanoid_human_townsfolk_meanlooking_mercenary01_64.png",
+		"npc/humanoid_human_townsfolk_pitiful_looking_beggar01_64.png",
+		"npc/humanoid_human_townsfolk_singing_happy_drunk01_64.png",
+		"npc/humanoid_human_townsfolk_squinteyed_rogue01_64.png",
+		"npc/humanoid_human_townsfolk_village_idiot01_64.png",
+		"npc/snowman01.png",
 		"npc/snaproot_pimp.png",
 		"player/ascii_player_dorfhelmet_01_64.png",
 		"player/ascii_player_fedora_feather_04_64.png",
