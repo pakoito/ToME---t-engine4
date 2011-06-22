@@ -761,7 +761,7 @@ While this is a free game that I am doing for fun, if it can help feeding my fam
 end
 
 function _M:selectTile()
---	if not profile.auth or not tonumber(profile.auth.donated) or tonumber(profile.auth.donated) <= 1 then return self:selectTileNoDonations() end
+	if not profile.auth or not tonumber(profile.auth.donated) or tonumber(profile.auth.donated) <= 1 then return self:selectTileNoDonations() end
 
 	local d = Dialog.new("Select a Tile", 600, 550)
 
