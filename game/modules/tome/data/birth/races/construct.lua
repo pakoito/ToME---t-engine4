@@ -65,6 +65,7 @@ newBirthDescriptor
 		class =
 		{
 			__ALL__ = "disallow",
+			Warrior = "allow",
 		},
 		subclass =
 		{
@@ -105,6 +106,8 @@ newBirthDescriptor
 		stun_immune = 1,
 		fear_immune = 1,
 		construct = 1,
+
+		moddable_tile = "runic_golem",
 	},
 	experience = 1.5,
 }
