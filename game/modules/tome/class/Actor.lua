@@ -818,6 +818,16 @@ function _M:tooltip(x, y, seen_by)
 	elseif factlevel > 0 then factcolor, factstate = "#LIGHT_GREEN#", "friendly"
 	end
 
+	-- Debug feature, mousing over with ctrl pressed will give detailed FOV info
+	if config.settings.cheat and core.key.modState("ctrl") then
+		print("============================================== SEEING from", self.name)
+		for i, a in ipairs(self.fov.actors_dist) do
+			local d = self.fov.actors[a]
+			print(("%3d : %-40s at %3dx%3d (see at %3dx%3d), diff %3dx%3d"):format(d.sqdist, a.name, a.x, a.y, d.x, d.y,d.dx,d.dy))
+		end
+		print("==============================================")
+	end
+
 	local pfactcolor, pfactstate, pfactlevel = "#ANTIQUE_WHITE#", "neutral", self:reactionToward(game.player)
 	if pfactlevel < 0 then pfactcolor, pfactstate = "#LIGHT_RED#", "hostile"
 	elseif pfactlevel > 0 then pfactcolor, pfactstate = "#LIGHT_GREEN#", "friendly"
