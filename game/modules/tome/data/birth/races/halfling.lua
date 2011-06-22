@@ -79,6 +79,7 @@ newBirthDescriptor
 		[ActorTalents.T_HALFLING_LUCK]=1,
 	},
 	copy = {
+		moddable_tile = "halfling_#sex#",
 		life_rating = 12,
 	},
 }
