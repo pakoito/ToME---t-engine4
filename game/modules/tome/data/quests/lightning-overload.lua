@@ -23,7 +23,7 @@ desc = function(self, who)
 	desc[#desc+1] = "As you came to Derth you saw a huge dark cloud over the small town."
 	desc[#desc+1] = "When you entered you were greeted by an army of air elementals slaughtering the population."
 	if self:isCompleted("saved-derth") then
-		desc[#desc+1] = " * You have dispatched the elementals but the cloud lingers still. You must find a powerful ally to remove it. There are rumours of a secret town in the blue mountains, to the southwest. You could also check out the Ziguranth group that is supposed to fight magic."
+		desc[#desc+1] = " * You have dispatched the elementals but the cloud lingers still. You must find a powerful ally to remove it. There are rumours of a secret town in the mountains, to the southwest. You could also check out the Ziguranth group that is supposed to fight magic."
 	end
 	if self:isCompleted("tempest-located") then
 		desc[#desc+1] = " * You have learned the real threat comes from a rogue Archmage, a Tempest named Urkis. The mages of Angolwen are ready to teleport you there."

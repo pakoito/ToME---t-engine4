@@ -35,10 +35,10 @@ find . -name '*~' -or -name '.svn' | xargs rm -rf
 # create teae/teams
 cd game/engines
 te4_pack_engine.sh default/ te4-"$ever"
-mv -i te4-*.teae boot-te4-*.team /var/www/te4.org/htdocs/dl/engines
+mv -f te4-*.teae boot-te4-*.team /var/www/te4.org/htdocs/dl/engines
 cd ../modules
 te4_pack_module.sh tome "$tver"
-mv -i tome*.team /var/www/te4.org/htdocs/dl/modules/tome/
+mv -f tome*.team /var/www/te4.org/htdocs/dl/modules/tome/
 cd ../../
 
 cd ..
