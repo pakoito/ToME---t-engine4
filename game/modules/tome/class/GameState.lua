@@ -443,8 +443,7 @@ function _M:spawnWorldAmbush(enc, dx, dy)
 		min_material_level = util.bound(math.ceil(game.player.level / 10), 1, 5) - 1,
 		generator =  {
 			map = gen,
---			actor = { class = "engine.generator.actor.Random", nb_npc = enc.nb or {1,1}, filters=enc.filters },
-			actor = { class = "engine.generator.actor.Random", nb_npc = {15,15}, filters=enc.filters },
+			actor = { class = "engine.generator.actor.Random", nb_npc = enc.nb or {1,1}, filters=enc.filters },
 		},
 
 		npc_list = mod.class.NPC:loadList("/data/general/npcs/all.lua", nil, nil, function(e) e.make_escort=nil end),

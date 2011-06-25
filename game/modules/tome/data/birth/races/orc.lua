@@ -24,9 +24,7 @@ newBirthDescriptor{
 	type = "race",
 	name = "Orc",
 	desc = {
-		"Since their creation by Morgoth, the Orcs have been the pawns of the forces of darkness.",
-		"While both Sauron and Morgoth were destroyed, the orcs survived and found a new master in the Far East.",
-		"Orcs are a ruthless warriors, yet they are not dumb, and some are terribly cunning.",
+		"",
 	},
 	descriptor_choices =
 	{
@@ -50,11 +48,12 @@ newBirthDescriptor{
 		[ActorTalents.T_ORC_FURY]=1,
 	},
 	copy = {
+		moddable_tile = "orc",
 		faction = "orc-pride",
 		type = "humanoid", subtype="orc",
 		default_wilderness = {"playerpop", "allied"},
 		starting_zone = "wilderness",
-		starting_quest = "start-dunadan",
+		starting_quest = "start-allied",
 		starting_intro = "orc",
 		life_rating=12,
 		resolvers.inscription("INFUSION:_REGENERATION", {cooldown=10, dur=5, heal=60}),
