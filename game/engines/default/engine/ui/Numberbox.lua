@@ -28,6 +28,7 @@ function _M:init(t)
 	self.title = assert(t.title, "no numberbox title")
 	self.number = t.number or 0
 	self.min = t.min or 0
+	self.on_change = t.on_change
 	self.max = t.max or 9999999
 	self.fct = assert(t.fct, "no numberbox fct")
 	self.chars = assert(t.chars, "no numberbox chars")
@@ -130,6 +131,7 @@ function _M:generate()
 end
 
 function _M:updateText(v)
+	local old = self.number
 	local text = ""
 	if not v then
 		self.number = tonumber(table.concat(self.tmp)) or 0
@@ -150,6 +152,7 @@ function _M:updateText(v)
 	self.text_surf:erase(0, 0, 0, 0)
 	self.text_surf:drawStringBlended(self.font_mono, text, 0, 0, 255, 255, 255, true)
 	self.text_surf:updateTexture(self.text_tex)
+	if self.on_change and old ~= self.number then self.on_change(self.number) end
 end
 
 function _M:display(x, y, nb_keyframes)

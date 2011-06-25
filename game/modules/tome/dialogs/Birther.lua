@@ -758,7 +758,7 @@ end
 function _M:selectTileNoDonations()
 	Dialog:yesnoLongPopup("Custom tiles",
 	[[Custom Tiles have been added as a thank you to everyone that has donated to ToME.
-They are a fun cosmetic feature that allows you to choose a tile for your character from a list of nearly 180, ranging from special humanoid tiles to downright wonky ones!
+They are a fun cosmetic feature that allows you to choose a tile for your character from a list of nearly 180 (with more to be added over time), ranging from special humanoid tiles to downright wonky ones!
 
 If you'd like to use this feature and find this game good you should consider donating, it will help ensure its survival.
 While this is a free game that I am doing for fun, if it can help feeding my family a bit I certainly will not complain as real life can be harsh sometimes.

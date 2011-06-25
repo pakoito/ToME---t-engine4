@@ -70,8 +70,47 @@ static ov_callbacks physfsOvCallbacks = {
 	physfsOvTell
 };
 
+void openal_get_devices()
+{
+	char deviceName[256];
+	char *defaultDevice=NULL;
+	char *deviceList=NULL;
+
+	if (alcIsExtensionPresent(NULL, (ALubyte*)"ALC_ENUMERATION_EXT") == AL_TRUE)
+	{ // try out enumeration extension
+		deviceList = (char *)alcGetString(NULL, ALC_DEVICE_SPECIFIER);
+
+		if (strlen(deviceList))
+		{
+			defaultDevice = (char *)alcGetString(NULL, ALC_DEFAULT_DEVICE_SPECIFIER);
+			int numDevices;
+
+			for (numDevices = 0; numDevices < 16; numDevices++)
+			{
+				if (defaultDevice && strcmp(deviceList, defaultDevice) == 0)
+				{
+//					devList.numDefaultDevice = numDevices;
+				}
+
+				deviceList += strlen(deviceList);
+				if (deviceList[0] == 0)
+				{
+					if (deviceList[1] == 0)
+					{
+						break;
+					}
+					else
+					{
+						deviceList++;
+					}
+				}
+			}
+		}
+	}
+}
 
 int init_openal() {
+//	openal_get_devices();
 	audioDevice = alcOpenDevice(NULL);
 	if (audioDevice == NULL) return 0;
 	audioContext = alcCreateContext(audioDevice, NULL);
@@ -245,8 +284,18 @@ static int loadsoundLua(lua_State *L) {
 	return 1;
 }
 
+static int audio_enable(lua_State *L) {
+	bool v = lua_toboolean(L, 1);
+	if (v)
+		alListenerf(AL_GAIN, 1);
+	else
+		alListenerf(AL_GAIN, 0);
+	return 0;
+}
+
 const luaL_reg soundlib[] = {
 	{"load", loadsoundLua},
+	{"enable", audio_enable},
 	{NULL, NULL}
 };
 

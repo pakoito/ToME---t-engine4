@@ -47,9 +47,9 @@ fs.setWritePath(fs.getHomePath())
 -- Loads default config & user config
 fs.mount(engine.homepath, "/")
 config.loadString[[
-sound.enabled = true
 audio.music_volume = 60
 audio.effects_volume = 100
+audio.enable = true
 aa_text = true
 fbo_active = true
 shaders_active = true
@@ -75,6 +75,9 @@ if not config.settings.window or not config.settings.window.size then
 	config.settings.window = config.settings.window or {}
 	config.settings.window.size = math.floor(r.w * 0.9).."x"..math.floor(r.h*0.9)
 end
+
+-- Audio
+core.sound.enable(config.settings.audio.enable)
 
 -- Load default keys
 engine.KeyBind:load("move,hotkeys,inventory,actions,interface,debug")

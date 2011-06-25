@@ -77,11 +77,23 @@ end
 function _M:volumeMusic(vol)
 	vol = util.bound(vol, 0, 100)
 	if vol then
-		self:saveSettings("audio", ("audio.music_volume = %q\n"):format(vol))
 		config.settings.audio = config.settings.audio or {}
 		config.settings.audio.music_volume = vol
+		game:audioSaveSettings()
 	end
 	for name, m in pairs(self.playing_musics) do
 		m.source:volume(vol / 100)
 	end
 end
+
+function _M:audioSaveSettings()
+	self:saveSettings("audio", ([[audio.music_volume = %d
+audio.effects_volume = %d
+audio.enable = %s
+]]):
+	format(config.settings.audio.music_volume,
+		config.settings.audio.effects_volume,
+		tostring(config.settings.audio.enable)
+	))
+end
+

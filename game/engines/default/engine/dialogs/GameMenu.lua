@@ -73,9 +73,9 @@ function _M:generateList(actions)
 			local menu = require("engine.dialogs.ShowAchievements").new(nil, game:getPlayer())
 			game:registerDialog(menu)
 		end },
-		sound = { "Sound & Music", function()
+		sound = { "Audio Options", function()
 			game:unregisterDialog(self)
-			local menu = require("engine.dialogs.SoundMusic").new()
+			local menu = require("engine.dialogs.AudioOptions").new()
 			game:registerDialog(menu)
 		end },
 		save = { "Save Game", function() game:unregisterDialog(self) game:saveGame() end },

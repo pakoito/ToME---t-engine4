@@ -81,9 +81,9 @@ end
 function _M:volumeSoundEffects(vol)
 	vol = util.bound(vol, 0, 100)
 	if vol then
-		self:saveSettings("audio", ("audio.effects_volume = %q\n"):format(vol))
 		config.settings.audio = config.settings.audio or {}
 		config.settings.audio.effects_volume = vol
+		game:audioSaveSettings()
 	end
 	for source, _ in pairs(self.playing_sounds) do
 		source:volume(vol / 100)

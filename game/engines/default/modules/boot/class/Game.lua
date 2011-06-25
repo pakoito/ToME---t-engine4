@@ -92,7 +92,6 @@ function _M:run()
 	self:registerDialog(MainMenu.new())
 
 	-- Run the current music if any
-	self:volumeMusic(config.settings.music.volume)
 	self:playMusic("The saga begins.ogg")
 
 	-- Get news
