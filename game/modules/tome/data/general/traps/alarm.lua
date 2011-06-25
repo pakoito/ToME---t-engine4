@@ -24,7 +24,7 @@ newEntity{ define_as = "TRAP_ALARM",
 }
 
 newEntity{ base = "TRAP_ALARM",
-	name = "intruder alarm", auto_id = true,
+	name = "intruder alarm", auto_id = true, image = "trap/trap_intruder_alarm_01.png",
 	detect_power = 20, disarm_power = 36,
 	rarity = 3, level_range = {1, 50},
 	color=colors.UMBER,

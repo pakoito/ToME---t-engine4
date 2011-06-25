@@ -46,7 +46,7 @@ newEntity{ base = "TRAP_ANNOY",
 }
 
 newEntity{ base = "TRAP_ANNOY",
-	name = "burning curse trap", auto_id = true,
+	name = "burning curse trap", auto_id = true, image = "trap/trap_burning_curse_01.png",
 	detect_power = 50, disarm_power = 58,
 	rarity = 3, level_range = {30, 50},
 	color=colors.ORCHID,
