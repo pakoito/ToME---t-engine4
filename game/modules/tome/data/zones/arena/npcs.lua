@@ -17,6 +17,13 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+--TODO: Ritch blade champion (!) Miniboss?
+--TODO: Blood tree, uses flying skulls. TODO: Flying skulls.
+--TODO: Golden ooze(item), mana ooze (inscriptions)
+--TODO: Armor ooze (armor), blade ooze (weapons)
+--TODO: Vitas ooze (health+), Muscle ooze (sta+)
+
+
 -- Load all others
 load("/data/general/npcs/all.lua")
 load("/data/general/npcs/crystal.lua")
@@ -26,6 +33,42 @@ load("/data/general/npcs/ziguranth.lua")
 load("/data/general/npcs/horror-corrupted.lua")
 
 local Talents = require("engine.interface.ActorTalents")
+
+--Fodder
+newEntity{ name = "flying skull",
+	type = "elemental", subtype = "dark",
+	display = "*", color=colors.BLACK, tint=colors.BLACK,
+	desc = [[A floating disembodied skull with an aura of darkness.]],
+	combat = { dam=10, atk=5, apr=10, physspeed=1 },
+	blood_color = colors.YELLOW,
+	level_range = {1, nil},
+	exp_worth = 1,
+	max_life = 10,
+	body = { INVEN = 1, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
+	no_drops = true, open_door = false,
+	infravision = 10,
+	rarity = false,
+	lite = 4,
+	life_rating = 1, rank = 1, size_category = 1,
+	autolevel = "caster",
+	ai = "dumb_talented_simple", ai_state = { ai_move = "move_astar", talent_in = 1 },
+	global_speed = 1,
+	stats = { str = 9, dex = 20, mag = 20 },
+	resolvers.talents{
+		[Talents.T_EXPLODE] = 3,
+	},
+	no_breath = 1,
+	blind_immune = 1,
+	fear_immune = 1,
+	rank = 2,
+	size_category = 1,
+	poison_immune = 1,
+	disease_immune = 1,
+	poison_immune = 1,
+	stun_immune = 1,
+	resolvers.sustains_at_birth(),
+}
+
 
 --Base arena human
 newEntity{ define_as = "BASE_NPC_ARENA1",
@@ -60,7 +103,6 @@ newEntity{ define_as = "BASE_NPC_ARENA1",
 newEntity{ 	name = "skeletal rat",
 	base = "BASE_NPC_RODENT",
 	define_as = "SKELERAT",
-	type = "undead",
 	desc = [[The diminutive skeleton of a giant rat, charged with evil energies. Nobody understands the usefulness of undead rodents until several of them come after you]],
 	color = colors.GOLD,
 	level_range = {3, 4},
@@ -312,7 +354,7 @@ newEntity{ name = "headless horror",
 
 
 --Bosses
-
+--TODO:Bosses must have a super mode for the royal crown mode.
 newEntity{ name = "Ryal",
 	base = "BASE_NPC_BONE_GIANT",
 	color=colors.VIOLET,
@@ -953,6 +995,7 @@ newEntity{ name = "martyr",
 		{type="weapon", subtype="longsword", ego_chance=10, autoreq=true},
 		{type="armor", subtype="shield", ego_chance=30, autoreq=true},
 	},
+	resists = { [DamageType.LIGHT] = 90 },
 	autolevel = "caster",
 	combat_def = 4,
 	resolvers.talents{
@@ -1047,7 +1090,8 @@ newEntity{ name = "star crusader",
 		{type="armor", subtype="massive", autoreq=true},
 		{type="armor", subtype="shield", ego_chance=50, autoreq=true},
 	},
-	resolvers.drops{chance=50, nb=1, {type="weapon", subtype="staff", force_drop=true, tome_drops="boss"}},
+	resists = { [DamageType.LIGHT] = 95 ,[DamageType.DARKNESS] = 95 },
+	resolvers.drops{ chance=50, nb=1, {type="weapon", subtype="staff", force_drop=true, tome_drops="boss"} },
 	combat_def = 4,
 	autolevel = "warriormage", ai_tactic = resolvers.tactic("melee"),
 	resolvers.talents{

@@ -37,7 +37,7 @@ return {
 		},
 	},
 	post_process = function(level)
-		local m = game.zone:makeEntityByName(game.level, "actor", "GLADIATOR")
+		local m = game.zone:makeEntityByName(game.level, "actor", "SLINGER")
 		if m then
 			game.zone:addEntity(game.level, m, "actor", 8, 2)
 		end

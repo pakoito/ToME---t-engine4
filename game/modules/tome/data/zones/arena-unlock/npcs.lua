@@ -17,6 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+
 local Talents = require("engine.interface.ActorTalents")
 
 newEntity{ name = "gladiator",
@@ -51,13 +52,13 @@ newEntity{ name = "gladiator",
 	},
 	resolvers.talents{
 		[Talents.T_SHIELD_PUMMEL]=2,
-		[Talents.T_RUSH]=4,
+		[Talents.T_RUSH]=3,
 		[Talents.T_REPULSION]=2,
 		[Talents.T_ARMOUR_TRAINING] = 3,
 		[Talents.T_WEAPON_COMBAT] = 1,
 	},
 	on_die = function (self)
-		local m = game.zone:makeEntityByName(game.level, "actor", "SLINGER")
+		local m = game.zone:makeEntityByName(game.level, "actor", "ARCANEBLADE")
 		if m then
 			local y = 2
 			if game.player.y < 3 then y = 11 end
@@ -109,7 +110,7 @@ newEntity{ name = "halfling slinger",
 		game:playSoundNear(game.player, "talents/teleport")
 	end,
 	on_die = function (self)
-		local m = game.zone:makeEntityByName(game.level, "actor", "ARCANEBLADE")
+		local m = game.zone:makeEntityByName(game.level, "actor", "GLADIATOR")
 		if m then
 			local y = 2
 			if game.player.y < 3 then y = 11 end
@@ -160,7 +161,8 @@ newEntity{ name = "arcane blade",
 	end,
 	on_die = function (self)
 		local Chat = require "engine.Chat"
-		local chat = Chat.new("arena-unlock", {name="Cornac rogue"}, game.player)
+		local npc = {name="Cornac rogue"}
+		local chat = Chat.new("arena-unlock", npc, game.player, {npc=npc})
 		chat:invoke("win")
 	end
 }

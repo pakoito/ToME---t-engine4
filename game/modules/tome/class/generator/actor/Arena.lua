@@ -331,6 +331,7 @@ function _M:calculateWave()
 		{ entity = { name = "white ooze" },
 			wave = 1, power = 3, delay = 3, bonus = 0.1, score = 15, entry = 2,
 			special = function (self) if game.level.arena.currentWave > 10 then self.wave = 2 end if game.level.arena.currentWave > 15 then self.entity = { name = "green ooze" } end return self end },
+
 		{ entity = { name = "cutpurse" }, --Wave ~5
 			wave = 1, power = 8, delay = 3, bonus = 0.1, score = 40, entry = 1 },
 		{ entity = { name = "white crystal" },
@@ -436,6 +437,7 @@ function _M:calculateWave()
 			wave = 1, power = 10, delay = 2, bonus = 0.3, score = 300, entry = 2 },
 		{ entity = { name = "ritch hunter" },
 			wave = 4, power = 6, delay = 5, bonus = 0.4, score = 250, entry = 2 },
+
 		{ entity = { type = "undead", subtype = "wight" },
 			wave = 1, power = 11, delay = 2, bonus = 0.5, score = 400, entry = 1 },
 		{ entity = { name = "sun paladin" },
@@ -455,9 +457,74 @@ function _M:calculateWave()
 	return foe[val]
 end
 
+function _M:setArenaTriggers(e, entry)
+	if e.on_added then e.on_added_orig = e.on_added end
+	if e.on_die then e.on_die_orig = e.on_die end
+	if e.on_takehit then e.on_takehit_orig = e.on_takehit end
+
+	if entry == 3 then
+		e.on_added = function (self)
+			if self.on_added_orig then self.on_added_orig(self) end
+			game.level.arena.danger = game.level.arena.danger + self.arenaPower
+			game:playSoundNear(game.player, "talents/teleport")
+			game.level.map:particleEmitter(self.x, self.y, 0.5, "teleport")
+		end
+	else
+		e.on_added = function (self)
+			if self.on_added_orig then self.on_added_orig(self) end
+			game.level.arena.danger = game.level.arena.danger + self.arenaPower
+		end
+	end
+	e.on_takehit = function(self, value, src)
+		if self.on_takehit_orig then self.on_takehit_orig(self) end
+		if src.player then self.arenaLastHit = value end
+		return value
+	end
+	e.on_die = function (self)
+		if self.on_die_orig then self.on_die_orig(self) end
+		if self.arenaLastHit >= self.max_life then
+			if self.arenaLastHit >= self.max_life * 2 then
+				local x, y = game.level.map:getTileToScreen(self.x, self.y)
+				game.flyers:add(x, y, 90, 0, -0.5, "OVERKILL", { 231, 0, 0 }, false)
+				game.log("#LIGHT_GREEN#Your powerful attack completely obliterates #WHITE#"..self.name.."#LIGHT_GREEN#!")
+				local val = (self.level * 0.015)
+				if val > 0.5 then game.log("#LIGHT_GREEN#The audience cheers!") end
+				game.level.arena.raiseRank(val)
+			else
+				game.log("#LIGHT_GREEN#You destroy #WHITE#"..self.name.."#LIGHT_GREEN# in a single blow!")
+				local val = (self.level * 0.01)
+				if val > 0.5 then game.log("#LIGHT_GREEN#The audience cheers!") end
+				game.level.arena.raiseRank(val)
+			end
+		end
+		game.level.arena.danger = game.level.arena.danger - self.arenaPower
+		if game.level.arena.pinch == false then
+			game.log("#LIGHT_GREEN#Your score multiplier increases by #WHITE#"..self.arenaBonusMult.."#LIGHT_GREEN#!")
+			game.level.arena.bonusMultiplier = game.level.arena.bonusMultiplier + self.arenaBonusMult
+		else
+			game.level.arena.bonus = game.level.arena.bonus + self.arenaScore
+		end
+		game.level.arena.kills = game.level.arena.kills + 1
+		if game.level.arena.kills > 5 then
+			game.level.arena.bonusMultiplier = game.level.arena.bonusMultiplier + 0.1
+			game.log("#LIGHT_GREEN#Your score multiplier increases by #WHITE#0.1#LIGHT_GREEN#!")
+		end
+		if self.level > game.player.level + 3 then
+			game.log("#YELLOW#You defeat an experienced enemy!")
+			local raise = (self.level - game.player.level) * 0.01
+			if raise > 0.5 then
+				game.log("#LIGHT_GREEN#The audience cheers!")
+				raise = 0.5
+			end
+			game.level.arena.raiseRank(raise)
+		end
+	end
+end
+
 function _M:generateOne(e)
 	local m = self.zone:makeEntity(self.level, "actor", e.entity, nil, true)
 	if m then
+		self:setArenaTriggers(m)
 		local escort = m.make_escort
 		m.make_escort = nil
 		m.faction = "enemies"
@@ -467,61 +534,6 @@ function _M:generateOne(e)
 		m.arenaScore = e.score
 		m.arenaLastHit = 0
 		m:setTarget(game.player)
-		m.on_takehit = function(self, value, src) if src.player then self.arenaLastHit = value end return value end
-		if m.on_added then m.on_added_orig = m.on_added end
-		if e.entry == 3 then
-			m.on_added = function (self)
-				if self.on_added_orig then self.on_added_orig(self) end
-				game.level.arena.danger = game.level.arena.danger + self.arenaPower
-				game:playSoundNear(game.player, "talents/teleport")
-				game.level.map:particleEmitter(self.x, self.y, 0.5, "teleport")
-			end
-		else
-			m.on_added = function (self)
-				if self.on_added_orig then self.on_added_orig(self) end
-				game.level.arena.danger = game.level.arena.danger + self.arenaPower
-			end
-		end
-		if m.on_die then m.on_die_orig = m.on_die end
-		m.on_die = function (self)
-			if self.on_die_orig then self.on_die_orig(self) end
-			if self.arenaLastHit >= self.max_life then
-				if self.arenaLastHit >= self.max_life * 2 then
-					local x, y = game.level.map:getTileToScreen(self.x, self.y)
-					game.flyers:add(x, y, 90, 0, -0.5, "OVERKILL", { 231, 0, 0 }, false)
-					game.log("#LIGHT_GREEN#Your powerful attack completely obliterates #WHITE#"..self.name.."#LIGHT_GREEN#!")
-					local val = (self.level * 0.015)
-					if val > 0.5 then game.log("#LIGHT_GREEN#The audience cheers!") end
-					game.level.arena.raiseRank(val)
-				else
-					game.log("#LIGHT_GREEN#You destroy #WHITE#"..self.name.."#LIGHT_GREEN# in a single blow!")
-					local val = (self.level * 0.01)
-					if val > 0.5 then game.log("#LIGHT_GREEN#The audience cheers!") end
-					game.level.arena.raiseRank(val)
-				end
-			end
-			game.level.arena.danger = game.level.arena.danger - self.arenaPower
-			if game.level.arena.pinch == false then
-				game.log("#LIGHT_GREEN#Your score multiplier increases by #WHITE#"..self.arenaBonusMult.."#LIGHT_GREEN#!")
-				game.level.arena.bonusMultiplier = game.level.arena.bonusMultiplier + self.arenaBonusMult
-			else
-				game.level.arena.bonus = game.level.arena.bonus + self.arenaScore
-			end
-			game.level.arena.kills = game.level.arena.kills + 1
-			if game.level.arena.kills > 5 then
-				game.level.arena.bonusMultiplier = game.level.arena.bonusMultiplier + 0.1
-				game.log("#LIGHT_GREEN#Your score multiplier increases by #WHITE#0.1#LIGHT_GREEN#!")
-			end
-			if self.level > game.player.level + 3 then
-				game.log("#YELLOW#You defeat an experienced enemy!")
-				local raise = (self.level - game.player.level) * 0.01
-				if raise > 0.5 then
-					game.log("#LIGHT_GREEN#The audience cheers!")
-					raise = 0.5
-				end
-				game.level.arena.raiseRank(raise)
-			end
-		end
 		self:place(m, entry, false)
 	end
 end

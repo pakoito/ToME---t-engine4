@@ -19,53 +19,91 @@
 
 newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*A tall, hooded man stares at you*#WHITE#
-I am waiting for a great fighter. Go away.
-#LIGHT_GREEN#*The man ignores you for a few uncomfortable seconds, then asks:*#WHITE#
-What is it? Are you the fighter I am waiting for?
+Yes...yes...you look like a promising warrior indeed...
+I have an offer, @playerdescriptor.race@.
+You see...I am an agent for the Arena. I look for promising warriors that
+can provide a good show for our audience. Perhaps you are strong enough to join.
+All you need to do is beat three of my men in battle, and you shall be rewarded.
+#LIGHT_GREEN#*You consider the offer of the mysterious hooded man for a moment*
 ]],
 	answers = {
-		{"No", jump="no"},
-		{"Yes", jump="yes"},
+		{"Interesting, tell me more about that Arena.", jump="more_ex",
+			action = function (self, player) self.talked_to = 1 end,
+			cond=function(npc, player) return not profile.mod.allow_build.campaign_arena end},
+		{"I am strong! What do you have to offer?", jump="more",
+			action = function (self, player) self.talked_to = 1 end,
+			cond=function(npc, player) return profile.mod.allow_build.campaign_arena end},
+		{"I don't accept deals from shady hooded men.", jump="refuse",
+		action = function (self, player) self.talked_to = 1 end},
 	}
 }
 
-newChat{ id="no",
-	text = [[#LIGHT_GREEN#*The man stares back at you*#WHITE#
-That's unfortunate. You look like a fighter.
-#LIGHT_GREEN#*The hooded man draws a smile in his face. You can't tell if it's an arrogant
-#LIGHT_GREEN#smirk, or a sign of satisfaction. Concerned, you draw your hand closer to your
-#LIGHT_GREEN#weapon*#WHITE#
-Heheheh... indeed, you are.
-I am looking for strong fighters for battling in the arena. A tiny entertainment for the
-masses... but also a good source of good gold, and experience.
-Listen, here is the deal. If you can prove your worth as fighter, I will give you
-an invitation to the arena.
-Fight three combatants. If you win, you get a pass. If you can survive, that is...
+newChat{ id="more",
+	text = [[#LIGHT_GREEN#*You can feel the man smiling from inside his hood*#WHITE#
+I have wealth and glory to offer, and some very useful
+#YELLOW#combat experience#WHITE# from fighting our men...
+So, what do you think? Are you up to it?
+#LIGHT_GREEN#*The promises of fortune look so convincing coming from such a
+suspiciously-dressed man. Something tells you this is not a trap, so you
+consider his offer one last time...*
 ]],
 	answers = {
-		{"Interesting. I am up to the challenge.", jump="yes"},
-		{"I am not interested.", jump="ok"},
+		{"I am ready for battle, let's go now!", jump="accept", action = function (self, player) self.talked_to = 2 end },
+		{"I don't have time for games, Cornac.", jump="refuse"},
 	}
 }
 
-newChat{ id="yes",
-	text = [[#LIGHT_GREEN#*The man shows a devious smile*#WHITE#
-Ah, excellent. A great fighter is always willing to head into battle.
-Heheh... very well then, follow me, @playerdescriptor.race@.
-#LIGHT_GREEN#*The man starts walking away, but suddenly turns to you*#WHITE#
-Just remember, you might lose your life if you are weak.
-But that is not the case, is it? Heheh...
+newChat{ id="more_ex",
+	text = [[#LIGHT_GREEN#*You can feel the man smiling from inside his hood*#WHITE#
+The Arena is where the brave come to fight against all odds.
+We are still growing up, and we lack challengers...
+It's like a gamble, but you use your fighting instead of money to play, you see?
+We in the Arena work hard to make a good show, and in return...you can get enough
+wealth and glory to last for centuries!
+If you can pass my little test...I will #LIGHT_RED#allow you to join the Arena when
+you are done with your adventures.#WHITE#
+You also shall gather some much needed #LIGHT_RED#combat experience#WHITE# from fighting
+our men...so, what do you think? Are you up to it?
+#LIGHT_GREEN#*The promises of fortune look so convincing coming from such a
+suspiciously-dressed man. Something tells you this is not a trap, so you
+consider his offer one last time...*
 ]],
 	answers = {
-		{"Let's go", jump="go"},
-		{"Wait, I am not ready yet.", jump="ok"},
+		{"I am ready for battle, let's go now!", jump="accept", action = function (self, player) self.talked_to = 2 end },
+		{"I don't have time for games, Cornac.", jump="refuse"},
+	}
+}
+
+newChat{ id="refuse",
+	text = [[#LIGHT_GREEN#*The man lets out a disappointed sigh*#WHITE#
+That's unfortunate. We could have used someone like you.
+You are just the type the audience likes. You could have been a champion.
+Alas, if you stand by your choice, we shall never meet again.
+However, if you change your mind...I will #YELLOW#stay on Derth just a little
+longer.#WHITE#
+If I am still around, we can have a deal. Think about it, @playerdescriptor.race@.
+]],
+	answers = {
+		{"We'll see. [Leave]"},
+	}
+}
+
+newChat{ id="accept",
+	text = [[#LIGHT_GREEN#*The man smiles in approval*#WHITE#
+Excellent! A great fighter is always willing to head into battle.
+You certainly won't regret meeting us, indeed...
+So, are you ready to fight?
+]],
+	answers = {
+		{"Sounds like fun, let's make haste!", jump="go"},
+		{"Wait. I am not ready yet.", jump="ok"},
 	}
 }
 
 newChat{ id="go",
 	text = "#LIGHT_GREEN#*The man quietly walks away, after making you a gesture to follow him*",
 	answers = {
-		{"#LIGHT_GREEN#*You follow the man*",
+		{"[Follow him]",
 		action = function (self, player)
 			self:die()
 			player:grantQuest("arena-unlock")
@@ -79,20 +117,18 @@ newChat{ id="go",
 
 newChat{ id="win",
 	text = [[#LIGHT_GREEN#*The Cornac rogue comes back from the shadows*#WHITE#
-Hehehe, well done, @playerdescriptor.race@! I knew you had potential.
+Heheheh, well done, @playerdescriptor.race@! I knew you had potential.
 #LIGHT_GREEN#*The rogue takes out his hood, showing a fairly young, but unmistakingly
-#LIGHT_GREEN#battle-hardened man. He is smiling widely, but this time you can clearly
-#LIGHT_GREEN#recognize satisfaction in his smile.#WHITE#
-The name's Rej. I work for the arena to recruit great fighters who can give a good
-show... and not die in two blows.
-A promise is a promise. This envelope contains an invitation to the arena, and a map
-with its location.
-When you are done adventuring, I'd like to see you there.
-#LIGHT_GREEN#*As you travel back to Derth in company of the rogue, you both talk about past
-#LIGHT_GREEN#battles and techniques. His experience in combat inspires you greatly. (#WHITE#+2 generic talent points#LIGHT_GREEN#)
-#WHITE#Very well, @playername@. I must go now. I need to meet with some fighters at
-Zigur, not too far from here.
-Come to the arena when you are done with your adventures, will you?.
+#LIGHT_GREEN#battle-hardened man.#WHITE#
+The name's Rej. I work for the arena to recruit great fighters who can give a
+good show... and not die in two blows. You are one of those, indeed!
+I won't keep you away from your adventures, I was there too, long ago.
+But we can make you a true champion, beloved by many and bathing in diamonds.
+
+#LIGHT_GREEN#*As you travel back to Derth in company of the rogue, you discuss your
+#LIGHT_GREEN#battles in the forest. He provides you with great insight on your combat technique(#WHITE#+2 generic talent points#LIGHT_GREEN#)*
+#WHITE#Very well, @playername@. I must go now.
+Good luck in your adventures, and come visit us when you are done!
 ]],
 	answers = {
 		{ "I will. Farewell for now.", action = function (self, player)
@@ -112,10 +148,34 @@ Come to the arena when you are done with your adventures, will you?.
 }
 
 newChat{ id="ok",
-	text = "#WHITE#I see... come back if you change your mind...",
+	text = "#WHITE#I see... I will be waiting...#YELLOW#But not for long.",
 	answers = {
 		{ "See you."},
 	}
 }
 
-return "welcome"
+newChat{ id="back",
+	text = [[#LIGHT_GREEN#*The Cornac rogue displays a welcoming smile*#WHITE#
+Welcome back, @playerdescriptor.race@. Have you reconsidered my generous offer?
+]],
+	answers = {
+		{ "Yes, tell me more.", jump = "accept", action = function (self, player) self.talked_to = 2 end },
+		{ "No, see you."},
+	}
+}
+
+newChat{ id="back2",
+	text = [[
+Welcome back, @playerdescriptor.race@. Are you ready to go?
+]],
+	answers = {
+		{ "Let's go, Cornac.", jump = "go" },
+		{ "Just a minute, I have to prepare my equipment."},
+	}
+}
+
+if npc.talked_to then
+	if npc.talked_to == 1 then return "back"
+	elseif npc.talked_to >= 2 then return "back2"
+	end
+else return "welcome" end

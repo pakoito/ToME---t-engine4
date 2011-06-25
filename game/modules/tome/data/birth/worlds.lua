@@ -140,11 +140,6 @@ newBirthDescriptor{
 	descriptor_choices = default_eyal_descriptors{ difficulty = { Tutorial = "never", Easy = "never", Normal = "never" } },
 	copy = {
 		death_dialog = "ArenaFinish",
-
-		-- Give the orb of knowledge
-		resolvers.inventory{ id=true, {defined="ORB_KNOWLEDGE"}},
-		resolvers.generic(function(e) e.hotkey[12] = {"inventory", "Orb of Knowledge"} end),
-
 		-- Override normal stuff
 		before_starting_zone = function(self)
 			self.starting_level = 1

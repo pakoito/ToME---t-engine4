@@ -29,45 +29,6 @@ newEntity{ base = "BASE_LORE",
 	encumberance = 0,
 }
 
-
--- Id stuff
-newEntity{ define_as = "ORB_KNOWLEDGE",
-	power_source = {unknown=true},
-	unique = true, quest=true,
-	type = "jewelry", subtype="orb",
-	unided_name = "orb", no_unique_lore = true,
-	name = "Orb of Knowledge", identified = true,
-	display = "*", color=colors.VIOLET, image = "object/ruby.png",
-	encumber = 1,
-	desc = [[This orb was given to you by Elisa the halfling scryer, it will automatically identify normal and rare items for you and can be activated to identify all others.]],
-
-	on_drop = function(self, who)
-		if who == game.player then
-			game.logPlayer(who, "You cannot bring yourself to drop the %s", self:getName())
-			return true
-		end
-	end,
-
-	max_power = 1, power_regen = 1,
-	use_power = { name = "use the orb", power = 1,
-		use = function(self, who)
-			for inven_id, inven in pairs(who.inven) do
-				for item, o in ipairs(inven) do
-					if not o:isIdentified() then
-						o:identify(true)
-						game.logPlayer(who, "You have: %s", o:getName{do_colour=true})
-					end
-				end
-			end
-			return true
-		end
-	},
-
-	carrier = {
-		auto_id = 2,
-	},
-}
-
 newEntity{ define_as = "ARENA_BOOTS_DISE", name = "a pair of leather boots of disengagement",
 	slot = "FEET",
 	type = "armor", subtype="feet",
