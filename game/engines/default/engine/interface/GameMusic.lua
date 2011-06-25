@@ -51,6 +51,7 @@ function _M:playMusic(name)
 	m = m:use() -- Get the source
 	m:loop(true)
 	m:play()
+	m:volume(config.settings.audio.music_volume / 100)
 	self.playing_musics[name] = {source=m}
 end
 
@@ -74,9 +75,13 @@ function _M:playAndStopMusic(...)
 end
 
 function _M:volumeMusic(vol)
-do return end
+	vol = util.bound(vol, 0, 100)
 	if vol then
-		self:saveSettings("music", ("music.volume = %q\n"):format(vol))
+		self:saveSettings("audio", ("audio.music_volume = %q\n"):format(vol))
+		config.settings.audio = config.settings.audio or {}
+		config.settings.audio.music_volume = vol
 	end
-	return core.sound.musicVolume(vol) or 0
+	for name, m in pairs(self.playing_musics) do
+		m.source:volume(vol / 100)
+	end
 end

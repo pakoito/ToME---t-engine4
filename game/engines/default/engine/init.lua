@@ -48,7 +48,8 @@ fs.setWritePath(fs.getHomePath())
 fs.mount(engine.homepath, "/")
 config.loadString[[
 sound.enabled = true
-music.volume = 60
+audio.music_volume = 60
+audio.effects_volume = 100
 aa_text = true
 fbo_active = true
 shaders_active = true

@@ -61,7 +61,8 @@ function _M:playSound(name)
 	end
 	if not s or not s.sample then return end
 	local source = s.sample:use()
-	if s.volume then source:volume(s.volume / 100) end
+	if s.volume then source:volume((s.volume / 100) * (config.settings.audio.effects_volume / 100))
+	else source:volume(config.settings.audio.effects_volume / 100) end
 	source:play()
 	self.playing_sounds[source] = true
 	return source
@@ -75,4 +76,16 @@ function _M:cleanSounds()
 		if not s:playing() then todel[#todel+1] = s end
 	end
 	for i = 1, #todel do self.playing_sounds[todel[i]] = nil end
+end
+
+function _M:volumeSoundEffects(vol)
+	vol = util.bound(vol, 0, 100)
+	if vol then
+		self:saveSettings("audio", ("audio.effects_volume = %q\n"):format(vol))
+		config.settings.audio = config.settings.audio or {}
+		config.settings.audio.effects_volume = vol
+	end
+	for source, _ in pairs(self.playing_sounds) do
+		source:volume(vol / 100)
+	end
 end
