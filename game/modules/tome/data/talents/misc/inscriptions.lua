@@ -478,10 +478,20 @@ newInscription{
 	end,
 }
 
+local function attack_rune(self, btid)
+	for tid, lev in pairs(self.talents) do
+		 if tid ~= btid and self.talents_def[tid].is_attack_rune then
+		 	self.talents_cd[tid] = 1
+		 end
+	end
+end
+
 newInscription{
 	name = "Rune: Heat Beam",
 	type = {"inscriptions/runes", 1},
 	points = 1,
+	is_attack_rune = true,
+	no_energy = true,
 	is_spell = true,
 	tactical = { ATTACK = 1 },
 	requires_target = true,
@@ -502,6 +512,7 @@ newInscription{
 		local _ _, x, y = self:canProject(tg, x, y)
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "flamebeam", {tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/fire")
+		attack_rune(self, t.id)
 		return true
 	end,
 	info = function(self, t)
@@ -518,6 +529,8 @@ newInscription{
 	name = "Rune: Frozen Spear",
 	type = {"inscriptions/runes", 1},
 	points = 1,
+	is_attack_rune = true,
+	no_energy = true,
 	is_spell = true,
 	tactical = { ATTACK = 1, DISABLE=1 },
 	requires_target = true,
@@ -535,6 +548,7 @@ newInscription{
 		if not x or not y then return nil end
 		self:projectile(tg, x, y, DamageType.ICE, data.power + data.inc_stat, {type="freeze"})
 		game:playSoundNear(self, "talents/ice")
+		attack_rune(self, t.id)
 		return true
 	end,
 	info = function(self, t)
@@ -551,6 +565,8 @@ newInscription{
 	name = "Rune: Acid Wave",
 	type = {"inscriptions/runes", 1},
 	points = 1,
+	is_attack_rune = true,
+	no_energy = true,
 	is_spell = true,
 	tactical = { ATTACKAREA = 1 },
 	requires_target = true,
@@ -566,9 +582,10 @@ newInscription{
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		local tg = self:getTalentTarget(t)
-		self:projectile(tg, self.x, self.y, DamageType.ACID, data.power + data.inc_stat)
+		self:project(tg, self.x, self.y, DamageType.ACID, data.power + data.inc_stat)
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_acid", {radius=tg.radius})
 		game:playSoundNear(self, "talents/slime")
+		attack_rune(self, t.id)
 		return true
 	end,
 	info = function(self, t)
@@ -585,6 +602,8 @@ newInscription{
 	name = "Rune: Lightning",
 	type = {"inscriptions/runes", 1},
 	points = 1,
+	is_attack_rune = true,
+	no_energy = true,
 	is_spell = true,
 	tactical = { ATTACK = 1 },
 	requires_target = true,
@@ -606,6 +625,7 @@ newInscription{
 		local _ _, x, y = self:canProject(tg, x, y)
 		game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "lightning", {tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/lightning")
+		attack_rune(self, t.id)
 		return true
 	end,
 	info = function(self, t)
