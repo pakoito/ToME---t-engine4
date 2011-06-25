@@ -56,7 +56,7 @@ static LJ_AINLINE int cp_iseol(CPChar c)
   return (c == '\n' || c == '\r');
 }
 
-//static LJ_AINLINE CPChar cp_get(CPState *cp);
+static LJ_AINLINE CPChar cp_get(CPState *cp);
 
 /* Peek next raw character. */
 static LJ_AINLINE CPChar cp_rawpeek(CPState *cp)
