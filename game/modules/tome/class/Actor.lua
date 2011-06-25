@@ -1757,9 +1757,9 @@ function _M:updateModdableTile()
 	add[#add+1] = {image = base..(self.moddable_tile_base or "base_01.png")}
 	i = self.inven[self.INVEN_CLOAK]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile):format("shoulder")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
 	i = self.inven[self.INVEN_BODY]; if i and i[1] and i[1].moddable_tile2 then add[#add+1] = {image = base..(i[1].moddable_tile2)..".png"}
-	else add[#add+1] = {image = base.."lower_body_01.png"} end
+	elseif not self.moddable_tile_nude then add[#add+1] = {image = base.."lower_body_01.png"} end
 	i = self.inven[self.INVEN_BODY]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile)..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1}
-	else add[#add+1] = {image = base.."upper_body_01.png"} end
+	elseif not self.moddable_tile_nude then add[#add+1] = {image = base.."upper_body_01.png"} end
 	i = self.inven[self.INVEN_MAINHAND]; if i and i[1] and i[1].moddable_tile then
 		add[#add+1] = {image = base..(i[1].moddable_tile):format("right")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1}
 		if i[1].moddable_tile_particle then

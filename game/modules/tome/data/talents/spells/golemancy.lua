@@ -30,6 +30,8 @@ local function makeGolem()
 	return require("mod.class.NPC").new{
 		type = "construct", subtype = "golem",
 		display = 'g', color=colors.WHITE, image = "npc/alchemist_golem.png",
+		moddable_tile = "runic_golem",
+		moddable_tile_nude = true,
 		level_range = {1, 50}, exp_worth=0,
 		life_rating = 13,
 		never_anger = true,

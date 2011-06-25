@@ -108,6 +108,7 @@ newBirthDescriptor
 		construct = 1,
 
 		moddable_tile = "runic_golem",
+		moddable_tile_nude = true,
 	},
 	experience = 1.5,
 }
