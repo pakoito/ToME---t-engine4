@@ -548,6 +548,8 @@ static int sdl_font_draw(lua_State *L)
 	int h = TTF_FontLineSkip(*f);
 	SDL_Color color = {r,g,b};
 
+	if (max_width >= 1024) max_width = 1024;
+
 	Uint32 rmask, gmask, bmask, amask;
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
 	rmask = 0xff000000; gmask = 0x00ff0000; bmask = 0x0000ff00; amask = 0x000000ff;

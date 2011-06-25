@@ -654,6 +654,11 @@ int resizeWindow(int width, int height)
 
 	SDL_SetGamma(gamma_correction, gamma_correction, gamma_correction);
 
+	GLint texSize;
+	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &texSize);
+	printf("OpenGL max texture size: %d\n", texSize);
+
+
 	return( TRUE );
 }
 
