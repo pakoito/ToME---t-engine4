@@ -27,7 +27,7 @@ newEntity{ define_as = "TRAP_WATER",
 }
 
 newEntity{ base = "TRAP_WATER",
-	name = "water jet", auto_id = true,
+	name = "water jet", auto_id = true, image = "trap/trap_water_jet_01.png",
 	detect_power = 6, disarm_power = 16,
 	rarity = 3, level_range = {1, 50},
 	color=colors.LIGHT_BLUE,
@@ -37,7 +37,7 @@ newEntity{ base = "TRAP_WATER",
 }
 
 newEntity{ base = "TRAP_WATER",
-	name = "water siphon", auto_id = true,
+	name = "water siphon", auto_id = true, image = "trap/trap_water_siphon_01.png",
 	detect_power = 8, disarm_power = 2,
 	rarity = 3, level_range = {1, 50},
 	color=colors.BLUE,

@@ -48,7 +48,7 @@ newEntity{ base = "TRAP_ALARM",
 }
 
 newEntity{ base = "TRAP_ALARM",
-	name = "summoning alarm", auto_id = true,
+	name = "summoning alarm", auto_id = true, image = "trap/trap_summoning_alarm_01.png",
 	detect_power = 8, disarm_power = 2,
 	rarity = 3, level_range = {10, 50},
 	color=colors.DARK_UMBER,

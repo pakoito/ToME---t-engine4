@@ -24,7 +24,7 @@ newEntity{ define_as = "TRAP_ANNOY",
 }
 
 newEntity{ base = "TRAP_ANNOY",
-	name = "lethargy trap", auto_id = true,
+	name = "lethargy trap", auto_id = true, image = "trap/trap_lethargy_rune_01.png",
 	detect_power = 20, disarm_power = 36,
 	rarity = 3, level_range = {1, 50},
 	color=colors.BLUE,

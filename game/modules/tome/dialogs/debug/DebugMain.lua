@@ -92,6 +92,21 @@ function _M:use(item)
 	elseif act == "shertul-energy" then
 		game.player:grantQuest("shertul-fortress")
 		game.player:hasQuest("shertul-fortress"):gain_energy(1000)
+	elseif act == "all_traps" then
+		for _, file in ipairs(fs.list("/data/general/traps/")) do if file:find(".lua$") then
+			local list = mod.class.Trap:loadList("/data/general/traps/"..file)
+			for i, e in ipairs(list) do
+				print("======",e.name,e.rarity)
+				if e.rarity then
+					local trap = game.zone:finishEntity(game.level, "trap", e)
+					trap:setKnown(game.player, true)
+					local x, y = util.findFreeGrid(game.player.x, game.player.y, 20, true, {[engine.Map.TRAP]=true})
+					if x then
+						game.zone:addEntity(game.level, trap, "trap", x, y)
+					end
+				end
+			end
+		end end
 	end
 end
 
@@ -108,6 +123,7 @@ function _M:generateList()
 	list[#list+1] = {name="Create Item", dialog="CreateItem"}
 	list[#list+1] = {name="Alter Faction", dialog="AlterFaction"}
 	list[#list+1] = {name="Give Sher'tul fortress energy", action="shertul-energy"}
+	list[#list+1] = {name="Create all traps", action="all_traps"}
 
 	local chars = {}
 	for i, v in ipairs(list) do

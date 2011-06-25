@@ -17,14 +17,14 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-newEntity{ define_as = "TRAP_ALARM",
+newEntity{ define_as = "TRAP_TELEPORT",
 	type = "annoy", subtype="teleport", id_by_type=true, unided_name = "trap",
 	display = '^',
 	triggered = function() end,
 }
 
 newEntity{ base = "TRAP_TELEPORT",
-	name = "teleport trap", auto_id = true,
+	name = "teleport trap", auto_id = true, image = "trap/trap_teleport_01.png",
 	desc = [[Now you know why nobody ever got close enough to disarm this trap...]],
 	detect_power = resolvers.mbonus(5, 40), disarm_power = resolvers.mbonus(10, 50),
 	rarity = 5, level_range = {5, 50},
