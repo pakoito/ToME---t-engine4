@@ -44,7 +44,8 @@ newEntity{ base = "BASE_NPC_HUMANOID_RANDOM_BOSS",
 		else
 			image = "player/cornac_male.png"
 		end
-		e.moddable_tile = "cornac_#sex#"
+		e.moddable_tile = "human_#sex#"
+		e.moddable_tile_base = "base_cornac_01.png"
 	end),
 	humanoid_random_boss = 1,
 	resolvers.racial(),
@@ -59,7 +60,9 @@ newEntity{ base = "BASE_NPC_HUMANOID_RANDOM_BOSS",
 		else
 			image = "player/thalore_male.png"
 		end
-		e.moddable_tile = "thalore_#sex#"
+		e.moddable_tile = "elf_#sex#"
+		e.moddable_tile_base = "base_thalore_01.png"
+		e.moddable_tile_ornament = {female="braid_01"}
 	end),
 	humanoid_random_boss = 1,
 	resolvers.racial(),
@@ -74,7 +77,9 @@ newEntity{ base = "BASE_NPC_HUMANOID_RANDOM_BOSS",
 		else
 			image = "player/shalore_male.png"
 		end
-		e.moddable_tile = "shalore_#sex#"
+		e.moddable_tile = "elf_#sex#"
+		e.moddable_tile_base = "base_shalore_01.png"
+		e.moddable_tile_ornament = {female="braid_02"}
 	end),
 	humanoid_random_boss = 1,
 	resolvers.racial(),

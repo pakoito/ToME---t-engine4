@@ -73,6 +73,9 @@ newBirthDescriptor
 	talents_types = { ["race/shalore"]={true, 0} },
 	talents = { [ActorTalents.T_SHALOREN_SPEED]=1 },
 	copy = {
+		moddable_tile = "elf_#sex#",
+		moddable_tile_base = "base_shalore_01.png",
+		moddable_tile_ornament = {female="braid_02"},
 		default_wilderness = {"playerpop", "shaloren"},
 		starting_zone = "scintillating-caves",
 		starting_quest = "start-shaloren",
@@ -106,6 +109,9 @@ newBirthDescriptor
 	talents_types = { ["race/thalore"]={true, 0} },
 	talents = { [ActorTalents.T_THALOREN_WRATH]=1 },
 	copy = {
+		moddable_tile = "elf_#sex#",
+		moddable_tile_base = "base_thalore_01.png",
+		moddable_tile_ornament = {female="braid_01"},
 		default_wilderness = {"playerpop", "thaloren"},
 		starting_zone = "norgos-lair",
 		starting_quest = "start-thaloren",

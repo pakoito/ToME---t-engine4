@@ -823,7 +823,9 @@ function _M:tooltip(x, y, seen_by)
 		print("============================================== SEEING from", self.name)
 		for i, a in ipairs(self.fov.actors_dist) do
 			local d = self.fov.actors[a]
-			print(("%3d : %-40s at %3dx%3d (see at %3dx%3d), diff %3dx%3d"):format(d.sqdist, a.name, a.x, a.y, d.x, d.y,d.dx,d.dy))
+			if d then
+				print(("%3d : %-40s at %3dx%3d (see at %3dx%3d), diff %3dx%3d"):format(d.sqdist, a.name, a.x, a.y, d.x, d.y,d.dx,d.dy))
+			end
 		end
 		print("==============================================")
 	end
@@ -842,7 +844,7 @@ function _M:tooltip(x, y, seen_by)
 	end
 
 	local ts = tstring{}
-	ts:add({"uid",self.uid}) ts:merge(rank_color:toTString()) ts:add(self.name, {"color", "WHITE"}, true)
+	ts:add({"uid",self.uid}) ts:merge(rank_color:toTString()) ts:add(self.name, {"color", "WHITE"}, {"font","italic"}, "(", self.female and "female" or "male", ")", {"font","normal"}, true)
 	ts:add(self.type:capitalize(), " / ", self.subtype:capitalize(), true)
 	ts:add("Rank: ") ts:merge(rank_color:toTString()) ts:add(rank, {"color", "WHITE"}, true)
 	ts:add({"color", 0, 255, 255}, ("Level: %d"):format(self.level), {"color", "WHITE"}, true)
@@ -1752,10 +1754,12 @@ function _M:updateModdableTile()
 	local i
 
 	i = self.inven[self.INVEN_CLOAK]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile):format("behind")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
-	add[#add+1] = {image = base.."base_01.png"}
+	add[#add+1] = {image = base..(self.moddable_tile_base or "base_01.png")}
 	i = self.inven[self.INVEN_CLOAK]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile):format("shoulder")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
-	i = self.inven[self.INVEN_BODY]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile)..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
-	i = self.inven[self.INVEN_BODY]; if i and i[1] and i[1].moddable_tile2 then add[#add+1] = {image = base..(i[1].moddable_tile2)..".png"} end
+	i = self.inven[self.INVEN_BODY]; if i and i[1] and i[1].moddable_tile2 then add[#add+1] = {image = base..(i[1].moddable_tile2)..".png"}
+	else add[#add+1] = {image = base.."lower_body_01.png"} end
+	i = self.inven[self.INVEN_BODY]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile)..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1}
+	else add[#add+1] = {image = base.."upper_body_01.png"} end
 	i = self.inven[self.INVEN_MAINHAND]; if i and i[1] and i[1].moddable_tile then
 		add[#add+1] = {image = base..(i[1].moddable_tile):format("right")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1}
 		if i[1].moddable_tile_particle then
@@ -2729,6 +2733,7 @@ end
 -- Used to make escorts and such
 function _M:addedToLevel(level, x, y)
 	if not self._rst_full then self:resetToFull() self._rst_full = true end -- Only do it once, the first time we come into being
+	self:updateModdableTile()
 	if self.make_escort then
 		for _, filter in ipairs(self.make_escort) do
 			for i = 1, filter.number do
