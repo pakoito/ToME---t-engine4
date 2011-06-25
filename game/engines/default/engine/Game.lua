@@ -425,6 +425,7 @@ end
 -- Threads will be auto joined when the module exits or when it can
 -- ALL THREADS registered *MUST* return true when they exit
 function _M:registerThread(th, linda)
+error("Threads unsuported yet")
 	print("[THREAD] registering", th, linda, #self.__threads+1)
 	self.__threads[#self.__threads+1] = {th=th, linda=linda}
 	return #self.__threads
@@ -434,6 +435,7 @@ end
 -- @param timeout the time in seconds to wait for each thread
 function _M:joinThreads(timeout)
 	for i = #self.__threads, 1, -1 do
+error("Threads unsuported yet")
 		local th = self.__threads[i].th
 		print("[THREAD] Thread join", i, th)
 		local v, err = th:join(timeout)
