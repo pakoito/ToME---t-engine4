@@ -104,6 +104,12 @@ return {
 		game.state:makeWeather(level, 6, {max_nb=3, chance=1, dir=110, speed={0.1, 0.6}, alpha={0.4, 0.6}, particle_name="weather/dark_cloud_%02d"})
 	end,
 
+	foreground = function(level, x, y, nb_keyframes)
+		if level.level ~= 3 then return end
+		if nb_keyframes > 10 then return end
+		if nb_keyframes > 0 and rng.chance(100 / nb_keyframes) then local s = game:playSound("ambient/ambient_horror_sound_0"..rng.range(1, 6)) if s then s:volume(s:volume() * 1.5) end end
+	end,
+
 	on_enter = function(lev, old_lev, newzone)
 		local Dialog = require("engine.ui.Dialog")
 		if lev == 2 and not game.level.shown_warning then
