@@ -5,7 +5,7 @@ solution "TEngine"
 	objdir "obj"
 	defines {"GLEW_STATIC"}
 	if _OPTIONS.force32bits then buildoptions{"-m32"} linkoptions{"-m32"} libdirs{"/usr/lib32"} end
-	if _OPTIONS.relpath then linkoptions{"-Wl,-rpath -Wl,\\\$\$ORIGIN/lib "} end
+	if _OPTIONS.relpath then linkoptions{"-Wl,-rpath -Wl,\\\$\$ORIGIN/lib "} end	
 
 	includedirs {
 		"src",
@@ -31,6 +31,8 @@ configuration "windows"
 		"/e/libs/SDL_ttf-2.0.9/lib",
 		"/e/libs/SDL_image-1.2.10/lib",
 		"/e/libs/SDL_mixer-1.2.11/lib",
+		"/e/libs/libvorbis-1.3.2/lib/.libs",
+		"/e/libs/libogg-1.2.2/src/.libs",
 		"/e/apps/mingw/lib",
 	}
 	includedirs {
@@ -38,6 +40,8 @@ configuration "windows"
 		"/e/libs/SDL_ttf-2.0.9/include/",
 		"/e/libs/SDL_image-1.2.10/include/",
 		"/e/libs/SDL_mixer-1.2.11/include/",
+		"/e/libs/libvorbis-1.3.2/include",
+		"/e/libs/libogg-1.2.2/include",
 		"/e/apps/mingw/include/GL",
 	}
 

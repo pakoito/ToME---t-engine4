@@ -44,7 +44,7 @@ project "TEngine"
         	links { "IOKit" }
 
 	configuration "windows"
-		links { "mingw32", "SDLmain", "SDL", "SDL_ttf", "SDL_image", "openal", "OPENGL32", "GLU32", "wsock32" }
+		links { "mingw32", "SDLmain", "SDL", "SDL_ttf", "SDL_image", "openal32", "vorbisfile", "OPENGL32", "GLU32", "wsock32" }
 		defines { [[TENGINE_HOME_PATH='"T-Engine"']], 'SELFEXE_WINDOWS'  }
 		prebuildcommands { "windres ../src/windows/icon.rc -O coff -o ../src/windows/icon.res" }
 		linkoptions { "../src/windows/icon.res" }
@@ -107,6 +107,7 @@ elseif _OPTIONS.lua == "jit2" then
 		targetname "lua"
 
 		files { "../src/luajit2/src/*.c", "../src/luajit2/src/*.s", "../src/luajit2/src/lj_vm.s", "../src/luajit2/src/lj_bcdef.h", "../src/luajit2/src/lj_ffdef.h", "../src/luajit2/src/lj_ffdef.h", "../src/luajit2/src/lj_libdef.h", "../src/luajit2/src/lj_recdef.h", "../src/luajit2/src/lj_folddef.h" }
+		excludes { "../src/luajit2/src/buildvm*.c", "../src/luajit2/src/luajit.c" }
 
 		configuration "linux"
 			local list = "../src/luajit2/src/lib_base.c ../src/luajit2/src/lib_math.c ../src/luajit2/src/lib_bit.c ../src/luajit2/src/lib_string.c ../src/luajit2/src/lib_table.c ../src/luajit2/src/lib_io.c ../src/luajit2/src/lib_os.c ../src/luajit2/src/lib_package.c ../src/luajit2/src/lib_debug.c ../src/luajit2/src/lib_jit.c ../src/luajit2/src/lib_ffi.c"
@@ -120,6 +121,20 @@ elseif _OPTIONS.lua == "jit2" then
 				"../src/luajit2/src/buildvm -m vmdef -o ../src/luajit2/vmdef.lua "..list,
 				"../src/luajit2/src/buildvm -m folddef -o ../src/luajit2/src/lj_folddef.h ../src/luajit2/src/lj_opt_fold.c",
 			}
+
+		configuration "windows"
+			local list = "../src/luajit2/src/lib_base.c ../src/luajit2/src/lib_math.c ../src/luajit2/src/lib_bit.c ../src/luajit2/src/lib_string.c ../src/luajit2/src/lib_table.c ../src/luajit2/src/lib_io.c ../src/luajit2/src/lib_os.c ../src/luajit2/src/lib_package.c ../src/luajit2/src/lib_debug.c ../src/luajit2/src/lib_jit.c ../src/luajit2/src/lib_ffi.c"
+			prebuildcommands{
+				"gcc -o ../src/luajit2/src/buildvm ../src/luajit2/src/buildvm*.c",
+				"../src/luajit2/src/buildvm -m coffasm -o ../src/luajit2/src/lj_vm.s",
+				"../src/luajit2/src/buildvm -m bcdef -o ../src/luajit2/src/lj_bcdef.h "..list,
+				"../src/luajit2/src/buildvm -m ffdef -o ../src/luajit2/src/lj_ffdef.h "..list,
+				"../src/luajit2/src/buildvm -m libdef -o ../src/luajit2/src/lj_libdef.h "..list,
+				"../src/luajit2/src/buildvm -m recdef -o ../src/luajit2/src/lj_recdef.h "..list,
+				"../src/luajit2/src/buildvm -m vmdef -o ../src/luajit2/vmdef.lua "..list,
+				"../src/luajit2/src/buildvm -m folddef -o ../src/luajit2/src/lj_folddef.h ../src/luajit2/src/lj_opt_fold.c",
+			}
+
 end
 
 project "luasocket"

@@ -26,8 +26,8 @@
 #include <OpenAL/alc.h>
 #include <Vorbis/vorbisfile.h>
 #elif defined(WIN32)
-#include <al.h>
-#include <alc.h>
+#include <AL/al.h>
+#include <AL/alc.h>
 #include <vorbis/vorbisfile.h>
 #else
 #include <AL/al.h>
