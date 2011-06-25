@@ -175,23 +175,30 @@ void stackDump (lua_State *L) {
 
 int docall (lua_State *L, int narg, int nret)
 {
-//	printf("<===%d\n", lua_gettop(L));
+#if 1
 	int status;
 	int base = lua_gettop(L) - narg;  /* function index */
+//	printf("<===%d (%d)\n", base, narg);
 	lua_pushcfunction(L, traceback);  /* push traceback function */
 	lua_insert(L, base);  /* put it under chunk and args */
 	status = lua_pcall(L, narg, nret, base);
 	lua_remove(L, base);  /* remove traceback function */
 	/* force a complete garbage collection in case of errors */
 	if (status != 0) { lua_pop(L, 1); lua_gc(L, LUA_GCCOLLECT, 0); }
-//	printf(">===%d\n", lua_gettop(L));
-	if (lua_gettop(L) != nret)
+//	printf(">===%d (%d) [%d]\n", lua_gettop(L), nret, status);
+	if (lua_gettop(L) != nret + (base - 1))
 	{
 		stackDump(L);
 //		assert(0);
 		lua_settop(L, base);
 	}
 	return status;
+#else
+	int status=0;
+	int base = lua_gettop(L) - narg;  /* function index */
+	lua_call(L, narg, nret);
+	return status;
+#endif
 }
 
 /* No print function, does .. nothing */

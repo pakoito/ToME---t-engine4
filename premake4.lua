@@ -52,7 +52,7 @@ configuration "Debug"
 configuration "Release"
 	defines { "NDEBUG=1" }
 	flags { "Optimize", "NoFramePointer" }
-	buildoptions { "-O3" }
+	buildoptions { "-O2" }
 	targetdir "bin/Release"
 
 

@@ -39,7 +39,7 @@ THE SOFTWARE.
 ]]--
 
 module( "lanes", package.seeall )
-
+do return end
 --require "lua51-lanes"
 assert( type(lanes)=="table" )
 
