@@ -65,6 +65,7 @@ end
 
 function _M:select()
 	self.checked = not self.checked
+	self:sound("button")
 	if self.on_change then self.on_change(self.checked) end
 end
 

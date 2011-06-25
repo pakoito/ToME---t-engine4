@@ -135,6 +135,7 @@ end
 
 function _M:onUse(button)
 	local item = self.dlist[self.sel_j] and self.dlist[self.sel_j][self.sel_i]
+	self:sound("button")
 	if item then self.fct(item) end
 end
 

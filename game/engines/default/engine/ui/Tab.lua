@@ -64,7 +64,10 @@ function _M:generate()
 
 	self.frame_sel = self:makeFrame("ui/button_sel", self.w, self.h)
 
-	self.key:addBind("ACCEPT", function() self.fct(self.selected) end)
+	self.key:addBind("ACCEPT", function()
+		self:sound("button")
+		self.fct(self.selected)
+	end)
 	self.key:addCommands{
 		_SPACE = function() self:select() end,
 	}

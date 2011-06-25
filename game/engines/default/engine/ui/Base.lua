@@ -41,6 +41,10 @@ _M.font_bold_h = _M.font_bold:lineSkip()
 _M.ui = "stone"
 _M.defaultui = "stone"
 
+sounds = {
+	button = "ui/subtle_button_sound",
+}
+
 _M.ui_conf = {
 	stone = {
 		frame_shadow = {x=15, y=15, a=0.5},
@@ -161,4 +165,10 @@ function _M:setTextShadow(v)
 end
 
 function _M:positioned(x, y)
+end
+
+function _M:sound(name)
+	if game.playSound and sounds[name] then
+		game:playSound(sounds[name])
+	end
 end

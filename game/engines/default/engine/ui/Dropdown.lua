@@ -60,6 +60,7 @@ end
 function _M:positioned(x, y, sx, sy)
 	self.c_list = List.new{width=self.w, list=self.list, select=self.on_select, display_prop=self.display_prop, scrollbar=self.scrollbar, nb_items=self.nb_items, fct=function()
 		game:unregisterDialog(self.popup)
+		self:sound("button")
 		self.fct(self.c_list.list[self.c_list.sel])
 	end}
 	self.popup = Dialog.new(nil, self.w, self.c_list.h, sx, sy + self.h, nil, nil, false, "simple")
@@ -69,6 +70,7 @@ function _M:positioned(x, y, sx, sy)
 	self.popup.key:addBind("EXIT", function()
 		game:unregisterDialog(self.popup)
 		self.c_list.sel = self.previous
+		self:sound("button")
 		self.fct(self.c_list.list[self.c_list.sel])
 	end)
 end
