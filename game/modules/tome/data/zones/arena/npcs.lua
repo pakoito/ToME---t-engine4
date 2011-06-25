@@ -36,7 +36,7 @@ local Talents = require("engine.interface.ActorTalents")
 
 --Fodder
 newEntity{ name = "flying skull",
-	type = "elemental", subtype = "dark",
+	type = "undead", subtype = "skull",
 	display = "*", color=colors.BLACK, tint=colors.BLACK,
 	desc = [[A floating disembodied skull with an aura of darkness.]],
 	combat = { dam=10, atk=5, apr=10, physspeed=1 },
@@ -66,6 +66,7 @@ newEntity{ name = "flying skull",
 	disease_immune = 1,
 	poison_immune = 1,
 	stun_immune = 1,
+	undead = 1,
 	resolvers.sustains_at_birth(),
 }
 

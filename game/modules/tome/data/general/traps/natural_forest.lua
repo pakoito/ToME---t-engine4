@@ -27,7 +27,7 @@ newEntity{ define_as = "TRAP_NATURAL_FOREST",
 }
 
 newEntity{ base = "TRAP_NATURAL_FOREST",
-	name = "sliding rock", auto_id = true,
+	name = "sliding rock", auto_id = true, image = "trap/trap_slippery_rocks_01.png",
 	detect_power = 6, disarm_power = 16,
 	rarity = 3, level_range = {1, 50},
 	color=colors.UMBER,
