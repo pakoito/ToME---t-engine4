@@ -127,7 +127,8 @@ function _M:bindKeys()
 	-- Bind defaults
 	for type, t in pairs(_M.binds_def) do
 		for i, ks in ipairs(_M.binds_remap[type] or t.default) do
-			self.binds[ks] = type
+			self.binds[ks] = self.binds[ks] or {}
+			self.binds[ks][type] = true
 		end
 	end
 end
@@ -135,7 +136,7 @@ end
 function _M:findBoundKeys(virtual)
 	local bs = {}
 	for ks, virt in pairs(self.binds) do
-		if virt == virtual then bs[#bs+1] = ks end
+		if virt[virtual] then bs[#bs+1] = ks end
 	end
 	return unpack(bs)
 end
@@ -207,14 +208,18 @@ function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode, isup, ismouse)
 	if not ismouse then ks, us = self:makeKeyString(sym, ctrl, shift, alt, meta, unicode)
 	else ks = self:makeMouseString(sym, ctrl, shift, alt, meta) end
 --	print("[BIND]", sym, ctrl, shift, alt, meta, unicode, " :=: ", ks, us, " ?=? ", self.binds[ks], us and self.binds[us])
-	if self.binds[ks] and self.virtuals[self.binds[ks]] then
-		if isup and not _M.binds_def[self.binds[ks]].updown then return end
-		self.virtuals[self.binds[ks]](sym, ctrl, shift, alt, meta, unicode, isup)
-		return true
-	elseif us and self.binds[us] and self.virtuals[self.binds[us]] then
-		if isup and not _M.binds_def[self.binds[us]].updown then return end
-		self.virtuals[self.binds[us]](sym, ctrl, shift, alt, meta, unicode, isup)
-		return true
+	if self.binds[ks] then
+		for virt, _ in pairs(self.binds[ks]) do if self.virtuals[virt] then
+			if isup and not _M.binds_def[virt].updown then return end
+			self.virtuals[virt](sym, ctrl, shift, alt, meta, unicode, isup)
+			return true
+		end end
+	elseif us and self.binds[us] then
+		for virt, _ in pairs(self.binds[us]) do if self.virtuals[virt] then
+			if isup and not _M.binds_def[virt].updown then return end
+			self.virtuals[virt](sym, ctrl, shift, alt, meta, unicode, isup)
+			return true
+		end end
 	end
 
 	if isup then return end
