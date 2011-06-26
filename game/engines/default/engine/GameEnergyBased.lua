@@ -100,6 +100,15 @@ function _M:tickLevel(level)
 	for i = 1, #arr do
 		e = arr[i]
 		if e and e.act and e.energy then
+			if e.actBase then
+				if e.energyBase < self.energy_to_act then
+					e.energyBase = e.energyBase + self.energy_per_tick
+				end
+				if e.energyBase >= self.energy_to_act then
+					e:actBase(self)
+				end
+			end
+
 --				print("<ENERGY", e.name, e.uid, "::", e.energy.value, self.paused, "::", e.player)
 			if e.energy.value < self.energy_to_act then
 				e.energy.value = (e.energy.value or 0) + self.energy_per_tick * (e.energy.mod or 1) * (e.global_speed or 1)

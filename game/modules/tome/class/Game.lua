@@ -604,11 +604,6 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 
 	self.player:onEnterLevel(self.zone, self.level)
 
-	-- All entities on the level remember acting not long ago, this prevents long "update" time upon re-entry
-	for uid, act in pairs(self.level.entities) do
-		act.last_act_turn = math.floor(self.turn / (self.zone.wilderness and 1000 or 10))
-	end
-
 	local musics = {}
 	local keep_musics = false
 	if self.level.data.ambient_music then

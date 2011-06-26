@@ -76,6 +76,8 @@ _M.temporary_values_conf.combat_spellspeed = "mult0"
 
 function _M:init(t, no_default)
 	-- Define some basic combat stats
+	self.energyBase = 0
+
 	self.combat_def = 0
 	self.combat_armor = 0
 	self.combat_armor_hardiness = 0
@@ -231,7 +233,9 @@ function _M:useEnergy(val)
 
 end
 
-function _M:actTurn()
+function _M:actBase()
+	self.energyBase = self.energyBase - game.energy_to_act
+
 	if self:isTalentActive (self.T_DARKEST_LIGHT) and self.positive > self.negative then
 		self:forceUseTalent(self.T_DARKEST_LIGHT, {ignore_energy=true})
 		game.logSeen(self, "%s's darkness can no longer hold back the light!", self.name:capitalize())
@@ -339,12 +343,6 @@ function _M:act()
 			end
 		end
 	end
-
-	-- We compute turns at "default" speed, and only fire some actions when chaning turn
-	local actturn = math.floor(game.turn / (game.zone.wilderness and 1000 or 10))
-	if not self.last_act_turn then self.last_act_turn = actturn - 1 end
-	for i = 1, actturn - self.last_act_turn do self:actTurn() end
-	self.last_act_turn = actturn
 
 	-- Conduit talent prevents all auras from cooling down
 	if self:isTalentActive(self.T_CONDUIT) then
@@ -2754,6 +2752,4 @@ function _M:addedToLevel(level, x, y)
 		self.make_escort = nil
 	end
 	self:check("on_added_to_level", level, x, y)
-
-	self.last_act_turn = math.floor(game.turn / 10)
 end
