@@ -31,7 +31,7 @@ newTalent{
 	range = 6,
 	direct_hit = true,
 	requires_target = true,
-	getSlow = function(self, t) return self:getTalentLevel(t) * 0.08 end,
+	getSlow = function(self, t) return math.max(self:getTalentLevel(t) * 0.08, 0.6) end,
 	action = function(self, t)
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t, display={particle="bolt_arcane"}}
 		local x, y = self:getTarget(tg)

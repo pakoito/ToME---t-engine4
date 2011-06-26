@@ -40,7 +40,7 @@ newTalent{
 	end,
 	action = function(self, t)
 		local en = ( 3 + self:getTalentLevel(t)) * (100 + self:getWil())/100
-		local dam = .1 + 0.03*self:getTalentLevel(t)
+		local dam = math.max(0.1 + 0.03*self:getTalentLevel(t), 0.4)
 		local tg = self:getTalentTarget(t)
 		self:project(tg, self.x, self.y, function(tx, ty)
 			local act = game.level.map(tx, ty, engine.Map.ACTOR)

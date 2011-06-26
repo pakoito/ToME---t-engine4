@@ -236,7 +236,7 @@ newTalent{
 	tactical = { DISABLE = 2 },
 	requires_target = true,
 	range = function(self, t) return math.floor (self:getTalentLevel(t)) end,
-	getSlow = function(self, t) return self:getTalentLevel(t) * 0.07 + 0.2 end,
+	getSlow = function(self, t) return math.max(self:getTalentLevel(t) * 0.07 + 0.2, 0.65) end,
 	getDuration = function(self, t) return 5 + self:getTalentLevel(t) end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
