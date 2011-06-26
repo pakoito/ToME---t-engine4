@@ -682,11 +682,12 @@ newInscription{
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,
+	range = 4,
 	getDamage = function(self, t) return 150 + self:getWil() * 4 end,
 	getDuration = function(self, t) return 4 end,
 	action = function(self, t)
 		-- Find the target and check hit
-		local tg = {type="hit", self:getTalentRange(t), talent=t}
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty then return nil end
 		local _ _, tx, ty = self:canProject(tg, tx, ty)

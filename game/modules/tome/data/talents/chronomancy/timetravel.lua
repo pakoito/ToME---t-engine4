@@ -95,7 +95,7 @@ newTalent{
 	getDuration = function(self, t) return 4 + math.floor(self:getTalentLevel(t) / 3 * getParadoxModifier(self, pm)) end,
 	action = function(self, t)
 		-- Find the target and check hit
-		local tg = {type="hit", self:getTalentRange(t), talent=t}
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty then return nil end
 		local _ _, tx, ty = self:canProject(tg, tx, ty)
