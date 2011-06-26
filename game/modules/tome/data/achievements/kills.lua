@@ -28,6 +28,21 @@ newAchievement{
 	desc = [[Do over 600 damage in one attack]],
 }
 newAchievement{
+	name = "Size is everything", id = "DAMAGE_1500",
+	show = "full",
+	desc = [[Do over 1500 damage in one attack]],
+}
+newAchievement{
+	name = "The bigger the better!", id = "DAMAGE_3000",
+	show = "full",
+	desc = [[Do over 3000 damage in one attack]],
+}
+newAchievement{
+	name = "Overpowered!", id = "DAMAGE_6000",
+	show = "full",
+	desc = [[Do over 6000 damage in one attack]],
+}
+newAchievement{
 	name = "Exterminator",
 	show = "full",
 	desc = [[Killed 1000 creatures]],

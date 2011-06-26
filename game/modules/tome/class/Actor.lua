@@ -1128,7 +1128,11 @@ function _M:onTakeHit(value, src)
 
 	-- Achievements
 	if not self.no_take_hit_achievements and src and src.resolveSource and src:resolveSource().player and value >= 600 then
-		world:gainAchievement("SIZE_MATTERS", src:resolveSource())
+		local rsrc = src:resolveSource()
+		world:gainAchievement("SIZE_MATTERS", rsrc)
+		world:gainAchievement("DAMAGE_1500", rsrc)
+		world:gainAchievement("DAMAGE_3000", rsrc)
+		world:gainAchievement("DAMAGE_6000", rsrc)
 	end
 
 	-- Stoned ? SHATTER !
