@@ -91,6 +91,7 @@ void openal_get_devices()
 				{
 //					devList.numDefaultDevice = numDevices;
 				}
+				printf("OpenAL device available: %s (default %s)\n", deviceList, defaultDevice);
 
 				deviceList += strlen(deviceList);
 				if (deviceList[0] == 0)
@@ -110,7 +111,7 @@ void openal_get_devices()
 }
 
 int init_openal() {
-//	openal_get_devices();
+	openal_get_devices();
 	audioDevice = alcOpenDevice(NULL);
 	if (audioDevice == NULL) return 0;
 	audioContext = alcCreateContext(audioDevice, NULL);
