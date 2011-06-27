@@ -102,7 +102,7 @@ newTalent{
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
 	end,
-	getSlow = function(self, t) return math.max((10 + (self:combatTalentSpellDamage(t, 10, 50) * getParadoxModifier(self, pm))) / 100, 0.6) end,
+	getSlow = function(self, t) return math.min((10 + (self:combatTalentSpellDamage(t, 10, 50) * getParadoxModifier(self, pm))) / 100, 0.6) end,
 	getDuration = function(self, t) return 5 + math.ceil(self:getTalentLevel(t)) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)

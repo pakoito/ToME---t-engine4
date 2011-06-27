@@ -21,6 +21,7 @@ require "engine.class"
 local Dialog = require "engine.ui.Dialog"
 local ListColumns = require "engine.ui.ListColumns"
 local TextzoneList = require "engine.ui.TextzoneList"
+local Image = require "engine.ui.Image"
 local Separator = require "engine.ui.Separator"
 
 module(..., package.seeall, class.inherit(Dialog))
@@ -54,9 +55,16 @@ function _M:init(l, w, force_height)
 	}
 	c_text:setTextShadow(false)
 
-	self:loadUI{
-		{left = 3, top = 3, ui=c_text}
-	}
+	local uis = { {left = 3, top = 3, ui=c_text} }
+	if l.image then
+		local image = Image.new{file="lore/"..l.image, auto_width=true, auto_height=true}
+		uis = {
+			{hcenter = 0, top = 3, ui=image},
+			{left = 3, top = 3 + image.h, ui=c_text},
+		}
+	end
+
+	self:loadUI(uis)
 	self.key:addBind("EXIT", function() game:unregisterDialog(self) if fct then fct() end end)
 	self.key:addBind("ACCEPT", function() game:unregisterDialog(self) if fct then fct() end end)
 	self:setupUI(true, true)
