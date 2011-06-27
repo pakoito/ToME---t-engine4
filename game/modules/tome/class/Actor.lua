@@ -459,8 +459,8 @@ function _M:defineDisplayCallback()
 			if on_map then
 				local dh = h * 0.1
 				local lp = self.life / self.max_life + 0.0001
-				core.display.drawQuad(x, y + h - dh, w, dh, 129, 180, 57, 128)
-				core.display.drawQuad(x, y + h - dh, w * lp, dh, 50, 220, 77, 255)
+				core.display.drawQuad(x + 3, y + h - dh, w - 6, dh, 129, 180, 57, 128)
+				core.display.drawQuad(x + 3, y + h - dh, (w - 6) * lp, dh, 50, 220, 77, 255)
 			end
 		end
 
