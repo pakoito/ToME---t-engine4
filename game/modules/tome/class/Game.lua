@@ -1246,7 +1246,9 @@ end
 
 function _M:setupMouse(reset)
 	if reset then self.mouse:reset() end
-	self.mouse:registerZone(Map.display_x, Map.display_y, Map.viewport.width, Map.viewport.height, function(button, mx, my, xrel, yrel, bx, by, event)
+	self.mouse:registerZone(Map.display_x, Map.display_y, Map.viewport.width, Map.viewport.height, function(button, mx, my, xrel, yrel, bx, by, event, extra)
+		self.tooltip.add_map_str = extra and extra.log_str
+
 		-- Handle targeting
 		if self:targetMouse(button, mx, my, xrel, yrel, event) then return end
 
@@ -1259,7 +1261,7 @@ function _M:setupMouse(reset)
 				if not self.gestures:isGesturing() then
 					if not xrel and not yrel then
 						-- Handle Use menu
-						self:mouseRightClick(mx, my)
+						self:mouseRightClick(mx, my, extra)
 						return
 					end
 				else
@@ -1323,26 +1325,24 @@ function _M:setupMouse(reset)
 	-- Chat tooltips
 	profile.chat:onMouse(function(user, item, button, event, x, y, xrel, yrel, bx, by)
 		local mx, my = core.mouse.get()
-		if not item or item.faded == 0 then self.mouse:delegate(button, mx, my, xrel, yrel, nil, nil, event, "playmap") return end
+		if not item or not user or item.faded == 0 then self.mouse:delegate(button, mx, my, xrel, yrel, nil, nil, event, "playmap") return end
 
 		local str = tstring{{"color","GOLD"}, {"font","bold"}, user.name, {"color","LAST"}, {"font","normal"}, true}
 		str:add({"color","ANTIQUE_WHITE"}, "Playing: ", {"color", "LAST"}, user.current_char, true)
 		str:add({"color","ANTIQUE_WHITE"}, "Game: ", {"color", "LAST"}, user.module, "(", user.valid, ")",true)
 
-		local tmx, tmy = self.level.map:getMouseTile(mx, my)
-		local mstr = self.tooltip:getTooltipAtMap(tmx, tmy, mx, my)
-
+		local extra = {}
 		if item.extra_data and item.extra_data.mode == "tooltip" then
-			local str = item.extra_data.tooltip.."\n---\nLinked by: "..str:toString().."\n---\n"..(mstr and mstr:toString() or "")
-			self.tooltip:displayAtMap(nil, nil, self.w, self.h, str)
+			local rstr = tstring{item.extra_data.tooltip, true, "---", true, "Linked by: "}
+			rstr:merge(str)
+			extra.log_str = rstr
 		else
-			if mstr then str:add(true, "---", true) str:merge(mstr) end
-			self.tooltip:displayAtMap(nil, nil, self.w, self.h, str)
-
-			if button == "left" and event == "button" then
-				profile.chat:showUserInfo(user.login)
+			extra.log_str = str
+			if button == "right" and event == "button" then
+				extra.add_map_action = { name="Show chat user", fct=function() profile.chat:showUserInfo(user.login) end }
 			end
 		end
+		self.mouse:delegate(button, mx, my, xrel, yrel, nil, nil, event, "playmap", extra)
 	end)
 	if not reset then self.mouse:setCurrent() end
 end
@@ -1384,9 +1384,9 @@ function _M:mouseMiddleClick(mx, my)
 end
 
 --- Right mouse click on the map
-function _M:mouseRightClick(mx, my)
+function _M:mouseRightClick(mx, my, extra)
 	local tmx, tmy = self.level.map:getMouseTile(mx, my)
-	self:registerDialog(MapMenu.new(mx, my, tmx, tmy))
+	self:registerDialog(MapMenu.new(mx, my, tmx, tmy, extra and extra.add_map_action))
 end
 
 --- Ask if we really want to close, if so, save the game first

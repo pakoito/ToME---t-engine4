@@ -24,11 +24,12 @@ local Map = require "engine.Map"
 
 module(..., package.seeall, class.inherit(engine.ui.Dialog))
 
-function _M:init(mx, my, tmx, tmy)
+function _M:init(mx, my, tmx, tmy, extra)
 	self.tmx, self.tmy = util.bound(tmx, 0, game.level.map.w - 1), util.bound(tmy, 0, game.level.map.h - 1)
 	if tmx == game.player.x and tmy == game.player.y then self.on_player = true end
 
 	self:generateList()
+	if extra then table.insert(self.list, 1, {name=extra.name, action="extra", action_fct=extra.fct, color=extra.color}) end
 	self.__showup = false
 
 	local name = "Actions"
@@ -65,7 +66,8 @@ function _M:use(item)
 
 	local act = item.action
 
-	if act == "move_to" then game.player:mouseMove(self.tmx, self.tmy, true)
+	if act == "extra" then item.action_fct()
+	elseif act == "move_to" then game.player:mouseMove(self.tmx, self.tmy, true)
 	elseif act == "control" then game.party:setPlayer(item.actor)
 	elseif act == "order" then game.party:giveOrders(item.actor)
 	elseif act == "change_level" then game.key:triggerVirtual("CHANGE_LEVEL")

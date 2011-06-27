@@ -39,12 +39,13 @@ function _M:getTooltipAtMap(tmx, tmy, mx, my)
 	tt[#tt+1] = (seen or remember) and game.level.map:checkEntity(tmx, tmy, Map.TERRAIN, "tooltip", game.level.map.actor_player) or nil
 	if #tt > 0 then
 		local ts = tstring{}
+		if self.add_map_str then ts:merge(self.add_map_str:toTString()) ts:add(true, "---", true) end
 		for i = 1, #tt do
 			ts:merge(tt[i]:toTString())
 			if i < #tt then ts:add(true, "---", true) end
 		end
-		ts:add("TOTOOTOT")
 		return ts
 	end
+	if self.add_map_str then return self.add_map_str:toTString() end
 	return nil
 end
