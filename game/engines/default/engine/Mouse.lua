@@ -33,21 +33,22 @@ end
 -- @param x coordinate of the click
 -- @param y coordinate of the click
 -- @param isup true if the key was released, false if pressed
-function _M:receiveMouse(button, x, y, isup)
+-- @param force_name if not nil only the zone with this name may trigger
+function _M:receiveMouse(button, x, y, isup, force_name)
 	self.status[button] = not isup
 	if not isup then return end
 
 	for i, m in ipairs(self.areas) do
-		if (not m.mode or m.mode.button) and (x >= m.x1 and x < m.x2 and y >= m.y1 and y < m.y2) then
+		if (not m.mode or m.mode.button) and (x >= m.x1 and x < m.x2 and y >= m.y1 and y < m.y2) and (not force_name or force_name == m.name) then
 			m.fct(button, x, y, nil, nil, x-m.x1, y-m.y1, "button")
 			break
 		end
 	end
 end
 
-function _M:receiveMouseMotion(button, x, y, xrel, yrel)
+function _M:receiveMouseMotion(button, x, y, xrel, yrel, force_name)
 	for i, m in ipairs(self.areas) do
-		if (not m.mode or m.mode.move) and (x >= m.x1 and x < m.x2 and y >= m.y1 and y < m.y2) then
+		if (not m.mode or m.mode.move) and (x >= m.x1 and x < m.x2 and y >= m.y1 and y < m.y2) and (not force_name or force_name == m.name) then
 			m.fct(button, x, y, xrel, yrel, x-m.x1, y-m.y1, "motion")
 			break
 		end
@@ -56,13 +57,13 @@ end
 
 --- Delegate an event from an other mouse handler
 -- if self.delegate_offset_x and self.delegate_offset_y are set hey will be used to change the actual coordinates
-function _M:delegate(button, mx, my, xrel, yrel, bx, by, event)
+function _M:delegate(button, mx, my, xrel, yrel, bx, by, event, name)
 	local ox, oy = (self.delegate_offset_x or 0), (self.delegate_offset_y or 0)
 	mx = mx - ox
 	my = my - oy
 
-	if event == "button" then self:receiveMouse(button, mx, my, true)
-	elseif event == "motion" then self:receiveMouseMotion(button, mx, my, xrel, yrel)
+	if event == "button" then self:receiveMouse(button, mx, my, true, name)
+	elseif event == "motion" then self:receiveMouseMotion(button, mx, my, xrel, yrel, name)
 	end
 end
 

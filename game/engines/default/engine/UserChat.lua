@@ -345,11 +345,9 @@ function _M:resize(x, y, w, h, fontname, fontsize, color, bgcolor)
 			local citem = nil
 			for i = 1, #self.dlist do
 				local item = self.dlist[i]
-				if item.dh and y >= item.dh - self.mouse.delegate_offset_y then citem = item break end
+				if item.dh and y >= item.dh - self.mouse.delegate_offset_y then citem = self.dlist[i].src break end
 			end
-			if citem and citem.login and self.channels[self.cur_channel].users[citem.login] then
-				self.on_mouse(self.channels[self.cur_channel].users[citem.login], citem, button, event)
-			end
+			self.on_mouse(citem and citem.login and self.channels[self.cur_channel].users[citem.login], citem and citem.login and citem, button, event, x, y, xrel, yrel, bx, by)
 		end
 	end)
 
@@ -412,7 +410,7 @@ function _M:display()
 		for i = #gen, 1, -1 do
 			gen[i].login = log[z].login
 			gen[i].extra_data = log[z].extra_data
-			self.dlist[#self.dlist+1] = {item=gen[i], date=log[z].timestamp}
+			self.dlist[#self.dlist+1] = {item=gen[i], date=log[z].timestamp, src=log[z]}
 			h = h + self.fh
 			if h > self.h - self.fh - (self.do_display_chans and self.fh or 0) then stop=true break end
 		end
@@ -436,9 +434,10 @@ function _M:toScreen()
 			if fade < self.fading * 1000 then fade = 1
 			elseif fade < self.fading * 2000 then fade = (self.fading * 2000 - fade) / (self.fading * 1000)
 			else fade = 0 end
+			self.dlist[i].src.faded = fade
 		end
 
-		item.dh = h
+		self.dlist[i].dh = h
 		if self.shadow then item._tex:toScreenFull(self.display_x+2, h+2, item.w, item.h, item._tex_w, item._tex_h, 0,0,0, self.shadow * fade) end
 		item._tex:toScreenFull(self.display_x, h, item.w, item.h, item._tex_w, item._tex_h, 1, 1, 1, fade)
 		h = h - self.fh

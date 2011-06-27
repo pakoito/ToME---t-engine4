@@ -52,7 +52,7 @@ local LogDisplay = require "engine.LogDisplay"
 local LogFlasher = require "engine.LogFlasher"
 local DebugConsole = require "engine.DebugConsole"
 local FlyingText = require "engine.FlyingText"
-local Tooltip = require "engine.Tooltip"
+local Tooltip = require "mod.class.Tooltip"
 local Calendar = require "engine.Calendar"
 local Gestures = require "engine.ui.Gestures"
 
@@ -1278,19 +1278,11 @@ function _M:setupMouse(reset)
 
 		-- Handle the mouse movement/scrolling
 		self.player:mouseHandleDefault(self.key, self.key == self.normal_key, button, mx, my, xrel, yrel, event)
-	end)
+	end, nil, "playmap")
 	-- Scroll message log
---[[
-	self.mouse:registerZone(self.logdisplay.display_x, self.logdisplay.display_y, self.w, self.h, function(button, mx, my, xrel, yrel, bx, by, event)
-		if self.show_userchat then
-			profile.chat.mouse:delegate(button, mx, my, xrel, yrel, bx, by, event)
-		else
-			if button == "wheelup" then self.logdisplay:scrollUp(1) end
-			if button == "wheeldown" then self.logdisplay:scrollUp(-1) end
-			if button == "left" then self.logdisplay:showLogDialog(nil, 0.6) end
-		end
+	self.mouse:registerZone(profile.chat.display_x, profile.chat.display_y, profile.chat.w, profile.chat.h, function(button, mx, my, xrel, yrel, bx, by, event)
+		profile.chat.mouse:delegate(button, mx, my, xrel, yrel, bx, by, event)
 	end)
-]]
 	-- Use hotkeys with mouse
 	self.mouse:registerZone(self.hotkeys_display.display_x, self.hotkeys_display.display_y, self.w, self.h, function(button, mx, my, xrel, yrel, bx, by, event)
 		if event == "button" and button == "left" and self.zone and self.zone.wilderness then return end
@@ -1329,15 +1321,22 @@ function _M:setupMouse(reset)
 		end
 	end)
 	-- Chat tooltips
-	profile.chat:onMouse(function(user, item, button, event)
+	profile.chat:onMouse(function(user, item, button, event, x, y, xrel, yrel, bx, by)
+		local mx, my = core.mouse.get()
+		if not item or item.faded == 0 then self.mouse:delegate(button, mx, my, xrel, yrel, nil, nil, event, "playmap") return end
+
 		local str = tstring{{"color","GOLD"}, {"font","bold"}, user.name, {"color","LAST"}, {"font","normal"}, true}
 		str:add({"color","ANTIQUE_WHITE"}, "Playing: ", {"color", "LAST"}, user.current_char, true)
 		str:add({"color","ANTIQUE_WHITE"}, "Game: ", {"color", "LAST"}, user.module, "(", user.valid, ")",true)
 
+		local tmx, tmy = self.level.map:getMouseTile(mx, my)
+		local mstr = self.tooltip:getTooltipAtMap(tmx, tmy, mx, my)
+
 		if item.extra_data and item.extra_data.mode == "tooltip" then
-			local str = item.extra_data.tooltip.."\n---\nLinked by: "..str:toString()
+			local str = item.extra_data.tooltip.."\n---\nLinked by: "..str:toString().."\n---\n"..(mstr and mstr:toString() or "")
 			self.tooltip:displayAtMap(nil, nil, self.w, self.h, str)
 		else
+			if mstr then str:add(true, "---", true) str:merge(mstr) end
 			self.tooltip:displayAtMap(nil, nil, self.w, self.h, str)
 
 			if button == "left" and event == "button" then
