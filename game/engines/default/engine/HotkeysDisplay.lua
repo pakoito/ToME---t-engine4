@@ -140,7 +140,7 @@ function _M:display()
 		gen.x, gen.y = x, y
 		gen.i = i
 		self.items[#self.items+1] = gen
-		self.clics[i] = {x,y,w+4,h+4}
+		self.clics[i + (12 * (page - 1))] = {x,y,w+4,h+4}
 
 		if y + self.font_h * 2 > self.h then
 			x = x + self.w / self.nb_cols
