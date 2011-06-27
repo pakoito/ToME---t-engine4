@@ -234,8 +234,7 @@ function _M:getMapStackMO(map, x, y)
 
 	-- Create the map object with 1 + additional textures
 	local _mo = core.map.newObject(0, 1, self:check("display_on_seen"), self:check("display_on_remember"), self:check("display_on_unknown"), 0, 0, 1, 1, 1)
-	_mo:texture(0, tex)
-
+	_mo:texture(0, tex, false, 1, 1, 0, 0)
 	stackmo[nb] = _mo
 
 	return _mo

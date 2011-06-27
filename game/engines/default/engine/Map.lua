@@ -183,6 +183,7 @@ function _M:save()
 		_fovcache = true,
 		surface = true,
 		finished = true,
+		_stackmo = true,
 	})
 end
 

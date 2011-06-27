@@ -358,9 +358,6 @@ function _M:setupDisplayMode(reboot, mode)
 	if not mode or mode == "postinit" then
 		local gfx = config.settings.tome.gfx
 
-		-- Show a count for stacked objects
-		Map.object_stack_count = true
-
 		-- Select tiles
 		Tiles.prefix = "/data/gfx/"
 		if gfx.tiles ~= "mushroom" then
@@ -378,6 +375,9 @@ function _M:setupDisplayMode(reboot, mode)
 		elseif gfx.size == "16x16" then
 			Map:setViewPort(216, 0, self.w - 216, (self.map_h_stop or 80) - 16, 16, 16, "/data/font/FSEX300.ttf", 16, do_bg)
 		end
+
+		-- Show a count for stacked objects
+		Map.object_stack_count = true
 
 		Map.tiles.use_images = true
 		if gfx.tiles == "ascii" then Map.tiles.use_images = false Map.tiles.force_back_color = {r=0, g=0, b=0, a=255} end

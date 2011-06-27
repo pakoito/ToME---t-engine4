@@ -78,8 +78,8 @@ return {
 			if level.eagle then level.eagle.ps:toScreen(dx, dy, true, 1) end
 			if level.eagle_s then level.eagle_s.ps:toScreen(dx + 100, dy + 120, true, 1) end
 			if nb_keyframes > 0 and rng.chance(400 / nb_keyframes) then game:playSound("actions/eagle_scream") end
-			if not level.eagle.ps:isAlive() then level.eagle = nil end
-			if not level.eagle_s.ps:isAlive() then level.eagle_s = nil end
+			if level.eagle and not level.eagle.ps:isAlive() then level.eagle = nil end
+			if level.eagle_s and not level.eagle_s.ps:isAlive() then level.eagle_s = nil end
 		end
 	end,
 }
