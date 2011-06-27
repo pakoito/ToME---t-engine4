@@ -182,5 +182,19 @@ function _M:generateList()
 		self.c_list:drawItem(item)
 	end,}
 
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"How many log and chat lines to show at the screen's bottom."}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Log lines#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.tome.log_lines)
+	end, fct=function(item)
+		game:registerDialog(GetQuantity.new("Number of lines", "From 2 to 20", config.settings.tome.log_lines, 20, function(qty)
+			qty = util.bound(qty, 2, 20)
+			game:saveSettings("tome.log_lines", ("tome.log_lines = %d\n"):format(qty))
+			config.settings.tome.log_lines = qty
+			game.logdisplay.resizeToLines()
+			profile.chat.resizeToLines()
+			self.c_list:drawItem(item)
+		end, 2))
+	end,}
+
 	self.list = list
 end
