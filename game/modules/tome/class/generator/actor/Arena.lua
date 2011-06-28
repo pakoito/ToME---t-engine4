@@ -136,7 +136,7 @@ function _M:place(m, entry, elite)
 	local place = rng.range(1, entry.max)
 	local x, y = entry[place]()
 	local tries = 0
-	while (not m:canMove(x, y)) and tries < entry.max + 2 do
+	while (not m:canMove(x, y) or game.level.map(x, y, Map.ACTOR)) and tries < entry.max + 2 do
 		x, y = entry[place]()
 		place = rng.range(1, entry.max)
 		tries = tries + 1
