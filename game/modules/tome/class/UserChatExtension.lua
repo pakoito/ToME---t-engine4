@@ -42,6 +42,13 @@ function _M:sendActorLink(m)
 	core.profile.pushOrder(string.format("o='ChatSerialData' channel=%q msg=%q", self.chat.cur_channel, ser))
 end
 
+function _M:sendKillerLink(msg, src)
+	local desc = nil
+	if src.tooltip then desc = tostring(src:tooltip(src.x, src.y, game.player)):removeUIDCodes() end
+	local ser = zlib.compress(table.serialize{kind="killer-link", msg=msg, desc=desc})
+	core.profile.pushOrder(string.format("o='ChatSerialData' channel=%q msg=%q", self.chat.cur_channel, ser))
+end
+
 -- Receive a custom event
 function _M:event(e)
 	if e.se == "SerialData" then
@@ -51,10 +58,10 @@ function _M:event(e)
 		if not data then return end
 		if data.kind == "object-link" then
 			self.chat:addMessage(e.channel, e.login, e.name, "#ANTIQUE_WHITE#has linked an item: #WHITE# "..data.name, {mode="tooltip", tooltip=data.desc})
-			if self.chat.cur_channel == e.channel then game.logChat("#LIGHT_BLUE#%s has linked an item <%s>", e.name, data.name) end
 		elseif data.kind == "actor-link" then
 			self.chat:addMessage(e.channel, e.login, e.name, "#ANTIQUE_WHITE#has linked a creature: #WHITE# "..data.name, {mode="tooltip", tooltip=data.desc})
-			if self.chat.cur_channel == e.channel then game.logChat("#LIGHT_BLUE#%s has linked a creature <%s>", e.name, data.name) end
+		elseif data.kind == "killer-link" then
+			self.chat:addMessage(e.channel, e.login, e.name, "#CRIMSON#"..data.msg.."#WHITE#", data.desc and {mode="tooltip", tooltip=data.desc} or nil)
 		end
 	end
 end

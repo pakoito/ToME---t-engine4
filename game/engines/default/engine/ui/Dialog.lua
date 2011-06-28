@@ -556,7 +556,7 @@ function _M:toScreen(x, y, nb_keyframes)
 		if not ui.hidden then ui.ui:display(x + ui.x, y + ui.y, nb_keyframes, ox + ui.x, oy + ui.y) end
 	end
 
-	self:innerDisplay(x, y, nb_keyframes)
+	self:innerDisplay(x, y, nb_keyframes, tx, ty)
 
 	-- Restiore normal opengl matrix
 	if zoom < 1 then core.display.glScale() end

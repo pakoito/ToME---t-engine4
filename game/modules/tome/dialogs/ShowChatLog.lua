@@ -90,13 +90,30 @@ function _M:mouseEvent(button, x, y, xrel, yrel, bx, by, event)
 
 	if button == "wheelup" and event == "button" then self.key:triggerVirtual("MOVE_UP")
 	elseif button == "wheeldown" and event == "button" then self.key:triggerVirtual("MOVE_DOWN")
+	elseif event == "motion" then
+		if not self.dlist then return end
+		local citem = nil
+		for i = #self.dlist, 1, -1 do
+			local item = self.dlist[i]
+			if item.dh and by >= item.dh then citem = self.dlist[i].src break end
+		end
+		if citem and citem.extra_data and citem.extra_data.mode == "tooltip" then
+			game.tooltip_x, game.tooltip_y = 1, 1
+			game.tooltip:displayAtMap(nil, nil, game.w, game.h, citem.extra_data.tooltip)
+		else
+			game.tooltip_x, game.tooltip_y = nil, nil
+		end
 	end
 end
 
 function _M:loadLog(log)
 	self.lines = {}
 	for i = #log, 1, -1 do
-		self.lines[#self.lines+1] = log[i]
+		if type(log[i]) == "string" then
+			self.lines[#self.lines+1] = {str=log[i]}
+		else
+			self.lines[#self.lines+1] = log[i]
+		end
 	end
 
 	self.max_h = self.ih - self.iy
@@ -117,7 +134,7 @@ function _M:switchTo(ui)
 	if ui.tab_channel == "__log" then
 		self:loadLog(self.log:getLog())
 	else
-		self:loadLog(self.chat:getLog(ui.tab_channel))
+		self:loadLog(self.chat:getLog(ui.tab_channel, true))
 	end
 	-- Set it on the class to persist between invocations
 	_M.last_tab = ui.tab_channel
@@ -135,9 +152,9 @@ function _M:setScroll(i)
 		local stop = false
 		local tstr = self.lines[z]
 		if not tstr then break end
-		local gen = self.font:draw(tstr, self.iw - 10, 255, 255, 255)
+		local gen = self.font:draw(tstr.str, self.iw - 10, 255, 255, 255)
 		for i = 1, #gen do
-			self.dlist[#self.dlist+1] = gen[i]
+			self.dlist[#self.dlist+1] = {d=gen[i], src=self.lines[z].src}
 			nb = nb + 1
 			if nb >= self.max_display then stop = true break end
 		end
@@ -146,12 +163,14 @@ function _M:setScroll(i)
 	self.font:setStyle(old_style)
 end
 
-function _M:innerDisplay(x, y, nb_keyframes)
+function _M:innerDisplay(x, y, nb_keyframes, tx, ty)
 	local h = y + self.iy + self.start_y
 	for i = 1, #self.dlist do
-		local item = self.dlist[i]
+		local item = self.dlist[i].d
 		if self.shadow then item._tex:toScreenFull(x+2, h+2, item.w, item.h, item._tex_w, item._tex_h, 0,0,0, self.shadow) end
 		item._tex:toScreenFull(x, h, item.w, item.h, item._tex_w, item._tex_h)
+		self.dlist[i].dh = h - y
+--		print("<<",i,"::",h + ty)
 		h = h + self.font_h
 	end
 

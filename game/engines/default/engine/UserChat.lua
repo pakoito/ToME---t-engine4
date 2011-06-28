@@ -256,12 +256,16 @@ end
 ----------------------------------------------------------------
 
 --- Returns the full log
-function _M:getLog(channel)
+function _M:getLog(channel, extra)
 	channel = channel or self.cur_channel
 	local log = {}
 	if self.channels[channel] then
 		for _, i in ipairs(self.channels[channel].log) do
-			log[#log+1] = ("<%s> %s"):format(i.name, i.msg)
+			if extra then
+				log[#log+1] = {str=("<%s> %s"):format(i.name, i.msg), src=i}
+			else
+				log[#log+1] = ("<%s> %s"):format(i.name, i.msg)
+			end
 		end
 	end
 	return log
