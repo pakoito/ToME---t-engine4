@@ -55,6 +55,7 @@ newTalent{
 		a.x, a.y = nil, nil
 		a._mo:invalidate()
 		a._mo = nil
+		a:removeTimedEffectsOnClone()
 		if a.can_multiply <= 0 then a:unlearnTalent(t.id) end
 
 		print("[MULTIPLY]", x, y, "::", game.level.map(x,y,Map.ACTOR))

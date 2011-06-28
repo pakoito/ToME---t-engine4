@@ -1317,6 +1317,16 @@ function _M:onTakeHit(value, src)
 	return value
 end
 
+function _M:removeTimedEffectsOnClone()
+	local todel = {}
+	for eff, p in pairs(self.tmp) do
+		if _M.tempeffect_def[eff].remove_on_clone then
+			todel[#todel+1] = eff
+		end
+	end
+	while #todel > 0 do self:removeEffect(table.remove(todel)) end
+end
+
 function _M:resolveSource()
 	if self.summoner_gain_exp and self.summoner then
 		return self.summoner:resolveSource()

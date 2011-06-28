@@ -2794,6 +2794,7 @@ newEffect{
 	long_desc = function(self, eff) return ("%s is fed upon by %s."):format(self.name:capitalize(), eff.src.name) end,
 	type = "mental",
 	status = "detrimental",
+	remove_on_clone = true,
 	parameters = { },
 	activate = function(self, eff)
 	end,
@@ -3721,6 +3722,7 @@ newEffect{
 	type = "physical",
 	status = "detrimental",
 	parameters = {},
+	remove_on_clone = true,
 	on_gain = function(self, err) return "#Target# is grappled!", "+Grappled" end,
 	on_lose = function(self, err) return "#Target# is free from the grapple.", "-Grappled" end,
 	activate = function(self, eff)
