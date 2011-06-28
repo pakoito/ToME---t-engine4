@@ -59,6 +59,7 @@ mouse_cursor = true
 display_fps = 30
 gamma_correction = 120
 mouse_move = true
+chat.filter = {}
 ]]
 for i, file in ipairs(fs.list("/settings/")) do
 	if file:find(".cfg$") then

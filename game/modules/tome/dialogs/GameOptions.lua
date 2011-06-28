@@ -128,15 +128,6 @@ function _M:generateList()
 		self.c_list:drawItem(item)
 	end,}
 
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"If enabled, the chats between players will also appear in the game log, in addition to the normal chat log.#WHITE#"}
-	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Community chat appears in the game log#WHITE##{normal}#", status=function(item)
-		return tostring(config.settings.tome.chat_log and "enabled" or "disabled")
-	end, fct=function(item)
-		config.settings.tome.chat_log = not config.settings.tome.chat_log
-		game:saveSettings("tome.chat_log", ("tome.chat_log = %s\n"):format(tostring(config.settings.tome.chat_log)))
-		self.c_list:drawItem(item)
-	end,}
-
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Select the interface look. Stone is the default one. Simple is basic but takes less screen space.\nYou must restart the game for the change to take effect."}
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Interface Style#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.tome.ui_theme):capitalize()
@@ -195,6 +186,17 @@ function _M:generateList()
 			self.c_list:drawItem(item)
 		end, 2))
 	end,}
+
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Configure the chat filters to select what kind of messages to see.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Chat message filters#WHITE##{normal}#", status=function(item)
+		return "select to configure"
+	end, fct=function(item)
+		game:registerDialog(require("engine.dialogs.ChatFilter").new({
+			{name="Deaths", kind="death"},
+			{name="Object & Creatures links", kind="link"},
+		}))
+	end,}
+
 
 	self.list = list
 end
