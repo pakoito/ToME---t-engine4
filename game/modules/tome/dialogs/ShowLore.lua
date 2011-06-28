@@ -22,6 +22,7 @@ local Dialog = require "engine.ui.Dialog"
 local ListColumns = require "engine.ui.ListColumns"
 local TextzoneList = require "engine.ui.TextzoneList"
 local Separator = require "engine.ui.Separator"
+local Image = require "engine.ui.Image"
 
 module(..., package.seeall, class.inherit(Dialog))
 
@@ -63,7 +64,7 @@ function _M:generateList()
 	local i = 0
 	for id, _ in pairs(self.actor.lore_known) do
 		local l = self.actor:getLore(id)
-		list[#list+1] = { name=l.name, desc=util.getval(l.lore), cat=l.category, order=l.order }
+		list[#list+1] = { name=l.name, desc=util.getval(l.lore), cat=l.category, order=l.order, image=l.image }
 		i = i + 1
 	end
 	-- Add known artifacts
@@ -74,5 +75,24 @@ end
 function _M:select(item)
 	if item then
 		self.c_desc:switchItem(item, ("#GOLD#Category:#AQUAMARINE# %s\n#GOLD#Found as:#0080FF# %s\n#GOLD#Text:#ANTIQUE_WHITE# %s"):format(item.cat, item.name, item.desc))
+		if item.image then
+			if type(item.image) == "string" then
+				self.image = Image.new{file="lore/"..item.image, auto_width=true, auto_height=true}
+				local r = self.image.w / self.image.h
+				self.image.w = self.iw / 2 - 20
+				self.image.h = self.image.w / r
+				item.image = self.image
+			else
+				self.image = item.image
+			end
+		else
+			self.image = nil
+		end
+	end
+end
+
+function _M:innerDisplay(x, y, nb_keyframes)
+	if self.image then
+		self.image:display(x + self.iw - self.image.w, y + self.ih - self.image.h)
 	end
 end

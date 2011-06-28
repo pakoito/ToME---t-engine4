@@ -49,6 +49,7 @@ The Sorcerers seem to have awakened its power.
 		max_positive = 50,
 		max_negative = 50,
 		inc_stats = { [Stats.STAT_MAG] = 10, [Stats.STAT_WIL] = 10 },
+		speaks_shertul = 1,
 	},
 
 	-- This is not a simple artifact, it is a godslayer, show off!

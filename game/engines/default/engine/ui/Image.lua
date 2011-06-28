@@ -32,6 +32,7 @@ function _M:init(t)
 		self.image = Tiles:loadImage(self.file)
 		local iw, ih = 0, 0
 		if self.image then iw, ih = self.image:getSize() end
+		self.iw, self.ih = iw, ih
 		if t.auto_width then t.width = iw end
 		if t.auto_height then t.height = ih end
 	end
@@ -56,5 +57,5 @@ function _M:display(x, y)
 		self.item[1]:toScreenFull(x + 5, y + 5, self.w, self.h, self.item[2], self.item[3], 0, 0, 0, 0.5)
 	end
 
-	self.item[1]:toScreenFull(x, y, self.w, self.h, self.item[2], self.item[3])
+	self.item[1]:toScreenFull(x, y, self.w, self.h, self.item[2] * self.w / self.iw, self.item[3] * self.h / self.ih)
 end
