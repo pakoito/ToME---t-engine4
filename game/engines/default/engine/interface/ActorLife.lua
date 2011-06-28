@@ -61,14 +61,14 @@ end
 -- If HP is reduced to 0 then remove from the level and call the die method.<br/>
 -- When an actor dies its dead property is set to true, to wait until garbage collection deletes it
 -- @return true/false if the actor died and the actual damage done
-function _M:takeHit(value, src)
+function _M:takeHit(value, src, death_note)
 	if self.onTakeHit then value = self:onTakeHit(value, src) end
 	self.life = self.life - value
 	self.changed = true
 	if self.life <= 0 then
 		if src.on_kill and src:on_kill(self) then return false, value end
 		game.logSeen(self, "#{bold}#%s killed %s!#{normal}#", src.name:capitalize(), self.name)
-		return self:die(src), value
+		return self:die(src, death_note), value
 	end
 	return false, value
 end

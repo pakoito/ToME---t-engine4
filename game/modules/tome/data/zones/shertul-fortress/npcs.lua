@@ -23,6 +23,7 @@ local Talents = require("engine.interface.ActorTalents")
 newEntity{ base = "BASE_NPC_HORROR", define_as="WEIRDLING_BEAST",
 	name = "Weirdling Beast", color=colors.VIOLET,
 	desc = "A roughly humanoid creature, with tentacles-like appendages in the place of arms and legs. You gasp in horror as you notice it has no head. Putrid warts form quickly on its skin and explode as quickly.",
+	killer_message = "and slowly consumed",
 	level_range = {19, nil}, exp_worth = 3,
 	rank = 3.5,
 	autolevel = "warriormage",

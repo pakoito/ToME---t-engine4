@@ -26,6 +26,7 @@ newEntity{
 	type = "humanoid", subtype = "human",
 	display = "p", color=colors.UMBER,
 	faction = "zigur",
+	killer_message = "and burned on a pyre",
 
 	combat = { dam=resolvers.rngavg(5,12), atk=2, apr=6, physspeed=2 },
 

@@ -19,10 +19,11 @@
 
 require "engine.class"
 local Dialog = require "engine.ui.Dialog"
+local DamageType = require "engine.DamageType"
 
 module(..., package.seeall, class.make)
 
-function _M:onPartyDeath(src)
+function _M:onPartyDeath(src, death_note)
 	if self.dead then return true end
 
 	-- Remove from the party if needed
@@ -56,8 +57,37 @@ function _M:onPartyDeath(src)
 			game:registerDialog(dialog)
 		end
 		game.player:saveUUID()
-		if not game.player.easy_mode_lifes or game.player.easy_mode_lifes <= 0 then
-			profile.chat:talk(("%s has died a painful death to %s."):format(self.name:capitalize(), src and src.name or "<unknown>"))
+
+		local death_mean = nil
+		if death_note and death_note.damtype then
+			local dt = DamageType:get(death_note.damtype)
+			if dt and dt.death_message then death_mean = rng.table(dt.death_message) end
 		end
+
+		local top_killer = nil
+		if profile.mod.deaths then
+			local l = {}
+			for _, names in pairs(profile.mod.deaths.sources or {}) do
+				for name, nb in pairs(names) do l[name] = (l[name] or 0) + nb end
+			end
+			l = table.listify(l)
+			if #l > 0 then
+				table.sort(l, function(a,b) return a[2] > b[2] end)
+				top_killer = l[1][1]
+			end
+		end
+
+		local msg = "%s the %d %s %s was %s to death by %s%s%s on level %s of %s."
+		msg = msg:format(
+			game.player.name, game.player.level, game.player.descriptor.subrace:lower(), game.player.descriptor.subclass:lower(),
+			death_mean or "battered",
+			src.unique and src.name or src.name:a_an(),
+			src.name == top_killer and " (yet again)" or "",
+			src.killer_message and " "..src.killer_message or "",
+			game.level.level, game.zone.name
+		)
+
+		game.log("#{bold}#"..msg.."#{normal}#")
+		if not game.player.easy_mode_lifes or game.player.easy_mode_lifes <= 0 then profile.chat:talk(msg) end
 	end
 end

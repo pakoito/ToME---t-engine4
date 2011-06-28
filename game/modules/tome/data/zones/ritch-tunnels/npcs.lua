@@ -30,6 +30,7 @@ newEntity{
 	display = "I", color=colors.RED,
 	desc = [[Ritchs are giant insects native to the arid wastes of the southern parts of the Far East.
 Vicious predators, they inject corrupting diseases into their foes, and their sharp claws cut through most armours.]],
+	killer_message = ", who incubated her eggs in the corpse,",
 
 	combat = { dam=resolvers.rngavg(10,32), atk=9, apr=4, damtype=DamageType.BLIGHT, dammod={dex=1.2} },
 

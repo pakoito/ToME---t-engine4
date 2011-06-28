@@ -428,11 +428,11 @@ function _M:heal(value, src)
 	mod.class.Actor.heal(self, value, src)
 end
 
-function _M:die(src)
+function _M:die(src, death_note)
 	self:runStop("died")
 	self:restStop("died")
 
-	return self:onPartyDeath(src)
+	return self:onPartyDeath(src, death_note)
 end
 
 --- Suffocate a bit, lose air

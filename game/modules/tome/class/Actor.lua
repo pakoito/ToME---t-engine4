@@ -404,7 +404,7 @@ function _M:act()
 
 	if self.never_act then return false end
 
-	self:automaticTalents()
+	if not game.zone.wilderness then self:automaticTalents() end
 
 	-- Compute bonuses based on actors in FOV
 	if self:knowTalent(self.T_MILITANT_MIND) and not self:hasEffect(self.EFF_MILITANT_MIND) then

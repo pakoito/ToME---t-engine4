@@ -149,7 +149,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		print("[PROJECTOR] final dam", dam)
 
 		local dead
-		dead, dam = target:takeHit(dam, src)
+		dead, dam = target:takeHit(dam, src, {damtype=type})
 
 		-- Log damage for later
 		if not DamageType:get(type).hideMessage then
@@ -219,12 +219,14 @@ end
 
 newDamageType{
 	name = "physical", type = "PHYSICAL",
+	death_message = {"battered", "bludgeoned", "sliced", "maimed", "raked", "bled", "impaled", "dissected", "disembowelled", "decapitated", "stabbed", "pierced", "torn limb from limb", "crushed", "shattered", "smashed", "cleaved", "swiped", "struck", "mutilated", "tortured"},
 }
 
 -- Arcane is basic (usually) unresistable damage
 newDamageType{
 	name = "arcane", type = "ARCANE", text_color = "#PURPLE#",
 	antimagic_resolve = true,
+	death_message = {"blasted", "energised", "mana-torn", "dweomered", "imploded"},
 }
 -- The elemental damages
 newDamageType{
@@ -240,6 +242,7 @@ newDamageType{
 		end
 		return realdam
 	end,
+	death_message = {"burnt", "scorched", "blazed", "roasted", "flamed", "fried", "combusted", "toasted", "slowly cooked", "boiled"},
 }
 newDamageType{
 	name = "cold", type = "COLD", text_color = "#1133F3#",
@@ -251,6 +254,7 @@ newDamageType{
 		end
 		return realdam
 	end,
+	death_message = {"frozen", "chilled", "iced", "cooled"},
 }
 newDamageType{
 	name = "lightning", type = "LIGHTNING", text_color = "#ROYAL_BLUE#",
@@ -259,6 +263,7 @@ newDamageType{
 		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
 		return realdam
 	end,
+	death_message = {"electrocuted", "shocked", "bolted", "volted", "amped"},
 }
 -- Acid destroys potions
 newDamageType{
@@ -268,12 +273,14 @@ newDamageType{
 		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
 		return realdam
 	end,
+	death_message = {"dissolved", "corroded", "scalded", "melted"},
 }
 
 -- Nature & Blight: Opposing damage types
 newDamageType{
 	name = "nature", type = "NATURE", text_color = "#LIGHT_GREEN#",
 	antimagic_resolve = true,
+	death_message = {"slimed"},
 }
 newDamageType{
 	name = "blight", type = "BLIGHT", text_color = "#DARK_GREEN#",
@@ -291,18 +298,21 @@ newDamageType{
 		end
 		return realdam
 	end,
+	death_message = {"diseased", "poxed", "infected", "plagued", "debilitated by noxious blight before falling", "fouled"},
 }
 
 -- Light damage
 newDamageType{
 	name = "light", type = "LIGHT", text_color = "#YELLOW#",
 	antimagic_resolve = true,
+	death_message = {"shadowed", "darkened"},
 }
 
 -- Darkness damage
 newDamageType{
 	name = "darkness", type = "DARKNESS", text_color = "#DARK_GREY#",
 	antimagic_resolve = true,
+	death_message = {"shadowed", "darkened"},
 }
 
 -- Mind damage
@@ -321,6 +331,14 @@ newDamageType{
 			end
 		end
 	end,
+	death_message = {"psyched", "mentally tortured", "mindraped"},
+}
+
+-- Temporal damage
+newDamageType{
+	name = "temporal", type = "TEMPORAL", text_color = "#LIGHT_STEEL_BLUE#",
+	antimagic_resolve = true,
+	death_message = {"timewarped", "temporally distorted"},
 }
 
 -- Lite up the room
@@ -1139,12 +1157,6 @@ newDamageType{
 			target:setEffect(target.EFF_CUT, 5, {src=src, power=dam / 11})
 		end
 	end,
-}
-
--- Chronomancy damage types
-newDamageType{
-	name = "temporal", type = "TEMPORAL", text_color = "#LIGHT_STEEL_BLUE#",
-	antimagic_resolve = true,
 }
 
 -- Temporal/Physical damage
