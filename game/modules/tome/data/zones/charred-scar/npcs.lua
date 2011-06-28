@@ -271,6 +271,7 @@ newEntity{ base = "BASE_NPC_FAEROS", define_as = "FYRK",
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/elemental_fire_fyrk__faeros_high_guard.png", display_h=2, display_y=-1}}},
 	desc = [[Faeros are highly intelligent fire elementals, rarely seen outside volcanoes. They are probably not native to this world.
 This one looks even nastier and looks toward you with what seems to be disdain. Flames swirl all around him.]],
+	killer_message = "and a sole piece of char was sent to his masters as a totem",
 	level_range = {35, nil}, exp_worth = 2,
 	rank = 5,
 	max_life = resolvers.rngavg(800,900), life_rating = 20, fixed_rating = true,

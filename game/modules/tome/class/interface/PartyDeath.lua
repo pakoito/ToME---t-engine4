@@ -83,14 +83,13 @@ function _M:onPartyDeath(src, death_note)
 			death_mean or "battered",
 			src.unique and src.name or src.name:a_an(),
 			src.name == top_killer and " (yet again)" or "",
-			src.killer_message and " "..src.killer_message or "",
+			(src.killer_message and " "..src.killer_message or ""):gsub("#sex#", game.player.female and "her" or "him"),
 			game.level.level, game.zone.name
 		)
 
 		game.log("#{bold}#"..msg.."#{normal}#")
 		if not game.player.easy_mode_lifes or game.player.easy_mode_lifes <= 0 then
 			profile.chat.uc_ext:sendKillerLink(msg, src)
---		profile.chat:talk(msg)
 		end
 	end
 end

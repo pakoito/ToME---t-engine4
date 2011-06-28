@@ -27,6 +27,7 @@ local Talents = require("engine.interface.ActorTalents")
 newEntity{ base="BASE_NPC_ORC_RAK_SHOR", define_as = "CULTIST_RAK_SHOR",
 	name = "Rak'Shor Cultist", color=colors.VIOLET, unique = true,
 	desc = [[An old orc, wearing black robes. He seems to be responsible for the creation of the shades.]],
+	killer_message = "but nobody knew why #sex# suddenly became evil",
 	level_range = {35, nil}, exp_worth = 2,
 	rank = 4,
 	max_life = 150, life_rating = 17, fixed_rating = true,
@@ -80,6 +81,7 @@ newEntity{ base="BASE_NPC_ORC_RAK_SHOR", define_as = "CULTIST_RAK_SHOR",
 			a.player = nil
 			a.rank = 4
 			a.name = "Doomed Shade of "..a.name
+			a.killer_message = "but nobody knew why #sex# suddenly became evil"
 			a.color_r = 150 a.color_g = 150 a.color_b = 150
 			a._mo:invalidate()
 			a.ai = "tactical"
