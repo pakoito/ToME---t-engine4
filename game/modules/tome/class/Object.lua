@@ -533,7 +533,7 @@ function _M:getTextualDesc(compare_with)
 				local _, _, t, st = type:find("^([^/]+)/?(.*)$")
 				local esp = ""
 				if st and st ~= "" then
-					esp = st:capitalize()
+					esp = t:capitalize().."/"..st:capitalize()
 				else
 					esp = t:capitalize()
 				end
@@ -553,7 +553,7 @@ function _M:getTextualDesc(compare_with)
 		for type, i in pairs(w.esp or {}) do
 			local _, _, t, st = type:find("^([^/]+)/?(.*)$")
 			if st and st ~= "" then
-				esps[#esps+1] = st:capitalize()
+				esps[#esps+1] = t:capitalize().."/"..st:capitalize()
 			else
 				esps[#esps+1] = t:capitalize()
 			end
