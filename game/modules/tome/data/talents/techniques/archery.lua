@@ -75,6 +75,7 @@ newTalent{
 	sustain_stamina = 20,
 	no_energy = true,
 	tactical = { BUFF = 2 },
+	no_npc_use = true,
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	activate = function(self, t)
 		local weapon = self:hasArcheryWeapon()

@@ -86,9 +86,9 @@ newTalent{
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		-- Temporarily turn on "friendlyfire" to lite all tiles
-		tg.friendlyfire = true
+		tg.selffire = true
 		self:project(tg, self.x, self.y, DamageType.LITE, 1)
-		tg.friendlyfire = false
+		tg.selffire = false
 		local grids = self:project(tg, self.x, self.y, DamageType.BLIND, t.getDuration(self, t))
 		if self:getTalentLevel(t) >= 3 then
 			self:project(tg, self.x, self.y, DamageType.LIGHT, t.getDamage(self, t))

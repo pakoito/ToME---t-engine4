@@ -281,6 +281,7 @@ newTalent{
 	cooldown = 60,
 	sustain_stamina = 90,
 	tactical = { DEFEND = 3 },
+	no_npc_use = true,
 	on_pre_use = function(self, t, silent) if not self:hasShield() then if not silent then game.logPlayer(self, "You require a weapon and a shield to use this talent.") end return false end return true end,
 	activate = function(self, t)
 		local shield = self:hasShield()
