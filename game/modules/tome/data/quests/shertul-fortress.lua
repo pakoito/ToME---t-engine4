@@ -45,6 +45,13 @@ desc = function(self, who)
 			desc[#desc+1] = "The fortress shadow has asked that you come back as soon as possible."
 		end
 	end
+	if self:isCompleted("flight") then
+		if self:isCompleted("flight-done") then
+			desc[#desc+1] = "You have re-enabled the Fortress flight systems, you can now fly around in your fortress!"
+		else
+			desc[#desc+1] = "The fortress shadow has asked that you find an Ancient Storm Saphir, along with at least 250 energy, to re-enable the Fortress flight systems."
+		end
+	end
 	if self.shertul_energy > 0 then
 		desc[#desc+1] = ("The Fortress current energy level is: %d."):format(self.shertul_energy)
 	end
@@ -88,6 +95,12 @@ gain_energy = function(self, energy)
 		game.player:setQuestStatus(self.id, self.COMPLETED, "farportal")
 		local Dialog = require "engine.ui.Dialog"
 		Dialog:simpleLongPopup("Fortress Shadow", "Master, you have sent enough energy to activate the exploratory farportal.\nHowever there seems to be a disturbance in that room, please return as soon as possible.", 400)
+	end
+
+	if self.shertul_energy >= 250 and not self:isCompleted("flight") then
+		game.player:setQuestStatus(self.id, self.COMPLETED, "flight")
+		local Dialog = require "engine.ui.Dialog"
+		Dialog:simpleLongPopup("Fortress Shadow", "Master, you have sent enough energy to activate the flight systems.\nHowever one control crystal is broken, you need to find a #GOLD#Ancient Storm Saphir#WHITE#.", 400)
 	end
 end
 

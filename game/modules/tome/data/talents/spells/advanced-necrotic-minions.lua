@@ -185,7 +185,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[]]):
+		return ([[
+		bone shield ?
+		]]):
 		format()
 	end,
 }

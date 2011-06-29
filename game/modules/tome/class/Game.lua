@@ -971,15 +971,7 @@ function _M:setupCommands()
 --]]
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			game.player:learnLore("shertul-fortress-9")
-			game.player:learnLore("shertul-fortress-8")
-			game.player:learnLore("shertul-fortress-7")
-			game.player:learnLore("shertul-fortress-6")
-			game.player:learnLore("shertul-fortress-5")
-			game.player:learnLore("shertul-fortress-4")
-			game.player:learnLore("shertul-fortress-3")
-			game.player:learnLore("shertul-fortress-2")
-			game.player:learnLore("shertul-fortress-1")
+			game.player:setEffect(game.player.EFF_BONE_SHIELD, 30, {nb=3})
 --			self.state:debugRandomZone()
 --			local m = game.zone:makeEntity(game.level, "actor", {random_boss=true}, nil, true)
 --			if m then game.zone:addEntity(game.level, m, "actor", game.player.x, game.player.y + 1) end

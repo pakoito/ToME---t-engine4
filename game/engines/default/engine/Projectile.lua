@@ -63,7 +63,16 @@ function _M:move(x, y, force)
 	map(x, y, Map.PROJECTILE, self)
 
 	if self.travel_particle then
-		self:addParticles(Particles.new(self.travel_particle, 1, nil))
+		if self.project then
+			local args = table.clone(self.travel_particle_args or {})
+			args.src_x = self.old_x
+			args.src_y = self.old_y
+			args.proj_x = self.project.def.x
+			args.proj_y = self.project.def.y
+			self:addParticles(Particles.new(self.travel_particle, 1, args))
+		else
+			self:addParticles(Particles.new(self.travel_particle, 1, self.travel_particle_args))
+		end
 		self.travel_particle = nil
 	end
 	if self.trail_particle then
@@ -232,6 +241,7 @@ function _M:makeProject(src, display, def, do_move, do_act, do_stop)
 		name = name,
 		display = display.display or ' ', color = display.color or colors.WHITE, image = display.image or nil,
 		travel_particle = display.particle,
+		travel_particle_args = display.particle_args,
 		trail_particle = display.trail,
 		src = src,
 		src_x = src.x, src_y = src.y,
@@ -255,6 +265,7 @@ function _M:makeHoming(src, display, def, target, count, on_move, on_hit)
 		name = name,
 		display = display.display or ' ', color = display.color or colors.WHITE, image = display.image or nil,
 		travel_particle = display.particle,
+		travel_particle_args = display.particle_args,
 		trail_particle = display.trail,
 		src = src,
 		def = def,
