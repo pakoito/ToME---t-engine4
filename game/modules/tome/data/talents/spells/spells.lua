@@ -225,3 +225,4 @@ load("/data/talents/spells/arcane-shield.lua")
 
 load("/data/talents/spells/necrotic-minions.lua")
 load("/data/talents/spells/advanced-necrotic-minions.lua")
+load("/data/talents/spells/nightfall.lua")

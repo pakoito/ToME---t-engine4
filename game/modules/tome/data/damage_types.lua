@@ -508,6 +508,17 @@ newDamageType{
 	end,
 }
 
+-- Darkness but not over minions
+newDamageType{
+	name = "minions darkness", type = "MINION_DARKNESS",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and (not target.necrotic_minion or target.summoner ~= src) then
+			DamageType:get(DamageType.DARKNESS).projector(src, x, y, DamageType.DARKNESS, dam)
+		end
+	end,
+}
+
 -- Cold + Stun
 newDamageType{
 	name = "coldstun", type = "COLDSTUN",
