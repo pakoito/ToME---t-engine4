@@ -27,6 +27,7 @@ You do not understand the inscriptions there.#WHITE#*
 Rokzz krilt copru.]],
 	answers = {
 		{"[Examine the orb]", jump="examine", cond=has_rod},
+		{"[Fly the fortress]", action=function(npc, player) player:hasQuest("shertul-fortress"):fly() end},
 		{"[Leave the orb alone]"},
 	}
 }

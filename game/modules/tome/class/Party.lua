@@ -57,7 +57,9 @@ function _M:addMember(actor, def)
 	end
 
 	-- Turn NPCs into party members
-	actor:replaceWith(require("mod.class.PartyMember").new(actor))
+	if not actor.no_party_class then
+		actor:replaceWith(require("mod.class.PartyMember").new(actor))
+	end
 
 	-- Notify the UI
 	if game.player then game.player.changed = true end
@@ -82,6 +84,23 @@ function _M:removeMember(actor, silent)
 
 	-- Notify the UI
 	game.player.changed = true
+end
+
+function _M:leftLevel()
+	local todel = {}
+	local newplayer = false
+	for i, actor in ipairs(self.m_list) do
+		local def = self.members[actor]
+		if def.temporary_level then
+			todel[#todel+1] = actor
+			if actor == game.player then newplayer = true end
+		end
+	end
+	for i = 1, #todel do
+		self:removeMember(todel[i])
+		todel[i]:disappear()
+	end
+	self:findSuitablePlayer()
 end
 
 function _M:hasMember(actor)
@@ -122,6 +141,10 @@ function _M:canControl(actor, vocal)
 	if not actor then return false end
 	if actor == game.player then return false end
 
+	if game.player and game.player.no_leave_control then
+--		print("[PARTY] error trying to set player but current player is modal")
+		return false
+	end
 	if not self.members[actor] then
 --		print("[PARTY] error trying to set player, not a member of party: ", actor.uid, actor.name)
 		return false
@@ -153,7 +176,7 @@ function _M:setPlayer(actor, bypass)
 	self.player = actor
 
 	-- Convert the class to always be a player
-	if actor.__CLASSNAME ~= "mod.class.Player" then
+	if actor.__CLASSNAME ~= "mod.class.Player" and not actor.no_party_class then
 		actor.__PREVIOUS_CLASSNAME = actor.__CLASSNAME
 		actor:replaceWith(mod.class.Player.new(actor))
 		actor.changed = true

@@ -149,3 +149,14 @@ upgrade_rod = function(self)
 	rod.shertul_fortress = true
 	game.log("#VIOLET#Your rod of recall glows brightly for a moment.")
 end
+
+fly = function(self)
+	local f = require("mod.class.FortressPC").new{}
+	game:changeLevel(1, "wilderness")
+	game.party:addMember(f, {temporary_level=1, control="full"})
+	f.x = game.player.x
+	f.y = game.player.y
+	game.party:setPlayer(f, true)
+	game.level:addEntity(f)
+	f:move(f.x, f.y, true)
+end

@@ -492,6 +492,8 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 		return
 	end
 
+	if self.zone and self.level then self.party:leftLevel() end
+
 	if game.player:isTalentActive(game.player.T_JUMPGATE) then
 		game.player:forceUseTalent(game.player.T_JUMPGATE, {ignore_energy=true})
 	end
@@ -971,12 +973,12 @@ function _M:setupCommands()
 --]]
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			game.player:setEffect(game.player.EFF_BONE_SHIELD, 30, {nb=3})
+--			game.player:setEffect(game.player.EFF_BONE_SHIELD, 30, {nb=3})
 --			self.state:debugRandomZone()
 --			local m = game.zone:makeEntity(game.level, "actor", {random_boss=true}, nil, true)
 --			if m then game.zone:addEntity(game.level, m, "actor", game.player.x, game.player.y + 1) end
 --			self:changeLevel(1, "test")
---			self.level.map:particleEmitter(game.player.x, game.player.y, 1, "eagle")
+			self.level.map:particleEmitter(game.player.x, game.player.y, 1, "flame")
 		end end,
 	}
 
