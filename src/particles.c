@@ -82,6 +82,7 @@ static int particles_new(lua_State *L)
 	const char *args = luaL_checkstring(L, 2);
 	// float zoom = luaL_checknumber(L, 3);
 	int density = luaL_checknumber(L, 4);
+	GLuint *texture = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 5);
 
 	particles_type *ps = (particles_type*)lua_newuserdata(L, sizeof(particles_type));
 	auxiliar_setclass(L, "core{particles}", -1);
@@ -98,6 +99,7 @@ static int particles_new(lua_State *L)
 	ps->colors = NULL;
 	ps->particles = NULL;
 	ps->init = FALSE;
+	ps->texture = *texture;
 
 	thread_add(ps);
 	return 1;
@@ -147,35 +149,6 @@ static int particles_die(lua_State *L)
 	return 1;
 }
 
-// Load a texture for the particle system; runs in the main thread
-extern void make_texture_for_surface(SDL_Surface *s, int *fw, int *fh);
-extern void copy_surface_to_texture(SDL_Surface *s);
-GLuint particle_load_texture(const char *file)
-{
-	char path[512];
-	char *base = "/data/gfx/";
-	strcpy(path, base);
-	strcpy(path + strlen(base), file);
-	strcpy(path + strlen(base) + strlen(file), ".png");
-
-	SDL_Surface *s = IMG_Load_RW(PHYSFSRWOPS_openRead(path), TRUE);
-	if (!s) return 0;
-
-	GLuint t = 0;
-	glGenTextures(1, &t);
-	tglBindTexture(GL_TEXTURE_2D, t);
-
-	int fw, fh;
-	make_texture_for_surface(s, &fw, &fh);
-	copy_surface_to_texture(s);
-
-	SDL_FreeSurface(s);
-
-	printf("Loaded texture for particles: %s => %d\n", path, t);
-
-	return t;
-}
-
 // Runs into main thread
 static int particles_to_screen(lua_State *L)
 {
@@ -191,30 +164,8 @@ static int particles_to_screen(lua_State *L)
 
 	SDL_mutexP(ps->lock);
 
-	// Load the texture the first time
-	if (ps->texture_name)
-	{
-		lua_rawgeti(L, LUA_REGISTRYINDEX, textures_ref);
-		lua_pushstring(L, ps->texture_name);
-		lua_gettable(L, -2);
-
-		if (lua_isnumber(L, -1)) // Use an existing texture
-		{
-			ps->texture = lua_tonumber(L, -1);
-			lua_pop(L, 1);
-		}
-		else // Load a new texture
-		{
-			lua_pop(L, 1);
-			ps->texture = particle_load_texture(ps->texture_name);
-			lua_pushstring(L, ps->texture_name);
-			lua_pushnumber(L, ps->texture);
-			lua_settable(L, -3);
-			free((char*)ps->texture_name);
-			ps->texture_name = NULL;
-		}
-		lua_pop(L, 1);
-	}
+	// No texture? abord
+	if (!ps->texture) return 0;
 
 	glBindTexture(GL_TEXTURE_2D, ps->texture);
 	glTexCoordPointer(2, GL_SHORT, 0, texcoords);
@@ -650,11 +601,6 @@ void thread_particle_init(particle_thread *pt, plist *l)
 	ps->colors = calloc(4*4*batch, sizeof(GLfloat)); // 4 color data, 4 vertices per particles
 	ps->texcoords = calloc(2*4*batch, sizeof(GLshort));
 	ps->particles = calloc(nb, sizeof(particle_type));
-
-	if (lua_isstring(L, 4))
-		ps->texture_name = strdup(lua_tostring(L, 4));
-	else
-		ps->texture_name = strdup("particle");
 
 	// Locate the updator
 	lua_pushvalue(L, 2);

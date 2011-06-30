@@ -44,7 +44,6 @@ typedef struct {
 	// W by main, R by thread
 	const char *name_def;
 	const char *args;
-	const char *texture_name;
 	float zoom;
 
 	// R/W only by thread
