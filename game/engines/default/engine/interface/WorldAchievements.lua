@@ -131,7 +131,7 @@ function _M:gainAchievement(id, src, ...)
 	self:gainPersonalAchievement(true, id, src, ...)
 
 	self.achieved[id] = {turn=game.turn, who=self:achievementWho(src), when=os.date("%Y-%m-%d %H:%M:%S")}
-	profile:saveModuleProfile("achievement."..id, self.achieved[id])
+	profile:saveModuleProfile("achievements", {id=id, turn=game.turn, who=self:achievementWho(src), gained_on=os.date("%Y-%m-%d %H:%M:%S")})
 	game.log("#LIGHT_GREEN#New Achievement: %s!", a.name)
 	self:showAchievement("New Achievement: #LIGHT_GREEN#"..a.name, a)
 	profile.chat:achievement(a.name)

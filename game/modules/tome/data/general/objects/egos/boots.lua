@@ -223,7 +223,6 @@ newEntity{
 	rarity = 35,
 	cost = 80,
 	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_DISENGAGE, level = 2, power = 80 },
 	wielder = {
 		resists={
 			[DamageType.NATURE] = resolvers.mbonus_material(20, 10, function(e, v) return 0, -v end),
@@ -234,7 +233,7 @@ newEntity{
 		},
 		pin_immune = resolvers.mbonus_material(50, 40, function(e, v) v=v/100 return 0, v end),
 		combat_spellpower = resolvers.mbonus_material(7, 3),
-	},	
+	},
 }
 
 newEntity{
@@ -251,7 +250,7 @@ newEntity{
 		blind_immune = resolvers.mbonus_material(15, 5, function(e, v) v=v/100 return 0, v end),
 		confusion_immune = resolvers.mbonus_material(15, 5, function(e, v) v=v/100 return 0, v end),
 		disease_immune = resolvers.mbonus_material(15, 5, function(e, v) v=v/100 return 0, v end),
-	},	
+	},
 }
 
 newEntity{
@@ -269,7 +268,7 @@ newEntity{
 			[DamageType.COLD] = resolvers.mbonus_material(10, 5),
 		},
 		combat_armor = resolvers.mbonus_material(7, 3),
-	},	
+	},
 }
 
 newEntity{
@@ -283,7 +282,7 @@ newEntity{
 		max_mana = resolvers.mbonus_material(40, 20),
 		mana_regen = resolvers.mbonus_material(50, 10, function(e, v) v=v/100 return 0, v end),
 		combat_spellcrit = resolvers.mbonus_material(4, 1),
-	},	
+	},
 }
 
 newEntity{
@@ -300,7 +299,7 @@ newEntity{
 		stun_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
 		pin_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
 		confusion_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
-	},	
+	},
 }
 
 newEntity{
@@ -320,7 +319,7 @@ newEntity{
 		pin_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
 		poison_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, -v end),
 		disease_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, -v end),
-	},	
+	},
 }
 
 newEntity{
@@ -334,7 +333,7 @@ newEntity{
 		resource_leech_chance = resolvers.mbonus_material(10, 5),
 		resource_leech_value = resolvers.mbonus_material(1, 1),
 		max_life = resolvers.mbonus_material(70, 40, function(e, v) return 0, -v end),
-	},	
+	},
 }
 
 newEntity{
@@ -348,10 +347,10 @@ newEntity{
 		disarm_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
 		combat_physcrit = resolvers.mbonus_material(4, 1),
 		combat_dam = resolvers.mbonus_material(3, 3),
-		resists_pen = { 
+		resists_pen = {
 			[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 5),
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -367,7 +366,7 @@ newEntity{
 		inc_stats = {
 			[Stats.STAT_MAG] = resolvers.mbonus_material(5, 1),
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -383,5 +382,5 @@ newEntity{
 		combat_mentalresist = resolvers.mbonus_material(7, 1),
 		combat_physresist = resolvers.mbonus_material(7, 1),
 		combat_spellresist = resolvers.mbonus_material(7, 1),
-	},	
+	},
 }

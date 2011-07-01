@@ -30,7 +30,7 @@ end
 
 function _M:connected()
 	if self.sock then return true end
-	self.sock = socket.connect("te4.org", 2257)
+	self.sock = socket.connect("te4.org", 2259)
 	if not self.sock then return false end
 --	self.sock:settimeout(10)
 	print("[PROFILE] Thread connected to te4.org")
@@ -43,7 +43,7 @@ end
 --- Connects the second tcp channel to receive data
 function _M:connectedPull()
 	if self.psock then return true end
-	self.psock = socket.connect("te4.org", 2258)
+	self.psock = socket.connect("te4.org", 2260)
 	if not self.psock then return false end
 --	self.psock:settimeout(10)
 	print("[PROFILE] Pull socket connected to te4.org")
@@ -256,21 +256,43 @@ end
 
 function _M:orderGetConfigs(o)
 	if not self.auth then return end
-	self:command("GCFS", o.module)
+	self:command("CGET", o.module, o.kind)
 	if self:read("200") then
 		local _, _, size = self.last_line:find("^([0-9]+)")
 		size = tonumber(size)
 		if not size or size < 1 then return end
 		local body = self:receive(size)
-		cprofile.pushEvent(string.format("e='GetConfigs' module=%q data=%q", o.module, body))
+		cprofile.pushEvent(string.format("e='GetConfigs' module=%q kind=%q data=%q", o.module, o.kind, body))
+	end
+end
+
+function _M:orderSetConfigsBatch(o)
+	if not o.v then
+		if not self.setConfigsBatching then return end
+		self.setConfigsBatchingLevel = self.setConfigsBatchingLevel - 1
+		if self.setConfigsBatchingLevel > 0 then return end
+
+		print("[PROFILE THREAD] flushing CSETs")
+
+		local data = zlib.compress(table.serialize(self.setConfigsBatching))
+		self:command("FSET", data:len())
+		if self:read("200") then self.sock:send(data) end
+
+		self.setConfigsBatching = nil
+	else
+		print("[PROFILE THREAD] batching CSETs")
+		self.setConfigsBatching = self.setConfigsBatching or {}
+		self.setConfigsBatchingLevel = (self.setConfigsBatchingLevel or 0) + 1
 	end
 end
 
 function _M:orderSetConfigs(o)
 	if not self.auth then return end
-	self:command("SCFS", o.data:len(), o.module)
-	if self:read("200") then
-		self.sock:send(o.data)
+	if self.setConfigsBatching then
+		self.setConfigsBatching[#self.setConfigsBatching+1] = o
+	else
+		self:command("CSET", o.data:len(), o.module, o.kind)
+		if self:read("200") then self.sock:send(o.data) end
 	end
 end
 

@@ -28,53 +28,34 @@ end
 function _M:registerDeath(src)
 	local pid = self:playerStatGetCharacterIdentifier(game.party:findMember{main=true})
 	local name = src.name
-
-	profile.mod.deaths = profile.mod.deaths or {}
-	profile.mod.deaths.count = (profile.mod.deaths.count or 0) + 1
-
-	profile.mod.deaths.sources = profile.mod.deaths.sources or {}
-	profile.mod.deaths.sources[pid] = profile.mod.deaths.sources[pid] or {}
-	profile.mod.deaths.sources[pid][name] = (profile.mod.deaths.sources[pid][name] or 0) + 1
-	profile:saveModuleProfile("deaths", profile.mod.deaths)
+	profile:saveModuleProfile("deaths", {source=name, cid=pid, nb={"inc",1}})
 end
 
 function _M:registerUniqueKilled(who)
 	local pid = self:playerStatGetCharacterIdentifier(game.party:findMember{main=true})
 
-	profile.mod.uniques = profile.mod.uniques or { uniques={} }
-	profile.mod.uniques.uniques[who.name] = profile.mod.uniques.uniques[who.name] or {}
-	profile.mod.uniques.uniques[who.name][pid] = (profile.mod.uniques.uniques[who.name][pid] or 0) + 1
-	profile:saveModuleProfile("uniques", profile.mod.uniques)
+	profile:saveModuleProfile("uniques", {victim=who.name, cid=pid, nb={"inc",1}})
 end
 
 function _M:registerArtifactsPicked(what)
 	if what.stat_picked_up then return end
 	what.stat_picked_up = true
 	local pid = self:playerStatGetCharacterIdentifier(game.party:findMember{main=true})
-	local name = what:getName{do_color=false, do_count=false, force_id=true}
+	local name = what:getName{do_color=false, do_count=false, force_id=true, no_add_name=true}
 
-	profile.mod.artifacts = profile.mod.artifacts or { artifacts={} }
-	profile.mod.artifacts.artifacts[name] = profile.mod.artifacts.artifacts[name] or {}
-	profile.mod.artifacts.artifacts[name][pid] = (profile.mod.artifacts.artifacts[name][pid] or 0) + 1
-	profile:saveModuleProfile("artifacts", profile.mod.artifacts)
+	profile:saveModuleProfile("artifacts", {name=name, cid=pid, nb={"inc",1}})
 end
 
 function _M:registerCharacterPlayed()
 	local pid = self:playerStatGetCharacterIdentifier(game.party:findMember{main=true})
 
-	profile.mod.characters = profile.mod.characters or { characters={} }
-	profile.mod.characters.characters[pid] = (profile.mod.characters.characters[pid] or 0) + 1
-	profile:saveModuleProfile("characters", profile.mod.characters)
+	profile:saveModuleProfile("characters", {cid=pid, nb={"inc",1}})
 end
 
 function _M:registerLoreFound(lore)
-	profile.mod.lore = profile.mod.lore or { lore={} }
-	profile.mod.lore.lore[lore] = true
-	profile:saveModuleProfile("lore", profile.mod.lore)
+	profile:saveModuleProfile("lore", {name=lore, nb={"inc",1}})
 end
 
 function _M:registerEscorts(status)
-	profile.mod.escorts = profile.mod.escorts or { saved=0, lost=0, betrayed=0, zigur=0 }
-	profile.mod.escorts[status] = profile.mod.escorts[status] + 1
-	profile:saveModuleProfile("escorts", profile.mod.escorts)
+	profile:saveModuleProfile("escorts", {fate=status, nb={"inc",1}})
 end

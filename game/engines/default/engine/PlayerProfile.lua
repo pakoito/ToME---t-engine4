@@ -83,7 +83,7 @@ function _M:init()
 	{
 		[checkstats]     = { invalid = { read={online=true}, write="online" }, valid = { read={online=true}, write="online" } },
 		["^allow_build$"] = { invalid = { read={offline=true,online=true}, write="offline" }, valid = { read={offline=true,online=true}, write="online" } },
-		["^achievement%..*$"] = { invalid = { read={offline=true,online=true}, write="offline" }, valid = { read={online=true}, write="online" } },
+		["^achievements$"] = { invalid = { read={offline=true,online=true}, write="offline" }, valid = { read={online=true}, write="online" } },
 	}
 
 	self.auth = false
@@ -130,6 +130,14 @@ function _M:umountProfile(online, pop)
 
 	if pop then fs.setWritePath(pop) end
 end
+
+-- Define the fields that are sync'ed online, and how they are sync'ed
+local generic_profile_defs = {
+	firstrun = {nosync=true, {firstrun="number"}, receive=function(data, save) save.firstrun = data.firstrun end },
+	online = {nosync=true, {login="string:40", pass="string:40"}, receive=function(data, save) save.login = data.login save.pass = data.pass end },
+	modules_played = { {name="index:string:30"}, {time_played="number"}, receive=function(data, save) max_set(save, data.name, data, "time_played") end, export=function(env) for k, v in pairs(env) do add{name=k, time_played=v} end end },
+	modules_loaded = { {name="index:string:30"}, {nb="number"}, receive=function(data, save) max_set(save, data.name, data, "nb") end, export=function(env) for k, v in pairs(env) do add{name=k, nb=v} end end },
+}
 
 --- Loads profile generic profile from disk
 -- Generic profile is always read from the "online" profile
@@ -207,7 +215,7 @@ function _M:filterSaveData(field)
 end
 
 --- Loads profile module profile from disk
-function _M:loadModuleProfile(short_name)
+function _M:loadModuleProfile(short_name, mod_def)
 	if short_name == "boot" then return end
 
 	-- Delay when we are currently saving
@@ -238,84 +246,106 @@ function _M:loadModuleProfile(short_name)
 	load(false) -- Load from offline profile
 	load(true) -- Load from online profile
 
-	self:getConfigs(short_name)
-	self:syncOnline(short_name)
-
 	self.mod = self.modules[short_name]
 	self.mod_name = short_name
+
+	self:getConfigs(short_name, nil, mod_def)
+	self:syncOnline(short_name, mod_def)
 end
 
 --- Saves a profile data
-function _M:saveGenericProfile(name, data, nosync)
+function _M:saveGenericProfile(name, data, no_sync, nowrite)
 	-- Delay when we are currently saving
 	if savefile_pipe and savefile_pipe.saving then savefile_pipe:pushGeneric("saveGenericProfile", function() self:saveGenericProfile(name, data, nosync) end) return end
 
-	data = serialize(data)
+	if not generic_profile_defs[name] then print("[PROFILE] refusing unknown generic data", name) return end
 
-	-- Check for readability
-	local f, err = loadstring(data)
-	if not f then print("[PROFILE] cannot save generic data ", name, data, "it does not parse:") print(err) return end
-	setfenv(f, {})
-	local ok, err = pcall(f)
-	if not ok and err then print("[PROFILE] cannot save generic data", name, data, "it does not parse") print(err) return end
+	profile.generic[name] = profile.generic[name] or {}
+	local dataenv = profile.generic[name]
+	local f = generic_profile_defs[name].receive
+	setfenv(f, {
+		inc_set=function(dataenv, key, data, dkey)
+			local v = data[dkey]
+			if type(v) == "number" then
+			elseif type(v) == "table" and v[1] == "inc" then v = (dataenv[key] or 0) + v[2]
+			end
+			dataenv[key] = v
+			data[dkey] = v
+		end,
+		max_set=function(dataenv, key, data, dkey)
+			local v = data[dkey]
+			if type(v) == "number" then
+			elseif type(v) == "table" and v[1] == "inc" then v = (dataenv[key] or 0) + v[2]
+			end
+			v = math.max(v, dataenv[key] or 0)
+			dataenv[key] = v
+			data[dkey] = v
+		end,
+	})
+	f(data, dataenv)
 
-	local pop = self:mountProfile(true)
-	local f = fs.open("/generic/"..name..".profile", "w")
-	f:write(data)
-	f:close()
-	self:umountProfile(true, pop)
+	if not nowrite then
+		local pop = self:mountProfile(true)
+		local f = fs.open("/generic/"..name..".profile", "w")
+		f:write(serialize(dataenv))
+		f:close()
+		self:umountProfile(true, pop)
+	end
 
-	if not nosync then self:setConfigs("generic", name, data) end
+	if not nosync and not generic_profile_defs[name].no_sync then self:setConfigs("generic", name, data) end
 end
 
 --- Saves a module profile data
-function _M:saveModuleProfile(name, data, module, nosync)
+function _M:saveModuleProfile(name, data, nosync, nowrite)
 	if module == "boot" then return end
+	if not game or not game.__mod_info.profile_defs then return end
 
 	-- Delay when we are currently saving
-	if savefile_pipe and savefile_pipe.saving then savefile_pipe:pushGeneric("saveModuleProfile", function() self:saveModuleProfile(name, data, module, nosync) end) return end
+	if savefile_pipe and savefile_pipe.saving then savefile_pipe:pushGeneric("saveModuleProfile", function() self:saveModuleProfile(name, data, nosync) end) return end
 
-	data = serialize(data)
-	module = module or self.mod_name
+	local module = self.mod_name
 
 	-- Check for readability
-	local f, err = loadstring(data)
-	if not f then print("[PROFILE] cannot save module data ", name, data, "it does not parse:") print(err) return end
-	setfenv(f, {})
-	local ok, err = pcall(f)
-	if not ok and err then print("[PROFILE] cannot save module data", name, data, "it does not parse") print(err) return end
+	profile.mod[name] = profile.mod[name] or {}
+	local dataenv = profile.mod[name]
+	local f = game.__mod_info.profile_defs[name].receive
+	setfenv(f, {
+		inc_set=function(dataenv, key, data, dkey)
+			local v = data[dkey]
+			if type(v) == "number" then
+			elseif type(v) == "table" and v[1] == "inc" then v = (dataenv[key] or 0) + v[2]
+			end
+			dataenv[key] = v
+			data[dkey] = v
+		end,
+		max_set=function(dataenv, key, data, dkey)
+			local v = data[dkey]
+			if type(v) == "number" then
+			elseif type(v) == "table" and v[1] == "inc" then v = (dataenv[key] or 0) + v[2]
+			end
+			v = math.max(v, dataenv[key] or 0)
+			dataenv[key] = v
+			data[dkey] = v
+		end,
+	})
+	f(data, dataenv)
 
-	local online = self:filterSaveData(name)
-	local pop = self:mountProfile(online, module)
---[[
-	local path = "current-profile/modules/"..module.."/"..name..".profile"
-	local f, msg = fs.open(path, "w")
-	print("[PROFILE] search path: ")
-	table.foreach(fs.getSearchPath(), print)
-	print("[PROFILE] path: ", path)
-	print("[PROFILE] real path: ", fs.getRealPath(path), "::", fs.exists(path) and "exists" or "does not exist")
-	print("[PROFILE] write path is: ", fs.getWritePath())
-	if f then
-		f:write(data)
+	if not nowrite then
+		local online = self:filterSaveData(name)
+		local pop = self:mountProfile(online, module)
+		local f = fs.open("/modules/"..module.."/"..name..".profile", "w")
+		f:write(serialize(dataenv))
 		f:close()
-	else
-		print("[PROFILE] physfs error:", msg)
+		self:umountProfile(online, pop)
 	end
-]]
-	local f = fs.open("/modules/"..module.."/"..name..".profile", "w")
-	f:write(data)
-	f:close()
 
-	self:umountProfile(online, pop)
-
-	if not nosync then self:setConfigs(module, name, data) end
+	if not nosync and not game.__mod_info.profile_defs[name].no_sync then self:setConfigs(module, name, data) end
 end
 
 function _M:checkFirstRun()
 	local result = self.generic.firstrun
 	if not result then
-		firstrun = { When=os.time() }
-		self:saveGenericProfile("firstrun", firstrun, false)
+		self:saveGenericProfile("firstrun", {firstrun=os.time()})
 	end
 	return result
 end
@@ -328,8 +358,7 @@ function _M:performlogin(login, pass)
 	self:tryAuth()
 	self:waitFirstAuth()
 	if (profile.auth) then
-		self.generic.online = { login=login, pass=pass }
-		self:saveGenericProfile("online", self.generic.online)
+		self:saveGenericProfile("online", {login=login, pass=pass})
 		self:getConfigs("generic")
 		self:syncOnline("generic")
 	end
@@ -411,24 +440,13 @@ function _M:eventGetConfigs(e)
 	local data = zlib.decompress(e.data):unserialize()
 	local module = e.module
 	if not data then print("[ONLINE PROFILE] get configs") return end
-	for name, val in pairs(data) do
-		print("[ONLINE PROFILE] config ", name)
+	for i = 1, #data do
+		local val = data[i]
 
-		local field = name
-		local f, err = loadstring(val)
-		if not f and err then
-			print("Error loading profile config: ", err)
+		if module == "generic" then
+			self:saveGenericProfile(e.kind, val, true, i < #data)
 		else
-			if module == "generic" then
-				self.generic[field] = self.generic[field] or {}
-				self:loadData(f, self.generic[field])
-				self:saveGenericProfile(field, self.generic[field], true)
-			else
-				self.modules[module] = self.modules[module] or {}
-				self.modules[module][field] = self.modules[module][field] or {}
-				self:loadData(f, self.modules[module][field])
-				self:saveModuleProfile(field, self.modules[module][field], module, true)
-			end
+			self:saveModuleProfile(e.kind, val, true, i < #data)
 		end
 	end
 	if self.evt_cbs.GetConfigs then self.evt_cbs.GetConfigs(e) self.evt_cbs.GetConfigs = nil end
@@ -489,36 +507,81 @@ function _M:logOut()
 	self:umountProfile(true, pop)
 end
 
-function _M:getConfigs(module, cb)
+function _M:getConfigs(module, cb, mod_def)
 	self:waitFirstAuth()
 	if not self.auth then return end
 	self.evt_cbs.GetConfigs = cb
-	core.profile.pushOrder(table.serialize{o="GetConfigs", module=module})
+	if module == "generic" then
+		for k, _ in pairs(generic_profile_defs) do
+			if not _.no_sync then
+				core.profile.pushOrder(table.serialize{o="GetConfigs", module=module, kind=k})
+			end
+		end
+	else
+		for k, _ in pairs((mod_def or game.__mod_info).profile_defs) do
+			if not _.no_sync then
+				core.profile.pushOrder(table.serialize{o="GetConfigs", module=module, kind=k})
+			end
+		end
+	end
 end
 
-function _M:setConfigs(module, name, val)
+function _M:setConfigsBatch(v)
+	core.profile.pushOrder(table.serialize{o="SetConfigsBatch", v=v and true or false})
+end
+
+function _M:setConfigs(module, name, data)
 	self:waitFirstAuth()
 	if not self.auth then return end
 	if name == "online" then return end
-	if type(val) ~= "string" then val = serialize(val) end
-	core.profile.pushOrder(table.serialize{o="SetConfigs", module=module, data=zlib.compress(table.serialize{[name] = val})})
+	if module ~= "generic" then
+		if not game.__mod_info.profile_defs then print("[PROFILE] saving config but no profile defs", module, name) return end
+		if not game.__mod_info.profile_defs[name] then print("[PROFILE] saving config but no profile def kind", module, name) return end
+	else
+		if not generic_profile_defs[name] then print("[PROFILE] saving config but no profile def kind", module, name) return end
+	end
+	core.profile.pushOrder(table.serialize{o="SetConfigs", module=module, kind=name, data=zlib.compress(table.serialize(data))})
 end
 
-function _M:syncOnline(module)
+function _M:syncOnline(module, mod_def)
 	self:waitFirstAuth()
 	if not self.auth then return end
 	local sync = self.generic
 	if module ~= "generic" then sync = self.modules[module] end
 	if not sync then return end
 
-	local data = {}
-	for k, v in pairs(sync) do if k ~= "online" then data[k] = serialize(v) end end
-
-	core.profile.pushOrder(table.serialize{o="SetConfigs", module=module, data=zlib.compress(table.serialize(data))})
+	self:setConfigsBatch(true)
+	if module == "generic" then
+		for k, def in pairs(generic_profile_defs) do
+			if not def.no_sync and def.export and sync[k] then
+				local f = def.export
+				local ret = {}
+				setfenv(f, setmetatable({add=function(d) ret[#ret+1] = d end}, {__index=_G}))
+				f(sync[k])
+				for i, r in ipairs(ret) do
+					core.profile.pushOrder(table.serialize{o="SetConfigs", module=module, kind=k, data=zlib.compress(table.serialize(r))})
+				end
+			end
+		end
+	else
+		for k, def in pairs((mod_def or game.__mod_info).profile_defs) do
+			if not def.no_sync and def.export and sync[k] then
+				local f = def.export
+				local ret = {}
+				setfenv(f, setmetatable({add=function(d) ret[#ret+1] = d end}, {__index=_G}))
+				f(sync[k])
+				for i, r in ipairs(ret) do
+					core.profile.pushOrder(table.serialize{o="SetConfigs", module=module, kind=k, data=zlib.compress(table.serialize(r))})
+				end
+			end
+		end
+	end
+	self:setConfigsBatch(false)
 end
 
 function _M:checkModuleHash(module, md5)
 	self.hash_valid = false
+do self.hash_valid = true return true end
 --	if not self.auth then return nil, "no online profile active" end
 	if config.settings.cheat then return nil, "cheat mode active" end
 	if game and game:isTainted() then return nil, "savefile tainted" end

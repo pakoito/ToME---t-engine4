@@ -1438,11 +1438,10 @@ function _M:setAllowedBuild(what, notify)
 	-- Do not unlock things in easy mode
 	--if self.difficulty == self.DIFFICULTY_EASY then return end
 
-	profile.mod.allow_build = profile.mod.allow_build or {}
+	profile:saveModuleProfile("allow_build", {name=what})
+
 	if profile.mod.allow_build[what] then return end
 	profile.mod.allow_build[what] = true
-
-	profile:saveModuleProfile("allow_build", profile.mod.allow_build)
 
 	if notify then
 		self.state:checkDonation() -- They gained someting nice, they could be more receptive

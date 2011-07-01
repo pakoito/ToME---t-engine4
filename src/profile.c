@@ -68,6 +68,7 @@ int pop_order(lua_State *L)
 	if (q)
 	{
 		lua_pushlstring(L, q->payload, q->payload_len);
+//		printf("[profile order POP] %s\n", lua_tostring(L,-1));
 		free(q->payload);
 		free(q);
 	}
@@ -139,6 +140,7 @@ int thread_profile(void *data)
 	luaopen_core(L);
 	luaopen_socket_core(L);
 	luaopen_mime_core(L);
+	luaopen_zlib(L);
 	luaL_openlib(L, "cprofile", threadlib, 0); lua_pop(L, 1);
 
 	// Override "print" if requested

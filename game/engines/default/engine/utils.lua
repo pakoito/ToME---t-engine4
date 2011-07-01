@@ -1057,9 +1057,7 @@ function util.showMainMenu(no_reboot, reboot_engine, reboot_engine_version, rebo
 
 	if game and type(game) == "table" and game.__session_time_played_start then
 		if game.onDealloc then game:onDealloc() end
-		profile.generic.modules_played = profile.generic.modules_played or {}
-		profile.generic.modules_played[game.__mod_info.short_name] = (profile.generic.modules_played[game.__mod_info.short_name] or 0) + (os.time() - game.__session_time_played_start)
-		profile:saveGenericProfile("modules_played", profile.generic.modules_played)
+		profile:saveGenericProfile("modules_played", {name=game.__mod_info.short_name, time_played={"inc", os.time() - game.__session_time_played_start}})
 	end
 
 	-- Join threads

@@ -981,7 +981,7 @@ function _M:on_identify()
 		game.player:learnLore(self.on_id_lore)
 	end
 	if self.unique and self.desc and not self.no_unique_lore then
-		game.player:additionalLore(self.unique, self:getName(), "artifacts", self.desc)
+		game.player:additionalLore(self.unique, self:getName{no_add_name=true, do_color=false, no_count=true}, "artifacts", self.desc)
 		game.player:learnLore(self.unique)
 	end
 end

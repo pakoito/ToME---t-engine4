@@ -1835,7 +1835,7 @@ function _M:onAddObject(o)
 
 	-- Achievement checks
 	if self.player then
-		if o.unique then
+		if o.unique and not o.lore and not o.randart then
 			game.player:registerArtifactsPicked(o)
 		end
 		world:gainAchievement("DEUS_EX_MACHINA", self, o)

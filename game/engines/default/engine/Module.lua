@@ -246,11 +246,6 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 
 	mod.version_name = ("%s-%d.%d.%d"):format(mod.short_name, mod.version[1], mod.version[2], mod.version[3])
 
-	profile.generic.modules_loaded = profile.generic.modules_loaded or {}
-	profile.generic.modules_loaded[mod.short_name] = (profile.generic.modules_loaded[mod.short_name] or 0) + 1
-
-	profile:saveGenericProfile("modules_loaded", profile.generic.modules_loaded)
-
 	-- Turn based by default
 	core.game.setRealtime(0)
 
@@ -290,7 +285,8 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 	end
 
 	profile:addStatFields(unpack(mod.profile_stats_fields or {}))
-	profile:loadModuleProfile(mod.short_name)
+	profile:setConfigsBatch(true)
+	profile:loadModuleProfile(mod.short_name, mod)
 	profile:currentCharacter(mod.version_string, "game did not tell us")
 
 	-- Init the module code
@@ -339,6 +335,9 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 		end
 	end
 	print("[MODULE LOADER] done loading module", mod.long_name)
+
+	profile:saveGenericProfile("modules_loaded", {name=mod.short_name, nb={"inc", 1}})
+	profile:setConfigsBatch(false)
 end
 
 --- Setup write dir for a module
