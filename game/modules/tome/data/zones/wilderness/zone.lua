@@ -27,7 +27,7 @@ return {
 --	all_remembered = true,
 --	all_lited = true,
 --	day_night = true,
-	persistent = "memory",
+	persistent = "zone",
 	ambient_music = "Remembrance.ogg",
 	wilderness = true,
 	wilderness_see_radius = 4,
