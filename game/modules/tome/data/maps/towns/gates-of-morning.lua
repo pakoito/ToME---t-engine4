@@ -61,6 +61,7 @@ defineTile('s', "FLOOR", nil, mod.class.NPC.new{
 	type = "humanoid", subtype = "human",
 	display = "p", color=colors.BLUE,
 	name = "Melnela",
+	female = true,
 	size_category = 3, rank = 2,
 	ai = "simple",
 	faction = "sunwall",
