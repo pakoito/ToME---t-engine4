@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 load("/data/general/grids/basic.lua")
+load("/data/general/grids/fortress.lua")
 
 newEntity{
 	define_as = "LAKE_NUR",
@@ -29,18 +30,8 @@ newEntity{
 }
 
 newEntity{
-	define_as = "SEALED_DOOR",
-	name = "sealed door", image = "terrain/stone_wall_door.png",
-	display = '+', color=colors.WHITE, back_color=colors.DARK_UMBER,
-	notice = true,
-	always_remember = true,
-	block_sight = true,
-	does_block_move = true,
-}
-
-newEntity{
 	define_as = "TELEPORT_OUT",
-	name = "teleportation circle to the surface", image = "terrain/maze_floor.png", add_displays = {class.new{image="terrain/maze_teleport.png"}},
+	name = "teleportation circle to the surface", image = "terrain/solidwall/solid_floor1.png", add_displays = {class.new{image="terrain/maze_teleport.png"}},
 	display = '>', color_r=255, color_g=0, color_b=255,
 	notice = true, show_tooltip = true,
 	change_level = 1, change_zone = "wilderness",
@@ -48,7 +39,7 @@ newEntity{
 
 newEntity{
 	define_as = "COMMAND_ORB",
-	name = "Sher'Tul Control Orb", image = "terrain/maze_floor.png", add_displays = {class.new{image="terrain/worldmap.png"}},
+	name = "Sher'Tul Control Orb", image = "terrain/solidwall/solid_floor1.png", add_displays = {class.new{image="terrain/worldmap.png"}},
 	display = '*', color=colors.PURPLE,
 	notice = true,
 	always_remember = true,
@@ -61,19 +52,10 @@ newEntity{
 	end,
 }
 
-newEntity{ base = "HARDWALL",
-	define_as = "GREEN_DRAPPING",
-	add_displays = {class.new{image="terrain/green_drapping.png"}},
-}
-newEntity{ base = "HARDWALL",
-	define_as = "PURPLE_DRAPPING",
-	add_displays = {class.new{image="terrain/purple_drapping.png"}},
-}
-
 newEntity{
 	define_as = "FARPORTAL",
 	name = "Exploratory Farportal",
-	display = '&', color_r=255, color_g=0, color_b=220, back_color=colors.VIOLET, image = "terrain/maze_floor.png",
+	display = '&', color_r=255, color_g=0, color_b=220, back_color=colors.VIOLET, image = "terrain/solidwall/solid_floor1.png",
 	notice = true,
 	always_remember = true,
 	show_tooltip = true,
@@ -120,7 +102,7 @@ It should automatically create a portal back, but it might not be near your arri
 }
 
 newEntity{ base = "FARPORTAL", define_as = "CFARPORTAL",
-	image = "terrain/maze_floor.png",
+	image = "terrain/solidwall/solid_floor1.png",
 	add_displays = {
 		class.new{image="terrain/farportal-base.png", display_x=-1, display_y=-1, display_w=3, display_h=3},
 	},
@@ -134,7 +116,7 @@ newEntity{ base = "FARPORTAL", define_as = "CFARPORTAL",
 
 newEntity{
 	define_as = "LIBRARY",
-	name = "Library of Lost Mysteries", image = "terrain/maze_floor.png", add_displays = {class.new{image="terrain/temporal_instability_blue.png"}},
+	name = "Library of Lost Mysteries", image = "terrain/solidwall/solid_floor1.png", add_displays = {class.new{image="terrain/temporal_instability_blue.png"}},
 	display = '*', color=colors.BLUE,
 	notice = true,
 	always_remember = true,
@@ -148,3 +130,13 @@ newEntity{
 		return true
 	end,
 }
+
+for i = 1, 9 do
+newEntity{ define_as = "MURAL_PAINTING"..i,
+	type = "wall", subtype = "floor",
+	name="mural painting",
+	display='#', color=colors.LIGHT_RED,
+	image="terrain/solidwall/solid_wall_mural_shertul"..i..".png",
+	block_move=function(self, x, y, e, act, couldpass) if e and e.player and act then e:learnLore("shertul-fortress-"..i) end return true end
+}
+end
