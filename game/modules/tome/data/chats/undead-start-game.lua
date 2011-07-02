@@ -41,7 +41,7 @@ You are mine! Be quiet!
 ]],
 	answers = {
 		{"[attack]", action=function(npc, player)
-			local floor = game.zone:makeEntityByName(game.level, "terrain", "FLOOR")
+			local floor = game.zone:makeEntityByName(game.level, "terrain", "SUMMON_CIRCLE_BROKEN")
 			game.zone:addEntity(game.level, floor, "terrain", 22, 3)
 		end},
 	}
