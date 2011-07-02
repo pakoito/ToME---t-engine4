@@ -123,14 +123,16 @@ access_angolwen = function(self, player)
 	if player:hasQuest("antimagic") and not player:hasQuest("antimagic"):isEnded() then player:setQuestStatus("antimagic", engine.Quest.FAILED) end -- Fail antimagic quest
 
 	local g = mod.class.Grid.new{
+		type = "floor", subtype = "grass",
 		show_tooltip=true, always_remember = true,
 		name="Angolwen, the hidden city of magic",
 		desc="Secret place of magic, set apart from the world to protect it.",
-		display='*', color=colors.WHITE, image="terrain/grass.png", add_mos={{image="terrain/town1.png"}},
+		display='*', color=colors.WHITE, image="terrain/grass.png", add_displays={mod.class.Grid.new{image="terrain/town1.png", z=5}},
 		notice = true,
 		change_level=1, change_zone="town-angolwen"
 	}
 	local p = mod.class.Grid.new{
+		type = "floor", subtype = "grass",
 		show_tooltip=true, always_remember = true,
 		name="Portal to Angolwen",
 		desc="The city of magic lies inside the mountains to the west. Either a spell or a portal is needed to access it.",
@@ -144,6 +146,7 @@ access_angolwen = function(self, player)
 	local level = game.level
 	local spot = level:pickSpot{type="zone-pop", subtype="angolwen"}
 	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
+	game.nicer_tiles:updateAround(game.level, spot.x, spot.y)
 	spot = level:pickSpot{type="zone-pop", subtype="angolwen-portal"}
 	game.zone:addEntity(level, p, "terrain", spot.x, spot.y)
 

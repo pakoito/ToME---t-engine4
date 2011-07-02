@@ -318,14 +318,14 @@ function _M:getMapObjects(tiles, mos, z)
 	until not mo
 end
 
-function _M:removeAllMOs()
-	if self._mo then self._mo:invalidate() end
+function _M:removeAllMOs(no_invalidate)
+	if self._mo and not no_invalidate then self._mo:invalidate() end
 	self._mo = nil
 
 	if not self.add_displays then return end
 	for i = 1, #self.add_displays do
 		if self.add_displays[i]._mo then
-			self.add_displays[i]._mo:invalidate()
+			if not no_invalidate then self.add_displays[i]._mo:invalidate() end
 			self.add_displays[i]._mo = nil
 		end
 	end

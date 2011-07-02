@@ -95,7 +95,9 @@ function _M:replaceAll(level)
 		-- Otherwise compute this new combo and store the entity
 		else
 			local cloned = false
-			if not g.force_clone then g = g:cloneFull() g.force_clone = true cloned = true end
+			if not g.force_clone or not self.edit_entity_store then g = g:cloneFull() g.force_clone = true cloned = true end
+
+			g:removeAllMOs(true)
 
 			-- Edit the first add_display entity, or add a dummy if none
 			if not g.__edit_d then
@@ -125,8 +127,8 @@ function _M:replaceAll(level)
 				if e.image then g.image = e.image end
 			end
 
-			g._mo = nil
 			level.map(i, j, Map.TERRAIN, g)
+			level.map:updateMap(i, j)
 			if self.edit_entity_store then self.edit_entity_store[id] = g end
 		end
 	end end
@@ -143,10 +145,14 @@ function _M:postProcessLevelTiles(level)
 	end end
 
 	self:replaceAll(level)
+
+	self.edit_entity_store = nil
 end
 
 function _M:updateAround(level, x, y)
 	if not Map.tiles.nicer_tiles then return end
+
+	self.edit_entity_store = nil
 
 	for i = x-1, x+1 do for j = y-1, y+1 do
 		self:handle(level, i, j)

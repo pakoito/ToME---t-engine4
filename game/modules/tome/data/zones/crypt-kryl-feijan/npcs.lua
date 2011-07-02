@@ -107,7 +107,7 @@ newEntity{ define_as = "MELINDA",
 
 newEntity{ define_as = "ACOLYTE",
 	name = "Acolyte of the Sect of Kryl-Feijan",
-	type = "humanoid", subtype = "elf",
+	type = "humanoid", subtype = "elf", image = "npc/humanoid_shalore_elven_corruptor.png",
 	display = "p", color=colors.LIGHT_RED,
 	desc = [[Black-robed Elves with a mad look in their eyes.]],
 	autolevel = "caster",
