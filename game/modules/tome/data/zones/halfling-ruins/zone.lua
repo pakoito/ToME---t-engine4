@@ -97,11 +97,12 @@ return {
 	end,
 	on_enter = function(lev, old_lev, newzone)
 		if newzone then
-			local p = game.party:findMember{main=true}
-			local level = game.memory_levels["wilderness-1"]
-			local spot = level:pickSpot{type="zone-pop", subtype="halfling-ruins"}
-			p.wild_x = spot.x
-			p.wild_y = spot.y
+			game:onLevelLoad("wilderness-1", function(zone, level)
+				local p = game.party:findMember{main=true}
+				local spot = level:pickSpot{type="zone-pop", subtype="halfling-ruins"}
+				p.wild_x = spot.x
+				p.wild_y = spot.y
+			end)
 		end
 	end,
 }

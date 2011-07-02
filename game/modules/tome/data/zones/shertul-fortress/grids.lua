@@ -134,9 +134,9 @@ newEntity{
 for i = 1, 9 do
 newEntity{ define_as = "MURAL_PAINTING"..i,
 	type = "wall", subtype = "floor",
-	name="mural painting",
+	name="mural painting", lore = "shertul-fortress-"..i,
 	display='#', color=colors.LIGHT_RED,
 	image="terrain/solidwall/solid_wall_mural_shertul"..i..".png",
-	block_move=function(self, x, y, e, act, couldpass) if e and e.player and act then e:learnLore("shertul-fortress-"..i) end return true end
+	block_move=function(self, x, y, e, act, couldpass) if e and e.player and act then e:learnLore(self.lore) end return true end
 }
 end

@@ -29,16 +29,17 @@ end
 
 on_grant = function(self, who)
 	-- Reveal reknor entrance
-	local g = mod.class.Grid.new{
-		show_tooltip=true,
-		name="A gate into the old kingdom of Reknor",
-		display='>', color=colors.UMBER,
-		notice = true,
-		change_level=1, change_zone="reknor"
-	}
-	g:resolve() g:resolve(nil, true)
-	local level = game.memory_levels["wilderness-1"]
-	local spot = level:pickSpot{type="zone-pop", subtype="reknor"}
-	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
+	game:onLevelLoad("wilderness-1", function(zone, level)
+		local g = mod.class.Grid.new{
+			show_tooltip=true,
+			name="A gate into the old kingdom of Reknor",
+			display='>', color=colors.UMBER,
+			notice = true,
+			change_level=1, change_zone="reknor"
+		}
+		g:resolve() g:resolve(nil, true)
+		local spot = level:pickSpot{type="zone-pop", subtype="reknor"}
+		game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
+	end)
 	game.logPlayer(game.player, "The elder points to Reknor on your map, to the north on the western side of the Iron Throne.")
 end

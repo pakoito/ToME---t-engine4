@@ -42,12 +42,17 @@ return {
 			if z.type == "zonename" then
 				for x = z.x1, z.x2 do for y = z.y1, z.y2 do
 					game.level.map.attrs(x, y, "zonename", z.subtype)
+					if z.subtype == "Tar'Eyal" then
+						game.level.map.attrs(x, y, "block_fortress", true)
+					end
 				end end
 			elseif z.type == "world-encounter" then
 				for x = z.x1, z.x2 do for y = z.y1, z.y2 do
 					if not game.level.map.attrs(x, y, "world-encounter") then game.level.map.attrs(x, y, "world-encounter", {}) end
 					game.level.map.attrs(x, y, "world-encounter")[z.subtype] = true
 				end end
+			elseif z.type == "block_fortress" then
+				game.level.map.attrs(x, y, "block_fortress", true)
 			end
 		end
 

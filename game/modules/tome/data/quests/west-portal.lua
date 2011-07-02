@@ -43,34 +43,36 @@ end
 
 on_grant = function(self, who)
 	-- Reveal entrances
-	local g = mod.class.Grid.new{
-		show_tooltip=true, always_remember = true,
-		name="Backdoor to the Vor Armoury",
-		display='>', color=colors.UMBER,
-		notice = true,
-		change_level=1, change_zone="vor-armoury"
-	}
-	g:resolve() g:resolve(nil, true)
-	local level = game.memory_levels["wilderness-1"]
-	local spot = level:pickSpot{type="zone-pop", subtype="vor-armoury"}
-	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
+	game:onLevelLoad("wilderness-1", function(zone, level)
+		local g = mod.class.Grid.new{
+			show_tooltip=true, always_remember = true,
+			name="Backdoor to the Vor Armoury",
+			display='>', color=colors.UMBER,
+			notice = true,
+			change_level=1, change_zone="vor-armoury"
+		}
+		g:resolve() g:resolve(nil, true)
+		local spot = level:pickSpot{type="zone-pop", subtype="vor-armoury"}
+		game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
+	end)
 
 	game.logPlayer(game.player, "Zemekkys points to the location of Vor Armoury on your map.")
 end
 
 wyrm_lair = function(self, who)
 	-- Reveal entrances
-	local g = mod.class.Grid.new{
-		show_tooltip=true, always_remember = true,
-		name="Entrance into the sandpit of Briagh",
-		display='>', color=colors.YELLOW,
-		notice = true,
-		change_level=1, change_zone="briagh-lair"
-	}
-	g:resolve() g:resolve(nil, true)
-	local level = game.memory_levels["wilderness-1"]
-	local spot = level:pickSpot{type="zone-pop", subtype="briagh"}
-	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
+	game:onLevelLoad("wilderness-1", function(zone, level)
+		local g = mod.class.Grid.new{
+			show_tooltip=true, always_remember = true,
+			name="Entrance into the sandpit of Briagh",
+			display='>', color=colors.YELLOW,
+			notice = true,
+			change_level=1, change_zone="briagh-lair"
+		}
+		g:resolve() g:resolve(nil, true)
+		local spot = level:pickSpot{type="zone-pop", subtype="briagh"}
+		game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
+	end)
 
 	game.logPlayer(game.player, "Zemekkys points to the location of Briagh lair on your map.")
 end

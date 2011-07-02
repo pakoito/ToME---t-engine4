@@ -230,20 +230,18 @@ function _M:newGame()
 
 			-- Configure & create the worldmap
 			self.player.last_wilderness = self.player.default_wilderness[3] or "wilderness"
-			self.player.wild_x, self.player.wild_y = 1, 1
-			self:changeLevel(1, self.player.last_wilderness)
-			self.player.wild_x, self.player.wild_y = self.player.default_wilderness[1], self.player.default_wilderness[2]
-			if type(self.player.wild_x) == "string" and type(self.player.wild_y) == "string" then
-				local spot = self.level:pickSpot{type=self.player.wild_x, subtype=self.player.wild_y} or {x=1,y=1}
-					self.player.wild_x, self.player.wild_y = spot.x, spot.y
-			end
-			self.player:move(self.player.wild_x, self.player.wild_y, true)
+			game:onLevelLoad(self.player.last_wilderness.."-1", function(zone, level)
+				game.player.wild_x, game.player.wild_y = game.player.default_wilderness[1], game.player.default_wilderness[2]
+				if type(game.player.wild_x) == "string" and type(game.player.wild_y) == "string" then
+					local spot = level:pickSpot{type=game.player.wild_x, subtype=game.player.wild_y} or {x=1,y=1}
+					game.player.wild_x, game.player.wild_y = spot.x, spot.y
+				end
+			end)
 
 			-- Generate
 			if self.player.__game_difficulty then self:setupDifficulty(self.player.__game_difficulty) end
-			if self.player.starting_zone ~= self.player.last_wilderness then
-				self:onTickEnd(function() self:changeLevel(self.player.starting_level or 1, self.player.starting_zone, nil, self.player.starting_level_force_down) end)
-			end
+			self:changeLevel(self.player.starting_level or 1, self.player.starting_zone, nil, self.player.starting_level_force_down)
+
 			print("[PLAYER BIRTH] resolve...")
 			self.player:resolve()
 			self.player:resolve(nil, true)
@@ -280,6 +278,16 @@ function _M:newGame()
 			self.calendar = Calendar.new("/data/calendar_"..(self.player.calendar or "allied")..".lua", "Today is the %s %s of the %s year of the Age of Ascendancy of Maj'Eyal.\nThe time is %02d:%02d.", 122, 167, 11)
 			Map:setViewerFaction(self.player.faction)
 			if self.player.__game_difficulty then self:setupDifficulty(self.player.__game_difficulty) end
+
+			-- Configure & create the worldmap
+			self.player.last_wilderness = self.player.default_wilderness[3] or "wilderness"
+			game:onLevelLoad(self.player.last_wilderness.."-1", function(zone, level)
+				game.player.wild_x, game.player.wild_y = game.player.default_wilderness[1], game.player.default_wilderness[2]
+				if type(game.player.wild_x) == "string" and type(game.player.wild_y) == "string" then
+					local spot = level:pickSpot{type=game.player.wild_x, subtype=game.player.wild_y} or {x=1,y=1}
+					game.player.wild_x, game.player.wild_y = spot.x, spot.y
+				end
+			end)
 
 			-- Tell the level gen code to add all the party
 			self.to_re_add_actors = {}
@@ -413,7 +421,7 @@ end
 function _M:save()
 	self.total_playtime = (self.total_playtime or 0) + (os.time() - (self.last_update or self.real_starttime))
 	self.last_update = os.time()
-	return class.save(self, self:defaultSavedFields{difficulty=true, to_re_add_actors=true, party=true, _chronoworlds=true, total_playtime=true}, true)
+	return class.save(self, self:defaultSavedFields{difficulty=true, to_re_add_actors=true, party=true, _chronoworlds=true, total_playtime=true, on_level_load_fcts=true}, true)
 end
 
 function _M:updateCurrentChar()
@@ -476,6 +484,14 @@ function _M:leaveLevel(level, lev, old_lev)
 		end
 		level:removeEntity(self.player)
 	end
+end
+
+function _M:onLevelLoad(id, fct)
+	self.on_level_load_fcts = self.on_level_load_fcts or {}
+	self.on_level_load_fcts[id] = self.on_level_load_fcts[id] or {}
+	local l = self.on_level_load_fcts[id]
+	l[#l+1] = fct
+	print("Registering on level load", id, fct)
 end
 
 function _M:changeLevel(lev, zone, keep_old_lev, force_down)
@@ -541,6 +557,14 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 
 	-- Check if we need to switch the current guardian
 	self.state:zoneCheckBackupGuardian()
+
+	-- Check if we must do some special things on load of this level
+	self.on_level_load_fcts = self.on_level_load_fcts or {}
+	print("Running on level loads", self.zone.short_name.."-"..self.level.level)
+	for i, fct in ipairs(self.on_level_load_fcts[self.zone.short_name.."-"..self.level.level] or {}) do
+		fct(self.zone, self.level)
+	end
+	self.on_level_load_fcts[self.zone.short_name.."-"..self.level.level] = nil
 
 	-- Decay level ?
 	if self.level.last_turn and self.level.data.decay and self.level.last_turn + self.level.data.decay[1] * 10 < self.turn then

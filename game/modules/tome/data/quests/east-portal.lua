@@ -111,17 +111,18 @@ open_telmur = function(self, player)
 	self:remove_materials(player)
 
 	-- Reveal entrances
-	local g = mod.class.Grid.new{
-		show_tooltip=true, always_remember = true,
-		name="Entrance into Telmur, tower of Telos",
-		display='>', color=colors.RED,
-		notice = true,
-		change_level=1, change_zone="telmur"
-	}
-	g:resolve() g:resolve(nil, true)
-	local level = game.memory_levels["wilderness-1"]
-	local spot = level:pickSpot{type="zone-pop", subtype="telmur"}
-	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
+	game:onLevelLoad("wilderness-1", function(zone, level)
+		local g = mod.class.Grid.new{
+			show_tooltip=true, always_remember = true,
+			name="Entrance into Telmur, tower of Telos",
+			display='>', color=colors.RED,
+			notice = true,
+			change_level=1, change_zone="telmur"
+		}
+		g:resolve() g:resolve(nil, true)
+		local spot = level:pickSpot{type="zone-pop", subtype="telmur"}
+		game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
+	end)
 
 	game.logPlayer(game.player, "Tannen points to the location of Telmur on your map.")
 	player:setQuestStatus(self.id, engine.Quest.COMPLETED, "open-telmur")

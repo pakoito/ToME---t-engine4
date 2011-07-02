@@ -94,19 +94,20 @@ newEntity{ base = "BASE_NPC_HORROR", define_as="WEIRDLING_BEAST",
 		if spot then game.level.default_down.x, game.level.default_down.y = spot.x, spot.y end
 
 		-- Update the worldmap with a shortcut to here
-		local g = mod.class.Grid.new{
-			show_tooltip=true, always_remember = true,
-			name="Teleportation portal to the Sher'Tul Fortress",
-			display='>', color=colors.ANTIQUE_WHITE, image = "terrain/maze_teleport.png",
-			notice = true,
-			change_level=1, change_zone="shertul-fortress",
-		}
-		g:resolve() g:resolve(nil, true)
-		local level = game.memory_levels["wilderness-1"]
-		local spot = level:pickSpot{type="zone-pop", subtype="shertul-fortress"}
-		game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
-		game.player.wild_x = spot.x
-		game.player.wild_y = spot.y
+		game:onLevelLoad("wilderness-1", function(zone, level)
+			local g = mod.class.Grid.new{
+				show_tooltip=true, always_remember = true,
+				name="Teleportation portal to the Sher'Tul Fortress",
+				display='>', color=colors.ANTIQUE_WHITE, image = "terrain/maze_teleport.png",
+				notice = true,
+				change_level=1, change_zone="shertul-fortress",
+			}
+			g:resolve() g:resolve(nil, true)
+			local spot = level:pickSpot{type="zone-pop", subtype="shertul-fortress"}
+			game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
+			game.player.wild_x = spot.x
+			game.player.wild_y = spot.y
+		end)
 
 		-- Update quest
 		game.player:setQuestStatus("shertul-fortress", engine.Quest.COMPLETED, "weirdling")

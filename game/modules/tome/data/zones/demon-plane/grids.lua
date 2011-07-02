@@ -33,9 +33,10 @@ newEntity{
 		if who == game.player then
 			require("engine.ui.Dialog"):yesnoPopup("Back and there again", "Enter the portal back to Maj'Eyal? (Warning loot Draebor first)", function(ret)
 				if not ret then
-					local level = game.memory_levels["wilderness-1"]
-					local spot = level:pickSpot{type="farportal-end", subtype="demon-plane-arrival"}
-					who.wild_x, who.wild_y = spot.x, spot.y
+					game:onLevelLoad("wilderness-1", function(zone, level)
+						local spot = level:pickSpot{type="farportal-end", subtype="demon-plane-arrival"}
+						who.wild_x, who.wild_y = spot.x, spot.y
+					end)
 					game:changeLevel(1, "wilderness")
 					game.logPlayer(who, "#VIOLET#You enter the swirling portal and in the blink of an eye you are back to Maj'Eyal, near the Daikara.")
 				end

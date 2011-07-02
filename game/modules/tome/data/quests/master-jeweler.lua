@@ -55,17 +55,18 @@ end
 
 start_search = function(self, who)
 	-- Reveal entrances
-	local g = mod.class.Grid.new{
-		show_tooltip=true, always_remember = true,
-		name="Cavern leading to the valley of the moon",
-		display='>', color=colors.GREY,
-		notice = true,
-		change_level=1, change_zone="valley-moon-caverns"
-	}
-	g:resolve() g:resolve(nil, true)
-	local level = game.memory_levels["wilderness-1"]
-	local spot = level:pickSpot{type="zone-pop", subtype="valley-moon-caverns"}
-	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
+	game:onLevelLoad("wilderness-1", function(zone, level)
+		local g = mod.class.Grid.new{
+			show_tooltip=true, always_remember = true,
+			name="Cavern leading to the valley of the moon",
+			display='>', color=colors.GREY,
+			notice = true,
+			change_level=1, change_zone="valley-moon-caverns"
+		}
+		g:resolve() g:resolve(nil, true)
+		local spot = level:pickSpot{type="zone-pop", subtype="valley-moon-caverns"}
+		game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
+	end)
 
 	who:setQuestStatus(self.id, engine.Quest.COMPLETED, "search-valley")
 	game.logPlayer(game.player, "Limmir points to the entrance to a cave on your map. This is supposed to be the way to the valley.")

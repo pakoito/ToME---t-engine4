@@ -32,10 +32,12 @@ quickEntity('>', {
 		local p = game.party:findMember{main=true}
 		-- Only yeeks can pass
 		if p.descriptor and p.descriptor.race and p.descriptor.race == "Yeek" then
-			local level = game.memory_levels["wilderness-1"]
-			local spot = level:pickSpot{type="zone-pop", subtype="rel-tunnel"}
-			p.wild_x = spot.x
-			p.wild_y = spot.y
+			game:onLevelLoad("wilderness-1", function(zone, level)
+				local p = game:getPlayer(true)
+				local spot = level:pickSpot{type="zone-pop", subtype="rel-tunnel"}
+				p.wild_x = spot.x
+				p.wild_y = spot.y
+			end)
 			return
 		end
 		require("engine.ui.Dialog"):simplePopup("Long tunnel", "As you enter the tunnel you feel a strange compulsion to go backward.")

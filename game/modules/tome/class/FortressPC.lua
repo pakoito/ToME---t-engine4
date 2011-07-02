@@ -45,6 +45,7 @@ function _M:init(t, no_default)
 
 	self.max_life = 10000
 	self.life = 10000
+	self.energy.mod = 2
 
 	self:addParticles(Particles.new("shertul_fortress_orbiters", 1, {}))
 end
@@ -193,6 +194,7 @@ function _M:moveEngineMove(x, y, force)
 	if y >= map.h then y = map.h - 1 end
 
 	if not force and map:checkAllEntities(x, y, "block_fortress", self, true) then return true end
+	if not force and map.attrs(x, y, "block_fortress") then return true end
 
 	if self.x and self.y then
 		map:remove(self.x, self.y, Map.PROJECTILE)
@@ -223,4 +225,11 @@ end
 -- Do not touch!
 function _M:block_move(x, y, e, can_attack)
 	return true
+end
+
+function _M:deleteFromMap(map)
+	if self.x and self.y and map then
+		map:remove(self.x, self.y, engine.Map.PROJECTILE)
+		self:closeParticles()
+	end
 end
