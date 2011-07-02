@@ -19,6 +19,8 @@
 
 require "engine.class"
 require "engine.Entity"
+local Map = require "engine.Map"
+local Particles = require "engine.Particles"
 require "mod.class.Player"
 
 module(..., package.seeall, class.inherit(mod.class.Player))
@@ -28,13 +30,14 @@ function _M:init(t, no_default)
 
 	self.name = "Yiilkgur, the Sher'Tul Fortress"
 	self.faction = game:getPlayer(true).faction
+	self.no_breath = true
 	self.no_party_class = true
 	self.no_leave_control = true
 	self.can_change_level = true
 	self.can_change_zone = true
 	self.display = ' '
 	self.moddable_tile = nil
-	self.can_pass = {water=500, wall=500}
+	self.can_pass = {pass_water=500, pass_wall=500, pass_tree=500}
 	self.image="terrain/shertul_flying_castle.png"
 	self.display_h = 2
 	self.display_y = -1
@@ -42,6 +45,8 @@ function _M:init(t, no_default)
 
 	self.max_life = 10000
 	self.life = 10000
+
+	self:addParticles(Particles.new("shertul_fortress_orbiters", 1, {}))
 end
 
 function _M:tooltip(x, y, seen_by)
@@ -55,7 +60,6 @@ end
 --- Attach or remove a display callback
 -- Defines particles to display
 function _M:defineDisplayCallback()
-do return end
 	if not self._mo then return end
 
 	local ps = self:getParticlesList()
@@ -68,40 +72,6 @@ do return end
 	local f_neutral = nil
 
 	self._mo:displayCallback(function(x, y, w, h, zoom, on_map)
-		-- Tactical info
-		if game.level and game.level.map.view_faction then
-			local map = game.level.map
-			if on_map then
-				if not f_self then
-					f_self = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_self)
-					f_powerful = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_powerful)
-					f_danger = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_danger)
-					f_friend = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_friend)
-					f_enemy = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_enemy)
-					f_neutral = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_neutral)
-				end
-
-				if self.faction then
-					local friend
-					if not map.actor_player then friend = Faction:factionReaction(map.view_faction, self.faction)
-					else friend = map.actor_player:reactionToward(self) end
-
-					if self == map.actor_player then
-						f_self:toScreen(x, y, w, h)
-					elseif map:faction_danger_check(self) then
-						if friend >= 0 then f_powerful:toScreen(x, y, w, h)
-						else f_danger:toScreen(x, y, w, h) end
-					elseif friend > 0 then
-						f_friend:toScreen(x, y, w, h)
-					elseif friend < 0 then
-						f_enemy:toScreen(x, y, w, h)
-					else
-						f_neutral:toScreen(x, y, w, h)
-					end
-				end
-			end
-		end
-
 		local e
 		for i = 1, #ps do
 			e = ps[i]
@@ -113,4 +83,144 @@ do return end
 
 		return true
 	end)
+end
+
+function _M:move(x, y, force)
+	local ox, oy = self.x, self.y
+	local moved = self:moveModActor(x, y, force)
+	if moved then
+		game.level.map:moveViewSurround(self.x, self.y, 8, 8)
+		game.level.map.attrs(self.x, self.y, "walked", true)
+
+		if self.describeFloor then self:describeFloor(self.x, self.y) end
+	end
+
+	-- Update wilderness coords
+	if game.zone.wilderness and not force then
+		-- Cheat with time
+		game.turn = game.turn + 1000
+		local p = game:getPlayer(true)
+		p.wild_x, p.wild_y = self.x, self.y
+		if self.x ~= ox or self.y ~= oy then
+			game.state:worldDirectorAI()
+		end
+	end
+
+	-- Update zone name
+	if game.zone.variable_zone_name then game:updateZoneName() end
+
+	return moved
+end
+
+function _M:moveModActor(x, y, force)
+	local moved = false
+	local ox, oy = self.x, self.y
+
+	if force or self:enoughEnergy() then
+
+		-- Confused ?
+		if not force and self:attr("confused") then
+			if rng.percent(self:attr("confused")) then
+				x, y = self.x + rng.range(-1, 1), self.y + rng.range(-1, 1)
+			end
+		end
+
+		-- Encased in ice, attack the ice
+		if not force and self:attr("encased_in_ice") then
+			self:attackTarget(self)
+			moved = true
+		-- Should we prob travel through walls ?
+		elseif not force and self:attr("prob_travel") and game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move", self) then
+			moved = self:probabilityTravel(x, y, self:attr("prob_travel"))
+		-- Never move but tries to attack ? ok
+		elseif not force and self:attr("never_move") then
+			-- A bit weird, but this simple asks the collision code to detect an attack
+			if not game.level.map:checkAllEntities(x, y, "block_move", self, true) then
+				game.logPlayer(self, "You are unable to move!")
+			end
+		else
+			moved = self:moveEngineMove(x, y, force)
+		end
+		if not force and moved and (self.x ~= ox or self.y ~= oy) and not self.did_energy then
+			self:useEnergy(game.energy_to_act * self:combatMovementSpeed())
+		end
+	end
+	self.did_energy = nil
+
+	-- Try to detect traps
+	if self:knowTalent(self.T_TRAP_DETECTION) then
+		local power = self:getTalentLevel(self.T_TRAP_DETECTION) * self:getCun(25)
+		local grids = core.fov.circle_grids(self.x, self.y, 1, true)
+		for x, yy in pairs(grids) do for y, _ in pairs(yy) do
+			local trap = game.level.map(x, y, Map.TRAP)
+			if trap and not trap:knownBy(self) and self:checkHit(power, trap.detect_power) then
+				trap:setKnown(self, true)
+				game.level.map:updateMap(x, y)
+				game.logPlayer(self, "You have found a trap (%s)!", trap:getName())
+			end
+		end end
+	end
+
+	if moved and self:isTalentActive(self.T_BODY_OF_STONE) then
+		self:forceUseTalent(self.T_BODY_OF_STONE, {ignore_energy=true})
+	end
+
+	if moved and not force and ox and oy and (ox ~= self.x or oy ~= self.y) and config.settings.tome.smooth_move > 0 then
+		local blur = 0
+		self:setMoveAnim(ox, oy, config.settings.tome.smooth_move, blur)
+	end
+
+	return moved
+end
+
+--- Moves an actor on the map
+-- *WARNING*: changing x and y properties manually is *WRONG* and will blow up in your face. Use this method. Always.
+-- @param map the map to move onto
+-- @param x coord of the destination
+-- @param y coord of the destination
+-- @param force if true do not check for the presence of an other entity. *Use wisely*
+-- @return true if a move was *ATTEMPTED*. This means the actor will probably want to use energy
+function _M:moveEngineMove(x, y, force)
+	if self.dead then return true end
+	local map = game.level.map
+
+	x = math.floor(x)
+	y = math.floor(y)
+
+	if x < 0 then x = 0 end
+	if x >= map.w then x = map.w - 1 end
+	if y < 0 then y = 0 end
+	if y >= map.h then y = map.h - 1 end
+
+	if not force and map:checkAllEntities(x, y, "block_fortress", self, true) then return true end
+
+	if self.x and self.y then
+		map:remove(self.x, self.y, Map.PROJECTILE)
+	else
+--		print("[MOVE] actor moved without a starting position", self.name, x, y)
+	end
+	self.old_x, self.old_y = self.x or x, self.y or y
+	self.x, self.y = x, y
+	map(x, y, Map.PROJECTILE, self)
+
+	-- Move emote
+	if self.__emote then
+		if self.__emote.dead then self.__emote = nil
+		else
+			self.__emote.x = x
+			self.__emote.y = y
+			map.emotes[self.__emote] = true
+		end
+	end
+
+	map:checkAllEntities(x, y, "on_move", self, force)
+
+	return true
+end
+
+--- Checks if something bumps in us
+-- If it happens the method attack is called on the target with the attacker as parameter.
+-- Do not touch!
+function _M:block_move(x, y, e, can_attack)
+	return true
 end

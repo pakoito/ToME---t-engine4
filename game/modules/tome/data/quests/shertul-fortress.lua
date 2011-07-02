@@ -158,5 +158,6 @@ fly = function(self)
 	f.y = game.player.y
 	game.party:setPlayer(f, true)
 	game.level:addEntity(f)
+	game.level.map:remove(f.x, f.y, engine.Map.ACTOR)
 	f:move(f.x, f.y, true)
 end
