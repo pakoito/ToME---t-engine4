@@ -61,52 +61,25 @@ end
 on_grant = function(self, who)
 	-- Reveal entrances
 	game:onLevelLoad("wilderness-1", function(zone, level)
-		local g = mod.class.Grid.new{
-			show_tooltip=true, always_remember = true,
-			name="Entrance to Rak'shor Pride bastion",
-			display='>', color=colors.UMBER,
-			notice = true,
-			change_level=1, change_zone="rak-shor-pride"
-		}
-		g:resolve() g:resolve(nil, true)
+		local g = game.zone:makeEntityByName(level, "terrain", "RAK_SHOR_PRIDE")
 		local spot = level:pickSpot{type="zone-pop", subtype="rak-shor-pride"}
 		game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
+		game.nicer_tiles:updateAround(game.level, spot.x, spot.y)
 
-		-- Reveal entrances
-		local g = mod.class.Grid.new{
-			show_tooltip=true, always_remember = true,
-			name="Entrance to Vor Pride bastion",
-			display='>', color=colors.UMBER,
-			notice = true,
-			change_level=1, change_zone="vor-pride"
-		}
-		g:resolve() g:resolve(nil, true)
+		g = game.zone:makeEntityByName(level, "terrain", "VOR_PRIDE")
 		local spot = level:pickSpot{type="zone-pop", subtype="vor-pride"}
 		game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
+		game.nicer_tiles:updateAround(game.level, spot.x, spot.y)
 
-		-- Reveal entrances
-		local g = mod.class.Grid.new{
-			show_tooltip=true, always_remember = true,
-			name="Entrance to Gorbat Pride bastion",
-			display='>', color=colors.UMBER,
-			notice = true,
-			change_level=1, change_zone="gorbat-pride"
-		}
-		g:resolve() g:resolve(nil, true)
+		g = game.zone:makeEntityByName(level, "terrain", "GORBAT_PRIDE")
 		local spot = level:pickSpot{type="zone-pop", subtype="gorbat-pride"}
 		game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
+		game.nicer_tiles:updateAround(game.level, spot.x, spot.y)
 
-		-- Reveal entrances
-		local g = mod.class.Grid.new{
-			show_tooltip=true, always_remember = true,
-			name="Entrance to Grushnak Pride caverns",
-			display='>', color=colors.UMBER,
-			notice = true,
-			change_level=1, change_zone="grushnak-pride"
-		}
-		g:resolve() g:resolve(nil, true)
+		g = game.zone:makeEntityByName(level, "terrain", "GRUSHNAK_PRIDE")
 		local spot = level:pickSpot{type="zone-pop", subtype="grushnak-pride"}
 		game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
+		game.nicer_tiles:updateAround(game.level, spot.x, spot.y)
 	end)
 
 	game.logPlayer(game.player, "Aeryn points to the known locations on your map.")

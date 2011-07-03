@@ -88,24 +88,10 @@ end
 
 create_entrance = function(self)
 	game:onLevelLoad("wilderness-1", function(zone, level)
-		local p = mod.class.Grid.new{
-			show_tooltip=true, always_remember = true,
-			name="Long road to the Tempest Peak",
-			display='>', color=colors.WHITE,
-			notice = true,
-			change_level=1, change_zone="tempest-peak",
-			change_level_check = function()
-				game.turn = game.turn + 5 * game.calendar.HOUR
-				if not game.player:hasQuest("lightning-overload").walked then
-					require("engine.ui.Dialog"):simpleLongPopup("Danger...", [[After an hours long walk you finally reach the end of the way. You are nearly on top of one of the highest peaks you can see.
-The storm is raging above your head.]], 400)
-					game.player:hasQuest("lightning-overload").walked = true
-				end
-			end
-		}
-		p:resolve() p:resolve(nil, true)
+		local g = game.zone:makeEntityByName(level, "terrain", "TEMPEST_PEAK")
 		local spot = level:pickSpot{type="zone-pop", subtype="tempest-peak"}
 		game.zone:addEntity(level, p, "terrain", spot.x, spot.y)
+		game.nicer_tiles:updateAround(game.level, spot.x, spot.y)
 	end)
 	game.player:setQuestStatus(self.id, engine.Quest.COMPLETED, "tempest-entrance")
 end

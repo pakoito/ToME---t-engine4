@@ -271,7 +271,7 @@ newEntity{ base="TOWN", define_as = "TOWN_LAST_HOPE",
 	change_zone="town-last-hope",
 }
 newEntity{ base="TOWN", define_as = "TOWN_ANGOLWEN",
-	name = "Angolwen, the hidden city of magic", add_mos = {{image="terrain/town1.png"}},
+	name = "Angolwen, the hidden city of magic", add_displays = {mod.class.Grid.new{z=5, image="terrain/town1.png"}},
 	desc = "Secret place of magic, set apart from the world to protect it.\nLead by the Supreme Archmage Linaniil.",
 	change_zone="town-angolwen",
 }
@@ -317,7 +317,7 @@ newEntity{ base="TOWN", define_as = "TOWN_IRON_COUNCIL",
 }
 
 --------------------------------------------------------------------------------
--- Zones
+-- Maj'Eyal Zones
 --------------------------------------------------------------------------------
 newEntity{ base="PLAINS", define_as = "ZONE_PLAINS", change_level=1, display='>', color=colors.VIOLET, notice = true, nice_tiler=false }
 newEntity{ base="DESERT", define_as = "ZONE_DESERT", change_level=1, display='>', color=colors.VIOLET, notice = true, nice_tiler=false }
@@ -436,9 +436,107 @@ newEntity{ base="ZONE_PLAINS", define_as = "UNREMARKABLE_CAVE",
 	change_zone="unremarkable-cave",
 }
 
+newEntity{ base="ZONE_PLAINS", define_as = "REKNOR",
+	name="A gate into the old kingdom of Reknor",
+	color=colors.UMBER,
+	add_displays={class.new{image="terrain/cave_entrance_closed02.png", z=4}},
+	change_zone="reknor",
+}
+
+newEntity{ base="ZONE_PLAINS", define_as = "TELMUR",
+	name="Entrance into Telmur, tower of Telos",
+	color=colors.RED,
+	add_mos={{image="terrain/tower_entrance02.png"}}, add_displays={class.new{image="terrain/tower_entrance_up02.png", z=18, display_y=-1}},
+	change_zone="telmur",
+}
+
 newEntity{ base="WATER_BASE", define_as = "MURGOL_LAIR",
 	name="Way into the lair of Murgol",
 	color={r=0, g=0, b=255},
 	add_displays={class.new{image="terrain/underwater/subsea_cave_entrance_01.png", z=4, display_h=2, display_y=-1}},
 	change_level=1, change_zone="murgol-lair",
 }
+
+newEntity{ base="ZONE_PLAINS", define_as = "TEMPEST_PEAK",
+	name="Long road to the Tempest Peak",
+	color=colors.WHITE,
+	add_displays={mod.class.Grid.new{image="terrain/road_upwards_01.png", display_h=2, display_y=-1}},
+	change_level=1, change_zone="tempest-peak",
+	change_level_check = function()
+		game.turn = game.turn + 5 * game.calendar.HOUR
+		if not game.player:hasQuest("lightning-overload").walked then
+			require("engine.ui.Dialog"):simpleLongPopup("Danger...", [[After an hours long walk you finally reach the end of the way. You are nearly on top of one of the highest peaks you can see.
+The storm is raging above your head.]], 400)
+			game.player:hasQuest("lightning-overload").walked = true
+		end
+	end,
+}
+
+--------------------------------------------------------------------------------
+-- Far East Zones
+--------------------------------------------------------------------------------
+
+newEntity{ base="ZONE_DESERT", define_as = "RAK_SHOR_PRIDE",
+	name="Entrance to Rak'shor Pride bastion",
+	color=colors.UMBER,
+	add_displays = {mod.class.Grid.new{image="terrain/dungeon_entrance_closed02.png", z=5}},
+	change_zone="rak-shor-pride",
+}
+
+newEntity{ base="ZONE_DESERT", define_as = "GORBAT_PRIDE",
+	name="Entrance to Gorbat Pride bastion",
+	color=colors.UMBER,
+	add_displays = {mod.class.Grid.new{image="terrain/dungeon_entrance_closed02.png", z=5}},
+	change_zone="gorbat-pride",
+}
+
+newEntity{ base="ZONE_PLAINS", define_as = "GRUSHNAK_PRIDE",
+	name="Entrance to Grushnak Pride bastion",
+	color=colors.UMBER,
+	add_displays = {mod.class.Grid.new{image="terrain/ladder_down.png", z=5}},
+	change_zone="grushnak-pride",
+}
+
+newEntity{ base="ZONE_PLAINS", define_as = "VOR_PRIDE",
+	name="Entrance to Vor Pride bastion",
+	color=colors.UMBER,
+	add_displays = {mod.class.Grid.new{image="terrain/dungeon_entrance_closed02.png", z=5}},
+	change_zone="vor-pride",
+}
+
+newEntity{ base="ZONE_PLAINS", define_as = "VOR_ARMOURY",
+	name="Backdoor to the Vor Armoury",
+	color=colors.UMBER,
+	add_displays = {mod.class.Grid.new{image="terrain/dungeon_entrance_closed02.png", z=5}},
+	change_zone="vor-armoury",
+}
+
+newEntity{ base="ZONE_DESERT", define_as = "BRIAGH_LAIR",
+	name="Entrance into the sandpit of Briagh",
+	color=colors.YELLOW,
+	add_displays = {mod.class.Grid.new{image="terrain/ladder_down.png", z=5}},
+	change_zone="briagh-lair",
+}
+
+newEntity{ base="ZONE_DESERT", define_as = "CAVERN_MOON",
+	name="Cavern leading to the valley of the moon",
+	color=colors.GREY,
+	add_displays = {mod.class.Grid.new{image="terrain/cave_entrance_closed02.png", z=5}},
+	change_zone="valley-moon-caverns",
+}
+
+newEntity{ base="ZONE_PLAINS", define_as = "ARDHUNGOL",
+	name="A way into the caverns of Ardhungol",
+	color=colors.GREEN,
+	add_displays = {mod.class.Grid.new{image="terrain/cave_entrance02.png", z=5}},
+	change_zone="ardhungol",
+}
+
+newEntity{ base="ZONE_DESERT", define_as = "ERUAN",
+	name="The arid wastes of Erúan",
+	color=colors.UMBER,
+	add_displays={mod.class.Grid.new{image="terrain/road_upwards_01.png", display_h=2, display_y=-1}},
+	change_zone="eruan",
+}
+
+START POSITION RESET ON RELOAD ????

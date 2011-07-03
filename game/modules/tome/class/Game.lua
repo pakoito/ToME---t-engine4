@@ -487,6 +487,12 @@ function _M:leaveLevel(level, lev, old_lev)
 end
 
 function _M:onLevelLoad(id, fct)
+	if self.zone and self.level and id == self.zone.short_name.."-"..self.level.level then
+		print("Direct execute of on level load", id, fct)
+		fct(self.zone, self.level)
+		return
+	end
+
 	self.on_level_load_fcts = self.on_level_load_fcts or {}
 	self.on_level_load_fcts[id] = self.on_level_load_fcts[id] or {}
 	local l = self.on_level_load_fcts[id]
@@ -1002,7 +1008,13 @@ function _M:setupCommands()
 --			local m = game.zone:makeEntity(game.level, "actor", {random_boss=true}, nil, true)
 --			if m then game.zone:addEntity(game.level, m, "actor", game.player.x, game.player.y + 1) end
 --			self:changeLevel(1, "test")
-			self.level.map:particleEmitter(game.player.x, game.player.y, 1, "flame")
+			local list = mod.class.Object:loadList("/data/general/objects/brotherhood-artifacts.lua")
+			for _, e in ipairs(list) do if e.image and e.unique then
+				local o = e:clone()
+				o:resolve() o:resolve(nil,true)
+				local x, y = util.findFreeGrid(self.player.x, self.player.y, 15, true, {[engine.Map.OBJECT]=true})
+				game.zone:addEntity(game.level, o, "object", x, y)
+			end end
 		end end,
 	}
 

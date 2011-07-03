@@ -56,16 +56,10 @@ end
 start_search = function(self, who)
 	-- Reveal entrances
 	game:onLevelLoad("wilderness-1", function(zone, level)
-		local g = mod.class.Grid.new{
-			show_tooltip=true, always_remember = true,
-			name="Cavern leading to the valley of the moon",
-			display='>', color=colors.GREY,
-			notice = true,
-			change_level=1, change_zone="valley-moon-caverns"
-		}
-		g:resolve() g:resolve(nil, true)
+		local g = game.zone:makeEntityByName(level, "terrain", "CAVERN_MOON")
 		local spot = level:pickSpot{type="zone-pop", subtype="valley-moon-caverns"}
 		game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
+		game.nicer_tiles:updateAround(game.level, spot.x, spot.y)
 	end)
 
 	who:setQuestStatus(self.id, engine.Quest.COMPLETED, "search-valley")

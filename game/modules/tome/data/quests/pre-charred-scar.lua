@@ -30,16 +30,9 @@ on_grant = function(self, who)
 	local chat = engine.Chat.new("pre-charred-scar", aeryn, who)
 	chat:invoke()
 
-	-- Reveal  entrance
+	-- Reveal entrance
 	game:onLevelLoad("wilderness-1", function(zone, level)
-		local g = mod.class.Grid.new{
-			show_tooltip=true, always_remember = true,
-			name="The arid wastes of Erúan",
-			display='>', color=colors.UMBER,
-			notice = true,
-			change_level=1, change_zone="eruan"
-		}
-		g:resolve() g:resolve(nil, true)
+		local g = game.zone:makeEntityByName(level, "terrain", "ERUAN")
 		local spot = level:pickSpot{type="zone-pop", subtype="eruan"}
 		game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 	end)

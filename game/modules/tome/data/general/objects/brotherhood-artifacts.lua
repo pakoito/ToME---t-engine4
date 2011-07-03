@@ -27,7 +27,7 @@ local Talents = require "engine.interface.ActorTalents"
 newEntity{
 	power_source = {nature=true},
 	define_as = "ELIXIR_FOX",
-	type = "potion", subtype="potion",
+	type = "potion", subtype="potion", image = "object/elixir_of_the_fox.png",
 	name = "Elixir of the Fox", unique=true, unided_name="vial of pink fluid",
 	display = "!", color=colors.VIOLET,
 	desc = [[A vial of pink, airy fluid.]],
@@ -48,7 +48,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	define_as = "ELIXIR_AVOIDANCE",
-	type = "potion", subtype="potion",
+	type = "potion", subtype="potion", image = "object/elixir_of_avoidance.png",
 	name = "Elixir of Avoidance", unique=true, unided_name="vial of green fluid",
 	display = "!", color=colors.GREEN,
 	desc = [[A vial of opaque green fluid.]],
@@ -66,7 +66,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	define_as = "ELIXIR_PRECISION",
-	type = "potion", subtype="potion",
+	type = "potion", subtype="potion", image = "object/elixir_of_precision.png",
 	name = "Elixir of Precision", unique=true, unided_name="vial of red fluid",
 	display = "!", color=colors.GREEN,
 	desc = [[A vial of chunky red fluid.]],
@@ -84,7 +84,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	define_as = "ELIXIR_MYSTICISM",
-	type = "potion", subtype="potion",
+	type = "potion", subtype="potion", image = "object/elixir_of_mysticism.png",
 	name = "Elixir of Mysticism", unique=true, unided_name="vial of cyan fluid",
 	display = "!", color=colors.BLUE,
 	desc = [[A vial of glowing cyan fluid.]],
@@ -105,7 +105,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	define_as = "ELIXIR_SAVIOR",
-	type = "potion", subtype="potion",
+	type = "potion", subtype="potion", image = "object/elixir_of_the_saviour.png",
 	name = "Elixir of the Savior", unique=true, unided_name="vial of grey fluid",
 	display = "!", color=colors.GREY,
 	desc = [[A vial of bubbling, slate-colored fluid.]],
@@ -125,7 +125,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	define_as = "ELIXIR_MASTERY",
-	type = "potion", subtype="potion",
+	type = "potion", subtype="potion", image = "object/elixir_of_mastery.png",
 	name = "Elixir of Mastery", unique=true, unided_name="vial of maroon fluid",
 	display = "!", color=colors.PURPLE,
 	desc = [[A vial of thick maroon fluid.]],
@@ -144,7 +144,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	define_as = "ELIXIR_FORCE",
-	type = "potion", subtype="potion",
+	type = "potion", subtype="potion", image = "object/elixir_of_explosive_force.png",
 	name = "Elixir of Explosive Force", unique=true, unided_name="vial of orange fluid",
 	display = "!", color=colors.ORANGE,
 	desc = [[A vial of churning orange fluid.]],
@@ -162,7 +162,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	define_as = "ELIXIR_SERENDIPITY",
-	type = "potion", subtype="potion",
+	type = "potion", subtype="potion", image = "object/elixir_of_serendipity.png",
 	name = "Elixir of Serendipity", unique=true, unided_name="vial of yellow fluid",
 	display = "!", color=colors.YELLOW,
 	desc = [[A vial of lifelike yellow fluid.]],
@@ -181,7 +181,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	define_as = "ELIXIR_FOCUS",
-	type = "potion", subtype="potion",
+	type = "potion", subtype="potion", image = "object/elixir_of_focus.png",
 	name = "Elixir of Focus", unique=true, unided_name="vial of clear fluid",
 	display = "!", color=colors.WHITE,
 	desc = [[A vial of clear, steaming fluid.]],
@@ -199,7 +199,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	define_as = "ELIXIR_BRAWN",
-	type = "potion", subtype="potion",
+	type = "potion", subtype="potion", image = "object/elixir_of_brawn.png",
 	name = "Elixir of Brawn", unique=true, unided_name="vial of tan fluid",
 	display = "!", color=colors.TAN,
 	desc = [[A vial of sluggish tan fluid.]],
@@ -220,7 +220,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	define_as = "ELIXIR_STONESKIN",
-	type = "potion", subtype="potion",
+	type = "potion", subtype="potion", image = "object/elixir_of_stoneskin.png",
 	name = "Elixir of Stoneskin", unique=true, unided_name="vial of iron-colored fluid",
 	display = "!", color=colors.SLATE,
 	desc = [[A vial of grainy, iron-colored fluid.]],
@@ -238,7 +238,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	define_as = "ELIXIR_FOUNDATIONS",
-	type = "potion", subtype="potion",
+	type = "potion", subtype="potion", image = "object/elixir_of_foundations.png",
 	name = "Elixir of Foundations", unique=true, unided_name="vial of white fluid",
 	display = "!", color=colors.WHITE,
 	desc = [[A vial of murky wuite fluid.]],
@@ -257,12 +257,12 @@ newEntity{
 
 newEntity{ base = "BASE_TAINT",
 	name = "Taint of Telepathy",
-	define_as = "TAINT_TELEPATHY",
+	define_as = "TAINT_TELEPATHY", image = "object/taint_of_telepathy.png",
 	unique = true,
 	identified = true,
 	cost = 200,
 	material_level = 3,
-	
+
 	inscription_kind = "utility",
 	inscription_data = {
 		cooldown = 30,
@@ -273,12 +273,12 @@ newEntity{ base = "BASE_TAINT",
 
 newEntity{ base = "BASE_INFUSION",
 	name = "Infusion of Wild Growth",
-	define_as = "INFUSION_WILD_GROWTH",
+	define_as = "INFUSION_WILD_GROWTH", image = "object/infusion_of_wild_growth.png",
 	unique = true,
 	identified = true,
 	cost = 200,
 	material_level = 3,
-	
+
 	inscription_kind = "utility",
 	inscription_data = {
 		cooldown = 30,
@@ -292,8 +292,8 @@ newEntity{ base = "BASE_GEM",
 	power_source = {nature=true},
 	unique = true,
 	unided_name = "cloudy, heavy emerald",
-	name = "Lifebinding Emerald", subtype = "green",
-	color = colors.GREEN, image="object/emerald.png",
+	name = "Lifebinding Emerald", subtype = "green", image = "object/lifebinding_emerald.png",
+	color = colors.GREEN,
 	desc = [[A lopsided, heavy emerald with murky green clouds shifting sluggishly under the surface.]],
 	cost = 200,
 	material_level = 5,
@@ -319,7 +319,7 @@ newEntity{
 	power_source = {nature=true},
 	define_as = "ELIXIR_INVULNERABILITY",
 	encumber = 2,
-	type = "potion", subtype="potion",
+	type = "potion", subtype="potion", image = "object/elixir_of_invulnerability.png",
 	name = "Elixir of Invulnerability", unique=true, unided_name="vial of black fluid",
 	display = "!", color=colors.SLATE,
 	desc = [[A vial of thick fluid, metallic and reflective. It's incredibly heavy.]],

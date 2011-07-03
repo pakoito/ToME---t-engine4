@@ -122,28 +122,9 @@ end
 access_angolwen = function(self, player)
 	if player:hasQuest("antimagic") and not player:hasQuest("antimagic"):isEnded() then player:setQuestStatus("antimagic", engine.Quest.FAILED) end -- Fail antimagic quest
 
-	local g = mod.class.Grid.new{
-		type = "floor", subtype = "grass",
-		show_tooltip=true, always_remember = true,
-		name="Angolwen, the hidden city of magic",
-		desc="Secret place of magic, set apart from the world to protect it.",
-		display='*', color=colors.WHITE, image="terrain/grass.png", add_displays={mod.class.Grid.new{image="terrain/town1.png", z=5}},
-		notice = true,
-		change_level=1, change_zone="town-angolwen"
-	}
-	local p = mod.class.Grid.new{
-		type = "floor", subtype = "grass",
-		show_tooltip=true, always_remember = true,
-		name="Portal to Angolwen",
-		desc="The city of magic lies inside the mountains to the west. Either a spell or a portal is needed to access it.",
-		display='*', color=colors.VIOLET, image = "terrain/grass.png", add_displays = {mod.class.Grid.new{image="terrain/maze_teleport.png"}},
-		notice = true,
-		change_level=1, change_zone="town-angolwen",
-		change_level_check = function() local p = game.party:findMember{main=true} if p:attr("forbid_arcane") then game.log("The portal fizzles.") return true end return false end
-	}
-	g:resolve() g:resolve(nil, true)
-	p:resolve() p:resolve(nil, true)
 	local level = game.level
+	local g = game.zone:makeEntityByName(game.level, "terrain", "TOWN_ANGOLWEN")
+	local p = game.zone:makeEntityByName(game.level, "terrain", "TOWN_ANGOLWEN_PORTAL")
 	local spot = level:pickSpot{type="zone-pop", subtype="angolwen"}
 	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 	game.nicer_tiles:updateAround(game.level, spot.x, spot.y)

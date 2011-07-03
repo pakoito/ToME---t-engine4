@@ -29,14 +29,14 @@ newEntity{
 		local x, y = self:findSpotGeneric(who, function(map, x, y) local enc = map:checkAllEntities(x, y, "can_encounter") return enc and enc == "water" end)
 		if not x then return end
 
-		local g = mod.class.Grid.new{
-			show_tooltip=true,
-			name="Entrance to an underwater cave",
-			display='>', color=colors.AQUAMARINE,
-			notice = true,
-			change_level=1, change_zone="flooded-cave"
-		}
-		g:resolve() g:resolve(nil, true)
+		local g = game.level.map(x, y, engine.Map.TERRAIN):cloneFull()
+		g.name = "Entrance to an underwater cave"
+		g.display='>' g.color_r=colors.AQUAMARINE.r g.color_g=colors.AQUAMARINE.g g.color_b=colors.AQUAMARINE.b g.notice = true
+		g.change_level=1 g.change_zone="flooded-cave"
+		g.add_displays = g.add_displays or {}
+		g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/underwater/subsea_cave_entrance_01.png", z=4, display_h=2, display_y=-1}
+		g.nice_tiler = nil
+		g.does_block_move = nil
 		game.zone:addEntity(game.level, g, "terrain", x, y)
 		game.logPlayer(who, "#LIGHT_BLUE#You notice an entrance to an underwater cave.")
 		return true
@@ -51,16 +51,14 @@ newEntity{
 		local x, y = self:findSpot(who)
 		if not x then return end
 
-		local g = mod.class.Grid.new{
-			show_tooltip=true,
-			name="Entrance to a dark crypt",
-			display='>', color=colors.GREY,
-			notice = true,
-			change_level=1, change_zone="shadow-crypt"
-		}
-		g:resolve() g:resolve(nil, true)
+		local g = game.level.map(x, y, engine.Map.TERRAIN):cloneFull()
+		g.name = "Entrance to a dark crypt"
+		g.display='>' g.color_r=128 g.color_g=128 g.color_b=128 g.notice = true
+		g.change_level=1 g.change_zone="shadow-crypt"
+		g.add_displays = g.add_displays or {}
+		g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/dungeon_entrance_closed02.png", z=5}
+		g.nice_tiler = nil
 		game.zone:addEntity(game.level, g, "terrain", x, y)
-		game.logPlayer(who, "#LIGHT_BLUE#You notice an entrance to a dark crypt. Fetid wind seems to come out of it.")
 		return true
 	end
 }
@@ -73,16 +71,14 @@ newEntity{
 		local x, y = self:findSpot(who)
 		if not x then return end
 
-		local g = mod.class.Grid.new{
-			show_tooltip=true,
-			name="Entrance to the orc breeding pit",
-			display='>', color=colors.GREEN,
-			notice = true,
-			change_level=1, change_zone="orc-breeding-pit"
-		}
-		g:resolve() g:resolve(nil, true)
+		local g = game.level.map(x, y, engine.Map.TERRAIN):cloneFull()
+		g.name = "Entrance to the orc breeding pit"
+		g.display='>' g.color_r=colors.GREEN.r g.color_g=colors.GREEN.g g.color_b=colors.GREEN.b g.notice = true
+		g.change_level=1 g.change_zone="orc-breeding-pit"
+		g.add_displays = g.add_displays or {}
+		g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/ladder_down.png"}
+		g.nice_tiler = nil
 		game.zone:addEntity(game.level, g, "terrain", x, y)
-		game.logPlayer(who, "#LIGHT_BLUE#You find an entrance to a dim, moist cavern. The stench of the warm air rising from it is almost unbearable.")
 		return true
 	end
 }

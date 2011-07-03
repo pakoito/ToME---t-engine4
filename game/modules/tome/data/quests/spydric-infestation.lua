@@ -32,16 +32,11 @@ end
 on_grant = function(self, who)
 	-- Reveal entrance
 	game:onLevelLoad("wilderness-1", function(zone, level)
-		local g = mod.class.Grid.new{
-			show_tooltip=true, always_remember = true,
-			name="A way into the caverns of Ardhungol",
-			display='>', color=colors.GREEN,
-			notice = true,
-			change_level=1, change_zone="ardhungol"
-		}
+		local g = game.zone:makeEntityByName(level, "terrain", "ARDHUNGOL")
 		g:resolve() g:resolve(nil, true)
 		local spot = level:pickSpot{type="zone-pop", subtype="ardhungol"}
 		game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
+		game.nicer_tiles:updateAround(game.level, spot.x, spot.y)
 	end)
 	game.logPlayer(game.player, "She marks the location of Ardhungol on your map.")
 end
@@ -55,7 +50,8 @@ portal_back = function(self, who)
 		name="Portal back to the Gates of Morning",
 		display='>', color=colors.GOLD,
 		notice = true,
-		change_level=1, change_zone="town-gates-of-morning"
+		change_level=1, change_zone="town-gates-of-morning",
+		image = "terrain/granite_floor1.png", add_mods={{image="terrain/demon_portal.png"}},
 	}
 	g:resolve() g:resolve(nil, true)
 	game.zone:addEntity(game.level, g, "terrain", who.x, who.y)
