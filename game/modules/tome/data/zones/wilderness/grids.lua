@@ -538,5 +538,3 @@ newEntity{ base="ZONE_DESERT", define_as = "ERUAN",
 	add_displays={mod.class.Grid.new{image="terrain/road_upwards_01.png", display_h=2, display_y=-1}},
 	change_zone="eruan",
 }
-
-START POSITION RESET ON RELOAD ????

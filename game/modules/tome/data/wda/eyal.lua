@@ -156,3 +156,5 @@ elseif zone == "Far East" then
 		end
 	end
 end
+
+game.level.level = 1
