@@ -468,11 +468,11 @@ function _M:drawDialog(kind, actor_to_compare)
 				text3 = ""
 			end
 
-			if StatVal > player:getStat(stat) then
-				StatTxt = ("%s: #ff0000#%3d / %d#LAST#%s"):format(name, player:getStat(stat, nil, nil, true), player:getStat(stat), text3)
-			else
+--			if StatVal > player:getStat(stat) then
+--				StatTxt = ("%s: #ff0000#%3d / %d#LAST#%s"):format(name, player:getStat(stat, nil, nil, true), player:getStat(stat), text3)
+--			else
 				StatTxt = ("%s: #00ff00#%3d / %d#LAST#%s"):format(name, player:getStat(stat, nil, nil, true), player:getStat(stat), text3)
-			end
+--			end
 
 			self:mouseTooltip(tooltip, s:drawColorStringBlended(self.font, StatTxt, w, h, 255, 255, 255, true)) h = h + self.font_h
 		end
