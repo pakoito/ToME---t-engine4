@@ -107,7 +107,7 @@ function _M:use(item)
 		d:mouseZones{ norestrict=true,
 			{ x=0, y=0, w=game.w, h=game.h, fct=function(button, x, y, xrel, yrel, tx, ty)
 				if xrel or yrel then return end
-				if button == "left" then return end
+				if button == "right" then return end
 
 				local ks = KeyBind:makeMouseString(
 					button,

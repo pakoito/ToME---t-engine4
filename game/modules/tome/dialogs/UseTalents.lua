@@ -46,8 +46,10 @@ Right click or press '*' to configure.
 		{name="Talent", width=80, display_prop="name"},
 		{name="Status", width=20, display_prop="status"},
 		{name="Hotkey", width={75,"fixed"}, display_prop="hotkey"},
-		{name="Left Mouse", width={60,"fixed"}, display_prop=function(item)
-			if item.talent and item.talent == self.actor.auto_shoot_talent then return "LeftClick" else return "" end
+		{name="Mouse Click", width={60,"fixed"}, display_prop=function(item)
+			if item.talent and item.talent == self.actor.auto_shoot_talent then return "LeftClick" 
+			elseif item.talent and item.talent == self.actor.auto_shoot_midclick_talent then return "MiddleClick"
+			else return "" end
 		end},
 	}
 	self.c_list = TreeList.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 10, all_clicks=true, scrollbar=true, columns=cols, tree=self.list, fct=function(item, sel, button) self:use(item, button) end, select=function(item, sel) self:select(item) end}

@@ -106,6 +106,7 @@ on_turn = function(self)
 	foe.is_ring_foe = true
 	foe.faction = "neutral"
 	foe.arena_old_on_die = foe.on_die
+	foe.no_drops = true
 	foe.on_die = function(self, ...)
 		local q = game.player:hasQuest("ring-of-blood")
 		q.inside_kills = q.inside_kills + 1

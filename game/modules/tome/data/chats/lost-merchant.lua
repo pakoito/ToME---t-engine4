@@ -28,7 +28,7 @@ newChat{ id="welcome",
 newChat{ id="welcome2",
 	text = [[Please get me out of here!]],
 	answers = {
-		{"Come, there is a way out!", action = function(npc, player) npc.can_talk = nil end},
+		{"Come, there is a way out!", action = function(npc, player) npc.can_talk = nil npc.cant_be_moved = nil end},
 	}
 }
 

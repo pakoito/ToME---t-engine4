@@ -36,7 +36,7 @@ newEntity{
 
 newEntity{
 	define_as = "BASE_INFUSION",
-	type = "scroll", subtype="infusion", add_name = " [#INSCRIPTION#]",
+	type = "scroll", subtype="infusion", add_name = " (#INSCRIPTION#)",
 	unided_name = "infusion", id_by_type = true,
 	display = "?", color=colors.LIGHT_GREEN, image="object/rune_green.png",
 	encumber = 0.1,
@@ -58,7 +58,7 @@ newEntity{
 
 newEntity{
 	define_as = "BASE_RUNE",
-	type = "scroll", subtype="rune", add_name = " [#INSCRIPTION#]",
+	type = "scroll", subtype="rune", add_name = " (#INSCRIPTION#)",
 	unided_name = "rune", id_by_type = true,
 	display = "?", color=colors.LIGHT_BLUE, image="object/rune_red.png",
 	encumber = 0.1,
@@ -81,7 +81,7 @@ newEntity{
 
 newEntity{
 	define_as = "BASE_TAINT",
-	type = "scroll", subtype="taint", add_name = " [#INSCRIPTION#]",
+	type = "scroll", subtype="taint", add_name = " (#INSCRIPTION#)",
 	unided_name = "taint", id_by_type = true,
 	display = "?", color=colors.LIGHT_BLUE, image="object/rune_yellow.png",
 	encumber = 0.1,
