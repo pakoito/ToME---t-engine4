@@ -97,8 +97,8 @@ function _M:display(x, y)
 	for i = self.scroll, max do
 		local item = self.list[i]
 		if not item then break end
-		if self.text_shadow then item._tex:toScreenFull(x+1, y+1, self.fw, self.fh, item._tex_w, item._tex_h, 0, 0, 0, self.text_shadow) end
-		item._tex:toScreenFull(x, y, self.fw, self.fh, item._tex_w, item._tex_h)
+		if self.text_shadow then item._tex:toScreenFull(x+1, y+1, item.w, item.h, item._tex_w, item._tex_h, 0, 0, 0, self.text_shadow) end
+		item._tex:toScreenFull(x, y, item.w, item.h, item._tex_w, item._tex_h)
 		y = y + self.fh
 	end
 
