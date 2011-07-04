@@ -947,9 +947,26 @@ function _M:getSubtypeOrder()
 	return self.subtype or ""
 end
 
+--- Gets the item's flag value
+function _M:getPriceFlags()
+	local price = 0
+
+	local function count(w)
+		if w.stun_immune then price = price + w.stun_immune * 80 end
+	end
+
+	if self.carrier then count(self.carrier) end
+	if self.wilder then count(self.wilder) end
+	return price
+end
+
 --- Get item cost
 function _M:getPrice()
-	return self.cost or 0
+	local base = self.cost or 0
+	if self.egoed then
+		base = base + self:getPriceFlags()
+	end
+	return base
 end
 
 --- Called when trying to pickup
