@@ -178,7 +178,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[All your foes infected with a disease enter a catalepsy, stunning them for %d turns and dealing all remaining disease damage instantly.]]):
+		return ([[All your foes within a radius 2 ball infected with a disease enter a catalepsy, stunning them for %d turns and dealing all remaining disease damage instantly.]]):
 		format(math.floor(2 + self:getTalentLevel(t) / 2))
 	end,
 }
@@ -238,7 +238,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Infects the target with a very contagious disease doing %0.2f damage per turn for 6 turns.
-		If any blight damage from non-diseases hits the target, the epidemic may activate and spread a random disease to nearby targets.
+		If any blight damage from non-diseases hits the target, the epidemic may activate and spread a random disease to nearby targets within a radius 2 ball.
 		Creatures suffering from that disease will also suffer healing reduction (%d%%).
 		The damage will increase with your Magic stat, and the spread chance increases with the blight damage.]]):
 		format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 15, 50)), 40 + self:getTalentLevel(t) * 4)

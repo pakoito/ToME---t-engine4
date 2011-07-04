@@ -50,9 +50,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You extract corrupted blood from your own body, hitting everything in a frontal cone for %0.2f blight damage.
+		return ([[You extract corrupted blood from your own body, hitting everything in a frontal cone of radius %d for %0.2f blight damage.
 		Each affected creature has a %d%% chance of being infected by a random disease doing %0.2f blight damage over 6 turns.
-		The damage will increase with Magic stat.]]):format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 10, 190)), 20 + self:getTalentLevel(t) * 10, damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 10, 220)))
+		The damage will increase with Magic stat.]]):format(self:getTalentRadius(t), damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 10, 190)), 20 + self:getTalentLevel(t) * 10, damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 10, 220)))
 	end,
 }
 
@@ -108,8 +108,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Make the blood of all creatures around you boil, doing %0.2f blight damage and slowing them by 20%%.
-		The damage will increase with Magic stat.]]):format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 28, 190)))
+		return ([[Make the blood of all creatures around you in radius %d boil, doing %0.2f blight damage and slowing them by 20%%.
+		The damage will increase with Magic stat.]]):format(self:getTalentRadius(t), damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 28, 190)))
 	end,
 }
 

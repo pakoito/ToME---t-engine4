@@ -110,8 +110,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Fire bone spears in all directions, hitting all your foes for %0.2f physical damage.
-		The damage will increase with your Magic stat.]]):format(damDesc(self, DamageType.PHYSICAL, self:combatTalentSpellDamage(t, 8, 180)))
+		return ([[Fire bone spears in all directions, hitting all your foes within radius %d for %0.2f physical damage.
+		The damage will increase with your Magic stat.]]):format(self:getTalentRadius(t), damDesc(self, DamageType.PHYSICAL, self:combatTalentSpellDamage(t, 8, 180)))
 	end,
 }
 

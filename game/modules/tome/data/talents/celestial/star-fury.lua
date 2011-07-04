@@ -96,7 +96,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local damageonspot = t.getDamageOnSpot(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[Invokes a blast of shadows dealing %0.2f darkness damage and leaving a field that does %0.2f darkness damage per turn for %d turns.
+		return ([[Invokes a blast of shadows dealing %0.2f darkness damage and leaving a field of radius 3 that does %0.2f darkness damage per turn for %d turns.
 		The damage will increase with the Magic stat]]):
 		format(damDesc(self, DamageType.DARKNESS, damage),damDesc(self, DamageType.DARKNESS, damageonspot),duration)
 	end,
@@ -132,10 +132,11 @@ newTalent{
 	info = function(self, t)
 		local lightdam = t.getLightDamage(self, t)
 		local darknessdam = t.getDarknessDamage(self, t)
-		return ([[A surge of twilight pulses from you, doing %0.2f light and %0.2f darkness damage.
+		local radius = self:getTalentRadius(t)
+		return ([[A surge of twilight pulses from you, doing %0.2f light and %0.2f darkness damage within radius %d.
 		It also regenerates both your negative and positive energies.
 		The damage will increase with the Magic stat]]):
-		format(damDesc(self, DamageType.LIGHT, lightdam),damDesc(self, DamageType.DARKNESS, darknessdam))
+		format(damDesc(self, DamageType.LIGHT, lightdam),damDesc(self, DamageType.DARKNESS, darknessdam), radius)
 	end,
 }
 

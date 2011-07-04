@@ -590,7 +590,7 @@ newInscription{
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[Activate the rune to fire a self-centered acid wave, doing %0.2f acid damage.]]):format(damDesc(self, DamageType.ACID, data.power + data.inc_stat))
+		return ([[Activate the rune to fire a self-centered acid wave of radius %d, doing %0.2f acid damage.]]):format(self:getTalentRadius(t), damDesc(self, DamageType.ACID, data.power + data.inc_stat))
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)

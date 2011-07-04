@@ -113,8 +113,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your battle cry shatters the will of your foes, lowering their defense by %d for 7 turns, making them easier to hit.
+		return ([[Your battle cry shatters the will of your foes within a radius of %d, lowering their defense by %d for 7 turns, making them easier to hit.
 		Lowering defense chance increase with your Strength stat.]]):
-		format(7 * self:getTalentLevel(t))
+		format(self:getTalentRadius(t), 7 * self:getTalentLevel(t))
 	end,
 }

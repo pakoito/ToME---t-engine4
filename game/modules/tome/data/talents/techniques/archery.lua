@@ -325,9 +325,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You fire multiple shots at the area, doing %d%% damage and stunning your targets for %d turns.
+		return ([[You fire multiple shots in a circular pattern with radius %d, doing %d%% damage and stunning your targets for %d turns.
 		Stun chance increase with your Dexterity stat.]])
-		:format(self:combatTalentWeaponDamage(t, 0.5, 1.5) * 100,
-		2 + self:getTalentLevelRaw(t))
+		:format(self:getTalentRadius(t), self:combatTalentWeaponDamage(t, 0.5, 1.5) * 100, 2 + self:getTalentLevelRaw(t))
 	end,
 }

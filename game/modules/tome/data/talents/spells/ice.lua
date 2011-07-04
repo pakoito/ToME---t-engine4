@@ -50,7 +50,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Invoke ice shards at the targets in the selected area. Each shard travels slowly and does %0.2f ice damage on impact.
+		return ([[Invoke ice shards at the targets in the selected area. Each shard travels slowly and does %0.2f ice damage, hitting all adjacent targets on impact.
 		This spell will never hit the caster.
 		The damage will increase with the Magic stat]]):
 		format(damDesc(self, DamageType.COLD, damage))
@@ -81,9 +81,10 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Blast a wave of cold all around you, doing %0.2f cold damage and freezing creatures to the ground for 4 turns.
+		local radius = self:getTalentRadius(t)
+		return ([[Blast a wave of cold all around you with radius %d, doing %0.2f cold damage and freezing creatures to the ground for 4 turns.
 		Affected creatures can still act but not move.
-		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.COLD, damage))
+		The damage will increase with the Magic stat]]):format(radius, damDesc(self, DamageType.COLD, damage))
 	end,
 }
 

@@ -145,7 +145,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[You breathe sand in a frontal cone. Any target caught in the area will take %0.2f physical damage and be blinded for %d turns.
-		The damage will increase with the Strength stat]]):format(damDesc(self, DamageType.PHYSICAL, damage), duration)
+		return ([[You breathe sand in a frontal cone of radius %d. Any target caught in the area will take %0.2f physical damage and be blinded for %d turns.
+		The damage will increase with the Strength stat]]):format(self:getTalentRadius(t), damDesc(self, DamageType.PHYSICAL, damage), duration)
 	end,
 }

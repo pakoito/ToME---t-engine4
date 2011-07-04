@@ -77,8 +77,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You summon a powerful gust of wind, knocking back your foes up to 4 titles away and damaging them for %d.
-		The damage will increase with the Strength stat]]):format(self:combatTalentStatDamage(t, "str", 15, 90))
+		return ([[You summon a powerful gust of wind, knocking back your foes within a radius of %d up to 4 tiles away and damaging them for %d.
+		The damage will increase with the Strength stat]]):format(self:getTalentRadius(t), self:combatTalentStatDamage(t, "str", 15, 90))
 	end,
 }
 
@@ -160,7 +160,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You breathe fire in a frontal cone. Any target caught in the area will take %0.2f fire damage over 3 turns.
-		The damage will increase with the Strength stat]]):format(damDesc(self, DamageType.FIRE, self:combatTalentStatDamage(t, "str", 30, 550)))
+		return ([[You breathe fire in a frontal cone of radius %d. Any target caught in the area will take %0.2f fire damage over 3 turns.
+		The damage will increase with the Strength stat]]):format(self:getTalentRadius(t), damDesc(self, DamageType.FIRE, self:combatTalentStatDamage(t, "str", 30, 550)))
 	end,
 }

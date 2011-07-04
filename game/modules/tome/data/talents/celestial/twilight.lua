@@ -170,7 +170,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local duration = t.getConfuseDuration(self, t)
-		return ([[Let out a mental cry that shatters the will of your targets, confusing them for %d turns.
+		return ([[Let out a mental cry that shatters the will of your targets within radius 3, confusing them for %d turns.
 		The duration will improve with the Cunning stat.]]):
 		format(duration)
 	end,

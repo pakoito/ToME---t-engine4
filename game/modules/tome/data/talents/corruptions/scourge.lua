@@ -135,7 +135,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Strike with each of your weapons, doing %d%% acid weapon damage. If at least one of the strikes hits an acid splash is generated doing %0.2f acid damage.
+		return ([[Strike with each of your weapons, doing %d%% acid weapon damage. If at least one of the strikes hits an acid splash is generated doing %0.2f acid damage to all targets adjacent to the foe you struck.
 		The splash damage will increase with your Magic stat.]]):
 		format(100 * self:combatTalentWeaponDamage(t, 0.8, 1.6), damDesc(self, DamageType.ACID, self:combatTalentSpellDamage(t, 10, 130)))
 	end,

@@ -120,9 +120,10 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local stunduration = t.getStunDuration(self, t)
-		return ([[Conjures up a cone of flame. Any target caught in the area will take %0.2f fire damage and be paralyzed for %d turns.
+		local radius = self:getTalentRadius(t)
+		return ([[Conjures up a cone of flame with radius %d. Any target caught in the area will take %0.2f fire damage and be paralyzed for %d turns.
 		The damage will increase with the Magic stat]]):
-		format(damDesc(self, DamageType.FIRE, damage), stunduration)
+		format(radius, damDesc(self, DamageType.FIRE, damage), stunduration)
 	end,
 }
 

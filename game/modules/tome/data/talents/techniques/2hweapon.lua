@@ -140,8 +140,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Shout your warcry in a frontal cone. Any targets caught inside will be confused for %d turns.]]):
-		format(3 + self:getTalentLevelRaw(t))
+		return ([[Shout your warcry in a frontal cone of radius %d. Any targets caught inside will be confused for %d turns.]]):
+		format(self:getTalentRadius(t), 3 + self:getTalentLevelRaw(t))
 	end,
 }
 
