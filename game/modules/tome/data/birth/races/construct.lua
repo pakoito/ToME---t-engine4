@@ -48,7 +48,7 @@ newBirthDescriptor
 	locked_desc = "",
 	desc = {
 		"Runic Golems are creatures made of solid rock and animated using arcane forces.",
-		"They can not be of any class, but they have many intrinsinc abilities.",
+		"They cannot be of any class, but they have many intrinsic abilities.",
 		"#GOLD#Stat modifiers:",
 		"#LIGHT_BLUE# * +3 Strength, -2 Dexterity, +3 Constitution",
 		"#LIGHT_BLUE# * +2 Magic, +2 Willpower, -5 Cunning",

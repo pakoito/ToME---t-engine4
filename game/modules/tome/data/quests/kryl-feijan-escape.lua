@@ -20,15 +20,15 @@
 name = "The Sect of Kryl-Feijan"
 desc = function(self, who)
 	local desc = {}
-	desc[#desc+1] = "You discovered a sect worshiping a demon named Kryl-Feijan in a crypt."
+	desc[#desc+1] = "You discovered a sect worshipping a demon named Kryl-Feijan in a crypt."
 	desc[#desc+1] = "They were trying to bring it back into the world using a human sacrifice."
 	if self:isStatus(self.DONE) then
-		desc[#desc+1] = "You have defeated the acolytes and saved the woman. She told you she is the daughter of a rich merchant of Last Hope."
+		desc[#desc+1] = "You defeated the acolytes and saved the woman. She told you she is the daughter of a rich merchant of Last Hope."
 	elseif self:isStatus(self.FAILED) then
 		if self.not_saved then
-			desc[#desc+1] = "You have failed to protect her when escorting her out of the crypt."
+			desc[#desc+1] = "You failed to protect her when escorting her out of the crypt."
 		else
-			desc[#desc+1] = "You have failed to defeat the acolytes in time - the woman got torn apart by the demon growing inside her."
+			desc[#desc+1] = "You failed to defeat the acolytes in time - the woman got torn apart by the demon growing inside her."
 		end
 	end
 	return table.concat(desc, "\n")

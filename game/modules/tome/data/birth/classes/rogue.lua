@@ -47,7 +47,7 @@ newBirthDescriptor{
 	name = "Rogue",
 	desc = {
 		"Rogues are masters of tricks. A Rogue can get behind you unnoticed and stab you in the back for tremendous damage.",
-		"Rogues usually prefer to dual-wield daggers. They can also become trapping experts, from detecting and disarming traps to setting them.",
+		"Rogues usually prefer to dual-wield daggers. They can also become trapping experts, detecting and disarming traps as well as setting them.",
 		"Their most important stats are: Dexterity and Cunning",
 		"#GOLD#Stat modifiers:",
 		"#LIGHT_BLUE# * +1 Strength, +3 Dexterity, +0 Constitution",

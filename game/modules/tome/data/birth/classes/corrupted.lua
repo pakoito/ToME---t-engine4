@@ -43,7 +43,7 @@ newBirthDescriptor{
 	type = "subclass",
 	name = "Reaver",
 	locked = function() return profile.mod.allow_build.corrupter_reaver end,
-	locked_desc = "Reap thee the souls of thine enemies, and the powers of darkness shall enter thine flesh.",
+	locked_desc = "Reap thee the souls of thine enemies, and the powers of darkness shall enter thy flesh.",
 	desc = {
 		"Reavers are terrible foes, charging their enemies with a weapon in each hand.",
 		"They can harness the blight of evil, infecting their foes with terrible contagious diseases while crushing their skulls with devastating combat techniques.",

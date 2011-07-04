@@ -52,7 +52,7 @@ desc = function(self, who)
 
 	if self:isCompleted() then
 		desc[#desc+1] = ""
-		desc[#desc+1] = "#LIGHT_GREEN#* All prides lie in ruins, their masters destroyed. High Sun Paladin Aeryn would surely be glad of the news!#WHITE#"
+		desc[#desc+1] = "#LIGHT_GREEN#* All the bastions of the Pride lie in ruins, their masters destroyed. High Sun Paladin Aeryn would surely be glad of the news!#WHITE#"
 	end
 
 	return table.concat(desc, "\n")

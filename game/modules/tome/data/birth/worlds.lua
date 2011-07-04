@@ -81,9 +81,9 @@ newBirthDescriptor{
 	{
 		"Play as your favorite race and class and venture into the infinite dungeon.",
 		"The only limit to how far you can go is your own skill!",
-		"Inside the infinite dungeon you will yourself be limitless, you can levelup after level 50 and continue to gain stat and talent points (at a reduced rate).",
-		"Every levels after level 50 the maximun of stats will increase by one.",
-		"Every 10 levels after level 50 the maximun points of every talents will increase by one.",
+		"Inside the infinite dungeon you will yourself be limitless. You can level up beyond level 50 and continue to gain stat and talent points (at a reduced rate).",
+		"Every level after level 50 the maximum of stats will increase by one.",
+		"Every 10 levels after level 50 the maximum points of each talent will increase by one.",
 	},
 	descriptor_choices = default_eyal_descriptors{ difficulty = { Tutorial = "never"} },
 	copy = {

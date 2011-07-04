@@ -26,8 +26,8 @@ newBirthDescriptor{
 	desc = {
 		"The elven races are usually named as a whole 'elves', but this is incorrect.",
 		"Elves are split into three separate races - albeit related - of which only two remain in the current age.",
-		"Elves usualy live about one thousand year, except for the shaloren who magically sustain themselves forever.",
-		"Their view of the world varies wildly between the different elven races.",
+		"Elves usually live about one thousand years, except for the Shaloren who magically sustain themselves forever.",
+		"Their view of the world varies wildly across the different elven races.",
 	},
 	descriptor_choices =
 	{
@@ -59,8 +59,8 @@ newBirthDescriptor
 	type = "subrace",
 	name = "Shalore",
 	desc = {
-		"Shaloren Elves have close ties with the magic of the world, and produced in the past many great mages.",
-		"Yet they remain quiet and try to hide their magic to the world, for they remember too well the Spellblaze - and the spellhunt that followed.",
+		"Shaloren elves have close ties with the magic of the world, and produced in the past many great mages.",
+		"Yet they remain quiet and try to hide their magic from the world, for they remember too well the Spellblaze - and the Spellhunt that followed.",
 		"They possess the #GOLD#Grace of the Eternals#WHITE# talent which allows them a boost of speed every once in a while.",
 		"#GOLD#Stat modifiers:",
 		"#LIGHT_BLUE# * -2 Strength, +1 Dexterity, +0 Constitution",

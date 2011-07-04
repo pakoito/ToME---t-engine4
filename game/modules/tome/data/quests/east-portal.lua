@@ -27,7 +27,7 @@ desc = function(self, who)
 	end
 
 	if self:isCompleted("gave-orb") then
-		desc[#desc+1] = "You gave the Orb of Many Ways to Tannen for study while you look for the athame and diamond in Reknor."
+		desc[#desc+1] = "You gave the Orb of Many Ways to Tannen to study while you look for the athame and diamond in Reknor."
 	end
 	if self:isCompleted("withheld-orb") then
 		desc[#desc+1] = "You kept the Orb of Many Ways despite Tannen's request to study it. You must now look for the athame and diamond in Reknor."
@@ -174,5 +174,5 @@ back_to_last_hope = function(self)
 	local Chat = require("engine.Chat")
 	local chat = Chat.new("east-portal-end", g, game.player)
 	chat:invoke()
-	game.logPlayer(who, "#VIOLET#You enter the swirling portal and in the blink of an eye you are back to Last Hope.")
+	game.logPlayer(who, "#VIOLET#You enter the swirling portal and in the blink of an eye you are back in Last Hope.")
 end

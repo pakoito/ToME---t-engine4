@@ -27,7 +27,7 @@ newBirthDescriptor{
 		"The Humans are one of the main races on Maj'Eyal, along with the Halflings. For many thousands of years they fought each other until events, and great people, unified all the Human and Halfling nations under one rule.",
 		"Humans of these Allied Kingdoms have known peace for over a century now.",
 		"Humans are split into two categories: the Highers, and the rest. Highers have latent magic in their blood which gives them higher attributes and senses along with a longer life.",
-		"The rest of humanity is gifted with quick learning and mastery. They can do and become anything they desire.",
+		"The rest of Humanity is gifted with quick learning and mastery. They can do and become anything they desire.",
 	},
 	descriptor_choices =
 	{

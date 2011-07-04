@@ -26,7 +26,7 @@ desc = function(self, player, who)
 	elseif self:isStatus(self.DONE) and self.player_won == false then
 		desc[#desc+1] = "#RED#You aided various denizens of Maj'Eyal in their attempts to join the Brotherhood of Alchemists, though you did not prove the deciding factor for any. This year's new member is "..self.winner..".#WHITE#"
 	else
-		desc[#desc+1] = "#LIGHT_BLUE#Various alchemists around Maj'Eyal are competing to gain entry into the great Brotherhood of Alchemists, and one or more has enlisted your aid.#WHITE#"
+		desc[#desc+1] = "#LIGHT_BLUE#Various alchemists around Maj'Eyal are competing to gain entry into the great Brotherhood of Alchemists, and one or more have enlisted your aid.#WHITE#"
 	end
 	--e (for elixir) is the name of the table listing all the elixirs and their various strings and ingredients and such. self.e[2][3], for example, refers to the table containing all the information for the second alchemist's third elixir. self.e[2][3].ingredients[1] refers to the first ingredient of the third elixir of the second alchemist. This saves a ton of work in making the desc function, since it's messy and it would suck to copy/paste twelve of them (one for each elixir).
 	for i = 1, 4 do --run through list of four alchemists

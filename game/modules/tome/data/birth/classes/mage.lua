@@ -48,7 +48,7 @@ newBirthDescriptor{
 	desc = {
 		"An Archmage devotes his whole life to the study of magic above anything else.",
 		"Most Archmagi lack basic skills that others take for granted (like general fighting sense), but they make up for it by their raw magical power.",
-		"Archmagi start knowing all schools of magic but the more intricate (Temporal and Meta). However, they usually refuse to have anything to do with Necromancy.",
+		"Archmagi start with knowledge of many schools of magic. However, they usually refuse to have anything to do with Necromancy.",
 		"All Archmagi have been trained in the secret town of Angolwen and possess a unique spell to teleport to it directly.",
 		"Their most important stats are: Magic and Willpower",
 		"#GOLD#Stat modifiers:",
@@ -178,7 +178,7 @@ newBirthDescriptor{
 	locked = function() return profile.mod.allow_build.mage_necromancer and true or "hide" end,
 	locked_desc = "The road to necromancy is a macabre path indeed. Walk with the dead, and drink deeply of their black knowledge.",
 	desc = {
-		"While most magic is viewed with suspicion since the Spellblaze, the stigma surrounding the black art of necromancy has been around since time immemorial.",
+		"While most magic is viewed with suspicion since the Spellblaze, the stigma surrounding the black art of Necromancy has been around since time immemorial.",
 		"These dark spellcasters extinguish life, twist death, and raise armies of undead monsters to sate their lust for power and pursue their ultimate goal: Eternal life.",
 		"Their most important stats are: Magic and Willpower",
 		"#GOLD#Stat modifiers:",

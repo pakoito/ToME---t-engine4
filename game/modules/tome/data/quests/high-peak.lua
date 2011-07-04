@@ -31,12 +31,12 @@ desc = function(self, who)
 		desc[#desc+1] = "You have won the game!"
 	end
 
-	if self:isCompleted("killed-aeryn") then desc[#desc+1] = "#LIGHT_GREEN#* You encountered Sun Paladin Aeryn who blamed you for the loss of the Sunwall and killed her.#LAST#" end
-	if self:isCompleted("spared-aeryn") then desc[#desc+1] = "#LIGHT_GREEN#* You encountered Sun Paladin Aeryn who blamed you for the loss of the Sunwall and spared her.#LAST#" end
+	if self:isCompleted("killed-aeryn") then desc[#desc+1] = "#LIGHT_GREEN#* You encountered Sun Paladin Aeryn who blamed you for the loss of the Sunwall. You were forced to kill her.#LAST#" end
+	if self:isCompleted("spared-aeryn") then desc[#desc+1] = "#LIGHT_GREEN#* You encountered Sun Paladin Aeryn who blamed you for the loss of the Sunwall, but you spared her.#LAST#" end
 
 	if game.winner and game.winner == "full" then desc[#desc+1] = "#LIGHT_GREEN#* You defeated the Sorcerers before the Void portal could open.#LAST#" end
-	if game.winner and game.winner == "aeryn-sacrifice" then desc[#desc+1] = "#LIGHT_GREEN#* You defeated the Sorcerers and Aeryn sacrified herself to close the Void portal.#LAST#" end
-	if game.winner and game.winner == "self-sacrifice" then desc[#desc+1] = "#LIGHT_GREEN#* You defeated the Sorcerers and sacrified yourself to close the Void portal.#LAST#" end
+	if game.winner and game.winner == "aeryn-sacrifice" then desc[#desc+1] = "#LIGHT_GREEN#* You defeated the Sorcerers and Aeryn sacrificed herself to close the Void portal.#LAST#" end
+	if game.winner and game.winner == "self-sacrifice" then desc[#desc+1] = "#LIGHT_GREEN#* You defeated the Sorcerers and sacrificed yourself to close the Void portal.#LAST#" end
 
 	return table.concat(desc, "\n")
 end
@@ -132,9 +132,9 @@ function onWin(self, who)
 
 	-- Yeeks are special
 	if who:isQuestStatus("high-peak", engine.Quest.COMPLETED, "yeek") then
-		desc[#desc+1] = "Your sacrifice worked, your mental energies were imbued with farportal energies. The Way radiated from the High Peak toward the rest of Eyal like a mental tidal wave."
-		desc[#desc+1] = "Every sentient being in Eyal is now part of the Way. Peace and happiness are enforced to all."
-		desc[#desc+1] = "Only the mages of Angolwen were able to withstand the mental shock and thus are the only unsafe people left. But what can they do against the migth of the Way?"
+		desc[#desc+1] = "Your sacrifice worked. Your mental energies were imbued with farportal energies. The Way radiated from the High Peak toward the rest of Eyal like a mental tidal wave."
+		desc[#desc+1] = "Every sentient being in Eyal is now part of the Way. Peace and happiness are enforced for all."
+		desc[#desc+1] = "Only the mages of Angolwen were able to withstand the mental shock and thus are the only unsafe people left. But what can they do against the might of the Way?"
 		return 0, desc
 	end
 

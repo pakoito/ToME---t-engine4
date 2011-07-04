@@ -465,7 +465,7 @@ newEntity{ base="ZONE_PLAINS", define_as = "TEMPEST_PEAK",
 	change_level_check = function()
 		game.turn = game.turn + 5 * game.calendar.HOUR
 		if not game.player:hasQuest("lightning-overload").walked then
-			require("engine.ui.Dialog"):simpleLongPopup("Danger...", [[After an hours long walk you finally reach the end of the way. You are nearly on top of one of the highest peaks you can see.
+			require("engine.ui.Dialog"):simpleLongPopup("Danger...", [[After walking many hours, you finally reach the end of the way. You are nearly on top of one of the highest peaks you can see.
 The storm is raging above your head.]], 400)
 			game.player:hasQuest("lightning-overload").walked = true
 		end

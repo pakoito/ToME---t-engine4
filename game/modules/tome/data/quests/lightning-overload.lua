@@ -20,7 +20,7 @@
 name = "Storming the city"
 desc = function(self, who)
 	local desc = {}
-	desc[#desc+1] = "As you came to Derth you saw a huge dark cloud over the small town."
+	desc[#desc+1] = "As you approached Derth you saw a huge dark cloud over the small town."
 	desc[#desc+1] = "When you entered you were greeted by an army of air elementals slaughtering the population."
 	if self:isCompleted("saved-derth") then
 		desc[#desc+1] = " * You have dispatched the elementals but the cloud lingers still. You must find a powerful ally to remove it. There are rumours of a secret town in the mountains, to the southwest. You could also check out the Ziguranth group that is supposed to fight magic."
@@ -134,7 +134,7 @@ enter_derth = function(self)
 	end
 	self.kill_count = 0
 
-	require("engine.ui.Dialog"):simpleLongPopup("Danger...", "As you arrive in Derth you notice a huge dark cloud hovering over the town.\nYou hear screams coming from the central place.", 400)
+	require("engine.ui.Dialog"):simpleLongPopup("Danger...", "As you arrive in Derth you notice a huge dark cloud hovering over the town.\nYou hear screams coming from the town square.", 400)
 end
 
 
@@ -146,7 +146,7 @@ reenter_derth = function(self)
 
 		game.player:setQuestStatus(self.id, engine.Quest.COMPLETED, "restored-derth")
 		if self:isCompleted("tempest-entrance") then
-			require("engine.ui.Dialog"):simpleLongPopup("Clear sky", "It seems the ziguranth have kept their word.\nDerth is free of the storm cloud.", 400)
+			require("engine.ui.Dialog"):simpleLongPopup("Clear sky", "It seems the Ziguranth have kept their word.\nDerth is free of the storm cloud.", 400)
 		else
 			require("engine.ui.Dialog"):simpleLongPopup("Clear sky", "It seems the mages have kept their word.\nDerth is free of the storm cloud.", 400)
 		end

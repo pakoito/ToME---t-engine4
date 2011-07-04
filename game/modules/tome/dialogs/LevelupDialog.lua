@@ -451,7 +451,7 @@ function _M:finish()
 		return nil
 	end
 
-	local txt = "#LIGHT_BLUE#Warning: You have increased some of your statistics or talent. Talent(s) actually sustained: \n %s if it is dependent on one of the stats you changed, you need to re-use it for the changes to take effect."
+	local txt = "#LIGHT_BLUE#Warning: You have increased some of your statistics or talent. Talent(s) actually sustained: \n %s If these are dependent on one of the stats you changed, you need to re-use them for the changes to take effect."
 	local talents = ""
 	local reset = {}
 	for tid, act in pairs(self.actor.sustain_talents) do
@@ -787,11 +787,11 @@ function _M:onDrawItem(item)
 
 	if item.type then
 		text:add({"color",0x00,0xFF,0xFF}, "Talent Category", true)
-		text:add({"color",0x00,0xFF,0xFF}, "A talent category allows you to learn talents of this category. You gain a talent category point at level 10, 20 and 30. You may also find trainers or artifacts that allow you to learn more.\nA talent category point can be used either to learn a new category or increase the mastery of a known one.", true, true, {"color", "WHITE"})
+		text:add({"color",0x00,0xFF,0xFF}, "A talent category contains talents you may learn. You gain a talent category point at level 10, 20 and 30. You may also find trainers or artifacts that allow you to learn more.\nA talent category point can be used either to learn a new category or increase the mastery of a known one.", true, true, {"color", "WHITE"})
 
 		if self.actor.talents_types_def[item.type].generic then
 			text:add({"color",0x00,0xFF,0xFF}, "Generic talent tree", true)
-			text:add({"color",0x00,0xFF,0xFF}, "A generic talent allows you to perform various utility actions and improve your character. It represents talents anybody can learn (should they find a trainer for it). You gain one point every level (except every 5th level). You may also find trainers or artifacts that allow you to learn more.", true, true, {"color", "WHITE"})
+			text:add({"color",0x00,0xFF,0xFF}, "A generic talent allows you to perform various utility actions and improve your character. It represents a skill anybody can learn (should you find a trainer for it). You gain one point every level (except every 5th level). You may also find trainers or artifacts that allow you to learn more.", true, true, {"color", "WHITE"})
 		else
 			text:add({"color",0x00,0xFF,0xFF}, "Class talent tree", true)
 			text:add({"color",0x00,0xFF,0xFF}, "A class talent allows you to perform new combat moves, cast spells, and improve your character. It represents the core function of your class. You gain one point every level and two every 5th level. You may also find trainers or artifacts that allow you to learn more.", true, true, {"color", "WHITE"})

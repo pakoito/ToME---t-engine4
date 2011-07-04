@@ -20,7 +20,7 @@
 name = "The fall of Zigur"
 desc = function(self, who)
 	local desc = {}
-	desc[#desc+1] = "You decided to side with the Grand Corruptor and joined forces to onslaught the Ziguranth main base of power."
+	desc[#desc+1] = "You decided to side with the Grand Corruptor and joined forces to assault the Ziguranth main base of power."
 	if self:isStatus(self.FAILED) then
 		desc[#desc+1] = "The Grand Corruptor died during the attack before he had time to teach you his ways."
 	elseif self:isStatus(self.DONE) then
@@ -123,7 +123,7 @@ end
 function onWin(self, who)
 	if not self:isStatus(self.DONE) then return end
 	return 10, {
-		"While you were in the Far East, the Grand Corruptor was busy in the Maj'Eyal.",
+		"While you were in the Far East, the Grand Corruptor was busy in Maj'Eyal.",
 		"With the fall of Zigur he was able to attack and take control of Elvala, the Shaloren capital city.",
 		"His plans however do not stop there.",
 	}

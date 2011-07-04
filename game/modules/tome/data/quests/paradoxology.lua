@@ -21,9 +21,9 @@ name = "The Way We Weren't"
 desc = function(self, who)
 	local desc = {}
 	desc[#desc+1] = "You have met what seems to be a future version of yourself.\n"
-	if self:isCompleted("combat") then desc[#desc+1] = "You tried to kill yourself to prevent you from doing something, or going somewhere, you were not very clear.\n" end
+	if self:isCompleted("combat") then desc[#desc+1] = "You tried to kill yourself to prevent you from doing something, or going somewhere... you were not very clear.\n" end
 	if self:isCompleted("now-died") then desc[#desc+1] = "You were killed by your future self, and thus this event never occured.\n" end
-	if self:isCompleted("future-died") then desc[#desc+1] = "You killed your future self, try avoiding timetraveling to this moment in the future...\n" end
+	if self:isCompleted("future-died") then desc[#desc+1] = "You killed your future self. In the future, you might wish to avoid time-traveling back to this moment...\n" end
 	return table.concat(desc, "\n")
 end
 
@@ -115,7 +115,7 @@ generate = function(self, player, x, y)
 			world:gainAchievement("PARADOX_NOW", p)
 
 			local rift = game.zone:makeEntityByName(game.level, "terrain", "RIFT")
-			rift.change_level_check = function() game.log("This rift in time has been created by the paradox. You dare not enter it, it could make things worse. An other one will have to fix you mess.") return true end
+			rift.change_level_check = function() game.log("This rift in time has been created by the paradox. You dare not enter it; it could make things worse. Another Warden will have to fix your mess.") return true end
 			game.zone:addEntity(game.level, rift, "terrain", self.x, self.y)
 
 			self.on_die = nil

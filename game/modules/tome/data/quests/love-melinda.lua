@@ -22,9 +22,9 @@ desc = function(self, who)
 	local desc = {}
 	desc[#desc+1] = "After rescuing Melinda from Kryl-Feijan and the cultists you met her again in Last Hope."
 	if who.female then
-		desc[#desc+1] = "You talked for a while and it seems she has a crush for you, even though you are yourself a woman."
+		desc[#desc+1] = "You talked for a while and it seems she has a crush on you, even though you are yourself a woman."
 	else
-		desc[#desc+1] = "You talked for a while and it seems she has a crush for you."
+		desc[#desc+1] = "You talked for a while and it seems she has a crush on you."
 	end
 	return table.concat(desc, "\n")
 end
@@ -32,7 +32,7 @@ end
 function onWin(self, who)
 	if who.dead then return end
 	return 10, {
-		"After your victory you came back to Last Hope and reunited with Melinda, who shown no signs of demonic corruption for the many years to come.",
-		"You lived together and led a happy life, Melinda even learned a few adventurers tricks and you both traveled Eyal, making new legends.",
+		"After your victory you came back to Last Hope and reunited with Melinda, who after many years remains free of demonic corruption.",
+		"You lived together and led a happy life. Melinda even learned a few adventurer's tricks and you both traveled Eyal, making new legends.",
 	}
 end

@@ -43,7 +43,7 @@ newBirthDescriptor{
 	type = "subclass",
 	name = "Mindslayer",
 	locked = function() return profile.mod.allow_build.psionic_mindslayer end,
-	locked_desc = "A thought can inspire, a thought can kill. After centuries of oppression, years of imprisonment, a thought shall break us free and vengeance will strike from our darkest dreams.",
+	locked_desc = "A thought can inspire; a thought can kill. After centuries of oppression, years of imprisonment, a thought shall break us free and vengeance will strike from our darkest dreams.",
 	desc = {
 		"Mindslayers specialize in direct and brutal application of mental forces to their immediate surroundings.",
 		"When Mindslayers do battle, they will most often be found in the thick of the fighting, vast energies churning around them and telekinetically-wielded weapons hewing nearby foes at the speed of thought.",

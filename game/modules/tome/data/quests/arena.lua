@@ -37,7 +37,7 @@ function onWin(self, who)
 
 	desc[#desc+1] = "#GOLD#Well done! You have won the Arena: Challenge of the Master#WHITE#"
 	desc[#desc+1] = ""
-	desc[#desc+1] = "You valiantly fought every creature the arena could throw on you and you emerged victorious!"
+	desc[#desc+1] = "You valiantly fought every creature the arena could throw at you and you emerged victorious!"
 	desc[#desc+1] = "Glory to you, you are now the new master and your future characters will challenge you."
 	return 0, desc
 end

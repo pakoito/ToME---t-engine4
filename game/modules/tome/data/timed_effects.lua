@@ -3190,7 +3190,7 @@ newEffect{
 	status = "detrimental",
 	parameters = { },
 	on_gain = function(self, err) return "#Target# is returned to a much younger state!" end,
-	on_lose = function(self, err) return "#Target# has regained it's natural age." end,
+	on_lose = function(self, err) return "#Target# has regained its natural age." end,
 	activate = function(self, eff)
 		eff.stat = self:addTemporaryValue("inc_stats", {
 				[Stats.STAT_STR] =-eff.power,

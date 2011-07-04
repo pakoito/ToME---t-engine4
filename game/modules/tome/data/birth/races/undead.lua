@@ -76,7 +76,7 @@ newBirthDescriptor
 		"- stun resistance",
 		"- fear immunity",
 		"- special ghoul talents: ghoulish leap, gnaw and retch",
-		"The rotting bodies of ghouls also force them to act a bit slower than most creatures.",
+		"The rotting bodies of ghouls also force them to act a bit more slowly than most creatures.",
 		"#GOLD#Stat modifiers:",
 		"#LIGHT_BLUE# * +3 Strength, +1 Dexterity, +5 Constitution",
 		"#LIGHT_BLUE# * +0 Magic, -2 Willpower, -2 Cunning",
@@ -119,7 +119,7 @@ newBirthDescriptor
 	type = "subrace",
 	name = "Skeleton",
 	locked = function() return profile.mod.allow_build.undead_skeleton end,
-	locked_desc = "The marching bones, each step we rattle, but servants no more, we march to battle!",
+	locked_desc = "The marching bones, each step we rattle; but servants no more, we march to battle!",
 	desc = {
 		"Skeletons are animated bones, undead creatures both strong and dexterous.",
 		"They have access to #GOLD#special skeleton talents#WHITE# and a wide range of undead abilities:",
