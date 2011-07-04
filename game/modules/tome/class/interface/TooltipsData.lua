@@ -213,11 +213,12 @@ Not all talents are affected, notably Wild Gifts are not.
 ]]
 TOOLTIP_ARMOR = [[#GOLD#Armour#LAST#
 Armour value is a damage reduction from every incoming melee and ranged physical attacks.
+Absorbs (hardiness)% of incoming physical damage, up to a maximum of (armour) damage absorbed.
 This is countered by armour penetration and is applied before all kinds of critical damage increase, talent multipliers and damage multiplier, thus making even small amounts have greater effects.
 ]]
 TOOLTIP_ARMOR_HARDINESS = [[#GOLD#Armour Hardiness#LAST#
-Armour hardiness value represents how much of every incoming blows the armor will affect.
-With 50% you will apply your armor to half the damage of a blow, with 100% to all of it.
+Armour hardiness value represents how much of every incoming blows the armour will affect.
+Absorbs (hardiness)% of incoming physical damage, up to a maximum of (armour) damage absorbed.
 ]]
 TOOLTIP_DEFENSE = [[#GOLD#Defense#LAST#
 Defense represents your chance to avoid being hit at all by a melee attack, it is measured against the attacker's accuracy chance.

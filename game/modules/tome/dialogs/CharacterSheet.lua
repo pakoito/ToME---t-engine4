@@ -684,8 +684,6 @@ function _M:drawDialog(kind, actor_to_compare)
 		self:mouseTooltip(self.TOOLTIP_ARMOR_HARDINESS,   s:drawColorStringBlended(self.font, ("Armor Hardiness : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
 		text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatArmor() end, "%3d", "%+.0f")
 		self:mouseTooltip(self.TOOLTIP_ARMOR,   s:drawColorStringBlended(self.font,           ("Armor           : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
-		text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatArmorHardiness() * actor:combatArmor() * 0.01 end, "%3d", "%+.0f")
-		self:mouseTooltip(self.TOOLTIP_ARMOR,   s:drawColorStringBlended(self.font,           ("(with hardiness): #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
 		text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatDefense() end, "%3d", "%+.0f")
 		self:mouseTooltip(self.TOOLTIP_DEFENSE, s:drawColorStringBlended(self.font,           ("Defense         : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
 		text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatDefenseRanged() end, "%3d", "%+.0f")
