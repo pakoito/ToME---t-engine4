@@ -32,6 +32,7 @@ newEntity{
 	desc = [[Handheld deflection devices]],
 	require = { talent = { {Talents.T_ARMOUR_TRAINING,3} }, },
 	randart_able = { attack=20, physical=10, spell=10, def=50, misc=10 },
+	special_combat = { damrange = 1.2 },
 	egos = "/data/general/objects/egos/shield.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 }
 
