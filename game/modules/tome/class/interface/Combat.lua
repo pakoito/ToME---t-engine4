@@ -455,6 +455,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	local gwf = self:hasEffect(self.EFF_GREATER_WEAPON_FOCUS)
 	if hitted and not target.dead and gwf and not gwf.inside and rng.percent(gwf.chance) then
 		gwf.inside = true
+		game.logSeen(self, "%s focuses and gains an extra blow!", self.name:capitalize())
 		self:attackTargetWith(target, weapon, damtype, mult)
 		gwf.inside = nil
 	end
