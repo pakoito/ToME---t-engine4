@@ -49,7 +49,8 @@ on_grant = function(self, who)
 		name="Portal to the temple of Creation",
 		display='>', color=colors.VIOLET,
 		notice = true,
-		change_level=1, change_zone="temple-of-creation"
+		change_level=1, change_zone="temple-of-creation",
+		image = "terrain/underwater/subsea_floor_02.png", add_mos={{image="terrain/demon_portal.png"}},
 	}
 	g:resolve() g:resolve(nil, true)
 	game.zone:addEntity(game.level, g, "terrain", 34, 6)
@@ -67,7 +68,8 @@ portal_back = function(self, who)
 		name="Portal to the Flooded Cave",
 		display='>', color=colors.VIOLET,
 		notice = true,
-		change_level=2, change_zone="flooded-cave"
+		change_level=2, change_zone="flooded-cave",
+		image = "terrain/underwater/subsea_floor_02.png", add_mos={{image="terrain/demon_portal.png"}},
 	}
 	g:resolve() g:resolve(nil, true)
 	game.zone:addEntity(game.level, g, "terrain", 15, 13)

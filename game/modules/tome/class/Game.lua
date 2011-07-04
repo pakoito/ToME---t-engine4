@@ -78,6 +78,8 @@ function _M:init()
 
 	-- Same init as when loaded from a savefile
 	self:loaded()
+
+	self.visited_zones = {}
 end
 
 function _M:run()
@@ -421,7 +423,7 @@ end
 function _M:save()
 	self.total_playtime = (self.total_playtime or 0) + (os.time() - (self.last_update or self.real_starttime))
 	self.last_update = os.time()
-	return class.save(self, self:defaultSavedFields{difficulty=true, to_re_add_actors=true, party=true, _chronoworlds=true, total_playtime=true, on_level_load_fcts=true}, true)
+	return class.save(self, self:defaultSavedFields{difficulty=true, to_re_add_actors=true, party=true, _chronoworlds=true, total_playtime=true, on_level_load_fcts=true, visited_zones=true}, true)
 end
 
 function _M:updateCurrentChar()
@@ -557,6 +559,7 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 		if type(self.zone.save_per_level) == "nil" then self.zone.save_per_level = config.settings.tome.save_zone_levels and true or false end
 	end
 	self.zone:getLevel(self, lev, old_lev)
+	self.visited_zones[self.zone.short_name] = true
 
 	-- Post process walls
 	self.nicer_tiles:postProcessLevelTiles(self.level)

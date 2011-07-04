@@ -19,6 +19,7 @@
 
 require "engine.class"
 require "engine.Grid"
+local Map = require "engine.Map"
 local Dialog = require "engine.ui.Dialog"
 local DamageType = require "engine.DamageType"
 
@@ -26,6 +27,16 @@ module(..., package.seeall, class.inherit(engine.Grid))
 
 function _M:init(t, no_default)
 	engine.Grid.init(self, t, no_default)
+
+	self:initGlow()
+end
+
+--- Make wilderness zone entrances glow until entered once
+function _M:initGlow()
+	if self.glow and Map.tiles.nicer_tiles and self.change_zone then
+		self.add_displays = self.add_displays or {}
+		self.add_displays[#self.add_displays+1] = require("mod.class.WildernessGrid").new{change_zone=self.change_zone, display=' ', z=17}
+	end
 end
 
 function _M:block_move(x, y, e, act, couldpass)
@@ -104,6 +115,11 @@ function _M:tooltip(x, y)
 	else
 		tstr = tstring{{"uid", self.uid}, self.name}
 	end
+
+	if game.level.entrance_glow and self.change_zone and not game.visited_zones[self.change_zone] then
+		tstr:add(true, {"font","bold"}, {"color","CRIMSON"}, "Never visited yet", {"color", "LAST"}, {"font","normal"}, true)
+	end
+
 	if config.settings.cheat then tstr:add(true, "UID: ", tostring(self.uid), true, "Coords: ", tostring(x), "x", tostring(y)) end
 	return tstr
 end

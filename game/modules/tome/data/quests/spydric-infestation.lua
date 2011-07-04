@@ -51,7 +51,7 @@ portal_back = function(self, who)
 		display='>', color=colors.GOLD,
 		notice = true,
 		change_level=1, change_zone="town-gates-of-morning",
-		image = "terrain/granite_floor1.png", add_mods={{image="terrain/demon_portal.png"}},
+		image = "terrain/granite_floor1.png", add_mos={{image="terrain/demon_portal.png"}},
 	}
 	g:resolve() g:resolve(nil, true)
 	game.zone:addEntity(game.level, g, "terrain", who.x, who.y)

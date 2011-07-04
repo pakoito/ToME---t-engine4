@@ -77,6 +77,9 @@ return {
 		end
 		place_list(game.level:getEntitiesList("maj_eyal_encounters"))
 		place_list(game.level:getEntitiesList("fareast_encounters"))
+
+		-- Create the glow
+		level.entrance_glow = require("engine.Particles").new("starglow", 1, {})
 	end,
 	on_enter = function(_, _, newzone)
 		if game.player.level >= 12 and game.player.level <= 20 and not game.player:hasQuest("lightning-overload") then

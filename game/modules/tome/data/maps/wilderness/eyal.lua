@@ -82,7 +82,7 @@ if game.player:knowTalent(game.player.T_DWARF_RESILIENCE) then defineTile('iron-
 
 -- Far East
 defineTile('gates-of-morning', "TOWN_GATES_OF_MORNING")
-quickEntity('high-peak', {always_remember = true, show_tooltip=true, name="High Peak", display='>', color=colors.VIOLET, notice = true, change_level=1, change_zone="high-peak"})
+quickEntity('high-peak', {always_remember = true, show_tooltip=true, name="High Peak", display='>', color=colors.VIOLET, notice = true, change_level=1, glow=true, change_zone="high-peak"})
 defineTile('unremarkable-cave', "UNREMARKABLE_CAVE")
 
 -- Island of Rel

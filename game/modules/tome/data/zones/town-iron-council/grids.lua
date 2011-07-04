@@ -37,7 +37,7 @@ newEntity{
 end
 
 newEntity{ base = "DOWN", define_as = "ESCAPE_REKNOR", name="Escape route from Reknor", change_zone="reknor-escape" }
-newEntity{ base = "DOWN", define_as = "DEEP_BELLOW", name="The Deep Bellow", change_zone="deep-bellow" }
+newEntity{ base = "DOWN", define_as = "DEEP_BELLOW", name="The Deep Bellow", glow=true, change_zone="deep-bellow" }
 
 newEntity{ define_as = "STATUE",
 	display = '@', image="terrain/oldstone_floor.png", add_displays = {mod.class.Grid.new{image="terrain/statue1.png"}},

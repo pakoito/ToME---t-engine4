@@ -258,7 +258,7 @@ end
 --------------------------------------------------------------------------------
 -- Towns
 --------------------------------------------------------------------------------
-newEntity{ base="PLAINS", define_as = "TOWN", notice = true, change_level=1, display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, nice_tiler=false }
+newEntity{ base="PLAINS", define_as = "TOWN", notice = true, change_level=1, glow=true, display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, nice_tiler=false }
 
 newEntity{ base="TOWN", define_as = "TOWN_DERTH",
 	name = "Derth (Town)", add_mos = {{image="terrain/village_01.png"}},
@@ -319,8 +319,8 @@ newEntity{ base="TOWN", define_as = "TOWN_IRON_COUNCIL",
 --------------------------------------------------------------------------------
 -- Maj'Eyal Zones
 --------------------------------------------------------------------------------
-newEntity{ base="PLAINS", define_as = "ZONE_PLAINS", change_level=1, display='>', color=colors.VIOLET, notice = true, nice_tiler=false }
-newEntity{ base="DESERT", define_as = "ZONE_DESERT", change_level=1, display='>', color=colors.VIOLET, notice = true, nice_tiler=false }
+newEntity{ base="PLAINS", define_as = "ZONE_PLAINS", change_level=1, glow=true, display='>', color=colors.VIOLET, notice = true, nice_tiler=false }
+newEntity{ base="DESERT", define_as = "ZONE_DESERT", change_level=1, glow=true, display='>', color=colors.VIOLET, notice = true, nice_tiler=false }
 
 newEntity{ base="ZONE_PLAINS", define_as = "MAZE",
 	name="A gate into the Maze",
@@ -454,7 +454,7 @@ newEntity{ base="WATER_BASE", define_as = "MURGOL_LAIR",
 	name="Way into the lair of Murgol",
 	color={r=0, g=0, b=255},
 	add_displays={class.new{image="terrain/underwater/subsea_cave_entrance_01.png", z=4, display_h=2, display_y=-1}},
-	change_level=1, change_zone="murgol-lair",
+	change_level=1, change_zone="murgol-lair", glow=true,
 }
 
 newEntity{ base="ZONE_PLAINS", define_as = "TEMPEST_PEAK",

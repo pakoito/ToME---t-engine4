@@ -35,7 +35,7 @@ on_grant = function(self, who)
 		name="Small lumberjack village",
 		display='*', color=colors.WHITE,
 		notice = true, image="terrain/grass.png", add_mos={{image="terrain/town1.png"}},
-		change_level=1, change_zone="town-lumberjack-village",
+		change_level=1, glow=true, change_zone="town-lumberjack-village",
 	}
 	g:resolve() g:resolve(nil, true)
 	local level = game.level
