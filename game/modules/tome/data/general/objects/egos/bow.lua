@@ -27,7 +27,7 @@ newEntity{
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 6,
-	combat={apr = resolvers.mbonus_material(15, 1, function(e, v) return v * 0.3 end)},
+	combat={apr = resolvers.mbonus_material(15, 1)},
 }
 
 newEntity{
@@ -37,7 +37,7 @@ newEntity{
 	rarity = 3,
 	cost = 4,
 	wielder = {
-		inc_damage={ [DamageType.PHYSICAL] = resolvers.mbonus_material(25, 8, function(e, v) return v * 0.8 end), },
+		inc_damage={ [DamageType.PHYSICAL] = resolvers.mbonus_material(25, 8), },
 	},
 }
 
@@ -59,7 +59,7 @@ newEntity{
 	rarity = 7,
 	cost = 7,
 	wielder = {
-		inc_stats = { [Stats.STAT_DEX] = resolvers.mbonus_material(6, 2, function(e, v) return v * 3 end) },
+		inc_stats = { [Stats.STAT_DEX] = resolvers.mbonus_material(6, 2) },
 	},
 }
 
@@ -95,6 +95,6 @@ newEntity{
 			[Talents.T_PINNING_SHOT]=1,
 			[Talents.T_VOLLEY_OF_ARROWS]=2,
 		},
-		inc_damage={ [DamageType.PHYSICAL] = resolvers.mbonus_material(14, 8, function(e, v) return v * 0.8 end), },
+		inc_damage={ [DamageType.PHYSICAL] = resolvers.mbonus_material(14, 8), },
 	},
 }

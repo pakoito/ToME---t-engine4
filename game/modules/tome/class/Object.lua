@@ -952,11 +952,96 @@ function _M:getPriceFlags()
 	local price = 0
 
 	local function count(w)
+		--status immunities
 		if w.stun_immune then price = price + w.stun_immune * 80 end
+		if w.knockback_immune then price = price + w.knockback_immune * 80 end
+		if w.disarm_immune then price = price + w.disarm_immune * 80 end
+		if w.teleport_immune then price = price + w.teleport_immune * 80 end
+		if w.blind_immune then price = price + w.blind_immune * 80 end
+		if w.confusion_immune then price = price + w.confusion_immune * 80 end
+		if w.poison_immune then price = price + w.poison_immune * 80 end
+		if w.disease_immune then price = price + w.disease_immune * 80 end
+		if w.cut_immune then price = price + w.cut_immune * 80 end
+		if w.pin_immune then price = price + w.pin_immune * 80 end
+		if w.silence_immune then price = price + w.silence_immune * 80 end
+
+		--saves
+		if w.combat_physresist then price = price + w.combat_physresist * 0.15 end
+		if w.combat_mentalresist then price = price + w.combat_mentalresist * 0.15 end
+		if w.combat_spellresist then price = price + w.combat_spellresist * 0.15 end
+
+		--resource-affecting attributes
+		if w.max_life then price = price + w.max_life * 0.1 end
+		if w.max_stamina then price = price + w.max_stamina * 0.1 end
+		if w.max_mana then price = price + w.max_mana * 0.2 end
+		if w.life_regen then price = price + w.life_regen * 10 end
+		if w.stamina_regen then price = price + w.stamina_regen * 100 end
+		if w.mana_regen then price = price + w.mana_regen * 80 end
+		if w.stamina_regen_on_hit then price = price + w.stamina_regen_on_hit * 3 end
+		if w.equilibrium_regen_on_hit then price = price + w.equilibrium_regen_on_hit * 3 end
+		if w.mana_regen_on_hit then price = price + w.mana_regen_on_hit * 3 end
+		if w.resource_leech_chance then price = price + w.resource_leech_chance * 10 end
+		if w.resource_leech_value then price = price + w.resource_leech_value * 10 end
+
+		--combat attributes
+		if w.combat_def then price = price + w.combat_def * 1 end
+		if w.combat_def_ranged then price = price + w.combat_def_ranged * 1 end
+		if w.combat_armor then price = price + w.combat_armor * 1 end
+		if w.combat_physcrit then price = price + w.combat_physcrit * 1.4 end
+		if w.combat_critical_power then price = price + w.critical_power * 2 end
+		if w.combat_atk then price = price + w.combat_atk * 1 end
+		if w.combat_apr then price = price + w.combat_apr * 0.3 end
+		if w.combat_dam then price = price + w.combat_dam * 3 end
+		if w.combat_physspeed then price = price + w.combat_physspeed * -200 end
+		if w.combat_spellpower then price = price + w.combat_spellpower * 0.8 end
+		if w.combat_spellcrit then price = price + w.combat_spellcrit * 0.4 end
+
+		--miscellaneous attributes
+		if w.inc_stealth then price = price + w.inc_stealth * 1 end
+		if w.see_invisible then price = price + w.see_invisible * 0.2 end
+		if w.infravision then price = price + w.infravision * 1.4 end
+		if w.trap_detect_power then price = price + w.trap_detect_power * 1.2 end
+		if w.disarm_bonus then price = price + w.disarm_bonus * 1.2 end
+		if w.healing_factor then price = price + w.healing_factor * 0.8 end
+		if w.max_encumber then price = price + w.max_encumber * 0.4 end
+		if w.movement_speed then price = price + w.movement_speed * 100 end
+		if w.fatigue then price = price + w.fatigue * -1 end
+		if w.lite then price = price + w.lite * 10 end
+		if w.size_category then price = price + w.size_category * 25 end
+		if w.esp_all then price = price + w.esp_all * 25 end
+		if w.esp_range then price = price + w.esp_range * 15 end
+		if w.can_breath then price = price + w.can_breath * 10 end
+
+		--resists
+		if w.resists then for t, v in pairs(w.resists) do price = price + v * 0.15 end end
+
+		--resist penetration
+		if w.resists_pen then for t, v in pairs(w.resists_pen) do price = price + v * 1 end end
+
+		--resist cap
+		if w.resists_cap then for t, v in pairs(w.resists_cap) do price = price + v * 5 end end
+
+		--stats
+		if w.inc_stats then for t, v in pairs(w.inc_stats) do price = price + v * 3 end end
+
+		--percentage damage increases
+		if w.inc_damage then for t, v in pairs(w.inc_damage) do price = price + v * 0.8 end end
+
+		--damage auras
+		if w.on_melee_hit then for t, v in pairs(w.on_melee_hit) do price = price + v * 0.6 end end
+
+		--melee-projected damage
+		if w.melee_project then for t, v in pairs(w.melee_project) do price = price + v * 0.7 end end
+
+		--talent mastery
+		if w.talent_types_mastery then for t, v in pairs(w.talent_types_mastery) do price = price + v * 100 end end
+
+		--talent cooldown reduction
+		if w.talent_cd_reduction then for t, v in pairs(w.talent_cd_reduction) do price = price + v * 5 end end
 	end
 
 	if self.carrier then count(self.carrier) end
-	if self.wilder then count(self.wilder) end
+	if self.wielder then count(self.wielder) end
 	return price
 end
 

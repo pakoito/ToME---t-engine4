@@ -29,8 +29,8 @@ newEntity{
 	cost = 40,
 	wielder = {
 		inc_stats = {
-			[Stats.STAT_MAG] = resolvers.mbonus_material(2, 2, function(e, v) return v * 3 end),
-			[Stats.STAT_WIL] = resolvers.mbonus_material(2, 2, function(e, v) return v * 3 end),
+			[Stats.STAT_MAG] = resolvers.mbonus_material(2, 2),
+			[Stats.STAT_WIL] = resolvers.mbonus_material(2, 2),
 		},
 	},
 	max_power = 60, power_regen = 1,
@@ -51,7 +51,7 @@ newEntity{
 	rarity = 5,
 	cost = 6,
 	wielder = {
-		combat_def_ranged = resolvers.mbonus_material(8, 2, function(e, v) return v * 1 end),
+		combat_def_ranged = resolvers.mbonus_material(8, 2),
 	},
 }
 
@@ -78,8 +78,8 @@ newEntity{
 	use_talent = { id = Talents.T_RUSH, level = 2, power = 80 },
 	wielder = {
 		inc_stats = {
-			[Stats.STAT_STR] = resolvers.mbonus_material(2, 2, function(e, v) return v * 3 end),
-			[Stats.STAT_CON] = resolvers.mbonus_material(2, 2, function(e, v) return v * 3 end),
+			[Stats.STAT_STR] = resolvers.mbonus_material(2, 2),
+			[Stats.STAT_CON] = resolvers.mbonus_material(2, 2),
 		},
 	},
 }
@@ -96,8 +96,8 @@ newEntity{
 	use_talent = { id = Talents.T_DISENGAGE, level = 2, power = 80 },
 	wielder = {
 		inc_stats = {
-			[Stats.STAT_DEX] = resolvers.mbonus_material(2, 2, function(e, v) return v * 3 end),
-			[Stats.STAT_CUN] = resolvers.mbonus_material(2, 2, function(e, v) return v * 3 end),
+			[Stats.STAT_DEX] = resolvers.mbonus_material(2, 2),
+			[Stats.STAT_CUN] = resolvers.mbonus_material(2, 2),
 		},
 	},
 }
@@ -109,8 +109,8 @@ newEntity{
 	rarity = 12,
 	cost = 12,
 	wielder = {
-		stun_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
-		knockback_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
+		stun_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, v end),
+		knockback_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, v end),
 	},
 }
 
@@ -121,8 +121,8 @@ newEntity{
 	rarity = 9,
 	cost = 7,
 	wielder = {
-		max_stamina = resolvers.mbonus_material(30, 10, function(e, v) return v * 0.1 end),
-		stamina_regen = resolvers.mbonus_material(10, 3, function(e, v) v=v/10 return v * 10, v end),
+		max_stamina = resolvers.mbonus_material(30, 10),
+		stamina_regen = resolvers.mbonus_material(10, 3, function(e, v) v=v/10 return 0, v end),
 	},
 }
 
@@ -133,7 +133,7 @@ newEntity{
 	rarity = 5,
 	cost = 6,
 	wielder = {
-		max_encumber = resolvers.mbonus_material(30, 20, function(e, v) return v * 0.4, v end),
+		max_encumber = resolvers.mbonus_material(30, 20),
 	},
 }
 
@@ -145,7 +145,7 @@ newEntity{
 	rarity = 5,
 	cost = 6,
 	wielder = {
-		combat_spellpower = resolvers.mbonus_material(3, 3, function(e, v) return v * 0.8 end),
+		combat_spellpower = resolvers.mbonus_material(3, 3),
 	},
 }
 
@@ -156,7 +156,7 @@ newEntity{
 	rarity = 5,
 	cost = 6,
 	wielder = {
-		combat_armor = resolvers.mbonus_material(6, 4, function(e, v) return v * 1 end),
+		combat_armor = resolvers.mbonus_material(6, 4),
 	},
 }
 
@@ -167,7 +167,7 @@ newEntity{
 	rarity = 5,
 	cost = 6,
 	wielder = {
-		infravision = resolvers.mbonus_material(2, 1, function(e, v) return v * 1.4 end),
+		infravision = resolvers.mbonus_material(2, 1),
 	},
 }
 
@@ -179,10 +179,10 @@ newEntity{
 	rarity = 18,
 	cost = 60,
 	wielder = {
-		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
-		cut_immune = resolvers.mbonus_material(2, 2, function(e, v) v=v/10 return v * 8, v end),
-		life_regen = resolvers.mbonus_material(10, 5, function(e, v) v=v/10 return v * 10, v end),
-		poison_immune = resolvers.mbonus_material(10, 10, function(e, v) return v * 0.15, v/100 end),
+		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, v end),
+		cut_immune = resolvers.mbonus_material(2, 2, function(e, v) v=v/10 return 0, v end),
+		life_regen = resolvers.mbonus_material(10, 5, function(e, v) v=v/10 return 0, v end),
+		poison_immune = resolvers.mbonus_material(10, 10, function(e, v) return 0, v/100 end),
 
 	},
 }
@@ -195,8 +195,8 @@ newEntity{
 	rarity = 20,
 	cost = 70,
 	wielder = {
-		fatigue = resolvers.mbonus_material(6, 4, function(e, v) return v * 1, -v end),
-		max_life=resolvers.mbonus_material(30, 30, function(e, v) return v * 0.1 end),
+		fatigue = resolvers.mbonus_material(6, 4, function(e, v) return 0, -v end),
+		max_life=resolvers.mbonus_material(30, 30),
 		movement_speed = 0.1,
 	},
 }
@@ -209,9 +209,9 @@ newEntity{
 	rarity = 15,
 	cost = 20,
 	wielder = {
-		combat_dam = resolvers.mbonus_material(3, 3, function(e, v) return v * 3 end),
-		combat_apr = resolvers.mbonus_material(3, 3, function(e, v) return v * 0.3 end),
-		pin_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
+		combat_dam = resolvers.mbonus_material(3, 3),
+		combat_apr = resolvers.mbonus_material(3, 3),
+		pin_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, v end),
 	},
 }
 

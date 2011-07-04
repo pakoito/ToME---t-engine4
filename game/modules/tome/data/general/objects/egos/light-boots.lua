@@ -30,6 +30,6 @@ newEntity{
 	rarity = 5,
 	cost = 6,
 	wielder = {
-		inc_stealth = resolvers.mbonus_material(10, 5, function(e, v) return v * 1, v end),
+		inc_stealth = resolvers.mbonus_material(10, 5),
 	},
 }

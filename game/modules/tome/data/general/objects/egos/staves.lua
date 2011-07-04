@@ -31,7 +31,7 @@ newEntity{
 	rarity = 4,
 	cost = 8,
 	wielder = {
-		combat_spellpower = resolvers.mbonus_material(30, 3, function(e, v) return v * 0.8 end),
+		combat_spellpower = resolvers.mbonus_material(30, 3),
 	},
 }
 
@@ -42,7 +42,7 @@ newEntity{
 	rarity = 3,
 	cost = 8,
 	wielder = {
-		max_mana = resolvers.mbonus_material(70, 40, function(e, v) return v * 0.2 end),
+		max_mana = resolvers.mbonus_material(70, 40),
 	},
 }
 
@@ -54,7 +54,7 @@ newEntity{
 	rarity = 3,
 	cost = 8,
 	wielder = {
-		combat_spellcrit = resolvers.mbonus_material(15, 4, function(e, v) return v * 0.4 end),
+		combat_spellcrit = resolvers.mbonus_material(15, 4),
 	},
 }
 
@@ -66,9 +66,9 @@ newEntity{
 	rarity = 18,
 	cost = 45,
 	wielder = {
-		combat_spellpower = resolvers.mbonus_material(30, 3, function(e, v) return v * 0.6 end),
-		max_mana = resolvers.mbonus_material(100, 10, function(e, v) return v * 0.2 end),
-		inc_stats = { [Stats.STAT_MAG] = resolvers.mbonus_material(5, 1, function(e, v) return v * 3 end), [Stats.STAT_WIL] = resolvers.mbonus_material(5, 1, function(e, v) return v * 3 end) },
+		combat_spellpower = resolvers.mbonus_material(30, 3),
+		max_mana = resolvers.mbonus_material(100, 10),
+		inc_stats = { [Stats.STAT_MAG] = resolvers.mbonus_material(5, 1), [Stats.STAT_WIL] = resolvers.mbonus_material(5, 1) },
 	},
 }
 
@@ -79,7 +79,7 @@ newEntity{
 	rarity = 3,
 	cost = 5,
 	wielder = {
-		inc_damage={ [DamageType.FIRE] = resolvers.mbonus_material(25, 8, function(e, v) return v * 0.8 end), },
+		inc_damage={ [DamageType.FIRE] = resolvers.mbonus_material(25, 8), },
 	},
 }
 
@@ -90,7 +90,7 @@ newEntity{
 	rarity = 3,
 	cost = 5,
 	wielder = {
-		inc_damage={ [DamageType.TEMPORAL] = resolvers.mbonus_material(25, 8, function(e, v) return v * 0.8 end), },
+		inc_damage={ [DamageType.TEMPORAL] = resolvers.mbonus_material(25, 8), },
 	},
 }
 
@@ -101,7 +101,7 @@ newEntity{
 	rarity = 3,
 	cost = 5,
 	wielder = {
-		inc_damage={ [DamageType.COLD] = resolvers.mbonus_material(25, 8, function(e, v) return v * 0.8 end), },
+		inc_damage={ [DamageType.COLD] = resolvers.mbonus_material(25, 8), },
 	},
 }
 
@@ -112,7 +112,7 @@ newEntity{
 	rarity = 3,
 	cost = 5,
 	wielder = {
-		inc_damage={ [DamageType.ACID] = resolvers.mbonus_material(25, 8, function(e, v) return v * 0.8 end), },
+		inc_damage={ [DamageType.ACID] = resolvers.mbonus_material(25, 8), },
 	},
 }
 
@@ -123,7 +123,7 @@ newEntity{
 	rarity = 3,
 	cost = 5,
 	wielder = {
-		inc_damage={ [DamageType.LIGHTNING] = resolvers.mbonus_material(25, 8, function(e, v) return v * 0.8 end), },
+		inc_damage={ [DamageType.LIGHTNING] = resolvers.mbonus_material(25, 8), },
 	},
 }
 
@@ -134,7 +134,7 @@ newEntity{
 	rarity = 3,
 	cost = 5,
 	wielder = {
-		inc_damage={ [DamageType.NATURE] = resolvers.mbonus_material(25, 8, function(e, v) return v * 0.8 end), },
+		inc_damage={ [DamageType.NATURE] = resolvers.mbonus_material(25, 8), },
 	},
 }
 
@@ -145,7 +145,7 @@ newEntity{
 	rarity = 3,
 	cost = 5,
 	wielder = {
-		inc_damage={ [DamageType.BLIGHT] = resolvers.mbonus_material(25, 8, function(e, v) return v * 0.8 end), },
+		inc_damage={ [DamageType.BLIGHT] = resolvers.mbonus_material(25, 8), },
 	},
 }
 
@@ -156,7 +156,7 @@ newEntity{
 	rarity = 3,
 	cost = 5,
 	wielder = {
-		inc_damage={ [DamageType.LIGHT] = resolvers.mbonus_material(25, 8, function(e, v) return v * 0.8 end), },
+		inc_damage={ [DamageType.LIGHT] = resolvers.mbonus_material(25, 8), },
 	},
 }
 
@@ -167,7 +167,7 @@ newEntity{
 	rarity = 3,
 	cost = 5,
 	wielder = {
-		inc_damage={ [DamageType.DARKNESS] = resolvers.mbonus_material(25, 8, function(e, v) return v * 0.8 end), },
+		inc_damage={ [DamageType.DARKNESS] = resolvers.mbonus_material(25, 8), },
 	},
 }
 
@@ -179,7 +179,7 @@ newEntity{
 	cost = 8,
 	wielder = {
 		talents_types_mastery = {
-			["spell/divination"] = resolvers.mbonus_material(2, 2, function(e, v) v=v/10 return v * 8, v end),
+			["spell/divination"] = resolvers.mbonus_material(2, 2, function(e, v) v=v/10 return 0, v end),
 		},
 	},
 }
@@ -192,7 +192,7 @@ newEntity{
 	cost = 10,
 	wielder = {
 		talents_types_mastery = {
-			["spell/conveyance"] = resolvers.mbonus_material(2, 2, function(e, v) v=v/10 return v * 8, v end),
+			["spell/conveyance"] = resolvers.mbonus_material(2, 2, function(e, v) v=v/10 return 0, v end),
 		},
 	},
 	max_power = 120, power_regen = 1,
@@ -226,11 +226,11 @@ newEntity{
 	rarity = 18,
 	cost = 45,
 	wielder = {
-		combat_spellpower = resolvers.mbonus_material(12, 3, function(e, v) return v * 0.6 end),
-		combat_spellcrit = resolvers.mbonus_material(4, 2, function(e, v) return v * 0.4 end),
+		combat_spellpower = resolvers.mbonus_material(12, 3),
+		combat_spellcrit = resolvers.mbonus_material(4, 2),
 		inc_damage = {
-			[DamageType.FIRE] = resolvers.mbonus_material(15, 5, function(e, v) return v * 0.25 end),
-			[DamageType.LIGHTNING] = resolvers.mbonus_material(15, 5, function(e, v) return v * 0.25 end),
+			[DamageType.FIRE] = resolvers.mbonus_material(15, 5),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(15, 5),
 		},
 	},
 	max_power = 80, power_regen = 1,
@@ -246,11 +246,11 @@ newEntity{
 	rarity = 20,
 	cost = 45,
 	wielder = {
-		combat_spellpower = resolvers.mbonus_material(12, 3, function(e, v) return v * 0.6 end),
-		stun_immune = resolvers.mbonus_material(3, 3, function(e, v) v=v/10 return v * 8, v end),
-		combat_def = resolvers.mbonus_material(16, 4, function(e, v) return v * 1 end),
+		combat_spellpower = resolvers.mbonus_material(12, 3),
+		stun_immune = resolvers.mbonus_material(3, 3, function(e, v) v=v/10 return 0, v end),
+		combat_def = resolvers.mbonus_material(16, 4),
 		resists={
-			[DamageType.ARCANE] = resolvers.mbonus_material(5, 5, function(e, v) return v * 0.15 end),
+			[DamageType.ARCANE] = resolvers.mbonus_material(5, 5),
 		},
 	},
 	max_power = 80, power_regen = 1,
@@ -265,8 +265,8 @@ newEntity{
 	rarity = 18,
 	cost = 45,
 	wielder = {
-		combat_spellpower = resolvers.mbonus_material(12, 3, function(e, v) return v * 0.6 end),
-		mana_regen = resolvers.mbonus_material(30, 10, function(e, v) v=v/100 return v * 80, v end),
+		combat_spellpower = resolvers.mbonus_material(12, 3),
+		mana_regen = resolvers.mbonus_material(30, 10, function(e, v) v=v/100 return 0, v end),
 	},
 	max_power = 80, power_regen = 1,
 	use_talent = { id = Talents.T_METAFLOW, level = 3, power = 80 },
@@ -280,11 +280,11 @@ newEntity{
 	rarity = 16,
 	cost = 35,
 	wielder = {
-		combat_spellpower = resolvers.mbonus_material(7, 3, function(e, v) return v * 0.6 end),
-		life_regen = resolvers.mbonus_material(15, 5, function(e, v) v=v/10 return v * 10, v end),
-		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return v * 80, v end),
+		combat_spellpower = resolvers.mbonus_material(7, 3),
+		life_regen = resolvers.mbonus_material(15, 5, function(e, v) v=v/10 return 0, v end),
+		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, v end),
 		inc_stats = {
-			[Stats.STAT_CON] = resolvers.mbonus_material(4, 3, function(e, v) return v * 3 end),
+			[Stats.STAT_CON] = resolvers.mbonus_material(4, 3),
 			},
 	},
 }
@@ -297,11 +297,11 @@ newEntity{
 	rarity = 16,
 	cost = 35,
 	wielder = {
-		combat_spellpower = resolvers.mbonus_material(7, 3, function(e, v) return v * 0.6 end),
-		see_invisible = resolvers.mbonus_material(15, 5, function(e, v) return v * 0.2 end),
+		combat_spellpower = resolvers.mbonus_material(7, 3),
+		see_invisible = resolvers.mbonus_material(15, 5),
 		inc_damage = {
-			[DamageType.FIRE] = resolvers.mbonus_material(20, 5, function(e, v) return v * 0.25 end),
-			[DamageType.BLIGHT] = resolvers.mbonus_material(20, 5, function(e, v) return v * 0.25 end),
+			[DamageType.FIRE] = resolvers.mbonus_material(20, 5),
+			[DamageType.BLIGHT] = resolvers.mbonus_material(20, 5),
 		},
 	},
 }
@@ -314,10 +314,10 @@ newEntity{
 	rarity = 16,
 	cost = 35,
 	wielder = {
-		combat_spellpower = resolvers.mbonus_material(7, 3, function(e, v) return v * 0.6 end),
+		combat_spellpower = resolvers.mbonus_material(7, 3),
 		movement_speed = 0.1,
 		inc_damage = {
-			[DamageType.TEMPORAL] = resolvers.mbonus_material(20, 5, function(e, v) return v * 0.25 end),
+			[DamageType.TEMPORAL] = resolvers.mbonus_material(20, 5),
 		},
 	},
 

@@ -31,19 +31,19 @@ newEntity{
 	cost = 60,
 	wielder = {
 		resists={
-			[DamageType.ACID] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
-			[DamageType.LIGHTNING] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
-			[DamageType.FIRE] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
-			[DamageType.COLD] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
-			[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 5, function(e, v) return v * 0.15 end),
+			[DamageType.ACID] = resolvers.mbonus_material(10, 5),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(10, 5),
+			[DamageType.FIRE] = resolvers.mbonus_material(10, 5),
+			[DamageType.COLD] = resolvers.mbonus_material(10, 5),
+			[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 5),
 	},
 		inc_stats = {
-			[Stats.STAT_CON] = resolvers.mbonus_material(5, 1, function(e, v) return v * 3 end),
-			[Stats.STAT_STR] = resolvers.mbonus_material(5, 1, function(e, v) return v * 3 end),
+			[Stats.STAT_CON] = resolvers.mbonus_material(5, 1),
+			[Stats.STAT_STR] = resolvers.mbonus_material(5, 1),
 		},
-		stun_immune = resolvers.mbonus_material(20, 20, function(e, v) v=v/100 return v * 80, v end),
-		knockback_immune = resolvers.mbonus_material(20, 20, function(e, v) v=v/100 return v * 80, v end),
-		disarm_immune = resolvers.mbonus_material(20, 20, function(e, v) v=v/100 return v * 80, v end),
+		stun_immune = resolvers.mbonus_material(20, 20, function(e, v) v=v/100 return 0, v end),
+		knockback_immune = resolvers.mbonus_material(20, 20, function(e, v) v=v/100 return 0, v end),
+		disarm_immune = resolvers.mbonus_material(20, 20, function(e, v) v=v/100 return 0, v end),
 		talent_cd_reduction={[Talents.T_RUSH]=5},
 	},
 }
@@ -55,6 +55,6 @@ newEntity{
 	rarity = 8,
 	cost = 7,
 	wielder = {
-		combat_armor = resolvers.mbonus_material(12, 3, function(e, v) return v * 1 end),
+		combat_armor = resolvers.mbonus_material(12, 3),
 	},
 }
