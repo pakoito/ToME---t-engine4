@@ -80,12 +80,26 @@ function _M:onPartyDeath(src, death_note)
 		local msg
 		if not death_note.special_death_msg then
 			msg = "%s the level %d %s %s was %s to death by %s%s%s on level %s of %s."
+			local srcname = src.unique and src.name or src.name:a_an()
+			local killermsg = (src.killer_message and " "..src.killer_message or ""):gsub("#sex#", game.player.female and "her" or "him")
+			if src.name == game.player.name then
+				srcname = game.player.female and "herself" or "himself"
+				killermsg = rng.table{
+					" (the fool)",
+					" in an act of extreme incompetence",
+					" out of supreme humility",
+					", by accident of course,",
+					" in some sort of fetish experiment gone wrong",
+					", providing a free meal to the wildlife",
+					" (how embarrassing)",
+				}
+			end
 			msg = msg:format(
 				game.player.name, game.player.level, game.player.descriptor.subrace:lower(), game.player.descriptor.subclass:lower(),
 				death_mean or "battered",
-				src.unique and src.name or src.name:a_an(),
+				srcname,
 				src.name == top_killer and " (yet again)" or "",
-				(src.killer_message and " "..src.killer_message or ""):gsub("#sex#", game.player.female and "her" or "him"),
+				killermsg,
 				game.level.level, game.zone.name
 			)
 		else
