@@ -127,7 +127,7 @@
  </tileset>
  <layer name="Terrain" width="60" height="60">
   <data encoding="base64" compression="zlib">
-   eJzt1k0KwjAQBeDs3HqYgJfoEVzqAT2QJ/DfE0ihhRCSOIn5e/EtHoG20Pma6bSTUmoSZj9ApFZ6MUMvvfTihl566cUNvfTSi5sS3kcHrppe3YGrlldbae0r7T05zD35a+7viN6Qa1Rv7HOgF8trv79X69jNc10P3rWeVK80rb12PS28z2V9Leu7kNdVj88b+vb8Yi3VC6H+lfTzfG5n1XGJ9N4reyU1+WaWq44c/WyeOxjJ4d0Ka9okWtacE+8xO48ZvdJ+NvdXGyva/qbMK9Nrv79I80r6PQrtL6L323wO3TdHP5dK6v8kvW5v7DFEb+g51HLl9Kb2Kb3jeVvNpR72t4fQK5vPqKGXXnpxQy+99OKGXnrpxQ299NKLm3/zfgCv0LQw
+   eJzt1skNwjAQBVDfuFJMJJpICRyhQAqiApawNIAiJZJlHDN2vH3zD18RCRLzMpMJvVKqF2bfQKRWejFDL7304oZeeunFDb300oubFN6hAldOb1eBK5e3M1Lal9p7sphr8ufsb4tel6tVr+99oBfLaz6/V+PcbeF7NXjnekK90pT2mvWU8D6m43M6vhJ5bfUseV3vnjXWVLPgml/JPI/XdkYdF0/vPbNXUtPSzrLVEWOe9WsHLePn90rvVljTJtAy5xz4G6PzqHnX9NhnnvX+duq7D7n6W2Jf6V7z+UXaV9L3kau/iN5f+9n1uzHmOVVC/0/Sa/f6nkP0uu5DLldMb+ic0tuet9ReqqG/NYRe2X5GDb300osbeumlFzf00ksvbuill17c/Jv3A4oHtJ8=
   </data>
  </layer>
  <objectgroup color="#ff0000" name="Actor" width="60" height="60">
@@ -202,7 +202,7 @@
     <property name="type" value="&quot;zonename&quot;"/>
    </properties>
   </object>
-  <object name="Farportal" x="1220" y="835" width="219" height="215">
+  <object name="Farportal" x="1220" y="835" width="247" height="217">
    <properties>
     <property name="subtype" value="&quot;Exploratory Farportal&quot;"/>
     <property name="type" value="&quot;zonename&quot;"/>

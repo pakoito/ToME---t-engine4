@@ -67,8 +67,8 @@ It should automatically create a portal back, but it might not be near your arri
 		if not who.player then return end
 		local Dialog = require "engine.ui.Dialog"
 		local q = who:hasQuest("shertul-fortress")
---		if not q then Dialog:simplePopup("Exploratory Farportal", "The farportal seems to be inactive") return end
---		if not q:exploratory_energy(true) then Dialog:simplePopup("Exploratory Farportal", "The fortress does not have enough energy to power a trip through the portal.") return end
+		if not q then Dialog:simplePopup("Exploratory Farportal", "The farportal seems to be inactive") return end
+		if not q:exploratory_energy(true) then Dialog:simplePopup("Exploratory Farportal", "The fortress does not have enough energy to power a trip through the portal.") return end
 
 		Dialog:yesnoPopup("Exploratory Farportal", "Do you want to travel in the farportal? You can not know where you will end up.", function(ret) if ret then
 			local zone, boss = game.state:createRandomZone()
@@ -112,7 +112,7 @@ It should automatically create a portal back, but it might not be near your arri
 				self.explo_portal_on_die = nil
 			end
 			game:changeLevel(1, zone)
---			q:exploratory_energy()
+			q:exploratory_energy()
 			game.log("#VIOLET#You enter the swirling portal and in the blink of an eye you set foot in an unfamiliar zone, with no trace of the portal...")
 		end end)
 	end,
