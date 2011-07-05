@@ -519,6 +519,17 @@ newDamageType{
 	end,
 }
 
+-- Fore but not over minions
+newDamageType{
+	name = "firey no friends", type = "FIRE_FRIENDS",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and target.summoner ~= src then
+			DamageType:get(DamageType.FIRE).projector(src, x, y, DamageType.FIRE, dam)
+		end
+	end,
+}
+
 -- Cold + Stun
 newDamageType{
 	name = "coldstun", type = "COLDSTUN",

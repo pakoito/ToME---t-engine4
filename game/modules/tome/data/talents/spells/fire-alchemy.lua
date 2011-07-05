@@ -102,7 +102,7 @@ newTalent{
 	require = spells_req3,
 	points = 5,
 	random_ego = "attack",
-	mana = 40,
+	mana = 70,
 	cooldown = 30,
 	range = 0,
 	radius = 3,
@@ -116,7 +116,7 @@ newTalent{
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			self.x, self.y, t.getDuration(self, t),
-			DamageType.FIRE, t.getDamage(self, t),
+			DamageType.FIRE_FRIENDS, t.getDamage(self, t),
 			3,
 			5, nil,
 			{type="firestorm", only_one=true},
@@ -134,6 +134,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[A furious fire storm rages around the caster doing %0.2f fire damage in a radius of 3 each turn for %d turns.
+		You closely control the firestorm, preventing it from harming your party members.
 		The damage and duration will increase with the Magic stat]]):
 		format(damDesc(self, DamageType.FIRE, damage), duration)
 	end,
