@@ -722,6 +722,15 @@ function _M:checkMapViewBounded()
 	self._map:setScroll(self.mx, self.my, centered and 0 or self.smooth_scroll)
 end
 
+--- Scrolls the map in the given direction
+function _M:scrollDir(dir)
+	self.changed = true
+	self.mx, self.my = util.coordAddDir(self.mx, self.my, dir)
+	self.mx = util.bound(self.mx, 0, self.w - self.viewport.mwidth)
+	self.my = util.bound(self.my, 0, self.h - self.viewport.mheight)
+	self._map:setScroll(self.mx, self.my, self.smooth_scroll)
+end
+
 --- Gets the tile under the mouse
 function _M:getMouseTile(mx, my)
 --	if mx < self.display_x or my < self.display_y or mx >= self.display_x + self.viewport.width or my >= self.display_y + self.viewport.height then return end

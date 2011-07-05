@@ -151,6 +151,8 @@ upgrade_rod = function(self)
 end
 
 fly = function(self)
+	game.player:learnLore("shertul-fortress-takeoff")
+
 	local f = require("mod.class.FortressPC").new{}
 	game:changeLevel(1, "wilderness")
 	game.party:addMember(f, {temporary_level=1, control="full"})

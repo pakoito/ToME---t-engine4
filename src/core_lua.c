@@ -184,6 +184,7 @@ static int lua_get_mod_state(lua_State *L)
 	else if (!strcmp(mod, "ctrl")) lua_pushboolean(L, smod & KMOD_CTRL);
 	else if (!strcmp(mod, "alt")) lua_pushboolean(L, smod & KMOD_ALT);
 	else if (!strcmp(mod, "meta")) lua_pushboolean(L, smod & KMOD_META);
+	else if (!strcmp(mod, "caps")) lua_pushboolean(L, smod & KMOD_CAPS);
 	else lua_pushnil(L);
 
 	return 1;

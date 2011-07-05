@@ -108,3 +108,11 @@ newLore{
 	image = "shertul_fortress_lore9.png",
 	lore = function() return [[This final mural has been ruined, with deep scores and scratches etched across its surface. All you can see of the original appears to be flames.]] end,
 }
+
+newLore{
+	id = "shertul-fortress-takeoff",
+	category = "sher'tul",
+	name = "Yiilkgur raising toward the sky",
+	image = "fortress_takeoff.png",
+	lore = [[Yiilkgur, the Sher'Tul Fortress is re-activated and raises from the depths of Nur toward the sky.]],
+}

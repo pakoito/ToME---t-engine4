@@ -173,6 +173,13 @@ function _M:run()
 
 	-- Run the current music if any
 	self:onTickEnd(function() self:playMusic() end)
+
+	-- Create the map scroll text overlay
+	self.player_display.font:setStyle("bold")
+	local s = core.display.drawStringBlendedNewSurface(self.player_display.font, "<Scroll mode, press keys to scroll, caps lock to exit>", unpack(colors.simple(colors.GOLD)))
+	self.player_display.font:setStyle("normal")
+	self.caps_scroll = {s:glTexture()}
+	self.caps_scroll.w, self.caps_scroll.h = s:getSize()
 end
 
 --- Checks if the current character is "tainted" by cheating
@@ -913,6 +920,19 @@ function _M:display(nb_keyframes)
 		-- Mouse gestures
 		self.gestures:update()
 		self.gestures:display(map.display_x, map.display_y + map.viewport.height - self.gestures.font_h - 5)
+
+		-- Inform the player that map is in scroll mode
+		if core.key.modState("caps") then
+			local w = map.viewport.width * 0.5
+			local h = w * self.caps_scroll.h / self.caps_scroll.w
+			self.caps_scroll[1]:toScreenFull(
+				map.display_x + (map.viewport.width - w) / 2,
+				map.display_y + (map.viewport.height - h) / 2,
+				w, h,
+				self.caps_scroll[2] * w / self.caps_scroll.w, self.caps_scroll[3] * h / self.caps_scroll.h,
+				1, 1, 1, 0.5
+			)
+		end
 	end
 
 	-- We display the player's interface
@@ -1033,15 +1053,15 @@ function _M:setupCommands()
 	self.key:addBinds
 	{
 		-- Movements
-		MOVE_LEFT = function() self.player:moveDir(4) end,
-		MOVE_RIGHT = function() self.player:moveDir(6) end,
-		MOVE_UP = function() self.player:moveDir(8) end,
-		MOVE_DOWN = function() self.player:moveDir(2) end,
-		MOVE_LEFT_UP = function() self.player:moveDir(7) end,
-		MOVE_LEFT_DOWN = function() self.player:moveDir(1) end,
-		MOVE_RIGHT_UP = function() self.player:moveDir(9) end,
-		MOVE_RIGHT_DOWN = function() self.player:moveDir(3) end,
-		MOVE_STAY = function() if self.player:enoughEnergy() then self.player:describeFloor(self.player.x, self.player.y) self.player:useEnergy() end end,
+		MOVE_LEFT = function() if core.key.modState("caps") and self.level then self.level.map:scrollDir(4) else self.player:moveDir(4) end end,
+		MOVE_RIGHT = function() if core.key.modState("caps") and self.level then self.level.map:scrollDir(6) else self.player:moveDir(6) end end,
+		MOVE_UP = function() if core.key.modState("caps") and self.level then self.level.map:scrollDir(8) else self.player:moveDir(8) end end,
+		MOVE_DOWN = function() if core.key.modState("caps") and self.level then self.level.map:scrollDir(2) else self.player:moveDir(2) end end,
+		MOVE_LEFT_UP = function() if core.key.modState("caps") and self.level then self.level.map:scrollDir(7) else self.player:moveDir(7) end end,
+		MOVE_LEFT_DOWN = function() if core.key.modState("caps") and self.level then self.level.map:scrollDir(1) else self.player:moveDir(1) end end,
+		MOVE_RIGHT_UP = function() if core.key.modState("caps") and self.level then self.level.map:scrollDir(9) else self.player:moveDir(9) end end,
+		MOVE_RIGHT_DOWN = function() if core.key.modState("caps") and self.level then self.level.map:scrollDir(3) else self.player:moveDir(3) end end,
+		MOVE_STAY = function() if core.key.modState("caps") and self.level then self.level.map:centerViewAround(self.player.x, self.player.y) else if self.player:enoughEnergy() then self.player:describeFloor(self.player.x, self.player.y) self.player:useEnergy() end end end,
 
 		RUN = function()
 			game.log("Run in which direction?")
