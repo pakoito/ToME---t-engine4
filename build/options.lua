@@ -47,4 +47,4 @@ newoption {
 	description = "Enables compiling with all pedantic options",
 }
 
-_OPTIONS.lua = _OPTIONS.lua or "default"
+_OPTIONS.lua = _OPTIONS.lua or "jit2"
