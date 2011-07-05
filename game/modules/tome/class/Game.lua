@@ -1008,37 +1008,12 @@ function _M:setupCommands()
 				for i, a in ipairs(e.add_mos or {}) do print("   => ", a.image) end
 			end end
 		end end,
-		[{"_f","ctrl"}] = function() if config.settings.cheat then
-			self.nicer_tiles:updateAround(self.level, game.player.x, game.player.y)
---			self.nicer_tiles:replaceAll(self.level)
---[[
-			local i,j = game.player.x, game.player.y
-			local level=self.level
-			local s = level.map:checkEntity(i, j, Map.TERRAIN, "type") or "wall"
-			local g1 = level.map:checkEntity(i-1, j+1, Map.TERRAIN, "type") == s and 1 or 0
-			local g2 = level.map:checkEntity(i, j+1, Map.TERRAIN, "type")   == s and 1 or 0
-			local g3 = level.map:checkEntity(i+1, j+1, Map.TERRAIN, "type") == s and 1 or 0
-			local g4 = level.map:checkEntity(i-1, j, Map.TERRAIN, "type")   == s and 1 or 0
-			local g6 = level.map:checkEntity(i+1, j, Map.TERRAIN, "type")   == s and 1 or 0
-			local g7 = level.map:checkEntity(i-1, j-1, Map.TERRAIN, "type") == s and 1 or 0
-			local g8 = level.map:checkEntity(i, j-1, Map.TERRAIN, "type")   == s and 1 or 0
-			local g9 = level.map:checkEntity(i+1, j-1, Map.TERRAIN, "type") == s and 1 or 0
-			print(("	[ [=[\n%d%d%d\n%d %d\n%d%d%d]=] ] = '',"):format(g7,g8,g9,g4,g6,g1,g2,g3))
---]]
-		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
---			game.player:setEffect(game.player.EFF_BONE_SHIELD, 30, {nb=3})
---			self.state:debugRandomZone()
---			local m = game.zone:makeEntity(game.level, "actor", {random_boss=true}, nil, true)
---			if m then game.zone:addEntity(game.level, m, "actor", game.player.x, game.player.y + 1) end
---			self:changeLevel(1, "test")
-			local list = mod.class.Object:loadList("/data/general/objects/brotherhood-artifacts.lua")
-			for _, e in ipairs(list) do if e.image and e.unique then
-				local o = e:clone()
-				o:resolve() o:resolve(nil,true)
-				local x, y = util.findFreeGrid(self.player.x, self.player.y, 15, true, {[engine.Map.OBJECT]=true})
-				game.zone:addEntity(game.level, o, "object", x, y)
-			end end
+			for uid, e in pairs(self.level.entities) do
+				if e.level and e.level >= 10 then
+					print("========WARNING", e.x, e.y, e.name, e.level)
+				end
+			end
 		end end,
 	}
 

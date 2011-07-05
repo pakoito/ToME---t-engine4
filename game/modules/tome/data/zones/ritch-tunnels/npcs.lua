@@ -94,7 +94,7 @@ newEntity{ base = "BASE_NPC_RITCH_REL",
 
 newEntity{ base = "BASE_NPC_RITCH_REL", define_as = "HIVE_MOTHER",
 	unique = true,
-	name = "Ritch Hive Mother",
+	name = "Ritch Great Hive Mother", image = "npc/insect_ritch_ritch_hive_mother.png",
 	display = "I", color=colors.VIOLET,
 	desc = [[This huge ritch seems to be the mother of all those here. Her sharp, fiery, claws dart toward you!]],
 	level_range = {7, nil}, exp_worth = 2,
