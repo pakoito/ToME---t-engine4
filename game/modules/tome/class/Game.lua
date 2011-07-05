@@ -256,6 +256,7 @@ function _M:newGame()
 			self.player:resolve(nil, true)
 			self.player.energy.value = self.energy_to_act
 			Map:setViewerFaction(self.player.faction)
+			self.player:updateModdableTile()
 
 			self.paused = true
 			print("[PLAYER BIRTH] resolved!")

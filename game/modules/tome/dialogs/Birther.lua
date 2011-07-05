@@ -35,6 +35,7 @@ local Module = require "engine.Module"
 local Tiles = require "engine.Tiles"
 local Particles = require "engine.Particles"
 local CharacterVaultSave = require "engine.CharacterVaultSave"
+local Object = require "mod.class.Object"
 
 module(..., package.seeall, class.inherit(Birther))
 
@@ -47,6 +48,10 @@ function _M:init(title, actor, order, at_end, quickbirth, w, h)
 	self.tiles = Tiles.new(64, 64, nil, nil, true, nil)
 
 	Dialog.init(self, title and title or "Character Creation", w or 600, h or 400)
+
+	self.obj_list = Object:loadList("/data/general/objects/objects.lua")
+	self.obj_list_by_name = {}
+	for i, e in ipairs(self.obj_list) do if e.name and e.rarity then self.obj_list_by_name[e.name] = e end end
 
 	self.descriptors = {}
 	self.descriptors_by_type = {}
@@ -166,12 +171,14 @@ function _M:atEnd(v)
 			local ps = self.actor:getParticlesList()
 			for i, p in ipairs(ps) do self.actor:removeParticles(p) end
 			self.actor:defineDisplayCallback()
-			if self.actor._mo then self.actor._mo:invalidate() end
-			self.actor._mo = nil
+			self.actor:removeAllMOs()
 
 			game:unregisterDialog(self)
 			self:apply()
-			if self.actor.has_custom_tile then self.actor.make_tile = nil self.actor.moddable_tile = nil end
+			if self.actor.has_custom_tile then
+				self.actor.make_tile = nil
+				self.actor.moddable_tile = nil
+			end
 			game:setPlayerName(self.c_name.text)
 			self.at_end(false)
 		end)
@@ -724,11 +731,51 @@ function _M:innerDisplay(x, y, nb_keyframes)
 	end
 end
 
+--- Fake a body & starting equipment
+function _M:fakeEquip(v)
+	if not v then
+		self.actor.body = nil
+		self.actor.inven = {}
+	else
+		self.actor.inven = {}
+		local fake_body = { INVEN = 1000, QS_MAINHAND = 1, QS_OFFHAND = 1, MAINHAND = 1, OFFHAND = 1, FINGER = 2, NECK = 1, LITE = 1, BODY = 1, HEAD = 1, CLOAK = 1, HANDS = 1, BELT = 1, FEET = 1, TOOL = 1, QUIVER = 1, MOUNT = 1 }
+		self.actor.body = fake_body
+		self.actor:initBody()
+
+		local c = self.birth_descriptor_def.class[self.descriptors_by_type.class or "Warrior"]
+		local sc = self.birth_descriptor_def.subclass[self.descriptors_by_type.subclass or "Fighter"]
+		local function apply_equip(r)
+			for i, f in ipairs(r[1]) do
+				local o = self.obj_list_by_name[f.name]
+				if o and o.slot then
+					o = o:clone()
+					o:resolve()
+					o:resolve(nil, true)
+					local inven = self.actor:getInven(o.slot)
+					if inven[1] and o.offslot then inven = self.actor:getInven(o.offslot) end
+					if not inven[1] then inven[1] = o end
+				end
+			end
+		end
+
+		for _, r in pairs(c.copy or {}) do if type(r) == "table" and r.__resolver == "equip" then apply_equip(r) end end
+		for _, r in pairs(sc.copy or {}) do if type(r) == "table" and r.__resolver == "equip" then apply_equip(r) end end
+	end
+end
+
 function _M:setTile(f, w, h)
+	self.actor:removeAllMOs()
 	if not f then
 		if not self.actor.has_custom_tile and self.descriptors_by_type.subrace and self.descriptors_by_type.sex then
+			local dr = self.birth_descriptor_def.subrace[self.descriptors_by_type.subrace]
+			local ds = self.birth_descriptor_def.sex[self.descriptors_by_type.sex]
 			self.actor.image = "player/"..self.descriptors_by_type.subrace:lower():gsub("[^a-z0-9_]", "_").."_"..self.descriptors_by_type.sex:lower():gsub("[^a-z0-9_]", "_")..".png"
 			self.actor.add_mos = nil
+			self.actor.female = ds.copy.female
+			self.actor.male = ds.copy.male
+			self.actor.moddable_tile = dr.copy.moddable_tile
+			self.actor.moddable_tile_base = dr.copy.moddable_tile_base
+			self.actor.moddable_tile_ornament = dr.copy.moddable_tile_ornament
 		end
 	else
 		self.actor.make_tile = nil
@@ -741,8 +788,9 @@ function _M:setTile(f, w, h)
 		end
 		self.actor.has_custom_tile = f
 	end
-	if self.actor._mo then self.actor._mo:invalidate() end
-	self.actor._mo = nil
+	self:fakeEquip(true)
+	self.actor:updateModdableTile()
+	self:fakeEquip(false)
 
 	-- Add an example particles if any
 	local ps = self.actor:getParticlesList()
