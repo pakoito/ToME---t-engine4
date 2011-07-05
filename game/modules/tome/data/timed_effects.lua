@@ -1767,12 +1767,15 @@ newEffect{
 	long_desc = function(self, eff) return ("The target is hexed, granting it %d%% chance each turn to be dazed for 3 turns."):format(eff.chance) end,
 	type = "hex",
 	status = "detrimental",
-	parameters = {chance=10},
+	parameters = {chance=10, power=10},
 	on_gain = function(self, err) return "#Target# is hexed!", "+Pacification Hex" end,
 	on_lose = function(self, err) return "#Target# is free from the hex.", "-Pacification Hex" end,
 	-- Damage each turn
 	on_timeout = function(self, eff)
-		if not self:hasEffect(self.EFF_DAZED) and rng.percent(eff.chance) then self:setEffect(self.EFF_DAZED, 3, {}) end
+		if not self:hasEffect(self.EFF_DAZED) and rng.percent(eff.chance) then
+			self:setEffect(self.EFF_DAZED, 3, {})
+			if not self:checkHit(eff.power, self:combatSpellResist(), 0, 95, 15) then eff.dur = 0 end
+		end
 	end,
 	activate = function(self, eff)
 		self:setEffect(self.EFF_DAZED, 3, {})

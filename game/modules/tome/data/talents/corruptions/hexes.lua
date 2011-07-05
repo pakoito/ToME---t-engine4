@@ -40,7 +40,7 @@ newTalent{
 			local target = game.level.map(tx, ty, Map.ACTOR)
 			if not target or target == self then return end
 			if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) then
-				target:setEffect(target.EFF_PACIFICATION_HEX, 20, {chance=self:combatTalentSpellDamage(t, 30, 50)})
+				target:setEffect(target.EFF_PACIFICATION_HEX, 20, {power=self:combatSpellpower(), chance=self:combatTalentSpellDamage(t, 30, 50)})
 			end
 		end)
 		game:playSoundNear(self, "talents/slime")
