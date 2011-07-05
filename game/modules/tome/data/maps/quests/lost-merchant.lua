@@ -62,6 +62,12 @@ defineTile('P', "FLOOR", nil, mod.class.NPC.new{
 	on_die = function(self, who)
 		game.level.map(self.x, self.y, game.level.map.TERRAIN, game.zone.grid_list.UP_WILDERNESS)
 		game.logSeen(who, "As the assassin dies the magical veil protecting the stairs out vanishes.")
+		for uid, e in pairs(game.level.entities) do
+			if e.is_merchant and not e.dead then
+				e.can_talk = "lost-merchant"
+				break
+			end
+		end
 	end,
 
 	is_assassin_lord = true,
