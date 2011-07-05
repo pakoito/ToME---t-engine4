@@ -670,7 +670,7 @@ function _M:combatTalentWeaponDamage(t, base, max, t2)
 	if t2 then t2 = t2 / 2 else t2 = 0 end
 	local diff = max - base
 	local mult = base + diff * math.sqrt((self:getTalentLevel(t) + t2) / 5)
-	print("[TALENT WEAPON MULT]", self:getTalentLevel(t), base, max, t2, mult)
+--	print("[TALENT WEAPON MULT]", self:getTalentLevel(t), base, max, t2, mult)
 	return mult
 end
 
