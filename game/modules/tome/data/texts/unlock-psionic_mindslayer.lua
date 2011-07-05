@@ -32,5 +32,5 @@ Class features:#YELLOW#
 
 Mindslayers use their mind to manipulate the world.
 They require energy to do so, which they take from the world around them.
-While their shields are up incomming damage will be partly absorbed and the energy stored for later use.
+While their shields are up incoming damage will be partly absorbed and the energy stored for later use.
 ]]
