@@ -283,3 +283,53 @@ All damage of this type that you receive, through any means, is reduced by this 
 TOOLTIP_SPECIFIC_IMMUNE = [[#GOLD#Effect resistance chance#LAST#
 This represents your chance to completely avoid the effect in question.
 ]]
+TOOLTIP_ON_HIT_DAMAGE = [[#GOLD#Damage when hit#LAST#
+Each time a creature hits your in melee it will suffer damage.
+]]
+TOOLTIP_RESISTS_PEN_ALL = [[#GOLD#Damage penetration: all#LAST#
+Reduces the amount of effective resistance of your foes to any damage you deal by this percent.
+If you have 50% penetration against a creature with 50% resistance it will have an effective resistance of 25%.
+This stacks with individual damage type penetrations.
+]]
+TOOLTIP_RESISTS_PEN = [[#GOLD#Damage penetration: specific#LAST#
+Reduces the amount of effective resistance of your foes to all damage of this type you deal by this percent.
+If you have 50% penetration against a creature with 50% resistance it will have an effective resistance of 25%.
+]]
+
+-------------------------------------------------------------
+-- Misc
+-------------------------------------------------------------
+TOOLTIP_ESP = [[#GOLD#Telepathy#LAST#
+Allows you to sense creatures of the given type(s) even if they are not currently in your line of sight.
+]]
+TOOLTIP_ESP_RANGE = [[#GOLD#Telepathy range#LAST#
+Determines the distance up to which you can sense creatures with telepathy.
+]]
+TOOLTIP_ESP_ALL = [[#GOLD#Telepathy#LAST#
+Allows you to sense any creatures even if they are not currently in your line of sight.
+]]
+TOOLTIP_VISION_LITE = [[#GOLD#Lite radius#LAST#
+The maximun distance your lite can light up, anything further can not be see by natural means, unless the place itself is lit.
+]]
+TOOLTIP_VISION_SIGHT = [[#GOLD#Sight range#LAST#
+How far your sight can see, this only works in lit areas.
+]]
+TOOLTIP_VISION_INFRA = [[#GOLD#Infravision#LAST#
+A secondary sight that allows you to see even in the dark, but only creatures can be seen this way.
+]]
+TOOLTIP_VISION_STEALTH = [[#GOLD#Stealth#LAST#
+To use stealth one must possess the 'Stealth' talent.
+Stealth allows you to try to hide from any creatures that would otehrwise see you.
+Even if they have seen you they will have a harder time hitting you.
+Any creature can try to see you through stealth.
+]]
+TOOLTIP_VISION_SEE_STEALTH = [[#GOLD#See stealth#LAST#
+Your power to see stealthed creatures, the higher it is the more likely you are to see them (based on their own stealth score).
+]]
+TOOLTIP_VISION_INVISIBLE = [[#GOLD#Invisibility#LAST#
+Invisible creatures are magically removed from the sight of all others. They can only be see by creatures that can see invisible.
+]]
+TOOLTIP_VISION_SEE_INVISIBLE = [[#GOLD#See invisible#LAST#
+Your power to see invisible creatures, the higher it is the more likely you are to see them (based on their own invisibility score).
+If you do not have any see invisible score you will never be able to see invisible creatures.
+]]
