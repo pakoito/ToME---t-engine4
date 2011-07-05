@@ -78,7 +78,6 @@ end
 function _M:generateOne()
 	local f = nil
 	if self.filters then f = self.filters[rng.range(1, #self.filters)] end
-	print("===========================================", f and f.max_ood)
 	local m = self.zone:makeEntity(self.level, "actor", f, nil, true)
 	if m then
 		local x, y = rng.range(self.area.x1, self.area.x2), rng.range(self.area.y1, self.area.y2)
