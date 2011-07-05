@@ -524,7 +524,7 @@ newEffect{
 		if math.floor(core.fov.distance(self.x, self.y, eff.src.x, eff.src.y)) > 1 or eff.src.dead or not game.level:hasEntity(eff.src) then
 			return true
 		end
-		self:suffocate(eff.power, eff.src)
+		self:suffocate(eff.power, eff.src, (" was constricted to death by %s."):format(eff.src.unique and eff.src.name or eff.src.name:a_an()))
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("never_move", eff.tmpid)

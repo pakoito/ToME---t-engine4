@@ -436,8 +436,8 @@ function _M:die(src, death_note)
 end
 
 --- Suffocate a bit, lose air
-function _M:suffocate(value, src)
-	local dead, affected = mod.class.Actor.suffocate(self, value, src)
+function _M:suffocate(value, src, death_msg)
+	local dead, affected = mod.class.Actor.suffocate(self, value, src, death_msg)
 	if affected and value > 0 and self.runStop then
 		self:runStop("suffocating")
 		self:restStop("suffocating")

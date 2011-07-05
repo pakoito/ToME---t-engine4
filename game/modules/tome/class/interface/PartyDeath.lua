@@ -77,15 +77,25 @@ function _M:onPartyDeath(src, death_note)
 			end
 		end
 
-		local msg = "%s the %d %s %s was %s to death by %s%s%s on level %s of %s."
-		msg = msg:format(
-			game.player.name, game.player.level, game.player.descriptor.subrace:lower(), game.player.descriptor.subclass:lower(),
-			death_mean or "battered",
-			src.unique and src.name or src.name:a_an(),
-			src.name == top_killer and " (yet again)" or "",
-			(src.killer_message and " "..src.killer_message or ""):gsub("#sex#", game.player.female and "her" or "him"),
-			game.level.level, game.zone.name
-		)
+		local msg
+		if not death_note.special_death_msg then
+			msg = "%s the level %d %s %s was %s to death by %s%s%s on level %s of %s."
+			msg = msg:format(
+				game.player.name, game.player.level, game.player.descriptor.subrace:lower(), game.player.descriptor.subclass:lower(),
+				death_mean or "battered",
+				src.unique and src.name or src.name:a_an(),
+				src.name == top_killer and " (yet again)" or "",
+				(src.killer_message and " "..src.killer_message or ""):gsub("#sex#", game.player.female and "her" or "him"),
+				game.level.level, game.zone.name
+			)
+		else
+			msg = "%s the level %d %s %s %s on level %s of %s."
+			msg = msg:format(
+				game.player.name, game.player.level, game.player.descriptor.subrace:lower(), game.player.descriptor.subclass:lower(),
+				death_note.special_death_msg,
+				game.level.level, game.zone.name
+			)
+		end
 
 		game.log("#{bold}#"..msg.."#{normal}#")
 		if not game.player.easy_mode_lifes or game.player.easy_mode_lifes <= 0 then

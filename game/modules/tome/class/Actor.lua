@@ -322,7 +322,7 @@ function _M:actBase()
 	local air_level, air_condition = game.level.map:checkEntity(self.x, self.y, Map.TERRAIN, "air_level"), game.level.map:checkEntity(self.x, self.y, Map.TERRAIN, "air_condition")
 	if air_level then
 		if not air_condition or not self.can_breath[air_condition] or self.can_breath[air_condition] <= 0 then
-			self:suffocate(-air_level, self)
+			self:suffocate(-air_level, self, air_condition == "water" and "drowned to death" or nil)
 		end
 	end
 end
@@ -2523,14 +2523,14 @@ function _M:worthExp(target)
 end
 
 --- Suffocate a bit, lose air
-function _M:suffocate(value, src)
+function _M:suffocate(value, src, death_message)
 	if self:attr("no_breath") then return false, false end
 	if self:attr("invulnerable") then return false, false end
 	self.air = self.air - value
 	local ae = game.level.map(self.x, self.y, Map.ACTOR)
 	if self.air <= 0 then
 		game.logSeen(self, "%s suffocates to death!", self.name:capitalize())
-		return self:die(src), true
+		return self:die(src, {special_death_msg=death_message or "suffocated to death"}), true
 	end
 	return false, true
 end

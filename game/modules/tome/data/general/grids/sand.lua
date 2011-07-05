@@ -66,7 +66,7 @@ newEntity{
 					local a = game.level.map(self.x, self.y, engine.Map.ACTOR)
 					if a then
 						game.logPlayer(a, "You are crushed by the collapsing tunnel! You suffocate!")
-						a:suffocate(30, self)
+						a:suffocate(30, self, "was buried alive")
 						engine.DamageType:get(engine.DamageType.PHYSICAL).projector(self, self.x, self.y, engine.DamageType.PHYSICAL, a.life / 2)
 					end
 				end
