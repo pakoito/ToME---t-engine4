@@ -310,7 +310,7 @@ newDamageType{
 
 -- Darkness damage
 newDamageType{
-	name = "darkness", type = "DARKNESS", text_color = "#DARK_GREY#",
+	name = "darkness", type = "DARKNESS", text_color = "#GREY#",
 	antimagic_resolve = true,
 	death_message = {"shadowed", "darkened"},
 }
