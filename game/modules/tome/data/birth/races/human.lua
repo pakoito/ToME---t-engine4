@@ -45,8 +45,6 @@ newBirthDescriptor{
 	},
 	talents = {},
 	copy = {
-		moddable_tile = "human_#sex#",
-		moddable_tile_base = "base_cornac_01.png",
 		faction = "allied-kingdoms",
 		type = "humanoid", subtype="human",
 		resolvers.inscription("INFUSION:_REGENERATION", {cooldown=10, dur=5, heal=60}),
@@ -106,6 +104,8 @@ newBirthDescriptor
 	},
 	experience = 1.0,
 	copy = {
+		moddable_tile = "human_#sex#",
+		moddable_tile_base = "base_cornac_01.png",
 		unused_talents_types = 1,
 		life_rating = 10,
 		default_wilderness = {"playerpop", "allied"},

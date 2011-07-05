@@ -766,10 +766,10 @@ end
 function _M:setTile(f, w, h)
 	self.actor:removeAllMOs()
 	if not f then
-		if not self.actor.has_custom_tile and self.descriptors_by_type.subrace and self.descriptors_by_type.sex then
-			local dr = self.birth_descriptor_def.subrace[self.descriptors_by_type.subrace]
-			local ds = self.birth_descriptor_def.sex[self.descriptors_by_type.sex]
-			self.actor.image = "player/"..self.descriptors_by_type.subrace:lower():gsub("[^a-z0-9_]", "_").."_"..self.descriptors_by_type.sex:lower():gsub("[^a-z0-9_]", "_")..".png"
+		if not self.actor.has_custom_tile then
+			local dr = self.birth_descriptor_def.subrace[self.descriptors_by_type.subrace or "Cornac"]
+			local ds = self.birth_descriptor_def.sex[self.descriptors_by_type.sex or "Female"]
+			self.actor.image = "player/"..(self.descriptors_by_type.subrace or "Cornac"):lower():gsub("[^a-z0-9_]", "_").."_"..(self.descriptors_by_type.sex or "Female"):lower():gsub("[^a-z0-9_]", "_")..".png"
 			self.actor.add_mos = nil
 			self.actor.female = ds.copy.female
 			self.actor.male = ds.copy.male
