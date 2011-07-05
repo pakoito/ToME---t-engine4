@@ -56,6 +56,15 @@ newAchievement{
 }
 
 newAchievement{
+	name = "Fool of a Took!", id = "HALFLING_SUICIDE",
+	show = "name",
+	desc = [[Killed oneself as a halfling.]],
+	can_gain = function(self, who)
+		if who.descriptor and who.descriptor.race == "Halfling" then return true end
+	end
+}
+
+newAchievement{
 	name = "Emancipation", id = "EMANCIPATION",
 	image = "npc/alchemist_golem.png",
 	show = "name",

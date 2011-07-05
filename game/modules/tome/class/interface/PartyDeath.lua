@@ -45,6 +45,7 @@ function _M:onPartyDeath(src, death_note)
 
 	-- No more player found! Switch back to main and die
 	if game_ender then
+		world:gainAchievement("HALFLING_SUICIDE", self)
 		game.party:setPlayer(game.party:findMember{main=true}, true)
 		game.paused = true
 		game.player.energy.value = game.energy_to_act
