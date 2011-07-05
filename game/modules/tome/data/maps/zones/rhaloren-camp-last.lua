@@ -21,7 +21,7 @@ defineTile('.', "FLOOR")
 defineTile('#', "WALL")
 defineTile('+', "DOOR")
 defineTile('P', "FLOOR", nil, "INQUISITOR")
-defineTile('p', "FLOOR", nil, {random_filter={special=function(e) return e.faction == "rhalore" end}})
+defineTile('p', "FLOOR", nil, {random_filter={max_ood=2, special=function(e) return e.faction == "rhalore" end}})
 
 subGenerator{
 	x = 0, y = 0, w = 50, h = 43,
