@@ -125,15 +125,13 @@ function _M:drawFrame(x, y, r, g, b, a)
 end
 
 function _M:toScreen(x, y, nb_keyframes)
-	local zoom = 1
-
 	-- We translate and scale opengl matrix to make the popup effect easily
-	local ox, oy = x, y
+	local ox, oy = math.floor(x), math.floor(y)
+	x, y = ox, oy
 	local hw, hh = math.floor(self.w / 2), math.floor(self.h / 2)
 	local tx, ty = x + hw, y + hh
 	x, y = -hw, -hh
 	core.display.glTranslate(tx, ty, 0)
-	if zoom < 1 then core.display.glScale(zoom, zoom, zoom) end
 
 	-- Draw the frame and shadow
 	self:drawFrame(x, y, 1, 1, 1, self.frame.a)
@@ -147,7 +145,6 @@ function _M:toScreen(x, y, nb_keyframes)
 	end
 
 	-- Restiore normal opengl matrix
-	if zoom < 1 then core.display.glScale() end
 	core.display.glTranslate(-tx, -ty, 0)
 end
 
