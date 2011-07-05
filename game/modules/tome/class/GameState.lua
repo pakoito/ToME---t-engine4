@@ -1275,6 +1275,7 @@ function _M:createRandomBoss(base, data)
 	b.name = name.." the "..b.name
 	b.unique = b.name
 	local boss_id = "RND_BOSS_"..b.name:upper():gsub("[^A-Z]", "_")
+	b.define_as = boss_id
 	b.color = colors.VIOLET
 	b.rank = data.rank or (rng.percent(30) and 4 or 3.5)
 	b.level_range[1] = data.level

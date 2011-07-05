@@ -67,18 +67,20 @@ It should automatically create a portal back, but it might not be near your arri
 		if not who.player then return end
 		local Dialog = require "engine.ui.Dialog"
 		local q = who:hasQuest("shertul-fortress")
-		if not q then Dialog:simplePopup("Exploratory Farportal", "The farportal seems to be inactive") return end
-		if not q:exploratory_energy(true) then Dialog:simplePopup("Exploratory Farportal", "The fortress does not have enough energy to power a trip through the portal.") return end
+--		if not q then Dialog:simplePopup("Exploratory Farportal", "The farportal seems to be inactive") return end
+--		if not q:exploratory_energy(true) then Dialog:simplePopup("Exploratory Farportal", "The fortress does not have enough energy to power a trip through the portal.") return end
 
 		Dialog:yesnoPopup("Exploratory Farportal", "Do you want to travel in the farportal? You can not know where you will end up.", function(ret) if ret then
 			local zone, boss = game.state:createRandomZone()
 			zone.no_worldport = true
 			zone.generator.actor.abord_no_guardian = true
-			boss.explo_portal_on_die = boss.on_die
-			boss.on_die = function(self, ...)
-				local x, y = self.x or game.player.x, self.y or game.player.y
-				local g = game.zone:makeEntityByName(game.level, "terrain", game.zone.basic_floor):clone()
-				g._mo = nil
+			zone.make_back_portal = function(self)
+				local p = game:getPlayer(true)
+				local x, y = p.x, p.y
+				local g = game.zone:makeEntityByName(game.level, "terrain", game.zone.basic_floor)
+				if g.change_level then return end
+				g = g:clone()
+				g:removeAllMOs(true)
 				g.nice_tiler = nil
 				g.show_tooltip = true
 				g.name = "Exploratory Farportal exit"
@@ -88,14 +90,29 @@ It should automatically create a portal back, but it might not be near your arri
 				g.notice = true
 				g.change_level = 1 g.change_zone = "shertul-fortress"
 				game.zone:addEntity(game.level, g, "terrain", x, y)
-				game.logSeen(self, "#VIOLET#As %s falls you notice a portal appearing.", self.name)
+				if self then game.logSeen(self, "#VIOLET#As %s falls you notice a portal appearing.", self.name)
+				else game.logSeen(p, "#VIOLET#Your rod of recall shakes, a portal appears beneath you.") end
+			end
+			zone.on_turn = function(zone)
+				if game.turn % 1000 == 0 and game.level.level == zone.max_level then
+					for uid, e in pairs(game.level.entities) do
+						if e.define_as == zone.generator.actor.guardian and not e.dead then return end
+					end
+					-- Not found!
+					zone.make_back_portal()
+				end
+			end
+
+			boss.explo_portal_on_die = boss.on_die
+			boss.on_die = function(self, ...)
+				game.zone.make_back_portal(self)
 
 				self:check("explo_portal_on_die", ...)
 				self.on_die = self.explo_portal_on_die
 				self.explo_portal_on_die = nil
 			end
 			game:changeLevel(1, zone)
-			q:exploratory_energy()
+--			q:exploratory_energy()
 			game.log("#VIOLET#You enter the swirling portal and in the blink of an eye you set foot in an unfamiliar zone, with no trace of the portal...")
 		end end)
 	end,
