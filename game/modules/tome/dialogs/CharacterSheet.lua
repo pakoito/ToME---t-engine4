@@ -214,7 +214,7 @@ function _M:drawDialog(kind, actor_to_compare)
 			end
 		end
 
-		if value2 and value2 ~= value then
+		if value and value2 and value2 ~= value then
 			if added == 0 and not nobracets then
 				ret:add(" (")
 			elseif added > 1 then
