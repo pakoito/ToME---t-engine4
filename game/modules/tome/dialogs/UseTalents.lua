@@ -47,7 +47,7 @@ Right click or press '*' to configure.
 		{name="Status", width=20, display_prop="status"},
 		{name="Hotkey", width={75,"fixed"}, display_prop="hotkey"},
 		{name="Mouse Click", width={60,"fixed"}, display_prop=function(item)
-			if item.talent and item.talent == self.actor.auto_shoot_talent then return "LeftClick" 
+			if item.talent and item.talent == self.actor.auto_shoot_talent then return "LeftClick"
 			elseif item.talent and item.talent == self.actor.auto_shoot_midclick_talent then return "MiddleClick"
 			else return "" end
 		end},
@@ -189,8 +189,9 @@ end
 function _M:generateList()
 	-- Makes up the list
 	local list = {}
-	list.chars = {}
 	local letter = 1
+
+--[[
 	for i, tt in ipairs(self.actor.talents_types_def) do
 		local cat = tt.type:gsub("/.*", "")
 		local where = #list
@@ -237,8 +238,56 @@ function _M:generateList()
 				shown=true,
 			})
 		end
-
 	end
-	for i = 1, #list do list[i].id = i end
+]]
+
+	local actives, sustains, sustained, cooldowns = {}, {}, {}, {}
+	local chars = {}
+
+	-- Find all talents of this school
+	for j, t in pairs(self.actor.talents_def) do
+		if self.actor:knowTalent(t.id) and t.mode ~= "passive" then
+			local typename = "talent"
+			local nodes = t.mode == "sustained" and sustains or actives
+			local status = tstring{{"color", "LIGHT_GREEN"}, "Active"}
+			if self.actor:isTalentCoolingDown(t) then
+				nodes = cooldowns
+				status = tstring{{"color", "LIGHT_RED"}, self.actor:isTalentCoolingDown(t).." turns"}
+			elseif t.mode == "sustained" then
+				if self.actor:isTalentActive(t.id) then nodes = sustained end
+				status = self.actor:isTalentActive(t.id) and tstring{{"color", "YELLOW"}, "Sustaining"} or tstring{{"color", "LIGHT_GREEN"}, "Sustain"}
+			end
+			nodes[#nodes+1] = {
+				name=t.name.." ("..typename..")",
+				status=status,
+				talent=t.id,
+				desc=self.actor:getTalentFullDescription(t),
+				color=function() return {0xFF, 0xFF, 0xFF} end,
+				hotkey=function(item)
+					for i = 1, 36 do if self.actor.hotkey[i] and self.actor.hotkey[i][1] == "talent" and self.actor.hotkey[i][2] == item.talent then
+						return "H.Key "..i..""
+					end end
+					return ""
+				end,
+			}
+		end
+	end
+	table.sort(actives, function(a,b) return a.name < b.name end)
+	table.sort(sustains, function(a,b) return a.name < b.name end)
+	table.sort(sustained, function(a,b) return a.name < b.name end)
+	table.sort(cooldowns, function(a,b) return a.name < b.name end)
+	for i, node in ipairs(actives) do node.char = self:makeKeyChar(letter) chars[node.char] = node letter = letter + 1 end
+	for i, node in ipairs(sustains) do node.char = self:makeKeyChar(letter) chars[node.char] = node letter = letter + 1 end
+	for i, node in ipairs(sustained) do node.char = self:makeKeyChar(letter) chars[node.char] = node letter = letter + 1 end
+	for i, node in ipairs(cooldowns) do node.char = self:makeKeyChar(letter) chars[node.char] = node letter = letter + 1 end
+
+
+	list = {
+		{ char='', name=('#{bold}#Activable talents#{normal}#'):toTString(), status='', hotkey='', desc="All activable talents you can currently use.", color=function() return colors.simple(colors.LIGHT_GREEN) end, nodes=actives, shown=true },
+		{ char='', name=('#{bold}#Sustainable talents#{normal}#'):toTString(), status='', hotkey='', desc="All sustainable talents you can currently use.", color=function() return colors.simple(colors.LIGHT_GREEN) end, nodes=sustains, shown=true },
+		{ char='', name=('#{bold}#Sustained talents#{normal}#'):toTString(), status='', hotkey='', desc="All sustainable talents you currently sustain, using them will de-activate them.", color=function() return colors.simple(colors.YELLOW) end, nodes=sustained, shown=true },
+		{ char='', name=('#{bold}#Cooling down talents#{normal}#'):toTString(), status='', hotkey='', desc="All talents you have used that are still cooling down.", color=function() return colors.simple(colors.LIGHT_RED) end, nodes=cooldowns, shown=true },
+		chars = chars,
+	}
 	self.list = list
 end
