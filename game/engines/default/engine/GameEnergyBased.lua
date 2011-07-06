@@ -100,7 +100,7 @@ function _M:tickLevel(level)
 	for i = 1, #arr do
 		e = arr[i]
 		if e and e.act and e.energy then
-			if e.actBase then
+			if e.actBase and e.energyBase then
 				if e.energyBase < self.energy_to_act then
 					e.energyBase = e.energyBase + self.energy_per_tick
 				end

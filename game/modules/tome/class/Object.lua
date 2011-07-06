@@ -988,7 +988,7 @@ function _M:getPriceFlags()
 		if w.combat_def_ranged then price = price + w.combat_def_ranged * 1 end
 		if w.combat_armor then price = price + w.combat_armor * 1 end
 		if w.combat_physcrit then price = price + w.combat_physcrit * 1.4 end
-		if w.combat_critical_power then price = price + w.critical_power * 2 end
+		if w.combat_critical_power then price = price + w.combat_critical_power * 2 end
 		if w.combat_atk then price = price + w.combat_atk * 1 end
 		if w.combat_apr then price = price + w.combat_apr * 0.3 end
 		if w.combat_dam then price = price + w.combat_dam * 3 end
@@ -1010,7 +1010,7 @@ function _M:getPriceFlags()
 		if w.size_category then price = price + w.size_category * 25 end
 		if w.esp_all then price = price + w.esp_all * 25 end
 		if w.esp_range then price = price + w.esp_range * 15 end
-		if w.can_breath then price = price + w.can_breath * 10 end
+		if w.can_breath then for t, v in pairs(w.can_breath) do price = price + v * 30 end end
 
 		--resists
 		if w.resists then for t, v in pairs(w.resists) do price = price + v * 0.15 end end
