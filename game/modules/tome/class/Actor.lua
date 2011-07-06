@@ -361,14 +361,6 @@ function _M:act()
 		end
 	end
 
-	-- Auto stealth?
-	if self:isTalentActive(self.T_AUTOMATIC_STEALTH) and not self:isTalentActive(self.T_STEALTH) then
-		local t = self:getTalentFromId(self.T_STEALTH)
-		if self:preUseTalent(t, true, true) and not self:isTalentCoolingDown(t) then
-			self:useTalent(self.T_STEALTH)
-		end
-	end
-
 	if self:attr("paralyzed") then
 		self.paralyzed_counter = (self.paralyzed_counter or 0) + (self:attr("stun_immune") or 0) * 100
 		if self.paralyzed_counter < 100 then
@@ -1009,7 +1001,7 @@ function _M:onTakeHit(value, src)
 			self:forceUseTalent(self.T_DISRUPTION_SHIELD, {ignore_energy=true})
 
 			-- Explode!
-			game.logSeen(self, "%s disruption shield collapses and then explodes in a powerful manastorm!", self.name:capitalize())
+			game.logSeen(self, "%s's disruption shield collapses and then explodes in a powerful manastorm!", self.name:capitalize())
 			local tg = {type="ball", radius=5}
 			self:project(tg, self.x, self.y, DamageType.ARCANE, dam, {type="manathrust"})
 		end
@@ -2566,7 +2558,7 @@ function _M:canSeeNoCache(actor, def, def_pct)
 
 	-- Check for stealth. Checks against the target cunning and level
 	if actor:attr("stealth") and actor ~= self then
-		local def = self.level / 2 + self:getCun(25) + (self:attr("see_stealth") or 0)
+		local def = self.level / 2 + self:getCun(25, true) + (self:attr("see_stealth") or 0)
 		local hit, chance = self:checkHit(def, actor:attr("stealth") + (actor:attr("inc_stealth") or 0), 0, 100)
 		if not hit then
 			return false, chance

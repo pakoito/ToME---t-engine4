@@ -143,7 +143,7 @@ newTalent{
 	info = function(self, t)
 		local power = t.getManaRatio(self, t)
 		return ([[Uses mana instead of life to take damage. Uses %0.2f mana per damage point taken.
-		If your mana is brought too low by the shield, it will de-activate and the chain reaction will release a deadly arcane explosion of the amount of damage absorbed.
+		If your mana is brought too low by the shield, it will de-activate and the chain reaction will release a deadly arcane explosion with radius 5 of the amount of damage absorbed.
 		The damage to mana ratio increases with the Magic stat]]):
 		format(power)
 	end,
