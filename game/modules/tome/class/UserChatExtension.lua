@@ -44,7 +44,7 @@ end
 
 function _M:sendKillerLink(msg, src)
 	local desc = nil
-	if src.tooltip then desc = tostring(src:tooltip(src.x, src.y, game.player)):removeUIDCodes() end
+	if src.tooltip then desc = tostring(src:tooltip(src.x, src.y, game.player) or "???"):removeUIDCodes() end
 	local ser = zlib.compress(table.serialize{kind="killer-link", msg=msg, desc=desc})
 	core.profile.pushOrder(string.format("o='ChatSerialData' channel=%q msg=%q", self.chat.cur_channel, ser))
 end

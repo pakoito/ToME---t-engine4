@@ -581,8 +581,7 @@ end
 
 function _M:checkModuleHash(module, md5)
 	self.hash_valid = false
-do self.hash_valid = true return true end
---	if not self.auth then return nil, "no online profile active" end
+	if not self.auth then return nil, "no online profile active" end
 	if config.settings.cheat then return nil, "cheat mode active" end
 	if game and game:isTainted() then return nil, "savefile tainted" end
 	core.profile.pushOrder(table.serialize{o="CheckModuleHash", module=module, md5=md5})
