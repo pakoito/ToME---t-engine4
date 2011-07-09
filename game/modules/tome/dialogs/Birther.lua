@@ -42,7 +42,8 @@ module(..., package.seeall, class.inherit(Birther))
 --- Instanciates a birther for the given actor
 function _M:init(title, actor, order, at_end, quickbirth, w, h)
 	self.quickbirth = quickbirth
-	self.actor = actor
+	self.actor = actor:cloneFull()
+	self.actor_base = actor
 	self.order = order
 	self.at_end = at_end
 	self.tiles = Tiles.new(64, 64, nil, nil, true, nil)
@@ -174,8 +175,13 @@ function _M:atEnd(v)
 			self.actor:removeAllMOs()
 
 			game:unregisterDialog(self)
+			self.actor = self.actor_base
+			if self.has_custom_tile then
+				self:setTile(self.has_custom_tile.f, self.has_custom_tile.w, self.has_custom_tile.h)
+				self.actor.has_custom_tile = self.has_custom_tile.f
+			end
 			self:apply()
-			if self.actor.has_custom_tile then
+			if self.has_custom_tile then
 				self.actor.make_tile = nil
 				self.actor.moddable_tile = nil
 			end
@@ -766,7 +772,7 @@ end
 function _M:setTile(f, w, h)
 	self.actor:removeAllMOs()
 	if not f then
-		if not self.actor.has_custom_tile then
+		if not self.has_custom_tile then
 			local dr = self.birth_descriptor_def.subrace[self.descriptors_by_type.subrace or "Cornac"]
 			local ds = self.birth_descriptor_def.sex[self.descriptors_by_type.sex or "Female"]
 			self.actor.image = "player/"..(self.descriptors_by_type.subrace or "Cornac"):lower():gsub("[^a-z0-9_]", "_").."_"..(self.descriptors_by_type.sex or "Female"):lower():gsub("[^a-z0-9_]", "_")..".png"
@@ -779,6 +785,7 @@ function _M:setTile(f, w, h)
 		end
 	else
 		self.actor.make_tile = nil
+		self.actor.moddable_tile = nil
 		if h > w then
 			self.actor.image = "invis.png"
 			self.actor.add_mos = {{image=f, display_h=2, display_y=-1}}
@@ -786,7 +793,7 @@ function _M:setTile(f, w, h)
 			self.actor.add_mos = nil
 			self.actor.image = f
 		end
-		self.actor.has_custom_tile = f
+		self.has_custom_tile = {f=f,w=w,h=h}
 	end
 	self:fakeEquip(true)
 	self.actor:updateModdableTile()
@@ -1016,16 +1023,16 @@ function _M:selectTile()
 	}
 	local remove = Button.new{text="Use default tile", width=500, fct=function()
 		game:unregisterDialog(d)
-		self.actor.has_custom_tile = nil
+		self.has_custom_tile = nil
 		self:setTile()
 	end}
 	local list = ImageList.new{width=500, height=500, tile_w=64, tile_h=64, padding=10, list=list, fct=function(item)
 		game:unregisterDialog(d)
-		if not profile.auth or not tonumber(profile.auth.donated) or tonumber(profile.auth.donated) <= 1 then
-			self:selectTileNoDonations()
-		else
+--		if not profile.auth or not tonumber(profile.auth.donated) or tonumber(profile.auth.donated) <= 1 then
+--			self:selectTileNoDonations()
+--		else
 			self:setTile(item.f, item.w, item.h)
-		end
+--		end
 	end}
 	d:loadUI{
 		{left=0, top=0, ui=list},
