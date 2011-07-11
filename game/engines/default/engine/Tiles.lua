@@ -109,6 +109,7 @@ function _M:get(char, fr, fg, fb, br, bg, bb, image, alpha, do_outline, allow_ti
 			if not self.allow_backcolor or bg < 0 then bg = nil end
 			if not self.allow_backcolor or bb < 0 then bb = nil end
 			if not self.allow_backcolor then alpha = 0 end
+print('====', char, fr, fg, fb, br, bg, bb, image)
 			s = core.display.newTile(self.w, self.h, self.font, dochar, (self.w - w) / 2, (self.h - h) / 2, fr, fg, fb, br or 0, bg or 0, bb or 0, alpha, self.use_images)
 		end
 

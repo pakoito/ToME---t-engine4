@@ -368,8 +368,6 @@ function _M:setupDisplayMode(reboot, mode)
 			util.showMainMenu(false, nil, nil, self.__mod_info.short_name, self.save_name, false)
 		end
 
-		local do_bg = true
-
 		Map:resetTiles()
 	end
 
@@ -384,6 +382,7 @@ function _M:setupDisplayMode(reboot, mode)
 		print("[DISPLAY MODE] Tileset: "..gfx.tiles)
 		print("[DISPLAY MODE] Size: "..gfx.size)
 
+		local do_bg = true
 		if gfx.size == "64x64" then
 			Map:setViewPort(216, 0, self.w - 216, (self.map_h_stop or 80) - 16, 64, 64, nil, 44, do_bg)
 		elseif gfx.size == "48x48" then
