@@ -1324,6 +1324,7 @@ function _M:setupMouse(reset)
 	end)
 	-- Use hotkeys with mouse
 	self.mouse:registerZone(self.hotkeys_display.display_x, self.hotkeys_display.display_y, self.w, self.h, function(button, mx, my, xrel, yrel, bx, by, event)
+		if self.show_npc_list then return end
 		if event == "button" and button == "left" and self.zone and self.zone.wilderness then return end
 		self.hotkeys_display:onMouse(button, mx, my, event == "button",
 			function(text)
