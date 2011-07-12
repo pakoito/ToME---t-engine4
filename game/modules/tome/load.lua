@@ -52,7 +52,7 @@ if not config.settings.tome.smooth_move then config.settings.tome.smooth_move = 
 if not config.settings.tome.gfx then
 	local w, h = core.display.size()
 	if w >= 1000 then config.settings.tome.gfx = {size="64x64", tiles="shockbolt"}
-	else config.settings.tome.gfx = {size="32x32", tiles="shockbolt"}
+	else config.settings.tome.gfx = {size="48x48", tiles="shockbolt"}
 	end
 end
 if config.settings.tome.gfx.tiles == "mushroom" then config.settings.tome.gfx.tiles="shockbolt" end

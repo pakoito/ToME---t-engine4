@@ -32,13 +32,16 @@ function _M:init(map, source_actor)
 
 	self.cursor = engine.Tiles:loadImage("target_cursor.png"):glTexture()
 
-	self.sr = core.display.newSurface(map.tile_w, map.tile_h)
+	--Use power of two (pot) width and height, rounded up
+	local pot_width = math.pow(2, math.ceil(math.log(map.tile_w-0.1) / math.log(2.0)))
+	local pot_height = math.pow(2, math.ceil(math.log(map.tile_h-0.1) / math.log(2.0)))
+	self.sr = core.display.newSurface(pot_width, pot_height)
 	self.sr:erase(255, 0, 0, 90)
 	self.sr = self.sr:glTexture()
-	self.sb = core.display.newSurface(map.tile_w, map.tile_h)
+	self.sb = core.display.newSurface(pot_width, pot_height)
 	self.sb:erase(0, 0, 255, 90)
 	self.sb = self.sb:glTexture()
-	self.sg = core.display.newSurface(map.tile_w, map.tile_h)
+	self.sg = core.display.newSurface(pot_width, pot_height)
 	self.sg:erase(0, 255, 0, 90)
 	self.sg = self.sg:glTexture()
 

@@ -91,7 +91,7 @@ function _M:generateList()
 	elseif self.cur_sel == "size" then
 		list = {
 			{name="64x64", sub="size", val="64x64"},
---			{name="48x48", sub="size", val="48x48"},
+			{name="48x48", sub="size", val="48x48"},
 			{name="32x32", sub="size", val="32x32"},
 			{name="16x16", sub="size", val="16x16"},
 		}
