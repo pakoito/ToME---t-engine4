@@ -386,10 +386,11 @@ function _M:setupDisplayMode(reboot, mode)
 		local _, _, tw, th = gfx.size:find("^([0-9]+)x([0-9]+)$")
 		tw, th = tonumber(tw), tonumber(th)
 		if not tw then tw, th = 64, 64 end
-		local fsize = math.floor(th / 1.5) + 10
+		local pot_th = math.pow(2, math.ceil(math.log(th-0.1) / math.log(2.0)))
+		local fsize = math.floor( pot_th/th*(0.7 * th + 5) )
 
 		if th <= 20 then
-			Map:setViewPort(216, 0, self.w - 216, (self.map_h_stop or 80) - 16, tw, th, "/data/font/FSEX300.ttf", th, do_bg)
+			Map:setViewPort(216, 0, self.w - 216, (self.map_h_stop or 80) - 16, tw, th, "/data/font/FSEX300.ttf", pot_th, do_bg)
 		else
 			Map:setViewPort(216, 0, self.w - 216, (self.map_h_stop or 80) - 16, tw, th, nil, fsize, do_bg)
 		end
