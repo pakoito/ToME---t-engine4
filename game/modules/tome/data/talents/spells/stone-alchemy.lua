@@ -63,7 +63,6 @@ newTalent{
 	require = spells_req1,
 	points = 5,
 	mana = 5,
-	cooldown = 20,
 	no_npc_use = true,
 	action = function(self, t)
 		self:showEquipInven("Try to extract gems from which metallic item?", function(o) return o.metallic and (o.material_level or 1) <= self:getTalentLevelRaw(t) end, function(o, inven, item)
