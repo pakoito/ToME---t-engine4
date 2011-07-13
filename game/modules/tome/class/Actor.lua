@@ -556,7 +556,7 @@ function _M:move(x, y, force)
 			end
 		end end
 	end
-	
+
 	if moved and self:knowTalent(self.T_CURSED_TOUCH) then
 		local t = self:getTalentFromId(self.T_CURSED_TOUCH)
 		t.curseFloor(self, t, x, y)
@@ -1227,8 +1227,7 @@ function _M:onTakeHit(value, src)
 			a.energy.val = 0
 			a.exp_worth = 0.1
 			a.inven = {}
-			a._mo:invalidate()
-			a._mo = nil
+			a:removeAllMOs()
 			a.x, a.y = nil, nil
 			game.zone:addEntity(game.level, a, "actor", x, y)
 			game.logSeen(self, "%s is split in two!", self.name:capitalize())
@@ -2641,7 +2640,7 @@ end
 function _M:hasLOS(x, y, what)
 	if not x or not y then return false, self.x, self.y end
 	what = what or "block_sight"
-	
+
 	local lx, ly
 	if what == "block_sight" then
 		local darkVisionRange
@@ -2649,7 +2648,7 @@ function _M:hasLOS(x, y, what)
 			local t = self:getTalentFromId(self.T_DARK_VISION)
 			darkVisionRange = self:getTalentRange(t)
 		end
-	
+
 		local l = line.new(self.x, self.y, x, y)
 		local inCreepingDark, lastX, lastY = false
 		lx, ly = l()
@@ -2678,7 +2677,7 @@ function _M:hasLOS(x, y, what)
 			lx, ly = l()
 		end
 	end
-	
+
 	-- Ok if we are at the end reset lx and ly for the next code
 	if not lx and not ly then lx, ly = x, y end
 
