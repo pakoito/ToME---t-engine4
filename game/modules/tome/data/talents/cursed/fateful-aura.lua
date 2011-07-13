@@ -86,8 +86,6 @@ newTalent{
 		if item.type == "ammo" then return end
 
 		item.cursed_touch = true
-		item.name = "cursed " .. item.name
-		item.encumber = item.encumber + 1
 
 		local affectedPercent
 		local affected = 0
@@ -132,7 +130,10 @@ newTalent{
 			end
 		end
 
-		if affected > 0 then item.name = "cursed ".. item.name end
+		if affected > 0 then
+			item.encumber = item.encumber + 1
+			item.name = "cursed ".. item.name
+		end
 	end,
 	curseFloor = function(self, t, x, y)
 		local i = 1
