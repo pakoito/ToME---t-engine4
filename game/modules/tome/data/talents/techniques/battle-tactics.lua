@@ -102,12 +102,15 @@ newTalent{
 	do_turn = function(self, t)
 		local p = self:isTalentActive(t.id)
 		if p.resid then self:removeTemporaryValue("resists", p.resid) end
-		local perc = (1 - (self.life / self.max_life)) * 10 * (1 + math.floor(self:getTalentLevel(t) / 1.4))
+		local perc = (1 - (self.life / self.max_life)) * 10 * 5
 		p.resid = self:addTemporaryValue("resists", {all=perc})
+	end,
+	getStaminaDrain = function(self, t)
+		return -16 + 2 * self:getTalentLevelRaw(t)
 	end,
 	activate = function(self, t)
 		return {
-			stamina = self:addTemporaryValue("stamina_regen", -15),
+			stamina = self:addTemporaryValue("stamina_regen", t.getStaminaDrain(self, t))
 		}
 	end,
 	deactivate = function(self, t, p)
@@ -116,9 +119,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local drain = t.getStaminaDrain(self, t)
 		return ([[Take an defensive stance to resist the onslaught of your foes.
-		For each 10%% of your total life you lack, you gain %d%% global damage resistance.
-		This consumes stamina rapidly(-15 stamina/turn).]]):
-		format(1 + math.floor(self:getTalentLevel(t) / 1.4))
+		For each 10%% of your total life you lack, you gain 5%% global damage resistance.
+		This consumes stamina rapidly(%d stamina/turn).]]):
+		format(drain)
 	end,
 }
