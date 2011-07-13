@@ -14,6 +14,8 @@ if __SELFEXE then
 	if not __APPLE__ then
 		-- Now remove executable name
 		dir = dir:gsub("(.*"..fs.getPathSeparator()..").+", "%1")
+	else
+		dir = dir:gsub("(.*"..fs.getPathSeparator()..").+", "%1")..fs.getPathSeparator().."Resources"..fs.getPathSeparator()
 	end
 
 	print("SelfExe gave us app directory of:", dir)

@@ -21,10 +21,10 @@
 #ifndef _MUSIC_H_
 #define _MUSIC_H_
 
-#if defined(MACOSX)
-#include <OpenAL/al.h>
-#include <OpenAL/alc.h>
-#include <Vorbis/vorbisfile.h>
+#ifdef __APPLE__
+#include <al.h>
+#include <alc.h>
+#include <vorbisfile.h>
 #elif defined(WIN32)
 #include <AL/al.h>
 #include <AL/alc.h>

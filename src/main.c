@@ -786,7 +786,9 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 		SDL_WM_SetCaption("T-Engine4", NULL);
 
 		// Now we can open lua lanes, the physfs paths are set and it can load it's lanes-keeper.lua file
-//		luaopen_lanes(L);
+		//		luaopen_lanes(L);
+
+		printf("Running lua loader code...\n");
 
 		// And run the lua engine scripts
 		if (!luaL_loadfile(L, "/loader/init.lua"))
