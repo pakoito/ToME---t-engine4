@@ -383,14 +383,15 @@ function _M:setupDisplayMode(reboot, mode)
 		print("[DISPLAY MODE] Size: "..gfx.size)
 
 		local do_bg = gfx.tiles == "ascii_full"
-		if gfx.size == "64x64" then
-			Map:setViewPort(216, 0, self.w - 216, (self.map_h_stop or 80) - 16, 64, 64, nil, 44, do_bg)
-		elseif gfx.size == "48x48" then
-			Map:setViewPort(216, 0, self.w - 216, (self.map_h_stop or 80) - 16, 48, 48, nil, 36, do_bg)
-		elseif gfx.size == "32x32" then
-			Map:setViewPort(216, 0, self.w - 216, (self.map_h_stop or 80) - 16, 32, 32, nil, 22, do_bg)
-		elseif gfx.size == "16x16" then
-			Map:setViewPort(216, 0, self.w - 216, (self.map_h_stop or 80) - 16, 16, 16, "/data/font/FSEX300.ttf", 16, do_bg)
+		local _, _, tw, th = gfx.size:find("^([0-9]+)x([0-9]+)$")
+		tw, th = tonumber(tw), tonumber(th)
+		if not tw then tw, th = 64, 64 end
+		local fsize = math.floor(th / 1.5) + 10
+
+		if th <= 20 then
+			Map:setViewPort(216, 0, self.w - 216, (self.map_h_stop or 80) - 16, tw, th, "/data/font/FSEX300.ttf", th, do_bg)
+		else
+			Map:setViewPort(216, 0, self.w - 216, (self.map_h_stop or 80) - 16, tw, th, nil, fsize, do_bg)
 		end
 
 		-- Show a count for stacked objects

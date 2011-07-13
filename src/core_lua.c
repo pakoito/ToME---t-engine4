@@ -1411,8 +1411,8 @@ static int sdl_texture_outline(lua_State *L)
 	if (!fbo_active) return 0;
 
 	GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 1);
-	int x = luaL_checknumber(L, 2);
-	int y = luaL_checknumber(L, 3);
+	float x = luaL_checknumber(L, 2);
+	float y = luaL_checknumber(L, 3);
 	int w = luaL_checknumber(L, 4);
 	int h = luaL_checknumber(L, 5);
 	float r = luaL_checknumber(L, 6);

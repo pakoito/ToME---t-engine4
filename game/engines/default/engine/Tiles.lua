@@ -103,13 +103,18 @@ function _M:get(char, fr, fg, fb, br, bg, bb, image, alpha, do_outline, allow_ti
 			if not s then s = core.display.loadImage(self.base_prefix..image) end
 			if s then is_image = true end
 		end
+
+		local pot_width = math.pow(2, math.ceil(math.log(self.w-0.1) / math.log(2.0)))
+		local pot_height = math.pow(2, math.ceil(math.log(self.h-0.1) / math.log(2.0)))
+
 		if not s then
 			local w, h = self.font:size(dochar)
 			if not self.allow_backcolor or br < 0 then br = nil end
 			if not self.allow_backcolor or bg < 0 then bg = nil end
 			if not self.allow_backcolor or bb < 0 then bb = nil end
 			if not self.allow_backcolor then alpha = 0 end
-			s = core.display.newTile(self.w, self.h, self.font, dochar, (self.w - w) / 2, (self.h - h) / 2, fr, fg, fb, br or 0, bg or 0, bb or 0, alpha, self.use_images)
+
+			s = core.display.newTile(pot_width, pot_height, self.font, dochar, (pot_width - w) / 2, (pot_height - h) / 2, fr, fg, fb, br or 0, bg or 0, bb or 0, alpha, self.use_images)
 		end
 
 		if self.texture then
@@ -118,9 +123,9 @@ function _M:get(char, fr, fg, fb, br, bg, bb, image, alpha, do_outline, allow_ti
 			sw, sh = w / sw, h / sh
 			if not is_image and do_outline then
 				if type(do_outline) == "boolean" then
-					s = s:makeOutline(2, 2, self.w, self.h, 0, 0, 0, 1) or s
+					s = s:makeOutline(2*pot_width/self.w, 2*pot_height/self.h, pot_width, pot_height, 0, 0, 0, 1) or s
 				else
-					s = s:makeOutline(do_outline.x, do_outline.y, self.w, self.h, do_outline.r, do_outline.g, do_outline.b, do_outline.a) or s
+					s = s:makeOutline(do_outline.x*pot_width/self.w, do_outline.y*pot_height/self.h, pot_width, pot_height, do_outline.r, do_outline.g, do_outline.b, do_outline.a) or s
 				end
 			end
 		else

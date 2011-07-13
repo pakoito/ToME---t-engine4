@@ -499,7 +499,7 @@ static int map_objects_display(lua_State *L)
 		texcoords[4] = m->tex_x[0] + m->tex_factorx[0]; texcoords[5] = m->tex_y[0] + m->tex_factory[0];
 		texcoords[6] = m->tex_x[0]; texcoords[7] = m->tex_y[0] + m->tex_factory[0];
 
-		vertices[0] = dx; vertices[1] = dy; vertices[3] = dz;
+		vertices[0] = dx; vertices[1] = dy; vertices[2] = dz;
 		vertices[3] = w + dx; vertices[4] = dy; vertices[5] = dz;
 		vertices[6] = w + dx; vertices[7] = h + dy; vertices[8] = dz;
 		vertices[9] = dx; vertices[10] = h + dy; vertices[11] = dz;

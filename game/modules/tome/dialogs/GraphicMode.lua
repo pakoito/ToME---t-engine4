@@ -20,6 +20,8 @@
 require "engine.class"
 local Dialog = require "engine.ui.Dialog"
 local List = require "engine.ui.List"
+local GetQuantity = require "engine.dialogs.GetQuantity"
+local Map = require "engine.Map"
 
 module(..., package.seeall, class.inherit(Dialog))
 
@@ -40,7 +42,7 @@ function _M:init()
 
 	Dialog.init(self, "Change graphic mode", 300, 20)
 
-	self.c_list = List.new{width=self.iw, nb_items=5, list=self.list, fct=function(item) self:use(item) end}
+	self.c_list = List.new{width=self.iw, nb_items=7, list=self.list, fct=function(item) self:use(item) end}
 
 	self:loadUI{
 		{left=0, top=0, ui=self.c_list},
@@ -60,9 +62,16 @@ function _M:use(item)
 	if not item then return end
 
 	if item.sub and item.val then
-		config.settings.tome.gfx[item.sub] = item.val
-		self.changed = true
-		item.change_sel = "main"
+		if item.val == "customsize" then
+			game:registerDialog(GetQuantity.new("Tile size", "From 10 to 128", Map.tile_w or 64, 128, function(qty)
+				qty = math.floor(util.bound(qty, 10, 128))
+				self:use{name=qty.."x"..qty, sub=item.sub, val=qty.."x"..qty}
+			end, 10))
+		else
+			config.settings.tome.gfx[item.sub] = item.val
+			self.changed = true
+			item.change_sel = "main"
+		end
 	end
 
 	if item.change_sel then
@@ -94,6 +103,7 @@ function _M:generateList()
 			{name="48x48", sub="size", val="48x48"},
 			{name="32x32", sub="size", val="32x32"},
 			{name="16x16", sub="size", val="16x16"},
+			{name="Custom", sub="size", val="customsize"},
 		}
 	end
 
