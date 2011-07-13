@@ -21,7 +21,7 @@
 
 -- Select the zone
 local Map = require "engine.Map"
-local zone = game.zone.display_name()
+local zone = game.zone.display_name and game.zone.display_name() or game.zone.name
 if not wda.zones[zone] then wda.zones[zone] = {} end
 wda = wda.zones[zone]
 

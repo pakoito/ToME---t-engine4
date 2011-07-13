@@ -236,6 +236,7 @@ function _M:randomBirth()
 	})
 	self.c_name:setText(namegen:generate())
 
+--[[
 	-- Random campaign
 	local camp, camp_id = nil
 	repeat camp, camp_id = rng.table(self.c_campaign.c_list.list)
@@ -249,7 +250,7 @@ function _M:randomBirth()
 	until diff.name ~= "Tutorial" and not diff.locked
 	self.c_difficulty.c_list.sel = diff_id
 	self:difficultyUse(diff)
-
+--]]
 	-- Random race
 	local race, race_id = nil
 	repeat race, race_id = rng.table(self.all_races)
