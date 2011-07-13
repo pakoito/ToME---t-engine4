@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 local function combatTalentDamage(self, t, min, max)
-	return self:combatTalentSpellDamage(t, min, max, self.level + self:getWil())
+	return self:combatTalentSpellDamage(t, min, max, (self.level + self:getWil()) * 1.2)
 end
 
 local function combatPower(self, t, multiplier)
@@ -33,10 +33,10 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 3,
 	hate =  0.5,
-	range = 2,
+	range = 3,
 	tactical = { ATTACKAREA = 2 },
 	getDamage = function(self, t)
-		return combatTalentDamage(self, t, 10, 290)
+		return combatTalentDamage(self, t, 10, 350)
 	end,
 	getMindpower = function(self, t)
 		return combatPower(self, t)
@@ -90,7 +90,7 @@ newTalent{
 		return 10
 	end,
 	getDamage = function(self, t)
-		return combatTalentDamage(self, t, 15, 180)
+		return combatTalentDamage(self, t, 0, 180)
 	end,
 	getMindpower = function(self, t)
 		return combatPower(self, t)
@@ -268,7 +268,7 @@ newTalent{
 		return 5
 	end,
 	getDamage = function(self, t)
-		return combatTalentDamage(self, t, 15, 160)
+		return combatTalentDamage(self, t, 0, 160)
 	end,
 	getMindpower = function(self, t)
 		return combatPower(self, t, 1.2)
@@ -296,7 +296,7 @@ newTalent{
 		local maxDamage = t.getDamage(self, t)
 		local minDamage = maxDamage / duration
 		local mindpower = t.getMindpower(self, t)
-		return ([[Unleash agony upon your target. The pain will grow over the course of %d turns unless they manage to resist. The first turn will inflict %d damage and slowly increase to %d on the last turn. (%d mindpower vs mental resistance)
+		return ([[Unleash agony upon your target. The pain will grow over the course of %d turns. The first turn will inflict %d damage and slowly increase to %d on the last turn. (%d mindpower vs mental resistance)
 		The damage and mindpower will increase with the Willpower stat.]]):format(duration, damDesc(self, DamageType.MIND, minDamage), damDesc(self, DamageType.MIND, maxDamage), mindpower)
 	end,
 }

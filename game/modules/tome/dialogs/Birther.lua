@@ -819,7 +819,7 @@ If you'd like to use this feature and find this game good you should consider do
 While this is a free game that I am doing for fun, if it can help feed my family a bit I certainly will not complain as real life can be harsh sometimes.
 You will need an online profile active and connected for the tile selector to enable. If you choose to donate now you will need to restart the game to be granted access.]], 400, function(ret)
 		if not ret then
-			game:registerDialog(require("mod.dialogs.Donation").new())
+			game:registerDialog(require("mod.dialogs.Donation").new("custom-tiles"))
 		end
 	end, "Later", "Donate!")
 end
@@ -1028,11 +1028,11 @@ function _M:selectTile()
 	end}
 	local list = ImageList.new{width=500, height=500, tile_w=64, tile_h=64, padding=10, list=list, fct=function(item)
 		game:unregisterDialog(d)
---		if not profile.auth or not tonumber(profile.auth.donated) or tonumber(profile.auth.donated) <= 1 then
---			self:selectTileNoDonations()
---		else
+		if not profile.auth or not tonumber(profile.auth.donated) or tonumber(profile.auth.donated) <= 1 then
+			self:selectTileNoDonations()
+		else
 			self:setTile(item.f, item.w, item.h)
---		end
+		end
 	end}
 	d:loadUI{
 		{left=0, top=0, ui=list},

@@ -20,6 +20,7 @@
 -- Cursed
 newTalentType{ allow_random=true, type="cursed/slaughter", name = "slaughter", description = "Your axe yearns for its next victim." }
 newTalentType{ allow_random=true, type="cursed/endless-hunt", name = "endless hunt", description = "Each day you lift your weary body and begin the unending hunt." }
+newTalentType{ allow_random=true, type="cursed/strife", name = "strife", description = "It is not enough that they die. So too must they suffer at your hands." }
 newTalentType{ allow_random=true, type="cursed/gloom", name = "gloom", description = "All those in your sight must share your despair." }
 newTalentType{ allow_random=true, type="cursed/rampage", name = "rampage", description = "Let loose the hate that has grown within." }
 
@@ -29,9 +30,11 @@ newTalentType{ allow_random=true, type="cursed/force-of-will", name = "force of 
 newTalentType{ allow_random=true, type="cursed/darkness", is_spell=true, name = "darkness", description = "Harness the power of darkness to envelop your foes." }
 newTalentType{ allow_random=true, type="cursed/shadows", is_spell=true, name = "shades", description = "Summon shadows from the darkness to aid you." }
 newTalentType{ allow_random=true, type="cursed/punishments", name = "punishments", description = "Your hate becomes punishment in the minds of your foes." }
+newTalentType{ allow_random=true, type="cursed/primal-magic", name = "primal magic", description = "You still control traces of power from your previous life." }
 
 -- Generic
 newTalentType{ allow_random=true, type="cursed/cursed-form", name = "cursed form", generic = true, description = "You are wracked with the dark energies of the curse." }
+newTalentType{ allow_random=true, type="cursed/fateful-aura", name = "fateful aura", generic = true, description = "The things you surround yourself with soon wither away." }
 newTalentType{ allow_random=true, type="cursed/dark-figure", name = "dark figure", generic = true, description = "Life as an outcast has given you time to reflect on your misfortunes." }
 newTalentType{ allow_random=true, type="cursed/traveler", name = "traveler", generic = true, description = "You have become accustomed to the hard life of a lone traveler." }
 
@@ -100,6 +103,7 @@ cursed_mag_req5 = {
 
 load("/data/talents/cursed/slaughter.lua")
 load("/data/talents/cursed/endless-hunt.lua")
+load("/data/talents/cursed/strife.lua")
 load("/data/talents/cursed/gloom.lua")
 load("/data/talents/cursed/rampage.lua")
 
@@ -108,7 +112,9 @@ load("/data/talents/cursed/dark-sustenance.lua")
 load("/data/talents/cursed/shadows.lua")
 load("/data/talents/cursed/darkness.lua")
 load("/data/talents/cursed/punishments.lua")
+load("/data/talents/cursed/primal-magic.lua")
 
 load("/data/talents/cursed/cursed-form.lua")
+load("/data/talents/cursed/fateful-aura.lua")
 load("/data/talents/cursed/dark-figure.lua")
 load("/data/talents/cursed/traveler.lua")

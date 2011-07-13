@@ -30,7 +30,8 @@ local Map = require "engine.Map"
 
 module(..., package.seeall, class.inherit(Dialog))
 
-function _M:init()
+function _M:init(source)
+	self.donation_source = source or "ingame"
 	Dialog.init(self, "Donations", 500, 300)
 
 	local desc = Textzone.new{width=self.iw, auto_height=true, text=[[Hi, I am Nicolas (DarkGod), the maker of this game.
@@ -67,6 +68,6 @@ function _M:ok()
 	game:unregisterDialog(self)
 	self:simplePopup("Thank you", "Thank you, a paypal page should now open in your browser.")
 
-	local url = ("http://te4.org/ingame-donate/%s/%s/%s"):format(self.c_donate.number, self.c_recur.checked and "monthly" or "onetime", (profile.auth and profile.auth.drupid) and profile.auth.drupid or "")
+	local url = ("http://te4.org/ingame-donate/%s/%s/%s/EUR/%s"):format(self.c_donate.number, self.c_recur.checked and "monthly" or "onetime", (profile.auth and profile.auth.drupid) and profile.auth.drupid or "0", self.donation_source)
 	util.browserOpenUrl(url)
 end

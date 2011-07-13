@@ -108,4 +108,4 @@ return {
 [[X....X.~.~.~......~..W......X]],
 [[X....X.......~.~..V.........X]],
 [[XXXXXXXXXXXXXXXXXXXXXXXXXXXXX]],
-}
+}

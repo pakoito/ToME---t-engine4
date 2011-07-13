@@ -38,7 +38,7 @@ newEntity{ base="BASE_NPC_CORRUPTED_HORROR", define_as = "THE_MOUTH",
 	size_category = 4,
 	infravision = 10,
 	instakill_immune = 1,
-	never_move = true,
+	never_move = 1,
 
 	-- Bad idea to melee it
 	combat = {dam=100, atk=1000, apr=1000, physcrit=1000},

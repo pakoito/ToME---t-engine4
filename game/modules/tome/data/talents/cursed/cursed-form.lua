@@ -22,7 +22,7 @@ local function getHateMultiplier(self, min, max)
 end
 
 local function combatTalentDamage(self, t, min, max)
-	return self:combatTalentSpellDamage(t, min, max, self.level + self:getWil())
+	return self:combatTalentSpellDamage(t, min, max, (self.level + self:getWil()) * 1.2)
 end
 
 newTalent{
@@ -38,7 +38,7 @@ newTalent{
 		return true
 	end,
 	getHealPerKill = function(self, t)
-		return combatTalentDamage(self, t, 25, 100)
+		return combatTalentDamage(self, t, 15, 55)
 	end,
 	getRegenRate = function(self, t)
 		return 3 + math.sqrt(self:getTalentLevel(t) * 2) * math.min(1000, self.max_life) * 0.006

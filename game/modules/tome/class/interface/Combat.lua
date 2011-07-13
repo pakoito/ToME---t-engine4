@@ -521,6 +521,10 @@ function _M:combatArmor()
 	if self:knowTalent(self.T_CARBON_SPIKES) and self:isTalentActive(self.T_CARBON_SPIKES) then
 		add = add + self.carbon_armor
 	end
+	if self:knowTalent(self.T_PRIMAL_SKIN) then
+		local t = self:getTalentFromId(self.T_PRIMAL_SKIN)
+		add = add + t.getArmor(self, t)
+	end
 	return self.combat_armor + add
 end
 

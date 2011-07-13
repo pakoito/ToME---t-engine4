@@ -380,8 +380,8 @@ newTalent{
 	require = cursed_mag_req2,
 	points = 5,
 	random_ego = "attack",
-	cooldown = 10,
-	hate = 0.5,
+	cooldown = 6,
+	hate = 0.0,
 	range = 6,
 	requires_target = true,
 	tactical = { ATTACK = 2 },
@@ -447,7 +447,8 @@ newTalent{
 	info = function(self, t)
 		local defenseDuration = t.getDefenseDuration(self, t)
 		local blindsideChance = t.getBlindsideChance(self, t)
-		return ([[Focus your shadows on a single target. Friendly targets will be defended for %d turns. Hostile targets will be attacked with a %d%% chance they will blindside the target.]]):format(defenseDuration, blindsideChance)
+		return ([[Focus your shadows on a single target. Friendly targets will be defended for %d turns. Hostile targets will be attacked with a %d%% chance they will blindside the target.
+		This talent has no cost.]]):format(defenseDuration, blindsideChance)
 	end,
 }
 

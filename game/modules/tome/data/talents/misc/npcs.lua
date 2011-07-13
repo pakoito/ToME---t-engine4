@@ -82,6 +82,7 @@ newTalent{
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
+		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
 		self.combat_apr = self.combat_apr + 1000
 		self:attackTarget(target, DamageType.POISON, 2 + self:getTalentLevel(t), true)
@@ -106,6 +107,7 @@ newTalent{
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
+		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
 		self.combat_apr = self.combat_apr + 1000
 		self:attackTarget(target, DamageType.ACID, self:combatTalentWeaponDamage(t, 1, 1.8), true)
@@ -155,6 +157,7 @@ newTalent{
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
+		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
 		self.combat_apr = self.combat_apr + 1000
 		self:attackTarget(target, DamageType.POISON, 2 + self:getTalentLevel(t), true)
@@ -1222,6 +1225,7 @@ newTalent{
 	action = function(self, t)
 		local tg = {type="bolt", range=1}
 		local x, y, target = self:getTarget(tg)
+		if not x or not y then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
 		self:project(tg, x, y, DamageType.LIGHT, math.floor(self:combatSpellpower(0.25) * self:getTalentLevel(t)), {type="light"})
 		game.level.map:particleEmitter(self.x, self.y, 1, "ball_fire", {radius = 1, r = 1, g = 0, b = 0})

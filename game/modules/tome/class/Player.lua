@@ -221,6 +221,15 @@ function _M:act()
 	-- Clean log flasher
 --	game.flash:empty()
 
+	-- update feed immediately before the player moves for best visual consistency (this is not perfect but looks much better than updating mid-move)
+	if self:hasEffect(self.EFF_FEED) then
+		self.tempeffect_def[self.EFF_FEED].updateFeed(self, self:hasEffect(self.EFF_FEED))
+	elseif self:hasEffect(self.EFF_FED_UPON) then
+		local fed_upon_eff = self:hasEffect(self.EFF_FED_UPON)
+		
+		fed_upon_eff.src.tempeffect_def[fed_upon_eff.src.EFF_FEED].updateFeed(fed_upon_eff.src, fed_upon_eff.src:hasEffect(self.EFF_FEED))
+	end
+
 	-- Resting ? Running ? Otherwise pause
 	if not self:restStep() and not self:runStep() and self.player then
 		game.paused = true
@@ -344,24 +353,8 @@ function _M:playerFOV()
 			local range = self:getTalentRange(t)
 			self:computeFOV(range, "block_sense", function(x, y)
 				local actor = game.level.map(x, y, game.level.map.ACTOR)
-				if actor then
-					-- modified actor:hasLOS()
-					local l = line.new(self.x, self.y, x, y)
-					local lx, ly = l()
-					while lx and ly do
-						if game.level.map:checkAllEntities(lx, ly, "block_sight") then
-							if not game.level.map:checkAllEntities(lx, ly, "creepingDark") then break end
-							print("see creepingDark")
-						end
-
-						lx, ly = l()
-					end
-					-- Ok if we are at the end reset lx and ly for the next code
-					if not lx and not ly then lx, ly = x, y end
-
-					if lx == x and ly == y then
-						game.level.map.seens(x, y, 0.6)
-					end
+				if actor and self:hasLOS(x, y) then
+					game.level.map.seens(x, y, 0.6)
 				end
 			end, true, true, true)
 		end

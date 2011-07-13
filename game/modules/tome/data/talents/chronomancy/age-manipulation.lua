@@ -44,10 +44,12 @@ newTalent{
 		if self:getTalentLevel(t) >= 4 then
 			local tg2 = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="temporal_bolt"}}
 			local x, y = self:getTarget(tg2)
-			x, y = checkBackfire(self, x, y)
 			if x and y then
-				self:projectile(tg2, x, y, DamageType.CLOCK, self:spellCrit(t.getDamage(self, t)), nil)
-				game:playSoundNear(self, "talents/spell_generic2")
+				x, y = checkBackfire(self, x, y)
+				if x and y then
+					self:projectile(tg2, x, y, DamageType.CLOCK, self:spellCrit(t.getDamage(self, t)), nil)
+					game:playSoundNear(self, "talents/spell_generic2")
+				end
 			end
 		else end
 	

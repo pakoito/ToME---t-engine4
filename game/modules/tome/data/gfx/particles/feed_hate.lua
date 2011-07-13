@@ -35,7 +35,7 @@ return { generator = function()
 
 	return {
 		life = 5,
-		size = rng.range(4, 6), sizev = -0.4, sizea = 0,
+		size = rng.range(6, 8), sizev = -0.4, sizea = 0,
 
 		x = r * math.cos(angle) + math.cos(rightAngle) * offset, xv = 0, xa = 0,
 		y = r * math.sin(angle) + math.sin(rightAngle) * offset, yv = 0, ya = 0,

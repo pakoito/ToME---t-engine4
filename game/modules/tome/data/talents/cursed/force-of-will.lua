@@ -19,7 +19,7 @@
 
 
 local function combatTalentDamage(self, t, min, max)
-	return self:combatTalentSpellDamage(t, min, max, self.level + self:getWil())
+	return self:combatTalentSpellDamage(t, min, max, (self.level + self:getWil()) * 1.2)
 end
 
 -- damage: initial physical damage and used for fractional knockback damage
@@ -109,7 +109,7 @@ newTalent{
 		return 4
 	end,
 	getDamage = function(self, t)
-		return combatTalentDamage(self, t, 15, 240)
+		return combatTalentDamage(self, t, 0, 200)
 	end,
 	getKnockback = function(self, t)
 		return math.floor(self:getTalentLevel(t))
@@ -147,7 +147,7 @@ newTalent{
 	tactical = { DEFEND = 2 },
 	no_sustain_autoreset = true,
 	getMaxDamage = function(self, t)
-		return combatTalentDamage(self, t, 15, 200)
+		return combatTalentDamage(self, t, 0, 200)
 	end,
 	getDisplayName = function(self, t, p)
 		return ("Deflection (%d)"):format(p.value)
@@ -219,10 +219,10 @@ newTalent{
 		return math.floor(2 + self:getTalentLevel(t) / 3)
 	end,
 	getDamage = function(self, t)
-		return combatTalentDamage(self, t, 10, 300)
+		return combatTalentDamage(self, t, 0, 240)
 	end,
 	getKnockback = function(self, t)
-		return 2 + math.floor(self:getTalentLevel(t))
+		return 2 + math.floor(self:getTalentLevel(t) / 2)
 	end,
 	target = function(self, t)
 		return {type="ball", nolock=true, pass_terrain=false, friendly_fire=false, nowarning=true, range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t}
@@ -279,7 +279,7 @@ newTalent{
 	type = {"cursed/force-of-will", 4},
 	require = cursed_wil_req4,
 	points = 5,
-	hate = 2,
+	hate = 3,
 	cooldown = 50,
 	tactical = { ATTACKAREA = 2 },
 	range = function(self, t)
@@ -289,7 +289,7 @@ newTalent{
 		return 5 + math.floor(self:getTalentLevel(t))
 	end,
 	getDamage = function(self, t)
-		return combatTalentDamage(self, t, 10, 200)
+		return combatTalentDamage(self, t, 0, 200)
 	end,
 	getKnockback = function(self, t)
 		return math.floor(self:getTalentLevel(t))

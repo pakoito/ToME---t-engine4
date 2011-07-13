@@ -1,4 +1,4 @@
--- ToME - Tales of Maj'Eyal
+-- ToME - Tales of Middle-Earth
 -- Copyright (C) 2009, 2010, 2011 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -18,33 +18,25 @@
 -- darkgod@te4.org
 
 base_size = 32
-
-local toggle = false
+local first = true
 
 return { generator = function()
-	local ad = rng.range(0, 360)
-	local a = math.rad(ad)
-	local dir = -math.rad(ad)
-	local r = rng.range(10, 90)
-	local dirchance = rng.chance(2)
-
 	return {
-		trail = 1,
-		life = 30,
-		size = 15, sizev = -0.3, sizea = 0,
+		life = 60,
+		size = 1, sizev = 0, sizea = 0.3,
 
-		x = r * math.cos(a), xv = 0, xa = 0,
-		y = r * math.sin(a), yv = 0, ya = 0,
-		dir = dir, dirv = 0, dira = 0,
-		vel = dirchance and 0.32 or -0.2, velv = 0, vela = dirchance and -0.01 or 0.01,
+		x = 0, xv = 0, xa = 0,
+		y = 0, yv = 0, ya = 0,
+		dir = 0, dirv = 0, dira = 0,
+		vel = 0, velv = 0, vela = 0,
 
-		r = 32,  rv = 0, ra = 0,
-		g = 0,  gv = 0, ga = 0,
-		b = 64,  bv = 0, ba = 0,
-		a = rng.range(20, 50) / 255,  av = 0, aa = 0,
+		r = 255/255, rv = 0, ra = 0,
+		g = 242/255, gv = 0, ga = 0,
+		b = 128/255, gv = 0, ga = 0,
+		a = 255/255, av = -1/60, aa = 0,
 	}
 end, },
 function(self)
-	self.ps:emit(1)
+	if first then self.ps:emit(1) first = false end
 end,
-20
+1

@@ -28,7 +28,7 @@ local first = true
 
 return { generator = function()
 	local life = rng.range(3, 8)
-	local size = rng.float(2, 4)
+	local size = rng.float(3, 5)
 	local alpha = rng.range(80, 160) / 255
 	local moveAngle = angle + math.rad(rng.range(-25, 25))
 	local offsetDistance = engine.Map.tile_w * 0.7

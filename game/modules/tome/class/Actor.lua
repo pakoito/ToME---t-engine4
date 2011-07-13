@@ -253,7 +253,7 @@ function _M:actBase()
 	-- Hate decay
 	if self:knowTalent(self.T_HATE_POOL) and self.hate > 0 then
 		-- hate loss speeds up as hate increases
-		local hateChange = -math.max(0.02, 0.07 * math.pow(self.hate / 10, 2))
+		local hateChange = -math.max(0.02, 0.07 * math.pow(self.hate / 10, 1.5))
 		self:incHate(hateChange)
 	end
 
@@ -305,6 +305,11 @@ function _M:actBase()
 		if self.unseenForce then
 			local t = self:getTalentFromId(self.T_UNSEEN_FORCE)
 			t.do_unseenForce(self, t)
+		end
+		-- this handles doomed arcane bolts turn based effects
+		if self.arcaneBolts then
+			local t = self:getTalentFromId(self.T_ARCANE_BOLTS)
+			t.do_arcaneBolts(self, t)
 		end
 		-- this handles Door to the Past random anomalies
 		if self:isTalentActive(self.T_DOOR_TO_THE_PAST) then
@@ -550,6 +555,11 @@ function _M:move(x, y, force)
 				game.logPlayer(self, "You have found a trap (%s)!", trap:getName())
 			end
 		end end
+	end
+	
+	if moved and self:knowTalent(self.T_CURSED_TOUCH) then
+		local t = self:getTalentFromId(self.T_CURSED_TOUCH)
+		t.curseFloor(self, t, x, y)
 	end
 
 	if moved and self:isTalentActive(self.T_BODY_OF_STONE) then
@@ -1173,13 +1183,13 @@ function _M:onTakeHit(value, src)
 			end
 		end
 	end
-	if src and src.knowTalent and src:knowTalent(src.T_HATE_POOL) then
+	if src and (src.hate_per_powerful_hit or 0) > 0 and src.knowTalent and src:knowTalent(src.T_HATE_POOL) then
 		local hateGain = 0
 		local hateMessage
 
 		if value / src.max_life > 0.33 then
 			-- you deliver a big hit
-			hateGain = hateGain + 0.4
+			hateGain = hateGain + src.hate_per_powerful_hit
 			hateMessage = "#F53CBE#Your powerful attack feeds your madness!"
 		end
 
@@ -1822,6 +1832,12 @@ end
 
 --- Call when an object is added
 function _M:onAddObject(o)
+	-- curse the item
+	if self:knowTalent(self.T_CURSED_TOUCH) and not o.cursed_touch then
+		local t = self:getTalentFromId(self.T_CURSED_TOUCH)
+		t.curseItem(self, t, o)
+	end
+
 	engine.interface.ActorInventory.onAddObject(self, o)
 
 	self:checkEncumbrance()
@@ -2619,6 +2635,55 @@ end
 function _M:resetCanSeeCache()
 	self.can_see_cache = {}
 	setmetatable(self.can_see_cache, {__mode="k"})
+end
+
+--- Does the actor have LOS to the target
+function _M:hasLOS(x, y, what)
+	if not x or not y then return false, self.x, self.y end
+	what = what or "block_sight"
+	
+	local lx, ly
+	if what == "block_sight" then
+		local darkVisionRange
+		if self:knowTalent(self.T_DARK_VISION) then
+			local t = self:getTalentFromId(self.T_DARK_VISION)
+			darkVisionRange = self:getTalentRange(t)
+		end
+	
+		local l = line.new(self.x, self.y, x, y)
+		local inCreepingDark, lastX, lastY = false
+		lx, ly = l()
+		while lx and ly do
+			if game.level.map:checkAllEntities(lx, ly, "block_sight") then
+				if darkVisionRange and game.level.map:checkAllEntities(lx, ly, "creepingDark") then
+					inCreepingDark = true
+				else
+					break
+				end
+			end
+			if inCreepingDark and darkVisionRange and core.fov.distance(self.x, self.y, lx, ly) > darkVisionRange then
+				lx, ly = lastX or lx, lastY or ly
+				break
+			end
+
+			lastX, lastY = lx, ly
+			lx, ly = l()
+		end
+	else
+		local l = line.new(self.x, self.y, x, y)
+		lx, ly = l()
+		while lx and ly do
+			if game.level.map:checkAllEntities(lx, ly, what) then break end
+
+			lx, ly = l()
+		end
+	end
+	
+	-- Ok if we are at the end reset lx and ly for the next code
+	if not lx and not ly then lx, ly = x, y end
+
+	if lx == x and ly == y then return true, lx, ly end
+	return false, lx, ly
 end
 
 --- Can the target be applied some effects

@@ -62,14 +62,25 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			return 0
 		end
 
-		-- dark vision increases damage done in the dark
-		if src.knowTalent and src:knowTalent(src.T_DARK_VISION) then
+		-- dark vision increases damage done in creeping dark
+		if src and src.knowTalent and src:knowTalent(src.T_DARK_VISION) then
 			local t = src:getTalentFromId(src.T_DARK_VISION)
 			local damageIncrease = t.getDamageIncrease(src, t)
 			if damageIncrease > 0
-					and not game.level.map.lites(x, y) -- not lit
+					and src and src.x and src.y
 					and core.fov.distance(src.x, src.y, target.x, target.y) > (src.lite or 0) -- outside of lite radius
 					and game.level.map:checkAllEntities(x, y, "creepingDark") then -- creeping dark square
+				dam = dam + (dam * damageIncrease / 100)
+				game.logPlayer(src, "You strike in the darkness. (+%d damage)", damageIncrease)
+			end
+		end
+		
+		if src and src.knowTalent and src:knowTalent(src.T_DARK_VISION)
+				and src.x and src.y
+				and game.level.map:checkAllEntities(x, y, "creepingDark") then
+			local t = src:getTalentFromId(src.T_DARK_VISION)
+			local damageIncrease = t.getDamageIncrease(src, t)
+			if damageIncrease > 0 and core.fov.distance(src.x, src.y, target.x, target.y) <= src:getTalentRange(t) then
 				dam = dam + (dam * damageIncrease / 100)
 				game.logPlayer(src, "You strike in the darkness. (+%d damage)", damageIncrease)
 			end
@@ -1454,7 +1465,11 @@ newDamageType{
 		local realdam = DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam.dam)
 		if target and realdam > 0 then
 			local heal = realdam * (dam.healfactor or 1)
+			-- cannot be reduced
+			local temp = src.healing_factor
+			src.healing_factor = 1
 			src:heal(heal)
+			src.healing_factor = temp
 			game.logSeen(target, "%s consumes %d life from %s!", src.name:capitalize(), heal, target.name)
 		end
 	end,

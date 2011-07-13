@@ -21,7 +21,7 @@ local Object = require "engine.Object"
 local Map = require "engine.Map"
 
 local function combatTalentDamage(self, t, min, max)
-	return self:combatTalentSpellDamage(t, min, max, self.level + self:getMag())
+	return self:combatTalentSpellDamage(t, min, max, (self.level + self:getMag()) * 1.2)
 end
 
 local function createDarkTendrils(summoner, x, y, target, damage, duration, pinDuration)
@@ -273,10 +273,10 @@ newTalent{
 	end,
 
 	getDarkCount = function(self, t)
-		return 2 + math.floor(self:getTalentLevel(t))
+		return 5 + math.floor(self:getTalentLevel(t))
 	end,
 	getDamage = function(self, t)
-		return combatTalentDamage(self, t, 15, 70)
+		return combatTalentDamage(self, t, 0, 80)
 	end,
 	action = function(self, t)
 		local range = self:getTalentRange(t)
@@ -313,7 +313,6 @@ newTalent{
 		for i = 1, darkCount do
 			local location, id = rng.table(locations)
 			table.remove(locations, id)
-			print("*** dark", location[1], location[2])
 			t.createDark(self, location[1], location[2], damage, 8, 4, 70, 0)
 		end
 
@@ -337,10 +336,10 @@ newTalent{
 	mode = "passive",
 	random_ego = "attack",
 	range = function(self, t)
-		return math.floor(2 + self:getTalentLevel(t) * 2)
+		return math.min(10, math.floor((math.sqrt(self:getTalentLevel(t)) - 0.5) * 5))
 	end,
 	getDamageIncrease = function(self, t)
-		return combatTalentDamage(self, t, 5, 40)
+		return combatTalentDamage(self, t, 0, 40)
 	end,
 	hasLOS = function(x1, y1, x2, y2)
 		local l = line.new(x1, y1, x2, y2)
@@ -355,7 +354,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damageIncrease = t.getDamageIncrease(self, t)
-		return ([[Your eyes penetrate the darkness to find anyone that may be hiding there. You can also see through the creeping dark but not well enough to directly target someone. You do %d%% more damage to anyone in the dark (or in creeping dark).]]):format(damageIncrease)
+		return ([[Your eyes penetrate the darkness to find anyone that may be hiding there. You can also see through your clouds of creeping dark and gain the advantage of doing %d%% more damage to anyone enveloped by it.]]):format(damageIncrease)
 	end,
 }
 
@@ -369,10 +368,11 @@ newTalent{
 	cooldown = 6,
 	tactical = { ATTACK = 2, DISABLE = 1 },
 	range = 5,
+	direct_hit = true,
 	reflectable = true,
 	requires_target = true,
 	getDamage = function(self, t)
-		return combatTalentDamage(self, t, 15, 250)
+		return combatTalentDamage(self, t, 0, 270)
 	end,
 	action = function(self, t)
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
@@ -426,7 +426,7 @@ newTalent{
 		return 2 + math.floor(self:getTalentLevel(t) / 2)
 	end,
 	getDamage = function(self, t)
-		return combatTalentDamage(self, t, 30, 95)
+		return combatTalentDamage(self, t, 0, 100)
 	end,
 	action = function(self, t)
 		if self.dark_tendrils then return false end

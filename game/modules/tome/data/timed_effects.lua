@@ -2662,6 +2662,8 @@ newEffect{
 	status = "beneficial",
 	parameters = { },
 	activate = function(self, eff)
+		eff.src = self
+	
 		-- hate
 		if eff.hateGain and eff.hateGain > 0 then
 			eff.hateGainId = self:addTemporaryValue("hate_regen", eff.hateGain)
@@ -2704,11 +2706,8 @@ newEffect{
 			eff.resistGainId = self:addTemporaryValue("resists", gainList)
 			eff.resistLossId = eff.target:addTemporaryValue("resists", lossList)
 		end
-
-		eff.extension = eff.extension or 0
-		eff.isSevered = false
-
-		eff.target:setEffect(eff.target.EFF_FED_UPON, eff.dur, {src=self})
+		
+		eff.target:setEffect(eff.target.EFF_FED_UPON, eff.dur, { src = eff.src, target = eff.target })
 	end,
 	deactivate = function(self, eff)
 		-- hate
@@ -2730,65 +2729,40 @@ newEffect{
 
 		if eff.particles then
 			-- remove old particle emitter
-			eff.particles.x = nil
-			eff.particles.y = nil
 			game.level.map:removeParticleEmitter(eff.particles)
 			eff.particles = nil
 		end
 
 		eff.target:removeEffect(eff.target.EFF_FED_UPON)
 	end,
-	on_timeout = function(self, eff)
-		if eff.isSevered then
-			eff.extension = eff.extension - 1
-			if eff.extension <= 0 then
-				self:removeEffect(self.EFF_FEED)
-			end
-			return
-		end
-
-		if eff.target.dead then
-			eff.isSevered = true
-		else
-			local t = self:getTalentFromId(self.T_DARK_VISION)
-			if t then
-				if not t.hasLOS(self.x, self.y, eff.target.x, eff.target.y) then
-					eff.isSevered = true
-				end
-			else
-				if not self:hasLOS(eff.target.x, eff.target.y) then
-					eff.isSevered = true
-				end
-			end
-		end
-
-		if eff.isSevered then
+	updateFeed = function(self, eff)
+		local source = eff.src
+		local target = eff.target
+		
+		if source.dead or target.dead or not game.level:hasEntity(source) or not game.level:hasEntity(target) or not source:hasLOS(target.x, target.y) then
+			source:removeEffect(source.EFF_FEED)
 			if eff.particles then
-				-- remove old particle emitter
-				eff.particles.x = nil
-				eff.particles.y = nil
 				game.level.map:removeParticleEmitter(eff.particles)
 				eff.particles = nil
 			end
-
-			if eff.extension <= 0 then
-				self:removeEffect(self.EFF_FEED)
-			end
-		else
+			return
+		end
+		
+		-- update particles position
+		if not eff.particles or eff.particles.x ~= source.x or eff.particles.y ~= source.y or eff.particles.tx ~= target.x or eff.particles.ty ~= target.y then
 			if eff.particles then
-				-- remove old particle emitter
-				eff.particles.x = nil
-				eff.particles.y = nil
 				game.level.map:removeParticleEmitter(eff.particles)
 			end
 			-- add updated particle emitter
-			local dx, dy = eff.target.x - self.x, eff.target.y - self.y
+			local dx, dy = target.x - source.x, target.y - source.y
 			eff.particles = Particles.new("feed_hate", math.max(math.abs(dx), math.abs(dy)), { tx=dx, ty=dy })
-			eff.particles.x = self.x
-			eff.particles.y = self.y
+			eff.particles.x = source.x
+			eff.particles.y = source.y
+			eff.particles.tx = target.x
+			eff.particles.ty = target.y
 			game.level.map:addParticleEmitter(eff.particles)
 		end
-	end,
+	end
 }
 
 newEffect{
@@ -2802,10 +2776,7 @@ newEffect{
 	activate = function(self, eff)
 	end,
 	deactivate = function(self, eff)
-		eff.src:removeEffect(eff.src.EFF_FEED)
-	end,
-	on_timeout = function(self, eff)
-		if eff.src.dead or not game.level:hasEntity(eff.src) then
+		if eff.target == self and eff.src:hasEffect(eff.src.EFF_FEED) then
 			eff.src:removeEffect(eff.src.EFF_FEED)
 		end
 	end,
@@ -2829,14 +2800,10 @@ newEffect{
 	on_timeout = function(self, eff)
 		eff.turn = (eff.turn or 0) + 1
 
-		if self:checkHit(eff.mindpower, self:combatMentalResist(), 0, 95, 5) then
-			local damage = math.floor(eff.damage * (eff.turn / eff.duration))
-			if damage > 0 then
-				DamageType:get(DamageType.MIND).projector(eff.source, self.x, self.y, DamageType.MIND, damage)
-				game:playSoundNear(self, "talents/fire")
-			end
-		else
-			return true
+		local damage = math.floor(eff.damage * (eff.turn / eff.duration))
+		if damage > 0 then
+			DamageType:get(DamageType.MIND).projector(eff.source, self.x, self.y, DamageType.MIND, damage)
+			game:playSoundNear(self, "talents/fire")
 		end
 
 		if self.dead then

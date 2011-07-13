@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 local function combatTalentDamage(self, t, min, max)
-	return self:combatTalentSpellDamage(t, min, max, self.level + self:getWil())
+	return self:combatTalentSpellDamage(t, min, max, (self.level + self:getWil()) * 1.2)
 end
 
 local function combatPower(self, t, multiplier)
@@ -77,7 +77,7 @@ newTalent{
 			resistGain = tFeedStrengths.getResistGain(self, tFeedStrengths, target)
 		end
 
-		self:setEffect(self.EFF_FEED, 40, { target=target, hateGain=hateGain, constitutionGain=constitutionGain, lifeRegenGain=lifeRegenGain, damageGain=damageGain, resistGain=resistGain, extension=0 })
+		self:setEffect(self.EFF_FEED, 40, { target=target, hateGain=hateGain, constitutionGain=constitutionGain, lifeRegenGain=lifeRegenGain, damageGain=damageGain, resistGain=resistGain })
 
 		return true
 	end,
@@ -100,7 +100,7 @@ newTalent{
 	direct_hit = true,
 	requires_target = true,
 	getLifeSteal = function(self, t, target)
-		return combatTalentDamage(self, t, 20, 120)
+		return combatTalentDamage(self, t, 0, 100)
 	end,
 	action = function(self, t)
 		local effect = self:hasEffect(self.EFF_FEED)
@@ -134,10 +134,10 @@ newTalent{
 	info = function(self, t)
 		local lifeSteal = t.getLifeSteal(self, t)
 		if self:getTalentLevel(t) >= 5 then
-			return ([[Devours life from the target of your feeding. %d life from the victim will be added to your own. Devour Life can be used like the Feed talent to begin feeding.
+			return ([[Devours life from the target of your feeding. %d life from the victim will be added to your own. This healing cannot be reduced. Devour Life can be used like the Feed talent to begin feeding.
 			Improves with the Willpower stat.]]):format(lifeSteal)
 		else
-			return ([[Devours life from the target of your feeding. %d life from the victim will be added to your own. At level 5 Devour Life can be used like the Feed talent to begin feeding.
+			return ([[Devours life from the target of your feeding. %d life from the victim will be added to your own. This healing cannot be reduced. At level 5 Devour Life can be used like the Feed talent to begin feeding.
 			Improves with the Willpower stat.]]):format(lifeSteal)
 		end
 	end,
