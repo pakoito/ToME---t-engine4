@@ -22,11 +22,13 @@ cd tmp
 mkdir t-engine4-windows-"$ver"
 mkdir t-engine4-src-"$ver"
 mkdir t-engine4-linux32-"$ver"
+mkdir t-engine4-osx-"$ver"
 
 # src
 echo "******************** Src"
 cd t-engine4-src-"$ver"
 cp -a ../../bootstrap/  ../../game/ ../../C* ../../premake4.lua ../../src/ ../../build/ ../../mac/  .
+rm -rf mac/base_app/
 rm -rf game/modules/angband
 rm -rf game/modules/rogue
 rm -rf game/modules/gruesome
@@ -66,6 +68,23 @@ rm -rf game/modules/gruesome
 cd ..
 tar -cvjf t-engine4-linux32-"$ver".tar.bz2 t-engine4-linux32-"$ver"
 
+# OSX
+echo "******************** OSX"
+cd t-engine4-osx-"$ver"
+mkdir T-Engine.app/
+cp -a ../../mac/base_app/* T-Engine.app/
+cp -a ../../bootstrap/ T-Engine.app/Contents/MacOS/
+cp -a ../../game/ T-Engine.app/Contents/Resources/
+cp -a ../../C* .
+find . -name '*~' -or -name '.svn' | xargs rm -rf
+rm -rf T-Engine.app/Contents/Resources/game/modules/angband
+rm -rf T-Engine.app/Contents/Resources/game/modules/rogue
+rm -rf T-Engine.app/Contents/Resources/game/modules/gruesome
+cd ..
+size=`du -hsc t-engine4-osx-"$ver"|grep total|cut -dM -f1`
+sudo makedmg t-engine4-osx-"$ver".dmg "Tales of Maj'Eyal" `expr $size + 10` t-engine4-osx-"$ver"
+gzip t-engine4-osx-"$ver".dmg
+
 #### Music less
 
 # src
@@ -89,7 +108,7 @@ IFS=$'\n'; for i in `find game/ -name '*.ogg'`; do rm "$i"; done
 cd ..
 tar -cvjf t-engine4-linux32-"$ver"-nomusic.tar.bz2 t-engine4-linux32-"$ver"
 
-cp *zip *bz2 /var/www/te4.org/htdocs/dl/t-engine
+cp *zip *bz2 *dmg.gz /var/www/te4.org/htdocs/dl/t-engine
 
 ########## Announce
 
@@ -99,3 +118,4 @@ echo "http://te4.org/dl/t-engine/t-engine4-linux32-$ver.tar.bz2"
 echo "http://te4.org/dl/t-engine/t-engine4-windows-$ver-nomusic.zip"
 echo "http://te4.org/dl/t-engine/t-engine4-src-$ver-nomusic.tar.bz2"
 echo "http://te4.org/dl/t-engine/t-engine4-linux32-$ver-nomusic.tar.bz2"
+echo "http://te4.org/dl/t-engine/t-engine4-osx-$ver.dmg.gz"
