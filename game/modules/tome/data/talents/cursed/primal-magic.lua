@@ -120,6 +120,12 @@ newTalent{
 		-- but we cant ...
 		local _ _, x, y = self:canProject(tg, x, y)
 		
+		if not self:canMove(x, y) or (self.x == x and self.y == y) then return nil end
+		if not self:canBe("teleport") or game.level.map.attrs(x, y, "no_teleport") then
+			game.logSeen(self, "Your attempt to displace fails!")
+			return true
+		end
+		
 		game.level.map:particleEmitter(self.x, self.y, 1, "teleport_out")
 		self:move(x, y, true)
 		game.level.map:particleEmitter(self.x, self.y, 1, "teleport_in")

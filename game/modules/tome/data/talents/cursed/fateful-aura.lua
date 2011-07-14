@@ -83,7 +83,7 @@ newTalent{
 		if item.unique then return end
 		if item.quest then return end
 		if not item:wornInven() then return end
-		if item.type == "ammo" then return end
+		if item.type == "ammo" or item.type == "gem" then return end
 
 		item.cursed_touch = true
 
@@ -121,7 +121,7 @@ newTalent{
 		end
 
 		-- grim craft
-		if item.type == "armor" then
+		if item.type == "armor" and (sub_type == "cloth" or sub_type == "light" or sub_type == "heavy" or sub_type == "medium" or sub_type == "massive") then
 			local tGrimCraft = self:getTalentFromId(self.T_GRIM_CRAFT)
 			if tGrimCraft and self:getTalentLevelRaw(tGrimCraft) > 0 then
 				if not curses_armor then curses_armor = mod.class.Object:loadList("/data/general/objects/egos/curses-armor.lua") end

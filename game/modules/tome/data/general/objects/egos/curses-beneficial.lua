@@ -28,7 +28,6 @@ newEntity{ name = "ben wil", weighting = 1, copy = { wielder = { inc_stats = { [
 newEntity{ name = "ben cun", weighting = 1, copy = { wielder = { inc_stats = { [Stats.STAT_CUN] = resolvers.mbonus_material(4, 1) }, }, }, }
 newEntity{ name = "ben con", weighting = 1, copy = { wielder = { inc_stats = { [Stats.STAT_CON] = resolvers.mbonus_material(4, 1) }, }, }, }
 
---newEntity{ name = "ben healing factor", weighting = 1, copy = { wielder = { healing_factor = resolvers.mbonus_material(10, 5, function(e, v) v=v/100 return 0, v end) }, }, }
 newEntity{ name = "ben mentalresist", weighting = 1, copy = { wielder = { combat_mentalresist = resolvers.mbonus_material(4, 2) }, }, }
 newEntity{ name = "ben physresist", weighting = 1, copy = { wielder = { combat_physresist = resolvers.mbonus_material(4, 2) }, }, }
 newEntity{ name = "ben spellresist", weighting = 1, copy = { wielder = { combat_spellresist = resolvers.mbonus_material(4, 2) }, }, }

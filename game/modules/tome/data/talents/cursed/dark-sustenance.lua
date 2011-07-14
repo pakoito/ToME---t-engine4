@@ -44,6 +44,7 @@ newTalent{
 		local tg = {type="hit", range=range}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target or core.fov.distance(self.x, self.y, x, y) > range then return nil end
+		if target == self then return nil end -- avoid targeting while frozen
 
 		if self:reactionToward(target) >= 0 or target.summoner == self then
 			game.logPlayer(self, "You can only gain sustenance from your foes!");

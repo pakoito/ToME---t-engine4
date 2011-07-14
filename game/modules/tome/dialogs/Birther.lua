@@ -140,9 +140,6 @@ function _M:init(title, actor, order, at_end, quickbirth, w, h)
 	}
 	self:setupUI()
 
-	-- If we wanted to hide the custom tile selector for non donators, but we dont want to
---	if not profile.auth or not tonumber(profile.auth.donated) or tonumber(profile.auth.donated) <= 1 then self:toggleDisplay(self.c_tile, false) end
-
 	if self.descriptors_by_type.difficulty == "Tutorial" then
 		self:raceUse(self.all_races[1], 1)
 		self:raceUse(self.all_races[1].nodes[1], 2)
@@ -421,7 +418,7 @@ end
 
 function _M:getLock(d)
 	if not d.locked then return false end
-	local ret = d.locked()
+	local ret = d.locked(self)
 	if ret == "hide" then return "hide" end
 	return not ret
 end
@@ -1029,7 +1026,7 @@ function _M:selectTile()
 	end}
 	local list = ImageList.new{width=500, height=500, tile_w=64, tile_h=64, padding=10, list=list, fct=function(item)
 		game:unregisterDialog(d)
-		if not profile.auth or not tonumber(profile.auth.donated) or tonumber(profile.auth.donated) <= 1 then
+		if not self:isDonator() then
 			self:selectTileNoDonations()
 		else
 			self:setTile(item.f, item.w, item.h)
@@ -1042,4 +1039,8 @@ function _M:selectTile()
 	d:setupUI(true, true)
 	d.key:addBind("EXIT", function() game:unregisterDialog(d) end)
 	game:registerDialog(d)
+end
+
+function _M:isDonator()
+	if not profile.auth or not tonumber(profile.auth.donated) or tonumber(profile.auth.donated) <= 1 then return false else return true end
 end

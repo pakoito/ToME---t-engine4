@@ -33,7 +33,6 @@ newEntity{ name="det res light", weighting = 2, copy = { wielder = { resists={ [
 newEntity{ name="det res fire", weighting = 2, copy = { wielder = { resists={ [DamageType.FIRE] = -5 }, }, }, }
 newEntity{ name="det res arcane", weighting = 2, copy = { wielder = { resists={ [DamageType.ARCANE] = -5 }, }, }, }
 
---newEntity{ name="det healing factor", weighting = 1, copy = { wielder = { healing_factor = resolvers.mbonus_material(10, 5, function(e, v) v=-v/100 return 0, v end) }, }, }
 newEntity{ name="det mentalresist", weighting = 1, copy = { wielder = { combat_mentalresist = resolvers.mbonus_material(8, 3, function(e, v) return 0, -v end) }, }, }
 newEntity{ name="det physresist", weighting = 1, copy = { wielder = { combat_physresist = resolvers.mbonus_material(8, 3, function(e, v) return 0, -v end) }, }, }
 newEntity{ name="det spellresist", weighting = 1, copy = { wielder = { combat_spellresist = resolvers.mbonus_material(8, 3, function(e, v) return 0, -v end) }, }, }

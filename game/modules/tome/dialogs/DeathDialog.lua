@@ -115,8 +115,10 @@ end
 --- Send the party to the Eidolon Plane
 function _M:eidolonPlane()
 	game:onTickEnd(function()
-		self.actor:attr("easy_mode_lifes", -1)
-		game.log("#LIGHT_RED#You have %s left.", (self.actor:attr("easy_mode_lifes") and self.actor:attr("easy_mode_lifes").." life(s)") or "no more lives")
+		if not self.actor:attr("infinite_lifes") then
+			self.actor:attr("easy_mode_lifes", -1)
+			game.log("#LIGHT_RED#You have %s left.", (self.actor:attr("easy_mode_lifes") and self.actor:attr("easy_mode_lifes").." life(s)") or "no more lives")
+		end
 
 		self:cleanActor(self.actor)
 		self:resurrectBasic(self.actor)
@@ -234,7 +236,7 @@ function _M:generateList()
 
 	if config.settings.cheat then list[#list+1] = {name="Resurrect by cheating", action="cheat"} end
 	if not self.actor.no_resurrect and allow_res then
-		if self.actor:attr("easy_mode_lifes") then
+		if self.actor:attr("easy_mode_lifes") or self.actor:attr("infinite_lifes") then
 			self:use{action="easy_mode"}
 			self.dont_show = true
 			return

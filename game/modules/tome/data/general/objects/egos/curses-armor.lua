@@ -21,8 +21,6 @@ local Stats = require "engine.interface.ActorStats"
 local DamageType = require "engine.DamageType"
 local Talents = require "engine.interface.ActorTalents"
 
-newEntity{ name = "arm healing factor", weighting = 4, copy = { wielder = { healing_factor = resolvers.mbonus_material(30, 15) }, }, }
-newEntity{ name = "arm max life", weighting = 2, copy = { wielder = { max_life = resolvers.mbonus_material(60, 40) }, }, }
 newEntity{ name = "arm life regen", weighting = 2, copy = { wielder = { life_regen = resolvers.mbonus_material(15, 5, function(e, v) v=v/10 return 0, v end) }, }, }
 newEntity{ name = "arm combat armor", weighting = 2, copy = { wielder = { combat_armor = resolvers.mbonus_material(8, 2), }, }, }
 

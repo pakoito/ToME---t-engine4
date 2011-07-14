@@ -137,6 +137,29 @@ newBirthDescriptor{
 }
 newBirthDescriptor{
 	type = "difficulty",
+	name = "Exploration",
+	locked = function(birther) return birther:isDonator() or "hide" end,
+	locked_desc = "Exploration mode: Infinite lives (donator feature)",
+	desc =
+	{
+		"#GOLD##{bold}#Exploration mode#WHITE#",
+		"Provides the normal game experience but with infinite lives.#{normal}#",
+		"Infinite number of lives available.",
+		"This is not the way the game is meant to be played, but it allows you to have a more forgiving experience.",
+		"Remember though that dying is an integral part of the game and helps you become a better player.",
+	},
+	descriptor_choices =
+	{
+		race = { ["Tutorial Human"] = "forbid", },
+		class = { ["Tutorial Adventurer"] = "forbid", },
+	},
+	copy = {
+		__game_difficulty = 2,
+		infinite_lifes = 1,
+	},
+}
+newBirthDescriptor{
+	type = "difficulty",
 	name = "Easy",
 	display_name = "Discovery",
 	desc =
