@@ -25,7 +25,7 @@ return {
 	max_level = 1,
 	width = 170, height = 100,
 --	all_remembered = true,
---	all_lited = true,
+	all_lited = true,
 --	day_night = true,
 	persistent = "zone",
 	ambient_music = "Remembrance.ogg",
