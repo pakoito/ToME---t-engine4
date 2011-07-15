@@ -30,6 +30,7 @@ local tiles_packs = {
 --	mushroom = {name= "Mushroom", order=2},
 	ascii = {name= "ASCII", order=5},
 	ascii_full = {name= "ASCII with background", order=6},
+	customtiles = {name= "Custom Tileset", order=7},
 }
 if fs.exists("/data/gfx/altefcat") then tiles_packs.altefcat = {name= "Altefcat/Gervais", order=3} end
 if fs.exists("/data/gfx/oldrpg") then tiles_packs.oldrpg = {name= "Old RPG", order=4} end
@@ -58,6 +59,10 @@ function _M:init()
 	}
 end
 
+function _M:doCustomTiles()
+	local d = Dialog.new("Custom Tileset")
+end
+
 function _M:use(item)
 	if not item then return end
 
@@ -67,6 +72,8 @@ function _M:use(item)
 				qty = math.floor(util.bound(qty, 10, 128))
 				self:use{name=qty.."x"..qty, sub=item.sub, val=qty.."x"..qty}
 			end, 10))
+		elseif item.val == "customtiles" then
+			self:doCustomTiles()
 		else
 			config.settings.tome.gfx[item.sub] = item.val
 			self.changed = true
