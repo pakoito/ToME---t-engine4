@@ -1763,7 +1763,7 @@ end
 
 --- Update tile for races that can handle it
 function _M:updateModdableTile()
-	if not self.moddable_tile then return end
+	if not self.moddable_tile or Map.tiles.no_moddable_tiles then return end
 	self:removeAllMOs()
 
 	local base = "player/"..self.moddable_tile:gsub("#sex#", self.female and "female" or "male").."/"

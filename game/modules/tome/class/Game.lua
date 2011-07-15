@@ -399,10 +399,21 @@ function _M:setupDisplayMode(reboot, mode)
 		Map.object_stack_count = true
 
 		Map.tiles.use_images = true
-		if gfx.tiles == "ascii" then Map.tiles.use_images = false Map.tiles.force_back_color = {r=0, g=0, b=0, a=255} end
-		if gfx.tiles == "ascii_full" then Map.tiles.use_images = false end
-		if gfx.tiles == "shockbolt" then Map.tiles.nicer_tiles = true end
-		if gfx.tiles == "oldrpg" then Map.tiles.nicer_tiles = true end
+		if gfx.tiles == "ascii" then
+			Map.tiles.use_images = false
+			Map.tiles.force_back_color = {r=0, g=0, b=0, a=255}
+			Map.tiles.no_moddable_tiles = true
+		elseif gfx.tiles == "ascii_full" then
+			Map.tiles.use_images = false
+			Map.tiles.no_moddable_tiles = true
+		elseif gfx.tiles == "shockbolt" then
+			Map.tiles.nicer_tiles = true
+		elseif gfx.tiles == "oldrpg" then
+			Map.tiles.nicer_tiles = true
+			Map.tiles.no_moddable_tiles = true
+		elseif gfx.tiles == "mushroom" then
+			Map.tiles.no_moddable_tiles = true
+		end
 
 		if self.level then
 			if self.level.map.finished then
