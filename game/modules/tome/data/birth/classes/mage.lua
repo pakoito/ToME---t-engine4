@@ -76,7 +76,6 @@ newBirthDescriptor{
 		[ActorTalents.T_FLAME] = 1,
 		[ActorTalents.T_LIGHTNING] = 1,
 		[ActorTalents.T_PHASE_DOOR] = 1,
-		[ActorTalents.T_TELEPORT_ANGOLWEN]=1,
 	},
 	copy = {
 		-- Mages start in angolwen
@@ -87,6 +86,7 @@ newBirthDescriptor{
 				self.starting_zone = "town-angolwen"
 				self.starting_quest = "start-archmage"
 				self.starting_intro = "archmage"
+				self:learnTalent(self.T_TELEPORT_ANGOLWEN, true)
 			end
 		end,
 
