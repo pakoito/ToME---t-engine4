@@ -21,11 +21,10 @@ return {
 	name = "Blighted Ruins",
 	level_range = {1, 8},
 	level_scheme = "player",
-	max_level = 6,
+	max_level = 4,
 	decay = {300, 800},
-	-- 6 levels but actors gain one level every 2 levels
-	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + math.floor((zone.max_level - level.level) / 2) + rng.range(-1,2) end,
-	level_adjust_level = function(zone, level) return zone.base_level + math.floor((zone.max_level - level.level) / 2) end,
+	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + (zone.max_level - level.level) + rng.range(-1,2) end,
+	level_adjust_level = function(zone, level) return zone.base_level + (zone.max_level - level.level) end,
 	width = 50, height = 50,
 --	all_remembered = true,
 --	all_lited = true,
@@ -69,7 +68,7 @@ return {
 				up = "UP_WILDERNESS",
 			}, },
 		},
-		[6] = {
+		[4] = {
 			no_level_connectivity = true,
 			generator = { map = {
 				class = "engine.generator.map.Static",

@@ -52,7 +52,7 @@ newBirthDescriptor{
 		-- Force undead faction to undead
 		resolvers.genericlast(function(e) e.faction = "undead" end),
 		starting_zone = "blighted-ruins",
-		starting_level = 6, starting_level_force_down = true,
+		starting_level = 4, starting_level_force_down = true,
 		starting_quest = "start-undead",
 		undead = 1,
 		inscription_restrictions = { ["inscriptions/runes"] = true, },
@@ -110,6 +110,7 @@ newBirthDescriptor
 		fear_immune = 1,
 		global_speed = 0.8,
 		moddable_tile = "ghoul",
+		moddable_tile_nude = true,
 	},
 	experience = 1.4,
 }
@@ -160,6 +161,7 @@ newBirthDescriptor
 		no_breath = 1,
 		blood_color = colors.GREY,
 		moddable_tile = "skeleton",
+		moddable_tile_nude = true,
 	},
 	experience = 1.4,
 }
