@@ -90,21 +90,30 @@ gzip t-engine4-osx-"$ver".dmg
 # src
 echo "******************** Src"
 cd t-engine4-src-"$ver"
-IFS=$'\n'; for i in `find game/ -name '*.ogg'`; do rm "$i"; done
+IFS=$'\n'; for i in `find game/ -name '*.ogg'`; do
+	echo "$i"|grep '/music/' -q
+	if test $? -eq 0; then rm "$i"; fi
+done
 cd ..
 tar cvjf t-engine4-src-"$ver"-nomusic.tar.bz2 t-engine4-src-"$ver"
 
 # windows
 echo "******************** Windows"
 cd t-engine4-windows-"$ver"
-IFS=$'\n'; for i in `find game/ -name '*.ogg'`; do rm "$i"; done
+IFS=$'\n'; for i in `find game/ -name '*.ogg'`; do
+	echo "$i"|grep '/music/' -q
+	if test $? -eq 0; then rm "$i"; fi
+done
 cd ..
 zip -r -9 t-engine4-windows-"$ver"-nomusic.zip t-engine4-windows-"$ver"
 
 # linux 32
 echo "******************** linux32"
 cd t-engine4-linux32-"$ver"
-IFS=$'\n'; for i in `find game/ -name '*.ogg'`; do rm "$i"; done
+IFS=$'\n'; for i in `find game/ -name '*.ogg'`; do
+	echo "$i"|grep '/music/' -q
+	if test $? -eq 0; then rm "$i"; fi
+done
 cd ..
 tar -cvjf t-engine4-linux32-"$ver"-nomusic.tar.bz2 t-engine4-linux32-"$ver"
 

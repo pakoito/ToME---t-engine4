@@ -59,9 +59,8 @@ function _M:loadAchievements()
 	self.achieved = {}
 	self.playerachieved = {}
 
-	for k, e in pairs(profile.mod) do
-		if k:find('^achievement%.') then
-			local id = k:gsub('^achievement%.', '')
+	if profile.mod.achievements then
+		for id, e in pairs(profile.mod.achievements) do
 			if self.achiev_defs[id] then
 				self.achieved[id] = e
 			end
