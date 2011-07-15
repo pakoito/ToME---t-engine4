@@ -2299,7 +2299,7 @@ newEffect{
 	activate = function(self, eff)
 	end,
 	deactivate = function(self, eff)
-		if self:canBe("worldport") and not self:attr("never_move") then
+		if eff.allow_override or (self:canBe("worldport") and not self:attr("never_move")) then
 			game:onTickEnd(function()
 				game.logPlayer(self, "You are yanked out of this place!")
 				game:changeLevel(1, eff.where or game.player.last_wilderness)
@@ -2663,7 +2663,7 @@ newEffect{
 	parameters = { },
 	activate = function(self, eff)
 		eff.src = self
-	
+
 		-- hate
 		if eff.hateGain and eff.hateGain > 0 then
 			eff.hateGainId = self:addTemporaryValue("hate_regen", eff.hateGain)
@@ -2706,7 +2706,7 @@ newEffect{
 			eff.resistGainId = self:addTemporaryValue("resists", gainList)
 			eff.resistLossId = eff.target:addTemporaryValue("resists", lossList)
 		end
-		
+
 		eff.target:setEffect(eff.target.EFF_FED_UPON, eff.dur, { src = eff.src, target = eff.target })
 	end,
 	deactivate = function(self, eff)
@@ -2738,7 +2738,7 @@ newEffect{
 	updateFeed = function(self, eff)
 		local source = eff.src
 		local target = eff.target
-		
+
 		if source.dead or target.dead or not game.level:hasEntity(source) or not game.level:hasEntity(target) or not source:hasLOS(target.x, target.y) then
 			source:removeEffect(source.EFF_FEED)
 			if eff.particles then
@@ -2747,7 +2747,7 @@ newEffect{
 			end
 			return
 		end
-		
+
 		-- update particles position
 		if not eff.particles or eff.particles.x ~= source.x or eff.particles.y ~= source.y or eff.particles.tx ~= target.x or eff.particles.ty ~= target.y then
 			if eff.particles then

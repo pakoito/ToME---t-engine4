@@ -39,7 +39,9 @@ desc = function(self, who)
 		end
 	end
 	if self:isCompleted("farportal") then
-		if self:isCompleted("farportal-done") then
+		if self:isCompleted("farportal-broken") then
+			desc[#desc+1] = "You have forced a recall while into an exploratory farportal zone, the farportal was rendered unusable in the process."
+		elseif self:isCompleted("farportal-done") then
 			desc[#desc+1] = "You have entered the exploratory farportal room and defeated the horror lurking there, you can now use the farportal."
 		else
 			desc[#desc+1] = "The fortress shadow has asked that you come back as soon as possible."
@@ -61,6 +63,10 @@ end
 on_grant = function(self, who)
 	self.shertul_energy = 0
 	self.explored = 0
+end
+
+break_farportal = function(self)
+	game.player:setQuestStatus(self.id, self.COMPLETED, "farportal-broken")
 end
 
 spawn_butler = function(self)

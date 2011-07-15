@@ -104,8 +104,9 @@ There are however unwanted byproducts to this operation, the generation of a met
 }
 
 newChat{ id="farportal",
-	text = [[Long ago the Sher'tuls used farportals not only for transportation to know locations but also to explore new parts of the new world, or even other worlds.
+	text = [[Long ago the Sher'tuls used farportals not only for transportation to know locations but also to explore new parts of the world, or even other worlds.
 This Fortress is equiped with an exploratory farportal, and now has enough energy to allow one teleportation. Each teleportation will take you to a random part of the universe and use 30 energy.
+Beware that the return portal may not be nearby your arrival point, you will need to find it. You can use the rod of recall to try and force an emergency recall, but it has high chances of breaking the exploratory farportal forever.
 You maye use the farportal, however beware I sense a strange presence in the farportal room.]],
 	answers = {
 		{"I will check it out, thanks.", action=function() q:spawn_farportal_guardian() end},
