@@ -75,7 +75,7 @@ newTalent{
 			game.logPlayer(self, "You are too close to build up momentum!")
 			return
 		end
-		local tx, ty = self.x, self.y
+		local tx, ty = lx, ly
 		lx, ly = l()
 		while lx and ly do
 			if game.level.map:checkAllEntities(lx, ly, "block_move", self) then break end
