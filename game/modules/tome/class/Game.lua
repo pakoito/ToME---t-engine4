@@ -110,12 +110,12 @@ function _M:run()
 	self.logdisplay = LogDisplay.new(216, self.map_h_stop - font_h * config.settings.tome.log_lines -16, (self.w - 216) / 2, font_h * config.settings.tome.log_lines, nil, font, size, nil, nil)
 	self.logdisplay.resizeToLines = function() self.logdisplay:resize(216, self.map_h_stop - font_h * config.settings.tome.log_lines -16, (self.w - 216) / 2, font_h * config.settings.tome.log_lines) end
 	self.logdisplay:enableShadow(1)
-	self.logdisplay:enableFading(2)
+	self.logdisplay:enableFading(config.settings.tome.log_fade or 3)
 
 	profile.chat:resize(216 + (self.w - 216) / 2, self.map_h_stop - font_h * config.settings.tome.log_lines -16, (self.w - 216) / 2, font_h * config.settings.tome.log_lines, font, size, nil, nil)
 	profile.chat.resizeToLines = function() profile.chat:resize(216 + (self.w - 216) / 2, self.map_h_stop - font_h * config.settings.tome.log_lines -16, (self.w - 216) / 2, font_h * config.settings.tome.log_lines) end
 	profile.chat:enableShadow(1)
-	profile.chat:enableFading(6)
+	profile.chat:enableFading(config.settings.tome.log_fade or 3)
 	profile.chat:enableDisplayChans(false)
 
 	self.hotkeys_display = HotkeysDisplay.new(nil, 216, self.h - font_mono_h * 4.2, self.w - 216, font_mono_h * 4.2, "/data/gfx/ui/talents-list.png", font_mono, size_mono)
