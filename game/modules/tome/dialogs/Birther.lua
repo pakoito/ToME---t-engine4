@@ -63,7 +63,7 @@ function _M:init(title, actor, order, at_end, quickbirth, w, h)
 	self.c_tile = Button.new{text="Select custom tile", fct=function() self:selectTile() end}
 	self.c_cancel = Button.new{text="Cancel", fct=function() self:atEnd("quit") end}
 
-	self.c_name = Textbox.new{title="Name: ", text=game.player_name, chars=30, max_len=50, fct=function()
+	self.c_name = Textbox.new{title="Name: ", text=(not config.settings.cheat and game.player_name == "player") and "" or game.player_name, chars=30, max_len=50, fct=function()
 		if config.settings.cheat then self:makeDefault() end
 	end, on_change=function() self:setDescriptor() end}
 
