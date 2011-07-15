@@ -167,7 +167,6 @@ newEntity{
 	name = "deep water", image = "terrain/water_grass_5_1.png",
 	display = '~', color=colors.AQUAMARINE, back_color=colors.DARK_BLUE,
 	always_remember = true,
-	air_level = -5, air_condition="water",
 	can_encounter="water", equilibrium_level=-10,
 }
 newEntity{ base = "WATER_BASE", define_as = "WATER_BASE_DEEP", can_pass = {pass_water=1}, does_block_move = true }
