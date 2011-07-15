@@ -73,7 +73,8 @@ newBirthDescriptor{
 		[ActorTalents.T_CURSED_TOUCH] = 1,
 		[ActorTalents.T_GLOOM] = 1,
 		[ActorTalents.T_SLASH] = 1,
-		[ActorTalents.T_WEAPONS_MASTERY] = 1
+		[ActorTalents.T_WEAPONS_MASTERY] = 1,
+		[ActorTalents.T_WEAPON_COMBAT] = 1,
 	},
 	copy = {
 		max_life = 110,
