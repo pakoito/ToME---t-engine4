@@ -122,6 +122,7 @@ newBirthDescriptor{
 		[ActorTalents.T_CURSED_TOUCH] = 1,
 		[ActorTalents.T_FEED] = 1,
 		[ActorTalents.T_WILLFUL_STRIKE] = 1,
+		[ActorTalents.T_CALL_SHADOWS] = 1,
 	},
 	copy = {
 		max_life = 90,
