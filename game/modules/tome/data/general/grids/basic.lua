@@ -326,10 +326,11 @@ newEntity{
 	block_esp = true,
 	force_clone = true,
 	door_player_stop = "This door seems to have been sealed off, you need to find a way to open it.",
-	door_opened = "DOOR_OPEN",
+	door_opened = "GENERIC_LEVER_DOOR_OPEN",
 	on_lever_change = function(self, x, y, who, val, oldval)
+		local toggle = game.level.map.attrs(x, y, "lever_toggle")
 		local trigger = game.level.map.attrs(x, y, "lever_action")
-		if val > oldval and val >= trigger then
+		if toggle or (val > oldval and val >= trigger) then
 			game.level.map(x, y, engine.Map.TERRAIN, game.zone.grid_list[self.door_opened])
 			game.log("#VIOLET#You hear a door openning.")
 			return true
@@ -338,6 +339,27 @@ newEntity{
 }
 newEntity{ base = "GENERIC_LEVER_DOOR", define_as = "GENERIC_LEVER_DOOR_HORIZ", image = "terrain/granite_door1.png", add_displays = {class.new{image="terrain/granite_wall3.png", z=18, display_y=-1}}, door_opened = "DOOR_HORIZ_OPEN"}
 newEntity{ base = "GENERIC_LEVER_DOOR", define_as = "GENERIC_LEVER_DOOR_VERT", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/granite_door1_vert.png", z=17}, class.new{image="terrain/granite_door1_vert_north.png", z=18, display_y=-1}}, door_opened = "DOOR_OPEN_VERT"}
+
+newEntity{
+	define_as = "GENERIC_LEVER_DOOR_OPEN",
+	type = "wall", subtype = "floor",
+	name = "open door", image="terrain/granite_door1_open.png",
+	display = "'", color_r=238, color_g=154, color_b=77, back_color=colors.DARK_GREY,
+	always_remember = true,
+	door_closed = "GENERIC_LEVER_DOOR",
+	door_player_stop = "This door seems to have been sealed off, you need to find a way to close it.",
+	on_lever_change = function(self, x, y, who, val, oldval)
+		local toggle = game.level.map.attrs(x, y, "lever_toggle")
+		local trigger = game.level.map.attrs(x, y, "lever_action")
+		if toggle or (val < oldval and val < trigger) then
+			game.level.map(x, y, engine.Map.TERRAIN, game.zone.grid_list[self.door_closed])
+			game.log("#VIOLET#You hear a door closing.")
+			return true
+		end
+	end,
+}
+newEntity{ base = "GENERIC_LEVER_DOOR_OPEN", define_as = "GENERIC_LEVER_DOOR_HORIZ_OPEN", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/granite_door1_open.png", z=17}, class.new{image="terrain/granite_wall3.png", z=18, display_y=-1}}, door_closed = "GENERIC_LEVER_DOOR_HORIZ"}
+newEntity{ base = "GENERIC_LEVER_DOOR_OPEN", define_as = "GENERIC_LEVER_DOOR_OPEN_VERT", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/granite_door1_open_vert.png", z=17}, class.new{image="terrain/granite_door1_open_vert_north.png", z=18, display_y=-1}}, door_closed = "GENERIC_LEVER_DOOR_VERT"}
 
 newEntity{
 	define_as = "GENERIC_LEVER",
@@ -371,9 +393,10 @@ newEntity{
 				if block and game.level.map.attrs(i, j, block) then return true end
 			end, function(_, i, j)
 				local akind = game.level.map.attrs(i, j, "lever_action_kind")
+				if not akind then return end
 				if type(akind) == "string" then akind = {[akind]=true} end
 				for k, _ in pairs(kind) do if akind[k] then
-					local old = game.level.map.attrs(i, j, "lever_action_value")
+					local old = game.level.map.attrs(i, j, "lever_action_value") or 0
 					local newval = old + (self.lever and val or -val)
 					game.level.map.attrs(i, j, "lever_action_value", newval)
 					if game.level.map:checkEntity(i, j, engine.Map.TERRAIN, "on_lever_change", e, newval, old) then
