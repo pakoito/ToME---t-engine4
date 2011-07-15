@@ -57,7 +57,7 @@ newTalent{
 			autolevel = "none",
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=5, },
 			stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
-			inc_stats = { str=10 + self:getWil() * self:getTalentLevel(t) / 5, dex=10 + self:getTalentLevel(t) * 2, mag=5, con=15 + self:getTalentLevelRaw(self.T_RESILIENCE)*2 },
+			inc_stats = { str=15 + (self:getWil(130) * self:getTalentLevel(t) / 5) + (self:getTalentLevel(t) * 2), dex=10 + self:getTalentLevel(t) * 2, mag=5, con=15 + self:getTalentLevelRaw(self.T_RESILIENCE)*2 },
 			level_range = {self.level, self.level}, exp_worth = 0,
 			global_speed = 1.2,
 
@@ -84,7 +84,7 @@ newTalent{
 		Your summons inherit some of your stats: increased damage%%, stun/pin/confusion/blindness resistance, armour penetration.
 		Strength stat will increase with your Willpower stat.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
-		10 + self:getWil() * self:getTalentLevel(t) / 5,
+		15 + (self:getWil(130) * self:getTalentLevel(t) / 5) + (self:getTalentLevel(t) * 2),
 		10 + self:getTalentLevel(t) * 2,
 		15 + self:getTalentLevelRaw(self.T_RESILIENCE)*2)
 	end,
@@ -222,7 +222,7 @@ newTalent{
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=2, },
 			global_speed=1.2,
 			stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
-			inc_stats = { str=25 + self:getWil() * self:getTalentLevel(t) / 5, dex=18, con=10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2, },
+			inc_stats = { str=25 + (self:getWil(140) * self:getTalentLevel(t) / 5) + (self:getTalentLevel(t) * 2), dex=18, con=10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2, },
 
 			desc = [[It is a cross between a human and a bull.]],
 			resolvers.equip{ {type="weapon", subtype="battleaxe", auto_req=true}, },
@@ -248,7 +248,7 @@ newTalent{
 		Your summons inherit some of your stats: increased damage%%, stun/pin/confusion/blindness resistance, armour penetration.
 		Strength stat will increase with your Willpower stat.]])
 		:format(self:getTalentLevel(t) + 2 + self:getTalentLevelRaw(self.T_RESILIENCE),
-		25 + self:getWil() * self:getTalentLevel(t) / 5,
+		25 + (self:getWil(140) * self:getTalentLevel(t) / 5) + (self:getTalentLevel(t) * 2),
 		10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2)
 	end,
 }
@@ -300,13 +300,13 @@ newTalent{
 			autolevel = "none",
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=2, },
 			stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
-			inc_stats = { str=25 + self:getWil() * self:getTalentLevel(t) / 5, dex=18, con=10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2, },
+			inc_stats = { str=25 + (self:getWil(120) * self:getTalentLevel(t) / 5) + (self:getTalentLevel(t) * 2), dex=18, con=10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2, },
 
 			desc = [[It is a massive animated statue.]],
 			level_range = {self.level, self.level}, exp_worth = 0,
 
 			combat_armor = 25, combat_def = -20,
-			combat = { dam=resolvers.rngavg(25,50), atk=20, apr=5, dammod={str=0.9} },
+			combat = { dam=25 + self:getWil(), atk=20, apr=5, dammod={str=0.9} },
 			resolvers.talents{ [Talents.T_UNSTOPPABLE]=3, [Talents.T_STUN]=3, },
 
 			poison_immune=1, cut_immune=1, fear_immune=1, blind_immune=1,
@@ -328,7 +328,7 @@ newTalent{
 		Your summons inherit some of your stats: increased damage%%, stun/pin/confusion/blindness resistance, armour penetration.
 		Strength stat will increase with your Willpower stat.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
-		25 + self:getWil() * self:getTalentLevel(t) / 5,
+		25 + (self:getWil(120) * self:getTalentLevel(t) / 5) + (self:getTalentLevel(t) * 2),
 		10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2)
 	end,
 }
