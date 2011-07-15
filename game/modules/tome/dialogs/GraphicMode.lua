@@ -20,6 +20,10 @@
 require "engine.class"
 local Dialog = require "engine.ui.Dialog"
 local List = require "engine.ui.List"
+local Button = require "engine.ui.Button"
+local Checkbox = require "engine.ui.Checkbox"
+local Textzone = require "engine.ui.Textzone"
+local Textbox = require "engine.ui.Textbox"
 local GetQuantity = require "engine.dialogs.GetQuantity"
 local Map = require "engine.Map"
 
@@ -60,7 +64,37 @@ function _M:init()
 end
 
 function _M:doCustomTiles()
-	local d = Dialog.new("Custom Tileset")
+	local d = Dialog.new("Custom Tileset", 100, 100)
+
+	local help = Textzone.new{width=500, auto_height=true, text=[[You can configure the game to use a custom tileset.
+You must place all files of your tileset in a subfolder of the modules's data/gfx/ folder, just like the existing tilesets.
+Each tile must be correctly named according to the existing tilesets.]]}
+	local dir = Textbox.new{title="Folder: ", text="", chars=30, max_len=50, fct=function() end}
+	local moddable_tiles = Checkbox.new{title="Use moddable tiles (equipment showing on player)", default=false, fct=function() end }
+	local adv_tiles = Checkbox.new{title="Use advanced tiles (transitions, wide tiles, ...)", default=false, fct=function() end }
+	local ok = Button.new{text="Use custom tileset", fct=function()
+		config.settings.tome.gfx.tiles = "customtiles"
+		config.settings.tome.gfx.tiles_custom_dir = dir.text
+		config.settings.tome.gfx.tiles_custom_moddable = moddable_tiles.checked
+		config.settings.tome.gfx.tiles_custom_adv = adv_tiles.checked
+		self.changed = true
+		self:use{change_sel = "main"}
+		game:unregisterDialog(d)
+	end}
+	local cancel = Button.new{text="Cancel", fct=function() game:unregisterDialog(d) end}
+
+	d:loadUI{
+		{left=0, top=0, ui=help},
+		{left=0, top=help.h, ui=dir},
+		{left=0, top=help.h+dir.h, ui=moddable_tiles},
+		{left=0, top=help.h+dir.h+moddable_tiles.h, ui=adv_tiles},
+		{left=0, bottom=0, ui=ok},
+		{right=0, bottom=0, ui=cancel},
+	}
+	d:setFocus(dir)
+	d:setupUI(true, true)
+
+	game:registerDialog(d)
 end
 
 function _M:use(item)

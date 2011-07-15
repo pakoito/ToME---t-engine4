@@ -360,7 +360,7 @@ end
 function _M:setupDisplayMode(reboot, mode)
 	if not mode or mode == "init" then
 		local gfx = config.settings.tome.gfx
-		self:saveSettings("tome.gfx", ('tome.gfx = {tiles=%q, size=%q}\n'):format(gfx.tiles, gfx.size))
+		self:saveSettings("tome.gfx", ('tome.gfx = {tiles=%q, size=%q, tiles_custom_dir=%q, tiles_custom_moddable=%s, tiles_custom_adv=%s}\n'):format(gfx.tiles, gfx.size, gfx.tiles_custom_dir or "", gfx.tiles_custom_moddable and "true" or "false", gfx.tiles_custom_adv and "true" or "false"))
 
 		if reboot then
 			self.change_res_dialog = true
@@ -375,9 +375,9 @@ function _M:setupDisplayMode(reboot, mode)
 		local gfx = config.settings.tome.gfx
 
 		-- Select tiles
-		Tiles.prefix = "/data/gfx/"
-		if gfx.tiles ~= "mushroom" then
-			Tiles.prefix = "/data/gfx/"..gfx.tiles.."/"
+		Tiles.prefix = "/data/gfx/"..gfx.tiles.."/"
+		if config.settings.tome.gfx.tiles == "customtiles" then
+			Tiles.prefix = "/data/gfx/"..config.settings.tome.gfx.tiles_custom_dir.."/"
 		end
 		print("[DISPLAY MODE] Tileset: "..gfx.tiles)
 		print("[DISPLAY MODE] Size: "..gfx.size)
@@ -411,8 +411,9 @@ function _M:setupDisplayMode(reboot, mode)
 		elseif gfx.tiles == "oldrpg" then
 			Map.tiles.nicer_tiles = true
 			Map.tiles.no_moddable_tiles = true
-		elseif gfx.tiles == "mushroom" then
-			Map.tiles.no_moddable_tiles = true
+		elseif gfx.tiles == "customtiles" then
+			Map.tiles.no_moddable_tiles = not config.settings.tome.gfx.tiles_custom_moddable
+			Map.tiles.nicer_tiles = config.settings.tome.gfx.tiles_custom_adv
 		end
 
 		if self.level then

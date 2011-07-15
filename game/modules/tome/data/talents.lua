@@ -36,7 +36,7 @@ newTalent = function(t)
 		end
 		t.tactical = tacts
 	end
-
+--[[
 	if t.image then
 		if type(t.image) == "boolean" then
 			local name = t.name:gsub(" ", ""):lower()
@@ -48,7 +48,7 @@ newTalent = function(t)
 		end
 		t.image_texture = t.image:glTexture()
 	end
-
+]]
 	return oldNewTalent(t)
 end
 
