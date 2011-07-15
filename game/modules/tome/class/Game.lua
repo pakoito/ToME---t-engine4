@@ -64,9 +64,11 @@ module(..., package.seeall, class.inherit(engine.GameTurnBased, engine.interface
 -- Difficulty settings
 DIFFICULTY_EASY = 1
 DIFFICULTY_NORMAL = 2
-DIFFICULTY_HARDCORE = 3
-DIFFICULTY_NIGHTMARE = 4
-DIFFICULTY_INSANE = 5
+DIFFICULTY_NIGHTMARE = 3
+DIFFICULTY_INSANE = 4
+PERMADEATH_INFINITE = 1
+PERMADEATH_MANY = 2
+PERMADEATH_ONE = 3
 
 function _M:init()
 	engine.GameTurnBased.init(self, engine.KeyBind.new(), 1000, 100)
@@ -229,7 +231,7 @@ function _M:newGame()
 	self.always_target = true
 	local nb_unlocks, max_unlocks = self:countBirthUnlocks()
 	self.creating_player = true
-	local birth; birth = Birther.new("Character Creation ("..nb_unlocks.."/"..max_unlocks.." unlocked birth options)", self.player, {"base", "world", "difficulty", "race", "subrace", "sex", "class", "subclass" }, function(loaded)
+	local birth; birth = Birther.new("Character Creation ("..nb_unlocks.."/"..max_unlocks.." unlocked birth options)", self.player, {"base", "world", "difficulty", "permadeath", "race", "subrace", "sex", "class", "subclass" }, function(loaded)
 		if not loaded then
 			self.calendar = Calendar.new("/data/calendar_"..(self.player.calendar or "allied")..".lua", "Today is the %s %s of the %s year of the Age of Ascendancy of Maj'Eyal.\nThe time is %02d:%02d.", 122, 167, 11)
 			self.player:check("make_tile")
@@ -249,6 +251,7 @@ function _M:newGame()
 
 			-- Generate
 			if self.player.__game_difficulty then self:setupDifficulty(self.player.__game_difficulty) end
+			self:setupPermadeath(self.player)
 			self:changeLevel(self.player.starting_level or 1, self.player.starting_zone, nil, self.player.starting_level_force_down)
 
 			print("[PLAYER BIRTH] resolve...")
@@ -288,6 +291,7 @@ function _M:newGame()
 			self.calendar = Calendar.new("/data/calendar_"..(self.player.calendar or "allied")..".lua", "Today is the %s %s of the %s year of the Age of Ascendancy of Maj'Eyal.\nThe time is %02d:%02d.", 122, 167, 11)
 			Map:setViewerFaction(self.player.faction)
 			if self.player.__game_difficulty then self:setupDifficulty(self.player.__game_difficulty) end
+			self:setupPermadeath(self.player)
 
 			-- Configure & create the worldmap
 			self.player.last_wilderness = self.player.default_wilderness[3] or "wilderness"
@@ -319,6 +323,12 @@ end
 
 function _M:setupDifficulty(d)
 	self.difficulty = d
+end
+function _M:setupPermadeath(p)
+	if p:attr("infinite_lifes") then self.permadeath = PERMADEATH_INFINITE
+	elseif p:attr("easy_mode_lifes") then self.permadeath = PERMADEATH_MANY
+	else self.permadeath = PERMADEATH_ONE
+	end
 end
 
 function _M:loaded()
@@ -444,7 +454,7 @@ end
 function _M:save()
 	self.total_playtime = (self.total_playtime or 0) + (os.time() - (self.last_update or self.real_starttime))
 	self.last_update = os.time()
-	return class.save(self, self:defaultSavedFields{difficulty=true, to_re_add_actors=true, party=true, _chronoworlds=true, total_playtime=true, on_level_load_fcts=true, visited_zones=true}, true)
+	return class.save(self, self:defaultSavedFields{difficulty=true, permadeath=true, to_re_add_actors=true, party=true, _chronoworlds=true, total_playtime=true, on_level_load_fcts=true, visited_zones=true}, true)
 end
 
 function _M:updateCurrentChar()
@@ -459,11 +469,11 @@ function _M:getSaveDescription()
 	return {
 		name = player.name,
 		description = ([[%s the level %d %s %s.
-Difficulty: %s
+Difficulty: %s / %s
 Campaign: %s
 Exploring level %d of %s.]]):format(
 		player.name, player.level, player.descriptor.subrace, player.descriptor.subclass,
-		player.descriptor.difficulty,
+		player.descriptor.difficulty, player.descriptor.permadeath,
 		player.descriptor.world,
 		self.level.level, self.zone.name
 		),
@@ -476,10 +486,10 @@ function _M:getVaultDescription(e)
 		name = ([[%s the %s %s]]):format(e.name, e.descriptor.subrace, e.descriptor.subclass),
 		descriptors = e.descriptor,
 		description = ([[%s the %s %s.
-Difficulty: %s
+Difficulty: %s / %s
 Campaign: %s]]):format(
 		e.name, e.descriptor.subrace, e.descriptor.subclass,
-		e.descriptor.difficulty,
+		e.descriptor.difficulty, e.descriptor.permadeath,
 		e.descriptor.world
 		),
 	}

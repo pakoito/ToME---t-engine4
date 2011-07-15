@@ -22,7 +22,7 @@ require "engine.class"
 module(..., package.seeall, class.make)
 
 function _M:playerStatGetCharacterIdentifier(p)
-	return p.descriptor.world..","..p.descriptor.subrace..","..p.descriptor.subclass..","..p.descriptor.difficulty
+	return p.descriptor.world..","..p.descriptor.subrace..","..p.descriptor.subclass..","..p.descriptor.difficulty..","..p.descriptor.permadeath
 end
 
 function _M:registerDeath(src)

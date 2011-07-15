@@ -51,10 +51,11 @@ end
 function _M:gainAchievement(id, src, ...)
 	local a = self.achiev_defs[id]
 	-- Do not unlock things in easy mode
-	if not a or (game.difficulty == game.DIFFICULTY_EASY and not a.tutorial) then return end
+	if not a then return end
+	if game.difficulty == game.DIFFICULTY_EASY and not a.tutorial then return end
+	if game.permadeath == game.PERMADEATH_INFINITE and not a.tutorial then return end
 
-	if game.difficulty == game.DIFFICULTY_NIGHTMARE then id = "NIGHTMARE_"..id end
-	if game.difficulty == game.DIFFICULTY_INSANE then id = "INSANE_"..id end
+	if game.difficulty == game.DIFFICULTY_INSANE and game.permadeath == game.PERMADEATH_ONE then id = "INSANE_"..id end
 
 	mod.class.interface.WorldAchievements.gainAchievement(self, id, src, ...)
 end

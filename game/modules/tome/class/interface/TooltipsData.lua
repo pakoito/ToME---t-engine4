@@ -33,7 +33,7 @@ You can gain money by looting it from your foes, by selling items and by doing s
 
 TOOLTIP_LIVES = [[#GOLD#Lives#LAST#
 How many lives you have and how many you lost.
-Your total number of lives depends on the difficulty setting you choose.
+Your total number of lives depends on the permadeath setting you choose.
 You may find other ways to save yourself but they are not considered extra lives.]]
 
 TOOLTIP_LIFE = [[#GOLD#Life#LAST#

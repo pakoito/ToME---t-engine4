@@ -82,17 +82,22 @@ function _M:init(title, actor, order, at_end, quickbirth, w, h)
 
 	self:generateDifficulties()
 	self.c_difficulty_text = Textzone.new{auto_width=true, auto_height=true, text="Difficulty: "}
-	self.c_difficulty = Dropdown.new{width=300, fct=function(item) self:difficultyUse(item) end, on_select=function(item) self:updateDesc(item) end, list=self.all_difficulties, nb_items=#self.all_difficulties}
+	self.c_difficulty = Dropdown.new{width=100, fct=function(item) self:difficultyUse(item) end, on_select=function(item) self:updateDesc(item) end, list=self.all_difficulties, nb_items=#self.all_difficulties}
 
-	self.c_desc = TextzoneList.new{width=math.floor(self.iw / 3 - 10), height=self.ih - self.c_female.h - self.c_ok.h - self.c_campaign.h - 10, scrollbar=true, no_color_bleed=true}
+	self:generatePermadeaths()
+	self.c_permadeath_text = Textzone.new{auto_width=true, auto_height=true, text="Permadeath: "}
+	self.c_permadeath = Dropdown.new{width=150, fct=function(item) self:permadeathUse(item) end, on_select=function(item) self:updateDesc(item) end, list=self.all_permadeaths, nb_items=#self.all_permadeaths}
+
+	self.c_desc = TextzoneList.new{width=math.floor(self.iw / 3 - 10), height=self.ih - self.c_female.h - self.c_ok.h - self.c_difficulty.h - self.c_campaign.h - 10, scrollbar=true, no_color_bleed=true}
 
 	self:setDescriptor("base", "base")
 	self:setDescriptor("world", self.default_campaign)
 	self:setDescriptor("difficulty", self.default_difficulty)
+	self:setDescriptor("permadeath", self.default_permadeath)
 	self:setDescriptor("sex", "Female")
 
 	self:generateRaces()
-	self.c_race = TreeList.new{width=math.floor(self.iw / 3 - 10), height=self.ih - self.c_female.h - self.c_ok.h - self.c_campaign.h - 10, scrollbar=true, columns={
+	self.c_race = TreeList.new{width=math.floor(self.iw / 3 - 10), height=self.ih - self.c_female.h - self.c_ok.h - self.c_difficulty.h - self.c_campaign.h - 10, scrollbar=true, columns={
 		{width=100, display_prop="name"},
 	}, tree=self.all_races,
 		fct=function(item, sel, v) self:raceUse(item, sel, v) end,
@@ -102,7 +107,7 @@ function _M:init(title, actor, order, at_end, quickbirth, w, h)
 	}
 
 	self:generateClasses()
-	self.c_class = TreeList.new{width=math.floor(self.iw / 3 - 10), height=self.ih - self.c_female.h - self.c_ok.h - self.c_campaign.h - 10, scrollbar=true, columns={
+	self.c_class = TreeList.new{width=math.floor(self.iw / 3 - 10), height=self.ih - self.c_female.h - self.c_ok.h - self.c_difficulty.h - self.c_campaign.h - 10, scrollbar=true, columns={
 		{width=100, display_prop="name"},
 	}, tree=self.all_classes,
 		fct=function(item, sel, v) self:classUse(item, sel, v) end,
@@ -123,13 +128,17 @@ function _M:init(title, actor, order, at_end, quickbirth, w, h)
 		-- Second line
 		{left=0, top=self.c_name, ui=self.c_campaign_text},
 		{left=self.c_campaign_text, top=self.c_name, ui=self.c_campaign},
-		{left=self.c_campaign, top=self.c_name, ui=self.c_difficulty_text},
-		{left=self.c_difficulty_text, top=self.c_name, ui=self.c_difficulty},
+
+		-- Third line
+		{left=0, top=self.c_campaign, ui=self.c_difficulty_text},
+		{left=self.c_difficulty_text, top=self.c_campaign, ui=self.c_difficulty},
+		{left=self.c_difficulty, top=self.c_campaign, ui=self.c_permadeath_text},
+		{left=self.c_permadeath_text, top=self.c_campaign, ui=self.c_permadeath},
 
 		-- Lists
-		{left=0, top=self.c_campaign, ui=self.c_race},
-		{left=self.c_race, top=self.c_campaign, ui=self.c_class},
-		{right=0, top=self.c_campaign, ui=self.c_desc},
+		{left=0, top=self.c_permadeath, ui=self.c_race},
+		{left=self.c_race, top=self.c_permadeath, ui=self.c_class},
+		{right=0, top=self.c_permadeath, ui=self.c_desc},
 
 		-- Buttons
 		{left=0, bottom=0, ui=self.c_ok, hidden=true},
@@ -141,6 +150,7 @@ function _M:init(title, actor, order, at_end, quickbirth, w, h)
 	self:setupUI()
 
 	if self.descriptors_by_type.difficulty == "Tutorial" then
+		self:permadeathUse(self.all_permadeaths[1], 1)
 		self:raceUse(self.all_races[1], 1)
 		self:raceUse(self.all_races[1].nodes[1], 2)
 		self:classUse(self.all_classes[1], 1)
@@ -148,6 +158,7 @@ function _M:init(title, actor, order, at_end, quickbirth, w, h)
 	end
 	for i, item in ipairs(self.c_campaign.c_list.list) do if self.default_campaign == item.id then self.c_campaign.c_list.sel = i break end end
 	for i, item in ipairs(self.c_difficulty.c_list.list) do if self.default_difficulty == item.id then self.c_difficulty.c_list.sel = i break end end
+	for i, item in ipairs(self.c_permadeath.c_list.list) do if self.default_permadeath == item.id then self.c_permadeath.c_list.sel = i break end end
 	self:setFocus(self.c_campaign)
 	self:setFocus(self.c_name)
 end
@@ -201,6 +212,7 @@ function _M:makeDefault()
 	self:setDescriptor("sex", "Female")
 	self:setDescriptor("world", "Maj'Eyal")
 	self:setDescriptor("difficulty", "Normal")
+	self:setDescriptor("permadeath", "Adventure")
 	self:setDescriptor("race", "Human")
 	self:setDescriptor("subrace", "Higher")
 	self:setDescriptor("class", "Warrior")
@@ -284,6 +296,9 @@ function _M:on_focus(id, ui)
 	elseif self.focus_ui and self.focus_ui.ui == self.c_difficulty then
 		local item = self.c_difficulty.c_list.list[self.c_difficulty.c_list.sel]
 		self.c_desc:switchItem(item, item.desc)
+	elseif self.focus_ui and self.focus_ui.ui == self.c_permadeath then
+		local item = self.c_permadeath.c_list.list[self.c_permadeath.c_list.sel]
+		self.c_desc:switchItem(item, item.desc)
 	end
 end
 
@@ -301,6 +316,7 @@ function _M:campaignUse(item)
 		self:setDescriptor("world", item.id)
 
 		self:generateDifficulties()
+		self:generatePermadeaths()
 		self:generateRaces()
 		self:generateClasses()
 	end
@@ -312,6 +328,20 @@ function _M:difficultyUse(item)
 		self.c_difficulty.c_list.sel = self.c_difficulty.previous
 	else
 		self:setDescriptor("difficulty", item.id)
+
+		self:generatePermadeaths()
+		self:generateRaces()
+		self:generateRaces()
+		self:generateClasses()
+	end
+end
+
+function _M:permadeathUse(item)
+	if not item then return end
+	if item.locked then
+		self.c_permadeath.c_list.sel = self.c_permadeath.previous
+	else
+		self:setDescriptor("permadeath", item.id)
 
 		self:generateRaces()
 		self:generateClasses()
@@ -361,6 +391,7 @@ function _M:updateDescriptors()
 	table.insert(self.descriptors, self.birth_descriptor_def.base[self.descriptors_by_type.base])
 	table.insert(self.descriptors, self.birth_descriptor_def.world[self.descriptors_by_type.world])
 	table.insert(self.descriptors, self.birth_descriptor_def.difficulty[self.descriptors_by_type.difficulty])
+	table.insert(self.descriptors, self.birth_descriptor_def.permadeath[self.descriptors_by_type.permadeath])
 	table.insert(self.descriptors, self.birth_descriptor_def.sex[self.descriptors_by_type.sex])
 	if self.descriptors_by_type.subrace then
 		table.insert(self.descriptors, self.birth_descriptor_def.race[self.descriptors_by_type.race])
@@ -473,6 +504,38 @@ function _M:generateDifficulties()
 		self.c_difficulty.c_list.list = self.all_difficulties
 		self.c_difficulty.c_list:generate()
 		if type(oldsel) == "number" then self.c_difficulty.c_list.sel = oldsel end
+	end
+end
+
+function _M:generatePermadeaths()
+	local locktext = "\n\n#GOLD#This is a locked birth option. Performing certain actions and completing certain quests will make locked campaigns, races and classes permanently available."
+	local list = {}
+
+	local oldsel = nil
+	if self.c_permadeath then
+		oldsel = self.c_permadeath.c_list.list[self.c_permadeath.c_list.sel].id
+	end
+
+	for i, d in ipairs(self.birth_descriptor_def.permadeath) do
+		if self:isDescriptorAllowed(d) then
+			local locked = self:getLock(d)
+			if locked == true then
+				list[#list+1] = { name = tstring{{"font", "italic"}, {"color", "GREY"}, "-- locked --", {"font", "normal"}}:toString(), id=d.name, locked=true, desc=d.locked_desc..locktext }
+			elseif locked == false then
+				local desc = d.desc
+				if type(desc) == "table" then desc = table.concat(d.desc, "\n") end
+				list[#list+1] = { name = tstring{d.display_name}:toString(), id=d.name, desc=desc }
+				if oldsel == d.name then oldsel = #list end
+				if d.selection_default then self.default_permadeath = d.name end
+			end
+		end
+	end
+
+	self.all_permadeaths = list
+	if self.c_permadeath then
+		self.c_permadeath.c_list.list = self.all_permadeaths
+		self.c_permadeath.c_list:generate()
+		if type(oldsel) == "number" then self.c_permadeath.c_list.sel = oldsel end
 	end
 end
 
@@ -634,6 +697,14 @@ function _M:loadPremade(pm)
 		for i, item in ipairs(self.all_difficulties) do if not item.locked and item.id == pm.descriptors.difficulty then
 			self:difficultyUse(item)
 			self.c_difficulty.c_list.sel = i
+			ok = ok + 1
+			break
+		end end
+
+		-- Permadeath
+		for i, item in ipairs(self.all_permadeaths) do if not item.locked and item.id == pm.descriptors.permadeath then
+			self:permadeathUse(item)
+			self.c_permadeath.c_list.sel = i
 			ok = ok + 1
 			break
 		end end

@@ -137,39 +137,15 @@ newBirthDescriptor{
 }
 newBirthDescriptor{
 	type = "difficulty",
-	name = "Exploration",
-	locked = function(birther) return birther:isDonator() or "hide" end,
-	locked_desc = "Exploration mode: Infinite lives (donator feature)",
-	desc =
-	{
-		"#GOLD##{bold}#Exploration mode#WHITE#",
-		"Provides the normal game experience but with infinite lives.#{normal}#",
-		"Infinite number of lives available.",
-		"This is not the way the game is meant to be played, but it allows you to have a more forgiving experience.",
-		"Remember though that dying is an integral part of the game and helps you become a better player.",
-	},
-	descriptor_choices =
-	{
-		race = { ["Tutorial Human"] = "forbid", },
-		class = { ["Tutorial Adventurer"] = "forbid", },
-	},
-	copy = {
-		__game_difficulty = 2,
-		infinite_lifes = 1,
-	},
-}
-newBirthDescriptor{
-	type = "difficulty",
 	name = "Easy",
-	display_name = "Discovery",
+	display_name = "Easier",
 	desc =
 	{
-		"#GOLD##{bold}#Discovery mode#WHITE#",
+		"#GOLD##{bold}#Easier mode#WHITE##{normal}#",
 		"Provides an easier game experience.",
-		"Use it if you feel uneasy tackling the harder modes.#{normal}#",
+		"Use it if you feel uneasy tackling the harder modes.",
 		"All damage done to the player decreased by 30%",
 		"All healing for the player increased by 30%",
-		"At level 1,2,3,5,7,10,14,18,24,30,40 get one more 'life' that allows to resurrect at the start of the level.",
 		"Achievements are not granted.",
 	},
 	descriptor_choices =
@@ -179,20 +155,16 @@ newBirthDescriptor{
 	},
 	copy = {
 		__game_difficulty = 1,
-		easy_mode_lifes = 1,
 	},
 }
 newBirthDescriptor{
 	type = "difficulty",
 	name = "Normal",
-	display_name = "Adventure",
 	selection_default = profile.mod.allow_build.tutorial_done,
 	desc =
 	{
-		"#GOLD##{bold}#Adventure mode#WHITE#",
-		"Provides the normal game experience but with limited extra lives.",
-		"Use it if you want normal playing conditions but do not feel ready for just one life.#{normal}#",
-		"At level 1,2,5,7,14,24,35 get one more 'life' that allows to resurrect at the start of the level.",
+		"#GOLD##{bold}#Adventure mode#WHITE##{normal}#",
+		"Provides the normal level of chalenges.",
 	},
 	descriptor_choices =
 	{
@@ -201,11 +173,63 @@ newBirthDescriptor{
 	},
 	copy = {
 		__game_difficulty = 2,
-		easy_mode_lifes = 1,
 	},
 }
 newBirthDescriptor{
 	type = "difficulty",
+	name = "Insane",
+	desc =
+	{
+		"#GOLD##{bold}#Insane mode#WHITE##{normal}#",
+		"Absolutely unfair game setting",
+		"All zone levels increased by 100% + 10",
+		"All creatures talent levels increased by 100%",
+		"Player rank is normal instead of elite",
+		"Player can earn Insane version of achievements if also playing in Roguelike permadeath mode.",
+	},
+	descriptor_choices =
+	{
+		race = { ["Tutorial Human"] = "forbid", },
+		class = { ["Tutorial Adventurer"] = "forbid", },
+	},
+	copy = { __game_difficulty = 4, rank=2 },
+}
+
+--------------- Permadeath
+newBirthDescriptor{
+	type = "permadeath",
+	name = "Exploration",
+	locked = function(birther) return birther:isDonator() or "hide" end,
+	locked_desc = "Exploration mode: Infinite lives (donator feature)",
+	desc =
+	{
+		"#GOLD##{bold}#Exploration mode#WHITE#",
+		"Provides you with infinite lives.#{normal}#",
+		"This is not the way the game is meant to be played, but it allows you to have a more forgiving experience.",
+		"Remember though that dying is an integral part of the game and helps you become a better player.",
+		"No achievements will be granted in this mode.",
+	},
+	copy = {
+		infinite_lifes = 1,
+	},
+}
+newBirthDescriptor{
+	type = "permadeath",
+	name = "Adventure",
+	selection_default = true,
+	desc =
+	{
+		"#GOLD##{bold}#Adventure mode#WHITE#",
+		"Provides you with limited extra lives.",
+		"Use it if you want normal playing conditions but do not feel ready for just one life.#{normal}#",
+		"At level 1,2,5,7,14,24,35 get one more 'life' that allows to resurrect at the start of the level.",
+	},
+	copy = {
+		easy_mode_lifes = 1,
+	},
+}
+newBirthDescriptor{
+	type = "permadeath",
 	name = "Roguelike",
 	desc =
 	{
@@ -214,32 +238,6 @@ newBirthDescriptor{
 		"You will only have one life; you *ARE* your character.#{normal}#",
 		"Only one life, unless ways to self-resurrect are found in-game.",
 	},
-	descriptor_choices =
-	{
-		race = { ["Tutorial Human"] = "forbid", },
-		class = { ["Tutorial Adventurer"] = "forbid", },
-	},
-	copy = { __game_difficulty = 3 },
-}
-newBirthDescriptor{
-	type = "difficulty",
-	name = "Insane",
-	desc =
-	{
-		"#GOLD##{bold}#Insane mode#WHITE#",
-		"The basic roguelike mode rules with added unfairness!#{normal}#",
-		"Absolutely unfair game setting",
-		"Only one life, unless ways to self-resurrect are found in-game.",
-		"All zone levels increased by 100% + 10",
-		"All creatures talent levels increased by 100%",
-		"Player rank is normal instead of elite",
-	},
-	descriptor_choices =
-	{
-		race = { ["Tutorial Human"] = "forbid", },
-		class = { ["Tutorial Adventurer"] = "forbid", },
-	},
-	copy = { __game_difficulty = 5, rank=2 },
 }
 
 

@@ -137,7 +137,7 @@ newBirthDescriptor{
 		"See how far you can go! Can you become the new Master of the Arena?",
 		"If so, you will battle your own champion next time!",
 	},
-	descriptor_choices = default_eyal_descriptors{ difficulty = { Tutorial = "never", Easy = "never", Normal = "never" } },
+	descriptor_choices = default_eyal_descriptors{ difficulty = { Tutorial = "never" }, permadeath = { Exploration = "never", Adventure = "never" } },
 	copy = {
 		death_dialog = "ArenaFinish",
 		-- Override normal stuff
