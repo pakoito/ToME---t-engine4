@@ -224,7 +224,7 @@ newTalent{
 				self:useEnergy()
 				self.duration = self.duration - 1
 				if self.duration <= 0 then
-					game.level.map:remove(self.x, self.y, engine.Map.TRAP)
+					if game.level.map(self.x, self.y, engine.Map.TRAP) == self then game.level.map:remove(self.x, self.y, engine.Map.TRAP) end
 					game.level:removeEntity(self)
 				end
 			end,

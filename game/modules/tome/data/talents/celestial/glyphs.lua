@@ -62,7 +62,7 @@ newTalent{
 				self:useEnergy()
 				self.temporary = self.temporary - 1
 				if self.temporary <= 0 then
-					game.level.map:remove(self.x, self.y, engine.Map.TRAP)
+					if game.level.map(self.x, self.y, engine.Map.TRAP) == self then game.level.map:remove(self.x, self.y, engine.Map.TRAP) end
 					game.level:removeEntity(self)
 				end
 			end,
@@ -133,7 +133,7 @@ newTalent{
 				self:useEnergy()
 				self.temporary = self.temporary - 1
 				if self.temporary <= 0 then
-					game.level.map:remove(self.x, self.y, engine.Map.TRAP)
+					if game.level.map(self.x, self.y, engine.Map.TRAP) == self then game.level.map:remove(self.x, self.y, engine.Map.TRAP) end
 					game.level:removeEntity(self)
 				end
 			end,
@@ -201,7 +201,7 @@ newTalent{
 				self:useEnergy()
 				self.temporary = self.temporary - 1
 				if self.temporary <= 0 then
-					game.level.map:remove(self.x, self.y, engine.Map.TRAP)
+					if game.level.map(self.x, self.y, engine.Map.TRAP) == self then game.level.map:remove(self.x, self.y, engine.Map.TRAP) end
 					game.level:removeEntity(self)
 				end
 			end,
@@ -268,7 +268,7 @@ newTalent{
 				self:useEnergy()
 				self.temporary = self.temporary - 1
 				if self.temporary <= 0 then
-					game.level.map:remove(self.x, self.y, engine.Map.TRAP)
+					if game.level.map(self.x, self.y, engine.Map.TRAP) == self then game.level.map:remove(self.x, self.y, engine.Map.TRAP) end
 					game.level:removeEntity(self)
 				end
 			end,

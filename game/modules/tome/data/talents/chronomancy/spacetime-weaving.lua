@@ -31,20 +31,20 @@ newTalent{
 	getPower = function(self, t) return math.floor(self:getWil()/2) end,
 	action = function(self, t)
 		-- open dialog to get desired paradox
-		local q = engine.dialogs.GetQuantity.new("Retuning the fabric of spacetime...", 
+		local q = engine.dialogs.GetQuantity.new("Retuning the fabric of spacetime...",
 		"What's your desired paradox level?", math.floor(self.paradox), nil, function(qty)
-			
+
 			-- get reduction amount and find duration
 			amount = qty - self.paradox
 			local dur = math.floor(math.abs(qty-self.paradox)/t.getPower(self, t))
-						
+
 			-- set tuning effect
 			if amount >= 0 then
 				self:setEffect(self.EFF_SPACETIME_TUNING, dur, {power = t.getPower(self, t)})
 			elseif amount < 0 then
 				self:setEffect(self.EFF_SPACETIME_TUNING, dur, {power = - t.getPower(self, t)})
 			end
-			
+
 		end)
 		game:registerDialog(q)
 		return true
@@ -66,14 +66,14 @@ newTalent{
 	cooldown = 24,
 	tactical = { PARADOX = 2 },
 	getReduction = function(self, t)
-		
+
 		--check for Paradox Mastery
 		if self:knowTalent(self.T_PARADOX_MASTERY) and self:isTalentActive(self.T_PARADOX_MASTERY) then
 			modifier = self:getWil() * (1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10) or 0 )
 		else
 			modifier = self:getWil()
 		end
-		
+
 		local reduction = (20 + (modifier * self:getTalentLevel(t)/2))
 		return reduction
 	end,
@@ -258,7 +258,7 @@ newTalent{
 				self.temporary = self.temporary - 1
 				if self.temporary <= 0 then
 					game.logSeen(self, "Reality asserts itself and forces the wormhole shut.")
-					game.level.map:remove(self.x, self.y, engine.Map.TRAP)
+					if game.level.map(self.x, self.y, engine.Map.TRAP) == self then game.level.map:remove(self.x, self.y, engine.Map.TRAP) end
 					game.level:removeEntity(self)
 				end
 			end,
