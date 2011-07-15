@@ -187,18 +187,18 @@ function _M:generateList()
 		end, 2))
 	end,}
 
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"How many seconds before log and chat lines begin to fade away.."}
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"How many seconds before log and chat lines begin to fade away.\nIf set to 0 the logs will never fade away."}
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Log fate time#WHITE##{normal}#", status=function(item)
-		return tostring(config.settings.tome.log_fade or 3)
+		return tostring(config.settings.tome.log_fade)
 	end, fct=function(item)
-		game:registerDialog(GetQuantity.new("Fade time (in seconds)", "From 2 to 20", config.settings.tome.log_fade or 3, 20, function(qty)
-			qty = util.bound(qty, 1, 20)
+		game:registerDialog(GetQuantity.new("Fade time (in seconds)", "From 2 to 20", config.settings.tome.log_fade, 20, function(qty)
+			qty = util.bound(qty, 0, 20)
 			game:saveSettings("tome.log_fade", ("tome.log_fade = %d\n"):format(qty))
 			config.settings.tome.log_fade = qty
-			game.logdisplay:enableFading(config.settings.tome.log_fade or 3)
-			profile.chat:enableFading(config.settings.tome.log_fade or 3)
+			game.logdisplay:enableFading(config.settings.tome.log_fade)
+			profile.chat:enableFading(config.settings.tome.log_fade)
 			self.c_list:drawItem(item)
-		end, 1))
+		end, 0))
 	end,}
 
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Configure the chat filters to select what kind of messages to see.#WHITE#"}

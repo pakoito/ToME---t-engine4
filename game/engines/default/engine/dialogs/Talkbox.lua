@@ -27,7 +27,8 @@ local Textzone = require "engine.ui.Textzone"
 
 module(..., package.seeall, class.inherit(Dialog))
 
-function _M:init(chat)
+function _M:init(chat, on_end)
+	self.on_end = on_end
 	self.chat = chat
 	self.min = 2
 	self.max = 300
@@ -120,6 +121,8 @@ function _M:okclick()
 		elseif type == "whisper" then
 			self.chat:whisper(name, text)
 		end
+
+		if self.on_end then self.on_end() end
 	end
 end
 

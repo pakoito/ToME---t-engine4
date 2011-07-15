@@ -196,10 +196,10 @@ function _M:achievement(name)
 end
 
 --- Request a line to send
-function _M:talkBox()
+function _M:talkBox(on_end)
 	if not profile.auth then return end
 	local Talkbox = require "engine.dialogs.Talkbox"
-	local d = Talkbox.new(self)
+	local d = Talkbox.new(self, on_end)
 	game:registerDialog(d)
 
 	self:updateChanList()
@@ -443,7 +443,7 @@ function _M:toScreen()
 		local item = self.dlist[i].item
 
 		local fade = 1
-		if self.fading then
+		if self.fading and self.fading > 0 then
 			fade = now - self.dlist[i].date
 			if fade < self.fading * 1000 then fade = 1
 			elseif fade < self.fading * 2000 then fade = (self.fading * 2000 - fade) / (self.fading * 1000)
