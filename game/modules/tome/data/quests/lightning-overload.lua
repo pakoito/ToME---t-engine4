@@ -90,7 +90,7 @@ create_entrance = function(self)
 	game:onLevelLoad("wilderness-1", function(zone, level)
 		local g = game.zone:makeEntityByName(level, "terrain", "TEMPEST_PEAK")
 		local spot = level:pickSpot{type="zone-pop", subtype="tempest-peak"}
-		game.zone:addEntity(level, p, "terrain", spot.x, spot.y)
+		game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 		game.nicer_tiles:updateAround(game.level, spot.x, spot.y)
 	end)
 	game.player:setQuestStatus(self.id, engine.Quest.COMPLETED, "tempest-entrance")
