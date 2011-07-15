@@ -562,7 +562,7 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:projectile(tg, x, y, DamageType.ARCANE, self:spellCrit(self:combatTalentSpellDamage(t, 15, 240)), {type="voidblast"})
+		self:projectile(tg, x, y, DamageType.VOID_BLAST, self:spellCrit(self:combatTalentSpellDamage(t, 15, 240)), {type="voidblast"})
 		game:playSoundNear(self, "talents/arcane")
 		return true
 	end,

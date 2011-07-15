@@ -74,7 +74,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 				game.logPlayer(src, "You strike in the darkness. (+%d damage)", damageIncrease)
 			end
 		end
-		
+
 		if src and src.knowTalent and src:knowTalent(src.T_DARK_VISION)
 				and src.x and src.y
 				and game.level.map:checkAllEntities(x, y, "creepingDark") then
@@ -1521,12 +1521,26 @@ newDamageType{
 		local realdam = DamageType:get(DamageType.ARCANE).projector(src, x, y, DamageType.ARCANE, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
+			if game.zone.void_blast_hits and game.party:hasMember(target) then game.zone.void_blast_hits = game.zone.void_blast_hits + 1 end
+
 			if target:knowTalent(target.T_MANA_POOL) then
 				target:setEffect(target.EFF_MANAWORM, 5, {power=dam * 5, src=src})
 				src:disappear(src)
 			else
 				game.logSeen(target, "%s is unaffected.", target.name:capitalize())
 			end
+		end
+		return realdam
+	end,
+}
+
+newDamageType{
+	name = "void blast", type = "VOID_BLAST",
+	projector = function(src, x, y, type, dam)
+		local realdam = DamageType:get(DamageType.ARCANE).projector(src, x, y, DamageType.ARCANE, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if game.zone.void_blast_hits and target and game.party:hasMember(target) then
+			game.zone.void_blast_hits = game.zone.void_blast_hits + 1
 		end
 		return realdam
 	end,

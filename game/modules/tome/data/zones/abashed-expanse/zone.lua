@@ -63,6 +63,7 @@ return {
 		},
 	},
 
+	void_blast_hits = 0,
 	next_move = 10,
 	teleport_zones = true,
 	-- Code for teleporting platforms
@@ -212,6 +213,11 @@ return {
 		end
 	end,
 --]]
+
+	on_leave = function(lev, old_lev, newzone)
+		if not newzone then return end
+		world:gainAchievement("ABASHED_EXPANSE_NO_BLAST", game.player, game.zone)
+	end,
 
 	post_process = function(level)
 		local Map = require "engine.Map"

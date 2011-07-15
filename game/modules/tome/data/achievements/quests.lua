@@ -246,3 +246,12 @@ newAchievement{
 	show = "name",
 	desc = [[Stabilized the Abashed Expanse to maintain it in orbit.]],
 }
+newAchievement{
+	name = "Matrix style!", id = "ABASHED_EXPANSE_NO_BLAST",
+	show = "full",
+	desc = [[Finished the whole Abashed Expanse zone without being hit by a single void blast or manaworm. Dodging's fun!]],
+	can_gain = function(self, who, zone)
+		if not who:isQuestStatus("start-archmage", engine.Quest.DONE) then return false end
+		if zone.void_blast_hits and zone.void_blast_hits == 0 then return true end
+	end,
+}
