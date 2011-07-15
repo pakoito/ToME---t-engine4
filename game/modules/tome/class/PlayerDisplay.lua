@@ -276,7 +276,7 @@ function _M:display()
 	if (player.unnatural_body_heal  or 0) > 0 and player:knowTalent(player.T_UNNATURAL_BODY) then
 		local t = player:getTalentFromId(player.T_UNNATURAL_BODY)
 		local regen = t.getRegenRate(player, t)
-		self:mouseTooltip(self.TOOLTIP_LIFE, self:makeTextureBar("#c00000#Blood:", nil, regen, player.unnatural_body_heal, -regen, x, h, 255, 255, 255, colors.DARK_RED, colors.VERY_DARK_RED)) h = h + self.font_h
+		self:mouseTooltip(self.TOOLTIP_UNNATURAL_BODY, self:makeTextureBar("#c00000#Un.body:", ("%0.1f (%0.1f/turn)"):format(player.unnatural_body_heal, math.min(regen, player.unnatural_body_heal)), regen, player.unnatural_body_heal, nil, x, h, 255, 255, 255, colors.DARK_RED, colors.VERY_DARK_RED)) h = h + self.font_h
 	end
 	if player:knowTalent(player.T_PARADOX_POOL) then
 		local _, chance = player:paradoxFailChance()

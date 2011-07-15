@@ -42,6 +42,10 @@ If it reaches below zero you die.
 Death is usually permanent so beware!
 It is increased by Constitution.]]
 
+TOOLTIP_UNNATURAL_BODY = [[#GOLD#Unnatrual Body Regeneration#LAST#
+Your Unnatural Body talent allows you to feed of the life of your fallen foes.
+Each time you kill a creature your maximun regeneration pool increases and each turn some of it transfers into your own life.]]
+
 TOOLTIP_LIFE_REGEN = [[#GOLD#Life Regeneration#LAST#
 How many life you regenerate per turn.
 This value can be improved with spells, talents, infusions, equipment.]]
