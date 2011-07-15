@@ -1119,9 +1119,11 @@ newDamageType{
 	name = "healing power", type = "HEALING_POWER",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
-		if target then
+		if target and not target.undead then
 			target:setEffect(target.EFF_EMPOWERED_HEALING, 1, {power=(dam/100)})
 			target:heal(dam, src)
+		elseif target then
+			DamageType:get(DamageType.LIGHT).projector(src, x, y, DamageType.LIGHT, dam)
 		end
 	end,
 }
