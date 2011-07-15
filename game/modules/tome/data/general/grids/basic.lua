@@ -354,6 +354,7 @@ newEntity{
 			local radius = game.level.map.attrs(x, y, "lever_radius") or 10
 			local val = game.level.map.attrs(x, y, "lever")
 			local kind = game.level.map.attrs(x, y, "lever_kind")
+			if type(kind) == "string" then kind = {[kind]=true} end
 			if self.lever then
 				self.color_r = colors.UMBER.r self.color_g = colors.UMBER.g self.color_b = colors.UMBER.b
 				self.add_mos[1].image = "terrain/lever1_state1.png"
@@ -369,7 +370,9 @@ newEntity{
 			core.fov.calc_circle(x, y, game.level.map.w, game.level.map.h, radius, function(_, i, j)
 				if block and game.level.map.attrs(i, j, block) then return true end
 			end, function(_, i, j)
-				if game.level.map.attrs(i, j, "lever_action_kind") == kind then
+				local akind = game.level.map.attrs(i, j, "lever_action_kind")
+				if type(akind) == "string" then akind = {[akind]=true} end
+				for k, _ in pairs(kind) do if akind[k] then
 					local old = game.level.map.attrs(i, j, "lever_action_value")
 					local newval = old + (self.lever and val or -val)
 					game.level.map.attrs(i, j, "lever_action_value", newval)
@@ -380,7 +383,7 @@ newEntity{
 					if fct and fct(i, j, e, newval, old) then
 						if game.level.map.attrs(i, j, "lever_action_only_once") then game.level.map.attrs(i, j, "lever_action_kind", false) end
 					end
-				end
+				end end
 			end, nil)
 		end
 		return true
