@@ -281,7 +281,7 @@ newEntity{
 			[DamageType.ARCANE] = resolvers.mbonus_material(10, 5),
 		},
 		fatigue = resolvers.mbonus_material(6, 4, function(e, v) return 0, v end),
-	},	
+	},
 }
 
 newEntity{
@@ -299,7 +299,7 @@ newEntity{
 		melee_project = {
 			[DamageType.NATURE] = resolvers.mbonus_material(10, 5),
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -322,7 +322,7 @@ newEntity{
 		melee_project = {
 			[DamageType.FIRE] = resolvers.mbonus_material(10, 5),
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -345,7 +345,7 @@ newEntity{
 		melee_project = {
 			[DamageType.LIGHTNING] = resolvers.mbonus_material(10, 5),
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -368,7 +368,7 @@ newEntity{
 		melee_project = {
 			[DamageType.ACID] = resolvers.mbonus_material(10, 5),
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -391,7 +391,7 @@ newEntity{
 		melee_project = {
 			[DamageType.COLD] = resolvers.mbonus_material(10, 5),
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -412,7 +412,7 @@ newEntity{
 		resource_leech_value = resolvers.mbonus_material(1, 1),
 		max_life = resolvers.mbonus_material(70, 40, function(e, v) return 0, -v end),
 		healing_factor = resolvers.mbonus_material(30, 20, function(e, v) v=v/100 return 0, -v end),
-	},	
+	},
 }
 
 newEntity{
@@ -426,7 +426,7 @@ newEntity{
 	use_talent = { id = Talents.T_DISPLACEMENT_SHIELD, level = 5, power = 80 },
 	wielder = {
 		combat_def = resolvers.mbonus_material(10, 5),
-	},	
+	},
 }
 
 newEntity{
@@ -440,7 +440,7 @@ newEntity{
 	use_talent = { id = Talents.T_EARTHEN_BARRIER, level = 5, power = 80 },
 	wielder = {
 		combat_armor = resolvers.mbonus_material(7, 3),
-	},	
+	},
 }
 
 newEntity{
@@ -457,7 +457,7 @@ newEntity{
 			[DamageType.LIGHT] = resolvers.mbonus_material(10, 5),
 			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 5),
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -476,7 +476,7 @@ newEntity{
 		melee_project = {
 			[DamageType.TEMPORAL] = resolvers.mbonus_material(7, 3),
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -490,9 +490,9 @@ newEntity{
 	use_talent = { id = Talents.T_WATERS_OF_LIFE, level = 4, power = 80 },
 	wielder = {
 		talents_types_mastery = {
-			["gifts/harmony"] = resolvers.mbonus_material(2, 2, function(e, v) v=v/10 return 0, v end),
+			["wild-gift/harmony"] = resolvers.mbonus_material(2, 2, function(e, v) v=v/10 return 0, v end),
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -508,5 +508,5 @@ newEntity{
 		inc_stats = {
 			[Stats.STAT_WIL] = resolvers.mbonus_material(5, 1),
 		},
-	},	
+	},
 }

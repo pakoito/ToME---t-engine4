@@ -271,9 +271,9 @@ newEntity{
 		stamina_regen = resolvers.mbonus_material(12, 3, function(e, v) v=v/10 return 0, -v end),
 		mana_regen = resolvers.mbonus_material(50, 10, function(e, v) v=v/100 return 0, -v end),
 		talents_types_mastery = {
-			["techniques/combat-training"] = resolvers.mbonus_material(2, 2, function(e, v) v=v/10 return 0, v end),
+			["technique/combat-training"] = resolvers.mbonus_material(2, 2, function(e, v) v=v/10 return 0, v end),
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -289,7 +289,7 @@ newEntity{
 		combat_mentalresist = resolvers.mbonus_material(4, 1),
 		combat_physresist = resolvers.mbonus_material(4, 1),
 		combat_spellresist = resolvers.mbonus_material(4, 1),
-	},	
+	},
 }
 
 newEntity{
@@ -308,7 +308,7 @@ newEntity{
 		combat_physresist = resolvers.mbonus_material(4, 1),
 		combat_spellresist = resolvers.mbonus_material(4, 1),
 		max_life = resolvers.mbonus_material(70, 40),
-	},	
+	},
 }
 
 newEntity{
@@ -325,7 +325,7 @@ newEntity{
 		},
 		combat_atk = resolvers.mbonus_material(7, 3),
 		combat_apr = resolvers.mbonus_material(7, 3),
-	},	
+	},
 }
 
 newEntity{
@@ -342,7 +342,7 @@ newEntity{
 		poison_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
 		resource_leech_chance = resolvers.mbonus_material(10, 5),
 		resource_leech_value = resolvers.mbonus_material(1, 1),
-	},	
+	},
 }
 
 newEntity{
@@ -358,7 +358,7 @@ newEntity{
 		combat_spellresist = resolvers.mbonus_material(10, 5),
 		combat_armor = resolvers.mbonus_material(7, 3),
 		combat_def = resolvers.mbonus_material(10, 5),
-	},	
+	},
 }
 
 newEntity{
@@ -372,7 +372,7 @@ newEntity{
 		max_mana = resolvers.mbonus_material(80, 20),
 		combat_spellpower = resolvers.mbonus_material(7, 3),
 		combat_spellcrit = resolvers.mbonus_material(3, 3),
-	},	
+	},
 }
 
 newEntity{
@@ -387,7 +387,7 @@ newEntity{
 		confusion_immune = resolvers.mbonus_material(15, 5, function(e, v) v=v/100 return 0, v end),
 		combat_physcrit = resolvers.mbonus_material(4, 1),
 		combat_dam = resolvers.mbonus_material(4, 1),
-	},	
+	},
 }
 
 newEntity{
@@ -402,7 +402,7 @@ newEntity{
 	wielder = {
 		max_life = resolvers.mbonus_material(70, 40),
 		fatigue = resolvers.mbonus_material(6, 4, function(e, v) return 0, -v end),
-	},	
+	},
 }
 
 newEntity{
@@ -417,5 +417,5 @@ newEntity{
 		combat_atk = resolvers.mbonus_material(10, 5),
 		combat_apr = resolvers.mbonus_material(10, 5),
 		inc_stealth = resolvers.mbonus_material(10, 5),
-	},	
+	},
 }
