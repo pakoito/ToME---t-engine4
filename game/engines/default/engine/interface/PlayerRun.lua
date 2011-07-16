@@ -63,19 +63,21 @@ function _M:runInit(dir)
 	}
 
 	-- Check sides
-	if checkDir(self, sides[dir].hard_left) then self.running.block_hard_left = true end
-	if checkDir(self, sides[dir].hard_right) then self.running.block_hard_right = true end
+	if sides[dir] then
+		if checkDir(self, sides[dir].hard_left) then self.running.block_hard_left = true end
+		if checkDir(self, sides[dir].hard_right) then self.running.block_hard_right = true end
 
-	if checkDir(self, sides[dir].soft_left) then
-		self.running.block_left = true
-	else
-		self.running.ignore_left = 2
-	end
+		if checkDir(self, sides[dir].soft_left) then
+			self.running.block_left = true
+		else
+			self.running.ignore_left = 2
+		end
 
-	if checkDir(self, sides[dir].soft_right) then
-		self.running.block_right = true
-	else
-		self.running.ignore_right = 2
+		if checkDir(self, sides[dir].soft_right) then
+			self.running.block_right = true
+		else
+			self.running.ignore_right = 2
+		end
 	end
 
 	self.running.dialog.__showup = nil
