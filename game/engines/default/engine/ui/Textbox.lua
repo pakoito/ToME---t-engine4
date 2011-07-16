@@ -136,6 +136,7 @@ function _M:setText(text)
 end
 
 function _M:updateText()
+	if not self.tmp[1] then self.tmp = {} end
 	self.text = table.concat(self.tmp)
 	local text = ""
 	for i = self.scroll, self.scroll + self.max_display - 1 do

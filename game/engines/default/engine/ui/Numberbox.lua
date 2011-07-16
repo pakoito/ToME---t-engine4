@@ -134,6 +134,7 @@ function _M:updateText(v)
 	local old = self.number
 	local text = ""
 	if not v then
+		if not self.tmp[1] then self.tmp = {} end
 		self.number = tonumber(table.concat(self.tmp)) or 0
 		self.number = util.bound(self.number, self.min, self.max)
 		for i = self.scroll, self.scroll + self.max_display - 1 do

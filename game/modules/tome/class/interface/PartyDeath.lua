@@ -35,7 +35,8 @@ function _M:onPartyDeath(src, death_note)
 	end
 
 	-- Die
-	mod.class.Actor.die(self, src)
+	death_note = death_note or {}
+	mod.class.Actor.die(self, src, death_note)
 
 	-- Was not the current player, just die
 	if game.player ~= self then return end
