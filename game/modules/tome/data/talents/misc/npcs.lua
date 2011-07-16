@@ -693,7 +693,8 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.BLINDING_INK, t.getDuration(self, t), {type="dark"})
+		self:project(tg, x, y, DamageType.BLINDING_INK, t.getDuration(self, t))
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "breath_dark", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/breath")
 		return true
 	end,

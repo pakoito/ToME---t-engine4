@@ -20,9 +20,15 @@
 -- Turn on LuaJIT if available
 pcall(require, "jit")
 if jit then
-	jit.on()
-	require("jit.opt").start(2)
+	local jit_on, err = pcall(jit.on)
+	if jit_on then
+		require("jit.opt").start(2)
+	else
+		jit.off()
+		print("Disabling JIT compiler because of:", err)
+	end
 	print("LuaVM:", jit.version, jit.arch)
+
 else
 	print("LuaVM:", _VERSION)
 end

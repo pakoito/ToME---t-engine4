@@ -420,7 +420,6 @@ function _M:setupDisplayMode(reboot, mode)
 			Map.tiles.nicer_tiles = true
 		elseif gfx.tiles == "oldrpg" then
 			Map.tiles.nicer_tiles = true
-			Map.tiles.no_moddable_tiles = true
 		elseif gfx.tiles == "customtiles" then
 			Map.tiles.no_moddable_tiles = not config.settings.tome.gfx.tiles_custom_moddable
 			Map.tiles.nicer_tiles = config.settings.tome.gfx.tiles_custom_adv
