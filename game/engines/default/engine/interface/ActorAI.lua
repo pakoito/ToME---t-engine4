@@ -87,6 +87,7 @@ end
 --- Move one step to the given target if possible
 -- This tries the most direct route, if not available it checks sides and always tries to get closer
 function _M:moveDirection(x, y)
+	if not self.x or not self.y then return false end
 	local l = line.new(self.x, self.y, x, y)
 	local lx, ly = l()
 	if lx and ly then
