@@ -2617,9 +2617,19 @@ function _M:canSee(actor, def, def_pct)
 	return res, chance
 end
 
+--- Reset our own seeing cache
 function _M:resetCanSeeCache()
 	self.can_see_cache = {}
 	setmetatable(self.can_see_cache, {__mode="k"})
+end
+
+--- Reset the cache of everything else that had see us on the level
+function _M:resetCanSeeCacheOf()
+	if not game.level then return end
+	for uid, e in pairs(game.level.entities) do
+		if e.can_see_cache and e.can_see_cache[self] then e.can_see_cache[self] = nil end
+	end
+	game.level.map:updateMap(self.x, self.y)
 end
 
 --- Does the actor have LOS to the target

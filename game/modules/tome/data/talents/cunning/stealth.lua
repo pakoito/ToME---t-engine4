@@ -55,14 +55,14 @@ newTalent{
 			lite = self:addTemporaryValue("lite", -1000),
 			infra = self:addTemporaryValue("infravision", 1),
 		}
-		game.level.map:updateMap(self.x, self.y)
+		self:resetCanSeeCacheOf()
 		return res
 	end,
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("stealth", p.stealth)
 		self:removeTemporaryValue("infravision", p.infra)
 		self:removeTemporaryValue("lite", p.lite)
-		game.level.map:updateMap(self.x, self.y)
+		self:resetCanSeeCacheOf()
 		return true
 	end,
 	info = function(self, t)

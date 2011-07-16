@@ -724,6 +724,7 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("invisible", eff.tmpid)
+		self:resetCanSeeCacheOf()
 	end,
 }
 
@@ -756,10 +757,17 @@ newEffect{
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("blind", 1)
 		eff.dur = self:updateEffectDuration(eff.dur, "blind")
+		if game.level then
+			self:resetCanSeeCache()
+			game.level.map:redisplay()
+		end
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("blind", eff.tmpid)
-		if game.level then game.level.map.changed = true end
+		if game.level then
+			self:resetCanSeeCache()
+			game.level.map:redisplay()
+		end
 	end,
 }
 

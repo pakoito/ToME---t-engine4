@@ -147,11 +147,13 @@ newTalent{
 	activate = function(self, t)
 		local timer = t.getEnergyConvert(self, t)
 		game:playSoundNear(self, "talents/heal")
-		return {
+		local ret = {
 			invisible = self:addTemporaryValue("invisible", t.getInvisibilityPower(self, t)),
 			fill = self:addTemporaryValue("positive_regen", timer),
 			drain = self:addTemporaryValue("negative_regen", - timer),
 		}
+		self:resetCanSeeCacheOf()
+		return ret
 	end,
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("invisible", p.invisible)
@@ -164,6 +166,7 @@ newTalent{
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "sunburst", {radius=tg.radius, grids=grids, tx=self.x, ty=self.y, max_alpha=80})
 		game:playSoundNear(self, "talents/flame")
 		self.positive = 0
+		self:resetCanSeeCacheOf()
 		return true
 	end,
 	info = function(self, t)

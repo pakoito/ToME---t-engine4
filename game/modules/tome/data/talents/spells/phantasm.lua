@@ -124,14 +124,17 @@ newTalent{
 	getInvisibilityPower = function(self, t) return self:combatTalentSpellDamage(t, 10, 50) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/heal")
-		return {
+		local ret = {
 			invisible = self:addTemporaryValue("invisible", t.getInvisibilityPower(self, t)),
 			drain = self:addTemporaryValue("mana_regen", -5),
 		}
+		self:resetCanSeeCacheOf()
+		return ret
 	end,
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("invisible", p.invisible)
 		self:removeTemporaryValue("mana_regen", p.drain)
+		self:resetCanSeeCacheOf()
 		return true
 	end,
 	info = function(self, t)
