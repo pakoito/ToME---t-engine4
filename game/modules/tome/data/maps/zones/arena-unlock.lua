@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-defineTile("#", "WALL")
+defineTile("#", "HARDWALL")
 defineTile("+", "LOCK")
 defineTile(":", "GRASS", nil, nil, nil, {no_teleport=true})
 defineTile(".", "SAND")
@@ -43,5 +43,4 @@ T#...#.....#...#:
 :#.............#:
 :#...#..:..#...#:
 :#######+#######:
-:::TT:T:::T::::::
-]]
+:::TT:T:::T::::::]]
