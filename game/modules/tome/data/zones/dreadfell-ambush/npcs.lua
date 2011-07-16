@@ -61,6 +61,7 @@ newEntity{ base="BASE_NPC_ORC", define_as = "UKRUK",
 
 	on_die = function(self, who)
 		world:gainAchievement("KILL_UKRUK", game.player)
-		game.player:resolveSource():hasQuest("staff-absorption"):killed_ukruk(game.player:resolveSource())
+		local q = game.player:resolveSource():hasQuest("staff-absorption")
+		if q then q:killed_ukruk(game.player:resolveSource()) end
 	end,
 }
