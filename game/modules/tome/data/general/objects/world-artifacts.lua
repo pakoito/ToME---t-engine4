@@ -1397,6 +1397,7 @@ newEntity{ base = "BASE_CLOTH_ARMOR",
 		combat_mentalresist = 15,
 		resists={[DamageType.FIRE] = 10, [DamageType.COLD] = 10},
 		on_melee_hit={[DamageType.ARCANE] = 15},
+		mana_regen = 1,
 	},
 }
 
