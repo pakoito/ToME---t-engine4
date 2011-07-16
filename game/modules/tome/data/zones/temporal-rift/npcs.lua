@@ -24,7 +24,7 @@ local Talents = require("engine.interface.ActorTalents")
 
 newEntity{ define_as = "BEN_CRUTHDAR_ABOMINATION",
 	type = "humanoid", subtype = "temporal", unique = true,
-	name = "Ben Cruthdar, the Abomination",
+	name = "Ben Cruthdar, the Abomination", image = "npc/humanoid_human_ben_cruthdar__the_cursed.png",
 	display = "p", color=colors.VIOLET,
 	desc = [[This crazed madman seems twisted and corrupted by temporal energy, his body shifting and phasing in and out of reality.]],
 	level_range = {15, nil}, exp_worth = 2,
