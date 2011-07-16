@@ -24,7 +24,7 @@ if jit then
 	if jit_on then
 		require("jit.opt").start(2)
 	else
-		jit.off()
+		pcall(jit.off)
 		print("Disabling JIT compiler because of:", err)
 	end
 	print("LuaVM:", jit.version, jit.arch)
