@@ -54,7 +54,7 @@ function _M:resolve(c, list, force)
 	res = (list or self.grid_list)[res]
 	if not res then return end
 	if res.force_clone then
---		res = res:clone()
+		res = res:clone()
 	end
 	res:resolve()
 	res:resolve(nil, true)
