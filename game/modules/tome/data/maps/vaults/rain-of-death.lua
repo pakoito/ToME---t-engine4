@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 -- Rain of Death
+setStatusAll{no_teleport=true}
 
 rotates = {"default", "90", "180", "270", "flipx", "flipy"}
 

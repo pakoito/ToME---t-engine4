@@ -196,6 +196,7 @@ newBirthDescriptor{
 }
 
 --------------- Permadeath
+--[[
 newBirthDescriptor{
 	type = "permadeath",
 	name = "Exploration",
@@ -213,6 +214,7 @@ newBirthDescriptor{
 		infinite_lifes = 1,
 	},
 }
+]]
 newBirthDescriptor{
 	type = "permadeath",
 	name = "Adventure",
