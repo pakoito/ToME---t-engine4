@@ -357,15 +357,19 @@ newTalent{
 		shadow:feed()
 		game.level.map:particleEmitter(x, y, 1, "teleport_in")
 
+		shadow.no_party_ai = true
+		shadow.unused_stats = 0
+		shadow.unused_talents = 0
+		shadow.unused_generics = 0
+		shadow.unused_talents_types = 0
+		shadow.no_points_on_levelup = true
+		if game.party:hasMember(self) then
+			shadow.remove_from_party_on_death = true
+			game.party:addMember(shadow, { control="no", type="summon", title="Summon"})
+		end
+
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
-	end,
-	removeAllShadows = function(self, t)
-		for _, e in pairs(game.level.entities) do
-			if e.summoner and e.summoner == self and e.subtype == "shadow" then
-				e:die()
-			end
-		end
 	end,
 	info = function(self, t)
 		local maxShadows = t.getMaxShadows(self, t)

@@ -126,12 +126,6 @@ function _M:onEnterLevelEnd(zone, level)
 end
 
 function _M:onLeaveLevel(zone, level)
-	-- clean up things that need to be removed before re-entering the level
-	if self:isTalentActive(self.T_CALL_SHADOWS) then
-		local t = self:getTalentFromId(self.T_CALL_SHADOWS)
-		t.removeAllShadows(self, t)
-	end
-
 	if self:hasEffect(self.EFF_FEED) then
 		self:removeEffect(self.EFF_FEED, true)
 	end
@@ -226,7 +220,7 @@ function _M:act()
 		self.tempeffect_def[self.EFF_FEED].updateFeed(self, self:hasEffect(self.EFF_FEED))
 	elseif self:hasEffect(self.EFF_FED_UPON) then
 		local fed_upon_eff = self:hasEffect(self.EFF_FED_UPON)
-		
+
 		fed_upon_eff.src.tempeffect_def[fed_upon_eff.src.EFF_FEED].updateFeed(fed_upon_eff.src, fed_upon_eff.src:hasEffect(self.EFF_FEED))
 	end
 

@@ -27,7 +27,7 @@ function _M:init(t, no_default)
 	mod.class.NPC.init(self, t, no_default)
 
 	-- Set correct AI
-	if self.ai ~= "party_member" then
+	if self.ai ~= "party_member" and not self.no_party_ai then
 		self.ai_state.ai_party = self.ai
 		self.ai = "party_member"
 	end
