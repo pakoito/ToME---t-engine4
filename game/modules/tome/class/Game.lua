@@ -1147,7 +1147,7 @@ function _M:setupCommands()
 				local stop = {}
 				for eff_id, p in pairs(self.player.tmp) do
 					local e = self.player.tempeffect_def[eff_id]
-					if e.status == "detrimental" then stop[#stop+1] = e.desc end
+					if e.status == "detrimental" and not e.no_stop_enter_worlmap then stop[#stop+1] = e.desc end
 				end
 
 				if e.change_zone and #stop > 0 and e.change_zone:find("^wilderness") then

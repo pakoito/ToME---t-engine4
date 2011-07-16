@@ -30,6 +30,7 @@ newEffect{
 	long_desc = function(self, eff) return ("The more you use infusions, the longer they will take to recharge (+%d cooldowns)."):format(eff.power) end,
 	type = "infusion",
 	status = "detrimental",
+	no_stop_enter_worlmap = true,
 	parameters = { power=1 },
 	on_merge = function(self, old_eff, new_eff)
 		old_eff.dur = new_eff.dur
@@ -44,6 +45,7 @@ newEffect{
 	long_desc = function(self, eff) return ("The more you use runes, the longer they will take to recharge (+%d cooldowns)."):format(eff.power) end,
 	type = "rune",
 	status = "detrimental",
+	no_stop_enter_worlmap = true,
 	parameters = { power=1 },
 	on_merge = function(self, old_eff, new_eff)
 		old_eff.dur = new_eff.dur
@@ -58,6 +60,7 @@ newEffect{
 	long_desc = function(self, eff) return ("The more you use taints, the longer they will take to recharge (+%d cooldowns)."):format(eff.power) end,
 	type = "taint",
 	status = "detrimental",
+	no_stop_enter_worlmap = true,
 	parameters = { power=1 },
 	on_merge = function(self, old_eff, new_eff)
 		old_eff.dur = new_eff.dur
