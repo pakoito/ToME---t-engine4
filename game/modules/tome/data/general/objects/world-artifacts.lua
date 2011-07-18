@@ -788,7 +788,7 @@ newEntity{
 newEntity{ base = "BASE_HELM",
 	power_source = {technique=true},
 	unique = true,
-	name = "Helm of the Dwarven Emporors",
+	name = "Helm of the Dwarven Emperors",
 	unided_name = "shining helm",
 	desc = [[A Dwarven helm embedded with a single diamond that can banish all underground shadows.]],
 	level_range = {20, 28},
