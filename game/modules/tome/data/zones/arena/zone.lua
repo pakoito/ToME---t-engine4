@@ -258,7 +258,7 @@ return {
 				return ranks[rank]
 			end,
 			updateScores = function(l)
-				local scores = world.arena.scores
+				local scores = world.arena.scores or {}
 				table.insert(scores, l)
 				table.sort(scores, function(a,b) return a.score > b.score end)
 				if #scores > 10 then table.remove(scores) end
