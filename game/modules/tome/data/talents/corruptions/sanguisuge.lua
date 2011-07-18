@@ -39,6 +39,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Fires a bolt of blight, doing %0.2f blight damage and replenishing 20%% of it as vim energy.
+		The amount of vim regained depends on the target's rank (higher rank give more vim).
 		The effect will increase with your Magic stat.]]):
 		format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 25, 200)))
 	end,
@@ -50,11 +51,11 @@ newTalent{
 	require = corrs_req2,
 	points = 5,
 	vim = 0,
-	cooldown = 20,
+	cooldown = 30,
 	range = 10,
 	tactical = { VIM = 1 },
 	action = function(self, t)
-		local amount = self.max_life * 0.4
+		local amount = self.life * 0.4
 		if self.life <= amount + 1 then
 			game.logPlayer(self, "Doing this would kill you.")
 			return
@@ -79,7 +80,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Sacrifices 40%% of your life to restore %d vim.
+		return ([[Sacrifices 40%% of your current life to restore %d vim.
 		This only works if there is at least one foe in sight.
 		The effect will increase with your Magic stat.]]):
 		format(30 + self:combatTalentSpellDamage(t, 5, 150))

@@ -764,6 +764,17 @@ function _M:getRankLevelAdjust()
 	end
 end
 
+function _M:getRankVimAdjust()
+	if self.rank == 1 then return 0.7
+	elseif self.rank == 2 then return 1
+	elseif self.rank == 3 then return 1.2
+	elseif self.rank == 3.5 then return 2.2
+	elseif self.rank == 4 then return 2.6
+	elseif self.rank >= 5 then return 2.8
+	else return 0
+	end
+end
+
 function _M:getRankLifeAdjust(value)
 	local level_adjust = 1 + self.level / 40
 	if self.rank == 1 then return value * (level_adjust - 0.2)

@@ -1059,7 +1059,9 @@ newDamageType{
 		if _G.type(dam) == "number" then dam = {dam=dam, vim=0.2} end
 		local realdam = DamageType:get(DamageType.BLIGHT).projector(src, x, y, DamageType.BLIGHT, dam.dam)
 		local target = game.level.map(x, y, Map.ACTOR)
-		if target and target ~= src and realdam > 0 then src:incVim(realdam * dam.vim) end
+		if target and target ~= src and realdam > 0 then
+			src:incVim(realdam * dam.vim * target:getRankVimAdjust())
+		end
 	end,
 }
 
