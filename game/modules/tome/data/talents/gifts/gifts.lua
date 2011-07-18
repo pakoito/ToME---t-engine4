@@ -99,6 +99,7 @@ function setupSummon(self, m, x, y, no_control)
 	local main_weapon = self:getInven("MAINHAND") and self:getInven("MAINHAND")[1]
 	m:attr("combat_apr", self:combatAPR(main_weapon))
 	m.inc_damage = table.clone(self.inc_damage, true)
+	m.resists_pen = table.clone(self.resists_pen, true)
 	m:attr("stun_immune", self:attr("stun_immune"))
 	m:attr("blind_immune", self:attr("blind_immune"))
 	m:attr("pin_immune", self:attr("pin_immune"))
