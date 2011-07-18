@@ -484,13 +484,15 @@ function _M:restCheck()
 	if spotted then return false, ("hostile spotted (%s%s)"):format(spotted.actor.name, game.level.map:isOnScreen(spotted.x, spotted.y) and "" or " - offscreen") end
 
 	-- Resting improves regen
-	local perc = math.min(self.resting.cnt / 10, 4)
-	local old_shield = self.arcane_shield
-	self.arcane_shield = nil
-	self:heal(self.life_regen * perc)
-	self.arcane_shield = old_shield
-	self:incStamina(self.stamina_regen * perc)
-	self:incMana(self.mana_regen * perc)
+	for act, def in pairs(game.party.members) do if game.level:hasEntity(act) and not act.dead then
+		local perc = math.min(self.resting.cnt / 10, 4)
+		local old_shield = act.arcane_shield
+		act.arcane_shield = nil
+		act:heal(act.life_regen * perc)
+		act.arcane_shield = old_shield
+		act:incStamina(act.stamina_regen * perc)
+		act:incMana(act.mana_regen * perc)
+	end end
 
 	-- Check resources, make sure they CAN go up, otherwise we will never stop
 	if not self.resting.rest_turns then
@@ -499,7 +501,9 @@ function _M:restCheck()
 		if self:getMana() < self:getMaxMana() and self.mana_regen > 0 then return true end
 		if self:getStamina() < self:getMaxStamina() and self.stamina_regen > 0 then return true end
 		if self.life < self.max_life and self.life_regen> 0 then return true end
-		if self.alchemy_golem and game.level:hasEntity(self.alchemy_golem) and self.alchemy_golem.life_regen > 0 and not self.alchemy_golem.dead and self.alchemy_golem.life < self.alchemy_golem.max_life then return true end
+		for act, def in pairs(game.party.members) do if game.level:hasEntity(act) and not act.dead then
+			if act.life < act.max_life and act.life_regen> 0 then return true end
+		end end
 	else
 		return true
 	end
