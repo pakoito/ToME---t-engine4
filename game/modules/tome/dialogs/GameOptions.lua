@@ -188,7 +188,7 @@ function _M:generateList()
 	end,}
 
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"How many seconds before log and chat lines begin to fade away.\nIf set to 0 the logs will never fade away."}
-	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Log fate time#WHITE##{normal}#", status=function(item)
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Log fade time#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.tome.log_fade)
 	end, fct=function(item)
 		game:registerDialog(GetQuantity.new("Fade time (in seconds)", "From 2 to 20", config.settings.tome.log_fade, 20, function(qty)

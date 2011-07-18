@@ -443,7 +443,7 @@ newEntity{
 	name = "Blood of Life",
 	unided_name = "bloody phial",
 	level_range = {1, 50},
-	display = '!', color=colors.VIOLET, image="object/potion-0x3-violet.png",
+	display = '!', color=colors.VIOLET, image="object/potion-0x3.png",
 	encumber = 0.4,
 	rarity = 350,
 	desc = [[The Blood of Life! It can let a living being resurrect in case of an untimely demise. But only once!]],

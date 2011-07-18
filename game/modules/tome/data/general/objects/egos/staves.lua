@@ -339,11 +339,11 @@ newEntity{
 			[DamageType.COLD] = resolvers.mbonus_material(10, 5),
 			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 5),
 		},
-		resists_pen = { 
+		resists_pen = {
 			[DamageType.COLD] = resolvers.mbonus_material(10, 5),
 			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 5),
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -356,7 +356,7 @@ newEntity{
 	wielder = {
 		max_mana = resolvers.mbonus_material(100, 20),
 		combat_spellpower = resolvers.mbonus_material(20, 5),
-	},	
+	},
 }
 
 newEntity{
@@ -374,7 +374,7 @@ newEntity{
 		on_melee_hit = {
 			[DamageType.ICE] = resolvers.mbonus_material(10, 5),
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -390,7 +390,7 @@ newEntity{
 		},
 		mana_regen = resolvers.mbonus_material(50, 10, function(e, v) v=v/100 return 0, v end),
 		combat_spellpower = resolvers.mbonus_material(12, 3),
-	},	
+	},
 }
 
 newEntity{
@@ -410,7 +410,7 @@ newEntity{
 			[DamageType.FIRE] = resolvers.mbonus_material(10, 5),
 			[DamageType.COLD] = resolvers.mbonus_material(10, 5),
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -426,10 +426,10 @@ newEntity{
 		inc_damage = {
 			[DamageType.FIRE] = resolvers.mbonus_material(20, 5),
 		},
-		resists_pen = { 
+		resists_pen = {
 			[DamageType.FIRE] = resolvers.mbonus_material(20, 5),
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -446,22 +446,7 @@ newEntity{
 		inc_damage = {
 			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 5),
 		},
-	},	
-}
-
-newEntity{
-	power_source = {nature=true},
-	name = " of growth", suffix=true, instant_resolve=true,
-	level_range = {1, 50},
-	greater_ego = 1,
-	rarity = 15,
-	cost = 40,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_STONE_VINES, level = 3, power = 80 },
-	wielder = {
-		max_life = resolvers.mbonus_material(70, 40),
-		combat_spellpower = resolvers.mbonus_material(12, 3),
-	},	
+	},
 }
 
 newEntity{
@@ -472,14 +457,14 @@ newEntity{
 	rarity = 15,
 	cost = 30,
 	max_power = 20, power_regen = 1,
-	use_talent = { id = Talents.T_CORRUPTED_NEGATION, level = 4, power = 15 },
+	use_talent = { id = Talents.T_CORRUPTED_NEGATION, level = 2, power = 15 },
 	wielder = {
 		combat_spellpower = resolvers.mbonus_material(12, 3),
 		inc_damage = {
 			[DamageType.BLIGHT] = resolvers.mbonus_material(10, 5),
 			[DamageType.POISON] = resolvers.mbonus_material(10, 5),
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -493,8 +478,8 @@ newEntity{
 	use_talent = { id = Talents.T_CHAIN_LIGHTNING, level = 5, power = 60 },
 	wielder = {
 		combat_spellpower = resolvers.mbonus_material(12, 3),
-		resists_pen = { 
+		resists_pen = {
 			[DamageType.LIGHTNING] = resolvers.mbonus_material(25, 5),
 		},
-	},	
+	},
 }
