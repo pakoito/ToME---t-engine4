@@ -1031,11 +1031,7 @@ function _M:setupCommands()
 			end end
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			for uid, e in pairs(self.level.entities) do
-				if e.level and e.level >= 10 then
-					print("========WARNING", e.x, e.y, e.name, e.level)
-				end
-			end
+			self.player:setEffect(self.player.EFF_BLINDED, 10, {})
 		end end,
 	}
 

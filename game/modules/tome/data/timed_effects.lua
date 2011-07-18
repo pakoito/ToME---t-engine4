@@ -762,14 +762,14 @@ newEffect{
 		eff.dur = self:updateEffectDuration(eff.dur, "blind")
 		if game.level then
 			self:resetCanSeeCache()
-			game.level.map:redisplay()
+			if self.player then for uid, e in pairs(game.level.entities) do if e.x then game.level.map:updateMap(e.x, e.y) end end game.level.map.changed = true end
 		end
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("blind", eff.tmpid)
 		if game.level then
 			self:resetCanSeeCache()
-			game.level.map:redisplay()
+			if self.player then for uid, e in pairs(game.level.entities) do if e.x then game.level.map:updateMap(e.x, e.y) end end game.level.map.changed = true end
 		end
 	end,
 }
