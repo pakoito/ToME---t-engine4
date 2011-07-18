@@ -364,25 +364,27 @@ function _M:runScan(fct)
 		local x, y = self.x + dx, self.y + dy
 		fct(x, y, "ahead")
 
-		-- Ahead left
-		local dx, dy = dir_to_coord[sides[self.running.dir].soft_left][1], dir_to_coord[sides[self.running.dir].soft_left][2]
-		local x, y = self.x + dx, self.y + dy
-		fct(x, y, "ahead left")
+		if sides[self.running.dir] then
+			-- Ahead left
+			local dx, dy = dir_to_coord[sides[self.running.dir].soft_left][1], dir_to_coord[sides[self.running.dir].soft_left][2]
+			local x, y = self.x + dx, self.y + dy
+			fct(x, y, "ahead left")
 
-		-- Ahead right
-		local dx, dy = dir_to_coord[sides[self.running.dir].soft_right][1], dir_to_coord[sides[self.running.dir].soft_right][2]
-		local x, y = self.x + dx, self.y + dy
-		fct(x, y, "ahead right")
+			-- Ahead right
+			local dx, dy = dir_to_coord[sides[self.running.dir].soft_right][1], dir_to_coord[sides[self.running.dir].soft_right][2]
+			local x, y = self.x + dx, self.y + dy
+			fct(x, y, "ahead right")
 
-		-- Left
-		local dx, dy = dir_to_coord[sides[self.running.dir].hard_left][1], dir_to_coord[sides[self.running.dir].hard_left][2]
-		local x, y = self.x + dx, self.y + dy
-		fct(x, y, "left")
+			-- Left
+			local dx, dy = dir_to_coord[sides[self.running.dir].hard_left][1], dir_to_coord[sides[self.running.dir].hard_left][2]
+			local x, y = self.x + dx, self.y + dy
+			fct(x, y, "left")
 
-		-- Right
-		local dx, dy = dir_to_coord[sides[self.running.dir].hard_right][1], dir_to_coord[sides[self.running.dir].hard_right][2]
-		local x, y = self.x + dx, self.y + dy
-		fct(x, y, "right")
+			-- Right
+			local dx, dy = dir_to_coord[sides[self.running.dir].hard_right][1], dir_to_coord[sides[self.running.dir].hard_right][2]
+			local x, y = self.x + dx, self.y + dy
+			fct(x, y, "right")
+		end
 
 	elseif self.running.path[self.running.cnt] then
 		-- Ahead
