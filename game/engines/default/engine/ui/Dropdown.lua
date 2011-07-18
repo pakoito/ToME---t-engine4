@@ -93,6 +93,8 @@ function _M:display(x, y, nb_keyframes)
 	end
 
 	local item = self.c_list.list[self.c_list.sel]
-	if self.text_shadow then item._tex[1]:toScreenFull(x+1 + self.frame_sel.b4.w, y+1, self.c_list.fw, self.c_list.fh, item._tex[2], item._tex[3], 0, 0, 0, self.text_shadow) end
-	item._tex[1]:toScreenFull(x + self.frame_sel.b4.w, y, self.c_list.fw, self.c_list.fh, item._tex[2], item._tex[3])
+	if item then
+		if self.text_shadow then item._tex[1]:toScreenFull(x+1 + self.frame_sel.b4.w, y+1, self.c_list.fw, self.c_list.fh, item._tex[2], item._tex[3], 0, 0, 0, self.text_shadow) end
+		item._tex[1]:toScreenFull(x + self.frame_sel.b4.w, y, self.c_list.fw, self.c_list.fh, item._tex[2], item._tex[3])
+	end
 end

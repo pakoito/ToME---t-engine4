@@ -617,7 +617,7 @@ end
 -- @param what property to check
 -- @return the number of times the property returned a non false value
 function _M:checkAllEntitiesCount(x, y, what, ...)
-	if not x or not y or x < 0 or x >= self.w or y < 0 or y >= self.h then return {} end
+	if not x or not y or x < 0 or x >= self.w or y < 0 or y >= self.h then return 0 end
 	local ret = {}
 	local tile = self.map[x + y * self.w]
 	local nb = 0
