@@ -79,6 +79,7 @@ end
 --- Set the tooltip text
 function _M:set(str, ...)
 	if type(str) == "string" then str = str:format(...):toTString() end
+	if type(str) == "number" then str = tostring(str):toTString() end
 
 	if str.is_tstring then
 		self:erase()
