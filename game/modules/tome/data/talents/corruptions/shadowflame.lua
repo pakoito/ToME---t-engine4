@@ -265,6 +265,11 @@ newTalent{
 				end
 			end
 
+			-- Remove all npcs in the fearscape
+			for uid, e in pairs(oldlevel.entities) do
+				if e ~= self and e ~= p.target then e:die() end
+			end
+
 			-- Reload MOs
 			game.level.map:redisplay()
 
