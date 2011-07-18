@@ -61,7 +61,7 @@ newTalent{
 				local a = game.level.map(x, y, engine.Map.ACTOR)
 				if not a or self:reactionToward(a) >= 0 then return end
 				a:setTarget(game.player)
-				a:setEffect(a.EFF_VIMSENSE, 2, {power=self:combatTalentSpellDamage(t, 10, 45)})
+				a:setEffect(a.EFF_VIMSENSE, 2, {power=self:combatTalentSpellDamage(self.T_VIMSENSE, 10, 45)})
 			end,
 		})
 		game:playSoundNear(self, "talents/spell_generic")
