@@ -55,7 +55,7 @@ newTalent{
 	range = 10,
 	tactical = { VIM = 1 },
 	action = function(self, t)
-		local amount = self.life * 0.4
+		local amount = self.life * 0.5
 		if self.life <= amount + 1 then
 			game.logPlayer(self, "Doing this would kill you.")
 			return
@@ -80,7 +80,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Sacrifices 40%% of your current life to restore %d vim.
+		return ([[Sacrifices 50%% of your current life to restore %d vim.
 		This only works if there is at least one foe in sight.
 		The effect will increase with your Magic stat.]]):
 		format(30 + self:combatTalentSpellDamage(t, 5, 150))
