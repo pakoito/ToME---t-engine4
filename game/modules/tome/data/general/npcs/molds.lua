@@ -107,5 +107,7 @@ newEntity{ base = "BASE_NPC_MOLD",
 		[Talents.T_DECREPITUDE_DISEASE]=5,
 		[Talents.T_WEAKNESS_DISEASE]=5,
 		[Talents.T_GRAB]=5,
-	}
+	},
+
+	on_death_lore = "zquikzshl",
 }

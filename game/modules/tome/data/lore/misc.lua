@@ -439,3 +439,24 @@ Running man, running man
 Now's the time to choose
 Running man, running man
 Your honour or your shoes!]] }
+
+
+--------------------------------------------------------------
+-- Misc bosses
+--------------------------------------------------------------
+
+newLore{
+	id = "zquikzshl",
+	category = "boss",
+	name = "Z'quikzshl",
+	lore = [[#{italic}#(The handwriting of this diary entry is poor at best. Whoever wrote this was in poor health.)
+
+#{bold}#53rd Allure, Year 603 of the Age of Pyre#{normal}#
+
+I have done it! My fool of a master said I was not ready for the rites of lichdom, that I would attract undue attention... what utter idiocy. Already I can feel the transformation taking place, and I am certain that this weakness will only be momentary. My master was foolish to leave the Grimoire of Mortality Transcended open and unattended! All I needed was a bone from a magical creature, and as luck would have it, I had found a skeletal corpse of a dragon not far from our tower. The other ingredients were trivial and in possession of my master... surely he will be astounded that I, Zilquick the Eternal, will have transcended mortality!
+
+(Another entry is written beneath this one, in a much more elegant and controlled script.)
+
+Zilquick the Eternal, hah! What an unbearable buffoon, and I am glad his pride was his undoing. The young fool used up the Ruby of Eldoral in creating his phylactery, however; I must acquire a new phylactery for myself. On the bright side, my incompetent apprentice did illustrate why a bone from a creature slain by my own hand is important: the dragon bone he chose had left to fester a mold infection, and the mold somehow infused itself with the bone's inherent magical properties, altering the magical composition of the spell. I do hope whoever finds this note shall kill this "lich" using the most painful means available, and shall deposit him someplace where he is sure to be found.
+Oh, look. He is trying to harm me with spells, but all he can manage is a corruption of his own name: Z'quikzshl.]]
+}

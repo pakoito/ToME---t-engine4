@@ -1367,6 +1367,8 @@ function _M:die(src)
 		game.state:bossKilled(self.rank)
 	end
 
+	if self.on_death_lore then game.player:learnLore(self.on_death_lore) end
+
 	-- Do we get a blooooooody death ?
 	if rng.percent(33) then self:bloodyDeath() end
 
