@@ -340,7 +340,7 @@ function _M:resize(x, y, w, h, fontname, fontsize, color, bgcolor)
 	self.mouse:registerZone(0, 0, self.w, self.h, function(button, x, y, xrel, yrel, bx, by, event)
 		if button == "wheelup" then self:scrollUp(1)
 		elseif button == "wheeldown" then self:scrollUp(-1)
-		elseif event == "button" and button == "left" and y <= self.frame.h then
+		elseif event == "button" and button == "left" and y <= self.frame.h and self.do_display_chans then
 			local w = 0
 			local last_ok = nil
 			for i = 1, #self.display_chans do
