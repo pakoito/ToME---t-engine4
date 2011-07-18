@@ -1484,7 +1484,12 @@ function _M:saveGame()
 	-- savefile_pipe is created as a global by the engine
 	savefile_pipe:push(self.save_name, "game", self)
 	world:saveWorld()
-	if not self.creating_player then game.player:saveUUID() end
+	if not self.creating_player then
+		local oldplayer = self.player
+		self.party:setPlayer(self:getPlayer(true), true)
+		self.player:saveUUID()
+		self.party:setPlayer(oldplayer, true)
+	end
 	self.log("Saving game...")
 end
 
