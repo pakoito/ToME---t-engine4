@@ -122,7 +122,7 @@ newEntity{
 	power_source = {nature=true},
 	name = " of the depths", suffix=true,
 	level_range = {15, 50},
-	rarity = 7,
+	rarity = 10,
 	cost = 10,
 	wielder = {
 		can_breath = {water=1},
@@ -338,7 +338,7 @@ newEntity{
 			[Stats.STAT_CUN] = resolvers.mbonus_material(4, 1),
 		},
 		life_regen = resolvers.mbonus_material(30, 5, function(e, v) v=v/10 return 0, v end),
-	},	
+	},
 }
 
 newEntity{
@@ -355,7 +355,7 @@ newEntity{
 		blind_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
 		confusion_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
 		combat_mentalresist = resolvers.mbonus_material(7, 3),
-	},	
+	},
 }
 
 newEntity{
@@ -372,7 +372,7 @@ newEntity{
 		},
 		confusion_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
 		lite = resolvers.mbonus_material(1, 1),
-	},	
+	},
 }
 
 newEntity{
@@ -390,7 +390,7 @@ newEntity{
 		disease_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
 		max_life = resolvers.mbonus_material(70, 40),
 		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, v end),
-	},	
+	},
 }
 
 newEntity{
@@ -408,7 +408,7 @@ newEntity{
 			[Stats.STAT_DEX] = resolvers.mbonus_material(7, 3),
 		},
 		infravision = resolvers.mbonus_material(3, 1),
-	},	
+	},
 }
 
 newEntity{
@@ -430,7 +430,7 @@ newEntity{
 			[DamageType.ARCANE] = resolvers.mbonus_material(15, 5),
 		},
 		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, -v end),
-	},	
+	},
 }
 
 newEntity{
@@ -446,7 +446,7 @@ newEntity{
 		},
 		combat_physcrit = resolvers.mbonus_material(4, 1),
 		combat_spellcrit = resolvers.mbonus_material(4, 1),
-	},	
+	},
 }
 
 newEntity{
@@ -464,7 +464,7 @@ newEntity{
 			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 5),
 		},
 		confusion_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
-	},	
+	},
 }
 
 newEntity{
@@ -482,7 +482,7 @@ newEntity{
 		},
 		combat_mentalresist = resolvers.mbonus_material(7, 3),
 		combat_physresist = resolvers.mbonus_material(7, 3),
-	},	
+	},
 }
 
 newEntity{
@@ -498,5 +498,5 @@ newEntity{
 		},
 		resource_leech_chance = resolvers.mbonus_material(10, 5),
 		resource_leech_value = resolvers.mbonus_material(1, 1),
-	},	
+	},
 }

@@ -339,7 +339,7 @@ newEntity{
 		},
 		disarm_immune = resolvers.mbonus_material(25, 15, function(e, v) v=v/100 return 0, v end),
 		combat_physresist = resolvers.mbonus_material(15, 5),
-	},	
+	},
 }
 
 newEntity{
@@ -357,7 +357,7 @@ newEntity{
 		disease_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
 		life_regen = resolvers.mbonus_material(30, 5, function(e, v) v=v/10 return 0, v end),
 		fatigue = resolvers.mbonus_material(6, 4, function(e, v) return 0, -v end),
-	},	
+	},
 }
 
 newEntity{
@@ -375,7 +375,7 @@ newEntity{
 		combat_physcrit = resolvers.mbonus_material(5, 1),
 		combat_spellcrit = resolvers.mbonus_material(5, 1),
 		combat_atk = resolvers.mbonus_material(10, 5),
-	},	
+	},
 }
 
 newEntity{
@@ -393,7 +393,7 @@ newEntity{
 		confusion_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
 		combat_mentalresist = resolvers.mbonus_material(10, 5),
 		combat_spellresist = resolvers.mbonus_material(10, 5),
-	},	
+	},
 }
 
 newEntity{
@@ -408,11 +408,11 @@ newEntity{
 	wielder = {
 		max_life = resolvers.mbonus_material(60, 40, function(e, v) return 0, -v end),
 		combat_armor = resolvers.mbonus_material(7, 3, function(e, v) return 0, -v end),
-		
+
 		combat_physcrit = resolvers.mbonus_material(7, 3),
 		combat_apr = resolvers.mbonus_material(15, 5),
 		combat_def = resolvers.mbonus_material(10, 5),
-	},	
+	},
 }
 
 newEntity{
@@ -429,7 +429,7 @@ newEntity{
 		combat_mentalresist = resolvers.mbonus_material(10, 5),
 		combat_armor = resolvers.mbonus_material(7, 3),
 		combat_def = resolvers.mbonus_material(10, 5),
-	},	
+	},
 }
 
 newEntity{
@@ -446,7 +446,7 @@ newEntity{
 			[Stats.STAT_STR] = resolvers.mbonus_material(6, 4),
 		},
 		lite = resolvers.mbonus_material(1, 1),
-	},	
+	},
 }
 
 newEntity{
@@ -454,7 +454,7 @@ newEntity{
 	name = " of the deep", suffix=true, instant_resolve=true,
 	level_range = {10, 50},
 	greater_ego = 1,
-	rarity = 15,
+	rarity = 90,
 	cost = 20,
 	wielder = {
 		resists={
@@ -463,7 +463,7 @@ newEntity{
 		},
 		combat_armor = resolvers.mbonus_material(5, 1),
 		can_breath = {water=1},
-	},	
+	},
 }
 
 newEntity{
@@ -482,5 +482,5 @@ newEntity{
 		combat_physcrit = resolvers.mbonus_material(3, 2),
 		combat_spellcrit = resolvers.mbonus_material(3, 2),
 		combat_dam = resolvers.mbonus_material(7, 3),
-	},	
+	},
 }

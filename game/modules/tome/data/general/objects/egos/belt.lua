@@ -185,7 +185,7 @@ newEntity{
 	cost = 9,
 	wielder = {
 		confusion_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
-	},	
+	},
 }
 
 newEntity{
@@ -315,10 +315,10 @@ newEntity{
 		inc_damage = {
 			[DamageType.PHYSICAL] = resolvers.mbonus_material(20, 5),
 		},
-		resists_pen = { 
+		resists_pen = {
 			[DamageType.PHYSICAL] = resolvers.mbonus_material(15, 5),
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -335,7 +335,7 @@ newEntity{
 		on_melee_hit = {
 			[DamageType.BLIGHT] = resolvers.mbonus_material(10, 5),
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -352,7 +352,7 @@ newEntity{
 		},
 		blind_immune = resolvers.mbonus_material(20, 15, function(e, v) v=v/100 return 0, v end),
 		see_invisible = resolvers.mbonus_material(20, 5),
-	},	
+	},
 }
 
 newEntity{
@@ -373,7 +373,7 @@ newEntity{
 		combat_mentalresist = resolvers.mbonus_material(3, 3),
 		combat_physresist = resolvers.mbonus_material(3, 3),
 		combat_spellresist = resolvers.mbonus_material(3, 3),
-	},	
+	},
 }
 
 newEntity{
@@ -389,7 +389,7 @@ newEntity{
 		},
 		max_mana = resolvers.mbonus_material(40, 20),
 		mana_regen = resolvers.mbonus_material(50, 10, function(e, v) v=v/100 return 0, v end),
-	},	
+	},
 }
 
 newEntity{
@@ -409,7 +409,7 @@ newEntity{
 		blind_immune = resolvers.mbonus_material(25, 10, function(e, v) v=v/100 return 0, -v end),
 		confusion_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
 		max_stamina = resolvers.mbonus_material(30, 10),
-	},	
+	},
 }
 
 newEntity{
@@ -424,7 +424,7 @@ newEntity{
 		confusion_immune = resolvers.mbonus_material(15, 5, function(e, v) v=v/100 return 0, v end),
 		combat_critical_power = resolvers.mbonus_material(10, 5),
 		combat_dam = resolvers.mbonus_material(3, 3),
-	},	
+	},
 }
 
 newEntity{
@@ -442,7 +442,7 @@ newEntity{
 			[Stats.STAT_WIL] = resolvers.mbonus_material(5, 1),
 		},
 		max_life = resolvers.mbonus_material(70, 40),
-	},	
+	},
 }
 
 newEntity{
@@ -450,7 +450,7 @@ newEntity{
 	name = " of unlife", suffix=true, instant_resolve=true,
 	level_range = {10, 50},
 	greater_ego = 1,
-	rarity = 15,
+	rarity = 90,
 	cost = 30,
 	wielder = {
 		resists={
@@ -460,7 +460,7 @@ newEntity{
 			[Stats.STAT_STR] = resolvers.mbonus_material(5, 1),
 		},
 		can_breath = {water=1},
-	},	
+	},
 }
 
 newEntity{
@@ -477,5 +477,5 @@ newEntity{
 		combat_mentalresist = resolvers.mbonus_material(7, 3),
 		combat_physresist = resolvers.mbonus_material(7, 3),
 		combat_spellresist = resolvers.mbonus_material(7, 3),
-	},	
+	},
 }
