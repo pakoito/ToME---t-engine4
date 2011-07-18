@@ -286,6 +286,8 @@ newEntity{
 		resource_leech_chance = resolvers.mbonus_material(10, 5),
 		resource_leech_value = resolvers.mbonus_material(1, 1),
 		life_regen = resolvers.mbonus_material(30, 5, function(e, v) v=v/10 return 0, -v end),
+	},
+	combat = {
 		melee_project = {
 			[DamageType.NATURE] = resolvers.mbonus_material(46, 5),
 		},
@@ -303,11 +305,13 @@ newEntity{
 		on_melee_hit = {
 			[DamageType.FIRE] = resolvers.mbonus_material(20, 5),
 		},
-		melee_project = {
-			[DamageType.FIRE] = resolvers.mbonus_material(46, 5),
-		},
 		resists_pen = {
 			[DamageType.FIRE] = resolvers.mbonus_material(20, 5),
+		},
+	},
+	combat = {
+		melee_project = {
+			[DamageType.FIRE] = resolvers.mbonus_material(46, 5),
 		},
 	},
 }
@@ -323,11 +327,13 @@ newEntity{
 		on_melee_hit = {
 			[DamageType.ICE] = resolvers.mbonus_material(20, 5),
 		},
-		melee_project = {
-			[DamageType.COLD] = resolvers.mbonus_material(46, 5),
-		},
 		resists_pen = {
 			[DamageType.COLD] = resolvers.mbonus_material(20, 5),
+		},
+	},
+	combat = {
+		melee_project = {
+			[DamageType.COLD] = resolvers.mbonus_material(46, 5),
 		},
 	},
 }
@@ -343,11 +349,13 @@ newEntity{
 		on_melee_hit = {
 			[DamageType.LIGHTNING] = resolvers.mbonus_material(20, 5),
 		},
-		melee_project = {
-			[DamageType.LIGHTNING] = resolvers.mbonus_material(46, 5),
-		},
 		resists_pen = {
 			[DamageType.LIGHTNING] = resolvers.mbonus_material(20, 5),
+		},
+	},
+	combat = {
+		melee_project = {
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(46, 5),
 		},
 	},
 }
@@ -363,11 +371,13 @@ newEntity{
 		on_melee_hit = {
 			[DamageType.ACID] = resolvers.mbonus_material(20, 5),
 		},
-		melee_project = {
-			[DamageType.ACID] = resolvers.mbonus_material(46, 5),
-		},
 		resists_pen = {
 			[DamageType.ACID] = resolvers.mbonus_material(20, 5),
+		},
+	},
+	combat = {
+		melee_project = {
+			[DamageType.ACID] = resolvers.mbonus_material(46, 5),
 		},
 	},
 }
@@ -383,11 +393,13 @@ newEntity{
 		on_melee_hit = {
 			[DamageType.SLIME] = resolvers.mbonus_material(20, 5),
 		},
-		melee_project = {
-			[DamageType.SLIME] = resolvers.mbonus_material(46, 5),
-		},
 		resists_pen = {
 			[DamageType.NATURE] = resolvers.mbonus_material(20, 5),
+		},
+	},
+	combat = {
+		melee_project = {
+			[DamageType.SLIME] = resolvers.mbonus_material(46, 5),
 		},
 	},
 }
@@ -444,6 +456,8 @@ newEntity{
 			[Stats.STAT_MAG] = resolvers.mbonus_material(5, 1),
 		},
 		disease_immune = resolvers.mbonus_material(55, 10, function(e, v) v=v/100 return 0, v end),
+	},
+	combat = {
 		melee_project = {
 			[DamageType.BLIGHT] = resolvers.mbonus_material(46, 5),
 		},
@@ -490,6 +504,8 @@ newEntity{
 		on_melee_hit = {
 			[DamageType.TEMPORAL] = resolvers.mbonus_material(10, 5),
 		},
+	},
+	combat = {
 		melee_project = {
 			[DamageType.TEMPORAL] = resolvers.mbonus_material(46, 5),
 		},
