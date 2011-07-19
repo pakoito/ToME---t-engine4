@@ -47,7 +47,9 @@ local UIBase = require "engine.ui.Base"
 -- Init settings
 config.settings.tome = config.settings.tome or {}
 profile.mod.allow_build = profile.mod.allow_build or {}
-if type(config.settings.tome.autosave) == "nil" then config.settings.tome.autosave = true end
+--if type(config.settings.tome.autosave) == "nil" then
+config.settings.tome.autosave = true
+--end
 if not config.settings.tome.smooth_move then config.settings.tome.smooth_move = 3 end
 if not config.settings.tome.gfx then
 	local w, h = core.display.size()

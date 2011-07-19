@@ -70,7 +70,7 @@ function _M:generateList()
 		game:saveSettings("background_saves", ("background_saves = %s\n"):format(tostring(config.settings.background_saves)))
 		self.c_list:drawItem(item)
 	end,}
-
+--[[
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Autosaves the whole game when switching zones. This is safer but can make playing a bit slower while it saves. Savefiles will also be somewhat bigger.#WHITE#"}
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Autosave when leaving a zone#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.tome.autosave and "enabled" or "disabled")
@@ -79,7 +79,7 @@ function _M:generateList()
 		game:saveSettings("tome.autosave", ("tome.autosave = %s\n"):format(tostring(config.settings.tome.autosave)))
 		self.c_list:drawItem(item)
 	end,}
-
+]]
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Forces the game to save each level instead of each zone.\nThis makes it save more often but the game will use less memory when deep in a dungeon.\n\n#LIGHT_RED#Changing this option will not affect already visited zones.#WHITE#"}
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Zone save per level#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.tome.save_zone_levels and "enabled" or "disabled")
