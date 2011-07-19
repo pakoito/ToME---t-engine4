@@ -126,7 +126,7 @@ end
 
 newEntity{
 	define_as = "ORB_UNDEATH",
-	name = "Invocation Portal: Undeath",
+	name = "Invocation Portal: Undeath", image = "terrain/marble_floor.png", add_mos = {{image="terrain/demon_portal4.png"}},
 	display = '&', color=colors.GREY, back_color=colors.PURPLE,
 	notice = true,
 	always_remember = true,
@@ -140,7 +140,7 @@ newEntity{
 
 newEntity{
 	define_as = "ORB_ELEMENTS",
-	name = "Invocation Portal: Elements",
+	name = "Invocation Portal: Elements", image = "terrain/marble_floor.png", add_mos = {{image="terrain/demon_portal4.png"}},
 	display = '&', color=colors.LIGHT_RED, back_color=colors.PURPLE,
 	notice = true,
 	always_remember = true,
@@ -154,7 +154,7 @@ newEntity{
 
 newEntity{
 	define_as = "ORB_DRAGON",
-	name = "Invocation Portal: Dragons",
+	name = "Invocation Portal: Dragons", image = "terrain/marble_floor.png", add_mos = {{image="terrain/demon_portal4.png"}},
 	display = '&', color=colors.LIGHT_BLUE, back_color=colors.PURPLE,
 	notice = true,
 	always_remember = true,
@@ -168,7 +168,7 @@ newEntity{
 
 newEntity{
 	define_as = "ORB_DESTRUCTION",
-	name = "Invocation Portal: Destruction",
+	name = "Invocation Portal: Destruction",  image = "terrain/marble_floor.png", add_mos = {{image="terrain/demon_portal4.png"}},
 	display = '&', color=colors.WHITE, back_color=colors.PURPLE,
 	notice = true,
 	always_remember = true,
@@ -182,7 +182,7 @@ newEntity{
 
 newEntity{
 	define_as = "PORTAL_BOSS",
-	name = "Portal: The Sanctum",
+	name = "Portal: The Sanctum", image = "terrain/marble_floor.png", add_mos = {{image="terrain/demon_portal4.png"}},
 	display = '&', color=colors.LIGHT_BLUE, back_color=colors.PURPLE,
 	notice = true,
 	always_remember = true,
@@ -204,7 +204,7 @@ newEntity{
 }
 
 newEntity{
-	define_as = "HIGH_PEAK_UP", image = "terrain/stair_up.png",
+	define_as = "HIGH_PEAK_UP", image = "terrain/marble_floor.png", add_mos = {{image = "terrain/stair_up.png"}},
 	name = "next level",
 	display = '>', color_r=255, color_g=255, color_b=0,
 	notice = true,

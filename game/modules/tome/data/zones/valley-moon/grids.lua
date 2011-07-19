@@ -33,8 +33,9 @@ newEntity{
 }
 
 newEntity{
+	type = "floor", subtype = "grass",
 	define_as = "PORTAL_DEMON",
-	name = "Infernal Portal",
+	name = "Fearscape Portal", image = "terrain/grass.png", add_displays={class.new{z=5, image = "terrain/demon_portal4.png"}},
 	display = '&', color=colors.RED, back_color=colors.PURPLE,
 	notice = true,
 	always_remember = true,

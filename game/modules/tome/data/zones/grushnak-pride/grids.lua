@@ -26,7 +26,7 @@ load("/data/general/grids/forest.lua")
 newEntity{
 	define_as = "SLIME_TUNNELS",
 	name = "entrance to a slimy pit",
-	display = '>', color=colors.LIGHT_GREEN, image = "terrain/underground_floor.png", add_displays = {class.new{image="terrain/ladder_down_green.png"}},
+	display = '>', color=colors.LIGHT_GREEN, image = "terrain/underground_floor.png", add_displays = {class.new{image="terrain/ladder_down.png"}},
 	always_remember = true,
 	notice = true,
 	change_level = 1,
