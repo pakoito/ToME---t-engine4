@@ -1132,6 +1132,7 @@ newEffect{
 		if self:attr("shield_factor") then eff.power = eff.power * (100 + self:attr("shield_factor")) / 100 end
 		if self:attr("shield_dur") then eff.dur = eff.dur + self:attr("shield_dur") end
 		self.displacement_shield = eff.power
+		self.displacement_shield_max = eff.power
 		self.displacement_shield_chance = eff.chance
 		--- Warning there can be only one time shield active at once for an actor
 		self.displacement_shield_target = eff.target
@@ -1149,6 +1150,7 @@ newEffect{
 	deactivate = function(self, eff)
 		self:removeParticles(eff.particle)
 		self.displacement_shield = nil
+		self.displacement_shield_max = nil
 		self.displacement_shield_chance = nil
 		self.displacement_shield_target = nil
 	end,
@@ -1172,12 +1174,14 @@ newEffect{
 		eff.tmpid = self:addTemporaryValue("damage_shield", eff.power)
 		--- Warning there can be only one time shield active at once for an actor
 		self.damage_shield_absorb = eff.power
+		self.damage_shield_absorb_max = eff.power
 		eff.particle = self:addParticles(Particles.new("damage_shield", 1))
 	end,
 	deactivate = function(self, eff)
 		self:removeParticles(eff.particle)
 		self:removeTemporaryValue("damage_shield", eff.tmpid)
 		self.damage_shield_absorb = nil
+		self.damage_shield_absorb_max = nil
 	end,
 }
 
@@ -1199,6 +1203,7 @@ newEffect{
 		eff.tmpid = self:addTemporaryValue("time_shield", eff.power)
 		--- Warning there can be only one time shield active at once for an actor
 		self.time_shield_absorb = eff.power
+		self.time_shield_absorb_max = eff.power
 		eff.particle = self:addParticles(Particles.new("time_shield", 1))
 	end,
 	deactivate = function(self, eff)
@@ -1211,6 +1216,7 @@ newEffect{
 
 		self:removeTemporaryValue("time_shield", eff.tmpid)
 		self.time_shield_absorb = nil
+		self.time_shield_absorb_max = 0
 	end,
 }
 
@@ -3428,11 +3434,14 @@ newEffect{
 		eff.kbid = self:addTemporaryValue("on_melee_hit", {[DamageType.REPULSION]= eff.power})
 		eff.particle = self:addParticles(Particles.new("gravity_focus", 1))
 		self.repulsion_shield_absorb = eff.power
+		self.repulsion_shield_absorb_max = eff.power
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("repulsion_shield", eff.tmpid)
 		self:removeTemporaryValue("on_melee_hit", eff.kbid)
 		self:removeParticles(eff.particle)
+		self.repulsion_shield_absorb = nil
+		self.repulsion_shield_absorb_max = nil
 	end,
 }
 

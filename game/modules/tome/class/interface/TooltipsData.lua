@@ -42,6 +42,11 @@ If it reaches below zero you die.
 Death is usually permanent so beware!
 It is increased by Constitution.]]
 
+TOOLTIP_DAMAGE_SHIELD = [[#GOLD#Damage shields#LAST#
+Various talents, items and powers can grant you a temporary damage shield.
+They all work in slightly different maners, but usualy will absorb some damage before crumbling down.
+]]
+
 TOOLTIP_UNNATURAL_BODY = [[#GOLD#Unnatrual Body Regeneration#LAST#
 Your Unnatural Body talent allows you to feed of the life of your fallen foes.
 Each time you kill a creature your maximum regeneration pool increases and each turn some of it transfers into your own life.]]
