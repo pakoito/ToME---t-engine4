@@ -232,7 +232,7 @@ function _M:display()
 	if player:attr("displacement_shield") then shield = shield + player.displacement_shield max_shield = max_shield + player.displacement_shield_max end
 	if player:attr("repulsion_shield") then shield = shield + player.repulsion_shield_absorb max_shield = max_shield + player.repulsion_shield_absorb_max end
 	if player:attr("damage_shunt") then shield = shield + player.damage_shunt_absorb max_shield = max_shield + player.damage_shunt_absorb_max end
-	if max_shield then
+	if max_shield > 0 then
 		self:mouseTooltip(self.TOOLTIP_DAMAGE_SHIELD, self:makeTextureBar("#WHITE#Shield:", nil, shield, max_shield, nil, x, h, 255, 255, 255, {r=colors.GREY.r / 3, g=colors.GREY.g / 3, b=colors.GREY.b / 3}, {r=colors.GREY.r / 6, g=colors.GREY.g / 6, b=colors.GREY.b / 6})) h = h + self.font_h
 	end
 
