@@ -3458,12 +3458,14 @@ newEffect{
 		eff.tmpid = self:addTemporaryValue("damage_shunt", eff.power)
 		--- Warning there can be only one time shield active at once for an actor
 		self.damage_shunt_absorb = eff.power
+		self.damage_shunt_absorb_max = eff.power
 		eff.particle = self:addParticles(Particles.new("damage_shield", 1))
 	end,
 	deactivate = function(self, eff)
 		self:removeParticles(eff.particle)
 		self:removeTemporaryValue("damage_shunt", eff.tmpid)
 		self.damage_shunt_absorb = nil
+		self.damage_shunt_absorb_max = nil
 	end,
 }
 
