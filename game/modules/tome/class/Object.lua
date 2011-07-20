@@ -234,7 +234,7 @@ function _M:getTextualDesc(compare_with)
 
 	if self.quest then desc:add({"color", "VIOLET"},"[Plot Item]", {"color", "LAST"}, true) end
 
-	desc:add(("Type: %s / %s"):format(rawget(self, 'type') or "unknown", self.subtype or "unknown"), true)
+	desc:add(("Type: %s / %s"):format(rawget(self, 'type') or "unknown", rawget(self, 'subtype') or "unknown"), true)
 	if self.slot_forbid == "OFFHAND" then desc:add("It must be held with both hands.", true) end
 	desc:add(true)
 
