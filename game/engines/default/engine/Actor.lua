@@ -150,6 +150,7 @@ end
 -- @param force if true do not check for the presence of an other entity. *Use wisely*
 -- @return true if a move was *ATTEMPTED*. This means the actor will probably want to use energy
 function _M:move(x, y, force)
+	if not x or not y then return end
 	if self.dead then return true end
 	local map = game.level.map
 

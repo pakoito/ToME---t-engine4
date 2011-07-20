@@ -145,7 +145,7 @@ function _M:generateList(kind)
 				cache[img] = tex
 			end
 		end
-		if not data.notdone or a.show then
+		if data and (not data.notdone or a.show) then
 			if a.show == "full" or not data.notdone then
 				list[#list+1] = { name=a.name, color=color, desc=a.desc, when=data.when, who=data.who, order=a.order, id=id, tex=tex, a=a }
 			elseif a.show == "none" then
