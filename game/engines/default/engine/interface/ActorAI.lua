@@ -100,12 +100,12 @@ function _M:moveDirection(x, y)
 			local list = coords[dir]
 			local l = {}
 			-- Find possibilities
-			for i = 1, #list do
+			for i = 1, #list do if dir_to_coord[list[i]] then
 				local dx, dy = self.x + dir_to_coord[list[i]][1], self.y + dir_to_coord[list[i]][2]
 				if self:aiCanPass(dx, dy) then
 					l[#l+1] = {dx,dy, (dx-x)^2 + (dy-y)^2}
 				end
-			end
+			end end
 			-- Move to closest
 			if #l > 0 then
 				table.sort(l, function(a,b) return a[3]<b[3] end)
