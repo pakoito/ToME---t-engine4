@@ -40,7 +40,7 @@ end
 
 newEntity{
 	define_as = "INFINITE",
-	name = "way into the infinite dungeon", image = "terrain/wall_hole.png",
+	name = "way into the infinite dungeon", image = "terrain/maze_floor.png", add_mos={{image = "terrain/stair_down.png"}},
 	display = '>', color=colors.VIOLET, back_color=colors.DARK_GREY,
 	always_remember = true,
 	on_move = function(self, x, y, who)
@@ -70,7 +70,7 @@ newEntity{
 
 newEntity{
 	define_as = "PORTAL",
-	name = "orb", image = "terrain/maze_teleport.png",
+	name = "orb", image = "terrain/maze_floor.png", add_mos={{image = "object/egg_dragons_egg_03_64.png"}},
 	display = '*', color=colors.VIOLET, back_color=colors.DARK_GREY,
 	force_clone=true,
 	always_remember = true,

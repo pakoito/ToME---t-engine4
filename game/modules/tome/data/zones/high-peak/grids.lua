@@ -211,4 +211,3 @@ newEntity{
 	always_remember = true,
 	change_level = 1,
 }
-

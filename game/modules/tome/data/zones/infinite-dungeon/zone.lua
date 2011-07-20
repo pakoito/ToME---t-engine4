@@ -43,7 +43,10 @@ return {
 			door = "DOOR",
 		},
 		actor = {
-			class = "engine.generator.actor.Random",
+			class = "mod.class.generator.actor.RandomStairGuard",
+			guard = {
+				{random_boss={rank = 3.5, loot_quantity = 3,}},
+			},
 			nb_npc = {29, 39},
 			filters = { {max_ood=6}, },
 		},

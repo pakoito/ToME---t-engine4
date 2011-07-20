@@ -30,7 +30,7 @@ newEntity{
 newEntity{
 	define_as = "MOUNTAIN_WALL",
 	type = "rockwall", subtype = "rock",
-	name = "rocky mountain", image = "terrain/rocky_mountain.png", z=3,
+	name = "rocky mountain", image = "terrain/rocky_mountain.png",
 	display = '#', color=colors.UMBER, back_color=colors.LIGHT_UMBER,
 	always_remember = true,
 	can_pass = {pass_wall=1},
