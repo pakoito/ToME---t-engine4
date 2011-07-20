@@ -852,11 +852,11 @@ function _M:useOrbPortal(portal)
 	else
 		if portal.change_wilderness then
 			if portal.change_wilderness.spot then
-				game:onLevelLoad(portal.change_wilderness.level_name or (portal.change_zone.."-"..portal.change_level), function(zone, level)
-					local spot = level:pickSpot(portal.change_wilderness.spot)
-					self.wild_x = spot and spot.x or 0
-					self.wild_y = spot and spot.y or 0
-				end)
+				game:onLevelLoad(portal.change_wilderness.level_name or (portal.change_zone.."-"..portal.change_level), function(zone, level, spot)
+					local spot = level:pickSpot(spot)
+					game.player.wild_x = spot and spot.x or 0
+					game.player.wild_y = spot and spot.y or 0
+				end, portal.change_wilderness.spot)
 			else
 				self.wild_x = portal.change_wilderness.x or 0
 				self.wild_y = portal.change_wilderness.y or 0

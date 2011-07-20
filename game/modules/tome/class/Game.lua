@@ -518,18 +518,18 @@ function _M:leaveLevel(level, lev, old_lev)
 	end
 end
 
-function _M:onLevelLoad(id, fct)
+function _M:onLevelLoad(id, fct, data)
 	if self.zone and self.level and id == self.zone.short_name.."-"..self.level.level then
-		print("Direct execute of on level load", id, fct)
-		fct(self.zone, self.level)
+		print("Direct execute of on level load", id, fct, data)
+		fct(self.zone, self.level, data)
 		return
 	end
 
 	self.on_level_load_fcts = self.on_level_load_fcts or {}
 	self.on_level_load_fcts[id] = self.on_level_load_fcts[id] or {}
 	local l = self.on_level_load_fcts[id]
-	l[#l+1] = fct
-	print("Registering on level load", id, fct)
+	l[#l+1] = {fct=fct, data=data}
+	print("Registering on level load", id, fct, data)
 end
 
 function _M:changeLevel(lev, zone, keep_old_lev, force_down)
@@ -604,7 +604,7 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 	self.on_level_load_fcts = self.on_level_load_fcts or {}
 	print("Running on level loads", self.zone.short_name.."-"..self.level.level)
 	for i, fct in ipairs(self.on_level_load_fcts[self.zone.short_name.."-"..self.level.level] or {}) do
-		fct(self.zone, self.level)
+		fct.fct(self.zone, self.level, fct.data)
 	end
 	self.on_level_load_fcts[self.zone.short_name.."-"..self.level.level] = nil
 
