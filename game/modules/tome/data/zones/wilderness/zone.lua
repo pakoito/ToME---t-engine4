@@ -37,7 +37,7 @@ return {
 			map = "wilderness/eyal",
 		},
 	},
-	post_process = function(level)
+	post_nicer_tiles = function(level)
 		for _, z in ipairs(level.custom_zones) do
 			if z.type == "zonename" then
 				for x = z.x1, z.x2 do for y = z.y1, z.y2 do

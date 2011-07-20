@@ -154,6 +154,7 @@ newEntity{
 		g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/dungeon_entrance_closed02.png", z=5}
 		g:initGlow()
 		game.zone:addEntity(game.level, g, "terrain", x, y)
+		print("[WORLDMAP] Elven ruins at", x, y)
 		return true
 	end,
 }
@@ -188,6 +189,7 @@ newEntity{
 		g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/ruin_entrance_closed01.png", z=5}
 		g:initGlow()
 		game.zone:addEntity(game.level, g, "terrain", x, y)
+		print("[WORLDMAP] Ruined dungeon at", x, y)
 		return true
 	end,
 }
@@ -209,6 +211,7 @@ newEntity{
 		g.nice_tiler = nil
 		g:initGlow()
 		game.zone:addEntity(game.level, g, "terrain", x, y)
+		print("[WORLDMAP] Mark of the spellblaze at", x, y)
 		return true
 	end,
 }
@@ -229,6 +232,7 @@ newEntity{
 		g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="npc/alchemist_golem.png", z=5}
 		g:initGlow()
 		game.zone:addEntity(game.level, g, "terrain", x, y)
+		print("[WORLDMAP] Golem Graveyard at", x, y)
 		return true
 	end,
 }
@@ -251,6 +255,7 @@ newEntity{
 		}
 		g:resolve() g:resolve(nil, true)
 		game.zone:addEntity(game.level, g, "actor", x, y)
+		print("[WORLDMAP] Agrimley at", x, y)
 		return true
 	end,
 }
@@ -271,6 +276,7 @@ newEntity{
 		g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/cave_entrance_closed02.png", z=5}
 		g:initGlow()
 		game.zone:addEntity(game.level, g, "terrain", x, y)
+		print("[WORLDMAP] Hidden compound at", x, y)
 		return true
 	end,
 }
