@@ -29,7 +29,7 @@ return {
 --	all_remembered = true,
 --	all_lited = true,
 	persistent = "zone",
-	ambient_music = "6_19.ogg",
+	ambient_music = "Suspicion.ogg",
 	min_material_level = function() return game.state:isAdvanced() and 3 or 2 end,
 	max_material_level = function() return game.state:isAdvanced() and 4 or 3 end,
 	generator =  {
