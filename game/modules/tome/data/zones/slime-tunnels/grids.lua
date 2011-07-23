@@ -23,33 +23,31 @@ load("/data/general/grids/slime.lua")
 
 newEntity{
 	define_as = "ORB_DRAGON",
-	name = "orb pedestal (dragon)", image = "terrain/slime_floor.png", add_displays={class.new{image = "terrain/pedestal_01.png", display_h=2, display_y=-1}},
+	name = "orb pedestal (dragon)", image = "terrain/slime/slime_floor_01.png", add_displays={class.new{image = "terrain/pedestal_01.png", display_h=2, display_y=-1}},
 	display = '_', color_r=255, color_g=255, color_b=255, back_color=colors.LIGHT_RED,
 }
 newEntity{
 	define_as = "ORB_UNDEATH",
-	name = "orb pedestal (undeath)", image = "terrain/slime_floor.png", add_displays={class.new{image = "terrain/pedestal_01.png", display_h=2, display_y=-1}},
+	name = "orb pedestal (undeath)", image = "terrain/slime/slime_floor_01.png", add_displays={class.new{image = "terrain/pedestal_01.png", display_h=2, display_y=-1}},
 	display = '_', color_r=255, color_g=255, color_b=255, back_color=colors.LIGHT_RED,
 }
 newEntity{
 	define_as = "ORB_ELEMENTS",
-	name = "orb pedestal (elements)", image = "terrain/slime_floor.png", add_displays={class.new{image = "terrain/pedestal_01.png", display_h=2, display_y=-1}},
+	name = "orb pedestal (elements)", image = "terrain/slime/slime_floor_01.png", add_displays={class.new{image = "terrain/pedestal_01.png", display_h=2, display_y=-1}},
 	display = '_', color_r=255, color_g=255, color_b=255, back_color=colors.LIGHT_RED,
 }
 newEntity{
 	define_as = "ORB_DESTRUCTION",
-	name = "orb pedestal (destruction)", image = "terrain/slime_floor.png", add_displays={class.new{image = "terrain/pedestal_01.png", display_h=2, display_y=-1}},
+	name = "orb pedestal (destruction)", image = "terrain/slime/slime_floor_01.png", add_displays={class.new{image = "terrain/pedestal_01.png", display_h=2, display_y=-1}},
 	display = '_', color_r=255, color_g=255, color_b=255, back_color=colors.LIGHT_RED,
 }
 
-newEntity{
+newEntity{ base = "SLIME_DOOR_VERT",
 	define_as = "PEAK_DOOR",
-	name = "sealed door", image = "terrain/granite_door1.png",
-	display = '+', color_r=238, color_g=154, color_b=77, back_color=colors.DARK_UMBER,
-	notice = true,
-	always_remember = true,
+	name = "sealed door",
+	door_opened = false,
+	nice_tiler = false,
 	does_block_move = true,
-	block_sight = true,
 }
 
 newEntity{
@@ -64,7 +62,7 @@ newEntity{
 
 newEntity{
 	define_as = "UP_GRUSHNAK",
-	name = "exit to Grushnak Pride", image = "terrain/slime_floor.png", add_displays = {class.new{image="terrain/ladder_up.png"}},
+	name = "exit to Grushnak Pride", image = "terrain/slime/slime_floor_01.png", add_displays = {class.new{image="terrain/ladder_up.png"}},
 	display = '<', color_r=255, color_g=0, color_b=255,
 	always_remember = true,
 	notice = true,
