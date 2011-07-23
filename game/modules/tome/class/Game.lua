@@ -1034,7 +1034,7 @@ function _M:setupCommands()
 			end end
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			self.player:setEffect(self.player.EFF_BLINDED, 10, {})
+			self.state:debugRandomZone()
 		end end,
 	}
 

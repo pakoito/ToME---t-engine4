@@ -1137,6 +1137,15 @@ local random_zone_themes = {
 		getUp = function(self) return "SAND_UP"..self.less_dir end,
 		getDown = function(self) return "SAND_DOWN"..self.more_dir end,
 	} end },
+	-- Slime
+	{ name="slime", rarity=1, gen=function() return {
+		load_grids = {"/data/general/grids/slime.lua"},
+		getDoor = function(self) return "SLIME_DOOR" end,
+		getFloor = function(self) return "SLIME_FLOOR" end,
+		getWall = function(self) return "SLIME_WALL" end,
+		getUp = function(self) return "SLIME_UP"..self.less_dir end,
+		getDown = function(self) return "SLIME_DOWN"..self.more_dir end,
+	} end },
 }
 
 function _M:createRandomZone(zbase)

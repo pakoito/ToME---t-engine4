@@ -176,12 +176,17 @@ newInscription{
 	name = "Infusion: Sun",
 	type = {"inscriptions/infusions", 1},
 	points = 1,
-	tactical = { BUFF = 1, DISABLE = 2 },
+	tactical = { ATTACK_AREA = 1, DISABLE = 2 },
+	range = 0,
+	radius = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return data.range
+	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		self:project({type="ball", range=0, selffire=true, radius=data.range}, self.x, self.y, engine.DamageType.LITE, 1)
-		self:project({type="ball", range=0, selffire=true, radius=data.range}, self.x, self.y, engine.DamageType.BREAK_STEALTH, 1)
-		self:project({type="ball", range=0, selffire=false, radius=data.range}, self.x, self.y, engine.DamageType.BLINDCUSTOMMIND, {power=data.power + data.inc_stat, turns=data.turns})
+		self:project({type="ball", range=self:getTalentRange(t), selffire=true, radius=self:getTalentRadius(t)}, self.x, self.y, engine.DamageType.LITE, 1)
+		self:project({type="ball", range=self:getTalentRange(t), selffire=true, radius=self:getTalentRadius(t)}, self.x, self.y, engine.DamageType.BREAK_STEALTH, 1)
+		self:project({type="ball", range=self:getTalentRange(t), selffire=false, radius=self:getTalentRadius(t)}, self.x, self.y, engine.DamageType.BLINDCUSTOMMIND, {power=data.power + data.inc_stat, turns=data.turns})
 		return true
 	end,
 	info = function(self, t)

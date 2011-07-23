@@ -29,14 +29,23 @@ newTalent{
 	proj_speed = 20,
 	requires_target = true,
 	target = function(self, t)
-		return {type="bolt", range=self:getTalentRange(t), talent=t, display = {particle=particle, trail=trail},
-			-- Like a normal block_path, but goes over friendlies
-			block_path = function(typ, lx, ly)
+		return {type="bolt", range=self:getTalentRange(t), talent=t, display = {particle=particle, trail=trail}, friendlyfire=false,
+			-- Like a normal block_path, but goes over friendlies.  Also, cannot gain additional range by firing over friendlies.
+			block_path = function(typ, lx, ly, for_highlights)
+				-- use default 'block_path'
+				local dummy_typ = engine.Target:getType({type="bolt"})
+				local block, hit, hit_radius = dummy_typ.block_path(typ, lx, ly, for_highlights)
 				local a = game.level.map(lx, ly, engine.Map.ACTOR)
-				if a and self:reactionToward(a) >= 0 then return false, lx, ly
-				elseif game.level.map:checkAllEntities(lx, ly, "block_move") then return true, lx, ly end
-				if typ.range and typ.source_actor and typ.source_actor.x and math.sqrt((typ.source_actor.x-lx)^2 + (typ.source_actor.y-ly)^2) > typ.range then return true end
-				return false, lx, ly
+				local block_from_range = false
+				if typ.range and typ.start_x then
+					local dist = core.fov.distance(typ.start_x, typ.start_y, lx, ly)
+					if math.floor(dist - typ.range + 0.5) > 0 then block_from_range = true end
+				elseif typ.range and typ.source_actor and typ.source_actor.x then
+					local dist = core.fov.distance(typ.source_actor.x, typ.source_actor.y, lx, ly)
+					if math.floor(dist - typ.range + 0.5) > 0 then block_from_range = true end
+				end
+				if a then return block_from_range or self:reactionToward(a) < 0, hit, hit_radius
+				else return block, hit, hit_radius end
 			end,
 		}
 	end,

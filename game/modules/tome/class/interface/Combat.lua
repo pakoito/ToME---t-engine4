@@ -254,7 +254,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 			print("[ATTACK] after inc by type", dam)
 		end
 
-		if crit then game.logSeen(self, "%s performs a critical strike!", self.name:capitalize()) end
+		if crit then game.logSeen(self, "#{bold}#%s performs a critical strike!#{normal}#", self.name:capitalize()) end
 		DamageType:get(damtype).projector(self, target.x, target.y, damtype, math.max(0, dam))
 		hitted = true
 	else
@@ -763,7 +763,7 @@ function _M:spellCrit(dam, add_chance)
 	if rng.percent(chance) then
 		dam = dam * (1.5 + (self.combat_critical_power or 0) / 100)
 		crit = true
-		game.logSeen(self, "%s's spell attains critical power!", self.name:capitalize())
+		game.logSeen(self, "#{bold}#%s's spell attains critical power!#{normal}#", self.name:capitalize())
 
 		if self:attr("mana_on_crit") then self:incMana(self:attr("mana_on_crit")) end
 

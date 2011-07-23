@@ -44,6 +44,12 @@ function _M:init(map, source_actor)
 	self.sg = core.display.newSurface(pot_width, pot_height)
 	self.sg:erase(0, 255, 0, 90)
 	self.sg = self.sg:glTexture()
+	self.sy = core.display.newSurface(pot_width, pot_height)
+	self.sy:erase(255, 255, 0, 90)
+	self.sy = self.sy:glTexture()
+	self.syg = core.display.newSurface(pot_width, pot_height)
+	self.syg:erase(153, 204, 50, 90)
+	self.syg = self.syg:glTexture()
 
 	self.source_actor = source_actor
 
@@ -85,12 +91,13 @@ function _M:display(dispx, dispy)
 	while lx and ly do
 		local block, hit, hit_radius = false, true, true
 		if self.target_type.block_path then
-			block, hit, hit_radius = self.target_type:block_path(lx, ly)
+			block, hit, hit_radius = self.target_type:block_path(lx, ly, true)
 		end
 
 		-- Update coordinates and set color
 		if hit and not stopped then
 			stop_x, stop_y = lx, ly
+			if not block and hit == "unknown" then s = self.sy end
 		else
 			s = self.sr
 		end
@@ -124,13 +131,20 @@ function _M:display(dispx, dispy)
 			game.level.map.h,
 			self.target_type.ball,
 			function(_, px, py)
-				if self.target_type.block_radius and self.target_type:block_radius(px, py) then return true end
+				if self.target_type.block_radius and self.target_type:block_radius(px, py, true) then return true end
 			end,
 			function(_, px, py)
-				self.sg:toScreen(self.display_x + (px - game.level.map.mx) * self.tile_w * Map.zoom,
-				self.display_y + (py - game.level.map.my) * self.tile_h * Map.zoom,
-				self.tile_w * Map.zoom,
-				self.tile_h * Map.zoom)
+				if not self.target_type.no_restrict and not game.level.map.remembers(px, py) and not game.level.map.seens(px, py) then
+					self.syg:toScreen(self.display_x + (px - game.level.map.mx) * self.tile_w * Map.zoom,
+					self.display_y + (py - game.level.map.my) * self.tile_h * Map.zoom,
+					self.tile_w * Map.zoom,
+					self.tile_h * Map.zoom)
+				else
+					self.sg:toScreen(self.display_x + (px - game.level.map.mx) * self.tile_w * Map.zoom,
+					self.display_y + (py - game.level.map.my) * self.tile_h * Map.zoom,
+					self.tile_w * Map.zoom,
+					self.tile_h * Map.zoom)
+				end
 			end,
 		nil)
 	elseif self.target_type.cone and self.target_type.cone > 0 then
@@ -144,13 +158,20 @@ function _M:display(dispx, dispy)
 			dir_angle,
 			self.target_type.cone_angle,
 			function(_, px, py)
-				if self.target_type.block_radius and self.target_type:block_radius(px, py) then return true end
+				if self.target_type.block_radius and self.target_type:block_radius(px, py, true) then return true end
 			end,
 			function(_, px, py)
-				self.sg:toScreen(self.display_x + (px - game.level.map.mx) * self.tile_w * Map.zoom,
-				self.display_y + (py - game.level.map.my) * self.tile_h * Map.zoom,
-				self.tile_w * Map.zoom,
-				self.tile_h * Map.zoom)
+				if not self.target_type.no_restrict and not game.level.map.remembers(px, py) and not game.level.map.seens(px, py) then
+					self.syg:toScreen(self.display_x + (px - game.level.map.mx) * self.tile_w * Map.zoom,
+					self.display_y + (py - game.level.map.my) * self.tile_h * Map.zoom,
+					self.tile_w * Map.zoom,
+					self.tile_h * Map.zoom)
+				else
+					self.sg:toScreen(self.display_x + (px - game.level.map.mx) * self.tile_w * Map.zoom,
+					self.display_y + (py - game.level.map.my) * self.tile_h * Map.zoom,
+					self.tile_w * Map.zoom,
+					self.tile_h * Map.zoom)
+				end
 			end,
 		nil)
 	end
@@ -183,30 +204,45 @@ function _M:getType(t)
 		range=20,
 		selffire=true,
 		friendlyfire=true,
-		block_path = function(typ, lx, ly)
+		block_path = function(typ, lx, ly, for_highlights)
 			if not typ.no_restrict then
-				if typ.range and typ.source_actor and typ.source_actor.x then
+				if typ.range and typ.start_x then
+					local dist = core.fov.distance(typ.start_x, typ.start_y, lx, ly)
+					if math.floor(dist - typ.range + 0.5) > 0 then return true, false, false end
+				elseif typ.range and typ.source_actor and typ.source_actor.x then
 					local dist = core.fov.distance(typ.source_actor.x, typ.source_actor.y, lx, ly)
 					if math.floor(dist - typ.range + 0.5) > 0 then return true, false, false end
 				end
-				if typ.requires_knowledge and not game.level.map.remembers(lx, ly) and not game.level.map.seens(lx, ly) then
+				local is_known =  game.level.map.remembers(lx, ly) or game.level.map.seens(lx, ly)
+				if typ.requires_knowledge and not is_known then
 					return true, false, false
 				end
 				if not typ.pass_terrain and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") and not game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "pass_projectile") then
-					return true, true, false
+					if for_highlights and not is_known then
+						return false, "unknown", true
+					else
+						return true, true, false
+					end
 				-- If we explode due to something other than terrain, then we should explode ON the tile, not before it
 				elseif typ.stop_block then
 					local nb = game.level.map:checkAllEntitiesCount(lx, ly, "block_move")
 					if nb > 1 or (nb == 1 and game.level.map:checkAllEntities(lx, ly, "block_move") and not game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "pass_projectile")) then
-						return true, true, true
+						if for_highlights and not is_known then
+							return false, "unknown", true
+						else
+							return true, true, true
+						end
 					end
+				end
+				if for_highlights and not is_known then
+					return false, "unknown", true
 				end
 			end
 			-- If we don't block the path, then the explode point should be here
 			return false, true, true
 		end,
-		block_radius=function(typ, lx, ly)
-			return not typ.no_restrict and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move")
+		block_radius=function(typ, lx, ly, for_highlights)
+			return not typ.no_restrict and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") and not game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "pass_projectile") and not (for_highlights and not (game.level.map.remembers(lx, ly) or game.level.map.seens(lx, ly)))
 		end
 	}
 
@@ -238,7 +274,7 @@ function _M:setActive(v, type)
 		if v and type then
 			self.target_type = self:getType(type)
 			-- Targeting will generally want to stop at unseen/remembered tiles
-			table.update(self.target_type, {requires_knowledge=true})
+--			table.update(self.target_type, {requires_knowledge=true})
 		else
 			self.target_type = {}
 		end

@@ -169,6 +169,8 @@ end
 function _M:canProject(t, x, y)
 	local typ = Target:getType(t)
 	typ.source_actor = self
+	typ.start_x = self.x
+	typ.start_y = self.y
 
 	-- Stop at range or on block
 	local lx, ly = x, y
@@ -214,6 +216,8 @@ function _M:projectile(t, x, y, damtype, dam, particles)
 --	if type(dam) == "number" and dam < 0 then return end
 	local typ = Target:getType(t)
 	typ.source_actor = self
+	typ.start_x = self.x
+	typ.start_y = self.y
 
 	local proj = require(self.projectile_class):makeProject(self, t.display, {x=x, y=y, start_x = t.x or self.x, start_y = t.y or self.y, damtype=damtype, tg=t, typ=typ, dam=dam, particles=particles})
 	game.zone:addEntity(game.level, proj, "projectile", t.x or self.x, t.y or self.y)

@@ -77,6 +77,14 @@ newEntity{ define_as = "TROLL_PROX",
 	end,
 
 	on_die = function(self, who)
+		--force the note to drop if it hasn't dropped already (such as if he died via drowning)
+		if self.on_takehit then
+			local n = game.zone:makeEntityByName(game.level, "object", "PROX_NOTE")
+			if n then
+				self.on_takehit = nil
+				game.zone:addEntity(game.level, n, "object", self.x, self.y)
+			end
+		end
 		game.state:activateBackupGuardian("ALUIN", 2, 35, "... and we thought the trollmire was safer now!")
 		game.player:resolveSource():setQuestStatus("start-allied", engine.Quest.COMPLETED, "trollmire")
 	end,

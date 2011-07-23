@@ -92,7 +92,7 @@ newTalent{
 			for px, ys in pairs(grids) do for py, _ in pairs(ys) do nb = nb + 1 end end
 			nb = theorical_nb - nb
 			if nb > 0 then
-				local mult = (math.log10(nb) / math.min(6 - self:getTalentLevelRaw(self.T_EXPLOSION_EXPERT), 5))
+				local mult = math.log10(nb) / (6 - math.min(self:getTalentLevelRaw(self.T_EXPLOSION_EXPERT), 5))
 				print("Adjusting explosion damage to account for ", nb, " lost tiles => ", mult * 100)
 				dam = dam + dam * mult
 			end

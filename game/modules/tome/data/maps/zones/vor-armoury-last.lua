@@ -21,15 +21,16 @@ startx = 0
 starty = 34
 
 defineTile(".", "FLOOR")
+defineTile(";", "FLOOR", nil, nil, nil, {no_teleport=true})
 defineTile("~", "DEEP_WATER")
 defineTile("#", "HARDWALL")
 defineTile('&', "DOOR_VAULT")
 defineTile("$", "FLOOR", {random_filter={add_levels=5, ego_chance=30}})
 defineTile("%", "LAVA_FLOOR")
-defineTile("*", "FLOOR", {random_filter={add_levels=20}}, {random_filter={name="overpowered greater multi-hued wyrm", add_levels=50}})
-defineTile("=", "FLOOR", {random_filter={unique=true, not_properties={"lore"}}}, {random_filter={name="overpowered greater multi-hued wyrm", add_levels=50}})
+defineTile("*", "FLOOR", {random_filter={add_levels=20}}, {random_filter={name="overpowered greater multi-hued wyrm", add_levels=50}}, nil, {no_teleport=true})
+defineTile("=", "FLOOR", {random_filter={unique=true, not_properties={"lore"}}}, {random_filter={name="overpowered greater multi-hued wyrm", add_levels=50}}, nil, {no_teleport=true})
 --defineTile("^", "LAVA_FLOOR", "ZEMEKKYS_HAT", {random_filter={name="overpowered greater multi-hued wyrm", add_levels=50}})
-defineTile("^", "FLOOR", nil, {random_filter={name="overpowered greater multi-hued wyrm", add_levels=50}})
+defineTile("^", "FLOOR", nil, {random_filter={name="overpowered greater multi-hued wyrm", add_levels=50}}, nil, {no_teleport=true})
 defineTile("+", "DOOR")
 defineTile('<', "UP")
 defineTile("o", "FLOOR", nil, {random_filter={add_levels=5, subtype="orc"}})
@@ -38,16 +39,16 @@ defineTile("|", "FLOOR", "ATHAME")
 
 return [[
 .....~~############################
-.....~##.#^........=#.............#
-....~~#..#..........#.............#
-....~##..#..........#.$$$$...$$$$.#
-....~#...#..........#.$##$...$##$.#
-...~~#...&....**....#.$##$...$##$.#
-..~~##...&....**....#.$$$$...$$$$.#
-..~##....#..........#%.o.o###o.o..#
-..~#.....#..........#%%...###...%%#
-.~~#.....#..........#%%...$$$..%%$#
-~~~#.....#.........=#%%%%%%%%%%%%$#
+.....~##.#^;;;;;;;;=#.............#
+....~~#..#;;;;;;;;;;#.............#
+....~##..#;;;;;;;;;;#.$$$$...$$$$.#
+....~#...#;;;;;;;;;;#.$##$...$##$.#
+...~~#...&;;;;**;;;;#.$##$...$##$.#
+..~~##...&;;;;**;;;;#.$$$$...$$$$.#
+..~##....#;;;;;;;;;;#%.o.o###o.o..#
+..~#.....#;;;;;;;;;;#%%...###...%%#
+.~~#.....#;;;;;;;;;;#%%...$$$..%%$#
+~~~#.....#;;;;;;;;;=#%%%%%%%%%%%%$#
 ~#####+##############%..........%$#
 ~#..o.o.o.........o##...oooooo...$#
 ~#................o##............$#

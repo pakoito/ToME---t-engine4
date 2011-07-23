@@ -199,7 +199,7 @@ newEntity{ base = "BASE_INFUSION",
 	cost = 10,
 	material_level = 1,
 
-	inscription_kind = "utility",
+	inscription_kind = "attack",
 	inscription_data = {
 		cooldown = resolvers.rngrange(9, 15),
 		range = resolvers.mbonus_level(5, 5, function(e, v) return v * 0.1 end),

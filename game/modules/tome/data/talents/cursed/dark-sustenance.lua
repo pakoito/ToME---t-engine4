@@ -37,7 +37,7 @@ newTalent{
 	requires_target = function(self, t) return self:getTalentLevel(t) >= 5 end,
 	direct_hit = true,
 	getHateGain = function(self, t)
-		return math.sqrt(self:getTalentLevel(t)) * 0.2 + self:getWil(0.15)
+		return math.sqrt(self:getTalentLevel(t)) * 0.2 + self:getWil(0.15, true)
 	end,
 	action = function(self, t)
 		local range = self:getTalentRange(t)

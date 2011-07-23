@@ -2003,8 +2003,9 @@ newEffect{
 		self.life = self.life - eff.life
 		self.changed = true
 		if self.life <= 0 then
-			game.logSeen(self, "%s died when the effects of increased life wore off.", self.name:capitalize())
-			self:die(self)
+			self.life = 1
+			self:setEffect(target.EFF_STUNNED, 3, {})
+			game.logSeen(self, "%s's increased life wears off and is stunned by the change.", self.name:capitalize())
 		end
 	end,
 }
