@@ -60,7 +60,7 @@ function _M:edit(i, j, id, e)
 	self.edits[i] = self.edits[i] or {}
 	self.edits[i][j] = self.edits[i][j] or {}
 	local ee = self.edits[i][j]
-	ee[#ee+1] = {use_id=id, add_displays=e.add_displays, add_mos=e.add_mos, image=e.image, min=e.min, max=e.max}
+	ee[#ee+1] = {use_id=id, add_displays=e.add_displays, add_mos=e.add_mos, add_mos_shader=e.add_mos_shader, image=e.image, min=e.min, max=e.max}
 end
 
 function _M:handle(level, i, j)
@@ -117,6 +117,7 @@ function _M:replaceAll(level)
 						mos[#mos+1] = table.clone(e.add_mos[i])
 						mos[#mos].image = mos[#mos].image:format(rng.range(e.min, e.max))
 					end
+					if e.add_mos_shader then gd.shader = e.add_mos_shader end
 					gd._mo = nil
 				end
 				if e.add_displays then
@@ -372,6 +373,38 @@ ice = { method="borders", type="ice", forbid={grass=true, sand=true, lava=true},
 	default7i={add_mos={{image="terrain/ice/frozen_ground_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=2},
 	default9i={add_mos={{image="terrain/ice/frozen_ground_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=2},
 },
+lava = { method="borders", type="lava", forbid={},
+	default8={add_mos={{image="terrain/lava/lava_floor_2_%02d.png", display_y=-1}}, min=1, max=8},
+	default2={add_mos={{image="terrain/lava/lava_floor_8_%02d.png", display_y=1}}, min=1, max=8},
+	default4={add_mos={{image="terrain/lava/lava_floor_6_%02d.png", display_x=-1}}, min=1, max=8},
+	default6={add_mos={{image="terrain/lava/lava_floor_4_%02d.png", display_x=1}}, min=1, max=8},
+
+	default1={add_mos={{image="terrain/lava/lava_floor_9_%02d.png", display_x=-1, display_y=1}}, min=1, max=4},
+	default3={add_mos={{image="terrain/lava/lava_floor_7_%02d.png", display_x=1, display_y=1}}, min=1, max=4},
+	default7={add_mos={{image="terrain/lava/lava_floor_3_%02d.png", display_x=-1, display_y=-1}}, min=1, max=4},
+	default9={add_mos={{image="terrain/lava/lava_floor_1_%02d.png", display_x=1, display_y=-1}}, min=1, max=4},
+
+	default1i={add_mos={{image="terrain/lava/lava_floor_inner_1_%02d.png", display_x=-1, display_y=1}}, min=1, max=4},
+	default3i={add_mos={{image="terrain/lava/lava_floor_inner_3_%02d.png", display_x=1, display_y=1}}, min=1, max=4},
+	default7i={add_mos={{image="terrain/lava/lava_floor_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=4},
+	default9i={add_mos={{image="terrain/lava/lava_floor_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=4},
+},
+molten_lava = { method="borders", type="molten_lava", forbid={grass=true, sand=true, lava=true, ice=true},
+	default8={add_mos_shader="lava", add_mos={{image="terrain/lava/molten_lava_2_%02d.png", display_y=-1}}, min=1, max=2},
+	default2={add_mos_shader="lava", add_mos={{image="terrain/lava/molten_lava_8_%02d.png", display_y=1}}, min=1, max=2},
+	default4={add_mos_shader="lava", add_mos={{image="terrain/lava/molten_lava_6_%02d.png", display_x=-1}}, min=1, max=2},
+	default6={add_mos_shader="lava", add_mos={{image="terrain/lava/molten_lava_4_%02d.png", display_x=1}}, min=1, max=2},
+
+	default1={add_mos_shader="lava", add_mos={{image="terrain/lava/molten_lava_9_%02d.png", display_x=-1, display_y=1}}, min=1, max=2},
+	default3={add_mos_shader="lava", add_mos={{image="terrain/lava/molten_lava_7_%02d.png", display_x=1, display_y=1}}, min=1, max=2},
+	default7={add_mos_shader="lava", add_mos={{image="terrain/lava/molten_lava_3_%02d.png", display_x=-1, display_y=-1}}, min=1, max=3},
+	default9={add_mos_shader="lava", add_mos={{image="terrain/lava/molten_lava_1_%02d.png", display_x=1, display_y=-1}}, min=1, max=2},
+
+	default1i={add_mos_shader="lava", add_mos={{image="terrain/lava/molten_lava_inner_1_%02d.png", display_x=-1, display_y=1}}, min=1, max=2},
+	default3i={add_mos_shader="lava", add_mos={{image="terrain/lava/molten_lava_inner_3_%02d.png", display_x=1, display_y=1}}, min=1, max=2},
+	default7i={add_mos_shader="lava", add_mos={{image="terrain/lava/molten_lava_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=2},
+	default9i={add_mos_shader="lava", add_mos={{image="terrain/lava/molten_lava_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=2},
+},
 mountain = { method="borders", type="mountain", forbid={}, use_type=true,
 	default8={add_displays={{image="terrain/mountain8.png", display_y=-1, z=16}}, min=1, max=1},
 	default2={add_mos={{image="terrain/mountain2.png", display_y=1}}, min=1, max=1},
@@ -419,22 +452,6 @@ lava_mountain = { method="borders", type="lava_mountain", forbid={}, use_type=tr
 	default3i={add_mos={{image="terrain/lava/lava_mountain3.png", display_x=1, display_y=1}}, min=1, max=1},
 	default7i={add_displays={{image="terrain/lava/lava_mountain7.png", display_x=-1, display_y=-1, z=17}}, min=1, max=1},
 	default9i={add_displays={{image="terrain/lava/lava_mountain9.png", display_x=1, display_y=-1, z=18}}, min=1, max=1},
-},
-lava = { method="borders", type="lava",
-	default8={add_mos={{image="terrain/lava/lava_floor_2_%02d.png", display_y=-1}}, min=1, max=8},
-	default2={add_mos={{image="terrain/lava/lava_floor_8_%02d.png", display_y=1}}, min=1, max=8},
-	default4={add_mos={{image="terrain/lava/lava_floor_6_%02d.png", display_x=-1}}, min=1, max=8},
-	default6={add_mos={{image="terrain/lava/lava_floor_4_%02d.png", display_x=1}}, min=1, max=8},
-
-	default1={add_mos={{image="terrain/lava/lava_floor_9_%02d.png", display_x=-1, display_y=1}}, min=1, max=4},
-	default3={add_mos={{image="terrain/lava/lava_floor_7_%02d.png", display_x=1, display_y=1}}, min=1, max=4},
-	default7={add_mos={{image="terrain/lava/lava_floor_3_%02d.png", display_x=-1, display_y=-1}}, min=1, max=4},
-	default9={add_mos={{image="terrain/lava/lava_floor_1_%02d.png", display_x=1, display_y=-1}}, min=1, max=4},
-
-	default1i={add_mos={{image="terrain/lava/lava_floor_inner_1_%02d.png", display_x=-1, display_y=1}}, min=1, max=4},
-	default3i={add_mos={{image="terrain/lava/lava_floor_inner_3_%02d.png", display_x=1, display_y=1}}, min=1, max=4},
-	default7i={add_mos={{image="terrain/lava/lava_floor_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=4},
-	default9i={add_mos={{image="terrain/lava/lava_floor_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=4},
 },
 slime_wall = { method="borders", type="slime_wall", forbid={}, use_type=true,
 	default8={add_displays={{image="terrain/slime/slime_wall_V2_top_01.png", display_y=-1, z=18}}, min=1, max=1},

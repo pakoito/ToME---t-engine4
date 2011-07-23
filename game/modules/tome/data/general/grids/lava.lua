@@ -17,6 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local molten_lava_editer = {method="borders_def", def="molten_lava"}
 local lava_editer = {method="borders_def", def="lava"}
 local lava_mountain_editer = {method="borders_def", def="lava_mountain"}
 
@@ -54,10 +55,11 @@ for i = 1, 6 do newEntity{ base="LAVA_WALL", define_as = "LAVA_WALL"..i, image =
 
 newEntity{
 	define_as = "LAVA",
-	type = "floor", subtype = "moltenlava",
-	name = "molten lava", image = "terrain/lava.png",
+	type = "floor", subtype = "molten_lava",
+	name = "molten lava", image = "terrain/lava/molten_lava_5_01.png",
 	display = '%', color=colors.LIGHT_RED, back_color=colors.RED,
 	does_block_move = true,
 	pass_projectile = true,
 	shader = "lava",
+	nice_editer = molten_lava_editer,
 }

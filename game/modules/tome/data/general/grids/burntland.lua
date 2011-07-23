@@ -20,6 +20,7 @@
 for i = 1, 20 do
 newEntity{
 	define_as = "BURNT_TREE"..i,
+	type = "wall", subtype = "burnt",
 	name = "burnt tree",
 	image = "terrain/grass_burnt1.png",
 	add_displays = class:makeTrees("terrain/burnttree_alpha"),
@@ -34,6 +35,7 @@ end
 
 for i = 1, 4 do
 newEntity{ define_as = "BURNT_GROUND"..i,
+	type = "floor", subtype = "burnt",
 	name='burnt ground',
 	display='.', color=colors.UMBER, back_color=colors.DARK_GREY, image="terrain/grass_burnt"..i..".png",
 }
@@ -41,6 +43,7 @@ end
 
 newEntity{
 	define_as = "ALTAR",
+	type = "floor", subtype = "burnt",
 	name = "corrupted altar", image = "terrain/grass_burnt1.png", add_displays = {class.new{image = "terrain/floor_pentagram.png"}},
 	display = ';', color=colors.RED, back_color=colors.DARK_UMBER,
 	notice = true,
@@ -49,6 +52,7 @@ newEntity{
 
 newEntity{
 	define_as = "BURNT_UP_WILDERNESS",
+	type = "floor", subtype = "burnt",
 	name = "exit to the worldmap", image = "terrain/grass_burnt1.png", add_displays = {class.new{image="terrain/worldmap.png"}},
 	display = '<', color_r=255, color_g=0, color_b=255,
 	always_remember = true,
@@ -58,6 +62,7 @@ newEntity{
 }
 newEntity{
 	define_as = "BURNT_UP4",
+	type = "floor", subtype = "burnt",
 	name = "way to the previous level", image = "terrain/grass_burnt1.png", add_displays = {class.new{image="terrain/way_next_4.png"}},
 	display = '<', color_r=255, color_g=255, color_b=0,
 	notice = true,
@@ -66,6 +71,7 @@ newEntity{
 }
 newEntity{
 	define_as = "BURNT_DOWN6",
+	type = "floor", subtype = "burnt",
 	name = "way to the next level", image = "terrain/grass_burnt1.png", add_displays = {class.new{image="terrain/way_next_6.png"}},
 	display = '>', color_r=255, color_g=255, color_b=0,
 	notice = true,

@@ -131,7 +131,10 @@ function _M:tooltip(x, y)
 		tstr:add(true, {"font","bold"}, {"color","CRIMSON"}, "Never visited yet", {"color", "LAST"}, {"font","normal"}, true)
 	end
 
-	if config.settings.cheat then tstr:add(true, "UID: ", tostring(self.uid), true, "Coords: ", tostring(x), "x", tostring(y)) end
+	if config.settings.cheat then
+		tstr:add(true, tostring(rawget(self, "type")), " / ", tostring(rawget(self, "subtype")))
+		tstr:add(true, "UID: ", tostring(self.uid), true, "Coords: ", tostring(x), "x", tostring(y))
+	end
 	return tstr
 end
 
