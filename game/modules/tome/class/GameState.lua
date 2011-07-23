@@ -1102,7 +1102,7 @@ local random_zone_themes = {
 		getDown = function(self) return "DOWN" end,
 	} end },
 	-- Underground
-	{ name="underground", rarity=6, gen=function() return {
+	{ name="underground", rarity=5, gen=function() return {
 		load_grids = {"/data/general/grids/underground.lua"},
 		getDoor = function(self) return "UNDERGROUND_FLOOR" end,
 		getFloor = function(self) return "UNDERGROUND_FLOOR" end,
@@ -1111,7 +1111,7 @@ local random_zone_themes = {
 		getDown = function(self) return "UNDERGROUND_LADDER_DOWN" end,
 	} end },
 	-- Crystals
-	{ name="crystal", rarity=6, gen=function() return {
+	{ name="crystal", rarity=4, gen=function() return {
 		load_grids = {"/data/general/grids/underground.lua"},
 		getDoor = function(self) return "CRYSTAL_FLOOR" end,
 		getFloor = function(self) return "CRYSTAL_FLOOR" end,
@@ -1138,7 +1138,7 @@ local random_zone_themes = {
 		getDown = function(self) return "SAND_DOWN"..self.more_dir end,
 	} end },
 	-- Slime
-	{ name="slime", rarity=1, gen=function() return {
+	{ name="slime", rarity=4, gen=function() return {
 		load_grids = {"/data/general/grids/slime.lua"},
 		getDoor = function(self) return "SLIME_DOOR" end,
 		getFloor = function(self) return "SLIME_FLOOR" end,
