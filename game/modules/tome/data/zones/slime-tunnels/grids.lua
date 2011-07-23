@@ -23,22 +23,22 @@ load("/data/general/grids/slime.lua")
 
 newEntity{
 	define_as = "ORB_DRAGON",
-	name = "orb pedestal (dragon)", image = "terrain/orb_pedestal.png",
+	name = "orb pedestal (dragon)", image = "terrain/slime_floor.png", add_displays={class.new{image = "terrain/pedestal_01.png", display_h=2, display_y=-1}},
 	display = '_', color_r=255, color_g=255, color_b=255, back_color=colors.LIGHT_RED,
 }
 newEntity{
 	define_as = "ORB_UNDEATH",
-	name = "orb pedestal (undeath)", image = "terrain/orb_pedestal.png",
+	name = "orb pedestal (undeath)", image = "terrain/slime_floor.png", add_displays={class.new{image = "terrain/pedestal_01.png", display_h=2, display_y=-1}},
 	display = '_', color_r=255, color_g=255, color_b=255, back_color=colors.LIGHT_RED,
 }
 newEntity{
 	define_as = "ORB_ELEMENTS",
-	name = "orb pedestal (elements)", image = "terrain/orb_pedestal.png",
+	name = "orb pedestal (elements)", image = "terrain/slime_floor.png", add_displays={class.new{image = "terrain/pedestal_01.png", display_h=2, display_y=-1}},
 	display = '_', color_r=255, color_g=255, color_b=255, back_color=colors.LIGHT_RED,
 }
 newEntity{
 	define_as = "ORB_DESTRUCTION",
-	name = "orb pedestal (destruction)", image = "terrain/orb_pedestal.png",
+	name = "orb pedestal (destruction)", image = "terrain/slime_floor.png", add_displays={class.new{image = "terrain/pedestal_01.png", display_h=2, display_y=-1}},
 	display = '_', color_r=255, color_g=255, color_b=255, back_color=colors.LIGHT_RED,
 }
 

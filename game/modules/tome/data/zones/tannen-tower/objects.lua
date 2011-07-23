@@ -24,6 +24,7 @@ local Stats = require "engine.interface.ActorStats"
 newEntity{ base = "BASE_GEM",
 	define_as = "RESONATING_DIAMOND_WEST2",
 	name = "Resonating Diamond", color=colors.VIOLET, quest=true, unique="Resonating Diamond West2", identified=true, no_unique_lore=true,
+	image = "object/artifact/resonating_diamond.png",
 	material_level = 5,
 
 	on_drop = function(self, who)

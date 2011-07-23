@@ -25,12 +25,14 @@ load("/data/general/grids/mountain.lua")
 newEntity{
 	define_as = "MOONSTONE",
 	name = "moonstone",
-	image = "terrain/moonstone.png",
+	image = "terrain/grass.png",
 	display = '&', color=colors.GREY, back_color={r=44,g=95,b=43},
 	always_remember = true,
 	does_block_move = true,
 	block_sight = true,
+	nice_tiler = { method="replace", base={"MOONSTONE", 100, 1, 8}},
 }
+for i = 1, 8 do newEntity{ base="MOONSTONE", define_as = "MOONSTONE"..i, add_displays={class.new{image = "terrain/moonstone_0"..i..".png", display_h=2, display_y=-1}}} end
 
 newEntity{
 	type = "floor", subtype = "grass",

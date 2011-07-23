@@ -143,22 +143,15 @@ newEntity{ base="WATER_BASE",
 }
 
 -----------------------------------------
--- Water/sand
+-- Poison water
 -----------------------------------------
-
-for i = 1, 9 do for j = 1, 1 do
-	if i ~= 5 then newEntity{base="WATER_BASE", define_as = "WATER_SAND_"..i..j, image="terrain/water_sand_"..i.."_"..j..".png"} end
-end end
-newEntity{base="WATER_BASE", define_as = "WATER_SAND_1I", image="terrain/water_sand_1i_1.png"}
-newEntity{base="WATER_BASE", define_as = "WATER_SAND_3I", image="terrain/water_sand_3i_1.png"}
-newEntity{base="WATER_BASE", define_as = "WATER_SAND_7I", image="terrain/water_sand_7i_1.png"}
-newEntity{base="WATER_BASE", define_as = "WATER_SAND_9I", image="terrain/water_sand_9i_1.png"}
 
 newEntity{
 	define_as = "POISON_DEEP_WATER",
-	name = "poisoned deep water", image = "terrain/water_floor.png",
+	type = "floor", subtype = "water",
+	name = "poisoned deep water", image = "terrain/poisoned_water_01.png",
 	display = '~', color=colors.YELLOW_GREEN, back_color=colors.DARK_GREEN,
-	add_displays = class:makeWater(true, "poison_"),
+--	add_displays = class:makeWater(true, "poison_"),
 	always_remember = true,
 	air_level = -5, air_condition="water",
 
@@ -169,7 +162,9 @@ newEntity{
 		local dam = DT:get(DT.POISON).projector(self, x, y, DT.POISON, rng.range(self.mindam, self.maxdam))
 		if dam > 0 then game.logPlayer(who, "The water poisons you!") end
 	end,
+	nice_tiler = { method="replace", base={"POISON_DEEP_WATER", 100, 1, 6}},
 }
+for i = 1, 6 do newEntity{ base="POISON_DEEP_WATER", define_as = "POISON_DEEP_WATER"..i, image = "terrain/poisoned_water_0"..i..".png" } end
 
 
 -----------------------------------------

@@ -70,7 +70,7 @@ newEntity{
 
 newEntity{
 	define_as = "PORTAL",
-	name = "orb", image = "terrain/maze_floor.png", add_mos={{image = "object/egg_dragons_egg_03_64.png"}},
+	name = "orb", image = "terrain/maze_floor.png", add_displays={class.new{z=18, image = "terrain/pedestal_orb_04.png", display_h=2, display_y=-1}},
 	display = '*', color=colors.VIOLET, back_color=colors.DARK_GREY,
 	force_clone=true,
 	always_remember = true,
