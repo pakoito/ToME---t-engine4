@@ -44,8 +44,10 @@ newEntity{ define_as = "LAVA",
 
 newEntity{ base = "GRASS", define_as = "FIELDS",
 	name="cultivated fields",
-	display=';', image="terrain/cultivation.png"
+	display=';', image="terrain/cultivation.png",
+	nice_tiler = { method="replace", base={"FIELDS", 100, 1, 4}},
 }
+for i = 1, 4 do newEntity{ base = "FIELDS", define_as = "FIELDS"..i, image="terrain/grass.png", add_mos={{image="terrain/cultivation0"..i..".png"}} } end
 
 newEntity{ base = "FLOOR", define_as = "COBBLESTONE",
 	name="cobblestone road",
