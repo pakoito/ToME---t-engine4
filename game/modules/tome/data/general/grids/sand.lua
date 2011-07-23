@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local sand_editer = { method="borders_def", def="sand"}
+local sand_wall_editer = { method="sandWalls_def", def="sandwall"}
 
 newEntity{
 	define_as = "SAND",
@@ -41,7 +41,7 @@ for i = 1, 11 do newEntity{ base = "UNDERGROUND_SAND", define_as = "UNDERGROUND_
 newEntity{
 	define_as = "SANDWALL",
 	type = "wall", subtype = "sand",
-	name = "sandwall", image = "terrain/sandwall.png",
+	name = "sandwall", image = "terrain/sand/sand_V3_5_01.png",
 	display = '#', color={r=203,g=189,b=72}, back_color={r=93,g=79,b=22},
 	always_remember = true,
 	can_pass = {pass_wall=1},
@@ -86,62 +86,16 @@ newEntity{
 		game.level:addEntity(sand)
 		return nil, sand, true
 	end,
-	nice_tiler = { method="roundwall3d",
-		inner={"SANDWALL", 100, 1, 1},
-		wall8={"SANDWALL_8", 100, 1, 1},
-		wall2={"SANDWALL_2", 100, 1, 1},
-		wall82={"SANDWALL_NORTH_SOUTH", 100, 1, 1},
-		wall1={"SANDWALL_1", 100, 1, 1},
-		wall3={"SANDWALL_3", 100, 1, 1},
-		wall7={"SANDWALL_7", 100, 1, 1},
-		wall9={"SANDWALL_9", 100, 1, 1},
-		wall1d={"SANDWALL_1D", 100, 1, 1},
-		wall3d={"SANDWALL_3D", 100, 1, 1},
-		wall7d={"SANDWALL_7D", 100, 1, 1},
-		wall9d={"SANDWALL_9D", 100, 1, 1},
-		wall19d={"SANDWALL_19D", 100, 1, 1},
-		wall37d={"SANDWALL_37D", 100, 1, 1},
-		wall73d={"SANDWALL_73D", 100, 1, 1},
-		wall91d={"SANDWALL_91D", 100, 1, 1},
-		hole2={"SANDWALL_HOLE_2", 100, 1, 1},
-		hole8={"SANDWALL_HOLE_8", 100, 1, 1},
-		pillar2={"SANDWALL_PILLAR_2", 100, 1, 1},
-		pillar8={"SANDWALL_PILLAR_8", 100, 1, 1},
-		pillar4={"SANDWALL_PILLAR_4", 100, 1, 1},
-		pillar6={"SANDWALL_PILLAR_6", 100, 1, 1},
-		pillar_small={"SANDWALL_PILLAR_SMALL", 100, 1, 1},
-	},
+	nice_editer = sand_wall_editer,
+	nice_tiler = { method="replace", base={"SANDWALL", 20, 1, 6}},
 }
-
-local i = 1
-newEntity{ base = "SANDWALL", define_as = "SANDWALL"..i, image = "terrain/sandwall_5_"..i..".png"}
-newEntity{ base = "SANDWALL", define_as = "SANDWALL_2"..i, image = "terrain/sandwall_2_"..i..".png"}
-newEntity{ base = "SANDWALL", define_as = "SANDWALL_1"..i, image = "terrain/sandwall_1_"..i..".png"}
-newEntity{ base = "SANDWALL", define_as = "SANDWALL_3"..i, image = "terrain/sandwall_3_"..i..".png"}
-newEntity{ base = "SANDWALL", define_as = "SANDWALL_8"..i, image = "terrain/sandwall_5_"..i..".png", add_displays = {class.new{image="terrain/sandwall_8_1.png", z=18, display_y=-1}}}
-newEntity{ base = "SANDWALL", define_as = "SANDWALL_NORTH_SOUTH"..i, image = "terrain/sandwall_2_"..i..".png", add_displays = {class.new{image="terrain/sandwall_8_1.png", z=18, display_y=-1}}}
-newEntity{ base = "SANDWALL", define_as = "SANDWALL_7"..i, image = "terrain/sandwall_5_"..i..".png", add_displays = {class.new{image="terrain/sandwall_7_1.png", z=18, display_y=-1}}}
-newEntity{ base = "SANDWALL", define_as = "SANDWALL_9"..i, image = "terrain/sandwall_5_"..i..".png", add_displays = {class.new{image="terrain/sandwall_9_1.png", z=18, display_y=-1}}}
-newEntity{ base = "SANDWALL", define_as = "SANDWALL_1D"..i, image = "terrain/sandwall_1d_"..i..".png"}
-newEntity{ base = "SANDWALL", define_as = "SANDWALL_3D"..i, image = "terrain/sandwall_3d_"..i..".png"}
-newEntity{ base = "SANDWALL", define_as = "SANDWALL_7D"..i, image = "terrain/sandwall_5_"..i..".png", add_displays = {class.new{image="terrain/sandwall_7d_1.png", z=18, display_y=-1}}}
-newEntity{ base = "SANDWALL", define_as = "SANDWALL_9D"..i, image = "terrain/sandwall_5_"..i..".png", add_displays = {class.new{image="terrain/sandwall_9d_1.png", z=18, display_y=-1}}}
-newEntity{ base = "SANDWALL", define_as = "SANDWALL_19D"..i, image = "terrain/sandwall_19d_"..i..".png"}
-newEntity{ base = "SANDWALL", define_as = "SANDWALL_37D"..i, image = "terrain/sandwall_37d_"..i..".png"}
-newEntity{ base = "SANDWALL", define_as = "SANDWALL_73D"..i, image = "terrain/sandwall_5_"..i..".png", add_displays = {class.new{image="terrain/sandwall_73d_1.png", z=18, display_y=-1}}}
-newEntity{ base = "SANDWALL", define_as = "SANDWALL_91D"..i, image = "terrain/sandwall_5_"..i..".png", add_displays = {class.new{image="terrain/sandwall_91d_1.png", z=18, display_y=-1}}}
-newEntity{ base = "SANDWALL", define_as = "SANDWALL_PILLAR_2"..i, image = "terrain/sandwall_2p_"..i..".png"}
-newEntity{ base = "SANDWALL", define_as = "SANDWALL_PILLAR_8"..i, image = "terrain/sandwall_5_"..i..".png", add_displays = {class.new{image="terrain/sandwall_8p_1.png", z=18, display_y=-1}}}
-newEntity{ base = "SANDWALL", define_as = "SANDWALL_PILLAR_4"..i, image = "terrain/sandwall_1_"..i..".png", add_displays = {class.new{image="terrain/sandwall_7_1.png", z=18, display_y=-1}}}
-newEntity{ base = "SANDWALL", define_as = "SANDWALL_PILLAR_6"..i, image = "terrain/sandwall_3_"..i..".png", add_displays = {class.new{image="terrain/sandwall_9_1.png", z=18, display_y=-1}}}
-newEntity{ base = "SANDWALL", define_as = "SANDWALL_HOLE_2"..i, image = "terrain/sandwall_2h_"..i..".png"}
-newEntity{ base = "SANDWALL", define_as = "SANDWALL_HOLE_8"..i, image = "terrain/sandwall_5_"..i..".png", add_displays = {class.new{image="terrain/sandwall_8h_1.png", z=18, display_y=-1}}}
+for i = 1, 6 do newEntity{ base = "SANDWALL", define_as = "SANDWALL"..i, image = "terrain/sand/sandwall_5_"..i..".png"} end
 
 
 newEntity{
 	define_as = "SANDWALL_STABLE",
 	type = "wall", subtype = "sand",
-	name = "sandwall", image = "terrain/sandwall.png",
+	name = "sandwall", image = "terrain/sand/sand_V3_5_01.png",
 	display = '#', color={r=203,g=189,b=72}, back_color={r=93,g=79,b=22},
 	always_remember = true,
 	can_pass = {pass_wall=1},
@@ -149,56 +103,10 @@ newEntity{
 	block_sight = true,
 	air_level = -10,
 	dig = "UNDERGROUND_SAND",
-	nice_tiler = { method="roundwall3d",
-		inner={"SANDWALL_STABLE", 100, 1, 1},
-		wall8={"SANDWALL_STABLE_8", 100, 1, 1},
-		wall2={"SANDWALL_STABLE_2", 100, 1, 1},
-		wall82={"SANDWALL_STABLE_NORTH_SOUTH", 100, 1, 1},
-		wall1={"SANDWALL_STABLE_1", 100, 1, 1},
-		wall3={"SANDWALL_STABLE_3", 100, 1, 1},
-		wall7={"SANDWALL_STABLE_7", 100, 1, 1},
-		wall9={"SANDWALL_STABLE_9", 100, 1, 1},
-		wall1d={"SANDWALL_STABLE_1D", 100, 1, 1},
-		wall3d={"SANDWALL_STABLE_3D", 100, 1, 1},
-		wall7d={"SANDWALL_STABLE_7D", 100, 1, 1},
-		wall9d={"SANDWALL_STABLE_9D", 100, 1, 1},
-		wall19d={"SANDWALL_STABLE_19D", 100, 1, 1},
-		wall37d={"SANDWALL_STABLE_37D", 100, 1, 1},
-		wall73d={"SANDWALL_STABLE_73D", 100, 1, 1},
-		wall91d={"SANDWALL_STABLE_91D", 100, 1, 1},
-		hole2={"SANDWALL_STABLE_HOLE_2", 100, 1, 1},
-		hole8={"SANDWALL_STABLE_HOLE_8", 100, 1, 1},
-		pillar2={"SANDWALL_STABLE_PILLAR_2", 100, 1, 1},
-		pillar8={"SANDWALL_STABLE_PILLAR_8", 100, 1, 1},
-		pillar4={"SANDWALL_STABLE_PILLAR_4", 100, 1, 1},
-		pillar6={"SANDWALL_STABLE_PILLAR_6", 100, 1, 1},
-		pillar_small={"SANDWALL_STABLE_PILLAR_SMALL", 100, 1, 1},
-	},
+	nice_editer = sand_wall_editer,
+	nice_tiler = { method="replace", base={"SANDWALL_STABLE", 20, 1, 6}},
 }
-
-local i = 1
-newEntity{ base = "SANDWALL_STABLE", define_as = "SANDWALL_STABLE"..i, image = "terrain/sandwall_5_"..i..".png"}
-newEntity{ base = "SANDWALL_STABLE", define_as = "SANDWALL_STABLE_2"..i, image = "terrain/sandwall_2_"..i..".png"}
-newEntity{ base = "SANDWALL_STABLE", define_as = "SANDWALL_STABLE_1"..i, image = "terrain/sandwall_1_"..i..".png"}
-newEntity{ base = "SANDWALL_STABLE", define_as = "SANDWALL_STABLE_3"..i, image = "terrain/sandwall_3_"..i..".png"}
-newEntity{ base = "SANDWALL_STABLE", define_as = "SANDWALL_STABLE_8"..i, image = "terrain/sandwall_5_"..i..".png", add_displays = {class.new{image="terrain/sandwall_8_1.png", z=18, display_y=-1}}}
-newEntity{ base = "SANDWALL_STABLE", define_as = "SANDWALL_STABLE_NORTH_SOUTH"..i, image = "terrain/sandwall_2_"..i..".png", add_displays = {class.new{image="terrain/sandwall_8_1.png", z=18, display_y=-1}}}
-newEntity{ base = "SANDWALL_STABLE", define_as = "SANDWALL_STABLE_7"..i, image = "terrain/sandwall_5_"..i..".png", add_displays = {class.new{image="terrain/sandwall_7_1.png", z=18, display_y=-1}}}
-newEntity{ base = "SANDWALL_STABLE", define_as = "SANDWALL_STABLE_9"..i, image = "terrain/sandwall_5_"..i..".png", add_displays = {class.new{image="terrain/sandwall_9_1.png", z=18, display_y=-1}}}
-newEntity{ base = "SANDWALL_STABLE", define_as = "SANDWALL_STABLE_1D"..i, image = "terrain/sandwall_1d_"..i..".png"}
-newEntity{ base = "SANDWALL_STABLE", define_as = "SANDWALL_STABLE_3D"..i, image = "terrain/sandwall_3d_"..i..".png"}
-newEntity{ base = "SANDWALL_STABLE", define_as = "SANDWALL_STABLE_7D"..i, image = "terrain/sandwall_5_"..i..".png", add_displays = {class.new{image="terrain/sandwall_7d_1.png", z=18, display_y=-1}}}
-newEntity{ base = "SANDWALL_STABLE", define_as = "SANDWALL_STABLE_9D"..i, image = "terrain/sandwall_5_"..i..".png", add_displays = {class.new{image="terrain/sandwall_9d_1.png", z=18, display_y=-1}}}
-newEntity{ base = "SANDWALL_STABLE", define_as = "SANDWALL_STABLE_19D"..i, image = "terrain/sandwall_19d_"..i..".png"}
-newEntity{ base = "SANDWALL_STABLE", define_as = "SANDWALL_STABLE_37D"..i, image = "terrain/sandwall_37d_"..i..".png"}
-newEntity{ base = "SANDWALL_STABLE", define_as = "SANDWALL_STABLE_73D"..i, image = "terrain/sandwall_5_"..i..".png", add_displays = {class.new{image="terrain/sandwall_73d_1.png", z=18, display_y=-1}}}
-newEntity{ base = "SANDWALL_STABLE", define_as = "SANDWALL_STABLE_91D"..i, image = "terrain/sandwall_5_"..i..".png", add_displays = {class.new{image="terrain/sandwall_91d_1.png", z=18, display_y=-1}}}
-newEntity{ base = "SANDWALL_STABLE", define_as = "SANDWALL_STABLE_PILLAR_2"..i, image = "terrain/sandwall_2p_"..i..".png"}
-newEntity{ base = "SANDWALL_STABLE", define_as = "SANDWALL_STABLE_PILLAR_8"..i, image = "terrain/sandwall_5_"..i..".png", add_displays = {class.new{image="terrain/sandwall_8p_1.png", z=18, display_y=-1}}}
-newEntity{ base = "SANDWALL_STABLE", define_as = "SANDWALL_STABLE_PILLAR_4"..i, image = "terrain/sandwall_1_"..i..".png", add_displays = {class.new{image="terrain/sandwall_7_1.png", z=18, display_y=-1}}}
-newEntity{ base = "SANDWALL_STABLE", define_as = "SANDWALL_STABLE_PILLAR_6"..i, image = "terrain/sandwall_3_"..i..".png", add_displays = {class.new{image="terrain/sandwall_9_1.png", z=18, display_y=-1}}}
-newEntity{ base = "SANDWALL_STABLE", define_as = "SANDWALL_STABLE_HOLE_2"..i, image = "terrain/sandwall_2h_"..i..".png"}
-newEntity{ base = "SANDWALL_STABLE", define_as = "SANDWALL_STABLE_HOLE_8"..i, image = "terrain/sandwall_5_"..i..".png", add_displays = {class.new{image="terrain/sandwall_8h_1.png", z=18, display_y=-1}}}
+for i = 1, 6 do newEntity{ base = "SANDWALL_STABLE", define_as = "SANDWALL_STABLE"..i, image = "terrain/sand/sandwall_5_"..i..".png"} end
 
 newEntity{
 	define_as = "PALMTREE",

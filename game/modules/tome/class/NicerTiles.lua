@@ -452,18 +452,30 @@ slime_wall = { method="borders", type="slime_wall", forbid={}, use_type=true,
 
 	default7i={add_mos={{image="terrain/slime/slime_edge_upper_left_01.png", display_y=-1, display_x=-0.03125}}, min=1, max=1},
 	default9i={add_mos={{image="terrain/slime/slime_edge_upper_right_01.png", display_y=-1, display_x=0.03125}}, min=1, max=1},
+},
+sandwall = { method="walls", type="sandwall", forbid={}, use_type=true, extended=true,
+	default8={add_displays={{image="terrain/sand/sandwall_8_1.png", display_y=-1, z=16}}, min=1, max=1},
+	default8p={add_displays={{image="terrain/sand/sand_V3_pillar_top_01.png", display_y=-1, z=16}}, min=1, max=1},
+	default7={add_displays={{image="terrain/sand/sand_V3_inner_7_01.png", display_y=-1, z=16}}, min=1, max=1},
+	default9={add_displays={{image="terrain/sand/sand_V3_inner_9_01.png", display_y=-1, z=16}}, min=1, max=1},
+	default7i={add_displays={{image="terrain/sand/sand_V3_3_01.png", display_y=-1, z=16}}, min=1, max=1},
+	default8i={add_displays={{image="terrain/sand/sandwall_8h_1.png", display_y=-1, z=16}}, min=1, max=1},
+	default9i={add_displays={{image="terrain/sand/sand_V3_1_01.png", display_y=-1, z=16}}, min=1, max=1},
+	default73i={add_displays={{image="terrain/sand/sandwall_91d_1.png", display_y=-1, z=16}}, min=1, max=1},
+	default91i={add_displays={{image="terrain/sand/sandwall_73d_1.png", display_y=-1, z=16}}, min=1, max=1},
 
---[[
-	default1={add_mos={{image="terrain/mountain9i.png", display_x=-1, display_y=1}}, min=1, max=1},
-	default3={add_mos={{image="terrain/mountain7i.png", display_x=1, display_y=1}}, min=1, max=1},
-	default7={add_mos={{image="terrain/mountain3i.png", display_x=-1, display_y=-1}}, min=1, max=1},
-	default9={add_mos={{image="terrain/mountain1i.png", display_x=1, display_y=-1}}, min=1, max=1},
+	default2={image="terrain/sand/sand_V3_8_01.png", min=1, max=1},
+	default2p={image="terrain/sand.png", add_mos={{image="terrain/sand/sand_V3_pillar_bottom_01.png"}}, min=1, max=1},
+	default1={image="terrain/sand.png", add_mos={{image="terrain/sand/sand_V3_inner_1_01.png"}}, min=1, max=1},
+	default3={image="terrain/sand.png", add_mos={{image="terrain/sand/sand_V3_inner_3_01.png"}}, min=1, max=1},
+	default1i={image="terrain/sand/sand_V3_7_01.png", min=1, max=1},
+	default2i={image="terrain/sand/sandwall_2h_1.png", min=1, max=1},
+	default3i={image="terrain/sand/sand_V3_9_01.png", min=1, max=1},
+	default19i={image="terrain/sand/sandwall_19d_1.png", min=1, max=1},
+	default37i={image="terrain/sand/sandwall_37d_1.png", min=1, max=1},
 
-	default1i={add_mos={{image="terrain/mountain1.png", display_x=-1, display_y=1}}, min=1, max=1},
-	default3i={add_mos={{image="terrain/mountain3.png", display_x=1, display_y=1}}, min=1, max=1},
-	default7i={add_displays={{image="terrain/mountain7.png", display_x=-1, display_y=-1, z=17}}, min=1, max=1},
-	default9i={add_displays={{image="terrain/mountain9.png", display_x=1, display_y=-1, z=18}}, min=1, max=1},
-]]
+	default4={add_displays={{image="terrain/sand/sand_ver_edge_left_01.png", display_x=-1}}, min=1, max=1},
+	default6={add_displays={{image="terrain/sand/sand_ver_edge_right_01.png", display_x=1}}, min=1, max=1},
 },
 }
 
@@ -558,6 +570,71 @@ function _M:editTileGenericWalls(level, i, j, g, nt, type)
 	if     g5 ~= g6 and g5 ~= g9 and g5 ~= g8 then self:edit(i, j, id, nt[g9.."9i"] or nt["default9i"]) end
 end
 
+--- Make water have nice transition to other stuff
+function _M:editTileGenericSandWalls(level, i, j, g, nt, type)
+	local kind = nt.use_type and "type" or "subtype"
+	local g5 = level.map:checkEntity(i, j,   Map.TERRAIN, kind) or type
+	local g8 = level.map:checkEntity(i, j-1, Map.TERRAIN, kind) or type
+	local g2 = level.map:checkEntity(i, j+1, Map.TERRAIN, kind) or type
+	local g4 = level.map:checkEntity(i-1, j, Map.TERRAIN, kind) or type
+	local g6 = level.map:checkEntity(i+1, j, Map.TERRAIN, kind) or type
+	local g7 = level.map:checkEntity(i-1, j-1, Map.TERRAIN, kind) or type
+	local g9 = level.map:checkEntity(i+1, j-1, Map.TERRAIN, kind) or type
+	local g1 = level.map:checkEntity(i-1, j+1, Map.TERRAIN, kind) or type
+	local g3 = level.map:checkEntity(i+1, j+1, Map.TERRAIN, kind) or type
+	if nt.forbid then
+		if nt.forbid[g5] then g5 = type end
+		if nt.forbid[g4] then g4 = type end
+		if nt.forbid[g6] then g6 = type end
+		if nt.forbid[g8] then g8 = type end
+		if nt.forbid[g2] then g2 = type end
+		if nt.forbid[g1] then g1 = type end
+		if nt.forbid[g3] then g3 = type end
+		if nt.forbid[g7] then g7 = type end
+		if nt.forbid[g9] then g9 = type end
+	end
+
+	local id = "sandwall:"..table.concat({type,tostring(g1==g5),tostring(g2==g5),tostring(g3==g5),tostring(g4==g5),tostring(g5==g5),tostring(g6==g5),tostring(g7==g5),tostring(g8==g5),tostring(g9==g5)}, ",")
+
+	-- Sides
+	if     g5 ~= g8 and g5 ~= g7 and g5 ~= g9 then
+		if     g5 ~= g4 and g5 ~= g6 then self:edit(i, j, id, nt[g8.."8p"] or nt["default8p"])
+		elseif g5 == g4 and g5 == g6 then self:edit(i, j, id, nt[g8.."8"] or nt["default8"])
+		elseif g5 ~= g4 and g5 == g6 then self:edit(i, j, id, nt[g7.."7"] or nt["default7"])
+		elseif g5 == g4 and g5 ~= g6 then self:edit(i, j, id, nt[g9.."9"] or nt["default9"])
+		end
+	elseif g5 ~= g8 and g5 ~= g7 and g5 == g9 then
+		if     g5 == g4 then self:edit(i, j, id, nt[g7.."7i"] or nt["default7i"])
+		elseif g5 ~= g4 then self:edit(i, j, id, nt[g7.."73i"] or nt["default73i"])
+		end
+	elseif g5 ~= g8 and g5 == g7 and g5 ~= g9 then
+		if     g5 == g6 then self:edit(i, j, id, nt[g9.."9i"] or nt["default9i"])
+		elseif g5 ~= g6 then self:edit(i, j, id, nt[g9.."91i"] or nt["default91i"])
+		end
+	elseif g5 ~= g8 and g5 == g7 and g5 == g9 then self:edit(i, j, id, nt[g8.."8i"] or nt["default8i"])
+	end
+
+	if     g5 ~= g2 and g5 ~= g1 and g5 ~= g3 then
+		if     g5 ~= g4 and g5 ~= g6 then self:edit(i, j, id, nt[g2.."2p"] or nt["default2p"])
+		elseif g5 == g4 and g5 == g6 then self:edit(i, j, id, nt[g2.."2"] or nt["default2"])
+		elseif g5 ~= g4 and g5 == g6 then self:edit(i, j, id, nt[g1.."1"] or nt["default1"])
+		elseif g5 == g4 and g5 ~= g6 then self:edit(i, j, id, nt[g3.."3"] or nt["default3"])
+		end
+	elseif g5 ~= g2 and g5 ~= g1 and g5 == g3 then
+		if     g5 == g4 then self:edit(i, j, id, nt[g3.."3i"] or nt["default3i"])
+		elseif g5 ~= g4 then self:edit(i, j, id, nt[g3.."37i"] or nt["default37i"])
+		end
+	elseif g5 ~= g2 and g5 == g1 and g5 ~= g3 then
+		if     g5 == g6 then self:edit(i, j, id, nt[g1.."1i"] or nt["default1i"])
+		elseif g5 ~= g6 then self:edit(i, j, id, nt[g1.."19i"] or nt["default19i"])
+		end
+	elseif g5 ~= g2 and g5 == g1 and g5 == g3 then self:edit(i, j, id, nt[g2.."2i"] or nt["default2i"])
+	end
+
+	if     g5 ~= g4 and g5 == g2 and g5 ~= g1 then self:edit(i, j, id, nt[g4.."4"] or nt["default4"]) end
+	if     g5 ~= g6 and g5 == g2 and g5 ~= g3 then self:edit(i, j, id, nt[g6.."6"] or nt["default6"]) end
+end
+
 function _M:editTileBorders(level, i, j, g, nt)
 	self:editTileGenericBorders(level, i, j, g, nt, nt.type or "grass")
 end
@@ -566,6 +643,9 @@ function _M:editTileBorders_def(level, i, j, g, nt)
 end
 function _M:editTileWalls_def(level, i, j, g, nt)
 	self:editTileGenericWalls(level, i, j, g, defs[nt.def], defs[nt.def].type or "grass")
+end
+function _M:editTileSandWalls_def(level, i, j, g, nt)
+	self:editTileGenericSandWalls(level, i, j, g, defs[nt.def], defs[nt.def].type or "grass")
 end
 
 -- This array is precomputed, it holds the possible combinations of walls and the nice tile they generate
