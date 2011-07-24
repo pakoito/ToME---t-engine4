@@ -92,7 +92,7 @@ newEntity{ base = "BASE_NPC_CRYSTAL",
 	desc = "A formation of white crystal. It emits bright white, chilling light.",
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 1,
-	resists = { [DamageType.ICE] = 100, [DamageType.FIRE] = -100 },
+	resists = { [DamageType.COLD] = 100, [DamageType.FIRE] = -100 },
 	resolvers.talents{
 		[Talents.T_ICE_SHARDS]={base=1, every=7, max=5},
 	}
@@ -125,7 +125,7 @@ newEntity{ base = "BASE_NPC_CRYSTAL",
 	desc = "A formation of blue crystal. Its light shines like the ocean's waves.",
 	level_range = {3, nil}, exp_worth = 1,
 	rarity = 4,
-	resists = { [DamageType.ICE] = -100 },
+	resists = { [DamageType.COLD] = -100 },
 	resolvers.talents{
 		[Talents.T_TIDAL_WAVE]={base=3, every=9, max=5},
 	}
