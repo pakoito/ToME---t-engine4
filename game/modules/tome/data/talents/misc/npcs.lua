@@ -938,13 +938,13 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.PHYSKNOCKBACK, {dist=3+self:getTalentLevelRaw(t), dam=self:spellCrit(12 + self:getStr(50) * self:getTalentLevel(t))}, {type="archery"})
+		self:project(tg, x, y, DamageType.PHYSKNOCKBACK, {dist=3+self:getTalentLevelRaw(t), dam=self:spellCrit(12 + self:getStr(50, true) * self:getTalentLevel(t))}, {type="archery"})
 		game:playSoundNear(self, "talents/ice")
 		return true
 	end,
 	info = function(self, t)
 		return ([[Throws a huge boulder at a target, damaging it for %0.2f and knocking it back.
-		The damage will increase with the Strength stat]]):format(12 + self:getStr(50) * self:getTalentLevel(t))
+		The damage will increase with the Strength stat]]):format(12 + self:getStr(50, true) * self:getTalentLevel(t))
 	end,
 }
 
@@ -1267,7 +1267,7 @@ newTalent{
 				{DamageType.DARKNESS, "dark"},
 			}
 			tg.display={particle="bolt_elemental", trail="generictrail"}
-		self:projectile(tg, x, y, elem[1], math.floor(self:getMag(90) * self:getTalentLevel(t)), {type=elem[2]})
+		self:projectile(tg, x, y, elem[1], math.floor(self:getMag(90, true) * self:getTalentLevel(t)), {type=elem[2]})
 		game:playSoundNear(self, "talents/arcane")
 		return true
 	end,

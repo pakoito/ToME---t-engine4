@@ -425,7 +425,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	end
 
 	-- Riposte!
-	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_RIPOSTE) and rng.percent(target:getTalentLevel(target.T_RIPOSTE) * (5 + target:getDex(5))) then
+	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_RIPOSTE) and rng.percent(target:getTalentLevel(target.T_RIPOSTE) * (5 + target:getDex(5, true))) then
 		game.logSeen(self, "%s ripostes!", target.name:capitalize())
 		target:attackTarget(self, nil, nil, true)
 	end
@@ -438,7 +438,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	end
 
 	-- Counter Attack!
-	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_COUNTER_ATTACK) and target:isUnarmed() and rng.percent(target:getTalentLevel(target.T_COUNTER_ATTACK) * (5 + target:getCun(5))) then
+	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_COUNTER_ATTACK) and target:isUnarmed() and rng.percent(target:getTalentLevel(target.T_COUNTER_ATTACK) * (5 + target:getCun(5, true))) then
 		game.logSeen(self, "%s counters the attack!", target.name:capitalize())
 		local t = target:getTalentFromId(target.T_COUNTER_ATTACK)
 		local damage = t.getDamage(target, t)
@@ -446,7 +446,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	end
 
 	-- Defensive Throw!
-	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_DEFENSIVE_THROW) and rng.percent(target:getTalentLevel(target.T_DEFENSIVE_THROW) * (5 + target:getCun(5))) then
+	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_DEFENSIVE_THROW) and rng.percent(target:getTalentLevel(target.T_DEFENSIVE_THROW) * (5 + target:getCun(5, true))) then
 		local t = target:getTalentFromId(target.T_DEFENSIVE_THROW)
 		t.do_throw(target, self, t)
 	end
@@ -545,25 +545,25 @@ function _M:combatAttackBase(weapon, ammo)
 end
 function _M:combatAttack(weapon, ammo)
 	local stats
-	if self.use_psi_combat then stats = (self:getWil(50) - 5) + (self:getCun(50) - 5)
-	else stats = (self:getStr(50) - 5) + (self:getDex(50) - 5)
+	if self.use_psi_combat then stats = (self:getWil(50, true) - 5) + (self:getCun(50, true) - 5)
+	else stats = (self:getStr(50, true) - 5) + (self:getDex(50, true) - 5)
 	end
 	return self:combatAttackBase(weapon, ammo) + stats
 end
 
 --- Gets the attack using only strength
 function _M:combatAttackStr(weapon, ammo)
-	return self:combatAttackBase(weapon, ammo) + (self:getStr(100) - 10)
+	return self:combatAttackBase(weapon, ammo) + (self:getStr(100, true) - 10)
 end
 
 --- Gets the attack using only dexterity
 function _M:combatAttackDex(weapon, ammo)
-	return self:combatAttackBase(weapon, ammo) + (self:getDex(100) - 10)
+	return self:combatAttackBase(weapon, ammo) + (self:getDex(100, true) - 10)
 end
 
 --- Gets the attack using only magic
 function _M:combatAttackMag(weapon, ammo)
-	return self:combatAttackBase(weapon, ammo) + (self:getMag(100) - 10)
+	return self:combatAttackBase(weapon, ammo) + (self:getMag(100, true) - 10)
 end
 
 --- Gets the armor penetration

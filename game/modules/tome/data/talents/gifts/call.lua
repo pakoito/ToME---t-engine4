@@ -39,7 +39,7 @@ newTalent{
 		end
 
 		local dur = 17 - self:getTalentLevel(t)
-		local e = 10 + self:getWil(50) * self:getTalentLevel(t)
+		local e = 10 + self:getWil(50, true) * self:getTalentLevel(t)
 		local tt = e / 2
 		local pt = (e - tt) / dur
 		self:setEffect(self.EFF_MEDITATION, dur, {per_turn=pt, final=tt})
@@ -49,7 +49,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local dur = 17 - self:getTalentLevel(t)
-		local e = 10 + self:getWil(50) * self:getTalentLevel(t)
+		local e = 10 + self:getWil(50, true) * self:getTalentLevel(t)
 		local tt = e / 2
 		local pt = (e - tt) / dur
 		return ([[Meditate on your link with Nature. You are considered dazed for %d turns

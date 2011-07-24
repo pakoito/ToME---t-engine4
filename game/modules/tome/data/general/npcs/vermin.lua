@@ -79,7 +79,7 @@ newEntity{ base = "BASE_NPC_WORM",
 	on_die = function(self, src)
 		game.level.map:addEffect(self,
 			self.x, self.y, 5,
-			engine.DamageType.BLIGHT, self:getStr(90),
+			engine.DamageType.BLIGHT, self:getStr(90, true),
 			2,
 			5, nil,
 			engine.Entity.new{alpha=100, display='', color_br=30, color_bg=180, color_bb=60}

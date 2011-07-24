@@ -75,8 +75,8 @@ newTalent{
 		return {
 			stun = self:addTemporaryValue("stun_immune", 0.1 * self:getTalentLevel(t)),
 			pin = self:addTemporaryValue("pin_immune", 0.1 * self:getTalentLevel(t)),
-			dam = self:addTemporaryValue("combat_dam", 5 + self:getStr(7) * self:getTalentLevel(t)),
-			atk = self:addTemporaryValue("combat_atk", 5 + self:getDex(7) * self:getTalentLevel(t)),
+			dam = self:addTemporaryValue("combat_dam", 5 + self:getStr(7, true) * self:getTalentLevel(t)),
+			atk = self:addTemporaryValue("combat_atk", 5 + self:getDex(7, true) * self:getTalentLevel(t)),
 			def = self:addTemporaryValue("combat_def", -10),
 			armor = self:addTemporaryValue("combat_armor", -10),
 		}
@@ -96,8 +96,8 @@ newTalent{
 		While berserking you are nearly unstoppable, granting %d%% stun and pinning resistance.
 		Accuracy increase with your Dexterity stat and damage with your Strength stat]]):
 		format(
-			5 + self:getDex(7) * self:getTalentLevel(t),
-			5 + self:getStr(7) * self:getTalentLevel(t),
+			5 + self:getDex(7, true) * self:getTalentLevel(t),
+			5 + self:getStr(7, true) * self:getTalentLevel(t),
 			10 * self:getTalentLevel(t)
 		)
 	end,

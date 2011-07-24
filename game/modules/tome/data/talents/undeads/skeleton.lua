@@ -48,13 +48,13 @@ newTalent{
 	cooldown = 30,
 	tactical = { DEFEND = 2 },
 	action = function(self, t)
-		self:setEffect(self.EFF_DAMAGE_SHIELD, 10, {power=50 + 70 * self:getTalentLevel(t) + self:getDex(350)})
+		self:setEffect(self.EFF_DAMAGE_SHIELD, 10, {power=50 + 70 * self:getTalentLevel(t) + self:getDex(350, true)})
 		return true
 	end,
 	info = function(self, t)
 		return ([[Creates a shield of bones absorbing %d damage. Lasts for 10 turns.
 		The damage absorbed increases with dexterity.]]):
-		format(50 + 70 * self:getTalentLevel(t) + self:getDex(350))
+		format(50 + 70 * self:getTalentLevel(t) + self:getDex(350, true))
 	end,
 }
 

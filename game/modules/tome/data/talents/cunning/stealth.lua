@@ -27,7 +27,7 @@ newTalent{
 	allow_autocast = true,
 	no_energy = true,
 	tactical = { BUFF = 3 },
-	getStealthPower = function(self, t) return 4 + self:getCun(10) * self:getTalentLevel(t) end,
+	getStealthPower = function(self, t) return 4 + self:getCun(10, true) * self:getTalentLevel(t) end,
 	getRadius = function(self, t) return math.floor(10 - self:getTalentLevel(t) * 1.1) end,
 	on_pre_use = function(self, t, silent)
 		if self:isTalentActive(t.id) then return true end

@@ -71,7 +71,7 @@ newTalent{
 		local damage = t.getDamage(self, t) * 100
 		return ([[When you avoid a melee blow you have a %d%% chance to get a free, automatic unarmed attack against your foe for %d%% damage.
 		The is considered a strike for the purpose of stance damage bonuses (if have any) and will only trigger while unarmed.
-		The chance of countering increases with the cunning stat.]]):format(self:getTalentLevel(t) * (5 + self:getCun(5)), damage)
+		The chance of countering increases with the cunning stat.]]):format(self:getTalentLevel(t) * (5 + self:getCun(5, true)), damage)
 	end,
 }
 

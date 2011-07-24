@@ -159,7 +159,7 @@ newEntity{ base = "BASE_NPC_SANDWORM",
 	on_die = function(self, src)
 		game.level.map:addEffect(self,
 			self.x, self.y, 5,
-			engine.DamageType.ACID, self:getStr(90),
+			engine.DamageType.ACID, self:getStr(90, true),
 			3,
 			5, nil,
 			{type="vapour"}

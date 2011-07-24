@@ -78,7 +78,7 @@ newTalent{
 	tactical = { BUFF = 3 },
 	require = cuns_req3,
 	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t) * 1.5) end,
-	getDamage = function(self, t) return self:getWil(70) end,
+	getDamage = function(self, t) return self:getWil(70, true) end,
 	action = function(self, t)
 		self:setEffect(self.EFF_WILLFUL_COMBAT, t.getDuration(self, t), {power=t.getDamage(self, t)})
 		return true

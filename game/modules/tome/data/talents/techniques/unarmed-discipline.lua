@@ -116,7 +116,7 @@ newTalent{
 		local damagetwo = t.getDamageTwo(self, t)
 		return ([[When you avoid a melee blow you have a %d%% chance to throw the target to the ground.  If the throw lands the target will take %0.2f damage and be dazed for 2 turns or %0.2f damage and be stunned for 2 turns if grappled.
 		The chance of throwing increases with the cunning stat and the damage will scale with the strength stat, dexterity, and cunning stats.
-		This is considered a grapple for the purposes of stance damage bonuses.]]):format(self:getTalentLevel(t) * (5 + self:getCun(5)), damDesc(self, DamageType.PHYSICAL, (damage)), damDesc(self, DamageType.PHYSICAL, (damagetwo)))
+		This is considered a grapple for the purposes of stance damage bonuses.]]):format(self:getTalentLevel(t) * (5 + self:getCun(5, true)), damDesc(self, DamageType.PHYSICAL, (damage)), damDesc(self, DamageType.PHYSICAL, (damagetwo)))
 	end,
 }
 

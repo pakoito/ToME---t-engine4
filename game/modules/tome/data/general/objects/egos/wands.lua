@@ -119,7 +119,7 @@ newEntity{
 		local tg = {type="beam", range=6 + who:getMag(4)}
 		local x, y = who:getTarget(tg)
 		if not x or not y then return nil end
-		local dam = (40 + who:getMag(20)) * self.material_level
+		local dam = (40 + who:getMag(20, true)) * self.material_level
 		who:project(tg, x, y, engine.DamageType.LIGHTNING, rng.avg(dam / 3, dam, 3))
 		local _ _, x, y = who:canProject(tg, x, y)
 		game.level.map:particleEmitter(who.x, who.y, math.max(math.abs(x-who.x), math.abs(y-who.y)), "lightning", {tx=x-who.x, ty=y-who.y})
@@ -139,7 +139,7 @@ newEntity{
 		local tg = {type="beam", range=6 + who:getMag(4)}
 		local x, y = who:getTarget(tg)
 		if not x or not y then return nil end
-		local dam = (35 + who:getMag(20)) * self.material_level
+		local dam = (35 + who:getMag(20, true)) * self.material_level
 		who:project(tg, x, y, engine.DamageType.FIRE, dam, {type="flame"})
 		game:playSoundNear(who, "talents/fire")
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
@@ -157,7 +157,7 @@ newEntity{
 		local tg = {type="bolt", range=10 + who:getMag(10)}
 		local x, y = who:getTarget(tg)
 		if not x or not y then return nil end
-		local dam = (45 + who:getMag(25)) * self.material_level
+		local dam = (45 + who:getMag(25, true)) * self.material_level
 		local elem = rng.table{
 			{engine.DamageType.FIRE, "flame"},
 			{engine.DamageType.COLD, "freeze"},
@@ -183,7 +183,7 @@ newEntity{
 		local tg = {default_target=who, type="hit", nowarning=true, range=6 + who:getMag(4), first_target="friend"}
 		local x, y = who:getTarget(tg)
 		if not x or not y then return nil end
-		local dam = (80 + who:getMag(50)) * self.material_level
+		local dam = (80 + who:getMag(50, true)) * self.material_level
 		who:project(tg, x, y, engine.DamageType.HEAL, dam)
 		game:playSoundNear(who, "talents/heal")
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})

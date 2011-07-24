@@ -51,7 +51,7 @@ newTalent{
 	cooldown = 20,
 	no_npc_use = true,
 	action = function(self, t)
-		local rad = 5 + self:getCun(10) * self:getTalentLevel(t)
+		local rad = math.floor(5 + self:getCun(10, true) * self:getTalentLevel(t))
 		self:setEffect(self.EFF_SENSE, 3 + self:getTalentLevel(t), {
 			range = rad,
 			actor = 1,
@@ -60,7 +60,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Sense foes around you in a radius of %d for %d turns.
-		The radius will increase with the Cunning stat]]):format(10 + self:getCun(10) * self:getTalentLevel(t), 3 + self:getTalentLevel(t))
+		The radius will increase with the Cunning stat]]):format(math.floor(10 + self:getCun(10, true) * self:getTalentLevel(t)), 3 + self:getTalentLevel(t))
 	end,
 }
 
@@ -112,7 +112,7 @@ newTalent{
 	tactical = { BUFF = 2 },
 	activate = function(self, t)
 		return {
-			slow_projectiles = self:addTemporaryValue("slow_projectiles", 15 + self:getDex(10) * self:getTalentLevel(t)),
+			slow_projectiles = self:addTemporaryValue("slow_projectiles", 15 + self:getDex(10, true) * self:getTalentLevel(t)),
 		}
 	end,
 
@@ -122,6 +122,6 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Your great dexterity allows you to see incoming projectiles (spells, arrows, ...), slowing them down by %d%%.]]):
-		format(15 + self:getDex(10) * self:getTalentLevel(t))
+		format(15 + self:getDex(10, true) * self:getTalentLevel(t))
 	end,
 }

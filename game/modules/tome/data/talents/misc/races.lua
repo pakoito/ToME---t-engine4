@@ -190,7 +190,7 @@ newTalent{
 		game:playSoundNear(self, "talents/spell_generic2")
 		local ret = {
 			invis = self:addTemporaryValue("invis_on_hit", self:getTalentLevelRaw(t) * 5),
-			power = self:addTemporaryValue("invis_on_hit_power", 5 + self:getMag(20)),
+			power = self:addTemporaryValue("invis_on_hit_power", 5 + self:getMag(20, true)),
 			talent = self:addTemporaryValue("invis_on_hit_disable", {[t.id]=1}),
 		}
 		return ret
@@ -204,7 +204,7 @@ newTalent{
 	info = function(self, t)
 		return ([[As the only immortal race of Eyal, Shaloren have learnt, over the long years, to use their innate inner magic to protect themselves.
 		%d%% chance to become invisible (power %d) for 5 turns when hit by a blow doing at least 15%% of their total life.]]):
-		format(self:getTalentLevelRaw(t) * 5, 5 + self:getMag(20))
+		format(self:getTalentLevelRaw(t) * 5, 5 + self:getMag(20, true))
 	end,
 }
 
@@ -258,12 +258,12 @@ newTalent{
 	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 5 end,
 	tactical = { ATTACK = 1, DEFEND = 1 },
 	action = function(self, t)
-		self:setEffect(self.EFF_ETERNAL_WRATH, 5, {power=7 + self:getWil(10)})
+		self:setEffect(self.EFF_ETERNAL_WRATH, 5, {power=7 + self:getWil(10, true)})
 		return true
 	end,
 	info = function(self, t)
 		return ([[Call upon the power of the Eternals, increasing all damage by %d%% and reducing all damage taken by %d%% for 5 turns.
-		The bonus will increase with the Willpower stat.]]):format(7 + self:getWil(10), 7 + self:getWil(10))
+		The bonus will increase with the Willpower stat.]]):format(7 + self:getWil(10, true), 7 + self:getWil(10, true))
 	end,
 }
 
@@ -443,7 +443,7 @@ newTalent{
 	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 5 end,
 	range = 1,
 	no_npc_use = true,
-	getRange = function(self, t) return math.floor(1 + self:getCon(4) + self:getTalentLevel(t)) end,
+	getRange = function(self, t) return math.floor(1 + self:getCon(4, true) + self:getTalentLevel(t)) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t}
 		local x, y = self:getTarget(tg)
@@ -546,12 +546,12 @@ newTalent{
 	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 4 end,
 	tactical = { ATTACK = 2 },
 	action = function(self, t)
-		self:setEffect(self.EFF_ORC_FURY, 5, {power=10 + self:getWil(20)})
+		self:setEffect(self.EFF_ORC_FURY, 5, {power=10 + self:getWil(20, true)})
 		return true
 	end,
 	info = function(self, t)
 		return ([[Summons your lust for blood and destruction, increasing all damage by %d%% for 5 turns.
-		The bonus will increase with the Willpower stat.]]):format(10 + self:getWil(20))
+		The bonus will increase with the Willpower stat.]]):format(10 + self:getWil(20, true))
 	end,
 }
 
@@ -655,7 +655,7 @@ newTalent{
 		self:project(tg, x, y, function(px, py)
 			local target = game.level.map(px, py, Map.ACTOR)
 			if not target or target.dead then return end
-			if not target:canBe("instakill") or target.rank > 2 or target.undead or not target:checkHit(self:getWil(20) + self.level * 1.5, target.level) then
+			if not target:canBe("instakill") or target.rank > 2 or target.undead or not target:checkHit(self:getWil(20, true) + self.level * 1.5, target.level) then
 				game.logSeen(target, "%s resists the mental assault!", target.name:capitalize())
 				return
 			end

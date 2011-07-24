@@ -150,7 +150,7 @@ function _M:moveModActor(x, y, force)
 
 	-- Try to detect traps
 	if self:knowTalent(self.T_TRAP_DETECTION) then
-		local power = self:getTalentLevel(self.T_TRAP_DETECTION) * self:getCun(25)
+		local power = self:getTalentLevel(self.T_TRAP_DETECTION) * self:getCun(25, true)
 		local grids = core.fov.circle_grids(self.x, self.y, 1, true)
 		for x, yy in pairs(grids) do for y, _ in pairs(yy) do
 			local trap = game.level.map(x, y, Map.TRAP)

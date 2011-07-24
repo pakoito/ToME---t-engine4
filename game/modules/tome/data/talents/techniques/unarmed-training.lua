@@ -92,7 +92,7 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	getDuration = function(self, t) return math.ceil(self:getTalentLevel(t)/2) end,
-	getChance = function(self, t) return self:getTalentLevel(t) * (5 + self:getCun(5)) end,
+	getChance = function(self, t) return self:getTalentLevel(t) * (5 + self:getCun(5, true)) end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		local chance = t.getChance(self, t)

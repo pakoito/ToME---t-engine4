@@ -32,7 +32,7 @@ local function getSpikeStrength(self, t)
 end
 
 local function getEfficiency(self, t)
-	return 0.01*(50 + math.min(self:getCun(30), 50))
+	return 0.01*(50 + math.min(self:getCun(30, true), 50))
 end
 
 newTalent{

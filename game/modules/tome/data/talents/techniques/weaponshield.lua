@@ -73,7 +73,7 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	info = function(self, t)
-		return ([[When you block/avoid a melee blow you have a %d%% chance to get a free, automatic melee attack against your foe. Your chances increase with dexterity.]]):format(self:getTalentLevel(t) * (5 + self:getDex(5)))
+		return ([[When you block/avoid a melee blow you have a %d%% chance to get a free, automatic melee attack against your foe. Your chances increase with dexterity.]]):format(self:getTalentLevel(t) * (5 + self:getDex(5, true)))
 	end,
 }
 
@@ -192,8 +192,8 @@ newTalent{
 			stun = self:addTemporaryValue("stun_immune", 0.1 * self:getTalentLevel(t)),
 			knock = self:addTemporaryValue("knockback_immune", 0.1 * self:getTalentLevel(t)),
 			dam = self:addTemporaryValue("inc_damage", {[DamageType.PHYSICAL]=-20}),
-			def = self:addTemporaryValue("combat_def", 5 + (1 + self:getDex(4)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE) * 2),
-			armor = self:addTemporaryValue("combat_armor", 5 + (1 + self:getDex(4)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE)),
+			def = self:addTemporaryValue("combat_def", 5 + (1 + self:getDex(4, true)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE) * 2),
+			armor = self:addTemporaryValue("combat_armor", 5 + (1 + self:getDex(4, true)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE)),
 		}
 	end,
 	deactivate = function(self, t, p)
@@ -207,8 +207,8 @@ newTalent{
 	info = function(self, t)
 		return ([[Enter a protective battle stance, increasing defense by %d and armor by %d at the cost of -20%% physical damage. The defense and armor increase is based on dexterity.
 		It also grants resistance to stunning and knockback (%d%%).]]):format(
-		5 + (1 + self:getDex(4)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE)* 2,
-		5 + (1 + self:getDex(4)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE),
+		5 + (1 + self:getDex(4, true)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE)* 2,
+		5 + (1 + self:getDex(4, true)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE),
 		10 * self:getTalentLevel(t), 10 * self:getTalentLevel(t)
 		)
 	end,
@@ -292,7 +292,7 @@ newTalent{
 
 		return {
 			max_life = self:addTemporaryValue("max_life", (10 + self:getCon() * 0.25) * self:getTalentLevel(t)),
-			def = self:addTemporaryValue("combat_def", 5 + self:getDex(4) * self:getTalentLevel(t)),
+			def = self:addTemporaryValue("combat_def", 5 + self:getDex(4, true) * self:getTalentLevel(t)),
 			nomove = self:addTemporaryValue("never_move", 1),
 		}
 	end,
@@ -305,7 +305,7 @@ newTalent{
 	info = function(self, t)
 		return ([[You brace yourself for the final stand, increasing defense by %d and maximum life by %d, but making you unable to move.
 		The increase in defense is based on Dexterity and life on Constitution.]]):
-		format(5 + self:getDex(4) * self:getTalentLevel(t),
+		format(5 + self:getDex(4, true) * self:getTalentLevel(t),
 		(10 + self:getCon() * 0.25) * self:getTalentLevel(t))
 	end,
 }

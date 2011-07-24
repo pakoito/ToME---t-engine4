@@ -26,11 +26,11 @@ newTalent{
 	points = 5,
 	tactical = { BUFF = 2 },
 	action = function(self, t)
-		self:setEffect(self.EFF_CONTROL, 5 + self:getTalentLevelRaw(t), {power=15 + math.ceil(self:getTalentLevel(t)*(1 + self:getCun(8)))})
+		self:setEffect(self.EFF_CONTROL, 5 + self:getTalentLevelRaw(t), {power=15 + math.ceil(self:getTalentLevel(t)*(1 + self:getCun(8, true)))})
 		return true
 	end,
 	info = function(self, t)
-		local boost = 15 + math.ceil(self:getTalentLevel(t)*(1 + self:getCun(8)))
+		local boost = 15 + math.ceil(self:getTalentLevel(t)*(1 + self:getCun(8, true)))
 		local dur = 5 + self:getTalentLevelRaw(t)
 		return ([[Encase your body in a sheath of thought-quick forces, allowing you to control your body's movements directly without the inefficiency of dealing with crude mechanisms like nerves and muscles.
 		Increases attack by %d and critical strike chance by %0.2f%% for %d turns. The effect scales with Cunning.]]):

@@ -36,8 +36,8 @@ newTalent{
 	tactical = { BUFF = 2 },
 	type_no_req = true,
 	no_npc_use = true, -- They dont need it since it auto switches anyway
-	getAttack = function(self, t) return 5 + self:getDex(20) end,
-	getDamage = function(self, t) return 20 + self:getDex(20) end,
+	getAttack = function(self, t) return 5 + self:getDex(20, true) end,
+	getDamage = function(self, t) return 20 + self:getDex(20, true) end,
 	activate = function(self, t)
 		cancelStances(self)
 		local ret = {

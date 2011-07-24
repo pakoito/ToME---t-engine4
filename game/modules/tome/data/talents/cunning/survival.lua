@@ -25,7 +25,7 @@ newTalent{
 	points = 5,
 	info = function(self, t)
 		return ([[Your attention to detail allows you to detect traps around you (%d detection 'power').]]):
-		format(self:getTalentLevel(t) * self:getCun(25))
+		format(self:getTalentLevel(t) * self:getCun(25, true))
 	end,
 }
 
@@ -60,7 +60,7 @@ newTalent{
 	points = 5,
 	info = function(self, t)
 		return ([[You have learnt to disarm traps (%d disarm power).]]):
-		format(self:getTalentLevel(t) * self:getCun(25))
+		format(self:getTalentLevel(t) * self:getCun(25, true))
 	end,
 }
 
@@ -74,12 +74,12 @@ newTalent{
 	cooldown = 30,
 	action = function(self, t)
 		local dur = 5 + self:getWil(10)
-		local chance = 5 * self:getTalentLevel(t) + self:getCun(25) + self:getDex(25)
+		local chance = 5 * self:getTalentLevel(t) + self:getCun(25, true) + self:getDex(25, true)
 		self:setEffect(self.EFF_EVASION, dur, {chance=chance})
 		return true
 	end,
 	info = function(self, t)
 		return ([[Your quick wit allows you to see attacks before they come, granting you a %d%% chance to completely evade them for %d turns.
-		Duration increases with Willpower, and chance to evade with Cunning and Dexterity.]]):format(5 * self:getTalentLevel(t) + self:getCun(25) + self:getDex(25), 5 + self:getWil(10))
+		Duration increases with Willpower, and chance to evade with Cunning and Dexterity.]]):format(5 * self:getTalentLevel(t) + self:getCun(25, true) + self:getDex(25, true), 5 + self:getWil(10))
 	end,
 }

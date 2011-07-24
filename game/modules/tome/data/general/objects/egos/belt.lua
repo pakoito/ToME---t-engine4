@@ -45,7 +45,7 @@ newEntity{
 	},
 	max_power = 120, power_regen = 1,
 	use_power = { name = "create a temporary shield that absorbs damage", power = 100, use = function(self, who)
-		local power = 100 + who:getMag(120)
+		local power = 100 + who:getMag(120, true)
 		who:setEffect(who.EFF_DAMAGE_SHIELD, 10, {power=power})
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
 		return true, nil, true

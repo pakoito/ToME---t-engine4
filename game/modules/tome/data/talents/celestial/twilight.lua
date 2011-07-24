@@ -28,7 +28,7 @@ newTalent{
 	positive = 15,
 	tactical = { BUFF = 1 },
 	range = 10,
-	getNegativeGain = function(self, t) return 20 + self:getTalentLevel(t) * self:getCun(40) end,
+	getNegativeGain = function(self, t) return 20 + self:getTalentLevel(t) * self:getCun(40, true) end,
 	action = function(self, t)
 		if self:isTalentActive(self.T_DARKEST_LIGHT) then
 			game.logPlayer(self, "You can't use Twilight while Darkest Light is active.")
@@ -214,7 +214,7 @@ newTalent{
 			return true
 		end
 
-		modifier = self:getCun(10) * self:getTalentLevel(t)
+		modifier = self:getCun(10, true) * self:getTalentLevel(t)
 
 		local m = target:clone{
 --			shader = "shadow_simulacrum", textures = { function() return _3DNoise, true end },
@@ -232,7 +232,7 @@ newTalent{
 		m.on_added_to_level = nil
 
 		m.energy.value = 0
-		m.life = m.life / (2 - (modifier / 50))
+		m.life = m.life / (2 - math.min(modifier / 50, 1.9))
 		m.forceLevelup = function() end
 		-- Handle special things
 		m.on_die = nil
