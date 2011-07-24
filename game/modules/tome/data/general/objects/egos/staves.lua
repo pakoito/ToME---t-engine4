@@ -215,7 +215,7 @@ newEntity{
 		lite = 1,
 	},
 	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_ILLUMINATE, level = 2, power = 80 },
+	use_talent = { id = Talents.T_ILLUMINATE, level = 2, power = 10 },
 }
 
 newEntity{
