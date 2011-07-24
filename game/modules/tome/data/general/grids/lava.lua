@@ -62,4 +62,6 @@ newEntity{
 	pass_projectile = true,
 	shader = "lava",
 	nice_editer = molten_lava_editer,
+	nice_tiler = { method="replace", base={"LAVA", 10, 2, 5} },
 }
+for i = 2, 5 do newEntity{ base="LAVA", define_as = "LAVA"..i, image = "terrain/lava/molten_lava_5_0"..i..".png"} end
