@@ -37,6 +37,7 @@ When activated it will prompt to destroy items on the floor, if there are none i
 	transmo_filter = function(o) if o:getPrice() <= 0 or o.quest then return false end return true end,
 	transmo_inven = function(self, who, inven, idx, o)
 		local price = math.min(o:getPrice() * self.pricemod(o), 25) * o:getNumber()
+		price = math.floor(price * 100) / 100 -- Make sure we get at most 2 digit precision
 		who:removeObject(who:getInven("INVEN"), idx, true)
 		who:sortInven()
 		who:incMoney(price)
