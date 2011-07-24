@@ -145,7 +145,7 @@ function _M:generateList(kind)
 				cache[img] = tex
 			end
 		end
-		if data and (not data.notdone or a.show) then
+		if not data.notdone or a.show then
 			if a.show == "full" or not data.notdone then
 				list[#list+1] = { name=a.name, color=color, desc=a.desc, when=data.when, who=data.who, order=a.order, id=id, tex=tex, a=a }
 			elseif a.show == "none" then
@@ -161,9 +161,9 @@ function _M:generateList(kind)
 	if kind == "self" and self.player and self.player.achievements then
 		for id, data in pairs(self.player.achievements) do handle(id, world.achieved[id]) end
 	elseif kind == "main" then
-		for id, data in pairs(world.achieved) do handle(id, data) end
+		for id, data in pairs(world.achieved) do handle(id, data or {notdone=true, when="--", who="--"}) end
 	elseif kind == "all" then
-		for _, a in ipairs(world.achiev_defs) do handle(a.id, world.achieved[id] or {notdone=true, when="--", who="--"}) end
+		for _, a in ipairs(world.achiev_defs) do handle(a.id, world.achieved[a.id] or {notdone=true, when="--", who="--"}) end
 	end
 	table.sort(list, function(a, b) return a.name < b.name end)
 	self.list = list
