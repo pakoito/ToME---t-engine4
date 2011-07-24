@@ -3769,16 +3769,11 @@ newEffect{
 		DamageType:get(DamageType.PHYSICAL).projector(eff.src or self, self.x, self.y, DamageType.PHYSICAL, eff.power)
 	end,
 	activate = function(self, eff)
-		if self:canBe("silence") then
-			eff.tmpid = self:addTemporaryValue("silence", 1)
-			eff.dur = self:updateEffectDuration(eff.dur, "silence")
-		end
-		silenced = true
+		eff.tmpid = self:addTemporaryValue("silence", 1)
+		eff.dur = self:updateEffectDuration(eff.dur, "silence")
 	end,
 	deactivate = function(self, eff)
-		if silenced then
-			self:removeTemporaryValue("silence", eff.tmpid)
-		end
+		self:removeTemporaryValue("silence", eff.tmpid)
 	end,
 }
 
