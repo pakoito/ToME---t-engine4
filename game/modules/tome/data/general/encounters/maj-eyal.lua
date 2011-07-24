@@ -152,6 +152,7 @@ newEntity{
 		g.change_level=1 g.change_zone="ancient-elven-ruins" g.glow=true
 		g.add_displays = g.add_displays or {}
 		g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/dungeon_entrance_closed02.png", z=5}
+		g.nice_tiler = nil
 		g:initGlow()
 		game.zone:addEntity(game.level, g, "terrain", x, y)
 		print("[WORLDMAP] Elven ruins at", x, y)
@@ -187,6 +188,7 @@ newEntity{
 		g.change_level=1 g.change_zone="ruined-dungeon" g.glow=true
 		g.add_displays = g.add_displays or {}
 		g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/ruin_entrance_closed01.png", z=5}
+		g.nice_tiler = nil
 		g:initGlow()
 		game.zone:addEntity(game.level, g, "terrain", x, y)
 		print("[WORLDMAP] Ruined dungeon at", x, y)
@@ -230,6 +232,7 @@ newEntity{
 		g.change_level=1 g.change_zone="golem-graveyard" g.glow=true
 		g.add_displays = g.add_displays or {}
 		g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="npc/alchemist_golem.png", z=5}
+		g.nice_tiler = nil
 		g:initGlow()
 		game.zone:addEntity(game.level, g, "terrain", x, y)
 		print("[WORLDMAP] Golem Graveyard at", x, y)
@@ -274,6 +277,7 @@ newEntity{
 		g.change_level=1 g.change_zone="ring-of-blood" g.glow=true
 		g.add_displays = g.add_displays or {}
 		g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/cave_entrance_closed02.png", z=5}
+		g.nice_tiler = nil
 		g:initGlow()
 		game.zone:addEntity(game.level, g, "terrain", x, y)
 		print("[WORLDMAP] Hidden compound at", x, y)

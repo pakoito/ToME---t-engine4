@@ -80,6 +80,9 @@ return {
 
 		-- Create the glow
 		level.entrance_glow = require("engine.Particles").new("starglow", 1, {})
+
+		-- Only run once
+		level.data.post_nicer_tiles = nil
 	end,
 	on_enter = function(_, _, newzone)
 		if game.player.level >= 12 and game.player.level <= 20 and not game.player:hasQuest("lightning-overload") then
