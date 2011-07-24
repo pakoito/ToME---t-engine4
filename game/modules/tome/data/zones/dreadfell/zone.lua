@@ -61,7 +61,7 @@ return {
 		},
 	},
 	post_process = function(level)
-		for uid, e in pairs(level.entities) do e.faction="dreadfell" end
+		for uid, e in pairs(level.entities) do e.faction = e.hard_faction or "dreadfell" end
 
 		-- Put lore near the up stairs
 		if game.zone.created_lore and game.zone.created_lore[level.level] then
