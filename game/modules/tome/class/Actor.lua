@@ -1558,6 +1558,7 @@ function _M:learnStats(statorder)
 end
 
 function _M:resetToFull()
+	if self.dead then return end
 	self.life = self.max_life
 	self.mana = self.max_mana
 	self.vim = self.max_vim

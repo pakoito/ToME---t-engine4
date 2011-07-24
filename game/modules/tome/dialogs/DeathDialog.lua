@@ -186,15 +186,15 @@ function _M:use(item)
 		game.logPlayer(self.actor, "#LIGHT_BLUE#You resurrect! CHEATER!")
 
 		self:cleanActor(self.actor)
-		self:restoreResources(self.actor)
 		self:resurrectBasic(self.actor)
+		self:restoreResources(self.actor)
 	elseif act == "blood_life" then
 		self.actor.blood_life = false
 		game.logPlayer(self.actor, "#LIGHT_RED#The Blood of Life rushes through your dead body. You come back to life!")
 
 		self:cleanActor(self.actor)
-		self:restoreResources(self.actor)
 		self:resurrectBasic(self.actor)
+		self:restoreResources(self.actor)
 		world:gainAchievement("UNSTOPPABLE", actor)
 	elseif act == "easy_mode" then
 		self:eidolonPlane()
@@ -203,8 +203,8 @@ function _M:use(item)
 		game.logPlayer(self.actor, "#YELLOW#Your bones magically knit back together. You are once more able to dish out pain to your foes!")
 
 		self:cleanActor(self.actor)
-		self:restoreResources(self.actor)
 		self:resurrectBasic(self.actor)
+		self:restoreResources(self.actor)
 		world:gainAchievement("UNSTOPPABLE", actor)
 	elseif act:find("^consume") then
 		local inven, item, o = item.inven, item.item, item.object
@@ -212,8 +212,8 @@ function _M:use(item)
 		game.logPlayer(self.actor, "#YELLOW#Your %s is consumed and disappears! You come back to life!", o:getName{do_colour=true})
 
 		self:cleanActor(self.actor)
-		self:restoreResources(self.actor)
 		self:resurrectBasic(self.actor)
+		self:restoreResources(self.actor)
 		world:gainAchievement("UNSTOPPABLE", actor)
 	end
 end
