@@ -48,10 +48,12 @@ newTalent{
 	require = techs_dex_req2,
 	points = 5,
 	random_ego = "utility",
+	stamina = 20,
 	cooldown = 20,
+	radius = function(self, t) return math.floor(5 + self:getCun(10, true) * self:getTalentLevel(t)) end,
 	no_npc_use = true,
 	action = function(self, t)
-		local rad = math.floor(5 + self:getCun(10, true) * self:getTalentLevel(t))
+		local rad = self:getTalentRadius(t)
 		self:setEffect(self.EFF_SENSE, 3 + self:getTalentLevel(t), {
 			range = rad,
 			actor = 1,
@@ -59,8 +61,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local rad = self:getTalentRadius(t)
 		return ([[Sense foes around you in a radius of %d for %d turns.
-		The radius will increase with the Cunning stat]]):format(math.floor(10 + self:getCun(10, true) * self:getTalentLevel(t)), 3 + self:getTalentLevel(t))
+		The radius will increase with the Cunning stat]]):format(rad, 3 + self:getTalentLevel(t))
 	end,
 }
 
