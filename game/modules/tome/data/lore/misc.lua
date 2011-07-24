@@ -460,3 +460,20 @@ I have done it! My fool of a master said I was not ready for the rites of lichdo
 Zilquick the Eternal, hah! What an unbearable buffoon, and I am glad his pride was his undoing. The young fool used up the Ruby of Eldoral in creating his phylactery, however; I must acquire a new phylactery for myself. On the bright side, my incompetent apprentice did illustrate why a bone from a creature slain by my own hand is important: the dragon bone he chose had left to fester a mold infection, and the mold somehow infused itself with the bone's inherent magical properties, altering the magical composition of the spell. I do hope whoever finds this note shall kill this "lich" using the most painful means available, and shall deposit him someplace where he is sure to be found.
 Oh, look. He is trying to harm me with spells, but all he can manage is a corruption of his own name: Z'quikzshl.]]
 }
+
+newLore{
+	id = "walrog",
+	category = "boss",
+	name = "Walrog",
+	lore = [[Dirge of the Naloren
+
+There once was a village
+the Nalore held dear
+but when Ol' Walrog came t'pillage,
+they did quiver in fear.
+
+So remember the tale
+of dead Old Shellsea,
+for Ol' Walrog sent the gale,
+that ended Old Shellsea.]]
+}

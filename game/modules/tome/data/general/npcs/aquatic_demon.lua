@@ -77,4 +77,6 @@ newEntity{ base = "BASE_NPC_AQUATIC_DEMON",
 	resists={[DamageType.COLD] = resolvers.mbonus(50, 30)},
 
 	resolvers.talents{ [Talents.T_TIDAL_WAVE]=4, [Talents.T_FREEZE]=5 },
+
+	on_death_lore = "walrog",
 }
