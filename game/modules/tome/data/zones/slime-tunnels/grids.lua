@@ -60,12 +60,9 @@ newEntity{
 	change_level=1, change_zone="high-peak",
 }
 
-newEntity{
+newEntity{ base = "SLIME_UP",
 	define_as = "UP_GRUSHNAK",
-	name = "exit to Grushnak Pride", image = "terrain/slime/slime_floor_01.png", add_displays = {class.new{image="terrain/ladder_up.png"}},
-	display = '<', color_r=255, color_g=0, color_b=255,
-	always_remember = true,
-	notice = true,
+	name = "exit to Grushnak Pride",
 	change_level = 5,
 	change_zone = "grushnak-pride",
 	force_down = true,
