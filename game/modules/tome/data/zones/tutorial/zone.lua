@@ -30,6 +30,7 @@ return {
 	persistent = "zone",
 	ambient_music = "Woods of Eremae.ogg",
 	no_level_connectivity = true,
+	no_worldport = true,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",

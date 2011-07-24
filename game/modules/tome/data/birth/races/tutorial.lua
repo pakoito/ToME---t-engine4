@@ -54,5 +54,7 @@ newBirthDescriptor
 		starting_zone = "tutorial",
 		starting_quest = "tutorial",
 		starting_intro = "tutorial",
+		moddable_tile = "human_#sex#",
+		moddable_tile_base = "base_cornac_01.png",
 	},
 }
