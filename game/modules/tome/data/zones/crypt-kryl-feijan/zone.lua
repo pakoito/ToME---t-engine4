@@ -58,6 +58,9 @@ return {
 			nb_trap = {6, 9},
 		},
 	},
+	post_process = function(level)
+		for uid, e in pairs(level.entities) do e.faction = e.hard_faction or "fearscape" end
+	end,
 	on_enter = function(lev)
 		if lev < 4 then
 			require("engine.ui.Dialog"):simplePopup("Crypt", "You hear an eerie chanting echoing from a distance.")

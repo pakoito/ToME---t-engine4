@@ -26,6 +26,7 @@ newEntity{
 	type = "demon", subtype = "major",
 	display = "U", color=colors.WHITE,
 	blood_color = colors.GREEN,
+	faction = "fearscape",
 	body = { INVEN = 10 },
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },
