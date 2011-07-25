@@ -26,6 +26,9 @@ desc = function(self, who)
 	else
 		desc[#desc+1] = "You talked for a while and it seems she has a crush on you."
 	end
+	if self:isCompleted("moved-in") then
+		desc[#desc+1] = "Melinda decided to come live with you in your Fortress."
+	end
 	return table.concat(desc, "\n")
 end
 
@@ -36,3 +39,42 @@ function onWin(self, who)
 		"You lived together and led a happy life. Melinda even learned a few adventurer's tricks and you both traveled Eyal, making new legends.",
 	}
 end
+
+function spawnFortress(self, who) game:onTickEnd(function()
+	local melinda = require("mod.class.NPC").new{
+		name = "Melinda",
+		type = "humanoid", subtype = "human", female=true,
+		display = "@", color=colors.LIGHT_BLUE,
+		image = "player/cornac_female_redhair.png",
+		moddable_tile = "human_female",
+		moddable_tile_base = "base_redhead_01.png",
+		desc = [[You saved her from the depth of a cultists lair and fell in love with her. She has moved in the Fortress to see you more often.]],
+		autolevel = "tank",
+		ai = "none",
+		stats = { str=8, dex=7, mag=8, con=12 },
+		faction = who.faction,
+		never_anger = true,
+
+		resolvers.equip{ id=true,
+			{defined="SIMPLE_GOWN", autoreq=true, ego_chance=-1000, ego_chance=-1000}
+		},
+
+		body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
+		lite = 4,
+		rank = 2,
+		exp_worth = 0,
+
+		max_life = 100, life_regen = 0,
+		life_rating = 12,
+		combat_armor = 3, combat_def = 3,
+
+		on_die = function(self) game.player:setQuestStatus("love-melinda", engine.Quest.FAILED) end,
+		can_talk = "melinda-fortress",
+	}
+	melinda:resolve() melinda:resolve(nil, true)
+	local spot = game.level:pickSpot{type="spawn", subtype="melinda"}
+	game.zone:addEntity(game.level, melinda, "actor", spot.x, spot.y)
+	who:move(spot.x + 1, spot.y)
+
+	who:setQuestStatus(self.id, self.COMPLETED, "moved-in")
+end) end

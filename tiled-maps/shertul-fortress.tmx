@@ -181,8 +181,14 @@
     <property name="type" value="&quot;spawn&quot;"/>
    </properties>
   </object>
+  <object name="melinda" x="743" y="1030" width="21" height="21">
+   <properties>
+    <property name="subtype" value="&quot;melinda&quot;"/>
+    <property name="type" value="&quot;spawn&quot;"/>
+   </properties>
+  </object>
  </objectgroup>
- <objectgroup name="addZone#rooms" width="60" height="60">
+ <objectgroup name="addZone#rooms" width="60" height="60" visible="0">
   <object name="control room" x="673" y="738" width="412" height="408">
    <properties>
     <property name="subtype" value="&quot;Control Room&quot;"/>

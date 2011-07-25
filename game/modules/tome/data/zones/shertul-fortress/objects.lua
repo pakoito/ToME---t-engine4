@@ -67,3 +67,11 @@ When activated it will prompt to destroy items on the floor, if there are none i
 		end
 	},
 }
+
+newEntity{ base = "BASE_CLOTH_ARMOR",
+	define_as = "SIMPLE_GOWN",
+	name = "simple gown",
+	cost = 0.5,
+	material_level = 1,
+	moddable_tile = "upper_body_12",
+}

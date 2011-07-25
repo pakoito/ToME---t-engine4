@@ -17,6 +17,9 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 local q = game.player:hasQuest("kryl-feijan-escape")
+local qs = game.player:hasQuest("shertul-fortress")
+local ql = game.player:hasQuest("love-melinda")
+
 if not q or not q:isStatus(q.DONE) then
 
 newChat{ id="welcome",
@@ -37,6 +40,7 @@ newChat{ id="welcome",
 	text = [[@playername@! My daughter's savior!]],
 	answers = {
 		{"Hi, I was just checking in to see if Melinda is all right.", jump="reward", cond=function(npc, player) return not npc.rewarded_for_saving_melinda end, action=function(npc, player) npc.rewarded_for_saving_melinda = true end},
+		{"Hi, I would like to talk to Melinda please.", jump="home1", switch_npc={name="Melinda"}, cond=function(npc, player) return ql and not ql:isCompleted("moved-in") end},
 		{"Sorry, I have to go!"},
 	}
 }
@@ -129,6 +133,38 @@ I feel safe in your arms. Please, I know you must leave, but promise to come bac
 		{"Oh, I am sorry. I think you are mistaken. I was only trying to comfort you.", quick_reply="Oh, sorry, I was not myself. Goodbye, then. Farewell."},
 	}
 }
+
+------------------------------------------------------------------
+-- Moving in
+------------------------------------------------------------------
+newChat{ id="home1",
+	text = [[#LIGHT_GREEN#*Melinda appears at the door and kisses you*#WHITE#
+@playername@! I missed you!]],
+	answers = {
+		{"I am sorry, I was a bit busy I fear. You know, the usual: slaying cultists, looting treasures of old."},
+		{"Actually I have thought about something, for us. Some time ago I assumed ownership of a very special home... #LIGHT_GREEN#[tell her the Fortress story]#WHITE#", jump="home2", cond=function(npc, player) return ql and qs and qs:isCompleted("farportal") and not ql:isCompleted("moved-in") end},
+	}
+}
+
+newChat{ id="home2",
+	text = [[An ancient fortress of a mythical race?! How #{bold}#exciting#{normal}#!]],
+	answers = {
+		{"Yes indeed, I will probably spend quite some time there and I wondered if, well maybe, if you would like to stay there with me, there is much free room and...", jump="home3"},
+		{"But really dangerous, anyway I must be on my way. I will try to stop by again soon. #LIGHT_GREEN#[kiss her]#WHITE#"},
+	}
+}
+
+newChat{ id="home3",
+	text = [[#LIGHT_GREEN#*Melinda hugs you fiercely, kisses you and rushes to the inside of the shop. While she runs you hear:*#WHITE#
+Daddy you won't have to fear for me anymore! I'm moving home!]],
+	answers = {
+		{"I take that as a yes. #LIGHT_GREEN#[wait for her return and go to the Fortress]#WHITE#", action=function(npc, player)
+			game:changeLevel(1, "shertul-fortress")
+			player:hasQuest("love-melinda"):spawnFortress(player)
+		end},
+	}
+}
+
 
 end
 

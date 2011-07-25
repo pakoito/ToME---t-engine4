@@ -56,6 +56,7 @@ addSpot({17, 27}, "portal", "back")
 addSpot({23, 25}, "spawn", "butler")
 addSpot({36, 29}, "door", "farportal")
 addSpot({40, 29}, "spawn", "farportal")
+addSpot({23, 32}, "spawn", "melinda")
 
 -- addZone section
 addZone({21, 23, 33, 35}, "zonename", "Control Room")
