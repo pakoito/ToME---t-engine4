@@ -44,6 +44,8 @@ function _M:init(x, y, w, h, max, fontname, fontsize, color, bgcolor)
 	setmetatable(self.cache, {__mode="v"})
 
 	self:resize(x, y, w, h)
+
+--	if config.settings.log_to_disk then self.out_f = fs.open("/game-log-"..(game and type(game) == "table" and game.__mod_info and game.__mod_info.short_name or "default").."-"..os.time()..".txt", "w") end
 end
 
 function _M:enableShadow(v)
@@ -103,6 +105,7 @@ function _M:call(str, ...)
 	str = str:format(...)
 	print("[LOG]", str)
 	local tstr = str:toString()
+	if self.out_f then self.out_f:write(tstr:removeColorCodes()) self.out_f:write("\n") end
 	table.insert(self.log, 1, {str=tstr, timestamp = core.game.getTime()})
 	while #self.log > self.max_log do
 		local old = table.remove(self.log)
