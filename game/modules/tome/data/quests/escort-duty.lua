@@ -332,6 +332,7 @@ on_grant = function(self, who)
 			world:gainAchievement("ESCORT_KILL", game.player)
 			game.player:registerEscorts("betrayed")
 		else
+			world:gainAchievement("ESCORT_LOST", game.player)
 			game.player:registerEscorts("lost")
 		end
 	end
