@@ -51,7 +51,7 @@ newTalent{
 
 	end,
 	action = function(self, t)
-		self:showInventory("Reshape which weapon?", self:getInven("INVEN"), function(o) return not o.quest and o.type == "weapon" and not o.fully_reshaped end, function(o, item)
+		local d d = self:showInventory("Reshape which weapon?", self:getInven("INVEN"), function(o) return not o.quest and o.type == "weapon" and not o.fully_reshaped end, function(o, item)
 			--o.wielder = o.wielder or {}
 			if (o.old_atk or 0) < t.boost(self, t) then
 				o.combat.atk = (o.combat.atk or 0) - (o.old_atk or 0)
@@ -65,10 +65,14 @@ newTalent{
 					o.name = "reshaped" .. " "..o.name..""
 					o.been_reshaped = true
 				end
+				d.used_talent = true
 			else
 				game.logPlayer(self, "You cannot reshape your %s any further.", o:getName{do_colour=true, no_count=true})
 			end
 		end)
+		local co = coroutine.running()
+		d.unload = function(self) coroutine.resume(co, self.used_talent) end
+		if not coroutine.yield() then return nil end
 		return true
 	end,
 	info = function(self, t)
@@ -95,7 +99,7 @@ newTalent{
 		return math.floor(0.1*self:combatTalentIntervalDamage(t, "wil", 50, 100))
 	end,
 	action = function(self, t)
-		self:showInventory("Reshape which piece of armor?", self:getInven("INVEN"), function(o) return not o.quest and o.type == "armor" and not o.fully_reshaped end, function(o, item)
+		local d d = self:showInventory("Reshape which piece of armor?", self:getInven("INVEN"), function(o) return not o.quest and o.type == "armor" and not o.fully_reshaped end, function(o, item)
 			if (o.old_fat or 0) < t.fat_red(self, t) then
 				o.wielder = o.wielder or {}
 				if not o.been_reshaped then
@@ -117,10 +121,14 @@ newTalent{
 					o.name = "reshaped" .. " "..o.name..""
 					o.been_reshaped = true
 				end
+				d.used_talent = true
 			else
 				game.logPlayer(self, "You cannot reshape your %s any further.", o:getName{do_colour=true, no_count=true})
 			end
 		end)
+		local co = coroutine.running()
+		d.unload = function(self) coroutine.resume(co, self.used_talent) end
+		if not coroutine.yield() then return nil end
 		return true
 	end,
 	info = function(self, t)
@@ -141,13 +149,17 @@ newTalent{
 	points = 5,
 	no_npc_use = true,
 	action = function(self, t)
-		self:showInventory("Use which gem?", self:getInven("INVEN"), function(gem) return gem.type == "gem" and gem.material_level and not gem.unique end, function(gem, gem_item)
+		local d d = self:showInventory("Use which gem?", self:getInven("INVEN"), function(gem) return gem.type == "gem" and gem.material_level and not gem.unique end, function(gem, gem_item)
 			self:removeObject(self:getInven("INVEN"), gem_item)
 			local amt = 0.1*self:combatTalentIntervalDamage(t, "cun", 100, 400)
 			local dur = 3 + 2*(gem.material_level or 0)
 			self:setEffect(self.EFF_PSI_REGEN, dur, {power=amt})
 			self.changed = true
+			d.used_talent = true
 		end)
+		local co = coroutine.running()
+		d.unload = function(self) coroutine.resume(co, self.used_talent) end
+		if not coroutine.yield() then return nil end
 		return true
 	end,
 	info = function(self, t)

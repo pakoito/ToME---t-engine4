@@ -27,7 +27,7 @@ newTalent{
 	no_npc_use = true,
 	action = function(self, t)
 		local inven = self:getInven("INVEN")
-		self:showInventory("Telekinetically grasp which item?", inven, function(o)
+		local d d = self:showInventory("Telekinetically grasp which item?", inven, function(o)
 			return (o.type == "weapon" or o.type == "gem") and o.subtype ~= "longbow" and o.subtype ~= "sling"
 		end, function(o, item)
 			local pf = self:getInven("PSIONIC_FOCUS")
@@ -70,8 +70,13 @@ newTalent{
 			game.logSeen(self, "%s wears: %s.", self.name:capitalize(), o:getName{do_color=true})
 
 			self:sortInven()
+			d.used_talent = true
 		end)
-		end,
+		local co = coroutine.running()
+		d.unload = function(self) coroutine.resume(co, self.used_talent) end
+		if not coroutine.yield() then return nil end
+		return true
+	end,
 	info = function(self, t)
 		return ([[Encase a weapon or gem in mentally-controlled forces, holding it aloft and bringing it to bear with the power of your mind alone.]])
 	end,
