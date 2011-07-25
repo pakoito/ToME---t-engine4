@@ -1224,7 +1224,7 @@ function _M:setupCommands()
 		end,
 
 		SHOW_CHARACTER_SHEET = function()
-			self:registerDialog(require("mod.dialogs.CharacterSheet").new(self.party:findMember{main=true}))
+			self:registerDialog(require("mod.dialogs.CharacterSheet").new(self.player))
 		end,
 
 		SHOW_MESSAGE_LOG = function()
