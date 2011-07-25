@@ -68,13 +68,13 @@ end
 
 --- Adds an entity to the level
 -- Only entities that need to act need to be added. Terrain features do not need this usually
-function _M:addEntity(e, after)
+function _M:addEntity(e, after, no_error)
 	if e._fake_level_entity then
 		e._fake_level_entity(self, "add", after)
 		return
 	end
 
-	if self.entities[e.uid] then error("Entity "..e.uid.."("..e.name..") already present on the level") end
+	if self.entities[e.uid] then if no_error then return else error("Entity "..e.uid.."("..e.name..") already present on the level") end end
 	self.entities[e.uid] = e
 	if e.addEntityOrder then after = e:addEntityOrder(level) end
 	if not after or not self:hasEntity(after) then

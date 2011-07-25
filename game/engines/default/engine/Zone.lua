@@ -480,7 +480,7 @@ function _M:addEntity(level, e, typ, x, y, no_added)
 		e.x = nil
 		e.y = nil
 		if x and y then e:move(x, y, true) end
-		level:addEntity(e)
+		level:addEntity(e, nil, true)
 		if not no_added then e:added() end
 		-- Levelup ?
 		if self.actor_adjust_level and e.forceLevelup then
@@ -492,8 +492,8 @@ function _M:addEntity(level, e, typ, x, y, no_added)
 		e.x = nil
 		e.y = nil
 		if x and y then e:move(x, y, true) end
-		if e.src then level:addEntity(e, e.src)
-		else level:addEntity(e) end
+		if e.src then level:addEntity(e, e.src, true)
+		else level:addEntity(e, nil, true) end
 		if not no_added then e:added() end
 	elseif typ == "object" then
 		if x and y then level.map:addObject(x, y, e) end
