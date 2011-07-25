@@ -329,14 +329,13 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 		self:project({type="ball", radius=1, selffire=false}, target.x, target.y, DamageType.PHYSICAL, dam)
 		self:incStamina(-15)
 		self.shattering_impact_last_turn = game.turn
-		print"===========IMPACT"
 	end
 
 	-- Onslaught
 	if hitted and self:attr("onslaught") then
 		local dir = util.getDir(target.x, target.y, self.x, self.y)
-		local lx, ly = util.coordAddDir(self.x, self.y, dir_sides[dir].left)
-		local rx, ry = util.coordAddDir(self.x, self.y, dir_sides[dir].right)
+		local lx, ly = util.coordAddDir(self.x, self.y, dir_sides[dir or 6].left)
+		local rx, ry = util.coordAddDir(self.x, self.y, dir_sides[dir or 6].right)
 		local lt, rt = game.level.map(lx, ly, Map.ACTOR), game.level.map(rx, ry, Map.ACTOR)
 
 		if target:checkHit(self:combatAttack(weapon), target:combatPhysicalResist(), 0, 95, 10) and target:canBe("knockback") then
