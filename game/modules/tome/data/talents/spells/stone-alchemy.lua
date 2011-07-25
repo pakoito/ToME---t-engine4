@@ -38,15 +38,20 @@ newTalent{
 		return gem
 	end,
 	action = function(self, t)
-		self:showEquipInven("Use which gem?", function(o) return not o.unique and o.type == "gem" end, function(o, inven, item)
+		local d d = self:showEquipInven("Use which gem?", function(o) return not o.unique and o.type == "gem" end, function(o, inven, item)
 			if not o then return end
 			local gem = t.make_gem(self, t, o.define_as)
 			self:addObject(self.INVEN_INVEN, gem)
 			self:removeObject(inven, item)
 			game.logPlayer(self, "You create: %s", gem:getName{do_color=true, do_count=true})
 			self:sortInven()
+			d.used_talent = true
 			return true
 		end)
+		local co = coroutine.running()
+		d.unload = function(self) coroutine.resume(co, self.used_talent) end
+		if not coroutine.yield() then return nil end
+
 		game:playSoundNear(self, "talents/arcane")
 		return true
 	end,
@@ -65,7 +70,7 @@ newTalent{
 	mana = 5,
 	no_npc_use = true,
 	action = function(self, t)
-		self:showEquipInven("Try to extract gems from which metallic item?", function(o) return o.metallic and (o.material_level or 1) <= self:getTalentLevelRaw(t) end, function(o, inven, item)
+		local d d = self:showEquipInven("Try to extract gems from which metallic item?", function(o) return o.metallic and (o.material_level or 1) <= self:getTalentLevelRaw(t) end, function(o, inven, item)
 			if not o then return end
 			self:removeObject(inven, item)
 
@@ -75,9 +80,13 @@ newTalent{
 				self:addObject(self.INVEN_INVEN, gem)
 				game.logPlayer(self, "You extract: %s", gem:getName{do_color=true, do_count=true})
 				self:sortInven()
+				d.used_talent = true
 			end
 			return true
 		end)
+		local co = coroutine.running()
+		d.unload = function(self) coroutine.resume(co, self.used_talent) end
+		if not coroutine.yield() then return nil end
 		return true
 	end,
 	info = function(self, t)
@@ -101,16 +110,23 @@ newTalent{
 	cooldown = 100,
 	no_npc_use = true,
 	action = function(self, t)
-		self:showInventory("Use which gem?", self:getInven("INVEN"), function(gem) return gem.type == "gem" and gem.imbue_powers and gem.material_level and gem.material_level <= self:getTalentLevelRaw(t) end, function(gem, gem_item)
-			self:showInventory("Imbue which armour?", self:getInven("INVEN"), function(o) return o.type == "armor" and o.slot == "BODY" and not o.been_imbued end, function(o, item)
+		local d d = self:showInventory("Use which gem?", self:getInven("INVEN"), function(gem) return gem.type == "gem" and gem.imbue_powers and gem.material_level and gem.material_level <= self:getTalentLevelRaw(t) end, function(gem, gem_item)
+			local nd = self:showInventory("Imbue which armour?", self:getInven("INVEN"), function(o) return o.type == "armor" and o.slot == "BODY" and not o.been_imbued end, function(o, item)
 				self:removeObject(self:getInven("INVEN"), gem_item)
 				o.wielder = o.wielder or {}
 				table.mergeAdd(o.wielder, gem.imbue_powers, true)
 				o.been_imbued = true
 				game.logPlayer(self, "You imbue your %s with %s.", o:getName{do_colour=true, no_count=true}, gem:getName{do_colour=true, no_count=true})
 				o.name = o.name .. " ("..gem.name..")"
+				d.used_talent = true
+				game:unregisterDialog(d)
 			end)
+			nd.unload = function(self) game:unregisterDialog(d) end
+			return true
 		end)
+		local co = coroutine.running()
+		d.unload = function(self) coroutine.resume(co, self.used_talent) end
+		if not coroutine.yield() then return nil end
 		return true
 	end,
 	info = function(self, t)
