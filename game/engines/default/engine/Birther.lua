@@ -313,7 +313,6 @@ function _M:apply()
 			-- Append array part
 			while #copy > 0 do
 				local f = table.remove(copy)
-				print("===============+COPY", #copy, table.serialize(f,nil,true))
 				table.insert(self.actor, f)
 			end
 			-- Copy normal data
