@@ -61,7 +61,7 @@ return {
 	},
 	post_process = function(level)
 		-- Everything hates you in the infinite dungeon!
-		for uid, e in pairs(level.entities) do e.faction="enemies" end
+		for uid, e in pairs(level.entities) do e.faction = e.hard_faction or "enemies" end
 
 		-- Some lore
 		if level.level == 1 or level.level == 10 or level.level == 20 or level.level == 30 or level.level == 40 then
