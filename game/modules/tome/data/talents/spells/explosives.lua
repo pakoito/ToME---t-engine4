@@ -55,7 +55,7 @@ newTalent{
 		if self:isTalentActive(self.T_ACID_INFUSION) then inc_dam = acidi.getIncrease(self,acidi); damtype = DamageType.ACID_BLIND; particle = "ball_acid"
 		elseif self:isTalentActive(self.T_LIGHTNING_INFUSION) then inc_dam = lightningi.getIncrease(self,lightningi); damtype = DamageType.LIGHTNING_DAZE; particle = "ball_lightning"
 		elseif self:isTalentActive(self.T_FROST_INFUSION) then inc_dam = frosti.getIncrease(self,frosti); damtype = DamageType.ICE; particle = "ball_ice"
-		else inc_dam = fireinf.getIncrease(self,fireinf) + (ammo.alchemist_bomb.power or 0) / 100; damtype = self:knowTalent(self.T_FIRE_INFUSION) and DamageType.FIREBURN or DamageType.FIRE
+		else inc_dam = fireinf.getIncrease(self,fireinf) + (ammo.alchemist_bomb and ammo.alchemist_bomb.power or 0) / 100; damtype = self:knowTalent(self.T_FIRE_INFUSION) and DamageType.FIREBURN or DamageType.FIRE
 		end
 		local dam = self:combatTalentSpellDamage(t, 15, 150, ((ammo.alchemist_power or 0) + self:combatSpellpower()) / 2)
 		dam = dam * (1 + inc_dam)
@@ -109,19 +109,19 @@ newTalent{
 
 			local target = game.level.map(tx, ty, Map.ACTOR)
 			dam_done = dam_done + DamageType:get(damtype).projector(self, tx, ty, damtype, d, tmp)
-			if ammo.alchemist_bomb.splash then
+			if ammo.alchemist_bomb and ammo.alchemist_bomb.splash then
 				DamageType:get(DamageType[ammo.alchemist_bomb.splash.type]).projector(self, tx, ty, DamageType[ammo.alchemist_bomb.splash.type], ammo.alchemist_bomb.splash.dam)
 			end
 			if not target then return end
-			if ammo.alchemist_bomb.stun and rng.percent(ammo.alchemist_bomb.stun.chance) and target:checkHit(self:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 5) and target:canBe("stun") then
+			if ammo.alchemist_bomb and ammo.alchemist_bomb.stun and rng.percent(ammo.alchemist_bomb.stun.chance) and target:checkHit(self:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 5) and target:canBe("stun") then
 				target:setEffect(target.EFF_STUNNED, ammo.alchemist_bomb.stun.dur, {})
 			end
-			if ammo.alchemist_bomb.daze and rng.percent(ammo.alchemist_bomb.daze.chance) and target:checkHit(self:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 5) and target:canBe("stun") then
+			if ammo.alchemist_bomb and ammo.alchemist_bomb.daze and rng.percent(ammo.alchemist_bomb.daze.chance) and target:checkHit(self:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 5) and target:canBe("stun") then
 				target:setEffect(target.EFF_DAZED, ammo.alchemist_bomb.daze.dur, {})
 			end
 		end)
 
-		if ammo.alchemist_bomb.leech then self:heal(math.min(self.max_life * ammo.alchemist_bomb.leech / 100, dam_done)) end
+		if ammo.alchemist_bomb and ammo.alchemist_bomb.leech then self:heal(math.min(self.max_life * ammo.alchemist_bomb.leech / 100, dam_done)) end
 
 		local _ _, x, y = self:canProject(tg, x, y)
 		-- Lightning ball gets a special treatment to make it look neat
@@ -139,7 +139,7 @@ newTalent{
 			game.level.map:particleEmitter(x, y, tg.radius, particle, {radius=tg.radius, grids=grids, tx=x, ty=y})
 		end
 
-		if ammo.alchemist_bomb.mana then self:incMana(ammo.alchemist_bomb.mana) end
+		if ammo.alchemist_bomb and ammo.alchemist_bomb.mana then self:incMana(ammo.alchemist_bomb.mana) end
 
 		game:playSoundNear(self, "talents/arcane")
 		return true
@@ -227,7 +227,7 @@ newTalent{
 		local inc_dam = 0
 		local damtype = DamageType.SPELLKNOCKBACK
 		local particle = "ball_fire"
-		inc_dam = self:getTalentLevel(self.T_FIRE_INFUSION) * 0.05 + (ammo.alchemist_bomb.power or 0) / 100
+		inc_dam = self:getTalentLevel(self.T_FIRE_INFUSION) * 0.05 + (ammo.alchemist_bomb and ammo.alchemist_bomb.power or 0) / 100
 		local dam = self:combatTalentSpellDamage(t, 15, 120, ((ammo.alchemist_power or 0) + self:combatSpellpower()) / 2)
 		dam = dam * (1 + inc_dam)
 		return dam, damtype, particle
@@ -267,24 +267,24 @@ newTalent{
 
 			local target = game.level.map(tx, ty, Map.ACTOR)
 			dam_done = dam_done + DamageType:get(damtype).projector(self, tx, ty, damtype, d, tmp)
-			if ammo.alchemist_bomb.splash then
+			if ammo.alchemist_bomb and ammo.alchemist_bomb.splash then
 				DamageType:get(DamageType[ammo.alchemist_bomb.splash.type]).projector(self, tx, ty, DamageType[ammo.alchemist_bomb.splash.type], ammo.alchemist_bomb.splash.dam)
 			end
 			if not target then return end
-			if ammo.alchemist_bomb.stun and rng.percent(ammo.alchemist_bomb.stun.chance) and target:checkHit(self:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 5) and target:canBe("stun") then
+			if ammo.alchemist_bomb and ammo.alchemist_bomb.stun and rng.percent(ammo.alchemist_bomb.stun.chance) and target:checkHit(self:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 5) and target:canBe("stun") then
 				target:setEffect(target.EFF_STUNNED, ammo.alchemist_bomb.stun.dur, {})
 			end
-			if ammo.alchemist_bomb.daze and rng.percent(ammo.alchemist_bomb.daze.chance) and target:checkHit(self:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 5) and target:canBe("stun") then
+			if ammo.alchemist_bomb and ammo.alchemist_bomb.daze and rng.percent(ammo.alchemist_bomb.daze.chance) and target:checkHit(self:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 5) and target:canBe("stun") then
 				target:setEffect(target.EFF_DAZED, ammo.alchemist_bomb.daze.dur, {})
 			end
 		end)
 
-		if ammo.alchemist_bomb.leech then self:heal(math.min(self.max_life * ammo.alchemist_bomb.leech / 100, dam_done)) end
+		if ammo.alchemist_bomb and ammo.alchemist_bomb.leech then self:heal(math.min(self.max_life * ammo.alchemist_bomb.leech / 100, dam_done)) end
 
 		local _ _, x, y = self:canProject(tg, x, y)
 		game.level.map:particleEmitter(x, y, tg.radius, particle, {radius=tg.radius, grids=grids, tx=x, ty=y})
 
-		if ammo.alchemist_bomb.mana then self:incMana(ammo.alchemist_bomb.mana) end
+		if ammo.alchemist_bomb and ammo.alchemist_bomb.mana then self:incMana(ammo.alchemist_bomb.mana) end
 
 		game:playSoundNear(self, "talents/arcane")
 		return true
