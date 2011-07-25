@@ -430,7 +430,19 @@ end
 function _M:resolve(t, last, on_entity, key_chain)
 	t = t or self
 	key_chain = key_chain or {}
+
+	-- First we grab the whole list to handle
+	local list = {}
 	for k, e in pairs(t) do
+		if type(e) == "table" and e.__resolver and (not e.__resolve_last or last) then
+			list[k] = e
+		elseif type(e) == "table" and not e.__CLASSNAME then
+			list[k] = e
+		end
+	end
+
+	-- Then we handle it, this is because resolvers can modify the list with their returns, or handlers, so we must make sure to not modify the list we are iterating over
+	for k, e in pairs(list) do
 		if type(e) == "table" and e.__resolver and (not e.__resolve_last or last) then
 			t[k] = resolvers.calc[e.__resolver](e, on_entity or self, self, t, k, key_chain)
 		elseif type(e) == "table" and not e.__CLASSNAME then
@@ -452,6 +464,15 @@ function _M:resolve(t, last, on_entity, key_chain)
 		else
 			-- Handle IDed if possible
 			if self.resolveIdentify then self:resolveIdentify() end
+		end
+	end
+end
+
+--- Print all resolvers registered
+function _M:printResolvers(t)
+	for k, e in pairs(t or self) do
+		if type(e) == "table" and e.__resolver then
+			print(" * Resolver on entity", self.name, "::", e.__resolver, e.__resolve_last, " (with params) ", table.serialize(e, nil, true))
 		end
 	end
 end

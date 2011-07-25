@@ -49,7 +49,7 @@ newBirthDescriptor{
 		"An Archmage devotes his whole life to the study of magic above anything else.",
 		"Most Archmagi lack basic skills that others take for granted (like general fighting sense), but they make up for it by their raw magical power.",
 		"Archmagi start with knowledge of many schools of magic. However, they usually refuse to have anything to do with Necromancy.",
-		"All Archmagi have been trained in the secret town of Angolwen and possess a unique spell to teleport to it directly.",
+		"Most Archmagi have been trained in the secret town of Angolwen and possess a unique spell to teleport to it directly.",
 		"Their most important stats are: Magic and Willpower",
 		"#GOLD#Stat modifiers:",
 		"#LIGHT_BLUE# * +0 Strength, +0 Dexterity, +0 Constitution",

@@ -185,7 +185,7 @@ function _M:atEnd(v)
 			game:unregisterDialog(self)
 			self.actor = self.actor_base
 			if self.has_custom_tile then
-				self:setTile(self.has_custom_tile.f, self.has_custom_tile.w, self.has_custom_tile.h)
+				self:setTile(self.has_custom_tile.f, self.has_custom_tile.w, self.has_custom_tile.h, true)
 				self.actor.has_custom_tile = self.has_custom_tile.f
 			end
 			self:apply()
@@ -838,7 +838,7 @@ function _M:fakeEquip(v)
 	end
 end
 
-function _M:setTile(f, w, h)
+function _M:setTile(f, w, h, last)
 	self.actor:removeAllMOs()
 	if not f then
 		if not self.has_custom_tile then
@@ -864,17 +864,19 @@ function _M:setTile(f, w, h)
 		end
 		self.has_custom_tile = {f=f,w=w,h=h}
 	end
-	self:fakeEquip(true)
-	self.actor:updateModdableTile()
-	self:fakeEquip(false)
+	if not last then
+		self:fakeEquip(true)
+		self.actor:updateModdableTile()
+		self:fakeEquip(false)
 
-	-- Add an example particles if any
-	local ps = self.actor:getParticlesList()
-	for i, p in ipairs(ps) do self.actor:removeParticles(p) end
-	if self.descriptors_by_type.subclass then
-		local d = self.birth_descriptor_def.subclass[self.descriptors_by_type.subclass]
-		if d and d.birth_example_particles then
-			self.actor:addParticles(Particles.new(d.birth_example_particles, 1))
+		-- Add an example particles if any
+		local ps = self.actor:getParticlesList()
+		for i, p in ipairs(ps) do self.actor:removeParticles(p) end
+		if self.descriptors_by_type.subclass then
+			local d = self.birth_descriptor_def.subclass[self.descriptors_by_type.subclass]
+			if d and d.birth_example_particles then
+				self.actor:addParticles(Particles.new(d.birth_example_particles, 1))
+			end
 		end
 	end
 end
