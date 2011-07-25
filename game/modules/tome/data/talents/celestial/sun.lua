@@ -87,7 +87,9 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		-- Temporarily turn on "friendlyfire" to lite all tiles
 		tg.selffire = true
+		tg.radius = tg.radius * 2
 		self:project(tg, self.x, self.y, DamageType.LITE, 1)
+		tg.radius = tg.radius / 2
 		tg.selffire = false
 		local grids = self:project(tg, self.x, self.y, DamageType.BLIND, t.getDuration(self, t))
 		if self:getTalentLevel(t) >= 3 then
@@ -101,10 +103,10 @@ newTalent{
 		local radius = self:getTalentRadius(t)
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[Invokes Sun flare with radius of %d, blinding your foes for %d turns and lighting up your immediate area.
-		At level 3 it will start dealing %0.2f light damage.
+		return ([[Invokes Sun flare with radius of %d, blinding your foes for %d turns and lighting up your immediate area (radius %d).
+		At level 3 it will start dealing %0.2f light damage (radius %d).
 		The damage will increase with the Magic stat.]]):
-		format(radius, duration, damDesc(self, DamageType.LIGHT, damage))
+		format(radius, duration, radius * 2, damDesc(self, DamageType.LIGHT, damage), radius)
    end,
 }
 
