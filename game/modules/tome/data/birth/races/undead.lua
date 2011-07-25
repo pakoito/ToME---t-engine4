@@ -128,7 +128,7 @@ newBirthDescriptor
 		"- bleeding immunity",
 		"- fear immunity",
 		"- no need to breathe",
-		"- special skeleton talents: sharp bones, bone armour, re-assemble",
+		"- special skeleton talents: bone armour, resilient bones, re-assemble",
 		"#GOLD#Stat modifiers:",
 		"#LIGHT_BLUE# * +3 Strength, +4 Dexterity, +0 Constitution",
 		"#LIGHT_BLUE# * +0 Magic, +0 Willpower, +0 Cunning",
