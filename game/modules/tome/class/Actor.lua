@@ -2312,7 +2312,7 @@ function _M:postUseTalent(ab, ret)
 			trigger = true; self:incNegative(-ab.negative * (100 + self:combatFatigue()) / 100)
 		end
 		if ab.hate then
-			trigger = true; self:incHate(-ab.hate * (100 + self:combatFatigue()) / 100)
+			trigger = true; self:incHate(-ab.hate)
 		end
 		-- Equilibrium is not affected by fatigue
 		if ab.equilibrium then
