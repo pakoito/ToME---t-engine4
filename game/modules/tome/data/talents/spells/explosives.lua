@@ -57,7 +57,7 @@ newTalent{
 		elseif self:isTalentActive(self.T_FROST_INFUSION) then inc_dam = frosti.getIncrease(self,frosti); damtype = DamageType.ICE; particle = "ball_ice"
 		else inc_dam = fireinf.getIncrease(self,fireinf) + (ammo.alchemist_bomb.power or 0) / 100; damtype = self:knowTalent(self.T_FIRE_INFUSION) and DamageType.FIREBURN or DamageType.FIRE
 		end
-		local dam = self:combatTalentSpellDamage(t, 15, 150, (ammo.alchemist_power + self:combatSpellpower()) / 2)
+		local dam = self:combatTalentSpellDamage(t, 15, 150, ((ammo.alchemist_power or 0) + self:combatSpellpower()) / 2)
 		dam = dam * (1 + inc_dam)
 		return dam, damtype, particle
 	end,
@@ -228,7 +228,7 @@ newTalent{
 		local damtype = DamageType.SPELLKNOCKBACK
 		local particle = "ball_fire"
 		inc_dam = self:getTalentLevel(self.T_FIRE_INFUSION) * 0.05 + (ammo.alchemist_bomb.power or 0) / 100
-		local dam = self:combatTalentSpellDamage(t, 15, 120, (ammo.alchemist_power + self:combatSpellpower()) / 2)
+		local dam = self:combatTalentSpellDamage(t, 15, 120, ((ammo.alchemist_power or 0) + self:combatSpellpower()) / 2)
 		dam = dam * (1 + inc_dam)
 		return dam, damtype, particle
 	end,

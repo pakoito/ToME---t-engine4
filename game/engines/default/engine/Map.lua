@@ -1015,37 +1015,39 @@ function _M:displayParticles(nb_keyframes)
 	local del = {}
 	local e = next(self.particles)
 	while e do
-		adx, ady = 0, 0
-		if e.x and e.y then
-			-- Make sure we display on the real screen coords: handle current move anim position
-			if e._mo then
-				adx, ady = e._mo:getMoveAnim(self._map, e.x, e.y)
+		if e.ps then
+			adx, ady = 0, 0
+			if e.x and e.y then
+				-- Make sure we display on the real screen coords: handle current move anim position
+				if e._mo then
+					adx, ady = e._mo:getMoveAnim(self._map, e.x, e.y)
+				else
+					adx, ady = self._map:getScroll()
+					adx, ady = adx / self.tile_w, ady / self.tile_h
+				end
+			end
+
+			if nb_keyframes == 0 and e.x and e.y then
+				-- Just display it, not updating, no emitting
+				if e.x + e.radius >= self.mx and e.x - e.radius < self.mx + self.viewport.mwidth and e.y + e.radius >= self.my and e.y - e.radius < self.my + self.viewport.mheight then
+					e.ps:toScreen(self.display_x + (adx + e.x - self.mx + 0.5) * self.tile_w * self.zoom, self.display_y + (ady + e.y - self.my + 0.5) * self.tile_h * self.zoom, self.seens(e.x, e.y), e.zoom * self.zoom)
+				end
+			elseif e.x and e.y then
+				alive = e.ps:isAlive()
+
+				-- Update more, if needed
+				if alive and e.x + e.radius >= self.mx and e.x - e.radius < self.mx + self.viewport.mwidth and e.y + e.radius >= self.my and e.y - e.radius < self.my + self.viewport.mheight then
+					e.ps:toScreen(self.display_x + (adx + e.x - self.mx + 0.5) * self.tile_w * self.zoom, self.display_y + (ady + e.y - self.my + 0.5) * self.tile_h * self.zoom, self.seens(e.x, e.y))
+				end
+
+				if not alive then
+					del[#del+1] = e
+					e.dead = true
+				end
 			else
-				adx, ady = self._map:getScroll()
-				adx, ady = adx / self.tile_w, ady / self.tile_h
-			end
-		end
-
-		if nb_keyframes == 0 and e.x and e.y then
-			-- Just display it, not updating, no emitting
-			if e.x + e.radius >= self.mx and e.x - e.radius < self.mx + self.viewport.mwidth and e.y + e.radius >= self.my and e.y - e.radius < self.my + self.viewport.mheight then
-				e.ps:toScreen(self.display_x + (adx + e.x - self.mx + 0.5) * self.tile_w * self.zoom, self.display_y + (ady + e.y - self.my + 0.5) * self.tile_h * self.zoom, self.seens(e.x, e.y), e.zoom * self.zoom)
-			end
-		elseif e.x and e.y then
-			alive = e.ps:isAlive()
-
-			-- Update more, if needed
-			if alive and e.x + e.radius >= self.mx and e.x - e.radius < self.mx + self.viewport.mwidth and e.y + e.radius >= self.my and e.y - e.radius < self.my + self.viewport.mheight then
-				e.ps:toScreen(self.display_x + (adx + e.x - self.mx + 0.5) * self.tile_w * self.zoom, self.display_y + (ady + e.y - self.my + 0.5) * self.tile_h * self.zoom, self.seens(e.x, e.y))
-			end
-
-			if not alive then
 				del[#del+1] = e
 				e.dead = true
 			end
-		else
-			del[#del+1] = e
-			e.dead = true
 		end
 
 		e = next(self.particles, e)
