@@ -448,7 +448,7 @@ function _M:onTalentCooledDown(tid)
 
 	local x, y = game.level.map:getTileToScreen(self.x, self.y)
 	game.flyers:add(x, y, 30, -0.3, -3.5, ("%s available"):format(t.name:capitalize()), {0,255,00})
-	game.log("#00ff00#Talent %s is ready to use.", t.name)
+	game.log("#00ff00#%sTalent %s is ready to use.", (t.display_entity and t.display_entity:getDisplayString() or ""), t.name)
 end
 
 --- Tries to get a target from the user
