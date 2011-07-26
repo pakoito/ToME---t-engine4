@@ -582,6 +582,7 @@ function _M:select(item)
 		self:onDrawItem(item)
 		self.c_t_desc:switchItem(item)
 	end
+	self.cur_item = item
 end
 
 function _M:treeSelect(item, sel, v)
@@ -833,6 +834,13 @@ function _M:onDrawItem(item)
 	self.c_t_desc:createItem(item, text)
 end
 
+-- Display the player tile
+function _M:innerDisplay(x, y, nb_keyframes)
+	if self.cur_item and self.cur_item.entity then
+		self.cur_item.entity:toScreen(nil, x + self.iw - 64, y + self.iy + self.ui_by_ui[self.c_t_desc].y, 64, 64)
+	end
+end
+
 function _M:generateList()
 	self.actor.__show_special_talents = self.actor.__show_special_talents or {}
 	self.talent_stats_req = {}
@@ -871,8 +879,9 @@ function _M:generateList()
 					local isgeneric = self.actor.talents_types_def[tt.type].generic
 					list[#list+1] = {
 						__id=t.id,
-						name=t.name,
+						name=((t.display_entity and t.display_entity:getDisplayString() or "")..t.name):toTString(),
 						rawname=t.name..(isgeneric and " (generic talent)" or " (class talent)"),
+						entity=t.display_entity,
 						talent=t.id,
 						_type=tt.type,
 						color=function(item) return ((self.actor.talents[item.talent] or 0) ~= (self.actor_dup.talents[item.talent] or 0)) and {255, 215, 0} or self.actor:knowTalentType(item._type) and {255,255,255} or {175,175,175} end,

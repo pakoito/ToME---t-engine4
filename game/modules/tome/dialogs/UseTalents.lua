@@ -186,6 +186,13 @@ function _M:use(item, button)
 	self.actor:useTalent(item.talent)
 end
 
+-- Display the player tile
+function _M:innerDisplay(x, y, nb_keyframes)
+	if self.cur_item and self.cur_item.entity then
+		self.cur_item.entity:toScreen(nil, x + self.iw - 64, y + self.iy + self.c_tut.h + 10, 64, 64)
+	end
+end
+
 function _M:generateList()
 	-- Makes up the list
 	local list = {}
@@ -258,8 +265,10 @@ function _M:generateList()
 				status = self.actor:isTalentActive(t.id) and tstring{{"color", "YELLOW"}, "Sustaining"} or tstring{{"color", "LIGHT_GREEN"}, "Sustain"}
 			end
 			nodes[#nodes+1] = {
-				name=t.name.." ("..typename..")",
+				name=((t.display_entity and t.display_entity:getDisplayString() or "")..t.name.." ("..typename..")"):toTString(),
+				cname=t.name,
 				status=status,
+				entity=t.display_entity,
 				talent=t.id,
 				desc=self.actor:getTalentFullDescription(t),
 				color=function() return {0xFF, 0xFF, 0xFF} end,
@@ -272,10 +281,10 @@ function _M:generateList()
 			}
 		end
 	end
-	table.sort(actives, function(a,b) return a.name < b.name end)
-	table.sort(sustains, function(a,b) return a.name < b.name end)
-	table.sort(sustained, function(a,b) return a.name < b.name end)
-	table.sort(cooldowns, function(a,b) return a.name < b.name end)
+	table.sort(actives, function(a,b) return a.cname < b.cname end)
+	table.sort(sustains, function(a,b) return a.cname < b.cname end)
+	table.sort(sustained, function(a,b) return a.cname < b.cname end)
+	table.sort(cooldowns, function(a,b) return a.cname < b.cname end)
 	for i, node in ipairs(actives) do node.char = self:makeKeyChar(letter) chars[node.char] = node letter = letter + 1 end
 	for i, node in ipairs(sustains) do node.char = self:makeKeyChar(letter) chars[node.char] = node letter = letter + 1 end
 	for i, node in ipairs(sustained) do node.char = self:makeKeyChar(letter) chars[node.char] = node letter = letter + 1 end

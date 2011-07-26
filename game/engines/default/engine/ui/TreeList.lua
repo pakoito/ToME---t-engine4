@@ -90,62 +90,64 @@ function _M:drawItem(item, nb_keyframes)
 	nb_keyframes = (nb_keyframes or 0) / 2
 	item.cols = {}
 	for i, col in ipairs(self.columns) do
-		local fw = col.width
-		local level = item.level
-		local color = util.getval(item.color, item) or {255,255,255}
-		local text
-		if type(col.display_prop) == "function" then
-			text = col.display_prop(item):toTString()
-		else
-			text = item[col.display_prop or col.sort]
-			if type(text) ~= "table" or not text.is_tstring then
-				text = util.getval(text, item)
-				if type(text) ~= "table" then text = tstring.from(tostring(text)) end
-			end
-		end
-		local s = col.surface
-
-		local offset = 0
-		if i == 1 then
-			offset = level * self.level_offset
-			if item.nodes then offset = offset + self.plus.w end
-		end
-		local startx = col.frame_sel.b4.w + offset
-
-		item.cols[i] = {}
-
-		s:erase(0, 0, 0, 0)
-		local test_text = text:toString()
-		local font_w, _ = self.font:size(test_text)
-		font_w = font_w + startx
-
-		if font_w > fw then
-			item.displayx_offset = item.displayx_offset or {}
-			item.displayx_offset[i] = item.displayx_offset[i] or 0
-			item.dir = item.dir or {}
-			item.dir[i] = item.dir[i] or 0
-
-			if item.dir[i] == 0 then
-				item.displayx_offset[i] = item.displayx_offset[i] - nb_keyframes
-				if -item.displayx_offset[i] >= font_w - fw + 15 then
-					item.dir[i] = 1
-				end
-			elseif item.dir[i] == 1 then
-				item.displayx_offset[i] = item.displayx_offset[i] + nb_keyframes
-				if item.displayx_offset[i] >= 0 then
-					item.dir[i] = 0
+		if not col.direct_draw then
+			local fw = col.width
+			local level = item.level
+			local color = util.getval(item.color, item) or {255,255,255}
+			local text
+			if type(col.display_prop) == "function" then
+				text = col.display_prop(item):toTString()
+			else
+				text = item[col.display_prop or col.sort]
+				if type(text) ~= "table" or not text.is_tstring then
+					text = util.getval(text, item)
+					if type(text) ~= "table" then text = tstring.from(tostring(text)) end
 				end
 			end
+			local s = col.surface
 
-			-- We use 1000 and do not cut lines to make sure it draws as much as possible
-			text:drawOnSurface(s, 10000, nil, self.font, startx + item.displayx_offset[i], (self.fh - self.font_h) / 2, color[1], color[2], color[3])
-			item.autoscroll = true
-		else
-			text:drawOnSurface(s, 10000, nil, self.font, startx, (self.fh - self.font_h) / 2, color[1], color[2], color[3])
+			local offset = 0
+			if i == 1 then
+				offset = level * self.level_offset
+				if item.nodes then offset = offset + self.plus.w end
+			end
+			local startx = col.frame_sel.b4.w + offset
+
+			item.cols[i] = {}
+
+			s:erase(0, 0, 0, 0)
+			local test_text = text:toString()
+			local font_w, _ = self.font:size(test_text)
+			font_w = font_w + startx
+
+			if font_w > fw then
+				item.displayx_offset = item.displayx_offset or {}
+				item.displayx_offset[i] = item.displayx_offset[i] or 0
+				item.dir = item.dir or {}
+				item.dir[i] = item.dir[i] or 0
+
+				if item.dir[i] == 0 then
+					item.displayx_offset[i] = item.displayx_offset[i] - nb_keyframes
+					if -item.displayx_offset[i] >= font_w - fw + 15 then
+						item.dir[i] = 1
+					end
+				elseif item.dir[i] == 1 then
+					item.displayx_offset[i] = item.displayx_offset[i] + nb_keyframes
+					if item.displayx_offset[i] >= 0 then
+						item.dir[i] = 0
+					end
+				end
+
+				-- We use 1000 and do not cut lines to make sure it draws as much as possible
+				text:drawOnSurface(s, 10000, nil, self.font, startx + item.displayx_offset[i], (self.fh - self.font_h) / 2, color[1], color[2], color[3])
+				item.autoscroll = true
+			else
+				text:drawOnSurface(s, 10000, nil, self.font, startx, (self.fh - self.font_h) / 2, color[1], color[2], color[3])
+			end
+
+			--text:drawOnSurface(s, col.width - startx - col.frame_sel.b6.w, 1, self.font, startx, (self.fh - self.font_h) / 2, color[1], color[2], color[3])
+			item.cols[i]._tex, item.cols[i]._tex_w, item.cols[i]._tex_h = s:glTexture()
 		end
-
-		--text:drawOnSurface(s, col.width - startx - col.frame_sel.b6.w, 1, self.font, startx, (self.fh - self.font_h) / 2, color[1], color[2], color[3])
-		item.cols[i]._tex, item.cols[i]._tex_w, item.cols[i]._tex_h = s:glTexture()
 	end
 	if self.on_drawitem then self.on_drawitem(item) end
 end
@@ -335,8 +337,12 @@ function _M:display(x, y, nb_keyframes)
 				end
 			end
 
-			if self.text_shadow then item.cols[j]._tex:toScreenFull(x+1, y+1, col.width, self.fh, item.cols[j]._tex_w, item.cols[j]._tex_h, 0, 0, 0, self.text_shadow) end
-			item.cols[j]._tex:toScreenFull(x, y, col.width, self.fh, item.cols[j]._tex_w, item.cols[j]._tex_h)
+			if col.direct_draw then
+				col.direct_draw(item, x, y, col.width, self.fh)
+			else
+				if self.text_shadow then item.cols[j]._tex:toScreenFull(x+1, y+1, col.width, self.fh, item.cols[j]._tex_w, item.cols[j]._tex_h, 0, 0, 0, self.text_shadow) end
+				item.cols[j]._tex:toScreenFull(x, y, col.width, self.fh, item.cols[j]._tex_w, item.cols[j]._tex_h)
+			end
 
 			if item.nodes and j == 1 then
 				local s = item.shown and self.minus or self.plus
