@@ -52,7 +52,7 @@ function _M:newAchievement(t)
 
 	self.achiev_defs[t.id] = t
 	self.achiev_defs[#self.achiev_defs+1] = t
-	print("[ACHIEVEMENT] defined", t.order, t.id)
+--	print("[ACHIEVEMENT] defined", t.order, t.id)
 end
 
 function _M:loadAchievements()

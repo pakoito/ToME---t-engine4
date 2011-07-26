@@ -47,6 +47,7 @@ local NPC = require "mod.class.NPC"
 local PlayerDisplay = require "mod.class.PlayerDisplay"
 
 local HotkeysDisplay = require "engine.HotkeysDisplay"
+local HotkeysIconsDisplay = require "engine.HotkeysIconsDisplay"
 local ActorsSeenDisplay = require "engine.ActorsSeenDisplay"
 local LogDisplay = require "engine.LogDisplay"
 local LogFlasher = require "engine.LogFlasher"
@@ -108,7 +109,7 @@ function _M:run()
 
 	self.player_display = PlayerDisplay.new(0, 200, 200, self.h - 200, {30,30,0}, font_mono, size_mono)
 --	self.flash = LogFlasher.new(0, 0, self.w, 20, nil, font, size, {255,255,255}, {0,0,0})
-	self.map_h_stop = self.h - font_mono_h * 4
+	self.map_h_stop = self.h - 64
 	self.logdisplay = LogDisplay.new(216, self.map_h_stop - font_h * config.settings.tome.log_lines -16, (self.w - 216) / 2, font_h * config.settings.tome.log_lines, nil, font, size, nil, nil)
 	self.logdisplay.resizeToLines = function() self.logdisplay:resize(216, self.map_h_stop - font_h * config.settings.tome.log_lines -16, (self.w - 216) / 2, font_h * config.settings.tome.log_lines) end
 	self.logdisplay:enableShadow(1)
@@ -120,7 +121,7 @@ function _M:run()
 	profile.chat:enableFading(config.settings.tome.log_fade or 3)
 	profile.chat:enableDisplayChans(false)
 
-	self.hotkeys_display = HotkeysDisplay.new(nil, 216, self.h - font_mono_h * 4.2, self.w - 216, font_mono_h * 4.2, "/data/gfx/ui/talents-list.png", font_mono, size_mono)
+	self.hotkeys_display = HotkeysIconsDisplay.new(nil, 216, self.h - 64, self.w - 216, 64, "/data/gfx/ui/talents-list.png", font_mono, size_mono)
 	self.hotkeys_display:enableShadow(0.6)
 	self.hotkeys_display:setColumns(3)
 	self.npcs_display = ActorsSeenDisplay.new(nil, 216, self.h - font_mono_h * 4.2, self.w - 216, font_mono_h * 4.2, "/data/gfx/ui/talents-list.png", font_mono, size_mono)

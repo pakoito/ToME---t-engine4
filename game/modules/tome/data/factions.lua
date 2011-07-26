@@ -67,7 +67,7 @@ for i, line in ipairs(lines) do
 			end
 		else
 			local n = tonumber(d)
-			if n then print(j, i, factsid[j], factsid[i], n*100)
+			if n then
 				facts[factsid[j]].reactions[factsid[i]] = n * 100
 			end
 		end
@@ -76,7 +76,7 @@ end
 
 for f1, data in pairs(facts) do
 	for f2, v in pairs(data.reactions) do
-		print("[FACTION] initial reaction", f1, f2, " => ", v)
+--		print("[FACTION] initial reaction", f1, f2, " => ", v)
 		engine.Faction:setInitialReaction(f1, f2, v, true)
 	end
 end

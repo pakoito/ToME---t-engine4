@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 local tacticals = {}
+local Entity = require "engine.Entity"
 
 local oldNewTalent = newTalent
 newTalent = function(t)
@@ -36,19 +37,11 @@ newTalent = function(t)
 		end
 		t.tactical = tacts
 	end
---[[
-	if t.image then
-		if type(t.image) == "boolean" then
-			local name = t.name:gsub(" ", ""):lower()
-			t.image = core.display.loadImage("data/gfx/talents/"..name..".png")
-			assert(t.image, "talent auto image requested by not found for: "..t.name)
-		else
-			t.image = core.display.loadImage("data/gfx/"..t.image..".png")
-			assert(t.image, "talent image requested by not found for: "..t.name)
-		end
-		t.image_texture = t.image:glTexture()
+
+	if not t.image then
+		t.image = "talents/"..(t.short_name or t.name):lower():gsub("[^a-z0-9_]", "_")..".png"
 	end
-]]
+	t.display_entity = Entity.new{image=t.image}
 	return oldNewTalent(t)
 end
 

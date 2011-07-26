@@ -955,6 +955,97 @@ static int gl_draw_quad(lua_State *L)
 	return 0;
 }
 
+static int gl_draw_quad_part(lua_State *L)
+{
+	int x = luaL_checknumber(L, 1);
+	int y = luaL_checknumber(L, 2);
+	int w = luaL_checknumber(L, 3);
+	int h = luaL_checknumber(L, 4);
+	float angle = luaL_checknumber(L, 5);
+	float r = luaL_checknumber(L, 6) / 255;
+	float g = luaL_checknumber(L, 7) / 255;
+	float b = luaL_checknumber(L, 8) / 255;
+	float a = luaL_checknumber(L, 9) / 255;
+
+	int xw = w + x;
+	int yh = h + y;
+	int midx = x + w / 2, midy = y + h / 2;
+
+	if (lua_isuserdata(L, 10))
+	{
+		GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 10);
+		tglBindTexture(GL_TEXTURE_2D, *t);
+	}
+	else if (lua_toboolean(L, 10))
+	{
+		// Do nothing, we keep the currently bound texture
+	}
+	else
+	{
+		tglBindTexture(GL_TEXTURE_2D, gl_tex_white);
+	}
+
+	GLfloat texcoords[2*10] = {
+		0, 0,
+		0, 1,
+		1, 1,
+		1, 0,
+		1, 0,
+		1, 0,
+		1, 0,
+		1, 0,
+		1, 0,
+		1, 0,
+	};
+	GLfloat colors[4*10] = {
+		r, g, b, a,
+		r, g, b, a,
+		r, g, b, a,
+		r, g, b, a,
+		r, g, b, a,
+		r, g, b, a,
+		r, g, b, a,
+		r, g, b, a,
+		r, g, b, a,
+		r, g, b, a,
+	};
+	GLfloat vertices[2*10] = {
+		midx, midy,
+		midx, y,
+	};
+
+	if (angle < 0) angle = 0;
+	else if (angle > 360) angle = 360;
+
+	int i = 4;
+	float quadrant = angle / 45;
+	float rad = (angle - (45 * (int)quadrant)) * M_PI / 180;
+	float s = sin(rad) / 2;
+
+	if (quadrant >= 7)                 { vertices[i++] = x + w * s; vertices[i++] = y; }
+	else if (quadrant < 7)             { vertices[i++] = x; vertices[i++] = y; }
+	if (quadrant >= 6 && quadrant < 7) { vertices[i++] = x; vertices[i++] = midy - h * s; }
+	else if (quadrant < 6)             { vertices[i++] = x; vertices[i++] = midy; }
+	if (quadrant >= 5 && quadrant < 6) { vertices[i++] = x; vertices[i++] = yh - h * s; }
+	else if (quadrant < 5)             { vertices[i++] = x; vertices[i++] = yh; }
+	if (quadrant >= 4 && quadrant < 5) { vertices[i++] = midx - w * s; vertices[i++] = yh; }
+	else if (quadrant < 4)             { vertices[i++] = midx; vertices[i++] = yh; }
+	if (quadrant >= 3 && quadrant < 4) { vertices[i++] = xw - w * s; vertices[i++] = yh; }
+	else if (quadrant < 3)             { vertices[i++] = xw; vertices[i++] = yh; }
+	if (quadrant >= 2 && quadrant < 3) { vertices[i++] = xw; vertices[i++] = midy + h * s; }
+	else if (quadrant < 2)             { vertices[i++] = xw; vertices[i++] = midy; }
+	if (quadrant >= 1 && quadrant < 2) { vertices[i++] = xw; vertices[i++] = y + h * s; }
+	else if (quadrant < 1)             { vertices[i++] = xw; vertices[i++] = y; }
+	if (quadrant >= 0 && quadrant < 1) { vertices[i++] = midx + w * s; vertices[i++] = y; }
+
+	glColorPointer(4, GL_FLOAT, 0, colors);
+	glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
+	glVertexPointer(2, GL_FLOAT, 0, vertices);
+
+	glDrawArrays(GL_TRIANGLE_FAN, 0, i / 2);
+	return 0;
+}
+
 
 static int sdl_load_image(lua_State *L)
 {
@@ -1888,6 +1979,7 @@ static const struct luaL_reg displaylib[] =
 	{"newFBO", gl_new_fbo},
 	{"newQuadratic", gl_new_quadratic},
 	{"drawQuad", gl_draw_quad},
+	{"drawQuadPart", gl_draw_quad_part},
 	{"FBOActive", gl_fbo_is_active},
 	{"disableFBO", gl_fbo_disable},
 	{"drawStringNewSurface", sdl_surface_drawstring_newsurface},

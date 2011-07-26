@@ -42,7 +42,7 @@ newEntity{
 	life_rating = 12,
 	resolvers.tmasteries{ ["technique/other"]=0.25 },
 
-	resists = { [DamageType.FIRE] = 20, [DamageType.COLD] = 20, [DamageType.POISON] = 20 },
+	resists = { [DamageType.FIRE] = 20, [DamageType.COLD] = 20, [DamageType.NATURE] = 20 },
 	on_die = function(self, who)
 		local part = "BEAR_PAW"
 		if game.player:hasQuest("brotherhood-of-alchemists") then

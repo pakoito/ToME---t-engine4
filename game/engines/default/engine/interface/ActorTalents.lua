@@ -81,7 +81,7 @@ function _M:newTalent(t)
 	self.talents_def[t.id] = t
 	assert(not self[t.id], "talent already exists with id T_"..t.short_name)
 	self[t.id] = t.id
-	print("[TALENT]", t.name, t.short_name, t.id)
+--	print("[TALENT]", t.name, t.short_name, t.id)
 
 	-- Register in the type
 	table.insert(self.talents_types_def[t.type[1]].talents, t)

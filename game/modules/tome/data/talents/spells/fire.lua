@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 newTalent{
-	name = "Flame", image = true,
+	name = "Flame",
 	type = {"spell/fire",1},
 	require = spells_req1,
 	points = 5,

@@ -47,7 +47,7 @@ function _M:newLore(t)
 
 	self.lore_defs[t.id] = t
 	self.lore_defs[#self.lore_defs+1] = t
-	print("[LORE] defined", t.order, t.id)
+--	print("[LORE] defined", t.order, t.id)
 end
 
 function _M:init(t)
