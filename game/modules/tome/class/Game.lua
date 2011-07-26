@@ -121,7 +121,7 @@ function _M:run()
 	profile.chat:enableFading(config.settings.tome.log_fade or 3)
 	profile.chat:enableDisplayChans(false)
 
-	self.hotkeys_display = HotkeysIconsDisplay.new(nil, 216, self.h - 70, self.w - 216, 70, "/data/gfx/ui/talents-list.png", font_mono, size_mono, 32, 32)
+	self.hotkeys_display = HotkeysIconsDisplay.new(nil, 216, self.h - 70, self.w - 216, 70, "/data/gfx/ui/talents-list.png", font_mono, size_mono, 48, 48)
 	self.hotkeys_display:enableShadow(0.6)
 	self.hotkeys_display:setColumns(3)
 	self.npcs_display = ActorsSeenDisplay.new(nil, 216, self.h - font_mono_h * 4.2, self.w - 216, font_mono_h * 4.2, "/data/gfx/ui/talents-list.png", font_mono, size_mono)

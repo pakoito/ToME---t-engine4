@@ -985,6 +985,15 @@ static int gl_draw_quad_part(lua_State *L)
 		tglBindTexture(GL_TEXTURE_2D, gl_tex_white);
 	}
 
+	if (angle < 0) angle = 0;
+	else if (angle > 360) angle = 360;
+
+	// Shortcut
+	if (angle == 360)
+	{
+		return 0;
+	}
+
 	GLfloat texcoords[2*10] = {
 		0, 0,
 		0, 1,
@@ -1013,9 +1022,6 @@ static int gl_draw_quad_part(lua_State *L)
 		midx, midy,
 		midx, y,
 	};
-
-	if (angle < 0) angle = 0;
-	else if (angle > 360) angle = 360;
 
 	int i = 4;
 	float quadrant = angle / 45;

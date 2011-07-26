@@ -99,11 +99,10 @@ function _M:display()
 	for page=1,3 do
 	for i = 1, 12 do
 		local j = i + (12 * (page - 1))
-		local ks = game.key:formatKeyString(game.key:findBoundKeys("HOTKEY_"..page_to_hotkey[page]..i))
 		if a.hotkey[j] and a.hotkey[j][1] == "talent" then
-			hks[#hks+1] = {a.hotkey[j][2], j, "talent", ks}
+			hks[#hks+1] = {a.hotkey[j][2], j, "talent", i, page}
 		elseif a.hotkey[j] and a.hotkey[j][1] == "inventory" then
-			hks[#hks+1] = {a.hotkey[j][2], j, "inventory", ks}
+			hks[#hks+1] = {a.hotkey[j][2], j, "inventory", i, page}
 		end
 	end
 	end
@@ -147,11 +146,27 @@ function _M:display()
 				frame = "disabled"
 			end
 			display_entity = o
+			if o and o.use_talent then
+				local t = a:getTalentFromId(o.use_talent.id)
+				display_entity = t.display_entity
+			end
+			if o and (o.use_talent or o.use_power) then
+				angle = 360 * ((o.power / o.max_power))
+				color = {255,0,0}
+				local need = (o.use_talent and o.use_talent.power) or (o.use_power and o.use_power.power) or 0
+				if o.power < need then
+					if o.power_regen and o.power_regen > 0 then
+						frame = "cooldown"
+						txt = tostring(math.ceil((need - o.power) / o.power_regen))
+					else frame = "disabled" end
+				end
+			end
 		end
 
 		local w, h = self.icon_w, self.icon_h
-
---		local key = self.font:draw(ts[4], w, colors.YELLOW.r, colors.YELLOW.g, colors.YELLOW.b, true)[1]
+		self.font:setStyle("bold")
+		local key = self.font:draw(("%d/%d"):format(ts[4], ts[5]), w, colors.ANTIQUE_WHITE.r, colors.ANTIQUE_WHITE.g, colors.ANTIQUE_WHITE.b, true)[1]
+		self.font:setStyle("normal")
 
 		local gtxt = nil
 		if txt then
@@ -176,10 +191,13 @@ function _M:toScreen()
 		local frame = self.frames[item.frame]
 		frame[1]:toScreenFull(self.display_x + item.x, self.display_y + item.y, self.frames.w, self.frames.h, frame[2] * self.frames.rw, frame[3] * self.frames.rh)
 		item.e:toScreen(self.tiles, self.display_x + item.x + self.frames.fx, self.display_y + item.y + self.frames.fy, self.icon_w, self.icon_h)
---		key._tex:toScreenFull(self.display_x + item.x + 64 - key.w, self.display_y + item.y, key.w, key.h, key._tex_w, key._tex_h)
+
+		if self.shadow then key._tex:toScreenFull(self.display_x + item.x + 1 + self.frames.fx + self.icon_w - key.w, self.display_y + item.y + 1 + self.icon_h - key.h, key.w, key.h, key._tex_w, key._tex_h, 0, 0, 0, self.shadow) end
+		key._tex:toScreenFull(self.display_x + item.x + self.frames.fx + self.icon_w - key.w, self.display_y + item.y + self.icon_h - key.h, key.w, key.h, key._tex_w, key._tex_h)
+
 		if item.color then core.display.drawQuadPart(self.display_x + item.x + self.frames.fx, self.display_y + item.y + self.frames.fy, self.icon_w, self.icon_h, item.angle, item.color[1], item.color[2], item.color[3], 128) end
 		if gtxt then
-			if self.shadow then gtxt._tex:toScreenFull(self.display_x + item.x + self.frames.fy + 2 + (self.icon_w - gtxt.fw) / 2, self.display_y + item.y + self.frames.fy + 2 + (self.icon_h - gtxt.fh) / 2, gtxt.w, gtxt.h, gtxt._tex_w, gtxt._tex_h, 0, 0, 0, self.shadow)  end
+			if self.shadow then gtxt._tex:toScreenFull(self.display_x + item.x + self.frames.fy + 2 + (self.icon_w - gtxt.fw) / 2, self.display_y + item.y + self.frames.fy + 2 + (self.icon_h - gtxt.fh) / 2, gtxt.w, gtxt.h, gtxt._tex_w, gtxt._tex_h, 0, 0, 0, self.shadow) end
 			gtxt._tex:toScreenFull(self.display_x + item.x + self.frames.fx + (self.icon_w - gtxt.fw) / 2, self.display_y + item.y + self.frames.fy + (self.icon_h - gtxt.fh) / 2, gtxt.w, gtxt.h, gtxt._tex_w, gtxt._tex_h)
 		end
 

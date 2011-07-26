@@ -33,7 +33,8 @@ end
 
 --- Regen resources, shout be called in your actor's act() method
 function _M:regenPower()
-	if self.power_regen then self.power = util.bound(self.power + self.power_regen, 0, self.max_power) end
+	if self.power_regen then
+	self.power = util.bound(self.power + self.power_regen, 0, self.max_power) end
 end
 
 function _M:canUseObject()
@@ -52,7 +53,7 @@ function _M:getUseDesc()
 	elseif self.use_simple then
 		return ("It can be used to %s."):format(self.use_simple.name)
 	elseif self.use_talent then
-		if not self.use_talent.power then                                                                        print(self:getTalentFromId(self.use_talent.id),self.use_talent.id)
+		if not self.use_talent.power then
 			return ("It can be used to activate talent: %s (level %d)."):format(self:getTalentFromId(self.use_talent.id).name, self.use_talent.level)
 		else
 			return ("It can be used to activate talent: %s (level %d), costing %d power out of %d/%d."):format(self:getTalentFromId(self.use_talent.id).name, self.use_talent.level, self.use_talent.power, self.power, self.max_power)

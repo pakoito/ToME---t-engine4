@@ -30,9 +30,8 @@ _M.display_on_unknown = false
 function _M:init(t, no_default)
 	t = t or {}
 
-	self.energy = t.energy or { value=0, mod=1 }
+	self.energy = t.energy or { value=0 }
 	self.energy.value = self.energy.value or 0
-	self.energy.mod = self.energy.mod or 0
 
 	Entity.init(self, t, no_default)
 end

@@ -836,7 +836,7 @@ end
 
 -- Display the player tile
 function _M:innerDisplay(x, y, nb_keyframes)
-	if self.cur_item and self.cur_item.entity then
+	if self.cur_item and self.cur_item.entity and self.c_t_desc and self.ui_by_ui[self.c_t_desc] then
 		self.cur_item.entity:toScreen(nil, x + self.iw - 64, y + self.iy + self.ui_by_ui[self.c_t_desc].y, 64, 64)
 	end
 end
