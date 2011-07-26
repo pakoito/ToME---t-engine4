@@ -75,7 +75,7 @@ newEntity{ base = "BASE_NPC_CRYSTAL",
 	desc = "A formation of red crystal. It emits bright red, scorching light.",
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 1,
-	resists = { [DamageType.FIRE] = 100, [DamageType.ICE] = -100 },
+	resists = { [DamageType.FIRE] = 100, [DamageType.COLD] = -100 },
 	resolvers.talents{
 		[Talents.T_FLAME]={base=1, every=7, max=5},
 	},
