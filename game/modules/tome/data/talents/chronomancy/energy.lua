@@ -18,67 +18,48 @@
 -- darkgod@te4.org
 
 newTalent{
-	name = "Entropy",
-	type = {"chronomancy/energy", 1},
+	name = "Energy Decomposition",
+	type = {"chronomancy/energy",1},
+	mode = "sustained",
 	require = chrono_req1,
 	points = 5,
-	paradox = 5,
+	sustain_paradox = 75,
 	cooldown = 10,
-	tactical = { DISABLE = 2 },
-	direct_hit = true,
-	requires_target = true,
-	range = 6,
-	getCooldown = function(self, t) return 2 + math.ceil(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
-	getTalentCount = function(self, t) return self:getTalentLevelRaw(t) end,
-	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t)}
-		local tx, ty = self:getTarget(tg)
-		if not tx or not ty then return nil end
-		tx, ty = checkBackfire(self, tx, ty)
-		local target = game.level.map(tx, ty, Map.ACTOR)
-		if not target then return end
-
-		if not self:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) then
-			game.logSeen(target, "%s resists!", target.name:capitalize())
-			return true
-		end
-
-		local tids = {}
-		for tid, _ in pairs(target.talents) do
-			local tt = target:getTalentFromId(tid)
-			if tt.type[1]:find("^inscriptions/") and not target.talents_cd[tid] then
-				tids[#tids+1] = tid
-			end
-		end
-
-		for i = 1, t.getTalentCount(self, t) do
-			if #tids == 0 then break end
-			local tid = rng.tableRemove(tids)
-			target.talents_cd[tid] = t.getCooldown(self, t)
-		end
-		self.changed = true
-
-		game.logSeen(target, "%s feels the effects of entropy!", target.name:capitalize())
-		game.level.map:particleEmitter(tx, ty, 1, "entropythrust")
-		game:playSoundNear(self, "talents/spell_generic")
+	tactical = { BUFF = 2 },
+	getAbsorption = function(self, t) return self:combatTalentSpellDamage(t, 5, 50) end,
+	on_damage = function(self, t, damtype, dam)
+		if not DamageType:get(damtype).antimagic_resolve then return dam end
+		local absorb = t.getAbsorption(self, t)
+		-- works like armor with 50% hardiness for projected energy effects
+		dam = math.max(dam * 0.5 - absorb, 0) + (dam * 0.5)
+		print("[PROJECTOR] after static reduction dam", dam)
+		return dam
+	end,
+	activate = function(self, t)
+		game:playSoundNear(self, "talents/heal")
+		return {
+			particle = self:addParticles(Particles.new("temporal_focus", 1)),
+		}
+	end,
+	deactivate = function(self, t, p)
+		self:removeParticles(p.particle)
 		return true
 	end,
 	info = function(self, t)
-		local talentcount = t.getTalentCount(self, t)
-		local cooldown = t.getCooldown(self, t)
-		return ([[You sap the energy out of %d of the targets inscriptions, placing them on cooldown for %d turns.]]):
-		format(talentcount, cooldown)
+		local absorption = t.getAbsorption(self, t)
+		return ([[Reduces all incoming energy damage by 50%% up to a maximum of %d.
+		The maximum damage reduction will scale with your Spellpower.]]):format(absorption)
 	end,
 }
 
 newTalent{
 	name = "Entropic Field",
-	type = {"chronomancy/energy", 2},
+	type = {"chronomancy/energy",2},
 	mode = "sustained",
 	require = chrono_req2,
 	points = 5,
-	sustain_paradox = 150,
-	cooldown = 20,
+	sustain_paradox = 75,
+	cooldown = 10,
 	tactical = { BUFF = 2 },
 	getPower = function(self, t) return 10 + (self:combatTalentSpellDamage(t, 10, 50)) end,
 	activate = function(self, t)
@@ -97,68 +78,81 @@ newTalent{
 	end,
 	info = function(self, t)
 		local power = t.getPower(self, t)
-		return ([[You encase yourself in a field that slows incoming projectiles by %d%% and grants you %d%% physical resistance.
-		The effect will scale with the Magic stat.]]):format(power, power / 2)
+		return ([[You encase yourself in a field that slows incoming projectiles by %d%% and increases your physical resistance by %d%%.
+		The effect will scale with your Spellpower.]]):format(power, power / 2)
 	end,
 }
 
 newTalent{
-	name = "Energy Decomposition",
-	type = {"chronomancy/energy",3},
+	name = "Energy Absorption",
+	type = {"chronomancy/energy", 3},
 	require = chrono_req3,
 	points = 5,
-	paradox = 15,
-	cooldown = 24,
+	paradox = 10,
+	cooldown = 10,
 	tactical = { DISABLE = 2 },
 	direct_hit = true,
 	requires_target = true,
 	range = 6,
-	getRemoveCount = function(self, t) return math.floor(self:getTalentLevel(t)*getParadoxModifier(self, pm)) end,
+	getCooldown = function(self, t) return 2 + math.floor(self:getTalentLevel(t) * getParadoxModifier(self, pm)/2) end,
+	getTalentCount = function(self, t) return math.ceil(self:getTalentLevel(t)) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local tx, ty = self:getTarget(tg)
 		if not tx or not ty then return nil end
+		local _ _, tx, ty = self:canProject(tg, tx, ty)
 		tx, ty = checkBackfire(self, tx, ty)
 		local target = game.level.map(tx, ty, Map.ACTOR)
 		if not target then return end
 
-		local effs = {}
+		if not self:checkHit(self:combatSpellpower(), target:combatSpellResist()) then
+			game.logSeen(target, "%s resists!", target.name:capitalize())
+			return true
+		end
 
-		-- Go through all spell effects
-		for eff_id, p in pairs(target.tmp) do
-		local e = target.tempeffect_def[eff_id]
-			if e.type == "magical" then
-				effs[#effs+1] = {"effect", eff_id}
+		local tids = {}
+		for tid, lev in pairs(target.talents) do
+			local t = target:getTalentFromId(tid)
+			if t and not target.talents_cd[tid] and t.mode == "activated" and not t.innate then tids[#tids+1] = t end
+		end
+		
+		local count = 0
+		local cdr = t.getCooldown(self, t)
+		
+		for i = 1, t.getTalentCount(self, t) do
+			local t = rng.tableRemove(tids)
+			if not t then break end
+			target.talents_cd[t.id] = cdr
+			game.logSeen(target, "%s's %s is disrupted!", target.name:capitalize(), t.name)
+			count = count + 1
+		end
+		
+		if count >= 1 then
+			local tids = {}
+			for tid, _ in pairs(self.talents_cd) do
+				local tt = self:getTalentFromId(tid)
+				if tt.type[1]:find("^chronomancy/") then
+					tids[#tids+1] = tid
+				end
+			end
+			for i = 1, count do
+				if #tids == 0 then break end
+				local tid = rng.tableRemove(tids)
+				self.talents_cd[tid] = self.talents_cd[tid] - cdr
 			end
 		end
 
-		-- Go through all sustained spells
-		for tid, act in pairs(target.sustain_talents) do
-		local talent = target:getTalentFromId(tid)
-			if talent.is_spell then
-				effs[#effs+1] = {"talent", tid}
-			end
-		end
-
-		for i = 1, t.getRemoveCount(self, t) do
-			if #effs == 0 then break end
-			local eff = rng.tableRemove(effs)
-
-			if eff[1] == "effect" then
-				target:removeEffect(eff[2])
-			else
-				target:forceUseTalent(eff[2], {ignore_energy=true})
-			end
-		end
+		game.logSeen(target, "%s feels the effects of entropy!", target.name:capitalize())
 		game.level.map:particleEmitter(tx, ty, 1, "entropythrust")
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
-		local count = t.getRemoveCount(self, t)
-		return ([[Removes up to %d magical effects or sustained spells (both good and bad) from the target.
-		The number of effects removed will scale with your Paradox.]]):
-		format(count)
+		local talentcount = t.getTalentCount(self, t)
+		local cooldown = t.getCooldown(self, t)
+		return ([[You sap the target's energy and add it to your own, placing  up to %d random talents on cooldown for %d turns and reducing the cooldown of one of your chronomancy talents currently on cooldown by %d turns per enemy talent effected.
+		The cooldown adjustment scales with your Paradox.]]):
+		format(talentcount, cooldown, cooldown)
 	end,
 }
 
@@ -167,32 +161,18 @@ newTalent{
 	type = {"chronomancy/energy",4},
 	require = chrono_req4,
 	points = 5,
-	paradox = 30,
-	cooldown = 50,
+	paradox = 20,
+	cooldown = 12,
 	tactical = { BUFF = 2 },
-	getTalentCount = function(self, t) return math.ceil(self:getTalentLevel(t) + 2) end,
-	getMaxLevel = function(self, t) return self:getTalentLevelRaw(t) end,
+	getMaxLevel = function(self, t) return self:getTalentLevel(t) end,
 	action = function(self, t)
-		local tids = {}
-		for tid, _ in pairs(self.talents_cd) do
-			local tt = self:getTalentFromId(tid)
-			if tt.type[2] <= t.getMaxLevel(self, t) and tt.type[1]:find("^chronomancy/") then
-				tids[#tids+1] = tid
-			end
-		end
-		for i = 1, t.getTalentCount(self, t) do
-			if #tids == 0 then break end
-			local tid = rng.tableRemove(tids)
-			self.talents_cd[tid] = nil
-		end
-		self.changed = true
-		game:playSoundNear(self, "talents/spell_generic")
+		-- effect is handled in actor postUse
+		self:setEffect(self.EFF_REDUX, 5, {})
 		return true
 	end,
 	info = function(self, t)
-		local talentcount = t.getTalentCount(self, t)
 		local maxlevel = t.getMaxLevel(self, t)
-		return ([[Your mastery of energy allows you to reset the cooldown of %d of your chronomantic spells of level %d or less.]]):
-		format(talentcount, maxlevel)
+		return ([[You'll recast the next activated chronomancy spell (up to talent level %0.1f) that you cast within the next 5 turns.]]):
+		format(maxlevel)
 	end,
 }

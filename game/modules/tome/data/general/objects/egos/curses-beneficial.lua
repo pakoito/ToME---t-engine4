@@ -165,6 +165,7 @@ newEntity{
 newEntity{
 	name="gift of the hungry", level = 1, weighting = 3, subclass="Doomed",
 	apply = function(item, who, power)
+		item.wielder = item.wielder or {}
 		item.wielder.talents_types_mastery = item.wielder.talents_types_mastery or {}
 		item.wielder.talents_types_mastery["cursed/dark-sustenance"] = math.max(item.wielder.talents_types_mastery["cursed/dark-sustenance"] or 0, math.ceil(8 * power) * 0.01)
 	end,
@@ -172,6 +173,7 @@ newEntity{
 newEntity{
 	name="gift of the cursed", level = 1, weighting = 3, subclass="Cursed",
 	apply = function(item, who, power)
+		item.wielder = item.wielder or {}
 		item.wielder.talents_types_mastery = item.wielder.talents_types_mastery or {}
 		item.wielder.talents_types_mastery["cursed/cursed-form"] = math.max(item.wielder.talents_types_mastery["cursed/cursed-form"] or 0, math.ceil(8 * power) * 0.01)
 	end,
@@ -179,6 +181,7 @@ newEntity{
 newEntity{
 	name="gift of the cursed", level = 1, weighting = 3, subclass="Doomed",
 	apply = function(item, who, power)
+		item.wielder = item.wielder or {}
 		item.wielder.talents_types_mastery = item.wielder.talents_types_mastery or {}
 		item.wielder.talents_types_mastery["cursed/cursed-form"] = math.max(item.wielder.talents_types_mastery["cursed/cursed-form"] or 0, math.ceil(8 * power) * 0.01)
 	end,
@@ -186,6 +189,7 @@ newEntity{
 newEntity{
 	name="gift of the outcast", level = 1, weighting = 2, subclass="Cursed",
 	apply = function(item, who, power)
+		item.wielder = item.wielder or {}
 		item.wielder.talents_types_mastery = item.wielder.talents_types_mastery or {}
 		item.wielder.talents_types_mastery["cursed/dark-figure"] = math.max(item.wielder.talents_types_mastery["cursed/dark-figure"] or 0, math.ceil(8 * power) * 0.01)
 	end,
@@ -193,6 +197,7 @@ newEntity{
 newEntity{
 	name="gift of the outcast", level = 1, weighting = 2, subclass="Doomed",
 	apply = function(item, who, power)
+		item.wielder = item.wielder or {}
 		item.wielder.talents_types_mastery = item.wielder.talents_types_mastery or {}
 		item.wielder.talents_types_mastery["cursed/dark-figure"] = math.max(item.wielder.talents_types_mastery["cursed/dark-figure"] or 0, math.ceil(8 * power) * 0.01)
 	end,

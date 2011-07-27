@@ -17,59 +17,93 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+
 newTalent{
-	name = "Probability Weaving",
-	type = {"chronomancy/chronomancy", 1},
-	mode = "sustained",
-	require = temporal_req1,
-	sustain_paradox = 75,
-	points = 5,
-	cooldown = 10,
-	tactical = { BUFF = 2 },
-	getDefense = function(self, t) return self:combatTalentSpellDamage(t, 4, 20) end,
-	activate = function(self, t)
-		game:playSoundNear(self, "talents/heal")
-		return {
-			def = self:addTemporaryValue("combat_def", t.getDefense(self, t)),
-		}
-	end,
-	deactivate = function(self, t, p)
-		self:removeTemporaryValue("combat_def", p.def)
+	name = "Spacetime Tuning",
+	type = {"chronomancy/other", 1},
+	hide = true,
+	points = 1,
+	message = "@Source@ retunes the fabric of spacetime.",
+	cooldown = 50,
+	tactical = { PARADOX = 2 },
+	no_npc_use = true,
+	no_energy = true,
+	getAnomaly = function(self, t) return 6 - (self:getTalentLevelRaw(self.T_STATIC_HISTORY) or 0) end,
+	getPower = function(self, t) return math.floor(self:getWil()/2) end,
+	action = function(self, t)
+		-- open dialog to get desired paradox
+		local q = engine.dialogs.GetQuantity.new("Retuning the fabric of spacetime...",
+		"What's your desired paradox level?", math.floor(self.paradox), nil, function(qty)
+
+			-- get reduction amount and find duration
+			local amount = qty - self.paradox
+			local dur = math.floor(math.abs(qty-self.paradox)/t.getPower(self, t))
+
+			-- set tuning effect
+			if amount >= 0 then
+				self:setEffect(self.EFF_SPACETIME_TUNING, dur, {power = t.getPower(self, t)})
+			elseif amount < 0 then
+				self:setEffect(self.EFF_SPACETIME_TUNING, dur, {power = - t.getPower(self, t)})
+			end
+
+		end)
+		game:registerDialog(q)
 		return true
 	end,
 	info = function(self, t)
-		local defense = t.getDefense(self, t)
-		return ([[Bends the laws of probability, increasing your defense by %d and reducing the chance you'll be critically hit by melee or ranged attacks by %d%%.
-		The defense increase will scale with the Magic stat.]]):format(defense, self:getTalentLevel(t))
+		local chance = t.getAnomaly(self, t)
+		return ([[Retunes your Paradox towards the desired level and informs you of failure, anomaly, and backfire chances when you finish tuning.  You will be dazed while tuning and each turn your Paradox will increase or decrease by an amount equal to one half of your Willpower stat.
+		Each turn you spend increasing Paradox will have a %d%% chance of triggering a temporal anomaly which will end the tuning process.  Decreasing Paradox has no chance of triggering an anomaly.]]):
+		format(chance)
 	end,
 }
 
 newTalent{
-	name = "Deja Vu",
-	type = {"chronomancy/chronomancy",2},
-	require = temporal_req2,
+	name = "Static History",
+	type = {"chronomancy/chronomancy", 1},
+	require = temporal_req1,
 	points = 5,
-	paradox = 10,
-	cooldown = 20,
-	no_npc_use = true,
-	getRadius = function(self, t) return 5 + math.floor(self:combatTalentSpellDamage(t, 2, 12) * getParadoxModifier(self, pm)) end,
+	message = "@Source@ stabilizes the timeline.",
+	cooldown = 24,
+	tactical = { PARADOX = 2 },
+	getDuration = function(self, t) 
+		local duration = 1 + math.floor(self:getTalentLevel(t)/2)
+		if self:knowTalent(self.T_PARADOX_MASTERY) then
+			duration = 1 + math.floor((self:getTalentLevel(t)/2) + self:getTalentLevel(self.T_PARADOX_MASTERY)/2)
+		end
+		
+		return duration
+	end,
+	getReduction = function(self, t)
+		local modifier = self:getWil()
+		--check for Paradox Mastery
+		if self:knowTalent(self.T_PARADOX_MASTERY) then
+			modifier = self:getWil() * (1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10 or 0))
+		end
+
+		local reduction = (20 + (modifier * self:getTalentLevel(t)/2))
+		return reduction
+	end,
 	action = function(self, t)
-		self:magicMap(t.getRadius(self, t))
+		self:incParadox (- t.getReduction(self, t))
 		game:playSoundNear(self, "talents/spell_generic")
+		self:setEffect(self.EFF_SPACTIME_STABILITY, t.getDuration(self, t), {})
 		return true
 	end,
 	info = function(self, t)
-		local radius = t.getRadius(self, t)
-		return ([[Your keen intuition allows you to form a mental picture of your surroundings in a radius of %d.
-		The radius will scale with your Paradox and Magic stat.]]):
-		format(radius)
+		local reduction = t.getReduction(self, t)
+		local duration = t.getDuration(self, t)
+		return ([[Reduces Paradox by %d by stabilizing the spacetime continuum and allows chronomancy to be used without failure, backfire, or anomaly checks for %d turns.
+		Talent points invested in Static History will also reduce your chances of triggering an anomaly while using Spacetime Tuning.
+		The effect will increase with the Willpower stat.]]):
+		format(reduction, duration)
 	end,
 }
 
 newTalent{
 	name = "Precognition",
-	type = {"chronomancy/chronomancy",3},
-	require = temporal_req3,
+	type = {"chronomancy/chronomancy",2},
+	require = temporal_req2,
 	points = 5,
 	paradox = 25,
 	cooldown = 50,
@@ -91,6 +125,27 @@ newTalent{
 }
 
 newTalent{
+	name = "Probability Weaving",
+	type = {"chronomancy/chronomancy",3},
+	mode = "passive",
+	require = temporal_req3,
+	points = 5,
+	on_learn = function(self, t)
+		self.inc_stats[self.STAT_LCK] = self.inc_stats[self.STAT_LCK] + 2
+		self:onStatChange(self.STAT_LCK, 2)
+		self.combat_spellpower = self.combat_spellpower + 2
+	end,
+	on_unlearn = function(self, t)
+		self.inc_stats[self.STAT_LCK] = self.inc_stats[self.STAT_LCK] - 2
+		self:onStatChange(self.STAT_LCK, - 2)
+		self.combat_spellpower = self.combat_spellpower - 2
+	end,
+	info = function(self, t)
+		return ([[You've learned to bend the laws of probability, increasing your luck and spellpower by %d.]]):format(2 * self:getTalentLevelRaw(t))
+	end,
+}
+
+newTalent{
 	name = "Foresight",
 	type = {"chronomancy/chronomancy", 4},
 	require = temporal_req4,
@@ -108,7 +163,8 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[You avoid all damage from a single damage source as long as it occurs within the next %d turns and deals at least 10%% of your maximum life in a single hit.  Once an attack is avoided the spell will end.
-		Additional talent points will lower the cooldown and the duration will scale with your Paradox.]]):
+		Additional talent points will lower the cooldown and the duration will scale with your Paradox.
+		This spell takes no time to cast.]]):
 		format(duration)
 	end,
 }

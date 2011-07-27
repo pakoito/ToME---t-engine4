@@ -731,9 +731,6 @@ function _M:physicalCrit(dam, weapon, target)
 		end
 	end
 
-	if target:knowTalent(target.T_PROBABILITY_WEAVING) and target:isTalentActive(target.T_PROBABILITY_WEAVING) then
-		chance = chance - target:getTalentLevel(target.T_PROBABILITY_WEAVING)
-	end
 	if target:hasHeavyArmor() and target:knowTalent(target.T_ARMOUR_TRAINING) then
 		chance = chance - target:getTalentLevel(target.T_ARMOUR_TRAINING) * 1.9
 	end

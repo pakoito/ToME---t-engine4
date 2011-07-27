@@ -35,7 +35,7 @@ newTalent{
 		local primary = t.getThread(self, t)
 		return ([[You begin to gather energy from other timelines, increasing all damage dealt by %d%% on the first turn and %d%% more each additional turn.
 		The increased damage will be released with the first attack, item, or talent used, otherwise the spell ends after five turns.
-		The percentages will increase with your Paradox and Magic stat.]]):format(primary + (primary/5), primary/5)
+		The percentages will increase with your Paradox and Spellpower.]]):format(primary + (primary/5), primary/5)
 	end,
 }
 
@@ -66,7 +66,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[Creates a wake of temporal energy that deals %0.2f damage in a beam as you attempt to rethread the timeline.  Affected targets may be dazed, blinded, pinned, or confused for 3 turns.
-		The damage will increase with the Magic stat]]):
+		The damage will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.TEMPORAL, damage))
 	end,
 }

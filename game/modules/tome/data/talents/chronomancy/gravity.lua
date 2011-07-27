@@ -18,25 +18,37 @@
 -- darkgod@te4.org
 
 newTalent{
-	name = "Repulsion Shield",
+	name = "Repulsion Blast",
 	type = {"chronomancy/gravity",1},
 	require = chrono_req1,
 	points = 5,
-	paradox = 4,
-	cooldown = 20,
-	tactical = { DEFEND = 1, ESCAPE = 1, DISABLE = 1 },
-	getAbsorb = function(self, t) return self:combatTalentSpellDamage(t, 30, 470) * getParadoxModifier(self, pm) end,
-	getDuration = function (self, t) return 6 + math.ceil(self:getTalentLevel(t)) end,
+	paradox = 5,
+	cooldown = 4,
+	tactical = { ATTACKAREA = 2, ESCAPE = 2 },
+	range = 0,
+	radius = function(self, t)
+		return 4 + math.floor(self:getTalentLevelRaw (t)/2)
+	end,
+	requires_target = true,
+	target = function(self, t)
+		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), friendlyfire=false, talent=t}
+	end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 170)*getParadoxModifier(self, pm) end,
 	action = function(self, t)
-		self:setEffect(self.EFF_REPULSION_SHIELD, t.getDuration(self, t), {power=t.getAbsorb(self, t)})
-		game:playSoundNear(self, "talents/heal")
+		local tg = self:getTalentTarget(t)
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, DamageType.REPULSION, self:spellCrit(t.getDamage(self, t)))
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "gravity_breath", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
+		game:playSoundNear(self, "talents/earth")
 		return true
 	end,
 	info = function(self, t)
-		local absorb = t.getAbsorb(self, t)
-		local duration = t.getDuration(self, t)
-		return ([[Surround yourself with a repulsion field for %d turns that will absorb up to %0.2f damage and potentially knock back attackers.  Pinned creatures are immune to this knockback.
-		The absorption will scale with your Paradox and Magic stat.]]):format(duration, absorb)
+		local damage = t.getDamage(self, t)
+		local radius = self:getTalentRadius(t)
+		return ([[Sends out a wave of repulsion in a %d radius cone, dealing %0.2f physical damage and knocking back creatures caught in the area.  Deals 50%% extra damage to pinned targets.
+		The damage will scale with your Paradox and Spellpower.]]):
+		format(radius, damDesc(self, DamageType.PHYSICAL, t.getDamage(self, t)))
 	end,
 }
 
@@ -46,9 +58,9 @@ newTalent{
 	require = chrono_req2,
 	points = 5,
 	paradox = 10,
-	cooldown = 10,
+	cooldown = 6,
 	tactical = { ATTACKAREA = 2, DISABLE = 2 },
-	range = 6,
+	range = 10,
 	radius = function(self, t)
 		return 2 + math.floor(self:getTalentLevel(t) / 3)
 	end,
@@ -73,7 +85,7 @@ newTalent{
 				game.logSeen(target, "%s is drawn in by the gravity spike!", target.name:capitalize())
 			end
 		end)
-		self:project (tg, x, y, DamageType.PHYSICAL, self:spellCrit(t.getDamage(self, t)))
+		self:project (tg, x, y, DamageType.GRAVITY, self:spellCrit(t.getDamage(self, t)))
 		
 		game.level.map:particleEmitter(x, y, tg.radius, "gravity_spike", {radius=tg.radius, grids=grids, tx=x, ty=y})
 		game:playSoundNear(self, "talents/earth")
@@ -82,47 +94,54 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[Creates a gravity spike in a radius of %d moving all targets towards the spells center and inflicting %0.2f physical damage.
-		The damage will scale with your Paradox and Magic Stat.]]):format(radius, damDesc(self, DamageType.PHYSICAL, t.getDamage(self, t)))
+		return ([[Creates a gravity spike in a radius of %d that moves all targets towards the spells center and inflicts %0.2f physical damage.  Deals 50%% extra damage to pinned targets.
+		The damage will scale with your Paradox and Spellpower.]]):format(radius, damDesc(self, DamageType.PHYSICAL, t.getDamage(self, t)))
 	end,
 }
 
 newTalent{
-	name = "Repulsion Blast",
+	name = "Repulsion Field",
 	type = {"chronomancy/gravity",3},
 	require = chrono_req3,
 	points = 5,
-	paradox = 12,
-	cooldown = 12,
+	paradox = 15,
+	cooldown = 14,
 	tactical = { ATTACKAREA = 2, ESCAPE = 2 },
 	range = 0,
 	radius = function(self, t)
-		return 4 + math.floor(self:getTalentLevelRaw (t)/2)
+		return 1 + math.floor(self:getTalentLevel(t)/2)
 	end,
-	requires_target = true,
 	target = function(self, t)
-		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), friendlyfire=false, talent=t}
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false}
 	end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 170)*getParadoxModifier(self, pm) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 8, 80)*getParadoxModifier(self, pm) end,
+	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.PHYSICAL, self:spellCrit(t.getDamage(self, t)))
-		self:project(tg, x, y, DamageType.REPULSION, t.getDamage(self, t))
-		game.level.map:particleEmitter(self.x, self.y, tg.radius, "gravity_breath", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
-		game:playSoundNear(self, "talents/earth")
+		game.level.map:addEffect(self,
+			self.x, self.y, t.getDuration(self, t),
+			DamageType.REPULSION, t.getDamage(self, t),
+			tg.radius,
+			5, nil,
+			engine.Entity.new{alpha=50, display='', color_br=200, color_bg=120, color_bb=0},
+			function(e)
+				e.x = e.src.x
+				e.y = e.src.y
+				return true
+			end,
+			tg.selffire
+		)
+		game:playSoundNear(self, "talents/cloud")
 		return true
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
+		local duration = t.getDuration(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[Sends out a wave of repulsion in a %d radius cone, dealing %0.2f physical damage and knocking back creatures caught in the area.  Pinned creatures are immune to this knockback.
-		The damage will scale with your Paradox and Magic stat.]]):
-		format(radius, damDesc(self, DamageType.PHYSICAL, t.getDamage(self, t)))
+		return ([[You surround yourself with a radius %d aura of gravity distortion that will knockback and deal %0.2f physical damage to all creatures.  The effect lasts %d turns.  Deals 50%% extra damage to pinned targets. 
+		The damage will scale with your Paradox and Spellpower.]]):format(radius, damDesc(self, DamageType.PHYSICAL, damage), duration)
 	end,
 }
-
 
 newTalent{
 	name = "Gravity Well",
@@ -130,11 +149,11 @@ newTalent{
 	require = chrono_req4,
 	points = 5,
 	paradox = 20,
-	cooldown = 30,
+	cooldown = 24,
 	tactical = { ATTACKAREA = 2, DISABLE = 2 },
-	range = 6,
+	range = 10,
 	radius = function(self, t)
-		return 2 + math.floor(self:getTalentLevel(t) / 3)
+		return 2 + math.floor(self:getTalentLevel(t) / 2)
 	end,
 	direct_hit = true,
 	requires_target = true,
@@ -155,7 +174,7 @@ newTalent{
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			x, y, duration,
-			DamageType.GRAVITY, dam,
+			DamageType.GRAVITYPIN, dam,
 			radius,
 			5, nil,
 			{type="quake"},
@@ -169,6 +188,6 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local radius = self:getTalentRadius(t)
 		return ([[Increases local gravity, doing %0.2f physical damage with a chance to pin in a radius of %d each turn for %d turns.
-		The damage will scale with your Paradox and Magic stat]]):format(damDesc(self, DamageType.PHYSICAL, damage), radius, duration)
+		The damage will scale with your Paradox and Spellpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage), radius, duration)
 	end,
 }

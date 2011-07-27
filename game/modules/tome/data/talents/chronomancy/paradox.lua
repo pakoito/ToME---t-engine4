@@ -20,29 +20,20 @@
 newTalent{
 	name = "Paradox Mastery",
 	type = {"chronomancy/paradox", 1},
-	mode = "sustained",
+	mode = "passive",
 	require = chrono_req_high1,
-	sustain_paradox = 75,
-	cooldown = 10,
 	points = 5,
-	getResist = function(self, t) return 10 + (self:combatTalentSpellDamage(t, 10, 50)) end,
-	activate = function(self, t)
-		game:playSoundNear(self, "talents/arcane")
-		return {
-			particle = self:addParticles(Particles.new("temporal_focus", 1)),
-			temp = self:addTemporaryValue("resists", {[DamageType.TEMPORAL]=t.getResist(self, t)}),
-		}
+	on_learn = function(self, t)
+		self.resists[DamageType.TEMPORAL] = (self.resists[DamageType.TEMPORAL] or 0) + 7
 	end,
-	deactivate = function(self, t, p)
-		self:removeParticles(p.particle)
-		self:removeTemporaryValue("resists", p.temp)
-		return true
+	on_unlearn = function(self, t)
+		self.resists[DamageType.TEMPORAL] = self.resists[DamageType.TEMPORAL] - 7
 	end,
 	info = function(self, t)
-		local resist = t.getResist(self, t)
-		return ([[You've learned to focus your control over the spacetime continuum and resist anomalous effects.  Increases your effective willpower for static history, failure, anomaly, and backfire calculations by %d%% and increases your Temporal resistance by %d%%.
-		The resistance will scale with the Magic stat.]]):
-		format(self:getTalentLevel(t) * 10, resist)
+		local resist = self:getTalentLevelRaw(t) * 7
+		local stability = math.floor(self:getTalentLevel(t)/2)
+		return ([[You've learned to focus your control over the spacetime continuum and resist anomalous effects.  Extends the duration of the Static History stability effect by %d turns, your effective willpower for static history, failure, anomaly, and backfire calculations by %d%%, and your Temporal resistance by %d%%.]]):
+		format(stability, self:getTalentLevel(t) * 10, resist)
 	end,
 }
 
@@ -64,7 +55,7 @@ newTalent{
 	info = function(self, t)
 		local absorb = t.getAbsorb(self, t)
 		return ([[Divides up to %0.2f damage evenly along every second of your past and future, effectively negating it.  Damage Shunt lasts 10 turns or until the maximum damage limit has been reached.
-		Casting Damage Shunt costs no time and the effect will scale with your Paradox and Magic stat.]]):
+		Casting Damage Shunt costs no time and the effect will scale with your Paradox and Spellpower.]]):
 		format(absorb)
 	end,
 }
@@ -101,7 +92,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local reduction = t.getReduction(self, t)
 		return ([[By altering the target's past you change its present, reducing all of its resistances by %d%% for %d turns.
-		The duration and reduction will scale with your Paradox.  The reduction will increase with your Magic stat.]]):
+		The duration and reduction will scale with your Paradox.  The reduction will increase with your Spellpower.]]):
 		format(reduction, duration)
 	end,
 }

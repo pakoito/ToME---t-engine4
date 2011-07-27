@@ -147,6 +147,11 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			local t = target:getTalentFromId(target.T_ANTIMAGIC_SHIELD)
 			dam = t.on_damage(target, t, type, dam)
 		end
+		
+		if target.isTalentActive and target:isTalentActive(target.T_ENERGY_DECOMPOSITION) then
+			local t = target:getTalentFromId(target.T_ENERGY_DECOMPOSITION)
+			dam = t.on_damage(target, t, type, dam)
+		end
 
 		if src:attr("stunned") then
 			dam = dam * 0.3
@@ -350,6 +355,22 @@ newDamageType{
 	name = "temporal", type = "TEMPORAL", text_color = "#LIGHT_STEEL_BLUE#",
 	antimagic_resolve = true,
 	death_message = {"timewarped", "temporally distorted"},
+}
+
+-- Temporal + Stun
+newDamageType{
+	name = "temporalstun", type = "TEMPORALSTUN",
+	projector = function(src, x, y, type, dam)
+		DamageType:get(DamageType.TEMPORAL).projector(src, x, y, DamageType.TEMPORAL, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("stun") then
+				target:setEffect(target.EFF_STUNNED, 4, {})
+			else
+				game.logSeen(target, "%s resists the stun!", target.name:capitalize())
+			end
+		end
+	end,
 }
 
 -- Lite up the room
@@ -762,24 +783,6 @@ newDamageType{
 			DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam.dam)
 			if target:checkHit(src:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
 				target:knockback(src.x, src.y, dam.dist)
-				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
-			else
-				game.logSeen(target, "%s resists the knockback!", target.name:capitalize())
-			end
-		end
-	end,
-}
-
--- Generic spell knockback vs. physresist.  Uses a more generic resist message
-newDamageType{
-	name = "repulsion", type = "REPULSION",
-	projector = function(src, x, y, type, dam, tmp)
-		local target = game.level.map(x, y, Map.ACTOR)
-		tmp = tmp or {}
-		if target and not target:attr("never_move") and not tmp[target] then
-			tmp[target] = true
-			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
-				target:knockback(src.x, src.y, 2)
 				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
 			else
 				game.logSeen(target, "%s resists the knockback!", target.name:capitalize())
@@ -1205,9 +1208,21 @@ newDamageType{
 	end,
 }
 
--- Gravity damage
+-- Gravity damage types
 newDamageType{
 	name = "gravity", type = "GRAVITY",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if not target then return end
+		if target and target:attr("never_move") then
+			dam = dam * 1.5
+		end
+		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam)
+	end,
+}
+
+newDamageType{
+	name = "gravitypin", type = "GRAVITYPIN",
 	projector = function(src, x, y, type, dam)
 		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -1216,6 +1231,29 @@ newDamageType{
 			target:setEffect(target.EFF_PINNED, 2, {}, true)
 		else
 			game.logSeen(target, "%s resists!", target.name:capitalize())
+		end
+	end,
+}
+
+newDamageType{
+	name = "repulsion", type = "REPULSION",
+	projector = function(src, x, y, type, dam, tmp)
+		local target = game.level.map(x, y, Map.ACTOR)
+		tmp = tmp or {}
+		-- extra damage on pinned targets
+		if target and target:attr("never_move") then
+			dam = dam * 1.5
+		end
+		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam)
+		-- check knockback
+		if target and not target:attr("never_move") and not tmp[target] then
+			tmp[target] = true
+			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
+				target:knockback(src.x, src.y, 2)
+				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
+			else
+				game.logSeen(target, "%s resists the knockback!", target.name:capitalize())
+			end
 		end
 	end,
 }

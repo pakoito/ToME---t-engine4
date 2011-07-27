@@ -58,9 +58,9 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local damagestat = t.getDamageStat(self, t)
-		return ([[Project a bolt of temporal energy, dealing %0.2f temporal damage and reducing all of the target's stats by %d for 3 turns.
+		return ([[Projects a bolt of temporal energy that deals %0.2f temporal damage and reduces all of the target's stats by %d for 3 turns.
 		At talent level 4 you may project a second bolt.
-		The damage will scale with your Paradox and Magic stat.]]):format(damDesc(self, DamageType.TEMPORAL, damage), damagestat)
+		The damage will scale with your Paradox and Spellpower.]]):format(damDesc(self, DamageType.TEMPORAL, damage), damagestat)
 	end,
 }
 
@@ -70,7 +70,7 @@ newTalent{
 	require = chrono_req2,
 	points = 5,
 	paradox = 15,
-	cooldown = 15,
+	cooldown = 12,
 	tactical = { ATTACKAREA = 2, DISABLE= 2 },
 	range = 0,
 	radius = function(self, t)
@@ -110,7 +110,7 @@ newTalent{
 	require = chrono_req3,
 	points = 5,
 	paradox = 20,
-	cooldown = 20,
+	cooldown = 14,
 	tactical = { ATTACKAREA = 2 },
 	range = 0,
 	radius = function(self, t)
@@ -143,8 +143,8 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[You surround yourself with a radius %d aura of time distortion that lasts %d turns and deals %0.2f stacking temporal damage over 3 turns to all other creatures.
-		The damage will scale with your Paradox and Magic stat]]):format(radius, duration, damDesc(self, DamageType.TEMPORAL, damage))
+		return ([[You surround yourself with a radius %d aura of time distortion that deals %0.2f stacking temporal damage over 3 turns to all creatures.  The effect lasts %d turns.
+		The damage will scale with your Paradox and Spellpower.]]):format(radius, damDesc(self, DamageType.TEMPORAL, damage), duration)
 	end,
 }
 
@@ -166,7 +166,7 @@ newTalent{
 		-- Go through all spell effects
 		for eff_id, p in pairs(target.tmp) do
 			local e = target.tempeffect_def[eff_id]
-			if e.type ~= "time" then
+			if e.type ~= "time" and e.type ~= "other" then
 				effs[#effs+1] = {"effect", eff_id}
 			end
 		end
@@ -186,7 +186,7 @@ newTalent{
 		local heal = t.getHeal(self, t)
 		local count = t.getRemoveCount(self, t)
 		return ([[You revert your body to a previous state, healing yourself for %0.2f life and removing %d status effects (both good and bad).
-		The life healed will scale with your Paradox and Magic stat.]]):
+		The life healed will scale with your Paradox and Spellpower.]]):
 		format(heal, count)
 	end,
 }

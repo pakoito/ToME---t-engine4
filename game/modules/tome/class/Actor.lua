@@ -1078,23 +1078,6 @@ function _M:onTakeHit(value, src)
 		end
 	end
 
-	if self:attr("repulsion_shield") then
-		-- Absorb damage into the shield
-		if value <= self.repulsion_shield_absorb then
-			self.repulsion_shield_absorb = self.repulsion_shield_absorb - value
-			value = 0
-		else
-			value = value - self.repulsion_shield_absorb
-			self.repulsion_shield_absorb = 0
-		end
-
-		-- If we are at the end of the capacity, remove the effect
-		if self.repulsion_shield_absorb <= 0 then
-			game.logPlayer(self, "Your repulsion shield crumbles under the damage!")
-			self:removeEffect(self.EFF_REPULSION_SHIELD)
-		end
-	end
-
 	if self:attr("damage_shunt") then
 		-- Absorb damage into the shield
 		if value <= self.damage_shunt_absorb then
@@ -1507,6 +1490,15 @@ function _M:die(src)
 	if self:hasEffect(self.EFF_CORROSIVE_WORM) then
 		local p = self:hasEffect(self.EFF_CORROSIVE_WORM)
 		p.src:project({type="ball", radius=4, x=self.x, y=self.y}, self.x, self.y, DamageType.ACID, p.explosion, {type="acid"})
+	end
+	
+	if self:hasEffect(self.EFF_TEMPORAL_DESTABILIZATION) then
+		local p = self:hasEffect(self.EFF_TEMPORAL_DESTABILIZATION)
+		if self:hasEffect(self.EFF_CONTINUUM_DESTABILIZATION) then
+			p.src:project({type="ball", radius=4, x=self.x, y=self.y}, self.x, self.y, DamageType.TEMPORAL, p.explosion, {type="light"})
+		else
+			p.src:project({type="ball", radius=4, x=self.x, y=self.y}, self.x, self.y, DamageType.MATTER, p.explosion, {type="flame"})
+		end
 	end
 
 	-- Increase vim
@@ -1964,7 +1956,7 @@ end
 --- Paradox checks
 function _M:paradoxChanceModifier()
 	local modifier = self:getWil()
-	if self:knowTalent(self.T_PARADOX_MASTERY) and self:isTalentActive(self.T_PARADOX_MASTERY) then
+	if self:knowTalent(self.T_PARADOX_MASTERY) then
 		modifier = self:getWil() * (1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10) or 0 )
 	end
 	--print("[Paradox] Will modifier: ", modifier, "::", self:getParadox())
@@ -2337,6 +2329,14 @@ function _M:postUseTalent(ab, ret)
 	if ab.id ~= self.T_LIGHTNING_SPEED then self:breakLightningSpeed() end
 	if ab.id ~= self.T_GATHER_THE_THREADS then self:breakGatherTheThreads() end
 	self:breakStepUp()
+	
+	--and ab.type[1] == "chronomancy" and ab.mode == "activated" and self:getTalentLevel(ab.id) >= self:getTalentLevel(self.T_REDUX) 
+	
+	if ab.id ~= self.T_REDUX and self:hasEffect(self.EFF_REDUX) and ab.type[1]:find("^chronomancy/") and ab.mode == "activated" and self:getTalentLevel(self.T_REDUX) >= self:getTalentLevel(ab.id) then
+		self:removeEffect(self.EFF_REDUX)
+		self:forceUseTalent(ab.id, {ignore_energy=true, ignore_cd = true})
+	end
+	
 	return true
 end
 

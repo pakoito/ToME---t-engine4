@@ -41,7 +41,7 @@ newTalent{
 	info = function(self, t)
 		local power = t.getPower(self, t)
 		return ([[Increases the caster's movement speed by %d%%.  Additionally switching weapons takes no time while Celerity is active.
-		The effect will scale with your Magic stat.]]):format(power * 100)
+		The effect will scale with your Spellpower.]]):format(power * 100)
 	end,
 }
 
@@ -52,7 +52,7 @@ newTalent{
 	require = chrono_req2,
 	points = 5,
 	paradox = 10,
-	cooldown = 20,
+	cooldown = 12,
 	tactical = { ATTACKAREA = 1, DISABLE = 3 },
 	range = 6,
 	radius = function(self, t)
@@ -64,6 +64,7 @@ newTalent{
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=self:spellFriendlyFire(), talent=t}
 	end,
 	getDuration = function(self, t) return 2 + math.ceil(((self:getTalentLevel(t) / 2)) * getParadoxModifier(self, pm)) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 170) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
@@ -71,17 +72,19 @@ newTalent{
 		local _ _, _, _, x, y = self:canProject(tg, x, y)
 		x, y = checkBackfire(self, x, y)
 		local grids = self:project(tg, x, y, DamageType.STOP, t.getDuration(self, t))
+		self:project(tg, x, y, DamageType.TEMPORAL, self:spellCrit(t.getDamage(self, t)))
 
 		game.level.map:particleEmitter(x, y, tg.radius, "temporal_flash", {radius=tg.radius, tx=x, ty=y})
 		game:playSoundNear(self, "talents/tidalwave")
 		return true
 	end,
 	info = function(self, t)
+		local damage = t.getDamage(self, t)
 		local radius = self:getTalentRadius(t)
 		local duration = t.getDuration(self, t)
-		return ([[Attempts to stun all creatures in a radius %d ball for %d turns.
-		The stun duration will scale with your Paradox.]]):
-		format(radius, duration)
+		return ([[Inflicts %0.2f temporal damage and attempts to stun all creatures in a radius %d ball for %d turns.
+		The stun duration will scale with your Paradox and the damage will scale with your Paradox and Spellpower.]]):
+		format(damage, radius, duration)
 	end,
 }
 
@@ -91,7 +94,7 @@ newTalent{
 	require = chrono_req3,
 	points = 5,
 	paradox = 15,
-	cooldown = 30,
+	cooldown = 24,
 	tactical = { ATTACKAREA = 2, DISABLE = 2 },
 	range = 6,
 	radius = function(self, t)
@@ -127,7 +130,7 @@ newTalent{
 		local radius = self:getTalentRadius(t)
 		local duration = t.getDuration(self, t)
 		return ([[Creates a time distortion in a radius of %d that lasts for %d turns, decreasing affected targets global speed by %d%% for 2 turns and inflicting %0.2f temporal damage each turn they remain in the area.
-		The slow effect and damage will scale with your Paradox and Magic stat.]]):
+		The slow effect and damage will scale with your Paradox and Spellpower.]]):
 		format(radius, duration, 100 * slow, damDesc(self, DamageType.TEMPORAL, 100 * slow))
 	end,
 }
@@ -143,12 +146,12 @@ newTalent{
 	no_energy = true,
 	getPower = function(self, t) return ((10 + (self:combatTalentSpellDamage(t, 10, 50) * getParadoxModifier(self, pm))) / 100) end,
 	action = function(self, t)
-		self:setEffect(self.EFF_SPEED, 8, {power=t.getPower(self, t)})
+		self:setEffect(self.EFF_HASTE, 8, {power=t.getPower(self, t)})
 		return true
 	end,
 	info = function(self, t)
 		local power = t.getPower(self, t)
-		return ([[Increases the caster's global speed by %d%% for the next 8 turns.
-		The speed increase will scale with your Paradox and Magic stat.]]):format(100 * power)
+		return ([[Increases the caster's global speed by %d%% and casting speed by %d%% for the next 8 turns.
+		The speed increase will scale with your Paradox and Spellpower.]]):format(100 * power, 50 * power)
 	end,
 }

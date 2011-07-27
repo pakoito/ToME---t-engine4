@@ -94,7 +94,7 @@ newTalent{
  		end
 			self:learnTalent(self.T_JUMPGATE_TELEPORT)
 	end,
- 	 on_unlearn = function(self, t)
+ 	on_unlearn = function(self, t)
 		if self:getTalentLevel(t) < 4 and self:knowTalent(self.T_JUMPGATE_TWO) then
  			self:unlearnTalent(self.T_JUMPGATE_TWO)
  		end

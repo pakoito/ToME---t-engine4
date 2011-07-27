@@ -18,92 +18,23 @@
 -- darkgod@te4.org
 
 newTalent{
-	name = "Spacetime Tuning",
-	type = {"chronomancy/other", 1},
-	hide = true,
-	points = 1,
-	message = "@Source@ retunes the fabric of spacetime.",
-	cooldown = 50,
-	tactical = { PARADOX = 2 },
-	no_npc_use = true,
-	no_energy = true,
-	getAnomaly = function(self, t) return 6 - (self:getTalentLevelRaw(self.T_STATIC_HISTORY) or 0) end,
-	getPower = function(self, t) return math.floor(self:getWil()/2) end,
-	action = function(self, t)
-		-- open dialog to get desired paradox
-		local q = engine.dialogs.GetQuantity.new("Retuning the fabric of spacetime...",
-		"What's your desired paradox level?", math.floor(self.paradox), nil, function(qty)
-
-			-- get reduction amount and find duration
-			amount = qty - self.paradox
-			local dur = math.floor(math.abs(qty-self.paradox)/t.getPower(self, t))
-
-			-- set tuning effect
-			if amount >= 0 then
-				self:setEffect(self.EFF_SPACETIME_TUNING, dur, {power = t.getPower(self, t)})
-			elseif amount < 0 then
-				self:setEffect(self.EFF_SPACETIME_TUNING, dur, {power = - t.getPower(self, t)})
-			end
-
-		end)
-		game:registerDialog(q)
-		return true
-	end,
-	info = function(self, t)
-		local chance = t.getAnomaly(self, t)
-		return ([[Retunes your Paradox towards the desired level and informs you of failure, anomaly, and backfire chances when you finish tuning.  You will be dazed while tuning and each turn your Paradox will increase or decrease by an amount equal to one half of your Willpower stat.
-		Each turn you spend increasing Paradox will have a %d%% chance of triggering a temporal anomaly which will end the tuning process.  Decreasing Paradox has no chance of triggering an anomaly.]]):
-		format(chance)
-	end,
-}
-
-newTalent{
-	name = "Static History",
-	type = {"chronomancy/spacetime-weaving", 1},
-	require = temporal_req1,
-	points = 5,
-	message = "@Source@ fixes some of the damage caused to the timeline.",
-	cooldown = 24,
-	tactical = { PARADOX = 2 },
-	getReduction = function(self, t)
-
-		--check for Paradox Mastery
-		if self:knowTalent(self.T_PARADOX_MASTERY) and self:isTalentActive(self.T_PARADOX_MASTERY) then
-			modifier = self:getWil() * (1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10) or 0 )
-		else
-			modifier = self:getWil()
-		end
-
-		local reduction = (20 + (modifier * self:getTalentLevel(t)/2))
-		return reduction
-	end,
-	action = function(self, t)
-		self:incParadox (- t.getReduction(self, t))
-		game:playSoundNear(self, "talents/spell_generic")
-		return true
-	end,
-	info = function(self, t)
-		local reduction = t.getReduction (self, t)
-		return ([[Reduce Paradox by %d by revising past damage you've inflicted on the spacetime continuum.  Talent points invested in Static History will also reduce your chances of triggering an anomaly while using Spacetime Tuning.
-		The effect will increase with the Willpower stat.]]):
-		format(reduction)
-	end,
-}
-
-newTalent{
 	name = "Dimensional Step",
-	type = {"chronomancy/spacetime-weaving", 2},
-	require = temporal_req2,
+	type = {"chronomancy/spacetime-weaving", 1},
+	require = chrono_req1,
 	points = 5,
 	paradox = 5,
-	cooldown = function(self, t) return 20 - (self:getTalentLevelRaw(t) * 2) end,
+	cooldown = 10,
 	tactical = { CLOSEIN = 2, ESCAPE = 2 },
 	range = function(self, t)
-		return 5 + (self:getTalentLevelRaw(t))
+		return 4 + math.floor(self:getTalentLevel(t))
 	end,
 	requires_target = true,
 	target = function(self, t)
-		return {type="hit", range=self:getTalentRange(t)}
+		if self:getTalentLevel(t) >=4 then
+			return {type="hit", range=self:getTalentRange(t), pass_terrain=true, requires_knowledge=false}
+		else
+			return {type="hit", range=self:getTalentRange(t)}
+		end
 	end,
 	direct_hit = true,
 	action = function(self, t)
@@ -111,11 +42,13 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y then return nil end
 		local _, x, y = self:canProject(tg, x, y)
+		
 		if not self:canBe("teleport") or game.level.map.attrs(x, y, "no_teleport") then
 			game.logSeen(self, "The spell fizzles!")
 			return true
 		end
-		if self:hasLOS(x, y) and not game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then
+	
+		if not game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then
 			local tx, ty = util.findFreeGrid(x, y, 5, true, {[Map.ACTOR]=true})
 			if tx and ty then
 				self:move(tx, ty, true)
@@ -128,44 +61,82 @@ newTalent{
 			game.logSeen(self, "You cannot move there.")
 			return nil
 		end
+		
 		return true
 	end,
 	info = function(self, t)
 		local range = self:getTalentRange(t)
-		return ([[Teleports you to up to %d tiles away to a targeted location in line of sight.
-		Additional talent points will lower the cooldown and increase the range.]]):format(range)
+		return ([[Teleports you to up to %d tiles away to a targeted location in line of sight.  Additional talent points increase the range.
+		At talent level 4 you no longer require line of sight to teleport.]]):format(range)
 	end,
 }
 
 newTalent{
-	name = "Temporal Reprieve",
-	type = {"chronomancy/spacetime-weaving", 3},
-	require = temporal_req3,
+	name = "Banish",
+	type = {"chronomancy/spacetime-weaving", 2},
+	require = chrono_req2,
 	points = 5,
-	paradox = 20,
-	cooldown = 50,
-	tactical = { BUFF = 0.5 },
-	message = "@Source@ manipulates the flow of time.",
-	getCooldownReduction = function(self, t) return 2 + math.ceil(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
+	paradox = 10,
+	cooldown = 10,
+	tactical = { ESCAPE = 2 },
+	range = 0,
+	radius = function(self, t)
+		return 2 + math.floor(self:getTalentLevel(t)/2)
+	end,
+	getTeleport = function(self, t) return 6 + math.floor(self:getTalentLevel(t)/2 * getParadoxModifier(self, pm) * 4) end,
+	target = function(self, t)
+		return {type="ball", range=0, radius=self:getTalentRadius(t), selffire=false, talent=t}
+	end,
+	direct_hit = true,
 	action = function(self, t)
-		for tid, cd in pairs(self.talents_cd) do
-			self.talents_cd[tid] = cd - t.getCooldownReduction(self, t)
+		local tg = self:getTalentTarget(t)
+		local actors = {}
+		
+		self:project(tg, self.x, self.y, function(px, py)
+			local target = game.level.map(px, py, Map.ACTOR)
+			if not target or target == self then return end
+			
+			--checks for spacetime mastery hit bonus
+			local power = self:combatSpellpower()
+			if self:knowTalent(self.T_SPACETIME_MASTERY) then
+				power = self:combatSpellpower() * 1 + (self:getTalentLevel(self.T_SPACETIME_MASTERY)/10)
+			end
+			
+			if target:canBe("teleport") then
+				local hit = self:checkHit(power, target:combatSpellResist() + (target:attr("continuum_destabilization") or 0))
+				if not hit then	
+					game.logSeen(target, "%s resists the banishment!", target.name:capitalize())
+					return
+				end
+			else 
+				game.logSeen(target, "%s resists the banishment!", target.name:capitalize())
+				return
+			end
+			
+			actors[#actors+1] = target
+		end)
+
+		for i, a in ipairs(actors) do
+			game.level.map:particleEmitter(a.x, a.y, 1, "teleport")
+			a:teleportRandom(a.x, a.y, self:getTalentRadius(t) * 4, self:getTalentRadius(t) * 2)
+			a:setEffect(a.EFF_CONTINUUM_DESTABILIZATION, 100, {power=self:combatSpellpower(0.3)})
+			game.level.map:particleEmitter(a.x, a.y, 1, "teleport")
 		end
-		game:playSoundNear(self, "talents/spell_generic2")
+		
 		return true
 	end,
 	info = function(self, t)
-		local reduction = t.getCooldownReduction(self, t)
-		return ([[All your talents, runes, and infusions currently on cooldown are %d turns closer to being off cooldown.
-		The effect will scale with your Paradox.]]):
-		format(reduction)
+		local radius = self:getTalentRadius(t)
+		local range = t.getTeleport(self, t)
+		return ([[Randomly teleports all targets with in a radius of %d around you.  Targets will be teleported between %d and %d tiles from their current location.
+		The teleport range will scale with your Paradox.]]):format(radius, range / 2, range)
 	end,
 }
 
 newTalent{
 	name = "Wormhole",
-	type = {"chronomancy/spacetime-weaving", 4},
-	require = temporal_req4,
+	type = {"chronomancy/spacetime-weaving", 3},
+	require = chrono_req3,
 	points = 5,
 	paradox = 20,
 	cooldown = 20,
@@ -291,5 +262,34 @@ newTalent{
 		At level 4 you may choose the exit location target area (radius %d).  The duration will scale with your Paradox.
 		This spell takes no time to cast.]])
 		:format(duration, radius)
+	end,
+}
+
+newTalent{
+	name = "Spacetime Mastery",
+	type = {"chronomancy/spacetime-weaving", 4},
+	mode = "passive",
+	require = chrono_req4,
+	points = 5,
+	on_learn = function(self, t)
+		self.talent_cd_reduction[self.T_BANISH] = (self.talent_cd_reduction[self.T_BANISH] or 0) + 1
+		self.talent_cd_reduction[self.T_DIMENSIONAL_STEP] = (self.talent_cd_reduction[self.T_DIMENSIONAL_STEP] or 0) + 1
+		self.talent_cd_reduction[self.T_SWAP] = (self.talent_cd_reduction[self.T_SWAP] or 0) + 1
+		self.talent_cd_reduction[self.T_TEMPORAL_WAKE] = (self.talent_cd_reduction[self.T_TEMPORAL_WAKE] or 0) + 1
+		self.talent_cd_reduction[self.T_WORMHOLE] = (self.talent_cd_reduction[self.T_WORMHOLE] or 0) + 2
+	end,
+	on_unlearn = function(self, t)
+		self.talent_cd_reduction[self.T_BANISH] = self.talent_cd_reduction[self.T_BANISH] - 1
+		self.talent_cd_reduction[self.T_DIMENSIONAL_STEP] = self.talent_cd_reduction[self.T_DIMENSIONAL_STEP] - 1
+		self.talent_cd_reduction[self.T_SWAP] = self.talent_cd_reduction[self.T_SWAP] - 1
+		self.talent_cd_reduction[self.T_TEMPORAL_WAKE] = self.talent_cd_reduction[self.T_TEMPORAL_WAKE] - 1
+		self.talent_cd_reduction[self.T_WORMHOLE] = self.talent_cd_reduction[self.T_WORMHOLE] - 2
+	end,
+	info = function(self, t)
+		local cooldown = self:getTalentLevelRaw(t)
+		local wormhole = self:getTalentLevelRaw(t) * 2
+		local power = self:getTalentLevel(t) * 10
+		return ([[Your mastery of spacetime reduces the cooldown of banish, dimensional step, swap, and temporal wake by %d and the cooldown of wormhole by %d.  Also improves your chances of hitting targets with effects that may cause continuum destablization (Banish, Time Skip, etc.) as well as your chance of overcoming continuum destabilization by %d%%.]]):
+		format(cooldown, wormhole, power)
 	end,
 }

@@ -103,32 +103,6 @@ newTalent{
 	end,
 }
 
---[=[newTalent{
-	name = "Sprint",
-	type = {"cunning/tactical", 2},
-	require = cuns_req2,
-	points = 5,
-	cooldown = 24,
-	stamina = 12,
-	tactical = { CLOSEIN = 2, ESCAPE = 2 },
-	no_energy = true,
-	getMovement = function(self, t) return 1 - 1 / (1 + (100)/ 100) end,
-	getDuration = function(self, t) return 4 + math.ceil(self:getTalentLevel(t)) end,
-	action = function(self, t)
-
-		self:setEffect(self.EFF_SPRINT, t.getDuration(self, t), {power=t.getMovement(self, t)})
-
-		return true
-	end,
-	info = function(self, t)
-		local movement = t.getMovement(self, t)
-		local duration = t.getDuration(self, t)
-		return ([[Increases movement speed by %d%% for %d turns.
-		Activating this talent takes no time]]):
-		format(movement * 100, duration)
-	end,
-}]=]
-
 newTalent{
 	name = "Exploit Weakness",
 	type = {"cunning/tactical", 4},

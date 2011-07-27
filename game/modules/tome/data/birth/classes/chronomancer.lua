@@ -70,9 +70,9 @@ newBirthDescriptor{
 	talents = {
 		[ActorTalents.T_SPACETIME_TUNING] = 1,
 		[ActorTalents.T_STATIC_HISTORY] = 1,
-		[ActorTalents.T_TURN_BACK_THE_CLOCK] = 1,
+		[ActorTalents.T_DIMENSIONAL_STEP] = 1,
 		[ActorTalents.T_DUST_TO_DUST] = 1,
-		[ActorTalents.T_ECHOES_FROM_THE_PAST] = 1,
+		[ActorTalents.T_TIME_SKIP] = 1,
 		},
 	copy = {
 		max_life = 90,

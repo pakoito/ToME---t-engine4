@@ -20,79 +20,19 @@
 local Object = require "engine.Object"
 
 newTalent{
-	name = "Echoes From The Past",
-	type = {"chronomancy/timetravel", 1},
+	name = "Time Skip",
+	type = {"chronomancy/timetravel",1},
 	require = chrono_req1,
 	points = 5,
-	paradox = 10,
 	cooldown = 6,
-	tactical = { ATTACKAREA = 2 },
-        range = 0,
-        radius = function(self, t)
-            return 1 + self:getTalentLevelRaw(t)
-        end,
-	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
-	end,
-	getDamage = function(self, t) return (self:combatTalentSpellDamage(t, 18, 160)*getParadoxModifier(self, pm)) end,
-	getPercent = function(self, t) return (10 + (self:combatTalentSpellDamage(t, 1, 10))) / 100 end,
-	action = function(self, t)
-		local tg = self:getTalentTarget(t)
-		self:project(tg, self.x, self.y, DamageType.TEMPORAL, self:spellCrit(t.getDamage(self, t)))
-		self:project(tg, self.x, self.y, DamageType.TEMPORAL_ECHO, t.getPercent(self, t))
-		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_temporal", {radius=tg.radius})
-		game:playSoundNear(self, "talents/teleport")
-		return true
-	end,
-	info = function(self, t)
-		local percent = t.getPercent(self, t) * 100
-		local radius = self:getTalentRadius(t)
-		local damage = t.getDamage(self, t)
-		return ([[Creates a temporal echo in a nova around you in a radius of %d.  Affected targets will take %0.2f temporal damage and %d%% of the difference between their current life and max life as additional temporal damage.
-		The percentage and damage scales with your Paradox and the Magic stat.]]):
-		format(radius, damage, percent)
-	end,
-}
-
-newTalent{
-	name = "Borrowed Time",
-	type = {"chronomancy/timetravel", 2},
-	require = chrono_req2,
-	points = 5,
-	paradox = 15,
-	cooldown = 20,
-	no_energy = true,
-	tactical = { ESCAPE = 2, CLOSEIN = 2, BUFF = 2 },
-	getDuration = function(self, t) return 1 + math.floor(self:getTalentLevelRaw(t)/4) end,
-	getStun = function(self, t) return 6 - self:getTalentLevelRaw(t) end,
-	action = function(self, t)
-		self:setEffect(self.EFF_BORROWED_TIME, t.getDuration(self, t), {power=t.getStun(self,t)})
-		return true
-	end,
-	info = function(self, t)
-		local duration = t.getDuration(self, t)
-		local stun = t.getStun(self, t)
-		return ([[You borrow some energy from the future, greatly increasing your global speed for %d turns.  At the end of this time though you'll be paralyzed (no chance of resisting) for %d turns as you pay back the time you borrowed.
-		]]):format(duration + 1, stun)
-	end,
-}
-
--- Time Skip and other Overlay talents like jumpgate are causing issues on remove.  They'll eat other overlays.
-
-newTalent{
-	name = "Time Skip",
-	type = {"chronomancy/timetravel",3},
-	require = chrono_req3,
-	points = 5,
-	cooldown = 10,
-	paradox = 10,
+	paradox = 5,
 	tactical = { ATTACK = 1, DISABLE = 2 },
 	range = 6,
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 25, 250) * getParadoxModifier(self, pm) end,
-	getDuration = function(self, t) return 4 + math.floor(self:getTalentLevel(t) / 3 * getParadoxModifier(self, pm)) end,
+	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t) / 2 * getParadoxModifier(self, pm)) end,
 	action = function(self, t)
 		-- Find the target and check hit
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
@@ -103,8 +43,15 @@ newTalent{
 		if tx then
 			target = game.level.map(tx, ty, engine.Map.ACTOR)
 		end
+		
+		-- checks for spacetime mastery hit bonus
+		local power = self:combatSpellpower()
+		if self:knowTalent(self.T_SPACETIME_MASTERY) then
+			power = self:combatSpellpower() * 1 + (self:getTalentLevel(self.T_SPACETIME_MASTERY)/10)
+		end
+		
 		if target and not target.player then
-			local hit = self:checkHit(self:combatSpellpower(), target:combatSpellResist() + (target:attr("continuum_destabilization") or 0))
+			local hit = self:checkHit(power, target:combatSpellResist() + (target:attr("continuum_destabilization") or 0))
 			if not hit then
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 				return true
@@ -115,7 +62,7 @@ newTalent{
 
 		-- Create an object to time the effect and store the creature
 		-- First, clone the terrain that we are replacing
-		local terrain = game.level.map(target.x, target.y, engine.Map.TERRAIN)
+		--[[local terrain = game.level.map(target.x, target.y, engine.Map.TERRAIN)
 		local temporal_instability = mod.class.Object.new{
 			old_feat = game.level.map(target.x, target.y, engine.Map.TERRAIN),
 			name = "temporal instability", type="temporal", subtype="anomaly",
@@ -149,7 +96,7 @@ newTalent{
 			temporal_instability.add_displays = {overlay}
 		else
 			table.append(temporal_instability.add_displays, overlay)
-		end
+		end ]]--
 
 		self:project(tg, tx, ty, DamageType.TEMPORAL, self:spellCrit(t.getDamage(self, t)))
 		game.level.map:particleEmitter(tx, ty, 1, "temporal_thrust")
@@ -159,10 +106,11 @@ newTalent{
 			if target ~= self then
 				target:setEffect(target.EFF_CONTINUUM_DESTABILIZATION, 100, {power=self:combatSpellpower(0.3)})
 			end
-			game.logSeen(target, "%s has moved forward in time!", target.name:capitalize())
-			game.level:removeEntity(target)
-			game.level:addEntity(temporal_instability)
-			game.level.map(target.x, target.y, engine.Map.TERRAIN, temporal_instability)
+			--game.logSeen(target, "%s has moved forward in time!", target.name:capitalize())
+			self:project(tg, tx, ty, DamageType.TIME_PRISON, t.getDuration(self, t), {type="manathrust"})
+			--game.level:removeEntity(target)
+			--game.level:addEntity(temporal_instability)
+			--game.level.map(target.x, target.y, engine.Map.TERRAIN, temporal_instability)
 		else
 			game.logSeen(target, "%s has been killed by the temporal energy!", target.name:capitalize())
 		end
@@ -172,8 +120,66 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[Inflicts %0.2f temporal damage.  If your target survives it will be sent %d turns into the future.
-		The duration will scale with your Paradox.  The damage will scale with Paradox and the Magic stat.]]):format(damDesc(self, DamageType.TEMPORAL, damage), duration)
+		return ([[Inflicts %0.2f temporal damage.  If your target survives it will be removed from time for %d turns.
+		The duration will scale with your Paradox.  The damage will scale with your Paradox and Spellpower.]]):format(damDesc(self, DamageType.TEMPORAL, damage), duration)
+	end,
+}
+
+newTalent{
+	name = "Borrowed Time",
+	type = {"chronomancy/timetravel", 2},
+	require = chrono_req2,
+	points = 5,
+	paradox = 15,
+	cooldown = 20,
+	no_energy = true,
+	tactical = { ESCAPE = 2, CLOSEIN = 2, BUFF = 2 },
+	getDuration = function(self, t) return 1 + math.floor(self:getTalentLevelRaw(t)/4) end,
+	getStun = function(self, t) return 6 - self:getTalentLevelRaw(t) end,
+	action = function(self, t)
+		self:setEffect(self.EFF_BORROWED_TIME, t.getDuration(self, t), {power=t.getStun(self,t)})
+		return true
+	end,
+	info = function(self, t)
+		local duration = t.getDuration(self, t)
+		local stun = t.getStun(self, t)
+		return ([[You borrow some energy from the future, greatly increasing your global speed for %d turns.  At the end of this time though you'll be paralyzed (no chance of resisting) for %d turns as you pay back the time you borrowed.
+		]]):format(duration + 1, stun)
+	end,
+}
+
+newTalent{
+	name = "Echoes From The Past",
+	type = {"chronomancy/timetravel", 3},
+	require = chrono_req3,
+	points = 5,
+	paradox = 10,
+	cooldown = 6,
+	tactical = { ATTACKAREA = 2 },
+        range = 0,
+        radius = function(self, t)
+            return 1 + self:getTalentLevelRaw(t)
+        end,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
+	end,
+	getDamage = function(self, t) return (self:combatTalentSpellDamage(t, 18, 160)*getParadoxModifier(self, pm)) end,
+	getPercent = function(self, t) return (10 + (self:combatTalentSpellDamage(t, 1, 10))) / 100 end,
+	action = function(self, t)
+		local tg = self:getTalentTarget(t)
+		self:project(tg, self.x, self.y, DamageType.TEMPORAL, self:spellCrit(t.getDamage(self, t)))
+		self:project(tg, self.x, self.y, DamageType.TEMPORAL_ECHO, t.getPercent(self, t))
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_temporal", {radius=tg.radius})
+		game:playSoundNear(self, "talents/teleport")
+		return true
+	end,
+	info = function(self, t)
+		local percent = t.getPercent(self, t) * 100
+		local radius = self:getTalentRadius(t)
+		local damage = t.getDamage(self, t)
+		return ([[Creates a temporal echo in a nova around you in a radius of %d.  Affected targets will take %0.2f temporal damage and %d%% of the difference between their current life and max life as additional temporal damage.
+		The percentage and damage scales with your Paradox and Spellpower.]]):
+		format(radius, damage, percent)
 	end,
 }
 

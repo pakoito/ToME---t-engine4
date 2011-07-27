@@ -3422,31 +3422,6 @@ newEffect{
 }
 
 newEffect{
-	name = "REPULSION_SHIELD",
-	desc = "Repulsion Shield",
-	long_desc = function(self, eff) return ("The target is surrounded by a repulsion field that will absorb up to %d/%d damage and knock back attackers."):format(self.repulsion_shield_absorb, eff.power) end,
-	type = "magical",
-	status = "beneficial",
-	parameters = { power=10 },
-	on_gain = function(self, err) return "#Target# is protected by a repulsion field.", "+Repulsion Shield" end,
-	on_lose = function(self, err) return "#Target# is no longer protected by a repulsion field.", "-Repulsion Shield" end,
-	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("repulsion_shield", eff.power)
-		eff.kbid = self:addTemporaryValue("on_melee_hit", {[DamageType.REPULSION]= eff.power})
-		eff.particle = self:addParticles(Particles.new("gravity_focus", 1))
-		self.repulsion_shield_absorb = eff.power
-		self.repulsion_shield_absorb_max = eff.power
-	end,
-	deactivate = function(self, eff)
-		self:removeTemporaryValue("repulsion_shield", eff.tmpid)
-		self:removeTemporaryValue("on_melee_hit", eff.kbid)
-		self:removeParticles(eff.particle)
-		self.repulsion_shield_absorb = nil
-		self.repulsion_shield_absorb_max = nil
-	end,
-}
-
-newEffect{
 	name = "DAMAGE_SHUNT",
 	desc = "Damage Shunt",
 	long_desc = function(self, eff) return ("The target is splitting all damage it receives along the timeline, negating up to %d/%d damage."):format(self.damage_shunt_absorb, eff.power) end,
@@ -3921,23 +3896,6 @@ newEffect{
 }
 
 newEffect{
-	name = "SPRINT",
-	desc = "Sprint",
-	long_desc = function(self, eff) return ("Increases movement speed by %d%%."):format(eff.power*100) end,
-	type = "physical",
-	status = "beneficial",
-	parameters = { power=0.1 },
-	on_gain = function(self, err) return "#Target# speeds up.", "+Sprint" end,
-	on_lose = function(self, err) return "#Target# slows down.", "-Sprint" end,
-	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("movement_speed", eff.power)
-	end,
-	deactivate = function(self, eff)
-		self:removeTemporaryValue("movement_speed", eff.tmpid)
-	end,
-}
-
-newEffect{
 	name = "STONE_VINE",
 	desc = "Stone Vine",
 	long_desc = function(self, eff) return ("A living stone vine holds the target on the ground and doing %0.2f physical damage per turn."):format(eff.dam) end,
@@ -4141,5 +4099,68 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		for i, particle in ipairs(eff.particles) do self:removeParticles(particle) end
+	end,
+}
+
+newEffect{
+	name = "SPACTIME_STABILITY",
+	desc = "Spacetime Stability",
+	long_desc = function(self, eff) return "Chronomancy spells cast by the target will not fail, backfire, or cause an anomaly." end,
+	type = "time",
+	status = "beneficial",
+	parameters = { power=0.1 },
+	on_gain = function(self, err) return "Spacetime has stabilized around #Target#.", "+Spactime Stability" end,
+	on_lose = function(self, err) return "The fabric of spacetime around #Target# has returned to normal.", "-Spacetime Stability" end,
+	activate = function(self, eff)
+		self:attr("no_paradox_fail", 1)
+	end,
+	deactivate = function(self, eff)
+		self:attr("no_paradox_fail", -1)
+	end,
+}
+
+newEffect{
+	name = "REDUX",
+	desc = "Redux",
+	long_desc = function(self, eff) return "The next activated chronomancy talent that the target uses will be cast twice." end,
+	type = "magical",
+	status = "beneficial",
+	parameters = { power=1},
+	activate = function(self, eff)
+	end,
+	deactivate = function(self, eff)
+	end,
+}
+
+newEffect{
+	name = "TEMPORAL_DESTABILIZATION",
+	desc = "Temporal Destabilization",
+	long_desc = function(self, eff) return ("Target is destabilized and suffering %0.2f temporal damage per turn."):format(eff.dam) end,
+	type = "magical",
+	status = "detrimental",
+	parameters = { dam=1, explosion=10 },
+	on_gain = function(self, err) return "#Target# is unstable.", "+Temporal Destabilization" end,
+	on_lose = function(self, err) return "#Target# has regained stability.", "-Temporal Destabilization" end,
+	on_timeout = function(self, eff)
+		DamageType:get(DamageType.TEMPORAL).projector(eff.src or self, self.x, self.y, DamageType.TEMPORAL, eff.dam)
+	end,
+}
+
+newEffect{
+	name = "Haste",
+	desc = "Haste",
+	long_desc = function(self, eff) return ("Increases global action speed by %d%% and casting speed by %d%%."):format(eff.power * 100, eff.power * 50) end,
+	type = "magical",
+	status = "beneficial",
+	parameters = { power=0.1 },
+	on_gain = function(self, err) return "#Target# speeds up.", "+Haste" end,
+	on_lose = function(self, err) return "#Target# slows down.", "-Haste" end,
+	activate = function(self, eff)
+		eff.glbid = self:addTemporaryValue("global_speed", eff.power)
+		eff.spdid = self:addTemporaryValue("combat_spellspeed", eff.power/2)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("global_speed", eff.glbid)
+		self:removeTemporaryValue("combat_spellspeed", eff.spdid)
 	end,
 }

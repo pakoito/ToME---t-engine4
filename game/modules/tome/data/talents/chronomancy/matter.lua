@@ -22,7 +22,7 @@ newTalent{
 	type = {"chronomancy/matter",1},
 	require = chrono_req1,
 	points = 5,
-	paradox = 6,
+	paradox = 5,
 	cooldown = 3,
 	tactical = { ATTACKAREA = 2 },
 	range = 10,
@@ -32,7 +32,7 @@ newTalent{
 	target = function(self, t)
 		return {type="beam", range=self:getTalentRange(t), talent=t}
 	end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 220)*getParadoxModifier(self, pm) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 230)*getParadoxModifier(self, pm) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
@@ -46,40 +46,11 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Fires a beam that attempts to turn matter into dust, inflicting %0.2f temporal damage and %0.2f physical damage.
-		The damage will scale with your Paradox and Magic stat.]]):
+		return ([[Fires a beam that turns matter into dust, inflicting %0.2f temporal damage and %0.2f physical damage.
+		The damage will scale with your Paradox and Spellpower.]]):
 		format(damDesc(self, DamageType.TEMPORAL, damage / 2), damDesc(self, DamageType.PHYSICAL, damage / 2))
 	end,
 }
---[[newTalent{
-	name = "Terraforming",
-	type = {"chronomancy/matter",2},
-	require = chrono_req2,
-	points = 5,
-	paradox = 10,
-	range = 6,
-	no_npc_use = true,
-	cooldown = function(self, t) return 20 - math.ceil(self:getTalentLevel(t) *2) or 0 end,
-	reflectable = true,
-	requires_target = true,
-	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t}
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		x, y = checkBackfire(self, x, y)
-		if game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then
-			self:project(tg, x, y, DamageType.DIG, nil)
-		else
-			self:project(tg, x, y, DamageType.GROW, nil)
-		end
-		game:playSoundNear(self, "talents/earth")
-		return true
-	end,
-	info = function(self, t)
-		return (Makes impassable terrain passable and turns passable terrain into walls, trees, etc.
-		Additional talent points will lower the cooldown):format()
-	end,
-}]]
 
 newTalent{
 	name = "Carbon Spikes",
@@ -87,7 +58,7 @@ newTalent{
 	require = chrono_req2, no_sustain_autoreset = true,
 	points = 5,
 	mode = "sustained",
-	sustain_paradox = 150,
+	sustain_paradox = 75,
 	cooldown = 12,
 	tactical = { BUFF =2, DEFEND = 2 },
 	getDamageOnMeleeHit = function(self, t) return self:combatTalentSpellDamage(t, 10, 100) end,
@@ -126,50 +97,42 @@ newTalent{
 		local armor = t.getArmor(self, t)
 		return ([[Fragile spikes of carbon protrude from your flesh, clothing, and armor, increasing your armor rating by %d and inflicting %0.2f bleed damage over six turns on attackers.   Each time you're struck the armor increase will be reduced by 1.  Each turn the spell will regenerate 1 armor up to it's starting value.
 		If the armor increase from the spell ever falls below 1 the sustain will deactivate and the effect will end.
-		The armor and bleed damage will increase with the Magic stat.]]):
+		The armor and bleed damage will increase with your Spellpower.]]):
 		format(armor, damDesc(self, DamageType.PHYSICAL, damage))
 	end,
 }
 
 newTalent{
-	name = "Calcify",
-	type = {"chronomancy/matter",3},
+	name = "Destabilize",
+	type = {"chronomancy/matter", 3},
 	require = chrono_req3,
 	points = 5,
-	paradox = 20,
-	cooldown = 20,
-	tactical = { ATTACKAREA = 2, DISABLE = 2 },
-        range = 0,
-	radius = function(self, t)
-		return 1 + self:getTalentLevelRaw(t)
-	end,
-	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
-	end,
-	getDuration = function(self, t) return 2 + math.floor(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
+	cooldown = 10,
+	paradox = 15,
+	range = 10,
+	tactical = { ATTACK = 2 },
+	requires_target = true,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 60)*getParadoxModifier(self, pm) end,
+	getExplosion = function(self, t) return self:combatTalentSpellDamage(t, 20, 230)*getParadoxModifier(self, pm) end,
 	action = function(self, t)
-		local tg = self:getTalentTarget(t)
-		self:project(tg, self.x, self.y, function(tx, ty)
-			local target = game.level.map(tx, ty, Map.ACTOR)
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, function(px, py)
+			local target = game.level.map(px, py, Map.ACTOR)
 			if not target then return end
-
-			if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 10) and target:canBe("stun") and target:canBe("instakill") then
-				target:setEffect(target.EFF_STONED, t.getDuration(self, t), {})
-			else
-				game.logSeen(target, "%s resists the calcification.", target.name:capitalize())
-			end
+			target:setEffect(target.EFF_TEMPORAL_DESTABILIZATION, 10, {src=self, dam=t.getDamage(self, t), explosion=self:spellCrit(t.getExplosion(self, t))})
 		end)
-		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_earth", {radius=tg.radius})
-		game:playSoundNear(self, "talents/breath")
+		game:playSoundNear(self, "talents/slime")
 		return true
 	end,
 	info = function(self, t)
-		local radius = self:getTalentRadius(t)
-		local duration = t.getDuration(self, t)
-		return ([[Attempts to turn all targets around you in a radius of %d to stone for %d turns.  Stoned creatures are unable to act or regen life and are very brittle.
-		If a stoned creature is hit by an attack that deals more than 30%% of its life it will shattered and be destroyed.
-		Stoned creatures are highly resistant to fire and lightning and somewhat resistant to physical attacks.
-		The duration will scale with your Paradox.]]):format(radius, duration)
+		local damage = t.getDamage(self, t)
+		local explosion = t.getExplosion(self, t)
+		return ([[Destabilizes the target, inflicting %0.2f temporal damage per turn for 10 turns.  If the target dies while destabilized it will explode doing %0.2f temporal damage and %0.2f physical damage in a radius of 4.
+		If the target dies while also under the effects of continuum destabilization all explosion damage will be done as temporal damage.
+		The damage will scale with your Paradox and Spellpower.]]):
+		format(damDesc(self, DamageType.TEMPORAL, damage), damDesc(self, DamageType.TEMPORAL, explosion/2), damDesc(self, DamageType.PHYSICAL, explosion/2))
 	end,
 }
 
@@ -179,7 +142,7 @@ newTalent{
 	require = chrono_req4,
 	points = 5,
 	paradox = 20,
-	cooldown = 12,
+	cooldown = 4,
 	tactical = { ATTACK = 2 },
 	range = 10,
 	direct_hit = true,
@@ -188,14 +151,22 @@ newTalent{
 	target = function(self, t)
 		return {type="hit", range=self:getTalentRange(t), talent=t}
 	end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 230)*getParadoxModifier(self, pm) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 30, 300)*getParadoxModifier(self, pm) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y, target = self:getTarget(tg)
 		if not x or not y then return nil end
 		x, y = checkBackfire(self, x, y)
-		self:project(tg, x, y, DamageType.MATTER, self:spellCrit(t.getDamage(self,t)))
+		
+		-- bonus damage on targets with temporal destabilization
+		local damage = t.getDamage(self, t)
+		if target:hasEffect(target.EFF_TEMPORAL_DESTABILIZATION) or target:hasEffect(target.EFF_CONTINUUM_DESTABILIZATION) then
+			damage = damage * 1.5
+		end
+		
+		self:project(tg, x, y, DamageType.MATTER, self:spellCrit(damage))
 		game:playSoundNear(self, "talents/arcane")
+		
 		-- Try to insta-kill
 		if target then
 			if target:checkHit(self:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("instakill") and target.life > 0 and target.life < target.max_life * 0.2 then
@@ -206,6 +177,7 @@ newTalent{
 				game.logSeen(target, "%s resists the quantum spike!", target.name:capitalize())
 			end
 		end
+		
 		-- if we kill it use teleport particles for larger effect radius
 		if target and target.dead then
 			game.level.map:particleEmitter(x, y, 1, "teleport")
@@ -218,7 +190,8 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[Attempts to pull the target apart at a molecular level, inflicing %0.2f temporal damage and %0.2f physical damage.  If the target ends up with low enough life(<20%%) it might be instantly killed.
-		The damage will scale with your Paradox and the Magic stat.]]):format(damDesc(self, DamageType.TEMPORAL, damage/2), damDesc(self, DamageType.PHYSICAL, damage/2))
+		Quantum Spike deals 50%% additional damage to targets effected by temporal destabilization and/or continuum destabilization.
+		The damage will scale with your Paradox and Spellpower.]]):format(damDesc(self, DamageType.TEMPORAL, damage/2), damDesc(self, DamageType.PHYSICAL, damage/2))
 	end,
 }
 

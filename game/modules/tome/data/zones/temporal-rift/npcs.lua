@@ -167,7 +167,7 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "CHRONOLITH_TWIN",
 		[Talents.T_HASTE]=3,
 		[Talents.T_STATIC_HISTORY]=5,
 		[Talents.T_DIMENSIONAL_STEP]=5,
-		[Talents.T_REPULSION_SHIELD]=5,
+		[Talents.T_REPULSION_FIELD]=5,
 	},
 
 	autolevel = "warriormage",

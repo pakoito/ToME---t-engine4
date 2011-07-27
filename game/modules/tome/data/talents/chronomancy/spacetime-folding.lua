@@ -38,7 +38,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local ap = t.getArmorPen(self, t)
 		return ([[Folds a single dimension of your weapons (or ammo), allowing them to penetrate %d armor and adding %0.2f temporal damage to your strikes.
-		The armor penetration and damage will increase with the Magic stat.]]):format(ap, damDesc(self, DamageType.TEMPORAL, damage))
+		The armor penetration and damage will increase with your Spellpower.]]):format(ap, damDesc(self, DamageType.TEMPORAL, damage))
 	end,
 }
 
@@ -53,7 +53,7 @@ newTalent{
 	requires_target = true,
 	direct_hit = true,
 	range = function(self, t)
-		return 5 + (self:getTalentLevelRaw(t))
+		return 4 + math.floor(self:getTalentLevel(t))
 	end,
 	getConfuseDuration = function(self, t) return math.floor((self:getTalentLevel(t) + 2) * getParadoxModifier(self, pm)) end,
 	getConfuseEfficency = function(self, t) return (50 + self:getTalentLevelRaw(t) * 10) end,
@@ -62,7 +62,7 @@ newTalent{
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, tx, ty)) > self:getTalentRange(t) then return nil end
-		if not self:canBe("teleport") or game.level.map.attrs(tx, ty, "no_teleport") or game.level.map.attrs(self.x, self.y, "no_teleport") then
+				if not self:canBe("teleport") or game.level.map.attrs(tx, ty, "no_teleport") or game.level.map.attrs(self.x, self.y, "no_teleport") then
 			game.logSeen(self, "The spell fizzles!")
 			return true
 		end
@@ -73,8 +73,15 @@ newTalent{
 				if not target then return nil end
 			end
 		end
+		
+		-- checks for spacetime mastery hit bonus
+		local power = self:combatSpellpower()
+		if self:knowTalent(self.T_SPACETIME_MASTERY) then
+			power = self:combatSpellpower() * 1 + (self:getTalentLevel(self.T_SPACETIME_MASTERY)/10)
+		end
+		
 		if target:canBe("teleport") then
-			local hit = self:checkHit(self:combatSpellpower(), target:combatSpellResist() + (target:attr("continuum_destabilization") or 0))
+			local hit = self:checkHit(power, target:combatSpellResist() + (target:attr("continuum_destabilization") or 0))
 			if not hit then
 				game.logSeen(target, "The spell fizzles!")
 				return true
@@ -109,7 +116,7 @@ newTalent{
 		local range = self:getTalentRange(t)
 		local duration = t.getConfuseDuration(self, t)
 		return ([[You manipulate the spacetime continuum in such a way that you switch places with another creature with in a range of %d.  The targeted creature will be confused for %d turns.
-		The confusion chance will increase with your magic stat.]]):format (range, duration)
+		The spells hit chance will increase with your Spellpower.]]):format (range, duration)
 	end,
 }
 
@@ -142,7 +149,7 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	paradox = 10,
-	cooldown = 12,
+	cooldown = 10,
 	tactical = { ATTACK = 1, CLOSEIN = 2 },
 	direct_hit = true,
 	reflectable = true,
@@ -150,22 +157,24 @@ newTalent{
 	target = function(self, t)
 		return {type="beam", range=self:getTalentRange(t), friendlyfire=false, talent=t}
 	end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 200) * getParadoxModifier(self, pm) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 230) * getParadoxModifier(self, pm) end,
 	range = function(self, t)
-		return 5 + (self:getTalentLevelRaw(t))
+		return 4 + math.floor(self:getTalentLevel(t))
 	end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local _ _, x, y = self:canProject(tg, x, y)
+		
 		if not self:canBe("teleport") or game.level.map.attrs(x, y, "no_teleport") then
 			game.logSeen(self, "The spell fizzles!")
 			return true
 		end
+		
 		if self:hasLOS(x, y) and not game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then
 			local dam = self:spellCrit(t.getDamage(self, t))
-			self:project(tg, x, y, DamageType.TEMPORAL, dam)
+			self:project(tg, x, y, DamageType.TEMPORALSTUN, dam)
 			game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "temporal_lightning", {tx=x-self.x, ty=y-self.y})
 			game:playSoundNear(self, "talents/lightning")
 			local tx, ty = util.findFreeGrid(x, y, 5, true, {[Map.ACTOR]=true})
@@ -176,13 +185,14 @@ newTalent{
 			game.logSeen(self, "You can't move there.")
 			return nil
 		end
+		
 		return true
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local range = self:getTalentRange(t)
-		return ([[Violently fold the space between yourself and another point within a range of %d.  You move to the selected point and leave a temporal wake behind, inflicting %0.2f temporal damage to everything in the path.
-		The damage will scale with your Paradox and the Magic stat and the range will increase with the talent level.]]):
+		return ([[Violently fold the space between yourself and another point within a range of %d.  You move to the selected point and leave a temporal wake behind that stuns for 4 turns and inflicts %0.2f temporal damage to everything in the path.
+		The damage will scale with your Paradox and Spellpower and the range will increase with the talent level.]]):
 		format(range, damDesc(self, DamageType.TEMPORAL, damage))
 	end,
 }
