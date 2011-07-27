@@ -1143,8 +1143,8 @@ local random_zone_themes = {
 		getDoor = function(self) return "SLIME_DOOR" end,
 		getFloor = function(self) return "SLIME_FLOOR" end,
 		getWall = function(self) return "SLIME_WALL" end,
-		getUp = function(self) return "SLIME_UP"..self.less_dir end,
-		getDown = function(self) return "SLIME_DOWN"..self.more_dir end,
+		getUp = function(self) return "SLIME_UP" end,
+		getDown = function(self) return "SLIME_DOWN" end,
 	} end },
 }
 
