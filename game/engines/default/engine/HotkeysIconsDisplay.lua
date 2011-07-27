@@ -254,5 +254,5 @@ function _M:onMouse(button, mx, my, click, on_over, on_click)
 			return
 		end
 	end
---	self.cur_sel = nil
+	self.cur_sel = nil
 end
