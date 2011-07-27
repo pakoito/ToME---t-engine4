@@ -70,7 +70,7 @@ newTalent{
 			end
 		end, nil)
 		if not seen then
-			game.logPlayer(self, "There is no foes in sight.")
+			game.logPlayer(self, "There are no foes in sight.")
 			return
 		end
 
