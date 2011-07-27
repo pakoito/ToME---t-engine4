@@ -32,9 +32,8 @@ newTalent{
 	tactical = { ATTACK = 2 },
 	requires_target = true,
 	action = function(self, t)
-		local weapon = self:hasAxeWeapon()
-		if not weapon then
-			game.logPlayer(self, "You cannot use %s without an axe!", t.name)
+		if not self:hasAxeWeapon() and not self:hasCursedWeapon() then
+			game.logPlayer(self, "You cannot use %s without an axe or a cursed weapon!", t.name)
 			return nil
 		end
 
@@ -51,7 +50,7 @@ newTalent{
 	info = function(self, t)
 		local multiplier = (0.17 + .23 * self:getTalentLevel(t))
 		return ([[Slashes wildly at your target for 100%% (at 0 Hate) to %d%% (at 10+ Hate) damage.
-		Requires a one or two handed axe.]]):format(multiplier * 100 + 100)
+		Requires a one or two handed axe or a cursed weapon.]]):format(multiplier * 100 + 100)
 	end,
 }
 
@@ -65,9 +64,8 @@ newTalent{
 	cooldown = 15,
 	hate = 0.2,
 	action = function(self, t)
-		local weapon = self:hasAxeWeapon()
-		if not weapon then
-			game.logPlayer(self, "You cannot use %s without an axe!", t.name)
+		if not self:hasAxeWeapon() and not self:hasCursedWeapon() then
+			game.logPlayer(self, "You cannot use %s without an axe or a cursed weapon!", t.name)
 			return nil
 		end
 
@@ -98,7 +96,7 @@ newTalent{
 	info = function(self, t)
 		local multiplier = self:combatTalentWeaponDamage(t, 0.2, 0.7)
 		return ([[Assault nearby foes with 4 fast attacks for %d%% (at 0 Hate) to %d%% (at 10+ Hate) damage each.
-		Requires a one or two handed axe.]]):format(multiplier * 50, multiplier * 100)
+		Requires a one or two handed axe or a cursed weapon.]]):format(multiplier * 50, multiplier * 100)
 	end,
 }
 
@@ -114,9 +112,8 @@ newTalent{
 	tactical = { CLOSEIN = 2 },
 	requires_target = true,
 	action = function(self, t)
-		local weapon = self:hasAxeWeapon()
-		if not weapon then
-			game.logPlayer(self, "You cannot use %s without an axe!", t.name)
+		if not self:hasAxeWeapon() and not self:hasCursedWeapon() then
+			game.logPlayer(self, "You cannot use %s without an axe or a cursed weapon!", t.name)
 			return nil
 		end
 
@@ -204,7 +201,7 @@ newTalent{
 			size = "Small"
 		end
 		return ([[Charge through your opponents, attacking anyone near your path for %d%% (at 0 Hate) to %d%% (at 10+ Hate) damage. %s opponents may be knocked from your path.
-		Requires a one or two handed axe.]]):format(multiplier * 30, multiplier * 100, size)
+		Requires a one or two handed axe or a cursed weapon.]]):format(multiplier * 30, multiplier * 100, size)
 	end,
 }
 
@@ -215,8 +212,8 @@ newTalent{
 	require = cursed_str_req4,
 	points = 5,
 	on_attackTarget = function(self, t, target, multiplier)
-		local weapon = self:hasAxeWeapon()
-		if not weapon then
+		if not self:hasAxeWeapon() and not self:hasCursedWeapon() then
+			game.logPlayer(self, "You cannot use %s without an axe or a cursed weapon!", t.name)
 			return nil
 		end
 
@@ -245,7 +242,7 @@ newTalent{
 	info = function(self, t)
 		local chance = 28 + self:getTalentLevel(t) * 7
 		local multiplier = self:combatTalentWeaponDamage(t, 0.2, 0.7)
-		return ([[Every swing of your axe has a %d%% chance of striking a second target for %d%% (at 0 Hate) to %d%% (at 10+ Hate) damage.
-		Requires a one or two handed axe.]]):format(chance, multiplier * 50, multiplier * 100)
+		return ([[Every swing of your weapon has a %d%% chance of striking a second target for %d%% (at 0 Hate) to %d%% (at 10+ Hate) damage.
+		Requires a one or two handed axe or a cursed weapon.]]):format(chance, multiplier * 50, multiplier * 100)
 	end,
 }

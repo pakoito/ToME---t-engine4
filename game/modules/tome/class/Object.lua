@@ -126,7 +126,7 @@ function _M:descAttribute(attr)
 		local stat, i = next(self.wielder.resists)
 		return (i and i > 0 and "+"..i or tostring(i)).."%"
 	elseif attr == "REGEN" then
-		local i = self.wielder.mana_regen or self.wielder.stamina_regen or self.wielder.life_regen
+		local i = self.wielder.mana_regen or self.wielder.stamina_regen or self.wielder.life_regen or self.wielder.hate_regen
 		return ("%s%0.2f/turn"):format(i > 0 and "+" or "-", math.abs(i))
 	elseif attr == "COMBAT" then
 		local c = self.combat
@@ -699,6 +699,7 @@ function _M:getTextualDesc(compare_with)
 		compare_fields(w, compare_with, field, "life_regen", "%+.2f", "Life regen: ")
 		compare_fields(w, compare_with, field, "stamina_regen", "%+.2f", "Stamina each turn: ")
 		compare_fields(w, compare_with, field, "mana_regen", "%+.2f", "Mana each turn: ")
+		compare_fields(w, compare_with, field, "hate_regen", "%+.3f", "Hate each turn: ")
 
 		compare_fields(w, compare_with, field, "stamina_regen_on_hit", "%+.2f", "Stamina when hit: ")
 		compare_fields(w, compare_with, field, "mana_regen_on_hit", "%+.2f", "Mana when hit: ")
@@ -865,6 +866,10 @@ function _M:getTextualDesc(compare_with)
 	end
 	for tid, data in pairs(talents) do
 		desc:add(talents[tid][3] and {"color","GREEN"} or {"color","WHITE"}, ("Talent on hit(spell): %s (%d%% chance level %d)."):format(self:getTalentFromId(tid).name, talents[tid][1], talents[tid][2]), {"color","LAST"}, true)
+	end
+	
+	if self.extra_description then
+		desc:add({"color", "LIGHT_UMBER"}, self.extra_description, {"color","LAST"}, true)
 	end
 
 	local use_desc = self:getUseDesc()

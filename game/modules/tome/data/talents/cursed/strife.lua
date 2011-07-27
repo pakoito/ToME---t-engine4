@@ -41,9 +41,8 @@ newTalent{
 		return math.max(3, 18 - math.floor(self:getTalentLevel(t) * 1.2))
 	end,
 	action = function(self, t)
-		local weapon = self:hasAxeWeapon()
-		if not weapon then
-			game.logPlayer(self, "You cannot use %s without an axe!", t.name)
+		if not self:hasAxeWeapon() and not self:hasCursedWeapon() then
+			game.logPlayer(self, "You cannot use %s without an axe or a cursed weapon!", t.name)
 			return nil
 		end
 
@@ -69,7 +68,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		return ([[Poison your foe for with the essence of your curse inflicting %d%% damage and %d poison damage over %d turns.
 		Poison damage increases with the Willpower stat.
-		Requires a one or two handed axe.]]):format(damagePercent, poisonDamage, duration)
+		Requires a one or two handed axe or a cursed weapon.]]):format(damagePercent, poisonDamage, duration)
 	end,
 }
 
@@ -90,9 +89,8 @@ newTalent{
 		return math.max(1, math.floor(self:getTalentLevel(t)))
 	end,
 	action = function(self, t)
-		local weapon = self:hasAxeWeapon()
-		if not weapon then
-			game.logPlayer(self, "You cannot use %s without an axe!", t.name)
+		if not self:hasAxeWeapon() and not self:hasCursedWeapon() then
+			game.logPlayer(self, "You cannot use %s without an axe or a cursed weapon!", t.name)
 			return nil
 		end
 		
@@ -112,7 +110,8 @@ newTalent{
 	info = function(self, t)
 		local damagePercent = t.getDamagePercent(self, t)
 		local distance = t.getDistance(self, t)
-		return ([[Swing your axe for %d%% damage as you leap backwards %d spaces from your target.]]):format(damagePercent, distance)
+		return ([[Swing your weapon for %d%% damage as you leap backwards %d spaces from your target.
+		Requires a one or two handed axe or a cursed weapon.]]):format(damagePercent, distance)
 	end,
 }
 
@@ -132,12 +131,11 @@ newTalent{
 		return 100 - (40 / math.max(1, self:getTalentLevel(t)))
 	end,
 	getDuration = function(self, t)
-		return 2 + math.floor(1.5 * self:getTalentLevel(t))
+		return 2 + math.floor(self:getTalentLevel(t))
 	end,
 	action = function(self, t)
-		local weapon = self:hasAxeWeapon()
-		if not weapon then
-			game.logPlayer(self, "You cannot use %s without an axe!", t.name)
+		if not self:hasAxeWeapon() and not self:hasCursedWeapon() then
+			game.logPlayer(self, "You cannot use %s without an axe or a cursed weapon!", t.name)
 			return nil
 		end
 		
@@ -151,7 +149,7 @@ newTalent{
 		
 		local hit = self:attackTarget(target, nil, damagePercent / 100, true)
 		if hit and target:canBe("stun") then
-			target:setEffect(target.EFF_DAZED, duration, {})
+			target:setEffect(target.EFF_STUNNED, duration, {})
 		end
 		
 		return true
@@ -159,7 +157,8 @@ newTalent{
 	info = function(self, t)
 		local damagePercent = t.getDamagePercent(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[Smash you foe with the butt of your axe doing %d%% damage and dazing them for %d turns.]]):format(damagePercent, duration)
+		return ([[Smash you foe with your weapon doing %d%% damage and stunning them for %d turns.
+		Requires a one or two handed axe or a cursed weapon.]]):format(damagePercent, duration)
 	end,
 }
 
@@ -198,8 +197,8 @@ newTalent{
 		return false
 	end,
 	action = function(self, t)
-		local weapon = self:hasAxeWeapon()
-		if not weapon then
+		if not self:hasAxeWeapon() and not self:hasCursedWeapon() then
+			game.logPlayer(self, "You cannot use %s without an axe or a cursed weapon!", t.name)
 			return nil
 		end
 		
@@ -267,6 +266,6 @@ newTalent{
 		local confuseEfficiency = t.getConfuseEfficiency(self, t)
 		
 		return ([[With unnatural speed you assail all foes in sight within a range of 4 with wild swings from your axe. You will attack up to %d different targets for %d%% damage. When the assualt finally ends all foes in range will be confused for %d turns and you will find yourself in a nearby location.
-		Requires a one or two handed axe.]]):format(attackCount, damagePercent, confuseDuration)
+		Requires a one or two handed axe or a cursed weapon.]]):format(attackCount, damagePercent, confuseDuration)
 	end,
 }

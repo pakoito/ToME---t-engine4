@@ -17,56 +17,54 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local Object = require "engine.Object"
+
 local curses_detrimental
 local curses_beneficial
 local curses_weapon
-local curses_staff
-local curses_armor
 
-local function getEffect(list, item)
-	-- filters on item.type and uses random weighting
+local function getEffect(list, item, who, level, effectName)
+	-- filters on item.type, etc. and uses random weighting
 	local weightTotal = 0
+	local effects = {}
 	for i, effect in pairs(list) do
-		if not effect.item_type or effect.item_type == item.type then
+		if (not effect.level or effect.level == level)
+				and (not effect.item_type or effect.item_type == item.type)
+				and (not effect.item_subtype or effect.item_subtype == item.subtype)
+				and (not effect.subclass or effect.subclass == who.descriptor.subclass)
+				and (not item.uses_special_on_hit or not item.combat or not item.combat.special_on_hit)then
+			if effectName and effect.name == effectName then return effect end
+			
 			weightTotal = weightTotal + (effect.weighting or 1)
+			effects[#effects + 1] = effect
 		end
 	end
 
 	local weight = rng.range(1, weightTotal)
 	weightTotal = 0
-	for i, effect in pairs(list) do
-		if not effect.item_type or effect.item_type == item.type then
-			weightTotal = weightTotal + (effect.weighting or 1)
-			if weight <= weightTotal then return effect end
-		end
+	for i, effect in pairs(effects) do
+		weightTotal = weightTotal + (effect.weighting or 1)
+		if weight <= weightTotal then return effect end
 	end
+	print("* fateful-aura getEffect failed. count:", #list, "found:", #effects, "weightTotal:", weightTotal, "weight:", weight, "item:", item.name, "type:", item.type, "subtype:", item.subtype, "level:", level, "subclass:", who.descriptor.subclass)
 	return
 end
 
-local function addEffects(list, item, percent1, percent2, percent3)
-	local effectCount
-	local percent = rng.range(1, 100)
-	if percent <= percent3 then
-		effectCount = 3
-	elseif percent <= percent3 + percent2 then
-		effectCount = 2
-	elseif percent <= percent3 + percent2 + percent1 then
-		effectCount = 1
+local function addEffect(item, effect, who, power)
+	if effect.copy then
+		table.mergeAddAppendArray(item, effect.copy, true)
+		item:resolve()
+		item:resolve(nil, true)
+	end
+	if effect.apply then
+		effect.apply(item, who, power)
+	end
+	
+	if item.extra_description then
+		item.extra_description = item.extra_description..", #F53CBE#"..effect.name.."#LAST#"
 	else
-		effectCount = 0
+		item.extra_description = "#F53CBE#"..effect.name.."#LAST#"
 	end
-
-	if effectCount > 0 then
-		for i = 1, effectCount do
-			local effect = getEffect(list, item)
-
-			print(("* curse %s with [%s]"):format(item.name, effect.name))
-			table.mergeAddAppendArray(item, effect.copy, true)
-			item:resolve()
-			item:resolve(nil, true)
-		end
-	end
-	return effectCount
 end
 
 newTalent{
@@ -75,8 +73,11 @@ newTalent{
 	mode = "passive",
 	require = cursed_wil_req1,
 	points = 5,
-	getAffectedPercent = function(self, t)
-		return math.floor(math.max(0, 100 - (math.sqrt(self:getTalentLevel(t)) - 0.5) * 25))
+	getCurseChance = function(self, t)
+		return math.floor(math.min(100, 30 + (math.sqrt(self:getTalentLevel(t)) - 1) * 50))
+	end,
+	getMajorChance = function(self, t)
+		return math.floor(math.max(0, 30 - (math.sqrt(self:getTalentLevel(t)) - 1) * 25))
 	end,
 	curseItem = function(self, t, item)
 		if item.cursed_touch then return end
@@ -84,56 +85,81 @@ newTalent{
 		if item.quest then return end
 		if not item:wornInven() then return end
 		if item.type == "ammo" or item.type == "gem" then return end
-
+		
+		--[[ test to run all code
+		if not curses_detrimental then curses_detrimental = mod.class.Object:loadList("/data/general/objects/egos/curses-detrimental.lua") end
+		if not curses_weapon then curses_weapon = mod.class.Object:loadList("/data/general/objects/egos/curses-weapon.lua") end
+		if not curses_beneficial then curses_beneficial = mod.class.Object:loadList("/data/general/objects/egos/curses-beneficial.lua") end
+		local tal = t
+		local lis
+		if item.type == "weapon" then
+			lis = curses_weapon
+		elseif item.type == "lite" then
+			lis = curses_beneficial
+		else
+			lis = curses_detrimental
+		end
+		if lis then
+			for i, effect in pairs(lis) do
+				addEffect(item, effect, self, 1)
+			end
+			item.cursed = true
+			item.name = "cursed ".. item.name
+			if false then return nil end
+		end
+		-- end test]]
+		
+		-- prevent re-cursion
 		item.cursed_touch = true
 
-		local affectedPercent
-		local affected = 0
-
-		-- cursed touch
-		affectedPercent = t.getAffectedPercent(self, t)
-		if not curses_detrimental then curses_detrimental = mod.class.Object:loadList("/data/general/objects/egos/curses-detrimental.lua") end
-		affected = affected + addEffects(curses_detrimental, item, affectedPercent * 0.7, affectedPercent * 0.2, affectedPercent * 0.1)
-
-		-- dark gifts
+		-- add a curse?
+		if not rng.percent(t.getCurseChance(self, t)) then return end
+		
+		-- effect power
+		local power = 0.3 + (item.material_level or 3) * 0.1
+		
+		local level
+		
+		-- beneficial
+		local beneficialEffect
 		local tDarkGifts = self:getTalentFromId(self.T_DARK_GIFTS)
 		if tDarkGifts and self:getTalentLevelRaw(tDarkGifts) > 0 then
-			affectedPercent = t.getAffectedPercent(self, t)
-			if not curses_beneficial then curses_beneficial = mod.class.Object:loadList("/data/general/objects/egos/curses-beneficial.lua") end
-			affected = affected + addEffects(curses_beneficial, item, affectedPercent * 0.7, affectedPercent * 0.2, affectedPercent * 0.1)
-		end
-
-		-- vengeful blessings
-		if item.type == "weapon" then
 			local tVengefulBlessings = self:getTalentFromId(self.T_VENGEFUL_BLESSINGS)
-			if tVengefulBlessings and self:getTalentLevelRaw(tVengefulBlessings) > 0 then
-				local list
-				if item.subtype == "staff" then
-					if not curses_staff then curses_staff = mod.class.Object:loadList("/data/general/objects/egos/curses-staff.lua") end
-					list = curses_staff
-				else
-					if not curses_weapon then curses_weapon = mod.class.Object:loadList("/data/general/objects/egos/curses-weapon.lua") end
-					list = curses_weapon
-				end
-				affectedPercent = t.getAffectedPercent(self, t)
-				affected = affected + addEffects(list, item, affectedPercent * 0.65, affectedPercent * 0.25, affectedPercent * 0.1)
+			
+			local list
+			if item.type == "weapon" and tVengefulBlessings and self:getTalentLevelRaw(tVengefulBlessings) > 0 and rng.percent(tVengefulBlessings.getChance(self, tVengefulBlessings)) then
+				if not curses_weapon then curses_weapon = mod.class.Object:loadList("/data/general/objects/egos/curses-weapon.lua") end
+				list = curses_weapon
+				if rng.percent(tVengefulBlessings.getMajorChance(self, t)) then level = 2 else level = 1 end
+				power = power * (1 + tVengefulBlessings.getPowerPercent(self, tVengefulBlessings) / 100)
+			else
+				if not curses_beneficial then curses_beneficial = mod.class.Object:loadList("/data/general/objects/egos/curses-beneficial.lua") end
+				list = curses_beneficial
+				if rng.percent(tDarkGifts.getMajorChance(self, t)) then level = 2 else level = 1 end
+				power = power * (1 + tDarkGifts.getPowerPercent(self, tDarkGifts) / 100)
 			end
+			
+			beneficialEffect = getEffect(list, item, self, level)
 		end
-
-		-- grim craft
-		if item.type == "armor" and (sub_type == "cloth" or sub_type == "light" or sub_type == "heavy" or sub_type == "medium" or sub_type == "massive") then
-			local tGrimCraft = self:getTalentFromId(self.T_GRIM_CRAFT)
-			if tGrimCraft and self:getTalentLevelRaw(tGrimCraft) > 0 then
-				if not curses_armor then curses_armor = mod.class.Object:loadList("/data/general/objects/egos/curses-armor.lua") end
-				affectedPercent = t.getAffectedPercent(self, t)
-				affected = affected + addEffects(curses_armor, item, affectedPercent * 0.65, affectedPercent * 0.25, affectedPercent * 0.1)
-			end
+		
+		-- detrimental
+		local detrimentalEffect
+		local effectName
+		if rng.percent(t.getMajorChance(self, t)) then level = 2 else level = 1 end
+		if beneficialEffect and beneficialEffect.detrimental then effectName = rng.table(beneficialEffect.detrimental) end -- select a recommended curse
+		if not curses_detrimental then curses_detrimental = mod.class.Object:loadList("/data/general/objects/egos/curses-detrimental.lua") end
+		detrimentalEffect = getEffect(curses_detrimental, item, self, level, effectName)
+		
+		-- apply the curse
+		item.cursed = true
+		item.name = "cursed ".. item.name
+		item.encumber = item.encumber + 1
+		
+		addEffect(item, detrimentalEffect, self, power)
+		if beneficialEffect then
+			addEffect(item, beneficialEffect, self, power)
 		end
-
-		if affected > 0 then
-			item.encumber = item.encumber + 1
-			item.name = "cursed ".. item.name
-		end
+			
 	end,
 	curseFloor = function(self, t, x, y)
 		local i = 1
@@ -152,9 +178,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local affectedPercent = t.getAffectedPercent(self, t)
+		local curseChance = t.getCurseChance(self, t)
+		local majorChance = t.getMajorChance(self, t)
 
-		return ([[Your cursed touch permeates everything around you. Any non-unique equipment you find gains 1 extra weight and has a %d%% chance of receiving 1 curse, %d%% chance of 2 curses or a %d%% chance of 3 curses.]]):format(affectedPercent * 0.7, affectedPercent * 0.2, affectedPercent * 0.1)
+		return ([[Your cursed touch permeates everything around you. Any non-unique equipment you find has a %d%% chance of becoming cursed. Cursed objects gain 1 extra weight and recieve a harmful effect. There is a %d%% chance of a major effect.]]):format(curseChance, majorChance)
 	end,
 }
 
@@ -164,13 +191,17 @@ newTalent{
 	mode = "passive",
 	require = cursed_wil_req2,
 	points = 5,
-	getAffectedPercent = function(self, t)
-		return math.floor(math.min(100, 20 + (math.sqrt(self:getTalentLevel(t)) - 0.5) * 30))
+	getMajorChance = function(self, t)
+		return math.floor(math.min(100, 10 + (math.sqrt(self:getTalentLevel(t)) - 1) * 20))
+	end,
+	getPowerPercent = function(self, t)
+		return math.floor((math.sqrt(self:getTalentLevel(t)) - 1) * 20)
 	end,
 	info = function(self, t)
-		local affectedPercent = t.getAffectedPercent(self, t)
+		local majorChance = t.getMajorChance(self, t)
+		local powerPercent = t.getPowerPercent(self, t)
 
-		return ([[Your curses can also bring dark gifts. All cursed items have a %d%% chance of receiving 1 beneficial effect, %d%% chance of 2 beneficial effects or a %d%% chance of 3 beneficial effects.]]):format(affectedPercent * 0.7, affectedPercent * 0.2, affectedPercent * 0.1)
+		return ([[Your curses will also bring dark gifts. All cursed items receive a beneficial effect with a %d%% chance of a major effect. Your gifts gain %d%% more power.]]):format(majorChance, powerPercent)
 	end,
 }
 
@@ -180,28 +211,156 @@ newTalent{
 	mode = "passive",
 	require = cursed_wil_req3,
 	points = 5,
-	getAffectedPercent = function(self, t)
-		return math.floor(math.min(100, 20 + (math.sqrt(self:getTalentLevel(t)) - 0.5) * 30))
+	getChance = function(self, t)
+		return math.floor(math.min(100, 35 + (math.sqrt(self:getTalentLevel(t)) - 1) * 30))
+	end,
+	getMajorChance = function(self, t)
+		return math.floor(math.min(100, 10 + (math.sqrt(self:getTalentLevel(t)) - 1) * 15))
+	end,
+	getPowerPercent = function(self, t)
+		return math.floor((math.sqrt(self:getTalentLevel(t)) - 1) * 20)
 	end,
 	info = function(self, t)
-		local affectedPercent = t.getAffectedPercent(self, t)
+		local chance = t.getChance(self, t)
+		local majorChance = t.getMajorChance(self, t)
+		local powerPercent = t.getPowerPercent(self, t)
 
-		return ([[Bestow vengeful blessings on your tools of death. Cursed weapons or staves have a %d%% chance of receiving 1 beneficial effect, %d%% chance of 2 beneficial effects or a %d%% chance of 3 beneficial effects.]]):format(affectedPercent * 0.65, affectedPercent * 0.25, affectedPercent * 0.1)
+		return ([[Bestow vengeful blessings on your tools of death. Cursed weapons or staves have a %d%% chance of being blessed with a powerful beneficial effect that replaces your dark gift. There is a %d%% chance of a major effect. Your blessings gain %d%% more power.]]):format(chance, majorChance, powerPercent)
 	end,
 }
 
 newTalent{
-	name = "Grim Craft",
+	name = "Cursed Sentry",
 	type = {"cursed/fateful-aura", 4},
-	mode = "passive",
 	require = cursed_wil_req4,
 	points = 5,
-	getAffectedPercent = function(self, t)
-		return math.floor(math.min(100, 20 + (math.sqrt(self:getTalentLevel(t)) - 0.5) * 30))
+	cooldown = 40,
+	range = 5,
+	no_npc_use = true,
+	getDuration = function(self, t)
+		return math.floor(8 + (math.sqrt(self:getTalentLevel(t)) - 1) * 8)
+	end,
+	getAttackSpeed = function(self, t)
+		return math.floor(60 + (math.sqrt(self:getTalentLevel(t)) - 1) * 60)
+	end,
+	action = function(self, t)
+		local inven = self:getInven("INVEN")
+		local found = false
+		for i, obj in pairs(inven) do
+			if type(obj) == "table" and obj.cursed and obj.type == "weapon" then
+				found = true
+			break
+			end
+		end
+		if not found then
+			game.logPlayer(self, "You cannot use %s without a cursed weapon in your inventory!", t.name)
+			return false
+		end
+		
+		-- select the location
+		local range = self:getTalentRange(t)
+		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
+		local tx, ty = self:getTarget(tg)
+		if not tx or not ty then return nil end
+		local _ _, x, y = self:canProject(tg, tx, ty)
+		if game.level.map(x, y, Map.ACTOR) or game.level.map:checkEntity(x, y, game.level.map.TERRAIN, "block_move") then return nil end
+		
+		-- select the item
+		local d = self:showInventory("Which weapon will be your sentry?", inven,
+			function(o)
+				return o.cursed and o.type == "weapon"
+			end, nil)
+		d.action = function(o, item)
+				d.used_talent = true
+				d.selected_object = o
+				d.selected_item = item
+				
+				return false
+			end
+		
+		local co = coroutine.running()
+		d.unload = function(self) coroutine.resume(co, self.used_talent, self.selected_object, d.selected_item) end
+		local used_talent, o, item = coroutine.yield()
+		if not used_talent then return nil end
+		
+		local result = self:removeObject(inven, item)
+		
+		local NPC = require "mod.class.NPC"
+		local sentry = NPC.new {
+			type = "construct", subtype = "weapon",
+			display = o.display, color=o.color, image = o.image, blood_color = colors.GREY,
+			name = "animated "..o.name, faction = self.faction,
+			desc = "A weapon imbued with a living curse. It seems to be searching for its next victim.",
+			faction = self.faction,
+			body = { INVEN = 10, MAINHAND=1, QUIVER=1 },
+			rank = 2,
+			size_category = 1,
+			
+			autolevel = "warrior",
+			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=5, },
+			
+			max_life = 50, life_rating = 3,
+			stats = { str=20, dex=20, mag=10, con=10 },
+			combat = { dam=1, atk=1, apr=1 },
+			combat_armor = 100, combat_def = 50,
+			combat_physspeed = 100 / t.getAttackSpeed(self, t),
+			infravision = 10,
+			
+			resists = { all = 75, },
+			cut_immune = 1,
+			blind_immune = 1,
+			fear_immune = 1,
+			poison_immune = 1,
+			disease_immune = 1,
+			stone_immune = 1,
+			see_invisible = 30,
+			no_breath = 1,
+			disarm_immune = 1,
+			never_move = 1,
+			no_drops = true, -- remove to drop the weapon
+			
+			resolvers.talents{
+				[Talents.T_WEAPON_COMBAT]={base=1, every=5, max=10},
+				[Talents.T_WEAPONS_MASTERY]={base=1, every=5, max=10},
+				[Talents.T_BOW_MASTERY]={base=1, every=5, max=10},
+				[Talents.T_SHOOT]=1,
+			},
+
+			summoner = self,
+			summoner_gain_exp=true,
+			summon_time = t.getDuration(self, t),
+			summon_quiet = true,
+			
+			on_die = function(self, who)
+				game.logSeen(self, "#F53CBE#%s crumbles to dust.", self.name:capitalize())
+			end,
+		}
+		result = sentry:wearObject(o, true, false)
+		
+		sentry:resolve()
+		sentry:resolve(nil, true)
+		sentry:forceLevelup(self.level)
+		game.zone:addEntity(game.level, sentry, "actor", x, y)
+
+		sentry.no_party_ai = true
+		sentry.unused_stats = 0
+		sentry.unused_talents = 0
+		sentry.unused_generics = 0
+		sentry.unused_talents_types = 0
+		sentry.no_points_on_levelup = true
+		if game.party:hasMember(self) then
+			sentry.remove_from_party_on_death = true
+			game.party:addMember(sentry, { control="no", type="summon", title="Summon"})
+		end
+		
+		game:playSoundNear(self, "talents/spell_generic")
+		
+		return true
 	end,
 	info = function(self, t)
-		local affectedPercent = t.getAffectedPercent(self, t)
+		local duration = t.getDuration(self, t)
+		local attackSpeed = t.getAttackSpeed(self, t)
 
-		return ([[Craft to your defenses for the slaughter that lies ahead. Cursed body armor has a %d%% chance of receiving 1 beneficial effect, %d%% chance of 2 beneficial effects or a %d%% chance of 3 beneficial effects.]]):format(affectedPercent * 0.65, affectedPercent * 0.25, affectedPercent * 0.1)
+		return ([[Instill a part of your living curse into a weapon in your inventory and toss it nearby. This nearly impervious sentry will attack all nearby enemies for %d turns. When the curse ends the weapon will crumble to dust. Attack Speed: %d%%]]):format(duration, attackSpeed)
 	end,
 }

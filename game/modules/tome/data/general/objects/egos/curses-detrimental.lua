@@ -21,46 +21,172 @@ local Stats = require "engine.interface.ActorStats"
 local DamageType = require "engine.DamageType"
 local Talents = require "engine.interface.ActorTalents"
 
-newEntity{ name="det str", weighting = 1, copy = { wielder = { inc_stats = { [Stats.STAT_STR] = resolvers.mbonus_material(4, 1, function(e, v) return 0, -v end), }, }, }, }
-newEntity{ name="det dex", weighting = 1, copy = { wielder = { inc_stats = { [Stats.STAT_DEX] = resolvers.mbonus_material(4, 1, function(e, v) return 0, -v end) }, }, }, }
-newEntity{ name="det mag", weighting = 1, copy = { wielder = { inc_stats = { [Stats.STAT_MAG] = resolvers.mbonus_material(4, 1, function(e, v) return 0, -v end) }, }, }, }
-newEntity{ name="det wil", weighting = 1, copy = { wielder = { inc_stats = { [Stats.STAT_WIL] = resolvers.mbonus_material(4, 1, function(e, v) return 0, -v end) }, }, }, }
-newEntity{ name="det cun", weighting = 1, copy = { wielder = { inc_stats = { [Stats.STAT_CUN] = resolvers.mbonus_material(4, 1, function(e, v) return 0, -v end) }, }, }, }
-newEntity{ name="det con", weighting = 1, copy = { wielder = { inc_stats = { [Stats.STAT_CON] = resolvers.mbonus_material(4, 1, function(e, v) return 0, -v end) }, }, }, }
-newEntity{ name="det lck", weighting = 1, copy = { wielder = { inc_stats = { [Stats.STAT_LCK] = resolvers.mbonus_material(4, 1, function(e, v) return 0, -v end) }, }, }, }
-
-newEntity{ name="det res light", weighting = 2, copy = { wielder = { resists={ [DamageType.LIGHT] = -5 }, }, }, }
-newEntity{ name="det res fire", weighting = 2, copy = { wielder = { resists={ [DamageType.FIRE] = -5 }, }, }, }
-newEntity{ name="det res arcane", weighting = 2, copy = { wielder = { resists={ [DamageType.ARCANE] = -5 }, }, }, }
-
-newEntity{ name="det mentalresist", weighting = 1, copy = { wielder = { combat_mentalresist = resolvers.mbonus_material(8, 3, function(e, v) return 0, -v end) }, }, }
-newEntity{ name="det physresist", weighting = 1, copy = { wielder = { combat_physresist = resolvers.mbonus_material(8, 3, function(e, v) return 0, -v end) }, }, }
-newEntity{ name="det spellresist", weighting = 1, copy = { wielder = { combat_spellresist = resolvers.mbonus_material(8, 3, function(e, v) return 0, -v end) }, }, }
-newEntity{ name="det max air", weighting = 1, copy = { wielder = { max_air = -20 }, }, }
-
 newEntity{
-	name = "det fumble",
-	weighting = 6,
-	item_type="weapon",
-	copy = {
-		combat = {
-			special_on_hit = {
-				desc="4% chance of fumbling your weapon when striking.",
-				fct=function(combat, who, target)
-					if not rng.percent(4) then return end
-					if not who:canBe("disarm") then return end
-					who:setEffect(who.EFF_DISARMED, 3, {})
-					game.logSeen(target, "%s fumbles the attack!", who.name:capitalize())
-				end
-			},
-		},
-	},
+	name="curse of weakness", level = 1, weighting = 1,
+	apply = function(item, who, power)
+		item.wielder = item.wielder or {}
+		item.wielder.inc_stats = item.wielder.inc_stats or {}
+		item.wielder.inc_stats[Stats.STAT_STR] = (item.wielder.inc_stats[Stats.STAT_STR] or 0) - math.ceil(4 * power)
+	end,
 }
-	
 newEntity{
-	name = "det knockback",
-	weighting = 3,
-	item_type="weapon",
+	name="curse of clumsiness", level = 1, weighting = 1,
+	apply = function(item, who, power)
+		item.wielder = item.wielder or {}
+		item.wielder.inc_stats = item.wielder.inc_stats or {}
+		item.wielder.inc_stats[Stats.STAT_DEX] = (item.wielder.inc_stats[Stats.STAT_DEX] or 0) - math.ceil(4 * power)
+	end,
+}
+newEntity{
+	name="curse of the mundane", level = 1, weighting = 1,
+	apply = function(item, who, power)
+		item.wielder = item.wielder or {}
+		item.wielder.inc_stats = item.wielder.inc_stats or {}
+		item.wielder.inc_stats[Stats.STAT_MAG] = (item.wielder.inc_stats[Stats.STAT_MAG] or 0) - math.ceil(4 * power)
+	end,
+}
+newEntity{
+	name="curse of the feeble", level = 1, weighting = 1,
+	apply = function(item, who, power)
+		item.wielder = item.wielder or {}
+		item.wielder.inc_stats = item.wielder.inc_stats or {}
+		item.wielder.inc_stats[Stats.STAT_WIL] = (item.wielder.inc_stats[Stats.STAT_WIL] or 0) - math.ceil(4 * power)
+	end,
+}
+newEntity{
+	name="curse of the fool", level = 1, weighting = 1,
+	apply = function(item, who, power)
+		item.wielder = item.wielder or {}
+		item.wielder.inc_stats = item.wielder.inc_stats or {}
+		item.wielder.inc_stats[Stats.STAT_CUN] = (item.wielder.inc_stats[Stats.STAT_CUN] or 0) - math.ceil(4 * power)
+	end,
+}
+newEntity{
+	name="curse of the sickly", level = 1, weighting = 1,
+	apply = function(item, who, power)
+		item.wielder = item.wielder or {}
+		item.wielder.inc_stats = item.wielder.inc_stats or {}
+		item.wielder.inc_stats[Stats.STAT_CON] = (item.wielder.inc_stats[Stats.STAT_CON] or 0) - math.ceil(4 * power)
+	end,
+}
+newEntity{
+	name="curse of misfortune", level = 2, weighting = 1,
+	apply = function(item, who, power)
+		item.wielder = item.wielder or {}
+		item.wielder.inc_stats = item.wielder.inc_stats or {}
+		item.wielder.inc_stats[Stats.STAT_LCK] = (item.wielder.inc_stats[Stats.STAT_LCK] or 0) - math.ceil(4 * power)
+	end,
+}
+
+newEntity{
+	name="curse of harsh light", level = 1, weighting = 1,
+	apply = function(item, who, power)
+		item.wielder = item.wielder or {}
+		item.wielder.resists = item.wielder.resists or {}
+		item.wielder.resists[DamageType.LIGHT] = (item.wielder.resists[DamageType.LIGHT] or 0) - math.ceil(10 * power)
+	end,
+}
+newEntity{
+	name="curse of fiery death", level = 1, weighting = 1,
+	apply = function(item, who, power)
+		item.wielder = item.wielder or {}
+		item.wielder.resists = item.wielder.resists or {}
+		item.wielder.resists[DamageType.FIRE] = (item.wielder.resists[DamageType.FIRE] or 0) - math.ceil(10 * power)
+	end,
+}
+newEntity{
+	name="curse of frozen death", level = 1, weighting = 1,
+	apply = function(item, who, power)
+		item.wielder = item.wielder or {}
+		item.wielder.resists = item.wielder.resists or {}
+		item.wielder.resists[DamageType.COLD] = (item.wielder.resists[DamageType.COLD] or 0) - math.ceil(10 * power)
+	end,
+}
+newEntity{
+	name="curse of madness", level = 2, weighting = 1,
+	apply = function(item, who, power)
+		item.wielder = item.wielder or {}
+		item.wielder.resists = item.wielder.resists or {}
+		item.wielder.resists[DamageType.MIND] = (item.wielder.resists[DamageType.MIND] or 0) - math.ceil(20 * power)
+	end,
+}
+
+newEntity{
+	name="curse of submission", level = 1, weighting = 1,
+	apply = function(item, who, power)
+		item.wielder = item.wielder or {}
+		item.wielder.combat_mentalresist = (item.wielder.combat_mentalresist or 0) - math.ceil(6 * power)
+	end,
+}
+newEntity{
+	name="curse of buckling", level = 1, weighting = 1,
+	apply = function(item, who, power)
+		item.wielder = item.wielder or {}
+		item.wielder.combat_physresist = (item.wielder.combat_physresist or 0) - math.ceil(6 * power)
+	end,
+}
+newEntity{
+	name="curse of the susceptibility", level = 1, weighting = 1,
+	apply = function(item, who, power)
+		item.wielder = item.wielder or {}
+		item.wielder.combat_spellresist = (item.wielder.combat_spellresist or 0) - math.ceil(6 * power)
+	end,
+}
+
+newEntity{
+	name="curse of strangling", level = 1, weighting = 2,
+	apply = function(item, who, power)
+		item.wielder = item.wielder or {}
+		item.wielder.max_air = (item.wielder.max_air or 0) - math.ceil(20 * power)
+	end,
+}
+newEntity{
+	name="curse of burden", level = 2, weighting = 3,
+	apply = function(item, who, power)
+		item.encumber = item.encumber + 5
+	end,
+}
+newEntity{
+	name="curse of soothing", level = 2, weighting = 2,
+	apply = function(item, who, power)
+		item.wielder = item.wielder or {}
+		item.wielder.max_hate = (item.wielder.max_hate or 0) - math.ceil(1 * power)
+	end,
+}
+newEntity{
+	name="curse of dying", level = 2, weighting = 1,
+	apply = function(item, who, power)
+		item.wielder = item.wielder or {}
+		item.wielder.life_regen = (item.wielder.life_regen or 0) - (math.ceil(100 * power) * 0.01 * 0.2)
+	end,
+}
+newEntity{
+	name="curse of misses", level = 2, weighting = 1,
+	apply = function(item, who, power)
+		item.wielder = item.wielder or {}
+		item.wielder.combat_atk = (item.wielder.combat_atk or 0) - math.ceil(4 * power)
+	end,
+}
+newEntity{
+	name="curse of misses", level = 2, weighting = 1,
+	apply = function(item, who, power)
+		item.wielder = item.wielder or {}
+		item.wielder.combat_atk = (item.wielder.combat_atk or 0) - math.ceil(4 * power)
+	end,
+}
+newEntity{
+	name="curse of elements", level = 2, weighting = 1,
+	apply = function(item, who, power)
+		item.wielder = item.wielder or {}
+		item.wielder.resists = item.wielder.resists or {}
+		item.wielder.resists[DamageType.FIRE] = (item.wielder.resists[DamageType.FIRE] or 0) - math.ceil(8 * power)
+		item.wielder.resists[DamageType.COLD] = (item.wielder.resists[DamageType.COLD] or 0) - math.ceil(8 * power)
+		item.wielder.resists[DamageType.LIGHTNING] = (item.wielder.resists[DamageType.LIGHTNING] or 0) - math.ceil(8 * power)
+	end,
+}
+
+newEntity{
+	name = "curse of rebuff", level = 2, weighting = 3, item_type="weapon",
 	copy = {
 		combat = {
 			special_on_hit = {
@@ -73,13 +199,10 @@ newEntity{
 				end
 			},
 		},
-	}
+	},
 }
-	
 newEntity{
-	name = "det teleport",
-	weighting = 3,
-	item_type="weapon",
+	name = "curse of dismissal", level = 2, weighting = 3, item_type="weapon",
 	copy = {
 		combat = {
 			special_on_hit = {
@@ -94,11 +217,8 @@ newEntity{
 		},
 	},
 }
-
 newEntity{
-	name = "det heal",
-	weighting = 3,
-	item_type="weapon",
+	name = "curse of kindness", level = 2, weighting = 3, item_type="weapon",
 	copy = {
 		combat = {
 			special_on_hit = {

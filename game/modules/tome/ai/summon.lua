@@ -22,7 +22,9 @@ newAI("summoned", function(self)
 	if self.summon_time then
 		self.summon_time = self.summon_time - 1
 		if self.summon_time <= 0 then
-			game.logPlayer(self.summoner, "#PINK#Your summoned %s disappears.", self.name)
+			if not self.summon_quiet then
+				game.logPlayer(self.summoner, "#PINK#Your summoned %s disappears.", self.name)
+			end
 			self:die()
 		end
 	end

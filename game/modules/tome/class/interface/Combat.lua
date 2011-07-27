@@ -902,6 +902,20 @@ function _M:hasAxeWeapon()
 	return weapon
 end
 
+--- Check if the actor has a cursed weapon
+function _M:hasCursedWeapon()
+	if self:attr("disarmed") then
+		return nil, "disarmed"
+	end
+
+	if not self:getInven("MAINHAND") then return end
+	local weapon = self:getInven("MAINHAND")[1]
+	if not weapon or not weapon.cursed then
+		return nil
+	end
+	return weapon
+end
+
 --- Check if the actor has a two handed weapon
 function _M:hasTwoHandedWeapon()
 	if self:attr("disarmed") then
