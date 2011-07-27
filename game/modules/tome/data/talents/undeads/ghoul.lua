@@ -145,4 +145,3 @@ newTalent{
 		format(100 * (0.2 + self:getTalentLevel(t) / 12), 3 + math.ceil(self:getTalentLevel(t)))
 	end,
 }
-
