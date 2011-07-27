@@ -521,7 +521,7 @@ newTalent{
 				-- Add a lasting map effect
 				game.level.map:addEffect(self,
 					x, y, 4,
-					DamageType.POISON, self.dam,
+					engine.DamageType.POISON, self.dam,
 					3,
 					5, nil,
 					{type="vapour"},
