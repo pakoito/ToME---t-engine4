@@ -868,8 +868,26 @@ function _M:getTextualDesc(compare_with)
 	end
 
 	local use_desc = self:getUseDesc()
-	if use_desc then desc:add(use_desc) end
+	if use_desc then desc:merge(use_desc:toTString()) end
 	return desc
+end
+
+function _M:getUseDesc()
+	if self.use_power then
+		if self.show_charges then
+			return tstring{{"color","YELLOW"}, ("It can be used to %s, with %d charges out of %d."):format(self.use_power.name, math.floor(self.power / self.use_power.power), math.floor(self.max_power / self.use_power.power)), {"color","LAST"}}
+		else
+			return tstring{{"color","YELLOW"}, ("It can be used to %s, costing %d power out of %d/%d."):format(self.use_power.name, self.use_power.power, self.power, self.max_power), {"color","LAST"}}
+		end
+	elseif self.use_simple then
+		return tstring{{"color","YELLOW"}, ("It can be used to %s."):format(self.use_simple.name), {"color","LAST"}}
+	elseif self.use_talent then
+		local t = game.player:getTalentFromId(self.use_talent.id)
+		local desc = game.player:getTalentFullDescription(t, nil, {force_level=self.use_talent.level, ignore_cd=true, ignore_ressources=true, custom=self.use_talent.power and tstring{{"color",0x6f,0xff,0x83}, "Power cost: ", {"color",0x7f,0xff,0xd4},("%d out of %d/%d."):format(self.use_talent.power, self.power, self.max_power)}})
+		local ret = tstring{{"color","YELLOW"}, "It can be used to activate talent ", t.name," :", {"color","LAST"}, true}
+		ret:merge(desc)
+		return ret
+	end
 end
 
 --- Gets the full desc of the object

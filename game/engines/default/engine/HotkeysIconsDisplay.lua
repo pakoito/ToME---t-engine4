@@ -118,6 +118,7 @@ function _M:display()
 	for ii, ts in ipairs(hks) do
 		local s
 		local i = ts[2]
+		local lpage = ts[5]
 		local color, angle, txt = nil, 0, nil
 		local display_entity = nil
 		local frame = "ok"
@@ -165,7 +166,7 @@ function _M:display()
 
 		local w, h = self.icon_w, self.icon_h
 		self.font:setStyle("bold")
-		local key = self.font:draw(("%d/%d"):format(ts[4], ts[5]), w, colors.ANTIQUE_WHITE.r, colors.ANTIQUE_WHITE.g, colors.ANTIQUE_WHITE.b, true)[1]
+		local key = self.font:draw(("%d/%d"):format(ts[4], lpage), w, colors.ANTIQUE_WHITE.r, colors.ANTIQUE_WHITE.g, colors.ANTIQUE_WHITE.b, true)[1]
 		self.font:setStyle("normal")
 
 		local gtxt = nil
@@ -176,8 +177,8 @@ function _M:display()
 
 		x = self.frames.w * (i-1)
 		y = 0
-		self.items[#self.items+1] = {x=x, y=y, e=display_entity or self.default_entity, color=color, angle=angle, key=key, gtxt=gtxt, frame=frame}
-		self.clics[i + (12 * (page - 1))] = {x,y,w,h}
+		self.items[#self.items+1] = {i=i, x=x, y=y, e=display_entity or self.default_entity, color=color, angle=angle, key=key, gtxt=gtxt, frame=frame, pagesel=lpage==page}
+		self.clics[i] = {x,y,w,h}
 	end
 end
 
@@ -189,19 +190,21 @@ function _M:toScreen()
 		local key = item.key
 		local gtxt = item.gtxt
 		local frame = self.frames[item.frame]
-		frame[1]:toScreenFull(self.display_x + item.x, self.display_y + item.y, self.frames.w, self.frames.h, frame[2] * self.frames.rw, frame[3] * self.frames.rh)
+		local pagesel = item.pagesel and 1 or 0.5
+		frame[1]:toScreenFull(self.display_x + item.x, self.display_y + item.y, self.frames.w, self.frames.h, frame[2] * self.frames.rw, frame[3] * self.frames.rh, pagesel, pagesel, pagesel, 255)
 		item.e:toScreen(self.tiles, self.display_x + item.x + self.frames.fx, self.display_y + item.y + self.frames.fy, self.icon_w, self.icon_h)
 
 		if self.shadow then key._tex:toScreenFull(self.display_x + item.x + 1 + self.frames.fx + self.icon_w - key.w, self.display_y + item.y + 1 + self.icon_h - key.h, key.w, key.h, key._tex_w, key._tex_h, 0, 0, 0, self.shadow) end
 		key._tex:toScreenFull(self.display_x + item.x + self.frames.fx + self.icon_w - key.w, self.display_y + item.y + self.icon_h - key.h, key.w, key.h, key._tex_w, key._tex_h)
 
 		if item.color then core.display.drawQuadPart(self.display_x + item.x + self.frames.fx, self.display_y + item.y + self.frames.fy, self.icon_w, self.icon_h, item.angle, item.color[1], item.color[2], item.color[3], 128) end
+
+		if self.cur_sel == item.i then core.display.drawQuad(self.display_x + item.x + self.frames.fx, self.display_y + item.y + self.frames.fy, self.icon_w, self.icon_h, 128, 128, 255, 80) end
+
 		if gtxt then
 			if self.shadow then gtxt._tex:toScreenFull(self.display_x + item.x + self.frames.fy + 2 + (self.icon_w - gtxt.fw) / 2, self.display_y + item.y + self.frames.fy + 2 + (self.icon_h - gtxt.fh) / 2, gtxt.w, gtxt.h, gtxt._tex_w, gtxt._tex_h, 0, 0, 0, self.shadow) end
 			gtxt._tex:toScreenFull(self.display_x + item.x + self.frames.fx + (self.icon_w - gtxt.fw) / 2, self.display_y + item.y + self.frames.fy + (self.icon_h - gtxt.fh) / 2, gtxt.w, gtxt.h, gtxt._tex_w, gtxt._tex_h)
 		end
-
---		if self.cur_sel == item.i then core.display.drawQuad(self.display_x + item.x, self.display_y + item.y, item.w, item.h, 0, 50, 120, 180) end
 	end
 end
 
@@ -240,8 +243,10 @@ function _M:onMouse(button, mx, my, click, on_over, on_click)
 						text = tstring{{"color","GOLD"}, {"font", "bold"}, t.name, {"font", "normal"}, {"color", "LAST"}, true}
 						text:merge(self.actor:getTalentFullDescription(t))
 					elseif a.hotkey[i] and a.hotkey[i][1] == "inventory" then
-						local o = a:findInAllInventories(a.hotkey[i][2])
-						if o then text = o:getDesc() else text = "Missing!" end
+						local o = a:findInAllInventories(a.hotkey[i][2], {no_add_name=true, force_id=true, no_count=true})
+						if o then
+							text = o:getDesc()
+						else text = "Missing!" end
 					end
 					on_over(text)
 				end
@@ -249,5 +254,5 @@ function _M:onMouse(button, mx, my, click, on_over, on_click)
 			return
 		end
 	end
-	self.cur_sel = nil
+--	self.cur_sel = nil
 end
