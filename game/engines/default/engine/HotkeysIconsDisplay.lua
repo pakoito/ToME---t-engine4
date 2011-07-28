@@ -239,8 +239,12 @@ function _M:onMouse(button, mx, my, click, on_over, on_click)
 			if on_click and click then
 				if on_click(i, a.hotkey[i]) then click = false end
 			end
-			if button == "left" and click then
-				a:activateHotkey(i)
+			if button == "left" then
+				if click then
+					a:activateHotkey(i)
+				else
+					print("== DRAG START", mx, my, i)
+				end
 			elseif button == "right" and click then
 				a.hotkey[i] = nil
 				a.changed = true
