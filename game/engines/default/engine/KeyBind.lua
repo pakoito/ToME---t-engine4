@@ -79,7 +79,7 @@ function _M:saveRemap(file)
 	if not file then
 		restore = fs.getWritePath()
 		fs.setWritePath(engine.homepath)
-		file = "keybinds.cfg"
+		file = "keybinds1.3.cfg"
 	end
 
 	local f = fs.open(file, "w")
