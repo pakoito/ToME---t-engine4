@@ -38,6 +38,7 @@
 #include <math.h>
 #include <time.h>
 
+extern SDL_Window *window;
 
 /***** Helpers *****/
 static GLenum sdl_gl_texture_format(SDL_Surface *s) {
@@ -133,7 +134,7 @@ static int lua_set_mouse(lua_State *L)
 {
 	int x = luaL_checknumber(L, 1);
 	int y = luaL_checknumber(L, 2);
-	SDL_WarpMouse(x, y);
+	SDL_WarpMouseInWindow(window, x, y);
 	return 0;
 }
 extern int current_mousehandler;
@@ -189,10 +190,19 @@ static int lua_get_mod_state(lua_State *L)
 
 	return 1;
 }
+static int lua_get_scancode_name(lua_State *L)
+{
+	SDL_Scancode code = luaL_checknumber(L, 1);
+	lua_pushstring(L, SDL_GetScancodeName(code));
+
+	return 1;
+}
+
 static const struct luaL_reg keylib[] =
 {
 	{"set_current_handler", lua_set_current_keyhandler},
 	{"modState", lua_get_mod_state},
+	{"symName", lua_get_scancode_name},
 	{NULL, NULL},
 };
 
@@ -478,8 +488,9 @@ static int sdl_surface_drawstring_newsurface_aa(lua_State *L)
 	{
 		SDL_Surface **s = (SDL_Surface**)lua_newuserdata(L, sizeof(SDL_Surface*));
 		auxiliar_setclass(L, "sdl{surface}", -1);
-		*s = SDL_DisplayFormatAlpha(txt);
-		SDL_FreeSurface(txt);
+		*s = txt;
+//		*s = SDL_DisplayFormatAlpha(txt);
+//		SDL_FreeSurface(txt);
 		return 1;
 	}
 
@@ -925,7 +936,7 @@ static int gl_draw_quad(lua_State *L)
 	}
 	else
 	{
-		tglBindTexture(GL_TEXTURE_2D, gl_tex_white);
+		tglBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	GLfloat texcoords[2*4] = {
@@ -982,7 +993,7 @@ static int gl_draw_quad_part(lua_State *L)
 	}
 	else
 	{
-		tglBindTexture(GL_TEXTURE_2D, gl_tex_white);
+		tglBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	if (angle < 0) angle = 0;
@@ -1613,7 +1624,7 @@ static int sdl_texture_outline(lua_State *L)
 static int sdl_set_window_title(lua_State *L)
 {
 	const char *title = luaL_checkstring(L, 1);
-	SDL_WM_SetCaption(title, NULL);
+	SDL_SetWindowTitle(window, title);
 	return 0;
 }
 
@@ -1629,6 +1640,17 @@ static int sdl_set_window_size(lua_State *L)
 	return 1;
 }
 
+static int sdl_set_window_pos(lua_State *L)
+{
+	int w = luaL_checknumber(L, 1);
+	int h = luaL_checknumber(L, 2);
+
+	SDL_SetWindowPosition(window, w, h);
+
+	lua_pushboolean(L, TRUE);
+	return 1;
+}
+
 extern void on_redraw();
 static int sdl_redraw_screen(lua_State *L)
 {
@@ -1638,6 +1660,10 @@ static int sdl_redraw_screen(lua_State *L)
 
 extern int mouse_cursor_tex, mouse_cursor_tex_ref;
 extern int mouse_cursor_down_tex, mouse_cursor_down_tex_ref;
+SDL_Surface *mouse_cursor_s = NULL;
+SDL_Surface *mouse_cursor_down_s = NULL;
+SDL_Cursor *mouse_cursor = NULL;
+SDL_Cursor *mouse_cursor_down = NULL;
 extern int mouse_cursor_ox, mouse_cursor_oy;
 static int sdl_set_mouse_cursor(lua_State *L)
 {
@@ -1657,9 +1683,13 @@ static int sdl_set_mouse_cursor(lua_State *L)
 	}
 	else
 	{
-		GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 4);
-		mouse_cursor_down_tex = *t;
+		SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 4);
+		mouse_cursor_down_s = *s;
 		mouse_cursor_down_tex_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+
+		if (mouse_cursor_down) { SDL_FreeCursor(mouse_cursor_down); mouse_cursor_down = NULL; }
+		mouse_cursor_down = SDL_CreateColorCursor(mouse_cursor_down_s, -mouse_cursor_ox, -mouse_cursor_oy);
+		if (mouse_cursor_down) SDL_SetCursor(mouse_cursor_down);
 	}
 
 	/* Default */
@@ -1671,15 +1701,18 @@ static int sdl_set_mouse_cursor(lua_State *L)
 
 	if (lua_isnil(L, 3))
 	{
-		mouse_cursor_tex = 0;
-		SDL_ShowCursor(SDL_ENABLE);
+//		mouse_cursor_tex = 0;
+//		SDL_ShowCursor(SDL_ENABLE);
 	}
 	else
 	{
-		SDL_ShowCursor(SDL_DISABLE);
-		GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 3);
-		mouse_cursor_tex = *t;
+		SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 3);
+		mouse_cursor_s = *s;
 		mouse_cursor_tex_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+
+		if (mouse_cursor) { SDL_FreeCursor(mouse_cursor); mouse_cursor = NULL; }
+		mouse_cursor = SDL_CreateColorCursor(mouse_cursor_s, -mouse_cursor_ox, -mouse_cursor_oy);
+		if (mouse_cursor) SDL_SetCursor(mouse_cursor);
 	}
 	return 0;
 }
@@ -1966,7 +1999,15 @@ static int sdl_set_gamma(lua_State *L)
 	if (lua_isnumber(L, 1))
 	{
 		gamma_correction = lua_tonumber(L, 1);
-		SDL_SetGamma(gamma_correction, gamma_correction, gamma_correction);
+
+		Uint16 red_ramp[256];
+		Uint16 green_ramp[256];
+		Uint16 blue_ramp[256];
+
+		SDL_CalculateGammaRamp(gamma_correction, red_ramp);
+		SDL_memcpy(green_ramp, red_ramp, sizeof(red_ramp));
+		SDL_memcpy(blue_ramp, red_ramp, sizeof(red_ramp));
+		SDL_SetWindowGammaRamp(window, red_ramp, green_ramp, blue_ramp);
 	}
 	lua_pushnumber(L, gamma_correction);
 	return 1;
@@ -1993,6 +2034,7 @@ static const struct luaL_reg displaylib[] =
 	{"loadImage", sdl_load_image},
 	{"setWindowTitle", sdl_set_window_title},
 	{"setWindowSize", sdl_set_window_size},
+	{"setWindowPos", sdl_set_window_pos},
 	{"getModesList", sdl_get_modes_list},
 	{"setMouseCursor", sdl_set_mouse_cursor},
 	{"setGamma", sdl_set_gamma},

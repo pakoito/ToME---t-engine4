@@ -34,6 +34,7 @@ extern GLenum gl_c_texture_unit;
 	if ((tu) != gl_c_texture_unit) { glActiveTexture((tu)); gl_c_texture_unit=(tu); } \
 	}
 
+//printf("swithch texture %d : %d\n", t, glIsTexture(t));
 extern GLenum gl_c_texture;
 #define tglBindTexture(w, t) \
 	{ \

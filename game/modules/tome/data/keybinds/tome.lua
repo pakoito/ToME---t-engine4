@@ -18,119 +18,119 @@
 -- darkgod@te4.org
 
 defineAction{
-	default = { "sym:9:true:false:false:false" },
+	default = { "sym:_TAB:true:false:false:false" },
 	type = "SWITCH_PARTY",
 	group = "party",
 	name = "Select controlled character",
 }
 
 defineAction{
-	default = { "sym:282:false:false:false:false" },
+	default = { "sym:_F1:false:false:false:false" },
 	type = "SWITCH_PARTY_1",
 	group = "party",
 	name = "Switch control to character 1",
 }
 
 defineAction{
-	default = { "sym:283:false:false:false:false" },
+	default = { "sym:_F2:false:false:false:false" },
 	type = "SWITCH_PARTY_2",
 	group = "party",
 	name = "Switch control to character 2",
 }
 
 defineAction{
-	default = { "sym:284:false:false:false:false" },
+	default = { "sym:_F3:false:false:false:false" },
 	type = "SWITCH_PARTY_3",
 	group = "party",
 	name = "Switch control to character 3",
 }
 
 defineAction{
-	default = { "sym:285:false:false:false:false" },
+	default = { "sym:_F4:false:false:false:false" },
 	type = "SWITCH_PARTY_4",
 	group = "party",
 	name = "Switch control to character 4",
 }
 
 defineAction{
-	default = { "sym:286:false:false:false:false" },
+	default = { "sym:_F5:false:false:false:false" },
 	type = "SWITCH_PARTY_5",
 	group = "party",
 	name = "Switch control to character 5",
 }
 
 defineAction{
-	default = { "sym:287:false:false:false:false" },
+	default = { "sym:_F6:false:false:false:false" },
 	type = "SWITCH_PARTY_6",
 	group = "party",
 	name = "Switch control to character 6",
 }
 
 defineAction{
-	default = { "sym:288:false:false:false:false" },
+	default = { "sym:_F7:false:false:false:false" },
 	type = "SWITCH_PARTY_7",
 	group = "party",
 	name = "Switch control to character 7",
 }
 
 defineAction{
-	default = { "sym:289:false:false:false:false" },
+	default = { "sym:_F8:false:false:false:false" },
 	type = "SWITCH_PARTY_8",
 	group = "party",
 	name = "Switch control to character 8",
 }
 
 defineAction{
-	default = { "sym:282:true:false:false:false" },
+	default = { "sym:_F1:true:false:false:false" },
 	type = "ORDER_PARTY_1",
 	group = "party",
 	name = "Give order to character 1",
 }
 
 defineAction{
-	default = { "sym:283:true:false:false:false" },
+	default = { "sym:_F2:true:false:false:false" },
 	type = "ORDER_PARTY_2",
 	group = "party",
 	name = "Give order to character 2",
 }
 
 defineAction{
-	default = { "sym:284:true:false:false:false" },
+	default = { "sym:_F3:true:false:false:false" },
 	type = "ORDER_PARTY_3",
 	group = "party",
 	name = "Give order to character 3",
 }
 
 defineAction{
-	default = { "sym:285:true:false:false:false" },
+	default = { "sym:_F4:true:false:false:false" },
 	type = "ORDER_PARTY_4",
 	group = "party",
 	name = "Give order to character 4",
 }
 
 defineAction{
-	default = { "sym:286:true:false:false:false" },
+	default = { "sym:_F5:true:false:false:false" },
 	type = "ORDER_PARTY_5",
 	group = "party",
 	name = "Give order to character 5",
 }
 
 defineAction{
-	default = { "sym:287:true:false:false:false" },
+	default = { "sym:_F6:true:false:false:false" },
 	type = "ORDER_PARTY_6",
 	group = "party",
 	name = "Give order to character 6",
 }
 
 defineAction{
-	default = { "sym:288:true:false:false:false" },
+	default = { "sym:_F7:true:false:false:false" },
 	type = "ORDER_PARTY_7",
 	group = "party",
 	name = "Give order to character 7",
 }
 
 defineAction{
-	default = { "sym:289:true:false:false:false" },
+	default = { "sym:_F8:true:false:false:false" },
 	type = "ORDER_PARTY_8",
 	group = "party",
 	name = "Give order to character 8",

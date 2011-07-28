@@ -50,6 +50,8 @@
 #define WIDTH 800
 #define HEIGHT 600
 
+SDL_Window *window = NULL;
+SDL_GLContext maincontext; /* Our opengl context handle */
 lua_State *L = NULL;
 int nb_cpus;
 bool no_debug = FALSE;
@@ -212,7 +214,7 @@ typedef struct {
 	Uint32 color;
 } MainStateData;
 
-int event_filter(const SDL_Event *event)
+int event_filter(void *userdata, SDL_Event* event)
 {
 	// Do not allow the user to close without asking the game to know about it
 	if (event->type == SDL_QUIT && (current_game != LUA_NOREF))
@@ -229,11 +231,14 @@ int event_filter(const SDL_Event *event)
 	return 1;
 }
 
+extern SDL_Cursor *mouse_cursor;
+extern SDL_Cursor *mouse_cursor_down;
 void on_event(SDL_Event *event)
 {
 	switch (event->type) {
 	case SDL_KEYDOWN:
 	case SDL_KEYUP:
+	case SDL_TEXTINPUT:
 		if (current_keyhandler != LUA_NOREF)
 		{
 			lua_rawgeti(L, LUA_REGISTRYINDEX, current_keyhandler);
@@ -241,41 +246,18 @@ void on_event(SDL_Event *event)
 			lua_gettable(L, -2);
 			lua_remove(L, -2);
 			lua_rawgeti(L, LUA_REGISTRYINDEX, current_keyhandler);
-			lua_pushnumber(L, event->key.keysym.sym);
-/*
-			Uint8 *_pKeyState = SDL_GetKeyState(NULL);
-			lua_pushboolean(L, (_pKeyState[SDLK_RCTRL] || _pKeyState[SDLK_LCTRL]) ? TRUE : FALSE);
-			lua_pushboolean(L, (_pKeyState[SDLK_RSHIFT] || _pKeyState[SDLK_LSHIFT]) ? TRUE : FALSE);
-			lua_pushboolean(L, (_pKeyState[SDLK_RALT] || _pKeyState[SDLK_LALT]) ? TRUE : FALSE);
-			lua_pushboolean(L, (_pKeyState[SDLK_RMETA] || _pKeyState[SDLK_LMETA]) ? TRUE : FALSE);
-*/
-			lua_pushboolean(L, (event->key.keysym.mod & KMOD_CTRL) ? TRUE : FALSE);
-			lua_pushboolean(L, (event->key.keysym.mod & KMOD_SHIFT) ? TRUE : FALSE);
-			lua_pushboolean(L, (event->key.keysym.mod & KMOD_ALT) ? TRUE : FALSE);
-			lua_pushboolean(L, (event->key.keysym.mod & KMOD_META) ? TRUE : FALSE);
-			/* Convert unicode UCS-2 to UTF8 string */
-			if (event->key.keysym.unicode)
+			if (event->type != SDL_TEXTINPUT) lua_pushnumber(L, event->key.keysym.scancode);
+			else lua_pushnumber(L, 0);
+
+			SDL_Keymod _pKeyState = SDL_GetModState();
+			lua_pushboolean(L, (_pKeyState & KMOD_CTRL) ? TRUE : FALSE);
+			lua_pushboolean(L, (_pKeyState & KMOD_SHIFT) ? TRUE : FALSE);
+			lua_pushboolean(L, (_pKeyState & KMOD_ALT) ? TRUE : FALSE);
+			lua_pushboolean(L, (_pKeyState & KMOD_GUI) ? TRUE : FALSE);
+
+			if (event->type == SDL_TEXTINPUT)
 			{
-				wchar_t wc = event->key.keysym.unicode;
-
-				char buf[4] = {0,0,0,0};
-				if (wc < 0x80)
-				{
-					buf[0] = wc;
-				}
-				else if (wc < 0x800)
-				{
-					buf[0] = (0xC0 | wc>>6);
-					buf[1] = (0x80 | wc & 0x3F);
-				}
-				else
-				{
-					buf[0] = (0xE0 | wc>>12);
-					buf[1] = (0x80 | wc>>6 & 0x3F);
-					buf[2] = (0x80 | wc & 0x3F);
-				}
-
-				lua_pushstring(L, buf);
+				lua_pushstring(L, event->text.text);
 			}
 			else
 				lua_pushnil(L);
@@ -285,6 +267,9 @@ void on_event(SDL_Event *event)
 		break;
 	case SDL_MOUSEBUTTONDOWN:
 	case SDL_MOUSEBUTTONUP:
+		if (event->type == SDL_MOUSEBUTTONDOWN) SDL_SetCursor(mouse_cursor_down);
+		else SDL_SetCursor(mouse_cursor);
+
 		if (current_mousehandler != LUA_NOREF)
 		{
 			lua_rawgeti(L, LUA_REGISTRYINDEX, current_mousehandler);
@@ -319,6 +304,32 @@ void on_event(SDL_Event *event)
 			lua_pushnumber(L, event->button.y);
 			lua_pushboolean(L, (event->type == SDL_MOUSEBUTTONUP) ? TRUE : FALSE);
 			docall(L, 5, 0);
+		}
+		break;
+	case SDL_MOUSEWHEEL:
+		if (current_mousehandler != LUA_NOREF)
+		{
+			int x = 0, y = 0;
+			SDL_GetMouseState(&x, &y);
+
+			int i;
+			for (i = 0; i <= 1; i++)
+			{
+				lua_rawgeti(L, LUA_REGISTRYINDEX, current_mousehandler);
+				lua_pushstring(L, "receiveMouse");
+				lua_gettable(L, -2);
+				lua_remove(L, -2);
+				lua_rawgeti(L, LUA_REGISTRYINDEX, current_mousehandler);
+				if (event->wheel.y > 0) lua_pushstring(L, "wheelup");
+				else if (event->wheel.y < 0) lua_pushstring(L, "wheeldown");
+				else if (event->wheel.x > 0) lua_pushstring(L, "wheelleft");
+				else if (event->wheel.x < 0) lua_pushstring(L, "wheelright");
+				else lua_pushstring(L, "wheelnone");
+				lua_pushnumber(L, x);
+				lua_pushnumber(L, y);
+				lua_pushboolean(L, i);
+				docall(L, 5, 0);
+			}
 		}
 		break;
 	case SDL_MOUSEMOTION:
@@ -472,7 +483,8 @@ void on_redraw()
 //	printf("keyframes: %f / %f by %f => %d\n", nb_keyframes, reference_fps, step, nb - (last_keyframe));
 	call_draw(nb - last_keyframe);
 
-	SDL_GL_SwapBuffers();
+	//SDL_GL_SwapBuffers();
+	SDL_GL_SwapWindow(window);
 
 	last_keyframe = nb;
 }
@@ -664,18 +676,26 @@ int resizeWindow(int width, int height)
 
 void do_resize(int w, int h, bool fullscreen)
 {
-	int flags = SDL_OPENGL | SDL_RESIZABLE;
-
-	if (fullscreen) flags = SDL_OPENGL | SDL_FULLSCREEN;
-
-	screen = SDL_SetVideoMode(w, h, 32, flags);
-	if (screen==NULL) {
-		printf("error opening screen: %s\n", SDL_GetError());
-		return;
+	if (!window)
+	{
+		window = SDL_CreateWindow("TE4", 0, 0, w, h, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | (fullscreen ? SDL_WINDOW_FULLSCREEN : 0));
+		if (window==NULL) {
+			printf("error opening screen: %s\n", SDL_GetError());
+			exit(1);
+		}
+		screen = SDL_GetWindowSurface(window);
+		maincontext = SDL_GL_CreateContext(window);
+		glewInit();
 	}
-	glewInit();
+	else
+	{
+		SDL_SetWindowSize(window, w, h);
+		screen = SDL_GetWindowSurface(window);
+	}
 
-	resizeWindow(screen->w, screen->h);
+	SDL_SetWindowFullscreen(window, fullscreen);
+	SDL_GetWindowSize(window, &w, &h);
+	resizeWindow(w, h);
 }
 
 void boot_lua(int state, bool rebooting, int argc, char *argv[])
@@ -734,6 +754,7 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 		luaopen_profile(L);
 		luaopen_zlib(L);
 		luaopen_bit(L);
+		luaopen_wait(L);
 
 		// Override "print" if requested
 		if (no_debug)
@@ -880,38 +901,27 @@ int main(int argc, char *argv[])
 	}
 
 	// Filter events, to catch the quit event
-	SDL_SetEventFilter(event_filter);
+	SDL_SetEventFilter(event_filter, NULL);
 
 	boot_lua(1, FALSE, argc, argv);
 
-	SDL_WM_SetIcon(IMG_Load_RW(PHYSFSRWOPS_openRead("/engines/default/data/gfx/te4-icon.png"), TRUE), NULL);
-
-//	screen = SDL_SetVideoMode(WIDTH, HEIGHT, 32, SDL_OPENGL | SDL_GL_DOUBLEBUFFER | SDL_HWPALETTE | SDL_HWSURFACE | SDL_RESIZABLE);
-//	glewInit();
 	do_resize(WIDTH, HEIGHT, FALSE);
 	if (screen==NULL) {
 		printf("error opening screen: %s\n", SDL_GetError());
 		return;
 	}
-	SDL_WM_SetCaption("T4Engine", NULL);
-	SDL_EnableUNICODE(TRUE);
+	SDL_SetWindowIcon(window, IMG_Load_RW(PHYSFSRWOPS_openRead("/engines/default/data/gfx/te4-icon.png"), TRUE));
+	SDL_SetWindowTitle(window, "T4Engine");
 	SDL_EnableKeyRepeat(300, 10);
 	TTF_Init();
-/*	if (Mix_OpenAudio(22050, AUDIO_S16, 2, 2048) == -1)
-	{
-		no_sound = TRUE;
-		printf("Disabling sounds: %s", SDL_GetError());
-	}
-	else
-	{
-		Mix_VolumeMusic(SDL_MIX_MAXVOLUME);
-		Mix_Volume(-1, SDL_MIX_MAXVOLUME);
-		Mix_AllocateChannels(16);
-	}
-	*/
 
 	/* Sets up OpenGL double buffering */
 	resizeWindow(WIDTH, HEIGHT);
+
+	// Allow getting unicode events
+	SDL_StartTextInput();
+	// Allow screensaver to work
+	SDL_EnableScreenSaver();
 
 	// Get OpenGL capabilities
 	multitexture_active = GLEW_ARB_multitexture;
@@ -942,36 +952,58 @@ int main(int argc, char *argv[])
 		{
 			switch(event.type)
 			{
-			case SDL_ACTIVEEVENT:
-/*				if ((event.active.state & SDL_APPACTIVE) || (event.active.state & SDL_APPINPUTFOCUS))
+			case SDL_WINDOWEVENT:
+				switch (event.window.event)
 				{
-					if (event.active.gain == 0)
-						isActive = FALSE;
-					else
-						isActive = TRUE;
+				case SDL_WINDOWEVENT_RESIZED:
+					printf("resize %d x %d\n", event.window.data1, event.window.data2);
+					do_resize(event.window.data1, event.window.data2, FALSE);
+
+					if (current_game != LUA_NOREF)
+					{
+						lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
+						lua_pushstring(L, "onResolutionChange");
+						lua_gettable(L, -2);
+						lua_remove(L, -2);
+						lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
+						docall(L, 1, 0);
+					}
+					break;
+				case SDL_WINDOWEVENT_MOVED: {
+					int x, y;
+					SDL_GetWindowPosition(window, &x, &y);
+					printf("move %d x %d\n", x, y);
+					if (current_game != LUA_NOREF)
+					{
+						lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
+						lua_pushstring(L, "onWindowMoved");
+						lua_gettable(L, -2);
+						lua_remove(L, -2);
+						lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
+						lua_pushnumber(L, x);
+						lua_pushnumber(L, y);
+						docall(L, 3, 0);
+					}
+					break;
 				}
-				printf("SDL Activity %d\n", isActive);
-*/				break;
-
-			case SDL_VIDEORESIZE:
-				printf("resize %d x %d\n", event.resize.w, event.resize.h);
-				do_resize(event.resize.w, event.resize.h, FALSE);
-
-				if (current_game != LUA_NOREF)
-				{
-					lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
-					lua_pushstring(L, "onResolutionChange");
-					lua_gettable(L, -2);
-					lua_remove(L, -2);
-					lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
-					docall(L, 1, 0);
+				case SDL_WINDOWEVENT_CLOSE:
+					event.type = SDL_QUIT;
+					SDL_PushEvent(&event);
+					break;
+				case SDL_WINDOWEVENT_SHOWN:
+				case SDL_WINDOWEVENT_HIDDEN:
+				case SDL_WINDOWEVENT_FOCUS_GAINED:
+				case SDL_WINDOWEVENT_FOCUS_LOST:
+					SDL_SetModState(KMOD_NONE);
+//					printf("SDL Activity %d\n", isActive);
+					break;
 				}
-
 				break;
-
+			case SDL_TEXTINPUT:
 			case SDL_MOUSEBUTTONUP:
 			case SDL_MOUSEBUTTONDOWN:
 			case SDL_MOUSEMOTION:
+			case SDL_MOUSEWHEEL:
 			case SDL_KEYDOWN:
 			case SDL_KEYUP:
 				/* handle key presses */

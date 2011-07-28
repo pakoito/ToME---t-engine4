@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+--core.wait.createThread()
+
 -- load some utility functions
 dofile("/engine/utils.lua")
 dofile("/engine/colors.lua")
@@ -75,6 +77,11 @@ if not config.settings.window or not config.settings.window.size then
 	print("[RESOLUTION] no configured resolution, defaulting to biggest possible: ", r.w, r.h)
 	config.settings.window = config.settings.window or {}
 	config.settings.window.size = math.floor(r.w * 0.9).."x"..math.floor(r.h*0.9)
+end
+
+-- Move around
+if config.settings.window.pos then
+--	core.display.setWindowPos(config.settings.window.pos.x, config.settings.window.pos.y)
 end
 
 -- Audio

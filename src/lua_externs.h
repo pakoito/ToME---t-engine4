@@ -15,6 +15,7 @@ int luaopen_noise(lua_State *L);
 int luaopen_lxp(lua_State *L);
 int luaopen_md5_core (lua_State *L);
 int luaopen_zlib (lua_State *L);
+int luaopen_wait(lua_State *L);
 
 void create_particles_thread();
 void thread_particle_new_keyframes(int nb_keyframes);

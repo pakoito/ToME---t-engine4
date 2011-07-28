@@ -148,6 +148,7 @@ end
 function _M:onResolutionChange()
 	local oldw, oldh = self.w, self.h
 	engine.Game.onResolutionChange(self)
+	if oldw == self.w and oldh == self.h then return end
 	print("[RESOLUTION] changed to ", self.w, self.h)
 	if not self.change_res_dialog then
 		self.change_res_dialog = Dialog:yesnoPopup("Resolution changed", "Accept the new resolution?", function(ret)

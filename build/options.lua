@@ -47,4 +47,9 @@ newoption {
 	description = "Enables compiling with all pedantic options",
 }
 
+newoption {
+	trigger     = "no-cleanup-jit2",
+	description = "Doesnt remove jit2 build files",
+}
+
 _OPTIONS.lua = _OPTIONS.lua or "jit2"

@@ -142,7 +142,7 @@ function _M:findBoundKeys(virtual)
 end
 
 function _M:makeKeyString(sym, ctrl, shift, alt, meta, unicode)
-	return ("sym:%s:%s:%s:%s:%s"):format(tostring(sym), tostring(ctrl), tostring(shift), tostring(alt), tostring(meta)), unicode and "uni:"..unicode
+	return ("sym:%s:%s:%s:%s:%s"):format(tostring(self.sym_to_name[sym] or sym), tostring(ctrl), tostring(shift), tostring(alt), tostring(meta)), unicode and "uni:"..unicode
 end
 
 function _M:makeGestureString(gesture)
@@ -159,21 +159,24 @@ function _M:formatKeyString(ks)
 	if ks:find("^uni:") then
 		return ks:sub(5)
 	elseif ks:find("^sym:") then
-		local i, j, sym, ctrl, shift, alt, meta = ks:find("^sym:([0-9]+):([a-z]+):([a-z]+):([a-z]+):([a-z]+)$")
+		local i, j, sym, ctrl, shift, alt, meta = ks:find("^sym:([^:]+):([a-z]+):([a-z]+):([a-z]+):([a-z]+)$")
 		if not i then return "--" end
 
 		ctrl = ctrl == "true" and true or false
 		shift = shift == "true" and true or false
 		alt = alt == "true" and true or false
 		meta = meta == "true" and true or false
-		sym = tonumber(sym) or sym
-		sym = _M.sym_to_name[sym] or sym
-		sym = sym:gsub("^_", "")
+		if tonumber(sym) then
+			sym = tonumber(sym)
+		else
+			sym = _M[sym]
+		end
+		sym = core.key.symName(sym)
 
-		if ctrl then sym = "[ctrl]+"..sym end
-		if shift then sym = "[shift]+"..sym end
-		if alt then sym = "[alt]+"..sym end
-		if meta then sym = "[meta]+"..sym end
+		if ctrl then sym = "[C]+"..sym end
+		if shift then sym = "[S]+"..sym end
+		if alt then sym = "[A]+"..sym end
+		if meta then sym = "[M]+"..sym end
 
 		return sym
 	elseif ks:find("^mouse:") then
@@ -186,10 +189,10 @@ function _M:formatKeyString(ks)
 		meta = meta == "true" and true or false
 		sym = "mouse["..sym.."]"
 
-		if ctrl then sym = "[ctrl]+"..sym end
-		if shift then sym = "[shift]+"..sym end
-		if alt then sym = "[alt]+"..sym end
-		if meta then sym = "[meta]+"..sym end
+		if ctrl then sym = "[C]+"..sym end
+		if shift then sym = "[S]+"..sym end
+		if alt then sym = "[A]+"..sym end
+		if meta then sym = "[M]+"..sym end
 
 		return sym
 	elseif ks:find("^gest:") then

@@ -5,7 +5,7 @@ solution "TEngine"
 	objdir "obj"
 	defines {"GLEW_STATIC"}
 	if _OPTIONS.force32bits then buildoptions{"-m32"} linkoptions{"-m32"} libdirs{"/usr/lib32"} end
-	if _OPTIONS.relpath then linkoptions{"-Wl,-rpath -Wl,\\\$\$ORIGIN/lib "} end	
+	if _OPTIONS.relpath then linkoptions{"-Wl,-rpath -Wl,\\\$\$ORIGIN/lib "} end
 
 	includedirs {
 		"src",
@@ -17,7 +17,7 @@ solution "TEngine"
 		"src/utf8proc",
 		"src/physfs",
 		"src/physfs/zlib123",
-		"/usr/include/SDL",
+		"/opt/SDL-1.3/include/SDL/",
 		"/usr/include/GL",
 	}
 	if _OPTIONS.lua == "default" then includedirs{"src/lua"}

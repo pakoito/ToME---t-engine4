@@ -38,8 +38,6 @@ function _M:init(actor, x, y, w, h, bgcolor, fontname, fontsize, icon_w, icon_h)
 	self.items = {}
 	self.cache = {}
 	setmetatable(self.cache, {__mode="v"})
-	self:resize(x, y, w, h)
-	self.nb_cols = 1
 	self.icon_w, self.icon_h = icon_w, icon_h
 	self.tiles = Tiles.new(icon_w, icon_h, fontname or "/data/font/VeraMono.ttf", fontsize or 10, true, true)
 
@@ -53,11 +51,12 @@ function _M:init(actor, x, y, w, h, bgcolor, fontname, fontsize, icon_w, icon_h)
 	self.frames.sustain = { core.display.loadImage("/data/gfx/ui/talent_frame_sustain.png"):glTexture() }
 
 	self.default_entity = Entity.new{display='?', color=colors.WHITE}
+
+	self:resize(x, y, w, h)
 end
 
 --- Sets the display into nb columns
 function _M:setColumns(nb)
-	self.nb_cols = nb
 end
 
 function _M:enableShadow(v)
@@ -71,6 +70,9 @@ function _M:resize(x, y, w, h)
 	self.surface = core.display.newSurface(w, h)
 	self.texture, self.texture_w, self.texture_h = self.surface:glTexture()
 	if self.actor then self.actor.changed = true end
+
+	self.max_cols = math.floor(self.w / self.frames.w)
+	self.max_rows = math.floor(self.h / self.frames.h)
 
 	if self.bg_image then
 		local fill = core.display.loadImage(self.bg_image)
@@ -91,20 +93,10 @@ function _M:display()
 	local a = self.actor
 	if not a or not a.changed then return self.surface end
 
-	local page = a.hotkey_page
-	if page == 1 and core.key.modState("ctrl") then page = 2
-	elseif page == 1 and core.key.modState("shift") then page = 3 end
-
-	local hks = {}
-	for page=1,3 do
-	for i = 1, 12 do
-		local j = i + (12 * (page - 1))
-		if a.hotkey[j] and a.hotkey[j][1] == "talent" then
-			hks[#hks+1] = {a.hotkey[j][2], j, "talent", i, page}
-		elseif a.hotkey[j] and a.hotkey[j][1] == "inventory" then
-			hks[#hks+1] = {a.hotkey[j][2], j, "inventory", i, page}
-		end
-	end
+	local bpage = a.hotkey_page
+	local spage = bpage
+	if bpage == 1 and core.key.modState("ctrl") then spage = 2 if self.max_cols < 24 then bpage = 2 end
+	elseif bpage == 1 and core.key.modState("shift") then spage = 3 if self.max_cols < 36 then bpage = 3 end
 	end
 
 	self.surface:erase(self.bgcolor[1], self.bgcolor[2], self.bgcolor[3])
@@ -112,74 +104,93 @@ function _M:display()
 
 	local x = 0
 	local y = 0
+	local col, row = 0, 0
 	self.clics = {}
 	self.items = {}
 
-	for ii, ts in ipairs(hks) do
-		local s
-		local i = ts[2]
-		local lpage = ts[5]
-		local color, angle, txt = nil, 0, nil
-		local display_entity = nil
-		local frame = "ok"
-		if ts[3] == "talent" then
-			local tid = ts[1]
-			local t = a:getTalentFromId(tid)
-			display_entity = t.display_entity
-			if a:isTalentCoolingDown(t) then
-				color = {255,0,0}
-				angle = 360 * (1 - (a.talents_cd[t.id] / a:getTalentCooldown(t)))
-				txt = tostring(a:isTalentCoolingDown(t))
-				frame = "cooldown"
-			elseif a:isTalentActive(t.id) then
-				color = {255,255,0}
-				frame = "sustain"
-			elseif not a:preUseTalent(t, true, true) then
-				color = {190,190,190}
-				frame = "disabled"
-			end
-		elseif ts[3] == "inventory" then
-			local o = a:findInAllInventories(ts[1], {no_add_name=true, force_id=true, no_count=true})
-			local cnt = 0
-			if o then cnt = o:getNumber() end
-			if cnt == 0 then
-				color = {128,128,128}
-				frame = "disabled"
-			end
-			display_entity = o
-			if o and o.use_talent then
-				local t = a:getTalentFromId(o.use_talent.id)
+	for page = bpage, 3 do for i = 1, 12 do
+		local ts = nil
+		local bi = i
+		local j = i + (12 * (page - 1))
+		if a.hotkey[j] and a.hotkey[j][1] == "talent" then
+			ts = {a.hotkey[j][2], j, "talent", i, page, i + (12 * (page - bpage))}
+		elseif a.hotkey[j] and a.hotkey[j][1] == "inventory" then
+			ts = {a.hotkey[j][2], j, "inventory", i, page, i + (12 * (page - bpage))}
+		end
+
+		if ts then
+			local s
+			local i = ts[2]
+			local lpage = ts[5]
+			local color, angle, txt = nil, 0, nil
+			local display_entity = nil
+			local frame = "ok"
+			if ts[3] == "talent" then
+				local tid = ts[1]
+				local t = a:getTalentFromId(tid)
 				display_entity = t.display_entity
-			end
-			if o and (o.use_talent or o.use_power) then
-				angle = 360 * ((o.power / o.max_power))
-				color = {255,0,0}
-				local need = (o.use_talent and o.use_talent.power) or (o.use_power and o.use_power.power) or 0
-				if o.power < need then
-					if o.power_regen and o.power_regen > 0 then
-						frame = "cooldown"
-						txt = tostring(math.ceil((need - o.power) / o.power_regen))
-					else frame = "disabled" end
+				if a:isTalentCoolingDown(t) then
+					color = {255,0,0}
+					angle = 360 * (1 - (a.talents_cd[t.id] / a:getTalentCooldown(t)))
+					txt = tostring(a:isTalentCoolingDown(t))
+					frame = "cooldown"
+				elseif a:isTalentActive(t.id) then
+					color = {255,255,0}
+					frame = "sustain"
+				elseif not a:preUseTalent(t, true, true) then
+					color = {190,190,190}
+					frame = "disabled"
+				end
+			elseif ts[3] == "inventory" then
+				local o = a:findInAllInventories(ts[1], {no_add_name=true, force_id=true, no_count=true})
+				local cnt = 0
+				if o then cnt = o:getNumber() end
+				if cnt == 0 then
+					color = {128,128,128}
+					frame = "disabled"
+				end
+				display_entity = o
+				if o and o.use_talent then
+					local t = a:getTalentFromId(o.use_talent.id)
+					display_entity = t.display_entity
+				end
+				if o and (o.use_talent or o.use_power) then
+					angle = 360 * ((o.power / o.max_power))
+					color = {255,0,0}
+					local need = (o.use_talent and o.use_talent.power) or (o.use_power and o.use_power.power) or 0
+					if o.power < need then
+						if o.power_regen and o.power_regen > 0 then
+							frame = "cooldown"
+							txt = tostring(math.ceil((need - o.power) / o.power_regen))
+						else frame = "disabled" end
+					end
 				end
 			end
+
+			local w, h = self.icon_w, self.icon_h
+			self.font:setStyle("bold")
+			local ks = game.key:formatKeyString(game.key:findBoundKeys("HOTKEY_"..page_to_hotkey[page]..bi))
+			local key = self.font:draw(ks, self.font:size(ks), colors.ANTIQUE_WHITE.r, colors.ANTIQUE_WHITE.g, colors.ANTIQUE_WHITE.b, true)[1]
+			self.font:setStyle("normal")
+
+			local gtxt = nil
+			if txt then
+				gtxt = self.fontbig:draw(txt, w, colors.WHITE.r, colors.WHITE.g, colors.WHITE.b, true)[1]
+				gtxt.fw, gtxt.fh = self.fontbig:size(txt)
+			end
+
+			x = self.frames.w * col
+			y = self.frames.h * row
+			self.items[#self.items+1] = {i=i, x=x, y=y, e=display_entity or self.default_entity, color=color, angle=angle, key=key, gtxt=gtxt, frame=frame, pagesel=lpage==spage}
+			self.clics[i] = {x,y,w,h}
 		end
-
-		local w, h = self.icon_w, self.icon_h
-		self.font:setStyle("bold")
-		local key = self.font:draw(("%d/%d"):format(ts[4], lpage), w, colors.ANTIQUE_WHITE.r, colors.ANTIQUE_WHITE.g, colors.ANTIQUE_WHITE.b, true)[1]
-		self.font:setStyle("normal")
-
-		local gtxt = nil
-		if txt then
-			gtxt = self.fontbig:draw(txt, w, colors.WHITE.r, colors.WHITE.g, colors.WHITE.b, true)[1]
-			gtxt.fw, gtxt.fh = self.fontbig:size(txt)
+		col = col + 1
+		if col >= self.max_cols then
+			col = 0
+			row = row + 1
+			if row >= self.max_rows then return end
 		end
-
-		x = self.frames.w * (i-1)
-		y = 0
-		self.items[#self.items+1] = {i=i, x=x, y=y, e=display_entity or self.default_entity, color=color, angle=angle, key=key, gtxt=gtxt, frame=frame, pagesel=lpage==page}
-		self.clics[i] = {x,y,w,h}
-	end
+	end end
 end
 
 function _M:toScreen()
@@ -194,9 +205,6 @@ function _M:toScreen()
 		frame[1]:toScreenFull(self.display_x + item.x, self.display_y + item.y, self.frames.w, self.frames.h, frame[2] * self.frames.rw, frame[3] * self.frames.rh, pagesel, pagesel, pagesel, 255)
 		item.e:toScreen(self.tiles, self.display_x + item.x + self.frames.fx, self.display_y + item.y + self.frames.fy, self.icon_w, self.icon_h)
 
-		if self.shadow then key._tex:toScreenFull(self.display_x + item.x + 1 + self.frames.fx + self.icon_w - key.w, self.display_y + item.y + 1 + self.icon_h - key.h, key.w, key.h, key._tex_w, key._tex_h, 0, 0, 0, self.shadow) end
-		key._tex:toScreenFull(self.display_x + item.x + self.frames.fx + self.icon_w - key.w, self.display_y + item.y + self.icon_h - key.h, key.w, key.h, key._tex_w, key._tex_h)
-
 		if item.color then core.display.drawQuadPart(self.display_x + item.x + self.frames.fx, self.display_y + item.y + self.frames.fy, self.icon_w, self.icon_h, item.angle, item.color[1], item.color[2], item.color[3], 128) end
 
 		if self.cur_sel == item.i then core.display.drawQuad(self.display_x + item.x + self.frames.fx, self.display_y + item.y + self.frames.fy, self.icon_w, self.icon_h, 128, 128, 255, 80) end
@@ -205,6 +213,10 @@ function _M:toScreen()
 			if self.shadow then gtxt._tex:toScreenFull(self.display_x + item.x + self.frames.fy + 2 + (self.icon_w - gtxt.fw) / 2, self.display_y + item.y + self.frames.fy + 2 + (self.icon_h - gtxt.fh) / 2, gtxt.w, gtxt.h, gtxt._tex_w, gtxt._tex_h, 0, 0, 0, self.shadow) end
 			gtxt._tex:toScreenFull(self.display_x + item.x + self.frames.fx + (self.icon_w - gtxt.fw) / 2, self.display_y + item.y + self.frames.fy + (self.icon_h - gtxt.fh) / 2, gtxt.w, gtxt.h, gtxt._tex_w, gtxt._tex_h)
 		end
+
+--		core.display.drawQuad(self.display_x + item.x + 1 + self.frames.fx + self.icon_w - key.w, self.display_y + item.y + 1 + self.icon_h - key.h, key.w, key.h, 0, 128, 128, 200)
+		if self.shadow then key._tex:toScreenFull(self.display_x + item.x + 1 + self.frames.fx + self.icon_w - key.w, self.display_y + item.y + 1 + self.icon_h - key.h, key.w, key.h, key._tex_w, key._tex_h, 0, 0, 0, self.shadow) end
+		key._tex:toScreenFull(self.display_x + item.x + self.frames.fx + self.icon_w - key.w, self.display_y + item.y + self.icon_h - key.h, key.w, key.h, key._tex_w, key._tex_h)
 	end
 end
 

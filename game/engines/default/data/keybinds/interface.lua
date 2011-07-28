@@ -18,14 +18,14 @@
 -- darkgod@te4.org
 
 defineAction{
-	default = { "sym:9:false:false:false:false" },
+	default = { "sym:_TAB:false:false:false:false" },
 	type = "TOGGLE_NPC_LIST",
 	group = "actions",
 	name = "Toggle list of seen creatures",
 }
 
 defineAction{
-	default = { "sym:109:true:false:false:false" },
+	default = { "sym:_m:true:false:false:false" },
 	type = "SHOW_MESSAGE_LOG",
 	group = "actions",
 	name = "Show message log",

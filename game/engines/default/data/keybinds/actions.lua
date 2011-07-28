@@ -38,7 +38,7 @@ defineAction{
 }
 
 defineAction{
-	default = { "uni:j", "sym:113:true:false:false:false" },
+	default = { "uni:j", "sym:_q:true:false:false:false" },
 	type = "SHOW_QUESTS",
 	group = "actions",
 	name = "Show quests",
@@ -52,21 +52,21 @@ defineAction{
 }
 
 defineAction{
-	default = { "sym:115:true:false:false:false" },
+	default = { "sym:_s:true:false:false:false" },
 	type = "SAVE_GAME",
 	group = "actions",
 	name = "Save game",
 }
 
 defineAction{
-	default = { "sym:120:true:false:false:false" },
+	default = { "sym:_x:true:false:false:false" },
 	type = "QUIT_GAME",
 	group = "actions",
 	name = "Quit game",
 }
 
 defineAction{
-	default = { "sym:116:false:true:false:false" },
+	default = { "sym:_t:false:true:false:false" },
 	type = "TACTICAL_DISPLAY",
 	group = "actions",
 	name = "Tactical display on/off",
@@ -80,14 +80,14 @@ defineAction{
 }
 
 defineAction{
-	default = { "sym:9:false:false:false:false" },
+	default = { "sym:_TAB:false:false:false:false" },
 	type = "TOGGLE_MINIMAP",
 	group = "actions",
 	name = "Toggle minimap",
 }
 
 defineAction{
-	default = { "sym:116:true:false:false:false" },
+	default = { "sym:_t:true:false:false:false" },
 	type = "SHOW_TIME",
 	group = "actions",
 	name = "Show game calendar",
@@ -101,7 +101,7 @@ defineAction{
 }
 
 defineAction{
-	default = { "sym:115:false:false:true:false" },
+	default = { "sym:_s:false:false:true:false" },
 	type = "SWITCH_GFX",
 	group = "actions",
 	name = "Switch graphical modes",
@@ -115,14 +115,14 @@ defineAction{
 }
 
 defineAction{
-	default = { "sym:13:false:false:false:false", "sym:271:false:false:false:false" },
+	default = { "sym:_RETURN:false:false:false:false", "sym:_KP_ENTER:false:false:false:false" },
 	type = "ACCEPT",
 	group = "actions",
 	name = "Accept action",
 }
 
 defineAction{
-	default = { "sym:27:false:false:false:false" },
+	default = { "sym:_ESCAPE:false:false:false:false" },
 	type = "EXIT",
 	group = "actions",
 	name = "Exit menu",

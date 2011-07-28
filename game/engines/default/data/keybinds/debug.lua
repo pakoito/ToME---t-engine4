@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 defineAction{
-	default = { "sym:108:true:false:false:false" },
+	default = { "sym:_l:true:false:false:false" },
 	type = "LUA_CONSOLE",
 	group = "debug",
 	name = "Show Lua console",

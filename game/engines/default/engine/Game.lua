@@ -56,7 +56,8 @@ function _M:setMouseCursor(up, down, offsetx, offsety)
 	local mouse = core.display.loadImage(up)
 	local mouse_down = core.display.loadImage(down)
 	if mouse then
-		self.__cursor = { up=mouse:glTexture(), down=(mouse_down or mouse):glTexture(), ox=offsetx, oy=offsety }
+--		self.__cursor = { up=mouse:glTexture(), down=(mouse_down or mouse):glTexture(), ox=offsetx, oy=offsety }
+		self.__cursor = { up=mouse, down=(mouse_down or mouse), ox=offsetx, oy=offsety }
 		if config.settings.mouse_cursor then
 			core.display.setMouseCursor(self.__cursor.ox, self.__cursor.oy, self.__cursor.up, self.__cursor.down)
 		else
@@ -362,13 +363,17 @@ function _M:onResolutionChange()
 		self.change_res_dialog_oldw, self.change_res_dialog_oldh = self.w, self.h
 	end
 
+	local ow, oh = self.w, self.h
 	self.w, self.h = core.display.size()
 	config.settings.window.size = ("%dx%d"):format(self.w, self.h)
 	self:saveSettings("resolution", ("window.size = '%s'\n"):format(config.settings.window.size))
-	print("[RESOLUTION] changed to ", self.w, self.h)
+	print("[RESOLUTION] changed to ", self.w, self.h, "from", ow, oh)
 
 	-- We do not even have a game yet
 	if not game then return end
+
+	-- No actual resize
+	if ow == self.w and oh == self.h then return end
 
 	-- Do not repop if we just revert back
 	if self.change_res_dialog and type(self.change_res_dialog) == "string" and self.change_res_dialog == "revert" then return end
@@ -386,6 +391,11 @@ function _M:onResolutionChange()
 			self.change_res_dialog_oldw, self.change_res_dialog_oldh = nil, nil
 		end
 	end, "Accept", "Revert")
+end
+
+--- Called when the game window is moved around
+function _M:onWindowMoved(x, y)
+	self:saveSettings("window_pos", ("window.pos = {x=%d, y=%d}\n"):format(x, y))
 end
 
 --- Requests the game to save

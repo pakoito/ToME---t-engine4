@@ -18,21 +18,21 @@
 -- darkgod@te4.org
 
 defineAction{
-	default = { "sym:32:false:false:false:false" },
+	default = { "sym:_SPACE:false:false:false:false" },
 	type = "USERCHAT_TALK",
 	group = "user chat",
 	name = "Talk to people",
 }
 
 defineAction{
-	default = { "sym:32:true:false:false:false" },
+	default = { "sym:_SPACE:true:false:false:false" },
 	type = "USERCHAT_SHOW_TALK",
 	group = "user chat",
 	name = "Display chat log",
 }
 
 defineAction{
-	default = { "sym:32:false:true:false:false" },
+	default = { "sym:_SPACE:false:true:false:false" },
 	type = "USERCHAT_SWITCH_CHANNEL",
 	group = "user chat",
 	name = "Cycle chat channels",
