@@ -120,7 +120,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local drain = t.getStaminaDrain(self, t)
-		return ([[Take an defensive stance to resist the onslaught of your foes.
+		return ([[Take a defensive stance to resist the onslaught of your foes.
 		For each 10%% of your total life you lack, you gain 5%% global damage resistance.
 		This consumes stamina rapidly(%d stamina/turn).]]):
 		format(drain)
