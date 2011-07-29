@@ -140,7 +140,7 @@ function _M:generateList()
 			qty = util.bound(qty, 50, 300)
 			game:saveSettings("gamma_correction", ("gamma_correction = %d\n"):format(qty))
 			config.settings.gamma_correction = qty
-			core.display.setGamma(config.settings.gamma_correction / 100)
+			game:setGamma(config.settings.gamma_correction / 100)
 			self.c_list:drawItem(item)
 		end), 50)
 	end,}

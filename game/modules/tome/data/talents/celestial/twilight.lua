@@ -217,7 +217,7 @@ newTalent{
 		modifier = self:getCun(10, true) * self:getTalentLevel(t)
 
 		local m = target:clone{
---			shader = "shadow_simulacrum", textures = { function() return _3DNoise, true end },
+			shader = "shadow_simulacrum",
 			no_drops = true,
 			faction = self.faction,
 			summoner = self, summoner_gain_exp=true,

@@ -71,6 +71,9 @@ PERMADEATH_INFINITE = 1
 PERMADEATH_MANY = 2
 PERMADEATH_ONE = 3
 
+-- Tell the engine that we have a fullscreen shader that supports gamma correction
+support_shader_gamma = true
+
 function _M:init()
 	engine.GameTurnBased.init(self, engine.KeyBind.new(), 1000, 100)
 	engine.interface.GameMusic.init(self)
@@ -439,6 +442,9 @@ function _M:setupDisplayMode(reboot, mode)
 		self.fbo = core.display.newFBO(Map.viewport.width, Map.viewport.height)
 		if self.fbo then self.fbo_shader = Shader.new("main_fbo") if not self.fbo_shader.shad then self.fbo = nil self.fbo_shader = nil end end
 		if self.player then self.player:updateMainShader() end
+
+		self.full_fbo = core.display.newFBO(self.w, self.h)
+		if self.full_fbo then self.full_fbo_shader = Shader.new("full_fbo") if not self.full_fbo_shader.shad then self.full_fbo = nil self.full_fbo_shader = nil end end
 	end
 end
 
@@ -896,6 +902,8 @@ function _M:display(nb_keyframes)
 	-- If switching resolution, blank everything but the dialog
 	if self.change_res_dialog then engine.GameTurnBased.display(self, nb_keyframes) return end
 
+	if self.full_fbo then self.full_fbo:use(true) end
+
 	-- Now the map, if any
 	if self.level and self.level.map and self.level.map.finished then
 		local map = self.level.map
@@ -912,7 +920,7 @@ function _M:display(nb_keyframes)
 				if self.level.data.foreground then self.level.data.foreground(self.level, 0, 0, nb_keyframes) end
 				if self.level.data.weather_particle then self.state:displayWeather(self.level, self.level.data.weather_particle, nb_keyframes) end
 				if config.settings.tome.smooth_fov then map._map:drawSeensTexture(0, 0, nb_keyframes) end
-			self.fbo:use(false)
+			self.fbo:use(false, self.full_fbo)
 
 			_2DNoise:bind(1, false)
 			self.fbo:toScreen(map.display_x, map.display_y, map.viewport.width, map.viewport.height, self.fbo_shader.shad)
@@ -991,6 +999,8 @@ function _M:display(nb_keyframes)
 	else
 		self:targetDisplayTooltip(self.w, self.h)
 	end
+
+	if self.full_fbo then self.full_fbo:use(false) self.full_fbo:toScreen(0, 0, self.w, self.h, self.full_fbo_shader.shad) end
 end
 
 --- Called when a dialog is registered to appear on screen

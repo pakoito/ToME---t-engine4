@@ -1053,6 +1053,7 @@ static int map_get_scroll(lua_State *L)
 	\
 	if (dm->cb_ref != LUA_NOREF) \
 	{\
+		if (m->shader) glUseProgramObjectARB(0); \
 		lua_rawgeti(L, LUA_REGISTRYINDEX, dm->cb_ref); \
 		lua_pushnumber(L, dx); \
 		lua_pushnumber(L, dy); \
@@ -1071,6 +1072,7 @@ static int map_get_scroll(lua_State *L)
 			glColorPointer(4, GL_FLOAT, 0, colors); \
 		} \
 		lua_pop(L, 1); \
+		if (m->shader) useShader(m->shader, i, j, map->tile_w, map->tile_h, r, g, b, a); \
 	} \
 }
 

@@ -88,6 +88,8 @@ function _M:loaded()
 
 	self.__threads = self.__threads or {}
 	self.__coroutines = self.__coroutines or {}
+
+	self:setGamma(config.settings.gamma_correction / 100)
 end
 
 --- Defines the default fields to be saved by the savefile code
@@ -399,6 +401,21 @@ end
 --- Called when the game window is moved around
 function _M:onWindowMoved(x, y)
 	self:saveSettings("window_pos", ("window.pos = {x=%d, y=%d}\n"):format(x, y))
+end
+
+--- Sets the gamma of the window
+-- By default it uses SDL gamma settings, but it can also use a fullscreen shader if available
+function _M:setGamma(gamma)
+	if self.support_shader_gamma and self.full_fbo_shader then
+		-- Tell the shader which gamma to use
+		self.full_fbo_shader:setUniform("gamma", gamma)
+		-- Remove SDL gamma correction
+		core.display.setGamma(1)
+		print("[GAMMA] Setting gamma correction using fullscreen shader", gamma)
+	else
+		core.display.setGamma(gamma)
+		print("[GAMMA] Setting gamma correction using SDL", gamma)
+	end
 end
 
 --- Requests the game to save

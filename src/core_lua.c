@@ -1845,7 +1845,13 @@ static int gl_fbo_use(lua_State *L)
 		glPopAttrib();
 
 		// Unbind texture from FBO and then unbind FBO
-		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+		if (!lua_isuserdata(L, 3)) glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+		else
+		{
+			lua_fbo *pfbo = (lua_fbo*)auxiliar_checkclass(L, "gl{fbo}", 3);
+			glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, pfbo->fbo);
+		}
+
 
 	}
 	return 0;
