@@ -136,6 +136,37 @@ Rest easy, brother. It may have taken your eye, but think of what else it could 
 
 Make sure you write the words on your next letter nice and big,
 Rolf]]}
+newLore{
+	id = "adventurer-letter-6",
+	category = "adventures",
+	name = "letter to Rolf (3)",
+	lore = [[Rolf,
+
+I can't remember anything from the fight save the sheer terror at being near something so horrid and powerful. There is no shame in running from a foe you cannot possibly hope to defeat, is there? Maybe ale from the tavern is a good idea, but maybe it is better to conquer your fear once and for all... I hope you can forgive me, but I must defeat this monster, if it takes me the rest of my life.
+
+Wishing you and your ale a hearty good-bye,
+
+Weisman.]]}
+newLore{
+	id = "adventurer-letter-7",
+	category = "adventures",
+	name = "letter to Weisman (4)",
+	lore = [[Weisman,
+
+By my ancestors' profits I hope you receive this message in good health and spirits. Please, old friend - there is no need to impress upon me your valour, I know full well how courageous you are. Please, do not go after that... that thing! If I must drag you away physically, that is what I shall do, but I beg of you, please, consider another foe to fight!
+
+Your friend,
+
+Rolf.]]}
+newLore{
+	id = "adventurer-letter-8",
+	category = "adventures",
+	name = "Last Will of Rolf",
+	bloodstains = 6,
+	lore = [[Last Will and Testament of Rolf Two-Axes
+
+I have failed. Oh by the great wyrm's maw, I have failed! The beast Weisman set out to slay was dead already by another's hand, but its corruption remained still. When I arrived in its chamber, Weisman was already half-gone; he was hacking away at foes only he could see. When I tried to stop him, he turned his axe on me... I am beaten and broken, hiding in some crevasse away from... from my own friend, who through the corruption in this place has been perverted into a monstrosity my axes were unable to fell. I hold no doubt that this is the last time I shall put quill to parchment, as even now I can hear my old friend's perverted voice.. calling to me. I bequeathe my belongings to any who slay ...
+#{italic}#(the ink blotch seems to indicate Weisman had caught up to his old friend, one-half of that abomination)#{normal}#]]}
 
 --------------------------------------------------------------
 -- Myths of creations

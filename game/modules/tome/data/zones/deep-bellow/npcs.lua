@@ -78,6 +78,7 @@ newEntity{ base="BASE_NPC_CORRUPTED_HORROR", define_as = "THE_MOUTH",
 
 	on_die = function(self, who)
 		game.player:resolveSource():setQuestStatus("deep-bellow", engine.Quest.COMPLETED)
+		game.state:activateBackupGuardian("ABOMINATION", 3, 35, "I have heard a dwarf whispering about some abomination in the deep bellow.")
 	end,
 }
 
@@ -121,4 +122,77 @@ It seems to come from the digestive system of the mouth.]],
 			self.summoner.no_take_hit_achievements = nil
 		end
 	end,
+}
+
+newEntity{ base="BASE_NPC_CORRUPTED_HORROR", define_as = "ABOMINATION",
+	unique = true,
+	allow_infinite_dungeon = true,
+	name = "The Abomination",
+	display = "h", color=colors.VIOLET,
+	desc = [[A horrid mass of pustulent flesh, sinew, and bone; this creature seems to constantly be in pain. Two heads glare malevolently at you, an intruder in its domain.]],
+	level_range = {35, nil}, exp_worth = 3,
+	max_life = 350, life_rating = 23, fixed_rating = true,
+	life_regen = 30,
+	hate_regen = 10,
+	negative_regen = 14,
+	stats = { str=30, dex=8, cun=10, mag=15, con=20 },
+	rank = 4,
+	size_category = 3,
+	infravision = 10,
+	instakill_immune = 1,
+	blind_immune = 1,
+	see_invisible = 30,
+	move_others=true,
+
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, FEET=1 },
+	resolvers.equip{
+		{type="weapon", subtype="battleaxe", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="boots", defined="WARPED_BOOTS", random_art_replace={chance=75}, autoreq=true},
+		{type="armor", subtype="massive", force_drop=true, tome_drops="boss", autoreq=true},
+	},
+	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
+	resolvers.drops{chance=100, nb=1, {defined="ADV_LTR_8"} },
+
+	resolvers.talents{
+		[Talents.T_ARMOUR_TRAINING]=5,
+		[Talents.T_WEAPON_COMBAT]={base=5, every=5, max=10},
+		[Talents.T_WEAPONS_MASTERY]={base=5, every=5, max=10},
+
+		[Talents.T_ENRAGE]={base=3, every=7, max=5},
+		[Talents.T_SUPPRESSION]={base=4, every=7, max=6},
+		[Talents.T_GLOOM]={base=4, every=7, max=6},
+		[Talents.T_WEAKNESS]={base=4, every=7, max=6},
+		[Talents.T_TORMENT]={base=4, every=7, max=6},
+
+		[Talents.T_HYMN_OF_MOONLIGHT]={base=3, every=7, max=5},
+		[Talents.T_STARFALL]={base=3, every=7, max=7},
+		[Talents.T_SHADOW_BLAST]={base=3, every=7, max=7},
+	},
+	resolvers.sustains_at_birth(),
+
+	-- Supposed to drop two notes during the fight, if player has cooldowns to worry about player can snag these then.
+	on_takehit = function(self, val)
+		if self.life - val < self.max_life * 0.75 and not self.dropped_note6 then
+			local n = game.zone:makeEntityByName(game.level, "object", "ADV_LTR_6")
+			if n then
+				self.dropped_note6 = true
+				game.zone:addEntity(game.level, n, "object", self.x, self.y)
+				game.logSeen(self, "A parchment falls to the floor near The Abomination.")
+			end
+		end
+		if self.life - val < self.max_life * 0.25 and not self.dropped_note7 then
+			local n = game.zone:makeEntityByName(game.level, "object", "ADV_LTR_7")
+			if n then
+				self.dropped_note7 = true
+				game.zone:addEntity(game.level, n, "object", self.x, self.y)
+				game.logSeen(self, "A parchment falls to the floor near The Abomination.")
+			end
+		end
+		return val
+	end,
+
+	autolevel = "warriormage",
+	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"melee",
+	resolvers.inscriptions(4, {}),
 }
