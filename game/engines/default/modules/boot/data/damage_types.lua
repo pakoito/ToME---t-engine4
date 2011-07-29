@@ -29,9 +29,9 @@ setDefaultProjector(function(src, x, y, type, dam)
 			end
 		else
 			if src == game.player then
-				game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -3, tostring(-math.ceil(dam)), {0,255,0})
+				game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -rng.float(2, 3), tostring(-math.ceil(dam)), {0,255,0})
 			elseif target == game.player then
-				game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -3, tostring(-math.ceil(dam)), {255,0,0})
+				game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, rng.float(2, 3), tostring(-math.ceil(dam)), {255,0,0})
 			end
 		end
 		return dam

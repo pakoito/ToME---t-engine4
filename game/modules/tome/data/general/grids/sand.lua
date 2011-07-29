@@ -17,6 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local sand_editer = { method="borders_def", def="sand"}
 local sand_wall_editer = { method="sandWalls_def", def="sandwall"}
 
 newEntity{
