@@ -1023,7 +1023,7 @@ function _M:setupCommands()
 
 	-- Debug mode
 	self.key:addCommands{
-		[{"_a","ctrl"}] = function() if config.settings.cheat then game:registerDialog(require("mod.dialogs.debug.DebugMain").new()) end end,
+		[{"_q","ctrl"}] = function() if config.settings.cheat then game:registerDialog(require("mod.dialogs.debug.DebugMain").new()) end end,
 		[{"_d","ctrl"}] = function() if config.settings.cheat then
 			local g = game.level.map(game.player.x, game.player.y, Map.TERRAIN)
 			print(g.define_as, g.image, g.z)

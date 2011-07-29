@@ -33,6 +33,7 @@ function _M:init(t)
 	self.nb_items = t.nb_items
 	assert(self.h or self.nb_items, "no tree height/nb_items")
 	self.fct = t.fct
+	self.on_drag = t.on_drag
 	self.on_expand = t.on_expand
 	self.on_drawitem = t.on_drawitem
 	self.select = t.select
@@ -202,6 +203,7 @@ function _M:generate()
 		else
 			if (self.all_clicks or button == "left") and button ~= "wheelup" and button ~= "wheeldown" and event == "button" then self:onUse(button) end
 		end
+		if event == "motion" and button == "left" and self.on_drag then self.on_drag(self.list[self.sel], self.sel) end
 	end)
 	self.key:addBinds{
 		ACCEPT = function() self:onUse("left") end,

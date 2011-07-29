@@ -223,6 +223,7 @@ end
 --- Call when a mouse event arrives in this zone
 -- This is optional, only if you need mouse support
 function _M:onMouse(button, mx, my, click, on_over, on_click)
+	mx, my = mx - self.display_x, my - self.display_y
 	local a = self.actor
 
 	if button == "wheelup" and click then
@@ -231,9 +232,21 @@ function _M:onMouse(button, mx, my, click, on_over, on_click)
 	elseif button == "wheeldown" and click then
 		a:nextHotkeyPage()
 		return
+	elseif button == "drag-end" then
+		local drag = game.mouse.dragged.payload
+		print(table.serialize(drag,nil,true))
+		if drag.kind == "talent" or drag.kind == "inventory" then
+			local i = math.floor(mx / self.frames.w) + (self.actor.hotkey_page-1) * 12 + 1
+			local old = self.actor.hotkey[i]
+			self.actor.hotkey[i] = {drag.kind, drag.id}
+			if drag.source_hotkey_slot then
+				self.actor.hotkey[drag.source_hotkey_slot] = old
+			end
+			game.mouse:usedDrag()
+			self.actor.changed = true
+		end
 	end
 
-	mx, my = mx - self.display_x, my - self.display_y
 	for i, zone in pairs(self.clics) do
 		if mx >= zone[1] and mx < zone[1] + zone[3] and my >= zone[2] and my < zone[2] + zone[4] then
 			if on_click and click then
@@ -243,7 +256,16 @@ function _M:onMouse(button, mx, my, click, on_over, on_click)
 				if click then
 					a:activateHotkey(i)
 				else
-					print("== DRAG START", mx, my, i)
+					if a.hotkey[i][1] == "talent" then
+						local t = self.actor:getTalentFromId(a.hotkey[i][2])
+						local s = t.display_entity:getEntityFinalSurface(nil, 64, 64)
+						game.mouse:startDrag(mx, my, s, {kind=a.hotkey[i][1], id=a.hotkey[i][2], source_hotkey_slot=i}, function(drag, used) if not used then self.actor.hotkey[i] = nil self.actor.changed = true end end)
+					elseif a.hotkey[i][1] == "inventory" then
+						local o = a:findInAllInventories(a.hotkey[i][2], {no_add_name=true, force_id=true, no_count=true})
+						local s = nil
+						if o then s = o:getEntityFinalSurface(nil, 64, 64) end
+						game.mouse:startDrag(mx, my, s, {kind=a.hotkey[i][1], id=a.hotkey[i][2], source_hotkey_slot=i}, function(drag, used) if not used then self.actor.hotkey[i] = nil self.actor.changed = true end end)
+					end
 				end
 			elseif button == "right" and click then
 				a.hotkey[i] = nil

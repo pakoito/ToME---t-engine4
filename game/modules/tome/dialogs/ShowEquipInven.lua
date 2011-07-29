@@ -32,8 +32,19 @@ function _M:init(...)
 			game.tooltip:displayAtMap(nil, nil, item.last_display_x, item.last_display_y, item.object:getDesc({do_color=true}, self.actor:getInven(item.object:wornInven())))
 		end
 	end
+	self.on_drag = function(item) self:onDrag(item) end
 	self.key.any_key = function(sym)
 		-- Control resets the tooltip
 		if sym == self.key._LCTRL or sym == self.key._RCTRL then local i = self.cur_item self.cur_item = nil self:select(i) end
+	end
+end
+
+function _M:onDrag(item)
+	if item and item.object then
+		local s = item.object:getEntityFinalSurface(nil, 64, 64)
+		game.mouse:startDrag(0, 0, s, {kind="inventory", id=item.object:getName{no_add_name=true, force_id=true, no_count=true}}, function(drag, used)
+			local x, y = core.mouse.get()
+			game.mouse:receiveMouse("drag-end", x, y, true, nil, {drag=drag})
+		end)
 	end
 end

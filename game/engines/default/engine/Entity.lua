@@ -374,6 +374,7 @@ function _M:getEntityFinalSurface(tiles, w, h)
 	if _M.__mo_final_repo[self] and _M.__mo_final_repo[self][id] then return _M.__mo_final_repo[self][id].surface, _M.__mo_final_repo[self][id].tex end
 
 	local Map = require "engine.Map"
+	tiles = tiles or Map.tiles
 
 	local mos = {}
 	local list = {}

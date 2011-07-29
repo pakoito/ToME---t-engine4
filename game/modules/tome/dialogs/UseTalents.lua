@@ -52,7 +52,7 @@ Right click or press '*' to configure.
 			else return "" end
 		end},
 	}
-	self.c_list = TreeList.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 10, all_clicks=true, scrollbar=true, columns=cols, tree=self.list, fct=function(item, sel, button) self:use(item, button) end, select=function(item, sel) self:select(item) end}
+	self.c_list = TreeList.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 10, all_clicks=true, scrollbar=true, columns=cols, tree=self.list, fct=function(item, sel, button) self:use(item, button) end, select=function(item, sel) self:select(item) end, on_drag=function(item, sel) self:onDrag(item) end}
 	self.c_list.cur_col = 2
 
 	self:loadUI{
@@ -126,6 +126,17 @@ function _M:defineHotkey(id)
 	self:simplePopup("Hotkey "..id.." assigned", self.actor:getTalentFromId(item.talent).name:capitalize().." assigned to hotkey "..id)
 	self.c_list:drawTree()
 	self.actor.changed = true
+end
+
+function _M:onDrag(item)
+	if item and item.talent then
+		local t = self.actor:getTalentFromId(item.talent)
+		local s = t.display_entity:getEntityFinalSurface(nil, 64, 64)
+		game.mouse:startDrag(0, 0, s, {kind="talent", id=t.id}, function(drag, used)
+			local x, y = core.mouse.get()
+			game.mouse:receiveMouse("drag-end", x, y, true, nil, {drag=drag})
+		end)
+	end
 end
 
 function _M:select(item)

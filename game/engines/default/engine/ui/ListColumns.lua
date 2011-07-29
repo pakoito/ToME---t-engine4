@@ -36,6 +36,7 @@ function _M:init(t)
 	self.scrollbar = t.scrollbar
 	self.fct = t.fct
 	self.select = t.select
+	self.on_drag = t.on_drag
 	self.all_clicks = t.all_clicks
 	self.hide_columns = t.hide_columns
 
@@ -184,6 +185,7 @@ function _M:generate()
 		self.sel = util.bound(self.scroll + math.floor(by / self.fh), 1, self.max)
 		self:onSelect()
 		if (self.all_clicks or button == "left") and event == "button" then self:onUse(button, event) end
+		if event == "motion" and button == "left" and self.on_drag then self.on_drag(self.list[self.sel], self.sel) end
 	end)
 	self.key:addBinds{
 		ACCEPT = function() self:onUse("left", "key") end,

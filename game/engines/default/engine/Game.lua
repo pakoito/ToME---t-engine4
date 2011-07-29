@@ -48,15 +48,18 @@ function _M:init(keyhandler)
 
 	self.__threads = {}
 
-	-- Default mouse
+	self:defaultMouseCursor()
+end
+
+--- Default mouse cursor
+function _M:defaultMouseCursor()
 	self:setMouseCursor("/data/gfx/ui/mouse.png", "/data/gfx/ui/mouse-down.png", -4, -4)
 end
 
-function _M:setMouseCursor(up, down, offsetx, offsety)
-	local mouse = core.display.loadImage(up)
-	local mouse_down = core.display.loadImage(down)
+function _M:setMouseCursor(mouse, mouse_down, offsetx, offsety)
+	if type(mouse) == "string" then mouse = core.display.loadImage(mouse) end
+	if type(mouse_down) == "string" then mouse_down = core.display.loadImage(mouse_down) end
 	if mouse then
---		self.__cursor = { up=mouse:glTexture(), down=(mouse_down or mouse):glTexture(), ox=offsetx, oy=offsety }
 		self.__cursor = { up=mouse, down=(mouse_down or mouse), ox=offsetx, oy=offsety }
 		if config.settings.mouse_cursor then
 			core.display.setMouseCursor(self.__cursor.ox, self.__cursor.oy, self.__cursor.up, self.__cursor.down)

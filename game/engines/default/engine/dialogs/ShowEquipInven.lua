@@ -44,7 +44,7 @@ function _M:init(title, actor, filter, action, on_select)
 		{name="Inventory", width=72, display_prop="name", sort="name"},
 		{name="Category", width=20, display_prop="cat", sort="cat"},
 		{name="Enc.", width=8, display_prop="encumberance", sort="encumberance"},
-	}, list={}, fct=function(item, sel, button, event) self:use(item, button, event) end, select=function(item, sel) self:select(item) end}
+	}, list={}, fct=function(item, sel, button, event) self:use(item, button, event) end, select=function(item, sel) self:select(item) end, on_drag=function(item) if self.on_drag then self.on_drag(item) end end}
 
 	self.c_equip = ListColumns.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.max_h*self.font_h - 10, scrollbar=true, columns={
 		{name="", width={20,"fixed"}, display_prop="char"},
@@ -52,7 +52,7 @@ function _M:init(title, actor, filter, action, on_select)
 		{name="Equipment", width=72, display_prop="name"},
 		{name="Category", width=20, display_prop="cat"},
 		{name="Enc.", width=8, display_prop="encumberance"},
-	}, list={}, fct=function(item, sel, button, event) self:use(item, button, event) end, select=function(item, sel) self:select(item) end}
+	}, list={}, fct=function(item, sel, button, event) self:use(item, button, event) end, select=function(item, sel) self:select(item) end, on_drag=function(item) if self.on_drag then self.on_drag(item) end end}
 
 	self:generateList()
 

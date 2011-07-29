@@ -33,6 +33,7 @@ function _M:init(t)
 	assert(self.h or self.nb_items, "no list height/nb_items")
 	self.fct = t.fct
 	self.on_select = t.select
+	self.on_drag = t.on_drag
 	self.display_prop = t.display_prop or "name"
 	self.scrollbar = t.scrollbar
 	self.all_clicks = t.all_clicks
@@ -84,6 +85,7 @@ function _M:generate()
 		if self.sel and self.list[self.sel] then self.list[self.sel].focus_decay = self.focus_decay_max end
 		self.sel = util.bound(self.scroll + math.floor(by / self.fh), 1, self.max)
 		if (self.all_clicks or button == "left") and event == "button" then self:onUse(button) end
+		if event == "motion" and button == "left" and self.on_drag then self.on_drag(self.list[self.sel], self.sel) end
 		self:onSelect()
 	end)
 	self.key:addBinds{
