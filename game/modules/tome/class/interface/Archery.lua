@@ -180,6 +180,7 @@ local function archery_projectile(tx, ty, tg, self)
 	-- Regen on being hit
 	if hitted and not target.dead and target:attr("stamina_regen_on_hit") then target:incStamina(target.stamina_regen_on_hit) end
 	if hitted and not target.dead and target:attr("mana_regen_on_hit") then target:incMana(target.mana_regen_on_hit) end
+	if hitted and not target.dead and target:attr("equilibrium_regen_on_hit") then target:incEquilibrium(-target.equilibrium_regen_on_hit) end
 
 	-- Ablative armor
 	if hitted and not target.dead and target:attr("carbon_spikes") then
