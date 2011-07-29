@@ -44,6 +44,11 @@ return {
 		},
 		actor = {
 			class = "mod.class.generator.actor.RandomStairGuard",
+			guard_test = function(level)
+				local allow = {[5]=true, [8]=true, [11]=true, [14]=true, [16]=true, [18]=true, [20]=true, [22]=true, [24]=true, [26]=true, [28]=true }
+				if level.level >= 30 then return true end
+				return allow[level.level]
+			end,
 			guard = {
 				{random_boss={rank = 3.5, loot_quantity = 3,}},
 			},

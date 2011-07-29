@@ -33,7 +33,7 @@ function _M:generate()
 	-- Add a guard on the stairs, except on the last level
 	local data = self.level.data.generator.actor
 	local glevel = self.zone.max_level
-	if self.level.level < glevel and self.level.default_down and data.guard then
+	if self.level.level < glevel and self.level.default_down and data.guard and (not data.guard_test or data.guard_test(self.level)) then
 		local m = self.zone:makeEntity(self.level, "actor", rng.table(data.guard), nil, true)
 		if m then
 			local x, y = util.findFreeGrid(self.level.default_down.x, self.level.default_down.y, 5, true, {[Map.ACTOR]=true})
