@@ -377,7 +377,7 @@ newTalent{
 			resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/immovable_plants_rimebark.png", display_h=2, display_y=-1}}},
 			desc = [[This huge treant like being is embedded with the fury of winter itself.]],
 			autolevel = "none",
-			ai = "summoned", ai_real = "tactical", ai_state = { talent_in=1, ally_compassion=10},
+			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=1, ally_compassion=10},
 			ai_tactic = resolvers.tactic"ranged",
 			stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
 			inc_stats = { wil=15 + self:getWil() * self:getTalentLevel(t) / 5, cun=10 + self:getTalentLevel(t) * 2, con=10+self:getTalentLevelRaw(self.T_RESILIENCE) * 2, },

@@ -817,7 +817,7 @@ newEntity{ base = "BASE_GEM", define_as = "CRYSTAL_FOCUS",
 			who.changed = true
 
 			game.logPlayer(who, "You fix the crystal on the %s and create the %s.", oldname, o:getName{do_color=true})
-			return true
+--			return true
 		end)
 	end },
 }
