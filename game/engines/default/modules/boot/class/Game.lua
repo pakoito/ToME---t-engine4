@@ -43,6 +43,9 @@ local NPC = require "mod.class.NPC"
 
 module(..., package.seeall, class.inherit(engine.GameEnergyBased, engine.interface.GameMusic, engine.interface.GameSound))
 
+-- Tell the engine that we have a fullscreen shader that supports gamma correction
+support_shader_gamma = true
+
 function _M:init()
 	engine.interface.GameMusic.init(self)
 	engine.interface.GameSound.init(self)
@@ -136,6 +139,7 @@ function _M:newGame()
 	self.player = Player.new{name=self.player_name, game_ender=true}
 	Map:setViewerActor(self.player)
 	self:setupDisplayMode()
+	self:setGamma(config.settings.gamma_correction / 100)
 
 	self.player:resolve()
 	self.player:resolve(nil, true)
@@ -177,6 +181,9 @@ function _M:setupDisplayMode()
 			self.fbo_shader:setUniform("colorize", {1,1,1,0.9})
 		end
 	end
+
+	self.full_fbo = core.display.newFBO(self.w, self.h)
+	if self.full_fbo then self.full_fbo_shader = Shader.new("full_fbo") if not self.full_fbo_shader.shad then self.full_fbo = nil self.full_fbo_shader = nil end end
 end
 
 function _M:changeLevel(lev, zone)
@@ -248,12 +255,15 @@ function _M:display(nb_keyframes)
 	-- If switching resolution, blank everything but the dialog
 	if self.change_res_dialog then engine.GameEnergyBased.display(self, nb_keyframes) return end
 
+	if self.full_fbo then self.full_fbo:use(true) end
+
 	-- If background anim is stopped, things are greatly simplified
 	if self.stopped then
 		if self.background then self.background:toScreenFull(0, 0, self.w, self.h, self.background_w, self.background_h) end
 		self.tooltip:display()
 		self.tooltip:toScreen(5, 5)
 		engine.GameEnergyBased.display(self, nb_keyframes)
+		if self.full_fbo then self.full_fbo:use(false) self.full_fbo:toScreen(0, 0, self.w, self.h, self.full_fbo_shader.shad) end
 		return
 	end
 
@@ -276,7 +286,7 @@ function _M:display(nb_keyframes)
 
 	-- Display using Framebuffer, so that we can use shaders and all
 	if self.fbo then
-		self.fbo:use(false)
+		self.fbo:use(false, self.full_fbo)
 		_2DNoise:bind(1, false)
 		self.fbo:toScreen(
 			self.level.map.display_x, self.level.map.display_y,
@@ -294,6 +304,8 @@ function _M:display(nb_keyframes)
 	self.flyers = nil
 	engine.GameEnergyBased.display(self, nb_keyframes)
 	self.flyers = old
+
+	if self.full_fbo then self.full_fbo:use(false) self.full_fbo:toScreen(0, 0, self.w, self.h, self.full_fbo_shader.shad) end
 end
 
 --- Ask if we really want to close, if so, save the game first
