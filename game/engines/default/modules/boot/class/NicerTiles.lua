@@ -65,7 +65,7 @@ end
 
 function _M:handle(level, i, j)
 	local g = level.map(i, j, Map.TERRAIN)
-	if g and Map.tiles.nicer_tiles then
+	if g then
 		if g.nice_tiler then self["niceTile"..g.nice_tiler.method:capitalize()](self, level, i, j, g, g.nice_tiler) end
 		if g.nice_editer then self["editTile"..g.nice_editer.method:capitalize()](self, level, i, j, g, g.nice_editer) end
 		if g.nice_editer2 then self["editTile"..g.nice_editer2.method:capitalize()](self, level, i, j, g, g.nice_editer2) end
@@ -139,8 +139,6 @@ function _M:replaceAll(level)
 end
 
 function _M:postProcessLevelTiles(level)
-	if not Map.tiles.nicer_tiles then return end
-
 	self.edit_entity_store = {}
 
 	for i = 0, level.map.w - 1 do for j = 0, level.map.h - 1 do
@@ -153,8 +151,6 @@ function _M:postProcessLevelTiles(level)
 end
 
 function _M:updateAround(level, x, y)
-	if not Map.tiles.nicer_tiles then return end
-
 	self.edit_entity_store = nil
 
 	for i = x-1, x+1 do for j = y-1, y+1 do

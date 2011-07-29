@@ -30,10 +30,10 @@ module(..., package.seeall, class.inherit(
 ))
 
 function _M:init(t, no_default)
-	t.display=t.display or '@'
-	t.color_r=t.color_r or 230
-	t.color_g=t.color_g or 230
-	t.color_b=t.color_b or 230
+	t.display=''
+	t.color_r=230
+	t.color_g=230
+	t.color_b=230
 
 	t.player = true
 	t.type = t.type or "humanoid"
@@ -53,6 +53,18 @@ function _M:init(t, no_default)
 	self:learnTalent(self.T_LIGHTNING, true, 2)
 	self:learnTalent(self.T_SUNSHIELD, true, 2)
 	self:learnTalent(self.T_FLAMESHOCK, true, 2)
+
+	local tile = rng.range(1, 4)
+	if tile == 1 then
+		self.image = "player/humanoid_dwarf_dwarven_summoner.png"
+	elseif tile == 2 then
+		self.image = "player/humanoid_human_riala_shalarak.png"
+	elseif tile == 3 then
+		self.image = "player/humanoid_elf_high_chronomancer_zemekkys.png"
+	elseif tile == 4 then
+		self.image = "player/humanoid_halfling_protector_myssil.png"
+	end
+	self:removeAllMOs()
 end
 
 function _M:move(x, y, force)

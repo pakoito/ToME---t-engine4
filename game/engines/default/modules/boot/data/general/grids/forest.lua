@@ -25,7 +25,7 @@ newEntity{
 	name = "grass", image = "terrain/grass.png",
 	display = '.', color=colors.LIGHT_GREEN, back_color={r=44,g=95,b=43},
 	grow = "TREE",
-	nice_tiler = { method="replace", base={"GRASS_PATCH", 70, 1, 15}},
+	nice_tiler = { method="replace", base={"GRASS_PATCH", 70, 1, 12}},
 	nice_editer = grass_editer,
 }
 for i = 1, 12 do newEntity{ base = "GRASS", define_as = "GRASS_PATCH"..i, image = "terrain/grass"..(i<7 and "" or "2")..".png" } end

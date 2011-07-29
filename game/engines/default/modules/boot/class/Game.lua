@@ -167,12 +167,12 @@ function _M:onResolutionChange()
 end
 
 function _M:setupDisplayMode()
-	Map:setViewPort(0, 0, self.w, self.h, 32, 32, nil, 22, true, true)
+	Map:setViewPort(0, 0, self.w, self.h, 48, 48, nil, 22, true, true)
 	Map:resetTiles()
 	Map.tiles.use_images = true
 
 	-- Create the framebuffer
---	self.fbo = core.display.newFBO(game.w, game.h)
+	self.fbo = core.display.newFBO(game.w, game.h)
 	if self.fbo then
 		self.fbo_shader = Shader.new("main_fbo")
 		if not self.fbo_shader.shad then
