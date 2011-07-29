@@ -445,6 +445,9 @@ function _M:setupDisplayMode(reboot, mode)
 
 		self.full_fbo = core.display.newFBO(self.w, self.h)
 		if self.full_fbo then self.full_fbo_shader = Shader.new("full_fbo") if not self.full_fbo_shader.shad then self.full_fbo = nil self.full_fbo_shader = nil end end
+
+		self.mm_fbo = core.display.newFBO(200, 200)
+		if self.mm_fbo then self.mm_fbo_shader = Shader.new("mm_fbo") if not self.mm_fbo_shader.shad then self.mm_fbo = nil self.mm_fbo_shader = nil end end
 	end
 end
 
@@ -948,9 +951,19 @@ function _M:display(nb_keyframes)
 		map:displayEmotes(nb_keyframe or 1)
 
 		-- Minimap display
-		self.minimap_bg:toScreen(0, 0, 200, 200)
-		self.minimap_scroll_x, self.minimap_scroll_y = util.bound(self.player.x - 25, 0, map.w - 50), util.bound(self.player.y - 25, 0, map.h - 50)
-		map:minimapDisplay(0, 0, self.minimap_scroll_x, self.minimap_scroll_y, 50, 50, 1)
+		if self.mm_fbo then
+			self.mm_fbo:use(true)
+			self.minimap_scroll_x, self.minimap_scroll_y = util.bound(self.player.x - 25, 0, map.w - 50), util.bound(self.player.y - 25, 0, map.h - 50)
+			map:minimapDisplay(0, 0, self.minimap_scroll_x, self.minimap_scroll_y, 50, 50, 1)
+			self.mm_fbo:use(false, self.full_fbo)
+
+			self.minimap_bg:toScreen(0, 0, 200, 200)
+			self.mm_fbo:toScreen(0, 0, 200, 200, self.mm_fbo_shader.shad)
+		else
+			self.minimap_bg:toScreen(0, 0, 200, 200)
+			self.minimap_scroll_x, self.minimap_scroll_y = util.bound(self.player.x - 25, 0, map.w - 50), util.bound(self.player.y - 25, 0, map.h - 50)
+			map:minimapDisplay(0, 0, self.minimap_scroll_x, self.minimap_scroll_y, 50, 50, 1)
+		end
 
 		-- Mouse gestures
 		self.gestures:update()
