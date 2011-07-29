@@ -37,14 +37,14 @@ starty = 7
 
 return {
 [[#XXXXXXXXX#####XXXX#]],
-[[XXm~..~.~XXXX#XX$$XX]],
-[[X~~...j..~~jXXXmmmmX]],
-[[X~...mXX.j...j..jjXX]],
-[[Xm..~XXXXX~~.~.jXXX#]],
+[[XXm~~~~~~XXXX#XX$$XX]],
+[[X~~~~.j..~~jXXXmmmmX]],
+[[X~.~~mXX.j~~~j..jjXX]],
+[[Xm.~~XXXXX~~~~.jXXX#]],
 [[XX.mmXXXXXXXXXXXX###]],
 [[XmmmXXXXXXXXXXXXXXXX]],
-[[X~..mXXXX~.mmXXm...!]],
-[[XXm...m.........~mXX]],
-[[#XXXX~~.mXXXm~m~XXX#]],
+[[X~~~mXXXX~.mmXXm...!]],
+[[XXm..~m~....~~~~~mXX]],
+[[#XXXX~~~mXXXm~m~XXX#]],
 [[####XXXXXX#XXXXXX###]],
 }
