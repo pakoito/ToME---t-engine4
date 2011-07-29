@@ -135,6 +135,7 @@ function _M:onDrag(item)
 		game.mouse:startDrag(0, 0, s, {kind="talent", id=t.id}, function(drag, used)
 			local x, y = core.mouse.get()
 			game.mouse:receiveMouse("drag-end", x, y, true, nil, {drag=drag})
+			if drag.used then self.c_list:drawTree() end
 		end)
 	end
 end

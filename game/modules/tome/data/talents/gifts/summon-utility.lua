@@ -95,6 +95,7 @@ newTalent{
 	equilibrium = 2,
 	cooldown = 10,
 	range = 10,
+	is_summon = true,
 	requires_target = true,
 	tactical = { DEFEND = 2, PROTECT = 2 },
 	on_pre_use = function(self, t, silent)
@@ -172,6 +173,7 @@ newTalent{
 	equilibrium = 5,
 	cooldown = 10,
 	range = 10,
+	is_summon = true,
 	tactical = { ATTACK = 1, DISABLE = 2 },
 	on_pre_use = function(self, t, silent)
 		if not self:canBe("summon") and not silent then game.logPlayer(self, "You can not summon, you are suppressed!") return end
@@ -241,33 +243,31 @@ newTalent{
 }
 
 newTalent{
-	name = "Suppress Summoning",
+	name = "Frantic Summoning",
 	type = {"wild-gift/summon-utility", 3},
 	require = gifts_req3,
+	mode = "sustained",
 	points = 5,
-	equilibrium = 15,
-	cooldown = 18,
-	range = function(self, t) return 4 + self:getTalentLevel(t) end,
+	sustain_equilibrium = 100,
+	cooldown = 20,
+	getReduc = function(self, t) return self:getTalentLevelRaw(t) * 15 end,
 	requires_target = true,
-	tactical = { DISABLE = 0.2 },
-	action = function(self, t)
-		local dur = math.floor(5 + self:getTalentLevel(t))
-		local tg = {type="ball", range=0, radius=self:getTalentRange(t), selffire=true, talent=t}
-		self:project(tg, self.x, self.y, function(px, py)
-			local target = game.level.map(px, py, Map.ACTOR)
-			if not target then return end
-			if not target:checkHit(self:combatMindpower(), target:combatMentalResist(), 10) then game.logSeen(target, "%s resists the suppression!", target.name:capitalize()) return end
-			target:setEffect(target.EFF_NO_SUMMON, dur, {})
-			game.level.map:particleEmitter(px, py, 1, "summon")
-		end)
-
-		game:playSoundNear(self, "talents/spell_generic")
+	tactical = { BUFF = 0.2 },
+	activate = function(self, t)
+		return {
+			tmp = self:addTemporaryValue("fast_summons", t.getReduc(self, t)),
+		}
+	end,
+	deactivate = function(self, t, p)
+		self:removeTemporaryValue("fast_summons", p.tmp)
 		return true
 	end,
 	info = function(self, t)
-		return ([[Disrupts the local area, preventing any summons, including yours, for %d turns.
-		This talent will only prevent new summons, it does not remove existing ones.]]):
-		format(math.floor(5 + self:getTalentLevel(t)))
+		local reduc = t.getReduc(self, t)
+		return ([[You focus yourself on nature, allowing you to summon creatures much faster (%d%% of a normal summon time).
+		In this state your minimun equilibrium is much higher increasing the chance to fail using wild gifts.
+		If you fail to use a wild gift Frantic Summoning will be cancelled.]]):
+		format(100 - reduc)
 	end,
 }
 

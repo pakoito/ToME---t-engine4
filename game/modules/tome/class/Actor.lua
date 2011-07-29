@@ -1491,7 +1491,7 @@ function _M:die(src)
 		local p = self:hasEffect(self.EFF_CORROSIVE_WORM)
 		p.src:project({type="ball", radius=4, x=self.x, y=self.y}, self.x, self.y, DamageType.ACID, p.explosion, {type="acid"})
 	end
-	
+
 	if self:hasEffect(self.EFF_TEMPORAL_DESTABILIZATION) then
 		local p = self:hasEffect(self.EFF_TEMPORAL_DESTABILIZATION)
 		if self:hasEffect(self.EFF_CONTINUUM_DESTABILIZATION) then
@@ -2120,6 +2120,7 @@ function _M:preUseTalent(ab, silent, fake)
 			if not silent then game.logPlayer(self, "You fail to use %s due to your equilibrium!", ab.name) end
 			self:incEquilibrium((ab.equilibrium or ab.sustain_equilibrium) / 10)
 			self:useEnergy()
+			self:breakFranticSummoning()
 			return false
 		end
 	end
@@ -2218,6 +2219,8 @@ function _M:postUseTalent(ab, ret)
 	if not ab.no_energy then
 		if ab.is_spell then
 			self:useEnergy(game.energy_to_act * self:combatSpellSpeed())
+		elseif ab.is_summon then
+			self:useEnergy(game.energy_to_act * self:combatSummonSpeed())
 		elseif ab.type[1]:find("^technique/") then
 			self:useEnergy(game.energy_to_act * self:combatSpeed())
 		else
@@ -2329,14 +2332,14 @@ function _M:postUseTalent(ab, ret)
 	if ab.id ~= self.T_LIGHTNING_SPEED then self:breakLightningSpeed() end
 	if ab.id ~= self.T_GATHER_THE_THREADS then self:breakGatherTheThreads() end
 	self:breakStepUp()
-	
-	--and ab.type[1] == "chronomancy" and ab.mode == "activated" and self:getTalentLevel(ab.id) >= self:getTalentLevel(self.T_REDUX) 
-	
+
+	--and ab.type[1] == "chronomancy" and ab.mode == "activated" and self:getTalentLevel(ab.id) >= self:getTalentLevel(self.T_REDUX)
+
 	if ab.id ~= self.T_REDUX and self:hasEffect(self.EFF_REDUX) and ab.type[1]:find("^chronomancy/") and ab.mode == "activated" and self:getTalentLevel(self.T_REDUX) >= self:getTalentLevel(ab.id) then
 		self:removeEffect(self.EFF_REDUX)
 		self:forceUseTalent(ab.id, {ignore_energy=true, ignore_cd = true})
 	end
-	
+
 	return true
 end
 
@@ -2363,6 +2366,13 @@ function _M:breakStealth()
 
 		self:forceUseTalent(self.T_STEALTH, {ignore_energy=true})
 		self.changed = true
+	end
+end
+
+--- Breaks frantic summoning if active
+function _M:breakFranticSummoning()
+	if self:isTalentActive(self.T_FRANTIC_SUMMONING) then
+		self:forceUseTalent(T_FRANTIC_SUMMONING, {ignore_energy=true})
 	end
 end
 

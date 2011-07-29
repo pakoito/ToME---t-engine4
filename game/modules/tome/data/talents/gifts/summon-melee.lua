@@ -28,6 +28,7 @@ newTalent{
 	cooldown = 15,
 	range = 10,
 	requires_target = true,
+	is_summon = true,
 	tactical = { ATTACK = 2 },
 	on_pre_use = function(self, t, silent)
 		if not self:canBe("summon") and not silent then game.logPlayer(self, "You can not summon, you are suppressed!") return end
@@ -101,6 +102,7 @@ newTalent{
 	cooldown = 10,
 	range = 10,
 	requires_target = true,
+	is_summon = true,
 	tactical = { ATTACK = 1, EQUILIBRIUM = 1, },
 	on_pre_use = function(self, t, silent)
 		if not self:canBe("summon") and not silent then game.logPlayer(self, "You can not summon, you are suppressed!") return end
@@ -184,6 +186,7 @@ newTalent{
 	equilibrium = 10,
 	cooldown = 15,
 	range = 10,
+	is_summon = true,
 	requires_target = true,
 	tactical = { ATTACK = 2, DISABLE = 2 },
 	on_pre_use = function(self, t, silent)
@@ -263,6 +266,7 @@ newTalent{
 	equilibrium = 15,
 	cooldown = 20,
 	range = 10,
+	is_summon = true,
 	tactical = { ATTACK = 3, DISABLE = 1 },
 	on_pre_use = function(self, t, silent)
 		if not self:canBe("summon") and not silent then game.logPlayer(self, "You can not summon, you are suppressed!") return end

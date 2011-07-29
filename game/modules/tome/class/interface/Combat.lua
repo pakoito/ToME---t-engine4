@@ -704,6 +704,11 @@ function _M:combatSpellSpeed()
 	return 1 / self.combat_spellspeed
 end
 
+--- Gets summon speed
+function _M:combatSummonSpeed()
+	return math.max(1 - ((self:attr("fast_summons") or 0) / 100), 0.1)
+end
+
 --- Computes physical crit for a damage
 function _M:physicalCrit(dam, weapon, target)
 	if self:isTalentActive(self.T_STEALTH) and self:knowTalent(self.T_SHADOWSTRIKE) then

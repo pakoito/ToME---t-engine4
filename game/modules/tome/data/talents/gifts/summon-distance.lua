@@ -137,6 +137,48 @@ newTalent{
 }
 
 newTalent{
+	name = "Winter's Fury",
+	type = {"wild-gift/other",1},
+	require = gifts_req4,
+	points = 5,
+	equilibrium = 10,
+	cooldown = 4,
+	tactical = { ATTACKAREA = 2 },
+	range = 0,
+	radius = 3,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false}
+	end,
+	getDamage = function(self, t) return self:combatTalentStatDamage(t, "wil", 30, 120) end,
+	getDuration = function(self, t) return 4 end,
+	action = function(self, t)
+		-- Add a lasting map effect
+		game.level.map:addEffect(self,
+			self.x, self.y, t.getDuration(self, t),
+			DamageType.ICE, t.getDamage(self, t),
+			3,
+			5, nil,
+			{type="icestorm", only_one=true},
+			function(e)
+				e.x = e.src.x
+				e.y = e.src.y
+				return true
+			end,
+			false
+		)
+		game:playSoundNear(self, "talents/ice")
+		return true
+	end,
+	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		local duration = t.getDuration(self, t)
+		return ([[A furious ice storm rages around the user doing %0.2f cold damage in a radius of 3 each turn for %d turns.
+		It has 25%% chance to freeze damaged targets.
+		The damage and duration will increase with the Willpower stat]]):format(damDesc(self, DamageType.COLD, damage), duration)
+	end,
+}
+
+newTalent{
 	name = "Ritch Flamespitter",
 	type = {"wild-gift/summon-distance", 1},
 	require = gifts_req1,
@@ -147,6 +189,7 @@ newTalent{
 	cooldown = 10,
 	range = 10,
 	requires_target = true,
+	is_summon = true,
 	tactical = { ATTACK = 2 },
 	on_pre_use = function(self, t, silent)
 		if not self:canBe("summon") and not silent then game.logPlayer(self, "You can not summon, you are suppressed!") return end
@@ -225,6 +268,7 @@ newTalent{
 	cooldown = 10,
 	range = 10,
 	requires_target = true,
+	is_summon = true,
 	tactical = { ATTACK = 2 },
 	on_pre_use = function(self, t, silent)
 		if not self:canBe("summon") and not silent then game.logPlayer(self, "You can not summon, you are suppressed!") return end
@@ -293,16 +337,17 @@ newTalent{
 }
 
 newTalent{
-	name = "Warper",
+	name = "Rimebark",
 	type = {"wild-gift/summon-distance", 3},
 	require = gifts_req3,
 	points = 5,
 	random_ego = "attack",
-	message = "@Source@ summons a Warper!",
+	message = "@Source@ summons a Rimebark!",
 	equilibrium = 8,
 	cooldown = 10,
 	range = 10,
 	requires_target = true,
+	is_summon = true,
 	tactical = { ATTACK = 1, DISABLE = 2 },
 	on_pre_use = function(self, t, silent)
 		if not self:canBe("summon") and not silent then game.logPlayer(self, "You can not summon, you are suppressed!") return end
@@ -326,28 +371,28 @@ newTalent{
 
 		local NPC = require "mod.class.NPC"
 		local m = NPC.new{
-			type = "demon", subtype = "lesser",
-			display = "u", color=colors.BLUE,
-			name = "warper", faction = self.faction, image = "npc/summoner_warper.png",
-			desc = [[It looks like a hole in reality. The Warper disrupts the normal flow of space and time.]],
+			type = "immovable", subtype = "plants",
+			display = "#", color=colors.WHITE,
+			name = "rimebark", faction = self.faction, image = "npc/immovable_plants_rimebark.png",
+			resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/immovable_plants_rimebark.png", display_h=2, display_y=-1}}},
+			desc = [[This huge treant like being is embedded with the fury of winter itself.]],
 			autolevel = "none",
 			ai = "summoned", ai_real = "tactical", ai_state = { talent_in=1, ally_compassion=10},
 			ai_tactic = resolvers.tactic"ranged",
 			stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
-			inc_stats = { mag=15 + self:getWil() * self:getTalentLevel(t) / 5, wil=10 + self:getTalentLevel(t) * 2, con=10+self:getTalentLevelRaw(self.T_RESILIENCE) * 2, },
+			inc_stats = { wil=15 + self:getWil() * self:getTalentLevel(t) / 5, cun=10 + self:getTalentLevel(t) * 2, con=10+self:getTalentLevelRaw(self.T_RESILIENCE) * 2, },
 			level_range = {self.level, self.level}, exp_worth = 0,
+			never_move = 1,
 
-			max_life = resolvers.rngavg(5,10),
-			life_rating = 8,
+			max_life = resolvers.rngavg(120,150),
+			life_rating = 16,
 			infravision = 10,
 
-			combat_armor = 0, combat_def = 0,
-			combat = { dam=1, atk=1, },
+			combat_armor = 15, combat_def = 0,
+			combat = { dam=resolvers.levelup(resolvers.rngavg(15,25), 1, 1.3), atk=resolvers.levelup(resolvers.rngavg(15,25), 1, 1.3), dammod={cun=1.1} },
 
 			resolvers.talents{
-				[self.T_TIME_PRISON]=self:getTalentLevelRaw(t),
-				[self.T_MANATHRUST]=self:getTalentLevelRaw(t),
-				[self.T_PHASE_DOOR]=self:getTalentLevelRaw(t),
+				[self.T_WINTER_S_FURY]=self:getTalentLevelRaw(t),
 			},
 
 			summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
@@ -361,10 +406,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summon a Warper for %d turns to harass your foes. Warpers are really weak in melee and die easily, but they can blink around, throwing manathrusts and time prisons at your foes.
-		It will get %d magic, %d willpower and %d constitution.
+		return ([[Summon a Rimebark for %d turns to harass your foes. Rimebarks can not move but they have a permanent ice storm around them, damaging and freezing anything coming close in a radius of 3.
+		It will get %d willpower, %d cunning and %d constitution.
 		Your summons inherit some of your stats: increased damage%%, stun/pin/confusion/blindness resistance, armour penetration.
-		Magic stat will increase with your Willpower stat.]])
+		Willpower stat will increase with your Willpower stat.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 		15 + self:getWil() * self:getTalentLevel(t) / 5,
 		10 + self:getTalentLevel(t) * 2,
@@ -383,6 +428,7 @@ newTalent{
 	cooldown = 10,
 	range = 10,
 	requires_target = true,
+	is_summon = true,
 	tactical = { ATTACK = 2, DISABLE = 2 },
 	on_pre_use = function(self, t, silent)
 		if not self:canBe("summon") and not silent then game.logPlayer(self, "You can not summon, you are suppressed!") return end

@@ -78,7 +78,7 @@ newEntity{ base = "BASE_NPC_ELVALA_TOWN",
 	ai_state = { talent_in=1, },
 	autolevel = "wildcaster",
 	resolvers.talents{
-		[Talents.T_WARPER]={base=1, every=5, max=10},
+		[Talents.T_RIMEBARK]={base=1, every=5, max=10},
 		[Talents.T_WAR_HOUND]={base=1, every=5, max=10},
 	},
 	resolvers.inscriptions(3, "infusion"),
