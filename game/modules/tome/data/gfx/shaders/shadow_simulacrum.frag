@@ -61,7 +61,6 @@ void main(void)
 {
 	vec2 uv = gl_TexCoord[0].xy * p2;
 	uv -= floor(uv);
-	gl_FragColor = texture2D(tex, gl_TexCoord[0].xy).a;
-	float grey = (gl_FragColor.r*0.3+gl_FragColor.g*0.59+gl_FragColor.b*0.11) * 0.7;
-	gl_FragColor.rgb = fx(uv) * grey;
+	gl_FragColor = texture2D(tex, gl_TexCoord[0].xy);
+	gl_FragColor.rgb = fx(uv) * 0.7 + (gl_FragColor.rgb * 0.3);
 }
