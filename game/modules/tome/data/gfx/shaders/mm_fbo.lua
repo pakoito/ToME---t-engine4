@@ -18,11 +18,9 @@
 -- darkgod@te4.org
 
 return {
-	frag = "full_fbo",
+	frag = "mm_fbo",
 	vert = nil,
 	args = {
-		tex = { texture = 0 },
-		noisevol = { texture = 1 },
 	},
 	clone = false,
 }

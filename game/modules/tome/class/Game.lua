@@ -951,19 +951,18 @@ function _M:display(nb_keyframes)
 		map:displayEmotes(nb_keyframe or 1)
 
 		-- Minimap display
-		if self.mm_fbo then
-			self.mm_fbo:use(true)
+--		if self.mm_fbo then
+--			self.mm_fbo:use(true)
+--			self.minimap_scroll_x, self.minimap_scroll_y = util.bound(self.player.x - 25, 0, map.w - 50), util.bound(self.player.y - 25, 0, map.h - 50)
+--			map:minimapDisplay(0, 0, self.minimap_scroll_x, self.minimap_scroll_y, 50, 50, 1)
+--			self.mm_fbo:use(false, self.full_fbo)
+--			self.minimap_bg:toScreen(0, 0, 200, 200)
+--			self.mm_fbo:toScreen(0, 0, 200, 200, self.mm_fbo_shader.shad)
+--		else
+			self.minimap_bg:toScreen(0, 0, 200, 200)
 			self.minimap_scroll_x, self.minimap_scroll_y = util.bound(self.player.x - 25, 0, map.w - 50), util.bound(self.player.y - 25, 0, map.h - 50)
 			map:minimapDisplay(0, 0, self.minimap_scroll_x, self.minimap_scroll_y, 50, 50, 1)
-			self.mm_fbo:use(false, self.full_fbo)
-
-			self.minimap_bg:toScreen(0, 0, 200, 200)
-			self.mm_fbo:toScreen(0, 0, 200, 200, self.mm_fbo_shader.shad)
-		else
-			self.minimap_bg:toScreen(0, 0, 200, 200)
-			self.minimap_scroll_x, self.minimap_scroll_y = util.bound(self.player.x - 25, 0, map.w - 50), util.bound(self.player.y - 25, 0, map.h - 50)
-			map:minimapDisplay(0, 0, self.minimap_scroll_x, self.minimap_scroll_y, 50, 50, 1)
-		end
+--		end
 
 		-- Mouse gestures
 		self.gestures:update()
@@ -1013,7 +1012,10 @@ function _M:display(nb_keyframes)
 		self:targetDisplayTooltip(self.w, self.h)
 	end
 
-	if self.full_fbo then self.full_fbo:use(false) self.full_fbo:toScreen(0, 0, self.w, self.h, self.full_fbo_shader.shad) end
+	if self.full_fbo then
+		self.full_fbo:use(false)
+		self.full_fbo:toScreen(0, 0, self.w, self.h, self.full_fbo_shader.shad)
+	end
 end
 
 --- Called when a dialog is registered to appear on screen
