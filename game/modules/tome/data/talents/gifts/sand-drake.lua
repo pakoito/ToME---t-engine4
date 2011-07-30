@@ -42,8 +42,9 @@ newTalent{
 			return true
 		end
 
-		if (target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 15) or target.dead) and target:canBe("instakill") then
+		if (target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 15) or target.dead) and (target:canBe("instakill") or target.life * 100 / target.max_life <= 5) then
 			if not target.dead then target:die(self) end
+			world:gainAchievement("EAT_BOSSES", self, target)
 			self:incEquilibrium(-target.level - 5)
 			self:heal(target.level * 2 + 5)
 		else

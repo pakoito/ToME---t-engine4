@@ -1515,7 +1515,6 @@ function _M:die(src)
 		world:gainAchievement("EXTERMINATOR", p, self)
 		world:gainAchievement("PEST_CONTROL", p, self)
 		world:gainAchievement("REAVER", p, self)
-		world:gainAchievement("EAT_BOSSES", p, self)
 
 		if self.unique then
 			game.player:registerUniqueKilled(self)
