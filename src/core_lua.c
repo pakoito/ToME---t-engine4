@@ -413,7 +413,7 @@ static int sdl_surface_drawstring(lua_State *L)
 	bool alpha_from_texture = lua_toboolean(L, 9);
 
 	SDL_Color color = {r,g,b};
-	SDL_Surface *txt = TTF_RenderUTF8_Solid(*f, str, color);
+	SDL_Surface *txt = TTF_RenderUTF8_Blended(*f, str, color);
 	if (txt)
 	{
 		if (alpha_from_texture) SDL_SetAlpha(txt, 0, 0);
@@ -458,13 +458,14 @@ static int sdl_surface_drawstring_newsurface(lua_State *L)
 	int b = luaL_checknumber(L, 5);
 
 	SDL_Color color = {r,g,b};
-	SDL_Surface *txt = TTF_RenderUTF8_Solid(*f, str, color);
+	SDL_Surface *txt = TTF_RenderUTF8_Blended(*f, str, color);
 	if (txt)
 	{
 		SDL_Surface **s = (SDL_Surface**)lua_newuserdata(L, sizeof(SDL_Surface*));
 		auxiliar_setclass(L, "sdl{surface}", -1);
-		*s = SDL_DisplayFormatAlpha(txt);
-		SDL_FreeSurface(txt);
+//		*s = SDL_DisplayFormatAlpha(txt);
+//		SDL_FreeSurface(txt);
+		*s = txt;
 		return 1;
 	}
 
@@ -488,9 +489,9 @@ static int sdl_surface_drawstring_newsurface_aa(lua_State *L)
 	{
 		SDL_Surface **s = (SDL_Surface**)lua_newuserdata(L, sizeof(SDL_Surface*));
 		auxiliar_setclass(L, "sdl{surface}", -1);
-		*s = txt;
 //		*s = SDL_DisplayFormatAlpha(txt);
 //		SDL_FreeSurface(txt);
+		*s = txt;
 		return 1;
 	}
 
@@ -601,7 +602,7 @@ static int sdl_font_draw(lua_State *L)
 			char old = *next;
 			*next = '\0';
 			if (txt) SDL_FreeSurface(txt);
-			if (no_text_aa) txt = TTF_RenderUTF8_Solid(*f, start, color);
+			if (no_text_aa) txt = TTF_RenderUTF8_Blended(*f, start, color);
 			else txt = TTF_RenderUTF8_Blended(*f, start, color);
 
 			// If we must do a newline, flush the previous word and the start the new line
