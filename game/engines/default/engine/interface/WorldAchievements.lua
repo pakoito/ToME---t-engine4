@@ -141,9 +141,9 @@ end
 
 --- Show an achievement gain dialog
 function _M:showAchievement(title, a)
-	if not config.settings.cheat then
+--	if not config.settings.cheat then
 		game:registerDialog(Achievement.new("New Achievement: #LIGHT_GREEN#"..a.name, a))
-	end
+--	end
 end
 
 --- Format an achievement source

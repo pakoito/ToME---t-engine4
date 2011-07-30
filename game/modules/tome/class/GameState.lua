@@ -566,8 +566,8 @@ function _M:checkDonation(back_insert)
 	-- We then check multiple conditions to make sure the player is in a good state of mind
 
 	-- Dont ask often
-	local last = profile.generic.donations and profile.generic.donations.last_ask or 0
-	local min_interval = 30 * 24 * 60 * 60 -- 1 month
+	local last = profile.mod.donations and profile.mod.donations.last_ask or 0
+	local min_interval = 15 * 24 * 60 * 60 -- 1 month
 	if os.time() < last + min_interval then
 		print("Donation check: too soon")
 		return
@@ -613,9 +613,7 @@ function _M:checkDonation(back_insert)
 	end
 
 	-- Request money! Even a god has to eat :)
-	profile.generic.donations = profile.generic.donations or {}
-	profile.generic.donations.last_ask = os.time()
-	profile:saveGenericProfile("donations", profile.generic.donations)
+	profile:saveModuleProfile("donations", {last_ask=os.time()})
 	if back_insert then
 		game:registerDialogAt(Donation.new(), 2)
 	else
