@@ -61,7 +61,7 @@ end
 
 function _M:mouseTooltip(text, w, h, x, y, click)
 	self.mouse:registerZone(x, y, w, h, function(button, mx, my, xrel, yrel, bx, by, event)
-		game.tooltip_x, game.tooltip_y = 1, 1; game.tooltip:displayAtMap(nil, nil, game.w, game.h, text)
+		game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, text)
 		if click and event == "button" and button == "left" then
 			click()
 		end

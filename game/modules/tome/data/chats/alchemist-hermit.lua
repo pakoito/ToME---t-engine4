@@ -111,8 +111,8 @@ local function empty_handed(npc, player, n) -- n is the index of the elixir we'r
 	and q:isCompleted(e[n].full)  --... and yet the elixir is already made (poached!)
 end
 
---Make the alchemist's reaction to your turn-in vary depending on whether he lost. 
-local function alchemist_reaction_complete(npc, player, lose, other_alch, other_elixir) 
+--Make the alchemist's reaction to your turn-in vary depending on whether he lost.
+local function alchemist_reaction_complete(npc, player, lose, other_alch, other_elixir)
 	if lose == true then
 		return ([[SON OF A RITCH! YOU SHOW UP TEN MINUTES AFTER I GET THE NEWS THAT SOME JACKASS ALREADY FINISHED THE ELIXIRS AND IS GETTING ACCEPTED BY THE BROTHERHOOD. WHAT THE HELL TOOK YOU SO LONG? MIRVENIA'S MAMMARIES, I'LL TAKE THESE AND MAKE YOU YOUR REWARD, BUT ONLY BECAUSE A CURSE WILL KILL ME IF I DON'T. AND IF IT TASTES LIKE PISS, THAT'S YOUR IMAGINATION, I'M SURE.]])
 	else
@@ -166,9 +166,9 @@ newChat{ id="choice",
 	text = [[#LIGHT_GREEN#*He hands you a slip of paper with the names and properties of some elixirs on it.*#WHITE#
 THE INGREDIENTS TO THESE SUCKERS ARE SORT OF A TRADE SECRET, SO I'LL TELL YOU ABOUT ONE AND WE'LL SEE HOW THAT GOES. OH, AND I'LL MAKE ENOUGH FOR YOU TO HAVE A SWIG WHEN I'M DONE, SO GOOD FOR YOU. WHICH ONE WILL IT BE? JUST POINT AT THE DAMNED LIST. I HAVEN'T HEARD A THING YOU'VE SAID YET. I HOPE TO HELL YOU'RE NOT STANDING THERE TRYING TO SELL ME SOMETHING.]],
 	answers = {
-		{"[Indicate the "..e[1].name..".]", jump="list", 
+		{"[Indicate the "..e[1].name..".]", jump="list",
 			cond = function(npc, player) return not game.player:hasQuest("brotherhood-of-alchemists"):isCompleted(e[1].full) end,
-			action = function(npc, player) 
+			action = function(npc, player)
 				player:setQuestStatus("brotherhood-of-alchemists", engine.Quest.COMPLETED, e[1].start)
 				game.player:hasQuest("brotherhood-of-alchemists"):update_needed_ingredients(player)
 			end,
@@ -176,12 +176,12 @@ THE INGREDIENTS TO THESE SUCKERS ARE SORT OF A TRADE SECRET, SO I'LL TELL YOU AB
 				local o = art_list[e[1].id]
 				o:identify(true)
 				game.tooltip_x, game.tooltip_y = 1, 1
-				game.tooltip:displayAtMap(nil, nil, game.w, game.h, tostring(o:getDesc()))
+				game:tooltipDisplayAtMap(game.w, game.h, tostring(o:getDesc()))
 			end,
 		},
-		{"[Indicate the "..e[2].name..".]", jump="list", 
+		{"[Indicate the "..e[2].name..".]", jump="list",
 			cond = function(npc, player) return not game.player:hasQuest("brotherhood-of-alchemists"):isCompleted(e[2].full) end,
-			action = function(npc, player) 
+			action = function(npc, player)
 				player:setQuestStatus("brotherhood-of-alchemists", engine.Quest.COMPLETED, e[2].start)
 				game.player:hasQuest("brotherhood-of-alchemists"):update_needed_ingredients(player)
 			end,
@@ -189,12 +189,12 @@ THE INGREDIENTS TO THESE SUCKERS ARE SORT OF A TRADE SECRET, SO I'LL TELL YOU AB
 				local o = art_list[e[2].id]
 				o:identify(true)
 				game.tooltip_x, game.tooltip_y = 1, 1
-				game.tooltip:displayAtMap(nil, nil, game.w, game.h, tostring(o:getDesc()))
+				game:tooltipDisplayAtMap(game.w, game.h, tostring(o:getDesc()))
 			end,
 		},
-		{"[Indicate the "..e[3].name..".]", jump="list", 
+		{"[Indicate the "..e[3].name..".]", jump="list",
 			cond = function(npc, player) return not game.player:hasQuest("brotherhood-of-alchemists"):isCompleted(e[3].full) end,
-			action = function(npc, player) 
+			action = function(npc, player)
 				player:setQuestStatus("brotherhood-of-alchemists", engine.Quest.COMPLETED, e[3].start)
 				game.player:hasQuest("brotherhood-of-alchemists"):update_needed_ingredients(player)
 			end,
@@ -202,7 +202,7 @@ THE INGREDIENTS TO THESE SUCKERS ARE SORT OF A TRADE SECRET, SO I'LL TELL YOU AB
 				local o = art_list[e[3].id]
 				o:identify(true)
 				game.tooltip_x, game.tooltip_y = 1, 1
-				game.tooltip:displayAtMap(nil, nil, game.w, game.h, tostring(o:getDesc()))
+				game:tooltipDisplayAtMap(game.w, game.h, tostring(o:getDesc()))
 			end,
 		},
 		{"[leave]"},
@@ -253,7 +253,7 @@ I LIVE WAY THE HELL OUT HERE FOR A REASON, YOU PIECE OF... OH. IT'S YOU.]],
 				q:on_turnin(player, alch_picked, e_picked, false)
 			end,
 		},
-		
+
 		-- If the final elixir:
 		{"I'VE RETURNED WITH THE INGREDIENTS FOR THE "..e[1].cap_name..".", jump="totally-complete",
 			cond = function(npc, player) return turn_in_final(npc, player, 1) end,
@@ -264,7 +264,7 @@ I LIVE WAY THE HELL OUT HERE FOR A REASON, YOU PIECE OF... OH. IT'S YOU.]],
 		{"I'VE RETURNED WITH THE INGREDIENTS FOR THE "..e[3].cap_name..".", jump="totally-complete",
 			cond = function(npc, player) return turn_in_final(npc, player, 3) end,
 		},
-		
+
 		-- If the elixir got made while you were out:
 		{"I'VE RETURNED WITH THE INGREDIENTS FOR THE "..e[1].cap_name..".", jump="poached",
 			cond = function(npc, player) return turn_in_poached(npc, player, 1) end,
@@ -275,10 +275,10 @@ I LIVE WAY THE HELL OUT HERE FOR A REASON, YOU PIECE OF... OH. IT'S YOU.]],
 		{"I'VE RETURNED WITH THE INGREDIENTS FOR THE "..e[3].cap_name..".", jump="poached",
 			cond = function(npc, player) return turn_in_poached(npc, player, 3) end,
 		},
-		
+
 		--Don't let player work on multiple elixirs for the same alchemist.
 		--See comments in more_aid function above for all the gory detail
-		{"I'VE COME TO OFFER MORE AID.", jump="choice", 
+		{"I'VE COME TO OFFER MORE AID.", jump="choice",
 			cond = function(npc, player) return more_aid(npc, player) end,
 		},
 		{"[leave]"},
@@ -291,23 +291,23 @@ newChat{ id="complete",
 	answers = {
 		{"[Give him the monster bits.]", jump="complete2",
 			cond = function(npc, player) return give_bits(npc, player, 1) end,
-			action = function(npc, player) 
+			action = function(npc, player)
 				player:setQuestStatus("brotherhood-of-alchemists", engine.Quest.COMPLETED, e[1].almost)
 				q:remove_ingredients(player, e[1].short_name, 1)
 			end
 		},
-		{"[Give him the monster bits.]", jump="complete2", 
+		{"[Give him the monster bits.]", jump="complete2",
 			cond = function(npc, player) return give_bits(npc, player, 2) end,
-			action = function(npc, player) 
+			action = function(npc, player)
 				player:setQuestStatus("brotherhood-of-alchemists", engine.Quest.COMPLETED, e[2].almost)
-				q:remove_ingredients(player, e[2].short_name, 2)				
+				q:remove_ingredients(player, e[2].short_name, 2)
 			end
 		},
-		{"[Give him the monster bits.]", jump="complete2", 
+		{"[Give him the monster bits.]", jump="complete2",
 			cond = function(npc, player) return give_bits(npc, player, 3) end,
-			action = function(npc, player) 
+			action = function(npc, player)
 				player:setQuestStatus("brotherhood-of-alchemists", engine.Quest.COMPLETED, e[3].almost)
-				q:remove_ingredients(player, e[3].short_name, 3)				
+				q:remove_ingredients(player, e[3].short_name, 3)
 			end
 		},
 --		{"Sorry, it seems I lack some stuff. I will be back."},
@@ -321,23 +321,23 @@ GOOD WORK, WHOEVER YOU ARE. ALL OF MAJ'EYAL OWES YOU THEIR THANKS, EXCEPT FOR ME
 	answers = {
 		{"[Give him the monster bits]", jump="totally-complete2",
 			cond = function(npc, player) return give_bits(npc, player, 1) end,
-			action = function(npc, player) 
+			action = function(npc, player)
 				player:setQuestStatus("brotherhood-of-alchemists", engine.Quest.COMPLETED, e[1].almost)
 				q:remove_ingredients(player, e[1].short_name, 1)
 			end
 		},
-		{"[Give him the monster bits]", jump="totally-complete2", 
+		{"[Give him the monster bits]", jump="totally-complete2",
 			cond = function(npc, player) return give_bits(npc, player, 2) end,
-			action = function(npc, player) 
+			action = function(npc, player)
 				player:setQuestStatus("brotherhood-of-alchemists", engine.Quest.COMPLETED, e[2].almost)
-				q:remove_ingredients(player, e[2].short_name, 2)				
+				q:remove_ingredients(player, e[2].short_name, 2)
 			end
 		},
-		{"[Give him the monster bits]", jump="totally-complete2", 
+		{"[Give him the monster bits]", jump="totally-complete2",
 			cond = function(npc, player) return give_bits(npc, player, 3) end,
-			action = function(npc, player) 
+			action = function(npc, player)
 				player:setQuestStatus("brotherhood-of-alchemists", engine.Quest.COMPLETED, e[3].almost)
-				q:remove_ingredients(player, e[3].short_name, 3)				
+				q:remove_ingredients(player, e[3].short_name, 3)
 			end
 		},
 		--{"Sorry, it seems I lack some stuff. I will be back."},
@@ -349,7 +349,7 @@ newChat{ id="complete2",
 	text = [[WAIT HERE. THERE'S A GOOD CHANCE YOU'LL GET BLOWN INTO ADVENTURER KIBBLE IF YOU STEP INSIDE THIS BUILDING. MY ROBE OF MAD ALCHEMIST PROTECTION IS THE ONLY REASON I'M NOT VAPOUR.]],
 	answers = {
 		{"[Wait]", jump="complete3"},
-		
+
 	}
 }
 
@@ -358,7 +358,7 @@ newChat{ id="totally-complete2",
 	text = [[GIVE ME AN HOUR, AND THINK UNPLEASANT THOUGHTS ABOUT THE BROTHERHOOD. IF ANYTHING EXPLODES, COME RESCUE ME, EVEN IF IT LOOKS LIKE THE BUILDING IS AN INFERNO OF POISONOUS SMOKE AND POLKA-DOT FLAMES.]],
 	answers = {
 		{"[Wait]", jump="totally-complete3"},
-		
+
 	}
 }
 
@@ -367,7 +367,7 @@ newChat{ id="complete3",
 	text = [[#LIGHT_GREEN#*Disaster fails to occur. The halfling finally returns and hands you a small vial of sooty glass.*#WHITE#
 ENJOY, AND COME BACK ANY TIME IF YOU'RE INTERESTED IN SIMILAR WORK. I HAVEN'T WON YET. THE LONGER YOU WAIT, THE MORE LIKELY IT IS THAT YOU'LL RETURN TO A SMOKING CRATER AND ONE TRULY IRATE HALFLING.]],
 	answers = {
-		{"THANK YOU. I'LL BE OFF.", 
+		{"THANK YOU. I'LL BE OFF.",
 			cond = function(npc, player) return q and q:isCompleted(e[1].almost) and not q:isCompleted(e[1].full) end,
 			action = function(npc, player)
 				player:setQuestStatus("brotherhood-of-alchemists", engine.Quest.COMPLETED, e[1].full)
@@ -399,7 +399,7 @@ newChat{ id="totally-complete3",
 	text = [[#LIGHT_GREEN#*The halfling finally returns with a vial and a small pouch.*#WHITE#
 YOUR DOSE OF THE ELIXIR, AS WELL AS SOMETHING ELSE. THIS INFUSION IS RARE AS HELL, SO DON'T GO WASTING IT.]],
 	answers = {
-		{"THANK YOU. I'LL BE OFF.", 
+		{"THANK YOU. I'LL BE OFF.",
 			cond = function(npc, player) return q and q:isCompleted(e[1].almost) and not q:isCompleted(e[1].full) end,
 			action = function(npc, player)
 				player:setQuestStatus("brotherhood-of-alchemists", engine.Quest.COMPLETED, e[1].full)
@@ -430,7 +430,7 @@ YOUR DOSE OF THE ELIXIR, AS WELL AS SOMETHING ELSE. THIS INFUSION IS RARE AS HEL
 				q:reward(player, final_reward)
 				q:update_needed_ingredients(player)
 				q:winner_is(player, alchemist_num)
-				player:setQuestStatus("brotherhood-of-alchemists", engine.Quest.DONE)			
+				player:setQuestStatus("brotherhood-of-alchemists", engine.Quest.DONE)
 			end
 		},
 	}
@@ -449,7 +449,7 @@ newChat{ id="choice",
 				local o = art_list[e[1].id]
 				o:identify(true)
 				game.tooltip_x, game.tooltip_y = 1, 1
-				game.tooltip:displayAtMap(nil, nil, game.w, game.h, tostring(o:getDesc()))
+				game:tooltipDisplayAtMap(game.w, game.h, tostring(o:getDesc()))
 			end,
 		},
 		{"[Indicate the "..e[2].name..".]", jump="list",
@@ -462,7 +462,7 @@ newChat{ id="choice",
 				local o = art_list[e[2].id]
 				o:identify(true)
 				game.tooltip_x, game.tooltip_y = 1, 1
-				game.tooltip:displayAtMap(nil, nil, game.w, game.h, tostring(o:getDesc()))
+				game:tooltipDisplayAtMap(game.w, game.h, tostring(o:getDesc()))
 			end,
 		},
 		{"[Indicate the "..e[3].name..".]", jump="list",
@@ -475,7 +475,7 @@ newChat{ id="choice",
 				local o = art_list[e[3].id]
 				o:identify(true)
 				game.tooltip_x, game.tooltip_y = 1, 1
-				game.tooltip:displayAtMap(nil, nil, game.w, game.h, tostring(o:getDesc()))
+				game:tooltipDisplayAtMap(game.w, game.h, tostring(o:getDesc()))
 			end,
 		},
 		{"[leave]"},
@@ -496,7 +496,7 @@ newChat{ id="poached",
 		{"Hrmph.",
 			cond = function(npc, player) return empty_handed(npc, player, 1) end,
 			action = function(npc, player)
-				q:remove_ingredients(player, e[1].short_name, 1) 
+				q:remove_ingredients(player, e[1].short_name, 1)
 				player:setQuestStatus("brotherhood-of-alchemists", engine.Quest.COMPLETED, e[1].almost)
 				q:update_needed_ingredients(player)
 			end,

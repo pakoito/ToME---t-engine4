@@ -953,7 +953,7 @@ end
 
 function _M:mouseTooltip(text, _, _, _, w, h, x, y)
 	self:mouseZones({
-		{ x=x, y=y + self.hoffset, w=w, h=h, fct=function(button) game.tooltip_x, game.tooltip_y = 1, 1; game.tooltip:displayAtMap(nil, nil, game.w, game.h, text) end},
+		{ x=x, y=y + self.hoffset, w=w, h=h, fct=function(button) game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, text) end},
 	}, true)
 end
 

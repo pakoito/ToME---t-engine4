@@ -72,6 +72,12 @@ function _M:targetDisplayTooltip(dx, dy)
 	end
 end
 
+--- Forces the tooltip to pop with the given text
+function _M:tooltipDisplayAtMap(x, y, text)
+	self.tooltip:displayAtMap(nil, nil, x, y, text)
+	self.tooltip_x = {}
+end
+
 --- Enter/leave targeting mode
 -- This is the "meat" of this interface, do not expect to understand it easily, it mixes some nasty stuff
 -- This require the Game to have both a "key" field (this is the default) and a "normal_key" field<br/>

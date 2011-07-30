@@ -191,8 +191,6 @@ function _M:displayAtMap(tmx, tmy, mx, my, text)
 	end
 
 	if not self.empty then
---		mx = mx - self.w / 2 + game.level.map.tile_w / 2
---		my = my - self.h
 		local x1, x2, y1, y2 = util.getval(self.tooltip_bound_x1), util.getval(self.tooltip_bound_x2), util.getval(self.tooltip_bound_y1), util.getval(self.tooltip_bound_y2)
 		if mx < x1 then mx = x1 end
 		if my < y1 then my = y1 end

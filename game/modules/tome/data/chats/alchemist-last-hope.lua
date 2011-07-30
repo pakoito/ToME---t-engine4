@@ -108,8 +108,8 @@ local function empty_handed(npc, player, n) -- n is the index of the elixir we'r
 	and q:isCompleted(e[n].full)  --... and yet the elixir is already made (poached!)
 end
 
---Make the alchemist's reaction to your turn-in vary depending on whether he lost. 
-local function alchemist_reaction_complete(npc, player, lose, other_alch, other_elixir) 
+--Make the alchemist's reaction to your turn-in vary depending on whether he lost.
+local function alchemist_reaction_complete(npc, player, lose, other_alch, other_elixir)
 	if lose == true then
 		return ([[Damn it all. You're too late. %s has already finished. But I suppose you did your best, so I'll take these and keep my end of the bargian.]]):format(other_alch)
 	else
@@ -161,9 +161,9 @@ newChat{ id="competition",
 newChat{ id="choice",
 	text = [[One last thing. There's a few other fellows angling for the same slot in the Brotherhood that I am. They're not going to be sitting on their hands while we're at work here, so best move quick-like. Now, which of these do you want to help me with first: the Brew of Brawn, the Brew of Stoneskin, or the Brew of Foundations? Or Elixirs, rather. Not Brews. Best get in the habit now, I suppose.]],
 	answers = {
-		{"The "..e[1].name..".", jump="list", 
+		{"The "..e[1].name..".", jump="list",
 			cond = function(npc, player) return not game.player:hasQuest("brotherhood-of-alchemists"):isCompleted(e[1].full) end,
-			action = function(npc, player) 
+			action = function(npc, player)
 				player:setQuestStatus("brotherhood-of-alchemists", engine.Quest.COMPLETED, e[1].start)
 				game.player:hasQuest("brotherhood-of-alchemists"):update_needed_ingredients(player)
 			end,
@@ -171,12 +171,12 @@ newChat{ id="choice",
 				local o = art_list[e[1].id]
 				o:identify(true)
 				game.tooltip_x, game.tooltip_y = 1, 1
-				game.tooltip:displayAtMap(nil, nil, game.w, game.h, tostring(o:getDesc()))
+				game:tooltipDisplayAtMap(game.w, game.h, tostring(o:getDesc()))
 			end,
 		},
-		{"The "..e[2].name..".", jump="list", 
+		{"The "..e[2].name..".", jump="list",
 			cond = function(npc, player) return not game.player:hasQuest("brotherhood-of-alchemists"):isCompleted(e[2].full) end,
-			action = function(npc, player) 
+			action = function(npc, player)
 				player:setQuestStatus("brotherhood-of-alchemists", engine.Quest.COMPLETED, e[2].start)
 				game.player:hasQuest("brotherhood-of-alchemists"):update_needed_ingredients(player)
 			end,
@@ -184,12 +184,12 @@ newChat{ id="choice",
 				local o = art_list[e[2].id]
 				o:identify(true)
 				game.tooltip_x, game.tooltip_y = 1, 1
-				game.tooltip:displayAtMap(nil, nil, game.w, game.h, tostring(o:getDesc()))
+				game:tooltipDisplayAtMap(game.w, game.h, tostring(o:getDesc()))
 			end,
 		},
-		{"The "..e[3].name..".", jump="list", 
+		{"The "..e[3].name..".", jump="list",
 			cond = function(npc, player) return not game.player:hasQuest("brotherhood-of-alchemists"):isCompleted(e[3].full) end,
-			action = function(npc, player) 
+			action = function(npc, player)
 				player:setQuestStatus("brotherhood-of-alchemists", engine.Quest.COMPLETED, e[3].start)
 				game.player:hasQuest("brotherhood-of-alchemists"):update_needed_ingredients(player)
 			end,
@@ -197,7 +197,7 @@ newChat{ id="choice",
 				local o = art_list[e[3].id]
 				o:identify(true)
 				game.tooltip_x, game.tooltip_y = 1, 1
-				game.tooltip:displayAtMap(nil, nil, game.w, game.h, tostring(o:getDesc()))
+				game:tooltipDisplayAtMap(game.w, game.h, tostring(o:getDesc()))
 			end,
 		},
 		{"[leave]"},
@@ -248,7 +248,7 @@ Aha, my favorite adventurer.]],
 				q:on_turnin(player, alch_picked, e_picked, false)
 			end,
 		},
-		
+
 		-- If the final elixir:
 		{"I've returned with the ingredients for the "..e[1].name..".", jump="totally-complete",
 			cond = function(npc, player) return turn_in_final(npc, player, 1) end,
@@ -259,7 +259,7 @@ Aha, my favorite adventurer.]],
 		{"I've returned with the ingredients for the "..e[3].name..".", jump="totally-complete",
 			cond = function(npc, player) return turn_in_final(npc, player, 3) end,
 		},
-		
+
 		-- If the elixir got made while you were out:
 		{"I've returned with the ingredients for the "..e[1].name..".", jump="poached",
 			cond = function(npc, player) return turn_in_poached(npc, player, 1) end,
@@ -270,10 +270,10 @@ Aha, my favorite adventurer.]],
 		{"I've returned with the ingredients for the "..e[3].name..".", jump="poached",
 			cond = function(npc, player) return turn_in_poached(npc, player, 3) end,
 		},
-		
+
 		--Don't let player work on multiple elixirs for the same alchemist.
 		--See comments in more_aid function above for all the gory detail
-		{"I've come to offer more aid.", jump="choice", 
+		{"I've come to offer more aid.", jump="choice",
 			cond = function(npc, player) return more_aid(npc, player) end,
 		},
 		{"[leave]"},
@@ -286,23 +286,23 @@ newChat{ id="complete",
 	answers = {
 		{"[Give him the monster bits.]", jump="complete2",
 			cond = function(npc, player) return give_bits(npc, player, 1) end,
-			action = function(npc, player) 
+			action = function(npc, player)
 				player:setQuestStatus("brotherhood-of-alchemists", engine.Quest.COMPLETED, e[1].almost)
 				q:remove_ingredients(player, e[1].short_name, 1)
 			end
 		},
-		{"[Give him the monster bits.]", jump="complete2", 
+		{"[Give him the monster bits.]", jump="complete2",
 			cond = function(npc, player) return give_bits(npc, player, 2) end,
-			action = function(npc, player) 
+			action = function(npc, player)
 				player:setQuestStatus("brotherhood-of-alchemists", engine.Quest.COMPLETED, e[2].almost)
-				q:remove_ingredients(player, e[2].short_name, 2)				
+				q:remove_ingredients(player, e[2].short_name, 2)
 			end
 		},
-		{"[Give him the monster bits.]", jump="complete2", 
+		{"[Give him the monster bits.]", jump="complete2",
 			cond = function(npc, player) return give_bits(npc, player, 3) end,
-			action = function(npc, player) 
+			action = function(npc, player)
 				player:setQuestStatus("brotherhood-of-alchemists", engine.Quest.COMPLETED, e[3].almost)
-				q:remove_ingredients(player, e[3].short_name, 3)				
+				q:remove_ingredients(player, e[3].short_name, 3)
 			end
 		},
 --		{"Sorry, it seems I lack some stuff. I will be back."},
@@ -316,23 +316,23 @@ Ha ha! This is the last one! Stire and Marus and that damned hermit can suck on 
 	answers = {
 		{"[Give him the monster bits]", jump="totally-complete2",
 			cond = function(npc, player) return give_bits(npc, player, 1) end,
-			action = function(npc, player) 
+			action = function(npc, player)
 				player:setQuestStatus("brotherhood-of-alchemists", engine.Quest.COMPLETED, e[1].almost)
 				q:remove_ingredients(player, e[1].short_name, 1)
 			end
 		},
-		{"[Give him the monster bits]", jump="totally-complete2", 
+		{"[Give him the monster bits]", jump="totally-complete2",
 			cond = function(npc, player) return give_bits(npc, player, 2) end,
-			action = function(npc, player) 
+			action = function(npc, player)
 				player:setQuestStatus("brotherhood-of-alchemists", engine.Quest.COMPLETED, e[2].almost)
-				q:remove_ingredients(player, e[2].short_name, 2)				
+				q:remove_ingredients(player, e[2].short_name, 2)
 			end
 		},
-		{"[Give him the monster bits]", jump="totally-complete2", 
+		{"[Give him the monster bits]", jump="totally-complete2",
 			cond = function(npc, player) return give_bits(npc, player, 3) end,
-			action = function(npc, player) 
+			action = function(npc, player)
 				player:setQuestStatus("brotherhood-of-alchemists", engine.Quest.COMPLETED, e[3].almost)
-				q:remove_ingredients(player, e[3].short_name, 3)				
+				q:remove_ingredients(player, e[3].short_name, 3)
 			end
 		},
 		--{"Sorry, it seems I lack some stuff. I will be back."},
@@ -344,7 +344,7 @@ newChat{ id="complete2",
 	text = [[Give me an hour or so to make with the alchemy. Don't go anywhere.]],
 	answers = {
 		{"[Wait]", jump="complete3"},
-		
+
 	}
 }
 
@@ -353,7 +353,7 @@ newChat{ id="totally-complete2",
 	text = [[I'd invite you inside while you wait, but the she-dwarf's in there, and I've grown fond of you.]],
 	answers = {
 		{"[Wait]", jump="totally-complete3"},
-		
+
 	}
 }
 
@@ -362,7 +362,7 @@ newChat{ id="complete3",
 	text = [[#LIGHT_GREEN#*The dwarf finally returns with a vial.*#WHITE#
 Tastes like Urh'Rok's own piss, but it gets the job done.]],
 	answers = {
-		{"Thank you. I'll be off.", 
+		{"Thank you. I'll be off.",
 			cond = function(npc, player) return q and q:isCompleted(e[1].almost) and not q:isCompleted(e[1].full) end,
 			action = function(npc, player)
 				player:setQuestStatus("brotherhood-of-alchemists", engine.Quest.COMPLETED, e[1].full)
@@ -394,7 +394,7 @@ newChat{ id="totally-complete3",
 	text = [[#LIGHT_GREEN#*The dwarf finally returns with a vial and a small pouch.*#WHITE#
 I put a bit of the good stuff in this one, though it won't do you any favors tomorrow morning. And careful with that Taint of Telepathy, especially if the wife answers the door the next time you knock. Har!]],
 	answers = {
-		{"Thank you. I'll be off.", 
+		{"Thank you. I'll be off.",
 			cond = function(npc, player) return q and q:isCompleted(e[1].almost) and not q:isCompleted(e[1].full) end,
 			action = function(npc, player)
 				player:setQuestStatus("brotherhood-of-alchemists", engine.Quest.COMPLETED, e[1].full)
@@ -425,7 +425,7 @@ I put a bit of the good stuff in this one, though it won't do you any favors tom
 				q:reward(player, final_reward)
 				q:update_needed_ingredients(player)
 				q:winner_is(player, alchemist_num)
-				player:setQuestStatus("brotherhood-of-alchemists", engine.Quest.DONE)			
+				player:setQuestStatus("brotherhood-of-alchemists", engine.Quest.DONE)
 			end
 		},
 	}
@@ -444,7 +444,7 @@ newChat{ id="choice",
 				local o = art_list[e[1].id]
 				o:identify(true)
 				game.tooltip_x, game.tooltip_y = 1, 1
-				game.tooltip:displayAtMap(nil, nil, game.w, game.h, tostring(o:getDesc()))
+				game:tooltipDisplayAtMap(game.w, game.h, tostring(o:getDesc()))
 			end,
 		},
 		{"The "..e[2].name..".", jump="list",
@@ -457,7 +457,7 @@ newChat{ id="choice",
 				local o = art_list[e[2].id]
 				o:identify(true)
 				game.tooltip_x, game.tooltip_y = 1, 1
-				game.tooltip:displayAtMap(nil, nil, game.w, game.h, tostring(o:getDesc()))
+				game:tooltipDisplayAtMap(game.w, game.h, tostring(o:getDesc()))
 			end,
 		},
 		{"The "..e[3].name..".", jump="list",
@@ -470,7 +470,7 @@ newChat{ id="choice",
 				local o = art_list[e[3].id]
 				o:identify(true)
 				game.tooltip_x, game.tooltip_y = 1, 1
-				game.tooltip:displayAtMap(nil, nil, game.w, game.h, tostring(o:getDesc()))
+				game:tooltipDisplayAtMap(game.w, game.h, tostring(o:getDesc()))
 			end,
 		},
 		{"[leave]"},
@@ -491,7 +491,7 @@ newChat{ id="poached",
 		{"Hrmph.",
 			cond = function(npc, player) return empty_handed(npc, player, 1) end,
 			action = function(npc, player)
-				q:remove_ingredients(player, e[1].short_name, 1) 
+				q:remove_ingredients(player, e[1].short_name, 1)
 				player:setQuestStatus("brotherhood-of-alchemists", engine.Quest.COMPLETED, e[1].almost)
 				q:update_needed_ingredients(player)
 			end,

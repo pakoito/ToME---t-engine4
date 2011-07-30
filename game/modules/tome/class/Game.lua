@@ -111,7 +111,6 @@ function _M:run()
 	self.calendar = Calendar.new("/data/calendar_allied.lua", "Today is the %s %s of the %s year of the Age of Ascendancy of Maj'Eyal.\nThe time is %02d:%02d.", 122, 167, 11)
 
 	self.player_display = PlayerDisplay.new(0, 200, 200, self.h - 200, {30,30,0}, font_mono, size_mono)
---	self.flash = LogFlasher.new(0, 0, self.w, 20, nil, font, size, {255,255,255}, {0,0,0})
 	self.map_h_stop = self.h - 52
 	self.logdisplay = LogDisplay.new(216, self.map_h_stop - font_h * config.settings.tome.log_lines -16, (self.w - 216) / 2, font_h * config.settings.tome.log_lines, nil, font, size, nil, nil)
 	self.logdisplay.resizeToLines = function() self.logdisplay:resize(216, self.map_h_stop - font_h * config.settings.tome.log_lines -16, (self.w - 216) / 2, font_h * config.settings.tome.log_lines) end
@@ -149,8 +148,6 @@ function _M:run()
 	end
 	self.logSeen = function(e, style, ...) if e and e.x and e.y and self.level.map.seens(e.x, e.y) then self.log(style, ...) end end
 	self.logPlayer = function(e, style, ...) if e == self.player or e == self.party then self.log(style, ...) end end
-
---	self.log(self.flash.GOOD, "Welcome to #00FF00#Tales of Maj'Eyal!")
 
 	-- List of stuff to do on tick end
 	self.on_tick_end = {}
@@ -832,9 +829,6 @@ end
 function _M:displayDelayedLogDamage()
 	for src, tgts in pairs(self.delayed_log_damage) do
 		for target, dams in pairs(tgts) do
---			local flash = game.flash.NEUTRAL
---			if target == game.player then flash = game.flash.BAD end
---			if src == game.player then flash = game.flash.GOOD end
 			if #dams.descs > 1 then
 				game.logSeen(target, "%s hits %s for %s damage (total %0.2f).", src.name:capitalize(), target.name, table.concat(dams.descs, ", "), dams.total)
 			else
@@ -983,10 +977,6 @@ function _M:display(nb_keyframes)
 	end
 
 	-- We display the player's interface
---	self.flash:toScreen(nb_keyframe)
---	if self.show_userchat then profile.chat:toScreen()
---	else self.logdisplay:toScreen()
---	end
 	profile.chat:toScreen()
 	self.logdisplay:toScreen()
 
@@ -1321,7 +1311,6 @@ function _M:setupCommands()
 		end,
 
 		LOOK_AROUND = function()
---			self.flash:empty(true)
 			self.log("Looking around... (direction keys to select interesting things, shift+direction keys to move freely)")
 			local co = coroutine.create(function() self.player:getTarget{type="hit", no_restrict=true, range=2000} end)
 			local ok, err = coroutine.resume(co)
@@ -1380,12 +1369,12 @@ function _M:setupMouse(reset)
 	-- Use hotkeys with mouse
 	self.mouse:registerZone(self.hotkeys_display.display_x, self.hotkeys_display.display_y, self.w, self.h, function(button, mx, my, xrel, yrel, bx, by, event)
 		if self.show_npc_list then return end
-		if event == "button" and button == "left" and self.zone and self.zone.wilderness then return end
+		if event == "button" and button == "left" and ((self.zone and self.zone.wilderness) or (self.key ~= self.normal_key)) then return end
 		self.hotkeys_display:onMouse(button, mx, my, event == "button",
 			function(text)
 				text = text:toTString()
 				text:add(true, "---", true, {"font","italic"}, {"color","GOLD"}, "Left click to use", true, "Right click to configure", true, "Press 'm' to setup", {"color","LAST"}, {"font","normal"})
-				self.tooltip:displayAtMap(nil, nil, self.w, self.h, text)
+				self:tooltipDisplayAtMap(self.w, self.h, text)
 			end,
 			function(i, hk)
 				if button == "right" and hk[1] == "talent" then
@@ -1747,16 +1736,16 @@ end
 
 function _M:mouseIcon(bx, by)
 	if bx < _talents_icon_w then
-		self.tooltip:displayAtMap(nil, nil, self.w, self.h, "Display talents\nToggle with #{bold}##GOLD#[tab]#LAST##{normal}#")
+		self:tooltipDisplayAtMap(self.w, self.h, "Display talents\nToggle with #{bold}##GOLD#[tab]#LAST##{normal}#")
 	elseif bx < 2*_talents_icon_w then
-		self.tooltip:displayAtMap(nil, nil, self.w, self.h, "Display creatures\nToggle with #{bold}##GOLD#[tab]#LAST##{normal}#")
+		self:tooltipDisplayAtMap(self.w, self.h, "Display creatures\nToggle with #{bold}##GOLD#[tab]#LAST##{normal}#")
 	elseif bx < 3*_talents_icon_w then
-		self.tooltip:displayAtMap(nil, nil, self.w, self.h, "#{bold}##GOLD#I#LAST##{normal}#nventory")
+		self:tooltipDisplayAtMap(self.w, self.h, "#{bold}##GOLD#I#LAST##{normal}#nventory")
 	elseif bx < 4*_talents_icon_w then
-		self.tooltip:displayAtMap(nil, nil, self.w, self.h, "#{bold}##GOLD#C#LAST##{normal}#haracter Sheet")
+		self:tooltipDisplayAtMap(self.w, self.h, "#{bold}##GOLD#C#LAST##{normal}#haracter Sheet")
 	elseif bx < 5*_talents_icon_w then
-		self.tooltip:displayAtMap(nil, nil, self.w, self.h, "Main menu (#{bold}##GOLD#Esc#LAST##{normal}#)")
+		self:tooltipDisplayAtMap(self.w, self.h, "Main menu (#{bold}##GOLD#Esc#LAST##{normal}#)")
 	elseif bx < 6*_talents_icon_w then
-		self.tooltip:displayAtMap(nil, nil, self.w, self.h, "Show message/chat log (#{bold}##GOLD#ctrl+m#LAST##{normal}#)")
+		self:tooltipDisplayAtMap(self.w, self.h, "Show message/chat log (#{bold}##GOLD#ctrl+m#LAST##{normal}#)")
 	end
 end

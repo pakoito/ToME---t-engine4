@@ -98,8 +98,7 @@ function _M:mouseEvent(button, x, y, xrel, yrel, bx, by, event)
 			if item.dh and by >= item.dh then citem = self.dlist[i].src break end
 		end
 		if citem and citem.extra_data and citem.extra_data.mode == "tooltip" then
-			game.tooltip_x, game.tooltip_y = 1, 1
-			game.tooltip:displayAtMap(nil, nil, game.w, game.h, citem.extra_data.tooltip)
+			game:tooltipDisplayAtMap(game.w, game.h, citem.extra_data.tooltip)
 		else
 			game.tooltip_x, game.tooltip_y = nil, nil
 		end

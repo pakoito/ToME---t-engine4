@@ -203,7 +203,7 @@ local function generate_rewards()
 				on_select=function(npc, player)
 					game.tooltip_x, game.tooltip_y = 1, 1
 					local TooltipsData = require("mod.class.interface.TooltipsData")
-					game.tooltip:displayAtMap(nil, nil, game.w, game.h, TooltipsData["TOOLTIP_"..npc.stats_def[i].short_name:upper()])
+					game:tooltipDisplayAtMap(game.w, game.h, TooltipsData["TOOLTIP_"..npc.stats_def[i].short_name:upper()])
 				end,
 			}
 		end end
@@ -221,7 +221,7 @@ local function generate_rewards()
 				on_select=function(npc, player)
 					game.tooltip_x, game.tooltip_y = 1, 1
 					local TooltipsData = require("mod.class.interface.TooltipsData")
-					game.tooltip:displayAtMap(nil, nil, game.w, game.h, TooltipsData["TOOLTIP_"..saves_tooltips[save]:upper().."_SAVE"])
+					game:tooltipDisplayAtMap(game.w, game.h, TooltipsData["TOOLTIP_"..saves_tooltips[save]:upper().."_SAVE"])
 				end,
 			}
 		end
@@ -243,7 +243,7 @@ local function generate_rewards()
 						action=doit,
 						on_select=function(npc, player)
 							game.tooltip_x, game.tooltip_y = 1, 1
-							game.tooltip:displayAtMap(nil, nil, game.w, game.h, "#GOLD#"..t.name.."#LAST#\n"..tostring(player:getTalentFullDescription(t, 1)))
+							game:tooltipDisplayAtMap(game.w, game.h, "#GOLD#"..t.name.."#LAST#\n"..tostring(player:getTalentFullDescription(t, 1)))
 						end,
 					}
 			end
@@ -263,7 +263,7 @@ local function generate_rewards()
 				action=doit,
 				on_select=function(npc, player)
 					game.tooltip_x, game.tooltip_y = 1, 1
-					game.tooltip:displayAtMap(nil, nil, game.w, game.h, "#GOLD#"..(cat:capitalize().." / "..tt_def.name:capitalize()).."#LAST#\n"..tt_def.description)
+					game:tooltipDisplayAtMap(game.w, game.h, "#GOLD#"..(cat:capitalize().." / "..tt_def.name:capitalize()).."#LAST#\n"..tt_def.description)
 				end,
 			}
 		end end

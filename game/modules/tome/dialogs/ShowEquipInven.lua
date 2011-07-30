@@ -28,8 +28,7 @@ function _M:init(...)
 	-- Add tooltips
 	self.on_select = function(item)
 		if item.last_display_x and item.object then
-			game.tooltip_x, game.tooltip_y = {}, 1
-			game.tooltip:displayAtMap(nil, nil, item.last_display_x, item.last_display_y, item.object:getDesc({do_color=true}, self.actor:getInven(item.object:wornInven())))
+			game:tooltipDisplayAtMap(item.last_display_x, item.last_display_y, item.object:getDesc({do_color=true}, self.actor:getInven(item.object:wornInven())))
 		end
 	end
 	self.on_drag = function(item) self:onDrag(item) end
