@@ -45,7 +45,6 @@ function _M:init()
 		local nodes = {}
 
 		for j, save in ipairs(m.savefiles) do
-		print(m.short_name)
 			local mod_string = ("%s-%d.%d.%d"):format(m.short_name, save.module_version and save.module_version[1] or -1, save.module_version and save.module_version[2] or -1, save.module_version and save.module_version[3] or -1)
 			local mod = list[mod_string]
 			if mod then
@@ -58,6 +57,12 @@ function _M:init()
 					height=self.c_desc.h,
 					text=("#{bold}##GOLD#%s: %s#WHITE##{normal}#\nGame version: %d.%d.%d\n\n%s"):format(mod.long_name, save.name, mod.version[1], mod.version[2], mod.version[3], save.description)
 				}
+				if save.screenshot then
+					local w, h = save.screenshot:getSize()
+					save.screenshot = { save.screenshot:glTexture() }
+					save.screenshot.w, save.screenshot.h = w, h
+				end
+				table.sort(nodes, function(a, b) return (a.timestamp or 0) > (b.timestamp or 0) end)
 				table.insert(nodes, save)
 				found = true
 			end
@@ -100,7 +105,20 @@ function _M:select(item)
 	if item and self.uis[2] then
 		self.uis[2].ui = item.zone
 		self.cur_sel = item
+	else
+		self.cur_sel = nil
 	end
+end
+
+function _M:innerDisplay(x, y, nb_keyframes)
+	if not self.cur_sel or not self.cur_sel.screenshot then return end
+	local s = self.cur_sel.screenshot
+	local r = s.w / s.h
+	local w = math.min(s.w, self.c_desc.w - 20)
+	local h = w / r
+	h = math.min(h, self.ih / 1.7)
+	w = h * r
+	s[1]:toScreenFull(x + self.ix + self.iw - self.c_desc.w, y + self.ih - h - 20, w, h, s[2] * w / s.w, s[3] * h / s.h)
 end
 
 function _M:deleteSave()

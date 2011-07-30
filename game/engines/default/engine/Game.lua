@@ -476,3 +476,13 @@ error("Threads unsuported yet")
 		end
 	end
 end
+
+--- Take a screenshot of the game
+-- @param for_savefile The screenshot will be used for savefile display
+function _M:takeScreenshot(for_savefile)
+	if for_savefile then
+		return core.display.getScreenshot(self.w / 4, self.h / 4, self.w / 2, self.h / 2)
+	else
+		return core.display.getScreenshot(0, 0, self.w, self.h)
+	end
+end

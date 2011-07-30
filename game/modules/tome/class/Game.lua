@@ -1518,6 +1518,22 @@ function _M:saveGame()
 	self.log("Saving game...")
 end
 
+--- Take a screenshot of the game
+-- @param for_savefile The screenshot will be used for savefile display
+function _M:takeScreenshot(for_savefile)
+	if for_savefile then
+		local x, y = self.w / 4, self.h / 4
+		if self.level then
+			x, y = self.level.map:getTileToScreen(self.player.x, self.player.y)
+			x, y = x - self.w / 4, y - self.h / 4
+			x, y = util.bound(x, 0, self.w / 2), util.bound(y, 0, self.h / 2)
+		end
+		return core.display.getScreenshot(x, y, self.w / 2, self.h / 2)
+	else
+		return core.display.getScreenshot(0, 0, self.w, self.h)
+	end
+end
+
 function _M:setAllowedBuild(what, notify)
 	-- Do not unlock things in easy mode
 	--if self.difficulty == self.DIFFICULTY_EASY then return end

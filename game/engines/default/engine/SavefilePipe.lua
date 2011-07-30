@@ -52,6 +52,11 @@ end
 function _M:push(savename, type, object, class)
 	if game.onSavefilePush then game:onSavefilePush(savename, type, object, class) end
 
+	local screenshot = nil
+	if type == "game" then
+		screenshot = game:takeScreenshot(true)
+	end
+
 	class = class or self.saveclass
 	local Savefile = require(class)
 	local id = Savefile["nameSave"..type:lower():capitalize()](Savefile, object)
@@ -59,7 +64,7 @@ function _M:push(savename, type, object, class)
 	if #self.pipe == 0 then savefile_pipe.current_nb = 0 end
 
 	local clone, nb = object:cloneFull()
-	self.pipe[#self.pipe+1] = {id=id, savename = savename, type=type, object=clone, nb_objects=nb, baseobject=object, class=class, saveversion=game:saveVersion("new")}
+	self.pipe[#self.pipe+1] = {id=id, savename = savename, type=type, object=clone, nb_objects=nb, baseobject=object, class=class, saveversion=game:saveVersion("new"), screenshot=screenshot}
 	local total_nb = 0
 	for i, p in ipairs(self.pipe) do total_nb = total_nb + p.nb_objects end
 	self.total_nb = total_nb
@@ -97,6 +102,7 @@ function _M:doThread()
 		local save = Savefile.new(p.savename, config.settings.background_saves)
 		o.__saved_saveversion = p.saveversion
 		save["save"..p.type:lower():capitalize()](save, o, true)
+		if p.screenshot then save:saveScreenshot(p.screenshot) end
 		save:close()
 
 		table.remove(self.pipe, 1)

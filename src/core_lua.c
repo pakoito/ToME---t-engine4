@@ -37,6 +37,7 @@
 #include "useshader.h"
 #include <math.h>
 #include <time.h>
+#include <png.h>
 
 extern SDL_Window *window;
 
@@ -2020,6 +2021,100 @@ static int sdl_set_gamma(lua_State *L)
 	return 1;
 }
 
+static void png_write_data_fn(png_structp png_ptr, png_bytep data, png_size_t length)
+{
+	luaL_Buffer *B = (luaL_Buffer*)png_get_io_ptr(png_ptr);
+	luaL_addlstring(B, data, length);
+}
+static void png_output_flush_fn(png_structp png_ptr)
+{
+}
+
+#ifndef png_infopp_NULL
+#define png_infopp_NULL (png_infopp)NULL
+#endif
+static int sdl_get_png_screenshot(lua_State *L)
+{
+	unsigned int x = luaL_checknumber(L, 1);
+	unsigned int y = luaL_checknumber(L, 2);
+	unsigned long width = luaL_checknumber(L, 3);
+	unsigned long height = luaL_checknumber(L, 4);
+	unsigned long i;
+	png_structp png_ptr;
+	png_infop info_ptr;
+	png_colorp palette;
+	png_byte *image;
+	png_bytep *row_pointers;
+
+	png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+
+	if (png_ptr == NULL)
+	{
+		return 0;
+	}
+
+	info_ptr = png_create_info_struct(png_ptr);
+	if (info_ptr == NULL)
+	{
+		png_destroy_write_struct(&png_ptr, png_infopp_NULL);
+		return 0;
+	}
+
+	if (setjmp(png_jmpbuf(png_ptr)))
+	{
+		png_destroy_write_struct(&png_ptr, &info_ptr);
+		return 0;
+	}
+
+	luaL_Buffer B;
+	luaL_buffinit(L, &B);
+	png_set_write_fn(png_ptr, &B, png_write_data_fn, png_output_flush_fn);
+
+	png_set_IHDR(png_ptr, info_ptr, width, height, 8, PNG_COLOR_TYPE_RGB,
+		PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
+
+	image = (png_byte *)malloc(width * height * 3 * sizeof(png_byte));
+	if(image == NULL)
+	{
+		png_destroy_write_struct(&png_ptr, &info_ptr);
+		luaL_pushresult(&B); lua_pop(L, 1);
+		return 0;
+	}
+
+	row_pointers = (png_bytep *)malloc(height * sizeof(png_bytep));
+	if(row_pointers == NULL)
+	{
+		png_destroy_write_struct(&png_ptr, &info_ptr);
+		free(image);
+		image = NULL;
+		luaL_pushresult(&B); lua_pop(L, 1);
+		return 0;
+	}
+
+	glPixelStorei(GL_PACK_ALIGNMENT, 1);
+	glReadPixels(x, y, width, height, GL_RGB, GL_UNSIGNED_BYTE, (GLvoid *)image);
+
+	for (i = 0; i < height; i++)
+	{
+		row_pointers[i] = (png_bytep)image + (height - 1 - i) * width * 3;
+	}
+
+	png_set_rows(png_ptr, info_ptr, row_pointers);
+	png_write_png(png_ptr, info_ptr, PNG_TRANSFORM_IDENTITY, NULL);
+
+	png_destroy_write_struct(&png_ptr, &info_ptr);
+
+	free(row_pointers);
+	row_pointers = NULL;
+
+	free(image);
+	image = NULL;
+
+	luaL_pushresult(&B);
+
+	return 1;
+}
+
 static const struct luaL_reg displaylib[] =
 {
 	{"setTextBlended", set_text_aa},
@@ -2051,6 +2146,7 @@ static const struct luaL_reg displaylib[] =
 	{"glColor", gl_color},
 	{"glMatrix", gl_matrix},
 	{"glDepthTest", gl_depth_test},
+	{"getScreenshot", sdl_get_png_screenshot},
 	{NULL, NULL},
 };
 

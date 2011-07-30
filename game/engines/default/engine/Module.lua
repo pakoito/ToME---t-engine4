@@ -161,6 +161,10 @@ function _M:listSavefiles()
 			if fs.exists(dir.."/game.teag") then
 				local def = self:loadSavefileDescription(dir)
 				if def then
+					if fs.exists(dir.."/cur.png") then
+						def.screenshot = core.display.loadImage(dir.."/cur.png")
+					end
+
 					table.insert(lss, def)
 				end
 			end

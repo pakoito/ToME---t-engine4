@@ -184,6 +184,16 @@ function _M:loadQuickHotkeys()
 	return nil
 end
 
+--- Saves the screenshot of a game
+function _M:saveScreenshot(screenshot)
+	if not screenshot then return end
+	fs.mkdir(self.save_dir)
+
+	local f = fs.open(self.save_dir.."cur.png", "w")
+	f:write(screenshot)
+	f:close()
+end
+
 --- Get a savename for a game
 function _M:nameSaveGame(game)
 	return "game.teag"
@@ -218,6 +228,7 @@ function _M:saveGame(game, no_dialog)
 	f:write(("module_version = {%d,%d,%d}\n"):format(game.__mod_info.version[1], game.__mod_info.version[2], game.__mod_info.version[3]))
 	f:write(("name = %q\n"):format(desc.name))
 	f:write(("short_name = %q\n"):format(self.short_name))
+	f:write(("timestamp = %d\n"):format(os.time()))
 	f:write(("description = %q\n"):format(desc.description))
 	f:close()
 
