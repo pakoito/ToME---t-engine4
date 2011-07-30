@@ -486,3 +486,19 @@ function _M:takeScreenshot(for_savefile)
 		return core.display.getScreenshot(0, 0, self.w, self.h)
 	end
 end
+
+--- Take a screenshot of the game
+-- @param for_savefile The screenshot will be used for savefile display
+function _M:saveScreenshot()
+	local s = self:takeScreenshot()
+	if not s then return end
+	fs.mkdir("/screenshots")
+
+	local file = ("/screenshots/%s-%d.png"):format(self.__mod_info.version_string, os.time())
+	local f = fs.open(file, "w")
+	f:write(s)
+	f:close()
+
+	local Dialog = require "engine.ui.Dialog"
+	Dialog:simplePopup("Screenshot taken!", "File: "..fs.getRealPath(file))
+end

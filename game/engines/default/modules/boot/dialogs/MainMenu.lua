@@ -71,6 +71,7 @@ function _M:init()
 			game:registerDialog(require("engine.DebugConsole").new())
 		end
 	end)
+	self.key:addBind("SCREENSHOT", function() self:saveScreenshot() end)
 
 end
 

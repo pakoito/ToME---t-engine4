@@ -1275,6 +1275,8 @@ function _M:setupCommands()
 			self.player.changed = true
 		end,
 
+		SCREENSHOT = function() self:saveScreenshot() end,
+
 		HELP = "EXIT",
 		EXIT = function()
 			local menu menu = require("engine.dialogs.GameMenu").new{

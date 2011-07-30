@@ -338,6 +338,8 @@ function _M:setupCommands()
 			self:onQuit()
 		end,
 
+		SCREENSHOT = function() self:saveScreenshot() end,
+
 		EXIT = function()
 			local menu menu = require("engine.dialogs.GameMenu").new{
 				"resume",

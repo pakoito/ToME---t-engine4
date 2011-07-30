@@ -30,3 +30,10 @@ defineAction{
 	group = "actions",
 	name = "Show message log",
 }
+
+defineAction{
+	default = { "sym:_PRINTSCREEN:false:false:false:false" },
+	type = "SCREENSHOT",
+	group = "actions",
+	name = "Take a screenshot",
+}
