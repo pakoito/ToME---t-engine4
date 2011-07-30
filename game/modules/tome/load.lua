@@ -66,6 +66,7 @@ if not config.settings.tome.fonts then config.settings.tome.fonts = {type="fanta
 if not config.settings.tome.ui_theme then config.settings.tome.ui_theme = "stone" end
 if not config.settings.tome.log_lines then config.settings.tome.log_lines = 5 end
 if not config.settings.tome.log_fade then config.settings.tome.log_fade = 3 end
+if not config.settings.tome.scroll_dist then config.settings.tome.scroll_dist = 8 end
 Map.smooth_scroll = config.settings.tome.smooth_move
 Map.faction_danger_check = function(self, e) return e.rank > 3 end
 
