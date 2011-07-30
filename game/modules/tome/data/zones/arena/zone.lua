@@ -152,10 +152,10 @@ return {
 				--The physical doors
 				door = {
 					max = 5,
-					function () return 0, 0 end,
-					function () return 0, 14 end,
-					function () return 14, 0 end,
-					function () return 14, 14 end,
+					function () return 0, 1 end,
+					function () return 1, 14 end,
+					function () return 14, 1 end,
+					function () return 13, 14 end,
 					function () return 7, 0 end
 				},
 				--Main gate
@@ -268,11 +268,12 @@ return {
 			end,
 			openGates = function()
 				local gates = game.level.arena.entry.door
-				local g = game.zone:makeEntityByName(game.level, "terrain", "FLOOR")
+				local g = game.zone:makeEntityByName(game.level, "terrain", "LOCK_OPEN")
 				local x, y = 0, 0
 				for i = 1, gates.max do
 					x, y = gates[i]()
 					game.zone:addEntity(game.level, g, "terrain", x, y)
+					game.nicer_tiles:updateAround(game.level, x, y)
 				end
 				game:playSoundNear(game.player, "talents/earth")
 				game.log("#LIGHT_GREEN#The gates open!")
@@ -285,6 +286,7 @@ return {
 					x, y = gates[i]()
 					game.zone:addEntity(game.level, g, "terrain", x, y)
 					game.level.map:particleEmitter(x, y, 0.5, "arena_gate")
+					game.nicer_tiles:updateAround(game.level, x, y)
 				end
 				game:playSoundNear(game.player, "talents/earth")
 				game.log("#LIGHT_RED#The gates close!")

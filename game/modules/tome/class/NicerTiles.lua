@@ -238,7 +238,6 @@ function _M:niceTileDoor3d(level, i, j, g, nt)
 	local gs = level.map:checkEntity(i, j+1, Map.TERRAIN, "type") or "wall"
 	local gw = level.map:checkEntity(i-1, j, Map.TERRAIN, "type") or "wall"
 	local ge = level.map:checkEntity(i+1, j, Map.TERRAIN, "type") or "wall"
-
 	if gs == "wall" and gn == "wall" then self:replace(i, j, self:getTile(nt.north_south))
 	elseif gw == "wall" and ge == "wall" then self:replace(i, j, self:getTile(nt.west_east))
 	end

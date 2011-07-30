@@ -100,10 +100,10 @@ newEntity{ define_as = "BASE_NPC_ARENA1",
 }
 
 --Minibosses
-
-newEntity{ 	name = "skeletal rat",
+newEntity{ name = "skeletal rat",
 	base = "BASE_NPC_RODENT",
 	define_as = "SKELERAT",
+	type = "undead",
 	desc = [[The diminutive skeleton of a giant rat, charged with evil energies. Nobody understands the usefulness of undead rodents until several of them come after you]],
 	color = colors.GOLD,
 	level_range = {3, 4},
