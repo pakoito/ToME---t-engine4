@@ -29,3 +29,12 @@ newEntity{ base = "BASE_LORE",
 	encumberance = 0,
 }
 end
+
+newEntity{ base = "BASE_LORE",
+	define_as = "NOTE6",
+	name = "exploration log", lore="scintillating-caves-note-6",
+	desc = [[A paper scrap, left by an adventurer.]],
+	rarity = false,
+	is_magic_device = false,
+	encumberance = 0,
+}

@@ -107,4 +107,13 @@ newEntity{ base="BASE_NPC_CRYSTAL", define_as = "SPELLBLAZE_SIMULACRUM",
 	autolevel = "caster",
 	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
 	ai_tactic = resolvers.tactic"ranged",
+
+	-- Add the lore on the upstairs
+	on_added_to_level = function(self)
+		local note = game.zone:makeEntityByName(game.level, "object", "NOTE6")
+		if note then
+			game.zone:addEntity(game.level, note, "object", game.level.default_up.x, game.level.default_up.y)
+		end
+		self.on_added_to_level = nil
+	end,
 }

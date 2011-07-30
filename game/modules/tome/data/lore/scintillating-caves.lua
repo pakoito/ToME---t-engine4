@@ -79,3 +79,17 @@ I felt it touch me, I felt it reach into my heart and imbue me with its strength
 
 I see now the path that lies before me. The Spellblaze was not a curse, it was a blessing. I must open our people's eyes to the glory that our race has unlocked! I shall bring the wonders of this corruption to the whole world!]],
 }
+
+newLore{
+	id = "scintillating-caves-note-6",
+	category = "scintillating caves",
+	name = "exploration journal",
+	lore = [[#{italic}#10th Mirth, Year 122 of the Age of Ascendancy#{normal}#
+The council has seen fit to allow me to investigate the scintillating caverns after that Rhaloren madman started raving on the streets about how someone had "befouled" them... I do not see any such befoulment, but neither do I see the moving crystals this place was rumoured to have. There are oddly misplaced crystal shards, which seem to have sheared off of something larger, but hardly anything spectacular.
+
+#{italic}#2nd Summertide, Year 122 of the Age of Ascendancy#{normal}#
+It's strange, really.. from the fragments I've been able to find, they seem to adhere to the ethereal geometry of magics - the red fragments seem to be pieces of fire magic from their geometry; the blue adheres to water, etc... there also seem to be pieces of deformed crystal, as though some terrible power warped whatever colour some of these crystals used to be into something they were never intended to be - is this the "befoulment" the madman raved about?
+
+#{italic}#3rd Summertide, Year 122 of the Age of Ascendancy#{normal}#
+Well... that was certainly unexpected. There may be some truth to the rumours that these crystals can move about, or at least that they have some will of their own - I was just about to finish my investigation of the caves, when in the very last part of the cave I hadn't yet explored, I saw what appeared to be two giant... legs, growing from the cavern. I was immediately overcome by feelings of fear and malice, and not my own - that crystal sent them to me, that I was unwelcome here, that it was not yet finished. I dare not tell the council of my cowardice, so I shall... invent a more fitting report in a much safer place. If some wayward adventurer finds these notes, it is my surmise that whomever destroyed the original crystals left such a strong impression of strength and will that the rudimentary intelligence governing them decided the form of its destroyer was stronger than the original, crystalline shapes.]]
+}

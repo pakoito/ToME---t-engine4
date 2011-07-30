@@ -44,7 +44,7 @@ newLore{
 	category = "trollmire",
 	name = "tattered paper scrap (trollmire)",
 	lore = [[You find a tattered page scrap. Perhaps this is part of a diary entry.
-"11th of Allure, year 121«
+"11th of Allure, year 121"
 Saw an absolutely gigantic troll, but fortunately I threw him off my scent."
 
 Alongside the note is a part of a plan of the region.]],
