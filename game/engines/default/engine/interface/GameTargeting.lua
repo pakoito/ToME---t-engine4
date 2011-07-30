@@ -135,8 +135,20 @@ function _M:targetMode(v, msg, co, typ)
 			self.key = self.targetmode_key
 			self.key:setCurrent()
 
-			if self.target_no_star_scan or (self.target.target.entity and self.level.map.seens(self.target.target.entity.x, self.target.target.entity.y) and self.player ~= self.target.target.entity) then
-			else
+			local do_scan = true
+			if self.target_no_star_scan
+			   or (
+			       self.target.target.entity and
+			       self.level.map.seens(self.target.target.entity.x, self.target.target.entity.y) and
+			       self.player ~= self.target.target.entity
+			      ) then
+
+				if type(typ) == "table" and typ.first_target ~= "friend" and self.player:reactionToward(self.target.target.entity) >= 0 then
+				else
+					do_scan = false
+				end
+			end
+			if do_scan then
 				local filter = nil
 				if type(typ) == "table" and typ.first_target and typ.first_target == "friend" then
 					filter = function(a) return self.player:reactionToward(a) >= 0 end
