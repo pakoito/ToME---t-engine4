@@ -293,7 +293,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 
 	-- Shadow cast
 	if hitted and not target.dead and self:knowTalent(self.T_SHADOW_COMBAT) and self:isTalentActive(self.T_SHADOW_COMBAT) and self:getMana() > 0 then
-		local dam = 3 + self:getTalentLevel(self.T_SHADOW_COMBAT) * 2
+		local dam = 2 + self:combatTalentSpellDamage(self.T_SHADOW_COMBAT, 2, 40)
 		local mana = 1 + self:getTalentLevelRaw(self.T_SHADOW_COMBAT) / 1.5
 		if self:getMana() > mana then
 			DamageType:get(DamageType.DARKNESS).projector(self, target.x, target.y, DamageType.DARKNESS, dam)

@@ -26,7 +26,7 @@ newTalent{
 	sustain_stamina = 20,
 	cooldown = 5,
 	tactical = { BUFF = 2 },
-	getDamage = function(self, t) return 3 + self:getTalentLevel(t) * 2 end,
+	getDamage = function(self, t) return 2 + self:combatTalentSpellDamage(t, 2, 40) end,
 	getManaCost = function(self, t) return 1 + self:getTalentLevelRaw(t) / 1.5 end,
 	activate = function(self, t)
 		return {}
