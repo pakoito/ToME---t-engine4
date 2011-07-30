@@ -27,6 +27,10 @@ local Tiles = require "engine.Tiles"
 module(..., package.seeall, class.inherit(Base))
 
 tiles = Tiles.new(16, 16)
+tooltip_bound_x1 = 0
+tooltip_bound_x2 = function() return game.w end
+tooltip_bound_y1 = 0
+tooltip_bound_y2 = function() return game.h end
 
 function _M:init(fontname, fontsize, color, bgcolor, max)
 	self.max = max or 300
@@ -189,10 +193,11 @@ function _M:displayAtMap(tmx, tmy, mx, my, text)
 	if not self.empty then
 --		mx = mx - self.w / 2 + game.level.map.tile_w / 2
 --		my = my - self.h
-		if mx < 0 then mx = 0 end
-		if my < 0 then my = 0 end
-		if mx > game.w - self.w then mx = game.w - self.w end
-		if my > game.h - self.h then my = game.h - self.h end
+		local x1, x2, y1, y2 = util.getval(self.tooltip_bound_x1), util.getval(self.tooltip_bound_x2), util.getval(self.tooltip_bound_y1), util.getval(self.tooltip_bound_y2)
+		if mx < x1 then mx = x1 end
+		if my < y1 then my = y1 end
+		if mx > x2 - self.w then mx = x2 - self.w end
+		if my > y2 - self.h then my = y2 - self.h end
 		self.last_display_x = mx
 		self.last_display_y = my
 		self:toScreen(mx, my)
