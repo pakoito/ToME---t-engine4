@@ -518,7 +518,7 @@ function _M:getConfigs(module, cb, mod_def)
 			end
 		end
 	else
-		for k, _ in pairs((mod_def or game.__mod_info).profile_defs) do
+		for k, _ in pairs((mod_def or game.__mod_info).profile_defs or {}) do
 			if not _.no_sync then
 				core.profile.pushOrder(table.serialize{o="GetConfigs", module=module, kind=k})
 			end
@@ -564,7 +564,7 @@ function _M:syncOnline(module, mod_def)
 			end
 		end
 	else
-		for k, def in pairs((mod_def or game.__mod_info).profile_defs) do
+		for k, def in pairs((mod_def or game.__mod_info).profile_defs or {}) do
 			if not def.no_sync and def.export and sync[k] then
 				local f = def.export
 				local ret = {}
