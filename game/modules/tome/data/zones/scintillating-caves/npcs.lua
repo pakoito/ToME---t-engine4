@@ -62,5 +62,45 @@ newEntity{ base="BASE_NPC_CRYSTAL", define_as = "SPELLBLAZE_CRYSTAL",
 
 	on_die = function(self, who)
 		game.player:resolveSource():setQuestStatus("start-shaloren", engine.Quest.COMPLETED, "spellblaze")
+		game.state:activateBackupGuardian("SPELLBLAZE_SIMULACRUM", 3, 35, "I heard that some old crystals are nearly alive now in the scintillating caves.")
 	end,
+}
+
+newEntity{ base="BASE_NPC_CRYSTAL", define_as = "SPELLBLAZE_SIMULACRUM",
+	allow_infinite_dungeon = true,
+	unique = true,
+	name = "Spellblaze Simulacrum", display = "g",
+	color=colors.VIOLET,
+	desc = [[A formation of purple crystal, but where the others could only be described as polyhedral, this construct seems to strangely resemble... you, if you were several orders of magnitude larger.]],
+	killer_message = "and vaporised into nothingness",
+	level_range = {35, nil}, exp_worth = 3,
+	max_life = 300, life_rating = 15, fixed_rating = true,
+	mana_regen = 20,
+	stats = { str=15, dex=15, cun=20, mag=35, con=15 },
+	rank = 4,
+	size_category = 5,
+	infravision = 10,
+	see_invisible = 10,
+	blind_immune = 1,
+	instakill_immune = 1,
+
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+	resolvers.drops{chance=100, nb=1, {defined="GOLEM_HEART", random_art_replace={chance=75}} },
+	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
+
+	resolvers.talents{
+		[Talents.T_ARCANE_POWER]=5,
+		[Talents.T_FLAME]={base=3, every=7, max=5},
+		[Talents.T_ICE_SHARDS]={base=3, every=7, max=5},
+		[Talents.T_SOUL_ROT]={base=3, every=7, max=5},
+		[Talents.T_MANATHRUST]={base=3, every=7, max=5},
+		[Talents.T_LIGHTNING]={base=3, every=7, max=5},
+		[Talents.T_ICE_STORM]={base=3, every=7, max=5},
+	},
+	resolvers.sustains_at_birth(),
+	resolvers.inscriptions(4, {}),
+
+	autolevel = "caster",
+	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"ranged",
 }
