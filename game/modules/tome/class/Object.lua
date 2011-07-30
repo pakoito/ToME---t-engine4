@@ -238,6 +238,11 @@ function _M:getTextualDesc(compare_with)
 	if self.slot_forbid == "OFFHAND" then desc:add("It must be held with both hands.", true) end
 	desc:add(true)
 
+	if self.set_list then
+		desc:add({"color","GREEN"}, "It is part of a set of items.", {"color","LAST"}, true)
+		if self.set_complete then desc:add({"color","LIGHT_GREEN"}, "The set is complete.", {"color","LAST"}, true) end
+	end
+
 	-- Stop here if unided
 	if not self:isIdentified() then return desc end
 
@@ -867,7 +872,7 @@ function _M:getTextualDesc(compare_with)
 	for tid, data in pairs(talents) do
 		desc:add(talents[tid][3] and {"color","GREEN"} or {"color","WHITE"}, ("Talent on hit(spell): %s (%d%% chance level %d)."):format(self:getTalentFromId(tid).name, talents[tid][1], talents[tid][2]), {"color","LAST"}, true)
 	end
-	
+
 	if self.extra_description then
 		desc:add({"color", "LIGHT_UMBER"}, self.extra_description, {"color","LAST"}, true)
 	end
@@ -1110,4 +1115,16 @@ function _M:on_identify()
 		game.player:additionalLore(self.unique, self:getName{no_add_name=true, do_color=false, no_count=true}, "artifacts", self.desc)
 		game.player:learnLore(self.unique)
 	end
+end
+
+--- Add some special properties right before wearing it
+function _M:specialWearAdd(prop, value)
+	self._special_wear = self._special_wear or {}
+	self._special_wear[prop] = self:addTemporaryValue(prop, value)
+end
+
+--- Add some special properties right when completting a set
+function _M:specialSetAdd(prop, value)
+	self._special_set = self._special_set or {}
+	self._special_set[prop] = self:addTemporaryValue(prop, value)
 end

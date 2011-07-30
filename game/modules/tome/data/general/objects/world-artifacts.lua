@@ -858,36 +858,6 @@ newEntity{ base = "BASE_KNIFE",
 	},
 }
 
--- The Twin blades Moon and Star
-local activate_pair = function(moon, star, who)
-	local DamageType = require "engine.DamageType"
-	moon.paired = {}
-	star.paired = {}
-
-	-- The Moon knife's bonuses
-	moon.paired._special1 = {who, "lite", who:addTemporaryValue("lite", 1)}
-	moon.paired._special2 = {moon, "combat", moon:addTemporaryValue("combat", {melee_project={[DamageType.RANDOM_CONFUSION]=3}})}
-	moon.paired._special3 = {who, {"inc_damage", DamageType.DARKNESS}, who:addTemporaryValue({"inc_damage", DamageType.DARKNESS}, 10)}
-	-- The Star knife's bonuses
-	star.paired._special1 = {who, "lite", who:addTemporaryValue("lite", 1)}
-	star.paired._special2 = {star, "combat", star:addTemporaryValue("combat", {melee_project={[DamageType.RANDOM_BLIND]=3}})}
-	star.paired._special3 = {who, "inc_damage", who:addTemporaryValue("inc_damage", {[DamageType.LIGHT]=10}) }
-	game.logPlayer(who, "The two blades glow brightly as they are brought close together.")
-end
-
-local deactivate_pair = function(moon, star, who)
-	-- Remove the paired bonusese
-	for k, id in pairs(moon.paired) do
-		id[1]:removeTemporaryValue(id[2], id[3])
-	end
-	for k, id in pairs(star.paired) do
-		id[1]:removeTemporaryValue(id[2], id[3])
-	end
-	moon.paired = nil
-	star.paired = nil
-	game.logPlayer(who, "The light from the two blades fades as they are separated.")
-end
-
 newEntity{ base = "BASE_KNIFE", define_as = "ART_PAIR_MOON",
 	power_source = {arcane=true},
 	unique = true,
@@ -912,22 +882,15 @@ newEntity{ base = "BASE_KNIFE", define_as = "ART_PAIR_MOON",
 			[DamageType.DARKNESS] = 10,
 		},
 	},
-	activate_pair = activate_pair,
-	deactivate_pair = deactivate_pair,
-	on_wear = function(self, who)
-		-- Look for the Moon knife
-		local o, item, inven_id = who:findInAllInventoriesBy("define_as", "ART_PAIR_STAR")
-		if o and who:getInven(inven_id).worn then
-			self.activate_pair(o, self, who)
-		end
+	set_list = { {"define_as","ART_PAIR_STAR"} },
+	on_set_complete = function(self, who)
+		self:specialSetAdd({"wielder","lite"}, 1)
+		self:specialSetAdd({"combat","melee_project"}, {[engine.DamageType.RANDOM_CONFUSION]=3})
+		self:specialSetAdd({"wielder","inc_damage"}, {[engine.DamageType.DARKNESS]=10})
+		game.logSeen(who, "#ANTIQUE_WHITE#The two blades glow brightly as they are brought close together.")
 	end,
-	on_takeoff = function(self, who)
-		if self.paired then
-			local o, item, inven_id = who:findInAllInventoriesBy("define_as", "ART_PAIR_STAR")
-			if o and who:getInven(inven_id).worn then
-				self.deactivate_pair(o, self, who)
-			end
-		end
+	on_set_broken = function(self, who)
+		game.logPlayer(who, "#ANTIQUE_WHITE#The light from the two blades fades as they are separated.")
 	end,
 }
 
@@ -955,23 +918,13 @@ newEntity{ base = "BASE_KNIFE", define_as = "ART_PAIR_STAR",
 			[DamageType.LIGHT] = 10,
 		},
 	},
-	activate_pair = activate_pair,
-	deactivate_pair = deactivate_pair,
-	on_wear = function(self, who)
-		-- Look for the Moon knife
-		local o, item, inven_id = who:findInAllInventoriesBy("define_as", "ART_PAIR_MOON")
-		if o and who:getInven(inven_id).worn then
-			self.activate_pair(o, self, who)
-		end
+	set_list = { {"define_as","ART_PAIR_MOON"} },
+	on_set_complete = function(self, who)
+		self:specialSetAdd({"wielder","lite"}, 1)
+		self:specialSetAdd({"combat","melee_project"}, {[engine.DamageType.RANDOM_BLIND]=3})
+		self:specialSetAdd({"wielder","inc_damage"}, {[engine.DamageType.LIGHT]=10})
 	end,
-	on_takeoff = function(self, who)
-		if self.paired then
-			local o, item, inven_id = who:findInAllInventoriesBy("define_as", "ART_PAIR_MOON")
-			if o and who:getInven(inven_id).worn then
-				self.deactivate_pair(o, self, who)
-			end
-		end
-	end,
+
 }
 
 newEntity{ base = "BASE_RING",
@@ -1346,9 +1299,9 @@ It was made by Humans for Humans; only they can harness the true power of the ro
 			local Stats = require "engine.interface.ActorStats"
 			local DamageType = require "engine.DamageType"
 
-			self.wielded._special1 = {"inc_stats", who:addTemporaryValue("inc_stats", { [Stats.STAT_MAG] = 3, [Stats.STAT_CUN] = 9, }) }
-			self.wielded._special2 = {"inc_damage", who:addTemporaryValue("inc_damage", {[DamageType.ARCANE]=7}) }
-			self.wielded._special3 = {"combat_spellcrit", who:addTemporaryValue("combat_spellcrit", 2) }
+			self:specialWearAdd({"wielder","inc_stats"}, { [Stats.STAT_MAG] = 3, [Stats.STAT_CUN] = 9, })
+			self:specialWearAdd({"wielder","inc_damage"}, {[DamageType.ARCANE]=7})
+			self:specialWearAdd({"wielder","combat_spellcrit"}, 2)
 			game.logPlayer(who, "#LIGHT_BLUE#You feel as surge of power as you wear the vestments of the old Human Conclave!")
 		end
 	end,
@@ -1556,9 +1509,9 @@ newEntity{ base = "BASE_BATTLEAXE",
 		if who.descriptor and who.descriptor.race == "Dwarf" then
 			local Stats = require "engine.interface.ActorStats"
 
-			self.wielded._special1 = {"inc_stats", who:addTemporaryValue("inc_stats", { [Stats.STAT_CON] = 4, [Stats.STAT_DEX] = 4, }) }
-			self.wielded._special2 = {"stun_immune", who:addTemporaryValue("stun_immune", 0.5) }
-			self.wielded._special3 = {"knockback_immune", who:addTemporaryValue("knockback_immune", 0.5) }
+			self:specialWearAdd({"wielder","inc_stats"}, { [Stats.STAT_CON] = 7, [Stats.STAT_DEX] = 7, })
+			self:specialWearAdd({"wielder","stun_immune"}, 0.5)
+			self:specialWearAdd({"wielder","knockback_immune"}, 0.5)
 			game.logPlayer(who, "#LIGHT_BLUE#You feel as surge of power as you wield the axe of your ancestors!")
 		end
 	end,

@@ -98,7 +98,6 @@ function _M:addObject(inven_id, o)
 	-- Do whatever is needed when wearing this object
 	if inven.worn then
 		self:onWear(o)
-		o:check("on_wear", self)
 	end
 
 	self:onAddObject(o)
@@ -169,7 +168,6 @@ function _M:removeObject(inven, item, no_unstack)
 	-- Do whatever is needed when taking off this object
 	if inven.worn then
 		self:onTakeoff(o)
-		o:check("on_takeoff", self)
 	end
 
 	self:onRemoveObject(o)
@@ -377,6 +375,7 @@ end
 function _M:onWear(o)
 	-- Apply wielder properties
 	o.wielded = {}
+	o:check("on_wear", self)
 	if o.wielder then
 		for k, e in pairs(o.wielder) do
 			o.wielded[k] = self:addTemporaryValue(k, e)
@@ -395,6 +394,7 @@ function _M:onTakeoff(o)
 			end
 		end
 	end
+	o:check("on_takeoff", self)
 	o.wielded = nil
 end
 

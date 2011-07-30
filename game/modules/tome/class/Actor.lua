@@ -1791,8 +1791,36 @@ function _M:updateModdableTile()
 end
 
 --- Call when an object is worn
-function _M:onWear(o)
-	engine.interface.ActorInventory.onWear(self, o)
+-- This doesnt call the base interface onWear, it copies the code because we need some tricky stuff
+function _M:onWear(o, bypass_set)
+	o.wielded = {}
+
+	if o.set_list and not bypass_set then
+		local list = {}
+		for i, d in ipairs(o.set_list) do
+			local po, item, inven_id = self:findInAllInventoriesBy(d[1], d[2])
+			if po and self:getInven(inven_id).worn then
+				list[#list+1] = po
+			end
+		end
+		if #list == #o.set_list then
+			for i, po in ipairs(list) do
+				self:onTakeoff(po, true)
+				po:check("on_set_complete", self)
+				self:onWear(po, true)
+				po.set_complete = true
+			end
+			o:check("on_set_complete", self)
+			o.set_complete = true
+		end
+	end
+
+	o:check("on_wear", self)
+	if o.wielder then
+		for k, e in pairs(o.wielder) do
+			o.wielded[k] = self:addTemporaryValue(k, e)
+		end
+	end
 
 	if o.talent_on_spell then
 		self.talent_on_spell = self.talent_on_spell or {}
@@ -1807,8 +1835,38 @@ function _M:onWear(o)
 end
 
 --- Call when an object is taken off
-function _M:onTakeoff(o)
+function _M:onTakeoff(o, bypass_set)
 	engine.interface.ActorInventory.onTakeoff(self, o)
+
+	if o.set_list and o.set_complete and not bypass_set then
+		local list = {}
+		for i, d in ipairs(o.set_list) do
+			local po, item, inven_id = self:findInAllInventoriesBy(d[1], d[2])
+			if po then
+				self:onTakeoff(po, true)
+				po:check("on_set_broken", self)
+				if po._special_set then
+					for k, id in pairs(po._special_set) do
+						po:removeTemporaryValue(k, id)
+					end
+					po._special_set = nil
+				end
+				self:onWear(po, true)
+				po.set_complete = nil
+			end
+		end
+		o:check("on_set_broken", self)
+		if o._special_set then
+			for k, id in pairs(o._special_set) do o:removeTemporaryValue(k, id) end
+			o._special_set = nil
+		end
+		o.set_complete = nil
+	end
+
+	if o._special_wear then
+		for k, id in pairs(o._special_wear) do o:removeTemporaryValue(k, id) end
+		o._special_wear = nil
+	end
 
 	if o.talent_on_spell then
 		self.talent_on_spell = self.talent_on_spell or {}

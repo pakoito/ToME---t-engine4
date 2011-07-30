@@ -776,6 +776,34 @@ newEntity{ base = "BASE_GLOVES", define_as = "FLAMEWROUGHT",
 	use_talent = { id = Talents.T_RITCH_FLAMESPITTER_BOLT, level = 2, power = 6 },
 }
 
+-- The crystal set
+local crystal_activate_pair = function(w, a, who)
+	local DamageType = require "engine.DamageType"
+	w.paired = {}
+	a.paired = {}
+
+	-- The weapon's bonuses
+	w.talent_on_spell = { {chance=10, talent="T_MANATHRUST", level=3} }
+	w.combat.talent_on_hit = { T_MANATHRUST = {level=3, chance=10} }
+	w.paired._special1 = {who, "combat_spellcrit", who:addTemporaryValue("combat_spellcrit", 10)}
+	w.paired._special2 = {who, "combat_physcrit", who:addTemporaryValue("combat_physcrit", 10)}
+	w.paired._special3 = {who, "resists_pen", who:addTemporaryValue("resists_pen", {[DamageType.ARCANE]=20})}
+	-- The armor's bonuses
+	a.paired._special1 = {who, "stun_immune", who:addTemporaryValue("stun_immune", 0.5)}
+	a.paired._special2 = {who, "blind_immune", who:addTemporaryValue("blind_immune", 0.5)}
+	game.logPlayer(who, "#GOLD#As the crystalline weapon and armour are brought together, they begin to emit a constant humming.")
+end
+local crystal_deactivate_pair = function(w, a, who)
+	-- Remove the paired bonusese
+	for k, id in pairs(w) do id[1]:removeTemporaryValue(id[2], id[3]) end
+	for k, id in pairs(a) do id[1]:removeTemporaryValue(id[2], id[3]) end
+	w.talent_on_spell = nil
+	w.combat.talent_on_hit = nil
+	w.paired = nil
+	a.paired = nil
+	game.logPlayer(who, "#GOLD#The humming from the crystalline artifacts fades as they are separated.")
+end
+
 newEntity{ base = "BASE_GEM", define_as = "CRYSTAL_FOCUS",
 	power_source = {arcane=true},
 	unique = true,
@@ -805,6 +833,7 @@ newEntity{ base = "BASE_GEM", define_as = "CRYSTAL_FOCUS",
 				o.combat.dam = o.combat.dam * 1.25
 				o.combat.damtype = engine.DamageType.ARCANE
 			end
+			o.is_crystalline_weapon = true
 			o.wielder = o.wielder or {}
 			o.wielder.combat_spellpower = 12
 			o.wielder.combat_dam = 12
@@ -813,11 +842,83 @@ newEntity{ base = "BASE_GEM", define_as = "CRYSTAL_FOCUS",
 			o.wielder.inc_stats[engine.interface.ActorStats.STAT_CON] = 3
 			o.wielder.inc_damage = o.wielder.inc_damage or {}
 			o.wielder.inc_damage[engine.DamageType.ARCANE] = 10
+
+			o.set_list = { {"is_crystalline_armor", true} }
+			o.on_set_complete = function(self, who)
+				self.talent_on_spell = { {chance=10, talent="T_MANATHRUST", level=3} }
+				self.combat.talent_on_hit = { T_MANATHRUST = {level=3, chance=10} }
+				self:specialSetAdd({"wielder","combat_spellcrit"}, 10)
+				self:specialSetAdd({"wielder","combat_physcrit"}, 10)
+				self:specialSetAdd({"wielder","resists_pen"}, {[engine.DamageType.ARCANE]=20, [engine.DamageType.PHYSICAL]=15})
+				game.logPlayer(who, "#GOLD#As the crystalline weapon and armour are brought together, they begin to emit a constant humming.")
+			end
+			o.on_set_broken = function(self, who)
+				self.talent_on_spell = nil
+				self.combat.talent_on_hit = nil
+				game.logPlayer(who, "#GOLD#The humming from the crystalline artifacts fades as they are separated.")
+			end
+
 			who:sortInven()
 			who.changed = true
 
 			game.logPlayer(who, "You fix the crystal on the %s and create the %s.", oldname, o:getName{do_color=true})
---			return true
+		end)
+	end },
+}
+
+newEntity{ base = "BASE_GEM", define_as = "CRYSTAL_HEART",
+	power_source = {arcane=true},
+	unique = true,
+	unided_name = "coruscating crystal",
+	name = "Crystal Heart", subtype = "multi-hued",
+	color = colors.RED, image="object/ruby.png",
+	level_range = {35, 42},
+	desc = [[This crystal is huge, easily the size of your head. It sparkles brilliantly almost of its own accord.]],
+	rarity = 250,
+	cost = 200,
+	material_level = 5,
+
+	max_power = 1, power_regen = 1,
+	use_power = { name = "combine with a suit of body armor", power = 1, use = function(self, who, gem_inven, gem_item)
+		-- Body armour only, can be cloth, light, heavy, or massive though. No clue if o.slot works for this.
+		who:showInventory("Fuse with which armor?", who:getInven("INVEN"), function(o) return o.type == "armor" and o.slot == "BODY" and not o.egoed and not o.unique end, function(o, item)
+			local oldname = o:getName{do_color=true}
+
+			-- Remove the gem
+			who:removeObject(gem_inven, gem_item)
+			who:sortInven(gem_inven)
+
+			-- Change the weapon... err, armour. No, I'm not copy/pasting here, honest!
+			o.name = "Crystalline "..o.name:capitalize()
+			o.unique = o.name
+			o.no_unique_lore = true
+			o.is_crystalline_armor = true
+
+			o.wielder = o.wielder or {}
+			-- This is supposed to add 1 def for crap cloth robes if for some reason you choose it instead of better robes, and then multiply by 1.25.
+			o.wielder.combat_def = ((o.wielder.combat_def or 0) + 2) * 1.7
+			-- Same for armour. Yay crap cloth!
+			o.wielder.combat_armor = ((o.wielder.combat_armor or 0) + 3) * 1.7
+			o.wielder.combat_spellresist = 35
+			o.wielder.combat_physresist = 25
+			o.wielder.inc_stats = o.wielder.inc_stats or {}
+			o.wielder.inc_stats[engine.interface.ActorStats.STAT_MAG] = 8
+			o.wielder.inc_stats[engine.interface.ActorStats.STAT_CON] = 8
+			o.wielder.inc_stats[engine.interface.ActorStats.STAT_LCK] = 12
+			o.wielder.resists = o.wielder.resists or {}
+			o.wielder.resists = { [engine.DamageType.ARCANE] = 35, [engine.DamageType.PHYSICAL] = 15 }
+			o.wielder.poison_immune = 1
+			o.wielder.disease_immune = 1
+
+			o.set_list = { {"is_crystalline_weapon", true} }
+			o.on_set_complete = function(self, who)
+				self:specialSetAdd({"wielder","stun_immune"}, 0.5)
+				self:specialSetAdd({"wielder","blind_immune"}, 0.5)
+			end
+			who:sortInven()
+			who.changed = true
+
+			game.logPlayer(who, "You fix the crystal on the %s and create the %s.", oldname, o:getName{do_color=true})
 		end)
 	end },
 }
