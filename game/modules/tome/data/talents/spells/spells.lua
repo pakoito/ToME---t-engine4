@@ -57,6 +57,9 @@ newTalentType{ type="golem/golem", name = "golem", description = "Golem basic ca
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/necrotic-minions", name = "necrotic minions", description = "Create and empower dumb undead minions." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/advanced-necrotic-minions", name = "advanced necrotic minions", description = "Create and empower powerful undead minions." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/nightfall", name = "nightfall", description = "Manipulate darkness itself to slaughter your foes." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/shades", name = "shades", description = "Invoke and control shades." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/necrosis", name = "necrosis", description = "Gain control over death, eventually turning into a lich." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/grave", name = "grave", description = "Use the rotting cold doom of the tomb to fell your foes." }
 
 -- Stone Warden spells
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/arcane-shield", name = "arcane shield", description = "Infuse arcane forces in your shield." }
@@ -226,3 +229,6 @@ load("/data/talents/spells/arcane-shield.lua")
 load("/data/talents/spells/necrotic-minions.lua")
 load("/data/talents/spells/advanced-necrotic-minions.lua")
 load("/data/talents/spells/nightfall.lua")
+load("/data/talents/spells/shades.lua")
+load("/data/talents/spells/necrosis.lua")
+load("/data/talents/spells/grave.lua")

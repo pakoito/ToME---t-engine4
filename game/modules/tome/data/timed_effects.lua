@@ -1655,6 +1655,29 @@ newEffect{
 }
 
 newEffect{
+	name = "CURSE_HATE",
+	desc = "Curse of Hate",
+	long_desc = function(self, eff) return ("The target is cursed, force all foes in a radius of 5 to attack it.") end,
+	type = "curse",
+	status = "detrimental",
+	parameters = { },
+	on_gain = function(self, err) return "#Target# is cursed.", "+Curse" end,
+	on_lose = function(self, err) return "#Target# is no longer cursed.", "-Curse" end,
+	on_timeout = function(self, eff)
+		if self.dead or not self.x then return end
+		local tg = {type="ball", range=0, radius=5, friendlyfire=false}
+		self:project(tg, self.x, self.y, function(tx, ty)
+			local a = game.level.map(tx, ty, Map.ACTOR)
+			if a and not a.dead and a:reactionToward(self) < 0 then a:setTarget(self) end
+		end)
+	end,
+	activate = function(self, eff)
+	end,
+	deactivate = function(self, eff)
+	end,
+}
+
+newEffect{
 	name = "CONTINUUM_DESTABILIZATION",
 	desc = "Continuum Destabilization",
 	long_desc = function(self, eff) return ("The target has been affected by space or time manipulations and is becoming more resistant to them (+%d)."):format(eff.power) end,

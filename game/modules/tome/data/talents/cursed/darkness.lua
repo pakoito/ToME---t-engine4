@@ -219,6 +219,7 @@ newTalent{
 					if self.particles then game.level.map:removeParticleEmitter(self.particles) end
 					game.level.map:remove(self.x, self.y, Map.TERRAIN+3)
 					game.level:removeEntity(self)
+					self.creepingDark = nil
 					--game.level.map:redisplay()
 				else
 					self.duration = self.duration - 1

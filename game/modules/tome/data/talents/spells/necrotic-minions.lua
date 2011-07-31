@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 newTalent{
-	name = "Necrotic Aura",
+	name = "Necrotic Aura", image = "talents/aura_mastery.png",
 	type = {"spell/other", 1},
 	points = 1,
 	mode = "sustained",
