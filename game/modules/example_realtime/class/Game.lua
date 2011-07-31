@@ -180,6 +180,11 @@ function _M:getPlayer()
 	return self.player
 end
 
+--- Says if this savefile is usable or not
+function _M:isLoadable()
+	return not self:getPlayer(true).dead
+end
+
 function _M:tick()
 	if self.level then
 		self:targetOnTick()

@@ -167,7 +167,7 @@ function _M:run()
 	self:setupMouse()
 
 	-- Starting from here we create a new game
-	if not self.player then self:newGame() end
+	if not self.player or self.player.dead then util.showMainMenu() end
 
 	self:initTargeting()
 
@@ -741,6 +741,11 @@ function _M:getPlayer(main)
 	else
 		return self.player
 	end
+end
+
+--- Says if this savefile is usable or not
+function _M:isLoadable()
+	return not self:getPlayer(true).dead
 end
 
 --- Clones the game world for chronomancy spells

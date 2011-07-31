@@ -165,8 +165,15 @@ end
 --- Returns the player
 -- Reimplement it in your module, this can just return nil if you dont want/need
 -- the engine adjusting stuff to the player or if you have many players or whatever
-function _M:getPlayer()
+-- @param main if true the game should try to return the "main" player, if any
+function _M:getPlayer(main)
 	return nil
+end
+
+--- Says if this savefile is usable or not
+-- Reimplement it in your module, returning false when the player is dead
+function _M:isLoadable()
+	return true
 end
 
 --- Gets/increment the savefile version

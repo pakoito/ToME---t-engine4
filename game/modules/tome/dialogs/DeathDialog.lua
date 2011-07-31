@@ -35,6 +35,7 @@ function _M:init(actor)
 
 	self:generateList()
 	if self.dont_show then return end
+	game:saveGame()
 
 	self.c_desc = Textzone.new{width=self.iw, auto_height=true, text=[[You have #LIGHT_RED#died#LAST#!
 Death in ToME is usually permanent, but if you have a means of resurrection it will be proposed in the menu below.
@@ -160,6 +161,7 @@ function _M:eidolonPlane()
 
 		game.log("#LIGHT_RED#From the brink of death you seem to be yanked to another plane.")
 		game.player:updateMainShader()
+		game:saveGame()
 	end)
 	return true
 end
@@ -169,10 +171,6 @@ function _M:use(item)
 	local act = item.action
 
 	if act == "exit" then
-		local save = Savefile.new(game.save_name)
-		save:delete()
-		save:close()
-		world:saveWorld()
 		if item.subaction == "none" then
 			util.showMainMenu()
 		elseif item.subaction == "restart" then

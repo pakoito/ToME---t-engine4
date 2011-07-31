@@ -47,7 +47,7 @@ function _M:init()
 		for j, save in ipairs(m.savefiles) do
 			local mod_string = ("%s-%d.%d.%d"):format(m.short_name, save.module_version and save.module_version[1] or -1, save.module_version and save.module_version[2] or -1, save.module_version and save.module_version[3] or -1)
 			local mod = list[mod_string]
-			if mod then
+			if mod and save.loadable then
 				save.fct = function()
 					Module:instanciate(mod, save.name, false)
 				end
