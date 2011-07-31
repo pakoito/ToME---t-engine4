@@ -35,7 +35,8 @@ function _M:sendObjectLink(o)
 end
 
 function _M:sendActorLink(m)
-	local name = m.name:removeUIDCodes()
+	local rank, rank_color = m:TextRank()
+	local name = rank_color..m.name:removeUIDCodes().."#LAST#"
 	local desc = tostring(m:tooltip(m.x, m.y, game.player)):removeUIDCodes()
 	if not desc then return end
 	local ser = zlib.compress(table.serialize{kind="actor-link", name=name, desc=desc})

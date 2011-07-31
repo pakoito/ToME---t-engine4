@@ -683,6 +683,7 @@ end
 -- @param no_default if true then no default values will be assigned
 -- @param res the table to load into, defaults to a new one
 -- @param mod an optional function to which will be passed each entity as they are created. Can be used to adjust some values on the fly
+-- @param loaded an optional table of already loaded files
 -- @usage MyEntityClass:loadList("/data/my_entities_def.lua")
 function _M:loadList(file, no_default, res, mod, loaded)
 	if type(file) == "table" then
