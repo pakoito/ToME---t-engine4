@@ -17,8 +17,6 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local Object = require "engine.Object"
-
 newTalent{
 	name = "Time Skip",
 	type = {"chronomancy/timetravel",1},
@@ -50,7 +48,7 @@ newTalent{
 			power = self:combatSpellpower() * 1 + (self:getTalentLevel(self.T_SPACETIME_MASTERY)/10)
 		end
 		
-		if target and not target.player then
+		if target then
 			local hit = self:checkHit(power, target:combatSpellResist() + (target:attr("continuum_destabilization") or 0))
 			if not hit then
 				game.logSeen(target, "%s resists!", target.name:capitalize())
@@ -59,58 +57,18 @@ newTalent{
 		else
 			return
 		end
-
-		-- Create an object to time the effect and store the creature
-		-- First, clone the terrain that we are replacing
-		--[[local terrain = game.level.map(target.x, target.y, engine.Map.TERRAIN)
-		local temporal_instability = mod.class.Object.new{
-			old_feat = game.level.map(target.x, target.y, engine.Map.TERRAIN),
-			name = "temporal instability", type="temporal", subtype="anomaly",
-			display = '&', color=colors.LIGHT_BLUE,
-			temporary = t.getDuration(self, t),
-			canAct = false,
-			target = target,
-			act = function(self)
-				self:useEnergy()
-				self.temporary = self.temporary - 1
-				if self.temporary <= 0 then
-					game.level.map(self.target.x, self.target.y, engine.Map.TERRAIN, self.old_feat)
-					game.level:removeEntity(self)
-					local mx, my = util.findFreeGrid(self.target.x, self.target.y, 20, true, {[engine.Map.ACTOR]=true})
-					game.zone:addEntity(game.level, self.target, "actor", mx, my)
-				end
-			end,
-			summoner_gain_exp = true,
-			summoner = self,
-		}
-		-- Mixin the old terrain
-		table.update(temporal_instability, terrain)
-		-- Now update the display overlay
-		local overlay = engine.Entity.new{
-		--	image = "terrain/wormhole.png",
-			display = '&', color=colors.LIGHT_BLUE, image="object/temporal_instability.png",
-			display_on_seen = true,
-			display_on_remember = true,
-		}
-		if not temporal_instability.add_displays then
-			temporal_instability.add_displays = {overlay}
-		else
-			table.append(temporal_instability.add_displays, overlay)
-		end ]]--
-
+		
+		-- deal the damage first so time prison doesn't prevent it
 		self:project(tg, tx, ty, DamageType.TEMPORAL, self:spellCrit(t.getDamage(self, t)))
 		game.level.map:particleEmitter(tx, ty, 1, "temporal_thrust")
 		game:playSoundNear(self, "talents/arcane")
-		-- Remove the target and place the temporal placeholder
+		
+		-- make sure the target survives the initial hit and then time prison
 		if not target.dead then
 			if target ~= self then
 				target:setEffect(target.EFF_CONTINUUM_DESTABILIZATION, 100, {power=self:combatSpellpower(0.3)})
 			end
-			--game.logSeen(target, "%s has moved forward in time!", target.name:capitalize())
-			self:project(tg, tx, ty, DamageType.TIME_PRISON, t.getDuration(self, t), {type="manathrust"})
-			--game.level:removeEntity(target)
-			--game.level:addEntity(temporal_instability)
-			--game.level.map(target.x, target.y, engine.Map.TERRAIN, temporal_instability)
+			target:setEffect(target.EFF_TIME_PRISON, t.getDuration(self, t), {})
 		else
 			game.logSeen(target, "%s has been killed by the temporal energy!", target.name:capitalize())
 		end

@@ -94,8 +94,8 @@ newTalent{
 	direct_hit = true,
 	requires_target = true,
 	range = 6,
-	getCooldown = function(self, t) return 2 + math.floor(self:getTalentLevel(t) * getParadoxModifier(self, pm)/2) end,
-	getTalentCount = function(self, t) return math.ceil(self:getTalentLevel(t)) end,
+	getTalentCount = function(self, t) return 2 + math.floor(self:getTalentLevel(t) * getParadoxModifier(self, pm)/2) end,
+	getCooldown = function(self, t) return math.ceil(self:getTalentLevel(t)) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local tx, ty = self:getTarget(tg)
@@ -115,10 +115,10 @@ newTalent{
 			local t = target:getTalentFromId(tid)
 			if t and not target.talents_cd[tid] and t.mode == "activated" and not t.innate then tids[#tids+1] = t end
 		end
-		
+
 		local count = 0
 		local cdr = t.getCooldown(self, t)
-		
+
 		for i = 1, t.getTalentCount(self, t) do
 			local t = rng.tableRemove(tids)
 			if not t then break end
@@ -126,7 +126,7 @@ newTalent{
 			game.logSeen(target, "%s's %s is disrupted!", target.name:capitalize(), t.name)
 			count = count + 1
 		end
-		
+
 		if count >= 1 then
 			local tids = {}
 			for tid, _ in pairs(self.talents_cd) do
