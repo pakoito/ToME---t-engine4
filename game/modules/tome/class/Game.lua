@@ -167,7 +167,8 @@ function _M:run()
 	self:setupMouse()
 
 	-- Starting from here we create a new game
-	if not self.player or self.player.dead then util.showMainMenu() end
+	if self.player and self.player.dead then util.showMainMenu() return end
+	if not self.player then self:newGame() end
 
 	self:initTargeting()
 
