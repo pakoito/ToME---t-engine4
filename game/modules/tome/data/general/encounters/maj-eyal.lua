@@ -92,7 +92,7 @@ newEntity{
 						},
 						post_process = function(level)
 							for uid, e in pairs(level.entities) do
-								if e.faction ~= "allied-kingdoms" then
+								if e.faction ~= "victim" then
 									e.faction="assassin-lair"
 									e.cant_be_moved = true
 								end
