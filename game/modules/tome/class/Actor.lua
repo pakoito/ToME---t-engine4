@@ -455,7 +455,7 @@ function _M:defineDisplayCallback()
 			-- Tactical life info
 			if on_map then
 				local dh = h * 0.1
-				local lp = self.life / self.max_life + 0.0001
+				local lp = math.max(0, self.life) / self.max_life + 0.0001
 				core.display.drawQuad(x + 3, y + h - dh, w - 6, dh, 129, 180, 57, 128)
 				core.display.drawQuad(x + 3, y + h - dh, (w - 6) * lp, dh, 50, 220, 77, 255)
 			end
@@ -861,7 +861,11 @@ function _M:tooltip(x, y, seen_by)
 	ts:add("Rank: ") ts:merge(rank_color:toTString()) ts:add(rank, {"color", "WHITE"}, true)
 	ts:add({"color", 0, 255, 255}, ("Level: %d"):format(self.level), {"color", "WHITE"}, true)
 	ts:add(("Exp: %d/%d"):format(self.exp, self:getExpChart(self.level+1) or "---"), true)
-	ts:add({"color", 255, 0, 0}, ("HP: %d (%d%%)"):format(self.life, self.life * 100 / self.max_life), {"color", "WHITE"}, true)
+	if self.life >= 0 then
+		ts:add({"color", 255, 0, 0}, ("HP: %d (%d%%)"):format(self.life, self.life * 100 / self.max_life), {"color", "WHITE"}, true)
+	else
+		ts:add({"color", 255, 0, 0}, "HP: ???", {"color", "WHITE"}, true)
+	end
 	if self:attr("encased_in_ice") then
 		local eff = self:hasEffect(self.EFF_FROZEN)
 		ts:add({"color", 0, 255, 128}, ("Iceblock: %d"):format(eff.hp), {"color", "WHITE"}, true)
@@ -896,7 +900,7 @@ end
 --- Regenerate life, call it from your actor class act() method
 function _M:regenLife()
 	if self.life_regen and not self:attr("no_life_regen") then
-		self.life = util.bound(self.life + self.life_regen * util.bound((self.healing_factor or 1), 0, 2.5), 0, self.max_life)
+		self.life = util.bound(self.life + self.life_regen * util.bound((self.healing_factor or 1), 0, 2.5), self.die_at, self.max_life)
 	end
 end
 

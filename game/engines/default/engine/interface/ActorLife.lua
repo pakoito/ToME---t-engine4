@@ -29,6 +29,7 @@ function _M:init(t)
 	self.max_life = t.max_life or 100
 	self.life = t.life or self.max_life
 	self.life_regen = t.life_regen or 0
+	self.die_at = t.die_at or 0
 end
 
 --- Checks if something bumps in us
@@ -46,14 +47,14 @@ end
 --- Regenerate life, call it from your actor class act() method
 function _M:regenLife()
 	if self.life_regen then
-		self.life = util.bound(self.life + self.life_regen, 0, self.max_life)
+		self.life = util.bound(self.life + self.life_regen, self.die_at, self.max_life)
 	end
 end
 
 --- Heal some
 function _M:heal(value, src)
 	if self.onHeal then value = self:onHeal(value, src) end
-	self.life = util.bound(self.life + value, 0, self.max_life)
+	self.life = util.bound(self.life + value, self.die_at, self.max_life)
 	self.changed = true
 end
 
@@ -65,7 +66,7 @@ function _M:takeHit(value, src, death_note)
 	if self.onTakeHit then value = self:onTakeHit(value, src) end
 	self.life = self.life - value
 	self.changed = true
-	if self.life <= 0 then
+	if self.life <= self.die_at then
 		if src.on_kill and src:on_kill(self) then return false, value end
 		game.logSeen(self, "#{bold}#%s killed %s!#{normal}#", src.name:capitalize(), self.name)
 		return self:die(src, death_note), value

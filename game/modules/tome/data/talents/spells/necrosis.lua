@@ -21,45 +21,25 @@ newTalent{
 	name = "Blurred Mortality",
 	type = {"spell/necrosis",1},
 	require = spells_req1,
+	mode = "sustained",
 	points = 5,
-	random_ego = "attack",
-	mana = 12,
-	cooldown = 3,
-	tactical = { ATTACK = 2 },
-	range = 10,
-	reflectable = true,
-	proj_speed = 20,
-	requires_target = true,
-	target = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_dark", trail="darktrail"}}
-		if self:getTalentLevel(t) >= 5 then tg.type = "beam" end
-		return tg
+	sustain_mana = 30,
+	cooldown = 30,
+	tactical = { BUFF = 2 },
+	activate = function(self, t)
+		local ret = {
+			die_at = self:addTemporaryValue("die_at", -50 * self:getTalentLevelRaw(t)),
+		}
+		return ret
 	end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 25, 230) end,
-	action = function(self, t)
-		local tg = self:getTalentTarget(t)
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		if self:getTalentLevel(t) < 3 then
-			self:projectile(tg, x, y, DamageType.DARKNESS, self:spellCrit(t.getDamage(self, t)), function(self, tg, x, y, grids)
-				game.level.map:particleEmitter(x, y, 1, "dark")
-			end)
-		else
-			self:project(tg, x, y, self:getTalentLevel(t) >= 5 and DamageType.MINION_DARKNESS or DamageType.DARKNESS, self:spellCrit(t.getDamage(self, t)))
-			local _ _, x, y = self:canProject(tg, x, y)
-			game.level.map:particleEmitter(self.x, self.y, tg.radius, "shadow_beam", {tx=x-self.x, ty=y-self.y})
-		end
-
-		game:playSoundNear(self, "talents/spell_generic")
+	deactivate = function(self, t, p)
+		self:removeTemporaryValue("die_at", p.die_at)
 		return true
 	end,
 	info = function(self, t)
-		local damage = t.getDamage(self, t)
-		return ([[Conjures up a bolt of darkness, doing %0.2f darkness damage.
-		At level 3 it will create a beam of shadows.
-		At level 5 it will not hurt your minions anymore.
-		The damage will increase with the Magic stat]]):
-		format(damDesc(self, DamageType.DARKNESS, damage))
+		return ([[The line between life and death blurs for you, you can only die when you reach %d life.
+		However when bellow 0 you can not see how much life you have left.]]):
+		format(50 * self:getTalentLevelRaw(t))
 	end,
 }
 
