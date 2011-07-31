@@ -568,7 +568,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Fires a blast of void energies that slowly travel to their target, dealing %0.2f% arcane damage on impact.
+		return ([[Fires a blast of void energies that slowly travel to their target, dealing %0.2f arcane damage on impact.
 		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.ARCANE, self:combatTalentSpellDamage(t, 15, 240)))
 	end,
 }
@@ -1214,7 +1214,6 @@ newTalent{
 }
 
 newTalent{
-	short_name = "EXPLODE",
 	name = "Explode",
 	type = {"technique/other", 1},
 	points = 5,
@@ -1240,7 +1239,6 @@ newTalent{
 }
 
 newTalent{
-	short_name = "ELEMENTAL_BOLT",
 	name = "Elemental bolt",
 	type = {"spell/other", 1},
 	points = 5,
@@ -1278,7 +1276,6 @@ newTalent{
 }
 
 newTalent{
-	short_name = "VOLCANO",
 	name = "Volcano",
 	type = {"spell/other", 1},
 	points = 5,
@@ -1385,7 +1382,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Saps away 30% of the targets speed and inflicts %d temporal damage for three turns
+		return ([[Saps away 30%% of the targets speed and inflicts %d temporal damage for three turns
 		]]):format(damDesc(self, DamageType.TEMPORAL, damage))
 	end,
 }
