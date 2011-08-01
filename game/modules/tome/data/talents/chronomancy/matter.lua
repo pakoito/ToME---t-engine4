@@ -160,9 +160,12 @@ newTalent{
 		
 		-- bonus damage on targets with temporal destabilization
 		local damage = t.getDamage(self, t)
-		if target:hasEffect(target.EFF_TEMPORAL_DESTABILIZATION) or target:hasEffect(target.EFF_CONTINUUM_DESTABILIZATION) then
-			damage = damage * 1.5
+		if target then 
+			if target:hasEffect(target.EFF_TEMPORAL_DESTABILIZATION) or target:hasEffect(target.EFF_CONTINUUM_DESTABILIZATION) then
+				damage = damage * 1.5
+			end
 		end
+		
 		
 		self:project(tg, x, y, DamageType.MATTER, self:spellCrit(damage))
 		game:playSoundNear(self, "talents/arcane")

@@ -186,7 +186,8 @@ newTalent{
 		local heal = t.getHeal(self, t)
 		local count = t.getRemoveCount(self, t)
 		return ([[You revert your body to a previous state, healing yourself for %0.2f life and removing %d status effects (both good and bad).
-		The life healed will scale with your Paradox and Spellpower.]]):
+		The life healed will scale with your Paradox and Spellpower.
+		Does not remove 'time' or 'other' effects.]]):
 		format(heal, count)
 	end,
 }

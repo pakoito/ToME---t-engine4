@@ -172,7 +172,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local maxlevel = t.getMaxLevel(self, t)
-		return ([[You'll recast the next activated chronomancy spell (up to talent level %0.1f) that you cast within the next 5 turns.]]):
+		return ([[You'll recast the next activated chronomancy spell (up to talent level %0.1f) that you cast within the next 5 turns one turn later without spending an action.]]):
 		format(maxlevel)
 	end,
 }
