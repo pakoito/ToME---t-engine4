@@ -49,6 +49,10 @@ function _M:loadMap(file)
 		zone = self.zone,
 		data = self.data,
 		Map = require("engine.Map"),
+		specialList = function(kind, files)
+			assert(kind == "terrain", "kind unsupported")
+			self.grid_list = self.zone.grid_class:loadList(files)
+		end,
 		subGenerator = function(g)
 			self.subgen[#self.subgen+1] = g
 		end,
