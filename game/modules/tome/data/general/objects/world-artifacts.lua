@@ -2045,6 +2045,39 @@ newEntity{ base = "BASE_CLOAK",
 	},
 }
 
+newEntity{ base = "BASE_DIGGER",
+	power_source = {technique=true},
+	unique = true,
+	name = "Pick of Dwarven Emperors", color = colors.GREY,
+	unided_name = "crude iron pickaxe",
+	desc = [[This ancient pickaxe was used to pass down dwarven legends from one generation to the next.  Every bit of the head and shaft are covered in runes that recount the stories of the dwarven people.]],
+	level_range = {26, 35},
+	rarity = 290,
+	cost = 150,
+	material_level = 3,
+	digspeed = 12,
+	wielder = {
+		resists_pen = { [DamageType.PHYSICAL] = 10, },
+		inc_stats = { [Stats.STAT_STR] = 3, [Stats.STAT_CON] = 3, },
+		combat_mentalresist = 7,
+		combat_physresist = 7,
+		combat_spellresist = 7,
+		max_life = 50,
+	},
+	on_wear = function(self, who)
+		if who.descriptor and who.descriptor.race == "Dwarf" then
+			local Stats = require "engine.interface.ActorStats"
+			local DamageType = require "engine.DamageType"
+
+			self:specialWearAdd({"wielder","inc_stats"}, { [Stats.STAT_STR] = 5, [Stats.STAT_CON] = 5, })
+			self:specialWearAdd({"wielder","inc_damage"}, { [DamageType.PHYSICAL] = 10 })
+			self:specialWearAdd({"wielder", "talents_types_mastery"}, { ["race/dwarf"] = 0.2 })
+
+			game.logPlayer(who, "#LIGHT_BLUE#You feel the whisper of your ancestors as you wield this pickaxe!")
+		end
+	end,
+}
+
 --[=[
 newEntity{
 	unique = true,
