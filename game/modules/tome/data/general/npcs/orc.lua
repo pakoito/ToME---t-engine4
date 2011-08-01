@@ -260,3 +260,57 @@ newEntity{ base = "BASE_NPC_ORC",
 	autolevel = "rogue",
 	resolvers.racial(),
 }
+
+-- Unique orcs
+newEntity{ base = "BASE_NPC_ORC",
+	name = "Kra'Tor the Gluttonous", unique = true,
+	color=colors.DARK_KHAKI,
+	desc = [[A morbidly obese orc with greasy pockmarked skin and oily long black hair.  He's clad in plate mail and carries a huge granite battleaxe that's nearly as large as he is.]],
+	level_range = {38, nil}, exp_worth = 2,
+	rarity = 50,
+	rank = 3.5,
+	max_life = resolvers.rngavg(600, 800),
+	life_rating = 22,
+	move_others=true,
+
+	resolvers.equip{
+		{type="weapon", subtype="battleaxe", defined="GAPING_MAW", random_art_replace={chance=75}, autoreq=true},
+		{type="armor", subtype="massive", tome_drops="boss", autoreq=true},
+	},
+	resolvers.drops{chance=100, nb=2, {tome_drops="boss"} },
+
+	combat_armor = 2, combat_def = 0,
+
+	blind_immune = 0.5,
+	confuse_immune = 0.5,
+	stun_immune = 0.7,
+	knockback_immune = 1,
+
+	autolevel = "wyrmic",
+	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"melee",
+	resolvers.inscriptions(4, {"movement infusion", "healing infusion", "regeneration infusion", "wild infusion"}),
+
+	resists = { all=25},
+
+	resolvers.talents{
+		[Talents.T_ICE_CLAW]={base=4, every=4, max=8},
+		[Talents.T_ICY_SKIN]={base=5, every=4, max=9},
+		[Talents.T_SAND_BREATH]={base=5, every=4, max=9},
+
+		[Talents.T_RESOLVE]=5,
+		[Talents.T_AURA_OF_SILENCE]=5,
+		[Talents.T_MANA_CLASH]={base=5, every=5, max=8},
+
+		[Talents.T_WARSHOUT]={base=4, every=4, max=8},
+		[Talents.T_DEATH_DANCE]={base=3, every=4, max=7},
+		[Talents.T_BERSERKER]={base=5, every=4, max=10},
+		[Talents.T_CRUSH]={base=3, every=4, max=8},
+
+		[Talents.T_WEAPON_COMBAT]={base=6, every=4, max=10},
+		[Talents.T_WEAPONS_MASTERY]={base=6, every=4, max=10},
+
+		[Talents.T_ARMOUR_TRAINING]={base=5, every=4, max=12},
+	},
+	resolvers.sustains_at_birth(),
+}

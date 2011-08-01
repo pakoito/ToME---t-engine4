@@ -155,3 +155,39 @@ newEntity{ base = "BASE_GEM",
 		healing_factor = 0.5,
 	},
 }
+
+newEntity{ base = "BASE_CLOAK",
+	power_source = {arcane=true},
+	unique = true,
+	name = "Threads of Fate",
+	unided_name = "a shimmering white cloak",
+	desc = [[Untouched by the ravages of time, this fine spun white cloak appears to be crafted of an otherworldly material that shifts and shimmers in the light.  While it has cropped up in the hands of many through out history, from great mages to lowly card sharks, no one has ever claimed to be its creator or know its true origins.]],
+	level_range = {45, 50},
+	color = colors.WHITE,
+	rarity = 500,
+	cost = 300,
+	material_level = 5,
+
+	wielder = {
+		combat_def = 10,
+		combat_spellpower = 8,
+		confusion_immune = 0.4,
+		inc_stats = { [Stats.STAT_MAG] = 6, [Stats.STAT_WIL] = 6, [Stats.STAT_LCK] = 10, },
+
+		inc_damage = { [DamageType.TEMPORAL]= 10 },
+		resists_cap = { [DamageType.TEMPORAL] = 10, },
+		resists = { [DamageType.TEMPORAL] = 20, },
+		combat_physresist = 20,
+		combat_mentalresist = 20,
+		combat_spellresist = 20,
+
+		talents_types_mastery = {
+			["chronomancy/timeline-threading"] = 0.1,
+			["chronomancy/chronomancy"] = 0.1,
+			["spell/divination"] = 0.1,
+		},
+	},
+
+	max_power = 1000, power_regen = 1,
+	use_talent = { id = Talents.T_SEE_THE_THREADS, level = 1, power = 1000 },
+}
