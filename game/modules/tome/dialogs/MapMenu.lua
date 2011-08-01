@@ -153,10 +153,11 @@ function _M:generateList()
 			end
 			if t_avail then
 				local rt = util.getval(t.requires_target, player, t)
+				local e = t.display_entity
 				if self.on_player and not rt then
-					tals[#tals+1] = {name=t.name, talent=t, action="talent", color=colors.simple(colors.GOLD)}
+					tals[#tals+1] = {name=e:getDisplayString()..t.name, dname=t.name, talent=t, action="talent", color=colors.simple(colors.GOLD)}
 				elseif not self.on_player and rt then
-					tals[#tals+1] = {name=t.name, talent=t, action="talent", set_target=tg or default_tg, color=colors.simple(colors.GOLD)}
+					tals[#tals+1] = {name=e:getDisplayString()..t.name, dname=t.name, talent=t, action="talent", set_target=tg or default_tg, color=colors.simple(colors.GOLD)}
 				end
 			end
 		end
@@ -168,7 +169,7 @@ function _M:generateList()
 			if ha and hb then return ha < hb
 			elseif ha and not hb then return ha < 999999
 			elseif hb and not ha then return hb > 999999
-			else return a.talent.name < b.talent.name
+			else return a.talent.dname < b.talent.dname
 			end
 		end)
 		for i = 1, #tals do list[#list+1] = tals[i] end
