@@ -37,7 +37,7 @@
 #include "useshader.h"
 #include <math.h>
 #include <time.h>
-//#include <png.h>
+#include <png.h>
 
 extern SDL_Window *window;
 
@@ -2021,7 +2021,6 @@ static int sdl_set_gamma(lua_State *L)
 	return 1;
 }
 
-/*
 static void png_write_data_fn(png_structp png_ptr, png_bytep data, png_size_t length)
 {
 	luaL_Buffer *B = (luaL_Buffer*)png_get_io_ptr(png_ptr);
@@ -2034,11 +2033,8 @@ static void png_output_flush_fn(png_structp png_ptr)
 #ifndef png_infopp_NULL
 #define png_infopp_NULL (png_infopp)NULL
 #endif
-*/
 static int sdl_get_png_screenshot(lua_State *L)
 {
-	return 0;
-	/*
 	unsigned int x = luaL_checknumber(L, 1);
 	unsigned int y = luaL_checknumber(L, 2);
 	unsigned long width = luaL_checknumber(L, 3);
@@ -2116,7 +2112,7 @@ static int sdl_get_png_screenshot(lua_State *L)
 
 	luaL_pushresult(&B);
 
-	return 1;*/
+	return 1;
 }
 
 static const struct luaL_reg displaylib[] =
