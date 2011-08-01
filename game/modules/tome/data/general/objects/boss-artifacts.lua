@@ -485,8 +485,8 @@ newEntity{ base = "BASE_AMULET",
 		silence_immune = 0.8,
 		combat_spellpower = 9,
 		combat_spellcrit = 4,
-		mana = 50,
-		vim = 50,
+		max_mana = 50,
+		max_vim = 50,
 	},
 }
 
