@@ -194,6 +194,16 @@ function _M:use(item)
 		self:resurrectBasic(self.actor)
 		self:restoreResources(self.actor)
 		world:gainAchievement("UNSTOPPABLE", actor)
+	elseif act == "lichform" then
+		local t = self.actor:getTalentFromId(self.actor.T_LICHFORM)
+		t.becomeLich(self.actor, t)
+
+		self:cleanActor(self.actor)
+		self:resurrectBasic(self.actor)
+		self:restoreResources(self.actor)
+		self.actor.talents_cd = {}
+		world:gainAchievement("LICHFORM", actor)
+		self.actor:updateModdableTile()
 	elseif act == "easy_mode" then
 		self:eidolonPlane()
 	elseif act == "skeleton" then
@@ -234,6 +244,11 @@ function _M:generateList()
 
 	if config.settings.cheat then list[#list+1] = {name="Resurrect by cheating", action="cheat"} end
 	if not self.actor.no_resurrect and allow_res then
+		if self.actor:isTalentActive(self.actor.T_LICHFORM) then
+			self:use{action="lichform"}
+			self.dont_show = true
+			return
+		end
 		if self.actor:attr("easy_mode_lifes") or self.actor:attr("infinite_lifes") then
 			self:use{action="easy_mode"}
 			self.dont_show = true

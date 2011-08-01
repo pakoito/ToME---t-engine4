@@ -89,3 +89,8 @@ newAchievement{
 		end
 	end,
 }
+newAchievement{
+	name = "Lichform",
+	desc = [[Achieved your wild dreams of power and eternal life: you turned into a Lich!]],
+	show = "name",
+}

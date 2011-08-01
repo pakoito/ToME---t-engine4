@@ -17,6 +17,12 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local isFF = function(self)
+	if self:getTalentLevel(self.T_INVOKE_DARKNESS) >= 5 then return false
+	else return true
+	end
+end
+
 newTalent{
 	name = "Invoke Darkness",
 	type = {"spell/nightfall",1},
@@ -30,8 +36,9 @@ newTalent{
 	reflectable = true,
 	proj_speed = 20,
 	requires_target = true,
+	direct_hit = function(self, t) if self:getTalentLevel(t) >= 3 then return true else return false end end,
 	target = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_dark", trail="darktrail"}}
+		local tg = {type="bolt", range=self:getTalentRange(t), friendlyfire=isFF(self), talent=t, display={particle="bolt_dark", trail="darktrail"}}
 		if self:getTalentLevel(t) >= 5 then tg.type = "beam" end
 		return tg
 	end,
@@ -45,7 +52,7 @@ newTalent{
 				game.level.map:particleEmitter(x, y, 1, "dark")
 			end)
 		else
-			self:project(tg, x, y, self:getTalentLevel(t) >= 5 and DamageType.MINION_DARKNESS or DamageType.DARKNESS, self:spellCrit(t.getDamage(self, t)))
+			self:project(tg, x, y, DamageType.DARKNESS, self:spellCrit(t.getDamage(self, t)))
 			local _ _, x, y = self:canProject(tg, x, y)
 			game.level.map:particleEmitter(self.x, self.y, tg.radius, "shadow_beam", {tx=x-self.x, ty=y-self.y})
 		end
@@ -57,66 +64,59 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		return ([[Conjures up a bolt of darkness, doing %0.2f darkness damage.
 		At level 3 it will create a beam of shadows.
-		At level 5 it will not hurt your minions anymore.
+		At level 5 none of your Nightfall spells will not hurt your minions anymore.
 		The damage will increase with the Magic stat]]):
 		format(damDesc(self, DamageType.DARKNESS, damage))
 	end,
 }
 
 newTalent{
-	name = "Terrify",
+	name = "Circle of Death",
 	type = {"spell/nightfall",2},
 	require = spells_req2,
 	points = 5,
-	random_ego = "attack",
-	mana = 30,
+	mana = 45,
 	cooldown = 18,
-	tactical = { ATTACK = 1, DISABLE = 3 },
-	range = 0,
-	radius = function(self, t)
-		return 3 + self:getTalentLevelRaw(t)
-	end,
+	tactical = { ATTACK = 2, DISABLE = 3 },
+	range = 6,
+	radius = 3,
+	direct_hit = true,
 	requires_target = true,
 	target = function(self, t)
-		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
 	end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 120) end,
-	getStunDuration = function(self, t) return self:getTalentLevelRaw(t) + 2 end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 40) end,
+	getDuration = function(self, t) return 5 end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.FLAMESHOCK, {dur=t.getStunDuration(self, t), dam=self:spellCrit(t.getDamage(self, t))})
+		local _ _, _, _, x, y = self:canProject(tg, x, y)
+		-- Add a lasting map effect
+		game.level.map:addEffect(self,
+			x, y, t.getDuration(self, t),
+			DamageType.CIRCLE_DEATH, {dam=t.getDamage(self, t), dur=4 + math.floor(self:getTalentLevel(t) / 2), ff=isFF(self)},
+			self:getTalentRadius(t),
+			5, nil,
+			{type="circle_of_death"},
+			nil, false
+		)
 
-		if self:attr("burning_wake") then
-			local l = line.new(self.x, self.y, x, y)
-			local lx, ly = l()
-			local dir = lx and coord_to_dir[lx - self.x][ly - self.y] or 6
-
-			game.level.map:addEffect(self,
-				self.x, self.y, 4,
-				DamageType.INFERNO, self:attr("burning_wake"),
-				tg.radius,
-				{angle=math.deg(math.atan2(y - self.y, x - self.x))}, 55,
-				{type="inferno"},
-				nil, self:spellFriendlyFire()
-			)
-		end
-		game.level.map:particleEmitter(self.x, self.y, tg.radius, "breath_fire", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/fire")
 		return true
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		local stunduration = t.getStunDuration(self, t)
-		return ([[Conjures up a cone of flame. Any target caught in the area will take %0.2f fire damage and be paralyzed for %d turns.
+		return ([[Dark fumes erupts from the ground for 5 turns, any creatures entering the circle will receive either a bane of confusion or a bane of blindness.
+		Only one bane can affect a creature.
+		Banes last for %d turns and also deal %0.2f darkness damage.
 		The damage will increase with the Magic stat]]):
-		format(damDesc(self, DamageType.FIRE, damage), stunduration)
+		format(4 + math.floor(self:getTalentLevel(t) / 2), damDesc(self, DamageType.DARKNESS, damage))
 	end,
 }
 
 newTalent{
-	name = "Rigor Mortis",
+	name = "Fear the Night",
 	type = {"spell/nightfall",3},
 	require = spells_req3,
 	points = 5,
@@ -165,7 +165,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Foul Aura",
+	name = "Rigor Mortis",
 	type = {"spell/nightfall",4},
 	require = spells_req4,
 	points = 5,

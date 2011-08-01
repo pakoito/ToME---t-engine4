@@ -147,7 +147,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			local t = target:getTalentFromId(target.T_ANTIMAGIC_SHIELD)
 			dam = t.on_damage(target, t, type, dam)
 		end
-		
+
 		if target.isTalentActive and target:isTalentActive(target.T_ENERGY_DECOMPOSITION) then
 			local t = target:getTalentFromId(target.T_ENERGY_DECOMPOSITION)
 			dam = t.on_damage(target, t, type, dam)
@@ -1585,5 +1585,25 @@ newDamageType{
 			game.zone.void_blast_hits = game.zone.void_blast_hits + 1
 		end
 		return realdam
+	end,
+}
+
+newDamageType{
+	name = "circle of death", type = "CIRCLE_DEATH",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and (src:reactionToward(target) < 0 or dam.ff) then
+			for eff_id, p in pairs(target.tmp) do
+				local e = target.tempeffect_def[eff_id]
+				if e.type == "bane" then return end
+			end
+
+			local what = rng.percent(50) and "blind" or "confusion"
+			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe(what) then
+				target:setEffect(what == "blind" and target.EFF_BANE_BLINDED or target.EFF_BANE_CONFUSED, math.ceil(dam.dur), {src=src, power=50, dam=dam.dam})
+			else
+				game.logSeen(target, "%s resists the bane!", target.name:capitalize())
+			end
+		end
 	end,
 }

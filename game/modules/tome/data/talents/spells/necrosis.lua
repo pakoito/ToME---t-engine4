@@ -148,43 +148,90 @@ newTalent{
 	name = "Lichform",
 	type = {"spell/necrosis",4},
 	require = spells_req4,
+	mode = "sustained",
 	points = 5,
-	mana = 100,
+	sustain_mana = 150,
 	cooldown = 30,
-	tactical = { ATTACKAREA = 3 },
-	range = 10,
-	radius = 5,
-	direct_hit = true,
-	requires_target = true,
-	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
-	end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 80) end,
-	getDuration = function(self, t) return 5 + self:getTalentLevel(t) end,
-	action = function(self, t)
-		local tg = self:getTalentTarget(t)
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		local _ _, _, _, x, y = self:canProject(tg, x, y)
-		-- Add a lasting map effect
-		game.level.map:addEffect(self,
-			x, y, t.getDuration(self, t),
-			DamageType.INFERNO, t.getDamage(self, t),
-			self:getTalentRadius(t),
-			5, nil,
-			{type="inferno"},
-			nil, self:spellFriendlyFire()
-		)
+	no_npc_use = true,
+	becomeLich = function(self, t)
+		self.descriptor.race = "Undead"
+		self.descriptor.subrace = "Lich"
+		self.moddable_tile = "skeleton"
+		self.moddable_tile_nude = true
+		self.moddable_tile_base = "base_lich_01.png"
+		self.moddable_tile_ornament = nil
+		self.blood_color = colors.GREY
+		self:attr("poison_immune", 1)
+		self:attr("disease_immune", 0.5)
+		self:attr("stun_immune", 0.5)
+		self:attr("cut_immune", 1)
+		self:attr("fear_immune", 1)
+		self:attr("no_breath", 1)
+		self:attr("undead", 1)
+		self.resists[DamageType.COLD] = (self.resists[DamageType.COLD] or 0) + 20
+		self.resists[DamageType.DARKNESS] = (self.resists[DamageType.DARKNESS] or 0) + 20
+		self.inscription_restrictions = self.inscription_restrictions or {}
+		self.inscription_restrictions["inscriptions/runes"] = true
+		self.inscription_restrictions["inscriptions/taints"] = true
 
-		game:playSoundNear(self, "talents/fire")
+		local level = self:getTalentLevel(t)
+		if level < 2 then
+			self:incIncStat("mag", -3) self:incIncStat("wil", -3)
+			self.resists.all = (self.resists.all or 0) - 10
+		elseif level < 3 then
+			-- nothing
+		elseif level < 4 then
+			self:incIncStat("mag", 3) self:incIncStat("wil", 3)
+			self.life_rating = self.life_rating + 1
+		elseif level < 5 then
+			self:incIncStat("mag", 3) self:incIncStat("wil", 3)
+			self:attr("combat_spellresist", 10) self:attr("combat_mentalresist", 10)
+			self.life_rating = self.life_rating + 2
+		elseif level < 6 then
+			self:incIncStat("mag", 5) self:incIncStat("wil", 5)
+			self:attr("combat_spellresist", 10) self:attr("combat_mentalresist", 10)
+			self.resists_cap.all = (self.resists_cap.all or 0) + 10
+			self.life_rating = self.life_rating + 2
+		else
+			self:incIncStat("mag", 6) self:incIncStat("wil", 6) self:incIncStat("cun", 6)
+			self:attr("combat_spellresist", 15) self:attr("combat_mentalresist", 15)
+			self.resists_cap.all = (self.resists_cap.all or 0) + 15
+			self.life_rating = self.life_rating + 3
+		end
+
+		require("engine.ui.Dialog"):simplePopup("Lichform", "#GREY#You feel your life slip away, only to be replaced by pure arcane forces! Your flesh starts to rot on your bones, your eyes fall apart as you are reborn into a Lich!")
+	end,
+	on_pre_use = function(self, t)
+		if self:attr("undead") then return false else return true end
+	end,
+	activate = function(self, t)
+		local ret = {
+			mana = self:addTemporaryValue("mana_regen", -4),
+		}
+		return ret
+	end,
+	deactivate = function(self, t, p)
+		self:removeTemporaryValue("mana_regen", p.mana)
 		return true
 	end,
 	info = function(self, t)
-		local damage = t.getDamage(self, t)
-		local duration = t.getDuration(self, t)
-		local radius = self:getTalentRadius(t)
-		return ([[Raging flames burn foes and allies alike doing %0.2f fire damage in a radius of %d each turn for %d turns.
-		The damage will increase with the Magic stat]]):
-		format(damDesc(self, DamageType.FIRE, damage), radius, duration)
+		return ([[Your true goal. The purpose of all necromancy, to become a powerful and everliving Lich!
+		If you are killed while this spell is active the arcane forces you unleash will be able to rebuild you body into Lichform.
+		All liches gain the following intrinsic:
+		- Poison, cuts, fear immunity
+		- Disease resistance 50%%
+		- Stun resistance 50%%
+		- Cold and darkness resistance 20%%
+		- No need to breathe
+		- Infusions do not work
+		Also:
+		At level 1: -3 to all stats, -10%% to all resistances. Such meagre devotion!
+		At level 2: Nothing
+		At level 3: +3 Magic and Willpower, +1 life rating (not retroactive)
+		At level 4: +3 Magic and Willpower, +2 life rating (not retroactive), +10 spell and mental saves
+		At level 5: +5 Magic and Willpower, +2 life rating (not retroactive), +10 spell and mental saves, all resistances cap raised by 10%%
+		At level 6: +6 Magic, Willpower and Cunning, +3 life rating (not retroactive), +15 spell and mental saves, all resistances cap raised by 15%%. Fear my power!
+		While active it will drain 4 mana per turns.]]):
+		format()
 	end,
 }

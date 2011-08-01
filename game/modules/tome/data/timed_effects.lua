@@ -795,6 +795,58 @@ newEffect{
 }
 
 newEffect{
+	name = "BANE_BLINDED",
+	desc = "Bane of Blindness",
+	long_desc = function(self, eff) return ("The target is blinded, unable to see anything and takes %0.2f darkness damage per turns."):format(eff.dam) end,
+	type = "bane",
+	status = "detrimental",
+	parameters = { dam=10},
+	on_gain = function(self, err) return "#Target# loses sight!", "+Blind" end,
+	on_lose = function(self, err) return "#Target# recovers sight.", "-Blind" end,
+	on_timeout = function(self, eff)
+		DamageType:get(DamageType.FIRE).projector(eff.src, self.x, self.y, DamageType.DARKNESS, eff.dam)
+	end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("blind", 1)
+		eff.dur = self:updateEffectDuration(eff.dur, "blind")
+		if game.level then
+			self:resetCanSeeCache()
+			if self.player then for uid, e in pairs(game.level.entities) do if e.x then game.level.map:updateMap(e.x, e.y) end end game.level.map.changed = true end
+		end
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("blind", eff.tmpid)
+		if game.level then
+			self:resetCanSeeCache()
+			if self.player then for uid, e in pairs(game.level.entities) do if e.x then game.level.map:updateMap(e.x, e.y) end end game.level.map.changed = true end
+		end
+	end,
+}
+
+newEffect{
+	name = "BANE_CONFUSED",
+	desc = "Bane of Confusion",
+	long_desc = function(self, eff) return ("The target is confused, acting randomly (chance %d%%), unable to perform complex actions and takes %0.2f darkness damage per turns."):format(eff.power, eff.dam) end,
+	type = "bane",
+	status = "detrimental",
+	parameters = { power=50, dam=10 },
+	on_gain = function(self, err) return "#Target# wanders around!.", "+Confused" end,
+	on_lose = function(self, err) return "#Target# seems more focused.", "-Confused" end,
+	on_timeout = function(self, eff)
+		DamageType:get(DamageType.FIRE).projector(eff.src, self.x, self.y, DamageType.DARKNESS, eff.dam)
+	end,
+	activate = function(self, eff)
+		eff.dur = self:updateEffectDuration(eff.dur, "confusion")
+		eff.power = eff.power - (self:attr("confusion_immune") or 0) / 2
+		eff.tmpid = self:addTemporaryValue("confused", eff.power)
+		if eff.power <= 0 then eff.dur = 0 end
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("confused", eff.tmpid)
+	end,
+}
+
+newEffect{
 	name = "DWARVEN_RESILIENCE",
 	desc = "Dwarven Resilience",
 	long_desc = function(self, eff) return ("The target's skin turns to stone, granting %d armour, %d physical save and %d spell save."):format(eff.armor, eff.physical, eff.spell) end,
