@@ -45,11 +45,12 @@ Still, this is a golden age. Civilisations are healing the wounds of thousands o
 You are an adventurer, set out to discover wonders, explore old places, and venture into the unknown for wealth and glory.
 ]]
 starter = "mod.load"
-profile_stats_fields = {"artifacts", "characters", "deaths", "uniques", "lore", "escorts"}
+profile_stats_fields = {"artifacts", "characters", "deaths", "uniques", "scores", "lore", "escorts"}
 allow_userchat = true -- We can talk to the online community
 no_get_name = true -- Name setting for new characters is done by the module itself
 
 -- Define the fields that are sync'ed online, and how they are sync'ed
+-- '
 profile_defs = {
 	allow_build = { {name="index:string:30"}, receive=function(data, save) save[data.name] = true end, export=function(env) for k, _ in pairs(env) do add{name=k} end end },
 	lore = { {name="index:string:30"}, receive=function(data, save) save.lore = save.lore or {} save.lore[data.name] = true end, export=function(env) for k, v in pairs(env.lore or {}) do add{name=k} end end },
@@ -60,4 +61,38 @@ profile_defs = {
 	deaths = { {cid="index:string:50"}, {source="index:string:50"}, {nb="number"}, receive=function(data, save) save.sources = save.sources or {} save.sources[data.cid] = save.sources[data.cid] or {} inc_set(save.sources[data.cid], data.source, data, "nb") end, export=function(env) for cid, d in pairs(env.sources or {}) do for name, v in pairs(d) do add{cid=cid, source=name, nb=v} end end end },
 	achievements = { {id="index:string:40"}, {gained_on="timestamp"}, {who="string:50"}, {turn="number"}, receive=function(data, save) save[data.id] = {who=data.who, when=data.gained_on, turn=data.turn} end, export=function(env) for id, v in pairs(env) do add{id=id, who=v.who, gained_on=v.when, turn=v.turn} end end },
 	donations = { no_sync=true, {last_ask="timestamp"}, receive=function(data, save) save.last_ask = data.last_ask end, export=function(env) add{last_ask=env.last_ask} end },
+	scores = {
+		nosync=true,
+		receive=function(data,save)
+			save.sc = save.sc or {}
+			save.sc[data.world] = save.sc[data.world] or {}
+			save.sc[data.world].alive = save.sc[data.world].alive or {}
+			save.sc[data.world].dead = save.sc[data.world].dead or {}
+			if data.type == "alive" then
+				save.sc[data.world].alive = save.sc[data.world].alive or {}
+				save.sc[data.world].alive[data.name] = data
+			else
+				-- clear any 'alive' entry with this name
+				save.sc[data.world].alive[data.name] = nil
+				save.sc[data.world].dead = save.sc[data.world].dead or {}
+				save.sc[data.world].dead[#save.sc[data.world].dead+1] = data
+			end
+		end
+	},
 }
+
+score_formatters = {
+	["Maj'Eyal"] = {
+		alive="#LIGHT_GREEN#{score} : #BLUE#{name}#LAST# the #LIGHT_RED#level {level} {subrace} {subclass}#LAST# is still alive and well on #GREEN#{where}#LAST##WHITE#",
+		dead="{score} : #BLUE#{name}#LAST# the #LIGHT_RED#level {level} {subrace} {subclass}#LAST# died on #GREEN#{where}#LAST#, killed by a #RED#{killedby}#LAST#"
+	},
+	["Infinite"] = {
+		alive="#LIGHT_GREEN#{score} : #BLUE#{name}#LAST# the #LIGHT_RED#level {level} {subrace} {subclass}#LAST# is still alive and well on level #GREEN#{dlvl}#LAST##WHITE#",
+		dead="{score} : #BLUE#{name}#LAST# the #LIGHT_RED#level {level} {subrace} {subclass}#LAST# died on level #GREEN#{dlvl}#LAST#, killed by a #RED#{killedby}#LAST#"
+	},
+	["Arena"] = {
+		alive="#LIGHT_GREEN#{score} : #BLUE#{name}#LAST# the #LIGHT_RED#level {level} {subrace} {subclass}#LAST# is still alive and well on wave #GREEN#{dlvl}#LAST##WHITE#",
+		dead="{score} : #BLUE#{name}#LAST# the #LIGHT_RED#level {level} {subrace} {subclass}#LAST# died on wave #GREEN#{dlvl}#LAST#, killed by a #RED#{killedby}#LAST#"
+	}
+}
+

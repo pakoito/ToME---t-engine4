@@ -78,6 +78,11 @@ function _M:generateList(actions)
 			local menu = require("engine.dialogs.AudioOptions").new()
 			game:registerDialog(menu)
 		end },
+		highscores = { "View High Scores", function()
+			game:unregisterDialog(self)
+			local menu = require("engine.dialogs.ViewHighScores").new()
+			game:registerDialog(menu)
+	  end },
 		save = { "Save Game", function() game:unregisterDialog(self) game:saveGame() end },
 		quit = { "Save and Exit", function() game:unregisterDialog(self) game:onQuit() end },
 	}

@@ -30,22 +30,22 @@ project "TEngine"
 
 	configuration "macosx"
 		files { "../src/mac/SDL*" }
-	        includedirs {
-        	      "/System/Library/Frameworks/OpenGL.framework/Headers",
-        	      "/System/Library/Frameworks/OpenAL.framework/Headers",
-	              "/Library/Frameworks/Ogg.framework/Headers",
-	              "/Library/Frameworks/Vorbis.framework/Headers",
-	              "/Library/Frameworks/SDL.framework/Headers",
-	              "/Library/Frameworks/SDL.framework/Headers",
-        	      "/Library/Frameworks/SDL_net.framework/Headers",
-	              "/Library/Frameworks/SDL_image.framework/Headers",
-        	      "/Library/Frameworks/SDL_ttf.framework/Headers",
-	              "/Library/Frameworks/SDL_mixer.framework/Headers"
-        	}
-	        defines { "USE_TENGINE_MAIN", 'SELFEXE_MACOSX', [[TENGINE_HOME_PATH='"/Library/Application Support/T-Engine/"']]  }
-		linkoptions { "-framework Vorbis", "-framework Ogg", "-framework SDL", "-framework SDL_image", "-framework SDL_ttf", "-framework SDL_mixer", "-framework Cocoa", "-framework OpenGL" , "-framework OpenAL" }
+		includedirs {
+  	      "/System/Library/Frameworks/OpenGL.framework/Headers",
+  	      "/System/Library/Frameworks/OpenAL.framework/Headers",
+		      "/Library/Frameworks/SDL.framework/Headers",
+		      "/Library/Frameworks/SDL.framework/Headers",
+  	      "/Library/Frameworks/SDL_net.framework/Headers",
+		      "/Library/Frameworks/SDL_image.framework/Headers",
+  	      "/Library/Frameworks/SDL_ttf.framework/Headers",
+		      "/Library/Frameworks/SDL_mixer.framework/Headers",
+			"/opt/local/include",
+			"/opt/local/include/Vorbis"
+  	}
+	  defines { "USE_TENGINE_MAIN", 'SELFEXE_MACOSX'  }
+		linkoptions { "-framework SDL", "-framework SDL_image", "-framework SDL_ttf", "-framework SDL_mixer", "-framework Cocoa", "-framework OpenGL" , "-framework OpenAL", "-pagezero_size 10000","-image_base 100000000" }
 		targetdir "."
-        	links { "IOKit" }
+		links { "IOKit" }
 
 	configuration "windows"
 		links { "mingw32", "SDLmain", "SDL", "SDL_ttf", "SDL_image", "openal32", "vorbisfile", "OPENGL32", "GLU32", "wsock32" }

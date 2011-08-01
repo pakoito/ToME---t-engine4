@@ -19,6 +19,7 @@
 
 require "engine.class"
 
+
 module(..., package.seeall, class.make)
 
 function _M:playerStatGetCharacterIdentifier(p)

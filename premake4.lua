@@ -48,7 +48,7 @@ configuration "windows"
 configuration "Debug"
 	defines { }
 	flags { "Symbols" }
-	buildoptions { "-ggdb" }
+	buildoptions { "-ggdb", "-pagezero_size 10000", "-image_base 100000000" }
 	targetdir "bin/Debug"
 	if _OPTIONS.luaassert then defines {"LUA_USE_APICHECK"} end
 	if _OPTIONS.pedantic then buildoptions { "-Wall" } end

@@ -33,6 +33,7 @@ local Birther = require "mod.dialogs.Birther"
 local Astar = require "engine.Astar"
 local DirectPath = require "engine.DirectPath"
 local Shader = require "engine.Shader"
+local HighScores = require "engine.HighScores"
 
 local NicerTiles = require "mod.class.NicerTiles"
 local GameState = require "mod.class.GameState"
@@ -1056,7 +1057,22 @@ function _M:setupCommands()
 			end end
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			self.state:debugRandomZone()
+--			self.state:debugRandomZone()
+
+			local list = {}
+			local grab_list = function(l)
+				for _, o in pairs(l) do
+					if o.unique and not o.randart and o.type~="lore" then list[o.unique] = o end
+				end
+			end
+			for i, zone in ipairs(fs.list("/data/zones/")) do
+				local file = "/data/zones/"..zone.."/objects.lua"
+				if fs.exists(file) then grab_list(mod.class.Object:loadList(file)) end
+			end
+
+			for u, o in pairs(list) do
+				print(o.type, o.subtype, o.name, unpack(table.keys(o.power_source or {})))
+			end
 		end end,
 		[{"_f","ctrl"}] = function() if config.settings.cheat then
 game.player:learnTalent('T_MULTIPLY',true)
@@ -1329,6 +1345,7 @@ game.player:learnTalent('T_GIFT_OF_AMAKTHEL',true)
 				"resume",
 				"achievements",
 				{ "Show known Lore", function() game:unregisterDialog(menu) game:registerDialog(require("mod.dialogs.ShowLore").new("Tales of Maj'Eyal Lore", self.player)) end },
+				"highscores",
 				{ "Inventory", function() game:unregisterDialog(menu) self.key:triggerVirtual("SHOW_INVENTORY") end },
 				{ "Character Sheet", function() game:unregisterDialog(menu) self.key:triggerVirtual("SHOW_CHARACTER_SHEET") end },
 				"keybinds",
@@ -1552,8 +1569,40 @@ function _M:onSavefilePush()
 	self.player:restStop("saving")
 end
 
+--- Saves the highscore of the current char
+function _M:registerHighscore()
+	local player = self:getPlayer(true)
+	local campaign = player.descriptor.world
+
+	local details = {
+		world = player.descriptor.world,
+		subrace = player.descriptor.subrace,
+		subclass = player.descriptor.subclass,
+		difficulty = player.descriptor.difficulty,
+		level = player.level,
+		name = player.name,
+		where = self.zone.name,
+		dlvl = self.level.level
+	}
+	if campaign == 'Arena' then
+		details.score = self.level.arena.score
+	else
+		-- fallback score based on xp, this is a placeholder
+		details.score = math.floor(10 * (player.level + (player.exp / player:getExpChart(player.level)))) + math.floor(player.money / 100)
+	end
+
+	if player.dead then
+		details.killedby = player.killedBy and player.killedBy.name or "???"
+		HighScores.registerScore(campaign, details)
+	else
+		HighScores.noteLivingScore(campaign, player.name, details)
+	end
+end
+
 --- Requests the game to save
 function _M:saveGame()
+	self:registerHighscore()
+
 	-- savefile_pipe is created as a global by the engine
 	savefile_pipe:push(self.save_name, "game", self)
 	world:saveWorld()

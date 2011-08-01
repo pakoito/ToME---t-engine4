@@ -429,6 +429,10 @@ end
 function _M:saveGame()
 end
 
+--- Saves the highscore of the current char
+function _M:registerHighscore()
+end
+
 --- Add a coroutine to the pool
 -- Coroutines registered will be run each game tick
 function _M:registerCoroutine(id, co)

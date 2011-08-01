@@ -129,9 +129,9 @@ function _M:use(item)
 	local act = item.action
 
 	if act == "exit" then
-		local save = Savefile.new(game.save_name)
-		save:delete()
-		save:close()
+		game:getPlayer(true).dead = true
+		game:saveGame()
+
 		world:saveWorld()
 		if item.subaction == "none" then
 			util.showMainMenu()
