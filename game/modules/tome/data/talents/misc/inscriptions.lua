@@ -179,7 +179,7 @@ newInscription{
 	name = "Infusion: Sun",
 	type = {"inscriptions/infusions", 1},
 	points = 1,
-	tactical = { ATTACK_AREA = 1, DISABLE = 2 },
+	tactical = { ATTACKAREA = 1, DISABLE = 2 },
 	range = 0,
 	radius = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
