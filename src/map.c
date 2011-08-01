@@ -318,8 +318,6 @@ static bool _CheckGL_Error(const char* GLcall, const char* file, const int line)
 #endif
 static int map_objects_toscreen(lua_State *L)
 {
-	if (!fbo_active) return 0;
-
 	int x = luaL_checknumber(L, 1);
 	int y = luaL_checknumber(L, 2);
 	int w = luaL_checknumber(L, 3);
