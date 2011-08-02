@@ -67,7 +67,7 @@ newEntity{
 	power_source = {nature=true},
 	define_as = "PUTRESCENT_POTION",
 	type = "corpse", subtype = "blood",
-	name = "Wyrm Bile", unique=true, unided_name="putrescent potion",
+	name = "Wyrm Bile", unique=true, unided_name="putrescent potion", image = "object/elixir_of_stoneskin.png",
 	display = "*", color=colors.VIOLET,
 	desc = [[A vial of thick, lumpy fluid. Who knows what this will do to you if you drink it?]],
 	cost = 3000,

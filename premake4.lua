@@ -45,10 +45,13 @@ configuration "windows"
 		"/e/apps/mingw/include/GL",
 	}
 
+configuration "macosx"
+	buildoptions { "-pagezero_size 10000", "-image_base 100000000" }
+
 configuration "Debug"
 	defines { }
 	flags { "Symbols" }
-	buildoptions { "-ggdb", "-pagezero_size 10000", "-image_base 100000000" }
+	buildoptions { "-ggdb" }
 	targetdir "bin/Debug"
 	if _OPTIONS.luaassert then defines {"LUA_USE_APICHECK"} end
 	if _OPTIONS.pedantic then buildoptions { "-Wall" } end
