@@ -34,15 +34,28 @@ function _M:init(source)
 	self.donation_source = source or "ingame"
 	Dialog.init(self, "Donations", 500, 300)
 
-	local desc = Textzone.new{width=self.iw, auto_height=true, text=[[Hi, I am Nicolas (DarkGod), the maker of this game.
+	local desc
+	local recur = false
+
+	if not profile.auth or not tonumber(profile.auth.donated) or tonumber(profile.auth.donated) <= 1 then
+		-- First time donation
+		desc = Textzone.new{width=self.iw, auto_height=true, text=[[Hi, I am Nicolas (DarkGod), the maker of this game.
 It is my dearest hope that you find my game enjoyable, and that you will continue to do so for many years to come!
 
 ToME is free and open-source and will stay that way, but that does not mean I can live without money, so I have come to disturb you here and now to ask for your kindness.
 If you feel that the (many) hours you have spent having fun were worth it, please consider making a donation for the future of the game.
 ]]}
+	else
+		-- Recurring donation
+		recur = true
+		desc = Textzone.new{width=self.iw, auto_height=true, text=[[Thank you for supporting ToME, your donation was greatly appreciated.
+If you want to continue supporting ToME you are welcome to make a new donation or even a reccuring one which helps ensure the future of the game.
+Thank you for your kindness!]]}
+	end
+
 	self.c_donate = Numberbox.new{title="Donation amount: ", number=10, max=1000, min=5, chars=5, fct=function() end}
 	local euro = Textzone.new{auto_width=true, auto_height=true, text=[[€]]}
-	self.c_recur = Checkbox.new{title="Make it a recurring montly donation", default=false, fct=function() end}
+	self.c_recur = Checkbox.new{title="Make it a recurring montly donation", default=recur, fct=function() end}
 	local ok = require("engine.ui.Button").new{text="Accept", fct=function() self:ok() end}
 	local cancel = require("engine.ui.Button").new{text="Cancel", fct=function() self:cancel() end}
 

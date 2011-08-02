@@ -565,6 +565,12 @@ function _M:checkDonation(back_insert)
 	-- This is only called when something nice happens (like an achievement)
 	-- We then check multiple conditions to make sure the player is in a good state of mind
 
+	-- If this is a reccuring donator, do not bother her/him
+	if profile.auth and tonumber(profile.auth.donated) and profile.auth.sub == "yes" then
+		print("Donation check: already a reccuring donator")
+		return
+	end
+
 	-- Dont ask often
 	local last = profile.mod.donations and profile.mod.donations.last_ask or 0
 	local min_interval = 15 * 24 * 60 * 60 -- 1 month
@@ -614,6 +620,7 @@ function _M:checkDonation(back_insert)
 
 	-- Request money! Even a god has to eat :)
 	profile:saveModuleProfile("donations", {last_ask=os.time()})
+
 	if back_insert then
 		game:registerDialogAt(Donation.new(), 2)
 	else
