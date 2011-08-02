@@ -38,7 +38,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[The line between life and death blurs for you, you can only die when you reach -%d life.
-		However when bellow 0 you can not see how much life you have left.]]):
+		However when below 0 you can not see how much life you have left.]]):
 		format(50 * self:getTalentLevelRaw(t))
 	end,
 }
