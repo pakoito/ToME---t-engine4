@@ -116,58 +116,9 @@ newTalent{
 }
 
 newTalent{
-	name = "???3",
+	name = "Curse of the Meek",
 	type = {"spell/shades",3},
 	require = spells_req3,
-	points = 5,
-	random_ego = "attack",
-	mana = 40,
-	cooldown = 8,
-	tactical = { ATTACKAREA = 2 },
-	range = 7,
-	radius = function(self, t)
-		return 1 + self:getTalentLevelRaw(t)
-	end,
-	proj_speed = 4,
-	direct_hit = true,
-	requires_target = true,
-	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=self:spellFriendlyFire(), talent=t, display={particle="bolt_fire", trail="firetrail"}}
-	end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 28, 280) end,
-	action = function(self, t)
-		local tg = self:getTalentTarget(t)
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		self:projectile(tg, x, y, DamageType.FIRE, self:spellCrit(t.getDamage(self, t)), function(self, tg, x, y, grids)
-			game.level.map:particleEmitter(x, y, tg.radius, "fireflash", {radius=tg.radius, tx=x, ty=y})
-			if self:attr("burning_wake") then
-				game.level.map:addEffect(self,
-					x, y, 4,
-					engine.DamageType.INFERNO, self:attr("burning_wake"),
-					tg.radius,
-					5, nil,
-					{type="inferno"},
-					nil, tg.selffire
-				)
-			end
-		end)
-		game:playSoundNear(self, "talents/fireflash")
-		return true
-	end,
-	info = function(self, t)
-		local damage = t.getDamage(self, t)
-		local radius = self:getTalentRadius(t)
-		return ([[Conjures up a bolt of fire moving toward the target that explodes into a flash of fire doing %0.2f fire damage in a radius of %d.
-		The damage will increase with the Magic stat]]):
-		format(damDesc(self, DamageType.FIRE, damage), radius)
-	end,
-}
-
-newTalent{
-	name = "Curse of the Meek",
-	type = {"spell/shades",4},
-	require = spells_req4,
 	points = 5,
 	mana = 50,
 	cooldown = 30,
@@ -255,5 +206,70 @@ newTalent{
 		return ([[Reaches through the shadows into quiter places, summoning %d harmless creatures. Those creatures are then cursed with a Curse of Hate, making all
 		hostile foes try to kill them. If killed by hostile foes you have 50%% chance to gain a soul.]]):
 		format(math.ceil(self:getTalentLevel(t)))
+	end,
+}
+
+newTalent{
+	name = "Forgery of Haze",
+	type = {"spell/shades",4},
+	require = spells_req4,
+	points = 5,
+	mana = 50,
+	cooldown = 8,
+	tactical = { ATTACK = 2, ESCAPE = 1 },
+	requires_target = true,
+	getDuration = function(self, t) return math.floor(3 + self:getTalentLevel(t)) end,
+	action = function(self, t)
+		-- Find space
+		local x, y = util.findFreeGrid(self.x, self.y, 1, true, {[Map.ACTOR]=true})
+		if not x then
+			game.logPlayer(self, "Not enough space to summon!")
+			return
+		end
+
+		local m = self:clone{
+			shader = "shadow_simulacrum",
+			no_drops = true,
+			faction = self.faction,
+			summoner = self, summoner_gain_exp=true,
+			summon_time = t.getDuration(self, t),
+			ai_target = {actor=nil},
+			ai = "summoned", ai_real = "tactical",
+			desc = [[A dark shadowy shape who's form resembles you.]],
+		}
+		m:removeAllMOs()
+		m.make_escort = nil
+		m.on_added_to_level = nil
+
+		m.energy.value = 0
+		m.life = m.life
+		m.forceLevelup = function() end
+		m.on_die = nil
+		m.on_acquire_target = nil
+		m.seen_by = nil
+		m.can_talk = nil
+		m.clone_on_hit = nil
+		m.talents.T_CREATE_MINIONS = nil
+		m.talents.T_FORGERY_OF_HAZE = nil
+		m.remove_from_party_on_death = true
+
+		game.zone:addEntity(game.level, m, "actor", x, y)
+		game.level.map:particleEmitter(x, y, 1, "shadow")
+
+		if game.party:hasMember(self) then
+			game.party:addMember(m, {
+				control="no",
+				type="minion",
+				title="Forgery of Haze",
+				orders = {target=true},
+			})
+		end
+
+		game:playSoundNear(self, "talents/spell_generic2")
+		return true
+	end,
+	info = function(self, t)
+		return ([[Through the shadows you forge a temporary copy of yourself, existing for %d turns.]]):
+		format(t.getDuration(self, t))
 	end,
 }
