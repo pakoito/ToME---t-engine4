@@ -374,9 +374,9 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 		t.do_terror(self, t, target, dam)
 	end
 
-	-- Mortal Terror
-	if hitted and not target.dead and target:knowTalent(target.T_STONESKIN) and rng.percent(15) then
-		target:setEffect(target.EFF_STONE_SKIN, 5, {power=target:getTalentLevelRaw(target.T_STONESKIN)*3})
+	-- Dwarves stoneskin
+	if hitted and not target.dead and target:attr("auto_stoneskin") and rng.percent(15) then
+		target:setEffect(target.EFF_STONE_SKIN, 5, {power=target:attr("auto_stoneskin")})
 	end
 
 	-- Conduit (Psi)

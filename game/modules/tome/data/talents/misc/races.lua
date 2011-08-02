@@ -411,14 +411,14 @@ newTalent{
 	points = 5,
 	mode = "passive",
 	on_learn = function(self, t)
-		self:attr("auto_stoneskin", 3)
+		self:attr("auto_stoneskin", 6)
 	end,
 	on_unlearn = function(self, t)
-		self:attr("auto_stoneskin", -3)
+		self:attr("auto_stoneskin", -6)
 	end,
 	info = function(self, t)
 		return ([[Dwarf skin is a complex structure, it can automatically react to physical blows to harden itself.
-		15%% chance when hit in melee to increase armour total by %d for 5 turns.]]):format(self:getTalentLevelRaw(t) * 3)
+		15%% chance when hit in melee to increase armour total by %d for 5 turns.]]):format(self:getTalentLevelRaw(t) * 6)
 	end,
 }
 
