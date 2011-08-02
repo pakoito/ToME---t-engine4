@@ -893,12 +893,24 @@ int main(int argc, char *argv[])
 	// RNG init
 	init_gen_rand(time(NULL));
 
+	int vid_drv;
+	for (vid_drv = 0; vid_drv < SDL_GetNumVideoDrivers(); vid_drv++)
+	{
+		printf("Available video driver: %s\n", SDL_GetVideoDriver(vid_drv));
+	}
+
 	// initialize engine and set up resolution and depth
-	Uint32 flags=SDL_INIT_VIDEO | SDL_INIT_TIMER;
+	Uint32 flags=SDL_INIT_TIMER;
 	if (SDL_Init (flags) < 0) {
 		printf("cannot initialize SDL: %s\n", SDL_GetError ());
-		return;
+		return 1;
 	}
+
+	if (SDL_VideoInit(NULL) != 0) {
+		printf("Error initializing SDL video:  %s\n", SDL_GetError());
+		return 2;
+	}
+
 
 	// Filter events, to catch the quit event
 	SDL_SetEventFilter(event_filter, NULL);
