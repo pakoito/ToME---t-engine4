@@ -683,10 +683,10 @@ void do_resize(int w, int h, bool fullscreen)
 			printf("error opening screen: %s\n", SDL_GetError());
 			exit(1);
 		}
-		glewInit();
 		screen = SDL_GetWindowSurface(window);
 		maincontext = SDL_GL_CreateContext(window);
 		SDL_GL_MakeCurrent(window, maincontext);
+		glewInit();
 	}
 	else
 	{
@@ -949,6 +949,7 @@ int main(int argc, char *argv[])
 		shaders_active = FALSE;
 		fbo_active = FALSE;
 	}
+	printf("===fbo %d\n", fbo_active);
 
 //	setupDisplayTimer(30);
 	init_blank_surface();
