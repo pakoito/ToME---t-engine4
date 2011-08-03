@@ -672,6 +672,23 @@ newDamageType{
 	end,
 }
 
+-- Darkness damage + blind chance
+newDamageType{
+	name = "blinding darkness", type = "DARKNESS_BLIND",
+	projector = function(src, x, y, type, dam)
+		local realdam = DamageType:get(DamageType.ACID).projector(src, x, y, DamageType.DARKNESS, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and rng.percent(25) then
+			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("blind") then
+				target:setEffect(target.EFF_BLINDED, 3, {src=src})
+			else
+				game.logSeen(target, "%s resists!", target.name:capitalize())
+			end
+		end
+		return realdam
+	end,
+}
+
 -- Lightning damage + daze chance
 newDamageType{
 	name = "lightning daze", type = "LIGHTNING_DAZE",
@@ -975,7 +992,7 @@ newDamageType{
 	end,
 }
 
--- Blind
+-- gBlind
 newDamageType{
 	name = "% chances to blind", type = "RANDOM_BLIND",
 	projector = function(src, x, y, type, dam)

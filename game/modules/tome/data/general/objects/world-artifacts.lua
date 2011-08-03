@@ -1914,6 +1914,72 @@ newEntity{ base = "BASE_GREATSWORD",
 	},
 }
 
+newEntity{ base = "BASE_MACE",
+	name = "Ureslak's Femur", define_as = "URESLAK_FEMUR",
+	unided_name = "a strangely colored bone", unique = true,
+	desc = [[A shortened femur of the mighty prismatic dragon, this erratic club still pulses with Ureslak's volatile nature.]],
+	level_range = {42, 50},
+	require = { stat = { str=45, dex=30 }, },
+	rarity = 400,
+	cost = 300,
+	material_level = 5,
+	combat = {
+		dam = 52,
+		apr = 5,
+		physcrit = 2.5,
+		dammod = {str=1},
+		special_on_hit = {desc="10% chance to shimer to a different hue and gain powers", fct=function(combat, who, target)
+			if not rng.percent(10) then return end
+			local o, item, inven_id = who:findInAllInventoriesBy("define_as", "URESLAK_FEMUR")
+			if not o or not who:getInven(inven_id).worn then return end
+
+			who:onTakeoff(o, true)
+			local b = rng.table(o.ureslak_bonuses)
+			o.name = "Ureslak's "..b.name.." Femur"
+			o.combat.damtype = b.damtype
+			o.wielder = b.wielder
+			who:onWear(o, true)
+			game.logSeen(who, "#GOLD#Ureslak's Femur glows and shimers!")
+		end },
+	},
+	ureslak_bonuses = {
+		{ name = "Flaming", damtype = DamageType.FIREBURN, wielder = {
+			global_speed = 0.3,
+			resists = { [DamageType.FIRE] = 45 },
+			resists_pen = { [DamageType.FIRE] = 30 },
+			inc_damage = { [DamageType.FIRE] = 30 },
+		} },
+		{ name = "Frozen", damtype = DamageType.ICE, wielder = {
+			combat_armor = 15,
+			resists = { [DamageType.COLD] = 45 },
+			resists_pen = { [DamageType.COLD] = 30 },
+			inc_damage = { [DamageType.COLD] = 30 },
+		} },
+		{ name = "Crackling", damtype = DamageType.LIGHTNING_DAZE, wielder = {
+			inc_stats = { [Stats.STAT_STR] = 6, [Stats.STAT_DEX] = 6, [Stats.STAT_CON] = 6, [Stats.STAT_CUN] = 6, [Stats.STAT_WIL] = 6, [Stats.STAT_MAG] = 6, },
+			resists = { [DamageType.LIGHTNING] = 45 },
+			resists_pen = { [DamageType.LIGHTNING] = 30 },
+			inc_damage = { [DamageType.LIGHTNING] = 30 },
+		} },
+		{ name = "Venomous", damtype = DamageType.POISON, wielder = {
+			resists = { all = 15, [DamageType.NATURE] = 45 },
+			resists_pen = { [DamageType.NATURE] = 30 },
+			inc_damage = { [DamageType.NATURE] = 30 },
+		} },
+		{ name = "Starry", damtype = DamageType.DARKNESS_BLIND, wielder = {
+			combat_spellresist = 15, combat_mentalresist = 15, combat_physresist = 15,
+			resists = { [DamageType.DARKNESS] = 45 },
+			resists_pen = { [DamageType.DARKNESS] = 30 },
+			inc_damage = { [DamageType.DARKNESS] = 30 },
+		} },
+		{ name = "Eldritch", damtype = DamageType.ARCANE, wielder = {
+			resists = { [DamageType.ARCANE] = 45 },
+			resists_pen = { [DamageType.ARCANE] = 30 },
+			inc_damage = { all = 12, [DamageType.ARCANE] = 30 },
+		} },
+	},
+}
+
 newEntity{ base = "BASE_WARAXE",
 	power_source = {technique=true},
 	unique = true,

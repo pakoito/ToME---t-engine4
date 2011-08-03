@@ -466,6 +466,7 @@ function _M:findInInventoryBy(inven, prop, value)
 		end
 	else
 		for item, o in ipairs(inven) do
+			print(o.name, inven.id, item, "=====test", prop, value, o[prop])
 			if o[prop] == value then return o, item end
 		end
 	end

@@ -45,7 +45,7 @@ newEntity{
 newEntity{ base="BASE_NPC_BIRD", define_as = "NPC_PHOENIX",
 	name = "Phoenix", unique = true,
 	display = "B", color=colors.VIOLET,
-	rarity = 200,
+	rarity = 50,
 	desc = [[Ever burning, ever dying, ever reviving, the Phoenix swoops down upon you, seeking to share its fiery fate with you.]],
 	level_range = {40, 75}, exp_worth = 10,
 	max_life = 1000, life_rating = 23, fixed_rating = true,
