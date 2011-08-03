@@ -347,7 +347,7 @@ newEntity{ base = "BASE_AMULET",
 	material_level = 4,
 	wielder = {
 		inc_stats = {
-			[Stats.STAT_STR] = 6,
+			[Stats.STAT_STR] = 10,
 			[Stats.STAT_CON] = 6,
 		},
 		talents_types_mastery = {
@@ -356,10 +356,11 @@ newEntity{ base = "BASE_AMULET",
 			["technique/warcries"] = 0.1,
 			["technique/bloodthirst"] = 0.1,
 		},
-		stun_immune = 0.3,
+		stun_immune = 0.5,
+		pin_immune = 1,
 	},
 	max_power = 48, power_regen = 1,
-	use_talent = { id = Talents.T_SHATTERING_SHOUT, level = 4, power = 24 },
+	use_talent = { id = Talents.T_SHATTERING_SHOUT, level = 4, power = 10 },
 }
 
 newEntity{ base = "BASE_LITE",
