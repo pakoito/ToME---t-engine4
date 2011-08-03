@@ -445,8 +445,8 @@ function _M:setupDisplayMode(reboot, mode)
 		self.full_fbo = core.display.newFBO(self.w, self.h)
 		if self.full_fbo then self.full_fbo_shader = Shader.new("full_fbo") if not self.full_fbo_shader.shad then self.full_fbo = nil self.full_fbo_shader = nil end end
 
-		self.mm_fbo = core.display.newFBO(200, 200)
-		if self.mm_fbo then self.mm_fbo_shader = Shader.new("mm_fbo") if not self.mm_fbo_shader.shad then self.mm_fbo = nil self.mm_fbo_shader = nil end end
+--		self.mm_fbo = core.display.newFBO(200, 200)
+--		if self.mm_fbo then self.mm_fbo_shader = Shader.new("mm_fbo") if not self.mm_fbo_shader.shad then self.mm_fbo = nil self.mm_fbo_shader = nil end end
 	end
 end
 
