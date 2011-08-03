@@ -436,6 +436,31 @@ newEntity{ base = "BASE_LITE",
 	use_talent = { id = Talents.T_BLOOD_GRASP, level = 3, power = 10 },
 }
 
+newEntity{ base = "BASE_LITE",
+	power_source = {nature=true, antimagic=true},
+	unique = true,
+	name = "Guidance",
+	unided_name = "a softly glowing crystal",
+	level_range = {38, 50},
+	color = colors.YELLOW,
+	encumber = 1,
+	rarity = 300,
+	desc = [[Said to have once belonged to Inquisitor Marcus Dunn during the Spellhunt this fist sized quartz crystal glows constantly with a soft white light and was rumoured to be a great aid in meditation, helping focus the mind, body, and soul of the owner as well as protecting them from the foulest of magics.]],
+	cost = 100,
+
+	wielder = {
+		lite = 4,
+		inc_stats = { [Stats.STAT_WIL] = 6, [Stats.STAT_CUN] = 6,},
+		combat_physresist = 12,
+		combat_mentalresist = 12,
+		combat_spellresist = 12,
+		confusion_immune = 0.5,
+		talents_types_mastery = { ["wild-gift/call"] = 0.2, ["wild-gift/antimagic"] = 0.1, },
+		resists_cap = { [DamageType.BLIGHT] = 10, },
+		resists = { [DamageType.BLIGHT] = 20, },
+	},
+}
+
 newEntity{
 	power_source = {nature=true},
 	unique = true,
@@ -2079,6 +2104,38 @@ newEntity{ base = "BASE_KNIFE", define_as = "ART_PAIR_TWDAG",
 		self.combat.special_on_hit = nil
 	end,
 }
+
+newEntity{ base = "BASE_LONGSWORD",
+	power_source = {nature=true, antimagic=true},
+	unique = true,
+	name = "Witch-Bane", color = colors.LIGHT_STEEL_BLUE,
+	unided_name = "an ivory handled voratun longsword",
+	desc = [[A thin voratun blade with an ivory handle wrapped in purple cloth.  The weapon is nearly as legendary as it's former owner, Marcus Dunn, and was thought to have been destroyed after Marcus' was slain near the end of the Spellhunt.]],
+	level_range = {38, 50},
+	rarity = 250,
+	require = { stat = { str=48 }, },
+	cost = 650,
+	material_level = 5,
+	combat = {
+		dam = 45,
+		apr = 4,
+		physcrit = 10,
+		dammod = {str=1},
+		talent_on_hit = { [Talents.T_MANA_CLASH] = {level=1, chance=25} },
+	},
+	wielder = {
+		inc_stats = { [Stats.STAT_WIL] = 6, [Stats.STAT_CUN] = 6,},
+		talent_cd_reduction={
+			[Talents.T_AURA_OF_SILENCE] = 2,
+			[Talents.T_MANA_CLASH] = 2,
+		},
+		resists = {
+			all = 10,
+			[DamageType.PHYSICAL] = - 10,
+		},
+	},
+}
+
 
 newEntity{ base = "BASE_GAUNTLETS",
 	power_source = {arcane=true},

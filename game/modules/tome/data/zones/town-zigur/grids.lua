@@ -56,7 +56,7 @@ newEntity{ base = "FLOOR", define_as = "COBBLESTONE",
 
 newEntity{ base = "HARDWALL", define_as = "ROCK",
 	name="giant rock",
-	image="terrain/oldstone_floor.png", add_displays = {class.new{image="terrain/maze_rock.png"}},
+	image="terrain/oldstone_floor.png", add_displays = {class.new{image="terrain/huge_rock.png"}},
 	nice_tiler = false,
 }
 
