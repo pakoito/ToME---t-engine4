@@ -1915,6 +1915,7 @@ newEntity{ base = "BASE_GREATSWORD",
 }
 
 newEntity{ base = "BASE_MACE",
+	power_source = {nature=true},
 	name = "Ureslak's Femur", define_as = "URESLAK_FEMUR",
 	unided_name = "a strangely colored bone", unique = true,
 	desc = [[A shortened femur of the mighty prismatic dragon, this erratic club still pulses with Ureslak's volatile nature.]],
@@ -2002,6 +2003,81 @@ It is said the wielder will slowly grow mad. This, however, has never been prove
 		see_invisible = 5,
 		inc_damage = { [DamageType.PHYSICAL]=10 },
 	},
+}
+
+newEntity{ base = "BASE_LONGSWORD", define_as = "ART_PAIR_TWSWORD",
+	power_source = {arcane=true},
+	unique = true,
+	name = "Sword of Potential Futures",
+	unided_name = "under-wrought blade",
+	desc = [[Legend has it this blade is one of a pair; twin blades forged in the earliest of days of the Wardens. To an untrained wielder it is less than perfect; to a Warden, it represents the untapped potential of time.]],
+	level_range = {20, 30},
+	rarity = 250,
+	require = { stat = { str=24, mag=24 }, },
+	cost = 300,
+	material_level = 3,
+	combat = {
+		dam = 28,
+		apr = 10,
+		physcrit = 8,
+		dammod = {str=0.8,mag=0.2},
+		melee_project={[DamageType.TEMPORAL] = 5},
+	},
+	wielder = {
+		inc_damage={
+			[DamageType.TEMPORAL] = 5, [DamageType.PHYSICAL] = -5,
+		},
+	},
+	set_list = { {"define_as","ART_PAIR_TWDAG"} },
+	on_set_complete = function(self, who)
+		self.combat.special_on_hit = {desc="10% chance to reduce the target's resistances to all damage", fct=function(combat, who, target)
+			if not rng.percent(10) then return end
+			target:setEffect(target.FLAWED_DESIGN, 3, {power=20})
+		end}
+		self:specialSetAdd({"wielder","inc_damage"}, {[engine.DamageType.TEMPORAL]=5, [engine.DamageType.PHYSICAL]=10,})
+		game.logSeen(who, "#CRIMSON#The echoes of time resound as the blades are reunited once more.")
+	end,
+	on_set_broken = function(self, who)
+		self.combat.special_on_hit = nil
+		game.logPlayer(who, "#CRIMSON#Time seems less perfect in your eyes as the blades are separated.")
+	end,
+}
+
+newEntity{ base = "BASE_KNIFE", define_as = "ART_PAIR_TWDAG",
+	power_source = {arcane=true},
+	unique = true,
+	name = "Dagger of the Past",
+	unided_name = "rusted blade",
+	desc = [[Legend has it this blade is one of a pair; twin blades forged in the earliest of days of the Wardens. To an untrained wielder it is less than perfect; to a Warden, it represents the opportunity to learn from the mistakes of the past.]],
+	level_range = {20, 30},
+	rarity = 250,
+	require = { stat = { dex=24, mag=24 }, },
+	cost = 300,
+	material_level = 3,
+	combat = {
+		dam = 25,
+		apr = 20,
+		physcrit = 20,
+		dammod = {dex=0.5,mag=0.5},
+		melee_project={[DamageType.TEMPORAL] = 5},
+	},
+	wielder = {
+		inc_damage={
+			[DamageType.TEMPORAL] = 5, [DamageType.PHYSICAL] = -10,
+		},
+	},
+	set_list = { {"define_as","ART_PAIR_TWSWORD"} },
+	on_set_complete = function(self, who)
+		self.combat.special_on_hit = {desc="10% chance to return the target to a much youger state", fct=function(combat, who, target)
+			if not rng.percent(10) then return end
+			target:setEffect(target.TURN_BACK_THE_CLOCK, 3, {power=10})
+		end}
+		self:specialSetAdd({"wielder","inc_damage"}, {[engine.DamageType.TEMPORAL]=5, [engine.DamageType.PHYSICAL]=10,})
+		self:specialSetAdd({"wielder","resists_pen"}, {[engine.DamageType.TEMPORAL]=15,})
+	end,
+	on_set_broken = function(self, who)
+		self.combat.special_on_hit = nil
+	end,
 }
 
 newEntity{ base = "BASE_GAUNTLETS",
