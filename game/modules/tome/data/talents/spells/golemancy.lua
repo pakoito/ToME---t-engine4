@@ -63,6 +63,7 @@ local function makeGolem()
 			["golem/arcane"] = true,
 		},
 		inscription_restrictions = { ["inscriptions/runes"] = true, },
+                resolvers.inscription("RUNE:_SHIELDING", {cooldown=14, dur=5, power=100}),
 
 		hotkey = {},
 		hotkey_page = 1,
