@@ -52,7 +52,7 @@ newEntity{ define_as = "ATAMATHON", base = "BASE_NPC_CONSTRUCT",
 		{defined="GEM_AMETHYST"},
 	},
 
-	inc_damage = {all=160},
+	inc_damage = {all=360},
 
 	no_auto_resists = true,
 	resists = {
