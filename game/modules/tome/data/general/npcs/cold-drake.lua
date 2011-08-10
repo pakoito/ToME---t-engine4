@@ -41,7 +41,7 @@ newEntity{
 	knockback_immune = 1,
 	stun_immune = 1,
 	stun_immune = 0.5,
-	blind_immunge = 0.5,
+	blind_immune = 0.5,
 }
 
 newEntity{ base = "BASE_NPC_COLD_DRAKE",
@@ -94,7 +94,7 @@ newEntity{ base = "BASE_NPC_COLD_DRAKE",
 	on_melee_hit = {[DamageType.COLD]=resolvers.mbonus(25, 10)},
 	lite = 1,
 	stun_immune = 0.8,
-	blind_immunge = 0.8,
+	blind_immune = 0.8,
 
 	make_escort = {
 		{type="dragon", name="cold drake", number=1},

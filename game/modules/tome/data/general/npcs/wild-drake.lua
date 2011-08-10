@@ -38,7 +38,7 @@ newEntity{
 
 	knockback_immune = 1,
 	stun_immune = 0.6,
-	blind_immunge = 0.6,
+	blind_immune = 0.6,
 	resolvers.sustains_at_birth(),
 }
 

@@ -40,7 +40,7 @@ newEntity{
 
 	knockback_immune = 1,
 	stun_immune = 0.5,
-	blind_immunge = 0.5,
+	blind_immune = 0.5,
 }
 
 newEntity{ base = "BASE_NPC_STORM_DRAKE",
@@ -95,7 +95,7 @@ newEntity{ base = "BASE_NPC_STORM_DRAKE",
 	stats_per_level = 5,
 	lite = 1,
 	stun_immune = 0.8,
-	blind_immunge = 0.8,
+	blind_immune = 0.8,
 
 	ai = "tactical",
 	ai_tactic = resolvers.tactic"melee",
