@@ -120,7 +120,7 @@ function _M:yesnoLongPopup(title, text, w, fct, yes_text, no_text, no_leave, esc
 end
 
 --- Requests a simple yes-no dialog
-function _M:yesnocancelLongPopup(title, text, fct, yes_text, no_text, cancel_text, no_leave, escape)
+function _M:yesnocancelPopup(title, text, fct, yes_text, no_text, cancel_text, no_leave, escape)
 	local w, h = self.font:size(text)
 	local d = new(title, 1, 1)
 
@@ -128,9 +128,32 @@ function _M:yesnocancelLongPopup(title, text, fct, yes_text, no_text, cancel_tex
 	local ok = require("engine.ui.Button").new{text=yes_text or "Yes", fct=function() game:unregisterDialog(d) fct(true, false) end}
 	local no = require("engine.ui.Button").new{text=no_text or "No", fct=function() game:unregisterDialog(d) fct(false, false) end}
 	local cancel = require("engine.ui.Button").new{text=cancel_text or "Cancel", fct=function() game:unregisterDialog(d) fct(false, true) end}
-	if not no_leave then d.key:addBind("EXIT", function() game:unregisterDialog(d) game:unregisterDialog(d) fct(false,not escape) end) end
+	if not no_leave then d.key:addBind("EXIT", function() game:unregisterDialog(d) game:unregisterDialog(d) fct(false, not escape) end) end
 	d:loadUI{
 		{left = 3, top = 3, ui=require("engine.ui.Textzone").new{width=w+20, height=h + 5, text=text}},
+		{left = 3, bottom = 3, ui=ok},
+		{left = 3 + ok.w, bottom = 3, ui=no},
+		{right = 3, bottom = 3, ui=cancel},
+	}
+	d:setFocus(ok)
+	d:setupUI(true, true)
+
+	game:registerDialog(d)
+	return d
+end
+
+--- Requests a simple yes-no dialog
+function _M:yesnocancelLongPopup(title, text, w, fct, yes_text, no_text, cancel_text, no_leave, escape)
+	local list = text:splitLines(w - 10, font)
+	local d = new(title, 1, 1)
+
+--	d.key:addBind("EXIT", function() game:unregisterDialog(d) fct(false) end)
+	local ok = require("engine.ui.Button").new{text=yes_text or "Yes", fct=function() game:unregisterDialog(d) fct(true, false) end}
+	local no = require("engine.ui.Button").new{text=no_text or "No", fct=function() game:unregisterDialog(d) fct(false, false) end}
+	local cancel = require("engine.ui.Button").new{text=cancel_text or "Cancel", fct=function() game:unregisterDialog(d) fct(false, true) end}
+	if not no_leave then d.key:addBind("EXIT", function() game:unregisterDialog(d) game:unregisterDialog(d) fct(false, not escape) end) end
+	d:loadUI{
+		{left = 3, top = 3, ui=require("engine.ui.Textzone").new{width=w+20, height=self.font_h * #list, text=text}},
 		{left = 3, bottom = 3, ui=ok},
 		{left = 3 + ok.w, bottom = 3, ui=no},
 		{right = 3, bottom = 3, ui=cancel},

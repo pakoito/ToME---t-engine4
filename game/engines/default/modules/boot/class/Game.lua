@@ -346,11 +346,22 @@ function _M:checkFirstTime()
 	if not profile.generic.firstrun then
 		profile:checkFirstRun()
 		local text = "Thanks for downloading T-Engine/ToME.\n\n"..profile_help_text
-		Dialog:yesnoLongPopup("Welcome to T-Engine", text, 400, function(ret)
-			if ret then
-				self:registerDialog(require("mod.dialogs.Profile").new())
+		Dialog:yesnocancelLongPopup("Welcome to T-Engine", text, 600, function(ret, cancel)
+			if cancel then return end
+			if not ret then
+				local dialogdef = {}
+				dialogdef.fct = function(login) self:setPlayerLogin(login) end
+				dialogdef.name = "login"
+				dialogdef.justlogin = true
+				game:registerDialog(require('mod.dialogs.ProfileLogin').new(dialogdef, game.profile_help_text))
+			else
+				local dialogdef = {}
+				dialogdef.fct = function(login) self:setPlayerLogin(login) end
+				dialogdef.name = "creation"
+				dialogdef.justlogin = false
+				game:registerDialog(require('mod.dialogs.ProfileLogin').new(dialogdef, game.profile_help_text))
 			end
-		end, "Register now", "Maybe later")
+		end, "Register new account", "Log in existing account", "Maybe later")
 	end
 end
 

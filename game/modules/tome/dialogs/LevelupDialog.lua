@@ -241,7 +241,7 @@ function _M:updateKeys(kind)
 			EXIT = function()
 				if self.actor.unused_stats~=self.actor_dup.unused_stats or self.actor.unused_talents_types~=self.actor_dup.unused_talents_types or
 				self.actor.unused_talents~=self.actor_dup.unused_talents or self.actor.unused_generics~=self.actor_dup.unused_generics then
-					self:yesnocancelLongPopup("Finish","Do you accept changes?", function(yes, cancel)
+					self:yesnocancelPopup("Finish","Do you accept changes?", function(yes, cancel)
 					if cancel then
 						return nil
 					else
@@ -281,7 +281,7 @@ function _M:updateKeys(kind)
 			EXIT = function()
 				if self.actor.unused_stats~=self.actor_dup.unused_stats or self.actor.unused_talents_types~=self.actor_dup.unused_talents_types or
 				self.actor.unused_talents~=self.actor_dup.unused_talents or self.actor.unused_generics~=self.actor_dup.unused_generics  then
-					self:yesnocancelLongPopup("Finish","Do you accept changes?", function(yes, cancel)
+					self:yesnocancelPopup("Finish","Do you accept changes?", function(yes, cancel)
 					if cancel then
 						return nil
 					else
@@ -309,7 +309,7 @@ function _M:updateKeys(kind)
 			EXIT = function()
 				if self.actor.unused_stats~=self.actor_dup.unused_stats or self.actor.unused_talents_types ~= self.actor_dup.unused_talents_types or
 				self.actor.unused_talents ~= self.actor_dup.unused_talents or self.actor.unused_generics~=self.actor_dup.unused_generics then
-					self:yesnocancelLongPopup("Finish","Do you accept changes?", function(yes, cancel)
+					self:yesnocancelPopup("Finish","Do you accept changes?", function(yes, cancel)
 					if cancel then
 						return nil
 					else
