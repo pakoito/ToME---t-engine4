@@ -45,7 +45,7 @@ newTalent{
 		local radius = t.getRadius(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[Summons an ethereal magical eye at the designated location that lasts for %d turns.
-		The eye can not be seen or attacked by other creatures and posses magical vision that allows it to see any creature in a %d range around it.
+		The eye can not be seen or attacked by other creatures and possesses magical vision that allows it to see any creature in a %d range around it.
 		It does not require light to do so but it can not see through walls.
 		Casting the eye does not take a turn.
 		Only one arcane eye can exist at any given time.
@@ -85,10 +85,10 @@ newTalent{
 		local seeinvisible = t.getSeeInvisible(self, t)
 		local seestealth = t.getSeeStealth(self, t)
 		local criticalchance = t.getCriticalChance(self, t)
-		return ([[You focus your senses, getting informations from moments in the future.
-		Improves see invisible +%d.
-		Improves see through stealth +%d.
-		Improves critical spell chance +%d%%.
+		return ([[You focus your senses, getting information from moments in the future.
+		Improves see invisible +%d
+		Improves see through stealth +%d
+		Improves critical spell chance +%d%%
 		The effects will improve with the Magic stat]]):
 		format(seeinvisible, seestealth, criticalchance)
 	end,
@@ -111,7 +111,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local radius = t.getRadius(self, t)
-		return ([[Form a map of your surroundings in your mind in a radius of %d.]]):
+		return ([[Form a map of your surroundings in your mind in a radius of %d]]):
 		format(radius)
 	end,
 }
@@ -144,7 +144,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local resist = t.getResist(self, t)
-		return ([[Echos of the future flashes before your eyes, allowing you to sense some incoming attacks.
+		return ([[Echoes of the future flash before your eyes, allowing you to sense some incoming attacks.
 		If the attack is elemental or magical you will erect a temporary shield that reduces all damage of this type by %d%% for 5 turns.
 		This effect can only happen once every 5 turns and happens before damage is taken.
 		The bonus will increase with the Magic stat]]):format(resist)
