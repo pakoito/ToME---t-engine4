@@ -288,7 +288,7 @@ newTalent{
 	target = function(self, t)
 		return {type="beam", range=self:getTalentRange(t), talent=t}
 	end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 25, 220) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 25, 320) end,
 	tactical = { ATTACK = 3 },
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
