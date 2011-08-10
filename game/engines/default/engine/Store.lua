@@ -57,13 +57,11 @@ function _M:loadup(level, zone, force_nb)
 	if not self:canRestock() then return end
 	local inven = self:getInven("INVEN")
 
-	if s.empty_before_restock then
-		for i = #inven, 1, -1 do
-			local e = inven[i]
-			inven[i] = nil
-			if not e.__store_forget then
-				e:removed()
-			end
+	for i = #inven, 1, -1 do
+		local e = inven[i]
+		inven[i] = nil
+		if (s.empty_before_restock and not e.__store_forget) or (e.__force_store_forget) then
+			e:removed()
 		end
 	end
 
