@@ -462,7 +462,7 @@ newEntity{
 		combat_spellpower = resolvers.mbonus_material(12, 3),
 		inc_damage = {
 			[DamageType.BLIGHT] = resolvers.mbonus_material(10, 5),
-			[DamageType.POISON] = resolvers.mbonus_material(10, 5),
+			[DamageType.NATURE] = resolvers.mbonus_material(10, 5),
 		},
 	},
 }
