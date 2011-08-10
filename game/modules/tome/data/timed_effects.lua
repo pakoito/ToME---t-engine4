@@ -3708,9 +3708,9 @@ newEffect{
 	on_gain = function(self, err) return "#Target# is engaged in a grapple!", "+Grappling" end,
 	on_lose = function(self, err) return "#Target# has released the hold.", "-Grappling" end,
 	on_timeout = function(self, eff)
-		if math.floor(core.fov.distance(self.x, self.y, eff.src.x, eff.src.y)) > 1 or eff.src.dead or not eff.src:hasEffect(self.EFF_GRAPPLED) then
-			if eff.src:hasEffect(self.EFF_GRAPPLED) then
-				eff.src:removeEffect(self.EFF_GRAPPLED)
+		if eff.src and math.floor(core.fov.distance(self.x, self.y, eff.src.x, eff.src.y)) > 1 or eff.src.dead or not eff.src:hasEffect(eff.src.EFF_GRAPPLED) then
+			if eff.src:hasEffect(eff.src.EFF_GRAPPLED) then
+				eff.src:removeEffect(eff.src.EFF_GRAPPLED)
 			end
 			return true
 		end
@@ -3722,14 +3722,14 @@ newEffect{
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("stamina_regen", eff.tmpid)
 		-- clears debuffs from the grappled opponent; grapple break is set to silent so it won't spam everytime a grapple is reapplied
-		if eff.src:hasEffect(self.EFF_GRAPPLED) then
-			eff.src:removeEffect(self.EFF_GRAPPLED, true)
+		if eff.src:hasEffect(eff.src.EFF_GRAPPLED) then
+			eff.src:removeEffect(eff.src.EFF_GRAPPLED, true)
 		end
-		if eff.src:hasEffect(self.EFF_CRUSHING_HOLD) then
-			eff.src:removeEffect(self.EFF_CRUSHING_HOLD)
+		if eff.src:hasEffect(eff.src.EFF_CRUSHING_HOLD) then
+			eff.src:removeEffect(eff.src.EFF_CRUSHING_HOLD)
 		end
-		if eff.src:hasEffect(self.EFF_STRANGLE_HOLD) then
-			eff.src:removeEffect(self.EFF_STRANGLE_HOLD)
+		if eff.src:hasEffect(eff.src.EFF_STRANGLE_HOLD) then
+			eff.src:removeEffect(eff.src.EFF_STRANGLE_HOLD)
 		end
 	end,
 }
@@ -3750,18 +3750,26 @@ newEffect{
 		eff.atk = self:addTemporaryValue("combat_atk", -eff.power)
 	end,
 	on_timeout = function(self, eff)
-		if math.floor(core.fov.distance(self.x, self.y, eff.src.x, eff.src.y)) > 1 or eff.src.dead or not eff.src:hasEffect(self.EFF_GRAPPLING) then
-			if eff.src:hasEffect(self.EFF_GRAPPLING) then
-				eff.src:removeEffect(self.EFF_GRAPPLING)
+		if math.floor(core.fov.distance(self.x, self.y, eff.src.x, eff.src.y)) > 1 or eff.src.dead or not eff.src:hasEffect(eff.src.EFF_GRAPPLING) then
+			if eff.src:hasEffect(eff.src.EFF_GRAPPLING) then
+				eff.src:removeEffect(eff.src.EFF_GRAPPLING)
 			end
 			return true
 		end
 	end,
 	deactivate = function(self, eff)
 		-- clears the grappling effect from the attacker; this will in turn remove all other holds.
-		if eff.src:hasEffect(self.EFF_GRAPPLING) then
-			eff.src:removeEffect(self.EFF_GRAPPLING)
+		if eff.src:hasEffect(eff.src.EFF_GRAPPLING) then
+			eff.src:removeEffect(eff.src.EFF_GRAPPLING)
 		end
+		-- just in case it doesn't (like if the grappler is rifted); we'll check for other effects and remove those as well
+		if self:hasEffect(self.EFF_CRUSHING_HOLD) then
+			self:removeEffect(self.EFF_CRUSHING_HOLD)
+		end
+		if self:hasEffect(self.EFF_STRANGLE_HOLD) then
+			self:removeEffect(self.EFF_STRANGLE_HOLD)
+		end
+		
 		self:removeTemporaryValue("combat_atk", eff.atk)
 		self:removeTemporaryValue("combat_def", eff.def)
 		self:removeTemporaryValue("never_move", eff.tmpid)
