@@ -48,21 +48,23 @@ newTalent{
 
 		if self.ai_target then self.ai_target.target = target end
 
-		local l = line.new(self.x, self.y, x, y)
-		local lx, ly = l()
-		if game.level.map:checkAllEntities(lx, ly, "block_move", self) then
-			game.logPlayer(self, "You are too close to build up momentum!")
-			return
-		end
-		local tx, ty = self.x, self.y
-		lx, ly = l()
-		while lx and ly do
-			if game.level.map:checkAllEntities(lx, ly, "block_move", self) then break end
-			tx, ty = lx, ly
+		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then
+			local l = line.new(self.x, self.y, x, y)
+			local lx, ly = l()
+			if game.level.map:checkAllEntities(lx, ly, "block_move", self) then
+				game.logPlayer(self, "You are too close to build up momentum!")
+				return
+			end
+			local tx, ty = self.x, self.y
 			lx, ly = l()
-		end
+			while lx and ly do
+				if game.level.map:checkAllEntities(lx, ly, "block_move", self) then break end
+				tx, ty = lx, ly
+				lx, ly = l()
+			end
 
-		self:move(tx, ty, true)
+			self:move(tx, ty, true)
+		end
 
 		-- Attack ?
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return true end
@@ -154,21 +156,23 @@ newTalent{
 
 		if self.ai_target then self.ai_target.target = target end
 
-		local l = line.new(self.x, self.y, x, y)
-		local lx, ly = l()
-		if game.level.map:checkAllEntities(lx, ly, "block_move", self) then
-			game.logPlayer(self, "You are too close to build up momentum!")
-			return
-		end
-		local tx, ty = self.x, self.y
-		lx, ly = l()
-		while lx and ly do
-			if game.level.map:checkAllEntities(lx, ly, "block_move", self) then break end
-			tx, ty = lx, ly
+		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then
+			local l = line.new(self.x, self.y, x, y)
+			local lx, ly = l()
+			if game.level.map:checkAllEntities(lx, ly, "block_move", self) then
+				game.logPlayer(self, "You are too close to build up momentum!")
+				return
+			end
+			local tx, ty = self.x, self.y
 			lx, ly = l()
-		end
+			while lx and ly do
+				if game.level.map:checkAllEntities(lx, ly, "block_move", self) then break end
+				tx, ty = lx, ly
+				lx, ly = l()
+			end
 
-		self:move(tx, ty, true)
+			self:move(tx, ty, true)
+		end
 
 		-- Attack ?
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return true end
@@ -223,21 +227,23 @@ newTalent{
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > self:getTalentRange(t) then return nil end
 
-		local l = line.new(self.x, self.y, x, y)
-		local lx, ly = l()
-		if game.level.map:checkAllEntities(lx, ly, "block_move", self) then
-			game.logPlayer(self, "You are too close to build up momentum!")
-			return
-		end
-		local tx, ty = self.x, self.y
-		lx, ly = l()
-		while lx and ly do
-			if game.level.map:checkAllEntities(lx, ly, "block_move", self) then break end
-			tx, ty = lx, ly
+		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then
+			local l = line.new(self.x, self.y, x, y)
+			local lx, ly = l()
+			if game.level.map:checkAllEntities(lx, ly, "block_move", self) then
+				game.logPlayer(self, "You are too close to build up momentum!")
+				return
+			end
+			local tx, ty = self.x, self.y
 			lx, ly = l()
-		end
+			while lx and ly do
+				if game.level.map:checkAllEntities(lx, ly, "block_move", self) then break end
+				tx, ty = lx, ly
+				lx, ly = l()
+			end
 
-		self:move(tx, ty, true)
+			self:move(tx, ty, true)
+		end
 
 		if self.ai_target then self.ai_target.target = target end
 
@@ -342,13 +348,21 @@ newTalent{
 	type = {"golem/arcane", 2},
 	require = spells_req2,
 	points = 5,
-	cooldown = 30,
+	mode = "sustained",
+	cooldown = 70,
 	range = 10,
-	mana = 20,
+	sustain_mana = 30,
 	requires_target = true,
-	tactical = { DEFEND = 1, SURROUNDED = 3 },
-	action = function(self, t)
-		self:setEffect(self.EFF_REFLECTIVE_SKIN, 15, {power=20 + self:combatTalentSpellDamage(t, 12, 40)})
+	tactical = { DEFEND = 1, SURROUNDED = 3, BUFF = 1 },
+	activate = function(self, t)
+		game:playSoundNear(self, "talents/spell_generic2")
+		local ret = {
+			tmpid = self:addTemporaryValue("reflect_damage", 20 + self:combatTalentSpellDamage(t, 12, 40))
+		}
+		return ret
+	end,
+	deactivate = function(self, t, p)
+		self:removeTemporaryValue("reflect_damage", p.tmpid)
 		return true
 	end,
 	info = function(self, t)
