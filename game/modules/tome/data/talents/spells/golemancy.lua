@@ -62,6 +62,11 @@ local function makeGolem()
 			["golem/fighting"] = true,
 			["golem/arcane"] = true,
 		},
+		talents_types_mastery = {
+			["technique/combat-training"] = 1.3,
+			["golem/fighting"] = 1.3,
+			["golem/arcane"] = 1.3,
+		},
 		inscription_restrictions = { ["inscriptions/runes"] = true, },
                 resolvers.inscription("RUNE:_SHIELDING", {cooldown=14, dur=5, power=100}),
 
@@ -237,15 +242,24 @@ newTalent{
 	points = 5,
 	on_learn = function(self, t)
 		self.alchemy_golem:learnTalent(Talents.T_WEAPON_COMBAT, true)
+		self.alchemy_golem:learnTalent(Talents.T_WEAPON_COMBAT, true)
+		self.alchemy_golem:learnTalent(Talents.T_WEAPONS_MASTERY, true)
 		self.alchemy_golem:learnTalent(Talents.T_WEAPONS_MASTERY, true)
 	end,
 	on_unlearn = function(self, t)
 		self.alchemy_golem:unlearnTalent(Talents.T_WEAPON_COMBAT, true)
+		self.alchemy_golem:unlearnTalent(Talents.T_WEAPON_COMBAT, true)
+		self.alchemy_golem:unlearnTalent(Talents.T_WEAPONS_MASTERY, true)
 		self.alchemy_golem:unlearnTalent(Talents.T_WEAPONS_MASTERY, true)
 	end,
 	info = function(self, t)
-		local attack = self:getTalentFromId(Talents.T_WEAPON_COMBAT).getAttack(self, t)
-		local damage = self:getTalentFromId(Talents.T_WEAPONS_MASTERY).getDamage(self, t)
+		local rawlev = self:getTalentLevelRaw(t)
+		local olda, oldd = self.alchemy_golem.talents[Talents.T_WEAPON_COMBAT], self.alchemy_golem.talents[Talents.T_WEAPONS_MASTERY]
+		self.alchemy_golem.talents[Talents.T_WEAPON_COMBAT], self.alchemy_golem.talents[Talents.T_WEAPONS_MASTERY] = 2 + rawlev * 2, rawlev * 2
+		local ta, td = self:getTalentFromId(Talents.T_WEAPON_COMBAT), self:getTalentFromId(Talents.T_WEAPONS_MASTERY)
+		local attack = ta.getAttack(self.alchemy_golem, ta)
+		local damage = td.getDamage(self.alchemy_golem, td)
+		self.alchemy_golem.talents[Talents.T_WEAPON_COMBAT], self.alchemy_golem.talents[Talents.T_WEAPONS_MASTERY] = olda, oldd
 		return ([[Improves your golem proficiency with weapons. Increasing its attack by %d and damage by %d%%.]]):
 		format(attack, 100 * damage)
 	end,
@@ -259,17 +273,32 @@ newTalent{
 	points = 5,
 	on_learn = function(self, t)
 		self.alchemy_golem:learnTalent(Talents.T_HEALTH, true)
+		self.alchemy_golem:learnTalent(Talents.T_HEALTH, true)
+		self.alchemy_golem:learnTalent(Talents.T_ARMOUR_TRAINING, true)
 		self.alchemy_golem:learnTalent(Talents.T_ARMOUR_TRAINING, true)
 	end,
 	on_unlearn = function(self, t)
 		self.alchemy_golem:unlearnTalent(Talents.T_HEALTH, true)
+		self.alchemy_golem:unlearnTalent(Talents.T_HEALTH, true)
+		self.alchemy_golem:unlearnTalent(Talents.T_ARMOUR_TRAINING, true)
 		self.alchemy_golem:unlearnTalent(Talents.T_ARMOUR_TRAINING, true)
 	end,
 	info = function(self, t)
-		local health = self:getTalentFromId(Talents.T_HEALTH).getHealth(self, t)
-		local heavyarmor = self:getTalentFromId(Talents.T_ARMOUR_TRAINING).getArmor(self, t)
-		return ([[Improves your golem armour training and health. Increases armor by %d when wearing armor also increases health by %d.]]):
-		format(heavyarmor, health)
+		local rawlev = self:getTalentLevelRaw(t)
+		local oldh, olda = self.alchemy_golem.talents[Talents.T_HEALTH], self.alchemy_golem.talents[Talents.T_ARMOUR_TRAINING]
+		self.alchemy_golem.talents[Talents.T_HEALTH], self.alchemy_golem.talents[Talents.T_ARMOUR_TRAINING] = rawlev * 2, 4 + rawlev * 2
+		local th, ta = self:getTalentFromId(Talents.T_HEALTH), self:getTalentFromId(Talents.T_ARMOUR_TRAINING)
+		local health = th.getHealth(self.alchemy_golem, th)
+		local heavyarmor = ta.getArmor(self.alchemy_golem, ta)
+		local hardiness = ta.getArmorHardiness(self.alchemy_golem, ta)
+		local crit = ta.getCriticalChanceReduction(self.alchemy_golem, ta)
+		self.alchemy_golem.talents[Talents.T_HEALTH], self.alchemy_golem.talents[Talents.T_ARMOUR_TRAINING] = olda, oldh
+
+		return ([[Improves your golem armour training and health.
+		Increases health by %d, increases armour value by %d and reduces chance to be critically hit by %d%% when wearing a heavy mail armour or a massive plate armour.
+		It also increases armour hardiness by %d%%.
+		The golem can always use all kind of armours, including massive ones.]]):
+		format(health, heavyarmor, crit, hardiness)
 	end,
 }
 
