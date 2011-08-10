@@ -71,12 +71,14 @@ end
 --- Give target to others
 function _M:seen_by(who)
 	if self.ai_target.actor then return end
+	if self.dont_pass_target then return end
 	if not who.ai_target then return end
 	if not who.ai_target.actor then return end
 	if self:reactionToward(who) <= 0 then return end
 	if not who:canSee(who.ai_target.actor) then return end
 	if not who.x or not self:hasLOS(who.x, who.y) then return end
 	self:setTarget(who.ai_target.actor)
+	print("=========++PASSING TARGET", self.name, "from", who.name, "to", who.ai_target.actor.name)
 end
 
 --- Check if we are angered

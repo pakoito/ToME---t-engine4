@@ -30,6 +30,7 @@ newEntity{
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	autolevel = "warriormage",
 	ai = "dumb_talented_simple", ai_state = { ai_target="target_player_radius", sense_radius=40, talent_in=2, },
+	dont_pass_target = true,
 	stats = { str=14, dex=18, mag=20, con=12 },
 	rank = 2,
 	size_category = 3,

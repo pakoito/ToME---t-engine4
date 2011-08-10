@@ -156,6 +156,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	combat = { dam=resolvers.levelup(20, 1, 1.1), atk=20, apr=50, dammod={mag=1}, damtype=DamageType.DARKNESS},
 
 	ai = "dumb_talented_simple", ai_state = { ai_target="target_player_radius", sense_radius=10, talent_in=2, },
+	dont_pass_target = true,
 
 	can_pass = {pass_wall=20},
 	resists = {all = 35, [DamageType.LIGHT] = -50, [DamageType.DARKNESS] = 100},
@@ -618,7 +619,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
 	combat_armor = 1, combat_def = 10,
 	on_melee_hit = { [DamageType.TEMPORAL] = resolvers.mbonus(20, 10), },
-	
+
 	stun_immune = 1,
 	confusion_immune = 1,
 	silence_immune = 1,

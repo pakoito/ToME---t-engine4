@@ -156,5 +156,6 @@ newEntity{ define_as = "CORRUPTED_SAND_WYRM",
 
 	autolevel = "warriormage",
 	ai = "tactical", ai_state = { ai_target="target_player_radius", sense_radius=400, talent_in=1, },
+	dont_pass_target = true,
 	resolvers.inscriptions(4, "infusion"),
 }

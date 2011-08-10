@@ -99,6 +99,7 @@ newEntity{ base = "BASE_NPC_SANDWORM",
 	combat = { dam=resolvers.levelup(resolvers.mbonus(55, 15), 1, 1), atk=15, apr=0, dammod={str=1} },
 
 	ai = "dumb_talented_simple", ai_state = { ai_target="target_player_radius", sense_radius=40, talent_in=2, },
+	dont_pass_target = true,
 	stats = { str=30, dex=7, mag=3, con=3 },
 
 	no_breath = 1,
@@ -150,6 +151,7 @@ newEntity{ base = "BASE_NPC_SANDWORM",
 	no_breath = 1,
 
 	ai = "dumb_talented_simple", ai_state = { ai_target="target_player_radius", sense_radius=40, talent_in=2, },
+	dont_pass_target = true,
 	move_project = {[DamageType.DIG]=1},
 
 	resolvers.talents{
