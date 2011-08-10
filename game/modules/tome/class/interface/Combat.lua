@@ -29,10 +29,10 @@ module(..., package.seeall, class.make)
 
 --- Checks what to do with the target
 -- Talk ? attack ? displace ?
-function _M:bumpInto(target)
+function _M:bumpInto(target, x, y)
 	local reaction = self:reactionToward(target)
 	if reaction < 0 then
-		if target.encounterAttack and self.player then self:onWorldEncounter(target) return end
+		if target.encounterAttack and self.player then self:onWorldEncounter(target, x, y) return end
 		return self:useTalent(self.T_ATTACK, nil, nil, nil, target)
 	elseif reaction >= 0 then
 		-- Talk ?

@@ -38,7 +38,7 @@ end
 function _M:block_move(x, y, e, can_attack)
 	-- Dont bump yourself!
 	if e and e ~= self and can_attack then
-		e:attack(self)
+		e:attack(self, x, y)
 		return "attack"
 	end
 	return true
@@ -86,7 +86,7 @@ end
 --- Actor is being attacked!
 -- Module authors should rewrite it to handle combat, dialog, ...
 -- @param target the actor attacking us
-function _M:attack(target)
+function _M:attack(target, x, y)
 	game.logSeen(target, "%s attacks %s.", self.name:capitalize(), target.name:capitalize())
 	target:takeHit(10, self)
 end

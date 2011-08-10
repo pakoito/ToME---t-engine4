@@ -140,8 +140,11 @@ function _M:onLeaveLevel(zone, level)
 end
 
 -- Wilderness encounter
-function _M:onWorldEncounter(target)
+function _M:onWorldEncounter(target, x, y)
 	if target.on_encounter then
+		if x and y and game.level.map(x, y, Map.ACTOR) == target then
+			game.level.map:remove(x, y, Map.ACTOR)
+		end
 		game.state:handleWorldEncounter(target)
 	end
 end

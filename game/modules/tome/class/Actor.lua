@@ -1487,7 +1487,7 @@ function _M:die(src)
 			p.src:project({type="ball", radius=4, x=self.x, y=self.y}, self.x, self.y, DamageType.MATTER, p.explosion, {type="flame"})
 		end
 	end
-	
+
 	if self:hasEffect(self.EFF_CEASE_TO_EXIST) then
 		local kill = true
 		game:onTickEnd(function()
@@ -1716,8 +1716,8 @@ function _M:onTemporaryValueChange(prop, v, base)
 	end
 end
 
-function _M:attack(target)
-	self:bumpInto(target)
+function _M:attack(target, x, y)
+	self:bumpInto(target, x, y)
 end
 
 function _M:getMaxEncumbrance()

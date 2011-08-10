@@ -21,6 +21,7 @@ require "engine.class"
 local ActorAI = require "engine.interface.ActorAI"
 local Faction = require "engine.Faction"
 local Emote = require("engine.Emote")
+local Map = require("engine.Map")
 require "mod.class.Actor"
 
 module(..., package.seeall, class.inherit(mod.class.Actor, engine.interface.ActorAI))
@@ -39,10 +40,10 @@ end
 
 --- Checks what to do with the target
 -- Talk ? attack ? displace ?
-function _M:bumpInto(target)
+function _M:bumpInto(target, x, y)
 	local reaction = self:reactionToward(target)
 	if reaction < 0 then
-		return self:encounterAttack(target)
+		return self:encounterAttack(target, x, y)
 	elseif reaction >= 0 then
 		-- Talk ?
 		if target.player and self.can_talk then
@@ -137,8 +138,8 @@ function _M:defineDisplayCallback()
 	end)
 end
 
-function _M:encounterAttack(target)
-	if target.player then target:onWorldEncounter(self) return end
+function _M:encounterAttack(target, x, y)
+	if target.player then target:onWorldEncounter(self, self.x, self.y) return end
 
 	self.unit_power = self.unit_power or 0
 	target.unit_power = target.unit_power or 0
