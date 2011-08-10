@@ -90,6 +90,7 @@ The known bastions of the Pride are:
 		{"I will investigate them.", jump="welcome", action=function(npc, player)
 			player:setQuestStatus("orc-hunt", engine.Quest.DONE)
 			player:grantQuest("orc-pride")
+			game.logPlayer(game.player, "Aeryn points to the known locations on your map.")
 		end},
 	},
 }

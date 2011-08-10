@@ -81,8 +81,6 @@ on_grant = function(self, who)
 		game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 		game.nicer_tiles:updateAround(game.level, spot.x, spot.y)
 	end)
-
-	game.logPlayer(game.player, "Aeryn points to the known locations on your map.")
 end
 
 on_status_change = function(self, who, status, sub)

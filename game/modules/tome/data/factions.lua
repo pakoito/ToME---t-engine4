@@ -19,7 +19,7 @@
 
 -- CSV export
 local src = [[
-,Enemies,Undead,Allied Kingdoms,Shalore,Thalore,Iron Throne,The Way,Angolwen,Dreadfell,,Temple of Creation|H,Water lair|H,Assassin lair|H,Rhalore,Zigur,,Sunwall|H,Orc Pride,,Sandworm Burrowers,Victim,Slavers,,Sorcerers,Fearscape
+,Enemies,Undead,Allied Kingdoms,Shalore,Thalore,Iron Throne,The Way,Angolwen,Dreadfell,,Temple of Creation|H,Water lair|H,Assassin lair|H,Rhalore,Zigur,,Sunwall,Orc Pride,,Sandworm Burrowers,Victim,Slavers,,Sorcerers,Fearscape
 Enemies,,,,,,,,,,,,,,,,,,,,,,,,,
 Undead,-1,,,,,,,,,,,,,,,,,,,,,,,,
 Allied Kingdoms,-1,-1,,,,,,,,,,,,,,,,,,,,,,,
@@ -36,7 +36,7 @@ Assassin lair|H,,,,,,,,,,,,,,,,,,,,,,,,,
 Rhalore,-1,-1,-1,-1,-1,-1,-1,-1,-1,,-1,-1,-1,,,,,,,,,,,,
 Zigur,-1,-1,1,1,1,1,0.2,-1,-1,,,,,-1,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,,,,,
-Sunwall|H,-1,-1,,,,,,,-1,,,,-1,-1,,,,,,,,,,,
+Sunwall,-1,-1,,,,,,,-1,,,,-1,-1,,,,,,,,,,,
 Orc Pride,,-1,-1,-1,-1,-1,-1,-1,-1,,,,,-1,-1,,-1,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,,,,,
 Sandworm Burrowers,,,,,,,,,,,,,,,,,,,,,,,,,

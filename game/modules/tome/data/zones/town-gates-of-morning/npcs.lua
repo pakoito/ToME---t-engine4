@@ -67,5 +67,13 @@ newEntity{ define_as = "HIGH_SUN_PALADIN_AERYN",
 	},
 	resolvers.sustains_at_birth(),
 
+	on_die = function(self)
+		if not game.player:hasQuest("orc-pride") then
+			game.player:setQuestStatus("orc-hunt", engine.Quest.DONE)
+			game.player:grantQuest("orc-pride")
+			game.logPlayer(game.player, "You find a note containing the location of the Orc Prides on Aeryn's body.")
+		end
+	end,
+
 	can_talk = "gates-of-morning-welcome",
 }
