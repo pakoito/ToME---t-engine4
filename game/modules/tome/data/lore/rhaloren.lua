@@ -37,7 +37,7 @@ newLore{
 	id = "rhaloren-note-2",
 	category = "rhaloren",
 	name = "letter (rhaloren camp)",
-	lore = [[The Scintillating Caverns must be protected. Our great leader has ordered it so, and his word is more binding than any law. Our numbers are few, and we must move in secrecy, but a quiet watch will he made on the caverns. Any who are seen to interfere in them must be lured here to our place of strength, and brought before me for inquisition.
+	lore = [[The Scintillating Caverns must be protected. Our great leader has ordered it so, and his word is more binding than any law. Our numbers are few, and we must move in secrecy, but a quiet watch will be made on the caverns. Any who are seen to interfere in them must be lured here to our place of strength, and brought before me for inquisition.
 
 -- The Inquisitor]],
 }

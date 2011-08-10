@@ -321,7 +321,7 @@ newDamageType{
 newDamageType{
 	name = "light", type = "LIGHT", text_color = "#YELLOW#",
 	antimagic_resolve = true,
-	death_message = {"shadowed", "darkened"},
+	death_message = {"radiated", "seared", "purified"},
 }
 
 -- Darkness damage
