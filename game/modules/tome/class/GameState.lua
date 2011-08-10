@@ -31,6 +31,7 @@ function _M:init(t, no_default)
 
 	self.allow_backup_guardians = {}
 	self.world_artifacts_pool = {}
+	self.unique_death = {}
 	self.boss_killed = 0
 	self.stores_restock = 1
 	self.east_orc_patrols = 4
@@ -45,6 +46,17 @@ end
 --- Number of bosses killed
 function _M:bossKilled(rank)
 	self.boss_killed = self.boss_killed + 1
+end
+
+--- Sets unique as dead
+function _M:registerUniqueDeath(u)
+	if u.randboss then return end
+	self.unique_death[u.name] = true
+end
+
+--- Is unique dead?
+function _M:isUniqueDead(name)
+	return self.unique_death[name]
 end
 
 --- Allow dropping the rod of recall
@@ -1288,6 +1300,7 @@ function _M:createRandomBoss(base, data)
 	local name = ngd:generate()
 	b.name = name.." the "..b.name
 	b.unique = b.name
+	b.randboss = true
 	local boss_id = "RND_BOSS_"..b.name:upper():gsub("[^A-Z]", "_")
 	b.define_as = boss_id
 	b.color = colors.VIOLET

@@ -23,6 +23,8 @@ local function void_portal_open(npc, player)
 	return true
 end
 local function aeryn_alive(npc, player)
+	if game.state:isUniqueDead("High Sun Paladin Aeryn") then return false end
+
 	-- Charred scar was successful
 	if player:hasQuest("charred-scar") and player:hasQuest("charred-scar"):isCompleted("stopped") then return true end
 

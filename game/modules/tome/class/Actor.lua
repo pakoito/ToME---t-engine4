@@ -1347,6 +1347,7 @@ function _M:die(src)
 	if self.rank > 3 then
 		game.state:bossKilled(self.rank)
 	end
+	if self.unique then game.state:registerUniqueDeath(self) end
 
 	if self.on_death_lore then game.player:learnLore(self.on_death_lore) end
 

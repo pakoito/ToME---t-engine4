@@ -93,10 +93,12 @@ function end_end_combat(self)
 end
 
 function failed_charred_scar(self, level)
-	local aeryn = game.zone:makeEntityByName(level, "actor", "FALLEN_SUN_PALADIN_AERYN")
-	game.zone:addEntity(level, aeryn, "actor", level.default_down.x, level.default_down.y)
-	game.logPlayer(game.player, "#LIGHT_RED#As you enter the level you hear a familiar voice.")
-	game.logPlayer(game.player, "#LIGHT_RED#Fallen Sun Paladin Aeryn: '%s YOU BROUGHT ONLY DESTRUCTION TO THE SUNWALL! YOU WILL PAY!'", game.player.name:upper())
+	if not game.state:isUniqueDead("High Sun Paladin Aeryn") then
+		local aeryn = game.zone:makeEntityByName(level, "actor", "FALLEN_SUN_PALADIN_AERYN")
+		game.zone:addEntity(level, aeryn, "actor", level.default_down.x, level.default_down.y)
+		game.logPlayer(game.player, "#LIGHT_RED#As you enter the level you hear a familiar voice.")
+		game.logPlayer(game.player, "#LIGHT_RED#Fallen Sun Paladin Aeryn: '%s YOU BROUGHT ONLY DESTRUCTION TO THE SUNWALL! YOU WILL PAY!'", game.player.name:upper())
+	end
 
 	game:onLevelLoad("wilderness-1", function(zone, level)
 		local spot = level:pickSpot{type="zone-pop", subtype="ruined-gates-of-morning"}
