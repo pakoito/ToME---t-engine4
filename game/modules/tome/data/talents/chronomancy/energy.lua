@@ -30,8 +30,8 @@ newTalent{
 	on_damage = function(self, t, damtype, dam)
 		if not DamageType:get(damtype).antimagic_resolve then return dam end
 		local absorb = t.getAbsorption(self, t)
-		-- works like armor with 50% hardiness for projected energy effects
-		dam = math.max(dam * 0.5 - absorb, 0) + (dam * 0.5)
+		-- works like armor with 30% hardiness for projected energy effects
+		dam = math.max(dam * 0.3 - absorb, 0) + (dam * 0.7)
 		print("[PROJECTOR] after static reduction dam", dam)
 		return dam
 	end,
@@ -47,7 +47,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local absorption = t.getAbsorption(self, t)
-		return ([[Reduces all incoming energy damage by 50%% up to a maximum of %d.
+		return ([[Reduces all incoming energy damage by 30%% up to a maximum of %d.
 		The maximum damage reduction will scale with your Spellpower.]]):format(absorption)
 	end,
 }
@@ -164,6 +164,7 @@ newTalent{
 	paradox = 20,
 	cooldown = 12,
 	tactical = { BUFF = 2 },
+	no_energy = true,
 	getMaxLevel = function(self, t) return self:getTalentLevel(t) end,
 	action = function(self, t)
 		-- effect is handled in actor postUse
@@ -172,7 +173,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		local maxlevel = t.getMaxLevel(self, t)
-		return ([[You'll recast the next activated chronomancy spell (up to talent level %0.1f) that you cast within the next 5 turns one turn later without spending an action.]]):
+		return ([[You may recast the next activated chronomancy spell (up to talent level %0.1f) that you cast within the next 5 turns on the turn following its initial casting.
+		The Paradox cost of the initial spell will be paid each time it is cast and the second casting will still consume a turn.
+		This spell takes no time to cast.]]):
 		format(maxlevel)
 	end,
 }

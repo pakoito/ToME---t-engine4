@@ -3431,13 +3431,13 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		game:onTickEnd(function()
-			if game._chronoworlds == nil then
-				game.logSeen(self, "#LIGHT_RED#The precognition spell fizzles and cancels, leaving you in this timeline.")
+			if not game:chronoRestore("precognition", true) then
+				game.logSeen(self, "#LIGHT_RED#The spell fizzles.")
 				return
 			end
-			game:chronoRestore("precognition", true)
-			game.logPlayer(game.player, "#LIGHT_BLUE#You unfold the space time continuum to a previous state!")
+			game.logPlayer(game.player, "#LIGHT_BLUE#You unfold the spacetime continuum to a previous state!")
 			game.player.tmp[self.EFF_PRECOGNITION] = nil
+			if game._chronoworlds then game._chronoworlds = nil end
 		end)
 	end,
 }
@@ -3493,30 +3493,6 @@ newEffect{
 				chat:invoke()
 			end
 		end)
-	end,
-}
-
-newEffect{
-	name = "DAMAGE_SHUNT",
-	desc = "Damage Shunt",
-	long_desc = function(self, eff) return ("The target is splitting all damage it receives along the timeline, negating up to %d/%d damage."):format(self.damage_shunt_absorb, eff.power) end,
-	type = "magical",
-	status = "beneficial",
-	parameters = { power=100 },
-	on_gain = function(self, err) return "#Target# is splitting damage along the timeline.", "+Damage Shunt" end,
-	on_lose = function(self, err) return "The spell protecting #target# has ended.", "-Damage Shunt" end,
-	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("damage_shunt", eff.power)
-		--- Warning there can be only one time shield active at once for an actor
-		self.damage_shunt_absorb = eff.power
-		self.damage_shunt_absorb_max = eff.power
-		eff.particle = self:addParticles(Particles.new("damage_shield", 1))
-	end,
-	deactivate = function(self, eff)
-		self:removeParticles(eff.particle)
-		self:removeTemporaryValue("damage_shunt", eff.tmpid)
-		self.damage_shunt_absorb = nil
-		self.damage_shunt_absorb_max = nil
 	end,
 }
 
@@ -4237,5 +4213,59 @@ newEffect{
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("global_speed", eff.glbid)
 		self:removeTemporaryValue("combat_spellspeed", eff.spdid)
+	end,
+}
+
+newEffect{
+	name = "CEASE_TO_EXIST",
+	desc = "Cease to Exist",
+	long_desc = function(self, eff) return ("The target is being removed from the timeline and is suffering %d temporal damage per turn."):format(eff.dam) end,
+	type = "magical",
+	status = "detrimental",
+	parameters = { power = 1 },
+	on_gain = function(self, err) return "#Target# is being removed from the timeline.", "+Cease to Exist" end,
+	activate = function(self, eff)
+		eff.resists = self:addTemporaryValue("resists", { all = -eff.power})
+	end,
+	deactivate = function(self, eff)
+		if game._chronoworlds then 
+			game._chronoworlds = nil
+		end
+		self:removeTemporaryValue("resists", eff.resists)
+	end,
+}
+
+newEffect{
+	name = "FADE_FROM_TIME",
+	desc = "Fade From Time",
+	long_desc = function(self, eff) return ("The target is partially removed from the timeline, reducing all damage dealt by %d%%, all damage recieved by %d%%, and the duration of all detrimental effects by %d%%."):
+	format(eff.dur + 1, eff.cur_power or eff.power, eff.cur_power or eff.power) end,
+	type = "time",  -- so no timeless shinanigans or removal by body reversion
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# has partially removed itself from the timeline.", "+Fade From Time" end,
+	on_lose = function(self, err) return "#Target# has returned fully to the timeline.", "-Fade From Time" end,
+	on_merge = function(self, old_eff, new_eff)
+		self:removeTemporaryValue("inc_damage", old_eff.dmgid)
+		self:removeTemporaryValue("resists", old_eff.rstid)
+		old_eff.cur_power = (new_eff.power)
+		old_eff.dmgid = self:addTemporaryValue("inc_damage", {all = - old_eff.dur})
+		old_eff.rstid = self:addTemporaryValue("resists", {all = old_eff.cur_power})
+
+		old_eff.dur = old_eff.dur
+		return old_eff
+	end,
+	on_timeout = function(self, eff)
+		local current = eff.power * eff.dur/10
+		self:setEffect(self.EFF_FADE_FROM_TIME, 1, {power = current})
+	end,
+	activate = function(self, eff)
+		eff.cur_power = eff.power
+		eff.rstid = self:addTemporaryValue("resists", { all = eff.power})
+		eff.dmgid = self:addTemporaryValue("inc_damage", {all= -10})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("resists", eff.rstid)
+		self:removeTemporaryValue("inc_damage", eff.dmgid)
 	end,
 }

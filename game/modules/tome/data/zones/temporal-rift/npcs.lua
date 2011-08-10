@@ -171,7 +171,7 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "CHRONOLITH_TWIN",
 	},
 
 	autolevel = "warriormage",
-	ai = "tactical", ai_state = { talent_in=2, ai_move="move_astar", },
+	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
 	ai_tactic = resolvers.tactic "ranged",
 	resolvers.inscriptions(1, {"shielding rune"}),
 
@@ -220,7 +220,7 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "CHRONOLITH_CLONE",
 	},
 
 	autolevel = "warriormage",
-	ai = "tactical", ai_state = { talent_in=2, ai_move="move_astar", },
+	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
 	ai_tactic = resolvers.tactic "ranged",
 	resolvers.inscriptions(1, {"invisibility rune"}),
 

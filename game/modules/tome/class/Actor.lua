@@ -1082,23 +1082,6 @@ function _M:onTakeHit(value, src)
 		end
 	end
 
-	if self:attr("damage_shunt") then
-		-- Absorb damage into the shield
-		if value <= self.damage_shunt_absorb then
-			self.damage_shunt_absorb = self.damage_shunt_absorb - value
-			value = 0
-		else
-			value = value - self.damage_shunt_absorb
-			self.damage_shunt_absorb = 0
-		end
-
-		-- If we are at the end of the capacity, remove the effect
-		if self.damage_shunt_absorb <= 0 then
-			game.logPlayer(self, "Your damage shunt spell has done all it can!")
-			self:removeEffect(self.EFF_DAMAGE_SHUNT)
-		end
-	end
-
 	if self:hasEffect(self.EFF_BONE_SHIELD) then
 		local e = self.tempeffect_def[self.EFF_BONE_SHIELD]
 		e.absorb(self, self.tmp[self.EFF_BONE_SHIELD])
@@ -1503,6 +1486,23 @@ function _M:die(src)
 		else
 			p.src:project({type="ball", radius=4, x=self.x, y=self.y}, self.x, self.y, DamageType.MATTER, p.explosion, {type="flame"})
 		end
+	end
+	
+	if self:hasEffect(self.EFF_CEASE_TO_EXIST) then
+		local kill = true
+		game:onTickEnd(function()
+			if game._chronoworlds == nil then
+				game.logPlayer(game.player, "#LIGHT_RED#The cease to exist spell fizzles and cancels, leaving the timeline intact.")
+				kill = false
+				return
+			end
+			game:chronoRestore("cease_to_exist", true)
+			-- check that the kill condition still applies
+			if kill == true then
+				local t = game.player:getTalentFromId(game.player.T_CEASE_TO_EXIST)
+				t.do_instakill(game.player, t)
+			end
+		end)
 	end
 
 	-- Increase vim
@@ -2394,10 +2394,9 @@ function _M:postUseTalent(ab, ret)
 	if ab.id ~= self.T_GATHER_THE_THREADS then self:breakGatherTheThreads() end
 	self:breakStepUp()
 
-	--and ab.type[1] == "chronomancy" and ab.mode == "activated" and self:getTalentLevel(ab.id) >= self:getTalentLevel(self.T_REDUX)
-
 	if ab.id ~= self.T_REDUX and self:hasEffect(self.EFF_REDUX) and ab.type[1]:find("^chronomancy/") and ab.mode == "activated" and self:getTalentLevel(self.T_REDUX) >= self:getTalentLevel(ab.id) then
 		self:removeEffect(self.EFF_REDUX)
+		-- this still consumes energy but works as the talent suggests it does
 		self:forceUseTalent(ab.id, {ignore_energy=true, ignore_cd = true})
 	end
 
@@ -2846,6 +2845,10 @@ end
 function _M:on_set_temporary_effect(eff_id, e, p)
 	if e.status == "detrimental" and self:knowTalent(self.T_RESILIENT_BONES) then
 		p.dur = math.ceil(p.dur * (1 - (self:getTalentLevel(self.T_RESILIENT_BONES) / 12)))
+	end
+	if e.status == "detrimental" and self:hasEffect(self.EFF_FADE_FROM_TIME) then
+		local fft = self:hasEffect(self.EFF_FADE_FROM_TIME)
+		p.dur = math.ceil(p.dur * (1 - (fft.power/100)))
 	end
 	if e.status == "detrimental" and self:attr("negative_status_effect_immune") then
 		p.dur = 0

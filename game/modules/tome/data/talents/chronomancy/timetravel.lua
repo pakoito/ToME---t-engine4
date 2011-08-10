@@ -189,7 +189,9 @@ newTalent{
 
 		game:playSoundNear(self, "talents/arcane")
 		return {
-			game:chronoClone("revision"),
+			game:onTickEnd(function()
+				game:chronoClone("revision")
+			end),
 			particle = self:addParticles(Particles.new("temporal_aura", 1)),
 		}
 	end,
@@ -235,9 +237,10 @@ newTalent{
 			-- Manualy start the cooldown of the "old player"
 			game.player:startTalentCooldown(t)
 			game.player:incParadox(t.paradox * (1 + (game.player.paradox / 300)))
-
+			game.player:forceUseTalent(game.player.T_DOOR_TO_THE_PAST, {ignore_energy=true})
 			-- remove anomaly count
 			if self.dttp_anomaly_count then self.dttp_anomaly_count = nil end
+			if game._chronoworlds then game._chronoworlds = nil end
 		end)
 
 		return true

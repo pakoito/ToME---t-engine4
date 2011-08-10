@@ -38,62 +38,101 @@ newTalent{
 }
 
 newTalent{
-	name = "Damage Shunt",
+	name = "Cease to Exist",
 	type = {"chronomancy/paradox", 2},
 	require = chrono_req_high2,
 	points = 5,
-	paradox = 10,
-	cooldown = 15,
-	tactical = { DEFEND = 2 },
-	no_energy = true,
-	getAbsorb = function(self, t) return self:combatTalentSpellDamage(t, 30, 470) * getParadoxModifier(self, pm) end,
-	action = function(self, t)
-		self:setEffect(self.EFF_DAMAGE_SHUNT, 10, {power=t.getAbsorb(self, t)})
-		game:playSoundNear(self, "talents/heal")
-		return true
-	end,
-	info = function(self, t)
-		local absorb = t.getAbsorb(self, t)
-		return ([[Divides up to %0.2f damage evenly along every second of your past and future, effectively negating it.  Damage Shunt lasts 10 turns or until the maximum damage limit has been reached.
-		Casting Damage Shunt costs no time and the effect will scale with your Paradox and Spellpower.]]):
-		format(absorb)
-	end,
-}
-
-newTalent{
-	name = "Flawed Design",
-	type = {"chronomancy/paradox",3},
-	require = chrono_req_high3,
-	points = 5,
-	cooldown = 20,
+	cooldown = 24,
 	paradox = 20,
 	range = 10,
-	tactical = { DISABLE = 2 },
+	tactical = { ATTACK = 2 },
 	requires_target = true,
 	direct_hit = true,
-	getDuration = function(self, t) return 2 + math.floor(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
-	getReduction = function(self, t) return 10 + (self:combatTalentSpellDamage(t, 10, 40) * getParadoxModifier(self, pm)) end,
-	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		x, y = checkBackfire(self, x, y)
-		self:project(tg, x, y, function(tx, ty)
-			local target = game.level.map(tx, ty, Map.ACTOR)
-			if not target then return end
-			if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) then
-				target:setEffect(target.EFF_FLAWED_DESIGN, t.getDuration(self,t), {power=t.getReduction(self, t)})
+	no_npc_use = true,
+	getDuration = function(self, t) return 4 + math.floor(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
+	getPower = function(self, t) return self:combatTalentSpellDamage(t, 10, 50) * getParadoxModifier(self, pm) end,
+	do_instakill = function(self, t)
+		-- search for target because it's ID will change when the chrono restore takes place
+		local tg = false
+		local grids = core.fov.circle_grids(self.x, self.y, 10, true)
+		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
+			local a = game.level.map(x, y, Map.ACTOR)
+			if a and a:hasEffect(a.EFF_CEASE_TO_EXIST) then
+				tg = a
 			end
+		end end
+		
+		if tg then
+			game:onTickEnd(function()
+				tg:removeEffect(tg.EFF_CEASE_TO_EXIST)
+				game.logSeen(tg, "#LIGHT_BLUE#%s never existed, this never happened!", tg.name:capitalize())
+				tg:die(self)
+			end)
+		end
+	end,
+	action = function(self, t)
+		-- check for other chrono worlds
+		if checkTimeline(self) == true then
+			return
+		end
+		
+		-- get our target
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local tx, ty = self:getTarget(tg)
+		if not tx or not ty then return nil end
+		local _ _, tx, ty = self:canProject(tg, tx, ty)
+		
+		local target = game.level.map(tx, ty, Map.ACTOR)
+		if not target then return end
+		
+		-- does the spell hit?  if not nothing happens
+		if not self:checkHit(self:combatSpellpower(), target:combatSpellResist()) then
+			game.logSeen(target, "%s resists!", target.name:capitalize())
+			return true
+		end
+	
+		-- Manualy start cooldown and spend paradox before the chronoworld is made
+		game.player:startTalentCooldown(t)
+		game.player:incParadox(t.paradox * (1 + (game.player.paradox / 300)))
+	
+		-- set up chronoworld next, we'll load it when the target dies in class\actor
+		game:onTickEnd(function()
+			game:chronoClone("cease_to_exist")
 		end)
-		game:playSoundNear(self, "talents/generic2")
+			
+		target:setEffect(target.EFF_CEASE_TO_EXIST, t.getDuration(self,t), {power=t.getPower(self, t)})
+				
 		return true
 	end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
-		local reduction = t.getReduction(self, t)
-		return ([[By altering the target's past you change its present, reducing all of its resistances by %d%% for %d turns.
-		The duration and reduction will scale with your Paradox.  The reduction will increase with your Spellpower.]]):
-		format(reduction, duration)
+		local power = t.getPower(self, t)
+		return ([[Over the next %d turns you attempt to remove the target from the timeline.  It's resistances will be reduced by %d%% and if you manage to kill it while the spell is in effect you'll be returned to the point in time you cast this spell and the target will be slain.
+		The duration will scale with your Paradox and the resistance penalty will scale with your paradox and spellpower.]])
+		:format(duration, power)
+	end,
+}
+
+newTalent{
+	name = "Fade From Time",
+	type = {"chronomancy/paradox", 3},
+	require = chrono_req_high3,
+	points = 5,
+	paradox = 10,
+	cooldown = 24,
+	tactical = { DEFEND = 2 },
+	getResist = function(self, t) return self:combatTalentSpellDamage(t, 10, 70) * getParadoxModifier(self, pm) end,
+	action = function(self, t)
+		self:setEffect(self.EFF_FADE_FROM_TIME, 10, {power=t.getResist(self, t)})
+		game:playSoundNear(self, "talents/heal")
+		return true
+	end,
+	info = function(self, t)
+		local resist = t.getResist(self, t)
+		return ([[You partially remove yourself from the timeline for 10 turns, increasing your resistance to all damage by %d%%, reducing the duration of all detrimental effects by %d%%, and reducing all damage you deal by 10%%.
+		The resistance bonus, detrimental effect reduction, and damage penalty will gradually lose power over the course of the spell.
+		The effect will scale with your Paradox and Spellpower.]]):
+		format(resist, resist, resist/10)
 	end,
 }
 
