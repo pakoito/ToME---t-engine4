@@ -481,7 +481,7 @@ local function spotHostiles(self)
 end
 
 --- Can we continue resting ?
--- We can rest if no hostiles are in sight, and if we need life/mana/stamina (and their regen rates allows them to fully regen)
+-- We can rest if no hostiles are in sight, and if we need life/mana/stamina/psi (and their regen rates allows them to fully regen)
 function _M:restCheck()
 	local spotted = spotHostiles(self)
 	if spotted then return false, ("hostile spotted (%s%s)"):format(spotted.actor.name, game.level.map:isOnScreen(spotted.x, spotted.y) and "" or " - offscreen") end
@@ -495,6 +495,7 @@ function _M:restCheck()
 		act.arcane_shield = old_shield
 		act:incStamina(act.stamina_regen * perc)
 		act:incMana(act.mana_regen * perc)
+		act:incPsi(act.psi_regen * perc)
 	end end
 
 	-- Check resources, make sure they CAN go up, otherwise we will never stop
@@ -503,6 +504,7 @@ function _M:restCheck()
 		if self.life_regen <= 0 then return false, "loosing health!" end
 		if self:getMana() < self:getMaxMana() and self.mana_regen > 0 then return true end
 		if self:getStamina() < self:getMaxStamina() and self.stamina_regen > 0 then return true end
+		if self:getPsi() < self:getMaxPsi() and self.psi_regen > 0 then return true end
 		if self.life < self.max_life and self.life_regen> 0 then return true end
 		for act, def in pairs(game.party.members) do if game.level:hasEntity(act) and not act.dead then
 			if act.life < act.max_life and act.life_regen> 0 then return true end

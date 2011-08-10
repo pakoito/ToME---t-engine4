@@ -122,8 +122,11 @@ local function archery_projectile(tx, ty, tg, self)
 	local mult = tg.archery.mult or 1
 
 	-- Does the blow connect? yes .. complex :/
+	if tg.archery.use_psi_archery then self.use_psi_combat = true end
 	local atk, def = self:combatAttack(weapon, ammo), target:combatDefenseRanged()
 	local dam, apr, armor = self:combatDamage(ammo), self:combatAPR(ammo), target:combatArmor()
+	atk = atk + (tg.archery.atk or 0)
+	dam = dam + (tg.archery.dam or 0)
 	print("[ATTACK ARCHERY] to ", target.name, " :: ", dam, apr, armor, "::", mult)
 	if not self:canSee(target) then atk = atk / 3 end
 
@@ -175,6 +178,29 @@ local function archery_projectile(tx, ty, tg, self)
 		local dam = t.getDamage(self, t)
 		DamageType:get(DamageType.TEMPORAL).projector(self, target.x, target.y, DamageType.TEMPORAL, dam)
 	end
+	
+	-- Conduit (Psi)
+	if hitted and not target.dead and self:knowTalent(self.T_CONDUIT) and self:isTalentActive(self.T_CONDUIT) and self.use_psi_combat then
+		local t =  self:getTalentFromId(self.T_CONDUIT)
+		--t.do_combat(self, t, target)
+		local mult = 1 + 0.2*(self:getTalentLevel(t))
+		local auras = self:isTalentActive(t.id)
+		if auras.k_aura_on then
+			local k_aura = self:getTalentFromId(self.T_KINETIC_AURA)
+			local k_dam = mult * k_aura.getAuraStrength(self, k_aura)
+			DamageType:get(DamageType.PHYSICAL).projector(self, target.x, target.y, DamageType.PHYSICAL, k_dam)
+		end
+		if auras.t_aura_on then
+			local t_aura = self:getTalentFromId(self.T_THERMAL_AURA)
+			local t_dam = mult * t_aura.getAuraStrength(self, t_aura)
+			DamageType:get(DamageType.FIRE).projector(self, target.x, target.y, DamageType.FIRE, t_dam)
+		end
+		if auras.c_aura_on then
+			local c_aura = self:getTalentFromId(self.T_CHARGED_AURA)
+			local c_dam = mult * c_aura.getAuraStrength(self, c_aura)
+			DamageType:get(DamageType.LIGHTNING).projector(self, target.x, target.y, DamageType.LIGHTNING, c_dam)
+		end
+	end
 
 
 	-- Regen on being hit
@@ -191,7 +217,7 @@ local function archery_projectile(tx, ty, tg, self)
 			target:forceUseTalent(target.T_CARBON_SPIKES, {ignore_energy=true})
 		end
 	end
-
+	self.use_psi_combat = false
 end
 
 --- Shoot at one target
@@ -205,11 +231,10 @@ function _M:archeryShoot(targets, talent, tg, params)
 		game.logPlayer(self, "You are disarmed!")
 		return nil
 	end
-
 	print("[SHOOT WITH]", weapon.name, ammo.name)
 	local realweapon = weapon
 	weapon = weapon.combat
-
+	
 	local tg = tg or {type="bolt"}
 	tg.talent = tg.talent or talent
 
@@ -235,6 +260,12 @@ function _M:hasArcheryWeapon(type)
 	if not self:getInven("QUIVER") then return nil, "no ammo" end
 	local weapon = self:getInven("MAINHAND")[1]
 	local ammo = self:getInven("QUIVER")[1]
+	if self.inven[self.INVEN_PSIONIC_FOCUS] then
+		local pf_weapon = self:getInven("PSIONIC_FOCUS")[1]
+		if pf_weapon and pf_weapon.archery then
+			weapon = pf_weapon
+		end
+	end
 	if not weapon or not weapon.archery then
 		return nil, "no shooter"
 	end

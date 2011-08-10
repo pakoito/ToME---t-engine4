@@ -157,7 +157,7 @@ function _M:init(t, no_default)
 	t.positive_regen = t.positive_regen or -0.2 -- Positive energy slowly decays
 	t.negative_regen = t.negative_regen or -0.2 -- Positive energy slowly decays
 	t.paradox_regen = t.paradox_regen or 0 -- Paradox does not regen
-	t.psi_regen = t.psi_regen or 0 -- Energy does not regen
+	t.psi_regen = t.psi_regen or 0.2 -- Energy regens slowly
 
 	t.max_positive = t.max_positive or 50
 	t.max_negative = t.max_negative or 50
@@ -230,7 +230,10 @@ function _M:useEnergy(val)
 		local t = self:getTalentFromId(self.T_BEYOND_THE_FLESH)
 		t.do_tkautoattack(self, t)
 	end
-
+	if self:hasEffect(self.EFF_MASTERFUL_TELEKINETIC_ARCHERY) then
+		local t = self:getTalentFromId(self.T_MASTERFUL_TELEKINETIC_ARCHERY)
+		t.do_tkautoshoot(self, t)
+	end
 end
 
 function _M:actBase()

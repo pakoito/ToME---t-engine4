@@ -25,7 +25,7 @@
 newTalent{
 	name = "Mindlash",
 	type = {"psionic/focus", 1},
-	require = psi_wil_high1,
+	require = psi_wil_req1,
 	points = 5,
 	random_ego = "attack",
 	cooldown = function(self, t)
@@ -49,13 +49,35 @@ newTalent{
 	requires_target = true,
 	target = function(self, t) return {type="ball", range=self:getTalentRange(t), radius=0, selffire=false, talent=t} end,
 	action = function(self, t)
-		--local gem_level = getGemLevel(self)
+		local gem_level = getGemLevel(self)
 		--local dam = (5 + self:getTalentLevel(t) * self:getWil(40))*(1 + 0.3*gem_level)
 		local dam = t.getDamage(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.PHYSICAL, self:spellCrit(rng.avg(0.8*dam, dam)), {type="flame"})
+		if gem_level > 0 and not tg.dead and self:knowTalent(self.T_CONDUIT) and self:isTalentActive(self.T_CONDUIT) then
+			local c =  self:getTalentFromId(self.T_CONDUIT)
+			--c.do_combat(self, c, tg)
+			local mult = 1 + 0.2*(self:getTalentLevel(c))
+			local auras = self:isTalentActive(c.id)
+			if auras.k_aura_on then
+				local k_aura = self:getTalentFromId(self.T_KINETIC_AURA)
+				local k_dam = mult * k_aura.getAuraStrength(self, k_aura)
+				DamageType:get(DamageType.PHYSICAL).projector(self, x, y, DamageType.PHYSICAL, k_dam)
+			end
+			if auras.t_aura_on then
+				local t_aura = self:getTalentFromId(self.T_THERMAL_AURA)
+				local t_dam = mult * t_aura.getAuraStrength(self, t_aura)
+				DamageType:get(DamageType.FIRE).projector(self, x, y, DamageType.FIRE, t_dam)
+			end
+			if auras.c_aura_on then
+				local c_aura = self:getTalentFromId(self.T_CHARGED_AURA)
+				local c_dam = mult * c_aura.getAuraStrength(self, c_aura)
+				DamageType:get(DamageType.LIGHTNING).projector(self, x, y, DamageType.LIGHTNING, c_dam)
+			end
+
+		end
 		return true
 	end,
 	info = function(self, t)
@@ -71,7 +93,7 @@ newTalent{
 newTalent{
 	name = "Pyrokinesis",
 	type = {"psionic/focus", 2},
-	require = psi_wil_high2,
+	require = psi_wil_req2,
 	points = 5,
 	random_ego = "attack",
 	cooldown = function(self, t)
@@ -116,7 +138,7 @@ newTalent{
 newTalent{
 	name = "Reach",
 	type = {"psionic/focus", 3},
-	require = psi_wil_high3,
+	require = psi_wil_req3,
 	mode = "passive",
 	points = 5,
 	info = function(self, t)
@@ -129,11 +151,11 @@ newTalent{
 newTalent{
 	name = "Focused Channeling",
 	type = {"psionic/focus", 4},
-	require = psi_wil_high4,
+	require = psi_wil_req4,
 	mode = "passive",
 	points = 5,
 	info = function(self, t)
-		local inc = 1 + 0.1*self:getTalentLevel(t)
+		local inc = 1 + 0.15*self:getTalentLevel(t)
 		return ([[You can channel more energy with your auras and shields using a telekinetically-wielded gemstone as a focus. Increases the base strength of all auras and shields by %0.2f to %0.2f, depending on the quality of the gem used as a focus.]]):
 		format(inc, 5*inc)
 	end,

@@ -20,7 +20,7 @@
 newTalent{
 	name = "Mindhook",
 	type = {"psionic/augmented-mobility", 1},
-	require = psi_wil_high1,
+	require = psi_wil_20_1,
 	cooldown = function(self, t)
 		return math.ceil(20 - self:getTalentLevel(t)*2)
 	end,
@@ -66,7 +66,7 @@ newTalent{
 	random_ego = "utility",
 	cooldown = 80,
 	psi = 30,
-	require = psi_wil_high2,
+	require = psi_wil_20_2,
 	action = function(self, t)
 		self:setEffect(self.EFF_QUICKNESS, 10+self:getWil(10), {power=self:getTalentLevel(t) * 0.1})
 		return true
@@ -84,7 +84,7 @@ newTalent{
 	--name = "Super"..self.race.." Leap",
 	name = "Telekinetic Leap",
 	type = {"psionic/augmented-mobility", 3},
-	require = psi_wil_high3,
+	require = psi_wil_20_3,
 	cooldown = 15,
 	psi = 10,
 	points = 5,
@@ -121,7 +121,7 @@ newTalent{
 newTalent{
 	name = "Shattering Charge",
 	type = {"psionic/augmented-mobility", 4},
-	require = psi_wil_high4,
+	require = psi_wil_20_4,
 	points = 5,
 	random_ego = "attack",
 	psi = 60,

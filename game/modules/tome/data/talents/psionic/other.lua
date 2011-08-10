@@ -28,7 +28,7 @@ newTalent{
 	action = function(self, t)
 		local inven = self:getInven("INVEN")
 		local d d = self:showInventory("Telekinetically grasp which item?", inven, function(o)
-			return (o.type == "weapon" or o.type == "gem") and o.subtype ~= "longbow" and o.subtype ~= "sling"
+			return (o.type == "weapon" or o.type == "gem") and o.subtype ~= "sling"
 		end, function(o, item)
 			local pf = self:getInven("PSIONIC_FOCUS")
 			if not pf then return end
@@ -142,8 +142,8 @@ newTalent{
 		if not self:getInven("PSIONIC_FOCUS") then return end
 		local tkweapon = self:getInven("PSIONIC_FOCUS")[1]
 		if type(tkweapon) == "boolean" then tkweapon = nil end
-		if not tkweapon or tkweapon.type == "gem" then
-			game.logPlayer(self, "You cannot do that without a telekinetically-wielded weapon.")
+		if not tkweapon or tkweapon.type == "gem" or tkweapon.archery then
+			game.logPlayer(self, "You cannot do that without a telekinetically-wielded melee weapon.")
 			return nil
 		end
 		return true

@@ -1408,6 +1408,21 @@ newDamageType{
 	end,
 }
 
+newDamageType{
+	name = "implosion", type = "IMPLOSION",
+	projector = function(src, x, y, type, dam)
+		local dur = 3
+		local perc = 50
+		if _G.type(dam) == "table" then dam, dur, perc = dam.dam, dam.dur, (dam.initial or perc) end
+		local init_dam = dam
+		if init_dam > 0 then DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, init_dam) end
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			target:setEffect(target.EFF_IMPLODING, dur, {src=src, power=dam})
+		end
+	end,
+}
+
 -- Temporal + Stat damage
 newDamageType{
 	name = "clock", type = "CLOCK",

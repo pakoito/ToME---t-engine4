@@ -38,9 +38,9 @@ newTalent{
 	requires_target = true,
 	tactical = { ATTACK = 2 },
 	action = function(self, t)
-		local tkweapon = self:getInven("MAINHAND") and self:getInven("MAINHAND")[1]
-		if type(tkweapon) == "boolean" then tkweapon = nil end
-		if not tkweapon then
+		local weapon = self:getInven("MAINHAND") and self:getInven("MAINHAND")[1]
+		if type(weapon) == "boolean" then weapon = nil end
+		if not weapon or self:attr("disarmed")then
 			game.logPlayer(self, "You cannot do that without a weapon in your hands.")
 			return nil
 		end
@@ -49,7 +49,7 @@ newTalent{
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
 		self.use_psi_combat = true
-		self:attackTargetWith(target, tkweapon.combat, nil, self:combatTalentWeaponDamage(t, 1.8, 3))
+		self:attackTargetWith(target, weapon.combat, nil, self:combatTalentWeaponDamage(t, 1.8, 3))
 		self.use_psi_combat = false
 		return true
 	end,

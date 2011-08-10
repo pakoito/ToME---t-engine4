@@ -3252,6 +3252,60 @@ newEffect{
 	end,
 }
 
+newEffect{
+	name = "MASTERFUL_TELEKINETIC_ARCHERY",
+	desc = "Telekinetic Archery",
+	long_desc = function(self, eff) return ("Your telekinetically-wielded bow automatically attacks the nearest target each turn.") end,
+	type = "mental",
+	status = "beneficial",
+	parameters = {dam=10},
+	on_gain = function(self, err) return "#Target# enters a telekinetic archer's trance!", "+Telekinetic archery" end,
+	on_lose = function(self, err) return "#Target# is no longer in a telekinetic archer's trance.", "-Telekinetic archery" end,
+}
+
+newEffect{
+	name = "PSIONIC_BIND",
+	desc = "Immobilized",
+	long_desc = function(self, eff) return "Immobilized by telekinetic forces." end,
+	type = "mental",
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#F53CBE##Target# is bound by telekinetic forces!", "+Paralyzed" end,
+	on_lose = function(self, err) return "#Target# shakes free of the telekinetic binding", "-Paralyzed" end,
+	activate = function(self, eff)
+		--eff.particle = self:addParticles(Particles.new("gloom_stunned", 1))
+		eff.tmpid = self:addTemporaryValue("paralyzed", 1)
+		-- Start the stun counter only if this is the first stun
+		if self.paralyzed == 1 then self.paralyzed_counter = (self:attr("stun_immune") or 0) * 100 end
+		eff.dur = self:updateEffectDuration(eff.dur, "stun")
+	end,
+	deactivate = function(self, eff)
+		--self:removeParticles(eff.particle)
+		self:removeTemporaryValue("paralyzed", eff.tmpid)
+		if not self:attr("paralyzed") then self.paralyzed_counter = nil end
+	end,
+}
+
+newEffect{
+	name = "IMPLODING",
+	desc = "Slow",
+	long_desc = function(self, eff) return ("Slowed by 50%% and taking %d crushing damage per turn."):format( eff.power) end,
+	type = "mental",
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# is being crushed.", "+Imploding" end,
+	on_lose = function(self, err) return "#Target# shakes off the crushing forces.", "-Imploding" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("global_speed", -0.5)
+		eff.dur = self:updateEffectDuration(eff.dur, "slow")
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("global_speed", eff.tmpid)
+	end,
+	on_timeout = function(self, eff)
+		DamageType:get(DamageType.PHYSICAL).projector(eff.src, self.x, self.y, DamageType.PHYSICAL, eff.power)
+	end,
+}
 
 newEffect{
 	name = "TURN_BACK_THE_CLOCK",

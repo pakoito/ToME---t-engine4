@@ -30,10 +30,18 @@ newTalent{
 	requires_target = true,
 	tactical = { ATTACK = 1 },
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
+	use_psi_archery = function(self, t)
+		local pf_weapon = self:getInven("PSIONIC_FOCUS")[1]
+		if pf_weapon and pf_weapon.archery then
+			return true
+		else
+			return false
+		end
+	end,
 	action = function(self, t)
 		local targets = self:archeryAcquireTargets(nil, {one_shot=true})
 		if not targets then return end
-		self:archeryShoot(targets, t)
+		self:archeryShoot(targets, t, nil, {use_psi_archery = t.use_psi_archery(self, t)})
 		return true
 	end,
 	info = function(self, t)

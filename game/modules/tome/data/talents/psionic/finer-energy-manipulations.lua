@@ -20,7 +20,7 @@
 newTalent{
 	name = "Perfect Control",
 	type = {"psionic/finer-energy-manipulations", 1},
-	require = psi_cun_req1,
+	require = psi_cun_high1,
 	cooldown = 100,
 	psi = 15,
 	points = 5,
@@ -41,7 +41,7 @@ newTalent{
 newTalent{
 	name = "Reshape Weapon",
 	type = {"psionic/finer-energy-manipulations", 2},
-	require = psi_cun_req2,
+	require = psi_cun_high2,
 	cooldown = 1,
 	psi = 0,
 	points = 5,
@@ -86,7 +86,7 @@ newTalent{
 newTalent{
 	name = "Reshape Armor",
 	type = {"psionic/finer-energy-manipulations", 3},
-	require = psi_cun_req3,
+	require = psi_cun_high3,
 	cooldown = 1,
 	psi = 0,
 	points = 5,
@@ -143,15 +143,20 @@ newTalent{
 newTalent{
 	name = "Matter is Energy",
 	type = {"psionic/finer-energy-manipulations", 4},
-	require = psi_cun_req4,
+	require = psi_cun_high4,
 	cooldown = 50,
 	psi = 0,
 	points = 5,
 	no_npc_use = true,
+	energy_per_turn = function(self, t)
+		--return 5 + 2 * math.ceil(self:getTalentLevel(t)) + self:getCun(5)
+		return self:combatTalentIntervalDamage(t, "cun", 10, 40, 0.25)
+	end,
 	action = function(self, t)
 		local d d = self:showInventory("Use which gem?", self:getInven("INVEN"), function(gem) return gem.type == "gem" and gem.material_level and not gem.unique end, function(gem, gem_item)
 			self:removeObject(self:getInven("INVEN"), gem_item)
-			local amt = 0.1*self:combatTalentIntervalDamage(t, "cun", 100, 400)
+			--local amt = 0.1*self:combatTalentIntervalDamage(t, "cun", 100, 400)
+			local amt = t.energy_per_turn(self, t)
 			local dur = 3 + 2*(gem.material_level or 0)
 			self:setEffect(self.EFF_PSI_REGEN, dur, {power=amt})
 			self.changed = true
@@ -163,7 +168,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local amt = 0.1*self:combatTalentIntervalDamage(t, "cun", 100, 400)
+		local amt = t.energy_per_turn(self, t)
 		return ([[Matter is energy, as any good Mindslayer knows. Unfortunately, the various bonds and particles involved are just too numerous and complex to make the conversion feasible in most cases. Fortunately, the organized, crystalline structure of gems makes it possible to transform a small percentage of its matter into usable energy.
 		Grants %d energy per turn for between five and thirteen turns, depending on the quality of the gem used. The amount of energy granted per turn scales with Cunning.]]):
 		format(amt)

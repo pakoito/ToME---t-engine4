@@ -78,7 +78,7 @@ function _M:seen_by(who)
 	if not who:canSee(who.ai_target.actor) then return end
 	if not who.x or not self:hasLOS(who.x, who.y) then return end
 	self:setTarget(who.ai_target.actor)
-	print("=========++PASSING TARGET", self.name, "from", who.name, "to", who.ai_target.actor.name)
+	print("[TARGET] Passing target", self.name, "from", who.name, "to", who.ai_target.actor.name)
 end
 
 --- Check if we are angered

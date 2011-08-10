@@ -28,7 +28,11 @@ newTalentType{ allow_random=true, type="psionic/finer-energy-manipulations", gen
 newTalentType{ allow_random=true, type="psionic/mental-discipline", generic = true, name = "mental discipline", description = "Increase mental capacity, endurance, and flexibility." }
 newTalentType{ no_silence=true, type="psionic/other", name = "other", description = "Various psionic talents." }
 
--- Generic requires for psionic talents based on talent level
+newTalentType{ allow_random=true, type="psionic/grip", name = "grip", description = "Augment your telekinetic grip." }
+newTalentType{ allow_random=true, type="psionic/psi-archery", name = "psi-archery", description = "Use your telekinetic powers to wield bows with deadly effectiveness." }
+newTalentType{ allow_random=true, type="psionic/greater-psi-fighting", name = "greater psi-fighting", description = "Elevate psi-fighting prowess to epic levels." }
+newTalentType{ allow_random=true, type="psionic/brainstorm", name = "brainstorm", description = "Focus your telekinetic powers in ways undreamed of by most mindslayers." }
+-- Level 0 wil tree requirements:
 psi_absorb = {
 	stat = { wil=function(level) return 12 + (level-1) * 8 end },
 	level = function(level) return 0 + 5*(level-1)  end,
@@ -49,10 +53,8 @@ psi_wil_req4 = {
 	stat = { wil=function(level) return 36 + (level-1) * 2 end },
 	level = function(level) return 12 + (level-1)  end,
 }
-psi_wil_req5 = {
-	stat = { wil=function(level) return 44 + (level-1) * 2 end },
-	level = function(level) return 16 + (level-1)  end,
-}
+
+--Level 10 wil tree requirements:
 psi_wil_high1 = {
 	stat = { wil=function(level) return 22 + (level-1) * 2 end },
 	level = function(level) return 10 + (level-1)  end,
@@ -69,11 +71,26 @@ psi_wil_high4 = {
 	stat = { wil=function(level) return 46 + (level-1) * 2 end },
 	level = function(level) return 22 + (level-1)  end,
 }
-psi_wil_high5 = {
-	stat = { wil=function(level) return 54 + (level-1) * 2 end },
-	level = function(level) return 26 + (level-1)  end,
+
+--Level 20 wil tree requirements:
+psi_wil_20_1 = {
+	stat = { wil=function(level) return 32 + (level-1) * 2 end },
+	level = function(level) return 20 + (level-1)  end,
 }
--- For cunning trees
+psi_wil_20_2 = {
+	stat = { wil=function(level) return 36 + (level-1) * 2 end },
+	level = function(level) return 24 + (level-1)  end,
+}
+psi_wil_20_3 = {
+	stat = { wil=function(level) return 42 + (level-1) * 2 end },
+	level = function(level) return 28 + (level-1)  end,
+}
+psi_wil_20_4 = {
+	stat = { wil=function(level) return 48 + (level-1) * 2 end },
+	level = function(level) return 32 + (level-1)  end,
+}
+
+-- Level 0 cun tree requirements:
 psi_cun_req1 = {
 	stat = { cun=function(level) return 12 + (level-1) * 2 end },
 	level = function(level) return 0 + (level-1)  end,
@@ -90,10 +107,9 @@ psi_cun_req4 = {
 	stat = { cun=function(level) return 36 + (level-1) * 2 end },
 	level = function(level) return 12 + (level-1)  end,
 }
-psi_cun_req5 = {
-	stat = { cun=function(level) return 44 + (level-1) * 2 end },
-	level = function(level) return 16 + (level-1)  end,
-}
+
+
+-- Level 10 cun tree requirements:
 psi_cun_high1 = {
 	stat = { cun=function(level) return 22 + (level-1) * 2 end },
 	level = function(level) return 10 + (level-1)  end,
@@ -110,10 +126,7 @@ psi_cun_high4 = {
 	stat = { cun=function(level) return 46 + (level-1) * 2 end },
 	level = function(level) return 22 + (level-1)  end,
 }
-psi_cun_high5 = {
-	stat = { cun=function(level) return 54 + (level-1) * 2 end },
-	level = function(level) return 26 + (level-1)  end,
-}
+
 
 -- Useful definitions for psionic talents
 function getGemLevel(self)
@@ -123,6 +136,11 @@ function getGemLevel(self)
 		if tk_item and (tk_item.type == "gem") then
 			gem_level = tk_item.material_level or 5
 		end
+	end
+	if self:knowTalent(self.T_GREATER_TELEKINETIC_GRASP) and gem_level > 0 then
+		if self:getTalentLevelRaw(self.T_GREATER_TELEKINETIC_GRASP) == 5 then
+			gem_level = gem_level + 1
+		end	
 	end
 	return gem_level
 end
@@ -136,3 +154,6 @@ load("/data/talents/psionic/voracity.lua")
 load("/data/talents/psionic/augmented-mobility.lua")
 load("/data/talents/psionic/focus.lua")
 load("/data/talents/psionic/other.lua")
+
+load("/data/talents/psionic/psi-archery.lua")
+load("/data/talents/psionic/grip.lua")

@@ -34,7 +34,7 @@ newBirthDescriptor{
 		},
 	},
 	copy = {
-
+		psi_regen = 0.2,
 	},
 	body = { PSIONIC_FOCUS = 1, QS_PSIONIC_FOCUS = 1,},
 }
@@ -54,16 +54,23 @@ newBirthDescriptor{
 	},
 	stats = { str=1, wil=4, cun=3, },
 	talents_types = {
+		--Level 0 trees:
 		["psionic/absorption"]={true, 0.3},
 		["psionic/projection"]={true, 0.3},
 		["psionic/psi-fighting"]={true, 0.3},
-		["psionic/focus"]={false, 0.3},
-		["psionic/augmented-mobility"]={false, 0},
-		["psionic/voracity"]={true, 0.3},
-		["psionic/finer-energy-manipulations"]={false, 0},
+		["psionic/focus"]={true, 0.3},
 		["psionic/mental-discipline"]={true, 0.3},
+		["psionic/voracity"]={true, 0.3},
+		--Level 10 trees:
+		["psionic/finer-energy-manipulations"]={false, 0},
+		["psionic/psi-archery"]={false, 0.3},
+		--Level 20 trees:
+		["psionic/grip"]={false, 0},
+		["psionic/augmented-mobility"]={false, 0},
+		--Miscellaneous trees:
 		["cunning/survival"]={true, 0},
 		["technique/combat-training"]={true, 0},
+		
 	},
 	talents = {
 		[ActorTalents.T_KINETIC_SHIELD] = 1,
@@ -73,12 +80,17 @@ newBirthDescriptor{
 		[ActorTalents.T_TRAP_DETECTION] = 1,
 		[ActorTalents.T_TELEKINETIC_GRASP] = 1,
 		[ActorTalents.T_TELEKINETIC_SMASH] = 1,
+		[ActorTalents.T_SHOOT] = 1,
 	},
 	copy = {
 		max_life = 110,
 		resolvers.equip{ id=true,
 			{type="armor", subtype="cloth", name="linen robe", autoreq=true, ego_chance=-1000},
 			{type="weapon", subtype="greatsword", name="iron greatsword", autoreq=true, ego_chance=-1000},
+		},
+		resolvers.inventory{ id=true,
+			{type="gem",},
+			{type="weapon", subtype="longbow", name="elm longbow", ego_chance=-1000},
 		},
 		resolvers.generic(function(self)
 			-- Make and wield some alchemist gems

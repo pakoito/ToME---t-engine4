@@ -621,7 +621,14 @@ function _M:combatDamage(weapon)
 		if self.use_psi_combat and stat == "dex" then stat = "cun" end
 		totstat = totstat + self:getStat(stat) * mod
 	end
-	if self.use_psi_combat then totstat = totstat * 0.6 end
+	if self.use_psi_combat then 
+		if self:knowTalent(self.T_GREATER_TELEKINETIC_GRASP) then
+			local g =  self:getTalentFromId(self.T_GREATER_TELEKINETIC_GRASP)
+			totstat = totstat * g.stat_sub(self, g)
+		else
+			totstat = totstat * 0.6 
+		end
+	end
 
 	local add = 0
 	if self:knowTalent(Talents.T_ARCANE_DESTRUCTION) then
@@ -814,8 +821,10 @@ function _M:combatTalentStatDamage(t, stat, base, max)
 end
 
 --- Gets damage based on talent, stat, and interval
-function _M:combatTalentIntervalDamage(t, stat, min, max)
-	return self:rescaleDamage(min + (1 + (self:getStat(stat) / 100) * (max / 6.5 - 1)) * self:getTalentLevel(t))
+function _M:combatTalentIntervalDamage(t, stat, min, max, stat_weight)
+	local stat_weight = stat_weight or 0.5
+	--return self:rescaleDamage(min + (1 + (self:getStat(stat) / 100) * (max / 6.5 - 1)) * self:getTalentLevel(t))
+	return self:rescaleDamage(min + (max - min)*((stat_weight * self:getStat(stat)/100) + (1 - stat_weight) * self:getTalentLevel(t)/6.5))
 end
 
 --- Computes physical resistance
