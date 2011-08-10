@@ -24,7 +24,7 @@
 newLore{
 	id = "infinite-dungeon-1",
 	category = "ruined dungeon",
-	name = "clue (ruined dungeon)",
+	name = "clue (ruined dungeon)", always_pop = true,
 	lore = [[There is an inscription here:
 #{italic}#The river flows in its bed of stone...#{normal}#]],
 }
@@ -32,7 +32,7 @@ newLore{
 newLore{
 	id = "infinite-dungeon-2",
 	category = "ruined dungeon",
-	name = "clue (ruined dungeon)",
+	name = "clue (ruined dungeon)", always_pop = true,
 	lore = [[There is an inscription here:
 #{italic}#...The feather flies gently in the wind.
 The tree's roots run deep...#{normal}#]],
@@ -41,7 +41,7 @@ The tree's roots run deep...#{normal}#]],
 newLore{
 	id = "infinite-dungeon-3",
 	category = "ruined dungeon",
-	name = "clue (ruined dungeon)",
+	name = "clue (ruined dungeon)", always_pop = true,
 	lore = [[There is an inscription here:
 #{italic}#...The eldritch force burns all that lives.#{normal}#]],
 }
@@ -49,7 +49,7 @@ newLore{
 newLore{
 	id = "infinite-dungeon-4",
 	category = "ruined dungeon",
-	name = "infinite dungeon (ruined dungeon)",
+	name = "infinite dungeon (ruined dungeon)", always_pop = true,
 	lore = [[There is an inscription here:
 The deceptive god Ralkur fled before the wrath of the godslayer Branzir and his dark blade Madrath. But though he fled to the depths of the dungeon he came to an end. Seeing himself cornered he used his power to delve deeper into the ground, laying traps and summoning enemies to confound his enemy. But Branzir would not be lost. He pursued his prey ever on, hunting him ever deeper. And Ralkur fled further, and faster, delving to fathoms beyond knowledge, with the godslayer always behind him, hunting relentlessly.
 

@@ -76,7 +76,7 @@ end
 function _M:learnLore(lore, nopopup)
 	local l = self:getLore(lore)
 	local learnt = false
-	if not self:knownLore(lore) then
+	if not self:knownLore(lore) or l.always_pop then
 		game.logPlayer(self, "Lore found: #0080FF#%s", l.name)
 		if not nopopup then
 			LorePopup.new(l, game.w * 0.6, 0.8)
