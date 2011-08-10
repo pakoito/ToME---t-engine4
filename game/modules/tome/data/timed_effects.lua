@@ -1114,16 +1114,24 @@ newEffect{
 	parameters = { range=10, actor=1, object=0, trap=0 },
 	activate = function(self, eff)
 		game.level.map.changed = true
+		eff.particle = Particles.new("image", 1, {image="shockbolt/npc/arcane_eye", size=64})
+		eff.particle.x = eff.x
+		eff.particle.y = eff.y
+		eff.particle.always_seen = true
+		game.level.map:addParticleEmitter(eff.particle)
 	end,
 	on_timeout = function(self, eff)
 		-- Track an actor if it's not dead
 		if eff.track and not eff.track.dead then
 			eff.x = eff.track.x
 			eff.y = eff.track.y
+			eff.particle.x = eff.x
+			eff.particle.y = eff.y
 			game.level.map.changed = true
 		end
 	end,
 	deactivate = function(self, eff)
+		game.level.map:removeParticleEmitter(eff.particle)
 		game.level.map.changed = true
 	end,
 }
@@ -3769,7 +3777,7 @@ newEffect{
 		if self:hasEffect(self.EFF_STRANGLE_HOLD) then
 			self:removeEffect(self.EFF_STRANGLE_HOLD)
 		end
-		
+
 		self:removeTemporaryValue("combat_atk", eff.atk)
 		self:removeTemporaryValue("combat_def", eff.def)
 		self:removeTemporaryValue("never_move", eff.tmpid)
@@ -4236,7 +4244,7 @@ newEffect{
 		eff.resists = self:addTemporaryValue("resists", { all = -eff.power})
 	end,
 	deactivate = function(self, eff)
-		if game._chronoworlds then 
+		if game._chronoworlds then
 			game._chronoworlds = nil
 		end
 		self:removeTemporaryValue("resists", eff.resists)

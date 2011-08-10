@@ -26,7 +26,7 @@ local a = 1
 
 return { generator = function()
 	return {
-		life = 1,
+		life = core.particles.ETERNAL,
 		size = size, sizev = 0, sizea = 0,
 
 		x = x, xv = 0, xa = 0,
