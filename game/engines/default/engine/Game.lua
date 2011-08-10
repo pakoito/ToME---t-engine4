@@ -143,9 +143,11 @@ function _M:display(nb_keyframes)
 		self.flyers:display(nb_keyframes)
 	end
 
-	for i, d in ipairs(self.dialogs) do
-		d:display()
-		d:toScreen(d.display_x, d.display_y, nb_keyframes)
+	if not self.suppressDialogs then
+		for i, d in ipairs(self.dialogs) do
+			d:display()
+			d:toScreen(d.display_x, d.display_y, nb_keyframes)
+		end
 	end
 
 	-- Check profile thread events
@@ -492,7 +494,12 @@ end
 -- @param for_savefile The screenshot will be used for savefile display
 function _M:takeScreenshot(for_savefile)
 	if for_savefile then
-		return core.display.getScreenshot(self.w / 4, self.h / 4, self.w / 2, self.h / 2)
+		self.suppressDialogs = true
+		core.display.forceRedraw()
+		local sc = core.display.getScreenshot(self.w / 4, self.h / 4, self.w / 2, self.h / 2)
+		self.suppressDialogs = nil
+		core.display.forceRedraw()
+		return sc
 	else
 		return core.display.getScreenshot(0, 0, self.w, self.h)
 	end

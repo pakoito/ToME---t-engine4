@@ -1619,13 +1619,21 @@ end
 -- @param for_savefile The screenshot will be used for savefile display
 function _M:takeScreenshot(for_savefile)
 	if for_savefile then
+		self.suppressDialogs = true
+		core.display.forceRedraw()
+
 		local x, y = self.w / 4, self.h / 4
 		if self.level then
 			x, y = self.level.map:getTileToScreen(self.player.x, self.player.y)
 			x, y = x - self.w / 4, y - self.h / 4
 			x, y = util.bound(x, 0, self.w / 2), util.bound(y, 0, self.h / 2)
 		end
-		return core.display.getScreenshot(x, y, self.w / 2, self.h / 2)
+		local sc = core.display.getScreenshot(x, y, self.w / 2, self.h / 2)
+
+		self.suppressDialogs = nil
+		core.display.forceRedraw()
+
+		return sc
 	else
 		return core.display.getScreenshot(0, 0, self.w, self.h)
 	end
