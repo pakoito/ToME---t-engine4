@@ -37,7 +37,8 @@ newEntity{
 	stats = { str=20, dex=20, mag=30, con=16 },
 
 	knockback_immune = 1,
-	stun_immune = 1,
+	stun_immune = 0.6,
+	blind_immunge = 0.6,
 	resolvers.sustains_at_birth(),
 }
 

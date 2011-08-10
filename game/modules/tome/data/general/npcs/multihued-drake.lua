@@ -38,7 +38,8 @@ newEntity{
 	stats = { str=20, dex=20, mag=30, con=16 },
 
 	knockback_immune = 1,
-	stun_immune = 1,
+	stun_immune = 0.8,
+	blind_immunge = 0.8,
 	poison_immune = 0.5,
 }
 
@@ -107,6 +108,8 @@ newEntity{ base = "BASE_NPC_MULTIHUED_DRAKE", define_as = "GREATER_MULTI_HUED_WY
 	combat = { dam=resolvers.levelup(resolvers.rngavg(25,150), 1, 2.2), atk=resolvers.rngavg(25,130), apr=25, dammod={str=1.1} },
 	stats_per_level = 5,
 	lite = 1,
+	stun_immune = 1,
+	blind_immunge = 1,
 
 	resists = { [DamageType.PHYSICAL] = 40, [DamageType.FIRE] = 40, [DamageType.COLD] = 40, [DamageType.ACID] = 40, [DamageType.LIGHTNING] = 40, },
 
@@ -151,6 +154,8 @@ newEntity{ base = "BASE_NPC_MULTIHUED_DRAKE",
 	on_melee_hit = {[DamageType.FIRE]=resolvers.mbonus(10, 5), [DamageType.COLD]=resolvers.mbonus(10, 5), [DamageType.LIGHTNING]=resolvers.mbonus(10, 5), [DamageType.ACID]=resolvers.mbonus(10, 5)},
 	combat = { dam=resolvers.levelup(resolvers.rngavg(25,150), 1, 2.2), atk=resolvers.rngavg(25,130), apr=32, dammod={str=1.1} },
 	lite = 1,
+	stun_immune = 1,
+	blind_immunge = 1,
 
 	ai = "tactical",
 	ai_tactic = resolvers.tactic"ranged",

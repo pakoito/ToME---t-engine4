@@ -39,7 +39,8 @@ newEntity{
 	resists = { [DamageType.LIGHTNING] = 100, },
 
 	knockback_immune = 1,
-	stun_immune = 1,
+	stun_immune = 0.5,
+	blind_immunge = 0.5,
 }
 
 newEntity{ base = "BASE_NPC_STORM_DRAKE",
@@ -93,6 +94,8 @@ newEntity{ base = "BASE_NPC_STORM_DRAKE",
 	combat = { dam=resolvers.levelup(resolvers.rngavg(25,110), 1, 2), atk=resolvers.rngavg(25,70), apr=25, dammod={str=1.1} },
 	stats_per_level = 5,
 	lite = 1,
+	stun_immune = 0.8,
+	blind_immunge = 0.8,
 
 	ai = "tactical",
 	ai_tactic = resolvers.tactic"melee",
