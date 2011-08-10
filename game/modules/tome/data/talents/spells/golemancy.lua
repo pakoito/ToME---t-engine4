@@ -140,7 +140,7 @@ newTalent{
 	no_npc_use = true,
 	getHeal = function(self, t)
 		local ammo = self:hasAlchemistWeapon()
-		return self:combatTalentSpellDamage(t, 15, 350, ((ammo and ammo.alchemist_power or 0) + self:combatSpellpower()) / 2)
+		return 50 + self:combatTalentSpellDamage(self.T_GOLEM_POWER, 15, 550, ((ammo and ammo.alchemist_power or 0) + self:combatSpellpower()) / 2)
 	end,
 	action = function(self, t)
 		if not self.alchemy_golem then
@@ -229,7 +229,7 @@ newTalent{
 		local heal = t.getHeal(self, t)
 		return ([[Interact with your golem
 		- If it is destroyed you will take some time to reconstruct it (takes 15 alchemist gems).
-		- If it is alive you will be able to talk to it, change its weapon and armour or repair it for %d (takes 2 alchemist gems)]]):
+		- If it is alive you will be able to talk to it, change its weapon and armour or repair it for %d (takes 2 alchemist gems), Spellpower, alchemist gem and Golem Power talent all influence the healing done]]):
 		format(heal)
 	end,
 }
@@ -276,12 +276,14 @@ newTalent{
 		self.alchemy_golem:learnTalent(Talents.T_HEALTH, true)
 		self.alchemy_golem:learnTalent(Talents.T_ARMOUR_TRAINING, true)
 		self.alchemy_golem:learnTalent(Talents.T_ARMOUR_TRAINING, true)
+		self.alchemy_golem.healing_factor = (self.alchemy_golem.healing_factor or 1) + 0.1
 	end,
 	on_unlearn = function(self, t)
 		self.alchemy_golem:unlearnTalent(Talents.T_HEALTH, true)
 		self.alchemy_golem:unlearnTalent(Talents.T_HEALTH, true)
 		self.alchemy_golem:unlearnTalent(Talents.T_ARMOUR_TRAINING, true)
 		self.alchemy_golem:unlearnTalent(Talents.T_ARMOUR_TRAINING, true)
+		self.alchemy_golem.healing_factor = (self.alchemy_golem.healing_factor or 1) - 0.1
 	end,
 	info = function(self, t)
 		local rawlev = self:getTalentLevelRaw(t)
@@ -295,10 +297,9 @@ newTalent{
 		self.alchemy_golem.talents[Talents.T_HEALTH], self.alchemy_golem.talents[Talents.T_ARMOUR_TRAINING] = olda, oldh
 
 		return ([[Improves your golem armour training and health.
-		Increases health by %d, increases armour value by %d and reduces chance to be critically hit by %d%% when wearing a heavy mail armour or a massive plate armour.
-		It also increases armour hardiness by %d%%.
+		Increases health by %d, increases armour value by %d, reduces chance to be critically hit by %d%% when wearing a heavy mail armour or a massive plate armour, increases armour hardiness by %d%% and increases healing factor by %d%%.
 		The golem can always use all kind of armours, including massive ones.]]):
-		format(health, heavyarmor, crit, hardiness)
+		format(health, heavyarmor, crit, hardiness, rawlev * 10)
 	end,
 }
 
