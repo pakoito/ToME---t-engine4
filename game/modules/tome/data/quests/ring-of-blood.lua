@@ -37,6 +37,8 @@ on_status_change = function(self, who, status, sub)
 		who:setQuestStatus(self.id, engine.Quest.DONE)
 		if self:isCompleted("won-fight") then
 			game:setAllowedBuild("warrior_brawler", true)
+		elseif self:isCompleted("killall") then
+			world:gainAchievement("RING_BLOOD_KILL", who)
 		end
 	end
 end

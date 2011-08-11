@@ -255,3 +255,8 @@ newAchievement{
 		if zone.void_blast_hits and zone.void_blast_hits == 0 then return true end
 	end,
 }
+newAchievement{
+	name = "The Right thing to do", id = "RING_BLOOD_KILL",
+	show = "name",
+	desc = [[You did the righteous thing in the ring of blood and disposed of the Blood Master.]],
+}

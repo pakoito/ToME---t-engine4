@@ -67,6 +67,7 @@ newEntity{ define_as = "RING_MASTER",
 
 	on_die = function(self, who)
 		game.player:setQuestStatus("ring-of-blood", engine.Quest.COMPLETED, "killall")
+		game.player:setQuestStatus("ring-of-blood", engine.Quest.COMPLETED)
 	end,
 
 	faction = "slavers",
