@@ -22,19 +22,19 @@ load("/data/general/traps/store.lua")
 newEntity{ base = "BASE_STORE", define_as = "HEAVY_ARMOR_STORE",
 	name="Impenetrable Plates",
 	display='2', color=colors.UMBER,
-	resolvers.store("HEAVY_ARMOR", "sunwall", "store/shop_door.png", "store/shop_sign_armory.png"),
+	resolvers.store("HEAVY_ARMOR", "sunwall", "store/shop_door.png", "store/shop_sign_impenetrable_plates.png"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "LIGHT_ARMOR_STORE",
 	name="Quality Leather",
 	display='2', color=colors.UMBER,
-	resolvers.store("LIGHT_ARMOR", "sunwall", "store/shop_door.png", "store/shop_sign_tanner.png"),
+	resolvers.store("LIGHT_ARMOR", "sunwall", "store/shop_door.png", "store/shop_sign_quality_leather.png"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "CLOTH_ARMOR_STORE",
 	name="Arcane Cloth",
 	display='2', color=colors.UMBER,
-	resolvers.store("CLOTH_ARMOR", "sunwall", "store/shop_door.png", "store/shop_sign_tailor.png"),
+	resolvers.store("CLOTH_ARMOR", "sunwall", "store/shop_door.png", "store/shop_sign_arcane_cloth.png"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "SWORD_WEAPON_STORE",
@@ -46,43 +46,43 @@ newEntity{ base = "BASE_STORE", define_as = "SWORD_WEAPON_STORE",
 newEntity{ base = "BASE_STORE", define_as = "KNIFE_WEAPON_STORE",
 	name="Night Affairs",
 	display='3', color=colors.UMBER,
-	resolvers.store("KNIFE_WEAPON", "sunwall", "store/shop_door.png", "store/shop_sign_knives.png"),
+	resolvers.store("KNIFE_WEAPON", "sunwall", "store/shop_door.png", "store/shop_sign_night_affairs.png"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "AXE_WEAPON_STORE",
 	name="Orc Cutters",
 	display='3', color=colors.UMBER,
-	resolvers.store("AXE_WEAPON", "sunwall", "store/shop_door.png", "store/shop_sign_axesmith.png"),
+	resolvers.store("AXE_WEAPON", "sunwall", "store/shop_door.png", "store/shop_sign_orc_cutters.png"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "MAUL_WEAPON_STORE",
 	name="Mauling for Brutes",
 	display='3', color=colors.UMBER,
-	resolvers.store("MAUL_WEAPON", "sunwall", "store/shop_door.png", "store/shop_sign_macesmith.png"),
+	resolvers.store("MAUL_WEAPON", "sunwall", "store/shop_door.png", "store/shop_sign_mauling_brutes.png"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "ARCHER_WEAPON_STORE",
 	name="Bows and Slings",
 	display='3', color=colors.UMBER,
-	resolvers.store("ARCHER_WEAPON", "sunwall", "store/shop_door.png", "store/shop_sign_bows.png"),
+	resolvers.store("ARCHER_WEAPON", "sunwall", "store/shop_door.png", "store/shop_sign_bows_slings.png"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "STAFF_WEAPON_STORE",
 	name="Sook's Arcane Goodness",
 	display='3', color=colors.UMBER,
-	resolvers.store("STAFF_WEAPON", "sunwall", "store/shop_door.png", "store/shop_sign_staves.png"),
+	resolvers.store("STAFF_WEAPON", "sunwall", "store/shop_door.png", "store/shop_sign_sooks_goodness.png"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "HERBALIST",
 	name="Sarah's Herbal Infusions",
 	display='4', color=colors.LIGHT_GREEN,
-	resolvers.store("POTION", "sunwall", "store/shop_door.png", "store/shop_sign_herbalist.png"),
+	resolvers.store("POTION", "sunwall", "store/shop_door.png", "store/shop_sign_saras_herbal_infusions.png"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "RUNES",
 	name="Sook's Runes and other Harmless Contraptions",
 	display='5', color=colors.LIGHT_RED,
-	resolvers.store("LAST_HOPE_LIBRARY", "sunwall", "store/shop_door.png", "store/shop_sign_alchemist.png"),
+	resolvers.store("LAST_HOPE_LIBRARY", "sunwall", "store/shop_door.png", "store/shop_sign_sooks_runes.png"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "ZEMEKKYS",

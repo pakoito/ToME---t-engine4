@@ -22,62 +22,62 @@ load("/data/general/traps/store.lua")
 newEntity{ base = "BASE_STORE", define_as = "HEAVY_ARMOR_STORE",
 	name="Hormond & Son Plates",
 	display='2', color=colors.UMBER,
-	resolvers.store("HEAVY_ARMOR", "allied-kingdoms", "store/shop_door.png", "store/shop_sign_armory.png"),
+	resolvers.store("HEAVY_ARMOR", "allied-kingdoms", "store/shop_door.png", "store/shop_sign_hormond_sons.png"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "LIGHT_ARMOR_STORE",
 	name="Rila's Leather",
 	display='2', color=colors.UMBER,
-	resolvers.store("LIGHT_ARMOR", "allied-kingdoms", "store/shop_door.png", "store/shop_sign_tanner.png"),
+	resolvers.store("LIGHT_ARMOR", "allied-kingdoms", "store/shop_door.png", "store/shop_sign_rilas_leather.png"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "CLOTH_ARMOR_STORE",
 	name="Toxar Alchemical Tailor",
 	display='2', color=colors.UMBER,
-	resolvers.store("CLOTH_ARMOR", "allied-kingdoms", "store/shop_door.png", "store/shop_sign_tailor.png"),
+	resolvers.store("CLOTH_ARMOR", "allied-kingdoms", "store/shop_door.png", "store/shop_sign_toxar_alchemical_tailor.png"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "SWORD_WEAPON_STORE",
 	name="Herk's Cutting Edge",
 	display='3', color=colors.UMBER,
-	resolvers.store("SWORD_WEAPON", "allied-kingdoms", "store/shop_door.png", "store/shop_sign_swordsmith.png"),
+	resolvers.store("SWORD_WEAPON", "allied-kingdoms", "store/shop_door.png", "store/shop_sign_herks_cutting_edge.png"),
 	resolvers.chatfeature("last-hope-weapon-store", "allied-kingdoms"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "KNIFE_WEAPON_STORE",
 	name="Yulek's Tools of the Night",
 	display='3', color=colors.UMBER,
-	resolvers.store("KNIFE_WEAPON", "allied-kingdoms", "store/shop_door.png", "store/shop_sign_knives.png"),
+	resolvers.store("KNIFE_WEAPON", "allied-kingdoms", "store/shop_door.png", "store/shop_sign_yuleks_tools_of_night.png"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "AXE_WEAPON_STORE",
 	name="Vortal's Trees Choppers",
 	display='3', color=colors.UMBER,
-	resolvers.store("AXE_WEAPON", "allied-kingdoms", "store/shop_door.png", "store/shop_sign_axesmith.png"),
+	resolvers.store("AXE_WEAPON", "allied-kingdoms", "store/shop_door.png", "store/shop_sign_vortals_trees.png"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "MAUL_WEAPON_STORE",
 	name="Raber's Blunt Paradise",
 	display='3', color=colors.UMBER,
-	resolvers.store("MAUL_WEAPON", "allied-kingdoms", "store/shop_door.png", "store/shop_sign_macesmith.png"),
+	resolvers.store("MAUL_WEAPON", "allied-kingdoms", "store/shop_door.png", "store/shop_sign_rabers_blunt_paradise.png"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "ARCHER_WEAPON_STORE",
 	name="Dala's Far Reaching Implements",
 	display='3', color=colors.UMBER,
-	resolvers.store("ARCHER_WEAPON", "allied-kingdoms", "store/shop_door.png", "store/shop_sign_bows.png"),
+	resolvers.store("ARCHER_WEAPON", "allied-kingdoms", "store/shop_door.png", "store/shop_sign_dalas_far_reaching.png"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "HERBALIST",
 	name="Sarah's Herbal Infusions",
 	display='4', color=colors.LIGHT_GREEN,
-	resolvers.store("POTION", "allied-kingdoms", "store/shop_door.png", "store/shop_sign_herbalist.png"),
+	resolvers.store("POTION", "allied-kingdoms", "store/shop_door.png", "store/shop_sign_saras_herbal_infusions.png"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "RUNES",
 	name="Sook's Runes and other Harmless Contraptions",
 	display='5', color=colors.LIGHT_RED,
-	resolvers.store("LAST_HOPE_LIBRARY", "allied-kingdoms", "store/shop_door.png", "store/shop_sign_library.png"),
+	resolvers.store("LAST_HOPE_LIBRARY", "allied-kingdoms", "store/shop_door.png", "store/shop_sign_sooks_runes.png"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "ELDER",
@@ -107,6 +107,6 @@ newEntity{ base = "BASE_STORE", define_as = "MELINDA_FATHER",
 newEntity{ base = "BASE_STORE", define_as = "RARE_GOODS",
 	name="Urthol's Wondrous Emporium",
 	display='7', color=colors.BLUE,
-	resolvers.store("LOST_MERCHANT", "allied-kingdoms", "store/shop_door.png", "store/shop_sign_jewelry.png"),
+	resolvers.store("LOST_MERCHANT", "allied-kingdoms", "store/shop_door.png", "store/shop_sign_urthols_emporium.png"),
 	resolvers.chatfeature("last-hope-lost-merchant", "allied-kingdoms"),
 }

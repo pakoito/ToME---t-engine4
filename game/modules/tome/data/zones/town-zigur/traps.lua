@@ -22,38 +22,38 @@ load("/data/general/traps/store.lua")
 newEntity{ base = "BASE_STORE", define_as = "HEAVY_ARMOR_STORE",
 	name="Horman's Plates",
 	display='2', color=colors.UMBER,
-	resolvers.store("ZIGUR_HARMOR", "zigur", "store/shop_door.png", "store/shop_sign_armory.png"),
+	resolvers.store("ZIGUR_HARMOR", "zigur", "store/shop_door.png", "store/shop_sign_hormans_plates.png"),
 }
 newEntity{ base = "BASE_STORE", define_as = "LIGHT_ARMOR_STORE",
 	name="Infused Leather",
 	display='2', color=colors.UMBER,
-	resolvers.store("ZIGUR_LARMOR", "zigur", "store/shop_door.png", "store/shop_sign_tanner.png"),
+	resolvers.store("ZIGUR_LARMOR", "zigur", "store/shop_door.png", "store/shop_sign_infused_leather.png"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "SWORD_WEAPON_STORE",
 	name="Slash & Dash",
 	display='3', color=colors.UMBER,
-	resolvers.store("ZIGUR_SWORD_WEAPON", "zigur", "store/shop_door.png", "store/shop_sign_swordsmith.png"),
+	resolvers.store("ZIGUR_SWORD_WEAPON", "zigur", "store/shop_door.png", "store/shop_sign_slash_dash.png"),
 }
 newEntity{ base = "BASE_STORE", define_as = "MACE_WEAPON_STORE",
 	name="Nature's Punch",
 	display='3', color=colors.UMBER,
-	resolvers.store("ZIGUR_MACE_WEAPON", "zigur", "store/shop_door.png", "store/shop_sign_macesmith.png"),
+	resolvers.store("ZIGUR_MACE_WEAPON", "zigur", "store/shop_door.png", "store/shop_sign_natures_punch.png"),
 }
 newEntity{ base = "BASE_STORE", define_as = "AXE_WEAPON_STORE",
 	name="Slice & Dice",
 	display='3', color=colors.UMBER,
-	resolvers.store("ZIGUR_AXE_WEAPON", "zigur", "store/shop_door.png", "store/shop_sign_axesmith.png"),
+	resolvers.store("ZIGUR_AXE_WEAPON", "zigur", "store/shop_door.png", "store/shop_sign_slice_dice.png"),
 }
 newEntity{ base = "BASE_STORE", define_as = "ARCHER_WEAPON_STORE",
 	name="Nature's Reach",
 	display='3', color=colors.UMBER,
-	resolvers.store("ZIGUR_ARCHER_WEAPON", "zigur", "store/shop_door.png", "store/shop_sign_bows.png"),
+	resolvers.store("ZIGUR_ARCHER_WEAPON", "zigur", "store/shop_door.png", "store/shop_sign_natures_reach.png"),
 }
 newEntity{ base = "BASE_STORE", define_as = "KNIFE_WEAPON_STORE",
 	name="A Million Cuts",
 	display='3', color=colors.UMBER,
-	resolvers.store("ZIGUR_KNIFE_WEAPON", "zigur", "store/shop_door.png", "store/shop_sign_knives.png"),
+	resolvers.store("ZIGUR_KNIFE_WEAPON", "zigur", "store/shop_door.png", "store/shop_sign_million_cuts.png"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "LIBRARY",
@@ -64,7 +64,7 @@ newEntity{ base = "BASE_STORE", define_as = "LIBRARY",
 
 newEntity{ base = "BASE_STORE", define_as = "TRAINER",
 	name="Trainer",
-	display='1', color=colors.UMBER, image = "store/shop_door2.png",
+	display='1', color=colors.UMBER, image = "store/shop_door2.png", add_mos={{display_x=0.6, image="store/shop_sign_trainer.png"}},
 	resolvers.chatfeature("zigur-trainer", "zigur"),
 }
 
