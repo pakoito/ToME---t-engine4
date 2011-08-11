@@ -108,7 +108,9 @@ end
 --called in the on_die functions of ingredient-dropping monsters to determine if they should really drop their ingredient
 need_part = function(self, player, ingredient, monster)
 	if self:isEnded() then return end
-	if not player or not game.party:hasMember(player) or player.suppress_alchemist_drops then return end
+	local oplayer = player
+	if player.resolveSource then player = player:resolveSource() end
+	if not player or not game.party:hasMember(player) or oplayer.suppress_alchemist_drops then return end
 	local list = self.needed_ingredients
 	local needed = false
 	local ing_list = mod.class.Object:loadList("/data/general/objects/elixir-ingredients.lua")
