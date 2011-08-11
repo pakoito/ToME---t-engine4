@@ -243,9 +243,12 @@ function _M:loadScreen(mod)
 
 		local logo = {(core.display.loadImage("/data/gfx/background/"..mod.short_name.."-logo.png") or core.display.loadImage("/data/gfx/background/tome-logo.png")):glTexture()}
 
-		local bar = {core.display.loadImage("/data/gfx/waiter/waiter_bar.png"):glTexture()}
+		local left = {core.display.loadImage("/data/gfx/waiter/left.png"):glTexture()}
+		local right = {core.display.loadImage("/data/gfx/waiter/right.png"):glTexture()}
+		local middle = {core.display.loadImage("/data/gfx/waiter/middle.png"):glTexture()}
+		local bar = {core.display.loadImage("/data/gfx/waiter/bar.png"):glTexture()}
 
-		local dw, dh = math.floor(sw / 2), 20
+		local dw, dh = math.floor(sw / 2), 54
 		local dx, dy = math.floor((sw - dw) / 2), sh - dh
 
 		return function()
@@ -278,7 +281,10 @@ function _M:loadScreen(mod)
 			x2 = util.bound(x2, 0, dw)
 			local w, h = x2 - x, dh
 
-			bar[1]:toScreenFull(dx + x, dy, w, h, w * bar[4], h * bar[5])
+			middle[1]:toScreenFull(dx, dy, dw, middle[7], middle[2], middle[3])
+			bar[1]:toScreenFull(dx + x, dy, w, bar[7], bar[2], bar[3])
+			left[1]:toScreenFull(dx - left[6] + 5, dy + (middle[7] - left[7]) / 2, left[6], left[7], left[2], left[3])
+			right[1]:toScreenFull(dx + dw - 5, dy + (middle[7] - right[7]) / 2, right[6], right[7], right[2], right[3])
 		end
 	end)
 end
