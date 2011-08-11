@@ -93,6 +93,11 @@ static void hook_wait_display(lua_State *L, lua_Debug *ar)
 {
 	waited_count++;
 	SDL_PumpEvents();
+
+	static int last_tick = 0;
+	int now = SDL_GetTicks();
+	if (now - last_tick < 300) return;
+	last_tick = now;
 	on_redraw();
 }
 

@@ -219,6 +219,7 @@ newTalent{
 	tactical = { ATTACK = 2, ESCAPE = 1 },
 	requires_target = true,
 	getDuration = function(self, t) return math.floor(3 + self:getTalentLevel(t)) end,
+	getHealth = function(self, t) return 0.2 + self:combatTalentSpellDamage(t, 20, 500) / 1000 end,
 	action = function(self, t)
 		-- Find space
 		local x, y = util.findFreeGrid(self.x, self.y, 1, true, {[Map.ACTOR]=true})
@@ -242,7 +243,8 @@ newTalent{
 		m.on_added_to_level = nil
 
 		m.energy.value = 0
-		m.life = m.life
+		m.max_life = m.max_life * t.getHealth(self, t)
+		m.life = util.bound(m.life, 0, m.max_life)
 		m.forceLevelup = function() end
 		m.on_die = nil
 		m.on_acquire_target = nil
@@ -269,7 +271,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Through the shadows you forge a temporary copy of yourself, existing for %d turns.]]):
-		format(t.getDuration(self, t))
+		return ([[Through the shadows you forge a temporary copy of yourself, existing for %d turns.
+		The copy possess your exact talents and stats and has %d%% life.]]):
+		format(t.getDuration(self, t), t.getHealth(self, t) * 100)
 	end,
 }
