@@ -162,15 +162,21 @@ static int particles_to_screen(lua_State *L)
 	GLfloat *colors = ps->colors;
 	GLshort *texcoords = ps->texcoords;
 
-	SDL_mutexP(ps->lock);
+	if (x < -10000) x = -10000;
+	if (x > 10000) x = 10000;
+	if (y < -10000) y = -10000;
+	if (y > 10000) y = 10000;
 
 	// No texture? abord
 	if (!ps->texture) return 0;
+
+	SDL_mutexP(ps->lock);
 
 	glBindTexture(GL_TEXTURE_2D, ps->texture);
 	glTexCoordPointer(2, GL_SHORT, 0, texcoords);
 	glColorPointer(4, GL_FLOAT, 0, colors);
 	glVertexPointer(2, GL_FLOAT, 0, vertices);
+
 	glTranslatef(x, y, 0);
 	glPushMatrix();
 	glScalef(ps->zoom * zoom, ps->zoom * zoom, ps->zoom * zoom);
@@ -184,11 +190,11 @@ static int particles_to_screen(lua_State *L)
 	}
 	if (remaining) glDrawArrays(GL_QUADS, 0, remaining);
 
-	SDL_mutexV(ps->lock);
-
 	glRotatef(-ps->rotate, 0, 0, 1);
 	glPopMatrix();
 	glTranslatef(-x, -y, 0);
+
+	SDL_mutexV(ps->lock);
 
 	return 0;
 }

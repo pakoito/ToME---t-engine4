@@ -1014,6 +1014,7 @@ function _M:displayParticles(nb_keyframes)
 	local alive
 	local del = {}
 	local e = next(self.particles)
+	local dx, dy = self.display_x, self.display_y
 	while e do
 		if e.ps then
 			adx, ady = 0, 0
@@ -1030,14 +1031,14 @@ function _M:displayParticles(nb_keyframes)
 			if nb_keyframes == 0 and e.x and e.y then
 				-- Just display it, not updating, no emitting
 				if e.x + e.radius >= self.mx and e.x - e.radius < self.mx + self.viewport.mwidth and e.y + e.radius >= self.my and e.y - e.radius < self.my + self.viewport.mheight then
-					e.ps:toScreen(self.display_x + (adx + e.x - self.mx + 0.5) * self.tile_w * self.zoom, self.display_y + (ady + e.y - self.my + 0.5) * self.tile_h * self.zoom, self.seens(e.x, e.y) or e.always_seen, e.zoom * self.zoom)
+					e.ps:toScreen(dx + (adx + e.x - self.mx + 0.5) * self.tile_w * self.zoom, dy + (ady + e.y - self.my + 0.5) * self.tile_h * self.zoom, self.seens(e.x, e.y) or e.always_seen, e.zoom * self.zoom)
 				end
 			elseif e.x and e.y then
 				alive = e.ps:isAlive()
 
 				-- Update more, if needed
 				if alive and e.x + e.radius >= self.mx and e.x - e.radius < self.mx + self.viewport.mwidth and e.y + e.radius >= self.my and e.y - e.radius < self.my + self.viewport.mheight then
-					e.ps:toScreen(self.display_x + (adx + e.x - self.mx + 0.5) * self.tile_w * self.zoom, self.display_y + (ady + e.y - self.my + 0.5) * self.tile_h * self.zoom, self.seens(e.x, e.y) or e.always_seen)
+					e.ps:toScreen(dx + (adx + e.x - self.mx + 0.5) * self.tile_w * self.zoom, dy + (ady + e.y - self.my + 0.5) * self.tile_h * self.zoom, self.seens(e.x, e.y) or e.always_seen)
 				end
 
 				if not alive then

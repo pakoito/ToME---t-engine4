@@ -212,7 +212,8 @@ function _M:defineDisplayCallback()
 		for i = 1, #ps do
 			e = ps[i]
 			e:checkDisplay()
-			if e.ps:isAlive() then e.ps:toScreen(x + w / 2, y + h / 2, true, w / game.level.map.tile_w)
+			if e.ps:isAlive() then
+				e.ps:toScreen(x + w / 2, y + h / 2, true, w / game.level.map.tile_w)
 			else
 			end
 		end

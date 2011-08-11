@@ -276,11 +276,13 @@ static int map_object_get_move_anim(lua_State *L)
 
 	if (!obj->move_max || obj->display_last == DL_NONE)
 	{
+//		printf("==== GET %f x %f\n", mapdx, mapdy);
 		lua_pushnumber(L, mapdx);
 		lua_pushnumber(L, mapdy);
 	}
 	else
 	{
+//		printf("==== GET %f x %f :: %f x %f\n", mapdx, mapdy,obj->animdx,obj->animdy);
 		lua_pushnumber(L, mapdx + obj->animdx);
 		lua_pushnumber(L, mapdy + obj->animdy);
 	}
@@ -1195,6 +1197,7 @@ void display_map_quad(GLuint *cur_tex, int *vert_idx, int *col_idx, map_type *ma
 			// Final step
 			animdx = adx * m->move_step / (float)m->move_max - adx;
 			animdy = ady * m->move_step / (float)m->move_max - ady;
+//			printf("==computing %f x %f : %f x %f // %d/%d\n", animdx, animdy, adx, ady, m->move_step, m->move_max);
 		}
 	}
 
