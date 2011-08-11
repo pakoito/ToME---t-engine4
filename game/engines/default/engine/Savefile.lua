@@ -96,19 +96,20 @@ function _M:getFileName(o)
 end
 
 function _M:saveObject(obj, zip)
+	local processed = 0
 	self.current_save_zip = zip
 	self.current_save_main = obj
 	self:addToProcess(obj)
 	while #self.process > 0 do
 		local tbl = table.remove(self.process)
 		self.tables[tbl] = self:getFileName(tbl)
---		zip:add(self:getFileName(tbl), tbl:save(nil, nil, self))
 		tbl:save()
 		savefile_pipe.current_nb = savefile_pipe.current_nb + 1
+		processed = processed + 1
 
 		if self.coroutine then coroutine.yield() end
 	end
-	return self.tables[obj]
+	return processed
 end
 
 --- Get a savename for a world
@@ -133,7 +134,8 @@ function _M:saveWorld(world, no_dialog)
 	core.display.forceRedraw()
 
 	local zip = fs.zipOpen(self.save_dir..self:nameSaveWorld(world)..".tmp")
-	self:saveObject(world, zip)
+	local nb = self:saveObject(world, zip)
+	zip:add("nb", tostring(nb))
 	zip:close()
 	fs.delete(self.save_dir..self:nameSaveWorld(world))
 	fs.rename(self.save_dir..self:nameSaveWorld(world)..".tmp", self.save_dir..self:nameSaveWorld(world))
@@ -215,7 +217,8 @@ function _M:saveGame(game, no_dialog)
 	core.display.forceRedraw()
 
 	local zip = fs.zipOpen(self.save_dir..self:nameSaveGame(game)..".tmp")
-	self:saveObject(game, zip)
+	local nb = self:saveObject(game, zip)
+	zip:add("nb", tostring(nb))
 	zip:close()
 	fs.delete(self.save_dir..self:nameSaveGame(game))
 	fs.rename(self.save_dir..self:nameSaveGame(game)..".tmp", self.save_dir..self:nameSaveGame(game))
@@ -360,6 +363,7 @@ function _M:loadReal(load)
 	-- Resolve self referencing tables now
 	resolveSelf(o, o, true)
 
+--	core.wait.manualTick()
 	self.loaded[load] = o
 	return o
 end
