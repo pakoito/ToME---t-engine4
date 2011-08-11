@@ -45,12 +45,13 @@ function _M:init(actor)
 	}
 	self:setFocus(self.c_list)
 	self:setupUI()
-	self:select(self.list[1])
 	self.c_list:selectColumn(2)
 
 	self.key:addBinds{
 		EXIT = function() game:unregisterDialog(self) end,
 	}
+
+	self:select(self.list[1])
 end
 
 function _M:select(item)
