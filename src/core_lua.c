@@ -1275,8 +1275,12 @@ static int sdl_surface_to_texture(lua_State *L)
 
 	lua_pushnumber(L, fw);
 	lua_pushnumber(L, fh);
+	lua_pushnumber(L, (double)fw / (*s)->w);
+	lua_pushnumber(L, (double)fh / (*s)->h);
+	lua_pushnumber(L, (*s)->w);
+	lua_pushnumber(L, (*s)->h);
 
-	return 3;
+	return 7;
 }
 
 static int sdl_surface_merge(lua_State *L)

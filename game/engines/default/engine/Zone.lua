@@ -596,8 +596,7 @@ function _M:getLevel(game, lev, old_lev, no_close)
 	local level
 	-- Load persistent level?
 	if type(level_data.persistent) == "string" and level_data.persistent == "zone_temporary" then
-		local popup = Dialog:simplePopup("Loading level", "Please wait while loading the level...", nil, true)
-		popup.__showup = nil
+		local popup = Dialog:simpleWaiter("Loading level", "Please wait while loading the level...", nil, 10000)
 		core.display.forceRedraw()
 
 		self.temp_memory_levels = self.temp_memory_levels or {}
@@ -610,10 +609,9 @@ function _M:getLevel(game, lev, old_lev, no_close)
 			-- This is not needed in case of a direct to file persistance becuase the map IS recreated each time anyway
 			level.map:recreate()
 		end
-		game:unregisterDialog(popup)
+		popup:done()
 	elseif type(level_data.persistent) == "string" and level_data.persistent == "zone" and not self.save_per_level then
-		local popup = Dialog:simplePopup("Loading level", "Please wait while loading the level...", nil, true)
-		popup.__showup = nil
+		local popup = Dialog:simpleWaiter("Loading level", "Please wait while loading the level...", nil, 10000)
 		core.display.forceRedraw()
 
 		self.memory_levels = self.memory_levels or {}
@@ -626,10 +624,9 @@ function _M:getLevel(game, lev, old_lev, no_close)
 			-- This is not needed in case of a direct to file persistance becuase the map IS recreated each time anyway
 			level.map:recreate()
 		end
-		game:unregisterDialog(popup)
+		popup:done()
 	elseif type(level_data.persistent) == "string" and level_data.persistent == "memory" then
-		local popup = Dialog:simplePopup("Loading level", "Please wait while loading the level...", nil, true)
-		popup.__showup = nil
+		local popup = Dialog:simpleWaiter("Loading level", "Please wait while loading the level...", nil, 10000)
 		core.display.forceRedraw()
 
 		game.memory_levels = game.memory_levels or {}
@@ -642,10 +639,9 @@ function _M:getLevel(game, lev, old_lev, no_close)
 			-- This is not needed in case of a direct to file persistance becuase the map IS recreated each time anyway
 			level.map:recreate()
 		end
-		game:unregisterDialog(popup)
+		popup:done()
 	elseif level_data.persistent then
-		local popup = Dialog:simplePopup("Loading level", "Please wait while loading the level...", nil, true)
-		popup.__showup = nil
+		local popup = Dialog:simpleWaiter("Loading level", "Please wait while loading the level...", nil, 10000)
 		core.display.forceRedraw()
 
 		-- Try to load from a savefile
@@ -655,18 +651,17 @@ function _M:getLevel(game, lev, old_lev, no_close)
 			-- Setup the level in the game
 			game:setLevel(level)
 		end
-		game:unregisterDialog(popup)
+		popup:done()
 	end
 
 	-- In any cases, make one if none was found
 	if not level then
-		local popup = Dialog:simplePopup("Generating level", "Please wait while generating the level...", nil, true)
-		popup.__showup = nil
+		local popup = Dialog:simpleWaiter("Generating level", "Please wait while generating the level...", nil, 10000)
 		core.display.forceRedraw()
 
 		level = self:newLevel(level_data, lev, old_lev, game)
 
-		game:unregisterDialog(popup)
+		popup:done()
 	end
 
 	-- Clean up things

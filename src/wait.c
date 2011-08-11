@@ -31,23 +31,18 @@
 
 extern SDL_Window *window;
 extern SDL_Surface *screen;
-extern SDL_GLContext maincontext; /* Our opengl context handle */
-SDL_GLContext waitcontext; /* Our opengl context handle */
-static SDL_Thread *wait_thread = NULL;
-static SDL_sem *start_sem, *end_sem;
-static char* payload = NULL;
-static bool enabled = FALSE;
 
-static GLuint bkg_t;
-static GLubyte *bkg_image = NULL;
-static int bkg_realw=1;
-static int bkg_realh=1;
-
-extern int resizeWindow(int width, int height);
-extern void on_redraw();
+static bool wait_hooked = FALSE;
+static int waiting = 0;
+static int waited_count = 0;
+static int bkg_realw, bkg_realh, bkg_w, bkg_h;
+static GLuint bkg_t = 0;
+static int wait_draw_ref = LUA_NOREF;
 
 static int draw_last_frame(lua_State *L)
 {
+	if (!bkg_t) return 0;
+
 	int w, h;
 	SDL_GetWindowSize(window, &w, &h);
 
@@ -72,200 +67,103 @@ static int draw_last_frame(lua_State *L)
 	return 0;
 }
 
-static const struct luaL_reg waitlib[] =
+bool draw_waiting(lua_State *L)
 {
-	{"drawLastFrame", draw_last_frame},
-	{NULL, NULL},
-};
+	if (!waiting) return FALSE;
 
-static int thread_wait(void *data)
-{
-	lua_State *L = lua_open();  /* create state */
-	luaL_openlibs(L);  /* open libraries */
-	luaopen_core(L);
-	luaL_openlib(L, "wait", waitlib, 0);
-	lua_pop(L, 1);
-
-	// And run the lua engine pre init scripts
-	if (!luaL_loadfile(L, "/loader/pre-init.lua")) docall(L, 0, 0);
-	else lua_pop(L, 1);
-
-	int rot = 1;
-	while (TRUE)
+	if (wait_draw_ref != LUA_NOREF)
 	{
-		if (!enabled) SDL_SemWait(start_sem);
-
-		if (enabled > 0)
-		{
-			if (enabled == 2)
-			{
-				int w, h;
-				SDL_GetWindowSize(window, &w, &h);
-
-				enabled = 1;
-
-				if (!waitcontext)
-				{
-					waitcontext = SDL_GL_CreateContext(window);
-					resizeWindow(w, h);
-					glGenTextures(1, &bkg_t);
-				}
-				SDL_GL_MakeCurrent(window, waitcontext);
-
-				// Bind the texture to read
-				if (bkg_image)
-				{
-					tglBindTexture(GL_TEXTURE_2D, bkg_t);
-					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-					// In case we can't support NPOT textures round up to nearest POT
-					bkg_realw=1;
-					bkg_realh=1;
-					while (bkg_realw < w) bkg_realw *= 2;
-					while (bkg_realh < h) bkg_realh *= 2;
-					glTexImage2D(GL_TEXTURE_2D, 0, 3, bkg_realw, bkg_realh, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-					glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, bkg_image);
-					printf("Make wait background texture %d : %dx%d (%d, %d)\n", bkg_t, w, h, bkg_realw, bkg_realh);
-				}
-
-				if (payload)
-				{
-					luaL_loadstring(L, payload);
-					lua_call(L, 0, 0);
-				}
-			}
-			SDL_Delay(50);
-
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			glLoadIdentity();
-
-			lua_getglobal(L, "waitDisplay");
-			if (lua_isnil(L, -1)) lua_pop(L, 1);
-			else
-			{
-				if (lua_pcall(L, 0, 0, 0))
-				{
-					printf("Wait thread error: %s\n", lua_tostring(L, -1));
-					lua_pop(L, 1);
-				}
-			}
-
-			GLfloat texcoords[2*4] = {
-				0, 0,
-				1, 0,
-				1, 1,
-				0, 1,
-			};
-			GLfloat colors[4*4] = {
-				1, 1, 1, 1,
-				1, 1, 1, 1,
-				1, 1, 1, 1,
-				1, 1, 1, 1,
-			};
-
-			glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
-			glColorPointer(4, GL_FLOAT, 0, colors);
-
-			tglBindTexture(GL_TEXTURE_2D, 0);
-
-			GLfloat vertices[2*4] = {
-				-100, -100,
-				-100, 100,
-				100, 100,
-				100, -100,
-			};
-			glVertexPointer(2, GL_FLOAT, 0, vertices);
-			glTranslatef(500, 500, 0);
-			glRotatef(rot, 0, 0, 1);
-			glDrawArrays(GL_QUADS, 0, 4);
-			glRotatef(-rot, 0, 0, 1);
-			glTranslatef(-500, -500, 0);
-			rot++;
-
-			SDL_GL_SwapWindow(window);
-		}
-		else if (enabled == -1)
-		{
-			SDL_SemPost(end_sem);
-			enabled = 0;
-		}
+		lua_rawgeti(L, LUA_REGISTRYINDEX, wait_draw_ref);
+		lua_call(L, 0, 0);
 	}
+	else draw_last_frame(L);
 
-	// Cleanup
-	lua_close(L);
-	printf("Cleaned up wait thread\n");
-
-	return(0);
+	return TRUE;
 }
 
-// Runs on main thread
-static void free_profile_thread()
+extern void on_redraw();
+static void hook_wait_display(lua_State *L, lua_Debug *ar)
 {
-	int status;
-	SDL_WaitThread(wait_thread, &status);
-/*
-	SDL_DestroyMutex(profile->lock_iqueue);
-	SDL_DestroySemaphore(profile->wait_iqueue);
-	SDL_DestroyMutex(profile->lock_oqueue);
-	SDL_DestroySemaphore(profile->wait_oqueue);
-*/
+	waited_count++;
+	on_redraw();
 }
 
-// Runs on main thread
-static int create_wait_thread(lua_State *L)
-{
-	start_sem = SDL_CreateSemaphore(0);
-	end_sem = SDL_CreateSemaphore(0);
-
-	wait_thread = SDL_CreateThread(thread_wait, NULL);
-	if (wait_thread == NULL) {
-		printf("Unable to create wait thread: %s\n", SDL_GetError());
-		return -1;
-	}
-
-	printf("Creating wait thread\n");
-	return 0;
-}
-
-// Runs on main thread
 static int enable(lua_State *L)
 {
-	if (!wait_thread) return 0;
-
-	if (payload) { free(payload); payload = NULL; }
-
-	if (lua_isstring(L, 1))
-	{
-		payload = strdup(lua_tostring(L, 1));
-	}
+	waiting++;
 
 	// Grab currently displayed stuff
-	glPixelStorei(GL_PACK_ALIGNMENT, 1);
-	if (bkg_image) free(bkg_image);
-	bkg_image = (GLubyte*)malloc(screen->w * screen->h * 4 * sizeof(GLubyte));
-	glReadPixels(0, 0, screen->w, screen->h, GL_RGBA, GL_UNSIGNED_BYTE, bkg_image);
+	if (waiting == 1)
+	{
+		int w, h;
+		SDL_GetWindowSize(window, &w, &h);
 
-	SDL_GL_MakeCurrent(window, NULL);
-	enabled = 2;
-	SDL_SemPost(start_sem);
-	return 0;
+		bkg_w = w;
+		bkg_h = h;
+
+		glGenTextures(1, &bkg_t);
+		tglBindTexture(GL_TEXTURE_2D, bkg_t);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+		// In case we can't support NPOT textures round up to nearest POT
+		bkg_realw=1;
+		bkg_realh=1;
+		while (bkg_realw < w) bkg_realw *= 2;
+		while (bkg_realh < h) bkg_realh *= 2;
+		glTexImage2D(GL_TEXTURE_2D, 0, 3, bkg_realw, bkg_realh, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+		glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, w, h);
+		printf("Make wait background texture %d : %dx%d (%d, %d)\n", bkg_t, w, h, bkg_realw, bkg_realh);
+
+		waited_count = 0;
+
+		int count = 300;
+		if (lua_isnumber(L, 1)) count = lua_tonumber(L, 1);
+		if (!lua_gethookmask(L))
+		{
+			lua_sethook(L, hook_wait_display, LUA_MASKCOUNT, count);
+			wait_hooked = TRUE;
+		}
+
+		if (lua_isfunction(L, 2))
+		{
+			lua_pushvalue(L, 2);
+			lua_call(L, 0, 1);
+			wait_draw_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+		}
+
+		on_redraw();
+	}
+
+	lua_pushboolean(L, waiting == 1);
+	lua_pushnumber(L, waiting);
+	return 2;
 }
 
-// Runs on main thread
 static int disable(lua_State *L)
 {
-	if (!wait_thread) return 0;
-	enabled = -1;
-	SDL_SemWait(end_sem);
-	SDL_GL_MakeCurrent(window, maincontext);
-	on_redraw();
-	return 0;
+	waiting--;
+	if (waiting < 0) waiting = 0;
+	if (!waiting)
+	{
+		if (bkg_t)
+		{
+			glDeleteTextures(1, &bkg_t);
+			bkg_t = 0;
+		}
+		if (wait_hooked) lua_sethook(L, NULL, 0, 0);
+		if (wait_draw_ref != LUA_NOREF) luaL_unref(L, LUA_REGISTRYINDEX, wait_draw_ref);
+		printf("Wait finished, counted %d\n", waited_count);
+	}
+	lua_pushboolean(L, waiting > 0);
+	lua_pushnumber(L, waiting);
+	return 2;
 }
 
 static const struct luaL_reg mainlib[] =
 {
-	{"createThread", create_wait_thread},
+	{"drawLastFrame", draw_last_frame},
 	{"enable", enable},
 	{"disable", disable},
 	{NULL, NULL},

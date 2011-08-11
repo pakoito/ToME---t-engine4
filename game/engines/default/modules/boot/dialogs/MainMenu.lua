@@ -27,6 +27,7 @@ module(..., package.seeall, class.inherit(Dialog))
 
 function _M:init()
 	Dialog.init(self, "Main Menu", 300, 400, 450, 50)
+	self.__showup = false
 	self.absolute = true
 
 	local l = {}
@@ -92,6 +93,5 @@ end
 function _M:on_recover_focus()
 	game:unregisterDialog(self)
 	local d = new()
-	d.__showup = false
 	game:registerDialog(d)
 end

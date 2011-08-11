@@ -17,8 +17,6 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
---core.wait.createThread()
-
 -- load some utility functions
 dofile("/engine/utils.lua")
 dofile("/engine/colors.lua")

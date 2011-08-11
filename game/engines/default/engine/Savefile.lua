@@ -128,8 +128,7 @@ function _M:saveWorld(world, no_dialog)
 
 	local popup
 	if not no_dialog then
-		popup = Dialog:simplePopup("Saving world", "Please wait while saving the world...", nil, true)
-		popup.__showup = nil
+		popup = Dialog:simpleWaiter("Saving world", "Please wait while saving the world...")
 	end
 	core.display.forceRedraw()
 
@@ -139,7 +138,7 @@ function _M:saveWorld(world, no_dialog)
 	fs.delete(self.save_dir..self:nameSaveWorld(world))
 	fs.rename(self.save_dir..self:nameSaveWorld(world)..".tmp", self.save_dir..self:nameSaveWorld(world))
 
-	if not no_dialog then game:unregisterDialog(popup) end
+	if not no_dialog then popup:done() end
 end
 
 --- Save the given birth descriptors, used for quick start
@@ -211,8 +210,7 @@ function _M:saveGame(game, no_dialog)
 
 	local popup
 	if not no_dialog then
-		popup = Dialog:simplePopup("Saving game", "Please wait while saving the game...", nil, true)
-		popup.__showup = nil
+		popup = Dialog:simpleWaiter("Saving game", "Please wait while saving the game...")
 	end
 	core.display.forceRedraw()
 
@@ -233,7 +231,7 @@ function _M:saveGame(game, no_dialog)
 	f:write(("description = %q\n"):format(desc.description))
 	f:close()
 
-	if not no_dialog then game:unregisterDialog(popup) end
+	if not no_dialog then popup:done() end
 
 	-- A bit hacky, save hotkeys, this will do until I can make it better for multiplayer stuff
 	local f = fs.open(self.hotkeys_file, "w")
@@ -263,8 +261,7 @@ function _M:saveZone(zone, no_dialog)
 
 	local popup
 	if not no_dialog then
-		popup = Dialog:simplePopup("Saving zone", "Please wait while saving the zone...", nil, true)
-		popup.__showup = nil
+		popup = Dialog:simpleWaiter("Saving zone", "Please wait while saving the zone...")
 	end
 	core.display.forceRedraw()
 
@@ -274,7 +271,7 @@ function _M:saveZone(zone, no_dialog)
 	fs.delete(self.save_dir..self:nameSaveZone(zone))
 	fs.rename(self.save_dir..self:nameSaveZone(zone)..".tmp", self.save_dir..self:nameSaveZone(zone))
 
-	if not no_dialog then game:unregisterDialog(popup) end
+	if not no_dialog then popup:done() end
 end
 
 --- Get a savename for a level
@@ -292,8 +289,7 @@ function _M:saveLevel(level, no_dialog)
 
 	local popup
 	if not no_dialog then
-		popup = Dialog:simplePopup("Saving level", "Please wait while saving the level...", nil, true)
-		popup.__showup = nil
+		popup = Dialog:simpleWaiter("Saving level", "Please wait while saving the level...")
 	end
 	core.display.forceRedraw()
 
@@ -303,7 +299,7 @@ function _M:saveLevel(level, no_dialog)
 	fs.delete(self.save_dir..self:nameSaveLevel(level))
 	fs.rename(self.save_dir..self:nameSaveLevel(level)..".tmp", self.save_dir..self:nameSaveLevel(level))
 
-	if not no_dialog then game:unregisterDialog(popup) end
+	if not no_dialog then popup:done() end
 end
 
 --- Get a savename for an entity
@@ -321,8 +317,7 @@ function _M:saveEntity(e, no_dialog)
 
 	local popup
 	if not no_dialog then
-		popup = Dialog:simplePopup("Saving entity", "Please wait while saving the entity...", nil, true)
-		popup.__showup = nil
+		popup = Dialog:simpleWaiter("Saving entity", "Please wait while saving the entity...")
 	end
 	core.display.forceRedraw()
 
@@ -332,7 +327,7 @@ function _M:saveEntity(e, no_dialog)
 	fs.delete(self.save_dir..self:nameSaveEntity(e))
 	fs.rename(self.save_dir..self:nameSaveEntity(e)..".tmp", self.save_dir..self:nameSaveEntity(e))
 
-	if not no_dialog then game:unregisterDialog(popup) end
+	if not no_dialog then popup:done() end
 end
 
 local function resolveSelf(o, base, allow_object)
@@ -376,8 +371,7 @@ function _M:loadWorld()
 
 	fs.mount(path, self.load_dir)
 
-	local popup = Dialog:simplePopup("Loading world", "Please wait while loading the world...")
-	popup.__showup = nil
+	local popup = Dialog:simpleWaiter("Loading world", "Please wait while loading the world...")
 	core.display.forceRedraw()
 
 	local loadedWorld = self:loadReal("main")
@@ -390,7 +384,7 @@ function _M:loadWorld()
 
 	fs.umount(path)
 
-	game:unregisterDialog(popup)
+	popup:done()
 
 	return loadedWorld
 end
@@ -402,8 +396,7 @@ function _M:loadGame()
 
 	fs.mount(path, self.load_dir)
 
-	local popup = Dialog:simplePopup("Loading game", "Please wait while loading the game...")
-	popup.__showup = nil
+	local popup = Dialog:simpleWaiter("Loading game", "Please wait while loading the game...")
 	core.display.forceRedraw()
 
 	local loadedGame = self:loadReal("main")
@@ -418,7 +411,7 @@ function _M:loadGame()
 
 	fs.umount(path)
 
-	game:unregisterDialog(popup)
+	popup:done()
 
 	return loadedGame, delay_fct
 end
@@ -430,8 +423,7 @@ function _M:loadZone(zone)
 
 	fs.mount(path, self.load_dir)
 
-	local popup = Dialog:simplePopup("Loading zone", "Please wait while loading the zone...")
-	popup.__showup = nil
+	local popup = Dialog:simpleWaiter("Loading zone", "Please wait while loading the zone...")
 	core.display.forceRedraw()
 
 	local loadedZone = self:loadReal("main")
@@ -442,7 +434,7 @@ function _M:loadZone(zone)
 		o:loaded()
 	end
 
-	game:unregisterDialog(popup)
+	popup:done()
 
 	fs.umount(path)
 	return loadedZone
@@ -455,8 +447,7 @@ function _M:loadLevel(zone, level)
 
 	fs.mount(path, self.load_dir)
 
-	local popup = Dialog:simplePopup("Loading level", "Please wait while loading the level...")
-	popup.__showup = nil
+	local popup = Dialog:simpleWaiter("Loading level", "Please wait while loading the level...")
 	core.display.forceRedraw()
 
 	local loadedLevel = self:loadReal("main")
@@ -467,7 +458,7 @@ function _M:loadLevel(zone, level)
 		o:loaded()
 	end
 
-	game:unregisterDialog(popup)
+	popup:done()
 
 	fs.umount(path)
 	return loadedLevel
@@ -480,8 +471,7 @@ function _M:loadEntity(name)
 
 	fs.mount(path, self.load_dir)
 
-	local popup = Dialog:simplePopup("Loading entity", "Please wait while loading the entity...")
-	popup.__showup = nil
+	local popup = Dialog:simpleWaiter("Loading entity", "Please wait while loading the entity...")
 	core.display.forceRedraw()
 
 	local loadedEntity = self:loadReal("main")
@@ -492,7 +482,7 @@ function _M:loadEntity(name)
 		o:loaded()
 	end
 
-	game:unregisterDialog(popup)
+	popup:done()
 
 	fs.umount(path)
 	return loadedEntity

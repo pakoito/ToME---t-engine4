@@ -125,8 +125,7 @@ end
 function _M:forceWait()
 	if #self.pipe == 0 then return end
 
-	local popup = Dialog:simplePopup("Saving...", "Please wait while saving...", nil, true)
-	popup.__showup = nil
+	local popup = Dialog:simpleWaiter("Saving...", "Please wait while saving...", nil, 1000)
 	core.display.forceRedraw()
 
 	local cnt = 0
@@ -136,7 +135,7 @@ function _M:forceWait()
 		coroutine.resume(self.co)
 	end
 
-	game:unregisterDialog(popup)
+	popup:done()
 end
 
 --- Allow to ignore saveversion token

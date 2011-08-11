@@ -29,7 +29,6 @@
 #include "lualib.h"
 #include "luasocket.h"
 #include "luasocket/mime.h"
-#include "lua_externs.h"
 #include "SFMT.h"
 
 #include "types.h"
@@ -42,6 +41,7 @@
 #include "serial.h"
 #include "profile.h"
 #include "main.h"
+#include "lua_externs.h"
 #include "runner/core.h"
 #ifdef SELFEXE_WINDOWS
 #include <windows.h>
@@ -393,6 +393,8 @@ void on_tick()
 
 void call_draw(int nb_keyframes)
 {
+	if (draw_waiting(L)) return;
+
 	if (nb_keyframes > 30) nb_keyframes = 30;
 
 	// Notify the particles threads that there are new keyframes

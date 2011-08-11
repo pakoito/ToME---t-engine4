@@ -24,6 +24,51 @@ local Base = require "engine.ui.Base"
 --- A generic UI button
 module(..., package.seeall, class.inherit(Base))
 
+--- Requests a simple waiter dialog
+function _M:simpleWaiter(title, text, width, count)
+	width = width or 400
+	local w, h = self.font:size(text)
+	local d = new(title, 1, 1)
+	local wait = require("engine.ui.Empty").new{width=width, height=20}
+	d:loadUI{
+		{left = 3, top = 3, ui=require("engine.ui.Textzone").new{width=w+10, height=h+5, text=text}},
+		{left = 3, bottom = 3, ui=wait},
+	}
+	d:setupUI(true, true)
+
+	d.__showup = false
+	d.unload = function(self) core.wait.disable() end
+	d.done = function(self) game:unregisterDialog(self) end
+
+	game:registerDialog(d)
+
+	core.display.forceRedraw()
+	core.wait.enable(count, function()
+		local dx, dy, dw, dh = d.ui_by_ui[wait].x + d.display_x, d.ui_by_ui[wait].y + d.display_y, wait.w, wait.h
+		local i, max, dir, togg = 0, 20, 1, 0
+		local bar = {core.display.loadImage("/data/gfx/waiter/waiter_bar.png"):glTexture()}
+		return function()
+			local x
+			i = i + dir
+			if dir > 0 and i >= max then dir = -1 togg = util.boundWrap(togg + 1, 0, 3)
+			elseif dir < 0 and i <= 0 then dir = 1 togg = util.boundWrap(togg + 1, 0, 3)
+			end
+
+			core.wait.drawLastFrame()
+
+			local w, h = dw * (i / max), dh
+			if togg <= 1 then x = 0
+			else x = dw - w
+			end
+
+			bar[1]:toScreenFull(dx + x, dy, w, h, w * bar[4], h * bar[5])
+		end
+	end)
+
+	return d
+end
+
+
 --- Requests a simple, press any key, dialog
 function _M:listPopup(title, text, list, w, h, fct)
 	local d = new(title, 1, 1)

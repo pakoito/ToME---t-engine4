@@ -230,6 +230,59 @@ function _M:listVaultSavesForCurrent()
 	return lss
 end
 
+--- Make a module loadscreen
+function _M:loadScreen(mod)
+	core.display.forceRedraw()
+	core.wait.enable(50000, function()
+		local i, max, dir, togg = 0, 20, 1, 0
+
+		local bkgs = core.display.loadImage("/data/gfx/background/"..mod.short_name..".png") or core.display.loadImage("/data/gfx/background/tome.png")
+		local sw, sh = core.display.size()
+		local bw, bh = bkgs:getSize()
+		local bkg = {bkgs:glTexture()}
+
+		local logo = {(core.display.loadImage("/data/gfx/background/"..mod.short_name.."-logo.png") or core.display.loadImage("/data/gfx/background/tome-logo.png")):glTexture()}
+
+		local bar = {core.display.loadImage("/data/gfx/waiter/waiter_bar.png"):glTexture()}
+
+		local dw, dh = math.floor(sw / 2), 20
+		local dx, dy = math.floor((sw - dw) / 2), sh - dh
+
+		return function()
+			-- Background
+			local x, y = 0, 0
+			if bw > bh then
+				bh = sw * bh / bw
+				bw = sw
+				y = (sh - bh) / 2
+			else
+				bw = sh * bw / bh
+				bh = sh
+				x = (sw - bw) / 2
+			end
+			bkg[1]:toScreenFull(x, y, bw, bh, bw * bkg[4], bh * bkg[5])
+
+			-- Logo
+			logo[1]:toScreenFull(0, 0, logo[6], logo[7], logo[2], logo[3])
+
+			-- Progressbar
+			local x
+			i = i + dir
+			if dir > 0 and i >= max then dir = -1 togg = util.boundWrap(togg + 1, 0, 3)
+			elseif dir < 0 and i <= 0 then dir = 1 togg = util.boundWrap(togg + 1, 0, 3)
+			end
+
+			local w, h = dw * (i / max), dh
+			if togg <= 1 then x = 0
+			else x = dw - w
+			end
+
+			bar[1]:toScreenFull(dx + x, dy, w, h, w * bar[4], h * bar[5])
+		end
+	end)
+end
+
+
 --- Instanciate the given module, loading it and creating a new game / loading an existing one
 -- @param mod the module definition as given by Module:loadDefinition()
 -- @param name the savefile name
@@ -255,6 +308,8 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 
 	-- Init the module directories
 	mod.load("setup")
+
+	self:loadScreen(mod)
 
 	-- Check MD5sum with the server
 	local md5 = require "md5"
@@ -342,6 +397,8 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 
 	profile:saveGenericProfile("modules_loaded", {name=mod.short_name, nb={"inc", 1}})
 	profile:setConfigsBatch(false)
+
+	core.wait.disable()
 end
 
 --- Setup write dir for a module
