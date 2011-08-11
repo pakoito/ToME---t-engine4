@@ -2396,14 +2396,18 @@ newEffect{
 	long_desc = function(self, eff) return "The target is waiting to be recalled back to the worldmap." end,
 	type = "magical",
 	status = "beneficial",
+	cancel_on_level_change = true,
 	parameters = { },
 	activate = function(self, eff)
+		eff.leveid = game.zone.short_name.."-"..game.level.level
 	end,
 	deactivate = function(self, eff)
 		if eff.allow_override or (self:canBe("worldport") and not self:attr("never_move")) then
 			game:onTickEnd(function()
-				game.logPlayer(self, "You are yanked out of this place!")
-				game:changeLevel(1, eff.where or game.player.last_wilderness)
+				if eff.leveid == game.zone.short_name.."-"..game.level.level then
+					game.logPlayer(self, "You are yanked out of this place!")
+					game:changeLevel(1, eff.where or game.player.last_wilderness)
+				end
 			end)
 		else
 			game.logPlayer(self, "Space restabilizes around you.")
@@ -2417,8 +2421,10 @@ newEffect{
 	long_desc = function(self, eff) return "The target is waiting to be recalled back to Angolwen." end,
 	type = "magical",
 	status = "beneficial",
+	cancel_on_level_change = true,
 	parameters = { },
 	activate = function(self, eff)
+		eff.leveid = game.zone.short_name.."-"..game.level.level
 	end,
 	deactivate = function(self, eff)
 		local seen = false
@@ -2434,8 +2440,10 @@ newEffect{
 
 		if self:canBe("worldport") and not self:attr("never_move") then
 			game:onTickEnd(function()
-				game.logPlayer(self, "You are yanked out of this place!")
-				game:changeLevel(1, "town-angolwen")
+				if eff.leveid == game.zone.short_name.."-"..game.level.level then
+					game.logPlayer(self, "You are yanked out of this place!")
+					game:changeLevel(1, "town-angolwen")
+				end
 			end)
 		else
 			game.logPlayer(self, "Space restabilizes around you.")

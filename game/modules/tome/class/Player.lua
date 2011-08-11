@@ -116,7 +116,10 @@ function _M:onEnterLevel(zone, level)
 	-- Cancel effects
 	local effs = {}
 	for eff_id, p in pairs(self.tmp) do
-		if self.tempeffect_def[eff_id].cancel_on_level_change then effs[#effs+1] = eff_id end
+		if self.tempeffect_def[eff_id].cancel_on_level_change then
+			effs[#effs+1] = eff_id
+			if type(self.tempeffect_def[eff_id].cancel_on_level_change) == "function" then self.tempeffect_def[eff_id].cancel_on_level_change(self, p)  end
+		end
 	end
 	for i, eff_id in ipairs(effs) do self:removeEffect(eff_id) end
 end
