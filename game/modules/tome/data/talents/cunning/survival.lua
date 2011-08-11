@@ -59,7 +59,7 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	info = function(self, t)
-		return ([[You have learnt to disarm traps (%d disarm power).]]):
+		return ([[You have learned to disarm traps (%d disarm power).]]):
 		format(self:getTalentLevel(t) * self:getCun(25, true))
 	end,
 }

@@ -248,7 +248,7 @@ function _M:loadScreen(mod)
 		local middle = {core.display.loadImage("/data/gfx/waiter/middle.png"):glTexture()}
 		local bar = {core.display.loadImage("/data/gfx/waiter/bar.png"):glTexture()}
 
-		local dw, dh = math.floor(sw / 2), 54
+		local dw, dh = math.floor(sw / 2), left[7]
 		local dx, dy = math.floor((sw - dw) / 2), sh - dh
 
 		return function()
