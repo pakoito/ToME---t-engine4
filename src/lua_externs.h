@@ -20,3 +20,4 @@ int luaopen_wait(lua_State *L);
 void create_particles_thread();
 void thread_particle_new_keyframes(int nb_keyframes);
 bool draw_waiting(lua_State *L);
+bool is_waiting();

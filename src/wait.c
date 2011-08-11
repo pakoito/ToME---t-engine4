@@ -35,6 +35,7 @@ extern SDL_Surface *screen;
 static bool wait_hooked = FALSE;
 static int waiting = 0;
 static int waited_count = 0;
+static long waited_ticks = 0;
 static int bkg_realw, bkg_realh, bkg_w, bkg_h;
 static GLuint bkg_t = 0;
 static int wait_draw_ref = LUA_NOREF;
@@ -81,6 +82,12 @@ bool draw_waiting(lua_State *L)
 	return TRUE;
 }
 
+bool is_waiting()
+{
+	if (!waiting) return FALSE;
+	return TRUE;
+}
+
 extern void on_redraw();
 static void hook_wait_display(lua_State *L, lua_Debug *ar)
 {
@@ -89,6 +96,7 @@ static void hook_wait_display(lua_State *L, lua_Debug *ar)
 	on_redraw();
 }
 
+extern long draw_tick_skip;
 static int enable(lua_State *L)
 {
 	waiting++;
@@ -96,6 +104,9 @@ static int enable(lua_State *L)
 	// Grab currently displayed stuff
 	if (waiting == 1)
 	{
+		waited_count = 0;
+		waited_ticks = SDL_GetTicks();
+
 		int w, h;
 		SDL_GetWindowSize(window, &w, &h);
 
@@ -116,8 +127,6 @@ static int enable(lua_State *L)
 		glTexImage2D(GL_TEXTURE_2D, 0, 3, bkg_realw, bkg_realh, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 		glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, w, h);
 		printf("Make wait background texture %d : %dx%d (%d, %d)\n", bkg_t, w, h, bkg_realw, bkg_realh);
-
-		waited_count = 0;
 
 		int count = 300;
 		if (lua_isnumber(L, 1)) count = lua_tonumber(L, 1);
@@ -155,7 +164,8 @@ static int disable(lua_State *L)
 		}
 		if (wait_hooked) lua_sethook(L, NULL, 0, 0);
 		if (wait_draw_ref != LUA_NOREF) luaL_unref(L, LUA_REGISTRYINDEX, wait_draw_ref);
-		printf("Wait finished, counted %d\n", waited_count);
+		waited_ticks = SDL_GetTicks() - waited_ticks;
+		printf("Wait finished, counted %d, %ld ticks\n", waited_count, waited_ticks);
 	}
 	lua_pushboolean(L, waiting > 0);
 	lua_pushnumber(L, waiting);

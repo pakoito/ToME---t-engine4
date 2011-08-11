@@ -458,7 +458,7 @@ void on_redraw()
 
 	/* Gather our frames per second */
 	Frames++;
-	{
+	if (!is_waiting()) {
 		int t = SDL_GetTicks();
 		if (t - T0 >= 1000) {
 			float seconds = (t - T0) / 1000.0;
@@ -471,6 +471,14 @@ void on_redraw()
 			nb_keyframes = 0;
 			count_keyframes = 0;
 		}
+	}
+	else
+	{
+		T0 = SDL_GetTicks();
+		Frames = 0;
+		last_keyframe = 0;
+		nb_keyframes = 0;
+		count_keyframes = 0;
 	}
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
