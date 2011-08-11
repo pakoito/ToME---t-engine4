@@ -29,44 +29,18 @@ function _M:simpleWaiter(title, text, width, count)
 	width = width or 400
 	local w, h = self.font:size(text)
 	local d = new(title, 1, 1)
-	local wait = require("engine.ui.Empty").new{width=width, height=20}
+	local wait = require("engine.ui.Waiter").new{size=width}
 	d:loadUI{
 		{left = 3, top = 3, ui=require("engine.ui.Textzone").new{width=w+10, height=h+5, text=text}},
 		{left = 3, bottom = 3, ui=wait},
 	}
 	d:setupUI(true, true)
 
-	d.__showup = false
-	d.unload = function(self) core.wait.disable() end
 	d.done = function(self) game:unregisterDialog(self) end
 
 	game:registerDialog(d)
 
-	core.display.forceRedraw()
-	core.wait.enable(count, function()
-		local dx, dy, dw, dh = d.ui_by_ui[wait].x + d.display_x, d.ui_by_ui[wait].y + d.display_y, wait.w, wait.h
-		local i, max, dir = 0, 20, 1
-		local bar = {core.display.loadImage("/data/gfx/waiter/waiter_bar.png"):glTexture()}
-		return function()
-			-- Background
-			core.wait.drawLastFrame()
-
-			-- Progressbar
-			local x
-			i = i + dir
-			if dir > 0 and i >= max then dir = -1
-			elseif dir < 0 and i <= -max then dir = 1
-			end
-
-			local x = dw * (i / max)
-			local x2 = x + dw
-			x = util.bound(x, 0, dw)
-			x2 = util.bound(x2, 0, dw)
-			local w, h = x2 - x, dh
-
-			bar[1]:toScreenFull(dx + x, dy, w, h, w * bar[4], h * bar[5])
-		end
-	end)
+	core.wait.enable(count, wait:getWaitDisplay(d))
 
 	return d
 end
