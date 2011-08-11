@@ -41,7 +41,7 @@ function resolvers.calc.equip(t, e)
 		end
 		if o then
 			print("Zone made us an equipment according to filter!", o:getName())
-			
+
 			-- curse (done here to ensure object attributes get applied correctly)
 			if e:knowTalent(e.T_CURSED_TOUCH) and not o.cursed_touch then
 				local t = e:getTalentFromId(e.T_CURSED_TOUCH)
@@ -187,11 +187,16 @@ function resolvers.calc.drop_randart(t, e)
 end
 
 --- Resolves drops creation for an actor
-function resolvers.store(def, faction)
-	return {__resolver="store", def, faction}
+function resolvers.store(def, faction, door, sign)
+	return {__resolver="store", def, faction, door, sign}
 end
 --- Actually resolve the drops creation
 function resolvers.calc.store(t, e)
+	if t[3] then
+		e.image = t[3]
+		if t[4] then e.add_mos = {{display_x=0.6, image=t[4]}} end
+	end
+
 	e.store_faction = t[2]
 	t = t[1]
 

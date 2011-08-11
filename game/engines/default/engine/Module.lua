@@ -400,6 +400,8 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 	profile:setConfigsBatch(false)
 
 	core.wait.disable()
+
+	core.display.resetAllFonts("normal")
 end
 
 --- Setup write dir for a module

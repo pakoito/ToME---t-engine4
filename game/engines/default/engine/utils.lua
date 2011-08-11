@@ -466,6 +466,13 @@ end
 
 local font_cache = {}
 local oldNewFont = core.display.newFont
+
+core.display.resetAllFonts = function(state)
+	for font, sizes in pairs(font_cache) do for size, f in pairs(sizes) do
+		f:setStyle(state)
+	end end
+end
+
 core.display.newFont = function(font, size)
 	if font_cache[font] and font_cache[font][size] then print("Using cached font", font, size) return font_cache[font][size] end
 	font_cache[font] = font_cache[font] or {}

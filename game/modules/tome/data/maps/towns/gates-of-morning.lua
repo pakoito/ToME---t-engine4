@@ -90,19 +90,19 @@ mmmmmmmmmmmmm..............mmmmmm..........mmmmmmm
 mmmmmmmmmmmmm................mm..............mmmmm
 mmmmmmmmmmmm.........................####.....mmmm
 mmmmmmmmm............................####.....mmmm
-mmmmmmmm.......###...................####.....mmmm
-mmmmmmmm......######..................8A.....mmmmm
+mmmmmmmm.......###...................8#A#.....mmmm
+mmmmmmmm......######................._._.....mmmmm
 mmmmmmmm......######...#####....._______.....mmmmm
 mmmmmmmm......##6###...#####..____....._....mmmmmm
 mmmmmmmm........_......###7#.._.......__....mmmmmm
-mmmmmmmm........_........._..__......__.....mmmmmm
-mmmmmmm.........______________..#####_......mmmmmm
-mmmmmm.........._........._....######_.......mmmmm
-mmmmmm.........._..####..._....######_.......mmmmm
-mmmmm...###....__..#####.._..s..##345_...###..mmmm
-mmmmm...###...._...#####.._.......____...#Z#..mmmm
-mmmmm..#####..._...#12#..._......__......._...mmmm
-mmmmm..#0#9#..._....__....________......___....mmm
+mmmmmmmm........_........._..__......._.....mmmmmm
+mmmmmmm.........______________..#####._.....mmmmmm
+mmmmmm.........._........._....#######_......mmmmm
+mmmmmm.........._..####..._....#######_......mmmmm
+mmmmm...###....__..#####.._..s..3#4#5#_..###..mmmm
+mmmmm...###...._...#####.._......._____..#Z#..mmmm
+mmmmm..#####..._...1#2#..._......__......._...mmmm
+mmmmm..#0#9#..._...___....________......___....mmm
  mmmm...___....______.....__...._......__......mmm
  mmm....._....._.........._.....________........mm
   mm.....___..__.........._..........._.........mm
@@ -126,9 +126,9 @@ mmmmmm     tt~~~~tt         *****p**p********mmmmm
 mmmmmm    ttt~~~           **p***************mmmmm
 mmmmm    ttt~~~            ******************mmmmm
 mmmmm    ttt~~            *****:::::::*******mmmmm
-mmmmm      ~~             ****:::::::::::::*mmmmmm
-mmmmmmm   ~~~            ***:::::::::::::::mmmmmmm
-mmmmmmm  ~~~  mmmm     ****:::::::::::::::mmmmmmmm
+mmmmm       ~             ****:::::::::::::*mmmmmm
+mmmmmmm     ~            ***:::::::::::::::mmmmmmm
+mmmmmmm  ~~~~ mmmm     ****:::::::::::::::mmmmmmmm
 mmmmmm~~~~~mmmmmmmm    **mmmmm::::::::::mmmmmmmmmm
 mmmmmm~mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
 mmmmmm~mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm]]

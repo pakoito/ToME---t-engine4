@@ -22,27 +22,33 @@ load("/data/general/traps/store.lua")
 newEntity{ base = "BASE_STORE", define_as = "CLOTH_ARMOR_STORE",
 	name="Tailor",
 	display='2', color=colors.RED,
-	resolvers.store("CLOTH_ARMOR"),
+	resolvers.store("CLOTH_ARMOR", "shalore", "store/shop_door.png", "store/shop_sign_tailor.png"),
 }
 newEntity{ base = "BASE_STORE", define_as = "LIGHT_ARMOR_STORE",
 	name="Tanner",
 	display='2', color=colors.UMBER,
-	resolvers.store("LIGHT_ARMOR"),
+	resolvers.store("LIGHT_ARMOR", "shalore", "store/shop_door.png", "store/shop_sign_tanner.png"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "SWORD_WEAPON_STORE",
 	name="Swordsmith",
 	display='3', color=colors.UMBER,
-	resolvers.store("SWORD_WEAPON"),
+	resolvers.store("SWORD_WEAPON", "shalore", "store/shop_door.png", "store/shop_sign_swordsmith.png"),
 }
 newEntity{ base = "BASE_STORE", define_as = "STAFF_WEAPON_STORE",
 	name="Staff carver",
 	display='3', color=colors.RED,
-	resolvers.store("STAFF_WEAPON"),
+	resolvers.store("STAFF_WEAPON", "shalore", "store/shop_door.png", "store/shop_sign_staves.png"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "RUNEMASTER",
 	name="Runemaster",
 	display='5', color=colors.RED,
-	resolvers.store("SCROLL"),
+	resolvers.store("SCROLL", "shalore", "store/shop_door.png", "store/shop_sign_alchemist.png"),
+}
+
+newEntity{ base = "BASE_STORE", define_as = "ALCHEMIST",
+	name="Home of Marus the Alchemist",
+	display='*', color=colors.UMBER, image = "store/shop_door_barred.png",
+	resolvers.chatfeature("alchemist-elvala", "allied-kingdoms"),
 }
