@@ -233,8 +233,8 @@ end
 --- Make a module loadscreen
 function _M:loadScreen(mod)
 	core.display.forceRedraw()
-	core.wait.enable(50000, function()
-		local i, max, dir, togg = 0, 20, 1, 0
+	core.wait.enable(10000, function()
+		local i, max, dir = 0, 20, 1
 
 		local bkgs = core.display.loadImage("/data/gfx/background/"..mod.short_name..".png") or core.display.loadImage("/data/gfx/background/tome.png")
 		local sw, sh = core.display.size()
@@ -268,14 +268,15 @@ function _M:loadScreen(mod)
 			-- Progressbar
 			local x
 			i = i + dir
-			if dir > 0 and i >= max then dir = -1 togg = util.boundWrap(togg + 1, 0, 3)
-			elseif dir < 0 and i <= 0 then dir = 1 togg = util.boundWrap(togg + 1, 0, 3)
+			if dir > 0 and i >= max then dir = -1
+			elseif dir < 0 and i <= -max then dir = 1
 			end
 
-			local w, h = dw * (i / max), dh
-			if togg <= 1 then x = 0
-			else x = dw - w
-			end
+			local x = dw * (i / max)
+			local x2 = x + dw
+			x = util.bound(x, 0, dw)
+			x2 = util.bound(x2, 0, dw)
+			local w, h = x2 - x, dh
 
 			bar[1]:toScreenFull(dx + x, dy, w, h, w * bar[4], h * bar[5])
 		end

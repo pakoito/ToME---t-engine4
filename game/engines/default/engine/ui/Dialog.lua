@@ -45,21 +45,24 @@ function _M:simpleWaiter(title, text, width, count)
 	core.display.forceRedraw()
 	core.wait.enable(count, function()
 		local dx, dy, dw, dh = d.ui_by_ui[wait].x + d.display_x, d.ui_by_ui[wait].y + d.display_y, wait.w, wait.h
-		local i, max, dir, togg = 0, 20, 1, 0
+		local i, max, dir = 0, 20, 1
 		local bar = {core.display.loadImage("/data/gfx/waiter/waiter_bar.png"):glTexture()}
 		return function()
-			local x
-			i = i + dir
-			if dir > 0 and i >= max then dir = -1 togg = util.boundWrap(togg + 1, 0, 3)
-			elseif dir < 0 and i <= 0 then dir = 1 togg = util.boundWrap(togg + 1, 0, 3)
-			end
-
+			-- Background
 			core.wait.drawLastFrame()
 
-			local w, h = dw * (i / max), dh
-			if togg <= 1 then x = 0
-			else x = dw - w
+			-- Progressbar
+			local x
+			i = i + dir
+			if dir > 0 and i >= max then dir = -1
+			elseif dir < 0 and i <= -max then dir = 1
 			end
+
+			local x = dw * (i / max)
+			local x2 = x + dw
+			x = util.bound(x, 0, dw)
+			x2 = util.bound(x2, 0, dw)
+			local w, h = x2 - x, dh
 
 			bar[1]:toScreenFull(dx + x, dy, w, h, w * bar[4], h * bar[5])
 		end

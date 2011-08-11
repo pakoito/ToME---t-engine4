@@ -85,6 +85,7 @@ extern void on_redraw();
 static void hook_wait_display(lua_State *L, lua_Debug *ar)
 {
 	waited_count++;
+	SDL_PumpEvents();
 	on_redraw();
 }
 
