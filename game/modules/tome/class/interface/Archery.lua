@@ -178,7 +178,7 @@ local function archery_projectile(tx, ty, tg, self)
 		local dam = t.getDamage(self, t)
 		DamageType:get(DamageType.TEMPORAL).projector(self, target.x, target.y, DamageType.TEMPORAL, dam)
 	end
-	
+
 	-- Conduit (Psi)
 	if hitted and not target.dead and self:knowTalent(self.T_CONDUIT) and self:isTalentActive(self.T_CONDUIT) and self.use_psi_combat then
 		local t =  self:getTalentFromId(self.T_CONDUIT)
@@ -234,7 +234,7 @@ function _M:archeryShoot(targets, talent, tg, params)
 	print("[SHOOT WITH]", weapon.name, ammo.name)
 	local realweapon = weapon
 	weapon = weapon.combat
-	
+
 	local tg = tg or {type="bolt"}
 	tg.talent = tg.talent or talent
 

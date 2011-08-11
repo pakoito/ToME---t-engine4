@@ -474,6 +474,7 @@ void on_redraw()
 	}
 	else
 	{
+		// If we are waiting we ignore the fact that we are losing time, this way we never try to "catch up" later
 		T0 = SDL_GetTicks();
 		Frames = 0;
 		last_keyframe = 0;

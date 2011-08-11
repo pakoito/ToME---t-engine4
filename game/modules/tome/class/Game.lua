@@ -168,7 +168,11 @@ function _M:run()
 	self:setupMouse()
 
 	-- Starting from here we create a new game
-	if self.player and self.player.dead then util.showMainMenu() return end
+	if self.player and self.player.dead then
+		print("Player is dead, rebooting")
+		util.showMainMenu()
+		return
+	end
 	if not self.player then self:newGame() end
 
 	self:initTargeting()
@@ -1544,10 +1548,6 @@ function _M:onQuit()
 	if not self.quit_dialog and not self.player.dead and not self:hasDialogUp() then
 		self.quit_dialog = Dialog:yesnoPopup("Save and exit?", "Save and exit?", function(ok)
 			if ok then
-				local d = engine.ui.Dialog:simplePopup("Quitting...", "Quitting...", nil, true)
-				d.__show_popup = false
-				core.display.forceRedraw()
-
 				-- savefile_pipe is created as a global by the engine
 				self:saveGame()
 				util.showMainMenu()

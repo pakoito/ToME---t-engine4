@@ -34,18 +34,26 @@ newTalent{
 	type = {"psionic/grip", 1},
 	require = psi_wil_20_1,
 	points = 5,
-	mode = "passive",
-	on_learn = function(self, t)
-		self.combat_def_ranged = (self.combat_def_ranged or 0) + 8
+	mode = "sustained",
+	sustain_psi = 35,
+	getEvasion = function(self, t) return 10 + self:getTalentLevel(t) * 7, self:getTalentLevel(t) >= 4 and 2 or 1 end,
+	activate = function(self, t)
+		local chance, spread = t.getEvasion(self, t)
+		return {
+			chance = self:addTemporaryValue("projectile_evasion", chance),
+			spread = self:addTemporaryValue("projectile_evasion_spread", spread),
+		}
 	end,
-
-	on_unlearn = function(self, t)
-		self.combat_def_ranged = self.combat_def_ranged - 8
+	deactivate = function(self, t, p)
+		self:removeTemporaryValue("projectile_evasion", p.chance)
+		self:removeTemporaryValue("projectile_evasion_spread", p.spread)
+		return true
 	end,
 	info = function(self, t)
-		local boost = self:getTalentLevelRaw(t) * 8
-		return ([[You learn to devote a portion of your attention to mentally swatting, grabbing, or otherwise deflecting incoming projectiles. Increases ranged defense by %d.]]):
-		format(boost)
+		local chance, spread = t.getEvasion(self, t)
+		return ([[You learn to devote a portion of your attention to mentally swatting, grabbing, or otherwise deflecting incoming projectiles.
+		All projectiles targetting you have a %d%% chance to instead target a spot %d grids nearby.]]):
+		format(chance, spread)
 	end,
 
 }

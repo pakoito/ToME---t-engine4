@@ -2859,11 +2859,21 @@ function _M:on_set_temporary_effect(eff_id, e, p)
 	end
 end
 
+--- Called when we are the target of a projection
+function _M:on_project_acquire(tx, ty, who, t, x, y, damtype, dam, particles, is_projectile, mods)
+	if is_projectile and self:attr("projectile_evasion") and rng.percent(self.projectile_evasion) then
+		local spread = self.projectile_evasion_spread or 1
+		mods.x = x + rng.range(-spread, spread)
+		mods.y = y + rng.range(-spread, spread)
+		return true
+	end
+end
+
 --- Called when we are projected upon
 -- This is used to do spell reflection, antimagic, ...
 function _M:on_project(tx, ty, who, t, x, y, damtype, dam, particles)
 	-- Spell reflect
-	if self:attr("spell_reflect") and ((t.talent and t.talent.reflectable) or t.reflectable) and rng.percent(self:attr("spell_reflect")) then
+	if self:attr("spell_reflect") and (t.talent and t.talent.reflectable and t.talent.is_spell) and rng.percent(self:attr("spell_reflect")) then
 		game.logSeen(self, "%s reflects the spell!", self.name:capitalize())
 		-- Setup the bypass so it does not eternally reflect between two actors
 		t.bypass = true

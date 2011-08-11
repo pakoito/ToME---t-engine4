@@ -40,6 +40,12 @@ end
 function _M:project(t, x, y, damtype, dam, particles)
 	if type(particles) ~= "table" then particles = nil end
 
+	local mods = {}
+	if game.level.map:checkAllEntities(x, y, "on_project_acquire", self, t, x, y, damtype, dam, particles, false, mods) then
+		if mods.x then x = mods.x end
+		if mods.y then y = mods.y end
+	end
+
 --	if type(dam) == "number" and dam < 0 then return end
 	local typ = Target:getType(t)
 	typ.source_actor = self
@@ -212,6 +218,12 @@ end
 -- @param particles particles effect configuration, or nil
 function _M:projectile(t, x, y, damtype, dam, particles)
 	if type(particles) ~= "function" and type(particles) ~= "table" then particles = nil end
+
+	local mods = {}
+	if game.level.map:checkAllEntities(x, y, "on_project_acquire", self, t, x, y, damtype, dam, particles, true, mods) then
+		if mods.x then x = mods.x end
+		if mods.y then y = mods.y end
+	end
 
 --	if type(dam) == "number" and dam < 0 then return end
 	local typ = Target:getType(t)
