@@ -269,7 +269,8 @@ function _M:saveZone(zone, no_dialog)
 	core.display.forceRedraw()
 
 	local zip = fs.zipOpen(self.save_dir..self:nameSaveZone(zone)..".tmp")
-	self:saveObject(zone, zip)
+	local nb = self:saveObject(zone, zip)
+	zip:add("nb", tostring(nb))
 	zip:close()
 	fs.delete(self.save_dir..self:nameSaveZone(zone))
 	fs.rename(self.save_dir..self:nameSaveZone(zone)..".tmp", self.save_dir..self:nameSaveZone(zone))
@@ -297,7 +298,8 @@ function _M:saveLevel(level, no_dialog)
 	core.display.forceRedraw()
 
 	local zip = fs.zipOpen(self.save_dir..self:nameSaveLevel(level)..".tmp")
-	self:saveObject(level, zip)
+	local nb = self:saveObject(level, zip)
+	zip:add("nb", tostring(nb))
 	zip:close()
 	fs.delete(self.save_dir..self:nameSaveLevel(level))
 	fs.rename(self.save_dir..self:nameSaveLevel(level)..".tmp", self.save_dir..self:nameSaveLevel(level))
@@ -325,7 +327,8 @@ function _M:saveEntity(e, no_dialog)
 	core.display.forceRedraw()
 
 	local zip = fs.zipOpen(self.save_dir..self:nameSaveEntity(e)..".tmp")
-	self:saveObject(e, zip)
+	local nb = self:saveObject(e, zip)
+	zip:add("nb", tostring(nb))
 	zip:close()
 	fs.delete(self.save_dir..self:nameSaveEntity(e))
 	fs.rename(self.save_dir..self:nameSaveEntity(e)..".tmp", self.save_dir..self:nameSaveEntity(e))
@@ -464,7 +467,15 @@ function _M:loadZone(zone)
 
 	fs.mount(path, self.load_dir)
 
-	local popup = Dialog:simpleWaiter("Loading zone", "Please wait while loading the zone...")
+	local f = fs.open(self.load_dir.."nb", "r")
+	local nb = 0
+	if f then
+		nb = tonumber(f:read()) or 100
+		f:close()
+	end
+
+	local popup = Dialog:simpleWaiter("Loading zone", "Please wait while loading the zone...", nil, nil, nb > 0 and nb)
+	core.wait.enableManualTick(true)
 	core.display.forceRedraw()
 
 	local loadedZone = self:loadReal("main")
@@ -475,6 +486,7 @@ function _M:loadZone(zone)
 		o:loaded()
 	end
 
+	core.wait.enableManualTick(false)
 	popup:done()
 
 	fs.umount(path)

@@ -187,6 +187,7 @@ static int disable(lua_State *L)
 
 static int enable_manual_tick(lua_State *L)
 {
+	if (!waiting) return 0;
 	manual_ticks_enabled = lua_toboolean(L, 1);
 	if (!manual_ticks_enabled) lua_sethook(L, hook_wait_display, LUA_MASKCOUNT, wait_hooked);
 	else lua_sethook(L, NULL, 0, 0);
@@ -195,6 +196,7 @@ static int enable_manual_tick(lua_State *L)
 
 static int manual_tick(lua_State *L)
 {
+	if (!waiting) return 0;
 	if (manual_ticks_enabled)
 	{
 		waited_count += lua_tonumber(L, 1);
@@ -205,6 +207,7 @@ static int manual_tick(lua_State *L)
 
 static int add_max_ticks(lua_State *L)
 {
+	if (!waiting) return 0;
 	waited_count_max += lua_tonumber(L, 1);
 	return 0;
 }

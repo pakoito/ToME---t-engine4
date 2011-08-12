@@ -25,11 +25,11 @@ local Base = require "engine.ui.Base"
 module(..., package.seeall, class.inherit(Base))
 
 --- Requests a simple waiter dialog
-function _M:simpleWaiter(title, text, width, count)
+function _M:simpleWaiter(title, text, width, count, max)
 	width = width or 400
 	local w, h = self.font:size(text)
 	local d = new(title, 1, 1)
-	local wait = require("engine.ui.Waiter").new{size=width}
+	local wait = require("engine.ui.Waiter").new{size=width, known_max=max}
 	d:loadUI{
 		{left = 3, top = 3, ui=require("engine.ui.Textzone").new{width=w+10, height=h+5, text=text}},
 		{left = 3, bottom = 3, ui=wait},
