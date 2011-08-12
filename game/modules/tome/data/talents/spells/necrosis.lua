@@ -48,99 +48,83 @@ newTalent{
 	type = {"spell/necrosis",2},
 	require = spells_req2,
 	points = 5,
-	random_ego = "attack",
-	mana = 30,
-	cooldown = 18,
-	tactical = { ATTACK = 1, DISABLE = 3 },
-	range = 0,
-	radius = function(self, t)
-		return 3 + self:getTalentLevelRaw(t)
-	end,
+	mana = 70,
+	cooldown = 30,
+	tactical = { ATTACK = 3, DISABLE = 2 },
+	range = 7,
 	requires_target = true,
-	target = function(self, t)
-		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
-	end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 120) end,
-	getStunDuration = function(self, t) return self:getTalentLevelRaw(t) + 2 end,
+	getMax = function(self, t) return 200 + self:combatTalentSpellDamage(t, 28, 850) end,
+	getDamage = function(self, t) return 50 + self:combatTalentSpellDamage(t, 10, 100) end,
 	action = function(self, t)
-		local tg = self:getTalentTarget(t)
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.FLAMESHOCK, {dur=t.getStunDuration(self, t), dam=self:spellCrit(t.getDamage(self, t))})
-
-		if self:attr("burning_wake") then
-			local l = line.new(self.x, self.y, x, y)
-			local lx, ly = l()
-			local dir = lx and coord_to_dir[lx - self.x][ly - self.y] or 6
-
-			game.level.map:addEffect(self,
-				self.x, self.y, 4,
-				DamageType.INFERNO, self:attr("burning_wake"),
-				tg.radius,
-				{angle=math.deg(math.atan2(y - self.y, x - self.x))}, 55,
-				{type="inferno"},
-				nil, self:spellFriendlyFire()
-			)
-		end
-		game.level.map:particleEmitter(self.x, self.y, tg.radius, "breath_fire", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
-		game:playSoundNear(self, "talents/fire")
+		self:project(tg, x, y, function(px, py)
+			local target = game.level.map(px, py, Map.ACTOR)
+			if not target then return end
+			local dam = target.life * t.getDamage(self, t) / 100
+			dam = math.min(dam, t.getMax(self, t))
+			target:setEffect(target.EFF_IMPENDING_DOOM, 10, {dam=dam/10, src=self})
+		end, 1, {type="freeze"})
 		return true
 	end,
 	info = function(self, t)
-		local damage = t.getDamage(self, t)
-		local stunduration = t.getStunDuration(self, t)
-		return ([[Conjures up a cone of flame. Any target caught in the area will take %0.2f fire damage and be paralyzed for %d turns.
+		return ([[Your target doom draws near, it can not regenerate or heal at all and will take %d%% of its remaining life (or %0.2f, whichever is lower) over 10 turns as arcane damage.
 		The damage will increase with the Magic stat]]):
-		format(damDesc(self, DamageType.FIRE, damage), stunduration)
+		format(t.getDamage(self, t), t.getMax(self, t))
 	end,
 }
 
 newTalent{
-	name = "Reanimation",
+	name = "Undeath Link",
 	type = {"spell/necrosis",3},
 	require = spells_req3,
 	points = 5,
 	random_ego = "attack",
-	mana = 40,
-	cooldown = 8,
-	tactical = { ATTACKAREA = 2 },
-	range = 7,
-	radius = function(self, t)
-		return 1 + self:getTalentLevelRaw(t)
-	end,
-	proj_speed = 4,
-	direct_hit = true,
-	requires_target = true,
-	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=self:spellFriendlyFire(), talent=t, display={particle="bolt_fire", trail="firetrail"}}
-	end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 28, 280) end,
-	action = function(self, t)
-		local tg = self:getTalentTarget(t)
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		self:projectile(tg, x, y, DamageType.FIRE, self:spellCrit(t.getDamage(self, t)), function(self, tg, x, y, grids)
-			game.level.map:particleEmitter(x, y, tg.radius, "fireflash", {radius=tg.radius, tx=x, ty=y})
-			if self:attr("burning_wake") then
-				game.level.map:addEffect(self,
-					x, y, 4,
-					engine.DamageType.INFERNO, self:attr("burning_wake"),
-					tg.radius,
-					5, nil,
-					{type="inferno"},
-					nil, tg.selffire
-				)
+	mana = 35,
+	cooldown = 20,
+	tactical = { HEAL = 2 },
+	getHeal = function(self, t) return 20 + self:combatTalentSpellDamage(t, 10, 70) end,
+	on_pre_use = function(self, t)
+		if game.party and game.party:hasMember(self) then
+			for act, def in pairs(game.party.members) do
+				if act.summoner and act.summoner == self and act.necrotic_minion then
+					return true
+				end
 			end
-		end)
-		game:playSoundNear(self, "talents/fireflash")
+		else
+			for uid, act in pairs(game.level.entities) do
+				if act.summoner and act.summoner == self and act.necrotic_minion then
+					return true
+				end
+			end
+		end
+		return false
+	end,
+	action = function(self, t)
+		local heal = t.getHeal(self, t)
+		if game.party and game.party:hasMember(self) then
+			for act, def in pairs(game.party.members) do
+				if act.summoner and act.summoner == self and act.necrotic_minion then
+					act:takeHit(act.max_life * heal / 100, self)
+				end
+			end
+		else
+			for uid, act in pairs(game.level.entities) do
+				if act.summoner and act.summoner == self and act.necrotic_minion then
+					act:takeHit(act.max_life * heal / 100, self)
+				end
+			end
+		end
+		self:heal(self.max_life * heal / 100)
+		game:playSoundNear(self, "talents/ice")
 		return true
 	end,
 	info = function(self, t)
-		local damage = t.getDamage(self, t)
-		local radius = self:getTalentRadius(t)
-		return ([[Conjures up a bolt of fire moving toward the target that explodes into a flash of fire doing %0.2f fire damage in a radius of %d.
-		The damage will increase with the Magic stat]]):
-		format(damDesc(self, DamageType.FIRE, damage), radius)
+		local heal = t.getHeal(self, t)
+		return ([[Absorbs %d%% of all your minions life (possibly destroying them) and use this energy to heal you for %d%% of your total life.
+		The healing will increase with the Magic stat]]):
+		format(heal, heal)
 	end,
 }
 

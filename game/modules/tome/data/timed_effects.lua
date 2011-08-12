@@ -346,6 +346,7 @@ newEffect{
 
 		eff.hp = eff.hp or 100
 		eff.tmpid = self:addTemporaryValue("encased_in_ice", 1)
+		eff.healid = self:addTemporaryValue("no_healing", 1)
 		eff.moveid = self:addTemporaryValue("never_move", 1)
 		eff.frozid = self:addTemporaryValue("frozen", 1)
 		eff.defid = self:addTemporaryValue("combat_def", -1000)
@@ -360,6 +361,7 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("encased_in_ice", eff.tmpid)
+		self:removeTemporaryValue("no_healing", eff.healid)
 		self:removeTemporaryValue("never_move", eff.moveid)
 		self:removeTemporaryValue("frozen", eff.frozid)
 		self:removeTemporaryValue("combat_def", eff.defid)
@@ -4345,5 +4347,26 @@ newEffect{
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("resists", eff.rstid)
 		self:removeTemporaryValue("inc_damage", eff.dmgid)
+	end,
+}
+
+newEffect{
+	name = "IMPENDING_DOOM",
+	desc = "Impending Doom",
+	long_desc = function(self, eff) return ("The target's final doom is drawing near, preventing all forms of healing and dealing %0.2f arcane damage per turn. The effect will stop if the caster dies."):format(eff.dam) end,
+	type = "magical",
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# is doomed!", "+Doomed" end,
+	on_lose = function(self, err) return "#Target# is freed from the impending doom.", "-Doomed" end,
+	activate = function(self, eff)
+		eff.healid = self:addTemporaryValue("no_healing", 1)
+	end,
+	on_timeout = function(self, eff)
+		if eff.src.dead or not game.level:hasEntity(eff.src) then return true end
+		DamageType:get(DamageType.ARCANE).projector(eff.src, self.x, self.y, DamageType.ARCANE, eff.dam)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("no_healing", eff.healid)
 	end,
 }

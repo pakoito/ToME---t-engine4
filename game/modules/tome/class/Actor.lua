@@ -910,7 +910,7 @@ end
 --- Called before healing
 function _M:onHeal(value, src)
 	if self:hasEffect(self.EFF_UNSTOPPABLE) then return 0 end
-	if self:attr("encased_in_ice") then return 0 end
+	if self:attr("no_healing") then return 0 end
 
 	value = value * util.bound((self.healing_factor or 1), 0, 2.5)
 

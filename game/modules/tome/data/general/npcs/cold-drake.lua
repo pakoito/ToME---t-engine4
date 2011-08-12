@@ -39,7 +39,6 @@ newEntity{
 	resists = { [DamageType.COLD] = 100, },
 
 	knockback_immune = 1,
-	stun_immune = 1,
 	stun_immune = 0.5,
 	blind_immune = 0.5,
 }
