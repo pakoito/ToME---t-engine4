@@ -106,6 +106,7 @@ function _M:saveObject(obj, zip)
 		tbl:save()
 		savefile_pipe.current_nb = savefile_pipe.current_nb + 1
 		processed = processed + 1
+		core.wait.manualTick(1)
 
 		if self.coroutine then coroutine.yield() end
 	end
@@ -500,7 +501,14 @@ function _M:loadLevel(zone, level)
 
 	fs.mount(path, self.load_dir)
 
-	local popup = Dialog:simpleWaiter("Loading level", "Please wait while loading the level...")
+	local f = fs.open(self.load_dir.."nb", "r")
+	local nb = 0
+	if f then
+		nb = tonumber(f:read()) or 100
+		f:close()
+	end
+
+	local popup = Dialog:simpleWaiter("Loading level", "Please wait while loading the level...", nil, nil, nb > 0 and nb)
 	core.display.forceRedraw()
 
 	local loadedLevel = self:loadReal("main")
@@ -524,7 +532,14 @@ function _M:loadEntity(name)
 
 	fs.mount(path, self.load_dir)
 
-	local popup = Dialog:simpleWaiter("Loading entity", "Please wait while loading the entity...")
+	local f = fs.open(self.load_dir.."nb", "r")
+	local nb = 0
+	if f then
+		nb = tonumber(f:read()) or 100
+		f:close()
+	end
+
+	local popup = Dialog:simpleWaiter("Loading entity", "Please wait while loading the entity...", nil, nil, nb > 0 and nb)
 	core.display.forceRedraw()
 
 	local loadedEntity = self:loadReal("main")
