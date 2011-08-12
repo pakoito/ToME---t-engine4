@@ -50,13 +50,21 @@ newTalent{
 		local hardiness = t.getArmorHardiness(self, t)
 		local armor = t.getArmor(self, t)
 		local criticalreduction = t.getCriticalChanceReduction(self, t)
+		local classrestriction = ""
+		if self.descriptor.subclass == "Brawler" then
+			classrestriction = "(Note that brawlers will be unable to perform many of their talents in massive armour.)"
+		end
+		if self:knowTalent(self.T_STEALTH) then
+			classrestriction = "(Note that wearing mail or plate armour will interfere with stealth.)"
+		end
 		return ([[Teaches the usage of armours. Increases armour value by %d and reduces chance to be critically hit by %d%% when wearing a heavy mail armour or a massive plate armour.
 		It also increases armour hardiness by %d%%.
 		At level 1 it allows you to wear gauntlets, helms and heavy boots.
 		At level 2 it allows you to wear heavy mail armour.
 		At level 3 it allows you to wear shields.
-		At level 4 it allows you to wear massive plate armour.]]):
-		format(armor, criticalreduction, hardiness)
+		At level 4 it allows you to wear massive plate armour.
+		%s]]):
+		format(armor, criticalreduction, hardiness, classrestriction)
 	end,
 }
 

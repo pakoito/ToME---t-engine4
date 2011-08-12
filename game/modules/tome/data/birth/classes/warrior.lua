@@ -198,7 +198,7 @@ newBirthDescriptor{
 		["cunning/tactical"]={true, 0.3},
 		["cunning/survival"]={false, 0},
 		["technique/combat-training"]={true, 0.1},
-		["technique/field-control"]={false, 0.3},
+		["technique/field-control"]={true, 0},
 		["technique/combat-techniques-active"]={true, 0.1},
 		["technique/combat-techniques-passive"]={true, 0.1},
 		["technique/pugilism"]={true, 0.3},

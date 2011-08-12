@@ -40,11 +40,11 @@ newTalentType{ allow_random=true, type="technique/combat-training", name = "comb
 newTalentType{ allow_random=true, type="technique/magical-combat", name = "magical combat", description = "The blending together of magic and melee prowess." }
 
 -- Unarmed Combat
-newTalentType{ is_unarmed=true, allow_random=true, type="technique/pugilism", name = "pugilism", description = "Boxing techniques." }
-newTalentType{ is_unarmed=true, allow_random=true, type="technique/finishing-moves", name = "finishing moves", description = "Finishing moves that use combo points." }
-newTalentType{ is_unarmed=true, allow_random=true, type="technique/grappling", name = "grappling", description = "Grappling techniques." }
-newTalentType{ is_unarmed=true, allow_random=true, type="technique/unarmed-discipline", name = "unarmed discipline", description = "Advanced unarmed techniques including kicks and throws." }
-newTalentType{ is_unarmed=true, allow_random=true, type="technique/unarmed-training", name = "unarmed training", description = "Teaches various martial arts techniques." }
+newTalentType{ is_unarmed=true, allow_random=true, type="technique/pugilism", name = "pugilism", description = "Unarmed Boxing techniques that may not be practiced in massive armor or while a weapon or shield is equipped." }
+newTalentType{ is_unarmed=true, allow_random=true, type="technique/finishing-moves", name = "finishing moves", description = "Finishing moves that use combo points and may not be practiced in massive armor or while a weapon or shield is equipped." }
+newTalentType{ is_unarmed=true, allow_random=true, type="technique/grappling", name = "grappling", description = "Grappling techniques that may not be practiced in massive armor or while a weapon or shield is equipped." }
+newTalentType{ is_unarmed=true, allow_random=true, type="technique/unarmed-discipline", name = "unarmed discipline", description = "Advanced unarmed techniques including kicks and throw that may not be practiced in massive armor or while a weapon or shield is equipped." }
+newTalentType{ is_unarmed=true, allow_random=true, type="technique/unarmed-training", name = "unarmed training", description = "Teaches various martial arts techniques that may not be practiced in massive armor or while a weapon or shield is equipped." }
 newTalentType{ allow_random=true, type="technique/conditioning", name = "conditioning", generic = true, description = "Physical conditioning." }
 
 newTalentType{ is_unarmed=true, type="technique/unarmed-other", name = "unarmed other", generic = true, description = "Base martial arts attack and stances." }
