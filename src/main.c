@@ -68,6 +68,7 @@ int mouse_cursor_down_tex = 0, mouse_cursor_down_tex_ref = LUA_NOREF;
 int mouse_cursor_ox = 0, mouse_cursor_oy = 0;
 int mousex = 0, mousey = 0;
 float gamma_correction = 1;
+int requested_fps = 30;
 SDL_TimerID display_timer_id = NULL;
 SDL_TimerID realtime_timer_id = NULL;
 
@@ -614,6 +615,7 @@ void setupRealtime(float freq)
 void setupDisplayTimer(int fps)
 {
 	if (display_timer_id) SDL_RemoveTimer(display_timer_id);
+	requested_fps = fps;
 	display_timer_id = SDL_AddTimer(1000 / fps, redraw_timer, NULL);
 	printf("[ENGINE] Setting requested FPS to %d (%d ms)\n", fps, 1000 / fps);
 }

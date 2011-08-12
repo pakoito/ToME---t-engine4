@@ -363,7 +363,7 @@ function _M:loadReal(load)
 	-- Resolve self referencing tables now
 	resolveSelf(o, o, true)
 
---	core.wait.manualTick()
+	core.wait.manualTick(1)
 	self.loaded[load] = o
 	return o
 end
@@ -393,6 +393,24 @@ function _M:loadWorld()
 	return loadedWorld
 end
 
+--- Loads a world
+function _M:loadWorldSize()
+	local path = fs.getRealPath(self.save_dir..self:nameLoadWorld())
+	if not path or path == "" then return nil, "no savefile" end
+
+	fs.mount(path, self.load_dir)
+
+	local f = fs.open(self.load_dir.."nb", "r")
+	local nb = 0
+	if f then
+		nb = tonumber(f:read()) or 100
+		f:close()
+	end
+
+	fs.umount(path)
+	return nb
+end
+
 --- Loads a game
 function _M:loadGame()
 	local path = fs.getRealPath(self.save_dir..self:nameLoadGame())
@@ -418,6 +436,25 @@ function _M:loadGame()
 	popup:done()
 
 	return loadedGame, delay_fct
+end
+
+
+--- Loads a game
+function _M:loadGameSize()
+	local path = fs.getRealPath(self.save_dir..self:nameLoadGame())
+	if not path or path == "" then return nil, "no savefile" end
+
+	fs.mount(path, self.load_dir)
+
+	local f = fs.open(self.load_dir.."nb", "r")
+	local nb = 0
+	if f then
+		nb = tonumber(f:read()) or 100
+		f:close()
+	end
+
+	fs.umount(path)
+	return nb
 end
 
 --- Loads a zone

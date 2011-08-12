@@ -32,9 +32,11 @@
 extern SDL_Window *window;
 extern SDL_Surface *screen;
 
-static bool wait_hooked = FALSE;
+static int wait_hooked = 0;
+static bool manual_ticks_enabled = FALSE;
 static int waiting = 0;
 static int waited_count = 0;
+static int waited_count_max = 0;
 static long waited_ticks = 0;
 static int bkg_realw, bkg_realh, bkg_w, bkg_h;
 static GLuint bkg_t = 0;
@@ -88,15 +90,16 @@ bool is_waiting()
 	return TRUE;
 }
 
+extern int requested_fps;
 extern void on_redraw();
 static void hook_wait_display(lua_State *L, lua_Debug *ar)
 {
-	waited_count++;
+	if (!manual_ticks_enabled) waited_count++;
 	SDL_PumpEvents();
 
 	static int last_tick = 0;
 	int now = SDL_GetTicks();
-	if (now - last_tick < 300) return;
+	if (now - last_tick < (3000 / requested_fps)) return;
 	last_tick = now;
 	on_redraw();
 }
@@ -110,6 +113,8 @@ static int enable(lua_State *L)
 	if (waiting == 1)
 	{
 		waited_count = 0;
+		waited_count_max = 0;
+		manual_ticks_enabled = FALSE;
 		waited_ticks = SDL_GetTicks();
 
 		int w, h;
@@ -138,7 +143,7 @@ static int enable(lua_State *L)
 		if (!lua_gethookmask(L))
 		{
 			lua_sethook(L, hook_wait_display, LUA_MASKCOUNT, count);
-			wait_hooked = TRUE;
+			wait_hooked = count;
 		}
 
 		if (lua_isfunction(L, 2))
@@ -171,9 +176,43 @@ static int disable(lua_State *L)
 		if (wait_draw_ref != LUA_NOREF) luaL_unref(L, LUA_REGISTRYINDEX, wait_draw_ref);
 		waited_ticks = SDL_GetTicks() - waited_ticks;
 		printf("Wait finished, counted %d, %ld ticks\n", waited_count, waited_ticks);
+
+		waited_count = 0;
+		waited_count_max = 0;
 	}
 	lua_pushboolean(L, waiting > 0);
 	lua_pushnumber(L, waiting);
+	return 2;
+}
+
+static int enable_manual_tick(lua_State *L)
+{
+	manual_ticks_enabled = lua_toboolean(L, 1);
+	if (!manual_ticks_enabled) lua_sethook(L, hook_wait_display, LUA_MASKCOUNT, wait_hooked);
+	else lua_sethook(L, NULL, 0, 0);
+	return 0;
+}
+
+static int manual_tick(lua_State *L)
+{
+	if (manual_ticks_enabled)
+	{
+		waited_count += lua_tonumber(L, 1);
+		hook_wait_display(L, NULL);
+	}
+	return 0;
+}
+
+static int add_max_ticks(lua_State *L)
+{
+	waited_count_max += lua_tonumber(L, 1);
+	return 0;
+}
+
+static int get_ticks(lua_State *L)
+{
+	lua_pushnumber(L, waited_count);
+	lua_pushnumber(L, waited_count_max);
 	return 2;
 }
 
@@ -182,6 +221,10 @@ static const struct luaL_reg mainlib[] =
 	{"drawLastFrame", draw_last_frame},
 	{"enable", enable},
 	{"disable", disable},
+	{"enableManualTick", enable_manual_tick},
+	{"manualTick", manual_tick},
+	{"addMaxTicks", add_max_ticks},
+	{"getTicks", get_ticks},
 	{NULL, NULL},
 };
 

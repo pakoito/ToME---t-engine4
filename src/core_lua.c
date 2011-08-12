@@ -510,7 +510,7 @@ static font_make_texture_line(lua_State *L, SDL_Surface *s, int id, bool is_sepa
 	lua_rawset(L, -3);
 
 	glGenTextures(1, t);
-	tglBindTexture(GL_TEXTURE_2D, *t);
+	tfglBindTexture(GL_TEXTURE_2D, *t);
 	int fw, fh;
 	make_texture_for_surface(s, &fw, &fh);
 	copy_surface_to_texture(s);
@@ -909,7 +909,7 @@ int init_blank_surface()
 	SDL_FillRect(s, NULL, SDL_MapRGBA(s->format, 255, 255, 255, 255));
 
 	glGenTextures(1, &gl_tex_white);
-	tglBindTexture(GL_TEXTURE_2D, gl_tex_white);
+	tfglBindTexture(GL_TEXTURE_2D, gl_tex_white);
 	int fw, fh;
 	make_texture_for_surface(s, &fw, &fh);
 	copy_surface_to_texture(s);
@@ -1198,7 +1198,7 @@ static int sdl_surface_toscreen(lua_State *L)
 
 	GLuint t;
 	glGenTextures(1, &t);
-	tglBindTexture(GL_TEXTURE_2D, t);
+	tfglBindTexture(GL_TEXTURE_2D, t);
 
 	make_texture_for_surface(*s, NULL, NULL);
 	copy_surface_to_texture(*s);
@@ -1267,7 +1267,7 @@ static int sdl_surface_to_texture(lua_State *L)
 	auxiliar_setclass(L, "gl{texture}", -1);
 
 	glGenTextures(1, t);
-	tglBindTexture(GL_TEXTURE_2D, *t);
+	tfglBindTexture(GL_TEXTURE_2D, *t);
 
 	int fw, fh;
 	make_texture_for_surface(*s, &fw, &fh);
@@ -1546,7 +1546,7 @@ static int sdl_texture_outline(lua_State *L)
 	GLuint *img = (GLuint*)lua_newuserdata(L, sizeof(GLuint));
 	auxiliar_setclass(L, "gl{texture}", -1);
 	glGenTextures(1, img);
-	tglBindTexture(GL_TEXTURE_2D, *img);
+	tfglBindTexture(GL_TEXTURE_2D, *img);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,  w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -1786,7 +1786,7 @@ static int gl_new_fbo(lua_State *L)
 
 	// Now setup a texture to render to
 	glGenTextures(1, &(fbo->texture));
-	tglBindTexture(GL_TEXTURE_2D, fbo->texture);
+	tfglBindTexture(GL_TEXTURE_2D, fbo->texture);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,  w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);

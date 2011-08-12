@@ -116,7 +116,7 @@ profile = engine.PlayerProfile.new()
 -- Create a savefile pipe
 savefile_pipe = engine.SavefilePipe.new()
 
-util.showMainMenu(true)
-
 -- Setup FPS
 core.game.setFPS(config.settings.display_fps)
+
+util.showMainMenu(true)

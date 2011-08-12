@@ -29,3 +29,4 @@ description = [[
 Bootmenu!
 ]]
 starter = "mod.load"
+loading_wait_ticks = 1600

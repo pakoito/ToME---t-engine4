@@ -40,3 +40,7 @@ extern GLenum gl_c_texture;
 	{ \
 	if ((t) != gl_c_texture) { glBindTexture((w), (t)); gl_c_texture=(t); } \
 	}
+#define tfglBindTexture(w, t) \
+	{ \
+	glBindTexture((w), (t)); gl_c_texture=(t); \
+	}

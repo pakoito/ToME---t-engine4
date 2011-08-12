@@ -234,7 +234,9 @@ end
 function _M:loadScreen(mod)
 	core.display.forceRedraw()
 	core.wait.enable(10000, function()
-		local i, max, dir = 0, 20, 1
+		local has_max = mod.loading_wait_ticks
+		if has_max then core.wait.addMaxTicks(has_max) end
+		local i, max, dir = has_max or 20, has_max or 20, -1
 
 		local bkgs = core.display.loadImage("/data/gfx/background/"..mod.short_name..".png") or core.display.loadImage("/data/gfx/background/tome.png")
 		local sw, sh = core.display.size()
@@ -247,6 +249,8 @@ function _M:loadScreen(mod)
 		local right = {core.display.loadImage("/data/gfx/waiter/right.png"):glTexture()}
 		local middle = {core.display.loadImage("/data/gfx/waiter/middle.png"):glTexture()}
 		local bar = {core.display.loadImage("/data/gfx/waiter/bar.png"):glTexture()}
+
+		local font = core.display.newFont("/data/font/Vera.ttf", 12)
 
 		local dw, dh = math.floor(sw / 2), left[7]
 		local dx, dy = math.floor((sw - dw) / 2), sh - dh
@@ -270,21 +274,35 @@ function _M:loadScreen(mod)
 
 			-- Progressbar
 			local x
-			i = i + dir
-			if dir > 0 and i >= max then dir = -1
-			elseif dir < 0 and i <= -max then dir = 1
+			if has_max then
+				i, max = core.wait.getTicks()
+				i = util.bound(i, 0, max)
+			else
+				i = i + dir
+				if dir > 0 and i >= max then dir = -1
+				elseif dir < 0 and i <= -max then dir = 1
+				end
 			end
 
 			local x = dw * (i / max)
 			local x2 = x + dw
 			x = util.bound(x, 0, dw)
 			x2 = util.bound(x2, 0, dw)
+			if has_max then x, x2 = 0, x end
 			local w, h = x2 - x, dh
 
 			middle[1]:toScreenFull(dx, dy, dw, middle[7], middle[2], middle[3])
 			bar[1]:toScreenFull(dx + x, dy, w, bar[7], bar[2], bar[3])
 			left[1]:toScreenFull(dx - left[6] + 5, dy + (middle[7] - left[7]) / 2, left[6], left[7], left[2], left[3])
 			right[1]:toScreenFull(dx + dw - 5, dy + (middle[7] - right[7]) / 2, right[6], right[7], right[2], right[3])
+
+			if has_max then
+				font:setStyle("bold")
+				local txt = {core.display.drawStringBlendedNewSurface(font, math.min(100, math.floor(core.wait.getTicks() * 100 / max)).."%", 255, 255, 255):glTexture()}
+				font:setStyle("normal")
+				txt[1]:toScreenFull(dx + (dw - txt[6]) / 2 + 2, dy + (bar[7] - txt[7]) / 2 + 2, txt[6], txt[7], txt[2], txt[3], 0, 0, 0, 0.6)
+				txt[1]:toScreenFull(dx + (dw - txt[6]) / 2, dy + (bar[7] - txt[7]) / 2, txt[6], txt[7], txt[2], txt[3])
+			end
 		end
 	end)
 end
@@ -316,7 +334,22 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 	-- Init the module directories
 	mod.load("setup")
 
+	-- Check the savefile if possible, to add to the progress bar size
+	local savesize = 0
+	local save = Savefile.new("")
+	savesize = save:loadWorldSize()
+	save:close()
+
+	-- Load the savefile if it exists, or create a new one if not (or if requested)
+	local save = engine.Savefile.new(name)
+	if save:check() and not new_game then
+		savesize = savesize + save:loadGameSize()
+	end
+	save:close()
+
+	-- Display the loading bar
 	self:loadScreen(mod)
+	core.wait.addMaxTicks(savesize)
 
 	-- Check MD5sum with the server
 	local md5 = require "md5"
@@ -361,6 +394,7 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 	_G.game:setPlayerName(name)
 
 	-- Load the world, or make a new one
+	core.wait.enableManualTick(true)
 	if W then
 		local save = Savefile.new("")
 		_G.world = save:loadWorld()
@@ -381,6 +415,7 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 		save:delete()
 	end
 	save:close()
+	core.wait.enableManualTick(false)
 
 	-- And now run it!
 	_G.game:run()
