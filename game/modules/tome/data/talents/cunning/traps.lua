@@ -314,7 +314,7 @@ newTalent{
 
 		local Trap = require "mod.class.Trap"
 		local t = basetrap(self, t, x, y, 8 + self:getTalentLevel(self.T_TRAP_MASTERY), {
-			type = "physical", name = "catapult trap", color=colors.LIGHT_UMBER, image = "trap/catapulttrap01.png",
+			type = "physical", name = "catapult trap", color=colors.LIGHT_UMBER, image = "trap/trap_catapult_01_64.png",
 			dist = 2 + math.ceil(self:getTalentLevel(self.T_TRAP_MASTERY)),
 			check_hit = self:combatAttackDex(),
 			triggered = function(self, x, y, who)
@@ -368,7 +368,7 @@ newTalent{
 
 		local Trap = require "mod.class.Trap"
 		local t = basetrap(self, t, x, y, 8 + self:getTalentLevel(self.T_TRAP_MASTERY), {
-			type = "physical", name = "disarming trap", color=colors.DARK_GREY, image = "trap/disarmtrap01.png",
+			type = "physical", name = "disarming trap", color=colors.DARK_GREY, image = "trap/trap_magical_disarm_01_64.png",
 			dur = 2 + math.ceil(self:getTalentLevel(self.T_TRAP_MASTERY) / 2),
 			check_hit = self:combatAttackDex(),
 			triggered = function(self, x, y, who)

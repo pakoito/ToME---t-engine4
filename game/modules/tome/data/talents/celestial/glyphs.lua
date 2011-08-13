@@ -44,7 +44,7 @@ newTalent{
 		local trap = Trap.new{
 			name = "glyph of paralysis",
 			type = "elemental", id_by_type=true, unided_name = "trap",
-			display = '^', color=colors.GOLD,
+			display = '^', color=colors.GOLD, image = "trap/trap_glyph_paralysis_01_64.png",
 			dam = dam,
 			canTrigger = function(self, x, y, who)
 				if who:reactionToward(self.summoner) < 0 then return mod.class.Trap.canTrigger(self, x, y, who) end
@@ -110,7 +110,7 @@ newTalent{
 		local trap = Trap.new{
 			name = "glyph of repulsion",
 			type = "elemental", id_by_type=true, unided_name = "trap",
-			display = '^', color=colors.GOLD,
+			display = '^', color=colors.GOLD, image = "trap/trap_glyph_repulsion_01_64.png",
 			dam = dam,
 			canTrigger = function(self, x, y, who)
 				if who:reactionToward(self.summoner) < 0 then return mod.class.Trap.canTrigger(self, x, y, who) end
@@ -182,7 +182,7 @@ newTalent{
 		local trap = Trap.new{
 			name = "glyph of explosion",
 			type = "elemental", id_by_type=true, unided_name = "trap",
-			display = '^', color=colors.GOLD,
+			display = '^', color=colors.GOLD, image = "trap/trap_glyph_explosion_01_64.png",
 			dam = dam,
 			canTrigger = function(self, x, y, who)
 				if who:reactionToward(self.summoner) < 0 then return mod.class.Trap.canTrigger(self, x, y, who) end
@@ -250,7 +250,7 @@ newTalent{
 		local trap = Trap.new{
 			name = "glyph of fatigue",
 			type = "elemental", id_by_type=true, unided_name = "trap",
-			display = '^', color=colors.GOLD,
+			display = '^', color=colors.GOLD, image = "trap/trap_glyph_fatigue_01_64.png",
 			dam = dam,
 			canTrigger = function(self, x, y, who)
 				if who:reactionToward(self.summoner) < 0 then return mod.class.Trap.canTrigger(self, x, y, who) end
