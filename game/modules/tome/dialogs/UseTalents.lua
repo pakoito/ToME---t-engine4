@@ -163,7 +163,7 @@ function _M:use(item, button)
 		end
 
 		for i = 1, 36 do list[#list+1] = {name="Hotkey "..i, what=i} end
-		Dialog:listPopup("Bind talent: "..item.name, "How do you want to bind this talent?", list, 400, 500, function(b)
+		Dialog:listPopup("Bind talent: "..item.name:toString(), "How do you want to bind this talent?", list, 400, 500, function(b)
 			if not b then return end
 			if type(b.what) == "number" then
 				for i = 1, 36 do

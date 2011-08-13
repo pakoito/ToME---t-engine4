@@ -168,9 +168,9 @@ end
 function _M:niceTileWall3d(level, i, j, g, nt)
 	local s = level.map:checkEntity(i, j, Map.TERRAIN, "type") or "wall"
 	local gn = level.map:checkEntity(i, j-1, Map.TERRAIN, "type") or "wall"
-	local dn = level.map:checkEntity(i, j-1, Map.TERRAIN, "door_opened")
+	local dn = level.map:checkEntity(i, j-1, Map.TERRAIN, "is_door")
 	local gs = level.map:checkEntity(i, j+1, Map.TERRAIN, "type") or "wall"
-	local ds = level.map:checkEntity(i, j+1, Map.TERRAIN, "door_opened")
+	local ds = level.map:checkEntity(i, j+1, Map.TERRAIN, "is_door")
 	local gw = level.map:checkEntity(i-1, j, Map.TERRAIN, "type") or "wall"
 	local ge = level.map:checkEntity(i+1, j, Map.TERRAIN, "type") or "wall"
 

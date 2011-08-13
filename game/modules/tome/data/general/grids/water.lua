@@ -75,6 +75,7 @@ newEntity{
 	always_remember = true,
 	block_sight = true,
 	air_level = -5, air_condition="water",
+	is_door = true,
 	door_opened = "WATER_DOOR_OPEN",
 	dig = "WATER_FLOOR",
 }
@@ -85,6 +86,7 @@ newEntity{
 	display = "'", color_r=238, color_g=154, color_b=77, back_color=colors.DARK_GREY,
 	always_remember = true,
 	air_level = -5, air_condition="water",
+	is_door = true,
 	door_closed = "WATER_DOOR",
 }
 newEntity{ base = "WATER_DOOR", define_as = "WATER_DOOR_HORIZ", image = "terrain/underwater/subsea_stone_wall_door_closed.png", add_displays = {class.new{image="terrain/underwater/subsea_granite_wall3.png", z=18, display_y=-1}}, door_opened = "WATER_DOOR_HORIZ_OPEN"}

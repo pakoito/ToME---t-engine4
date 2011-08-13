@@ -181,22 +181,6 @@ newEntity{ base = "WALL", define_as = "WALL_PILLAR_4", image = "terrain/marble_f
 newEntity{ base = "WALL", define_as = "WALL_PILLAR_2", image = "terrain/marble_floor.png", z=1, add_displays = {class.new{image="terrain/granite_wall_pillar_2.png",z=3}}}
 
 -----------------------------------------
--- Big Walls
------------------------------------------
-newEntity{
-	define_as = "BIGWALL",
-	type = "wall", subtype = "floor",
-	name = "wall", image = "terrain/bigwall.png",
-	display = '#', color_r=255, color_g=255, color_b=255, back_color=colors.GREY,
-	always_remember = true,
-	does_block_move = true,
-	can_pass = {pass_wall=1},
-	block_sight = true,
-	air_level = -20,
-	dig = "FLOOR",
-}
-
------------------------------------------
 -- Hard Walls
 -----------------------------------------
 newEntity{
@@ -239,6 +223,7 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	block_sight = true,
+	is_door = true,
 	door_opened = "DOOR_OPEN",
 	dig = "FLOOR",
 }
@@ -248,6 +233,7 @@ newEntity{
 	name = "open door", image="terrain/granite_door1_open.png",
 	display = "'", color_r=238, color_g=154, color_b=77, back_color=colors.DARK_GREY,
 	always_remember = true,
+	is_door = true,
 	door_closed = "DOOR",
 }
 newEntity{ base = "DOOR", define_as = "DOOR_HORIZ", image = "terrain/granite_door1.png", add_displays = {class.new{image="terrain/granite_wall3.png", z=18, display_y=-1}}, door_opened = "DOOR_HORIZ_OPEN"}
@@ -266,6 +252,7 @@ newEntity{
 	block_sight = true,
 	block_sense = true,
 	block_esp = true,
+	is_door = true,
 	door_player_check = "This door seems to have been sealed off, you think you can open it.",
 	door_opened = "DOOR_OPEN",
 }
@@ -326,6 +313,7 @@ newEntity{
 	block_esp = true,
 	force_clone = true,
 	door_player_stop = "This door seems to have been sealed off, you need to find a way to open it.",
+	is_door = true,
 	door_opened = "GENERIC_LEVER_DOOR_OPEN",
 	on_lever_change = function(self, x, y, who, val, oldval)
 		local toggle = game.level.map.attrs(x, y, "lever_toggle")
@@ -345,7 +333,9 @@ newEntity{
 	type = "wall", subtype = "floor",
 	name = "open door", image="terrain/granite_door1_open.png",
 	display = "'", color_r=238, color_g=154, color_b=77, back_color=colors.DARK_GREY,
+	nice_tiler = { method="door3d", north_south="GENERIC_LEVER_DOOR_OPEN_VERT", west_east="GENERIC_LEVER_DOOR_HORIZ_OPEN" },
 	always_remember = true,
+	is_door = true,
 	door_closed = "GENERIC_LEVER_DOOR",
 	door_player_stop = "This door seems to have been sealed off, you need to find a way to close it.",
 	on_lever_change = function(self, x, y, who, val, oldval)

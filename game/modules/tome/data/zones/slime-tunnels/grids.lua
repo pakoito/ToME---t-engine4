@@ -45,6 +45,7 @@ newEntity{
 newEntity{ base = "SLIME_DOOR_VERT",
 	define_as = "PEAK_DOOR",
 	name = "sealed door",
+	is_door = true,
 	door_opened = false,
 	nice_tiler = false,
 	does_block_move = true,

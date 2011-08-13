@@ -62,6 +62,7 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	block_sight = true,
+	is_door = true,
 	door_opened = "SOLID_DOOR_OPEN",
 	dig = "FLOOR",
 }
@@ -90,6 +91,7 @@ newEntity{
 	block_sense = true,
 	block_esp = true,
 	door_player_stop = "This door seems to be sealed.",
+	is_door = true,
 	door_opened = "SOLID_DOOR_OPEN",
 }
 newEntity{ base = "SOLID_DOOR_SEALED", define_as = "SOLID_DOOR_SEALED_HORIZ", image = "terrain/solidwall/solid_floor1.png", add_mos={{image = "terrain/solidwall/solid_wall_closed_doors1.png"}}, add_displays = {class.new{image="terrain/solidwall/solid_wall_top_block1.png", z=18, display_y=-1}}, door_opened = "SOLID_DOOR_HORIZ_OPEN"}

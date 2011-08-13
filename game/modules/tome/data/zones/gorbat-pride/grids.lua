@@ -37,6 +37,7 @@ newEntity{
 	levers = 0,
 	force_clone = true,
 	door_player_stop = "This door seems to have been sealed off, you need to find a way to open it.",
+	is_door = true,
 	door_opened = "DOOR_OPEN",
 }
 newEntity{ base = "LEVER_DOOR", define_as = "LEVER_DOOR_HORIZ", image = "terrain/granite_door1.png", add_displays = {class.new{image="terrain/granite_wall3.png", z=18, display_y=-1}}, door_opened = "DOOR_HORIZ_OPEN"}

@@ -1627,7 +1627,7 @@ function _M:levelup()
 	self:incMaxVim(self.vim_rating)
 	self:incMaxMana(self.mana_rating)
 	self:incMaxStamina(self.stamina_rating)
-	self:incMaxPositive(self.positive_negative_rating)
+	self:incMaxPositive(self.positive_positive_rating)
 	self:incMaxNegative(self.positive_negative_rating)
 	self:incMaxPsi(self.psi_rating)
 	if self.max_hate < self.absolute_max_hate then

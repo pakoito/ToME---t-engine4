@@ -82,6 +82,7 @@ newEntity{
 	always_remember = true,
 	block_sight = true,
 --	nice_editer = slime_wall_editer,
+	is_door = true,
 	door_opened = "SLIME_DOOR_OPEN",
 	dig = "FLOOR",
 }
@@ -92,6 +93,7 @@ newEntity{
 	display = "'", color=colors.LIGHT_GREEN, back_color=colors.GREEN,
 	always_remember = true,
 --	nice_editer = slime_wall_editer,
+	is_door = true,
 	door_closed = "SLIME_DOOR",
 }
 newEntity{ base = "SLIME_DOOR", define_as = "SLIME_DOOR_HORIZ", image = "terrain/slime/slime_floor_01.png", add_displays={class.new{image="terrain/slime/slime_door_hor_closed_lower_01.png", add_mos={{image="terrain/slime/slime_door_hor_open_upper_01.png", display_y=-1}, {image="terrain/slime/floor_wall_slime_doorways_01.png"}}}}, door_opened = "SLIME_DOOR_HORIZ_OPEN"}

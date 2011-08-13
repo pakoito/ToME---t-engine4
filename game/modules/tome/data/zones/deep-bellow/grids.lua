@@ -20,4 +20,4 @@
 load("/data/general/grids/basic.lua")
 load("/data/general/grids/underground.lua")
 
-newEntity{ base = "DOWN", define_as = "IRON_COUNCIL", name="The Iron Council (Dwarven empire main city)", change_zone="town-iron-council" }
+newEntity{ base = "UP", define_as = "IRON_COUNCIL", name="The Iron Council (Dwarven empire main city)", change_zone="town-iron-council", change_level=1 }
