@@ -184,6 +184,9 @@ newTalent{
 		end
 
 		require("engine.ui.Dialog"):simplePopup("Lichform", "#GREY#You feel your life slip away, only to be replaced by pure arcane forces! Your flesh starts to rot on your bones, your eyes fall apart as you are reborn into a Lich!")
+
+		game.level.map:particleEmitter(self.x, self.y, 1, "demon_teleport")
+		self:forceUseTalent(self.T_LICHFORM, {no_energy=true})
 	end,
 	on_pre_use = function(self, t)
 		if self:attr("undead") then return false else return true end
