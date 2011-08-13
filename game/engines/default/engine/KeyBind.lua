@@ -219,7 +219,7 @@ function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode, isup, ismouse)
 		end end
 	elseif us and self.binds[us] then
 		for virt, _ in pairs(self.binds[us]) do if self.virtuals[virt] then
-			if isup and not _M.binds_def[virt].updown then return end
+--			if isup and not _M.binds_def[virt].updown then return end
 			self.virtuals[virt](sym, ctrl, shift, alt, meta, unicode, isup)
 			return true
 		end end
