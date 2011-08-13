@@ -23,10 +23,10 @@ function resolvers.equip(t)
 end
 --- Actually resolve the equipment creation
 function resolvers.calc.equip(t, e)
-	print("Equipment resolver for", e.name)
+--	print("Equipment resolver for", e.name)
 	-- Iterate of object requests, try to create them and equip them
 	for i, filter in ipairs(t[1]) do
-		print("Equipment resolver", e.name, filter.type, filter.subtype, filter.defined)
+--		print("Equipment resolver", e.name, filter.type, filter.subtype, filter.defined)
 		local o
 		if not filter.defined then
 			o = game.zone:makeEntity(game.level, "object", filter, nil, true)
@@ -35,12 +35,12 @@ function resolvers.calc.equip(t, e)
 			o, forced = game.zone:makeEntityByName(game.level, "object", filter.defined, filter.random_art_replace and true or false)
 			-- If we forced the generation this means it was already found
 			if forced then
-				print("Serving unique "..o.name.." but forcing replacement drop")
+--				print("Serving unique "..o.name.." but forcing replacement drop")
 				filter.random_art_replace.chance = 100
 			end
 		end
 		if o then
-			print("Zone made us an equipment according to filter!", o:getName())
+--			print("Zone made us an equipment according to filter!", o:getName())
 
 			-- curse (done here to ensure object attributes get applied correctly)
 			if e:knowTalent(e.T_CURSED_TOUCH) and not o.cursed_touch then
@@ -50,7 +50,7 @@ function resolvers.calc.equip(t, e)
 
 			-- Auto alloc some stats to be able to wear it
 			if filter.autoreq and rawget(o, "require") and rawget(o, "require").stat then
-				print("Autorequire stats")
+--				print("Autorequire stats")
 				for s, v in pairs(rawget(o, "require").stat) do
 					print(s,v)
 					if e:getStat(s) < v then
@@ -86,7 +86,7 @@ end
 function resolvers.calc.inventory(t, e)
 	-- Iterate of object requests, try to create them and equip them
 	for i, filter in ipairs(t[1]) do
-		print("Inventory resolver", e.name, filter.type, filter.subtype)
+--		print("Inventory resolver", e.name, filter.type, filter.subtype)
 		local o
 		if not filter.defined then
 			o = game.zone:makeEntity(game.level, "object", filter, nil, true)
@@ -94,7 +94,7 @@ function resolvers.calc.inventory(t, e)
 			o = game.zone:makeEntityByName(game.level, "object", filter.defined)
 		end
 		if o then
-			print("Zone made us an inventory according to filter!", o:getName())
+--			print("Zone made us an inventory according to filter!", o:getName())
 			e:addObject(t[1].inven and e:getInven(t[1].inven) or e.INVEN_INVEN, o)
 			game.zone:addEntity(game.level, o, "object")
 
@@ -126,7 +126,7 @@ function resolvers.calc.drops(t, e)
 			filter.not_properties[#filter.not_properties+1] = "lore"
 		end
 
-		print("Drops resolver", e.name, filter.type, filter.subtype, filter.defined)
+--		print("Drops resolver", e.name, filter.type, filter.subtype, filter.defined)
 		local o
 		if not filter.defined then
 			o = game.zone:makeEntity(game.level, "object", filter, nil, true)
@@ -135,12 +135,12 @@ function resolvers.calc.drops(t, e)
 			o, forced = game.zone:makeEntityByName(game.level, "object", filter.defined, filter.random_art_replace and true or false)
 			-- If we forced the generation this means it was already found
 			if forced then
-				print("Serving unique "..o.name.." but forcing replacement drop")
+--				print("Serving unique "..o.name.." but forcing replacement drop")
 				filter.random_art_replace.chance = 100
 			end
 		end
 		if o then
-			print("Zone made us a drop according to filter!", o:getName())
+--			print("Zone made us a drop according to filter!", o:getName())
 			e:addObject(e.INVEN_INVEN, o)
 			game.zone:addEntity(game.level, o, "object")
 
@@ -164,7 +164,7 @@ function resolvers.calc.drop_randart(t, e)
 	t = t[1]
 	local filter = t.filter
 
-	print("Randart Drops resolver")
+--	print("Randart Drops resolver")
 	local base = nil
 	if filter then
 		if not filter.defined then
@@ -176,7 +176,7 @@ function resolvers.calc.drop_randart(t, e)
 
 	local o = game.state:generateRandart(false, base, resolvers.current_level)
 	if o then
-		print("Zone made us a randart drop according to filter!", o:getName{force_id=true})
+--		print("Zone made us a randart drop according to filter!", o:getName{force_id=true})
 		e:addObject(e.INVEN_INVEN, o)
 		game.zone:addEntity(game.level, o, "object")
 

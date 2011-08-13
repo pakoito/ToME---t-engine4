@@ -75,6 +75,7 @@ newTalent{
 	points = 5,
 	proj_speed = 3,
 	range = 6,
+	cooldown = 30,
 	tactical = { BUFF = 2 },
 	sustain_negative = 10,
 	sustain_positive = 10,
