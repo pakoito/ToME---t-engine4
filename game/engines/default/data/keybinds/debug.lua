@@ -26,7 +26,7 @@ defineAction{
 }
 
 defineAction{
-	default = { "sym:_a:true:false:false:false" },
+	default = { },
 	type = "DEBUG_MODE",
 	group = "debug",
 	name = "Debug Mode",

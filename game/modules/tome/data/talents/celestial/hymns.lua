@@ -173,7 +173,7 @@ newTalent{
 	no_energy = true,
 	dont_provide_pool = true,
 	tactical = { BUFF = 2 },
-	range = 10,
+	range = 5,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 7, 80) end,
 	getTargetCount = function(self, t) return math.floor(self:getTalentLevel(t)) end,
 	getNegativeDrain = function(self, t) return 9 - self:getTalentLevelRaw(t) end,
