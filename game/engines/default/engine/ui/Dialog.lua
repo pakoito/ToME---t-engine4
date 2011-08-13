@@ -228,6 +228,8 @@ function _M:init(title, w, h, x, y, alpha, font, showup, skin)
 	self.force_x = x
 	self.force_y = y
 
+	self.first_display = true
+
 	Base.init(self, {}, true)
 
 	self:resize(w, h, true)
@@ -556,8 +558,13 @@ end
 function _M:innerDisplay(x, y, nb_keyframes)
 end
 
+function _M:firstDisplay()
+end
+
 function _M:toScreen(x, y, nb_keyframes)
 	if self.__hidden then return end
+
+	if self.first_display then self:firstDisplay() end
 
 	local zoom = 1
 	if self.__showup then

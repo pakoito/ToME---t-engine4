@@ -150,9 +150,6 @@ function _M:run()
 	self.logSeen = function(e, style, ...) if e and e.x and e.y and self.level.map.seens(e.x, e.y) then self.log(style, ...) end end
 	self.logPlayer = function(e, style, ...) if e == self.player or e == self.party then self.log(style, ...) end end
 
-	-- List of stuff to do on tick end
-	self.on_tick_end = {}
-
 	-- Ok everything is good to go, activate the game in the engine!
 	self:setCurrent()
 
@@ -821,13 +818,8 @@ function _M:tick()
 		-- Fun stuff: this can make the game realtime, although calling it in display() will make it work better
 		-- (since display is on a set FPS while tick() ticks as much as possible
 		-- engine.GameEnergyBased.tick(self)
-	end
-
-	-- Run tick end stuff
-	if #self.on_tick_end > 0 then
-		local fs = self.on_tick_end
-		self.on_tick_end = {}
-		for i = 1, #fs do fs[i]() end
+	else
+		engine.Game.tick(self)
 	end
 
 	-- Check damages to log
@@ -872,12 +864,6 @@ function _M:delayedLogDamage(src, target, dam, desc)
 	local t = self.delayed_log_damage[src][target]
 	t.descs[#t.descs+1] = desc
 	t.total = t.total + dam
-end
-
---- Register things to do on tick end
--- This is used for recall spells to let the tick finish before switching levels
-function _M:onTickEnd(f)
-	self.on_tick_end[#self.on_tick_end+1] = f
 end
 
 --- Called every game turns

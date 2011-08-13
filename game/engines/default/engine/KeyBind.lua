@@ -225,8 +225,6 @@ function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode, isup, ismouse)
 		end end
 	end
 
-	if isup then return end
-
 	return engine.KeyCommand.receiveKey(self, sym, ctrl, shift, alt, meta, unicode, isup)
 end
 

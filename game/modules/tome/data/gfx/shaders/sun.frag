@@ -1,27 +1,48 @@
+#extension GL_EXT_gpu_shader4: enable
 uniform sampler2D tex;
+vec3 Color1 = vec3(0.9, 0.8, 0.0);
+vec3 Color2 = vec3(0.6, 0.4, 0.0);
+uniform float tick;
 
-void main(void)
+int LFSR_Rand_Gen(in int n)
 {
-//	gl_FragColor = texture2D(tex, gl_TexCoord[0].xy);
+	// <<, ^ and & require GL_EXT_gpu_shader4.
+	n = (n << 13) ^ n;
+	return (n * (n*n*15731+789221) + 1376312589) & 0x7fffffff;
+}
 
-	int blursize = 3;
-	float blur = 3.0;
-	vec2 offset = 1.0 / vec2(512.0, 512.0);
+float LFSR_Rand_Gen_f( in int n )
+{
+	return float(LFSR_Rand_Gen(n));
+}
 
-	// Center Pixel
-	vec4 sample = vec4(0.0,0.0,0.0,0.0);
-	float factor = ((float(blursize)*2.0)+1.0);
-	factor = factor * factor;
+float noise3f(in vec3 p)
+{
+	ivec3 ip = ivec3(floor(p));
+	vec3 u = fract(p);
+	u = u*u*(3.0-2.0*u);
 
-	for(int i = -blursize; i <= blursize; i++)
-	{
-		for(int j = -blursize; j <= blursize; j++)
-		{
-			sample += texture2D(tex, vec2(gl_TexCoord[0].xy+vec2(float(i)*offset.x, float(j)*offset.y)));
-		}
-	}
-	sample /= (blur*2.0) * (blur*2.0);
-	gl_FragColor = sample * 0.8;
+	int n = ip.x + ip.y*57 + ip.z*113;
 
-//	gl_FragColor += vec4(0.3, 0.3, 0.3, 0);
+	float res = mix(mix(mix(LFSR_Rand_Gen_f(n+(0+57*0+113*0)),
+		LFSR_Rand_Gen_f(n+(1+57*0+113*0)),u.x),
+		mix(LFSR_Rand_Gen_f(n+(0+57*1+113*0)),
+			LFSR_Rand_Gen_f(n+(1+57*1+113*0)),u.x),u.y),
+		mix(mix(LFSR_Rand_Gen_f(n+(0+57*0+113*1)),
+			LFSR_Rand_Gen_f(n+(1+57*0+113*1)),u.x),
+			mix(LFSR_Rand_Gen_f(n+(0+57*1+113*1)),
+				LFSR_Rand_Gen_f(n+(1+57*1+113*1)),u.x),u.y),u.z);
+
+	return 1.0 - res*(1.0/1073741824.0);
+}
+
+void main()
+{
+	float intensity =
+		abs(noise3f(vec3(gl_TexCoord[0].xy*100.0 + vec2(30.0,0.0), tick/3000.0)) - 0.25) +
+		abs(noise3f(vec3(gl_TexCoord[0].xy*100.0 + vec2(40.0,0.0), tick/3000.0)) - 0.125) +
+		abs(noise3f(vec3(gl_TexCoord[0].xy*100.0 + vec2(50.0,0.0), tick/3000.0)) - 0.0625);
+//	vec3 color = mix(Color1, Color2, intensity);
+	vec4 base = texture2D(tex, gl_TexCoord[0].xy);
+	gl_FragColor = vec4(base.rgb * 0.7 + base.rgb * intensity * 0.3, 1.0);
 }

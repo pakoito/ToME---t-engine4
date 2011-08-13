@@ -236,10 +236,15 @@ extern SDL_Cursor *mouse_cursor;
 extern SDL_Cursor *mouse_cursor_down;
 void on_event(SDL_Event *event)
 {
+	static char *last_unicode = NULL;
+
 	switch (event->type) {
+	case SDL_TEXTINPUT:
+		if (last_unicode) free(last_unicode);
+		last_unicode = strdup(event->text.text);
+		break;
 	case SDL_KEYDOWN:
 	case SDL_KEYUP:
-	case SDL_TEXTINPUT:
 		if (current_keyhandler != LUA_NOREF)
 		{
 			lua_rawgeti(L, LUA_REGISTRYINDEX, current_keyhandler);
@@ -247,8 +252,7 @@ void on_event(SDL_Event *event)
 			lua_gettable(L, -2);
 			lua_remove(L, -2);
 			lua_rawgeti(L, LUA_REGISTRYINDEX, current_keyhandler);
-			if (event->type != SDL_TEXTINPUT) lua_pushnumber(L, event->key.keysym.scancode);
-			else lua_pushnumber(L, 0);
+			lua_pushnumber(L, event->key.keysym.scancode);
 
 			SDL_Keymod _pKeyState = SDL_GetModState();
 			lua_pushboolean(L, (_pKeyState & KMOD_CTRL) ? TRUE : FALSE);
@@ -256,9 +260,11 @@ void on_event(SDL_Event *event)
 			lua_pushboolean(L, (_pKeyState & KMOD_ALT) ? TRUE : FALSE);
 			lua_pushboolean(L, (_pKeyState & KMOD_GUI) ? TRUE : FALSE);
 
-			if (event->type == SDL_TEXTINPUT)
+			if (last_unicode)
 			{
-				lua_pushstring(L, event->text.text);
+				lua_pushstring(L, last_unicode);
+				free(last_unicode);
+				last_unicode = NULL;
 			}
 			else
 				lua_pushnil(L);

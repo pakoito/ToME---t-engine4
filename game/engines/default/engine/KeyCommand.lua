@@ -53,8 +53,6 @@ end
 function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode, isup)
 	self:handleStatus(sym, ctrl, shift, alt, meta, unicode, isup)
 
-	if isup then return end
-
 	if self.ignore[sym] then return end
 
 	-- Convert locale
@@ -64,7 +62,7 @@ function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode, isup)
 
 	if not self.commands[sym] and not self.commands[self.__DEFAULT] then
 		if self.on_input and unicode then self.on_input(unicode) handled = true end
-	elseif self.commands[sym] and (ctrl or shift or alt or meta) and not self.commands[sym].anymod then
+	elseif not isup and self.commands[sym] and (ctrl or shift or alt or meta) and not self.commands[sym].anymod then
 		local mods = {}
 		if alt then mods[#mods+1] = "alt" end
 		if ctrl then mods[#mods+1] = "ctrl" end
@@ -75,15 +73,15 @@ function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode, isup)
 			self.commands[sym][mods](sym, ctrl, shift, alt, meta, unicode)
 			handled = true
 		end
-	elseif self.commands[sym] and self.commands[sym].plain then
+	elseif not isup and self.commands[sym] and self.commands[sym].plain then
 		self.commands[sym].plain(sym, ctrl, shift, alt, meta, unicode)
 		handled = true
-	elseif self.commands[self.__DEFAULT] and self.commands[self.__DEFAULT].plain then
+	elseif not isup and self.commands[self.__DEFAULT] and self.commands[self.__DEFAULT].plain then
 		self.commands[self.__DEFAULT].plain(sym, ctrl, shift, alt, meta, unicode)
 		handled = true
 	end
 
-	if self.atLast then self.atLast(sym, ctrl, shift, alt, meta, unicode) handled = true  end
+	if not isup and self.atLast then self.atLast(sym, ctrl, shift, alt, meta, unicode) handled = true  end
 	return handled
 end
 

@@ -198,12 +198,18 @@ static int lua_get_scancode_name(lua_State *L)
 
 	return 1;
 }
+static int lua_flush_key_events(lua_State *L)
+{
+	SDL_FlushEvents(SDL_KEYDOWN, SDL_TEXTINPUT);
+	return 0;
+}
 
 static const struct luaL_reg keylib[] =
 {
 	{"set_current_handler", lua_set_current_keyhandler},
 	{"modState", lua_get_mod_state},
 	{"symName", lua_get_scancode_name},
+	{"flush", lua_flush_key_events},
 	{NULL, NULL},
 };
 
