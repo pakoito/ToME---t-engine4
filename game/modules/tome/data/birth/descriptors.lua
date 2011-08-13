@@ -202,6 +202,7 @@ newBirthDescriptor{
 	name = "Exploration",
 	locked = function(birther) return birther:isDonator() or "hide" end,
 	locked_desc = "Exploration mode: Infinite lives (donator feature)",
+	selection_default = config.settings.tome.default_birth and config.settings.tome.default_birth.permadeath == "Exploration",
 	desc =
 	{
 		"#GOLD##{bold}#Exploration mode#WHITE#",
@@ -214,11 +215,11 @@ newBirthDescriptor{
 		infinite_lifes = 1,
 	},
 }
-]]
+--]]
 newBirthDescriptor{
 	type = "permadeath",
 	name = "Adventure",
-	selection_default = true,
+	selection_default = config.settings.tome.default_birth and config.settings.tome.default_birth.permadeath == "Adventure",
 	desc =
 	{
 		"#GOLD##{bold}#Adventure mode#WHITE#",
@@ -233,6 +234,7 @@ newBirthDescriptor{
 newBirthDescriptor{
 	type = "permadeath",
 	name = "Roguelike",
+	selection_default = config.settings.tome.default_birth and config.settings.tome.default_birth.permadeath == "Roguelike",
 	desc =
 	{
 		"#GOLD##{bold}#Roguelike mode#WHITE#",

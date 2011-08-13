@@ -194,6 +194,8 @@ function _M:atEnd(v)
 				self.actor.moddable_tile = nil
 			end
 			game:setPlayerName(self.c_name.text)
+			game:saveSettings("tome.default_birth", ("tome.default_birth = {permadeath = %q}\n"):format(self.actor.descriptor.permadeath))
+
 			self.at_end(false)
 		end)
 	elseif v == "loaded" then
@@ -494,7 +496,7 @@ function _M:generateDifficulties()
 				if type(desc) == "table" then desc = table.concat(d.desc, "\n") end
 				list[#list+1] = { name = tstring{d.display_name}:toString(), id=d.name, desc=desc }
 				if oldsel == d.name then oldsel = #list end
-				if d.selection_default then self.default_difficulty = d.name end
+				if util.getval(d.selection_default) then self.default_difficulty = d.name end
 			end
 		end
 	end
@@ -526,7 +528,7 @@ function _M:generatePermadeaths()
 				if type(desc) == "table" then desc = table.concat(d.desc, "\n") end
 				list[#list+1] = { name = tstring{d.display_name}:toString(), id=d.name, desc=desc }
 				if oldsel == d.name then oldsel = #list end
-				if d.selection_default then self.default_permadeath = d.name end
+				if util.getval(d.selection_default) then self.default_permadeath = d.name end
 			end
 		end
 	end
