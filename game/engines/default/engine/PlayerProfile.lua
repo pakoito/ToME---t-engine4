@@ -601,13 +601,14 @@ end
 
 function _M:registerNewCharacter(module)
 	if not self.auth or not self.hash_valid then return end
-	local dialog = Dialog:simplePopup("Registering character", "Character is being registered on http://te4.org/") dialog.__showup = nil core.display.forceRedraw()
+	local dialog = Dialog:simpleWaiter("Registering character", "Character is being registered on http://te4.org/")
+	core.display.forceRedraw()
 
 	core.profile.pushOrder(table.serialize{o="RegisterNewCharacter", module=module})
 	local uuid = nil
 	self:waitEvent("RegisterNewCharacter", function(e) uuid = e.uuid end, 10000)
 
-	game:unregisterDialog(dialog)
+	dialog:done()
 	if not uuid then return end
 	print("[ONLINE PROFILE] new character UUID ", uuid)
 	return uuid

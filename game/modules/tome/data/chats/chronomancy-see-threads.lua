@@ -30,6 +30,7 @@ local function select(id)
 
 	game.logPlayer(game.player, "#LIGHT_BLUE#You select the timeline and re-arrange the universe to your liking!")
 	game.level.map:particleEmitter(game.player.x, game.player.y, 1, "rewrite_universe")
+	game._chronoworlds = nil
 end
 
 newChat{ id="welcome",

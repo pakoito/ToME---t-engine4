@@ -242,14 +242,14 @@ end
 function _M:showUserInfo(login)
 	if not profile.auth then return end
 
-	local popup = Dialog:simplePopup("Requesting...", "Requesting user info...", nil, true)
-	popup.__showup = nil
+	local popup = Dialog:simpleWaiter("Requesting...", "Requesting user info...")
 	core.display.forceRedraw()
 
 	core.profile.pushOrder(string.format("o='ChatUserInfo' login=%q", login))
 	local data = nil
 	profile:waitEvent("UserInfo", function(e) data=e.data end, 5000)
-	game:unregisterDialog(popup)
+
+	popup:done()
 
 	if not data then
 		Dialog:simplePopup("Error", "The server does not know about this player.")

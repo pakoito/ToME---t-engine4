@@ -305,6 +305,7 @@ function _M:loadScreen(mod)
 			end
 		end
 	end)
+	core.display.forceRedraw()
 end
 
 
@@ -314,10 +315,6 @@ end
 -- @param new_game true if the game must be created (aka new character)
 function _M:instanciate(mod, name, new_game, no_reboot)
 	if not no_reboot then
-		local popup = Dialog:simplePopup("Loading module", "Please wait while loading "..mod.long_name.."...", nil, true)
-		popup.__showup = nil
-		core.display.forceRedraw()
-
 		local eng_v = nil
 		if not mod.incompatible then eng_v = ("%d.%d.%d"):format(mod.engine[1], mod.engine[2], mod.engine[3]) end
 		util.showMainMenu(false, mod.engine[4], eng_v, mod.version_string, name, new_game)

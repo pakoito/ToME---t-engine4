@@ -753,17 +753,17 @@ end
 
 --- Clones the game world for chronomancy spells
 function _M:chronoClone(name)
-	local d = Dialog:simplePopup("Chronomancy", "Folding the space time structure...")
-	d.__showup = nil
-	core.display.forceRedraw()
-	game:unregisterDialog(d)
+	local d = Dialog:simpleWaiter("Chronomancy", "Folding the space time structure...")
 
+	local ret = nil
 	if name then
 		self._chronoworlds = self._chronoworlds or {}
 		self._chronoworlds[name] = game:cloneFull()
 	else
-		return game:cloneFull()
+		ret = game:cloneFull()
 	end
+	d:done()
+	return ret
 end
 
 --- Restores a chronomancy clone
@@ -775,10 +775,7 @@ function _M:chronoRestore(name, remove)
 	else ngame = name end
 	if not ngame then return false end
 
-	local d = Dialog:simplePopup("Chronomancy", "Unfolding the space time structure...")
-	d.__showup = nil
-	core.display.forceRedraw()
-	game:unregisterDialog(d)
+	local d = Dialog:simpleWaiter("Chronomancy", "Unfolding the space time structure...")
 
 	ngame:cloneReloaded()
 	_G.game = ngame
@@ -786,6 +783,8 @@ function _M:chronoRestore(name, remove)
 	game.key:setCurrent()
 	game.mouse:setCurrent()
 	profile.chat:setupOnGame()
+
+	core.wait.disable() -- "game" changed, we cant just unload the dialog, it doesnt exist anymore
 	return true
 end
 
