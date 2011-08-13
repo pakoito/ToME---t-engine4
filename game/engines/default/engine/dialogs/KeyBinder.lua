@@ -189,7 +189,7 @@ function _M:generateList(key_source, force_all)
 	local l = {}
 
 	for virtual, t in pairs(KeyBind.binds_def) do
-		if (force_all or key_source.virtuals[virtual]) and t.group ~= "debug" then
+		if (force_all or key_source.virtuals[virtual]) then
 			l[#l+1] = t
 		end
 	end
@@ -205,21 +205,23 @@ function _M:generateList(key_source, force_all)
 	local tree = {}
 	local groups = {}
 	for _, k in ipairs(l) do
-		local item = {
-			k = k,
-			name = tstring{{"font","italic"}, {"color","AQUAMARINE"}, k.name, {"font","normal"}},
-			sortname = k.name;
-			type = k.type,
-			single_key = k.single_key,
-			bind1 = function(item) return KeyBind:getBindTable(k)[1] end,
-			bind2 = function(item) return KeyBind:getBindTable(k)[2] end,
-			bind3 = function(item) return KeyBind:getBindTable(k)[3] end,
-			b1 = function(item) return KeyBind:formatKeyString(util.getval(item.bind1, item)) end,
-			b2 = function(item) return KeyBind:formatKeyString(util.getval(item.bind2, item)) end,
-			g = function(item) return KeyBind:formatKeyString(util.getval(item.bind3, item)) end,
-		}
-		groups[k.group] = groups[k.group] or {}
-		table.insert(groups[k.group], item)
+		if not k.only_on_cheat or config.settings.cheat then
+			local item = {
+				k = k,
+				name = tstring{{"font","italic"}, {"color","AQUAMARINE"}, k.name, {"font","normal"}},
+				sortname = k.name;
+				type = k.type,
+				single_key = k.single_key,
+				bind1 = function(item) return KeyBind:getBindTable(k)[1] end,
+				bind2 = function(item) return KeyBind:getBindTable(k)[2] end,
+				bind3 = function(item) return KeyBind:getBindTable(k)[3] end,
+				b1 = function(item) return KeyBind:formatKeyString(util.getval(item.bind1, item)) end,
+				b2 = function(item) return KeyBind:formatKeyString(util.getval(item.bind2, item)) end,
+				g = function(item) return KeyBind:formatKeyString(util.getval(item.bind3, item)) end,
+			}
+			groups[k.group] = groups[k.group] or {}
+			table.insert(groups[k.group], item)
+		end
 	end
 
 	for group, data in pairs(groups) do

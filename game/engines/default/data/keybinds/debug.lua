@@ -22,4 +22,13 @@ defineAction{
 	type = "LUA_CONSOLE",
 	group = "debug",
 	name = "Show Lua console",
+	only_on_cheat = true,
+}
+
+defineAction{
+	default = { "sym:_a:true:false:false:false" },
+	type = "DEBUG_MODE",
+	group = "debug",
+	name = "Debug Mode",
+	only_on_cheat = true,
 }

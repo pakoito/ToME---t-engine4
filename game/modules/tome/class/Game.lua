@@ -1034,7 +1034,6 @@ function _M:setupCommands()
 
 	-- Debug mode
 	self.key:addCommands{
-		[{"_q","ctrl"}] = function() if config.settings.cheat then game:registerDialog(require("mod.dialogs.debug.DebugMain").new()) end end,
 		[{"_d","ctrl"}] = function() if config.settings.cheat then
 			local g = game.level.map(game.player.x, game.player.y, Map.TERRAIN)
 			print(g.define_as, g.image, g.z)
@@ -1317,6 +1316,12 @@ game.player:learnTalent('T_GIFT_OF_AMAKTHEL',true)
 		LUA_CONSOLE = function()
 			if config.settings.cheat then
 				self:registerDialog(DebugConsole.new())
+			end
+		end,
+		-- Debug dialog
+		DEBUG_MODE = function()
+			if config.settings.cheat then
+				game:registerDialog(require("mod.dialogs.debug.DebugMain").new())
 			end
 		end,
 
