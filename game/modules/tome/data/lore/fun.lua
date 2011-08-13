@@ -209,3 +209,82 @@ Though rumours persist still
 Rogues aren't known by name or deed
 But by the names they kill]]
 }
+
+newLore{
+	id = "dust-to-dust",
+	category = "misc",
+	name = "Dust to Dust",
+	lore = [[#{italic}#An undead hunter's guide, by Aslabor Borys#{normal}#
+
+So, apparently I'm a legend now. Hah, knock a vampire's head off with a greatmaul and suddenly you're up there with Toknor and Mirvenia apparently. More and more often these days I get novice adventurers coming up to me, asking me for advice when it comes to battling the undead. My first instinct was to tell them to get back home and become bakers or gardeners or something. If they need crib notes for combat they obviously aren't cut out for it.
+
+But then I was thinking, these are good kids. Heck, I'd buy every man and woman in the world who's bumped off a ghoul a free drink if I could. If they want help when it comes to putting down necromancer slime and their chilling creations, I would be more than happy to oblige. Not much of a writer, but let's see. First...
+
+#{bold}#1. Ghouls#{normal}#
+
+Every once in a while, people come to me and say "Are all necromancers truly evil?" "Surely necromancy could be used for good!" "Isn't it wrong to discriminate against others simply because of the magicks they practice?" To these people, the first thing I usually say - shortly after giving them a black eye - is to take a look at a ghoul. Take a good, long look. Take in the diseased, putrescent flesh. Take in the oozing, exposed organs. Take in its features, slowly rotting to mulch. It used to be a person. It used to have a family, people who loved it. Now it's a walking corpse, its only desire being death and the mad, all-encompassing consumption of living flesh. Are all necromancers truly evil? A thousand times, yes.
+
+Even this most basic of undead minions can strike terror into the unprepared. The multitude of diseases that a normal ghoul carries are contagious in a manner many adventurers do not truly appreciate until they see the sores and necrosis visibly spreading up their arm from where a ghoul bit them. Such maladies must be dealt with promptly: if bitten by a ghoul, immediately plunge the afflicted area in scalding hot water, then wrap it quickly in clean cloth lined with mugwort and quartz powder. The wound must remain dressed for three weeks, with new dressings applied every four days, and make sure to burn the old ones! Failing the above, a wild infusion also works splendidly.
+
+    * * *
+
+
+#{bold}#2. Skeletons#{normal}#
+
+What guide to the undead would be complete without mentioning the humble skeleton? Despite these clattering and chittering bones of the deceased often looking so fragile that a stiff breeze could break them apart, in many ways they are more dangerous than their ghoul cousins.
+
+With no masses of rotted and ruined flesh to reanimate, necromancers can commit themselves fully to bestowing some level of fighting skill on a reanimated skeleton, and since a fighter's weapons will often last as long as his bones will, skeletons are usually armed and sometimes even armoured. The potential skill of a skeleton doesn't stop at melee weapons either - fallen archers take up their bows once again, and although difficult by comparison, some necromancers can even grant dead mages their magic powers once again.
+
+Some adventurers find themselves baffled when it comes to fighting skeletons. How do you destroy a foe who, by all rights, should be destroyed already? To these adventurers, I say take heart. The more broken and incomplete a body is, the more effort it takes to keep it reanimated. As most necromancers see skeletons as the lowest of low peons, you can expect a few good blows to easily dissipate the minimal effort their masters put into creating them.
+
+    * * *
+
+
+#{bold}#3. Wights#{normal}#
+
+Wights are an odd duck amongst the undead, often not created by necromancers specifically, but instead raising of their own volition when the conditions are right. Wights are by no means individual souls, but often part of a gestalt; when a particular land has seen enough bloodshed - battlefields, forest, crypts and graveyards - wights can be seen to raise en masse, a near-physical representation of the battles and turmoil the land has faced. Sadly, it is for this reason that necromancers often facilitate the creation of wights regardless, for no other study or profession causes so much blood or death.
+
+Those who have had encounters with wights often describe them as indistinct skeletal figures, wrapped in flowing cloaks that become faded and incorporeal at their edges, while strange lights dance where their eyes should remain. Survivors tell of a peculiar sense of exhaustion when in close proximity to them, as though merely being close to these figments of death causes one's life force to sputter and fade. Regardless of this and their ghostly appearance however, it has been recorded that steel and strength of arms is yet enough to destroy them, or at least to erase them for the time being. It's just a shame that such battles are likely to simply create more of them in the long run...
+
+    * * *
+
+
+#{bold}#4. Vampires#{normal}#
+
+Vampires are so far removed from other varieties of undead it seems almost unreal. What grants them their longevity? How do they retain such great intelligence? Beyond their sallow complexion and drawn features, why do they not decay and decompose as their ghoulish siblings do? The study of vampiric nature is one long list of unanswered questions, each new study adding yet more to the ever-growing pile.
+
+As said before, a vampire's greatest strength is its resemblance to a living man, both in mind and body. Thanks to this, vampires are known for residing comparatively close to normal towns and villages far more than other undead. Some have even been known to keep their lairs within these communities themselves! Despite their resemblance however, there are many telltale signs of vampirism: Unnaturally pale skin, long and distinctive fangs, an aversion to sunlight, and much more besides. In an effort to avoid close inspection, some vampires are known to masquerade as men of wealth, often cloistering themselves in remote locations to discourage prying eyes.
+
+But perhaps the most astonishing thing regarding vampires is their propensity for alliance and familial relationships. No other undead being even approaches matching the incomprehensible tangle of clans, broods, families and bloodkin that vampires create for themselves. It is for this reason that vampires often end up becoming rulers of lesser undead themselves, commanding them as a normal necromancer would. So, in turn, treat them as you would a necromancer - with cold steel.
+
+    * * *
+
+
+#{bold}#5. Spirits#{normal}#
+
+During my travels, I have noticed that some communities in the wild no longer bury their deceased as is the norm in larger settlements. Some folk burn the corpses of their fallen, committing their ashes to the earth instead. When asked why they perform this peculiar practice, I always receive the same answer: Necromancers. Fearful of their dead rising up to slay them at the whims of delusional, murderous filth, they believe that with the burning of the dead, their spirits are forever beyond the reach of a necromancer's bony fingers.
+
+Alas, this is not true. While fire may burn away a man's physical being, no flame can touch his spirit. Unfortunately, necromancers can. Bereft of both body and freedom, many souls are driven mad in the employ of necromancers, ceaselessly drifting through windswept crypts, harrying any unfortunate wanderers they encounter with a multitude of curses and hexes. Worst of all are those spirits who embrace their newfound purpose, causing them to grow in power at a frightening rate. No other being in Maj'Eyal is so obviously abhorrent to existence itself as these "dreads"; it is almost as though creation itself wants these beings gone from her world. It is my hope that you, and many others, oblige her wish.
+
+    * * *
+
+
+#{bold}#6. Bone Giants#{normal}#
+
+One of the most horrific, vomit-inducing expressions of the necromancer's so-called "art" is the bone giant. Not content with merely profaning the bodies of singular souls, some ambitious necromancers work to bind the bodies of countless skeletons together, creating hideous engines of destruction that can stand many times higher than the height of a normal man.
+
+It is a deadly mistake to liken these abominations to the golems alchemists and archmages employ. Wilful and fey as they are, normal mages often only craft golems for utility and their own protection, while necromancers create bone giants for the sole purpose of dealing death, and the only limit to their destructive capability is the necromancer's twisted imagination. Ever fought a snow giant? Imagine one with six arms and fingers like blades, wrought of sharpened ribs. Imagine one with countless skulls lining every inch of its wretched body, all screaming for your blood to be spilt as it thrashes spinal columns like whips from its disfigured hands! After facing one of these grotesque amalgamations, you'll be begging to go back to the Daikara to pick on simple, frost-rimed sub-men.
+
+    * * *
+
+
+#{bold}#7. Liches#{normal}#
+
+Hate made flesh. Evil made pure. Death incarnate. The culmination of a necromancer's work. Whatever you know liches as, I can tell you that they do not match the countless myths and legends that surround their terrible figures. They surpass them.
+
+Once a powerful necromancer finally crosses the border between life and death, the abyssal power that they could only initially grasp in dribs and drabs becomes theirs to control totally. It is often said that unexpected quakes, crops failing, and the leaves simultaneously falling from the trees heralds the birth of a lich. Lords of the undead, liches can annihilate ghouls and skeletons, banish dreads with a glance, and reduce bone giants to powder within moments.
+
+As to how to actually destroy one? Well, tell you what. If you manage to defeat one of these abominations, be a dear and write a guide for me, for I have absolutely, positively, no idea.
+
+    * * *]]
+}

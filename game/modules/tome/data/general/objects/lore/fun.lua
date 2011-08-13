@@ -50,6 +50,13 @@ newEntity{ base = "BASE_LORE",
 }
 end
 
+newEntity{ base = "BASE_LORE",
+	name = [["Dust to Dust", an undead hunter's guide, by Aslabor Borys]], lore="dust-to-dust", unique=true,
+	desc = [[An undead hunter's guide, by Aslabor Borys]],
+	level_range = {15, 50},
+	rarity = 60,
+}
+
 for i = 1, 5 do
 local who
 if i == 1 then who = "Rolf" nb = 1
