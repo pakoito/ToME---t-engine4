@@ -122,45 +122,29 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	mana = 40,
-	cooldown = 8,
-	tactical = { ATTACKAREA = 2 },
-	range = 7,
-	radius = function(self, t)
-		return 1 + self:getTalentLevelRaw(t)
-	end,
-	proj_speed = 4,
+	cooldown = 12,
 	direct_hit = true,
+	tactical = { ATTACK = 2, DISABLE = 2, ESCAPE = 1 },
+	range = 0,
+	radius = function(self, t) return 3 + self:getTalentLevelRaw(t) end,
 	requires_target = true,
-	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=self:spellFriendlyFire(), talent=t, display={particle="bolt_fire", trail="firetrail"}}
-	end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 28, 280) end,
+	target = function(self, t) return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), friendlyfire=isFF(self), talent=t} end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 230) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:projectile(tg, x, y, DamageType.FIRE, self:spellCrit(t.getDamage(self, t)), function(self, tg, x, y, grids)
-			game.level.map:particleEmitter(x, y, tg.radius, "fireflash", {radius=tg.radius, tx=x, ty=y})
-			if self:attr("burning_wake") then
-				game.level.map:addEffect(self,
-					x, y, 4,
-					engine.DamageType.INFERNO, self:attr("burning_wake"),
-					tg.radius,
-					5, nil,
-					{type="inferno"},
-					nil, tg.selffire
-				)
-			end
-		end)
-		game:playSoundNear(self, "talents/fireflash")
+		self:project(tg, x, y, DamageType.DARKKNOCKBACK, {dist=4, dam=self:spellCrit(t.getDamage(self, t))})
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "breath_dark", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
+		game:playSoundNear(self, "talents/fire")
 		return true
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[Conjures up a bolt of fire moving toward the target that explodes into a flash of fire doing %0.2f fire damage in a radius of %d.
+		return ([[Invoke a cone dealing %0.2f darkness damage, any creatures caught inside must make a mental save or be knocked back 4 grids away
 		The damage will increase with the Magic stat]]):
-		format(damDesc(self, DamageType.FIRE, damage), radius)
+		format(damDesc(self, DamageType.DARKNESS, damage))
 	end,
 }
 
@@ -169,43 +153,35 @@ newTalent{
 	type = {"spell/nightfall",4},
 	require = spells_req4,
 	points = 5,
-	random_ego = "attack",
-	mana = 100,
-	cooldown = 30,
+	mana = 60,
+	cooldown = 20,
 	tactical = { ATTACKAREA = 3 },
-	range = 10,
-	radius = 5,
+	range = 7,
+	radius = 1,
 	direct_hit = true,
 	requires_target = true,
-	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
-	end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 80) end,
-	getDuration = function(self, t) return 5 + self:getTalentLevel(t) end,
+	target = function(self, t) return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), friendlyfire=isFF(self), talent=t, display={particle="bolt_dark", trail="darktrail"}} end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 28, 280) end,
+	getMinion = function(self, t) return 10 + self:combatTalentSpellDamage(t, 10, 30) end,
+	getDur = function(self, t) return math.floor(3 + self:getTalentLevel(t)) end,
+	getSpeed = function(self, t) return math.min(self:getTalentLevel(t) * 0.065, 0.5) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		local _ _, _, _, x, y = self:canProject(tg, x, y)
-		-- Add a lasting map effect
-		game.level.map:addEffect(self,
-			x, y, t.getDuration(self, t),
-			DamageType.INFERNO, t.getDamage(self, t),
-			self:getTalentRadius(t),
-			5, nil,
-			{type="inferno"},
-			nil, self:spellFriendlyFire()
-		)
-
-		game:playSoundNear(self, "talents/fire")
+		self:projectile(tg, x, y, DamageType.RIGOR_MORTIS, {dam=t.getDamage(self, t), minion=t.getMinion(self, t), speed=t.getSpeed(self, t), dur=t.getDur(self, t)}, {type="dark"})
+		game:playSoundNear(self, "talents/fireflash")
 		return true
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		local duration = t.getDuration(self, t)
-		local radius = self:getTalentRadius(t)
-		return ([[Raging flames burn foes and allies alike doing %0.2f fire damage in a radius of %d each turn for %d turns.
-		The damage will increase with the Magic stat]]):
-		format(damDesc(self, DamageType.FIRE, damage), radius, duration)
+		local speed = t.getSpeed(self, t) * 100
+		local dur = t.getDur(self, t)
+		local minion = t.getMinion(self, t)
+		return ([[Invoke a ball of darkness that deals %0.2f darkness damage. Every creature hit will start to become closer to death and thus reduce global speed by %d%%.
+		Necrotic minions damage against those creatures is increased by %d%%.
+		The effects last for %d turns.
+		The damage done and minions damage increase will increase with the Magic stat]]):
+		format(damDesc(self, DamageType.DARKNESS, damage), speed, minion, dur)
 	end,
 }

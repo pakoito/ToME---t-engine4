@@ -21,7 +21,7 @@ newEntity{ define_as = "TRAP_NATURAL_FOREST",
 	type = "natural", subtype="forest", id_by_type=true, unided_name = "trap",
 	display = '^',
 	triggered = function(self, x, y, who)
-		self:project({type="hit",x=x,y=y}, x, y, self.damtype, self.dam, self.particles and {type=self.particles})
+		self:project({type="hit",x=x,y=y}, x, y, self.damtype, self.dam or 10, self.particles and {type=self.particles})
 		return true
 	end,
 }

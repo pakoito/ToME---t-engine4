@@ -48,6 +48,12 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			dam = dam + (dam * inc / 100)
 		end
 
+		-- Rigor mortis
+		if src.necrotic_minion and target:attr("inc_necrotic_minions") then
+			dam = dam + dam * target:attr("inc_necrotic_minions") / 100
+			print("[PROJECTOR] after necrotic increase dam", dam)
+		end
+
 		-- Blast the iceblock
 		if src.attr and src:attr("encased_in_ice") then
 			local eff = src:hasEffect(src.EFF_FROZEN)
@@ -744,6 +750,26 @@ newDamageType{
 				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
 			else
 				game.logSeen(target, "%s resists the punch!", target.name:capitalize())
+			end
+		end
+	end,
+}
+
+-- Darkness damage + repulsion; checks for spell power against mental resistance
+newDamageType{
+	name = "darkness knockback", type = "DARKKNOCKBACK",
+	projector = function(src, x, y, type, dam, tmp)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if _G.type(dam) ~= "table" then dam = {dam=dam, dist=3} end
+		tmp = tmp or {}
+		if target and not tmp[target] then
+			tmp[target] = true
+			DamageType:get(DamageType.DARKNESS).projector(src, x, y, DamageType.DARKNESS, dam.dam)
+			if target:checkHit(src:combatSpellpower(), target:combatMentalResist(), 0, 95, 15) and target:canBe("knockback") then
+				target:knockback(src.x, src.y, dam.dist)
+				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
+			else
+				game.logSeen(target, "%s resists the darkness!", target.name:capitalize())
 			end
 		end
 	end,
@@ -1636,6 +1662,21 @@ newDamageType{
 			else
 				game.logSeen(target, "%s resists the bane!", target.name:capitalize())
 			end
+		end
+	end,
+}
+
+-- Darkness damage + speed reduction + minion damage inc
+newDamageType{
+	name = "rigor mortis", type = "RIGOR_MORTIS",
+	projector = function(src, x, y, type, dam, tmp)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			DamageType:get(DamageType.DARKNESS).projector(src, x, y, DamageType.DARKNESS, dam.dam)
+			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) then
+				target:setEffect(target.EFF_SLOW, dam.dur, {power=dam.speed})
+			end
+			target:setEffect(target.EFF_RIGOR_MORTIS, dam.dur, {power=dam.minion})
 		end
 	end,
 }

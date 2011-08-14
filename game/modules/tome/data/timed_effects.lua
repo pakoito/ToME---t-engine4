@@ -4370,3 +4370,20 @@ newEffect{
 		self:removeTemporaryValue("no_healing", eff.healid)
 	end,
 }
+
+newEffect{
+	name = "RIGOR_MORTIS",
+	desc = "Rigor Mortis",
+	long_desc = function(self, eff) return ("The target takes %d%% more damage from necrotic minions."):format(eff.power) end,
+	type = "magical",
+	status = "detrimental",
+	parameters = {power=20},
+	on_gain = function(self, err) return "#Target# feels death coming!", "+Rigor Mortis" end,
+	on_lose = function(self, err) return "#Target# is freed from the rigor mortis.", "-Rigor Mortis" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("inc_necrotic_minions", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("inc_necrotic_minions", eff.tmpid)
+	end,
+}

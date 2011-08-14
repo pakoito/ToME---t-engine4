@@ -68,6 +68,7 @@ newTalent{
 	tactical = { BUFF = 3 },
 	getParams = function(self, t) return util.bound(30 + self:getTalentLevel(t) * 10, 30, 100), 20 + self:combatTalentSpellDamage(t, 25, 300) end,
 	summon = function(self, t, dam, src, killer)
+		if not killer or not killer.faction or self:reactionToward(killer) >= 0 then return end
 		local minion = require("mod.class.NPC").new{
 			name = "will o' the wisp",
 			type = "undead", subtype = "ghost",
@@ -106,7 +107,6 @@ newTalent{
 			minion.on_act = nil
 			minion:setTarget(killer)
 		end
-
 	end,
 	activate = function(self, t)
 		local chance, dam = t.getParams(self, t)
