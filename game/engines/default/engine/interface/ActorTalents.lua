@@ -124,7 +124,6 @@ function _M:useTalent(id, who, force_level, ignore_cd, force_target)
 		end
 		if not self:preUseTalent(ab) then return end
 		local co = coroutine.create(function()
-			print("USING", ab, ab.name)
 			local old_level
 			local old_target
 			if force_level then old_level = who.talents[id]; who.talents[id] = force_level end

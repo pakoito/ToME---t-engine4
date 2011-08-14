@@ -172,23 +172,37 @@ local minions_list = {
 }
 
 newTalent{
-	name = "Sacrifice",
+	name = "Undead Explosion",
 	type = {"spell/advanced-necrotic-minions",1},
 	require = spells_req1,
 	points = 5,
-	mana = 5,
-	cooldown = 14,
-	tactical = { ATTACK = 10 },
+	mana = 30,
+	cooldown = 10,
+	tactical = { ATTACKAREA = 2 },
+	radius = function(self, t) return 1 + math.floor(self:getTalentLevel(t) / 3) end,
+	range = 8,
 	requires_target = true,
+	no_npc_use = true,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t,  20, 80) end,
 	action = function(self, t)
-		game:playSoundNear(self, "talents/spell_generic2")
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t, first_target="friend"}
+		local tx, ty, target = self:getTarget(tg)
+		if not tx or not ty or not target or not target.summoner or not target.summoner == self or not target.necrotic_minion then return nil end
+
+		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t}
+		local dam = target.life * t.getDamage(self, t) / 100
+		target:die()
+		target:project(tg, target.x, target.y, DamageType.BLIGHT, dam)
+		game.level.map:particleEmitter(target.x, target.y, tg.radius, "ball_acid", {radius=tg.radius})
+
+		game:playSoundNear(self, "talents/fireflash")
 		return true
 	end,
 	info = function(self, t)
-		return ([[
-		bone shield ?
-		]]):
-		format()
+		return ([[Minions are only tools, you may dispose of them... violently.
+		Makes the targetted minion explode for %d%% of its remaining life as blight damage.
+		Beware to not be caught in the blast!]]):
+		format(t.getDamage(self, t))
 	end,
 }
 
@@ -221,7 +235,6 @@ newTalent{
 		if nb < 3 then return false end
 		return true
 	end,
-	getTurns = function(self, t) return math.floor(self:combatTalentSpellDamage(t, 8, 40)) end,
 	getLevel = function(self, t)
 		local raw = self:getTalentLevelRaw(t)
 		if raw <= 0 then return -8 end
@@ -260,51 +273,71 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Combines 3 of your skeletons into a bone giant.
-		The giant is unstable and will only exist for %d turns.
 		At level 1 it makes a bone giant.
 		At level 3 it makes a heavy bone giant.
 		At level 5 it makes an eternal bone giant.
 		At level 6 it has 20%% chances to produce a runed bone giant.
 		Only one bone giant can be active at any time.
 		The number of turns will inrease with your Magic stat.]]):
-		format(t.getTurns(self, t))
+		format()
 	end,
 }
 
 newTalent{
-	name = "Undead Explosion",
+	name = "Sacrifice",
 	type = {"spell/advanced-necrotic-minions",3},
 	require = spells_req3,
 	points = 5,
-	mana = 30,
-	cooldown = 10,
-	tactical = { ATTACKAREA = 2 },
-	radius = function(self, t) return 1 + math.floor(self:getTalentLevel(t) / 3) end,
-	range = 8,
+	mana = 5,
+	cooldown = 25,
+	tactical = { DEFEND = 1 },
 	requires_target = true,
-	no_npc_use = true,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t,  20, 80) end,
+	on_pre_use = function(self, t)
+		if game.party and game.party:hasMember(self) then
+			for act, def in pairs(game.party.members) do
+				if act.summoner and act.summoner == self and act.necrotic_minion then
+					if act.subtype == "giant" then return true end
+				end
+			end
+		else
+			for uid, act in pairs(game.level.entities) do
+				if act.summoner and act.summoner == self and act.necrotic_minion then
+					if act.subtype == "giant" then return true end
+				end
+			end
+		end
+		return false
+	end,
+	getTurns = function(self, t) return math.floor(4 + self:combatTalentSpellDamage(t, 8, 20)) end,
+	getBones = function(self, t) return math.floor(1 + self:getTalentLevel(t)) end,
 	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t), talent=t, first_target="friend"}
-		local tx, ty, target = self:getTarget(tg)
-		if not tx or not ty or not target or not target.summoner or not target.summoner == self or not target.necrotic_minion then return nil end
+		local list = {}
+		if game.party and game.party:hasMember(self) then
+			for act, def in pairs(game.party.members) do
+				if act.summoner and act.summoner == self and act.necrotic_minion and act.subtype == "giant" then list[#list+1] = act end
+			end
+		else
+			for uid, act in pairs(game.level.entities) do
+				if act.summoner and act.summoner == self and act.necrotic_minion and act.subtype == "giant" then list[#list+1] = act end
+			end
+		end
+		if #list < 1 then return end
 
-		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t}
-		local dam = target.life * t.getDamage(self, t) / 100
-		target:die()
-		target:project(tg, target.x, target.y, DamageType.BLIGHT, dam)
-		game.level.map:particleEmitter(target.x, target.y, tg.radius, "ball_acid", {radius=tg.radius})
+		rng.tableRemove(list):die(self)
 
-		game:playSoundNear(self, "talents/fireflash")
+		self:setEffect(self.EFF_BONE_SHIELD, t.getTurns(self, t), {nb=t.getBones(self, t)})
+
+		game:playSoundNear(self, "talents/spell_generic2")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Minions are only tools, you may dispose of them... violently.
-		Makes the targetted minion explode for %d%% of its remaining life as blight damage.
-		Beware to not be caught in the blast!]]):
-		format(t.getDamage(self, t))
+		return ([[Sacrifice a bone giant minion. Using its bones you make a temporary bone shield around you with %d charges.
+		The effect lasts until all bones are depleted or %d turns.
+		Each charge will fully absorb one attack.]]):
+		format(t.getBones(self, t), t.getTurns(self, t))
 	end,
 }
+
 
 newTalent{
 	name = "Minion Mastery",
