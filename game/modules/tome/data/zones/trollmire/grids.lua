@@ -20,3 +20,12 @@
 load("/data/general/grids/basic.lua")
 load("/data/general/grids/forest.lua")
 load("/data/general/grids/water.lua")
+
+newEntity{
+	define_as = "STEW",
+	type = "wall", subtype = "grass",
+	name = "troll stew", image = "terrain/grass.png", add_mos={{image="terrain/troll_stew.png"}},
+	display = '~', color=colors.LIGHT_RED, back_color=colors.RED,
+	does_block_move = true,
+	pass_projectile = true,
+}

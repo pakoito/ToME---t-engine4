@@ -22,6 +22,7 @@ defineTile("$", "GRASS", {random_filter={type="money"}})
 defineTile("*", "GRASS", {random_filter={type="gem"}})
 defineTile("<", "GRASS_UP4")
 defineTile(".", "GRASS")
+defineTile("=", "STEW")
 defineTile("@", "GRASS", nil, "TROLL_BILL")
 defineTile("t", "HARDTREE")
 defineTile("T", "GRASS", nil, {random_filter={type="giant", subtype="troll"}})
@@ -44,7 +45,7 @@ ttttttttttt..ttttttt
 tttttt.ttttT.ttttttt
 ttttt$$$.......ttttt
 tttt.$$$.......ttttt
-ttttt.@.........tttt
+ttttt.@=........tttt
 <...t***........Tttt
 ttt.t***........tttt
 ttt.t.t.........tttt

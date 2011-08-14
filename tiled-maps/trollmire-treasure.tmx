@@ -71,7 +71,7 @@
   </tile>
   <tile id="1">
    <properties>
-    <property name="display" value="2"/>
+    <property name="display" value="="/>
    </properties>
   </tile>
   <tile id="2">
@@ -185,7 +185,7 @@
  </tileset>
  <layer name="Terrain" width="20" height="20">
   <data encoding="base64" compression="zlib">
-   eJwzZ2BgMB8mmIsG5lHTTErMw6aPXPO4iMTUNIsUd1Ji5lYs8qSYh8+d5JhHTJySYi65aYRa5hFjLjXNI8d9lKRlXGxccqT6ZyUJ7hkKGABHfkHJ
+   eJwzZ2BgMB8mmIsG5lHTTErMw6aPXPO4iMTUNIsUd8LUbyPDzK1Y5ElxIz53kmMeMXFKirnkphFqmUeMudQ0jxz3UZKWcbFxyZHqn5UkuGcoYAC5zEJ1
   </data>
  </layer>
  <objectgroup name="Actor" width="20" height="20">
