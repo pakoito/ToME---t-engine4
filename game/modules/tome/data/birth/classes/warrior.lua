@@ -156,6 +156,9 @@ newBirthDescriptor{
 		["cunning/survival"]={true, -0.1},
 		["cunning/dirty"]={false, -0.1},
 	},
+	unlockable_talents_types = {
+		["spell/stone"]={false, 0.1, "mage_geomancer"},
+	},
 	talents = {
 		[ActorTalents.T_FLAME] = 1,
 		[ActorTalents.T_ARCANE_COMBAT] = 1,
@@ -164,7 +167,7 @@ newBirthDescriptor{
 	},
 	copy = {
 		max_life = 100,
-		talent_cd_reduction={[ActorTalents.T_FLAME]=-3, [ActorTalents.T_LIGHTNING]=-3, },
+		talent_cd_reduction={[ActorTalents.T_FLAME]=-3, [ActorTalents.T_LIGHTNING]=-3, [ActorTalents.T_EARTHEN_MISSILES]=-3, },
 		resolvers.equip{ id=true,
 			{type="weapon", subtype="greatsword", name="iron greatsword", autoreq=true, ego_chance=-1000, ego_chance=-1000},
 			{type="armor", subtype="light", name="rough leather armour", autoreq=true, ego_chance=-1000, ego_chance=-1000},

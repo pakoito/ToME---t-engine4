@@ -34,6 +34,7 @@ newTalent{
 			local mana = self:getMana() - 1
 			if self:knowTalent(self.T_FLAME) and mana > self:getTalentFromId(self.T_FLAME).mana * fatigue then spells[#spells+1] = self.T_FLAME end
 			if self:knowTalent(self.T_LIGHTNING) and mana > self:getTalentFromId(self.T_LIGHTNING).mana * fatigue then spells[#spells+1] = self.T_LIGHTNING end
+			if self:knowTalent(self.T_EARTHEN_MISSILES) and mana > self:getTalentFromId(self.T_EARTHEN_MISSILES).mana * fatigue then spells[#spells+1] = self.T_EARTHEN_MISSILES end
 			local tid = rng.table(spells)
 			if tid then
 				-- Extending beam target, assumes a maximum range of 10
@@ -73,7 +74,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Allows one to use a melee weapon to focus spells, granting %d%% chance per melee attack to deliver a Flame, or Lightning spell as a free action on the target.
+		return ([[Allows one to use a melee weapon to focus spells, granting %d%% chance per melee attack to deliver a Flame, Lightning or Earthen Missiles spell as a free action on the target.
 		Delivering the spell this way will not trigger a spell cooldown, but only works if the spell is not cooling-down.
 		The chance increases with dexterity.]]):
 		format(20 + self:getTalentLevel(t) * (1 + self:getDex(9, true)))

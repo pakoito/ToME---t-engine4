@@ -22,7 +22,7 @@ return "New Talent Category: #LIGHT_GREEN#Stone",
 While most mages are content using the Earth school, a few of them took their research deeper and created Stone magic.
 At its core lies the Crystalline Focus, which can create attacks so sharp they can cut through physical immunity.
 
-You have mastered stone magic and can now create new Archmage characters that can learn the #LIGHT_GREEN#Stone talents#WHITE#.
+You have mastered stone magic and can now create new Archmage and Arcane Blade characters that can learn the #LIGHT_GREEN#Stone talents#WHITE#.
 
 Talents:
 - #YELLOW#Earthen Missiles: #WHITE#Fires multiple missiles of stone indepentenly to targets
