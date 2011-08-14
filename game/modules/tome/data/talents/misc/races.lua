@@ -185,6 +185,7 @@ newTalent{
 	points = 5,
 	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 3 end,
 	mode = "sustained",
+	no_energy = true,
 	activate = function(self, t)
 		self.invis_on_hit_disable = self.invis_on_hit_disable or {}
 		game:playSoundNear(self, "talents/spell_generic2")
