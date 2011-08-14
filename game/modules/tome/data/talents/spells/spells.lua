@@ -195,7 +195,7 @@ function necroSetupSummon(self, m, x, y, level, no_control)
 		local src = self.summoner
 		local w = src:isTalentActive(src.T_WILL_O__THE_WISP)
 		local p = src:isTalentActive(src.T_NECROTIC_AURA)
-		if w and p and self.x and self.y and src.x and src.y and core.fov.distance(self.x, self.y, src.x, src.y) > self.summoner.necrotic_aura_radius then return end
+		if not w or not p or not self.x or not self.y or not src.x or not src.y or core.fov.distance(self.x, self.y, src.x, src.y) > self.summoner.necrotic_aura_radius then return end
 		if not rng.percent(w.chance) then return end
 
 		local t = src:getTalentFromId(src.T_WILL_O__THE_WISP)

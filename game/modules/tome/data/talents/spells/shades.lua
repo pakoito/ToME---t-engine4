@@ -18,107 +18,52 @@
 -- darkgod@te4.org
 
 newTalent{
-	name = "???1",
+	name = "Shadow Tunnel",
 	type = {"spell/shades",1},
-	require = spells_req1,
+	require = spells_req_high1,
 	points = 5,
 	random_ego = "attack",
-	mana = 12,
-	cooldown = 3,
-	tactical = { ATTACK = 2 },
-	range = 10,
-	reflectable = true,
-	proj_speed = 20,
+	mana = 25,
+	cooldown = 20,
+	tactical = { DEFEND = 2 },
 	requires_target = true,
-	target = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_dark", trail="darktrail"}}
-		if self:getTalentLevel(t) >= 5 then tg.type = "beam" end
-		return tg
-	end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 25, 230) end,
+	getChance = function(self, t) return 20 + self:combatTalentSpellDamage(t, 15, 60) end,
 	action = function(self, t)
-		local tg = self:getTalentTarget(t)
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		if self:getTalentLevel(t) < 3 then
-			self:projectile(tg, x, y, DamageType.DARKNESS, self:spellCrit(t.getDamage(self, t)), function(self, tg, x, y, grids)
-				game.level.map:particleEmitter(x, y, 1, "dark")
-			end)
+		local list = {}
+		if game.party and game.party:hasMember(self) then
+			for act, def in pairs(game.party.members) do
+				if act.summoner and act.summoner == self and act.necrotic_minion then list[#list+1] = act end
+			end
 		else
-			self:project(tg, x, y, self:getTalentLevel(t) >= 5 and DamageType.MINION_DARKNESS or DamageType.DARKNESS, self:spellCrit(t.getDamage(self, t)))
-			local _ _, x, y = self:canProject(tg, x, y)
-			game.level.map:particleEmitter(self.x, self.y, tg.radius, "shadow_beam", {tx=x-self.x, ty=y-self.y})
+			for uid, act in pairs(game.level.entities) do
+				if act.summoner and act.summoner == self and act.necrotic_minion then list[#list+1] = act end
+			end
+		end
+
+		for i, m in ipairs(list) do
+			local x, y = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
+			if x and y then
+				m:move(x, y, true)
+				game.level.map:particleEmitter(x, y, 1, "summon")
+			end
+			m:setEffect(m.EFF_EVASION, 5, {chance=t.getChance(self, t)})
 		end
 
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
-		local damage = t.getDamage(self, t)
-		return ([[Conjures up a bolt of darkness, doing %0.2f darkness damage.
-		At level 3 it will create a beam of shadows.
-		At level 5 it will not hurt your minions anymore.
-		The damage will increase with the Magic stat]]):
-		format(damDesc(self, DamageType.DARKNESS, damage))
-	end,
-}
-
-newTalent{
-	name = "???2",
-	type = {"spell/shades",2},
-	require = spells_req2,
-	points = 5,
-	random_ego = "attack",
-	mana = 30,
-	cooldown = 18,
-	tactical = { ATTACK = 1, DISABLE = 3 },
-	range = 0,
-	radius = function(self, t)
-		return 3 + self:getTalentLevelRaw(t)
-	end,
-	requires_target = true,
-	target = function(self, t)
-		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
-	end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 120) end,
-	getStunDuration = function(self, t) return self:getTalentLevelRaw(t) + 2 end,
-	action = function(self, t)
-		local tg = self:getTalentTarget(t)
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.FLAMESHOCK, {dur=t.getStunDuration(self, t), dam=self:spellCrit(t.getDamage(self, t))})
-
-		if self:attr("burning_wake") then
-			local l = line.new(self.x, self.y, x, y)
-			local lx, ly = l()
-			local dir = lx and coord_to_dir[lx - self.x][ly - self.y] or 6
-
-			game.level.map:addEffect(self,
-				self.x, self.y, 4,
-				DamageType.INFERNO, self:attr("burning_wake"),
-				tg.radius,
-				{angle=math.deg(math.atan2(y - self.y, x - self.x))}, 55,
-				{type="inferno"},
-				nil, self:spellFriendlyFire()
-			)
-		end
-		game.level.map:particleEmitter(self.x, self.y, tg.radius, "breath_fire", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
-		game:playSoundNear(self, "talents/fire")
-		return true
-	end,
-	info = function(self, t)
-		local damage = t.getDamage(self, t)
-		local stunduration = t.getStunDuration(self, t)
-		return ([[Conjures up a cone of flame. Any target caught in the area will take %0.2f fire damage and be paralyzed for %d turns.
-		The damage will increase with the Magic stat]]):
-		format(damDesc(self, DamageType.FIRE, damage), stunduration)
+		local chance = t.getChance(self, t)
+		return ([[Surround your minions in a veil of darkness. The darkness will teleport them to you and grant them %d%% evasion for 5 turns.
+		The evasion chance will increase with the Magic stat]]):
+		format(chance)
 	end,
 }
 
 newTalent{
 	name = "Curse of the Meek",
-	type = {"spell/shades",3},
-	require = spells_req3,
+	type = {"spell/shades",2},
+	require = spells_req_high2,
 	points = 5,
 	mana = 50,
 	cooldown = 30,
@@ -211,12 +156,12 @@ newTalent{
 
 newTalent{
 	name = "Forgery of Haze",
-	type = {"spell/shades",4},
-	require = spells_req4,
+	type = {"spell/shades",3},
+	require = spells_req_high3,
 	points = 5,
-	mana = 50,
-	cooldown = 8,
-	tactical = { ATTACK = 2, ESCAPE = 1 },
+	mana = 70,
+	cooldown = 30,
+	tactical = { ATTACK = 2, },
 	requires_target = true,
 	getDuration = function(self, t) return math.floor(3 + self:getTalentLevel(t)) end,
 	getHealth = function(self, t) return 0.2 + self:combatTalentSpellDamage(t, 20, 500) / 1000 end,
@@ -274,5 +219,38 @@ newTalent{
 		return ([[Through the shadows you forge a temporary copy of yourself, existing for %d turns.
 		The copy possess your exact talents and stats and has %d%% life.]]):
 		format(t.getDuration(self, t), t.getHealth(self, t) * 100)
+	end,
+}
+
+newTalent{
+	name = "Frostdusk",
+	type = {"spell/shades",4},
+	require = spells_req_high4,
+	points = 5,
+	mode = "sustained",
+	sustain_mana = 50,
+	cooldown = 30,
+	tactical = { BUFF = 2 },
+	getDarknessDamageIncrease = function(self, t) return self:getTalentLevelRaw(t) * 2 end,
+	getResistPenalty = function(self, t) return self:getTalentLevelRaw(t) * 10 end,
+	activate = function(self, t)
+		game:playSoundNear(self, "talents/spell_generic")
+		return {
+			dam = self:addTemporaryValue("inc_damage", {[DamageType.DARKNESS] = t.getDarknessDamageIncrease(self, t), [DamageType.COLD] = t.getDarknessDamageIncrease(self, t)}),
+			resist = self:addTemporaryValue("resists_pen", {[DamageType.DARKNESS] = t.getResistPenalty(self, t)}),
+			particle = self:addParticles(Particles.new("ultrashield", 1, {rm=0, rM=0, gm=0, gM=0, bm=10, bM=100, am=70, aM=180, radius=0.4, density=60, life=14, instop=20})),
+		}
+	end,
+	deactivate = function(self, t, p)
+		self:removeParticles(p.particle)
+		self:removeTemporaryValue("inc_damage", p.dam)
+		self:removeTemporaryValue("resists_pen", p.resist)
+		return true
+	end,
+	info = function(self, t)
+		local damageinc = t.getDarknessDamageIncrease(self, t)
+		local ressistpen = t.getResistPenalty(self, t)
+		return ([[Surround yourself with Frostdusk, increasing all your darkness and cold damage by %d%% and ignoring %d%% darkness resistance of your targets.]])
+		:format(damageinc, ressistpen)
 	end,
 }

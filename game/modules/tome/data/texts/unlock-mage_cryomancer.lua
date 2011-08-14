@@ -22,7 +22,7 @@ return "New Talent Category: #LIGHT_GREEN#Ice",
 While most mages are content using the Water school, a few of them took their research deeper and created Ice magic.
 At its core lies the Uttercold, a cold so cold it can even damage creatures normaly immune.
 
-You have mastered ice magic and can now create new Archmage characters that can learn the #LIGHT_GREEN#Ice talents#WHITE#.
+You have mastered ice magic and can now create new Archmage and Necromancer characters that can learn the #LIGHT_GREEN#Ice talents#WHITE#.
 
 Talents:
 - #YELLOW#Ice Shards: #WHITE#Fires slow moving ice crystals at a target area, each hit has a chance to freeze
