@@ -174,6 +174,23 @@ function _M:checkNew(fct)
 	end
 end
 
+function _M:applyingDescriptor(i, d)
+	if d.unlockable_talents_types then
+		for t, v in pairs(d.unlockable_talents_types) do
+			if profile.mod.allow_build[v[3]] then
+				local mastery
+				if type(v) == "table" then
+					v, mastery = v[1], v[2]
+				else
+					v, mastery = v, 0
+				end
+				self.actor:learnTalentType(t, v)
+				self.actor.talents_types_mastery[t] = (self.actor.talents_types_mastery[t] or 1) + mastery
+			end
+		end
+	end
+end
+
 function _M:atEnd(v)
 	if v == "created" and not self.ui_by_ui[self.c_ok].hidden then
 		self:checkNew(function()

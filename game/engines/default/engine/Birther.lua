@@ -363,6 +363,7 @@ function _M:apply()
 			self.actor.body = d.body
 			self.actor:initBody()
 		end
+		if self.applyingDescriptor then self:applyingDescriptor(i, d) end
 	end
 
 	-- Apply stats now to not be overridden by other things

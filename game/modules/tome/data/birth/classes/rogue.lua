@@ -67,16 +67,14 @@ newBirthDescriptor{
 		["cunning/lethality"]={true, 0.3},
 		["cunning/survival"]={true, 0.3},
 	},
+	unlockable_talents_types = {
+		["cunning/poisons"]={false, 0.3, "rogue_poisons"},
+	},
 	talents = {
 		[ActorTalents.T_STEALTH] = 1,
 		[ActorTalents.T_TRAP_MASTERY] = 1,
 		[ActorTalents.T_LETHALITY] = 1,
 		[ActorTalents.T_DUAL_STRIKE] = 1,
-	},
-	copy = {
-		resolvers.generic(function(self)
-			if profile.mod.allow_build.rogue_poisons then self:learnTalentType("cunning/poisons", false) self:setTalentTypeMastery("cunning/poisons", 1.3) end
-		end),
 	},
 }
 

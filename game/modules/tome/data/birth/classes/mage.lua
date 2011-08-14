@@ -70,6 +70,12 @@ newBirthDescriptor{
 		["spell/aegis"]={true, 0.3},
 		["cunning/survival"]={false, -0.1},
 	},
+	unlockable_talents_types = {
+		["spell/wildfire"]={false, 0.3, "mage_pyromancer"},
+		["spell/ice"]={false, 0.3, "mage_cryomancer"},
+		["spell/stone"]={false, 0.3, "mage_geomancer"},
+		["spell/storm"]={false, 0.3, "mage_tempest"},
+	},
 	birth_example_particles = "arcane_power",
 	talents = {
 		[ActorTalents.T_ARCANE_POWER] = 1,
@@ -97,12 +103,6 @@ newBirthDescriptor{
 			{type="weapon", subtype="staff", name="elm staff", autoreq=true, ego_chance=-1000},
 			{type="armor", subtype="cloth", name="linen robe", autoreq=true, ego_chance=-1000},
 		},
-		resolvers.generic(function(self)
-			if profile.mod.allow_build.mage_pyromancer then self:learnTalentType("spell/wildfire", false) self:setTalentTypeMastery("spell/wildfire", 1.3) end
-			if profile.mod.allow_build.mage_cryomancer then self:learnTalentType("spell/ice", false) self:setTalentTypeMastery("spell/ice", 1.3) end
-			if profile.mod.allow_build.mage_geomancer then self:learnTalentType("spell/stone", false) self:setTalentTypeMastery("spell/stone", 1.3) end
-			if profile.mod.allow_build.mage_tempest then self:learnTalentType("spell/storm", false) self:setTalentTypeMastery("spell/storm", 1.3) end
-		end),
 	},
 	copy_add = {
 		life_rating = -4,
