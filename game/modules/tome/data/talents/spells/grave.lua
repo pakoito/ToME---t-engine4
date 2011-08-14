@@ -20,37 +20,120 @@
 local Object = require "mod.class.Object"
 
 newTalent{
-	name = "Necromantic Fang",
+	name = "Chill of the Tomb",
 	type = {"spell/grave",1},
 	require = spells_req1,
 	points = 5,
-	random_ego = "attack",
-	mana = 12,
-	cooldown = 3,
-	tactical = { ATTACK = 2 },
-	range = 10,
-	reflectable = true,
-	proj_speed = 20,
+	mana = 30,
+	cooldown = 8,
+	tactical = { ATTACKAREA = 2 },
+	range = 7,
+	radius = function(self, t)
+		return 1 + self:getTalentLevelRaw(t)
+	end,
+	proj_speed = 4,
+	direct_hit = true,
 	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 25, 230) end,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=self:spellFriendlyFire(), talent=t, display={particle="bolt_ice", trail="icetrail"}}
+	end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 28, 280) end,
 	action = function(self, t)
+		local tg = self:getTalentTarget(t)
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:projectile(tg, x, y, DamageType.COLD, self:spellCrit(t.getDamage(self, t)), function(self, tg, x, y, grids)
+			game.level.map:particleEmitter(x, y, tg.radius, "iceflash", {radius=tg.radius, tx=x, ty=y})
+		end)
+		game:playSoundNear(self, "talents/ice")
 		return true
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Conjures up a bolt of darkness, doing %0.2f darkness damage.
-		At level 3 it will create a beam of shadows.
-		At level 5 it will not hurt your minions anymore.
+		local radius = self:getTalentRadius(t)
+		return ([[Conjures up a bolt of cold moving toward the target that explodes into a chilly circle of death doing %0.2f cold damage in a radius of %d.
 		The damage will increase with the Magic stat]]):
-		format(damDesc(self, DamageType.DARKNESS, damage))
+		format(damDesc(self, DamageType.COLD, damage), radius)
+	end,
+}
+
+newTalent{
+	name = "Will o' the Wisp",
+	type = {"spell/grave",2},
+	require = spells_req2,
+	mode = "sustained",
+	points = 5,
+	mana = 60,
+	cooldown = 30,
+	tactical = { BUFF = 3 },
+	getParams = function(self, t) return util.bound(30 + self:getTalentLevel(t) * 10, 30, 100), 20 + self:combatTalentSpellDamage(t, 25, 300) end,
+	summon = function(self, t, dam, src, killer)
+		local minion = require("mod.class.NPC").new{
+			name = "will o' the wisp",
+			type = "undead", subtype = "ghost",
+			blood_color = colors.GREY,
+			display = "G", color=colors.WHITE,
+			combat = { dam=1, atk=1, apr=1 },
+			autolevel = "warriormage",
+			ai = "dumb_talented_simple", ai_state = { talent_in=1, },
+			dont_pass_target = true,
+			movement_speed = 2,
+			stats = { str=14, dex=18, mag=20, con=12 },
+			rank = 2,
+			size_category = 1,
+			infravision = 10,
+			can_pass = {pass_wall=70},
+			resists = {all = 35, [DamageType.LIGHT] = -70, [DamageType.DARKNESS] = 65},
+			no_breath = 1,
+			stone_immune = 1,
+			confusion_immune = 1,
+			fear_immune = 1,
+			teleport_immune = 0.5,
+			disease_immune = 1,
+			poison_immune = 1,
+			stun_immune = 1,
+			blind_immune = 1,
+			cut_immune = 1,
+			see_invisible = 80,
+			undead = 1,
+			will_o_wisp_dam = dam,
+			talents = {T_WILL_O__THE_WISP_EXPLODE = 1},
+		}
+		local x, y = util.findFreeGrid(src.x or self.x, src.y or self.y, 5, true, {[Map.ACTOR]=true})
+		if minion and x and y then
+			necroSetupSummon(self, minion, x, y, lev, true)
+			minion.on_die = nil
+			minion.on_act = nil
+			minion:setTarget(killer)
+		end
+
+	end,
+	activate = function(self, t)
+		local chance, dam = t.getParams(self, t)
+		game:playSoundNear(self, "talents/spell_generic2")
+		local ret = {
+			chance = chance,
+			dam = dam,
+		}
+		return ret
+	end,
+	deactivate = function(self, t, p)
+		return true
+	end,
+	info = function(self, t)
+		local chance, dam = t.getParams(self, t)
+		return ([[Surround yourself with undead energies, when one of your minions is destroyed while inside your necrotic aura it has %d%% chances to create a will o' the wisp.
+		Will o' the wisp will take a random target in sight and home on it, when they reach it they explode for %0.2f cold damage.
+		The damage will increase with the Magic stat]]):
+		format(chance, damDesc(self, DamageType.DARKNESS, dam))
 	end,
 }
 
 -- Kinda copied from Creeping Darkness
 newTalent{
 	name = "Cold Flames",
-	type = {"spell/grave",2},
-	require = spells_req2,
+	type = {"spell/grave",3},
+	require = spells_req3,
 	points = 5,
 	mana = 40,
 	cooldown = 22,
@@ -232,45 +315,6 @@ newTalent{
 		local darkCount = t.getDarkCount(self, t)
 		return ([[Cold Flames slowly spreads from %d spots in a radius of %d around the targeted location. The flames deals %0.2f cold damage and has a chance of freezing.
 		Damage improves with the Magic stat.]]):format(darkCount, radius, damDesc(self, DamageType.COLD, damage))
-	end,
-}
-
-newTalent{
-	name = "Chill of the Tomb",
-	type = {"spell/grave",3},
-	require = spells_req3,
-	points = 5,
-	random_ego = "attack",
-	mana = 40,
-	cooldown = 8,
-	tactical = { ATTACKAREA = 2 },
-	range = 7,
-	radius = function(self, t)
-		return 1 + self:getTalentLevelRaw(t)
-	end,
-	proj_speed = 4,
-	direct_hit = true,
-	requires_target = true,
-	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=self:spellFriendlyFire(), talent=t, display={particle="bolt_ice", trail="icetrail"}}
-	end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 28, 280) end,
-	action = function(self, t)
-		local tg = self:getTalentTarget(t)
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		self:projectile(tg, x, y, DamageType.COLD, self:spellCrit(t.getDamage(self, t)), function(self, tg, x, y, grids)
-			game.level.map:particleEmitter(x, y, tg.radius, "iceflash", {radius=tg.radius, tx=x, ty=y})
-		end)
-		game:playSoundNear(self, "talents/ice")
-		return true
-	end,
-	info = function(self, t)
-		local damage = t.getDamage(self, t)
-		local radius = self:getTalentRadius(t)
-		return ([[Conjures up a bolt of cold moving toward the target that explodes into a chilly circle of death doing %0.2f cold damage in a radius of %d.
-		The damage will increase with the Magic stat]]):
-		format(damDesc(self, DamageType.COLD, damage), radius)
 	end,
 }
 

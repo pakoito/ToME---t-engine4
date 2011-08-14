@@ -203,7 +203,7 @@ newBirthDescriptor{
 	talents = {
 		[ActorTalents.T_NECROTIC_AURA] = 1,
 		[ActorTalents.T_CREATE_MINIONS] = 1,
-		[ActorTalents.T_NECROMANTIC_FANG] = 1,
+--		[ActorTalents.T_NECROMANTIC_FANG] = 1,
 		[ActorTalents.T_INVOKE_DARKNESS] = 1,
 		[ActorTalents.T_BLURRED_MORTALITY] = 1,
 	},

@@ -191,6 +191,17 @@ function necroSetupSummon(self, m, x, y, level, no_control)
 		end
 	end
 
+	m.on_die = function(self, killer)
+		local src = self.summoner
+		local w = src:isTalentActive(src.T_WILL_O__THE_WISP)
+		local p = src:isTalentActive(src.T_NECROTIC_AURA)
+		if w and p and self.x and self.y and src.x and src.y and core.fov.distance(self.x, self.y, src.x, src.y) > self.summoner.necrotic_aura_radius then return end
+		if not rng.percent(w.chance) then return end
+
+		local t = src:getTalentFromId(src.T_WILL_O__THE_WISP)
+		t.summon(src, t, w.dam, self, killer)
+	end
+
 	-- Summons never flee
 	m.ai_tactic = m.ai_tactic or {}
 	m.ai_tactic.escape = 0

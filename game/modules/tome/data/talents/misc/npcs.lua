@@ -1239,6 +1239,31 @@ newTalent{
 }
 
 newTalent{
+	name = "Will o' the Wisp Explode",
+	type = {"technique/other", 1},
+	points = 5,
+	message = "@Source@ explodes! @target@ is enveloped in frost.",
+	cooldown = 1,
+	range = 1,
+	requires_target = true,
+	tactical = { ATTACK = 1 },
+	action = function(self, t)
+		local tg = {type="bolt", range=1}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y then return nil end
+		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		self:project(tg, x, y, DamageType.COLD, self.will_o_wisp_dam or 1)
+		game.level.map:particleEmitter(self.x, self.y, 1, "ball_ice", {radius = 1, r = 1, g = 0, b = 0})
+		self:die(self)
+		game:playSoundNear(self, "talents/ice")
+		return true
+	end,
+	info = function(self, t)
+		return ([[Explodes.]])
+	end,
+}
+
+newTalent{
 	name = "Elemental bolt",
 	type = {"spell/other", 1},
 	points = 5,
