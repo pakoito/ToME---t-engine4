@@ -228,7 +228,7 @@ function resolvers.calc.chatfeature(t, e)
 		if who and who.player and act then
 			if self.chat_faction and who:reactionToward({faction=self.chat_faction}) < 0 then return true end
 			local Chat = require("engine.Chat")
-			local chat = Chat.new(self.chat, self, who)
+			local chat = Chat.new(self.chat, self, who, {npc=self, player=who})
 			chat:invoke()
 		end
 		return true

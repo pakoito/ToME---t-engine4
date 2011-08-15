@@ -38,11 +38,13 @@ newEntity{
 for i = 1, 3 do newEntity{ base="SWAMPTREE", define_as = "SWAMPTREE"..i, image = "terrain/grass.png", add_displays = class:makeTrees("terrain/swamptree", 3, 3)} end
 
 newEntity{ base = "FLOOR", define_as = "ROAD",
+	type = "floor", subtype = "road",
 	name="cobblestone road",
 	display='.', image="terrain/stone_road1.png"
 }
 
 newEntity{ base = "FLOOR", define_as = "GRAVE",
+	type = "wall", subtype = "grass",
 	name="grave",
 	display='&', image="terrain/grave.png",
 	does_block_move = true,

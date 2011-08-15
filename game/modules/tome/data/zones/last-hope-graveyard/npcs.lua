@@ -87,10 +87,10 @@ newEntity{ define_as = "CELIA",
 			local Dialog = require("engine.ui.Dialog")
 			Dialog:simpleLongPopup("Celia", "As you deal the last blow you quickly carve out Celia's heart for your Lichform ritual.\nCarefully weaving magic around it to keep it beating.", 400)
 		else
-			if game.player:knowLore("necromancer-primer-1") and
-			   game.player:knowLore("necromancer-primer-2") and
-			   game.player:knowLore("necromancer-primer-3") and
-			   game.player:knowLore("necromancer-primer-4") then
+			if game.player:knownLore("necromancer-primer-1") and
+			   game.player:knownLore("necromancer-primer-2") and
+			   game.player:knownLore("necromancer-primer-3") and
+			   game.player:knownLore("necromancer-primer-4") then
 				game:setAllowedBuild("mage_necromancer", true)
 			end
 		end

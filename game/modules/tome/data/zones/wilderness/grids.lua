@@ -471,6 +471,13 @@ The storm is raging above your head.]], 400)
 	end,
 }
 
+newEntity{ base="ZONE_PLAINS", define_as = "LAST_HOPE_GRAVEYARD",
+	name="A gate into Last Hope's graveyard",
+	color={r=0, g=255, b=255},
+	add_displays={class.new{image="terrain/dungeon_entrance01.png", z=4}},
+	change_zone="last-hope-graveyard",
+}
+
 --------------------------------------------------------------------------------
 -- Far East Zones
 --------------------------------------------------------------------------------

@@ -613,6 +613,12 @@
     <property name="type" value="&quot;playerpop&quot;"/>
    </properties>
   </object>
+  <object name="Last hope graveyard" x="1989" y="1254" width="24" height="20">
+   <properties>
+    <property name="subtype" value="&quot;last-hope-graveyard&quot;"/>
+    <property name="type" value="&quot;zone-pop&quot;"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="addZone#zonenames" width="170" height="100" visible="0">
   <object name="Maj'Eyal" x="171" y="56" width="2478" height="1344">
@@ -676,7 +682,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup name="addZone#pops" width="170" height="100">
+ <objectgroup name="addZone#pops" width="170" height="100" visible="0">
   <object name="Lumjberjack quest" x="1837" y="747" width="174" height="551">
    <properties>
     <property name="subtype" value="&quot;lumberjack-cursed&quot;"/>

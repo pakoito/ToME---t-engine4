@@ -204,12 +204,24 @@ newChat{ id="choice",
 	}
 }
 
+if npc.errand_given then
 newChat{ id="list",
 	text = [[Right, here's the list. Oh, one more thing. Got me some fellas already out hunting for this stuff, and I'll not play favorites. One of them brings me those ingredients before you do, and you're out of luck. Hurry back.]],
 	answers = {
 		{"I'll be off."},
 	}
 }
+else
+newChat{ id="list",
+	text = [[Right, here's the list. Oh, one more thing. Got me some fellas already out hunting for this stuff, and I'll not play favorites. One of them brings me those ingredients before you do, and you're out of luck. Hurry back.
+
+Oh, and one other last thing... if you have the time for another errand, though I've got no reward on this one.]],
+	answers = {
+		{"Well, I'll see if I can help.", jump="errand", action=function(npc, player) npc.errand_given = true end},
+		{"I'm here for profit, not errands - I have the list and will work on it; sort your own sidejobs out.", action=function(npc, player) npc.errand_given = true end},
+	}
+}
+end
 
 -- Quest is complete; nobody answers the door
 elseif q and q:isStatus(q.DONE) then
@@ -477,12 +489,24 @@ newChat{ id="choice",
 	}
 }
 
+if npc.errand_given then
 newChat{ id="list",
 	text = [[Here's a list of the creature bits I need. Good luck with the murdering!]],
 	answers = {
 		{"I'll be off."},
 	}
 }
+else
+newChat{ id="list",
+	text = [[Here's a list of the creature bits I need. Good luck with the murdering!
+
+Oh, and one other last thing... if you have the time for another errand, though I've got no reward on this one.]],
+	answers = {
+		{"Well, I'll see if I can help.", jump="errand", action=function(npc, player) npc.errand_given = true end},
+		{"I'm here for profit, not errands - I have the list and will work on it; sort your own sidejobs out.", action=function(npc, player) npc.errand_given = true end},
+	}
+}
+end
 
 -- If the elixir got made while you were out:
 newChat{ id="poached",
@@ -516,5 +540,22 @@ newChat{ id="poached",
 }
 
 end
+
+newChat{ id="errand",
+	text = [[Well, it's like this, one of my wife's friends has gone missing. A young alchemist in training, called Celia. Thing is, her husband died recently, and the grief done drove her mad. She used to go out to his grave every day, until one day she didn't come back. Personally I don't think she was able to live without him; the two were inseparable. If you get a chance on your travels, could you pass by the mausoleum to the east and check... well, you get the idea.
+
+It's strange what death can do to people, how it can take over their minds. Sometimes they forget it's the living that matter... See she gets a proper burial - treated respectfully, eh?]],
+	answers = {
+		{"I'll do what I can.", action=function(npc, player)
+			game:onLevelLoad("wilderness-1", function(zone, level)
+				local g = game.zone:makeEntityByName(level, "terrain", "LAST_HOPE_GRAVEYARD")
+				local spot = level:pickSpot{type="zone-pop", subtype="last-hope-graveyard"}
+				game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
+				game.nicer_tiles:updateAround(game.level, spot.x, spot.y)
+			end)
+			game.log("He points the location of the graveyard on your map.")
+		end},
+	}
+}
 
 return "welcome"
