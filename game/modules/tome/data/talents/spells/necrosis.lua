@@ -131,7 +131,11 @@ newTalent{
 newTalent{
 	name = "Lichform",
 	type = {"spell/necrosis",4},
-	require = spells_req4,
+	require = {
+		stat = { mag=function(level) return 40 + (level-1) * 2 end },
+		level = function(level) return 20 + (level-1)  end,
+		special = { desc="'From Death, Life' quest completed", fct=function(self, t) return self:isQuestStatus("lichform", engine.Quest.DONE) end},
+	},
 	mode = "sustained",
 	points = 5,
 	sustain_mana = 150,
@@ -183,10 +187,14 @@ newTalent{
 			self.life_rating = self.life_rating + 3
 		end
 
+		if self:attr("blood_life") then
+			self.blood_life = nil
+			game.log("#GREY#As you turn into a powerful undead you feel your body violently rejecting the Blood of Life.")
+		end
+
 		require("engine.ui.Dialog"):simplePopup("Lichform", "#GREY#You feel your life slip away, only to be replaced by pure arcane forces! Your flesh starts to rot on your bones, your eyes fall apart as you are reborn into a Lich!")
 
 		game.level.map:particleEmitter(self.x, self.y, 1, "demon_teleport")
-		self:forceUseTalent(self.T_LICHFORM, {no_energy=true})
 	end,
 	on_pre_use = function(self, t)
 		if self:attr("undead") then return false else return true end
@@ -218,6 +226,7 @@ newTalent{
 		At level 4: +3 Magic and Willpower, +2 life rating (not retroactive), +10 spell and mental saves
 		At level 5: +5 Magic and Willpower, +2 life rating (not retroactive), +10 spell and mental saves, all resistances cap raised by 10%%
 		At level 6: +6 Magic, Willpower and Cunning, +3 life rating (not retroactive), +15 spell and mental saves, all resistances cap raised by 15%%. Fear my power!
+		Undeads can not use this talent.
 		While active it will drain 4 mana per turns.]]):
 		format()
 	end,

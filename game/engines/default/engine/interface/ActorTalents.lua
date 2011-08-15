@@ -341,6 +341,11 @@ function _M:canLearnTalent(t, offset)
 				return nil, "not enough levels"
 			end
 		end
+		if req.special then
+			if not req.special.fct(self, t, offset) then
+				return nil, req.special.desc
+			end
+		end
 		if req.talent then
 			for _, tid in ipairs(req.talent) do
 				if type(tid) == "table" then
@@ -402,7 +407,11 @@ function _M:getTalentReqDesc(t_id, levmod)
 	if req.level then
 		local v = util.getval(req.level, tlev)
 		local c = (self.level >= v) and {"color", 0x00,0xff,0x00} or {"color", 0xff,0x00,0x00}
-		str:add(c, ("- Level %d\n"):format(v), true)
+		str:add(c, ("- Level %d"):format(v), true)
+	end
+	if req.special then
+		local c = (req.special.fct(self, t, offset)) and {"color", 0x00,0xff,0x00} or {"color", 0xff,0x00,0x00}
+		str:add(c, ("- %s"):format(req.special.desc), true)
 	end
 	if req.talent then
 		for _, tid in ipairs(req.talent) do

@@ -1,0 +1,154 @@
+-- ToME - Tales of Maj'Eyal
+-- Copyright (C) 2009, 2010, 2011 Nicolas Casalini
+--
+-- This program is free software: you can redistribute it and/or modify
+-- it under the terms of the GNU General Public License as published by
+-- the Free Software Foundation, either version 3 of the License, or
+-- (at your option) any later version.
+--
+-- This program is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
+--
+-- You should have received a copy of the GNU General Public License
+-- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+--
+-- Nicolas Casalini "DarkGod"
+-- darkgod@te4.org
+
+return {
+	name = "Last Hope Graveyard",
+	display_name = function(x, y)
+		if game.level.level == 1 then return "Last Hope Graveyard"
+		elseif game.level.level == 2 then return "Mausoleum"
+		end
+		return "Last Hope Graveyard"
+	end,
+	level_range = {15, 35},
+	level_scheme = "player",
+	max_level = 2,
+	decay = {300, 800},
+	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
+	width = 50, height = 50,
+	all_remembered = true,
+--	all_lited = true,
+	persistent = "zone",
+	color_shown = {0.7, 0.7, 0.7, 1},
+	color_obscure = {0.7*0.6, 0.7*0.6, 0.7*0.6, 0.6},
+	ambient_music = "Dark Secrets.ogg",
+	min_material_level = 2,
+	max_material_level = 3,
+	generator =  {
+		map = {
+			class = "engine.generator.map.Roomer",
+			nb_rooms = 10,
+			rooms = {"random_room"},
+			lite_room_chance = 0,
+			['.'] = "FLOOR",
+			['#'] = "WALL",
+			up = "UP",
+			down = "DOWN",
+			door = "DOOR",
+		},
+		actor = {
+			nb_npc = {0, 0},
+		},
+		object = {
+			nb_object = {0, 0},
+		},
+		trap = {
+			nb_trap = {0, 0},
+		},
+	},
+	levels =
+	{
+		[1] = {
+			generator = {
+				map = {
+					class = "engine.generator.map.Static",
+					map = "zones/last-hope-graveyard",
+				},
+			},
+		},
+		[2] = {
+			generator = {
+				map = {
+					class = "engine.generator.map.Static",
+					map = "zones/last-hope-mausoleum",
+				},
+			},
+		},
+	},
+
+	open_coffin = function(x, y, who)
+		local Dialog = require("engine.ui.Dialog")
+		Dialog:yesnoLongPopup("Open the coffin", "In rich families the dead are sometimes put to rest with some treasures. However they also sometime protect the coffins with powerful curses. Open?", 500, function(ret)
+			if not ret then return end
+			local r = rng.range(1, 100)
+			if r <= 10 then
+				if not who:knowTalentType("cursed/fateful-aura") then
+					Dialog:simplePopup("Curse!", "The coffin was a decoy, a powerful curse was set upon you (check your talents).")
+					who:learnTalentType("cursed/fateful-aura", true)
+					who:learnTalent(who.T_CURSED_TOUCH, true)
+				else
+					game.log("There is nothing there.")
+				end
+			elseif r <= 60 then
+				local m = game.zone:makeEntity(game.level, "actor", {properties={"undead"}, add_levels=10, random_boss={nb_classes=1, rank=3, ai = "tactical", loot_quantity = 0, no_loot_randart = true}}, nil, true)
+				local x, y = util.findFreeGrid(who.x, who.y, 5, true, {[engine.Map.ACTOR]=true})
+				if m and x and y then
+					game.zone:addEntity(game.level, m, "actor", x, y)
+					game.log("You were not the first here: the corpse was turned into an undead.")
+				else
+					game.log("There is nothing there.")
+				end
+			elseif r <= 95 then
+				game.log("There is nothing there.")
+			else
+				local o = game.zone:makeEntity(game.level, "object", {unique=true, not_properties={"lore"}}, nil, true)
+				local x, y = util.findFreeGrid(who.x, who.y, 5, true, {[engine.Map.OBJECT]=true})
+				if o and x and y then
+					game.zone:addEntity(game.level, o, "object", x, y)
+					game.log("The corpse had a treasure!")
+				else
+					game.log("There is nothing there.")
+				end
+			end
+
+			local g = game.zone:makeEntityByName(game.level, "terrain", "COFFIN_OPEN")
+			game.zone:addEntity(game.level, g, "terrain", x, y)
+		end)
+	end,
+
+	open_all_coffins = function(who, celia)
+		local floor = game.zone:makeEntityByName(game.level, "terrain", "FLOOR")
+		local coffin_open = game.zone:makeEntityByName(game.level, "terrain", "COFFIN_OPEN")
+		local spot = game.level:pickSpotRemove{type="door", subtype="chamber"}
+		while spot do
+			local g = game.level.map(spot.x, spot.y, engine.Map.TERRAIN)
+			if g.is_door then game.zone:addEntity(game.level, floor, "terrain", spot.x, spot.y) end
+			spot = game.level:pickSpotRemove{type="door", subtype="chamber"}
+		end
+
+		local spot = game.level:pickSpotRemove{type="coffin", subtype="chamber"}
+		while spot do
+			local g = game.level.map(spot.x, spot.y, engine.Map.TERRAIN)
+			if g.define_as == "COFFIN" then
+				game.zone:addEntity(game.level, coffin_open, "terrain", spot.x, spot.y)
+
+				local m = game.zone:makeEntity(game.level, "actor", {properties={"undead"}, add_levels=10, random_boss={nb_classes=1, rank=3, ai = "tactical", loot_quantity = 0, no_loot_randart = true}}, nil, true)
+				local x, y = util.findFreeGrid(spot.x, spot.y, 5, true, {[engine.Map.ACTOR]=true})
+				if m and x and y then
+					game.zone:addEntity(game.level, m, "actor", x, y)
+					m:setTarget(who)
+					m.necrotic_minion = true
+					m.summoner = celia
+				end
+			end
+			spot = game.level:pickSpotRemove{type="coffin", subtype="chamber"}
+		end
+
+		game.log("#YELLOW#You hear all the doors being shattered into pieces.")
+	end,
+}

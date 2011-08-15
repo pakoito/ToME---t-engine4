@@ -17,23 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/grids/basic.lua")
+local Talents = require "engine.interface.ActorTalents"
+local Stats = require "engine.interface.ActorStats"
+local DamageType = require "engine.DamageType"
 
-newEntity{
-	define_as = "LOCK",
-	name = "sealed door", image = "terrain/sealed_door.png",
-	display = '+', color=colors.WHITE, back_color=colors.DARK_UMBER,
-	notice = true,
-	always_remember = true,
-	block_sight = true,
-	does_block_move = true,
-}
-
-newEntity{
-	define_as = "PENTAGRAM",
-	name = "demonic symbol",
-	image = "terrain/marble_floor.png", add_mos = {{image="terrain/floor_pentagram.png"}},
-	display = ';', color=colors.RED, back_color=colors.DARK_UMBER,
-	notice = true,
-	always_remember = true,
-}
+load("/data/general/objects/objects-maj-eyal.lua")

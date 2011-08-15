@@ -175,7 +175,7 @@ newBirthDescriptor{
 newBirthDescriptor{
 	type = "subclass",
 	name = "Necromancer",
-	locked = function() return profile.mod.allow_build.mage_necromancer and true or "hide" end,
+	locked = function() return profile.mod.allow_build.mage_necromancer end,
 	locked_desc = "The road to necromancy is a macabre path indeed. Walk with the dead, and drink deeply of their black knowledge.",
 	not_on_random_boss = true,
 	desc = {
@@ -220,5 +220,6 @@ newBirthDescriptor{
 	},
 	copy_add = {
 		life_rating = -3,
+		resolvers.generic(function(self) self:grantQuest("lichform") end),
 	},
 }

@@ -44,6 +44,10 @@ newBirthDescriptor{
 			Celestial = "disallow",
 			Wilder = "disallow",
 		},
+		subclass =
+		{
+			Necromancer = "disallow",
+		},
 	},
 	talents = {
 		[ActorTalents.T_UNDEAD_ID]=1,

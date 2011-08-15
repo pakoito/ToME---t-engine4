@@ -165,6 +165,7 @@ newTalent{
 	requires_target = true,
 	getDuration = function(self, t) return math.floor(3 + self:getTalentLevel(t)) end,
 	getHealth = function(self, t) return 0.2 + self:combatTalentSpellDamage(t, 20, 500) / 1000 end,
+	getDam = function(self, t) return 0.4 + self:combatTalentSpellDamage(t, 10, 500) / 1000 end,
 	action = function(self, t)
 		-- Find space
 		local x, y = util.findFreeGrid(self.x, self.y, 1, true, {[Map.ACTOR]=true})
@@ -188,6 +189,7 @@ newTalent{
 		m.on_added_to_level = nil
 
 		m.energy.value = 0
+		m.player = nil
 		m.max_life = m.max_life * t.getHealth(self, t)
 		m.life = util.bound(m.life, 0, m.max_life)
 		m.forceLevelup = function() end
@@ -199,6 +201,7 @@ newTalent{
 		m.talents.T_CREATE_MINIONS = nil
 		m.talents.T_FORGERY_OF_HAZE = nil
 		m.remove_from_party_on_death = true
+		m.inc_damage.all = ((100 + (m.inc_damage.all or 0)) * t.getDam(self, t)) - 100
 
 		game.zone:addEntity(game.level, m, "actor", x, y)
 		game.level.map:particleEmitter(x, y, 1, "shadow")
@@ -217,8 +220,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Through the shadows you forge a temporary copy of yourself, existing for %d turns.
-		The copy possess your exact talents and stats and has %d%% life.]]):
-		format(t.getDuration(self, t), t.getHealth(self, t) * 100)
+		The copy possess your exact talents and stats, has %d%% life and deals %d%% damage.]]):
+		format(t.getDuration(self, t), t.getHealth(self, t) * 100, t.getDam(self, t) * 100)
 	end,
 }
 

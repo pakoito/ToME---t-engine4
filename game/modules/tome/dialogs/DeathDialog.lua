@@ -196,13 +196,12 @@ function _M:use(item)
 		world:gainAchievement("UNSTOPPABLE", actor)
 	elseif act == "lichform" then
 		local t = self.actor:getTalentFromId(self.actor.T_LICHFORM)
-		t.becomeLich(self.actor, t)
 
 		self:cleanActor(self.actor)
 		self:resurrectBasic(self.actor)
 		self:restoreResources(self.actor)
-		self.actor.talents_cd = {}
 		world:gainAchievement("LICHFORM", actor)
+		t.becomeLich(self.actor, t)
 		self.actor:updateModdableTile()
 	elseif act == "easy_mode" then
 		self:eidolonPlane()

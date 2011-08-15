@@ -28,6 +28,7 @@ Rokzz krilt copru.]],
 	answers = {
 		{"[Examine the orb]", jump="examine", cond=has_rod},
 --		{"[Fly the fortress]", action=function(npc, player) player:hasQuest("shertul-fortress"):fly() end},
+		{"[Begin the Lichform ceremory]", cond=function(npc, player) local q = player:hasQuest("lichform") return player:hasQuest("lichform"):check_lichform(player) end, action=function(npc, player) player:setQuestStatus("lichform", engine.Quest.COMPLETED) end},
 		{"[Leave the orb alone]"},
 	}
 }

@@ -17,23 +17,42 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/grids/basic.lua")
+startx = 0
+starty = 10
+endx = 18
+endy = 18
 
-newEntity{
-	define_as = "LOCK",
-	name = "sealed door", image = "terrain/sealed_door.png",
-	display = '+', color=colors.WHITE, back_color=colors.DARK_UMBER,
-	notice = true,
-	always_remember = true,
-	block_sight = true,
-	does_block_move = true,
-}
+-- defineTile section
+defineTile("*", "GRAVE")
+defineTile("<", "GRASS_UP4")
+defineTile("_", "ROAD")
+defineTile(">", "MAUSOLEUM")
+defineTile(".", "GRASS")
+defineTile("t", "SWAMPTREE")
 
-newEntity{
-	define_as = "PENTAGRAM",
-	name = "demonic symbol",
-	image = "terrain/marble_floor.png", add_mos = {{image="terrain/floor_pentagram.png"}},
-	display = ';', color=colors.RED, back_color=colors.DARK_UMBER,
-	notice = true,
-	always_remember = true,
-}
+-- addSpot section
+
+-- addZone section
+
+-- ASCII map section
+return [[
+tttttttttttttttttttt
+tttttttttttttttttttt
+._..._..._..._..._.t
+___________________t
+._.*._.*._.*._.*._.t
+._..._..._..._..._.t
+._*t*_*t*_*t*_*t*_*t
+._.t._.t._.t._.t._.t
+._*.*_*.*_*.*_*.*_*t
+._..._..._..._..._.t
+<__________________t
+._..._..._..._..._.t
+._*.*_*.*_*.*_*.*_*t
+._.t._.t._.t._.t._.t
+._*t*_*t*_*t*_*t*_*t
+._..._..._..._..._.t
+._.*._.*._.*._.*._.t
+___________________t
+._..._..__..._..._>t
+tttttttttttttttttttt]]
