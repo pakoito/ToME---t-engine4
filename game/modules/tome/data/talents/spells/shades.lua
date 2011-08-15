@@ -25,6 +25,7 @@ newTalent{
 	random_ego = "attack",
 	mana = 25,
 	cooldown = 20,
+	range = 10,
 	tactical = { DEFEND = 2 },
 	requires_target = true,
 	getChance = function(self, t) return 20 + self:combatTalentSpellDamage(t, 15, 60) end,
@@ -67,6 +68,7 @@ newTalent{
 	points = 5,
 	mana = 50,
 	cooldown = 30,
+	range = 10,
 	tactical = { DEFEND = 3 },
 	action = function(self, t)
 		local nb = math.ceil(self:getTalentLevel(t))
@@ -161,6 +163,7 @@ newTalent{
 	points = 5,
 	mana = 70,
 	cooldown = 30,
+	range = 10,
 	tactical = { ATTACK = 2, },
 	requires_target = true,
 	getDuration = function(self, t) return math.floor(3 + self:getTalentLevel(t)) end,

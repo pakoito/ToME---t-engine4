@@ -22,8 +22,11 @@ starty = 10
 endx = 18
 endy = 18
 
+local list = {}
+for i = 1, 25 do list[#list+1] = i end
+
 -- defineTile section
-defineTile("*", "GRAVE")
+defineTile("*", function() local v = rng.tableRemove(list) if not v then v = "" end return "GRAVE"..v end)
 defineTile("<", "GRASS_UP4")
 defineTile("_", "ROAD")
 defineTile(">", "MAUSOLEUM")

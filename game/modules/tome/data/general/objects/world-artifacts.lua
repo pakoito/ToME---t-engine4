@@ -806,8 +806,8 @@ newEntity{
 			game.level.map:particleEmitter(x, y, 1, "slime")
 
 			game:playSoundNear(who, "talents/slime")
-			return true
 		end
+		return true
 	end },
 }
 

@@ -31,3 +31,29 @@ newEntity{ base = "BASE_LORE",
 	is_magic_device = false,
 	encumberance = 0,
 }
+
+newEntity{ define_as = "CELIA_HEART",
+	power_source = {arcane=true},
+	unique = true,
+	type = "misc", subtype="heart",
+	unided_name = "bloody heart",
+	name = "Celia's Still Beating Heart",
+	level_range = {20, 35},
+	rarity = false,
+	display = "*", color=colors.RED, image = "object/orc_heart.png",
+	encumber = 2,
+	not_in_stores = true,
+	desc = [[The living heart of the necromancer Celia, carved out of her chest and preserved with magic.]],
+
+	max_power = 75, power_regen = 1,
+	use_power = { name = "extract a tiny part of Celia's soul", power = 75, use = function(self, who)
+		local p = who:isTalentActive(who.T_NECROTIC_AURA)
+		if not p then return end
+		p.souls = util.bound(p.souls + 1, 0, p.souls_max)
+		who.changed = true
+		game.logPlayer(who, "You squeeze Celia's heart in your hand, absorbing part of her soul into your necrotic aura.")
+		self.max_power = self.max_power + 5
+		self.use_power.power = self.use_power.power + 5
+		return true
+	end },
+}

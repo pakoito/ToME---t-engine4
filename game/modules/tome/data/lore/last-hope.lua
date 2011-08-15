@@ -127,26 +127,6 @@ Saviour of the Battle of Last Hope, Bringer of Unity, Soother of Hearts and Mind
 Quoth Queen Mirvenia: "Nothing moves me more than seeing the sun set over Last Hope, seeing all the joy and beauty we have brought here bathed in glorious light. At moments like this I still feel him next to me, and I know I have lived a good life. Today has been a good day... Today I think I shall die."]],
 }
 
-
-newLore{
-	id = "celia-letter",
-	category = "last hope",
-	name = "A creased letter",
-	lore = [[Oh Cecil, what must you think of me? But I remember your words to me, before the fever took you - you told me to live. And live I must... And yet that fever has now spread to me and I feel my days are numbered.
-
-I have a confession to make, my love. Those tinctures I brewed for you towards the end of your disease, those that helped you stay in my arms a few weeks longer, they were not my regular alchemy. In desperation I turned to darker arts in my obsession to save you. But though they kept your eyes open for a little longer, they could not keep you here with me.
-
-How desperately I yearn for you... At nights the pain of my disease tears me apart, yet I could bear it all if only you were by my side. But alone I have not the strength, and the dark thoughts return. My obsession remains.
-
-You would frown were you to see the things I have done. You would be sickened! I cringe each time I think of what your reaction would be to see me now. But please understand, my dear, please forgive me. For I must live! Though each morning I grow weaker, my determination to survive hardens. And it is not just for me...
-
-Amidst this darkness I have good news for you, my darling. I am with child. Though you have died your blood still lives in me, and even as my own flesh withers I can feel our baby blossoming within my womb. It is for this I carry on my experiments, gruesome as they be. It is for our child I struggle with hardened heart to extend my life ever further.
-
-I am cold and alone in this chilly crypt, thinking back on my times of warmth with you. Abominations lie beyond the walls, their haunting cries torturing my ears, reminding me of the black deeds I have performed. But every now and then I feel a gentle kick, and my resolve is stiffened, and to my experiments I return.
-
-I must live. For you, my love, I will live.]]
-}
-
 newLore{
 	id = "southspar-note-1",
 	category = "southspar",
@@ -219,3 +199,203 @@ I leave you with a copy of one of the last pieces of Southspar's history, a part
 
 "Time grows pressi... ... ome in the boat... ... found. The binding w... a success. Now, to the sea, to l... ... ew, and Dreadfe... ... oble king. Rot in my new du... as you will!"]]
 }
+
+
+--------------------------------------------------------------------------
+-- Last Hope Graveyard
+--------------------------------------------------------------------------
+newLore{
+	id = "celia-letter",
+	category = "last hope",
+	name = "A creased letter",
+	always_pop = true,
+	lore = [[Oh Cecil, what must you think of me? But I remember your words to me, before the fever took you - you told me to live. And live I must... And yet that fever has now spread to me and I feel my days are numbered.
+
+I have a confession to make, my love. Those tinctures I brewed for you towards the end of your disease, those that helped you stay in my arms a few weeks longer, they were not my regular alchemy. In desperation I turned to darker arts in my obsession to save you. But though they kept your eyes open for a little longer, they could not keep you here with me.
+
+How desperately I yearn for you... At nights the pain of my disease tears me apart, yet I could bear it all if only you were by my side. But alone I have not the strength, and the dark thoughts return. My obsession remains.
+
+You would frown were you to see the things I have done. You would be sickened! I cringe each time I think of what your reaction would be to see me now. But please understand, my dear, please forgive me. For I must live! Though each morning I grow weaker, my determination to survive hardens. And it is not just for me...
+
+Amidst this darkness I have good news for you, my darling. I am with child. Though you have died your blood still lives in me, and even as my own flesh withers I can feel our baby blossoming within my womb. It is for this I carry on my experiments, gruesome as they be. It is for our child I struggle with hardened heart to extend my life ever further.
+
+I am cold and alone in this chilly crypt, thinking back on my times of warmth with you. Abominations lie beyond the walls, their haunting cries torturing my ears, reminding me of the black deeds I have performed. But every now and then I feel a gentle kick, and my resolve is stiffened, and to my experiments I return.
+
+I must live. For you, my love, I will live.]]
+}
+
+local i = 0
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Here lies Jake, son of Borlin and Clarise
+#{normal}#112 - 118#{italic}#
+Rest well, our child
+This world was too dark for thee
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Here lies Alenda and Pariel
+#{normal}#92 - 115, 94 - 115#{italic}#
+In sin you lived
+In sin you died
+Rot here together
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Marcus the Immortal
+#{normal}#23 - 107#{italic}#
+Ambitious in life
+Humbled in death
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Lord Gracion Bestelle
+#{normal}#41 - 112#{italic}#
+The memory of the greatest
+Shall never dim
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Inilasac Salocin
+#{normal}#32 - 120#{italic}#
+All tomes shall remember thee
+And thine dark blessings
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+RIP Cecil Farion
+#{normal}#98 - 122#{italic}#
+Noble in mind
+Pure in spirit
+Rest now from the burdens of the flesh
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Here lies Golan of Derth
+#{normal}#65 - 113#{italic}#
+May your memories
+Always bring joy and love
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Here lies Mara
+#{normal}#70 - 109#{italic}#
+You knew your doom
+And faced it
+Rest in peace
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Bodun the Follower
+#{normal}#86 - 117#{italic}#
+Killed by a friend's untimely death dance
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Tania Pure-Hearted
+#{normal}#78 - 115#{italic}#
+Our tears are for ourselves
+To have lost one so bright as you
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Unknown
+#{normal}#?? - 107#{italic}#
+Your bravery will not be forgotten
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Captain Lepant
+#{normal}#56 - 102#{italic}#
+A hero to all elements of society
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Ghormot the Black
+#{normal}#0 - 97#{italic}#
+In this bright age
+Of new adventures
+You are not forgotten
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Gygax the Great
+#{normal}#38 - 108#{italic}#
+Most blessed are we
+To have shared this world with thee
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Here lies Opius the Wastrel
+#{normal}#89 - 117#{italic}#
+Death was too good for you
+May you quickly be forgotten
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Wichman Toy
+#{normal}#80 - 121#{italic}#
+Your rogueish charms
+Inspire us forever
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Annei Caffrey
+#{normal}#26 - 102#{italic}#
+On the wings of dragons
+You forever soar
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Here lies Eden of Derth
+#{normal}#97 - 121#{italic}#
+Untamed in spirit
+Unhesitant in flight
+Unlifed in grimmest darkness
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Calici the Brave
+#{normal}#86 - 113#{italic}#
+Alas that bravery was not enough
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Barbrim the Cursed
+#{normal}#92 - 119#{italic}#
+Betrayed by those he trusted
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Falsira Mageslayer
+#{normal}#78 - 104#{italic}#
+Slain by the dark magics she fought
+We shall never forget
+Death to the spellweavers!
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Here lies Amalla
+#{normal}#86 - 105#{italic}#
+Burned for witchcraft
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Gamrik Dellhorn
+#{normal}#47 - 93#{italic}#
+Fell to the Wintertide blizzard
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Here lies Peterin
+#{normal}#32 - 89#{italic}#
+Died alone
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Ben Harrison
+#{normal}#68 - 104#{italic}#
+Praise the name
+Of he who helped us band together
+#{normal}#]]}
+
+print("Made "..i.." last hope graveyard stones")

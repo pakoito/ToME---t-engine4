@@ -621,6 +621,7 @@ newTalent{
 	cooldown = 14,
 	tactical = { ATTACK = 10 },
 	requires_target = true,
+	range = 10,
 	on_pre_use = function(self, t)
 		local p = self:isTalentActive(self.T_NECROTIC_AURA)
 		if not p then return end

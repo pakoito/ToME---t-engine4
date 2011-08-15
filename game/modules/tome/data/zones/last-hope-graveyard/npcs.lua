@@ -49,13 +49,15 @@ newEntity{ define_as = "CELIA",
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 	resolvers.drops{chance=100, nb=1, {unique=true} },
 
-	max_life = 200, life_regen = 0,
+	max_life = 500, life_regen = 0,
 	mana_regen = 10,
-	life_rating = 16,
+	life_rating = 20,
 
+	necrotic_aura_base_souls = 6,
 	resolvers.talents{
 		[Talents.T_INVOKE_DARKNESS]={base=5, every=5, max=10},
 		[Talents.T_NECROTIC_AURA]=1,
+		[Talents.T_CREATE_MINIONS]=2,
 		[Talents.T_AURA_MASTERY]=5,
 		[Talents.T_SURGE_OF_UNDEATH]={base=2, every=4, max=7},
 		[Talents.T_CHILL_OF_THE_TOMB]={base=3, every=5, max=10},
@@ -84,6 +86,14 @@ newEntity{ define_as = "CELIA",
 	on_die = function(self)
 		if game.player:hasQuest("lichform") then
 			game.player:setQuestStatus("lichform", engine.Quest.COMPLETED, "heart")
+
+			local o = game.zone:makeEntityByName(game.level, "object", "CELIA_HEART")
+			o:identify(true)
+			local p = game:getPlayer(true)
+			if p:addObject(p.INVEN_INVEN, o) then
+				game.logPlayer(p, "You receive: %s.", o:getName{do_color=true})
+			end
+
 			local Dialog = require("engine.ui.Dialog")
 			Dialog:simpleLongPopup("Celia", "As you deal the last blow you quickly carve out Celia's heart for your Lichform ritual.\nCarefully weaving magic around it to keep it beating.", 400)
 		else

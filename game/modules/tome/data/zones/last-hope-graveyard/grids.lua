@@ -51,9 +51,11 @@ newEntity{ base = "FLOOR", define_as = "GRAVE",
 	pass_projectile = true,
 	block_move = function(self, x, y, who, act, couldpass)
 		if not who or not who.player or not act then return true end
+		if self.lore then who:learnLore(self.lore) end
 		return true
 	end,
 }
+for i = 1, 25 do newEntity{ base = "GRAVE", define_as = "GRAVE"..i, lore="last-hope-graveyard-"..i} end
 
 newEntity{ base = "FLOOR", define_as = "COFFIN",
 	name="coffin",
