@@ -40,6 +40,7 @@ collectgarbage("restart")
 
 -- Setup correct lua path
 package.path = "/?.lua"
+package.moonpath = "/?.moon"
 
 math.randomseed(os.time())
 
