@@ -42,3 +42,15 @@ newEntity{ base = "BASE_LORE",
 	cost = 2,
 }
 end
+
+for i = 1, 2 do
+newEntity{ base = "BASE_LORE",
+	define_as = "SOUTHSPAR_NOTE"..i,
+	subtype = "southspar", unique=true, no_unique_lore=true, not_in_stores=false,
+	name = "the Pale King part "..(i==1 and "one" or "two"), lore="southspar-note-"..i,
+	desc = [[A study into Southspar's most unusual ruler.]],
+	rarity = false,
+	encumberance = 0,
+	cost = 2,
+}
+end

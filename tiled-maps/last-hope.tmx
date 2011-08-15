@@ -106,6 +106,11 @@
     <property name="display" value="A"/>
    </properties>
   </tile>
+  <tile id="10">
+   <properties>
+    <property name="display" value="B"/>
+   </properties>
+  </tile>
   <tile id="31">
    <properties>
     <property name="display" value="F"/>
@@ -182,7 +187,7 @@
  </tileset>
  <layer name="Terrain" width="50" height="50">
   <data encoding="base64" compression="zlib">
-   eJzdmNdtxDAQRHW/bkJlXA3+vQrcpHOowgmqxhYgAovBpmGQDH8sBFIncR5nuaTuPE3TeXDcnMaPMSKuRVz9xrxdZf/RGiPdGBYHxl/Vz3IcwRNpWSBmpe9oHka7FVmmo/SfRMzQtvr35GH0o178ncUX8Yxk0PTUciBPTxbWg6KzhMUh77Pe9GKIPPDyP/pt1ptaDotB9qEurEkaTy1Lixee95j3pf9R3H92WLR5wbFYTzL5VPreFI61/RRo0vi9tVeTX1kGa7+I1hDOfXnus4KlJZ/WuHU4sCZZoT2X8SXjCVuftPpTQr5La1v11xs344nnBbNvaHMhz1QaT3auMp54XmTOILPy/LK9e96u2v7GskSeeOtibX8ZHBaDfPcM7R4sNRzWnBQOi0Fb3x5LtD4iDmZ9a2clZJC6L3CVPJJFO5OxuZX1QtvD5HPSh4sIrS19sTyJtLRyyLVheSE1W32aJ5n6y3IsRmgcmhf4DYv30JPMObMXB9aqDMd3BUc0Psvx0ugHBuvH/XZ9aOD4L+ujV73C2Kte9d4/NG9G7B/sfn7neHLkfs5yYM2KzlcYGsOo81UPFuSR/Xucd1lPNBbk0cYf8f3R6olkQR4M61swqrmRF6wnEaO2vr1vWev9OEbGi9b/S+T9bH54+q1xMwyWJx5LDWeUNx8Jhogjm18ZPfK+x57xiWVg1ryn51XRXlM72HyqyS9GR8uztV5ELIym1mdaGSwW1huWw9LfwpBhyZzp3pO/G8ngsdTmGqO/JwPLw8z93vozLN75MKt9LwaGpyb21D+C50j9LVy9x/wBML23jw==
+   eJzdmNltwzAQRO3fNKEyXEN+XUGazO0kTeSCqkkEiMBisNfwkIJ8LASSpjiPszzk0+FwOA2Om+P4MUbEtYir35jWp6zfW2OkG8PiwPir+lmOPXgiLTPEpNTtzcNotyLLtJf+o4gJylb9ljyMftSLv7P4Ip6RDJqeWg7k6cnCelB0lrA4ZDvrTS+GyAMv/6PfZr2p5bAYZB3qwj1J46llafHC8x7zvtQ/ivZnh0WbFxyL9SSTT6XuVeFYyk+BJo3fW3s1+ZVlsM6LaA3h3Jd+nxUsLfm0xK3DgXuSFVq/jC8ZT9j9Sdt/Ssh3aWVr//XGzXjiecGcG9pcyDuVxpOdq4wnnheZO8ik9J/Xd0/rUzvfWJbIE29dLOUvg8NikO+eoNyDpYbDmpPCYTFo69tjidZHxMGsb+2uhAxS9xmekkeyaHcyNreyXmhnmOwnfTiL0MrSF8uTSEsrh1wblhdSs1WneZLZf1mO2QiNQ/MCv2GxDT3J3DN7ceBeleH4ruCIxmc5Lo1+YLB+3K/PhwaO/7I+eu1XGFvtV73PD82bEecHe57fOZ7seZ6zHLhnRfcrDI1h1P2qBwvyyPot7rusJxoL8mjjj/j+aPVEsiAPhvUtGO25kResJxGjtr69b1nr/ThGxovW/0tkezY/PP3WuBkGyxOPpYYzypuPBEPEkc2vjB7Z7rFnfGIZmDXv6XlRtL8FfTz/ahiy+cXoaOlb60XEwmhq7dPKYLGw3rAclv4WhgxL5k73nvzdSAaPpTbXGP09GVgeZu631p9h8e6HWe1bMTA8NbGl/hE8e+pv4eo95g9UCrd0
   </data>
  </layer>
  <objectgroup name="Trap" width="50" height="50">

@@ -272,7 +272,6 @@ newEntity{
 		purse = 10,
 		empty_before_restock = false,
 		filters = {
-			{type="scroll", subtype="rune", id=true},
 		},
 		fixed = {
 			{id=true, defined="FOUNDATION_NOTE1"},
@@ -284,6 +283,8 @@ newEntity{
 			{id=true, defined="RACES_NOTE0"},
 			{id=true, defined="RACES_NOTE1"},
 			{id=true, defined="RACES_NOTE2"},
+			{id=true, defined="SOUTHSPAR_NOTE1"},
+			{id=true, defined="SOUTHSPAR_NOTE2"},
 		},
 	},
 }

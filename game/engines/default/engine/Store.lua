@@ -68,7 +68,9 @@ function _M:loadup(level, zone, force_nb)
 	local i = 1
 	local rngfill = force_nb or (rng.range(s.min_fill, s.max_fill) - #inven)
 	while i <= rngfill do
-		local filter = table.clone(util.getval(s.filters))
+		local filter = util.getval(s.filters)
+		if not filter then break end
+		filter = table.clone(filter)
 		local e
 		if not filter.defined then e = zone:makeEntity(level, "object", filter, nil, true)
 		else e = zone:makeEntityByName(level, "object", filter.defined) end
