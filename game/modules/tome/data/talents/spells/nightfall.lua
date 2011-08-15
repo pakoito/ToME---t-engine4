@@ -30,7 +30,7 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	mana = 12,
-	cooldown = 3,
+	cooldown = 4,
 	tactical = { ATTACK = 2 },
 	range = 10,
 	reflectable = true,

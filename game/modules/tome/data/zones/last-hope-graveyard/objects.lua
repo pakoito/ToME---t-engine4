@@ -22,3 +22,12 @@ local Stats = require "engine.interface.ActorStats"
 local DamageType = require "engine.DamageType"
 
 load("/data/general/objects/objects-maj-eyal.lua")
+
+newEntity{ base = "BASE_LORE",
+	define_as = "CELIA_NOTE",
+	name = "creased letter", lore="celia-letter",
+	desc = [[A letter.]],
+	rarity = false,
+	is_magic_device = false,
+	encumberance = 0,
+}

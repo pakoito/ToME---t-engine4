@@ -21,7 +21,7 @@ local minions_list = {
 	bone_giant = {
 		type = "undead", subtype = "giant",
 		blood_color = colors.GREY,
-		display = "K", color=colors.WHITE,
+		display = "K",
 		combat = { dam=resolvers.levelup(resolvers.mbonus(45, 20), 1, 1), atk=15, apr=10, dammod={str=0.8} },
 		body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 		infravision = 10,
@@ -55,7 +55,7 @@ local minions_list = {
 	h_bone_giant = {
 		type = "undead", subtype = "giant",
 		blood_color = colors.GREY,
-		display = "K", color=colors.WHITE,
+		display = "K",
 		combat = { dam=resolvers.levelup(resolvers.mbonus(45, 20), 1, 1), atk=15, apr=10, dammod={str=0.8} },
 		body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 		infravision = 10,
@@ -89,7 +89,7 @@ local minions_list = {
 	e_bone_giant = {
 		type = "undead", subtype = "giant",
 		blood_color = colors.GREY,
-		display = "K", color=colors.WHITE,
+		display = "K",
 		combat = { dam=resolvers.levelup(resolvers.mbonus(45, 20), 1, 1), atk=15, apr=10, dammod={str=0.8} },
 		body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 		infravision = 10,
@@ -125,7 +125,7 @@ local minions_list = {
 	r_bone_giant = {
 		type = "undead", subtype = "giant",
 		blood_color = colors.GREY,
-		display = "K", color=colors.WHITE,
+		display = "K",
 		combat = { dam=resolvers.levelup(resolvers.mbonus(45, 20), 1, 1), atk=15, apr=10, dammod={str=0.8} },
 		body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 		infravision = 10,

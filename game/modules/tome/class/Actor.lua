@@ -935,7 +935,7 @@ function _M:onHeal(value, src)
 	end
 
 	print("[HEALING]", self.uid, self.name, "for", value)
-	if not self.resting then
+	if not self.resting and value >= 1 then
 		local sx, sy = game.level.map:getTileToScreen(self.x, self.y)
 		game.flyers:add(sx, sy, 30, rng.float(-3, -2), (rng.range(0,2)-1) * 0.5, tostring(math.ceil(value)), {255,255,0})
 	end

@@ -126,3 +126,23 @@ Died the 2th Summertide, Year of Ascendancy 113
 Saviour of the Battle of Last Hope, Bringer of Unity, Soother of Hearts and Minds. Greatly is missed the alchemist that could change sorrow to joy, despair to hope, defeat to victory.
 Quoth Queen Mirvenia: "Nothing moves me more than seeing the sun set over Last Hope, seeing all the joy and beauty we have brought here bathed in glorious light. At moments like this I still feel him next to me, and I know I have lived a good life. Today has been a good day... Today I think I shall die."]],
 }
+
+
+newLore{
+	id = "celia-letter",
+	category = "last hope",
+	name = "A creased letter",
+	lore = [[Oh Cecil, what must you think of me? But I remember your words to me, before the fever took you - you told me to live. And live I must... And yet that fever has now spread to me and I feel my days are numbered.
+
+I have a confession to make, my love. Those tinctures I brewed for you towards the end of your disease, those that helped you stay in my arms a few weeks longer, they were not my regular alchemy. In desperation I turned to darker arts in my obsession to save you. But though they kept your eyes open for a little longer, they could not keep you here with me.
+
+How desperately I yearn for you... At nights the pain of my disease tears me apart, yet I could bear it all if only you were by my side. But alone I have not the strength, and the dark thoughts return. My obsession remains.
+
+You would frown were you to see the things I have done. You would be sickened! I cringe each time I think of what your reaction would be to see me now. But please understand, my dear, please forgive me. For I must live! Though each morning I grow weaker, my determination to survive hardens. And it is not just for me...
+
+Amidst this darkness I have good news for you, my darling. I am with child. Though you have died your blood still lives in me, and even as my own flesh withers I can feel our baby blossoming within my womb. It is for this I carry on my experiments, gruesome as they be. It is for our child I struggle with hardened heart to extend my life ever further.
+
+I am cold and alone in this chilly crypt, thinking back on my times of warmth with you. Abominations lie beyond the walls, their haunting cries torturing my ears, reminding me of the black deeds I have performed. But every now and then I feel a gentle kick, and my resolve is stiffened, and to my experiments I return.
+
+I must live. For you, my love, I will live.]]
+}

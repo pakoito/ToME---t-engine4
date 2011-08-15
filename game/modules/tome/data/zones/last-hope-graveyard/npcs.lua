@@ -23,6 +23,8 @@ load("/data/general/npcs/vampire.lua")
 load("/data/general/npcs/bone-giant.lua")
 load("/data/general/npcs/lich.lua")
 
+local Talents = require("engine.interface.ActorTalents")
+
 newEntity{ define_as = "CELIA",
 	name = "Celia",
 	type = "humanoid", subtype = "human", image = "npc/humanoid_human_celia.png",
@@ -40,13 +42,31 @@ newEntity{ define_as = "CELIA",
 	exp_worth = 2,
 	level_range = {20, nil},
 
+	equipment = resolvers.equip{
+		{type="weapon", subtype="staff", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="cloth", force_drop=true, tome_drops="boss", autoreq=true},
+	},
+	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
+	resolvers.drops{chance=100, nb=1, {unique=true} },
+
 	max_life = 200, life_regen = 0,
+	mana_regen = 10,
 	life_rating = 16,
 
 	resolvers.talents{
-		[Talents.T_INVOKE_DARKNESS]=4,
-		[Talents.T_FLAME]=5,
-		[Talents.T_MANATHRUST]=3,
+		[Talents.T_INVOKE_DARKNESS]={base=5, every=5, max=10},
+		[Talents.T_NECROTIC_AURA]=1,
+		[Talents.T_AURA_MASTERY]=5,
+		[Talents.T_SURGE_OF_UNDEATH]={base=2, every=4, max=7},
+		[Talents.T_CHILL_OF_THE_TOMB]={base=3, every=5, max=10},
+		[Talents.T_WILL_O__THE_WISP]={base=3, every=5, max=10},
+		[Talents.T_COLD_FLAMES]={base=4, every=5, max=10},
+		[Talents.T_VAMPIRIC_GIFT]={base=2, every=5, max=10},
+		[Talents.T_BLURRED_MORTALITY]={base=5, every=5, max=10},
+		[Talents.T_CIRCLE_OF_DEATH]={base=3, every=5, max=10},
+		[Talents.T_RIGOR_MORTIS]={base=3, every=5, max=10},
+		[Talents.T_FORGERY_OF_HAZE]={base=3, every=5, max=10},
+		[Talents.T_FROSTDUSK]={base=3, every=5, max=10},
 	},
 	resolvers.sustains_at_birth(),
 
@@ -62,29 +82,16 @@ newEntity{ define_as = "CELIA",
 	end,
 
 	on_die = function(self)
-		if not game.level.turn_counter then return end
-		game.level.turn_counter = game.level.turn_counter + 6 * 10
-
-		local nb = 0
-		local melinda
-		for uid, e in pairs(game.level.entities) do
-			if e.define_as and e.define_as == "ACOLYTE" and not e.dead then nb = nb + 1 end
-			if e.define_as and e.define_as == "MELINDA" then melinda = e end
-		end
-		if nb == 0 then
-			game.level.turn_counter = nil
-
-			local spot = game.level:pickSpot{type="locked-door", subtype="locked-door"}
-			local g = game.zone:makeEntityByName(game.level, "terrain", "FLOOR")
-			game.zone:addEntity(game.level, g, "terrain", spot.x, spot.y)
-
-			if melinda then
-				melinda:removeEffect(melinda.EFF_TIME_PRISON)
-				melinda.display_w = nil
-				melinda.image = "npc/woman_redhair_naked.png"
-				if melinda._mo then melinda._mo:invalidate() melinda._mo = nil end
-				game.level.map:updateMap(melinda.x, melinda.y)
-				require("engine.ui.Dialog"):simpleLongPopup("Melinda", "The woman seems to be freed from her bonds.\nShe stumbles on her feet, her naked body still dripping in blood. 'Please get me out of here!'", 400)
+		if game.player:hasQuest("lichform") then
+			game.player:setQuestStatus("lichform", engine.Quest.COMPLETED, "heart")
+			local Dialog = require("engine.ui.Dialog")
+			Dialog:simpleLongPopup("Celia", "As you deal the last blow you quickly carve out Celia's heart for your Lichform ritual.\nCarefully weaving magic around it to keep it beating.", 400)
+		else
+			if game.player:knowLore("necromancer-primer-1") and
+			   game.player:knowLore("necromancer-primer-2") and
+			   game.player:knowLore("necromancer-primer-3") and
+			   game.player:knowLore("necromancer-primer-4") then
+				game:setAllowedBuild("mage_necromancer", true)
 			end
 		end
 	end,
