@@ -77,7 +77,7 @@ newEntity{ base = "BASE_STORE", define_as = "HERBALIST",
 newEntity{ base = "BASE_STORE", define_as = "RUNES",
 	name="Sook's Runes and other Harmless Contraptions",
 	display='5', color=colors.LIGHT_RED,
-	resolvers.store("SCROLL", "allied-kingdoms", "store/shop_door.png", "store/shop_sign_sooks_runes.png"),
+	resolvers.store("SCROLL", "allied-kingdoms", "store/shop_door.png", "store/shop_sign_runemaster.png"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "LIBRARY",
