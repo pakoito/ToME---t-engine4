@@ -214,6 +214,18 @@ function _M:generateList()
 		}))
 	end,}
 
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Uses the icons hotkeys toolbar or the textual one.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Icons hotkey toolbar#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.tome.hotkey_icons and "enabled" or "disabled")
+	end, fct=function(item)
+		config.settings.tome.hotkey_icons = not config.settings.tome.hotkey_icons
+		game:saveSettings("tome.hotkey_icons", ("tome.hotkey_icons = %s\n"):format(tostring(config.settings.tome.hotkey_icons)))
+		game.hotkeys_display = config.settings.tome.hotkey_icons and game.hotkeys_display_icons or game.hotkeys_display_text
+		game.hotkeys_display.actor = game.player
+		game.player.changed = true
+		self.c_list:drawItem(item)
+	end,}
+
 
 	self.list = list
 end

@@ -135,6 +135,7 @@ function necroSetupSummon(self, m, x, y, level, no_control)
 	-- Try to use stored AI talents to preserve tweaking over multiple summons
 	m.ai_talents = self.stored_ai_talents and self.stored_ai_talents[m.name] or {}
 	m.inc_damage = table.clone(self.inc_damage, true)
+	m.no_breath = 1
 
 	if self:knowTalent(self.T_DARK_EMPATHY) then
 		local t = self:getTalentFromId(self.T_DARK_EMPATHY)
