@@ -31,9 +31,9 @@ function _M:init(l, w, force_height)
 	local list = text:splitLines(w - 10, self.font)
 
 	self.title_shadow = false
-	self.color = {r=0x3a, g=0x35, b=0x33}
+	self.color = l.text_color or {r=0x3a, g=0x35, b=0x33}
 
-	self.ui = "parchment"
+	self.ui = l.special_ui or "parchment"
 
 	Dialog.init(self, "Lore found: #0080FF#"..l.name, 1, 1)
 
@@ -48,10 +48,19 @@ function _M:init(l, w, force_height)
 		end
 		self.frame.overlays = ovs
 	end
+	if l.red_rose then
+		local ovs = {}
+		ovs[#ovs+1] = {image="ui/red_rose.png", gen=function(self, dialog)
+			self.x = dialog.w - 80
+			self.y = dialog.h - 80
+			self.a = 1
+		end}
+		self.frame.overlays = ovs
+	end
 
 	local h = math.min(force_height and (force_height * game.h) or 999999999, self.font_h * #list)
 	local c_text = require("engine.ui.Textzone").new{
-		width=w+10, height=h, scrollbar=(h < self.font_h * #list) and true or false, text=text, color={r=0x3a, g=0x35, b=0x33},
+		width=w+10, height=h, scrollbar=(h < self.font_h * #list) and true or false, text=text, color=self.color,
 	}
 	c_text:setTextShadow(false)
 

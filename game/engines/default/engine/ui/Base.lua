@@ -68,15 +68,13 @@ _M.ui_conf = {
 		frame_ox2 = 16,
 		frame_oy1 = -16,
 		frame_oy2 = 16,
-		b7 = "ui/parchment7.png",
-		b9 = "ui/parchment9.png",
-		b1 = "ui/parchment1.png",
-		b3 = "ui/parchment3.png",
-		b4 = "ui/parchment4.png",
-		b6 = "ui/parchment6.png",
-		b8 = "ui/parchment8.png",
-		b2 = "ui/parchment2.png",
-		b5 = "ui/parchment5.png",
+	},
+	tombstone = {
+		frame_shadow = {x = 10, y = 10, a = 0.5},
+		frame_ox1 = -16,
+		frame_ox2 = 16,
+		frame_oy1 = -16,
+		frame_oy2 = 16,
 	},
 }
 

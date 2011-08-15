@@ -62,7 +62,7 @@ for i = 1, 44 do newEntity{ base = "GRAVE", define_as = "GRAVE"..i, lore="last-h
 
 newEntity{ base = "FLOOR", define_as = "COFFIN",
 	name="coffin",
-	display='&', image="terrain/coffin.png",
+	display='&', image="terrain/marble_floor.png", add_mos={{image="terrain/coffin_unopened_01_64.png", display_h=2, display_y=-1}},
 	does_block_move = true,
 	pass_projectile = true,
 	block_move = function(self, x, y, who, act, couldpass)
@@ -74,7 +74,7 @@ newEntity{ base = "FLOOR", define_as = "COFFIN",
 
 newEntity{ base = "FLOOR", define_as = "COFFIN_OPEN",
 	name="open coffin",
-	display='/', image="terrain/coffin_open.png",
+	display='/', image="terrain/marble_floor.png", add_mos={{image="terrain/coffin_opened_01_64.png", display_h=2, display_y=-1}},
 	does_block_move = true,
 	pass_projectile = true,
 }

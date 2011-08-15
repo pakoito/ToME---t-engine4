@@ -225,14 +225,14 @@ I must live. For you, my love, I will live.]]
 }
 
 local i = 0
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Here lies Jake, son of Borlin and Clarise
 #{normal}#112 - 118#{italic}#
 Rest well, our child
 This world was too dark for thee
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Here lies Alenda and Pariel
 #{normal}#92 - 115, 94 - 115#{italic}#
 In sin you lived
@@ -240,28 +240,28 @@ In sin you died
 Rot here together
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Marcus the Immortal
 #{normal}#23 - 107#{italic}#
 Ambitious in life
 Humbled in death
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Lord Gracion Bestelle
 #{normal}#41 - 112#{italic}#
 The memory of the greatest
 Shall never dim
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Inilasac Salocin
 #{normal}#32 - 120#{italic}#
 All tomes shall remember thee
 And thine dark blessings
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, red_rose=true, lore = [[#{bold}#
 RIP Cecil Farion
 #{normal}#98 - 122#{italic}#
 Noble in mind
@@ -270,14 +270,14 @@ Rest now from the burdens of the flesh
 
 #{normal}#A fresh rose lies here]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Here lies Golan of Derth
 #{normal}#65 - 113#{italic}#
 May your memories
 Always bring joy and love
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Here lies Mara
 #{normal}#70 - 109#{italic}#
 You knew your doom
@@ -285,32 +285,32 @@ And faced it
 Rest in peace
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Bodun the Follower
 #{normal}#86 - 117#{italic}#
 Killed by a friend's untimely death dance
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Tania Pure-Hearted
 #{normal}#78 - 115#{italic}#
 Our tears are for ourselves
 To have lost one so bright as you
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Unknown
 #{normal}#?? - 107#{italic}#
 Your bravery will not be forgotten
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Captain Lepant
 #{normal}#56 - 102#{italic}#
 A hero to all elements of society
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Ghormot the Black
 #{normal}#0 - 97#{italic}#
 In this bright age
@@ -318,35 +318,35 @@ Of new adventures
 You are not forgotten
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Gygax the Great
 #{normal}#38 - 108#{italic}#
 Most blessed are we
 To have shared this world with thee
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Here lies Opius the Wastrel
 #{normal}#89 - 117#{italic}#
 Death was too good for you
 May you quickly be forgotten
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Wichman Toy
 #{normal}#80 - 121#{italic}#
 Your rogueish charms
 Inspire us forever
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Annei Caffrey
 #{normal}#26 - 102#{italic}#
 On the wings of dragons
 You forever soar
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Here lies Eden of Derth
 #{normal}#97 - 121#{italic}#
 Untamed in spirit
@@ -354,19 +354,19 @@ Unhesitant in flight
 Unlifed in grimmest darkness
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Calici the Brave
 #{normal}#86 - 113#{italic}#
 Alas that bravery was not enough
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Barbrim the Cursed
 #{normal}#92 - 119#{italic}#
 Betrayed by those he trusted
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Falsira Mageslayer
 #{normal}#78 - 104#{italic}#
 Slain by the dark magics she fought
@@ -374,50 +374,50 @@ We shall never forget
 Death to the spellweavers!
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Here lies Amalla
 #{normal}#86 - 105#{italic}#
 Burned for witchcraft
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Gamrik Dellhorn
 #{normal}#47 - 93#{italic}#
 Fell to the Wintertide blizzard
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Here lies Peterin
 #{normal}#32 - 89#{italic}#
 Died alone
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Ben Harrison
 #{normal}#68 - 104#{italic}#
 Praise the name
 Of he who helped us band together
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Here rests Raymond Gaustadnes
 #{normal}#84 - 120#{italic}#
 The Pixels finally got him...
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Here lies Crokar
 #{normal}#86 - 113#{italic}#
 His love of trolls proved too dangerous a hobby
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Lyrissa the Wyrmfriend
 #{normal}#93 - 116#{italic}#
 Eaten by dragons
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Here rests Weldeth the Deserter
 #{normal}#86 - 103#{italic}#
 Fled from battle
@@ -426,94 +426,94 @@ On a comrade's sword
 He quickly died
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{italic}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{italic}#
 This gravestone has been desecrated
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Seria Swanfoot
 #{normal}#56 - 109#{italic}#
 May your feet now walk amongst the stars
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Eric and Erik
 #{normal}#66 - 114#{italic}#
 Met their death investigating dark light
 Alas, the pit was darker still
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Hoblo Sureshot
 #{normal}#94 - 120#{italic}#
 Death by ricochet
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Grave of the Unknown Mason
 #{normal}#??? - ???#{italic}#
 In dedication to all those lost building the dungeons of Maj'Eyal
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Here lies Albert Deathproof
 #{normal}#75 - ???#{italic}#
 Buried alive
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 RIP Legless Jack
 #{normal}#26 - 98#{italic}#
 His life's dream was to dance
 But even dreams must die
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 The Blightbringer
 #{normal}#14 - 46#{italic}#
 Do not disturb
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Matthew the Brawler
 #{normal}#101 - 122#{italic}#
 Killed in a ring of blood
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Sarusan the Timeraper
 #{normal}#102 - 87#{italic}#
 He who wields Time
 Dies by Time
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Palia the Poacher
 #{normal}#94 - 118#{italic}#
 Shown no mercy in the cursed woods
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Here lies the merchant Dalio
 #{normal}#83 - 121#{italic}#
 Slain by an assassin's deadly poison
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Here lies Jazak
 #{normal}#92 - 113#{italic}#
 He played with the wildest fires
 And got burnt
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 RIP Gedis the Paladin
 #{normal}#?? - 118#{italic}#
 Bright star from foreign lands
 We weep your fallen light
 #{normal}#]]}
 
-i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", text_color = {r=255,g=255,b=255}, special_ui = "tombstone", always_pop = true, lore = [[#{bold}#
 Foursaw the Clown
 #{normal}#82 - 114#{italic}#
 We laughed
