@@ -966,6 +966,7 @@ function _M:selectTile()
 		"npc/humanoid_human_bandit.png",
 		"npc/humanoid_human_ben_cruthdar__the_cursed.png",
 		"npc/humanoid_human_blood_mage.png",
+		"npc/humanoid_human_celia.png",
 		"npc/humanoid_human_cryomancer.png",
 		"npc/humanoid_human_cutpurse.png",
 		"npc/humanoid_human_derth_guard.png",

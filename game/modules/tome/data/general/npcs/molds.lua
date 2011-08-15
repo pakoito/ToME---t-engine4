@@ -34,7 +34,9 @@ newEntity{
 	combat_armor = 1, combat_def = 1,
 	never_move = 1,
 	blind_immune = 1,
+	poison_immune = 1,
 	fear_immune = 1,
+	no_breath = 1,
 	rank = 1,
 	size_category = 1,
 }

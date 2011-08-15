@@ -267,7 +267,8 @@ RIP Cecil Farion
 Noble in mind
 Pure in spirit
 Rest now from the burdens of the flesh
-#{normal}#]]}
+
+#{normal}#A fresh rose lies here]]}
 
 i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
 Here lies Golan of Derth
@@ -396,6 +397,128 @@ Ben Harrison
 #{normal}#68 - 104#{italic}#
 Praise the name
 Of he who helped us band together
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Here rests Raymond Gaustadnes
+#{normal}#84 - 120#{italic}#
+The Pixels finally got him...
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Here lies Crokar
+#{normal}#86 - 113#{italic}#
+His love of trolls proved too dangerous a hobby
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Lyrissa the Wyrmfriend
+#{normal}#93 - 116#{italic}#
+Eaten by dragons
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Here rests Weldeth the Deserter
+#{normal}#86 - 103#{italic}#
+Fled from battle
+Bereft of pride
+On a comrade's sword
+He quickly died
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{italic}#
+This gravestone has been desecrated
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Seria Swanfoot
+#{normal}#56 - 109#{italic}#
+May your feet now walk amongst the stars
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Eric and Erik
+#{normal}#66 - 114#{italic}#
+Met their death investigating dark light
+Alas, the pit was darker still
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Hoblo Sureshot
+#{normal}#94 - 120#{italic}#
+Death by ricochet
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Grave of the Unknown Mason
+#{normal}#??? - ???#{italic}#
+In dedication to all those lost building the dungeons of Maj'Eyal
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Here lies Albert Deathproof
+#{normal}#75 - ???#{italic}#
+Buried alive
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+RIP Legless Jack
+#{normal}#26 - 98#{italic}#
+His life's dream was to dance
+But even dreams must die
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+The Blightbringer
+#{normal}#14 - 46#{italic}#
+Do not disturb
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Matthew the Brawler
+#{normal}#101 - 122#{italic}#
+Killed in a ring of blood
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Sarusan the Timeraper
+#{normal}#102 - 87#{italic}#
+He who wields Time
+Dies by Time
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Palia the Poacher
+#{normal}#94 - 118#{italic}#
+Shown no mercy in the cursed woods
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Here lies the merchant Dalio
+#{normal}#83 - 121#{italic}#
+Slain by an assassin's deadly poison
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Here lies Jazak
+#{normal}#92 - 113#{italic}#
+He played with the wildest fires
+And got burnt
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+RIP Gedis the Paladin
+#{normal}#?? - 118#{italic}#
+Bright star from foreign lands
+We weep your fallen light
+#{normal}#]]}
+
+i=i+1 newLore{ id = "last-hope-graveyard-"..i, category = "last hope graveyard", name = "gravestone", always_pop = true, lore = [[#{bold}#
+Foursaw the Clown
+#{normal}#82 - 114#{italic}#
+We laughed
+Until we saw
+The joke was over
 #{normal}#]]}
 
 print("Made "..i.." last hope graveyard stones")

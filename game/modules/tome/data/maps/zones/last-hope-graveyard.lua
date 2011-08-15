@@ -23,7 +23,7 @@ endx = 18
 endy = 18
 
 local list = {}
-for i = 1, 25 do list[#list+1] = i end
+for i = 1, 44 do list[#list+1] = i end
 
 -- defineTile section
 defineTile("*", function() local v = rng.tableRemove(list) if not v then v = "" end return "GRAVE"..v end)

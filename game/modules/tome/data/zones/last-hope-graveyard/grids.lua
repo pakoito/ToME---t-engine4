@@ -21,6 +21,8 @@ load("/data/general/grids/basic.lua")
 load("/data/general/grids/forest.lua")
 load("/data/general/grids/water.lua")
 
+local grass_editer = { method="borders_def", def="grass"}
+
 newEntity{
 	define_as = "SWAMPTREE",
 	type = "wall", subtype = "grass",
@@ -46,16 +48,17 @@ newEntity{ base = "FLOOR", define_as = "ROAD",
 newEntity{ base = "FLOOR", define_as = "GRAVE",
 	type = "wall", subtype = "grass",
 	name="grave",
-	display='&', image="terrain/grave.png",
+	display='&', image="terrain/grass.png",
 	does_block_move = true,
 	pass_projectile = true,
+	nice_editer = grass_editer,
 	block_move = function(self, x, y, who, act, couldpass)
 		if not who or not who.player or not act then return true end
 		if self.lore then who:learnLore(self.lore) end
 		return true
 	end,
 }
-for i = 1, 25 do newEntity{ base = "GRAVE", define_as = "GRAVE"..i, lore="last-hope-graveyard-"..i} end
+for i = 1, 44 do newEntity{ base = "GRAVE", define_as = "GRAVE"..i, lore="last-hope-graveyard-"..i, add_displays={class.new{z=18,image="terrain/grave_unopened_0"..rng.range(1,3).."_64.png", display_y=-1, display_h=2}},} end
 
 newEntity{ base = "FLOOR", define_as = "COFFIN",
 	name="coffin",
@@ -78,7 +81,7 @@ newEntity{ base = "FLOOR", define_as = "COFFIN_OPEN",
 
 newEntity{ define_as = "MAUSOLEUM",
 	name = "open mausoleum",
-	image = "terrain/stone_road1.png", add_mos = {{image="terrain/dungeon_entrance01.png"}},
+	image = "terrain/stone_road1.png", add_displays = {class.new{z=5, image="terrain/dungeon_entrance01.png"}},
 	type = "floor", subtype = "floor",
 	display = '>', color_r=255, color_g=255, color_b=0,
 	notice = true,

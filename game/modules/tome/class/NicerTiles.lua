@@ -535,7 +535,7 @@ function _M:editTileGenericBorders(level, i, j, g, nt, type)
 		if nt.forbid[g9] then g9 = type end
 	end
 
-	local id = "genbord:"..table.concat({type,tostring(g1==g5),tostring(g2==g5),tostring(g3==g5),tostring(g4==g5),tostring(g5==g5),tostring(g6==g5),tostring(g7==g5),tostring(g8==g5),tostring(g9==g5)}, ",")
+	local id = "genbord:"..table.concat({g.define_as or "--",type,tostring(g1==g5),tostring(g2==g5),tostring(g3==g5),tostring(g4==g5),tostring(g5==g5),tostring(g6==g5),tostring(g7==g5),tostring(g8==g5),tostring(g9==g5)}, ",")
 
 	-- Sides
 	if g5 ~= g8 then self:edit(i, j, id, nt[g8.."8"] or nt["default8"]) end
@@ -578,7 +578,7 @@ function _M:editTileGenericWalls(level, i, j, g, nt, type)
 		if nt.forbid[g9] then g9 = type end
 	end
 
-	local id = "genwall:"..table.concat({type,tostring(g1==g5),tostring(g2==g5),tostring(g3==g5),tostring(g4==g5),tostring(g5==g5),tostring(g6==g5),tostring(g7==g5),tostring(g8==g5),tostring(g9==g5)}, ",")
+	local id = "genwall:"..table.concat({g.define_as or "--",type,tostring(g1==g5),tostring(g2==g5),tostring(g3==g5),tostring(g4==g5),tostring(g5==g5),tostring(g6==g5),tostring(g7==g5),tostring(g8==g5),tostring(g9==g5)}, ",")
 
 	-- Sides
 	if     g5 ~= g8 then self:edit(i, j, id, nt[g8.."8"] or nt["default8"]) end
@@ -625,7 +625,7 @@ function _M:editTileGenericSandWalls(level, i, j, g, nt, type)
 		if nt.forbid[g9] then g9 = type end
 	end
 
-	local id = "sandwall:"..table.concat({type,tostring(g1==g5),tostring(g2==g5),tostring(g3==g5),tostring(g4==g5),tostring(g5==g5),tostring(g6==g5),tostring(g7==g5),tostring(g8==g5),tostring(g9==g5)}, ",")
+	local id = "sandwall:"..table.concat({g.define_as or "--",type,tostring(g1==g5),tostring(g2==g5),tostring(g3==g5),tostring(g4==g5),tostring(g5==g5),tostring(g6==g5),tostring(g7==g5),tostring(g8==g5),tostring(g9==g5)}, ",")
 
 	-- Sides
 	if     g5 ~= g8 and g5 ~= g7 and g5 ~= g9 then
