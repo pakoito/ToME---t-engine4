@@ -49,5 +49,28 @@ return {
 			class = "engine.generator.object.Random",
 			nb_object = {0, 0},
 		},
-	}
+	},
+
+	post_process = function(level)
+		local p = game:getPlayer(true)
+		if p.faction ~= "sunwall" then return end
+
+		for uid, e in pairs(level.entities) do
+			if e.define_as == "HIGH_SUN_PALADIN_AERYN" then
+				local spot = game.level:pickSpot{type="npc", subtype="aeryn-main"}
+				e:move(spot.x, spot.y, true)
+				e.can_talk = "gates-of-morning-main"
+			end
+		end
+
+		game:onTickEnd(function()
+			local spot = game.level:pickSpot{type="pop-birth", subtype="sunwall"}
+			game.player:move(spot.x, spot.y, true)
+
+			local spot = game.level:pickSpot{type="pop-birth", subtype="slazish-fens"}
+			local g = game.zone:makeEntityByName(game.level, "terrain", "FENS")
+			game.zone:addEntity(game.level, g, "terrain", spot.x, spot.y)
+			game.nicer_tiles:updateAround(game.level, spot.x, spot.y)
+		end)
+	end,
 }

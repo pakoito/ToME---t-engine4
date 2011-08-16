@@ -17,23 +17,23 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/grids/basic.lua")
-load("/data/general/grids/forest.lua")
-load("/data/general/grids/water.lua")
+name = "Serpentine Invaders"
+desc = function(self, who)
+	local desc = {}
+	desc[#desc+1] = "Nagas are invading the slazish fens. The Sunwall can not fight on two fronts, you need to stop the invaders before it is too late.\n Locate and destroy the invader's portal."
+	if self:isCompleted("slazish") then
+		desc[#desc+1] = "#LIGHT_GREEN#* .#WHITE#"
+	else
+		desc[#desc+1] = "#SLATE#* You must stop the nagas.#WHITE#"
+	end
+	return table.concat(desc, "\n")
+end
 
-local grass_editer = { method="borders_def", def="grass"}
-
-newEntity{ base = "FLOOR", define_as = "DIRT",
-	name="dirt road",
-	display='.', image="terrain/stone_road1.png"
-}
-
-newEntity{
-	define_as = "STEW",
-	type = "wall", subtype = "grass",
-	name = "troll stew", image = "terrain/grass.png", add_mos={{image="terrain/troll_stew.png"}},
-	display = '~', color=colors.LIGHT_RED, back_color=colors.RED,
-	does_block_move = true,
-	pass_projectile = true,
-	nice_editer = grass_editer,
-}
+on_status_change = function(self, who, status, sub)
+	if sub then
+		if self:isCompleted("slazish") then
+			who:setQuestStatus(self.id, engine.Quest.DONE)
+			who:grantQuest(who.celestial_race_start_quest)
+		end
+	end
+end

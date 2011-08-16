@@ -34,10 +34,10 @@ newEntity{
 	does_block_move = true,
 	block_sight = true,
 	dig = "GRASS",
-	nice_tiler = { method="replace", base={"SWAMPTREE", 100, 1, 3}},
+	nice_tiler = { method="replace", base={"SWAMPTREE", 100, 1, 20}},
 	nice_editer = grass_editer,
 }
-for i = 1, 3 do newEntity{ base="SWAMPTREE", define_as = "SWAMPTREE"..i, image = "terrain/grass.png", add_displays = class:makeTrees("terrain/swamptree", 3, 3)} end
+for i = 1, 20 do newEntity{ base="SWAMPTREE", define_as = "SWAMPTREE"..i, image = "terrain/grass.png", add_displays = class:makeTrees("terrain/swamptree", 3, 3)} end
 
 newEntity{ base = "FLOOR", define_as = "ROAD",
 	type = "floor", subtype = "road",

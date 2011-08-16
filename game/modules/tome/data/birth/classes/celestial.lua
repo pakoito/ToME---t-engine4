@@ -36,8 +36,16 @@ newBirthDescriptor{
 		},
 	},
 	copy = {
-		-- All mages are of angolwen faction
-		faction = "sunwall",
+		class_start_check = function(self)
+			if self.descriptor.world == "Maj'Eyal" and (self.descriptor.race == "Human" or self.descriptor.race == "Elf") then
+				self.celestial_race_start_quest = self.starting_quest
+				self.default_wilderness = {"zone-pop", "ruined-gates-of-morning"}
+				self.starting_zone = "town-gates-of-morning"
+				self.starting_quest = "start-sunwall"
+				self.starting_intro = "sunwall"
+				self.faction = "sunwall"
+			end
+		end,
 	},
 }
 
@@ -79,9 +87,9 @@ newBirthDescriptor{
 	copy = {
 		max_life = 110,
 		resolvers.equip{ id=true,
-			{type="weapon", subtype="mace", name="iron mace", autoreq=true, ego_chance=-1000},
-			{type="armor", subtype="shield", name="iron shield", autoreq=true, ego_chance=-1000},
-			{type="armor", subtype="heavy", name="iron mail armour", autoreq=true, ego_chance=-1000},
+			{type="weapon", subtype="mace", name="iron mace", ingore_material_restriction=true, autoreq=true, ego_chance=-1000},
+			{type="armor", subtype="shield", name="iron shield", ingore_material_restriction=true, autoreq=true, ego_chance=-1000},
+			{type="armor", subtype="heavy", name="iron mail armour", ingore_material_restriction=true, autoreq=true, ego_chance=-1000},
 		},
 	},
 	copy_add = {
@@ -127,8 +135,8 @@ newBirthDescriptor{
 	copy = {
 		max_life = 90,
 		resolvers.equip{ id=true,
-			{type="weapon", subtype="staff", name="elm staff", autoreq=true, ego_chance=-1000},
-			{type="armor", subtype="cloth", name="linen robe", autoreq=true, ego_chance=-1000}
+			{type="weapon", subtype="staff", name="elm staff", ingore_material_restriction=true, autoreq=true, ego_chance=-1000},
+			{type="armor", subtype="cloth", name="linen robe", ingore_material_restriction=true, autoreq=true, ego_chance=-1000}
 		},
 	},
 }

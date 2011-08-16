@@ -278,7 +278,7 @@ newTalent{
 		At level 5 it makes an eternal bone giant.
 		At level 6 it has 20%% chances to produce a runed bone giant.
 		Only one bone giant can be active at any time.
-		The number of turns will inrease with your Magic stat.]]):
+		The number of turns will increase with your Magic stat.]]):
 		format()
 	end,
 }

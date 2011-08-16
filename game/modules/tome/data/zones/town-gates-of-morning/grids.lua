@@ -76,3 +76,10 @@ newEntity{
 	nice_tiler = { method="replace", base={"GOLDEN_MOUNTAIN_WALL", 70, 1, 6} },
 }
 for i = 1, 6 do newEntity{ base="GOLDEN_MOUNTAIN", define_as = "GOLDEN_MOUNTAIN_WALL"..i, image = "terrain/golden_mountain5_"..i..".png"} end
+
+newEntity{ define_as = "FENS",
+	name = "Way into the Slazish fens",
+	display = '>', color = colors.YELLOW,
+	image="terrain/marble_floor.png", add_displays = {class.new{image="terrain/golden_cave_entrance02.png", z=8}},
+	change_zone="slazish-fen", change_level = 1,
+}

@@ -155,12 +155,11 @@ newBirthDescriptor{
 				self.starting_zone = "town-angolwen"
 				self.starting_quest = "start-archmage"
 				self.starting_intro = "archmage"
+				self.faction = "angolwen"
 				self:learnTalent(self.T_TELEPORT_ANGOLWEN, true)
 			end
 		end,
 
-		-- All mages are of angolwen faction
-		faction = "angolwen",
 		max_life = 90,
 		resolvers.equip{ id=true,
 			{type="weapon", subtype="staff", name="elm staff", autoreq=true, ego_chance=-1000},

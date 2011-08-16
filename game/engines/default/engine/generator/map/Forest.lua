@@ -21,6 +21,8 @@ require "engine.class"
 local Map = require "engine.Map"
 require "engine.Generator"
 local RoomsLoader = require "engine.generator.map.RoomsLoader"
+local Astar = require"engine.Astar"
+local DirectPath = require"engine.DirectPath"
 module(..., package.seeall, class.inherit(engine.Generator, RoomsLoader))
 
 function _M:init(zone, map, level, data)
@@ -37,6 +39,11 @@ function _M:init(zone, map, level, data)
 	self.octave = data.octave or 4
 	self.nb_spots = data.nb_spots or 10
 	self.do_ponds = data.do_ponds
+
+	self.add_road = data.add_road or false
+	self.end_road = data.end_road or false
+	self.end_road_room = data.end_road_room
+
 	if self.do_ponds then
 		self.do_ponds.zoom = self.do_ponds.zoom or 5
 		self.do_ponds.octave = self.do_ponds.octave or 5
@@ -118,6 +125,7 @@ function _M:addPond(x, y, spots)
 		for j = 1, self.do_ponds.size.h do
 			if pmap[i][j] then
 				self.map(i-1+x, j-1+y, Map.TERRAIN, self:resolve(pmap[i][j], self.grid_list, true))
+				self.map.room_map[i-1+x][j-1+y].special = "pond"
 			end
 		end
 	end
@@ -155,12 +163,15 @@ function _M:generate(lev, old_lev)
 	end
 
 	local spots = {}
+	local waypoints = {}
 	self.spots = spots
 
 	-- Add some spots
 	for i = 1, self.nb_spots do
 		local s = rng.tableRemove(possible_spots)
-		if s then self.spots[#self.spots+1] = s end
+		if s then
+			self.spots[#self.spots+1] = s
+		end
 	end
 
 	if self.do_ponds then
@@ -169,8 +180,50 @@ function _M:generate(lev, old_lev)
 		end
 	end
 
+
 	local nb_room = util.getval(self.data.nb_rooms or 0)
 	local rooms = {}
+	local end_room
+	local axis
+	local direction
+	local ending
+
+	-- get the axis and direction
+	if self.data.edge_entrances[1] == 2 or self.data.edge_entrances[1] == 8 then axis = "y"
+	else axis = "x"
+	end
+
+	if self.data.edge_entrances[1] == 2 or self.data.edge_entrances[1] == 4 then direction = 1
+	else direction = -1
+	end
+
+	-- Add the "requested" end room first (must be at least 66% into the level)
+	print("End Room:",self.end_road_room)
+	if self.end_road and self.end_road_room then
+		print("Trying to load",self.end_road_room)
+		local rroom, end_room_load
+		end_room_load = self:loadRoom(self.end_road_room)
+
+		local r = self:roomAlloc(end_room_load, #rooms+1, lev, old_lev, function(room, x, y)
+			local far_enough = false
+			if     axis == "x" and direction == 1 then
+				far_enough = x >= self.map.w*0.66
+			elseif axis == "x" and direction == -1 then
+				far_enough = x <= self.map.w*0.33
+			elseif axis == "y" and direction == 1 then
+				far_enough = y >= self.map.h*0.66
+			elseif axis == "y" and direction == -1 then
+				far_enough = y <= self.map.h*0.33
+			end
+			return far_enough
+		end)
+		if r then
+			rooms[#rooms+1] = r
+			end_room = r
+			print("Successfully loaded the end room")
+		end
+	end
+
 	while nb_room > 0 do
 		local rroom
 		while true do
@@ -194,7 +247,165 @@ function _M:generate(lev, old_lev)
 		ux, uy, dx, dy, spots = self:makeStairsInside(lev, old_lev, spots)
 	end
 
+	-- Create a road between the stairs via "waypoints" on the map
+	-- The rule is that no waypoint may further away (in terms of the directional axis) than the previous point
+	if self.add_road then
+		if self.end_road then
+			ending = true
+		else
+			ending = false
+		end
+
+		-- Add the up stairs as waypoint 1
+		if #waypoints > 0 then
+			table.insert(waypoints,1,{x=ux,y=uy})
+		else
+			waypoints[#waypoints+1] = {x=ux,y=uy}
+		end
+
+		-- Get 30 random locations
+		local possible_waypoints = {}
+		for i = 1, 30 do
+			local x = rng.range(0,self.map.w-1)
+			local y = rng.range(0,self.map.h-1)
+			possible_waypoints[i] = {x=x,y=y}
+			--print("Possible waypoint",i,x,y)
+		end
+
+		-- sort all the spots in order of upstairs to downstairs
+		local start, finish
+		if     self.data.edge_entrances[1] == 2 then
+			start = 0
+			finish = self.map.h
+			table.sort(possible_waypoints,function(a, b) return b.y > a.y end)
+		elseif self.data.edge_entrances[1] == 4 then
+			start = 0
+			finish = self.map.w
+			table.sort(possible_waypoints,function(a, b) return b.x > a.x end)
+		elseif self.data.edge_entrances[1] == 6 then
+			start = self.map.w
+			finish = 0
+			table.sort(possible_waypoints,function(a, b) return b.x < a.x end)
+		elseif self.data.edge_entrances[1] == 8 then
+			start = self.map.h
+			finish = 0
+			table.sort(possible_waypoints,function(a, b) return b.y < a.y end)
+		end
+
+		-- for i = 1, #possible_waypoints do
+			-- spot = possible_waypoints[i]
+			-- print("Possible waypoint",i,spot.x,spot.y)
+		-- end
+
+		print("Axis : ", axis, " from ", start," to ", finish)
+
+		if ending and end_room then
+			if axis == "x" then finish = end_room.x
+			else finish = end_room.y
+			end
+		end
+
+		for i = 1, #possible_waypoints do
+			local s = possible_waypoints[i]
+			print ("Possible waypoint",i,s.x,s.y)
+			reason = self:checkValid(s,waypoints[#waypoints],axis,start,finish)
+			if not self.map.room_map[s.x][s.y].special and reason == true then
+				waypoints[#waypoints+1] = {x=s.x,y=s.y}
+				print("Waypoint",i,s.x,s.y,"accepted")
+			else
+				print("Waypoint",i,s.x,s.y,"rejected: ",reason)
+			end
+		end
+
+		-- if the downstairs exist, and the road's not ending here, add the downstairs
+		if dx and not ending then
+			waypoints[#waypoints+1] = {x=dx,y=dy}
+		end
+
+		if ending and self.end_road_room then
+			waypoints[#waypoints+1] = {x=end_room.x,y=end_room.y}
+		end
+
+		--print("Amount of waypoints in road are: ", #waypoints)
+		local i = 2
+		while i <= #waypoints do
+			print("tunnel waypoint ",i-1," from ", waypoints[i-1].x, waypoints[i-1].y, " to ", waypoints[i].x,waypoints[i].y)
+			self:makeRoad(waypoints[i-1].x,waypoints[i-1].y,waypoints[i].x,waypoints[i].y,id,"road")
+			i = i + 1
+		end
+	end
+
 	return ux, uy, dx, dy, spots
+end
+
+function _M:makeRoad(x1,y1,x2,y2,id,terrain)
+	local a = Astar.new(self.map, game:getPlayer())
+	local recheck = false
+
+	path = a:calc(x1, y1, x2, y2, true, nil,
+		function(x, y)
+			if game.level.map:checkEntity(x, y, Map.TERRAIN, "air_level") then
+				return false
+			else
+				return true
+			end
+		end,
+		true)
+	--No Astar path ? just be dumb and try direct line
+	if not path then
+		local d = DirectPath.new(game.level.map, game:getPlayer())
+		path = d:calc(x1, y1, x2, y2, false)
+		print("A* couldn't find road to ",x2,y2,"from",x1,x2)
+	end
+	-- convert path to tunnel
+	for i, pathnode in ipairs(path) do
+		if not self.map.room_map[pathnode.x][pathnode.y].special then
+			self.map(pathnode.x, pathnode.y, Map.TERRAIN, self:resolve(terrain))
+		end
+	end
+end
+
+function _M:checkValid(spot, lastspot, axis, start, finish)
+	-- Get the axis
+	local mindistance = 2
+	--math.floor((start+finish)*0.07)
+	local progress, measure, invert_measure,invert_progress, measure = 0,0,0,0
+	if axis == "x" then
+		progress = lastspot.x
+		measure = spot.x
+		invert_measure = spot.y
+		invert_progress = lastspot.y
+	else
+		progress = lastspot.y
+		measure = spot.y
+		invert_measure = spot.x
+		invert_progress = lastspot.x
+	end
+
+	-- Get the direction
+	if finish < start then
+		progess = progress * -1
+		measure = measure * -1
+		finish = finish * -1
+		mindistance = mindistance * -1
+	end
+
+	-- every next one must be at least X squares closer to the end, and not closer than 2*X to the end,
+	-- and on the other axis may not be further than 20% of the distance of the map away
+	if not (measure > progress+mindistance) then
+		return "not enough progress from previous waypoint"
+	end
+	if not (measure < finish-mindistance*2) then
+		return "measure too close to finish"
+	end
+	if not (math.abs(invert_progress - invert_measure) < math.abs(start-finish)*0.2) then
+		return "on non-progress axis, the measure was more than 20% different from previous"
+	end
+
+	return
+		measure > progress+mindistance and
+		measure < finish-mindistance*2 and
+		math.abs(invert_progress - invert_measure) < math.abs(start-finish)*0.2
 end
 
 --- Create the stairs inside the level
@@ -264,3 +475,4 @@ function _M:makeStairsSides(lev, old_lev, sides, spots)
 
 	return ux, uy, dx, dy, spots
 end
+

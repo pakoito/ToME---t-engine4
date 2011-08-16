@@ -181,7 +181,7 @@ function _M:roomPlace(room, id, x, y)
 end
 
 --- Make up a room
-function _M:roomAlloc(room, id, lev, old_lev)
+function _M:roomAlloc(room, id, lev, old_lev, add_check)
 	room = self:roomGen(room, id, lev, old_lev)
 	if not room then return end
 
@@ -198,7 +198,7 @@ function _M:roomAlloc(room, id, lev, old_lev)
 			if not ok then break end
 		end
 
-		if ok then
+		if ok and (not add_check or add_check(room, x, y)) then
 			local res = self:roomPlace(room, id, x, y)
 			if res then return res end
 		end

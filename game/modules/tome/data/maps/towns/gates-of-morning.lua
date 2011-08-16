@@ -77,6 +77,8 @@ addSpot({42, 26}, "npc", "aeryn-main")
 addSpot({43, 21}, "pop-quest", "farportal")
 addSpot({43, 20}, "pop-quest", "farportal-npc")
 addSpot({42, 21}, "pop-quest", "farportal-player")
+addSpot({40, 30}, "pop-birth", "sunwall")
+addSpot({42, 30}, "pop-birth", "slazish-fens")
 
 -- addZone section
 

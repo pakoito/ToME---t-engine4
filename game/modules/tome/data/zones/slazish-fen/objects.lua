@@ -17,23 +17,24 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/grids/basic.lua")
-load("/data/general/grids/forest.lua")
-load("/data/general/grids/water.lua")
+load("/data/general/objects/objects-maj-eyal.lua")
 
-local grass_editer = { method="borders_def", def="grass"}
-
-newEntity{ base = "FLOOR", define_as = "DIRT",
-	name="dirt road",
-	display='.', image="terrain/stone_road1.png"
+for i = 1, 4 do
+newEntity{ base = "BASE_LORE",
+	define_as = "NOTE"..i,
+	name = "tattered paper scrap", lore="trollmire-note-"..i,
+	desc = [[A paper scrap, left by an adventurer.]],
+	rarity = false,
+	is_magic_device = false,
+	encumberance = 0,
 }
+end
 
-newEntity{
-	define_as = "STEW",
-	type = "wall", subtype = "grass",
-	name = "troll stew", image = "terrain/grass.png", add_mos={{image="terrain/troll_stew.png"}},
-	display = '~', color=colors.LIGHT_RED, back_color=colors.RED,
-	does_block_move = true,
-	pass_projectile = true,
-	nice_editer = grass_editer,
+newEntity{ base = "BASE_LORE",
+	define_as = "PROX_NOTE",
+	name = "tattered paper scrap", lore="trollmire-note-5",
+	desc = [[A paper scrap, left by an adventurer.]],
+	rarity = false,
+	is_magic_device = false,
+	encumberance = 0,
 }

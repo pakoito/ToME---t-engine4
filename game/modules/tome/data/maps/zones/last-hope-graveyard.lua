@@ -27,7 +27,7 @@ for i = 1, 44 do list[#list+1] = i end
 
 -- defineTile section
 defineTile("*", function() local v = rng.tableRemove(list) if not v then v = "" end return "GRAVE"..v end)
-defineTile("<", "GRASS_UP4")
+defineTile("<", "GRASS_UP_WILDERNESS")
 defineTile("_", "ROAD")
 defineTile(">", "MAUSOLEUM")
 defineTile(".", "GRASS")

@@ -52,14 +52,14 @@ on_status_change = function(self, who, status, sub)
 end
 
 check_lichform = function(self, who)
-	if self:isStatus(self.DONE) then print("1") return end
-	if who.level < 20 then print("2") return end
-	if not self:isCompleted("heart") then print("3") return end
+	if self:isStatus(self.DONE) then return end
+	if who.level < 20 then return end
+	if not self:isCompleted("heart") then return end
 	local q = who:hasQuest("shertul-fortress")
-	if not q then print("4") return end
-	if not q:isCompleted("butler") then print("5") return end
-	if q.shertul_energy < 40 then print("6") return end
-	if not who:knowTalentType("spell/necrosis") then print("7") return end
+	if not q then return end
+	if not q:isCompleted("butler") then return end
+	if q.shertul_energy < 40 then return end
+	if not who:knowTalentType("spell/necrosis") then return end
 
 	return true
 end

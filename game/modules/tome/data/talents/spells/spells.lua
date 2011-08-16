@@ -187,7 +187,7 @@ function necroSetupSummon(self, m, x, y, level, no_control)
 		self.life = self.life - self.max_life * (p and p.necrotic_aura_decay or 10) / 100
 		self.changed = true
 		if self.life <= 0 then
-			game.logSeen(self, "#{bold}#%s decays into a pile of ash!#{normal}#", src.name:capitalize())
+			game.logSeen(self, "#{bold}#%s decays into a pile of ash!#{normal}#", self.name:capitalize())
 			self:die(self)
 		end
 	end

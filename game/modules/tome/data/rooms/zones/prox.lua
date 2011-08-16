@@ -17,23 +17,25 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/grids/basic.lua")
-load("/data/general/grids/forest.lua")
-load("/data/general/grids/water.lua")
+return function(gen, id)
+	local w = 3
+	local h = 3
+	return { name="prox"..w.."x"..h, w=w, h=h, generator = function(self, x, y, is_lit)
+		local spots = {}
+		for i = 1, self.w do
+			for j = 1, self.h do
+				gen.map.room_map[i-1+x][j-1+y].room = id
+				gen.map(i-1+x, j-1+y, Map.TERRAIN, gen:resolve('floor'))
 
-local grass_editer = { method="borders_def", def="grass"}
+				spots[#spots+1] = {x=i-1+x, y=j-1+y}
+			end
+		end
 
-newEntity{ base = "FLOOR", define_as = "DIRT",
-	name="dirt road",
-	display='.', image="terrain/stone_road1.png"
-}
+		local s = rng.tableRemove(spots)
+		gen.map(s.x, s.y, Map.TERRAIN, gen:resolve('stew'))
+		print("Prox stew at", s.x, s.y)
 
-newEntity{
-	define_as = "STEW",
-	type = "wall", subtype = "grass",
-	name = "troll stew", image = "terrain/grass.png", add_mos={{image="terrain/troll_stew.png"}},
-	display = '~', color=colors.LIGHT_RED, back_color=colors.RED,
-	does_block_move = true,
-	pass_projectile = true,
-	nice_editer = grass_editer,
-}
+		local s = rng.tableRemove(spots)
+		gen.spots[#gen.spots+1] = {x=s.x, y=s.y, type="guardian", subtype="guardian"}
+	end}
+end

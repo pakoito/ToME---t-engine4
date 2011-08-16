@@ -17,23 +17,4 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/grids/basic.lua")
-load("/data/general/grids/forest.lua")
-load("/data/general/grids/water.lua")
-
-local grass_editer = { method="borders_def", def="grass"}
-
-newEntity{ base = "FLOOR", define_as = "DIRT",
-	name="dirt road",
-	display='.', image="terrain/stone_road1.png"
-}
-
-newEntity{
-	define_as = "STEW",
-	type = "wall", subtype = "grass",
-	name = "troll stew", image = "terrain/grass.png", add_mos={{image="terrain/troll_stew.png"}},
-	display = '~', color=colors.LIGHT_RED, back_color=colors.RED,
-	does_block_move = true,
-	pass_projectile = true,
-	nice_editer = grass_editer,
-}
+load("/data/general/traps/natural_forest.lua")

@@ -123,7 +123,6 @@ newEntity{
 	name = "deep water", image = "terrain/water_floor.png",
 	display = '~', color=colors.AQUAMARINE, back_color=colors.DARK_BLUE,
 	always_remember = true,
-	air_level = -5, air_condition="water",
 }
 
 -----------------------------------------
@@ -133,6 +132,7 @@ newEntity{
 newEntity{ base="WATER_BASE",
 	define_as = "DEEP_WATER",
 	image="terrain/water_grass_5_1.png",
+	air_level = -5, air_condition="water",
 }
 
 -----------------------------------------
@@ -142,6 +142,7 @@ newEntity{ base="WATER_BASE",
 newEntity{ base="WATER_BASE",
 	define_as = "DEEP_OCEAN_WATER",
 	image = "terrain/ocean_water_grass_5_1.png",
+	air_level = -5, air_condition="water",
 }
 
 -----------------------------------------

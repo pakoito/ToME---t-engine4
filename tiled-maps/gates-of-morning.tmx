@@ -239,6 +239,18 @@
     <property name="type" value="&quot;pop-quest&quot;"/>
    </properties>
   </object>
+  <object name="Sunwall player pop" x="1298" y="975">
+   <properties>
+    <property name="subtype" value="&quot;sunwall&quot;"/>
+    <property name="type" value="&quot;pop-birth&quot;"/>
+   </properties>
+  </object>
+  <object name="Fens" x="1362" y="976">
+   <properties>
+    <property name="subtype" value="&quot;slazish-fens&quot;"/>
+    <property name="type" value="&quot;pop-birth&quot;"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="Actor" width="50" height="50">
   <object name="Limmir" x="702" y="1233">

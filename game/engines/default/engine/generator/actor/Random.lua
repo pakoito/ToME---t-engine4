@@ -36,6 +36,7 @@ function _M:init(zone, map, level, spots)
 	self.nb_npc = data.nb_npc or {10, 20}
 	self.area = data.area or {x1=0, x2=self.map.w-1, y1=0, y2=self.map.h-1}
 	self.guardian = data.guardian
+	self.guardian_spot = data.guardian_spot
 	self.guardian_no_connectivity = data.guardian_no_connectivity
 	self.guardian_level = data.guardian_level
 	self.post_generation = data.post_generation
@@ -56,13 +57,27 @@ function _M:generateGuardian(guardian)
 	local m = self.zone:makeEntityByName(self.level, "actor", guardian)
 	local ok = false
 	if m then
-		local x, y = rng.range(self.area.x1, self.area.x2), rng.range(self.area.y1, self.area.y2)
-		local tries = 0
-		while (not m:canMove(x, y) or self.map.room_map[x][y].special) and tries < 100 do
-			x, y = rng.range(self.area.x1, self.area.x2), rng.range(self.area.y1, self.area.y2)
-			tries = tries + 1
+		local x, y = nil, nil
+
+		if self.guardian_spot then
+			local spot = self.level:pickSpot(self.guardian_spot)
+			if spot then
+				x, y = spot.x, spot.y
+				print("Selecting guardian spot", x, y)
+			end
 		end
-		if tries < 100 then
+
+		if not x or not y then
+			x, y = rng.range(self.area.x1, self.area.x2), rng.range(self.area.y1, self.area.y2)
+			local tries = 0
+			while (not m:canMove(x, y) or self.map.room_map[x][y].special) and tries < 100 do
+				x, y = rng.range(self.area.x1, self.area.x2), rng.range(self.area.y1, self.area.y2)
+				tries = tries + 1
+			end
+			if tries >= 100 then x, y = nil, nil end
+		end
+
+		if x and y then
 			self.spots[#self.spots+1] = {x=x, y=y, guardian=true, check_connectivity=(not self.guardian_no_connectivity) and "entrance" or nil}
 			self.zone:addEntity(self.level, m, "actor", x, y)
 			print("Guardian allocated: ", self.guardian, m.uid, m.name)

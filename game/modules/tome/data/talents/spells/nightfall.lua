@@ -64,7 +64,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		return ([[Conjures up a bolt of darkness, doing %0.2f darkness damage.
 		At level 3 it will create a beam of shadows.
-		At level 5 none of your Nightfall spells will not hurt your minions anymore.
+		At level 5 none of your Nightfall spells will hurt your minions anymore.
 		The damage will increase with the Magic stat]]):
 		format(damDesc(self, DamageType.DARKNESS, damage))
 	end,

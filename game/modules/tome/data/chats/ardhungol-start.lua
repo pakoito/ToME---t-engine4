@@ -17,6 +17,16 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+if not game.state:isAdvanced() then
+newChat{ id="welcome",
+	text = [[Good day to you.]],
+	answers = {
+		{"Good day to you too."},
+	}
+}
+return "welcome"
+end
+
 if not game.player:hasQuest("spydric-infestation") then
 newChat{ id="welcome",
 	text = [[I have heard you are a great hero of the west. Could you help me, please?]],
