@@ -62,14 +62,18 @@ newTalent{
 	require = techs_req3,
 	mode = "passive",
 	points = 5,
-	getPercent = function (self, t) return self:getTalentLevel(t) * 20 end,
+	getRes = function(self, t) return 2 * self:getTalentLevelRaw(t) end,
 	on_learn = function(self, t)
+		self.resists.all = (self.resists.all or 0) + 2
 	end,
 	on_unlearn = function(self, t)
+		self.resists.all = (self.resists.all or 0) - 2
 	end,
 	info = function(self, t)
-		local percent = t.getPercent(self, t)
-		return ([[You've learned to shrug off more damage then is normal.  Increases your effective constitution  for resist all bonuses by %d%%.]]):
+		local res = t.getRes(self, t)
+	info = function(self, t)
+		local percent = t.getRes(self, t)
+		return ([[You've learned to shrug off more damage then is normal.  Increases all damage reduction by %d%%.]]):
 		format(percent)
 	end,
 }
