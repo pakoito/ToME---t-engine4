@@ -31,6 +31,7 @@ function _M:init(zone, map, level, data)
 	self.zoom = data.zoom or 5
 	self.max_percent = data.max_percent or 80
 	self.sqrt_percent = data.sqrt_percent or 30
+	self.sqrt_percent2 = data.sqrt_percent2
 	self.hurst = data.hurst or nil
 	self.lacunarity = data.lacunarity or nil
 	self.octave = data.octave or 4
@@ -138,7 +139,16 @@ function _M:generate(lev, old_lev)
 			if (v >= self.sqrt_percent and rng.percent(v)) or (v < self.sqrt_percent and rng.percent(math.sqrt(v))) then
 				self.map(i-1, j-1, Map.TERRAIN, self:resolve("wall"))
 			else
-				self.map(i-1, j-1, Map.TERRAIN, self:resolve("floor"))
+				if not self.sqrt_percent2 then
+					self.map(i-1, j-1, Map.TERRAIN, self:resolve("floor"))
+				else
+					if (v >= self.sqrt_percent2) then
+						self.map(i-1, j-1, Map.TERRAIN, self:resolve("floor2"))
+					else
+						self.map(i-1, j-1, Map.TERRAIN, self:resolve("floor"))
+					end
+				end
+
 				if v >= self.sqrt_percent then possible_spots[#possible_spots+1] = {x=i-1, y=j-1, type="clearing", subtype="clearing"} end
 			end
 		end

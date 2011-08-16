@@ -71,7 +71,7 @@ end
 -- @param ty the end coord
 -- @param use_has_seen if true the astar wont consider non-has_seen grids
 -- @return either nil if no path or a list of nodes in the form { {x=...,y=...}, {x=...,y=...}, ..., {x=tx,y=ty}}
-function _M:calc(sx, sy, tx, ty, use_has_seen, heuristic, add_check)
+function _M:calc(sx, sy, tx, ty, use_has_seen, heuristic, add_check, forbid_diagonals)
 	local heur = heuristic or self.heuristicCloserPath
 	local w, h = self.map.w, self.map.h
 	local start = self:toSingle(sx, sy)
@@ -151,9 +151,11 @@ function _M:calc(sx, sy, tx, ty, use_has_seen, heuristic, add_check)
 		checkPos(node, x - 1, y)
 		checkPos(node, x, y + 1)
 		checkPos(node, x, y - 1)
-		checkPos(node, x + 1, y + 1)
-		checkPos(node, x + 1, y - 1)
-		checkPos(node, x - 1, y + 1)
-		checkPos(node, x - 1, y - 1)
+		if not forbid_diagonals then
+			checkPos(node, x + 1, y + 1)
+			checkPos(node, x + 1, y - 1)
+			checkPos(node, x - 1, y + 1)
+			checkPos(node, x - 1, y - 1)
+		end
 	end
 end
