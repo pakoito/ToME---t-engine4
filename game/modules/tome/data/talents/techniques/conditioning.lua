@@ -71,10 +71,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local res = t.getRes(self, t)
-	info = function(self, t)
-		local percent = t.getRes(self, t)
 		return ([[You've learned to shrug off more damage then is normal.  Increases all damage reduction by %d%%.]]):
-		format(percent)
+		format(res)
 	end,
 }
 
