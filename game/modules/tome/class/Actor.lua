@@ -2104,9 +2104,7 @@ function _M:preUseTalent(ab, silent, fake)
 
 	if not self:enoughEnergy() and not fake then return false end
 
-	if self:attr("force_talent_ignore_ressources") then
-		-- nothing
-	elseif ab.mode == "sustained" then
+	if ab.mode == "sustained" then
 		if ab.sustain_mana and self.max_mana < ab.sustain_mana and not self:isTalentActive(ab.id) then
 			if not silent then game.logPlayer(self, "You do not have enough mana to activate %s.", ab.name) end
 			return false
@@ -2135,7 +2133,7 @@ function _M:preUseTalent(ab, silent, fake)
 			if not silent then game.logPlayer(self, "You do not have enough energy to activate %s.", ab.name) end
 			return false
 		end
-	else
+	elseif not self:attr("force_talent_ignore_ressources") then
 		if ab.mana and self:getMana() < util.getval(ab.mana, self, ab) * (100 + 2 * self:combatFatigue()) / 100 then
 			if not silent then game.logPlayer(self, "You do not have enough mana to cast %s.", ab.name) end
 			return false
@@ -2283,9 +2281,7 @@ function _M:postUseTalent(ab, ret)
 	end
 
 	local trigger = false
-	if self:attr("force_talent_ignore_ressources") then
-		-- nothing
-	elseif ab.mode == "sustained" then
+	if ab.mode == "sustained" then
 		if not self:isTalentActive(ab.id) then
 			if ab.sustain_mana then
 				trigger = true; self:incMaxMana(-ab.sustain_mana)
@@ -2343,7 +2339,7 @@ function _M:postUseTalent(ab, ret)
 				self:incMaxPsi(ab.sustain_psi)
 			end
 		end
-	else
+	elseif not self:attr("force_talent_ignore_ressources") then
 		if ab.mana then
 			trigger = true; self:incMana(-util.getval(ab.mana, self, ab) * (100 + 2 * self:combatFatigue()) / 100)
 		end
