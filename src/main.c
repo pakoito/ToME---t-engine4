@@ -889,6 +889,10 @@ int main(int argc, char *argv[])
 	core_def->define = &define_core;
 	core_def->define(core_def, "te4core", -1, NULL, NULL, NULL, NULL, 0, NULL);
 
+#ifdef SELFEXE_WINDOWS
+	freopen ("te4_log.txt", "w", stdout);
+#endif
+
 	// Parse arguments
 	int i;
 	for (i = 1; i < argc; i++)
@@ -901,10 +905,6 @@ int main(int argc, char *argv[])
 		if (!strncmp(arg, "--flush-stdout", 14)) setvbuf(stdout, (char *) NULL, _IOLBF, 0);;
 		if (!strncmp(arg, "--no-debug", 10)) no_debug = TRUE;
 	}
-
-#ifdef SELFEXE_WINDOWS
-	freopen ("te4_log.txt", "w", stdout);
-#endif
 
 	// Get cpu cores
 	nb_cpus = get_number_cpus();
