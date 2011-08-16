@@ -21,7 +21,7 @@ startx = 7
 starty = 12
 
 defineTile('#', "HARDWALL")
-defineTile('O', "CLEARWALL")  -- this will be changed to a transparent hard wall (glass or arrow slot or something) when the tile is available
+defineTile('O', "GLASSWALL")
 defineTile('!', "DOOR_VAULT", nil, nil, nil, {block = true})
 defineTile('X', "HARDWALL", nil, nil, nil, {block = true})
 defineTile('.', "FLOOR")
@@ -57,7 +57,6 @@ defineTile('t', mod.class.Grid.new{
 	type = "floor", subtype = "floor",
 	name = "runed floor", image = "terrain/marble_floor.png", add_displays={mod.class.Grid.new{z=5, image = "trap/trap_teleport_01.png"}},
 	display = '^', color_r=255, color_g=0, color_b=255, back_color=colors.DARK_GREY,
-	grow = "WALL",
 	on_move = function(self, x, y, actor, forced)
 		if not actor.player then return end
 		if forced then return end
@@ -92,7 +91,6 @@ defineTile('u', mod.class.Grid.new{
 	type = "floor", subtype = "floor",
 	name = "runed floor", image = "terrain/marble_floor.png", add_displays={mod.class.Grid.new{z=5, image = "trap/trap_teleport_01.png"}},
 	display = '^', color_r=255, color_g=0, color_b=255, back_color=colors.DARK_GREY,
-	grow = "WALL",
 	on_move = function(self, x, y, actor, forced)
 		if not actor.player then return end
 		if forced then return end

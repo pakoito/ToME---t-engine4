@@ -84,7 +84,7 @@ function _M:block_move(x, y, e, act, couldpass)
 		end
 	end
 
-	if e and act and self.does_block_move and game.level.map.attrs(x, y, "on_block_change") then
+	if e and act and self.does_block_move and e.player and game.level.map.attrs(x, y, "on_block_change") then
 		local ng = game.zone:makeEntityByName(game.level, "terrain", game.level.map.attrs(x, y, "on_block_change"))
 		if ng then
 			game.zone:addEntity(game.level, ng, "terrain", x, y)

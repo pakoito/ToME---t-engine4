@@ -296,6 +296,61 @@ newEntity{ base = "OLD_WALL", define_as = "OLD_WALL_PILLAR_6", image = "terrain/
 newEntity{ base = "OLD_WALL", define_as = "OLD_WALL_PILLAR_4", image = "terrain/oldstone_floor.png", z=1, add_displays = {class.new{image="terrain/granite_wall_pillar_1.png", z=3}, class.new{image="terrain/granite_wall_pillar_7.png", z=18, display_y=-1}}}
 newEntity{ base = "OLD_WALL", define_as = "OLD_WALL_PILLAR_2", image = "terrain/oldstone_floor.png", z=1, add_displays = {class.new{image="terrain/granite_wall_pillar_2.png", z=3}}}
 
+-----------------------------------------
+-- Glass Walls
+-----------------------------------------
+newEntity{
+	define_as = "GLASSWALL",
+	type = "wall", subtype = "floor",
+	name = "glass wall", image = "terrain/glasswall.png",
+	display = '#', color=colors.AQUAMARINE, back_color=colors.GREY,
+	z = 3,
+	nice_tiler = { method="wall3d", inner="GLASSWALLF", north="GLASSWALL_NORTH", south="GLASSWALL_SOUTH", north_south="GLASSWALL_NORTH_SOUTH", small_pillar="GLASSWALL_SMALL_PILLAR", pillar_2="GLASSWALL_PILLAR_2", pillar_8="GLASSWALL_PILLAR_8", pillar_4="GLASSWALL_PILLAR_4" },
+	always_remember = true,
+	does_block_move = true,
+	can_pass = {pass_wall=1},
+	air_level = -20,
+	dig = "FLOOR",
+}
+newEntity{ base = "GLASSWALL", define_as = "GLASSWALLF", image = "terrain/marble_floor.png",add_mos={{image = "terrain/glass/wall_glass_middle_01_64.png"}}}
+newEntity{ base = "GLASSWALL", define_as = "GLASSWALL_NORTH", image = "terrain/marble_floor.png",add_mos={{image = "terrain/glass/wall_glass_middle_01_64.png"}}, z = 3, add_displays = {class.new{image="terrain/glass/wall_glass_top_01_64.png", z=18, display_y=-1}}}
+newEntity{ base = "GLASSWALL", define_as = "GLASSWALL_NORTH_SOUTH", image = "terrain/marble_floor.png",add_mos={{image = "terrain/glass/wall_glass_01_64.png"}}, z = 3, add_displays = {class.new{image="terrain/glass/wall_glass_top_01_64.png", z=18, display_y=-1}}}
+newEntity{ base = "GLASSWALL", define_as = "GLASSWALL_SOUTH", image = "terrain/marble_floor.png",add_mos={{image = "terrain/glass/wall_glass_01_64.png"}}, z = 3}
+newEntity{ base = "GLASSWALL_NORTH_SOUTH", define_as = "GLASSWALL_PILLAR_6"}
+newEntity{ base = "GLASSWALL_NORTH_SOUTH", define_as = "GLASSWALL_PILLAR_4"}
+newEntity{ base = "GLASSWALL_NORTH_SOUTH", define_as = "GLASSWALL_SMALL_PILLAR"}
+newEntity{ base = "GLASSWALL_NORTH", define_as = "GLASSWALL_PILLAR_8"}
+newEntity{ base = "GLASSWALL_SOUTH", define_as = "GLASSWALL_PILLAR_2"}
+
+-----------------------------------------
+-- Glass Doors
+-----------------------------------------
+newEntity{
+	define_as = "GLASSDOOR",
+	type = "wall", subtype = "floor",
+	name = "glass door", image = "terrain/glassdoor.png",
+	display = '+', color=colors.AQUAMARINE, back_color=colors.DARK_UMBER,
+	nice_tiler = { method="door3d", north_south="GLASSDOOR_VERT", west_east="GLASSDOOR_HORIZ" },
+	notice = true,
+	always_remember = true,
+	is_door = true,
+	door_opened = "GLASSDOOR_OPEN",
+	dig = "FLOOR",
+}
+newEntity{
+	define_as = "GLASSDOOR_OPEN",
+	type = "wall", subtype = "floor",
+	name = "open glass door", image="terrain/glassdoor.png",
+	display = "'", color=colors.AQUAMARINE, back_color=colors.DARK_GREY,
+	always_remember = true,
+	is_door = true,
+	door_closed = "GLASSDOOR",
+}
+newEntity{ base = "GLASSDOOR", define_as = "GLASSDOOR_HORIZ", image = "terrain/marble_floor.png", add_mos={{image = "terrain/glass/glass_door_hor_closed_01_64.png"}}, add_displays = {class.new{image="terrain/glass/wall_glass_top_01_64.png", z=18, display_y=-1}}, door_opened = "GLASSDOOR_HORIZ_OPEN"}
+newEntity{ base = "GLASSDOOR_OPEN", define_as = "GLASSDOOR_HORIZ_OPEN", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/glass/glass_door_hor_open_01_64.png", z=17}, class.new{image="terrain/glass/wall_glass_top_01_64.png", z=18, display_y=-1}}, door_closed = "GLASSDOOR_HORIZ"}
+newEntity{ base = "GLASSDOOR", define_as = "GLASSDOOR_VERT", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/glass/glass_door_ver_bottom_closed_01_64.png", z=17}, class.new{image="terrain/glass/glass_door_ver_top_closed_01_64.png", z=18, display_y=-1}}, door_opened = "GLASSDOOR_OPEN_VERT", dig = "GLASSDOOR_OPEN_VERT"}
+newEntity{ base = "GLASSDOOR_OPEN", define_as = "GLASSDOOR_OPEN_VERT", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/glass/glass_door_ver_bottom_open_01_64.png", z=17}, class.new{image="terrain/glass/glass_door_ver_top_closed_01_64.png", z=18, display_y=-1}}, door_closed = "GLASSDOOR_VERT"}
+
 
 -----------------------------------------
 -- Levers & such tricky tings
