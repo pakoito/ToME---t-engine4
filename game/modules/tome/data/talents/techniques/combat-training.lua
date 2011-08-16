@@ -18,22 +18,22 @@
 -- darkgod@te4.org
 
 newTalent{
-	name = "Health",
+	name = "Thick Skin",
 	type = {"technique/combat-training", 1},
 	mode = "passive",
 	points = 5,
 	require = { stat = { con=function(level) return 14 + level * 9 end }, },
-	getHealth = function(self, t) return 40 * self:getTalentLevelRaw(t) end,
+	getRes = function(self, t) return 3 * self:getTalentLevelRaw(t) end,
 	on_learn = function(self, t)
-		self.max_life = self.max_life + 40
+		self.resists.all = (self.resists.all or 0) + 3
 	end,
 	on_unlearn = function(self, t)
-		self.max_life = self.max_life - 40
+		self.resists.all = (self.resists.all or 0) - 3
 	end,
 	info = function(self, t)
-		local health = t.getHealth(self, t)
-		return ([[Increases your maximum life by %d]]):
-		format(health)
+		local res = t.getRes(self, t)
+		return ([[Your skin becomes more resilient to damage. Increases resistance to all damage by %d%%]]):
+		format(res)
 	end,
 }
 

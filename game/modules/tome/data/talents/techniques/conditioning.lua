@@ -64,10 +64,8 @@ newTalent{
 	points = 5,
 	getPercent = function (self, t) return self:getTalentLevel(t) * 20 end,
 	on_learn = function(self, t)
-		self:updateConDamageReduction()
 	end,
 	on_unlearn = function(self, t)
-		self:updateConDamageReduction()
 	end,
 	info = function(self, t)
 		local percent = t.getPercent(self, t)

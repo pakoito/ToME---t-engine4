@@ -1689,7 +1689,6 @@ end
 function _M:onStatChange(stat, v)
 	if stat == self.STAT_CON then
 		self.max_life = self.max_life + 4 * v
-		self:updateConDamageReduction()
 	elseif stat == self.STAT_WIL then
 		self:incMaxMana(5 * v)
 		self:incMaxStamina(2.5 * v)
@@ -1697,20 +1696,6 @@ function _M:onStatChange(stat, v)
 	elseif stat == self.STAT_STR then
 		self:checkEncumbrance()
 	end
-end
-
-function _M:updateConDamageReduction()
-	self.resists = self.resists or {}
-	self.resists.all = self.resists.all or 0
-	if self.temp_con_perc then
-		self.resists.all = self.resists.all - self.temp_con_perc
-	end
-	local inc = self:getCon() / 7
-	if self:knowTalent(self.T_IRON_SKIN) then
-		inc = inc * (1 + (self:getTalentLevel(self.T_IRON_SKIN) * 0.2))
-	end
-	self.temp_con_perc = inc
-	self.resists.all = self.resists.all + inc
 end
 
 --- Called when a temporary value changes (added or deleted)

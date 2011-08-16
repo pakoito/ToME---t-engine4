@@ -372,9 +372,6 @@ function _M:getStatDescription(stat_id)
 	text = text.."#LIGHT_BLUE#Stat gives:#LAST#\n"
 	if stat_id == self.actor.STAT_CON then
 		text = text.."Max life: "..color..(diff * 4).."#LAST#\n"
-		self.actor:updateConDamageReduction()
-		self.actor_dup:updateConDamageReduction()
-		text = text.."All resistance: "..color..("%.2f"):format(self.actor.temp_con_perc - self.actor_dup.temp_con_perc).."#LAST#\n"
 		text = text.."Physical save: "..color..(diff * 0.35).."#LAST#\n"
 	elseif stat_id == self.actor.STAT_WIL then
 		if self.actor:knowTalent(self.actor.T_MANA_POOL) then

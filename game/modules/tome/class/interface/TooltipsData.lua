@@ -164,7 +164,7 @@ TOOLTIP_DEX = [[#GOLD#Dexterity#LAST#
 Dexterity defines your character's ability to be agile and alert. It increases your chance to hit, your ability to avoid attacks, and your damage with light weapons.
 ]]
 TOOLTIP_CON = [[#GOLD#Constitution#LAST#
-Constitution defines your character's ability to withstand and resist damage. It increases your maximum life, your chance to save against physical effects and your global damage reduction.
+Constitution defines your character's ability to withstand and resist damage. It increases your maximum life and your chance to save against physical effects.
 ]]
 TOOLTIP_MAG = [[#GOLD#Magic#LAST#
 Magic defines your character's ability to manipulate the magical energy of the world. It increases your spell power, your chance to save against magical effects, and the effect of spells and other magic items.
