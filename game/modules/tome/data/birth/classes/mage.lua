@@ -42,6 +42,69 @@ newBirthDescriptor{
 
 newBirthDescriptor{
 	type = "subclass",
+	name = "Alchemist",
+	desc = {
+		"An Alchemist is a manipulator of materials using magic.",
+		"They do not use the forbidden arcane arts practised by the mages of old - such perverters of nature have been shunned or actively hunted down since the Spellblaze.",
+		"Alchemists can transmute gems to bring forth elemental effects, turning them into balls of fire, torrents of acid, and other effects.  They can also reinforce armour with magical effects using gems, and channel arcane staffs to produce bolts of energy.",
+		"Though normally physically weak, most alchemists are accompanied by magical golems which they construct and use as bodyguards.  These golems are enslaved to their master's will, and can grow in power as their master advances through the arts.",
+		"Their most important stats are: Magic and Dexterity",
+		"#GOLD#Stat modifiers:",
+		"#LIGHT_BLUE# * +0 Strength, +3 Dexterity, +0 Constitution",
+		"#LIGHT_BLUE# * +5 Magic, +1 Willpower, +0 Cunning",
+	},
+	stats = { mag=5, dex=3, wil=1, },
+	talents_types = {
+		["spell/explosives"]={true, 0.3},
+		["spell/infusion"]={true, 0.3},
+		["spell/golemancy"]={true, 0.3},
+		["spell/advanced-golemancy"]={false, 0.3},
+		["spell/stone-alchemy"]={true, 0.3},
+		["spell/fire-alchemy"]={false, 0.3},
+		["spell/staff-combat"]={true, 0.3},
+		["cunning/survival"]={false, -0.1},
+		["technique/combat-training"]={false, 0},
+	},
+	talents = {
+		[ActorTalents.T_CREATE_ALCHEMIST_GEMS] = 1,
+		[ActorTalents.T_REFIT_GOLEM] = 1,
+		[ActorTalents.T_THROW_BOMB] = 1,
+		[ActorTalents.T_FIRE_INFUSION] = 1,
+		[ActorTalents.T_CHANNEL_STAFF] = 1,
+	},
+	copy = {
+		max_life = 90,
+		resolvers.equip{ id=true,
+			{type="weapon", subtype="staff", name="elm staff", autoreq=true, ego_chance=-1000},
+			{type="armor", subtype="cloth", name="linen robe", autoreq=true, ego_chance=-1000}
+		},
+		resolvers.inventory{ id=true,
+			{type="gem",},
+			{type="gem",},
+			{type="gem",},
+		},
+		resolvers.generic(function(self) self:birth_create_alchemist_golem() end),
+		birth_create_alchemist_golem = function(self)
+			-- Make and wield some alchemist gems
+			local t = self:getTalentFromId(self.T_CREATE_ALCHEMIST_GEMS)
+			local gem = t.make_gem(self, t, "GEM_AGATE")
+			self:wearObject(gem, true, true)
+			self:sortInven()
+
+			-- Invoke the golem
+			if not self.alchemy_golem then
+				local t = self:getTalentFromId(self.T_REFIT_GOLEM)
+				t.action(self, t)
+			end
+		end,
+	},
+	copy_add = {
+		life_rating = -1,
+	},
+}
+
+newBirthDescriptor{
+	type = "subclass",
 	name = "Archmage",
 	locked = function() return profile.mod.allow_build.mage end,
 	locked_desc = "Hated, harrowed, hunted, hidden... Our ways are forbidden, but our cause is just. In our veiled valley we find solace from the world's wrath, free to study our arts. Only through charity and friendship can you earn our trust.",
@@ -106,69 +169,6 @@ newBirthDescriptor{
 	},
 	copy_add = {
 		life_rating = -4,
-	},
-}
-
-newBirthDescriptor{
-	type = "subclass",
-	name = "Alchemist",
-	desc = {
-		"An Alchemist is a manipulator of materials using magic.",
-		"They do not use the forbidden arcane arts practised by the mages of old - such perverters of nature have been shunned or actively hunted down since the Spellblaze.",
-		"Alchemists can transmute gems to bring forth elemental effects, turning them into balls of fire, torrents of acid, and other effects.  They can also reinforce armour with magical effects using gems, and channel arcane staffs to produce bolts of energy.",
-		"Though normally physically weak, most alchemists are accompanied by magical golems which they construct and use as bodyguards.  These golems are enslaved to their master's will, and can grow in power as their master advances through the arts.",
-		"Their most important stats are: Magic and Dexterity",
-		"#GOLD#Stat modifiers:",
-		"#LIGHT_BLUE# * +0 Strength, +3 Dexterity, +0 Constitution",
-		"#LIGHT_BLUE# * +5 Magic, +1 Willpower, +0 Cunning",
-	},
-	stats = { mag=5, dex=3, wil=1, },
-	talents_types = {
-		["spell/explosives"]={true, 0.3},
-		["spell/infusion"]={true, 0.3},
-		["spell/golemancy"]={true, 0.3},
-		["spell/advanced-golemancy"]={false, 0.3},
-		["spell/stone-alchemy"]={true, 0.3},
-		["spell/fire-alchemy"]={false, 0.3},
-		["spell/staff-combat"]={true, 0.3},
-		["cunning/survival"]={false, -0.1},
-		["technique/combat-training"]={false, 0},
-	},
-	talents = {
-		[ActorTalents.T_CREATE_ALCHEMIST_GEMS] = 1,
-		[ActorTalents.T_REFIT_GOLEM] = 1,
-		[ActorTalents.T_THROW_BOMB] = 1,
-		[ActorTalents.T_FIRE_INFUSION] = 1,
-		[ActorTalents.T_CHANNEL_STAFF] = 1,
-	},
-	copy = {
-		max_life = 90,
-		resolvers.equip{ id=true,
-			{type="weapon", subtype="staff", name="elm staff", autoreq=true, ego_chance=-1000},
-			{type="armor", subtype="cloth", name="linen robe", autoreq=true, ego_chance=-1000}
-		},
-		resolvers.inventory{ id=true,
-			{type="gem",},
-			{type="gem",},
-			{type="gem",},
-		},
-		resolvers.generic(function(self) self:birth_create_alchemist_golem() end),
-		birth_create_alchemist_golem = function(self)
-			-- Make and wield some alchemist gems
-			local t = self:getTalentFromId(self.T_CREATE_ALCHEMIST_GEMS)
-			local gem = t.make_gem(self, t, "GEM_AGATE")
-			self:wearObject(gem, true, true)
-			self:sortInven()
-
-			-- Invoke the golem
-			if not self.alchemy_golem then
-				local t = self:getTalentFromId(self.T_REFIT_GOLEM)
-				t.action(self, t)
-			end
-		end,
-	},
-	copy_add = {
-		life_rating = -1,
 	},
 }
 
