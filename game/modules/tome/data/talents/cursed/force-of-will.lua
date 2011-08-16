@@ -197,7 +197,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local maxDamage = t.getMaxDamage(self, t)
-		return ([[Deflect 50%% of incoming damage with the force of your will. You may deflect up to %d damage but first your hate must slowly feed your strength (-0.02 hate regeneration while building strength).
+		return ([[Deflect 50%% of incoming damage with the force of your will. You may deflect up to %d damage, but first your hate must slowly feed your strength (-0.02 hate regeneration while building strength).
 		The maximum damage deflected increases with the Willpower stat.]]):format(maxDamage)
 	end,
 }
@@ -249,7 +249,7 @@ newTalent{
 					local power = (1 - (distance / radius))
 					local localDamage = damage * power
 					local dazeDuration = t.getDazeDuration(self, t)
-					
+
 					forceHit(self, target, blastX, blastY, damage, math.max(0, knockback - distance), 15, power)
 					if target:canBe("stun") then
 						target:setEffect(target.EFF_DAZED, dazeDuration, {src=self})

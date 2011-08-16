@@ -26,7 +26,7 @@ newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="corrupti
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="corruption/plague", name = "plague", description = "Spread diseases to your foes." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="corruption/scourge", name = "scourge", description = "Bring pain and destruction to the world." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="corruption/reaving-combat", name = "reaving combat", description = "Enhanced melee combat through the dark arts." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="corruption/blood", name = "blood", description = "Harness the power of blood, both your own and your foes." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="corruption/blood", name = "blood", description = "Harness the power of blood, both your own and your foes'." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="corruption/blight", name = "blight", description = "Bring corruption and decay to all who oppose you." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="corruption/shadowflame", name = "Shadowflame", description = "Harness the power of the demonic shadowflame." }
 

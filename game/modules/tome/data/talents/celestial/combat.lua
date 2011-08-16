@@ -108,7 +108,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[In a pure display of power you project a melee attack, doing %d%% damage.
-		The range will increase with the Strength stat]]):
+		The range will increase with the Strength stat.]]):
 		format(100 * damage)
 	end,
 }

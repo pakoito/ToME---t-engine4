@@ -139,7 +139,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Fire a beam of Sun flames at your foes, burning all those in line for %0.2f fire damage.
+		return ([[Fire a beam of Sun flames at your foes, burning all those in a line for %0.2f fire damage.
 		The damage will increase with the Magic stat.]]):
 		format(damDesc(self, DamageType.FIRE, damage))
 	end,

@@ -79,7 +79,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Projects a bolt of corrupted blood doing %0.2f blight damage and healing the caster for half the damage done.
+		return ([[Project a bolt of corrupted blood doing %0.2f blight damage and healing you for half the damage done.
 		The damage will increase with Magic stat.]]):format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 10, 290)))
 	end,
 }
@@ -138,7 +138,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Concentrate on the corruption you bring, increasing your spell critical chance by %d%%.
-		Each time your spells are critical you enter a blood rage for 5 turns, increasing your blight and acid damage by %d%%.
+		Each time your spells go critical you enter a blood rage for 5 turns, increasing your blight and acid damage by %d%%.
 		The damage will increase with your Magic stat.]]):
 		format(self:combatTalentSpellDamage(t, 10, 14), self:combatTalentSpellDamage(t, 10, 30))
 	end,

@@ -52,7 +52,7 @@ newTalent{
 			self.unnatural_body_healing_factor = -0.5
 			self.healing_factor = (self.healing_factor or 1) + self.unnatural_body_healing_factor
 		end
-	
+
 		-- heal
 		local maxHeal = self.unnatural_body_heal or 0
 		if maxHeal > 0 then
@@ -87,7 +87,7 @@ newTalent{
 		local modifier1, modifier2 = "more", "more"
 		if resist > 0 then modifier1 = "less" end
 		if resist + 18 > 0 then modifier2 = "less" end
-		return ([[Your body's strength is fed by your hatred. With each kill you regenerate %d life at a rate of %0.1f life per turn. This healing cannot be reduced but most other forms of healing are reduced by 50%%. You also take %d%% %s damage (at 0 Hate) to %d%% %s damage (at 10+ Hate).
+		return ([[Your body's strength is fed by your hatred. With each kill you regenerate %d life at a rate of %0.1f life per turn. This healing cannot be reduced, but most other forms of healing are reduced by 50%%. You also take %d%% %s damage (at 0 Hate) to %d%% %s damage (at 10+ Hate).
 		Healing from kills improves with the Willpower stat.]]):format(healPerKill, regenRate, math.abs(resist), modifier1, math.abs(resist + 18), modifier2)
 	end,
 }

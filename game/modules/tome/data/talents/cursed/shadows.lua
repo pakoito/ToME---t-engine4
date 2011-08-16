@@ -569,6 +569,6 @@ newTalent{
 		local combatAtk = t.getCombatAtk(self, t)
 		local incDamage = t.getIncDamage(self, t)
 		local dominateChance = t.getDominateChance(self, t)
-		return ([[Instill hate in your shadows strengthening their attacks. They gain %d%% extra accuracy and %d%% extra damage. The fury of their attacks gives them the ability to try to Dominate their foes, increasing all damage taken by that foe for 4 turns. (%d%% chance at range 1)]]):format(combatAtk, incDamage, dominateChance)
+		return ([[Instill hate in your shadows, strengthening their attacks. They gain %d%% extra accuracy and %d%% extra damage. The fury of their attacks gives them the ability to try to Dominate their foes, increasing all damage taken by that foe for 4 turns. (%d%% chance at range 1)]]):format(combatAtk, incDamage, dominateChance)
 	end,
 }

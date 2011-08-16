@@ -63,28 +63,28 @@ newTalent{
 			self.arcaneBolts = nil
 			return
 		end
-		
+
 		local x, y = target.x, target.y
 		local tg = {type="bolt", range=range, talent=t, display={particle="bolt_fire", trail="firetrail"}}
 		self:projectile(tg, target.x, target.y, DamageType.ARCANE, self.arcaneBolts.damage, nil)
-		
+
 		game:playSoundNear(self, "talents/fire")
 	end,
 	action = function(self, t)
 		local range = self:getTalentRange(t)
 		local damage = t.getDamage(self, t)
-		
+
 		--local tg = {type="bolt", range=range, talent=t, display={particle="bolt_fire", trail="firetrail"}}
 		--local x, y, target = self:getTarget(tg)
 		--if not x or not y or not target or core.fov.distance(self.x, self.y, x, y) > range then return nil end
-		
+
 		self.arcaneBolts = { damage = damage, range = range, duration = 4 }
-		
+
 		return true
 	end,
 	do_arcaneBolts = function(self, t)
 		t.fireArcaneBolt(self, t)
-		
+
 		if self.arcaneBolts then
 			self.arcaneBolts.duration = self.arcaneBolts.duration - 1
 			if self.arcaneBolts.duration <= 0 then self.arcaneBolts = nil end
@@ -92,7 +92,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Each turn for 4 turns you fire a bolt of arcane energy at your nearest enemy inclicting %d damage.
+		return ([[Each turn for 4 turns you fire a bolt of arcane energy at your nearest enemy inflicting %d damage.
 		The damage will increase with the Magic stat.]]):format(damDesc(self, DamageType.ARCANE, damage))
 	end,
 }
@@ -115,17 +115,17 @@ newTalent{
 		local tg = {type="ball", nolock=true, pass_terrain=false, nowarning=true, range=range, radius=0, requires_knowledge=true}
 		x, y = self:getTarget(tg)
 		if not x then return nil end
-		
+
 		-- Target code does not restrict the target coordinates to the range, it lets the project function do it
 		-- but we cant ...
 		local _ _, x, y = self:canProject(tg, x, y)
-		
+
 		if not self:canMove(x, y) or (self.x == x and self.y == y) then return nil end
 		if not self:canBe("teleport") or game.level.map.attrs(x, y, "no_teleport") then
 			game.logSeen(self, "Your attempt to displace fails!")
 			return true
 		end
-		
+
 		game.level.map:particleEmitter(self.x, self.y, 1, "teleport_out")
 		self:move(x, y, true)
 		game.level.map:particleEmitter(self.x, self.y, 1, "teleport_in")
@@ -186,21 +186,21 @@ newTalent{
 			{type="light_zone"},
 			nil, self:spellFriendlyFire()
 		)
-		
+
 		tg = {type="hit", range=10}
 		self:project(tg, self.x, self.y, DamageType.CONFUSION, {
 			dur = 4,
 			dam = 75
 		})
-		
+
 		game:playSoundNear(self, "talents/fireflash")
-		
+
 		return true
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[Bathes the target in raw magic inflicting %d damage. Such wild magic is difficult to control and if you fail to keep your wits you will be confused for 4 turns.
-		The damage will increase with the Magic stat]]):
+		The damage will increase with the Magic stat.]]):
 		format(damDesc(self, DamageType.ARCANE, damage))
 	end,
 }

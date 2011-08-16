@@ -30,7 +30,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Turn into a wraith, allowing you to walk through walls (but does not prevent suffocation) for %d turns.
+		return ([[Turn into a wraith, allowing you to walk through walls (but not preventing suffocation) for %d turns.
 		Also increases your defense and armor by %d and %d.
 		The bonuses will increase with your Magic stat.]]):
 		format(4 + self:getTalentLevel(t), self:combatTalentSpellDamage(t, 5, 19), self:combatTalentSpellDamage(t, 5, 15))

@@ -41,7 +41,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Conjures up spear of bones doing %0.2f physical damage to all targets in line.
+		return ([[Conjures up a spear of bones doing %0.2f physical damage to all targets in line.
 		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.PHYSICAL, self:combatTalentSpellDamage(t, 20, 200)))
 	end,
 }
@@ -151,7 +151,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Bone shields start circling around you. They will each absorb fully one attack.
+		return ([[Bone shields start circling around you. They will each fully absorb one attack.
 		%d shield(s) will be generated.]]):
 		format(math.floor(self:getTalentLevel(t)))
 	end,

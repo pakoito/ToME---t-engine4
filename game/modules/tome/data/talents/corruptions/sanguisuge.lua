@@ -39,7 +39,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Fires a bolt of blight, doing %0.2f blight damage and replenishing 20%% of it as vim energy.
-		The amount of vim regained depends on the target's rank (higher rank give more vim).
+		The amount of vim regained depends on the target's rank (higher ranks give more vim).
 		The effect will increase with your Magic stat.]]):
 		format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 25, 200)))
 	end,

@@ -100,7 +100,7 @@ newTalent{
 	info = function(self, t)
 		local absorb = t.getAbsorb(self, t)
 		return ([[A protective shield forms around you that lasts for up to 10 turns, negating %d damage.
-		Max damage barrier can absorb will increase with your Magic stat.]]):
+		The max damage barrier can absorb will increase with your Magic stat.]]):
 		format(absorb)
 	end,
 }

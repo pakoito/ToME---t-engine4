@@ -113,7 +113,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local range = self:getTalentRange(t)
-		return ([[You perform a precision, telekinetically-enhanced leap, landing up to %d squares away.]]):
+		return ([[You perform a precise, telekinetically-enhanced leap, landing up to %d squares away.]]):
 		format(range)
 	end,
 }
