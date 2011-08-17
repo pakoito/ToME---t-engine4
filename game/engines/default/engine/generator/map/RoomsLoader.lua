@@ -152,7 +152,7 @@ end
 
 --- Place a room
 function _M:roomPlace(room, id, x, y)
-	local is_lit = rng.percent(self.data.lite_room_chance)
+	local is_lit = rng.percent(self.data.lite_room_chance or 100)
 
 	-- ok alloc it using the default generator or a specific one
 	local cx, cy

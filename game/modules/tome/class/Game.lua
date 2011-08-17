@@ -546,7 +546,7 @@ function _M:onLevelLoad(id, fct, data)
 	print("Registering on level load", id, fct, data)
 end
 
-function _M:changeLevel(lev, zone, keep_old_lev, force_down)
+function _M:changeLevel(lev, zone, keep_old_lev, force_down, auto_zone_stair)
 	if not self.player.can_change_level then
 		self.logPlayer(self.player, "#LIGHT_RED#You may not change level without your own body!")
 		return
@@ -647,12 +647,26 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down)
 		self.player:move(self.player.wild_x, self.player.wild_y, true)
 		self.player.last_wilderness = self.zone.short_name
 	else
-		local x, y
-		if lev > old_lev and not force_down then
-			x, y = self.level.default_up.x, self.level.default_up.y
-		else
-			x, y = self.level.default_down.x, self.level.default_down.y
+		local x, y = nil, nil
+		if auto_zone_stair and left_zone then
+			-- Dirty but quick
+			local list = {}
+			for i = 0, self.level.map.w - 1 do for j = 0, self.level.map.h - 1 do
+				local idx = i + j * self.level.map.w
+				if self.level.map.map[idx][Map.TERRAIN] and self.level.map.map[idx][Map.TERRAIN].change_zone == left_zone.short_name then
+					list[#list+1] = {i, j}
+				end
+			end end
+			if #list > 0 then x, y = unpack(rng.table(list)) end
 		end
+
+		-- Default to stairs
+		if not x then
+			if lev > old_lev and not force_down then x, y = self.level.default_up.x, self.level.default_up.y
+			else x, y = self.level.default_down.x, self.level.default_down.y
+			end
+		end
+
 		-- Check if there is already an actor at that location, if so move it
 		x = x or 1 y = y or 1
 		local blocking_actor = self.level.map(x, y, engine.Map.ACTOR)
@@ -1231,7 +1245,7 @@ game.player:learnTalent('T_GIFT_OF_AMAKTHEL',true)
 				else
 					-- Do not unpause, the player is allowed first move on next level
 					if e.change_level_check and e:change_level_check(game.player) then return end
-					self:changeLevel(e.change_zone and e.change_level or self.level.level + e.change_level, e.change_zone, e.keep_old_lev, e.force_down)
+					self:changeLevel(e.change_zone and e.change_level or self.level.level + e.change_level, e.change_zone, e.keep_old_lev, e.force_down, e.change_zone_auto_stairs)
 				end
 			else
 				self.log("There is no way out of this level here.")

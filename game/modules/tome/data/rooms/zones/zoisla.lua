@@ -26,7 +26,6 @@ return function(gen, id)
 			for j = 1, self.h do
 				gen.map.room_map[i-1+x][j-1+y].room = id
 				gen.map(i-1+x, j-1+y, Map.TERRAIN, gen:resolve('near_portal'))
-
 				spots[#spots+1] = {x=i-1+x, y=j-1+y}
 			end
 		end
@@ -35,7 +34,10 @@ return function(gen, id)
 		gen.map(s.x, s.y, Map.TERRAIN, gen:resolve('portal'))
 		print("Zoisla portal at", s.x, s.y)
 
-		local s = rng.tableRemove(spots)
-		gen.spots[#gen.spots+1] = {x=s.x, y=s.y, type="guardian", subtype="guardian"}
+		for i = 1, 3 do
+			local s = rng.tableRemove(spots)
+			local e = gen.zone:makeEntity(gen.level, "actor", {subtype="naga"}, nil, true)
+			if e then gen:roomMapAddEntity(s.x, s.y, "actor", e) end
+		end
 	end}
 end

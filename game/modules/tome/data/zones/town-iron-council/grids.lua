@@ -36,7 +36,7 @@ newEntity{
 }
 end
 
-newEntity{ base = "DOWN", define_as = "ESCAPE_REKNOR", name="Escape route from Reknor", change_zone="reknor-escape" }
+newEntity{ base = "DOWN", define_as = "ESCAPE_REKNOR", name="Escape route from Reknor", change_zone="reknor-escape", change_level=3, change_zone_auto_stairs = true }
 newEntity{ base = "DOWN", define_as = "DEEP_BELLOW", name="The Deep Bellow", glow=true, change_zone="deep-bellow" }
 
 newEntity{ define_as = "STATUE",

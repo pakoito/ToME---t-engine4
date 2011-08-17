@@ -19,22 +19,13 @@
 
 load("/data/general/objects/objects-maj-eyal.lua")
 
-for i = 1, 4 do
+for i = 1, 3 do
 newEntity{ base = "BASE_LORE",
-	define_as = "NOTE"..i,
-	name = "tattered paper scrap", lore="trollmire-note-"..i,
-	desc = [[A paper scrap, left by an adventurer.]],
+	define_as = "SLAZISH_NOTE"..i,
+	name = "weird conch", lore="slazish-note-"..i, image = "terrain/shell1.png",
+	desc = [[A conch, it seemed the naga was using it as a communication tool.]],
 	rarity = false,
 	is_magic_device = false,
 	encumberance = 0,
 }
 end
-
-newEntity{ base = "BASE_LORE",
-	define_as = "PROX_NOTE",
-	name = "tattered paper scrap", lore="trollmire-note-5",
-	desc = [[A paper scrap, left by an adventurer.]],
-	rarity = false,
-	is_magic_device = false,
-	encumberance = 0,
-}

@@ -63,7 +63,7 @@ newEntity{
 	end,
 }
 
-newEntity{ base = "BASE_NPC_NAGA",
+newEntity{ base = "BASE_NPC_NAGA", define_as = "NAGA_TIDEWARDEN",
 	name = "naga tidewarden", color=colors.DARK_UMBER,
 	desc = [[Before you stands a tall figure, propped high by a serpent's tail in place of where his legs should rightly be. His torso is slim and muscular, and his face has an elven beauty to it, framed by locks of blonde hair. But there is a fierceness to this creature too, and his bright eyes veil a smouldering anger.]],
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/humanoid_naga_naga_tidewarden.png", display_h=2, display_y=-1}}},
@@ -78,7 +78,7 @@ newEntity{ base = "BASE_NPC_NAGA",
 	},
 }
 
-newEntity{ base = "BASE_NPC_NAGA",
+newEntity{ base = "BASE_NPC_NAGA", define_as = "NAGA_TIDECALLER",
 	name = "naga tidecaller", color=colors.BLUE,
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/humanoid_naga_naga_tidecaller.png", display_h=2, display_y=-1}}},
 	desc = [[A slithering noise accompanies the movement of this strange creature, whose snake-like tail gives rise to the body of a beautiful elf-like woman. As she moves her delicate hands water rises from the ground, and you feel that here is no mere monster, but a creature of awe and power.]],
@@ -133,6 +133,7 @@ newEntity{ base="BASE_NPC_NAGA", define_as = "ZOISLA",
 	resolvers.equip{ {type="weapon", subtype="trident", autoreq=true, special_rarity="trident_rarity"}, },
 	resolvers.drops{chance=100, nb=1, {unique=true, not_properties={"lore"}} },
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
+	resolvers.drops{chance=100, nb=1, {defined="SLAZISH_NOTE3"} },
 
 	resolvers.talents{
 		[Talents.T_SPIT_POISON]={base=2, every=10, max=5},

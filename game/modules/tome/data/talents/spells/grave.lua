@@ -84,7 +84,7 @@ newTalent{
 			size_category = 1,
 			infravision = 10,
 			can_pass = {pass_wall=70},
-			resists = {all = 35, [DamageType.LIGHT] = -70, [DamageType.DARKNESS] = 65},
+			resists = {all = 35, [DamageType.LIGHT] = -70, [DamageType.COLD] = 65, [DamageType.DARKNESS] = 65},
 			no_breath = 1,
 			stone_immune = 1,
 			confusion_immune = 1,
@@ -125,7 +125,7 @@ newTalent{
 		return ([[Surround yourself with undead energies, when one of your minions is destroyed while inside your necrotic aura it has %d%% chances to create a will o' the wisp.
 		Will o' the wisp will take a random target in sight and home on it, when they reach it they explode for %0.2f cold damage.
 		The damage will increase with the Magic stat]]):
-		format(chance, damDesc(self, DamageType.DARKNESS, dam))
+		format(chance, damDesc(self, DamageType.COLD, dam))
 	end,
 }
 

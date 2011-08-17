@@ -58,8 +58,6 @@ return {
 			class = "engine.generator.actor.Random",
 			nb_npc = {7, 10},
 			filters = { {max_ood=2}, },
-			guardian = "ZOISLA",
-			guardia_spot = {type="guardian", subtype="guardian"},
 		},
 		object = {
 			class = "engine.generator.object.Random",
@@ -74,7 +72,7 @@ return {
 	{
 		[1] = {
 			generator = { map = {
-				up = "GRASS_UP_WILDERNESS",
+				up = "GATES_OF_MORNING",
 			}, },
 		},
 		[3] = {
@@ -86,43 +84,32 @@ return {
 				down = "GRASS",
 			}, },
 		},
-		-- Hidden treasure level
-		[4] = {
-			ambient_music = {"Rainy Day.ogg", "weather/rain.ogg"},
-			generator = {
-				map = {
-					class = "engine.generator.map.Static",
-					map = "zones/trollmire-treasure",
-				},
-				trap = { nb_trap = {0, 0} },
-				object = { nb_object = {3, 4} },
-				actor = { nb_npc = {2, 2} },
-			},
-		},
 	},
 
 	post_process = function(level)
-		-- Place a lore note on each level
-		game:placeRandomLoreObjectScale("NOTE", 5, level.level)
-
-		-- Rain on bill
-		if level.level == 4 and config.settings.tome.weather_effects then
-			local Map = require "engine.Map"
-			level.foreground_particle = require("engine.Particles").new("raindrops", 1, {width=Map.viewport.width, height=Map.viewport.height})
-		end
-
-		-- Some clouds floating happily over the trollmire
 		game.state:makeWeather(level, 7, {max_nb=1, speed={0.5, 1.6}, shadow=true, alpha={0.23, 0.35}, particle_name="weather/grey_cloud_%02d"})
-	end,
 
-	foreground = function(level, x, y, nb_keyframes)
-		if not config.settings.tome.weather_effects or not level.foreground_particle then return end
-		level.foreground_particle.ps:toScreen(x, y, true, 1)
-	end,
+		if level.level == 1 then
+			local npc1 = game.zone:makeEntityByName(game.level, "actor", "NAGA_TIDEWARDEN")
+			local npc2 = game.zone:makeEntityByName(game.level, "actor", "NAGA_TIDECALLER")
+			local x, y = util.findFreeGrid(game.level.default_down.x, game.level.default_down.y, 20, true, {[engine.Map.ACTOR]=true})
+			if x then game.zone:addEntity(game.level, npc1, "actor", x, y) end
+			x, y = util.findFreeGrid(game.level.default_down.x, game.level.default_down.y, 20, true, {[engine.Map.ACTOR]=true})
+			if x then game.zone:addEntity(game.level, npc2, "actor", x, y) end
 
-	on_enter = function(lev, old_lev, newzone)
-		if lev == 3 and game.player:hasQuest("trollmire-treasure") then
-			game.player:hasQuest("trollmire-treasure"):enter_level3()
+			npc1.on_die = function(self)
+				local n = game.zone:makeEntityByName(game.level, "object", "SLAZISH_NOTE1")
+				if n then game.zone:addEntity(game.level, n, "object", self.x, self.y) end
+			end
+		elseif level.level == 2 then
+			local npc = game.zone:makeEntityByName(game.level, "actor", "NAGA_TIDEWARDEN")
+			local x, y = util.findFreeGrid(game.level.default_down.x, game.level.default_down.y, 20, true, {[engine.Map.ACTOR]=true})
+			if x then game.zone:addEntity(game.level, npc, "actor", x, y) end
+
+			npc.on_die = function(self)
+				local n = game.zone:makeEntityByName(game.level, "object", "SLAZISH_NOTE2")
+				if n then game.zone:addEntity(game.level, n, "object", self.x, self.y) end
+			end
 		end
 	end,
 }

@@ -52,11 +52,39 @@ for i = 1, 7 do newEntity{ base="BOGWATER_MISC", define_as = "BOGWATER_MISC"..i,
 
 newEntity{ base="BOGWATER",
 	define_as = "PORTAL",
+	display = "&", color = colors.BLUE,
+	name = "coral portal",
 	add_displays = {class.new{z=18, image="terrain/naga_portal.png", display_h=2, display_y=-1}},
 	does_block_move = true,
 	pass_projectile = true,
 	block_move = function(self, x, y, who, act, couldpass)
 		if not who or not who.player or not act then return true end
+		if self.broken then
+			game.log("#VIOLET#The portal is already broken!")
+			return true
+		end
+
+		who:restInit(20, "destroying the portal", "destroyed the portal", function(cnt, max)
+			if cnt > max then
+				game.log("#VIOLET#The portal starts to break down, run!")
+				self.broken = true
+				game:onTickEnd(function()
+					local sx, sy = util.findFreeGrid(x, y, 10, true, {[engine.Map.ACTOR]=true})
+					local npc = game.zone:makeEntityByName(game.level, "actor", "ZOISLA")
+					if sx then
+						game.zone:addEntity(game.level, npc, "actor", sx, sy)
+						game.level.map:particleEmitter(sx, sy, 1, "teleport_water")
+						local chat = require("engine.Chat").new("zoisla", npc, who)
+						chat:invoke("welcome")
+					end
+				end)
+			end
+		end)
+
 		return true
 	end,
+}
+
+newEntity{ base = "GRASS_UP_WILDERNESS", define_as = "GATES_OF_MORNING",
+	change_zone = "town-gates-of-morning", change_zone_auto_stairs = true,
 }

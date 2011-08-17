@@ -201,7 +201,7 @@ function _M:generate(lev, old_lev)
 
 	-- Add the "requested" end room first (must be at least 66% into the level)
 	print("End Room:",self.end_road_room)
-	if self.end_road and self.end_road_room then
+	if self.end_road_room then
 		print("Trying to load",self.end_road_room)
 		local rroom, end_room_load
 		end_room_load = self:loadRoom(self.end_road_room)
