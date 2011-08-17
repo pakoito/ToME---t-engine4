@@ -45,6 +45,19 @@ newChat{ id="fool",
 				game.level.map:particleEmitter(player.x, player.y, 1, "teleport_water")
 				game.level.map:particleEmitter(sx, sy, 1, "teleport_water")
 
+				game:onLevelLoad("wilderness-1", function(zone, level, data)
+					local list = {}
+					for i = 0, level.map.w - 1 do for j = 0, level.map.h - 1 do
+						local idx = i + j * level.map.w
+						if level.map.map[idx][engine.Map.TERRAIN] and level.map.map[idx][engine.Map.TERRAIN].change_zone == data.from then
+							list[#list+1] = {i, j}
+						end
+					end end
+					if #list > 0 then
+						game.player.wild_x, game.player.wild_y = unpack(rng.table(list))
+					end
+				end, {from=game.zone.short_name})
+
 				local chat = require("engine.Chat").new("zoisla", npc, player)
 				chat:invoke("kill")
 			end)

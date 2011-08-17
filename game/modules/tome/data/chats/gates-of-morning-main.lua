@@ -20,7 +20,7 @@
 newChat{ id="welcome",
 	text = [[What may I do for you?]],
 	answers = {
-		{"Lady Aeryn, at last I am back home! [tell her your story]", jump="return", cond=function(npc, player) return player:hasQuest("start-sunwall") and not player:isQuestStatus("start-sunwall", engine.Quest.COMPLETED, "return") end, action=function(npc, player) player:setQuestStatus("start-sunwall", engine.Quest.COMPLETED, "return") end},
+		{"Lady Aeryn, at last I am back home! [tell her your story]", jump="return", cond=function(npc, player) return player:hasQuest("start-sunwall") and not player:isQuestStatus("start-sunwall", engine.Quest.COMPLETED, "slazish") and not player:isQuestStatus("start-sunwall", engine.Quest.COMPLETED, "return") end, action=function(npc, player) player:setQuestStatus("start-sunwall", engine.Quest.COMPLETED, "return") end},
 		{"Tell me more about the Gates of Morning.", jump="explain-gates", cond=function(npc, player) return player.faction ~= "sunwall" end},
 		{"Before I came here, I happened upon members of the Sunwall in Maj'Eyal. Do you know of this?.", jump="sunwall_west", cond=function(npc, player) return game.state.found_sunwall_west and not npc.been_asked_sunwall_west end, action=function(npc, player) npc.been_asked_sunwall_west = true end},
 		{"I need help in my hunt for clues about the staff.", jump="clues", cond=function(npc, player) return game.state:isAdvanced() and not player:hasQuest("orc-pride") end},
