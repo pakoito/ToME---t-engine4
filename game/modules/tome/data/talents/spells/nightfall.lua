@@ -142,9 +142,9 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[Invoke a cone dealing %0.2f darkness damage, any creatures caught inside must make a mental save or be knocked back 4 grids away
+		return ([[Invoke a cone dealing %0.2f darkness damage in a radius of %d, any creatures caught inside must make a mental save or be knocked back 4 grids away
 		The damage will increase with the Magic stat]]):
-		format(damDesc(self, DamageType.DARKNESS, damage))
+		format(damDesc(self, DamageType.DARKNESS, damage), self:getTalentRadius(t))
 	end,
 }
 
@@ -178,10 +178,10 @@ newTalent{
 		local speed = t.getSpeed(self, t) * 100
 		local dur = t.getDur(self, t)
 		local minion = t.getMinion(self, t)
-		return ([[Invoke a ball of darkness that deals %0.2f darkness damage. Every creature hit will start to become closer to death and thus reduce global speed by %d%%.
+		return ([[Invoke a ball of darkness that deals %0.2f darkness damage in a radius of %d. Every creature hit will start to become closer to death and thus reduce global speed by %d%%.
 		Necrotic minions damage against those creatures is increased by %d%%.
 		The effects last for %d turns.
 		The damage done and minions damage increase will increase with the Magic stat]]):
-		format(damDesc(self, DamageType.DARKNESS, damage), speed, minion, dur)
+		format(damDesc(self, DamageType.DARKNESS, damage), self:getTalentRadius(t), speed, minion, dur)
 	end,
 }

@@ -139,7 +139,7 @@ newTalent{
 				m:setEffect(m.EFF_CURSE_HATE, 100, {src=self})
 				m.on_die = function(self, src)
 					local p = self.summoner:isTalentActive(self.summoner.T_NECROTIC_AURA)
-					if p and src and src.reactionToward and src:reactionToward(self) < 0 then
+					if p and src and src.reactionToward and src:reactionToward(self) < 0 and rng.percent(50) then
 						p.souls = math.min(p.souls + 1, p.souls_max)
 						self.summoner.changed = true
 					end

@@ -249,7 +249,7 @@ function _M:display()
 	end
 	if player:isTalentActive(player.T_NECROTIC_AURA) then
 		local p = player:isTalentActive(player.T_NECROTIC_AURA)
-		self:mouseTooltip(self.TOOLTIP_MANA, self:makeTextureBar("#7fffd4#Necrotic", "%d", p.souls, p.souls_max, nil, x, h, 255, 255, 255,
+		self:mouseTooltip(self.TOOLTIP_NECROTIC_AURA, self:makeTextureBar("#7fffd4#Necrotic", "%d", p.souls, p.souls_max, nil, x, h, 255, 255, 255,
 			{r=colors.GREY.r / 2, g=colors.GREY.g / 2, b=colors.GREY.b / 2},
 			{r=colors.GREY.r / 5, g=colors.GREY.g / 5, b=colors.GREY.b / 5}
 		)) h = h + self.font_h
