@@ -57,7 +57,7 @@ newChat{ id="kill",
 You fool! You have doomed us, we could be #{bold}#anywhere!#{normal}#
 DIE !]],
 	answers = {
-		{"..."},
+		{"...", action=function(npc, player) world:gainAchievement("SUNWALL_LOST", player) end},
 	}
 }
 

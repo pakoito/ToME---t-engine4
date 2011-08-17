@@ -260,3 +260,8 @@ newAchievement{
 	show = "name",
 	desc = [[You did the righteous thing in the ring of blood and disposed of the Blood Master.]],
 }
+newAchievement{
+	name = "Lost in translation", id = "SUNWALL_LOST",
+	show = "name",
+	desc = [[Destroy the naga portal in the slazish fens and be caught in the aftereffect.]],
+}

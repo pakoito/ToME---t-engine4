@@ -39,7 +39,7 @@ on_status_change = function(self, who, status, sub)
 	if sub then
 		if self:isCompleted("return") then
 			who:setQuestStatus(self.id, engine.Quest.DONE)
-			who:grantQuest(who.celestial_race_start_quest)
+--			who:grantQuest(who.celestial_race_start_quest)
 		end
 	end
 end
