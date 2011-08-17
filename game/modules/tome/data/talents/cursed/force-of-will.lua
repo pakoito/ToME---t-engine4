@@ -66,7 +66,7 @@ local function forceHit(self, target, sourceX, sourceY, damage, knockback, knock
 				end
 
 				-- take partial damage
-				local blockDamage = damage * knockback * knockbackDamage / 100
+				local blockDamage = damage * util.bound(knockback * (knockbackDamage / 100), 0, 1.5)
 				self:project(target, target.x, target.y, DamageType.PHYSICAL, blockDamage)
 
 				if nextTarget then
@@ -125,7 +125,7 @@ newTalent{
 		local power = 1 --(1 - ((distance - 1) / range))
 		local damage = t.getDamage(self, t) * power
 		local knockback = t.getKnockback(self, t)
-		forceHit(self, target, self.x, self.y, damage, knockback, 15, power)
+		forceHit(self, target, self.x, self.y, damage, knockback, 7, power)
 		return true
 	end,
 	info = function(self, t)
@@ -250,7 +250,7 @@ newTalent{
 					local localDamage = damage * power
 					local dazeDuration = t.getDazeDuration(self, t)
 
-					forceHit(self, target, blastX, blastY, damage, math.max(0, knockback - distance), 15, power)
+					forceHit(self, target, blastX, blastY, damage, math.max(0, knockback - distance), 7, power)
 					if target:canBe("stun") then
 						target:setEffect(target.EFF_DAZED, dazeDuration, {src=self})
 					end
@@ -330,7 +330,7 @@ newTalent{
 			-- Randomly take targets
 			for i = 1, hitCount do
 				local target, index = rng.table(targets)
-				forceHit(self, target, target.x, target.y, damage, knockback, 15, 0.6)
+				forceHit(self, target, target.x, target.y, damage, knockback, 7, 0.6)
 			end
 		end
 
