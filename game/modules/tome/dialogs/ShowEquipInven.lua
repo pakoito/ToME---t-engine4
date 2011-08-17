@@ -41,7 +41,8 @@ end
 function _M:onDrag(item)
 	if item and item.object then
 		local s = item.object:getEntityFinalSurface(nil, 64, 64)
-		game.mouse:startDrag(0, 0, s, {kind="inventory", id=item.object:getName{no_add_name=true, force_id=true, no_count=true}}, function(drag, used)
+		local x, y = core.mouse.get()
+		game.mouse:startDrag(x, y, s, {kind="inventory", id=item.object:getName{no_add_name=true, force_id=true, no_count=true}}, function(drag, used)
 			local x, y = core.mouse.get()
 			game.mouse:receiveMouse("drag-end", x, y, true, nil, {drag=drag})
 		end)

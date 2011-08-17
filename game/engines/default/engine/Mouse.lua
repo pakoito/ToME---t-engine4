@@ -39,7 +39,7 @@ function _M:receiveMouse(button, x, y, isup, force_name, extra)
 	if not isup then return end
 
 	if _M.drag then
-		if _M.drag.predrag then _M.drag = nil
+		if _M.drag.prestart then _M.drag = nil
 		else return self:endDrag(x, y) end
 	end
 
@@ -102,15 +102,15 @@ end
 
 function _M:startDrag(x, y, cursor, payload, on_done)
 	if _M.drag then
-		if math.max(math.abs(_M.drag.x - x), math.abs(_M.drag.y - y)) > 6 then
+		if _M.drag.prestart and math.max(math.abs(_M.drag.start_x - x), math.abs(_M.drag.start_y - y)) > 6 then
+			_M.drag.prestart = nil
+			if _M.drag.cursor then game:setMouseCursor(_M.drag.cursor, nil, 0, 0) end
+			print("[MOUSE] enabling drag from predrag")
 		end
 		return
 	end
 
-	_M.drag = {start_x=x, start_y=y, payload=payload, on_done=on_done, prestart=true}
-	if cursor then
-		game:setMouseCursor(cursor, nil, 0, 0)
-	end
+	_M.drag = {start_x=x, start_y=y, payload=payload, on_done=on_done, prestart=true, cursor=cursor}
 	print("[MOUSE] pre starting drag'n'drop")
 end
 
