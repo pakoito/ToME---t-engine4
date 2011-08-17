@@ -38,7 +38,10 @@ function _M:receiveMouse(button, x, y, isup, force_name, extra)
 	self.status[button] = not isup
 	if not isup then return end
 
-	if _M.drag then return self:endDrag(x, y) end
+	if _M.drag then
+		if _M.drag.predrag then _M.drag = nil
+		else return self:endDrag(x, y) end
+	end
 
 	for i, m in ipairs(self.areas) do
 		if (not m.mode or m.mode.button) and (x >= m.x1 and x < m.x2 and y >= m.y1 and y < m.y2) and (not force_name or force_name == m.name) then
@@ -98,13 +101,17 @@ function _M:reset()
 end
 
 function _M:startDrag(x, y, cursor, payload, on_done)
-	if _M.drag then return end
+	if _M.drag then
+		if math.max(math.abs(_M.drag.x - x), math.abs(_M.drag.y - y)) > 6 then
+		end
+		return
+	end
 
-	_M.drag = {start_x=x, start_y=y, payload=payload, on_done=on_done}
+	_M.drag = {start_x=x, start_y=y, payload=payload, on_done=on_done, prestart=true}
 	if cursor then
 		game:setMouseCursor(cursor, nil, 0, 0)
 	end
-	print("[MOUSE] starting drag'n'drop")
+	print("[MOUSE] pre starting drag'n'drop")
 end
 
 function _M:endDrag(x, y)

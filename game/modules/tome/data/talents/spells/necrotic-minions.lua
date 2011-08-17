@@ -577,6 +577,8 @@ function getAdvancedMinionChances(self)
 end
 
 local function getMinionChances(self)
+do return { ghoul=30, ghast=30, ghoulking=40 } end
+
 	local cl = math.floor(self:getTalentLevel(self.T_CREATE_MINIONS))
 	if cl <= 1 then
 		return { d_skel_warrior=55, skel_warrior=10, a_skel_warrior=0, skel_archer=10, skel_m_archer=0, skel_mage=5,   ghoul=20, ghast=0, ghoulking=0 }

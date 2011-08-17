@@ -66,7 +66,7 @@ return {
 		if nb_keyframes > 10 then return end
 		local Map = require "engine.Map"
 		if not level.eagle then
-			if nb_keyframes > 0 and rng.chance(200 / nb_keyframes) then
+			if nb_keyframes > 0 and rng.chance(800 / nb_keyframes) then
 				local dir = -math.rad(rng.float(310, 340))
 				local dirv = math.rad(rng.float(-0.1, 0.1))
 				local y = rng.range(0, level.map.w / 2 * Map.tile_w)
@@ -77,7 +77,7 @@ return {
 			local dx, dy = level.map:getScreenUpperCorner() -- Display at map border, always, so it scrolls with the map
 			if level.eagle then level.eagle.ps:toScreen(dx, dy, true, 1) end
 			if level.eagle_s then level.eagle_s.ps:toScreen(dx + 100, dy + 120, true, 1) end
-			if nb_keyframes > 0 and rng.chance(400 / nb_keyframes) then game:playSound("actions/eagle_scream") end
+			if nb_keyframes > 0 and rng.chance(1000 / nb_keyframes) then game:playSound("actions/eagle_scream") end
 			if level.eagle and not level.eagle.ps:isAlive() then level.eagle = nil end
 			if level.eagle_s and not level.eagle_s.ps:isAlive() then level.eagle_s = nil end
 		end
