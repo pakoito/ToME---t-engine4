@@ -68,6 +68,7 @@ newEntity{ base="BOGWATER",
 			if cnt > max then
 				game.log("#VIOLET#The portal starts to break down, run!")
 				self.broken = true
+				who:setQuestStatus("start-sunwall", engine.Quest.COMPLETED, "slazish")
 				game:onTickEnd(function()
 					local sx, sy = util.findFreeGrid(x, y, 10, true, {[engine.Map.ACTOR]=true})
 					local npc = game.zone:makeEntityByName(game.level, "actor", "ZOISLA")

@@ -20,7 +20,8 @@
 newChat{ id="welcome",
 	text = [[Thank you, @playername@. I hate to admit it, but you saved my life.]],
 	answers = {
-		{"At your service. But may I ask what you were doing in this dark place?", jump="what"},
+		{"At your service. But may I ask what you were doing in this dark place?", jump="what", cond=function(npc, player) return not player:hasQuest("start-sunwall") end},
+		{"At your service. I have been gone for months, but I can feel it, at last this is my homeland!", jump="back", cond=function(npc, player) return player:hasQuest("start-sunwall") end},
 	}
 }
 
@@ -37,6 +38,15 @@ newChat{ id="sunwall",
 Tell High Sun Paladin Aeryn that you met me. I'll send word to let you pass.]],
 	answers = {
 		{"Thank you, I will talk with Aeryn.", action=function(npc, player) game.player:setQuestStatus("strange-new-world", engine.Quest.COMPLETED, "helped-fillarel") end},
+	}
+}
+
+newChat{ id="back",
+	text = [[Gone? Wait, this face.. you are @playername@! We thought you died in the naga portal explosion!
+Thanks to your courrage the Gates of Morning still stand.
+You should go there at once.]],
+	answers = {
+		{"Sadly I am the bringer of bad news, the orcs are planning something. Good luck, my lady."},
 	}
 }
 

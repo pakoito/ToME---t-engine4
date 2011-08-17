@@ -20,6 +20,7 @@
 newChat{ id="welcome",
 	text = [[What may I do for you?]],
 	answers = {
+		{"Lady Aeryn, at last I am back home! [tell her your story]", jump="return", cond=function(npc, player) return player:hasQuest("start-sunwall") and not player:isQuestStatus("start-sunwall", engine.Quest.COMPLETED, "return") end, action=function(npc, player) player:setQuestStatus("start-sunwall", engine.Quest.COMPLETED, "return") end},
 		{"Tell me more about the Gates of Morning.", jump="explain-gates", cond=function(npc, player) return player.faction ~= "sunwall" end},
 		{"Before I came here, I happened upon members of the Sunwall in Maj'Eyal. Do you know of this?.", jump="sunwall_west", cond=function(npc, player) return game.state.found_sunwall_west and not npc.been_asked_sunwall_west end, action=function(npc, player) npc.been_asked_sunwall_west = true end},
 		{"I need help in my hunt for clues about the staff.", jump="clues", cond=function(npc, player) return game.state:isAdvanced() and not player:hasQuest("orc-pride") end},
@@ -27,6 +28,14 @@ newChat{ id="welcome",
 		{"I am back from the Charred Scar, where the orcs took the staff.", jump="charred-scar", cond=function(npc, player) return player:hasQuest("charred-scar") and player:hasQuest("charred-scar"):isCompleted() end},
 		{"Sorry, I have to go!"},
 	}
+}
+
+newChat{ id="return",
+	text = [[@playername@! We thought you had died in the portal explosion. I am glad we were wrong, you saved the sunwall.
+The news about the staff is troubling. Ah well, please at least take time to rest for a while.]],
+	answers = {
+		{"I shall, thank you, my lady.", jump="welcome"},
+	},
 }
 
 newChat{ id="explain-gates",

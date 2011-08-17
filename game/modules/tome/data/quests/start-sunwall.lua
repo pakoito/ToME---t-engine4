@@ -22,7 +22,13 @@ desc = function(self, who)
 	local desc = {}
 	desc[#desc+1] = "Nagas are invading the slazish fens. The Sunwall can not fight on two fronts, you need to stop the invaders before it is too late.\n Locate and destroy the invader's portal."
 	if self:isCompleted("slazish") then
-		desc[#desc+1] = "#LIGHT_GREEN#* .#WHITE#"
+		desc[#desc+1] = "#LIGHT_GREEN#* You have destroyed the naga portal, the invasion is stopped.#WHITE#"
+
+		if self:isCompleted("return") then
+			desc[#desc+1] = "#LIGHT_GREEN#* You are back in Var'Eyal, the Far East as the people from the west call it.#WHITE#"
+		else
+			desc[#desc+1] = "#SLATE#* However you were teleported to a distant land, you must find a way back to the Gates of Morning.#WHITE#"
+		end
 	else
 		desc[#desc+1] = "#SLATE#* You must stop the nagas.#WHITE#"
 	end
@@ -31,7 +37,7 @@ end
 
 on_status_change = function(self, who, status, sub)
 	if sub then
-		if self:isCompleted("slazish") then
+		if self:isCompleted("return") then
 			who:setQuestStatus(self.id, engine.Quest.DONE)
 			who:grantQuest(who.celestial_race_start_quest)
 		end
