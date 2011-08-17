@@ -19,6 +19,9 @@
 
 load("/data/general/objects/objects-far-east.lua")
 
+local Stats = require "engine.interface.ActorStats"
+local Talents = require "engine.interface.ActorTalents"
+
 for i = 1, 3 do
 newEntity{ base = "BASE_LORE",
 	define_as = "SLAZISH_NOTE"..i,
@@ -29,3 +32,22 @@ newEntity{ base = "BASE_LORE",
 	encumberance = 0,
 }
 end
+
+newEntity{ base = "BASE_CLOTH_ARMOR", define_as = "ROBES_DEFLECTION",
+	power_source = {arcane=true},
+	unique = true,
+	name = "Robes of Deflection", color = colors.UMBER,
+	unided_name = "iridescent robe",
+	desc = [[This set of robes seems to shine with metallic colors.]],
+	level_range = {1, 10},
+	rarity = false,
+	cost = 70,
+	material_level = 1,
+	wielder = {
+		combat_armor_hardiness = 30,
+		combat_armor = 7,
+		inc_stats = { [Stats.STAT_CON] = 3, [Stats.STAT_MAG] = 3, },
+		combat_spellpower = 4,
+	},
+	talent_on_spell = { {chance=4, talent=Talents.T_EVASION, level=1} },
+}

@@ -130,7 +130,10 @@ newEntity{ base="BASE_NPC_NAGA", define_as = "ZOISLA",
 	move_others=true,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	resolvers.equip{ {type="weapon", subtype="trident", autoreq=true, special_rarity="trident_rarity"}, },
+	resolvers.equip{
+		{type="weapon", subtype="staff", autoreq=true},
+		{defined="ROBES_DEFLECTION", autoreq=true},
+	},
 	resolvers.drops{chance=100, nb=1, {unique=true, not_properties={"lore"}} },
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 	resolvers.drops{chance=100, nb=1, {defined="SLAZISH_NOTE3"} },

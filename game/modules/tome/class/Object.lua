@@ -479,6 +479,7 @@ function _M:getTextualDesc(compare_with)
 		compare_fields(w, compare_with, field, "combat_dam", "%+d", "Physical power: ")
 
 		compare_fields(w, compare_with, field, "combat_armor", "%+d", "Armor: ")
+		compare_fields(w, compare_with, field, "combat_armor_hardiness", "%+d%%", "Armor Hardiness: ")
 		compare_fields(w, compare_with, field, "combat_def", "%+d", "Defense: ")
 		compare_fields(w, compare_with, field, "combat_def_ranged", "%+d", "Ranged Defense: ")
 
