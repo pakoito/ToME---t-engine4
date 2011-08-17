@@ -56,8 +56,7 @@ newEntity{
 
 newEntity{ base = "BASE_NPC_NAGA",
 	name = "naga myrmidon", color=colors.DARK_UMBER, image="npc/naga_myrmidon.png",
-	desc = [[A naga warrior, wielding a menacing trident.
-Myrmidons are the most devoted warriors of the nagas.]],
+	desc = [[Before you stands a tall figure - a very tall figure, propped high by a thick serpent's tail in place of where his legs should rightly be. His torso is human-like, with bulging muscles beneath fitted armour, and large hands gripping a fiercely sharp trident. He glares at you with dark intensity, like a wolf about to pounce on unsuspecting prey.]],
 	level_range = {30, nil}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(120,150), life_rating = 16,
@@ -77,8 +76,7 @@ Myrmidons are the most devoted warriors of the nagas.]],
 
 newEntity{ base = "BASE_NPC_NAGA",
 	name = "naga tide huntress", color=colors.RED, image="npc/naga_tide_huntress.png",
-	desc = [[A naga hunter, wielding a long bow.
-Tide huntresses wield both magic and hunting skills, making them terrible foes.]],
+	desc = [[Though the sharp point of an arrow pointed steadily at your head is of concern, more unnerving is the creature that wields it. A slim and lithe woman from the waist up, but a terrifying giant serpent beneath, her tail stretching for several feet behind her. Her eyes turn cold and ice seems to magically condense on the tip of her barbed arrow. Suddenly it is of concern again.]],
 	level_range = {34, nil}, exp_worth = 1,
 	rarity = 4,
 	rank = 3,
@@ -104,8 +102,7 @@ Tide huntresses wield both magic and hunting skills, making them terrible foes.]
 
 newEntity{ base = "BASE_NPC_NAGA",
 	name = "naga psyren", color=colors.YELLOW, image="npc/naga_psyren.png",
-	desc = [[A naga psyren; she looks at you with great intensity.
-Psyrens are dangerous nagas that can directly assault your mind.]],
+	desc = [[Such a mix of enchanting beauty and reviling horror you have never before seen combined. Above, a beautiful, ethereal woman, of scant form and entrancing grace. Below, the thick, smooth scales of a snake, its stretched tail gently waving back and forth in the air behind her. The movement is eye-catching and hypnotic, and whilst you watch a mysterious smile plays across her seductive lips.]],
 	level_range = {36, nil}, exp_worth = 1,
 	rarity = 4,
 	rank = 3,

@@ -49,3 +49,14 @@ newEntity{ base="BOGWATER",
 	nice_tiler = { method="replace", base={"BOGWATER_MISC", 100, 1, 7}},
 }
 for i = 1, 7 do newEntity{ base="BOGWATER_MISC", define_as = "BOGWATER_MISC"..i, add_mos={{image="terrain/misc_bog"..i..".png"}}} end
+
+newEntity{ base="BOGWATER",
+	define_as = "PORTAL",
+	add_displays = {class.new{z=18, image="terrain/naga_portal.png", display_h=2, display_y=-1}},
+	does_block_move = true,
+	pass_projectile = true,
+	block_move = function(self, x, y, who, act, couldpass)
+		if not who or not who.player or not act then return true end
+		return true
+	end,
+}

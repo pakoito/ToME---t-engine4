@@ -184,17 +184,19 @@ function _M:generate(lev, old_lev)
 	local nb_room = util.getval(self.data.nb_rooms or 0)
 	local rooms = {}
 	local end_room
-	local axis
-	local direction
+	local axis = "x"
+	local direction = 1
 	local ending
 
 	-- get the axis and direction
-	if self.data.edge_entrances[1] == 2 or self.data.edge_entrances[1] == 8 then axis = "y"
-	else axis = "x"
-	end
+	if self.data.edge_entrances then
+		if self.data.edge_entrances[1] == 2 or self.data.edge_entrances[1] == 8 then axis = "y"
+		else axis = "x"
+		end
 
-	if self.data.edge_entrances[1] == 2 or self.data.edge_entrances[1] == 4 then direction = 1
-	else direction = -1
+		if self.data.edge_entrances[1] == 2 or self.data.edge_entrances[1] == 4 then direction = 1
+		else direction = -1
+		end
 	end
 
 	-- Add the "requested" end room first (must be at least 66% into the level)

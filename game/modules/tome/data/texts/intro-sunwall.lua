@@ -18,9 +18,9 @@
 -- darkgod@te4.org
 
 return [[Welcome #LIGHT_GREEN#@name@#WHITE#.
-You are a valiant defender of the Sunwall. For most of your live you have fought and repelled the Orc Prides onslaught.
-But the situation is growing dire, nagas have been sighted in the slazish fens on the other side of the sunwall mountains.
-Fearing an invasion, High Sun Paladin Aeryn sent you to investigate and deal with the threat.
+You are a citizen of the Sunwall, and like many of your age you have been trained in combat and magic. It can be a harsh life, and though you dream at times of venturing to distant lands you know your duty is to help defend the outpost against the vicious onslaught from the Orc Prides. But now High Sun Paladin Aeryn has advised you of a new threat.
 
-Stop the invading troops!
+Nagas have been sighted in the Slazish Fens on the other side of the Sunwall Mountains. Their objective is unclear, but an assault from both sides would be truly devastating at such a pivotal time for your people. Though there are few forces to spare on the front line against the Prides, you have volunteered to investigate the naga threat and stop them if need be.
+
+By the power of the Sun and the blessings of the Moon you step forth to find your fate.
 ]]

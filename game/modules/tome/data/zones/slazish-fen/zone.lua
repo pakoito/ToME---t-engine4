@@ -59,6 +59,7 @@ return {
 			nb_npc = {7, 10},
 			filters = { {max_ood=2}, },
 			guardian = "ZOISLA",
+			guardia_spot = {type="guardian", subtype="guardian"},
 		},
 		object = {
 			class = "engine.generator.object.Random",
@@ -79,6 +80,9 @@ return {
 		[3] = {
 			generator = { map = {
 				force_last_stair = true,
+				end_road_room = "zones/zoisla",
+				portal = "PORTAL",
+				near_portal = "BOGWATER",
 				down = "GRASS",
 			}, },
 		},
