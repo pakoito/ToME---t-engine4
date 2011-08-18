@@ -78,7 +78,7 @@ newTalent{
 	info = function(self, t)
 		local power = self:getTalentLevel(t)
 		local turns = 5 + math.ceil(power)
-		local fire = 100 * (0.1 + power / 11)
+		local fire = 100 * (0.1 + power / 16)
 		local cold = 3 + power * 2
 		local lightning = math.floor(power)
 		local acid = 5 + power * 2
