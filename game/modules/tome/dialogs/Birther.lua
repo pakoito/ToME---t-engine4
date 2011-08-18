@@ -1111,6 +1111,11 @@ function _M:selectTile()
 		"player/ascii_player_rogue_cloak_01_64.png",
 		"player/ascii_player_wizardhat_01_64.png",
 		"player/ascii_player_gentleman_01_64.png",
+		"player/ascii_player_red_hood_01.png",
+		"player/ascii_player_pink_amazone_01.png",
+		"player/ascii_player_bunny_01.png",
+		"player/ascii_player_exotic_01.png",
+		"player/ascii_player_shopper_01.png",
 	}
 	local remove = Button.new{text="Use default tile", width=500, fct=function()
 		game:unregisterDialog(d)
