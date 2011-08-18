@@ -286,3 +286,5 @@ function _M:cloneReloaded()
 	-- Computed delayed loads
 	for i = 1, #delay_load do delay_load[i]:loaded() end
 end
+
+return _M

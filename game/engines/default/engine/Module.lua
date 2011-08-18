@@ -134,6 +134,12 @@ function _M:loadDefinition(dir, team, incompatible)
 
 					fs.mount(src, "/", false)
 				end
+
+				-- Load moonscript support
+				if mod.moonscript then
+					require "moonscript"
+					require "moonscript.errors"
+				end
 			elseif mode == "init" then
 				local m = require(mod.starter)
 				m[1].__session_time_played_start = os.time()
