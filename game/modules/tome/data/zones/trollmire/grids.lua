@@ -25,7 +25,8 @@ local grass_editer = { method="borders_def", def="grass"}
 
 newEntity{ base = "FLOOR", define_as = "DIRT",
 	name="dirt road",
-	display='.', image="terrain/stone_road1.png"
+	display='.', image="terrain/stone_road1.png",
+	special_minimap = colors.DARK_GREY,
 }
 
 newEntity{

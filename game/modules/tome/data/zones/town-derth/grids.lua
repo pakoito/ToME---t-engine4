@@ -28,5 +28,6 @@ newEntity{ base = "GRASS", define_as = "FIELDS",
 
 newEntity{ base = "FLOOR", define_as = "COBBLESTONE",
 	name="cobblestone road",
-	display='.', image="terrain/stone_road1.png"
+	display='.', image="terrain/stone_road1.png",
+	special_minimap = colors.DARK_GREY,
 }

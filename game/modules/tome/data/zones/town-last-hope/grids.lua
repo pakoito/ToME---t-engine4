@@ -23,7 +23,8 @@ load("/data/general/grids/mountain.lua")
 
 newEntity{ base = "FLOOR", define_as = "ROAD",
 	name="cobblestone road",
-	display='.', image="terrain/stone_road1.png"
+	display='.', image="terrain/stone_road1.png",
+	special_minimap = colors.DARK_GREY,
 }
 
 newEntity{

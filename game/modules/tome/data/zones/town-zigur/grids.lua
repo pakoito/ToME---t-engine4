@@ -51,7 +51,8 @@ for i = 1, 4 do newEntity{ base = "FIELDS", define_as = "FIELDS"..i, image="terr
 
 newEntity{ base = "FLOOR", define_as = "COBBLESTONE",
 	name="cobblestone road",
-	display='.', image="terrain/stone_road1.png"
+	display='.', image="terrain/stone_road1.png",
+	special_minimap = colors.DARK_GREY,
 }
 
 newEntity{ base = "HARDWALL", define_as = "ROCK",

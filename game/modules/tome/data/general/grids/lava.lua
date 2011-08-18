@@ -58,6 +58,7 @@ newEntity{
 	type = "floor", subtype = "molten_lava",
 	name = "molten lava", image = "terrain/lava/molten_lava_5_01.png",
 	display = '%', color=colors.LIGHT_RED, back_color=colors.RED,
+	special_minimap = colors.RED,
 	does_block_move = true,
 	pass_projectile = true,
 	shader = "lava",

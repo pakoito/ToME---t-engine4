@@ -123,6 +123,7 @@ newEntity{
 	name = "deep water", image = "terrain/water_floor.png",
 	display = '~', color=colors.AQUAMARINE, back_color=colors.DARK_BLUE,
 	always_remember = true,
+	special_minimap = colors.BLUE,
 }
 
 -----------------------------------------

@@ -102,6 +102,7 @@ end
 -- You may overload this method to customize your minimap
 function _M:setupMinimapInfo(mo, map)
 	if self.change_level then mo:minimap(240, 0, 240) return end
+	if self.special_minimap then mo:minimap(self.special_minimap.r, self.special_minimap.g, self.special_minimap.b) return end
 	return engine.Grid.setupMinimapInfo(self, mo, map)
 end
 
