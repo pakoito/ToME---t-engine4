@@ -33,9 +33,11 @@ if level.level == 1 then defineTile("O", "FLOOR", nil, {random_filter={type='hum
 else quickEntity('O', 'o') end
 defineTile(".", "FLOOR")
 defineTile(";", "FLOOR", nil, nil, nil, {no_teleport=true})
-defineTile("*", "LEVER_DOOR", nil, nil, nil, nil, {type="lever", subtype="door"})
-defineTile("&", "LEVER", nil, nil, nil, nil, {type="lever", subtype="lever"})
 defineTile(" ", "FLOOR", nil, {entity_mod=function(e) e.make_escort = nil return e end, random_filter={type='humanoid', subtype='orc', special=function(e) return e.pride == data.pride end, random_boss={nb_classes=1, loot_quality="store", loot_quantity=1, no_loot_randart=true, rank=3}}}, nil, {no_teleport=true})
+
+defineTile('*', "GENERIC_LEVER_DOOR", nil, nil, nil, {lever_action=2, lever_action_value=0, lever_action_kind="pride-doors"}, {type="lever", subtype="door"})
+defineTile('&', "GENERIC_LEVER", nil, nil, nil, {lever=1, lever_kind="pride-doors", lever_spot={type="lever", subtype="door"}})
+
 
 -- addSpot section
 

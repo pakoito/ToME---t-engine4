@@ -417,6 +417,7 @@ newEntity{
 	force_clone = true,
 	block_move = function(self, x, y, e, act)
 		if act and e.player then
+			local spot = game.level.map.attrs(x, y, "lever_spot") or nil
 			local block = game.level.map.attrs(x, y, "lever_block") or nil
 			local radius = game.level.map.attrs(x, y, "lever_radius") or 10
 			local val = game.level.map.attrs(x, y, "lever")
@@ -434,9 +435,7 @@ newEntity{
 			self.lever = not self.lever
 			game.log("#VIOLET#You hear a mechanism clicking.")
 
-			core.fov.calc_circle(x, y, game.level.map.w, game.level.map.h, radius, function(_, i, j)
-				if block and game.level.map.attrs(i, j, block) then return true end
-			end, function(_, i, j)
+			local apply = function(i, j)
 				local akind = game.level.map.attrs(i, j, "lever_action_kind")
 				if not akind then return end
 				if type(akind) == "string" then akind = {[akind]=true} end
@@ -452,7 +451,16 @@ newEntity{
 						if game.level.map.attrs(i, j, "lever_action_only_once") then game.level.map.attrs(i, j, "lever_action_kind", false) end
 					end
 				end end
-			end, nil)
+			end
+
+			if spot then
+				local spot = game.level:pickSpot(spot)
+				if spot then apply(spot.x, spot.y) end
+			else
+				core.fov.calc_circle(x, y, game.level.map.w, game.level.map.h, radius, function(_, i, j)
+					if block and game.level.map.attrs(i, j, block) then return true end
+				end, function(_, i, j) apply(i, j) end, nil)
+			end
 		end
 		return true
 	end,
