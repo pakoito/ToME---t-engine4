@@ -26,8 +26,8 @@ newTalent{
 	sustain_stamina = 20,
 	cooldown = 5,
 	tactical = { BUFF = 2 },
-	getDamage = function(self, t) return 2 + self:combatTalentSpellDamage(t, 2, 40) end,
-	getManaCost = function(self, t) return 1 + self:getTalentLevelRaw(t) / 1.5 end,
+	getDamage = function(self, t) return 2 + self:combatTalentSpellDamage(t, 2, 50) end,
+	getManaCost = function(self, t) return 2 end,
 	activate = function(self, t)
 		return {}
 	end,
@@ -89,13 +89,14 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	cooldown = 5,
-	stamina = 100,
+	stamina = 30,
 	require = cuns_req4,
 	tactical = { CLOSEIN = 2, DISABLE = 1 },
 	range = function(self, t) return math.floor(5 + self:getTalentLevel(t)) end,
 	direct_hit = true,
 	requires_target = true,
 	getDuration = function(self, t) return 2 + self:getTalentLevel(t) end,
+	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1.2, 2.2) end,
 	action = function(self, t)
 		if self:attr("never_move") then game.logPlayer(self, "You can not do that currently.") return end
 
@@ -103,21 +104,14 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > self:getTalentRange(t) then return nil end
+		if not game.level.map.seens(x, y) then return nil end
 
-		local l = line.new(self.x, self.y, x, y)
-		local lx, ly = l()
-		local tx, ty = self.x, self.y
-		lx, ly = l()
-		while lx and ly do
-			if game.level.map:checkAllEntities(lx, ly, "block_move", self) then break end
-			tx, ty = lx, ly
-			lx, ly = l()
-		end
-
+		local tx, ty = util.findFreeGrid(x, y, 20, true, {[engine.Map.ACTOR]=true})
 		self:move(tx, ty, true)
 
 		-- Attack ?
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) == 1 then
+			self:attackTarget(target, DamageType.DARKNESS, t.getDamage(self, t), true)
 			if target:canBe("stun") then
 				target:setEffect(target.EFF_DAZED, t.getDuration(self, t), {})
 			else
@@ -128,8 +122,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[Step through the shadows to your target, dazing it for %d turns.
-		Dazed targets can not act, but any damage will free them.]]):
-		format(duration)
+		return ([[Step through the shadows to your target, dazing it for %d turns and hitting it with all your weapons for %d%% darkness weapon damage.
+		Dazed targets can not act, but any damage will free them.
+		To shadowstep you need to be able to see the target.]]):
+		format(duration, t.getDamage(self, t) * 100)
 	end,
 }

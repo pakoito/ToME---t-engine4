@@ -293,8 +293,8 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 
 	-- Shadow cast
 	if hitted and not target.dead and self:knowTalent(self.T_SHADOW_COMBAT) and self:isTalentActive(self.T_SHADOW_COMBAT) and self:getMana() > 0 then
-		local dam = 2 + self:combatTalentSpellDamage(self.T_SHADOW_COMBAT, 2, 40)
-		local mana = 1 + self:getTalentLevelRaw(self.T_SHADOW_COMBAT) / 1.5
+		local dam = 2 + self:combatTalentSpellDamage(self.T_SHADOW_COMBAT, 2, 50)
+		local mana = 2
 		if self:getMana() > mana then
 			DamageType:get(DamageType.DARKNESS).projector(self, target.x, target.y, DamageType.DARKNESS, dam)
 			self:incMana(-mana)
@@ -621,12 +621,12 @@ function _M:combatDamage(weapon)
 		if self.use_psi_combat and stat == "dex" then stat = "cun" end
 		totstat = totstat + self:getStat(stat) * mod
 	end
-	if self.use_psi_combat then 
+	if self.use_psi_combat then
 		if self:knowTalent(self.T_GREATER_TELEKINETIC_GRASP) then
 			local g =  self:getTalentFromId(self.T_GREATER_TELEKINETIC_GRASP)
 			totstat = totstat * g.stat_sub(self, g)
 		else
-			totstat = totstat * 0.6 
+			totstat = totstat * 0.6
 		end
 	end
 
