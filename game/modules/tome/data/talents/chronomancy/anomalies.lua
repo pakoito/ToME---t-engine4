@@ -27,7 +27,7 @@ newTalent{
 	direct_hit = true,
 	type_no_req = true,
 	getTargetCount = function(self, t) return math.ceil(self:getParadox()/200) end,
-	getRange = function(self, t) return math.ceil(self:getParadox()/10) end,
+	getRange = function(self, t) return math.ceil(self:getParadox()/20) end,
 	message = "Reality has shifted.",
 	action = function(self, t)
 		local tgts = {}
@@ -428,7 +428,7 @@ newTalent{
 	points = 1,
 	direct_hit = true,
 	type_no_req = true,
-	getRange = function(self, t) return math.ceil(self:getParadox()/10) end,
+	getRange = function(self, t) return math.ceil(self:getParadox()/20) end,
 	message = "Reality has shifted.",
 	action = function(self, t)
 		local tgts = {}
@@ -523,7 +523,7 @@ newTalent{
 	direct_hit = true,
 	type_no_req = true,
 	getTargetCount = function(self, t) return math.ceil(self:getParadox()/100) end,
-	getPower = function(self, t) return math.ceil(self:getParadox()/50) end,
+	getPower = function(self, t) return math.ceil(self:getParadox()/100) end,
 	getTalentCount = function(self, t) return math.ceil(self:getParadox()/200) end,
 	message = "@Source@ has increased local entropy.",
 	action = function(self, t)
@@ -688,7 +688,7 @@ newTalent{
 	points = 1,
 	direct_hit = true,
 	type_no_req = true,
-	getRange = function(self, t) return math.ceil(self:getParadox()/10) end,
+	getRange = function(self, t) return math.ceil(self:getParadox()/30) end,
 	getTargetCount = function(self, t) return math.ceil(self:getParadox()/200) end,
 	message = "Poof!!",
 	action = function(self, t)
