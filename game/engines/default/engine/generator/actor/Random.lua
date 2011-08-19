@@ -37,6 +37,7 @@ function _M:init(zone, map, level, spots)
 	self.area = data.area or {x1=0, x2=self.map.w-1, y1=0, y2=self.map.h-1}
 	self.guardian = data.guardian
 	self.guardian_spot = data.guardian_spot
+	self.guardian_alert = data.guardian_alert
 	self.guardian_no_connectivity = data.guardian_no_connectivity
 	self.guardian_level = data.guardian_level
 	self.post_generation = data.post_generation
@@ -81,6 +82,7 @@ function _M:generateGuardian(guardian)
 			self.spots[#self.spots+1] = {x=x, y=y, guardian=true, check_connectivity=(not self.guardian_no_connectivity) and "entrance" or nil}
 			self.zone:addEntity(self.level, m, "actor", x, y)
 			print("Guardian allocated: ", self.guardian, m.uid, m.name)
+			if self.guardian_alert then m:setTarget(game:getPlayer()) end
 			ok = true
 		end
 	else

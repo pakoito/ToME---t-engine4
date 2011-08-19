@@ -1062,7 +1062,7 @@ local random_zone_layouts = {
 		up = data:getUp(),
 		down = data:getDown(),
 		door = data:getDoor(),
-	} end },
+	} end, guardian_alert=true },
 	-- Sets
 	{ name="sets", rarity=3, gen=function(data)
 		local set = rng.table{
@@ -1286,7 +1286,7 @@ function _M:createRandomZone(zbase)
 		reload_lists = false,
 		generator =  {
 			map = layout.gen(data),
-			actor = { class = "engine.generator.actor.Random", nb_npc = nb_npc, guardian = boss_id, abord_no_guardian=true },
+			actor = { class = "engine.generator.actor.Random", nb_npc = nb_npc, guardian = boss_id, abord_no_guardian=true, guardian_alert=layout.guardian_alert },
 			trap = { class = "engine.generator.trap.Random", nb_trap = nb_trap, },
 			object = { class = "engine.generator.object.Random", nb_object = nb_object, },
 		},

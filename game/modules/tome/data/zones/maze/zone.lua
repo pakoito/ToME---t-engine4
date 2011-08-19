@@ -43,6 +43,7 @@ return {
 			class = "engine.generator.actor.Random",
 			nb_npc = {20, 30},
 			guardian = "MINOTAUR_MAZE",
+			guardian_alert = true,
 		},
 		object = {
 			class = "engine.generator.object.Random",
