@@ -86,7 +86,7 @@ newTalent{
 
 		-- Compare theorical AOE zone with actual zone and adjust damage accordingly
 		if self:knowTalent(self.T_EXPLOSION_EXPERT) then
-			local theorical_nb = ({ 9, 25, 45, 77, 109, 145 })[tg.radius]
+			local theorical_nb = ({ 9, 25, 45, 77, 109, 145 })[tg.radius] or 145
 			local nb = 0
 			local grids = self:project(tg, x, y, function(tx, ty) end)
 			for px, ys in pairs(grids) do for py, _ in pairs(ys) do nb = nb + 1 end end
@@ -188,7 +188,7 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	info = function(self, t)
-		local theorical_nb = ({ 9, 25, 45, 77, 109, 145 })[1 + self:getTalentLevelRaw(self.T_EXPLOSION_EXPERT)]
+		local theorical_nb = ({ 9, 25, 45, 77, 109, 145 })[1 + self:getTalentLevelRaw(self.T_EXPLOSION_EXPERT)] or 145
 		local min = 1
 		local min = (math.log10(min) / (6 - self:getTalentLevelRaw(self.T_EXPLOSION_EXPERT)))
 		local max = theorical_nb

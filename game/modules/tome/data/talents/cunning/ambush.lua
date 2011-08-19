@@ -100,7 +100,7 @@ newTalent{
 	name = "Ambuscade",
 	type = {"cunning/ambush", 3},
 	points = 5,
-	cooldown = 10,
+	cooldown = 20,
 	stamina = 35,
 	mana = 35,
 	require = cuns_req_high3,
@@ -152,6 +152,7 @@ newTalent{
 		m.remove_from_party_on_death = true
 		m.resists = { [DamageType.LIGHT] = -100, [DamageType.DARKNESS] = 130, all=-30 }
 		m.inc_damage.all = ((100 + (m.inc_damage.all or 0)) * t.getDam(self, t)) - 100
+		m.force_melee_damage_type = DamageType.DARKNESS
 
 		game.zone:addEntity(game.level, m, "actor", x, y)
 		game.level.map:particleEmitter(x, y, 1, "shadow")
@@ -181,7 +182,7 @@ newTalent{
 	info = function(self, t)
 		return ([[You take full control of your own shadow for %d turns.
 		Your shadow possesses your talents and stats, has %d%% life and deals %d%% damage, -30%% all resistances, -100%% light resistance and 100%% darkness resistance.
-		Your shadow is permanently stealthed (%d power)
+		Your shadow is permanently stealthed (%d power) and all melee damage it deals is converted to darkness damage.
 		If you release control early your shadow will dissipate.]]):
 		format(t.getDuration(self, t), t.getHealth(self, t) * 100, t.getDam(self, t) * 100, t.getStealthPower(self, t))
 	end,

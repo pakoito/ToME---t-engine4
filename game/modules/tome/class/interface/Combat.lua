@@ -104,6 +104,8 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 		if #types > 0 then
 			damtype = rng.table(types)
 		end
+	elseif not damtype and self:attr("force_melee_damage_type") then
+		damtype = self:attr("force_melee_damage_type")
 	end
 
 	local break_stealth = false

@@ -31,10 +31,10 @@ local function getEffect(list, item, who, level, effectName)
 		if (not effect.level or effect.level == level)
 				and (not effect.item_type or effect.item_type == item.type)
 				and (not effect.item_subtype or effect.item_subtype == item.subtype)
-				and (not effect.subclass or effect.subclass == who.descriptor.subclass)
+				and (not effect.subclass or effect.subclass == (who.descriptor and who.descriptor.subclass or who.subtype))
 				and (not item.uses_special_on_hit or not item.combat or not item.combat.special_on_hit)then
 			if effectName and effect.name == effectName then return effect end
-			
+
 			weightTotal = weightTotal + (effect.weighting or 1)
 			effects[#effects + 1] = effect
 		end
@@ -46,7 +46,7 @@ local function getEffect(list, item, who, level, effectName)
 		weightTotal = weightTotal + (effect.weighting or 1)
 		if weight <= weightTotal then return effect end
 	end
-	print("* fateful-aura getEffect failed. count:", #list, "found:", #effects, "weightTotal:", weightTotal, "weight:", weight, "item:", item.name, "type:", item.type, "subtype:", item.subtype, "level:", level, "subclass:", who.descriptor.subclass)
+	print("* fateful-aura getEffect failed. count:", #list, "found:", #effects, "weightTotal:", weightTotal, "weight:", weight, "item:", item.name, "type:", item.type, "subtype:", item.subtype, "level:", level, "subclass:", (who.descriptor and who.descriptor.subclass or who.subtype))
 	return
 end
 
@@ -59,7 +59,7 @@ local function addEffect(item, effect, who, power)
 	if effect.apply then
 		effect.apply(item, who, power)
 	end
-	
+
 	if item.extra_description then
 		item.extra_description = item.extra_description..", #F53CBE#"..effect.name.."#LAST#"
 	else
@@ -85,7 +85,7 @@ newTalent{
 		if item.quest then return end
 		if not item:wornInven() then return end
 		if item.type == "ammo" or item.type == "gem" then return end
-		
+
 		--[[ test to run all code
 		if not curses_detrimental then curses_detrimental = mod.class.Object:loadList("/data/general/objects/egos/curses-detrimental.lua") end
 		if not curses_weapon then curses_weapon = mod.class.Object:loadList("/data/general/objects/egos/curses-weapon.lua") end
@@ -108,24 +108,24 @@ newTalent{
 			if false then return nil end
 		end
 		-- end test]]
-		
+
 		-- prevent re-cursion
 		item.cursed_touch = true
 
 		-- add a curse?
 		if not rng.percent(t.getCurseChance(self, t)) then return end
-		
+
 		-- effect power
 		local power = 0.3 + (item.material_level or 3) * 0.1
-		
+
 		local level
-		
+
 		-- beneficial
 		local beneficialEffect
 		local tDarkGifts = self:getTalentFromId(self.T_DARK_GIFTS)
 		if tDarkGifts and self:getTalentLevelRaw(tDarkGifts) > 0 then
 			local tVengefulBlessings = self:getTalentFromId(self.T_VENGEFUL_BLESSINGS)
-			
+
 			local list
 			if item.type == "weapon" and tVengefulBlessings and self:getTalentLevelRaw(tVengefulBlessings) > 0 and rng.percent(tVengefulBlessings.getChance(self, tVengefulBlessings)) then
 				if not curses_weapon then curses_weapon = mod.class.Object:loadList("/data/general/objects/egos/curses-weapon.lua") end
@@ -138,10 +138,10 @@ newTalent{
 				if rng.percent(tDarkGifts.getMajorChance(self, t)) then level = 2 else level = 1 end
 				power = power * (1 + tDarkGifts.getPowerPercent(self, tDarkGifts) / 100)
 			end
-			
+
 			beneficialEffect = getEffect(list, item, self, level)
 		end
-		
+
 		-- detrimental
 		local detrimentalEffect
 		local effectName
@@ -149,17 +149,17 @@ newTalent{
 		if beneficialEffect and beneficialEffect.detrimental then effectName = rng.table(beneficialEffect.detrimental) end -- select a recommended curse
 		if not curses_detrimental then curses_detrimental = mod.class.Object:loadList("/data/general/objects/egos/curses-detrimental.lua") end
 		detrimentalEffect = getEffect(curses_detrimental, item, self, level, effectName)
-		
+
 		-- apply the curse
 		item.cursed = true
 		item.name = "cursed ".. item.name
 		item.encumber = item.encumber + 1
-		
+
 		addEffect(item, detrimentalEffect, self, power)
 		if beneficialEffect then
 			addEffect(item, beneficialEffect, self, power)
 		end
-			
+
 	end,
 	curseFloor = function(self, t, x, y)
 		local i = 1
@@ -256,7 +256,7 @@ newTalent{
 			game.logPlayer(self, "You cannot use %s without a cursed weapon in your inventory!", t.name)
 			return false
 		end
-		
+
 		-- select the location
 		local range = self:getTalentRange(t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -264,7 +264,7 @@ newTalent{
 		if not tx or not ty then return nil end
 		local _ _, x, y = self:canProject(tg, tx, ty)
 		if game.level.map(x, y, Map.ACTOR) or game.level.map:checkEntity(x, y, game.level.map.TERRAIN, "block_move") then return nil end
-		
+
 		-- select the item
 		local d = self:showInventory("Which weapon will be your sentry?", inven,
 			function(o)
@@ -274,17 +274,17 @@ newTalent{
 				d.used_talent = true
 				d.selected_object = o
 				d.selected_item = item
-				
+
 				return false
 			end
-		
+
 		local co = coroutine.running()
 		d.unload = function(self) coroutine.resume(co, self.used_talent, self.selected_object, d.selected_item) end
 		local used_talent, o, item = coroutine.yield()
 		if not used_talent then return nil end
-		
+
 		local result = self:removeObject(inven, item)
-		
+
 		local NPC = require "mod.class.NPC"
 		local sentry = NPC.new {
 			type = "construct", subtype = "weapon",
@@ -295,17 +295,17 @@ newTalent{
 			body = { INVEN = 10, MAINHAND=1, QUIVER=1 },
 			rank = 2,
 			size_category = 1,
-			
+
 			autolevel = "warrior",
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=5, },
-			
+
 			max_life = 50, life_rating = 3,
 			stats = { str=20, dex=20, mag=10, con=10 },
 			combat = { dam=1, atk=1, apr=1 },
 			combat_armor = 100, combat_def = 50,
 			combat_physspeed = 100 / t.getAttackSpeed(self, t),
 			infravision = 10,
-			
+
 			resists = { all = 75, },
 			cut_immune = 1,
 			blind_immune = 1,
@@ -318,7 +318,7 @@ newTalent{
 			disarm_immune = 1,
 			never_move = 1,
 			no_drops = true, -- remove to drop the weapon
-			
+
 			resolvers.talents{
 				[Talents.T_WEAPON_COMBAT]={base=1, every=5, max=10},
 				[Talents.T_WEAPONS_MASTERY]={base=1, every=5, max=10},
@@ -330,13 +330,13 @@ newTalent{
 			summoner_gain_exp=true,
 			summon_time = t.getDuration(self, t),
 			summon_quiet = true,
-			
+
 			on_die = function(self, who)
 				game.logSeen(self, "#F53CBE#%s crumbles to dust.", self.name:capitalize())
 			end,
 		}
 		result = sentry:wearObject(o, true, false)
-		
+
 		sentry:resolve()
 		sentry:resolve(nil, true)
 		sentry:forceLevelup(self.level)
@@ -352,9 +352,9 @@ newTalent{
 			sentry.remove_from_party_on_death = true
 			game.party:addMember(sentry, { control="no", type="summon", title="Summon"})
 		end
-		
+
 		game:playSoundNear(self, "talents/spell_generic")
-		
+
 		return true
 	end,
 	info = function(self, t)

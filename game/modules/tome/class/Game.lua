@@ -1076,9 +1076,14 @@ function _M:setupCommands()
 				if fs.exists(file) then grab_list(mod.class.Object:loadList(file)) end
 			end
 
+			local tbl = {}
 			for u, o in pairs(list) do
-				print(o.type, o.subtype, o.name, unpack(table.keys(o.power_source or {})))
+				tbl[#tbl+1] = ("--\n%s (%s / %s): %s\n"):format(o.name, o.type, o.subtype, o.desc)
 			end
+			table.sort(tbl)
+			local f = io.open("list","w")
+			for i, l in ipairs(tbl) do f:write(l) end
+			f:close()
 		end end,
 		[{"_f","ctrl"}] = function() if config.settings.cheat then
 game.player:learnTalent('T_MULTIPLY',true)

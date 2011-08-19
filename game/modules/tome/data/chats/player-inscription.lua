@@ -27,8 +27,8 @@ local answers = {}
 
 for i = 1, player.max_inscriptions do
 	local name = player.inscriptions[i]
-	local t = player:getTalentFromId("T_"..name)
 	if (not replace_same or replace_same.."_"..i == name) then
+		local t = player:getTalentFromId("T_"..name)
 		answers[#answers+1] = {t.name, action=function(npc, player)
 			player:setInscription(i, iname, idata, true, true, {obj=obj}, replace_same)
 			player:removeObject(inven, item)
