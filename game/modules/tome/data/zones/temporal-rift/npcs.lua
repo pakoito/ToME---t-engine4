@@ -125,7 +125,7 @@ newEntity{ define_as = "ABOMINATION_RANTHA",
 local twin_take_hit = function(self, value, src)
 	value = mod.class.Actor.onTakeHit(self, value, src)
 	value = value / 2
-	if value > 0 then
+	if value > 0 and self.brother then
 		local o = self.brother.onTakeHit
 		self.brother.onTakeHit = nil
 		self.brother:takeHit(value, src)

@@ -39,7 +39,7 @@ When activated it will prompt to destroy items on the floor, if there are none i
 		local price = math.min(o:getPrice() * self.pricemod(o), 25) * o:getNumber()
 		local price = math.min(o:getPrice() * self.pricemod(o), 25) * o:getNumber()
 		price = math.floor(price * 100) / 100 -- Make sure we get at most 2 digit precision
-		if price ~= price then price = 1 end -- NaN is the only value that does not equals itself, this is the way to check it since we do not have a math.isnan method
+		if price ~= price or not tostring(price):find("^[0-9]") then price = 1 end -- NaN is the only value that does not equals itself, this is the way to check it since we do not have a math.isnan method
 		who:removeObject(who:getInven("INVEN"), idx, true)
 		who:sortInven()
 		who:incMoney(price)

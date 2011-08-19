@@ -74,7 +74,7 @@ newTalent{
 					self:useEnergy()
 					self.temporary = self.temporary - 1
 					if self.temporary <= 0 then
-						game.level.map:remove(self.x, self.y, Map.TERRAIN+2)
+						game.level.map:remove(self.x, self.y, engine.Map.TERRAIN+2)
 						game.level:removeEntity(self)
 						game.level.map:redisplay()
 					end

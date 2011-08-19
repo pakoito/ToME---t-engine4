@@ -157,7 +157,7 @@ newTalent{
 		local apr = 0
 		local crit = 0
 		local speed = 1
-		local o = self:getInven("PSIONIC_FOCUS")[1]
+		local o = self:getInven("PSIONIC_FOCUS") and self:getInven("PSIONIC_FOCUS")[1]
 		if type(o) == "boolean" then o = nil end
 		if not o then
 			return ([[Allows you to wield a weapon telekinetically, directing it with your willpower and cunning rather than crude flesh. When activated, the telekinetically-wielded weapon will attack a random melee-range target each turn.
