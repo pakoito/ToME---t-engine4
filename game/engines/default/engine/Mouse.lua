@@ -52,12 +52,18 @@ function _M:receiveMouse(button, x, y, isup, force_name, extra)
 end
 
 function _M:receiveMouseMotion(button, x, y, xrel, yrel, force_name, extra)
+	local cur_m = nil
 	for i, m in ipairs(self.areas) do
 		if (not m.mode or m.mode.move) and (x >= m.x1 and x < m.x2 and y >= m.y1 and y < m.y2) and (not force_name or force_name == m.name) then
 			m.fct(button, x, y, xrel, yrel, x-m.x1, y-m.y1, "motion", extra)
+			cur_m = m
 			break
 		end
 	end
+	if self.last_m and self.last_m.allow_out_events and self.last_m ~= cur_m then
+		self.last_m.fct("none", x, y, xrel, yrel, x-self.last_m.x1, y-self.last_m.y1, "out", extra)
+	end
+	self.last_m = cur_m
 end
 
 --- Delegate an event from an other mouse handler
@@ -80,13 +86,13 @@ function _M:setCurrent()
 end
 
 --- Registers a click zone that when clicked will call the object's "onClick" method
-function _M:registerZone(x, y, w, h, fct, mode, name)
-	table.insert(self.areas, 1, {x1=x,y1=y,x2=x+w,y2=y+h, fct=fct, mode=mode, name=name})
+function _M:registerZone(x, y, w, h, fct, mode, name, allow_out_events)
+	table.insert(self.areas, 1, {x1=x,y1=y,x2=x+w,y2=y+h, fct=fct, mode=mode, name=name, allow_out_events=allow_out_events})
 end
 
 function _M:registerZones(t)
 	for i, z in ipairs(t) do
-		self:registerZone(z.x, z.y, z.w, z.h, z.fct, z.mode, z.name)
+		self:registerZone(z.x, z.y, z.w, z.h, z.fct, z.mode, z.name, z.out_events)
 	end
 end
 

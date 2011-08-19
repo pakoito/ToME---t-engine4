@@ -1446,6 +1446,7 @@ function _M:setupMouse(reset)
 	-- Use hotkeys with mouse
 	self.mouse:registerZone(self.hotkeys_display.display_x, self.hotkeys_display.display_y, self.w, self.h, function(button, mx, my, xrel, yrel, bx, by, event)
 		if self.show_npc_list then return end
+		if event == "out" then self.hotkeys_display.cur_sel = nil return end
 		if event == "button" and button == "left" and ((self.zone and self.zone.wilderness) or (self.key ~= self.normal_key)) then return end
 		self.hotkeys_display:onMouse(button, mx, my, event == "button",
 			function(text)
@@ -1461,7 +1462,7 @@ function _M:setupMouse(reset)
 				end
 			end
 		)
-	end)
+	end, nil, "hotkeys", true)
 	-- Use icons
 	self.mouse:registerZone(self.icons.display_x, self.icons.display_y, self.icons.w, self.icons.h, function(button, mx, my, xrel, yrel, bx, by)
 		self:mouseIcon(bx, by)
