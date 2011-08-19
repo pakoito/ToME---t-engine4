@@ -106,6 +106,7 @@ newBirthDescriptor{
 		["cunning/lethality"]={true, 0.3},
 		["cunning/dirty"]={true, 0.3},
 		["cunning/shadow-magic"]={true, 0.3},
+		["cunning/ambush"]={false, 0.3},
 	},
 	talents = {
 		[ActorTalents.T_DUAL_STRIKE] = 1,

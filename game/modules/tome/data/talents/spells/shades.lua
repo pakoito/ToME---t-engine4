@@ -185,6 +185,7 @@ newTalent{
 			summon_time = t.getDuration(self, t),
 			ai_target = {actor=nil},
 			ai = "summoned", ai_real = "tactical",
+			name = "Forgery of Haze ("..self.name..")",
 			desc = [[A dark shadowy shape who's form resembles you.]],
 		}
 		m:removeAllMOs()

@@ -27,6 +27,7 @@ newTalentType{ allow_random=true, type="cunning/poisons-effects", name = "poison
 newTalentType{ allow_random=true, type="cunning/dirty", name = "dirty fighting", description = "Teaches various talents to cripple your foes." }
 newTalentType{ allow_random=true, type="cunning/lethality", name = "lethality", description = "How to make your foes feel the pain." }
 newTalentType{ allow_random=true, type="cunning/shadow-magic", name = "shadow magic", description = "Blending magic and shadows." }
+newTalentType{ allow_random=true, type="cunning/ambush", name = "ambush", description = "Using darkness and a bit of magic you manipulate the shadows." }
 newTalentType{ allow_random=true, type="cunning/survival", name = "survival", generic = true, description = "The knowledge of the dangers of the world, and how to best avoid them." }
 newTalentType{ allow_random=true, type="cunning/tactical", name = "tactical", description = "Tactical combat abilities." }
 
@@ -80,3 +81,4 @@ load("/data/talents/cunning/lethality.lua")
 load("/data/talents/cunning/tactical.lua")
 load("/data/talents/cunning/survival.lua")
 load("/data/talents/cunning/shadow-magic.lua")
+load("/data/talents/cunning/ambush.lua")

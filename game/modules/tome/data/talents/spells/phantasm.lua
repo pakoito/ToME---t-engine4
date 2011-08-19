@@ -126,7 +126,7 @@ newTalent{
 		game:playSoundNear(self, "talents/heal")
 		local ret = {
 			invisible = self:addTemporaryValue("invisible", t.getInvisibilityPower(self, t)),
-			drain = self:addTemporaryValue("mana_regen", - math.max(2, 7 - self:getTalentLevelRaw(t))),
+			drain = self:addTemporaryValue("mana_regen", - math.max(2, 7 - math.ceil(self:getTalentLevelRaw(t) / 2))),
 		}
 		self:resetCanSeeCacheOf()
 		return ret
@@ -143,6 +143,6 @@ newTalent{
 		Beware, you should take off your light, otherwise you will still be easily spotted.
 		This powerful spell constantly drains your %d mana while active.
 		The bonus will increase with the Magic stat]]):
-		format(invisi, math.max(2, 7 - self:getTalentLevelRaw(t)))
+		format(invisi, math.max(2, 7 - math.ceil(self:getTalentLevelRaw(t) / 2)))
 	end,
 }

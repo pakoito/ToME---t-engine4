@@ -4387,3 +4387,40 @@ newEffect{
 		self:removeTemporaryValue("inc_necrotic_minions", eff.tmpid)
 	end,
 }
+
+newEffect{
+	name = "SHADOW_VEIL",
+	desc = "Shadow Veil",
+	long_desc = function(self, eff) return ("You veil yourself in shadows and let them control you. While in the veil you become immune to status effects, gain %d%% all damage reduction and each turn you blink to a nearby foe, hitting it for %d%% darkness weapon damage. While this goes on you can not be stopped unless you are killed and can not control you character."):format(eff.res, eff.dam * 100) end,
+	type = "time",
+	status = "beneficial",
+	parameters = { res=10, dam=1.5 },
+	on_gain = function(self, err) return "#Target# is covered in a veil of shadows!", "+Assail" end,
+	on_lose = function(self, err) return "#Target# is no longer covered by shadows.", "-Assail" end,
+	activate = function(self, eff)
+		eff.sefid = self:addTemporaryValue("negative_status_effect_immune", 1)
+		eff.resid = self:addTemporaryValue("resists", {all=eff.res})
+	end,
+	on_timeout = function(self, eff)
+		-- Choose a target in FOV
+		local acts = {}
+		local act
+		for i = 1, #self.fov.actors_dist do
+			act = self.fov.actors_dist[i]
+			if act and self:reactionToward(act) < 0 and not act.dead then
+				local sx, sy = util.findFreeGrid(act.x, act.y, 1, true, {[engine.Map.ACTOR]=true})
+				if sx then acts[#acts+1] = {act, sx, sy} end
+			end
+		end
+		if #acts == 0 then return end
+
+		act = rng.table(acts)
+		self:move(act[2], act[3], true)
+		game.level.map:particleEmitter(act[2], act[3], 1, "dark")
+		self:attackTarget(act[1], DamageType.DARKNESS, eff.dam) -- Attack *and* use energy
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("negative_status_effect_immune", eff.sefid)
+		self:removeTemporaryValue("resists", eff.resid)
+	end,
+}
