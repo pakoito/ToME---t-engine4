@@ -61,6 +61,18 @@ newEntity{
 This farportal is not connected to any other portal, it is made for exploration, you can not know where it will send you.
 It should automatically create a portal back, but it might not be near your arrival zone.]],
 
+
+	checkSpecialLocation = function(self, who, q)
+		-- Caldizar space fortress
+		if rng.percent(2) and not game.state:hasSeenSpecialFarportal("caldizar-space-fortress") then
+			game:changeLevel(1, "shertul-fortress-caldizar")
+			q:exploratory_energy()
+			game.log("#VIOLET#You enter the swirling portal and in the blink of an eye you set foot in a strangely familiar zone, right next to a farportal...")
+			game.state:seenSpecialFarportal("caldizar-space-fortress")
+			return true
+		end
+	end,
+
 	on_move = function(self, x, y, who)
 		if not who.player then return end
 		local Dialog = require "engine.ui.Dialog"
@@ -70,6 +82,8 @@ It should automatically create a portal back, but it might not be near your arri
 		if q:isCompleted("farportal-broken") then Dialog:simplePopup("Exploratory Farportal", "The farportal is broken and will not be usable anymore.") return end
 
 		Dialog:yesnoPopup("Exploratory Farportal", "Do you want to travel in the farportal? You can not know where you will end up.", function(ret) if ret then
+			if self:checkSpecialLocation(who, q) then return end
+
 			local zone, boss = game.state:createRandomZone()
 			zone.no_worldport = true
 			zone.force_farportal_recall = true

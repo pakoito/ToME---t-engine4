@@ -172,7 +172,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[A furious poison storm rages around the caster, poisoning all creatures inside for doing %0.2f nature damage in 6 turns in a radius of %d for %d turns.
+		return ([[A furious poison storm rages around the caster, poisoning all creatures inside for %0.2f nature damage in 6 turns in a radius of %d for %d turns.
 		Poisoning is cumulative, the longer they stay in the higher the poison damage they take.
 		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.NATURE, self:combatTalentSpellDamage(t, 12, 130)), self:getTalentRadius(t), 5 + self:getTalentLevel(t))
 	end,

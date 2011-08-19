@@ -104,9 +104,9 @@ gain_energy = function(self, energy)
 	end
 
 	if self.shertul_energy >= 250 and not self:isCompleted("flight") then
-		game.player:setQuestStatus(self.id, self.COMPLETED, "flight")
-		local Dialog = require "engine.ui.Dialog"
-		Dialog:simpleLongPopup("Fortress Shadow", "Master, you have sent enough energy to activate the flight systems.\nHowever one control crystal is broken, you need to find a #GOLD#Ancient Storm Saphir#WHITE#.", 400)
+--		game.player:setQuestStatus(self.id, self.COMPLETED, "flight")
+--		local Dialog = require "engine.ui.Dialog"
+--		Dialog:simpleLongPopup("Fortress Shadow", "Master, you have sent enough energy to activate the flight systems.\nHowever one control crystal is broken, you need to find a #GOLD#Ancient Storm Saphir#WHITE#.", 400)
 	end
 end
 

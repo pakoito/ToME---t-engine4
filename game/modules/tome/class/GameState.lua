@@ -31,6 +31,7 @@ function _M:init(t, no_default)
 
 	self.allow_backup_guardians = {}
 	self.world_artifacts_pool = {}
+	self.seen_special_farportals = {}
 	self.unique_death = {}
 	self.boss_killed = 0
 	self.stores_restock = 1
@@ -57,6 +58,16 @@ end
 --- Is unique dead?
 function _M:isUniqueDead(name)
 	return self.unique_death[name]
+end
+
+--- Seen a special farportal location
+function _M:seenSpecialFarportal(name)
+	self.seen_special_farportals[name] = true
+end
+
+--- Is farportal already used
+function _M:hasSeenSpecialFarportal(name)
+	return self.seen_special_farportals[name]
 end
 
 --- Allow dropping the rod of recall

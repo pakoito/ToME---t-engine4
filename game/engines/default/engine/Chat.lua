@@ -72,6 +72,7 @@ function _M:invoke(id)
 
 	local d = engine.dialogs.Chat.new(self, id or self.default_id)
 	game:registerDialog(d)
+	return d
 end
 
 --- Gets the chat with the given id
