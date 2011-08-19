@@ -1319,7 +1319,7 @@ newTalent{
 		if game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then return nil end
 
 		local oe = game.level.map(x, y, Map.TERRAIN)
-		if oe.is_volcano then return end
+		if not oe or oe.is_volcano then return end
 
 		local e = Object.new{
 			old_feat = oe,
