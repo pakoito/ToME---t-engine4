@@ -430,7 +430,7 @@ static int map_objects_display(lua_State *L)
 	// Now setup a texture to render to
 	GLuint img;
 	CHECKGL(glGenTextures(1, &img));
-	tglBindTexture(GL_TEXTURE_2D, img);
+	tfglBindTexture(GL_TEXTURE_2D, img);
 	CHECKGL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL));
 	CHECKGL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
 	CHECKGL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
