@@ -217,6 +217,12 @@ local function archery_projectile(tx, ty, tg, self)
 			target:forceUseTalent(target.T_CARBON_SPIKES, {ignore_energy=true})
 		end
 	end
+
+	-- Zero gravity
+	if hitted and game.zone.zero_gravity and rng.percent(util.bound(dam, 0, 100)) then
+		target:knockback(self.x, self.y, math.ceil(math.log(dam)))
+	end
+
 	self.use_psi_combat = false
 end
 

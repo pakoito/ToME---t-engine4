@@ -49,6 +49,7 @@ function _M:newEffect(t)
 	t.parameters = t.parameters or {}
 	t.type = t.type or "physical"
 	t.status = t.status or "detrimental"
+	t.decrease = t.decrease or 1
 
 	table.insert(self.tempeffect_def, t)
 	t.id = #self.tempeffect_def
@@ -64,17 +65,19 @@ end
 --
 function _M:timedEffects()
 	local todel = {}
+	local def
 	for eff, p in pairs(self.tmp) do
+		def = _M.tempeffect_def[eff]
 		if p.dur <= 0 then
 			todel[#todel+1] = eff
 		else
-			if _M.tempeffect_def[eff].on_timeout then
-				if _M.tempeffect_def[eff].on_timeout(self, p) then
+			if def.on_timeout then
+				if def.on_timeout(self, p) then
 					todel[#todel+1] = eff
 				end
 			end
 		end
-		p.dur = p.dur - 1
+		p.dur = p.dur - def.decrease
 	end
 
 	while #todel > 0 do
@@ -135,9 +138,10 @@ function _M:hasEffect(eff_id)
 end
 
 --- Removes the effect
-function _M:removeEffect(eff, silent)
+function _M:removeEffect(eff, silent, force)
 	local p = self.tmp[eff]
 	if not p then return end
+	if _M.tempeffect_def[eff].no_remove and not force then return end
 	self.tmp[eff] = nil
 	self.changed = true
 	if _M.tempeffect_def[eff].on_lose then

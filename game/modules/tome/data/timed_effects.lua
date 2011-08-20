@@ -4424,3 +4424,20 @@ newEffect{
 		self:removeTemporaryValue("resists", eff.resid)
 	end,
 }
+
+newEffect{
+	name = "ZERO_GRAVITY",
+	desc = "Zero Gravity",
+	no_stop_enter_worlmap = true,
+	long_desc = function(self, eff) return ("There is no gravity here, you float in the air. Movement three times as slow, any melee or archery blows have a chance to knockback.") end,
+	decrease = 0, no_remove = true,
+	type = "spacetime",
+	status = "detrimental",
+	cancel_on_level_change = true,
+	parameters = {},
+	activate = function(self, eff)
+		game.logPlayer(self, "#LIGHT_BLUE#You enter a zero gravity zone, beware!")
+	end,
+	deactivate = function(self, eff)
+	end,
+}

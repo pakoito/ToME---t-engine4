@@ -892,9 +892,9 @@ function _M:tooltip(x, y, seen_by)
 		local e = self.tempeffect_def[eff_id]
 		local dur = p.dur + 1
 		if e.status == "detrimental" then
-			if act then ts:add("- ", {"color", "LIGHT_RED"}, ("%s(%d)"):format(e.desc,dur), {"color", "WHITE"}, true) end
+			if act then ts:add("- ", {"color", "LIGHT_RED"}, (e.decrease > 0) and ("%s(%d)"):format(e.desc,dur) or e.desc, {"color", "WHITE"}, true) end
 		else
-			if act then ts:add("- ", {"color", "LIGHT_GREEN"}, ("%s(%d)"):format(e.desc,dur), {"color", "WHITE"}, true) end
+			if act then ts:add("- ", {"color", "LIGHT_GREEN"}, (e.decrease > 0) and ("%s(%d)"):format(e.desc,dur) or e.desc, {"color", "WHITE"}, true) end
 		end
 	end
 
@@ -2930,5 +2930,9 @@ function _M:addedToLevel(level, x, y)
 		end
 		self.make_escort = nil
 	end
+
+	if game.zone.zero_gravity then self:setEffect(self.EFF_ZERO_GRAVITY, 1, {})
+	else self:removeEffect(self.EFF_ZERO_GRAVITY, nil, true) end
+
 	self:check("on_added_to_level", level, x, y)
 end

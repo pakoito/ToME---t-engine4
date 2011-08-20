@@ -727,6 +727,12 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down, auto_zone_stair)
 	end
 	self.zone_name_s = nil
 
+	-- Special stuff
+	for uid, act in pairs(self.level.entities) do
+		if self.zone.zero_gravity then act:setEffect(act.EFF_ZERO_GRAVITY, 1, {})
+		else act:removeEffect(act.EFF_ZERO_GRAVITY, nil, true) end
+	end
+
 	-- Level feeling
 	local feeling
 	if self.level.special_feeling then

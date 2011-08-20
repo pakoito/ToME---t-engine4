@@ -461,6 +461,11 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 		gwf.inside = nil
 	end
 
+	-- Zero gravity
+	if hitted and game.zone.zero_gravity and rng.percent(util.bound(dam, 0, 100)) then
+		target:knockback(self.x, self.y, math.ceil(math.log(dam)))
+	end
+
 	-- Visual feedback
 	if hitted then game.level.map:particleEmitter(target.x, target.y, 1, "melee_attack", {color=target.blood_color}) end
 
