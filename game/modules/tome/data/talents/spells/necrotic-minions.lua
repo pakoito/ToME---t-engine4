@@ -609,6 +609,7 @@ local function makeMinion(self, lev)
 	for k, e in pairs(chances) do for i = 1, e do list[#list+1] = k end tot = tot + e end
 
 	local m = require("mod.class.NPC").new(minions_list[rng.table(list)])
+	m.max_level = self.level
 	return m
 end
 

@@ -36,6 +36,14 @@ function resolvers.calc.rngavg(t)
 	return rng.avg(t[1], t[2])
 end
 
+--- Dice roll
+function resolvers.dice(x, y)
+	return {__resolver="dice", x, y}
+end
+function resolvers.calc.dice(t)
+	return rng.dice(t[1], t[2])
+end
+
 --- Random table element
 function resolvers.rngtable(t)
 	return {__resolver="rngtable", t}
