@@ -25,7 +25,7 @@ newEntity{base="HARDWALL", define_as = "ATAMATHON_BROKEN",
 	nice_tiler = false,
 	display = 'g', color = colors.RED,
 	image = "npc/atamathon_broken.png",
-	resolvers.nice_tile{image="terrain/grass.png", add_displays = {class.new{image="npc/construct_golem_athamathon_the_giant_golem.png", display_y=-1, display_h=2}}},
+	resolvers.nice_tile{image="terrain/grass.png", add_displays = {class.new{z=18,image="npc/construct_golem_athamathon_the_giant_golem.png", display_y=-1, display_h=2}}},
 	name = "the remains of Atamathon",
 	show_tooltip = true,
 	desc = [[This giant golem was constructed by the halflings during the Pyre Wars to fight the orcs, but was felled by Garkul the Devourer.

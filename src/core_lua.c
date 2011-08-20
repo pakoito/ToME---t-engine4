@@ -885,7 +885,6 @@ static int gl_texture_to_sdl(lua_State *L)
 
 	// Make sdl surface from it
 	*s = SDL_CreateRGBSurfaceFrom(tmp, w, h, 32, w*4, 0,0,0,0);
-//	SDL_SaveBMP(*s, "/tmp/foo.bmp");
 
 	return 1;
 }
@@ -1091,7 +1090,11 @@ static int sdl_load_image(lua_State *L)
 static int sdl_free_surface(lua_State *L)
 {
 	SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 1);
-	SDL_FreeSurface(*s);
+	if (*s)
+	{
+		if ((*s)->flags & SDL_PREALLOC) free((*s)->pixels);
+		SDL_FreeSurface(*s);
+	}
 	lua_pushnumber(L, 1);
 	return 1;
 }
