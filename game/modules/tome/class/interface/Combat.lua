@@ -874,7 +874,11 @@ end
 
 --- Computes movement speed
 function _M:combatMovementSpeed()
-	return (self.base_movement_speed or 1) / self.movement_speed
+	local mult = 1
+	if game.zone and game.zone.zero_gravity then
+		mult = 3
+	end
+	return mult * (self.base_movement_speed or 1) / self.movement_speed
 end
 
 --- Check if the actor has a gem bomb in quiver

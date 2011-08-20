@@ -34,6 +34,7 @@ return {
 	ambient_music = "Dreaming of Flying.ogg",
 	no_level_connectivity = true,
 	no_worldport = true,
+	zero_gravity = true,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",

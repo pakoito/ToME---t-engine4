@@ -22,7 +22,7 @@ load("/data/general/objects/objects-maj-eyal.lua")
 newEntity{ base = "BASE_RING",
 	power_source = {psionic=true},
 	define_as = "RING_OF_BLOOD", rarity=false,
-	name = "Bloodcaller", unique=true,
+	name = "Bloodcaller", unique=true, image = "object/artifact/jewelry_ring_bloodcaller.png",
 	desc = [[You won the Ring of Blood trial, this is your reward.]],
 	unided_name = "bloody ring",
 	rarity = false,

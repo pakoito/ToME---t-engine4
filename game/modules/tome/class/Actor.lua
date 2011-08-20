@@ -571,6 +571,7 @@ function _M:move(x, y, force)
 
 	if moved and not force and ox and oy and (ox ~= self.x or oy ~= self.y) and config.settings.tome.smooth_move > 0 then
 		local blur = 0
+		if game.zone.zero_gravity then blur = 2 end
 		if self:attr("lightning_speed") or self:attr("step_up") or self:attr("wild_speed") then blur = 3 end
 		self:setMoveAnim(ox, oy, config.settings.tome.smooth_move, blur)
 	end

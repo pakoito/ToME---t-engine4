@@ -24,7 +24,7 @@ local Talents = require "engine.interface.ActorTalents"
 newEntity{ base = "BASE_SCROLL", define_as = "JEWELER_TOME", subtype="tome", no_unique_lore=true,
 	unique = true, quest=true,
 	unided_name = "ancient tome",
-	name = "Ancient Tome titled 'Gems and their uses'",
+	name = "Ancient Tome titled 'Gems and their uses'", image = "object/artifact/ancient_tome_gems_and_their_uses.png",
 	level_range = {30, 40}, rarity = 120,
 	color = colors.VIOLET,
 	is_magic_device = false,
