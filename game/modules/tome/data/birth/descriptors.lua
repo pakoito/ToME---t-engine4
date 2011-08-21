@@ -202,7 +202,7 @@ newBirthDescriptor{
 		"Provides you with infinite lives.#{normal}#",
 		"This is not the way the game is meant to be played, but it allows you to have a more forgiving experience.",
 		"Remember though that dying is an integral part of the game and helps you become a better player.",
-		"No achievements will be granted in this mode.",
+		"Exploration version of achievements will be granted in this mode.",
 	},
 	copy = {
 		infinite_lifes = 1,

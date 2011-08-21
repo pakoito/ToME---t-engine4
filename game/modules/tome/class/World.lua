@@ -53,8 +53,8 @@ function _M:gainAchievement(id, src, ...)
 	-- Do not unlock things in easy mode
 	if not a then return end
 	if game.difficulty == game.DIFFICULTY_EASY and not a.tutorial then return end
-	if game.permadeath == game.PERMADEATH_INFINITE and not a.tutorial then return end
 
+	if game.permadeath == game.PERMADEATH_INFINITE then id = "EXPLORATION_"..id end
 	if game.difficulty == game.DIFFICULTY_INSANE and game.permadeath == game.PERMADEATH_ONE then id = "INSANE_"..id end
 
 	mod.class.interface.WorldAchievements.gainAchievement(self, id, src, ...)
