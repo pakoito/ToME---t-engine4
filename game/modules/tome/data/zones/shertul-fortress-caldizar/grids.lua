@@ -23,7 +23,7 @@ load("/data/general/grids/void.lua")
 
 newEntity{
 	define_as = "COMMAND_ORB",
-	name = "Sher'Tul Control Orb", image = "terrain/solidwall/solid_floor1.png", add_displays = {class.new{image="terrain/worldmap.png"}},
+	name = "Sher'Tul Control Orb", image = "terrain/solidwall/solid_floor1.png", add_displays = {class.new{image="terrain/shertul_control_orb_blue.png"}},
 	display = '*', color=colors.PURPLE,
 	notice = true,
 	always_remember = true,
