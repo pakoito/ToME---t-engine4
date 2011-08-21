@@ -176,7 +176,6 @@ newBirthDescriptor{
 	name = "Necromancer",
 	locked = function() return profile.mod.allow_build.mage_necromancer end,
 	locked_desc = "The road to necromancy is a macabre path indeed. Walk with the dead, and drink deeply of their black knowledge.",
-	not_on_random_boss = true,
 	desc = {
 		"While most magic is viewed with suspicion since the Spellblaze, the stigma surrounding the black art of Necromancy has been around since time immemorial.",
 		"These dark spellcasters extinguish life, twist death, and raise armies of undead monsters to sate their lust for power and pursue their ultimate goal: Eternal life.",

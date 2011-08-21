@@ -1069,27 +1069,12 @@ function _M:setupCommands()
 			end end
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
---			self.state:debugRandomZone()
+			local list = mod.class.NPC:loadList("/data/general/npcs/humanoid_random_boss.lua")
+			local b = list[3]
+			local m = self.state:createRandomBoss(b, {level=self.player.level, nb_classes=0, force_classes={Rogue=true}, rank=5})
+			m:resolve() m:resolve(nil, true)
+			self.zone:addEntity(self.level, m, "actor", self.player.x + 1, self.player.y)
 
-			local list = {}
-			local grab_list = function(l)
-				for _, o in pairs(l) do
-					if o.unique and not o.randart and o.type~="lore" then list[o.unique] = o end
-				end
-			end
-			for i, zone in ipairs(fs.list("/data/zones/")) do
-				local file = "/data/zones/"..zone.."/objects.lua"
-				if fs.exists(file) then grab_list(mod.class.Object:loadList(file)) end
-			end
-
-			local tbl = {}
-			for u, o in pairs(list) do
-				tbl[#tbl+1] = ("--\n%s (%s / %s): %s\n"):format(o.name, o.type, o.subtype, o.desc)
-			end
-			table.sort(tbl)
-			local f = io.open("list","w")
-			for i, l in ipairs(tbl) do f:write(l) end
-			f:close()
 		end end,
 		[{"_f","ctrl"}] = function() if config.settings.cheat then
 game.player:learnTalent('T_MULTIPLY',true)

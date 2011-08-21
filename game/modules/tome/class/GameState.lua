@@ -1373,9 +1373,17 @@ function _M:createRandomBoss(base, data)
 	------------------------------------------------------------
 
 	-- Apply a class
+	local Birther = require "engine.Birther"
 	b.learn_tids = {}
 	local function apply_class(class)
-		print("Adding to random boss class", class.name)
+		local mclasses = Birther.birth_descriptor_def.class
+		local mclass = nil
+		for name, data in pairs(mclasses) do
+			if data.descriptor_choices and data.descriptor_choices.subclass and data.descriptor_choices.subclass[class.name] then mclass = data break end
+		end
+		if not mclass then return end
+
+		print("Adding to random boss class", class.name, mclass.name)
 		if config.settings.cheat then b.desc = (b.desc or "").."\nClass: "..class.name end
 
 		-- Add stats
@@ -1386,11 +1394,13 @@ function _M:createRandomBoss(base, data)
 		end
 
 		-- Add talent categories
+		for tt, d in pairs(mclass.talents_types or {}) do b:learnTalentType(tt, true) b:setTalentTypeMastery(tt, (b:getTalentTypeMastery(tt) or 1) + d[2]) end
+		for tt, d in pairs(mclass.unlockable_talents_types or {}) do b:learnTalentType(tt, true) b:setTalentTypeMastery(tt, (b:getTalentTypeMastery(tt) or 1) + d[2]) end
 		for tt, d in pairs(class.talents_types or {}) do b:learnTalentType(tt, true) b:setTalentTypeMastery(tt, (b:getTalentTypeMastery(tt) or 1) + d[2]) end
 		for tt, d in pairs(class.unlockable_talents_types or {}) do b:learnTalentType(tt, true) b:setTalentTypeMastery(tt, (b:getTalentTypeMastery(tt) or 1) + d[2]) end
 
 		-- Add starting equipment
-		for k, resolver in pairs(class.copy or {}) do
+		local apply_resolvers = function(k, resolver)
 			if type(resolver) == "table" and resolver.__resolver and resolver.__resolver == "equip" then
 				resolver[1].id = nil
 				-- Make sure we equip some nifty stuff instead of player's starting iron stuff
@@ -1403,8 +1413,12 @@ function _M:createRandomBoss(base, data)
 				b[#b+1] = resolver
 			elseif k == "birth_create_alchemist_golem" then
 				b.birth_create_alchemist_golem = resolver
+			elseif k == "necrotic_aura_base_souls" then
+				b.necrotic_aura_base_souls = util.bound(1 + math.ceil(data.level / 10), 1, 10)
 			end
 		end
+		for k, resolver in pairs(mclass.copy or {}) do apply_resolvers(k, resolver) end
+		for k, resolver in pairs(class.copy or {}) do apply_resolvers(k, resolver) end
 
 		-- Starting talents are autoleveling
 		local tres = nil
@@ -1439,10 +1453,14 @@ function _M:createRandomBoss(base, data)
 	end
 
 	-- Select two classes
-	local Birther = require "engine.Birther"
 	local classes = Birther.birth_descriptor_def.subclass
 	local list = {}
-	for name, data in pairs(classes) do if not data.not_on_random_boss then list[#list+1] = data end end
+	local force_classes = table.clone(data.force_classes)
+	for name, cdata in pairs(classes) do
+		if force_classes and force_classes[cdata.name] then apply_class(table.clone(cdata, true)) force_classes[cdata.name] = nil
+		elseif not cdata.not_on_random_boss then list[#list+1] = cdata
+		end
+	end
 	for i = 1, data.nb_classes or 2 do
 		local c = rng.tableRemove(list)
 		if not c then break end

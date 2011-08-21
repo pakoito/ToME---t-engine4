@@ -228,6 +228,7 @@ newTalent{
 	end,
 	activate = function(self, t)
 		cancelPoisons(self)
+		self.vile_poisons = self.vile_poisons or {}
 		self.vile_poisons[t.id] = true
 		return {}
 	end,
@@ -261,6 +262,7 @@ newTalent{
 	end,
 	activate = function(self, t)
 		cancelPoisons(self)
+		self.vile_poisons = self.vile_poisons or {}
 		self.vile_poisons[t.id] = true
 		return {}
 	end,
@@ -294,6 +296,7 @@ newTalent{
 	end,
 	activate = function(self, t)
 		cancelPoisons(self)
+		self.vile_poisons = self.vile_poisons or {}
 		self.vile_poisons[t.id] = true
 		return {}
 	end,
@@ -327,6 +330,7 @@ newTalent{
 	end,
 	activate = function(self, t)
 		cancelPoisons(self)
+		self.vile_poisons = self.vile_poisons or {}
 		self.vile_poisons[t.id] = true
 		return {}
 	end,
@@ -361,6 +365,7 @@ newTalent{
 	end,
 	activate = function(self, t)
 		cancelPoisons(self)
+		self.vile_poisons = self.vile_poisons or {}
 		self.vile_poisons[t.id] = true
 		return {}
 	end,

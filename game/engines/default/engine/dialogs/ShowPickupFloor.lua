@@ -58,8 +58,8 @@ function _M:init(title, x, y, filter, action, takeall, actor)
 	self:setupUI()
 
 	self.key:addCommands{
-		_ASTERISK = function() self:takeAll() end,
 		__TEXTINPUT = function(c)
+			if c == '*' then self:takeAll() return end
 			if self.list and self.list.chars[c] then
 				self:use(self.list[self.list.chars[c]])
 			end
