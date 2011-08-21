@@ -124,3 +124,11 @@ newLore{
 	image = "inside_caldizar_fortress.png",
 	lore = [[You somehow got teleported to an other Sher'Tul Fortress, in a very alien location. There you saw a living Sher'Tul.]],
 }
+
+newLore{
+	id = "first-farportal",
+	category = "sher'tul",
+	name = "lost farportal", always_pop = true,
+	image = "farportal_entering.png",
+	lore = function() return game.player.name..[[ boldly entering a Sher'Tul farportal.]] end,
+}

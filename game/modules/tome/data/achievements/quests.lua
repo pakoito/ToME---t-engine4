@@ -60,6 +60,9 @@ newAchievement{
 	image = "object/artifact/orb_many_ways.png",
 	show = "name",
 	desc = [[Activated a portal using the Orb of Many Ways.]],
+	on_gain = function()
+		game:onTickEnd(function() game.player:learnLore("first-farportal") end)
+	end
 }
 newAchievement{
 	name = "Destroyer's bane", id = "DESTROYER_BANE",
