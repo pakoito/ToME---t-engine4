@@ -62,7 +62,7 @@ next_combat = function(self)
 		self:add_foe(true, false, 4)
 	else
 		local spot = game.level:pickSpot{type="quest", subtype="sealed-gate"}
-		local g = game.zone:makeEntityByName(game.level, "terrain", "OPEN_GATE")
+		local g = game.zone:makeEntityByName(game.level, "terrain", "COBBLESTONE")
 		game.zone:addEntity(game.level, g, "terrain", spot.x, spot.y)
 
 		local p = game.party:findMember{main=true}
