@@ -2093,7 +2093,7 @@ function _M:preUseTalent(ab, silent, fake)
 	if ab.is_unarmed then
 		-- first check for heavy and massive armor
 		if self:hasMassiveArmor() then
-			if not silent then game.logSeen(self, "You are to heavily armored to use this talent.") end
+			if not silent then game.logSeen(self, "You are too heavily armoured to use this talent.") end
 			return false
 		-- next make sure we're unarmed
 		elseif not self:isUnarmed() then

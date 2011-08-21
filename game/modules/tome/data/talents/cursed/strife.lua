@@ -125,8 +125,6 @@ newTalent{
 	hate = 0.4,
 	tactical = { ATTACK = 2 },
 	requires_target = true,
-	tactical = { CLOSEIN = 2 },
-	requires_target = true,
 	getDamagePercent = function(self, t)
 		return 100 - (40 / math.max(1, self:getTalentLevel(t)))
 	end,

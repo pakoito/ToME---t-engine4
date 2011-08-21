@@ -107,7 +107,7 @@ newTalent{
 	mode = "sustained",
 	cooldown = 30,
 	sustain_stamina = 40,
-	tactical = { buff = 2 },
+	tactical = { BUFF = 2 },
 	activate = function(self, t)
 		return {
 			dam = self:addTemporaryValue("shattering_impact", self:combatTalentWeaponDamage(t, 0.2, 0.6)),

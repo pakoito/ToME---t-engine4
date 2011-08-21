@@ -96,7 +96,7 @@ newTalent{
 	sustain_vim = 30,
 	cooldown = 30,
 	range = 10,
-	tactical = { buff = 2 },
+	tactical = { BUFF = 2 },
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic2")
 		local ret = {

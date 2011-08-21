@@ -135,7 +135,7 @@ newTalent{
 	cooldown = 10,
 	requires_target = true,
 	range = 20,
-	tactical = { ATTACK = 2, CLONEIN = 2 },
+	tactical = { ATTACK = 2, CLOSEIN = 2 },
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
