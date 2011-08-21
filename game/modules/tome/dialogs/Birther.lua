@@ -264,6 +264,10 @@ function _M:randomBirth()
 	})
 	self.c_name:setText(namegen:generate())
 
+	self.descriptors_by_type.race = nil
+	self.descriptors_by_type.subrace = nil
+	self.descriptors_by_type.class = nil
+	self.descriptors_by_type.subclass = nil
 --[[
 	-- Random campaign
 	local camp, camp_id = nil
@@ -300,7 +304,7 @@ function _M:randomBirth()
 	-- Random subclass
 	if class then
 		local subclass, subclass_id = nil
-		repeat subclass, subclass_id = rng.table(self.all_classes[class_id].nodes) print("====", subclass, subclass_id, class_id)
+		repeat subclass, subclass_id = rng.table(self.all_classes[class_id].nodes)
 		until not subclass.locked
 		self:classUse(subclass)
 	end

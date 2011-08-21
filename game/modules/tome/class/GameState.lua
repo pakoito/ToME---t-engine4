@@ -1455,7 +1455,7 @@ function _M:createRandomBoss(base, data)
 	-- Select two classes
 	local classes = Birther.birth_descriptor_def.subclass
 	local list = {}
-	local force_classes = table.clone(data.force_classes)
+	local force_classes = data.force_classes and table.clone(data.force_classes)
 	for name, cdata in pairs(classes) do
 		if force_classes and force_classes[cdata.name] then apply_class(table.clone(cdata, true)) force_classes[cdata.name] = nil
 		elseif not cdata.not_on_random_boss then list[#list+1] = cdata

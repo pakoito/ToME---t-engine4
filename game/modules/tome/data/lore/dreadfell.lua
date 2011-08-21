@@ -121,3 +121,11 @@ newLore{
 	name = "a note about undead poetry from the Master",
 	lore = [[As an aside, I notice one of my skeletons has amused himself by writing a poem about me. Whilst my first reaction was to have his bones crunched into dust and what remained of his undead soul sent to the darkest depths of the abyss, I do now realise that there is some merit to this. Every great leader needs tales penned of his brilliant conquest. Therefore I now command you all to write more poetry in my honour, praising my amazing powers, unrivalled leadership, unconquerable strength, etc etc. Any that fail to produce works of sufficient standard shall be annihilated.]],
 }
+
+newLore{
+	id = "master-slain",
+	category = "dreadfell",
+	name = "slain master", always_pop = true,
+	image = "the_master_slain.png",
+	lore = [[A powerful staff is grabbed from the Master's dead hands.]],
+}
