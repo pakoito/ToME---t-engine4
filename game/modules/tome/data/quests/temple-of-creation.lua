@@ -50,7 +50,8 @@ on_grant = function(self, who)
 		display='>', color=colors.VIOLET,
 		notice = true,
 		change_level=1, change_zone="temple-of-creation",
-		image = "terrain/underwater/subsea_floor_02.png", add_mos={{image="terrain/demon_portal.png"}},
+		image = "terrain/underwater/subsea_floor_02.png",
+		add_displays = {mod.class.Grid.new{z=18, image="terrain/naga_portal.png", display_h=2, display_y=-1}},
 	}
 	g:resolve() g:resolve(nil, true)
 	game.zone:addEntity(game.level, g, "terrain", 34, 6)
@@ -69,7 +70,8 @@ portal_back = function(self, who)
 		display='>', color=colors.VIOLET,
 		notice = true,
 		change_level=2, change_zone="flooded-cave",
-		image = "terrain/underwater/subsea_floor_02.png", add_mos={{image="terrain/demon_portal.png"}},
+		image = "terrain/underwater/subsea_floor_02.png",
+		add_displays = {mod.class.Grid.new{z=18, image="terrain/naga_portal.png", display_h=2, display_y=-1}},
 	}
 	g:resolve() g:resolve(nil, true)
 	game.zone:addEntity(game.level, g, "terrain", 15, 13)
