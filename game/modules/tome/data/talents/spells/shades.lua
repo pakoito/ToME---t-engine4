@@ -186,7 +186,7 @@ newTalent{
 			ai_target = {actor=nil},
 			ai = "summoned", ai_real = "tactical",
 			name = "Forgery of Haze ("..self.name..")",
-			desc = [[A dark shadowy shape who's form resembles you.]],
+			desc = [[A dark shadowy shape whose form resembles you.]],
 		}
 		m:removeAllMOs()
 		m.make_escort = nil
