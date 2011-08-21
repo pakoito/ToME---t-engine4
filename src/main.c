@@ -63,9 +63,9 @@ bool exit_engine = FALSE;
 bool no_sound = FALSE;
 bool isActive = TRUE;
 bool tickPaused = FALSE;
-int mouse_cursor_tex = 0, mouse_cursor_tex_ref = LUA_NOREF;
-int mouse_cursor_down_tex = 0, mouse_cursor_down_tex_ref = LUA_NOREF;
-int mouse_cursor_ox = 0, mouse_cursor_oy = 0;
+int mouse_cursor_ox, mouse_cursor_oy;
+int mouse_drag_w = 32, mouse_drag_h = 32;
+int mouse_drag_tex = 0, mouse_drag_tex_ref = LUA_NOREF;
 int mousex = 0, mousey = 0;
 float gamma_correction = 1;
 int requested_fps = 30;
@@ -419,7 +419,7 @@ void call_draw(int nb_keyframes)
 	}
 
 	/* Mouse pointer */
-	if (mouse_cursor_tex && mouse_cursor_down_tex)
+	if (mouse_drag_tex)
 	{
 		GLfloat texcoords[2*4] = {
 			0, 0,
@@ -437,16 +437,17 @@ void call_draw(int nb_keyframes)
 		glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
 		glColorPointer(4, GL_FLOAT, 0, colors);
 
-		int x = mousex + mouse_cursor_ox;
-		int y = mousey + mouse_cursor_oy;
-		int down = SDL_GetMouseState(NULL, NULL);
-		tglBindTexture(GL_TEXTURE_2D, down ? mouse_cursor_down_tex : mouse_cursor_tex);
+		int x = mousex;
+		int y = mousey;
+		int w = mouse_drag_w / 2;
+		int h = mouse_drag_h / 2;
+		tglBindTexture(GL_TEXTURE_2D, mouse_drag_tex);
 
 		GLfloat vertices[2*4] = {
-			x, y,
-			x, y + 32,
-			x + 32, y + 32,
-			x + 32, y,
+			x - w, y - h,
+			x - w, y + h,
+			x + w, y + h,
+			x + w, y - h,
 		};
 		glVertexPointer(2, GL_FLOAT, 0, vertices);
 		glDrawArrays(GL_QUADS, 0, 4);

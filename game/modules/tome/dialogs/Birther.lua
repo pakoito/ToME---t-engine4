@@ -300,7 +300,7 @@ function _M:randomBirth()
 	-- Random subclass
 	if class then
 		local subclass, subclass_id = nil
-		repeat subclass, subclass_id = rng.table(self.all_classes[class_id].nodes)
+		repeat subclass, subclass_id = rng.table(self.all_classes[class_id].nodes) print("====", subclass, subclass_id, class_id)
 		until not subclass.locked
 		self:classUse(subclass)
 	end

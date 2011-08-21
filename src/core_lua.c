@@ -1673,8 +1673,8 @@ static int sdl_redraw_screen(lua_State *L)
 	return 0;
 }
 
-extern int mouse_cursor_tex, mouse_cursor_tex_ref;
-extern int mouse_cursor_down_tex, mouse_cursor_down_tex_ref;
+int mouse_cursor_s_ref = LUA_NOREF;
+int mouse_cursor_down_s_ref = LUA_NOREF;
 SDL_Surface *mouse_cursor_s = NULL;
 SDL_Surface *mouse_cursor_down_s = NULL;
 SDL_Cursor *mouse_cursor = NULL;
@@ -1686,21 +1686,17 @@ static int sdl_set_mouse_cursor(lua_State *L)
 	mouse_cursor_oy = luaL_checknumber(L, 2);
 
 	/* Down */
-	if (mouse_cursor_down_tex_ref != LUA_NOREF)
+	if (mouse_cursor_down_s_ref != LUA_NOREF)
 	{
-		luaL_unref(L, LUA_REGISTRYINDEX, mouse_cursor_down_tex_ref);
-		mouse_cursor_down_tex_ref = LUA_NOREF;
+		luaL_unref(L, LUA_REGISTRYINDEX, mouse_cursor_down_s_ref);
+		mouse_cursor_down_s_ref = LUA_NOREF;
 	}
 
-	if (lua_isnil(L, 4))
-	{
-		mouse_cursor_down_tex = 0;
-	}
-	else
+	if (!lua_isnil(L, 4))
 	{
 		SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 4);
 		mouse_cursor_down_s = *s;
-		mouse_cursor_down_tex_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+		mouse_cursor_down_s_ref = luaL_ref(L, LUA_REGISTRYINDEX);
 
 		if (mouse_cursor_down) { SDL_FreeCursor(mouse_cursor_down); mouse_cursor_down = NULL; }
 		mouse_cursor_down = SDL_CreateColorCursor(mouse_cursor_down_s, -mouse_cursor_ox, -mouse_cursor_oy);
@@ -1708,22 +1704,17 @@ static int sdl_set_mouse_cursor(lua_State *L)
 	}
 
 	/* Default */
-	if (mouse_cursor_tex_ref != LUA_NOREF)
+	if (mouse_cursor_s_ref != LUA_NOREF)
 	{
-		luaL_unref(L, LUA_REGISTRYINDEX, mouse_cursor_tex_ref);
-		mouse_cursor_tex_ref = LUA_NOREF;
+		luaL_unref(L, LUA_REGISTRYINDEX, mouse_cursor_s_ref);
+		mouse_cursor_s_ref = LUA_NOREF;
 	}
 
-	if (lua_isnil(L, 3))
-	{
-//		mouse_cursor_tex = 0;
-//		SDL_ShowCursor(SDL_ENABLE);
-	}
-	else
+	if (!lua_isnil(L, 3))
 	{
 		SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 3);
 		mouse_cursor_s = *s;
-		mouse_cursor_tex_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+		mouse_cursor_s_ref = luaL_ref(L, LUA_REGISTRYINDEX);
 
 		if (mouse_cursor) { SDL_FreeCursor(mouse_cursor); mouse_cursor = NULL; }
 		mouse_cursor = SDL_CreateColorCursor(mouse_cursor_s, -mouse_cursor_ox, -mouse_cursor_oy);
@@ -1731,6 +1722,34 @@ static int sdl_set_mouse_cursor(lua_State *L)
 	}
 	return 0;
 }
+
+extern int mouse_drag_tex, mouse_drag_tex_ref;
+extern int mouse_drag_w, mouse_drag_h;
+static int sdl_set_mouse_cursor_drag(lua_State *L)
+{
+	mouse_drag_w = luaL_checknumber(L, 2);
+	mouse_drag_h = luaL_checknumber(L, 3);
+
+	/* Default */
+	if (mouse_drag_tex_ref != LUA_NOREF)
+	{
+		luaL_unref(L, LUA_REGISTRYINDEX, mouse_drag_tex_ref);
+		mouse_drag_tex_ref = LUA_NOREF;
+	}
+
+	if (lua_isnil(L, 1))
+	{
+		mouse_drag_tex = 0;
+	}
+	else
+	{
+		GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 1);
+		mouse_drag_tex = *t;
+		mouse_drag_tex_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+	}
+	return 0;
+}
+
 
 /**************************************************************
  * Quadratic Objects
@@ -2152,6 +2171,7 @@ static const struct luaL_reg displaylib[] =
 	{"setWindowPos", sdl_set_window_pos},
 	{"getModesList", sdl_get_modes_list},
 	{"setMouseCursor", sdl_set_mouse_cursor},
+	{"setMouseDrag", sdl_set_mouse_cursor_drag},
 	{"setGamma", sdl_set_gamma},
 	{"glTranslate", gl_translate},
 	{"glScale", gl_scale},
