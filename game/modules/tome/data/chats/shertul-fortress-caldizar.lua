@@ -39,6 +39,7 @@ A wave of mental and magical power blasts into you with the might of a falling s
 			game:changeLevel(1, "shertul-fortress")
 			local spot = game.level:pickSpot{type="spawn", subtype="farportal"}
 			game.player:move(spot.x, spot.y, true)
+			game.player:learnLore("shertul-fortress-caldizar")
 		end},
 	}
 }

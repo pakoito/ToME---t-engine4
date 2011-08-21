@@ -116,3 +116,11 @@ newLore{
 	image = "fortress_takeoff.png",
 	lore = [[Yiilkgur, the Sher'Tul Fortress is re-activated and raises from the depths of Nur toward the sky.]],
 }
+
+newLore{
+	id = "shertul-fortress-caldizar",
+	category = "sher'tul",
+	name = "a living Sher'Tul?!", always_pop = true,
+	image = "inside_caldizar_fortress.png",
+	lore = [[You somehow got teleported to an other Sher'Tul Fortress, in a very alien location. There you saw a living Sher'Tul.]],
+}

@@ -40,7 +40,7 @@ newEntity{ base = "BASE_NPC_SHERTUL", define_as = "CALDIZAR",
 	can_talk = "shertul-fortress-caldizar",
 
 	seen_by = function(self, who)
-		if not game.party:hasMember(who) then return end
+		if not game.party:hasMember(who) or not who.player then return end
 		self.seen_by = nil
 		local chat = require("engine.Chat").new(self.can_talk, self, who, {player=who})
 		local d = chat:invoke()
