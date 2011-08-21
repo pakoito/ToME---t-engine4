@@ -189,12 +189,12 @@ newBirthDescriptor{
 }
 
 --------------- Permadeath
---[[
 newBirthDescriptor{
 	type = "permadeath",
 	name = "Exploration",
-	locked = function(birther) return birther:isDonator() or "hide" end,
+	locked = function(birther) return birther:isDonator() end,
 	locked_desc = "Exploration mode: Infinite lives (donator feature)",
+	locked_select = function(birther) birther:selectExplorationNoDonations() end,
 	selection_default = config.settings.tome.default_birth and config.settings.tome.default_birth.permadeath == "Exploration",
 	desc =
 	{
@@ -208,7 +208,6 @@ newBirthDescriptor{
 		infinite_lifes = 1,
 	},
 }
---]]
 newBirthDescriptor{
 	type = "permadeath",
 	name = "Adventure",

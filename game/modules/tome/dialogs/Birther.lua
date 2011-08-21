@@ -359,6 +359,7 @@ function _M:permadeathUse(item)
 	if not item then return end
 	if item.locked then
 		self.c_permadeath.c_list.sel = self.c_permadeath.previous
+		if item.locked_select then item.locked_select(self) end
 	else
 		self:setDescriptor("permadeath", item.id)
 
@@ -543,7 +544,7 @@ function _M:generatePermadeaths()
 		if self:isDescriptorAllowed(d) then
 			local locked = self:getLock(d)
 			if locked == true then
-				list[#list+1] = { name = tstring{{"font", "italic"}, {"color", "GREY"}, "-- locked --", {"font", "normal"}}:toString(), id=d.name, locked=true, desc=d.locked_desc..locktext }
+				list[#list+1] = { name = tstring{{"font", "italic"}, {"color", "GREY"}, "-- locked --", {"font", "normal"}}:toString(), id=d.name, locked=true, desc=d.locked_desc..locktext, locked_select=d.locked_select }
 			elseif locked == false then
 				local desc = d.desc
 				if type(desc) == "table" then desc = table.concat(d.desc, "\n") end
@@ -907,6 +908,24 @@ function _M:setTile(f, w, h, last)
 	end
 end
 
+function _M:selectExplorationNoDonations()
+	Dialog:yesnoLongPopup("Exploration mode",
+	[[Exploration mode provides the characters using it with infinite lives.
+Tales of Maj'Eyal is meant to be a very replayable game in which you get better by learning from mistakes (and thus from dying too).
+I realize this can not please everybody and after multiple requests I have decided to grant exploration mode to donators, because it will allow player that like the game to see it all if they wish.
+Beware though, infinite lives does not mean the difficulty is reduced, only that you can try as much as you want without restarting.
+
+If you'd like to use this feature and find this game good you should consider donating. It will help ensure its survival.
+While this is a free game that I am doing for fun, if it can help feed my family a bit I certainly will not complain as real life can be harsh sometimes.
+You will need an online profile active and connected for the tile selector to enable. If you choose to donate now you will need to restart the game to be granted access.
+
+Donators will also gain access to the custom tiles for their characters.]], 400, function(ret)
+		if not ret then
+			game:registerDialog(require("mod.dialogs.Donation").new("exploration-mode"))
+		end
+	end, "Later", "Donate!")
+end
+
 function _M:selectTileNoDonations()
 	Dialog:yesnoLongPopup("Custom tiles",
 	[[Custom Tiles have been added as a thank you to everyone that has donated to ToME.
@@ -914,7 +933,9 @@ They are a fun cosmetic feature that allows you to choose a tile for your charac
 
 If you'd like to use this feature and find this game good you should consider donating. It will help ensure its survival.
 While this is a free game that I am doing for fun, if it can help feed my family a bit I certainly will not complain as real life can be harsh sometimes.
-You will need an online profile active and connected for the tile selector to enable. If you choose to donate now you will need to restart the game to be granted access.]], 400, function(ret)
+You will need an online profile active and connected for the tile selector to enable. If you choose to donate now you will need to restart the game to be granted access.
+
+Donators will also gain access to the Exploration Mode featuring infinite lives.]], 400, function(ret)
 		if not ret then
 			game:registerDialog(require("mod.dialogs.Donation").new("custom-tiles"))
 		end
