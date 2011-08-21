@@ -357,6 +357,7 @@ on_grant = function(self, who)
 	g.add_displays = g.add_displays or {}
 	g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/maze_teleport.png"}
 	g.notice = true
+	g.nice_tiler = nil
 	g.on_move = function(self, x, y, who)
 		if not who.escort_quest then return end
 		game.player:setQuestStatus(who.quest_id, engine.Quest.DONE)
