@@ -1069,11 +1069,11 @@ function _M:setupCommands()
 			end end
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			local list = mod.class.NPC:loadList("/data/general/npcs/humanoid_random_boss.lua")
-			local b = list[3]
-			local m = self.state:createRandomBoss(b, {level=self.player.level, nb_classes=0, force_classes={Rogue=true}, rank=5})
-			m:resolve() m:resolve(nil, true)
-			self.zone:addEntity(self.level, m, "actor", self.player.x + 1, self.player.y)
+			local list = mod.class.Trap:loadList("/data/general/traps/complex.lua")
+			local b = list[2]:clone()
+			b:resolve() b:resolve(nil, true)
+			self.zone:addEntity(self.level, b, "trap", self.player.x + 1, self.player.y)
+
 
 		end end,
 		[{"_f","ctrl"}] = function() if config.settings.cheat then

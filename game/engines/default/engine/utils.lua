@@ -922,6 +922,18 @@ dir_sides =
 	[9] = {left=8, right=6},
 }
 
+opposed_dir = {
+	[1] = 9,
+	[2] = 8,
+	[3] = 7,
+	[4] = 6,
+	[5] = 5,
+	[6] = 4,
+	[7] = 3,
+	[8] = 2,
+	[9] = 1,
+}
+
 util = {}
 
 function util.getDir(x1, y1, x2, y2)
