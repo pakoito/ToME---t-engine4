@@ -174,6 +174,7 @@ function necroSetupSummon(self, m, x, y, level, no_control)
 		})
 	end
 	m:resolve() m:resolve(nil, true)
+	m.max_level = self.level + (level or 0)
 	m:forceLevelup(math.max(1, self.level + (level or 0)))
 	game.zone:addEntity(game.level, m, "actor", x, y)
 	game.level.map:particleEmitter(x, y, 1, "summon")
