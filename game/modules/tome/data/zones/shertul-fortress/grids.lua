@@ -43,7 +43,7 @@ newEntity{
 	always_remember = true,
 	block_move = function(self, x, y, e, act, couldpass)
 		if e and e.player and act then
-			local chat = require("engine.Chat").new("shertul-fortress-command-orb", self, e)
+			local chat = require("engine.Chat").new("shertul-fortress-command-orb", self, e, {player=e})
 			chat:invoke()
 		end
 		return true

@@ -20,11 +20,12 @@
 local has_rod = function(npc, player)
 	return player:findInAllInventoriesBy("define_as", "ROD_OF_RECALL") and not player:isQuestStatus("shertul-fortress", engine.Quest.COMPLETED, "butler")
 end
+local read = player:attr("speaks_shertul")
 
 newChat{ id="welcome",
 	text = [[*#LIGHT_GREEN#This orb seems to represent the world of Eyal as a whole. It is also probably used for controlling the fortress.
-You do not understand the inscriptions there.#WHITE#*
-Rokzz krilt copru.]],
+]]..(not read and [[You do not understand the inscriptions there.#WHITE#*
+#{italic}#"Rokzan krilt copru."#{normal}#]] or [[#WHITE#*#{italic}#"Insert control rod."#{normal}#]]),
 	answers = {
 		{"[Examine the orb]", jump="examine", cond=has_rod},
 --		{"[Fly the fortress]", action=function(npc, player) player:hasQuest("shertul-fortress"):fly() end},
