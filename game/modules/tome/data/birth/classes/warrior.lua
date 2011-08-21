@@ -30,6 +30,7 @@ newBirthDescriptor{
 			__ALL__ = "disallow",
 			Fighter = "allow",
 			Berserker = "allow",
+			Archer= "allow",
 			Brawler = "allow",
 			["Arcane Blade"] = "allow",
 		},
@@ -125,6 +126,54 @@ newBirthDescriptor{
 	},
 	copy_add = {
 		life_rating = 3,
+	},
+}
+
+newBirthDescriptor{
+	type = "subclass",
+	name = "Archer",
+	desc = {
+		"Archers are dexterous ranged fighters, able to pin their foes to the ground and rain down a carpet of arrows on them.",
+		"Skilled archers can fire special shots that pierce, cripple or pin their foes.",
+		"Archers can become good with either longbows or slings.",
+		"Their most important stats are: Dexterity and Strength (when using bows) or Cunning (when using Slings)",
+		"#GOLD#Stat modifiers:",
+		"#LIGHT_BLUE# * +2 Strength, +5 Dexterity, +0 Constitution",
+		"#LIGHT_BLUE# * +0 Magic, +0 Willpower, +2 Cunning",
+	},
+	stats = { dex=5, str=2, cun=2, },
+	talents_types = {
+		["technique/archery-training"]={true, 0.3},
+		["technique/archery-utility"]={true, 0.3},
+		["technique/archery-bow"]={true, 0.3},
+		["technique/archery-sling"]={true, 0.3},
+		["technique/combat-techniques-active"]={false, -0.1},
+		["technique/combat-techniques-passive"]={true, -0.1},
+		["technique/combat-training"]={true, 0.3},
+		["technique/field-control"]={true, 0},
+		["cunning/survival"]={true, 0},
+		["cunning/dirty"]={false, 0},
+	},
+	talents = {
+		[ActorTalents.T_SHOOT] = 1,
+		[ActorTalents.T_FLARE] = 1,
+		[ActorTalents.T_STEADY_SHOT] = 1,
+		[ActorTalents.T_BOW_MASTERY] = 1,
+		[ActorTalents.T_SLING_MASTERY] = 1,
+		[ActorTalents.T_WEAPON_COMBAT] = 1,
+	},
+	copy = {
+		max_life = 110,
+		resolvers.equip{ id=true,
+			{type="weapon", subtype="longbow", name="elm longbow", autoreq=true, ego_chance=-1000},
+			{type="armor", subtype="light", name="rough leather armour", autoreq=true, ego_chance=-1000}
+		},
+		resolvers.inventory{ id=true, inven="QS_MAINHAND",
+			{type="weapon", subtype="sling", name="rough leather sling", autoreq=true, ego_chance=-1000},
+		},
+		resolvers.generic(function(e)
+			e.auto_shoot_talent = e.T_SHOOT
+		end),
 	},
 }
 
