@@ -31,8 +31,8 @@ newBirthDescriptor{
 		subclass =
 		{
 			__ALL__ = "disallow",
-			['Sun Paladin'] = "allow",
-			Anorithil = "allow",
+			['Sun Paladin'] = "allow-nochange",
+			Anorithil = "allow-nochange",
 		},
 	},
 	copy = {

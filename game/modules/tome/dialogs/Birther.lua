@@ -452,6 +452,10 @@ function _M:isDescriptorAllowed(d)
 			local what = util.getval(od.descriptor_choices[type][d.name], self) or util.getval(od.descriptor_choices[type].__ALL__, self)
 			if what and what == "allow" then
 				allowed = true
+			elseif what and what == "nolore" then
+				allowed = "nolore"
+			elseif what and what == "allow-nochange" then
+				if not allowed then allowed = true end
 			elseif what and (what == "never" or what == "disallow") then
 				allowed = false
 			elseif what and what == "forbid" then
@@ -623,15 +627,18 @@ function _M:generateClasses()
 	for i, d in ipairs(self.birth_descriptor_def.class) do
 		if self:isDescriptorAllowed(d) then
 			local nodes = {}
-
 			for si, sd in ipairs(self.birth_descriptor_def.subclass) do
-				if d.descriptor_choices.subclass[sd.name] == "allow" then
+				if (d.descriptor_choices.subclass[sd.name] == "allow" or d.descriptor_choices.subclass[sd.name] == "allow-nochange" or d.descriptor_choices.subclass[sd.name] == "nolore") and self:isDescriptorAllowed(sd) then
 					local locked = self:getLock(sd)
 					if locked == true then
 						nodes[#nodes+1] = { name = tstring{{"font", "italic"}, {"color", "GREY"}, "-- locked --", {"font", "normal"}}, id=sd.name, pid=d.name, locked=true, desc=sd.locked_desc..locktext }
 					elseif locked == false then
+						local how = self:isDescriptorAllowed(sd)
 						local desc = sd.desc
 						if type(desc) == "table" then desc = table.concat(sd.desc, "\n") end
+						if how == "nolore" and self.descriptors_by_type.subrace then
+							desc = "#CRIMSON#Playing this class with the race you selected does not make much sense lore-wise. You can still do it but might miss on some special quests/...#WHITE#\n" .. desc
+						end
 						nodes[#nodes+1] = { name = sd.display_name, basename=sd.display_name, id=sd.name, pid=d.name, desc=desc }
 						if self.sel_class and self.sel_class.id == sd.name then newsel = nodes[#nodes] end
 					end

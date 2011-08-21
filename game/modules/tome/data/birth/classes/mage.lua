@@ -29,7 +29,7 @@ newBirthDescriptor{
 		{
 			__ALL__ = "disallow",
 			Alchemist = "allow",
-			Archmage = "allow",
+			Archmage = "allow-nochange",
 			Necromancer = "allow",
 		},
 	},

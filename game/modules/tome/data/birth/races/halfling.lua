@@ -36,6 +36,10 @@ newBirthDescriptor{
 			__ALL__ = "disallow",
 			Halfling = "allow",
 		},
+		subclass = {
+			-- Only human, elves, halflings and undeads are supposed to be archmages
+			Archmage = "allow",
+		},
 	},
 	copy = {
 		faction = "allied-kingdoms",

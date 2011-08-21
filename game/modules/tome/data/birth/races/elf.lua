@@ -39,7 +39,11 @@ newBirthDescriptor{
 		},
 		subclass =
 		{
-			['Anorithil'] = "allow",
+			-- Only human and elves make sense to play celestials
+			['Sun Paladin'] = "allow",
+			Anorithil = "allow",
+			-- Only human, elves, halflings and undeads are supposed to be archmages
+			Archmage = "allow",
 		},
 	},
 	copy = {

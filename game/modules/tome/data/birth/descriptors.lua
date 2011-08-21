@@ -49,13 +49,6 @@ newBirthDescriptor{
 			Undeads = "disallow",
 			Faeros = "disallow",
 		},
-		subclass =
-		{
-			-- Nobody can be a sun paladin but humans & elves
-			['Sun Paladin'] = "disallow",
-			-- Nobody can be a sun paladin but elves
-			['Anorithil'] = "disallow",
-		},
 		class =
 		{
 			-- Specific to some races

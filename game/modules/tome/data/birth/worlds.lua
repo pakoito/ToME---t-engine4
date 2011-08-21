@@ -48,6 +48,14 @@ local default_eyal_descriptors = function(add)
 		Chronomancer = "allow",
 		Psionic = "allow",
 	},
+	subclass =
+	{
+		-- Nobody should be a sun paladin & anorithil but humans & elves
+		['Sun Paladin'] = "nolore",
+		Anorithil = "nolore",
+		-- Nobody should be an archmage but human, elves, halflings and undeads
+		Archmage = "nolore",
+	},
 }
 	if add then table.merge(base, add) end
 	return base
