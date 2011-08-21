@@ -746,6 +746,7 @@ newTalent{
 				display = "y",
 				name = "yeek mindslayer", color=colors.YELLOW,
 				desc = "A wayist that came to help.",
+				moddable_tile = "yeek",
 
 				body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 
