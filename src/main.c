@@ -891,7 +891,7 @@ int main(int argc, char *argv[])
 	core_def->define(core_def, "te4core", -1, NULL, NULL, NULL, NULL, 0, NULL);
 
 #ifdef SELFEXE_WINDOWS
-	freopen ("te4_log.txt", "w", stdout);
+//	freopen ("te4_log.txt", "w", stdout);
 #endif
 
 	// Parse arguments
@@ -1097,6 +1097,6 @@ int main(int argc, char *argv[])
 	SDL_Quit();
 
 #ifdef SELFEXE_WINDOWS
-	fclose(stdout);
+//	fclose(stdout);
 #endif
 }
