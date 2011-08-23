@@ -446,14 +446,19 @@ function _M:setDescriptor(key, val)
 	self:toggleDisplay(self.c_ok, ok)
 end
 
-function _M:isDescriptorAllowed(d)
+function _M:isDescriptorAllowed(d, ignore_type)
 	self:updateDescriptors()
+
+	if type(ignore_type) == "string" then
+		ignore_type = {[ignore_type] = true}
+	end
+	ignore_type = ignore_type or {}
 
 	local allowed = true
 	local type = d.type
-	print("[BIRTHER] checking allowance for ", d.name)
+	print("[BIRTHER] checking allowance for ", d.name, d.type, "::", table.serialize(ignore_type, nil, true))
 	for j, od in ipairs(self.descriptors) do
-		if od.descriptor_choices and od.descriptor_choices[type] then
+		if od.descriptor_choices and od.descriptor_choices[type] and not ignore_type[type] then
 			local what = util.getval(od.descriptor_choices[type][d.name], self) or util.getval(od.descriptor_choices[type].__ALL__, self)
 			if what and what == "allow" then
 				allowed = true
@@ -487,7 +492,7 @@ function _M:generateCampaigns()
 	local list = {}
 
 	for i, d in ipairs(self.birth_descriptor_def.world) do
-		if self:isDescriptorAllowed(d) then
+		if self:isDescriptorAllowed(d, {difficulty=true, permadeath=true, race=true, subrace=true, class=true, subclass=true}) then
 			local locked = self:getLock(d)
 			if locked == true then
 				list[#list+1] = { name = tstring{{"font", "italic"}, {"color", "GREY"}, "-- locked --", {"font", "normal"}}:toString(), id=d.name, locked=true, desc=d.locked_desc..locktext }
@@ -513,7 +518,7 @@ function _M:generateDifficulties()
 	end
 
 	for i, d in ipairs(self.birth_descriptor_def.difficulty) do
-		if self:isDescriptorAllowed(d) then
+		if self:isDescriptorAllowed(d, {permadeath=true, race=true, subrace=true, class=true, subclass=true}) then
 			local locked = self:getLock(d)
 			if locked == true then
 				list[#list+1] = { name = tstring{{"font", "italic"}, {"color", "GREY"}, "-- locked --", {"font", "normal"}}:toString(), id=d.name, locked=true, desc=d.locked_desc..locktext }
@@ -545,7 +550,7 @@ function _M:generatePermadeaths()
 	end
 
 	for i, d in ipairs(self.birth_descriptor_def.permadeath) do
-		if self:isDescriptorAllowed(d) then
+		if self:isDescriptorAllowed(d, {race=true, subrace=true, class=true, subclass=true}) then
 			local locked = self:getLock(d)
 			if locked == true then
 				list[#list+1] = { name = tstring{{"font", "italic"}, {"color", "GREY"}, "-- locked --", {"font", "normal"}}:toString(), id=d.name, locked=true, desc=d.locked_desc..locktext, locked_select=d.locked_select }
@@ -576,7 +581,7 @@ function _M:generateRaces()
 	local tree = {}
 	local newsel = nil
 	for i, d in ipairs(self.birth_descriptor_def.race) do
-		if self:isDescriptorAllowed(d) then
+		if self:isDescriptorAllowed(d, {class=true, subclass=true}) then
 			local nodes = {}
 
 			for si, sd in ipairs(self.birth_descriptor_def.subrace) do
@@ -630,15 +635,18 @@ function _M:generateClasses()
 	local tree = {}
 	local newsel = nil
 	for i, d in ipairs(self.birth_descriptor_def.class) do
-		if self:isDescriptorAllowed(d) then
+		if self:isDescriptorAllowed(d, {subclass=true}) then
 			local nodes = {}
 			for si, sd in ipairs(self.birth_descriptor_def.subclass) do
-				if (d.descriptor_choices.subclass[sd.name] == "allow" or d.descriptor_choices.subclass[sd.name] == "allow-nochange" or d.descriptor_choices.subclass[sd.name] == "nolore") and self:isDescriptorAllowed(sd) then
+				if (d.descriptor_choices.subclass[sd.name] == "allow" or d.descriptor_choices.subclass[sd.name] == "allow-nochange" or d.descriptor_choices.subclass[sd.name] == "nolore") and self:isDescriptorAllowed(sd, {subclass=true, class=true}) then
 					local locked = self:getLock(sd)
 					if locked == true then
 						nodes[#nodes+1] = { name = tstring{{"font", "italic"}, {"color", "GREY"}, "-- locked --", {"font", "normal"}}, id=sd.name, pid=d.name, locked=true, desc=sd.locked_desc..locktext }
 					elseif locked == false then
-						local how = self:isDescriptorAllowed(sd)
+						local old = self.descriptors_by_type.subclass
+						self.descriptors_by_type.subclass = nil
+						local how = self:isDescriptorAllowed(sd, {class=true})
+						self.descriptors_by_type.subclass = old
 						local desc = sd.desc
 						if type(desc) == "table" then desc = table.concat(sd.desc, "\n") end
 						if how == "nolore" and self.descriptors_by_type.subrace then

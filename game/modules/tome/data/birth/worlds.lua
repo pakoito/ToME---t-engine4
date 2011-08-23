@@ -35,7 +35,6 @@ local default_eyal_descriptors = function(add)
 	class =
 	{
 		__ALL__ = "disallow",
-		-- currently psionics consist only of mindslayers
 		Psionic = "allow",
 		Warrior = "allow",
 		Archer = "allow",

@@ -30,7 +30,7 @@ newBirthDescriptor{
 			__ALL__ = "disallow",
 			Alchemist = "allow",
 			Archmage = "allow-nochange",
-			Necromancer = "allow",
+			Necromancer = "allow-nochange",
 		},
 	},
 	copy = {

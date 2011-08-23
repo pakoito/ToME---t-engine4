@@ -46,7 +46,7 @@ newBirthDescriptor{
 		},
 		subclass =
 		{
-			Necromancer = "forbid",
+			Necromancer = "nolore",
 			-- Only human, elves, halflings and undeads are supposed to be archmages
 			Archmage = "allow",
 		},

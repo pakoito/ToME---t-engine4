@@ -90,7 +90,7 @@ function _M:move(x, y, force)
 	local ox, oy = self.x, self.y
 	if force or self:enoughEnergy() then
 		moved = engine.Actor.move(self, x, y, force)
-		if not force and moved and (self.x ~= ox or self.y ~= oy) and not self.did_energy then self:useEnergy() end
+		if not force and moved and (self.x ~= ox or self.y ~= oy) and not self.did_energy then self:useEnergy(game.energy_to_act * 0.3) end
 	end
 	self.did_energy = nil
 	return moved
