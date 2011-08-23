@@ -30,6 +30,7 @@ newTalent{
 		return 4 + math.floor(self:getTalentLevelRaw (t)/2)
 	end,
 	requires_target = true,
+	direct_hit = true,
 	target = function(self, t)
 		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), friendlyfire=false, talent=t}
 	end,
@@ -116,6 +117,8 @@ newTalent{
 	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 8, 80)*getParadoxModifier(self, pm) end,
 	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
+	direct_hit = true,
+	requires_target = true,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		game.level.map:addEffect(self,

@@ -112,6 +112,7 @@ newTalent{
 	range = 10,
 	tactical = { ATTACK = 2 },
 	requires_target = true,
+	direct_hit = true,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 60)*getParadoxModifier(self, pm) end,
 	getExplosion = function(self, t) return self:combatTalentSpellDamage(t, 20, 230)*getParadoxModifier(self, pm) end,
 	action = function(self, t)

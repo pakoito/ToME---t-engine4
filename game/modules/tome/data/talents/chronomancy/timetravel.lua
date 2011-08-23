@@ -114,13 +114,15 @@ newTalent{
 	paradox = 10,
 	cooldown = 6,
 	tactical = { ATTACKAREA = 2 },
-        range = 0,
-        radius = function(self, t)
-            return 1 + self:getTalentLevelRaw(t)
-        end,
+	range = 0,
+	radius = function(self, t)
+		return 1 + self:getTalentLevelRaw(t)
+	end,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
+	direct_hit = true,
+	requires_target = true,
 	getDamage = function(self, t) return (self:combatTalentSpellDamage(t, 18, 160)*getParadoxModifier(self, pm)) end,
 	getPercent = function(self, t) return (10 + (self:combatTalentSpellDamage(t, 1, 10))) / 100 end,
 	action = function(self, t)
