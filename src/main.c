@@ -269,7 +269,35 @@ void on_event(SDL_Event *event)
 			else
 				lua_pushnil(L);
 			lua_pushboolean(L, (event->type == SDL_KEYUP) ? TRUE : FALSE);
-			docall(L, 8, 0);
+
+			/* Convert unicode UCS-2 to UTF8 string */
+			if (event->key.keysym.sym)
+			{
+				wchar_t wc = event->key.keysym.sym;
+
+				char buf[4] = {0,0,0,0};
+				if (wc < 0x80)
+				{
+					buf[0] = wc;
+				}
+				else if (wc < 0x800)
+				{
+					buf[0] = (0xC0 | wc>>6);
+					buf[1] = (0x80 | wc & 0x3F);
+				}
+				else
+				{
+					buf[0] = (0xE0 | wc>>12);
+					buf[1] = (0x80 | wc>>6 & 0x3F);
+					buf[2] = (0x80 | wc & 0x3F);
+				}
+
+				lua_pushstring(L, buf);
+			}
+			else
+				lua_pushnil(L);
+
+			docall(L, 9, 0);
 		}
 		break;
 	case SDL_MOUSEBUTTONDOWN:

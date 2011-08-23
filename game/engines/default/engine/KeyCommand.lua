@@ -50,7 +50,7 @@ function _M:setupProfiler()
 	end)
 end
 
-function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode, isup)
+function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode, isup, key)
 	self:handleStatus(sym, ctrl, shift, alt, meta, unicode, isup)
 
 	if self.ignore[sym] then return end
@@ -77,11 +77,11 @@ function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode, isup)
 		self.commands[sym].plain(sym, ctrl, shift, alt, meta, unicode)
 		handled = true
 	elseif not isup and self.commands[self.__DEFAULT] and self.commands[self.__DEFAULT].plain then
-		self.commands[self.__DEFAULT].plain(sym, ctrl, shift, alt, meta, unicode)
+		self.commands[self.__DEFAULT].plain(sym, ctrl, shift, alt, meta, unicode, key)
 		handled = true
 	end
 
-	if not isup and self.atLast then self.atLast(sym, ctrl, shift, alt, meta, unicode) handled = true  end
+	if not isup and self.atLast then self.atLast(sym, ctrl, shift, alt, meta, unicode, key) handled = true  end
 	return handled
 end
 

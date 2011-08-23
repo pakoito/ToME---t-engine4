@@ -202,10 +202,10 @@ function _M:formatKeyString(ks)
 	end
 end
 
-function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode, isup, ismouse)
+function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode, isup, key, ismouse)
 	self:handleStatus(sym, ctrl, shift, alt, meta, unicode, isup)
 
-	if self.any_key then self.any_key(sym, ctrl, shift, alt, meta, unicode, isup) end
+	if self.any_key then self.any_key(sym, ctrl, shift, alt, meta, unicode, isup, key) end
 
 	local ks, us
 	if not ismouse then ks, us = self:makeKeyString(sym, ctrl, shift, alt, meta, unicode)
@@ -225,7 +225,7 @@ function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode, isup, ismouse)
 		end end
 	end
 
-	return engine.KeyCommand.receiveKey(self, sym, ctrl, shift, alt, meta, unicode, isup)
+	return engine.KeyCommand.receiveKey(self, sym, ctrl, shift, alt, meta, unicode, isup, key)
 end
 
 --- Reset all binds

@@ -25,8 +25,8 @@ endy = 12
 -- defineTile section
 defineTile("X", "HARDWALL")
 defineTile("+", "DOOR")
-defineTile("<", "UP")
-defineTile(">", "DOWN")
+defineTile("<", "TUP")
+defineTile(">", "TDOWN")
 defineTile(".", "FLOOR")
 
 -- addSpot section

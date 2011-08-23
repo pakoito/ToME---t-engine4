@@ -24,27 +24,9 @@ load("/data/general/grids/lava.lua")
 load("/data/general/grids/mountain.lua")
 
 newEntity{
-	define_as = "SEALED_DOOR",
-	name = "sealed door", image = "terrain/sealed_door.png",
-	display = '+', color=colors.WHITE, back_color=colors.DARK_UMBER,
-	notice = true,
-	always_remember = true,
-	block_sight = true,
-	does_block_move = true,
-}
-
-newEntity{
-	define_as = "SEALED_DOOR_CRACKED",
-	name = "destroyed sealed door", image = "terrain/sealed_door_cracked.png",
-	display = '_', color=colors.WHITE, back_color=colors.DARK_UMBER,
-	notice = true,
-	always_remember = true,
-}
-
-newEntity{
 	define_as = "PORTAL_BACK",
 	name = "Portal to Last Hope",
-	display = '&', color_r=255, color_g=0, color_b=220, back_color=colors.VIOLET,
+	display = '&', color_r=255, color_g=0, color_b=220, back_color=colors.VIOLET, image = "terrain/marble_floor.png", add_mos = {{image="terrain/demon_portal.png"}},
 	notice = true,
 	always_remember = true,
 	show_tooltip = true,
@@ -62,20 +44,11 @@ newEntity{
 }
 
 -- Reversed!
-newEntity{
-	define_as = "UP",
-	name = "previous level",
-	display = '<', color_r=255, color_g=255, color_b=0,
-	notice = true,
-	always_remember = true,
+newEntity{ base = "UP",
+	define_as = "TUP",
 	change_level = 1,
 }
-
-newEntity{
-	define_as = "DOWN",
-	name = "next level",
-	display = '>', color_r=255, color_g=255, color_b=0,
-	notice = true,
-	always_remember = true,
+newEntity{ base = "DOWN",
+	define_as = "TDOWN",
 	change_level = -1,
 }

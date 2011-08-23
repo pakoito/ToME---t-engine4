@@ -30,40 +30,15 @@ defineTile("E", "GRASS", nil, {random_filter={type="elemental"}})
 defineTile("$", "FLOOR", nil, {random_filter={type="undead", subtype="giant"}})
 defineTile("X", "HARDWALL")
 defineTile("~", "FLOOR")
-defineTile("*", "SEALED_DOOR")
+defineTile('*', "GENERIC_LEVER_DOOR", nil, nil, nil, {lever_action=4, lever_action_value=0, lever_action_kind="doors"}, {type="lever", subtype="door"})
+defineTile('&', "GENERIC_LEVER", nil, nil, nil, {lever=1, lever_kind="doors", lever_radius=50})
 defineTile("+", "DOOR")
-defineTile("<", "UP")
+defineTile("<", "TUP")
 defineTile(",", "GRASS")
 defineTile(".", "FLOOR")
 defineTile(" ", "OLD_FLOOR")
 defineTile("!", "WALL")
 defineTile("T", "TREE")
-
-addData{post_process = function(level)
-	level.nb_to_open = 0
-	level.open_doors = function()
-		local doors = {{11,12},{12,11},{13,12},{12,13}}
-		local g = game.zone:makeEntityByName(game.level, "terrain", "SEALED_DOOR_CRACKED")
-		for i, d in ipairs(doors) do game.zone:addEntity(game.level, g, "terrain", d[1], d[2]) end
-		game.logPlayer(game.player, "#VIOLET#There is a loud crack coming from the center of the level.")
-	end
-
-	-- Need to kill them all
-	for uid, a in pairs(level.entities) do
-		if a.faction and game.player:reactionToward(a) < 0 then
-			a.old_on_die = a.on_die
-			a.on_die = function(self, who)
-				local nb = 0
-				for uid, a in pairs(game.level.entities) do
-					local ga = game.level.map(a.x, a.y, engine.Map.ACTOR)
-					if a.faction and game.player:reactionToward(a) < 0 and ga and ga == a and not a.dead then nb = nb + 1 end
-				end
-				if nb <= 0 then game.level.open_doors() end
-				self:check("old_on_die")
-			end
-		end
-	end
-end}
 
 -- ASCII map section
 return [[
@@ -76,17 +51,17 @@ XXX..XXX# #X.XU!~!XX..XXX
 XXX.XX### #X.X!~!U!XX.XXX
 XX..X##   #X.X~!U!~!X..XX
 XX.XX#    #X.X!~!~!UXX.XX
-XX.XX#  " #X.XU!~!U!~X.XX
-X..XX######X.X!U!~!~!X..X
+XX.XX# &" #X.XU!~!U!~X.XX
+X..XX######X.X&U!~!~!X..X
 X+XXXXXXXXXX*XXXXXXXXXX+X
 X.+........*<*........+.X
 X+XXXXXXXXXX*XXX+XXXXXX+X
-X..XX......X.XX,,,XXXX..X
+X..XX.....&X.XX,,,XXXX..X
 XX.XX......X.XEE,EEXXX.XX
 XX.XX......X.XEETEEXXX.XX
 XX..X....$$X.XEE,EEXX..XX
 XXX.XXXXXX+X.XX,,,XXX.XXX
-XXX..XX.$..X.XXXXXXX..XXX
+XXX..XX.$..X.XXX&XXX..XXX
 XXXX..X+XXXX.XXXXXX..XXXX
 XXXXX...XXXX.XXXX...XXXXX
 XXXXXXX....X+X....XXXXXXX

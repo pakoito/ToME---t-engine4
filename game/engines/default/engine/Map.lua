@@ -1020,11 +1020,15 @@ function _M:displayParticles(nb_keyframes)
 			adx, ady = 0, 0
 			if e.x and e.y then
 				-- Make sure we display on the real screen coords: handle current move anim position
-				if e._mo then
-					adx, ady = e._mo:getMoveAnim(self._map, e.x, e.y)
+				local _mo = e._mo
+				if not _mo then
+					_mo = self.map[e.x + e.y * self.w] and self.map[e.x + e.y * self.w][TERRAIN] and self.map[e.x + e.y * self.w][TERRAIN]._mo
+				end
+				if _mo then
+					adx, ady = _mo:getMoveAnim(self._map, e.x, e.y)
 				else
 					adx, ady = self._map:getScroll()
-					adx, ady = adx / self.tile_w, ady / self.tile_h
+					adx, ady = -adx / self.tile_w, -ady / self.tile_h
 				end
 			end
 

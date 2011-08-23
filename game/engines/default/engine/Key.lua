@@ -35,7 +35,8 @@ end
 -- @param meta is the meta key pressed?
 -- @param unicode the unicode representation of the key, if possible
 -- @param isup true if the key was released, false if pressed
-function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode, isup)
+-- @param key the unicode representation of the key pressed (without accounting for modifiers)
+function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode, isup, key)
 	print(sym, ctrl, shift, alt, meta, unicode, isup)
 	self:handleStatus(sym, ctrl, shift, alt, meta, unicode, isup)
 end
