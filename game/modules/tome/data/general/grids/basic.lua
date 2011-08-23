@@ -375,7 +375,7 @@ newEntity{
 		local trigger = game.level.map.attrs(x, y, "lever_action")
 		if toggle or (val > oldval and val >= trigger) then
 			game.level.map(x, y, engine.Map.TERRAIN, game.zone.grid_list[self.door_opened])
-			game.log("#VIOLET#You hear a door openning.")
+			game.log("#VIOLET#You hear a door opening.")
 			return true
 		end
 	end,
