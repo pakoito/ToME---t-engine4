@@ -45,7 +45,7 @@ newTalent{
 		if not x then
 			return
 		end
-		
+
 		local m = target:clone{
 			shader = "shadow_simulacrum",
 			no_drops = true,
@@ -63,7 +63,7 @@ newTalent{
 
 		mod.class.NPC.castAs(m)
 		engine.interface.ActorAI.init(m, m)
-		
+
 		m.energy.value = 0
 		m.player = nil
 		m.max_life = m.max_life / 2
@@ -75,7 +75,7 @@ newTalent{
 		m.seen_by = nil
 		m.can_talk = nil
 		m.clone_on_hit = nil
-			
+
 		-- Remove some talents
 		local tids = {}
 		for tid, _ in pairs(m.talents) do
@@ -86,10 +86,10 @@ newTalent{
 			if t.mode == "sustained" and m:isTalentActive(t.id) then m:forceUseTalent(t.id, {ignore_energy=true}) end
 			m.talents[t.id] = nil
 		end
-		
+
 		-- nil the Inner Demons effect to squelch combat log spam
 		m.tmp[m.EFF_INNER_DEMONS] = nil
-		
+
 		-- remove detrimental timed effects
 		local effs = {}
 		for eff_id, p in pairs(m.tmp) do
@@ -98,7 +98,7 @@ newTalent{
 				effs[#effs+1] = {"effect", eff_id}
 			end
 		end
-		
+
 		while #effs > 0 do
 			local eff = rng.tableRemove(effs)
 			if eff[1] == "effect" then
@@ -106,12 +106,12 @@ newTalent{
 			end
 		end
 
-		
+
 		game.zone:addEntity(game.level, m, "actor", x, y)
 		game.level.map:particleEmitter(x, y, 1, "shadow")
 
 		game.logSeen(target, "%s's Inner Demon manifests!", target.name:capitalize())
-		
+
 	end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
@@ -121,13 +121,13 @@ newTalent{
 		if not x or not y then return nil end
 		local target = game.level.map(x, y, Map.ACTOR)
 		if not target then return nil end
-		
+
 		if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("fear") then
 			target:setEffect(target.EFF_INNER_DEMONS, t.getDuration(self, t), {src = self, chance=t.getChance(self, t), dam=t.getDamage(self, t)})
 		else
 			game.logSeen(target, "%s resists the demons!", target.name:capitalize())
 		end
-		
+
 		return true
 	end,
 	info = function(self, t)
@@ -156,13 +156,13 @@ newTalent{
 		if not x or not y then return nil end
 		local target = game.level.map(x, y, Map.ACTOR)
 		if not target then return nil end
-		
+
 		if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("fear") then
 			target:setEffect(target.EFF_WAKING_NIGHTMARE, t.getDuration(self, t), {src = self, chance=t.getChance(self, t), dam=t.getDamage(self, t)})
 		else
 			game.logSeen(target, "%s resists the nightmare!", target.name:capitalize())
 		end
-		
+
 		return true
 	end,
 	info = function(self, t)
@@ -233,13 +233,13 @@ newTalent{
 		if not x or not y then return nil end
 		local target = game.level.map(x, y, Map.ACTOR)
 		if not target then return nil end
-		
-		if target:checkHit(src:combatMindpower(), target:combatMentalResist(), 0, 95, 15) and target:canBe("fear") then
-			target:setEffect(target.EFF_VOID_ECHOES, 6, {src= self, power=t.getDamage(self, t)})
+
+		if target:checkHit(self:combatMindpower(), target:combatMentalResist(), 0, 95, 15) and target:canBe("fear") then
+			target:setEffect(target.EFF_VOID_ECHOES, 6, {src=self, power=t.getDamage(self, t)})
 		else
 			game.logSeen(target, "%s resists the void!", target.name:capitalize())
 		end
-		
+
 		game:playSoundNear(self, "talents/arcane")
 		return true
 	end,
@@ -269,9 +269,9 @@ newTalent{
 		local _ _, tx, ty = self:canProject(tg, tx, ty)
 		target = game.level.map(tx, ty, Map.ACTOR)
 		if target == self then target = nil end
-		
+
 		if self:getTalentLevel(t) < 5 then self:setEffect(self.EFF_SUMMON_DESTABILIZATION, 500, {power=5}) end
-		
+
 		for i = 1, self:getTalentLevelRaw(t) do
 		-- Find space
 			local x, y = util.findFreeGrid(tx, ty, 5, true, {[Map.ACTOR]=true})
@@ -287,41 +287,41 @@ newTalent{
 				name = "void shard", faction = self.faction,
 				desc = [[It looks like a small hole in the fabric of spacetime.]],
 				stats = { str=22, dex=20, wil=15, con=15 },
-				
-				--level_range = {self.level, self.level}, 
+
+				--level_range = {self.level, self.level},
 				exp_worth = 0,
 				max_life = resolvers.rngavg(5,10),
 				life_rating = 2,
 				rank = 2,
 				size_category = 1,
-							
+
 				autolevel = "summoner",
-				ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_snake" },							
+				ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_snake" },
 				combat_armor = 1, combat_def = 1,
 				combat = { dam=resolvers.levelup(resolvers.mbonus(40, 15), 1, 1.2), atk=15, apr=15, dammod={wil=0.8}, damtype=DamageType.TEMPORAL },
 				on_melee_hit = { [DamageType.TEMPORAL] = resolvers.mbonus(20, 10), },
-			
+
 				infravision = 10,
 				no_breath = 1,
 				fear_immune = 1,
 				stun_immune = 1,
 				confusion_immune = 1,
 				silence_immune = 1,
-				
+
 				ai_target = {actor=target}
 			}
-			
+
 			m.faction = self.faction
-			m.summoner = self 
+			m.summoner = self
 			m.summoner_gain_exp=true
 			m.summon_time = t.getSummonTime(self, t)
-			
+
 			m:resolve() m:resolve(nil, true)
 			m:forceLevelup(self.level)
 			game.zone:addEntity(game.level, m, "actor", x, y)
 			game.level.map:particleEmitter(x, y, 1, "summon")
 			m:setEffect(m.EFF_TEMPORAL_DESTABILIZATION, 5, {src=self, dam=t.getDamage(self, t), explosion=self:spellCrit(t.getExplosion(self, t))})
-			
+
 		end
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
