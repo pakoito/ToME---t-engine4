@@ -63,6 +63,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 15,
 	hate = 0.2,
+	requires_target = true,
 	action = function(self, t)
 		if not self:hasAxeWeapon() and not self:hasCursedWeapon() then
 			game.logPlayer(self, "You cannot use %s without an axe or a cursed weapon!", t.name)

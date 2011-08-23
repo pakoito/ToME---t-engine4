@@ -103,6 +103,7 @@ newTalent{
 	tactical = { ESCAPE = 2, ATTACKAREA = 1, DISABLE = 1 },
 	direct_hit = true,
 	range = 0,
+	requires_target = true,
 	radius = function(self, t)
 		return 1 + 0.5 * t.getDuration(self, t)
 	end,
@@ -149,6 +150,7 @@ newTalent{
 	tactical = { ATTACKAREA = 2 },
 	range = 0,
 	radius = 3,
+	requires_target = true,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false}
 	end,

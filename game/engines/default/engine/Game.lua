@@ -367,10 +367,10 @@ end
 function _M:setResolution(res, force)
 	local r = available_resolutions[res]
 	if force and not r then
-		local _, _, w, h = res:find("([0-9][0-9][0-9]+)x([0-9][0-9][0-9]+)")
+		local _, _, w, h, f = res:find("([0-9][0-9][0-9]+)x([0-9][0-9][0-9]+)(.*)")
 		w = tonumber(w)
 		h = tonumber(h)
-		if w and h then r = {w, h, false} end
+		if w and h then r = {w, h, f==" Fullscreen" and true or false} end
 	end
 	if not r then return false, "unknown resolution" end
 

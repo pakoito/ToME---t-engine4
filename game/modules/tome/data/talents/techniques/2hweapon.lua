@@ -29,6 +29,7 @@ newTalent{
 	tactical = { ATTACKAREA = 3 },
 	range = 0,
 	radius = 1,
+	requires_target = true,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), selffire=false, radius=self:getTalentRadius(t)}
 	end,
