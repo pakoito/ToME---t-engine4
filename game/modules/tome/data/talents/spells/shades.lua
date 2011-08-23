@@ -103,7 +103,7 @@ newTalent{
 				}
 
 				m.level = 1
-				local race = rng.range(1, 5)
+				local race = 5 -- rng.range(1, 5)
 				if race == 1 then
 					m.name = "human farmer"
 					m.subtype = "human"
