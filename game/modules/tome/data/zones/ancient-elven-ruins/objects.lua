@@ -94,6 +94,7 @@ newEntity{ base = "BASE_LEATHER_CAP", define_as = "CROWN_ETERNAL_NIGHT",
 		self:specialSetAdd({"wielder","knockback_immune"}, 40)
 		self:specialSetAdd({"wielder","combat_mentalresist"}, 15)
 		self:specialSetAdd({"wielder","combat_spellresist"}, 15)
+		self:specialSetAdd({"wielder","inc_stats"}, {[who.STAT_CUN]=10})
 		self:specialSetAdd({"wielder","melee_project"}, {[engine.DamageType.DARKNESS]=40})
 		self:specialSetAdd({"wielder","inc_damage"}, {[engine.DamageType.DARKNESS]=20})
 		self.use_talent = { id = Talents.T_RETCH, level = 2, power = 47 }
