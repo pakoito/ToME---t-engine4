@@ -456,8 +456,8 @@ newEntity{
 	greater_ego = 1,
 	rarity = 15,
 	cost = 30,
-	max_power = 20, power_regen = 1,
-	use_talent = { id = Talents.T_CORRUPTED_NEGATION, level = 2, power = 15 },
+	max_power = 80, power_regen = 1,
+	use_talent = { id = Talents.T_CORRUPTED_NEGATION, level = 2, power = 80 },
 	wielder = {
 		combat_spellpower = resolvers.mbonus_material(12, 3),
 		inc_damage = {

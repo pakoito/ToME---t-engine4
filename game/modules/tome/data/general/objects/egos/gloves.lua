@@ -443,7 +443,7 @@ newEntity{
 		combat = {
 			talent_on_hit = { [Talents.T_UNSTOPPABLE] = {level=1, chance=5} },
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -454,7 +454,7 @@ newEntity{
 	rarity = 35,
 	cost = 70,
 	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_DISPERSE_MAGIC, level = 4, power = 80 },
+	use_talent = { id = Talents.T_DISPERSE_MAGIC, level = 3, power = 80 },
 	wielder = {
 		resists={
 			[DamageType.ARCANE] = resolvers.mbonus_material(7, 3),
@@ -466,7 +466,7 @@ newEntity{
 			melee_project={  [DamageType.ARCANE] = resolvers.mbonus_material(15, 4), },
 			talent_on_hit = { [Talents.T_MANATHRUST] = {level=3, chance=10} },
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -485,12 +485,12 @@ newEntity{
 		combat_atk = resolvers.mbonus_material(7, 3),
 		combat_dam = resolvers.mbonus_material(7, 1),
 		combat = {
-			melee_project={ 
+			melee_project={
 				[DamageType.SLIME] = resolvers.mbonus_material(15, 3),
 				[DamageType.ACID] = resolvers.mbonus_material(24, 4),
 			},
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -513,7 +513,7 @@ newEntity{
 			melee_project={ [DamageType.PHYSICAL] = resolvers.mbonus_material(25, 4), },
 			talent_on_hit = { [Talents.T_JUGGERNAUT] = {level=1, chance=10} },
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -535,7 +535,7 @@ newEntity{
 			atk = resolvers.mbonus_material(8, 4),
 			inc_damage_type = {animal=25},
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -553,7 +553,7 @@ newEntity{
 		combat = {
 			melee_project={ [DamageType.DRAINLIFE] = resolvers.mbonus_material(25, 4), },
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -576,7 +576,7 @@ newEntity{
 			melee_project={ [DamageType.DARKNESS] = resolvers.mbonus_material(25, 4), },
 			talent_on_hit = { [Talents.T_SHADOWSTEP] = {level=3, chance=10} },
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -596,7 +596,7 @@ newEntity{
 			melee_project={  [DamageType.ARCANE] = resolvers.mbonus_material(15, 4), },
 			talent_on_hit = { [Talents.T_ELEMENTAL_BOLT] = {level=3, chance=10} },
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -621,7 +621,7 @@ newEntity{
 				[DamageType.LIGHTNING] = resolvers.mbonus_material(25, 4),
 			},
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -642,5 +642,5 @@ newEntity{
 			melee_project={ [DamageType.PHYSICAL] = resolvers.mbonus_material(25, 4), },
 			talent_on_hit = { [Talents.T_SET_UP] = {level=1, chance=10} },
 		},
-	},	
+	},
 }
