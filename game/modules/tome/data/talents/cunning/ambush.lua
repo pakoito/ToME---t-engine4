@@ -48,7 +48,7 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[For an instant your weapons turn into a shadow leash that tries to grab the target's weapon, disarming it for %d tuns.
-		Duration increases with talent level and chance to suceed with your Dexterity stat.]]):
+		Duration increases with talent level and chance to succeed with your Dexterity stat.]]):
 		format(duration)
 	end,
 }
@@ -91,7 +91,7 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[You reach out with shadow vines toward your target, pulling it to you and silencing it for %d turns.
-		Duration increases with talent level and chance to suceed with your Dexterity stat.]]):
+		Duration increases with talent level and chance to succeed with your Dexterity stat.]]):
 		format(duration)
 	end,
 }
@@ -210,8 +210,8 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local res = t.getDamageRes(self, t)
 		return ([[You veil yourself in shadows for %d turns and let them control you.
-		While in the veil you become immune to status effects, gain %d%% all damage reduction and each turn you blink to a nearby foe, hitting it for %d%% darkness weapon damage.
-		While this goes on you can not be stopped unless you are killed and can not control you character.]]):
+		While in the veil you become immune to status effects, and gain %d%% all damage reduction. Each turn you blink to a nearby foe, hitting it for %d%% darkness weapon damage.
+		While this goes on you cannot be stopped unless you are killed, and you cannot control your character.]]):
 		format(duration, res, 100 * damage)
 	end,
 }

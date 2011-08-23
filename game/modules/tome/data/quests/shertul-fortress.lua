@@ -33,7 +33,7 @@ desc = function(self, who)
 	end
 	if self:isCompleted("recall") then
 		if self:isCompleted("recall-done") then
-			desc[#desc+1] = "You have upgraded your rod of recall to transport you to the Fortress."
+			desc[#desc+1] = "You have upgraded your rod of recall to transport you to the fortress."
 		else
 			desc[#desc+1] = "The fortress shadow has asked that you come back as soon as possible."
 		end
@@ -49,13 +49,13 @@ desc = function(self, who)
 	end
 	if self:isCompleted("flight") then
 		if self:isCompleted("flight-done") then
-			desc[#desc+1] = "You have re-enabled the Fortress flight systems, you can now fly around in your fortress!"
+			desc[#desc+1] = "You have re-enabled the fortress flight systems. You can now fly around in your fortress!"
 		else
-			desc[#desc+1] = "The fortress shadow has asked that you find an Ancient Storm Saphir, along with at least 250 energy, to re-enable the Fortress flight systems."
+			desc[#desc+1] = "The fortress shadow has asked that you find an Ancient Storm Saphir, along with at least 250 energy, to re-enable the fortress flight systems."
 		end
 	end
 	if self.shertul_energy > 0 then
-		desc[#desc+1] = ("The Fortress current energy level is: %d."):format(self.shertul_energy)
+		desc[#desc+1] = ("The fortress's current energy level is: %d."):format(self.shertul_energy)
 	end
 	return table.concat(desc, "\n")
 end
@@ -94,19 +94,19 @@ gain_energy = function(self, energy)
 	if self.shertul_energy >= 15 and not self:isCompleted("recall") then
 		game.player:setQuestStatus(self.id, self.COMPLETED, "recall")
 		local Dialog = require "engine.ui.Dialog"
-		Dialog:simpleLongPopup("Fortress Shadow", "Master, you have sent enough energy to improve your rod of recall, please return to the fortress.", 400)
+		Dialog:simpleLongPopup("Fortress Shadow", "Master, you have sent enough energy to improve your rod of recall. Please return to the fortress.", 400)
 	end
 
 	if self.shertul_energy >= 30 and not self:isCompleted("farportal") then
 		game.player:setQuestStatus(self.id, self.COMPLETED, "farportal")
 		local Dialog = require "engine.ui.Dialog"
-		Dialog:simpleLongPopup("Fortress Shadow", "Master, you have sent enough energy to activate the exploratory farportal.\nHowever there seems to be a disturbance in that room, please return as soon as possible.", 400)
+		Dialog:simpleLongPopup("Fortress Shadow", "Master, you have sent enough energy to activate the exploratory farportal.\nHowever, there seems to be a disturbance in that room. Please return as soon as possible.", 400)
 	end
 
 	if self.shertul_energy >= 250 and not self:isCompleted("flight") then
 --		game.player:setQuestStatus(self.id, self.COMPLETED, "flight")
 --		local Dialog = require "engine.ui.Dialog"
---		Dialog:simpleLongPopup("Fortress Shadow", "Master, you have sent enough energy to activate the flight systems.\nHowever one control crystal is broken, you need to find a #GOLD#Ancient Storm Saphir#WHITE#.", 400)
+--		Dialog:simpleLongPopup("Fortress Shadow", "Master, you have sent enough energy to activate the flight systems.\nHowever, one control crystal is broken. You need to find an #GOLD#Ancient Storm Saphir#WHITE#.", 400)
 	end
 end
 
@@ -143,7 +143,7 @@ end
 upgrade_rod = function(self)
 	if self.shertul_energy < 15 then
 		local Dialog = require "engine.ui.Dialog"
-		Dialog:simplePopup("Fortress Shadow", "The energy is too low, it needs to go back to at least 15.")
+		Dialog:simplePopup("Fortress Shadow", "The energy is too low. It needs to be at least 15.")
 		return
 	end
 	self.shertul_energy = self.shertul_energy - 15

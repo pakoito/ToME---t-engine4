@@ -22,7 +22,7 @@ desc = function(self, who)
 	local desc = {}
 	desc[#desc+1] = "You were part of a group of dwarves sent to investigate the situation of the kingdom of Reknor."
 	desc[#desc+1] = "When you arrived there you found nothing but orcs, well organized and very powerful."
-	desc[#desc+1] = "Most of your team was killed there and now you and Norgan (the sole survivor besides you) must hurry to go back to the Iron Council to bring the news."
+	desc[#desc+1] = "Most of your team was killed there and now you and Norgan (the sole survivor besides you) must hurry back to the Iron Council to bring the news."
 	desc[#desc+1] = "Let nothing stop you."
 	if self:isCompleted("norgan-survived") then
 		desc[#desc+1] = "Both Norgan and you made it home."

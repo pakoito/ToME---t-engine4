@@ -23,7 +23,7 @@ if o then has_staff = true end
 
 local speak
 if has_staff then
-	speak = [["You should not be here. How di-"#{normal}# It stops abruptly, and its attention seems to turn to the staff in your hands. #{italic}#"How did you get that?! You fool, you do not what forces you play with! Get it away from here - BEGONE!"]]
+	speak = [["You should not be here. How di-"#{normal}# It stops abruptly, and its attention seems to turn to the staff in your hands. #{italic}#"How did you get that?! You fool, you do not know what forces you play with! Get it away from here - BEGONE!"]]
 else
 	speak = [["You should not be here. How did you get here?! BEGONE!"]]
 end

@@ -66,7 +66,7 @@ newLore{
 	category = "sher'tul",
 	name = "fifth mural painting", always_pop = true,
 	image = "shertul_fortress_lore5.png",
-	lore = function() return [[This mural shows nine Sher'Tul standing side by side, each holding aloft a dark weapon. Your eyes are drawn to a runed staff held by the purple-robed figure in the centre. It seems familiar somehow...
+	lore = function() return [[This mural shows nine Sher'Tul standing side by side, each holding aloft a dark weapon. Your eyes are drawn to a runed staff held by the red-robed figure in the centre. It seems familiar somehow...
 There is some text beneath ]]..(not game.player:attr("speaks_shertul") and [[which you do not understand: #{italic}#'Zubadon koref noch hesen, ik dorudon koref noch pasor. Cosief maro dondreth karatu - Ranaduzil - ik jein belsan ovrienis.'#{normal}#]] or [[#{italic}#'Of pride we accepted no equals, and of greed we accepted no servitude. We made for ourselves terrible weapons - the Godslayers - and nine were chosen to wield them.'#{normal}#]])
 	end,
 }
@@ -86,7 +86,7 @@ newLore{
 	category = "sher'tul",
 	name = "seventh mural painting", always_pop = true,
 	image = "shertul_fortress_lore7.png",
-	lore = function() return [[You see the purple-robed Sher'Tul striking the huge god with the dark, runed staff. Bodies litter the floor around them, and the golden throne behind is bathed in blood. The light in the god's eyes seems faded.
+	lore = function() return [[You see the red-robed Sher'Tul striking the huge god with the dark, runed staff. Bodies litter the floor around them, and the golden throne behind is bathed in blood. The light in the god's eyes seems faded.
 There is some text underneath ]]..(not game.player:attr("speaks_shertul") and [[which you do not understand: #{italic}#'Trobazan AMAKTHEL konruata as va aurin leas, ik mab peli zort akan hun, penetar dondeberoth.'#{normal}#]] or [[#{italic}#'The almighty AMAKTHEL was assaulted on his golden throne, and though many died before his feet, he was finally felled.'#{normal}#]])
 	end,
 }

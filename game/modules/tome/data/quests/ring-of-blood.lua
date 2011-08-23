@@ -20,14 +20,14 @@
 name = "Till the Blood Runs Clear"
 desc = function(self, who)
 	local desc = {}
-	desc[#desc+1] = "You have found a slavers compound and entered it."
+	desc[#desc+1] = "You have found a slavers' compound and entered it."
 	if self:isCompleted("won-fight") then
 		desc[#desc+1] = ""
 		desc[#desc+1] = "You decided to join the slavers and take part in their game. You won the ring of blood!"
 	end
 	if self:isCompleted("killall") then
 		desc[#desc+1] = ""
-		desc[#desc+1] = "You decided you can not let slavers continue their dirty work and destroyed them!"
+		desc[#desc+1] = "You decided you cannot let slavers continue their dirty work and destroyed them!"
 	end
 	return table.concat(desc, "\n")
 end

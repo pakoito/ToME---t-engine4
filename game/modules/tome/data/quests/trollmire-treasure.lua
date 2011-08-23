@@ -20,8 +20,8 @@
 name = "Hidden treasure"
 desc = function(self, who)
 	local desc = {}
-	desc[#desc+1] = "You have found all the clues leading to the hidden treasure, there should be a way on the third level of the trollmire."
-	desc[#desc+1] = "It looks extremely dangerous however, beware."
+	desc[#desc+1] = "You have found all the clues leading to the hidden treasure. There should be a way on the third level of the Trollmire."
+	desc[#desc+1] = "It looks extremely dangerous, however - beware."
 	if self:isEnded() then
 		desc[#desc+1] = "You have slain Bill. His treasure is yours for the taking."
 	end

@@ -22,7 +22,7 @@ desc = function(self, who)
 	local desc = {}
 	if not self:isCompleted() and not self:isEnded() then
 		desc[#desc+1] = "Enter the caverns of Ardhungol and look for Sun Paladin Rashim."
-		desc[#desc+1] = "But be careful, those are not small spiders..."
+		desc[#desc+1] = "But be careful; those are not small spiders..."
 	else
 		desc[#desc+1] = "#LIGHT_GREEN#You have killed Ungolë in Ardhungol and saved the Sun Paladin."
 	end
@@ -55,5 +55,5 @@ portal_back = function(self, who)
 	}
 	g:resolve() g:resolve(nil, true)
 	game.zone:addEntity(game.level, g, "terrain", who.x, who.y)
-	game.logPlayer(who, "A portal appears right under you and Rashim rushes through.")
+	game.logPlayer(who, "A portal appears right under you, and Rashim rushes through.")
 end

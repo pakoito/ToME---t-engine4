@@ -94,9 +94,9 @@ newLore{
 	id = "maze-note-trap",
 	category = "maze",
 	name = "the perfect killing device",
-	lore = [[I have now devised the perfect trap for the horned beast that walks these halls! Truly he cannot avoid this amazing contraption - the perfect blend of technical mastery and using nature's lethal gifts. Ah, how I look forward to having that monster's head mounted on my walls - it shall be the pride of my collection!
+	lore = [[I have now devised the perfect trap for the horned beast that walks these halls! Truly he cannot avoid this amazing contraption - the perfect blend of technical mastery and nature's lethal gifts. Ah, how I look forward to having that monster's head mounted on my walls - it shall be the pride of my collection!
 
-The contraption is elegant and simple, though many months I have spent getting the formula perfect. There are two vials attached together- one containing finely ground hemlock, the other containing a carefully prepared zinc compound. When the vials are broken the materials react with the air and pump out an amazing cloud of poisonous vapour! The poison is supremely effective, killing within minutes. All I have to do is carefully hide the vials beneath a thin piece of slate and wait for my prey to step upon the trap - then POOF, it's dead!
+The contraption is elegant and simple, though many months I have spent getting the formula perfect. There are two vials attached together - one containing finely ground hemlock, the other containing a carefully prepared zinc compound. When the vials are broken the materials react with the air and pump out an amazing cloud of poisonous vapour! The poison is supremely effective, killing within minutes. All I have to do is carefully hide the vials beneath a thin piece of slate and wait for my prey to step upon the trap - then POOF, it's dead!
 
 I have prepared a great many vials to last me throughout the hunting season. By this time next year I will have a trophy collection to match the kings!
 

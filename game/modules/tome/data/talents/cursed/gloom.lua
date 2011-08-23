@@ -190,8 +190,8 @@ newTalent{
 	info = function(self, t)
 		local attackStrength = 0.3 + self:getTalentLevel(t) * 0.12
 		local effectiveness = getWillFailureEffectiveness(self, 5, 35, attackStrength)
-		return ([[A terrible gloom surrounds you affecting all those who approach.
-		The weak-minded may suffer from slow, stun or confusion. (%d effectiveness)
+		return ([[A terrible gloom surrounds you, affecting all those who approach.
+		The weak-minded may suffer from slowness, stun or confusion. (%d effectiveness)
 		This ability is innate and carries no cost to activate or deactivate.]]):format(effectiveness)
 	end,
 }

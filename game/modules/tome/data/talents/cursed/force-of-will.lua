@@ -131,7 +131,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local knockback = t.getKnockback(self, t)
-		return ([[Focusing your hate you strike your foe with unseen force for %d damage and %d knockback.
+		return ([[Focusing your hate, you strike your foe with unseen force for %d damage and %d knockback.
 		Damage increases with the Willpower stat.]]):format(damDesc(self, DamageType.PHYSICAL, damage), knockback)
 	end,
 }

@@ -84,7 +84,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local hateGain = t.getHateGain(self, t)
-		return ([[Feed from the essence of your enemy. Draws %0.2f hate per turn from a targeted foe as long as the they remain in your line of sight.
+		return ([[Feed from the essence of your enemy. Draws %0.2f hate per turn from a targeted foe as long as they remain in your line of sight.
 		Improves with the Willpower stat.]]):format(hateGain)
 	end,
 }

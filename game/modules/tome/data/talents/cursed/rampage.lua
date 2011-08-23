@@ -91,7 +91,7 @@ newTalent{
 		end
 		local hateLoss = t.getHateLoss(self, t)
 		local critical = t.getCritical(self, t)
-		return ([[You enter into a terrible rampage for %d turns, destroying everything in your path. There is also a small chance when you are hit that you will rampage.
+		return ([[You enter a terrible rampage for %d turns, destroying everything in your path. There is also a small chance when you are hit that you will rampage.
 		%0.2f hate loss per turn. +%d%% (at 0 Hate) to %d%% (at 10+ Hate) critical chance.]]):format(duration, hateLoss, critical * 0.3, critical * 1.0)
 	end,
 }

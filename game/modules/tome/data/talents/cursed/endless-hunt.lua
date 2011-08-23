@@ -166,7 +166,7 @@ newTalent{
 		local critical = math.min(100, 40 + self:getTalentLevel(t) * 12)
 		return ([[Stalk a single opponent starting from a position that is out of sight.
 		You will be invisible to your target for %d turns or until you attack (%d%% chance of a critical strike).
-		Your gloom will not affect the the stalked prey.]]):format(duration, critical)
+		Your gloom will not affect the stalked prey.]]):format(duration, critical)
 	end,
 }
 

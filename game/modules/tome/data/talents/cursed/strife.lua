@@ -66,9 +66,9 @@ newTalent{
 		local damagePercent = t.getDamagePercent(self, t)
 		local poisonDamage = t.getPoisonDamage(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[Poison your foe for with the essence of your curse inflicting %d%% damage and %d poison damage over %d turns.
+		return ([[Poison your foe with the essence of your curse inflicting %d%% damage and %d poison damage over %d turns.
 		Poison damage increases with the Willpower stat.
-		Requires a one or two handed axe or a cursed weapon.]]):format(damagePercent, poisonDamage, duration)
+		Requires a one- or two-handed axe or a cursed weapon.]]):format(damagePercent, poisonDamage, duration)
 	end,
 }
 
@@ -111,7 +111,7 @@ newTalent{
 		local damagePercent = t.getDamagePercent(self, t)
 		local distance = t.getDistance(self, t)
 		return ([[Swing your weapon for %d%% damage as you leap backwards %d spaces from your target.
-		Requires a one or two handed axe or a cursed weapon.]]):format(damagePercent, distance)
+		Requires a one- or two-handed axe or a cursed weapon.]]):format(damagePercent, distance)
 	end,
 }
 
@@ -155,8 +155,8 @@ newTalent{
 	info = function(self, t)
 		local damagePercent = t.getDamagePercent(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[Smash you foe with your weapon doing %d%% damage and stunning them for %d turns.
-		Requires a one or two handed axe or a cursed weapon.]]):format(damagePercent, duration)
+		return ([[Smash your foe with your weapon doing %d%% damage and stunning them for %d turns.
+		Requires a one- or two-handed axe or a cursed weapon.]]):format(damagePercent, duration)
 	end,
 }
 
@@ -264,6 +264,6 @@ newTalent{
 		local confuseEfficiency = t.getConfuseEfficiency(self, t)
 		
 		return ([[With unnatural speed you assail all foes in sight within a range of 4 with wild swings from your axe. You will attack up to %d different targets for %d%% damage. When the assualt finally ends all foes in range will be confused for %d turns and you will find yourself in a nearby location.
-		Requires a one or two handed axe or a cursed weapon.]]):format(attackCount, damagePercent, confuseDuration)
+		Requires a one- or two-handed axe or a cursed weapon.]]):format(attackCount, damagePercent, confuseDuration)
 	end,
 }

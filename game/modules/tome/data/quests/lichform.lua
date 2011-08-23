@@ -28,7 +28,7 @@ desc = function(self, who)
 	if who.level >= 20 then desc[#desc+1] = "#LIGHT_GREEN#* You are experienced enough.#WHITE#"
 	else desc[#desc+1] = "#SLATE#* The ceremony will require that you are worthy, experienced, and possessed of a certain amount of power#WHITE#" end
 
-	if self:isCompleted("heart") then desc[#desc+1] = "#LIGHT_GREEN#* You have 'extracted' the heart of one of your fellow necromancer.#WHITE#"
+	if self:isCompleted("heart") then desc[#desc+1] = "#LIGHT_GREEN#* You have 'extracted' the heart of one of your fellow necromancers.#WHITE#"
 	else desc[#desc+1] = "#SLATE#* The beating heart of a powerful necromancer.#WHITE#" end
 
 	if who:isQuestStatus("shertul-fortress", self.COMPLETED, "butler") then

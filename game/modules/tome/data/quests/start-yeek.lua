@@ -20,17 +20,17 @@
 name = "Following The Way"
 desc = function(self, who)
 	local desc = {}
-	desc[#desc+1] = "You have been tasked to remove two threads for the yeeks.\n"
-	desc[#desc+1] = "Protect the Way, vanquish your foes.\n"
+	desc[#desc+1] = "You have been tasked to remove two threats to the yeeks.\n"
+	desc[#desc+1] = "Protect the Way, and vanquish your foes.\n"
 	if self:isCompleted("murgol") then
 		desc[#desc+1] = "#LIGHT_GREEN#* You have explored the underwater zone and vanquished Murgol.#WHITE#"
 	else
 		desc[#desc+1] = "#SLATE#* You must explore the underwater lair of Murgol.#WHITE#"
 	end
 	if self:isCompleted("ritch") then
-		desc[#desc+1] = "#LIGHT_GREEN#* You have explored the ritch's tunnels and vanquished their queen.#WHITE#"
+		desc[#desc+1] = "#LIGHT_GREEN#* You have explored the ritch tunnels and vanquished their queen.#WHITE#"
 	else
-		desc[#desc+1] = "#SLATE#* You must explore ritch's tunnels.#WHITE#"
+		desc[#desc+1] = "#SLATE#* You must explore the ritch tunnels.#WHITE#"
 	end
 	return table.concat(desc, "\n")
 end

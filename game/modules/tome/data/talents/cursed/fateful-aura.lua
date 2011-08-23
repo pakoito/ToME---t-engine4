@@ -181,7 +181,7 @@ newTalent{
 		local curseChance = t.getCurseChance(self, t)
 		local majorChance = t.getMajorChance(self, t)
 
-		return ([[Your cursed touch permeates everything around you. Any non-unique equipment you find has a %d%% chance of becoming cursed. Cursed objects gain 1 extra weight and recieve a harmful effect. There is a %d%% chance of a major effect.]]):format(curseChance, majorChance)
+		return ([[Your cursed touch permeates everything around you. Any non-unique equipment you find has a %d%% chance of becoming cursed. Cursed objects gain 1 extra weight and receive a harmful effect. There is a %d%% chance of a major effect.]]):format(curseChance, majorChance)
 	end,
 }
 

@@ -519,7 +519,7 @@ newTalent{
 			return ([[Infuse magic into your shadows to give them fearsome spells.
 			Your shadows can strike adjacent foes with Lightning (%d%% chance at range 1).
 			Your shadows can sear their enemies from a distance with Flames (%d%% chance at range 2 to 6).
-			When your shadows are struck down they will attempt to Reform becoming whole again.]]):format(closeAttackSpellChance, farAttackSpellChance)
+			When your shadows are struck down they will attempt to Reform, becoming whole again.]]):format(closeAttackSpellChance, farAttackSpellChance)
 		end
 	end,
 }

@@ -44,7 +44,7 @@ There seems to be a hole about the size and form of your Rod of Recall.#WHITE#*]
 }
 newChat{ id="activate",
 	text = [[*#LIGHT_GREEN#As you take the rod close to the orb it seems to vibrate and react.
-A shadow appear in a corner of the room! You retract the rod immediately but the shadow stays.
+A shadow appears in a corner of the room! You retract the rod immediately but the shadow stays.
 It looks like the horrors you fought when coming inside, only less degenerated.
 The thing looks roughly humanoid, but it has no head and its limbs look like tentacles. It does not seem hostile.#WHITE#*]],
 	answers = {
