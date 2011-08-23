@@ -25,6 +25,7 @@ newTalent{
 	cooldown = 30,
 	equilibrium = 10,
 	tactical = { HEAL=2 },
+	no_energy = true,
 	on_pre_use = function(self, t)
 		for eff_id, p in pairs(self.tmp) do
 			local e = self.tempeffect_def[eff_id]
