@@ -743,6 +743,10 @@ function _M:getTextualDesc(compare_with)
 
 		compare_fields(w, compare_with, field, "size_category", "%+d", "Size category: ")
 
+		if w.undead then
+			desc:add("The wearer is treated as an undead.", true)
+		end
+
 		if w.speaks_shertul then
 			desc:add("Allows you to speak and read the old Sher'Tul language.", true)
 		end

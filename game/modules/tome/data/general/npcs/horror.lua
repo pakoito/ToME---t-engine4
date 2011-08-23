@@ -144,6 +144,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	name = "nightmare horror", color=colors.DARK_GREY,
 	desc ="A shifting form of darkest night that seems to reflect your deepest fears.",
 	level_range = {30, nil}, exp_worth = 1,
+	mana_regen = 10,
 	negative_regen = 10,
 	hate_regen = 1,
 	rarity = 5,
@@ -153,9 +154,11 @@ newEntity{ base = "BASE_NPC_HORROR",
 	autolevel = "caster",
 	stats = { str=15, dex=20, mag=20, wil=20, con=15 },
 	combat_armor = 1, combat_def = 30,
-	combat = { dam=resolvers.levelup(20, 1, 1.1), atk=20, apr=50, dammod={mag=1}, damtype=DamageType.DARKNESS},
+	combat = { dam=resolvers.levelup(20, 1, 1.1), atk=20, apr=50, dammod={mag=1}, damtype=DamageType.DARKSTUN},
 
-	ai = "dumb_talented_simple", ai_state = { ai_target="target_player_radius", sense_radius=10, talent_in=2, },
+	ai = "tactical", 
+	ai_tactic = resolvers.tactic"ranged",
+	ai_state = { ai_target="target_player_radius", sense_radius=10, talent_in=1, },
 	dont_pass_target = true,
 
 	can_pass = {pass_wall=20},
@@ -172,8 +175,10 @@ newEntity{ base = "BASE_NPC_HORROR",
 		[Talents.T_TORMENT]={base=3, every=12, max=8},
 		[Talents.T_DOMINATE]={base=3, every=12, max=8},
 		[Talents.T_LIFE_LEECH]={base=5, every=12, max=9},
-		[Talents.T_SHADOW_BLAST]={base=4, every=8, max=8},
-		[Talents.T_HYMN_OF_SHADOWS]={base=3, every=9, max=8},
+		[Talents.T_INVOKE_DARKNESS]={base=5, every=8, max=10},
+		[Talents.T_WAKING_NIGHTMARE]={base=3, every=8, max=10},
+		[Talents.T_ABYSSAL_SHROUD]={base=3, every=8, max=8},
+		[Talents.T_INNER_DEMONS]={base=3, every=8, max=10},
 	},
 
 	resolvers.inscriptions(1, {"shielding rune"}),
@@ -614,10 +619,12 @@ newEntity{ base = "BASE_NPC_HORROR",
 	rarity = 4,
 	rank = 2,
 	size_category = 2,
-	max_life = resolvers.rngavg(20,50),
-	autolevel = "warriormage",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
+	max_life = resolvers.rngavg(80, 120),
+	life_rating = 10,
+	autolevel = "summoner",
+	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_snake" },
 	combat_armor = 1, combat_def = 10,
+	combat = { dam=resolvers.levelup(resolvers.mbonus(40, 15), 1, 1.2), atk=15, apr=15, dammod={wil=0.8}, damtype=DamageType.TEMPORAL },
 	on_melee_hit = { [DamageType.TEMPORAL] = resolvers.mbonus(20, 10), },
 
 	stun_immune = 1,
@@ -627,8 +634,11 @@ newEntity{ base = "BASE_NPC_HORROR",
 	resists = {[DamageType.TEMPORAL] = 50},
 
 	resolvers.talents{
-		[Talents.T_DISPERSE_MAGIC]={base=3, every=7, max=5},
+		[Talents.T_ENERGY_ABSORPTION]={base=3, every=7, max=5},
+		[Talents.T_ENERGY_DECOMPOSITION]={base=3, every=7, max=5},
 		[Talents.T_ENTROPIC_FIELD]={base=3, every=7, max=5},
+		[Talents.T_ECHOES_FROM_THE_VOID]={base=3, every=7, max=5},
+		[Talents.T_VOID_SHARDS]={base=2, every=7, max=5},
 	},
 	-- Random Anomaly on Death
 	on_die = function(self, who)
@@ -637,7 +647,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 			if t.type[1] == "chronomancy/anomalies" then ts[#ts+1] = id end
 		end
 		self:forceUseTalent(rng.table(ts), {ignore_energy=true})
-		game.logSeen(self, "%s has collapsed in upon itself.", self.name)
+		game.logSeen(self, "%s has collapsed in upon itself.", self.name:capitalize())
 	end,
 
 	resolvers.sustains_at_birth(),

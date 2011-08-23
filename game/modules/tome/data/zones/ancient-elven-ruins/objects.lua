@@ -32,19 +32,19 @@ end
 local Stats = require "engine.interface.ActorStats"
 local Talents = require "engine.interface.ActorTalents"
 
--- Random artifact
-newEntity{ base = "BASE_MUMMY_WRAPPING",
+newEntity{ base = "BASE_MUMMY_WRAPPING", define_as = "BINDINGS_ETERNAL_NIGHT",
 	power_source = {arcane=true},
 	unique = true,
-	name = "Bindings of Eternal Night",
+	name = "Bindings of Eternal Night", image = "object/artifact/bindings_of_eternal_night.png",
 	unided_name = "blackened, slithering mummy wrappings",
 	desc = [[Woven through with fell magics of undeath, these bindings suck the light and life out of everything they touch. Any who don them will find themselves suspended in a nightmarish limbo between life and death.]],
 	color = colors.DARK_GREY,
 	level_range = {1, 50},
 	rarity = 130,
 	cost = 200,
-	material_level = 1,
+	material_level = 3,
 	wielder = {
+		combat_armor = 7,
 		inc_stats = { [Stats.STAT_WIL] = 5, [Stats.STAT_MAG] = 5, },
 		resists = {
 			[DamageType.BLIGHT] = 30,
@@ -52,10 +52,55 @@ newEntity{ base = "BASE_MUMMY_WRAPPING",
 			[DamageType.FIRE] = 30,
 		},
 		on_melee_hit={[DamageType.BLIGHT] = 10},
-		life_regen = -0.3,
+		life_regen = 0.3,
 		lite = -1,
+		poison_immune = 1,
+		disease_immune = 1,
+		undead = 1,
 	},
 	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_SPIT_POISON, level = 2, power = 50 },
+
+	set_list = { {"define_as","CROWN_ETERNAL_NIGHT"} },
+	on_set_complete = function(self, who)
+		self.use_talent = { id = Talents.T_ABYSSAL_SHROUD, level = 2, power = 47 }
+	end,
+	on_set_broken = function(self, who)
+		self.use_talent = nil
+	end,
 }
 
+newEntity{ base = "BASE_LEATHER_CAP", define_as = "CROWN_ETERNAL_NIGHT",
+	power_source = {arcane=true},
+	unique = true,
+	name = "Crown of Eternal Night", image = "object/artifact/crown_of_eternal_night.png",
+	unided_name = "blackened crown",
+	desc = [[This crown looks useless, yet you can fell it woven with fell magics of undeath. Maybe it has a use.]],
+	color = colors.DARK_GREY,
+	level_range = {1, 50},
+	cost = 100,
+	material_level = 3,
+	wielder = {
+		combat_armor = 3,
+		fatigue = 3,
+		inc_damage = {},
+		melee_project = {},
+	},
+	max_power = 80, power_regen = 1,
+
+	set_list = { {"define_as","BINDINGS_ETERNAL_NIGHT"} },
+	on_set_complete = function(self, who)
+		self:specialSetAdd({"wielder","lite"}, -1)
+		self:specialSetAdd({"wielder","confusion_immune"}, 40)
+		self:specialSetAdd({"wielder","knockback_immune"}, 40)
+		self:specialSetAdd({"wielder","combat_mentalresist"}, 15)
+		self:specialSetAdd({"wielder","combat_spellresist"}, 15)
+		self:specialSetAdd({"wielder","melee_project"}, {[engine.DamageType.DARKNESS]=40})
+		self:specialSetAdd({"wielder","inc_damage"}, {[engine.DamageType.DARKNESS]=20})
+		self.use_talent = { id = Talents.T_RETCH, level = 2, power = 47 }
+		game.logSeen(who, "#ANTIQUE_WHITE#The Crown of Eternal Night seems to react with the Bindings, you feel tremounduous dark power.")
+	end,
+	on_set_broken = function(self, who)
+		game.logPlayer(who, "#ANTIQUE_WHITE#The powerful darkness aura you felt vanes away.")
+		self.use_talent = nil
+	end,
+}

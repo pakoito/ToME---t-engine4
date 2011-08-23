@@ -2638,13 +2638,10 @@ newEffect{
 	on_gain = function(self, err) return "The fabric of time alters around #target#.", "+Damage Smearing" end,
 	on_lose = function(self, err) return "The fabric of time around #target# stabilizes.", "-Damage Smearing" end,
 	activate = function(self, eff)
-	--	eff.tmpid = self:addTemporaryValue("damage_smearing", eff.power)
-		--- Warning there can be only one time shield active at once for an actor
 		eff.particle = self:addParticles(Particles.new("time_shield", 1))
 	end,
 	deactivate = function(self, eff)
 		self:removeParticles(eff.particle)
-	--	self:removeTemporaryValue("damage_smearing", eff.tmpid)
 	end,
 }
 
@@ -4439,5 +4436,99 @@ newEffect{
 		game.logPlayer(self, "#LIGHT_BLUE#You enter a zero gravity zone, beware!")
 	end,
 	deactivate = function(self, eff)
+	end,
+}
+
+newEffect{
+	name = "VOID_ECHOES",
+	desc = "Void Echoes",
+	long_desc = function(self, eff) return ("The target is seeing echoes from the void and will take %0.2f mind damage as well as some resource damage each turn it fails a mental save."):format(eff.power) end,
+	type = "mental",
+	status = "detrimental",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# is being driven mad by the void.", "+Void Echoes" end,
+	on_lose = function(self, err) return "#Target# has survived the void madness.", "-Void Echoes" end,
+	on_timeout = function(self, eff)
+		local drain = DamageType:get(DamageType.MIND).projector(eff.src or self, self.x, self.y, DamageType.MIND, eff.power) / 2
+		self:incMana(-drain)
+		self:incVim(-drain * 0.5)
+		self:incPositive(-drain * 0.25)
+		self:incNegative(-drain * 0.25)
+		self:incStamina(-drain * 0.65)
+		self:incHate(-drain * 0.05)
+		self:incPsi(-drain * 0.2)
+	end,
+}
+
+newEffect{
+	name = "WAKING_NIGHTMARE",
+	desc = "Waking Nightmare",
+	long_desc = function(self, eff) return ("The target is lost in a waking nightmare that deals %0.2f darkness damage each turn and has a %d%% chance to cause a random effect detrimental."):format(eff.dam, eff.chance) end,
+	type = "magical",
+	status = "detrimental",
+	parameters = { chance=10, dam = 10 },
+	on_gain = function(self, err) return "#Target# is lost in a waking nightmare.", "+Waking Nightmare" end,
+	on_lose = function(self, err) return "#Target# is free from the nightmare.", "-Waking Nightmare" end,
+	on_timeout = function(self, eff)
+		DamageType:get(DamageType.DARKNESS).projector(eff.src or self, self.x, self.y, DamageType.DARKNESS, eff.dam)
+		if rng.percent(eff.chance) then
+			-- Pull random effect
+			local chance = rng.range(1, 3)
+			if chance == 1 then
+				if self:canBe("blind") then
+					self:setEffect(self.EFF_BLINDED, 3, {})
+				end
+			elseif chance == 2 then
+				if self:canBe("stun") then
+					self:setEffect(self.EFF_STUNNED, 3, {})
+				end
+			elseif chance == 3 then
+				if self:canBe("confusion") then
+					self:setEffect(self.EFF_CONFUSED, 3, {power=50})
+				end
+			end
+			game.logSeen(self, "%s succumbs to the nightmare!", self.name:capitalize())
+		end
+	end,
+}
+
+newEffect{
+	name = "ABYSSAL_SHROUD",
+	desc = "Abyssal Shroud",
+	long_desc = function(self, eff) return ("The target's lite radius has been reduced by %d and it's darkness resistance by %d%%."):format(eff.lite, eff.power) end,
+	type = "magical",
+	status = "detrimental",
+	parameters = {power=20},
+	on_gain = function(self, err) return "#Target# feels closer to the abyss!", "+Abyssal Shroud" end,
+	on_lose = function(self, err) return "#Target# is free from the abyss.", "-Abyssal Shroud" end,
+	activate = function(self, eff)
+		eff.liteid = self:addTemporaryValue("lite", -eff.lite)
+		eff.darkid = self:addTemporaryValue("resists", {	[DamageType.DARKNESS]= - eff.power })
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("lite", eff.liteid)
+		self:removeTemporaryValue("resists", eff.darkid)
+	end,
+}
+
+newEffect{
+	name = "INNER_DEMONS",
+	desc = "Inner Demons",
+	long_desc = function(self, eff) return ("The target is plagued by inner demons and each turn there's a %d%% chance that one will appear.  If the caster is killed or the target resists setting his demons loose the effect will end early."):format(eff.chance) end,
+	type = "magical",
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# is plagued by inner demons!", "+Inner Demons" end,
+	on_lose = function(self, err) return "#Target# is freed from the demons.", "-Inner Demons" end,
+	on_timeout = function(self, eff)
+		if eff.src.dead or not game.level:hasEntity(eff.src) then eff.dur = 0 return true end
+		if rng.percent(eff.chance) then
+			if self:checkHit(eff.src:combatSpellpower(), self:combatSpellResist(), 0, 95, 5) then 
+				local t = eff.src:getTalentFromId(eff.src.T_INNER_DEMONS)
+				t.summon_inner_demons(eff.src, self, t)
+			else
+				eff.dur = 0
+			end
+		end
 	end,
 }

@@ -1003,19 +1003,13 @@ function _M:onTakeHit(value, src)
 			end
 		end end
 
-		-- Randomly take targets
-	--	local tg = {type="hit"}
-		for i = 1, 1 do
-			if #tgts <= 0 then break end
-			local a, id = rng.table(tgts)
-			table.remove(tgts, id)
-
-			if a then
-				game.logSeen(self, "Some of the damage has been displaced onto %s!", a.name:capitalize())
-				a:takeHit(value / 2, src)
-				value = value / 2
-			end
+		local a = rng.table(tgts)
+		if a then
+			game.logSeen(self, "Some of the damage has been displaced onto %s!", a.name:capitalize())
+			a:takeHit(value / 2, self)
+			value = value / 2
 		end
+
 	end
 
 	if self:attr("disruption_shield") then

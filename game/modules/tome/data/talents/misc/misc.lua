@@ -27,6 +27,7 @@ newTalentType{ is_spell=true, no_silence=true, type="inscriptions/taints", name 
 -- Load other misc things
 load("/data/talents/misc/inscriptions.lua")
 load("/data/talents/misc/npcs.lua")
+load("/data/talents/misc/horrors.lua")
 load("/data/talents/misc/races.lua")
 
 -- Default melee attack

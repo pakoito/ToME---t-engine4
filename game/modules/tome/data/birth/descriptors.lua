@@ -211,7 +211,7 @@ newBirthDescriptor{
 newBirthDescriptor{
 	type = "permadeath",
 	name = "Adventure",
-	selection_default = config.settings.tome.default_birth and config.settings.tome.default_birth.permadeath == "Adventure",
+	selection_default = (not config.settings.tome.default_birth) or (config.settings.tome.default_birth and config.settings.tome.default_birth.permadeath == "Adventure"),
 	desc =
 	{
 		"#GOLD##{bold}#Adventure mode#WHITE#",

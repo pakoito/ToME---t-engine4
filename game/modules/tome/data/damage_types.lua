@@ -1680,3 +1680,31 @@ newDamageType{
 		end
 	end,
 }
+
+newDamageType{
+	name = "abyssal shroud", type = "ABYSSAL_SHROUD",
+	projector = function(src, x, y, type, dam)
+		--make it dark
+		game.level.map.remembers(x, y, false)
+		game.level.map.lites(x, y, false)
+		
+		local target = game.level.map(x, y, Map.ACTOR)
+		local reapplied = false
+		if target then
+			-- silence the apply message it if the target already has the effect
+			for eff_id, p in pairs(target.tmp) do
+				local e = target.tempeffect_def[eff_id]
+				if e.desc == "Abyssal Shroud" then
+					reapplied = true
+				end
+			end
+			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) then
+				target:setEffect(target.EFF_ABYSSAL_SHROUD, 2, {power=dam.power, lite=dam.lite}, reapplied)
+			else
+				game.logSeen(target, "%s resists the shroud!", target.name:capitalize())
+			end
+			
+			DamageType:get(DamageType.DARKNESS).projector(src, x, y, DamageType.DARKNESS, dam.dam)
+		end
+	end,
+}
