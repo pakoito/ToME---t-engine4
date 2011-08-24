@@ -160,27 +160,6 @@ newBirthDescriptor{
 
 newBirthDescriptor{
 	type = "world",
-	name = "Orcs",
-	display_name = "Orcs: The Rise to Power",
-	locked = function() return profile.mod.allow_build.campaign_orc and true or "hide" end,
-	locked_desc = "",
-	desc =
-	{
-		"Baston!",
-	},
-	descriptor_choices =
-	{
-		race =
-		{
-			__ALL__ = "disallow",
-			Orc = "allow",
---			Spider = function() return profile.mod.allow_build.spider and "allow" or "disallow" end,
-		},
-	},
-}
-
-newBirthDescriptor{
-	type = "world",
 	name = "Spydre",
 	display_name = "Spydrë: Thouch of the Spider",
 	locked = function() return profile.mod.allow_build.campaign_spidre and true or "hide" end,

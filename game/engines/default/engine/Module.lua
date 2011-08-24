@@ -375,15 +375,19 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 		end
 	end
 	local t = core.game.getTime()
-	fp("/mod")
-	fp("/data")
-	fp("/engine")
-	table.sort(md5s)
-	local fmd5 = md5.sumhexa(table.concat(md5s))
-	print("[MODULE LOADER] module MD5", fmd5, "computed in ", core.game.getTime() - t)
-	local hash_valid, hash_err
-	if mod.short_name ~= "boot" then
-		hash_valid, hash_err = profile:checkModuleHash(mod.version_name, fmd5)
+	if config.settings.cheat then
+		hash_valid, hash_err = false, "cheat mode skipping validation"
+	else
+		fp("/mod")
+		fp("/data")
+		fp("/engine")
+		table.sort(md5s)
+		local fmd5 = md5.sumhexa(table.concat(md5s))
+		print("[MODULE LOADER] module MD5", fmd5, "computed in ", core.game.getTime() - t)
+		local hash_valid, hash_err
+		if mod.short_name ~= "boot" then
+			hash_valid, hash_err = profile:checkModuleHash(mod.version_name, fmd5)
+		end
 	end
 
 	profile:addStatFields(unpack(mod.profile_stats_fields or {}))

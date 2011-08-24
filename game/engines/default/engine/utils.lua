@@ -970,6 +970,31 @@ function util.getval(val, ...)
 	end
 end
 
+function util.loadfilemods(file, env)
+	-- Base loader
+	local prev, err = loadfile(file)
+	if err then error(err) end
+	setfenv(prev, env)
+
+	for i, addon in ipairs(fs.list("/mod/addons/")) do
+		local fn = "/mod/addons/"..addon.."/superload/"..file
+		if fs.exists(fn) then
+			local f, err = loadfile(fn)
+			if err then error(err) end
+			local base = prev
+			setfenv(f, setmetatable({
+				loadPrevious = function()
+					local ok, err = pcall(base, bname)
+					if not ok and err then error(err) end
+				end
+			}, {__index=env}))
+			print("Loaded mod", f, fn)
+			prev = f
+		end
+	end
+	return prev
+end
+
 function core.fov.circle_grids(x, y, radius, block)
 	if not x or not y then return {} end
 	if radius == 0 then return {[x]={[y]=true}} end
