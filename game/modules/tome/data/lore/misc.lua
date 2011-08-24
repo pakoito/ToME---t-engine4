@@ -195,7 +195,7 @@ newLore{
 	id = "creation-human",
 	category = "myths of creation",
 	name = "human myth of creation",
-	lore = [[At the start of time Sun was born, and Moon, and Eyal raised from the Darkness.
+	lore = [[At the start of time Sun was born, and Moons, and Eyal raised from the Darkness.
 And Gerlyk walked Eyal with his three brothers.
 But one day Gerlyk walked alone and realised he was alone, and he desired company.
 So Gerlyk took a burning coal, and put stones around it, and wrapped it in earth, and bathed it in water and breathed his breath into it, and it became alive. And Gerlyk named it Human.
@@ -459,7 +459,7 @@ newLore{
 	lore = [[Running man, running man
 Your time is ending soon
 Running man, running man
-Will not save sun nor moon
+Will not save sun nor moons
 
 Running man, running man
 Survival growing slim

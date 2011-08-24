@@ -26,7 +26,7 @@ newChat{ id="welcome",
 }
 
 newChat{ id="what",
-	text = [[I am an Anorithil, a mage of the Sun and Moon; we fight all that is evil. I was with a group of Sun Paladins; we came from the Gates of Morning to the east.
+	text = [[I am an Anorithil, a mage of the Sun and Moons; we fight all that is evil. I was with a group of Sun Paladins; we came from the Gates of Morning to the east.
 My companions were... were slaughtered by orcs, and I nearly died as well. Thank you again for your help.]],
 	answers = {
 		{"It was my pleasure. But may I ask a favor myself? I am not from these lands. I used a farportal guarded by orcs deep below the Iron Throne and was brought here.", action=function(npc, player) game:setAllowedBuild("divine") game:setAllowedBuild("divine_anorithil", true) end, jump="sunwall"},

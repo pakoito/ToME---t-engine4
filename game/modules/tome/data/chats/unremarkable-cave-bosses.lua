@@ -47,7 +47,7 @@ game.player:grantQuest("strange-new-world")
 
 newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*A beautiful Elven woman in golden robes stands before you, facing an orc clad in mail.*#WHITE#
-Fillarel: "Abandon this fight, orc! You cannot win: I stand with the power of the Sun and the shadows of the Moon."
+Fillarel: "Abandon this fight, orc! You cannot win: I stand with the power of the Sun and the shadows of the Moons."
 Krogar: "Ha! It's only been one hour and you already look tired, my 'lady'."
 #LIGHT_GREEN#*As you enter the room they notice you.*#WHITE#
 Fillarel: "You! @playerdescriptor.race@! Help me defeat this monster or begone!"

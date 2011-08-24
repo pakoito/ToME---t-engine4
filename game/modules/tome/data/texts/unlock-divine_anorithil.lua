@@ -21,9 +21,9 @@ return "New Class: #LIGHT_GREEN#Anorithil (Celestial)",
 [[
 In the uttermost east, on the continent known only as the Far East, dwell the last remnants of Elves and Humans, fighting the Orc Pride and the many perils of the Far East.
 
-Anorithil are mages who are trained in special magic to focus the powers of the Sun and Moon.
+Anorithil are mages who are trained in special magic to focus the powers of the Sun and Moons.
 They have learned to harness the energy of both shadows and light in their battle against the Pride.
-Their motto is: "We stand betwixt the Sun and Moon, where light and darkness meet. In the grey twilight we seek our destiny."
+Their motto is: "We stand betwixt the Sun and Moons, where light and darkness meet. In the grey twilight we seek our destiny."
 
 You have helped one of them and can now create new characters with the #LIGHT_GREEN#Anorithil class#WHITE#.
 

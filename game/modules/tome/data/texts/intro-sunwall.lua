@@ -22,5 +22,5 @@ You are a citizen of the Sunwall, and like many of your age you have been traine
 
 Nagas have been sighted in the Slazish Fens on the other side of the Sunwall Mountains. Their objective is unclear, but an assault from both sides would be truly devastating at such a pivotal time for your people. Though there are few forces to spare on the front line against the Prides, you have volunteered to investigate the naga threat and stop them if need be.
 
-By the power of the Sun and the blessings of the Moon you step forth to find your fate.
+By the power of the Sun and the blessings of the Moons you step forth to find your fate.
 ]]
