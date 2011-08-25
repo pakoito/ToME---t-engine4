@@ -238,6 +238,7 @@ end
 
 --- List all available addons
 function _M:loadAddons(mod)
+	local adds = {}
 	local load = function(dir)
 		local add_def = loadfile(team and (dir.."/mod/init.lua") or (dir.."/init.lua"))
 		if add_def then
@@ -246,14 +247,12 @@ function _M:loadAddons(mod)
 			add_def()
 
 			if engine.version_string(add.version) == engine.version_string(mod.version) and add.for_module == mod.short_name then
-				print("Binding addon", add.long_name)
-				if add.superload then fs.mount(fs.getRealPath(dir).."/superload", "/mod/addons/"..add.short_name.."/superload", false) print(" * with superload") end
-				if add.overload then fs.mount(fs.getRealPath(dir).."/overload", "/", true) print(" * with overload") end
+				add.dir = dir
+				adds[#adds+1] = add
 			end
 		end
 	end
 
-	local adds = {}
 	for i, short_name in ipairs(fs.list("/addons/")) do if short_name:find("^"..mod.short_name.."%-") then
 		local dir = "/addons/"..short_name
 		print("Checking addon", short_name, ":: (as dir)", fs.exists(dir.."/init.lua"), ":: (as teaa)", short_name:find(".teaa$"), "")
@@ -262,6 +261,14 @@ function _M:loadAddons(mod)
 		elseif short_name:find(".team$") then
 		end
 	end end
+
+	table.sort(adds, function(a, b) return a.weight < b.weight end)
+
+	for i, add in ipairs(adds) do
+		print("Binding addon", add.long_name)
+		if add.superload then fs.mount(fs.getRealPath(add.dir).."/superload", "/mod/addons/"..add.short_name.."/superload", false) print(" * with superload") end
+		if add.overload then fs.mount(fs.getRealPath(add.dir).."/overload", "/", true) print(" * with overload") end
+	end
 end
 
 --- Make a module loadscreen
