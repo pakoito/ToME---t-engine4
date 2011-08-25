@@ -50,7 +50,6 @@ end
 function _M:newBirthDescriptor(t)
 	assert(t.name, "no birth name")
 	assert(t.type, "no birth type")
-	print("==============**************************", t.name)
 	t.short_name = t.short_name or t.name
 	t.short_name = t.short_name:upper():gsub("[ ]", "_")
 	t.display_name = t.display_name or t.name

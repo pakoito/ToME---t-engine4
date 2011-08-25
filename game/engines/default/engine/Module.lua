@@ -236,6 +236,34 @@ function _M:listVaultSavesForCurrent()
 	return lss
 end
 
+--- List all available addons
+function _M:loadAddons(mod)
+	local load = function(dir)
+		local add_def = loadfile(team and (dir.."/mod/init.lua") or (dir.."/init.lua"))
+		if add_def then
+			local add = {}
+			setfenv(add_def, add)
+			add_def()
+
+			if engine.version_string(add.version) == engine.version_string(mod.version) and add.for_module == mod.short_name then
+				print("Binding addon", add.long_name)
+				if add.superload then fs.mount(fs.getRealPath(dir).."/superload", "/mod/addons/"..add.short_name.."/superload", false) print(" * with superload") end
+				if add.overload then fs.mount(fs.getRealPath(dir).."/overload", "/", true) print(" * with overload") end
+			end
+		end
+	end
+
+	local adds = {}
+	for i, short_name in ipairs(fs.list("/addons/")) do if short_name:find("^"..mod.short_name.."%-") then
+		local dir = "/addons/"..short_name
+		print("Checking addon", short_name, ":: (as dir)", fs.exists(dir.."/init.lua"), ":: (as teaa)", short_name:find(".teaa$"), "")
+		if fs.exists(dir.."/init.lua") then
+			load(dir)
+		elseif short_name:find(".team$") then
+		end
+	end end
+end
+
 --- Make a module loadscreen
 function _M:loadScreen(mod)
 	core.display.forceRedraw()
@@ -389,6 +417,8 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 			hash_valid, hash_err = profile:checkModuleHash(mod.version_name, fmd5)
 		end
 	end
+
+	self:loadAddons(mod)
 
 	profile:addStatFields(unpack(mod.profile_stats_fields or {}))
 	profile:setConfigsBatch(true)
