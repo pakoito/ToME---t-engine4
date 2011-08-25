@@ -22,7 +22,7 @@ load("/data/general/objects/objects-maj-eyal.lua")
 newEntity{ base = "BASE_LITE", define_as = "VOID_STAR",
 	power_source = {arcane=true},
 	unique = true,
-	name = "Void Star", image="terrain/wormhole.png",
+	name = "Void Star", image="object/artifact/void_star.png",
 	unided_name = "tiny black star",
 	level_range = {1, 10},
 	color = colors.GREY,
