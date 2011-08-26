@@ -76,3 +76,4 @@ float gl_c_cb = 0;
 float gl_c_ca = 1;
 GLuint gl_c_texture = 0;
 GLenum gl_c_texture_unit = GL_TEXTURE0;
+GLuint gl_c_fbo = 0;

@@ -514,7 +514,7 @@ static int map_objects_display(lua_State *L)
 
 	// Unbind texture from FBO and then unbind FBO
 	CHECKGL(glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, 0, 0));
-	CHECKGL(glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0));
+	CHECKGL(glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, gl_c_fbo));
 	// Restore viewport
 	CHECKGL(glPopAttrib());
 

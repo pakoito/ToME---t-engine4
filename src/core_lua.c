@@ -1619,7 +1619,7 @@ static int sdl_texture_outline(lua_State *L)
 
 	// Unbind texture from FBO and then unbind FBO
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, 0, 0);
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, gl_c_fbo);
 	// Restore viewport
 	glPopAttrib();
 
@@ -1852,7 +1852,7 @@ static int gl_fbo_use(lua_State *L)
 
 	if (active)
 	{
-		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo->fbo);
+		tglBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo->fbo);
 
 		// Set the viewport and save the old one
 		glPushAttrib(GL_VIEWPORT_BIT);
@@ -1880,11 +1880,11 @@ static int gl_fbo_use(lua_State *L)
 		glPopAttrib();
 
 		// Unbind texture from FBO and then unbind FBO
-		if (!lua_isuserdata(L, 3)) glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+		if (!lua_isuserdata(L, 3)) { tglBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0); }
 		else
 		{
 			lua_fbo *pfbo = (lua_fbo*)auxiliar_checkclass(L, "gl{fbo}", 3);
-			glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, pfbo->fbo);
+			tglBindFramebufferEXT(GL_FRAMEBUFFER_EXT, pfbo->fbo);
 		}
 
 

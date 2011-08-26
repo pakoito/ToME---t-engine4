@@ -35,7 +35,7 @@ extern GLenum gl_c_texture_unit;
 	}
 
 //printf("swithch texture %d : %d\n", t, glIsTexture(t));
-extern GLenum gl_c_texture;
+extern GLuint gl_c_texture;
 #define tglBindTexture(w, t) \
 	{ \
 	if ((t) != gl_c_texture) { glBindTexture((w), (t)); gl_c_texture=(t); } \
@@ -43,4 +43,10 @@ extern GLenum gl_c_texture;
 #define tfglBindTexture(w, t) \
 	{ \
 	glBindTexture((w), (t)); gl_c_texture=(t); \
+	}
+
+extern GLuint gl_c_fbo;
+#define tglBindFramebufferEXT(w, t) \
+	{ \
+	glBindFramebufferEXT((w), (t)); gl_c_fbo=(t); \
 	}
