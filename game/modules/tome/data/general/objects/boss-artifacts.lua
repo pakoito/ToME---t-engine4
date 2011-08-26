@@ -381,7 +381,7 @@ newEntity{ base = "BASE_GEM",
 	unique = true, define_as = "PETRIFIED_WOOD",
 	unided_name = "burned piece of wood",
 	name = "Petrified Wood", subtype = "black",
-	color = colors.WHITE, image="object/bloodstone.png",
+	color = colors.WHITE, image = "object/artifact/petrified_wood.png",
 	level_range = {35, 45},
 	rarity = 280,
 	desc = [[A piece of the scorched wood taken from the remains of Snaproot.]],
@@ -521,7 +521,7 @@ newEntity{ base = "BASE_STAFF",
 newEntity{ base = "BASE_AMULET",
 	power_source = {arcane=true},
 	define_as = "AMULET_DREAD", rarity=false,
-	name = "Choker of Dread", unique=true,
+	name = "Choker of Dread", unique=true, image = "object/artifact/amulet_choker_of_dread.png",
 	unided_name = "dark amulet", color=colors.LIGHT_DARK,
 	desc = [[The evilness of undeath radiates from this amulet.]],
 	level_range = {20, 28},
@@ -778,39 +778,12 @@ newEntity{ base = "BASE_GLOVES", define_as = "FLAMEWROUGHT",
 }
 
 -- The crystal set
-local crystal_activate_pair = function(w, a, who)
-	local DamageType = require "engine.DamageType"
-	w.paired = {}
-	a.paired = {}
-
-	-- The weapon's bonuses
-	w.talent_on_spell = { {chance=10, talent="T_MANATHRUST", level=3} }
-	w.combat.talent_on_hit = { T_MANATHRUST = {level=3, chance=10} }
-	w.paired._special1 = {who, "combat_spellcrit", who:addTemporaryValue("combat_spellcrit", 10)}
-	w.paired._special2 = {who, "combat_physcrit", who:addTemporaryValue("combat_physcrit", 10)}
-	w.paired._special3 = {who, "resists_pen", who:addTemporaryValue("resists_pen", {[DamageType.ARCANE]=20})}
-	-- The armor's bonuses
-	a.paired._special1 = {who, "stun_immune", who:addTemporaryValue("stun_immune", 0.5)}
-	a.paired._special2 = {who, "blind_immune", who:addTemporaryValue("blind_immune", 0.5)}
-	game.logPlayer(who, "#GOLD#As the crystalline weapon and armour are brought together, they begin to emit a constant humming.")
-end
-local crystal_deactivate_pair = function(w, a, who)
-	-- Remove the paired bonusese
-	for k, id in pairs(w) do id[1]:removeTemporaryValue(id[2], id[3]) end
-	for k, id in pairs(a) do id[1]:removeTemporaryValue(id[2], id[3]) end
-	w.talent_on_spell = nil
-	w.combat.talent_on_hit = nil
-	w.paired = nil
-	a.paired = nil
-	game.logPlayer(who, "#GOLD#The humming from the crystalline artifacts fades as they are separated.")
-end
-
 newEntity{ base = "BASE_GEM", define_as = "CRYSTAL_FOCUS",
 	power_source = {arcane=true},
 	unique = true,
 	unided_name = "scintillating crystal",
 	name = "Crystal Focus", subtype = "multi-hued",
-	color = colors.WHITE, image="object/ametrine.png",
+	color = colors.WHITE, image = "object/artifact/crystal_focus.png",
 	level_range = {5, 12},
 	desc = [[This crystal radiates the power of the Spellblaze itself.]],
 	rarity = 200,
@@ -872,7 +845,7 @@ newEntity{ base = "BASE_GEM", define_as = "CRYSTAL_HEART",
 	unique = true,
 	unided_name = "coruscating crystal",
 	name = "Crystal Heart", subtype = "multi-hued",
-	color = colors.RED, image="object/ruby.png",
+	color = colors.RED, image = "object/artifact/crystal_heart.png",
 	level_range = {35, 42},
 	desc = [[This crystal is huge, easily the size of your head. It sparkles brilliantly almost of its own accord.]],
 	rarity = 250,

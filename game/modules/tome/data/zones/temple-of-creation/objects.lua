@@ -28,7 +28,7 @@ newEntity{ base = "BASE_LITE",
 	power_source = {arcane=true},
 	define_as = "ELDRITCH_PEARL",
 	unided_name = "bright pearl",
-	name = "Eldritch Pearl", unique=true,
+	name = "Eldritch Pearl", unique=true, image = "object/artifact/eldritch_pearl.png",
 	display ='*', color = colors.AQUAMARINE,
 	desc = [[Thousands of years spent inside the temple of creation have infused this pearl with the fury of rushing water. It pulses light.]],
 
