@@ -34,21 +34,23 @@ end
 
 --- List all available modules
 -- Static
-function _M:listModules(incompatible)
+function _M:listModules(incompatible, moddir_filter)
 	local ms = {}
 	fs.mount(engine.homepath, "/")
 --	print("Search Path: ") for k,e in ipairs(fs.getSearchPath()) do print("*",k,e) end
 
 	local knowns = {}
 	for i, short_name in ipairs(fs.list("/modules/")) do
-		local mod = self:createModule(short_name, incompatible)
-		if mod then
-			if not knowns[mod.short_name] then
-				table.insert(ms, {short_name=mod.short_name, name=mod.name, versions={}})
-				knowns[mod.short_name] = ms[#ms]
+		if not moddir_filter or moddir_filter(short_name) then
+			local mod = self:createModule(short_name, incompatible)
+			if mod then
+				if not knowns[mod.short_name] then
+					table.insert(ms, {short_name=mod.short_name, name=mod.name, versions={}})
+					knowns[mod.short_name] = ms[#ms]
+				end
+				local v = knowns[mod.short_name].versions
+				v[#v+1] = mod
 			end
-			local v = knowns[mod.short_name].versions
-			v[#v+1] = mod
 		end
 	end
 
@@ -156,10 +158,10 @@ end
 
 --- List all available savefiles
 -- Static
-function _M:listSavefiles()
+function _M:listSavefiles(moddir_filter)
 --	fs.mount(engine.homepath, "/tmp/listsaves")
 
-	local mods = self:listModules()
+	local mods = self:listModules(nil, moddir_filter)
 	for _, mod in ipairs(mods) do
 		local lss = {}
 		for i, short_name in ipairs(fs.list("/"..mod.short_name.."/save/")) do

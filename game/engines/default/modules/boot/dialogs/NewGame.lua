@@ -74,7 +74,7 @@ function _M:select(item)
 end
 
 function _M:generateList()
-	local list = Module:listModules(self.c_compat.checked)
+	local list = Module:listModules(self.c_compat.checked, function(dir) if dir:find("^boot") then return false else return true end end)
 	self.list = {}
 	for i = 1, #list do
 		for j, mod in ipairs(list[i].versions) do
