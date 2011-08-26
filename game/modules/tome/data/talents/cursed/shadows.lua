@@ -505,22 +505,10 @@ newTalent{
 		local closeAttackSpellChance = t.getCloseAttackSpellChance(self, t)
 		local farAttackSpellChance = t.getFarAttackSpellChance(self, t)
 
-		local level = self:getTalentLevelRaw(t)
-		if level < 3 then
-			return ([[Infuse magic into your shadows to give them fearsome spells.
-			Your shadows can strike adjacent foes with Lightning (%d%% chance at range 1).
-			At 3 talent points they will gain Flames and at 5 talent points they will gain Reform.]]):format(closeAttackSpellChance)
-		elseif level < 5 then
-			return ([[Infuse magic into your shadows to give them fearsome spells.
-			Your shadows can strike adjacent foes with Lightning (%d%% chance at range 1).
-			Your shadows can sear their enemies from a distance with Flames (%d%% chance at range 2 to 6).
-			At 5 talent points they will gain Reform.]]):format(closeAttackSpellChance, farAttackSpellChance)
-		else
-			return ([[Infuse magic into your shadows to give them fearsome spells.
-			Your shadows can strike adjacent foes with Lightning (%d%% chance at range 1).
-			Your shadows can sear their enemies from a distance with Flames (%d%% chance at range 2 to 6).
-			When your shadows are struck down they will attempt to Reform, becoming whole again.]]):format(closeAttackSpellChance, farAttackSpellChance)
-		end
+		return ([[Infuse magic into your shadows to give them fearsome spells.
+		Your shadows can strike adjacent foes with Lightning (%d%% chance at range 1).
+		At level 3 your shadows can sear their enemies from a distance with Flames (%d%% chance at range 2 to 6).
+		At level 5 when your shadows are struck down they will attempt to Reform, becoming whole again.]]):format(closeAttackSpellChance, farAttackSpellChance)
 	end,
 }
 
