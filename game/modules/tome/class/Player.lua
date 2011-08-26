@@ -675,7 +675,7 @@ function _M:getEncumberTitleUpdator(title)
 		local enc, max = self:getEncumbrance(), self:getMaxEncumbrance()
 		local color = "#00ff00#"
 		if enc > max then color = "#ff0000#" end
-		return ("%s - %sEncumbered %d/%d"):format(title, color, enc, max)
+		return ("%s - %sEncumberance %d/%d"):format(title, color, enc, max)
 	end
 end
 
