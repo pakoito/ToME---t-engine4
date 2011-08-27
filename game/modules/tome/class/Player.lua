@@ -491,7 +491,7 @@ function _M:restCheck()
 
 	-- Resting improves regen
 	for act, def in pairs(game.party.members) do if game.level:hasEntity(act) and not act.dead then
-		local perc = math.min(self.resting.cnt / 10, 4)
+		local perc = math.min(self.resting.cnt / 10, 8)
 		local old_shield = act.arcane_shield
 		act.arcane_shield = nil
 		act:heal(act.life_regen * perc)
