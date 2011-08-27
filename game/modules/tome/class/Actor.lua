@@ -569,6 +569,10 @@ function _M:move(x, y, force)
 		self:forceUseTalent(self.T_BODY_OF_STONE, {ignore_energy=true})
 	end
 
+	if not forced and moved and ox and oy and (ox ~= self.x or oy ~= self.y) and self:knowTalent(self.LIGHT_OF_FOOT) then
+		self:incStamina(self:getTalentLevelRaw(self.LIGHT_OF_FOOT) * 0.2)
+	end
+
 	if moved and not force and ox and oy and (ox ~= self.x or oy ~= self.y) and config.settings.tome.smooth_move > 0 then
 		local blur = 0
 		if game.zone.zero_gravity then blur = 2 end

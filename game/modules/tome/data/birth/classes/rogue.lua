@@ -30,6 +30,7 @@ newBirthDescriptor{
 			__ALL__ = "disallow",
 			Rogue = "allow",
 			Shadowblade = "allow",
+			Marauder = "allow",
 		},
 	},
 	copy = {
@@ -116,5 +117,44 @@ newBirthDescriptor{
 	},
 	copy = {
 		resolvers.inscription("RUNE:_MANASURGE", {cooldown=25, dur=10, mana=620}),
+	},
+}
+
+newBirthDescriptor{
+	type = "subclass",
+	name = "Marauder",
+	locked = function() return profile.mod.allow_build.rogue_marauder end,
+	locked_desc = "I will not hide and I will not sneak - come dance with my blades and we'll see who's weak. Snapping bone and cracking skull, it's the sounds of battle that make life full!",
+	desc = {
+		"The wilds of Maj'Eyal are not a safe place. Untamed beasts and wandering dragons may seem a great threat, but the true perils walk on two legs. Thieves and brigands, assassins and opportunistic adventurers, even mad wizards and magic-hating zealouts all carry danger to those who venture beyond the safety of city walls.",
+		"Amidst this chaos wanders one class of rogue that has learned to take by force rather than subterfuge. With refined techniques, agile feats and brawn-backed blades the Marauder seeks out his targets and removes them by the most direct methods. He uses dual weapons backed by advanced combat training to become highly effective in battle, and he is unafraid to use the dirtiest tactics when the odds are against him.",
+		"Their most important stats are: Strength, Dexterity and Cunning",
+		"#GOLD#Stat modifiers:",
+		"#LIGHT_BLUE# * +4 Strength, +4 Dexterity, +0 Constitution",
+		"#LIGHT_BLUE# * +0 Magic, +0 Willpower, +1 Cunning",
+	},
+	stats = { dex=4, str=4, cun=1, },
+	talents_types = {
+		["technique/dualweapon-attack"]={true, 0.2},
+		["technique/dualweapon-training"]={true, 0.2},
+		["technique/combat-techniques-active"]={true, 0.3},
+		["technique/combat-techniques-passive"]={false, 0.0},
+		["technique/combat-training"]={true, 0.3},
+		["technique/field-control"]={true, 0.3},
+		["technique/battle-tactics"]={false, 0.2},
+		["technique/mobility"]={true, 0.3},
+		["technique/thuggery"]={true, 0.3},
+		["cunning/dirty"]={true, 0.3},
+--		["cunning/tactical"]={false, 0.2},
+		["cunning/survival"]={true, 0.3},
+	},
+	unlockable_talents_types = {
+		["cunning/poisons"]={false, -0.1, "rogue_poisons"},
+	},
+	talents = {
+		[ActorTalents.T_DIRTY_FIGHTING] = 1,
+		[ActorTalents.T_SKULLCRACKER] = 1,
+		[ActorTalents.T_HACK_N_BACK] = 1,
+		[ActorTalents.T_DUAL_STRIKE] = 1,
 	},
 }

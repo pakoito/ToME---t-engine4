@@ -52,6 +52,7 @@
 
 SDL_Window *window = NULL;
 SDL_GLContext maincontext; /* Our opengl context handle */
+bool is_fullscreen = FALSE;
 lua_State *L = NULL;
 int nb_cpus;
 bool no_debug = FALSE;
@@ -742,9 +743,10 @@ void do_resize(int w, int h, bool fullscreen)
 		screen = SDL_GetWindowSurface(window);
 	}
 
+	printf("[DO RESIZE] %dx%d (%d)\n", w, h, fullscreen);
+	is_fullscreen = fullscreen;
 	SDL_SetWindowFullscreen(window, fullscreen);
 	SDL_GetWindowSize(window, &w, &h);
-	resizeWindow(w, h);
 	SDL_GL_MakeCurrent(window, maincontext);
 	resizeWindow(w, h);
 }
@@ -1021,7 +1023,7 @@ int main(int argc, char *argv[])
 				{
 				case SDL_WINDOWEVENT_RESIZED:
 					printf("resize %d x %d\n", event.window.data1, event.window.data2);
-					do_resize(event.window.data1, event.window.data2, FALSE);
+					do_resize(event.window.data1, event.window.data2, is_fullscreen);
 
 					if (current_game != LUA_NOREF)
 					{

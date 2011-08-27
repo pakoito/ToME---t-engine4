@@ -506,7 +506,13 @@ function _M:combatDefense()
 		local t = self:getTalentFromId(self.T_STEADY_MIND)
 		add = add + t.getDefense(self, t)
 	end
-	return math.max(0, self.combat_def + (self:getDex() - 10) * 0.35 + add + (self:getLck() - 50) * 0.4)
+	local d = math.max(0, self.combat_def + (self:getDex() - 10) * 0.35 + add + (self:getLck() - 50) * 0.4)
+
+	if self:hasLightArmor() and self:knowTalent(self.T_MOBILE_DEFENCE) then
+		d = d * (1 + self:getTalentLevel(self.T_MOBILE_DEFENCE) * 0.08)
+	end
+
+	return d
 end
 
 --- Gets the defense ranged
@@ -540,6 +546,9 @@ function _M:combatArmorHardiness()
 	local add = 0
 	if self:hasHeavyArmor() and self:knowTalent(self.T_ARMOUR_TRAINING) then
 		add = add + self:getTalentLevel(self.T_ARMOUR_TRAINING) * 5
+	end
+	if self:hasLightArmor() and self:knowTalent(self.T_MOBILE_DEFENCE) then
+		add = add + self:getTalentLevel(self.T_MOBILE_DEFENCE) * 6
 	end
 	return util.bound(30 + self.combat_armor_hardiness + add, 0, 100)
 end
@@ -991,6 +1000,16 @@ function _M:hasDualWeapon()
 		return nil
 	end
 	return weapon, offweapon
+end
+
+--- Check if the actor has a light armor
+function _M:hasLightArmor()
+	if not self:getInven("BODY") then return end
+	local armor = self:getInven("BODY")[1]
+	if not armor or (armor.subtype ~= "cloth" and armor.subtype ~= "light") then
+		return nil
+	end
+	return armor
 end
 
 --- Check if the actor has a heavy armor

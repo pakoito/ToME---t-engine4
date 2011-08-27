@@ -374,6 +374,7 @@ function _M:setResolution(res, force)
 	end
 	if not r then return false, "unknown resolution" end
 
+	print("Switching resolution to", res, r[1], r[2], r[3])
 	local old_w, old_h = self.w, self.h
 	core.display.setWindowSize(r[1], r[2], r[3])
 	self.w, self.h = core.display.size()
@@ -392,8 +393,9 @@ function _M:onResolutionChange()
 	end
 
 	local ow, oh = self.w, self.h
-	self.w, self.h = core.display.size()
-	config.settings.window.size = ("%dx%d"):format(self.w, self.h)
+	local fs
+	self.w, self.h, fs = core.display.size()
+	config.settings.window.size = ("%dx%d%s"):format(self.w, self.h, fs and " Fullscreen" or "")
 	self:saveSettings("resolution", ("window.size = '%s'\n"):format(config.settings.window.size))
 	print("[RESOLUTION] changed to ", self.w, self.h, "from", ow, oh)
 

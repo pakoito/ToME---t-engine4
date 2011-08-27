@@ -325,11 +325,13 @@ static int sdl_fullscreen(lua_State *L)
 	return 0;
 }
 
+extern bool is_fullscreen;
 static int sdl_screen_size(lua_State *L)
 {
 	lua_pushnumber(L, screen->w);
 	lua_pushnumber(L, screen->h);
-	return 2;
+	lua_pushboolean(L, is_fullscreen);
+	return 3;
 }
 
 static int sdl_new_font(lua_State *L)
@@ -1650,6 +1652,7 @@ static int sdl_set_window_size(lua_State *L)
 	bool fullscreen = lua_toboolean(L, 3);
 
 	printf("Setting resolution to %dx%d (%s)\n", w, h, fullscreen ? "fullscreen" : "windowed");
+	if (!fullscreen) {lua_pushstring(L, "plop") ;lua_error(L); }
 	do_resize(w, h, fullscreen);
 
 	lua_pushboolean(L, TRUE);
