@@ -197,6 +197,7 @@ newTalent{
 	mana = 60,
 	require = cuns_req_high4,
 	requires_target = true,
+	range = 5,
 	tactical = { ATTACK = 2, DEFEND = 1 },
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.9, 2) end,
 	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,

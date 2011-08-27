@@ -48,14 +48,27 @@ defineTile('P', "FLOOR", nil, mod.class.NPC.new{
 	ai = "dumb_talented_simple", ai_state = { talent_in=5, },
 	stats = { str=8, dex=15, mag=6, cun=15, con=7 },
 
-	resolvers.tmasteries{ ["technique/other"]=0.3, ["cunning/stealth"]=1.3, ["cunning/dirty"]=0.3, ["technique/dualweapon-training"]=0.3 },
+	resolvers.tmasteries{ ["cunning/stealth"]=1.3, },
 
 	desc = [[He is the leader of a gang of bandits, watch out for his men.]],
 	level_range = {8, 50}, exp_worth = 1,
 	rarity = 12,
 	combat_armor = 5, combat_def = 7,
-	max_life = resolvers.rngavg(90,100),
-	resolvers.talents{ [engine.interface.ActorTalents.T_LETHALITY]=3,[engine.interface.ActorTalents.T_STEALTH]=3, [engine.interface.ActorTalents.T_LETHALITY]=3, },
+	max_life = resolvers.rngavg(90,100), life_rating = 14,
+	resolvers.talents{
+		[engine.interface.ActorTalents.T_LETHALITY]={base=3, every=4, max=10},
+		[engine.interface.ActorTalents.T_STEALTH]={base=4, every=4, max=10},
+		[engine.interface.ActorTalents.T_VILE_POISONS]={base=3, every=4, max=10},
+		[engine.interface.ActorTalents.T_VENOMOUS_STRIKE]={base=3, every=4, max=10},
+		[engine.interface.ActorTalents.T_SHADOWSTEP]={base=3, every=4, max=10},
+		[engine.interface.ActorTalents.T_SHADOW_VEIL]={base=3, every=4, max=10},
+		[engine.interface.ActorTalents.T_AMBUSCADE]={base=3, every=4, max=10},
+		[engine.interface.ActorTalents.T_EMPOWER_POISONS]={base=3, every=4, max=10},
+		[engine.interface.ActorTalents.T_HIDE_IN_PLAIN_SIGHT]={base=3, every=4, max=10},
+		[engine.interface.ActorTalents.T_DIRTY_FIGHTING]={base=3, every=4, max=10},
+	},
+	stamina_regen = 5,
+	mana_regen = 6,
 
 	can_talk = "assassin-lord",
 

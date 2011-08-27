@@ -157,7 +157,7 @@ newEntity{ base = "BASE_NPC_THIEF", define_as = "THIEF_ASSASSIN",
 	name = "shadowblade", color_r=resolvers.rngrange(0, 10), color_g=resolvers.rngrange(0, 10), color_b=resolvers.rngrange(100, 120),
 	desc = [[Stealthy fighters trying to achieve victory with trickery. Be careful or they will steal your life!]],
 	level_range = {14, nil}, exp_worth = 1,
-	rarity = 3,
+	rarity = 4,
 	combat_armor = 3, combat_def = 10,
 	resolvers.talents{
 		[Talents.T_STEALTH]={base=3, every=5, max=8},
