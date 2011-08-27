@@ -69,7 +69,7 @@ newTalent{
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.5, 0.9) + getStrikingStyle(self, dam) end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t) * 100
-		return ([[When you avoid a melee blow you have a %d%% chance to get a free, automatic unarmed attack against your foe for %d%% damage.
+		return ([[When you avoid a melee blow you have a %d%% chance to get a free, automatic attack against your foe for %d%% damage.
 		Unarmed fighters using it do consider it a strike for the purpose of stance damage bonuses (if have any) and will have a damage bonus.
 		Armed fighters use it normaly.
 		The chance of countering increases with the cunning stat.]]):format(self:getTalentLevel(t) * (5 + self:getCun(5, true)), damage)

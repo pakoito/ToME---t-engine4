@@ -297,6 +297,8 @@ newEntity{ base = "BASE_HELM",
 	level_range = {12, 22},
 	rarity = 200,
 	cost = 20,
+	material_level = 3,
+	skullcracker_mult = 5,
 
 	wielder = {
 		combat_armor = 6,
