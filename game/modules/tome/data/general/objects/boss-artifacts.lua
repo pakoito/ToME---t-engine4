@@ -307,6 +307,7 @@ newEntity{ base = "BASE_HELM",
 		combat_physresist = 12,
 		combat_mentalresist = 12,
 		combat_spellresist = 12,
+		talents_types_mastery = {["technique/thuggery"]=0.2},
 	},
 }
 
