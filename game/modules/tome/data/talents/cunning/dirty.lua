@@ -123,8 +123,8 @@ newTalent{
 	tactical = { DISABLE = 2, ATTACK = 2 },
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.9, 1.4) end,
 	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
-	getAttackPenalty = function(self, t) return 10 + self:getTalentLevel(t) * 3 end,
-	getDamagePenalty = function(self, t) return 10 + self:getTalentLevel(t) * 4 end,
+	getAttackPenalty = function(self, t) return 5 + self:combatTalentStatDamage(t, "cun", 10, 60) end,
+	getDamagePenalty = function(self, t) return 5 + self:combatTalentStatDamage(t, "cun", 10, 50) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
