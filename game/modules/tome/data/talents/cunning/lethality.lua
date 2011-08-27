@@ -23,12 +23,18 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	require = cuns_req1,
+	on_learn = function(self, t)
+		self.combat_critical_power = (self.combat_critical_power or 0) + 5
+	end,
+	on_unlearn = function(self, t)
+		self.combat_critical_power = (self.combat_critical_power or 0) - 5
+	end,
 	getCriticalChance = function(self, t) return 1 + self:getTalentLevel(t) * 1.3 end,
 	info = function(self, t)
 		local critchance = t.getCriticalChance(self, t)
-		return ([[You have learned to find and hit the weak spots. Your strikes have a %0.2f%% greater chance to be critical hits.
+		return ([[You have learned to find and hit the weak spots. Your strikes have a %0.2f%% greater chance to be critical hits and your critical hits do %d%% more damage.
 		Also, when using knives, you now use your cunning score instead of your strength for bonus damage.]]):
-		format(critchance)
+		format(critchance, self:getTalentLevelRaw(t) * 5)
 	end,
 }
 
@@ -41,9 +47,10 @@ newTalent{
 	stamina = 15,
 	require = cuns_req2,
 	tactical = { ATTACK = 2 },
+	no_energy = true,
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.8, 1.4) end,
-	getArmorPierce = function(self, t) return 4 + (self:getTalentLevel(t) * self:getCun()) / 20 end,
+	getArmorPierce = function(self, t) return self:combatTalentStatDamage(t, "cun", 5, 60) end,
 	getDuration = function(self, t) return 5 + math.ceil(self:getTalentLevel(t)) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
@@ -77,8 +84,9 @@ newTalent{
 	stamina = 25,
 	tactical = { BUFF = 3 },
 	require = cuns_req3,
+	no_energy = true,
 	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t) * 1.5) end,
-	getDamage = function(self, t) return self:getWil(70, true) end,
+	getDamage = function(self, t) return self:getWil(40, true) + self:getCun(40, true) end,
 	action = function(self, t)
 		self:setEffect(self.EFF_WILLFUL_COMBAT, t.getDuration(self, t), {power=t.getDamage(self, t)})
 		return true
@@ -87,7 +95,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[For %d turns you put all your will into your blows, adding %d damage to each strike.
-		Damage will improve with your Willpower stat.]]):
+		Damage will improve with your Cunning and Willpower stats.]]):
 		format(duration, damage)
 	end,
 }
