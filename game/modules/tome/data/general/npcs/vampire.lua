@@ -51,7 +51,7 @@ newEntity{
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=9, },
 	stats = { str=12, dex=12, mag=12, con=12 },
 	infravision = 10,
-	life_regen = 3,
+	life_regen = 3, life_rating = 14,
 	size_category = 3,
 	rank = 2,
 
@@ -61,7 +61,10 @@ newEntity{
 
 	resolvers.sustains_at_birth(),
 
-	resolvers.talents{ [Talents.T_BLURRED_MORTALITY]={base=1, every=7, max=6} },
+	resolvers.talents{
+		[Talents.T_BLURRED_MORTALITY]={base=1, every=7, max=6},
+		[Talents.T_VAMPIRIC_GIFT]={base=1, every=7, max=6},
+	},
 
 	resists = { [DamageType.COLD] = 80, [DamageType.NATURE] = 80, [DamageType.LIGHT] = -50,  },
 	blind_immune = 1,
@@ -80,7 +83,10 @@ newEntity{ base = "BASE_NPC_VAMPIRE",
 	max_life = resolvers.rngavg(40,50),
 	combat_armor = 7, combat_def = 6,
 
-	resolvers.talents{ [Talents.T_STUN]={base=1, every=7, max=5} },
+	resolvers.talents{
+		[Talents.T_STUN]={base=1, every=7, max=5},
+		[Talents.T_INVOKE_DARKNESS]={base=3, every=7, max=5},
+	},
 }
 
 newEntity{ base = "BASE_NPC_VAMPIRE",
@@ -91,7 +97,12 @@ newEntity{ base = "BASE_NPC_VAMPIRE",
 	max_life = resolvers.rngavg(70,80),
 	combat_armor = 9, combat_def = 6,
 
-	resolvers.talents{ [Talents.T_STUN]={base=1, every=7, max=5}, [Talents.T_BLUR_SIGHT]={base=1, every=7, max=5}, [Talents.T_ROTTING_DISEASE]={base=1, every=7, max=5}, },
+	resolvers.talents{
+		[Talents.T_STUN]={base=1, every=7, max=5},
+		[Talents.T_BLUR_SIGHT]={base=1, every=7, max=5},
+		[Talents.T_ROTTING_DISEASE]={base=1, every=7, max=5},
+		[Talents.T_CIRCLE_OF_DEATH]={base=1, every=7, max=6},
+	},
 }
 
 newEntity{ base = "BASE_NPC_VAMPIRE",
@@ -102,7 +113,13 @@ newEntity{ base = "BASE_NPC_VAMPIRE",
 	max_life = resolvers.rngavg(80,90),
 	combat_armor = 10, combat_def = 8,
 	ai = "dumb_talented_simple", ai_state = { talent_in=6, },
-	resolvers.talents{ [Talents.T_STUN]={base=1, every=7, max=5}, [Talents.T_BLUR_SIGHT]={base=2, every=7, max=5}, [Talents.T_PHANTASMAL_SHIELD]={base=1, every=7, max=5}, [Talents.T_ROTTING_DISEASE]={base=2, every=7, max=5}, },
+	resolvers.talents{
+		[Talents.T_STUN]={base=1, every=7, max=5},
+		[Talents.T_BLUR_SIGHT]={base=2, every=7, max=5},
+		[Talents.T_PHANTASMAL_SHIELD]={base=1, every=7, max=5},
+		[Talents.T_ROTTING_DISEASE]={base=2, every=7, max=5},
+		[Talents.T_COLD_FLAMES]={base=1, every=7, max=6},
+	},
 }
 
 newEntity{ base = "BASE_NPC_VAMPIRE",
@@ -117,7 +134,14 @@ It can summon the very shades of its victims from beyond the grave to come ensla
 	ai = "tactical", ai_state = { talent_in=4, },
 	resolvers.inscriptions(1, "rune"),
 	summon = {{type="undead", number=1, hasxp=false}, },
-	resolvers.talents{ [Talents.T_STUN]={base=2, every=7, max=6}, [Talents.T_SUMMON]=1, [Talents.T_BLUR_SIGHT]={base=3, every=7, max=7}, [Talents.T_PHANTASMAL_SHIELD]={base=2, every=7, max=6}, [Talents.T_ROTTING_DISEASE]={base=3, every=7, max=7}, },
+	resolvers.talents{
+		[Talents.T_STUN]={base=2, every=7, max=6},
+		[Talents.T_SUMMON]=1,
+		[Talents.T_BLUR_SIGHT]={base=3, every=7, max=7},
+		[Talents.T_PHANTASMAL_SHIELD]={base=2, every=7, max=6},
+		[Talents.T_ROTTING_DISEASE]={base=3, every=7, max=7},
+		[Talents.T_FORGERY_OF_HAZE]={base=2, every=7, max=5},
+	},
 	on_die = function(self, who)
 		local part = "ELDER_VAMPIRE_BLOOD"
 		if game.player:hasQuest("brotherhood-of-alchemists") then
@@ -137,7 +161,15 @@ newEntity{ base = "BASE_NPC_VAMPIRE",
 	ai = "tactical", ai_state = { talent_in=3, },
 	resolvers.inscriptions(1, "rune"),
 	summon = {{type="undead", number=1, hasxp=false}, },
-	resolvers.talents{ [Talents.T_STUN]={base=4, every=7, max=8}, [Talents.T_SUMMON]=1, [Talents.T_BLUR_SIGHT]={base=4, every=7, max=8}, [Talents.T_PHANTASMAL_SHIELD]={base=5, every=7, max=8}, [Talents.T_ROTTING_DISEASE]={base=5, every=7, max=8}, },
+	resolvers.talents{
+		[Talents.T_FORGERY_OF_HAZE]={base=2, every=7, max=6},
+		[Talents.T_IMPENDING_DOOM]={base=2, every=7, max=6},
+		[Talents.T_STUN]={base=4, every=7, max=8},
+		[Talents.T_SUMMON]=1,
+		[Talents.T_BLUR_SIGHT]={base=4, every=7, max=8},
+		[Talents.T_PHANTASMAL_SHIELD]={base=5, every=7, max=8},
+		[Talents.T_ROTTING_DISEASE]={base=5, every=7, max=8},
+	},
 	make_escort = {
 		{type="undead", number=resolvers.mbonus(2, 2)},
 	},

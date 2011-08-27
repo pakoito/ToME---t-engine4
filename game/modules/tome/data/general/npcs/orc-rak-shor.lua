@@ -64,19 +64,25 @@ newEntity{ base = "BASE_NPC_ORC_RAK_SHOR",
 		{type="armor", subtype="cloth", autoreq=true},
 	},
 	combat_armor = 0, combat_def = 5,
-	summon = {
-		{type="undead", subtype="skeleton", number=1, hasxp=false},
-		{type="humanoid", subtype="ghoul", number=1, hasxp=false},
-	},
-	make_escort = {
-		{type="undead", subtype="ghoul", no_subescort=true, chance=50, number=resolvers.mbonus(3, 2)},
-		{type="undead", subtype="skeleton", no_subescort=true, chance=50, number=resolvers.mbonus(3, 2)},
-	},
+
+	necrotic_aura_base_souls = resolvers.rngavg(5, 10),
 
 	resolvers.talents{
-		[Talents.T_SUMMON]=1,
-		[Talents.T_SOUL_ROT]={base=5, every=10, max=8},
+		[Talents.T_NECROTIC_AURA] = 1,
+		[Talents.T_AURA_MASTERY] = 5,
+		[Talents.T_CREATE_MINIONS]={base=4, every=5, max=7},
+		[Talents.T_RIGOR_MORTIS]={base=3, every=5, max=7},
+		[Talents.T_INVOKE_DARKNESS]={base=5, every=5, max=9},
+		[Talents.T_VAMPIRIC_GIFT]={base=2, every=7, max=7},
 	},
+	resolvers.rngtalent{
+		[Talents.T_CIRCLE_OF_DEATH]={base=3, every=5, max=7},
+		[Talents.T_SURGE_OF_UNDEATH]={base=3, every=5, max=7},
+		[Talents.T_WILL_O__THE_WISP]={base=3, every=5, max=7},
+		[Talents.T_FORGERY_OF_HAZE]={base=3, every=5, max=7},
+		[Talents.T_FROSTDUSK]={base=3, every=5, max=7},
+	},
+	resolvers.sustains_at_birth(),
 }
 
 newEntity{ base = "BASE_NPC_ORC_RAK_SHOR",
@@ -128,4 +134,5 @@ newEntity{ base = "BASE_NPC_ORC_RAK_SHOR",
 		[Talents.T_BONE_SHIELD]={base=5, every=150, max=8},
 		[Talents.T_BLOOD_SPRAY]={base=4, every=10, max=8},
 	},
+	resolvers.sustains_at_birth(),
 }

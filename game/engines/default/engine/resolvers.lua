@@ -93,6 +93,28 @@ function resolvers.calc.talents(t, e)
 	return nil
 end
 
+--- Talents resolver, random choice of one
+function resolvers.rngtalent(list)
+	return {__resolver="rngtalent", list}
+end
+function resolvers.calc.rngtalent(t, e)
+	local lvls = false
+	local levelup_talents = e._levelup_talents or {}
+	local tid = rng.table(table.keys(t[1]))
+	local level = t[1][tid]
+
+	if type(level) == "table" then
+		levelup_talents[tid] = level
+		level = level.base
+		lvls = true
+	end
+	print("RNG Talent resolver for", e.name, ":", tid, "=>", level)
+	e:learnTalent(tid, true, level)
+
+	if lvls then e._levelup_talents = levelup_talents end
+	return nil
+end
+
 --- Talents masteries
 function resolvers.tmasteries(list)
 	return {__resolver="tmasteries", list}

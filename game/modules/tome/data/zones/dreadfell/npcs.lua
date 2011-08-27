@@ -79,6 +79,7 @@ newEntity{ define_as = "THE_MASTER",
 		[Talents.T_CIRCLE_OF_DEATH]={base=3, every=5, max=5},
 		[Talents.T_SURGE_OF_UNDEATH]={base=3, every=5, max=5},
 		[Talents.T_WILL_O__THE_WISP]={base=3, every=5, max=5},
+		[Talents.T_VAMPIRIC_GIFT]={base=2, every=7, max=5},
 
 		[Talents.T_CONGEAL_TIME]={base=2, every=5, max=5},
 		[Talents.T_MANATHRUST]={base=4, every=5, max=8},
