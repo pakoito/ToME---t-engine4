@@ -142,6 +142,12 @@ function table.values(t)
 	return tt
 end
 
+function table.from_list(t, k, v)
+	local tt = {}
+	for i, e in ipairs(t) do tt[e[k or 1]] = e[v or 2] end
+	return tt
+end
+
 function table.update(dst, src, deep)
 	for k, e in pairs(src) do
 		if deep and dst[k] and type(e) == "table" and type(dst[k]) == "table" and not e.__CLASSNAME then

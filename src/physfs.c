@@ -153,9 +153,9 @@ static int lua_file_read(lua_State *L)
 static int lua_file_readline(lua_State *L)
 {
 	PHYSFS_file **f = (PHYSFS_file**)auxiliar_checkclass(L, "physfs{file}", 1);
-	char buf[1024];
+	char buf[102400];
 	char *ptr = buf;
-	int bufsize = 1024;
+	int bufsize = 102400;
 	int total = 0;
 
 	if (PHYSFS_eof(*f)) return 0;

@@ -107,7 +107,7 @@ newTalent{
 		self.talent_cd_reduction[Talents.T_EVASION] = (self.talent_cd_reduction[Talents.T_EVASION] or 0) - 1
 	end,
 	info = function(self, t)
-		return ([[You literaly dance around your foes, increasing movement speed by %d%% and reducing the cooldown of Hack'n'Back, Rush, Disengage and Evasion by %d turns.]]):
+		return ([[You literally dance around your foes, increasing movement speed by %d%% and reducing the cooldown of Hack'n'Back, Rush, Disengage and Evasion by %d turns.]]):
 		format(self:getTalentLevelRaw(t) * 0.02, self:getTalentLevelRaw(t))
 	end,
 }

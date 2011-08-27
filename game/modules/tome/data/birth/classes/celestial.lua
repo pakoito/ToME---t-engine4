@@ -104,9 +104,9 @@ newBirthDescriptor{
 	locked_desc = "The balance of the heavens' powers is a daunting task. Mighty are those that stand in the twilight places, wielding both light and darkness in their mind.",
 	desc = {
 		"Anorithils hail from the Gates of Morning, the last bastion of the free people in the Far East.",
-		"Their way of life is well represented by their motto 'We stand betwixt the Sun and Moons, where light and darkness meet. In the grey twilight we seek our destiny.'",
-		"They can channel the power of the Sun and the Moons to burn and tear apart all who seek to destroy the Sunwall.",
-		"Masters of Sun and Moons magic, they usually burn their foes with Sun rays before calling the fury of the stars.",
+		"Their way of life is well represented by their motto 'We stand betwixt the Sun and Moon, where light and darkness meet. In the grey twilight we seek our destiny.'",
+		"They can channel the power of the Sun and the Moon to burn and tear apart all who seek to destroy the Sunwall.",
+		"Masters of Sun and Moon magic, they usually burn their foes with Sun rays before calling the fury of the stars.",
 		"Their most important stats are: Magic and Cunning",
 		"#GOLD#Stat modifiers:",
 		"#LIGHT_BLUE# * +0 Strength, +0 Dexterity, +0 Constitution",
