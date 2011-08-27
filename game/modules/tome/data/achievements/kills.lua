@@ -26,16 +26,16 @@ newAchievement{
 	name = "Size matters",
 	show = "full",
 	desc = [[Do over 600 damage in one attack]],
-}
-newAchievement{
-	name = "Size is everything", id = "DAMAGE_1500",
-	show = "full",
-	desc = [[Do over 1500 damage in one attack]],
 	on_gain = function(_, src, personal)
 		if src.descriptor and src.descriptor.subclass == "Rogue" then
 			game:setAllowedBuild("rogue_marauder", true)
 		end
 	end,
+}
+newAchievement{
+	name = "Size is everything", id = "DAMAGE_1500",
+	show = "full",
+	desc = [[Do over 1500 damage in one attack]],
 }
 newAchievement{
 	name = "The bigger the better!", id = "DAMAGE_3000",
