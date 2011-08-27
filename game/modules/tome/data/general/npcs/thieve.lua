@@ -51,7 +51,6 @@ newEntity{
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=5, },
 	stats = { str=8, dex=15, mag=6, cun=15, con=7 },
 
-	resolvers.tmasteries{ ["technique/other"]=0.3, ["cunning/stealth"]=1, ["cunning/dirty"]=0.3, ["technique/dualweapon-training"]=0.3 },
 	resolvers.talents{ [Talents.T_LETHALITY]={base=1, every=6, max=5}, },
 }
 
@@ -71,7 +70,7 @@ newEntity{ base = "BASE_NPC_THIEF",
 	level_range = {2, nil}, exp_worth = 1,
 	rarity = 1,
 	combat_armor = 2, combat_def = 5,
-	resolvers.talents{ [Talents.T_STEALTH]={base=1, every=6, max=5},  },
+	resolvers.talents{ [Talents.T_STEALTH]={base=1, every=6, max=7}, [Talents.T_SWITCH_PLACE]={last=8, base=0, every=6, max=5},  },
 	max_life = resolvers.rngavg(70,90),
 }
 
@@ -81,7 +80,12 @@ newEntity{ base = "BASE_NPC_THIEF",
 	level_range = {3, nil}, exp_worth = 1,
 	rarity = 1,
 	combat_armor = 3, combat_def = 5,
-	resolvers.talents{ [Talents.T_STEALTH]={base=2, every=6, max=6}, [Talents.T_DISARM]={base=2, every=6, max=6}, },
+	resolvers.talents{
+		[Talents.T_STEALTH]={base=2, every=6, max=8},
+		[Talents.T_DISARM]={base=2, every=6, max=6},
+		[Talents.T_VILE_POISONS]={base=1, every=6, max=5},
+		[Talents.T_VENOMOUS_STRIKE]={last=15, base=0, every=6, max=5},
+	},
 	max_life = resolvers.rngavg(70,90),
 }
 
@@ -91,7 +95,11 @@ newEntity{ base = "BASE_NPC_THIEF", define_as = "THIEF_BANDIT",
 	level_range = {5, nil}, exp_worth = 1,
 	rarity = 2,
 	combat_armor = 4, combat_def = 6,
-	resolvers.talents{ [Talents.T_STEALTH]={base=3, every=6, max=7}, [Talents.T_LETHALITY]={base=2, every=6, max=6}, },
+	resolvers.talents{
+		[Talents.T_STEALTH]={base=3, every=6, max=9},
+		[Talents.T_LETHALITY]={base=2, every=6, max=6},
+		[Talents.T_VICIOUS_STRIKES]={base=1, every=7, max=6},
+	},
 	max_life = resolvers.rngavg(80,100),
 }
 
@@ -114,7 +122,12 @@ newEntity{ base = "BASE_NPC_THIEF",
 		{type="humanoid", subtype="human", name="thief", number=1, hasxp=false},
 		{type="humanoid", subtype="human", name="rogue", number=2, hasxp=false},
 	},
-	resolvers.talents{ [Talents.T_STEALTH]={base=3, every=6, max=7}, [Talents.T_SUMMON]=1, [Talents.T_LETHALITY]={base=3, every=6, max=6}, },
+	resolvers.talents{
+		[Talents.T_STEALTH]={base=3, every=6, max=7},
+		[Talents.T_SUMMON]=1,
+		[Talents.T_LETHALITY]={base=3, every=6, max=6},
+		[Talents.T_TOTAL_THUGGERY]={base=1, every=5, max=7},
+	},
 }
 
 newEntity{ base = "BASE_NPC_THIEF", define_as = "THIEF_ASSASSIN",
@@ -133,6 +146,32 @@ newEntity{ base = "BASE_NPC_THIEF", define_as = "THIEF_ASSASSIN",
 		[Talents.T_SHADOWSTRIKE]={base=2, every=6, max=6},
 		[Talents.T_LETHALITY]={base=5, every=6, max=8},
 		[Talents.T_DISARM]={base=3, every=6, max=6},
+	},
+	max_life = resolvers.rngavg(70,90),
+
+	resolvers.sustains_at_birth(),
+	autolevel = "rogue",
+}
+
+newEntity{ base = "BASE_NPC_THIEF", define_as = "THIEF_ASSASSIN",
+	name = "shadowblade", color_r=resolvers.rngrange(0, 10), color_g=resolvers.rngrange(0, 10), color_b=resolvers.rngrange(100, 120),
+	desc = [[Stealthy fighters trying to achieve victory with trickery. Be careful or they will steal your life!]],
+	level_range = {14, nil}, exp_worth = 1,
+	rarity = 3,
+	combat_armor = 3, combat_def = 10,
+	resolvers.talents{
+		[Talents.T_STEALTH]={base=3, every=5, max=8},
+		[Talents.T_DUAL_WEAPON_TRAINING]={base=2, every=6, max=6},
+		[Talents.T_DUAL_WEAPON_DEFENSE]={base=2, every=6, max=6},
+		[Talents.T_DUAL_STRIKE]={base=1, every=6, max=6},
+		[Talents.T_SHADOWSTRIKE]={base=2, every=6, max=6},
+		[Talents.T_SHADOWSTEP]={base=2, every=6, max=6},
+		[Talents.T_LETHALITY]={base=5, every=6, max=8},
+		[Talents.T_SHADOW_LEASH]={base=1, every=6, max=6},
+		[Talents.T_SHADOW_AMBUSH]={base=1, every=6, max=6},
+		[Talents.T_SHADOW_COMBAT]={base=1, every=6, max=6},
+		[Talents.T_SHADOW_VEIL]={last=20, base=0, every=6, max=6},
+		[Talents.T_INVISIBILITY]={last=30, base=0, every=6, max=6},
 	},
 	max_life = resolvers.rngavg(70,90),
 

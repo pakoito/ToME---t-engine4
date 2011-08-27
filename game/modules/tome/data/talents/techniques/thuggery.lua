@@ -96,6 +96,7 @@ newTalent{
 newTalent{
 	name = "Vicious Strikes",
 	type = {"technique/thuggery", 3},
+	mode = "passive",
 	points = 5,
 	require = techs_req3,
 	on_learn = function(self, t)
