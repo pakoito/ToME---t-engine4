@@ -133,7 +133,14 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			target:setEffect(target.EFF_SMEARED, 6, {src=src, power=smear/6})
 			dam = 0
 		end
-
+		
+		-- affinity healing, we store it to apply it after damage is resolved
+		local affinity_heal = 0
+		if target.damage_affinity then
+			local aff = (target.damage_affinity[type] or 0) / 100
+			affinity_heal = (dam * aff)
+		end
+		
 		-- Reduce damage with resistance
 		if target.resists then
 			local pen = 0
@@ -197,6 +204,12 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			if type == DamageType.FIRE or type == DamageType.COLD or type == DamageType.LIGHTNING or type == DamageType.ACID or type == DamageType.NATURE then
 				target:setEffect(target.EFF_ELEMENTAL_HARMONY, 5 + math.ceil(target:attr("elemental_harmony")), {power=target:attr("elemental_harmony"), type=type})
 			end
+		end
+		
+		-- damage affinity healing
+		if not target.dead and affinity_heal > 0 then
+			target:heal(affinity_heal)
+			game.logSeen(target, "%s is healed by the %s%s#LAST# damage!", target.name:capitalize(), DamageType:get(type).text_color or "#aaaaaa#", DamageType:get(type).name)
 		end
 
 		if dam > 0 and src.__projecting_for and src.__projecting_for.project_type and (src.__projecting_for.project_type.talent_id or src.__projecting_for.project_type.talent) and src.getTalentFromId and not src.__projecting_for.talent_on_hit_done then
@@ -1542,17 +1555,6 @@ newDamageType{
 		if target then
 			dam = (target.max_life - target.life) * dam
 			DamageType:get(DamageType.TEMPORAL).projector(src, x, y, DamageType.TEMPORAL, dam)
-		end
-	end,
-}
-
--- Dredge Haste
-newDamageType{
-	name = "dredge frenzy", type = "DREDGE_FRENZY",
-	projector = function(src, x, y, type, dam)
-		local target = game.level.map(x, y, Map.ACTOR)
-		if target and target.dredge then
-			target:setEffect(target.EFF_SPEED, 3, {power=0.6})
 		end
 	end,
 }

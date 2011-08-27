@@ -1119,7 +1119,7 @@ newTalent{
 	target = function(self, t)
 		return {type="beam", range=self:getTalentRange(t), talent=t}
 	end,
-	tactical = { ATTACK = 3 },
+	tactical = { ATTACK = 2, ESCAPE = 2 },
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
@@ -1418,7 +1418,7 @@ newTalent{
 	points = 5,
 	cooldown = 6,
 	tactical = {
-		BUFF = 10,
+		BUFF = 4,
 	},
 	direct_hit = true,
 	range = 0,
@@ -1428,9 +1428,30 @@ newTalent{
 	end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
-		local grids = self:project(tg, self.x, self.y, DamageType.DREDGE_FRENZY)
+		self:project(tg, self.x, self.y, function(px, py)
+			local target = game.level.map(px, py, engine.Map.ACTOR)
+			local reapplied = false
+			if target then
+				local actor_frenzy = false
+				if target.dredge then
+					actor_frenzy = true
+				end
+				if actor_frenzy then
+					-- silence the apply message if the target already has the effect
+					for eff_id, p in pairs(target.tmp) do
+						local e = target.tempeffect_def[eff_id]
+						if e.name == "Frenzy" then
+							reapplied = true
+						end
+					end
+					target:setEffect(target.EFF_FRENZY, self:getTalentLevel(t), {crit = self:getTalentLevel(t), power=self:getTalentLevel(t) * 0.1, dieat=self:getTalentLevel(t) * 0.1}, reapplied)
+				end
+			end
+		end)
+		
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_light", {radius=tg.radius})
 		game:playSoundNear(self, "talents/arcane")
+			
 		return true
 	end,
 	info = function(self, t)

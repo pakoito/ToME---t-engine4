@@ -143,6 +143,9 @@ function _M:init(t, no_default)
 	t.resists = t.resists or {}
 	t.resists_cap = t.resists_cap or { all = 100 }
 	t.resists_pen = t.resists_pen or {}
+	
+	-- Absorbs a percentage of damage
+	t.damage_affinity = t.damage_affinity or {}
 
 	-- % Increase damage
 	t.inc_damage = t.inc_damage or {}

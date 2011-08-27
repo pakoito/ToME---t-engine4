@@ -66,15 +66,18 @@ newEntity{ base = "BASE_NPC_WORM",
 
 newEntity{ base = "BASE_NPC_WORM",
 	name = "carrion worm mass", color=colors.SANDY_BROWN,
+	can_multiply = 2,
 	level_range = {20, nil}, exp_worth = 1,
 	rarity = 4,
 	max_life = resolvers.rngavg(5,9),
 	combat = { dam=1, atk=15, apr=100 },
-	
-	resists = {[DamageType.BLIGHT] = 100},
+
+	disease_immune = 1,
+	resists = { [DamageType.PHYSICAL] = 50, [DamageType.ACID] = 100, [DamageType.BLIGHT] = 100, [DamageType.FIRE] = -50},
+	no_auto_resists = true,
 
 	autolevel = "warriormage",
-	resolvers.talents{ [Talents.T_CRAWL_POISON]=2, [Talents.T_ROTTING_DISEASE]=4, [Talents.T_MULTIPLY]=1 },
+	resolvers.talents{ [Talents.T_CRAWL_ACID]=2, [Talents.T_ROTTING_DISEASE]=4, [Talents.T_MULTIPLY]=1 },
 	
 	on_die = function(self, src)
 		game.level.map:addEffect(self,
@@ -82,7 +85,7 @@ newEntity{ base = "BASE_NPC_WORM",
 			engine.DamageType.BLIGHT, self:getStr(90, true),
 			2,
 			5, nil,
-			engine.Entity.new{alpha=100, display='', color_br=30, color_bg=180, color_bb=60}
+			engine.Entity.new{alpha=50, display='', color_br=30, color_bg=180, color_bb=60}
 		)
 		game.logSeen(self, "%s exudes a corrupted gas as it dies.", self.name:capitalize())
 	end,

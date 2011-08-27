@@ -44,7 +44,8 @@ newEntity{
 
 newEntity{ base = "BASE_NPC_HORROR",
 	name = "worm that walks", color=colors.SANDY_BROWN,
-	desc = [[A maggot-filled robe with a vaguely humanoid shape.]],
+	desc = [[A bulging rotten robe seems to tear at the seams, with masses of bloated worms spilling from out and around the moving form.  Two arm-like appendages, each made up of overlapping mucous-drenched maggots, grasp tightly around the handles of bile-coated waraxes. 
+	Each swing drips pestulant fluid before it, and each droplet writhes and wriggles in the air before splashing against the ground.]],
 	level_range = {25, nil}, exp_worth = 1,
 	rarity = 5,
 	max_life = resolvers.rngavg(150,170),
@@ -52,8 +53,9 @@ newEntity{ base = "BASE_NPC_HORROR",
 	rank = 3,
 	hate_regen = 1,
 	vim_regen = 1,
-
-	ai = "tactical", ai_state = { ai_move="move_dmap", talent_in=1, },
+	
+	autolevel = "warriormage",
+	ai = "tactical", ai_state = { ai_move="move_dmap", talent_in=1, ally_compassion=0 },
 	ai_tactic = resolvers.tactic "melee",
 
 	see_invisible = 100,
@@ -61,10 +63,11 @@ newEntity{ base = "BASE_NPC_HORROR",
 	stun_immune = 1,
 	blind_immune = 1,
 	disease_immune = 1,
-	move_others=true,
 
-	resists = { [DamageType.PHYSICAL] = 50, [DamageType.BLIGHT] = 100, [DamageType.FIRE] = -50},
-
+	resists = { [DamageType.PHYSICAL] = 50, [DamageType.ACID] = 100, [DamageType.BLIGHT] = 100, [DamageType.FIRE] = -50},
+	damage_affinity = { [DamageType.BLIGHT] = 50 },	
+	no_auto_resists = true,
+	
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.drops{chance=20, nb=1, {} },
 	resolvers.equip{
@@ -78,15 +81,15 @@ newEntity{ base = "BASE_NPC_HORROR",
 	resolvers.inscriptions(1, {"regeneration infusion"}),
 
 	resolvers.talents{
-		--[Talents.T_BONE_GRAB]={base=4, every=10},
-		[Talents.T_BLINDSIDE]={base=5, every=12},
+		[Talents.T_WORM_ROT]={base=4, every=8},
+		[Talents.T_EPIDEMIC]={base=4, every=8},
+		[Talents.T_REND]={base=4, every=8},
+		[Talents.T_ACID_STRIKE]={base=4, every=8},
+		[Talents.T_BLOODLUST]={base=4, every=8},
+		[Talents.T_RUIN]={base=4, every=8},
 		[Talents.T_CORRUPTED_STRENGTH]={base=3, every=15},
-		[Talents.T_SLASH]={base=4, every=12},
-		[Talents.T_FRENZY]={base=4, every=15},
-		[Talents.T_REND]={base=4, every=12},
-		[Talents.T_BLOODLUST]={base=3, every=12},
-		[Talents.T_RUIN]={base=2, every=12},
-		[Talents.T_SUMMON]=1,
+		
+		[Talents.T_BLINDSIDE]={base=3, every=12},
 
 		[Talents.T_WEAPON_COMBAT]={base=5, every=10, max=10},
 		[Talents.T_WEAPONS_MASTERY]={base=3, every=10, max=10},
@@ -96,14 +99,12 @@ newEntity{ base = "BASE_NPC_HORROR",
 
 	on_takehit = function(self, value, src)
 		if value >= (self.max_life * 0.1) then
-			self:forceUseTalent(self.T_SUMMON, {ignore_energy=true, ignore_cd=true})
+			local t = self:getTalentFromId(self.T_WORM_ROT)
+			t.spawn_carrion_worm(self, self, t)
+			game.logSeen(self, "#LIGHT_RED#A carrion worm mass has spawned from %s' wounds!", self.name)
 		end
 		return value
 	end,
-
-	summon = {
-		{type="vermin", subtype="worms", name="carrion worm mass", number=1, hasxp=false},
-	},
 }
 
 newEntity{ base = "BASE_NPC_HORROR",
@@ -474,11 +475,9 @@ newEntity{ base = "BASE_NPC_HORROR",
 	},
 }
 
--- Temporal Horrors
-
 newEntity{ base = "BASE_NPC_HORROR",
-	subtype = "temporal",
-	name = "temporal devourer", color=colors.CRIMSON,
+	subtype = "eldritch",
+	name = "devourer", color=colors.CRIMSON,
 	desc = "A headless, round creature with stubby legs and arms.  Its body seems to be all teeth.",
 	level_range = {10, nil}, exp_worth = 1,
 	rarity = 2,
@@ -486,17 +485,27 @@ newEntity{ base = "BASE_NPC_HORROR",
 	movement_speed = 0.8,
 	size_category = 2,
 	autolevel = "warrior",
-	max_life = resolvers.rngavg(50, 80),
-	combat_armor = 1, combat_def = 10,
-	combat = { dam=resolvers.levelup(resolvers.rngavg(20,30), 1, 1.2), atk=resolvers.rngavg(10,20), apr=5, dammod={str=1} },
+	max_life = resolvers.rngavg(80, 100),
+	life_rating = 14,
+	life_regen = 4,
+	combat_armor = 16, combat_def = 1,
+	combat = { dam=resolvers.levelup(resolvers.rngavg(25,40), 1, 0.6), atk=resolvers.rngavg(25,50), apr=25, dammod={str=1.1}, physcrit = 10 },
+	ai_state = { talent_in=2, },
 
-	resists = { [DamageType.TEMPORAL] = 5},
+	resolvers.talents{
+		[Talents.T_BLOODBATH]={base=1, every=5, max=7},
+		[Talents.T_GNASHING_TEETH]={base=1, every=5, max=7},
+		-- talents only usable while frenzied
+		[Talents.T_FRENZIED_LEAP]={base=1, every=5, max=7},
+		[Talents.T_FRENZIED_BITE]={base=1, every=5, max=7},
+	},
 
 	make_escort = {
-		{type="horror", subtype="temporal", name="temporal devourer", number=2, no_subescort=true},
+		{type="horror", subtype="eldritch", name="devourer", number=2, no_subescort=true},
 	},
 }
 
+-- temporal horrors
 newEntity{ base = "BASE_NPC_HORROR",
 	subtype = "temporal",
 	dredge = 1,
@@ -511,7 +520,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	combat_armor = 1, combat_def = 10,
 	combat = { dam=resolvers.levelup(resolvers.rngavg(15,20), 1, 1.1), atk=resolvers.rngavg(5,15), apr=5, dammod={str=1} },
 
-	resists = { [DamageType.TEMPORAL] = 5},
+	resists = { [DamageType.TEMPORAL] = 25},
 
 	resolvers.talents{
 		[Talents.T_DUST_TO_DUST]={base=1, every=7, max=5},
@@ -523,7 +532,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 newEntity{ base = "BASE_NPC_HORROR",
 	subtype = "temporal",
 	dredge = 1,
-	name = "temporal dredge", color=colors.PINK,
+	name = "dredge", color=colors.PINK,
 	desc = "A hulking pink-skinned creature with long arms as thick as tree trunks.  It drags its knuckles on the ground as it lumbers toward you.",
 	level_range = {15, nil}, exp_worth = 1,
 	rarity = 2,
@@ -536,7 +545,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	combat_armor = 1, combat_def = 0,
 	combat = { dam=resolvers.levelup(resolvers.rngavg(25,150), 1, 1.2), atk=resolvers.rngavg(25,130), apr=1, dammod={str=1.1} },
 
-	resists = {all = 10, [DamageType.TEMPORAL] = 50, [DamageType.PHYSICAL] = 25},
+	resists = {all = 10, [DamageType.TEMPORAL] = 25, [DamageType.PHYSICAL] = 25},
 
 	resolvers.talents{
 		[Talents.T_STUN]={base=3, every=7, max=7},
@@ -565,7 +574,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	resists = {all = 10, [DamageType.TEMPORAL] = 50},
 
 	make_escort = {
-		{type="horror", subtype="temporal", name="temporal dredge", number=3, no_subescort=true},
+		{type="horror", subtype="temporal", name="dredge", number=3, no_subescort=true},
 	},
 
 	resolvers.inscriptions(1, {"shielding rune"}),

@@ -1506,7 +1506,7 @@ newEffect{
 newEffect{
 	name = "EPIDEMIC",
 	desc = "Epidemic",
-	long_desc = function(self, eff) return ("The target is infected by a disease, doing %0.2f blight damage per turn.\nEach non-disease blight damage done to it will spread the disease."):format(eff.dam) end,
+	long_desc = function(self, eff) return ("The target is infected by a disease, doing %0.2f blight damage per turn and reducig healing received by %d%%.\nEach non-disease blight damage done to it will spread the disease."):format(eff.dam, eff.heal_factor) end,
 	type = "disease",
 	status = "detrimental",
 	parameters = {},
@@ -2744,13 +2744,10 @@ newEffect{
 			end
 		end
 
-		for i = 1, 1 do
-			if #effs == 0 then break end
+		if #effs > 0 then
 			local eff = rng.tableRemove(effs)
-
 			if eff[1] == "effect" then
 				self:removeEffect(eff[2])
-				known = true
 			end
 		end
 	end,
@@ -4530,5 +4527,95 @@ newEffect{
 				eff.dur = 0
 			end
 		end
+	end,
+}
+
+newEffect{
+	name = "WORM_ROT",
+	desc = "Worm Rot",
+	long_desc = function(self, eff) return ("The target is infected with carrion worm larvae.  Each turn it will lose one beneficial physical effect and %0.2f blight and acid damage will be inflicted.\nAfter five turns the disease will inflict %0.2f blight damage and spawn a carrion worm mass."):format(eff.dam, eff.burst) end,
+	type = "disease",
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# is afflicted by a terrible worm rot!" end,
+	on_lose = function(self, err) return "#Target# is free from the worm rot." end,
+	-- Damage each turn
+	on_timeout = function(self, eff)
+		self.worm_rot_timer = self.worm_rot_timer - 1
+		
+		-- disease damage
+		if self:attr("purify_disease") then 
+			self:heal(eff.dam)
+		else 
+			DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
+		end
+		-- acid damage from the larvae
+		DamageType:get(DamageType.ACID).projector(eff.src, self.x, self.y, DamageType.ACID, eff.dam)
+		
+		local effs = {}
+		-- Go through all physical effects
+		for eff_id, p in pairs(self.tmp) do
+			local e = self.tempeffect_def[eff_id]
+			if e.status == "beneficial" and e.type == "physical" then
+				effs[#effs+1] = {"effect", eff_id}
+			end
+		end
+		-- remove a random physical effect
+		if #effs > 0 then
+			local eff = rng.tableRemove(effs)
+			if eff[1] == "effect" then
+				self:removeEffect(eff[2])
+			end
+		end
+		
+		-- burst and spawn a worm mass
+		if self.worm_rot_timer == 0 then
+			DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.burst, {from_disease=true})
+			local t = eff.src:getTalentFromId(eff.src.T_WORM_ROT)
+			t.spawn_carrion_worm(eff.src, self, t)
+			game.logSeen(self, "#LIGHT_RED#A carrion worm mass bursts out of %s!", self.name:capitalize())
+			self:removeEffect(self.EFF_WORM_ROT)
+		end
+	end,
+	activate = function(self, eff)
+		self.worm_rot_timer = 5
+	end,
+	deactivate = function(self, eff)
+		self.worm_rot_timer = nil
+	end,
+}
+
+newEffect{
+	name = "FRENZY",
+	desc = "Frenzy",
+	long_desc = function(self, eff) return ("Increases global action speed by %d%% and physical crit by %d%%.\nAdditionally the target will continue to fight until it's hit points reach -%d%%."):format(eff.power * 100, eff.crit, eff.dieat * 100) end,
+	type = "physical",
+	status = "beneficial",
+	parameters = { power=0.1 },
+	on_gain = function(self, err) return "#Target# goes into a killing frenzy.", "+Frenzy" end,
+	on_lose = function(self, err) return "#Target# calms down.", "-Frenzy" end,
+	on_merge = function(self, old_eff, new_eff)
+		-- use on merge so reapplied frenzy doesn't kill off creatures with negative life
+		old_eff.dur = new_eff.dur
+		old_eff.power = new_eff.power
+		old_eff.crit = new_eff.crit
+		return old_eff
+	end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("global_speed", eff.power)
+		eff.critid = self:addTemporaryValue("combat_physcrit", eff.crit)
+		eff.dieatid = self:addTemporaryValue("die_at", -self.max_life * eff.dieat)
+	end,
+	deactivate = function(self, eff)
+		-- check negative life first incase the creature has healing
+		if self.life <= 0 then
+			local sx, sy = game.level.map:getTileToScreen(self.x, self.y)
+			game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, rng.float(-2.5, -1.5), "Falls dead!", {255,0,255})
+			game.logSeen(self, "%s dies when it's frenzy ends!", self.name:capitalize())
+			self:die(self)
+		end
+		self:removeTemporaryValue("global_speed", eff.tmpid)
+		self:removeTemporaryValue("combat_physcrit", eff.critid)
+		self:removeTemporaryValue("die_at", eff.dieatid)
 	end,
 }

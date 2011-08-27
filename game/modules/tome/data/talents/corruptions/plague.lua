@@ -212,7 +212,11 @@ newTalent{
 			local disease = rng.table(diseases)
 			local params = disease.params
 			params.src = self
-			target:setEffect(disease.id, 6, {src=self, dam=disease.params.dam, str=disease.params.str, dex=disease.params.dex, con=disease.params.con, heal_factor=disease.params.heal_factor})
+			if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 12 - self:getTalentLevel(t)) and target:canBe("disease") then
+				target:setEffect(disease.id, 6, {src=self, dam=disease.params.dam, str=disease.params.str, dex=disease.params.dex, con=disease.params.con, heal_factor=disease.params.heal_factor, burst=disease.params.burst})
+			else
+				game.logSeen(target, "%s resists the disease!", target.name:capitalize())
+			end
 			game.level.map:particleEmitter(px, py, 1, "slime")
 		end)
 	end,
