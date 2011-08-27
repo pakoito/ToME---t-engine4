@@ -40,6 +40,8 @@ function _M:init(actor, x, y, w, h, bgcolor, fontname, fontsize, icon_w, icon_h)
 	setmetatable(self.cache, {__mode="v"})
 	self.icon_w, self.icon_h = icon_w, icon_h
 	self.tiles = Tiles.new(icon_w, icon_h, fontname or "/data/font/VeraMono.ttf", fontsize or 10, true, true)
+	self.tiles.use_images = true
+	self.tiles.force_back_color = {r=0, g=0, b=0}
 
 	local fw, fh = core.display.loadImage("/data/gfx/ui/talent_frame_ok.png"):getSize()
 	self.frames = {w=math.floor(fw * icon_w / 64), h=math.floor(fh * icon_h / 64), rw=icon_w / 64, rh=icon_h / 64}
