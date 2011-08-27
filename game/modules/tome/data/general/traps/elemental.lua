@@ -20,6 +20,7 @@
 newEntity{ define_as = "TRAP_ELEMENTAL",
 	type = "elemental", id_by_type=true, unided_name = "trap",
 	display = '^',
+	pressure_trap = true,
 	triggered = function(self, x, y, who)
 		self:project({type="hit",x=x,y=y}, x, y, self.damtype, self.dam, self.particles and {type=self.particles})
 		return true

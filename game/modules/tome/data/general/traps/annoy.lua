@@ -52,6 +52,7 @@ newEntity{ base = "TRAP_ANNOY",
 	color=colors.ORCHID,
 	message = "@Target@ triggers a burning curse!",
 	dam = resolvers.mbonus(80, 5),
+	pressure_trap = true,
 	triggered = function(self, x, y, who)
 		who:setEffect(who.EFF_BURNING_HEX, 7, {src=self, dam=self.dam})
 		return true, true

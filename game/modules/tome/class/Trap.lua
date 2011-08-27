@@ -73,7 +73,7 @@ end
 
 --- Called when triggered
 function _M:canTrigger(x, y, who, no_random)
-	if self.safe_levitation and who:attr("levitation") then return false end
+	if self.pressure_trap and who:attr("avoid_pressure_traps") then return false end
 	if self.faction and who:reactionToward(self) >= 0 then return false end
 	if not no_random and who.trap_avoidance and rng.percent(who.trap_avoidance) then
 		if self:knownBy(who) then

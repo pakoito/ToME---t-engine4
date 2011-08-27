@@ -23,37 +23,54 @@ newTalent{
 	name = "Skullcracker",
 	type = {"technique/thuggery", 1},
 	points = 5,
-	random_ego = "attack",
 	cooldown = 12,
-	stamina = 10,
-	tactical = { DISABLE = 2, ATTACK = 0.5 },
-	require = cuns_req1,
+	stamina = 20,
+	tactical = { DISABLE = 2, ATTACK = 1 },
+	require = techs_req1,
 	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.2, 0.7) end,
-	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
+	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t) / 2) end,
+	getDamage = function(self, t)
+		local o = self:getInven(self.INVEN_HEAD) and self:getInven(self.INVEN_HEAD)[1]
+
+		local add = 0
+		if o then
+			add = 15 + o:getPriceFlags() * 0.6 * math.sqrt(o:getPowerRank() + 1) * (o:attr("metallic") and 1 or 0.5)
+		end
+
+		local totstat = self:getStat("str")
+		local talented_mod = math.sqrt((self:getTalentLevel(t) + (o and o.material_level or 1)) / 10) + 1
+		local power = math.max(self.combat_dam + add, 1)
+		power = (math.sqrt(power / 10) - 1) * 0.8 + 1
+--		print(("[COMBAT HEAD DAMAGE] power(%f) totstat(%f) talent_mod(%f)"):format(power, totstat, talented_mod))
+		return self:rescaleDamage(totstat / 1.5 * power * talented_mod)
+	end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		local hitted = self:attackTarget(target, nil, t.getDamage(self, t), true)
+
+		local dam = t.getDamage(self, t)
+
+		local _, hitted = self:attackTargetWith(target, nil, nil, nil, dam)
 
 		if hitted then
-			if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
-				target:setEffect(target.EFF_STUNNED, t.getDuration(self, t), {})
+			if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95) and target:canBe("confusion") then
+				target:setEffect(target.EFF_CONFUSED, t.getDuration(self, t), {power=30 + self:getDex(70)})
 			else
-				game.logSeen(target, "%s resists the stun!", target.name:capitalize())
+				game.logSeen(target, "%s resists the headblow!", target.name:capitalize())
 			end
 		end
 
 		return true
 	end,
 	info = function(self, t)
-		local damage = t.getDamage(self, t)
+		local dam = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[You hit your target doing %d%% damage, trying to stun it instead of damaging it. If your attack hits, the target is stunned for %d turns.
-		Stun chance increase with talent level and your Dexterity stat.]]):
-		format(100 * damage, duration)
+		return ([[You smack your forehead against your enemy's head (or whatever sensitive part you can find), causing %0.2f physical damage. If the attack hits the target is confused for %d turns.
+		Damage done increases with the quality of your headgear, your strength and your physical damage bonuses.
+		Confusion power and chance increase with your Dexterity stat.]]):
+		format(dam, duration)
 	end,
 }
 
@@ -62,52 +79,36 @@ newTalent{
 	type = {"technique/thuggery", 2},
 	mode = "passive",
 	points = 5,
-	require = cuns_req2,
-	getCriticalChance = function(self, t) return self:getTalentLevel(t) * 10 end,
+	require = techs_req2,
+	on_learn = function(self, t)
+		self.stun_immune = (self.stun_immune or 0) + 0.1
+		self.confusion_immune = (self.confusion_immune or 0) + 0.1
+	end,
+	on_unlearn = function(self, t)
+		self.stun_immune = (self.stun_immune or 0) - 0.1
+		self.confusion_immune = (self.confusion_immune or 0) - 0.1
+	end,
 	info = function(self, t)
-		local chance = t.getCriticalChance(self, t)
-		return ([[Your quick wit gives you a big advantage against stunned targets; all your hits will have a %d%% greater chance of being critical.]]):
-		format(chance)
+		return ([[Your attunement to violence has given you %d%% resistance to stuns and confusion arising in battle.]]):
+		format(self:getTalentLevelRaw(t) * 10)
 	end,
 }
 newTalent{
 	name = "Vicious Strikes",
 	type = {"technique/thuggery", 3},
 	points = 5,
-	random_ego = "defensive",
-	cooldown = 10,
-	stamina = 50,
-	require = cuns_req3,
-	requires_target = true,
-	tactical = { DISABLE = 2 },
-	getDuration = function(self, t) return 1 + self:getTalentLevel(t) end,
-	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t)}
-		local x, y, target = self:getTarget(tg)
-		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		local tx, ty, sx, sy = target.x, target.y, self.x, self.y
-		local hitted = self:attackTarget(target, nil, 0, true)
-
-		if hitted then
-			self:setEffect(self.EFF_EVASION, t.getDuration(self, t), {chance=50})
-
-			-- Displace
-			self.x = nil self.y = nil
-			self:move(tx, ty, true)
-			if not target.dead then
-				target.x = nil target.y = nil
-				target:move(sx, sy, true)
-			end
-		end
-
-		return true
+	require = techs_req3,
+	on_learn = function(self, t)
+		self.combat_critical_power = (self.combat_critical_power or 0) + 5
+		self.combat_apr = self.combat_apr + 4
+	end,
+	on_unlearn = function(self, t)
+		self.combat_critical_power = (self.combat_critical_power or 0) - 5
+		self.combat_apr = self.combat_apr - 4
 	end,
 	info = function(self, t)
-		local duration = t.getDuration(self, t)
-		return ([[Using a series of tricks and maneuvers, you switch places with your target.
-		Switching places will confuse your foes, granting you evasion(50%%) for %d turns.]]):
-		format(duration)
+		return ([[You know how to hit the right places, giving +%d%% critical damage mofidier and %d armour penetration.]]):
+		format(self:getTalentLevelRaw(t) * 5, self:getTalentLevelRaw(t) * 4)
 	end,
 }
 
@@ -115,47 +116,34 @@ newTalent{
 	name = "Total Thuggery",
 	type = {"technique/thuggery", 4},
 	points = 5,
-	random_ego = "attack",
-	cooldown = 25,
-	stamina = 30,
-	require = cuns_req4,
+	mode = "sustained",
+	cooldown = 30,
+	sustain_stamina = 40,
+	no_energy = true,
+	require = techs_req4,
 	requires_target = true,
+	range = 1,
 	tactical = { DISABLE = 2, ATTACK = 2 },
-	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.9, 1.4) end,
-	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
-	getAttackPenalty = function(self, t) return 10 + self:getTalentLevel(t) * 3 end,
-	getDamagePenalty = function(self, t) return 10 + self:getTalentLevel(t) * 4 end,
-	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t)}
-		local x, y, target = self:getTarget(tg)
-		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		local hitted = self:attackTarget(target, nil, t.getDamage(self, t), true)
-
-		if hitted then
-			if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) then
-				local tw = target:getInven("MAINHAND")
-				if tw then
-					tw = tw[1] and tw[1].combat
-				end
-				tw = tw or target.combat
-				local atk = target:combatAttack(tw) * (t.getAttackPenalty(self, t)) / 100
-				local dam = target:combatDamage(tw) * (t.getDamagePenalty(self, t)) / 100
-				target:setEffect(target.EFF_CRIPPLE, t.getDuration(self, t), {atk=atk, dam=dam})
-			else
-				game.logSeen(target, "%s is not crippled!", target.name:capitalize())
-			end
-		end
-
+	getCrit = function(self, t) return self:combatTalentStatDamage(t, "dex", 10, 50) / 1.5 end,
+	getPen = function(self, t) return self:combatTalentStatDamage(t, "str", 10, 50) / 2 end,
+	getDrain = function(self, t) return 12 - self:getTalentLevelRaw(t) end,
+	activate = function(self, t)
+		local ret = {
+			crit = self:addTemporaryValue("combat_physcrit", t.getCrit(self, t)),
+			pen = self:addTemporaryValue("resists_pen", {[DamageType.PHYSICAL] = t.getPen(self, t)}),
+			drain = self:addTemporaryValue("stamina_use_on_hit", t.getDrain(self, t)),
+		}
+		return ret
+	end,
+	deactivate = function(self, t, p)
+		self:removeTemporaryValue("combat_physcrit", p.crit)
+		self:removeTemporaryValue("resists_pen", p.pen)
+		self:removeTemporaryValue("stamina_use_on_hit", p.drain)
 		return true
 	end,
 	info = function(self, t)
-		local damage = t.getDamage(self, t)
-		local duration = t.getDuration(self, t)
-		local attackpen = t.getAttackPenalty(self, t)
-		local damagepen = t.getDamagePenalty(self, t)
-		return ([[You hit your target doing %d%% damage. If your attack hits, the target is crippled for %d turns, losing %d%% accuracy and %d%% damage.
-		Hit chance improves with talent level and your Dexterity stat.]]):
-		format(100 * damage, duration, attackpen, damagepen)
+		return ([[You go all out, trying to burn down your foes as fast as possible.
+		Every hit in battle has +%d%% critical chance and +%d%% physical penetration, but each strike drains %d stamina.]]):
+		format(t.getCrit(self, t), t.getPen(self, t), t.getDrain(self, t))
 	end,
 }

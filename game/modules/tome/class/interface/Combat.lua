@@ -213,14 +213,14 @@ function _M:checkEvasion(target)
 end
 
 --- Attacks with one weapon
-function _M:attackTargetWith(target, weapon, damtype, mult)
-	damtype = damtype or weapon.damtype or DamageType.PHYSICAL
+function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
+	damtype = damtype or (weapon and weapon.damtype) or DamageType.PHYSICAL
 	mult = mult or 1
 
 	-- Does the blow connect? yes .. complex :/
 	local atk, def = self:combatAttack(weapon), target:combatDefense()
 	if not self:canSee(target) then atk = atk / 3 end
-	local dam, apr, armor = self:combatDamage(weapon), self:combatAPR(weapon), target:combatArmor()
+	local dam, apr, armor = force_dam or self:combatDamage(weapon), self:combatAPR(weapon), target:combatArmor()
 	print("[ATTACK] to ", target.name, " :: ", dam, apr, armor, def, "::", mult)
 
 	if target:knowTalent(target.T_DUCK_AND_DODGE) then
@@ -249,7 +249,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 		dam = dam * mult
 		print("[ATTACK] after mult", dam)
 
-		if weapon.inc_damage_type then
+		if weapon and weapon.inc_damage_type then
 			for t, idt in pairs(weapon.inc_damage_type) do
 				if target.type.."/"..target.subtype == t or target.type == t then dam = dam + dam * idt / 100 break end
 			end
@@ -272,7 +272,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	end
 
 	-- Melee project
-	if hitted and not target.dead and weapon.melee_project then for typ, dam in pairs(weapon.melee_project) do
+	if hitted and not target.dead and weapon and weapon.melee_project then for typ, dam in pairs(weapon.melee_project) do
 		if dam > 0 then
 			DamageType:get(typ).projector(self, target.x, target.y, typ, dam)
 		end
@@ -317,7 +317,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	end
 
 	-- On hit talent
-	if hitted and not target.dead and weapon.talent_on_hit and next(weapon.talent_on_hit) then
+	if hitted and not target.dead and weapon and weapon.talent_on_hit and next(weapon.talent_on_hit) then
 		for tid, data in pairs(weapon.talent_on_hit) do
 			if rng.percent(data.chance) then
 				self:forceUseTalent(tid, {ignore_cd=true, ignore_energy=true, force_target=target, force_level=data.level, ignore_ressources=true})
@@ -394,7 +394,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	end
 
 	-- Special effect
-	if hitted and not target.dead and weapon.special_on_hit and weapon.special_on_hit.fct then
+	if hitted and not target.dead and weapon and weapon.special_on_hit and weapon.special_on_hit.fct then
 		weapon.special_on_hit.fct(weapon, self, target)
 	end
 
@@ -411,6 +411,10 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 	if hitted and not target.dead and target:attr("stamina_regen_on_hit") then target:incStamina(target.stamina_regen_on_hit) end
 	if hitted and not target.dead and target:attr("mana_regen_on_hit") then target:incMana(target.mana_regen_on_hit) end
 	if hitted and not target.dead and target:attr("equilibrium_regen_on_hit") then target:incEquilibrium(-target.equilibrium_regen_on_hit) end
+
+	if hitted and self:attr("stamina_use_on_hit") then
+		self:incStamina(-self.stamina_use_on_hit)
+	end
 
 	if hitted and not target.dead and target:knowTalent(target.T_STONESHIELD) then
 		local t = target:getTalentFromId(target.T_STONESHIELD)
@@ -454,7 +458,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult)
 
 	-- Greater Weapon Focus
 	local gwf = self:hasEffect(self.EFF_GREATER_WEAPON_FOCUS)
-	if hitted and not target.dead and gwf and not gwf.inside and rng.percent(gwf.chance) then
+	if hitted and not target.dead and weapon and gwf and not gwf.inside and rng.percent(gwf.chance) then
 		gwf.inside = true
 		game.logSeen(self, "%s focuses and gains an extra blow!", self.name:capitalize())
 		self:attackTargetWith(target, weapon, damtype, mult)

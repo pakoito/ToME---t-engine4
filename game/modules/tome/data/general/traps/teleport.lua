@@ -30,6 +30,7 @@ newEntity{ base = "TRAP_TELEPORT",
 	rarity = 5, level_range = {5, 50},
 	color=colors.UMBER,
 	message = "@Target@ is teleported away.",
+	pressure_trap = true,
 	triggered = function(self, x, y, who)
 		who:teleportRandom(x, y, 100)
 		return true

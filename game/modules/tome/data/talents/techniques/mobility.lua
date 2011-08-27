@@ -26,7 +26,7 @@ newTalent{
 	cooldown = 14,
 	stamina = 30,
 	tactical = { ESCAPE = 1, ATTACK = 0.5 },
-	require = cuns_req1,
+	require = techs_dex_req1,
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.4, 1) end,
 	getDist = function(self, t) return 1 + math.ceil(self:getTalentLevel(t) / 2) end,
@@ -56,7 +56,7 @@ newTalent{
 	type = {"technique/mobility", 2},
 	mode = "passive",
 	points = 5,
-	require = cuns_req2,
+	require = techs_dex_req2,
 	getDef = function(self, t) return self:getTalentLevel(t) * 0.08 end,
 	getHardiness = function(self, t) return self:getTalentLevel(t) * 0.06 end,
 	info = function(self, t)
@@ -70,15 +70,18 @@ newTalent{
 	type = {"technique/mobility", 3},
 	mode = "passive",
 	points = 5,
-	require = cuns_req3,
+	require = techs_dex_req3,
 	on_learn = function(self, t)
 		self.fatigue = (self.fatigue or 0) - 1.5
+		if self:getTalentLevelRaw(t) == 3 then self:attr("avoid_pressure_traps", 1) end
 	end,
 	on_unlearn = function(self, t)
 		self.fatigue = (self.fatigue or 0) + 1.5
+		if self:getTalentLevelRaw(t) == 2 then self:attr("avoid_pressure_traps", -1) end
 	end,
 	info = function(self, t)
-		return ([[You are light on foot, handling your armour better. Each step you take regenerates %0.2f stamina and your fatigue is permanently reduced by %d%%.]]):
+		return ([[You are light on foot, handling your armour better. Each step you take regenerates %0.2f stamina and your fatigue is permanently reduced by %d%%.
+		At level 3 you are able to walk so lightly that you never trigger traps that require pressure.]]):
 		format(self:getTalentLevelRaw(t) * 0.2, self:getTalentLevelRaw(t) * 1.5)
 	end,
 }
@@ -86,48 +89,25 @@ newTalent{
 newTalent{
 	name = "Strider",
 	type = {"technique/mobility", 4},
+	mode = "passive",
 	points = 5,
-	random_ego = "attack",
-	cooldown = 25,
-	stamina = 30,
-	require = cuns_req4,
-	requires_target = true,
-	tactical = { DISABLE = 2, ATTACK = 2 },
-	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.9, 1.4) end,
-	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
-	getAttackPenalty = function(self, t) return 10 + self:getTalentLevel(t) * 3 end,
-	getDamagePenalty = function(self, t) return 10 + self:getTalentLevel(t) * 4 end,
-	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t)}
-		local x, y, target = self:getTarget(tg)
-		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		local hitted = self:attackTarget(target, nil, t.getDamage(self, t), true)
-
-		if hitted then
-			if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) then
-				local tw = target:getInven("MAINHAND")
-				if tw then
-					tw = tw[1] and tw[1].combat
-				end
-				tw = tw or target.combat
-				local atk = target:combatAttack(tw) * (t.getAttackPenalty(self, t)) / 100
-				local dam = target:combatDamage(tw) * (t.getDamagePenalty(self, t)) / 100
-				target:setEffect(target.EFF_CRIPPLE, t.getDuration(self, t), {atk=atk, dam=dam})
-			else
-				game.logSeen(target, "%s is not crippled!", target.name:capitalize())
-			end
-		end
-
-		return true
+	require = techs_dex_req4,
+	on_learn = function(self, t)
+		self.movement_speed = self.movement_speed + 0.02
+		self.talent_cd_reduction[Talents.T_RUSH] = (self.talent_cd_reduction[Talents.T_RUSH] or 0) + 1
+		self.talent_cd_reduction[Talents.T_HACK_N_BACK] = (self.talent_cd_reduction[Talents.T_HACK_N_BACK] or 0) + 1
+		self.talent_cd_reduction[Talents.T_DISENGAGE] = (self.talent_cd_reduction[Talents.T_DISENGAGE] or 0) + 1
+		self.talent_cd_reduction[Talents.T_EVASION] = (self.talent_cd_reduction[Talents.T_EVASION] or 0) + 1
+	end,
+	on_unlearn = function(self, t)
+		self.movement_speed = self.movement_speed - 0.02
+		self.talent_cd_reduction[Talents.T_RUSH] = (self.talent_cd_reduction[Talents.T_RUSH] or 0) - 1
+		self.talent_cd_reduction[Talents.T_HACK_N_BACK] = (self.talent_cd_reduction[Talents.T_HACK_N_BACK] or 0) - 1
+		self.talent_cd_reduction[Talents.T_DISENGAGE] = (self.talent_cd_reduction[Talents.T_DISENGAGE] or 0) - 1
+		self.talent_cd_reduction[Talents.T_EVASION] = (self.talent_cd_reduction[Talents.T_EVASION] or 0) - 1
 	end,
 	info = function(self, t)
-		local damage = t.getDamage(self, t)
-		local duration = t.getDuration(self, t)
-		local attackpen = t.getAttackPenalty(self, t)
-		local damagepen = t.getDamagePenalty(self, t)
-		return ([[You hit your target doing %d%% damage. If your attack hits, the target is crippled for %d turns, losing %d%% accuracy and %d%% damage.
-		Hit chance improves with talent level and your Dexterity stat.]]):
-		format(100 * damage, duration, attackpen, damagepen)
+		return ([[You literaly danse around your foes, increasing movement speed by %d%% and reducing the cooldown of Hack'n'Back, Rush, Disengage and Evasion by %d turns.]]):
+		format(self:getTalentLevelRaw(t) * 0.02, self:getTalentLevelRaw(t))
 	end,
 }

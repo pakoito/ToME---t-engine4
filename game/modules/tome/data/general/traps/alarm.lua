@@ -29,6 +29,7 @@ newEntity{ base = "TRAP_ALARM",
 	rarity = 3, level_range = {1, 50},
 	color=colors.UMBER,
 	message = "@Target@ triggers an alarm!",
+	pressure_trap = true,
 	triggered = function(self, x, y, who)
 		for i = x - 20, x + 20 do for j = y - 20, y + 20 do if game.level.map:isBound(i, j) then
 			local actor = game.level.map(i, j, game.level.map.ACTOR)

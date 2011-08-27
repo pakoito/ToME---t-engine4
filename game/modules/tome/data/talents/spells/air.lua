@@ -152,6 +152,7 @@ newTalent{
 			encumb = self:addTemporaryValue("max_encumber", t.getEncumberance(self, t)),
 			def = self:addTemporaryValue("combat_def_ranged", t.getRangedDefence(self, t)),
 			lev = self:addTemporaryValue("levitation", 1),
+			traps = self:addTemporaryValue("avoid_pressure_traps", 1),
 		}
 		self:checkEncumbrance()
 		return ret
@@ -160,6 +161,7 @@ newTalent{
 		self:removeTemporaryValue("max_encumber", p.encumb)
 		self:removeTemporaryValue("combat_def_ranged", p.def)
 		self:removeTemporaryValue("levitation", p.lev)
+		self:removeTemporaryValue("avoid_pressure_traps", p.traps)
 		self:checkEncumbrance()
 		return true
 	end,

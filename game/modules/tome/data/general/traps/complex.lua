@@ -32,6 +32,7 @@ newEntity{ base = "TRAP_COMPLEX",
 	rarity = 3, level_range = {1, 30},
 	color_r=40, color_g=220, color_b=0,
 	message = "@Target@ walks on a trap, there is a loud noise.",
+	pressure_trap = true,
 	on_added = function(self, level, x, y)
 		local walls = {}
 		for i, dir in ipairs{4,6,8,2} do
