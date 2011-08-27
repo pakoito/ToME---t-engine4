@@ -27,7 +27,7 @@ newEntity{ base = "BASE_LONGBOW",
 	define_as = "EPOCH_CURVE",
 	-- not sure what rarity does so commented out for now
 	rarity=false,
-	name = "Epoch's Curve", unided_name = "white ash longbow", unique=true,
+	name = "Epoch's Curve", unided_name = "white ash longbow", unique=true, image="object/artifact/bow_epochs_curve.png",
 	desc = [[Epoch's Curve has served the Wardens for generations and was passed from Warden to Warden for many generations before being lost.
 	According to legend it was made from the first ash sapling to sprout after the Spellblaze and carries powers of both time and renewal.]],
 	level_range = {20, 40},
