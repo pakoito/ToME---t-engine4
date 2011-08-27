@@ -23,7 +23,7 @@ local function getStrikingStyle(self, dam)
 		local t = self:getTalentFromId(self.T_STRIKING_STANCE)
 		dam = t.getDamage(self, t)
 	end
-		return dam / 100
+	return dam / 100
 end
 
 newTalent{
@@ -32,8 +32,8 @@ newTalent{
 	require = cuns_req1,
 	mode = "passive",
 	points = 5,
-	getDefense = function(self, t) return self:getTalentLevel(t) * 2 end,
-	getMaximum = function(self, t) return (4 + (self:getTalentLevel(t) * self:getCun()) / 6) end,
+	getDefense = function(self, t) return self:getTalentLevel(t) * 1.5 end,
+	getMaximum = function(self, t) return (4 + (self:getTalentLevel(t) * self:getCun(60)) / 6) end,
 	do_tact_update = function (self, t)
 		local nb_foes = 0
 		local act
@@ -70,7 +70,8 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t) * 100
 		return ([[When you avoid a melee blow you have a %d%% chance to get a free, automatic unarmed attack against your foe for %d%% damage.
-		The is considered a strike for the purpose of stance damage bonuses (if have any) and will only trigger while unarmed.
+		Unarmed fighters using it do consider it a strike for the purpose of stance damage bonuses (if have any) and will have a damage bonus.
+		Armed fighters use it normaly.
 		The chance of countering increases with the cunning stat.]]):format(self:getTalentLevel(t) * (5 + self:getCun(5, true)), damage)
 	end,
 }
@@ -88,9 +89,7 @@ newTalent{
 	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t)) end,
 	getDefense = function(self, t) return 5 + self:combatTalentStatDamage(t, "cun", 1, 50) end,
 	action = function(self, t)
-
 		self:setEffect(self.EFF_DEFENSIVE_MANEUVER, t.getDuration(self, t), {power=t.getDefense(self, t)})
-
 		return true
 	end,
 	info = function(self, t)
@@ -127,7 +126,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local reduction = t.getReductionMax(self, t)
-		return ([[Systematically find the weaknesses in your opponents physical resists at the cost of 10%% of your physical damage.  Each time you hit an opponenet with a melee attack you reduce their physical resistance by 5%% up to a maximum of %d%%.
+		return ([[Systematically find the weaknesses in your opponents physical resists at the cost of 10%% of your physical damage.  Each time you hit an opponent with a melee attack you reduce their physical resistance by 5%% up to a maximum of %d%%.
 		]]):format(reduction)
 	end,
 }

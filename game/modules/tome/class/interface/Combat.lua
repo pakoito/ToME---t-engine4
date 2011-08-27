@@ -443,11 +443,10 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	end
 
 	-- Counter Attack!
-	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_COUNTER_ATTACK) and target:isUnarmed() and rng.percent(target:getTalentLevel(target.T_COUNTER_ATTACK) * (5 + target:getCun(5, true))) then
+	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_COUNTER_ATTACK) and rng.percent(target:getTalentLevel(target.T_COUNTER_ATTACK) * (5 + target:getCun(5, true))) then
 		game.logSeen(self, "%s counters the attack!", target.name:capitalize())
 		local t = target:getTalentFromId(target.T_COUNTER_ATTACK)
-		local damage = t.getDamage(target, t)
-		local hit = target:attackTarget(self, nil, damage, true)
+		target:attackTarget(self, nil, t.getDamage(target, t), true)
 	end
 
 	-- Defensive Throw!
