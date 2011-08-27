@@ -69,10 +69,16 @@ newEntity{ define_as = "THE_MASTER",
 	undead = 1,
 	self_resurrect = 1,
 	open_door = 1,
+	necrotic_aura_base_souls = 10,
 
 	resolvers.talents{
-		[Talents.T_SUMMON]=1,
-		[Talents.T_ARMOUR_TRAINING]={base=3, every=5, max=10},
+		[Talents.T_NECROTIC_AURA] = 1,
+		[Talents.T_AURA_MASTERY] = 6,
+		[Talents.T_CREATE_MINIONS]={base=4, every=5, max=7},
+		[Talents.T_RIGOR_MORTIS]={base=3, every=5, max=5},
+		[Talents.T_CIRCLE_OF_DEATH]={base=3, every=5, max=5},
+		[Talents.T_SURGE_OF_UNDEATH]={base=3, every=5, max=5},
+		[Talents.T_WILL_O__THE_WISP]={base=3, every=5, max=5},
 
 		[Talents.T_CONGEAL_TIME]={base=2, every=5, max=5},
 		[Talents.T_MANATHRUST]={base=4, every=5, max=8},
@@ -80,6 +86,7 @@ newEntity{ define_as = "THE_MASTER",
 		[Talents.T_PHASE_DOOR]=2,
 		[Talents.T_STRIKE]={base=3, every=5, max=7},
 
+		[Talents.T_ARMOUR_TRAINING]={base=3, every=5, max=10},
 		[Talents.T_WEAPONS_MASTERY]={base=3, every=4, max=7},
 		[Talents.T_STUNNING_BLOW]={base=1, every=5, max=5},
 		[Talents.T_RUSH]={base=4, every=5, max=8},
@@ -93,6 +100,13 @@ newEntity{ define_as = "THE_MASTER",
 	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
 	resolvers.inscriptions(3, {"shielding rune", "shielding rune", "invisibility rune", "speed rune"}),
 	resolvers.inscriptions(1, {"manasurge rune"}),
+
+	on_act = function(self)
+		if rng.percent(10) and self:isTalentActive(self.T_NECROTIC_AURA) then
+			local p = self:isTalentActive(self.T_NECROTIC_AURA)
+			p.souls = util.bound(p.souls + 1, 0, p.souls_max)
+		end
+	end,
 
 	on_die = function(self, who)
 		game.state:activateBackupGuardian("PALE_DRAKE", 1, 40, "It has been months since the hero cleansed the Dreadfell, yet rumours are growing: evil is back.")

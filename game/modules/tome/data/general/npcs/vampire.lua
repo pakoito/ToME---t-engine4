@@ -59,8 +59,9 @@ newEntity{
 
 	resolvers.inscriptions(1, "rune"),
 
-	resolvers.tmasteries{ ["technique/other"]=0.5, ["spell/phantasm"]=0.8, },
 	resolvers.sustains_at_birth(),
+
+	resolvers.talents{ [Talents.T_BLURRED_MORTALITY]={base=1, every=7, max=6} },
 
 	resists = { [DamageType.COLD] = 80, [DamageType.NATURE] = 80, [DamageType.LIGHT] = -50,  },
 	blind_immune = 1,
