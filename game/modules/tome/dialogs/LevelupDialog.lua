@@ -378,7 +378,7 @@ function _M:getStatDescription(stat_id)
 			text = text.."Max mana: "..color..(diff * 5).."#LAST#\n"
 		end
 		if self.actor:knowTalent(self.actor.T_STAMINA_POOL) then
-			text = text.."Max stamina: "..color..(diff * 2).."#LAST#\n"
+			text = text.."Max stamina: "..color..(diff * 2.5).."#LAST#\n"
 		end
 		if self.actor:knowTalent(self.actor.T_PSI_POOL) then
 			text = text.."Max PSI: "..color..(diff * 1).."#LAST#\n"

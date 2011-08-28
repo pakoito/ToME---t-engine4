@@ -282,7 +282,7 @@ function _M:generateList()
 			if t.display_entity then t.display_entity:getMapObjects(game.hotkeys_display_icons.tiles, {}, 1) end
 
 			nodes[#nodes+1] = {
-				name=((t.display_entity and t.display_entity:getDisplayString() or "")..t.name.." ("..typename..")"):toTString(),
+				name=((t.display_entity and t.display_entity:getDisplayString() or "")..t.name):toTString(),
 				cname=t.name,
 				status=status,
 				entity=t.display_entity,
