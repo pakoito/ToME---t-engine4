@@ -46,6 +46,7 @@ newEntity{
 	cut_immune = 1,
 	blind_immune = 1,
 	fear_immune = 1,
+	poison_immune = 1,
 	see_invisible = 2,
 	undead = 1,
 }
