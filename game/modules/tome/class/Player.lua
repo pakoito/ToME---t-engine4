@@ -158,9 +158,7 @@ function _M:describeFloor(x, y)
 		local i, nb = 1, 0
 		local obj = game.level.map:getObject(x, y, i)
 		while obj do
-			if obj.auto_pickup then
-				self:pickupFloor(i, true)
-			else
+			if not (obj.auto_pickup and self:pickupFloor(i, true)) then
 				if self:attr("auto_id") and obj:getPowerRank() <= self.auto_id then obj:identify(true) end
 				nb = nb + 1
 				i = i + 1

@@ -61,7 +61,7 @@ function _M:init(file)
 	end
 
 	self.min_syl = 2
-	self.max_syl = 4
+	self.max_syl = 3
 	self.forbidden = {}
 end
 
@@ -71,7 +71,7 @@ function _M:generate(no_repeat, min_syl, max_syl)
 	max_syl = max_syl or self.max_syl
 
 	-- Random number of syllables, the last one is always appended
-	local num_syl = rng.range(min_syl, max_syl - 1)
+	local num_syl = rng.range(min_syl, max_syl)
 
 	-- Turn ends list of tuples into a dictionary
 	local ends_dict = table.from_list(self.ends, 's', 'c')
@@ -87,7 +87,7 @@ function _M:generate(no_repeat, min_syl, max_syl)
 		word = {self.syllables[syl]}
 
 		local done_end = false
-		for i = 1, num_syl do
+		for i = 1, num_syl - 2 do
 			-- don't end yet if we don't have the minimum number of syllables
 			local eend
 			if i < min_syl then eend = 0
@@ -107,7 +107,8 @@ function _M:generate(no_repeat, min_syl, max_syl)
 			word[#word+1] = self.syllables[syl]
 		end
 
-		word_str = word_str..table.concat(word)
+		print("Make word from", table.concat(word, ", "), num_syl)
+		word_str = table.concat(word)
 	end
 
 	-- to ensure the word doesn't repeat, add it to the forbidden words
@@ -116,8 +117,9 @@ function _M:generate(no_repeat, min_syl, max_syl)
 	return word_str:capitalize()
 end
 
-function _M:selectSyllable(counts, end_count, used)
-	if not counts or #counts == 0 then return end
+function _M:selectSyllable(counts, end_count, used, tries)
+	tries = tries or 50
+	if not counts or #counts == 0 or tries <= 0 then return end
 
 	-- "counts" holds cumulative counts, so take the last element in the list
 	-- (and 2nd in that tuple) to get the sum of all counts
@@ -125,7 +127,7 @@ function _M:selectSyllable(counts, end_count, used)
 
 	for _, d in ipairs(counts) do
 		if d.c >= chosen then
-			if used[d.s] then return self:selectSyllable(counts, end_count, used) end
+			if used[d.s] then return self:selectSyllable(counts, end_count, used, tries - 1) end
 			used[d.s] = true
 			return d.s
 		end

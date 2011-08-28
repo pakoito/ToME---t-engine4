@@ -1122,6 +1122,15 @@ game.player:learnTalent('T_DREDGE_FRENZY',true)
 game.player:learnTalent('T_SEVER_LIFELINE',true)
 game.player:learnTalent('T_CALL_OF_AMAKTHEL',true)
 game.player:learnTalent('T_GIFT_OF_AMAKTHEL',true)
+game.player:learnTalent('T_ABYSSAL_SHROUD',true)
+game.player:learnTalent('T_ECHOES_FROM_THE_VOID',true)
+game.player:learnTalent('T_FRENZIED_BITE',true)
+game.player:learnTalent('T_FRENZIED_LEAP',true)
+game.player:learnTalent('T_GNASHING_TEETH',true)
+game.player:learnTalent('T_INNER_DEMONS',true)
+game.player:learnTalent('T_VOID_SHARDS',true)
+game.player:learnTalent('T_WAKING_NIGHTMARE',true)
+game.player:learnTalent('T_WORM_ROT',true)
 		end end,
 	}
 
