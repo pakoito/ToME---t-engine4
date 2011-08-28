@@ -61,7 +61,7 @@ newEntity{ base = "BASE_NPC_GHOST",
 	rarity = 10,
 	max_life = resolvers.rngavg(90,100),
 	combat_armor = 0, combat_def = resolvers.mbonus(10, 50),
-	invisibility = resolvers.mbonus(5, 10),
+	stealth = resolvers.mbonus(40, 10),
 	ai_state = { talent_in=4, },
 
 	combat = { dam=resolvers.mbonus(45, 45), atk=resolvers.mbonus(25, 45), apr=100, dammod={str=0.5, mag=0.5} },
@@ -83,7 +83,7 @@ newEntity{ base = "BASE_NPC_GHOST",
 	ai = "tactical",
 
 	combat_armor = 0, combat_def = resolvers.mbonus(10, 50),
-	invisibility = resolvers.mbonus(10, 20),
+	stealth = resolvers.mbonus(30, 20),
 
 	combat = { dam=resolvers.mbonus(65, 65), atk=resolvers.mbonus(25, 45), apr=100, dammod={str=0.5, mag=0.5} },
 
@@ -107,7 +107,7 @@ newEntity{ base = "BASE_NPC_GHOST",
 	max_life = resolvers.rngavg(40,50), life_rating = 6,
 
 	combat_armor = 0, combat_def = resolvers.mbonus(10, 10),
-	invisibility = resolvers.mbonus(10, 10),
+	stealth = resolvers.mbonus(40, 10),
 
 	combat = { dam=5, atk=5, apr=100, dammod={str=0.5, mag=0.5} },
 
@@ -133,7 +133,7 @@ newEntity{ base = "BASE_NPC_GHOST",
 	combat_armor = 0, combat_def = resolvers.mbonus(10, 50),
 	on_melee_hit = {[DamageType.BLIGHT]=resolvers.mbonus(25, 25)},
 	melee_project = {[DamageType.BLIGHT]=resolvers.mbonus(25, 25)},
-	invisibility = resolvers.mbonus(10, 20),
+	stealth = resolvers.mbonus(50, 20),
 
 	combat = { dam=resolvers.mbonus(85, 85), atk=resolvers.mbonus(45, 45), apr=100, dammod={str=0.7, mag=0.7} },
 
