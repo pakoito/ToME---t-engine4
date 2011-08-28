@@ -229,20 +229,22 @@ local randart_name_rules = {
 }
 
 --- Generate randarts for this state
-function _M:generateRandart(add, base, lev)
+function _M:generateRandart(add, base, lev, nb_egos)
 	if not self.randart_powers then self.randart_powers = engine.Object:loadList("/data/general/objects/random-artifacts.lua") end
 	local powers_list = self.randart_powers
 
 	-- Setup level
 	lev = lev or rng.range(12, 50)
 	local oldlev = game.level.level
+	local oldclev = resolvers.current_level
 	game.level.level = lev
+	resolvers.current_level = math.ceil(lev * 1.4)
 
 	-- Get a base object
 	base = base or game.zone:makeEntity(game.level, "object", {ingore_material_restriction=true, no_tome_drops=true, ego_filter={keep_egos=true, ego_chance=-1000}, special=function(e)
 		return (not e.unique and e.randart_able) and (not e.material_level or e.material_level >= 2) and true or false
 	end}, nil, true)
-	if not base then game.level.level = oldlev return end
+	if not base then game.level.level = oldlev resolvers.current_level = oldclev return end
 	local o = base:cloneFull()
 
 	local allthemes = {'misc','psionic','sorcerous','nature','brawny','lightning','arcane','light','physical','def','tireless','unyielding','dark','nimble','spell','cold','fire','venom','attack'}
@@ -315,7 +317,7 @@ function _M:generateRandart(add, base, lev)
 		table.insert(legos, game.level:getEntitiesList("object/"..o.egos..":prefix"))
 		table.insert(legos, game.level:getEntitiesList("object/"..o.egos..":suffix"))
 		table.insert(legos, game.level:getEntitiesList("object/"..o.egos..":"))
-		for i = 1, 3 do
+		for i = 1, nb_egos or 3 do
 			local egos = rng.table(legos)
 			local list = {}
 			local filter = nil
@@ -410,6 +412,7 @@ function _M:generateRandart(add, base, lev)
 	if add then self:addWorldArtifact(o) end
 
 	game.level.level = oldlev
+	resolvers.current_level = oldclev
 	return o
 end
 

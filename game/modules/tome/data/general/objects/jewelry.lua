@@ -37,6 +37,7 @@ newEntity{
 	encumber = 0.1,
 	rarity = 8,
 	desc = [[Amulets can have magical properties.]],
+	randart_able = { attack=40, physical=40, spell=40, def=40, misc=40 },
 	egos = "/data/general/objects/egos/amulets.lua", egos_chance = { prefix=resolvers.mbonus(50, 40), suffix=resolvers.mbonus(50, 40) }, egos_chance_decay = 0.5,
 }
 
