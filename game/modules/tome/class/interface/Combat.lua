@@ -559,7 +559,7 @@ end
 --- Gets the attack
 function _M:combatAttackBase(weapon, ammo)
 	weapon = weapon or self.combat or {}
-	return self.combat_atk + self:getTalentLevel(Talents.T_WEAPON_COMBAT) * 5 + (weapon.atk or 0) + (ammo and ammo.atk or 0) + (self:getLck() - 50) * 0.4
+	return 4 + self.combat_atk + self:getTalentLevel(Talents.T_WEAPON_COMBAT) * 5 + (weapon.atk or 0) + (ammo and ammo.atk or 0) + (self:getLck() - 50) * 0.4
 end
 function _M:combatAttack(weapon, ammo)
 	local stats

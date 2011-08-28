@@ -108,7 +108,7 @@ newTalent{
 		self.combat_apr = self.combat_apr - 4
 	end,
 	info = function(self, t)
-		return ([[You know how to hit the right places, giving +%d%% critical damage mofidier and %d armour penetration.]]):
+		return ([[You know how to hit the right places, giving +%d%% critical damage modifier and %d armour penetration.]]):
 		format(self:getTalentLevelRaw(t) * 5, self:getTalentLevelRaw(t) * 4)
 	end,
 }
