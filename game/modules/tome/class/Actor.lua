@@ -143,7 +143,7 @@ function _M:init(t, no_default)
 	t.resists = t.resists or {}
 	t.resists_cap = t.resists_cap or { all = 100 }
 	t.resists_pen = t.resists_pen or {}
-	
+
 	-- Absorbs a percentage of damage
 	t.damage_affinity = t.damage_affinity or {}
 
@@ -572,8 +572,8 @@ function _M:move(x, y, force)
 		self:forceUseTalent(self.T_BODY_OF_STONE, {ignore_energy=true})
 	end
 
-	if not forced and moved and ox and oy and (ox ~= self.x or oy ~= self.y) and self:knowTalent(self.LIGHT_OF_FOOT) then
-		self:incStamina(self:getTalentLevelRaw(self.LIGHT_OF_FOOT) * 0.2)
+	if not forced and moved and ox and oy and (ox ~= self.x or oy ~= self.y) and self:knowTalent(self.T_LIGHT_OF_FOOT) then
+		self:incStamina(self:getTalentLevelRaw(self.T_LIGHT_OF_FOOT) * 0.2)
 	end
 
 	if moved and not force and ox and oy and (ox ~= self.x or oy ~= self.y) and config.settings.tome.smooth_move > 0 then
