@@ -491,8 +491,6 @@ static const lua_CFunction package_loaders[] =
 {
   lj_cf_package_loader_preload,
   lj_cf_package_loader_lua,
-  lj_cf_package_loader_c,
-  lj_cf_package_loader_croot,
   NULL
 };
 
