@@ -55,7 +55,7 @@ function _M:init()
 
 	if profile.auth then
 		self.logged_url = "http://te4.org/users/"..profile.auth.page
-		local str = "#FFFF00#Online Profile: "..profile.auth.name.."[#LIGHT_BLUE##{underline}#"..self.logged_url.."#LAST##{normal}#]"
+		local str = "#FFFF00#Online Profile: "..profile.auth.name.."#{normal}#[#LIGHT_BLUE##{underline}#"..self.logged_url.."#LAST##{normal}#]"
 		self.c_auth = Textzone.new{auto_width=true, auto_height=true, text=str}
 	end
 
