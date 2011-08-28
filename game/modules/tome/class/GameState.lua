@@ -1308,13 +1308,14 @@ function _M:createRandomBoss(base, data)
 	------------------------------------------------------------
 	-- Basic stuff, name, rank, ...
 	------------------------------------------------------------
-	local ngd
+	local ngd, name
 	if base.random_name_def then
 		ngd = NameGenerator2.new("/data/languages/names/"..base.random_name_def:gsub("#sex#", base.female and "female" or "male")..".txt")
+		name = ngd:generate(nil, base.random_name_min_syllables, base.random_name_max_syllables)
 	else
 		ngd = NameGenerator.new(randart_name_rules.default)
+		name = ngd:generate()
 	end
-	local name = ngd:generate()
 	b.name = name.." the "..b.name
 	b.unique = b.name
 	b.randboss = true

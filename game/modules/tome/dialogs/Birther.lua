@@ -302,7 +302,7 @@ function _M:randomName()
 	local race_def = self.birth_descriptor_def.subrace[self.descriptors_by_type.subrace]
 	if race_def.copy.random_name_def then
 		local namegen = NameGenerator2.new("/data/languages/names/"..race_def.copy.random_name_def:gsub("#sex#", sex_def.copy.female and "female" or "male")..".txt")
-		self.c_name:setText(namegen:generate())
+		self.c_name:setText(namegen:generate(nil, race_def.copy.random_name_min_syllables, race_def.copy.random_name_max_syllables))
 	else
 		local namegen = NameGenerator.new((not sex_def.copy.female) and {
 			phonemesVocals = "a, e, i, o, u, y",

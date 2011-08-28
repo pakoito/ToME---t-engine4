@@ -83,7 +83,7 @@ newEntity{ base = "BASE_NPC_HUMANOID_RANDOM_BOSS",
 		e.moddable_tile_base = "base_shalore_01.png"
 		e.moddable_tile_ornament = {female="braid_02"}
 	end),
-	random_name_def = "shalore_#sex#",
+	random_name_def = "shalore_#sex#", random_name_max_syllables = 4,
 	humanoid_random_boss = 1,
 	resolvers.racial(),
 }

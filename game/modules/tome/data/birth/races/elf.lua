@@ -80,7 +80,7 @@ newBirthDescriptor
 		moddable_tile = "elf_#sex#",
 		moddable_tile_base = "base_shalore_01.png",
 		moddable_tile_ornament = {female="braid_02"},
-		random_name_def = "shalore_#sex#",
+		random_name_def = "shalore_#sex#", random_name_max_syllables = 4,
 		default_wilderness = {"playerpop", "shaloren"},
 		starting_zone = "scintillating-caves",
 		starting_quest = "start-shaloren",
