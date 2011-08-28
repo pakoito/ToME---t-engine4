@@ -758,7 +758,7 @@ newTalent{
 				autolevel = "none",
 				ai = "summoned", ai_real = "tactical", ai_state = { talent_in=2, },
 				stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
-				inc_stats = { str=25 + self:getWil() * self:getTalentLevel(t) / 5, dex=18, con=10 + self:getTalentLevel(t) * 2, },
+				inc_stats = { str=25 + self:getWil() * self:getTalentLevel(t) / 5, mag=10, cun=25 + self:getWil() * self:getTalentLevel(t) / 5, wil=25 + self:getWil() * self:getTalentLevel(t) / 5, dex=18, con=10 + self:getTalentLevel(t) * 2, },
 
 				resolvers.equip{
 					{type="weapon", subtype="longsword", autoreq=true},
