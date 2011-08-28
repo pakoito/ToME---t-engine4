@@ -21,7 +21,8 @@ require "engine.class"
 require "engine.Entity"
 local Particles = require "engine.Particles"
 local Map = require "engine.Map"
-local NameGenerator = require("engine.NameGenerator")
+local NameGenerator = require "engine.NameGenerator"
+local NameGenerator2 = require "engine.NameGenerator2"
 local Donation = require "mod.dialogs.Donation"
 
 module(..., package.seeall, class.inherit(engine.Entity))
@@ -1307,7 +1308,12 @@ function _M:createRandomBoss(base, data)
 	------------------------------------------------------------
 	-- Basic stuff, name, rank, ...
 	------------------------------------------------------------
-	local ngd = NameGenerator.new(randart_name_rules.default)
+	local ngd
+	if base.random_name_def then
+		ngd = NameGenerator2.new("/data/languages/names/"..base.random_name_def:gsub("#sex#", base.female and "female" or "male")..".txt")
+	else
+		ngd = NameGenerator.new(randart_name_rules.default)
+	end
 	local name = ngd:generate()
 	b.name = name.." the "..b.name
 	b.unique = b.name

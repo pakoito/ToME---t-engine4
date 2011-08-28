@@ -41,6 +41,7 @@ newEntity{
 	size_category = 3,
 	no_breath = 1,
 	demon = 1,
+	random_name_def = "demon",
 
 	resolvers.inscriptions(1, "rune"),
 	on_die = function(self, who)

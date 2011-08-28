@@ -47,6 +47,7 @@ newEntity{ base = "BASE_NPC_HUMANOID_RANDOM_BOSS",
 		e.moddable_tile = "human_#sex#"
 		e.moddable_tile_base = "base_cornac_01.png"
 	end),
+	random_name_def = "cornac_#sex#",
 	humanoid_random_boss = 1,
 	resolvers.racial(),
 }
@@ -64,6 +65,7 @@ newEntity{ base = "BASE_NPC_HUMANOID_RANDOM_BOSS",
 		e.moddable_tile_base = "base_thalore_01.png"
 		e.moddable_tile_ornament = {female="braid_01"}
 	end),
+	random_name_def = "thalore_#sex#",
 	humanoid_random_boss = 1,
 	resolvers.racial(),
 }
@@ -81,6 +83,7 @@ newEntity{ base = "BASE_NPC_HUMANOID_RANDOM_BOSS",
 		e.moddable_tile_base = "base_shalore_01.png"
 		e.moddable_tile_ornament = {female="braid_02"}
 	end),
+	random_name_def = "shalore_#sex#",
 	humanoid_random_boss = 1,
 	resolvers.racial(),
 }
@@ -96,6 +99,7 @@ newEntity{ base = "BASE_NPC_HUMANOID_RANDOM_BOSS",
 		end
 		e.moddable_tile = "halfling_#sex#"
 	end),
+	random_name_def = "halfling_#sex#",
 	humanoid_random_boss = 1,
 	resolvers.racial(),
 }
@@ -111,6 +115,7 @@ newEntity{ base = "BASE_NPC_HUMANOID_RANDOM_BOSS",
 		end
 		e.moddable_tile = "dwarf_#sex#"
 	end),
+	random_name_def = "dwarf_#sex#",
 	humanoid_random_boss = 2,
 	resolvers.racial(),
 }

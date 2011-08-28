@@ -80,9 +80,10 @@ function _M:generate(no_repeat, min_syl, max_syl)
 	-- and have no possible continuations; or if the word is in the forbidden list.
 	local word = {}
 	local word_str = ''
+	local used = {}
 	while #word < self.min_syl or self.forbidden[word_str] do
 		-- start word with the first syllable
-		local syl = self:selectSyllable(self.starts, 0)
+		local syl = self:selectSyllable(self.starts, 0, used)
 		word = {self.syllables[syl]}
 
 		local done_end = false
@@ -94,7 +95,7 @@ function _M:generate(no_repeat, min_syl, max_syl)
 			end
 
 			-- select next syllable
-			syl = self:selectSyllable(self.combinations[syl], eend)
+			syl = self:selectSyllable(self.combinations[syl], eend, used)
 			if not syl then done_end = true break end -- early end for this word, end syllable was chosen
 
 			word[#word+1] = self.syllables[syl]
@@ -102,7 +103,7 @@ function _M:generate(no_repeat, min_syl, max_syl)
 
 		if not done_end then
 			-- forcefully add an ending syllable if the loop ended without one
-			syl = self:selectSyllable(self.ends, 0)
+			syl = self:selectSyllable(self.ends, 0, used)
 			word[#word+1] = self.syllables[syl]
 		end
 
@@ -115,7 +116,7 @@ function _M:generate(no_repeat, min_syl, max_syl)
 	return word_str:capitalize()
 end
 
-function _M:selectSyllable(counts, end_count)
+function _M:selectSyllable(counts, end_count, used)
 	if not counts or #counts == 0 then return end
 
 	-- "counts" holds cumulative counts, so take the last element in the list
@@ -124,6 +125,8 @@ function _M:selectSyllable(counts, end_count)
 
 	for _, d in ipairs(counts) do
 		if d.c >= chosen then
+			if used[d.s] then return self:selectSyllable(counts, end_count, used) end
+			used[d.s] = true
 			return d.s
 		end
 	end
