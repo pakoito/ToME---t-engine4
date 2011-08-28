@@ -409,9 +409,10 @@ end
 
 --- Displays an entity somewhere on screen, outside the map
 -- @param tiles a Tiles instance that will handle the tiles (usually pass it the current Map.tiles, it will if this is null)
+-- @param x where to display
+-- @param y where to display
 -- @param w the width
 -- @param h the height
--- @return the sdl surface and the texture
 function _M:toScreen(tiles, x, y, w, h)
 	local Map = require "engine.Map"
 	tiles = tiles or Map.tiles

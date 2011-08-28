@@ -84,6 +84,7 @@ newBirthDescriptor
 	copy = {
 		moddable_tile = "human_#sex#",
 		moddable_tile_base = "base_higher_01.png",
+		random_name_def = "higher_#sex#",
 		life_rating = 11,
 		default_wilderness = {"playerpop", "allied"},
 		starting_zone = "trollmire",
@@ -109,6 +110,7 @@ newBirthDescriptor
 	copy = {
 		moddable_tile = "human_#sex#",
 		moddable_tile_base = "base_cornac_01.png",
+		random_name_def = "cornac_#sex#",
 		unused_talents_types = 1,
 		life_rating = 10,
 		default_wilderness = {"playerpop", "allied"},

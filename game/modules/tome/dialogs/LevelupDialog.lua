@@ -834,7 +834,7 @@ end
 -- Display the player tile
 function _M:innerDisplay(x, y, nb_keyframes)
 	if self.cur_item and self.cur_item.entity and self.c_t_desc and self.ui_by_ui[self.c_t_desc] then
-		self.cur_item.entity:toScreen(nil, x + self.iw - 64, y + self.iy + self.ui_by_ui[self.c_t_desc].y, 64, 64)
+		self.cur_item.entity:toScreen(game.hotkeys_display_icons.tiles, x + self.iw - 64, y + self.iy + self.ui_by_ui[self.c_t_desc].y, 64, 64)
 	end
 end
 
@@ -874,6 +874,10 @@ function _M:generateList()
 				if not t.hide or self.actor.__show_special_talents[t.id] then
 					self:computeDeps(t)
 					local isgeneric = self.actor.talents_types_def[tt.type].generic
+
+					-- Pregenenerate icon with the Tiles instance that allows images
+					if t.display_entity then t.display_entity:getMapObjects(game.hotkeys_display_icons.tiles, {}, 1) end
+
 					list[#list+1] = {
 						__id=t.id,
 						name=((t.display_entity and t.display_entity:getDisplayString() or "")..t.name):toTString(),

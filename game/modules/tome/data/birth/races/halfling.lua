@@ -84,6 +84,7 @@ newBirthDescriptor
 	},
 	copy = {
 		moddable_tile = "halfling_#sex#",
+		random_name_def = "halfling_#sex#",
 		life_rating = 12,
 	},
 }

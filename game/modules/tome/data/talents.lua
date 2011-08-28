@@ -41,8 +41,8 @@ newTalent = function(t)
 	if not t.image then
 		t.image = "talents/"..(t.short_name or t.name):lower():gsub("[^a-z0-9_]", "_")..".png"
 	end
-	if fs.exists("/data/gfx/"..t.image) then t.display_entity = Entity.new{image=t.image}
-	else t.display_entity = Entity.new{image="talents/default.png"}
+	if fs.exists("/data/gfx/"..t.image) then t.display_entity = Entity.new{image=t.image, is_talent=true}
+	else t.display_entity = Entity.new{image="talents/default.png", is_talent=true}
 	end
 	return oldNewTalent(t)
 end

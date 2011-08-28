@@ -28,6 +28,7 @@ function _M:init(t)
 	self.title = assert(t.title, "no textbox title")
 	self.text = t.text or ""
 	self.old_text = self.text
+	self.on_mouse = t.on_mouse
 	self.hide = t.hide
 	self.on_change = t.on_change
 	self.max_len = t.max_len or 999
@@ -78,9 +79,11 @@ function _M:generate()
 
 	-- Add UI controls
 	self.mouse:registerZone(title_w + 6, 0, fw, h, function(button, x, y, xrel, yrel, bx, by, event)
-		if event == "button" then
+		if event == "button" and button == "left" then
 			self.cursor = util.bound(math.floor(bx / self.font_mono_w) + self.scroll, 1, #self.tmp+1)
 			self:updateText()
+		elseif event == "button" and self.on_mouse then
+			self.on_mouse(button, x, y, xrel, yrel, bx, by, event)
 		end
 	end)
 	self.key:addBind("ACCEPT", function() self.fct(self.text) end)
