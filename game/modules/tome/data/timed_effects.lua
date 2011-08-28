@@ -4423,12 +4423,15 @@ newEffect{
 	name = "ZERO_GRAVITY",
 	desc = "Zero Gravity",
 	no_stop_enter_worlmap = true,
-	long_desc = function(self, eff) return ("There is no gravity here, you float in the air. Movement three times as slow, any melee or archery blows have a chance to knockback.") end,
+	long_desc = function(self, eff) return ("There is no gravity here, you float in the air. Movement three times as slow, any melee or archery blows have a chance to knockback. Maximum encumberance is greatly increased.") end,
 	decrease = 0, no_remove = true,
 	type = "spacetime",
 	status = "detrimental",
 	cancel_on_level_change = true,
 	parameters = {},
+	on_merge = function(self, old_eff, new_eff)
+		return old_eff
+	end,
 	activate = function(self, eff)
 		eff.encumb = self:addTemporaryValue("max_encumber", self:getMaxEncumbrance() * 20),
 		self:checkEncumbrance()

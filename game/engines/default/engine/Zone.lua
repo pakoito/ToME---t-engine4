@@ -698,7 +698,7 @@ function _M:newLevel(level_data, lev, old_lev, game)
 	level:setEntitiesList("trap", self:computeRarities("trap", self.trap_list, level, nil))
 
 	-- Save level data
-	level.data = level_data
+	level.data = level_data or {}
 	level.id = self.short_name.."-"..lev
 
 	-- Setup the level in the game

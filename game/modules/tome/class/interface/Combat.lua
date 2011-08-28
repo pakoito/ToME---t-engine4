@@ -465,7 +465,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	end
 
 	-- Zero gravity
-	if hitted and game.zone.zero_gravity and rng.percent(util.bound(dam, 0, 100)) then
+	if hitted and game.level.data.zero_gravity and rng.percent(util.bound(dam, 0, 100)) then
 		target:knockback(self.x, self.y, math.ceil(math.log(dam)))
 	end
 
@@ -892,7 +892,7 @@ end
 --- Computes movement speed
 function _M:combatMovementSpeed()
 	local mult = 1
-	if game.zone and game.zone.zero_gravity then
+	if game.level and game.level.data.zero_gravity then
 		mult = 3
 	end
 	return mult * (self.base_movement_speed or 1) / self.movement_speed

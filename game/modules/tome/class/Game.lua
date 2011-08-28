@@ -730,7 +730,7 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down, auto_zone_stair)
 	-- Special stuff
 	for uid, act in pairs(self.level.entities) do
 		if act.setEffect then
-			if self.zone.zero_gravity then act:setEffect(act.EFF_ZERO_GRAVITY, 1, {})
+			if self.level.data.zero_gravity then act:setEffect(act.EFF_ZERO_GRAVITY, 1, {})
 			else act:removeEffect(act.EFF_ZERO_GRAVITY, nil, true) end
 		end
 	end

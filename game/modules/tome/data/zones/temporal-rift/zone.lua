@@ -46,7 +46,8 @@ return {
 	ambient_music = "Through the Dark Portal.ogg",
 	levels =
 	{
-		[1] = { generator = {
+		[1] = { zero_gravity = true,
+			generator = {
 			map = {
 				class = "engine.generator.map.Forest",
 				floor = "VOID",

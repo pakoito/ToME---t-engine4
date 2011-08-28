@@ -219,7 +219,7 @@ local function archery_projectile(tx, ty, tg, self)
 	end
 
 	-- Zero gravity
-	if hitted and game.zone.zero_gravity and rng.percent(util.bound(dam, 0, 100)) then
+	if hitted and game.level.data.zero_gravity and rng.percent(util.bound(dam, 0, 100)) then
 		target:knockback(self.x, self.y, math.ceil(math.log(dam)))
 	end
 

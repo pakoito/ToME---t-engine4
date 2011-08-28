@@ -161,7 +161,7 @@ function _M:eidolonPlane()
 
 		for uid, act in pairs(game.level.entities) do
 			if act.setEffect then
-				if game.zone.zero_gravity then act:setEffect(act.EFF_ZERO_GRAVITY, 1, {})
+				if game.level.data.zero_gravity then act:setEffect(act.EFF_ZERO_GRAVITY, 1, {})
 				else act:removeEffect(act.EFF_ZERO_GRAVITY, nil, true) end
 			end
 		end
