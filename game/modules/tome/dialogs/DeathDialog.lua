@@ -159,6 +159,13 @@ function _M:eidolonPlane()
 			end
 		end
 
+		for uid, act in pairs(game.level.entities) do
+			if act.setEffect then
+				if game.zone.zero_gravity then act:setEffect(act.EFF_ZERO_GRAVITY, 1, {})
+				else act:removeEffect(act.EFF_ZERO_GRAVITY, nil, true) end
+			end
+		end
+
 		game.log("#LIGHT_RED#From the brink of death you seem to be yanked to another plane.")
 		game.player:updateMainShader()
 		if not config.settings.cheat then game:saveGame() end

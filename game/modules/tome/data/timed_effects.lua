@@ -4430,9 +4430,13 @@ newEffect{
 	cancel_on_level_change = true,
 	parameters = {},
 	activate = function(self, eff)
+		eff.encumb = self:addTemporaryValue("max_encumber", self:getMaxEncumbrance() * 20),
+		self:checkEncumbrance()
 		game.logPlayer(self, "#LIGHT_BLUE#You enter a zero gravity zone, beware!")
 	end,
 	deactivate = function(self, eff)
+		self:removeTemporaryValue("max_encumber", eff.encumb)
+		self:checkEncumbrance()
 	end,
 }
 
@@ -4520,7 +4524,7 @@ newEffect{
 	on_timeout = function(self, eff)
 		if eff.src.dead or not game.level:hasEntity(eff.src) then eff.dur = 0 return true end
 		if rng.percent(eff.chance) then
-			if self:checkHit(eff.src:combatSpellpower(), self:combatSpellResist(), 0, 95, 5) then 
+			if self:checkHit(eff.src:combatSpellpower(), self:combatSpellResist(), 0, 95, 5) then
 				local t = eff.src:getTalentFromId(eff.src.T_INNER_DEMONS)
 				t.summon_inner_demons(eff.src, self, t)
 			else
@@ -4542,16 +4546,16 @@ newEffect{
 	-- Damage each turn
 	on_timeout = function(self, eff)
 		self.worm_rot_timer = self.worm_rot_timer - 1
-		
+
 		-- disease damage
-		if self:attr("purify_disease") then 
+		if self:attr("purify_disease") then
 			self:heal(eff.dam)
-		else 
+		else
 			DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
 		end
 		-- acid damage from the larvae
 		DamageType:get(DamageType.ACID).projector(eff.src, self.x, self.y, DamageType.ACID, eff.dam)
-		
+
 		local effs = {}
 		-- Go through all physical effects
 		for eff_id, p in pairs(self.tmp) do
@@ -4567,7 +4571,7 @@ newEffect{
 				self:removeEffect(eff[2])
 			end
 		end
-		
+
 		-- burst and spawn a worm mass
 		if self.worm_rot_timer == 0 then
 			DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.burst, {from_disease=true})

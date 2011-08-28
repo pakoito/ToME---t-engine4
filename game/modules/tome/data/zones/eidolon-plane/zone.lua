@@ -28,6 +28,7 @@ return {
 	no_worldport = true,
 	is_eidolon_plane = true,
 	no_anomalies = true,
+	zero_gravity = true,
 	ambient_music = "Anne_van_Schothorst_-_Passed_Tense.ogg",
 	generator =  {
 		map = {
@@ -135,6 +136,13 @@ return {
 
 			-- Reload MOs
 			game.level.map:redisplay()
+
+			for uid, act in pairs(game.level.entities) do
+				if act.setEffect then
+					if game.zone.zero_gravity then act:setEffect(act.EFF_ZERO_GRAVITY, 1, {})
+					else act:removeEffect(act.EFF_ZERO_GRAVITY, nil, true) end
+				end
+			end
 
 			if to_worldmap then
 				game:changeLevel(1, game.player.last_wilderness or "wilderness")
