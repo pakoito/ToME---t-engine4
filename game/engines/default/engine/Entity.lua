@@ -568,6 +568,12 @@ function _M:addTemporaryValue(prop, v, noupdate)
 				local b = (base[prop] or 0) / 100
 				b = 1 - (1 - b) * (1 - v)
 				base[prop] = b * 100
+			elseif method == "inv1" then
+				v = util.bound(v, -0.999, 0.999)
+				t[id] = v
+				local b = (base[prop] or 1) - 1
+				b = 1 - (1 - b) * (1 - v)
+				base[prop] = b + 1
 			else
 				base[prop] = (base[prop] or 0) + v
 			end
@@ -631,6 +637,10 @@ function _M:removeTemporaryValue(prop, id, noupdate)
 				local b = base[prop] / 100
 				b = 1 - (1 - b) / (1 - v)
 				base[prop] = b * 100
+			elseif method == "inv1" then
+				local b = base[prop] - 1
+				b = 1 - (1 - b) / (1 - v)
+				base[prop] = b + 1
 			else
 				base[prop] = base[prop] - v
 			end
