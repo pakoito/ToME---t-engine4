@@ -20,9 +20,9 @@ local q = game.player:hasQuest("lost-merchant")
 if q and q:isStatus(q.COMPLETED, "saved") then
 
 newChat{ id="welcome",
-	text = [[Ah, my good friend @playername@!
-Thanks to you I made it safely to this great city! I am planning to open my shop soon, but since I am in your debt, perhaps I could open early for you if you are in need of rare goods.]]
-..(game.state:isAdvanced() and "\nOh my friend, as I told you I can now request a truly unique object to be crafted for you. For a truly unique price." or "\nIf you come back later when I'm correctly set up I shall be able to order for you some truly unique pieces. For a truly unique price."),
+	text = [[Ah, my #{italic}#good#{normal}# friend @playername@!
+Thanks to you I made it safely to this great city! I am planning to open my most excellent boutique soon, but since I am in your debt, perhaps I could open early for you if you are in need of rare goods.]]
+..(game.state:isAdvanced() and "\nOh my friend, good news! As I told you I can now request a truly #{italic}#unique#{normal}# object to be crafted just for you. For a truly unique price..." or "\nI eventually plan to arrange a truly unique service for the most discerning of customers. If you come back later when I'm fully set up I shall be able to order for you something quite marvellous. For a perfectly #{italic}#suitable#{normal}# price, of course."),
 	answers = {
 		{"Yes please, let me see your wares.", action=function(npc, player)
 			npc.store:loadup(game.level, game.zone)
@@ -34,9 +34,11 @@ Thanks to you I made it safely to this great city! I am planning to open my shop
 }
 
 newChat{ id="unique1",
-	text = [[I know this is expensive, but for 4000 gold I can have an item of your choice made into a unique thing.]],
+	text = [[I normally offer this service only for a truly deserved price, but for you my friend I am willing to offer a 20% discount - #{italic}#only#{normal}# 4000 gold to make an utterly unique item of your choice.  What do you say?]],
 	answers = {
+		{"Why, 'tis a paltry sum - take my order, man, and be quick about it!", cond=function(npc, player) return player.money >= 10000 end, jump="make"},
 		{"Yes please!", cond=function(npc, player) return player.money >= 4000 end, jump="make"},
+		{"HOW MUCH?! Please, excuse me, I- I need some fresh air...", cond=function(npc, player) return player.money < 500 end},
 		{"Not now, thank you."},
 	}
 }
