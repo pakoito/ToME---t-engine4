@@ -2011,9 +2011,9 @@ end
 
 --- Paradox checks
 function _M:paradoxChanceModifier()
-	local modifier = self:getWil()
+	local modifier = self:getWil() * 2
 	if self:knowTalent(self.T_PARADOX_MASTERY) then
-		modifier = self:getWil() * (1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10) or 0 )
+		modifier = modifier * (1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10) or 0 )
 	end
 	--print("[Paradox] Will modifier: ", modifier, "::", self:getParadox())
 	return modifier

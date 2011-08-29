@@ -32,7 +32,7 @@ newTalent{
 	info = function(self, t)
 		local resist = self:getTalentLevelRaw(t) * 7
 		local stability = math.floor(self:getTalentLevel(t)/2)
-		return ([[You've learned to focus your control over the spacetime continuum and resist anomalous effects.  Extends the duration of the Static History stability effect by %d turns, your effective willpower for static history, failure, anomaly, and backfire calculations by %d%%, and your Temporal resistance by %d%%.]]):
+		return ([[You've learned to focus your control over the spacetime continuum and resist anomalous effects.  Extends the duration of the Static History stability effect by %d turns, your effective willpower for Static History, failure, anomaly, and backfire calculations by %d%%, and your Temporal resistance by %d%%.]]):
 		format(stability, self:getTalentLevel(t) * 10, resist)
 	end,
 }
