@@ -107,7 +107,7 @@ newTalent{
 			ai = "summoned", ai_real = "dumb_talented", ai_state = { talent_in=1, },
 			level_range = {1, 1}, exp_worth = 0,
 
-			max_life = self.level * 2,
+			max_life = 2,
 			life_rating = 0,
 			never_move = 1,
 
@@ -124,6 +124,16 @@ newTalent{
 			summoner = self, summoner_gain_exp=true,
 			summon_time = 5,
 		}
+		if self:getTalentLevel(t) >= 5 then
+			m.on_die = function(self, src)
+				if not src or src == self then return end
+				self:project({type="ball", range=0, radius=2}, self.x, self.y, function(px, py)
+					local trap = game.level.map(px, py, engine.Map.TRAP)
+					if not trap or not trap.lure_trigger then return end
+					trap:trigger(px, py, src)
+				end)
+			end
+		end
 
 		m:resolve() m:resolve(nil, true)
 		m:forceLevelup(self.level)
@@ -133,6 +143,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Project a noisy lure that attracts all creatures in a radius %d to it.
+		At level 5, when the lure is destroyed it will trigger some traps in a radius of 2 around it (check individual traps to see if they are triggered).
 		This can be used while stealthed.]]):format(3 + self:getTalentLevelRaw(t))
 	end,
 }
@@ -224,6 +235,7 @@ newTalent{
 		local t = basetrap(self, t, x, y, 8 + self:getTalentLevel(self.T_TRAP_MASTERY), {
 			type = "elemental", name = "explosion trap", color=colors.LIGHT_RED, image = "trap/blast_fire01.png",
 			dam = dam,
+			lure_trigger = true,
 			triggered = function(self, x, y, who)
 				self:project({type="ball", x=x,y=y, radius=2}, x, y, engine.DamageType.FIREBURN, self.dam)
 				game.level.map:particleEmitter(x, y, 2, "fireflash", {radius=2, tx=x, ty=y})
@@ -241,7 +253,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Lay a simple yet effective trap that explodes on contact, doing %0.2f fire damage over a few turns in a radius of 2.]]):
+		return ([[Lay a simple yet effective trap that explodes on contact, doing %0.2f fire damage over a few turns in a radius of 2.
+		High level lure can trigger this trap.]]):
 		format(damDesc(self, DamageType.FIRE, 30 + self:getCun() * 0.8 * self:getTalentLevel(self.T_TRAP_MASTERY)))
 	end,
 }
@@ -464,6 +477,7 @@ newTalent{
 			type = "elemental", name = "flash bang trap", color=colors.YELLOW, image = "trap/blast_acid01.png",
 			dur = math.floor(self:getTalentLevel(self.T_TRAP_MASTERY) + 4),
 			check_hit = self:combatAttackDex(),
+			lure_trigger = true,
 			triggered = function(self, x, y, who)
 				self:project({type="ball", x=x,y=y, radius=2}, x, y, function(px, py)
 					local who = game.level.map(px, py, engine.Map.ACTOR)
@@ -491,7 +505,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Lay a trap that explodes in a radius of 2, blinding or dazing anything caught inside for %d turns.
-		Duration increases with Trap Mastery.]]):
+		Duration increases with Trap Mastery.
+		High level lure can trigger this trap.]]):
 		format(math.floor(self:getTalentLevel(self.T_TRAP_MASTERY) + 4))
 	end,
 }
@@ -517,6 +532,7 @@ newTalent{
 		local t = basetrap(self, t, x, y, 8 + self:getTalentLevel(self.T_TRAP_MASTERY), {
 			type = "nature", name = "poison gas trap", color=colors.LIGHT_RED, image = "trap/blast_acid01.png",
 			dam = dam,
+			lure_trigger = true,
 			triggered = function(self, x, y, who)
 				-- Add a lasting map effect
 				game.level.map:addEffect(self,
@@ -543,7 +559,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Lay a trap that explodes in a radius of 3, releasing a thick poisonous cloud lasting 4 turns.
-		Each turn the cloud infects all creatures with a poison that deals %0.2f nature damage over 5 turns.]]):
+		Each turn the cloud infects all creatures with a poison that deals %0.2f nature damage over 5 turns.
+		High level lure can trigger this trap.]]):
 		format(20 + self:getCun() * 0.5 * self:getTalentLevel(self.T_TRAP_MASTERY))
 	end,
 }
