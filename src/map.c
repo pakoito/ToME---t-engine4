@@ -545,8 +545,8 @@ static void setup_seens_texture(map_type *map)
 	glGenTextures(1, &(map->seens_texture));
 	printf("C Map seens texture: %d (%dx%d)\n", map->seens_texture, map->w, map->h);
 	tglBindTexture(GL_TEXTURE_2D, map->seens_texture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexImage2D(GL_TEXTURE_2D, 0, 4, map->w, map->h, 0, GL_BGRA, GL_UNSIGNED_BYTE, NULL);
 	map->seens_map = calloc((map->w)*(map->h)*4, sizeof(GLubyte));
