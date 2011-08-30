@@ -25,6 +25,8 @@ defineTile('~', "DEEP_WATER")
 defineTile('.', "GRASS")
 defineTile('_', "COBBLESTONE")
 
+quickEntity('@', {show_tooltip=true, name="Moss covered statue", display='@', image="terrain/grass.png", add_displays = {mod.class.Grid.new{image="terrain/statue3.png"}}, color=colors.GREEN, block_move=function(self, x, y, e, act, couldpass) if e and e.player and act then e:learnLore("thaloren-lament") end return true end})
+
 defineTile('2', "ROCKY_GROUND", nil, nil, "SWORD_WEAPON_STORE")
 defineTile('3', "ROCKY_GROUND", nil, nil, "MAUL_WEAPON_STORE")
 defineTile('4', "ROCKY_GROUND", nil, nil, "ARCHER_WEAPON_STORE")
@@ -70,7 +72,7 @@ sssssssssssssssss~~~~~~~__~~~~ssssssssssssssssssss
 tttttttttttttttttttttttt..tttttttttt~~~~~~~~~~~~~~
 ttttttttttttttttttttttt...ttttttttttttt~~~~~~~~~~~
 ttttttttttttt.5.ttttttt.....tttt.7.tttttt~~~~~~~~~
-ttttttttttttt.....tttt......t......ttttttttttttttt
+ttttttttttttt.....tttt...@..t......ttttttttttttttt
 ttttttttttttttttt.............tttttttttttttttttttt
 ttttttttttttttttttt...t......ttttttttttttttttttttt
 ttttttttttttttttttttttt.......tttttttttttttttttttt

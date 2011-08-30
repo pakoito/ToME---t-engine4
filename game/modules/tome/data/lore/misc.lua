@@ -434,9 +434,10 @@ Dragons are regularly hunted for their thick scales and their elementally imbued
 
 newLore{
 	id = "thaloren-lament",
-	category = "heart of the gloom",
-	name = "Lament for Lands now Lost",
-	lore = [[Where bright and berried yews did stand,
+	category = "shatur",
+	name = "Lament for Lands now Lost", always_pop = true,
+	lore = [[You see a moss covered statue of a Thalore reciting a poem, over and over.
+#{italic}#"Where bright and berried yews did stand,
 Where the eldest oaks grew so grand,
 Where singing birds once flew to land,
 All is dust, all is dead.
@@ -449,7 +450,7 @@ Now all lost, now all fled.
 Oaths from Shaloren mages sworn,
 Yet spells of fiery rages born,
 Our lands of bygone ages torn,
-Gone is trust, wrath is red.
+Gone is trust, wrath is red.#{normal}#
 ]] }
 
 newLore{
