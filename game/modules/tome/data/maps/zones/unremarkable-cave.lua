@@ -17,11 +17,11 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-defineTile('.', "FLOOR", nil, nil, nil, {lite=true})
-defineTile('#', "WALL", nil, nil, nil, {lite=true})
-defineTile('+', "DOOR", nil, nil, nil, {lite=true})
-defineTile('@', "FLOOR", nil, "FILLAREL", nil, {lite=true})
-defineTile('M', "FLOOR", nil, "CORRUPTOR", nil, {lite=true})
+defineTile('.', "CAVEFLOOR", nil, nil, nil, {lite=true})
+defineTile('#', "CAVEWALL", nil, nil, nil, {lite=true})
+defineTile('+', "CAVEFLOOR", nil, nil, nil, {lite=true})
+defineTile('@', "CAVEFLOOR", nil, "FILLAREL", nil, {lite=true})
+defineTile('M', "CAVEFLOOR", nil, "CORRUPTOR", nil, {lite=true})
 
 subGenerator{
 	x = 0, y = 0, w = 86, h = 50,
@@ -30,10 +30,10 @@ subGenerator{
 		edge_entrances = {4,6},
 		nb_rooms = 13,
 		rooms = {"random_room"},
-		['.'] = "FLOOR",
-		['#'] = "WALL",
-		up = "UP_WILDERNESS",
-		door = "DOOR",
+		['.'] = "CAVEFLOOR",
+		['#'] = "CAVEWALL",
+		up = "CAVE_LADDER_UP_WILDERNESS",
+		door = "CAVEFLOOR",
 		force_tunnels = {
 			{"random", {85, 25}, id=-500},
 		},

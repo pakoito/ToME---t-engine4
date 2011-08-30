@@ -18,4 +18,5 @@
 -- darkgod@te4.org
 
 load("/data/general/grids/basic.lua")
+load("/data/general/grids/cave.lua")
 load("/data/general/grids/water.lua")

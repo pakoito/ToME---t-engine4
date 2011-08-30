@@ -29,8 +29,8 @@ return {
 --	all_lited = true,
 	persistent = "zone",
 	-- Apply a greenish tint to all the map
-	color_shown = {0.3, 1, 0.5, 1},
-	color_obscure = {0.3*0.6, 1*0.6, 0.5*0.6, 0.6},
+	color_shown = {0.5, 1, 0.7, 1},
+	color_obscure = {0.5*0.6, 1*0.6, 0.7*0.6, 0.6},
 	ambient_music = "The Ancients.ogg",
 	min_material_level = 3,
 	max_material_level = 4,
@@ -39,11 +39,11 @@ return {
 			class = "engine.generator.map.Cavern",
 			zoom = 16,
 			min_floor = 1200,
-			floor = "FLOOR",
-			wall = "WALL",
-			up = "UP",
-			down = "DOWN",
-			door = "FLOOR",
+			floor = "CAVEFLOOR",
+			wall = "CAVEWALL",
+			up = "CAVE_LADDER_UP",
+			down = "CAVE_LADDER_DOWN",
+			door = "CAVEFLOOR",
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
@@ -63,7 +63,7 @@ return {
 	{
 		[1] = {
 			generator = { map = {
-				up = "UP_WILDERNESS",
+				up = "CAVE_LADDER_UP_WILDERNESS",
 			}, },
 		},
 	},

@@ -525,6 +525,30 @@ sandwall = { method="walls", type="sandwall", forbid={}, use_type=true, extended
 	default4={add_displays={{image="terrain/sand/sand_ver_edge_left_01.png", display_x=-1}}, min=1, max=1},
 	default6={add_displays={{image="terrain/sand/sand_ver_edge_right_01.png", display_x=1}}, min=1, max=1},
 },
+cavewall = { method="walls", type="cavewall", forbid={}, use_type=true, extended=true,
+	default8={add_displays={{image="terrain/cave/cavewall_8_1.png", display_y=-1, z=16}}, min=1, max=1},
+	default8p={add_displays={{image="terrain/cave/cave_V3_pillar_top_01.png", display_y=-1, z=16}}, min=1, max=1},
+	default7={add_displays={{image="terrain/cave/cave_V3_inner_7_01.png", display_y=-1, z=16}}, min=1, max=1},
+	default9={add_displays={{image="terrain/cave/cave_V3_inner_9_01.png", display_y=-1, z=16}}, min=1, max=1},
+	default7i={add_displays={{image="terrain/cave/cave_V3_3_01.png", display_y=-1, z=16}}, min=1, max=1},
+	default8i={add_displays={{image="terrain/cave/cavewall_8h_1.png", display_y=-1, z=16}}, min=1, max=1},
+	default9i={add_displays={{image="terrain/cave/cave_V3_1_01.png", display_y=-1, z=16}}, min=1, max=1},
+	default73i={add_displays={{image="terrain/cave/cavewall_91d_1.png", display_y=-1, z=16}}, min=1, max=1},
+	default91i={add_displays={{image="terrain/cave/cavewall_73d_1.png", display_y=-1, z=16}}, min=1, max=1},
+
+	default2={image="terrain/cave/cave_V3_8_01.png", min=1, max=1},
+	default2p={image="terrain/cave/cave_floor_1_01.png", add_mos={{image="terrain/cave/cave_V3_pillar_bottom_01.png"}}, min=1, max=1},
+	default1={image="terrain/cave/cave_floor_1_01.png", add_mos={{image="terrain/cave/cave_V3_inner_1_01.png"}}, min=1, max=1},
+	default3={image="terrain/cave/cave_floor_1_01.png", add_mos={{image="terrain/cave/cave_V3_inner_3_01.png"}}, min=1, max=1},
+	default1i={image="terrain/cave/cave_V3_7_01.png", min=1, max=1},
+	default2i={image="terrain/cave/cavewall_2h_1.png", min=1, max=1},
+	default3i={image="terrain/cave/cave_V3_9_01.png", min=1, max=1},
+	default19i={image="terrain/cave/cavewall_19d_1.png", min=1, max=1},
+	default37i={image="terrain/cave/cavewall_37d_1.png", min=1, max=1},
+
+	default4={add_displays={{image="terrain/cave/cave_ver_edge_left_01.png", display_x=-1}}, min=1, max=1},
+	default6={add_displays={{image="terrain/cave/cave_ver_edge_right_01.png", display_x=1}}, min=1, max=1},
+},
 }
 
 
