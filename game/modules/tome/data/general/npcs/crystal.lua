@@ -14,7 +14,7 @@ newEntity{
 
 	max_life = resolvers.rngavg(12,34),
 	stats = { str=1, dex=5, mag=20, con=1 },
-	global_speed = 0.7,
+	global_speed_base = 0.7,
 	infravision = 10,
 	combat_def = 1,
 	never_move = 1,
@@ -53,7 +53,7 @@ newEntity{ name = "wisp",
 	life_rating = 1, rank = 1, size_category = 1,
 	autolevel = "caster",
 	ai = "dumb_talented_simple", ai_state = { ai_move = "move_astar", talent_in = 1 },
-	global_speed = 1,
+	global_speed_base = 1,
 	stats = { str = 9, dex = 20, mag = 20 },
 	resolvers.talents{
 		[Talents.T_EXPLODE] = 3,

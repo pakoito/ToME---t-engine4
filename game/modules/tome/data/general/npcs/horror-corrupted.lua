@@ -170,7 +170,7 @@ newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 	autolevel = "rogue",
 	ai = "tactical", ai_state = { talent_in=2, ai_move="move_astar", },
 	ai_tactic = resolvers.tactic "ranged",
-	global_speed = 1.2,
+	global_speed_base = 1.2,
 
 	resists = { [DamageType.BLIGHT] = 50, [DamageType.DARKNESS] = 20,  [DamageType.LIGHT] = - 20 },
 
@@ -197,7 +197,7 @@ newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 	size_category = 3,
 	autolevel = "warrior",
 
-	global_speed = 0.8,
+	global_speed_base = 0.8,
 
 	resists = { [DamageType.ACID] = 50, [DamageType.DARKNESS] = 20,  [DamageType.LIGHT] = - 20 },
 
@@ -227,7 +227,7 @@ newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 	autolevel = "caster",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
 
-	global_speed = 0.8,
+	global_speed_base = 0.8,
 
 	resists = { [DamageType.DARKNESS] = 50,  [DamageType.LIGHT] = - 20 },
 

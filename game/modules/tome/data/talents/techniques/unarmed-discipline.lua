@@ -133,12 +133,12 @@ newTalent{
 	getStamina = function(self, t) return self:getTalentLevel(t) * 1.5 end,
 	activate = function(self, t)
 		return {
-			speed = self:addTemporaryValue("global_speed", -t.getSpeed(self, t)),
+			speed = self:addTemporaryValue("global_speed_add", -t.getSpeed(self, t)),
 			stamina = self:addTemporaryValue("stamina_regen", t.getStamina(self, t)),
 		}
 	end,
 	deactivate = function(self, t, p)
-		self:removeTemporaryValue("global_speed", p.speed)
+		self:removeTemporaryValue("global_speed_add", p.speed)
 		self:removeTemporaryValue("stamina_regen", p.stamina)
 		return true
 	end,

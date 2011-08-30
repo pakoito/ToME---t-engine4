@@ -319,7 +319,7 @@ newTalent{
 				combat = { dam=resolvers.mbonus(40, 15), atk=15, apr=15, dammod={mag=0.8}, damtype=DamageType.TEMPORAL },
 				body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 				autolevel = "none",
-				global_speed = 1.5,
+				global_speed_base = 1.5,
 				stats = { str=8, dex=12, mag=12, wil= 12, con=10 },
 				ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=2, },
 				level_range = {self.level, self.level},

@@ -44,7 +44,7 @@ newEntity{
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },
-	global_speed = 1.2,
+	global_speed_base = 1.2,
 	stats = { str=15, dex=15, mag=15, con=10 },
 	on_die = function(self, who)
 		local part = "NAGA_TONGUE"

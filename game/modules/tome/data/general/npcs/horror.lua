@@ -44,7 +44,7 @@ newEntity{
 
 newEntity{ base = "BASE_NPC_HORROR",
 	name = "worm that walks", color=colors.SANDY_BROWN,
-	desc = [[A bulging rotten robe seems to tear at the seams, with masses of bloated worms spilling from out and around the moving form.  Two arm-like appendages, each made up of overlapping mucous-drenched maggots, grasp tightly around the handles of bile-coated waraxes. 
+	desc = [[A bulging rotten robe seems to tear at the seams, with masses of bloated worms spilling from out and around the moving form.  Two arm-like appendages, each made up of overlapping mucous-drenched maggots, grasp tightly around the handles of bile-coated waraxes.
 	Each swing drips pestulant fluid before it, and each droplet writhes and wriggles in the air before splashing against the ground.]],
 	level_range = {25, nil}, exp_worth = 1,
 	rarity = 5,
@@ -53,7 +53,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	rank = 3,
 	hate_regen = 1,
 	vim_regen = 1,
-	
+
 	autolevel = "warriormage",
 	ai = "tactical", ai_state = { ai_move="move_dmap", talent_in=1, ally_compassion=0 },
 	ai_tactic = resolvers.tactic "melee",
@@ -65,9 +65,9 @@ newEntity{ base = "BASE_NPC_HORROR",
 	disease_immune = 1,
 
 	resists = { [DamageType.PHYSICAL] = 50, [DamageType.ACID] = 100, [DamageType.BLIGHT] = 100, [DamageType.FIRE] = -50},
-	damage_affinity = { [DamageType.BLIGHT] = 50 },	
+	damage_affinity = { [DamageType.BLIGHT] = 50 },
 	no_auto_resists = true,
-	
+
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.drops{chance=20, nb=1, {} },
 	resolvers.equip{
@@ -88,7 +88,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 		[Talents.T_BLOODLUST]={base=4, every=8},
 		[Talents.T_RUIN]={base=4, every=8},
 		[Talents.T_CORRUPTED_STRENGTH]={base=3, every=15},
-		
+
 		[Talents.T_BLINDSIDE]={base=3, every=12},
 
 		[Talents.T_WEAPON_COMBAT]={base=5, every=10, max=10},
@@ -157,7 +157,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	combat_armor = 1, combat_def = 30,
 	combat = { dam=resolvers.levelup(20, 1, 1.1), atk=20, apr=50, dammod={mag=1}, damtype=DamageType.DARKSTUN},
 
-	ai = "tactical", 
+	ai = "tactical",
 	ai_tactic = resolvers.tactic"ranged",
 	ai_state = { ai_target="target_player_radius", sense_radius=10, talent_in=1, },
 	dont_pass_target = true,
@@ -541,7 +541,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	autolevel = "warrior",
 	max_life = resolvers.rngavg(120, 150),
 	life_rating = 16,
-	global_speed = 0.7,
+	global_speed_base = 0.7,
 	combat_armor = 1, combat_def = 0,
 	combat = { dam=resolvers.levelup(resolvers.rngavg(25,150), 1, 1.2), atk=resolvers.rngavg(25,130), apr=1, dammod={str=1.1} },
 
@@ -598,7 +598,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	size_category = 3,
 	max_life = resolvers.rngavg(100,180),
 	life_rating = 12,
-	global_speed = 1.2,
+	global_speed_base = 1.2,
 	autolevel = "rogue",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
 	combat_armor = 10, combat_def = 10,

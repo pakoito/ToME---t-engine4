@@ -1971,7 +1971,7 @@ newEntity{ base = "BASE_MACE",
 	},
 	ureslak_bonuses = {
 		{ name = "Flaming", damtype = DamageType.FIREBURN, wielder = {
-			global_speed = 0.3,
+			global_speed_add = 0.3,
 			resists = { [DamageType.FIRE] = 45 },
 			resists_pen = { [DamageType.FIRE] = 30 },
 			inc_damage = { [DamageType.FIRE] = 30 },

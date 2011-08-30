@@ -33,7 +33,7 @@ newEntity{
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { talent_in=3, ai_move="move_snake" },
-	global_speed = 1.3,
+	global_speed_base = 1.3,
 	stats = { str=14, dex=23, mag=5, con=5 },
 	combat_armor = 1, combat_def = 1,
 }
@@ -121,7 +121,7 @@ newEntity{ base = "BASE_NPC_SNAKE",
 	max_life = resolvers.rngavg(100,120),
 	combat_armor = 14, combat_def = 5,
 	combat = { dam=resolvers.levelup(12, 1, 0.7), atk=10, apr=10 },
-	global_speed = 1,
+	global_speed_base = 1,
 
 	resolvers.talents{ [Talents.T_CONSTRICT]=5 },
 }

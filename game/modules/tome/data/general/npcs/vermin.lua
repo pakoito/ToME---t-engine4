@@ -28,7 +28,7 @@ newEntity{
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
-	global_speed = 0.9,
+	global_speed_base = 0.9,
 	stats = { str=10, dex=15, mag=3, con=3 },
 	combat_armor = 1, combat_def = 1,
 	infravision = 10,
@@ -78,7 +78,7 @@ newEntity{ base = "BASE_NPC_WORM",
 
 	autolevel = "warriormage",
 	resolvers.talents{ [Talents.T_CRAWL_ACID]=2, [Talents.T_ROTTING_DISEASE]=4, [Talents.T_MULTIPLY]=1 },
-	
+
 	on_die = function(self, src)
 		game.level.map:addEffect(self,
 			self.x, self.y, 5,

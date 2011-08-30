@@ -690,10 +690,10 @@ newEffect{
 	on_gain = function(self, err) return "#Target# speeds up.", "+Fast" end,
 	on_lose = function(self, err) return "#Target# slows down.", "-Fast" end,
 	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("global_speed", eff.power)
+		eff.tmpid = self:addTemporaryValue("global_speed_add", eff.power)
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("global_speed", eff.tmpid)
+		self:removeTemporaryValue("global_speed_add", eff.tmpid)
 	end,
 }
 
@@ -707,11 +707,11 @@ newEffect{
 	on_gain = function(self, err) return "#Target# slows down.", "+Slow" end,
 	on_lose = function(self, err) return "#Target# speeds up.", "-Slow" end,
 	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("global_speed", -eff.power)
+		eff.tmpid = self:addTemporaryValue("global_speed_add", -eff.power)
 		eff.dur = self:updateEffectDuration(eff.dur, "slow")
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("global_speed", eff.tmpid)
+		self:removeTemporaryValue("global_speed_add", eff.tmpid)
 	end,
 }
 
@@ -1979,11 +1979,11 @@ newEffect{
 	on_lose = function(self, err) return "#Target# overcomes the gloom.", "-Slow" end,
 	activate = function(self, eff)
 		eff.particle = self:addParticles(Particles.new("gloom_slow", 1))
-		eff.tmpid = self:addTemporaryValue("global_speed", -eff.power)
+		eff.tmpid = self:addTemporaryValue("global_speed_add", -eff.power)
 		eff.dur = self:updateEffectDuration(eff.dur, "slow")
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("global_speed", eff.tmpid)
+		self:removeTemporaryValue("global_speed_add", eff.tmpid)
 		self:removeParticles(eff.particle)
 	end,
 }
@@ -2131,7 +2131,7 @@ newEffect{
 		if eff.hateLoss or 0 > 0 then eff.hateLossId = self:addTemporaryValue("hate_regen", -eff.hateLoss) end
 		if eff.critical or 0 > 0 then eff.criticalId = self:addTemporaryValue("combat_physcrit", eff.critical) end
 		if eff.damage or 0 > 0 then eff.damageId = self:addTemporaryValue("inc_damage", {[DamageType.PHYSICAL]=eff.damage}) end
-		if eff.speed or 0 > 0 then eff.speedId = self:addTemporaryValue("global_speed", eff.speed * 0.01) end
+		if eff.speed or 0 > 0 then eff.speedId = self:addTemporaryValue("global_speed_add", eff.speed * 0.01) end
 		if eff.attack or 0 > 0 then eff.attackId = self:addTemporaryValue("combat_atk", self:combatAttack() * eff.attack * 0.01) end
 		if eff.evasion or 0 > 0 then eff.evasionId = self:addTemporaryValue("evasion", eff.evasion) end
 
@@ -2141,7 +2141,7 @@ newEffect{
 		if eff.hateLossId then self:removeTemporaryValue("hate_regen", eff.hateLossId) end
 		if eff.criticalId then self:removeTemporaryValue("combat_physcrit", eff.criticalId) end
 		if eff.damageId then self:removeTemporaryValue("inc_damage", eff.damageId) end
-		if eff.speedId then self:removeTemporaryValue("global_speed", eff.speedId) end
+		if eff.speedId then self:removeTemporaryValue("global_speed_add", eff.speedId) end
 		if eff.attackId then self:removeTemporaryValue("combat_atk", eff.attackId) end
 		if eff.evasionId then self:removeTemporaryValue("evasion", eff.evasionId) end
 
@@ -2205,10 +2205,10 @@ newEffect{
 	on_gain = function(self, err) return nil, "+Invigorated" end,
 	on_lose = function(self, err) return nil, "-Invigorated" end,
 	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("global_speed", eff.speed * 0.01)
+		eff.tmpid = self:addTemporaryValue("global_speed_add", eff.speed * 0.01)
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("global_speed", eff.tmpid)
+		self:removeTemporaryValue("global_speed_add", eff.tmpid)
 	end,
 	on_merge = function(self, old_eff, new_eff)
 		old_eff.dur = math.min(old_eff.dur + new_eff.dur, 15)
@@ -2498,13 +2498,13 @@ newEffect{
 	on_lose = function(self, err) return "#Target# slows down.", "-Wild Speed" end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("wild_speed", 1)
-		eff.moveid = self:addTemporaryValue("global_speed", eff.power/100)
+		eff.moveid = self:addTemporaryValue("global_speed_add", eff.power/100)
 		if self.ai_state then eff.aiid = self:addTemporaryValue("ai_state", {no_talents=1}) end -- Make AI not use talents while using it
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("wild_speed", eff.tmpid)
 		if eff.aiid then self:removeTemporaryValue("ai_state", eff.aiid) end
-		self:removeTemporaryValue("global_speed", eff.moveid)
+		self:removeTemporaryValue("global_speed_add", eff.moveid)
 	end,
 }
 
@@ -2519,13 +2519,13 @@ newEffect{
 	on_lose = function(self, err) return "#Target# slows down.", "-Step Up" end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("step_up", 1)
-		eff.moveid = self:addTemporaryValue("global_speed", eff.power/100)
+		eff.moveid = self:addTemporaryValue("global_speed_add", eff.power/100)
 		if self.ai_state then eff.aiid = self:addTemporaryValue("ai_state", {no_talents=1}) end -- Make AI not use talents while using it
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("step_up", eff.tmpid)
 		if eff.aiid then self:removeTemporaryValue("ai_state", eff.aiid) end
-		self:removeTemporaryValue("global_speed", eff.moveid)
+		self:removeTemporaryValue("global_speed_add", eff.moveid)
 	end,
 }
 
@@ -2540,7 +2540,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is back to normal.", "-Lightning Speed" end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("lightning_speed", 1)
-		eff.moveid = self:addTemporaryValue("global_speed", eff.power/100)
+		eff.moveid = self:addTemporaryValue("global_speed_add", eff.power/100)
 		eff.resistsid = self:addTemporaryValue("resists", {
 			[DamageType.PHYSICAL]=30,
 			[DamageType.LIGHTNING]=100,
@@ -2553,7 +2553,7 @@ newEffect{
 		self:removeTemporaryValue("lightning_speed", eff.tmpid)
 		self:removeTemporaryValue("resists", eff.resistsid)
 		if eff.aiid then self:removeTemporaryValue("ai_state", eff.aiid) end
-		self:removeTemporaryValue("global_speed", eff.moveid)
+		self:removeTemporaryValue("global_speed_add", eff.moveid)
 	end,
 }
 
@@ -3008,11 +3008,11 @@ newEffect{
 	on_lose = function(self, err) return "#Target# overcomes the madness.", "-Slow" end,
 	activate = function(self, eff)
 		eff.particle = self:addParticles(Particles.new("gloom_slow", 1))
-		eff.tmpid = self:addTemporaryValue("global_speed", -eff.power)
+		eff.tmpid = self:addTemporaryValue("global_speed_add", -eff.power)
 		eff.dur = self:updateEffectDuration(eff.dur, "slow")
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("global_speed", eff.tmpid)
+		self:removeTemporaryValue("global_speed_add", eff.tmpid)
 		self:removeParticles(eff.particle)
 	end,
 }
@@ -3300,11 +3300,11 @@ newEffect{
 	on_gain = function(self, err) return "#Target# is being crushed.", "+Imploding" end,
 	on_lose = function(self, err) return "#Target# shakes off the crushing forces.", "-Imploding" end,
 	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("global_speed", -0.5)
+		eff.tmpid = self:addTemporaryValue("global_speed_add", -0.5)
 		eff.dur = self:updateEffectDuration(eff.dur, "slow")
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("global_speed", eff.tmpid)
+		self:removeTemporaryValue("global_speed_add", eff.tmpid)
 	end,
 	on_timeout = function(self, eff)
 		DamageType:get(DamageType.PHYSICAL).projector(eff.src, self.x, self.y, DamageType.PHYSICAL, eff.power)
@@ -3407,10 +3407,10 @@ newEffect{
 	status = "beneficial",
 	parameters = { power=10 },
 	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("global_speed", 1)
+		eff.tmpid = self:addTemporaryValue("global_speed_add", 1)
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("global_speed", eff.tmpid)
+		self:removeTemporaryValue("global_speed_add", eff.tmpid)
 		self:setEffect(self.EFF_TEMPORAL_STUN, eff.power, {})
 	end,
 }
@@ -3888,12 +3888,12 @@ newEffect{
 	on_lose = function(self, err) return "#Target# has recovered from the maiming.", "-Maimed" end,
 	activate = function(self, eff)
 		eff.damid = self:addTemporaryValue("combat_dam", -eff.dam)
-		eff.tmpid = self:addTemporaryValue("global_speed", -0.3)
+		eff.tmpid = self:addTemporaryValue("global_speed_add", -0.3)
 		eff.dur = self:updateEffectDuration(eff.dur, "slow")
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("combat_dam", eff.damid)
-		self:removeTemporaryValue("global_speed", eff.tmpid)
+		self:removeTemporaryValue("global_speed_add", eff.tmpid)
 	end,
 }
 
@@ -3987,10 +3987,10 @@ newEffect{
 	on_gain = function(self, err) return "#Target# speeds up.", "+Reflexive Dodging" end,
 	on_lose = function(self, err) return "#Target# slows down.", "-Reflexive Dodging" end,
 	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("global_speed", eff.power)
+		eff.tmpid = self:addTemporaryValue("global_speed_add", eff.power)
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("global_speed", eff.tmpid)
+		self:removeTemporaryValue("global_speed_add", eff.tmpid)
 	end,
 }
 
@@ -4092,7 +4092,7 @@ newEffect{
 	parameters = { },
 	activate = function(self, eff)
 		if eff.type == DamageType.FIRE then
-			eff.tmpid = self:addTemporaryValue("global_speed", 0.1 + eff.power / 16)
+			eff.tmpid = self:addTemporaryValue("global_speed_add", 0.1 + eff.power / 16)
 		elseif eff.type == DamageType.COLD then
 			eff.tmpid = self:addTemporaryValue("combat_armor", 3 + eff.power * 2)
 		elseif eff.type == DamageType.LIGHTNING then
@@ -4113,7 +4113,7 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		if eff.type == DamageType.FIRE then
-			self:removeTemporaryValue("global_speed", eff.tmpid)
+			self:removeTemporaryValue("global_speed_add", eff.tmpid)
 		elseif eff.type == DamageType.COLD then
 			self:removeTemporaryValue("combat_armor", eff.tmpid)
 		elseif eff.type == DamageType.LIGHTNING then
@@ -4281,11 +4281,11 @@ newEffect{
 	on_gain = function(self, err) return "#Target# speeds up.", "+Haste" end,
 	on_lose = function(self, err) return "#Target# slows down.", "-Haste" end,
 	activate = function(self, eff)
-		eff.glbid = self:addTemporaryValue("global_speed", eff.power)
+		eff.glbid = self:addTemporaryValue("global_speed_add", eff.power)
 		eff.spdid = self:addTemporaryValue("combat_spellspeed", eff.power/2)
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("global_speed", eff.glbid)
+		self:removeTemporaryValue("global_speed_add", eff.glbid)
 		self:removeTemporaryValue("combat_spellspeed", eff.spdid)
 	end,
 }
@@ -4609,7 +4609,7 @@ newEffect{
 		return old_eff
 	end,
 	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("global_speed", eff.power)
+		eff.tmpid = self:addTemporaryValue("global_speed_add", eff.power)
 		eff.critid = self:addTemporaryValue("combat_physcrit", eff.crit)
 		eff.dieatid = self:addTemporaryValue("die_at", -self.max_life * eff.dieat)
 	end,
@@ -4621,7 +4621,7 @@ newEffect{
 			game.logSeen(self, "%s dies when it's frenzy ends!", self.name:capitalize())
 			self:die(self)
 		end
-		self:removeTemporaryValue("global_speed", eff.tmpid)
+		self:removeTemporaryValue("global_speed_add", eff.tmpid)
 		self:removeTemporaryValue("combat_physcrit", eff.critid)
 		self:removeTemporaryValue("die_at", eff.dieatid)
 	end,

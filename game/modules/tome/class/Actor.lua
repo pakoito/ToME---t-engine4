@@ -69,7 +69,6 @@ _M.__is_actor = true
 _M.stats_per_level = 3
 
 -- Speeds are multiplicative, not additive
-_M.temporary_values_conf.global_speed = "inv1"
 _M.temporary_values_conf.movement_speed = "mult0"
 _M.temporary_values_conf.combat_physspeed = "mult0"
 _M.temporary_values_conf.combat_spellspeed = "mult0"
@@ -85,6 +84,8 @@ function _M:init(t, no_default)
 	self.combat_apr = 0
 	self.combat_dam = 0
 	self.global_speed = 1
+	self.global_speed_base = 1
+	self.global_speed_add = 0
 	self.movement_speed = 1
 	self.combat_physcrit = 0
 	self.combat_physspeed = 1
@@ -210,6 +211,7 @@ function _M:init(t, no_default)
 	self.talents[self.T_ATTACK] = self.talents[self.T_ATTACK] or 1
 
 	self:resetCanSeeCache()
+	self:recomputeGlobalSpeed()
 end
 
 function _M:useEnergy(val)
@@ -1700,6 +1702,12 @@ function _M:onStatChange(stat, v)
 	end
 end
 
+function _M:recomputeGlobalSpeed()
+	if self.global_speed_add > 0 then self.global_speed = self.global_speed_base + self.global_speed_add
+	else self.global_speed = self.global_speed_base * math.exp(self.global_speed_add)
+	end
+end
+
 --- Called when a temporary value changes (added or deleted)
 -- Takes care to call onStatChange when needed
 -- @param prop the property changing
@@ -1708,6 +1716,8 @@ end
 function _M:onTemporaryValueChange(prop, v, base)
 	if base == self.inc_stats then
 		self:onStatChange(prop, v)
+	elseif prop == "global_speed_add" then
+		self:recomputeGlobalSpeed()
 	end
 end
 

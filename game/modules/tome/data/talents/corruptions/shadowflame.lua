@@ -93,7 +93,7 @@ newTalent{
 		local power = self:getTalentLevel(t) * 0.03
 		return {
 			demon = self:addTemporaryValue("demon", 1),
-			speed = self:addTemporaryValue("global_speed", power),
+			speed = self:addTemporaryValue("global_speed_add", power),
 			res = self:addTemporaryValue("resists", {[DamageType.FIRE]=self:combatTalentSpellDamage(t, 20, 30), [DamageType.DARKNESS]=self:combatTalentSpellDamage(t, 20, 35)}),
 			particle = self:addParticles(Particles.new("shadowfire", 1)),
 		}
@@ -102,7 +102,7 @@ newTalent{
 		self.type, self.subtype = unpack(self.__old_type)
 		self.__old_type = nil
 		self:removeTemporaryValue("resists", p.res)
-		self:removeTemporaryValue("global_speed", p.speed)
+		self:removeTemporaryValue("global_speed_add", p.speed)
 		self:removeTemporaryValue("demon", p.demon)
 		self:removeParticles(p.particle)
 		return true

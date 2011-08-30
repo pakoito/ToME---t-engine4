@@ -704,10 +704,12 @@ newTalent{
 	points = 5,
 	mode = "passive",
 	on_learn = function(self, t)
-		self.global_speed = self.global_speed + 0.03
+		self.global_speed_base = self.global_speed_base + 0.03
+		self:recomputeGlobalSpeed()
 	end,
 	on_unlearn = function(self, t)
-		self.global_speed = self.global_speed - 0.03
+		self.global_speed_base = self.global_speed_base - 0.03
+		self:recomputeGlobalSpeed()
 	end,
 	info = function(self, t)
 		return ([[Yeeks live fast, think fast, and sacrifice fast for the Way.

@@ -123,7 +123,7 @@ newEntity{ base = "BASE_NPC_TROLL",
 	level_range = {38, nil}, exp_worth = 1,
 	rarity = 6,
 	rank = 3,
-	global_speed = 1.6,
+	global_speed_base = 1.6,
 	life_rating = 25,
 	max_life = resolvers.rngavg(220,240),
 

@@ -117,11 +117,11 @@ newTalent{
 		game:playSoundNear(self, "talents/spell_generic")
 		local power = t.getHaste(self, t)
 		return {
-			speed = self:addTemporaryValue("global_speed", power),
+			speed = self:addTemporaryValue("global_speed_add", power),
 		}
 	end,
 	deactivate = function(self, t, p)
-		self:removeTemporaryValue("global_speed", p.speed)
+		self:removeTemporaryValue("global_speed_add", p.speed)
 		return true
 	end,
 	info = function(self, t)

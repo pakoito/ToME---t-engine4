@@ -52,7 +52,7 @@ newEntity{ name = "flying skull",
 	life_rating = 1, rank = 1, size_category = 1,
 	autolevel = "caster",
 	ai = "dumb_talented_simple", ai_state = { ai_move = "move_astar", talent_in = 1 },
-	global_speed = 1,
+	global_speed_base = 1,
 	stats = { str = 9, dex = 20, mag = 20 },
 	resolvers.talents{
 		[Talents.T_EXPLODE] = 3,

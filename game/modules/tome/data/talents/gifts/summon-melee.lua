@@ -60,7 +60,7 @@ newTalent{
 			stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
 			inc_stats = { str=15 + (self:getWil(130, true) * self:getTalentLevel(t) / 5) + (self:getTalentLevel(t) * 2), dex=10 + self:getTalentLevel(t) * 2, mag=5, con=15 + self:getTalentLevelRaw(self.T_RESILIENCE)*2 },
 			level_range = {self.level, self.level}, exp_worth = 0,
-			global_speed = 1.2,
+			global_speed_base = 1.2,
 
 			max_life = resolvers.rngavg(25,50),
 			life_rating = 6,
@@ -223,7 +223,7 @@ newTalent{
 
 			autolevel = "none",
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=2, },
-			global_speed=1.2,
+			global_speed_base=1.2,
 			stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
 			inc_stats = { str=25 + (self:getWil(140, true) * self:getTalentLevel(t) / 5) + (self:getTalentLevel(t) * 2), dex=18, con=10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2, },
 
