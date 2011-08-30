@@ -107,7 +107,7 @@ newTalent{
 			ai = "summoned", ai_real = "dumb_talented", ai_state = { talent_in=1, },
 			level_range = {1, 1}, exp_worth = 0,
 
-			max_life = 2,
+			max_life = 2 * self.level,
 			life_rating = 0,
 			never_move = 1,
 
