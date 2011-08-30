@@ -683,14 +683,14 @@ function _M:playerPickup()
 		local titleupdator = self:getEncumberTitleUpdator("Pickup")
 		local d d = self:showPickupFloor(titleupdator(), nil, function(o, item)
 			local o = self:pickupFloor(item, true)
-			o.__new_pickup = true
+			if o then o.__new_pickup = true end
 			self.changed = true
 			d:updateTitle(titleupdator())
 			d:used()
 		end)
 	else
 		local o = self:pickupFloor(1, true)
-		o.__new_pickup = true
+		if o then o.__new_pickup = true end
 		self:sortInven()
 		self:useEnergy()
 	self.changed = true
