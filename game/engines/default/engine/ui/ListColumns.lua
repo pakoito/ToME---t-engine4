@@ -236,7 +236,9 @@ function _M:setList(list)
 	self.sel = util.bound(self.sel, 1, self.max)
 	self.scroll = util.bound(self.scroll, 1, self.max)
 	self.scroll = util.scroll(self.sel, self.scroll, self.max_display)
-	self:selectColumn(1, true)
+
+	local oldcol, oldrev = self.cur_col, self.sort_reverse
+	self:selectColumn(oldcol or 1, (not oldcol) and true or false, self.sort_reverse)
 
 	for i, item in ipairs(self.list) do self:drawItem(item) end
 end
@@ -257,7 +259,7 @@ function _M:onUse(...)
 	else self.fct(item, self.sel, ...) end
 end
 
-function _M:selectColumn(i, force)
+function _M:selectColumn(i, force, reverse)
 	if not self.sortable and not force then return end
 	local col = self.columns[i]
 	if not col then return end
@@ -268,6 +270,7 @@ function _M:selectColumn(i, force)
 	else
 		self.sort_reverse = not self.sort_reverse
 	end
+	if type(reverse) == "boolean" then self.sort_reverse = reverse end
 
 	if self.sortable and not force then
 		local fct = col.sort
