@@ -187,6 +187,8 @@ function _M:use(item)
 		end
 	elseif act == "dump" then
 		game:registerDialog(require("mod.dialogs.CharacterSheet").new(self.actor))
+	elseif act == "log" then
+		game:registerDialog(require("mod.dialogs.ShowChatLog").new("Message Log", 0.6, game.logdisplay, profile.chat))
 	elseif act == "cheat" then
 		game.logPlayer(self.actor, "#LIGHT_BLUE#You resurrect! CHEATER!")
 
@@ -272,6 +274,7 @@ function _M:generateList()
 		end)
 	end
 
+	list[#list+1] = {name=(not profile.auth and "Message Log" or "Message/Chat log (allows to talk)"), action="log"}
 	list[#list+1] = {name="Character dump", action="dump"}
 	list[#list+1] = {name="Restart the same character", action="exit", subaction="restart"}
 	list[#list+1] = {name="Restart with a new character", action="exit", subaction="restart-new"}

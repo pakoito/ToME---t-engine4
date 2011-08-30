@@ -33,6 +33,9 @@ function _M:init(title, shadow, log, chat)
 
 	self.log, self.chat = log, chat
 
+	self.event_fct = function(e) self:onTalkEvent(e) end
+	chat:registerTalkEvents(self.event_fct)
+
 	local tabs = {}
 
 	local order = {}
@@ -65,6 +68,16 @@ function _M:init(title, shadow, log, chat)
 	self:switchTo(self.last_tab or "__log")
 end
 
+function _M:unload()
+	self.chat:unregisterTalkEvents(self.event_fct)
+end
+
+function _M:onTalkEvent(e)
+	if not e.channel then return end
+	if e.channel ~= self.last_tab then return end
+	self:switchTo(self.last_tab)
+end
+
 function _M:generate()
 	Dialog.generate(self)
 
@@ -83,6 +96,15 @@ function _M:generate()
 		_PAGEUP = function() self:setScroll(self.scroll - self.max_display) end,
 		_PAGEDOWN = function() self:setScroll(self.scroll + self.max_display) end,
 	}
+
+	for i, tab in ipairs(tabs) do
+		local tab = tab
+		tab.ui.key:addBind("USERCHAT_TALK", function()
+			local type, name = profile.chat:getCurrentTarget()
+			if type == "channel" and self.last_tab ~= "__log" then profile.chat:setCurrentTarget(true, self.last_tab) end
+			profile.chat:talkBox()
+		end)
+	end
 end
 
 function _M:mouseEvent(button, x, y, xrel, yrel, bx, by, event)

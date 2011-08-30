@@ -35,6 +35,7 @@ function _M:init()
 	self.channels = {}
 	self.max = 500
 	self.do_display_chans = true
+	self.on_event = {}
 end
 
 --- Hook up in the current running game
@@ -78,6 +79,16 @@ function _M:addMessage(kind, channel, login, name, msg, extra_data, no_change)
 	while #log > self.max do table.remove(log) end
 	self.changed = true
 	if not no_change and channel ~= self.cur_channel then self.channels[channel].changed = true self.channels_changed = true end
+end
+
+--- Register to receive events
+function _M:registerTalkEvents(fct)
+	self.on_event[fct] = true
+end
+
+--- Register to not receive events
+function _M:unregisterTalkEvents(fct)
+	self.on_event[fct] = nil
 end
 
 function _M:event(e)
@@ -149,6 +160,10 @@ function _M:event(e)
 			}
 		end
 		self.channels_changed = true
+	end
+
+	for fct, _ in pairs(self.on_event) do
+		fct(e)
 	end
 end
 
