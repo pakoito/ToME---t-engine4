@@ -325,7 +325,7 @@ function _M:onQuit()
 	if self.is_quitting then return end
 	self.is_quitting = Dialog:yesnoPopup("Quit", "Really exit T-Engine/ToME?", function(ok)
 		self.is_quitting = false
-		if ok then os.exit() end
+		if ok then core.game.exit_engine() end
 	end, "Quit", "Continue")
 end
 
