@@ -1336,7 +1336,7 @@ It was made by Humans for Humans; only they can harness the true power of the ro
 newEntity{ base = "BASE_CLOTH_ARMOR",
 	power_source = {arcane=true},
 	unique = true,
-	name = "Firewalker", color = colors.RED,
+	name = "Firewalker", color = colors.RED, image = "object/artifact/robe_firewalker.png",
 	unided_name = "blazing robe",
 	desc = [[This fiery robe was worn by the mad pyromancer Halchot, who terrorised many towns in the late Age of Dusk, burning and looting villages as they tried to recover from the Spellblaze.  Eventually he was tracked down by the Ziguranth, who cut out his tongue, chopped off his head, and rent his body to shreds.  The head was encased in a block of ice and paraded through the streets of nearby towns amidst the cheers of the locals.  Only this robe remains of the flames of Halchot.]],
 	level_range = {20, 30},

@@ -25,7 +25,14 @@ newEntity{
 	name = "cave floor", image = "terrain/cave/cave_floor_1_01.png",
 	display = '.', color=colors.SANDY_BROWN, back_color=colors.DARK_UMBER,
 	grow = "CAVEWALL",
+	nice_tiler = { method="replace", base={"CAVEFLOOR", 20, 1, 18}},
 }
+for i = 1, 18 do
+	if i <= 7 then newEntity{ base = "CAVEFLOOR", define_as = "CAVEFLOOR"..i, image = "terrain/cave/cave_floor_"..i.."_01.png"}
+	elseif i <= 16 then newEntity{ base = "CAVEFLOOR", define_as = "CAVEFLOOR"..i, image = "terrain/cave/cave_floor_1_01.png", add_mos={{image="terrain/cave/cave_rock_"..(i-7).."_01.png"}}}
+	else newEntity{ base = "CAVEFLOOR", define_as = "CAVEFLOOR"..i, image = "terrain/cave/cave_floor_1_01.png", add_mos={{image="terrain/cave/cave_mushroom_"..(i-16).."_01.png"}}}
+	end
+end
 
 newEntity{
 	define_as = "CAVEWALL",
@@ -41,7 +48,7 @@ newEntity{
 	nice_editer = cave_wall_editer,
 --	nice_tiler = { method="replace", base={"CAVEWALL", 20, 1, 6}},
 }
-for i = 1, 6 do newEntity{ base = "CAVEWALL", define_as = "CAVEWALL"..i, image = "terrain/cave/cavewall_5_"..i..".png"} end
+--for i = 1, 6 do newEntity{ base = "CAVEWALL", define_as = "CAVEWALL"..i, image = "terrain/cave/cavewall_5_"..i..".png"} end
 
 -----------------------------------------
 -- Cavy exits

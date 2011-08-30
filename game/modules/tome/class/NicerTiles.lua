@@ -127,7 +127,7 @@ function _M:replaceAll(level)
 						g.add_displays[#g.add_displays].image = g.add_displays[#g.add_displays].image:format(rng.range(e.min, e.max))
 					end
 				end
-				if e.image then g.image = e.image end
+				if e.image then g.image = e.image:format(rng.range(e.min, e.max)) end
 			end
 
 			level.map(i, j, Map.TERRAIN, g)
@@ -536,7 +536,7 @@ cavewall = { method="walls", type="cavewall", forbid={}, use_type=true, extended
 	default73i={add_displays={{image="terrain/cave/cavewall_91d_1.png", display_y=-1, z=16}}, min=1, max=1},
 	default91i={add_displays={{image="terrain/cave/cavewall_73d_1.png", display_y=-1, z=16}}, min=1, max=1},
 
-	default2={image="terrain/cave/cave_V3_8_01.png", min=1, max=1},
+	default2={image="terrain/cave/cave_V3_8_0%d.png", min=1, max=3},
 	default2p={image="terrain/cave/cave_floor_1_01.png", add_mos={{image="terrain/cave/cave_V3_pillar_bottom_01.png"}}, min=1, max=1},
 	default1={image="terrain/cave/cave_floor_1_01.png", add_mos={{image="terrain/cave/cave_V3_inner_1_01.png"}}, min=1, max=1},
 	default3={image="terrain/cave/cave_floor_1_01.png", add_mos={{image="terrain/cave/cave_V3_inner_3_01.png"}}, min=1, max=1},
