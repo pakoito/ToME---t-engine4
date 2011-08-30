@@ -38,16 +38,15 @@ return {
 			class = "engine.generator.map.Cavern",
 			zoom = 16,
 			min_floor = 1200,
-			floor = "FLOOR",
-			wall = "WALL",
-			up = "UP",
-			down = "DOWN",
-			door = "FLOOR",
+			floor = "CAVEFLOOR",
+			wall = "CAVEWALL",
+			up = "CAVE_LADDER_UP",
+			down = "CAVE_LADDER_DOWN",
+			door = "CAVEFLOOR",
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
 			nb_npc = {30, 40},
-			guardian = "UNGOLE",
 		},
 		object = {
 			class = "engine.generator.object.Random",
@@ -62,7 +61,7 @@ return {
 	{
 		[1] = {
 			generator = { map = {
-				up = "UP_WILDERNESS",
+				up = "CAVE_LADDER_UP_WILDERNESS",
 			}, },
 		},
 		[2] = {

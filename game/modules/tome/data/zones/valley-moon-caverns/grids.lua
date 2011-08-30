@@ -18,11 +18,12 @@
 -- darkgod@te4.org
 
 load("/data/general/grids/basic.lua")
+load("/data/general/grids/cave.lua")
 
 newEntity{
 	define_as = "UP_VALLEY",
 	name = "exit to the lost valley",
-	display = '<', color_r=255, color_g=0, color_b=255, image = "terrain/stair_up_wild.png",
+	display = '<', color_r=255, color_g=0, color_b=255, image = "terrain/cave/cave_floor_1_01.png", add_mos={{image="terrain/cave/cave_stairs_up_2_01.png"}},
 	always_remember = true,
 	notice = true,
 	change_level = 3,
