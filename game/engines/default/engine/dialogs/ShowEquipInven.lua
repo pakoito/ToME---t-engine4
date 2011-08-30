@@ -159,7 +159,7 @@ function _M:use(item, button, event)
 	end
 end
 
-function _M:generateList()
+function _M:generateList(no_update)
 	-- Makes up the list
 	self.equip_list = {}
 	local list = self.equip_list
@@ -207,8 +207,10 @@ function _M:generateList()
 	end
 	list.chars = chars
 
-	self.c_inven:setList(self.inven_list)
-	self.c_equip:setList(self.equip_list)
+	if not no_update then
+		self.c_inven:setList(self.inven_list)
+		self.c_equip:setList(self.equip_list)
+	end
 end
 
 function _M:on_recover_focus()

@@ -136,7 +136,7 @@ function _M:pickupFloor(i, vocal, no_sort)
 
 			local letter = ShowPickupFloor:makeKeyChar(self:itemPosition(self.INVEN_INVEN, o) or 1)
 			if vocal then game.logSeen(self, "%s picks up (%s.): %s.", self.name:capitalize(), letter, o:getName{do_color=true}) end
-			return true
+			return o
 		elseif not prepickup then
 			if vocal then game.logSeen(self, "%s has no room for: %s.", self.name:capitalize(), o:getName{do_color=true}) end
 		end

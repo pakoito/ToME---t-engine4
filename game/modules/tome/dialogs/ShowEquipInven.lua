@@ -38,6 +38,11 @@ function _M:init(...)
 	end
 end
 
+function _M:unload()
+	for i, item in ipairs(self.equip_list or {}) do if item.object then item.object.__new_pickup = nil end end
+	for i, item in ipairs(self.inven_list or {}) do if item.object then item.object.__new_pickup = nil end end
+end
+
 function _M:onDrag(item)
 	if item and item.object then
 		local s = item.object:getEntityFinalSurface(nil, 64, 64)
@@ -47,4 +52,17 @@ function _M:onDrag(item)
 			game.mouse:receiveMouse("drag-end", x, y, true, nil, {drag=drag})
 		end)
 	end
+end
+
+function _M:generateList()
+	Base.generateList(self, true)
+	for i, item in ipairs(self.inven_list or {}) do if item.object and item.object.__new_pickup then
+			item.name = ("#{bold}#"..item.name.."#{normal}#"):toTString()
+	end end
+	for i, item in ipairs(self.equip_list or {}) do if item.object and item.object.__new_pickup then
+			item.name = ("#{bold}#"..item.name.."#{normal}#"):toTString()
+	end end
+
+	self.c_inven:setList(self.inven_list)
+	self.c_equip:setList(self.equip_list)
 end

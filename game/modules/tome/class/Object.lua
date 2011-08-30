@@ -908,6 +908,11 @@ end
 --- Gets the full desc of the object
 function _M:getDesc(name_param, compare_with, never_compare)
 	local desc = tstring{}
+
+	if self.__new_pickup then
+		desc:add({"font","bold"},{"color","LIGHT_BLUE"},"Newly picked up",{"font","normal"},{"color","LAST"},true)
+	end
+
 	name_param = name_param or {}
 	name_param.do_color = true
 	compare_with = compare_with or {}
