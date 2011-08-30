@@ -2089,7 +2089,7 @@ newEffect{
 		self.changed = true
 		if self.life <= 0 then
 			self.life = 1
-			self:setEffect(target.EFF_STUNNED, 3, {})
+			self:setEffect(self.EFF_STUNNED, 3, {})
 			game.logSeen(self, "%s's increased life wears off and is stunned by the change.", self.name:capitalize())
 		end
 	end,

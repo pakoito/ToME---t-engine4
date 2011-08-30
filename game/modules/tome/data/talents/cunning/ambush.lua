@@ -71,7 +71,7 @@ newTalent{
 		if not x or not y or not target then return nil end
 		local _ _, x, y = self:canProject(tg, x, y)
 		target = game.level.map(x, y, Map.ACTOR)
-		if target == self then target = nil end
+		if not target then return nil end
 
 		local sx, sy = util.findFreeGrid(self.x, self.y, 5, true, {[engine.Map.ACTOR]=true})
 		if not sx then return end
