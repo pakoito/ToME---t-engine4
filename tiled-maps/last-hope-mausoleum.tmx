@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="50" height="25" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="tome-terrains" tilewidth="32" tileheight="32">
+  <image source="gfx/tome-terrains.png" width="256" height="576"/>
+  <tile id="0">
+   <properties>
+    <property name="display" value="."/>
+   </properties>
+  </tile>
+  <tile id="11">
+   <properties>
+    <property name="display" value="_"/>
+   </properties>
+  </tile>
+  <tile id="14">
+   <properties>
+    <property name="display" value="+"/>
+   </properties>
+  </tile>
+  <tile id="16">
+   <properties>
+    <property name="display" value="#"/>
+   </properties>
+  </tile>
+  <tile id="73">
+   <properties>
+    <property name="display" value="&gt;"/>
+   </properties>
+  </tile>
+  <tile id="75">
+   <properties>
+    <property name="display" value="&lt;"/>
+   </properties>
+  </tile>
+  <tile id="76">
+   <properties>
+    <property name="display" value="*"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="Terrain" width="50" height="25">
+  <data encoding="base64" compression="zlib">
+   eJztlkEKwCAMBJO7IP6r/v87tuClYMBoIzbuYZBVD06CYiKiBAAAP4Jvch0t8koPpvc5vszw2NODFcy4WOeW50MQ1kc8onFu1TwI89q+XMpejxI790lep/TD2/3w8l6t8rDGk4eH/xUAAOxOAWBHRis=
+  </data>
+ </layer>
+ <objectgroup name="Actor" width="50" height="25">
+  <object name="Celia" x="1131" y="398" width="12" height="12">
+   <properties>
+    <property name="display" value="@"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="Object" width="50" height="25">
+  <object name="Letter" x="73" y="393" width="14" height="16">
+   <properties>
+    <property name="display" value="L"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

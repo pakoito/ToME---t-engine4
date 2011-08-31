@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="20" height="20" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="dg_grounds32" tilewidth="32" tileheight="32">
+  <image source="gfx/dg_grounds32.gif" width="288" height="640"/>
+  <tile id="0">
+   <properties>
+    <property name="display" value=":"/>
+   </properties>
+  </tile>
+  <tile id="9">
+   <properties>
+    <property name="display" value="."/>
+    <property name="value" value="&quot;GRASS&quot;"/>
+   </properties>
+  </tile>
+  <tile id="12">
+   <properties>
+    <property name="display" value=","/>
+   </properties>
+  </tile>
+  <tile id="18">
+   <properties>
+    <property name="display" value="~"/>
+   </properties>
+  </tile>
+  <tile id="30">
+   <properties>
+    <property name="display" value="_"/>
+   </properties>
+  </tile>
+  <tile id="33">
+   <properties>
+    <property name="display" value="="/>
+   </properties>
+  </tile>
+  <tile id="54">
+   <properties>
+    <property name="display" value="t"/>
+    <property name="value" value="&quot;SWAMPTREE&quot;"/>
+   </properties>
+  </tile>
+  <tile id="72">
+   <properties>
+    <property name="display" value="~"/>
+   </properties>
+  </tile>
+  <tile id="117">
+   <properties>
+    <property name="display" value="^"/>
+   </properties>
+  </tile>
+  <tile id="159">
+   <properties>
+    <property name="display" value="-"/>
+   </properties>
+  </tile>
+  <tile id="168">
+   <properties>
+    <property name="display" value="!"/>
+    <property name="value" value="&quot;ROCK_VAULT&quot;"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="181" name="numbers" tilewidth="32" tileheight="32">
+  <image source="gfx/numbers.png" width="192" height="192"/>
+  <tile id="0">
+   <properties>
+    <property name="display" value="&lt;"/>
+    <property name="value" value="&quot;GRASS_UP4&quot;"/>
+   </properties>
+  </tile>
+  <tile id="1">
+   <properties>
+    <property name="display" value="="/>
+   </properties>
+  </tile>
+  <tile id="2">
+   <properties>
+    <property name="display" value="@"/>
+   </properties>
+  </tile>
+  <tile id="3">
+   <properties>
+    <property name="display" value="4"/>
+   </properties>
+  </tile>
+  <tile id="4">
+   <properties>
+    <property name="display" value="5"/>
+   </properties>
+  </tile>
+  <tile id="5">
+   <properties>
+    <property name="display" value="6"/>
+   </properties>
+  </tile>
+  <tile id="19">
+   <properties>
+    <property name="display" value="1"/>
+   </properties>
+  </tile>
+  <tile id="20">
+   <properties>
+    <property name="display" value="2"/>
+   </properties>
+  </tile>
+  <tile id="21">
+   <properties>
+    <property name="display" value="3"/>
+   </properties>
+  </tile>
+  <tile id="22">
+   <properties>
+    <property name="display" value="5"/>
+   </properties>
+  </tile>
+  <tile id="23">
+   <properties>
+    <property name="display" value="6"/>
+   </properties>
+  </tile>
+  <tile id="24">
+   <properties>
+    <property name="display" value="7"/>
+   </properties>
+  </tile>
+  <tile id="25">
+   <properties>
+    <property name="display" value="8"/>
+   </properties>
+  </tile>
+  <tile id="26">
+   <properties>
+    <property name="display" value="A"/>
+   </properties>
+  </tile>
+  <tile id="35">
+   <properties>
+    <property name="display" value="&amp;"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="217" name="dg_town632" tilewidth="32" tileheight="32">
+  <image source="gfx/dg_town632.gif" width="288" height="128"/>
+  <tile id="0">
+   <properties>
+    <property name="display" value="#"/>
+   </properties>
+  </tile>
+  <tile id="4">
+   <properties>
+    <property name="display" value="3"/>
+   </properties>
+  </tile>
+  <tile id="5">
+   <properties>
+    <property name="display" value="2"/>
+   </properties>
+  </tile>
+  <tile id="15">
+   <properties>
+    <property name="display" value="1"/>
+   </properties>
+  </tile>
+  <tile id="22">
+   <properties>
+    <property name="display" value="4"/>
+   </properties>
+  </tile>
+  <tile id="24">
+   <properties>
+    <property name="display" value="9"/>
+   </properties>
+  </tile>
+  <tile id="27">
+   <properties>
+    <property name="display" value="*"/>
+   </properties>
+  </tile>
+  <tile id="30">
+   <properties>
+    <property name="display" value="+"/>
+   </properties>
+  </tile>
+  <tile id="32">
+   <properties>
+    <property name="display" value="'"/>
+   </properties>
+  </tile>
+  <tile id="34">
+   <properties>
+    <property name="display" value="&gt;"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="Terrain" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJwzZ2BgMB/EmAuI5aE0F4V8cyibWhjdfV8o5NPCvzD+Fyj/C4V8fO6lhA8Liy8U8GkRflvxxD+l6YXa8Uvt8KN2/FI7/VEz/KiVf2lZvmDzjzwBeRj/NwNtymcADzNUOQ==
+  </data>
+ </layer>
+</map>
