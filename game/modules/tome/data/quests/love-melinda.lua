@@ -56,7 +56,7 @@ function spawnFortress(self, who) game:onTickEnd(function()
 		never_anger = true,
 
 		resolvers.equip{ id=true,
-			{defined="SIMPLE_GOWN", autoreq=true, ego_chance=-1000, ego_chance=-1000}
+			{defined="SIMPLE_GOWN", autoreq=true, ego_chance=-1000}
 		},
 
 		body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },

@@ -76,4 +76,5 @@ newEntity{ base = "BASE_CLOTH_ARMOR",
 	cost = 0.5,
 	material_level = 1,
 	moddable_tile = "upper_body_12",
+	egos = false, egos_chance = false,
 }
