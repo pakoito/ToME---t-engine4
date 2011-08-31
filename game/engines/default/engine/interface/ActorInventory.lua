@@ -139,6 +139,9 @@ function _M:pickupFloor(i, vocal, no_sort)
 			return o
 		elseif not prepickup then
 			if vocal then game.logSeen(self, "%s has no room for: %s.", self.name:capitalize(), o:getName{do_color=true}) end
+			return
+		else
+			return true
 		end
 	else
 		if vocal then game.logSeen(self, "There is nothing to pickup there.") end
