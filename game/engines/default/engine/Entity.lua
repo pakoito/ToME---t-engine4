@@ -652,7 +652,12 @@ function _M:removeTemporaryValue(prop, id, noupdate)
 				recursive(base[prop], k, e, method)
 			end
 		else
-			error("unsupported temporary value type: "..type(v).." :=: "..tostring(v))
+			if type(v) == "nil" then
+				print("ERROR!!! unsupported temporary value type: "..type(v).." :=: "..tostring(v))
+				util.show_backtrace()
+			else
+				error("unsupported temporary value type: "..type(v).." :=: "..tostring(v))
+			end
 		end
 	end
 
