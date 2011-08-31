@@ -605,6 +605,7 @@ end
 function _M:removeTemporaryValue(prop, id, noupdate)
 	local oldval = self.compute_vals[id]
 	print("removeTempVal", prop, oldval, " :=: ", id)
+	print(table.serialize(self.compute_vals,1,1))
 	self.compute_vals[id] = nil
 
 	-- Find the base, one removed from the last prop
@@ -651,7 +652,7 @@ function _M:removeTemporaryValue(prop, id, noupdate)
 				recursive(base[prop], k, e, method)
 			end
 		else
-			error("unsupported temporary value type: "..type(v).." :=: "..v)
+			error("unsupported temporary value type: "..type(v).." :=: "..tostring(v))
 		end
 	end
 

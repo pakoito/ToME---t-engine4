@@ -42,7 +42,7 @@ end
 
 function spawnFortress(self, who) game:onTickEnd(function()
 	local melinda = require("mod.class.NPC").new{
-		name = "Melinda",
+		name = "Melinda", define_as = "MELINDA_NPC",
 		type = "humanoid", subtype = "human", female=true,
 		display = "@", color=colors.LIGHT_BLUE,
 		image = "player/cornac_female_redhair.png",
@@ -78,3 +78,33 @@ function spawnFortress(self, who) game:onTickEnd(function()
 
 	who:setQuestStatus(self.id, self.COMPLETED, "moved-in")
 end) end
+
+function melindaWarrior(self, who)
+	for uid, e in pairs(game.level.entities) do if e.define_as == "MELINDA_NPC" then e:disappear() end end
+
+	local melinda = require("mod.class.Player").new{name="Melinda"}
+	local birth = require("mod.dialogs.Birther").new("", melinda, {}, function() end)
+	birth:setDescriptor("sex", "Female")
+	birth:setDescriptor("world", "Maj'Eyal")
+	birth:setDescriptor("difficulty", "Normal")
+	birth:setDescriptor("permadeath", "Roguelike")
+	birth:setDescriptor("race", "Human")
+	birth:setDescriptor("subrace", "Cornac")
+	birth:setDescriptor("class", "Warrior")
+	birth:setDescriptor("subclass", "Fighter")
+	birth.actor = melinda
+	birth:apply()
+	melinda.image = "player/cornac_female_redhair.png"
+	melinda.moddable_tile_base = "base_redhead_01.png"
+
+	melinda:resolve() melinda:resolve(nil, true)
+	melinda:removeAllMOs()
+	local spot = game.level:pickSpot{type="spawn", subtype="melinda"}
+	game.zone:addEntity(game.level, melinda, "actor", spot.x, spot.y)
+	melinda:forceLevelup(who.level)
+
+	game.party:addMember(melinda, {
+		control="full", type="companion", title="Melina",
+		orders = {target=true, leash=true, anchor=true, talents=true, behavior=true},
+	})
+end

@@ -922,6 +922,7 @@ dir_sides =
 	[2] = {left=3, right=1},
 	[3] = {left=6, right=2},
 	[4] = {left=1, right=7},
+	[5] = {left=7, right=9}, -- To avoid problems
 	[6] = {left=9, right=3},
 	[7] = {left=4, right=8},
 	[8] = {left=7, right=9},

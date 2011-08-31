@@ -1079,9 +1079,9 @@ function _M:setupCommands()
 
 		end end,
 		[{"_f","ctrl"}] = function() if config.settings.cheat then
-			self.player:setEffect(self.player.EFF_SPEED, 20, {power=2})
-			self.player:setEffect(self.player.EFF_SLOW, 20, {power=0.3})
-			self.player:setEffect(self.player.EFF_INVIGORATED, 20, {power=30})
+			self.player.quests["love-melinda"] = nil
+			self.player:grantQuest("love-melinda")
+			self.player:hasQuest("love-melinda"):melindaWarrior(self.player)
 		end end,
 	}
 
