@@ -38,7 +38,15 @@ newChat{ id="quest2",
 I have heard of rumours of a reclusive town of wise and powerful men somewhere in the mountains. Maybe they could help? If they even exist...
 There are also those Zigur-something people that claim to fight magic. Why are they not here?!]],
 	answers = {
+		{"You mean the Ziguranth. That would be me.", cond=function(npc, player) return player:isQuestStatus("antimagic", engine.Quest.DONE) end, jump="zigur"},
 		{"I will not let you down.", action=function(npc, player) player:hasQuest("lightning-overload"):done_derth() end},
+	}
+}
+
+newChat{ id="zigur",
+	text = [[Well then please do something about this evil magic!]],
+	answers = {
+		{"I will!", action=function(npc, player) player:hasQuest("lightning-overload"):done_derth() end},
 	}
 }
 

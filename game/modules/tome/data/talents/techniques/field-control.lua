@@ -115,7 +115,7 @@ newTalent{
 	tactical = { BUFF = 2 },
 	activate = function(self, t)
 		return {
-			slow_projectiles = self:addTemporaryValue("slow_projectiles", 15 + self:getDex(10, true) * self:getTalentLevel(t)),
+			slow_projectiles = self:addTemporaryValue("slow_projectiles", math.min(90, 15 + self:getDex(10, true) * self:getTalentLevel(t))),
 		}
 	end,
 
@@ -125,6 +125,6 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Your great dexterity allows you to see incoming projectiles (spells, arrows, ...), slowing them down by %d%%.]]):
-		format(15 + self:getDex(10, true) * self:getTalentLevel(t))
+		format(math.min(90, 15 + self:getDex(10, true) * self:getTalentLevel(t)))
 	end,
 }

@@ -61,7 +61,7 @@ newTalent{
 	sustain_paradox = 75,
 	cooldown = 10,
 	tactical = { BUFF = 2 },
-	getPower = function(self, t) return 10 + (self:combatTalentSpellDamage(t, 10, 50)) end,
+	getPower = function(self, t) return math.min(90, 10 + (self:combatTalentSpellDamage(t, 10, 50))) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/heal")
 		return {

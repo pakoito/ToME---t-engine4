@@ -1677,6 +1677,7 @@ function _M:countBirthUnlocks()
 		mage_cryomancer = true,
 		mage_necromancer = true,
 
+		rogue_marauder = true,
 		rogue_poisons = true,
 
 		divine_anorithil = true,

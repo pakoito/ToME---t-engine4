@@ -151,7 +151,7 @@ newTalent{
 	info = function(self, t)
 		local talentcount = t.getTalentCount(self, t)
 		local maxlevel = t.getMaxLevel(self, t)
-		return ([[Your mastery of the arcane flows allow you to reset the cooldown of %d of your spells of level %d or less.]]):
+		return ([[Your mastery of the arcane flows allow you to reset the cooldown of %d of your spells of tier %d or less.]]):
 		format(talentcount, maxlevel)
 	end,
 }

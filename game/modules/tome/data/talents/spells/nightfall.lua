@@ -39,7 +39,7 @@ newTalent{
 	direct_hit = function(self, t) if self:getTalentLevel(t) >= 3 then return true else return false end end,
 	target = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), friendlyfire=isFF(self), talent=t, display={particle="bolt_dark", trail="darktrail"}}
-		if self:getTalentLevel(t) >= 5 then tg.type = "beam" end
+		if self:getTalentLevel(t) >= 3 then tg.type = "beam" end
 		return tg
 	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 25, 230) end,
