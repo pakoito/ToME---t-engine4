@@ -3774,11 +3774,9 @@ newEffect{
 	on_gain = function(self, err) return "#Target# is engaged in a grapple!", "+Grappling" end,
 	on_lose = function(self, err) return "#Target# has released the hold.", "-Grappling" end,
 	on_timeout = function(self, eff)
-		if eff.src and math.floor(core.fov.distance(self.x, self.y, eff.src.x, eff.src.y)) > 1 or eff.src.dead or not eff.src:hasEffect(eff.src.EFF_GRAPPLED) then
-			if eff.src:hasEffect(eff.src.EFF_GRAPPLED) then
-				eff.src:removeEffect(eff.src.EFF_GRAPPLED)
-			end
-			return true
+		local p = eff.trgt:hasEffect(eff.trgt.EFF_GRAPPLED)
+		if not p or p.src ~= self or math.floor(core.fov.distance(self.x, self.y, eff.trgt.x, eff.trgt.y)) > 1 or eff.trgt.dead or not game.level:hasEntity(eff.trgt) then
+			self:removeEffect(self.EFF_GRAPPLING)
 		end
 	end,
 	activate = function(self, eff)
@@ -3787,16 +3785,6 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("stamina_regen", eff.tmpid)
-		-- clears debuffs from the grappled opponent; grapple break is set to silent so it won't spam everytime a grapple is reapplied
-		if eff.src:hasEffect(eff.src.EFF_GRAPPLED) then
-			eff.src:removeEffect(eff.src.EFF_GRAPPLED, true)
-		end
-		if eff.src:hasEffect(eff.src.EFF_CRUSHING_HOLD) then
-			eff.src:removeEffect(eff.src.EFF_CRUSHING_HOLD)
-		end
-		if eff.src:hasEffect(eff.src.EFF_STRANGLE_HOLD) then
-			eff.src:removeEffect(eff.src.EFF_STRANGLE_HOLD)
-		end
 	end,
 }
 
@@ -3816,26 +3804,11 @@ newEffect{
 		eff.atk = self:addTemporaryValue("combat_atk", -eff.power)
 	end,
 	on_timeout = function(self, eff)
-		if math.floor(core.fov.distance(self.x, self.y, eff.src.x, eff.src.y)) > 1 or eff.src.dead or not eff.src:hasEffect(eff.src.EFF_GRAPPLING) then
-			if eff.src:hasEffect(eff.src.EFF_GRAPPLING) then
-				eff.src:removeEffect(eff.src.EFF_GRAPPLING)
-			end
-			return true
-		end
+		if math.floor(core.fov.distance(self.x, self.y, eff.src.x, eff.src.y)) > 1 or eff.src.dead or not game.level:hasEntity(eff.src) then
+			self:removeEffect(self.EFF_GRAPPLED)
+		end			
 	end,
 	deactivate = function(self, eff)
-		-- clears the grappling effect from the attacker; this will in turn remove all other holds.
-		if eff.src:hasEffect(eff.src.EFF_GRAPPLING) then
-			eff.src:removeEffect(eff.src.EFF_GRAPPLING)
-		end
-		-- just in case it doesn't (like if the grappler is rifted); we'll check for other effects and remove those as well
-		if self:hasEffect(self.EFF_CRUSHING_HOLD) then
-			self:removeEffect(self.EFF_CRUSHING_HOLD)
-		end
-		if self:hasEffect(self.EFF_STRANGLE_HOLD) then
-			self:removeEffect(self.EFF_STRANGLE_HOLD)
-		end
-
 		self:removeTemporaryValue("combat_atk", eff.atk)
 		self:removeTemporaryValue("combat_def", eff.def)
 		self:removeTemporaryValue("never_move", eff.tmpid)
@@ -3852,7 +3825,12 @@ newEffect{
 	on_gain = function(self, err) return "#Target# is being crushed.", "+Crushing Hold" end,
 	on_lose = function(self, err) return "#Target# has escaped the crushing hold.", "-Crushing Hold" end,
 	on_timeout = function(self, eff)
-		DamageType:get(DamageType.PHYSICAL).projector(eff.src or self, self.x, self.y, DamageType.PHYSICAL, eff.power)
+		local p = self:hasEffect(self.EFF_GRAPPLED)
+		if p and p.src == eff.src then 
+			DamageType:get(DamageType.PHYSICAL).projector(eff.src or self, self.x, self.y, DamageType.PHYSICAL, eff.power)
+		else
+			self:removeEffect(self.EFF_CRUSHING_HOLD)
+		end
 	end,
 }
 
@@ -3866,7 +3844,12 @@ newEffect{
 	on_gain = function(self, err) return "#Target# is being strangled.", "+Strangle Hold" end,
 	on_lose = function(self, err) return "#Target# has escaped the strangle hold.", "-Strangle Hold" end,
 	on_timeout = function(self, eff)
-		DamageType:get(DamageType.PHYSICAL).projector(eff.src or self, self.x, self.y, DamageType.PHYSICAL, eff.power)
+		local p = self:hasEffect(self.EFF_GRAPPLED)
+		if p and p.src == eff.src then 
+			DamageType:get(DamageType.PHYSICAL).projector(eff.src or self, self.x, self.y, DamageType.PHYSICAL, eff.power)
+		else
+			self:removeEffect(self.EFF_STRANGLE_HOLD)
+		end
 	end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("silence", 1)
@@ -4260,7 +4243,7 @@ newEffect{
 newEffect{
 	name = "TEMPORAL_DESTABILIZATION",
 	desc = "Temporal Destabilization",
-	long_desc = function(self, eff) return ("Target is destabilized and suffering %0.2f temporal damage per turn."):format(eff.dam) end,
+	long_desc = function(self, eff) return ("Target is destabilized and suffering %0.2f temporal damage per turn.  If it dies with this effect active it will explode."):format(eff.dam) end,
 	type = "magical",
 	status = "detrimental",
 	parameters = { dam=1, explosion=10 },
@@ -4268,6 +4251,12 @@ newEffect{
 	on_lose = function(self, err) return "#Target# has regained stability.", "-Temporal Destabilization" end,
 	on_timeout = function(self, eff)
 		DamageType:get(DamageType.TEMPORAL).projector(eff.src or self, self.x, self.y, DamageType.TEMPORAL, eff.dam)
+	end,
+	activate = function(self, eff)
+		eff.particle = self:addParticles(Particles.new("destabilized", 1))
+	end,
+	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)
 	end,
 }
 

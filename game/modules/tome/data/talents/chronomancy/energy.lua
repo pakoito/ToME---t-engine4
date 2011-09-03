@@ -123,7 +123,7 @@ newTalent{
 			local t = rng.tableRemove(tids)
 			if not t then break end
 			target.talents_cd[t.id] = cdr
-			game.logSeen(target, "%s's %s is disrupted!", target.name:capitalize(), t.name)
+			game.logSeen(target, "%s's %s is disrupted by the Energy Absorption!", target.name:capitalize(), t.name)
 			count = count + 1
 		end
 
@@ -142,15 +142,15 @@ newTalent{
 			end
 		end
 
-		game.logSeen(target, "%s feels the effects of entropy!", target.name:capitalize())
-		game.level.map:particleEmitter(tx, ty, 1, "entropythrust")
+		game.level.map:particleEmitter(tx, ty, 1, "charge_matter")
+		game.level.map:particleEmitter(self.x, self.y, 1, "charge")
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
 		local talentcount = t.getTalentCount(self, t)
 		local cooldown = t.getCooldown(self, t)
-		return ([[You sap the target's energy and add it to your own, placing  up to %d random talents on cooldown for %d turns and reducing the cooldown of one of your chronomancy talents currently on cooldown by %d turns per enemy talent effected.
+		return ([[You sap the target's energy and add it to your own, placing up to %d random talents on cooldown for %d turns and reducing the cooldown of one of your chronomancy talents currently on cooldown by %d turns per enemy talent effected.
 		The cooldown adjustment scales with your Paradox.]]):
 		format(talentcount, cooldown, cooldown)
 	end,
@@ -169,6 +169,7 @@ newTalent{
 	action = function(self, t)
 		-- effect is handled in actor postUse
 		self:setEffect(self.EFF_REDUX, 5, {})
+		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
 	info = function(self, t)

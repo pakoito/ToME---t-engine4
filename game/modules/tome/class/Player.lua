@@ -656,6 +656,7 @@ function _M:doWear(inven, item, o)
 	end
 	self:sortInven()
 	self:useEnergy()
+	self:playerCheckSustains()
 	self.changed = true
 end
 
@@ -665,6 +666,7 @@ function _M:doTakeoff(inven, item, o)
 	end
 	self:sortInven()
 	self:useEnergy()
+	self:playerCheckSustains()
 	self.changed = true
 end
 
@@ -816,7 +818,7 @@ function _M:quickSwitchWeapons()
 		for i = 1, #pfset1 do self:addObject(pf2, pfset1[i]) end
 		for i = 1, #pfset2 do self:addObject(pf1, pfset2[i]) end
 	end
-	if not self:isTalentActive(T_CELERITY) then self:useEnergy() end
+	if not self:isTalentActive(self.T_CELERITY) then self:useEnergy() end
 	local names = ""
 	if pf1 and pf2 then
 		if not pf1[1] then
@@ -836,8 +838,28 @@ function _M:quickSwitchWeapons()
 		elseif not mh1[1] and oh1[1] then names = oh1[1]:getName{do_color=true}
 		end
 	end
+	
+	self:playerCheckSustains()
+
 	game.logPlayer(self, "You switch your weapons to: %s.", names)
 	self.changed = true
+end
+
+-- Go through all sustained talents and turn them off if pre_use fails
+function _M:playerCheckSustains()
+	for tid, _ in pairs(self.talents) do
+		local t = self:getTalentFromId(tid)
+		if t.mode == "sustained" and self:isTalentActive(t.id) then
+			-- handles unarmed
+			if t.is_unarmed and (self:hasMassiveArmor() or not self:isUnarmed()) then
+				self:forceUseTalent(tid, {ignore_energy=true})
+			end
+			-- handles pre_use checks
+			if t.on_pre_use and not t.on_pre_use(self, ab, silent, fake) then
+				self:forceUseTalent(tid, {ignore_energy=true})
+			end
+		end
+	end
 end
 
 function _M:playerLevelup(on_finish)

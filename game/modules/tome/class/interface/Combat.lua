@@ -1046,7 +1046,6 @@ function _M:hasMount()
 end
 
 -- Unarmed Combat; this handles grapple checks and building combo points
-
 -- Builds Comob; reduces the cooldown on all unarmed abilities on cooldown by one
 function _M:buildCombo()
 
@@ -1097,7 +1096,10 @@ end
 -- Breaks active grapples; called by a few talents that involve a lot of movement
 function _M:breakGrapples()
 	if self:hasEffect(self.EFF_GRAPPLING) then
-		-- deactivating GRAPPLING will clear the target's Grappled effect as well
+		local p = self:hasEffect(self.EFF_GRAPPLING)
+		if p.trgt then
+			p.trgt:removeEffect(p.trgt.EFF_GRAPPLED)
+		end
 		self:removeEffect(self.EFF_GRAPPLING)
 	end
 end
@@ -1128,14 +1130,13 @@ function _M:startGrapple(target)
 	end
 	-- Breaks the grapple before reapplying
 	if self:hasEffect(self.EFF_GRAPPLING) then
-		-- deactivating GRAPPLING will clear the targets Grappled effect and various holds
 		self:removeEffect(self.EFF_GRAPPLING, true)
 		target:setEffect(target.EFF_GRAPPLED, duration, {src=self, power=power}, true)
-		self:setEffect(self.EFF_GRAPPLING, duration, {src=target}, true)
+		self:setEffect(self.EFF_GRAPPLING, duration, {trgt=target}, true)
 		return true
 	elseif target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 5 - hitbonus) and target:canBe("pin") then
 		target:setEffect(target.EFF_GRAPPLED, duration, {src=self, power=power})
-		self:setEffect(self.EFF_GRAPPLING, duration, {src=target}, true)
+		self:setEffect(self.EFF_GRAPPLING, duration, {trgt=target})
 		return true
 	else
 		game.logSeen(target, "%s resists the grapple!", target.name:capitalize())

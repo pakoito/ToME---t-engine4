@@ -99,12 +99,12 @@ newTalent{
 			return true
 		end
 
-		-- start the grapple
+		-- start the grapple; this will automatically hit and reapply the grapple if we're already grappling the target
 		local hit = self:startGrapple(target)
 
 		local duration = t.getDuration(self, t)
 
-		-- do crushing hold if we know it
+		-- do crushing hold or strangle if we're already grappling the target
 		if hit and self:knowTalent(self.T_CRUSHING_HOLD) then
 			local t = self:getTalentFromId(self.T_CRUSHING_HOLD)
 			if grappled and not target.no_breath and not target.undead and target:canBe("silence") then
@@ -112,7 +112,6 @@ newTalent{
 			else
 				target:setEffect(target.EFF_CRUSHING_HOLD, duration, {src=self, power=t.getDamage(self, t)})
 			end
-
 		end
 
 		return true
@@ -163,19 +162,17 @@ newTalent{
 		if self:grappleSizeCheck(target) then
 			return true
 		end
-
+		
+		-- start the grapple; this will automatically hit and reapply the grapple if we're already grappling the target
 		local hit = self:startGrapple (target)
-
 		-- deal damage and maim if appropriate
 		if hit then
-
 			if grappled then
 				self:project(target, x, y, DamageType.PHYSICAL, self:physicalCrit(t.getDamage(self, t), nil, target))
 				target:setEffect(target.EFF_MAIMED, t.getDuration(self, t), {power=t.getMaim(self, t)})
 			else
 				self:project(target, x, y, DamageType.PHYSICAL, self:physicalCrit(t.getDamage(self, t), nil, target))
 			end
-
 		end
 
 		return true
@@ -224,7 +221,6 @@ newTalent{
 	getSlam = function(self, t) return 20 + self:combatTalentStatDamage(t, "str", 30, 500) * (1 + getGrapplingStyle(self, dam)) end,
 	-- Learn the appropriate stance
 	action = function(self, t)
-
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
@@ -261,12 +257,11 @@ newTalent{
 			if self:grappleSizeCheck(target) then
 				return true
 			end
-
+			
+			-- start the grapple; this will automatically hit and reapply the grapple if we're already grappling the target
 			local hit = self:startGrapple (target)
-
 			-- takedown or slam as appropriate
 			if hit then
-
 				if grappled then
 					self:project(target, x, y, DamageType.PHYSICAL, self:physicalCrit(t.getSlam(self, t), nil, target))
 					if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
@@ -282,7 +277,6 @@ newTalent{
 						game.logSeen(target, "%s resists the daze!", target.name:capitalize())
 					end
 				end
-
 			end
 		end
 

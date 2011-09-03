@@ -1494,10 +1494,13 @@ function _M:die(src)
 	if self:hasEffect(self.EFF_TEMPORAL_DESTABILIZATION) then
 		local p = self:hasEffect(self.EFF_TEMPORAL_DESTABILIZATION)
 		if self:hasEffect(self.EFF_CONTINUUM_DESTABILIZATION) then
-			p.src:project({type="ball", radius=4, x=self.x, y=self.y}, self.x, self.y, DamageType.TEMPORAL, p.explosion, {type="light"})
+			p.src:project({type="ball", radius=4, x=self.x, y=self.y}, self.x, self.y, DamageType.TEMPORAL, p.explosion, nil)
+			game.level.map:particleEmitter(self.x, self.y, 4, "ball_temporal", {radius=4})
 		else
-			p.src:project({type="ball", radius=4, x=self.x, y=self.y}, self.x, self.y, DamageType.MATTER, p.explosion, {type="flame"})
+			p.src:project({type="ball", radius=4, x=self.x, y=self.y}, self.x, self.y, DamageType.MATTER, p.explosion, nil)
+			game.level.map:particleEmitter(self.x, self.y, 4, "ball_matter", {radius=4})
 		end
+		game:playSoundNear(self, "talents/breath")
 	end
 
 	if self:hasEffect(self.EFF_CEASE_TO_EXIST) then
@@ -2101,7 +2104,7 @@ function _M:preUseTalent(ab, silent, fake)
 	end
 
 	-- when using unarmed techniques check for weapons and heavy armor
-	if ab.is_unarmed then
+	if ab.is_unarmed and not (ab.mode == "sustained" and self:isTalentActive(ab.id)) then
 		-- first check for heavy and massive armor
 		if self:hasMassiveArmor() then
 			if not silent then game.logSeen(self, "You are too heavily armoured to use this talent.") end
@@ -2231,7 +2234,7 @@ function _M:preUseTalent(ab, silent, fake)
 	end
 
 	-- Special checks
-	if ab.on_pre_use and not ab.on_pre_use(self, ab, silent, fake) then return false end
+	if ab.on_pre_use and not (ab.mode == "sustained" and self:isTalentActive(ab.id)) and not ab.on_pre_use(self, ab, silent, fake) then return false end
 
 	if not silent then
 		-- Allow for silent talents

@@ -80,7 +80,7 @@ newTalent{
 	activate = function(self, t)
 		local power = t.getArmor(self, t)
 		self.carbon_armor = power
-		game:playSoundNear(self, "talents/generic")
+		game:playSoundNear(self, "talents/spell_generic")
 		return {
 			armor = self:addTemporaryValue("carbon_spikes", power),
 			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.BLEED]=t.getDamageOnMeleeHit(self, t)}),			
@@ -123,8 +123,9 @@ newTalent{
 			local target = game.level.map(px, py, Map.ACTOR)
 			if not target then return end
 			target:setEffect(target.EFF_TEMPORAL_DESTABILIZATION, 10, {src=self, dam=t.getDamage(self, t), explosion=self:spellCrit(t.getExplosion(self, t))})
+			game.level.map:particleEmitter(target.x, target.y, 1, "entropythrust")
 		end)
-		game:playSoundNear(self, "talents/slime")
+		game:playSoundNear(self, "talents/cloud")
 		return true
 	end,
 	info = function(self, t)

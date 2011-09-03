@@ -87,6 +87,7 @@ newTalent{
 	target = function(self, t)
 		return {type="ball", range=0, radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
+	requires_target = true,
 	direct_hit = true,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
@@ -122,6 +123,9 @@ newTalent{
 			a:setEffect(a.EFF_CONTINUUM_DESTABILIZATION, 100, {power=self:combatSpellpower(0.3)})
 			game.level.map:particleEmitter(a.x, a.y, 1, "teleport")
 		end
+		
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_teleport", {radius=tg.radius})
+		game:playSoundNear(self, "talents/teleport")
 		
 		return true
 	end,

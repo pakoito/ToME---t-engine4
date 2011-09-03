@@ -549,6 +549,22 @@ cavewall = { method="walls", type="cavewall", forbid={}, use_type=true, extended
 	default4={add_displays={{image="terrain/cave/cave_ver_edge_left_01.png", display_x=-1}}, min=1, max=1},
 	default6={add_displays={{image="terrain/cave/cave_ver_edge_right_01.png", display_x=1}}, min=1, max=1},
 },
+rift = { method="borders", type="rift", forbid={},
+	default8={add_mos={{image="terrain/rift/rift_02_%02d.png", display_y=-1}}, min=1, max=1},
+	default2={add_mos={{image="terrain/rift/rift_08_%02d.png", display_y=1}}, min=1, max=1},
+	default4={add_mos={{image="terrain/rift/rift_06_%02d.png", display_x=-1}}, min=1, max=1},
+	default6={add_mos={{image="terrain/rift/rift_04_%02d.png", display_x=1}}, min=1, max=1},
+
+	default1={add_mos={{image="terrain/rift/rift_09_%02d.png", display_x=-1, display_y=1}}, min=1, max=1},
+	default3={add_mos={{image="terrain/rift/rift_07_%02d.png", display_x=1, display_y=1}}, min=1, max=1},
+	default7={add_mos={{image="terrain/rift/rift_03_%02d.png", display_x=-1, display_y=-1}}, min=1, max=1},
+	default9={add_mos={{image="terrain/rift/rift_01_%02d.png", display_x=1, display_y=-1}}, min=1, max=1},
+
+	default1i={add_mos={{image="terrain/rift/rift_inner_01_%02d.png", display_x=-1, display_y=1}}, min=1, max=1},
+	default3i={add_mos={{image="terrain/rift/rift_inner_03_%02d.png", display_x=1, display_y=1}}, min=1, max=1},
+	default7i={add_mos={{image="terrain/rift/rift_inner_07_%02d.png", display_x=-1, display_y=-1}}, min=1, max=1},
+	default9i={add_mos={{image="terrain/rift/rift_inner_09_%02d.png", display_x=1, display_y=-1}}, min=1, max=1},
+},
 }
 
 
