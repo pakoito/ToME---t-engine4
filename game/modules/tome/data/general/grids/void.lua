@@ -17,12 +17,11 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-------------------------------------------------------------
--- For inside the sea
-------------------------------------------------------------
+local rift_editer = { method="sandWalls_def", def="rift"}
 
 newEntity{
 	define_as = "VOID",
+	type = "floor", subtype = "void",
 	name = "void",
 	display = ' ',
 	_noalpha = false,
@@ -43,21 +42,14 @@ newEntity{
 }
 
 newEntity{
-	define_as = "SPACE_TURBULENCE1",
-	name = "space turbulence",
-	display = '#', color=colors.YELLOW, image="terrain/temporal_instability_yellow.png",
+	define_as = "SPACETIME_RIFT",
+	type = "wall", subtype = "rift",
+	name = "crack in spacetime",
+	display = '#', color=colors.YELLOW, image="terrain/rift/rift_inner_05_01.png",
 	always_remember = true,
 	does_block_move = true,
 	_noalpha = false,
-}
-
-newEntity{
-	define_as = "SPACE_TURBULENCE2",
-	name = "space turbulence",
-	display = '#', color=colors.BLUE, image="terrain/temporal_instability_blue.png",
-	always_remember = true,
-	does_block_move = true,
-	_noalpha = false,
+	nice_editer = rift_editer,
 }
 
 -----------------------------------------

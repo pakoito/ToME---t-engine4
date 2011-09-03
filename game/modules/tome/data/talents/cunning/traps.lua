@@ -101,7 +101,7 @@ newTalent{
 		local m = NPC.new{
 			type = "construct", subtype = "lure",
 			display = "*", color=colors.UMBER,
-			name = "lure", faction = self.faction,
+			name = "lure", faction = self.faction, image = "npc/lure.png",
 			desc = [[A noisy lure.]],
 			autolevel = "none",
 			ai = "summoned", ai_real = "dumb_talented", ai_state = { talent_in=1, },

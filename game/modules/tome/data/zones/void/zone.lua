@@ -41,7 +41,7 @@ return {
 		map = {
 			class = "engine.generator.map.Forest",
 			floor = "VOID",
-			wall = {"SPACE_TURBULENCE1","SPACE_TURBULENCE2"},
+			wall = "SPACETIME_RIFT",
 			up = "VOID",
 			down = "VOID",
 			edge_entrances = {4,6},
