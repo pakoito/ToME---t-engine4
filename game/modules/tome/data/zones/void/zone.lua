@@ -31,6 +31,7 @@ return {
 	width = 60, height = 25,
 --	all_remembered = true,
 	all_lited = true,
+	zero_gravity = true,
 	no_worldport = true,
 	persistent = "zone",
 	color_shown = {0.7, 0.6, 0.8, 1},

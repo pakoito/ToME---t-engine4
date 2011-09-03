@@ -28,6 +28,7 @@ return {
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	width = 12, height = 12,
 --	all_remembered = true,
+	zero_gravity = true,
 	all_lited = true,
 	no_worldport = true,
 	persistent = "zone",
