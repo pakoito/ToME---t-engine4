@@ -2060,7 +2060,7 @@ newEntity{ base = "BASE_LONGSWORD", define_as = "ART_PAIR_TWSWORD",
 	on_set_complete = function(self, who)
 		self.combat.special_on_hit = {desc="10% chance to reduce the target's resistances to all damage", fct=function(combat, who, target)
 			if not rng.percent(10) then return end
-			target:setEffect(target.FLAWED_DESIGN, 3, {power=20})
+			target:setEffect(target.EFF_FLAWED_DESIGN, 3, {power=20})
 		end}
 		self:specialSetAdd({"wielder","inc_damage"}, {[engine.DamageType.TEMPORAL]=5, [engine.DamageType.PHYSICAL]=10,})
 		game.logSeen(who, "#CRIMSON#The echoes of time resound as the blades are reunited once more.")
@@ -2098,7 +2098,7 @@ newEntity{ base = "BASE_KNIFE", define_as = "ART_PAIR_TWDAG",
 	on_set_complete = function(self, who)
 		self.combat.special_on_hit = {desc="10% chance to return the target to a much youger state", fct=function(combat, who, target)
 			if not rng.percent(10) then return end
-			target:setEffect(target.TURN_BACK_THE_CLOCK, 3, {power=10})
+			target:setEffect(target.EFF_TURN_BACK_THE_CLOCK, 3, {power=10})
 		end}
 		self:specialSetAdd({"wielder","inc_damage"}, {[engine.DamageType.TEMPORAL]=5, [engine.DamageType.PHYSICAL]=10,})
 		self:specialSetAdd({"wielder","resists_pen"}, {[engine.DamageType.TEMPORAL]=15,})
