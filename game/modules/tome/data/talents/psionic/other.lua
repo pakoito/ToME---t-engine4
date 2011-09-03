@@ -121,7 +121,7 @@ newTalent{
 					if o.combat and not o.archery then
 						print("[PSI ATTACK] attacking with", o.name)
 						self.use_psi_combat = true
-						local s, h = self:attackTargetWith(a, o.combat, nil, 1, self)
+						local s, h = self:attackTargetWith(a, o.combat, nil, 1)
 						self.use_psi_combat = false
 						speed = math.max(speed or 0, s)
 						hit = hit or h

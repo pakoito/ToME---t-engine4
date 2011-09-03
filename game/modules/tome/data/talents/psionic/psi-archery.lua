@@ -169,7 +169,7 @@ newTalent{
 		--local tg = {type="hit", range=10, talent=t}
 		for i = 1, targnum do
 			if #tgts <= 0 then break end
-			
+
 			local a, id = rng.table(tgts)
 			--local a, id = tgts[i]
 			--local targets = self:archeryAcquireTargets(target)
@@ -185,13 +185,13 @@ newTalent{
 			if am then
 				targets = {{x=a.x, y=a.y, ammo=am.combat}}
 			end
-			
+
 			if self:getInven(self.INVEN_PSIONIC_FOCUS) then
 				for i, o in ipairs(self:getInven(self.INVEN_PSIONIC_FOCUS)) do
 					if o.combat and o.archery then
 						print("[PSI ATTACK] attacking with", o.name)
 						self:archeryShoot(targets, t, nil, {use_psi_archery = true})
-						--local s, h = self:attackTargetWith(a, o.combat, nil, 1, self)
+						--local s, h = self:attackTargetWith(a, o.combat, nil, 1)
 						--speed = math.max(speed or 0, s)
 						--hit = hit or h
 						--if hit and not sound then sound = o.combat.sound
