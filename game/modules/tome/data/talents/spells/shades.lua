@@ -110,9 +110,9 @@ newTalent{
 					m.image = "npc/humanoid_human_human_farmer.png"
 					m.desc = [[A weather-worn human farmer, looking at a loss as to what's going on.]]
 				elseif race == 2 then
-					m.name = "halfling gardner"
+					m.name = "halfling gardener"
 					m.subtype = "halfling"
-					m.desc = [[A rugged halfling gardner, looking quite confused as to what he's doing here.]]
+					m.desc = [[A rugged halfling gardener, looking quite confused as to what he's doing here.]]
 					m.image = "npc/humanoid_halfling_halfling_gardener.png"
 				elseif race == 3 then
 					m.name = "shalore scribe"
@@ -224,7 +224,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Through the shadows you forge a temporary copy of yourself, existing for %d turns.
-		The copy possess your exact talents and stats, has %d%% life and deals %d%% damage.]]):
+		The copy possesses your exact talents and stats, has %d%% life and deals %d%% damage.]]):
 		format(t.getDuration(self, t), t.getHealth(self, t) * 100, t.getDam(self, t) * 100)
 	end,
 }

@@ -136,8 +136,8 @@ newTalent{
 		return ([[Shatter all frozen targets in your line of sight, doing %0.2f cold damage.
 		Depending on the target rank it will also have an additional effect:
 		* Critters will be instantly killed
-		* Normal rank will get +50%% critical chance
-		* Elites will get +10%% critical chance
+		* +50%% critical chance against Normal rank
+		* +10%% critical chance against Elites
 		At most it will affect %d foes.
 		The damage will increase with the Magic stat]]):
 		format(damDesc(self, DamageType.COLD, damage), targetcount)

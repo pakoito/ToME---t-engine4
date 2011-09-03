@@ -666,7 +666,7 @@ newTalent{
 		local nb = t.getMax(self, t)
 		local lev = t.getLevel(self, t)
 		local c = getMinionChances(self)
-		return ([[Fires powerful undead energies through your necrotic aura. For each recent deaths that happened inside your aura you will raise an undead minion (up to %d minions).
+		return ([[Fires powerful undead energies through your necrotic aura. For each recent death that happened inside your aura you will raise an undead minion (up to %d minions).
 		The minions level is your level %+d.
 		Each minion has a chance to be:
 		Degenerated skeleton warrior: %d%%
@@ -725,7 +725,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[A surge of power radiates to all your minions, increasing their combat power, spellpower, accuracy by %d, their armour penetration by %d and their critical chances by %d for 6 turns.
+		return ([[A surge of power radiates to all your minions, increasing their combat power, spellpower, and accuracy by %d; their armour penetration by %d; and their critical hit chance by %d for 6 turns.
 		The effects will increase with the Magic stat]]):
 		format(t.getPower(self, t), t.getAPR(self, t), t.getCrit(self, t))
 	end,

@@ -199,9 +199,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Minions are only tools, you may dispose of them... violently.
+		return ([[Minions are only tools. You may dispose of them... violently.
 		Makes the targetted minion explode for %d%% of its remaining life as blight damage.
-		Beware to not be caught in the blast!]]):
+		Beware not to be caught in the blast!]]):
 		format(t.getDamage(self, t))
 	end,
 }
@@ -276,7 +276,7 @@ newTalent{
 		At level 1 it makes a bone giant.
 		At level 3 it makes a heavy bone giant.
 		At level 5 it makes an eternal bone giant.
-		At level 6 it has 20%% chances to produce a runed bone giant.
+		At level 6 it has a 20%% chance to produce a runed bone giant.
 		Only one bone giant can be active at any time.
 		The number of turns will increase with your Magic stat.]]):
 		format()
@@ -332,7 +332,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Sacrifice a bone giant minion. Using its bones you make a temporary bone shield around you with %d charges.
-		The effect lasts until all bones are depleted or %d turns.
+		The effect lasts %d turns or until all charges are depleted.
 		Each charge will fully absorb one attack.]]):
 		format(t.getBones(self, t), t.getTurns(self, t))
 	end,
@@ -347,7 +347,7 @@ newTalent{
 	mode = "passive",
 	info = function(self, t)
 		local c = getAdvancedMinionChances(self)
-		return ([[Each minion you summon have a chance to be a more advanced form of undead:
+		return ([[Each minion you summon has a chance to be a more advanced form of undead:
 		Vampire: %d%%
 		Master Vampire: %d%%
 		Grave Wight: %d%%

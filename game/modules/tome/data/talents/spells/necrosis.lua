@@ -37,8 +37,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[The line between life and death blurs for you, you can only die when you reach -%d life.
-		However when below 0 you can not see how much life you have left.]]):
+		return ([[The line between life and death blurs for you; you can only die when you reach -%d life.
+		However, when below 0 you cannot see how much life you have left.]]):
 		format(50 * self:getTalentLevelRaw(t))
 	end,
 }
@@ -69,7 +69,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your target doom draws near, it can not regenerate or heal at all and will take %d%% of its remaining life (or %0.2f, whichever is lower) over 10 turns as arcane damage.
+		return ([[Your target's doom draws near. It cannot regenerate or heal at all and will take %d%% of its remaining life (or %0.2f, whichever is lower) over 10 turns as arcane damage.
 		The damage will increase with the Magic stat]]):
 		format(t.getDamage(self, t), t.getMax(self, t))
 	end,
@@ -122,7 +122,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local heal = t.getHeal(self, t)
-		return ([[Absorbs %d%% of all your minions life (possibly destroying them) and use this energy to heal you for %d%% of your total life.
+		return ([[Absorb %d%% of all your minions' life (possibly destroying them) and use this energy to heal you for %d%% of your total life.
 		The healing will increase with the Magic stat]]):
 		format(heal, heal)
 	end,
@@ -192,7 +192,7 @@ newTalent{
 			game.log("#GREY#As you turn into a powerful undead you feel your body violently rejecting the Blood of Life.")
 		end
 
-		require("engine.ui.Dialog"):simplePopup("Lichform", "#GREY#You feel your life slip away, only to be replaced by pure arcane forces! Your flesh starts to rot on your bones, your eyes fall apart as you are reborn into a Lich!")
+		require("engine.ui.Dialog"):simplePopup("Lichform", "#GREY#You feel your life slip away, only to be replaced by pure arcane forces! Your flesh starts to rot on your bones, and your eyes fall apart as you are reborn into a Lich!")
 
 		game.level.map:particleEmitter(self.x, self.y, 1, "demon_teleport")
 	end,
@@ -211,9 +211,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Your true goal. The purpose of all necromancy, to become a powerful and everliving Lich!
-		If you are killed while this spell is active the arcane forces you unleash will be able to rebuild you body into Lichform.
+		If you are killed while this spell is active the arcane forces you unleash will be able to rebuild your body into Lichform.
 		All liches gain the following intrinsic:
-		- Poison, cuts, fear immunity
+		- Poison, cut, fear immunity
 		- Disease resistance 50%%
 		- Stun resistance 50%%
 		- Cold and darkness resistance 20%%
@@ -224,10 +224,10 @@ newTalent{
 		At level 2: Nothing
 		At level 3: +3 Magic and Willpower, +1 life rating (not retroactive)
 		At level 4: +3 Magic and Willpower, +2 life rating (not retroactive), +10 spell and mental saves
-		At level 5: +5 Magic and Willpower, +2 life rating (not retroactive), +10 spell and mental saves, all resistances cap raised by 10%%
-		At level 6: +6 Magic, Willpower and Cunning, +3 life rating (not retroactive), +15 spell and mental saves, all resistances cap raised by 15%%. Fear my power!
-		Undeads can not use this talent.
-		While active it will drain 4 mana per turns.]]):
+		At level 5: +5 Magic and Willpower, +2 life rating (not retroactive), +10 spell and mental saves, all resistance caps raised by 10%%
+		At level 6: +6 Magic, Willpower and Cunning, +3 life rating (not retroactive), +15 spell and mental saves, all resistance caps raised by 15%%. Fear my power!
+		The undead cannot use this talent.
+		While active it will drain 4 mana per turn.]]):
 		format()
 	end,
 }
