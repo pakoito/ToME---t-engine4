@@ -32,7 +32,7 @@ end
 
 newEntity{ base = "BASE_RUNE", define_as = "RUNE_RIFT",
 	power_source = {arcane=true},
-	name = "Rune of the Rift", unique = true, identified = true,
+	name = "Rune of the Rift", unique = true, identified = true, image = "object/artifact/rune_of_the_rift.png",
 	rarity = false,
 	cost = 100,
 	material_level = 3,

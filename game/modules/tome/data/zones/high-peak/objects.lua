@@ -83,7 +83,7 @@ newEntity{ define_as = "PEARL_LIFE_DEATH",
 	type = "gem", subtype="white",
 	unided_name = "shining pearl",
 	name = "Pearl of Life and Death",
-	display = "*", color=colors.WHITE, image = "object/pearl.png",
+	display = "*", color=colors.WHITE, image = "object/artifact/pearl_of_life.png",
 	encumber = 2,
 	desc = [[A pearl, three times a normal sized one, that glitters in infinite colours, with slight patterns ever shifting away.]],
 

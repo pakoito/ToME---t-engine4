@@ -36,7 +36,7 @@ end
 newEntity{ base = "BASE_CLOTH_ARMOR", define_as = "ROBES_DEFLECTION",
 	power_source = {arcane=true},
 	unique = true,
-	name = "Robes of Deflection", color = colors.UMBER,
+	name = "Robes of Deflection", color = colors.UMBER, image = "object/artifact/robes_of_deflection.png",
 	unided_name = "iridescent robe",
 	desc = [[This set of robes seems to shine with metallic colors.]],
 	level_range = {1, 10},
