@@ -49,10 +49,9 @@ function _M:init()
 			local mod_string = ("%s-%d.%d.%d"):format(m.short_name, save.module_version and save.module_version[1] or -1, save.module_version and save.module_version[2] or -1, save.module_version and save.module_version[3] or -1)
 			local mod = list[mod_string]
 			if mod and save.loadable then
-				save.fct = function()
-					Module:instanciate(mod, save.name, false)
-				end
+				save.usable = true
 				save.mod = mod
+				save.base_name = save.name
 				save.zone = Textzone.new{
 					width=self.c_desc.w,
 					height=self.c_desc.h,
@@ -81,25 +80,43 @@ function _M:init()
 		end
 	end
 
+	self.save_sel = nil
 	self.c_tree = TreeList.new{width=math.floor(self.iw / 3 - 10), height=self.ih, scrollbar=true, columns={
 		{width=100, display_prop="name"},
 	}, tree=self.tree,
-		fct=function(item, sel, v) end,
+		fct=function(item)
+			if self.save_sel == item then self:playSave() end
+			if self.save_sel then self.save_sel.color = nil self.c_tree:drawItem(self.save_sel) end
+			item.color = function() return colors.simple(colors.LIGHT_GREEN) end
+			self.save_sel = item
+			self.c_tree:drawItem(item)
+			if item.usable then self:toggleDisplay(self.c_play, true) end
+			self:toggleDisplay(self.c_delete, true)
+		end,
 		select=function(item, sel) self:select(item) end,
 	}
 
 	self:loadUI{
 		{left=0, top=0, ui=self.c_tree},
 		{right=0, top=0, ui=self.c_desc},
-		{right=0, bottom=0, ui=self.c_delete},
+		{right=0, bottom=0, ui=self.c_delete, hidden=true},
+		{left=0, bottom=0, ui=self.c_play, hidden=true},
 		{left=self.c_tree.w + 5, top=5, ui=Separator.new{dir="horizontal", size=self.ih - 10}},
 	}
 	self:setFocus(self.c_tree)
-	self:setupUI()
+	self:setupUI(false, true)
 
 	self.key:addBinds{
 		EXIT = function() game:unregisterDialog(self) end,
 	}
+end
+
+function _M:on_focus(id, ui)
+	if self.focus_ui and self.focus_ui.ui == self.c_tree then
+		self:select(self.cur_sel)
+	else
+		self:select(self.save_sel)
+	end
 end
 
 function _M:select(item)
@@ -122,13 +139,18 @@ function _M:innerDisplay(x, y, nb_keyframes)
 	s[1]:toScreenFull(x + self.ix + self.iw - self.c_desc.w, y + self.ih - h - 20, w, h, s[2] * w / s.w, s[3] * h / s.h)
 end
 
+function _M:playSave()
+	if not self.save_sel then return end
+	Module:instanciate(self.save_sel.mod, self.save_sel.base_name, false)
+end
+
 function _M:deleteSave()
-	if not self.cur_sel then return end
+	if not self.save_sel then return end
 
 	Dialog:yesnoPopup("Delete savefile", "Really delete #{bold}##GOLD#"..self.cur_sel.name.."#WHITE##{normal}#", function(ret)
 		if ret then
-			local base = Module:setupWrite(self.cur_sel.mod)
-			local save = Savefile.new(self.cur_sel.name)
+			local base = Module:setupWrite(self.save_sel.mod)
+			local save = Savefile.new(self.save_sel.base_name)
 			save:delete()
 			save:close()
 			fs.umount(base)
