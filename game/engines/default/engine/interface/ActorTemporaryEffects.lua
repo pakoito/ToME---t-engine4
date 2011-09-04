@@ -120,7 +120,7 @@ function _M:setEffect(eff_id, dur, p, silent)
 			if ret then
 				game.logSeen(self, ret:gsub("#Target#", self.name:capitalize()):gsub("#target#", self.name))
 			end
-			if fly and game.flyers and game.level.map.seens(self.x, self.y) then
+			if fly and game.flyers and self.x and self.y and game.level.map.seens(self.x, self.y) then
 				local sx, sy = game.level.map:getTileToScreen(self.x, self.y)
 				if game.level.map.seens(self.x, self.y) then game.flyers:add(sx, sy, 20, (rng.range(0,2)-1) * 0.5, -3, fly, {255,100,80}) end
 			end
@@ -150,7 +150,7 @@ function _M:removeEffect(eff, silent, force)
 			if ret then
 				game.logSeen(self, ret:gsub("#Target#", self.name:capitalize()):gsub("#target#", self.name))
 			end
-			if fly and game.flyers then
+			if fly and game.flyers and self.x and self.y then
 				local sx, sy = game.level.map:getTileToScreen(self.x, self.y)
 				if game.level.map.seens(self.x, self.y) then game.flyers:add(sx, sy, 20, (rng.range(0,2)-1) * 0.5, -3, fly, {255,100,80}) end
 			end

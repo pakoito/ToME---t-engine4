@@ -2975,7 +2975,7 @@ newEffect{
 
 		if #targets > 0 then
 			local hitCount = 1
-			if rng.percent(eff.extraJumpChance) then hitCount = hitCount + 1 end
+			if rng.percent(eff.extraJumpChance or 0) then hitCount = hitCount + 1 end
 
 			-- Randomly take targets
 			for i = 1, hitCount do
@@ -3806,7 +3806,7 @@ newEffect{
 	on_timeout = function(self, eff)
 		if math.floor(core.fov.distance(self.x, self.y, eff.src.x, eff.src.y)) > 1 or eff.src.dead or not game.level:hasEntity(eff.src) then
 			self:removeEffect(self.EFF_GRAPPLED)
-		end			
+		end
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("combat_atk", eff.atk)
@@ -3826,7 +3826,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# has escaped the crushing hold.", "-Crushing Hold" end,
 	on_timeout = function(self, eff)
 		local p = self:hasEffect(self.EFF_GRAPPLED)
-		if p and p.src == eff.src then 
+		if p and p.src == eff.src then
 			DamageType:get(DamageType.PHYSICAL).projector(eff.src or self, self.x, self.y, DamageType.PHYSICAL, eff.power)
 		else
 			self:removeEffect(self.EFF_CRUSHING_HOLD)
@@ -3845,7 +3845,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# has escaped the strangle hold.", "-Strangle Hold" end,
 	on_timeout = function(self, eff)
 		local p = self:hasEffect(self.EFF_GRAPPLED)
-		if p and p.src == eff.src then 
+		if p and p.src == eff.src then
 			DamageType:get(DamageType.PHYSICAL).projector(eff.src or self, self.x, self.y, DamageType.PHYSICAL, eff.power)
 		else
 			self:removeEffect(self.EFF_STRANGLE_HOLD)
@@ -4464,7 +4464,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is free from the nightmare.", "-Waking Nightmare" end,
 	on_timeout = function(self, eff)
 		DamageType:get(DamageType.DARKNESS).projector(eff.src or self, self.x, self.y, DamageType.DARKNESS, eff.dam)
-		if rng.percent(eff.chance) then
+		if rng.percent(eff.chance or 0) then
 			-- Pull random effect
 			local chance = rng.range(1, 3)
 			if chance == 1 then
@@ -4515,7 +4515,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is freed from the demons.", "-Inner Demons" end,
 	on_timeout = function(self, eff)
 		if eff.src.dead or not game.level:hasEntity(eff.src) then eff.dur = 0 return true end
-		if rng.percent(eff.chance) then
+		if rng.percent(eff.chance or 0) then
 			if self:checkHit(eff.src:combatSpellpower(), self:combatSpellResist(), 0, 95, 5) then
 				local t = eff.src:getTalentFromId(eff.src.T_INNER_DEMONS)
 				t.summon_inner_demons(eff.src, self, t)

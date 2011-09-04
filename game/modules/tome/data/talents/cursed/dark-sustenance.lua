@@ -109,27 +109,27 @@ newTalent{
 			if self:getTalentLevel(t) >= 5 then
 				local tFeed = self:getTalentFromId(self.T_FEED)
 				if not tFeed.action(self, tFeed) then return nil end
-				
 				effect = self:hasEffect(self.EFF_FEED)
 			else
 				game.logPlayer(self, "You must begin feeding before you can Devour Life.");
 				return nil
 			end
 		end
+		if not effect then return nil end
 		local target = effect.target
-		
+
 		if target and not target.dead then
 			local lifeSteal = t.getLifeSteal(self, t)
 			self:project({type="hit", x=target.x,y=target.y}, target.x, target.y, DamageType.DEVOUR_LIFE, { dam=lifeSteal })
-			
+
 			game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(target.x-self.x), math.abs(target.y-self.y)), "dark_torrent", {tx=target.x-self.x, ty=target.y-self.y})
 			--local dx, dy = target.x - self.x, target.y - self.y
 			--game.level.map:particleEmitter(self.x, self.y,math.max(math.abs(dx), math.abs(dy)), "feed_hate", { tx=dx, ty=dy })
 			game:playSoundNear(self, "talents/fire")
-			
+
 			return true
 		end
-		
+
 		return nil
 	end,
 	info = function(self, t)

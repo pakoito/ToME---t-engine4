@@ -220,7 +220,7 @@ function _M:loaded()
 	self:makeCMap()
 
 	local mapseen = function(t, x, y, v)
-		if x < 0 or y < 0 or x >= self.w or y >= self.h then return end
+		if not x or not y or x < 0 or y < 0 or x >= self.w or y >= self.h then return end
 		if v ~= nil then
 			t[x + y * self.w] = v
 			self._map:setSeen(x, y, v)
@@ -230,21 +230,21 @@ function _M:loaded()
 		return t[x + y * self.w]
 	end
 	local mapfov = function(t, x, y, v)
-		if x < 0 or y < 0 or x >= self.w or y >= self.h then return end
+		if not x or not y or x < 0 or y < 0 or x >= self.w or y >= self.h then return end
 		if v ~= nil then
 			t[x + y * self.w] = v
 		end
 		return t[x + y * self.w]
 	end
 	local maphasseen = function(t, x, y, v)
-		if x < 0 or y < 0 or x >= self.w or y >= self.h then return end
+		if not x or not y or x < 0 or y < 0 or x >= self.w or y >= self.h then return end
 		if v ~= nil then
 			t[x + y * self.w] = v
 		end
 		return t[x + y * self.w]
 	end
 	local mapremember = function(t, x, y, v)
-		if x < 0 or y < 0 or x >= self.w or y >= self.h then return end
+		if not x or not y or x < 0 or y < 0 or x >= self.w or y >= self.h then return end
 		if v ~= nil then
 			t[x + y * self.w] = v
 			self._map:setRemember(x, y, v)
@@ -253,7 +253,7 @@ function _M:loaded()
 		return t[x + y * self.w]
 	end
 	local maplite = function(t, x, y, v)
-		if x < 0 or y < 0 or x >= self.w or y >= self.h then return end
+		if not x or not y or x < 0 or y < 0 or x >= self.w or y >= self.h then return end
 		if v ~= nil then
 			t[x + y * self.w] = v
 			self._map:setLite(x, y, v)
@@ -262,7 +262,7 @@ function _M:loaded()
 		return t[x + y * self.w]
 	end
 	local mapattrs = function(t, x, y, k, v)
-		if x < 0 or y < 0 or x >= self.w or y >= self.h then return end
+		if not x or not y or x < 0 or y < 0 or x >= self.w or y >= self.h then return end
 		if v ~= nil then
 			if not t[x + y * self.w] then t[x + y * self.w] = {} end
 			t[x + y * self.w][k] = v
