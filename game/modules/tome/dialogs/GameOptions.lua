@@ -131,11 +131,11 @@ function _M:generateList()
 		self.c_list:drawItem(item)
 	end,}
 
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Select the interface look. Stone is the default one. Simple is basic but takes less screen space.\nYou must restart the game for the change to take effect."}
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Select the interface look. Metal is the default one. Simple is basic but takes less screen space.\nYou must restart the game for the change to take effect."}
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Interface Style#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.tome.ui_theme):capitalize()
 	end, fct=function(item)
-		Dialog:listPopup("Interface style", "Select style", {{name="Stone", ui="stone"}, {name="Simple", ui="simple"}}, 300, 200, function(sel)
+		Dialog:listPopup("Interface style", "Select style", {{name="Metal", ui="metal"}, {name="Stone", ui="stone"}, {name="Simple", ui="simple"}}, 300, 200, function(sel)
 			if not sel or not sel.ui then return end
 			game:saveSettings("tome.ui_theme", ("tome.ui_theme = %q\n"):format(sel.ui))
 			config.settings.tome.ui_theme = sel.ui

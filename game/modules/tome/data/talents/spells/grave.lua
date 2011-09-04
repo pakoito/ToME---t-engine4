@@ -324,7 +324,7 @@ newTalent{
 	require = spells_req4,
 	points = 5,
 	mode = "sustained",
-	mana = 250,
+	sustain_mana = 250,
 	cooldown = 30,
 	tactical = { BUFF = 3 },
 	getParams = function(self, t) return 30 + self:getTalentLevel(t) * 5, 5 + self:combatTalentSpellDamage(t, 5, 40) end,

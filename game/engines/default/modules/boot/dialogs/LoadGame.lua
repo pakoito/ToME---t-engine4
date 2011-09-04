@@ -33,6 +33,7 @@ function _M:init()
 
 	local list = Module:listSavefiles(function(dir) if dir:find("^boot") then return false else return true end end)
 
+	self.c_play = Button.new{text="  Play!  ", fct=function(text) self:playSave() end}
 	self.c_delete = Button.new{text="Delete", fct=function(text) self:deleteSave() end}
 	self.c_desc = Textzone.new{width=math.floor(self.iw / 3 * 2 - 10), height=self.ih - self.c_delete.h - 10, text=""}
 

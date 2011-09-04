@@ -38,14 +38,22 @@ _M.font_bold = core.display.newFont("/data/font/VeraBd.ttf", 12)
 _M.font_bold_h = _M.font_bold:lineSkip()
 
 -- Default UI
-_M.ui = "stone"
-_M.defaultui = "stone"
+_M.ui = "metal"
+_M.defaultui = "metal"
 
 sounds = {
 	button = "ui/subtle_button_sound",
 }
 
 _M.ui_conf = {
+	metal = {
+		frame_shadow = {x=15, y=15, a=0.5},
+		frame_alpha = 1,
+		frame_ox1 = -42,
+		frame_ox2 =  42,
+		frame_oy1 = -42,
+		frame_oy2 =  42,
+	},
 	stone = {
 		frame_shadow = {x=15, y=15, a=0.5},
 		frame_alpha = 1,
@@ -134,28 +142,31 @@ function _M:makeFrame(base, w, h)
 		f.b6 = self:getUITexture(base.."6.png")
 		f.b5 = self:getUITexture(base.."5.png")
 	end
-	f.w = w
-	f.h = h
+	f.w = math.floor(w)
+	f.h = math.floor(h)
 	return f
 end
 
 function _M:drawFrame(f, x, y, r, g, b, a)
 	if not f.b7 then return end
 
+	x = math.floor(x)
+	y = math.floor(y)
+
 	-- Sides
 	f.b8.t:toScreenFull(x + f.b7.w, y, f.w - f.b7.w - f.b9.w + 1, f.b8.h, f.b8.tw, f.b8.th, r, g, b, a)
-	f.b2.t:toScreenFull(x + f.b7.w, y + f.h - f.b3.h, f.w - f.b7.w - f.b9.w + 1, f.b2.h, f.b2.tw, f.b2.th, r, g, b, a)
+	f.b2.t:toScreenFull(x + f.b7.w, y + f.h - f.b3.h + 1, f.w - f.b7.w - f.b9.w + 1, f.b2.h, f.b2.tw, f.b2.th, r, g, b, a)
 	f.b4.t:toScreenFull(x, y + f.b7.h, f.b4.w, f.h - f.b7.h - f.b1.h + 1, f.b4.tw, f.b4.th, r, g, b, a)
-	f.b6.t:toScreenFull(x + f.w - f.b9.w, y + f.b7.h, f.b6.w, f.h - f.b7.h - f.b1.h + 1, f.b6.tw, f.b6.th, r, g, b, a)
+	f.b6.t:toScreenFull(x + f.w - f.b9.w + 1, y + f.b7.h, f.b6.w, f.h - f.b7.h - f.b1.h + 1, f.b6.tw, f.b6.th, r, g, b, a)
 
 	-- Body
 	f.b5.t:toScreenFull(x + f.b7.w, y + f.b7.h, f.w - f.b7.w - f.b3.w + 1, f.h - f.b7.h - f.b3.h + 1, f.b6.tw, f.b6.th, r, g, b, a)
 
 	-- Corners
 	f.b7.t:toScreenFull(x, y, f.b7.w, f.b7.h, f.b7.tw, f.b7.th, r, g, b, a)
-	f.b1.t:toScreenFull(x, y + f.h - f.b1.h, f.b1.w, f.b1.h, f.b1.tw, f.b1.th, r, g, b, a)
-	f.b9.t:toScreenFull(x + f.w - f.b9.w, y, f.b9.w, f.b9.h, f.b9.tw, f.b9.th, r, g, b, a)
-	f.b3.t:toScreenFull(x + f.w - f.b3.w, y + f.h - f.b3.h, f.b3.w, f.b3.h, f.b3.tw, f.b3.th, r, g, b, a)
+	f.b1.t:toScreenFull(x, y + f.h - f.b1.h + 1, f.b1.w, f.b1.h, f.b1.tw, f.b1.th, r, g, b, a)
+	f.b9.t:toScreenFull(x + f.w - f.b9.w + 1, y, f.b9.w, f.b9.h, f.b9.tw, f.b9.th, r, g, b, a)
+	f.b3.t:toScreenFull(x + f.w - f.b3.w + 1, y + f.h - f.b3.h + 1, f.b3.w, f.b3.h, f.b3.tw, f.b3.th, r, g, b, a)
 end
 
 function _M:setTextShadow(v)
