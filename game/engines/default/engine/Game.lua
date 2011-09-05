@@ -219,7 +219,12 @@ function _M:tick()
 
 	if self.cleanSounds then self:cleanSounds() end
 
-	-- Run tick end stuff
+	self:onTickEndExecute()
+end
+
+--- Run all registered tick end functions
+-- Usualy jsut let the engine call it
+function _M:onTickEndExecute()
 	if self.on_tick_end and #self.on_tick_end > 0 then
 		local fs = self.on_tick_end
 		self.on_tick_end = {}

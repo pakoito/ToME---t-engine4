@@ -560,6 +560,9 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down, auto_zone_stair)
 		return
 	end
 
+	-- Finish stuff registered for the previous level
+	self:onTickEndExecute()
+
 	if self.zone and self.level then self.party:leftLevel() end
 
 	if game.player:isTalentActive(game.player.T_JUMPGATE) then
