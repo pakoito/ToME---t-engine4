@@ -64,7 +64,7 @@ if type(config.settings.tome.daynight) == "nil" then config.settings.tome.daynig
 if type(config.settings.tome.hotkey_icons) == "nil" then config.settings.tome.hotkey_icons = true end
 if type(config.settings.tome.chat_log) == "nil" then config.settings.tome.chat_log = true end
 if not config.settings.tome.fonts then config.settings.tome.fonts = {type="fantasy", size="normal"} end
-if not config.settings.tome.ui_theme then config.settings.tome.ui_theme = "metal" end
+if not config.settings.tome.ui_theme2 then config.settings.tome.ui_theme2 = "metal" end
 if not config.settings.tome.log_lines then config.settings.tome.log_lines = 5 end
 if not config.settings.tome.log_fade then config.settings.tome.log_fade = 3 end
 if not config.settings.tome.scroll_dist then config.settings.tome.scroll_dist = 8 end
@@ -72,7 +72,7 @@ Map.smooth_scroll = config.settings.tome.smooth_move
 Map.faction_danger_check = function(self, e) return e.rank > 3 end
 
 -- Dialog UI
-UIBase.ui = config.settings.tome.ui_theme
+UIBase.ui = config.settings.tome.ui_theme2
 UIBase:setTextShadow(0.6)
 
 -- Dialogs fonts

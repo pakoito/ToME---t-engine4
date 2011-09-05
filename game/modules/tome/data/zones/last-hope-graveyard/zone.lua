@@ -149,6 +149,10 @@ return {
 			spot = game.level:pickSpotRemove{type="coffin", subtype="chamber"}
 		end
 
+		local spot = game.level:pickSpotRemove{type="stairs", subtype="stairs"}
+		local g = game.level.map(spot.x, spot.y, engine.Map.TERRAIN)
+		game.zone:addEntity(game.level, floor, "terrain", spot.x, spot.y)
+
 		game.log("#YELLOW#You hear all the doors being shattered into pieces.")
 	end,
 }

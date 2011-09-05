@@ -26,7 +26,7 @@ endy = 12
 defineTile("#", "HARDWALL")
 defineTile("*", "COFFIN", nil, nil, nil, nil, {type="coffin", subtype="chamber"})
 defineTile("+", "DOOR", nil, nil, nil, nil, {type="door", subtype="chamber"})
-defineTile("<", "UP")
+defineTile("<", "UP", nil, nil, nil, nil, {type="stairs", subtype="stairs"})
 defineTile("_", "ALTAR")
 defineTile(".", "FLOOR")
 defineTile("@", "FLOOR", nil, "CELIA")

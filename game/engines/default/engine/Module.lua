@@ -377,7 +377,7 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 	-- Check the savefile if possible, to add to the progress bar size
 	local savesize = 0
 	local save = Savefile.new("")
-	savesize = save:loadWorldSize()
+	savesize = save:loadWorldSize() or 0
 	save:close()
 
 	-- Load the savefile if it exists, or create a new one if not (or if requested)

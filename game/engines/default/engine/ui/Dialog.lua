@@ -204,13 +204,13 @@ function _M:init(title, w, h, x, y, alpha, font, showup, skin)
 	local conf = self.ui_conf[self.ui]
 	self.frame = self.frame or {
 		b7 = "ui/dialogframe_7.png",
+		b8 = "ui/dialogframe_8.png",
 		b9 = "ui/dialogframe_9.png",
 		b1 = "ui/dialogframe_1.png",
+		b2 = "ui/dialogframe_2.png",
 		b3 = "ui/dialogframe_3.png",
 		b4 = "ui/dialogframe_4.png",
 		b6 = "ui/dialogframe_6.png",
-		b8 = "ui/dialogframe_8.png",
-		b2 = "ui/dialogframe_2.png",
 		b5 = "ui/dialogframe_5.png",
 		shadow = conf.frame_shadow,
 		a = conf.frame_alpha or 1,
@@ -219,6 +219,16 @@ function _M:init(title, w, h, x, y, alpha, font, showup, skin)
 	self.frame.ox2 = self.frame.ox2 or conf.frame_ox2
 	self.frame.oy1 = self.frame.oy1 or conf.frame_oy1
 	self.frame.oy2 = self.frame.oy2 or conf.frame_oy2
+
+	self.frame.title_x = 0
+	self.frame.title_y = 0
+	if conf.title_bar then
+		self.frame.title_x = conf.title_bar.x
+		self.frame.title_y = conf.title_bar.y
+		self.frame.b7 = self.frame.b7:gsub("dialogframe", "title_dialogframe")
+		self.frame.b8 = self.frame.b8:gsub("dialogframe", "title_dialogframe")
+		self.frame.b9 = self.frame.b9:gsub("dialogframe", "title_dialogframe")
+	end
 
 	self.uis = {}
 	self.ui_by_ui = {}
@@ -594,12 +604,14 @@ function _M:toScreen(x, y, nb_keyframes)
 
 	-- Draw the frame and shadow
 	if self.frame.shadow then self:drawFrame(x + self.frame.shadow.x, y + self.frame.shadow.y, 0, 0, 0, self.frame.shadow.a) end
-	self:drawFrame(x, y, 1, 1, 1, self.frame.a)
+	if not game or game.dialogs[#game.dialogs] == self then self:drawFrame(x, y, 1, 1, 1, self.frame.a)
+	else self:drawFrame(x, y, 0.7, 0.7, 0.7, self.frame.a)
+	end
 
 	-- Title
 	if self.title then
-		if self.title_shadow then self.title_tex[1]:toScreenFull(x + (self.w - self.title_tex.w) / 2 + 3, y + 3, self.title_tex.w, self.title_tex.h, self.title_tex[2], self.title_tex[3], 0, 0, 0, 0.5) end
-		self.title_tex[1]:toScreenFull(x + (self.w - self.title_tex.w) / 2, y, self.title_tex.w, self.title_tex.h, self.title_tex[2], self.title_tex[3])
+		if self.title_shadow then self.title_tex[1]:toScreenFull(x + (self.w - self.title_tex.w) / 2 + 3 + self.frame.title_x, y + 3 + self.frame.title_y, self.title_tex.w, self.title_tex.h, self.title_tex[2], self.title_tex[3], 0, 0, 0, 0.5) end
+		self.title_tex[1]:toScreenFull(x + (self.w - self.title_tex.w) / 2 + self.frame.title_x, y + self.frame.title_y, self.title_tex.w, self.title_tex.h, self.title_tex[2], self.title_tex[3])
 	end
 
 	-- UI elements
