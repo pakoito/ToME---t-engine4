@@ -25,6 +25,7 @@ newEntity{ define_as = "BASE_STORE",
 	triggered = function() end,
 	is_store = true,
 	z = 18,
+	_noalpha = true,
 	on_added = function(self, level, x, y)
 		-- Change the terrain to be passable since we are not
 		game:onTickEnd(function()
