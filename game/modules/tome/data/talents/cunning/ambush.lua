@@ -143,6 +143,7 @@ newTalent{
 		m.seen_by = nil
 		m.can_talk = nil
 		m.clone_on_hit = nil
+		m.no_inventory_access = true
 		m.stealth = t.getStealthPower(self, t)
 		for i = 1, 10 do
 			m:unlearnTalent(m.T_AMBUSCADE)
