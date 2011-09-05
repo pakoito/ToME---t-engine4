@@ -97,9 +97,9 @@ function _M:display()
 
 	local bpage = a.hotkey_page
 	local spage = bpage
-	if bpage == 1 and core.key.modState("ctrl") then spage = 2 if self.max_cols < 24 then bpage = 2 end
-	elseif bpage == 1 and core.key.modState("shift") then spage = 3 if self.max_cols < 36 then bpage = 3 end
-	end
+--	if bpage == 1 and core.key.modState("ctrl") then spage = 2 if self.max_cols < 24 then bpage = 2 end
+--	elseif bpage == 1 and core.key.modState("shift") then spage = 3 if self.max_cols < 36 then bpage = 3 end
+--	end
 
 	self.surface:erase(self.bgcolor[1], self.bgcolor[2], self.bgcolor[3])
 	if self.bg_surface then self.surface:merge(self.bg_surface, 0, 0) end
