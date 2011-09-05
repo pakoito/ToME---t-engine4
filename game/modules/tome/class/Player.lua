@@ -582,6 +582,16 @@ function _M:mouseMove(tmx, tmy, force_move)
 		-- Dont do traps
 		local trap = game.level.map(x, y, Map.TRAP)
 		if trap and trap:knownBy(self) and trap:canTrigger(x, y, self, true) then return false end
+
+		-- Dont go where you cant breath
+		if not self:attr("no_breath") then
+			local air_level, air_condition = game.level.map:checkEntity(x, y, Map.TERRAIN, "air_level"), game.level.map:checkEntity(x, y, Map.TERRAIN, "air_condition")
+			if air_level then
+				if not air_condition or not self.can_breath[air_condition] or self.can_breath[air_condition] <= 0 then
+					return false
+				end
+			end
+		end
 		return true
 	end
 	return engine.interface.PlayerMouse.mouseMove(self, tmx, tmy, spotHostiles, {recheck=true, astar_check=astar_check}, force_move)
@@ -838,7 +848,7 @@ function _M:quickSwitchWeapons()
 		elseif not mh1[1] and oh1[1] then names = oh1[1]:getName{do_color=true}
 		end
 	end
-	
+
 	self:playerCheckSustains()
 
 	game.logPlayer(self, "You switch your weapons to: %s.", names)
