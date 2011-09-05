@@ -35,7 +35,7 @@ newTalent{
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="temporal_bolt"}}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		x, y = checkBackfire(self, x, y)
+		x, y = checkBackfire(self, x, y, t.paradox)
 		self:projectile(tg, x, y, DamageType.CLOCK, self:spellCrit(t.getDamage(self, t)), nil)
 		game:playSoundNear(self, "talents/spell_generic2")
 		

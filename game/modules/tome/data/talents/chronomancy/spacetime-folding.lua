@@ -61,6 +61,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty then return nil end
+		tx, ty = checkBackfire(self, tx, ty, t.paradox)
 		if math.floor(core.fov.distance(self.x, self.y, tx, ty)) > self:getTalentRange(t) then return nil end
 				if not self:canBe("teleport") or game.level.map.attrs(tx, ty, "no_teleport") or game.level.map.attrs(self.x, self.y, "no_teleport") then
 			game.logSeen(self, "The spell fizzles!")
@@ -165,6 +166,7 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
+		x, y = checkBackfire(self, x, y, t.paradox)
 		local _ _, x, y = self:canProject(tg, x, y)
 		
 		if not self:canBe("teleport") or game.level.map.attrs(x, y, "no_teleport") then

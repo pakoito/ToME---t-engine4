@@ -36,8 +36,8 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty then return nil end
+		tx, ty = checkBackfire(self, tx, ty, t.paradox)
 		local _ _, tx, ty = self:canProject(tg, tx, ty)
-		tx, ty = checkBackfire(self, tx, ty)
 		if tx then
 			target = game.level.map(tx, ty, engine.Map.ACTOR)
 		end
@@ -206,6 +206,7 @@ newTalent{
 	info = function(self, t)
 		local count = t.getAnomalyCount(self, t)
 		return ([[This powerful spell allows you to mark a point in time that you can later return to by casting Revision (which you'll automatically learn upon learning this spell).  Maintaining such a doorway causes constant strain on the spacetime continuum and can possibly trigger an anomaly (using your current anomaly chance) once every %d turns.
+		This spell splits the timeline.  Attempting to use another spell that also splits the timeline while this effect is active will be unsuccessful.
 		Additional talent points will increase the time between anomaly checks.]]):
 		format(count)
 	end,

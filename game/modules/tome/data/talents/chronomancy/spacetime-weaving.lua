@@ -41,6 +41,7 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y, target = self:getTarget(tg)
 		if not x or not y then return nil end
+		x, y = checkBackfire(self, x, y, t.paradox)
 		local __, x, y = self:canProject(tg, x, y)
 		
 		if not self:canBe("teleport") or game.level.map.attrs(x, y, "no_teleport") then

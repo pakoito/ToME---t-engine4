@@ -102,8 +102,8 @@ temporal_req5 = {
 }
 
 -- Backfire Function; this does the actual backfire even though the chance is calculated in Actor
-checkBackfire = function(self, x, y)
-	if self:paradoxBackfireChance() and not self:attr("no_paradox_fail") then
+checkBackfire = function(self, x, y, pa)
+	if self:paradoxBackfireChance(pa) and not self:attr("no_paradox_fail") then
 		game.logPlayer(self, "The fabric of spacetime ripples and your spell backfires!!")
 		return self.x, self.y
 	else

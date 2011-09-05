@@ -3318,8 +3318,8 @@ newEffect{
 	type = "magical",
 	status = "detrimental",
 	parameters = { },
-	on_gain = function(self, err) return "#Target# is returned to a much younger state!" end,
-	on_lose = function(self, err) return "#Target# has regained its natural age." end,
+	on_gain = function(self, err) return "#Target# is returned to a much younger state!", "+Turn Back the Clock" end,
+	on_lose = function(self, err) return "#Target# has regained its natural age.", "-Turn Back the Clock" end,
 	activate = function(self, eff)
 		eff.stat = self:addTemporaryValue("inc_stats", {
 				[Stats.STAT_STR] =-eff.power,

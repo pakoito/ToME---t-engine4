@@ -108,6 +108,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local power = t.getPower(self, t)
 		return ([[Over the next %d turns you attempt to remove the target from the timeline.  It's resistances will be reduced by %d%% and if you manage to kill it while the spell is in effect you'll be returned to the point in time you cast this spell and the target will be slain.
+		This spell splits the timeline.  Attempting to use another spell that also splits the timeline while this effect is active will be unsuccessful.
 		The duration will scale with your Paradox and the resistance penalty will scale with your paradox and spellpower.]])
 		:format(duration, power)
 	end,
@@ -206,7 +207,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[You summon your future self to fight alongside you for %d turns.
+		return ([[You summon your future self to fight alongside you for %d turns.  At some point in the future you'll be pulled into the past to fight along side your past self after the initial effect ends.
+		This spell splits the timeline.  Attempting to use another spell that also splits the timeline while this effect is active will be unsuccessful.
 		The duration will scale with your Paradox.]]):format(duration)
 	end,
 }

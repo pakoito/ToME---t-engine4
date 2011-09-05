@@ -76,7 +76,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local _ _, _, _, x, y = self:canProject(tg, x, y)
-		x, y = checkBackfire(self, x, y)
+		x, y = checkBackfire(self, x, y, t.paradox)
 		local grids = self:project(tg, x, y, function(px, py)
 			local target = game.level.map(px, py, Map.ACTOR)
 			if not target then return end
@@ -173,7 +173,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local _ _, _, _, x, y = self:canProject(tg, x, y)
-		x, y = checkBackfire(self, x, y)
+		x, y = checkBackfire(self, x, y, t.paradox)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			x, y, duration,

@@ -2026,14 +2026,15 @@ end
 function _M:paradoxChanceModifier()
 	local modifier = self:getWil() * 2
 	if self:knowTalent(self.T_PARADOX_MASTERY) then
-		modifier = modifier * (1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10) or 0 )
+		modifier = modifier * (1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10) or 0)
 	end
 	--print("[Paradox] Will modifier: ", modifier, "::", self:getParadox())
 	return modifier
 end
 
 function _M:paradoxFailChance(pa)
-	local chance = math.pow(((self:getParadox() - self:paradoxChanceModifier())/200), 2)*((100 + self:combatFatigue()) / 100)
+	local total_paradox = self:getParadox() + (pa or 0)
+	local chance = 	(100 + 2*self:combatFatigue()) / 100 * math.pow((total_paradox - self:paradoxChanceModifier()) / 200, 2)
 	if self:getParadox() < 200 then chance = 0 end
 	--print("[Paradox] Fail chance: ", chance, "::", self:getParadox())
 	chance = util.bound(chance, 0, 100)
@@ -2041,7 +2042,8 @@ function _M:paradoxFailChance(pa)
 end
 
 function _M:paradoxAnomalyChance(pa)
-	local chance = math.pow(((self:getParadox() - self:paradoxChanceModifier())/300), 3)*((100 + self:combatFatigue()) / 100)
+	local total_paradox = self:getParadox() + (pa or 0)
+	local chance = 	(100 + 2*self:combatFatigue()) / 100 * math.pow((total_paradox- self:paradoxChanceModifier()) / 300, 3)
 	if self:getParadox() < 300 then chance = 0 end
 	--print("[Paradox] Anomaly chance: ", chance, "::", self:getParadox())
 	chance = util.bound(chance, 0, 100)
@@ -2049,7 +2051,8 @@ function _M:paradoxAnomalyChance(pa)
 end
 
 function _M:paradoxBackfireChance(pa)
-	local chance = math.pow (((self:getParadox() - self:paradoxChanceModifier())/400), 4)*((100 + self:combatFatigue()) / 100)
+	local total_paradox = self:getParadox() + (pa or 0)
+	local chance = (100 + 2*self:combatFatigue()) / 100 * math.pow((total_paradox - self:paradoxChanceModifier()) / 400, 4)
 	if self:getParadox() < 400 then chance = 0 end
 	--print("[Paradox] Backfire chance: ", chance, "::", self:getParadox())
 	chance = util.bound(chance, 0, 100)

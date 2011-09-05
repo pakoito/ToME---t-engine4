@@ -56,7 +56,7 @@ newTalent{
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		local _ _, x, y = self:canProject(tg, x, y)
+		local _ _, x, y = self:canProject(tg, x, y, t.paradox)
 		x, y = checkBackfire(self, x, y)
 		self:project(tg, x, y, DamageType.RETHREAD, self:spellCrit(t.getDamage(self, t)))
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "temporalbeam", {tx=x-self.x, ty=y-self.y})
@@ -163,9 +163,10 @@ newTalent{
 	type = {"chronomancy/timeline-threading", 4},
 	require = chrono_req_high4,
 	points = 5,
-	paradox = 100,
+	paradox = 50,
 	cooldown = 50,
 	no_npc_use = true,
+	no_energy = true,
 	getDuration = function(self, t) return 4 + math.floor(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
 	action = function(self, t)
 		if checkTimeline(self) == true then
@@ -176,7 +177,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[You peer %d turns into three different possible futures and then follow one of them into the present.  Note that seeing visions of your own death is fatal.]])
+		return ([[You peer into three possible futures, allowing you to explore each for %d turns.  When the effect expires you'll choose which of the three futures becomes your present.  Note that seeing visions of your own death can still be fatal
+		This spell splits the timeline.  Attempting to use another spell that also splits the timeline while this effect is active will be unsuccessful.
+		This spell takes no time to cast.]])
 		:format(duration)
 	end,
 }

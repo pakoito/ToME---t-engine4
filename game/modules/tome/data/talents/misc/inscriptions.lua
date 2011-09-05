@@ -699,7 +699,6 @@ newInscription{
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty then return nil end
 		local _ _, tx, ty = self:canProject(tg, tx, ty)
-		tx, ty = checkBackfire(self, tx, ty)
 		if tx then
 			target = game.level.map(tx, ty, engine.Map.ACTOR)
 		end

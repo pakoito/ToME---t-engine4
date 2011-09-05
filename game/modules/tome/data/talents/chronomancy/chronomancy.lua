@@ -108,7 +108,7 @@ newTalent{
 	paradox = 25,
 	cooldown = 50,
 	no_npc_use = true,
-	getDuration = function(self, t) return 4 + math.floor(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
+	getDuration = function(self, t) return 4 + math.ceil((self:getTalentLevel(t) * 2) * getParadoxModifier(self, pm)) end,
 	action = function(self, t)
 		if checkTimeline(self) == true then
 			return
@@ -119,7 +119,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[You peer %d turns into the future.  Note that visions of your own death will still be fatal.
+		return ([[You peer into the future, allowing you to explore your surroundings for %d turns.  When precognition expires you'll return to the point in time you first cast the spell.  Note that visions of your own death can still be fatal.
+		This spell splits the timeline.  Attempting to use another spell that also splits the timeline while this effect is active will be unsuccessful.
 		The duration will scale with your Paradox.]]):format(duration)
 	end,
 }
