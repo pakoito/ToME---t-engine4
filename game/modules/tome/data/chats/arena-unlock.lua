@@ -27,7 +27,7 @@ All you need to do is beat three of my men in battle, and you shall be rewarded.
 #LIGHT_GREEN#*You consider the offer of the mysterious hooded man for a moment*
 ]],
 	answers = {
-		{"Interesting, tell me more about that Arena.", jump="more_ex",
+		{"Interesting. Tell me more about that Arena.", jump="more_ex",
 			action = function (self, player) self.talked_to = 1 end,
 			cond=function(npc, player) return not profile.mod.allow_build.campaign_arena end},
 		{"I am strong! What do you have to offer?", jump="more",
@@ -43,12 +43,9 @@ newChat{ id="more",
 I have wealth and glory to offer, and some very useful
 #YELLOW#combat experience#WHITE# from fighting our men...
 So, what do you think? Are you up to it?
-#LIGHT_GREEN#*The promises of fortune look so convincing coming from such a
-suspiciously-dressed man. Something tells you this is not a trap, so you
-consider his offer one last time...*
 ]],
 	answers = {
-		{"I am ready for battle, let's go now!", jump="accept", action = function (self, player) self.talked_to = 2 end },
+		{"I am ready for battle. Let's go!", jump="accept", action = function (self, player) self.talked_to = 2 end },
 		{"I don't have time for games, Cornac.", jump="refuse"},
 	}
 }
@@ -64,12 +61,9 @@ If you can pass my little test...I will #LIGHT_RED#allow you to join the Arena w
 you are done with your adventures.#WHITE#
 You also shall gather some much needed #LIGHT_RED#combat experience#WHITE# from fighting
 our men...so, what do you think? Are you up to it?
-#LIGHT_GREEN#*The promises of fortune look so convincing coming from such a
-suspiciously-dressed man. Something tells you this is not a trap, so you
-consider his offer one last time...*
 ]],
 	answers = {
-		{"I am ready for battle, let's go now!", jump="accept", action = function (self, player) self.talked_to = 2 end },
+		{"I am ready for battle. Let's go!", jump="accept", action = function (self, player) self.talked_to = 2 end },
 		{"I don't have time for games, Cornac.", jump="refuse"},
 	}
 }
@@ -95,7 +89,7 @@ You certainly won't regret meeting us, indeed...
 So, are you ready to fight?
 ]],
 	answers = {
-		{"Sounds like fun, let's make haste!", jump="go"},
+		{"Sounds like fun. I'm ready!", jump="go"},
 		{"Wait. I am not ready yet.", jump="ok"},
 	}
 }
@@ -117,12 +111,12 @@ newChat{ id="go",
 
 newChat{ id="win",
 	text = [[#LIGHT_GREEN#*The Cornac rogue comes back from the shadows*#WHITE#
-Heheheh, well done, @playerdescriptor.race@! I knew you had potential.
+Well done, @playerdescriptor.race@! I knew you had potential.
 #LIGHT_GREEN#*The rogue takes out his hood, showing a fairly young, but unmistakingly
 #LIGHT_GREEN#battle-hardened man.#WHITE#
 The name's Rej. I work for the arena to recruit great fighters who can give a
 good show... and not die in two blows. You are one of those, indeed!
-I won't keep you away from your adventures, I was there too, long ago.
+I won't keep you away from your adventures. I was there too, long ago.
 But we can make you a true champion, beloved by many and bathing in diamonds.
 
 #LIGHT_GREEN#*As you travel back to Derth in company of the rogue, you discuss your
@@ -170,7 +164,7 @@ Welcome back, @playerdescriptor.race@. Are you ready to go?
 ]],
 	answers = {
 		{ "Let's go, Cornac.", jump = "go" },
-		{ "Just a minute, I have to prepare my equipment."},
+		{ "Just a minute. I have to prepare my equipment."},
 	}
 }
 
