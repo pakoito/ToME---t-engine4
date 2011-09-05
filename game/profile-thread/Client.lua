@@ -145,6 +145,9 @@ function _M:login()
 			cprofile.pushEvent("e='Auth' ok=false")
 			return false
 		end
+	elseif self.sock and self.auth then
+		cprofile.pushEvent(string.format("e='Auth' ok=%q", table.serialize(self.auth)))
+		return true
 	end
 end
 

@@ -223,7 +223,7 @@ Alchemists use gems to throw bombs, they require ammo.
 TOOLTIP_FATIGUE = [[#GOLD#Fatigue#LAST#
 Fatigue is a percentile value that increases the cost of all your talents and spells.
 It represents the fatigue created by wearing heavy equipment.
-Not all talents are affected, notably Wild Gifts are not.
+Not all talents are affected; notably, Wild Gifts are not.
 ]]
 TOOLTIP_ARMOR = [[#GOLD#Armour#LAST#
 Armour value is a damage reduction from every incoming melee and ranged physical attacks.
