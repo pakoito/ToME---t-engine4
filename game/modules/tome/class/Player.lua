@@ -865,7 +865,7 @@ function _M:playerCheckSustains()
 				self:forceUseTalent(tid, {ignore_energy=true})
 			end
 			-- handles pre_use checks
-			if t.on_pre_use and not t.on_pre_use(self, ab, silent, fake) then
+			if t.on_pre_use and not t.on_pre_use(self, t, silent, fake) then
 				self:forceUseTalent(tid, {ignore_energy=true})
 			end
 		end

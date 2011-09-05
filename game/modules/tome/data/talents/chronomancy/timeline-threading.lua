@@ -85,11 +85,9 @@ newTalent{
 	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)* getParadoxModifier(self, pm)) end,
 	getSize = function(self, t) return 2 + math.ceil(self:getTalentLevelRaw(t) / 2 ) end,
 	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty then return nil end
-		local _ _, tx, ty = self:canProject(tg, tx, ty)
-		local target = game.level.map(tx, ty, Map.ACTOR)
 		if not target or self:reactionToward(target) >= 0 then return end
 
 		-- Find space
@@ -117,7 +115,10 @@ newTalent{
 			ai_target = {actor=target},
 			ai = "summoned", ai_real = target.ai,
 		}
-
+		m:removeAllMOs()
+		m.make_escort = nil
+		m.on_added_to_level = nil
+		
 		m.energy.value = 0
 		m.life = m.life
 		m.forceLevelup = function() end
@@ -152,8 +153,8 @@ newTalent{
 		else
 			size = "huge"
 		end
-		return ([[Summons a double of an up to %s size target from another timeline that stays for %d turns. The copy and the target will be compelled to attack each other immediately.
-		]]):
+		return ([[Pulls a %s size or smaller copy of the target from another timeline that stays for %d turns. The copy and the target will be compelled to attack each other immediately.
+		The duration will scale with your Paradox.]]):
 		format(size, duration)
 	end,
 }
