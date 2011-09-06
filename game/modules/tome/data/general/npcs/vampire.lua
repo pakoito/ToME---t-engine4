@@ -17,23 +17,6 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
---  Wights had the power to confuse and paralyze
--- their icy grasp will sap willpower and drain exp
---
---they will have high treasure, but be *hard*
-
---in the books they could confuse and paralyze and sleep and bend lesser minds to do their will and cause fear.  fear would be more of an aura (need to save against it, but realistically it would only be once).
--- they could also be mind affecting too :)
-
-local Talents = require("engine.interface.ActorTalents")
-
--- Of the greater undead, vampires are the crossover between physical and magical prowess.  They possess a life draining attack and they are able to cast some powerful spells.
--- Ranks: vampire, master vampire, elder vampire, vampire lord.
--- to be added? ancient vampire
---taken from the T2 list, with oriental vampire removed, does it really have a part here in ToME?
-
--- last updated: 4:00pm March 1st, 2010
-
 local Talents = require("engine.interface.ActorTalents")
 
 newEntity{
