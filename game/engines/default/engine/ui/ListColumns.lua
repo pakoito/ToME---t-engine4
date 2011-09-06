@@ -337,6 +337,6 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y)
 
 	if self.focused and self.scrollbar then
 		self.scrollbar.pos = self.sel
-		self.scrollbar:display(bx + self.w - self.scrollbar.w, by)
+		self.scrollbar:display(bx + self.w - self.scrollbar.w, by + self.fh)
 	end
 end

@@ -1088,10 +1088,7 @@ function _M:displayEmotes(nb_keyframes)
 	while e do
 		-- Dont bother with obviously out of screen stuff
 		if e.x >= self.mx and e.x < self.mx + self.viewport.mwidth and e.y >= self.my and e.y < self.my + self.viewport.mheight and self.seens(e.x, e.y) then
-			e.surface:toScreen(
-				self.display_x + (e.x - self.mx + 0.5) * self.tile_w * self.zoom,
-				self.display_y + (e.y - self.my - 0.9) * self.tile_h * self.zoom
-			)
+			e:display(self.display_x + (e.x - self.mx + 0.5) * self.tile_w * self.zoom, self.display_y + (e.y - self.my - 0.9) * self.tile_h * self.zoom)
 		end
 
 		for i = 1, nb_keyframes do

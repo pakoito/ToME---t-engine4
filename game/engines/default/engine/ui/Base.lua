@@ -53,7 +53,7 @@ _M.ui_conf = {
 		frame_ox2 =  42,
 		frame_oy1 = -42,
 		frame_oy2 =  42,
-		title_bar = {x=0, y=-16},
+		title_bar = {x=0, y=-19},
 	},
 	stone = {
 		frame_shadow = {x=15, y=15, a=0.5},

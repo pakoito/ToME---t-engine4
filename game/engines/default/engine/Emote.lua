@@ -18,57 +18,51 @@
 -- darkgod@te4.org
 
 require "engine.class"
-require "engine.Tiles"
+local Base = require "engine.ui.Base"
 
-module(..., package.seeall, class.make)
+module(..., package.seeall, class.inherit(Base))
 
-local font = core.display.newFont(fontname or "/data/font/VeraBd.ttf", 16)
-local tiles = engine.Tiles.new(16, 16)
+frame_ox1 = -15
+frame_ox2 = 15
+frame_oy1 = -15
+frame_oy2 = 15
 
 function _M:init(text, dur, color)
-	local w, h = font:size(text)
-	w = w + 10
-	h = h + 15
-	self.dur = dur or 30
-	self.color = color or {r=0, g=0, b=0}
 	self.text = text
-	self.w = w
-	self.h = h
-	self:loaded()
+	self.dur = dur
+	self.color = color or colors.BLACK
+
+	Base.init(self, {font = {"/data/font/VeraBd.ttf", 16}})
+end
+
+function _M:loaded()
+	Base.init(self, {font = {"/data/font/VeraBd.ttf", 16}})
 end
 
 --- Serialization
 function _M:save()
-	return class.save(self, {
-		surface = true,
-	})
-end
-
-function _M:loaded()
-	local s = core.display.newSurface(self.w, self.h)
-	if not s then return end
-	s:erase(0, 0, 0, 255)
-
-	s:merge(tiles:get(nil, 0,0,0, 0,0,0, "emote/7.png"), 0, 0)
-	s:merge(tiles:get(nil, 0,0,0, 0,0,0, "emote/9.png"), self.w - 6, 0)
-	s:merge(tiles:get(nil, 0,0,0, 0,0,0, "emote/1.png"), 0, self.h - 10)
-	s:merge(tiles:get(nil, 0,0,0, 0,0,0, "emote/3.png"), self.w - 6, self.h - 10)
-	for i = 6, self.w - 6 do
-		s:merge(tiles:get(nil, 0,0,0, 0,0,0, "emote/8.png"), i, 0)
-		s:merge(tiles:get(nil, 0,0,0, 0,0,0, "emote/2.png"), i, self.h - 10)
-	end
-	for i = 6, self.h - 10 do
-		s:merge(tiles:get(nil, 0,0,0, 0,0,0, "emote/4.png"), 0, i)
-		s:merge(tiles:get(nil, 0,0,0, 0,0,0, "emote/6.png"), self.w - 6, i)
-	end
-	s:erase(255, 255, 255, 255, 6, 6, self.w - 6 - 6, self.h - 10 - 6)
-	s:erase(0, 0, 0, 0, 6, self.h - 4, self.w - 6, 4)
-
-	s:drawStringBlended(font, self.text, 5, 5, self.color.r, self.color.g, self.color.b)
-	self.surface = s
+	return class.save(self, {x=true, y=true, text=true, dur=true, color=true}, true)
 end
 
 function _M:update()
 	self.dur = self.dur - 1
 	if self.dur < 0 then return true end
+end
+
+function _M:generate()
+	-- Draw UI
+	local w, h = self.font:size(self.text)
+	self.w, self.h = w - frame_ox1 + frame_ox2, h - frame_oy1 + frame_oy2
+
+	local s = core.display.newSurface(w, h)
+	s:drawColorStringBlended(self.font, self.text, 0, 0, self.color.r, self.color.g, self.color.b, true)
+	self.tex = {s:glTexture()}
+
+	self.rw, self.rh = w, h
+	self.frame = self:makeFrame("ui/emote/", self.w, self.h)
+end
+
+function _M:display(x, y)
+	self:drawFrame(self.frame, x, y)
+	self.tex[1]:toScreenFull(x-frame_ox1, y-frame_oy1, self.rw, self.rh, self.tex[2], self.tex[3])
 end
