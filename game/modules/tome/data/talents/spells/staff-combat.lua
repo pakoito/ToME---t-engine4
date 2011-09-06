@@ -44,7 +44,7 @@ newTalent{
 					local dist = core.fov.distance(typ.source_actor.x, typ.source_actor.y, lx, ly)
 					if math.floor(dist - typ.range + 0.5) > 0 then block_from_range = true end
 				end
-				if a then return block_from_range or self:reactionToward(a) < 0, hit, hit_radius
+				if a then return block_from_range or (self and self:reactionToward(a) < 0), hit, hit_radius
 				else return block, hit, hit_radius end
 			end,
 		}
