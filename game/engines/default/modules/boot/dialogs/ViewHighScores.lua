@@ -69,7 +69,7 @@ function _M:init()
 end
 
 function _M:generateList()
-	local list = Module:listModules()
+	local list = Module:listModules(nil, function(dir) if dir:find("^boot") then return false else return true end end)
 	self.list = {}
 
 	for i = 1, #list do
