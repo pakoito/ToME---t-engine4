@@ -152,6 +152,7 @@ end
 function _M:move(x, y, force)
 	if not x or not y then return end
 	if self.dead then return true end
+	if not game.level then return end
 	local map = game.level.map
 
 	x = math.floor(x)
