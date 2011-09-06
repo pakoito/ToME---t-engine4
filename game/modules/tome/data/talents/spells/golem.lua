@@ -209,7 +209,7 @@ newTalent{
 	stamina = 5,
 	requires_target = true,
 	target = function(self, t)
-		return {type="ballbolt", radius=self:getTalentRadius(t), selffire=false, range=self:getTalentRange(t), min_range=2}
+		return {type="ballbolt", radius=self:getTalentRadius(t), selffire=false, range=self:getTalentRange(t)}
 	end,
 	getGolemDamage = function(self, t)
 		return self:combatTalentWeaponDamage(t, 0.4, 1.1)
@@ -248,7 +248,8 @@ newTalent{
 		if self.ai_target then self.ai_target.target = target end
 
 		-- Attack & daze
-		self:project(tg, tx, ty, function(xx, yy)
+		tg.type = "ball"
+		self:project(tg, self.x, self.y, function(xx, yy)
 			if xx == self.x and yy == self.y then return end
 			local target = game.level.map(xx, yy, Map.ACTOR)
 			if target and self:attackTarget(target, nil, t.getGolemDamage(self, t), true) then
