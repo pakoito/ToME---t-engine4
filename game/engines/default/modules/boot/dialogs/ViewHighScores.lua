@@ -50,7 +50,7 @@ function _M:init()
 	-- list of campaigns/worlds on left (bottom)
 	self.c_sublist = ListColumns.new{width=math.floor(self.iw / 3 - 10), height=math.floor(self.ih / 2),
 		columns = {{name="World",width=100,display_prop="world"}},
-		list={}, select=function(item,sel) self:changeworlds(item) end}
+		list={}, select=function(item,sel) self:changeworlds(item) end, fct=function(item) end}
 
 	self:loadUI{
 		{left=0, top=0, ui=self.c_list},
