@@ -21,12 +21,10 @@ require "engine.class"
 local Base = require "engine.ui.Base"
 local TextzoneList = require "engine.ui.TextzoneList"
 local Map = require "engine.Map"
-local Tiles = require "engine.Tiles"
 
 --- A generic tooltip
 module(..., package.seeall, class.inherit(Base))
 
-tiles = Tiles.new(16, 16)
 tooltip_bound_x1 = 0
 tooltip_bound_x2 = function() return game.w end
 tooltip_bound_y1 = 0
@@ -36,48 +34,16 @@ function _M:init(fontname, fontsize, color, bgcolor, max)
 	self.max = max or 300
 	self.ui = "simple"
 	self.font = {fontname or "/data/font/Vera.ttf", fontsize or 12}
-
-	local conf = self.ui_conf[self.ui]
-	self.frame = self.frame or {
-		b7 = "ui/dialogframe_7.png",
-		b9 = "ui/dialogframe_9.png",
-		b1 = "ui/dialogframe_1.png",
-		b3 = "ui/dialogframe_3.png",
-		b4 = "ui/dialogframe_4.png",
-		b6 = "ui/dialogframe_6.png",
-		b8 = "ui/dialogframe_8.png",
-		b2 = "ui/dialogframe_2.png",
-		b5 = "ui/dialogframe_5.png",
-		shadow = conf.frame_shadow,
-		a = conf.frame_alpha or 1,
-	}
-	self.frame.a = 0.85
-	self.frame.ox1 = self.frame.ox1 or conf.frame_ox1
-	self.frame.ox2 = self.frame.ox2 or conf.frame_ox2
-	self.frame.oy1 = self.frame.oy1 or conf.frame_oy1
-	self.frame.oy2 = self.frame.oy2 or conf.frame_oy2
-
 	self.default_ui = { TextzoneList.new{weakstore=true, width=self.max, height=500, variable_height=true, font=self.font, ui=self.ui} }
 
 	self.uis = {}
-	self.w = self.max + (self.frame.ox2 - self.frame.ox1) + 10
+	self.w = self.max + 10
 	self.h = 200
 	Base.init(self, {})
 end
 
 function _M:generate()
-	self.frame.w = self.w
-	self.frame.h = self.h
-
-	self.b7 = self:getUITexture(self.frame.b7)
-	self.b9 = self:getUITexture(self.frame.b9)
-	self.b1 = self:getUITexture(self.frame.b1)
-	self.b3 = self:getUITexture(self.frame.b3)
-	self.b8 = self:getUITexture(self.frame.b8)
-	self.b4 = self:getUITexture(self.frame.b4)
-	self.b2 = self:getUITexture(self.frame.b2)
-	self.b6 = self:getUITexture(self.frame.b6)
-	self.b5 = self:getUITexture(self.frame.b5)
+	self.frame = self:makeFrame("ui/tooltip/", self.w + 6, self.h + 6)
 end
 
 --- Set the tooltip text
@@ -97,7 +63,7 @@ function _M:set(str, ...)
 
 	local uih = 0
 	for i = 1, #self.uis do uih = uih + self.uis[i].h end
-	self.h = uih + (self.frame.oy2 - self.frame.oy1) + 10
+	self.h = uih + 16
 	self.frame.h = self.h
 end
 
@@ -109,26 +75,6 @@ end
 
 function _M:display() end
 
-function _M:drawFrame(x, y, r, g, b, a)
-	x = x + self.frame.ox1
-	y = y + self.frame.oy1
-
-	-- Corners
-	self.b7.t:toScreenFull(x, y, self.b7.w, self.b7.h, self.b7.tw, self.b7.th, r, g, b, a)
-	self.b1.t:toScreenFull(x, y + self.frame.h - self.b1.h, self.b1.w, self.b1.h, self.b1.tw, self.b1.th, r, g, b, a)
-	self.b9.t:toScreenFull(x + self.frame.w - self.b9.w, y, self.b9.w, self.b9.h, self.b9.tw, self.b9.th, r, g, b, a)
-	self.b3.t:toScreenFull(x + self.frame.w - self.b3.w, y + self.frame.h - self.b3.h, self.b3.w, self.b3.h, self.b3.tw, self.b3.th, r, g, b, a)
-
-	-- Sides
-	self.b8.t:toScreenFull(x + self.b7.w, y, self.frame.w - self.b7.w - self.b9.w, self.b8.h, self.b8.tw, self.b8.th, r, g, b, a)
-	self.b2.t:toScreenFull(x + self.b7.w, y + self.frame.h - self.b3.h, self.frame.w - self.b7.w - self.b9.w, self.b2.h, self.b2.tw, self.b2.th, r, g, b, a)
-	self.b4.t:toScreenFull(x, y + self.b7.h, self.b4.w, self.frame.h - self.b7.h - self.b1.h, self.b4.tw, self.b4.th, r, g, b, a)
-	self.b6.t:toScreenFull(x + self.frame.w - self.b9.w, y + self.b7.h, self.b6.w, self.frame.h - self.b7.h - self.b1.h, self.b6.tw, self.b6.th, r, g, b, a)
-
-	-- Body
-	self.b5.t:toScreenFull(x + self.b7.w, y + self.b7.h, self.frame.w - self.b7.w - self.b3.w , self.frame.h - self.b7.h - self.b3.h, self.b6.tw, self.b6.th, r, g, b, a)
-end
-
 function _M:toScreen(x, y, nb_keyframes)
 	-- We translate and scale opengl matrix to make the popup effect easily
 	local ox, oy = math.floor(x), math.floor(y)
@@ -139,7 +85,8 @@ function _M:toScreen(x, y, nb_keyframes)
 	core.display.glTranslate(tx, ty, 0)
 
 	-- Draw the frame and shadow
-	self:drawFrame(x, y, 1, 1, 1, self.frame.a)
+	self:drawFrame(self.frame, x+1, y+1, 0, 0, 0, 0.3)
+	self:drawFrame(self.frame, x-3, y-3, 1, 1, 1, 0.75)
 
 	-- UI elements
 	local uih = 0

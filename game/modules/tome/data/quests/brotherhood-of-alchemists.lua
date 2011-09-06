@@ -107,6 +107,7 @@ end
 
 --called in the on_die functions of ingredient-dropping monsters to determine if they should really drop their ingredient
 need_part = function(self, player, ingredient, monster)
+	if not player then return end
 	if self:isEnded() then return end
 	local oplayer = player
 	if player.resolveSource then player = player:resolveSource() end

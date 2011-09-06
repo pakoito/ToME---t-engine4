@@ -151,7 +151,9 @@ newTalent{
 			m:unlearnTalent(m.T_HIDE_IN_PLAIN_SIGHT)
 		end
 		m.remove_from_party_on_death = true
-		m.resists = { [DamageType.LIGHT] = -100, [DamageType.DARKNESS] = 130, all=-30 }
+		m.resists[DamageType.LIGHT] = -100
+		m.resists[DamageType.DARKNESS] = 130
+		m.resists.all = -30
 		m.inc_damage.all = ((100 + (m.inc_damage.all or 0)) * t.getDam(self, t)) - 100
 		m.force_melee_damage_type = DamageType.DARKNESS
 

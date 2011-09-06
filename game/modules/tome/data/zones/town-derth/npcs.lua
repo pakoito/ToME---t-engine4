@@ -106,6 +106,6 @@ newEntity{ base = "BASE_NPC_DERTH_TOWN",
 	seen_by = function(self, who)
 		if not game.party:hasMember(who) then return end
 		self.seen_by = nil
-		self:doEmote("Hey you, come here you seem worthy..", 60)
+		self:doEmote("Hey you. Come here.", 60)
 	end,
 }

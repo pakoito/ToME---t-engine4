@@ -64,7 +64,7 @@ newEntity{ base = "BASE_NPC_WORM",
 	end,
 }
 
-newEntity{ base = "BASE_NPC_WORM",
+newEntity{ base = "BASE_NPC_WORM", define_as = "CARRION_WORM_MASS",
 	name = "carrion worm mass", color=colors.SANDY_BROWN,
 	can_multiply = 2,
 	level_range = {20, nil}, exp_worth = 1,

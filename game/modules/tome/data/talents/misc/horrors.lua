@@ -477,15 +477,15 @@ newTalent{
 	proj_speed = 6,
 	spawn_carrion_worm = function (self, target, t)
 		local x, y = util.findFreeGrid(target.x, target.y, 10, true, {[Map.ACTOR]=true})
-		if not x then
-			return
-		end
+		if not x then return nil end
 
-		local worm = {type="vermin", subtype="worms", name="carrion worm mass", number=1, hasxp=false}
-		local m = game.zone:makeEntity(game.level, "actor", worm, nil, true)
-		m:resolve()
+		local worm = {type="vermin", subtype="worms", name="carrion worm mass"}
+		local list = mod.class.NPC:loadList("/data/general/npcs/vermin.lua")
+		local m = list.CARRION_WORM_MASS
+		if not m then return nil end
+
+		m:resolve() m:resolve(nil, true)
 		m.faction = self.faction
-
 		game.zone:addEntity(game.level, m, "actor", x, y)
 	end,
 	action = function(self, t)

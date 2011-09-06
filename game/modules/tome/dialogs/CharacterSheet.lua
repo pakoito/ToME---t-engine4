@@ -873,8 +873,8 @@ function _M:dump()
 	else
 		 nnl(("%-32s"):format(" "))
 	end
-	nl(makelabel("Difficulty", player.descriptor.difficulty))
-	nl(makelabel("Permadeath", player.descriptor.permadeath))
+	nl(makelabel("Difficulty", player.descriptor.difficulty or "???"))
+	nl(makelabel("Permadeath", player.descriptor.permadeath or "???"))
 
 	nnl(("%-32s"):format(strings[3]))
 	if player:knowTalent(player.T_MANA_POOL) then

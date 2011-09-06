@@ -1549,8 +1549,8 @@ function _M:registerHighscore()
 		difficulty = player.descriptor.difficulty,
 		level = player.level,
 		name = player.name,
-		where = self.zone.name,
-		dlvl = self.level.level
+		where = self.zone and self.zone.name or "???",
+		dlvl = self.level and self.level.level or 1
 	}
 	if campaign == 'Arena' then
 		details.score = self.level.arena.score
