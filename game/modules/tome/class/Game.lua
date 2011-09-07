@@ -231,6 +231,8 @@ function _M:newGame()
 
 		if config.settings.cheat then self.player.__cheated = true end
 
+		self.player:recomputeGlobalSpeed()
+
 		-- Register the character online if possible
 		self.player:getUUID()
 		self:updateCurrentChar()

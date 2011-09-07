@@ -2928,6 +2928,7 @@ end
 function _M:addedToLevel(level, x, y)
 	if not self._rst_full then self:resetToFull() self._rst_full = true end -- Only do it once, the first time we come into being
 	self:updateModdableTile()
+	self:recomputeGlobalSpeed()
 	if self.make_escort then
 		for _, filter in ipairs(self.make_escort) do
 			for i = 1, filter.number do
