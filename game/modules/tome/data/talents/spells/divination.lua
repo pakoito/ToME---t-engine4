@@ -37,7 +37,7 @@ newTalent{
 		-- but we cant ...
 		local _ _, x, y = self:canProject(tg, x, y)
 
-		self:setEffect(self.EFF_ARCANE_EYE, t.getDuration(self, t), {x=x, y=y, track=game.level.map(x, y, Map.ACTOR), radius=t.getRadius(self, t), true_seeing=self:getTalentLevel(t) >= 5})
+		self:setEffect(self.EFF_ARCANE_EYE, t.getDuration(self, t), {x=x, y=y, track=(self:getTalentLevel(t) >= 4) and game.level.map(x, y, Map.ACTOR) or nil, radius=t.getRadius(self, t), true_seeing=self:getTalentLevel(t) >= 5})
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
