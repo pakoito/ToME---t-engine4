@@ -275,7 +275,7 @@ function _M:selectColumn(i, force, reverse)
 	if self.sortable and not force then
 		local fct = col.sort
 		if type(fct) == "string" then fct = function(a, b) return a[col.sort] < b[col.sort] end end
-		if self.sort_reverse then local old=fct fct = function(a, b) return old(b, a) end end
+		if self.sort_reverse and fct then local old=fct fct = function(a, b) return old(b, a) end end
 		table.sort(self.list, fct)
 	end
 end
