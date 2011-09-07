@@ -114,7 +114,7 @@ newBirthDescriptor
 		cut_immune = 1,
 		stun_immune = 0.5,
 		fear_immune = 1,
-		global_speed_add = -0.2,
+		global_speed_base = 0.8,
 		moddable_tile = "ghoul",
 		moddable_tile_nude = true,
 	},

@@ -604,9 +604,7 @@ function _M:toScreen(x, y, nb_keyframes)
 
 	-- Draw the frame and shadow
 	if self.frame.shadow then self:drawFrame(x + self.frame.shadow.x, y + self.frame.shadow.y, 0, 0, 0, self.frame.shadow.a) end
-	if not game or game.dialogs[#game.dialogs] == self then self:drawFrame(x, y, 1, 1, 1, self.frame.a)
-	else self:drawFrame(x, y, 0.7, 0.7, 0.7, self.frame.a)
-	end
+	self:drawFrame(x, y, 1, 1, 1, self.frame.a)
 
 	-- Title
 	if self.title then
