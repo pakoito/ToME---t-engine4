@@ -239,6 +239,80 @@ defineAction{
 	name = "Third Hotkey 12",
 }
 
+-- Alt + Hotkeys
+defineAction{
+	default = { "sym:_1:false:false:true:false" },
+	type = "HOTKEY_FOURTH_1",
+	group = "hotkeys",
+	name = "Fourth Hotkey 1",
+}
+defineAction{
+	default = { "sym:_2:false:false:true:false" },
+	type = "HOTKEY_FOURTH_2",
+	group = "hotkeys",
+	name = "Fourth Hotkey 2",
+}
+defineAction{
+	default = { "sym:_3:false:false:true:false" },
+	type = "HOTKEY_FOURTH_3",
+	group = "hotkeys",
+	name = "Fourth Hotkey 3",
+}
+defineAction{
+	default = { "sym:_4:false:false:true:false" },
+	type = "HOTKEY_FOURTH_4",
+	group = "hotkeys",
+	name = "Fourth Hotkey 4",
+}
+defineAction{
+	default = { "sym:_5:false:false:true:false" },
+	type = "HOTKEY_FOURTH_5",
+	group = "hotkeys",
+	name = "Fourth Hotkey 5",
+}
+defineAction{
+	default = { "sym:_6:false:false:true:false" },
+	type = "HOTKEY_FOURTH_6",
+	group = "hotkeys",
+	name = "Fourth Hotkey 6",
+}
+defineAction{
+	default = { "sym:_7:false:false:true:false" },
+	type = "HOTKEY_FOURTH_7",
+	group = "hotkeys",
+	name = "Fourth Hotkey 7",
+}
+defineAction{
+	default = { "sym:_8:false:false:true:false" },
+	type = "HOTKEY_FOURTH_8",
+	group = "hotkeys",
+	name = "Fourth Hotkey 8",
+}
+defineAction{
+	default = { "sym:_9:false:false:true:false" },
+	type = "HOTKEY_FOURTH_9",
+	group = "hotkeys",
+	name = "Fourth Hotkey 9",
+}
+defineAction{
+	default = { "sym:_0:false:false:true:false" },
+	type = "HOTKEY_FOURTH_10",
+	group = "hotkeys",
+	name = "Fourth Hotkey 10",
+}
+defineAction{
+	default = { "sym:_MINUS:false:false:true:false" },
+	type = "HOTKEY_FOURTH_11",
+	group = "hotkeys",
+	name = "Fourth Hotkey 11",
+}
+defineAction{
+	default = { "sym:_EQUALS:false:false:true:false" },
+	type = "HOTKEY_FOURTH_12",
+	group = "hotkeys",
+	name = "Fourth Hotkey 12",
+}
+
 defineAction{
 	default = { "sym:_PAGEUP:false:false:false:false" },
 	type = "HOTKEY_PREV_PAGE",

@@ -98,6 +98,18 @@ Check out the keybinding screen in the game menu to bind hotkeys to a key (defau
 		HOTKEY_THIRD_10 = function() self:defineHotkey(34) end,
 		HOTKEY_THIRD_11 = function() self:defineHotkey(35) end,
 		HOTKEY_THIRD_12 = function() self:defineHotkey(36) end,
+		HOTKEY_FOURTH_1 = function() self:defineHotkey(37) end,
+		HOTKEY_FOURTH_2 = function() self:defineHotkey(38) end,
+		HOTKEY_FOURTH_3 = function() self:defineHotkey(39) end,
+		HOTKEY_FOURTH_4 = function() self:defineHotkey(40) end,
+		HOTKEY_FOURTH_5 = function() self:defineHotkey(41) end,
+		HOTKEY_FOURTH_6 = function() self:defineHotkey(42) end,
+		HOTKEY_FOURTH_7 = function() self:defineHotkey(43) end,
+		HOTKEY_FOURTH_8 = function() self:defineHotkey(44) end,
+		HOTKEY_FOURTH_9 = function() self:defineHotkey(45) end,
+		HOTKEY_FOURTH_10 = function() self:defineHotkey(46) end,
+		HOTKEY_FOURTH_11 = function() self:defineHotkey(47) end,
+		HOTKEY_FOURTH_12 = function() self:defineHotkey(48) end,
 		EXIT = function() game:unregisterDialog(self) end,
 	}
 end

@@ -85,7 +85,7 @@ function _M:setInscription(id, name, data, cooldown, vocal, src, bypass_max_same
 	local oldname = self.inscriptions[id]
 	local oldpos = nil
 	if oldname then
-		for i = 1, 36 do
+		for i = 1, 48 do
 			if self.hotkey[i] and self.hotkey[i][1] == "talent" and self.hotkey[i][2] == "T_"..oldname then oldpos = i break end
 		end
 		self:unlearnTalent(self["T_"..oldname])
@@ -109,7 +109,7 @@ function _M:setInscription(id, name, data, cooldown, vocal, src, bypass_max_same
 
 	-- Hotkey
 	if oldpos then
-		for i = 1, 36 do
+		for i = 1, 48 do
 			if self.hotkey[i] and self.hotkey[i][1] == "talent" and self.hotkey[i][2] == "T_"..name then self.hotkey[i] = nil end
 		end
 		self.hotkey[oldpos] = {"talent", "T_"..name}

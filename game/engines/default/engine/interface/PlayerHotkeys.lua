@@ -42,15 +42,15 @@ function _M:sortHotkeys()
 				print("[SORTING HOTKEYS] pairing",known_t_id,i)
 				self.hotkey[i] = {"talent", known_t_id}
 				-- Remove from old
-				for z = 1, 36 do if old[z] and old[z][1] == "talent" and old[z][2] == known_t_id then old[z] = nil break end end
+				for z = 1, 48 do if old[z] and old[z][1] == "talent" and old[z][2] == known_t_id then old[z] = nil break end end
 			end
 		end
 	end
 
 	-- Read all the rest
-	for j = 1, 36 do
+	for j = 1, 48 do
 		if old[j] then
-			for i = 1, 36 do if not self.hotkey[i] then
+			for i = 1, 48 do if not self.hotkey[i] then
 				self.hotkey[i] = old[j]
 				print("[SORTING HOTKEYS] added back", old[j][2], i)
 				break
@@ -106,7 +106,7 @@ function _M:hotkeyAutoTalents()
 	for tid, _ in pairs(self.talents) do
 		local t = self:getTalentFromId(tid)
 		if t.mode == "activated" or t.mode == "sustained" then
-			for i = 1, 36 do
+			for i = 1, 48 do
 				if not self.hotkey[i] then
 					self.hotkey[i] = {"talent", tid}
 					break

@@ -273,7 +273,7 @@ function _M:learnTalent(t_id, force, nb)
 				end
 			end
 			if not found then
-				for i = 1, 36 do
+				for i = 1, 48 do
 					if not self.hotkey[i] then
 						self.hotkey[i] = {"talent", t_id}
 						break

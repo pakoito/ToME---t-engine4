@@ -165,8 +165,8 @@ function _M:generateList()
 		end
 		table.sort(tals, function(a, b)
 			local ha, hb
-			for i = 1, 36 do if player.hotkey[i] and player.hotkey[i][1] == "talent" and player.hotkey[i][2] == a.talent.id then ha = i end end
-			for i = 1, 36 do if player.hotkey[i] and player.hotkey[i][1] == "talent" and player.hotkey[i][2] == b.talent.id then hb = i end end
+			for i = 1, 48 do if player.hotkey[i] and player.hotkey[i][1] == "talent" and player.hotkey[i][2] == a.talent.id then ha = i end end
+			for i = 1, 48 do if player.hotkey[i] and player.hotkey[i][1] == "talent" and player.hotkey[i][2] == b.talent.id then hb = i end end
 
 			if ha and hb then return ha < hb
 			elseif ha and not hb then return ha < 999999

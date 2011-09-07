@@ -114,6 +114,18 @@ function _M:init(title, actor, filter, action, on_select)
 		HOTKEY_THIRD_10 = function() self:defineHotkey(34) end,
 		HOTKEY_THIRD_11 = function() self:defineHotkey(35) end,
 		HOTKEY_THIRD_12 = function() self:defineHotkey(36) end,
+		HOTKEY_FOURTH_1 = function() self:defineHotkey(37) end,
+		HOTKEY_FOURTH_2 = function() self:defineHotkey(38) end,
+		HOTKEY_FOURTH_3 = function() self:defineHotkey(39) end,
+		HOTKEY_FOURTH_4 = function() self:defineHotkey(40) end,
+		HOTKEY_FOURTH_5 = function() self:defineHotkey(41) end,
+		HOTKEY_FOURTH_6 = function() self:defineHotkey(42) end,
+		HOTKEY_FOURTH_7 = function() self:defineHotkey(43) end,
+		HOTKEY_FOURTH_8 = function() self:defineHotkey(44) end,
+		HOTKEY_FOURTH_9 = function() self:defineHotkey(45) end,
+		HOTKEY_FOURTH_10 = function() self:defineHotkey(46) end,
+		HOTKEY_FOURTH_11 = function() self:defineHotkey(47) end,
+		HOTKEY_FOURTH_12 = function() self:defineHotkey(48) end,
 		ACCEPT = function()
 			if self.focus_ui and self.focus_ui.ui == self.c_inven then self:use(self.c_inven.list[self.c_inven.sel])
 			elseif self.focus_ui and self.focus_ui.ui == self.c_equip then self:use(self.c_equip.list[self.c_equip.sel])
