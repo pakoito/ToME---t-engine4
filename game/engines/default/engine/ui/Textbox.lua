@@ -44,6 +44,10 @@ function _M:init(t)
 	Base.init(self, t)
 end
 
+function _M:on_focus(v)
+	game:onTickEnd(function() self.key:unicodeInput(v) end)
+end
+
 function _M:generate()
 	self.mouse:reset()
 	self.key:reset()

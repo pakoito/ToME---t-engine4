@@ -87,12 +87,12 @@ end
 
 --- Switch to previous hotkey page
 function _M:prevHotkeyPage()
-	self.hotkey_page = util.boundWrap(self.hotkey_page - 1, 1, 3)
+	self.hotkey_page = util.boundWrap(self.hotkey_page - 1, 1, 4)
 	self.changed = true
 end
 --- Switch to next hotkey page
 function _M:nextHotkeyPage()
-	self.hotkey_page = util.boundWrap(self.hotkey_page + 1, 1, 3)
+	self.hotkey_page = util.boundWrap(self.hotkey_page + 1, 1, 4)
 	self.changed = true
 end
 --- Switch to hotkey page

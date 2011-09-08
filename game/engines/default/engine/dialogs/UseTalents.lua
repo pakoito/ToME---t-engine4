@@ -114,6 +114,10 @@ Check out the keybinding screen in the game menu to bind hotkeys to a key (defau
 	}
 end
 
+function _M:on_register()
+	game:onTickEnd(function() self.key:unicodeInput(true) end)
+end
+
 function _M:defineHotkey(id)
 	if not self.actor.hotkey then return end
 	local item = self.list[self.c_list.sel]

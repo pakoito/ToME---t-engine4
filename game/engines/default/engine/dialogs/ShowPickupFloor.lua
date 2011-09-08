@@ -73,6 +73,10 @@ function _M:init(title, x, y, filter, action, takeall, actor)
 	}
 end
 
+function _M:on_register()
+	game:onTickEnd(function() self.key:unicodeInput(true) end)
+end
+
 function _M:used()
 	if self.taking_all then return end
 	self:generateList()

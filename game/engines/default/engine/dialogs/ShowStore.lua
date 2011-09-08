@@ -80,6 +80,10 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 	}
 end
 
+function _M:on_register()
+	game:onTickEnd(function() self.key:unicodeInput(true) end)
+end
+
 function _M:updateStore()
 	self:generateList()
 end

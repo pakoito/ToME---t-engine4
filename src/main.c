@@ -237,12 +237,29 @@ extern SDL_Cursor *mouse_cursor;
 extern SDL_Cursor *mouse_cursor_down;
 void on_event(SDL_Event *event)
 {
-	static char *last_unicode = NULL;
-
 	switch (event->type) {
 	case SDL_TEXTINPUT:
-		if (last_unicode) free(last_unicode);
-		last_unicode = strdup(event->text.text);
+		if (current_keyhandler != LUA_NOREF)
+		{
+			lua_rawgeti(L, LUA_REGISTRYINDEX, current_keyhandler);
+			lua_pushstring(L, "receiveKey");
+			lua_gettable(L, -2);
+			lua_remove(L, -2);
+			lua_rawgeti(L, LUA_REGISTRYINDEX, current_keyhandler);
+			lua_pushnumber(L, 0);
+
+			SDL_Keymod _pKeyState = SDL_GetModState();
+			lua_pushboolean(L, (_pKeyState & KMOD_CTRL) ? TRUE : FALSE);
+			lua_pushboolean(L, (_pKeyState & KMOD_SHIFT) ? TRUE : FALSE);
+			lua_pushboolean(L, (_pKeyState & KMOD_ALT) ? TRUE : FALSE);
+			lua_pushboolean(L, (_pKeyState & KMOD_GUI) ? TRUE : FALSE);
+
+			lua_pushstring(L, event->text.text);
+			lua_pushboolean(L, FALSE);
+			lua_pushnil(L);
+
+			docall(L, 9, 0);
+		}
 		break;
 	case SDL_KEYDOWN:
 	case SDL_KEYUP:
@@ -261,14 +278,7 @@ void on_event(SDL_Event *event)
 			lua_pushboolean(L, (_pKeyState & KMOD_ALT) ? TRUE : FALSE);
 			lua_pushboolean(L, (_pKeyState & KMOD_GUI) ? TRUE : FALSE);
 
-			if (last_unicode)
-			{
-				lua_pushstring(L, last_unicode);
-				free(last_unicode);
-				last_unicode = NULL;
-			}
-			else
-				lua_pushnil(L);
+			lua_pushnil(L);
 			lua_pushboolean(L, (event->type == SDL_KEYUP) ? TRUE : FALSE);
 
 			/* Convert unicode UCS-2 to UTF8 string */
@@ -983,10 +993,9 @@ int main(int argc, char *argv[])
 	/* Sets up OpenGL double buffering */
 	resizeWindow(WIDTH, HEIGHT);
 
-	// Allow getting unicode events
-	SDL_StartTextInput();
 	// Allow screensaver to work
 	SDL_EnableScreenSaver();
+	SDL_StartTextInput();
 
 	// Get OpenGL capabilities
 	multitexture_active = GLEW_ARB_multitexture;

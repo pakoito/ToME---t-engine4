@@ -117,6 +117,7 @@ end
 function _M:init()
 	engine.KeyCommand.init(self)
 	self.virtuals = {}
+	self.use_unicode = false
 
 	self:bindKeys()
 end
@@ -141,8 +142,8 @@ function _M:findBoundKeys(virtual)
 	return unpack(bs)
 end
 
-function _M:makeKeyString(sym, ctrl, shift, alt, meta, unicode)
-	return ("sym:%s:%s:%s:%s:%s"):format(tostring(self.sym_to_name[sym] or sym), tostring(ctrl), tostring(shift), tostring(alt), tostring(meta)), unicode and "uni:"..unicode
+function _M:makeKeyString(sym, ctrl, shift, alt, meta, unicode, key)
+	return ("sym:%s:%s:%s:%s:%s"):format(tostring(self.sym_to_name[sym] or sym), tostring(ctrl), tostring(shift), tostring(alt), tostring(meta)), key and ("sym:=%s:%s:%s:%s:%s"):format(key, tostring(ctrl), tostring(shift), tostring(alt), tostring(meta)), unicode and "uni:"..unicode
 end
 
 function _M:makeGestureString(gesture)
@@ -166,12 +167,14 @@ function _M:formatKeyString(ks)
 		shift = shift == "true" and true or false
 		alt = alt == "true" and true or false
 		meta = meta == "true" and true or false
-		if tonumber(sym) then
-			sym = tonumber(sym)
+		if sym:sub(1, 1) == "=" then
+			sym = sym:sub(2)
 		else
-			sym = _M[sym]
+			if tonumber(sym) then sym = tonumber(sym)
+			else sym = _M[sym]
+			end
+			sym = core.key.symName(sym)
 		end
-		sym = core.key.symName(sym)
 
 		if ctrl then sym = "[C]+"..sym end
 		if shift then sym = "[S]+"..sym end
@@ -203,29 +206,42 @@ function _M:formatKeyString(ks)
 end
 
 function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode, isup, key, ismouse)
+	if unicode and not self.use_unicode then return end
+
 	self:handleStatus(sym, ctrl, shift, alt, meta, unicode, isup)
 
 	if self.any_key then self.any_key(sym, ctrl, shift, alt, meta, unicode, isup, key) end
 
 	local ks, us
-	if not ismouse then ks, us = self:makeKeyString(sym, ctrl, shift, alt, meta, unicode)
+	if not ismouse then ks, kks, us = self:makeKeyString(sym, ctrl, shift, alt, meta, unicode, key)
 	else ks = self:makeMouseString(sym, ctrl, shift, alt, meta) end
---	print("[BIND]", sym, ctrl, shift, alt, meta, unicode, " :=: ", ks, us, " ?=? ", self.binds[ks], us and self.binds[us])
+--	print("[BIND]", sym, ctrl, shift, alt, meta, unicode, " :=: ", ks, kks, us, " ?=? ", self.binds[ks], kks and self.binds[kks], us and self.binds[us])
 	if self.binds[ks] then
 		for virt, _ in pairs(self.binds[ks]) do if self.virtuals[virt] then
 			if isup and not _M.binds_def[virt].updown then return end
-			self.virtuals[virt](sym, ctrl, shift, alt, meta, unicode, isup)
+			self.virtuals[virt](sym, ctrl, shift, alt, meta, unicode, isup, key)
+			return true
+		end end
+	elseif kks and self.binds[kks] then
+		for virt, _ in pairs(self.binds[kks]) do if self.virtuals[virt] then
+			if isup and not _M.binds_def[virt].updown then return end
+			self.virtuals[virt](sym, ctrl, shift, alt, meta, unicode, isup, key)
 			return true
 		end end
 	elseif us and self.binds[us] then
 		for virt, _ in pairs(self.binds[us]) do if self.virtuals[virt] then
 --			if isup and not _M.binds_def[virt].updown then return end
-			self.virtuals[virt](sym, ctrl, shift, alt, meta, unicode, isup)
+			self.virtuals[virt](sym, ctrl, shift, alt, meta, unicode, isup, key)
 			return true
 		end end
 	end
 
 	return engine.KeyCommand.receiveKey(self, sym, ctrl, shift, alt, meta, unicode, isup, key)
+end
+
+--- Allow receiving unicode events
+function _M:unicodeInput(v)
+	self.use_unicode = v
 end
 
 --- Reset all binds

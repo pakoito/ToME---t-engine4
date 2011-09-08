@@ -204,12 +204,20 @@ static int lua_flush_key_events(lua_State *L)
 	return 0;
 }
 
+static int lua_key_unicode(lua_State *L)
+{
+	if (lua_isboolean(L, 1)) SDL_StartTextInput();
+	else SDL_StopTextInput();
+	return 0;
+}
+
 static const struct luaL_reg keylib[] =
 {
 	{"set_current_handler", lua_set_current_keyhandler},
 	{"modState", lua_get_mod_state},
 	{"symName", lua_get_scancode_name},
 	{"flush", lua_flush_key_events},
+	{"unicodeInput", lua_key_unicode},
 	{NULL, NULL},
 };
 

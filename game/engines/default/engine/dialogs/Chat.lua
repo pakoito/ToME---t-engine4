@@ -57,6 +57,10 @@ function _M:init(chat, id)
 	}
 end
 
+function _M:on_register()
+	game:onTickEnd(function() self.key:unicodeInput(true) end)
+end
+
 function _M:select(item)
 	local a = self.chat:get(self.cur_id).answers[item.answer]
 	if not a then return end

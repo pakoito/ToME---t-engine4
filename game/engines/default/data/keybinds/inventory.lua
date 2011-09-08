@@ -18,53 +18,53 @@
 -- darkgod@te4.org
 
 defineAction{
-	default = { "uni:i", },
+	default = { "sym:=i:false:false:false:false", },
 	type = "SHOW_INVENTORY",
 	group = "inventory",
 	name = "Show inventory",
 }
 defineAction{
-	default = { "uni:e", },
+	default = { "sym:=e:false:false:false:false", },
 	type = "SHOW_EQUIPMENT",
 	group = "inventory",
 	name = "Show equipment",
 }
 
 defineAction{
-	default = { "uni:g" },
+	default = { "sym:=g:false:false:false:false" },
 	type = "PICKUP_FLOOR",
 	group = "actions",
 	name = "Pickup items",
 }
 defineAction{
-	default = { "uni:d" },
+	default = { "sym:=d:false:false:false:false" },
 	type = "DROP_FLOOR",
 	group = "actions",
 	name = "Drop items",
 }
 
 defineAction{
-	default = { "uni:w", },
+	default = { "sym:=w:false:false:false:false", },
 	type = "WEAR_ITEM",
 	group = "inventory",
 	name = "Wield/wear items",
 }
 defineAction{
-	default = { "uni:t", },
+	default = { "sym:=t:false:false:false:false", },
 	type = "TAKEOFF_ITEM",
 	group = "inventory",
 	name = "Takeoff items",
 }
 
 defineAction{
-	default = { "uni:u", },
+	default = { "sym:=u:false:false:false:false", },
 	type = "USE_ITEM",
 	group = "inventory",
 	name = "Use items",
 }
 
 defineAction{
-	default = { "uni:x", },
+	default = { "sym:=x:false:false:false:false", },
 	type = "QUICK_SWITCH_WEAPON",
 	group = "inventory",
 	name = "Quick switch weapons set",

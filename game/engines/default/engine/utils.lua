@@ -130,6 +130,12 @@ function table.listify(t)
 	return tt
 end
 
+function table.keys_to_values(t)
+	local tt = {}
+	for k, e in pairs(t) do tt[e] = k end
+	return tt
+end
+
 function table.keys(t)
 	local tt = {}
 	for k, e in pairs(t) do tt[#tt+1] = k end

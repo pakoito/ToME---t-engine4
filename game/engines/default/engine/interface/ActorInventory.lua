@@ -77,6 +77,17 @@ function _M:getInven(id)
 	end
 end
 
+--- Tells if an inventory still has room left
+function _M:canAddToInven(id)
+	if type(id) == "number" then
+		return #self.inven[id] < self.inven[id].max
+	elseif type(id) == "string" then
+		return #self.inven[self["INVEN_"..id]] < self.inven[self["INVEN_"..id]].max
+	else
+		return id
+	end
+end
+
 --- Adds an object to an inventory
 -- @return false if the object could not be added otherwise true and the inventory index where it is now
 function _M:addObject(inven_id, o)

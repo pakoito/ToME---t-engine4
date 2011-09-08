@@ -48,6 +48,10 @@ function _M:init()
 	self.key:addBinds{ EXIT = function() game:unregisterDialog(self) end, }
 end
 
+function _M:on_register()
+	game:onTickEnd(function() self.key:unicodeInput(true) end)
+end
+
 function _M:use(item)
 	if not item then return end
 	game:unregisterDialog(self)

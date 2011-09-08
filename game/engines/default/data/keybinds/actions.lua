@@ -18,34 +18,34 @@
 -- darkgod@te4.org
 
 defineAction{
-	default = { "uni:<", "uni:>" },
+	default = { "sym:=<:false:false:false:false", "sym:=>:false:false:false:false" },
 	type = "CHANGE_LEVEL",
 	group = "actions",
 	name = "Go to next/previous level",
 }
 
 defineAction{
-	default = { "uni:G" },
+	default = { "sym:=g:false:true:false:false" },
 	type = "LEVELUP",
 	group = "actions",
 	name = "Levelup window",
 }
 defineAction{
-	default = { "uni:m" },
+	default = { "sym:=m:false:false:false:false" },
 	type = "USE_TALENTS",
 	group = "actions",
 	name = "Use talents",
 }
 
 defineAction{
-	default = { "uni:j", "sym:_q:true:false:false:false" },
+	default = { "sym:=j:false:false:false:false", "sym:_q:true:false:false:false" },
 	type = "SHOW_QUESTS",
 	group = "actions",
 	name = "Show quests",
 }
 
 defineAction{
-	default = { "uni:r", "uni:R" },
+	default = { "sym:=r:false:false:false:false", "sym:=r:false:true:false:false" },
 	type = "REST",
 	group = "actions",
 	name = "Rest for a while",
@@ -73,7 +73,7 @@ defineAction{
 }
 
 defineAction{
-	default = { "uni:l" },
+	default = { "sym:=l:false:false:false:false" },
 	type = "LOOK_AROUND",
 	group = "actions",
 	name = "Look around",
@@ -87,14 +87,14 @@ defineAction{
 }
 
 defineAction{
-	default = { "sym:_t:true:false:false:false" },
+	default = { "sym:=t:true:false:false:false" },
 	type = "SHOW_TIME",
 	group = "actions",
 	name = "Show game calendar",
 }
 
 defineAction{
-	default = { "uni:c", "uni:C" },
+	default = { "sym:=c", "sym:=c:false:true:false:false" },
 	type = "SHOW_CHARACTER_SHEET",
 	group = "actions",
 	name = "Show character sheet",
@@ -105,13 +105,6 @@ defineAction{
 	type = "SWITCH_GFX",
 	group = "actions",
 	name = "Switch graphical modes",
-}
-
-defineAction{
-	default = { "uni:?" },
-	type = "HELP",
-	group = "actions",
-	name = "Help",
 }
 
 defineAction{

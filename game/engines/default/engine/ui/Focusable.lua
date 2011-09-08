@@ -31,4 +31,5 @@ function _M:setFocus(v)
 	if not v then
 		self.focus_decay = self.focus_decay_max
 	end
+	if self.on_focus then self:on_focus(v) end
 end

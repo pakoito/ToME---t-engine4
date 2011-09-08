@@ -52,8 +52,6 @@ struct s_map_object {
 
 	int cb_ref;
 
-	bool closed;
-
 	struct s_map_object *next;
 	int next_ref;
 };

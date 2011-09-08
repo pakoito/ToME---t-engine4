@@ -65,6 +65,10 @@ function _M:init(title, inven, filter, action, actor)
 	}
 end
 
+function _M:on_register()
+	game:onTickEnd(function() self.key:unicodeInput(true) end)
+end
+
 function _M:select(item)
 	if item then
 		self.c_desc:switchItem(item, item.desc)

@@ -125,6 +125,10 @@ Right click or press '*' to configure.
 	}
 end
 
+function _M:on_register()
+	game:onTickEnd(function() self.key:unicodeInput(true) end)
+end
+
 function _M:defineHotkey(id)
 	if not self.actor.hotkey then return end
 	local item = self.cur_item

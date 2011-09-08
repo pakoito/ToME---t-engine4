@@ -139,6 +139,8 @@ function _M:on_register()
 	self:next()
 	self:select(self.list[self.c_list.sel])
 
+	self.key:unicodeInput(true)
+
 	if __module_extra_info.no_quickbirth then return end
 	if self.quickbirth then
 		if __module_extra_info.auto_quickbirth then

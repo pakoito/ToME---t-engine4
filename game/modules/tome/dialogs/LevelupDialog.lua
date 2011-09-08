@@ -230,6 +230,8 @@ end
 
 function _M:updateKeys(kind)
 	self.key:reset()
+	self.key:unicodeInput(true)
+
 	if kind == "Stats" then
 		self.key:addCommands{
 			_TAB = function() self:tabTabs() end,

@@ -31,6 +31,7 @@ commands = {}
 
 function _M:init()
 	engine.Dialog.init(self, "Lua Console", core.display.size())
+	game:onTickEnd(function() self.key:unicodeInput(true) end)
 	self:keyCommands{
 		_RETURN = function()
 			table.insert(self.commands, self.line)

@@ -109,6 +109,10 @@ function _M:switchTo(kind)
 	self:updateKeys()
 end
 
+function _M:on_register()
+	game:onTickEnd(function() self.key:unicodeInput(true) end)
+end
+
 function _M:updateKeys()
 	self.key:addCommands{
 	_TAB = function() self:tabTabs() end,

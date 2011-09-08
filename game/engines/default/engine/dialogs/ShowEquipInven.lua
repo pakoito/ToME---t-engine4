@@ -135,6 +135,10 @@ function _M:init(title, actor, filter, action, on_select)
 	}
 end
 
+function _M:on_register()
+	game:onTickEnd(function() self.key:unicodeInput(true) end)
+end
+
 function _M:defineHotkey(id)
 	if not self.actor or not self.actor.hotkey then return end
 

@@ -75,6 +75,10 @@ Word travels fast in Maj'Eyal, and if %s is a summon all future summons of the s
 	}
 end
 
+function _M:on_register()
+	game:onTickEnd(function() self.key:unicodeInput(true) end)
+end
+
 function _M:use(item)
 	if not item then return end
 
