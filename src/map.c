@@ -55,6 +55,8 @@ static int map_object_new(lua_State *L)
 
 	obj->move_max = 0;
 
+	obj->closed = FALSE;
+
 	obj->cb_ref = LUA_NOREF;
 
 	obj->mm_r = -1;
@@ -85,6 +87,8 @@ static int map_object_free(lua_State *L)
 {
 	map_object *obj = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 1);
 	int i;
+
+	obj->closed = TRUE;
 
 	for (i = 0; i < obj->nb_textures; i++)
 		if (obj->textures_ref[i] != LUA_NOREF)
@@ -1085,6 +1089,8 @@ void display_map_quad(GLuint *cur_tex, int *vert_idx, int *col_idx, map_type *ma
 	GLfloat *colors = map->colors;
 	GLfloat *texcoords = map->texcoords;
 
+	if (m->closed) exit(2);
+
 	/********************************************************
 	 ** Select the color to use
 	 ********************************************************/
@@ -1207,6 +1213,7 @@ void display_map_quad(GLuint *cur_tex, int *vert_idx, int *col_idx, map_type *ma
 	dm = m;
 	while (dm)
 	{
+		if (dm->closed) exit(3);
 		tglBindTexture(GL_TEXTURE_2D, dm->textures[0]);
 		DO_QUAD(dm, dx + (dm->dx + animdx) * map->tile_w, dy + (dm->dy + animdy) * map->tile_h, dm->dw, dm->dh, dm->scale, r, g, b, a, m->next);
 		dm->animdx = animdx;
