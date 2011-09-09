@@ -82,6 +82,15 @@ function _M:replaceAll(level)
 	-- In-place entities edition, now this is becoming tricky, but powerful
 	for i, jj in pairs(self.edits) do for j, ee in pairs(jj) do
 		local g = level.map(i, j, Map.TERRAIN)
+		if g.__nice_tile_base then
+			local base = g.__nice_tile_base
+			g = base:clone()
+			g:removeAllMOs()
+			g.__nice_tile_base = base
+		else
+			g.__nice_tile_base = g:clone()
+			g.__nice_tile_base:removeAllMOs()
+		end
 
 		local id = {g.name or "???"}
 		for __, e in ipairs(ee) do

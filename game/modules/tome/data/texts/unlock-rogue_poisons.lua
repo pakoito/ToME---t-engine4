@@ -25,7 +25,7 @@ You have made a deal with such a person and can now create new Rogue characters 
 
 Talents:
 - #YELLOW#Vile Poisons: #WHITE#Learn new dangerous and terrible poisons to coat your weapons with, infecting your foes
-- #YELLOW#Venomous Blow: #WHITE#A terrible strike that deals increased nature damage based on the number of poison effects
+- #YELLOW#Venomous Strike: #WHITE#A terrible strike that deals increased nature damage based on the number of poison effects
 - #YELLOW#Empower Poisons: #WHITE#Learn to make your poisons even more lethal and fast
 - #YELLOW#Toxic Death: #WHITE#Spread the toxic joy to your foe's friends!
 ]]
