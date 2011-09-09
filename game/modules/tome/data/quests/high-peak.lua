@@ -121,8 +121,9 @@ function win(self, how)
 	elseif how == "yeek-sacrifice" then world:gainAchievement("YEEK_SACRIFICE", game.player)
 	end
 
-	game.player.winner = how
-	game:registerDialog(require("engine.dialogs.ShowText").new("Winner", "win", {playername=game.player.name, how=how}, game.w * 0.6))
+	local p = game:getPlayer(true)
+	p.winner = how
+	game:registerDialog(require("engine.dialogs.ShowText").new("Winner", "win", {playername=p.name, how=how}, game.w * 0.6))
 end
 
 function onWin(self, who)
