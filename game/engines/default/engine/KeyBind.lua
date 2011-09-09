@@ -210,6 +210,8 @@ function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode, isup, key, ismouse)
 
 	self:handleStatus(sym, ctrl, shift, alt, meta, unicode, isup)
 
+	if self.ignore[sym] then return end
+
 	if self.any_key then self.any_key(sym, ctrl, shift, alt, meta, unicode, isup, key) end
 
 	local ks, us

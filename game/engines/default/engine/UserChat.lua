@@ -69,7 +69,9 @@ function _M:filterMessage(item)
 end
 
 function _M:addMessage(kind, channel, login, name, msg, extra_data, no_change)
-	local item = {kind=kind, login=login, name=name, msg=msg, extra_data=extra_data, timestamp=core.game.getTime()}
+	local color_name = colors.WHITE
+	if type(name) == "table" then name, color_name = name[1], name[2] end
+	local item = {kind=kind, login=login, name=name, color_name=color_name, msg=msg, extra_data=extra_data, timestamp=core.game.getTime()}
 	if self:filterMessage(item) then return end
 	if self.uc_ext and self.uc_ext.filterMessage then
 		if self.uc_ext:filterMessage(item) then return end
@@ -94,50 +96,72 @@ end
 function _M:event(e)
 	if e.se == "Talk" then
 		e.msg = e.msg:removeColorCodes()
+		local color = colors.WHITE
+		if e.donator == "oneshot" then color = colors.LIGHT_GREEN
+		elseif e.donator == "recurring" then color = colors.LIGHT_BLUE end
 
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
-		self:addMessage("talk", e.channel, e.login, e.name, e.msg)
+		self:addMessage("talk", e.channel, e.login, {e.name, color}, e.msg)
 
 		if type(game) == "table" and game.logChat and self.cur_channel == e.channel then
 			game.logChat("#YELLOW#<%s> %s", e.name, e.msg)
 		end
 	elseif e.se == "Whisper" then
 		e.msg = e.msg:removeColorCodes()
+		local color = colors.WHITE
+		if e.donator == "oneshot" then color = colors.LIGHT_GREEN
+		elseif e.donator == "recurring" then color = colors.LIGHT_BLUE end
 
 		self.channels[self.cur_channel] = self.channels[self.cur_channel] or {users={}, log={}}
-		self:addMessage("whisper", self.cur_channel, e.login, e.name, "#GOLD#<whisper> #LAST#"..e.msg)
+		self:addMessage("whisper", self.cur_channel, e.login, {e.name, color}, "#GOLD#<whisper> #LAST#"..e.msg)
 
 		if type(game) == "table" and game.logChat then
 			game.logChat("#GOLD#<Whisper from %s> %s", e.name, e.msg)
 		end
 	elseif e.se == "Achievement" then
 		e.msg = e.msg:removeColorCodes()
+		local color = colors.WHITE
+		if e.donator == "oneshot" then color = colors.LIGHT_GREEN
+		elseif e.donator == "recurring" then color = colors.LIGHT_BLUE end
 
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
-		self:addMessage("achievement", e.channel, e.login, e.name, "#{italic}##LIGHT_BLUE#has earned the achievement <"..e.msg..">#{normal}#", nil, true)
+		self:addMessage("achievement", e.channel, e.login, {e.name, color}, "#{italic}##LIGHT_BLUE#has earned the achievement <"..e.msg..">#{normal}#", nil, true)
 
 		if type(game) == "table" and game.logChat and self.cur_channel == e.channel then
 			game.logChat("#LIGHT_BLUE#%s has earned the achievement <%s>", e.name, e.msg)
 		end
 	elseif e.se == "SerialData" then
+		local color = colors.WHITE
+		if e.donator == "oneshot" then color = colors.LIGHT_GREEN
+		elseif e.donator == "recurring" then color = colors.LIGHT_BLUE end
+		e.color_name = color
+
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
 		if self.uc_ext then
 			self.uc_ext:event(e)
 		end
 	elseif e.se == "Join" then
+		local color = colors.WHITE
+		if e.donator == "oneshot" then color = colors.LIGHT_GREEN
+		elseif e.donator == "recurring" then color = colors.LIGHT_BLUE end
+
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
-		self.channels[e.channel].users[e.login] = {name=e.name, login=e.login}
+		self.channels[e.channel].users[e.login] = {name=e.name, donator=e.donator, login=e.login}
 		self.channels_changed = true
-		self:addMessage("join", e.channel, e.login, e.name, "#{italic}##FIREBRICK#has joined the channel#{normal}#", nil, true)
+		self:addMessage("join", e.channel, e.login, {e.name, color}, "#{italic}##FIREBRICK#has joined the channel#{normal}#", nil, true)
 		if type(game) == "table" and game.logChat and e.channel == self.cur_channel then
 			game.logChat("#{italic}##FIREBRICK#%s has joined channel %s (press space to talk).#{normal}#", e.login, e.channel)
 		end
 		self:updateChanList()
 	elseif e.se == "Part" then
+		local color = colors.WHITE
+		if e.donator == "oneshot" then color = colors.LIGHT_GREEN
+		elseif e.donator == "recurring" then color = colors.LIGHT_BLUE end
+
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
 		self.channels[e.channel].users[e.login] = nil
 		self.channels_changed = true
-		self:addMessage("join", e.channel, e.login, e.name, "#{italic}##FIREBRICK#has left the channel#{normal}#", nil, true)
+		self:addMessage("join", e.channel, e.login, {e.name, color}, "#{italic}##FIREBRICK#has left the channel#{normal}#", nil, true)
 		if type(game) == "table" and game.logChat and e.channel == self.cur_channel then
 			game.logChat("#{italic}##FIREBRICK#%s has left channel %s.#{normal}#", e.login, e.channel)
 		end
@@ -154,6 +178,7 @@ function _M:event(e)
 			self.channels[e.channel].users[user.login] = {
 				login=user.login,
 				name=user.name,
+				donator=user.donator,
 				current_char=user.current_char and user.current_char.title or "unknown",
 				module=user.current_char and user.current_char.module or "unknown",
 				valid=user.current_char and user.current_char.valid and "validate" or "not validated",
@@ -434,7 +459,8 @@ function _M:display()
 	local old_style = self.font:getStyle()
 	for z = 1 + self.scroll, #log do
 		local stop = false
-		local tstr = ("<%s> %s"):format(log[z].name, log[z].msg):toTString()
+		local tstr = tstring{"<", {"color",unpack(colors.simple(log[z].color_name))}, log[z].name, {"color", "LAST"}, "> "}
+		tstr:merge(log[z].msg:toTString())
 		local gen = tstring.makeLineTextures(tstr, self.w, self.font_mono)
 		for i = #gen, 1, -1 do
 			gen[i].login = log[z].login

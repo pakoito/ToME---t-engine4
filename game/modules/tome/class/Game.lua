@@ -1461,6 +1461,12 @@ function _M:setupMouse(reset)
 		if not item or not user or item.faded == 0 then self.mouse:delegate(button, mx, my, xrel, yrel, nil, nil, event, "playmap") return end
 
 		local str = tstring{{"color","GOLD"}, {"font","bold"}, user.name, {"color","LAST"}, {"font","normal"}, true}
+		if user.donator and user.donator ~= "none" then
+			local text, color = "Donator", colors.WHITE
+			if user.donator == "oneshot" then text, color = "Donator", colors.LIGHT_GREEN
+			elseif user.donator == "recurring" then text, color = "Recurring Donator", colors.LIGHT_BLUE end
+			str:add({"color",unpack(colors.simple(color))}, text, {"color", "LAST"}, true)
+		end
 		str:add({"color","ANTIQUE_WHITE"}, "Playing: ", {"color", "LAST"}, user.current_char, true)
 		str:add({"color","ANTIQUE_WHITE"}, "Game: ", {"color", "LAST"}, user.module, "(", user.valid, ")",true)
 

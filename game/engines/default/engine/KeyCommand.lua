@@ -29,7 +29,6 @@ function _M:init()
 	self.commands = {}
 	self.ignore = {}
 	self.on_input = false
-	self.locale_convert = {}
 
 	-- Fullscreen toggle
 	self:addCommand(self._RETURN, {"alt"}, function() core.display.fullscreen() end)
@@ -54,9 +53,6 @@ function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode, isup, key)
 	self:handleStatus(sym, ctrl, shift, alt, meta, unicode, isup)
 
 	if self.ignore[sym] then return end
-
-	-- Convert locale
-	sym = self.locale_convert[sym] or sym
 
 	local handled = false
 
@@ -160,20 +156,4 @@ end
 -- @param fct the function to call for each key, get a single parameter to pass the UTF8 string
 function _M:setTextInput(fct)
 	self.on_input = fct
-end
-
---- Loads a locale converter
--- WARNING: This only converts the "sym" key, *NOT* the unicode key
--- @param file the locale conversion file to load
-function _M:loadLocaleConversion(file)
-	local f, err = loadfile(file)
-	if not f and err then error(err) end
-	setfenv(f, setmetatable({
-		locale = config.settings.keyboard.locale,
-	}, {__index=engine.Key}))
-	conv = f() or {}
-
-	for k, e in pairs(conv) do
-		self.locale_convert[k] = e
-	end
 end

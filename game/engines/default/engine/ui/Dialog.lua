@@ -302,12 +302,12 @@ function _M:generate()
 		self.mouse:registerZone(self.display_x, self.display_y, self.w, self.h, function(...) self:mouseEvent(...) end)
 	end
 	self.key.receiveKey = function(_, ...) self:keyEvent(...) end
-	self.key:addCommand("_TAB", function(...) self.key:triggerVirtual("MOVE_DOWN") end)
-	self.key:addBinds{
-		MOVE_UP = function() self:moveFocus(-1) end,
-		MOVE_DOWN = function() self:moveFocus(1) end,
-		MOVE_LEFT = "MOVE_UP",
-		MOVE_RIGHT = "MOVE_DOWN",
+	self.key:addCommands{
+		_TAB = function() self:moveFocus(1) end,
+		_UP = function() self:moveFocus(-1) end,
+		_DOWN = function() self:moveFocus(1) end,
+		_LEFT = function() self:moveFocus(-1) end,
+		_RIGHT = function() self:moveFocus(1) end,
 	}
 end
 
