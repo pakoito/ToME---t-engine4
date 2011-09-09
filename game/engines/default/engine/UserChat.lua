@@ -265,6 +265,7 @@ function _M:findChannel(name)
 end
 
 function _M:findUser(name)
+	if not self.channels[self.cur_channel] then return end
 	for login, data in pairs(self.channels[self.cur_channel].users) do
 		if data.name:lower() == name:lower() then return data.name end
 	end
@@ -311,10 +312,12 @@ function _M:getLog(channel, extra)
 	local log = {}
 	if self.channels[channel] then
 		for _, i in ipairs(self.channels[channel].log) do
+			local tstr = tstring{"<", {"color",unpack(colors.simple(i.color_name or colors.WHITE))}, i.name, {"color", "LAST"}, "> "}
+			tstr:merge(i.msg:toTString())
 			if extra then
-				log[#log+1] = {str=("<%s> %s"):format(i.name, i.msg), src=i}
+				log[#log+1] = {str=tstr:toString(), src=i}
 			else
-				log[#log+1] = ("<%s> %s"):format(i.name, i.msg)
+				log[#log+1] = tstr:toString()
 			end
 		end
 	end
