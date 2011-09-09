@@ -129,7 +129,7 @@ end
 function onWin(self, who)
 	local desc = {}
 
-	desc[#desc+1] = "#GOLD#Well done! You have won the Tales of Maj'Eyal: the Fourth Age#WHITE#"
+	desc[#desc+1] = "#GOLD#Well done! You have won the Tales of Maj'Eyal: The Age of Ascendancy#WHITE#"
 	desc[#desc+1] = ""
 	desc[#desc+1] = "The Sorcerers are dead, and the Orc Pride lies in ruins, thanks to your efforts."
 	desc[#desc+1] = ""
