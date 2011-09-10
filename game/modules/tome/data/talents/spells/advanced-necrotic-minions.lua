@@ -76,7 +76,7 @@ local minions_list = {
 		stun_immune = 1,
 		see_invisible = resolvers.mbonus(15, 5),
 		undead = 1,
-		name = "runed bone giant", color=colors.RED,
+		name = "heavy bone giant", color=colors.RED,
 		desc = [[A towering creature, made from the bones of hundreds of dead bodies. It is covered by an unholy aura.]],
 		resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/undead_giant_heavy_bone_giant.png", display_h=2, display_y=-1}}},
 		level_range = {1, nil}, exp_worth = 0,
@@ -201,7 +201,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Minions are only tools. You may dispose of them... violently.
 		Makes the targetted minion explode for %d%% of its remaining life as blight damage.
-		Beware not to be caught in the blast!]]):
+		Beware! Don't get caught in the blast!]]):
 		format(t.getDamage(self, t))
 	end,
 }
@@ -331,7 +331,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Sacrifice a bone giant minion. Using its bones you make a temporary bone shield around you with %d charges.
+		return ([[Sacrifice a bone giant minion. Using it's bones you make a temporary bone shield around you with %d charges.
 		The effect lasts %d turns or until all charges are depleted.
 		Each charge will fully absorb one attack.]]):
 		format(t.getBones(self, t), t.getTurns(self, t))

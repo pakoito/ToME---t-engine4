@@ -150,8 +150,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Reaches through the shadows into quiter places, summoning %d harmless creatures. Those creatures are then cursed with a Curse of Hate, making all
-		hostile foes try to kill them. If killed by hostile foes you have 50%% chance to gain a soul.]]):
+		return ([[Reaches through the shadows into quiter places, summoning %d harmless creatures.
+		Those creatures are then cursed with a Curse of Hate, making all hostile foes try to kill them.
+		If killed by hostile foes you have 50%% chance to gain a soul.]]):
 		format(math.ceil(self:getTalentLevel(t)))
 	end,
 }
@@ -257,7 +258,7 @@ newTalent{
 	info = function(self, t)
 		local damageinc = t.getDarknessDamageIncrease(self, t)
 		local ressistpen = t.getResistPenalty(self, t)
-		return ([[Surround yourself with Frostdusk, increasing all your darkness and cold damage by %d%% and ignoring %d%% darkness resistance of your targets.]])
+		return ([[Surround yourself with Frostdusk, increasing all your darkness and cold damage by %d%% and ignoring %d%% of the darkness resistance of your targets.]])
 		:format(damageinc, ressistpen)
 	end,
 }
