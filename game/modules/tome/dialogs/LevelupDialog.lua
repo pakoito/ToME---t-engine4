@@ -476,7 +476,7 @@ function _M:finish()
 	end
 	for i, tid in ipairs(reset) do
 		self.actor:forceUseTalent(tid, {ignore_energy=true, ignore_cd=true, no_equilibrium_fail=true, no_paradox_fail=true})
-		self.actor:forceUseTalent(tid, {ignore_energy=true, ignore_cd=true, no_equilibrium_fail=true, no_paradox_fail=true})
+		if self.actor:knowTalent(tid) then self.actor:forceUseTalent(tid, {ignore_energy=true, ignore_cd=true, no_equilibrium_fail=true, no_paradox_fail=true}) end
 	end
 	-- Achievements checks
 	world:gainAchievement("ELEMENTALIST", self.actor)
@@ -828,7 +828,8 @@ function _M:onDrawItem(item)
 		local t = self.actor:getTalentFromId(item.talent)
 
 		if self:isUnlearnable(t, true) then
-			text:add({"color","LIGHT_BLUE"}, "This talent was recently learnt, you can still unlearn it.", true, "The last ", t.generic and "3 generic" or "4 class", " talents you learnt are always unlearnable.", {"color","LAST"}, true, true)
+			local max = tostring(self.actor:lastLearntTalentsMax(t.generic and "generic" or "class"))
+			text:add({"color","LIGHT_BLUE"}, "This talent was recently learnt, you can still unlearn it.", true, "The last ", max, t.generic and " generic" or " class", " talents you learnt are always unlearnable.", {"color","LAST"}, true, true)
 		elseif t.no_unlearn_last then
 			text:add({"color","YELLOW"}, "This talent can alter the world in a permanent way, as such you can never unlearn it once known.", {"color","LAST"}, true, true)
 		end
