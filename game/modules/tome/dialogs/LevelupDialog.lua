@@ -40,6 +40,7 @@ Class talent points left: #00FF00#%d#LAST#
 Generic talent points left: #00FF00#%d#LAST#]]
 
 function _M:init(actor, on_finish)
+	actor.no_last_learnt_talents_cap = true
 	self.actor = actor
 	self.unused_stats = self.actor.unused_stats
 	self.new_stats_changed = false
@@ -137,6 +138,12 @@ Mouse: #00FF00#Left click#FFFFFF# to increase a stat; #00FF00#right click#FFFFFF
 	else
 		self.talents:select()
 	end
+end
+
+function _M:unload()
+	self.actor.no_last_learnt_talents_cap = nil
+	self.actor:capLastLearntTalents("class")
+	self.actor:capLastLearntTalents("generic")
 end
 
 local prev_sel = nil
@@ -356,6 +363,7 @@ function _M:cancel()
 			self.actor:unlearnTalent(t_id)
 		end
 	end
+	self.actor.last_learnt_talents = self.actor_dup.last_learnt_talents
 end
 
 function _M:tabTabs()
@@ -596,6 +604,11 @@ function _M:treeSelect(item, sel, v)
 			local it = self.c_t_tree.items_by_key[tid]
 			if it then self.c_t_tree:drawItem(it) end
 		end
+		local t = self.actor:getTalentFromId(item.talent)
+		for _, tid in ipairs(self.actor.last_learnt_talents[t.generic and "generic" or "class"]) do
+			local it = self.c_t_tree.items_by_key[tid]
+			if it then self.c_t_tree:drawItem(it) end
+		end
 	end
 	self.c_t_desc:switchItem(item)
 	self.c_t_tree:outputList()
@@ -632,6 +645,18 @@ function _M:checkDeps()
 	end
 end
 
+function _M:isUnlearnable(t, limit)
+	if not self.actor.last_learnt_talents then return end
+	local list = self.actor.last_learnt_talents[t.generic and "generic" or "class"]
+	local max = self.actor:lastLearntTalentsMax(t.generic and "generic" or "class")
+	local min = 1
+	if limit then min = math.max(1, #list - (max - 1)) end
+	for i = #list, min, -1 do
+		if list[i] == t.id then return i end
+	end
+	return nil
+end
+
 function _M:learnTalent(t_id, v)
 	self.talents_learned[t_id] = self.talents_learned[t_id] or 0
 	local t = self.actor:getTalentFromId(t_id)
@@ -659,7 +684,7 @@ function _M:learnTalent(t_id, v)
 				self:simplePopup("Impossible", "You do not know this talent!")
 				return
 			end
-			if self.actor_dup:getTalentLevelRaw(t_id) == self.actor:getTalentLevelRaw(t_id) then
+			if not self:isUnlearnable(t, true) and self.actor_dup:getTalentLevelRaw(t_id) >= self.actor:getTalentLevelRaw(t_id) then
 				self:simplePopup("Impossible", "You cannot unlearn talents!")
 				return
 			end
@@ -700,7 +725,7 @@ function _M:learnTalent(t_id, v)
 				self:simplePopup("Impossible", "You do not know this talent!")
 				return
 			end
-			if self.actor_dup:getTalentLevelRaw(t_id) == self.actor:getTalentLevelRaw(t_id) then
+			if not self:isUnlearnable(t, true) and self.actor_dup:getTalentLevelRaw(t_id) >= self.actor:getTalentLevelRaw(t_id) then
 				self:simplePopup("Impossible", "You cannot unlearn talents!")
 				return
 			end
@@ -801,6 +826,13 @@ function _M:onDrawItem(item)
 
 	else
 		local t = self.actor:getTalentFromId(item.talent)
+
+		if self:isUnlearnable(t, true) then
+			text:add({"color","LIGHT_BLUE"}, "This talent was recently learnt, you can still unlearn it.", true, "The last ", t.generic and "3 generic" or "4 class", " talents you learnt are always unlearnable.", {"color","LAST"}, true, true)
+		elseif t.no_unlearn_last then
+			text:add({"color","YELLOW"}, "This talent can alter the world in a permanent way, as such you can never unlearn it once known.", {"color","LAST"}, true, true)
+		end
+
 		local traw = self.actor:getTalentLevelRaw(t.id)
 		local diff = function(i2, i1, res)
 			res:add({"color", "LIGHT_GREEN"}, i1, {"color", "LAST"}, " [->", {"color", "YELLOW_GREEN"}, i2, {"color", "LAST"}, "]")
@@ -887,7 +919,13 @@ function _M:generateList()
 						entity=t.display_entity,
 						talent=t.id,
 						_type=tt.type,
-						color=function(item) return ((self.actor.talents[item.talent] or 0) ~= (self.actor_dup.talents[item.talent] or 0)) and {255, 215, 0} or self.actor:knowTalentType(item._type) and {255,255,255} or {175,175,175} end,
+						color=function(item)
+							if ((self.actor.talents[item.talent] or 0) ~= (self.actor_dup.talents[item.talent] or 0)) then return {255, 215, 0}
+							elseif self:isUnlearnable(t, true) then return colors.simple(colors.LIGHT_BLUE)
+							elseif self.actor:knowTalentType(item._type) then return {255,255,255}
+							else return {175,175,175}
+							end
+						end,
 					}
 					list[#list].status = function(item)
 						local t = self.actor:getTalentFromId(item.talent)

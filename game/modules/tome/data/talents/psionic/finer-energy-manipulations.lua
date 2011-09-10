@@ -46,9 +46,9 @@ newTalent{
 	psi = 0,
 	points = 5,
 	no_npc_use = true,
+	no_unlearn_last = true,
 	boost = function(self, t)
 		return math.floor(self:combatTalentIntervalDamage(t, "wil", 3, 20))
-
 	end,
 	action = function(self, t)
 		local d d = self:showInventory("Reshape which weapon?", self:getInven("INVEN"), function(o) return not o.quest and o.type == "weapon" and not o.fully_reshaped end, function(o, item)
@@ -91,6 +91,7 @@ newTalent{
 	psi = 0,
 	points = 5,
 	no_npc_use = true,
+	no_unlearn_last = true,
 	arm_boost = function(self, t)
 		--return math.floor(0.1*self:combatTalentIntervalDamage(t, "wil", 10, 30))
 		return math.floor(0.25*t.fat_red(self, t))

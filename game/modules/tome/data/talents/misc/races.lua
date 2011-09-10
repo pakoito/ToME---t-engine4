@@ -800,6 +800,7 @@ newTalent{
 	name = "Knowledge of the Way",
 	type = {"base/race", 1},
 	no_npc_use = true,
+	no_unlearn_last = true,
 	on_learn = function(self, t) self.auto_id = 2 end,
 	action = function(self, t)
 		local Chat = require("engine.Chat")

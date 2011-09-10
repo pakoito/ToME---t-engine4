@@ -1076,12 +1076,10 @@ function _M:setupCommands()
 			end end
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			local list = mod.class.Trap:loadList("/data/general/traps/complex.lua")
-			local b = list[2]:clone()
-			b:resolve() b:resolve(nil, true)
-			self.zone:addEntity(self.level, b, "trap", self.player.x + 1, self.player.y)
-
-
+			print("== CLASS")
+			for i, tid in ipairs(game.player.last_learnt_talents.class) do print(i, tid) end
+			print("== GENERIC")
+			for i, tid in ipairs(game.player.last_learnt_talents.generic) do print(i, tid) end
 		end end,
 		[{"_f","ctrl"}] = function() if config.settings.cheat then
 			self.player.quests["love-melinda"] = nil

@@ -69,6 +69,7 @@ newTalent{
 	points = 5,
 	mana = 5,
 	no_npc_use = true,
+	no_unlearn_last = true,
 	action = function(self, t)
 		local d d = self:showEquipInven("Try to extract gems from which metallic item?", function(o) return o.metallic and (o.material_level or 1) <= self:getTalentLevelRaw(t) end, function(o, inven, item)
 			if not o then return end
@@ -109,6 +110,7 @@ newTalent{
 	mana = 80,
 	cooldown = 100,
 	no_npc_use = true,
+	no_unlearn_last = true,
 	action = function(self, t)
 		local d d = self:showInventory("Use which gem?", self:getInven("INVEN"), function(gem) return gem.type == "gem" and gem.imbue_powers and gem.material_level and gem.material_level <= self:getTalentLevelRaw(t) end, function(gem, gem_item)
 			local nd = self:showInventory("Imbue which armour?", self:getInven("INVEN"), function(o) return o.type == "armor" and o.slot == "BODY" and not o.been_imbued end, function(o, item)

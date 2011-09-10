@@ -54,6 +54,7 @@ local newInscription = function(t)
 		if not tt.image then
 			tt.image = "talents/"..(t.short_name or t.name):lower():gsub("[^a-z0-9_]", "_")..".png"
 		end
+		tt.no_unlearn_last = true
 		newTalent(tt)
 	end
 end

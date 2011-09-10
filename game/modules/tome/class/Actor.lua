@@ -1939,6 +1939,17 @@ function _M:canWearObject(o, try_slot)
 	return engine.interface.ActorInventory.canWearObject(self, o, try_slot)
 end
 
+function _M:lastLearntTalentsMax(what)
+	return what == "generic" and 3 or 4
+end
+
+function _M:capLastLearntTalents(what)
+	if self.no_last_learnt_talents_cap then return end
+	local list = self.last_learnt_talents[what]
+	local max = self:lastLearntTalentsMax(what)
+	while #list > max do table.remove(list, 1) end
+end
+
 --- Actor learns a talent
 -- @param t_id the id of the talent to learn
 -- @return true if the talent was learnt, nil and an error message otherwise
@@ -1947,6 +1958,12 @@ function _M:learnTalent(t_id, force, nb)
 
 	-- If we learned a spell, get mana, if you learned a technique get stamina, if we learned a wild gift, get power
 	local t = _M.talents_def[t_id]
+
+	if not t.no_unlearn_last and self.last_learnt_talents then
+		local list = t.generic and self.last_learnt_talents.generic or self.last_learnt_talents.class
+		table.insert(list, t_id)
+		self:capLastLearntTalents(t.generic and "generic" or "class")
+	end
 
 	if t.dont_provide_pool then return true end
 
@@ -2000,6 +2017,16 @@ end
 -- @return true if the talent was unlearnt, nil and an error message otherwise
 function _M:unlearnTalent(t_id)
 	if not engine.interface.ActorTalents.unlearnTalent(self, t_id, force) then return false end
+
+	local t = _M.talents_def[t_id]
+
+	if not t.no_unlearn_last and self.last_learnt_talents then
+		local list = t.generic and self.last_learnt_talents.generic or self.last_learnt_talents.class
+		for i = #list, 1, -1 do
+			if list[i] == t_id then table.remove(list, i) break end
+		end
+	end
+
 	-- Check the various pools
 	for key, num_refs in pairs(self.resource_pool_refs) do
 		if num_refs == 0 then

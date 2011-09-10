@@ -44,6 +44,7 @@ newTalent{
 	requires_target = true,
 	target = {type="hit", range=1},
 	tactical = { ATTACK = 1 },
+	no_unlearn_last = true,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
@@ -68,6 +69,7 @@ newTalent{
 	info = "Allows you to have an energy pool. Energy is used to perform psionic manipulations.",
 	mode = "passive",
 	hide = true,
+	no_unlearn_last = true,
 }
 
 newTalent{
@@ -76,6 +78,7 @@ newTalent{
 	info = "Allows you to have a mana pool. Mana is used to cast all spells.",
 	mode = "passive",
 	hide = true,
+	no_unlearn_last = true,
 }
 newTalent{
 	name = "Vim Pool",
@@ -83,6 +86,7 @@ newTalent{
 	info = "Allows you to have a vim pool. Vim is used by corruptions.",
 	mode = "passive",
 	hide = true,
+	no_unlearn_last = true,
 }
 newTalent{
 	name = "Stamina Pool",
@@ -90,6 +94,7 @@ newTalent{
 	info = "Allows you to have a stamina pool. Stamina is used to activate special combat attacks.",
 	mode = "passive",
 	hide = true,
+	no_unlearn_last = true,
 }
 newTalent{
 	name = "Equilibrium Pool",
@@ -97,6 +102,7 @@ newTalent{
 	info = "Allows you to have an equilibrium pool. Equilibrium is used to measure your balance with nature and the use of wild gifts.",
 	mode = "passive",
 	hide = true,
+	no_unlearn_last = true,
 }
 newTalent{
 	name = "Positive Pool",
@@ -104,6 +110,7 @@ newTalent{
 	info = "Allows you to have a positive energy pool.",
 	mode = "passive",
 	hide = true,
+	no_unlearn_last = true,
 }
 newTalent{
 	name = "Negative Pool",
@@ -111,6 +118,7 @@ newTalent{
 	info = "Allows you to have a negative energy pool.",
 	mode = "passive",
 	hide = true,
+	no_unlearn_last = true,
 }
 newTalent{
 	name = "Hate Pool",
@@ -118,6 +126,7 @@ newTalent{
 	info = "Allows you to have a hate pool.",
 	mode = "passive",
 	hide = true,
+	no_unlearn_last = true,
 }
 
 newTalent{
@@ -126,49 +135,7 @@ newTalent{
 	info = "Allows you to have a paradox pool.",
 	mode = "passive",
 	hide = true,
-}
-
-newTalent{
-	name = "Improved Health I",
-	type = {"base/race", 1},
-	info = "Improves the number of health points per level.",
-	mode = "passive",
-	hide = true,
-}
-newTalent{
-	name = "Improved Health II",
-	type = {"base/race", 1},
-	info = "Improves the number of health points per level.",
-	mode = "passive",
-	hide = true,
-}
-newTalent{
-	name = "Improved Health III",
-	type = {"base/race", 1},
-	info = "Improves the number of health points per level.",
-	mode = "passive",
-	hide = true,
-}
-newTalent{
-	name = "Decreased Health I",
-	type = {"base/race", 1},
-	info = "Improves the number of health points per level.",
-	mode = "passive",
-	hide = true,
-}
-newTalent{
-	name = "Decreased Health II",
-	type = {"base/race", 1},
-	info = "Improves the number of health points per level.",
-	mode = "passive",
-	hide = true,
-}
-newTalent{
-	name = "Decreased Health III",
-	type = {"base/race", 1},
-	info = "Improves the number of health points per level.",
-	mode = "passive",
-	hide = true,
+	no_unlearn_last = true,
 }
 
 -- Mages class talent, teleport to angolwen
@@ -178,6 +145,7 @@ newTalent{
 	type = {"base/class", 1},
 	cooldown = 400,
 	no_npc_use = true,
+	no_unlearn_last = true,
 	no_silence=true, is_spell=true,
 	action = function(self, t)
 		if not self:canBe("worldport") or self:attr("never_move") then
