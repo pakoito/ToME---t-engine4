@@ -49,7 +49,6 @@ newEntity{ define_as = "ASSASSIN_LORD",
 
 	desc = [[He is the leader of a gang of bandits, watch out for his men.]],
 	level_range = {8, 50}, exp_worth = 1,
-	rarity = 12,
 	combat_armor = 5, combat_def = 7,
 	max_life = resolvers.rngavg(90,100), life_rating = 14,
 	resolvers.talents{
