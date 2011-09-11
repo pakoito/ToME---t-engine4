@@ -126,13 +126,13 @@ newEntity{
 		item.wielder = item.wielder or {}
 		item.wielder.inc_stats = item.wielder.inc_stats or {}
 		item.wielder.inc_stats[Stats.STAT_WIL] = (item.wielder.inc_stats[Stats.STAT_WIL] or 0) + math.ceil(4 * power)
-		
+
 		item.wielder.inc_damage = item.wielder.inc_damage or {}
 		item.wielder.inc_damage[DamageType.DARKNESS] = (item.wielder.inc_damage[DamageType.DARKNESS] or 0) + math.ceil(8 * power)
-		
+
 		item.wielder.resists_pen = item.wielder.resists_pen or {}
 		item.wielder.resists_pen[DamageType.DARKNESS] = (item.wielder.resists_pen[DamageType.DARKNESS] or 0) + math.ceil(15 * power)
-		
+
 		item.wielder.talents_types_mastery = item.wielder.talents_types_mastery or {}
 		item.wielder.talents_types_mastery["cursed/gloom"] = math.max(item.wielder.talents_types_mastery["cursed/gloom"] or 0, math.ceil(5 * power) * 0.01)
 	end,
@@ -143,13 +143,13 @@ newEntity{
 		item.wielder = item.wielder or {}
 		item.wielder.inc_stats = item.wielder.inc_stats or {}
 		item.wielder.inc_stats[Stats.STAT_WIL] = (item.wielder.inc_stats[Stats.STAT_WIL] or 0) + math.ceil(6 * power)
-		
+
 		item.wielder.inc_damage = item.wielder.inc_damage or {}
 		item.wielder.inc_damage[DamageType.DARKNESS] = (item.wielder.inc_damage[DamageType.DARKNESS] or 0) + math.ceil(10 * power)
-		
+
 		item.wielder.resists_pen = item.wielder.resists_pen or {}
 		item.wielder.resists_pen[DamageType.DARKNESS] = (item.wielder.resists_pen[DamageType.DARKNESS] or 0) + math.ceil(20 * power)
-		
+
 		item.wielder.talents_types_mastery = item.wielder.talents_types_mastery or {}
 		item.wielder.talents_types_mastery["cursed/gloom"] = math.max(item.wielder.talents_types_mastery["cursed/gloom"] or 0, math.ceil(15 * power) * 0.01)
 	end,
@@ -160,13 +160,13 @@ newEntity{
 		item.wielder = item.wielder or {}
 		item.wielder.inc_damage = item.wielder.inc_damage or {}
 		item.wielder.inc_damage[DamageType.PHYSICAL] = (item.wielder.inc_damage[DamageType.PHYSICAL] or 0) + math.ceil(4 * power)
-		
+
 		item.wielder.resists_pen = item.wielder.resists_pen or {}
 		item.wielder.resists_pen[DamageType.PHYSICAL] = (item.wielder.resists_pen[DamageType.PHYSICAL] or 0) + math.ceil(8 * power)
-		
+
 		item.wielder.talents_types_mastery = item.wielder.talents_types_mastery or {}
 		item.wielder.talents_types_mastery["cursed/slaughter"] = math.max(item.wielder.talents_types_mastery["cursed/slaughter"] or 0, math.ceil(5 * power) * 0.01)
-		
+
 		item.wielder.talent_cd_reduction = item.wielder.talent_cd_reduction or {}
 		item.wielder.talent_cd_reduction[Talents.T_SLASH] = math.max(item.wielder.talent_cd_reduction[Talents.T_SLASH] or 0, math.ceil(2 * power))
 		item.wielder.talent_cd_reduction[Talents.T_FRENZY] = math.max(item.wielder.talent_cd_reduction[Talents.T_FRENZY] or 0, math.ceil(3 * power))
@@ -178,13 +178,13 @@ newEntity{
 		item.wielder = item.wielder or {}
 		item.wielder.inc_damage = item.wielder.inc_damage or {}
 		item.wielder.inc_damage[DamageType.PHYSICAL] = (item.wielder.inc_damage[DamageType.PHYSICAL] or 0) + math.ceil(5 * power)
-		
+
 		item.wielder.resists_pen = item.wielder.resists_pen or {}
 		item.wielder.resists_pen[DamageType.PHYSICAL] = (item.wielder.resists_pen[DamageType.PHYSICAL] or 0) + math.ceil(10 * power)
-		
+
 		item.wielder.talents_types_mastery = item.wielder.talents_types_mastery or {}
 		item.wielder.talents_types_mastery["cursed/slaughter"] = math.max(item.wielder.talents_types_mastery["cursed/slaughter"] or 0, math.ceil(15 * power) * 0.01)
-		
+
 		item.wielder.talent_cd_reduction = item.wielder.talent_cd_reduction or {}
 		item.wielder.talent_cd_reduction[Talents.T_SLASH] = math.max(item.wielder.talent_cd_reduction[Talents.T_SLASH] or 0, math.ceil(3 * power))
 		item.wielder.talent_cd_reduction[Talents.T_FRENZY] = math.max(item.wielder.talent_cd_reduction[Talents.T_FRENZY] or 0, math.ceil(5 * power))
@@ -197,11 +197,11 @@ newEntity{
 		item.combat.atk = (item.combat.atk or 0) + math.ceil(8 * power)
 		item.combat.apr = (item.combat.atk or 0) + math.ceil(8 * power)
 		item.combat.combat_physcrit = (item.combat.combat_physcrit or 0) + math.ceil(5 * power)
-		
+
 		item.wielder = item.wielder or {}
 		item.wielder.talents_types_mastery = item.wielder.talents_types_mastery or {}
 		item.wielder.talents_types_mastery["cursed/endless-hunt"] = math.max(item.wielder.talents_types_mastery["cursed/endless-hunt"] or 0, math.ceil(5 * power) * 0.01)
-		
+
 		item.wielder.talent_cd_reduction = item.wielder.talent_cd_reduction or {}
 		item.wielder.talent_cd_reduction[Talents.T_DOMINATE] = math.max(item.wielder.talent_cd_reduction[Talents.T_DOMINATE] or 0, 1)
 		item.wielder.talent_cd_reduction[Talents.T_BLINDSIDE] = math.max(item.wielder.talent_cd_reduction[Talents.T_BLINDSIDE] or 0, 1)
@@ -214,11 +214,11 @@ newEntity{
 		item.combat.atk = (item.combat.atk or 0) + math.ceil(10 * power)
 		item.combat.apr = (item.combat.atk or 0) + math.ceil(10 * power)
 		item.combat.combat_physcrit = (item.combat.combat_physcrit or 0) + math.ceil(5 * power)
-		
+
 		item.wielder = item.wielder or {}
 		item.wielder.talents_types_mastery = item.wielder.talents_types_mastery or {}
 		item.wielder.talents_types_mastery["cursed/endless-hunt"] = math.max(item.wielder.talents_types_mastery["cursed/endless-hunt"] or 0, math.ceil(15 * power) * 0.01)
-		
+
 		item.wielder.talent_cd_reduction = item.wielder.talent_cd_reduction or {}
 		item.wielder.talent_cd_reduction[Talents.T_DOMINATE] = math.max(item.wielder.talent_cd_reduction[Talents.T_DOMINATE] or 0, math.ceil(2 * power))
 		item.wielder.talent_cd_reduction[Talents.T_BLINDSIDE] = math.max(item.wielder.talent_cd_reduction[Talents.T_BLINDSIDE] or 0, math.ceil(2 * power))
@@ -228,12 +228,12 @@ newEntity{
 	name = "discord", level = 1, weighting = 3, item_type="weapon", subclass="Cursed",
 	apply = function(item, who, power)
 		item.combat = item.combat or {}
-		item.combat.physspeed = (item.combat.physspeed or 1) - (math.ceil(8 * power) * 0.1)
-		
+		item.combat.physspeed = (item.combat.physspeed or 1) - 0.1
+
 		item.wielder = item.wielder or {}
 		item.wielder.talents_types_mastery = item.wielder.talents_types_mastery or {}
 		item.wielder.talents_types_mastery["cursed/strife"] = math.max(item.wielder.talents_types_mastery["cursed/strife"] or 0, math.ceil(5 * power) * 0.01)
-		
+
 		item.wielder.talent_cd_reduction = item.wielder.talent_cd_reduction or {}
 		item.wielder.talent_cd_reduction[Talents.T_BAIT] = math.max(item.wielder.talent_cd_reduction[Talents.T_BAIT] or 0, 1)
 		item.wielder.talent_cd_reduction[Talents.T_SMASH] = math.max(item.wielder.talent_cd_reduction[Talents.T_SMASH] or 0, 1)
@@ -244,12 +244,12 @@ newEntity{
 	name = "havoc", level = 2, weighting = 3, item_type="weapon", subclass="Cursed",
 	apply = function(item, who, power)
 		item.combat = item.combat or {}
-		item.combat.physspeed = (item.combat.physspeed or 1) - (math.ceil(12 * power) * 0.1)
-		
+		item.combat.physspeed = (item.combat.physspeed or 1) - 0.1
+
 		item.wielder = item.wielder or {}
 		item.wielder.talents_types_mastery = item.wielder.talents_types_mastery or {}
 		item.wielder.talents_types_mastery["cursed/strife"] = math.max(item.wielder.talents_types_mastery["cursed/strife"] or 0, math.ceil(15 * power) * 0.01)
-		
+
 		item.wielder.talent_cd_reduction = item.wielder.talent_cd_reduction or {}
 		item.wielder.talent_cd_reduction[Talents.T_BAIT] = math.max(item.wielder.talent_cd_reduction[Talents.T_BAIT] or 0, math.ceil(2 * power))
 		item.wielder.talent_cd_reduction[Talents.T_SMASH] = math.max(item.wielder.talent_cd_reduction[Talents.T_SMASH] or 0, math.ceil(2 * power))
@@ -263,10 +263,10 @@ newEntity{
 	apply = function(item, who, power)
 		item.wielder.inc_damage = item.wielder.inc_damage or {}
 		item.wielder.inc_damage[DamageType.PHYSICAL] = (item.wielder.inc_damage[DamageType.PHYSICAL] or 0) + math.ceil(8 * power)
-		
+
 		item.wielder.resists_pen = item.wielder.resists_pen or {}
 		item.wielder.resists_pen[DamageType.PHYSICAL] = (item.wielder.resists_pen[DamageType.PHYSICAL] or 0) + math.ceil(15 * power)
-		
+
 		item.wielder.talents_types_mastery = item.wielder.talents_types_mastery or {}
 		item.wielder.talents_types_mastery["cursed/force-of-will"] = math.max(item.wielder.talents_types_mastery["cursed/force-of-will"] or 0, math.ceil(5 * power) * 0.01)
 	end,
@@ -277,10 +277,10 @@ newEntity{
 		item.wielder = item.wielder or {}
 		item.wielder.inc_damage = item.wielder.inc_damage or {}
 		item.wielder.inc_damage[DamageType.PHYSICAL] = (item.wielder.inc_damage[DamageType.PHYSICAL] or 0) + math.ceil(10 * power)
-		
+
 		item.wielder.resists_pen = item.wielder.resists_pen or {}
 		item.wielder.resists_pen[DamageType.PHYSICAL] = (item.wielder.resists_pen[DamageType.PHYSICAL] or 0) + math.ceil(20 * power)
-		
+
 		item.wielder.talents_types_mastery = item.wielder.talents_types_mastery or {}
 		item.wielder.talents_types_mastery["cursed/force-of-will"] = math.max(item.wielder.talents_types_mastery["cursed/force-of-will"] or 0, math.ceil(15 * power) * 0.01)
 	end,
@@ -291,13 +291,13 @@ newEntity{
 		item.wielder = item.wielder or {}
 		item.wielder.inc_damage = item.wielder.inc_damage or {}
 		item.wielder.inc_damage[DamageType.DARKNESS] = (item.wielder.inc_damage[DamageType.DARKNESS] or 0) + math.ceil(8 * power)
-		
+
 		item.wielder.resists_pen = item.wielder.resists_pen or {}
 		item.wielder.resists_pen[DamageType.DARKNESS] = (item.wielder.resists_pen[DamageType.DARKNESS] or 0) + math.ceil(15 * power)
-		
+
 		item.wielder.talents_types_mastery = item.wielder.talents_types_mastery or {}
 		item.wielder.talents_types_mastery["cursed/darkness"] = math.max(item.wielder.talents_types_mastery["cursed/darkness"] or 0, math.ceil(5 * power) * 0.01)
-		
+
 		item.wielder.talent_cd_reduction = item.wielder.talent_cd_reduction or {}
 		item.wielder.talent_cd_reduction[Talents.T_CREEPING_DARKNESS] = math.max(item.wielder.talent_cd_reduction[Talents.T_CREEPING_DARKNESS] or 0, math.ceil(3 * power))
 		item.wielder.talent_cd_reduction[Talents.T_DARK_TORRENT] = math.max(item.wielder.talent_cd_reduction[Talents.T_DARK_TORRENT] or 0, 1)
@@ -309,13 +309,13 @@ newEntity{
 		item.wielder = item.wielder or {}
 		item.wielder.inc_damage = item.wielder.inc_damage or {}
 		item.wielder.inc_damage[DamageType.DARKNESS] = (item.wielder.inc_damage[DamageType.DARKNESS] or 0) + math.ceil(10 * power)
-		
+
 		item.wielder.resists_pen = item.wielder.resists_pen or {}
 		item.wielder.resists_pen[DamageType.DARKNESS] = (item.wielder.resists_pen[DamageType.DARKNESS] or 0) + math.ceil(20 * power)
-		
+
 		item.wielder.talents_types_mastery = item.wielder.talents_types_mastery or {}
 		item.wielder.talents_types_mastery["cursed/darkness"] = math.max(item.wielder.talents_types_mastery["cursed/darkness"] or 0, math.ceil(15 * power) * 0.01)
-		
+
 		item.wielder.talent_cd_reduction = item.wielder.talent_cd_reduction or {}
 		item.wielder.talent_cd_reduction[Talents.T_CREEPING_DARKNESS] = math.max(item.wielder.talent_cd_reduction[Talents.T_CREEPING_DARKNESS] or 0, math.ceil(5 * power))
 		item.wielder.talent_cd_reduction[Talents.T_DARK_TORRENT] = math.max(item.wielder.talent_cd_reduction[Talents.T_DARK_TORRENT] or 0, math.ceil(2 * power))
@@ -327,10 +327,10 @@ newEntity{
 		item.wielder = item.wielder or {}
 		item.wielder.inc_stats = item.wielder.inc_stats or {}
 		item.wielder.inc_stats[Stats.STAT_MAG] = (item.wielder.inc_stats[Stats.STAT_MAG] or 0) + math.ceil(6 * power)
-		
+
 		item.wielder.talents_types_mastery = item.wielder.talents_types_mastery or {}
 		item.wielder.talents_types_mastery["cursed/shadows"] = math.max(item.wielder.talents_types_mastery["cursed/shadows"] or 0, math.ceil(5 * power) * 0.01)
-		
+
 		item.wielder.talent_cd_reduction = item.wielder.talent_cd_reduction or {}
 		item.wielder.talent_cd_reduction[Talents.T_FOCUS_SHADOWS] = math.max(item.wielder.talent_cd_reduction[Talents.T_FOCUS_SHADOWS] or 0, 1)
 	end,
@@ -341,10 +341,10 @@ newEntity{
 		item.wielder = item.wielder or {}
 		item.wielder.inc_stats = item.wielder.inc_stats or {}
 		item.wielder.inc_stats[Stats.STAT_MAG] = (item.wielder.inc_stats[Stats.STAT_MAG] or 0) + math.ceil(8 * power)
-		
+
 		item.wielder.talents_types_mastery = item.wielder.talents_types_mastery or {}
 		item.wielder.talents_types_mastery["cursed/shadows"] = math.max(item.wielder.talents_types_mastery["cursed/shadows"] or 0, math.ceil(15 * power) * 0.01)
-		
+
 		item.wielder.talent_cd_reduction = item.wielder.talent_cd_reduction or {}
 		item.wielder.talent_cd_reduction[Talents.T_FOCUS_SHADOWS] = math.max(item.wielder.talent_cd_reduction[Talents.T_FOCUS_SHADOWS] or 0, math.ceil(2 * power))
 	end,
@@ -355,13 +355,13 @@ newEntity{
 		item.wielder = item.wielder or {}
 		item.wielder.inc_damage = item.wielder.inc_damage or {}
 		item.wielder.inc_damage[DamageType.MIND] = (item.wielder.inc_damage[DamageType.MIND] or 0) + math.ceil(8 * power)
-		
+
 		item.wielder.resists_pen = item.wielder.resists_pen or {}
 		item.wielder.resists_pen[DamageType.MIND] = (item.wielder.resists_pen[DamageType.MIND] or 0) + math.ceil(15 * power)
-		
+
 		item.wielder.talents_types_mastery = item.wielder.talents_types_mastery or {}
 		item.wielder.talents_types_mastery["cursed/punishments"] = math.max(item.wielder.talents_types_mastery["cursed/punishments"] or 0, math.ceil(5 * power) * 0.01)
-		
+
 		item.wielder.talent_cd_reduction = item.wielder.talent_cd_reduction or {}
 		item.wielder.talent_cd_reduction[Talents.T_REPROACH] = math.max(item.wielder.talent_cd_reduction[Talents.T_REPROACH] or 0, 1)
 		item.wielder.talent_cd_reduction[Talents.T_HATEFUL_WHISPER] = math.max(item.wielder.talent_cd_reduction[Talents.T_HATEFUL_WHISPER] or 0, math.ceil(2 * power))
@@ -373,13 +373,13 @@ newEntity{
 		item.wielder = item.wielder or {}
 		item.wielder.inc_damage = item.wielder.inc_damage or {}
 		item.wielder.inc_damage[DamageType.MIND] = (item.wielder.inc_damage[DamageType.MIND] or 0) + (10 * power)
-		
+
 		item.wielder.resists_pen = item.wielder.resists_pen or {}
 		item.wielder.resists_pen[DamageType.MIND] = (item.wielder.resists_pen[DamageType.MIND] or 0) + (20 * power)
-		
+
 		item.wielder.talents_types_mastery = item.wielder.talents_types_mastery or {}
 		item.wielder.talents_types_mastery["cursed/punishments"] = math.max(item.wielder.talents_types_mastery["cursed/punishments"] or 0, math.ceil(15 * power) * 0.01)
-		
+
 		item.wielder.talent_cd_reduction = item.wielder.talent_cd_reduction or {}
 		item.wielder.talent_cd_reduction[Talents.T_REPROACH] = math.max(item.wielder.talent_cd_reduction[Talents.T_REPROACH] or 0, 1)
 		item.wielder.talent_cd_reduction[Talents.T_HATEFUL_WHISPER] = math.max(item.wielder.talent_cd_reduction[Talents.T_HATEFUL_WHISPER] or 0, math.ceil(3 * power))
@@ -391,13 +391,13 @@ newEntity{
 		item.wielder = item.wielder or {}
 		item.wielder.inc_damage = item.wielder.inc_damage or {}
 		item.wielder.inc_damage[DamageType.ARCANE] = (item.wielder.inc_damage[DamageType.ARCANE] or 0) + (8 * power)
-		
+
 		item.wielder.resists_pen = item.wielder.resists_pen or {}
 		item.wielder.resists_pen[DamageType.ARCANE] = (item.wielder.resists_pen[DamageType.ARCANE] or 0) + (15 * power)
-		
+
 		item.wielder.talents_types_mastery = item.wielder.talents_types_mastery or {}
 		item.wielder.talents_types_mastery["cursed/primal-magic"] = math.max(item.wielder.talents_types_mastery["cursed/primal-magic"] or 0, math.ceil(5 * power) * 0.01)
-		
+
 		item.wielder.talent_cd_reduction = item.wielder.talent_cd_reduction or {}
 		item.wielder.talent_cd_reduction[Talents.T_ARCANE_BOLTS] = math.max(item.wielder.talent_cd_reduction[Talents.T_ARCANE_BOLTS] or 0, 1)
 		item.wielder.talent_cd_reduction[Talents.T_VAPORIZE] = math.max(item.wielder.talent_cd_reduction[Talents.T_VAPORIZE] or 0, math.ceil(5 * power))
@@ -409,13 +409,13 @@ newEntity{
 		item.wielder = item.wielder or {}
 		item.wielder.inc_damage = item.wielder.inc_damage or {}
 		item.wielder.inc_damage[DamageType.ARCANE] = (item.wielder.inc_damage[DamageType.ARCANE] or 0) + (10 * power)
-		
+
 		item.wielder.resists_pen = item.wielder.resists_pen or {}
 		item.wielder.resists_pen[DamageType.ARCANE] = (item.wielder.resists_pen[DamageType.ARCANE] or 0) + (20 * power)
-		
+
 		item.wielder.talents_types_mastery = item.wielder.talents_types_mastery or {}
 		item.wielder.talents_types_mastery["cursed/primal-magic"] = math.max(item.wielder.talents_types_mastery["cursed/primal-magic"] or 0, math.ceil(15 * power) * 0.01)
-		
+
 		item.wielder.talent_cd_reduction = item.wielder.talent_cd_reduction or {}
 		item.wielder.talent_cd_reduction[Talents.T_ARCANE_BOLTS] = math.max(item.wielder.talent_cd_reduction[Talents.T_ARCANE_BOLTS] or 0, math.ceil(3 * power))
 		item.wielder.talent_cd_reduction[Talents.T_VAPORIZE] = math.max(item.wielder.talent_cd_reduction[Talents.T_VAPORIZE] or 0, math.ceil(10 * power))
