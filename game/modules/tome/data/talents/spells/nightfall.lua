@@ -108,7 +108,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[Dark fumes erupts from the ground for 5 turns. Any creature entering the circle will receive either a bane of confusion or a bane of blindness.
-		Only one bane can effect a creature.
+		Only one bane can affect a creature.
 		Banes last for %d turns and also deal %0.2f darkness damage.
 		The damage will increase with the Magic stat]]):
 		format(4 + math.floor(self:getTalentLevel(t) / 2), damDesc(self, DamageType.DARKNESS, damage))

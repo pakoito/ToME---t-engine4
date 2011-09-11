@@ -65,7 +65,7 @@ newTalent{
 		return ([[Chant the glory of the sun, granting you %d physical and spell save.
 		In addition it surrounds you with a shield of light, damaging anything that attacks you for %0.2f light damage.
 		You may only have one Chant active at once.
-		The resistance and damage will increase with the Magic stat]]):
+		The saves and damage will increase with the Magic stat]]):
 		format(saves, damDesc(self, DamageType.LIGHT, damageonmeleehit))
 	end,
 }

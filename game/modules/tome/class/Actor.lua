@@ -244,6 +244,8 @@ end
 function _M:actBase()
 	self.energyBase = self.energyBase - game.energy_to_act
 
+	if self:attr("no_timeflow") then return end
+
 	if self:isTalentActive (self.T_DARKEST_LIGHT) and self.positive > self.negative then
 		self:forceUseTalent(self.T_DARKEST_LIGHT, {ignore_energy=true})
 		game.logSeen(self, "%s's darkness can no longer hold back the light!", self.name:capitalize())

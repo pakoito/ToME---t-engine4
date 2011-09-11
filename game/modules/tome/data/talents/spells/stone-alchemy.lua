@@ -76,7 +76,7 @@ newTalent{
 			self:removeObject(inven, item)
 
 			local level = o.material_level or 1
-			local gem = game.zone:makeEntity(game.level, "object", {type="gem", special=function(e) return not e.unique and e.material_level == level end}, nil, true)
+			local gem = game.zone:makeEntity(game.level, "object", {ingore_material_restriction=true, type="gem", special=function(e) return not e.unique and e.material_level == level end}, nil, true)
 			if gem then
 				self:addObject(self.INVEN_INVEN, gem)
 				game.logPlayer(self, "You extract: %s", gem:getName{do_color=true, do_count=true})

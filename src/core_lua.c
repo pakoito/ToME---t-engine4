@@ -953,7 +953,7 @@ static int gl_draw_quad(lua_State *L)
 	}
 	else
 	{
-		tfglBindTexture(GL_TEXTURE_2D, 0);
+		tfglBindTexture(GL_TEXTURE_2D, gl_tex_white);
 	}
 
 	GLfloat texcoords[2*4] = {
@@ -1010,7 +1010,7 @@ static int gl_draw_quad_part(lua_State *L)
 	}
 	else
 	{
-		tfglBindTexture(GL_TEXTURE_2D, 0);
+		tfglBindTexture(GL_TEXTURE_2D, gl_tex_white);
 	}
 
 	if (angle < 0) angle = 0;
