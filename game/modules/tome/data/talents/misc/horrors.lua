@@ -41,7 +41,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
 		local hit = self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 1, 1.7), true)
 		if hit then
@@ -71,20 +71,20 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > self:getTalentRange(t) then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > self:getTalentRange(t) then return nil end
 
-		local l = line.new(self.x, self.y, x, y)
-		local lx, ly = l()
-		local tx, ty = lx, ly
-		lx, ly = l()
+		local block_actor = function(_, bx, by) return game.level.map:checkEntity(bx, by, Map.TERRAIN, "block_move", self) end
+		local l = self:lineFOV(x, y, block_actor)
+		local lx, ly, is_corner_blocked = l:step(block_actor)
+		local tx, ty, _ = lx, ly
 		while lx and ly do
-			if game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move", self) then break end
+			if is_corner_blocked or block_actor(_, lx, ly) then break end
 			tx, ty = lx, ly
-			lx, ly = l()
+			lx, ly, is_corner_blocked = l:step(block_actor)
 		end
 
 		-- Find space
-		if game.level.map:checkEntity(tx, ty, Map.TERRAIN, "block_move", self) then return nil end
+		if block_actor(_, tx, ty) then return nil end
 		local fx, fy = util.findFreeGrid(tx, ty, 5, true, {[Map.ACTOR]=true})
 		if not fx then
 			return
@@ -136,7 +136,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		local hit = self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.5, 1), true)
 
 		if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 8 - self:getTalentLevel(t) / 2) and target:canBe("cut") then
@@ -364,7 +364,7 @@ newTalent{
 		if not target then return nil end
 
 		if target:checkHit(self:combatMindpower(), target:combatMentalResist(), 0, 95, 15) and target:canBe("fear") then
-			target:setEffect(target.EFF_VOID_ECHOES, 6, {src= self, power=t.getDamage(self, t)})
+			target:setEffect(target.EFF_VOID_ECHOES, 6, {src=self, power=t.getDamage(self, t)})
 		else
 			game.logSeen(target, "%s resists the void!", target.name:capitalize())
 		end
@@ -511,3 +511,4 @@ newTalent{
 		return ([[A terrible rotting disease that removes a beneficial physical effect and deals acid and blight damage each turn.  If not cleared after a full five turn duration it will inflict extra damage and spawn a carrion worm mass.]])
 	end,
 }
+

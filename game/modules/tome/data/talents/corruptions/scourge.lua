@@ -37,7 +37,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
 		local speed1, hit1 = self:attackTargetWith(target, weapon.combat, nil, self:combatTalentWeaponDamage(t, 0.8, 1.6))
 		local speed2, hit2 = self:attackTargetWith(target, offweapon.combat, nil, self:getOffHandMult(self:combatTalentWeaponDamage(t, 0.8, 1.6)))
@@ -119,7 +119,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
 		local speed1, hit1 = self:attackTargetWith(target, weapon.combat, DamageType.ACID, self:combatTalentWeaponDamage(t, 0.8, 1.6))
 		local speed2, hit2 = self:attackTargetWith(target, offweapon.combat, DamageType.ACID, self:getOffHandMult(self:combatTalentWeaponDamage(t, 0.8, 1.6)))
@@ -161,7 +161,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
 		local speed1, hit1 = self:attackTargetWith(target, weapon.combat, DamageType.DARKNESS, self:combatTalentWeaponDamage(t, 0.6, 1.4))
 
@@ -181,3 +181,4 @@ newTalent{
 		format(100 * self:combatTalentWeaponDamage(t, 0.6, 1.4), 100 * self:combatTalentWeaponDamage(t, 0.6, 1.4))
 	end,
 }
+

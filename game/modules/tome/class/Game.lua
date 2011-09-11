@@ -1494,7 +1494,7 @@ function _M:mouseLeftClick(mx, my)
 	local t = p:getTalentFromId(p.auto_shoot_talent)
 	if not t then return end
 
-	local target_dist = math.floor(core.fov.distance(p.x, p.y, a.x, a.y))
+	local target_dist = core.fov.distance(p.x, p.y, a.x, a.y)
 
 	if p:enoughEnergy() and p:reactionToward(a) < 0 and not p:isTalentCoolingDown(t) and p:preUseTalent(t, true, true) and target_dist <= p:getTalentRange(t) and p:canProject({type="hit"}, a.x, a.y) then
 		p:useTalent(t.id, nil, nil, nil, a)
@@ -1512,7 +1512,7 @@ function _M:mouseMiddleClick(mx, my)
 	local t = p:getTalentFromId(p.auto_shoot_midclick_talent)
 	if not t then return end
 
-	local target_dist = math.floor(core.fov.distance(p.x, p.y, a.x, a.y))
+	local target_dist = core.fov.distance(p.x, p.y, a.x, a.y)
 
 	if p:enoughEnergy() and p:reactionToward(a) < 0 and not p:isTalentCoolingDown(t) and p:preUseTalent(t, true, true) and target_dist <= p:getTalentRange(t) and p:canProject({type="hit"}, a.x, a.y) then
 		p:useTalent(t.id, nil, nil, nil, a)
@@ -1858,3 +1858,4 @@ function _M:mouseIcon(bx, by)
 		self:tooltipDisplayAtMap(self.w, self.h, "Show message/chat log (#{bold}##GOLD#ctrl+m#LAST##{normal}#)")
 	end
 end
+

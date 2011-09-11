@@ -526,7 +526,7 @@ newEffect{
 		eff.tmpid = self:addTemporaryValue("never_move", 1)
 	end,
 	on_timeout = function(self, eff)
-		if math.floor(core.fov.distance(self.x, self.y, eff.src.x, eff.src.y)) > 1 or eff.src.dead or not game.level:hasEntity(eff.src) then
+		if core.fov.distance(self.x, self.y, eff.src.x, eff.src.y) > 1 or eff.src.dead or not game.level:hasEntity(eff.src) then
 			return true
 		end
 		self:suffocate(eff.power, eff.src, (" was constricted to death by %s."):format(eff.src.unique and eff.src.name or eff.src.name:a_an()))
@@ -2718,7 +2718,7 @@ newEffect{
 	long_desc = function(self, eff) return ("Increases the effectiveness of all healing the target receives by %d%%."):format(eff.power * 100) end,
 	type = "magical",
 	status = "beneficial",
-	parameters = { power= 0.1 },
+	parameters = { power = 0.1 },
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("healing_factor", eff.power)
 	end,
@@ -3322,12 +3322,12 @@ newEffect{
 	on_lose = function(self, err) return "#Target# has regained its natural age.", "-Turn Back the Clock" end,
 	activate = function(self, eff)
 		eff.stat = self:addTemporaryValue("inc_stats", {
-				[Stats.STAT_STR] =-eff.power,
-				[Stats.STAT_DEX] =-eff.power,
-				[Stats.STAT_CON] =-eff.power,
-				[Stats.STAT_MAG] =-eff.power,
-				[Stats.STAT_WIL] =-eff.power,
-				[Stats.STAT_CUN] =-eff.power,
+				[Stats.STAT_STR] = -eff.power,
+				[Stats.STAT_DEX] = -eff.power,
+				[Stats.STAT_CON] = -eff.power,
+				[Stats.STAT_MAG] = -eff.power,
+				[Stats.STAT_WIL] = -eff.power,
+				[Stats.STAT_CUN] = -eff.power,
 		})
 		-- Make sure the target doesn't have more life then it should
 		if self.life > self.max_life then
@@ -3775,7 +3775,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# has released the hold.", "-Grappling" end,
 	on_timeout = function(self, eff)
 		local p = eff.trgt:hasEffect(eff.trgt.EFF_GRAPPLED)
-		if not p or p.src ~= self or math.floor(core.fov.distance(self.x, self.y, eff.trgt.x, eff.trgt.y)) > 1 or eff.trgt.dead or not game.level:hasEntity(eff.trgt) then
+		if not p or p.src ~= self or core.fov.distance(self.x, self.y, eff.trgt.x, eff.trgt.y) > 1 or eff.trgt.dead or not game.level:hasEntity(eff.trgt) then
 			self:removeEffect(self.EFF_GRAPPLING)
 		end
 	end,
@@ -3804,7 +3804,7 @@ newEffect{
 		eff.atk = self:addTemporaryValue("combat_atk", -eff.power)
 	end,
 	on_timeout = function(self, eff)
-		if math.floor(core.fov.distance(self.x, self.y, eff.src.x, eff.src.y)) > 1 or eff.src.dead or not game.level:hasEntity(eff.src) then
+		if core.fov.distance(self.x, self.y, eff.src.x, eff.src.y) > 1 or eff.src.dead or not game.level:hasEntity(eff.src) then
 			self:removeEffect(self.EFF_GRAPPLED)
 		end
 	end,
@@ -3994,8 +3994,8 @@ newEffect{
 	end,
 	activate = function(self, eff)
 		eff.cur_inc = eff.inc
-		eff.tmpid= self:addTemporaryValue("resists", {
-			[DamageType.PHYSICAL]= eff.inc,
+		eff.tmpid = self:addTemporaryValue("resists", {
+			[DamageType.PHYSICAL] = eff.inc,
 		})
 	end,
 	deactivate = function(self, eff)
@@ -4024,7 +4024,7 @@ newEffect{
 	end,
 	on_timeout = function(self, eff)
 		local severed = false
-		if math.floor(core.fov.distance(self.x, self.y, eff.src.x, eff.src.y)) >= eff.free or eff.src.dead or not game.level:hasEntity(eff.src) then severed = true end
+		if core.fov.distance(self.x, self.y, eff.src.x, eff.src.y) >= eff.free or eff.src.dead or not game.level:hasEntity(eff.src) then severed = true end
 		if rng.percent(eff.free_chance) then severed = true end
 
 		if severed then
@@ -4325,7 +4325,7 @@ newEffect{
 	activate = function(self, eff)
 		eff.cur_power = eff.power
 		eff.rstid = self:addTemporaryValue("resists", { all = eff.power})
-		eff.dmgid = self:addTemporaryValue("inc_damage", {all= -10})
+		eff.dmgid = self:addTemporaryValue("inc_damage", {all = -10})
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("resists", eff.rstid)
@@ -4496,7 +4496,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is free from the abyss.", "-Abyssal Shroud" end,
 	activate = function(self, eff)
 		eff.liteid = self:addTemporaryValue("lite", -eff.lite)
-		eff.darkid = self:addTemporaryValue("resists", {	[DamageType.DARKNESS]= - eff.power })
+		eff.darkid = self:addTemporaryValue("resists", { [DamageType.DARKNESS] = -eff.power })
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("lite", eff.liteid)
@@ -4615,3 +4615,4 @@ newEffect{
 		self:removeTemporaryValue("die_at", eff.dieatid)
 	end,
 }
+

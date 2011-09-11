@@ -89,7 +89,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
 		local nb = 0
 		for eff_id, p in pairs(target.tmp) do
@@ -130,7 +130,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
 		local mod = (100 + self:combatTalentStatDamage(t, "cun", 40, 250)) / 100
 		for eff_id, p in pairs(target.tmp) do
@@ -380,3 +380,4 @@ newTalent{
 		format(damDesc(self, DamageType.NATURE, t.getDOT(self, t)), t.getDuration(self, t), t.getEffect(self, t))
 	end,
 }
+

@@ -82,9 +82,23 @@ function _M:display(dispx, dispy)
 	if not self.active then return end
 
 	local s = self.sb
-	local l = line.new(self.source_actor.x, self.source_actor.y, self.target.x, self.target.y)
-	local lx, ly = l()
-	local initial_dir = lx and coord_to_dir[lx - self.source_actor.x][ly - self.source_actor.y] or 5
+	local l
+	if self.target_type.source_actor.lineFOV then
+		l = self.target_type.source_actor:lineFOV(self.target.x, self.target.y)
+	else
+		l = core.fov.line(self.source_actor.x, self.source_actor.y, self.target.x, self.target.y)
+	end
+	local block_corner = function(_, bx, by)
+		if self.target_type.block_path then
+			local b, h, hr = self.target_type:block_path(bx, by, true)
+			return b and h and not hr
+		else
+			return false
+		end
+	end
+
+	local lx, ly, is_corner_blocked = l:step(block_corner)
+
 	local stop_x, stop_y = self.source_actor.x, self.source_actor.y
 	local stop_radius_x, stop_radius_y = self.source_actor.x, self.source_actor.y
 	local stopped = false
@@ -92,6 +106,11 @@ function _M:display(dispx, dispy)
 		local block, hit, hit_radius = false, true, true
 		if self.target_type.block_path then
 			block, hit, hit_radius = self.target_type:block_path(lx, ly, true)
+		end
+
+		if is_corner_blocked then
+			block = true
+			stopped = true
 		end
 
 		-- Update coordinates and set color
@@ -119,7 +138,7 @@ function _M:display(dispx, dispy)
 			stopped = true
 		end
 
-		lx, ly = l()
+		lx, ly, is_corner_blocked = l:step(block_corner)
 	end
 	self.cursor:toScreen(self.display_x + (self.target.x - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (self.target.y - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
 
@@ -148,14 +167,15 @@ function _M:display(dispx, dispy)
 			end,
 		nil)
 	elseif self.target_type.cone and self.target_type.cone > 0 then
-		local dir_angle = math.deg(math.atan2(self.target.y - self.source_actor.y, self.target.x - self.source_actor.x))
+		--local dir_angle = math.deg(math.atan2(self.target.y - self.source_actor.y, self.target.x - self.source_actor.x))
 		core.fov.calc_beam_any_angle(
 			stop_radius_x,
 			stop_radius_y,
 			game.level.map.w,
 			game.level.map.h,
 			self.target_type.cone,
-			dir_angle,
+			self.target.x - self.source_actor.x,
+			self.target.y - self.source_actor.y,
 			self.target_type.cone_angle,
 			function(_, px, py)
 				if self.target_type.block_radius and self.target_type:block_radius(px, py, true) then return true end
@@ -208,10 +228,10 @@ function _M:getType(t)
 			if not typ.no_restrict then
 				if typ.range and typ.start_x then
 					local dist = core.fov.distance(typ.start_x, typ.start_y, lx, ly)
-					if math.floor(dist - typ.range + 0.5) > 0 then return true, false, false end
+					if dist > typ.range then return true, false, false end
 				elseif typ.range and typ.source_actor and typ.source_actor.x then
 					local dist = core.fov.distance(typ.source_actor.x, typ.source_actor.y, lx, ly)
-					if math.floor(dist - typ.range + 0.5) > 0 then return true, false, false end
+					if dist > typ.range then return true, false, false end
 				end
 				local is_known =  game.level.map.remembers(lx, ly) or game.level.map.seens(lx, ly)
 				if typ.requires_knowledge and not is_known then
@@ -359,3 +379,4 @@ function _M:pointAtRange(srcx, srcy, destx, desty, dist)
 		return lx, ly
 	end
 end
+

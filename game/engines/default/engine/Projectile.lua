@@ -37,6 +37,21 @@ function _M:init(t, no_default)
 	Entity.init(self, t, no_default)
 end
 
+function _M:save()
+	if self.project and self.project.def and self.project.def.typ and self.project.def.typ.line_function then
+		self.project.def.typ.line_function_save = { self.project.def.typ.line_function:export() }
+		self.project.def.typ.line_function = nil
+	end
+	return class.save(self, {})
+end
+
+function _M:loaded()
+	if self.project and self.project.def and self.project.def.typ and self.project.def.typ.line_function_save then
+		self.project.def.typ.line_function = core.fov.line_import(unpack(self.project.def.typ.line_function_save))
+		self.project.def.typ.line_function_save = nil
+	end
+end
+
 --- Moves a projectile on the map
 -- *WARNING*: changing x and y properties manually is *WRONG* and will blow up in your face. Use this method. Always.
 -- @param map the map to move onto

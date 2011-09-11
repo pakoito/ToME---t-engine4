@@ -78,7 +78,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
 		local grappled = false
 
@@ -147,7 +147,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
 		local grappled = false
 
@@ -162,7 +162,7 @@ newTalent{
 		if self:grappleSizeCheck(target) then
 			return true
 		end
-		
+
 		-- start the grapple; this will automatically hit and reapply the grapple if we're already grappling the target
 		local hit = self:startGrapple (target)
 		-- deal damage and maim if appropriate
@@ -224,18 +224,19 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > self:getTalentRange(t) then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > self:getTalentRange(t) then return nil end
 
 		local grappled = false
 
 		-- do the rush
-		local l = line.new(self.x, self.y, x, y)
-		local tx, ty = self.x, self.y
-		lx, ly = l()
+		local block_actor = function(_, bx, by) return game.level.map:checkEntity(bx, by, Map.TERRAIN, "block_move", self) end
+		local l = self:lineFOV(x, y, block_actor)
+		local lx, ly, is_corner_blocked = l:step(block_actor)
+		local tx, ty = lx, ly
 		while lx and ly do
-			if game.level.map:checkAllEntities(lx, ly, "block_move", self) then break end
+			if is_corner_blocked or game.level.map:checkAllEntities(lx, ly, "block_move", self) then break end
 			tx, ty = lx, ly
-			lx, ly = l()
+			lx, ly, is_corner_blocked = l:step(block_actor)
 		end
 
 		local ox, oy = self.x, self.y
@@ -252,12 +253,12 @@ newTalent{
 			self:breakGrapples()
 		end
 
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) == 1 then
+		if core.fov.distance(self.x, self.y, x, y) == 1 then
 			-- end the talent without effect if the target is to big
 			if self:grappleSizeCheck(target) then
 				return true
 			end
-			
+
 			-- start the grapple; this will automatically hit and reapply the grapple if we're already grappling the target
 			local hit = self:startGrapple (target)
 			-- takedown or slam as appropriate
@@ -285,9 +286,10 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		local takedown = t.getTakeDown(self, t)
-		local slam  = t.getSlam(self, t)
+		local slam = t.getSlam(self, t)
 		return ([[Rushes forward and attempts to take the target to the ground, starting a grapple, inflicting %0.2f physical damage, and dazing the target for %d turns.  If you're already grappling the target you'll instead slam them into the ground for %0.2f physical damage and potentially stun them for %d turns.
 		The grapple effects and duration will be based off your grapple talent effect if you have it and the damage will scale with the strength stat.]])
 		:format(damDesc(self, DamageType.PHYSICAL, (takedown)), duration, damDesc(self, DamageType.PHYSICAL, (slam)), duration)
 	end,
 }
+

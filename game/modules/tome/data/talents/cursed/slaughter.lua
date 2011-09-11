@@ -40,7 +40,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
 		local multiplier = 1 + (0.17 + .23 * self:getTalentLevel(t)) * getHateMultiplier(self, 0, 1)
 		local hit = self:attackTarget(target, nil, multiplier, true)
@@ -121,13 +121,14 @@ newTalent{
 		local targeting = {type="bolt", range=self:getTalentRange(t), nolock=true}
 		local targetX, targetY, actualTarget = self:getTarget(targeting)
 		if not targetX or not targetY then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, targetX, targetY)) > self:getTalentRange(t) then return nil end
+		if core.fov.distance(self.x, self.y, targetX, targetY) > self:getTalentRange(t) then return nil end
 
-		local lineFunction = line.new(self.x, self.y, targetX, targetY)
-		local nextX, nextY = lineFunction()
+		local block_actor = function(_, bx, by) return game.level.map:checkEntity(bx, by, Map.TERRAIN, "block_move", target) end
+		local lineFunction = core.fov.line(self.x, self.y, targetX, targetY, block_actor)
+		local nextX, nextY, is_corner_blocked = lineFunction:step(block_actor)
 		local currentX, currentY = self.x, self.y
 
-		while nextX and nextY do
+		while nextX and nextY and not is_corner_blocked do
 			local blockingTarget = game.level.map(nextX, nextY, Map.ACTOR)
 			if blockingTarget and self:reactionToward(blockingTarget) < 0 then
 				-- attempt a knockback
@@ -147,7 +148,7 @@ newTalent{
 						for i = start, start + 8 do
 							local x = nextX + (i % 3) - 1
 							local y = nextY + math.floor((i % 9) / 3) - 1
-							if math.floor(core.fov.distance(currentY, currentX, x, y)) > 1
+							if core.fov.distance(currentY, currentX, x, y) > 1
 									and game.level.map:isBound(x, y)
 									and not game.level.map:checkAllEntities(x, y, "block_move", self) then
 								blockingTarget:move(x, y, true)
@@ -169,7 +170,7 @@ newTalent{
 
 			-- allow the move
 			currentX, currentY = nextX, nextY
-			nextX, nextY = lineFunction()
+			nextX, nextY, is_corner_blocked = lineFunction:step(block_actor)
 
 			-- attack adjacent targets
 			for i = 0, 8 do
@@ -247,3 +248,4 @@ newTalent{
 		Requires a one- or two-handed axe or a cursed weapon.]]):format(chance, multiplier * 50, multiplier * 100)
 	end,
 }
+

@@ -119,7 +119,7 @@ function _M:onEnterLevel(zone, level)
 	for eff_id, p in pairs(self.tmp) do
 		if self.tempeffect_def[eff_id].cancel_on_level_change then
 			effs[#effs+1] = eff_id
-			if type(self.tempeffect_def[eff_id].cancel_on_level_change) == "function" then self.tempeffect_def[eff_id].cancel_on_level_change(self, p)  end
+			if type(self.tempeffect_def[eff_id].cancel_on_level_change) == "function" then self.tempeffect_def[eff_id].cancel_on_level_change(self, p) end
 		end
 	end
 	for i, eff_id in ipairs(effs) do self:removeEffect(eff_id) end
@@ -389,6 +389,46 @@ function _M:doFOV()
 	self:playerFOV()
 end
 
+--- Create a line to target based on field of vision
+function _M:lineFOV(tx, ty, extra_block, block, sx, sy)
+	sx = sx or self.x
+	sy = sy or self.y
+	local act = game.level.map(x, y, Map.ACTOR)
+	local sees_target = game.level.map.seens(tx, ty)
+
+	local darkVisionRange
+	if self:knowTalent(self.T_DARK_VISION) then
+		local t = self:getTalentFromId(self.T_DARK_VISION)
+		darkVisionRange = self:getTalentRange(t)
+	end
+	local inCreepingDark = false
+
+	block = block or function(_, x, y)
+		if darkVisionRange then
+			if game.level.map:checkAllEntities(x, y, "creepingDark") then
+				inCreepingDark = true
+			end
+			if inCreepingDark and core.fov.distance(sx, sy, x, y) > darkVisionRange then
+				return true
+			end
+		end
+
+		if sees_target then
+			return game.level.map:checkAllEntities(x, y, "block_sight") or
+				game.level.map:checkEntity(x, y, engine.Map.TERRAIN, "block_move") and not game.level.map:checkEntity(x, y, engine.Map.TERRAIN, "pass_projectile") or
+				type(extra_block) == "function" and extra_block(self, x, y)
+		elseif core.fov.distance(sx, sy, x, y) <= self.sight and (game.level.map.remembers(x, y) or game.level.map.seens(x, y)) then
+			return game.level.map:checkEntity(x, y, Map.TERRAIN, "block_sight") or
+				game.level.map:checkEntity(x, y, engine.Map.TERRAIN, "block_move") and not game.level.map:checkEntity(x, y, engine.Map.TERRAIN, "pass_projectile") or
+				type(extra_block) == "function" and extra_block(self, x, y)
+		else
+			return true
+		end
+	end
+
+	return core.fov.line(sx, sy, tx, ty, block)
+end
+
 --- Called before taking a hit, overload mod.class.Actor:onTakeHit() to stop resting and running
 function _M:onTakeHit(value, src)
 	self:runStop("taken damage")
@@ -401,7 +441,7 @@ function _M:onTakeHit(value, src)
 
 	-- Hit direction warning
 	if src.x and src.y and (self.x ~= src.x or self.y ~= src.y) then
-		local range = math.floor(core.fov.distance(src.x, src.y, self.x,  self.y))
+		local range = core.fov.distance(src.x, src.y, self.x, self.y)
 		if range > 1 then
 			local angle = math.atan2(src.y - self.y, src.x - self.x)
 			game.level.map:particleEmitter(self.x, self.y, 1, "hit_warning", {angle=math.deg(angle)})
@@ -726,7 +766,7 @@ function _M:playerWear()
 	local inven = self:getInven(self.INVEN_INVEN)
 	local titleupdator = self:getEncumberTitleUpdator("Wield/wear object")
 	local d d = self:showInventory(titleupdator(), inven, function(o)
-		return o:wornInven() and self:getInven(o:wornInven())  and true or false
+		return o:wornInven() and self:getInven(o:wornInven()) and true or false
 	end, function(o, item)
 		self:doWear(inven, item, o)
 		d:updateTitle(titleupdator())
@@ -968,3 +1008,4 @@ function _M:on_quest_status(quest, status, sub)
 		game.logPlayer(game.player, "#LIGHT_RED#Quest '%s' is failed! #WHITE#(Press 'j' to see the quest log)", quest.name)
 	end
 end
+

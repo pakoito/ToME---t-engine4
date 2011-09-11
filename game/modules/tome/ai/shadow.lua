@@ -59,7 +59,7 @@ local function shadowChooseActorTarget(self)
 end
 
 local function shadowMoveToActorTarget(self)
-	local range = math.floor(core.fov.distance(self.x, self.y, self.ai_target.actor.x, self.ai_target.actor.y))
+	local range = core.fov.distance(self.x, self.y, self.ai_target.actor.x, self.ai_target.actor.y)
 	
 	if range <= 1 and self.ai_state.close_attack_spell_chance and rng.percent(self.ai_state.close_attack_spell_chance) then
 		-- chance for close spell
@@ -236,7 +236,7 @@ newAI("shadow", function(self)
 					self:attackTarget(target, nil, 1, true)
 					return true
 				end
-				if not newX and math.floor(core.fov.distance(x, y, defendant.x, defendant.y)) <= 1 and self:canMove(x, y, false) then
+				if not newX and core.fov.distance(x, y, defendant.x, defendant.y) <= 1 and self:canMove(x, y, false) then
 					newX, newY = x, y
 				end
 			end
@@ -313,3 +313,4 @@ newAI("shadow", function(self)
 	--game.logPlayer(self.summoner, "#PINK#%s -> failed to make a move.", self.name:capitalize())
 	return true
 end)
+

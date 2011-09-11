@@ -49,7 +49,7 @@ function _M:mouseMove(tmx, tmy, spotHostiles, astar_check, force_move)
 		-- Expand logic for clarity
 		local test_actor = game.level.map(tmx, tmy, Map.ACTOR)
 		local test_hostile = spotHostiles and spotHostiles(self)
-		local test_adjacent = math.floor(core.fov.distance(self.x, self.y, tmx, tmy)) == 1
+		local test_adjacent = core.fov.distance(self.x, self.y, tmx, tmy) == 1
 		if ((config.settings.mouse_move or force_move) and (test_hostile or test_adjacent)) or (not config.settings.mouse_move and test_adjacent and test_actor) then
 			local l = line.new(self.x, self.y, tmx, tmy)
 			local nx, ny = l()
@@ -143,3 +143,4 @@ function _M:mouseHandleDefault(key, allow_move, button, mx, my, xrel, yrel, even
 
 	if not xrel and not yrel then moving_around = false end
 end
+

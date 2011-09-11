@@ -186,15 +186,17 @@ newTalent{
 			local _ _, x, y = self:canProject(tg, x, y)
 			game.level.map:particleEmitter(self.x, self.y, tg.radius, "flamebeam", {tx=x-self.x, ty=y-self.y})
 			game:playSoundNear(self, "talents/lightning")
-			local l = line.new(self.x, self.y, x, y)
-			local lx, ly = l()
-			local tx, ty = self.x, self.y
-			lx, ly = l()
+
+			local block_actor = function(_, bx, by) return game.level.map:checkEntity(bx, by, engine.Map.TERRAIN, "block_move", self) end
+			local l = self:lineFOV(x, y, block_actor)
+			local lx, ly, is_corner_blocked = l:step(block_actor)
+			local tx, ty, _ = lx, ly
 			while lx and ly do
-				if game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move", self) then break end
+				if is_corner_blocked or block_actor(_, lx, ly) then break end
 				tx, ty = lx, ly
-				lx, ly = l()
+				lx, ly, is_corner_blocked = l:step(block_actor)
 			end
+
 			--self:move(tx, ty, true)
 			local fx, fy = util.findFreeGrid(tx, ty, 5, true, {[Map.ACTOR]=true})
 			if not fx then
@@ -212,3 +214,4 @@ newTalent{
 		format(range, 2*dam/3, dam)
 	end,
 }
+

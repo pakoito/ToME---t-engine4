@@ -22,16 +22,16 @@
 -- Internal functions
 local checkLOS = function(sx, sy, tx, ty)
 	what = what or "block_sight"
-	local l = line.new(sx, sy, tx, ty)
-	local lx, ly = l()
-	while lx and ly do
+	local l = core.fov.line(sx, sy, tx, ty, what)
+	local lx, ly, is_corner_blocked = l:step(what)
+	while lx and ly and not is_corner_blocked do
 		if game.level.map:checkAllEntities(lx, ly, what) then break end
 
-		lx, ly = l()
+		lx, ly, is_corner_blocked = l:step(what)
 	end
 	-- Ok if we are at the end reset lx and ly for the next code
-	if not lx and not ly then lx, ly = x, y end
-
+	if not lx and not ly and not is_corner_blocked then lx, ly = x, y end
+	
 	if lx == x and ly == y then return true, lx, ly end
 	return false, lx, ly
 end
@@ -65,7 +65,7 @@ newAI("use_tactical", function(self)
 	print("============================== TACTICAL AI", self.name)
 	local avail = {}
 	local ok = false
-	local target_dist = self.ai_target.actor and math.floor(core.fov.distance(self.x, self.y, self.ai_target.actor.x, self.ai_target.actor.y))
+	local target_dist = self.ai_target.actor and core.fov.distance(self.x, self.y, self.ai_target.actor.x, self.ai_target.actor.y)
 	local hate = self.ai_target.actor and (self:reactionToward(self.ai_target.actor) < 0)
 	local has_los = self.ai_target.actor and self:hasLOS(self.ai_target.actor.x, self.ai_target.actor.y)
 	local self_compassion = (self.ai_state.self_compassion == false and 0) or self.ai_state.self_compassion or 5
@@ -352,7 +352,7 @@ newAI("tactical", function(self)
 	-- Keep your distance
 	local special_move = false
 	if self.ai_tactic.safe_range and self.ai_target.actor and self:hasLOS(self.ai_target.actor.x, self.ai_target.actor.y) then
-		local target_dist = math.floor(core.fov.distance(self.x, self.y, self.ai_target.actor.x, self.ai_target.actor.y))
+		local target_dist = core.fov.distance(self.x, self.y, self.ai_target.actor.x, self.ai_target.actor.y)
 		if self.ai_tactic.safe_range == target_dist then
 			special_move = "none"
 		elseif self.ai_tactic.safe_range > target_dist then
@@ -386,3 +386,4 @@ newAI("flee_dmap_keep_los", function(self)
 		return self:move(fx, fy)
 	end
 end)
+

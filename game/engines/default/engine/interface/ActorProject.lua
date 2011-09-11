@@ -59,19 +59,40 @@ function _M:project(t, x, y, damtype, dam, particles)
 	local srcx, srcy = t.x or self.x, t.y or self.y
 
 	-- Stop at range or on block
-	local lx, ly = x, y
+	local lx, ly, is_corner_blocked = x, y
 	local stop_x, stop_y = srcx, srcy
 	local stop_radius_x, stop_radius_y = srcx, srcy
-	local l = line.new(srcx, srcy, x, y)
-	lx, ly = l()
-	local initial_dir = lx and coord_to_dir[lx - srcx][ly - srcy] or 5
+	local l
+	if typ.source_actor.lineFOV then
+		l = typ.source_actor:lineFOV(x, y, nil, nil, srcx, srcy)
+	else
+		l = core.fov.line(srcx, srcy, x, y)
+	end
+	local block_corner = function(_, bx, by)
+		if self.target_type.block_path then
+			local b, h, hr = self.target_type:block_path(bx, by, true)
+			return b and h and not hr
+		else
+			return false
+		end
+	end
+
+	local lx, ly, is_corner_blocked = l:step(block_corner)
 	while lx and ly do
 		local block, hit, hit_radius = false, true, true
 		if typ.block_path then
 			block, hit, hit_radius = typ:block_path(lx, ly)
 		end
+		if is_corner_blocked then
+			block = true
+			hit_radius = false
+		end
 		if hit then
-			stop_x, stop_y = lx, ly
+			if is_corner_blocked then
+				stop_x, stop_y = stop_radius_x, stop_radius_y
+			else
+				stop_x, stop_y = lx, ly
+			end
 			-- Deal damage: beam
 			if typ.line then addGrid(lx, ly) end
 			-- WHAT DOES THIS DO AGAIN?
@@ -85,7 +106,7 @@ function _M:project(t, x, y, damtype, dam, particles)
 		end
 
 		if block then break end
-		lx, ly = l()
+		lx, ly, is_corner_blocked = l:step(block_corner)
 	end
 
 	if typ.ball and typ.ball > 0 then
@@ -105,14 +126,15 @@ function _M:project(t, x, y, damtype, dam, particles)
 		nil)
 		addGrid(stop_x, stop_y)
 	elseif typ.cone and typ.cone > 0 then
-		local dir_angle = math.deg(math.atan2(y - self.y, x - self.x))
+		--local dir_angle = math.deg(math.atan2(y - self.y, x - self.x))
 		core.fov.calc_beam_any_angle(
 			stop_radius_x,
 			stop_radius_y,
 			game.level.map.w,
 			game.level.map.h,
 			typ.cone,
-			dir_angle,
+			x - self.x,
+			y - self.y,
 			typ.cone_angle,
 			function(_, px, py)
 				if typ.block_radius and typ:block_radius(px, py) then return true end
@@ -179,25 +201,47 @@ function _M:canProject(t, x, y)
 	typ.start_y = self.y
 
 	-- Stop at range or on block
-	local lx, ly = x, y
+	local lx, ly, is_corner_blocked = x, y
 	local stop_x, stop_y = self.x, self.y
 	local stop_radius_x, stop_radius_y = self.x, self.y
-	local l = line.new(self.x, self.y, x, y)
-	lx, ly = l()
+	local l
+	if typ.source_actor.lineFOV then
+		l = typ.source_actor:lineFOV(x, y)
+	else
+		l = core.fov.line(self.x, self.y, x, y)
+	end
+	local block_corner = function(_, bx, by)
+		if self.target_type.block_path then
+			local b, h, hr = self.target_type:block_path(bx, by, true)
+			return b and h and not hr
+		else
+			return false
+		end
+	end
+
+	local lx, ly, is_corner_blocked = l:step(block_corner)
 	while lx and ly do
 		local block, hit, hit_radius = false, true, true
 		if typ.block_path then
 			block, hit, hit_radius = typ:block_path(lx, ly)
 		end
+		if is_corner_blocked then
+			block = true
+			hit_radius = false
+		end
 		if hit then
-			stop_x, stop_y = lx, ly
+			if is_corner_blocked then
+				stop_x, stop_y = stop_radius_x, stop_radius_y
+			else
+				stop_x, stop_y = lx, ly
+			end
 		end
 		if hit_radius then
 			stop_radius_x, stop_radius_y = lx, ly
 		end
 
 		if block then break end
-		lx, ly = l()
+		lx, ly, is_corner_blocked = l:step(block_corner)
 	end
 
 	-- Check for minimum range
@@ -230,6 +274,11 @@ function _M:projectile(t, x, y, damtype, dam, particles)
 	typ.source_actor = self
 	typ.start_x = self.x
 	typ.start_y = self.y
+	if self.lineFOV then
+		typ.line_function = self:lineFOV(x, y)
+	else
+		typ.line_function = core.fov.line(self.x, self.y, x, y)
+	end
 
 	local proj = require(self.projectile_class):makeProject(self, t.display, {x=x, y=y, start_x = t.x or self.x, start_y = t.y or self.y, damtype=damtype, tg=t, typ=typ, dam=dam, particles=particles})
 	game.zone:addEntity(game.level, proj, "projectile", t.x or self.x, t.y or self.y)
@@ -247,20 +296,26 @@ end
 -- @return act should we call projectDoAct (usually only for beam)
 -- @return stop is this the last (blocking) tile?
 function _M:projectDoMove(typ, tgtx, tgty, x, y, srcx, srcy)
-	-- Stop at range or on block
-	local l = line.new(srcx, srcy, tgtx, tgty)
-	local lx, ly = srcx, srcy
-	-- Look for our current position
-	while lx and ly and not (lx == x and ly == y) do lx, ly = l() end
-	-- Now get the next position
-	if lx and ly then lx, ly = l() end
+	local block_corner = function(_, bx, by)
+		if self.target_type.block_path then
+			local b, h, hr = self.target_type:block_path(bx, by, true)
+			return b and h and not hr
+		else
+			return false
+		end
+	end
+	local lx, ly, is_corner_blocked = typ.line_function:step(block_corner)
 
 	if lx and ly then
 		local block, hit, hit_radius = false, true, true
 		if typ.block_path then
 			block, hit, hit_radius = typ:block_path(lx, ly)
 		end
-
+		if is_corner_blocked then
+			block = true
+			hit = false
+			hit_radius = false
+		end
 		if block then
 			if hit then
 				return lx, ly, false, true
@@ -329,15 +384,16 @@ function _M:projectDoStop(typ, tg, damtype, dam, particles, lx, ly, tmp, rx, ry)
 		nil)
 		addGrid(rx, ry)
 	elseif typ.cone and typ.cone > 0 then
-		local initial_dir = lx and util.getDir(lx, ly, x, y) or 5
-		local dir_angle = math.deg(math.atan2(ly - typ.source_actor.y, lx - typ.source_actor.x))
+		--local initial_dir = lx and util.getDir(lx, ly, x, y) or 5
+		--local dir_angle = math.deg(math.atan2(ly - typ.source_actor.y, lx - typ.source_actor.x))
 		core.fov.calc_beam_any_angle(
 			rx,
 			ry,
 			game.level.map.w,
 			game.level.map.h,
 			typ.cone,
-			dir_angle,
+			lx - typ.source_actor.x,
+			ly - typ.source_actor.y,
 			typ.cone_angle,
 			function(_, px, py)
 				if typ.block_radius and typ:block_radius(px, py) then return true end

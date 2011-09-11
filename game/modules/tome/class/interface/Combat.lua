@@ -157,7 +157,7 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 
 	-- Mount attack ?
 	local mount = self:hasMount()
-	if mount and mount.mount.attack_with_rider and math.floor(core.fov.distance(self.x, self.y, target.x, target.y)) <= 1 then
+	if mount and mount.mount.attack_with_rider and core.fov.distance(self.x, self.y, target.x, target.y) <= 1 then
 		mount.mount.actor:attackTarget(target, nil, nil, nil)
 	end
 
@@ -383,7 +383,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 
 	-- Conduit (Psi)
 	if hitted and not target.dead and self:knowTalent(self.T_CONDUIT) and self:isTalentActive(self.T_CONDUIT) and self.use_psi_combat then
-		local t =  self:getTalentFromId(self.T_CONDUIT)
+		local t = self:getTalentFromId(self.T_CONDUIT)
 		t.do_combat(self, t, target)
 	end
 
@@ -481,7 +481,7 @@ local weapon_talents = {
 	mace =    Talents.T_WEAPONS_MASTERY,
 	knife =   Talents.T_KNIFE_MASTERY,
 	whip  =   Talents.T_EXOTIC_WEAPONS_MASTERY,
-	trident=  Talents.T_EXOTIC_WEAPONS_MASTERY,
+	trident = Talents.T_EXOTIC_WEAPONS_MASTERY,
 	bow =     Talents.T_BOW_MASTERY,
 	sling =   Talents.T_SLING_MASTERY,
 	staff =   Talents.T_STAFF_MASTERY,
@@ -642,7 +642,7 @@ function _M:combatDamage(weapon)
 	end
 	if self.use_psi_combat then
 		if self:knowTalent(self.T_GREATER_TELEKINETIC_GRASP) then
-			local g =  self:getTalentFromId(self.T_GREATER_TELEKINETIC_GRASP)
+			local g = self:getTalentFromId(self.T_GREATER_TELEKINETIC_GRASP)
 			totstat = totstat * g.stat_sub(self, g)
 		else
 			totstat = totstat * 0.6
@@ -1053,7 +1053,7 @@ function _M:buildCombo()
 	local power = 1
 	-- Combo String bonuses
 	if self:knowTalent(self.T_COMBO_STRING) then
-		local t= self:getTalentFromId(self.T_COMBO_STRING)
+		local t = self:getTalentFromId(self.T_COMBO_STRING)
 		if rng.percent(t.getChance(self, t)) then
 			power = 2
 		end
@@ -1061,7 +1061,7 @@ function _M:buildCombo()
 	end
 
 	if self:knowTalent(self.T_RELENTLESS_STRIKES) then
-		local t= self:getTalentFromId(self.T_RELENTLESS_STRIKES)
+		local t = self:getTalentFromId(self.T_RELENTLESS_STRIKES)
 		self:incStamina(t.getStamina(self, t))
 	end
 
@@ -1143,3 +1143,4 @@ function _M:startGrapple(target)
 		return false
 	end
 end
+

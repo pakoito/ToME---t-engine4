@@ -37,15 +37,11 @@ newTalent{
 			if self:knowTalent(self.T_EARTHEN_MISSILES) and mana > self:getTalentFromId(self.T_EARTHEN_MISSILES).mana * fatigue then spells[#spells+1] = self.T_EARTHEN_MISSILES end
 			local tid = rng.table(spells)
 			if tid then
-				-- Extending beam target, assumes a maximum range of 10
-				local current_angle = math.atan2((target.y - self.y), (target.x - self.x)) + math.pi
-				target_x = self.x - math.floor(0.5 + (10 * math.cos(current_angle)))
-				target_y = self.y - math.floor(0.5 + (10 * math.sin(current_angle)))
-				local l = line.new(self.x, self.y, target_x, target_y)
-				local lx, ly = l()
-				target_x, target_y = lx, ly
+				local l = self:lineFOV(target.x, target.y)
+				local lx, ly, is_corner_blocked = l:step(nil, true)
+				local target_x, target_y = lx, ly
 				-- Check for terrain and friendly actors
-				while lx and ly do
+				while lx and ly and not is_corner_blocked and core.fov.distance(self.x, self.y, lx, ly) <= 10 do
 					local actor = game.level.map(lx, ly, engine.Map.ACTOR)
 					if actor and (self:reactionToward(actor) >= 0) then
 						break
@@ -54,7 +50,7 @@ newTalent{
 						break
 					end
 					target_x, target_y = lx, ly
-					lx, ly = l()
+					lx, ly = l:step(nil, true)
 				end
 				print("[ARCANE COMBAT] autocast ",self:getTalentFromId(tid).name)
 				local old_cd = self:isTalentCoolingDown(self:getTalentFromId(tid))
@@ -130,3 +126,4 @@ newTalent{
 		format(self:combatSpellpower() * self:getTalentLevel(Talents.T_ARCANE_DESTRUCTION) / 9)
 	end,
 }
+

@@ -1046,11 +1046,11 @@ function core.fov.beam_grids(x, y, radius, dir, angle, block)
 	return grids
 end
 
-function core.fov.beam_any_angle_grids(x, y, radius, dir_angle, angle, block)
+function core.fov.beam_any_angle_grids(x, y, radius, delta_x, delta_y, angle, block)
 	if not x or not y then return {} end
 	if radius == 0 then return {[x]={[y]=true}} end
 	local grids = {}
-	core.fov.calc_beam_any_angle(x, y, game.level.map.w, game.level.map.h, radius, dir_angle, angle, function(_, lx, ly)
+	core.fov.calc_beam_any_angle(x, y, game.level.map.w, game.level.map.h, radius, delta_x, delta_y, angle, function(_, lx, ly)
 		if block and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") then return true end
 	end,
 	function(_, lx, ly)
@@ -1063,6 +1063,45 @@ function core.fov.beam_any_angle_grids(x, y, radius, dir_angle, angle, block)
 	grids[x][y] = true
 
 	return grids
+end
+
+function core.fov.line(sx, sy, tx, ty, block, start_at_end)
+	local what = type(block) == "string" and block or "block_sight"
+	block = type(block) == "function" and block or
+		block == false and function(_, x, y) return end or
+		function(_, x, y)
+			return game.level.map:checkAllEntities(x, y, what)
+		end
+	return core.fov.line_base(sx, sy, tx, ty, game.level.map.w, game.level.map.h, block)
+end
+
+tmps = core.fov.line_base(0, 0, 0, 0, 0, 0, function(_, x, y) end)
+getmetatable(tmps).__index.step = function(l, block_corner, dont_stop_at_end)
+	block_corner = type(block_corner) == "function" and block_corner or
+		block_corner == false and function(_, x, y) return end or
+		type(block_corner) == "string" and function(_, x, y) return game.level.map:checkAllEntities(x, y, what) end or
+		function(_, x, y) return game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") and
+			not game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "pass_projectile") end
+	return l:step_base(dont_stop_at_end, game.level.map.w, game.level.map.h, block_corner)
+end
+
+--- Sets the permissiveness of FoV based on the shape of blocked terrain
+-- @param val can be a number between 0 and 1 (least permissive to most permissive) or the name of a shape: square, diamond, octagon, firstpeek.
+-- val = 0.0 is equivalent to "square", and val = 1.0 is equivalent to "diamond"
+-- "firstpeek" is the least permissive setting that allows @ to see r below:
+-- @##
+-- ..r
+function core.fov.set_permissiveness(val)
+	val = type(val) == "string" and (string.lower(val) == "square" and 0.0 or
+						string.lower(val) == "diamond" and 0.5 or
+						string.lower(val) == "octagon" and 1 - math.sqrt(0.5) or   --0.29289321881345247560 or
+						string.lower(val) == "firstpeek" and 0.167) or
+					type(tonumber(val)) == "number" and 0.5*tonumber(val)
+
+	if type(val) ~= "number" then return end
+	val = util.bound(val, 0.0, 0.5)
+	core.fov.set_permissiveness_base(val)
+	return val
 end
 
 --- Finds free grids around coords in a radius.
@@ -1087,7 +1126,7 @@ function util.findFreeGrid(sx, sy, radius, block, what)
 		if game.level.map:checkEntity(x, y, game.level.map.TERRAIN, "block_move") then ok = false end
 --		print("findFreeGrid", x, y, "from", sx,sy,"=>", ok)
 		if ok then
-			gs[#gs+1] = {x, y, math.floor(core.fov.distance(sx, sy, x, y)), rng.range(1, 1000)}
+			gs[#gs+1] = {x, y, core.fov.distance(sx, sy, x, y), rng.range(1, 1000)}
 		end
 	end end
 
@@ -1200,3 +1239,4 @@ function require_first(...)
 	end
 	return nil
 end
+

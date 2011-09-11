@@ -42,15 +42,16 @@ local function forceHit(self, target, sourceX, sourceY, damage, knockback, knock
 			sourceY = sourceY + dir_to_coord[newDirection][2]
 		end
 
-		local lineFunction = line.new(sourceX, sourceY, target.x, target.y, true)
+		local block_actor = function(_, bx, by) return game.level.map:checkEntity(bx, by, Map.TERRAIN, "block_move", target) end
+		local lineFunction = core.fov.line(sourceX, sourceY, target.x, target.y, block_actor, true)
 		local finalX, finalY = target.x, target.y
 		local knockbackCount = 0
 		local blocked = false
 		while knockback > 0 do
 			blocked = true
-			local x, y = lineFunction(true)
+			local x, y, is_corner_blocked = lineFunction:step(block_actor, true)
 
-			if not game.level.map:isBound(x, y) or game.level.map:checkAllEntities(x, y, "block_move", target) then
+			if not game.level.map:isBound(x, y) or is_corner_blocked or game.level.map:checkAllEntities(x, y, "block_move", target) then
 				-- blocked
 				local nextTarget = game.level.map(x, y, Map.ACTOR)
 				if nextTarget then
@@ -121,7 +122,7 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target or core.fov.distance(self.x, self.y, x, y) > range then return nil end
 
-		--local distance = math.max(1, math.floor(core.fov.distance(self.x, self.y, x, y)))
+		--local distance = math.max(1, core.fov.distance(self.x, self.y, x, y))
 		local power = 1 --(1 - ((distance - 1) / range))
 		local damage = t.getDamage(self, t) * power
 		local knockback = t.getKnockback(self, t)
@@ -245,7 +246,7 @@ newTalent{
 				-- your will ignores friendly targets (except for knockback hits)
 				local target = game.level.map(x, y, Map.ACTOR)
 				if target and self:reactionToward(target) < 0 then
-					local distance = math.floor(core.fov.distance(blastX, blastY, x, y))
+					local distance = core.fov.distance(blastX, blastY, x, y)
 					local power = (1 - (distance / radius))
 					local localDamage = damage * power
 					local dazeDuration = t.getDazeDuration(self, t)
@@ -355,3 +356,4 @@ newTalent{
 		end
 	end,
 }
+

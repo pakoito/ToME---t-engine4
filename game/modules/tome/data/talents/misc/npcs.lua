@@ -40,7 +40,7 @@ newTalent{
 	requires_target = true,
 	tactical = { ATTACK = 3 },
 	action = function(self, t)
-		if not self.can_multiply or self.can_multiply <= 0 then print("no more multiply")  return nil end
+		if not self.can_multiply or self.can_multiply <= 0 then print("no more multiply") return nil end
 
 		-- Find space
 		local x, y = util.findFreeGrid(self.x, self.y, 1, true, {[Map.ACTOR]=true})
@@ -82,7 +82,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		self.combat_apr = self.combat_apr + 1000
 		self:attackTarget(target, DamageType.POISON, 2 + self:getTalentLevel(t), true)
 		self.combat_apr = self.combat_apr - 1000
@@ -107,7 +107,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		self.combat_apr = self.combat_apr + 1000
 		self:attackTarget(target, DamageType.ACID, self:combatTalentWeaponDamage(t, 1, 1.8), true)
 		self.combat_apr = self.combat_apr - 1000
@@ -132,7 +132,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		self.combat_apr = self.combat_apr + 1000
 		self:attackTarget(target, DamageType.BLIND, self:combatTalentWeaponDamage(t, 0.8, 1.4), true)
 		self.combat_apr = self.combat_apr - 1000
@@ -157,7 +157,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		self.combat_apr = self.combat_apr + 1000
 		self:attackTarget(target, DamageType.POISON, 2 + self:getTalentLevel(t), true)
 		self.combat_apr = self.combat_apr - 1000
@@ -181,7 +181,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		local hit = self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.5, 1), true)
 
 		-- Try to stun !
@@ -213,7 +213,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		local hit = self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.5, 1), true)
 
 		if hit and target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("disarm") then
@@ -242,7 +242,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		local hit = self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.5, 1), true)
 
 		-- Try to stun !
@@ -274,7 +274,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		local hit = self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 1.5, 2), true)
 
 		-- Try to knockback !
@@ -307,7 +307,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		self:attackTarget(target, DamageType.POISON, 2 + self:getTalentLevel(t), true)
 		return true
 	end,
@@ -389,7 +389,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		local hit = self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.5, 1), true)
 
 		-- Try to rot !
@@ -420,7 +420,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		local hit = self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.5, 1), true)
 
 		-- Try to rot !
@@ -451,7 +451,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		local hit = self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.5, 1), true)
 
 		-- Try to rot !
@@ -647,7 +647,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		local hit = self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.8, 1.4), true)
 
 		-- Try to stun !
@@ -773,16 +773,16 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > self:getTalentRange(t) then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > self:getTalentRange(t) then return nil end
 
-		local l = line.new(self.x, self.y, x, y)
-		local lx, ly = l()
-		local tx, ty = self.x, self.y
-		lx, ly = l()
+		local block_actor = function(_, bx, by) return game.level.map:checkEntity(bx, by, Map.TERRAIN, "block_move", self) end
+		local l = self:lineFOV(x, y, block_actor)
+		local lx, ly, is_corner_blocked = l:step(block_actor)
+		local tx, ty = lx, ly
 		while lx and ly do
-			if game.level.map:checkAllEntities(lx, ly, "block_move", self) then break end
+			if is_corner_blocked or game.level.map:checkAllEntities(lx, ly, "block_move", self) then break end
 			tx, ty = lx, ly
-			lx, ly = l()
+			lx, ly, is_corner_blocked = l:step(block_actor)
 		end
 
 		local ox, oy = self.x, self.y
@@ -793,7 +793,7 @@ newTalent{
 		end
 
 		-- Attack ?
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) == 1 and target:canBe("pin") then
+		if core.fov.distance(self.x, self.y, x, y) == 1 and target:canBe("pin") then
 			target:setEffect(target.EFF_PINNED, 5, {})
 		end
 
@@ -1038,7 +1038,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, self:combatTalentWeaponDamage(t, 1, 1.4))
 
 		-- Try to stun !
@@ -1226,7 +1226,7 @@ newTalent{
 		local tg = {type="bolt", range=1}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		self:project(tg, x, y, DamageType.LIGHT, math.floor(self:combatSpellpower(0.25) * self:getTalentLevel(t)), {type="light"})
 		game.level.map:particleEmitter(self.x, self.y, 1, "ball_fire", {radius = 1, r = 1, g = 0, b = 0})
 		self:die(self)
@@ -1251,7 +1251,7 @@ newTalent{
 		local tg = {type="bolt", range=1}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		self:project(tg, x, y, DamageType.COLD, self.will_o_wisp_dam or 1)
 		game.level.map:particleEmitter(self.x, self.y, 1, "ball_ice", {radius = 1, r = 1, g = 0, b = 0})
 		self:die(self)
@@ -1448,10 +1448,10 @@ newTalent{
 				end
 			end
 		end)
-		
+
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_light", {radius=tg.radius})
 		game:playSoundNear(self, "talents/arcane")
-			
+
 		return true
 	end,
 	info = function(self, t)
@@ -1565,3 +1565,4 @@ newTalent{
 		return ([[Invoke a slimy crawler.]])
 	end,
 }
+

@@ -342,17 +342,6 @@ newTalent{
 	getDamageIncrease = function(self, t)
 		return combatTalentDamage(self, t, 0, 40)
 	end,
-	hasLOS = function(x1, y1, x2, y2)
-		local l = line.new(x1, y1, x2, y2)
-		local lx, ly = l()
-		while lx and ly do
-			local entity = game.level.map:checkAllEntities(lx, ly, "block_sight")
-			if entity and not game.level.map:checkAllEntities(lx, ly, "creepingDark") then return false end
-
-			lx, ly = l()
-		end
-		return true
-	end,
 	info = function(self, t)
 		local damageIncrease = t.getDamageIncrease(self, t)
 		return ([[Your eyes penetrate the darkness to find anyone that may be hiding there. You can also see through your clouds of creeping dark and gain the advantage of doing %d%% more damage to anyone enveloped by it.]]):format(damageIncrease)
@@ -418,7 +407,7 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	cooldown = 10,
-	hate =  1.2,
+	hate = 1.2,
 	range = 6,
 	tactical = { ATTACK = 2, DISABLE = 2 },
 	direct_hit = true,
@@ -451,3 +440,4 @@ newTalent{
 		The damage will increase with the Magic stat.]]):format(pinDuration, damage)
 	end,
 }
+

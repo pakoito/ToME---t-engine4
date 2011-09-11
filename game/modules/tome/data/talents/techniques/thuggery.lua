@@ -48,7 +48,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
 		local dam = t.getDamage(self, t)
 
@@ -148,3 +148,4 @@ newTalent{
 		format(t.getCrit(self, t), t.getPen(self, t), t.getDrain(self, t))
 	end,
 }
+

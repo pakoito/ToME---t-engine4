@@ -67,9 +67,9 @@ newAI("move_world_patrol", function(self)
 	else
 		local path = self.ai_state.route_path
 --		print("Using route", self.ai_state.route_path)
-		if not path or not path[1] or (path[1] and math.floor(core.fov.distance(self.x, self.y, path[1].x, path[1].y)) > 1) then
+		if not path or not path[1] or (path[1] and core.fov.distance(self.x, self.y, path[1].x, path[1].y)) > 1 then
 			self.ai_state.route_path = nil self.ai_state.route = nil
---			print("Nulling!", path, path and path[1], path and path[1] and math.floor(core.fov.distance(self.x, self.y, path[1].x, path[1].y)))
+--			print("Nulling!", path, path and path[1], path and path[1] and core.fov.distance(self.x, self.y, path[1].x, path[1].y))
 			return true
 		else
 			local ret = self:move(path[1].x, path[1].y)
@@ -114,3 +114,4 @@ newAI("move_world_hostile", function(self)
 	end
 	return true
 end)
+

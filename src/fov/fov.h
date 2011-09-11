@@ -33,6 +33,12 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+// Floating point espsilons to guarantee smooth floating point transitions and behavior in an integer grid.
+// There were no, and are no, floating point precision guarantees for maps greater than 1024x1024.  Use double precision if desired.
+// Nevertheless, map sizes greater than 10000x10000 should still behave reasonably.
+#define GRID_EPSILON 2.0e-6f
+#define SLOPE_EPSILON 1.53e-5f
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -97,8 +103,49 @@ typedef struct {
     /** Size of pre-calculated data. \internal */
     unsigned numheights;
 
+    /** A measure of how much an opaque tile blocks a tile.  0 for square, 0.5 for diamond shape.  Shapes extend to the edge of the tile. */
+    float permissiveness;
+
     /** \endcond */
 } fov_settings_type;
+
+/** struct of calculated data for field of vision lines */
+typedef struct {
+    /** x from which the line originates */
+    int source_x;
+
+    /** y from which the line originates */
+    int source_y;
+
+    /** x destination of line */
+    /*  This parameter may be deleted since it appears to be unnecessary */
+    int dest_x;
+
+    /** y destination of line */
+    /*  This parameter may be deleted since it appears to be unnecessary */
+    int dest_y;
+
+    /** Parametrization variable used to count the "steps" of the line */
+    int t;
+
+    /** Parametrization value of t for where line is blocked, if applicable */
+    /*  This parameter may be deleted since it appears to be unnecessary */
+    int block_t;
+
+    /** Parametrization value of t for where line reaches destination tile */
+    int dest_t;
+
+    /** Size of single step in x direction, so for t'th step, delta_x = t*step_x */
+    float step_x;
+
+    /** Size of single step in y direction, so for t'th step, delta_y = t*step_y */
+    float step_y;
+
+    /** Whether or not the line is blocked */
+    /*  This parameter may be deleted since it appears to be unnecessary */
+    bool is_blocked;
+} fov_line_data;
+
 
 /** The opposite direction to that given. */
 #define fov_direction_opposite(direction) ((fov_direction_type)(((direction)+4)&0x7))
@@ -240,7 +287,7 @@ void fov_beam(fov_settings_type *settings, void *map, void *source,
 
 /**
  * Calculate a field of view from source at (x,y), pointing
- * in the given direction (in degrees) and with the given angle. The larger
+ * in the given direction (in dx, dy) and with the given angle. The larger
  * the angle, the wider, "less focused" the beam. Each side of the
  * line pointing in the direction from the source will be half the
  * angle given such that the angle specified will be represented on
@@ -252,16 +299,40 @@ void fov_beam(fov_settings_type *settings, void *map, void *source,
  * \param source_x x-axis coordinate from which to start.
  * \param source_y y-axis coordinate from which to start.
  * \param radius Euclidean distance from (x,y) after which to stop.
- * \param dir_angle Direction angle, in degrees.
+ * \param dx Beam direction, delta x
+ * \param dy Beam direction, delta y
  * \param beam_angle The angle at the base of the beam of light, in degrees.
  */
 void fov_beam_any_angle(fov_settings_type *settings, void *map, void *source,
 						int source_x, int source_y, unsigned radius,
-						float dir_angle, float beam_angle
+						float dx, float dy, float beam_angle
 );
+
+/**
+ * Calculate a line based on field of view (or whatever the "opaque" function)
+ * from source to destination (x, y).  This will avoid opaque tiles if possible.
+ * If an unobstructed line to destination tile isn't found, then default to a
+ * bresenham line.
+ *
+ * \param settings Pointer to data structure containing settings.
+ * \param map Pointer to map data structure to be passed to callbacks.
+ * \param source Pointer to data structure holding source of light.
+ * \param line Pointer to data structure to store line information.
+ * \param source_x x-axis coordinate from which to start.
+ * \param source_y y-axis coordinate from which to start.
+ * \param dest_x x-axis coordinate from which to end.
+ * \param dest_y y-axis coordinate from which to end.
+ * \param start_at_end if true, the line will begin at the destination (x, y) and continue away from source (x, y)
+ */
+void fov_create_los_line(fov_settings_type *settings, void *map, void *source, fov_line_data *line,
+                                                int source_x, int source_y,
+                                                int dest_x, int dest_y,
+                                                bool start_at_end
+); 
 
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
 
 #endif
+

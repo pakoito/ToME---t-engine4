@@ -128,7 +128,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
 		-- First attack with offhand
 		local speed, hit = self:attackTargetWith(target, offweapon.combat, nil, self:getOffHandMult(self:combatTalentWeaponDamage(t, 0.7, 1.5)))
@@ -177,7 +177,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.4, 1.0), true)
 		self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.4, 1.0), true)
 		self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.4, 1.0), true)
@@ -210,7 +210,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
 		local dir = util.getDir(x, y, self.x, self.y)
 		if dir == 5 then return nil end
@@ -279,3 +279,4 @@ newTalent{
 		return ([[Spin around, damaging all targets around you with both weapons for %d%%.]]):format(100 * self:combatTalentWeaponDamage(t, 1.2, 1.9))
 	end,
 }
+

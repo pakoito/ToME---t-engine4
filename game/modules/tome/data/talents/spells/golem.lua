@@ -44,30 +44,31 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		game.target.source_actor = olds
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > self:getTalentRange(t) then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > self:getTalentRange(t) then return nil end
 
 		if self.ai_target then self.ai_target.target = target end
 
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then
-			local l = line.new(self.x, self.y, x, y)
-			local lx, ly = l()
-			if game.level.map:checkAllEntities(lx, ly, "block_move", self) then
+		if core.fov.distance(self.x, self.y, x, y) > 1 then
+			local block_actor = function(_, bx, by) return game.level.map:checkEntity(bx, by, Map.TERRAIN, "block_move", self) end
+			local l = self:lineFOV(x, y, block_actor)
+			local lx, ly, is_corner_blocked = l:step(block_actor)
+			if is_corner_blocked or game.level.map:checkAllEntities(lx, ly, "block_move", self) then
 				game.logPlayer(self, "You are too close to build up momentum!")
 				return
 			end
-			local tx, ty = self.x, self.y
-			lx, ly = l()
+			local tx, ty = lx, ly
+			lx, ly, is_corner_blocked = l:step(block_actor)
 			while lx and ly do
-				if game.level.map:checkAllEntities(lx, ly, "block_move", self) then break end
+				if is_corner_blocked or game.level.map:checkAllEntities(lx, ly, "block_move", self) then break end
 				tx, ty = lx, ly
-				lx, ly = l()
+				lx, ly, is_corner_blocked = l:step(block_actor)
 			end
 
 			self:move(tx, ty, true)
 		end
 
 		-- Attack ?
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return true end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return true end
 		local hit = self:attackTarget(target, nil, t.getDamage(self, t), true)
 
 		-- Try to knockback !
@@ -152,30 +153,31 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		game.target.source_actor = olds
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > self:getTalentRange(t) then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > self:getTalentRange(t) then return nil end
 
 		if self.ai_target then self.ai_target.target = target end
 
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then
-			local l = line.new(self.x, self.y, x, y)
-			local lx, ly = l()
-			if game.level.map:checkAllEntities(lx, ly, "block_move", self) then
+		if core.fov.distance(self.x, self.y, x, y) > 1 then
+			local block_actor = function(_, bx, by) return game.level.map:checkEntity(bx, by, Map.TERRAIN, "block_move", self) end
+			local l = self:lineFOV(x, y, block_actor)
+			local lx, ly, is_corner_blocked = l:step(block_actor)
+			if is_corner_blocked or game.level.map:checkAllEntities(lx, ly, "block_move", self) then
 				game.logPlayer(self, "You are too close to build up momentum!")
 				return
 			end
-			local tx, ty = self.x, self.y
-			lx, ly = l()
+			local tx, ty = lx, ly
+			lx, ly, is_corner_blocked = l:step(block_actor)
 			while lx and ly do
-				if game.level.map:checkAllEntities(lx, ly, "block_move", self) then break end
+				if is_corner_blocked or game.level.map:checkAllEntities(lx, ly, "block_move", self) then break end
 				tx, ty = lx, ly
-				lx, ly = l()
-			end
+				lx, ly, is_corner_blocked = l:step(block_actor)
+			end     
 
 			self:move(tx, ty, true)
 		end
 
 		-- Attack ?
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return true end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return true end
 		local hit = self:attackTarget(target, nil, t.getDamage(self, t), true)
 
 		-- Try to knockback !
@@ -225,22 +227,23 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		game.target.source_actor = olds
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > self:getTalentRange(t) then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > self:getTalentRange(t) then return nil end
 
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then
-			local l = line.new(self.x, self.y, x, y)
-			local lx, ly = l()
-			if game.level.map:checkAllEntities(lx, ly, "block_move", self) then
+		if core.fov.distance(self.x, self.y, x, y) > 1 then
+			local block_actor = function(_, bx, by) return game.level.map:checkEntity(bx, by, Map.TERRAIN, "block_move", self) end
+			local l = self:lineFOV(x, y, block_actor)
+			local lx, ly, is_corner_blocked = l:step(block_actor)
+			if is_corner_blocked or game.level.map:checkAllEntities(lx, ly, "block_move", self) then
 				game.logPlayer(self, "You are too close to build up momentum!")
 				return
 			end
-			local tx, ty = self.x, self.y
-			lx, ly = l()
+			local tx, ty = lx, ly
+			lx, ly, is_corner_blocked = l:step(block_actor)
 			while lx and ly do
-				if game.level.map:checkAllEntities(lx, ly, "block_move", self) then break end
+				if is_corner_blocked or game.level.map:checkAllEntities(lx, ly, "block_move", self) then break end
 				tx, ty = lx, ly
-				lx, ly = l()
-			end
+				lx, ly, is_corner_blocked = l:step(block_actor)
+			end     
 
 			self:move(tx, ty, true)
 		end
@@ -296,15 +299,12 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 
-		-- Always project the beam as far as possible
-		local current_angle = math.atan2((y - self.y), (x - self.x)) + math.pi
-		local target_x = self.x - math.floor(0.5 + (tg.range * math.cos(current_angle)))
-		local target_y = self.y - math.floor(0.5 + (tg.range * math.sin(current_angle)))
-		local l = line.new(self.x, self.y, target_x, target_y)
-		local lx, ly = l()
-		target_x, target_y = lx, ly
+		-- We will always project the beam as far as possible
+		local l = self:lineFOV(x, y)
+		local lx, ly, is_corner_blocked = l:step(nil, true)
+		local target_x, target_y = lx, ly
 		-- Check for terrain and friendly actors
-		while lx and ly do
+		while lx and ly and not is_corner_blocked and core.fov.distance(self.x, self.y, lx, ly) <= tg.range do
 			local actor = game.level.map(lx, ly, engine.Map.ACTOR)
 			if actor and (self:reactionToward(actor) >= 0) then
 				break
@@ -313,7 +313,7 @@ newTalent{
 				break
 			end
 			target_x, target_y = lx, ly
-			lx, ly = l()
+			lx, ly = l:step(nil, true)
 		end
 		x, y = target_x, target_y
 
@@ -490,3 +490,4 @@ newTalent{
 		This spell is only usable when the golem's master is dead.]]):format(rad, damDesc(self, DamageType.FIRE, 50 + 10 * self.level))
 	end,
 }
+

@@ -33,7 +33,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
 		local hit = self:attackTarget(target, DamageType.NATURE, self:combatTalentWeaponDamage(t, 1, 1.5), true)
 		if not hit then return true end
@@ -87,7 +87,7 @@ newTalent{
 		local radius = self:getTalentRadius(t)
 		local dam = t.getDamage(self, t)
 		return ([[You slam your foot onto the ground, shaking the area around you in a radius of %d.
-		Creatures caught by the quake will be damaged  for %d and knocked back up to 4 titles away.
+		Creatures caught by the quake will be damaged for %d and knocked back up to 4 titles away.
 		The terrain will also be moved around within the quake's radius.
 		The damage will increase with the Strength stat.]]):format(radius, dam)
 	end,
@@ -150,3 +150,4 @@ newTalent{
 		The damage will increase with the Strength stat]]):format(self:getTalentRadius(t), damDesc(self, DamageType.PHYSICAL, damage), duration)
 	end,
 }
+

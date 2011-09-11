@@ -280,7 +280,7 @@ newInscription{
 		local data = self:getInscriptionData(t.short_name)
 		local damage = t.getDamage(self, t)
 		return ([[Causes thick vines to spring from the ground and entangle all targets within %d squares for %d turns, pinning them in place and dealing %0.2f physical damage and %0.2f nature damage each turn.]]):
-		format(self:getTalentRadius(t), data.dur, damDesc(self, DamageType.PHYSICAL, damage)/3, damDesc(self, DamageType.Nature, 2*damage)/3)
+		format(self:getTalentRadius(t), data.dur, damDesc(self, DamageType.PHYSICAL, damage)/3, damDesc(self, DamageType.NATURE, 2*damage)/3)
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
@@ -586,7 +586,7 @@ newInscription{
 		return data.range
 	end,
 	target = function(self, t)
-		return  {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
@@ -874,3 +874,4 @@ newInscription{
 		return ([[Range %d telepathy for %d turns]]):format(self:getTalentRange(t), data.dur)
 	end,
 }
+

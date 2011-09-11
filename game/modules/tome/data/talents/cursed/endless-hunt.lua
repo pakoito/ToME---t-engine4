@@ -53,7 +53,7 @@ newTalent{
 		local target = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(target)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
 		-- attempt domination
 		if checkWillFailure(self, target, 50, 90, 1) then
@@ -104,7 +104,7 @@ newTalent{
 		local tg = {type="hit", pass_terrain = true, range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > self:getTalentRange(t) then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > self:getTalentRange(t) then return nil end
 
 		local start = rng.range(0, 8)
 		for i = start, start + 8 do
@@ -145,7 +145,7 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target or target == self then return nil end
 
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > self:getTalentRange(t) then
+		if core.fov.distance(self.x, self.y, x, y) > self:getTalentRange(t) then
 			game.logPlayer(self, "You are too far to begin stalking that prey!")
 			return nil
 		end
@@ -196,3 +196,4 @@ newTalent{
 --		return ([[Focusing your hate you blast your target for %d blight damage. Damage increases with willpower.]]):format(damage)
 --	end,
 --}
+

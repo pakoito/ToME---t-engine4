@@ -33,7 +33,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		self.combat_apr = self.combat_apr + 1000
 		self:attackTarget(target, DamageType.POISON, 1.5 + self:getTalentLevel(t) / 4, true)
 		self.combat_apr = self.combat_apr - 1000
@@ -149,3 +149,4 @@ newTalent{
 		The process is quite a strain on your body and all your talents will be put on cooldown for %d turns.]]):format(range, radius, duration)
 	end,
 }
+

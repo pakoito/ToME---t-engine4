@@ -67,20 +67,21 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > self:getTalentRange(t) then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > self:getTalentRange(t) then return nil end
 
-		local l = line.new(self.x, self.y, x, y)
-		local lx, ly = l()
-		if game.level.map:checkAllEntities(lx, ly, "block_move", self) then
+		local block_actor = function(_, bx, by) return game.level.map:checkEntity(bx, by, Map.TERRAIN, "block_move", self) end
+		local l = self:lineFOV(x, y, block_actor)
+		local lx, ly, is_corner_blocked = l:step(block_actor)
+		if is_corner_blocked or game.level.map:checkAllEntities(lx, ly, "block_move", self) then
 			game.logPlayer(self, "You are too close to build up momentum!")
 			return
 		end
 		local tx, ty = lx, ly
-		lx, ly = l()
+		lx, ly, is_corner_blocked = l:step(block_actor)
 		while lx and ly do
-			if game.level.map:checkAllEntities(lx, ly, "block_move", self) then break end
+			if is_corner_blocked or game.level.map:checkAllEntities(lx, ly, "block_move", self) then break end
 			tx, ty = lx, ly
-			lx, ly = l()
+			lx, ly, is_corner_blocked = l:step(block_actor)
 		end
 
 		local ox, oy = self.x, self.y
@@ -91,7 +92,7 @@ newTalent{
 		end
 
 		-- Attack ?
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) == 1 then
+		if core.fov.distance(self.x, self.y, x, y) == 1 then
 			if self:attackTarget(target, nil, 1.2, true) and target:canBe("stun") then
 				-- Daze, no save
 				target:setEffect(target.EFF_DAZED, 3, {})
@@ -209,3 +210,4 @@ newTalent{
 		return ([[You revel in the death of your foes, regaining %d stamina with each death.]]):format(self:getTalentLevel(t) * 2)
 	end,
 }
+

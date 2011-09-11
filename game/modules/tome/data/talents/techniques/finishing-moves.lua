@@ -35,17 +35,17 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
+
 		-- breaks active grapples if the target is not grappled
 		if target:isGrappled(self) then
 			grappled = true
 		else
 			self:breakGrapples()
 		end
-			
+
 		local hit = self:attackTarget(target, nil, t.getDamage(self, t), true)
-		
+
 		if hit then
 			if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
 				target:setEffect(target.EFF_STUNNED, t.getDuration(self, t), {})
@@ -53,9 +53,9 @@ newTalent{
 				game.logSeen(target, "%s resists the stun!", target.name:capitalize())
 			end
 		end
-		
+
 		self:clearCombo()
-			
+
 		return true
 	end,
 	info = function(self, t)
@@ -84,24 +84,24 @@ newTalent{
 	--on_pre_use = function(self, t, silent) if not self:hasEffect(self.EFF_COMBO) then if not silent then game.logPlayer(self, "You must have a combo going to use this ability.") end return false end return true end,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.1, 0.8) + getStrikingStyle(self, dam) end,
 	getAreaDamage = function(self, t) return self:combatTalentStatDamage(t, "str", 10, 300) * (1 + getStrikingStyle(self, dam)) end,
-	radius = function(self, t) 
+	radius = function(self, t)
 		return 1 + math.floor(self:getTalentLevel(t) / 4)
 	end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
+
 		-- breaks active grapples if the target is not grappled
 		if target:isGrappled(self) then
 			grappled = true
 		else
 			self:breakGrapples()
 		end
-			
+
 		local hit = self:attackTarget(target, nil, t.getDamage(self, t), true)
-					
+
 		if hit then
 			local tg = {type="ball", range=1, radius=self:getTalentRadius(t), selffire=false, talent=t}
 			local damage = t.getAreaDamage(self, t) * (0.25 + (self:getCombo(combo) /5))
@@ -109,9 +109,9 @@ newTalent{
 			game.level.map:particleEmitter(x, y, tg.radius, "ball_earth", {radius=tg.radius})
 			game:playSoundNear(self, "talents/breath")
 		end
-			
+
 		self:clearCombo()
-		
+
 		return true
 	end,
 	info = function(self, t)
@@ -145,17 +145,17 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
+
 		-- breaks active grapples if the target is not grappled
 		if target:isGrappled(self) then
 			grappled = true
 		else
 			self:breakGrapples()
 		end
-			
+
 		local hit = self:attackTarget(target, nil, t.getDamage(self, t), true)
-					
+
 		if hit then
 			-- try to daze
 			if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
@@ -163,13 +163,13 @@ newTalent{
 			else
 				game.logSeen(target, "%s resists the body shot!", target.name:capitalize())
 			end
-			
+
 			target:incStamina(- t.getDrain(self, t))
-						
+
 		end
-		
+
 		self:clearCombo()
-		
+
 		return true
 	end,
 	info = function(self, t)
@@ -203,19 +203,19 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
-		
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
+
 		-- breaks active grapples if the target is not grappled
 		if target:isGrappled(self) then
 			grappled = true
 		else
 			self:breakGrapples()
 		end
-		
+
 		local damage = t.getDamage(self, t) + (t.getBonusDamage(self, t) or 0)
-		
+
 		local hit = self:attackTarget(target, nil, damage, true)
-		
+
 		-- Try to insta-kill
 		if hit then
 			if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("instakill") and target.life > 0 and target.life < target.max_life * 0.2 then
@@ -226,14 +226,14 @@ newTalent{
 				game.logSeen(target, "%s resists the death blow!", target.name:capitalize())
 			end
 		end
-		
+
 		-- restore stamina
 		if target.dead then
 			self:incStamina(t.getStamina(self, t))
 		end
-		
+
 		self:clearCombo()
-			
+
 		return true
 	end,
 	info = function(self, t)
@@ -246,3 +246,4 @@ newTalent{
 		:format(damage, stamina, staminamax)
 	end,
 }
+

@@ -81,7 +81,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
 		-- Try to knockback !
 		local can = function(target)
@@ -128,3 +128,4 @@ newTalent{
 		format(math.min(90, 15 + self:getDex(10, true) * self:getTalentLevel(t)))
 	end,
 }
+

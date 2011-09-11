@@ -166,8 +166,8 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local actor = game.level.map(x, y, Map.ACTOR)
-		--if math.floor(core.fov.distance(self.x, self.y, x, y)) == 1 and not actor then return true end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) == 0 then return true end
+		--if core.fov.distance(self.x, self.y, x, y) == 1 and not actor then return true end
+		if core.fov.distance(self.x, self.y, x, y) == 0 then return true end
 		self:project(tg, x, y, DamageType.BATTER, self:spellCrit(rng.avg(0.8*dam, dam)))
 		local _ _, x, y = self:canProject(tg, x, y)
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "matter_beam", {tx=x-self.x, ty=y-self.y})
@@ -283,8 +283,8 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local actor = game.level.map(x, y, Map.ACTOR)
-		--if math.floor(core.fov.distance(self.x, self.y, x, y)) == 1 and not actor then return true end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) == 0 then return true end
+		--if core.fov.distance(self.x, self.y, x, y) == 1 and not actor then return true end
+		if core.fov.distance(self.x, self.y, x, y) == 0 then return true end
 		self:project(tg, x, y, DamageType.FIREBURN, self:spellCrit(rng.avg(0.8*dam, dam)))
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "breath_fire", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/fire")
@@ -404,7 +404,7 @@ newTalent{
 		local tg = {type="bolt", nolock=true, range=self:getTalentRange(t), talent=t}
 		local fx, fy = self:getTarget(tg)
 		if not fx or not fy then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, fx, fy)) == 0 then return true end
+		if core.fov.distance(self.x, self.y, fx, fy) == 0 then return true end
 
 		local nb = t.getNumSpikeTargets(self, t)
 		local affected = {}
@@ -507,3 +507,4 @@ newTalent{
 	end,
 
 }
+

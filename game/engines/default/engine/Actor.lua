@@ -252,8 +252,9 @@ end
 function _M:knockback(srcx, srcy, dist, recursive)
 	print("[KNOCKBACK] from", srcx, srcx, "over", dist)
 
-	local l = line.new(srcx, srcy, self.x, self.y, true)
-	local lx, ly = l(true)
+	local block_actor = function(_, bx, by) return game.level.map:checkEntity(bx, by, Map.TERRAIN, "block_move", self) end
+	local l = core.fov.line(srcx, srcy, self.x, self.y, block_actor, true)
+	local lx, ly, is_corner_blocked = l:step(block_actor, true)
 	local ox, oy = lx, ly
 	dist = dist - 1
 
@@ -266,10 +267,10 @@ function _M:knockback(srcx, srcy, dist, recursive)
 		end
 	end
 
-	while game.level.map:isBound(lx, ly) and not game.level.map:checkAllEntities(lx, ly, "block_move", self) and dist > 0 do
+	while game.level.map:isBound(lx, ly) and not is_corner_blocked and not game.level.map:checkAllEntities(lx, ly, "block_move", self) and dist > 0 do
 		dist = dist - 1
 		ox, oy = lx, ly
-		lx, ly = l(true)
+		lx, ly, is_corner_blocked = l:step(block_actor, true)
 		print("[KNOCKBACK] try", lx, ly, dist, "::", game.level.map:checkAllEntities(lx, ly, "block_move", self))
 
 		if recursive then
@@ -293,8 +294,9 @@ end
 function _M:pull(srcx, srcy, dist, recursive)
 	print("[PULL] from", self.x, self.x, "towards", srcx, srcy, "over", dist)
 
-	local l = line.new(self.x, self.y, srcx, srcy)
-	local lx, ly = l()
+	local block_actor = function(_, bx, by) return game.level.map:checkEntity(bx, by, Map.TERRAIN, "block_move", self) end
+	local l = core.fov.line(self.x, self.y, srcx, srcy, block_actor)
+	local lx, ly, is_corner_blocked = l:step(block_actor)
 	local ox, oy = lx, ly
 	dist = dist - 1
 
@@ -308,10 +310,10 @@ function _M:pull(srcx, srcy, dist, recursive)
 		end
 	end
 
-	while game.level.map:isBound(lx, ly) and not game.level.map:checkAllEntities(lx, ly, "block_move", self) and dist > 0 do
+	while game.level.map:isBound(lx, ly) and not is_corner_blocked and not game.level.map:checkAllEntities(lx, ly, "block_move", self) and dist > 0 do
 		dist = dist - 1
 		ox, oy = lx, ly
-		lx, ly = l()
+		lx, ly, is_corner_blocked = l:step(block_actor)
 		print("[PULL] try", lx, ly, dist, "::", game.level.map:checkAllEntities(lx, ly, "block_move", self))
 
 		if recursive then
@@ -370,19 +372,45 @@ function _M:canSee(actor, def, def_pct)
 	return true, 100
 end
 
+--- Create a line to target based on field of vision
+function _M:lineFOV(tx, ty, extra_block, block, sx, sy)
+	sx = sx or self.x
+	sy = sy or self.y
+	local act = game.level.map(tx, ty, Map.ACTOR)
+	local sees_target = (self.sight and core.fov.distance(sx, sy, tx, ty) <= self.sight or not self.sight) and
+		(game.level.map.lites(tx, ty) or act and self:canSee(act))
+
+	block = block or function(_, x, y)
+		if sees_target then
+			return game.level.map:checkAllEntities(x, y, "block_sight") or
+				game.level.map:checkEntity(x, y, engine.Map.TERRAIN, "block_move") and not game.level.map:checkEntity(x, y, engine.Map.TERRAIN, "pass_projectile") or
+				type(extra_block) == "function" and extra_block(self, x, y)
+		elseif (self.sight and core.fov.distance(sx, sy, x, y) <= self.sight or not self.sight) and game.level.map.lites(x, y) then
+			return game.level.map:checkEntity(x, y, Map.TERRAIN, "block_sight") or
+				game.level.map:checkEntity(x, y, engine.Map.TERRAIN, "block_move") and not game.level.map:checkEntity(x, y, engine.Map.TERRAIN, "pass_projectile") or
+				type(extra_block) == "function" and extra_block(self, x, y)
+		else
+			return true
+		end
+	end
+
+	return core.fov.line(sx, sy, tx, ty, block)
+end
+
 --- Does the actor have LOS to the target
 function _M:hasLOS(x, y, what)
 	if not x or not y then return false, self.x, self.y end
 	what = what or "block_sight"
-	local l = line.new(self.x, self.y, x, y)
-	local lx, ly = l()
-	while lx and ly do
+	local l = core.fov.line(self.x, self.y, x, y, what)
+	local lx, ly, is_corner_blocked = l:step(what)
+
+	while lx and ly and not is_corner_blocked do
 		if game.level.map:checkAllEntities(lx, ly, what) then break end
 
-		lx, ly = l()
+		lx, ly, is_corner_blocked = l:step(what)
 	end
 	-- Ok if we are at the end reset lx and ly for the next code
-	if not lx and not ly then lx, ly = x, y end
+	if not lx and not ly and not is_corner_blocked then lx, ly = x, y end
 
 	if lx == x and ly == y then return true, lx, ly end
 	return false, lx, ly
@@ -394,6 +422,7 @@ end
 -- @param radius how close we should be (defaults to 1)
 function _M:isNear(x, y, radius)
 	radius = radius or 1
-	if math.floor(core.fov.distance(self.x, self.y, x, y)) > radius then return false end
+	if core.fov.distance(self.x, self.y, x, y) > radius then return false end
 	return true
 end
+

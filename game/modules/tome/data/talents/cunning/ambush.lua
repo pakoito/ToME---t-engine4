@@ -35,7 +35,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
 		if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 5) and target:canBe("disarm") then
 			target:setEffect(target.EFF_DISARMED, t.getDuration(self, t), {})
@@ -78,7 +78,7 @@ newTalent{
 
 		target:move(sx, sy, true)
 
-		if math.floor(core.fov.distance(self.x, self.y, sx, sy)) <= 1 then
+		if core.fov.distance(self.x, self.y, sx, sy) <= 1 then
 			if target:checkHit(self:combatAttackDex(), target:combatMentalResist(), 0, 95, 5) and target:canBe("silence") then
 				target:setEffect(target.EFF_SILENCED, t.getDuration(self, t), {})
 			else
@@ -219,3 +219,4 @@ newTalent{
 		format(duration, res, 100 * damage)
 	end,
 }
+

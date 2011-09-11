@@ -35,7 +35,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
 		-- First attack with both weapon & shield (since we have the Stoneshield talent)
 		local hit = self:attackTarget(target, DamageType.ARCANE, self:combatTalentWeaponDamage(t, 0.6, (100 + self:combatTalentSpellDamage(t, 50, 300)) / 100), true)
@@ -103,7 +103,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
 		-- First attack with both weapon & shield (since we have the Stoneshield talent)
 		local hit1 = self:attackTarget(target, DamageType.NATURE, self:combatTalentWeaponDamage(t, 0.6, 1.6), true)
@@ -159,3 +159,4 @@ newTalent{
 		:format(100 * self:combatTalentWeaponDamage(t, 1.3, 2.6), self:getTalentRadius(t))
 	end,
 }
+

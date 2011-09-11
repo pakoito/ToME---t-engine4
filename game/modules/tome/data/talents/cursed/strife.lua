@@ -49,12 +49,12 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
 		local damagePercent = t.getDamagePercent(self, t)
 		local poisonDamage = t.getPoisonDamage(self, t)
 		local duration = t.getDuration(self, t)
-		
+
 		local hit = self:attackTarget(target, nil, damagePercent / 100, true)
 		if hit and target:canBe("poison") then
 			target:setEffect(target.EFF_POISONED, duration, {src=self, power=poisonDamage / duration})
@@ -93,18 +93,18 @@ newTalent{
 			game.logPlayer(self, "You cannot use %s without an axe or a cursed weapon!", t.name)
 			return nil
 		end
-		
+
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
 		local damagePercent = t.getDamagePercent(self, t)
 		local distance = t.getDistance(self, t)
-		
+
 		local hit = self:attackTarget(target, nil, damagePercent / 100, true)
 		self:knockback(target.x, target.y, distance)
-		
+
 		return true
 	end,
 	info = function(self, t)
@@ -136,20 +136,20 @@ newTalent{
 			game.logPlayer(self, "You cannot use %s without an axe or a cursed weapon!", t.name)
 			return nil
 		end
-		
+
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
 		local damagePercent = t.getDamagePercent(self, t)
 		local duration = t.getDuration(self, t)
-		
+
 		local hit = self:attackTarget(target, nil, damagePercent / 100, true)
 		if hit and target:canBe("stun") then
 			target:setEffect(target.EFF_STUNNED, duration, {})
 		end
-		
+
 		return true
 	end,
 	info = function(self, t)
@@ -182,35 +182,23 @@ newTalent{
 	getConfuseEfficiency = function(self, t)
 		return 50 + self:getTalentLevelRaw(t) * 10
 	end,
-	hasLOS = function(startX, startY, x, y)
-		local l = line.new(startX, startY, x, y)
-		local lx, ly = l()
-		while lx and ly do
-			if game.level.map:checkAllEntities(lx, ly, "block_sight") then break end
-
-			lx, ly = l()
-		end
-		if not lx and not ly then return true end
-		if lx == x and ly == y then return true end
-		return false
-	end,
 	action = function(self, t)
 		if not self:hasAxeWeapon() and not self:hasCursedWeapon() then
 			game.logPlayer(self, "You cannot use %s without an axe or a cursed weapon!", t.name)
 			return nil
 		end
-		
+
 		local damagePercent = t.getDamagePercent(self, t)
 		local attackCount = t.getAttackCount(self, t)
 		local confuseDuration = t.getConfuseDuration(self, t)
 		local confuseEfficiency = t.getConfuseEfficiency(self, t)
-		
+
 		local minDistance = 1
 		local maxDistance = 4
 		local startX, startY = self.x, self.y
 		local positions = {}
 		local targets = {}
-		
+
 		-- find all positions and targets in range
 		for x = startX - maxDistance, startX + maxDistance do
 			for y = startY - maxDistance, startY + maxDistance do
@@ -219,26 +207,26 @@ newTalent{
 						and core.fov.distance(startX, startY, x, y) >= minDistance
 						and self:hasLOS(x, y) then
 					if self:canMove(x, y) then positions[#positions + 1] = {x, y} end
-					
+
 					local target = game.level.map(x, y, Map.ACTOR)
 					if target and target ~= self and self:reactionToward(target) < 0 then targets[#targets + 1] = target end
 				end
 			end
 		end
-		
+
 		-- perform confusion
 		for i = 1, #targets do
 			self:project({type="hit",x=targets[i].x,y=targets[i].y}, targets[i].x, targets[i].y, DamageType.CONFUSION, { dur = confuseDuration, dam = confuseEfficiency })
 		end
-		
+
 		-- perform attacks
 		for i = 1, attackCount do
 			if #targets == 0 then break end
-			
+
 			local target = rng.tableRemove(targets)
 			local hit = self:attackTarget(target, nil, damagePercent / 100, true)
 		end
-		
+
 		-- perform movements
 		if #positions > 0 then
 			for i = 1, 8 do
@@ -250,11 +238,11 @@ newTalent{
 				end
 			end
 		end
-		
+
 		game.level.map:particleEmitter(currentX, currentY, 1, "teleport_in")
 		local position = positions[rng.range(1, #positions)]
 		self:move(position[1], position[2], true)
-		
+
 		return true
 	end,
 	info = function(self, t)
@@ -262,8 +250,9 @@ newTalent{
 		local attackCount = t.getAttackCount(self, t)
 		local confuseDuration = t.getConfuseDuration(self, t)
 		local confuseEfficiency = t.getConfuseEfficiency(self, t)
-		
+
 		return ([[With unnatural speed you assail all foes in sight within a range of 4 with wild swings from your axe. You will attack up to %d different targets for %d%% damage. When the assualt finally ends all foes in range will be confused for %d turns and you will find yourself in a nearby location.
 		Requires a one- or two-handed axe or a cursed weapon.]]):format(attackCount, damagePercent, confuseDuration)
 	end,
 }
+

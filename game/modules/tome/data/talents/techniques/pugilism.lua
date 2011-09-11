@@ -85,7 +85,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
 		-- force stance change
 		if target and not self:isTalentActive(self.T_STRIKING_STANCE) then
@@ -170,20 +170,21 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > self:getTalentRange(t) then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > self:getTalentRange(t) then return nil end
 
 		-- bonus damage for charging
-		local charge  = math.floor((core.fov.distance(self.x, self.y, x, y)) -1) / 10
+		local charge = (core.fov.distance(self.x, self.y, x, y) - 1) / 10
 		local damage = t.getDamage(self, t) + charge
 
 		-- do the rush
-		local l = line.new(self.x, self.y, x, y)
-		local tx, ty = self.x, self.y
-		lx, ly = l()
+		local block_actor = function(_, bx, by) return game.level.map:checkEntity(bx, by, Map.TERRAIN, "block_move", self) end
+		local l = self:lineFOV(x, y, block_actor)
+		local lx, ly, is_corner_blocked = l:step(block_actor)
+		local tx, ty = lx, ly
 		while lx and ly do
-			if game.level.map:checkAllEntities(lx, ly, "block_move", self) then break end
+			if is_corner_blocked or game.level.map:checkAllEntities(lx, ly, "block_move", self) then break end
 			tx, ty = lx, ly
-			lx, ly = l()
+			lx, ly, is_corner_blocked = l:step(block_actor)
 		end
 
 		local ox, oy = self.x, self.y
@@ -198,7 +199,7 @@ newTalent{
 		local hit3 = false
 
 		-- do the backhand
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) == 1 then
+		if core.fov.distance(self.x, self.y, x, y) == 1 then
 			-- get left and right side
 			local dir = util.getDir(x, y, self.x, self.y)
 			local lx, ly = util.coordAddDir(self.x, self.y, dir_sides[dir].left)
@@ -268,7 +269,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
 		-- breaks active grapples if the target is not grappled
 		if target:isGrappled(self) then
@@ -315,3 +316,4 @@ newTalent{
 		:format(damage)
 	end,
 }
+

@@ -38,7 +38,7 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > self:getTalentRange(t) then
+		if core.fov.distance(self.x, self.y, x, y) > self:getTalentRange(t) then
 			game.logPlayer(self, "You are too far to from the target!")
 			return nil
 		end
@@ -135,5 +135,4 @@ newTalent{
 		return ([[You hide your terrible nature behind a pitiful figure. Those that see you from a distance of %d will ignore you.]]):format(range)
 	end,
 }
-
 

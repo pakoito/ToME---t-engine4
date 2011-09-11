@@ -57,7 +57,7 @@ newTalent{
 		local tg = {type="hit", pass_terrain = true, range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > self:getTalentRange(t) then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > self:getTalentRange(t) then return nil end
 
 		local start = rng.range(0, 8)
 		for i = start, start + 8 do
@@ -560,3 +560,4 @@ newTalent{
 		return ([[Instill hate in your shadows, strengthening their attacks. They gain %d%% extra accuracy and %d%% extra damage. The fury of their attacks gives them the ability to try to Dominate their foes, increasing all damage taken by that foe for 4 turns. (%d%% chance at range 1)]]):format(combatAtk, incDamage, dominateChance)
 	end,
 }
+

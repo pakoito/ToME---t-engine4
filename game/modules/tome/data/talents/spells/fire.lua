@@ -100,15 +100,11 @@ newTalent{
 		self:project(tg, x, y, DamageType.FLAMESHOCK, {dur=t.getStunDuration(self, t), dam=self:spellCrit(t.getDamage(self, t))})
 
 		if self:attr("burning_wake") then
-			local l = line.new(self.x, self.y, x, y)
-			local lx, ly = l()
-			local dir = lx and coord_to_dir[lx - self.x][ly - self.y] or 6
-
 			game.level.map:addEffect(self,
 				self.x, self.y, 4,
 				DamageType.INFERNO, self:attr("burning_wake"),
 				tg.radius,
-				{angle=math.deg(math.atan2(y - self.y, x - self.x))}, 55,
+				{delta_x=x-self.x, delta_y=y-self.y}, 55,
 				{type="inferno"},
 				nil, self:spellFriendlyFire()
 			)
@@ -221,3 +217,4 @@ newTalent{
 		format(damDesc(self, DamageType.FIRE, damage), radius, duration)
 	end,
 }
+

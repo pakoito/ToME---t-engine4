@@ -39,7 +39,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
 		local hit = target:checkHit(self:combatAttack(), target:combatDefense(), 0, 95, 5 - self:getTalentLevel(t) / 2)
 	--	local hit = self:attackTarget(target, nil, nil, true)
@@ -72,7 +72,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		local push =t.getPush(self, t)
+		local push = t.getPush(self, t)
 		return ([[A push kick that knocks the target back %d tiles, moves you back 1 tile, and inflicts %0.2f physical damage.  If another creature is in the way that creature will be affected too.  Targets knocked into other targets may take extra damage.
 		This is considered a strike for the purposes of stance damage bonuses, will earn one combo point, and will break any grapples you're maintaining.
 		The damage will scale with the strength, dexterity, and cunning stats.]])
@@ -185,3 +185,4 @@ newTalent{
 		:format(damDesc(self, DamageType.PHYSICAL, (damage)))
 	end,
 }
+

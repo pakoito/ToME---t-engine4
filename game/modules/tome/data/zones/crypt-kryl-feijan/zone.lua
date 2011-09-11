@@ -102,7 +102,7 @@ return {
 
 		local melinda
 		for uid, e in pairs(game.level.entities) do if e.define_as and e.define_as == "MELINDA" then melinda = e end end
-		if melinda and not melinda.dead and math.floor(core.fov.distance(game.player.x, game.player.y, melinda.x, melinda.y)) > 1 then
+		if melinda and not melinda.dead and core.fov.distance(game.player.x, game.player.y, melinda.x, melinda.y) > 1 then
 			require("engine.ui.Dialog"):simplePopup("Crypt", "You can not abandon Melinda here!")
 			return nil, nil, true
 		end
@@ -141,3 +141,4 @@ return {
 		},
 	},
 }
+

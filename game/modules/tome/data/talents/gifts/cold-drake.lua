@@ -34,7 +34,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		self:attackTarget(target, DamageType.COLD, 1.4 + self:getTalentLevel(t) / 8, true)
 		return true
 	end,
@@ -151,3 +151,4 @@ newTalent{
 		The damage will increase with the Strength stat]]):format(self:getTalentRadius(t), damDesc(self, DamageType.COLD, self:combatTalentStatDamage(t, "str", 30, 430)))
 	end,
 }
+

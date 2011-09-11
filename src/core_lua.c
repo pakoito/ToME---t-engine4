@@ -2565,7 +2565,7 @@ static int lua_line_init(lua_State *L)
 	bool start_at_end = lua_toboolean(L, 5);
 
 	line_data *data = (line_data*)lua_newuserdata(L, sizeof(line_data));
-	auxiliar_setclass(L, "line{core}", -1);
+	auxiliar_setclass(L, "core{line}", -1);
 
 	data->origx=xFrom;
 	data->origy=yFrom;
@@ -2604,7 +2604,7 @@ static int lua_line_init(lua_State *L)
 
 static int lua_line_step(lua_State *L)
 {
-	line_data *data = (line_data*)auxiliar_checkclass(L, "line{core}", 1);
+	line_data *data = (line_data*)auxiliar_checkclass(L, "core{line}", 1);
 	bool dont_stop_at_end = lua_toboolean(L, 2);
 
 	if ( data->stepx*data->deltax > data->stepy*data->deltay ) {
@@ -2631,7 +2631,7 @@ static int lua_line_step(lua_State *L)
 
 static int lua_free_line(lua_State *L)
 {
-	(void)auxiliar_checkclass(L, "line{core}", 1);
+	(void)auxiliar_checkclass(L, "core{line}", 1);
 	lua_pushnumber(L, 1);
 	return 1;
 }
@@ -2725,7 +2725,7 @@ static const struct luaL_reg zliblib[] =
 
 int luaopen_core(lua_State *L)
 {
-	auxiliar_newclass(L, "line{core}", line_reg);
+	auxiliar_newclass(L, "core{line}", line_reg);
 	auxiliar_newclass(L, "gl{texture}", sdl_texture_reg);
 	auxiliar_newclass(L, "gl{fbo}", gl_fbo_reg);
 	auxiliar_newclass(L, "gl{quadratic}", gl_quadratic_reg);
@@ -2747,3 +2747,4 @@ int luaopen_core(lua_State *L)
 	lua_settop(L, 0);
 	return 1;
 }
+

@@ -39,10 +39,10 @@ newTalent{
 				local block_from_range = false
 				if typ.range and typ.start_x then
 					local dist = core.fov.distance(typ.start_x, typ.start_y, lx, ly)
-					if math.floor(dist - typ.range + 0.5) > 0 then block_from_range = true end
+					if dist > typ.range then block_from_range = true end
 				elseif typ.range and typ.source_actor and typ.source_actor.x then
 					local dist = core.fov.distance(typ.source_actor.x, typ.source_actor.y, lx, ly)
-					if math.floor(dist - typ.range + 0.5) > 0 then block_from_range = true end
+					if dist > typ.range then block_from_range = true end
 				end
 				if a then return block_from_range or (self and self:reactionToward(a) < 0), hit, hit_radius
 				else return block, hit, hit_radius end
@@ -175,7 +175,7 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if math.floor(core.fov.distance(self.x, self.y, x, y)) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, t.getDamage(self, t))
 
 		-- Try to stun !
@@ -197,3 +197,4 @@ newTalent{
 		format(100 * damage, dazedur)
 	end,
 }
+

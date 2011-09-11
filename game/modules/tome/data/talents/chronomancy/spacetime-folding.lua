@@ -62,7 +62,7 @@ newTalent{
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty then return nil end
 		tx, ty = checkBackfire(self, tx, ty, t.paradox)
-		if math.floor(core.fov.distance(self.x, self.y, tx, ty)) > self:getTalentRange(t) then return nil end
+		if core.fov.distance(self.x, self.y, tx, ty) > self:getTalentRange(t) then return nil end
 				if not self:canBe("teleport") or game.level.map.attrs(tx, ty, "no_teleport") or game.level.map.attrs(self.x, self.y, "no_teleport") then
 			game.logSeen(self, "The spell fizzles!")
 			return true
@@ -74,19 +74,19 @@ newTalent{
 				if not target then return nil end
 			end
 		end
-		
+
 		-- checks for spacetime mastery hit bonus
 		local power = self:combatSpellpower()
 		if self:knowTalent(self.T_SPACETIME_MASTERY) then
 			power = self:combatSpellpower() * 1 + (self:getTalentLevel(self.T_SPACETIME_MASTERY)/10)
 		end
-		
+
 		if target:canBe("teleport") then
 			local hit = self:checkHit(power, target:combatSpellResist() + (target:attr("continuum_destabilization") or 0))
 			if not hit then
 				game.logSeen(target, "The spell fizzles!")
 				return true
-			else 
+			else
 				self:project(tg, tx, ty, DamageType.CONFUSION, {
 					dur = t.getConfuseDuration(self, t),
 					dam = t.getConfuseEfficency(self, t),
@@ -168,12 +168,12 @@ newTalent{
 		if not x or not y then return nil end
 		x, y = checkBackfire(self, x, y, t.paradox)
 		local _ _, x, y = self:canProject(tg, x, y)
-		
+
 		if not self:canBe("teleport") or game.level.map.attrs(x, y, "no_teleport") then
 			game.logSeen(self, "The spell fizzles!")
 			return true
 		end
-		
+
 		if self:hasLOS(x, y) and not game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then
 			local dam = self:spellCrit(t.getDamage(self, t))
 			self:project(tg, x, y, DamageType.TEMPORALSTUN, dam)
@@ -187,7 +187,7 @@ newTalent{
 			game.logSeen(self, "You can't move there.")
 			return nil
 		end
-		
+
 		return true
 	end,
 	info = function(self, t)
@@ -235,3 +235,4 @@ newTalent{
 		format (damage*100)
 	end,
 }]=]
+

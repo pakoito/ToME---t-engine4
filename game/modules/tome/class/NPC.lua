@@ -68,6 +68,47 @@ function _M:doFOV()
 	end
 end
 
+--- Create a line to target based on field of vision
+function _M:lineFOV(tx, ty, extra_block, block, sx, sy)
+	sx = sx or self.x
+	sy = sy or self.y
+	local act = game.level.map(tx, ty, engine.Map.ACTOR)
+	local sees_target = core.fov.distance(sx, sy, tx, ty) <= self.sight and game.level.map.lites(tx, ty) or
+		act and self:canSee(act) and core.fov.distance(sx, sy, tx, ty) <= math.max(self.sight, (self.heightened_senses or 0) + (self.infravision or 0))
+
+	local darkVisionRange
+	if self:knowTalent(self.T_DARK_VISION) then
+		local t = self:getTalentFromId(self.T_DARK_VISION)
+		darkVisionRange = self:getTalentRange(t)
+	end
+	local inCreepingDark = false
+
+	block = block or function(_, x, y)
+		if darkVisionRange then
+			if game.level.map:checkAllEntities(x, y, "creepingDark") then
+				inCreepingDark = true
+			end
+			if inCreepingDark and core.fov.distance(sx, sy, x, y) > darkVisionRange then
+				return true
+			end
+		end
+
+		if sees_target then
+			return game.level.map:checkAllEntities(x, y, "block_sight") or
+				game.level.map:checkEntity(x, y, engine.Map.TERRAIN, "block_move") and not game.level.map:checkEntity(x, y, engine.Map.TERRAIN, "pass_projectile") or
+				type(extra_block) == "function" and extra_block(self, x, y)
+		elseif core.fov.distance(sx, sy, x, y) <= self.sight and game.level.map.lites(x, y) then
+			return game.level.map:checkEntity(x, y, engine.Map.TERRAIN, "block_sight") or
+				game.level.map:checkEntity(x, y, engine.Map.TERRAIN, "block_move") and not game.level.map:checkEntity(x, y, engine.Map.TERRAIN, "pass_projectile") or
+				type(extra_block) == "function" and extra_block(self, x, y)
+		else
+			return true
+		end
+	end
+
+	return core.fov.line(sx, sy, tx, ty, block)
+end
+
 --- Give target to others
 function _M:seen_by(who)
 	if self.ai_target.actor then return end
@@ -263,3 +304,4 @@ function _M:addedToLevel(level, x, y)
 
 	return mod.class.Actor.addedToLevel(self, level, x, y)
 end
+

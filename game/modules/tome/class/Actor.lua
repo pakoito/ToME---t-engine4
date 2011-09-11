@@ -104,8 +104,8 @@ function _M:init(t, no_default)
 	self.spell_cooldown_reduction = 0
 
 	self.unused_stats = self.unused_stats or 3
-	self.unused_talents =  self.unused_talents or 2
-	self.unused_generics =  self.unused_generics or 1
+	self.unused_talents = self.unused_talents or 2
+	self.unused_generics = self.unused_generics or 1
 	self.unused_talents_types = self.unused_talents_types or 0
 
 	t.healing_factor = t.healing_factor or 1
@@ -1589,7 +1589,7 @@ function _M:levelup()
 		if self.level % 5 == 0 then self.unused_talents = self.unused_talents + 1 end
 		if self.level % 5 == 0 then self.unused_generics = self.unused_generics - 1 end
 		-- At levels 10, 20 and 30 we gain a new talent type
-		if self.level == 10 or  self.level == 20 or  self.level == 30 then
+		if self.level == 10 or self.level == 20 or self.level == 30 then
 			self.unused_talents_types = self.unused_talents_types + 1
 		end
 	elseif type(self.no_points_on_levelup) == "function" then
@@ -2717,7 +2717,7 @@ function _M:canSeeNoCache(actor, def, def_pct)
 	-- check cursed pity talent
 	if actor:knowTalent(self.T_PITY) then
 		local t = actor:getTalentFromId(self.T_PITY)
-		if math.floor(core.fov.distance(self.x, self.y, actor.x, actor.y)) >= actor:getTalentRange(t) then
+		if core.fov.distance(self.x, self.y, actor.x, actor.y) >= actor:getTalentRange(t) then
 			return false, 50 - actor:getTalentLevel(self.T_PITY) * 5
 		end
 	end
@@ -2768,7 +2768,7 @@ function _M:hasLOS(x, y, what)
 	if not x or not y then return false, self.x, self.y end
 	what = what or "block_sight"
 
-	local lx, ly
+	local lx, ly, is_corner_blocked
 	if what == "block_sight" then
 		local darkVisionRange
 		if self:knowTalent(self.T_DARK_VISION) then
@@ -2776,10 +2776,10 @@ function _M:hasLOS(x, y, what)
 			darkVisionRange = self:getTalentRange(t)
 		end
 
-		local l = line.new(self.x, self.y, x, y)
+		local l = core.fov.line(self.x, self.y, x, y, "block_sight")
 		local inCreepingDark, lastX, lastY = false
-		lx, ly = l()
-		while lx and ly do
+		lx, ly, is_corner_blocked = l:step("block_sight")
+		while lx and ly and not is_corner_blocked do
 			if game.level.map:checkAllEntities(lx, ly, "block_sight") then
 				if darkVisionRange and game.level.map:checkAllEntities(lx, ly, "creepingDark") then
 					inCreepingDark = true
@@ -2793,20 +2793,20 @@ function _M:hasLOS(x, y, what)
 			end
 
 			lastX, lastY = lx, ly
-			lx, ly = l()
+			lx, ly, is_corner_blocked = l:step("block_sight")
 		end
 	else
-		local l = line.new(self.x, self.y, x, y)
-		lx, ly = l()
-		while lx and ly do
+		local l = core.fov.line(self.x, self.y, x, y, what)
+		lx, ly, is_corner_blocked = l:step(what)
+		while lx and ly and not is_corner_blocked do
 			if game.level.map:checkAllEntities(lx, ly, what) then break end
 
-			lx, ly = l()
+			lx, ly, is_corner_blocked = l:step(what)
 		end
 	end
 
 	-- Ok if we are at the end reset lx and ly for the next code
-	if not lx and not ly then lx, ly = x, y end
+	if not lx and not ly and not is_corner_blocked then lx, ly = x, y end
 
 	if lx == x and ly == y then return true, lx, ly end
 	return false, lx, ly
@@ -2981,3 +2981,4 @@ function _M:addedToLevel(level, x, y)
 
 	self:check("on_added_to_level", level, x, y)
 end
+
