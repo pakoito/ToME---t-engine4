@@ -141,7 +141,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Increases your golem's life, mana and stamina regeneration rates by %0.2f.
-		At level 1, 3 and 5 the golem also gains a new rune slot.]]):
+		At level 1, 3 and 5 the golem also gains a new rune slot.
+		Even without this talent, Golems start with three rune slots]]):
 		format(self:getTalentLevelRaw(t))
 	end,
 }

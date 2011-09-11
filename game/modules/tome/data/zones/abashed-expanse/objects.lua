@@ -19,6 +19,8 @@
 
 load("/data/general/objects/objects-maj-eyal.lua")
 
+local Talents = require "engine.interface.ActorTalents"
+
 newEntity{ base = "BASE_LITE", define_as = "VOID_STAR",
 	power_source = {arcane=true},
 	unique = true,
@@ -43,4 +45,7 @@ newEntity{ base = "BASE_LITE", define_as = "VOID_STAR",
 		},
 		lite = 2,
 	},
+
+	max_power = 70, power_regen = 1,
+	use_talent = { id = Talents.T_ECHOES_FROM_THE_VOID, level = 2, power = 70 },
 }

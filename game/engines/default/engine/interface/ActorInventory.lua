@@ -151,6 +151,8 @@ function _M:pickupFloor(i, vocal, no_sort)
 		elseif not prepickup then
 			if vocal then game.logSeen(self, "%s has no room for: %s.", self.name:capitalize(), o:getName{do_color=true}) end
 			return
+		elseif prepickup == "skip" then
+			return
 		else
 			return true
 		end

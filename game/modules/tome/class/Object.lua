@@ -1096,7 +1096,7 @@ end
 --- Called when trying to pickup
 function _M:on_prepickup(who, idx)
 	if self.quest and who ~= game.party:findMember{main=true} then
-		return true
+		return "skip"
 	end
 	if who.player and self.lore then
 		game.level.map:removeObject(who.x, who.y, idx)

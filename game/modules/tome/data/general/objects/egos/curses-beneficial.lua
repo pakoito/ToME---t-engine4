@@ -105,7 +105,7 @@ newEntity{
 	apply = function(item, who, power)
 		item.wielder = item.wielder or {}
 		item.wielder.resists = item.wielder.resists or {}
-		item.wielder.resists[DamageType.DARKNESS] = (item.wielder.resists[DamageType.ARCANE] or 0) + math.ceil(25 * power)
+		item.wielder.resists[DamageType.ARCANE] = (item.wielder.resists[DamageType.ARCANE] or 0) + math.ceil(25 * power)
 	end,
 }
 newEntity{
@@ -135,14 +135,14 @@ newEntity{
 	name="gift of seeking", level = 2, weighting = 3,
 	apply = function(item, who, power)
 		item.wielder = item.wielder or {}
-		item.wielder.combat_atk = (item.wielder.hate_regen or 0) + math.ceil(12 * power)
+		item.wielder.combat_atk = (item.wielder.combat_atk or 0) + math.ceil(12 * power)
 	end,
 }
 newEntity{
 	name="gift of rending", level = 2, weighting = 3,
 	apply = function(item, who, power)
 		item.wielder = item.wielder or {}
-		item.wielder.combat_apr = (item.wielder.hate_regen or 0) + math.ceil(10 * power)
+		item.wielder.combat_apr = (item.wielder.combat_apr or 0) + math.ceil(10 * power)
 	end,
 }
 newEntity{
