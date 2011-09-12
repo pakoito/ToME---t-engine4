@@ -69,8 +69,8 @@ function _M:project(t, x, y, damtype, dam, particles)
 		l = core.fov.line(srcx, srcy, x, y)
 	end
 	local block_corner = function(_, bx, by)
-		if self.target_type.block_path then
-			local b, h, hr = self.target_type:block_path(bx, by, true)
+		if typ.block_path then
+			local b, h, hr = typ:block_path(bx, by, true)
 			return b and h and not hr
 		else
 			return false
@@ -211,8 +211,8 @@ function _M:canProject(t, x, y)
 		l = core.fov.line(self.x, self.y, x, y)
 	end
 	local block_corner = function(_, bx, by)
-		if self.target_type.block_path then
-			local b, h, hr = self.target_type:block_path(bx, by, true)
+		if typ.block_path then
+			local b, h, hr = typ:block_path(bx, by, true)
 			return b and h and not hr
 		else
 			return false
@@ -297,8 +297,8 @@ end
 -- @return stop is this the last (blocking) tile?
 function _M:projectDoMove(typ, tgtx, tgty, x, y, srcx, srcy)
 	local block_corner = function(_, bx, by)
-		if self.target_type.block_path then
-			local b, h, hr = self.target_type:block_path(bx, by, true)
+		if typ.block_path then
+			local b, h, hr = typ:block_path(bx, by, true)
 			return b and h and not hr
 		else
 			return false
