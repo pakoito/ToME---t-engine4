@@ -178,7 +178,7 @@ newTalent{
 			return
 		end
 
-		local m = self:clone{
+		local m = require("mod.class.NPC").new(self:clone{
 			shader = "shadow_simulacrum",
 			no_drops = true,
 			faction = self.faction,
@@ -188,7 +188,7 @@ newTalent{
 			ai = "summoned", ai_real = "tactical",
 			name = "Forgery of Haze ("..self.name..")",
 			desc = [[A dark shadowy shape whose form resembles you.]],
-		}
+		})
 		m:removeAllMOs()
 		m.make_escort = nil
 		m.on_added_to_level = nil
@@ -198,10 +198,12 @@ newTalent{
 		m.max_life = m.max_life * t.getHealth(self, t)
 		m.life = util.bound(m.life, 0, m.max_life)
 		m.forceLevelup = function() end
+		m.die = nil
 		m.on_die = nil
 		m.on_acquire_target = nil
 		m.seen_by = nil
 		m.can_talk = nil
+		m.no_inventory_access = true
 		m.clone_on_hit = nil
 		m.talents.T_CREATE_MINIONS = nil
 		m.talents.T_FORGERY_OF_HAZE = nil
