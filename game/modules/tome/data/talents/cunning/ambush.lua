@@ -138,6 +138,7 @@ newTalent{
 		m.max_life = m.max_life * t.getHealth(self, t)
 		m.life = util.bound(m.life, 0, m.max_life)
 		m.forceLevelup = function() end
+		m.die = nil
 		m.on_die = nil
 		m.on_acquire_target = nil
 		m.seen_by = nil
