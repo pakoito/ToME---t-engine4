@@ -378,8 +378,36 @@ static int lua_fs_get_search_path(lua_State *L)
 	return 1;
 }
 
+static int lua_patch_file(lua_State *L)
+{
+	char *infile = PHYSFS_getDependentPath(luaL_checkstring(L, 1));
+	char *outfile = PHYSFS_getDependentPath(luaL_checkstring(L, 2));
+	char *patchfile = PHYSFS_getDependentPath(luaL_checkstring(L, 3));
+
+	printf("BSPATCH: %s + %s => %s\n", infile, patchfile, outfile);
+
+	int ret = bspatch(infile, outfile, patchfile);
+
+	free(infile);
+	free(outfile);
+	free(patchfile);
+
+	if (!ret)
+	{
+		lua_pushboolean(L, TRUE);
+		return 1;
+	}
+	else
+	{
+		lua_pushnil(L);
+		return 1;
+	}
+}
+
+
 static const struct luaL_reg fslib[] =
 {
+	{"patchFile", lua_patch_file},
 	{"open", lua_fs_open},
 	{"zipOpen", lua_fs_zipopen},
 	{"exists", lua_fs_exists},

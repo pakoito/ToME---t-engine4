@@ -22,7 +22,7 @@ project "TEngine"
 	language "C"
 	targetname("t-engine")
 	files { "../src/*.c", }
-	links { "physfs", "lua".._OPTIONS.lua, "fov", "luasocket", "luaprofiler", "lualanes", "lpeg", "tcodimport", "lxp", "expatstatic", "luamd5", "luazlib", "luabitop" }
+	links { "physfs", "lua".._OPTIONS.lua, "fov", "luasocket", "luaprofiler", "lualanes", "lpeg", "tcodimport", "lxp", "expatstatic", "luamd5", "luazlib", "luabitop", "te4-bzip" }
 	defines { "_DEFAULT_VIDEOMODE_FLAGS_='SDL_HWSURFACE|SDL_DOUBLEBUF'" }
 	defines { [[TENGINE_HOME_PATH='".t-engine"']], "TE4CORE_VERSION="..TE4CORE_VERSION }
 
@@ -272,3 +272,10 @@ project "utf8proc"
 	targetname "utf8proc"
 
 	files { "../src/utf8proc/utf8proc.c", }
+
+project "te4-bzip"
+	kind "StaticLib"
+	language "C"
+	targetname "te4-bzip"
+
+	files { "../src/bzip2/*.c", }

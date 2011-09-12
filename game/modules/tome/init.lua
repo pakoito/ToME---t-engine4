@@ -45,13 +45,19 @@ Still, this is a golden age. Civilisations are healing the wounds of thousands o
 You are an adventurer, set out to discover wonders, explore old places, and venture into the unknown for wealth and glory.
 ]]
 starter = "mod.load"
+
+-- List of additional team files required
+teams = {
+	{ "#name#-#version#-music.team", "optional", {"/data/music/"} },
+	{ "#name#-#version#-gfx-shockbolt.team", "optional", {"/data/gfx/shockbolt/"} },
+}
+
 loading_wait_ticks = 260
 profile_stats_fields = {"artifacts", "characters", "deaths", "uniques", "scores", "lore", "escorts"}
 allow_userchat = true -- We can talk to the online community
 no_get_name = true -- Name setting for new characters is done by the module itself
 
 -- Define the fields that are sync'ed online, and how they are sync'ed
--- '
 profile_defs = {
 	allow_build = { {name="index:string:30"}, receive=function(data, save) save[data.name] = true end, export=function(env) for k, _ in pairs(env) do add{name=k} end end },
 	lore = { {name="index:string:30"}, receive=function(data, save) save.lore = save.lore or {} save.lore[data.name] = true end, export=function(env) for k, v in pairs(env.lore or {}) do add{name=k} end end },
@@ -82,6 +88,7 @@ profile_defs = {
 	},
 }
 
+-- Formatter for scores
 score_formatters = {
 	["Maj'Eyal"] = {
 		alive="#LIGHT_GREEN#{score} : #BLUE#{name}#LAST# the #LIGHT_RED#level {level} {subrace} {subclass}#LAST# is still alive and well on #GREEN#{where}#LAST##WHITE#",

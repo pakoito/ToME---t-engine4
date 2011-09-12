@@ -17,6 +17,7 @@ solution "TEngine"
 		"src/utf8proc",
 		"src/physfs",
 		"src/physfs/zlib123",
+		"src/bzip2",
 		"/opt/SDL-1.3/include/SDL/",
 		"/usr/include/GL",
 	}
