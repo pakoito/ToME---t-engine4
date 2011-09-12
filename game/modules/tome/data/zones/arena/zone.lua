@@ -243,7 +243,7 @@ return {
 					local i = 1
 					while(scores[i] and scores[i].name) do
 						p = scores[i]
-						tmp = stri:format(p.name:capitalize(), p.sex, p.race, p.class, p.score, p.perk, p.wave)
+						tmp = stri:format(p.name:capitalize(), p.sex or "???", p.race or "???", p.class or "???", p.score or 0, p.perk or "???", p.wave or 0)
 						text = text..line(tmp, "#LIGHT_BLUE#")
 						i = i + 1
 					end

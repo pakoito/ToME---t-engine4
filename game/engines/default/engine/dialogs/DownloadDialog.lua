@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 require "engine.class"
-local ispatch = require "dispatch"
+local dispatch = require "dispatch"
 local Dialog = require "engine.ui.Dialog"
 local Textzone = require "engine.ui.Textzone"
 
@@ -93,6 +93,7 @@ function _M:startDownload()
 	local handler = dispatch.newhandler("coroutine")
 	local done = false
 	handler:start(function()
+		print("plop")
 		http.request{
 			url = self.url,
 			sink = function(chunk, err) print("=====") end,

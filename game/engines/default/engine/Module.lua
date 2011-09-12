@@ -133,8 +133,18 @@ function _M:loadDefinition(dir, team, incompatible)
 					if fs.exists(dir.."/engine") then fs.mount(fs.getRealPath(dir).."/engine/", "/engine", false) end
 				else
 					local src = fs.getRealPath(team)
-
 					fs.mount(src, "/", false)
+
+					-- Addional teams
+					for i, t in ipairs(mod.teams or {}) do
+						local base = team:gsub("/[^/]+$", "/")
+						local file = base..t[1]:gsub("#name#", mod.short_name):gsub("#version#", ("%d.%d.%d"):format(mod.version[1], mod.version[2], mod.version[3]))
+						if fs.exists(file) then
+							print("Mounting additional team file:", file)
+							local src = fs.getRealPath(file)
+							fs.mount(src, "/", false)
+						end
+					end
 				end
 
 				-- Load moonscript support
@@ -526,50 +536,6 @@ end
 -- @param src the url to load the list from, if nil it will default to te4.org
 -- @return a linda object (see lua lanes documentation) which should be waited upon like this <code>local mylist = l:receive("moduleslist")</code>. Also returns a thread handle
 function _M:loadRemoteList(src)
---[[
-	local l = lanes.linda()
-
-	function list_handler(src)
-		local http = require "socket.http"
-		local ltn12 = require "ltn12"
-
-		local t = {}
-		print("Downloading modules list from", src)
-		http.request{url = src, sink = ltn12.sink.table(t)}
-		local f, err = loadstring(table.concat(t))
-		if err then
-			print("Could not load modules list from ", src, ":", err)
-			l:send("moduleslist", {})
-			return
-		end
-
-		local list = {}
-		local dmods = {}
-		dmods.installableModule = function (t)
-			local ok = true
-
-			if not t.name or not t.long_name or not t.short_name or not t.author then ok = false end
-
-			if ok then
-				list[#list+1] = t
-			end
-		end
-		setfenv(f, dmods)
-		local ok, err = pcall(f)
-		if not ok and err then
-			print("Could not read modules list from ", src, ":", err)
-			l:send("moduleslist", {})
-			return
-		end
-
-		for k, e in ipairs(list) do print("[INSTALLABLE MODULE] ", e.name) end
-
-		l:send("moduleslist", list)
-	end
-
-	local h = lanes.gen("*", list_handler)(src or "http://te4.org/modules.lualist")
-	return l, h
-]]
 	local DownloadDialog = require "engine.dialogs.DownloadDialog"
 	local d = DownloadDialog.new("Fetching updates", "http://te4.org/dl/t-engine/t-engine4-windows-1.0.0beta21.zip")
 	d:startDownload()
