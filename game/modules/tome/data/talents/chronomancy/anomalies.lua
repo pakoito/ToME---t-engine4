@@ -19,6 +19,11 @@
 
 local Object = require "engine.Object"
 
+getAnomalyDamage = function(self)
+	local damage = math.pow(self:getParadox()/50, 2)
+	return damage
+end
+
 newTalent{
 	name = "Anomaly Teleport",
 	type = {"chronomancy/anomalies", 1},
@@ -254,7 +259,7 @@ newTalent{
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
 	type_no_req = true,
-	getDamage = function(self, t) return self:getParadox()/40 end,
+	getDamage = function(self, t) return getAnomalyDamage(self)/4 end,
 	getDuration = function(self, t) return math.ceil (self:getParadox()/50) end,
 	message = "A temporal storm rages around @Source@.",
 	action = function(self, t)
@@ -429,6 +434,8 @@ newTalent{
 	direct_hit = true,
 	type_no_req = true,
 	getRange = function(self, t) return math.ceil(self:getParadox()/20) end,
+	getConfuseDuration = function(self, t) return math.floor(self:getParadox()/200)end,
+	getConfuseEfficency = function(self, t) return self:getParadox()/10 end,
 	message = "Reality has shifted.",
 	action = function(self, t)
 		local tgts = {}
@@ -440,24 +447,35 @@ newTalent{
 			end
 		end end
 
-		-- Randomly take targets
+		-- Randomly take a target
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
-		for i = 1, 1 do
-			if #tgts <= 0 then break end
-			local a, id = rng.table(tgts)
-			table.remove(tgts, id)
-
-		local px, py = self.x, self.y
-		local gx, gy = a.x, a.y
-
-		self:move(gx, gy, true)
-		a:move(px, py, true)
-		self:move(gx, gy, true)
-		a:move(px, py, true)
-		game.level.map:particleEmitter(px, py, 1, "teleport")
-		game.level.map:particleEmitter(gx, gy, 1, "teleport")
-
+		local a, id = rng.table(tgts)
+		local target = a
+		
+		if target:canBe("teleport") and self:canBe("teleport") then
+			-- first remove the target so the destination tile is empty
+			game.level.map:remove(target.x, target.y, Map.ACTOR)
+			local px, py 
+			px, py = self.x, self.y
+			if self:teleportRandom(a.x, a.y, 0) then
+				-- return the target at the casters old location
+				game.level.map(px, py, Map.ACTOR, target)
+				self.x, self.y, target.x, target.y = target.x, target.y, px, py
+				game.level.map:particleEmitter(target.x, target.y, 1, "temporal_teleport")
+				game.level.map:particleEmitter(self.x, self.y, 1, "temporal_teleport")
+				-- confuse them both
+				self:project(tg, target.x, target.y, DamageType.CONFUSION, { dur = t.getConfuseDuration(self, t), dam = t.getConfuseEfficency(self, t), })
+				self:project(tg, self.x, self.y, DamageType.CONFUSION, { dur = t.getConfuseDuration(self, t), dam = t.getConfuseEfficency(self, t),	})
+			else
+				-- return the target without effect
+				game.level.map(target.x, target.y, Map.ACTOR, target)
+				game.logSeen(self, "The spell fizzles!")
+			end
+		else
+			game.logSeen(target, "%s resists the swap!", target.name:capitalize())
 		end
+
+		game:playSoundNear(self, "talents/teleport")
 		return true
 	end,
 	info = function(self, t)
@@ -474,7 +492,7 @@ newTalent{
 	type_no_req = true,
 	getTargetCount = function(self, t) return 1 end,
 	getRadius = function(self, t) return math.ceil(self:getParadox()/100) end,
-	getDamage = function(self, t) return self:getParadox()/20 end,
+	getDamage = function(self, t) return getAnomalyDamage(self) end,
 	message = "@Source@ has caused a Gravity Spike.",
 	action = function(self, t)
 		local tgts = {}

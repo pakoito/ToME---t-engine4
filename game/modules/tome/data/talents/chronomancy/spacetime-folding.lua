@@ -62,11 +62,6 @@ newTalent{
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty then return nil end
 		tx, ty = checkBackfire(self, tx, ty, t.paradox)
-		if core.fov.distance(self.x, self.y, tx, ty) > self:getTalentRange(t) then return nil end
-				if not self:canBe("teleport") or game.level.map.attrs(tx, ty, "no_teleport") or game.level.map.attrs(self.x, self.y, "no_teleport") then
-			game.logSeen(self, "The spell fizzles!")
-			return true
-		end
 		if tx then
 			local _ _, tx, ty = self:canProject(tg, tx, ty)
 			if tx then
@@ -74,40 +69,34 @@ newTalent{
 				if not target then return nil end
 			end
 		end
-
+		
 		-- checks for spacetime mastery hit bonus
 		local power = self:combatSpellpower()
 		if self:knowTalent(self.T_SPACETIME_MASTERY) then
-			power = self:combatSpellpower() * 1 + (self:getTalentLevel(self.T_SPACETIME_MASTERY)/10)
+			power = self:combatSpellpower() * (1 + self:getTalentLevel(self.T_SPACETIME_MASTERY)/10)
 		end
-
-		if target:canBe("teleport") then
-			local hit = self:checkHit(power, target:combatSpellResist() + (target:attr("continuum_destabilization") or 0))
-			if not hit then
-				game.logSeen(target, "The spell fizzles!")
-				return true
+		
+		if target:canBe("teleport") and self:checkHit(power, target:combatSpellResist() + (target:attr("continuum_destabilization") or 0)) then
+			-- first remove the target so the destination tile is empty
+			game.level.map:remove(target.x, target.y, Map.ACTOR)
+			local px, py 
+			px, py = self.x, self.y
+			if self:teleportRandom(tx, ty, 0) then
+				-- return the target at the casters old location
+				game.level.map(px, py, Map.ACTOR, target)
+				self.x, self.y, target.x, target.y = target.x, target.y, px, py
+				game.level.map:particleEmitter(target.x, target.y, 1, "temporal_teleport")
+				game.level.map:particleEmitter(self.x, self.y, 1, "temporal_teleport")
+				target:setEffect(target.EFF_CONTINUUM_DESTABILIZATION, 100, {power=self:combatSpellpower(0.3)})
+				-- confuse them
+				self:project(tg, target.x, target.y, DamageType.CONFUSION, { dur = t.getConfuseDuration(self, t), dam = t.getConfuseEfficency(self, t),	})
 			else
-				self:project(tg, tx, ty, DamageType.CONFUSION, {
-					dur = t.getConfuseDuration(self, t),
-					dam = t.getConfuseEfficency(self, t),
-				})
+				-- return the target without effect
+				game.level.map(target.x, target.y, Map.ACTOR, target)
+				game.logSeen(self, "The spell fizzles!")
 			end
-		end
-
-		-- Annoy them!
-		if target ~= self and target:reactionToward(self) < 0 then target:setTarget(self) end
-
-		game.level.map:remove(self.x, self.y, Map.ACTOR)
-		game.level.map:remove(target.x, target.y, Map.ACTOR)
-		game.level.map(self.x, self.y, Map.ACTOR, target)
-		game.level.map(target.x, target.y, Map.ACTOR, self)
-		self.x, self.y, target.x, target.y = target.x, target.y, self.x, self.y
-		game.level.map:particleEmitter(target.x, target.y, 1, "temporal_teleport")
-		game.level.map:particleEmitter(self.x, self.y, 1, "temporal_teleport")
-
-
-		if target ~= self then
-			target:setEffect(target.EFF_CONTINUUM_DESTABILIZATION, 100, {power=self:combatSpellpower(0.3)})
+		else
+			game.logSeen(target, "%s resists the swap!", target.name:capitalize())
 		end
 
 		game:playSoundNear(self, "talents/teleport")
@@ -166,36 +155,38 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
+		if not self:hasLOS(x, y) or game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then game.logSeen(self, "You can't move there.") return nil	end
 		x, y = checkBackfire(self, x, y, t.paradox)
 		local _ _, x, y = self:canProject(tg, x, y)
-
-		if not self:canBe("teleport") or game.level.map.attrs(x, y, "no_teleport") then
-			game.logSeen(self, "The spell fizzles!")
-			return true
-		end
-
-		if self:hasLOS(x, y) and not game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then
+		
+		-- indirect fire after the teleport from the x, y to our old starting spot would be best here 
+		-- but checking for no_teleport we can make an educated guess rather or not the teleport will work
+		if not game.level.map.attrs(x, y, "no_teleport") then
+			local y = y
+			if game.level.data.no_teleport_south and y  > self.y then 
+				y = self.y
+			end
 			local dam = self:spellCrit(t.getDamage(self, t))
 			self:project(tg, x, y, DamageType.TEMPORALSTUN, dam)
 			game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "temporal_lightning", {tx=x-self.x, ty=y-self.y})
 			game:playSoundNear(self, "talents/lightning")
-			local tx, ty = util.findFreeGrid(x, y, 5, true, {[Map.ACTOR]=true})
-			if tx and ty then
-				self:move(tx, ty, true)
-			end
-		else
-			game.logSeen(self, "You can't move there.")
-			return nil
 		end
-
+		
+		-- since we're using a precise teleport we'll look for a free grid first
+		local tx, ty = util.findFreeGrid(x, y, 5, true, {[Map.ACTOR]=true})
+		if tx and ty then
+			if not self:teleportRandom(tx, ty, 0) then
+				game.logSeen(self, "The spell fizzles!")
+			end
+		end
+		
 		return true
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		local range = self:getTalentRange(t)
-		return ([[Violently fold the space between yourself and another point within a range of %d.  You move to the selected point and leave a temporal wake behind that stuns for 4 turns and inflicts %0.2f temporal damage to everything in the path.
+		return ([[Violently fold the space between yourself and another point within range.  You move to the target location and leave a temporal wake behind that stuns for 4 turns and inflicts %0.2f temporal damage to everything in the path.
 		The damage will scale with your Paradox and Spellpower and the range will increase with the talent level.]]):
-		format(range, damDesc(self, DamageType.TEMPORAL, damage))
+		format(damDesc(self, DamageType.TEMPORAL, damage))
 	end,
 }
 
@@ -235,4 +226,3 @@ newTalent{
 		format (damage*100)
 	end,
 }]=]
-

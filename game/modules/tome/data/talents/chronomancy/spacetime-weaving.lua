@@ -39,29 +39,27 @@ newTalent{
 	direct_hit = true,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
-		local x, y, target = self:getTarget(tg)
+		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		x, y = checkBackfire(self, x, y, t.paradox)
-		local __, x, y = self:canProject(tg, x, y)
-		
-		if not self:canBe("teleport") or game.level.map.attrs(x, y, "no_teleport") then
-			game.logSeen(self, "The spell fizzles!")
-			return true
-		end
-	
-		if not game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then
-			local tx, ty = util.findFreeGrid(x, y, 5, true, {[Map.ACTOR]=true})
-			if tx and ty then
-				self:move(tx, ty, true)
-			end
-			game.level.map:particleEmitter(self.x, self.y, 1, "temporal_teleport")
-			self:move(tx, ty, true)
-			game.level.map:particleEmitter(self.x, self.y, 1, "temporal_teleport")
-			game:playSoundNear(self, "talents/teleport")
-		else
-			game.logSeen(self, "You cannot move there.")
+		if not self:hasLOS(x, y) and self:getTalentLevel(t) < 4 then
+			game.logSeen(self, "You do not have line of sight.")
 			return nil
 		end
+		x, y = checkBackfire(self, x, y, t.paradox)
+		local __, x, y = self:canProject(tg, x, y)
+	
+		game.level.map:particleEmitter(self.x, self.y, 1, "temporal_teleport")
+		
+		-- since we're using a precise teleport we'll look for a free grid first
+		local tx, ty = util.findFreeGrid(x, y, 5, true, {[Map.ACTOR]=true})
+		if tx and ty then
+			if not self:teleportRandom(tx, ty, 0) then
+				game.logSeen(self, "The spell fizzles!")
+			end
+		end
+		
+		game.level.map:particleEmitter(self.x, self.y, 1, "temporal_teleport")
+		game:playSoundNear(self, "talents/teleport")
 		
 		return true
 	end,
@@ -94,35 +92,34 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local actors = {}
 		
+		--checks for spacetime mastery hit bonus
+		local power = self:combatSpellpower()
+		if self:knowTalent(self.T_SPACETIME_MASTERY) then
+			power = self:combatSpellpower() * (1 + self:getTalentLevel(self.T_SPACETIME_MASTERY)/10)
+		end
+		
 		self:project(tg, self.x, self.y, function(px, py)
 			local target = game.level.map(px, py, Map.ACTOR)
 			if not target or target == self then return end
-			
-			--checks for spacetime mastery hit bonus
-			local power = self:combatSpellpower()
-			if self:knowTalent(self.T_SPACETIME_MASTERY) then
-				power = self:combatSpellpower() * 1 + (self:getTalentLevel(self.T_SPACETIME_MASTERY)/10)
-			end
-			
-			if target:canBe("teleport") then
-				local hit = self:checkHit(power, target:combatSpellResist() + (target:attr("continuum_destabilization") or 0))
-				if not hit then	
-					game.logSeen(target, "%s resists the banishment!", target.name:capitalize())
-					return
-				end
-			else 
+			if self:checkHit(power, target:combatSpellResist() + (target:attr("continuum_destabilization") or 0)) and target:canBe("teleport") then
+				actors[#actors+1] = target
+			else
 				game.logSeen(target, "%s resists the banishment!", target.name:capitalize())
-				return
 			end
-			
-			actors[#actors+1] = target
 		end)
 
+		local do_fizzle = false
 		for i, a in ipairs(actors) do
 			game.level.map:particleEmitter(a.x, a.y, 1, "teleport")
-			a:teleportRandom(a.x, a.y, self:getTalentRadius(t) * 4, self:getTalentRadius(t) * 2)
+			if not a:teleportRandom(a.x, a.y, self:getTalentRadius(t) * 4, self:getTalentRadius(t) * 2) then
+				do_fizzle = true
+			end
 			a:setEffect(a.EFF_CONTINUUM_DESTABILIZATION, 100, {power=self:combatSpellpower(0.3)})
 			game.level.map:particleEmitter(a.x, a.y, 1, "teleport")
+		end
+		
+		if do_fizzle == true then
+			game.logSeen(self, "The spell fizzles!")
 		end
 		
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_teleport", {radius=tg.radius})
@@ -162,13 +159,8 @@ newTalent{
 		if not entrance_x or not entrance_y then return nil end
 		local _ _, entrance_x, entrance_y = self:canProject(tg, entrance_x, entrance_y)
 		local trap = game.level.map(entrance_x, entrance_y, engine.Map.TRAP)
-		if trap then
-			game.logPlayer(self, "You can't place a wormhole entrance on a trap.")
-		return end
-		if game.level.map.attrs(entrance_x, entrance_y, "no_teleport") or game.level.map:checkEntity(entrance_x, entrance_y, Map.TERRAIN, "block_move") then
-			game.logPlayer(self, "You cannot place a wormhole here.")
-			return false
-		end
+		if trap or game.level.map:checkEntity(entrance_x, entrance_y, Map.TERRAIN, "block_move") then game.logPlayer(self, "You can't place a wormhole entrance here.") return end
+
 		-- Finding the exit location
 		-- First, find the center possible exit locations
 		local x, y, radius, minimum_distance
@@ -180,55 +172,69 @@ newTalent{
 			if not x then return nil end
 			-- See if we can actually project to the selected location
 			if not self:canProject(tg, x, y) then
-				game.logPlayer(self, "Pick a valid location")
+				game.logPlayer(self, "Pick a valid location.")
 				return false
 			end
 		else
 			x, y = self.x, self.y
-			radius = 15
+			radius = self:getTalentRange(t)
 			minimum_distance = 10
 		end
 		-- Second, select one of the possible exit locations
 		local poss = {}
-			for i = x - radius, x + radius do
-				for j = y - radius, y + radius do
-					if game.level.map:isBound(i, j) and
-						core.fov.distance(x, y, i, j) <= radius and
-						core.fov.distance(x, y, i, j) >= minimum_distance and
-						self:canMove(i, j) and not game.level.map.attrs(i, j, "no_teleport") and not game.level.map(i, j, engine.Map.TRAP) then
-						poss[#poss+1] = {i,j}
-					end
+		for i = x - radius, x + radius do
+			for j = y - radius, y + radius do
+				if game.level.map:isBound(i, j) and
+					core.fov.distance(x, y, i, j) <= radius and
+					core.fov.distance(x, y, i, j) >= minimum_distance and
+					self:canMove(i, j) and not game.level.map(i, j, engine.Map.TRAP) then
+					poss[#poss+1] = {i,j}
 				end
 			end
-			if #poss == 0 then
-				game.logPlayer(self, "No exit location could be found.")
-			return false end
-			local pos = poss[rng.range(1, #poss)]
-			exit_x, exit_y = pos[1], pos[2]
+		end
+		if #poss == 0 then game.logPlayer(self, "No exit location could be found.")	return false end
+		local pos = poss[rng.range(1, #poss)]
+		exit_x, exit_y = pos[1], pos[2]
 		print("[[wormhole]] entrance ", entrance_x, " :: ", entrance_y)
 		print("[[wormhole]] exit ", exit_x, " :: ", exit_y)
+		
+		--checks for spacetime mastery hit bonus
+		local power = self:combatSpellpower()
+		if self:knowTalent(self.T_SPACETIME_MASTERY) then
+			power = self:combatSpellpower() * (1 + self:getTalentLevel(self.T_SPACETIME_MASTERY)/10)
+		end
+		
 		-- Adding the entrance wormhole
 		local entrance = mod.class.Trap.new{
 			name = "wormhole",
 			type = "annoy", subtype="teleport", id_by_type=true, unided_name = "trap",
 			image = "terrain/wormhole.png",
 			display = '&', color_r=255, color_g=255, color_b=255, back_color=colors.STEEL_BLUE,
-			message = "@Target@ moves through the wormhole.",
-			triggered = function(self, x, y, who)
-				local tx, ty = util.findFreeGrid(self.dest.x, self.dest.y, 5, true, {[engine.Map.ACTOR]=true})
-				if not tx or not who:canBe("teleport") or game.level.map.attrs(tx, ty, "no_teleport") then
-					game.logPlayer(who, "You try to enter the wormhole but a violent force pushes you back.")
-					return true
-				else
-					who:move(tx, ty, true)
-				end
-				return true
-			end,
-			disarm = function(self, x, y, who) return false end,
+			message = "@Target@ moves onto the wormhole.",
 			temporary = t.getDuration(self, t),
 			x = entrance_x, y = entrance_y,
 			canAct = false,
 			energy = {value=0},
+			disarm = function(self, x, y, who) return false end,
+			check_hit = power,
+			destabilization_power = self:combatSpellpower(0.3),
+			summoned_by = self, -- "summoner" is immune to it's own traps
+			triggered = function(self, x, y, who)
+				if who:checkHit(self.check_hit, who:combatSpellResist(), 0, 95, 15) and who:canBe("teleport") or who == self.summoned_by then
+					-- since we're using a precise teleport we'll look for a free grid first
+					local tx, ty = util.findFreeGrid(self.dest.x, self.dest.y, 5, true, {[Map.ACTOR]=true})
+					if tx and ty then
+						if not who:teleportRandom(tx, ty, 0) then
+							game.logSeen(who, "%s tries to enter the wormhole but a violent force pushes it back.", who.name:capitalize())
+						elseif who ~= self.summoned_by then
+							who:setEffect(who.EFF_CONTINUUM_DESTABILIZATION, 100, {power=self.destabilization_power})
+						end
+					end
+				else
+					game.logSeen(who, "%s ignores the wormhole.", who.name:capitalize())
+				end
+				return true
+			end,
 			act = function(self)
 				self:useEnergy()
 				self.temporary = self.temporary - 1
@@ -245,6 +251,7 @@ newTalent{
 		game.zone:addEntity(game.level, entrance, "trap", entrance_x, entrance_y)
 		game.level.map:particleEmitter(entrance_x, entrance_y, 1, "teleport")
 		game:playSoundNear(self, "talents/heal")
+		
 		-- Adding the exit wormhole
 		local exit = entrance:clone()
 		exit.x = exit_x
@@ -254,16 +261,18 @@ newTalent{
 		exit:setKnown(self, true)
 		game.zone:addEntity(game.level, exit, "trap", exit_x, exit_y)
 		game.level.map:particleEmitter(exit_x, exit_y, 1, "teleport")
+		
 		-- Linking the wormholes
 		entrance.dest = exit
 		exit.dest = entrance
+		
 		game.logSeen(self, "%s folds the space between two points.", self.name)
 		return true
 	end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[You fold the space between yourself and another point, allowing travel back and forth between them for the next %d turns.
+		return ([[You fold the space between yourself and a random point within range, creating a pair of wormholes.  Any creature stepping on either wormhole will be teleported to the other.  The wormholes will last %d turns.
 		At level 4 you may choose the exit location target area (radius %d).  The duration will scale with your Paradox.
 		This spell takes no time to cast.]])
 		:format(duration, radius)
@@ -294,7 +303,7 @@ newTalent{
 		local cooldown = self:getTalentLevelRaw(t)
 		local wormhole = self:getTalentLevelRaw(t) * 2
 		local power = self:getTalentLevel(t) * 10
-		return ([[Your mastery of spacetime reduces the cooldown of banish, dimensional step, swap, and temporal wake by %d and the cooldown of wormhole by %d.  Also improves your chances of hitting targets with effects that may cause continuum destablization (Banish, Time Skip, etc.) as well as your chance of overcoming continuum destabilization by %d%%.]]):
+		return ([[Your mastery of spacetime reduces the cooldown of banish, dimensional step, swap, and temporal wake by %d and the cooldown of wormhole by %d.  Also improves your chances of hitting targets with chronomancy effects that may cause continuum destablization (Banish, Time Skip, etc.) as well as your chance of overcoming continuum destabilization by %d%%.]]):
 		format(cooldown, wormhole, power)
 	end,
 }

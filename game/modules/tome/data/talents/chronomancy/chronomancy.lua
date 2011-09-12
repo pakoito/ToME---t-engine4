@@ -69,19 +69,18 @@ newTalent{
 	getDuration = function(self, t) 
 		local duration = 1 + math.floor(self:getTalentLevel(t)/2)
 		if self:knowTalent(self.T_PARADOX_MASTERY) then
-			duration = 1 + math.floor((self:getTalentLevel(t)/2) + self:getTalentLevel(self.T_PARADOX_MASTERY)/2)
+			duration = 1 + math.floor((self:getTalentLevel(t)/2) + (self:getTalentLevel(self.T_PARADOX_MASTERY)/2))
 		end
 		
 		return duration
 	end,
 	getReduction = function(self, t)
-		local modifier = self:getWil()
+		local reduction = self:combatTalentStatDamage(t, "wil", 20, 400)
 		--check for Paradox Mastery
 		if self:knowTalent(self.T_PARADOX_MASTERY) then
-			modifier = modifier * (1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10 or 0))
+			reduction = reduction * (1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10 or 0))
 		end
-
-		local reduction = (20 + (modifier * self:getTalentLevel(t)/2))
+		
 		return reduction
 	end,
 	action = function(self, t)
