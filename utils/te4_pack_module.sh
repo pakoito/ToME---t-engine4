@@ -9,7 +9,7 @@ mod="$1"
 version="$2"
 exclude_ogg="$3"
 
-cd "$mod"
+pushd "$mod"
 teams=`lua <<EOS
 local init = loadfile("init.lua")
 local d = {}
@@ -22,13 +22,11 @@ for i, def in ipairs(d.teams) do
 end
 EOS`
 teams=`echo "$teams"| sed "s/#name#/$mod/g" | sed "s/#version#/$version/g"`
-cd ..
-
-echo $teams
+popd
 
 cp -a "$mod" tmp
 find tmp -name .svn -or -name '*~' | xargs rm -rf
-cd tmp
+pushd tmp
 
 if test "$exclude_ogg" -eq 1; then
 	IFS=$'\n'; for i in `find -name '*.ogg'`; do
@@ -43,14 +41,23 @@ mv mod/data .
 
 IFS=';'
 for teamdef in `echo "$teams"`; do
-	echo "=== Teamdef: $teamdef"
-end
+	tname=`echo "$teamdef"|cut -d: -f1`
+	tlist=`echo "$teamdef"|cut -d: -f2-`
+	echo "=== Teamdef: $tname"
+	IFS=':'
+	for list in `echo "$tlist"`; do
+		echo "=== Adding: $tlist"
+		zip --quiet -r -0 ../"$tname" "$list"
+		rm -rf "$list"
+	done
+	IFS=';'
+done
 
 if test "$exclude_ogg" -eq 1; then
-	zip -r -0 ../"$mod"-"$version-nomusic".team *
+	zip --quiet -r -0 ../"$mod"-"$version-nomusic".team *
 else
-	zip -r -0 ../"$mod"-"$version".team *
+	zip --quiet -r -0 ../"$mod"-"$version".team *
 fi
 
-cd -
+popd
 rm -rf tmp
