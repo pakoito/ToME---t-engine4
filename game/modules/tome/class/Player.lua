@@ -947,7 +947,13 @@ function _M:useOrbPortal(portal)
 		end
 		game:changeLevel(portal.change_level, portal.change_zone)
 
-		if portal.after_zone_teleport then self:move(portal.after_zone_teleport.x, portal.after_zone_teleport.y, true) end
+		if portal.after_zone_teleport then
+			self:move(portal.after_zone_teleport.x, portal.after_zone_teleport.y, true)
+			for e, _ in pairs(game.party.members) do if e ~= self then
+				local x, y = util.findFreeGrid(portal.after_zone_teleport.x, portal.after_zone_teleport.y, 10, true, {[Map.ACTOR]=true})
+				if x then e:move(x, y, true) end
+			end end
+		end
 	end
 
 	if portal.message then game.logPlayer(self, portal.message) end
