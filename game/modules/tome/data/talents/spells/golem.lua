@@ -171,7 +171,7 @@ newTalent{
 				if is_corner_blocked or game.level.map:checkAllEntities(lx, ly, "block_move", self) then break end
 				tx, ty = lx, ly
 				lx, ly, is_corner_blocked = l:step(block_actor)
-			end     
+			end
 
 			self:move(tx, ty, true)
 		end
@@ -211,7 +211,7 @@ newTalent{
 	stamina = 5,
 	requires_target = true,
 	target = function(self, t)
-		return {type="ballbolt", radius=self:getTalentRadius(t), selffire=false, range=self:getTalentRange(t)}
+		return {type="ballbolt", radius=self:getTalentRadius(t), friendlyfire=false, range=self:getTalentRange(t)}
 	end,
 	getGolemDamage = function(self, t)
 		return self:combatTalentWeaponDamage(t, 0.4, 1.1)
@@ -243,7 +243,7 @@ newTalent{
 				if is_corner_blocked or game.level.map:checkAllEntities(lx, ly, "block_move", self) then break end
 				tx, ty = lx, ly
 				lx, ly, is_corner_blocked = l:step(block_actor)
-			end     
+			end
 
 			self:move(tx, ty, true)
 		end
