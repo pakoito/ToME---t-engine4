@@ -74,6 +74,7 @@ SDL_TimerID display_timer_id = NULL;
 SDL_TimerID realtime_timer_id = NULL;
 
 /* OpenGL capabilities */
+GLint max_texture_size = 1024;
 extern bool shaders_active;
 bool fbo_active;
 bool multitexture_active;
@@ -725,9 +726,8 @@ int resizeWindow(int width, int height)
 
 	SDL_SetGamma(gamma_correction, gamma_correction, gamma_correction);
 
-	GLint texSize;
-	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &texSize);
-	printf("OpenGL max texture size: %d\n", texSize);
+	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_texture_size);
+	printf("OpenGL max texture size: %d\n", max_texture_size);
 
 
 	return( TRUE );

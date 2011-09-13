@@ -566,6 +566,7 @@ static font_make_texture_line(lua_State *L, SDL_Surface *s, int id, bool is_sepa
 	lua_rawseti(L, -2, id);
 }
 
+extern GLint max_texture_size;
 static int sdl_font_draw(lua_State *L)
 {
 	TTF_Font **f = (TTF_Font**)auxiliar_checkclass(L, "sdl{font}", 1);
@@ -578,7 +579,9 @@ static int sdl_font_draw(lua_State *L)
 	int h = TTF_FontLineSkip(*f);
 	SDL_Color color = {r,g,b};
 
-	if (max_width >= 1024) max_width = 1024;
+	int fullmax = max_texture_size / 2;
+	if (fullmax < 1024) fullmax = 1024;
+	if (max_width >= fullmax) max_width = fullmax;
 
 	Uint32 rmask, gmask, bmask, amask;
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
