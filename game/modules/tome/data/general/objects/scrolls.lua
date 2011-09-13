@@ -51,7 +51,7 @@ newEntity{
 	power_source = {nature=true},
 	use_simple = { name="inscribe your skin with the infusion.", use = function(self, who, inven, item)
 		if who:setInscription(nil, self.inscription_talent, self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
-			return true, "destroy", true
+			return {used=true, id=true, destroy=true}
 		end
 	end}
 }
@@ -74,7 +74,7 @@ newEntity{
 	power_source = {arcane=true},
 	use_simple = { name="inscribe your skin with the rune.", use = function(self, who, inven, item)
 		if who:setInscription(nil, self.inscription_talent, self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
-			return true, "destroy", true
+			return {used=true, id=true, destroy=true}
 		end
 	end}
 }
@@ -96,7 +96,7 @@ newEntity{
 	power_source = {arcane=true},
 	use_simple = { name="inscribe your skin with the taint.", use = function(self, who, inven, item)
 		if who:setInscription(nil, self.inscription_talent, self.inscription_data, true, true, {obj=self, inven=inven, item=item}) then
-			return true, "destroy", true
+			return {used=true, id=true, destroy=true}
 		end
 	end}
 }

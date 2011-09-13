@@ -46,6 +46,7 @@ newEntity{ define_as = "CELIA_HEART",
 	desc = [[The living heart of the necromancer Celia, carved out of her chest and preserved with magic.]],
 
 	max_power = 75, power_regen = 1,
+	use_sound = "talents/slime",
 	use_power = { name = "extract a tiny part of Celia's soul", power = 75, use = function(self, who)
 		local p = who:isTalentActive(who.T_NECROTIC_AURA)
 		if not p then return end
@@ -54,6 +55,6 @@ newEntity{ define_as = "CELIA_HEART",
 		game.logPlayer(who, "You squeeze Celia's heart in your hand, absorbing part of her soul into your necrotic aura.")
 		self.max_power = self.max_power + 5
 		self.use_power.power = self.use_power.power + 5
-		return true
+		return {id=true, used=true}
 	end },
 }

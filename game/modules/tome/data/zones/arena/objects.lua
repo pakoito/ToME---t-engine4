@@ -78,7 +78,7 @@ newEntity{ define_as = "ARENA_BOOTS_PHAS", name = "a pair of leather boots of ph
 		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
 		game:playSoundNear(who, "talents/teleport")
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
-		return true, nil, true
+		return {id=true, used=true}
 	end}
 }
 

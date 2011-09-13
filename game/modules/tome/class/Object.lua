@@ -85,12 +85,12 @@ function _M:use(who, typ, inven, item)
 	if not typ and #types == 1 then typ = types[1] end
 
 	if typ == "use" then
-		local ret = {self:useObject(who, inven, item)}
-		if ret[1] then
+		local ret = self:useObject(who, inven, item)
+		if ret.used then
 			if self.use_sound then game:playSoundNear(who, self.use_sound) end
 			who:useEnergy(game.energy_to_act * (inven.use_speed or 1))
 		end
-		return unpack(ret)
+		return ret
 	end
 end
 

@@ -797,12 +797,12 @@ function _M:playerUseItem(object, item, inven)
 				return true
 			end
 
-			local used, ret, id = o:use(self, nil, inven, item)
-			if not used then return end
-			if id then
+			local ret = o:use(self, nil, inven, item) or {}
+			if not ret.used then return end
+			if ret.id then
 				o:identify(true)
 			end
-			if ret and ret == "destroy" then
+			if ret.destroy then
 				if o.multicharge and o.multicharge > 1 then
 					o.multicharge = o.multicharge - 1
 				else

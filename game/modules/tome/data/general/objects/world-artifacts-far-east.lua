@@ -50,7 +50,7 @@ newEntity{ base = "BASE_SCROLL", define_as = "JEWELER_SUMMON", subtype="tome", n
 
 	max_power = 1, power_regen = 1,
 	use_power = { name = "summon Limmir the jeweler at the center of the lake of the moon", power = 1,
-		use = function(self, who) who:hasQuest("master-jeweler"):summon_limmir(who) return true end
+		use = function(self, who) who:hasQuest("master-jeweler"):summon_limmir(who) return {id=true, used=true} end
 	},
 }
 

@@ -41,7 +41,7 @@ newEntity{
 		who.inc_stats[who.STAT_CUN] = who.inc_stats[who.STAT_CUN] + 3
 		who:onStatChange(who.STAT_CUN, 3)
 		game.logPlayer(who, "#00FF00#The elixir has given you foxlike physical and mental agility!")
-		return true, "destroy", true
+		return {used=true, id=true, destroy=true}
 	end}
 }
 
@@ -59,7 +59,7 @@ newEntity{
 		game.logPlayer(who, "#00FFFF#You drink the elixir and feel forever transformed!")
 		who.combat_def = who.combat_def + 6
 		game.logPlayer(who, "#00FF00#The elixir has improved your defensive instincts!")
-		return true, "destroy", true
+		return {used=true, id=true, destroy=true}
 	end}
 }
 
@@ -77,7 +77,7 @@ newEntity{
 		game.logPlayer(who, "#00FFFF#You drink the elixir and feel forever transformed!")
 		who.combat_physcrit = who.combat_physcrit + 4
 		game.logPlayer(who, "#00FF00#The elixir has improved your eye for an enemy's weak points!")
-		return true, "destroy", true
+		return {used=true, id=true, destroy=true}
 	end}
 }
 
@@ -98,7 +98,7 @@ newEntity{
 		who.inc_stats[who.STAT_WIL] = who.inc_stats[who.STAT_WIL] + 3
 		who:onStatChange(who.STAT_WIL, 3)
 		game.logPlayer(who, "#00FF00#The elixir has augmented your magical and mental capacity!")
-		return true, "destroy", true
+		return {used=true, id=true, destroy=true}
 	end}
 }
 
@@ -118,7 +118,7 @@ newEntity{
 		who.combat_spellresist = who.combat_spellresist + 4
 		who.combat_mentalresist = who.combat_mentalresist + 4
 		game.logPlayer(who, "#00FF00#The elixir has improved your resistance to unpleasant effects!")
-		return true, "destroy", true
+		return {used=true, id=true, destroy=true}
 	end}
 }
 
@@ -137,7 +137,7 @@ newEntity{
 		who.unused_stats = who.unused_stats + 4
 		game.logPlayer(who, "#00FF00#The elixir has greatly expanded your capacity for improving your mind and body.")
 		game.logPlayer(who, "You have %d stat point(s) to spend. Press G to use them.", who.unused_stats)
-		return true, "destroy", true
+		return {used=true, id=true, destroy=true}
 	end}
 }
 
@@ -155,7 +155,7 @@ newEntity{
 		game.logPlayer(who, "#00FFFF#You drink the elixir and feel forever transformed!")
 		who.combat_spellcrit = who.combat_spellcrit + 4
 		game.logPlayer(who, "#00FF00#The elixir has improved your eye for an enemy's magical weak points!")
-		return true, "destroy", true
+		return {used=true, id=true, destroy=true}
 	end}
 }
 
@@ -174,7 +174,7 @@ newEntity{
 		who.inc_stats[who.STAT_LCK] = who.inc_stats[who.STAT_LCK] + 5
 		who:onStatChange(who.STAT_LCK, 5)
 		game.logPlayer(who, "#00FF00#The elixir seems to have subtly repositioned your entire being within the fabric of reality!")
-		return true, "destroy", true
+		return {used=true, id=true, destroy=true}
 	end}
 }
 
@@ -192,7 +192,7 @@ newEntity{
 		game.logPlayer(who, "#00FFFF#You drink the elixir and feel forever transformed!")
 		who.unused_talents = who.unused_talents + 2
 		game.logPlayer(who, "#00FF00#The elixir has improved your capacity for exercising your core talents.")
-		return true, "destroy", true
+		return {used=true, id=true, destroy=true}
 	end}
 }
 
@@ -213,7 +213,7 @@ newEntity{
 		who.inc_stats[who.STAT_CON] = who.inc_stats[who.STAT_CON] + 3
 		who:onStatChange(who.STAT_CON, 3)
 		game.logPlayer(who, "#00FF00#The elixir has augmented your physical might and resilience!")
-		return true, "destroy", true
+		return {used=true, id=true, destroy=true}
 	end}
 }
 
@@ -231,7 +231,7 @@ newEntity{
 		game.logPlayer(who, "#00FFFF#You drink the elixir and feel forever transformed!")
 		who.combat_armor = who.combat_armor + 4
 		game.logPlayer(who, "#00FF00#The elixir has reinforced your entire body!")
-		return true, "destroy", true
+		return {used=true, id=true, destroy=true}
 	end}
 }
 
@@ -249,7 +249,7 @@ newEntity{
 		game.logPlayer(who, "#00FFFF#You drink the elixir and feel forever transformed!")
 		who.unused_generics = who.unused_generics + 2
 		game.logPlayer(who, "#00FF00#The elixir has improved your capacity for exercising your core talents.")
-		return true, "destroy", true
+		return {used=true, id=true, destroy=true}
 	end}
 }
 
@@ -328,6 +328,6 @@ newEntity{
 	use_simple = { name="grant you complete invulnerability for five turns", use = function(self, who)
 		who:setEffect(who.EFF_DAMAGE_SHIELD, 5, {power=1000000})
 		game.logPlayer(who, "#00FF00#You feel indestructible!")
-		return true, "destroy", true
+		return {used=true, id=true, destroy=true}
 	end}
 }

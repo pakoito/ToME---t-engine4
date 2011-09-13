@@ -48,7 +48,7 @@ newEntity{
 		local power = 100 + who:getMag(120, true)
 		who:setEffect(who.EFF_DAMAGE_SHIELD, 10, {power=power})
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
-		return true, nil, true
+		return {id=true, used=true}
 	end}
 }
 

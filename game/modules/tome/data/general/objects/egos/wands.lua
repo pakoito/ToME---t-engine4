@@ -50,7 +50,7 @@ newEntity{
 			actor = 1,
 		})
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
-		return true, nil, true
+		return {id=true, used=true}
 	end}
 }
 
@@ -63,7 +63,7 @@ newEntity{
 	use_power = { name = "light the area", power = 3, use = function(self, who)
 		who:project({type="ball", range=0, selffire=true, radius=15}, who.x, who.y, engine.DamageType.LITE, 1)
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
-		return true, nil, true
+		return {id=true, used=true}
 	end}
 }
 
@@ -90,7 +90,7 @@ newEntity{
 			who:attr("can_disarm", -1)
 		end)
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
-		return true, nil, true
+		return {id=true, used=true}
 	end}
 }
 
@@ -105,7 +105,7 @@ newEntity{
 		who:teleportRandom(who.x, who.y, 100)
 		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
-		return true, nil, true
+		return {id=true, used=true}
 	end}
 }
 
@@ -125,7 +125,7 @@ newEntity{
 		game.level.map:particleEmitter(who.x, who.y, math.max(math.abs(x-who.x), math.abs(y-who.y)), "lightning", {tx=x-who.x, ty=y-who.y})
 		game:playSoundNear(who, "talents/lightning")
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
-		return true, nil, true
+		return {id=true, used=true}
 	end}
 }
 
@@ -143,7 +143,7 @@ newEntity{
 		who:project(tg, x, y, engine.DamageType.FIRE, dam, {type="flame"})
 		game:playSoundNear(who, "talents/fire")
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
-		return true, nil, true
+		return {id=true, used=true}
 	end}
 }
 
@@ -169,7 +169,7 @@ newEntity{
 		who:project(tg, x, y, elem[1], rng.avg(dam / 2, dam, 3), {type=elem[2]})
 		game:playSoundNear(who, "talents/fire")
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
-		return true, nil, true
+		return {id=true, used=true}
 	end}
 }
 
@@ -187,6 +187,6 @@ newEntity{
 		who:project(tg, x, y, engine.DamageType.HEAL, dam)
 		game:playSoundNear(who, "talents/heal")
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
-		return true, nil, true
+		return {id=true, used=true}
 	end}
 }

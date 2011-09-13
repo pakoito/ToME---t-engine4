@@ -108,12 +108,12 @@ newEntity{
 		teleport_immune = 0.5,
 	},
 	max_power = 120, power_regen = 1,
-	use_power = { name = "teleport you anywhere on the level, randomly", power = 60, use = function(self, who)
+	use_power = { name = "teleport you anywhere on the level, randomly", power = 65, use = function(self, who)
 		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
 		who:teleportRandom(who.x, who.y, 200)
 		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
-		return true, nil, true
+		return {id=true, used=true}
 	end}
 }
 

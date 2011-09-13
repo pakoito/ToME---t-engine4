@@ -87,7 +87,7 @@ If used near a portal it could probably activate it.]],
 			else
 				game.logPlayer(who, "There is no portal to activate here.")
 			end
-			return true
+			return {id=true, used=true}
 		end
 	},
 

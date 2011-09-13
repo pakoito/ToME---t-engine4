@@ -43,7 +43,7 @@ newEntity{ base = "BASE_SCROLL", subtype="tome",
 			game.logPlayer(who, "#00FFFF#You read the tome and perfect your mastery of fire magic!")
 		end
 
-		return true, "destroy", true
+		return {used=true, id=true, destroy=true}
 	end}
 }
 
@@ -67,7 +67,7 @@ newEntity{ base = "BASE_SCROLL", subtype="tome",
 			game.logPlayer(who, "#00FFFF#You read the tome and perfect your mastery of ice magic!")
 		end
 
-		return true, "destroy", true
+		return {used=true, id=true, destroy=true}
 	end}
 }
 

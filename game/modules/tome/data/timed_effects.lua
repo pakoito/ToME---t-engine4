@@ -2404,7 +2404,7 @@ newEffect{
 		eff.leveid = game.zone.short_name.."-"..game.level.level
 	end,
 	deactivate = function(self, eff)
-		if eff.allow_override or (self:canBe("worldport") and not self:attr("never_move")) then
+		if (eff.allow_override or (self:canBe("worldport") and not self:attr("never_move"))) and eff.dur <= 0 then
 			game:onTickEnd(function()
 				if eff.leveid == game.zone.short_name.."-"..game.level.level then
 					game.logPlayer(self, "You are yanked out of this place!")
