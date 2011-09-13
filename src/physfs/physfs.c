@@ -1059,6 +1059,19 @@ void PHYSFS_getSearchPathCallback(PHYSFS_StringCallback callback, void *data)
 } /* PHYSFS_getSearchPathCallback */
 
 
+void PHYSFS_getSearchPathCallbackWithMount(PHYSFS_DoubleStringCallback callback, void *data)
+{
+    DirHandle *i;
+
+    __PHYSFS_platformGrabMutex(stateLock);
+
+    for (i = searchPath; i != NULL; i = i->next)
+        callback(data, i->dirName, i->mountPoint);
+
+    __PHYSFS_platformReleaseMutex(stateLock);
+} /* PHYSFS_getSearchPathCallback */
+
+
 /* Split out to avoid stack allocation in a loop. */
 static void setSaneCfgAddPath(const char *i, const size_t l, const char *dirsep,
                               int archivesFirst)

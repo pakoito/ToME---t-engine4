@@ -41,6 +41,8 @@ extern int docall (lua_State *L, int narg, int nret);
 extern bool fbo_active;
 extern bool multitexture_active;
 extern long total_keyframes;
+extern int g_argc;
+extern char **g_argv;
 
 /* Error handling */
 struct lua_err_type_s {

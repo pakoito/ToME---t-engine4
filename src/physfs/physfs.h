@@ -2124,6 +2124,7 @@ __EXPORT__ const char *PHYSFS_getMountPoint(const char *dir);
  * \sa PHYSFS_getSearchPathCallback
  */
 typedef void (*PHYSFS_StringCallback)(void *data, const char *str);
+typedef void (*PHYSFS_DoubleStringCallback)(void *data, const char *str1, const char *str2);
 
 
 /**
@@ -2229,6 +2230,7 @@ __EXPORT__ void PHYSFS_getCdRomDirsCallback(PHYSFS_StringCallback c, void *d);
  * \sa PHYSFS_getSearchPath
  */
 __EXPORT__ void PHYSFS_getSearchPathCallback(PHYSFS_StringCallback c, void *d);
+__EXPORT__ void PHYSFS_getSearchPathCallbackWithMount(PHYSFS_DoubleStringCallback callback, void *data);
 
 
 /**

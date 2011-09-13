@@ -27,6 +27,7 @@
 #include "mzip.h"
 #include "zlib.h"
 #include "types.h"
+#include "main.h"
 
 /******************************************************************
  ******************************************************************
@@ -358,23 +359,50 @@ static int lua_fs_get_path_separator(lua_State *L)
 	return 1;
 }
 
+static void fs_list_path_double(void *data, const char *path, const char *mount)
+{
+	lua_State *L = (lua_State*)data;
+
+	int nb = lua_objlen(L, -1);
+	lua_pushnumber(L, nb + 1);
+	lua_newtable(L);
+
+	lua_pushliteral(L, "path");
+	lua_pushstring(L, path);
+	lua_settable(L, -3);
+
+	lua_pushliteral(L, "mount");
+	lua_pushstring(L, mount);
+	lua_settable(L, -3);
+
+	lua_settable(L, -3);
+}
+
 static int lua_fs_get_search_path(lua_State *L)
 {
-	char **rc = PHYSFS_getSearchPath();
-
-	char **i;
-	int nb = 1;
-
-	lua_newtable(L);
-	for (i = rc; *i != NULL; i++)
+	if (!lua_toboolean(L, 1))
 	{
-		lua_pushnumber(L, nb);
-		lua_pushstring(L, *i);
-		lua_settable(L, -3);
-		nb++;
-	}
+		char **rc = PHYSFS_getSearchPath();
 
-	PHYSFS_freeList(rc);
+		char **i;
+		int nb = 1;
+
+		lua_newtable(L);
+		for (i = rc; *i != NULL; i++)
+		{
+			lua_pushnumber(L, nb);
+			lua_pushstring(L, *i);
+			lua_settable(L, -3);
+			nb++;
+		}
+
+		PHYSFS_freeList(rc);
+	}
+	else
+	{
+		lua_newtable(L);
+		PHYSFS_getSearchPathCallbackWithMount(fs_list_path_double, L);
+	}
 	return 1;
 }
 
@@ -403,7 +431,6 @@ static int lua_patch_file(lua_State *L)
 		return 1;
 	}
 }
-
 
 static const struct luaL_reg fslib[] =
 {

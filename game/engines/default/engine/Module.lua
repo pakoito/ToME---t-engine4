@@ -36,8 +36,8 @@ end
 -- Static
 function _M:listModules(incompatible, moddir_filter)
 	local ms = {}
+	local allmounts = fs.getSearchPath(true)
 	fs.mount(engine.homepath, "/")
---	print("Search Path: ") for k,e in ipairs(fs.getSearchPath()) do print("*",k,e) end
 
 	local knowns = {}
 	for i, short_name in ipairs(fs.list("/modules/")) do
@@ -73,7 +73,9 @@ function _M:listModules(incompatible, moddir_filter)
 		end
 		ms[m.short_name] = m.versions[1]
 	end
---	fs.umount(engine.homepath)
+
+	fs.reset()
+	fs.mountAll(allmounts)
 
 	return ms
 end

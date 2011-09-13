@@ -31,7 +31,7 @@ module(..., package.seeall, class.inherit(Dialog))
 function _M:init()
 	Dialog.init(self, "Load Game", game.w * 0.8, game.h * 0.8)
 
-	local list = Module:listSavefiles(function(dir) if dir:find("^boot") then return false else return true end end)
+	local list = Module:listSavefiles()
 
 	self.c_play = Button.new{text="  Play!  ", fct=function(text) self:playSave() end}
 	self.c_delete = Button.new{text="Delete", fct=function(text) self:deleteSave() end}

@@ -983,6 +983,21 @@ function util.getval(val, ...)
 	end
 end
 
+function fs.reset()
+	local list = fs.getSearchPath(true)
+	for i, m in ipairs(list) do
+		fs.umount(m.path)
+	end
+	print("After fs.reset")
+	table.print(fs.getSearchPath(true))
+end
+
+function fs.mountAll(list)
+	for i, m in ipairs(list) do
+		fs.mount(m.path, "/" .. (m.mount or ""), true)
+	end
+end
+
 function util.loadfilemods(file, env)
 	-- Base loader
 	local prev, err = loadfile(file)

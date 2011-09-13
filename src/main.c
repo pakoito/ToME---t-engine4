@@ -50,6 +50,8 @@
 #define WIDTH 800
 #define HEIGHT 600
 
+int g_argc = 0;
+char **g_argv;
 SDL_Window *window = NULL;
 SDL_GLContext maincontext; /* Our opengl context handle */
 bool is_fullscreen = FALSE;
@@ -933,6 +935,9 @@ int main(int argc, char *argv[])
 #ifdef SELFEXE_WINDOWS
 	freopen ("te4_log.txt", "w", stdout);
 #endif
+
+	g_argc = argc;
+	g_argv = argv;
 
 	// Parse arguments
 	int i;
