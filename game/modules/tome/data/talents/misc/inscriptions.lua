@@ -489,9 +489,9 @@ newInscription{
 
 local function attack_rune(self, btid)
 	for tid, lev in pairs(self.talents) do
-		 if tid ~= btid and self.talents_def[tid].is_attack_rune then
-		 	self.talents_cd[tid] = 1
-		 end
+		if tid ~= btid and self.talents_def[tid].is_attack_rune and not self.talents_cd[tid] then
+			self.talents_cd[tid] = 1
+		end
 	end
 end
 
