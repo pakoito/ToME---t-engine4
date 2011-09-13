@@ -255,7 +255,7 @@ local function generate_rewards()
 			local cat = tt_def.type:gsub("/.*", "")
 			local doit = function(npc, player)
 				player:learnTalentType(tt, false)
-				player:setTalentTypeMastery(tt, mastery)
+				player:setTalentTypeMastery(tt, math.max(mastery, player:getTalentTypeMastery(tt)))
 				player:hasQuest(npc.quest_id).reward_message = ("gained talent category %s (at mastery %0.2f)"):format(cat:capitalize().." / "..tt_def.name:capitalize(), mastery)
 			end
 			answers[#answers+1] = {("[Allow training of talent category %s (at mastery %0.2f)]"):format(cat:capitalize().." / "..tt_def.name:capitalize(), mastery),
