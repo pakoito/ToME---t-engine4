@@ -133,14 +133,14 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			target:setEffect(target.EFF_SMEARED, 6, {src=src, power=smear/6})
 			dam = 0
 		end
-		
+
 		-- affinity healing, we store it to apply it after damage is resolved
 		local affinity_heal = 0
 		if target.damage_affinity then
 			local aff = (target.damage_affinity[type] or 0) / 100
 			affinity_heal = (dam * aff)
 		end
-		
+
 		-- Reduce damage with resistance
 		if target.resists then
 			local pen = 0
@@ -205,7 +205,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 				target:setEffect(target.EFF_ELEMENTAL_HARMONY, 5 + math.ceil(target:attr("elemental_harmony")), {power=target:attr("elemental_harmony"), type=type})
 			end
 		end
-		
+
 		-- damage affinity healing
 		if not target.dead and affinity_heal > 0 then
 			target:heal(affinity_heal)
@@ -1129,7 +1129,7 @@ newDamageType{
 	name = "demonfire", type = "DEMONFIRE",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
-		if target and target.demon then
+		if target and target:attr("demon") then
 			target:heal(dam)
 			return -dam
 		elseif target then
