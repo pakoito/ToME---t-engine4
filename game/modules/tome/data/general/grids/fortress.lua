@@ -94,5 +94,5 @@ newEntity{
 	is_door = true,
 	door_opened = "SOLID_DOOR_OPEN",
 }
-newEntity{ base = "SOLID_DOOR_SEALED", define_as = "SOLID_DOOR_SEALED_HORIZ", image = "terrain/solidwall/solid_floor1.png", add_mos={{image = "terrain/solidwall/solid_wall_closed_doors1.png"}}, add_displays = {class.new{image="terrain/solidwall/solid_wall_top_block1.png", z=18, display_y=-1}}, door_opened = "SOLID_DOOR_HORIZ_OPEN"}
-newEntity{ base = "SOLID_DOOR_SEALED", define_as = "SOLID_DOOR_SEALED_VERT", image = "terrain/solidwall/solid_floor1.png", add_displays = {class.new{image="terrain/solidwall/solid_door1_vert.png", z=17}, class.new{image="terrain/solidwall/solid_door1_vert_north.png", z=18, display_y=-1}}, door_opened = "SOLID_DOOR_OPEN_VERT"}
+newEntity{ base = "SOLID_DOOR_SEALED", define_as = "SOLID_DOOR_SEALED_HORIZ", image = "terrain/solidwall/solid_floor1.png", add_mos={{image = "terrain/solidwall/solid_wall_closed_doors1.png"}}, add_displays = {class.new{image="terrain/solidwall/solid_wall_top_block1.png", z=18, display_y=-1, add_mos={{image="terrain/padlock2.png", display_y=0.1}}}}, door_opened = "SOLID_DOOR_HORIZ_OPEN"}
+newEntity{ base = "SOLID_DOOR_SEALED", define_as = "SOLID_DOOR_SEALED_VERT", image = "terrain/solidwall/solid_floor1.png", add_displays = {class.new{image="terrain/solidwall/solid_door1_vert.png", z=17}, class.new{image="terrain/solidwall/solid_door1_vert_north.png", z=18, display_y=-1, add_mos={{image="terrain/padlock2.png", display_x=0.2, display_y=-0.4}}}}, door_opened = "SOLID_DOOR_OPEN_VERT"}
