@@ -74,6 +74,35 @@ newEntity{ base = "BASE_LITE", define_as = "WINTERTIDE_PHIAL",
 		lite = 1,
 		infravision = 6,
 	},
+
+	max_power = 60, power_regen = 1,
+	use_power = { name = "mental cleansing", power = 40,
+		use = function(self, who)
+			local target = who
+			local effs = {}
+			local known = false
+
+			-- Go through all spell effects
+			for eff_id, p in pairs(target.tmp) do
+				local e = target.tempeffect_def[eff_id]
+				if e.type == "mental" and e.status == "detrimental" then
+					effs[#effs+1] = {"effect", eff_id}
+				end
+			end
+
+			for i = 1, 3 + math.floor(who:getMag() / 10) do
+				if #effs == 0 then break end
+				local eff = rng.tableRemove(effs)
+
+				if eff[1] == "effect" then
+					target:removeEffect(eff[2])
+					known = true
+				end
+			end
+			game.logSeen(who, "%s's mind is clear!", who.name:capitalize())
+			return {id=true, used=true}
+		end
+	},
 }
 
 newEntity{ base = "BASE_AMULET",

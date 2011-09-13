@@ -110,7 +110,6 @@ Your control over chronomancy spells increases with your Willpower.
 
 TOOLTIP_PSI = [[#GOLD#Psi#LAST#
 Psi represents how much energy your mind can harness. Like matter, it can be neither created nor destroyed.
-It does not regenerate naturally. You must absorb energy through shields or through various other talents.
 Your capacity for storing energy is determined by your Willpower.
 ]]
 
