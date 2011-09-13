@@ -122,7 +122,7 @@ newTalent{
 			},
 
 			summoner = self, summoner_gain_exp=true,
-			summon_time = 5,
+			summon_time = 4 + self:getTalentLevelRaw(t),
 		}
 		if self:getTalentLevel(t) >= 5 then
 			m.on_die = function(self, src)
@@ -142,9 +142,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Project a noisy lure that attracts all creatures in a radius %d to it.
+		return ([[Project a noisy lure for %d turns that attracts all creatures in a radius %d to it.
 		At level 5, when the lure is destroyed it will trigger some traps in a radius of 2 around it (check individual traps to see if they are triggered).
-		This can be used while stealthed.]]):format(3 + self:getTalentLevelRaw(t))
+		This can be used while stealthed.]]):format(4 + self:getTalentLevelRaw(t), 3 + self:getTalentLevelRaw(t))
 	end,
 }
 newTalent{
