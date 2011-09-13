@@ -203,6 +203,7 @@ newTalent{
 		m.on_acquire_target = nil
 		m.seen_by = nil
 		m.can_talk = nil
+		m.on_takehit = nil
 		m.no_inventory_access = true
 		m.clone_on_hit = nil
 		m.talents.T_CREATE_MINIONS = nil

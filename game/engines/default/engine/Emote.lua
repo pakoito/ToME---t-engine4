@@ -29,7 +29,7 @@ frame_oy2 = 15
 
 function _M:init(text, dur, color)
 	self.text = text
-	self.dur = dur
+	self.dur = dur or 60
 	self.color = color or colors.BLACK
 
 	Base.init(self, {font = {"/data/font/VeraBd.ttf", 16}})
