@@ -1000,6 +1000,7 @@ newEntity{ base = "BASE_WARAXE",
 		physcrit = 12,
 		dammod = {str=1},
 		talent_on_hit = { [Talents.T_GREATER_WEAPON_FOCUS] = {level=2, chance=10} },
+		melee_project={[DamageType.DRAINLIFE] = 10},
 	},
 	wielder = {
 		inc_damage = { [DamageType.BLIGHT] = 8 },
