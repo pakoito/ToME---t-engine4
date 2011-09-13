@@ -33,7 +33,7 @@ defineTile("<", "UP_WILDERNESS")
 defineTile(">", "INFINITE")
 defineTile(".", "OLD_FLOOR")
 defineTile("1", "LORE1")
-defineTile("!", "LOCK")
+defineTile("!", "GENERIC_LEVER_DOOR")
 defineTile("2", "LORE2")
 
 -- addSpot section

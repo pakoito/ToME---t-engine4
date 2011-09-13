@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 defineTile("#", "HARDWALL")
-defineTile("+", "LOCK")
+defineTile("+", "GENERIC_LEVER_DOOR")
 defineTile(":", "GRASS", nil, nil, nil, {no_teleport=true})
 defineTile(".", "SAND")
 defineTile("-", "FLOOR")
@@ -29,9 +29,9 @@ starty = 12
 
 -- ASCII map section
 return [[
-:::::T::::::::T:T
+:::::T:---::::T:T
 :#######+#######:
-:#...#.....#...#:
+:#...#.---.#...#:
 :#.............#:
 :#....#...#....#:
 :##...........##T
@@ -41,6 +41,6 @@ T#...#.....#...#:
 :##...........##:
 :#....#...#....#:
 :#.............#:
-:#...#..:..#...#:
+:#...#.---.#...#:
 :#######+#######:
-:::TT:T:::T::::::]]
+:::TT:T---T::::::]]
