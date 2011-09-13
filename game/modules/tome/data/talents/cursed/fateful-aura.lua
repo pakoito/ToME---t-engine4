@@ -84,7 +84,7 @@ newTalent{
 		if item.unique then return end
 		if item.quest then return end
 		if not item:wornInven() then return end
-		if item.type == "ammo" or item.type == "gem" then return end
+		if item.type == "ammo" or item.type == "alchemist-gem" or item.type == "gem" then return end
 
 		--[[ test to run all code
 		if not curses_detrimental then curses_detrimental = mod.class.Object:loadList("/data/general/objects/egos/curses-detrimental.lua") end
