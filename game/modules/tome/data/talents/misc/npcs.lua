@@ -134,7 +134,7 @@ newTalent{
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		self.combat_apr = self.combat_apr + 1000
-		self:attackTarget(target, DamageType.BLIND, self:combatTalentWeaponDamage(t, 0.8, 1.4), true)
+		self:attackTarget(target, DamageType.BLIND, 5 + math.ceil(math.log(self:combatTalentWeaponDamage(t, 0.8, 1.4))), true)
 		self.combat_apr = self.combat_apr - 1000
 		return true
 	end,
