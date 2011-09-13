@@ -746,10 +746,14 @@ newEntity{ base = "BASE_GREATSWORD",
 	cost = 300,
 	material_level = 5,
 	combat = {
-		dam = 54,
+		dam = 60,
 		apr = 19,
 		physcrit = 4.5,
 		dammod = {str=1.2},
+		special_on_hit = {desc="10% chance to send the wielder into a killing frenzy", fct=function(combat, who)
+			if not rng.percent(10) then return end
+			who:setEffect(who.EFF_FRENZY, 3, {crit=10, power=0.3, dieat=0.2})
+		end},
 	},
 	wielder = {
 		see_invisible = 25,
