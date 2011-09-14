@@ -62,7 +62,7 @@ newEntity{ base = "BASE_MUMMY_WRAPPING", define_as = "BINDINGS_ETERNAL_NIGHT",
 
 	set_list = { {"define_as","CROWN_ETERNAL_NIGHT"} },
 	on_set_complete = function(self, who)
-		self.use_talent = { id = Talents.T_ABYSSAL_SHROUD, level = 2, power = 47 }
+		self.use_talent = { id = "T_ABYSSAL_SHROUD", level = 2, power = 47 }
 	end,
 	on_set_broken = function(self, who)
 		self.use_talent = nil
@@ -97,7 +97,7 @@ newEntity{ base = "BASE_LEATHER_CAP", define_as = "CROWN_ETERNAL_NIGHT",
 		self:specialSetAdd({"wielder","inc_stats"}, {[who.STAT_CUN]=10})
 		self:specialSetAdd({"wielder","melee_project"}, {[engine.DamageType.DARKNESS]=40})
 		self:specialSetAdd({"wielder","inc_damage"}, {[engine.DamageType.DARKNESS]=20})
-		self.use_talent = { id = Talents.T_RETCH, level = 2, power = 47 }
+		self.use_talent = { id = "T_RETCH", level = 2, power = 47 }
 		game.logSeen(who, "#ANTIQUE_WHITE#The Crown of Eternal Night seems to react with the Bindings, you feel tremounduous dark power.")
 	end,
 	on_set_broken = function(self, who)
