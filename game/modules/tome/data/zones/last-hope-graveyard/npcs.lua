@@ -79,6 +79,7 @@ newEntity{ define_as = "CELIA",
 	resolvers.inscriptions(1, {"manasurge rune"}),
 
 	on_takehit = function(self, val)
+		if not game.zone.open_all_coffins then return val end
 		self.on_takehit = nil
 		game.zone.open_all_coffins(game.player, self)
 		return val
