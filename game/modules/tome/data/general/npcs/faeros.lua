@@ -45,6 +45,10 @@ newEntity{
 	no_breath = 1,
 	poison_immune = 1,
 	disease_immune = 1,
+	stun_immune = 1,
+	blind_immune = 1,
+	knockback_immune = 1,
+	confusion_immune = 1,
 	on_die = function(self, who)
 		local part = "FAEROS_ASH"
 		if game.player:hasQuest("brotherhood-of-alchemists") then
