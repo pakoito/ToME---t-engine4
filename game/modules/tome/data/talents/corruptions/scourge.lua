@@ -79,7 +79,7 @@ newTalent{
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/slime")
 		local ret = {
-			per = self:addTemporaryValue("melee_project", {[DamageType.BLIGHT] = self:combatTalentSpellDamage(t, 15, 40)}),
+			per = self:addTemporaryValue("melee_project", {[DamageType.DRAINLIFE] = self:combatTalentSpellDamage(t, 15, 40)}),
 		}
 		return ret
 	end,
@@ -88,9 +88,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Concentrate on the corruption you bring, enhancing each of your melee strikes with %0.2f blight damage.
+		local dam = damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 15, 40))
+		return ([[Concentrate on the corruption you bring, enhancing each of your melee strikes with %0.2f blight damage (which also heals you for %0.2f each hit).
 		The damage will increase with your Magic stat.]]):
-		format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 15, 40)))
+		format(dam, dam * 0.4)
 	end,
 }
 

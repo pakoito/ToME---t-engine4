@@ -74,7 +74,7 @@ newBirthDescriptor{
 		resolvers.equip{ id=true,
 			{type="weapon", subtype="waraxe", name="iron waraxe", autoreq=true, ego_chance=-1000},
 			{type="weapon", subtype="waraxe", name="iron waraxe", autoreq=true, ego_chance=-1000},
-			{type="armor", subtype="heavy", name="iron mail armour", autoreq=true, ego_chance=-1000}
+			{type="armor", subtype="light", name="rough leather armour", autoreq=true, ego_chance=-1000}
 		},
 	},
 	copy_add = {
