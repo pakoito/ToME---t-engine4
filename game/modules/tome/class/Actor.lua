@@ -419,7 +419,7 @@ function _M:act()
 		local act
 		for i = 1, #self.fov.actors_dist do
 			act = self.fov.actors_dist[i]
-			if self:reactionToward(act) < 0 and self:canSee(act) then nb_foes = nb_foes + 1 end
+			if act and self:reactionToward(act) < 0 and self:canSee(act) then nb_foes = nb_foes + 1 end
 		end
 		if nb_foes > 1 then
 			nb_foes = math.min(nb_foes, self:getTalentLevel(self.T_MILITANT_MIND))
