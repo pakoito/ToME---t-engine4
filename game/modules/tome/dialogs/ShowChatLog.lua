@@ -156,7 +156,7 @@ function _M:switchTo(ui)
 		self:loadLog(self.log:getLog())
 	else
 		local s = nil
-		if _M.last_tab == ui.tab_channel and self.scroll < self.max - self.max_display + 1 then
+		if _M.last_tab == ui.tab_channel and self.max and self.max_display and self.scroll < self.max - self.max_display + 1 then
 			s = self.scroll
 		end
 		self:loadLog(self.chat:getLog(ui.tab_channel, true), s)
