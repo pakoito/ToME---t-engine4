@@ -43,6 +43,20 @@ newTalent{
 	mode = "passive",
 	points = 10,
 	require = { stat = { str=function(level) return 18 + level - 1 end }, },
+	on_unlearn = function(self, t)
+		for inven_id, inven in pairs(self.inven) do if inven.worn then
+			for i = #inven, 1, -1 do
+				local o = inven[i]
+				local ok, err = self:canWearObject(o)
+				if not ok and err == "missing dependency" then
+					game.logPlayer(self, "You can not use your %s anymore.", o:getName{do_color=true})
+					local o = self:removeObject(inven, i, true)
+					self:addObject(self.INVEN_INVEN, o)
+					self:sortInven()
+				end
+			end
+		end end
+	end,
 	getArmorHardiness = function(self, t) return self:getTalentLevel(t) * 5 end,
 	getArmor = function(self, t) return self:getTalentLevel(t) * 1.4 end,
 	getCriticalChanceReduction = function(self, t) return self:getTalentLevel(t) * 1.9 end,
