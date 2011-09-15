@@ -454,9 +454,9 @@ newEntity{ base = "BASE_CLOTH_ARMOR",
 		combat_def = 6,
 	},
 	talent_on_spell = {
-		{chance=10, talent=Talents.T_SOUL_ROT, level=3},
-		{chance=10, talent=Talents.T_BLOOD_GRASP, level=3},
-		{chance=10, talent=Talents.T_BONE_SPEAR, level=3},
+		{chance=5, talent=Talents.T_SOUL_ROT, level=3},
+		{chance=5, talent=Talents.T_BLOOD_GRASP, level=3},
+		{chance=5, talent=Talents.T_BONE_SPEAR, level=3},
 	},
 }
 

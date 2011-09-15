@@ -327,7 +327,7 @@ newTalent{
 	sustain_mana = 250,
 	cooldown = 30,
 	tactical = { BUFF = 3 },
-	getParams = function(self, t) return 30 + self:getTalentLevel(t) * 5, 5 + self:combatTalentSpellDamage(t, 5, 40) end,
+	getParams = function(self, t) return 20 + self:getTalentLevel(t) * 5, 5 + self:combatTalentSpellDamage(t, 5, 30) end,
 	activate = function(self, t)
 		local chance, val = t.getParams(self, t)
 		game:playSoundNear(self, "talents/spell_generic2")
