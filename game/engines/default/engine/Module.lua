@@ -171,13 +171,17 @@ end
 --- List all available savefiles
 -- Static
 function _M:listSavefiles(moddir_filter)
---	fs.mount(engine.homepath, "/tmp/listsaves")
+	local allmounts = fs.getSearchPath(true)
+		table.print(fs.getSearchPath(1))
+	fs.mount(engine.homepath, "/tmp/listsaves")
 
 	local mods = self:listModules(nil, moddir_filter)
 	for _, mod in ipairs(mods) do
 		local lss = {}
-		for i, short_name in ipairs(fs.list("/"..mod.short_name.."/save/")) do
-			local dir = "/"..mod.short_name.."/save/"..short_name
+		print("========", mod.short_name)
+		for i, short_name in ipairs(fs.list("/tmp/listsaves/"..mod.short_name.."/save/")) do
+			local dir = "/tmp/listsaves/"..mod.short_name.."/save/"..short_name
+			print("====", dir)
 			if fs.exists(dir.."/game.teag") then
 				local def = self:loadSavefileDescription(dir)
 				if def then
@@ -196,7 +200,9 @@ function _M:listSavefiles(moddir_filter)
 		end)
 	end
 
---	fs.umount(engine.homepath)
+	fs.reset()
+	fs.mountAll(allmounts)
+		table.print(fs.getSearchPath(1))
 
 	return mods
 end
