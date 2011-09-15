@@ -52,8 +52,10 @@ end
 
 function _M:unload()
 	local l = {}
-	for k, _ in pairs(config.settings.chat.filter) do
-		l[#l+1] = "chat.filter."..k.."=true"
+	for k, v in pairs(config.settings.chat.filter) do
+		if v then l[#l+1] = "chat.filter."..k.."=true" end
 	end
+	table.print(config.settings.chat.filter)
+	print("===", table.concat(l, "\n"))
 	game:saveSettings("chat.filter", table.concat(l, "\n"))
 end

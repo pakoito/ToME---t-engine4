@@ -127,7 +127,7 @@ function _M:mouseEvent(button, x, y, xrel, yrel, bx, by, event)
 	end
 end
 
-function _M:loadLog(log)
+function _M:loadLog(log, oldscroll)
 	self.lines = {}
 	for i = #log, 1, -1 do
 		if type(log[i]) == "string" then
@@ -143,7 +143,7 @@ function _M:loadLog(log)
 
 	self.scrollbar.max = self.max - self.max_display + 1
 	self.scroll = nil
-	self:setScroll(self.max - self.max_display + 1)
+	self:setScroll(oldscroll or (self.max - self.max_display + 1))
 end
 
 function _M:switchTo(ui)
@@ -155,7 +155,11 @@ function _M:switchTo(ui)
 	if ui.tab_channel == "__log" then
 		self:loadLog(self.log:getLog())
 	else
-		self:loadLog(self.chat:getLog(ui.tab_channel, true))
+		local s = nil
+		if _M.last_tab == ui.tab_channel and self.scroll < self.max - self.max_display + 1 then
+			s = self.scroll
+		end
+		self:loadLog(self.chat:getLog(ui.tab_channel, true), s)
 	end
 	-- Set it on the class to persist between invocations
 	_M.last_tab = ui.tab_channel
