@@ -43,6 +43,7 @@
  ******************************************************************/
 
 static const char FOV_PERMISSIVE_KEY = 'k';
+static const char FOV_VISION_SHAPE_KEY = 'k';
 
 struct lua_fovcache
 {
@@ -83,23 +84,43 @@ static int lua_fov_get_permissiveness(lua_State *L)
 		lua_settable(L, LUA_REGISTRYINDEX);
 	}
 }
+
+static int lua_fov_set_vision_shape(lua_State *L)
+{
+	int val = luaL_checknumber(L, 1);
+	lua_pushlightuserdata(L, (void *)&FOV_VISION_SHAPE_KEY); // push address as guaranteed unique key
+	lua_pushnumber(L, val);
+	lua_settable(L, LUA_REGISTRYINDEX);
+	return 0;
+}
+
+static int lua_fov_get_vision_shape(lua_State *L)
+{
+	lua_pushlightuserdata(L, (void *)&FOV_VISION_SHAPE_KEY); // push address as guaranteed unique key
+	lua_gettable(L, LUA_REGISTRYINDEX);  /* retrieve value */
+	if (lua_isnil(L, -1)) {
+		lua_pop(L, 1); // remove nil
+		lua_pushlightuserdata(L, (void *)&FOV_VISION_SHAPE_KEY); // push address as guaranteed unique key
+		lua_pushnumber(L, FOV_SHAPE_CIRCLE_ROUND);
+		lua_settable(L, LUA_REGISTRYINDEX);
+	}
+}
+
 static void map_seen(void *m, int x, int y, int dx, int dy, int radius, void *src)
 {
 	struct lua_fov *fov = (struct lua_fov *)m;
 	if (x < 0 || y < 0 || x >= fov->w || y >= fov->h) return;
-	if (dx*dx + dy*dy <= radius*radius + radius) // <-- use shape of FoV.  Also, is this check really necessary? TODO: verify and delete if unnecessary
-	{
-		// circular view - can be changed if you like
-		lua_rawgeti(fov->L, LUA_REGISTRYINDEX, fov->apply_ref);
-		if (fov->cache) lua_rawgeti(fov->L, LUA_REGISTRYINDEX, fov->cache_ref);
-		else lua_pushnil(fov->L);
-		lua_pushnumber(fov->L, x);
-		lua_pushnumber(fov->L, y);
-		lua_pushnumber(fov->L, dx);
-		lua_pushnumber(fov->L, dy);
-		lua_pushnumber(fov->L, dx*dx + dy*dy);
-		lua_call(fov->L, 6, 0);
-	}
+
+	// circular view - can be changed if you like
+	lua_rawgeti(fov->L, LUA_REGISTRYINDEX, fov->apply_ref);
+	if (fov->cache) lua_rawgeti(fov->L, LUA_REGISTRYINDEX, fov->cache_ref);
+	else lua_pushnil(fov->L);
+	lua_pushnumber(fov->L, x);
+	lua_pushnumber(fov->L, y);
+	lua_pushnumber(fov->L, dx);
+	lua_pushnumber(fov->L, dy);
+	lua_pushnumber(fov->L, dx*dx + dy*dy);
+	lua_call(fov->L, 6, 0);
 }
 
 static bool map_opaque(void *m, int x, int y)
@@ -155,6 +176,8 @@ static int lua_fov_calc_circle(lua_State *L)
 	fov_settings_set_apply_lighting_function(&(fov.fov_settings), map_seen);
 	lua_fov_get_permissiveness(L);
 	fov.fov_settings.permissiveness = luaL_checknumber(L, -1);
+	lua_fov_get_vision_shape(L);
+	fov.fov_settings.shape = luaL_checknumber(L, -1);
 
 	fov_circle(&(fov.fov_settings), &fov, NULL, x, y, radius);
 	map_seen(&fov, x, y, 0, 0, radius, NULL);
@@ -213,6 +236,8 @@ static int lua_fov_calc_beam(lua_State *L)
 	fov_settings_set_apply_lighting_function(&(fov.fov_settings), map_seen);
 	lua_fov_get_permissiveness(L);
 	fov.fov_settings.permissiveness = luaL_checknumber(L, -1);
+	lua_fov_get_vision_shape(L);
+	fov.fov_settings.shape = luaL_checknumber(L, -1);
 
 	fov_beam(&(fov.fov_settings), &fov, NULL, x, y, radius, dir, angle);
 	map_seen(&fov, x, y, 0, 0, radius, NULL);
@@ -259,6 +284,8 @@ static int lua_fov_calc_beam_any_angle(lua_State *L)
 	fov_settings_set_apply_lighting_function(&(fov.fov_settings), map_seen);
 	lua_fov_get_permissiveness(L);
 	fov.fov_settings.permissiveness = luaL_checknumber(L, -1);
+	lua_fov_get_vision_shape(L);
+	fov.fov_settings.shape = luaL_checknumber(L, -1);
 
 	fov_beam_any_angle(&(fov.fov_settings), &fov, NULL, x, y, radius, dx, dy, beam_angle);
 	map_seen(&fov, x, y, 0, 0, radius, NULL);
@@ -277,9 +304,49 @@ static int lua_distance(lua_State *L)
 	double y1 = luaL_checknumber(L, 2);
 	double x2 = luaL_checknumber(L, 3);
 	double y2 = luaL_checknumber(L, 4);
+	bool ret_float = lua_toboolean(L, 5);
+	double dx = fabs(x2 - x1);
+	double dy = fabs(y2 - y1);
+	double dist;
+	lua_fov_get_vision_shape(L);
+	int shape = luaL_checknumber(L, -1);
 
-	// TODO: switch/case based on FoV shape.  Use rounded circle for now
-	lua_pushnumber(L, (int)(sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2)) + 0.5f));
+	switch(shape) {
+	case FOV_SHAPE_CIRCLE_ROUND :
+		dist = sqrt(dx*dx + dy*dy) + 0.5;
+		break;
+	case FOV_SHAPE_CIRCLE_FLOOR :
+		dist = sqrt(dx*dx + dy*dy);
+		break;
+	case FOV_SHAPE_CIRCLE_CEIL :
+		if (ret_float)
+			dist = sqrt(dx*dx + dy*dy);
+		else
+			dist = ceil(sqrt(dx*dx + dy*dy));
+		break;
+	case FOV_SHAPE_CIRCLE_PLUS1 :
+		dist = sqrt(dx*dx + dy*dy);
+		if (dist > 0.5) dist = dist + 1 - 1.0/dist;
+		break;
+	case FOV_SHAPE_OCTAGON :
+		dist = (dx > dy) ? (dx + 0.5*dy) : (dy + 0.5*dx);
+		break;
+	case FOV_SHAPE_DIAMOND :
+		dist = dx + dy;
+		break;
+	case FOV_SHAPE_SQUARE :
+		dist = (dx > dy) ? dx : dy;
+		break;
+	default :
+		dist = sqrt(dx*dx + dy*dy) + 0.5;
+		break;
+	}
+
+	if (ret_float)
+		lua_pushnumber(L, dist);
+	else
+		lua_pushnumber(L, (int)dist);
+
 	return 1;
 }
 
@@ -355,101 +422,101 @@ typedef struct {
 
 static void map_default_seen(void *m, int x, int y, int dx, int dy, int radius, void *src)
 {
+	// TODO: understand how this function uses distances and use "lua_distance" (i.e., core.fov.distance) if necessary
 	default_fov *def = (default_fov*)src;
 	struct lua_fov *fov = (struct lua_fov *)m;
 	float sqdist = dx*dx + dy*dy;
 	float dist = sqrtf(sqdist);
-	if (dx*dx + dy*dy <= radius*radius + radius) // <-- use FoV shape.  Also, is this check really necessary? TODO: verify and delete if unnecessary
+	if (x < 0 || y < 0 || x >= fov->w || y >= fov->h) return;
+
+	// Distance Map
+	if (def->do_dmap)
 	{
-		// Distance Map
-		if (def->do_dmap)
-		{
-			lua_pushnumber(fov->L, x + y * def->w);
-			lua_pushnumber(fov->L, def->turn + radius - dist);
-			lua_rawset(fov->L, STACK_DMAP);
-		}
-
-		// Apply
-		if (def->do_apply)
-		{
-			lua_pushvalue(fov->L, STACK_APPLY);
-			lua_pushnumber(fov->L, x);
-			lua_pushnumber(fov->L, y);
-			lua_pushnumber(fov->L, dx);
-			lua_pushnumber(fov->L, dy);
-			lua_pushnumber(fov->L, sqdist);
-			lua_call(fov->L, 5, 0);
-		}
-
-		// Get entity
 		lua_pushnumber(fov->L, x + y * def->w);
-		lua_rawget(fov->L, STACK_MAP);
-		if (!lua_istable(fov->L, -1)) { lua_pop(fov->L, 1); return; }
-		lua_pushnumber(fov->L, def->entity);
-		lua_rawget(fov->L, -2);
-		if (!lua_istable(fov->L, -1)) { lua_pop(fov->L, 2); return; }
+		lua_pushnumber(fov->L, def->turn + radius - dist);
+		lua_rawset(fov->L, STACK_DMAP);
+	}
 
-		// Check if dead
-		lua_pushstring(fov->L, "dead");
-		lua_gettable(fov->L, -2);
-		if (lua_toboolean(fov->L, -1)) { lua_pop(fov->L, 3); return; }
-		lua_pop(fov->L, 1);
-
-		// Set sqdist in the actor for faster sorting
-		lua_pushstring(fov->L, "__sqdist");
-		lua_pushnumber(fov->L, sqdist);
-		lua_rawset(fov->L, -3);
-
-		// Make a table to hold data
-		lua_newtable(fov->L);
-		lua_pushstring(fov->L, "x");
+	// Apply
+	if (def->do_apply)
+	{
+		lua_pushvalue(fov->L, STACK_APPLY);
 		lua_pushnumber(fov->L, x);
-		lua_rawset(fov->L, -3);
-		lua_pushstring(fov->L, "y");
 		lua_pushnumber(fov->L, y);
-		lua_rawset(fov->L, -3);
-		lua_pushstring(fov->L, "dx");
 		lua_pushnumber(fov->L, dx);
-		lua_rawset(fov->L, -3);
-		lua_pushstring(fov->L, "dy");
 		lua_pushnumber(fov->L, dy);
-		lua_rawset(fov->L, -3);
-		lua_pushstring(fov->L, "sqdist");
 		lua_pushnumber(fov->L, sqdist);
-		lua_rawset(fov->L, -3);
+		lua_call(fov->L, 5, 0);
+	}
 
-		// Set the actor table
-		lua_pushvalue(fov->L, -2);
-		lua_pushvalue(fov->L, -2);
-		lua_rawset(fov->L, STACK_ACTOR);
+	// Get entity
+	lua_pushnumber(fov->L, x + y * def->w);
+	lua_rawget(fov->L, STACK_MAP);
+	if (!lua_istable(fov->L, -1)) { lua_pop(fov->L, 1); return; }
+	lua_pushnumber(fov->L, def->entity);
+	lua_rawget(fov->L, -2);
+	if (!lua_istable(fov->L, -1)) { lua_pop(fov->L, 2); return; }
 
-		// Set the dist table
-		def->dist_idx++;
-		lua_pushnumber(fov->L, def->dist_idx);
-		lua_pushvalue(fov->L, -3);
-		lua_rawset(fov->L, STACK_DIST);
+	// Check if dead
+	lua_pushstring(fov->L, "dead");
+	lua_gettable(fov->L, -2);
+	if (lua_toboolean(fov->L, -1)) { lua_pop(fov->L, 3); return; }
+	lua_pop(fov->L, 1);
 
-		// Call seen_by, if possible
-		lua_pushstring(fov->L, "updateFOV");
-		lua_gettable(fov->L, -3);
+	// Set sqdist in the actor for faster sorting
+	lua_pushstring(fov->L, "__sqdist");
+	lua_pushnumber(fov->L, sqdist);
+	lua_rawset(fov->L, -3);
+
+	// Make a table to hold data
+	lua_newtable(fov->L);
+	lua_pushstring(fov->L, "x");
+	lua_pushnumber(fov->L, x);
+	lua_rawset(fov->L, -3);
+	lua_pushstring(fov->L, "y");
+	lua_pushnumber(fov->L, y);
+	lua_rawset(fov->L, -3);
+	lua_pushstring(fov->L, "dx");
+	lua_pushnumber(fov->L, dx);
+	lua_rawset(fov->L, -3);
+	lua_pushstring(fov->L, "dy");
+	lua_pushnumber(fov->L, dy);
+	lua_rawset(fov->L, -3);
+	lua_pushstring(fov->L, "sqdist");
+	lua_pushnumber(fov->L, sqdist);
+	lua_rawset(fov->L, -3);
+
+	// Set the actor table
+	lua_pushvalue(fov->L, -2);
+	lua_pushvalue(fov->L, -2);
+	lua_rawset(fov->L, STACK_ACTOR);
+
+	// Set the dist table
+	def->dist_idx++;
+	lua_pushnumber(fov->L, def->dist_idx);
+	lua_pushvalue(fov->L, -3);
+	lua_rawset(fov->L, STACK_DIST);
+
+	// Call seen_by, if possible
+	lua_pushstring(fov->L, "updateFOV");
+	lua_gettable(fov->L, -3);
+	lua_pushvalue(fov->L, -3);
+	lua_pushvalue(fov->L, STACK_SELF);
+	lua_pushnumber(fov->L, sqdist);
+	lua_call(fov->L, 3, 0);
+
+	// Call seen_by, if possible
+	lua_pushstring(fov->L, "seen_by");
+	lua_gettable(fov->L, -3);
+	if (lua_isfunction(fov->L, -1))
+	{
 		lua_pushvalue(fov->L, -3);
 		lua_pushvalue(fov->L, STACK_SELF);
-		lua_pushnumber(fov->L, sqdist);
-		lua_call(fov->L, 3, 0);
-
-		// Call seen_by, if possible
-		lua_pushstring(fov->L, "seen_by");
-		lua_gettable(fov->L, -3);
-		if (lua_isfunction(fov->L, -1))
-		{
-			lua_pushvalue(fov->L, -3);
-			lua_pushvalue(fov->L, STACK_SELF);
-			lua_call(fov->L, 2, 0);
-		}
-		else lua_pop(fov->L, 1);
-
-		lua_pop(fov->L, 3);
+		lua_call(fov->L, 2, 0);
 	}
+	else lua_pop(fov->L, 1);
+
+	lua_pop(fov->L, 3);
 }
 
 static bool map_default_opaque(void *m, int x, int y)
@@ -497,6 +564,8 @@ static int lua_fov_calc_default_fov(lua_State *L)
 	fov_settings_set_apply_lighting_function(&(fov.fov_settings), map_default_seen);
 	lua_fov_get_permissiveness(L);
 	fov.fov_settings.permissiveness = luaL_checknumber(L, -1);
+	lua_fov_get_vision_shape(L);
+	fov.fov_settings.shape = luaL_checknumber(L, -1);
 
 	fov_circle(&(fov.fov_settings), &fov, &def, x, y, radius);
 	map_default_seen(&fov, x, y, 0, 0, radius, &def);
@@ -539,10 +608,13 @@ static int lua_fov_line_init(lua_State *L)
 	bool start_at_end = lua_toboolean(L, 8);
 	fov.w = w;
 	fov.h = h;
+
 	fov_settings_init(&(fov.fov_settings));
 	fov_settings_set_opacity_test_function(&(fov.fov_settings), map_opaque);
 	lua_fov_get_permissiveness(L);
 	fov.fov_settings.permissiveness = luaL_checknumber(L, -1);
+	lua_fov_get_vision_shape(L);
+	fov.fov_settings.shape = luaL_checknumber(L, -1);
 
 	fov_line_data *line = (fov_line_data*)lua_newuserdata(L, sizeof(fov_line_data));
 
@@ -715,6 +787,7 @@ static const struct luaL_reg fovlib[] =
 	{"line_base", lua_fov_line_init},
 	{"line_import", lua_fov_line_import},
 	{"set_permissiveness_base", lua_fov_set_permissiveness},
+	{"set_vision_shape_base", lua_fov_set_vision_shape},
 	{NULL, NULL},
 };
 

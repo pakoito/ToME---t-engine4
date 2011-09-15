@@ -1106,6 +1106,7 @@ end
 -- "firstpeek" is the least permissive setting that allows @ to see r below:
 -- @##
 -- ..r
+-- Default is "square"
 function core.fov.set_permissiveness(val)
 	val = type(val) == "string" and (string.lower(val) == "square" and 0.0 or
 						string.lower(val) == "diamond" and 0.5 or
@@ -1116,6 +1117,27 @@ function core.fov.set_permissiveness(val)
 	if type(val) ~= "number" then return end
 	val = util.bound(val, 0.0, 0.5)
 	core.fov.set_permissiveness_base(val)
+	return 2*val
+end
+
+--- Sets the vision shape or distance metric for field of vision, talent ranges, AoEs, etc.
+-- @param should be a string: circle, circle_round (same as circle), circle_floor, circle_ceil, circle_plus1, octagon, diamond, square.
+-- See "src/fov/fov.h" to see how each shape calculates distance and height.
+-- "circle_round" is aesthetically pleasing, "octagon" is a traditional roguelike FoV shape, and "circle_plus1" is similar to both "circle_round" and "octagon"
+-- Default is "circle_round"
+function core.fov.set_vision_shape(val)
+	sval = type(val) == "string" and string.lower(val)
+	val = sval and ((sval == "circle" or sval == "circle_round") and 0 or
+				sval == "circle_floor" and 1 or
+				sval == "circle_ceil" and 2 or
+				sval == "circle_plus1" and 3 or
+				sval == "octagon" and 4 or
+				sval == "diamond" and 5 or
+				sval == "square" and 6) or
+			type(tonumber(val)) == "number" and tonumber(val)
+
+	if type(val) ~= "number" then return end
+	core.fov.set_vision_shape_base(val)
 	return val
 end
 

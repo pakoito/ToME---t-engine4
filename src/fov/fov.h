@@ -55,12 +55,15 @@ typedef enum {
     FOV_SOUTHEAST
 } fov_direction_type;
 
-/** Values for the shape setting. */
+/** Values for the shape setting.          Distance                       Y (given x, radius r)   Square distance check   */
 typedef enum {
-    FOV_SHAPE_CIRCLE_PRECALCULATE,
-    FOV_SHAPE_SQUARE,
-    FOV_SHAPE_CIRCLE,
-    FOV_SHAPE_OCTAGON
+    FOV_SHAPE_CIRCLE_ROUND,             /* floor(sqrt(x^2 + y^2) + 0.5)   sqrt(r^2 + r - x^2)     x^2 + y^2 <= r^2 + r    */
+    FOV_SHAPE_CIRCLE_FLOOR,             /* floor(sqrt(x^2 + y^2))         sqrt(r^2 + 2*r - x^2)   x^2 + y^2 <= r^2 + 2*r  */
+    FOV_SHAPE_CIRCLE_CEIL,              /* ceil(sqrt(x^2 + y^2))          sqrt(r^2 - x^2)         x^2 + y^2 <= r^2        */
+    FOV_SHAPE_CIRCLE_PLUS1,             /* floor(d + 1 - 1.0/d)           sqrt(r^2 + 1 - x^2)     x^2 + y^2 <= r^2 + 1    */
+    FOV_SHAPE_OCTAGON,                  /* max(x, y) + min(x, y)/2        2*(r - x) + 1                                   */
+    FOV_SHAPE_DIAMOND,                  /* x + y                          r - x                                           */
+    FOV_SHAPE_SQUARE                    /* max(x, y)                      r                                               */
 } fov_shape_type;
 
 /** Values for the corner peek setting. */

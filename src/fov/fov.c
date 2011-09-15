@@ -82,7 +82,7 @@ typedef struct {
 /* Options -------------------------------------------------------- */
 
 void fov_settings_init(fov_settings_type *settings) {
-    settings->shape = FOV_SHAPE_CIRCLE_PRECALCULATE;
+    settings->shape = FOV_SHAPE_CIRCLE_ROUND;
     settings->corner_peek = FOV_CORNER_NOPEEK;
     settings->opaque_apply = FOV_OPAQUE_APPLY;
     settings->opaque = NULL;
@@ -238,23 +238,32 @@ static float fov_slope(float dx, float dy) {
         }                                                                                       \
                                                                                                 \
         switch (settings->shape) {                                                              \
-        case FOV_SHAPE_CIRCLE_PRECALCULATE:                                                     \
+        case FOV_SHAPE_CIRCLE_ROUND :                                                           \
             h = height(settings, dx, data->radius);                                             \
             break;                                                                              \
-        case FOV_SHAPE_CIRCLE:                                                                  \
-            h = (unsigned)(sqrt((data->radius)*(data->radius) + data->radius - dx*dx));         \
+        case FOV_SHAPE_CIRCLE_FLOOR :                                                           \
+            h = (unsigned)(sqrt((data->radius)*(data->radius) + 2*data->radius - dx*dx));       \
+            break;                                                                              \
+        case FOV_SHAPE_CIRCLE_CEIL :                                                            \
+            h = (unsigned)(sqrt((data->radius)*(data->radius) - dx*dx));                        \
+            break;                                                                              \
+        case FOV_SHAPE_CIRCLE_PLUS1 :                                                           \
+            h = (unsigned)(sqrt((data->radius)*(data->radius) + 1 - dx*dx));                    \
             break;                                                                              \
         case FOV_SHAPE_OCTAGON:                                                                 \
-            h = (data->radius - dx)<<1;                                                         \
+            h = 2u*(data->radius - (unsigned)dx) + 1u;                                          \
             break;                                                                              \
-        default:                                                                                \
+        case FOV_SHAPE_DIAMOND :                                                                \
+            h = data->radius - (unsigned)dx;                                                    \
+            break;                                                                              \
+        case FOV_SHAPE_SQUARE :                                                                 \
             h = data->radius;                                                                   \
+            break;                                                                              \
+        default :                                                                               \
+            h = (unsigned)(sqrt((data->radius)*(data->radius) + data->radius - dx*dx));         \
             break;                                                                              \
         };                                                                                      \
         if ((unsigned)dy1 > h) {                                                                \
-            if (h == 0) {                                                                       \
-                return;                                                                         \
-            }                                                                                   \
             dy1 = (int)h;                                                                       \
         }                                                                                       \
                                                                                                 \
@@ -469,82 +478,92 @@ void fov_beam(fov_settings_type *settings, void *map, void *source,
     end_slope = betweenf(angle_end, 0.0f, 1.0f);                         \
     fov_octant_##p1(&data, 1, start_slope, end_slope, true, true);       \
                                                                          \
-    if (angle_end - 1.0 > FLT_EPSILON) {                                 \
+    if (angle_end - 1.0f > FLT_EPSILON) {                                \
         start_slope = betweenf(2.0f - angle_end, 0.0f, 1.0f);            \
         fov_octant_##p2(&data, 1, start_slope, 1.0f, true, false);       \
                                                                          \
-    if (angle_end - 2.0 > 2.0f * FLT_EPSILON) {                          \
+    if (angle_end - 2.0f > 2.0f * FLT_EPSILON) {                         \
         end_slope = betweenf(angle_end - 2.0f, 0.0f, 1.0f);              \
         fov_octant_##p3(&data, 1, 0.0f, end_slope, false, true);         \
                                                                          \
-    if (angle_end - 3.0 > 3.0f * FLT_EPSILON) {                          \
+    if (angle_end - 3.0f > 3.0f * FLT_EPSILON) {                         \
         start_slope = betweenf(4.0f - angle_end, 0.0f, 1.0f);            \
         fov_octant_##p4(&data, 1, start_slope, 1.0f, true, false);       \
                                                                          \
-    if (angle_end - 4.0 > 4.0f * FLT_EPSILON) {                          \
+    if (angle_end - 4.0f > 4.0f * FLT_EPSILON) {                         \
         end_slope = betweenf(angle_end - 4.0f, 0.0f, 1.0f);              \
         fov_octant_##p5(&data, 1, 0.0f, end_slope, false, true);         \
                                                                          \
-    if (angle_end - 5.0 > 5.0f * FLT_EPSILON) {                          \
+    if (angle_end - 5.0f > 5.0f * FLT_EPSILON) {                         \
         start_slope = betweenf(6.0f - angle_end, 0.0f, 1.0f);            \
         fov_octant_##p6(&data, 1, start_slope, 1.0f, true, false);       \
                                                                          \
-    if (angle_end - 6.0 > 6.0f * FLT_EPSILON) {                          \
+    if (angle_end - 6.0f > 6.0f * FLT_EPSILON) {                         \
         end_slope = betweenf(angle_end - 6.0f, 0.0f, 1.0f);              \
         fov_octant_##p7(&data, 1, 0.0f, end_slope, false, true);         \
                                                                          \
-    if (angle_end - 7.0 > 7.0f * FLT_EPSILON) {                          \
+    if (angle_end - 7.0f > 7.0f * FLT_EPSILON) {                         \
         start_slope = betweenf(8.0f - angle_end, 0.0f, 1.0f);            \
-        fov_octant_##p8(&data, 1, start_slope, 1.0f, false, false);      \
-    }}}}}}}
+        fov_octant_##p8(&data, 1, start_slope, 1.0f, true, false);       \
+                                                                         \
+    if (angle_end - 8.0f > 8.0f * FLT_EPSILON) {                         \
+        end_slope = betweenf(angle_end - 8.0f, 0.0f, 1.0f);              \
+        start_slope = betweenf(angle_end - 8.0f, 0.0f, 1.0f);            \
+        fov_octant_##p1(&data, 1, 0.0f, end_slope, false, false);        \
+    }}}}}}}}
 
 #define BEAM_ANY_DIRECTION_DIAG(offset, p1, p2, p3, p4, p5, p6, p7, p8)  \
     angle_begin -= offset;                                               \
     angle_end -= offset;                                                 \
-    start_slope = betweenf(1.0 - angle_end, 0.0f, 1.0f);                 \
-    end_slope = 1.0 - angle_begin;                                       \
+    start_slope = betweenf(1.0f - angle_end, 0.0f, 1.0f);                \
+    end_slope = 1.0f - angle_begin;                                      \
     fov_octant_##p1(&data, 1, start_slope, end_slope, true, true);       \
                                                                          \
-    if (angle_end - 1.0 > FLT_EPSILON) {                                 \
+    if (angle_end - 1.0f > FLT_EPSILON) {                                \
         end_slope = betweenf(angle_end - 1.0f, 0.0f, 1.0f);              \
         fov_octant_##p2(&data, 1, 0.0f, end_slope, false, true);         \
                                                                          \
-    if (angle_end - 2.0 > 2.0f * FLT_EPSILON) {                          \
+    if (angle_end - 2.0f > 2.0f * FLT_EPSILON) {                         \
         start_slope = betweenf(3.0f - angle_end, 0.0f, 1.0f);            \
         fov_octant_##p3(&data, 1, start_slope, 1.0f, true, false);       \
                                                                          \
-    if (angle_end - 3.0 > 3.0f * FLT_EPSILON) {                          \
+    if (angle_end - 3.0f > 3.0f * FLT_EPSILON) {                         \
         end_slope = betweenf(angle_end - 3.0f, 0.0f, 1.0f);              \
         fov_octant_##p4(&data, 1, 0.0f, end_slope, false, true);         \
                                                                          \
-    if (angle_end - 4.0 > 4.0f * FLT_EPSILON) {                          \
+    if (angle_end - 4.0f > 4.0f * FLT_EPSILON) {                         \
         start_slope = betweenf(5.0f - angle_end, 0.0f, 1.0f);            \
         fov_octant_##p5(&data, 1, start_slope, 1.0f, true, false);       \
                                                                          \
-    if (angle_end - 5.0 > 5.0f * FLT_EPSILON) {                          \
+    if (angle_end - 5.0f > 5.0f * FLT_EPSILON) {                         \
         end_slope = betweenf(angle_end - 5.0f, 0.0f, 1.0f);              \
         fov_octant_##p6(&data, 1, 0.0f, end_slope, false, true);         \
                                                                          \
-    if (angle_end - 6.0 > 6.0f * FLT_EPSILON) {                          \
+    if (angle_end - 6.0f > 6.0f * FLT_EPSILON) {                         \
         start_slope = betweenf(7.0f - angle_end, 0.0f, 1.0f);            \
         fov_octant_##p7(&data, 1, start_slope, 1.0f, true, false);       \
                                                                          \
-    if (angle_end - 7.0 > 7.0f * FLT_EPSILON) {                          \
+    if (angle_end - 7.0f > 7.0f * FLT_EPSILON) {                         \
         end_slope = betweenf(angle_end - 7.0f, 0.0f, 1.0f);              \
-        fov_octant_##p8(&data, 1, 0.0f, end_slope, false, false);        \
-}}}}}}}
+        fov_octant_##p8(&data, 1, 0.0f, end_slope, false, true);         \
+                                                                         \
+    if (angle_end - 8.0f > 8.0f * FLT_EPSILON) {                         \
+        start_slope = betweenf(9.0f - angle_end, 0.0f, 1.0f);            \
+        fov_octant_##p1(&data, 1, start_slope, 1.0f, false, false);      \
+}}}}}}}}
 
 void fov_beam_any_angle(fov_settings_type *settings, void *map, void *source,
                         int source_x, int source_y, unsigned radius,
                         float dx, float dy, float beam_angle) {
 
     /* Note: angle_begin and angle_end are misnomers, since FoV calculation uses slopes, not angles.
-     * Hence, it may not be clear that we implicitly use a tan(x) ~ 4/pi*x approximation
-     * for x in range (0, pi/4) radians, or (0, 45) degrees.  We can (and will) make this much
-     * more precise, which is why the function now uses parameters dx, dy instead of dir_angle.
-     * TODO: make this more precise by not using approximations */
+     * We previously used a tan(x) ~ 4/pi*x approximation * for x in range (0, pi/4) radians, or 45 degrees.
+     * We no longer use this approximation.  Angles and slopes are calculated precisely,
+     * so this function can be used for numerically precise purposes if desired.
+     */
+
     fov_private_data_type data;
-    float start_slope, end_slope, angle_begin, angle_end, dir_angle;
+    float start_slope, end_slope, angle_begin, angle_end, x_start, y_start, x_end, y_end;
 
     data.settings = settings;
     data.map = map;
@@ -560,20 +579,45 @@ void fov_beam_any_angle(fov_settings_type *settings, void *map, void *source,
         return;
     }
 
-    dir_angle = RtoD*atan2(dy, dx);
-    while (dir_angle >= 360.0f) {
-        dir_angle -= 360.0f;
+    beam_angle = 0.5f * DtoR * beam_angle;
+    x_start = cos(beam_angle)*dx + sin(beam_angle)*dy;
+    y_start = cos(beam_angle)*dy - sin(beam_angle)*dx;
+    x_end   = cos(beam_angle)*dx - sin(beam_angle)*dy;
+    y_end   = cos(beam_angle)*dy + sin(beam_angle)*dx;
+
+    if (y_start > 0.0f) {
+        if (x_start > 0.0f) {                      /* octant 1 */               /* octant 2 */
+            angle_begin = ( y_start <  x_start) ? (y_start / x_start)        : (2.0f - x_start / y_start);
+        }
+        else {                                     /* octant 3 */               /* octant 4 */
+            angle_begin = (-x_start <  y_start) ? (2.0f - x_start / y_start) : (4.0f + y_start / x_start);
+        }
+    } else {
+        if (x_start < 0.0f) {                      /* octant 5 */               /* octant 6 */
+            angle_begin = (-y_start < -x_start) ? (4.0f + y_start / x_start) : (6.0f - x_start / y_start);
+        }
+        else {                                     /* octant 7 */               /* octant 8 */
+            angle_begin = ( x_start < -y_start) ? (6.0f - x_start / y_start) : (8.0f + y_start / x_start);
+        }
     }
 
-    while (dir_angle < 0.0f) {
-        dir_angle += 360.0f;
+    if (y_end > 0.0f) {
+        if (x_end > 0.0f) {                  /* octant 1 */           /* octant 2 */
+            angle_end = ( y_end <  x_end) ? (y_end / x_end)        : (2.0f - x_end / y_end);
+        }
+        else {                               /* octant 3 */           /* octant 4 */
+            angle_end = (-x_end <  y_end) ? (2.0f - x_end / y_end) : (4.0f + y_end / x_end);
+        }
+    } else {
+        if (x_end < 0.0f) {                  /* octant 5 */           /* octant 6 */
+            angle_end = (-y_end < -x_end) ? (4.0f + y_end / x_end) : (6.0f - x_end / y_end);
+        }
+        else {                               /* octant 7 */           /* octant 8 */
+            angle_end = ( x_end < -y_end) ? (6.0f - x_end / y_end) : (8.0f + y_end / x_end);
+        }
     }
 
-    /* Calculate the angles as a percentage of 45 degrees */
-    angle_begin = (dir_angle - 0.5*beam_angle) / 45.0f;
-    angle_end = (dir_angle + 0.5*beam_angle) / 45.0f;
-    if (angle_begin < 0.0f) {
-        angle_begin += 8.0f;
+    if (angle_end < angle_begin) {
         angle_end += 8.0f;
     }
 

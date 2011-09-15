@@ -383,6 +383,10 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 	-- Turn based by default
 	core.game.setRealtime(0)
 
+	-- FOV Shape
+	core.fov.set_vision_shape("circle")
+	core.fov.set_permissiveness("square")
+
 	-- Init the module directories
 	mod.load("setup")
 
