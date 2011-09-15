@@ -309,7 +309,6 @@ newEntity{ base = "BASE_WAND",
 	desc = [[This rod is made entirely of voratun, infused with raw magical energies that can bend space itself.
 You have heard of such items before. They are very useful to adventurers, allowing faster travel.]],
 	cost = 0, quest=true,
-	elec_proof = true,
 
 	max_power = 400, power_regen = 1,
 	use_power = { name = "recall the user to the worldmap", power = 202,

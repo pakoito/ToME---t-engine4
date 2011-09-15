@@ -150,8 +150,10 @@ return {
 		end
 
 		local spot = game.level:pickSpotRemove{type="stairs", subtype="stairs"}
-		local g = game.level.map(spot.x, spot.y, engine.Map.TERRAIN)
-		game.zone:addEntity(game.level, floor, "terrain", spot.x, spot.y)
+		if spot then
+			local g = game.level.map(spot.x, spot.y, engine.Map.TERRAIN)
+			game.zone:addEntity(game.level, floor, "terrain", spot.x, spot.y)
+		end
 
 		game.log("#YELLOW#You hear all the doors being shattered into pieces.")
 	end,
