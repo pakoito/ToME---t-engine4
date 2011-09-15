@@ -18,7 +18,6 @@
 -- darkgod@te4.org
 
 -- load some utility functions
-local dispatch = require "dispatch"
 dofile("/engine/utils.lua")
 dofile("/engine/colors.lua")
 
