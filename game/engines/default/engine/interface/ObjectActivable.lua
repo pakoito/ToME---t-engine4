@@ -77,6 +77,7 @@ function _M:useObject(who, ...)
 			else
 				game.logPlayer(who, "%s can not be used anymore.", self:getName{no_count=true})
 			end
+			return {}
 		end
 	elseif self.use_simple then
 		return self.use_simple.use(self, who, ...) or {}
@@ -97,6 +98,7 @@ function _M:useObject(who, ...)
 			else
 				game.logPlayer(who, "%s can not be used anymore.", self:getName{no_count=true})
 			end
+			return {}
 		end
 	end
 end
