@@ -942,8 +942,11 @@ static int map_draw_seen_texture(lua_State *L)
 
 	int mx = map->mx;
 	int my = map->my;
-	x -= map->tile_w * (map->used_animdx + map->used_mx);
-	y -= map->tile_h * (map->used_animdy + map->used_my);
+//	x -= map->tile_w * (map->used_animdx + map->used_mx);
+//	y -= map->tile_h * (map->used_animdy + map->used_my);
+	x -= map->tile_w * (map->used_animdx + map->mx);
+	y -= map->tile_h * (map->used_animdy + map->my);
+
 
 	tglBindTexture(GL_TEXTURE_2D, map->seens_texture);
 

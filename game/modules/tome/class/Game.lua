@@ -294,7 +294,7 @@ function _M:newGame()
 			end
 
 			if self.player.no_birth_levelup or __module_extra_info.no_birth_popup then birthend()
-			else self.player:playerLevelup(birthend) end
+			else self.player:playerLevelup(birthend, true) end
 
 		-- Player was loaded from a premade
 		else
@@ -1274,7 +1274,7 @@ function _M:setupCommands()
 		end),
 
 		LEVELUP = function()
-			self.player:playerLevelup()
+			self.player:playerLevelup(nil, false)
 		end,
 
 		SAVE_GAME = function()

@@ -39,7 +39,8 @@ Category points left: #00FF00#%d#LAST#
 Class talent points left: #00FF00#%d#LAST#
 Generic talent points left: #00FF00#%d#LAST#]]
 
-function _M:init(actor, on_finish)
+function _M:init(actor, on_finish, on_birth)
+	self.on_birth = on_birth
 	actor.no_last_learnt_talents_cap = true
 	self.actor = actor
 	self.unused_stats = self.actor.unused_stats
@@ -478,6 +479,14 @@ function _M:finish()
 		self.actor:forceUseTalent(tid, {ignore_energy=true, ignore_cd=true, no_equilibrium_fail=true, no_paradox_fail=true})
 		if self.actor:knowTalent(tid) then self.actor:forceUseTalent(tid, {ignore_energy=true, ignore_cd=true, no_equilibrium_fail=true, no_paradox_fail=true}) end
 	end
+
+	if not self.on_birth then
+		for t_id, _ in pairs(self.talents_learned) do
+			local t = self.actor:getTalentFromId(t_id)
+			if not self.actor:isTalentCoolingDown(t) then self.actor:startTalentCooldown(t) end
+		end
+	end
+
 	-- Achievements checks
 	world:gainAchievement("ELEMENTALIST", self.actor)
 	world:gainAchievement("WARPER", self.actor)

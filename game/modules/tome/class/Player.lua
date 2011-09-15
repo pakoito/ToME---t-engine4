@@ -925,8 +925,8 @@ function _M:playerCheckSustains()
 	end
 end
 
-function _M:playerLevelup(on_finish)
-	local ds = LevelupDialog.new(self, on_finish)
+function _M:playerLevelup(on_finish, on_birth)
+	local ds = LevelupDialog.new(self, on_finish, on_birth)
 	game:registerDialog(ds)
 end
 
