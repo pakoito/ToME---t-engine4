@@ -183,6 +183,13 @@ function _M:move(x, y, force)
 		if self.describeFloor then self:describeFloor(self.x, self.y) end
 	end
 
+--	if not force and ox == self.x and oy == self.y and self.tryPlayerSlide then
+--		x, y = self:tryPlayerSlide(x, y, false)
+--		self.tryPlayerSlide = false
+--		moved = self:move(x, y, false)
+--		self.tryPlayerSlide = nil
+--	end
+
 	-- Update wilderness coords
 	if game.zone.wilderness and not force then
 		-- Cheat with time

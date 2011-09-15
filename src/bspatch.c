@@ -49,6 +49,10 @@ static off_t offtin(u_char *buf)
 	return y;
 }
 
+#ifndef fseeko
+#define fseeko fseek
+#endif
+
 #define returnerr(ret, str, f1, f2) { printf(str, f1, f2); perror("\nError in bspatch\n"); return (ret); }
 
 int bspatch(char *infile, char *outfile, char *patchfile)
@@ -86,21 +90,20 @@ int bspatch(char *infile, char *outfile, char *patchfile)
 
 	/* Read header */
 	if (fread(header, 1, 32, f) < 32) {
-		if (feof(f))
-			errx(1, "Corrupt patch\n");
+		if (feof(f)) returnerr(1, "Corrupt patch", 0, 0);
 		returnerr(1, "fread(%s)", patchfile, 0);
 	}
 
 	/* Check for appropriate magic */
 	if (memcmp(header, "BSDIFF40", 8) != 0)
-		errx(1, "Corrupt patch\n");
+		returnerr(1, "Corrupt patch", 0, 0);
 
 	/* Read lengths from header */
 	bzctrllen=offtin(header+8);
 	bzdatalen=offtin(header+16);
 	newsize=offtin(header+24);
 	if((bzctrllen<0) || (bzdatalen<0) || (newsize<0))
-		errx(1,"Corrupt patch\n");
+		returnerr(1, "Corrupt patch", 0, 0);
 
 	/* Close patch file and re-open it via libbzip2 at the right places */
 	if (fclose(f))
@@ -111,21 +114,21 @@ int bspatch(char *infile, char *outfile, char *patchfile)
 		returnerr(1, "fseeko(%s, %lld)", patchfile,
 		    (long long)32);
 	if ((cpfbz2 = BZ2_bzReadOpen(&cbz2err, cpf, 0, 0, NULL, 0)) == NULL)
-		errx(1, "BZ2_bzReadOpen, bz2err = %d", cbz2err);
+		returnerr(1, "BZ2_bzReadOpen, bz2err = %d", cbz2err, 0);
 	if ((dpf = fopen(patchfile, "r")) == NULL)
 		returnerr(1, "fopen(%s)", patchfile, 0);
 	if (fseeko(dpf, 32 + bzctrllen, SEEK_SET))
 		returnerr(1, "fseeko(%s, %lld)", patchfile,
 		    (long long)(32 + bzctrllen));
 	if ((dpfbz2 = BZ2_bzReadOpen(&dbz2err, dpf, 0, 0, NULL, 0)) == NULL)
-		errx(1, "BZ2_bzReadOpen, bz2err = %d", dbz2err);
+		returnerr(1, "BZ2_bzReadOpen, bz2err = %d", dbz2err, 0);
 	if ((epf = fopen(patchfile, "r")) == NULL)
 		returnerr(1, "fopen(%s)", patchfile, 0);
 	if (fseeko(epf, 32 + bzctrllen + bzdatalen, SEEK_SET))
 		returnerr(1, "fseeko(%s, %lld)", patchfile,
 		    (long long)(32 + bzctrllen + bzdatalen));
 	if ((epfbz2 = BZ2_bzReadOpen(&ebz2err, epf, 0, 0, NULL, 0)) == NULL)
-		errx(1, "BZ2_bzReadOpen, bz2err = %d", ebz2err);
+		returnerr(1, "BZ2_bzReadOpen, bz2err = %d", ebz2err, 0);
 
 	if(((fd=open(infile,O_RDONLY,0))<0) ||
 		((oldsize=lseek(fd,0,SEEK_END))==-1) ||
@@ -142,19 +145,19 @@ int bspatch(char *infile, char *outfile, char *patchfile)
 			lenread = BZ2_bzRead(&cbz2err, cpfbz2, buf, 8);
 			if ((lenread < 8) || ((cbz2err != BZ_OK) &&
 			    (cbz2err != BZ_STREAM_END)))
-				errx(1, "Corrupt patch\n");
+				returnerr(1, "Corrupt patch", 0, 0);
 			ctrl[i]=offtin(buf);
 		};
 
 		/* Sanity-check */
 		if(newpos+ctrl[0]>newsize)
-			errx(1,"Corrupt patch\n");
+			returnerr(1, "Corrupt patch", 0, 0);
 
 		/* Read diff string */
 		lenread = BZ2_bzRead(&dbz2err, dpfbz2, new + newpos, ctrl[0]);
 		if ((lenread < ctrl[0]) ||
 		    ((dbz2err != BZ_OK) && (dbz2err != BZ_STREAM_END)))
-			errx(1, "Corrupt patch\n");
+			returnerr(1, "Corrupt patch", 0, 0);
 
 		/* Add old data to diff string */
 		for(i=0;i<ctrl[0];i++)
@@ -167,13 +170,13 @@ int bspatch(char *infile, char *outfile, char *patchfile)
 
 		/* Sanity-check */
 		if(newpos+ctrl[1]>newsize)
-			errx(1,"Corrupt patch\n");
+			returnerr(1, "Corrupt patch", 0, 0);
 
 		/* Read extra string */
 		lenread = BZ2_bzRead(&ebz2err, epfbz2, new + newpos, ctrl[1]);
 		if ((lenread < ctrl[1]) ||
 		    ((ebz2err != BZ_OK) && (ebz2err != BZ_STREAM_END)))
-			errx(1, "Corrupt patch\n");
+			returnerr(1, "Corrupt patch", 0, 0);
 
 		/* Adjust pointers */
 		newpos+=ctrl[1];
