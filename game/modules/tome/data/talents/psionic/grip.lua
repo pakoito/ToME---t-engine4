@@ -84,8 +84,8 @@ newTalent{
 		local _ _, x, y = self:canProject(tg, x, y)
 		game:playSoundNear(self, "talents/spell_generic")
 		local target = game.level.map(x, y, Map.ACTOR)
--		if target and target:checkHit(self:combatMindpower(), target:combatMentalResist(), 0, 95, 15)then
--			target:setEffect(self.EFF_PSIONIC_BIND, dur, {power=1})
+		if target and target:checkHit(self:combatMindpower(), target:combatMentalResist(), 0, 95, 15)then
+			target:setEffect(self.EFF_PSIONIC_BIND, dur, {power=1})
 		else
 			return
 		end

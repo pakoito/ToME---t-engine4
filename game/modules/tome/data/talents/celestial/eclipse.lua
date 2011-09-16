@@ -150,6 +150,7 @@ newTalent{
 		game:playSoundNear(self, "talents/heal")
 		local ret = {
 			invisible = self:addTemporaryValue("invisible", t.getInvisibilityPower(self, t)),
+			invisible_damage_penalty = self:addTemporaryValue("invisible_damage_penalty", 0.5),
 			fill = self:addTemporaryValue("positive_regen", timer),
 			drain = self:addTemporaryValue("negative_regen", - timer),
 		}
@@ -176,6 +177,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local radius = t.getRadius(self, t)
 		return ([[This powerful spell grants you %d bonus invisibility, but converts %d negative energy into positive energy each turn.  Once your positive energy exceeds your negative energy, or you deactivate the talent, the effect ends in an explosion of light, converting all of your positive energy into damage and inflicting an additional %0.2f damage on everything in a radius of %d.
+		As you become invisible you fade out of phase with reality, all your damage is reduced by 50%%.
 		You may not cast Twilight while this spell is active and you should take off your light source otherwise you will still easily be spotted.
 		The invisibility bonus will increase with your Cunning stat and the explosion damage will increase with the Magic Stat..]]):
 		format(invisibilitypower, convert, damDesc(self, DamageType.LIGHT, damage), radius)

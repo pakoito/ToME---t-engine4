@@ -126,13 +126,15 @@ newTalent{
 		game:playSoundNear(self, "talents/heal")
 		local ret = {
 			invisible = self:addTemporaryValue("invisible", t.getInvisibilityPower(self, t)),
-			drain = self:addTemporaryValue("mana_regen", - math.max(2, 7 - math.ceil(self:getTalentLevelRaw(t) / 2))),
+			invisible_damage_penalty = self:addTemporaryValue("invisible_damage_penalty", 0.7),
+			drain = self:addTemporaryValue("mana_regen", -2),
 		}
 		self:resetCanSeeCacheOf()
 		return ret
 	end,
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("invisible", p.invisible)
+		self:removeTemporaryValue("invisible_damage_penalty", p.invisible_damage_penalty)
 		self:removeTemporaryValue("mana_regen", p.drain)
 		self:resetCanSeeCacheOf()
 		return true
@@ -141,8 +143,9 @@ newTalent{
 		local invisi = t.getInvisibilityPower(self, t)
 		return ([[The caster fades from sight, granting %d bonus to invisibility.
 		Beware, you should take off your light, otherwise you will still be easily spotted.
-		This powerful spell constantly drains your %d mana while active.
+		As you become invisible you fade out of phase with reality, all your damage is reduced by 70%%.
+		This powerful spell constantly drains your 2 mana while active.
 		The bonus will increase with the Magic stat]]):
-		format(invisi, math.max(2, 7 - math.ceil(self:getTalentLevelRaw(t) / 2)))
+		format(invisi)
 	end,
 }

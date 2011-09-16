@@ -407,24 +407,21 @@ newInscription{
 	points = 1,
 	is_spell = true,
 	tactical = { DEFEND = 3, ESCAPE = 2 },
-	on_pre_use = function(self, t)
-		local ok, data = pcall(self.getInscriptionData, self, t.short_name)
-		return ok and data.nb_uses > 0
-	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		self:setEffect(self.EFF_INVISIBILITY, data.dur, {power=data.power + data.inc_stat})
+		self:setEffect(self.EFF_INVISIBILITY, data.dur, {power=data.power + data.inc_stat, penalty=0.8, regen=true})
 		self:usedInscription(t.short_name)
 		return true
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return ([[Activate the rune to become invisible (power %d) for %d turns.
-		Charges remaining: %d]]):format(data.power + data.inc_stat, data.dur, data.nb_uses)
+		As you become invisible you fade out of phase with reality, all your damage is reduced by 80%% and you can not heal or regen life while invisible.
+		]]):format(data.power + data.inc_stat, data.dur)
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[power %d for %d turns; %d charges]]):format(data.power + data.inc_stat, data.dur, data.nb_uses)
+		return ([[power %d for %d turns]]):format(data.power + data.inc_stat, data.dur)
 	end,
 }
 

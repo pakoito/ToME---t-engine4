@@ -721,14 +721,24 @@ newEffect{
 	long_desc = function(self, eff) return ("Improves/gives invisibility (power %d)."):format(eff.power) end,
 	type = "magical",
 	status = "beneficial",
-	parameters = { power=10 },
+	parameters = { power=10, penalty=0, regen=false },
 	on_gain = function(self, err) return "#Target# vanishes from sight.", "+Invis" end,
 	on_lose = function(self, err) return "#Target# is no longer invisible.", "-Invis" end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("invisible", eff.power)
+		eff.penaltyid = self:addTemporaryValue("invisible_damage_penalty", eff.penalty)
+		if eff.regen then
+			eff.regenid = self:addTemporaryValue("no_life_regen", 1)
+			eff.healid = self:addTemporaryValue("no_healing", 1)
+		end
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("invisible", eff.tmpid)
+		self:removeTemporaryValue("invisible_damage_penalty", eff.penaltyid)
+		if eff.regen then
+			self:removeTemporaryValue("no_life_regen", eff.regenid)
+			self:removeTemporaryValue("no_healing", eff.healid)
+		end
 		self:resetCanSeeCacheOf()
 	end,
 }

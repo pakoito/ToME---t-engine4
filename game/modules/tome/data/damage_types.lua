@@ -170,6 +170,10 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			dam = dam * 0.3
 			print("[PROJECTOR] stunned dam", dam)
 		end
+		if src:attr("invisible_damage_penalty") then
+			dam = dam * util.bound(1 - src.invisible_damage_penalty, 0, 1)
+			print("[PROJECTOR] invisible dam", dam)
+		end
 		if src:attr("numbed") then
 			dam = dam - dam * src:attr("numbed") / 100
 			print("[PROJECTOR] numbed dam", dam)
