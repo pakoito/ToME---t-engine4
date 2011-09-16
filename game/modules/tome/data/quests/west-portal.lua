@@ -75,7 +75,7 @@ create_portal = function(self, npc, player)
 	game.logPlayer(game.player, "#VIOLET#Zemekkys says: 'The portal is done!'")
 
 	-- Zemekkys is not in his home anymore
-	npc.on_move = nil
+	npc.block_move = true
 
 	-- Add Zemekkys near the portal
 	local zemekkys = mod.class.NPC.new{
