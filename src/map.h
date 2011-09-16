@@ -59,6 +59,7 @@ typedef struct s_map_object map_object;
 
 typedef struct {
 	map_object* ***grids;
+	int ***grids_ref;
 	float *grids_seens;
 	bool **grids_remembers;
 	bool **grids_lites;

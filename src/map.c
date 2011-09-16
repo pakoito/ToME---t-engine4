@@ -135,6 +135,7 @@ static int map_object_chain(lua_State *L)
 	map_object *obj2 = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 2);
 	if (obj->next) return 0;
 	obj->next = obj2;
+	lua_pushvalue(L, 2);
 	obj->next_ref = luaL_ref(L, LUA_REGISTRYINDEX);
 	return 0;
 }
@@ -616,6 +617,7 @@ static int map_new(lua_State *L)
 	map->mwidth = mwidth;
 	map->mheight = mheight;
 	map->grids = calloc(w, sizeof(map_object***));
+	map->grids_ref = calloc(w, sizeof(int**));
 	map->grids_seens = calloc(w * h, sizeof(float));
 	map->grids_remembers = calloc(w, sizeof(bool*));
 	map->grids_lites = calloc(w, sizeof(bool*));
@@ -628,7 +630,12 @@ static int map_new(lua_State *L)
 	for (i = 0; i < w; i++)
 	{
 		map->grids[i] = calloc(h, sizeof(map_object**));
-		for (j = 0; j < h; j++) map->grids[i][j] = calloc(zdepth, sizeof(map_object*));
+		map->grids_ref[i] = calloc(h, sizeof(int*));
+		for (j = 0; j < h; j++)
+		{
+			map->grids[i][j] = calloc(zdepth, sizeof(map_object*));
+			map->grids_ref[i][j] = calloc(zdepth, sizeof(int));
+		}
 //		map->grids_seens[i] = calloc(h, sizeof(float));
 		map->grids_remembers[i] = calloc(h, sizeof(bool));
 		map->grids_lites[i] = calloc(h, sizeof(bool));
@@ -644,13 +651,19 @@ static int map_free(lua_State *L)
 
 	for (i = 0; i < map->w; i++)
 	{
-		for (j = 0; j < map->h; j++) free(map->grids[i][j]);
+		for (j = 0; j < map->h; j++)
+		{
+			free(map->grids[i][j]);
+			free(map->grids_ref[i][j]);
+		}
 		free(map->grids[i]);
+		free(map->grids_ref[i]);
 //		free(map->grids_seens[i]);
 		free(map->grids_remembers[i]);
 		free(map->grids_lites[i]);
 	}
 	free(map->grids);
+	free(map->grids_ref);
 	free(map->grids_seens);
 	free(map->grids_remembers);
 	free(map->grids_lites);
@@ -754,6 +767,8 @@ static int map_set_grid(lua_State *L)
 #endif
 			lua_pushnil(L);
 			lua_settable(L, 5); // Access the list of all mos for the map
+
+			luaL_unref(L, LUA_REGISTRYINDEX, map->grids_ref[x][y][i]);
 		}
 
 		lua_pushnumber(L, i + 1);
@@ -763,6 +778,8 @@ static int map_set_grid(lua_State *L)
 		{
 			map->grids[x][y][i]->cur_x = x;
 			map->grids[x][y][i]->cur_y = y;
+			lua_pushvalue(L, -1);
+			map->grids_ref[x][y][i] = luaL_ref(L, LUA_REGISTRYINDEX);
 		}
 
 		// Set the object in the mo list
