@@ -410,7 +410,6 @@ newInscription{
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:setEffect(self.EFF_INVISIBILITY, data.dur, {power=data.power + data.inc_stat, penalty=0.4, regen=true})
-		self:usedInscription(t.short_name)
 		return true
 	end,
 	info = function(self, t)

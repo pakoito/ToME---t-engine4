@@ -326,27 +326,8 @@ newEntity{ base = "BASE_RUNE",
 		dur = resolvers.mbonus_level(9, 4, function(e, v) return v * 1 end),
 		power = resolvers.mbonus_level(8, 7, function(e, v) return v * 1 end),
 		use_stat_mod = 0.08,
-		nb_uses = resolvers.mbonus_level(7, 4),
 	},
 	inscription_talent = "RUNE:_INVISIBILITY",
-}
-
-newEntity{ base = "BASE_RUNE",
-	name = "speed rune",
-	level_range = {23, 50},
-	rarity = 16,
-	cost = 40,
-	material_level = 3,
-
-	inscription_kind = "utility",
-	inscription_data = {
-		cooldown = resolvers.rngrange(14, 24),
-		dur = resolvers.mbonus_level(4, 3),
-		power = resolvers.mbonus_level(30, 30, function(e, v) return v * 0.3 end),
-		use_stat_mod = 0.3,
-		nb_uses = resolvers.mbonus_level(7, 4),
-	},
-	inscription_talent = "RUNE:_SPEED",
 }
 
 newEntity{ base = "BASE_RUNE",
