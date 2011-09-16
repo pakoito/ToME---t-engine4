@@ -30,7 +30,7 @@ newTalent{
 	tactical = { ATTACK = 2 },
 	range = archery_range,
 	requires_target = true,
-	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow for this talent.") end return false end return true end,
+	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon("bow") then if not silent then game.logPlayer(self, "You require a bow for this talent.") end return false end return true end,
 	shot_boost = function(self, t)
 		return 30 + 10*self:getTalentLevel(t)
 	end,
@@ -66,7 +66,7 @@ newTalent{
 	range = archery_range,
 	requires_target = true,
 	tactical = { ATTACK = 2 },
-	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow for this talent.") end return false end return true end,
+	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon("bow") then if not silent then game.logPlayer(self, "You require a bow for this talent.") end return false end return true end,
 	apr_boost = function(self, t)
 		return 10 + 10*self:getTalentLevel(t)
 	end,
@@ -106,7 +106,7 @@ newTalent{
 	tactical = { ATTACK = 2 },
 	range = archery_range,
 	requires_target = true,
-	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow for this talent.") end return false end return true end,
+	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon("bow") then if not silent then game.logPlayer(self, "You require a bow for this talent.") end return false end return true end,
 	use_psi_archery = function(self, t)
 		local pf_weapon = self:getInven("PSIONIC_FOCUS")[1]
 		if pf_weapon and pf_weapon.archery then

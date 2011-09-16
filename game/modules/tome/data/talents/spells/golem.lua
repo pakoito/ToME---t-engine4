@@ -180,9 +180,9 @@ newTalent{
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return true end
 		local hit = self:attackTarget(target, nil, t.getDamage(self, t), true)
 
-		-- Try to knockback !
+		-- Try to pin
 		if hit then
-			if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 10 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
+			if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 10 - self:getTalentLevel(t) / 2) and target:canBe("pin") then
 				target:setEffect(target.EFF_PINNED, t.getPinDuration(self, t), {})
 			else
 				game.logSeen(target, "%s resists the crushing!", target.name:capitalize())

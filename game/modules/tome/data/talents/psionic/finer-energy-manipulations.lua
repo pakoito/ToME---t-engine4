@@ -94,13 +94,31 @@ newTalent{
 	no_unlearn_last = true,
 	arm_boost = function(self, t)
 		--return math.floor(0.1*self:combatTalentIntervalDamage(t, "wil", 10, 30))
-		return math.floor(0.25*t.fat_red(self, t))
+		--return math.floor(0.25*t.fat_red(self, t))
+		local arm_values = {
+		0 + self:getWil(2),
+		1 + self:getWil(2),
+		1 + self:getWil(2),
+		2 + self:getWil(2),
+		2 + self:getWil(2)
+		}
+		local index = util.bound(self:getTalentLevelRaw(t), 1, 5)
+		return arm_values[index] * (self:getTalentLevel(t) / self:getTalentLevelRaw(t))
 	end,
 	fat_red = function(self, t)
-		return math.floor(0.1*self:combatTalentIntervalDamage(t, "wil", 50, 100))
+		--return math.floor(0.1*self:combatTalentIntervalDamage(t, "wil", 50, 100))
+		local fat_values = {
+		1 + self:getWil(3),
+		1 + self:getWil(3),
+		2 + self:getWil(3),
+		2 + self:getWil(3),
+		3 + self:getWil(3)
+		}
+		local index = util.bound(self:getTalentLevelRaw(t), 1, 5)
+		return fat_values[index] * (self:getTalentLevel(t) / self:getTalentLevelRaw(t))
 	end,
 	action = function(self, t)
-		local d d = self:showInventory("Reshape which piece of armor?", self:getInven("INVEN"), function(o) return not o.quest and o.type == "armor" and not o.fully_reshaped end, function(o, item)
+		local d d = self:showInventory("Reshape which piece of armour?", self:getInven("INVEN"), function(o) return not o.quest and o.type == "armor" and not o.fully_reshaped end, function(o, item)
 			if (o.old_fat or 0) < t.fat_red(self, t) then
 				o.wielder = o.wielder or {}
 				if not o.been_reshaped then
@@ -135,7 +153,7 @@ newTalent{
 	info = function(self, t)
 		local arm = t.arm_boost(self, t)
 		local fat = t.fat_red(self, t)
-		return ([[Manipulate forces on the molecular level to realign, rebalance, and hone your armour. Permanently increases the armour rating of any piece of armour by %d. Also permanently reduces the fatigue rating of any piece of armour by %d.
+		return ([[Manipulate forces on the molecular level to realign, rebalance, and reinforce a piece of armour. Permanently increases the armour rating of any piece of armour by %d. Also permanently reduces the fatigue rating of any piece of armour by %d.
 		These values scale with Willpower.]]):
 		format(arm, fat)
 	end,

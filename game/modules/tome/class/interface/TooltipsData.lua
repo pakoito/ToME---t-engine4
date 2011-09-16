@@ -110,6 +110,8 @@ Your control over chronomancy spells increases with your Willpower.
 
 TOOLTIP_PSI = [[#GOLD#Psi#LAST#
 Psi represents how much energy your mind can harness. Like matter, it can be neither created nor destroyed.
+It regenerates naturally, though slowly, as you pull minute amounts of heat and kinetic energy from your surroundings.
+To get meaningful amounts back in combat, you must absorb it through shields or various other talents.
 Your capacity for storing energy is determined by your Willpower.
 ]]
 
@@ -185,7 +187,7 @@ TOOLTIP_MAGWILCUN = "#AQUAMARINE#Mental stats#LAST#\n---\n"..TOOLTIP_MAG.."\n---
 -------------------------------------------------------------
 -- Melee
 -------------------------------------------------------------
-TOOLTIP_COMBAT_ATTACK = [[#GOLD#Accuracy chance#LAST#
+TOOLTIP_COMBAT_ATTACK = [[#GOLD#Accuracy#LAST#
 Your accuracy value represents your chance to hit your opponents, it is measured directly against the target's defense rating.
 It is improved by both Strength and Dexterity.
 ]]
@@ -241,15 +243,12 @@ Ranged defense represents your chance to avoid being hit at all by a ranged atta
 ]]
 TOOLTIP_PHYS_SAVE = [[#GOLD#Physical saving throw#LAST#
 This value represents your resistance against physical attacks induced special effects, like bleeding, stuns, knockbacks, ...
-It is measured against your target's accuracy.
 ]]
 TOOLTIP_SPELL_SAVE = [[#GOLD#Spell saving throw#LAST#
 This value represents your resistance against spell attacks induced special effects, like freezes, knockbacks, ...
-It is measured against your target's spellpower.
 ]]
 TOOLTIP_MENTAL_SAVE = [[#GOLD#Mental saving throw#LAST#
 This value represents your resistance against mental attacks induced special effects, like confusion, fear, ...
-It is measured against your target's spellpower or mental power.
 ]]
 
 -------------------------------------------------------------

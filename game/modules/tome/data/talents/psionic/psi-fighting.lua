@@ -67,6 +67,7 @@ newTalent{
 	mode = "sustained",
 	cooldown = 0,
 	sustain_psi = 10,
+	no_energy = true,
 	tactical = { BUFF = 2 },
 	activate = function(self, t)
 		local str_power = math.floor(0.05*self:getTalentLevel(t)*self:getWil())

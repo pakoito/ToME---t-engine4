@@ -91,6 +91,7 @@ newTalent{
 	sustain_psi = 0,
 	range = 1,
 	direct_hit = true,
+	no_energy = true,
 	tactical = { BUFF = 3 },
 	do_tkautoattack = function(self, t)
 		if game.zone.wilderness then return end

@@ -28,7 +28,7 @@ newTalent{
 	range = 1,
 	tactical = { ATTACK = 2, DISABLE = 2 },
 	requires_target = true,
-	pre_use = function(self, t, silent) local shield = self:hasShield() if not shield then if not silent then game.logPlayer(self, "You cannot use Eldricth Blow without a shield!") end return false end return true end,
+	on_pre_use = function(self, t, silent) local shield = self:hasShield() if not shield then if not silent then game.logPlayer(self, "You cannot use Eldricth Blow without a shield!") end return false end return true end,
 	action = function(self, t)
 		local shield = self:hasShield()
 
@@ -96,7 +96,7 @@ newTalent{
 	requires_target = true,
 	tactical = { ATTACK = 3, DISABLE = 1 },
 	range = 1,
-	pre_use = function(self, t, silent) local shield = self:hasShield() if not shield then if not silent then game.logPlayer(self, "You cannot use Eldricth Fury without a shield!") end return false end return true end,
+	on_pre_use = function(self, t, silent) local shield = self:hasShield() if not shield then if not silent then game.logPlayer(self, "You cannot use Eldricth Fury without a shield!") end return false end return true end,
 	action = function(self, t)
 		local shield = self:hasShield()
 
@@ -111,9 +111,9 @@ newTalent{
 		local hit3 = self:attackTarget(target, DamageType.NATURE, self:combatTalentWeaponDamage(t, 0.6, 1.6), true)
 
 		-- Try to stun !
-		if hit then
+		if hit1 or hit2 or hit3 then
 			if target:checkHit(self:combatAttackStr(shield.special_combat), target:combatSpellResist(), 0, 95, 5) and target:canBe("stun") then
-				target:setEffect(target.EFF_DAZED, 3 + math.floor(self:getTalentLevel(t)), {})
+				target:setEffect(target.EFF_DAZED, 3 + math.floor(self:getTalentLevel(t)), {apply_power=self:combatAttackStr(shield.special_combat), apply_save="combatSpellResist"})
 			else
 				game.logSeen(target, "%s resists the dazing blows!", target.name:capitalize())
 			end
@@ -123,7 +123,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Channel eldritch forces to speed up your attacks, hitting the target three times with your weapon and shield doing %d%% nature damage.
-		If the any of the attacks hit, the target is dazed for %d turns.
+		If any of the attacks hit, the target is dazed for %d turns.
 		The daze is considered a magical attack and thus is resisted with spell save, not physical save.]])
 		:format(100 * self:combatTalentWeaponDamage(t, 0.6, 1.6), 3 + math.floor(self:getTalentLevel(t)))
 	end,
@@ -141,7 +141,7 @@ newTalent{
 	requires_target = true,
 	range = 1,
 	radius = function(self, t) return 1 + self:getTalentLevelRaw(t) end,
-	pre_use = function(self, t, silent) local shield = self:hasShield() if not shield then if not silent then game.logPlayer(self, "You cannot use Eldritch Slam without a shield!") end return false end return true end,
+	on_pre_use = function(self, t, silent) local shield = self:hasShield() if not shield then if not silent then game.logPlayer(self, "You cannot use Eldritch Slam without a shield!") end return false end return true end,
 	action = function(self, t)
 		local shield = self:hasShield()
 

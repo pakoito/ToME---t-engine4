@@ -472,7 +472,7 @@ newTalent{
 	type = {"psionic/projection", 4},
 	require = psi_wil_req4,
 	cooldown = function(self, t)
-		return 120 - self:getTalentLevel(t)*12
+		return math.floor(120 - self:getTalentLevel(t)*12)
 	end,
 	psi = 15,
 	points = 5,

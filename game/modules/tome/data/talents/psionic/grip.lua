@@ -17,17 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
---[=[
-1) Bind: 20 psi, (6, modified by reach) range, (15 - gem level) cooldown. (0, 0, 1, 1, 2) radius
-Paralyses enemies for (3-9[capped], based on normal scaling) turns. Checks your willpower against their physical saves, then against their mental saves for resistance. (only one required to hit, 80% max chance of success on each).
-Envelop your target in bonds of force and compulsion, paralyzing it for XXX turns. At talent level 3, it will affect an area. Chance to paralyze will improve with the Willpower stat.
 
-2) Swat Projectiles
-
-3) Greater Telekinetic Grasp: disarm immunity, % increase to TK weapon damage, gem level
-
-4) Implosion: Fuck dudes up. DOT.
-]=]
 
 newTalent{
 	name = "Deflect Projectiles",
@@ -65,7 +55,7 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	cooldown = function(self, t)
-		local c = 15
+		local c = 25
 		local gem_level = getGemLevel(self)
 		return math.max(c - gem_level, 0)
 	end,
@@ -81,7 +71,7 @@ newTalent{
 	getDuration = function (self, t)
 		local gem_level = getGemLevel(self)
 		--return 5 + self:getWil(5) + self:getTalentLevel(t) + gem_level
-		return self:combatTalentIntervalDamage(t, "wil", 3, 15, 0.2) + gem_level
+		return self:combatTalentIntervalDamage(t, "wil", 3, 12, 0.2) + gem_level
 	end,
 	requires_target = true,
 	target = function(self, t) return {type="ball", range=self:getTalentRange(t), radius=0, selffire=false, talent=t} end,
@@ -94,8 +84,8 @@ newTalent{
 		local _ _, x, y = self:canProject(tg, x, y)
 		game:playSoundNear(self, "talents/spell_generic")
 		local target = game.level.map(x, y, Map.ACTOR)
-		if target and target:checkHit(self:combatMindpower(), target:combatMentalResist(), 0, 95, 15)then
-			target:setEffect(self.EFF_PSIONIC_BIND, dur, {power=1})
+-		if target and target:checkHit(self:combatMindpower(), target:combatMentalResist(), 0, 95, 15)then
+-			target:setEffect(self.EFF_PSIONIC_BIND, dur, {power=1})
 		else
 			return
 		end
@@ -131,7 +121,6 @@ newTalent{
 	end,
 	getDuration = function (self, t)
 		local gem_level = getGemLevel(self)
-		--return 5 + self:getWil(5) + self:getTalentLevel(t) + gem_level
 		return self:combatTalentIntervalDamage(t, "wil", 2, 6, 0.2)
 	end,
 	getDamage = function (self, t)
@@ -146,14 +135,6 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		--local _ _, x, y = self:canProject(tg, x, y)
-		--game:playSoundNear(self, "talents/spell_generic")
-		--local target = game.level.map(x, y, Map.ACTOR)
-		--if target and target:checkHit(self:combatMindpower(), target:combatPhysicalResist(), 0, 95, 15)then
-		--	target:setEffect(self.EFF_IMPLODING, dur, {power=dam, src=self})
-		--else
-		--	return
-		--end
 		self:project(tg, x, y, DamageType.IMPLOSION, {dur=dur, dam=dam})
 
 		return true

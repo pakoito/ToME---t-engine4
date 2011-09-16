@@ -45,6 +45,7 @@ newTalent{
 			return
 		end
 		target:pull(self.x, self.y, tg.range)
+		target:setEffect(target.EFF_DAZED, 1, {})
 		game:playSoundNear(self, "talents/arcane")
 
 		return true
@@ -66,14 +67,16 @@ newTalent{
 	random_ego = "utility",
 	cooldown = 80,
 	psi = 30,
+	no_energy = true,
 	require = psi_wil_20_2,
 	action = function(self, t)
-		self:setEffect(self.EFF_QUICKNESS, 10+self:getWil(10), {power=self:getTalentLevel(t) * 0.1})
+		self:setEffect(self.EFF_QUICKNESS, 10+self:getWil(10), {power=self:getTalentLevel(t) * 0.2})
 		return true
 	end,
 	info = function(self, t)
-		local inc = self:getTalentLevel(t)*0.1
-		local percentinc = ((1/(1-inc))-1)*100
+		local inc = self:getTalentLevel(t)*0.2
+		local percentinc = 100 * inc
+		--local percentinc = ((1/(1-inc))-1)*100
 		return ([[You encase your legs in precise sheathes of force, increasing your movement speed by %d%% for %d turns.]]):
 		format(percentinc, 10+self:getWil(10))
 	end,
@@ -209,8 +212,8 @@ newTalent{
 	info = function(self, t)
 		local range = self:getTalentRange(t)
 		local dam = self:combatTalentMindDamage(t, 20, 600)
-		return ([[You expend massive amounts of energy to launch yourself across %d squares at incredible speed. All enemies in your path will be knocked flying and dealt between %d and %d damage. At high levels, you can batter through solid walls.
-		You must have a spiked kinetic shield erected in order to use this ability.]]):
+		return ([[You expend massive amounts of energy to launch yourself across %d squares at incredible speed. All enemies in your path will be knocked flying and dealt between %d and %d damage. At talent level five, you can batter through solid walls.
+		You must have a spiked Kinetic Shield erected in order to not get smashed to a pulp when using this ability. Shattering charge automatically spikes your Kinetic Shield if available and not already spiked. If no such shield is available, you cannot use Shattering Charge.]]):
 		format(range, 2*dam/3, dam)
 	end,
 }
