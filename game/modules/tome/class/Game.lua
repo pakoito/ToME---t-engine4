@@ -1097,6 +1097,7 @@ function _M:setupCommands()
 			self.player.changed = true
 		end
 	end
+	self.key:unicodeInput(true)
 	self.key:addBinds
 	{
 		-- Movements

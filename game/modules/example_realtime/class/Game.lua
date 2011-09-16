@@ -250,6 +250,7 @@ function _M:setupCommands()
 	self:targetSetupKey()
 
 	-- One key handled for normal function
+	self.key:unicodeInput(true)
 	self.key:addBinds
 	{
 		-- Movements

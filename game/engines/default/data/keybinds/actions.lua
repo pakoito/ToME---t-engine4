@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 defineAction{
-	default = { "sym:=<:false:false:false:false", "sym:=>:false:false:false:false" },
+	default = { "uni:<", "uni:>" },
 	type = "CHANGE_LEVEL",
 	group = "actions",
 	name = "Go to next/previous level",
