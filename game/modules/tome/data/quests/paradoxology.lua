@@ -83,7 +83,7 @@ generate = function(self, player, x, y)
 	a:forceLevelup(a.level + 7)
 
 	a:incIncStat("wil", 200)
-
+	a.self_resurrect = nil -- In case this is a skeleton player
 	a.on_die = function(self)
 		local o = game.zone:makeEntityByName(game.level, "object", "RUNE_RIFT")
 		o:identify(true)
