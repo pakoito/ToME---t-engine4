@@ -309,6 +309,7 @@ function _M:generate()
 		_LEFT = function() self:moveFocus(-1) end,
 		_RIGHT = function() self:moveFocus(1) end,
 	}
+	self.key:addBind("SCREENSHOT", function() if type(game) == "table" and game.key then game.key:triggerVirtual("SCREENSHOT") end end)
 end
 
 function _M:updateTitle(title)

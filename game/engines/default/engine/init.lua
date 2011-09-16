@@ -89,8 +89,8 @@ core.sound.enable(config.settings.audio.enable)
 engine.KeyBind:load("move,hotkeys,inventory,actions,interface,debug")
 
 -- Load remaps
-if fs.exists("/keybinds1.3.cfg") then
-	engine.KeyBind:loadRemap("/keybinds1.3.cfg")
+if fs.exists("/keybinds2.cfg") then
+	engine.KeyBind:loadRemap("/keybinds2.cfg")
 end
 
 fs.umount(engine.homepath)

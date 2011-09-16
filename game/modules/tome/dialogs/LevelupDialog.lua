@@ -239,6 +239,7 @@ end
 function _M:updateKeys(kind)
 	self.key:reset()
 	self.key:unicodeInput(true)
+	self.key:addBind("SCREENSHOT", function() if type(game) == "table" and game.key then game.key:triggerVirtual("SCREENSHOT") end end)
 
 	if kind == "Stats" then
 		self.key:addCommands{

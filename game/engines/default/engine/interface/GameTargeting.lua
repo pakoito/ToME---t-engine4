@@ -207,6 +207,7 @@ function _M:targetSetupKey()
 			self.target:setSpot(self.target.source_actor.x, self.target.source_actor.y, "freemove")
 			self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y)
 		end,
+		SCREENSHOT = function() self.normal_key:triggerVirtual("SCREENSHOT") end,
 	}
 end
 
