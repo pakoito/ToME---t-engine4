@@ -4607,7 +4607,7 @@ newEffect{
 		if self.life <= 0 then
 			local sx, sy = game.level.map:getTileToScreen(self.x, self.y)
 			game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, rng.float(-2.5, -1.5), "Falls dead!", {255,0,255})
-			game.logSeen(self, "%s dies when it's frenzy ends!", self.name:capitalize())
+			game.logSeen(self, "%s dies when its frenzy ends!", self.name:capitalize())
 			self:die(self)
 		end
 		self:removeTemporaryValue("global_speed_add", eff.tmpid)

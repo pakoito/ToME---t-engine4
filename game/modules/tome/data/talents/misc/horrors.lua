@@ -336,7 +336,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[An area of effect that causes darkness damage and reduces the lite radius and darkness resistance of those within.]])
+		return ([[An area of effect that causes darkness damage and reduces the light radius and darkness resistance of those within.]])
 	end,
 }
 -- Temporal Stalker Powers

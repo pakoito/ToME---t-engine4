@@ -84,7 +84,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Reshape Armor",
+	name = "Reshape Armour", short_name = "RESHAPE_ARMOR",
 	type = {"psionic/finer-energy-manipulations", 3},
 	require = psi_cun_high3,
 	cooldown = 1,
@@ -135,7 +135,7 @@ newTalent{
 	info = function(self, t)
 		local arm = t.arm_boost(self, t)
 		local fat = t.fat_red(self, t)
-		return ([[Manipulate forces on the molecular level to realign, rebalance, and hone your weapon. Permanently increases the armor rating of any piece of armor by %d. Also permanently reduces the fatigue rating of any piece of armor by %d.
+		return ([[Manipulate forces on the molecular level to realign, rebalance, and hone your armour. Permanently increases the armour rating of any piece of armour by %d. Also permanently reduces the fatigue rating of any piece of armour by %d.
 		These values scale with Willpower.]]):
 		format(arm, fat)
 	end,
