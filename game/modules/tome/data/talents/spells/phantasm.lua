@@ -118,7 +118,7 @@ newTalent{
 	mode = "sustained",
 	require = spells_req4,
 	points = 5,
-	sustain_mana = 200,
+	sustain_mana = 150,
 	cooldown = 30,
 	tactical = { ESCAPE = 2, DEFEND = 2 },
 	getInvisibilityPower = function(self, t) return self:combatTalentSpellDamage(t, 10, 50) end,
