@@ -310,6 +310,13 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		DamageType:get(DamageType.TEMPORAL).projector(self, target.x, target.y, DamageType.TEMPORAL, dam)
 	end
 
+	-- Ruin
+	if hitted and not target.dead and self:knowTalent(self.T_RUIN) and self:isTalentActive(self.T_RUIN) then
+		local t = self:getTalentFromId(self.T_RUIN)
+		local dam = t.getDamage(self, t)
+		DamageType:get(DamageType.DRAINLIFE).projector(self, target.x, target.y, DamageType.DRAINLIFE, dam)
+	end
+	
 	-- Autospell cast
 	if hitted and not target.dead and self:knowTalent(self.T_ARCANE_COMBAT) and self:isTalentActive(self.T_ARCANE_COMBAT) then
 		local t = self:getTalentFromId(self.T_ARCANE_COMBAT)
