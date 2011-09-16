@@ -33,13 +33,13 @@ defineAction{
 defineAction{
 	default = { "sym:=g:false:false:false:false" },
 	type = "PICKUP_FLOOR",
-	group = "actions",
+	group = "inventory",
 	name = "Pickup items",
 }
 defineAction{
 	default = { "sym:=d:false:false:false:false" },
 	type = "DROP_FLOOR",
-	group = "actions",
+	group = "inventory",
 	name = "Drop items",
 }
 

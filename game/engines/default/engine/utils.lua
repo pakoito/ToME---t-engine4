@@ -1208,6 +1208,10 @@ function util.showMainMenu(no_reboot, reboot_engine, reboot_engine_version, rebo
 	end
 end
 
+function util.lerp(a, b, x)
+	return a + x * (b - a)
+end
+
 function util.factorial(n)
 	if n == 0 then
 		return 1

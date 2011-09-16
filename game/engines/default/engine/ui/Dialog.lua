@@ -225,6 +225,8 @@ function _M:init(title, w, h, x, y, alpha, font, showup, skin)
 	if conf.title_bar then
 		self.frame.title_x = conf.title_bar.x
 		self.frame.title_y = conf.title_bar.y
+		self.frame.title_w = conf.title_bar.w
+		self.frame.title_h = conf.title_bar.h
 		self.frame.b7 = self.frame.b7:gsub("dialogframe", "title_dialogframe")
 		self.frame.b8 = self.frame.b8:gsub("dialogframe", "title_dialogframe")
 		self.frame.b9 = self.frame.b9:gsub("dialogframe", "title_dialogframe")
@@ -316,10 +318,12 @@ function _M:updateTitle(title)
 	if not title then return end
 	local title = title
 	if type(title)=="function" then title = title() end
+	self.font_bold:setStyle("bold")
 	local tw, th = self.font_bold:size(title)
 	local s = core.display.newSurface(tw, th)
 	s:erase(0, 0, 0, 0)
 	s:drawColorStringBlended(self.font_bold, title, 0, 0, self.color.r, self.color.g, self.color.b, true)
+	self.font_bold:setStyle("normal")
 	self.title_tex = {s:glTexture()}
 	self.title_tex.w = tw
 	self.title_tex.h = th

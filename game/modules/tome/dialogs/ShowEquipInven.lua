@@ -66,3 +66,28 @@ function _M:generateList()
 	self.c_inven:setList(self.inven_list)
 	self.c_equip:setList(self.equip_list)
 end
+
+function _M:updateTitle(title)
+	Base.updateTitle(self, title)
+
+	local green = colors.LIGHT_GREEN
+	local red = colors.LIGHT_RED
+
+	local enc, max = self.actor:getEncumbrance(), self.actor:getMaxEncumbrance()
+	local v = math.min(enc, max) / max
+	self.title_fill = self.iw * v
+	self.title_fill_color = {
+		r = util.lerp(green.r, red.r, v),
+		g = util.lerp(green.g, red.g, v),
+		b = util.lerp(green.b, red.b, v),
+	}
+end
+
+function _M:drawFrame(x, y, r, g, b, a)
+	Base.drawFrame(self, x, y, r, g, b, a)
+	if r == 0 then return end -- Drawing the shadow
+	if self.ui ~= "metal" then return end
+	if not self.title_fill then return end
+
+	core.display.drawQuad(x + self.frame.title_x, y + self.frame.title_y, self.title_fill, self.frame.title_h, self.title_fill_color.r, self.title_fill_color.g, self.title_fill_color.b, 60)
+end
