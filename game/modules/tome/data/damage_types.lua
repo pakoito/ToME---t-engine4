@@ -1520,35 +1520,39 @@ newDamageType{
 newDamageType{
 	name = "rethread", type = "RETHREAD",
 	projector = function(src, x, y, type, dam)
-		DamageType:get(DamageType.TEMPORAL).projector(src, x, y, DamageType.TEMPORAL, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		local chance = rng.range(1, 4)
 		-- Pull random effect
-		if target and chance == 1 then
-			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("stun") then
-				target:setEffect(target.EFF_DAZED, 3, {})
-			else
-				game.logSeen(target, "%s resists the daze!", target.name:capitalize())
-			end
-		elseif target and chance == 2 then
-			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("blind") then
-				target:setEffect(target.EFF_BLINDED, 3, {})
-			else
-				game.logSeen(target, "%s resists the blindness!", target.name:capitalize())
-			end
-		elseif target and chance == 3 then
-			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("pin") then
-				target:setEffect(target.EFF_PINNED, 3, {})
-			else
-				game.logSeen(target, "%s resists the pin!", target.name:capitalize())
-			end
-		elseif target and chance == 4 then
-			if target:checkHit(src:combatSpellpower(), target:combatMentalResist(), 0, 95, 15) and target:canBe("confusion") then
-				target:setEffect(target.EFF_CONFUSED, 3, {power=60})
-			else
-				game.logSeen(target, "%s resists the confusion!", target.name:capitalize())
+		if target then
+			if src then src:incParadox(-dam.reduction) end
+			if chance == 1 then
+				if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("stun") then
+					target:setEffect(target.EFF_DAZED, 3, {})
+				else
+					game.logSeen(target, "%s resists the daze!", target.name:capitalize())
+				end
+			elseif chance == 2 then
+				if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("blind") then
+					target:setEffect(target.EFF_BLINDED, 3, {})
+				else
+					game.logSeen(target, "%s resists the blindness!", target.name:capitalize())
+				end
+			elseif chance == 3 then
+				if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("pin") then
+					target:setEffect(target.EFF_PINNED, 3, {})
+				else
+					game.logSeen(target, "%s resists the pin!", target.name:capitalize())
+				end
+			elseif chance == 4 then
+				if target:checkHit(src:combatSpellpower(), target:combatMentalResist(), 0, 95, 15) and target:canBe("confusion") then
+					target:setEffect(target.EFF_CONFUSED, 3, {power=60})
+				else
+					game.logSeen(target, "%s resists the confusion!", target.name:capitalize())
+				end
 			end
 		end
+		-- deal damage last so we get paradox from each target
+		DamageType:get(DamageType.TEMPORAL).projector(src, x, y, DamageType.TEMPORAL, dam.dam)
 	end,
 }
 

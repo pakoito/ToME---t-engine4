@@ -26,16 +26,19 @@ newTalent{
 	cooldown = 12,
 	tactical = { BUFF = 2 },
 	getThread = function(self, t) return 20 + (self:combatTalentSpellDamage(t, 10, 40)*getParadoxModifier(self, pm)) end,
+	getReduction = function(self, t) return 5 * self:getTalentLevel(t) end,
 	action = function(self, t)
-		self:setEffect(self.EFF_GATHER_THE_THREADS, 5, {power=t.getThread(self, t)})
+		self:setEffect(self.EFF_GATHER_THE_THREADS, 5, {power=t.getThread(self, t), reduction=t.getReduction(self, t)})
 		game:playSoundNear(self, "talents/spell_generic2")
 		return true
 	end,
 	info = function(self, t)
 		local primary = t.getThread(self, t)
+		local reduction = t.getReduction(self, t)
 		return ([[You begin to gather energy from other timelines, increasing all damage dealt by %d%% on the first turn and %d%% more each additional turn.
 		The increased damage will be released with the first attack, item, or talent used, otherwise the spell ends after five turns.
-		The percentages will increase with your Paradox and Spellpower.]]):format(primary + (primary/5), primary/5)
+		Eacn turn the effect is active your Paradox will be reduced by %d.
+		The percentages will increase with your Paradox and Spellpower.]]):format(primary + (primary/5), primary/5, reduction)
 	end,
 }
 
@@ -52,22 +55,25 @@ newTalent{
 	reflectable = true,
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 200)*getParadoxModifier(self, pm) end,
+	getReduction = function(self, t) return self:getTalentLevel(t) * 2 end,
 	action = function(self, t)
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local _ _, x, y = self:canProject(tg, x, y, t.paradox)
 		x, y = checkBackfire(self, x, y)
-		self:project(tg, x, y, DamageType.RETHREAD, self:spellCrit(t.getDamage(self, t)))
+		self:project(tg, x, y, DamageType.RETHREAD, {dam=self:spellCrit(t.getDamage(self, t)), reduction = t.getReduction(self, t)})
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "temporalbeam", {tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
+		local reduction = t.getReduction(self, t)
 		return ([[Creates a wake of temporal energy that deals %0.2f damage in a beam as you attempt to rethread the timeline.  Affected targets may be dazed, blinded, pinned, or confused for 3 turns.
-		The damage will increase with your Spellpower.]]):
-		format(damDesc(self, DamageType.TEMPORAL, damage))
+		Each target you hit with rethread will reduce your Paradox by %d.
+		The damage will increase with your Paradox and Spellpower.]]):
+		format(damDesc(self, DamageType.TEMPORAL, damage), reduction)
 	end,
 }
 

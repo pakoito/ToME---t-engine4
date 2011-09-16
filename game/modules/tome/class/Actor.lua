@@ -1521,7 +1521,7 @@ function _M:die(src)
 			end
 		end)
 	end
-
+	
 	-- Increase vim
 	if src and src.knowTalent and src:knowTalent(src.T_VIM_POOL) then src:incVim(1 + src:getWil() / 10) end
 	if src and src.attr and src:attr("vim_on_death") and not self:attr("undead") then src:incVim(src:attr("vim_on_death")) end
@@ -2226,22 +2226,23 @@ function _M:preUseTalent(ab, silent, fake)
 
 	-- Paradox is special, it has no max, but the higher it is the higher the chance of something bad happening
 	if (ab.paradox or (ab.sustain_paradox and not self:isTalentActive(ab.id))) and not fake and not self:attr("force_talent_ignore_ressources") then
-		-- Check failure first
-		if not self:attr("no_paradox_fail") and self:paradoxFailChance(ab.paradox or ab.sustain_paradox) then
-			if not silent then game.logPlayer(self, "You fail to use %s due to your paradox!", ab.name) end
-			self:incParadox(ab.paradox or ab.sustain_paradox / 10)
-			self:useEnergy()
-			return false
-		-- Now Check Anomalies
-		elseif not game.zone.no_anomalies and not self:attr("no_paradox_fail") and self:paradoxAnomalyChance(ab.paradox or ab.sustain_paradox) then
+		-- Check anomalies first since they can reduce paradox, this way paradox is a self correcting resource
+		local paradox_scaling = 1 + self.paradox / 300
+		if not game.zone.no_anomalies and not self:attr("no_paradox_fail") and self:paradoxAnomalyChance(ab.paradox or ab.sustain_paradox) then
 			-- Random anomaly
-			self:incParadox(ab.paradox or ab.sustain_paradox / 2)
 			local ts = {}
 			for id, t in pairs(self.talents_def) do
 				if t.type[1] == "chronomancy/anomalies" then ts[#ts+1] = id end
 			end
 			if not silent then game.logPlayer(self, "You lose control and unleash an anomaly!") end
 			self:forceUseTalent(rng.table(ts), {ignore_energy=true})
+			self:incParadox(-ab.paradox * paradox_scaling or ab.sustain_paradox)
+			self:useEnergy()
+			return false
+		-- Now check for failure 
+		elseif not self:attr("no_paradox_fail") and self:paradoxFailChance(ab.paradox or ab.sustain_paradox) then
+			if not silent then game.logPlayer(self, "You fail to use %s due to your paradox!", ab.name) end
+			self:incParadox(ab.paradox or ab.sustain_paradox / 10)
 			self:useEnergy()
 			return false
 		end

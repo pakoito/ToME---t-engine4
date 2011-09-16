@@ -3480,6 +3480,7 @@ newEffect{
 	end,
 	on_timeout = function(self, eff)
 		local threads = eff.power / 5
+		self:incParadox(- eff.reduction)
 		self:setEffect(self.EFF_GATHER_THE_THREADS, 1, {power=threads})
 	end,
 	activate = function(self, eff)
@@ -4547,7 +4548,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is free from the worm rot." end,
 	-- Damage each turn
 	on_timeout = function(self, eff)
-		self.worm_rot_timer = self.worm_rot_timer - 1
+		eff.rot_timer = eff.rot_timer - 1
 
 		-- disease damage
 		if self:attr("purify_disease") then
@@ -4575,19 +4576,13 @@ newEffect{
 		end
 
 		-- burst and spawn a worm mass
-		if self.worm_rot_timer == 0 then
+		if eff.rot_timer == 0 then
 			DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.burst, {from_disease=true})
 			local t = eff.src:getTalentFromId(eff.src.T_WORM_ROT)
 			t.spawn_carrion_worm(eff.src, self, t)
 			game.logSeen(self, "#LIGHT_RED#A carrion worm mass bursts out of %s!", self.name:capitalize())
 			self:removeEffect(self.EFF_WORM_ROT)
 		end
-	end,
-	activate = function(self, eff)
-		self.worm_rot_timer = 5
-	end,
-	deactivate = function(self, eff)
-		self.worm_rot_timer = nil
 	end,
 }
 

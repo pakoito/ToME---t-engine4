@@ -37,22 +37,29 @@ newTalent{
 	tactical = { ATTACK = 1, DISABLE = 2 },
 	message = "In a frenzy @Source@ bites at @Target@!",
 	on_pre_use = function(self, t, silent) if not self:hasEffect(self.EFF_FRENZY) then return false end return true end,
+	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1, 1.7) end,
+	getBleedDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1.5, 3) end,
+	getHealingPenalty = function(self, t) return self:getTalentLevel(t) * 10 end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
-		local hit = self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 1, 1.7), true)
+		local hit = self:attackTarget(target, nil, t.getDamage(self, t), true)
 		if hit then
 			if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 5) and target:canBe("cut") then
-				target:setEffect(target.EFF_DEEP_WOUND, 5, {src=self, heal_factor=self:getTalentLevel(t) * 10, power=self:combatTalentWeaponDamage(t, 1.5, 3)/5})
+				target:setEffect(target.EFF_DEEP_WOUND, 5, {src=self, heal_factor=t.getHealingPenalty(self, t), power=t.getBleedDamage(self, t)/5})
 			end
 		end
 		return true
 	end,
 	info = function(self, t)
-		return ([[A nasty bite that causes a deep wound, only usable in a frenzy.]])
+		local damage = t.getDamage(self, t) * 100
+		local bleed = t.getBleedDamage(self, t) * 100
+		local heal_penalty = t.getHealingPenalty(self, t)
+		return ([[A nasty bite that hits for %d%% weapon damage, reduces the targets healing by %d%%, and causes the target to bleed for %d%% weapon damage over 5 turns.
+		Only usable while frenzied.]]):format(damage, heal_penalty, bleed)
 	end,
 }
 
@@ -94,7 +101,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Leap toward your target.]])
+		return ([[Leaps toward a target within range.
+		Only usable while frenzied.]])
 	end,
 }
 
@@ -107,6 +115,8 @@ newTalent{
 	message = "@Source@ tries to bite @Target@ with razor sharp teeth!",
 	requires_target = true,
 	tactical = { ATTACK = 2 },
+	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.5, 1) end,
+	getBleedDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.8, 1.5) end,
 	do_devourer_frenzy = function(self, target, t)
 		game.logSeen(self, "The scent of blood sends the %ss into a frenzy!", self.name:capitalize())
 		-- frenzy devourerers
@@ -137,10 +147,10 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
-		local hit = self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.5, 1), true)
+		local hit = self:attackTarget(target, nil, t.getDamage(self, t), true)
 
 		if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 8 - self:getTalentLevel(t) / 2) and target:canBe("cut") then
-			target:setEffect(target.EFF_CUT, 5, {power=self:combatTalentWeaponDamage(t, 0.8, 1.5), src=self})
+			target:setEffect(target.EFF_CUT, 5, {power=t.getBleedDamage(self, t), src=self})
 			t.do_devourer_frenzy(self, target, t)
 		else
 			game.logSeen(target, "%s resists the cut!", target.name:capitalize())
@@ -149,7 +159,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Bites the target, potentially causing it to bleed.  The blood will send the devourer into a frenzy (which in turn will frenzy nearby devourers).]])
+		local damage = t.getDamage(self, t) * 100
+		local bleed = t.getBleedDamage(self, t) * 100
+		return ([[Bites the target for %d%% weapon damage, potentially causing it to bleed for %d%% weapon damage over five turns.  
+		If the target is affected by the bleed it will send the devourer into a frenzy (which in turn will frenzy nearby devourers).]]):format(damage, bleed)
 	end,
 }
 
@@ -165,7 +178,6 @@ newTalent{
 	requires_target = true,
 	tactical = { ATTACK = 3 },
 	getChance = function(self, t) return self:combatTalentSpellDamage(t, 5, 50) end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 5, 50) end,
 	getDuration = function(self, t) return 8 + math.ceil(self:getTalentLevel(t) * 4) end,
 	summon_inner_demons = function(self, target, t)
 		-- Find space
@@ -200,6 +212,8 @@ newTalent{
 		m.forceLevelup = function() end
 		m.on_die = nil
 		m.on_acquire_target = nil
+		m.no_inventory_access = true
+		m.on_takehit = nil
 		m.seen_by = nil
 		m.can_talk = nil
 		m.clone_on_hit = nil
@@ -251,7 +265,7 @@ newTalent{
 		if not target then return nil end
 
 		if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("fear") then
-			target:setEffect(target.EFF_INNER_DEMONS, t.getDuration(self, t), {src = self, chance=t.getChance(self, t), dam=t.getDamage(self, t)})
+			target:setEffect(target.EFF_INNER_DEMONS, t.getDuration(self, t), {src = self, chance=t.getChance(self, t)})
 		else
 			game.logSeen(target, "%s resists the demons!", target.name:capitalize())
 		end
@@ -259,7 +273,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Brings the targets inner demons to the surface.  Each turn there's a chance that one will be summoned.  If the summoning is resisted the effect will end early.]])
+		local duration = t.getDuration(self, t)
+		local chance = t.getChance(self, t)
+		return ([[Brings the target's inner demons to the surface.  Each turn for %d turns there's a %d%% chance that one will be summoned. 
+		If the summoning is resisted the effect will end early.]]):format(duration, chance)
 	end,
 }
 
@@ -294,7 +311,11 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Darkness damage and a chance to randomly blind, stun, or confuse each turn.]])
+		local damage = t.getDamage(self, t)
+		local duration = t.getDuration(self, t)
+		local chance = t.getChance(self, t)
+		return ([[Inflicts %0.2f darkness damage each turn for %d turns and has a %d%% chance to randomly cause blindness, stun, or confusion (lasting 3 turns).]]):
+		format(damDesc(self, DamageType.DARKNESS, (damage)), duration, chance)
 	end,
 }
 
@@ -336,7 +357,12 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[An area of effect that causes darkness damage and reduces the light radius and darkness resistance of those within.]])
+		local duration = t.getDuration(self, t)
+		local damage = t.getDamage(self, t)
+		local light_reduction = t.getLiteReduction(self, t)
+		local darkness_resistance = t.getDarknessPower(self, t)
+		return ([[Creates a shroud of darkness over a radius 3 area that lasts %d turns.  The shroud causes %0.2f darkness damage each turn and reduces light radius by %d and darkness resistance by %d%% of those within.]]):
+		format(duration, damDesc(self, DamageType.DARKNESS, (damage)), light_reduction, darkness_resistance)
 	end,
 }
 -- Temporal Stalker Powers
@@ -373,7 +399,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Causes the void echoes status effect which does mind and resource damage every turn the target fails a mental save.]])
+		local damage = t.getDamage(self, t)
+		return ([[Shows the target the madness of the void.  Each turn for 6 turns the target must make a mental save or suffer %0.2f mind damage as well as resource damage (based off the mind damage and nature of the resource).]]):
+		format(damDesc(self, DamageType.MIND, (damage)))
 	end,
 }
 
@@ -456,7 +484,11 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summons shards of explosive doom!]])
+		local number = self:getTalentLevelRaw(t)
+		local damage = t.getDamage(self, t)
+		local explosion = t.getExplosion(self, t)
+		return ([[Summons %d void shards.  The void shards come into being destabilized and will suffer %0.2f temporal damage each turn for five turns.  If they die while destabilized they'll explode for %0.2f temporal and %0.2f physical damage in a radius of 4.]]):
+		format(number, damDesc(self, DamageType.TEMPORAL, (damage)), damDesc(self, DamageType.TEMPORAL, (explosion/2)), damDesc(self, DamageType.PHYSICAL, (explosion/2)))
 	end,
 }
 
@@ -472,7 +504,6 @@ newTalent{
 	tactical = { ATTACK = 2, DISABLE = 4 },
 	getBurstDamage = function(self, t) return self:combatTalentSpellDamage(t, 30, 300) end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 5, 50) end,
-	getHealReduction = function(self, t) return self:combatTalentSpellDamage(t, 20, 70) end,
 	getDuration = function(self, t) return 4 + math.ceil(self:getTalentLevel(t)) end,
 	proj_speed = 6,
 	spawn_carrion_worm = function (self, target, t)
@@ -497,7 +528,7 @@ newTalent{
 			local target = game.level.map(px, py, engine.Map.ACTOR)
 			if not target then return end
 			if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 12 - self:getTalentLevel(t)) and target:canBe("disease") then
-				target:setEffect(target.EFF_WORM_ROT, 5, {src=self, dam=t.getDamage(self, t), burst=t.getBurstDamage(self, t)})
+				target:setEffect(target.EFF_WORM_ROT, t.getDuration(self, t), {src=self, dam=t.getDamage(self, t), burst=t.getBurstDamage(self, t), rot_timer = 5})
 			else
 				game.logSeen(target, "%s resists the worm rot!", target.name:capitalize())
 			end
@@ -508,7 +539,12 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[A terrible rotting disease that removes a beneficial physical effect and deals acid and blight damage each turn.  If not cleared after a full five turn duration it will inflict extra damage and spawn a carrion worm mass.]])
+		local duration = t.getDuration(self, t)
+		local damage = t.getDamage(self, t)
+		local burst = t.getBurstDamage(self, t)
+		return ([[Infects the target with parasitic carrion worm larvae for %d turns.  Each turn the disease will remove a beneficial physical effect and deal %0.2f acid and %0.2f blight damage.
+		If not cleared after five turns it will inflict %0.2f acid damage as the larvae hatch, removing the effect but spawning a full grown carrion worm mass near the target's location.]]):
+		format(duration, damDesc(self, DamageType.ACID, (damage/2)), damDesc(self, DamageType.BLIGHT, (damage/2)), damDesc(self, DamageType.ACID, (burst)))
 	end,
 }
 

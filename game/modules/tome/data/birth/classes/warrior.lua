@@ -238,7 +238,7 @@ newBirthDescriptor{
 		"Without steel or iron, poor communities of all races turned to the strength of their own bodies for defense against the darkness.",
 		"Whether a pit-fighter, a boxer, or just an amateur practitioner, the Brawler's skills are still handy today.",
 		"Many of the Brawler's abilities will earn combo points which they can use on finishing moves that will have added effect.",
-		"The unarmed fighting styles the Brawler uses rely on maneuverability and having both hands available. As such, they may not be practiced in massive armor or while a weapon or shield is equipped.",
+		"The unarmed fighting styles the Brawler uses rely on maneuverability and having both hands available. As such, they cannot make use of their training wearing massive armour or while a weapon or shield is equipped.",
 		"Their most important stats are: Strength, Dexterity, and Cunning",
 		"#GOLD#Stat modifiers:",
 		"#LIGHT_BLUE# * +3 Strength, +3 Dexterity, +0 Constitution",
