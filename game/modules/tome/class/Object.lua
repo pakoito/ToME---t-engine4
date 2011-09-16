@@ -717,6 +717,7 @@ function _M:getTextualDesc(compare_with)
 		compare_fields(w, compare_with, field, "max_mana", "%+.2f", "Maximum mana: ")
 		compare_fields(w, compare_with, field, "max_stamina", "%+.2f", "Maximum stamina: ")
 		compare_fields(w, compare_with, field, "max_hate", "%+.2f", "Maximum hate: ")
+		compare_fields(w, compare_with, field, "max_vim", "%+.2f", "Maximum vim: ")
 		compare_fields(w, compare_with, field, "max_air", "%+.2f", "Maximum air capacity: ")
 
 		compare_fields(w, compare_with, field, "combat_spellpower", "%+d", "Spellpower: ")
@@ -1013,6 +1014,7 @@ function _M:getPriceFlags()
 		if w.max_life then price = price + w.max_life * 0.1 end
 		if w.max_stamina then price = price + w.max_stamina * 0.1 end
 		if w.max_mana then price = price + w.max_mana * 0.2 end
+		if w.max_vim then price = price + w.max_vim * 0.4 end
 		if w.life_regen then price = price + w.life_regen * 10 end
 		if w.stamina_regen then price = price + w.stamina_regen * 100 end
 		if w.mana_regen then price = price + w.mana_regen * 80 end
