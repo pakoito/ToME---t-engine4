@@ -2415,7 +2415,7 @@ function _M:postUseTalent(ab, ret)
 			trigger = true; self:incParadox(ab.paradox * (1 + (self.paradox / 300)))
 		end
 		if ab.psi then
-			trigger = true; self:incPsi(-ab.psi * (100 + 2 * self.fatigue) / 100)
+			trigger = true; self:incPsi(-ab.psi * (100 + 2 * self:combatFatigue()) / 100)
 		end
 	end
 
