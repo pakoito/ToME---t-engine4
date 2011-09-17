@@ -2236,7 +2236,7 @@ function _M:preUseTalent(ab, silent, fake)
 			end
 			if not silent then game.logPlayer(self, "You lose control and unleash an anomaly!") end
 			self:forceUseTalent(rng.table(ts), {ignore_energy=true})
-			self:incParadox(-ab.paradox * paradox_scaling or ab.sustain_paradox)
+			self:incParadox(-(ab.paradox and ab.paradox * paradox_scaling or ab.sustain_paradox))
 			self:useEnergy()
 			return false
 		-- Now check for failure 

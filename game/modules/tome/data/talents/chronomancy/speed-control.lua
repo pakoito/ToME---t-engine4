@@ -106,6 +106,7 @@ newTalent{
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
 	end,
 	getSlow = function(self, t) return math.min((10 + (self:combatTalentSpellDamage(t, 10, 50) * getParadoxModifier(self, pm))) / 100, 0.6) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 60) * getParadoxModifier(self, pm) end,
 	getDuration = function(self, t) return 5 + math.ceil(self:getTalentLevel(t)) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
@@ -116,7 +117,7 @@ newTalent{
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			x, y, t.getDuration(self, t),
-			DamageType.CHRONOSLOW, t.getSlow(self, t),
+			DamageType.CHRONOSLOW, {dam=t.getDamage(self, t), slow=t.getSlow(self, t)},
 			self:getTalentRadius(t),
 			5, nil,
 			{type="temporal_cloud"},
@@ -127,11 +128,12 @@ newTalent{
 	end,
 	info = function(self, t)
 		local slow = t.getSlow(self, t)
+		local damage = t.getDamage(self, t)
 		local radius = self:getTalentRadius(t)
 		local duration = t.getDuration(self, t)
-		return ([[Creates a time distortion in a radius of %d that lasts for %d turns, decreasing affected targets global speed by %d%% for 2 turns and inflicting %0.2f temporal damage each turn they remain in the area.
+		return ([[Creates a time distortion in a radius of %d that lasts for %d turns, decreasing affected targets global speed by %d%% for 3 turns and inflicting %0.2f temporal damage each turn they remain in the area.
 		The slow effect and damage will scale with your Paradox and Spellpower.]]):
-		format(radius, duration, 100 * slow, damDesc(self, DamageType.TEMPORAL, 100 * slow))
+		format(radius, duration, 100 * slow, damDesc(self, DamageType.TEMPORAL, damage))
 	end,
 }
 

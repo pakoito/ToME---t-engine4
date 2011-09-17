@@ -1286,11 +1286,20 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
-		if not target then return end
-		if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 20) and target:canBe("pin") then
-			target:setEffect(target.EFF_PINNED, 2, {}, true)
-		else
-			game.logSeen(target, "%s resists!", target.name:capitalize())
+		local reapplied = false
+		if target then
+			-- silence the apply message if the target already has the effect
+			for eff_id, p in pairs(target.tmp) do
+				local e = target.tempeffect_def[eff_id]
+				if e.desc == "Pinned to the ground" then
+					reapplied = true
+				end
+			end
+			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 20) and target:canBe("pin") then
+				target:setEffect(target.EFF_PINNED, 2, {}, reapplied)
+			else
+				game.logSeen(target, "%s resists!", target.name:capitalize())
+			end
 		end
 	end,
 }
@@ -1589,11 +1598,19 @@ newDamageType{
 newDamageType{
 	name = "chronoslow", type = "CHRONOSLOW",
 	projector = function(src, x, y, type, dam)
-		DamageType:get(DamageType.TEMPORAL).projector(src, x, y, DamageType.TEMPORAL, dam * 100)
+		DamageType:get(DamageType.TEMPORAL).projector(src, x, y, DamageType.TEMPORAL, dam.dam)
 		local target = game.level.map(x, y, Map.ACTOR)
+		local reapplied = false
 		if target then
+			-- silence the apply message it if the target already has the effect
+			for eff_id, p in pairs(target.tmp) do
+				local e = target.tempeffect_def[eff_id]
+				if e.desc == "Slow" then
+					reapplied = true
+				end
+			end
 			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) then
-				target:setEffect(target.EFF_SLOW, 2, {power=dam}, true)
+				target:setEffect(target.EFF_SLOW, 3, {power=dam.slow}, reapplied)
 			else
 				game.logSeen(target, "%s resists the slow", target.name:capitalize())
 			end

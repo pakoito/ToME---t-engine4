@@ -447,35 +447,37 @@ newTalent{
 			end
 		end end
 
-		-- Randomly take a target
-		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
-		local a, id = rng.table(tgts)
-		local target = a
+		if #tgts > 0 then
+			-- Randomly take a target
+			local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+			local a, id = rng.table(tgts)
+			local target = a
 		
-		if target:canBe("teleport") and self:canBe("teleport") then
-			-- first remove the target so the destination tile is empty
-			game.level.map:remove(target.x, target.y, Map.ACTOR)
-			local px, py 
-			px, py = self.x, self.y
-			if self:teleportRandom(a.x, a.y, 0) then
-				-- return the target at the casters old location
-				game.level.map(px, py, Map.ACTOR, target)
-				self.x, self.y, target.x, target.y = target.x, target.y, px, py
-				game.level.map:particleEmitter(target.x, target.y, 1, "temporal_teleport")
-				game.level.map:particleEmitter(self.x, self.y, 1, "temporal_teleport")
-				-- confuse them both
-				self:project(tg, target.x, target.y, DamageType.CONFUSION, { dur = t.getConfuseDuration(self, t), dam = t.getConfuseEfficency(self, t), })
-				self:project(tg, self.x, self.y, DamageType.CONFUSION, { dur = t.getConfuseDuration(self, t), dam = t.getConfuseEfficency(self, t),	})
+			if target:canBe("teleport") and self:canBe("teleport") then
+				-- first remove the target so the destination tile is empty
+				game.level.map:remove(target.x, target.y, Map.ACTOR)
+				local px, py 
+				px, py = self.x, self.y
+				if self:teleportRandom(a.x, a.y, 0) then
+					-- return the target at the casters old location
+					game.level.map(px, py, Map.ACTOR, target)
+					self.x, self.y, target.x, target.y = target.x, target.y, px, py
+					game.level.map:particleEmitter(target.x, target.y, 1, "temporal_teleport")
+					game.level.map:particleEmitter(self.x, self.y, 1, "temporal_teleport")
+					-- confuse them both
+					self:project(tg, target.x, target.y, DamageType.CONFUSION, { dur = t.getConfuseDuration(self, t), dam = t.getConfuseEfficency(self, t), })
+					self:project(tg, self.x, self.y, DamageType.CONFUSION, { dur = t.getConfuseDuration(self, t), dam = t.getConfuseEfficency(self, t),	})
+				else
+					-- return the target without effect
+					game.level.map(target.x, target.y, Map.ACTOR, target)
+					game.logSeen(self, "The spell fizzles!")
+				end
 			else
-				-- return the target without effect
-				game.level.map(target.x, target.y, Map.ACTOR, target)
-				game.logSeen(self, "The spell fizzles!")
+				game.logSeen(target, "%s resists the swap!", target.name:capitalize())
 			end
-		else
-			game.logSeen(target, "%s resists the swap!", target.name:capitalize())
+			game:playSoundNear(self, "talents/teleport")
 		end
 
-		game:playSoundNear(self, "talents/teleport")
 		return true
 	end,
 	info = function(self, t)

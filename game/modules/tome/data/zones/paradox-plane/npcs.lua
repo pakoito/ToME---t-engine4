@@ -40,14 +40,19 @@ newEntity{ define_as = "EPOCH",
 	no_breath = 1,
 	poison_immune = 1,
 	disease_immune = 1,
+	stun_immune = 1,
+	blind_immune = 1,
+	knockback_immune = 1,
+	confusion_immune = 1,
+	cut_immune = 1,
 	size_category = 5,
 	infravision = 10,
 	instakill_immune = 1,
 	move_others=true,
 
-	combat = { dam=resolvers.levelup(27, 1, 0.8), atk=10, apr=0, dammod={dex=1.2} },
+	combat = { dam=resolvers.levelup(resolvers.mbonus(40, 15), 1, 1.2), atk=20, apr=20, dammod={mag=1.2}, damtype=DamageType.TEMPORAL },
 
-	resists = { [DamageType.TEMPORAL] = 50, [DamageType.PHYSICAL] = 10, },
+	resists = { [DamageType.TEMPORAL] = 100, [DamageType.PHYSICAL] = -50, },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.drops{chance=100, nb=1, {defined="EPOCH_CURVE", random_art_replace={chance=25}}},
@@ -58,13 +63,12 @@ newEntity{ define_as = "EPOCH",
 
 	resolvers.talents{
 		[Talents.T_MULTIPLY]=1,
-		[Talents.T_TURN_BACK_THE_CLOCK]={base=4, every=7},
-		[Talents.T_DISPLACE_DAMAGE]={base=3, every=7},
-		[Talents.T_STATIC_HISTORY]=5,
-		[Talents.T_ESSENCE_OF_SPEED]={base=3, every=7},
+		[Talents.T_TURN_BACK_THE_CLOCK]=3, -- TBTC gets an extra bolt at tl 4, very dangerous
 		[Talents.T_CONGEAL_TIME]={base=3, every=7},
-		[Talents.T_ASHES_TO_ASHES]={base=3, every=7},
-		[Talents.T_DUST_TO_DUST]={base=3, every=7},
+		[Talents.T_STATIC_HISTORY]=5,
+		[Talents.T_BANISH]={base=3, every=7},
+		[Talents.T_HASTE]={base=1, every=7},
+		[Talents.T_SWAP]={base=1, every=7},
 	},
 
 	resolvers.sustains_at_birth(),
@@ -76,6 +80,8 @@ newEntity{ define_as = "EPOCH",
 
 	on_multiply = function(self, src)
 		self.on_die = nil
+		self.talents.T_SWAP = nil
+		self.talents_cd.T_MULTIPLY = 10
 	end,
 	on_die = function(self, who)
 		game.level.data.portal_next(self)

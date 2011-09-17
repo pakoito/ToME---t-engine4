@@ -49,7 +49,7 @@ newTalent{
 	points = 5,
 	paradox = 5,
 	cooldown = 10,
-	tactical = { ESCAPE = 2, CLOSEIN = 2, DISABLE = 2, },
+	tactical = { DISABLE = 2, },
 	requires_target = true,
 	direct_hit = true,
 	range = function(self, t)
