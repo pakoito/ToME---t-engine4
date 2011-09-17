@@ -343,6 +343,7 @@ function _M:updateKeys(kind)
 end
 
 function _M:cancel()
+--[[
 	self.actor.unused_stats = self.actor_dup.unused_stats
 	self.actor.unused_talents = self.actor_dup.unused_talents
 	self.actor.unused_generics = self.actor_dup.unused_generics
@@ -366,6 +367,11 @@ function _M:cancel()
 		end
 	end
 	self.actor.last_learnt_talents = self.actor_dup.last_learnt_talents
+]]
+	self.actor:replaceWith(self.actor_dup)
+	self.actor.changed = true
+	self.actor:removeAllMOs()
+	if game.level and self.actor.x then game.level.map:updateMap(self.actor.x, self.actor.y) end
 end
 
 function _M:tabTabs()
