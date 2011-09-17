@@ -657,6 +657,7 @@ end
 
 function _M:isUnlearnable(t, limit)
 	if not self.actor.last_learnt_talents then return end
+	if self.on_birth and self.actor:knowTalent(t.id) then return 1 end -- On birth we can reset any talents
 	local list = self.actor.last_learnt_talents[t.generic and "generic" or "class"]
 	local max = self.actor:lastLearntTalentsMax(t.generic and "generic" or "class")
 	local min = 1
