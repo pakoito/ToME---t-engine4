@@ -1087,7 +1087,7 @@ function core.fov.line(sx, sy, tx, ty, block, start_at_end)
 		function(_, x, y)
 			return game.level.map:checkAllEntities(x, y, what)
 		end
-	return core.fov.line_base(sx, sy, tx, ty, game.level.map.w, game.level.map.h, block)
+	return core.fov.line_base(sx, sy, tx, ty, game.level.map.w, game.level.map.h, start_at_end, block)
 end
 
 tmps = core.fov.line_base(0, 0, 0, 0, 0, 0, function(_, x, y) end)

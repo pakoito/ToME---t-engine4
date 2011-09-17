@@ -588,6 +588,7 @@ static int lua_fov_line_init(lua_State *L)
 	int dest_y = luaL_checknumber(L, 4);
 	int w = luaL_checknumber(L, 5);
 	int h = luaL_checknumber(L, 6);
+	bool start_at_end = lua_toboolean(L, 7);
 	struct lua_fov fov;
 	fov.cache_ref = LUA_NOREF;
 	fov.cache = NULL;
@@ -605,7 +606,6 @@ static int lua_fov_line_init(lua_State *L)
 */
 	fov.L = L;
 	fov.opaque_ref = luaL_ref(L, LUA_REGISTRYINDEX);
-	bool start_at_end = lua_toboolean(L, 8);
 	fov.w = w;
 	fov.h = h;
 
