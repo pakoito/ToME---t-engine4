@@ -1521,7 +1521,7 @@ function _M:die(src)
 			end
 		end)
 	end
-	
+
 	-- Increase vim
 	if src and src.knowTalent and src:knowTalent(src.T_VIM_POOL) then src:incVim(1 + src:getWil() / 10) end
 	if src and src.attr and src:attr("vim_on_death") and not self:attr("undead") then src:incVim(src:attr("vim_on_death")) end
@@ -2236,10 +2236,10 @@ function _M:preUseTalent(ab, silent, fake)
 			end
 			if not silent then game.logPlayer(self, "You lose control and unleash an anomaly!") end
 			self:forceUseTalent(rng.table(ts), {ignore_energy=true})
-			self:incParadox(-(ab.paradox and ab.paradox * paradox_scaling or ab.sustain_paradox))
+			self:incParadox(-(ab.paradox and (ab.paradox * paradox_scaling) or ab.sustain_paradox))
 			self:useEnergy()
 			return false
-		-- Now check for failure 
+		-- Now check for failure
 		elseif not self:attr("no_paradox_fail") and self:paradoxFailChance(ab.paradox or ab.sustain_paradox) then
 			if not silent then game.logPlayer(self, "You fail to use %s due to your paradox!", ab.name) end
 			self:incParadox(ab.paradox or ab.sustain_paradox / 10)
