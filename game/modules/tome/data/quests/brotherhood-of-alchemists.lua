@@ -202,6 +202,7 @@ end
 on_turnin = function(self, player, alch_picked, e_picked, player_last_elixir)
 	player:setQuestStatus("brotherhood-of-alchemists", engine.Quest.COMPLETED, self.e[alch_picked][e_picked].full)
 	player:setQuestStatus("brotherhood-of-alchemists", engine.Quest.COMPLETED, self.e[alch_picked][e_picked].poached)
+	game:saveGame()
 	if player_last_elixir == false and self:isCompleted(self.e[alch_picked][1].full) and self:isCompleted(self.e[alch_picked][2].full) and self:isCompleted(self.e[alch_picked][3].full) then
 		player:setQuestStatus("brotherhood-of-alchemists", engine.Quest.DONE)
 		self.winner = self.e[alch_picked][1].alchemist

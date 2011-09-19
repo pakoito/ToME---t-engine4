@@ -83,6 +83,7 @@ local maker_list = function()
 					art:identify(true)
 					player:addObject(player.INVEN_INVEN, art)
 					player:incMoney(-4000)
+					game:saveGame()
 
 					newChat{ id="naming",
 						text = "Do you want to name your item?\n"..tostring(art:getTextualDesc()),
