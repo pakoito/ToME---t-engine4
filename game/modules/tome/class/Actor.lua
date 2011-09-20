@@ -2856,9 +2856,7 @@ function _M:on_set_temporary_effect(eff_id, e, p)
 		p.maximum = p.dur
 		p.minimum = p.min_dur or 0 --Default minimum duration is 0. Can specify something else by putting min_dur=foo in p when calling setEffect()
 		save = self[p.apply_save or save_for_effects[e.type]](self)
-		local increase = math.floor(p.apply_power / 10)
-		local decrease = math.floor(save/10)
-		local duration = p.maximum - decrease + increase
+		local duration = p.maximum - math.max(0, math.floor((save - p.apply_power) / 10))
 		p.dur = util.bound(duration, p.minimum or 0, p.maximum)
 		p.amount_decreased = p.maximum - p.dur
 		local save_type = nil
