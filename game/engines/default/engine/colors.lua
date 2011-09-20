@@ -53,6 +53,7 @@ defineColor('STEEL_BLUE', 70, 130, 180)
 defineColor('TEAL', 0, 128, 128)
 defineColor('LIGHT_STEEL_BLUE', 176, 196, 222)
 defineColor('DARK_BLUE', 0x00, 0x00, 0x93)
+defineColor('ROYAL_BLUE', 0x00, 0x6C, 0xFF)
 
 defineColor('PINK', 255, 192, 203)
 defineColor('GOLD', 255, 215, 0)

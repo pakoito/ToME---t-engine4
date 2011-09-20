@@ -98,7 +98,7 @@ function _M:event(e)
 		e.msg = e.msg:removeColorCodes()
 		local color = colors.WHITE
 		if e.donator == "oneshot" then color = colors.LIGHT_GREEN
-		elseif e.donator == "recurring" then color = colors.LIGHT_BLUE end
+		elseif e.donator == "recurring" then color = colors.ROYAL_BLUE end
 
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
 		self:addMessage("talk", e.channel, e.login, {e.name, color}, e.msg)
@@ -110,7 +110,7 @@ function _M:event(e)
 		e.msg = e.msg:removeColorCodes()
 		local color = colors.WHITE
 		if e.donator == "oneshot" then color = colors.LIGHT_GREEN
-		elseif e.donator == "recurring" then color = colors.LIGHT_BLUE end
+		elseif e.donator == "recurring" then color = colors.ROYAL_BLUE end
 
 		self.channels[self.cur_channel] = self.channels[self.cur_channel] or {users={}, log={}}
 		self:addMessage("whisper", self.cur_channel, e.login, {e.name, color}, "#GOLD#<whisper> #LAST#"..e.msg)
@@ -122,7 +122,7 @@ function _M:event(e)
 		e.msg = e.msg:removeColorCodes()
 		local color = colors.WHITE
 		if e.donator == "oneshot" then color = colors.LIGHT_GREEN
-		elseif e.donator == "recurring" then color = colors.LIGHT_BLUE end
+		elseif e.donator == "recurring" then color = colors.ROYAL_BLUE end
 
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
 		self:addMessage("achievement", e.channel, e.login, {e.name, color}, "#{italic}##LIGHT_BLUE#has earned the achievement <"..e.msg..">#{normal}#", nil, true)
@@ -133,7 +133,7 @@ function _M:event(e)
 	elseif e.se == "SerialData" then
 		local color = colors.WHITE
 		if e.donator == "oneshot" then color = colors.LIGHT_GREEN
-		elseif e.donator == "recurring" then color = colors.LIGHT_BLUE end
+		elseif e.donator == "recurring" then color = colors.ROYAL_BLUE end
 		e.color_name = color
 
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
@@ -143,7 +143,7 @@ function _M:event(e)
 	elseif e.se == "Join" then
 		local color = colors.WHITE
 		if e.donator == "oneshot" then color = colors.LIGHT_GREEN
-		elseif e.donator == "recurring" then color = colors.LIGHT_BLUE end
+		elseif e.donator == "recurring" then color = colors.ROYAL_BLUE end
 
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
 		self.channels[e.channel].users[e.login] = {name=e.name, donator=e.donator, login=e.login}
@@ -156,7 +156,7 @@ function _M:event(e)
 	elseif e.se == "Part" then
 		local color = colors.WHITE
 		if e.donator == "oneshot" then color = colors.LIGHT_GREEN
-		elseif e.donator == "recurring" then color = colors.LIGHT_BLUE end
+		elseif e.donator == "recurring" then color = colors.ROYAL_BLUE end
 
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
 		self.channels[e.channel].users[e.login] = nil
