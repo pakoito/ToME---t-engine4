@@ -172,3 +172,54 @@ newTalent{
 	Nobody must learn about this spell and so it should never be used while seen by any creatures.
 	The spell will take time to activate. You must be out of sight of any creature when you cast it and when the teleportation takes effect.]]
 }
+
+newTalent{
+	name = "Relentless Pursuit",
+	type = {"base/class", 1},
+	points = 5,
+	no_energy = true,
+	cooldown = function(self, t) return 55 - self:getTalentLevel(t) * 5 end,
+	tactical = { DEFEND = 2 },
+	action = function(self, t)
+		local target = self
+		local todel = {}
+
+		local save_for_effects = {
+			bane = "combatSpellResist",
+			curse = "combatMentalResist",
+			disease = "combatSpellResist",
+			hex = "combatSpellResist",
+			magical = "combatSpellResist",
+			mental = "combatMentalResist",
+			physical = "combatPhysicalResist",
+			poison = "combatPhysicalResist",
+		}
+		for eff_id, p in pairs(target.tmp) do
+			local e = target.tempeffect_def[eff_id]
+			if e.status == "detrimental" then
+				local save = self[save_for_effects[e.type]](self)
+				local decrease = math.floor(save/10)
+				print("About to reduce duration of... %s. Will use %s. Reducing duration by %d", e.desc, save_for_effects[e.type])
+				p.dur = p.dur - decrease
+				if p.dur <= 0 then todel[#todel+1] = eff end
+			end
+		end
+		while #todel > 0 do
+			target:removeEffect(table.remove(todel))
+		end
+		game:playSoundNear(self, "talents/spell_generic")
+		return true
+	end,
+	info = function(self, t)
+		local physical_reduction = math.floor(self:combatPhysicalResist()/10)
+		local spell_reduction = math.floor(self:combatSpellResist()/10)
+		local mental_reduction = math.floor(self:combatMentalResist()/10)
+		return ([[Not the Master himself, nor all the orcs in fallen Reknor, nor even the terrifying unknown beyond Reknor's portal could slow your pursuit of the Staff of Absorption.
+		Children will hear of your relentlessness in song for years to come. 
+		When activated, this ability reduces the duration of all active detrimental effects by the appropriate saving throw duration reduction.
+		Physical and poison effect durations reduced by %d turns
+		Bane, disease, hex, and magical effect durations reduced by %d turns
+		Curse and mental effect durations reduced by %d turns]]):
+		format(physical_reduction, spell_reduction, mental_reduction)
+	end,
+}

@@ -218,7 +218,6 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is no longer poisoned.", "-Spydric Poison" end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("never_move", 1)
-		eff.dur = self:updateEffectDuration(eff.dur, "pin")
 	end,
 	on_timeout = function(self, eff)
 		if self:attr("purify_poison") then self:heal(eff.power)
@@ -352,7 +351,6 @@ newEffect{
 		eff.defid = self:addTemporaryValue("combat_def", -1000)
 		eff.rdefid = self:addTemporaryValue("combat_def_ranged", -1000)
 		eff.sefid = self:addTemporaryValue("negative_status_effect_immune", 1)
-		eff.dur = self:updateEffectDuration(eff.dur, "freeze")
 
 		self:setTarget(self)
 	end,
@@ -389,7 +387,6 @@ newEffect{
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("never_move", 1)
 		eff.frozid = self:addTemporaryValue("frozen", 1)
-		eff.dur = self:updateEffectDuration(eff.dur, "pin")
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("never_move", eff.tmpid)
@@ -413,7 +410,6 @@ newEffect{
 			[DamageType.FIRE]=80,
 			[DamageType.LIGHTNING]=50,
 		})
-		eff.dur = self:updateEffectDuration(eff.dur, "stun")
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("stoned", eff.tmpid)
@@ -434,7 +430,6 @@ newEffect{
 		eff.tmpid = self:addTemporaryValue("paralyzed", 1)
 		-- Start the stun counter only if this is the first stun
 		if self.paralyzed == 1 then self.paralyzed_counter = (self:attr("stun_immune") or 0) * 100 end
-		eff.dur = self:updateEffectDuration(eff.dur, "stun")
 	end,
 	on_timeout = function(self, eff)
 		DamageType:get(DamageType.FIRE).projector(eff.src, self.x, self.y, DamageType.FIRE, eff.power)
@@ -468,8 +463,6 @@ newEffect{
 			if not t then break end
 			self.talents_cd[t.id] = 1 -- Just set cooldown to 1 since cooldown does not decrease while stunned
 		end
-
-		eff.dur = self:updateEffectDuration(eff.dur, "stun")
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("stunned", eff.tmpid)
@@ -488,7 +481,6 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is not silenced anymore.", "-Silenced" end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("silence", 1)
-		eff.dur = self:updateEffectDuration(eff.dur, "silence")
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("silence", eff.tmpid)
@@ -506,7 +498,6 @@ newEffect{
 	on_lose = function(self, err) return "#Target# rearms.", "-Disarmed" end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("disarmed", 1)
-		eff.dur = self:updateEffectDuration(eff.dur, "disarmed")
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("disarmed", eff.tmpid)
@@ -708,7 +699,6 @@ newEffect{
 	on_lose = function(self, err) return "#Target# speeds up.", "-Slow" end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("global_speed_add", -eff.power)
-		eff.dur = self:updateEffectDuration(eff.dur, "slow")
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("global_speed_add", eff.tmpid)
@@ -771,7 +761,6 @@ newEffect{
 	on_lose = function(self, err) return "#Target# recovers sight.", "-Blind" end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("blind", 1)
-		eff.dur = self:updateEffectDuration(eff.dur, "blind")
 		if game.level then
 			self:resetCanSeeCache()
 			if self.player then for uid, e in pairs(game.level.entities) do if e.x then game.level.map:updateMap(e.x, e.y) end end game.level.map.changed = true end
@@ -790,13 +779,12 @@ newEffect{
 	name = "CONFUSED",
 	desc = "Confused",
 	long_desc = function(self, eff) return ("The target is confused, acting randomly (chance %d%%) and unable to perform complex actions."):format(eff.power) end,
-	type = "magical",
+	type = "mental",
 	status = "detrimental",
 	parameters = { power=50 },
 	on_gain = function(self, err) return "#Target# wanders around!.", "+Confused" end,
 	on_lose = function(self, err) return "#Target# seems more focused.", "-Confused" end,
 	activate = function(self, eff)
-		eff.dur = self:updateEffectDuration(eff.dur, "confusion")
 		eff.power = eff.power - (self:attr("confusion_immune") or 0) / 2
 		eff.tmpid = self:addTemporaryValue("confused", eff.power)
 		if eff.power <= 0 then eff.dur = 0 end
@@ -820,7 +808,6 @@ newEffect{
 	end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("blind", 1)
-		eff.dur = self:updateEffectDuration(eff.dur, "blind")
 		if game.level then
 			self:resetCanSeeCache()
 			if self.player then for uid, e in pairs(game.level.entities) do if e.x then game.level.map:updateMap(e.x, e.y) end end game.level.map.changed = true end
@@ -848,7 +835,6 @@ newEffect{
 		DamageType:get(DamageType.FIRE).projector(eff.src, self.x, self.y, DamageType.DARKNESS, eff.dam)
 	end,
 	activate = function(self, eff)
-		eff.dur = self:updateEffectDuration(eff.dur, "confusion")
 		eff.power = eff.power - (self:attr("confusion_immune") or 0) / 2
 		eff.tmpid = self:addTemporaryValue("confused", eff.power)
 		if eff.power <= 0 then eff.dur = 0 end
@@ -1383,7 +1369,6 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is no longer pinned.", "-Pinned" end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("never_move", 1)
-		eff.dur = self:updateEffectDuration(eff.dur, "pin")
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("never_move", eff.tmpid)
@@ -1990,7 +1975,6 @@ newEffect{
 	activate = function(self, eff)
 		eff.particle = self:addParticles(Particles.new("gloom_slow", 1))
 		eff.tmpid = self:addTemporaryValue("global_speed_add", -eff.power)
-		eff.dur = self:updateEffectDuration(eff.dur, "slow")
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("global_speed_add", eff.tmpid)
@@ -2012,7 +1996,6 @@ newEffect{
 		eff.tmpid = self:addTemporaryValue("paralyzed", 1)
 		-- Start the stun counter only if this is the first stun
 		if self.paralyzed == 1 then self.paralyzed_counter = (self:attr("stun_immune") or 0) * 100 end
-		eff.dur = self:updateEffectDuration(eff.dur, "stun")
 	end,
 	deactivate = function(self, eff)
 		self:removeParticles(eff.particle)
@@ -2033,7 +2016,6 @@ newEffect{
 	activate = function(self, eff)
 		eff.particle = self:addParticles(Particles.new("gloom_confused", 1))
 		eff.tmpid = self:addTemporaryValue("confused", eff.power)
-		eff.dur = self:updateEffectDuration(eff.dur, "confusion")
 	end,
 	deactivate = function(self, eff)
 		self:removeParticles(eff.particle)
@@ -3019,7 +3001,6 @@ newEffect{
 	activate = function(self, eff)
 		eff.particle = self:addParticles(Particles.new("gloom_slow", 1))
 		eff.tmpid = self:addTemporaryValue("global_speed_add", -eff.power)
-		eff.dur = self:updateEffectDuration(eff.dur, "slow")
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("global_speed_add", eff.tmpid)
@@ -3041,7 +3022,6 @@ newEffect{
 		eff.tmpid = self:addTemporaryValue("paralyzed", 1)
 		-- Start the stun counter only if this is the first stun
 		if self.paralyzed == 1 then self.paralyzed_counter = (self:attr("stun_immune") or 0) * 100 end
-		eff.dur = self:updateEffectDuration(eff.dur, "stun")
 	end,
 	deactivate = function(self, eff)
 		self:removeParticles(eff.particle)
@@ -3062,7 +3042,6 @@ newEffect{
 	activate = function(self, eff)
 		eff.particle = self:addParticles(Particles.new("gloom_confused", 1))
 		eff.tmpid = self:addTemporaryValue("confused", eff.power)
-		eff.dur = self:updateEffectDuration(eff.dur, "confusion")
 	end,
 	deactivate = function(self, eff)
 		self:removeParticles(eff.particle)
@@ -3291,7 +3270,6 @@ newEffect{
 		eff.tmpid = self:addTemporaryValue("paralyzed", 1)
 		-- Start the stun counter only if this is the first stun
 		if self.paralyzed == 1 then self.paralyzed_counter = (self:attr("stun_immune") or 0) * 100 end
-		eff.dur = self:updateEffectDuration(eff.dur, "stun")
 	end,
 	deactivate = function(self, eff)
 		--self:removeParticles(eff.particle)
@@ -3311,7 +3289,6 @@ newEffect{
 	on_lose = function(self, err) return "#Target# shakes off the crushing forces.", "-Imploding" end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("global_speed_add", -0.5)
-		eff.dur = self:updateEffectDuration(eff.dur, "slow")
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("global_speed_add", eff.tmpid)
@@ -3436,7 +3413,6 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is not paralyzed anymore.", "-Paralyzed" end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("time_stun", 1)
-		eff.dur = self:updateEffectDuration(eff.dur, "time_stun")
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("time_stun", eff.tmpid)
@@ -3864,7 +3840,6 @@ newEffect{
 	end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("silence", 1)
-		eff.dur = self:updateEffectDuration(eff.dur, "silence")
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("silence", eff.tmpid)
@@ -3883,7 +3858,6 @@ newEffect{
 	activate = function(self, eff)
 		eff.damid = self:addTemporaryValue("combat_dam", -eff.dam)
 		eff.tmpid = self:addTemporaryValue("global_speed_add", -0.3)
-		eff.dur = self:updateEffectDuration(eff.dur, "slow")
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("combat_dam", eff.damid)

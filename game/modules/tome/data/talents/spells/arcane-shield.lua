@@ -42,8 +42,8 @@ newTalent{
 
 		-- Try to stun !
 		if hit then
-			if target:checkHit(self:combatAttackStr(shield.special_combat), target:combatSpellResist(), 0, 95, 5) and target:canBe("stun") then
-				target:setEffect(target.EFF_STUNNED, 2 + math.floor(self:getTalentLevel(t) / 2), {})
+			if target:canBe("stun") then
+				target:setEffect(target.EFF_STUNNED, 2 + math.floor(self:getTalentLevel(t) / 2), {apply_power=self:combatAttackStr(shield.special_combat)})
 			else
 				game.logSeen(target, "%s resists the stun!", target.name:capitalize())
 			end
@@ -112,7 +112,7 @@ newTalent{
 
 		-- Try to stun !
 		if hit1 or hit2 or hit3 then
-			if target:checkHit(self:combatAttackStr(shield.special_combat), target:combatSpellResist(), 0, 95, 5) and target:canBe("stun") then
+			if target:canBe("stun") then
 				target:setEffect(target.EFF_DAZED, 3 + math.floor(self:getTalentLevel(t)), {apply_power=self:combatAttackStr(shield.special_combat), apply_save="combatSpellResist"})
 			else
 				game.logSeen(target, "%s resists the dazing blows!", target.name:capitalize())

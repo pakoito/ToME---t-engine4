@@ -198,8 +198,8 @@ newTalent{
 			local target = game.level.map(tx, ty, Map.ACTOR)
 			if not target then return end
 
-			if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 10) and target:canBe("stun") and target:canBe("instakill") then
-				target:setEffect(target.EFF_STONED, t.getDuration(self, t), {})
+			if target:canBe("stun") and target:canBe("instakill") then
+				target:setEffect(target.EFF_STONED, t.getDuration(self, t), {apply_power=self:combatSpellpower()})
 				game.level.map:particleEmitter(tx, ty, 1, "archery")
 			end
 		end)

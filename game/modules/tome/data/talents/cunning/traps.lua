@@ -284,8 +284,8 @@ newTalent{
 			check_hit = self:combatAttackDex(),
 			triggered = function(self, x, y, who)
 				if who and who:canBe("cut") then who:setEffect(who.EFF_CUT, 5, {src=self.summoner, power=self.dam}) end
-				if who:checkHit(self.check_hit, who:combatPhysicalResist(), 0, 95, 15) and who:canBe("pin") then
-					who:setEffect(who.EFF_PINNED, 5, {})
+				if who:canBe("pin") then
+					who:setEffect(who.EFF_PINNED, 5, {apply_power=self.check_hit})
 				else
 					game.logSeen(who, "%s resists!", who.name:capitalize())
 				end
@@ -385,8 +385,8 @@ newTalent{
 			dur = 2 + math.ceil(self:getTalentLevel(self.T_TRAP_MASTERY) / 2),
 			check_hit = self:combatAttackDex(),
 			triggered = function(self, x, y, who)
-				if who:checkHit(self.check_hit, who:combatPhysicalResist(), 0, 95, 15) and who:canBe("disarm") then
-					who:setEffect(who.EFF_DISARMED, self.dur, {})
+				if who:canBe("disarm") then
+					who:setEffect(who.EFF_DISARMED, self.dur, {apply_power=self.check_hit})
 				else
 					game.logSeen(who, "%s resists!", who.name:capitalize())
 				end
@@ -434,8 +434,8 @@ newTalent{
 			check_hit = self:combatAttackDex(),
 			triggered = function(self, x, y, who)
 				self:project({type="hit", x=x,y=y}, x, y, engine.DamageType.NATURE, self.dam, {type="slime"})
-				if who:checkHit(self.check_hit, who:combatSpellResist(), 0, 95, 15) and who:canBe("stun") then
-					who:setEffect(who.EFF_STUNNED, 4, {src=self.summoner})
+				if who:canBe("stun") then
+					who:setEffect(who.EFF_STUNNED, 4, {src=self.summoner, apply_power=self.check_hit})
 				end
 				return true, true
 			end,
@@ -481,10 +481,10 @@ newTalent{
 			triggered = function(self, x, y, who)
 				self:project({type="ball", x=x,y=y, radius=2}, x, y, function(px, py)
 					local who = game.level.map(px, py, engine.Map.ACTOR)
-					if who and who:checkHit(self.check_hit, who:combatSpellResist(), 0, 95, 15) and who:canBe("blind") then
-						who:setEffect(who.EFF_BLINDED, self.dur, {})
-					elseif who and who:checkHit(self.check_hit, who:combatSpellResist(), 0, 95, 15) and who:canBe("stun") then
-						who:setEffect(who.EFF_DAZED, self.dur, {})
+					if who and who:canBe("blind") then
+						who:setEffect(who.EFF_BLINDED, self.dur, {apply_power=self.check_hit})
+					elseif who and who:canBe("stun") then
+						who:setEffect(who.EFF_DAZED, self.dur, {apply_power=self.check_hit})
 					elseif who then
 						game.logSeen(who, "%s resists the flash bang!", who.name:capitalize())
 					end

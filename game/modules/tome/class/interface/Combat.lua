@@ -1141,8 +1141,8 @@ function _M:startGrapple(target)
 		target:setEffect(target.EFF_GRAPPLED, duration, {src=self, power=power}, true)
 		self:setEffect(self.EFF_GRAPPLING, duration, {trgt=target}, true)
 		return true
-	elseif target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 5 - hitbonus) and target:canBe("pin") then
-		target:setEffect(target.EFF_GRAPPLED, duration, {src=self, power=power})
+	elseif target:canBe("pin") then
+		target:setEffect(target.EFF_GRAPPLED, duration, {src=self, power=power, apply_power=self:combatAttackStr()})
 		self:setEffect(self.EFF_GRAPPLING, duration, {trgt=target})
 		return true
 	else

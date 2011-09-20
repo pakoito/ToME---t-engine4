@@ -231,8 +231,8 @@ newTalent{
 
 		-- Try to stun !
 		if hit then
-			if target:checkHit(self:combatAttackStr(weapon.combat), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
-				target:setEffect(target.EFF_STUNNED, 2 + self:getTalentLevel(t), {})
+			if target:canBe("stun") then
+				target:setEffect(target.EFF_STUNNED, 2 + self:getTalentLevel(t), {apply_power=self:combatAttackStr(weapon.combat)})
 			else
 				game.logSeen(target, "%s resists the stunning blow!", target.name:capitalize())
 			end
@@ -274,8 +274,8 @@ newTalent{
 
 		-- Try to stun !
 		if hit then
-			if target:checkHit(self:combatAttackStr(weapon.combat), target:combatPhysicalResist(), 0, 95, 10 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
-				target:setEffect(target.EFF_SUNDER_ARMOUR, 4 + self:getTalentLevel(t), {power=5*self:getTalentLevel(t)})
+			if target:canBe("stun") then
+				target:setEffect(target.EFF_SUNDER_ARMOUR, 4 + self:getTalentLevel(t), {power=5*self:getTalentLevel(t), apply_power=self:combatAttackStr(weapon.combat)})
 			else
 				game.logSeen(target, "%s resists the sundering!", target.name:capitalize())
 			end
@@ -320,8 +320,8 @@ newTalent{
 
 		-- Try to stun !
 		if hit then
-			if target:checkHit(self:combatAttackStr(weapon.combat), target:combatPhysicalResist(), 0, 95, 10 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
-				target:setEffect(target.EFF_SUNDER_ARMS, 4 + self:getTalentLevel(t), {power=3*self:getTalentLevel(t)})
+			if target:canBe("stun") then
+				target:setEffect(target.EFF_SUNDER_ARMS, 4 + self:getTalentLevel(t), {power=3*self:getTalentLevel(t), apply_power=self:combatAttackStr(weapon.combat)})
 			else
 				game.logSeen(target, "%s resists the sundering!", target.name:capitalize())
 			end

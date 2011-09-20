@@ -189,6 +189,7 @@ TOOLTIP_MAGWILCUN = "#AQUAMARINE#Mental stats#LAST#\n---\n"..TOOLTIP_MAG.."\n---
 -------------------------------------------------------------
 TOOLTIP_COMBAT_ATTACK = [[#GOLD#Accuracy#LAST#
 Your accuracy value represents your chance to hit your opponents, it is measured directly against the target's defense rating.
+When you inflict temporary physical effects on an enemy, every ten points of accuracy counteracts a single turn of duration reduction granted by the enemy's saving throws.
 It is improved by both Strength and Dexterity.
 ]]
 TOOLTIP_COMBAT_DAMAGE = [[#GOLD#Damage#LAST#
@@ -242,21 +243,22 @@ TOOLTIP_RDEFENSE = [[#GOLD#Ranged Defense#LAST#
 Ranged defense represents your chance to avoid being hit at all by a ranged attack, it is measured against the attacker's accuracy chance.
 ]]
 TOOLTIP_PHYS_SAVE = [[#GOLD#Physical saving throw#LAST#
-This value represents your resistance against physical attacks induced special effects, like bleeding, stuns, knockbacks, ...
+Increases chance to shrug off physically-induced effects. Also reduces duration of detrimental physical effects and poisons by up to one turn for every ten points, depending on the opponent.
 ]]
 TOOLTIP_SPELL_SAVE = [[#GOLD#Spell saving throw#LAST#
-This value represents your resistance against spell attacks induced special effects, like freezes, knockbacks, ...
+Increases chance to shrug off magically-induced effects. Also reduces duration of detrimental magical effects, diseases, hexes, and banes by up to one turn for every ten points, depending on the opponent.
 ]]
 TOOLTIP_MENTAL_SAVE = [[#GOLD#Mental saving throw#LAST#
-This value represents your resistance against mental attacks induced special effects, like confusion, fear, ...
+Increases chance to shrug off mentally-induced effects. Also reduces duration of detrimental mental effects and curses by up to one turn for every ten points, depending on the opponent.
 ]]
 
 -------------------------------------------------------------
 -- Spells
 -------------------------------------------------------------
 TOOLTIP_SPELL_POWER = [[#GOLD#Spellpower#LAST#
-Your spellpower value represents how effective/powerful your spells and magical effects are.
-It is improved by both Magic, some talents can change the stats that affect it.
+Your spellpower value represents how powerful your spells are.
+In addition, when your spells inflict temporary detrimental effects, every ten points of spellpower counteracts a single turn of duration reduction granted by the enemy's saving throws.
+It is improved by Magic, equipment, and certain talents.
 ]]
 TOOLTIP_SPELL_CRIT = [[#GOLD#Spell critical chance#LAST#
 Each time you deal damage with a spell you have a chance to make a critical hit that deals 150% of the normal damage.
@@ -268,8 +270,9 @@ Spellcasting speed represents how fast your spellcasting is compared to a normal
 The lower it is the faster it is.
 ]]
 TOOLTIP_MINDPOWER = [[#GOLD#Mindpower#LAST#
-Your mindpower value represents how effective/powerful your mental effects are.
-It is improved by both Willpower and Cunning, some talents can change the stats that affect it.
+Your mindpower value represents how powerful your mental abilities are.
+In addition, when you use mental abilities inflict temporary detrimental effects, every ten points of mindpower counteracts a single turn of duration reduction granted by the enemy's saving throws.
+It is improved by both Willpower and Cunning, equipment, and certain talents.
 ]]
 
 -------------------------------------------------------------

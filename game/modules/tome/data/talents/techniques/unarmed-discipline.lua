@@ -89,27 +89,22 @@ newTalent{
 	getDamage = function(self, t) return getTriStat(self, t, 10, 100) * (1 + getGrapplingStyle(self, dam)) end,
 	getDamageTwo = function(self, t) return getTriStat(self, t, 10, 100) * (1.5 + getGrapplingStyle(self, dam)) end,
 	do_throw = function(self, target, t)
-
-		local hit = self:checkHit(self:combatAttack(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2)
-
-		-- if grappled stun
-		if hit and target:canBe("knockback") and target:isGrappled(self) then
+		local hit = self:checkHit(self:combatAttack(), target:combatDefense(), 0, 95, 5 - self:getTalentLevel(t) / 2)
+		if hit then
 			self:project(target, target.x, target.y, DamageType.PHYSICAL, self:physicalCrit(t.getDamageTwo(self, t), nil, target))
-			game.logSeen(target, "%s has been slammed into the ground!", target.name:capitalize())
-			-- see if the throw stuns the enemy
-			if hit and target:canBe("stun")then
-				target:setEffect(target.EFF_STUNNED, 2, {})
-			end
-		-- if not grappled daze
-		elseif hit and target:canBe("knockback") then
-			self:project(target, target.x, target.y, DamageType.PHYSICAL, self:physicalCrit(t.getDamage(self, t), nil, target))
-			game.logSeen(target, "%s has been thrown to the ground!", target.name:capitalize())
-			-- see if the throw dazes the enemy
-			if hit and target:canBe("stun")then
-				target:setEffect(target.EFF_DAZED, 2, {})
+			-- if grappled stun
+			if target:isGrappled(self) and target:canBe("stun") then
+				target:setEffect(target.EFF_STUNNED, 2, {apply_power=self:combatAttack(), min_dur=1})
+				game.logSeen(target, "%s has been slammed into the ground!", target.name:capitalize())
+			-- if not grappled daze
+			else
+				game.logSeen(target, "%s has been thrown to the ground!", target.name:capitalize())
+				-- see if the throw dazes the enemy
+				if target:canBe("stun") then
+					target:setEffect(target.EFF_DAZED, 2, {apply_power=self:combatAttack(), min_dur=1})
+				end
 			end
 		end
-
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)

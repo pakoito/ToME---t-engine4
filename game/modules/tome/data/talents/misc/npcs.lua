@@ -186,8 +186,8 @@ newTalent{
 
 		-- Try to stun !
 		if hit then
-			if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
-				target:setEffect(target.EFF_STUNNED, 2 + self:getTalentLevel(t), {})
+			if target:canBe("stun") then
+				target:setEffect(target.EFF_STUNNED, 2 + self:getTalentLevel(t), {apply_power=self:combatAttackStr()})
 			else
 				game.logSeen(target, "%s resists the stunning blow!", target.name:capitalize())
 			end
@@ -216,8 +216,8 @@ newTalent{
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		local hit = self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.5, 1), true)
 
-		if hit and target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("disarm") then
-			target:setEffect(target.EFF_DISARMED, 2 + self:getTalentLevel(t), {})
+		if hit and target:canBe("disarm") then
+			target:setEffect(target.EFF_DISARMED, 2 + self:getTalentLevel(t), {apply_power=self:combatAttackStr()})
 		else
 			game.logSeen(target, "%s resists the blow!", target.name:capitalize())
 		end
@@ -247,8 +247,8 @@ newTalent{
 
 		-- Try to stun !
 		if hit then
-			if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
-				target:setEffect(target.EFF_CONSTRICTED, (2 + self:getTalentLevel(t)) * 10, {src=self, power=1.5 * self:getTalentLevel(t)})
+			if target:canBe("stun") then
+				target:setEffect(target.EFF_CONSTRICTED, (2 + self:getTalentLevel(t)) * 10, {src=self, power=1.5 * self:getTalentLevel(t), apply_power=self:combatAttackStr()})
 			else
 				game.logSeen(target, "%s resists the constriction!", target.name:capitalize())
 			end
@@ -394,8 +394,8 @@ newTalent{
 
 		-- Try to rot !
 		if hit then
-			if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("disease") then
-				target:setEffect(target.EFF_ROTTING_DISEASE, 10 + self:getTalentLevel(t) * 3, {src=self, dam=self:getStr() / 3 + self:getTalentLevel(t) * 2, con=math.floor(4 + target:getCon() * 0.1)})
+			if target:canBe("disease") then
+				target:setEffect(target.EFF_ROTTING_DISEASE, 10 + self:getTalentLevel(t) * 3, {src=self, dam=self:getStr() / 3 + self:getTalentLevel(t) * 2, con=math.floor(4 + target:getCon() * 0.1), apply_power=self:combatAttackStr()})
 			else
 				game.logSeen(target, "%s resists the disease!", target.name:capitalize())
 			end
@@ -425,8 +425,8 @@ newTalent{
 
 		-- Try to rot !
 		if hit then
-			if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("disease") then
-				target:setEffect(target.EFF_DECREPITUDE_DISEASE, 10 + self:getTalentLevel(t) * 3, {src=self, dam=self:getStr() / 3 + self:getTalentLevel(t) * 2, dex=math.floor(4 + target:getDex() * 0.1)})
+			if target:canBe("disease") then
+				target:setEffect(target.EFF_DECREPITUDE_DISEASE, 10 + self:getTalentLevel(t) * 3, {src=self, dam=self:getStr() / 3 + self:getTalentLevel(t) * 2, dex=math.floor(4 + target:getDex() * 0.1), apply_power=self:combatAttackStr()})
 			else
 				game.logSeen(target, "%s resists the disease!", target.name:capitalize())
 			end
@@ -456,8 +456,8 @@ newTalent{
 
 		-- Try to rot !
 		if hit then
-			if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("disease") then
-				target:setEffect(target.EFF_WEAKNESS_DISEASE, 10 + self:getTalentLevel(t) * 3, {src=self, dam=self:getStr() / 3 + self:getTalentLevel(t) * 2, str=math.floor(4 + target:getStr() * 0.1)})
+			if target:canBe("disease") then
+				target:setEffect(target.EFF_WEAKNESS_DISEASE, 10 + self:getTalentLevel(t) * 3, {src=self, dam=self:getStr() / 3 + self:getTalentLevel(t) * 2, str=math.floor(4 + target:getStr() * 0.1), apply_power=self:combatAttackStr()})
 			else
 				game.logSeen(target, "%s resists the disease!", target.name:capitalize())
 			end
@@ -652,8 +652,8 @@ newTalent{
 
 		-- Try to stun !
 		if hit then
-			if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
-				target:setEffect(target.EFF_PINNED, 1 + self:getTalentLevel(t), {})
+			if target:canBe("stun") then
+				target:setEffect(target.EFF_PINNED, 1 + self:getTalentLevel(t), {apply_power=self:combatAttackStr()})
 			else
 				game.logSeen(target, "%s resists the grab!", target.name:capitalize())
 			end
@@ -863,8 +863,8 @@ newTalent{
 				return mod.class.Trap.canTrigger(self, x, y, who)
 			end,
 			triggered = function(self, x, y, who)
-				if who:checkHit(self.disarm_power + 5, who:combatPhysicalResist(), 0, 95, 15) and who:canBe("stun") and who:canBe("pin") then
-					who:setEffect(who.EFF_PINNED, self.pin_dur, {})
+				if who:canBe("stun") and who:canBe("pin") then
+					who:setEffect(who.EFF_PINNED, self.pin_dur, {apply_power=self.disarm_power + 5})
 				else
 					game.logSeen(who, "%s resists!", who.name:capitalize())
 				end
@@ -1043,8 +1043,8 @@ newTalent{
 
 		-- Try to stun !
 		if hit then
-			if target:checkHit(self:combatAttackStr(weapon.combat), target:combatPhysicalResist(), 0, 95, 10 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
-				target:setEffect(target.EFF_PINNED, 2 + self:getTalentLevel(t), {})
+			if target:canBe("stun") then
+				target:setEffect(target.EFF_PINNED, 2 + self:getTalentLevel(t), {apply_power=self:combatAttackStr()})
 			else
 				game.logSeen(target, "%s resists the crushing!", target.name:capitalize())
 			end

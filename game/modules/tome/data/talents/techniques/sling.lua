@@ -41,8 +41,8 @@ newTalent{
 	tactical = { ATTACK = 2, DISABLE = 2 },
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon("sling") then if not silent then game.logPlayer(self, "You require a sling for this talent.") end return false end return true end,
 	archery_onhit = function(self, t, target, x, y)
-		if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 10) and target:canBe("blind") then
-			target:setEffect(target.EFF_BLINDED, 2 + self:getTalentLevelRaw(t), {})
+		if target:canBe("blind") then
+			target:setEffect(target.EFF_BLINDED, 2 + self:getTalentLevelRaw(t), {apply_power=self:combatAttackDex()})
 		else
 			game.logSeen(target, "%s resists!", target.name:capitalize())
 		end

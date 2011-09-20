@@ -56,13 +56,10 @@ newTalent{
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
 		-- attempt domination
-		if checkWillFailure(self, target, 50, 90, 1) then
-			local damMult = 1 + self:combatTalentWeaponDamage(t, 0.1, 0.5)
-			target:setEffect(target.EFF_DOMINATED, 4, { dominatedSource = self, dominatedDamMult = damMult })
-		else
-			game.logSeen(target, "%s resists the domination!", target.name:capitalize())
-		end
-
+		local damMult = 1 + self:combatTalentWeaponDamage(t, 0.1, 0.5)
+		local customMindpower = self:getWil() * 0.5 * 1
+		target:setEffect(target.EFF_DOMINATED, 4, { dominatedSource = self, dominatedDamMult = damMult, apply_power=customMindpower})
+		
 		-- just a regular attack (but maybe..with domination!)
 		self:attackTarget(target, nil, 1, true)
 

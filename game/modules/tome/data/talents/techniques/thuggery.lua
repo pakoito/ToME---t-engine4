@@ -55,8 +55,8 @@ newTalent{
 		local _, hitted = self:attackTargetWith(target, nil, nil, nil, dam)
 
 		if hitted then
-			if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95) and target:canBe("confusion") then
-				target:setEffect(target.EFF_CONFUSED, t.getDuration(self, t), {power=30 + self:getDex(70)})
+			if target:canBe("confusion") then
+				target:setEffect(target.EFF_CONFUSED, t.getDuration(self, t), {power=30 + self:getDex(70), apply_power=self:combatAttackDex()})
 			else
 				game.logSeen(target, "%s resists the headblow!", target.name:capitalize())
 			end

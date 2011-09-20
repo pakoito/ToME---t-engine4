@@ -182,8 +182,8 @@ newTalent{
 
 		-- Try to pin
 		if hit then
-			if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 10 - self:getTalentLevel(t) / 2) and target:canBe("pin") then
-				target:setEffect(target.EFF_PINNED, t.getPinDuration(self, t), {})
+			if target:canBe("pin") then
+				target:setEffect(target.EFF_PINNED, t.getPinDuration(self, t), {apply_power=self:combatAttackStr()})
 			else
 				game.logSeen(target, "%s resists the crushing!", target.name:capitalize())
 			end
@@ -256,8 +256,8 @@ newTalent{
 			if xx == self.x and yy == self.y then return end
 			local target = game.level.map(xx, yy, Map.ACTOR)
 			if target and self:attackTarget(target, nil, t.getGolemDamage(self, t), true) then
-				if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 10 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
-					target:setEffect(target.EFF_DAZED, t.getDazeDuration(self, t), {})
+				if target:canBe("stun") then
+					target:setEffect(target.EFF_DAZED, t.getDazeDuration(self, t), {apply_power=self:combatAttackStr()})
 				else
 					game.logSeen(target, "%s resists the dazing blow!", target.name:capitalize())
 				end

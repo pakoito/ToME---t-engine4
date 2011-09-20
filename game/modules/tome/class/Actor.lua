@@ -802,6 +802,13 @@ function _M:getRankLifeAdjust(value)
 	end
 end
 
+function _M:getRankSaveAdjust()
+	if self.rank <= 3 then return 0.5
+	elseif self.rank > 3 then return 1
+	else return 0
+	end
+end
+
 function _M:getRankResistAdjust()
 	if self.rank == 1 then return 0.4, 0.9
 	elseif self.rank == 2 then return 0.5, 1.5
@@ -1630,13 +1637,16 @@ function _M:levelup()
 		end
 	end
 
-	-- Gain life and resources
+	-- Gain life and resources and saves
 	local rating = self.life_rating
 	if not self.fixed_rating then
 		rating = rng.range(math.floor(self.life_rating * 0.5), math.floor(self.life_rating * 1.5))
 	end
 	self.max_life = self.max_life + math.max(self:getRankLifeAdjust(rating), 1)
-
+	self.combat_physresist = self.combat_physresist + self:getRankSaveAdjust()
+	self.combat_spellresist = self.combat_spellresist + self:getRankSaveAdjust()
+	self.combat_mentalresist = self.combat_mentalresist + self:getRankSaveAdjust()
+	
 	self:incMaxVim(self.vim_rating)
 	self:incMaxMana(self.mana_rating)
 	self:incMaxStamina(self.stamina_rating)
@@ -2837,49 +2847,44 @@ function _M:canBe(what)
 	return true
 end
 
---- Adjusts timed effect durations based on rank and other things
-function _M:updateEffectDuration(dur, what)
-	-- Rank reduction: below elite = none; elite = 1, boss = 2, elite boss = 3
-	local rankmod = 0
-	if self.rank == 3 then rankmod = 25
-	elseif self.rank == 3.5 then rankmod = 40
-	elseif self.rank == 4 then rankmod = 45
-	elseif self.rank == 5 then rankmod = 75
-	end
-	if rankmod <= 0 then return dur end
-
-	print("Effect duration reduction <", dur)
-	if what == "stun" then
-		local p = self:combatPhysicalResist(), rankmod * (util.bound(self:combatPhysicalResist() * 3, 40, 115) / 100)
-		dur = dur - math.ceil(dur * (p) / 100)
-	elseif what == "pin" then
-		local p = self:combatPhysicalResist(), rankmod * (util.bound(self:combatPhysicalResist() * 3, 40, 115) / 100)
-		dur = dur - math.ceil(dur * (p) / 100)
-	elseif what == "disarm" then
-		local p = self:combatPhysicalResist(), rankmod * (util.bound(self:combatPhysicalResist() * 3, 40, 115) / 100)
-		dur = dur - math.ceil(dur * (p) / 100)
-	elseif what == "frozen" then
-		local p = self:combatSpellResist(), rankmod * (util.bound(self:combatSpellResist() * 3, 40, 115) / 100)
-		dur = dur - math.ceil(dur * (p) / 100)
-	elseif what == "blind" then
-		local p = self:combatMentalResist(), rankmod * (util.bound(self:combatMentalResist() * 3, 40, 115) / 100)
-		dur = dur - math.ceil(dur * (p) / 100)
-	elseif what == "silence" then
-		local p = self:combatMentalResist(), rankmod * (util.bound(self:combatMentalResist() * 3, 40, 115) / 100)
-		dur = dur - math.ceil(dur * (p) / 100)
-	elseif what == "slow" then
-		local p = self:combatPhysicalResist(), rankmod * (util.bound(self:combatPhysicalResist() * 3, 40, 115) / 100)
-		dur = dur - math.ceil(dur * (p) / 100)
-	elseif what == "confusion" then
-		local p = self:combatMentalResist(), rankmod * (util.bound(self:combatMentalResist() * 3, 40, 115) / 100)
-		dur = dur - math.ceil(dur * (p) / 100)
-	end
-	print("Effect duration reduction >", dur)
-	return dur
-end
+-- Tells on_set_temporary_effect() what save to use for a given effect type
+local save_for_effects = {
+	bane = "combatSpellResist",
+	curse = "combatMentalResist",
+	disease = "combatSpellResist",
+	hex = "combatSpellResist",
+	magical = "combatSpellResist",
+	mental = "combatMentalResist",
+	physical = "combatPhysicalResist",
+	poison = "combatPhysicalResist",
+}
 
 --- Adjust temporary effects
 function _M:on_set_temporary_effect(eff_id, e, p)
+	if p.apply_power and (save_for_effects[e.type] or p.apply_save) then
+		local save = 0
+		p.maximum = p.dur
+		p.minimum = p.min_dur or 0 --Default minimum duration is 0. Can specify something else by putting min_dur=foo in p when calling setEffect()
+		save = self[p.apply_save or save_for_effects[e.type]](self)
+		local increase = math.floor(p.apply_power / 10)
+		local decrease = math.floor(save/10)
+		local duration = p.maximum - decrease + increase
+		p.dur = util.bound(duration, p.minimum or 0, p.maximum)
+		p.amount_decreased = p.maximum - p.dur
+		local save_type = nil
+		if p.apply_save then save_type = p.apply_save else save_type = save_for_effects[e.type] end
+		if save_type == "combatPhysicalResist" 
+			then p.save_string = "Physical save"
+		elseif save_type == "combatMentalResist"
+			then p.save_string = "Mental save"
+		elseif save_type == "combatSpellResist"
+			then p.save_string = "Spell save"			
+		end
+		p.total_dur = p.dur
+		p.apply_power = nil
+		
+	end
+
 	if e.status == "detrimental" and self:knowTalent(self.T_RESILIENT_BONES) then
 		p.dur = math.ceil(p.dur * (1 - (self:getTalentLevel(self.T_RESILIENT_BONES) / 12)))
 	end

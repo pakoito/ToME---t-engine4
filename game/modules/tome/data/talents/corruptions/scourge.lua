@@ -44,15 +44,15 @@ newTalent{
 
 		-- Try to bleed !
 		if hit1 then
-			if target:checkHit(self:combatAttackStr(weapon.combat), target:combatPhysicalResist(), 0, 95, 8 - self:getTalentLevel(t) / 2) and target:canBe("cut") then
-				target:setEffect(target.EFF_CUT, 5, {power=self:combatTalentSpellDamage(t, 5, 40), src=self})
+			if target:canBe("cut") then
+				target:setEffect(target.EFF_CUT, 5, {power=self:combatTalentSpellDamage(t, 5, 40), src=self, apply_power=self:combatAttackStr(weapon.combat)})
 			else
 				game.logSeen(target, "%s resists the cut!", target.name:capitalize())
 			end
 		end
 		if hit2 then
-			if target:checkHit(self:combatAttackStr(offweapon.combat), target:combatPhysicalResist(), 0, 95, 8 - self:getTalentLevel(t) / 2) and target:canBe("cut") then
-				target:setEffect(target.EFF_CUT, 5, {power=self:combatTalentSpellDamage(t, 5, 40), src=self})
+			if target:canBe("cut") then
+				target:setEffect(target.EFF_CUT, 5, {power=self:combatTalentSpellDamage(t, 5, 40), src=self, apply_power=self:combatAttackStr(offweapon.combat)})
 			else
 				game.logSeen(target, "%s resists the cut!", target.name:capitalize())
 			end
@@ -166,8 +166,8 @@ newTalent{
 
 		if hit1 then
 			local speed2, hit2 = self:attackTargetWith(target, offweapon.combat, DamageType.BLIGHT, self:getOffHandMult(self:combatTalentWeaponDamage(t, 0.6, 1.4)))
-			if hit2 and target:checkHit(self:combatAttack(offweapon.combat), target:combatPhysicalResist(), 0, 95, 10) and target:canBe("blind") then
-				target:setEffect(target.EFF_BLINDED, 4, {})
+			if hit2 and target:canBe("blind") then
+				target:setEffect(target.EFF_BLINDED, 4, {apply_power=self:combatAttack(offweapon.combat)})
 			else
 				game.logSeen(self, "%s resists the darkness.", target.name:capitalize())
 			end

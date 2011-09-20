@@ -250,11 +250,7 @@ newTalent{
 	requires_target = true,
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	archery_onhit = function(self, t, target, x, y)
-		if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 10) then
-			target:setEffect(target.EFF_SLOW, 7, {power=util.bound((self:combatAttack() * 0.15 * self:getTalentLevel(t)) / 100, 0.1, 0.4)})
-		else
-			game.logSeen(target, "%s resists!", target.name:capitalize())
-		end
+		target:setEffect(target.EFF_SLOW, 7, {power=util.bound((self:combatAttack() * 0.15 * self:getTalentLevel(t)) / 100, 0.1, 0.4), apply_power=self:combatAttackDex()})
 	end,
 	action = function(self, t)
 		local targets = self:archeryAcquireTargets(nil, {one_shot=true})
@@ -281,8 +277,8 @@ newTalent{
 	requires_target = true,
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	archery_onhit = function(self, t, target, x, y)
-		if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 10) and target:canBe("pin") then
-			target:setEffect(target.EFF_PINNED, 2 + self:getTalentLevelRaw(t), {})
+		if target:canBe("pin") then
+			target:setEffect(target.EFF_PINNED, 2 + self:getTalentLevelRaw(t), {apply_power=self:combatAttackDex()})
 		else
 			game.logSeen(target, "%s resists!", target.name:capitalize())
 		end
@@ -321,8 +317,8 @@ newTalent{
 	end,
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	archery_onhit = function(self, t, target, x, y)
-		if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 10) and target:canBe("stun") then
-			target:setEffect(target.EFF_STUNNED, 2 + self:getTalentLevelRaw(t), {})
+		if target:canBe("stun") then
+			target:setEffect(target.EFF_STUNNED, 2 + self:getTalentLevelRaw(t), {apply_power=self:combatAttackDex()})
 		else
 			game.logSeen(target, "%s resists!", target.name:capitalize())
 		end

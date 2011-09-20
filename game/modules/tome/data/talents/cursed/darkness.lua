@@ -379,8 +379,8 @@ newTalent{
 				if target then
 					self:project(target, target.x, target.y, DamageType.DARKNESS, self:spellCrit(damage))
 					if rng.percent(15) then
-						if not target.dead and target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("blind") then
-							target:setEffect(target.EFF_BLINDED, 3, {})
+						if not target.dead and target:canBe("blind") then
+							target:setEffect(target.EFF_BLINDED, 3, {apply_power=self:combatSpellpower(), min_dur=1})
 							target:setTarget(nil)
 							--game.logSeen(target, "%s stumbles in the darkness!", target.name:capitalize())
 						end

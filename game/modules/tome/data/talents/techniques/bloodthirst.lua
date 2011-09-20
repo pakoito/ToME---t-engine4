@@ -48,8 +48,8 @@ newTalent{
 		if not weapon or type(weapon) ~= "table" then weapon = nil end
 		weapon = weapon or target.combat
 
-		if target:checkHit(self:combatAttackStr(weapon.combat), target:combatPhysicalResist(), 0, 95, 8 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
-			target:setEffect(target.EFF_DAZED, 5, {})
+		if target:canBe("stun") then
+			target:setEffect(target.EFF_DAZED, 5, {apply_power=self:combatAttackStr(weapon.combat)})
 		else
 			game.logSeen(target, "%s resists the terror!", target.name:capitalize())
 		end

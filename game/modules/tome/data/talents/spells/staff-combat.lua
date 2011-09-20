@@ -180,8 +180,8 @@ newTalent{
 
 		-- Try to stun !
 		if hit then
-			if target:checkHit(self:combatAttackStr(weapon.combat), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
-				target:setEffect(target.EFF_DAZED, t.getDazeDuration(self, t), {})
+			if target:canBe("stun") then
+				target:setEffect(target.EFF_DAZED, t.getDazeDuration(self, t), {apply_power=self:combatAttackStr(weapon.combat)})
 			else
 				game.logSeen(target, "%s resists the dazing blow!", target.name:capitalize())
 			end

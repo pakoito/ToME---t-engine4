@@ -334,8 +334,13 @@ function _M:display()
 		local e = player.tempeffect_def[eff_id]
 		local dur = p.dur + 1
 		local name = e.desc
+		local desc = nil
 		if e.display_desc then name = e.display_desc(self, p) end
-		local desc = ("#{bold}##GOLD#%s (%s / %s)#WHITE##{normal}#\n"):format(name, e.type, e.status)..e.long_desc(player, p)
+		if p.save_string and p.amount_decreased and p.maximum and p.total_dur then
+			desc = ("#{bold}##GOLD#%s (%s / %s)#WHITE##{normal}#\n"):format(name, e.type, e.status)..e.long_desc(player, p).." "..("%s reduced the duration of this effect by %d turns, from %d to %d."):format(p.save_string, p.amount_decreased, p.maximum, p.total_dur)
+		else
+			desc = ("#{bold}##GOLD#%s (%s / %s)#WHITE##{normal}#\n"):format(name, e.type, e.status)..e.long_desc(player, p)
+		end
 		if e.status == "detrimental" then
 			self:mouseTooltip(desc, self:makeTexture((e.decrease > 0) and ("#LIGHT_RED#%s(%d)"):format(name, dur) or ("#LIGHT_RED#%s"):format(name), x, h, 255, 255, 255)) h = h + self.font_h
 		else

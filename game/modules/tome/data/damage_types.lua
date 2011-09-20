@@ -387,8 +387,8 @@ newDamageType{
 		DamageType:get(DamageType.TEMPORAL).projector(src, x, y, DamageType.TEMPORAL, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("stun") then
-				target:setEffect(target.EFF_STUNNED, 4, {})
+			if target:canBe("stun") then
+				target:setEffect(target.EFF_STUNNED, 4, {apply_power=src:combatSpellpower()})
 			else
 				game.logSeen(target, "%s resists the stun!", target.name:capitalize())
 			end
@@ -429,8 +429,8 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			if target:checkHit(src:combatMindpower() * 0.7, target:combatMentalResist(), 0, 95, 15) and target:canBe("silence") then
-				target:setEffect(target.EFF_SILENCED, math.ceil(dam), {})
+			if target:canBe("silence") then
+				target:setEffect(target.EFF_SILENCED, math.ceil(dam), {apply_power=src:combatMindpower() * 0.7})
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end
@@ -444,8 +444,8 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and rng.percent(dam) then
-			if target:checkHit(src:combatAttackDex() * 0.7, target:combatPhysicalResist(), 0, 95, 15) and target:canBe("silence") then
-				target:setEffect(target.EFF_SILENCED, 4, {})
+			if target:canBe("silence") then
+				target:setEffect(target.EFF_SILENCED, 4, {apply_power=src:combatAttackDex()*0.7})
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end
@@ -459,8 +459,8 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("blind") then
-				target:setEffect(target.EFF_BLINDED, math.ceil(dam), {})
+			if target:canBe("blind") then
+				target:setEffect(target.EFF_BLINDED, math.ceil(dam), {apply_power=src:combatSpellpower()})
 			else
 				game.logSeen(target, "%s resists the blinding light!", target.name:capitalize())
 			end
@@ -472,8 +472,8 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			if target:checkHit(src:combatAttack(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("blind") then
-				target:setEffect(target.EFF_BLINDED, math.ceil(dam), {})
+			if target:canBe("blind") then
+				target:setEffect(target.EFF_BLINDED, math.ceil(dam), {apply_power=src:combatAttack()})
 			else
 				game.logSeen(target, "%s resists the blinding light!", target.name:capitalize())
 			end
@@ -485,10 +485,10 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			if target:checkHit(src:combatAttackStr(), target:combatMentalResist(), 0, 95, 15) and target:canBe("blind") then
-				target:setEffect(target.EFF_BLINDED, math.ceil(dam), {})
+			if target:canBe("blind") then
+				target:setEffect(target.EFF_BLINDED, math.ceil(dam), {apply_power=src:combatAttackStr(), apply_save="combatPhysicalResist"})
 			else
-				game.logSeen(target, "%s resists the blinding light!", target.name:capitalize())
+				game.logSeen(target, "%s avoids the blinding ink!", target.name:capitalize())
 			end
 		end
 	end,
@@ -498,8 +498,8 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			if target:checkHit(dam.power, target:combatMentalResist(), 0, 95, 15) and target:canBe("blind") then
-				target:setEffect(target.EFF_BLINDED, math.ceil(dam.turns), {})
+			if target:canBe("blind") then
+				target:setEffect(target.EFF_BLINDED, math.ceil(dam.turns), {apply_power=dam.power, apply_save="combatMentalResist"})
 			else
 				game.logSeen(target, "%s resists the blinding light!", target.name:capitalize())
 			end
@@ -554,8 +554,8 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
 			-- Set on fire!
-			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("stun") then
-				target:setEffect(target.EFF_STUNNED, 4, {})
+			if target:canBe("stun") then
+				target:setEffect(target.EFF_STUNNED, 4, {apply_power=src:combatSpellpower()})
 			else
 				game.logSeen(target, "%s resists the darkness!", target.name:capitalize())
 			end
@@ -592,8 +592,8 @@ newDamageType{
 		DamageType:get(DamageType.COLD).projector(src, x, y, DamageType.COLD, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("stun") then
-				target:setEffect(target.EFF_STUNNED, 4, {})
+			if target:canBe("stun") then
+				target:setEffect(target.EFF_STUNNED, 4, {apply_power=src:combatSpellpower()})
 			else
 				game.logSeen(target, "%s resists the stun!", target.name:capitalize())
 			end
@@ -608,8 +608,8 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
 			-- Set on fire!
-			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("stun") then
-				target:setEffect(target.EFF_BURNING_SHOCK, dam.dur, {src=src, power=dam.dam / dam.dur})
+			if target:canBe("stun") then
+				target:setEffect(target.EFF_BURNING_SHOCK, dam.dur, {src=src, power=dam.dam / dam.dur, apply_power=src:combatSpellpower()})
 			else
 				game.logSeen(target, "%s resists the searing flame!", target.name:capitalize())
 			end
@@ -636,8 +636,8 @@ newDamageType{
 		DamageType:get(DamageType.COLD).projector(src, x, y, DamageType.COLD, dam.dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("pin") and target:canBe("stun") and not target:attr("fly") and not target:attr("levitation") then
-				target:setEffect(target.EFF_FROZEN_FEET, dam.dur, {})
+			if target:canBe("pin") and target:canBe("stun") and not target:attr("fly") and not target:attr("levitation") then
+				target:setEffect(target.EFF_FROZEN_FEET, dam.dur, {apply_power=src:combatSpellpower()})
 			end
 		end
 	end,
@@ -651,8 +651,8 @@ newDamageType{
 		if target then
 			-- Freeze it, if we pass the test
 			local sx, sy = game.level.map:getTileToScreen(x, y)
-			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("stun") then
-				target:setEffect(target.EFF_FROZEN, dam.dur, {hp=dam.hp * 1.5})
+			if target:canBe("stun") then
+				target:setEffect(target.EFF_FROZEN, dam.dur, {hp=dam.hp * 1.5, apply_power=src:combatSpellpower(), min_dur=1})
 
 				game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -3, "Frozen!", {0,255,155})
 			else
@@ -669,8 +669,8 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			if target:checkHit(src:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("blind") then
-				target:setEffect(target.EFF_DIM_VISION, 7, {sight=dam})
+			if target:canBe("blind") then
+				target:setEffect(target.EFF_DIM_VISION, 7, {sight=dam, apply_power=src:combatAttackDex()})
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end
@@ -685,8 +685,8 @@ newDamageType{
 		local realdam = DamageType:get(DamageType.ACID).projector(src, x, y, DamageType.ACID, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and rng.percent(25) then
-			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("blind") then
-				target:setEffect(target.EFF_BLINDED, 3, {src=src})
+			if target:canBe("blind") then
+				target:setEffect(target.EFF_BLINDED, 3, {src=src, apply_power=src:combatSpellpower()})
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end
@@ -702,8 +702,8 @@ newDamageType{
 		local realdam = DamageType:get(DamageType.ACID).projector(src, x, y, DamageType.DARKNESS, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and rng.percent(25) then
-			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("blind") then
-				target:setEffect(target.EFF_BLINDED, 3, {src=src})
+			if target:canBe("blind") then
+				target:setEffect(target.EFF_BLINDED, 3, {src=src, apply_power=src:combatSpellpower()})
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end
@@ -720,8 +720,8 @@ newDamageType{
 		local realdam = DamageType:get(DamageType.LIGHTNING).projector(src, x, y, DamageType.LIGHTNING, dam.dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and rng.percent(dam.daze) then
-			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("stun") then
-				target:setEffect(target.EFF_DAZED, 3, {src=src})
+			if target:canBe("stun") then
+				target:setEffect(target.EFF_DAZED, 3, {src=src, apply_power=src:combatSpellpower()})
 				if src:isTalentActive(src.T_HURRICANE) then
 					local t = src:getTalentFromId(src.T_HURRICANE)
 					t.do_hurricane(src, t, target)
@@ -858,7 +858,7 @@ newDamageType{
 		local realdam = DamageType:get(DamageType.NATURE).projector(src, x, y, DamageType.NATURE, dam / 6)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and target:canBe("poison") then
-			target:setEffect(target.EFF_POISONED, 5, {src=src, power=dam / 6})
+			target:setEffect(target.EFF_POISONED, 5, {src=src, power=dam / 6, apply_power=src:combatAttack()})
 		end
 		return realdam
 	end,
@@ -950,7 +950,7 @@ newDamageType{
 	end,
 }
 
--- Poisoning damage
+
 newDamageType{
 	name = "dig", type = "DIG",
 	projector = function(src, x, y, typ, dam)
@@ -977,11 +977,7 @@ newDamageType{
 		if target then
 			-- Freeze it, if we pass the test
 			local sx, sy = game.level.map:getTileToScreen(x, y)
-			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 20) then
-				target:setEffect(target.EFF_SLOW, 7, {power=dam})
-			else
-				game.logSeen(target, "%s resists!", target.name:capitalize())
-			end
+			target:setEffect(target.EFF_SLOW, 7, {power=dam, apply_power=src:combatSpellpower()})
 		end
 	end,
 }
@@ -994,11 +990,12 @@ newDamageType{
 		if target then
 			-- Freeze it, if we pass the test
 			local sx, sy = game.level.map:getTileToScreen(x, y)
-			if src == target or target:checkHit(src:combatSpellpower(), target:combatSpellResist() + (target:attr("continuum_destabilization") or 0), 0, 95, 20) then
+			if src == target then
 				target:setEffect(target.EFF_TIME_PRISON, dam, {})
 				target:setEffect(target.EFF_CONTINUUM_DESTABILIZATION, 100, {power=src:combatSpellpower(0.3)})
 			else
-				game.logSeen(target, "%s resists!", target.name:capitalize())
+				target:setEffect(target.EFF_TIME_PRISON, dam, {apply_power=src:combatSpellpower() - (target:attr("continuum_destabilization") or 0), apply_save="combatSpellResist"})
+				target:setEffect(target.EFF_CONTINUUM_DESTABILIZATION, 100, {power=src:combatSpellpower(0.3)})
 			end
 		end
 	end,
@@ -1010,8 +1007,8 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			if target:checkHit((dam.power_check or src.combatSpellpower)(src), (dam.resist_check or target.combatMentalResist)(target), 0, 95, 15) and target:canBe("confusion") then
-				target:setEffect(target.EFF_CONFUSED, dam.dur, {power=dam.dam})
+			if target:canBe("confusion") then
+				target:setEffect(target.EFF_CONFUSED, dam.dur, {power=dam.dam, apply_power=(dam.power_check or src.combatSpellpower)(src)})
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end
@@ -1026,8 +1023,8 @@ newDamageType{
 		if _G.type(dam) == "number" then dam = {dam=dam} end
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and rng.percent(dam.dam) then
-			if target:checkHit((dam.power_check or src.combatSpellpower)(src), (dam.resist_check or target.combatMentalResist)(target), 0, 95, 15) and target:canBe("confusion") then
-				target:setEffect(target.EFF_CONFUSED, dam.dam, {power=75})
+			if target:canBe("confusion") then
+				target:setEffect(target.EFF_CONFUSED, dam.dam, {power=75, apply_power=(dam.power_check or src.combatSpellpower)(src)})
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end
@@ -1042,8 +1039,8 @@ newDamageType{
 		if _G.type(dam) == "number" then dam = {dam=dam} end
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and rng.percent(dam.dam) then
-			if target:checkHit((dam.power_check or src.combatSpellpower)(src), (dam.resist_check or target.combatMentalResist)(target), 0, 95, 15) and target:canBe("confusion") then
-				target:setEffect(target.EFF_BLINDED, dam.dam, {})
+			if target:canBe("blind") then
+				target:setEffect(target.EFF_BLINDED, dam.dam, {apply_power=(dam.power_check or src.combatSpellpower)(src)})
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end
@@ -1058,8 +1055,8 @@ newDamageType{
 		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam.dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			if target:checkHit(src:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("blind") then
-				target:setEffect(target.EFF_BLINDED, dam.dur, {})
+			if target:canBe("blind") then
+				target:setEffect(target.EFF_BLINDED, dam.dur, {apply_power=src:combatAttackStr(), apply_save="combatPhysicalResist"})
 			else
 				game.logSeen(target, "%s resists the sandstorm!", target.name:capitalize())
 			end
@@ -1074,8 +1071,8 @@ newDamageType{
 		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam.dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			if target:checkHit(src:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("pin") then
-				target:setEffect(target.EFF_PINNED, dam.dur, {})
+			if target:canBe("pin") then
+				target:setEffect(target.EFF_PINNED, dam.dur, {apply_power=src:combatAttackStr()})
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end
@@ -1235,8 +1232,8 @@ newDamageType{
 		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and rng.percent(25) then
-			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("stun") then
-				target:setEffect(target.EFF_STUNNED, 2, {src=src})
+			if target:canBe("stun") then
+				target:setEffect(target.EFF_STUNNED, 2, {src=src, apply_power=src:combatSpellpower(), min_dur=1})
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end
@@ -1295,8 +1292,8 @@ newDamageType{
 					reapplied = true
 				end
 			end
-			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 20) and target:canBe("pin") then
-				target:setEffect(target.EFF_PINNED, 2, {}, reapplied)
+			if target:canBe("pin") then
+				target:setEffect(target.EFF_PINNED, 2, {apply_power=src:combatSpellpower(), min_dur=1}, reapplied)
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end
@@ -1352,8 +1349,8 @@ newDamageType{
 		if target then
 			if target == src then
 				target:setEffect(target.EFF_SANCTITY, 1, {power=dam})
-			elseif target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) then
-				target:setEffect(target.EFF_SILENCED, 2, {}, true)
+			elseif target:canBe("silence") then
+				target:setEffect(target.EFF_SILENCED, 2, {apply_power=src:combatSpellpower(), min_dur=1}, true)
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end
@@ -1417,7 +1414,7 @@ newDamageType{
 		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			if target:checkHit(src:combatMindpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
+			if target:canBe("knockback") then
 				target:knockback(src.x, src.y, 3)
 				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
 			else
@@ -1432,13 +1429,8 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			-- Freeze it, if we pass the test
-			local sx, sy = game.level.map:getTileToScreen(x, y)
-			if target:checkHit(src:combatMindpower(), target:combatPhysicalResist(), 0, 95, 20) then
-				target:setEffect(target.EFF_SLOW, 4, {power=dam})
-			else
-				game.logSeen(target, "%s resists!", target.name:capitalize())
-			end
+			local sx, sy = game.level.map:getTileToScreen(x, y)		
+			target:setEffect(target.EFF_SLOW, 4, {power=dam, apply_power=src:combatMindpower()})
 		end
 	end,
 }
@@ -1451,8 +1443,8 @@ newDamageType{
 		if target then
 			-- Freeze it, if we pass the test
 			local sx, sy = game.level.map:getTileToScreen(x, y)
-			if target:checkHit(src:combatMindpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("stun") then
-				target:setEffect(target.EFF_FROZEN, dam, {hp=70 + src:combatMindpower() * 10})
+			if target:canBe("stun") then
+				target:setEffect(target.EFF_FROZEN, dam, {hp=70 + src:combatMindpower() * 10, apply_power=src:combatMindpower()})
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end
@@ -1482,11 +1474,7 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
 			local dam = 2 + math.ceil(dam / 15)
-			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) then
-				target:setEffect(target.EFF_TURN_BACK_THE_CLOCK, 3, {power=dam})
-			else
-				game.logSeen(target, "%s resists!", target.name:capitalize())
-			end
+			target:setEffect(target.EFF_TURN_BACK_THE_CLOCK, 3, {power=dam, apply_power=src:combatSpellpower(), min_dur=1})
 		end
 		-- Reduce Con then deal the damage
 		DamageType:get(DamageType.TEMPORAL).projector(src, x, y, DamageType.TEMPORAL, dam)
@@ -1517,8 +1505,8 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("stun") then
-				target:setEffect(target.EFF_STUNNED, dam, {})
+			if target:canBe("stun") then
+				target:setEffect(target.EFF_STUNNED, dam, {apply_power=src:combatSpellpower()})
 			else
 				game.logSeen(target, "%s has not been stopped!", target.name:capitalize())
 			end
@@ -1535,26 +1523,26 @@ newDamageType{
 		if target then
 			if src then src:incParadox(-dam.reduction) end
 			if chance == 1 then
-				if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("stun") then
-					target:setEffect(target.EFF_DAZED, 3, {})
+				if target:canBe("stun") then
+					target:setEffect(target.EFF_DAZED, 3, {apply_power=src:combatSpellpower()})
 				else
 					game.logSeen(target, "%s resists the daze!", target.name:capitalize())
 				end
 			elseif chance == 2 then
-				if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("blind") then
-					target:setEffect(target.EFF_BLINDED, 3, {})
+				if target:canBe("blind") then
+					target:setEffect(target.EFF_BLINDED, 3, {apply_power=src:combatSpellpower()})
 				else
 					game.logSeen(target, "%s resists the blindness!", target.name:capitalize())
 				end
 			elseif chance == 3 then
 				if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("pin") then
-					target:setEffect(target.EFF_PINNED, 3, {})
+					target:setEffect(target.EFF_PINNED, 3, {apply_power=src:combatSpellpower()})
 				else
 					game.logSeen(target, "%s resists the pin!", target.name:capitalize())
 				end
 			elseif chance == 4 then
-				if target:checkHit(src:combatSpellpower(), target:combatMentalResist(), 0, 95, 15) and target:canBe("confusion") then
-					target:setEffect(target.EFF_CONFUSED, 3, {power=60})
+				if target:canBe("confusion") then
+					target:setEffect(target.EFF_CONFUSED, 3, {power=60, apply_power=src:combatSpellpower()})
 				else
 					game.logSeen(target, "%s resists the confusion!", target.name:capitalize())
 				end
@@ -1602,18 +1590,14 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		local reapplied = false
 		if target then
-			-- silence the apply message it if the target already has the effect
+			-- silence the apply message if the target already has the effect
 			for eff_id, p in pairs(target.tmp) do
 				local e = target.tempeffect_def[eff_id]
 				if e.desc == "Slow" then
 					reapplied = true
 				end
 			end
-			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) then
-				target:setEffect(target.EFF_SLOW, 3, {power=dam.slow}, reapplied)
-			else
-				game.logSeen(target, "%s resists the slow", target.name:capitalize())
-			end
+			target:setEffect(target.EFF_SLOW, 3, {power=dam.slow, apply_power=src:combatSpellpower()}, reapplied)
 		end
 	end,
 }
@@ -1684,8 +1668,8 @@ newDamageType{
 			end
 
 			local what = rng.percent(50) and "blind" or "confusion"
-			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe(what) then
-				target:setEffect(what == "blind" and target.EFF_BANE_BLINDED or target.EFF_BANE_CONFUSED, math.ceil(dam.dur), {src=src, power=50, dam=dam.dam})
+			if target:canBe(what) then
+				target:setEffect(what == "blind" and target.EFF_BANE_BLINDED or target.EFF_BANE_CONFUSED, math.ceil(dam.dur), {src=src, power=50, dam=dam.dam, apply_power=src:combatSpellpower()})
 			else
 				game.logSeen(target, "%s resists the bane!", target.name:capitalize())
 			end
@@ -1700,10 +1684,8 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
 			DamageType:get(DamageType.DARKNESS).projector(src, x, y, DamageType.DARKNESS, dam.dam)
-			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) then
-				target:setEffect(target.EFF_SLOW, dam.dur, {power=dam.speed})
-			end
-			target:setEffect(target.EFF_RIGOR_MORTIS, dam.dur, {power=dam.minion})
+			target:setEffect(target.EFF_SLOW, dam.dur, {power=dam.speed, apply_power=src:combatSpellpower()})
+			target:setEffect(target.EFF_RIGOR_MORTIS, dam.dur, {power=dam.minion, apply_power=src:combatSpellpower()})
 		end
 	end,
 }
@@ -1725,12 +1707,7 @@ newDamageType{
 					reapplied = true
 				end
 			end
-			if target:checkHit(src:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) then
-				target:setEffect(target.EFF_ABYSSAL_SHROUD, 2, {power=dam.power, lite=dam.lite}, reapplied)
-			else
-				game.logSeen(target, "%s resists the shroud!", target.name:capitalize())
-			end
-
+			target:setEffect(target.EFF_ABYSSAL_SHROUD, 2, {power=dam.power, lite=dam.lite, apply_power=src:combatSpellpower(), min_dur=1}, reapplied)
 			DamageType:get(DamageType.DARKNESS).projector(src, x, y, DamageType.DARKNESS, dam.dam)
 		end
 	end,

@@ -39,8 +39,8 @@ newTalent{
 		local hitted = self:attackTarget(target, nil, t.getDamage(self, t), true)
 
 		if hitted then
-			if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
-				target:setEffect(target.EFF_STUNNED, t.getDuration(self, t), {})
+			if target:canBe("stun") then
+				target:setEffect(target.EFF_STUNNED, t.getDuration(self, t), {apply_power=self:combatAttackDex()})
 			else
 				game.logSeen(target, "%s resists the stun!", target.name:capitalize())
 			end
@@ -133,18 +133,14 @@ newTalent{
 		local hitted = self:attackTarget(target, nil, t.getDamage(self, t), true)
 
 		if hitted then
-			if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) then
-				local tw = target:getInven("MAINHAND")
-				if tw then
-					tw = tw[1] and tw[1].combat
-				end
-				tw = tw or target.combat
-				local atk = target:combatAttack(tw) * (t.getAttackPenalty(self, t)) / 100
-				local dam = target:combatDamage(tw) * (t.getDamagePenalty(self, t)) / 100
-				target:setEffect(target.EFF_CRIPPLE, t.getDuration(self, t), {atk=atk, dam=dam})
-			else
-				game.logSeen(target, "%s is not crippled!", target.name:capitalize())
+			local tw = target:getInven("MAINHAND")
+			if tw then
+				tw = tw[1] and tw[1].combat
 			end
+			tw = tw or target.combat
+			local atk = target:combatAttack(tw) * (t.getAttackPenalty(self, t)) / 100
+			local dam = target:combatDamage(tw) * (t.getDamagePenalty(self, t)) / 100
+			target:setEffect(target.EFF_CRIPPLE, t.getDuration(self, t), {atk=atk, dam=dam, apply_power=self:combatAttackDex()})
 		end
 
 		return true

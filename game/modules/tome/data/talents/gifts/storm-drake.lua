@@ -119,8 +119,8 @@ newTalent{
 				local DT = require("engine.DamageType")
 				src:project({type="ball", radius=1}, self.x, self.y, DT.LIGHTNING, self.def.dam)
 				src:project({type="ball", radius=1}, self.x, self.y, DT.MINDKNOCKBACK, self.def.dam)
-				if target:checkHit(src:combatMindpower(), target:combatPhysicalResist(), 10) and target:canBe("stun") then
-					target:setEffect(target.EFF_STUNNED, 4, {})
+				if target:canBe("stun") then
+					target:setEffect(target.EFF_STUNNED, 4, {apply_power=src:combatMindpower()})
 				else
 					game.logSeen(target, "%s resists the tornado!", target.name:capitalize())
 				end

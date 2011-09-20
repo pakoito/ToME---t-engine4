@@ -34,8 +34,8 @@ newEntity{ base = "TRAP_NATURAL_FOREST",
 	pressure_trap = true,
 	message = "@Target@ slides on a rock!",
 	triggered = function(self, x, y, who)
-		if who:checkHit(self.disarm_power + 5, who:combatPhysicalResist(), 0, 95, 15) and who:canBe("stun") then
-			who:setEffect(who.EFF_STUNNED, 4, {})
+		if who:canBe("stun") then
+			who:setEffect(who.EFF_STUNNED, 4, {apply_power=self.disarm_power + 5})
 		else
 			game.logSeen(who, "%s resists!", who.name:capitalize())
 		end
@@ -49,4 +49,5 @@ newEntity{ base = "TRAP_NATURAL_FOREST",
 	color=colors.GREEN,
 	message = "A poisonous vine strikes at @Target@!",
 	dam = resolvers.mbonus(150, 15), damtype = DamageType.POISON,
+	combatAttack = function(self) return self.dam end
 }

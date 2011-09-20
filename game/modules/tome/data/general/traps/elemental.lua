@@ -83,6 +83,7 @@ newEntity{ base = "TRAP_ELEMENTAL",
 	color_r=0, color_g=220, color_b=0,
 	message = "A stream of poison gushes onto @target@!",
 	dam = resolvers.mbonus_level(100, 5), damtype = DamageType.POISON,
+	combatAttack = function(self) return self.dam end
 }
 
 -------------------------------------------------------
@@ -133,4 +134,5 @@ newEntity{ base = "TRAP_ELEMENTAL_BLAST", image = "trap/trap_poison_blast_01.png
 	color_r=0, color_g=220, color_b=0,
 	message = "A stream of poison gushes onto @target@!",
 	dam = resolvers.mbonus_level(250, 5), damtype = DamageType.POISON, radius = 2,
+	combatAttack = function(self) return self.dam end
 }

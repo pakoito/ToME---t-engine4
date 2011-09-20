@@ -107,8 +107,8 @@ newTalent{
 		if not x or not y then return nil end
 		self:project(tg, x, y, function(px, py)
 			local target = game.level.map(px, py, Map.ACTOR)
-			if not target or not target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 10) then return end
-			target:setEffect(target.EFF_BATTLE_CRY, 7, {power=7 * self:getTalentLevel(t)})
+			if not target then return end
+			target:setEffect(target.EFF_BATTLE_CRY, 7, {power=7 * self:getTalentLevel(t), apply_power=self:combatAttackStr()})
 		end, {type="flame"})
 		return true
 	end,

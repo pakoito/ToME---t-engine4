@@ -70,8 +70,8 @@ newTalent{
 			target:pull(self.x, self.y, tg.range)
 
 			DamageType:get(DamageType.PHYSICAL).projector(self, px, py, DamageType.PHYSICAL, dam)
-			if target:checkHit(self:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 10) and target:canBe("pin") then
-				target:setEffect(target.EFF_PINNED, math.floor(3 + self:getTalentLevel(t)), {})
+			if target:canBe("pin") then
+				target:setEffect(target.EFF_PINNED, math.floor(3 + self:getTalentLevel(t)), {apply_power=self:combatSpellpower()})
 			else
 				game.logSeen(target, "%s resists the bone!", target.name:capitalize())
 			end

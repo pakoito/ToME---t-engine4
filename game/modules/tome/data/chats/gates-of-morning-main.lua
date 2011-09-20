@@ -96,10 +96,22 @@ The known bastions of the Pride are:
 - Grushnak Pride, on the eastern slope of the High Peak]],
 -- - A group of corrupted humans live in Eastport on the southern coastline; they have contact with the Pride
 	answers = {
-		{"I will investigate them.", jump="welcome", action=function(npc, player)
+		{"I will investigate them.", jump="relentless", action=function(npc, player)
 			player:setQuestStatus("orc-hunt", engine.Quest.DONE)
 			player:grantQuest("orc-pride")
 			game.logPlayer(game.player, "Aeryn points to the known locations on your map.")
+		end},
+	},
+}
+
+newChat{ id="relentless",
+	text = [[One more bit of aid I might give you before you go. Your tale has moved me, and the very stars shine with approval of your relentless pursuit. Take their blessing, and let nothing stop you in your quest.
+	#LIGHT_GREEN#*She touches your forehead with one cool hand, and you feel a surge of power*
+	]],
+	answers = {
+		{"I'll leave not a single orc standing.", jump="welcome", action=function(npc, player)
+			player:learnTalent(player.T_RELENTLESS_PURSUIT, true, 1)
+			game.logPlayer(game.player, "#VIOLET#You have learned the talent Relentless Pursuit.")
 		end},
 	},
 }

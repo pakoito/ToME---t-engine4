@@ -68,7 +68,7 @@ newTalent{
 
 		local hit = self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 1, 1.7), true)
 		if hit then
-			if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 5) and target:canBe("cut") then
+			if target:canBe("cut") then
 				local sw = self:getInven("MAINHAND")
 				if sw then
 					sw = sw[1] and sw[1].combat
@@ -79,7 +79,7 @@ newTalent{
 				dam = rng.range(dam, dam * damrange)
 				dam = dam * self:combatTalentWeaponDamage(t, 2, 3.2)
 
-				target:setEffect(target.EFF_DEEP_WOUND, 7, {src=self, heal_factor=self:getTalentLevel(t) * 10, power=dam / 7})
+				target:setEffect(target.EFF_DEEP_WOUND, 7, {src=self, heal_factor=self:getTalentLevel(t) * 10, power=dam / 7, apply_power=self:combatAttackDex()})
 			end
 		end
 		return true

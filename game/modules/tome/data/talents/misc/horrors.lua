@@ -48,8 +48,8 @@ newTalent{
 
 		local hit = self:attackTarget(target, nil, t.getDamage(self, t), true)
 		if hit then
-			if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 5) and target:canBe("cut") then
-				target:setEffect(target.EFF_DEEP_WOUND, 5, {src=self, heal_factor=t.getHealingPenalty(self, t), power=t.getBleedDamage(self, t)/5})
+			if target:canBe("cut") then
+				target:setEffect(target.EFF_DEEP_WOUND, 5, {src=self, heal_factor=t.getHealingPenalty(self, t), power=t.getBleedDamage(self, t)/5, apply_power=self:combatAttackStr()})
 			end
 		end
 		return true
@@ -149,8 +149,8 @@ newTalent{
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		local hit = self:attackTarget(target, nil, t.getDamage(self, t), true)
 
-		if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 8 - self:getTalentLevel(t) / 2) and target:canBe("cut") then
-			target:setEffect(target.EFF_CUT, 5, {power=t.getBleedDamage(self, t), src=self})
+		if target:canBe("cut") then
+			target:setEffect(target.EFF_CUT, 5, {power=t.getBleedDamage(self, t), src=self, apply_power=self:combatAttackStr()})
 			t.do_devourer_frenzy(self, target, t)
 		else
 			game.logSeen(target, "%s resists the cut!", target.name:capitalize())
@@ -264,8 +264,8 @@ newTalent{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if not target then return nil end
 
-		if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("fear") then
-			target:setEffect(target.EFF_INNER_DEMONS, t.getDuration(self, t), {src = self, chance=t.getChance(self, t)})
+		if target:canBe("fear") then
+			target:setEffect(target.EFF_INNER_DEMONS, t.getDuration(self, t), {src = self, chance=t.getChance(self, t), apply_power=self:combatSpellpower()})
 		else
 			game.logSeen(target, "%s resists the demons!", target.name:capitalize())
 		end
@@ -302,8 +302,8 @@ newTalent{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if not target then return nil end
 
-		if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 15) and target:canBe("fear") then
-			target:setEffect(target.EFF_WAKING_NIGHTMARE, t.getDuration(self, t), {src = self, chance=t.getChance(self, t), dam=t.getDamage(self, t)})
+		if target:canBe("fear") then
+			target:setEffect(target.EFF_WAKING_NIGHTMARE, t.getDuration(self, t), {src = self, chance=t.getChance(self, t), dam=t.getDamage(self, t), apply_power=self:combatSpellpower()})
 		else
 			game.logSeen(target, "%s resists the nightmare!", target.name:capitalize())
 		end
@@ -389,8 +389,8 @@ newTalent{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if not target then return nil end
 
-		if target:checkHit(self:combatMindpower(), target:combatMentalResist(), 0, 95, 15) and target:canBe("fear") then
-			target:setEffect(target.EFF_VOID_ECHOES, 6, {src=self, power=t.getDamage(self, t)})
+		if target:canBe("fear") then
+			target:setEffect(target.EFF_VOID_ECHOES, 6, {src=self, power=t.getDamage(self, t), apply_power=self:combatMindpower()})
 		else
 			game.logSeen(target, "%s resists the void!", target.name:capitalize())
 		end
@@ -527,8 +527,8 @@ newTalent{
 		self:project(tg, x, y, function(px, py)
 			local target = game.level.map(px, py, engine.Map.ACTOR)
 			if not target then return end
-			if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 12 - self:getTalentLevel(t)) and target:canBe("disease") then
-				target:setEffect(target.EFF_WORM_ROT, t.getDuration(self, t), {src=self, dam=t.getDamage(self, t), burst=t.getBurstDamage(self, t), rot_timer = 5})
+			if target:canBe("disease") then
+				target:setEffect(target.EFF_WORM_ROT, t.getDuration(self, t), {src=self, dam=t.getDamage(self, t), burst=t.getBurstDamage(self, t), rot_timer = 5, apply_power=self:combatSpellpower()})
 			else
 				game.logSeen(target, "%s resists the worm rot!", target.name:capitalize())
 			end

@@ -47,8 +47,8 @@ newTalent{
 		local hit = self:attackTarget(target, nil, t.getDamage(self, t), true)
 
 		if hit then
-			if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
-				target:setEffect(target.EFF_STUNNED, t.getDuration(self, t), {})
+			if target:canBe("stun") then
+				target:setEffect(target.EFF_STUNNED, t.getDuration(self, t), {apply_power=self:combatAttackStr()})
 			else
 				game.logSeen(target, "%s resists the stun!", target.name:capitalize())
 			end
@@ -158,8 +158,8 @@ newTalent{
 
 		if hit then
 			-- try to daze
-			if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
-				target:setEffect(target.EFF_DAZED, t.getDuration(self, t), {})
+			if target:canBe("stun") then
+				target:setEffect(target.EFF_DAZED, t.getDuration(self, t), {apply_power=self:combatAttackStr()})
 			else
 				game.logSeen(target, "%s resists the body shot!", target.name:capitalize())
 			end

@@ -40,8 +40,8 @@ newTalent{
 		self:project(tg, x, y, function(px, py)
 			local target = game.level.map(px, py, engine.Map.ACTOR)
 			if not target then return end
-			if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 12 - self:getTalentLevel(t)) and target:canBe("disease") then
-				target:setEffect(disease[1], 6, {src=self, dam=self:combatTalentSpellDamage(t, 5, 45), [disease[2]]=self:combatTalentSpellDamage(t, 5, 25)})
+			if target:canBe("disease") then
+				target:setEffect(disease[1], 6, {src=self, dam=self:combatTalentSpellDamage(t, 5, 45), [disease[2]]=self:combatTalentSpellDamage(t, 5, 25), apply_power=self:combatSpellpower()})
 			else
 				game.logSeen(target, "%s resists the disease!", target.name:capitalize())
 			end
@@ -166,8 +166,8 @@ newTalent{
 				DamageType:get(DamageType.BLIGHT).projector(self, px, py, DamageType.BLIGHT, d.params.dam * d.params.dur)
 			end
 
-			if #diseases > 0 and target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 8) and target:canBe("stun") then
-				target:setEffect(target.EFF_STUNNED, dur, {})
+			if #diseases > 0 and target:canBe("stun") then
+				target:setEffect(target.EFF_STUNNED, dur, {apply_power=self:combatSpellpower()})
 			elseif #diseases > 0 then
 				game.logSeen(target, "%s resists the stun!", target.name:capitalize())
 			end
@@ -212,8 +212,8 @@ newTalent{
 			local disease = rng.table(diseases)
 			local params = disease.params
 			params.src = self
-			if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 12 - self:getTalentLevel(t)) and target:canBe("disease") then
-				target:setEffect(disease.id, 6, {src=self, dam=disease.params.dam, str=disease.params.str, dex=disease.params.dex, con=disease.params.con, heal_factor=disease.params.heal_factor, burst=disease.params.burst})
+			if target:canBe("disease") then
+				target:setEffect(disease.id, 6, {src=self, dam=disease.params.dam, str=disease.params.str, dex=disease.params.dex, con=disease.params.con, heal_factor=disease.params.heal_factor, burst=disease.params.burst, apply_power=self:combatSpellpower()})
 			else
 				game.logSeen(target, "%s resists the disease!", target.name:capitalize())
 			end
@@ -229,8 +229,8 @@ newTalent{
 		self:project(tg, x, y, function(px, py)
 			local target = game.level.map(px, py, engine.Map.ACTOR)
 			if not target or (self:reactionToward(target) >= 0) then return end
-			if target:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 12 - self:getTalentLevel(t)) and target:canBe("disease") then
-				target:setEffect(self.EFF_EPIDEMIC, 6, {src=self, dam=self:combatTalentSpellDamage(t, 15, 50), heal_factor=40 + self:getTalentLevel(t) * 4})
+			if target:canBe("disease") then
+				target:setEffect(self.EFF_EPIDEMIC, 6, {src=self, dam=self:combatTalentSpellDamage(t, 15, 50), heal_factor=40 + self:getTalentLevel(t) * 4, apply_power=self:combatSpellpower()})
 			else
 				game.logSeen(target, "%s resists the disease!", target.name:capitalize())
 			end

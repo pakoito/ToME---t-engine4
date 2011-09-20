@@ -265,15 +265,15 @@ newTalent{
 			if hit then
 				if grappled then
 					self:project(target, x, y, DamageType.PHYSICAL, self:physicalCrit(t.getSlam(self, t), nil, target))
-					if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
-						target:setEffect(target.EFF_STUNNED, t.getDuration(self, t), {})
+					if target:canBe("stun") then
+						target:setEffect(target.EFF_STUNNED, t.getDuration(self, t), {apply_power=self:combatAttackStr()})
 					else
 						game.logSeen(target, "%s resists the stun!", target.name:capitalize())
 					end
 				else
 					self:project(target, x, y, DamageType.PHYSICAL, self:physicalCrit(t.getTakeDown(self, t), nil, target))
-					if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("stun") then
-						target:setEffect(target.EFF_DAZED, t.getDuration(self, t), {})
+					if target:canBe("stun") then
+						target:setEffect(target.EFF_DAZED, t.getDuration(self, t), {apply_power=self:combatAttackStr()})
 					else
 						game.logSeen(target, "%s resists the daze!", target.name:capitalize())
 					end
