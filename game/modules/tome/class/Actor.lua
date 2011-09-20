@@ -802,13 +802,6 @@ function _M:getRankLifeAdjust(value)
 	end
 end
 
-function _M:getRankSaveAdjust()
-	if self.rank <= 3 then return 0.5
-	elseif self.rank > 3 then return 1
-	else return 0
-	end
-end
-
 function _M:getRankResistAdjust()
 	if self.rank == 1 then return 0.4, 0.9
 	elseif self.rank == 2 then return 0.5, 1.5
@@ -1643,9 +1636,6 @@ function _M:levelup()
 		rating = rng.range(math.floor(self.life_rating * 0.5), math.floor(self.life_rating * 1.5))
 	end
 	self.max_life = self.max_life + math.max(self:getRankLifeAdjust(rating), 1)
-	self.combat_physresist = self.combat_physresist + self:getRankSaveAdjust()
-	self.combat_spellresist = self.combat_spellresist + self:getRankSaveAdjust()
-	self.combat_mentalresist = self.combat_mentalresist + self:getRankSaveAdjust()
 	
 	self:incMaxVim(self.vim_rating)
 	self:incMaxMana(self.mana_rating)
