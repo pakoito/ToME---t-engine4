@@ -156,20 +156,21 @@ newEntity{ base = "BASE_INFUSION",
 
 	inscription_kind = "protect",
 	inscription_data = resolvers.generic(function(e)
+		local what = {}
+		local effects = {physical=true, mental=true, magical=true}
+		local eff1 = rng.tableIndex(effects)
+		what[eff1] = true
+		local two = rng.percent(20) and true or false
+		if two then
+			local eff2 = rng.tableIndex(effects, {eff1})
+			what[eff2] = true
+		end
 		return {
 			cooldown = rng.range(12, 17),
 			dur = rng.mbonus(4, resolvers.current_level, resolvers.mbonus_max_level) + 4,
 			power = rng.mbonus(20, resolvers.current_level, resolvers.mbonus_max_level) + 10,
 			use_stat_mod = 0.1,
-			what = {
-				poison = true,
-				disease = rng.percent(40) and true or nil,
-				curse = rng.percent(40) and true or nil,
-				hex = rng.percent(40) and true or nil,
-				magical = rng.percent(40) and true or nil,
-				physical = rng.percent(40) and true or nil,
-				mental = rng.percent(40) and true or nil,
-			}
+			what=what,
 		}
 	end),
 	inscription_talent = "INFUSION:_WILD",

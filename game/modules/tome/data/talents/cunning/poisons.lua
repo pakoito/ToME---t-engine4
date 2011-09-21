@@ -94,7 +94,7 @@ newTalent{
 		local nb = 0
 		for eff_id, p in pairs(target.tmp) do
 			local e = target.tempeffect_def[eff_id]
-			if e.type == "poison" then nb = nb + 1 end
+			if e.subtype == "poison" then nb = nb + 1 end
 		end
 		local dam = self:combatTalentWeaponDamage(t, 0.5 + nb * 0.6, 0.9 + nb * 1)
 
@@ -135,7 +135,7 @@ newTalent{
 		local mod = (100 + self:combatTalentStatDamage(t, "cun", 40, 250)) / 100
 		for eff_id, p in pairs(target.tmp) do
 			local e = target.tempeffect_def[eff_id]
-			if e.type == "poison" then
+			if e.subtype == "poison" then
 				p.dur = math.ceil(p.dur / 2)
 				p.power = (p.power or 0) * mod
 			end
@@ -170,7 +170,7 @@ newTalent{
 
 		for eff_id, p in pairs(target.tmp) do
 			local e = target.tempeffect_def[eff_id]
-			if e.type == "poison" and p.src == self then
+			if e.subtype == "poison" and p.src == self then
 				for i, tgt in ipairs(possible) do if rng.percent(20 + self:getTalentLevelRaw(t) * 8) and not tgt:hasEffect(eff_id) and self:reactionToward(tgt) < 0 then
 					p.src = nil
 					local pp = table.clone(p)
@@ -195,7 +195,7 @@ local function checkChance(self, target)
 	local nb = 1
 	for eff_id, p in pairs(target.tmp) do
 		local e = target.tempeffect_def[eff_id]
-		if e.type == "poison" then nb = nb + 1 end
+		if e.subtype == "poison" then nb = nb + 1 end
 	end
 	return rng.percent(chance / nb)
 end

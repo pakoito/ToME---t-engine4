@@ -875,7 +875,7 @@ newDamageType{
 			local status = (src:reactionToward(target) >= 0) and "detrimental" or "beneficial"
 			for eff_id, p in pairs(target.tmp) do
 				local e = target.tempeffect_def[eff_id]
-				if e.status == status and (e.type == "magical" or e.type == "physical" or e.type == "curse" or e.type == "hex") then
+				if e.status == status and (e.type == "magical" or e.type == "physical") then
 					effs[#effs+1] = {"effect", eff_id}
 				end
 			end
@@ -1664,7 +1664,7 @@ newDamageType{
 		if target and (src:reactionToward(target) < 0 or dam.ff) then
 			for eff_id, p in pairs(target.tmp) do
 				local e = target.tempeffect_def[eff_id]
-				if e.type == "bane" then return end
+				if e.subtype == "bane" then return end
 			end
 
 			local what = rng.percent(50) and "blind" or "confusion"

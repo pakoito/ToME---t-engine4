@@ -51,7 +51,7 @@ newBirthDescriptor{
 		faction = "allied-kingdoms",
 		type = "humanoid", subtype="human",
 		resolvers.inscription("INFUSION:_REGENERATION", {cooldown=10, dur=5, heal=60}),
-		resolvers.inscription("INFUSION:_WILD", {cooldown=12, what={poison=true}, dur=4, power=14}),
+		resolvers.inscription("INFUSION:_WILD", {cooldown=12, what={physical=true}, dur=4, power=14}),
 		resolvers.inventory{ id=true, {defined="ORB_SCRYING"} },
 		resolvers.generic(function(e) e.hotkey[10] = {"inventory", "Orb of Scrying"} end),
 	},

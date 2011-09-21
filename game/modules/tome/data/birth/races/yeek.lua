@@ -49,7 +49,7 @@ newBirthDescriptor{
 		starting_intro = "yeek",
 		blood_color = colors.BLUE,
 		resolvers.inscription("INFUSION:_REGENERATION", {cooldown=10, dur=5, heal=60}),
-		resolvers.inscription("INFUSION:_WILD", {cooldown=12, what={poison=true}, dur=4, power=14}),
+		resolvers.inscription("INFUSION:_WILD", {cooldown=12, what={physical=true}, dur=4, power=14}),
 	},
 	random_escort_possibilities = { {"trollmire", 2, 3}, {"ruins-kor-pul", 1, 2}, {"daikara", 1, 3}, {"old-forest", 1, 5}, {"dreadfell", 1, 8}, {"reknor", 1, 2}, },
 }

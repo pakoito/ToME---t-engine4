@@ -2839,14 +2839,9 @@ end
 
 -- Tells on_set_temporary_effect() what save to use for a given effect type
 local save_for_effects = {
-	bane = "combatSpellResist",
-	curse = "combatMentalResist",
-	disease = "combatSpellResist",
-	hex = "combatSpellResist",
 	magical = "combatSpellResist",
 	mental = "combatMentalResist",
 	physical = "combatPhysicalResist",
-	poison = "combatPhysicalResist",
 }
 
 --- Adjust temporary effects
@@ -2876,11 +2871,11 @@ function _M:on_set_temporary_effect(eff_id, e, p)
 	if e.status == "detrimental" and self:knowTalent(self.T_RESILIENT_BONES) then
 		p.dur = math.ceil(p.dur * (1 - (self:getTalentLevel(self.T_RESILIENT_BONES) / 12)))
 	end
-	if e.status == "detrimental" and self:hasEffect(self.EFF_FADE_FROM_TIME) then
+	if e.status == "detrimental" and e.type ~= "other" and self:hasEffect(self.EFF_FADE_FROM_TIME) then
 		local fft = self:hasEffect(self.EFF_FADE_FROM_TIME)
 		p.dur = math.ceil(p.dur * (1 - (fft.power/100)))
 	end
-	if e.status == "detrimental" and e.type ~= "magical" and self:knowTalent(self.T_SUPPRESSION) then
+	if e.status == "detrimental" and e.type ~= "magical" and e.type ~= "other" and self:knowTalent(self.T_SUPPRESSION) then
 		local t = self:getTalentFromId(self.T_SUPPRESSION)
 		p.dur = math.ceil(p.dur * (1 - (t.getPercent(self, t)/100)))
 	end

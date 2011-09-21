@@ -168,7 +168,7 @@ newTalent{
 		-- Go through all spell effects
 		for eff_id, p in pairs(target.tmp) do
 			local e = target.tempeffect_def[eff_id]
-			if e.type ~= "time" and e.type ~= "other" then
+			if e.type == "physical" then
 				effs[#effs+1] = {"effect", eff_id}
 			end
 		end
@@ -187,9 +187,8 @@ newTalent{
 	info = function(self, t)
 		local heal = t.getHeal(self, t)
 		local count = t.getRemoveCount(self, t)
-		return ([[You revert your body to a previous state, healing yourself for %0.2f life and removing %d status effects (both good and bad).
-		The life healed will scale with your Paradox and Spellpower.
-		Does not remove 'time' or 'other' effects.]]):
+		return ([[You revert your body to a previous state, healing yourself for %0.2f life and removing %d physical status effects (both good and bad).
+		The life healed will scale with your Paradox and Spellpower.]]):
 		format(heal, count)
 	end,
 }

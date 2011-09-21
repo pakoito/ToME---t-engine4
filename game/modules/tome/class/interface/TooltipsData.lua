@@ -243,13 +243,13 @@ TOOLTIP_RDEFENSE = [[#GOLD#Ranged Defense#LAST#
 Ranged defense represents your chance to avoid being hit at all by a ranged attack, it is measured against the attacker's accuracy chance.
 ]]
 TOOLTIP_PHYS_SAVE = [[#GOLD#Physical saving throw#LAST#
-Increases chance to shrug off physically-induced effects. Also reduces duration of detrimental physical effects and poisons by up to one turn for every ten points, depending on the opponent.
+Increases chance to shrug off physically-induced effects. Also reduces duration of detrimental physical effects by up to one turn for every ten points, depending on the opponent.
 ]]
 TOOLTIP_SPELL_SAVE = [[#GOLD#Spell saving throw#LAST#
-Increases chance to shrug off magically-induced effects. Also reduces duration of detrimental magical effects, diseases, hexes, and banes by up to one turn for every ten points, depending on the opponent.
+Increases chance to shrug off magically-induced effects. Also reduces duration of detrimental magical effects by up to one turn for every ten points, depending on the opponent.
 ]]
 TOOLTIP_MENTAL_SAVE = [[#GOLD#Mental saving throw#LAST#
-Increases chance to shrug off mentally-induced effects. Also reduces duration of detrimental mental effects and curses by up to one turn for every ten points, depending on the opponent.
+Increases chance to shrug off mentally-induced effects. Also reduces duration of detrimental mental effects by up to one turn for every ten points, depending on the opponent.
 ]]
 
 -------------------------------------------------------------
