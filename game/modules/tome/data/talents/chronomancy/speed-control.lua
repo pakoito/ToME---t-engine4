@@ -146,7 +146,7 @@ newTalent{
 	cooldown = 50,
 	tactical = { BUFF = 2, CLOSEIN = 2, ESCAPE = 2 },
 	no_energy = true,
-	getPower = function(self, t) return ((10 + (self:combatTalentSpellDamage(t, 10, 50) * getParadoxModifier(self, pm))) / 100) end,
+	getPower = function(self, t) return (self:combatTalentSpellDamage(t, 10, 50) * getParadoxModifier(self, pm)) / 100 end,
 	action = function(self, t)
 		self:setEffect(self.EFF_HASTE, 8, {power=t.getPower(self, t)})
 		return true

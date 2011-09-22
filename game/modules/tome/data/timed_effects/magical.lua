@@ -29,6 +29,7 @@ newEffect{
 	desc = "Surging mana",
 	long_desc = function(self, eff) return ("The mana surge engulfs the target, regenerating %0.2f mana per turn."):format(eff.power) end,
 	type = "magical",
+	subtype = "arcane",
 	status = "beneficial",
 	parameters = { power=10 },
 	on_gain = function(self, err) return "#Target# starts to surge mana.", "+Manasurge" end,
@@ -54,85 +55,11 @@ newEffect{
 }
 
 newEffect{
-	name = "FROZEN",
-	desc = "Frozen",
-	long_desc = function(self, eff) return ("The target is encased in ice. All damage done to you will be split, 40%% absorbed by the ice and 60%% by yourself. Your defense is nullified while in the ice and you may only attack the ice but you are also immune to any new detrimental status effects. The target can not teleport or heal while frozen. %d HP on the iceblock remaining."):format(eff.hp) end,
-	type = "magical",
-	status = "detrimental",
-	parameters = {},
-	on_gain = function(self, err) return "#Target# is encased in ice!", "+Frozen" end,
-	on_lose = function(self, err) return "#Target# is free from the ice.", "-Frozen" end,
-	activate = function(self, eff)
-		-- Change color
-		eff.old_r = self.color_r
-		eff.old_g = self.color_g
-		eff.old_b = self.color_b
-		self.color_r = 0
-		self.color_g = 255
-		self.color_b = 155
-		if not self.add_displays then
-			self.add_displays = { Entity.new{image='npc/iceblock.png', display=' ', display_on_seen=true } }
-			eff.added_display = true
-		end
-		if self._mo then self._mo:invalidate() self._mo = nil end
-		game.level.map:updateMap(self.x, self.y)
-
-		eff.hp = eff.hp or 100
-		eff.tmpid = self:addTemporaryValue("encased_in_ice", 1)
-		eff.healid = self:addTemporaryValue("no_healing", 1)
-		eff.moveid = self:addTemporaryValue("never_move", 1)
-		eff.frozid = self:addTemporaryValue("frozen", 1)
-		eff.defid = self:addTemporaryValue("combat_def", -1000)
-		eff.rdefid = self:addTemporaryValue("combat_def_ranged", -1000)
-		eff.sefid = self:addTemporaryValue("negative_status_effect_immune", 1)
-
-		self:setTarget(self)
-	end,
-	on_timeout = function(self, eff)
-		self:setTarget(self)
-	end,
-	deactivate = function(self, eff)
-		self:removeTemporaryValue("encased_in_ice", eff.tmpid)
-		self:removeTemporaryValue("no_healing", eff.healid)
-		self:removeTemporaryValue("never_move", eff.moveid)
-		self:removeTemporaryValue("frozen", eff.frozid)
-		self:removeTemporaryValue("combat_def", eff.defid)
-		self:removeTemporaryValue("combat_def_ranged", eff.rdefid)
-		self:removeTemporaryValue("negative_status_effect_immune", eff.sefid)
-		self.color_r = eff.old_r
-		self.color_g = eff.old_g
-		self.color_b = eff.old_b
-		if eff.added_display then self.add_displays = nil end
-		if self._mo then self._mo:invalidate() self._mo = nil end
-		game.level.map:updateMap(self.x, self.y)
-		self:setTarget(nil)
-	end,
-}
-
-newEffect{
-	name = "FROZEN_FEET",
-	desc = "Frozen Feet",
-	long_desc = function(self, eff) return "The target is frozen on the ground, able to act freely but not move." end,
-	type = "magical",
-	status = "detrimental",
-	parameters = {},
-	on_gain = function(self, err) return "#Target# is frozen to the ground!", "+Frozen" end,
-	on_lose = function(self, err) return "#Target# warms up.", "-Frozen" end,
-	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("never_move", 1)
-		eff.frozid = self:addTemporaryValue("frozen", 1)
-	end,
-	deactivate = function(self, eff)
-		self:removeTemporaryValue("never_move", eff.tmpid)
-		self:removeTemporaryValue("frozen", eff.frozid)
-	end,
-}
-
-newEffect{
 	name = "STONED",
 	desc = "Stoned",
 	long_desc = function(self, eff) return "The target has been turned to stone, making it subject to shattering but improving physical(+20%), fire(+80%) and lightning(+50%) resistances." end,
 	type = "magical",
+	subtype = "earth",
 	status = "detrimental",
 	parameters = {},
 	on_gain = function(self, err) return "#Target# turns to stone!", "+Stoned" end,
@@ -156,6 +83,7 @@ newEffect{
 	desc = "Earthen Barrier",
 	long_desc = function(self, eff) return ("Reduces physical damage received by %d%%."):format(eff.power) end,
 	type = "magical",
+	subtype = "earth",
 	status = "beneficial",
 	parameters = { power=10 },
 	on_gain = function(self, err) return "#Target# hardens its skin.", "+Earthen barrier" end,
@@ -175,6 +103,7 @@ newEffect{
 	desc = "Molten Skin",
 	long_desc = function(self, eff) return ("Reduces fire damage received by %d%%."):format(eff.power) end,
 	type = "magical",
+	subtype = "fire",
 	status = "beneficial",
 	parameters = { power=10 },
 	on_gain = function(self, err) return "#Target#'s skin turns into molten lava.", "+Molten Skin" end,
@@ -194,6 +123,7 @@ newEffect{
 	desc = "Reflective Skin",
 	long_desc = function(self, eff) return ("Magically returns %d%% of any damage done to the attacker."):format(eff.power) end,
 	type = "magical",
+	subtype = "arcane",
 	status = "beneficial",
 	parameters = { power=10 },
 	on_gain = function(self, err) return "#Target#'s skin starts to shimmer.", "+Reflective Skin" end,
@@ -211,6 +141,7 @@ newEffect{
 	desc = "Vimsense",
 	long_desc = function(self, eff) return ("Reduces blight resistance by %d%%."):format(eff.power) end,
 	type = "magical",
+	subtype = "blight",
 	status = "detrimental",
 	parameters = { power=10 },
 	activate = function(self, eff)
@@ -226,6 +157,7 @@ newEffect{
 	desc = "Invisibility",
 	long_desc = function(self, eff) return ("Improves/gives invisibility (power %d)."):format(eff.power) end,
 	type = "magical",
+	subtype = "phantasm",
 	status = "beneficial",
 	parameters = { power=10, penalty=0, regen=false },
 	on_gain = function(self, err) return "#Target# vanishes from sight.", "+Invis" end,
@@ -254,6 +186,7 @@ newEffect{
 	desc = "See Invisible",
 	long_desc = function(self, eff) return ("Improves/gives the ability to see invisible creatures (power %d)."):format(eff.power) end,
 	type = "magical",
+	subtype = "sense",
 	status = "beneficial",
 	parameters = { power=10 },
 	on_gain = function(self, err) return "#Target#'s eyes tingle." end,
@@ -323,6 +256,7 @@ newEffect{
 	desc = "Supercharge Golem",
 	long_desc = function(self, eff) return ("The target is supercharged, increasing life regen by %0.2f and damage done by 20%%."):format(eff.regen) end,
 	type = "magical",
+	subtype = "arcane",
 	status = "beneficial",
 	parameters = { regen=10 },
 	on_gain = function(self, err) return "#Target# is overloaded with power.", "+Supercharge" end,
@@ -342,6 +276,7 @@ newEffect{
 	desc = "Power Overload",
 	long_desc = function(self, eff) return ("The target radiates incredible power, increasing all damage done by %d%%."):format(eff.power) end,
 	type = "magical",
+	subtype = "arcane",
 	status = "beneficial",
 	parameters = { power=10 },
 	on_gain = function(self, err) return "#Target# is overloaded with power.", "+Overload" end,
@@ -359,6 +294,7 @@ newEffect{
 	desc = "Life Tap",
 	long_desc = function(self, eff) return ("The target taps its blood's hidden power, increasing all damage done by %d%%."):format(eff.power) end,
 	type = "magical",
+	subtype = "vim",
 	status = "beneficial",
 	parameters = { power=10 },
 	on_gain = function(self, err) return "#Target# is overloaded with power.", "+Life Tap" end,
@@ -376,6 +312,7 @@ newEffect{
 	desc = "Arcane Eye",
 	long_desc = function(self, eff) return ("You have an arcane eye observing for you in a radius of %d."):format(eff.radius) end,
 	type = "magical",
+	subtype = "sense",
 	status = "beneficial",
 	cancel_on_level_change = true,
 	parameters = { range=10, actor=1, object=0, trap=0 },
@@ -408,6 +345,7 @@ newEffect{
 	desc = "All stats increase",
 	long_desc = function(self, eff) return ("All primary stats of the target are increased by %d."):format(eff.power) end,
 	type = "magical",
+	subtype = "arcane",
 	status = "beneficial",
 	parameters = { power=1 },
 	activate = function(self, eff)
@@ -431,6 +369,7 @@ newEffect{
 	desc = "Displacement Shield",
 	long_desc = function(self, eff) return ("The target is surrounded by a space distortion that randomly sends (%d%% chance) incoming damage to another target (%s). Absorbs %d/%d damage before it crumbles."):format(eff.chance, eff.target.name or "unknown", self.displacement_shield, eff.power) end,
 	type = "magical",
+	subtype = "teleport",
 	status = "beneficial",
 	parameters = { power=10, target=nil, chance=25 },
 	on_gain = function(self, err) return "The very fabric of space alters around #target#.", "+Displacement Shield" end,
@@ -468,6 +407,7 @@ newEffect{
 	desc = "Damage Shield",
 	long_desc = function(self, eff) return ("The target is surrounded by a magical shield, absorbing %d/%d damage before it crumbles."):format(self.damage_shield_absorb, eff.power) end,
 	type = "magical",
+	subtype = "arcane",
 	status = "beneficial",
 	parameters = { power=100 },
 	on_gain = function(self, err) return "A shield forms around #target#.", "+Shield" end,
@@ -497,6 +437,7 @@ newEffect{
 	desc = "Martyrdom",
 	long_desc = function(self, eff) return ("All damage done by the target will also hurt it for %d%%."):format(eff.power) end,
 	type = "magical",
+	subtype = "light",
 	status = "detrimental",
 	parameters = { power=10 },
 	on_gain = function(self, err) return "#Target# is a martyr.", "+Martyr" end,
@@ -620,31 +561,11 @@ newEffect{
 }
 
 newEffect{
-	name = "FREE_ACTION",
-	desc = "Free Action",
-	long_desc = function(self, eff) return ("The target gains %d%% stun, daze and pinning immunity."):format(eff.power * 100) end,
-	type = "magical",
-	status = "beneficial",
-	parameters = { power=1 },
-	on_gain = function(self, err) return "#Target# is moving freely.", "+Free Action" end,
-	on_lose = function(self, err) return "#Target# is moving less freely.", "-Free Action" end,
-	activate = function(self, eff)
-		eff.stun = self:addTemporaryValue("stun_immune", eff.power)
-		eff.daze = self:addTemporaryValue("daze_immune", eff.power)
-		eff.pin = self:addTemporaryValue("pin_immune", eff.power)
-	end,
-	deactivate = function(self, eff)
-		self:removeTemporaryValue("stun_immune", eff.stun)
-		self:removeTemporaryValue("daze_immune", eff.daze)
-		self:removeTemporaryValue("pin_immune", eff.pin)
-	end,
-}
-
-newEffect{
 	name = "BLOODLUST",
 	desc = "Bloodlust",
 	long_desc = function(self, eff) return ("The target is in a magical bloodlust, improving spellpower by %d."):format(eff.dur) end,
 	type = "magical",
+	subtype = "frenzy",
 	status = "beneficial",
 	parameters = { power=1 },
 	on_merge = function(self, old_eff, new_eff)
@@ -672,6 +593,7 @@ newEffect{
 	desc = "Acid Splash",
 	long_desc = function(self, eff) return ("The target has been splashed with acid, taking %0.2f acid damage per turn, reducing armour by %d and attack by %d."):format(eff.dam, eff.armor or 0, eff.atk) end,
 	type = "magical",
+	subtype = "acid",
 	status = "detrimental",
 	parameters = {},
 	on_gain = function(self, err) return "#Target# is covered in acid!" end,
@@ -695,6 +617,7 @@ newEffect{
 	desc = "Bloodfury",
 	long_desc = function(self, eff) return ("The target's blight and acid damage is increased by %d%%."):format(eff.power) end,
 	type = "magical",
+	subtype = "frenzy",
 	status = "beneficial",
 	parameters = { power=10 },
 	activate = function(self, eff)
@@ -710,6 +633,7 @@ newEffect{
 	desc = "Reviving Phoenix",
 	long_desc = function(self, eff) return "Target is being brought back to life." end,
 	type = "magical",
+	subtype = "fire",
 	status = "beneficial",
 	parameters = { life_regen = 25, mana_regen = -9.75, never_move = 1, silence = 1 },
 	on_gain = function(self, err) return "#Target# is consumed in a burst of flame. All that remains is a fiery egg.", "+Phoenix" end,
@@ -743,6 +667,7 @@ newEffect{
 	desc = "Hurricane",
 	long_desc = function(self, eff) return ("The target is in the center of a lightning hurricane, doing %0.2f to %0.2f lightning damage to itself and others around every turn."):format(eff.dam / 3, eff.dam) end,
 	type = "magical",
+	subtype = "lightning",
 	status = "detrimental",
 	parameters = { dam=10, radius=2 },
 	on_gain = function(self, err) return "#Target# is caught inside a Hurricane.", "+Hurricane" end,
@@ -772,6 +697,7 @@ newEffect{
 	desc = "Recalling",
 	long_desc = function(self, eff) return "The target is waiting to be recalled back to the worldmap." end,
 	type = "magical",
+	subtype = "unknown",
 	status = "beneficial",
 	cancel_on_level_change = true,
 	parameters = { },
@@ -797,6 +723,7 @@ newEffect{
 	desc = "Teleport: Angolwen",
 	long_desc = function(self, eff) return "The target is waiting to be recalled back to Angolwen." end,
 	type = "magical",
+	subtype = "teleport",
 	status = "beneficial",
 	cancel_on_level_change = true,
 	parameters = { },
@@ -833,6 +760,7 @@ newEffect{
 	desc = "Premonition Shield",
 	long_desc = function(self, eff) return ("Reduces %s damage received by %d%%."):format(DamageType:get(eff.damtype).name, eff.resist) end,
 	type = "magical",
+	subtype = "sense",
 	status = "beneficial",
 	parameters = { },
 	on_gain = function(self, err) return "#Target# casts a protective shield just in time!", "+Premonition Shield" end,
@@ -850,6 +778,7 @@ newEffect{
 	desc = "Corrosive Worm",
 	long_desc = function(self, eff) return ("Target is infected with a corrosive worm doing %0.2f acid damage per turn."):format(eff.dam) end,
 	type = "magical",
+	subtype = "acid",
 	status = "detrimental",
 	parameters = { dam=1, explosion=10 },
 	on_gain = function(self, err) return "#Target# is infected by a corrosive worm.", "+Corrosive Worm" end,
@@ -864,6 +793,7 @@ newEffect{
 	desc = "Wraithform",
 	long_desc = function(self, eff) return ("Turn into a wraith, passing through walls (but not natural obstacles), granting %d defense and %d armour."):format(eff.def, eff.armor) end,
 	type = "magical",
+	subtype = "darkness",
 	status = "beneficial",
 	parameters = { power=10 },
 	on_gain = function(self, err) return "#Target# turns into a wraith.", "+Wraithform" end,
@@ -885,6 +815,7 @@ newEffect{
 	desc = "Empowered Healing",
 	long_desc = function(self, eff) return ("Increases the effectiveness of all healing the target receives by %d%%."):format(eff.power * 100) end,
 	type = "magical",
+	subtype = "light",
 	status = "beneficial",
 	parameters = { power = 0.1 },
 	activate = function(self, eff)
@@ -900,6 +831,7 @@ newEffect{
 	desc = "Providence",
 	long_desc = function(self, eff) return ("The target is under protection and its life regeneration is boosted by %d."):format(eff.power) end,
 	type = "magical",
+	subtype = "light",
 	status = "beneficial",
 	parameters = {},
 	on_timeout = function(self, eff)
@@ -932,6 +864,7 @@ newEffect{
 	desc = "Totality",
 	long_desc = function(self, eff) return ("The target's light and darkness spell penetration has been increased by %d%%."):format(eff.power) end,
 	type = "magical",
+	subtype = "darkness",
 	status = "beneficial",
 	parameters = { power=10 },
 	activate = function(self, eff)
@@ -951,6 +884,7 @@ newEffect{
 	desc = "Sanctity",
 	long_desc = function(self, eff) return ("The target is protected from silence effects.") end,
 	type = "magical",
+	subtype = "circle",
 	status = "beneficial",
 	parameters = { power=10 },
 	activate = function(self, eff)
@@ -966,6 +900,7 @@ newEffect{
 	desc = "Shifting Shadows",
 	long_desc = function(self, eff) return ("The target's defense is increased by %d."):format(eff.power) end,
 	type = "magical",
+	subtype = "circle",
 	status = "beneficial",
 	parameters = {power = 1},
 	activate = function(self, eff)
@@ -981,6 +916,7 @@ newEffect{
 	desc = "Blazing Light",
 	long_desc = function(self, eff) return ("The target is gaining %d positive energy each turn."):format(eff.power) end,
 	type = "magical",
+	subtype = "circle",
 	status = "beneficial",
 	parameters = {power = 1},
 	activate = function(self, eff)
@@ -996,6 +932,7 @@ newEffect{
 	desc = "Warding",
 	long_desc = function(self, eff) return ("Projectiles aimed at the target are slowed by %d%%."):format (eff.power) end,
 	type = "magical",
+	subtype = "circle",
 	status = "beneficial",
 	parameters = {power = 1},
 	activate = function(self, eff)
@@ -1011,6 +948,7 @@ newEffect{
 	desc = "Turn Back the Clock",
 	long_desc = function(self, eff) return ("The target has been returned to a much younger state, reducing all its stats by %d."):format(eff.power) end,
 	type = "magical",
+	subtype = "temporal",
 	status = "detrimental",
 	parameters = { },
 	on_gain = function(self, err) return "#Target# is returned to a much younger state!", "+Turn Back the Clock" end,
@@ -1039,6 +977,7 @@ newEffect{
 	desc = "Wasting",
 	long_desc = function(self, eff) return ("The target is wasting away, taking %0.2f temporal damage per turn."):format(eff.power) end,
 	type = "magical",
+	subtype = "temporal",
 	status = "detrimental",
 	parameters = { power=10 },
 	on_gain = function(self, err) return "#Target# is wasting away!", "+Wasting" end,
@@ -1062,6 +1001,7 @@ newEffect{
 	desc = "Prescience",
 	long_desc = function(self, eff) return ("The target's awareness is fully in the present, increasing both physical and spell critical hit chance by %d%%."):format(eff.power) end,
 	type = "magical",
+	subtype = "sense",
 	status = "beneficial",
 	parameters = { power = 10 },
 	on_gain = function(self, err) return "#Target# seems more aware." end,
@@ -1081,6 +1021,7 @@ newEffect{
 	desc = "Invigorate",
 	long_desc = function(self, eff) return ("The target is regaining %d stamina per turn."):format(eff.power) end,
 	type = "magical",
+	subtype = "temporal",
 	status = "beneficial",
 	parameters = {power = 10},
 	on_gain = function(self, err) return "#Target# is recovering stamina.", "+Invigorate" end,
@@ -1099,6 +1040,7 @@ newEffect{
 	long_desc = function(self, eff) return ("The target will inflict %d%% more damage on its next attack plus an additional %d%% for each turn spent gathering threads beyond the first."):
 	format(eff.power + (eff.power / 5), eff.power/5) end,
 	type = "magical",
+	subtype = "temporal",
 	status = "beneficial",
 	parameters = { power=10 },
 	on_gain = function(self, err) return "#Target# is gathering energy from other timelines.", "+Gather the Threads" end,
@@ -1132,6 +1074,7 @@ newEffect{
 	desc = "Flawed Design",
 	long_desc = function(self, eff) return ("The target's past has been altered, reducing all its resistances by %d%%."):format(eff.power) end,
 	type = "magical",
+	subtype = "temporal",
 	status = "detrimental",
 	parameters = { power=10 },
 	on_gain = function(self, err) return "#Target# is flawed.", "+Flawed" end,
@@ -1151,6 +1094,7 @@ newEffect{
 	desc = "Spacetime Tuning",
 	long_desc = function(self, eff) return "The target is retuning the fabric of spacetime; any damage will stop it." end,
 	type = "magical",
+	subtype = "temporal",
 	status = "detrimental",
 	parameters = {},
 	on_timeout = function(self, eff)
@@ -1198,6 +1142,7 @@ newEffect{
 	desc = "Foresight",
 	long_desc = function(self, eff) return ("The target has peered into the future and will ignore all damage from the next dangerous attack."):format() end,
 	type = "magical",
+	subtype = "sense",
 	status = "beneficial",
 	parameters = {},
 	activate = function(self, eff)
@@ -1211,6 +1156,7 @@ newEffect{
 	desc = "Manaworm",
 	long_desc = function(self, eff) return ("The target is infected by a manaworm, draining %0.2f mana per turns and releasing it as arcane damage to the target."):format(eff.power) end,
 	type = "magical",
+	subtype = "arcane",
 	status = "detrimental",
 	parameters = {power=10},
 	on_gain = function(self, err) return "#Target# is infected by a manaworm!", "+Manaworm" end,
@@ -1228,6 +1174,7 @@ newEffect{
 	desc = "Surge of Undeath",
 	long_desc = function(self, eff) return ("Increases the target combat power, spellpower, accuracy by %d, armour penetration by %d and critical chances by %d."):format(eff.power, eff.apr, eff.crit) end,
 	type = "magical",
+	subtype = "frenzy",
 	status = "beneficial",
 	parameters = { power=10, crit=10, apr=10 },
 	on_gain = function(self, err) return "#Target# is engulfed in dark energies.", "+Undeath Surge" end,
@@ -1255,6 +1202,7 @@ newEffect{
 	desc = "Bone Shield",
 	long_desc = function(self, eff) return ("Fully protects from %d damaging actions."):format(#eff.particles) end,
 	type = "magical",
+	subtype = "arcane",
 	status = "beneficial",
 	parameters = { nb=3 },
 	on_gain = function(self, err) return "#Target# protected by flying bones.", "+Bone Shield" end,
@@ -1283,6 +1231,7 @@ newEffect{
 	desc = "Redux",
 	long_desc = function(self, eff) return "The next activated chronomancy talent that the target uses will be cast twice." end,
 	type = "magical",
+	subtype = "temporal",
 	status = "beneficial",
 	parameters = { power=1},
 	activate = function(self, eff)
@@ -1296,6 +1245,7 @@ newEffect{
 	desc = "Temporal Destabilization",
 	long_desc = function(self, eff) return ("Target is destabilized and suffering %0.2f temporal damage per turn.  If it dies with this effect active it will explode."):format(eff.dam) end,
 	type = "magical",
+	subtype = "temporal",
 	status = "detrimental",
 	parameters = { dam=1, explosion=10 },
 	on_gain = function(self, err) return "#Target# is unstable.", "+Temporal Destabilization" end,
@@ -1316,6 +1266,7 @@ newEffect{
 	desc = "Haste",
 	long_desc = function(self, eff) return ("Increases global action speed by %d%% and casting speed by %d%%."):format(eff.power * 100, eff.power * 50) end,
 	type = "magical",
+	subtype = "temporal",
 	status = "beneficial",
 	parameters = { power=0.1 },
 	on_gain = function(self, err) return "#Target# speeds up.", "+Haste" end,
@@ -1335,6 +1286,7 @@ newEffect{
 	desc = "Cease to Exist",
 	long_desc = function(self, eff) return ("The target is being removed from the timeline and is suffering %d temporal damage per turn."):format(eff.dam) end,
 	type = "magical",
+	subtype = "temporal",
 	status = "detrimental",
 	parameters = { power = 1 },
 	on_gain = function(self, err) return "#Target# is being removed from the timeline.", "+Cease to Exist" end,
@@ -1354,6 +1306,7 @@ newEffect{
 	desc = "Impending Doom",
 	long_desc = function(self, eff) return ("The target's final doom is drawing near, preventing all forms of healing and dealing %0.2f arcane damage per turn. The effect will stop if the caster dies."):format(eff.dam) end,
 	type = "magical",
+	subtype = "arcane",
 	status = "detrimental",
 	parameters = {},
 	on_gain = function(self, err) return "#Target# is doomed!", "+Doomed" end,
@@ -1375,6 +1328,7 @@ newEffect{
 	desc = "Rigor Mortis",
 	long_desc = function(self, eff) return ("The target takes %d%% more damage from necrotic minions."):format(eff.power) end,
 	type = "magical",
+	subtype = "arcane",
 	status = "detrimental",
 	parameters = {power=20},
 	on_gain = function(self, err) return "#Target# feels death coming!", "+Rigor Mortis" end,
@@ -1384,5 +1338,25 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("inc_necrotic_minions", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "ABYSSAL_SHROUD",
+	desc = "Abyssal Shroud",
+	long_desc = function(self, eff) return ("The target's lite radius has been reduced by %d and it's darkness resistance by %d%%."):format(eff.lite, eff.power) end,
+	type = "magical",
+	subtype = "darkness",
+	status = "detrimental",
+	parameters = {power=20},
+	on_gain = function(self, err) return "#Target# feels closer to the abyss!", "+Abyssal Shroud" end,
+	on_lose = function(self, err) return "#Target# is free from the abyss.", "-Abyssal Shroud" end,
+	activate = function(self, eff)
+		eff.liteid = self:addTemporaryValue("lite", -eff.lite)
+		eff.darkid = self:addTemporaryValue("resists", { [DamageType.DARKNESS] = -eff.power })
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("lite", eff.liteid)
+		self:removeTemporaryValue("resists", eff.darkid)
 	end,
 }

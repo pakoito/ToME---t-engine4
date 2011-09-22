@@ -29,6 +29,7 @@ newEffect{
 	desc = "Silenced",
 	long_desc = function(self, eff) return "The target is silenced, preventing it from casting spells and using some vocal talents." end,
 	type = "mental",
+	subtype = "silence",
 	status = "detrimental",
 	parameters = {},
 	on_gain = function(self, err) return "#Target# is silenced!", "+Silenced" end,
@@ -46,6 +47,7 @@ newEffect{
 	desc = "Meditation",
 	long_desc = function(self, eff) return "The target is meditating. Any damage will stop it." end,
 	type = "mental",
+	subtype = "focus",
 	status = "detrimental",
 	parameters = {},
 	on_timeout = function(self, eff)
@@ -67,6 +69,7 @@ newEffect{
 	desc = "Summon Control",
 	long_desc = function(self, eff) return ("Reduces damage received by %d%% and increases summon time by %d."):format(eff.res, eff.incdur) end,
 	type = "mental",
+	subtype = "focus",
 	status = "beneficial",
 	parameters = { res=10, incdur=10 },
 	activate = function(self, eff)
@@ -87,6 +90,7 @@ newEffect{
 	desc = "Confused",
 	long_desc = function(self, eff) return ("The target is confused, acting randomly (chance %d%%) and unable to perform complex actions."):format(eff.power) end,
 	type = "mental",
+	subtype = "confusion",
 	status = "detrimental",
 	parameters = { power=50 },
 	on_gain = function(self, err) return "#Target# wanders around!.", "+Confused" end,
@@ -106,6 +110,7 @@ newEffect{
 	desc = "Dominated",
 	long_desc = function(self, eff) return ("The target's mind has been shattered. Its body remains as a thrall to your mind.") end,
 	type = "mental",
+	subtype = "dominate",
 	status = "detrimental",
 	parameters = { },
 	on_gain = function(self, err) return "#Target#'s mind is shattered." end,
@@ -140,6 +145,7 @@ newEffect{
 	desc = "Battle Shout",
 	long_desc = function(self, eff) return ("Increases maximum life and stamina by %d%%."):format(eff.power) end,
 	type = "mental",
+	subtype = "morale",
 	status = "beneficial",
 	parameters = { power=10 },
 	activate = function(self, eff)
@@ -159,6 +165,7 @@ newEffect{
 	desc = "Battle Cry",
 	long_desc = function(self, eff) return ("The target's will to defend itself is shattered by the powerful battle cry, reducing defense by %d."):format(eff.power) end,
 	type = "mental",
+	subtype = "morale",
 	status = "detrimental",
 	parameters = { power=10 },
 	on_gain = function(self, err) return "#Target#'s will is shattered.", "+Battle Cry" end,
@@ -176,6 +183,7 @@ newEffect{
 	desc = "Willful Combat",
 	long_desc = function(self, eff) return ("The target puts all its willpower into its blows, improving damage by %d."):format(eff.power) end,
 	type = "mental",
+	subtype = "focus",
 	status = "beneficial",
 	parameters = { power=10 },
 	on_gain = function(self, err) return "#Target# lashes out with pure willpower." end,
@@ -193,6 +201,7 @@ newEffect{
 	desc = "Gloom Weakness",
 	long_desc = function(self, eff) return ("The gloom reduces the target's attack by %d and damage rating by %d."):format(eff.atk, eff.dam) end,
 	type = "mental",
+	subtype = "gloom",
 	status = "detrimental",
 	parameters = { atk=10, dam=10 },
 	on_gain = function(self, err) return "#F53CBE##Target# is weakened by the gloom." end,
@@ -214,6 +223,7 @@ newEffect{
 	desc = "Slowed by the gloom",
 	long_desc = function(self, eff) return ("The gloom reduces the target's global speed by %d%%."):format(eff.power * 100) end,
 	type = "mental",
+	subtype = "gloom",
 	status = "detrimental",
 	parameters = { power=0.1 },
 	on_gain = function(self, err) return "#F53CBE##Target# moves reluctantly!", "+Slow" end,
@@ -233,6 +243,7 @@ newEffect{
 	desc = "Paralyzed by the gloom",
 	long_desc = function(self, eff) return "The gloom has paralyzed the target, rendering it unable to act." end,
 	type = "mental",
+	subtype = "gloom",
 	status = "detrimental",
 	parameters = {},
 	on_gain = function(self, err) return "#F53CBE##Target# is paralyzed with fear!", "+Paralyzed" end,
@@ -255,6 +266,7 @@ newEffect{
 	desc = "Confused by the gloom",
 	long_desc = function(self, eff) return ("The gloom has confused the target, making it act randomly (%d%% chance) and unable to perform complex actions."):format(eff.power) end,
 	type = "mental",
+	subtype = "gloom",
 	status = "detrimental",
 	parameters = {},
 	on_gain = function(self, err) return "#F53CBE##Target# is lost in despair!", "+Confused" end,
@@ -274,6 +286,7 @@ newEffect{
 	desc = "Stalking",
 	long_desc = function(self, eff) return ("Stalking %s."):format(eff.target.name) end,
 	type = "mental",
+	subtype = "veil",
 	status = "beneficial",
 	parameters = {},
 	activate = function(self, eff)
@@ -293,6 +306,7 @@ newEffect{
 	desc = "Being Stalked",
 	long_desc = function(self, eff) return "The target is being stalked." end,
 	type = "mental",
+	subtype = "veil",
 	status = "detrimental",
 	parameters = {},
 	activate = function(self, eff)
@@ -312,6 +326,7 @@ newEffect{
 	desc = "Dominated",
 	long_desc = function(self, eff) return ("The target is dominated, increasing damage done to it by its master by %d%%."):format(eff.dominatedDamMult * 100) end,
 	type = "mental",
+	subtype = "dominate",
 	status = "detrimental",
 	on_gain = function(self, err) return "#F53CBE##Target# has been dominated!", "+Dominated" end,
 	on_lose = function(self, err) return "#F53CBE##Target# is no longer dominated.", "-Dominated" end,
@@ -335,6 +350,7 @@ newEffect{
 	desc = "Radiating Fear",
 	long_desc = function(self, eff) return "The target is frightening, pushing away other creatures." end,
 	type = "mental",
+	subtype = "fear",
 	status = "beneficial",
 	parameters = { knockback = 1, radius = 3 },
 	on_gain = function(self, err) return "#F53CBE##Target# is surrounded by fear!", "+Radiant Fear" end,
@@ -381,6 +397,7 @@ newEffect{
 	desc = "Invigorated",
 	long_desc = function(self, eff) return ("The target is invigorated by death, increasing global speed by %d%%."):format(eff.speed) end,
 	type = "mental",
+	subtype = "morale",
 	status = "beneficial",
 	parameters = { speed = 30, duration = 3 },
 	on_gain = function(self, err) return nil, "+Invigorated" end,
@@ -402,6 +419,7 @@ newEffect{
 	desc = "Feeding",
 	long_desc = function(self, eff) return ("%s is feeding from %s."):format(self.name:capitalize(), eff.target.name) end,
 	type = "mental",
+	subtype = "psychic drain",
 	status = "beneficial",
 	parameters = { },
 	activate = function(self, eff)
@@ -513,6 +531,7 @@ newEffect{
 	desc = "Fed Upon",
 	long_desc = function(self, eff) return ("%s is fed upon by %s."):format(self.name:capitalize(), eff.src.name) end,
 	type = "mental",
+	subtype = "psychic drain",
 	status = "detrimental",
 	remove_on_clone = true,
 	parameters = { },
@@ -530,6 +549,7 @@ newEffect{
 	desc = "Agony",
 	long_desc = function(self, eff) return ("%s is writhing in agony, suffering from %d to %d damage over %d turns."):format(self.name:capitalize(), eff.damage / eff.duration, eff.damage, eff.duration) end,
 	type = "mental",
+	subtype = "pain",
 	status = "detrimental",
 	parameters = { damage=10, mindpower=10, range=10, minPercent=10 },
 	on_gain = function(self, err) return "#Target# is writhing in agony!", "+Agony" end,
@@ -565,6 +585,7 @@ newEffect{
 	desc = "Hateful Whisper",
 	long_desc = function(self, eff) return ("%s has heard the hateful whisper."):format(self.name:capitalize()) end,
 	type = "mental",
+	subtype = "madness",
 	status = "detrimental",
 	parameters = { },
 	on_gain = function(self, err) return "#Target# has heard the hateful whisper!", "+Hateful Whisper" end,
@@ -640,6 +661,7 @@ newEffect{
 	desc = "Slowed by madness",
 	long_desc = function(self, eff) return ("Madness reduces the target's global speed by %d%%."):format(eff.power * 100) end,
 	type = "mental",
+	subtype = "madness",
 	status = "detrimental",
 	parameters = { power=0.1 },
 	on_gain = function(self, err) return "#F53CBE##Target# slows in the grip of madness!", "+Slow" end,
@@ -659,6 +681,7 @@ newEffect{
 	desc = "Paralyzed by madness",
 	long_desc = function(self, eff) return "Madness has paralyzed the target, rendering it unable to act." end,
 	type = "mental",
+	subtype = "madness",
 	status = "detrimental",
 	parameters = {},
 	on_gain = function(self, err) return "#F53CBE##Target# is paralyzed by madness!", "+Paralyzed" end,
@@ -681,6 +704,7 @@ newEffect{
 	desc = "Confused by madness",
 	long_desc = function(self, eff) return ("Madness has confused the target, making it act randomly (%d%% chance) and unable to perform complex actions."):format(eff.power) end,
 	type = "mental",
+	subtype = "madness",
 	status = "detrimental",
 	parameters = {},
 	on_gain = function(self, err) return "#F53CBE##Target# is lost in madness!", "+Confused" end,
@@ -700,6 +724,7 @@ newEffect{
 	desc = "Quick",
 	long_desc = function(self, eff) return ("Increases run speed by %d%%."):format(eff.power * 100) end,
 	type = "mental",
+	subtype = "telekinesis",
 	status = "beneficial",
 	parameters = { power=0.1 },
 	on_gain = function(self, err) return "#Target# speeds up.", "+Quick" end,
@@ -716,6 +741,7 @@ newEffect{
 	desc = "Frenzied Psi-fighting",
 	long_desc = function(self, eff) return ("Causes telekinetically-wielded weapons to hit up to %d targets each turn."):format(eff.power) end,
 	type = "mental",
+	subtype = "telekinesis",
 	status = "beneficial",
 	parameters = {dam=10},
 	on_gain = function(self, err) return "#Target# enters a frenzy!", "+Frenzy" end,
@@ -727,6 +753,7 @@ newEffect{
 	desc = "Spiked Kinetic Shield",
 	long_desc = function(self, eff) return ("The target erects a powerful kinetic shield capable of absorbing %d/%d physical or acid damage before it crumbles."):format(self.kinspike_shield_absorb, eff.power) end,
 	type = "mental",
+	subtype = "telekinesis",
 	status = "beneficial",
 	parameters = { power=100 },
 	on_gain = function(self, err) return "A powerful kinetic shield forms around #target#.", "+Shield" end,
@@ -745,6 +772,7 @@ newEffect{
 	desc = "Spiked Thermal Shield",
 	long_desc = function(self, eff) return ("The target erects a powerful thermal shield capable of absorbing %d/%d thermal damage before it crumbles."):format(self.thermspike_shield_absorb, eff.power) end,
 	type = "mental",
+	subtype = "telekinesis",
 	status = "beneficial",
 	parameters = { power=100 },
 	on_gain = function(self, err) return "A powerful thermal shield forms around #target#.", "+Shield" end,
@@ -763,6 +791,7 @@ newEffect{
 	desc = "Spiked Charged Shield",
 	long_desc = function(self, eff) return ("The target erects a powerful charged shield capable of absorbing %d/%d lightning or blight damage before it crumbles."):format(self.chargespike_shield_absorb, eff.power) end,
 	type = "mental",
+	subtype = "telekinesis",
 	status = "beneficial",
 	parameters = { power=100 },
 	on_gain = function(self, err) return "A powerful charged shield forms around #target#.", "+Shield" end,
@@ -782,6 +811,7 @@ newEffect{
 	desc = "Perfect control",
 	long_desc = function(self, eff) return ("The target's combat attack and crit chance are improved by %d and %d%%, respectively."):format(eff.power, 0.5*eff.power) end,
 	type = "mental",
+	subtype = "telekinesis",
 	status = "beneficial",
 	parameters = { power=10 },
 	activate = function(self, eff)
@@ -799,6 +829,7 @@ newEffect{
 	desc = "Matter is energy",
 	long_desc = function(self, eff) return ("The gem's matter gradually transforms, granting %0.2f energy per turn."):format(eff.power) end,
 	type = "mental",
+	subtype = "psychic drain",
 	status = "beneficial",
 	parameters = { power=10 },
 	on_gain = function(self, err) return "Energy starts pouring from the gem into #Target#.", "+Energy" end,
@@ -816,6 +847,7 @@ newEffect{
 	desc = "Telekinetic Archery",
 	long_desc = function(self, eff) return ("Your telekinetically-wielded bow automatically attacks the nearest target each turn.") end,
 	type = "mental",
+	subtype = "telekinesis",
 	status = "beneficial",
 	parameters = {dam=10},
 	on_gain = function(self, err) return "#Target# enters a telekinetic archer's trance!", "+Telekinetic archery" end,
@@ -827,6 +859,7 @@ newEffect{
 	desc = "Weakened Mind",
 	long_desc = function(self, eff) return ("Decreases mind save by %d."):format(eff.power) end,
 	type = "mental",
+	subtype = "morale",
 	status = "detrimental",
 	parameters = { power=10 },
 	activate = function(self, eff)
@@ -842,6 +875,7 @@ newEffect{
 	desc = "Void Echoes",
 	long_desc = function(self, eff) return ("The target is seeing echoes from the void and will take %0.2f mind damage as well as some resource damage each turn it fails a mental save."):format(eff.power) end,
 	type = "mental",
+	subtype = "madness",
 	status = "detrimental",
 	parameters = { power=10 },
 	on_gain = function(self, err) return "#Target# is being driven mad by the void.", "+Void Echoes" end,
@@ -863,6 +897,7 @@ newEffect{
 	desc = "Waking Nightmare",
 	long_desc = function(self, eff) return ("The target is lost in a waking nightmare that deals %0.2f darkness damage each turn and has a %d%% chance to cause a random effect detrimental."):format(eff.dam, eff.chance) end,
 	type = "mental",
+	subtype = "madness",
 	status = "detrimental",
 	parameters = { chance=10, dam = 10 },
 	on_gain = function(self, err) return "#Target# is lost in a waking nightmare.", "+Waking Nightmare" end,
@@ -891,29 +926,11 @@ newEffect{
 }
 
 newEffect{
-	name = "ABYSSAL_SHROUD",
-	desc = "Abyssal Shroud",
-	long_desc = function(self, eff) return ("The target's lite radius has been reduced by %d and it's darkness resistance by %d%%."):format(eff.lite, eff.power) end,
-	type = "mental",
-	status = "detrimental",
-	parameters = {power=20},
-	on_gain = function(self, err) return "#Target# feels closer to the abyss!", "+Abyssal Shroud" end,
-	on_lose = function(self, err) return "#Target# is free from the abyss.", "-Abyssal Shroud" end,
-	activate = function(self, eff)
-		eff.liteid = self:addTemporaryValue("lite", -eff.lite)
-		eff.darkid = self:addTemporaryValue("resists", { [DamageType.DARKNESS] = -eff.power })
-	end,
-	deactivate = function(self, eff)
-		self:removeTemporaryValue("lite", eff.liteid)
-		self:removeTemporaryValue("resists", eff.darkid)
-	end,
-}
-
-newEffect{
 	name = "INNER_DEMONS",
 	desc = "Inner Demons",
 	long_desc = function(self, eff) return ("The target is plagued by inner demons and each turn there's a %d%% chance that one will appear.  If the caster is killed or the target resists setting his demons loose the effect will end early."):format(eff.chance) end,
 	type = "mental",
+	subtype = "madness",
 	status = "detrimental",
 	parameters = {},
 	on_gain = function(self, err) return "#Target# is plagued by inner demons!", "+Inner Demons" end,
@@ -999,5 +1016,255 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self.faction = eff.olf_faction
+	end,
+}
+
+newEffect{
+	name = "HALFLING_LUCK",
+	desc = "Halflings's Luck",
+	long_desc = function(self, eff) return ("The target's luck and cunning combine to grant it %d%% higher combat critical chance and %d%% higher spell critical chance."):format(eff.physical, eff.spell) end,
+	type = "mental",
+	subtype = "focus",
+	status = "beneficial",
+	parameters = { spell=10, physical=10 },
+	on_gain = function(self, err) return "#Target# seems more aware." end,
+	on_lose = function(self, err) return "#Target#'s awareness returns to normal." end,
+	activate = function(self, eff)
+		eff.pid = self:addTemporaryValue("combat_physcrit", eff.physical)
+		eff.sid = self:addTemporaryValue("combat_spellcrit", eff.spell)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_physcrit", eff.pid)
+		self:removeTemporaryValue("combat_spellcrit", eff.sid)
+	end,
+}
+
+newEffect{
+	name = "ATTACK",
+	desc = "Attack",
+	long_desc = function(self, eff) return ("The target's combat attack is improved by %d."):format(eff.power) end,
+	type = "mental",
+	subtype = "focus",
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# aims carefully." end,
+	on_lose = function(self, err) return "#Target# aims less carefully." end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("combat_atk", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_atk", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "DEADLY_STRIKES",
+	desc = "Deadly Strikes",
+	long_desc = function(self, eff) return ("The target's armour penetration is increased by %d."):format(eff.power) end,
+	type = "mental",
+	subtype = "focus",
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# aims carefully." end,
+	on_lose = function(self, err) return "#Target# aims less carefully." end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("combat_apr", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_apr", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "FRENZY",
+	desc = "Frenzy",
+	long_desc = function(self, eff) return ("Increases global action speed by %d%% and physical crit by %d%%.\nAdditionally the target will continue to fight until it's hit points reach -%d%%."):format(eff.power * 100, eff.crit, eff.dieat * 100) end,
+	type = "mental",
+	subtype = "frenzy",
+	status = "beneficial",
+	parameters = { power=0.1 },
+	on_gain = function(self, err) return "#Target# goes into a killing frenzy.", "+Frenzy" end,
+	on_lose = function(self, err) return "#Target# calms down.", "-Frenzy" end,
+	on_merge = function(self, old_eff, new_eff)
+		-- use on merge so reapplied frenzy doesn't kill off creatures with negative life
+		old_eff.dur = new_eff.dur
+		old_eff.power = new_eff.power
+		old_eff.crit = new_eff.crit
+		return old_eff
+	end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("global_speed_add", eff.power)
+		eff.critid = self:addTemporaryValue("combat_physcrit", eff.crit)
+		eff.dieatid = self:addTemporaryValue("die_at", -self.max_life * eff.dieat)
+	end,
+	deactivate = function(self, eff)
+		-- check negative life first incase the creature has healing
+		if self.life <= 0 then
+			local sx, sy = game.level.map:getTileToScreen(self.x, self.y)
+			game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, rng.float(-2.5, -1.5), "Falls dead!", {255,0,255})
+			game.logSeen(self, "%s dies when its frenzy ends!", self.name:capitalize())
+			self:die(self)
+		end
+		self:removeTemporaryValue("global_speed_add", eff.tmpid)
+		self:removeTemporaryValue("combat_physcrit", eff.critid)
+		self:removeTemporaryValue("die_at", eff.dieatid)
+	end,
+}
+
+newEffect{
+	name = "BLOODBATH",
+	desc = "Bloodbath",
+	long_desc = function(self, eff) return ("The thrill of combat improves the target's maximum life by %d, life regeneration by %d%% and stamina regeneration by %d%%."):format(eff.hp, eff.regen, eff.regen) end,
+	type = "mental",
+	subtype = "frenzy",
+	status = "beneficial",
+	parameters = { hp=10, regen=10 },
+	on_gain = function(self, err) return nil, "+Bloodbath" end,
+	on_lose = function(self, err) return nil, "-Bloodbath" end,
+	on_merge = function(self, old_eff, new_eff)
+		self:removeTemporaryValue("max_life", old_eff.life_id)
+		self:removeTemporaryValue("life_regen", old_eff.life_regen_id)
+		self:removeTemporaryValue("stamina_regen", old_eff.stamina_regen_id)
+
+		-- Take the new values, dont heal, otherwise you get a free heal each crit .. which is totaly broken
+		local v = new_eff.hp * self.max_life / 100
+		new_eff.life_id = self:addTemporaryValue("max_life", v)
+		new_eff.life_regen_id = self:addTemporaryValue("life_regen", new_eff.regen * self.life_regen / 100)
+		new_eff.stamina_regen_id = self:addTemporaryValue("stamina_regen", new_eff.regen * self.stamina_regen / 100)
+		return new_eff
+	end,
+	activate = function(self, eff)
+		local v = eff.hp * self.max_life / 100
+		eff.life_id = self:addTemporaryValue("max_life", v)
+		self:heal(v)
+		eff.life_regen_id = self:addTemporaryValue("life_regen", eff.regen * self.life_regen / 100)
+		eff.stamina_regen_id = self:addTemporaryValue("stamina_regen", eff.regen * self.stamina_regen / 100)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("max_life", eff.life_id)
+		self:removeTemporaryValue("life_regen", eff.life_regen_id)
+		self:removeTemporaryValue("stamina_regen", eff.stamina_regen_id)
+	end,
+}
+
+newEffect{
+	name = "BLOODRAGE",
+	desc = "Bloodrage",
+	long_desc = function(self, eff) return ("The target's strength is increased by %d by the thrill of combat."):format(eff.inc) end,
+	type = "mental",
+	subtype = "frenzy",
+	status = "beneficial",
+	parameters = { inc=1, max=10 },
+	on_merge = function(self, old_eff, new_eff)
+		self:removeTemporaryValue("inc_stats", old_eff.tmpid)
+		old_eff.cur_inc = math.min(old_eff.cur_inc + new_eff.inc, new_eff.max)
+		old_eff.tmpid = self:addTemporaryValue("inc_stats", {[Stats.STAT_STR] = old_eff.cur_inc})
+
+		old_eff.dur = new_eff.dur
+		return old_eff
+	end,
+	activate = function(self, eff)
+		eff.cur_inc = eff.inc
+		eff.tmpid = self:addTemporaryValue("inc_stats", {[Stats.STAT_STR] = eff.inc})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("inc_stats", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "UNSTOPPABLE",
+	desc = "Unstoppable",
+	long_desc = function(self, eff) return ("The target is unstoppable! It refuses to die, and at the end it will heal %d Life."):format(eff.kills * eff.hp_per_kill * self.max_life / 100) end,
+	type = "mental",
+	subtype = "frenzy",
+	status = "beneficial",
+	parameters = { hp_per_kill=2 },
+	activate = function(self, eff)
+		eff.kills = 0
+		eff.tmpid = self:addTemporaryValue("unstoppable", 1)
+		eff.healid = self:addTemporaryValue("no_life_regen", 1)
+	end,
+	deactivate = function(self, eff)
+		self:heal(eff.kills * eff.hp_per_kill * self.max_life / 100)
+		self:removeTemporaryValue("unstoppable", eff.tmpid)
+		self:removeTemporaryValue("no_life_regen", eff.healid)
+	end,
+}
+
+newEffect{
+	name = "INCREASED_LIFE",
+	desc = "Increased Life",
+	long_desc = function(self, eff) return ("The target's maximum life is increased by %d."):format(eff.life) end,
+	type = "mental",
+	subtype = "frenzy",
+	status = "beneficial",
+	on_gain = function(self, err) return "#Target# gains extra life.", "+Life" end,
+	on_lose = function(self, err) return "#Target# loses extra life.", "-Life" end,
+	parameters = { life = 50 },
+	activate = function(self, eff)
+		self.max_life = self.max_life + eff.life
+		self.life = self.life + eff.life
+		self.changed = true
+	end,
+	deactivate = function(self, eff)
+		self.max_life = self.max_life - eff.life
+		self.life = self.life - eff.life
+		self.changed = true
+		if self.life <= 0 then
+			self.life = 1
+			self:setEffect(self.EFF_STUNNED, 3, {})
+			game.logSeen(self, "%s's increased life wears off and is stunned by the change.", self.name:capitalize())
+		end
+	end,
+}
+
+newEffect{
+	name = "RAMPAGE",
+	desc = "Rampaging",
+	long_desc = function(self, eff) return "The target is rampaging!" end,
+	type = "mental",
+	subtype = "frenzy",
+	status = "beneficial",
+	parameters = { hateLoss = 0, critical = 0, damage = 0, speed = 0, attack = 0, evasion = 0 }, -- use percentages not fractions
+	on_gain = function(self, err) return "#F53CBE##Target# begins rampaging!", "+Rampage" end,
+	on_lose = function(self, err) return "#F53CBE##Target# is no longer rampaging.", "-Rampage" end,
+	activate = function(self, eff)
+		if eff.hateLoss or 0 > 0 then eff.hateLossId = self:addTemporaryValue("hate_regen", -eff.hateLoss) end
+		if eff.critical or 0 > 0 then eff.criticalId = self:addTemporaryValue("combat_physcrit", eff.critical) end
+		if eff.damage or 0 > 0 then eff.damageId = self:addTemporaryValue("inc_damage", {[DamageType.PHYSICAL]=eff.damage}) end
+		if eff.speed or 0 > 0 then eff.speedId = self:addTemporaryValue("global_speed_add", eff.speed * 0.01) end
+		if eff.attack or 0 > 0 then eff.attackId = self:addTemporaryValue("combat_atk", self:combatAttack() * eff.attack * 0.01) end
+		if eff.evasion or 0 > 0 then eff.evasionId = self:addTemporaryValue("evasion", eff.evasion) end
+
+		eff.particle = self:addParticles(Particles.new("rampage", 1))
+	end,
+	deactivate = function(self, eff)
+		if eff.hateLossId then self:removeTemporaryValue("hate_regen", eff.hateLossId) end
+		if eff.criticalId then self:removeTemporaryValue("combat_physcrit", eff.criticalId) end
+		if eff.damageId then self:removeTemporaryValue("inc_damage", eff.damageId) end
+		if eff.speedId then self:removeTemporaryValue("global_speed_add", eff.speedId) end
+		if eff.attackId then self:removeTemporaryValue("combat_atk", eff.attackId) end
+		if eff.evasionId then self:removeTemporaryValue("evasion", eff.evasionId) end
+
+		self:removeParticles(eff.particle)
+	end,
+}
+
+newEffect{
+	name = "ORC_FURY",
+	desc = "Orcish Fury",
+	long_desc = function(self, eff) return ("The target enters a destructive fury, increasing all damage done by %d%%."):format(eff.power) end,
+	type = "mental",
+	subtype = "frenzy",
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# enters a state of bloodlust." end,
+	on_lose = function(self, err) return "#Target# calms down." end,
+	activate = function(self, eff)
+		eff.pid = self:addTemporaryValue("inc_damage", {all=eff.power})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("inc_damage", eff.pid)
 	end,
 }

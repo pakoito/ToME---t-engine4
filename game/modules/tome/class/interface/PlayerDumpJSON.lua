@@ -79,7 +79,9 @@ function _M:dumpToJSON(js)
 	if self:knowTalent(self.T_POSITIVE_POOL) then r[#r+1] = {positive=string.format("%d/%d", self.positive, self.max_positive)} end
 	if self:knowTalent(self.T_NEGATIVE_POOL) then r[#r+1] = {negative=string.format("%d/%d", self.negative, self.max_negative)} end
 	if self:knowTalent(self.T_VIM_POOL) then r[#r+1] = {vim=string.format("%d/%d", self.vim, self.max_vim)} end
+	if self:knowTalent(self.T_PSI_POOL) then r[#r+1] = {psi=string.format("%d/%d", self.psi, self.max_psi)} end
 	if self:knowTalent(self.T_EQUILIBRIUM_POOL) then r[#r+1] = {equilibrium=string.format("%d", self.equilibrium)} end
+	if self:knowTalent(self.T_PARADOX_POOL) then r[#r+1] = {paradox=string.format("%d", self.paradox)} end
 	if self:knowTalent(self.T_HATE_POOL) then r[#r+1] = {hate=string.format("%0.2f/%0.2f", self.hate, self.max_hate)} end
 
 	-------------------------------------------------------------------
@@ -122,6 +124,18 @@ function _M:dumpToJSON(js)
 			end
 			if mean and mean.range then c[#c+1] = { ["range (main hand)"] = mean.range } end
 		end
+	end
+	--Unarmed?
+	if self:isUnarmed() then
+		local mean, dam = self.combat, self.combat
+		if mean and dam then
+			c[#c+1] = { ["accuracy (unarmed)"] = string.format("%d", self:combatAttack(mean)) }
+			c[#c+1] = { ["damage (unarmed)"] = string.format("%d", self:combatDamage(dam)) }
+			c[#c+1] = { ["APR (unarmed)"] = string.format("%d", self:combatAPR(dam)) }
+			c[#c+1] = { ["crit (unarmed)"] = string.format("%d%%", self:combatCrit(dam)) }
+			c[#c+1] = { ["speed (unarmed)"] = string.format("%0.2f", self:combatSpeed(mean)) }
+		end
+		if mean and mean.range then c[#c+1] = { ["range (unarmed)"] = mean.range } end
 	end
 	if self:getInven(self.INVEN_OFFHAND) then
 		local offmult = self:getOffHandMult()

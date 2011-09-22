@@ -17,6 +17,15 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+--	All timed effects are divided into physical, mental, magical, or other types.  Timed effect types are organized based on what saving throw or dispel would be most appropriate
+--	along with consideration based on how it can be applied.  There's a lot of overlap between natural and magical timed effects so when in doubt an effect will not be magical.
+--	Frozen is a good example of this because of Frost Breath.  Effects falling into the other category have no save and generally can not be removed unless they're specifically called.
+	
+--	All subtype organization is based off the root cause if one is available or effect if not.  For example burning is a fire effect, caused by fire.  
+--	Stun is a more general effect and can have many causes, thus it's subtype is based off its effect, so in this case the subtype is simply 'stun'.
+--	Burning Shock could easily fall into either of these subtypes.  First we ask if it has a cause, it does, fire.  Therefore it is subtype 'fire' rather then subtype 'stun'.
+
+
 local Stats = require "engine.interface.ActorStats"
 local Particles = require "engine.Particles"
 local Entity = require "engine.Entity"

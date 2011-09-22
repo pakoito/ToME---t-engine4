@@ -151,6 +151,7 @@ newEffect{
 	desc = "Golem out of sight",
 	long_desc = function(self, eff) return "The golem is out of sight of the alchemist; direct control will be lost!" end,
 	type = "other",
+	subtype = "miscellaneous",
 	status = "detrimental",
 	parameters = { },
 	on_gain = function(self, err) return "#LIGHT_RED##Target# is out of sight of its master; direct control will break!.", "+Out of sight" end,
@@ -177,7 +178,7 @@ newEffect{
 	desc = "Continuum Destabilization",
 	long_desc = function(self, eff) return ("The target has been affected by space or time manipulations and is becoming more resistant to them (+%d)."):format(eff.power) end,
 	type = "other",
-	subtype = "spacetime",
+	subtype = "time",
 	status = "beneficial",
 	parameters = { power=10 },
 	on_gain = function(self, err) return "#Target# looks a little pale around the edges.", "+Destabilized" end,
@@ -207,6 +208,7 @@ newEffect{
 	desc = "Summoning Destabilization",
 	long_desc = function(self, eff) return ("The more the target summons creatures the longer it will take to summon more (+%d turns)."):format(eff.power) end,
 	type = "other", -- Type "other" so that nothing can dispel it
+	subtype = "miscellaneous",
 	status = "detrimental",
 	parameters = { power=10 },
 	on_merge = function(self, old_eff, new_eff)
@@ -291,7 +293,7 @@ newEffect{
 	desc = "Temporal Stun",
 	long_desc = function(self, eff) return "The target is paralyzed, preventing any actions." end,
 	type = "other",
-	--subtype = "time", --no subtype so it can't be removed
+	subtype = "time",
 	status = "detrimental",
 	parameters = {},
 	on_gain = function(self, err) return "#Target# is paralyzed!", "+Paralyzed" end,
@@ -309,7 +311,7 @@ newEffect{
 	desc = "Precognition",
 	long_desc = function(self, eff) return "You walk into the future; when the effect ends, if you are not dead, you are brought back to the past." end,
 	type = "other",
-	--subtype = "time", --no subtype so it can't be removed
+	subtype = "time",
 	status = "beneficial",
 	parameters = { power=10 },
 	activate = function(self, eff)
@@ -335,7 +337,7 @@ newEffect{
 	desc = "See the Threads",
 	long_desc = function(self, eff) return ("You walk three different timelines, choosing the one you prefer at the end (current timeline: %d)."):format(eff.thread) end,
 	type = "other",
-	--subtype = "time", --no subtype so it can't be removed
+	subtype = "time",
 	status = "beneficial",
 	parameters = { power=10 },
 	activate = function(self, eff)
@@ -390,7 +392,7 @@ newEffect{
 	desc = "Imminent Paradox Clone",
 	long_desc = function(self, eff) return "When the effect expires you'll be pulled into the past." end,
 	type = "other",
-	--subtype = "time", --no subtype so it can't be removed
+	subtype = "time",
 	status = "detrimental",
 	parameters = { power=10 },
 	activate = function(self, eff)
@@ -442,7 +444,7 @@ newEffect{
 	desc = "Paradox Clone",
 	long_desc = function(self, eff) return "You've been pulled into the past." end,
 	type = "other",
-	--subtype = "time", --no subtype so it can't be removed
+	subtype = "time",
 	status = "detrimental",
 	parameters = { power=10 },
 	activate = function(self, eff)
@@ -467,6 +469,7 @@ newEffect{
 	desc = "Militant Mind",
 	long_desc = function(self, eff) return ("Increases physical power, spellpower and mindpower by %d."):format(eff.power) end,
 	type = "other",
+	subtype = "miscellaneous",
 	status = "beneficial",
 	parameters = { power=10 },
 	activate = function(self, eff)
@@ -520,7 +523,7 @@ newEffect{
 	name = "FADE_FROM_TIME",
 	desc = "Fade From Time",
 	long_desc = function(self, eff) return ("The target is partially removed from the timeline, reducing all damage dealt by %d%%, all damage recieved by %d%%, and the duration of all detrimental effects by %d%%."):
-	format(eff.dur + 1, eff.cur_power or eff.power, eff.cur_power or eff.power) end,
+	format(eff.dur + 1 * 2, eff.cur_power or eff.power, eff.cur_power or eff.power) end,
 	type = "other",
 	subtype = "time",
 	status = "beneficial",
@@ -531,7 +534,7 @@ newEffect{
 		self:removeTemporaryValue("inc_damage", old_eff.dmgid)
 		self:removeTemporaryValue("resists", old_eff.rstid)
 		old_eff.cur_power = (new_eff.power)
-		old_eff.dmgid = self:addTemporaryValue("inc_damage", {all = - old_eff.dur})
+		old_eff.dmgid = self:addTemporaryValue("inc_damage", {all = - old_eff.dur * 2})
 		old_eff.rstid = self:addTemporaryValue("resists", {all = old_eff.cur_power})
 
 		old_eff.dur = old_eff.dur
@@ -544,7 +547,7 @@ newEffect{
 	activate = function(self, eff)
 		eff.cur_power = eff.power
 		eff.rstid = self:addTemporaryValue("resists", { all = eff.power})
-		eff.dmgid = self:addTemporaryValue("inc_damage", {all = -10})
+		eff.dmgid = self:addTemporaryValue("inc_damage", {all = -20})
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("resists", eff.rstid)
@@ -557,6 +560,7 @@ newEffect{
 	desc = "Shadow Veil",
 	long_desc = function(self, eff) return ("You veil yourself in shadows and let them control you. While in the veil you become immune to status effects, gain %d%% all damage reduction and each turn you blink to a nearby foe, hitting it for %d%% darkness weapon damage. While this goes on you can not be stopped unless you are killed and can not control you character."):format(eff.res, eff.dam * 100) end,
 	type = "other",
+	subtype = "darkness",
 	status = "beneficial",
 	parameters = { res=10, dam=1.5 },
 	on_gain = function(self, err) return "#Target# is covered in a veil of shadows!", "+Assail" end,

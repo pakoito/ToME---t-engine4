@@ -122,7 +122,7 @@ newTalent{
 	paradox = 10,
 	cooldown = 24,
 	tactical = { DEFEND = 2 },
-	getResist = function(self, t) return self:combatTalentSpellDamage(t, 10, 70) * getParadoxModifier(self, pm) end,
+	getResist = function(self, t) return self:combatTalentSpellDamage(t, 10, 50) * getParadoxModifier(self, pm) end,
 	action = function(self, t)
 		self:setEffect(self.EFF_FADE_FROM_TIME, 10, {power=t.getResist(self, t)})
 		game:playSoundNear(self, "talents/heal")
@@ -130,7 +130,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local resist = t.getResist(self, t)
-		return ([[You partially remove yourself from the timeline for 10 turns, increasing your resistance to all damage by %d%%, reducing the duration of all detrimental effects by %d%%, and reducing all damage you deal by 10%%.
+		return ([[You partially remove yourself from the timeline for 10 turns, increasing your resistance to all damage by %d%%, reducing the duration of all detrimental effects by %d%%, and reducing all damage you deal by 20%%.
 		The resistance bonus, detrimental effect reduction, and damage penalty will gradually lose power over the course of the spell.
 		The effect will scale with your Paradox and Spellpower.]]):
 		format(resist, resist, resist/10)

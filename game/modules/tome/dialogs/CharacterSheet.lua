@@ -852,7 +852,6 @@ function _M:dump()
 	nl(("CON:  %d"):format(player:getCon()))
 
 	 -- All weapons in main hands
-
 	local strings = {}
 	for i = 1, 6 do strings[i]="" end
 	if player:getInven(player.INVEN_MAINHAND) then
@@ -870,6 +869,18 @@ function _M:dump()
 			end
 			if mean and mean.range then strings[6] = ("Range (Main Hand): %3d"):format(mean.range) end
 		end
+	end
+	--Unarmed??
+	if player:isUnarmed() then
+		local mean, dam = player.combat, player.combat
+		if mean and dam then
+			strings[1] = ("Accuracy(Unarmed): %3d"):format(player:combatAttack(mean))
+			strings[2] = ("Damage  (Unarmed): %3d"):format(player:combatDamage(dam))
+			strings[3] = ("APR     (Unarmed): %3d"):format(player:combatAPR(dam))
+			strings[4] = ("Crit    (Unarmed): %3d%%"):format(player:combatCrit(dam))
+			strings[5] = ("Speed   (Unarmed): %0.2f"):format(player:combatSpeed(mean))
+		end
+		if mean and mean.range then strings[6] = ("Range (Unarmed): %3d"):format(mean.range) end
 	end
 
 	local enc, max = player:getEncumbrance(), player:getMaxEncumbrance()
@@ -915,6 +926,12 @@ function _M:dump()
 	nnl(("%-32s"):format(""))
 	if player:knowTalent(player.T_EQUILIBRIUM_POOL) then
 		nl((makelabel("Equilibrium", ("    %d"):format(player:getEquilibrium()))))
+	else
+		nl()
+	end
+	nnl(("%-32s"):format(""))
+	if player:knowTalent(player.T_PARADOX_POOL) then
+		nl((makelabel("Paradox", ("    %d"):format(player:getParadox()))))
 	else
 		nl()
 	end

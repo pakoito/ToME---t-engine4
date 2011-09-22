@@ -159,6 +159,7 @@ newTalent{
 	end,
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("invisible", p.invisible)
+		self:removeTemporaryValue("invisible_damage_penalty", p.invisible_damage_penalty)
 		self:removeTemporaryValue("positive_regen", p.fill)
 		self:removeTemporaryValue("negative_regen", p.drain)
 		local tg = {type="ball", range=0, selffire=true, radius= t.getRadius(self, t), talent=t}
