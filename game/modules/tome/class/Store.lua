@@ -67,6 +67,14 @@ function _M:loadup(level, zone)
 	if Store.loadup(self, level, zone, self.store.nb_fill) then
 		self.last_filled = game.state.stores_restock
 	end
+	-- clear chrono worlds and their various effects
+	if game._chronoworlds then 
+		game.log("#CRIMSON#Your timetravel has no effect on pre-determined outcomes such as this.")
+		game._chronoworlds = nil
+		if game.player:isTalentActive(game.player.T_DOOR_TO_THE_PAST) then
+			game.player:forceUseTalent(game.player.T_DOOR_TO_THE_PAST, {ignore_energy=true})
+		end
+	end
 end
 
 

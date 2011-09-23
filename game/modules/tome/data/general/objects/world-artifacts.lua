@@ -92,7 +92,7 @@ newEntity{ base = "BASE_STAFF",
 			-- Go through all spell effects
 			for eff_id, p in pairs(target.tmp) do
 				local e = target.tempeffect_def[eff_id]
-				if e.subtype == "disease" then
+				if e.subtype.disease then
 					effs[#effs+1] = {"effect", eff_id}
 				end
 			end

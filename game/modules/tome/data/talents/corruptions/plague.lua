@@ -91,7 +91,7 @@ newTalent{
 
 			for eff_id, p in pairs(target.tmp) do
 				local e = target.tempeffect_def[eff_id]
-				if e.subtype == "disease" then
+				if e.subtype.disease then
 					diseases[#diseases+1] = {id=eff_id, params=p}
 				end
 			end
@@ -156,7 +156,7 @@ newTalent{
 			local diseases = {}
 			for eff_id, p in pairs(target.tmp) do
 				local e = target.tempeffect_def[eff_id]
-				if e.subtype == "disease" then
+				if e.subtype.disease then
 					diseases[#diseases+1] = {id=eff_id, params=p}
 				end
 			end
@@ -199,7 +199,7 @@ newTalent{
 		local diseases = {}
 		for eff_id, p in pairs(carrier.tmp) do
 			local e = carrier.tempeffect_def[eff_id]
-			if e.subtype == "disease" then
+			if e.subtype.disease then
 				diseases[#diseases+1] = {id=eff_id, params=p}
 			end
 		end

@@ -1664,7 +1664,7 @@ newDamageType{
 		if target and (src:reactionToward(target) < 0 or dam.ff) then
 			for eff_id, p in pairs(target.tmp) do
 				local e = target.tempeffect_def[eff_id]
-				if e.subtype == "bane" then return end
+				if e.subtype.bane then return end
 			end
 
 			local what = rng.percent(50) and "blind" or "confusion"

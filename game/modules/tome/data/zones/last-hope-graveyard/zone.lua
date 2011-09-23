@@ -85,6 +85,14 @@ return {
 		local Dialog = require("engine.ui.Dialog")
 		Dialog:yesnoLongPopup("Open the coffin", "In rich families the dead are sometimes put to rest with some treasures. However they also sometime protect the coffins with powerful curses. Open?", 500, function(ret)
 			if not ret then return end
+			-- clear chrono worlds and their various effects
+			if game._chronoworlds then 
+				game.log("#CRIMSON#Your timetravel has no effect on pre-determined outcomes such as this.")
+				game._chronoworlds = nil
+				if who:isTalentActive(who.T_DOOR_TO_THE_PAST) then
+					who:forceUseTalent(who.T_DOOR_TO_THE_PAST, {ignore_energy=true})
+				end
+			end
 			local r = rng.range(1, 100)
 			if r <= 10 then
 				if not who:knowTalentType("cursed/fateful-aura") then

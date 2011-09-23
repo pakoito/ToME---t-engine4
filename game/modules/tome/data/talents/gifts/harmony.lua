@@ -39,7 +39,7 @@ newTalent{
 		local nb = 0
 		for eff_id, p in pairs(self.tmp) do
 			local e = self.tempeffect_def[eff_id]
-			if e.subtype == "disease" or e.subtype == "poison" then
+			if e.subtype.disease or e.subtype.poison then
 				nb = nb + 1
 			end
 		end
