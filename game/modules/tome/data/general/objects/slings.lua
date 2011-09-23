@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local Talents = require "engine.interface.ActorTalents"
+
 newEntity{
 	define_as = "BASE_SLING",
 	slot = "MAINHAND",
@@ -27,6 +29,7 @@ newEntity{
 	rarity = 5,
 	combat = { talented = "sling", sound = "actions/arrow", sound_miss = "actions/arrow", },
 	archery = "sling",
+	require = { talent = { Talents.T_SHOOT }, },
 	proj_image = resolvers.image_material("shot_s", "metal"),
 	basic_ammo = { talented = "sling", damrange = 1.2},
 	desc = [[Slings are used to hurl stones or metal shots at your foes.]],

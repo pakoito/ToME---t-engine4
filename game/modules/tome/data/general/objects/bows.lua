@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local Talents = require "engine.interface.ActorTalents"
+
 newEntity{
 	define_as = "BASE_LONGBOW",
 	slot = "MAINHAND",
@@ -27,6 +29,7 @@ newEntity{
 	encumber = 4,
 	rarity = 5,
 	combat = { talented = "bow", sound = "actions/arrow", sound_miss = "actions/arrow",},
+	require = { talent = { Talents.T_SHOOT }, },
 	archery = "bow",
 	proj_image = resolvers.image_material("arrow", "wood"),
 	basic_ammo = { talented = "bow", damrange = 1.4  },
