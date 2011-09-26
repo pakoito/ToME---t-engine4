@@ -76,7 +76,7 @@ newEntity{ base = "BASE_LITE", define_as = "WINTERTIDE_PHIAL",
 	},
 
 	max_power = 60, power_regen = 1,
-	use_power = { name = "mental cleansing", power = 40,
+	use_power = { name = "cleanse your mind", power = 40,
 		use = function(self, who)
 			local target = who
 			local effs = {}

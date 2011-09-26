@@ -243,7 +243,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {nature=true},
+	power_source = {arcane=true},
 	name = "aegis ", prefix=true, instant_resolve=true,
 	level_range = {10, 50},
 	greater_ego = 1,
@@ -292,7 +292,7 @@ newEntity{
 		talents_types_mastery = {
 			["spell/temporal"] = resolvers.mbonus_material(2, 2, function(e, v) v=v/10 return 0, v end),
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -308,7 +308,7 @@ newEntity{
 		},
 		mana_regen = resolvers.mbonus_material(50, 10, function(e, v) v=v/100 return 0, v end),
 		combat_spellpower = resolvers.mbonus_material(7, 1),
-	},	
+	},
 }
 
 newEntity{
@@ -326,7 +326,7 @@ newEntity{
 			[DamageType.COLD] = resolvers.mbonus_material(7, 3),
 			[DamageType.ARCANE] = resolvers.mbonus_material(7, 3),
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -343,7 +343,7 @@ newEntity{
 		poison_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
 		disease_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
 		combat_physresist = resolvers.mbonus_material(7, 3),
-	},	
+	},
 }
 
 newEntity{
@@ -359,7 +359,7 @@ newEntity{
 			["spell/arcane"] = resolvers.mbonus_material(3, 1, function(e, v) v=v/10 return 0, v end),
 			["spell/arcane-shield"] = resolvers.mbonus_material(3, 1, function(e, v) v=v/10 return 0, v end),
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -380,7 +380,7 @@ newEntity{
 			[Stats.STAT_WIL] = resolvers.mbonus_material(9, 1),
 		},
 		combat_mentalresist = resolvers.mbonus_material(10, 5, function(e, v) return 0, -v end),
-	},	
+	},
 }
 
 newEntity{
@@ -397,7 +397,7 @@ newEntity{
 			[Stats.STAT_CON] = resolvers.mbonus_material(5, 1),
 		},
 		combat_armor = resolvers.mbonus_material(5, 1),
-	},	
+	},
 }
 
 newEntity{
@@ -414,7 +414,7 @@ newEntity{
 			[DamageType.ACID] = resolvers.mbonus_material(10, 5),
 			[DamageType.COLD] = resolvers.mbonus_material(10, 5),
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -430,7 +430,7 @@ newEntity{
 		inc_stats = {
 			[Stats.STAT_MAG] = resolvers.mbonus_material(9, 1),
 		},
-	},	
+	},
 }
 
 newEntity{
