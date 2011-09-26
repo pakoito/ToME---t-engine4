@@ -280,7 +280,7 @@ function _M:giveOrder(actor, order)
 		end), 1)
 	elseif order == "anchor" then
 		local co = coroutine.create(function()
-			local x, y, act = game.player:getTarget({type="hit", range=10})
+			local x, y, act = game.player:getTarget({type="hit", range=10, nowarning=true})
 			local anchor
 			if x and y then
 				if act then
