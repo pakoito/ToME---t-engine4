@@ -110,7 +110,7 @@ No, NO! I have - I --- acci--- pain, such pa--______
 	on_learn = function(who)
 		local p = game.party:findMember{main=true}
 		if p:knowTalent(p.T_TRAP_MASTERY) then
-			p:learnTalent(p.T_POISON_GAS_TRAP, 1)
+			p:learnTalent(p.T_POISON_GAS_TRAP, 1, nil, {no_unlearn=true})
 			game.log("#LIGHT_GREEN#You have learnt to create poison gas traps!")
 		end
 	end,

@@ -86,7 +86,7 @@ return {
 		Dialog:yesnoLongPopup("Open the coffin", "In rich families the dead are sometimes put to rest with some treasures. However they also sometime protect the coffins with powerful curses. Open?", 500, function(ret)
 			if not ret then return end
 			-- clear chrono worlds and their various effects
-			if game._chronoworlds then 
+			if game._chronoworlds then
 				game.log("#CRIMSON#Your timetravel has no effect on pre-determined outcomes such as this.")
 				game._chronoworlds = nil
 				if who:isTalentActive(who.T_DOOR_TO_THE_PAST) then
@@ -98,7 +98,7 @@ return {
 				if not who:knowTalentType("cursed/fateful-aura") then
 					Dialog:simplePopup("Curse!", "The coffin was a decoy, a powerful curse was set upon you (check your talents).")
 					who:learnTalentType("cursed/fateful-aura", true)
-					who:learnTalent(who.T_CURSED_TOUCH, true)
+					who:learnTalent(who.T_CURSED_TOUCH, true, nil, {no_unlearn=true})
 				else
 					game.log("There is nothing there.")
 				end

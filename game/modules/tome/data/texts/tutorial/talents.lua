@@ -18,8 +18,8 @@
 -- darkgod@te4.org
 
 if not game.player.tutored_levels then
-	game.player:learnTalent(game.player.T_SHIELD_PUMMEL, true, 1)
-	game.player:learnTalent(game.player.T_SHIELD_WALL, true, 1)
+	game.player:learnTalent(game.player.T_SHIELD_PUMMEL, true, 1, {no_unlearn=true})
+	game.player:learnTalent(game.player.T_SHIELD_WALL, true, 1, {no_unlearn=true})
 	game.player.tutored_levels = true
 end
 

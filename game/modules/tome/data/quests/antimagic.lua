@@ -34,7 +34,7 @@ on_status_change = function(self, who, status, sub)
 		local p = game.party:findMember{main=true}
 		p:attr("forbid_arcane", 1)
 		p:learnTalentType("wild-gift/antimagic", true)
-		p:learnTalent(p.T_RESOLVE, true)
+		p:learnTalent(p.T_RESOLVE, true, nil, {no_unlearn=true})
 		world:gainAchievement("ANTIMAGIC", game.player)
 	end
 end

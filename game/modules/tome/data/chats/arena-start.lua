@@ -101,7 +101,7 @@ local give_moveinfu = function(self, player)
 end
 
 local give_imbue = function(self, player)
-	player:learnTalent(player.T_IMBUE_ITEM, true, 4)
+	player:learnTalent(player.T_IMBUE_ITEM, true, 4, {no_unlearn=true})
 	player.changed = true
 	game.level.arena.perk = "Imbue"..game.level.arena.modeString
 end

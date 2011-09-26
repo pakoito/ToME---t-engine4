@@ -2037,13 +2037,15 @@ end
 --- Actor learns a talent
 -- @param t_id the id of the talent to learn
 -- @return true if the talent was learnt, nil and an error message otherwise
-function _M:learnTalent(t_id, force, nb)
+function _M:learnTalent(t_id, force, nb, extra)
 	if not engine.interface.ActorTalents.learnTalent(self, t_id, force, nb) then return false end
 
 	-- If we learned a spell, get mana, if you learned a technique get stamina, if we learned a wild gift, get power
 	local t = _M.talents_def[t_id]
 
-	if not t.no_unlearn_last and self.last_learnt_talents then
+	extra = extra or {}
+
+	if not t.no_unlearn_last and self.last_learnt_talents and not extra.no_unlearn then
 		local list = t.generic and self.last_learnt_talents.generic or self.last_learnt_talents.class
 		table.insert(list, t_id)
 		self:capLastLearntTalents(t.generic and "generic" or "class")
@@ -2075,7 +2077,7 @@ function _M:learnTalent(t_id, force, nb)
 		self:learnTalent(self.T_NEGATIVE_POOL, true)
 		self.resource_pool_refs[self.T_NEGATIVE_POOL] = (self.resource_pool_refs[self.T_NEGATIVE_POOL] or 0) + 1
 	end
-	if t.type[1]:find("^cursed/") and not self:knowTalent(self.T_HATE_POOL) then
+	if t.type[1]:find("^cursed/") and not self:knowTalent(self.T_HATE_POOL) and t.hate then
 		self:learnTalent(self.T_HATE_POOL, true)
 		self.resource_pool_refs[self.T_HATE_POOL] = (self.resource_pool_refs[self.T_HATE_POOL] or 0) + 1
 	end

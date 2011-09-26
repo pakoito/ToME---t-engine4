@@ -46,7 +46,7 @@ end
 on_status_change = function(self, who, status, sub)
 	if self:isCompleted() then
 		who:setQuestStatus(self.id, engine.Quest.DONE)
-		who:learnTalent(who.T_LICHFORM, true, 1)
+		who:learnTalent(who.T_LICHFORM, true, 1, {no_unlearn=true})
 		require("engine.ui.Dialog"):simplePopup("Lichform", "The secrets of death lay open to you! The skill 'Lichform' has been unlocked!")
 	end
 end

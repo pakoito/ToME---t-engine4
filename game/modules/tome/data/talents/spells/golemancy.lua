@@ -241,10 +241,10 @@ newTalent{
 	require = spells_req1,
 	points = 5,
 	on_learn = function(self, t)
-		self.alchemy_golem:learnTalent(Talents.T_WEAPON_COMBAT, true)
-		self.alchemy_golem:learnTalent(Talents.T_WEAPON_COMBAT, true)
-		self.alchemy_golem:learnTalent(Talents.T_WEAPONS_MASTERY, true)
-		self.alchemy_golem:learnTalent(Talents.T_WEAPONS_MASTERY, true)
+		self.alchemy_golem:learnTalent(Talents.T_WEAPON_COMBAT, true, nil, {no_unlearn=true})
+		self.alchemy_golem:learnTalent(Talents.T_WEAPON_COMBAT, true, nil, {no_unlearn=true})
+		self.alchemy_golem:learnTalent(Talents.T_WEAPONS_MASTERY, true, nil, {no_unlearn=true})
+		self.alchemy_golem:learnTalent(Talents.T_WEAPONS_MASTERY, true, nil, {no_unlearn=true})
 	end,
 	on_unlearn = function(self, t)
 		self.alchemy_golem:unlearnTalent(Talents.T_WEAPON_COMBAT, true)
@@ -272,10 +272,10 @@ newTalent{
 	require = spells_req2,
 	points = 5,
 	on_learn = function(self, t)
-		self.alchemy_golem:learnTalent(Talents.T_THICK_SKIN, true)
-		self.alchemy_golem:learnTalent(Talents.T_THICK_SKIN, true)
-		self.alchemy_golem:learnTalent(Talents.T_ARMOUR_TRAINING, true)
-		self.alchemy_golem:learnTalent(Talents.T_ARMOUR_TRAINING, true)
+		self.alchemy_golem:learnTalent(Talents.T_THICK_SKIN, true, nil, {no_unlearn=true})
+		self.alchemy_golem:learnTalent(Talents.T_THICK_SKIN, true, nil, {no_unlearn=true})
+		self.alchemy_golem:learnTalent(Talents.T_ARMOUR_TRAINING, true, nil, {no_unlearn=true})
+		self.alchemy_golem:learnTalent(Talents.T_ARMOUR_TRAINING, true, nil, {no_unlearn=true})
 		self.alchemy_golem.healing_factor = (self.alchemy_golem.healing_factor or 1) + 0.1
 	end,
 	on_unlearn = function(self, t)

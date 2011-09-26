@@ -106,7 +106,7 @@ return {
 		end
 
 		--Allow players to shoot bows and stuff by default. Move it back to perks if too powerful.
-		game.player:learnTalent(game.player.T_SHOOT, true)
+		game.player:learnTalent(game.player.T_SHOOT, true, nil, {no_unlearn=true})
 		game.player.changed = true
 		level.turn_counter = 60 --5 turns before action starts.
 		--world.arena = nil

@@ -100,7 +100,7 @@ function _M:setInscription(id, name, data, cooldown, vocal, src, bypass_max_same
 	self.inscriptions_data[name] = data
 	self.inscriptions[id] = name
 	print("Inscribing on "..self.name..": "..tostring(name))
-	self:learnTalent(self["T_"..name], true, 1)
+	self:learnTalent(self["T_"..name], true, 1, {no_unlearn=true})
 	local t = self:getTalentFromId(self["T_"..name])
 	if cooldown then self:startTalentCooldown(t) end
 	if vocal then

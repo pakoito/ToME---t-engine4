@@ -90,9 +90,9 @@ newTalent{
 	tactical = { ESCAPE = 2 },
  	on_learn = function(self, t)
 		if self:getTalentLevel(t) >= 4 and not self:knowTalent(self.T_JUMPGATE_TWO) then
-			self:learnTalent(self.T_JUMPGATE_TWO)
+			self:learnTalent(self.T_JUMPGATE_TWO, nil, nil, {no_unlearn=true})
  		end
-			self:learnTalent(self.T_JUMPGATE_TELEPORT)
+			self:learnTalent(self.T_JUMPGATE_TELEPORT, nil, nil, {no_unlearn=true})
 	end,
  	on_unlearn = function(self, t)
 		if self:getTalentLevel(t) < 4 and self:knowTalent(self.T_JUMPGATE_TWO) then
@@ -279,7 +279,7 @@ newTalent{
 	tactical = { ESCAPE = 2 },
 	on_learn = function(self, t)
 		if not self:knowTalent(self.T_JUMPGATE_TELEPORT_TWO) then
-			self:learnTalent(self.T_JUMPGATE_TELEPORT_TWO)
+			self:learnTalent(self.T_JUMPGATE_TELEPORT_TWO, nil, nil, {no_unlearn=true})
 		end
 	end,
 	on_unlearn = function(self, t)

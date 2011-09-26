@@ -34,15 +34,15 @@ newTalent{
 	on_learn = function(self, t)
 		local lev = self:getTalentLevelRaw(t)
 		if lev == 1 then
-			self:learnTalent(self.T_EXPLOSION_TRAP, true)
+			self:learnTalent(self.T_EXPLOSION_TRAP, true, nil, {no_unlearn=true})
 		elseif lev == 2 then
-			self:learnTalent(self.T_BEAR_TRAP, true)
+			self:learnTalent(self.T_BEAR_TRAP, true, nil, {no_unlearn=true})
 		elseif lev == 3 then
-			self:learnTalent(self.T_CATAPULT_TRAP, true)
+			self:learnTalent(self.T_CATAPULT_TRAP, true, nil, {no_unlearn=true})
 		elseif lev == 4 then
-			self:learnTalent(self.T_DISARMING_TRAP, true)
+			self:learnTalent(self.T_DISARMING_TRAP, true, nil, {no_unlearn=true})
 		elseif lev == 5 then
-			self:learnTalent(self.T_NIGHTSHADE_TRAP, true)
+			self:learnTalent(self.T_NIGHTSHADE_TRAP, true, nil, {no_unlearn=true})
 		end
 	end,
 	on_unlearn = function(self, t)

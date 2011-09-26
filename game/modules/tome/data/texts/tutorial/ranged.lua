@@ -18,11 +18,11 @@
 -- darkgod@te4.org
 
 if not game.player.tutored_levels2 then
-	game.player:learnTalent(game.player.T_SHOOT, true, 1)
+	game.player:learnTalent(game.player.T_SHOOT, true, 1, {no_unlearn=true})
 	game.player.tutored_levels2 = true
 end
 
-return [[Ranged combat typically revolves around firing arrows, slinging stones, or casting spells. 
+return [[Ranged combat typically revolves around firing arrows, slinging stones, or casting spells.
 You have been given a bow, which you wield with both hands.
 You have infinite normal arrows, but you can add special arrows to your quiver for extra damage and/or effects.
 To fire an arrow, use the shoot talent. The target interface will pop-up, just like for other talents.

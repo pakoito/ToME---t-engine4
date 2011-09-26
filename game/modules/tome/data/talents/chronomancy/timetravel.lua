@@ -41,13 +41,13 @@ newTalent{
 		if tx then
 			target = game.level.map(tx, ty, engine.Map.ACTOR)
 		end
-		
+
 		-- checks for spacetime mastery hit bonus
 		local power = self:combatSpellpower()
 		if self:knowTalent(self.T_SPACETIME_MASTERY) then
 			power = self:combatSpellpower() * (1 + self:getTalentLevel(self.T_SPACETIME_MASTERY)/10)
 		end
-		
+
 		if target then
 			local hit = self:checkHit(power, target:combatSpellResist() + (target:attr("continuum_destabilization") or 0))
 			if not hit then
@@ -57,12 +57,12 @@ newTalent{
 		else
 			return
 		end
-		
+
 		-- deal the damage first so time prison doesn't prevent it
 		self:project(tg, tx, ty, DamageType.TEMPORAL, self:spellCrit(t.getDamage(self, t)))
 		game.level.map:particleEmitter(tx, ty, 1, "temporal_thrust")
 		game:playSoundNear(self, "talents/arcane")
-		
+
 		-- make sure the target survives the initial hit and then time prison
 		if not target.dead then
 			if target ~= self then
@@ -155,7 +155,7 @@ newTalent{
 	getAnomalyCount = function(self, t) return math.ceil(self:getTalentLevel(t)) end,
 	on_learn = function(self, t)
 		if not self:knowTalent(self.T_REVISION) then
-			self:learnTalent(self.T_REVISION)
+			self:learnTalent(self.T_REVISION, nil, nil, {no_unlearn=true})
 		end
 	end,
 	on_unlearn = function(self, t)
@@ -243,7 +243,7 @@ newTalent{
 		-- remove anomaly count
 		if self.dttp_anomaly_count then self.dttp_anomaly_count = nil end
 		if game._chronoworlds then game._chronoworlds = nil end
-	
+
 		return true
 	end,
 	info = function(self, t)

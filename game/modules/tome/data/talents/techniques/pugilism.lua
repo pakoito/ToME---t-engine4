@@ -73,7 +73,7 @@ newTalent{
 	-- Learn the appropriate stance
 	on_learn = function(self, t)
 		if not self:knowTalent(self.T_STRIKING_STANCE) then
-			self:learnTalent(self.T_STRIKING_STANCE, true)
+			self:learnTalent(self.T_STRIKING_STANCE, true, nil, {no_unlearn=true})
 		end
 	end,
 	on_unlearn = function(self, t)

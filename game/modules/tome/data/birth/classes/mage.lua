@@ -156,7 +156,7 @@ newBirthDescriptor{
 				self.starting_quest = "start-archmage"
 				self.starting_intro = "archmage"
 				self.faction = "angolwen"
-				self:learnTalent(self.T_TELEPORT_ANGOLWEN, true)
+				self:learnTalent(self.T_TELEPORT_ANGOLWEN, true, nil, {no_unlearn=true})
 			end
 		end,
 

@@ -110,7 +110,7 @@ newChat{ id="relentless",
 	]],
 	answers = {
 		{"I'll leave not a single orc standing.", jump="welcome", action=function(npc, player)
-			player:learnTalent(player.T_RELENTLESS_PURSUIT, true, 1)
+			player:learnTalent(player.T_RELENTLESS_PURSUIT, true, 1, {no_unlearn=true})
 			game.logPlayer(game.player, "#VIOLET#You have learned the talent Relentless Pursuit.")
 		end},
 	},

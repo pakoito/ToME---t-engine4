@@ -35,7 +35,7 @@ newEntity{ base = "BASE_SCROLL", subtype="tome",
 
 	use_simple = { name="learn the ancient secrets", use = function(self, who)
 		if not who:knowTalent(who.T_FLAME) then
-			who:learnTalent(who.T_FLAME, true, 3)
+			who:learnTalent(who.T_FLAME, true, 3, {no_unlearn=true})
 			game.logPlayer(who, "#00FFFF#You read the tome and learn about ancient forgotten fire magic!")
 		else
 			who.talents_types_mastery["spell/fire"] = (who.talents_types_mastery["spell/fire"] or 1) + 0.1
@@ -59,7 +59,7 @@ newEntity{ base = "BASE_SCROLL", subtype="tome",
 
 	use_simple = { name="learn the ancient secrets", use = function(self, who)
 		if not who:knowTalent(who.T_ICE_STORM) then
-			who:learnTalent(who.T_ICE_STORM, true, 3)
+			who:learnTalent(who.T_ICE_STORM, true, 3, {no_unlearn=true})
 			game.logPlayer(who, "#00FFFF#You read the tome and learn about ancient forgotten ice magic!")
 		else
 			who.talents_types_mastery["spell/water"] = (who.talents_types_mastery["spell/water"] or 1) + 0.1
