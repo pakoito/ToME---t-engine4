@@ -933,7 +933,9 @@ int main(int argc, char *argv[])
 	core_def->define(core_def, "te4core", -1, NULL, NULL, NULL, NULL, 0, NULL);
 
 #ifdef SELFEXE_WINDOWS
-	freopen ("te4_log.txt", "w", stdout);
+	FILE *logfile;
+	logfile = freopen ("te4_log.txt", "w", stdout);
+	bool windows_autoflush = FALSE;
 #endif
 
 	g_argc = argc;
@@ -948,7 +950,14 @@ int main(int argc, char *argv[])
 		if (!strncmp(arg, "-u", 2)) core_def->reboot_name = strdup(arg+2);
 		if (!strncmp(arg, "-E", 2)) core_def->reboot_einfo = strdup(arg+2);
 		if (!strncmp(arg, "-n", 2)) core_def->reboot_new = 1;
-		if (!strncmp(arg, "--flush-stdout", 14)) setvbuf(stdout, (char *) NULL, _IOLBF, 0);;
+		if (!strncmp(arg, "--flush-stdout", 14))
+		{
+			setvbuf(stdout, (char *) NULL, _IOLBF, 0);
+#ifdef SELFEXE_WINDOWS
+			setvbuf(logfile, NULL, _IONBF, 2);
+			windows_autoflush = TRUE;
+#endif
+		}
 		if (!strncmp(arg, "--no-debug", 10)) no_debug = TRUE;
 	}
 
@@ -1027,6 +1036,9 @@ int main(int argc, char *argv[])
 	{
 		if (!isActive || tickPaused) SDL_WaitEvent(NULL);
 
+#ifdef SELFEXE_WINDOWS
+		if (windows_autoflush) _commit(_fileno(stdout));
+#endif
 		/* handle the events in the queue */
 		while (SDL_PollEvent(&event))
 		{
