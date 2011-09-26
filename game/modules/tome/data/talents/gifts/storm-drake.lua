@@ -77,7 +77,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local percent = t.getPercent(self, t)
-		return ([[Generate an electrical field around you in a radius of 1. Any foe caught inside will lose %d%% of its current life.
+		return ([[Generate an electrical field around you in a radius of 1. Any creature caught inside will lose %d%% of its current life.
 		This effect can not kill creatures.
 		Life loss will increase with the Willpower stat.]]):format(percent)
 	end,
