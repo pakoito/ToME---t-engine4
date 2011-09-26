@@ -81,7 +81,6 @@ newEntity{
 			{tid=e.T_SUMMON, level=1},
 			{tid=e.T_WILLFUL_STRIKE, level=5},
 			{tid=e.T_REPROACH, level=5},
-			{tid=e.T_ENRAGE, level=4},
 			{tid=e.T_FEED_STRENGTHS, level=4},
 			{tid=e.T_FEED_POWER, level=4},
 		}

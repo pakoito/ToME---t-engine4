@@ -89,11 +89,6 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 		game.logPlayer(self, "%s notices you at the last moment!", target.name:capitalize())
 	end
 
-	if target and target:hasEffect(self.EFF_DOMINATED) and target.dominatedSource and target.dominatedSource == self then
-		-- target is being dominated by self
-		mult = (mult or 1) * (target.dominatedDamMult or 1)
-	end
-
 	-- Change attack type if using gems
 	if not damtype and self:getInven(self.INVEN_GEM) then
 		local gems = self:getInven(self.INVEN_GEM)
@@ -171,9 +166,9 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 	elseif sound_miss then game:playSoundNear(self, sound_miss) end
 
 	-- cleave second attack
-	if self:knowTalent(self.T_CLEAVE) then
+	if self:isTalentActive(self.T_CLEAVE) then
 		local t = self:getTalentFromId(self.T_CLEAVE)
-		t.on_attackTarget(self, t, target, multiplier)
+		t.on_attackTarget(self, t, target)
 	end
 
 	-- Cancel stealth!
@@ -219,6 +214,15 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 
 	-- Does the blow connect? yes .. complex :/
 	local atk, def = self:combatAttack(weapon), target:combatDefense()
+	
+	-- add stalker damage and attack bonus
+	local effStalker = self:hasEffect(self.EFF_STALKER)
+	if effStalker and effStalker.target == target then
+		local t = self:getTalentFromId(self.T_STALK)
+		atk = atk + t.getAttackChange(self, t, effStalker.bonus)
+		mult = mult * t.getStalkedDamageMultiplier(self, t, effStalker.bonus)
+	end
+	
 	if not self:canSee(target) then atk = atk / 3 end
 	local dam, apr, armor = force_dam or self:combatDamage(weapon), self:combatAPR(weapon), target:combatArmor()
 	print("[ATTACK] to ", target.name, " :: ", dam, apr, armor, def, "::", mult)
@@ -228,11 +232,20 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		def = def + diff * target:getTalentLevelRaw(target.T_DUCK_AND_DODGE) * 1.2
 	end
 
+	-- check repel
+	local repelled = false
+	if target:isTalentActive(target.T_REPEL) then
+		local t = target:getTalentFromId(target.T_REPEL)
+		repelled = t.isRepelled(target, t)
+	end
+	
 	-- If hit is over 0 it connects, if it is 0 we still have 50% chance
 	local hitted = false
 	local crit = false
 	local evaded = false
-	if self:checkEvasion(target) then
+	if repelled then
+		game.logSeen(target, "%s repels an attack from %s.", target.name:capitalize(), self.name)
+	elseif self:checkEvasion(target) then
 		evaded = true
 		game.logSeen(target, "%s evades %s.", target.name:capitalize(), self.name)
 	elseif self:checkHit(atk, def) then
@@ -262,6 +275,25 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	else
 		local srcname = game.level.map.seens(self.x, self.y) and self.name:capitalize() or "Something"
 		game.logSeen(target, "%s misses %s.", srcname, target.name)
+	end
+	
+	-- handle stalk targeting for hits (also handled in Actor for turn end effects)
+	if hitted and target ~= self then
+		if effStalker then
+			-- mark if stalkee was hit
+			effStalker.hit = effStalker.hit or effStalker.target == target
+		elseif self:isTalentActive(self.T_STALK) then
+			local stalk = self:isTalentActive(self.T_STALK)
+		
+			if not stalk.hit then
+				-- mark a new target
+				stalk.hit = true
+				stalk.hit_target = target
+			elseif stalk.hit_target ~= target then
+				-- more than one target; clear it
+				stalk.hit_target = nil
+			end
+		end
 	end
 
 	-- Spread diseases
@@ -516,6 +548,10 @@ function _M:combatDefense()
 		local t = self:getTalentFromId(self.T_STEADY_MIND)
 		add = add + t.getDefense(self, t)
 	end
+	if self:isTalentActive(Talents.T_SURGE) then
+		local t = self:getTalentFromId(self.T_SURGE)
+		add = add + t.getDefenseChange(self, t)
+	end
 	local d = math.max(0, self.combat_def + (self:getDex() - 10) * 0.35 + add + (self:getLck() - 50) * 0.4)
 
 	if self:hasLightArmor() and self:knowTalent(self.T_MOBILE_DEFENCE) then
@@ -690,7 +726,7 @@ function _M:combatSpellpower(mod)
 		add = add + self:hasEffect(self.EFF_BLOODLUST).dur
 	end
 
-	return (self.combat_spellpower + add + self:getMag()) * mod
+	return ((self.combat_spellpower > 0 and self.combat_spellpower or 0) + add + self:getMag()) * mod
 end
 
 --- Gets damage based on talent
@@ -718,6 +754,7 @@ function _M:getOffHandMult(mult)
 	elseif self:knowTalent(Talents.T_CORRUPTED_STRENGTH) then
 		offmult = (mult or 1) / (2 - (math.min(self:getTalentLevel(Talents.T_CORRUPTED_STRENGTH), 8) / 9))
 	end
+	
 	return offmult
 end
 
@@ -746,13 +783,6 @@ end
 function _M:physicalCrit(dam, weapon, target)
 	if self:isTalentActive(self.T_STEALTH) and self:knowTalent(self.T_SHADOWSTRIKE) then
 		return dam * (1.5 + self:getTalentLevel(self.T_SHADOWSTRIKE) / 7), true
-	end
-
-	if target.stalker and target.stalker == self and self:knowTalent(self.T_STALK) then
-		local t = self:getTalentFromId(self.T_STALK)
-		if rng.percent(math.min(100, 40 + self:getTalentLevel(t) * 12)) then
-			return dam * 1.5, true
-		end
 	end
 
 	local chance = self:combatCrit(weapon)
@@ -827,7 +857,7 @@ end
 function _M:combatMindpower(mod)
 	mod = mod or 1
 	local add = 0
-	return (self.combat_mindpower + add + self:getWil() * 0.7 + self:getCun() * 0.4) * mod
+	return ((self.combat_mindpower > 0 and self.combat_mindpower or 0) + add + self:getWil() * 0.7 + self:getCun() * 0.4) * mod
 end
 
 --- Gets damage based on talent
@@ -952,6 +982,20 @@ function _M:hasCursedWeapon()
 	if not self:getInven("MAINHAND") then return end
 	local weapon = self:getInven("MAINHAND")[1]
 	if not weapon or not weapon.cursed then
+		return nil
+	end
+	return weapon
+end
+
+--- Check if the actor has a cursed weapon
+function _M:hasCursedOffhandWeapon()
+	if self:attr("disarmed") then
+		return nil, "disarmed"
+	end
+
+	if not self:getInven("OFFHAND") then return end
+	local weapon = self:getInven("OFFHAND")[1]
+	if not weapon or not weapon.combat or not weapon.cursed then
 		return nil
 	end
 	return weapon

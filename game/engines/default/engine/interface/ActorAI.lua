@@ -86,7 +86,7 @@ end
 
 --- Move one step to the given target if possible
 -- This tries the most direct route, if not available it checks sides and always tries to get closer
-function _M:moveDirection(x, y)
+function _M:moveDirection(x, y, force)
 	if not self.x or not self.y then return false end
 	local l = line.new(self.x, self.y, x, y)
 	local lx, ly = l()
@@ -109,10 +109,10 @@ function _M:moveDirection(x, y)
 			-- Move to closest
 			if #l > 0 then
 				table.sort(l, function(a,b) return a[3]<b[3] end)
-				return self:move(l[1][1], l[1][2])
+				return self:move(l[1][1], l[1][2], force)
 			end
 		else
-			return self:move(lx, ly)
+			return self:move(lx, ly, force)
 		end
 	end
 end

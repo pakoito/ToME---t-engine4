@@ -69,18 +69,6 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		end
 
 		-- dark vision increases damage done in creeping dark
-		if src and src.knowTalent and src:knowTalent(src.T_DARK_VISION) then
-			local t = src:getTalentFromId(src.T_DARK_VISION)
-			local damageIncrease = t.getDamageIncrease(src, t)
-			if damageIncrease > 0
-					and src and src.x and src.y
-					and core.fov.distance(src.x, src.y, target.x, target.y) > (src.lite or 0) -- outside of lite radius
-					and game.level.map:checkAllEntities(x, y, "creepingDark") then -- creeping dark square
-				dam = dam + (dam * damageIncrease / 100)
-				game.logPlayer(src, "You strike in the darkness. (+%d damage)", damageIncrease)
-			end
-		end
-
 		if src and src.knowTalent and src:knowTalent(src.T_DARK_VISION)
 				and src.x and src.y
 				and game.level.map:checkAllEntities(x, y, "creepingDark") then
@@ -145,6 +133,8 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		if target.resists then
 			local pen = 0
 			if src.resists_pen then pen = (src.resists_pen.all or 0) + (src.resists_pen[type] or 0) end
+			local dominated = target:hasEffect(target.EFF_DOMINATED)
+			if dominated and dominated.source == src then pen = pen + (dominated.resistPenetration or 0) end
 			local res = target:combatGetResist(type)
 			res = res * (100 - pen) / 100
 			print("[PROJECTOR] res", res, (100 - res) / 100, " on dam", dam)

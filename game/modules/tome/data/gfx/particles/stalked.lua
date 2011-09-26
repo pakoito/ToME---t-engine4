@@ -19,30 +19,36 @@
 
 base_size = 32
 
+local nb = 0
+
 return { generator = function()
-	local ad = 90 * rng.range(0, 3)
-	local a = math.rad(ad)
-	local dir = math.rad(ad + 90)
-	local r = rng.range(2, 15)
-	local dirchance = rng.chance(2)
+	local angle = math.rad(rng.range(0, 360))
+	local r = 18
+	local life = 30
 
 	return {
---		rail = 1,
-		life = 30,
-		size = 4, sizev = -0.1, sizea = 0,
+		life = life,
+		size = 3, sizev = 0, sizea = 0,
 
-		x = r * math.cos(a), xv = 0, xa = 0,
-		y = r * math.sin(a), yv = 0, ya = 0,
-		dir = dir, dirv = 0, dira = 0,
-		vel = dirchance and 0.8 or -0.8, velv = 0, vela = 0,
+		x = r * math.cos(angle), xv = -r * math.cos(angle) / life, xa = 0,
+		y = r * math.sin(angle), yv = -r * math.sin(angle) / life, ya = 0,
+		dir = 0, dirv = 0, dira = 0,
+		vel = 0, velv = 0, vela = 0,
 
 		r = 228 / 255,  rv = 0, ra = 0,
 		g = 40 / 255,  gv = 0, ga = 0,
 		b = 5 / 255,  bv = 0, ba = 0,
-		a = 255 / 255,  av = 0 / 255, aa = 0,
+		a = 230 / 255,  av = 0, aa = 0,
 	}
 end, },
 function(self)
-	self.ps:emit(60)
+	if nb == 0 then
+		self.ps:emit(100)
+	elseif nb == 10 and bonus >= 2 then
+		self.ps:emit(100)
+	elseif nb == 20 and bonus >= 3 then
+		self.ps:emit(100)
+	end
+	nb = (nb + 1) % 40
 end,
-60
+300, nil, true

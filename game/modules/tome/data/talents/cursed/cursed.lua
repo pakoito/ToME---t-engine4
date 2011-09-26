@@ -18,9 +18,9 @@
 -- darkgod@te4.org
 
 -- Cursed
-newTalentType{ allow_random=true, type="cursed/slaughter", name = "slaughter", description = "Your axe yearns for its next victim." }
+newTalentType{ allow_random=true, type="cursed/slaughter", name = "slaughter", description = "Your weapon yearns for its next victim." }
 newTalentType{ allow_random=true, type="cursed/endless-hunt", name = "endless hunt", description = "Each day you lift your weary body and begin the unending hunt." }
-newTalentType{ allow_random=true, type="cursed/strife", name = "strife", description = "It is not enough that they die. So too must they suffer at your hands." }
+newTalentType{ allow_random=true, type="cursed/strife", name = "strife", description = "The battlefield is your home; death and confusion, your comfort." }
 newTalentType{ allow_random=true, type="cursed/gloom", name = "gloom", description = "All those in your sight must share your despair." }
 newTalentType{ allow_random=true, type="cursed/rampage", name = "rampage", description = "Let loose the hate that has grown within." }
 
@@ -35,8 +35,8 @@ newTalentType{ allow_random=true, type="cursed/primal-magic", name = "primal mag
 -- Generic
 newTalentType{ allow_random=true, type="cursed/cursed-form", name = "cursed form", generic = true, description = "You are wracked with the dark energies of the curse." }
 newTalentType{ allow_random=true, type="cursed/fateful-aura", name = "fateful aura", generic = true, description = "The things you surround yourself with soon wither away." }
-newTalentType{ allow_random=true, type="cursed/dark-figure", name = "dark figure", generic = true, description = "Life as an outcast has given you time to reflect on your misfortunes." }
-newTalentType{ allow_random=true, type="cursed/traveler", name = "traveler", generic = true, description = "You have become accustomed to the hard life of a lone traveler." }
+newTalentType{ allow_random=false, type="cursed/curses", name = "curses", hide = true, description = "The effects of cursed objects." }
+newTalentType{ allow_random=true, type="cursed/dark-figure", name = "dark figure", description = "Life as an outcast has given you time to reflect on your misfortunes." }
 
 cursed_wil_req1 = {
 	stat = { wil=function(level) return 12 + (level-1) * 2 end },
@@ -101,6 +101,39 @@ cursed_mag_req5 = {
 	level = function(level) return 16 + (level-1)  end,
 }
 
+-- utility functions
+function getHateMultiplier(self, min, max, cursedWeaponBonus, hate)
+	local fraction = (hate or self.hate) / 10
+	if cursedWeaponBonus then
+		if self:hasDualWeapon() then
+			if self:hasCursedWeapon() then fraction = fraction + 0.13 end
+			if self:hasCursedOffhandWeapon() then fraction = fraction + 0.07 end
+		else
+			if self:hasCursedWeapon() then fraction = fraction + 0.2 end
+		end
+	end
+	fraction = math.min(fraction, 1)
+	return (min + ((max - min) * fraction))
+end
+
+function checkWillFailure(self, target, minChance, maxChance, attackStrength)
+	-- attack power is analogous to mental resist except all willpower and no cunning
+	local attack = self:getWil() * 0.5 * attackStrength
+	local defense = target:combatMentalResist()
+
+	-- used this instead of checkHit to get a curve that is a little more ratio dependent than difference dependent.
+	-- + 10 prevents large changes for low attack/defense values
+	-- 2 * log adjusts falloff to roughly get 0% break near attack = 0.5 * defense and 100% break near attack = 2 * defense
+	local chance = minChance + (1 + 2 * math.log((attack + 10) / (defense + 10))) * (maxChance - minChance) * 0.5
+
+	local result = rng.avg(1, 100)
+	print("checkWillFailure", self.name, self.level, target.name, target.level, minChance, chance, maxChance)
+
+	if result <= minChance then return true end
+	if result >= maxChance then return false end
+	return result <= chance
+end
+
 load("/data/talents/cursed/slaughter.lua")
 load("/data/talents/cursed/endless-hunt.lua")
 load("/data/talents/cursed/strife.lua")
@@ -117,4 +150,3 @@ load("/data/talents/cursed/primal-magic.lua")
 load("/data/talents/cursed/cursed-form.lua")
 load("/data/talents/cursed/fateful-aura.lua")
 load("/data/talents/cursed/dark-figure.lua")
-load("/data/talents/cursed/traveler.lua")

@@ -113,7 +113,6 @@ newEntity{ base="BASE_NPC_ORC_RAK_SHOR", define_as = "CULTIST_RAK_SHOR",
 			-- Add some
 			a.talents[a.T_UNNATURAL_BODY] = 7
 			a.talents[a.T_RELENTLESS] = 7
-			a.talents[a.T_ENRAGE] = 5
 			a.talents[a.T_FEED_POWER] = 5
 			a.talents[a.T_FEED_STRENGTHS] = 5
 			a.talents[a.T_DARK_TENDRILS] = 5

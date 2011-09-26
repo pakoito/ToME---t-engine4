@@ -57,9 +57,9 @@ newBirthDescriptor{
 	stats = { wil=4, str=5, },
 	talents_types = {
 		["cursed/gloom"]={true, 0.0},
-		["cursed/slaughter"]={true, 0.0},
-		["cursed/endless-hunt"]={true, 0.0},
-		["cursed/strife"]={true, 0.0},
+		["cursed/slaughter"]={true, 0.3},
+		["cursed/endless-hunt"]={true, 0.3},
+		["cursed/strife"]={true, 0.3},
 		["cursed/cursed-form"]={true, 0.0},
 		["cursed/fateful-aura"]={true, 0.0},
 		["cursed/unyielding"]={true, 0.0},

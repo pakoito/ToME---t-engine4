@@ -164,7 +164,6 @@ newEntity{ define_as = "ALUIN",
 		[Talents.T_WEAPONS_MASTERY]={base=5, every=5, max=10},
 		[Talents.T_RUSH]={base=4, every=7, max=6},
 
-		[Talents.T_ENRAGE]={base=3, every=7, max=5},
 		[Talents.T_SUPPRESSION]={base=4, every=7, max=6},
 		[Talents.T_BLINDSIDE]={base=4, every=7, max=6},
 		[Talents.T_GLOOM]={base=4, every=7, max=6},

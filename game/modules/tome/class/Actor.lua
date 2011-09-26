@@ -217,6 +217,39 @@ end
 function _M:useEnergy(val)
 	engine.Actor.useEnergy(self, val)
 
+	-- handle stalking
+	local effStalker = self:hasEffect(self.EFF_STALKER)
+	if effStalker then
+		if effStalker.hit then
+			-- consecutive hit on stalkee..add hate then bonus
+			local t = self:getTalentFromId(self.T_STALK)
+			self:incHate(t.getHitHateChange(self, t, effStalker.bonus))
+			effStalker.bonus = math.min(3, (effStalker.bonus or 1) + 1)
+			effStalker.hit = false
+		else
+			 -- no consecutive hit on stalkee..remove bonus
+			effStalker.bonus = math.max(1, (effStalker.bonus or 1) - 1)
+		end
+	elseif self:isTalentActive(self.T_STALK) then
+		local stalk = self:isTalentActive(self.T_STALK)
+		if stalk.hit and stalk.hit_target and not stalk.hit_target.dead then
+			stalk.hit_turns = (stalk.hit_turns or 0) + 1
+			stalk.hit = false
+			
+			if stalk.hit_turns > 1 then
+				-- multiple hits begin stalking
+				local t = self:getTalentFromId(self.T_STALK)
+				t.doStalk(self, t, stalk.hit_target)
+				stalk.hit_turns = 0
+				stalk.hit_target = nil
+			end
+		else
+			stalk.hit = false
+			stalk.hit_target = nil
+			stalk.hit_turns = 0
+		end
+	end
+	
 	-- Do not fire those talents if this is not turn's end
 	if self:enoughEnergy() or game.zone.wilderness then return end
 	if self:isTalentActive(self.T_KINETIC_AURA) then
@@ -261,10 +294,27 @@ function _M:actBase()
 	end
 	self:regenResources()
 	-- Hate decay
-	if self:knowTalent(self.T_HATE_POOL) and self.hate > 0 then
+	if self:knowTalent(self.T_HATE_POOL) then
 		-- hate loss speeds up as hate increases
 		local hateChange = -math.max(0.02, 0.07 * math.pow(self.hate / 10, 1.5))
-		self:incHate(hateChange)
+		if self:knowTalent(self.T_SEETHE) then
+			-- seethe prevents loss at low levels and gains some back and very low levels
+			local t = self:getTalentFromId(self.T_SEETHE)
+			local hateLossMinHate = t.getHateLossMinHate(self, t)
+			local hateGainMaxHate = t.getHateGainMaxHate(self, t)
+			
+			if self.hate < hateGainMaxHate then
+				hateChange = math.min(t.getHateGainChange(self, t), hateGainMaxHate - self.hate)
+			elseif self.hate < hateLossMinHate then
+				hateChange = 0
+			elseif self.hate + hateChange <= hateLossMinHate then
+				hateChange = hateLossMinHate - self.hate
+			end
+		end
+		
+		if hateChange ~= 0 then
+			self:incHate(hateChange)
+		end
 	end
 
 	-- Compute timed effects
@@ -967,11 +1017,6 @@ function _M:onTakeHit(value, src)
 	if self:hasEffect(self.EFF_SPACETIME_TUNING) then
 		self:removeEffect(self.EFF_SPACETIME_TUNING)
 	end
-	-- remove stalking if there is an interaction
-	if self.stalker and src and self.stalker == src then
-		self.stalker:removeEffect(self.EFF_STALKER)
-		self:removeEffect(self.EFF_STALKED)
-	end
 
 	-- Remove domination hex
 	if self:hasEffect(self.EFF_DOMINATION_HEX) and src and src == self:hasEffect(self.EFF_DOMINATION_HEX).src then
@@ -1463,6 +1508,12 @@ function _M:die(src)
 		local t = src:getTalentFromId(src.T_CRUEL_VIGOR)
 		t.on_kill(src, t)
 	end
+	
+	local effStalked = self:hasEffect(self.EFF_STALKED)
+	if effStalked and not effStalked.source.dead and effStalked.source:hasEffect(self.EFF_STALKER) then
+		local t = effStalked.source:getTalentFromId(effStalked.source.T_STALK)
+		t.on_targetDied(effStalked.source, t, self)
+	end	
 
 	if src and src.knowTalent and src:knowTalent(src.T_BLOODRAGE) then
 		local t = src:getTalentFromId(src.T_BLOODRAGE)
@@ -1843,6 +1894,12 @@ function _M:onWear(o, bypass_set)
 			o.talent_on_spell[i]._id = id
 		end
 	end
+	
+	-- apply any special cursed logic
+	if self:knowTalent(self.T_CURSED_TOUCH) then
+		local t = self:getTalentFromId(self.T_CURSED_TOUCH)
+		t.on_onWear(self, t, o)
+	end
 
 	self:updateModdableTile()
 end
@@ -1887,6 +1944,12 @@ function _M:onTakeoff(o, bypass_set)
 			local id = o.talent_on_spell[i]._id
 			self.talent_on_spell[id] = nil
 		end
+	end
+	
+	-- apply any special cursed logic
+	if self:knowTalent(self.T_CURSED_TOUCH) then
+		local t = self:getTalentFromId(self.T_CURSED_TOUCH)
+		t.on_onTakeOff(self, t, o)
 	end
 
 	self:updateModdableTile()
@@ -2697,13 +2760,6 @@ function _M:canSeeNoCache(actor, def, def_pct)
 		local hit, chance = self:checkHit(def, actor:attr("stealth") + (actor:attr("inc_stealth") or 0), 0, 100)
 		if not hit then
 			return false, chance
-		end
-	end
-
-	-- check if the actor is stalking you
-	if self.stalker then
-		if self.stalker == actor then
-			return false, 0
 		end
 	end
 

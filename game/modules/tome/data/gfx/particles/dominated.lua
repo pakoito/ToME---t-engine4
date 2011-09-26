@@ -22,27 +22,28 @@ base_size = 32
 return { generator = function()
 	local ad = rng.range(0, 360)
 	local a = math.rad(ad)
-	local dir = math.rad(ad)
-	local r = rng.range(15, 18)
-	local dirchance = rng.chance(2)
+	local r = 18
+	local life = 35
+	local x1 = r * math.cos(a)
+	local y1 = r * math.sin(a) * 0.2 + 11
+	local y2 = 11
 
 	return {
---		rail = 1,
-		life = 10,
-		size = 5, sizev = -0.3, sizea = 0,
+		life = life,
+		size = 12, sizev = -11 / life, sizea = 0,
 
-		x = r * math.cos(a), xv = 0, xa = 0,
-		y = r * math.sin(a), yv = 0, ya = 0,
-		dir = dir, dirv = 0, dira = 0,
-		vel = -0.4, velv = 0, vela = 0,
+		x = x1, xv = 0, xa = 0,
+		y = y1, yv = (y2 - y1) / life, ya = 0,
+		dir = math.rad(270), dirv = 0, dira = 0,
+		vel = 5 / life, velv =  9 * (2 / life / life), vela = 0,
 
-		r = 88 / 255,  rv = 0, ra = 0,
-		g = 40 / 255,  gv = 0, ga = 0,
-		b = 48 / 255,  bv = 0, ba = 0,
-		a = 180 / 255,  av = 0 / 255, aa = 0,
+		r = (rng.percent(50) and 10 or 160) / 255,  rv = 0, ra = 0,
+		g = 0,  gv = 0, ga = 0,
+		b = 20 / 255,  bv = 0, ba = 0,
+		a = 0.6,  av = .2 / life, aa = 0,
 	}
 end, },
 function(self)
-	self.ps:emit(6)
+	self.ps:emit(3)
 end,
-60
+200

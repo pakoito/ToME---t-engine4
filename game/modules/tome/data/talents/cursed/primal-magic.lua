@@ -160,11 +160,12 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	hate = 3,
-	cooldown = 40,
+	cooldown = 30,
 	tactical = { ATTACK = 2 },
 	range = 10,
 	proj_speed = 20,
 	requires_target = true,
+	no_npc_use = true,
 	target = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_arcane", trail="arcanetrail"}}
 		return tg

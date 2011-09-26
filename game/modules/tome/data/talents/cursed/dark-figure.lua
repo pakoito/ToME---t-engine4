@@ -17,10 +17,6 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local function getHateMultiplier(self, min, max)
-	return (min + ((max - min) * math.min(self.hate, 10) / 10))
-end
-
 newTalent{
 	name = "Radiant Fear",
 	type = {"cursed/dark-figure", 1},

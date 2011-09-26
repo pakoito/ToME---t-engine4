@@ -227,7 +227,7 @@ function _M:act()
 	-- Clean log flasher
 --	game.flash:empty()
 
-	-- update feed immediately before the player moves for best visual consistency (this is not perfect but looks much better than updating mid-move)
+	-- update feed/beckoned immediately before the player moves for best visual consistency (this is not perfect but looks much better than updating mid-move)
 	if self:hasEffect(self.EFF_FEED) then
 		self.tempeffect_def[self.EFF_FEED].updateFeed(self, self:hasEffect(self.EFF_FEED))
 	elseif self:hasEffect(self.EFF_FED_UPON) then
@@ -349,6 +349,13 @@ function _M:playerFOV()
 				game.level.map.seens(x, y, 0.6)
 			end
 		end, true, true, true)
+		
+		local effStalker = self:hasEffect(self.EFF_STALKER)
+		if effStalker then
+			if core.fov.distance(self.x, self.y, effStalker.target.x, effStalker.target.y) <= 10 then
+				game.level.map.seens(effStalker.target.x, effStalker.target.y, 0.6)
+			end
+		end
 	end
 
 	if not self:attr("blind") then

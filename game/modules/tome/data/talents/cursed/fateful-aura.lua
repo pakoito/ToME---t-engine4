@@ -47,6 +47,7 @@ local function getEffect(list, item, who, level, effectName)
 		if weight <= weightTotal then return effect end
 	end
 	print("* fateful-aura getEffect failed. count:", #list, "found:", #effects, "weightTotal:", weightTotal, "weight:", weight, "item:", item.name, "type:", item.type, "subtype:", item.subtype, "level:", level, "subclass:", (who.descriptor and who.descriptor.subclass or who.subtype))
+	
 	return
 end
 
@@ -159,7 +160,12 @@ newTalent{
 		if beneficialEffect then
 			addEffect(item, beneficialEffect, self, power)
 		end
-
+		
+		local curseName = "#F53CBE#"..detrimentalEffect.name.."#LAST#"
+		if beneficialEffect then
+			curseName = curseName..", #F53CBE#"..beneficialEffect.name.."#LAST#"
+		end
+		game.logPlayer(self, "Your aura brings a curse to %s: %s.", item.name, curseName)
 	end,
 	curseFloor = function(self, t, x, y)
 		local i = 1
@@ -169,6 +175,18 @@ newTalent{
 
 			i = i + 1
 			item = game.level.map:getObject(x, y, i)
+		end
+	end,
+	on_onWear = function(self, t, o)
+		if o.cursed and self:knowTalent(self.T_UNNATURAL_BODY) then
+			local t = self:getTalentFromId(self.T_UNNATURAL_BODY)
+			t.updateHealingFactor(self, t)
+		end
+	end,
+	on_onTakeOff = function(self, t, o)
+		if o.cursed and self:knowTalent(self.T_UNNATURAL_BODY) then
+			local t = self:getTalentFromId(self.T_UNNATURAL_BODY)
+			t.updateHealingFactor(self, t)
 		end
 	end,
 	activate = function(self, t)
@@ -238,7 +256,7 @@ newTalent{
 	range = 5,
 	no_npc_use = true,
 	getDuration = function(self, t)
-		return math.floor(8 + (math.sqrt(self:getTalentLevel(t)) - 1) * 8)
+		return math.floor(6 + self:getTalentLevel(t) * 2)
 	end,
 	getAttackSpeed = function(self, t)
 		return math.floor(60 + (math.sqrt(self:getTalentLevel(t)) - 1) * 60)

@@ -159,7 +159,6 @@ newEntity{ base="BASE_NPC_CORRUPTED_HORROR", define_as = "ABOMINATION",
 		[Talents.T_WEAPON_COMBAT]={base=5, every=5, max=10},
 		[Talents.T_WEAPONS_MASTERY]={base=5, every=5, max=10},
 
-		[Talents.T_ENRAGE]={base=3, every=7, max=5},
 		[Talents.T_SUPPRESSION]={base=4, every=7, max=6},
 		[Talents.T_GLOOM]={base=4, every=7, max=6},
 		[Talents.T_WEAKNESS]={base=4, every=7, max=6},

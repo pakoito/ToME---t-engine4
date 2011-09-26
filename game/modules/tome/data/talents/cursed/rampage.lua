@@ -17,10 +17,6 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local function getHateMultiplier(self, min, max)
-	return (min + ((max - min) * math.min(self.hate, 10) / 10))
-end
-
 newTalent{
 	name = "Rampage",
 	type = {"cursed/rampage", 1},
@@ -37,14 +33,13 @@ newTalent{
 	end,
 	hate = 0.5,
 	action = function(self, t, hateLoss)
-		local hateLoss = 0
 		local critical = 0
 		local damage = 0
 		local speed = 0
 		local attack = 0
 		local evasion = 0
 
-		local hateMultiplier = getHateMultiplier(self, 0.1, 1.0)
+		local hateMultiplier = getHateMultiplier(self, 0.1, 1.0, true)
 
 		critical = t.getCritical(self, t) * hateMultiplier
 		if not hateLoss then
@@ -92,7 +87,8 @@ newTalent{
 		local hateLoss = t.getHateLoss(self, t)
 		local critical = t.getCritical(self, t)
 		return ([[You enter a terrible rampage for %d turns, destroying everything in your path. There is also a small chance when you are hit that you will rampage.
-		%0.2f hate loss per turn. +%d%% (at 0 Hate) to %d%% (at 10+ Hate) critical chance.]]):format(duration, hateLoss, critical * 0.3, critical * 1.0)
+		%0.2f hate loss per turn. +%d%% (at 0 Hate) to %d%% (at 10+ Hate) critical chance.
+		Hate-based effects will improve when wielding cursed weapons.]]):format(duration, hateLoss, critical * 0.3, critical * 1.0)
 	end,
 }
 
@@ -112,7 +108,8 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[Add brutality to your rampage.
-		Rampage lasts %d turns. +%d%% (at 0 Hate) to %d%% (at 10+ Hate) damage.]]):format(duration, damage * 0.1, damage * 1.0)
+		Rampage lasts %d turns. +%d%% (at 0 Hate) to %d%% (at 10+ Hate) physical damage.
+		Hate-based effects will improve when wielding cursed weapons.]]):format(duration, damage * 0.1, damage * 1.0)
 	end,
 }
 
@@ -132,7 +129,8 @@ newTalent{
 		local cooldown = t.getCooldown(self, t)
 		local speed = t.getSpeed(self, t)
 		return ([[Add reflexes to your rampage.
-		Rampage cooldown is %d turns. +%d%% (at 0 Hate) to %d%% (at 10+ Hate) speed.]]):format(cooldown, speed * 0.1, speed * 1.0)
+		Rampage cooldown is %d turns. +%d%% (at 0 Hate) to %d%% (at 10+ Hate) speed.
+		Hate-based effects will improve when wielding cursed weapons.]]):format(cooldown, speed * 0.1, speed * 1.0)
 	end,
 }
 
@@ -152,6 +150,7 @@ newTalent{
 		local attack = t.getAttack(self, t)
 		local evasion = t.getEvasion(self, t)
 		return ([[Add instincts to your rampage.
-		+%d%% (at 0 Hate) to %d%% (at 10+ Hate) attack. +%d%% (at 0 Hate) to %d%% (at 10+ Hate) evasion.]]):format(attack * 0.1, attack * 1.0, evasion * 0.1, evasion * 1.0)
+		+%d%% (at 0 Hate) to %d%% (at 10+ Hate) attack. +%d%% (at 0 Hate) to %d%% (at 10+ Hate) evasion.
+		Hate-based effects will improve when wielding cursed weapons.]]):format(attack * 0.1, attack * 1.0, evasion * 0.1, evasion * 1.0)
 	end,
 }

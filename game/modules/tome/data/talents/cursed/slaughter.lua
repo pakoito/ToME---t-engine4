@@ -17,9 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local function getHateMultiplier(self, min, max)
-	return (min + ((max - min) * math.min(self.hate, 10) / 10))
-end
+local Stats = require "engine.interface.ActorStats"
 
 newTalent{
 	name = "Slash",
@@ -27,30 +25,67 @@ newTalent{
 	require = cursed_str_req1,
 	points = 5,
 	random_ego = "attack",
-	cooldown = 6,
-	hate = 0.1,
+	cooldown = 8,
+	hate = 0.2,
 	tactical = { ATTACK = 2 },
 	requires_target = true,
-	action = function(self, t)
-		if not self:hasAxeWeapon() and not self:hasCursedWeapon() then
-			game.logPlayer(self, "You cannot use %s without an axe or a cursed weapon!", t.name)
-			return nil
+	getDamageMultiplier = function(self, t, hate)
+		return 1 + self:combatTalentIntervalDamage(t, "str", 0.3, 1.5, 0.4) * getHateMultiplier(self, 0.3, 1, true, hate)
+	end,
+	getPoisonDamage = function(self, t)
+		local level
+		if self:hasCursedWeapon() then
+			level = math.max(1, self:getTalentLevel(t) - 2)
+		else
+			level = math.max(1, self:getTalentLevel(t) - 3)
 		end
-
+		return self:rescaleDamage(math.sqrt(level) * 40 * ((100 + self:getStat("str")) / 200))
+	end,
+	getPoisonHealFactor = function(self, t, hate)
+		return 50
+	end,
+	getPoisonDuration = function(self, t)
+		local level
+		if self:hasCursedWeapon() then
+			level = math.max(1, self:getTalentLevel(t) - 2)
+		else
+			level = math.max(1, self:getTalentLevel(t) - 3)
+		end
+		return math.floor(10 * level)
+	end,
+	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
-
-		local multiplier = 1 + (0.17 + .23 * self:getTalentLevel(t)) * getHateMultiplier(self, 0, 1)
-		local hit = self:attackTarget(target, nil, multiplier, true)
+		
+		local damageMultiplier = t.getDamageMultiplier(self, t)
+		local hit = self:attackTarget(target, nil, damageMultiplier, true)
+		
+		local level = self:getTalentLevel(t)
+		if hit and target:canBe("poison") and level >= 4 or (self:hasCursedWeapon() and level >= 3) then
+			local poisonDamage = t.getPoisonDamage(self, t)
+			local poisonHealFactor = t.getPoisonHealFactor(self, t)
+			local poisonDuration = t.getPoisonDuration(self, t)
+			target:setEffect(target.EFF_INSIDIOUS_POISON, poisonDuration, {src=self, power=poisonDamage / poisonDuration, heal_factor=poisonHealFactor})
+		end
 
 		return true
 	end,
 	info = function(self, t)
-		local multiplier = (0.17 + .23 * self:getTalentLevel(t))
-		return ([[Slashes wildly at your target for 100%% (at 0 Hate) to %d%% (at 10+ Hate) damage.
-		Requires a one- or two-handed axe or a cursed weapon.]]):format(multiplier * 100 + 100)
+		local level = self:getTalentLevel(t)
+		if level >= 4 or (self:hasCursedWeapon() and level >= 3) then
+			local poisonDamage = t.getPoisonDamage(self, t)
+			local poisonHealFactor = t.getPoisonHealFactor(self, t)
+			local poisonDuration = t.getPoisonDuration(self, t)
+			return ([[Slashes wildly at your target for %d%% (at 0 Hate) to %d%% (at 10+ Hate) damage.
+			Your main weapon inflicts an insidious poison born of your curse causing %d damage and %d%% reduced healing over %d turns.
+			Hate-based effects will improve when wielding cursed weapons (+2.5 hate). The insidious poison improves with a cursed main weapon.]]):format(t.getDamageMultiplier(self, t, 0) * 100, t.getDamageMultiplier(self, t, 10) * 100, poisonDamage, poisonHealFactor, poisonDuration)
+		else
+			return ([[Slashes wildly at your target for %d%% (at 0 Hate) to %d%% (at 10+ Hate) damage.
+			At level 4 (3 when weilding a cursed main weapon) your curse begins to inflict an insidious poison.
+			Hate-based effects will improve when wielding cursed weapons (+2.5 hate). The insidious poison improves with a cursed main weapon.]]):format(t.getDamageMultiplier(self, t, 0) * 100, t.getDamageMultiplier(self, t, 10) * 100)
+		end
 	end,
 }
 
@@ -61,15 +96,21 @@ newTalent{
 	points = 5,
 	tactical = { ATTACKAREA = 2 },
 	random_ego = "attack",
-	cooldown = 15,
+	cooldown = 12,
 	hate = 0.2,
-	requires_target = true,
-	action = function(self, t)
-		if not self:hasAxeWeapon() and not self:hasCursedWeapon() then
-			game.logPlayer(self, "You cannot use %s without an axe or a cursed weapon!", t.name)
-			return nil
+	getDamageMultiplier = function(self, t, hate)
+		return self:combatTalentIntervalDamage(t, "str", 0.25, 0.8, 0.4) * getHateMultiplier(self, 0.5, 1, true, hate)
+	end,
+	getAttackChange = function(self, t)
+		local level
+		if self:hasCursedWeapon() then
+			level = math.max(1, self:getTalentLevel(t) - 2)
+		else
+			level = math.max(1, self:getTalentLevel(t) - 3)
 		end
-
+		return -self:rescaleDamage((math.sqrt(level) - 0.5) * 15 * ((100 + self:getStat("str")) / 200))
+	end,
+	action = function(self, t)
 		local targets = {}
 		for i = -1, 1 do
 			for j = -1, 1 do
@@ -82,22 +123,40 @@ newTalent{
 				end
 			end
 		end
-
+		
 		if #targets <= 0 then return nil end
 
-		local multiplier = self:combatTalentWeaponDamage(t, 0.2, 0.7) * getHateMultiplier(self, 0.5, 1.0)
+		local damageMultiplier = t.getDamageMultiplier(self, t)
+		local attackChange = t.getAttackChange(self, t)
+		
+		local effStalker = self:hasEffect(self.EFF_STALKER)
 		for i = 1, 4 do
-			local target = rng.table(targets)
+			local target
+			if effStalker and not effStalker.target.dead then
+				target = effStalker.target
+			else
+				target = rng.table(targets)
+			end
 
-			self:attackTarget(target, nil, multiplier, true)
+			if self:attackTarget(target, nil, damageMultiplier, true) and not target:hasEffect(target.EFF_OVERWHELMED) then
+				target:setEffect(target.EFF_OVERWHELMED, 3, {src=self, attackChange=attackChange})
+			end
 		end
 
 		return true
 	end,
 	info = function(self, t)
-		local multiplier = self:combatTalentWeaponDamage(t, 0.2, 0.7)
-		return ([[Assault nearby foes with 4 fast attacks for %d%% (at 0 Hate) to %d%% (at 10+ Hate) damage each.
-		Requires a one- or two-handed axe or a cursed weapon.]]):format(multiplier * 50, multiplier * 100)
+		local level = self:getTalentLevel(t)
+		if level >= 4 or (self:hasCursedWeapon() and level >= 3) then
+			local attackChange = t.getAttackChange(self, t)
+			return ([[Assault nearby foes with 4 fast attacks for %d%% (at 0 Hate) to %d%% (at 10+ Hate) damage each. Stalked prey are always targeted if nearby.
+			The intensity of your assault overwhelms anyone who is struck, reducing their attack by %d for 3 turns.
+			Hate-based effects will improve when wielding cursed weapons (+2.5 hate). Attack reduction increases with a cursed main weapon and the Strength stat.]]):format(t.getDamageMultiplier(self, t, 0) * 100, t.getDamageMultiplier(self, t, 10) * 100, -attackChange)
+		else
+			return ([[Assault nearby foes with 4 fast attacks for %d%% (at 0 Hate) to %d%% (at 10+ Hate) damage each. Stalked prey are always targeted if nearby.
+			At level 4 (3 when weilding a cursed main weapon) the intensity of your assault overwhelms anyone who is struck, reducing their attack for 3 turns.
+			Hate-based effects will improve when wielding cursed weapons (+2.5 hate).]]):format(t.getDamageMultiplier(self, t, 0) * 100, t.getDamageMultiplier(self, t, 10) * 100)
+		end
 	end,
 }
 
@@ -108,16 +167,14 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	cooldown = 20,
-	hate = 0.5,
+	hate = 0.8,
 	range = 4,
 	tactical = { CLOSEIN = 2 },
 	requires_target = true,
+	getDamageMultiplier = function(self, t, hate)
+		return self:combatTalentIntervalDamage(t, "str", 0.8, 1.7, 0.4) * getHateMultiplier(self, 0.5, 1, true, hate)
+	end,
 	action = function(self, t)
-		if not self:hasAxeWeapon() and not self:hasCursedWeapon() then
-			game.logPlayer(self, "You cannot use %s without an axe or a cursed weapon!", t.name)
-			return nil
-		end
-
 		local targeting = {type="bolt", range=self:getTalentRange(t), nolock=true}
 		local targetX, targetY, actualTarget = self:getTarget(targeting)
 		if not targetX or not targetY then return nil end
@@ -178,8 +235,8 @@ newTalent{
 				local y = currentY + math.floor((i % 9) / 3) - 1
 				local target = game.level.map(x, y, Map.ACTOR)
 				if target and self:reactionToward(target) < 0 then
-					local multiplier = self:combatTalentWeaponDamage(t, 0.5, 1.5) * getHateMultiplier(self, 0.3, 1.0)
-					self:attackTarget(target, nil, multiplier, true)
+					local damageMultiplier = t.getDamageMultiplier(self, t)
+					self:attackTarget(target, nil, damageMultiplier, true)
 
 					game.level.map:particleEmitter(x, y, 1, "blood", {})
 					game:playSoundNear(self, "actions/melee")
@@ -192,7 +249,6 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local multiplier = self:combatTalentWeaponDamage(t, 0.5, 1.5)
 		local level = self:getTalentLevelRaw(t)
 		local size
 		if level >= 5 then
@@ -203,26 +259,104 @@ newTalent{
 			size = "Small"
 		end
 		return ([[Charge through your opponents, attacking anyone near your path for %d%% (at 0 Hate) to %d%% (at 10+ Hate) damage. %s opponents may be knocked from your path.
-		Requires a one- or two-handed axe or a cursed weapon.]]):format(multiplier * 30, multiplier * 100, size)
+		Hate-based effects will improve when wielding cursed weapons (+2.5 hate).]]):format(t.getDamageMultiplier(self, t, 0) * 100, t.getDamageMultiplier(self, t, 10) * 100, size)
 	end,
 }
+
+--newTalent{
+--	name = "Cleave",
+--	type = {"cursed/slaughter", 4},
+--	mode = "passive",
+--	require = cursed_str_req4,
+--	points = 5,
+--	on_attackTarget = function(self, t, target, multiplier)
+--		if inCleave then return end
+--		inCleave = true
+--
+--		local chance = 28 + self:getTalentLevel(t) * 7
+--		if rng.percent(chance) then
+--			local start = rng.range(0, 8)
+--			for i = start, start + 8 do
+--				local x = self.x + (i % 3) - 1
+--				local y = self.y + math.floor((i % 9) / 3) - 1
+--				local secondTarget = game.level.map(x, y, Map.ACTOR)
+--				if secondTarget and secondTarget ~= target and self:reactionToward(secondTarget) < 0 then
+--					local multiplier = multiplier or 1 * self:combatTalentWeaponDamage(t, 0.2, 0.7) * getHateMultiplier(self, 0.5, 1.0, true)
+--					game.logSeen(self, "%s cleaves through another foe!", self.name:capitalize())
+--					self:attackTarget(secondTarget, nil, multiplier, true)
+--					inCleave = false
+--					return
+--				end
+--			end
+--		end
+--		inCleave = false
+--
+--	end,
+--	info = function(self, t)
+--		local chance = 28 + self:getTalentLevel(t) * 7
+--		local multiplier = self:combatTalentWeaponDamage(t, 0.2, 0.7)
+--		return ([[Every swing of your weapon has a %d%% chance of striking a second target for %d%% (at 0 Hate) to %d%% (at 10+ Hate) damage.
+--		Hate-based effects will improve when wielding cursed weapons (+2.5 hate).]]):format(chance, multiplier * 50, multiplier * 100)
+--	end,
+--}
 
 newTalent{
 	name = "Cleave",
 	type = {"cursed/slaughter", 4},
-	mode = "passive",
+	mode = "sustained",
 	require = cursed_str_req4,
 	points = 5,
-	on_attackTarget = function(self, t, target, multiplier)
-		if not self:hasAxeWeapon() and not self:hasCursedWeapon() then
-			game.logPlayer(self, "You cannot use %s without an axe or a cursed weapon!", t.name)
-			return nil
+	cooldown = 10,
+	no_energy = true,
+	getChance = function(self, t)
+		local chance = self:combatTalentIntervalDamage(t, "str", 10, 38, 0.4)
+		if self:hasTwoHandedWeapon() then
+			chance = chance + 15
 		end
-
+		return chance
+	end,
+	getDamageMultiplier = function(self, t, hate)
+		local damageMultiplier = self:combatTalentIntervalDamage(t, "str", 0.3, 0.9, 0.4) * getHateMultiplier(self, 0.5, 1.0, true, hate)
+		if self:hasTwoHandedWeapon() then
+			damageMultiplier = damageMultiplier + 0.25
+		end
+		return damageMultiplier
+	end,
+	preUseTalent = function(self, t)
+		-- prevent AI's from activating more than 1 talent
+		if self ~= game.player and (self:isTalentActive(self.T_SURGE) or self:isTalentActive(self.T_REPEL)) then return false end
+		return true
+	end,
+	activate = function(self, t)
+		-- deactivate other talents and place on cooldown
+		if self:isTalentActive(self.T_SURGE) then
+			self:useTalent(self.T_SURGE)
+		elseif self:knowTalent(self.T_SURGE) then
+			local tSurge = self:getTalentFromId(self.T_SURGE)
+			self.talents_cd[self.T_SURGE] = tSurge.cooldown
+		end
+			
+		if self:isTalentActive(self.T_REPEL) then
+			self:useTalent(self.T_REPEL)
+		elseif self:knowTalent(self.T_REPEL) then
+			local tRepel = self:getTalentFromId(self.T_REPEL)
+			self.talents_cd[self.T_REPEL] = tRepel.cooldown
+		end
+	
+		return {
+			luckId = self:addTemporaryValue("inc_stats", { [Stats.STAT_LCK] = -3 })
+		}
+	end,
+	deactivate = function(self, t, p)
+		if p.luckId then self:removeTemporaryValue("inc_stats", p.luckId) end
+		
+		return true
+	end,
+	on_attackTarget = function(self, t, target)
 		if inCleave then return end
 		inCleave = true
 
-		local chance = 28 + self:getTalentLevel(t) * 7
+		local chance = t.getChance(self, t)
 		if rng.percent(chance) then
 			local start = rng.range(0, 8)
 			for i = start, start + 8 do
@@ -230,22 +364,20 @@ newTalent{
 				local y = self.y + math.floor((i % 9) / 3) - 1
 				local secondTarget = game.level.map(x, y, Map.ACTOR)
 				if secondTarget and secondTarget ~= target and self:reactionToward(secondTarget) < 0 then
-					local multiplier = multiplier or 1 * self:combatTalentWeaponDamage(t, 0.2, 0.7) * getHateMultiplier(self, 0.5, 1.0)
-					game.logSeen(self, "%s cleaves through another foe!", self.name:capitalize())
-					self:attackTarget(secondTarget, nil, multiplier, true)
+					local damageMultiplier = t.getDamageMultiplier(self, t)
+					game.logSeen(self, "%s cleaves through %s!", self.name:capitalize(), secondTarget.name)
+					self:attackTarget(secondTarget, nil, damageMultiplier, true)
 					inCleave = false
 					return
 				end
 			end
 		end
 		inCleave = false
-
 	end,
 	info = function(self, t)
-		local chance = 28 + self:getTalentLevel(t) * 7
-		local multiplier = self:combatTalentWeaponDamage(t, 0.2, 0.7)
-		return ([[Every swing of your weapon has a %d%% chance of striking a second target for %d%% (at 0 Hate) to %d%% (at 10+ Hate) damage.
-		Requires a one- or two-handed axe or a cursed weapon.]]):format(chance, multiplier * 50, multiplier * 100)
+		local chance = t.getChance(self, t)
+		return ([[While active every swing of your weapon has a %d%% chance of striking a second nearby target for %d%% (at 0 Hate) to %d%% (at 10+ Hate) damage. The recklessness of your attacks brings you bad luck (luck -3). Cleave, repel and parry cannot be activate simultaneously and activating one will place the others in cooldown.
+		Chance and damage increase with with the Strength stat and when wielding a two-handed weapon (+15%% chance, +25%% damage). Hate-based effects will improve when wielding cursed weapons (+2.5 hate).]]):format(chance, t.getDamageMultiplier(self, t, 0) * 100, t.getDamageMultiplier(self, t, 10) * 100)
 	end,
 }
 

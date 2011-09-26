@@ -23,6 +23,7 @@ local Entity = require "engine.Entity"
 local Chat = require "engine.Chat"
 local Map = require "engine.Map"
 local Level = require "engine.Level"
+local Astar = require "engine.Astar"
 
 newEffect{
 	name = "SILENCED",
@@ -284,63 +285,246 @@ newEffect{
 newEffect{
 	name = "STALKER",
 	desc = "Stalking",
-	long_desc = function(self, eff) return ("Stalking %s."):format(eff.target.name) end,
+	display_desc = function(self, eff)
+		return ([[Stalking %d/%d +%d ]]):format(eff.target.life, eff.target.max_life, eff.bonus)
+	end,
+	long_desc = function(self, eff)
+		local t = self:getTalentFromId(self.T_STALK)
+		local effStalked = eff.target:hasEffect(eff.target.EFF_STALKED)
+		local desc = ([[Stalking %s. Bonus level %d: +%d attack, +%d%% melee damage, +%0.3f hate/turn prey was hit.]]):format(
+			eff.target.name, eff.bonus, t.getAttackChange(self, t, eff.bonus), t.getStalkedDamageMultiplier(self, t, eff.bonus) * 100 - 100, t.getHitHateChange(self, t, eff.bonus))
+		if effStalked and effStalked.damageChange and effStalked.damageChange > 0 then
+			desc = desc..([[" Prey damage modifier: %d%%."]]):format(effStalked.damageChange)
+		end
+		return desc
+	end,
 	type = "mental",
 	subtype = { veil=true },
 	status = "beneficial",
 	parameters = {},
 	activate = function(self, eff)
-		if not self.stalkee then
-			self.stalkee = eff.target
-			game.logSeen(self, "#F53CBE#%s is being stalked by %s!", eff.target.name:capitalize(), self.name)
-		end
+		game.logSeen(self, "#F53CBE#%s is being stalked by %s!", eff.target.name:capitalize(), self.name)
 	end,
 	deactivate = function(self, eff)
-		self.stalkee = nil
 		game.logSeen(self, "#F53CBE#%s is no longer being stalked by %s.", eff.target.name:capitalize(), self.name)
+	end,
+	on_timeout = function(self, eff)
+		if not eff.target or eff.target.dead or not eff.target:hasEffect(eff.target.EFF_STALKED) then
+			self:removeEffect(self.EFF_STALKER)
+		end
 	end,
 }
 
 newEffect{
 	name = "STALKED",
-	desc = "Being Stalked",
-	long_desc = function(self, eff) return "The target is being stalked." end,
+	desc = "Stalked",
+	long_desc = function(self, eff)
+		local effStalker = eff.source:hasEffect(eff.source.EFF_STALKER)
+		local t = self:getTalentFromId(eff.source.T_STALK)
+		local desc = ([[Being stalked by %s. Stalker bonus level %d: +%d attack, +%d%% melee damage, +%0.3f hate/turn prey was hit.]]):format(
+			eff.source.name, effStalker.bonus, t.getAttackChange(eff.source, t, effStalker.bonus), t.getStalkedDamageMultiplier(eff.source, t, effStalker.bonus) * 100 - 100, t.getHitHateChange(eff.source, t, effStalker.bonus))
+		if eff.damageChange and eff.damageChange > 0 then
+			desc = desc..([[" Prey damage modifier: %d%%."]]):format(eff.damageChange)
+		end
+		return desc
+	end,
 	type = "mental",
 	subtype = { veil=true },
 	status = "detrimental",
 	parameters = {},
 	activate = function(self, eff)
-		if not self.stalker then
-			eff.particle = self:addParticles(Particles.new("stalked", 1))
-			self.stalker = eff.target
-		end
+		local effStalker = eff.source:hasEffect(eff.source.EFF_STALKER)
+		eff.particleBonus = effStalker.bonus
+		eff.particle = self:addParticles(Particles.new("stalked", 1, { bonus = eff.particleBonus }))
 	end,
 	deactivate = function(self, eff)
-		self.stalker = nil
 		if eff.particle then self:removeParticles(eff.particle) end
+		if eff.damageChangeId then self:removeTemporaryValue("inc_damage", eff.damageChangeId) end
+	end,
+	on_timeout = function(self, eff)
+		if not eff.source or eff.source.dead or not eff.source:hasEffect(eff.source.EFF_STALKER) then
+			self:removeEffect(self.EFF_STALKED)
+		else
+			local effStalker = eff.source:hasEffect(eff.source.EFF_STALKER)
+			if eff.particleBonus ~= effStalker.bonus then
+				eff.particleBonus = effStalker.bonus
+				self:removeParticles(eff.particle)
+				eff.particle = self:addParticles(Particles.new("stalked", 1, { bonus = eff.particleBonus }))
+			end
+		end
+	end,
+	updateDamageChange = function(self, eff)
+		if eff.damageChangeId then
+			self:removeTemporaryValue("inc_damage", eff.damageChangeId)
+			eff.damageChangeId = nil
+		end
+		if eff.damageChange and eff.damageChange > 0 then
+			eff.damageChangeId = eff.target:addTemporaryValue("inc_damage", {all=eff.damageChange})
+		end
+	end,
+}
+
+newEffect{
+	name = "BECKONED",
+	desc = "Beckoned",
+	long_desc = function(self, eff)
+		local message = ("The target has been beckoned by %s and is heeding the call. There is a %d%% chance of moving towards the beckoner each turn."):format(eff.source.name, eff.chance)
+		if eff.spellpowerChangeId and eff.mindpowerChangeId then
+			message = message..(" (spellpower: -%d, mindpower: -%d"):format(eff.spellpowerChange, eff.mindpowerChange)
+		end
+		return message
+	end,
+	type = "mental",
+	status = "detrimental",
+	parameters = { speedChange=0.5 },
+	on_gain = function(self, err) return "#Target# has been beckoned.", "+Beckoned" end,
+	on_lose = function(self, err) return "#Target# is no longer beckoned.", "-Beckoned" end,
+	activate = function(self, eff)
+		eff.particle = self:addParticles(Particles.new("beckoned", 1))
+		
+		eff.spellpowerChangeId = self:addTemporaryValue("combat_spellpower", eff.spellpowerChange)
+		eff.mindpowerChangeId = self:addTemporaryValue("combat_mindpower", eff.mindpowerChange)
+	end,
+	deactivate = function(self, eff)
+		if eff.particle then self:removeParticles(eff.particle) end
+		
+		if eff.spellpowerChangeId then self:removeTemporaryValue("combat_spellpower", eff.spellpowerChangeId) end
+		if eff.mindpowerChangeId then self:removeTemporaryValue("combat_mindpower", eff.spellpowerChangeId) end
+	end,
+	on_timeout = function(self, eff)
+		if eff.source.dead then return nil end
+		
+		local distance = core.fov.distance(self.x, self.y, eff.source.x, eff.source.y)
+		if math.floor(distance) > 1 and distance <= eff.range then
+			-- in range but not adjacent
+			
+			-- add debuffs
+			if not eff.spellpowerChangeId then eff.spellpowerChangeId = self:addTemporaryValue("combat_spellpower", eff.spellpowerChange) end
+			if not eff.mindpowerChangeId then eff.mindpowerChangeId = self:addTemporaryValue("combat_mindpower", eff.mindpowerChange) end
+			
+			-- custom pull logic (adapted from move_dmap; forces movement, pushes others aside, custom particles)
+			if not self:attr("never_move") and rng.percent(eff.chance) then
+				local source = eff.source
+				local moveX, moveY = source.x, source.y -- move in general direction by default
+				if not self:hasLOS(source.x, source.y) then
+					-- move using dmap if available
+					--local c = source:distanceMap(self.x, self.y)
+					--if c then
+					--	local dir = 5
+					--	for i = 1, 9 do
+					--		local sx, sy = util.coordAddDir(self.x, self.y, i)
+					--		local cd = source:distanceMap(sx, sy)
+					--		if cd and cd > c and self:canMove(sx, sy) then c = cd; dir = i end
+					--	end
+					--	if i ~= 5 then
+					--		moveX, moveY = util.coordAddDir(self.x, self.y, dir)
+					--	end
+					--end
+					
+					-- move a-star (far more useful than dmap)
+					local a = Astar.new(game.level.map, self)
+					local path = a:calc(self.x, self.y, source.x, source.y)
+					if path then
+						moveX, moveY = path[1].x, path[1].y
+					end
+				end
+				
+				if moveX and moveY then
+					local old_move_others, old_x, old_y = self.move_others, self.x, self.y
+					self.move_others = true
+					self:moveDirection(moveX, moveY, true)
+					self.move_others = old_move_others
+					if old_x ~= self.x or old_y ~= self.y then
+						if not self.did_energy then
+							self:useEnergy()
+						end
+						game.level.map:particleEmitter(self.x, self.y, 1, "beckoned_move", {power=power, dx=self.x - source.x, dy=self.y - source.y})
+					end
+				end
+			end
+		else
+			-- adjacent or out of range..remove debuffs
+			if eff.spellpowerChangeId then self:removeTemporaryValue("combat_spellpower", eff.spellpowerChangeId) end
+			if eff.mindpowerChangeId then self:removeTemporaryValue("combat_mindpower", eff.spellpowerChangeId) end
+		end
+	end,
+}
+
+newEffect{
+	name = "OVERWHELMED",
+	desc = "Overwhelmed",
+	long_desc = function(self, eff) return ("The target has been overwhemed by a furious assault, reducing attack by %d."):format( -eff.attackChange) end,
+	type = "mental",
+	status = "detrimental",
+	parameters = { damageChange=0.1 },
+	on_gain = function(self, err) return "#Target# has been overwhelmed.", "+Overwhelmed" end,
+	on_lose = function(self, err) return "#Target# is no longer overwhelmed.", "-Overwhelmed" end,
+	activate = function(self, eff)
+		eff.attackChangeId = self:addTemporaryValue("combat_atk", eff.attackChange)
+		eff.particle = self:addParticles(Particles.new("overwhelmed", 1))
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_atk", eff.attackChangeId)
+		self:removeParticles(eff.particle)
+	end,
+}
+
+newEffect{
+	name = "HARASSED",
+	desc = "Harassed",
+	long_desc = function(self, eff) return ("The target has been harassed by it's stalker, reducing damage by %d%%."):format( -eff.damageChange * 100) end,
+	type = "mental",
+	status = "detrimental",
+	parameters = { damageChange=0.1 },
+	on_gain = function(self, err) return "#Target# has been harassed.", "+Harassed" end,
+	on_lose = function(self, err) return "#Target# is no longer harassed.", "-Harassed" end,
+	activate = function(self, eff)
+		eff.damageChangeId = self:addTemporaryValue("inc_damage", {all=eff.damageChange})
+		eff.particle = self:addParticles(Particles.new("harassed", 1))
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("inc_damage", eff.damageChangeId)
+		self:removeParticles(eff.particle)
+	end,
+}
+
+newEffect{
+	name = "BLINDSIDE_BONUS",
+	desc = "Blindside Bonus",
+	long_desc = function(self, eff) return ("The target has appeared out of nowhere! It's defense is boosted by %d."):format(eff.defenseChange) end,
+	type = "physical",
+	status = "beneficial",
+	parameters = { defenseChange=10 },
+	activate = function(self, eff)
+		eff.defenseChangeId = self:addTemporaryValue("combat_def", eff.defenseChange)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_def", eff.defenseChangeId)
 	end,
 }
 
 newEffect{
 	name = "DOMINATED",
 	desc = "Dominated",
-	long_desc = function(self, eff) return ("The target is dominated, increasing damage done to it by its master by %d%%."):format(eff.dominatedDamMult * 100) end,
+	long_desc = function(self, eff) return ("The target is dominated, unable to move and losing %d armor, %d defense and suffering %d%% penetration for damage from its master."):format(-eff.armorChange, -eff.defenseChange, eff.resistPenetration) end,
 	type = "mental",
 	subtype = { dominate=true },
 	status = "detrimental",
 	on_gain = function(self, err) return "#F53CBE##Target# has been dominated!", "+Dominated" end,
 	on_lose = function(self, err) return "#F53CBE##Target# is no longer dominated.", "-Dominated" end,
-	parameters = { dominatedDamMult = 1.3 },
+	parameters = { armorChange = -3, defenseChange = -3, physicalResistChange = -0.1 },
 	activate = function(self, eff)
-		if not self.dominatedSource then
-			self.dominatedSource = eff.dominatedSource
-			self.dominatedDamMult = 1.3 or eff.dominatedDamMult
-			eff.particle = self:addParticles(Particles.new("dominated", 1))
-		end
+		eff.neverMoveId = self:addTemporaryValue("never_move", 1)
+		eff.armorId = self:addTemporaryValue("combat_armor", eff.armorChange)
+		eff.defenseId = self:addTemporaryValue("combat_def", eff.armorChange)
+		
+		eff.particle = self:addParticles(Particles.new("dominated", 1))
 	end,
 	deactivate = function(self, eff)
-		self.dominatedSource = nil
-		self.dominatedDamMult = nil
+		self:removeTemporaryValue("never_move", eff.neverMoveId)
+		self:removeTemporaryValue("combat_armor", eff.armorId)
+		self:removeTemporaryValue("combat_def", eff.defenseId)
+		
 		self:removeParticles(eff.particle)
 	end,
 }
