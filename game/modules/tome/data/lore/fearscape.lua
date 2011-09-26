@@ -37,5 +37,6 @@ newLore{
 	image = "kryl_feijan_sacrificial_altar.png",
 	lore = [[You see a female human lying unconscious on a black altar, twisted sigils scored into her naked flesh.
 Around her are several figures in dark robes.
+
 As they notice you one calls out 'Intruder! Protect the seed of Kryl-Feijan!']],
 }
