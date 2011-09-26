@@ -235,7 +235,7 @@ function _M:useEnergy(val)
 		if stalk.hit and stalk.hit_target and not stalk.hit_target.dead then
 			stalk.hit_turns = (stalk.hit_turns or 0) + 1
 			stalk.hit = false
-			
+
 			if stalk.hit_turns > 1 then
 				-- multiple hits begin stalking
 				local t = self:getTalentFromId(self.T_STALK)
@@ -249,7 +249,7 @@ function _M:useEnergy(val)
 			stalk.hit_turns = 0
 		end
 	end
-	
+
 	-- Do not fire those talents if this is not turn's end
 	if self:enoughEnergy() or game.zone.wilderness then return end
 	if self:isTalentActive(self.T_KINETIC_AURA) then
@@ -302,7 +302,7 @@ function _M:actBase()
 			local t = self:getTalentFromId(self.T_SEETHE)
 			local hateLossMinHate = t.getHateLossMinHate(self, t)
 			local hateGainMaxHate = t.getHateGainMaxHate(self, t)
-			
+
 			if self.hate < hateGainMaxHate then
 				hateChange = math.min(t.getHateGainChange(self, t), hateGainMaxHate - self.hate)
 			elseif self.hate < hateLossMinHate then
@@ -311,7 +311,7 @@ function _M:actBase()
 				hateChange = hateLossMinHate - self.hate
 			end
 		end
-		
+
 		if hateChange ~= 0 then
 			self:incHate(hateChange)
 		end
@@ -1289,13 +1289,13 @@ function _M:onTakeHit(value, src)
 	end
 
 	if self.on_takehit then value = self:check("on_takehit", value, src) end
-	
+
 	-- VITALITY?
 	if self:knowTalent(self.T_VITALITY) and self.life > self.max_life /2 and self.life - value <= self.max_life/2 then
 		local t = self:getTalentFromId(self.T_VITALITY)
 		t.do_vitality_recovery(self, t)
 	end
-	
+
 	-- Daunting Presence?
 	if self:isTalentActive(self.T_DAUNTING_PRESENCE) and value > (self.max_life / 20) then
 		local t = self:getTalentFromId(self.T_DAUNTING_PRESENCE)
@@ -1326,7 +1326,7 @@ function _M:onTakeHit(value, src)
 		game.logSeen(self, "%s has been saved by a blast of positive energy!", self.name:capitalize())
 		self:forceUseTalent(self.T_SECOND_LIFE, {ignore_energy=true})
 	end
-	
+
 	-- Shade's reform
 	if value >= self.life and self.ai_state and self.ai_state.can_reform then
 		local t = self:getTalentFromId(self.T_SHADOW_REFORM)
@@ -1527,12 +1527,12 @@ function _M:die(src)
 		local t = src:getTalentFromId(src.T_CRUEL_VIGOR)
 		t.on_kill(src, t)
 	end
-	
+
 	local effStalked = self:hasEffect(self.EFF_STALKED)
 	if effStalked and not effStalked.source.dead and effStalked.source:hasEffect(self.EFF_STALKER) then
 		local t = effStalked.source:getTalentFromId(effStalked.source.T_STALK)
 		t.on_targetDied(effStalked.source, t, self)
-	end	
+	end
 
 	if src and src.knowTalent and src:knowTalent(src.T_BLOODRAGE) then
 		local t = src:getTalentFromId(src.T_BLOODRAGE)
@@ -1706,7 +1706,7 @@ function _M:levelup()
 		rating = rng.range(math.floor(self.life_rating * 0.5), math.floor(self.life_rating * 1.5))
 	end
 	self.max_life = self.max_life + math.max(self:getRankLifeAdjust(rating), 1)
-	
+
 	self:incMaxVim(self.vim_rating)
 	self:incMaxMana(self.mana_rating)
 	self:incMaxStamina(self.stamina_rating)
@@ -1855,6 +1855,10 @@ function _M:updateModdableTile()
 	elseif not self.moddable_tile_nude then add[#add+1] = {image = base.."lower_body_01.png"} end
 	i = self.inven[self.INVEN_BODY]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile)..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1}
 	elseif not self.moddable_tile_nude then add[#add+1] = {image = base.."upper_body_01.png"} end
+	i = self.inven[self.INVEN_HEAD]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile)..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
+	i = self.inven[self.INVEN_FEET]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile)..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
+	i = self.inven[self.INVEN_HANDS]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile)..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
+	i = self.inven[self.INVEN_CLOAK]; if i and i[1] and i[1].moddable_tile_hood then add[#add+1] = {image = base..(i[1].moddable_tile):format("hood")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
 	i = self.inven[self.INVEN_MAINHAND]; if i and i[1] and i[1].moddable_tile then
 		add[#add+1] = {image = base..(i[1].moddable_tile):format("right")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1}
 		if i[1].moddable_tile_particle then
@@ -1863,10 +1867,6 @@ function _M:updateModdableTile()
 		end
 	end
 	i = self.inven[self.INVEN_OFFHAND]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile):format("left")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
-	i = self.inven[self.INVEN_HEAD]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile)..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
-	i = self.inven[self.INVEN_FEET]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile)..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
-	i = self.inven[self.INVEN_HANDS]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile)..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
-	i = self.inven[self.INVEN_CLOAK]; if i and i[1] and i[1].moddable_tile_hood then add[#add+1] = {image = base..(i[1].moddable_tile):format("hood")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
 
 	if self.moddable_tile_ornament and self.moddable_tile_ornament[self.female and "female" or "male"] then add[#add+1] = {image = base..self.moddable_tile_ornament[self.female and "female" or "male"]..".png"} end
 
@@ -1913,7 +1913,7 @@ function _M:onWear(o, bypass_set)
 			o.talent_on_spell[i]._id = id
 		end
 	end
-	
+
 	-- apply any special cursed logic
 	if self:knowTalent(self.T_CURSED_TOUCH) then
 		local t = self:getTalentFromId(self.T_CURSED_TOUCH)
@@ -1964,7 +1964,7 @@ function _M:onTakeoff(o, bypass_set)
 			self.talent_on_spell[id] = nil
 		end
 	end
-	
+
 	-- apply any special cursed logic
 	if self:knowTalent(self.T_CURSED_TOUCH) then
 		local t = self:getTalentFromId(self.T_CURSED_TOUCH)
@@ -2234,7 +2234,7 @@ function _M:preUseTalent(ab, silent, fake)
 		if not silent then game.logSeen(self, "The spell fizzles.") end
 		return false
 	end
-	
+
 	-- when using unarmed techniques check for weapons and heavy armor
 	if ab.is_unarmed and not (ab.mode == "sustained" and self:isTalentActive(ab.id)) then
 		-- first check for heavy and massive armor
@@ -2949,12 +2949,12 @@ function _M:on_set_temporary_effect(eff_id, e, p)
 		p.amount_decreased = p.maximum - p.dur
 		local save_type = nil
 		if p.apply_save then save_type = p.apply_save else save_type = save_for_effects[e.type] end
-		if save_type == "combatPhysicalResist" 
+		if save_type == "combatPhysicalResist"
 			then p.save_string = "Physical save"
 		elseif save_type == "combatMentalResist"
 			then p.save_string = "Mental save"
 		elseif save_type == "combatSpellResist"
-			then p.save_string = "Spell save"			
+			then p.save_string = "Spell save"
 		end
 		p.total_dur = p.dur
 		p.apply_power = nil
@@ -2972,7 +2972,7 @@ function _M:on_set_temporary_effect(eff_id, e, p)
 		p.dur = math.ceil(p.dur * (1 - (t.getPercent(self, t)/100)))
 	end
 	if self:knowTalent(self.T_VITALITY) and e.status == "detrimental" and (e.subtype.wound or e.subtype.poison or e.subtype.disease) then
-		local t = self:getTalentFromId(self.T_VITALITY) 
+		local t = self:getTalentFromId(self.T_VITALITY)
 		p.dur = math.ceil(p.dur * (1 - t.getWoundReduction(self, t)))
 	end
 	if e.status == "detrimental" and self:attr("negative_status_effect_immune") then
