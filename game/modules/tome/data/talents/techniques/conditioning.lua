@@ -25,7 +25,7 @@ newTalent{
 	points = 5,
 	getWoundReduction = function(self, t) return self:getTalentLevel(t)/10 end,
 	getHealMod = function(self, t) return self:combatTalentStatDamage(t, "con", 20, 80) end,
-	getLifeRegen = function(self, t) return self:combatTalentStatDamage(t, "con", 1, 10) end,
+	getLifeRegen = function(self, t) return self:combatTalentStatDamage(t, "con", 2, 20) end,
 	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t)) end,
 	do_vitality_recovery = function(self, t)
 		self:setEffect(self.EFF_RECOVERY, t.getDuration(self, t), {heal_mod = t.getHealMod(self, t), regen = t.getLifeRegen(self, t)})
@@ -95,7 +95,7 @@ newTalent{
 	require = techs_con_req3,
 	mode = "passive",
 	points = 5,
-	getChance = function(self, t) return self:combatTalentStatDamage(t, "con", 20, 80) end,
+	getChance = function(self, t) return self:combatTalentStatDamage(t, "con", 40, 80) end,
 	do_unflinching_resolve = function(self, t)
 		local effs = {}
 		-- Go through all spell effects

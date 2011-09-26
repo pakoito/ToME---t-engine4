@@ -270,6 +270,7 @@ newBirthDescriptor{
 		[ActorTalents.T_EMPTY_HAND] = 1,
 	},
 	copy = {
+		combat = { sound = "actions/melee", sound_miss="actions/melee_miss" },
 		resolvers.equip{ id=true,
 			{type="armor", subtype="hands", name="iron gauntlets", autoreq=true, ego_chance=-1000, ego_chance=-1000},
 			{type="armor", subtype="light", name="rough leather armour", autoreq=true, ego_chance=-1000, ego_chance=-1000},
