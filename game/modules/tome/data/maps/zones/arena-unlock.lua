@@ -22,6 +22,7 @@ defineTile("+", "GENERIC_LEVER_DOOR")
 defineTile(":", "GRASS", nil, nil, nil, {no_teleport=true})
 defineTile(".", "SAND")
 defineTile("-", "FLOOR")
+defineTile("_", "FLOOR", nil, nil, nil, {no_teleport=true})
 defineTile("T", "TREE", nil, nil, nil, {no_teleport=true})
 
 startx = 8
@@ -29,7 +30,7 @@ starty = 12
 
 -- ASCII map section
 return [[
-:::::T:---::::T:T
+:::::T:___::::T:T
 :#######+#######:
 :#...#.---.#...#:
 :#.............#:
@@ -43,4 +44,4 @@ T#...#.....#...#:
 :#.............#:
 :#...#.---.#...#:
 :#######+#######:
-:::TT:T---T::::::]]
+:::TT:T___T::::::]]
