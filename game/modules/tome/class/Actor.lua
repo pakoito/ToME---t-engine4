@@ -2209,7 +2209,7 @@ function _M:incStamina(stamina)
 		if self.stamina - stamina_cost < 0 then
 			local damage = stamina_cost - (self.stamina or 0)
 			self:incStamina(-self.stamina or 0)
-			self.life = self.life - damage -- directly spend life; no resistance applies
+			self.life = self.life - damage
 		else
 			return previous_incStamina(self, stamina)
 		end
@@ -2287,7 +2287,7 @@ function _M:preUseTalent(ab, silent, fake)
 			if not silent then game.logPlayer(self, "You do not have enough mana to cast %s.", ab.name) end
 			return false
 		end
-		if ab.stamina and self:getStamina() < ab.stamina * (100 + self:combatFatigue()) / 100 and not self:hasEffect(self.EFF_ADRENALINE_SURGE) then
+		if ab.stamina and self:getStamina() < ab.stamina * (100 + self:combatFatigue()) / 100 and (not self:hasEffect(self.EFF_ADRENALINE_SURGE) or self.life < ab.stamina * (100 + self:combatFatigue()) / 100) then
 			if not silent then game.logPlayer(self, "You do not have enough stamina to use %s.", ab.name) end
 			return false
 		end
