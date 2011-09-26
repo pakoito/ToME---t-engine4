@@ -539,24 +539,6 @@ newEntity{
 }
 
 newEntity{
-	power_source = {nature=true},
-	name = "leeching ", prefix=true, instant_resolve=true,
-	level_range = {10, 50},
-	greater_ego = 1,
-	rarity = 15,
-	cost = 40,
-	wielder = {
-		resource_leech_chance = resolvers.mbonus_material(10, 5),
-		resource_leech_value = resolvers.mbonus_material(1, 1),
-		life_regen = resolvers.mbonus_material(12, 3, function(e, v) v=v/10 return 0, -v end),
-		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, -v end),
-		combat = {
-			melee_project={ [DamageType.DRAINLIFE] = resolvers.mbonus_material(25, 4), },
-		},
-	},
-}
-
-newEntity{
 	power_source = {technique=true},
 	name = "nightfighting ", prefix=true, instant_resolve=true,
 	level_range = {20, 50},

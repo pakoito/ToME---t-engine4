@@ -57,18 +57,6 @@ newEntity{
 }
 newEntity{
 	power_source = {arcane=true},
-	name = " of greater telepathy", suffix=true,
-	level_range = {40, 50},
-	greater_ego = 1,
-	rarity = 50,
-	cost = 25,
-	wielder = {
-		life_regen = -3,
-		esp_all = 1,
-	},
-}
-newEntity{
-	power_source = {arcane=true},
 	name = " of telepathic range", suffix=true,
 	level_range = {40, 50},
 	rarity = 15,

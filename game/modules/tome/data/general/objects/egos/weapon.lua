@@ -276,25 +276,6 @@ newEntity{
 }
 
 newEntity{
-	power_source = {nature=true},
-	name = "insatiable ", prefix=true, instant_resolve=true,
-	level_range = {1, 50},
-	greater_ego = 1,
-	rarity = 60,
-	cost = 40,
-	wielder = {
-		resource_leech_chance = resolvers.mbonus_material(10, 5),
-		resource_leech_value = resolvers.mbonus_material(1, 1),
-		life_regen = resolvers.mbonus_material(30, 5, function(e, v) v=v/10 return 0, -v end),
-	},
-	combat = {
-		melee_project = {
-			[DamageType.NATURE] = resolvers.mbonus_material(46, 5),
-		},
-	},
-}
-
-newEntity{
 	power_source = {technique=true},
 	name = "blazebringer's ", prefix=true, instant_resolve=true,
 	level_range = {10, 50},

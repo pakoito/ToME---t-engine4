@@ -338,15 +338,14 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = "painweaver's ", prefix=true, instant_resolve=true,
-	level_range = {20, 50},
-	greater_ego = 1,
+	level_range = {5, 35},
 	rarity = 20,
 	cost = 60,
 	wielder = {
-		life_regen = resolvers.mbonus_material(30, 5, function(e, v) v=v/10 return 0, -v end),
-		combat_spellpower = resolvers.mbonus_material(5, 5),
-		combat_dam = resolvers.mbonus_material(5, 5),
-	},	
+		healing_factor = resolvers.mbonus_material(30, 5, function(e, v) v=v/10 return 0, -v end),
+		combat_spellpower = resolvers.mbonus_material(15, 5),
+		combat_dam = resolvers.mbonus_material(15, 5),
+	},
 }
 
 newEntity{
@@ -363,10 +362,10 @@ newEntity{
 		melee_project = {
 			[DamageType.FIRE] = resolvers.mbonus_material(10, 5),
 		},
-		resists_pen = { 
+		resists_pen = {
 			[DamageType.FIRE] = resolvers.mbonus_material(10, 5),
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -384,7 +383,7 @@ newEntity{
 			[DamageType.ARCANE] = resolvers.mbonus_material(20, 5),
 		},
 		lite = resolvers.mbonus_material(1, 1),
-	},	
+	},
 }
 
 newEntity{
@@ -400,7 +399,7 @@ newEntity{
 		},
 		combat_spellresist = resolvers.mbonus_material(7, 3),
 		max_stamina = resolvers.mbonus_material(30, 10),
-	},	
+	},
 }
 
 newEntity{
@@ -417,7 +416,7 @@ newEntity{
 		poison_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
 		disease_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
 		combat_physresist = resolvers.mbonus_material(7, 3),
-	},	
+	},
 }
 
 newEntity{
@@ -434,10 +433,10 @@ newEntity{
 		melee_project = {
 			[DamageType.COLD] = resolvers.mbonus_material(10, 5),
 		},
-		resists_pen = { 
+		resists_pen = {
 			[DamageType.COLD] = resolvers.mbonus_material(10, 5),
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -456,7 +455,7 @@ newEntity{
 		combat_mentalresist = resolvers.mbonus_material(5, 5, function(e, v) return 0, -v end),
 		combat_physresist = resolvers.mbonus_material(5, 5, function(e, v) return 0, -v end),
 		combat_spellresist = resolvers.mbonus_material(5, 5, function(e, v) return 0, -v end),
-	},	
+	},
 }
 
 newEntity{
@@ -473,7 +472,7 @@ newEntity{
 			[DamageType.FIRE] = resolvers.mbonus_material(10, 5),
 			[DamageType.COLD] = resolvers.mbonus_material(10, 5),
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -486,10 +485,10 @@ newEntity{
 	max_power = 80, power_regen = 1,
 	use_talent = { id = Talents.T_GREATER_WEAPON_FOCUS, level = 4, power = 80 },
 	wielder = {
-		resists_pen = { 
+		resists_pen = {
 			[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 5),
 		},
-	},	
+	},
 }
 
 newEntity{
@@ -504,7 +503,7 @@ newEntity{
 	wielder = {
 		combat_apr = resolvers.mbonus_material(7, 3),
 		combat_def = resolvers.mbonus_material(7, 3),
-	},	
+	},
 }
 
 newEntity{
@@ -518,7 +517,7 @@ newEntity{
 	use_talent = { id = Talents.T_BLINDING_SPEED, level = 4, power = 80 },
 	wielder = {
 		movement_speed = resolvers.mbonus_material(12, 3, function(e, v) v=v/100 return 0, v end),
-	},	
+	},
 }
 
 newEntity{
@@ -533,6 +532,6 @@ newEntity{
 			[DamageType.LIGHTNING] = resolvers.mbonus_material(12, 3),
 			[DamageType.PHYSICAL] = resolvers.mbonus_material(12, 3),
 		},
-	},	
+	},
 }
 
