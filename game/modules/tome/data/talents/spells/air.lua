@@ -48,7 +48,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[Conjures up mana into a powerful beam of lightning doing %0.2f to %0.2f damage
-		The damage will increase with the Magic stat]]):
+		The damage will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.LIGHTNING, damage / 3),
 		damDesc(self, DamageType.LIGHTNING, damage))
 	end,
@@ -128,7 +128,7 @@ newTalent{
 		local targets = t.getTargetCount(self, t)
 		return ([[Invokes a forking beam of lightning doing %0.2f to %0.2f damage and forking to another target.
 		It can hit up to %d targets up to 10 grids apart and will never hit the same one twice; nor will it hit the caster.
-		The damage will increase with the Magic stat]]):
+		The damage will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.LIGHTNING, damage / 3),
 			damDesc(self, DamageType.LIGHTNING, damage),
 			targets)
@@ -234,7 +234,7 @@ newTalent{
 		return ([[Conjures a furious, raging lightning storm with a radius of 5 that follows you as long as this spell is active.
 		Each turn a random lightning bolt will hit up to %d of your foes for 1 to %0.2f damage.
 		This powerful spell will continuously drain %0.2f mana while active.
-		The damage will increase with the Magic stat]]):
+		The damage will increase with your Spellpower.]]):
 		format(targetcount, damDesc(self, DamageType.LIGHTNING, damage),-manadrain)
 	end,
 }

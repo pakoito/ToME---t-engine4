@@ -50,9 +50,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Invoke ice shards at the targets in the selected area. Each shard travels slowly and does %0.2f ice damage, hitting all adjacent targets on impact.
+		return ([[Hurl ice shards at the targets in the selected area. Each shard travels slowly and does %0.2f ice damage, hitting all adjacent targets on impact.
 		This spell will never hit the caster.
-		The damage will increase with the Magic stat]]):
+		The damage will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.COLD, damage))
 	end,
 }
@@ -84,7 +84,7 @@ newTalent{
 		local radius = self:getTalentRadius(t)
 		return ([[Blast a wave of cold all around you with radius %d, doing %0.2f cold damage and freezing creatures to the ground for 4 turns.
 		Affected creatures can still act but not move.
-		The damage will increase with the Magic stat]]):format(radius, damDesc(self, DamageType.COLD, damage))
+		The damage will increase with your Spellpower.]]):format(radius, damDesc(self, DamageType.COLD, damage))
 	end,
 }
 
@@ -134,12 +134,12 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local targetcount = t.getTargetCount(self, t)
 		return ([[Shatter all frozen targets in your line of sight, doing %0.2f cold damage.
-		Depending on the target rank it will also have an additional effect:
+		Depending on the target's rank, there will also be an additional effect:
 		* Critters will be instantly killed
 		* +50%% critical chance against Normal rank
 		* +10%% critical chance against Elites
 		At most it will affect %d foes.
-		The damage will increase with the Magic stat]]):
+		The damage will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.COLD, damage), targetcount)
 	end,
 }

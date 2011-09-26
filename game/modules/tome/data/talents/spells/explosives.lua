@@ -152,7 +152,7 @@ newTalent{
 		return ([[Imbue an alchemist gem with an explosive charge of mana and throw it.
 		The gem will explode for %0.2f %s damage.
 		Each kind of gem will also provide a specific effect.
-		The damage will improve with better gems and Magic stat and the range with your dexterity.]]):format(dam, DamageType:get(damtype).name)
+		The damage will improve with better gems and with your Spellpower; the range, with your Dexterity.]]):format(dam, DamageType:get(damtype).name)
 	end,
 }
 
@@ -297,6 +297,6 @@ newTalent{
 		return ([[Crush together two alchemist gems, making them extremely unstable.
 		You then throw them to a target area, where they explode on impact dealing %0.2f physical damage and knocking back any creatures in the blast radius.
 		Each kind of gem will also provide a specific effect.
-		The damage will improve with better gems and Magic stat, and the range with your dexterity.]]):format(dam)
+		The damage will improve with better gems and with your Spellpower; the range, with your Dexterity.]]):format(dam)
 	end,
 }

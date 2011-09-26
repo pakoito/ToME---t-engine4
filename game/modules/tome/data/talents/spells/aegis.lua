@@ -35,7 +35,7 @@ newTalent{
 	info = function(self, t)
 		local heal = t.getHeal(self, t)
 		return ([[Call upon the forces of nature to heal your body for %d life.
-		The life healed will increase with the Magic stat]]):
+		The life healed will increase with your Spellpower.]]):
 		format(heal)
 	end,
 }
@@ -72,7 +72,7 @@ newTalent{
 		local dur = t.getDur(self, t)
 		return ([[Surround yourself with strengthening arcane forces.
 		Every damage shield, time shield or displacement shield affecting you has its power increased by %d%% and duration increased by %d.
-		The shield value will increase with your Magic stat.]]):
+		The shield value will increase with your Spellpower.]]):
 		format(shield, dur)
 	end,
 }
@@ -104,7 +104,7 @@ newTalent{
 		local shield = t.getShield(self, t)
 		return ([[Surround yourself with protective arcane forces.
 		Each time you receive a direct heal (not a life regeneration effect) you automatically get a damage shield of %d%% of the heal value for 3 turns.
-		The shield value will increase with your Magic stat.]]):
+		The shield value will increase with your Spellpower.]]):
 		format(shield)
 	end,
 }
@@ -152,7 +152,8 @@ newTalent{
 		local shield = t.getShield(self, t)
 		return ([[Release arcane energies into any magical shield currently protecting you, further charging it by %d%% of its max absorb value.
 		It will affect at most %d shield effects.
-		Affected shields are: Damage Shield, Time Shield, Displacement Shield]]):
+		Affected shields are: Damage Shield, Time Shield, Displacement Shield.
+		The charging will increase with your Spellpower.]]):
 		format(shield, self:getTalentLevelRaw(t))
 	end,
 }

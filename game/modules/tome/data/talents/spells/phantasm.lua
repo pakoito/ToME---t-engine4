@@ -77,7 +77,7 @@ newTalent{
 	info = function(self, t)
 		local defence = t.getDefense(self, t)
 		return ([[The caster's image blurs, granting %d bonus to defense.
-		The bonus will increase with the Magic stat]]):
+		The bonus will increase with your Spellpower.]]):
 		format(defence)
 	end,
 }
@@ -107,7 +107,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[The caster is surrounded by a phantasmal shield. If hit in melee, the shield will deal %d arcane damage to the attacker.
-		The damage will increase with the Magic stat]]):
+		The damage will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.ARCANE, damage))
 	end,
 }
@@ -142,10 +142,10 @@ newTalent{
 	info = function(self, t)
 		local invisi = t.getInvisibilityPower(self, t)
 		return ([[The caster fades from sight, granting %d bonus to invisibility.
-		Beware, you should take off your light, otherwise you will still be easily spotted.
-		As you become invisible you fade out of phase with reality, all your damage is reduced by 70%%.
-		This powerful spell constantly drains your 2 mana while active.
-		The bonus will increase with the Magic stat]]):
+		Beware -- you should take off your light, or you will still be easily spotted.
+		As you become invisible you fade out of phase with reality. All your damage is reduced by 70%%.
+		This powerful spell constantly drains your mana (2 per turn) while active.
+		The invisibility bonus will increase with your Spellpower.]]):
 		format(invisi)
 	end,
 }

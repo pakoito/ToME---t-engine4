@@ -65,7 +65,7 @@ newTalent{
 		return ([[Conjures up a bolt of darkness, doing %0.2f darkness damage.
 		At level 3 it will create a beam of shadows.
 		At level 5 none of your Nightfall spells will hurt your minions any more.
-		The damage will increase with the Magic stat]]):
+		The damage will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.DARKNESS, damage))
 	end,
 }
@@ -110,7 +110,7 @@ newTalent{
 		return ([[Dark fumes erupts from the ground for 5 turns. Any creature entering the circle will receive either a bane of confusion or a bane of blindness.
 		Only one bane can affect a creature.
 		Banes last for %d turns and also deal %0.2f darkness damage.
-		The damage will increase with the Magic stat]]):
+		The damage will increase with your Spellpower.]]):
 		format(4 + math.floor(self:getTalentLevel(t) / 2), damDesc(self, DamageType.DARKNESS, damage))
 	end,
 }
@@ -143,7 +143,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local radius = self:getTalentRadius(t)
 		return ([[Invoke a cone dealing %0.2f darkness damage in a radius of %d. Any creatures caught inside must make a mental save or be knocked back 4 grids away.
-		The damage will increase with the Magic stat]]):
+		The damage will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.DARKNESS, damage), self:getTalentRadius(t))
 	end,
 }
@@ -181,7 +181,7 @@ newTalent{
 		return ([[Invoke a ball of darkness that deals %0.2f darkness damage in a radius of %d. Every creature hit will start to become closer to death and thus reduce global speed by %d%%.
 		Necrotic minions' damage against those creatures is increased by %d%%.
 		The effects last for %d turns.
-		The damage done and minions' damage increase will increase with the Magic stat]]):
+		The damage done and minions' damage increase will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.DARKNESS, damage), self:getTalentRadius(t), speed, minion, dur)
 	end,
 }

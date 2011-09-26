@@ -52,7 +52,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local radius = self:getTalentRadius(t)
 		return ([[Conjures up a bolt of cold moving toward the target that explodes into a chilly circle of death doing %0.2f cold damage in a radius of %d.
-		The damage will increase with the Magic stat]]):
+		The damage will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.COLD, damage), radius)
 	end,
 }
@@ -122,9 +122,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		local chance, dam = t.getParams(self, t)
-		return ([[Surround yourself with undead energies, when one of your minions is destroyed while inside your necrotic aura it has %d%% chances to create a will o' the wisp.
-		Will o' the wisp will take a random target in sight and home in on it, when they reach it they explode for %0.2f cold damage.
-		The damage will increase with the Magic stat]]):
+		return ([[Surround yourself with undead energies. When one of your minions is destroyed while inside your necrotic aura, it has a %d%% chance to create a will o' the wisp.
+		The will o' the wisp will take a random target in sight and home in on it. When it reaches the target, it will explode for %0.2f cold damage.
+		The damage will increase with your Spellpower.]]):
 		format(chance, damDesc(self, DamageType.COLD, dam))
 	end,
 }
@@ -314,7 +314,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local darkCount = t.getDarkCount(self, t)
 		return ([[Cold Flames slowly spread from %d spots in a radius of %d around the targeted location. The flames deal %0.2f cold damage and has a chance of freezing.
-		Damage improves with the Magic stat.]]):format(darkCount, radius, damDesc(self, DamageType.COLD, damage))
+		Damage improves with your Spellpower.]]):format(darkCount, radius, damDesc(self, DamageType.COLD, damage))
 	end,
 }
 
@@ -344,8 +344,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local chance, val = t.getParams(self, t)
-		return ([[Vampiric energies fill you; each time you deal damage you have x% chance to heal for %d%% of the damage done.
-		The absorbtion percent will increase with the Magic stat]]):
+		return ([[Vampiric energies fill you; each time you deal damage you have a %d%% chance to heal for %d%% of the damage done.
+		The absorption percent will increase with your Spellpower.]]):
 		format(chance, val)
 	end,
 }

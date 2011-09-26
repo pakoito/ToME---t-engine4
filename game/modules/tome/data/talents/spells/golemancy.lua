@@ -229,7 +229,7 @@ newTalent{
 		local heal = t.getHeal(self, t)
 		return ([[Interact with your golem
 		- If it is destroyed you will take some time to reconstruct it (takes 15 alchemist gems).
-		- If it is alive you will be able to talk to it, change its weapon and armour or repair it for %d (takes 2 alchemist gems), Spellpower, alchemist gem and Golem Power talent all influence the healing done]]):
+		- If it is alive you will be able to talk to it, change its weapon and armour or repair it for %d (takes 2 alchemist gems). Spellpower, alchemist gem and Golem Power talent all influence the healing done.]]):
 		format(heal)
 	end,
 }
@@ -260,7 +260,7 @@ newTalent{
 		local attack = ta.getAttack(self.alchemy_golem, ta)
 		local damage = td.getDamage(self.alchemy_golem, td)
 		self.alchemy_golem.talents[Talents.T_WEAPON_COMBAT], self.alchemy_golem.talents[Talents.T_WEAPONS_MASTERY] = olda, oldd
-		return ([[Improves your golem proficiency with weapons. Increasing its attack by %d and damage by %d%%.]]):
+		return ([[Improves your golem's proficiency with weapons, increasing its attack by %d and damage by %d%%.]]):
 		format(attack, 100 * damage)
 	end,
 }
@@ -296,7 +296,7 @@ newTalent{
 		local crit = ta.getCriticalChanceReduction(self.alchemy_golem, ta)
 		self.alchemy_golem.talents[Talents.T_THICK_SKIN], self.alchemy_golem.talents[Talents.T_ARMOUR_TRAINING] = olda, oldh
 
-		return ([[Improves your golem armour training and damage resistance.
+		return ([[Improves your golem's armour training and damage resistance.
 		Increases all damage resistance by %d%%, increases armour value by %d, reduces chance to be critically hit by %d%% when wearing a heavy mail armour or a massive plate armour, increases armour hardiness by %d%% and increases healing factor by %d%%.
 		The golem can always use all kind of armours, including massive ones.]]):
 		format(res, heavyarmor, crit, hardiness, rawlev * 10)
@@ -378,7 +378,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Teleport to your golem and your golem to your place. Your foes will be confused and those that were attacking you will have %d%% chances to target your golem instead.]]):
+		return ([[Teleport to your golem, while your golem teleports to your location. Your foes will be confused, and those that were attacking you will have a %d%% chance to target your golem instead.]]):
 		format(self:getTalentLevelRaw(t) * 15 + 25)
 	end,
 }

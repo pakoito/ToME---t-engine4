@@ -726,7 +726,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[A surge of power radiates to all your minions, increasing their combat power, spellpower and accuracy by %d, their armour penetration by %d and their critical hit chance by %d for 6 turns.
-		The effects will increase with the Magic stat]]):
+		The effects will increase with your Spellpower.]]):
 		format(t.getPower(self, t), t.getAPR(self, t), t.getCrit(self, t))
 	end,
 }
@@ -740,7 +740,7 @@ newTalent{
 	getPerc = function(self, t) return self:combatTalentSpellDamage(t, 15, 80) end,
 	info = function(self, t)
 		return ([[You share your powers with your minions, granting them %d%% of your resistances and saves.
-		The effect will increase with the Magic stat]]):
+		The effect will increase with your Spellpower.]]):
 		format(t.getPerc(self, t))
 	end,
 }

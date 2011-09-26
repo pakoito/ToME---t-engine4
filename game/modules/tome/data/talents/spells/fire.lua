@@ -69,7 +69,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		return ([[Conjures up a bolt of fire, setting the target ablaze and doing %0.2f fire damage over 3 turns.
 		At level 5 it will create a beam of flames.
-		The damage will increase with the Magic stat]]):
+		The damage will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.FIRE, damage))
 	end,
 }
@@ -118,7 +118,7 @@ newTalent{
 		local stunduration = t.getStunDuration(self, t)
 		local radius = self:getTalentRadius(t)
 		return ([[Conjures up a cone of flame with radius %d. Any target caught in the area will take %0.2f fire damage and be paralyzed for %d turns.
-		The damage will increase with the Magic stat]]):
+		The damage will increase with your Spellpower.]]):
 		format(radius, damDesc(self, DamageType.FIRE, damage), stunduration)
 	end,
 }
@@ -167,7 +167,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local radius = self:getTalentRadius(t)
 		return ([[Conjures up a bolt of fire moving toward the target that explodes into a flash of fire doing %0.2f fire damage in a radius of %d.
-		The damage will increase with the Magic stat]]):
+		The damage will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.FIRE, damage), radius)
 	end,
 }
@@ -213,7 +213,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local radius = self:getTalentRadius(t)
 		return ([[Raging flames burn foes and allies alike doing %0.2f fire damage in a radius of %d each turn for %d turns.
-		The damage will increase with the Magic stat]]):
+		The damage will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.FIRE, damage), radius, duration)
 	end,
 }

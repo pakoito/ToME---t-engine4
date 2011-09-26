@@ -70,7 +70,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Your target's doom draws near. It cannot regenerate or heal at all and will take %d%% of its remaining life (or %0.2f, whichever is lower) over 10 turns as arcane damage.
-		The damage will increase with the Magic stat]]):
+		The damage will increase with your Spellpower.]]):
 		format(t.getDamage(self, t), t.getMax(self, t))
 	end,
 }
@@ -123,7 +123,7 @@ newTalent{
 	info = function(self, t)
 		local heal = t.getHeal(self, t)
 		return ([[Absorb %d%% of all your minions' life (possibly destroying them) and use this energy to heal you for %d%% of your total life.
-		The healing will increase with the Magic stat]]):
+		The healing will increase with your Spellpower.]]):
 		format(heal, heal)
 	end,
 }
@@ -212,7 +212,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Your true goal. The purpose of all necromancy, to become a powerful and everliving Lich!
 		If you are killed while this spell is active the arcane forces you unleash will be able to rebuild your body into Lichform.
-		All liches gain the following intrinsic:
+		All liches gain the following intrinsics:
 		- Poison, cut, fear immunity
 		- Disease resistance 50%%
 		- Stun resistance 50%%

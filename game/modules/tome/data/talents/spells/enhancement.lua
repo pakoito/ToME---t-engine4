@@ -44,7 +44,7 @@ newTalent{
 		local firedamage = t.getFireDamage(self, t)
 		local firedamageinc = t.getFireDamageIncrease(self, t)
 		return ([[Engulfs your hands (and weapons) in a sheath of fire, dealing %0.2f fire damage per melee attack and increasing all fire damage by %d%%.
-		The effects will increase with your Magic stat.]]):
+		The effects will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.FIRE, firedamage), firedamageinc)
 	end,
 }
@@ -68,7 +68,7 @@ newTalent{
 	info = function(self, t)
 		local reduction = t.getPhysicalReduction(self, t)
 		return ([[Hardens your skin with the power of earth, reducing physical damage taken by %d%% for 10 turns.
-		Damage reduction will increase with your Magic stat.]]):
+		Damage reduction will increase with your Spellpower.]]):
 		format(reduction)
 	end,
 }
@@ -100,7 +100,7 @@ newTalent{
 		local icedamage = t.getIceDamage(self, t)
 		local icedamageinc = t.getIceDamageIncrease(self, t)
 		return ([[Engulfs your hands (and weapons) in a sheath of ice, dealing %d ice damage per melee attack and increasing all cold damage by %d%%.
-		The effects will increase with your Magic stat.]]):
+		The effects will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.COLD, icedamage), icedamageinc)
 	end,
 }
@@ -136,7 +136,7 @@ newTalent{
 	info = function(self, t)
 		local statinc = t.getStatIncrease(self, t)
 		return ([[You concentrate on your inner self, increasing your stats each by %d up to +11.
-		Stats increase will improve with your Magic stat.]]):
+		Stats increase will improve with your Spellpower.]]):
 		format(statinc)
 	end,
 }

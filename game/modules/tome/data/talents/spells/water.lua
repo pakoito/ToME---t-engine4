@@ -56,7 +56,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[Corrosive fumes rise from the ground doing %0.2f acid damage in a radius of 3 each turn for %d turns.
-		The damage will increase with the Magic stat]]):
+		The damage will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.ACID, damage), duration)
 	end,
 }
@@ -88,7 +88,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[Condenses ambient water on a target, freezing it for %d turns and damaging it for %0.2f.
-		The damage will increase with the Magic stat]]):format(2+math.ceil(self:getTalentLevelRaw(t)), damDesc(self, DamageType.COLD, damage))
+		The damage will increase with your Spellpower.]]):format(2+math.ceil(self:getTalentLevelRaw(t)), damDesc(self, DamageType.COLD, damage))
 	end,
 }
 
@@ -134,7 +134,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local radius = self:getTalentRadius(t)
 		return ([[A wall of water rushes out from the caster with radius 1, increasing 1 per turn to a maximum eventual radius of %d, doing %0.2f cold damage and %0.2f physical damage as well as knocking back targets each turn for %d turns.
-		The damage and duration will increase with the Magic stat]]):
+		The damage and duration will increase with your Spellpower.]]):
 		format(radius, damDesc(self, DamageType.COLD, damage/2), damDesc(self, DamageType.PHYSICAL, damage/2), duration)
 	end,
 }
@@ -179,6 +179,6 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		return ([[A furious ice storm rages around the caster doing %0.2f cold damage in a radius of 3 each turn for %d turns.
 		It has 25%% chance to freeze damaged targets.
-		The damage and duration will increase with the Magic stat]]):format(damDesc(self, DamageType.COLD, damage), duration)
+		The damage and duration will increase with your Spellpower.]]):format(damDesc(self, DamageType.COLD, damage), duration)
 	end,
 }

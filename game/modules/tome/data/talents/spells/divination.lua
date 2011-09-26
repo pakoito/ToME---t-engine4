@@ -89,7 +89,7 @@ newTalent{
 		Improves see invisible +%d
 		Improves see through stealth +%d
 		Improves critical spell chance +%d%%
-		The effects will improve with the Magic stat]]):
+		The effects will improve with your Spellpower.]]):
 		format(seeinvisible, seestealth, criticalchance)
 	end,
 }
@@ -147,6 +147,6 @@ newTalent{
 		return ([[Echoes of the future flash before your eyes, allowing you to sense some incoming attacks.
 		If the attack is elemental or magical you will erect a temporary shield that reduces all damage of this type by %d%% for 5 turns.
 		This effect can only happen once every 5 turns and happens before damage is taken.
-		The bonus will increase with the Magic stat]]):format(resist)
+		The bonus will increase with your Spellpower.]]):format(resist)
 	end,
 }

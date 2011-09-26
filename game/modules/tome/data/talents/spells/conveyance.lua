@@ -91,7 +91,7 @@ newTalent{
 		return ([[Teleports you randomly with a small range of up to %d grids.
 		At level 4 it allows you to specify which creature to teleport.
 		At level 5 it allows you to choose the target area (radius %d). If the target area is not in line of sight there is a chance the spell will fizzle.
-		The range will increase with the Magic stat]]):format(range, radius)
+		The range will increase with your Spellpower.]]):format(range, radius)
 	end,
 }
 
@@ -164,7 +164,7 @@ newTalent{
 		return ([[Teleports you randomly with a large range (%d), with a minimum range of 15.
 		At level 4 it allows you to specify which creature to teleport.
 		At level 5 it allows you to choose the target area (radius %d).
-		The range will increase with the Magic stat]]):format(range, radius)
+		The range will increase with your Spellpower.]]):format(range, radius)
 	end,
 }
 
@@ -197,7 +197,7 @@ newTalent{
 		return ([[This intricate spell erects a space distortion around the caster that is linked to another one around a target.
 		Any time the caster should take damage there is a %d%% chance that it will instead be warped by the shield and hit the designated target.
 		Once the maximum damage (%d) is absorbed, the time runs out (%d turns), or the target dies, the shield will crumble.
-		Max damage shield can absorb will increase with the Magic stat]]):
+		Max damage shield can absorb will increase with your Spellpower.]]):
 		format(chance, maxabsorb, duration)
 	end,
 }
@@ -226,7 +226,7 @@ newTalent{
 		local range = t.getRange(self, t)
 		return ([[When you hit a solid surface this spell tears down the laws of probability to make you instantly appear on the other side.
 		Teleports up to %d grids.
-		Range will improve with your Magic stat.]]):
+		Range will improve with your Spellpower.]]):
 		format(range)
 	end,
 }

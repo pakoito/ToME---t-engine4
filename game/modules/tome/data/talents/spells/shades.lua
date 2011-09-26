@@ -56,7 +56,7 @@ newTalent{
 	info = function(self, t)
 		local chance = t.getChance(self, t)
 		return ([[Surround your minions in a veil of darkness. The darkness will teleport them to you and grant them %d%% evasion for 5 turns.
-		The evasion chance will increase with the Magic stat]]):
+		The evasion chance will increase with your Spellpower.]]):
 		format(chance)
 	end,
 }

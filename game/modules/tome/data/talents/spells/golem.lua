@@ -340,7 +340,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[Fire a beam from your eyes doing %0.2f fire damage, %0.2f cold damage or %0.2f lightning damage.
-		The damage will increase with the Magic stat]]):
+		The damage will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.FIRE, damage), damDesc(self, DamageType.COLD, damage), damDesc(self, DamageType.LIGHTNING, damage))
 	end,
 }
@@ -371,7 +371,7 @@ newTalent{
 		return ([[Your golem's skin shimmers with eldritch energies.
 		Any damage it takes is partly reflected (%d%%) to the attacker.
 		The golem still takes full damage.
-		Damage returned will increase with the Magic stat.]]):
+		Damage returned will increase with your Spellpower.]]):
 		format(20 + self:combatTalentSpellDamage(t, 12, 40))
 	end,
 }
@@ -459,7 +459,7 @@ newTalent{
 		Burning is cumulative, the longer they stay in they higher the fire damage they take.
 		In addition the golem gains %d%% fire resistance.
 		Molten Skin damage will not affect the golem's master.
-		The damage and resistance will increase with the magic stat.]]):format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 12, 120)), 5 + self:getTalentLevel(t), 30 + self:combatTalentSpellDamage(t, 12, 60))
+		The damage and resistance will increase with your Spellpower.]]):format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 12, 120)), 5 + self:getTalentLevel(t), 30 + self:combatTalentSpellDamage(t, 12, 60))
 	end,
 }
 

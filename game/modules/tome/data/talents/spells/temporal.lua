@@ -68,7 +68,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		return ([[This intricate spell erects a time shield around the caster, preventing any incoming damage and sending it forward in time.
 		Once either the maximum damage (%d) is absorbed, or the time runs out (%d turns), the stored damage will return as self-damage over time (5 turns).
-		Max absorption will increase with the Magic stat]]):
+		Max absorption will increase with your Spellpower.]]):
 		format(maxabsorb, duration)
 	end,
 }
@@ -98,7 +98,7 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[Removes the target from the flow of time for %d turns. In this state the target can neither act nor be harmed.
-		The duration will increase with the Magic stat]]):
+		The duration will increase with your Spellpower.]]):
 		format(duration)
 	end,
 }

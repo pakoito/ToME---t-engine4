@@ -57,8 +57,8 @@ newTalent{
 	info = function(self, t)
 		local dam = damDesc(self, DamageType.LIGHTNING, t.getDamage(self, t))
 		local radius = self:getTalentRadius(t)
-		return ([[Lightning emanates from you in a circular wave with radius %d, doing %0.2f to %0.2f lightning damage and possibly dazing them (75%% chance).
-		The damage will increase with the Magic stat]]):format(radius, dam / 3, dam)
+		return ([[Lightning emanates from you in a circular wave with radius %d, doing %0.2f to %0.2f lightning damage and possibly dazing (75%% chance).
+		The damage will increase with your Spellpower.]]):format(radius, dam / 3, dam)
 	end,
 }
 
@@ -86,7 +86,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[Conjures up a bolt of lightning, doing %0.2f to %0.2f lightning damage and dazing the target for 3 turns.
-		The damage will increase with the Magic stat]]):
+		The damage will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.LIGHTNING, damage/3), damDesc(self, DamageType.LIGHTNING, damage))
 	end,
 }
@@ -125,9 +125,9 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local chance = t.getChance(self, t)
 		local radius = t.getRadius(self, t)
-		return ([[Each time one of your lightning spells dazes a target it has %d%% chances to creates a chain reaction that summons a mighty Hurricane that last for 10 turns around the target with radius of %d.
+		return ([[Each time one of your lightning spells dazes a target it has a %d%% chance to creates a chain reaction that summons a mighty Hurricane that lasts for 10 turns around the target with radius of %d.
 		Each turn all creatures around it will take %0.2f to %0.2f lightning damage.
-		The damage will increase with the Magic stat]]):format(chance, radius, damage / 3, damage)
+		The damage will increase with your Spellpower.]]):format(chance, radius, damage / 3, damage)
 	end,
 }
 

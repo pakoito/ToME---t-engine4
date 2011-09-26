@@ -44,7 +44,7 @@ newTalent{
 	info = function(self, t)
 		local armor = t.getArmor(self, t)
 		return ([[The caster's skin grows as hard as stone, granting %d bonus to armor.
-		The bonus to armor will increase with the Magic stat]]):
+		The bonus to armor will increase with your Spellpower.]]):
 		format(armor)
 	end,
 }
@@ -74,7 +74,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[Conjures up a fist of stone doing %0.2f physical damage and knocking the target back.
-		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.PHYSICAL, damage))
+		The damage will increase with your Spellpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage))
 	end,
 }
 
@@ -173,7 +173,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		return ([[Entomb yourself in a wall of stone for %d turns.
 		At level 4 it becomes targetable.
-		Duration will improve with your Magic stat.]]):
+		Duration will improve with your Spellpower.]]):
 		format(duration)
 	end,
 }
