@@ -298,6 +298,7 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
+		if self.x == x and self.y == y then return nil end
 
 		-- We will always project the beam as far as possible
 		local l = self:lineFOV(x, y)

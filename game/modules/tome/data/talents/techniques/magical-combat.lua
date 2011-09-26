@@ -28,6 +28,8 @@ newTalent{
 	cooldown = 5,
 	tactical = { BUFF = 2 },
 	do_trigger = function(self, t, target)
+		if self.x == target.x and self.y == target.y then return nil end
+
 		if rng.percent(20 + self:getTalentLevel(t) * (1 + self:getDex(9, true))) then
 			local spells = {}
 			local fatigue = (100 + 2 * self:combatFatigue()) / 100

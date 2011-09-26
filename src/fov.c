@@ -631,7 +631,7 @@ static int lua_fov_line_step(lua_State *L)
 {
 	fov_line_data *line = (fov_line_data*)auxiliar_checkclass(L, "core{fovline}", 1);
 	bool dont_stop_at_end = lua_toboolean(L, 2);
-	if (!dont_stop_at_end && line->dest_t == line->t) return 0;
+	if (!dont_stop_at_end && line->dest_t == line->t || line->dest_t == 0) return 0;
 
 	// If there is a tie, then choose the tile closer to a cardinal direction.
 	// If we weren't careful, this would be the most likely place to have floating precision
