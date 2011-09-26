@@ -852,7 +852,7 @@ newTalent{
 		local dur = 2 + self:getTalentLevel(t)
 		local trap = mod.class.Trap.new{
 			type = "web", subtype="web", id_by_type=true, unided_name = "sticky web",
-			display = '^', color=colors.YELLOW,
+			display = '^', color=colors.YELLOW, image = "trap/trap_spiderweb_01_64.png",
 			name = "sticky web", auto_id = true,
 			detect_power = 6 * self:getTalentLevel(t), disarm_power = 10 * self:getTalentLevel(t),
 			level_range = {self.level, self.level},
