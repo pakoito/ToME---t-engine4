@@ -953,10 +953,11 @@ function _M:display(nb_keyframes)
 		-- Basic display; no FBOs
 		else
 			if self.level.data.background then self.level.data.background(self.level, map.display_x, map.display_y, nb_keyframes) end
-			map:display(nil, nil, nb_keyframes)
+			map:display(nil, nil, nb_keyframes, config.settings.tome.smooth_fov)
 			if self.target then self.target:display() end
 			if self.level.data.foreground then self.level.data.foreground(self.level, map.display_x, map.display_y, nb_keyframes) end
 			if self.level.data.weather_particle then self.state:displayWeather(self.level, self.level.data.weather_particle, nb_keyframes) end
+			if config.settings.tome.smooth_fov then map._map:drawSeensTexture(map.display_x, map.display_y, nb_keyframes) end
 		end
 
 		if not self.zone_name_s then self:updateZoneName() end
