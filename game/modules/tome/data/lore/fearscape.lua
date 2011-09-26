@@ -29,3 +29,13 @@ newLore{
 
 In the distance you see looming, demonic shapes of absolute darkness, towering above the blazing land like wardens of doom. The sky is black, but above your head hangs a round world that you recognise as Eyal. Across the burning plains gather armies of fiendish figures, and glowing eyes turn up with hateful glowers to your home world. Suddenly both you and it and seem small and frail. As the flames fill your body with pain your only thought is of escape.]],
 }
+
+newLore{
+	id = "kryl-feijan-altar",
+	category = "fearscape",
+	name = "sacrificial altar", always_pop = true,
+	image = "kryl_feijan_sacrificial_altar.png",
+	lore = [[You see a female human lying unconscious on a black altar, twisted sigils scored into her naked flesh.
+Around her are several figures in dark robes.
+As they notice you one calls out 'Intruder! Protect the seed of Kryl-Feijan!']],
+}

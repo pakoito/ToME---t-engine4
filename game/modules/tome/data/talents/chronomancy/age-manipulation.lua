@@ -86,7 +86,7 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		print (check)
+
 		self:project(tg, x, y, DamageType.CONFUSION, {
 			dur = t.getConfuseDuration(self, t),
 			dam = t.getConfuseEfficency(self, t)

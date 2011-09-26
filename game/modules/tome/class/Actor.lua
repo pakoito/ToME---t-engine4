@@ -381,6 +381,16 @@ function _M:actBase()
 			local t = self:getTalentFromId(self.T_CARBON_SPIKES)
 			t.do_carbonRegrowth(self, t)
 		end
+		if self:knowTalent(self.T_UNFLINCHING_RESOLVE) then
+			local t = self:getTalentFromId(self.T_UNFLINCHING_RESOLVE)
+			t.do_unflinching_resolve(self, t)
+		end
+		if self:isTalentActive(self.T_DAUNTING_PRESENCE) then
+			local t = self:getTalentFromId(self.T_DAUNTING_PRESENCE)
+			if self.life < t.getMinimumLife(self, t) then
+				self:forceUseTalent(self.T_DAUNTING_PRESENCE, {ignore_energy=true})
+			end
+		end
 	end
 
 	-- Suffocate ?
@@ -401,11 +411,15 @@ function _M:act()
 	if self.mana < 1 or self.stamina < 1 or self.psi < 1 then
 		for tid, _ in pairs(self.sustain_talents) do
 			local t = self:getTalentFromId(tid)
-			if (t.sustain_mana and self.mana < 1) or (t.sustain_stamina and self.stamina < 1) then
+			if (t.sustain_mana and self.mana < 1) or (t.sustain_stamina and self.stamina < 1 and not self:hasEffect(self.EFF_ADRENALINE_SURGE)) then
 				self:forceUseTalent(tid, {ignore_energy=true})
 			elseif (t.sustain_psi and self.psi < 1) and t.remove_on_zero then
 				self:forceUseTalent(tid, {ignore_energy=true})
 			end
+		end
+		-- clear grappling
+		if self:hasEffect(self.EFF_GRAPPLING) and not self:hasEffect(self.EFF_ADRENALINE_SURGE) then
+			self:removeEffect(self.EFF_GRAPPLING)
 		end
 	end
 
@@ -1275,6 +1289,18 @@ function _M:onTakeHit(value, src)
 	end
 
 	if self.on_takehit then value = self:check("on_takehit", value, src) end
+	
+	-- VITALITY?
+	if self:knowTalent(self.T_VITALITY) and self.life > self.max_life /2 and self.life - value <= self.max_life/2 then
+		local t = self:getTalentFromId(self.T_VITALITY)
+		t.do_vitality_recovery(self, t)
+	end
+	
+	-- Daunting Presence?
+	if self:isTalentActive(self.T_DAUNTING_PRESENCE) and value > (self.max_life / 20) then
+		local t = self:getTalentFromId(self.T_DAUNTING_PRESENCE)
+		t.do_daunting_presence(self, t)
+	end
 
 	-- Shield of Light
 	if value > 0 and self:isTalentActive(self.T_SHIELD_OF_LIGHT) then
@@ -1300,14 +1326,7 @@ function _M:onTakeHit(value, src)
 		game.logSeen(self, "%s has been saved by a blast of positive energy!", self.name:capitalize())
 		self:forceUseTalent(self.T_SECOND_LIFE, {ignore_energy=true})
 	end
-
-	-- Unflinching Resolve
-	if self:knowTalent(self.T_UNFLINCHING_RESOLVE) and value >= (self.max_life / 10) then
-		local t = self:getTalentFromId(self.T_UNFLINCHING_RESOLVE)
-		local dam = value
-		t.on_hit(self, t, dam)
-	end
-
+	
 	-- Shade's reform
 	if value >= self.life and self.ai_state and self.ai_state.can_reform then
 		local t = self:getTalentFromId(self.T_SHADOW_REFORM)
@@ -2179,6 +2198,24 @@ function _M:incParadox(paradox)
 	return previous_incParadox(self, paradox)
 end
 
+-- Overwrite incStamina to set up Adrenaline Surge
+local previous_incStamina = _M.incStamina
+
+function _M:incStamina(stamina)
+	if stamina < 0 and self:hasEffect(self.EFF_ADRENALINE_SURGE) then
+		local stamina_cost = math.abs(stamina)
+		if self.stamina - stamina_cost < 0 then
+			local damage = stamina_cost - (self.stamina or 0)
+			self:incStamina(-self.stamina or 0)
+			self.life = self.life - damage -- directly spend life; no resistance applies
+		else
+			return previous_incStamina(self, stamina)
+		end
+	else
+		return previous_incStamina(self, stamina)
+	end
+end
+
 --- Called before a talent is used
 -- Check the actor can cast it
 -- @param ab the talent (not the id, the table)
@@ -2197,7 +2234,7 @@ function _M:preUseTalent(ab, silent, fake)
 		if not silent then game.logSeen(self, "The spell fizzles.") end
 		return false
 	end
-
+	
 	-- when using unarmed techniques check for weapons and heavy armor
 	if ab.is_unarmed and not (ab.mode == "sustained" and self:isTalentActive(ab.id)) then
 		-- first check for heavy and massive armor
@@ -2248,7 +2285,7 @@ function _M:preUseTalent(ab, silent, fake)
 			if not silent then game.logPlayer(self, "You do not have enough mana to cast %s.", ab.name) end
 			return false
 		end
-		if ab.stamina and self:getStamina() < ab.stamina * (100 + self:combatFatigue()) / 100 then
+		if ab.stamina and self:getStamina() < ab.stamina * (100 + self:combatFatigue()) / 100 and not self:hasEffect(self.EFF_ADRENALINE_SURGE) then
 			if not silent then game.logPlayer(self, "You do not have enough stamina to use %s.", ab.name) end
 			return false
 		end
@@ -2921,7 +2958,6 @@ function _M:on_set_temporary_effect(eff_id, e, p)
 		end
 		p.total_dur = p.dur
 		p.apply_power = nil
-		
 	end
 
 	if e.status == "detrimental" and self:knowTalent(self.T_RESILIENT_BONES) then
@@ -2934,6 +2970,10 @@ function _M:on_set_temporary_effect(eff_id, e, p)
 	if e.status == "detrimental" and e.type ~= "magical" and e.type ~= "other" and self:knowTalent(self.T_SUPPRESSION) then
 		local t = self:getTalentFromId(self.T_SUPPRESSION)
 		p.dur = math.ceil(p.dur * (1 - (t.getPercent(self, t)/100)))
+	end
+	if self:knowTalent(self.T_VITALITY) and e.status == "detrimental" and (e.subtype.wound or e.subtype.poison or e.subtype.disease) then
+		local t = self:getTalentFromId(self.T_VITALITY) 
+		p.dur = math.ceil(p.dur * (1 - t.getWoundReduction(self, t)))
 	end
 	if e.status == "detrimental" and self:attr("negative_status_effect_immune") then
 		p.dur = 0

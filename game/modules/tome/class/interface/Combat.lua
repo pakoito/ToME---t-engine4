@@ -572,10 +572,6 @@ function _M:combatArmor()
 	if self:hasHeavyArmor() and self:knowTalent(self.T_ARMOUR_TRAINING) then
 		add = add + self:getTalentLevel(self.T_ARMOUR_TRAINING) * 1.4
 	end
-	if self:knowTalent(self.T_PHYSICAL_CONDITIONING) then
-		local t = self:getTalentFromId(self.T_PHYSICAL_CONDITIONING)
-		add = add + t.getArmor(self, t)
-	end
 	if self:knowTalent(self.T_CARBON_SPIKES) and self:isTalentActive(self.T_CARBON_SPIKES) then
 		add = add + self.carbon_armor
 	end
@@ -886,10 +882,6 @@ end
 --- Computes physical resistance
 function _M:combatPhysicalResist()
 	local add = 0
-	if self:knowTalent(self.T_PHYSICAL_CONDITIONING) then
-		local t = self:getTalentFromId(self.T_PHYSICAL_CONDITIONING)
-		add = add + t.getPhysical(self, t)
-	end
 	if self:knowTalent(self.T_POWER_IS_MONEY) then
 		add = add + util.bound(self.money / (80 - self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 5), 0, self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 10)
 	end

@@ -27,6 +27,12 @@ newTalent{
 	mode = "passive",
 	points = 1,
 	getDamage = function(self, t) return self.level * 0.5 end,
+	on_learn = function(self, t)
+		self.combat.sound = "actions/melee"
+		self.combat.sound_miss = "actions/melee_miss"
+	end,
+	on_unlearn = function(self, t)
+	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[Adds %d damage to all glove and gauntlet strikes.
@@ -46,7 +52,8 @@ newTalent{
 	getDamage = function(self, t) return math.sqrt(self:getTalentLevel(t) / 10) end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Increases damage done with unarmed attacks by %d%%.]]):
+		return ([[Increases damage done with unarmed attacks by %d%% 
+		Note this only applies to your base unarmed damage and things that work off of it (pugilism and finishing moves for instance) and will not increase grappling or kick damage.]]):
 		format(100 * damage)
 	end,
 }

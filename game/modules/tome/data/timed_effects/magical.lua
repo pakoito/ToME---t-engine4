@@ -1095,7 +1095,7 @@ newEffect{
 	long_desc = function(self, eff) return "The target is retuning the fabric of spacetime; any damage will stop it." end,
 	type = "magical",
 	subtype = { temporal=true },
-	status = "detrimental",
+	status = "beneficial",
 	parameters = {},
 	on_timeout = function(self, eff)
 		local t = self:getTalentFromId(self.T_SPACETIME_TUNING)

@@ -1514,7 +1514,7 @@ newDamageType{
 			if src then src:incParadox(-dam.reduction) end
 			if chance == 1 then
 				if target:canBe("stun") then
-					target:setEffect(target.EFF_DAZED, 3, {apply_power=src:combatSpellpower()})
+					target:setEffect(target.EFF_STUNNED, 3, {apply_power=src:combatSpellpower()})
 				else
 					game.logSeen(target, "%s resists the daze!", target.name:capitalize())
 				end

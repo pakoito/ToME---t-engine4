@@ -42,6 +42,50 @@ newBirthDescriptor{
 
 newBirthDescriptor{
 	type = "subclass",
+	name = "Berserker",
+	desc = {
+		"A Berserker wields huge two-handed weapons of destruction, bringing pain and death to his foes as he cleaves them in two.",
+		"A Berserker usually forfeits all ideas of self-defense to concentrate on what he does best: killing things.",
+		"Their most important stats are: Strength and Constitution",
+		"#GOLD#Stat modifiers:",
+		"#LIGHT_BLUE# * +5 Strength, +1 Dexterity, +3 Constitution",
+		"#LIGHT_BLUE# * +0 Magic, +0 Willpower, +0 Cunning",
+	},
+	stats = { str=5, con=3, dex=1, },
+	talents_types = {
+		["technique/archery-training"]={false, 0.1},
+		["technique/shield-defense"]={false, -0.1},
+		["technique/2hweapon-offense"]={true, 0.3},
+		["technique/2hweapon-cripple"]={true, 0.3},
+		["technique/combat-techniques-active"]={true, 0.3},
+		["technique/combat-techniques-passive"]={true, 0.3},
+		["technique/combat-training"]={true, 0.3},
+		["technique/superiority"]={false, 0.3},
+		["technique/warcries"]={false, 0.3},
+		["technique/field-control"]={false, 0},
+		["technique/bloodthirst"]={false, 0.2},
+		["cunning/survival"]={true, 0},
+		["cunning/dirty"]={false, 0},
+	},
+	talents = {
+		[ActorTalents.T_DEATH_DANCE] = 1,
+		[ActorTalents.T_STUNNING_BLOW] = 1,
+		[ActorTalents.T_WEAPON_COMBAT] = 1,
+		[ActorTalents.T_ARMOUR_TRAINING] = 2,
+	},
+	copy = {
+		resolvers.equip{ id=true,
+			{type="weapon", subtype="greatsword", name="iron greatsword", autoreq=true, ego_chance=-1000, ego_chance=-1000},
+			{type="armor", subtype="heavy", name="iron mail armour", autoreq=true, ego_chance=-1000, ego_chance=-1000},
+		},
+	},
+	copy_add = {
+		life_rating = 3,
+	},
+}
+
+newBirthDescriptor{
+	type = "subclass",
 	name = "Fighter",
 	desc = {
 		"A Fighter specializes in weapon and shield combat, rarely leaving the cover of her many protective techniques.",
@@ -82,50 +126,6 @@ newBirthDescriptor{
 	},
 	copy_add = {
 		life_rating = 2,
-	},
-}
-
-newBirthDescriptor{
-	type = "subclass",
-	name = "Berserker",
-	desc = {
-		"A Berserker wields huge two-handed weapons of destruction, bringing pain and death to his foes as he cleaves them in two.",
-		"A Berserker usually forfeits all ideas of self-defense to concentrate on what he does best: killing things.",
-		"Their most important stats are: Strength and Constitution",
-		"#GOLD#Stat modifiers:",
-		"#LIGHT_BLUE# * +5 Strength, +1 Dexterity, +3 Constitution",
-		"#LIGHT_BLUE# * +0 Magic, +0 Willpower, +0 Cunning",
-	},
-	stats = { str=5, con=3, dex=1, },
-	talents_types = {
-		["technique/archery-training"]={false, 0.1},
-		["technique/shield-defense"]={false, -0.1},
-		["technique/2hweapon-offense"]={true, 0.3},
-		["technique/2hweapon-cripple"]={true, 0.3},
-		["technique/combat-techniques-active"]={true, 0.3},
-		["technique/combat-techniques-passive"]={true, 0.3},
-		["technique/combat-training"]={true, 0.3},
-		["technique/superiority"]={false, 0.3},
-		["technique/warcries"]={false, 0.3},
-		["technique/field-control"]={false, 0},
-		["technique/bloodthirst"]={false, 0.2},
-		["cunning/survival"]={true, 0},
-		["cunning/dirty"]={false, 0},
-	},
-	talents = {
-		[ActorTalents.T_DEATH_DANCE] = 1,
-		[ActorTalents.T_STUNNING_BLOW] = 1,
-		[ActorTalents.T_WEAPON_COMBAT] = 1,
-		[ActorTalents.T_ARMOUR_TRAINING] = 2,
-	},
-	copy = {
-		resolvers.equip{ id=true,
-			{type="weapon", subtype="greatsword", name="iron greatsword", autoreq=true, ego_chance=-1000, ego_chance=-1000},
-			{type="armor", subtype="heavy", name="iron mail armour", autoreq=true, ego_chance=-1000, ego_chance=-1000},
-		},
-	},
-	copy_add = {
-		life_rating = 3,
 	},
 }
 

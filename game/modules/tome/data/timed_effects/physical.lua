@@ -1123,16 +1123,16 @@ newEffect{
 	on_lose = function(self, err) return "#Target# has released the hold.", "-Grappling" end,
 	on_timeout = function(self, eff)
 		local p = eff.trgt:hasEffect(eff.trgt.EFF_GRAPPLED)
+		local drain = 6 - (self:getTalentLevelRaw(self.T_CLINCH) or 0)
 		if not p or p.src ~= self or core.fov.distance(self.x, self.y, eff.trgt.x, eff.trgt.y) > 1 or eff.trgt.dead or not game.level:hasEntity(eff.trgt) then
 			self:removeEffect(self.EFF_GRAPPLING)
+		else
+			self:incStamina(-drain)
 		end
 	end,
 	activate = function(self, eff)
-		local drain = 6 - (self:getTalentLevelRaw(self.T_CLINCH) or 0)
-		eff.tmpid = self:addTemporaryValue("stamina_regen", - drain)
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("stamina_regen", eff.tmpid)
 	end,
 }
 
@@ -1297,20 +1297,22 @@ newEffect{
 }
 
 newEffect{
-	name = "RECOVERY",
+	name = "Recovery",
 	desc = "Recovery",
-	long_desc = function(self, eff) return ("The target is recovering from a damaging blow and regaining %d life each turn."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target is recovering %d life each turn and it's healing modifier has been increased by %d%%."):format(eff.regen, eff.heal_mod) end,
 	type = "physical",
-	subtype = { conditioning=true, heal=true },
+	subtype = { heal=true },
 	status = "beneficial",
 	parameters = { power=10 },
-	on_gain = function(self, err) return "#Target# is recovering from the attack!", "+Recovery" end,
-	on_lose = function(self, err) return "#Target# has finished recovering from the attack.", "-Recovery" end,
+	on_gain = function(self, err) return "#Target# is recovering!", "+Recovery" end,
+	on_lose = function(self, err) return "#Target# has finished recovering.", "-Recovery" end,
 	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("life_regen", eff.power)
+		eff.regenid = self:addTemporaryValue("life_regen", eff.regen)
+		eff.healid = self:addTemporaryValue("healing_factor", eff.heal_mod / 100)
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("life_regen", eff.tmpid)
+		self:removeTemporaryValue("life_regen", eff.regenid)
+		self:removeTemporaryValue("healing_factor", eff.healid)
 	end,
 }
 
@@ -1537,7 +1539,7 @@ newEffect{
 	desc = "Immobilized",
 	long_desc = function(self, eff) return "Immobilized by telekinetic forces." end,
 	type = "physical",
-	subtype = { telekinesis=true, pin=true },
+	subtype = { telekinesis=true, stun=true },
 	status = "detrimental",
 	parameters = {},
 	on_gain = function(self, err) return "#F53CBE##Target# is bound by telekinetic forces!", "+Paralyzed" end,
@@ -1595,5 +1597,23 @@ newEffect{
 		self:removeTemporaryValue("stun_immune", eff.stun)
 		self:removeTemporaryValue("daze_immune", eff.daze)
 		self:removeTemporaryValue("pin_immune", eff.pin)
+	end,
+}
+
+newEffect{
+	name = "ADRENALINE_SURGE",
+	desc = "Adrenaline Surge",
+	long_desc = function(self, eff) return ("The target's combat damage is improved by %d and it an continue to fight past the point of exhaustion, supplementing life for stamina."):format(eff.power) end,
+	type = "physical",
+	subtype = { frenzy=true },
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# feels a surge of adrenaline." end,
+	on_lose = function(self, err) return "#Target#'s adrenaline surge has come to an end." end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("combat_dam", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_dam", eff.tmpid)
 	end,
 }

@@ -752,5 +752,3 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "GRGGLCK_TENTACLE",
 		end
 	end,
 }
-
-

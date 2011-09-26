@@ -70,7 +70,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local reduction = t.getReduction(self, t)
-		return ([[Creates a wake of temporal energy that deals %0.2f damage in a beam as you attempt to rethread the timeline.  Affected targets may be dazed, blinded, pinned, or confused for 3 turns.
+		return ([[Creates a wake of temporal energy that deals %0.2f damage in a beam as you attempt to rethread the timeline.  Affected targets may be stunned, blinded, pinned, or confused for 3 turns.
 		Each target you hit with rethread will reduce your Paradox by %d.
 		The damage will increase with your Paradox and Spellpower.]]):
 		format(damDesc(self, DamageType.TEMPORAL, damage), reduction)

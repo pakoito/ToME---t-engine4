@@ -61,7 +61,7 @@ newTalent{
 	requires_target = true,
 	getDuration = function(self, t) return 4 + math.floor(self:getTalentLevel(t)) end,
 	getPower = function(self, t) return 5 + self:combatTalentStatDamage(t, "str", 1, 50) end,
-	getDrain = function(self, t) return 6 - (self:getTalentLevelRaw(t) or 0) end,
+	getDrain = function(self, t) return 6 - math.max(1, self:getTalentLevelRaw(t) or 0) end,
 	-- Learn the appropriate stance
 	on_learn = function(self, t)
 		if not self:knowTalent(self.T_GRAPPLING_STANCE) then

@@ -171,7 +171,7 @@ newEntity{ base = "BASE_NPC_TELUGOROTH",
 
 	resolvers.talents{
 		[Talents.T_ANOMALY_TEMPORAL_STORM]=1,
-		[Talents.T_QUANTUM_SPIKE]={base=5, every=7},
+		[Talents.T_QUANTUM_SPIKE]={base=2, every=7},
 		[Talents.T_DIMENSIONAL_STEP]={base=5, every=7},
 		[Talents.T_ANOMALY_REARRANGE]=1,
 		[Talents.T_TEMPORAL_WAKE]={base=4, every=7},
