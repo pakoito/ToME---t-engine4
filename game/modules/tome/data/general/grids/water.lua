@@ -48,7 +48,7 @@ newEntity{
 	can_pass = {pass_wall=1},
 	block_sight = true,
 	air_level = -20,
-	dig = "FLOOR",
+	dig = "WATER_FLOOR",
 }
 
 for i = 1, 5 do
