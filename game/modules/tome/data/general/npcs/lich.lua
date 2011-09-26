@@ -69,6 +69,7 @@ newEntity{
 
 newEntity{ base = "BASE_NPC_LICH",
 	name = "lich", color=colors.DARK_BLUE,
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/undead_lich_lich.png", display_h=2, display_y=-1}}},
 	desc=[[Having thought to discover life eternal, these beings have allowed undeath to rob them of the joys of life. Now they seek to destroy it as well.]],
 	level_range = {35, nil}, exp_worth = 1,
 	rarity = 20,
