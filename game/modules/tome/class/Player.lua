@@ -159,7 +159,7 @@ function _M:describeFloor(x, y)
 		local i, nb = 1, 0
 		local obj = game.level.map:getObject(x, y, i)
 		while obj do
-			if not (obj.auto_pickup and self:pickupFloor(i, true)) then
+			if not ((obj.auto_pickup and not obj.unique) and self:pickupFloor(i, true)) then
 				if self:attr("auto_id") and obj:getPowerRank() <= self.auto_id then obj:identify(true) end
 				nb = nb + 1
 				i = i + 1
@@ -349,7 +349,7 @@ function _M:playerFOV()
 				game.level.map.seens(x, y, 0.6)
 			end
 		end, true, true, true)
-		
+
 		local effStalker = self:hasEffect(self.EFF_STALKER)
 		if effStalker then
 			if core.fov.distance(self.x, self.y, effStalker.target.x, effStalker.target.y) <= 10 then
