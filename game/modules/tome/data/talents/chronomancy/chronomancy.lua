@@ -86,13 +86,13 @@ newTalent{
 	action = function(self, t)
 		self:incParadox (- t.getReduction(self, t))
 		game:playSoundNear(self, "talents/spell_generic")
-		self:setEffect(self.EFF_SPACTIME_STABILITY, t.getDuration(self, t), {})
+		self:setEffect(self.EFF_SPACETIME_STABILITY, t.getDuration(self, t), {})
 		return true
 	end,
 	info = function(self, t)
 		local reduction = t.getReduction(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[Reduces Paradox by %d by stabilizing the spacetime continuum and allows chronomancy to be used without failure, backfire, or anomaly checks for %d turns.
+		return ([[Reduces Paradox by %d by stabilizing the spacetime continuum and allows chronomancy to be used without failure checks for %d turns (backfires and anomalies may still occur).
 		Talent points invested in Static History will also reduce your chances of triggering an anomaly while using Spacetime Tuning.
 		The effect will increase with the Willpower stat.]]):
 		format(reduction, duration)

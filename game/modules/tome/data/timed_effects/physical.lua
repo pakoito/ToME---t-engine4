@@ -1304,7 +1304,7 @@ newEffect{
 	subtype = { heal=true },
 	status = "beneficial",
 	parameters = { power=10 },
-	on_gain = function(self, err) return "#Target# is recovering!", "+Recovery" end,
+	on_gain = function(self, err) return "#Target# is recovering from the damage!", "+Recovery" end,
 	on_lose = function(self, err) return "#Target# has finished recovering.", "-Recovery" end,
 	activate = function(self, eff)
 		eff.regenid = self:addTemporaryValue("life_regen", eff.regen)
@@ -1615,5 +1615,21 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("combat_dam", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "BLINDSIDE_BONUS",
+	desc = "Blindside Bonus",
+	long_desc = function(self, eff) return ("The target has appeared out of nowhere! It's defense is boosted by %d."):format(eff.defenseChange) end,
+	type = "physical",
+	subtype = { evade=true },
+	status = "beneficial",
+	parameters = { defenseChange=10 },
+	activate = function(self, eff)
+		eff.defenseChangeId = self:addTemporaryValue("combat_def", eff.defenseChange)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_def", eff.defenseChangeId)
 	end,
 }

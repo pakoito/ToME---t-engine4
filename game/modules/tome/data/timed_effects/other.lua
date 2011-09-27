@@ -502,7 +502,7 @@ newEffect{
 }
 
 newEffect{
-	name = "SPACTIME_STABILITY",
+	name = "SPACETIME_STABILITY",
 	desc = "Spacetime Stability",
 	long_desc = function(self, eff) return "Chronomancy spells cast by the target will not fail, backfire, or cause an anomaly." end,
 	type = "other",
@@ -512,10 +512,8 @@ newEffect{
 	on_gain = function(self, err) return "Spacetime has stabilized around #Target#.", "+Spactime Stability" end,
 	on_lose = function(self, err) return "The fabric of spacetime around #Target# has returned to normal.", "-Spacetime Stability" end,
 	activate = function(self, eff)
-		self:attr("no_paradox_fail", 1)
 	end,
 	deactivate = function(self, eff)
-		self:attr("no_paradox_fail", -1)
 	end,
 }
 

@@ -335,11 +335,12 @@ function _M:display()
 		local dur = p.dur + 1
 		local name = e.desc
 		local desc = nil
+		local eff_subtype = table.concat(table.keys(e.subtype), "/")
 		if e.display_desc then name = e.display_desc(self, p) end
 		if p.save_string and p.amount_decreased and p.maximum and p.total_dur then
-			desc = ("#{bold}##GOLD#%s (%s / %s)#WHITE##{normal}#\n"):format(name, e.type, e.status)..e.long_desc(player, p).." "..("%s reduced the duration of this effect by %d turns, from %d to %d."):format(p.save_string, p.amount_decreased, p.maximum, p.total_dur)
+			desc = ("#{bold}##GOLD#%s\n(%s: %s)#WHITE##{normal}#\n"):format(name, e.type, eff_subtype)..e.long_desc(player, p).." "..("%s reduced the duration of this effect by %d turns, from %d to %d."):format(p.save_string, p.amount_decreased, p.maximum, p.total_dur)
 		else
-			desc = ("#{bold}##GOLD#%s (%s / %s)#WHITE##{normal}#\n"):format(name, e.type, e.status)..e.long_desc(player, p)
+			desc = ("#{bold}##GOLD#%s\n(%s: %s)#WHITE##{normal}#\n"):format(name, e.type, eff_subtype)..e.long_desc(player, p)
 		end
 		if e.status == "detrimental" then
 			self:mouseTooltip(desc, self:makeTexture((e.decrease > 0) and ("#LIGHT_RED#%s(%d)"):format(name, dur) or ("#LIGHT_RED#%s"):format(name), x, h, 255, 255, 255)) h = h + self.font_h

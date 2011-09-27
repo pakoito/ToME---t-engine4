@@ -2343,7 +2343,7 @@ function _M:preUseTalent(ab, silent, fake)
 			self:useEnergy()
 			return false
 		-- Now check for failure
-		elseif not self:attr("no_paradox_fail") and self:paradoxFailChance(ab.paradox or ab.sustain_paradox) then
+		elseif not self:attr("no_paradox_fail") and self:paradoxFailChance(ab.paradox or ab.sustain_paradox) and not self:hasEffect(self.EFF_SPACETIME_STABILITY) then
 			if not silent then game.logPlayer(self, "You fail to use %s due to your paradox!", ab.name) end
 			self:incParadox(ab.paradox or ab.sustain_paradox / 10)
 			self:useEnergy()

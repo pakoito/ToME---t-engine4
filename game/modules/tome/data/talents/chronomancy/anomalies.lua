@@ -19,9 +19,24 @@
 
 local Object = require "engine.Object"
 
+-- A simple scaling damage formula
+-- returns 45 damage at 400 paradox and 178 at 800 paradox.  Caps out at 400 damage.
 getAnomalyDamage = function(self)
-	local damage = math.pow(self:getParadox()/50, 2)
+	local base_damage = math.pow(self:getParadox()/60, 2)
+	local damage = math.min(base_damage, 400)
 	return damage
+end
+-- Another scaling formula, used in place of apply_power for timed effects
+-- Returns  25 power at 400 paradox and 100 at 800 paradox
+getAnomalyPower = function(self)
+	local damage = math.pow(self:getParadox()/80, 2)
+	return damage
+end
+-- simple radius formula used for AoEs and targeting, caps at 10 mostly to prevent overloading the particle threads with a giant AoE
+getAnomalyRadius = function(self)
+	local base_radius = math.ceil(self:getParadox()/100)
+	local radius = math.min(base_radius, 10)
+	return radius
 end
 
 newTalent{
@@ -109,12 +124,10 @@ newTalent{
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
 	range = 10,
-	radius = function(self, t)
-		return math.floor(self:getParadox()/200)
-	end,
 	direct_hit = true,
 	type_no_req = true,
 	getTargetCount = function(self, t) return 1 end,
+	getRadius = function(self, t) return getAnomalyRadius(self) end,
 	getStop = function(self, t) return math.ceil(self:getParadox()/100) end,
 	message = "@Source@ has created a bubble of nul time.",
 	action = function(self, t)
@@ -128,14 +141,14 @@ newTalent{
 		end end
 
 		-- Randomly take targets
-		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=self:spellFriendlyFire(), talent=t}
+		local tg = {type="ball", range=self:getTalentRange(t), radius=t.getRadius(self, t), selffire=self:spellFriendlyFire(), talent=t}
 		for i = 1, t.getTargetCount(self, t) do
 			if #tgts <= 0 then break end
 			local a, id = rng.table(tgts)
 			table.remove(tgts, id)
 
 			self:project(tg, a.x, a.y, DamageType.STOP, t.getStop(self, t))
-			game.level.map:particleEmitter(a.x, a.y, tg.radius, "ball_temporal", {radius=tg.radius, tx=a.x, ty=a.y})
+			game.level.map:particleEmitter(a.x, a.y, tg.radius, "ball_temporal", {radius=t.getRadius(self, t), tx=a.x, ty=a.y})
 			game:playSoundNear(self, "talents/spell_generic")
 		end
 		return true
@@ -150,12 +163,10 @@ newTalent{
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
 	range = 6,
-	radius = function(self, t)
-		return 1 - 1 / (1 + (self:getParadox()/15) / 100)
-	end,
 	direct_hit = true,
 	type_no_req = true,
 	getTargetCount = function(self, t) return 1 end,
+	getRadius = function(self, t) return getAnomalyRadius(self) end,
 	getSlow = function(self, t) return 1 - 1 / (1 + (self:getParadox()/15) / 100) end,
 	message = "@Source@ has created a bubble of slow time.",
 	action = function(self, t)
@@ -169,14 +180,14 @@ newTalent{
 		end end
 
 		-- Randomly take targets
-		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=self:spellFriendlyFire(), talent=t}
+		local tg = {type="ball", range=self:getTalentRange(t), radius=t.getRadius(self, t), selffire=self:spellFriendlyFire(), talent=t}
 		for i = 1, t.getTargetCount(self, t) do
 			if #tgts <= 0 then break end
 			local a, id = rng.table(tgts)
 			table.remove(tgts, id)
 
 			self:project(tg, a.x, a.y, DamageType.SLOW, t.getSlow(self, t))
-			game.level.map:particleEmitter(a.x, a.y, tg.radius, "ball_temporal", {radius=tg.radius, tx=a.x, ty=a.y})
+			game.level.map:particleEmitter(a.x, a.y, tg.radius, "ball_temporal", {radius=t.getRadius(self, t), tx=a.x, ty=a.y})
 			game:playSoundNear(self, "talents/spell_generic")
 		end
 		return true
@@ -221,36 +232,6 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Increases global speed in a ball on target.]])
-	end,
-}
-
-newTalent{
-	name = "Anomaly Spacetime Correction",
-	type = {"chronomancy/anomalies", 1},
-	points = 1,
-	type_no_req = true,
-	message = "A spacetime correction has occurred.",
-	action = function(self, t)
-		self:incParadox (-(self:getParadox()*0.5))
-		return true
-	end,
-	info = function(self, t)
-		return ([[Massive Paradox Loss.]])
-	end,
-}
-
-newTalent{
-	name = "Anomaly Spacetime Damage",
-	type = {"chronomancy/anomalies", 1},
-	points = 1,
-	type_no_req = true,
-	message = "@Source@ has done massive damage to the spacetime continuum!.",
-	action = function(self, t)
-		self:incParadox ((self:getParadox()*0.5))
-		return true
-	end,
-	info = function(self, t)
-		return ([[Massive Paradox gain.]])
 	end,
 }
 
@@ -413,12 +394,12 @@ newTalent{
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
 	type_no_req = true,
-	getRadius = function(self, t) return math.ceil(self:getParadox()/100) end,
+	getRadius = function(self, t) return getAnomalyRadius(self) end,
 	message = "Matter turns to dust around @Source@.",
 	action = function(self, t)
 		local tg = {type="ball", range=0, radius=t.getRadius(self,t), friendlyfire=false, talent=t}
 		self:project(tg, self.x, self.y, DamageType.DIG, 1)
-		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_earth", {radius=tg.radius})
+		game.level.map:particleEmitter(self.x, self.y, t.getRadius(self, t), "ball_earth", {radius=tg.radius})
 		game:playSoundNear(self, "talents/breath")
 		return true
 	end,
@@ -493,7 +474,7 @@ newTalent{
 	direct_hit = true,
 	type_no_req = true,
 	getTargetCount = function(self, t) return 1 end,
-	getRadius = function(self, t) return math.ceil(self:getParadox()/100) end,
+	getRadius = function(self, t) return getAnomalyRadius(self) end,
 	getDamage = function(self, t) return getAnomalyDamage(self) end,
 	message = "@Source@ has caused a Gravity Spike.",
 	action = function(self, t)
@@ -523,8 +504,8 @@ newTalent{
 				end
 			end)
 
-			self:project (tg, a.x, a.y, DamageType.PHYSICAL, self:spellCrit(t.getDamage(self, t)))
-			game.level.map:particleEmitter(a.x, a.y, tg.radius, "gravity_spike", {radius=tg.radius, grids=grids, tx=a.x, ty=a.y})
+			self:project (tg, a.x, a.y, DamageType.PHYSICAL, t.getDamage(self, t))
+			game.level.map:particleEmitter(a.x, a.y, tg.radius, "gravity_spike", {radius=t.getRadius(self, t), grids=grids, tx=a.x, ty=a.y})
 			game:playSoundNear(self, "talents/earth")
 
 		end

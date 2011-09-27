@@ -70,7 +70,6 @@ newTalent{
 				end
 			end
 		end)
-		game:playSoundNear(self, "talents/fire")
 	end,
 	activate = function(self, t)
 		local ret = {	}
@@ -95,7 +94,7 @@ newTalent{
 	require = techs_con_req3,
 	mode = "passive",
 	points = 5,
-	getChance = function(self, t) return self:combatTalentStatDamage(t, "con", 40, 80) end,
+	getChance = function(self, t) return self:combatTalentStatDamage(t, "con", 50, 100) end,
 	do_unflinching_resolve = function(self, t)
 		local effs = {}
 		-- Go through all spell effects
@@ -120,15 +119,15 @@ newTalent{
 			local eff = rng.tableRemove(effs)
 			if eff[1] == "effect" and rng.percent(t.getChance(self, t)) then
 				self:removeEffect(eff[2])
-				game.logSeen(self, "%s recovers!", self.name:capitalize())
+				game.logSeen(self, "%s has recovered!", self.name:capitalize())
 			end
 		end
 	end,
 	info = function(self, t)
 		local chance = t.getChance(self, t)
-		return ([[You've learned to shake off effects that would disable you. Each turn you have a %d%% chance to remove a single stun effect.
-		At talent level 2 you may also shake off blindness, at level 3 confusion, level 4 pins, and level 5 slows. 
-		Only one effect may be removed each turn and the chance to remove an effect scales with your Constitution stat.]]):
+		return ([[You've learned to recover quickly from effects that would disable you. Each turn you have a %d%% chance to recover from a single stun effect.
+		At talent level 2 you may also recover from blindness, at level 3 confusion, level 4 pins, and level 5 slows. 
+		Only one effect may be recovered from each turn and the chance to recover from an effect scales with your Constitution stat.]]):
 		format(chance)
 	end,
 }
