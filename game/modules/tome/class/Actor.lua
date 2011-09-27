@@ -2621,8 +2621,8 @@ function _M:getTalentFullDescription(t, addlevel, config)
 	else d:add({"color",0x6f,0xff,0x83}, "Use mode: ", {"color",0x00,0xFF,0x00}, "Activated", true)
 	end
 
-	if not config.custom then
-		d:merge(custom)
+	if config.custom then
+		d:merge(config.custom)
 		d:add(true)
 	end
 	if not config.ignore_ressources then
@@ -2646,9 +2646,11 @@ function _M:getTalentFullDescription(t, addlevel, config)
 	if speed then d:add({"color",0x6f,0xff,0x83}, "Travel Speed: ", {"color",0xFF,0xFF,0xFF}, ""..(speed * 100).."% of base", true)
 	else d:add({"color",0x6f,0xff,0x83}, "Travel Speed: ", {"color",0xFF,0xFF,0xFF}, "instantaneous", true)
 	end
-	local uspeed = "1 turn"
-	if t.no_energy and type(t.no_energy) == "boolean" and t.no_energy == true then uspeed = "instant" end
-	d:add({"color",0x6f,0xff,0x83}, "Usage Speed: ", {"color",0xFF,0xFF,0xFF}, uspeed, true)
+	if not config.ignore_use_time then
+		local uspeed = "1 turn"
+		if t.no_energy and type(t.no_energy) == "boolean" and t.no_energy == true then uspeed = "instant" end
+		d:add({"color",0x6f,0xff,0x83}, "Usage Speed: ", {"color",0xFF,0xFF,0xFF}, uspeed, true)
+	end
 
 	d:add({"color",0x6f,0xff,0x83}, "Description: ", {"color",0xFF,0xFF,0xFF})
 	d:merge(t.info(self, t):toTString():tokenize(" ()[]"))
