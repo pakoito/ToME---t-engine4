@@ -983,9 +983,11 @@ newDamageType{
 			if src == target then
 				target:setEffect(target.EFF_TIME_PRISON, dam, {})
 				target:setEffect(target.EFF_CONTINUUM_DESTABILIZATION, 100, {power=src:combatSpellpower(0.3)})
-			else
+			elseif target:checkHit(src:combatSpellpower() - (target:attr("continuum_destabilization") or 0), target:combatSpellResist(), 0, 95, 15) then
 				target:setEffect(target.EFF_TIME_PRISON, dam, {apply_power=src:combatSpellpower() - (target:attr("continuum_destabilization") or 0), apply_save="combatSpellResist"})
 				target:setEffect(target.EFF_CONTINUUM_DESTABILIZATION, 100, {power=src:combatSpellpower(0.3)})
+			else
+				game.logSeen(target, "%s resists the time prison.", target.name:capitalize())
 			end
 		end
 	end,
@@ -1419,7 +1421,7 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			local sx, sy = game.level.map:getTileToScreen(x, y)		
+			local sx, sy = game.level.map:getTileToScreen(x, y)
 			target:setEffect(target.EFF_SLOW, 4, {power=dam, apply_power=src:combatMindpower()})
 		end
 	end,
