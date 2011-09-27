@@ -59,9 +59,10 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			local eff = src:hasEffect(src.EFF_FROZEN)
 			eff.hp = eff.hp - dam
 			local srcname = src.x and src.y and game.level.map.seens(src.x, src.y) and src.name:capitalize() or "Something"
-			if eff.hp < 0 then
+			if eff.hp < 0 and not eff.begone then
 				game.logSeen(src, "%s forces the iceblock to shatter.", src.name:capitalize())
-				src:removeEffect(src.EFF_FROZEN)
+				game:onTickEnd(function() src:removeEffect(src.EFF_FROZEN) end)
+				eff.begone = true
 			else
 				game:delayedLogDamage(src, {name="Iceblock", x=src.x, y=src.y}, dam, ("%s%d %s#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", math.ceil(dam), DamageType:get(type).name))
 			end

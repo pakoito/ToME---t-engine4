@@ -1209,7 +1209,8 @@ function _M:onTakeHit(value, src)
 		local eff = self:hasEffect(self.EFF_FROZEN)
 		eff.hp = eff.hp - value * 0.4
 		value = value * 0.6
-		if eff.hp < 0 then self:removeEffect(self.EFF_FROZEN) end
+		if eff.hp < 0 and not eff.begone then game:onTickEnd(function() self:removeEffect(self.EFF_FROZEN) end) end
+		eff.begone = true
 	end
 
 	-- Adds hate
