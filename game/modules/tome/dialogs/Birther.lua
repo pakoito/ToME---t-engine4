@@ -236,7 +236,7 @@ function _M:makeDefault()
 	self:setDescriptor("race", "Human")
 	self:setDescriptor("subrace", "Higher")
 	self:setDescriptor("class", "Warrior")
-	self:setDescriptor("subclass", "Fighter")
+	self:setDescriptor("subclass", "Berserker")
 	__module_extra_info.no_birth_popup = true
 	self:atEnd("created")
 end
@@ -869,7 +869,7 @@ function _M:fakeEquip(v)
 		self.actor:initBody()
 
 		local c = self.birth_descriptor_def.class[self.descriptors_by_type.class or "Warrior"]
-		local sc = self.birth_descriptor_def.subclass[self.descriptors_by_type.subclass or "Fighter"]
+		local sc = self.birth_descriptor_def.subclass[self.descriptors_by_type.subclass or "Berserker"]
 		local function apply_equip(r)
 			for i, f in ipairs(r[1]) do
 				local o = self.obj_list_by_name[f.name]

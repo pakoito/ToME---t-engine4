@@ -29,7 +29,7 @@ newBirthDescriptor{
 		{
 			__ALL__ = "disallow",
 			Berserker = "allow",
-			Fighter = "allow",
+			Bulwark = "allow",
 			Archer= "allow",
 			Brawler = "allow",
 			["Arcane Blade"] = "allow",
@@ -86,10 +86,10 @@ newBirthDescriptor{
 
 newBirthDescriptor{
 	type = "subclass",
-	name = "Fighter",
+	name = "Bulwark",
 	desc = {
-		"A Fighter specializes in weapon and shield combat, rarely leaving the cover of her many protective techniques.",
-		"A good Fighter is able to withstand terrible attacks from all sides, protected by her shield, and when the time comes lash out at her foes with incredible strength.",
+		"A Bulwark specializes in weapon and shield combat, rarely leaving the cover of her many protective techniques.",
+		"A good Bulwark is able to withstand terrible attacks from all sides, protected by her shield, and when the time comes lash out at her foes with incredible strength.",
 		"Their most important stats are: Strength and Dexterity",
 		"#GOLD#Stat modifiers:",
 		"#LIGHT_BLUE# * +5 Strength, +2 Dexterity, +2 Constitution",
