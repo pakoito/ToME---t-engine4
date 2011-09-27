@@ -543,15 +543,32 @@ static void setup_seens_texture(map_type *map)
 	if (map->seens_texture) glDeleteTextures(1, &(map->seens_texture));
 	if (map->seens_map) free(map->seens_map);
 
+	int realw=1;
+	while (realw < map->w) realw *= 2;
+	int realh=1;
+	while (realh < map->h) realh *= 2;
+	map->seens_map_w = realw;
+	map->seens_map_h = realh;
+
 	glGenTextures(1, &(map->seens_texture));
 	printf("C Map seens texture: %d (%dx%d)\n", map->seens_texture, map->w, map->h);
 	tglBindTexture(GL_TEXTURE_2D, map->seens_texture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, 4, map->w, map->h, 0, GL_BGRA, GL_UNSIGNED_BYTE, NULL);
-	map->seens_map = calloc((map->w)*(map->h)*4, sizeof(GLubyte));
+	glTexImage2D(GL_TEXTURE_2D, 0, 4, map->seens_map_w, map->seens_map_h, 0, GL_BGRA, GL_UNSIGNED_BYTE, NULL);
+	map->seens_map = calloc((map->seens_map_w)*(map->seens_map_h)*4, sizeof(GLubyte));
 	map->seen_changed = TRUE;
+
+	// Black it all
+	int i;
+	for (i = 0; i < map->seens_map_w * map->seens_map_h; i++)
+	{
+		map->seens_map[(i*4)] = 0;
+		map->seens_map[(i*4)+1] = 0;
+		map->seens_map[(i*4)+2] = 0;
+		map->seens_map[(i*4)+3] = 255;
+	}
 }
 
 #define QUADS_PER_BATCH 500
@@ -935,8 +952,10 @@ static void map_update_seen_texture(map_type *map)
 			}
 			ptr += 4;
 		}
+		// Skip the rest of the texture, silly GPUs not supporting NPOT textures!
+		ptr += (map->seens_map_w - map->w) * 4;
 	}
-	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, map->w, map->h, GL_BGRA, GL_UNSIGNED_BYTE, seens);
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, map->seens_map_w, map->seens_map_h, GL_BGRA, GL_UNSIGNED_BYTE, seens);
 }
 
 static int map_update_seen_texture_lua(lua_State *L)
@@ -954,8 +973,8 @@ static int map_draw_seen_texture(lua_State *L)
 	int nb_keyframes = 0;
 //	x += -map->tile_w * 3;
 //	y += -map->tile_h * 3;
-	int w = (map->w) * map->tile_w;
-	int h = (map->h) * map->tile_h;
+	int w = (map->seens_map_w) * map->tile_w;
+	int h = (map->seens_map_h) * map->tile_h;
 
 	int mx = map->mx;
 	int my = map->my;

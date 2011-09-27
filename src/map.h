@@ -73,6 +73,7 @@ typedef struct {
 	GLfloat *colors;
 	GLfloat *texcoords;
 	GLubyte *seens_map;
+	int seens_map_w, seens_map_h;
 
 	GLuint seens_texture;
 
