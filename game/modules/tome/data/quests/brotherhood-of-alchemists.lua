@@ -203,19 +203,19 @@ on_turnin = function(self, player, alch_picked, e_picked, player_last_elixir)
 	player:setQuestStatus("brotherhood-of-alchemists", engine.Quest.COMPLETED, self.e[alch_picked][e_picked].full)
 	player:setQuestStatus("brotherhood-of-alchemists", engine.Quest.COMPLETED, self.e[alch_picked][e_picked].poached)
 	-- clear chrono worlds and their various effects
-	if game._chronoworlds then 
+	if game._chronoworlds then
 		game.log("#CRIMSON#Your timetravel has no effect on pre-determined outcomes such as this.")
 		game._chronoworlds = nil
 		if player:isTalentActive(player.T_DOOR_TO_THE_PAST) then
 			player:forceUseTalent(player.T_DOOR_TO_THE_PAST, {ignore_energy=true})
 		end
 	end
-	game:saveGame()
 	if player_last_elixir == false and self:isCompleted(self.e[alch_picked][1].full) and self:isCompleted(self.e[alch_picked][2].full) and self:isCompleted(self.e[alch_picked][3].full) then
 		player:setQuestStatus("brotherhood-of-alchemists", engine.Quest.DONE)
 		self.winner = self.e[alch_picked][1].alchemist
 		self.player_won = false
 	end
+	game:onTickEnd(function() game:saveGame() end)
 end
 
 --sets the name of the winner. Only called in the case of the player turning in an alchemist's final potion. An alchemist that completes his third potion without the player's aid gets named the winner in the on_turning function above.
