@@ -982,6 +982,7 @@ newEntity{ base = "BASE_RING",
 			["technique/shield-offense"] = 0.3,
 			["technique/warcries"] = 0.3,
 			["technique/superiority"] = 0.3,
+			["technique/thuggery"] = 0.3,
 		},
 	},
 }
