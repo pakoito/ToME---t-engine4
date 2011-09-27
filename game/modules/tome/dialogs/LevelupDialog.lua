@@ -774,6 +774,10 @@ function _M:learnType(tt, v)
 			self:simplePopup("Not enough talent category points", "You have no category points left!")
 			return
 		end
+		if not self.actor.talents_types_def[tt] or self.actor.talents_types_def[tt].min_lev > self.actor.level then
+			self:simplePopup("Too low level", ("This talent tree only provides talents starting at level %d. Learning it now would be useless."):format(self.actor.talents_types_def[tt].min_lev))
+			return
+		end
 		if not self.actor:knowTalentType(tt) then
 			self.actor:learnTalentType(tt)
 			self.talent_types_learned[tt][1] = true

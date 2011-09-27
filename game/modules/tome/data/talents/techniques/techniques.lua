@@ -29,10 +29,10 @@ newTalentType{ allow_random=true, type="technique/archery-bow", name = "archery 
 newTalentType{ allow_random=true, type="technique/archery-sling", name = "archery - slings", description = "Specialized sling techniques." }
 newTalentType{ allow_random=true, type="technique/archery-training", name = "archery training", description = "Generic archery techniques." }
 newTalentType{ allow_random=true, type="technique/archery-utility", name = "archery prowess", description = "Specialized archery techniques to maim your targets." }
-newTalentType{ allow_random=true, type="technique/superiority", name = "superiority", description = "Advanced combat techniques." }
-newTalentType{ allow_random=true, type="technique/battle-tactics", name = "battle tactics", description = "Advanced combat tactics." }
-newTalentType{ allow_random=true, type="technique/warcries", name = "warcries", no_silence = true, description = "Master the warcries to improve yourself and weaken others." }
-newTalentType{ allow_random=true, type="technique/bloodthirst", name = "bloodthirst", description = "Delight in the act of battle and the spilling of blood." }
+newTalentType{ allow_random=true, type="technique/superiority", name = "superiority", min_lev = 10, description = "Advanced combat techniques." }
+newTalentType{ allow_random=true, type="technique/battle-tactics", name = "battle tactics", min_lev = 10, description = "Advanced combat tactics." }
+newTalentType{ allow_random=true, type="technique/warcries", name = "warcries", no_silence = true, min_lev = 10, description = "Master the warcries to improve yourself and weaken others." }
+newTalentType{ allow_random=true, type="technique/bloodthirst", name = "bloodthirst", min_lev = 10, description = "Delight in the act of battle and the spilling of blood." }
 newTalentType{ allow_random=true, type="technique/field-control", name = "field control", generic = true, description = "Control the battlefield using various techniques." }
 newTalentType{ allow_random=true, type="technique/combat-techniques-active", name = "combat techniques", description = "Generic combat oriented techniques." }
 newTalentType{ allow_random=true, type="technique/combat-techniques-passive", name = "combat veteran", description = "Generic combat oriented techniques." }

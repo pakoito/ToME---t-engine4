@@ -22,14 +22,14 @@ newTalentType{ allow_random=true, type="psionic/absorption", name = "absorption"
 newTalentType{ allow_random=true, type="psionic/projection", name = "projection", description = "Project energy to damage foes." }
 newTalentType{ allow_random=true, type="psionic/psi-fighting", name = "psi-fighting", description = "Wield melee weapons with mentally-manipulated forces." }
 newTalentType{ allow_random=true, type="psionic/focus", name = "focus", description = "Use gems to focus your energies." }
-newTalentType{ allow_random=true, type="psionic/augmented-mobility", name = "augmented mobility", description = "Use energy to move yourself and others." }
+newTalentType{ allow_random=true, type="psionic/augmented-mobility", name = "augmented mobility", min_lev = 20, description = "Use energy to move yourself and others." }
 newTalentType{ allow_random=true, type="psionic/voracity", generic = true, name = "voracity", description = "Pull energy from your surroundings." }
-newTalentType{ allow_random=true, type="psionic/finer-energy-manipulations", generic = true, name = "finer energy manipulations", description = "Subtle applications of the psionic arts." }
+newTalentType{ allow_random=true, type="psionic/finer-energy-manipulations", min_lev = 10, generic = true, name = "finer energy manipulations", description = "Subtle applications of the psionic arts." }
 newTalentType{ allow_random=true, type="psionic/mental-discipline", generic = true, name = "mental discipline", description = "Increase mental capacity, endurance, and flexibility." }
-newTalentType{ no_silence=true, type="psionic/other", name = "other", description = "Various psionic talents." }
+newTalentType{ type="psionic/other", name = "other", description = "Various psionic talents." }
 
-newTalentType{ allow_random=true, type="psionic/grip", name = "grip", description = "Augment your telekinetic grip." }
-newTalentType{ allow_random=true, type="psionic/psi-archery", name = "psi-archery", description = "Use your telekinetic powers to wield bows with deadly effectiveness." }
+newTalentType{ allow_random=true, type="psionic/grip", name = "grip", min_lev = 20, description = "Augment your telekinetic grip." }
+newTalentType{ allow_random=true, type="psionic/psi-archery", name = "psi-archery", min_lev = 10, description = "Use your telekinetic powers to wield bows with deadly effectiveness." }
 newTalentType{ allow_random=true, type="psionic/greater-psi-fighting", name = "greater psi-fighting", description = "Elevate psi-fighting prowess to epic levels." }
 newTalentType{ allow_random=true, type="psionic/brainstorm", name = "brainstorm", description = "Focus your telekinetic powers in ways undreamed of by most mindslayers." }
 -- Level 0 wil tree requirements:
@@ -140,7 +140,7 @@ function getGemLevel(self)
 	if self:knowTalent(self.T_GREATER_TELEKINETIC_GRASP) and gem_level > 0 then
 		if self:getTalentLevelRaw(self.T_GREATER_TELEKINETIC_GRASP) == 5 then
 			gem_level = gem_level + 1
-		end	
+		end
 	end
 	return gem_level
 end
