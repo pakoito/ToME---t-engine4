@@ -221,7 +221,10 @@ Amidst this darkness I have good news for you, my darling. I am with child. Thou
 
 I am cold and alone in this chilly crypt, thinking back on my times of warmth with you. Abominations lie beyond the walls, their haunting cries torturing my ears, reminding me of the black deeds I have performed. But every now and then I feel a gentle kick, and my resolve is stiffened, and to my experiments I return.
 
-I must live. For you, my love, I will live.]]
+I must live. For you, my love, I will live.]],
+	on_learn = function(who)
+		who:setQuestStatus("grave-necromancer", engine.Quest.COMPLETED, "note")
+	end,
 }
 
 local i = 0

@@ -82,22 +82,25 @@ newEntity{ define_as = "CELIA",
 		if not game.zone.open_all_coffins then return val end
 		self.on_takehit = nil
 		game.zone.open_all_coffins(game.player, self)
+		local p = game:getPlayer(true)
+		p:setQuestStatus("grave-necromancer", engine.Quest.COMPLETED, "coffins")
 		return val
 	end,
 
 	on_die = function(self)
+		local p = game:getPlayer(true)
 		if game.player:hasQuest("lichform") then
 			game.player:setQuestStatus("lichform", engine.Quest.COMPLETED, "heart")
 
 			local o = game.zone:makeEntityByName(game.level, "object", "CELIA_HEART")
 			o:identify(true)
-			local p = game:getPlayer(true)
 			if p:addObject(p.INVEN_INVEN, o) then
 				game.logPlayer(p, "You receive: %s.", o:getName{do_color=true})
 			end
 
 			local Dialog = require("engine.ui.Dialog")
 			Dialog:simpleLongPopup("Celia", "As you deal the last blow you quickly carve out Celia's heart for your Lichform ritual.\nCarefully weaving magic around it to keep it beating.", 400)
+			p:setQuestStatus("grave-necromancer", engine.Quest.COMPLETED, "kill-necromancer")
 		else
 			if game.player:knownLore("necromancer-primer-1") and
 			   game.player:knownLore("necromancer-primer-2") and
@@ -105,6 +108,8 @@ newEntity{ define_as = "CELIA",
 			   game.player:knownLore("necromancer-primer-4") then
 				game:setAllowedBuild("mage_necromancer", true)
 			end
+			p:setQuestStatus("grave-necromancer", engine.Quest.COMPLETED, "kill")
 		end
+		p:setQuestStatus("grave-necromancer", engine.Quest.COMPLETED)
 	end,
 }
