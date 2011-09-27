@@ -60,8 +60,12 @@ function _M:use(item)
 	local act = item.action
 
 	if act == "use" then
-		self.actor:playerUseItem(self.object, self.item, self.inven, self.onuse)
-		self.onuse(self.inven, self.item, self.object, true)
+		if self.object:wornInven() and not self.object.wielded and not self.object.use_no_wear then
+			self:simplePopup("Impossible", "You must wear this object to use it!")
+		else
+			self.actor:playerUseItem(self.object, self.item, self.inven, self.onuse)
+			self.onuse(self.inven, self.item, self.object, true)
+		end
 	elseif act == "drop" then
 		self.actor:doDrop(self.inven, self.item, function() self.onuse(self.inven, self.item, self.object, false) end)
 	elseif act == "wear" then
