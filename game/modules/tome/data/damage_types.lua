@@ -352,7 +352,7 @@ newDamageType{
 		if target then
 			local mindpower, mentalresist
 			if _G.type(dam) == "table" then dam, mindpower, mentalresist, factor = dam.dam, dam.mindpower, dam.mentalresist end
-			if target:checkHit(mindpower or (src:combatMindpower() * 0.7), mentalresist or target:combatMentalResist(), 0, 95, 15) then
+			if target:checkHit(mindpower or src:combatMindpower(), mentalresist or target:combatMentalResist(), 0, 95, 15) then
 				return DamageType.defaultProjector(src, x, y, type, dam)
 			else
 				game.logSeen(target, "%s resists the mind attack!", target.name:capitalize())
