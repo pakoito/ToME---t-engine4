@@ -258,24 +258,34 @@ newEffect{
 newEffect{
 	name = "BURNING_SHOCK",
 	desc = "Burning Shock",
-	long_desc = function(self, eff) return ("The target is on fire, taking %0.2f fire damage per turn and unable to act."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target is on fire, taking %0.2f fire damage per turn, reducing damage by 70%%, healing received by 50%%, putting random talents on cooldown and reducing movement speed by 50%%. While flameshocked talents do not cooldown."):format(eff.power) end,
 	type = "physical",
 	subtype = { fire=true, stun=true },
 	status = "detrimental",
 	parameters = {},
-	on_gain = function(self, err) return "#Target# is paralyzed by the burning flame!", "+Burning Shock" end,
-	on_lose = function(self, err) return "#Target# is not paralyzed anymore.", "-Burning Shock" end,
+	on_gain = function(self, err) return "#Target# is stunned by the burning flame!", "+Burning Shock" end,
+	on_lose = function(self, err) return "#Target# is not stunned anymore.", "-Burning Shock" end,
 	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("paralyzed", 1)
-		-- Start the stun counter only if this is the first stun
-		if self.paralyzed == 1 then self.paralyzed_counter = (self:attr("stun_immune") or 0) * 100 end
+		eff.tmpid = self:addTemporaryValue("stunned", 1)
+		eff.speedid = self:addTemporaryValue("movement_speed", -0.5)
+
+		local tids = {}
+		for tid, lev in pairs(self.talents) do
+			local t = self:getTalentFromId(tid)
+			if t and not self.talents_cd[tid] and t.mode == "activated" and not t.innate then tids[#tids+1] = t end
+		end
+		for i = 1, 4 do
+			local t = rng.tableRemove(tids)
+			if not t then break end
+			self.talents_cd[t.id] = 1 -- Just set cooldown to 1 since cooldown does not decrease while stunned
+		end
 	end,
 	on_timeout = function(self, eff)
 		DamageType:get(DamageType.FIRE).projector(eff.src, self.x, self.y, DamageType.FIRE, eff.power)
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("paralyzed", eff.tmpid)
-		if not self:attr("paralyzed") then self.paralyzed_counter = nil end
+		self:removeTemporaryValue("stunned", eff.tmpid)
+		self:removeTemporaryValue("movement_speed", eff.speedid)
 	end,
 }
 

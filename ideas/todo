@@ -1,4 +1,2 @@
-* check forced saveGame in alchemist/merchant turnin
 * autoexport character entity on death/win(/save?)
 * RSS feed of events in a character's life, exportable to FB
-* while frozen disable talents that woulndt have an effect

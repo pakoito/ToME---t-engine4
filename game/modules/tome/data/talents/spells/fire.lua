@@ -91,7 +91,7 @@ newTalent{
 	target = function(self, t)
 		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 120) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 250) end,
 	getStunDuration = function(self, t) return self:getTalentLevelRaw(t) + 2 end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
@@ -117,7 +117,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local stunduration = t.getStunDuration(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[Conjures up a cone of flame with radius %d. Any target caught in the area will take %0.2f fire damage and be paralyzed for %d turns.
+		return ([[Conjures up a cone of flame with radius %d. Any target caught in the area will take %0.2f fire damage and be stunned for %d turns.
 		The damage will increase with your Spellpower.]]):
 		format(radius, damDesc(self, DamageType.FIRE, damage), stunduration)
 	end,
