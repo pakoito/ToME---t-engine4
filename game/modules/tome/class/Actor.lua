@@ -1363,8 +1363,10 @@ function _M:onTakeHit(value, src)
 	-- Life leech
 	if value > 0 and src and src:attr("life_leech_chance") and rng.percent(src.life_leech_chance) then
 		local leech = math.min(value, self.life) * src.life_leech_value / 100
-		src:heal(leech)
-		game.logSeen(src, "#CRIMSON#%s leeches life from its victim!", src.name:capitalize())
+		if leech > 0 then
+			src:heal(leech)
+			game.logSeen(src, "#CRIMSON#%s leeches life from its victim!", src.name:capitalize())
+		end
 	end
 
 	-- Resource leech
