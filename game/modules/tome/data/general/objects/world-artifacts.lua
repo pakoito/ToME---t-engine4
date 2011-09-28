@@ -335,7 +335,7 @@ newEntity{ base = "BASE_AMULET",
 	use_talent = { id = Talents.T_JUGGERNAUT, level = 2, power = 30 },
 }
 
-newEntity{ base = "BASE_AMULET",
+newEntity{ base = "BASE_AMULET", define_as = "SET_GARKUL_TEETH",
 	power_source = {technique=true},
 	unique = true,
 	name = "Garkul's Teeth", color = colors.YELLOW, image = "object/artifact/amulet_garkuls_teeth.png",
@@ -356,11 +356,21 @@ newEntity{ base = "BASE_AMULET",
 			["technique/warcries"] = 0.1,
 			["technique/bloodthirst"] = 0.1,
 		},
-		stun_immune = 0.5,
+		combat_physresist = 18,
+		combat_mentalresist = 18,
 		pin_immune = 1,
 	},
 	max_power = 48, power_regen = 1,
 	use_talent = { id = Talents.T_SHATTERING_SHOUT, level = 4, power = 10 },
+
+	set_list = { {"define_as", "HELM_OF_GARKUL"} },
+	on_set_complete = function(self, who)
+		self:specialSetAdd({"wielder","die_at"}, -100)
+		game.logSeen(who, "#CRIMSON#As you wear both Garkul's heirlooms you can feel the mighty warrior's spirit flowing through you.")
+	end,
+	on_set_broken = function(self, who)
+		game.logPlayer(who, "#CRIMSON#The spirit of Garkul fades away.")
+	end,
 }
 
 newEntity{ base = "BASE_LITE",

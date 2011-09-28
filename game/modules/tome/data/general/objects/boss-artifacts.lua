@@ -348,6 +348,12 @@ newEntity{ base = "BASE_HELM",
 		combat_spellresist = 12,
 		talents_types_mastery = {["technique/thuggery"]=0.2},
 	},
+
+	set_list = { {"define_as","SET_GARKUL_TEETH"} },
+	on_set_complete = function(self, who)
+		self:specialSetAdd("skullcracker_mult", 1)
+		self:specialSetAdd({"wielder","melee_project"}, {[engine.DamageType.GARKUL_INVOKE]=5})
+	end,
 }
 
 newEntity{ base = "BASE_SHIELD",

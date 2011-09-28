@@ -254,8 +254,8 @@ newEntity{
 	rarity = 17,
 	cost = 20,
 	wielder = {
-		stun_immune = resolvers.mbonus_material(3, 2, function(e, v) v=v/10 return 0, v end),
-		confusion_immune = resolvers.mbonus_material(3, 2, function(e, v) v=v/10 return 0, v end),
+		disease_immune = resolvers.mbonus_material(30, 20, function(e, v) v=v/100 return 0, v end),
+		confusion_immune = resolvers.mbonus_material(30, 20, function(e, v) v=v/100 return 0, v end),
 		poison_immune = resolvers.mbonus_material(30, 10, function(e, v) return 0, v/100 end),
 	},
 }

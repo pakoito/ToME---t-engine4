@@ -78,8 +78,8 @@ newEntity{
 	rarity = 7,
 	cost = 6,
 	wielder = {
-		stun_immune = resolvers.mbonus_material(40, 30, function(e, v) v=v/100 return 0, v end),
-		knockback_immune = resolvers.mbonus_material(40, 30, function(e, v) v=v/100 return 0, v end),
+		stun_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, v end),
+		knockback_immune = resolvers.mbonus_material(20, 20, function(e, v) v=v/100 return 0, v end),
 	},
 }
 

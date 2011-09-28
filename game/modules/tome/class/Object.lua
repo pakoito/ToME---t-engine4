@@ -713,6 +713,7 @@ function _M:getTextualDesc(compare_with)
 
 		compare_fields(w, compare_with, field, "mana_on_crit", "%+.2f", "Mana when firing critical spell: ")
 
+		compare_fields(w, compare_with, field, "die_at", "%+.2f life", "Only die when reaching: ", 1, true, true)
 		compare_fields(w, compare_with, field, "max_life", "%+.2f", "Maximum life: ")
 		compare_fields(w, compare_with, field, "max_mana", "%+.2f", "Maximum mana: ")
 		compare_fields(w, compare_with, field, "max_stamina", "%+.2f", "Maximum stamina: ")
@@ -825,6 +826,9 @@ function _M:getTextualDesc(compare_with)
 	if self.wielder or can_wielder then
 		desc:add({"color","YELLOW"}, "When wielded/worn:", {"color", "LAST"}, true)
 		desc_wielder(self, compare_with, "wielder")
+		if self:attr("skullcracker_mult") and game.player:knowTalent(game.player.T_SKULLCRACKER) then
+			compare_fields(self, compare_with, "wielder", "skullcracker_mult", "%+d", "Skullcracker multiplicator: ")
+		end
 	end
 
 	if self.carrier or can_carrier then

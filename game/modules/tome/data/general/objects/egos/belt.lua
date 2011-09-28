@@ -297,7 +297,7 @@ newEntity{
 	wielder = {
 		combat_armor = resolvers.mbonus_material(6, 4),
 		combat_def = resolvers.mbonus_material(4, 4),
-		stun_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, v end),
+		combat_physresist = resolvers.mbonus_material(20, 7),
 	},
 }
 
@@ -403,11 +403,11 @@ newEntity{
 		inc_stats = {
 			[Stats.STAT_CON] = resolvers.mbonus_material(6, 4),
 		},
-		stun_immune = resolvers.mbonus_material(25, 10, function(e, v) v=v/100 return 0, v end),
-		knockback_immune = resolvers.mbonus_material(25, 10, function(e, v) v=v/100 return 0, v end),
-		pin_immune = resolvers.mbonus_material(25, 10, function(e, v) v=v/100 return 0, -v end),
-		blind_immune = resolvers.mbonus_material(25, 10, function(e, v) v=v/100 return 0, -v end),
-		confusion_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
+		stun_immune = resolvers.mbonus_material(17, 5, function(e, v) v=v/100 return 0, v end),
+		knockback_immune = resolvers.mbonus_material(17, 5, function(e, v) v=v/100 return 0, v end),
+		pin_immune = resolvers.mbonus_material(17, 5, function(e, v) v=v/100 return 0, -v end),
+		blind_immune = resolvers.mbonus_material(17, 5, function(e, v) v=v/100 return 0, -v end),
+		confusion_immune = resolvers.mbonus_material(17, 5, function(e, v) v=v/100 return 0, v end),
 		max_stamina = resolvers.mbonus_material(30, 10),
 	},
 }

@@ -279,7 +279,7 @@ newEntity{
 	wielder = {
 		combat_armor = resolvers.mbonus_material(3, 2),
 		combat_def = resolvers.mbonus_material(4, 4),
-		stun_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, v end),
+		combat_physresist = resolvers.mbonus_material(20, 7),
 	},
 }
 

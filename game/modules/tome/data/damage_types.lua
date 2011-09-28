@@ -1705,3 +1705,67 @@ newDamageType{
 		end
 	end,
 }
+
+newDamageType{
+	name = "% chance to summon an orc spirit", type = "GARKUL_INVOKE",
+	projector = function(src, x, y, type, dam)
+		if not rng.percent(dam) then return end
+		local target = game.level.map(x, y, engine.Map.ACTOR)
+		if not target then return end
+
+		if game.party:hasMember(src) and game.party:findMember{type="garkul spirit"} then return end
+
+		-- Find space
+		local x, y = util.findFreeGrid(src.x, src.y, 5, true, {[engine.Map.ACTOR]=true})
+		if not x then return end
+
+		print("Invoking garkul spirit on", x, y)
+
+		local NPC = require "mod.class.NPC"
+		local orc = NPC.new{
+			type = "humanoid", subtype = "orc",
+			display = "o", color=colors.UMBER,
+			combat = { dam=resolvers.rngavg(5,12), atk=2, apr=6, physspeed=2 },
+			body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
+			infravision = 10,
+			lite = 1,
+			rank = 2,
+			size_category = 3,
+			resolvers.racial(),
+			resolvers.sustains_at_birth(),
+			autolevel = "warrior",
+			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
+			stats = { str=20, dex=8, mag=6, con=16 },
+			name = "orc spirit", color=colors.SALMON, image = "npc/humanoid_orc_orc_berserker.png",
+			desc = [[An orc clad in a massive armour, wielding a huge axe.]],
+			level_range = {35, nil}, exp_worth = 0,
+			max_life = resolvers.rngavg(110,120), life_rating = 12,
+			resolvers.equip{
+				{type="weapon", subtype="battleaxe", autoreq=true},
+				{type="armor", subtype="massive", autoreq=true},
+			},
+			combat_armor = 0, combat_def = 5,
+
+			resolvers.talents{
+				[src.T_ARMOUR_TRAINING]={base=4, every=5, max=5},
+				[src.T_WEAPON_COMBAT]={base=4, every=5, max=8},
+				[src.T_WEAPONS_MASTERY]={base=4, every=5, max=8},
+				[src.T_RUSH]={base=3, every=7, max=6},
+				[src.T_STUNNING_BLOW]={base=3, every=7, max=6},
+				[src.T_BERSERKER]={base=3, every=7, max=6},
+			},
+
+			faction = src.faction,
+			summoner = src,
+			summon_time = 6,
+		}
+
+		orc:resolve() orc:resolve(nil, true)
+		game.zone:addEntity(game.level, orc, "actor", x, y)
+		orc:forceLevelup(src.level)
+
+		orc.remove_from_party_on_death = true
+		game.party:addMember(orc, {control="no", type="garkul spirit", title="Garkul Spirit"})
+		orc:setTarget(target)
+	end,
+}
