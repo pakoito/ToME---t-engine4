@@ -367,7 +367,7 @@ newDamageType{
 newDamageType{
 	name = "temporal", type = "TEMPORAL", text_color = "#LIGHT_STEEL_BLUE#",
 	antimagic_resolve = true,
-	death_message = {"timewarped", "temporally distorted"},
+	death_message = {"timewarped", "temporally distorted", "spaghettified across the whole of space and time", "paradoxed"},
 }
 
 -- Temporal + Stun
