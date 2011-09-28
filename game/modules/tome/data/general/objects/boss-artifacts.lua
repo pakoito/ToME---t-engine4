@@ -126,7 +126,10 @@ newEntity{ base = "BASE_AMULET",
 			[DamageType.FIRE] = 10,
 			[DamageType.COLD] = -5,
 		},
-		blind_immune = 1,
+		damage_affinity={
+			[DamageType.FIRE] = 30,
+		},
+		blind_immune = 0.4,
 	},
 	talent_on_spell = { {chance=10, talent=Talents.T_VOLCANO, level=3} },
 }
@@ -257,8 +260,8 @@ newEntity{ base = "BASE_HEAVY_ARMOR",
 		talent_cd_reduction={[Talents.T_ICE_BREATH]=3, [Talents.T_FIRE_BREATH]=3, [Talents.T_SAND_BREATH]=3, [Talents.T_LIGHTNING_BREATH]=3,},
 		inc_stats = { [Stats.STAT_WIL] = 6, [Stats.STAT_CUN] = 4, [Stats.STAT_STR] = 6, [Stats.STAT_LCK] = 10, },
 		blind_immune = 0.5,
-		stun_immune = 0.5,
-		knockback_immune = 1,
+		stun_immune = 0.25,
+		knockback_immune = 0.5,
 		esp = { dragon = 1 },
 		combat_def = 10,
 		combat_armor = 14,
@@ -276,7 +279,7 @@ newEntity{ base = "BASE_RING",
 	power_source = {technique=true},
 	define_as = "PRIDE_GLORY", rarity=false,
 	name = "Glory of the Pride", unique=true, image="object/artifact/glory_of_the_pride.png",
-	desc = [[The most prized treasure of the Battlemaster of the Pride, Grushnak. This gold ring is inscribed in the orc tongue, the black speech.]],
+	desc = [[The most prized treasure of the Battlemaster of the Pride, Grushnak. This gold ring is inscribed in the now lost orc tongue.]],
 	unided_name = "deep black ring",
 	level_range = {40, 50},
 	rarity = 280,
@@ -285,8 +288,8 @@ newEntity{ base = "BASE_RING",
 	wielder = {
 		max_mana = -40,
 		max_stamina = 40,
-		stun_immune = 1,
-		confusion_immune = 1,
+		combat_physresist = 45,
+		confusion_immune = 0.5,
 		combat_atk = 10,
 		combat_dam = 10,
 		combat_def = 5,
@@ -454,8 +457,9 @@ newEntity{ base = "BASE_CLOTH_ARMOR",
 	wielder = {
 		inc_stats = { [Stats.STAT_MAG] = 5, [Stats.STAT_WIL] = 4, [Stats.STAT_CUN] = 3 },
 		see_invisible = 10,
-		blind_immune = 1,
+		blind_immune = 0.5,
 		combat_spellpower = 30,
+		combat_spellresist = 25,
 		combat_dam = 10,
 		combat_def = 6,
 	},
@@ -933,8 +937,8 @@ newEntity{ base = "BASE_GEM", define_as = "CRYSTAL_HEART",
 			o.wielder.inc_stats[engine.interface.ActorStats.STAT_LCK] = 12
 			o.wielder.resists = o.wielder.resists or {}
 			o.wielder.resists = { [engine.DamageType.ARCANE] = 35, [engine.DamageType.PHYSICAL] = 15 }
-			o.wielder.poison_immune = 1
-			o.wielder.disease_immune = 1
+			o.wielder.poison_immune = 0.6
+			o.wielder.disease_immune = 0.6
 
 			o.set_list = { {"is_crystalline_weapon", true} }
 			o.on_set_complete = function(self, who)

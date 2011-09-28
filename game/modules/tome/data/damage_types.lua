@@ -126,8 +126,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		-- affinity healing, we store it to apply it after damage is resolved
 		local affinity_heal = 0
 		if target.damage_affinity then
-			local aff = (target.damage_affinity[type] or 0) / 100
-			affinity_heal = (dam * aff)
+			affinity_heal = math.max(0, dam * ((target.damage_affinity.all or 0) + (target.damage_affinity[type] or 0)) / 100)
 		end
 
 		-- Reduce damage with resistance
