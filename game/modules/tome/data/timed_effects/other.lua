@@ -99,7 +99,7 @@ newEffect{
 	name = "TIME_SHIELD",
 	desc = "Time Shield",
 	long_desc = function(self, eff) return ("The target is surrounded by a time distortion, absorbing %d/%d damage and sending it forward in time."):format(self.time_shield_absorb, eff.power) end,
-	type = "other", 
+	type = "other",
 	subtype = { time=true, shield=true },
 	status = "beneficial",
 	parameters = { power=10 },
@@ -135,7 +135,7 @@ newEffect{
 	name = "TIME_DOT",
 	desc = "Time Shield Backfire",
 	long_desc = function(self, eff) return ("The time distortion protecting the target has ended. All damage forwarded in time is now applied, doing %d arcane damage per turn."):format(eff.power) end,
-	type = "other", 
+	type = "other",
 	subtype = { time=true },
 	status = "detrimental",
 	parameters = { power=10 },
@@ -326,6 +326,7 @@ newEffect{
 				return
 			end
 			game.logPlayer(game.player, "#LIGHT_BLUE#You unfold the spacetime continuum to a previous state!")
+			game:chronoRestore("precognition", true)
 			game.player.tmp[self.EFF_PRECOGNITION] = nil
 			if game._chronoworlds then game._chronoworlds = nil end
 			if game.player:knowTalent(game.player.T_FORESIGHT) then
@@ -492,7 +493,7 @@ newEffect{
 	desc = "Sever Lifeline",
 	long_desc = function(self, eff) return ("The target lifeline is being cut. When the effect ends %0.2f temporal damage will hit the target."):format(eff.power) end,
 	type = "other",
-	subtype = { time=true }, 
+	subtype = { time=true },
 	status = "detrimental",
 	parameters = {power=10000},
 	on_gain = function(self, err) return "#Target# lifeline is being severed!", "+Sever Lifeline" end,
