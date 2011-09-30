@@ -117,6 +117,7 @@ newTalent{
 	tactical = { ATTACK = 2 },
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.5, 1) end,
 	getBleedDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.8, 1.5) end,
+	getPower = function(self, t) return self:combatTalentStatDamage(t, "con", 10, 50) end,
 	do_devourer_frenzy = function(self, target, t)
 		game.logSeen(self, "The scent of blood sends the %ss into a frenzy!", self.name:capitalize())
 		-- frenzy devourerers
@@ -137,7 +138,7 @@ newTalent{
 							reapplied = true
 						end
 					end
-					target:setEffect(target.EFF_FRENZY, math.floor(2 + self:getTalentLevel(t)), {crit = self:getTalentLevel(t) * 3, power=self:getTalentLevel(t) * 0.2, dieat=self:getTalentLevel(t) * 0.2}, reapplied)
+					target:setEffect(target.EFF_FRENZY, math.floor(2 + self:getTalentLevel(t)), {crit = t.getPower(self, t), power=t.getPower(self, t)/50, dieat=t.getPower(self, t)/50}, reapplied)
 				end
 			end
 		end)

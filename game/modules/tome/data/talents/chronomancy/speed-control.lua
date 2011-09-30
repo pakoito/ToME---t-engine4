@@ -21,30 +21,20 @@ newTalent{
 	name = "Celerity",
 	type = {"chronomancy/speed-control", 1},
 	require = chrono_req1,
-	mode = "sustained",
 	points = 5,
-	sustain_paradox = 75,
-	cooldown = 10,
-	tactical = { BUFF = 1, CLOSEIN = 1, ESCAPE = 1 },
-	no_energy = true,
-	getPower = function(self, t) return self:combatTalentSpellDamage(t, 10, 40) / 100 end,
-	activate = function(self, t)
-		local power = t.getPower(self, t)
-		return {
-		move = self:addTemporaryValue("movement_speed", power)
-		}
+	mode = "passive",
+	on_learn = function(self, t)
+		self.movement_speed = self.movement_speed + 0.05
 	end,
-	deactivate = function(self, t, p)
-		self:removeTemporaryValue("movement_speed", p.move)
-		return true
+	on_unlearn = function(self, t)
+		self.movement_speed = self.movement_speed - 0.05
 	end,
 	info = function(self, t)
-		local power = t.getPower(self, t)
-		return ([[Increases the caster's movement speed by %d%%.  Additionally switching weapons takes no time while Celerity is active.
-		The effect will scale with your Spellpower.]]):format(power * 100)
+		local power = self:getTalentLevelRaw(t) * 5
+		return ([[Increases your movement speed by %d%% and switching between already equipped weapon sets (default hotkey x) no longer takes a turn.]]):
+		format(power)
 	end,
 }
-
 
 newTalent{
 	name = "Stop",
@@ -143,17 +133,55 @@ newTalent{
 	require = chrono_req4,
 	points = 5,
 	paradox = 20,
-	cooldown = 50,
+	cooldown = 24,
 	tactical = { BUFF = 2, CLOSEIN = 2, ESCAPE = 2 },
 	no_energy = true,
 	getPower = function(self, t) return (self:combatTalentSpellDamage(t, 10, 50) * getParadoxModifier(self, pm)) / 100 end,
+	do_haste_double = function(self, t, x, y)
+		-- Find space
+		local tx, ty = util.findFreeGrid(x, y, 0, true, {[Map.ACTOR]=true})
+		if not tx then
+			return
+		end
+				
+		local NPC = require "mod.class.NPC"
+		local m = NPC.new{
+			type = "figment", subtype = "temporal",
+			display = "@", color=colors.LIGHT_STEEL_BLUE,
+			name = "After Image", faction = self.faction, image = "npc/undead_ghost_kor_s_fury.png",
+			desc = [[An after image created by someone using the Haste spell.]],
+			autolevel = "none",
+			ai = "summoned", ai_real = "dumb_talented", ai_state = { talent_in=1, },
+			level_range = {1, 1}, exp_worth = 0,
+
+			max_life = self.max_life,
+			life_rating = 0,
+			never_move = 1,
+
+			summon_time = 3,
+		}
+		
+		m.life = self.life
+		m.combat = nil
+		m.never_anger = true
+		m:resolve() m:resolve(nil, true)
+		m:forceLevelup(self.level)
+		m.on_takehit = function(self, value, src)
+			self:die(src)
+			return value
+		end,
+				
+		game.zone:addEntity(game.level, m, "actor", x, y)
+		m:removeAllMOs()
+		game.level.map:updateMap(x, y)
+	end,
 	action = function(self, t)
 		self:setEffect(self.EFF_HASTE, 8, {power=t.getPower(self, t)})
 		return true
 	end,
 	info = function(self, t)
 		local power = t.getPower(self, t)
-		return ([[Increases the caster's global speed by %d%% and casting speed by %d%% for the next 8 turns.
+		return ([[Increases the caster's global speed by %d%% for the next 8 turns.  Each time you move with this effect active you'll leave behind an image of yourself for four turns that may draw enemy attacks.
 		The speed increase will scale with your Paradox and Spellpower.]]):format(100 * power, 50 * power)
 	end,
 }

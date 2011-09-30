@@ -69,7 +69,6 @@ Now you have come to finish what the Sher'tul began. Become a Godslayer yourself
 
 		[Talents.T_DAMAGE_SMEARING]=5,
 		[Talents.T_HASTE]=3,
-		[Talents.T_BORROWED_TIME]=3,
 	},
 	resolvers.sustains_at_birth(),
 

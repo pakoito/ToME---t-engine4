@@ -32,8 +32,8 @@ newTalent{
 	info = function(self, t)
 		local resist = self:getTalentLevelRaw(t) * 7
 		local stability = math.floor(self:getTalentLevel(t)/2)
-		return ([[You've learned to focus your control over the spacetime continuum and resist anomalous effects.  Extends the duration of the Static History stability effect by %d turns, your effective willpower for Static History, failure, anomaly, and backfire calculations by %d%%, and your Temporal resistance by %d%%.]]):
-		format(stability, self:getTalentLevel(t) * 10, resist)
+		return ([[You've learned to focus your control over the spacetime continuum and resist anomalous effects.  Increases your Temporal resistance by %d%%, extends the duration of the Static History stability effect by %d turns, and increases your effective willpower for failure, anomaly, and backfire calculations by %d%%.]]):
+		format(resist, stability, self:getTalentLevel(t) * 10)
 	end,
 }
 
@@ -148,7 +148,7 @@ newTalent{
 	range = 2,
 	requires_target = true,
 	no_npc_use = true,
-	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)* getParadoxModifier(self, pm)) end,
+	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)*getParadoxModifier(self, pm)) end,
 	getModifier = function(self, t) return rng.range(t.getDuration(self,t)*2, t.getDuration(self, t)*4) end,
 	action = function (self, t)
 		if checkTimeline(self) == true then
@@ -160,48 +160,66 @@ newTalent{
 		if not tx or not ty then return nil end
 		local _ _, tx, ty = self:canProject(tg, tx, ty)
 		if not tx or not ty then return nil end
+		
+		local x, y = util.findFreeGrid(tx, ty, 2, true, {[Map.ACTOR]=true})
+		if not x then
+			game.logPlayer(self, "Not enough space to summon!")
+			return
+		end
 
 		local sex = game.player.female and "she" or "he"
-		local a = mod.class.NPC.new{}
-		a:replaceWith(game.player:resolveSource():cloneFull())
-		mod.class.NPC.castAs(a)
-		engine.interface.ActorAI.init(a, a)
-		a.no_drops = true
-		a.energy.value = 0
-		a.player = nil
-		--a.name = a.name.."'s paradox clone"
-		a.name = a.name
-		a.color_r = 176 a.color_g = 196 a.color_b = 222
-		a._mo:invalidate()
-		a.faction = self.faction
-		a.max_life = a.max_life
-		a.life = a.max_life
-		a.die = nil
-		a.summoner = self
-		a.summoner_gain_exp=true
-		a.summon_time = t.getDuration(self, t)
-		a.ai = "summoned"
-		a.ai_real = "tactical"
-		a.ai_tactic = resolvers.tactic("ranged")
-		a.ai_state = { talent_in=1, ally_compassion=10}
-		a.desc = [[The real you... or so ]]..sex..[[ says.]]
+		local m = require("mod.class.NPC").new(self:clone{
+			no_drops = true,
+			faction = self.faction,
+			summoner = self, summoner_gain_exp=true,
+			summon_time = t.getDuration(self, t),
+			ai_target = {actor=nil},
+			ai = "summoned", ai_real = "tactical",
+			ai_tactic = resolvers.tactic("ranged"), ai_state = { talent_in=1, ally_compassion=10},
+			desc = [[The real you... or so ]]..sex..[[ says.]]
+		})
+		m:removeAllMOs()
+		m.make_escort = nil
+		m.on_added_to_level = nil
 
+		m.energy.value = 0
+		m.player = nil
+		m.max_life = m.max_life
+		m.life = util.bound(m.life, 0, m.max_life)
+		m.forceLevelup = function() end
+		m.die = nil
+		m.on_die = nil
+		m.on_acquire_target = nil
+		m.seen_by = nil
+		m.can_talk = nil
+		m.on_takehit = nil
+		m.no_inventory_access = true
+		m.clone_on_hit = nil
+		m.remove_from_party_on_death = true
+		
 		-- Remove some talents
 		local tids = {}
-		for tid, _ in pairs(a.talents) do
-			local t = a:getTalentFromId(tid)
+		for tid, _ in pairs(m.talents) do
+			local t = m:getTalentFromId(tid)
 			if t.no_npc_use then tids[#tids+1] = t end
 		end
 		for i, t in ipairs(tids) do
-			if t.mode == "sustained" and a:isTalentActive(t.id) then a:forceUseTalent(t.id, {ignore_energy=true}) end
-			a.talents[t.id] = nil
+			m.talents[t.id] = nil
+		end
+		
+		game.zone:addEntity(game.level, m, "actor", x, y)
+		game.level.map:particleEmitter(x, y, 1, "temporal_teleport")
+		game:playSoundNear(self, "talents/teleport")
+
+		if game.party:hasMember(self) then
+			game.party:addMember(m, {
+				control="no",
+				type="minion",
+				title="Paradox Clone",
+				orders = {target=true},
+			})
 		end
 
-		local x, y = util.findFreeGrid(tx, ty, 10, true, {[engine.Map.ACTOR]=true})
-		if x and y then
-			game.zone:addEntity(game.level, a, "actor", x, y)
-		end
-		game:playSoundNear(self, "talents/spell_generic")
 		self:setEffect(self.EFF_IMMINENT_PARADOX_CLONE, t.getDuration(self, t) + t.getModifier(self, t), {})
 		return true
 	end,

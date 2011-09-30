@@ -18,9 +18,43 @@
 -- darkgod@te4.org
 
 newTalent{
-	name = "Time Skip",
-	type = {"chronomancy/timetravel",1},
+	name = "Static History",
+	type = {"chronomancy/timetravel", 1},
 	require = chrono_req1,
+	points = 5,
+	message = "@Source@ rearranges history.",
+	cooldown = 24,
+	tactical = { PARADOX = 2 },
+	getDuration = function(self, t) 
+		local duration = 1 + math.floor(self:getTalentLevel(t)/2)
+		
+		if self:knowTalent(self.T_PARADOX_MASTERY) then
+			duration = 1 + math.floor((self:getTalentLevel(t)/2) + (self:getTalentLevel(self.T_PARADOX_MASTERY)/2))
+		end
+		
+		return duration
+	end,
+	getReduction = function(self, t) return self:combatTalentSpellDamage(t, 30, 300) end,
+	action = function(self, t)
+		self:incParadox (- t.getReduction(self, t))
+		game:playSoundNear(self, "talents/spell_generic")
+		self:setEffect(self.EFF_SPACETIME_STABILITY, t.getDuration(self, t), {})
+		return true
+	end,
+	info = function(self, t)
+		local reduction = t.getReduction(self, t)
+		local duration = t.getDuration(self, t)
+		return ([[By slightly reorganizing history you reduce your Paradox by %d and temporarily stabilize the timeline; allowing chronomancy to be used without chance of failure for %d turns.(backfires and anomalies may still occur).
+		Talent points invested in Static History will also reduce your chances of triggering an anomaly while using Spacetime Tuning.
+		The paradox reduction will increase with your Spellpower.]]):
+		format(reduction, duration)
+	end,
+}
+
+newTalent{
+	name = "Time Skip",
+	type = {"chronomancy/timetravel",2},
+	require = chrono_req2,
 	points = 5,
 	cooldown = 6,
 	paradox = 5,
@@ -84,29 +118,6 @@ newTalent{
 }
 
 newTalent{
-	name = "Borrowed Time",
-	type = {"chronomancy/timetravel", 2},
-	require = chrono_req2,
-	points = 5,
-	paradox = 15,
-	cooldown = 20,
-	no_energy = true,
-	tactical = { ESCAPE = 2, CLOSEIN = 2, BUFF = 2 },
-	getDuration = function(self, t) return 1 + math.floor(self:getTalentLevelRaw(t)/4) end,
-	getStun = function(self, t) return 6 - self:getTalentLevelRaw(t) end,
-	action = function(self, t)
-		self:setEffect(self.EFF_BORROWED_TIME, t.getDuration(self, t), {power=t.getStun(self,t)})
-		return true
-	end,
-	info = function(self, t)
-		local duration = t.getDuration(self, t)
-		local stun = t.getStun(self, t)
-		return ([[You borrow some energy from the future, greatly increasing your global speed for %d turns.  At the end of this time though you'll be paralyzed (no chance of resisting) for %d turns as you pay back the time you borrowed.
-		]]):format(duration + 1, stun)
-	end,
-}
-
-newTalent{
 	name = "Echoes From The Past",
 	type = {"chronomancy/timetravel", 3},
 	require = chrono_req3,
@@ -144,13 +155,53 @@ newTalent{
 }
 
 newTalent{
+	name = "Temporal Reprieve",
+	type = {"chronomancy/timetravel", 4},
+	require = chrono_req1,
+	points = 5,
+	paradox = 20,
+	cooldown = 50,
+	tactical = { BUFF = 0.5 },
+	message = "@Source@ manipulates the flow of time.",
+	getCooldownReduction = function(self, t) return 1 + math.floor(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
+	action = function(self, t)
+		-- update cooldowns
+		for tid, cd in pairs(self.talents_cd) do
+			self.talents_cd[tid] = cd - t.getCooldownReduction(self, t)
+		end
+		
+		local target = self
+		local todel = {}
+		for eff_id, p in pairs(target.tmp) do
+			local e = target.tempeffect_def[eff_id]
+			if e.type ~= "other" then
+				p.dur = p.dur - t.getCooldownReduction(self, t)
+				if p.dur <= 0 then todel[#todel+1] = eff end
+			end
+		end
+		while #todel > 0 do
+			target:removeEffect(table.remove(todel))
+		end
+		
+		return true
+	end,
+	info = function(self, t)
+		local reduction = t.getCooldownReduction(self, t)
+		return ([[Manipulate the flow of time; reducing the cooldown of all your talents on cooldown by %d turns and reducing the duration of most status effects currently affecting you (good or bad) by %d turns.
+		The effect will scale with your Paradox.]]):
+		format(reduction, reduction)
+	end,
+}
+
+--[=[
+newTalent{
 	name = "Door to the Past",
 	type = {"chronomancy/timetravel", 4},
 	require = chrono_req4, no_sustain_autoreset = true,
 	points = 5,
 	mode = "sustained",
 	sustain_paradox = 150,
-	cooldown = 50,
+	cooldown = 25,
 	no_npc_use = true,
 	getAnomalyCount = function(self, t) return math.ceil(self:getTalentLevel(t)) end,
 	on_learn = function(self, t)
@@ -218,8 +269,8 @@ newTalent{
 	type_no_req = true,
 	points = 1,
 	message = "@Source@ revises history.",
-	cooldown = 100,
-	paradox = 100,
+	cooldown = 50,
+	paradox = 25,
 	no_npc_use = true,
 	on_pre_use = function(self, t, silent) if not self:isTalentActive(self.T_DOOR_TO_THE_PAST) then if not silent then game.logPlayer(self, "Door to the Past must be active to use this talent.") end return false end return true end,
 	action = function(self, t)
@@ -252,4 +303,4 @@ newTalent{
 		return ([[Casting Revision will return you to the point in time you created a temporal marker using Door to the Past.]])
 		:format()
 	end,
-}
+}]=]

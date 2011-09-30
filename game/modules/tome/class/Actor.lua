@@ -646,9 +646,14 @@ function _M:move(x, y, force)
 
 	if moved and not force and ox and oy and (ox ~= self.x or oy ~= self.y) and config.settings.tome.smooth_move > 0 then
 		local blur = 0
-		if game.level.data.zero_gravity then blur = 2 end
+		if game.level.data.zero_gravity or self:hasEffect(self.EFF_HASTE) then blur = 2 end
 		if self:attr("lightning_speed") or self:attr("step_up") or self:attr("wild_speed") then blur = 3 end
 		self:setMoveAnim(ox, oy, config.settings.tome.smooth_move, blur)
+	end
+	
+	if moved and not force and self:knowTalent(self.T_HASTE) and self:hasEffect(self.EFF_HASTE) then
+		local t = self:getTalentFromId(self.T_HASTE)
+		t.do_haste_double(self, t, ox, oy)
 	end
 
 	return moved
@@ -951,7 +956,7 @@ function _M:tooltip(x, y, seen_by)
 	end
 	ts:add(("Stats: %d / %d / %d / %d / %d / %d"):format(self:getStr(), self:getDex(), self:getCon(), self:getMag(), self:getWil(), self:getCun()), true)
 	ts:add("Resists: ", table.concat(resists, ','), true)
-	ts:add("Armour/Defense: ", tostring(math.floor(self:combatArmor())), ' / ', tostring(math.floor(self:combatDefense())), true)
+	ts:add("Armour/Defense: ", tostring(math.floor(self:combatArmor())), ' / ', tostring(math.floor(self:combatDefense(true))), true)
 	ts:add("Size: ", {"color", "ANTIQUE_WHITE"}, self:TextSizeCategory(), {"color", "WHITE"}, true)
 	if self.summon_time then
 		ts:add("Time left: ", {"color", "ANTIQUE_WHITE"}, ("%d"):format(self.summon_time), {"color", "WHITE"}, true)
@@ -1163,12 +1168,6 @@ function _M:onTakeHit(value, src)
 	if self:isTalentActive(self.T_BONE_SHIELD) then
 		local t = self:getTalentFromId(self.T_BONE_SHIELD)
 		t.absorb(self, t, self:isTalentActive(self.T_BONE_SHIELD))
-		value = 0
-	end
-
-	if self:hasEffect(self.EFF_FORESIGHT) and value >= (self.max_life / 10) then
-		self:removeEffect(self.EFF_FORESIGHT)
-		game.logSeen(self, "%s avoids the attack.", self.name:capitalize())
 		value = 0
 	end
 
@@ -2447,7 +2446,7 @@ function _M:postUseTalent(ab, ret)
 				trigger = true; self:incMaxHate(-ab.sustain_hate)
 			end
 			if ab.sustain_paradox then
-				trigger = true; self:incMinParadox(ab.sustain_paradox)
+				trigger = true; self:breakGatherTheThreads(); self:incMinParadox(ab.sustain_paradox)
 			end
 			if ab.sustain_psi then
 				trigger = true; self:incMaxPsi(-ab.sustain_psi)

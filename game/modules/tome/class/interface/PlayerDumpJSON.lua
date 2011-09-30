@@ -172,11 +172,11 @@ function _M:dumpToJSON(js)
 	d[#d+1] = { ["fatigue"] = self:combatFatigue() }
 	d[#d+1] = { ["armour"] = self:combatArmor() }
 	d[#d+1] = { ["armour hardiness"] = self:combatArmorHardiness() }
-	d[#d+1] = { ["defense"] = self:combatDefense() }
-	d[#d+1] = { ["ranged defense"] = self:combatDefenseRanged() }
-	d[#d+1] = { ["physical save"] = self:combatPhysicalResist() }
-	d[#d+1] = { ["spell save"] = self:combatSpellResist() }
-	d[#d+1] = { ["mental save"] = self:combatMentalResist() }
+	d[#d+1] = { ["defense"] = self:combatDefense(true) }
+	d[#d+1] = { ["ranged defense"] = self:combatDefenseRanged(true) }
+	d[#d+1] = { ["physical save"] = self:combatPhysicalResist(true) }
+	d[#d+1] = { ["spell save"] = self:combatSpellResist(true) }
+	d[#d+1] = { ["mental save"] = self:combatMentalResist(true) }
 	if self.resists.all then d[#d+1] = { ["all resists(cap)"] = string.format("%3d%%(%3d%%)", self.resists.all, self.resists_cap.all or 0) } end
 	for i, t in ipairs(DamageType.dam_def) do
 		if self.resists[DamageType[t.type]] and self.resists[DamageType[t.type]] ~= 0 then

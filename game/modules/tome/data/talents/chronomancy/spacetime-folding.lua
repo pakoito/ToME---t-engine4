@@ -115,7 +115,7 @@ newTalent{
 	type = {"chronomancy/spacetime-folding", 3},
 	mode = "sustained",
 	require = temporal_req3,
-	sustain_paradox = 150,
+	sustain_paradox = 125,
 	cooldown = 10,
 	tactical = { BUFF = 2 },
 	points = 5,

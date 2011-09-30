@@ -1416,7 +1416,7 @@ newTalent{
 	name = "Dredge Frenzy",
 	type = {"chronomancy/other", 1},
 	points = 5,
-	cooldown = 6,
+	cooldown = 12,
 	tactical = {
 		BUFF = 4,
 	},
@@ -1426,6 +1426,7 @@ newTalent{
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=true, talent=t}
 	end,
+	getPower = function(self, t) return self:combatTalentSpellDamage(t, 10, 50) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		self:project(tg, self.x, self.y, function(px, py)
@@ -1444,7 +1445,7 @@ newTalent{
 							reapplied = true
 						end
 					end
-					target:setEffect(target.EFF_FRENZY, self:getTalentLevel(t), {crit = self:getTalentLevel(t), power=self:getTalentLevel(t) * 0.1, dieat=self:getTalentLevel(t) * 0.1}, reapplied)
+					target:setEffect(target.EFF_FRENZY, self:getTalentLevel(t), {crit = t.getPower(self, t)/10, power=t.getPower(self, t)/100, dieat=t.getPower(self, t)/100}, reapplied)
 				end
 			end
 		end)

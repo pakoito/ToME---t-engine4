@@ -529,10 +529,14 @@ function _M:combatCheckTraining(weapon)
 end
 
 --- Gets the defense
-function _M:combatDefense()
+--- Fake denotes a check not actually being made, used by character sheets etc.
+function _M:combatDefense(fake)
 	local add = 0
 	if self:hasDualWeapon() and self:knowTalent(self.T_DUAL_WEAPON_DEFENSE) then
 		add = add + 4 + (self:getTalentLevel(self.T_DUAL_WEAPON_DEFENSE) * self:getDex()) / 12
+	end
+	if not fake then 
+		add = add + (self:checkOnDefenseCall("defense") or 0)
 	end
 	if self:knowTalent(self.T_TACTICAL_EXPERT) then
 		local t = self:getTalentFromId(self.T_TACTICAL_EXPERT)
@@ -556,8 +560,11 @@ function _M:combatDefense()
 end
 
 --- Gets the defense ranged
-function _M:combatDefenseRanged()
-	return math.max(0, self:combatDefense() + (self.combat_def_ranged or 0))
+--- Fake denotes a check not actually being made, used by character sheets etc.
+function _M:combatDefenseRanged(fake)
+	local base_defense = self:combatDefense(true)
+	if not fake then base_defense = self:combatDefense() end
+	return math.max(0, base_defense + (self.combat_def_ranged or 0))
 end
 
 --- Gets the armor
@@ -874,8 +881,12 @@ function _M:combatTalentIntervalDamage(t, stat, min, max, stat_weight)
 end
 
 --- Computes physical resistance
-function _M:combatPhysicalResist()
+--- Fake denotes a check not actually being made, used by character sheets etc.
+function _M:combatPhysicalResist(fake)
 	local add = 0
+	if not fake then 
+		add = add + (self:checkOnDefenseCall("physical") or 0)
+	end
 	if self:knowTalent(self.T_POWER_IS_MONEY) then
 		add = add + util.bound(self.money / (80 - self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 5), 0, self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 10)
 	end
@@ -883,8 +894,12 @@ function _M:combatPhysicalResist()
 end
 
 --- Computes spell resistance
-function _M:combatSpellResist()
+--- Fake denotes a check not actually being made, used by character sheets etc.
+function _M:combatSpellResist(fake)
 	local add = 0
+	if not fake then 
+		add = add + (self:checkOnDefenseCall("spell") or 0)
+	end
 	if self:knowTalent(self.T_POWER_IS_MONEY) then
 		add = add + util.bound(self.money / (80 - self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 5), 0, self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 10)
 	end
@@ -892,8 +907,12 @@ function _M:combatSpellResist()
 end
 
 --- Computes mental resistance
-function _M:combatMentalResist()
+--- Fake denotes a check not actually being made, used by character sheets etc.
+function _M:combatMentalResist(fake)
 	local add = 0
+	if not fake then 
+		add = add + (self:checkOnDefenseCall("mental") or 0)
+	end
 	if self:knowTalent(self.T_STEADY_MIND) then
 		local t = self:getTalentFromId(self.T_STEADY_MIND)
 		add = add + t.getMental(self, t)
@@ -902,6 +921,17 @@ function _M:combatMentalResist()
 		add = add + util.bound(self.money / (80 - self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 5), 0, self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 10)
 	end
 	return self.combat_mentalresist + (self:getCun() + self:getWil() + (self:getLck() - 50) * 0.5) * 0.35 + add
+end
+
+-- Called when a Save or Defense is checked
+function _M:checkOnDefenseCall(type)
+	local add = 0
+	if self:knowTalent(self.T_SPIN_FATE) then
+		print("Spin Fate", type)
+		local t = self:getTalentFromId(self.T_SPIN_FATE)
+		t.do_spin_fate(self, t, type)
+	end
+	return add
 end
 
 --- Returns the resistance

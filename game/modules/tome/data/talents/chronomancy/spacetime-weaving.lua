@@ -20,7 +20,7 @@
 newTalent{
 	name = "Dimensional Step",
 	type = {"chronomancy/spacetime-weaving", 1},
-	require = chrono_req1,
+	require = temporal_req1,
 	points = 5,
 	paradox = 5,
 	cooldown = 10,
@@ -73,7 +73,7 @@ newTalent{
 newTalent{
 	name = "Banish",
 	type = {"chronomancy/spacetime-weaving", 2},
-	require = chrono_req2,
+	require = temporal_req2,
 	points = 5,
 	paradox = 10,
 	cooldown = 10,
@@ -138,7 +138,7 @@ newTalent{
 newTalent{
 	name = "Wormhole",
 	type = {"chronomancy/spacetime-weaving", 3},
-	require = chrono_req3,
+	require = temporal_req3,
 	points = 5,
 	paradox = 20,
 	cooldown = 20,
@@ -283,7 +283,7 @@ newTalent{
 	name = "Spacetime Mastery",
 	type = {"chronomancy/spacetime-weaving", 4},
 	mode = "passive",
-	require = chrono_req4,
+	require = temporal_req4,
 	points = 5,
 	on_learn = function(self, t)
 		self.talent_cd_reduction[self.T_BANISH] = (self.talent_cd_reduction[self.T_BANISH] or 0) + 1

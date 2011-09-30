@@ -59,55 +59,14 @@ newTalent{
 }
 
 newTalent{
-	name = "Static History",
-	type = {"chronomancy/chronomancy", 1},
+	name = "Precognition",
+	type = {"chronomancy/chronomancy",1},
 	require = temporal_req1,
 	points = 5,
-	message = "@Source@ stabilizes the timeline.",
-	cooldown = 24,
-	tactical = { PARADOX = 2 },
-	getDuration = function(self, t) 
-		local duration = 1 + math.floor(self:getTalentLevel(t)/2)
-		if self:knowTalent(self.T_PARADOX_MASTERY) then
-			duration = 1 + math.floor((self:getTalentLevel(t)/2) + (self:getTalentLevel(self.T_PARADOX_MASTERY)/2))
-		end
-		
-		return duration
-	end,
-	getReduction = function(self, t)
-		local reduction = self:combatTalentStatDamage(t, "wil", 20, 400)
-		--check for Paradox Mastery
-		if self:knowTalent(self.T_PARADOX_MASTERY) then
-			reduction = reduction * (1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10 or 0))
-		end
-		
-		return reduction
-	end,
-	action = function(self, t)
-		self:incParadox (- t.getReduction(self, t))
-		game:playSoundNear(self, "talents/spell_generic")
-		self:setEffect(self.EFF_SPACETIME_STABILITY, t.getDuration(self, t), {})
-		return true
-	end,
-	info = function(self, t)
-		local reduction = t.getReduction(self, t)
-		local duration = t.getDuration(self, t)
-		return ([[Reduces Paradox by %d by stabilizing the spacetime continuum and allows chronomancy to be used without failure checks for %d turns (backfires and anomalies may still occur).
-		Talent points invested in Static History will also reduce your chances of triggering an anomaly while using Spacetime Tuning.
-		The effect will increase with the Willpower stat.]]):
-		format(reduction, duration)
-	end,
-}
-
-newTalent{
-	name = "Precognition",
-	type = {"chronomancy/chronomancy",2},
-	require = temporal_req2,
-	points = 5,
-	paradox = 25,
-	cooldown = 50,
+	paradox = 5,
+	cooldown = 10,
 	no_npc_use = true,
-	getDuration = function(self, t) return 4 + math.ceil((self:getTalentLevel(t) * 2) * getParadoxModifier(self, pm)) end,
+	getDuration = function(self, t) return 4 + math.ceil((self:getTalentLevel(t) * 2)) end,
 	action = function(self, t)
 		if checkTimeline(self) == true then
 			return
@@ -118,53 +77,115 @@ newTalent{
 	end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[You peer into the future, allowing you to explore your surroundings for %d turns.  When precognition expires you'll return to the point in time you first cast the spell.  Note that visions of your own death can still be fatal.
-		This spell splits the timeline.  Attempting to use another spell that also splits the timeline while this effect is active will be unsuccessful.
-		The duration will scale with your Paradox.]]):format(duration)
+		return ([[You peer into the future, allowing you to explore your surroundings for %d turns.  When precognition expires you'll return to the point in time you first cast the spell.  Note that visions of your own death will still be fatal.
+		This spell splits the timeline.  Attempting to use another spell that also splits the timeline while this effect is active will be unsuccessful.]]):format(duration)
 	end,
 }
 
 newTalent{
-	name = "Probability Weaving",
-	type = {"chronomancy/chronomancy",3},
+	name = "Spin Fate",
+	type = {"chronomancy/chronomancy", 2},
+	require = temporal_req2,
 	mode = "passive",
-	require = temporal_req3,
 	points = 5,
-	on_learn = function(self, t)
-		self.inc_stats[self.STAT_LCK] = self.inc_stats[self.STAT_LCK] + 2
-		self:onStatChange(self.STAT_LCK, 2)
-		self.combat_spellpower = self.combat_spellpower + 2
-	end,
-	on_unlearn = function(self, t)
-		self.inc_stats[self.STAT_LCK] = self.inc_stats[self.STAT_LCK] - 2
-		self:onStatChange(self.STAT_LCK, - 2)
-		self.combat_spellpower = self.combat_spellpower - 2
+	getDuration = function(self, t) return 1 + math.ceil(self:getTalentLevel(t)) end,
+	getSaveBonus = function(self, t) return self:getTalentLevel(t) end,
+	do_spin_fate = function(self, t, type)
+		game:playSoundNear(self, "talents/spell_generic")
+		local save_bonus = t.getSaveBonus(self, t)
+		if self:hasEffect(self.T_PRECOGNITION) then
+			save_bonus = save_bonus * 2
+		end
+		
+		local mental_save, physical_save, spell_save, defense_bonus = 0
+		if type == "mental" then mental_save = save_bonus end
+		if type == "physical" then physical_save = save_bonus end
+		if type == "spell" then spell_save = save_bonus end		
+		if type == "defense" then defense_bonus = save_bonus end		
+		print("Spin Fate", type, mental_save, physical_save, spell_save, defense_bonus)
+		
+		self:setEffect(self.EFF_SPIN_FATE, t.getDuration(self, t), {max_bonus = t.getSaveBonus(self, t) * 10, defense = defense_bonus, mental = mental_save, physical = physical_save, spell = spell_save})
+		return true
 	end,
 	info = function(self, t)
-		return ([[You've learned to bend the laws of probability, increasing your luck and spellpower by %d.]]):format(2 * self:getTalentLevelRaw(t))
+		local save = t.getSaveBonus(self, t)
+		local duration = t.getDuration(self, t)
+		return ([[You've learned to make minor corrections in how future events unfold.  Each time an attacker makes a check against your defense or saves the respective value is increased by %d (stacking up to a maximum increase of %d for each value).
+		The effect will last %d turns but the duration will refresh everytime it's reapplied.
+		The defense or saving throw increase is doubled while Precognition is active (but the cap remains the same).]]):
+		format(save, save * 10, duration)
 	end,
 }
 
 newTalent{
 	name = "Foresight",
+	type = {"chronomancy/chronomancy",3},
+	mode = "passive",
+	require = temporal_req3,
+	points = 5,
+	getRadius = function(self, t) return 3 + math.floor(self:getTalentLevel(t) * 2) end,
+	do_precog_foresight = function(self, t)
+		self:magicMap(t.getRadius(self, t))
+		self:setEffect(self.EFF_SENSE, 1, {
+			range = t.getRadius(self, t),
+			actor = 1,
+			object = 1,
+			trap = 1,
+		})
+	end,
+	info = function(self, t)
+		local radius = t.getRadius(self, t)
+		return ([[When the duration of your Precognition expires (or is cancelled with Moment of Prescience) you'll be given a vision of your surroundings, sensing terrain, enemies, objects, and traps in a %d radius.]]):
+		format(radius)
+	end,
+}
+
+newTalent{
+	name = "Moment of Prescience",
 	type = {"chronomancy/chronomancy", 4},
 	require = temporal_req4,
 	points = 5,
-	paradox = 20,
-	cooldown = function(self, t) return 27 - (self:getTalentLevelRaw(t) * 3) end,
-	getDuration = function(self, t) return 4 + math.floor(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
-	tactical = { DEFEND = 4 },
+	paradox = 10,
+	cooldown = 24,
+	getDuration = function(self, t) return 2 + math.floor(self:getTalentLevel(t)) end,
+	getPercentage = function(self, t) return self:getTalentLevel(t) * 10 end,
+	getDetection = function(self, t) return self:getTalentLevel(t) * 5 end,
+	on_pre_use = function(self, t, silent) if not self:hasEffect(self.EFF_PRECOGNITION) then if not silent then game.logPlayer(self, "Precognition must be active to use this talent.") end return false end return true end,
+	tactical = { BUFF = 4 },
 	no_energy = true,
+	no_npc_use = true,
 	action = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic")
-		self:setEffect(self.EFF_FORESIGHT, t.getDuration(self, t), {})
+		-- clear the chronoworlds and the timed effect
+		if game._chronoworlds then game._chronoworlds = nil end
+		game.player.tmp[self.EFF_PRECOGNITION] = nil
+		
+		-- check for Spin Fate
+		local eff = self:hasEffect(self.EFF_SPIN_FATE)
+		local mental_power, physical_power, spell_power, accuracy = 0
+		local percentage = t.getPercentage(self, t)/100
+		if eff then
+			mental_power = (eff.cur_mental or eff.mental) * percentage
+			physical_power = (eff.cur_physical or eff.physical) * percentage
+			spell_power = (eff.cur_spell or eff.spell) * percentage
+			accuracy_power = (eff.cur_defense or eff.defense) * percentage
+		end
+							
+		self:setEffect(self.EFF_PRESCIENCE, t.getDuration(self, t), {detect=t.getDetection(self, t), mental=mental_power, physical=physical_power, spell=spell_power, accuracy=accuracy_power})
+		if self:knowTalent(self.T_FORESIGHT) then
+			local t = self:getTalentFromId(self.T_FORESIGHT)
+			t.do_precog_foresight(self, t)
+		end
 		return true
 	end,
 	info = function(self, t)
+		local detect = t.getDetection(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[You avoid all damage from a single damage source as long as it occurs within the next %d turns and deals at least 10%% of your maximum life in a single hit.  Once an attack is avoided the spell will end.
-		Additional talent points will lower the cooldown and the duration will scale with your Paradox.
+		local percent = t.getPercentage(self, t)
+		return ([[While under the affects of Precognition you may use Moment of Prescience to cancel it, walking the timeline exactly as you did before to reach the present.
+		Doing so will pull your awareness fully into the moment, increasing your stealth detection and see invisibility by %d for %d turns. 
+		If you have Spin Fate going when you cast this spell you'll gain %d%% of your spin as accuracy, attack power, spell power, or mind power as appropriate.
 		This spell takes no time to cast.]]):
-		format(duration)
+		format(detect, duration, percent)
 	end,
 }

@@ -729,21 +729,21 @@ function _M:drawDialog(kind, actor_to_compare)
 		self:mouseTooltip(self.TOOLTIP_ARMOR_HARDINESS,   s:drawColorStringBlended(self.font, ("Armor Hardiness : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
 		text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatArmor() end, "%3d", "%+.0f")
 		self:mouseTooltip(self.TOOLTIP_ARMOR,   s:drawColorStringBlended(self.font,           ("Armor           : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
-		text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatDefense() end, "%3d", "%+.0f")
+		text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatDefense(true) end, "%3d", "%+.0f")
 		self:mouseTooltip(self.TOOLTIP_DEFENSE, s:drawColorStringBlended(self.font,           ("Defense         : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
-		text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatDefenseRanged() end, "%3d", "%+.0f")
+		text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatDefenseRanged(true) end, "%3d", "%+.0f")
 		self:mouseTooltip(self.TOOLTIP_RDEFENSE,s:drawColorStringBlended(self.font,           ("Ranged Defense  : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
 
 		h = h + self.font_h
 		s:drawColorStringBlended(self.font, "#LIGHT_BLUE#Saves:", w, h, 255, 255, 255, true) h = h + self.font_h
-		text = compare_fields(player, actor_to_compare, function(actor, ...) return math.floor(actor:combatPhysicalResist()) end, "%3d", "%+.0f")
-		dur_text = ("%d"):format(math.floor(player:combatPhysicalResist()/10))
+		text = compare_fields(player, actor_to_compare, function(actor, ...) return math.floor(actor:combatPhysicalResist(true)) end, "%3d", "%+.0f")
+		dur_text = ("%d"):format(math.floor(player:combatPhysicalResist(true)/10))
 		self:mouseTooltip(self.TOOLTIP_PHYS_SAVE,   s:drawColorStringBlended(self.font, ("Physical: #00ff00#%s  [-%s effect duration]"):format(text, dur_text), w, h, 255, 255, 255, true)) h = h + self.font_h
-		text = compare_fields(player, actor_to_compare, function(actor, ...) return math.floor(actor:combatSpellResist()) end, "%3d", "%+.0f")
-		dur_text = ("%d"):format(math.floor(player:combatSpellResist()/10))
+		text = compare_fields(player, actor_to_compare, function(actor, ...) return math.floor(actor:combatSpellResist(true)) end, "%3d", "%+.0f")
+		dur_text = ("%d"):format(math.floor(player:combatSpellResist(true)/10))
 		self:mouseTooltip(self.TOOLTIP_SPELL_SAVE,  s:drawColorStringBlended(self.font, ("Spell   : #00ff00#%s  [-%s effect duration]"):format(text, dur_text), w, h, 255, 255, 255, true)) h = h + self.font_h
-		text = compare_fields(player, actor_to_compare, function(actor, ...) return math.floor(actor:combatMentalResist()) end, "%3d", "%+.0f")
-		dur_text = ("%d"):format(math.floor(player:combatMentalResist()/10))
+		text = compare_fields(player, actor_to_compare, function(actor, ...) return math.floor(actor:combatMentalResist(true)) end, "%3d", "%+.0f")
+		dur_text = ("%d"):format(math.floor(player:combatMentalResist(true)/10))
 		self:mouseTooltip(self.TOOLTIP_MENTAL_SAVE, s:drawColorStringBlended(self.font, ("Mental  : #00ff00#%s  [-%s effect duration]"):format(text, dur_text), w, h, 255, 255, 255, true)) h = h + self.font_h
 
 		h = 0
@@ -964,9 +964,9 @@ function _M:dump()
 	nl(makelabel("Spell Crit", player:combatSpellCrit() .."%"))
 	nnl(("%-32s"):format(makelabel("Armor Hardiness", player:combatArmorHardiness() .. "%")))
 	nl(makelabel("Spell Speed", player:combatSpellSpeed() ..""))
-	nnl(("%-32s"):format(makelabel("Defense", player:combatDefense() .. "")))
+	nnl(("%-32s"):format(makelabel("Defense", player:combatDefense(true) .. "")))
 	nl()
-	nnl(("%-32s"):format(makelabel("Ranged Defense", player:combatDefenseRanged() .. "")))
+	nnl(("%-32s"):format(makelabel("Ranged Defense", player:combatDefenseRanged(true) .. "")))
 
 	nl()
 	if player.inc_damage.all then nl(makelabel("All damage", player.inc_damage.all.."%")) end
@@ -977,9 +977,9 @@ function _M:dump()
 	end
 
 	nl()
-	nl(makelabel("Physical Save",player:combatPhysicalResist() ..""))
-	nl(makelabel("Spell Save",player:combatSpellResist() ..""))
-	nl(makelabel("Mental Save",player:combatMentalResist() ..""))
+	nl(makelabel("Physical Save",player:combatPhysicalResist(true) ..""))
+	nl(makelabel("Spell Save",player:combatSpellResist(true) ..""))
+	nl(makelabel("Mental Save",player:combatMentalResist(true) ..""))
 
 	nl()
 	if player.resists.all then nl(("All Resists: %3d%%"):format(player.resists.all, player.resists_cap.all or 0)) end

@@ -1110,9 +1110,9 @@ function _M:drawDialog(kind)
 		s:drawColorStringBlended(self.font, ("Constitution: #00c000#%d"):format(con_diff), w, h, 255, 255, 255, true) h = h + self.font_h
 		h = h + self.font_h
 		s:drawColorStringBlended(self.font, "#LIGHT_BLUE#Saves:", w, h, 255, 255, 255, true) h = h + self.font_h
-		self:mouseTooltip(self.TOOLTIP_PHYS_SAVE, s:drawColorStringBlended(self.font,   ("Physical : #00c000#%.2f"):format(self.actor:combatPhysicalResist() - self.actor_dup:combatPhysicalResist()), w, h, 255, 255, 255, true)) h = h + self.font_h
-		self:mouseTooltip(self.TOOLTIP_SPELL_SAVE, s:drawColorStringBlended(self.font,  ("Spell    : #00c000#%.2f"):format(self.actor:combatSpellResist() - self.actor_dup:combatSpellResist()), w, h, 255, 255, 255, true)) h = h + self.font_h
-		self:mouseTooltip(self.TOOLTIP_MENTAL_SAVE, s:drawColorStringBlended(self.font, ("Mental   : #00c000#%.2f"):format(self.actor:combatMentalResist() - self.actor_dup:combatMentalResist()), w, h, 255, 255, 255, true)) h = h + self.font_h
+		self:mouseTooltip(self.TOOLTIP_PHYS_SAVE, s:drawColorStringBlended(self.font,   ("Physical : #00c000#%.2f"):format(self.actor:combatPhysicalResist(true) - self.actor_dup:combatPhysicalResist(true)), w, h, 255, 255, 255, true)) h = h + self.font_h
+		self:mouseTooltip(self.TOOLTIP_SPELL_SAVE, s:drawColorStringBlended(self.font,  ("Spell    : #00c000#%.2f"):format(self.actor:combatSpellResist(true) - self.actor_dup:combatSpellResist(true)), w, h, 255, 255, 255, true)) h = h + self.font_h
+		self:mouseTooltip(self.TOOLTIP_MENTAL_SAVE, s:drawColorStringBlended(self.font, ("Mental   : #00c000#%.2f"):format(self.actor:combatMentalResist(true) - self.actor_dup:combatMentalResist(true)), w, h, 255, 255, 255, true)) h = h + self.font_h
 		h = h + self.font_h
 		self:mouseTooltip(self.TOOLTIP_RESIST_ALL, s:drawColorStringBlended(self.font, ("All resistance: #00c000#%.2f%%"):format((self.actor.resists.all or 0) - (self.actor_dup.resists.all or 0)), w, h, 255, 255, 255, true)) h = h + self.font_h
 
@@ -1160,8 +1160,8 @@ function _M:drawDialog(kind)
 		s:drawColorStringBlended(self.font, ArmorTxt, w, h, 255, 255, 255, true) h = h + self.font_h
 		self:mouseTooltip(self.TOOLTIP_ARMOR_HARDINESS, s:drawColorStringBlended(self.font, ("Armor hardiness: #00c000#%d%%"):format(self.actor:combatArmorHardiness() - self.actor_dup:combatArmorHardiness()), w, h, 255, 255, 255, true)) h = h + self.font_h
 		self:mouseTooltip(self.TOOLTIP_ARMOR, s:drawColorStringBlended(self.font,           ("Armor          : #00c000#%d(%d)"):format(self.actor:combatArmor() - self.actor_dup:combatArmor(), self.actor:combatArmorHardiness() * (self.actor:combatArmor() - self.actor_dup:combatArmor()) * 0.01), w, h, 255, 255, 255, true)) h = h + self.font_h
-		self:mouseTooltip(self.TOOLTIP_DEFENSE, s:drawColorStringBlended(self.font,         ("Defense        : #00c000#%d"):format(self.actor:combatDefense() - self.actor_dup:combatDefense()), w, h, 255, 255, 255, true)) h = h + self.font_h
-		self:mouseTooltip(self.TOOLTIP_RDEFENSE, s:drawColorStringBlended(self.font,        ("Ranged defense : #00c000#%d"):format(self.actor:combatDefenseRanged() - self.actor_dup:combatDefenseRanged()), w, h, 255, 255, 255, true)) h = h + self.font_h
+		self:mouseTooltip(self.TOOLTIP_DEFENSE, s:drawColorStringBlended(self.font,         ("Defense        : #00c000#%d"):format(self.actor:combatDefense(true) - self.actor_dup:combatDefense(true)), w, h, 255, 255, 255, true)) h = h + self.font_h
+		self:mouseTooltip(self.TOOLTIP_RDEFENSE, s:drawColorStringBlended(self.font,        ("Ranged defense : #00c000#%d"):format(self.actor:combatDefenseRanged(true) - self.actor_dup:combatDefenseRanged(true)), w, h, 255, 255, 255, true)) h = h + self.font_h
 		h = 0
 		w = 400
 		local mainhand = self.actor:getInven(self.actor.INVEN_MAINHAND)

@@ -58,7 +58,7 @@ newTalent{
 	require = chrono_req2, no_sustain_autoreset = true,
 	points = 5,
 	mode = "sustained",
-	sustain_paradox = 75,
+	sustain_paradox = 100,
 	cooldown = 12,
 	tactical = { BUFF =2, DEFEND = 2 },
 	getDamageOnMeleeHit = function(self, t) return self:combatTalentSpellDamage(t, 10, 100) end,

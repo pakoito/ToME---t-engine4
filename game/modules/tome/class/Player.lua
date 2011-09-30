@@ -888,7 +888,7 @@ function _M:quickSwitchWeapons()
 		for i = 1, #pfset1 do self:addObject(pf2, pfset1[i]) end
 		for i = 1, #pfset2 do self:addObject(pf1, pfset2[i]) end
 	end
-	if not self:isTalentActive(self.T_CELERITY) then self:useEnergy() end
+	if not self:knowTalent(self.T_CELERITY) then self:useEnergy() end
 	local names = ""
 	if pf1 and pf2 then
 		if not pf1[1] then

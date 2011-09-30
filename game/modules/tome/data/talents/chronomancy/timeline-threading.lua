@@ -25,8 +25,8 @@ newTalent{
 	paradox = 5,
 	cooldown = 12,
 	tactical = { BUFF = 2 },
-	getThread = function(self, t) return 20 + (self:combatTalentSpellDamage(t, 10, 40)*getParadoxModifier(self, pm)) end,
-	getReduction = function(self, t) return 5 * self:getTalentLevel(t) end,
+	getThread = function(self, t) return  6 * self:getTalentLevel(t) end,
+	getReduction = function(self, t) return 3 * self:getTalentLevel(t) end,
 	action = function(self, t)
 		self:setEffect(self.EFF_GATHER_THE_THREADS, 5, {power=t.getThread(self, t), reduction=t.getReduction(self, t)})
 		game:playSoundNear(self, "talents/spell_generic2")
@@ -35,10 +35,9 @@ newTalent{
 	info = function(self, t)
 		local primary = t.getThread(self, t)
 		local reduction = t.getReduction(self, t)
-		return ([[You begin to gather energy from other timelines, increasing all damage dealt by %d%% on the first turn and %d%% more each additional turn.
-		The increased damage will be released with the first attack, item, or talent used, otherwise the spell ends after five turns.
-		Eacn turn the effect is active your Paradox will be reduced by %d.
-		The percentages will increase with your Paradox and Spellpower.]]):format(primary + (primary/5), primary/5, reduction)
+		return ([[You begin to gather energy from other timelines, increasing spellpower by %0.2f on the first turn and %0.2f more each additional turn.
+		The effect will end with the first attack, item, or talent used, otherwise the spell ends after five turns.
+		Eacn turn the effect is active your Paradox will be reduced by %d.]]):format(primary + (primary/5), primary/5, reduction)
 	end,
 }
 

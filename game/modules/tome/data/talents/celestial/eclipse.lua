@@ -142,7 +142,7 @@ newTalent{
 	sustain_negative = 10,
 	tactical = { DEFEND = 2, ESCAPE = 2 },
 	getInvisibilityPower = function(self, t) return 5 + (self:getCun() / 15) * self:getTalentLevel(t) end,
-	getEnergyConvert = function(self, t) return 6 - (self:getTalentLevelRaw(t)) end,
+	getEnergyConvert = function(self, t) return 6 - math.max(0, self:getTalentLevelRaw(t)) end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 100) end,
 	getRadius = function(self, t) return 2 + self:getTalentLevel(t) / 2 end,
 	activate = function(self, t)

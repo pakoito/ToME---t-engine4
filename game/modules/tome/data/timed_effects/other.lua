@@ -321,13 +321,17 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		game:onTickEnd(function()
-			if not game:chronoRestore("precognition", true) then
+			if game._chronoworlds == nil then
 				game.logSeen(self, "#LIGHT_RED#The spell fizzles.")
 				return
 			end
 			game.logPlayer(game.player, "#LIGHT_BLUE#You unfold the spacetime continuum to a previous state!")
 			game.player.tmp[self.EFF_PRECOGNITION] = nil
 			if game._chronoworlds then game._chronoworlds = nil end
+			if game.player:knowTalent(game.player.T_FORESIGHT) then
+				local t = game.player:getTalentFromId(game.player.T_FORESIGHT)
+				t.do_precog_foresight(self, t)
+			end
 		end)
 	end,
 }
@@ -404,7 +408,6 @@ newEffect{
 		local t = self:getTalentFromId(self.T_PARADOX_CLONE)
 		local base = t.getDuration(self, t) - 2
 		game:onTickEnd(function()
-
 			if game._chronoworlds == nil then
 				game.logSeen(self, "#LIGHT_RED#You've altered your destiny and will not be pulled into the past.")
 				return
@@ -504,7 +507,7 @@ newEffect{
 newEffect{
 	name = "SPACETIME_STABILITY",
 	desc = "Spacetime Stability",
-	long_desc = function(self, eff) return "Chronomancy spells cast by the target will not fail, backfire, or cause an anomaly." end,
+	long_desc = function(self, eff) return "Chronomancy spells cast by the target will not fail." end,
 	type = "other",
 	subtype = { time=true },
 	status = "beneficial",
@@ -521,7 +524,7 @@ newEffect{
 	name = "FADE_FROM_TIME",
 	desc = "Fade From Time",
 	long_desc = function(self, eff) return ("The target is partially removed from the timeline, reducing all damage dealt by %d%%, all damage recieved by %d%%, and the duration of all detrimental effects by %d%%."):
-	format(eff.dur + 1 * 2, eff.cur_power or eff.power, eff.cur_power or eff.power) end,
+	format(eff.dur * 2 + 2, eff.cur_power or eff.power, eff.cur_power or eff.power) end,
 	type = "other",
 	subtype = { time=true },
 	status = "beneficial",
