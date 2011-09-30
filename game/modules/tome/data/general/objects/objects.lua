@@ -76,9 +76,6 @@ loadIfNot("/data/general/objects/gauntlets.lua")
 loadIfNot("/data/general/objects/cloak.lua")
 loadIfNot("/data/general/objects/leather-belt.lua")
 
--- Mounts
-loadIfNot("/data/general/objects/mounts.lua")
-
 -- Lore
 loadIfNot("/data/general/objects/lore/spellhunt.lua")
 loadIfNot("/data/general/objects/lore/fun.lua")

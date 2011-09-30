@@ -109,7 +109,7 @@ newEntity{ define_as = "PLAYER_SLAVE",
 	move_others=true,
 	suppress_alchemist_drops = true,
 
-	body = { INVEN = 1000, QS_MAINHAND = 1, QS_OFFHAND = 1, MAINHAND = 1, OFFHAND = 1, FINGER = 2, NECK = 1, LITE = 1, BODY = 1, HEAD = 1, CLOAK = 1, HANDS = 1, BELT = 1, FEET = 1, TOOL = 1, QUIVER = 1, MOUNT = 1 },
+	body = { INVEN = 1000, QS_MAINHAND = 1, QS_OFFHAND = 1, MAINHAND = 1, OFFHAND = 1, FINGER = 2, NECK = 1, LITE = 1, BODY = 1, HEAD = 1, CLOAK = 1, HANDS = 1, BELT = 1, FEET = 1, TOOL = 1, QUIVER = 1 },
 	resolvers.equip{
 		{type="armor", subtype="hands", autoreq=true},
 		{type="armor", subtype="light", autoreq=true},
