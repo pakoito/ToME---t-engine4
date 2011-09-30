@@ -150,12 +150,6 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 		if not self.combat.no_stealth_break then break_stealth = true end
 	end
 
-	-- Mount attack ?
-	local mount = self:hasMount()
-	if mount and mount.mount.attack_with_rider and core.fov.distance(self.x, self.y, target.x, target.y) <= 1 then
-		mount.mount.actor:attackTarget(target, nil, nil, nil)
-	end
-
 	-- We use up our own energy
 	if speed and not noenergy then
 		self:useEnergy(game.energy_to_act * speed)
@@ -214,7 +208,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 
 	-- Does the blow connect? yes .. complex :/
 	local atk, def = self:combatAttack(weapon), target:combatDefense()
-	
+
 	-- add stalker damage and attack bonus
 	local effStalker = self:hasEffect(self.EFF_STALKER)
 	if effStalker and effStalker.target == target then
@@ -222,7 +216,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		atk = atk + t.getAttackChange(self, t, effStalker.bonus)
 		mult = mult * t.getStalkedDamageMultiplier(self, t, effStalker.bonus)
 	end
-	
+
 	if not self:canSee(target) then atk = atk / 3 end
 	local dam, apr, armor = force_dam or self:combatDamage(weapon), self:combatAPR(weapon), target:combatArmor()
 	print("[ATTACK] to ", target.name, " :: ", dam, apr, armor, def, "::", mult)
@@ -238,7 +232,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		local t = target:getTalentFromId(target.T_REPEL)
 		repelled = t.isRepelled(target, t)
 	end
-	
+
 	-- If hit is over 0 it connects, if it is 0 we still have 50% chance
 	local hitted = false
 	local crit = false
@@ -276,7 +270,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		local srcname = game.level.map.seens(self.x, self.y) and self.name:capitalize() or "Something"
 		game.logSeen(target, "%s misses %s.", srcname, target.name)
 	end
-	
+
 	-- handle stalk targeting for hits (also handled in Actor for turn end effects)
 	if hitted and target ~= self then
 		if effStalker then
@@ -284,7 +278,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 			effStalker.hit = effStalker.hit or effStalker.target == target
 		elseif self:isTalentActive(self.T_STALK) then
 			local stalk = self:isTalentActive(self.T_STALK)
-		
+
 			if not stalk.hit then
 				-- mark a new target
 				stalk.hit = true
@@ -348,7 +342,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		local dam = t.getDamage(self, t)
 		DamageType:get(DamageType.DRAINLIFE).projector(self, target.x, target.y, DamageType.DRAINLIFE, dam)
 	end
-	
+
 	-- Autospell cast
 	if hitted and not target.dead and self:knowTalent(self.T_ARCANE_COMBAT) and self:isTalentActive(self.T_ARCANE_COMBAT) then
 		local t = self:getTalentFromId(self.T_ARCANE_COMBAT)
@@ -750,7 +744,7 @@ function _M:getOffHandMult(mult)
 	elseif self:knowTalent(Talents.T_CORRUPTED_STRENGTH) then
 		offmult = (mult or 1) / (2 - (math.min(self:getTalentLevel(Talents.T_CORRUPTED_STRENGTH), 8) / 9))
 	end
-	
+
 	return offmult
 end
 
@@ -1078,20 +1072,9 @@ function _M:hasMassiveArmor()
 	return armor
 end
 
---- Check if the actor has a mount
-function _M:hasMount()
-	if not self:getInven("MOUNT") then return end
-	local mount = self:getInven("MOUNT")[1]
-	if not mount or mount.type ~= "mount" then
-		return nil
-	end
-	return mount
-end
-
 -- Unarmed Combat; this handles grapple checks and building combo points
 -- Builds Comob; reduces the cooldown on all unarmed abilities on cooldown by one
 function _M:buildCombo()
-
 	local duration = 3
 	local power = 1
 	-- Combo String bonuses

@@ -446,11 +446,11 @@ function _M:setFocus(id)
 		for i = 1, #self.uis do
 			if self.uis[i].ui == id then id = i break end
 		end
-		if type(id) == "table" then return end
+		if type(id) == "table" then self:no_focus() return end
 	end
 
 	local ui = self.uis[id]
-	if not ui.ui.can_focus then return end
+	if not ui.ui.can_focus then self:no_focus() return end
 	self.focus_ui = ui
 	self.focus_ui_id = id
 	ui.ui:setFocus(true)
@@ -504,6 +504,8 @@ end
 
 function _M:on_focus(id, ui)
 end
+function _M:no_focus()
+end
 
 function _M:mouseEvent(button, x, y, xrel, yrel, bx, by, event)
 	-- Look for focus
@@ -514,9 +516,10 @@ function _M:mouseEvent(button, x, y, xrel, yrel, bx, by, event)
 
 			-- Pass the event
 			ui.ui.mouse:delegate(button, bx, by, xrel, yrel, bx, by, event)
-			break
+			return
 		end
 	end
+	self:no_focus()
 end
 
 function _M:keyEvent(...)
@@ -570,6 +573,8 @@ function _M:drawFrame(x, y, r, g, b, a)
 	end
 end
 
+function _M:innerDisplayBack(x, y, nb_keyframes)
+end
 function _M:innerDisplay(x, y, nb_keyframes)
 end
 
@@ -616,6 +621,8 @@ function _M:toScreen(x, y, nb_keyframes)
 		if self.title_shadow then self.title_tex[1]:toScreenFull(x + (self.w - self.title_tex.w) / 2 + 3 + self.frame.title_x, y + 3 + self.frame.title_y, self.title_tex.w, self.title_tex.h, self.title_tex[2], self.title_tex[3], 0, 0, 0, 0.5) end
 		self.title_tex[1]:toScreenFull(x + (self.w - self.title_tex.w) / 2 + self.frame.title_x, y + self.frame.title_y, self.title_tex.w, self.title_tex.h, self.title_tex[2], self.title_tex[3])
 	end
+
+	self:innerDisplayBack(x, y, nb_keyframes, tx, ty)
 
 	-- UI elements
 	for i = 1, #self.uis do

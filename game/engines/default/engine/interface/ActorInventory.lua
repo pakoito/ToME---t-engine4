@@ -31,7 +31,7 @@ _M.inven_def = {}
 
 --- Defines stats
 -- Static!
-function _M:defineInventory(short_name, name, is_worn, desc, show_equip)
+function _M:defineInventory(short_name, name, is_worn, desc, show_equip, infos)
 	assert(name, "no inventory slot name")
 	assert(short_name, "no inventory slot short_name")
 	assert(desc, "no inventory slot desc")
@@ -41,6 +41,7 @@ function _M:defineInventory(short_name, name, is_worn, desc, show_equip)
 		description = desc,
 		is_worn = is_worn,
 		is_shown_equip = show_equip,
+		infos = infos,
 	})
 	self.inven_def[#self.inven_def].id = #self.inven_def
 	self.inven_def[short_name] = self.inven_def[#self.inven_def]
@@ -60,7 +61,7 @@ end
 function _M:initBody()
 	if self.body then
 		for inven, max in pairs(self.body) do
-			self.inven[self["INVEN_"..inven]] = {max=max, worn=self.inven_def[self["INVEN_"..inven]].is_worn, id=self["INVEN_"..inven]}
+			self.inven[self["INVEN_"..inven]] = {max=max, worn=self.inven_def[self["INVEN_"..inven]].is_worn, id=self["INVEN_"..inven], name=inven}
 		end
 		self.body = nil
 	end

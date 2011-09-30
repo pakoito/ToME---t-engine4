@@ -1177,17 +1177,6 @@ function _M:onTakeHit(value, src)
 		value = t.do_onTakeHit(self, t, self:isTalentActive(self.T_DEFLECTION), value)
 	end
 
-	-- Mount takes some damage ?
-	local mount = self:hasMount()
-	if mount and mount.mount.share_damage then
-		mount.mount.actor:takeHit(value * mount.mount.share_damage / 100, src)
-		value = value * (100 - mount.mount.share_damage) / 100
-		-- Remove the dead mount
-		if mount.mount.actor.dead and mount.mount.effect then
-			self:removeEffect(mount.mount.effect)
-		end
-	end
-
 	-- Achievements
 	if not self.no_take_hit_achievements and src and src.resolveSource and src:resolveSource().player and value >= 600 then
 		local rsrc = src:resolveSource()

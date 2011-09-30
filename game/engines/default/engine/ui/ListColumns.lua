@@ -37,6 +37,7 @@ function _M:init(t)
 	self.fct = t.fct
 	self.select = t.select
 	self.on_drag = t.on_drag
+	self.on_drag_end = t.on_drag_end
 	self.all_clicks = t.all_clicks
 	self.hide_columns = t.hide_columns
 
@@ -186,6 +187,7 @@ function _M:generate()
 		self:onSelect()
 		if (self.all_clicks or button == "left") and event == "button" then self:onUse(button, event) end
 		if event == "motion" and button == "left" and self.on_drag then self.on_drag(self.list[self.sel], self.sel) end
+		if button == "drag-end" and self.on_drag_end then self.on_drag_end(self.list[self.sel], self.sel) end
 	end)
 	self.key:addBinds{
 		ACCEPT = function() self:onUse("left", "key") end,

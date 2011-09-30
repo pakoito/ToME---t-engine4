@@ -214,7 +214,7 @@ function _M:receiveKey(sym, ctrl, shift, alt, meta, unicode, isup, key, ismouse)
 
 	if self.any_key then self.any_key(sym, ctrl, shift, alt, meta, unicode, isup, key) end
 
-	local ks, us
+	local ks, kks, us
 	if not ismouse then ks, kks, us = self:makeKeyString(sym, ctrl, shift, alt, meta, unicode, key)
 	else ks = self:makeMouseString(sym, ctrl, shift, alt, meta) end
 --	print(self, "[BIND]", sym, ctrl, shift, alt, meta, unicode, " :=: ", ks, kks, us, " ?=? ", self.binds[ks], kks and self.binds[kks], us and self.binds[us])

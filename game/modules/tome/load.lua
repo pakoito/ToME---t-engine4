@@ -119,26 +119,42 @@ KeyBind:load("move,hotkeys,inventory,actions,interface,tome,debug")
 dofile("/mod/resolvers.lua")
 
 -- Body parts
-ActorInventory:defineInventory("MAINHAND", "In main hand", true, "Most weapons are wielded in the main hand.")
-ActorInventory:defineInventory("OFFHAND", "In off hand", true, "You can use shields or a second weapon in your off-hand, if you have the talents for it.")
-ActorInventory:defineInventory("PSIONIC_FOCUS", "Psionic focus", true, "Object held in your telekinetic grasp. It can be a weapon or some other item to provide a benefit to your psionic powers.")
-ActorInventory:defineInventory("FINGER", "On fingers", true, "Rings are worn on fingers.")
-ActorInventory:defineInventory("NECK", "Around neck", true, "Amulets are worn around the neck.")
-ActorInventory:defineInventory("LITE", "Light source", true, "A light source allows you to see in the dark places of the world.")
-ActorInventory:defineInventory("BODY", "Main armor", true, "Armor protects you from physical attacks. The heavier the armor the more it hinders the use of talents and spells.")
-ActorInventory:defineInventory("CLOAK", "Cloak", true, "A cloak can simply keep you warm or grant you wondrous powers should you find a magical one.")
-ActorInventory:defineInventory("HEAD", "On head", true, "You can wear helmets or crowns on your head.")
-ActorInventory:defineInventory("BELT", "Around waist", true, "Belts are worn around your waist.")
-ActorInventory:defineInventory("INBELT", "In your belt", true, "Put small objects in your belt. Using them from the belt only uses 60% of the normal time.")
-ActorInventory:defineInventory("HANDS", "On hands", true, "Various gloves can be worn on your hands.")
-ActorInventory:defineInventory("FEET", "On feet", true, "Sandals or boots can be worn on your feet.")
-ActorInventory:defineInventory("TOOL", "Tool", true, "This is your readied tool, always available immediately.")
-ActorInventory:defineInventory("QUIVER", "Quiver", true, "Your readied ammo.")
-ActorInventory:defineInventory("GEM", "Socketed Gems", true, "Socketed gems.")
-ActorInventory:defineInventory("MOUNT", "Mount", false, "Your mount.")
+ActorInventory:defineInventory("MAINHAND", "In main hand", true, "Most weapons are wielded in the main hand.", nil, {equipdoll_back="ui/equipdoll/mainhand_inv.png"})
+ActorInventory:defineInventory("OFFHAND", "In off hand", true, "You can use shields or a second weapon in your off-hand, if you have the talents for it.", nil, {equipdoll_back="ui/equipdoll/offhand_inv.png"})
+ActorInventory:defineInventory("PSIONIC_FOCUS", "Psionic focus", true, "Object held in your telekinetic grasp. It can be a weapon or some other item to provide a benefit to your psionic powers.", nil, {equipdoll_back="ui/equipdoll/psionic_inv.png"})
+ActorInventory:defineInventory("FINGER", "On fingers", true, "Rings are worn on fingers.", nil, {equipdoll_back="ui/equipdoll/ring_inv.png"})
+ActorInventory:defineInventory("NECK", "Around neck", true, "Amulets are worn around the neck.", nil, {equipdoll_back="ui/equipdoll/amulet_inv.png"})
+ActorInventory:defineInventory("LITE", "Light source", true, "A light source allows you to see in the dark places of the world.", nil, {equipdoll_back="ui/equipdoll/light_inv.png"})
+ActorInventory:defineInventory("BODY", "Main armor", true, "Armor protects you from physical attacks. The heavier the armor the more it hinders the use of talents and spells.", nil, {equipdoll_back="ui/equipdoll/body_inv.png"})
+ActorInventory:defineInventory("CLOAK", "Cloak", true, "A cloak can simply keep you warm or grant you wondrous powers should you find a magical one.", nil, {equipdoll_back="ui/equipdoll/cloak_inv.png"})
+ActorInventory:defineInventory("HEAD", "On head", true, "You can wear helmets or crowns on your head.", nil, {equipdoll_back="ui/equipdoll/head_inv.png"})
+ActorInventory:defineInventory("BELT", "Around waist", true, "Belts are worn around your waist.", nil, {equipdoll_back="ui/equipdoll/belt_inv.png"})
+ActorInventory:defineInventory("HANDS", "On hands", true, "Various gloves can be worn on your hands.", nil, {equipdoll_back="ui/equipdoll/hands_inv.png"})
+ActorInventory:defineInventory("FEET", "On feet", true, "Sandals or boots can be worn on your feet.", nil, {equipdoll_back="ui/equipdoll/boots_inv.png"})
+ActorInventory:defineInventory("TOOL", "Tool", true, "This is your readied tool, always available immediately.", nil, {equipdoll_back="ui/equipdoll/tool_inv.png"})
+ActorInventory:defineInventory("QUIVER", "Quiver", true, "Your readied ammo.", nil, {equipdoll_back="ui/equipdoll/ammo_inv.png"})
+ActorInventory:defineInventory("GEM", "Socketed Gems", true, "Socketed gems.", nil, {equipdoll_back="ui/equipdoll/gem_inv.png"})
 ActorInventory:defineInventory("QS_MAINHAND", "Second weapon set: In main hand", false, "Weapon Set 2: Most weapons are wielded in the main hand. Press 'x' to switch weapon sets.", true)
 ActorInventory:defineInventory("QS_OFFHAND", "Second weapon set: In off hand", false, "Weapon Set 2: You can use shields or a second weapon in your off-hand, if you have the talents for it. Press 'x' to switch weapon sets.", true)
 ActorInventory:defineInventory("QS_PSIONIC_FOCUS", "Second weapon set: psionic focus", false, "Weapon Set 2: Object held in your telekinetic grasp. It can be a weapon or some other item to provide a benefit to your psionic powers. Press 'x' to switch weapon sets.", true)
+ActorInventory.equipdolls = {
+	default = { w=48, h=48, itemframe="ui/equipdoll/itemframe48.png", itemframe_sel="ui/equipdoll/itemframe-sel48.png", ix=3, iy=3, iw=42, ih=42, doll_x=116, doll_y=168+64, list={
+		MAINHAND = {{x=48, y=120}},
+		OFFHAND = {{x=48, y=192}},
+		PSIONIC_FOCUS = {{x=48, y=48}},
+		FINGER = {{x=48, y=408}, {x=120, y=408}},
+		NECK = {{x=192, y=48}},
+		LITE = {{x=192, y=408}},
+		BODY = {{x=48, y=264}},
+		CLOAK = {{x=264, y=120}},
+		HEAD = {{x=120, y=48}},
+		BELT = {{x=264, y=264}},
+		HANDS = {{x=264, y=192}},
+		FEET = {{x=264, y=336}},
+		TOOL = {{x=264, y=408}},
+		QUIVER = {{x=48, y=336}},
+	}},
+}
 
 -- Damage types
 DamageType:loadDefinition("/data/damage_types.lua")
