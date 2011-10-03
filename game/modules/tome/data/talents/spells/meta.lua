@@ -81,16 +81,31 @@ newTalent{
 }
 
 newTalent{
-	name = "Spell Shaping",
+	name = "Spellcraft",
 	type = {"spell/meta",2},
 	require = spells_req2,
 	points = 5,
-	mode = "passive",
+	sustain_mana = 70,
+	cooldown = 30,
+	mode = "sustained",
+	tactical = { BUFF = 2 },
 	getChance = function(self, t) return self:getTalentLevelRaw(t) * 20 end,
+	activate = function(self, t)
+		game:playSoundNear(self, "talents/spell_generic")
+		return {
+			cd = self:addTemporaryValue("spellshock_on_damage", self:combatTalentSpellDamage(t, 10, 320) / 4),
+		}
+	end,
+	deactivate = function(self, t, p)
+		self:removeTemporaryValue("spellshock_on_damage", p.cd)
+		return true
+	end,
 	info = function(self, t)
 		local chance = t.getChance(self, t)
-		return ([[You learn to shape your area spells, allowing you to carve a hole in them to avoid damaging yourself.  The chance of success is %d%%.]]):
-		format(chance)
+		return ([[You learn to finely craft and tune your offensive spells.
+		You try to carve a hole spells that affect an area to avoid damaging yourself.  The chance of success is %d%%.
+		You hone your spells to spellshock the targets (spellshocked target take a 20%% damage resistance penality). Your spellpower is increased by %d for purpose of determining spellshocks and your normal damaging spells can trigger spellshock.]]):
+		format(chance, self:combatTalentSpellDamage(t, 10, 320) / 4)
 	end,
 }
 

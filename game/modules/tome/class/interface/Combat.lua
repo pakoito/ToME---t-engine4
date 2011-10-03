@@ -951,7 +951,8 @@ end
 
 --- Do we get hit by our own AOE ?
 function _M:spellFriendlyFire()
-	local chance = self:getTalentLevelRaw(self.T_SPELL_SHAPING) * 20 + (self:getLck() - 50) * 0.2
+	local chance = (self:getLck() - 50) * 0.2
+	if self:isTalentActive(self.T_SPELLCRAFT) then chance = chance + self:getTalentLevelRaw(self.T_SPELLCRAFT) * 20 end
 	chance = 100 - chance
 	print("[SPELL] friendly fire chance", chance)
 	return chance

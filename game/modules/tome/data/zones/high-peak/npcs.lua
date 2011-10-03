@@ -92,7 +92,7 @@ newEntity{
 	resolvers.talents{
 		[Talents.T_STONE_SKIN]={base=7, every=6},
 		[Talents.T_QUICKEN_SPELLS]={base=7, every=6},
-		[Talents.T_SPELL_SHAPING]={base=7, every=6},
+		[Talents.T_SPELLCRAFT]={base=7, every=6},
 		[Talents.T_ARCANE_POWER]={base=7, every=6},
 		[Talents.T_ESSENCE_OF_SPEED]={base=7, every=6},
 		[Talents.T_HYMN_OF_SHADOWS]={base=7, every=6},
