@@ -314,6 +314,7 @@ newEntity{ base = "BASE_NPC_ORC",
 		[Talents.T_WARSHOUT]={base=4, every=4, max=8},
 		[Talents.T_DEATH_DANCE]={base=3, every=4, max=7},
 		[Talents.T_BERSERKER]={base=5, every=4, max=10},
+		[Talents.T_BATTLE_CALL]={base=5, every=4, max=8},
 		[Talents.T_CRUSH]={base=3, every=4, max=8},
 
 		[Talents.T_WEAPON_COMBAT]={base=6, every=4, max=10},

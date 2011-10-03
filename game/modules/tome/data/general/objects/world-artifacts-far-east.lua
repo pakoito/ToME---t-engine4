@@ -157,11 +157,11 @@ newEntity{ base = "BASE_GEM",
 }
 
 newEntity{ base = "BASE_CLOAK",
-	power_source = {arcane=true},
+	power_source = {arcane=true}, define_as = "THREADS_FATE",
 	unique = true,
 	name = "Threads of Fate", image = "object/artifact/cloak_threads_of_fate.png",
 	unided_name = "a shimmering white cloak",
-	desc = [[Untouched by the ravages of time, this fine spun white cloak appears to be crafted of an otherworldly material that shifts and shimmers in the light.  While it has cropped up in the hands of many through out history, from great mages to lowly card sharks, no one has ever claimed to be its creator or know its true origins.]],
+	desc = [[Untouched by the ravages of time, this fine spun white cloak appears to be crafted of an otherworldly material that shifts and shimmers in the light.]],
 	level_range = {45, 50},
 	color = colors.WHITE,
 	rarity = 500,
