@@ -266,7 +266,7 @@ newInscription{
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
-	getDamage = function(self, t) return self:combatTalentMindDamage(t, 3, 20) end,
+	getDamage = function(self, t) return 10 + self:combatMindpower() * 0.4 end,
 	action = function(self, t)
 		local dam = t.getDamage(self, t)
 		local tg = self:getTalentTarget(t)
