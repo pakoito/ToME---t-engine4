@@ -62,7 +62,7 @@ newBirthDescriptor{
 	copy = {
 		-- Some basic stuff
 		move_others = true,
-		no_auto_resists = true,
+		no_auto_resists = true, no_auto_saves = true,
 		no_auto_high_stats = true,
 		resists_cap = {all=70},
 		keep_inven_on_death = true,

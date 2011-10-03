@@ -210,7 +210,7 @@ function _M:crossTierEffect(eff_id, apply_power, apply_save, use_given_e)
 	}
 	local e = self.tempeffect_def[eff_id]
 	if not apply_power or not save_for_effects[e.type] then return end
-	local save = self[apply_save or save_for_effects[e.type]](self)
+	local save = self[apply_save or save_for_effects[e.type]](self, true)
 
 	if use_given_e then
 		ct_effect = self["EFF_"..e.name]
@@ -615,14 +615,18 @@ function _M:combatDefenseBase(fake)
 end
 
 --- Gets the defense ranged
-function _M:combatDefense()
-	local d = self:combatDefenseBase()
+function _M:combatDefense(fake)
+	local base_defense = self:combatDefenseBase(true)
+	if not fake then base_defense = self:combatDefenseBase() end
+	local d = base_defense
 	return self:rescaleCombatStats(d)
 end
 
 --- Gets the defense ranged
-function _M:combatDefenseRanged()
-	local d = math.max(0, self:combatDefenseBase() + (self.combat_def_ranged or 0))
+function _M:combatDefenseRanged(fake)
+	local base_defense = self:combatDefenseBase(true)
+	if not fake then base_defense = self:combatDefenseBase() end
+	local d = math.max(0, base_defense + (self.combat_def_ranged or 0))
 	return self:rescaleCombatStats(d)
 end
 

@@ -871,13 +871,6 @@ function _M:getRankLifeAdjust(value)
 	end
 end
 
-
-
-
-
-
-
-
 function _M:getRankResistAdjust()
 	if self.rank == 1 then return 0.4, 0.9
 	elseif self.rank == 2 then return 0.5, 1.5
@@ -885,6 +878,17 @@ function _M:getRankResistAdjust()
 	elseif self.rank == 3.5 then return 0.9, 1.5
 	elseif self.rank == 4 then return 0.9, 1.5
 	elseif self.rank >= 5 then return 0.9, 1.5
+	else return 0
+	end
+end
+
+function _M:getRankSaveAdjust()
+	if self.rank == 1 then return 0.6, 0.9
+	elseif self.rank == 2 then return 1, 1.5
+	elseif self.rank == 3 then return 1.3, 1.8
+	elseif self.rank == 3.5 then return 1.5, 2
+	elseif self.rank == 4 then return 1.7, 2.1
+	elseif self.rank >= 5 then return 1.9, 2.3
 	else return 0
 	end
 end
@@ -914,7 +918,12 @@ function _M:TextSizeCategory()
 end
 
 function _M:colorStats(stat)
-	local score = math.floor(self[stat](self, fake))
+	local score = 0
+	if stat == "combatDefense" or stat == "combatPhysicalResist" or stat == "combatSpellResist" or stat == "combatMentalResist" then
+		score = math.floor(self[stat](self, true))
+	else
+		score = math.floor(self[stat](self))
+	end
 
 	if score <= 9 then
 		return "#B4B4B4# "..score
@@ -990,6 +999,7 @@ function _M:tooltip(x, y, seen_by)
 	ts:add("#0080FF#S. save#FFFFFF#:  ", self:colorStats("combatSpellResist"), true)
 	ts:add("#FFD700#M. power#FFFFFF#: ", self:colorStats("combatMindpower"), "  ")
 	ts:add("#0080FF#M. save#FFFFFF#:  ", self:colorStats("combatMentalResist"), true)
+	ts:add({"color", "WHITE"})
 	if self.summon_time then
 		ts:add("Time left: ", {"color", "ANTIQUE_WHITE"}, ("%d"):format(self.summon_time), {"color", "WHITE"}, true)
 	end
@@ -1721,6 +1731,13 @@ function _M:levelup()
 		if self.rank >= 4 then
 			self.resists.all = (self.resists.all or 0) + rng.float(self:getRankResistAdjust()) / (self.rank == 4 and 3 or 2.5)
 		end
+	end
+
+	-- Gain some saves
+	if not self.no_auto_saves then
+		self.combat_spellresist = self.combat_spellresist + rng.float(self:getRankSaveAdjust()) * (self:getMag() + self:getWil()) / 200
+		self.combat_mentalresist = self.combat_mentalresist + rng.float(self:getRankSaveAdjust()) * (self:getCun() + self:getWil()) / 200
+		self.combat_physresist = self.combat_physresist + rng.float(self:getRankSaveAdjust()) * (self:getStr() + self:getCon()) / 200
 	end
 
 	-- Gain life and resources and saves
