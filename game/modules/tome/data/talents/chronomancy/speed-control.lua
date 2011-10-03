@@ -136,7 +136,7 @@ newTalent{
 	cooldown = 24,
 	tactical = { BUFF = 2, CLOSEIN = 2, ESCAPE = 2 },
 	no_energy = true,
-	getPower = function(self, t) return (self:combatTalentSpellDamage(t, 10, 50) * getParadoxModifier(self, pm)) / 100 end,
+	getPower = function(self, t) return (self:combatTalentSpellDamage(t, 50, 100) * getParadoxModifier(self, pm)) / 100 end,
 	do_haste_double = function(self, t, x, y)
 		-- Find space
 		local tx, ty = util.findFreeGrid(x, y, 0, true, {[Map.ACTOR]=true})
@@ -148,8 +148,8 @@ newTalent{
 		local m = NPC.new{
 			type = "figment", subtype = "temporal",
 			display = "@", color=colors.LIGHT_STEEL_BLUE,
-			name = "After Image", faction = self.faction, image = "npc/undead_ghost_kor_s_fury.png",
-			desc = [[An after image created by someone using the Haste spell.]],
+			name = "Afterimage", faction = self.faction, image = "npc/undead_ghost_kor_s_fury.png",
+			desc = [[An afterimage created by someone using the Haste spell.]],
 			autolevel = "none",
 			ai = "summoned", ai_real = "dumb_talented", ai_state = { talent_in=1, },
 			level_range = {1, 1}, exp_worth = 0,
@@ -158,7 +158,7 @@ newTalent{
 			life_rating = 0,
 			never_move = 1,
 
-			summon_time = 3,
+			summon_time = 2,
 		}
 		
 		m.life = self.life
@@ -176,12 +176,12 @@ newTalent{
 		game.level.map:updateMap(x, y)
 	end,
 	action = function(self, t)
-		self:setEffect(self.EFF_HASTE, 8, {power=t.getPower(self, t)})
+		self:setEffect(self.EFF_HASTE, 4, {power=t.getPower(self, t)})
 		return true
 	end,
 	info = function(self, t)
 		local power = t.getPower(self, t)
-		return ([[Increases the caster's global speed by %d%% for the next 8 turns.  Each time you move with this effect active you'll leave behind an image of yourself for four turns that may draw enemy attacks.
-		The speed increase will scale with your Paradox and Spellpower.]]):format(100 * power, 50 * power)
+		return ([[Increases your global speed by %d%% for the next 4 game turns.  Each time you move with this effect active you'll leave behind an image of yourself for two turns that may draw enemy attacks.
+		The speed increase will scale with your Paradox and Spellpower.]]):format(100 * power)
 	end,
 }
