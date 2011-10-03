@@ -21,6 +21,7 @@ local list = {
 	"simple", "simple", "simple", "simple", "simple", "simple", "simple", "simple", "simple", "simple", "simple", "simple", "simple", "simple", "simple", "simple",
 	"pilar", "oval","s","cells","inner_checkerboard","y","inner","small_inner_cross","small_cross","big_cells","cells2","inner_cross","cells3","cells4","cells5","cells6","cross","equal2","pilar2","cells7","cells8","double_y","equal","center_arrows","h","pilar_big",
 	"big_cross", "broken_room", "cells9", "double_helix", "inner_fort", "multi_pillar", "split2", "womb", "big_inner_circle", "broken_x", "circle_cross", "inner_circle2", "inner_pillar", "small_x", "weird1", "xroads", "broken_infinity", "cells10", "cross_circled", "inner_circle", "micro_pillar", "split1", "weird2",
+	"basic_cell", "circular", "cross_quartet", "double_t", "five_blocks", "five_pillars", "five_walls", "four_blocks", "four_chambers", "hollow_cross", "interstice", "long_hall", "long_hall2", "narrow_spiral", "nine_chambers", "sideways_s", "side_passages_2", "side_passages_4", "spiral_cell", "thick_n", "thick_wall", "tiny_pillars", "two_domes", "two_passages", "zigzag",
 }
 
 -- Load a random normal room file and use it
