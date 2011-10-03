@@ -281,7 +281,7 @@ newTalent{
 		local t = basetrap(self, t, x, y, 8 + self:getTalentLevel(self.T_TRAP_MASTERY), {
 			type = "physical", name = "bear trap", color=colors.UMBER, image = "trap/beartrap01.png",
 			dam = dam,
-			check_hit = self:combatAttackDex(),
+			check_hit = self:combatAttack(),
 			triggered = function(self, x, y, who)
 				if who and who:canBe("cut") then who:setEffect(who.EFF_CUT, 5, {src=self.summoner, power=self.dam}) end
 				if who:canBe("pin") then
@@ -329,7 +329,7 @@ newTalent{
 		local t = basetrap(self, t, x, y, 8 + self:getTalentLevel(self.T_TRAP_MASTERY), {
 			type = "physical", name = "catapult trap", color=colors.LIGHT_UMBER, image = "trap/trap_catapult_01_64.png",
 			dist = 2 + math.ceil(self:getTalentLevel(self.T_TRAP_MASTERY)),
-			check_hit = self:combatAttackDex(),
+			check_hit = self:combatAttack(),
 			triggered = function(self, x, y, who)
 				-- Try to knockback !
 				local can = function(target)
@@ -383,7 +383,7 @@ newTalent{
 		local t = basetrap(self, t, x, y, 8 + self:getTalentLevel(self.T_TRAP_MASTERY), {
 			type = "physical", name = "disarming trap", color=colors.DARK_GREY, image = "trap/trap_magical_disarm_01_64.png",
 			dur = 2 + math.ceil(self:getTalentLevel(self.T_TRAP_MASTERY) / 2),
-			check_hit = self:combatAttackDex(),
+			check_hit = self:combatAttack(),
 			triggered = function(self, x, y, who)
 				if who:canBe("disarm") then
 					who:setEffect(who.EFF_DISARMED, self.dur, {apply_power=self.check_hit})
@@ -431,7 +431,7 @@ newTalent{
 		local t = basetrap(self, t, x, y, 5 + self:getTalentLevel(self.T_TRAP_MASTERY), {
 			type = "nature", name = "nightshade trap", color=colors.LIGHT_BLUE, image = "trap/poison_vines01.png",
 			dam = dam,
-			check_hit = self:combatAttackDex(),
+			check_hit = self:combatAttack(),
 			triggered = function(self, x, y, who)
 				self:project({type="hit", x=x,y=y}, x, y, engine.DamageType.NATURE, self.dam, {type="slime"})
 				if who:canBe("stun") then
@@ -476,7 +476,7 @@ newTalent{
 		local t = basetrap(self, t, x, y, 5 + self:getTalentLevel(self.T_TRAP_MASTERY), {
 			type = "elemental", name = "flash bang trap", color=colors.YELLOW, image = "trap/blast_acid01.png",
 			dur = math.floor(self:getTalentLevel(self.T_TRAP_MASTERY) + 4),
-			check_hit = self:combatAttackDex(),
+			check_hit = self:combatAttack(),
 			lure_trigger = true,
 			triggered = function(self, x, y, who)
 				self:project({type="ball", x=x,y=y, radius=2}, x, y, function(px, py)

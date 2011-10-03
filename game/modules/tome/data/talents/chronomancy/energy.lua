@@ -141,7 +141,7 @@ newTalent{
 				self.talents_cd[tid] = self.talents_cd[tid] - cdr
 			end
 		end
-
+		target:crossTierEffect(target.EFF_SPELLSHOCKED, self:combatSpellpower())
 		game.level.map:particleEmitter(tx, ty, 1, "charge_matter")
 		game.level.map:particleEmitter(self.x, self.y, 1, "charge")
 		game:playSoundNear(self, "talents/spell_generic")

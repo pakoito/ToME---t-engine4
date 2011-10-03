@@ -168,10 +168,10 @@ newTalent{
 		-- deal damage and maim if appropriate
 		if hit then
 			if grappled then
-				self:project(target, x, y, DamageType.PHYSICAL, self:physicalCrit(t.getDamage(self, t), nil, target))
+				self:project(target, x, y, DamageType.PHYSICAL, self:physicalCrit(t.getDamage(self, t), nil, target, self:combatAttack(), target:combatDefense()))
 				target:setEffect(target.EFF_MAIMED, t.getDuration(self, t), {power=t.getMaim(self, t)})
 			else
-				self:project(target, x, y, DamageType.PHYSICAL, self:physicalCrit(t.getDamage(self, t), nil, target))
+				self:project(target, x, y, DamageType.PHYSICAL, self:physicalCrit(t.getDamage(self, t), nil, target, self:combatAttack(), target:combatDefense()))
 			end
 		end
 
@@ -264,16 +264,16 @@ newTalent{
 			-- takedown or slam as appropriate
 			if hit then
 				if grappled then
-					self:project(target, x, y, DamageType.PHYSICAL, self:physicalCrit(t.getSlam(self, t), nil, target))
+					self:project(target, x, y, DamageType.PHYSICAL, self:physicalCrit(t.getSlam(self, t), nil, target, self:combatAttack(), target:combatDefense()))
 					if target:canBe("stun") then
-						target:setEffect(target.EFF_STUNNED, t.getDuration(self, t), {apply_power=self:combatAttackStr()})
+						target:setEffect(target.EFF_STUNNED, t.getDuration(self, t), {apply_power=self:combatPhysicalpower()})
 					else
 						game.logSeen(target, "%s resists the stun!", target.name:capitalize())
 					end
 				else
-					self:project(target, x, y, DamageType.PHYSICAL, self:physicalCrit(t.getTakeDown(self, t), nil, target))
+					self:project(target, x, y, DamageType.PHYSICAL, self:physicalCrit(t.getTakeDown(self, t), nil, target, self:combatAttack(), target:combatDefense()))
 					if target:canBe("stun") then
-						target:setEffect(target.EFF_DAZED, t.getDuration(self, t), {apply_power=self:combatAttackStr()})
+						target:setEffect(target.EFF_DAZED, t.getDuration(self, t), {apply_power=self:combatPhysicalpower()})
 					else
 						game.logSeen(target, "%s resists the daze!", target.name:capitalize())
 					end

@@ -49,7 +49,7 @@ newTalent{
 		weapon = weapon or target.combat
 
 		if target:canBe("stun") then
-			target:setEffect(target.EFF_DAZED, 5, {apply_power=self:combatAttackStr(weapon.combat)})
+			target:setEffect(target.EFF_DAZED, 5, {apply_power=self:combatPhysicalpower()})
 		else
 			game.logSeen(target, "%s resists the terror!", target.name:capitalize())
 		end

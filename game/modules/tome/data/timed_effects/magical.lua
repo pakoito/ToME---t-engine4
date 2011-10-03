@@ -1406,3 +1406,24 @@ newEffect{
 		self:removeParticles(eff.particle)
 	end,
 }
+
+
+newEffect{
+	name = "SPELLSHOCKED",
+	desc = "Spellshocked",
+	long_desc = function(self, eff) return ("Overwhelming magic has temporarily interfered with all damage resistances, lowering them by 25%.") end,
+	type = "magical",
+	subtype = { cross_tier=true },
+	status = "detrimental",
+	parameters = { power=10 },
+	on_gain = function(self, err) return nil, "+Spellshocked" end,
+	on_lose = function(self, err) return nil, "-Spellshocked" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("resists", {
+			all = -25,
+		})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("resists", eff.tmpid)
+	end,
+}

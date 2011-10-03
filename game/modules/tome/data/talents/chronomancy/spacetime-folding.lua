@@ -77,6 +77,7 @@ newTalent{
 		end
 		
 		if target:canBe("teleport") and self:checkHit(power, target:combatSpellResist() + (target:attr("continuum_destabilization") or 0)) then
+			target:crossTierEffect(target.EFF_SPELLSHOCKED, self:combatSpellpower())
 			-- first remove the target so the destination tile is empty
 			game.level.map:remove(target.x, target.y, Map.ACTOR)
 			local px, py 

@@ -201,7 +201,6 @@ Tridents require the exotic weapons mastery talent to use correctly.]],
 	material_level = 4,
 	combat = {
 		dam = 60,
-		atk = 10,
 		apr = 4,
 		physcrit = 15,
 		dammod = {str=1.3},
@@ -213,6 +212,7 @@ Tridents require the exotic weapons mastery talent to use correctly.]],
 	},
 
 	wielder = {
+		combat_atk = 10,
 		combat_spellresist = 18,
 		see_invisible = 2,
 		resists={[DamageType.COLD] = 25},

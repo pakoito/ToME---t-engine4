@@ -45,14 +45,14 @@ newTalent{
 		-- Try to bleed !
 		if hit1 then
 			if target:canBe("cut") then
-				target:setEffect(target.EFF_CUT, 5, {power=self:combatTalentSpellDamage(t, 5, 40), src=self, apply_power=self:combatAttackStr(weapon.combat)})
+				target:setEffect(target.EFF_CUT, 5, {power=self:combatTalentSpellDamage(t, 5, 40), src=self, apply_power=self:combatPhysicalpower()})
 			else
 				game.logSeen(target, "%s resists the cut!", target.name:capitalize())
 			end
 		end
 		if hit2 then
 			if target:canBe("cut") then
-				target:setEffect(target.EFF_CUT, 5, {power=self:combatTalentSpellDamage(t, 5, 40), src=self, apply_power=self:combatAttackStr(offweapon.combat)})
+				target:setEffect(target.EFF_CUT, 5, {power=self:combatTalentSpellDamage(t, 5, 40), src=self, apply_power=self:combatPhysicalpower()})
 			else
 				game.logSeen(target, "%s resists the cut!", target.name:capitalize())
 			end

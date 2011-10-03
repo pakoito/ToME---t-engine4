@@ -39,7 +39,7 @@ newTalent{
 		self:project(tg, self.x, self.y, DamageType.CONFUSION, {
 			dur=3,
 			dam=40 + 6 * self:getTalentLevel(t),
-			power_check=function() return self:combatAttackStr() end,
+			power_check=function() return self:combatPhysicalpower() end,
 			resist_check=self.combatPhysicalResist,
 		}, {type="flame"})
 		return true

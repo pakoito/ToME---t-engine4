@@ -49,7 +49,7 @@ newTalent{
 		local hit = self:attackTarget(target, nil, t.getDamage(self, t), true)
 		if hit then
 			if target:canBe("cut") then
-				target:setEffect(target.EFF_DEEP_WOUND, 5, {src=self, heal_factor=t.getHealingPenalty(self, t), power=t.getBleedDamage(self, t)/5, apply_power=self:combatAttackStr()})
+				target:setEffect(target.EFF_DEEP_WOUND, 5, {src=self, heal_factor=t.getHealingPenalty(self, t), power=t.getBleedDamage(self, t)/5, apply_power=self:combatPhysicalpower()})
 			end
 		end
 		return true
@@ -151,7 +151,7 @@ newTalent{
 		local hit = self:attackTarget(target, nil, t.getDamage(self, t), true)
 
 		if target:canBe("cut") then
-			target:setEffect(target.EFF_CUT, 5, {power=t.getBleedDamage(self, t), src=self, apply_power=self:combatAttackStr()})
+			target:setEffect(target.EFF_CUT, 5, {power=t.getBleedDamage(self, t), src=self, apply_power=self:combatPhysicalpower()})
 			t.do_devourer_frenzy(self, target, t)
 		else
 			game.logSeen(target, "%s resists the cut!", target.name:capitalize())
@@ -392,6 +392,7 @@ newTalent{
 
 		if target:canBe("fear") then
 			target:setEffect(target.EFF_VOID_ECHOES, 6, {src=self, power=t.getDamage(self, t), apply_power=self:combatMindpower()})
+			target:crossTierEffect(target.EFF_VOID_ECHOES, self:combatMindpower())
 		else
 			game.logSeen(target, "%s resists the void!", target.name:capitalize())
 		end

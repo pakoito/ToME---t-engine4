@@ -44,13 +44,12 @@ newTalent{
 	end,
 	getDamage = function (self, t)
 		local gem_level = getGemLevel(self)
-		return self:combatTalentIntervalDamage(t, "wil", 6, 265)*(1 + 0.3*gem_level)
+		return self:combatStatTalentIntervalDamage(t, "combatMindpower", 6, 170)*(1 + 0.3*gem_level)
 	end,
 	requires_target = true,
 	target = function(self, t) return {type="ball", range=self:getTalentRange(t), radius=0, selffire=false, talent=t} end,
 	action = function(self, t)
 		local gem_level = getGemLevel(self)
-		--local dam = (5 + self:getTalentLevel(t) * self:getWil(40))*(1 + 0.3*gem_level)
 		local dam = t.getDamage(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
@@ -81,8 +80,6 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		--local gem_level = getGemLevel(self)
-		--local dam = (5 + self:getTalentLevel(t) * self:getWil(40))*(1 + 0.3*gem_level)
 		local dam = t.getDamage(self, t)
 		return ([[Focus energies on a distant target to lash it with physical force, doing %d damage.
 		Mindslayers do not do this sort of ranged attack naturally. The use of a telekinetically-wielded gem as a focus will improve the effects considerably.]]):
@@ -113,7 +110,7 @@ newTalent{
 	end,
 	getDamage = function (self, t)
 		local gem_level = getGemLevel(self)
-		return self:combatTalentIntervalDamage(t, "wil", 21, 281)*(1 + 0.3*gem_level)
+		return self:combatStatTalentIntervalDamage(t, "combatMindpower", 21, 200)*(1 + 0.3*gem_level)
 	end,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), friendlyfire=false}
@@ -126,8 +123,6 @@ newTalent{
 	end,
 	info = function(self, t)
 		local radius = self:getTalentRadius(t)
-		--local gem_level = getGemLevel(self)
-		--local dam = (20 + self:getTalentLevel(t) * self:getWil(40))*(1 + 0.3*gem_level)
 		local dam = t.getDamage(self, t)
 		return ([[Focus energies on all foes within %d squares, setting them ablaze. Does %d damage over ten turns.
 		Mindslayers do not do this sort of ranged attack naturally. The use of a telekinetically-wielded gem as a focus will improve the effects considerably.]]):

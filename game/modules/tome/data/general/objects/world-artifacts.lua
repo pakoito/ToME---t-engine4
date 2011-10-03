@@ -163,11 +163,11 @@ newEntity{ base = "BASE_STAFF",
 	combat = {
 		dam = 64,
 		apr = 10,
-		atk = 7,
 		dammod = {mag=1.4},
 		damtype = DamageType.PHYSICAL,
 	},
 	wielder = {
+		combat_atk = 7,
 		combat_spellpower = 12,
 		combat_spellcrit = 18,
 		inc_damage={
@@ -651,10 +651,10 @@ newEntity{ base = "BASE_KNIFE",
 	combat = {
 		dam = 15,
 		apr = 10,
-		atk = 40,
 		physcrit = 0,
 		dammod = {dex=0.55, str=0.45},
 	},
+	wielder = {combat_atk=20},
 }
 
 newEntity{ base = "BASE_LEATHER_BOOT",
@@ -886,12 +886,12 @@ newEntity{ base = "BASE_KNIFE",
 	combat = {
 		dam = 25,
 		apr = 10,
-		atk = 15,
 		physcrit = 8,
 		dammod = {dex=0.55,str=0.35},
 		no_stealth_break = true,
 		melee_project={[DamageType.RANDOM_SILENCE] = 10},
 	},
+	wielder = {combat_atk = 10},
 }
 
 newEntity{ base = "BASE_KNIFE", define_as = "ART_PAIR_MOON",
@@ -1037,12 +1037,12 @@ newEntity{ base = "BASE_GREATMAUL",
 	combat = {
 		dam = 48,
 		apr = 15,
-		atk = 20,
 		physcrit = 3,
 		dammod = {str=1.2},
 		talent_on_hit = { [Talents.T_SUNDER_ARMOUR] = {level=3, chance=15} },
 	},
 	wielder = {
+		combat_atk = 20,
 		pin_immune = 1,
 		knockback_immune = 1,
 	},
@@ -1062,11 +1062,11 @@ newEntity{ base = "BASE_MACE",
 	combat = {
 		dam = 25,
 		apr = 4,
-		atk = 12,
 		physcrit = 10,
 		dammod = {str=1},
 		melee_project={[DamageType.RANDOM_CONFUSION] = 14},
 	},
+	wielder = {combat_atk=12,},
 }
 
 newEntity{ base = "BASE_MACE",
@@ -1083,11 +1083,11 @@ newEntity{ base = "BASE_MACE",
 	combat = {
 		dam = 40,
 		apr = 4,
-		atk = 6,
 		physcrit = 9,
 		dammod = {str=1},
 		melee_project={[DamageType.RANDOM_SILENCE] = 10, [DamageType.NATURE] = 18},
 	},
+	wielder = {combat_atk=6},
 
 	max_power = 25, power_regen = 1,
 	use_talent = { id = Talents.T_RUSH, level = 3, power = 15 },
@@ -1618,12 +1618,12 @@ newEntity{ base = "BASE_WHIP",
 	combat = {
 		dam = 28,
 		apr = 8,
-		atk = 10,
 		physcrit = 5,
 		dammod = {dex=1},
 		melee_project={[DamageType.POISON] = 22},
 	},
 	wielder = {
+		combat_atk = 10,
 		see_invisible = 9,
 	},
 }

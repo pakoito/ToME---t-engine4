@@ -199,7 +199,8 @@ newTalent{
 
 				local blocked = true
 				if blockingTarget.size_category <= maxSize then
-					if blockingTarget:checkHit(self:combatAttackStr(), blockingTarget:combatPhysicalResist(), 0, 95, 15) and blockingTarget:canBe("knockback") then
+					if blockingTarget:checkHit(self:combatPhysicalpower(), blockingTarget:combatPhysicalResist(), 0, 95, 15) and blockingTarget:canBe("knockback") then
+						blockingTarget:crossTierEffect(blockingTarget.EFF_OFFBALANCE, self:combatPhysicalpower())
 						-- determine where to move the target (any adjacent square that isn't next to the attacker)
 						local start = rng.range(0, 8)
 						for i = start, start + 8 do

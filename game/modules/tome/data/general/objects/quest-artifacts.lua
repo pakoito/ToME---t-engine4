@@ -38,12 +38,12 @@ Light around it seems to dim and you can feel its tremendous power simply by tou
 	combat = {
 		dam = 30,
 		apr = 4,
-		atk = 20,
 		dammod = {mag=1},
 		damtype = DamageType.ARCANE,
 		talented = "staff",
 	},
 	wielder = {
+		combat_atk = 20,
 		combat_spellpower = 20,
 		combat_spellcrit = 10,
 	},

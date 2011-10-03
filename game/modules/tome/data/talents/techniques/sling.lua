@@ -23,8 +23,13 @@ newTalent{
 	points = 10,
 	require = { stat = { dex=function(level) return 12 + level * 3 end }, },
 	mode = "passive",
+	getDamage = function(self, t) return self:getTalentLevel(t) * 5 end,
+	getPercentInc = function(self, t) return math.sqrt(self:getTalentLevel(t) / 10) / 2 end,
 	info = function(self, t)
-		return ([[Increases damage done with slings by %d%%.]]):format(100 * (math.sqrt(self:getTalentLevel(t) / 10)))
+		local damage = t.getDamage(self, t)
+		local inc = t.getPercentInc(self, t)
+		return ([[Increases Physical Power by %d. Also increases damage done with slings by %d%%.]]):
+		format(damage, inc * 100)
 	end,
 }
 
@@ -42,7 +47,7 @@ newTalent{
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon("sling") then if not silent then game.logPlayer(self, "You require a sling for this talent.") end return false end return true end,
 	archery_onhit = function(self, t, target, x, y)
 		if target:canBe("blind") then
-			target:setEffect(target.EFF_BLINDED, 2 + self:getTalentLevelRaw(t), {apply_power=self:combatAttackDex()})
+			target:setEffect(target.EFF_BLINDED, 2 + self:getTalentLevelRaw(t), {apply_power=self:combatAttack()})
 		else
 			game.logSeen(target, "%s resists!", target.name:capitalize())
 		end
@@ -76,8 +81,9 @@ newTalent{
 	tactical = { ATTACK = 2, DISABLE = 2, ESCAPE = 1 },
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon("sling") then if not silent then game.logPlayer(self, "You require a sling for this talent.") end return false end return true end,
 	archery_onhit = function(self, t, target, x, y)
-		if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
+		if target:checkHit(self:combatAttack(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
 			target:knockback(self.x, self.y, 4)
+			target:crossTierEffect(target.EFF_OFFBALANCE, self:combatAttack())
 			game.logSeen(target, "%s is knocked back!", target.name:capitalize())
 		else
 			game.logSeen(target, "%s stands firm!", target.name:capitalize())

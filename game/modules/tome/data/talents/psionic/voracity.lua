@@ -38,9 +38,15 @@ newTalent{
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
+	getLeech = function(self, t)
+		return self:combatStatTalentIntervalDamage(t, "combatMindpower", 4, 20)
+	end,
+	getSlow = function(self, t)
+		return math.min(5 * self:getTalentLevel(t) + 15, 50)
+	end,
 	action = function(self, t)
-		local en = ( 3 + self:getTalentLevel(t)) * (100 + self:getWil())/100
-		local dam = math.min(0.1 + 0.03*self:getTalentLevel(t), 0.4)
+		local en = t.getLeech(self, t)
+		local dam = t.getSlow(self, t)/100
 		local tg = self:getTalentTarget(t)
 		self:project(tg, self.x, self.y, function(tx, ty)
 			local act = game.level.map(tx, ty, engine.Map.ACTOR)
@@ -53,11 +59,10 @@ newTalent{
 	end,
 	info = function(self, t)
 		local range = self:getTalentRadius(t)
-		local slow = 3 * self:getTalentLevel(t) + 10
-		local en = ( 3 + self:getTalentLevel(t)) * (100 + self:getWil())/100
+		local slow = t.getSlow(self, t)
+		local en = t.getLeech(self, t)
 		return ([[You suck the kinetic energy out of your surroundings, slowing all targets in a radius of %d by %d%% for four turns.
-		For each target drained, you gain %d energy.
-		The energy gained scales with Willpower.]]):format(range, slow, en)
+		For each target drained, you gain %d energy.]]):format(range, slow, en)
 	end,
 }
 
@@ -81,9 +86,15 @@ newTalent{
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
+	getLeech = function(self, t)
+		return self:combatStatTalentIntervalDamage(t, "combatMindpower", 5, 25)
+	end,
+	getDam = function(self, t)
+		return math.ceil(1 + 0.5*self:getTalentLevel(t))
+	end,
 	action = function(self, t)
-		local en = ( 4 + self:getTalentLevel(t)) * (100 + self:getWil())/85
-		local dam = math.ceil(1 + 0.5*self:getTalentLevel(t))
+		local en = t.getLeech(self, t)
+		local dam = t.getDam(self, t)
 		local tg = self:getTalentTarget(t)
 		self:project(tg, self.x, self.y, function(tx, ty)
 			local act = game.level.map(tx, ty, engine.Map.ACTOR)
@@ -96,11 +107,10 @@ newTalent{
 	end,
 	info = function(self, t)
 		local range = self:getTalentRadius(t)
-		local dam = math.ceil(1 + 0.5*self:getTalentLevel(t))
-		local en = ( 4 + self:getTalentLevel(t)) * (100 + self:getWil())/85
+		local dam = t.getDam(self, t)
+		local en = t.getLeech(self, t)
 		--local duration = self:getTalentLevel(t) + 2
-		return ([[You leech the heat out of all targets in a radius of %d, freezing them for up to %d turns and gaining %d energy for each target frozen.
-		The energy gained scales with Willpower.]]):
+		return ([[You leech the heat out of all targets in a radius of %d, freezing them for up to %d turns and gaining %d energy for each target frozen.]]):
 		format(range, dam, en)
 	end,
 }
@@ -126,16 +136,22 @@ newTalent{
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
+	getLeech = function(self, t)
+		return self:combatStatTalentIntervalDamage(t, "combatMindpower", 6, 30)
+	end,
+	getDam = function(self, t)
+		return self:spellCrit(self:combatTalentMindDamage(t, 28, 270))
+	end,
 	action = function(self, t)
-		local en = ( 5 + self:getTalentLevel(t)) * (100 + self:getWil())/75
-		local dam = self:spellCrit(self:combatTalentMindDamage(t, 28, 270))
+		local en = t.getLeech(self, t)
+		local dam = t.getDam(self, t)
 		local tg = self:getTalentTarget(t)
 		self:project(tg, self.x, self.y, function(tx, ty)
 			local act = game.level.map(tx, ty, engine.Map.ACTOR)
 			if act then
 				self:incPsi(en)
 			end
-			DamageType:get(DamageType.LIGHTNING_DAZE).projector(self, tx, ty, DamageType.LIGHTNING_DAZE, dam)
+			DamageType:get(DamageType.LIGHTNING_DAZE).projector(self, tx, ty, DamageType.LIGHTNING_DAZE, rng.avg(dam/3, dam, 3))
 		end)
 		-- Lightning ball gets a special treatment to make it look neat
 		local sradius = (tg.radius + 0.5) * (engine.Map.tile_w + engine.Map.tile_h) / 2
@@ -153,10 +169,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		local range = self:getTalentRadius(t)
-		local en = ( 5 + self:getTalentLevel(t)) * (100 + self:getWil())/75
-		local dam = damDesc(self, DamageType.LIGHTNING, self:combatTalentMindDamage(t, 28, 270))
-		return ([[You pull electric potential from all targets around you in a radius of %d, gaining %d energy for each one affected and giving them a nasty shock in the process. Deals between %d and %d damage.
-		The energy gained scales with Willpower.]]):format(range, en, dam / 3, dam)
+		local en = t.getLeech(self, t)
+		local dam = damDesc(self, DamageType.LIGHTNING, t.getDam(self, t))
+		return ([[You pull electric potential from all targets around you in a radius of %d, gaining %d energy for each one affected and giving them a nasty shock in the process. Deals between %d and %d damage.]]):format(range, en, dam / 3, dam)
 	end,
 }
 newTalent{

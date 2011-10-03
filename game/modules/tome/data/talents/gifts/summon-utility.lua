@@ -75,7 +75,7 @@ newTalent{ short_name="SPIDER_WEB",
 		self:project(tg, x, y, function(tx, ty)
 			local target = game.level.map(tx, ty, Map.ACTOR)
 			if target and target:canBe("pin") then
-				target:setEffect(target.EFF_PINNED, 3 + self:getTalentLevel(t), {apply_power=self:combatAttackStr()})
+				target:setEffect(target.EFF_PINNED, 3 + self:getTalentLevel(t), {apply_power=self:combatPhysicalpower()})
 			end
 		end)
 		return true

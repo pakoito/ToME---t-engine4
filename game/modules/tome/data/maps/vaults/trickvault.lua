@@ -20,6 +20,14 @@
 startx = 7
 starty = 12
 
+setStatusAll{no_teleport=true}
+
+specialList("terrain", {
+	"/data/general/grids/basic.lua",
+	"/data/general/grids/lava.lua",
+	"/data/general/grids/.lua",
+})
+
 defineTile('#', "HARDWALL")
 defineTile('O', "GLASSWALL")
 defineTile('!', "DOOR_VAULT", nil, nil, nil, {block = true})

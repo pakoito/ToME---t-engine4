@@ -285,7 +285,7 @@ function _M:actBase()
 	end
 
 	-- Cooldown talents
-	if not self:attr("stunned") then self:cooldownTalents() end
+	if not self:attr("no_talents_cooldown") then self:cooldownTalents() end
 	-- Regen resources
 	self:regenLife()
 	if self:knowTalent(self.T_UNNATURAL_BODY) then
@@ -650,7 +650,7 @@ function _M:move(x, y, force)
 		if self:attr("lightning_speed") or self:attr("step_up") or self:attr("wild_speed") then blur = 3 end
 		self:setMoveAnim(ox, oy, config.settings.tome.smooth_move, blur)
 	end
-	
+
 	if moved and not force and self:knowTalent(self.T_HASTE) and self:hasEffect(self.EFF_HASTE) then
 		local t = self:getTalentFromId(self.T_HASTE)
 		t.do_haste_double(self, t, ox, oy)
@@ -871,6 +871,13 @@ function _M:getRankLifeAdjust(value)
 	end
 end
 
+
+
+
+
+
+
+
 function _M:getRankResistAdjust()
 	if self.rank == 1 then return 0.4, 0.9
 	elseif self.rank == 2 then return 0.5, 1.5
@@ -904,6 +911,26 @@ function _M:TextSizeCategory()
 	elseif self.size_category >= 6 then sizecat = "gargantuan"
 	end
 	return sizecat
+end
+
+function _M:colorStats(stat)
+	local score = math.floor(self[stat](self, fake))
+
+	if score <= 9 then
+		return "#B4B4B4# "..score
+	elseif score <= 20 then
+		return "#B4B4B4#"..score
+	elseif score <= 40 then
+		return "#FFFFFF#"..score
+	elseif score <= 60 then
+		return "#00FF80#"..score
+	elseif score <= 80 then
+		return "#0080FF#"..score
+	elseif score <= 99 then
+		return "#8d55ff#"..score
+	elseif score == 100 then
+		return "#8d55ff#**"
+	end
 end
 
 function _M:tooltip(x, y, seen_by)
@@ -944,26 +971,31 @@ function _M:tooltip(x, y, seen_by)
 	ts:add(self.type:capitalize(), " / ", self.subtype:capitalize(), true)
 	ts:add("Rank: ") ts:merge(rank_color:toTString()) ts:add(rank, {"color", "WHITE"}, true)
 	ts:add({"color", 0, 255, 255}, ("Level: %d"):format(self.level), {"color", "WHITE"}, true)
-	ts:add(("Exp: %d/%d"):format(self.exp, self:getExpChart(self.level+1) or "---"), true)
-	if self.life >= 0 then
-		ts:add({"color", 255, 0, 0}, ("HP: %d (%d%%)"):format(self.life, self.life * 100 / self.max_life), {"color", "WHITE"}, true)
-	else
-		ts:add({"color", 255, 0, 0}, "HP: ???", {"color", "WHITE"}, true)
-	end
+	ts:add({"color", 255, 0, 0}, ("HP: %d (%d%%)"):format(self.life, self.life * 100 / self.max_life), {"color", "WHITE"}, true)
+
 	if self:attr("encased_in_ice") then
 		local eff = self:hasEffect(self.EFF_FROZEN)
 		ts:add({"color", 0, 255, 128}, ("Iceblock: %d"):format(eff.hp), {"color", "WHITE"}, true)
 	end
-	ts:add(("Stats: %d / %d / %d / %d / %d / %d"):format(self:getStr(), self:getDex(), self:getCon(), self:getMag(), self:getWil(), self:getCun()), true)
-	ts:add("Resists: ", table.concat(resists, ','), true)
-	ts:add("Armour/Defense: ", tostring(math.floor(self:combatArmor())), ' / ', tostring(math.floor(self:combatDefense(true))), true)
+	--ts:add(("Stats: %d / %d / %d / %d / %d / %d"):format(self:getStr(), self:getDex(), self:getCon(), self:getMag(), self:getWil(), self:getCun()), true)
+	if #resists > 0 then ts:add("Resists: ", table.concat(resists, ','), true) end
+	ts:add("Hardiness/Armour: ", tostring(math.floor(self:combatArmorHardiness())), '% / ', tostring(math.floor(self:combatArmor())), true)
 	ts:add("Size: ", {"color", "ANTIQUE_WHITE"}, self:TextSizeCategory(), {"color", "WHITE"}, true)
+
+	ts:add("#FFD700#Accuracy#FFFFFF#: ", self:colorStats("combatAttack"), "  ")
+	ts:add("#0080FF#Defense#FFFFFF#:  ", self:colorStats("combatDefense"), true)
+	ts:add("#FFD700#P. power#FFFFFF#: ", self:colorStats("combatPhysicalpower"), "  ")
+	ts:add("#0080FF#P. save#FFFFFF#:  ", self:colorStats("combatPhysicalResist"), true)
+	ts:add("#FFD700#S. power#FFFFFF#: ", self:colorStats("combatSpellpower"), "  ")
+	ts:add("#0080FF#S. save#FFFFFF#:  ", self:colorStats("combatSpellResist"), true)
+	ts:add("#FFD700#M. power#FFFFFF#: ", self:colorStats("combatMindpower"), "  ")
+	ts:add("#0080FF#M. save#FFFFFF#:  ", self:colorStats("combatMentalResist"), true)
 	if self.summon_time then
 		ts:add("Time left: ", {"color", "ANTIQUE_WHITE"}, ("%d"):format(self.summon_time), {"color", "WHITE"}, true)
 	end
-	ts:add(self.desc, true)
+	if self.desc then ts:add(self.desc, true) end
 	if self.faction and Faction.factions[self.faction] then ts:add("Faction: ") ts:merge(factcolor:toTString()) ts:add(("%s (%s, %d)"):format(Faction.factions[self.faction].name, factstate, factlevel), {"color", "WHITE"}, true) end
-	ts:add("Personal reaction: ") ts:merge(pfactcolor:toTString()) ts:add(("%s, %d"):format(pfactstate, pfactlevel), {"color", "WHITE"}, true)
+	if game.player ~= self then ts:add("Personal reaction: ") ts:merge(pfactcolor:toTString()) ts:add(("%s, %d"):format(pfactstate, pfactlevel), {"color", "WHITE"}, true) end
 
 	for tid, act in pairs(self.sustain_talents) do
 		if act then ts:add("- ", {"color", "LIGHT_GREEN"}, self:getTalentFromId(tid).name, {"color", "WHITE"}, true) end
@@ -2939,7 +2971,8 @@ function _M:on_set_temporary_effect(eff_id, e, p)
 		p.maximum = p.dur
 		p.minimum = p.min_dur or 0 --Default minimum duration is 0. Can specify something else by putting min_dur=foo in p when calling setEffect()
 		save = self[p.apply_save or save_for_effects[e.type]](self)
-		local duration = p.maximum - math.max(0, math.floor((save - p.apply_power) / 10))
+		--local duration = p.maximum - math.max(0, math.floor((save - p.apply_power) / 5))
+		local duration = p.maximum - math.max(0, (math.floor(save/5) - math.floor(p.apply_power/5)))
 		p.dur = util.bound(duration, p.minimum or 0, p.maximum)
 		p.amount_decreased = p.maximum - p.dur
 		local save_type = nil
@@ -2951,6 +2984,7 @@ function _M:on_set_temporary_effect(eff_id, e, p)
 		elseif save_type == "combatSpellResist"
 			then p.save_string = "Spell save"
 		end
+		if not p.no_ct_effect and e.status == "detrimental" then self:crossTierEffect(eff_id, p.apply_power, p.apply_save or save_for_effects[e.type]) end
 		p.total_dur = p.dur
 		p.apply_power = nil
 	end

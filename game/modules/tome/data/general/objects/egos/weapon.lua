@@ -85,7 +85,7 @@ newEntity{
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 4,
-	combat={atk = resolvers.mbonus_material(20, 5)},
+	wielder={combat_atk = resolvers.mbonus_material(20, 5)},
 }
 
 newEntity{
@@ -157,6 +157,7 @@ newEntity{
 	rarity = 25,
 	cost = 35,
 	wielder = {
+		combat_atk = resolvers.mbonus_material(10, 2),
 		inc_damage = {
 			[DamageType.PHYSICAL] = resolvers.mbonus_material(15, 4),
 		},
@@ -168,7 +169,6 @@ newEntity{
 	},
 	combat = {
 		apr = resolvers.mbonus_material(8, 1),
-		atk = resolvers.mbonus_material(10, 2),
 	},
 }
 

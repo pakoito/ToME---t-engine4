@@ -73,8 +73,9 @@ newTalent{
 
 		-- Try to knockback !
 		if hit then
-			if target:checkHit(self:combatAttackStr(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("knockback") then
+			if target:checkHit(self:combatPhysicalpower(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("knockback") then
 				target:knockback(self.x, self.y, 3)
+				target:crossTierEffect(target.EFF_OFFBALANCE, self:combatPhysicalpower())
 			else
 				game.logSeen(target, "%s resists the knockback!", target.name:capitalize())
 			end
@@ -183,7 +184,7 @@ newTalent{
 		-- Try to pin
 		if hit then
 			if target:canBe("pin") then
-				target:setEffect(target.EFF_PINNED, t.getPinDuration(self, t), {apply_power=self:combatAttackStr()})
+				target:setEffect(target.EFF_PINNED, t.getPinDuration(self, t), {apply_power=self:combatPhysicalpower()})
 			else
 				game.logSeen(target, "%s resists the crushing!", target.name:capitalize())
 			end
@@ -257,7 +258,7 @@ newTalent{
 			local target = game.level.map(xx, yy, Map.ACTOR)
 			if target and self:attackTarget(target, nil, t.getGolemDamage(self, t), true) then
 				if target:canBe("stun") then
-					target:setEffect(target.EFF_DAZED, t.getDazeDuration(self, t), {apply_power=self:combatAttackStr()})
+					target:setEffect(target.EFF_DAZED, t.getDazeDuration(self, t), {apply_power=self:combatPhysicalpower()})
 				else
 					game.logSeen(target, "%s resists the dazing blow!", target.name:capitalize())
 				end

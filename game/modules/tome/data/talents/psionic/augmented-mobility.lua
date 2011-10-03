@@ -69,8 +69,11 @@ newTalent{
 	psi = 30,
 	no_energy = true,
 	require = psi_wil_20_2,
+	getDuration = function(self, t) 
+		return 10 + self:combatMindpower(0.1)
+	end,
 	action = function(self, t)
-		self:setEffect(self.EFF_QUICKNESS, 10+self:getWil(10), {power=self:getTalentLevel(t) * 0.2})
+		self:setEffect(self.EFF_QUICKNESS, t.getDuration(self, t), {power=self:getTalentLevel(t) * 0.2})
 		return true
 	end,
 	info = function(self, t)
@@ -78,7 +81,7 @@ newTalent{
 		local percentinc = 100 * inc
 		--local percentinc = ((1/(1-inc))-1)*100
 		return ([[You encase your legs in precise sheathes of force, increasing your movement speed by %d%% for %d turns.]]):
-		format(percentinc, 10+self:getWil(10))
+		format(percentinc, t.getDuration(self, t))
 	end,
 }
 

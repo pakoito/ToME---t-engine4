@@ -135,7 +135,7 @@ newTalent{
 		self:project(tg, x, y, DamageType.CONFUSION, {
 			dur=3+self:getTalentLevelRaw(t),
 			dam=50+self:getTalentLevelRaw(t)*10,
-			power_check=function() return self:combatAttackStr(weapon) end,
+			power_check=function() return self:combatPhysicalpower() end,
 			resist_check=self.combatPhysicalResist,
 		}, {type="flame"})
 		return true
@@ -185,7 +185,7 @@ newTalent{
 
 		-- Try to insta-kill
 		if hit then
-			if target:checkHit(self:combatAttackStr(weapon.combat), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("instakill") and target.life > 0 and target.life < target.max_life * 0.2 then
+			if target:checkHit(self:combatPhysicalpower(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("instakill") and target.life > 0 and target.life < target.max_life * 0.2 then
 				-- KILL IT !
 				game.logSeen(target, "%s feels the pain of the death blow!", target.name:capitalize())
 				target:die(self)
@@ -232,7 +232,7 @@ newTalent{
 		-- Try to stun !
 		if hit then
 			if target:canBe("stun") then
-				target:setEffect(target.EFF_STUNNED, 2 + self:getTalentLevel(t), {apply_power=self:combatAttackStr(weapon.combat)})
+				target:setEffect(target.EFF_STUNNED, 2 + self:getTalentLevel(t), {apply_power=self:combatPhysicalpower()})
 			else
 				game.logSeen(target, "%s resists the stunning blow!", target.name:capitalize())
 			end
@@ -244,7 +244,7 @@ newTalent{
 		return ([[Hits the target with your weapon doing %d%% damage. If the attack hits, the target is stunned for %d turns.
 		Stun chance increase with your Strength stat.]])
 		:format(100 * self:combatTalentWeaponDamage(t, 1, 1.5),
-		2 + self:getTalentLevel(t))
+		2 + math.floor(self:getTalentLevel(t)))
 	end,
 }
 
@@ -275,7 +275,7 @@ newTalent{
 		-- Try to stun !
 		if hit then
 			if target:canBe("stun") then
-				target:setEffect(target.EFF_SUNDER_ARMOUR, 4 + self:getTalentLevel(t), {power=5*self:getTalentLevel(t), apply_power=self:combatAttackStr(weapon.combat)})
+				target:setEffect(target.EFF_SUNDER_ARMOUR, 4 + self:getTalentLevel(t), {power=5*self:getTalentLevel(t), apply_power=self:combatPhysicalpower()})
 			else
 				game.logSeen(target, "%s resists the sundering!", target.name:capitalize())
 			end
@@ -321,7 +321,7 @@ newTalent{
 		-- Try to stun !
 		if hit then
 			if target:canBe("stun") then
-				target:setEffect(target.EFF_SUNDER_ARMS, 4 + self:getTalentLevel(t), {power=3*self:getTalentLevel(t), apply_power=self:combatAttackStr(weapon.combat)})
+				target:setEffect(target.EFF_SUNDER_ARMS, 4 + self:getTalentLevel(t), {power=3*self:getTalentLevel(t), apply_power=self:combatPhysicalpower()})
 			else
 				game.logSeen(target, "%s resists the sundering!", target.name:capitalize())
 			end

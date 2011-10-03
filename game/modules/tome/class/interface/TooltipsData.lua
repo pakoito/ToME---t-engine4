@@ -164,22 +164,22 @@ I.E: at 100% you will be able to do 100% more attacks (aka twice as many) in the
 -- Stats
 -------------------------------------------------------------
 TOOLTIP_STR = [[#GOLD#Strength#LAST#
-Strength defines your character's ability to apply physical force. It increases your melee damage, damage done with heavy weapons, your chance to hit, your chance to save against physical effects, and carrying capacity.
+Strength defines your character's ability to apply physical force. It increases Physical Power, damage done with heavy weapons, Physical Save, and carrying capacity.
 ]]
 TOOLTIP_DEX = [[#GOLD#Dexterity#LAST#
-Dexterity defines your character's ability to be agile and alert. It increases your chance to hit, your ability to avoid attacks, and your damage with light weapons.
+Dexterity defines your character's ability to be agile and alert. It increases Accuracy, Defense, and your damage with light weapons.
 ]]
 TOOLTIP_CON = [[#GOLD#Constitution#LAST#
-Constitution defines your character's ability to withstand and resist damage. It increases your maximum life and your chance to save against physical effects.
+Constitution defines your character's ability to withstand and resist damage. It increases your maximum life and Physical Save.
 ]]
 TOOLTIP_MAG = [[#GOLD#Magic#LAST#
-Magic defines your character's ability to manipulate the magical energy of the world. It increases your spell power, your chance to save against magical effects, and the effect of spells and other magic items.
+Magic defines your character's ability to manipulate the magical energy of the world. It increases your Spellpower, Spell Save, and the effect of spells and other magic items.
 ]]
 TOOLTIP_WIL = [[#GOLD#Willpower#LAST#
-Willpower defines your character's ability to concentrate. It increases your mana, stamina, psi capacity, and your chance to save against magical and mental effects.
+Willpower defines your character's ability to concentrate. It increases your mana, stamina, psi capacity, Mindpower, Spell Save, and Mental Save.
 ]]
 TOOLTIP_CUN = [[#GOLD#Cunning#LAST#
-Cunning defines your character's ability to learn, think, and react. It allows you to learn many worldly abilities, and increases your chance to save against mental effects and critical chance.
+Cunning defines your character's ability to learn, think, and react. It allows you to learn many worldly abilities, and increases your Mindpower, Mental Save, and critical chance.
 ]]
 TOOLTIP_STRDEXCON = "#AQUAMARINE#Physical stats#LAST#\n---\n"..TOOLTIP_STR.."\n---\n"..TOOLTIP_DEX.."\n---\n"..TOOLTIP_CON
 TOOLTIP_MAGWILCUN = "#AQUAMARINE#Mental stats#LAST#\n---\n"..TOOLTIP_MAG.."\n---\n"..TOOLTIP_WIL.."\n---\n"..TOOLTIP_CUN
@@ -188,9 +188,12 @@ TOOLTIP_MAGWILCUN = "#AQUAMARINE#Mental stats#LAST#\n---\n"..TOOLTIP_MAG.."\n---
 -- Melee
 -------------------------------------------------------------
 TOOLTIP_COMBAT_ATTACK = [[#GOLD#Accuracy#LAST#
-Your accuracy value represents your chance to hit your opponents, it is measured directly against the target's defense rating.
-When you inflict temporary physical effects on an enemy, every ten points of accuracy counteracts a single turn of duration reduction granted by the enemy's saving throws.
-It is improved by both Strength and Dexterity.
+Determines your chance to hit your target when measured against the target's Defense.
+When you use Accuracy to inflict temporary physical effects on an enemy, every five points of Accuracy counteracts a single turn of duration reduction granted by the enemy's saving throws.
+]]
+TOOLTIP_COMBAT_PHYSICAL_POWER = [[#GOLD#Physical Power#LAST#
+Measures your ability to deal physical damage in combat.
+When you use Physical Power to inflict temporary physical effects on an enemy, every five points of Physical Power counteracts a single turn of duration reduction granted by the enemy's saving throws.
 ]]
 TOOLTIP_COMBAT_DAMAGE = [[#GOLD#Damage#LAST#
 This is the damage you inflict on your foes when you hit them.
@@ -237,19 +240,19 @@ Armour hardiness value represents how much of every incoming blows the armour wi
 Absorbs (hardiness)% of incoming physical damage, up to a maximum of (armour) damage absorbed.
 ]]
 TOOLTIP_DEFENSE = [[#GOLD#Defense#LAST#
-Defense represents your chance to avoid being hit at all by a melee attack, it is measured against the attacker's accuracy chance.
+Defense represents your chance to avoid physical melee attacks. It is measured against the attacker's Accuracy.
 ]]
 TOOLTIP_RDEFENSE = [[#GOLD#Ranged Defense#LAST#
-Ranged defense represents your chance to avoid being hit at all by a ranged attack, it is measured against the attacker's accuracy chance.
+Defense represents your chance to avoid physical ranged attacks. It is measured against the attacker's Accuracy.
 ]]
 TOOLTIP_PHYS_SAVE = [[#GOLD#Physical saving throw#LAST#
-Increases chance to shrug off physically-induced effects. Also reduces duration of detrimental physical effects by up to one turn for every ten points, depending on the opponent.
+Increases chance to shrug off physically-induced effects. Also reduces duration of detrimental physical effects by up to one turn for every five points, depending on the opponent.
 ]]
 TOOLTIP_SPELL_SAVE = [[#GOLD#Spell saving throw#LAST#
-Increases chance to shrug off magically-induced effects. Also reduces duration of detrimental magical effects by up to one turn for every ten points, depending on the opponent.
+Increases chance to shrug off magically-induced effects. Also reduces duration of detrimental magical effects by up to one turn for every five points, depending on the opponent.
 ]]
 TOOLTIP_MENTAL_SAVE = [[#GOLD#Mental saving throw#LAST#
-Increases chance to shrug off mentally-induced effects. Also reduces duration of detrimental mental effects by up to one turn for every ten points, depending on the opponent.
+Increases chance to shrug off mentally-induced effects. Also reduces duration of detrimental mental effects by up to one turn for every five points, depending on the opponent.
 ]]
 
 -------------------------------------------------------------
@@ -257,8 +260,7 @@ Increases chance to shrug off mentally-induced effects. Also reduces duration of
 -------------------------------------------------------------
 TOOLTIP_SPELL_POWER = [[#GOLD#Spellpower#LAST#
 Your spellpower value represents how powerful your spells are.
-In addition, when your spells inflict temporary detrimental effects, every ten points of spellpower counteracts a single turn of duration reduction granted by the enemy's saving throws.
-It is improved by Magic, equipment, and certain talents.
+In addition, when your spells inflict temporary detrimental effects, every five points of spellpower counteracts a single turn of duration reduction granted by the enemy's saving throws.
 ]]
 TOOLTIP_SPELL_CRIT = [[#GOLD#Spell critical chance#LAST#
 Each time you deal damage with a spell you have a chance to make a critical hit that deals 150% of the normal damage.
@@ -271,8 +273,7 @@ The lower it is the faster it is.
 ]]
 TOOLTIP_MINDPOWER = [[#GOLD#Mindpower#LAST#
 Your mindpower value represents how powerful your mental abilities are.
-In addition, when you use mental abilities inflict temporary detrimental effects, every ten points of mindpower counteracts a single turn of duration reduction granted by the enemy's saving throws.
-It is improved by both Willpower and Cunning, equipment, and certain talents.
+In addition, when you use mental abilities inflict temporary detrimental effects, every five points of mindpower counteracts a single turn of duration reduction granted by the enemy's saving throws.
 ]]
 
 -------------------------------------------------------------

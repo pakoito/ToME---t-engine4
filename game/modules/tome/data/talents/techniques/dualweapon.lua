@@ -136,7 +136,7 @@ newTalent{
 		-- Second attack with mainhand
 		if hit then
 			if target:canBe("stun") then
-				target:setEffect(target.EFF_STUNNED, 2 + self:getTalentLevel(t), {apply_power=self:combatAttackDex(weapon.combat)})
+				target:setEffect(target.EFF_STUNNED, 2 + self:getTalentLevel(t), {apply_power=self:combatAttack()})
 			else
 				game.logSeen(target, "%s resists the stunning strike!", target.name:capitalize())
 			end

@@ -250,7 +250,7 @@ newTalent{
 	requires_target = true,
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	archery_onhit = function(self, t, target, x, y)
-		target:setEffect(target.EFF_SLOW, 7, {power=util.bound((self:combatAttack() * 0.15 * self:getTalentLevel(t)) / 100, 0.1, 0.4), apply_power=self:combatAttackDex()})
+		target:setEffect(target.EFF_SLOW, 7, {power=util.bound((self:combatAttack() * 0.15 * self:getTalentLevel(t)) / 100, 0.1, 0.4), apply_power=self:combatAttack()})
 	end,
 	action = function(self, t)
 		local targets = self:archeryAcquireTargets(nil, {one_shot=true})
@@ -278,7 +278,7 @@ newTalent{
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	archery_onhit = function(self, t, target, x, y)
 		if target:canBe("pin") then
-			target:setEffect(target.EFF_PINNED, 2 + self:getTalentLevelRaw(t), {apply_power=self:combatAttackDex()})
+			target:setEffect(target.EFF_PINNED, 2 + self:getTalentLevelRaw(t), {apply_power=self:combatAttack()})
 		else
 			game.logSeen(target, "%s resists!", target.name:capitalize())
 		end
@@ -318,7 +318,7 @@ newTalent{
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	archery_onhit = function(self, t, target, x, y)
 		if target:canBe("stun") then
-			target:setEffect(target.EFF_STUNNED, 2 + self:getTalentLevelRaw(t), {apply_power=self:combatAttackDex()})
+			target:setEffect(target.EFF_STUNNED, 2 + self:getTalentLevelRaw(t), {apply_power=self:combatAttack()})
 		else
 			game.logSeen(target, "%s resists!", target.name:capitalize())
 		end

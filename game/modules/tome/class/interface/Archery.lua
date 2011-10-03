@@ -147,7 +147,7 @@ local function archery_projectile(tx, ty, tg, self)
 
 		local crit
 		if tg.archery.crit_chance then self.combat_physcrit = self.combat_physcrit + tg.archery.crit_chance end
-		dam, crit = self:physicalCrit(dam, ammo, target)
+		dam, crit = self:physicalCrit(dam, ammo, target, atk, def)
 		if tg.archery.crit_chance then self.combat_physcrit = self.combat_physcrit - tg.archery.crit_chance end
 		print("[ATTACK ARCHERY] after crit", dam)
 

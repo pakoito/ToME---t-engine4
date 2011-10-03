@@ -23,7 +23,7 @@ local function getShieldStrength(self, t)
 		add = getGemLevel(self)*(1 + 0.1*(self:getTalentLevel(self.T_FOCUSED_CHANNELING) or 0))
 	end
 	--return 2 + (1+ self:getWil(8))*self:getTalentLevel(t) + add
-	return self:combatTalentIntervalDamage(t, "wil", 3, 50) + add
+	return self:combatStatTalentIntervalDamage(t, "combatMindpower", 3, 40) + add
 end
 
 local function getSpikeStrength(self, t)

@@ -67,6 +67,7 @@ newTalent{
 				game.logSeen(target, "%s resists the static field!", target.name:capitalize())
 				return
 			end
+			target:crossTierEffect(target.EFF_OFFBALANCE, self:combatMindpower())
 			game.logSeen(target, "%s is caught in the static field!", target.name:capitalize())
 			local dam = target.life * t.getPercent(self, t) / 100
 			if target.life - dam < 0 then dam = target.life end

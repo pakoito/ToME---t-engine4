@@ -132,7 +132,7 @@ newTalent{
 
 		if hitted then
 			if target:canBe("stun") then
-				target:setEffect(target.EFF_STUNNED, 3 + math.ceil(self:getTalentLevel(t)), {apply_power=self:combatAttackDex()})
+				target:setEffect(target.EFF_STUNNED, 3 + math.ceil(self:getTalentLevel(t)), {apply_power=self:combatAttack()})
 			else
 				game.logSeen(target, "%s resists the stun!", target.name:capitalize())
 			end

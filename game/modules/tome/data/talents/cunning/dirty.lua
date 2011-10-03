@@ -40,7 +40,7 @@ newTalent{
 
 		if hitted then
 			if target:canBe("stun") then
-				target:setEffect(target.EFF_STUNNED, t.getDuration(self, t), {apply_power=self:combatAttackDex()})
+				target:setEffect(target.EFF_STUNNED, t.getDuration(self, t), {apply_power=self:combatAttack()})
 			else
 				game.logSeen(target, "%s resists the stun!", target.name:capitalize())
 			end
@@ -140,7 +140,7 @@ newTalent{
 			tw = tw or target.combat
 			local atk = target:combatAttack(tw) * (t.getAttackPenalty(self, t)) / 100
 			local dam = target:combatDamage(tw) * (t.getDamagePenalty(self, t)) / 100
-			target:setEffect(target.EFF_CRIPPLE, t.getDuration(self, t), {atk=atk, dam=dam, apply_power=self:combatAttackDex()})
+			target:setEffect(target.EFF_CRIPPLE, t.getDuration(self, t), {atk=atk, dam=dam, apply_power=self:combatAttack()})
 		end
 
 		return true

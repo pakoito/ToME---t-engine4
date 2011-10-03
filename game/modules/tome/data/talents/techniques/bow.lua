@@ -23,8 +23,13 @@ newTalent{
 	points = 10,
 	require = { stat = { dex=function(level) return 12 + level * 3 end }, },
 	mode = "passive",
+	getDamage = function(self, t) return self:getTalentLevel(t) * 5 end,
+	getPercentInc = function(self, t) return math.sqrt(self:getTalentLevel(t) / 10) / 2 end,
 	info = function(self, t)
-		return ([[Increases damage done with bows by %d%%.]]):format(100 * (math.sqrt(self:getTalentLevel(t) / 10)))
+		local damage = t.getDamage(self, t)
+		local inc = t.getPercentInc(self, t)
+		return ([[Increases Physical Power by %d. Also increases damage done with bows by %d%%.]]):
+		format(damage, inc * 100)
 	end,
 }
 

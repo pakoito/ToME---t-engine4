@@ -102,11 +102,13 @@ newTalent{
 	points = 10,
 	require = { stat = { str=function(level) return 12 + level * 3 end }, },
 	mode = "passive",
-	getDamage = function(self, t) return math.sqrt(self:getTalentLevel(t) / 10) end,
+	getDamage = function(self, t) return self:getTalentLevel(t) * 5 end,
+	getPercentInc = function(self, t) return math.sqrt(self:getTalentLevel(t) / 10) / 2 end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Increases damage done with swords, maces and axes by %d%%.]]):
-		format(100 * damage)
+		local inc = t.getPercentInc(self, t)
+		return ([[Increases Physical Power by %d. Also increases damage done with swords, axes, maces, knives, and exotic weapons by %d%%]]):
+		format(damage, 100*inc)
 	end,
 }
 
@@ -117,11 +119,13 @@ newTalent{
 	points = 10,
 	require = { stat = { dex=function(level) return 10 + level * 3 end }, },
 	mode = "passive",
-	getDamage = function(self, t) return math.sqrt(self:getTalentLevel(t) / 10) end,
+	getDamage = function(self, t) return self:getTalentLevel(t) * 5 end,
+	getPercentInc = function(self, t) return math.sqrt(self:getTalentLevel(t) / 10) / 2 end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Increases damage done with knives by %d%%.]]):
-		format(100 * damage)
+		local inc = t.getPercentInc(self, t)
+		return ([[Increases Physical Power by %d. Also increases damage done with knives by %d%%]]):
+		format(damage, 100*inc)
 	end,
 }
 
@@ -132,10 +136,12 @@ newTalent{
 	points = 10,
 	require = { stat = { str=function(level) return 10 + level * 3 end, dex=function(level) return 10 + level * 3 end }, },
 	mode = "passive",
-	getDamage = function(self, t) return math.sqrt(self:getTalentLevel(t) / 10) end,
+	getDamage = function(self, t) return self:getTalentLevel(t) * 5 end,
+	getPercentInc = function(self, t) return math.sqrt(self:getTalentLevel(t) / 10) / 2 end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Increases damage done with exotic weapons (whips, tridents, ...) by %d%%.]]):
-		format(100 * damage)
+		local inc = t.getPercentInc(self, t)
+		return ([[Increases Physical Power by %d. Also increases damage done with exotic weapons by %d%%]]):
+		format(damage, 100*inc)
 	end,
-}
+}

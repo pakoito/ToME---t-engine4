@@ -56,7 +56,7 @@ newTalent{
 
 		if hitted then
 			if target:canBe("confusion") then
-				target:setEffect(target.EFF_CONFUSED, t.getDuration(self, t), {power=30 + self:getDex(70), apply_power=self:combatAttackDex()})
+				target:setEffect(target.EFF_CONFUSED, t.getDuration(self, t), {power=30 + self:getDex(70), apply_power=self:combatAttack()})
 			else
 				game.logSeen(target, "%s resists the headblow!", target.name:capitalize())
 			end

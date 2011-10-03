@@ -85,14 +85,17 @@ newTalent{
 
 		-- Try to knockback !
 		local can = function(target)
-			if target:checkHit(self:combatAttackDex(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("knockback") then
+			if target:checkHit(self:combatPhysicalpower(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("knockback") then
 				return true
 			else
 				game.logSeen(target, "%s resists the knockback!", target.name:capitalize())
 			end
 		end
 
-		if can(target) then target:knockback(self.x, self.y, math.floor(2 + self:getTalentLevel(t)), can) end
+		if can(target) then 
+			target:knockback(self.x, self.y, math.floor(2 + self:getTalentLevel(t)), can) 
+			target:crossTierEffect(target.EFF_OFFBALANCE, self:combatPhysicalpower())
+		end
 
 		return true
 	end,

@@ -70,8 +70,7 @@ newTalent{
 	end,
 	getDuration = function (self, t)
 		local gem_level = getGemLevel(self)
-		--return 5 + self:getWil(5) + self:getTalentLevel(t) + gem_level
-		return self:combatTalentIntervalDamage(t, "wil", 3, 12, 0.2) + gem_level
+		return self:combatStatTalentIntervalDamage(t, "combatMindpower", 3, 10, 0.2) + gem_level
 	end,
 	requires_target = true,
 	target = function(self, t) return {type="ball", range=self:getTalentRange(t), radius=0, selffire=false, talent=t} end,
@@ -121,11 +120,11 @@ newTalent{
 	end,
 	getDuration = function (self, t)
 		local gem_level = getGemLevel(self)
-		return self:combatTalentIntervalDamage(t, "wil", 2, 6, 0.2)
+		return self:combatStatTalentIntervalDamage(t, "combatMindpower", 2, 6, 0.2)
 	end,
 	getDamage = function (self, t)
 		local gem_level = getGemLevel(self)
-		return self:combatTalentIntervalDamage(t, "wil", 100, 200, 0.25)*(1 + 0.1*gem_level)
+		return self:combatStatTalentIntervalDamage(t, "combatMindpower", 100, 150, 0.25)*(1 + 0.1*gem_level)
 	end,
 	requires_target = true,
 	target = function(self, t) return {type="ball", range=self:getTalentRange(t), radius=0, selffire=false, talent=t} end,
@@ -136,6 +135,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.IMPLOSION, {dur=dur, dam=dam})
+		target:crossTierEffect(target.EFF_OFFBALANCE, self:combatMindpower())
 
 		return true
 	end,

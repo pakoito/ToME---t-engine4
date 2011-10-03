@@ -51,9 +51,9 @@ newBirthDescriptor
 	},
 	copy = {
 		default_wilderness = {1, 1, "wilderness"},
-		starting_zone = "tutorial",
-		starting_quest = "tutorial",
-		starting_intro = "tutorial",
+		starting_zone = "tutorial-combat-stats",
+		starting_quest = "tutorial-combat-stats",
+		starting_intro = "tutorial-combat-stats",
 		moddable_tile = "human_#sex#",
 		moddable_tile_base = "base_cornac_01.png",
 	},

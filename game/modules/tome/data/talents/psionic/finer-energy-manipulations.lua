@@ -21,19 +21,22 @@ newTalent{
 	name = "Perfect Control",
 	type = {"psionic/finer-energy-manipulations", 1},
 	require = psi_cun_high1,
-	cooldown = 100,
+	cooldown = 50,
 	psi = 15,
 	points = 5,
 	tactical = { BUFF = 2 },
+	getBoost = function(self, t)
+		return 15 + math.ceil(self:getTalentLevel(t)*self:combatStatTalentIntervalDamage(t, "combatMindpower", 1, 9))
+	end,
 	action = function(self, t)
-		self:setEffect(self.EFF_CONTROL, 5 + self:getTalentLevelRaw(t), {power=15 + math.ceil(self:getTalentLevel(t)*(1 + self:getCun(8, true)))})
+		self:setEffect(self.EFF_CONTROL, 5 + self:getTalentLevelRaw(t), {power= t.getBoost(self, t)})
 		return true
 	end,
 	info = function(self, t)
-		local boost = 15 + math.ceil(self:getTalentLevel(t)*(1 + self:getCun(8, true)))
+		local boost = t.getBoost(self, t)
 		local dur = 5 + self:getTalentLevelRaw(t)
 		return ([[Encase your body in a sheath of thought-quick forces, allowing you to control your body's movements directly without the inefficiency of dealing with crude mechanisms like nerves and muscles.
-		Increases attack by %d and critical strike chance by %0.2f%% for %d turns. The effect scales with Cunning.]]):
+		Increases attack by %d and critical strike chance by %0.2f%% for %d turns.]]):
 		format(boost, 0.5*boost, dur)
 	end,
 }
@@ -48,7 +51,7 @@ newTalent{
 	no_npc_use = true,
 	no_unlearn_last = true,
 	boost = function(self, t)
-		return math.floor(self:combatTalentIntervalDamage(t, "wil", 3, 20))
+		return math.floor(self:combatStatTalentIntervalDamage(t, "combatMindpower", 3, 20))
 	end,
 	action = function(self, t)
 		local d d = self:showInventory("Reshape which weapon?", self:getInven("INVEN"), function(o) return not o.quest and o.type == "weapon" and not o.fully_reshaped end, function(o, item)
@@ -77,8 +80,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local weapon_boost = t.boost(self, t)
-		return ([[Manipulate forces on the molecular level to realign, rebalance, and hone your weapon. Permanently increases the accuracy and damage of any weapon by %d.
-		This value scales with Willpower.]]):
+		return ([[Manipulate forces on the molecular level to realign, rebalance, and hone your weapon. Permanently increases the accuracy and damage of any weapon by %d.]]):
 		format(weapon_boost)
 	end,
 }
@@ -93,8 +95,6 @@ newTalent{
 	no_npc_use = true,
 	no_unlearn_last = true,
 	arm_boost = function(self, t)
-		--return math.floor(0.1*self:combatTalentIntervalDamage(t, "wil", 10, 30))
-		--return math.floor(0.25*t.fat_red(self, t))
 		local arm_values = {
 		0 + self:getWil(2),
 		1 + self:getWil(2),
@@ -106,7 +106,6 @@ newTalent{
 		return arm_values[index] * (self:getTalentLevel(t) / self:getTalentLevelRaw(t))
 	end,
 	fat_red = function(self, t)
-		--return math.floor(0.1*self:combatTalentIntervalDamage(t, "wil", 50, 100))
 		local fat_values = {
 		1 + self:getWil(3),
 		1 + self:getWil(3),
@@ -168,13 +167,11 @@ newTalent{
 	points = 5,
 	no_npc_use = true,
 	energy_per_turn = function(self, t)
-		--return 5 + 2 * math.ceil(self:getTalentLevel(t)) + self:getCun(5)
-		return self:combatTalentIntervalDamage(t, "cun", 10, 40, 0.25)
+		return self:combatStatTalentIntervalDamage(t, "combatMindpower", 10, 40, 0.25)
 	end,
 	action = function(self, t)
 		local d d = self:showInventory("Use which gem?", self:getInven("INVEN"), function(gem) return gem.type == "gem" and gem.material_level and not gem.unique end, function(gem, gem_item)
 			self:removeObject(self:getInven("INVEN"), gem_item)
-			--local amt = 0.1*self:combatTalentIntervalDamage(t, "cun", 100, 400)
 			local amt = t.energy_per_turn(self, t)
 			local dur = 3 + 2*(gem.material_level or 0)
 			self:setEffect(self.EFF_PSI_REGEN, dur, {power=amt})
@@ -189,7 +186,7 @@ newTalent{
 	info = function(self, t)
 		local amt = t.energy_per_turn(self, t)
 		return ([[Matter is energy, as any good Mindslayer knows. Unfortunately, the various bonds and particles involved are just too numerous and complex to make the conversion feasible in most cases. Fortunately, the organized, crystalline structure of gems makes it possible to transform a small percentage of its matter into usable energy.
-		Grants %d energy per turn for between five and thirteen turns, depending on the quality of the gem used. The amount of energy granted per turn scales with Cunning.]]):
+		Grants %d energy per turn for between five and thirteen turns, depending on the quality of the gem used.]]):
 		format(amt)
 	end,
 }

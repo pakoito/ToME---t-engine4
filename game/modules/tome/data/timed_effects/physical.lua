@@ -267,6 +267,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is not stunned anymore.", "-Burning Shock" end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("stunned", 1)
+		eff.tcdid = self:addTemporaryValue("no_talents_cooldown", 1)
 		eff.speedid = self:addTemporaryValue("movement_speed", -0.5)
 
 		local tids = {}
@@ -285,6 +286,7 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("stunned", eff.tmpid)
+		self:removeTemporaryValue("no_talents_cooldown", eff.tcdid)
 		self:removeTemporaryValue("movement_speed", eff.speedid)
 	end,
 }
@@ -301,6 +303,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is not stunned anymore.", "-Stunned" end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("stunned", 1)
+		eff.tcdid = self:addTemporaryValue("no_talents_cooldown", 1)
 		eff.speedid = self:addTemporaryValue("movement_speed", -0.5)
 
 		local tids = {}
@@ -316,6 +319,7 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("stunned", eff.tmpid)
+		self:removeTemporaryValue("no_talents_cooldown", eff.tcdid)
 		self:removeTemporaryValue("movement_speed", eff.speedid)
 	end,
 }
@@ -1642,4 +1646,16 @@ newEffect{
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("combat_def", eff.defenseChangeId)
 	end,
+}
+
+newEffect{
+	name = "OFFBALANCE",
+	desc = "Off-balance",
+	long_desc = function(self, eff) return ("Badly off balance. Attackers gain a 25% bonus to critical strike power.") end,
+	type = "physical",
+	subtype = { cross_tier=true },
+	status = "detrimental",
+	parameters = {power = 1},
+	on_gain = function(self, err) return nil, "+Off-balance" end,
+	on_lose = function(self, err) return nil, "-Off-balance" end,
 }

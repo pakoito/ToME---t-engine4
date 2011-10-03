@@ -195,7 +195,7 @@ function _M:display()
 		self:mouseTooltip(("#GOLD##{bold}#%s\n#WHITE##{normal}#Unused stats: %d\nUnused class talents: %d\nUnused generic talents: %d\nUnused categories: %d"):format(player.name, player.unused_stats, player.unused_talents, player.unused_generics, player.unused_talents_types), self.w, self.font_h, 0, h, function()
 			player:playerLevelup()
 		end)
---		h = h + self.font_h
+		h = h + self.font_h
 	end
 
 	self.font:setStyle("bold")
@@ -204,6 +204,21 @@ function _M:display()
 
 	self:mouseTooltip(self.TOOLTIP_LEVEL, self:makeTexture(("Level / Exp: #00ff00#%s / %2d%%"):format(player.level, 100 * cur_exp / max_exp), x, h, 255, 255, 255)) h = h + self.font_h
 	self:mouseTooltip(self.TOOLTIP_GOLD, self:makeTexture(("Gold: #00ff00#%0.2f"):format(player.money or 0), x, h, 255, 255, 255)) h = h + self.font_h
+
+	--Display attack, defense, spellpower, mindpower, and saves.
+	local attack_stats = {{"combatAttack", "TOOLTIP_COMBAT_ATTACK", "Accuracy:"}, {"combatPhysicalpower", "TOOLTIP_COMBAT_PHYSICAL_POWER", "P. power:"}, {"combatSpellpower", "TOOLTIP_SPELL_POWER", "S. power:"}, {"combatMindpower", "TOOLTIP_MINDPOWER", "M. power:"}, {"combatDefense", "TOOLTIP_DEFENSE", "Defense:"}, {"combatPhysicalResist", "TOOLTIP_PHYS_SAVE", "P. save:"}, {"combatSpellResist", "TOOLTIP_SPELL_SAVE", "S. save:"}, {"combatMentalResist", "TOOLTIP_MENTAL_SAVE", "M. save:"}}
+
+	local attack_stat_color = "#FFD700#"
+	local defense_stat_color = "#0080FF#"
+	for i = 1, 4 do
+		text = ("%s"):format(player:colorStats(attack_stats[i][1]))
+		self:mouseTooltip(self[attack_stats[i][2]], self:makeTexture((attack_stat_color.."%s"):format(attack_stats[i][3]), x, h, 255, 255, 255))
+		self:mouseTooltip(self[attack_stats[i][2]], self:makeTexture(("%s"):format(text), x+75, h, 255, 255, 255))
+		text = ("%s"):format(player:colorStats(attack_stats[i+4][1]))
+		self:mouseTooltip(self[attack_stats[i+4][2]], self:makeTexture((defense_stat_color.."%s"):format(attack_stats[i+4][3]), x+110, h, 255, 255, 255))
+		self:mouseTooltip(self[attack_stats[i+4][2]], self:makeTexture(("%s"):format(text), x+180, h, 255, 255, 255)) h = h + self.font_h
+	end
+	h = h + self.font_h
 
 	if game.level and game.level.turn_counter then
 		self:makeTexture(("Turns remaining: %d"):format(game.level.turn_counter / 10), x, h, 255, 0, 0) h = h + self.font_h

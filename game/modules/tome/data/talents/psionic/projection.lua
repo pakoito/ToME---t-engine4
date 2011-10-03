@@ -21,8 +21,7 @@ local function aura_strength(self, t)
 	if self:knowTalent(self.T_FOCUSED_CHANNELING) then
 		add = getGemLevel(self)*(1 + 0.1*(self:getTalentLevel(self.T_FOCUSED_CHANNELING) or 0))
 	end
-	--return 5 + (1+ self:getWil(5))*self:getTalentLevel(t) + add
-	return self:combatTalentIntervalDamage(t, "wil", 10, 50) + add
+	return self:combatStatTalentIntervalDamage(t, "combatMindpower", 10, 40) + add
 end
 
 local function aura_spike_strength(self, t)
@@ -183,7 +182,6 @@ newTalent{
 		local spikecost = t.getSpikeCost(self, t)
 		return ([[Fills the air around you with reactive currents of force that do %d physical damage to all who approach. All damage done by the aura will drain one point of energy per %0.2f points of damage dealt.
 		When deactivated, if you have at least %d energy, a massive spike of kinetic energy is released as a beam, smashing targets for %d physical damage and sending them flying. Telekinetically wielding a gem instead of a weapon will result in improved spike efficiency.
-		The damage will increase with the Willpower stat.
 		To turn off an aura without spiking it, deactivate it and target yourself.]]):format(dam, mast, spikecost, spikedam)
 	end,
 }
@@ -300,7 +298,6 @@ newTalent{
 		local spikecost = t.getSpikeCost(self, t)
 		return ([[Fills the air around you with reactive currents of furnace-like heat that do %d fire damage to all who approach. All damage done by the aura will drain one point of energy per %0.2f points of damage dealt.
 		When deactivated, if you have at least %d energy, a massive spike of thermal energy is released as a conical blast (radius %d) of superheated air. Anybody caught in it will suffer %d fire damage over several turns. Telekinetically wielding a gem instead of a weapon will result in improved spike efficiency.
-		The damage will increase with the Willpower stat.
 		To turn off an aura without spiking it, deactivate it and target yourself.]]):format(dam, mast, spikecost, rad, spikedam)
 	end,
 }
@@ -462,7 +459,6 @@ newTalent{
 		local nb = t.getNumSpikeTargets(self, t)
 		return ([[Fills the air around you with crackling energy, doing %d lightning damage to all who stand nearby. All damage done by the aura will drain one point of energy per %0.2f points of damage dealt.
 		When deactivated, if you have at least %d energy, a massive spike of electrical energy jumps between up to %d nearby targets, doing %d lightning damage to each. Telekinetically wielding a gem instead of a weapon will result in improved spike efficiency.
-		The damage will increase with the Willpower stat.
 		To turn off an aura without spiking it, deactivate it and target yourself.]]):format(dam, mast, spikecost, nb, spikedam)
 	end,
 }

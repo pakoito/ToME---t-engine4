@@ -106,11 +106,13 @@ newTalent{
 	mode = "passive",
 	require = spells_req2,
 	points = 5,
-	getDamage = function(self, t) return math.sqrt(self:getTalentLevel(t) / 10) end,
+	getDamage = function(self, t) return self:getTalentLevel(t) * 5 end,
+	getPercentInc = function(self, t) return math.sqrt(self:getTalentLevel(t) / 10) / 2 end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Increases damage done with staves by %d%%.]]):
-		format(100 * damage)
+		local inc = t.getPercentInc(self, t)
+		return ([[Increases Physical Power by %d. Also increases damage done with staves by %d%%.]]):
+		format(damage, 100 * inc)
 	end,
 }
 
@@ -181,7 +183,7 @@ newTalent{
 		-- Try to stun !
 		if hit then
 			if target:canBe("stun") then
-				target:setEffect(target.EFF_DAZED, t.getDazeDuration(self, t), {apply_power=self:combatAttackStr(weapon.combat)})
+				target:setEffect(target.EFF_DAZED, t.getDazeDuration(self, t), {apply_power=self:combatPhysicalpower()})
 			else
 				game.logSeen(target, "%s resists the dazing blow!", target.name:capitalize())
 			end

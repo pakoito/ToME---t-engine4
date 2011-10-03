@@ -38,7 +38,7 @@ newTalent{
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
 		if target:canBe("disarm") then
-			target:setEffect(target.EFF_DISARMED, t.getDuration(self, t), {apply_power=self:combatAttackDex()})
+			target:setEffect(target.EFF_DISARMED, t.getDuration(self, t), {apply_power=self:combatAttack()})
 		else
 			game.logSeen(target, "%s resists the shadow!", target.name:capitalize())
 		end
@@ -80,7 +80,7 @@ newTalent{
 
 		if core.fov.distance(self.x, self.y, sx, sy) <= 1 then
 			if target:canBe("silence") then
-				target:setEffect(target.EFF_SILENCED, t.getDuration(self, t), {apply_power=self:combatAttackDex()})
+				target:setEffect(target.EFF_SILENCED, t.getDuration(self, t), {apply_power=self:combatAttack()})
 			else
 				game.logSeen(target, "%s resists the shadow!", target.name:capitalize())
 			end

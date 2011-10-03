@@ -29,6 +29,7 @@ load("/data/talents/misc/inscriptions.lua")
 load("/data/talents/misc/npcs.lua")
 load("/data/talents/misc/horrors.lua")
 load("/data/talents/misc/races.lua")
+load("/data/talents/misc/tutorial.lua")
 
 -- Default melee attack
 newTalent{

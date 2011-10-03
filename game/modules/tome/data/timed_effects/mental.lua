@@ -382,27 +382,27 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is no longer beckoned.", "-Beckoned" end,
 	activate = function(self, eff)
 		eff.particle = self:addParticles(Particles.new("beckoned", 1))
-		
+
 		eff.spellpowerChangeId = self:addTemporaryValue("combat_spellpower", eff.spellpowerChange)
 		eff.mindpowerChangeId = self:addTemporaryValue("combat_mindpower", eff.mindpowerChange)
 	end,
 	deactivate = function(self, eff)
 		if eff.particle then self:removeParticles(eff.particle) end
-		
+
 		if eff.spellpowerChangeId then self:removeTemporaryValue("combat_spellpower", eff.spellpowerChangeId) end
 		if eff.mindpowerChangeId then self:removeTemporaryValue("combat_mindpower", eff.spellpowerChangeId) end
 	end,
 	on_timeout = function(self, eff)
 		if eff.source.dead then return nil end
-		
+
 		local distance = core.fov.distance(self.x, self.y, eff.source.x, eff.source.y)
 		if math.floor(distance) > 1 and distance <= eff.range then
 			-- in range but not adjacent
-			
+
 			-- add debuffs
 			if not eff.spellpowerChangeId then eff.spellpowerChangeId = self:addTemporaryValue("combat_spellpower", eff.spellpowerChange) end
 			if not eff.mindpowerChangeId then eff.mindpowerChangeId = self:addTemporaryValue("combat_mindpower", eff.mindpowerChange) end
-			
+
 			-- custom pull logic (adapted from move_dmap; forces movement, pushes others aside, custom particles)
 			if not self:attr("never_move") and rng.percent(eff.chance) then
 				local source = eff.source
@@ -421,7 +421,7 @@ newEffect{
 					--		moveX, moveY = util.coordAddDir(self.x, self.y, dir)
 					--	end
 					--end
-					
+
 					-- move a-star (far more useful than dmap)
 					local a = Astar.new(game.level.map, self)
 					local path = a:calc(self.x, self.y, source.x, source.y)
@@ -429,7 +429,7 @@ newEffect{
 						moveX, moveY = path[1].x, path[1].y
 					end
 				end
-				
+
 				if moveX and moveY then
 					local old_move_others, old_x, old_y = self.move_others, self.x, self.y
 					self.move_others = true
@@ -505,14 +505,14 @@ newEffect{
 		eff.neverMoveId = self:addTemporaryValue("never_move", 1)
 		eff.armorId = self:addTemporaryValue("combat_armor", eff.armorChange)
 		eff.defenseId = self:addTemporaryValue("combat_def", eff.armorChange)
-		
+
 		eff.particle = self:addParticles(Particles.new("dominated", 1))
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("never_move", eff.neverMoveId)
 		self:removeTemporaryValue("combat_armor", eff.armorId)
 		self:removeTemporaryValue("combat_def", eff.defenseId)
-		
+
 		self:removeParticles(eff.particle)
 	end,
 }
@@ -1460,5 +1460,33 @@ newEffect{
 		self:removeTemporaryValue("combat_dam", eff.damid)
 		self:removeTemporaryValue("combat_spellpower", eff.spellid)
 		self:removeTemporaryValue("combat_mindpower", eff.mindid)
+	end,
+}
+
+newEffect{
+	name = "BRAINLOCKED",
+	desc = "Brainlocked",
+	long_desc = function(self, eff) return ("Renders a random talent unavailable. No talents will cool down until the effect has worn off."):format() end,
+	type = "mental",
+	subtype = { cross_tier=true },
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return nil, "+Brainlocked" end,
+	on_lose = function(self, err) return nil, "-Brainlocked" end,
+	activate = function(self, eff)
+		eff.tcdid = self:addTemporaryValue("no_talents_cooldown", 1)
+		local tids = {}
+		for tid, lev in pairs(self.talents) do
+			local t = self:getTalentFromId(tid)
+			if t and not self.talents_cd[tid] and t.mode == "activated" and not t.innate then tids[#tids+1] = t end
+		end
+		for i = 1, 1 do
+			local t = rng.tableRemove(tids)
+			if not t then break end
+			self.talents_cd[t.id] = 1
+		end
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("no_talents_cooldown", eff.tmpid)
 	end,
 }

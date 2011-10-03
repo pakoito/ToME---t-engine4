@@ -174,7 +174,8 @@ end
 
 --- Computes a logarithmic chance to hit, opposing chance to hit to chance to miss
 -- This will be used for melee attacks, physical and spell resistance
-function _M:checkHit(atk, def, min, max, factor)
+
+function _M:checkHitOld(atk, def, min, max, factor)
 	print("checkHit", atk, def)
 	if atk == 0 then atk = 1 end
 	local hit = nil
@@ -186,6 +187,57 @@ function _M:checkHit(atk, def, min, max, factor)
 	hit = 50 * (one + two)
 
 	hit = util.bound(hit, min or 5, max or 95)
+	print("=> chance to hit", hit)
+	return rng.percent(hit), hit
+end
+
+--Tells the tier difference between two values
+function _M:crossTierEffect(eff_id, apply_power, apply_save, use_given_e)
+	local q = game.player:hasQuest("tutorial-combat-stats")
+	if q and not q:isCompleted("final-lesson")then
+		return
+	end
+	local ct_effect
+	local save_for_effects = {
+		physical = "combatPhysicalResist",
+		magical = "combatSpellResist",
+		mental = "combatMentalResist",
+	}
+	local cross_tier_effects = {
+		combatPhysicalResist = self.EFF_OFFBALANCE,
+		combatSpellResist = self.EFF_SPELLSHOCKED,
+		combatMentalResist = self.EFF_BRAINLOCKED,
+	}
+	local e = self.tempeffect_def[eff_id]
+	if not apply_power or not save_for_effects[e.type] then return end
+	local save = self[apply_save or save_for_effects[e.type]](self)
+
+	if use_given_e then
+		ct_effect = self["EFF_"..e.name]
+	else
+		ct_effect = cross_tier_effects[save_for_effects[e.type]]
+	end
+	local dur = self:getTierDiff(apply_power, save)
+	self:setEffect(ct_effect, dur, {})
+end
+
+function _M:getTierDiff(atk, def)
+	atk = math.floor(atk)
+	def = math.floor(def)
+	return math.max(0, math.max(math.ceil(atk/20), 1) - math.max(math.ceil(def/20), 1))
+end
+
+--New, simpler checkHit that relies on rescaleCombatStats() being used elsewhere
+function _M:checkHit(atk, def, min, max, factor, p)
+	local min = min or 0
+	local max = max or 100
+	if game.player:hasQuest("tutorial-combat-stats") then
+		min = 0
+		max = 100
+	end --ensures predictable combat for the tutorial
+	print("checkHit", atk, def)
+	local hit = 50 + 5 * (atk - def)
+	hit = util.bound(hit, min, max)
 	print("=> chance to hit", hit)
 	return rng.percent(hit), hit
 end
@@ -251,7 +303,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		local damrange = self:combatDamageRange(weapon)
 		dam = rng.range(dam, dam * damrange)
 		print("[ATTACK] after range", dam)
-		dam, crit = self:physicalCrit(dam, weapon, target)
+		dam, crit = self:physicalCrit(dam, weapon, target, atk, def)
 		print("[ATTACK] after crit", dam)
 		dam = dam * mult
 		print("[ATTACK] after mult", dam)
@@ -375,12 +427,15 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 
 		if target:checkHit(self:combatAttack(weapon), target:combatPhysicalResist(), 0, 95, 10) and target:canBe("knockback") then
 			target:knockback(self.x, self.y, self:attr("onslaught"))
+			target:crossTierEffect(target.EFF_OFFBALANCE, src:combatAttack())
 		end
 		if lt and lt:checkHit(self:combatAttack(weapon), lt:combatPhysicalResist(), 0, 95, 10) and lt:canBe("knockback") then
 			lt:knockback(self.x, self.y, self:attr("onslaught"))
+			target:crossTierEffect(target.EFF_OFFBALANCE, src:combatAttack())
 		end
 		if rt and rt:checkHit(self:combatAttack(weapon), rt:combatPhysicalResist(), 0, 95, 10) and rt:canBe("knockback") then
 			rt:knockback(self.x, self.y, self:attr("onslaught"))
+			target:crossTierEffect(target.EFF_OFFBALANCE, src:combatAttack())
 		end
 	end
 
@@ -530,12 +585,12 @@ end
 
 --- Gets the defense
 --- Fake denotes a check not actually being made, used by character sheets etc.
-function _M:combatDefense(fake)
+function _M:combatDefenseBase(fake)
 	local add = 0
 	if self:hasDualWeapon() and self:knowTalent(self.T_DUAL_WEAPON_DEFENSE) then
 		add = add + 4 + (self:getTalentLevel(self.T_DUAL_WEAPON_DEFENSE) * self:getDex()) / 12
 	end
-	if not fake then 
+	if not fake then
 		add = add + (self:checkOnDefenseCall("defense") or 0)
 	end
 	if self:knowTalent(self.T_TACTICAL_EXPERT) then
@@ -560,11 +615,15 @@ function _M:combatDefense(fake)
 end
 
 --- Gets the defense ranged
---- Fake denotes a check not actually being made, used by character sheets etc.
-function _M:combatDefenseRanged(fake)
-	local base_defense = self:combatDefense(true)
-	if not fake then base_defense = self:combatDefense() end
-	return math.max(0, base_defense + (self.combat_def_ranged or 0))
+function _M:combatDefense()
+	local d = self:combatDefenseBase()
+	return self:rescaleCombatStats(d)
+end
+
+--- Gets the defense ranged
+function _M:combatDefenseRanged()
+	local d = math.max(0, self:combatDefenseBase() + (self.combat_def_ranged or 0))
+	return self:rescaleCombatStats(d)
 end
 
 --- Gets the armor
@@ -603,10 +662,10 @@ function _M:combatAttackBase(weapon, ammo)
 end
 function _M:combatAttack(weapon, ammo)
 	local stats
-	if self.use_psi_combat then stats = (self:getWil(50, true) - 5) + (self:getCun(50, true) - 5)
-	else stats = (self:getStr(50, true) - 5) + (self:getDex(50, true) - 5)
+	if self.use_psi_combat then stats = self:getCun(100, true) - 10
+	else stats = self:getDex(100, true) - 10
 	end
-	return self:combatAttackBase(weapon, ammo) + stats
+	return self:rescaleCombatStats(self:combatAttackBase(weapon, ammo) + stats)
 end
 
 --- Gets the attack using only strength
@@ -659,10 +718,23 @@ end
 
 
 --- Scale damage values
--- This makes low damage values equal to what they should be and puts disminishing returns to super high values
+-- This currently beefs up high-end damage values to make up for the combat stat rescale nerf.
 function _M:rescaleDamage(dam)
 	if dam <= 0 then return dam end
-	return dam * (1 - math.log10(dam * 2) / 7)
+--	return dam * (1 - math.log10(dam * 2) / 7) --this is the old version, pre-combat-stat-rescale
+	return dam ^ 1.04
+end
+--Diminishing-returns method of scaling combat stats, observing this rule: the first twenty ranks cost 1 point each, the second twenty cost two each, and so on. This is much, much better for players than some logarithmic mess, since they always know exactly what's going on, and there are nice breakpoints to strive for.
+function _M:rescaleCombatStats(raw_combat_stat_value)
+	local x = raw_combat_stat_value
+	local tiers = 5 -- Just increase this if you want to add high-level content that allows for combat stat scores over 100.
+	--return math.floor(math.min(x, 20) + math.min(math.max((x-20), 0)/2, 20) + math.min(math.max((x-60), 0)/3, 20) + math.min(math.max((x-120), 0)/4, 20) + math.min(math.max((x-200), 0)/5, 20)) --Five terms of the summation below.
+	local total = 0
+	for i = 1, tiers do
+		local sub = 20*(i*(i-1)/2)
+		total = total + math.min(math.max(x-sub, 0)/i, 20)
+	end
+	return total
 end
 
 --- Gets the damage
@@ -689,6 +761,16 @@ function _M:combatDamage(weapon)
 		end
 	end
 
+	local talented_mod = math.sqrt(self:combatCheckTraining(weapon) / 10) / 2 + 1
+
+	local power = math.max((weapon.dam or 1), 1)
+	power = (math.sqrt(power / 10) - 1) * 0.5 + 1
+	--print(("[COMBAT DAMAGE] power(%f) totstat(%f) talent_mod(%f)"):format(power, totstat, talented_mod))
+	return self:rescaleDamage(0.3*(self:combatPhysicalpower() + totstat) * power * talented_mod)
+end
+
+function _M:combatPhysicalpower(mod)
+	mod = mod or 1
 	local add = 0
 	if self:knowTalent(Talents.T_ARCANE_DESTRUCTION) then
 		add = add + self:combatSpellpower() * self:getTalentLevel(Talents.T_ARCANE_DESTRUCTION) / 9
@@ -696,17 +778,33 @@ function _M:combatDamage(weapon)
 	if self:isTalentActive(Talents.T_BLOOD_FRENZY) then
 		add = add + self.blood_frenzy
 	end
-	if self:knowTalent(self.T_EMPTY_HAND) and weapon == self.combat then
+	if self:knowTalent(self.T_EMPTY_HAND) and self:isUnarmed() then
 		local t = self:getTalentFromId(self.T_EMPTY_HAND)
 		add = add + t.getDamage(self, t)
 	end
+	if self:knowTalent(Talents.T_WEAPONS_MASTERY) then
+		add = add + 5 * self:getTalentLevel(Talents.T_WEAPONS_MASTERY)
+	end
+	if self:knowTalent(Talents.T_KNIFE_MASTERY) then
+		add = add + 5 * self:getTalentLevel(Talents.T_WEAPONS_MASTERY)
+	end
+	if self:knowTalent(Talents.T_EXOTIC_WEAPONS_MASTERY) then
+		add = add + 5 * self:getTalentLevel(Talents.T_WEAPONS_MASTERY)
+	end
+	if self:knowTalent(Talents.T_UNARMED_MASTERY) then
+		add = add + 5 * self:getTalentLevel(Talents.T_UNARMED_MASTERY)
+	end
+	if self:knowTalent(Talents.T_STAFF_MASTERY) then
+		add = add + 5 * self:getTalentLevel(Talents.T_STAFF_MASTERY)
+	end
+	if self:knowTalent(Talents.T_BOW_MASTERY) then
+		add = add + 5 * self:getTalentLevel(Talents.T_BOW_MASTERY)
+	end
+	if self:knowTalent(Talents.T_SLING_MASTERY) then
+		add = add + 5 * self:getTalentLevel(Talents.T_SLING_MASTERY)
+	end
 
-	local talented_mod = math.sqrt(self:combatCheckTraining(weapon) / 10) + 1
-
-	local power = math.max(self.combat_dam + (weapon.dam or 1) + add, 1)
-	power = (math.sqrt(power / 10) - 1) * 0.8 + 1
-	print(("[COMBAT DAMAGE] power(%f) totstat(%f) talent_mod(%f)"):format(power, totstat, talented_mod))
-	return self:rescaleDamage(totstat / 1.5 * power * talented_mod)
+	return self:rescaleCombatStats((self.combat_dam > 0 and self.combat_dam or 0) + add + self:getStr()) * mod
 end
 
 --- Gets spellpower
@@ -723,7 +821,7 @@ function _M:combatSpellpower(mod)
 		add = add + self:hasEffect(self.EFF_BLOODLUST).dur
 	end
 
-	return ((self.combat_spellpower > 0 and self.combat_spellpower or 0) + add + self:getMag()) * mod
+	return self:rescaleCombatStats((self.combat_spellpower > 0 and self.combat_spellpower or 0) + add + self:getMag()) * mod
 end
 
 --- Gets damage based on talent
@@ -777,12 +875,14 @@ function _M:combatSummonSpeed()
 end
 
 --- Computes physical crit for a damage
-function _M:physicalCrit(dam, weapon, target)
+function _M:physicalCrit(dam, weapon, target, atk, def)
+	local tier_diff = self:getTierDiff(atk, def)
 	if self:isTalentActive(self.T_STEALTH) and self:knowTalent(self.T_SHADOWSTRIKE) then
 		return dam * (1.5 + self:getTalentLevel(self.T_SHADOWSTRIKE) / 7), true
 	end
 
 	local chance = self:combatCrit(weapon)
+	local crit_power_add = 0
 	local crit = false
 	if self:knowTalent(self.T_BACKSTAB) and target:attr("stunned") then chance = chance + self:getTalentLevel(self.T_BACKSTAB) * 10 end
 
@@ -796,6 +896,7 @@ function _M:physicalCrit(dam, weapon, target)
 		end
 	end
 
+
 	if target:hasHeavyArmor() and target:knowTalent(target.T_ARMOUR_TRAINING) then
 		chance = chance - target:getTalentLevel(target.T_ARMOUR_TRAINING) * 1.9
 	end
@@ -804,7 +905,13 @@ function _M:physicalCrit(dam, weapon, target)
 
 	print("[PHYS CRIT %]", chance)
 	if rng.percent(chance) then
-		dam = dam * (1.5 + (self.combat_critical_power or 0) / 100)
+		if tier_diff > 0 then
+			target:crossTierEffect(target.EFF_OFFBALANCE, atk, "combatDefense")
+		end
+		if target:hasEffect(target.EFF_OFFBALANCE) then
+			crit_power_add = 0.25
+		end
+		dam = dam * (1.5 + crit_power_add + (self.combat_critical_power or 0) / 100)
 		crit = true
 
 	end
@@ -854,7 +961,7 @@ end
 function _M:combatMindpower(mod)
 	mod = mod or 1
 	local add = 0
-	return ((self.combat_mindpower > 0 and self.combat_mindpower or 0) + add + self:getWil() * 0.7 + self:getCun() * 0.4) * mod
+	return self:rescaleCombatStats((self.combat_mindpower > 0 and self.combat_mindpower or 0) + add + self:getWil() * 0.7 + self:getCun() * 0.4) * mod
 end
 
 --- Gets damage based on talent
@@ -870,47 +977,59 @@ function _M:combatTalentStatDamage(t, stat, base, max)
 	-- Compute at "max"
 	local mod = max / ((base + 100) * ((math.sqrt(5) - 1) * 0.8 + 1))
 	-- Compute real
-	return self:rescaleDamage((base + (self:getStat(stat))) * ((math.sqrt(self:getTalentLevel(t)) - 1) * 0.8 + 1) * mod)
+	local dam = (base + (self:getStat(stat))) * ((math.sqrt(self:getTalentLevel(t)) - 1) * 0.8 + 1) * mod
+	dam =  dam * (1 - math.log10(dam * 2) / 7)
+	dam = dam ^ (1 / 1.04)
+	return self:rescaleDamage(dam)
+end
+
+--- Gets damage based on talent, basic stat, and interval
+function _M:combatTalentIntervalDamage(t, stat, min, max, stat_weight)
+	local stat_weight = stat_weight or 0.5
+	local dam = min + (max - min)*((stat_weight * self:getStat(stat)/100) + (1 - stat_weight) * self:getTalentLevel(t)/6.5)
+	dam =  dam * (1 - math.log10(dam * 2) / 7)
+	dam = dam ^ (1 / 1.04)
+	return self:rescaleDamage(dam)
 end
 
 --- Gets damage based on talent, stat, and interval
-function _M:combatTalentIntervalDamage(t, stat, min, max, stat_weight)
+function _M:combatStatTalentIntervalDamage(t, stat, min, max, stat_weight)
 	local stat_weight = stat_weight or 0.5
-	--return self:rescaleDamage(min + (1 + (self:getStat(stat) / 100) * (max / 6.5 - 1)) * self:getTalentLevel(t))
-	return self:rescaleDamage(min + (max - min)*((stat_weight * self:getStat(stat)/100) + (1 - stat_weight) * self:getTalentLevel(t)/6.5))
+	scaled_stat = self[stat](self)
+	return self:rescaleDamage(min + (max - min)*((stat_weight * self[stat](self)/100) + (1 - stat_weight) * self:getTalentLevel(t)/6.5))
 end
 
 --- Computes physical resistance
 --- Fake denotes a check not actually being made, used by character sheets etc.
 function _M:combatPhysicalResist(fake)
 	local add = 0
-	if not fake then 
+	if not fake then
 		add = add + (self:checkOnDefenseCall("physical") or 0)
 	end
 	if self:knowTalent(self.T_POWER_IS_MONEY) then
 		add = add + util.bound(self.money / (80 - self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 5), 0, self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 10)
 	end
-	return self.combat_physresist + (self:getCon() + self:getStr() + (self:getLck() - 50) * 0.5) * 0.35 + add
+	return self:rescaleCombatStats(self.combat_physresist + (self:getCon() + self:getStr() + (self:getLck() - 50) * 0.5) * 0.35 + add)
 end
 
 --- Computes spell resistance
 --- Fake denotes a check not actually being made, used by character sheets etc.
 function _M:combatSpellResist(fake)
 	local add = 0
-	if not fake then 
+	if not fake then
 		add = add + (self:checkOnDefenseCall("spell") or 0)
 	end
 	if self:knowTalent(self.T_POWER_IS_MONEY) then
 		add = add + util.bound(self.money / (80 - self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 5), 0, self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 10)
 	end
-	return self.combat_spellresist + (self:getMag() + self:getWil() + (self:getLck() - 50) * 0.5) * 0.35 + add
+	return self:rescaleCombatStats(self.combat_spellresist + (self:getMag() + self:getWil() + (self:getLck() - 50) * 0.5) * 0.35 + add)
 end
 
 --- Computes mental resistance
 --- Fake denotes a check not actually being made, used by character sheets etc.
 function _M:combatMentalResist(fake)
 	local add = 0
-	if not fake then 
+	if not fake then
 		add = add + (self:checkOnDefenseCall("mental") or 0)
 	end
 	if self:knowTalent(self.T_STEADY_MIND) then
@@ -920,7 +1039,7 @@ function _M:combatMentalResist(fake)
 	if self:knowTalent(self.T_POWER_IS_MONEY) then
 		add = add + util.bound(self.money / (80 - self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 5), 0, self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 10)
 	end
-	return self.combat_mentalresist + (self:getCun() + self:getWil() + (self:getLck() - 50) * 0.5) * 0.35 + add
+	return self:rescaleCombatStats(self.combat_mentalresist + (self:getCun() + self:getWil() + (self:getLck() - 50) * 0.5) * 0.35 + add)
 end
 
 -- Called when a Save or Defense is checked
@@ -1191,7 +1310,8 @@ function _M:startGrapple(target)
 		self:setEffect(self.EFF_GRAPPLING, duration, {trgt=target}, true)
 		return true
 	elseif target:canBe("pin") then
-		target:setEffect(target.EFF_GRAPPLED, duration, {src=self, power=power, apply_power=self:combatAttackStr()})
+		target:setEffect(target.EFF_GRAPPLED, duration, {src=self, power=power, apply_power=self:combatPhysicalpower()})
+		target:crossTierEffect(target.EFF_GRAPPLED, self:combatPhysicalpower())
 		self:setEffect(self.EFF_GRAPPLING, duration, {trgt=target})
 		return true
 	else
