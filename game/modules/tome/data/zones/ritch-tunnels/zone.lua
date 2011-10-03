@@ -37,7 +37,7 @@ return {
 			edge_entrances = {4,6},
 			rooms = {"forest_clearing"},
 			lite_room_chance = 90,
-			rooms_config = {forest_clearing={pit_chance=5, filters={{type="insect", subtype="ritch"}}}},
+			rooms_config = {forest_clearing={pit_chance=5, filters={{type="insect", subtype="ritch", max_ood=2}}}},
 			['.'] = "UNDERGROUND_SAND",
 			['#'] = "SANDWALL_STABLE",
 			up = "SAND_LADDER_UP",
