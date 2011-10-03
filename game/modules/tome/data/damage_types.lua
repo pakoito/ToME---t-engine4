@@ -206,15 +206,22 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			game.logSeen(target, "%s is healed by the %s%s#LAST# damage!", target.name:capitalize(), DamageType:get(type).text_color or "#aaaaaa#", DamageType:get(type).name)
 		end
 
-		if dam > 0 and src.__projecting_for and src.__projecting_for.project_type and (src.__projecting_for.project_type.talent_id or src.__projecting_for.project_type.talent) and src.getTalentFromId and not src.__projecting_for.talent_on_hit_done then
+		if dam > 0 and src.__projecting_for and src.__projecting_for.project_type and (src.__projecting_for.project_type.talent_id or src.__projecting_for.project_type.talent) and src.getTalentFromId then
 			local t = src:getTalentFromId(src.__projecting_for.project_type.talent or src.__projecting_for.project_type.talent_id)
-			if src.talent_on_spell and next(src.talent_on_spell) and t.is_spell then
-				for id, d in pairs(src.talent_on_spell) do
-					if rng.percent(d.chance) and t.id ~= d.talent then
-						src.__projecting_for.talent_on_hit_done = true
-						local old = src.__projecting_for
-						src:forceUseTalent(d.talent, {ignore_cd=true, ignore_energy=true, force_target=target, force_level=d.level, ignore_ressources=true})
-						src.__projecting_for = old
+
+			if src:attr("spellshock_on_damage") and target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) then
+				target:crossTierEffect(target.EFF_SPELLSHOCKED, src:combatSpellpower())
+			end
+
+			if not src.__projecting_for.talent_on_hit_done then
+				if src.talent_on_spell and next(src.talent_on_spell) and t.is_spell then
+					for id, d in pairs(src.talent_on_spell) do
+						if rng.percent(d.chance) and t.id ~= d.talent then
+							src.__projecting_for.talent_on_hit_done = true
+							local old = src.__projecting_for
+							src:forceUseTalent(d.talent, {ignore_cd=true, ignore_energy=true, force_target=target, force_level=d.level, ignore_ressources=true})
+							src.__projecting_for = old
+						end
 					end
 				end
 			end
