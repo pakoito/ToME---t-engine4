@@ -56,7 +56,7 @@ newTalent{
 	require = techs_strdex_req2,
 	points = 5,
 	random_ego = "attack",
-	stamina = 45,
+	stamina = 22,
 	cooldown = function(self, t) return math.floor(40 - self:getTalentLevel(t) * 4) end,
 	tactical = { ATTACK = 1, CLOSEIN = 3 },
 	requires_target = true,
