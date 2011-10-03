@@ -1468,7 +1468,7 @@ newEffect{
 	desc = "Brainlocked",
 	long_desc = function(self, eff) return ("Renders a random talent unavailable. No talents will cool down until the effect has worn off."):format() end,
 	type = "mental",
-	subtype = { cross_tier=true },
+	subtype = { ["cross tier"]=true },
 	status = "detrimental",
 	parameters = {},
 	on_gain = function(self, err) return nil, "+Brainlocked" end,
@@ -1487,6 +1487,6 @@ newEffect{
 		end
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("no_talents_cooldown", eff.tmpid)
+		self:removeTemporaryValue("no_talents_cooldown", eff.tcdid)
 	end,
 }

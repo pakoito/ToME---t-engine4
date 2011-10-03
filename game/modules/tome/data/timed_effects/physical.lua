@@ -749,107 +749,6 @@ newEffect{
 }
 
 newEffect{
-	name = "ROTTING_DISEASE",
-	desc = "Rotting Disease",
-	long_desc = function(self, eff) return ("The target is infected by a disease, reducing its constitution by %d and doing %0.2f blight damage per turn."):format(eff.con, eff.dam) end,
-	type = "physical",
-	subtype = {disease=true, blight=true},
-	status = "detrimental",
-	parameters = {},
-	on_gain = function(self, err) return "#Target# is afflicted by a rotting disease!" end,
-	on_lose = function(self, err) return "#Target# is free from the rotting disease." end,
-	-- Damage each turn
-	on_timeout = function(self, eff)
-		if self:attr("purify_disease") then self:heal(eff.dam)
-		else DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
-		end
-	end,
-	-- Lost of CON
-	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("inc_stats", {[Stats.STAT_CON] = -eff.con})
-	end,
-	deactivate = function(self, eff)
-		self:removeTemporaryValue("inc_stats", eff.tmpid)
-	end,
-}
-
-newEffect{
-	name = "DECREPITUDE_DISEASE",
-	desc = "Decrepitude Disease",
-	long_desc = function(self, eff) return ("The target is infected by a disease, reducing its dexterity by %d and doing %0.2f blight damage per turn."):format(eff.dex, eff.dam) end,
-	type = "physical",
-	subtype = {disease=true, blight=true},
-	status = "detrimental",
-	parameters = {},
-	on_gain = function(self, err) return "#Target# is afflicted by a decrepitude disease!" end,
-	on_lose = function(self, err) return "#Target# is free from the decrepitude disease." end,
-	-- Damage each turn
-	on_timeout = function(self, eff)
-		if self:attr("purify_disease") then self:heal(eff.dam)
-		else DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
-		end
-	end,
-	-- Lost of CON
-	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("inc_stats", {[Stats.STAT_DEX] = -eff.dex})
-	end,
-	deactivate = function(self, eff)
-		self:removeTemporaryValue("inc_stats", eff.tmpid)
-	end,
-}
-
-newEffect{
-	name = "WEAKNESS_DISEASE",
-	desc = "Weakness Disease",
-	long_desc = function(self, eff) return ("The target is infected by a disease, reducing its strength by %d and doing %0.2f blight damage per turn."):format(eff.str, eff.dam) end,
-	type = "physical",
-	subtype = {disease=true, blight=true},
-	status = "detrimental",
-	parameters = {},
-	on_gain = function(self, err) return "#Target# is afflicted by a weakness disease!" end,
-	on_lose = function(self, err) return "#Target# is free from the weakness disease." end,
-	-- Damage each turn
-	on_timeout = function(self, eff)
-		if self:attr("purify_disease") then self:heal(eff.dam)
-		else DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
-		end
-	end,
-	-- Lost of CON
-	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("inc_stats", {[Stats.STAT_STR] = -eff.str})
-	end,
-	deactivate = function(self, eff)
-		self:removeTemporaryValue("inc_stats", eff.tmpid)
-	end,
-}
-
-newEffect{
-	name = "EPIDEMIC",
-	desc = "Epidemic",
-	long_desc = function(self, eff) return ("The target is infected by a disease, doing %0.2f blight damage per turn and reducig healing received by %d%%.\nEach non-disease blight damage done to it will spread the disease."):format(eff.dam, eff.heal_factor) end,
-	type = "physical",
-	subtype = {disease=true, blight=true},
-	status = "detrimental",
-	parameters = {},
-	on_gain = function(self, err) return "#Target# is afflicted by an epidemic!" end,
-	on_lose = function(self, err) return "#Target# is free from the epidemic." end,
-	-- Damage each turn
-	on_timeout = function(self, eff)
-		if self:attr("purify_disease") then self:heal(eff.dam)
-		else DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
-		end
-	end,
-	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("diseases_spread_on_blight", 1)
-		eff.healid = self:addTemporaryValue("healing_factor", -eff.heal_factor / 100)
-	end,
-	deactivate = function(self, eff)
-		self:removeTemporaryValue("diseases_spread_on_blight", eff.tmpid)
-		self:removeTemporaryValue("healing_factor", eff.healid)
-	end,
-}
-
-newEffect{
 	name = "CRIPPLE",
 	desc = "Cripple",
 	long_desc = function(self, eff) return ("The target is crippled, reducing attack by %d and damage by %d."):format(eff.atk, eff.dam) end,
@@ -1499,56 +1398,6 @@ newEffect{
 }
 
 newEffect{
-	name = "WORM_ROT",
-	desc = "Worm Rot",
-	long_desc = function(self, eff) return ("The target is infected with carrion worm larvae.  Each turn it will lose one beneficial physical effect and %0.2f blight and acid damage will be inflicted.\nAfter five turns the disease will inflict %0.2f blight damage and spawn a carrion worm mass."):format(eff.dam, eff.burst) end,
-	type = "physical",
-	subtype = {disease=true, blight=true, acid=true},
-	status = "detrimental",
-	parameters = {},
-	on_gain = function(self, err) return "#Target# is afflicted by a terrible worm rot!" end,
-	on_lose = function(self, err) return "#Target# is free from the worm rot." end,
-	-- Damage each turn
-	on_timeout = function(self, eff)
-		eff.rot_timer = eff.rot_timer - 1
-
-		-- disease damage
-		if self:attr("purify_disease") then
-			self:heal(eff.dam)
-		else
-			DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
-		end
-		-- acid damage from the larvae
-		DamageType:get(DamageType.ACID).projector(eff.src, self.x, self.y, DamageType.ACID, eff.dam)
-
-		local effs = {}
-		-- Go through all physical effects
-		for eff_id, p in pairs(self.tmp) do
-			local e = self.tempeffect_def[eff_id]
-			if e.status == "beneficial" and e.type == "physical" then
-				effs[#effs+1] = {"effect", eff_id}
-			end
-		end
-		-- remove a random physical effect
-		if #effs > 0 then
-			local eff = rng.tableRemove(effs)
-			if eff[1] == "effect" then
-				self:removeEffect(eff[2])
-			end
-		end
-
-		-- burst and spawn a worm mass
-		if eff.rot_timer == 0 then
-			DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.burst, {from_disease=true})
-			local t = eff.src:getTalentFromId(eff.src.T_WORM_ROT)
-			t.spawn_carrion_worm(eff.src, self, t)
-			game.logSeen(self, "#LIGHT_RED#A carrion worm mass bursts out of %s!", self.name:capitalize())
-			self:removeEffect(self.EFF_WORM_ROT)
-		end
-	end,
-}
-
-newEffect{
 	name = "PSIONIC_BIND",
 	desc = "Immobilized",
 	long_desc = function(self, eff) return "Immobilized by telekinetic forces." end,
@@ -1651,11 +1500,17 @@ newEffect{
 newEffect{
 	name = "OFFBALANCE",
 	desc = "Off-balance",
-	long_desc = function(self, eff) return ("Badly off balance. Attackers gain a 25% bonus to critical strike power.") end,
+	long_desc = function(self, eff) return ("Badly off balance. Attackers gain a 25% bonus to physical critical strike power, the target movement speed is also reduced by 20%%.") end,
 	type = "physical",
-	subtype = { cross_tier=true },
+	subtype = { ["cross tier"]=true },
 	status = "detrimental",
 	parameters = {power = 1},
 	on_gain = function(self, err) return nil, "+Off-balance" end,
 	on_lose = function(self, err) return nil, "-Off-balance" end,
+	activate = function(self, eff)
+		eff.speedid = self:addTemporaryValue("movement_speed", -0.2)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("movement_speed", eff.speedid)
+	end,
 }
