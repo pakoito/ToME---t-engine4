@@ -725,12 +725,14 @@ function _M:doWear(inven, item, o)
 	self.changed = true
 end
 
-function _M:doTakeoff(inven, item, o)
+function _M:doTakeoff(inven, item, o, simple)
 	if self:takeoffObject(inven, item) then
 		self:addObject(self.INVEN_INVEN, o)
 	end
-	self:sortInven()
-	self:useEnergy()
+	if not simple then
+		self:sortInven()
+		self:useEnergy()
+	end
 	self:playerCheckSustains()
 	self.changed = true
 end

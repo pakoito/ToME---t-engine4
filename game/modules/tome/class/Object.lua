@@ -227,6 +227,35 @@ function _M:getName(t)
 	end
 end
 
+--- Gets the short name of the object
+function _M:getShortName(t)
+	if not self.short_name then return self:getName(t) end
+
+	t = t or {}
+	local qty = self:getNumber()
+	local name = self.short_name
+
+	if not self:isIdentified() and not t.force_id and self:getUnidentifiedName() then name = self:getUnidentifiedName() end
+
+	if self.keywords and next(self.keywords) then
+		local k = table.keys(self.keywords)
+		table.sort(k)
+		name = name..","..table.concat(k, ',')
+	end
+
+	if not t.do_color then
+		if qty == 1 or t.no_count then return name
+		else return qty.." "..name
+		end
+	else
+		local _, c = self:getDisplayColor()
+		local ds = t.no_image and "" or self:getDisplayString()
+		if qty == 1 or t.no_count then return c..ds..name.."#LAST#"
+		else return c..qty.." "..ds..name.."#LAST#"
+		end
+	end
+end
+
 --- Gets the full textual desc of the object without the name and requirements
 function _M:getTextualDesc(compare_with)
 	compare_with = compare_with or {}
@@ -728,7 +757,7 @@ function _M:getTextualDesc(compare_with)
 
 		compare_fields(w, compare_with, field, "combat_spellpower", "%+d", "Spellpower: ")
 		compare_fields(w, compare_with, field, "combat_spellcrit", "%+d%%", "Spell crit. chance: ")
-		
+
 		compare_fields(w, compare_with, field, "combat_mindpower", "%+d", "Mindpower: ")
 		compare_fields(w, compare_with, field, "combat_mindcrit", "%+d%%", "Mental crit. chance: ")
 

@@ -36,7 +36,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_MASSIVE_ARMOR",
-	name = "iron plate armour",
+	name = "iron plate armour", short_name = "iron",
 	level_range = {1, 10},
 	require = { stat = { str=22 }, },
 	cost = 20,
@@ -49,7 +49,7 @@ newEntity{ base = "BASE_MASSIVE_ARMOR",
 }
 
 newEntity{ base = "BASE_MASSIVE_ARMOR",
-	name = "steel plate armour",
+	name = "steel plate armour", short_name = "steel",
 	level_range = {10, 20},
 	require = { stat = { str=28 }, },
 	cost = 25,
@@ -62,7 +62,7 @@ newEntity{ base = "BASE_MASSIVE_ARMOR",
 }
 
 newEntity{ base = "BASE_MASSIVE_ARMOR",
-	name = "dwarven-steel plate armour",
+	name = "dwarven-steel plate armour", short_name = "d.steel",
 	level_range = {20, 30},
 	require = { stat = { str=35 }, },
 	cost = 30,
@@ -75,7 +75,7 @@ newEntity{ base = "BASE_MASSIVE_ARMOR",
 }
 
 newEntity{ base = "BASE_MASSIVE_ARMOR",
-	name = "stralite plate armour",
+	name = "stralite plate armour", short_name = "stralite",
 	level_range = {30, 40},
 	cost = 40,
 	material_level = 4,
@@ -88,7 +88,7 @@ newEntity{ base = "BASE_MASSIVE_ARMOR",
 }
 
 newEntity{ base = "BASE_MASSIVE_ARMOR",
-	name = "voratun plate armour",
+	name = "voratun plate armour", short_name = "voratun",
 	level_range = {40, 50},
 	require = { stat = { str=60 }, },
 	cost = 50,
