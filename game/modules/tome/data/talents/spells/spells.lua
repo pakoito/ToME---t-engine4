@@ -183,7 +183,7 @@ function necroSetupSummon(self, m, x, y, level, no_control)
 	m.on_act = function(self)
 		local src = self.summoner
 		local p = src:isTalentActive(src.T_NECROTIC_AURA)
-		if p and self.x and self.y and src.x and src.y and core.fov.distance(self.x, self.y, src.x, src.y) <= self.summoner.necrotic_aura_radius then return end
+		if p and self.x and self.y and not src.dead and src.x and src.y and core.fov.distance(self.x, self.y, src.x, src.y) <= self.summoner.necrotic_aura_radius then return end
 
 		self.life = self.life - self.max_life * (p and p.necrotic_aura_decay or 10) / 100
 		self.changed = true
