@@ -1174,7 +1174,7 @@ function _M:selectTile()
 		self.has_custom_tile = nil
 		self:setTile()
 	end}
-	local list = ImageList.new{width=500, height=500, tile_w=64, tile_h=64, padding=10, list=list, fct=function(item)
+	local list = ImageList.new{width=500, height=500, tile_w=64, tile_h=64, padding=10, scrollbar=true, list=list, fct=function(item)
 		game:unregisterDialog(d)
 		if not self:isDonator() then
 			self:selectTileNoDonations()

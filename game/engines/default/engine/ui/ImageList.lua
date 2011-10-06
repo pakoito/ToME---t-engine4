@@ -34,6 +34,9 @@ function _M:init(t)
 	self.list = assert(t.list, "no image list list")
 	self.fct = assert(t.fct, "no image list fct")
 	self.padding = t.padding or 6
+	self.force_size = t.force_size
+	self.scrollbar = t.scrollbar
+	self.selection = t.selection
 
 	self.nb_w = math.floor(self.w / (self.tile_w + self.padding))
 	self.nb_h = math.floor(self.h / (self.tile_h + self.padding))
@@ -50,7 +53,9 @@ function _M:generate()
 	self.scroll = 1
 	self.dlist = {}
 	local row = {}
-	for i, f in ipairs(self.list) do
+	for i, data in ipairs(self.list) do
+		local f = data
+		if type(data) == "table" then f = f.image end
 		local s = Tiles:loadImage(f)
 		if s then
 			local w, h = s:getSize()
@@ -58,6 +63,7 @@ function _M:generate()
 			item.w = w
 			item.h = h
 			item.f = f
+			item.data = data
 			self.tiles[f] = {f=f, w=w, h=h, pos_i = #row+1, pos_j = #self.dlist}
 			row[#row+1] = item
 			if #row + 1 > self.nb_w then
@@ -69,11 +75,16 @@ function _M:generate()
 	self.dlist[#self.dlist+1] = row
 	self.max = #self.dlist
 
-	self.scrollbar = Slider.new{size=self.h, max=#self.dlist - self.nb_h}
+	if self.scrollbar then
+		self.scrollbar = Slider.new{size=self.h, max=#self.dlist - self.nb_h}
+	end
 
 	self.frame = self:makeFrame(nil, self.tile_w, self.tile_h)
 	self.frame_sel = self:makeFrame("ui/selector-sel", self.tile_w, self.tile_h)
 	self.frame_usel = self:makeFrame("ui/selector", self.tile_w, self.tile_h)
+	if self.selection then
+		self.frame_selected = self:makeFrame("ui/selector-green", self.tile_w, self.tile_h)
+	end
 
 	self.sel_i = 1
 	self.sel_j = 1
@@ -133,10 +144,31 @@ function _M:generate()
 	}
 end
 
+function _M:getAllSelected()
+	local list = {}
+	for i, row in ipairs(self.dlist) do for j, item in ipairs(row) do if item.selected then list[#list+1] = item end end end
+	return list
+end
+
+function _M:clearSelection()
+	for i, row in ipairs(self.dlist) do for j, item in ipairs(row) do item.selected = false end end
+end
+
 function _M:onUse(button)
 	local item = self.dlist[self.sel_j] and self.dlist[self.sel_j][self.sel_i]
 	self:sound("button")
-	if item then self.fct(item) end
+	if item then
+		if self.selection == "simple" then
+			self:clearSelection()
+			item.selected = not item.selected
+		elseif self.selection == "multiple" then
+			item.selected = not item.selected
+		elseif self.selection == "ctrl-multiple" then
+			if not core.key.modState("ctrl") then self:clearSelection() end
+			item.selected = not item.selected
+		end
+		self.fct(item)
+	end
 end
 
 function _M:onSelect()
@@ -150,6 +182,8 @@ function _M:display(x, y)
 		for i = 1, #row do
 			local item = row[i]
 
+			if item.selected then self:drawFrame(self.frame_selected, x + (i-1) * (self.tile_w + self.padding), y) end
+
 			if self.sel_i == i and self.sel_j == j then
 				if self.focused then self:drawFrame(self.frame_sel, x + (i-1) * (self.tile_w + self.padding), y)
 				else self:drawFrame(self.frame_usel, x + (i-1) * (self.tile_w + self.padding), y) end
@@ -157,12 +191,16 @@ function _M:display(x, y)
 				self:drawFrame(self.frame, x + (i-1) * (self.tile_w + self.padding), y)
 			end
 
-			item[1]:toScreenFull(x + (i-1) * (self.tile_w + self.padding) + self.tile_w - item.w, y + self.tile_h - item.h, item.w, item.h, item[2], item[3])
+			if self.force_size then
+				item[1]:toScreenFull(x + (i-1) * (self.tile_w + self.padding), y, self.tile_w, self.tile_h, item[2] * self.tile_w / item.w, item[3] * self.tile_h / item.h)
+			else
+				item[1]:toScreenFull(x + (i-1) * (self.tile_w + self.padding) + self.tile_w - item.w, y + self.tile_h - item.h, item.w, item.h, item[2], item[3])
+			end
 		end
 		y = y + self.tile_h + self.padding
 	end
 
-	if self.focused then
+	if self.focused and self.scrollbar then
 		self.scrollbar.pos = self.scroll
 		self.scrollbar:display(bx + self.w - self.scrollbar.w, by)
 	end

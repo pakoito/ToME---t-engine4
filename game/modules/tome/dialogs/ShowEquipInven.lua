@@ -24,6 +24,7 @@ local ListColumns = require "engine.ui.ListColumns"
 local Textzone = require "engine.ui.Textzone"
 local TextzoneList = require "engine.ui.TextzoneList"
 local Separator = require "engine.ui.Separator"
+local ImageList = require "engine.ui.ImageList"
 local EquipDollFrame = require "engine.ui.EquipDollFrame"
 
 module(..., package.seeall, class.inherit(Dialog))
@@ -41,7 +42,18 @@ function _M:init(title, actor, filter, action, on_select)
 
 	self.inner_scroll = self:makeFrame("ui/tooltip/", self.equipdolls_max_w, self.equipdolls_max_h)
 
-	self.c_inven = ListColumns.new{width=self.iw - 20 - self.equipdolls_max_w, height=self.ih - self.max_h*self.font_h - 10, sortable=true, scrollbar=true, columns={
+	self.c_tabs = ImageList.new{width=self.iw - 20 - self.equipdolls_max_w, height=36, tile_w=32, tile_h=32, padding=5, force_size=true, selection="ctrl-multiple", list={
+		{image="metal-ui/inven_tabs/weapons.png", 	kind="weapons"},
+		{image="metal-ui/inven_tabs/armors.png", 	kind="armors"},
+		{image="metal-ui/inven_tabs/jewelry.png", 	kind="jewelry"},
+		{image="metal-ui/inven_tabs/gems.png", 		kind="gems"},
+		{image="metal-ui/inven_tabs/inscriptions.png", 	kind="inscriptions"},
+		{image="metal-ui/inven_tabs/misc.png", 		kind="misc"},
+		{image="metal-ui/inven_tabs/quests.png", 	kind="quests"},
+	}, fct=function() self:generateList() end}
+	self.c_tabs.dlist[1][1].selected = true
+
+	self.c_inven = ListColumns.new{width=self.iw - 20 - self.equipdolls_max_w, height=self.ih - self.max_h*self.font_h - 10 - self.c_tabs.h, sortable=true, scrollbar=true, columns={
 		{name="", width={20,"fixed"}, display_prop="char", sort="id"},
 		{name="", width={24,"fixed"}, display_prop="object", sort="sortname", direct_draw=function(item, x, y) if item.object then item.object:toScreen(nil, x+4, y, 16, 16) end end},
 		{name="Inventory", width=72, display_prop="name", sort="sortname"},
@@ -51,7 +63,8 @@ function _M:init(title, actor, filter, action, on_select)
 
 	self:generateList()
 
-	uis[#uis+1] = {right=0, top=0, ui=self.c_inven}
+	uis[#uis+1] = {right=0, top=0, ui=self.c_tabs}
+	uis[#uis+1] = {right=0, top=self.c_tabs.h + 5, ui=self.c_inven}
 	uis[#uis+1] = {left=self.equipdolls_max_w, top=5, ui=Separator.new{dir="horizontal", size=self.ih - 10}}
 
 	self:loadUI(uis)
@@ -230,14 +243,57 @@ function _M:innerDisplayBack(x, y, nb_keyframes)
 	self.actor:toScreen(nil, x + doll.doll_x, y + self.base_doll_y + doll.doll_y, 128, 128)
 end
 
+local tab_filters = {
+	weapons = function(o) return o.type == "weapon" end,
+	armors = function(o) return o.type == "armor" end,
+	gems = function(o) return o.type == "gem" or o.type == "alchemist-gem" end,
+	jewelry = function(o) return o.type == "jewelry" end,
+	inscriptions = function(o) return o.type == "scroll" end,
+	quests = function(o) return o.plot or o.quest end,
+}
+
+function _M:updateTabFilter()
+	local list = self.c_tabs:getAllSelected()
+	local checks = {}
+
+	for i, item in ipairs(list) do
+		if item.data.kind == "weapons" then checks[#checks+1] = tab_filters.weapons
+		elseif item.data.kind == "armors" then checks[#checks+1] = tab_filters.armors
+		elseif item.data.kind == "gems" then checks[#checks+1] = tab_filters.gems
+		elseif item.data.kind == "jewelry" then checks[#checks+1] = tab_filters.jewelry
+		elseif item.data.kind == "inscriptions" then checks[#checks+1] = tab_filters.inscriptions
+		elseif item.data.kind == "quests" then checks[#checks+1] = tab_filters.quests
+		elseif item.data.kind == "misc" then
+			local misc
+			misc = function(o)
+				-- Anything else
+				for k, fct in pairs(tab_filters) do
+					if fct ~= misc then
+						if fct(o) then return false end
+					end
+				end
+				return true
+			end
+			checks[#checks+1] = misc
+		end
+	end
+
+	self.tab_filter = function(o)
+		for i = 1, #checks do if checks[i](o) then return true end end
+		return false
+	end
+end
+
 function _M:generateList(no_update)
+	self:updateTabFilter()
+
 	-- Makes up the list
 	self.inven_list = {}
 	local list = self.inven_list
 	local chars = {}
 	local i = 1
 	for item, o in ipairs(self.actor:getInven("INVEN") or {}) do
-		if not self.filter or self.filter(o) then
+		if (not self.filter or self.filter(o)) and (not self.tab_filter or self.tab_filter(o)) then
 			local char = self:makeKeyChar(i)
 
 			local enc = 0
