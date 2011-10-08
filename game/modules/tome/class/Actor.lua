@@ -1471,7 +1471,9 @@ function _M:die(src, death_note)
 			for inven_id, inven in pairs(self.inven) do invens[#invens+1] = inven end
 			table.sort(invens, function(a,b) if a.id == 1 then return false elseif b.id == 1 then return true else return a.id < b.id end end)
 			for _, inven in ipairs(invens) do
-				for i, o in ipairs(inven) do
+				for i = #inven, 1, -1 do
+					local o = inven[i]
+
 					-- Handle boss wielding artifacts
 					if o.__special_boss_drop and rng.percent(o.__special_boss_drop.chance) then
 						print("Refusing to drop "..self.name.." artifact "..o.name.." with chance "..o.__special_boss_drop.chance)
@@ -1486,6 +1488,7 @@ function _M:die(src, death_note)
 
 					if not o.no_drop then
 						o.droppedBy = self.name
+						self:removeObject(inven, i, true)
 						game.level.map:addObject(self.x, self.y, o)
 					else
 						o:removed()
