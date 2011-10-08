@@ -37,20 +37,30 @@ function _M:init(title, actor, filter, action, on_select)
 
 	Dialog.init(self, title or "Inventory", math.max(800, game.w * 0.8), math.max(600, game.h * 0.8))
 
+	self.font_bold:setStyle("bold")
+	local tw, th = self.font_bold:size(self.actor.name)
+	local s = core.display.newSurface(tw, th)
+	s:erase(0, 0, 0, 0)
+	s:drawColorStringBlended(self.font_bold, self.actor.name, 0, 0, colors.GOLD.r, colors.GOLD.g, colors.GOLD.b, true)
+	self.font_bold:setStyle("normal")
+	self.charname_tex = {s:glTexture()}
+	self.charname_tex.w = tw
+	self.charname_tex.h = th
+
 	self.max_h = 0
 	local uis = self:generateEquipDollFrames()
 
 	self.inner_scroll = self:makeFrame("ui/tooltip/", self.equipdolls_max_w, self.equipdolls_max_h)
 
 	self.c_tabs = ImageList.new{width=self.iw - 20 - self.equipdolls_max_w, height=36, tile_w=32, tile_h=32, padding=5, force_size=true, selection="ctrl-multiple", list={
-		{image="metal-ui/inven_tabs/weapons.png", 	kind="weapons"},
-		{image="metal-ui/inven_tabs/armors.png", 	kind="armors"},
-		{image="metal-ui/inven_tabs/jewelry.png", 	kind="jewelry"},
-		{image="metal-ui/inven_tabs/gems.png", 		kind="gems"},
-		{image="metal-ui/inven_tabs/inscriptions.png", 	kind="inscriptions"},
-		{image="metal-ui/inven_tabs/misc.png", 		kind="misc"},
-		{image="metal-ui/inven_tabs/quests.png", 	kind="quests"},
-	}, fct=function() self:generateList() end}
+		{image="metal-ui/inven_tabs/weapons.png", 	kind="weapons", desc="All kinds of weapons"},
+		{image="metal-ui/inven_tabs/armors.png", 	kind="armors", desc="All kinds of armours"},
+		{image="metal-ui/inven_tabs/jewelry.png", 	kind="jewelry", desc="Rings and Amulets"},
+		{image="metal-ui/inven_tabs/gems.png", 		kind="gems", desc="Gems"},
+		{image="metal-ui/inven_tabs/inscriptions.png", 	kind="inscriptions", desc="Infusions, Runes, ..."},
+		{image="metal-ui/inven_tabs/misc.png", 		kind="misc", desc="Miscellaneous"},
+		{image="metal-ui/inven_tabs/quests.png", 	kind="quests", desc="Quest and plot related items"},
+	}, fct=function() self:generateList() end, on_select=function(item) self:select(item) end}
 	self.c_tabs.dlist[1][1].selected = true
 
 	self.c_inven = ListColumns.new{width=self.iw - 20 - self.equipdolls_max_w, height=self.ih - self.max_h*self.font_h - 10 - self.c_tabs.h, sortable=true, scrollbar=true, columns={
@@ -137,12 +147,29 @@ function _M:init(title, actor, filter, action, on_select)
 			end
 		end,
 		EXIT = function() game:unregisterDialog(self) end,
+
+		SWITCH_PARTY_1 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 1 self.c_tabs:onUse("left") end,
+		SWITCH_PARTY_2 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 2 self.c_tabs:onUse("left") end,
+		SWITCH_PARTY_3 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 3 self.c_tabs:onUse("left") end,
+		SWITCH_PARTY_4 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 4 self.c_tabs:onUse("left") end,
+		SWITCH_PARTY_5 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 5 self.c_tabs:onUse("left") end,
+		SWITCH_PARTY_6 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 6 self.c_tabs:onUse("left") end,
+		SWITCH_PARTY_7 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 7 self.c_tabs:onUse("left") end,
+		ORDER_PARTY_1 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 1 self.c_tabs:onUse("left", true) end,
+		ORDER_PARTY_2 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 2 self.c_tabs:onUse("left", true) end,
+		ORDER_PARTY_3 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 3 self.c_tabs:onUse("left", true) end,
+		ORDER_PARTY_4 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 4 self.c_tabs:onUse("left", true) end,
+		ORDER_PARTY_5 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 5 self.c_tabs:onUse("left", true) end,
+		ORDER_PARTY_6 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 6 self.c_tabs:onUse("left", true) end,
+		ORDER_PARTY_7 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 7 self.c_tabs:onUse("left", true) end,
 	}
 
 	-- Add tooltips
 	self.on_select = function(item)
 		if item.last_display_x and item.object then
-			game:tooltipDisplayAtMap(item.last_display_x, item.last_display_y, item.object:getDesc({do_color=true}, self.actor:getInven(item.object:wornInven())))
+			game:tooltipDisplayAtMap(item.last_display_x, item.last_display_y, item.object:getDesc({do_color=true}))
+		elseif item.last_display_x and item.data and item.data.desc then
+			game:tooltipDisplayAtMap(item.last_display_x, item.last_display_y + self.c_tabs.h, item.data.desc)
 		end
 	end
 	self.key.any_key = function(sym)
@@ -181,6 +208,7 @@ function _M:on_focus(id, ui)
 	if self.focus_ui and self.focus_ui.ui == self.c_inven then self:select(self.c_inven.list[self.c_inven.sel])
 	elseif self.focus_ui and self.focus_ui.ui and self.focus_ui.ui.doll_select and self.focus_ui.ui:getItem() and self.focus_ui.ui.last_display_x then
 		self:select{last_display_x=self.focus_ui.ui.last_display_x+self.focus_ui.ui.w, last_display_y=self.focus_ui.ui.last_display_y, object=self.focus_ui.ui:getItem()}
+	elseif self.focus_ui and self.focus_ui.ui == self.c_tabs then
 	else
 		game.tooltip_x = nil
 	end
@@ -366,4 +394,6 @@ function _M:drawFrame(x, y, r, g, b, a)
 	core.display.drawQuad(x + self.frame.title_x, y + self.frame.title_y, self.title_fill, self.frame.title_h, self.title_fill_color.r, self.title_fill_color.g, self.title_fill_color.b, 60)
 
 	Base.drawFrame(self, self.inner_scroll, x, y + self.base_doll_y)
+	if self.title_shadow then self.charname_tex[1]:toScreenFull(x + (self.equipdolls_max_w - self.charname_tex.w) / 2 + 2, y + self.base_doll_y + 5 + 2, self.charname_tex.w, self.charname_tex.h, self.charname_tex[2], self.charname_tex[3], 0, 0, 0, 0.5) end
+	self.charname_tex[1]:toScreenFull(x + (self.equipdolls_max_w - self.charname_tex.w) / 2, y + self.base_doll_y + 5, self.charname_tex.w, self.charname_tex.h, self.charname_tex[2], self.charname_tex[3])
 end

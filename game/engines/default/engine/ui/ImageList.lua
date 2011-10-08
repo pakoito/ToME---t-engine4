@@ -37,6 +37,7 @@ function _M:init(t)
 	self.force_size = t.force_size
 	self.scrollbar = t.scrollbar
 	self.selection = t.selection
+	self.on_select = t.on_select
 
 	self.nb_w = math.floor(self.w / (self.tile_w + self.padding))
 	self.nb_h = math.floor(self.h / (self.tile_h + self.padding))
@@ -154,7 +155,7 @@ function _M:clearSelection()
 	for i, row in ipairs(self.dlist) do for j, item in ipairs(row) do item.selected = false end end
 end
 
-function _M:onUse(button)
+function _M:onUse(button, forcectrl)
 	local item = self.dlist[self.sel_j] and self.dlist[self.sel_j][self.sel_i]
 	self:sound("button")
 	if item then
@@ -164,7 +165,7 @@ function _M:onUse(button)
 		elseif self.selection == "multiple" then
 			item.selected = not item.selected
 		elseif self.selection == "ctrl-multiple" then
-			if not core.key.modState("ctrl") then self:clearSelection() end
+			if not forcectrl and not core.key.modState("ctrl") then self:clearSelection() end
 			item.selected = not item.selected
 		end
 		self.fct(item)
@@ -172,9 +173,11 @@ function _M:onUse(button)
 end
 
 function _M:onSelect()
+	local item = self.dlist[self.sel_j] and self.dlist[self.sel_j][self.sel_i]
+	if self.on_select and item then self.on_select(item) end
 end
 
-function _M:display(x, y)
+function _M:display(x, y, nb_keyframes, screen_x, screen_y)
 	local bx, by = x, y
 
 	for j = self.scroll, math.min(self.scroll + self.nb_h, #self.dlist) do
@@ -196,6 +199,8 @@ function _M:display(x, y)
 			else
 				item[1]:toScreenFull(x + (i-1) * (self.tile_w + self.padding) + self.tile_w - item.w, y + self.tile_h - item.h, item.w, item.h, item[2], item[3])
 			end
+			item.last_display_x = screen_x + (x - bx)
+			item.last_display_y = screen_y + (y - by)
 		end
 		y = y + self.tile_h + self.padding
 	end
