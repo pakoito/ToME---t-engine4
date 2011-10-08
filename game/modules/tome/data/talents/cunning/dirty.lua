@@ -106,7 +106,8 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[Using a series of tricks and maneuvers, you switch places with your target.
-		Switching places will confuse your foes, granting you evasion(50%%) for %d turns.]]):
+		Switching places will confuse your foes, granting you evasion(50%%) for %d turns.
+		While switching places your weapon(s) will connect with the target, not damaging it but on hit effects can trigger.]]):
 		format(duration)
 	end,
 }
