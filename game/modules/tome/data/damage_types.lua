@@ -256,7 +256,7 @@ end
 
 newDamageType{
 	name = "physical", type = "PHYSICAL",
-	death_message = {"battered", "bludgeoned", "sliced", "maimed", "raked", "bled", "impaled", "dissected", "disembowelled", "decapitated", "stabbed", "pierced", "torn limb from limb", "crushed", "shattered", "smashed", "cleaved", "swiped", "struck", "mutilated", "tortured"},
+	death_message = {"battered", "bludgeoned", "sliced", "maimed", "raked", "bled", "impaled", "dissected", "disembowelled", "decapitated", "stabbed", "pierced", "torn limb from limb", "crushed", "shattered", "smashed", "cleaved", "swiped", "struck", "mutilated", "tortured", "skewered", "squished", "mauled", "chopped into tiny pieces", "splattered", "ground", "minced", "punctured", "hacked apart", "eviscerated"},
 }
 
 -- Arcane is basic (usually) unresistable damage
@@ -291,7 +291,7 @@ newDamageType{
 		end
 		return realdam
 	end,
-	death_message = {"frozen", "chilled", "iced", "cooled"},
+	death_message = {"frozen", "chilled", "iced", "cooled", "frozen and shattered into a million little shards"},
 }
 newDamageType{
 	name = "lightning", type = "LIGHTNING", text_color = "#ROYAL_BLUE#",
@@ -300,7 +300,7 @@ newDamageType{
 		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
 		return realdam
 	end,
-	death_message = {"electrocuted", "shocked", "bolted", "volted", "amped"},
+	death_message = {"electrocuted", "shocked", "bolted", "volted", "amped", "zapped"},
 }
 -- Acid destroys potions
 newDamageType{
@@ -317,7 +317,7 @@ newDamageType{
 newDamageType{
 	name = "nature", type = "NATURE", text_color = "#LIGHT_GREEN#",
 	antimagic_resolve = true,
-	death_message = {"slimed"},
+	death_message = {"slimed", "splurged", "treehugged", "naturalised"},
 }
 newDamageType{
 	name = "blight", type = "BLIGHT", text_color = "#DARK_GREEN#",
@@ -335,21 +335,21 @@ newDamageType{
 		end
 		return realdam
 	end,
-	death_message = {"diseased", "poxed", "infected", "plagued", "debilitated by noxious blight before falling", "fouled"},
+	death_message = {"diseased", "poxed", "infected", "plagued", "debilitated by noxious blight before falling", "fouled", "tainted"},
 }
 
 -- Light damage
 newDamageType{
 	name = "light", type = "LIGHT", text_color = "#YELLOW#",
 	antimagic_resolve = true,
-	death_message = {"radiated", "seared", "purified"},
+	death_message = {"radiated", "seared", "purified", "sun baked", "jerkied", "tanned"},
 }
 
 -- Darkness damage
 newDamageType{
 	name = "darkness", type = "DARKNESS", text_color = "#GREY#",
 	antimagic_resolve = true,
-	death_message = {"shadowed", "darkened"},
+	death_message = {"shadowed", "darkened", "swallowed by the void"},
 }
 
 -- Mind damage
@@ -375,7 +375,7 @@ newDamageType{
 newDamageType{
 	name = "temporal", type = "TEMPORAL", text_color = "#LIGHT_STEEL_BLUE#",
 	antimagic_resolve = true,
-	death_message = {"timewarped", "temporally distorted", "spaghettified across the whole of space and time", "paradoxed"},
+	death_message = {"timewarped", "temporally distorted", "spaghettified across the whole of space and time", "paradoxed", "replaced by a time clone (and no one ever knew the difference)", "grandfathered", "time dilated"},
 }
 
 -- Temporal + Stun
