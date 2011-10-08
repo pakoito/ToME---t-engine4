@@ -163,7 +163,7 @@ newTalent{
 	target = function(self, t) return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), friendlyfire=isFF(self), talent=t, display={particle="bolt_dark", trail="darktrail"}} end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 28, 280) end,
 	getMinion = function(self, t) return 10 + self:combatTalentSpellDamage(t, 10, 30) end,
-	getDur = function(self, t) return math.floor(3 + self:getTalentLevel(t)) end,
+	getDur = function(self, t) return math.floor(3 + self:getTalentLevel(t) / 1.5) end,
 	getSpeed = function(self, t) return math.min(self:getTalentLevel(t) * 0.065, 0.5) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
