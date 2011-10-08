@@ -737,6 +737,7 @@ newEntity{ base = "BASE_SHIELD",
 		combat_def = 20,
 		combat_def_ranged = 10,
 		fatigue = 30,
+		combat_armor_hardiness = 20,
 	},
 }
 
