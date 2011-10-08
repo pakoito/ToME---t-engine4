@@ -30,7 +30,12 @@ newEntity{
 	desc = [[The rift leads somewhere ..]],
 	change_level = 1, change_zone = "temporal-rift",
 	change_level_check = function() -- Forbid going back
-		if not game.player:hasQuest("temporal-rift") then return false end
+		if not game.player:hasQuest("temporal-rift") then
+			require("engine.ui.Dialog"):yesnoPopup("Temporal Rift", "Are you sure you want to enter? There's no telling where you will end up or if you will be able to make it back.", function(ret)
+				if ret then game:changeLevel(1, "temporal-rift") end
+			end)
+			return true
+		end
 		game.log("The rift is too unstable to cross it.")
 		return true
 	end
