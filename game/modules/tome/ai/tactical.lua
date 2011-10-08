@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
---local print = function() end
+local print = function() end
 
 -- Internal functions
 local checkLOS = function(sx, sy, tx, ty)
@@ -31,7 +31,7 @@ local checkLOS = function(sx, sy, tx, ty)
 	end
 	-- Ok if we are at the end reset lx and ly for the next code
 	if not lx and not ly and not is_corner_blocked then lx, ly = x, y end
-	
+
 	if lx == x and ly == y then return true, lx, ly end
 	return false, lx, ly
 end
