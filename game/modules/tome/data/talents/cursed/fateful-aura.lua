@@ -47,7 +47,7 @@ local function getEffect(list, item, who, level, effectName)
 		if weight <= weightTotal then return effect end
 	end
 	print("* fateful-aura getEffect failed. count:", #list, "found:", #effects, "weightTotal:", weightTotal, "weight:", weight, "item:", item.name, "type:", item.type, "subtype:", item.subtype, "level:", level, "subclass:", (who.descriptor and who.descriptor.subclass or who.subtype))
-	
+
 	return
 end
 
@@ -74,6 +74,7 @@ newTalent{
 	mode = "passive",
 	require = cursed_wil_req1,
 	points = 5,
+	no_unlearn_last = true,
 	getCurseChance = function(self, t)
 		return math.floor(math.min(100, 30 + (math.sqrt(self:getTalentLevel(t)) - 1) * 50))
 	end,
@@ -160,7 +161,7 @@ newTalent{
 		if beneficialEffect then
 			addEffect(item, beneficialEffect, self, power)
 		end
-		
+
 		local curseName = "#F53CBE#"..detrimentalEffect.name.."#LAST#"
 		if beneficialEffect then
 			curseName = curseName..", #F53CBE#"..beneficialEffect.name.."#LAST#"

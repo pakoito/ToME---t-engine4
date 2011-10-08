@@ -27,6 +27,7 @@ newTalent{
 	mode = "passive",
 	require = cursed_wil_req1,
 	points = 5,
+	no_unlearn_last = true,
 	on_learn = function(self, t)
 		return true
 	end,
@@ -54,10 +55,10 @@ newTalent{
 			self.unnatural_body_healing_factor = -0.5
 			self.healing_factor = (self.healing_factor or 1) + self.unnatural_body_healing_factor
 		end
-	
+
 		-- equipped items changed
 		local oldHealingFactor = self.unnatural_body_healing_factor
-		
+
 		local bonus = t.getCurseHealingFactorChange(self, t)
 		local newHealingFactor = -0.5
 		if self:hasShield() and self:hasShield().cursed then newHealingFactor = newHealingFactor + bonus end
@@ -67,7 +68,7 @@ newTalent{
 		if self:getInven("FEET") and self:getInven("FEET")[1] and self:getInven("FEET")[1].cursed then newHealingFactor = newHealingFactor + bonus end
 		if self:getInven("HEAD") and self:getInven("HEAD")[1] and self:getInven("HEAD")[1].cursed then newHealingFactor = newHealingFactor + bonus end
 		if self:getInven("BELT") and self:getInven("BELT")[1] and self:getInven("BELT")[1].cursed then newHealingFactor = newHealingFactor + bonus end
-		
+
 		if self.unnatural_body_healing_factor ~= newHealingFactor then
 			self.healing_factor = (self.healing_factor or 1) + newHealingFactor - self.unnatural_body_healing_factor
 			self.unnatural_body_healing_factor = newHealingFactor
@@ -112,7 +113,7 @@ newTalent{
 		if self.unnatural_body_healing_factor == nil then
 			t.updateHealingFactor(self, t)
 		end
-	
+
 		local healPerKill = t.getHealPerKill(self, t)
 		local maxUnnaturalBodyHeal = t.getMaxUnnaturalBodyHeal(self, t)
 		local regenRate = t.getRegenRate(self, t)
