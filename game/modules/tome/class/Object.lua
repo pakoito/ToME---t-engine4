@@ -135,7 +135,7 @@ function _M:descAttribute(attr)
 		local c = self.combat
 		return c.dam.."-"..(c.dam*(c.damrange or 1.1)).." power, "..(c.apr or 0).." apr, "..DamageType:get(c.damtype).name.." damage"
 	elseif attr == "ARMOR" then
-		return (self.wielder and self.wielder.combat_def or 0).." def, "..(self.wielder and self.wielder.combat_armor or 0).." armor"
+		return (self.wielder and self.wielder.combat_def or 0).." def, "..(self.wielder and self.wielder.combat_armor or 0).." armour"
 	elseif attr == "ATTACK" then
 		return (self.wielder and self.wielder.combat_atk or 0).." accuracy, "..(self.wielder and self.wielder.combat_apr or 0).." apr, "..(self.wielder and self.wielder.combat_dam or 0).." power"
 	elseif attr == "MONEY" then
@@ -425,7 +425,7 @@ function _M:getTextualDesc(compare_with)
 		end
 
 		compare_fields(combat, compare_with, field, "atk", "%+d", "Accuracy: ", 1, false, false, add_table)
-		compare_fields(combat, compare_with, field, "apr", "%+d", "Armor Penetration: ", 1, false, false, add_table)
+		compare_fields(combat, compare_with, field, "apr", "%+d", "Armour Penetration: ", 1, false, false, add_table)
 		compare_fields(combat, compare_with, field, "physcrit", "%+.1f%%", "Physical crit. chance: ", 1, false, false, add_table)
 		compare_fields(combat, compare_with, field, "physspeed", "%.0f%%", "Attack speed: ", 100, false, true, add_table)
 
@@ -503,12 +503,12 @@ function _M:getTextualDesc(compare_with)
 		w = w or {}
 		w = w[field] or {}
 		compare_fields(w, compare_with, field, "combat_atk", "%+d", "Accuracy: ")
-		compare_fields(w, compare_with, field, "combat_apr", "%+d", "Armor penetration: ")
+		compare_fields(w, compare_with, field, "combat_apr", "%+d", "Armour penetration: ")
 		compare_fields(w, compare_with, field, "combat_physcrit", "%+.1f%%", "Physical crit. chance: ")
 		compare_fields(w, compare_with, field, "combat_dam", "%+d", "Physical power: ")
 
-		compare_fields(w, compare_with, field, "combat_armor", "%+d", "Armor: ")
-		compare_fields(w, compare_with, field, "combat_armor_hardiness", "%+d%%", "Armor Hardiness: ")
+		compare_fields(w, compare_with, field, "combat_armor", "%+d", "Armour: ")
+		compare_fields(w, compare_with, field, "combat_armor_hardiness", "%+d%%", "Armour Hardiness: ")
 		compare_fields(w, compare_with, field, "combat_def", "%+d", "Defense: ")
 		compare_fields(w, compare_with, field, "combat_def_ranged", "%+d", "Ranged Defense: ")
 
