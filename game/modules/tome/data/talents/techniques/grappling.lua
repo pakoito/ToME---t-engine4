@@ -27,23 +27,25 @@ newTalent{
 	tactical = { BUFF = 2 },
 	type_no_req = true,
 	no_npc_use = true, -- They dont need it since it auto switches anyway
-	getSave = function(self, t) return 5 + self:getStr(20, true) end,
-	getDamage = function(self, t) return 20 + self:getStr(20, true) end,
+	getSave = function(self, t) return self:getStr(20, true) end,
+	getDamage = function(self, t) return self:getStr(10, true) end,
 	activate = function(self, t)
 		cancelStances(self)
 		local ret = {
 			phys = self:addTemporaryValue("combat_physresist", t.getSave(self, t)),
+			power = self:addTemporaryValue("combat_dam", t.getDamage(self, t)),
 		}
 		return ret
 	end,
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("combat_physresist", p.phys)
+		self:removeTemporaryValue("combat_dam", p.power)
 		return true
 	end,
 	info = function(self, t)
 		local save = t.getSave(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Increases your physical saves by %d and the damage of your grappling talents by %d%%.
+		return ([[Increases your physical saves by %d and your physical power by %d.
 		The bonuses will scale with the strength stat.]])
 		:format(save, damage)
 	end,
@@ -60,7 +62,7 @@ newTalent{
 	tactical = { ATTACK = 2, DISABLE = 2 },
 	requires_target = true,
 	getDuration = function(self, t) return 4 + math.floor(self:getTalentLevel(t)) end,
-	getPower = function(self, t) return 5 + self:combatTalentStatDamage(t, "str", 1, 50) end,
+	getPower = function(self, t) return self:combatTalentPhysicalDamage(t, 5, 25) end,
 	getDrain = function(self, t) return 6 - math.max(1, self:getTalentLevelRaw(t) or 0) end,
 	-- Learn the appropriate stance
 	on_learn = function(self, t)
@@ -122,7 +124,7 @@ newTalent{
 		local drain = t.getDrain(self, t)
 		return ([[Grapples a target up to one size category larger then yourself for %d turns. A grappled opponent will be unable to move and its attack and defense will be reduced by %d.  Any movement from the target or you will break the grapple.  Maintaining a grapple drains %d stamina per turn.
 		You may only grapple a single target at a time and using any targeted unarmed talent on a target that you're not grappling will break the grapple.
-		The grapple attack and defense reduction as well as success chance will scale with the strength stat.
+		The grapple attack and defense reduction as well as success chance will scale with your physical power.
 		Performing this action will switch your stance to Grappling Stance.]])
 		:format(duration, power, drain)
 	end,
@@ -139,8 +141,8 @@ newTalent{
 	tactical = { ATTACK = 2, DISABLE = 2 },
 	requires_target = true,
 	getDuration = function(self, t) return 2 + math.floor(self:getTalentLevel(t)) end,
-	getDamage = function(self, t) return 10 + self:combatTalentStatDamage(t, "str", 20, 400) * (1 + getGrapplingStyle(self, dam)) end,
-	getMaim = function(self, t) return 10 + self:combatTalentStatDamage(t, "str", 5, 20) * (1 + getGrapplingStyle(self, dam)) end,
+	getDamage = function(self, t) return self:combatTalentPhysicalDamage(t, 10, 100) * getUnarmedTrainingBonus(self) end,
+	getMaim = function(self, t) return self:combatTalentPhysicalDamage(t, 5, 30) end,
 	-- Learn the appropriate stance
 	action = function(self, t)
 
@@ -182,7 +184,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local maim = t.getMaim(self, t)
 		return ([[Grapples the target and inflicts %0.2f physical damage.  If the target is already grappled the target will be maimed as well, reducing damage by %d and global speed by 30%% for %d turns.
-		The grapple effects will be based off your grapple talent effect if you have it and the damage will scale with the strength stat.]])
+		The grapple effects will be based off your grapple talent effect if you have it and the damage will with your physical power.]])
 		:format(damDesc(self, DamageType.PHYSICAL, (damage)), maim, duration)
 	end,
 }
@@ -195,12 +197,12 @@ newTalent{
 	points = 5,
 	tactical = { ATTACK = 2, DISABLE = 2 },
 	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentStatDamage(t, "str", 1, 200) * (1 + getGrapplingStyle(self, dam)) end,
+	getDamage = function(self, t) return self:combatTalentPhysicalDamage(t, 5, 50) * getUnarmedTrainingBonus(self) end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[Your clinch talent now starts a crushing hold that deals %0.2f physical damage each turn.  If the target is already grappled the hold will instead become a strangle hold, silencing the target and inflicting %0.2f physical damage each turn.
 		Undead, targets immune to silence, and creatures that do not breathe are immune to the strangle effect and will only be affected by the crushing hold.
-		The damage will scale with the strength stat.]])
+		The damage will scale with your physical power.]])
 		:format(damDesc(self, DamageType.PHYSICAL, (damage)), damDesc(self, DamageType.PHYSICAL, (damage * 1.5)))
 	end,
 }
@@ -217,8 +219,8 @@ newTalent{
 	requires_target = true,
 	range = function(self, t) return 2 + math.floor(self:getTalentLevel(t)/3) end,
 	getDuration = function(self, t) return 2 + math.floor(self:getTalentLevel(t)) end,
-	getTakeDown = function(self, t) return 10 + self:combatTalentStatDamage(t, "str", 15, 250) * (1 + getGrapplingStyle(self, dam)) end,
-	getSlam = function(self, t) return 20 + self:combatTalentStatDamage(t, "str", 30, 500) * (1 + getGrapplingStyle(self, dam)) end,
+	getTakeDown = function(self, t) return self:combatTalentPhysicalDamage(t, 10, 100) * getUnarmedTrainingBonus(self) end,
+	getSlam = function(self, t) return self:combatTalentPhysicalDamage(t, 15, 150) * getUnarmedTrainingBonus(self) end,
 	-- Learn the appropriate stance
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
@@ -288,7 +290,7 @@ newTalent{
 		local takedown = t.getTakeDown(self, t)
 		local slam = t.getSlam(self, t)
 		return ([[Rushes forward and attempts to take the target to the ground, starting a grapple, inflicting %0.2f physical damage, and dazing the target for %d turns.  If you're already grappling the target you'll instead slam them into the ground for %0.2f physical damage and potentially stun them for %d turns.
-		The grapple effects and duration will be based off your grapple talent effect if you have it and the damage will scale with the strength stat.]])
+		The grapple effects and duration will be based off your grapple talent effect if you have it and the damage will scale with your physical power.]])
 		:format(damDesc(self, DamageType.PHYSICAL, (takedown)), duration, damDesc(self, DamageType.PHYSICAL, (slam)), duration)
 	end,
 }

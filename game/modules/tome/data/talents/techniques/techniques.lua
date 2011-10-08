@@ -192,25 +192,22 @@ archery_range = function(self, t)
 end
 
 -- Unarmed stance changes and stance damage bonuses
-
-getGrapplingStyle = function(self, dam)
-	local dam = 0
-	if self:isTalentActive(self.T_GRAPPLING_STANCE) then
-		local t = self:getTalentFromId(self.T_GRAPPLING_STANCE)
-		dam = t.getDamage(self, t)
-	end
-		return dam / 100
-end
-
 getStrikingStyle = function(self, dam)
 	local dam = 0
 	if self:isTalentActive(self.T_STRIKING_STANCE) then
 		local t = self:getTalentFromId(self.T_STRIKING_STANCE)
 		dam = t.getDamage(self, t)
 	end
-		return dam / 100
+	return dam / 100
 end
 
+-- Used for grapples and other unarmed attacks that don't rely on glove or gauntlet damage
+getUnarmedTrainingBonus = function(self)
+	local t = self:getTalentFromId(self.T_UNARMED_MASTERY)
+	local damage = t.getPercentInc(self, t) or 0
+	return damage + 1
+end
+	
 cancelStances = function(self)
 	if self.cancelling_stances then return end
 	local stances = {self.T_STRIKING_STANCE, self.T_GRAPPLING_STANCE}

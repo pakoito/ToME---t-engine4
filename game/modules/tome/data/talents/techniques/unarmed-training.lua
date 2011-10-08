@@ -42,7 +42,6 @@ newTalent{
 }
 
 -- generic unarmed training
-
 newTalent{
 	name = "Unarmed Mastery",
 	type = {"technique/unarmed-training", 1},
@@ -54,9 +53,9 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local inc = t.getPercentInc(self, t)
-		return ([[Increases Physical Power by %d. 
-		Also increases damage done with unarmed attacks by %d%%. Note this only applies to your base unarmed damage and things that work off of it (pugilism and finishing moves for instance) and will not increase grappling or kick damage.]]):
-		format(damage, 100*inc)
+		return ([[Increases damage done with all unarmed attacks by %d%% (including grapples and kicks).  Also increases Physical Power by %d.
+		Note that brawlers naturally gain 0.5 physical power per character level (current brawler physical power bonus: %0.1f.)]]):
+		format(100*inc, damage, self.level * 0.5)
 	end,
 }
 

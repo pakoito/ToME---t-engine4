@@ -17,13 +17,6 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- strength, cunning, and dexterity damage combined
-local function getTriStat(self, t, low, high)
-	low = low / 3
-	high = high / 3
-	return	self:combatTalentStatDamage(t, "str", low, high) + self:combatTalentStatDamage(t, "cun", low, high) + self:combatTalentStatDamage(t, "dex", low, high)
-end
-
 newTalent{
 	name = "Push Kick",
 	type = {"technique/unarmed-discipline", 1},
@@ -33,7 +26,7 @@ newTalent{
 	stamina = 12,
 	tactical = { ATTACK = 2, ESCAPE = 2 },
 	requires_target = true,
-	getDamage = function(self, t) return getTriStat(self, t, 10, 300) * (1 + getStrikingStyle(self, dam)) end,
+	getDamage = function(self, t) return self:combatTalentPhysicalDamage(t, 10, 100) * getUnarmedTrainingBonus(self) end,
 	getPush = function(self, t) return 1 + math.ceil(self:getTalentLevel(t)/4) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
@@ -74,9 +67,9 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local push = t.getPush(self, t)
 		return ([[A push kick that knocks the target back %d tiles, moves you back 1 tile, and inflicts %0.2f physical damage.  If another creature is in the way that creature will be affected too.  Targets knocked into other targets may take extra damage.
-		This is considered a strike for the purposes of stance damage bonuses, will earn one combo point, and will break any grapples you're maintaining.
-		The damage will scale with the strength, dexterity, and cunning stats.]])
-		:format(push, damDesc(self, DamageType.PHYSICAL, (damage)))
+		This will earn one combo point and break any grapples you're maintaining.
+		The damage will scale with your physical power.]]):
+		format(push, damDesc(self, DamageType.PHYSICAL, (damage)))
 	end,
 }
 
@@ -86,8 +79,8 @@ newTalent{
 	require = techs_dex_req2,
 	mode = "passive",
 	points = 5,
-	getDamage = function(self, t) return getTriStat(self, t, 10, 100) * (1 + getGrapplingStyle(self, dam)) end,
-	getDamageTwo = function(self, t) return getTriStat(self, t, 10, 100) * (1.5 + getGrapplingStyle(self, dam)) end,
+	getDamage = function(self, t) return self:combatTalentPhysicalDamage(t, 5, 50) * getUnarmedTrainingBonus(self) end,
+	getDamageTwo = function(self, t) return self:combatTalentPhysicalDamage(t, 10, 75) * getUnarmedTrainingBonus(self) end,
 	do_throw = function(self, target, t)
 		local hit = self:checkHit(self:combatAttack(), target:combatDefense(), 0, 95, 5 - self:getTalentLevel(t) / 2)
 		if hit then
@@ -110,8 +103,8 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local damagetwo = t.getDamageTwo(self, t)
 		return ([[When you avoid a melee blow you have a %d%% chance to throw the target to the ground.  If the throw lands the target will take %0.2f damage and be dazed for 2 turns or %0.2f damage and be stunned for 2 turns if grappled.
-		The chance of throwing increases with the cunning stat and the damage will scale with the strength stat, dexterity, and cunning stats.
-		This is considered a grapple for the purposes of stance damage bonuses.]]):format(self:getTalentLevel(t) * (5 + self:getCun(5, true)), damDesc(self, DamageType.PHYSICAL, (damage)), damDesc(self, DamageType.PHYSICAL, (damagetwo)))
+		The chance of throwing increases with the cunning stat and the damage will scale with your physical power.]]):
+		format(self:getTalentLevel(t) * (5 + self:getCun(5, true)), damDesc(self, DamageType.PHYSICAL, (damage)), damDesc(self, DamageType.PHYSICAL, (damagetwo)))
 	end,
 }
 
@@ -157,7 +150,7 @@ newTalent{
 	radius = function(self, t) return 1 end,
 	tactical = { ATTACKAREA = 2, DISABLE = 2 },
 	requires_target = true,
-	getDamage = function(self, t) return getTriStat(self, t, 10, 500) * (1 + getStrikingStyle(self, dam)) end,
+	getDamage = function(self, t) return self:combatTalentPhysicalDamage(t, 15, 150) * getUnarmedTrainingBonus(self) end,
 	target = function(self, t)
 		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
@@ -175,9 +168,8 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[Attack your foes in a frontal arc with a roundhouse kick that deals %0.2f physical damage and knocks your foes back.
-		This is considered a strike for the purposes of stance damage bonuses and will break any grapples you're maintaining.
-		The knockback chance will increase with the strength stat and the damage will scale with the strength, dexterity, and cunning stats.]])
-		:format(damDesc(self, DamageType.PHYSICAL, (damage)))
+		This will break any grapples you're maintaining and the damage will scale with your physical power.]]):
+		format(damDesc(self, DamageType.PHYSICAL, (damage)))
 	end,
 }
 

@@ -134,13 +134,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local lifeSteal = t.getLifeSteal(self, t)
-		if self:getTalentLevel(t) >= 5 then
-			return ([[Devours life from the target of your feeding. %d life from the victim will be added to your own. This healing cannot be reduced. Devour Life can be used like the Feed talent to begin feeding.
-			Improves with the Willpower stat.]]):format(lifeSteal)
-		else
-			return ([[Devours life from the target of your feeding. %d life from the victim will be added to your own. This healing cannot be reduced. At level 5 Devour Life can be used like the Feed talent to begin feeding.
-			Improves with the Willpower stat.]]):format(lifeSteal)
-		end
+		return ([[Devours life from the target of your feeding. %d life from the victim will be added to your own. This healing cannot be reduced. At level 5 Devour Life can be used like the Feed talent to begin feeding.
+		Improves with the Willpower stat.]]):format(lifeSteal)
 	end,
 }
 

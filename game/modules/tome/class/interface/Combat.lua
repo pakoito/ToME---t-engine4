@@ -811,6 +811,14 @@ function _M:combatPhysicalpower(mod)
 	return self:rescaleCombatStats((self.combat_dam > 0 and self.combat_dam or 0) + add + self:getStr()) * mod
 end
 
+--- Gets damage based on talent
+function _M:combatTalentPhysicalDamage(t, base, max)
+	-- Compute at "max"
+	local mod = max / ((base + 100) * ((math.sqrt(5) - 1) * 0.8 + 1))
+	-- Compute real
+	return self:rescaleDamage((base + (self:combatPhysicalpower())) * ((math.sqrt(self:getTalentLevel(t)) - 1) * 0.8 + 1) * mod)
+end
+
 --- Gets spellpower
 function _M:combatSpellpower(mod)
 	mod = mod or 1

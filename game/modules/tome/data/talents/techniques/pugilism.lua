@@ -36,8 +36,8 @@ newTalent{
 	tactical = { BUFF = 2 },
 	type_no_req = true,
 	no_npc_use = true, -- They dont need it since it auto switches anyway
-	getAttack = function(self, t) return 5 + self:getDex(20, true) end,
-	getDamage = function(self, t) return 20 + self:getDex(20, true) end,
+	getAttack = function(self, t) return self:getDex(25, true) end,
+	getDamage = function(self, t) return self:getDex(50, true) end,
 	activate = function(self, t)
 		cancelStances(self)
 		local ret = {
@@ -59,13 +59,12 @@ newTalent{
 }
 
 newTalent{
-	name = "Double Strike",
+	name = "Double Strike",  -- no stamina cost attack that will replace the bump attack under certain conditions
 	type = {"technique/pugilism", 1},
 	require = techs_dex_req1,
 	points = 5,
 	random_ego = "attack",
 	cooldown = function(self, t) return math.ceil(3 * getRelentless(self, cd)) end,
-	stamina = 2,
 	message = "@Source@ throws two quick punches.",
 	tactical = { ATTACK = 2 },
 	requires_target = true,
@@ -128,9 +127,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t) * 100
-		return ([[Two quick punches that deal %d%% damage each and switches your stance to Striking Stance.
-		If either jab connects you earn one combo point.
-		At talent level 4 or greater if both jabs connect you'll earn two combo points.]])
+		return ([[Two quick punches that deal %d%% damage each and switches your stance to Striking Stance.  If you already have Striking Stance active and Double Strike isn't on cooldown this talent will automatically replace your normal attacks (and trigger the cooldown).
+		If either jab connects you earn one combo point.  At talent level 4 or greater if both jabs connect you'll earn two combo points.]])
 		:format(damage)
 	end,
 }
@@ -142,7 +140,7 @@ newTalent{
 	points = 5,
 	random_ego = "utility",
 	mode = "passive",
-	getStamina = function(self, t) return self:getTalentLevel(t)/2 end,
+	getStamina = function(self, t) return self:getTalentLevel(t)/4 end,
 	getCooldownReduction = function(self, t) return self:getTalentLevel(t)/15 end,
 	info = function(self, t)
 		local stamina = t.getStamina(self, t)

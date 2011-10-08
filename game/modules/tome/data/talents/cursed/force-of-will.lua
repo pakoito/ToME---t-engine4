@@ -347,13 +347,8 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local knockback = t.getKnockback(self, t)
 		local secondHitChance = t.getSecondHitChance(self, t)
-		if secondHitChance > 0 then
-			return ([[Your fury becomes an unseen force that randomly lashes out at the foes around you. For %d turns you strike one nearby target doing %d damage and %d knockback. There is a %d%% chance of a second strike.
-			Damage increases with the Willpower stat.]]):format(duration, damDesc(self, DamageType.PHYSICAL, damage), knockback, secondHitChance)
-		else
-			return ([[Your fury becomes an unseen force that randomly lashes out at the foes around you. For %d turns you strike one nearby target doing %d damage and %d knockback. At higher levels there is a chance of a second strike.
-			Damage increases with the Willpower stat.]]):format(duration, damDesc(self, DamageType.PHYSICAL, damage), knockback, secondHitChance)
-		end
+		return ([[Your fury becomes an unseen force that randomly lashes out at the foes around you. For %d turns you strike one nearby target doing %d damage and %d knockback. At higher levels there is a chance of a second strike.
+		Damage increases with the Willpower stat.]]):format(duration, damDesc(self, DamageType.PHYSICAL, damage), knockback, secondHitChance)
 	end,
 }
 

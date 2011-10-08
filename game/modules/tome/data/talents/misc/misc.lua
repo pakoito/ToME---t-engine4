@@ -54,8 +54,20 @@ newTalent{
 		if not x then return end
 		local target = game.level.map(x, y, engine.Map.ACTOR)
 		if not target then return end
-
-		self:attackTarget(target)
+		
+		local double_strike = false
+		if self:knowTalent(self.T_DOUBLE_STRIKE) and self:isTalentActive(self.T_STRIKING_STANCE) then
+			local t = self:getTalentFromId(self.T_DOUBLE_STRIKE)
+			if not self:isTalentCoolingDown(t) then
+				double_strike = true
+			end
+		end
+		-- if double strike isn't on cooldown, throw a double strike; quality of life hack
+		if double_strike then
+			self:forceUseTalent(self.T_DOUBLE_STRIKE, {force_target=target}) -- uses energy because attack is 'fake'
+		else
+			self:attackTarget(target)
+		end
 		return true
 	end,
 	info = function(self, t)

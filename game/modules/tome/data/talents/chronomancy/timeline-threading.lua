@@ -46,15 +46,15 @@ newTalent{
 	type = {"chronomancy/timeline-threading", 2},
 	require = chrono_req_high2,
 	points = 5,
-	paradox = 10,
-	cooldown = 4,
+	paradox = 5,
+	cooldown = 6,
 	tactical = { ATTACK = 2 },
 	range = 10,
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 200)*getParadoxModifier(self, pm) end,
-	getReduction = function(self, t) return self:getTalentLevel(t) * 2 end,
+	getReduction = function(self, t) return math.ceil(self:getTalentLevel(t)) end,
 	action = function(self, t)
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
