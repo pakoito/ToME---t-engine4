@@ -2365,11 +2365,10 @@ function _M:preUseTalent(ab, silent, fake)
 	-- But it is not affected by fatigue
 	if (ab.equilibrium or (ab.sustain_equilibrium and not self:isTalentActive(ab.id))) and not fake and not self:attr("force_talent_ignore_ressources") then
 		-- Fail ? lose energy and 1/10 more equilibrium
-		if not self:attr("no_equilibrium_fail") and not self:equilibriumChance(ab.equilibrium or ab.sustain_equilibrium) then
+		if (not self:attr("no_equilibrium_fail") and (not self:attr("no_equilibrium_summon_fail") or not ab.is_summon)) and not self:equilibriumChance(ab.equilibrium or ab.sustain_equilibrium) then
 			if not silent then game.logPlayer(self, "You fail to use %s due to your equilibrium!", ab.name) end
 			self:incEquilibrium((ab.equilibrium or ab.sustain_equilibrium) / 10)
 			self:useEnergy()
-			self:breakFranticSummoning()
 			return false
 		end
 	end
@@ -2607,13 +2606,6 @@ function _M:breakStealth()
 
 		self:forceUseTalent(self.T_STEALTH, {ignore_energy=true})
 		self.changed = true
-	end
-end
-
---- Breaks frantic summoning if active
-function _M:breakFranticSummoning()
-	if self:isTalentActive(self.T_FRANTIC_SUMMONING) then
-		self:forceUseTalent(T_FRANTIC_SUMMONING, {ignore_energy=true})
 	end
 end
 

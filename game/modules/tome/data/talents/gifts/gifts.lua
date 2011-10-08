@@ -132,6 +132,12 @@ function setupSummon(self, m, x, y, no_control)
 	-- Summons never flee
 	m.ai_tactic = m.ai_tactic or {}
 	m.ai_tactic.escape = 0
+
+	local p = self:hasEffect(self.EFF_FRANTIC_SUMMONING)
+	if p then
+		p.dur = p.dur - 1
+		if p.dur <= 0 then self:removeEffect(self.EFF_FRANTIC_SUMMONING) end
+	end
 end
 
 load("/data/talents/gifts/summon-melee.lua")

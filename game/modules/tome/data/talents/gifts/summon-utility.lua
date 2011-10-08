@@ -246,28 +246,24 @@ newTalent{
 	name = "Frantic Summoning",
 	type = {"wild-gift/summon-utility", 3},
 	require = gifts_req3,
-	mode = "sustained",
 	points = 5,
-	sustain_equilibrium = 100,
-	cooldown = 20,
-	getReduc = function(self, t) return self:getTalentLevelRaw(t) * 15 end,
+	equilibrium = 5,
+	cooldown = 25,
 	requires_target = true,
+	no_energy = true,
 	tactical = { BUFF = 0.2 },
-	activate = function(self, t)
-		return {
-			tmp = self:addTemporaryValue("fast_summons", t.getReduc(self, t)),
-		}
-	end,
-	deactivate = function(self, t, p)
-		self:removeTemporaryValue("fast_summons", p.tmp)
+	getReduc = function(self, t) return self:getTalentLevelRaw(t) * 15 end,
+	getDuration = function(self, t) return 2 + math.floor(self:getTalentLevel(t) / 1.4) end,
+	action = function(self, t)
+		self:setEffect(self.EFF_FRANTIC_SUMMONING, t.getDuration(self, t), {power=t.getReduc(self, t)})
 		return true
 	end,
 	info = function(self, t)
 		local reduc = t.getReduc(self, t)
-		return ([[You focus yourself on nature, allowing you to summon creatures much faster (%d%% of a normal summon time).
-		In this state your minimun equilibrium is much higher increasing the chance to fail using wild gifts.
-		If you fail to use a wild gift Frantic Summoning will be cancelled.]]):
-		format(100 - reduc)
+		return ([[You focus yourself on nature, allowing you to summon creatures much faster (%d%% of a normal summon time) and with no chance to fail from high equilibrium for %d turns.
+		When activating this power a random summoning talent will come off cooldown.
+		Each time you summon the duration of the frantic summoning effect will reduce by 1.]]):
+		format(100 - reduc, t.getDuration(self, t))
 	end,
 }
 

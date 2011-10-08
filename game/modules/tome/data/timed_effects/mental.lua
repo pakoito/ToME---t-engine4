@@ -1490,3 +1490,37 @@ newEffect{
 		self:removeTemporaryValue("no_talents_cooldown", eff.tcdid)
 	end,
 }
+
+newEffect{
+	name = "FRANTIC_SUMMONING",
+	desc = "Frantic Summoning",
+	long_desc = function(self, eff) return ("Reduces the time taken for summoning by %d%%."):format(eff.power) end,
+	type = "mental",
+	subtype = { summon=true },
+	status = "beneficial",
+	on_gain = function(self, err) return "#Target# starts summoning at high speed.", "+Frantic Summoning" end,
+	on_lose = function(self, err) return "#Target#'s frantic summoning ends.", "-Frantic Summoning" end,
+	parameters = { power=20 },
+	activate = function(self, eff)
+		eff.failid = self:addTemporaryValue("no_equilibrium_summon_fail", 1)
+		eff.speedid = self:addTemporaryValue("fast_summons", eff.power)
+
+		-- Find a cooling down summon talent and enable it
+		local list = {}
+		for tid, dur in pairs(self.talents_cd) do
+			local t = self:getTalentFromId(tid)
+			if t.is_summon then
+				list[#list+1] = t
+			end
+		end
+		if #list > 0 then
+			local t = rng.table(list)
+			self.talents_cd[t.id] = nil
+			if self.onTalentCooledDown then self:onTalentCooledDown(t.id) end
+		end
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("no_equilibrium_summon_fail", eff.failid)
+		self:removeTemporaryValue("fast_summons", eff.speedid)
+	end,
+}
