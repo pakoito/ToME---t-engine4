@@ -35,11 +35,6 @@ newBirthDescriptor{
 	},
 	copy = {
 		max_life = 100,
-		equipment = resolvers.equip{ id=true,
-			{type="weapon", subtype="dagger", name="iron dagger", autoreq=true, ego_chance=-1000},
-			{type="weapon", subtype="dagger", name="iron dagger", autoreq=true, ego_chance=-1000},
-			{type="armor", subtype="light", name="rough leather armour", autoreq=true, ego_chance=-1000}
-		},
 	},
 }
 
@@ -76,6 +71,13 @@ newBirthDescriptor{
 		[ActorTalents.T_TRAP_MASTERY] = 1,
 		[ActorTalents.T_LETHALITY] = 1,
 		[ActorTalents.T_DUAL_STRIKE] = 1,
+	},
+	copy = {
+		equipment = resolvers.equip{ id=true,
+			{type="weapon", subtype="dagger", name="iron dagger", autoreq=true, ego_chance=-1000},
+			{type="weapon", subtype="dagger", name="iron dagger", autoreq=true, ego_chance=-1000},
+			{type="armor", subtype="light", name="rough leather armour", autoreq=true, ego_chance=-1000}
+		},
 	},
 }
 
@@ -117,6 +119,11 @@ newBirthDescriptor{
 	},
 	copy = {
 		resolvers.inscription("RUNE:_MANASURGE", {cooldown=25, dur=10, mana=620}),
+		equipment = resolvers.equip{ id=true,
+			{type="weapon", subtype="dagger", name="iron dagger", autoreq=true, ego_chance=-1000},
+			{type="weapon", subtype="dagger", name="iron dagger", autoreq=true, ego_chance=-1000},
+			{type="armor", subtype="light", name="rough leather armour", autoreq=true, ego_chance=-1000}
+		},
 	},
 }
 
@@ -156,5 +163,14 @@ newBirthDescriptor{
 		[ActorTalents.T_SKULLCRACKER] = 1,
 		[ActorTalents.T_HACK_N_BACK] = 1,
 		[ActorTalents.T_DUAL_STRIKE] = 1,
+		[ActorTalents.T_ARMOUR_TRAINING] = 1,
+	},
+	copy = {
+		equipment = resolvers.equip{ id=true,
+			{type="weapon", subtype="dagger", name="iron dagger", autoreq=true, ego_chance=-1000},
+			{type="weapon", subtype="dagger", name="iron dagger", autoreq=true, ego_chance=-1000},
+			{type="armor", subtype="light", name="rough leather armour", autoreq=true, ego_chance=-1000},
+			{type="armor", subtype="head", name="iron helm", autoreq=true, ego_chance=-1000},
+		},
 	},
 }
