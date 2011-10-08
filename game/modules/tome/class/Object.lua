@@ -440,14 +440,14 @@ function _M:getTextualDesc(compare_with)
 		for i, v in ipairs(compare_with or {}) do
 			for tid, data in pairs(v[field] and (v[field].talent_on_hit or {})or {}) do
 				if not talents[tid] or talents[tid][1]~=data.chance or talents[tid][2]~=data.level then
-					desc:add({"color","RED"}, ("Talent on hit(melee): %s (%d%% chance level %d)."):format(self:getTalentFromId(tid).name, data.chance, data.level), {"color","LAST"}, true)
+					desc:add({"color","RED"}, ("When this weapon hits: %s (%d%% chance level %d)."):format(self:getTalentFromId(tid).name, data.chance, data.level), {"color","LAST"}, true)
 				else
 					talents[tid][3] = true
 				end
 			end
 		end
 		for tid, data in pairs(talents) do
-			desc:add(talents[tid][3] and {"color","WHITE"} or {"color","GREEN"}, ("Talent on hit(melee): %s (%d%% chance level %d)."):format(self:getTalentFromId(tid).name, talents[tid][1], talents[tid][2]), {"color","LAST"}, true)
+			desc:add(talents[tid][3] and {"color","WHITE"} or {"color","GREEN"}, ("When this weapon hits: %s (%d%% chance level %d)."):format(self:getTalentFromId(tid).name, talents[tid][1], talents[tid][2]), {"color","LAST"}, true)
 		end
 
 		local special = ""
@@ -458,14 +458,14 @@ function _M:getTextualDesc(compare_with)
 		for i, v in ipairs(compare_with or {}) do
 			if v[field] and v[field].special_on_hit then
 				if special ~= v[field].special_on_hit.desc then
-					desc:add({"color","RED"}, "Special effect on hit: "..v[field].special_on_hit.desc, {"color","LAST"}, true)
+					desc:add({"color","RED"}, "Special effect when this weapon hits: "..v[field].special_on_hit.desc, {"color","LAST"}, true)
 				else
 					found = true
 				end
 			end
 		end
 		if special ~= "" then
-			desc:add(found and {"color","WHITE"} or {"color","GREEN"}, "Special effect on hit: "..special, {"color","LAST"}, true)
+			desc:add(found and {"color","WHITE"} or {"color","GREEN"}, "Special effect when this weapon hits: "..special, {"color","LAST"}, true)
 		end
 
 		found = false
@@ -483,7 +483,7 @@ function _M:getTextualDesc(compare_with)
 
 		compare_fields(combat, compare_with, field, "travel_speed", "%+d%%", "Travel speed: ", 1, false, false, add_table)
 
-		compare_table_fields(combat, compare_with, field, "melee_project", "%+d", "Damage on strike(melee): ", function(item)
+		compare_table_fields(combat, compare_with, field, "melee_project", "%+d", "Damage when this weapon hits: ", function(item)
 				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
 				return col[2], (" %s"):format(DamageType.dam_def[item].name),{"color","LAST"}
 			end)
@@ -518,17 +518,17 @@ function _M:getTextualDesc(compare_with)
 				return (" %s"):format(Stats.stats_def[item].short_name:capitalize())
 			end)
 
-		compare_table_fields(w, compare_with, field, "melee_project", "%d", "Damage on hit(melee): ", function(item)
+		compare_table_fields(w, compare_with, field, "melee_project", "%d", "Damage when the wearer hits(melee): ", function(item)
 				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
 				return col[2],(" %s"):format(DamageType.dam_def[item].name),{"color","LAST"}
 			end)
 
-		compare_table_fields(w, compare_with, field, "ranged_project", "%d", "Damage on hit(ranged): ", function(item)
+		compare_table_fields(w, compare_with, field, "ranged_project", "%d", "Damage when the wearer hits(ranged): ", function(item)
 				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
 				return col[2],(" %s"):format(DamageType.dam_def[item].name),{"color","LAST"}
 			end)
 
-		compare_table_fields(w, compare_with, field, "on_melee_hit", "%d", "Damage when hit: ", function(item)
+		compare_table_fields(w, compare_with, field, "on_melee_hit", "%d", "Damage when the wearer is hit: ", function(item)
 				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
 				return col[2],(" %s"):format(DamageType.dam_def[item].name),{"color","LAST"}
 			end)
