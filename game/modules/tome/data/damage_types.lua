@@ -1150,7 +1150,7 @@ newDamageType{
 	name = "retch", type = "RETCH",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
-		if target and (target.undead or target.retch_heal) then
+		if target and (target:attr("undead") or target.retch_heal) then
 			target:heal(dam * 1.5)
 		elseif target then
 			DamageType:get(DamageType.BLIGHT).projector(src, x, y, DamageType.BLIGHT, dam)
@@ -1163,7 +1163,7 @@ newDamageType{
 	name = "holy light", type = "HOLY_LIGHT",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
-		if target and not target.undead and not target.demon then
+		if target and not target:attr("undead") and not target:attr("demon") then
 			target:heal(dam / 2)
 		elseif target then
 			DamageType:get(DamageType.LIGHT).projector(src, x, y, DamageType.LIGHT, dam)
@@ -1186,7 +1186,7 @@ newDamageType{
 	name = "healing power", type = "HEALING_POWER",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
-		if target and not target.undead then
+		if target and not target:attr("undead") then
 			target:setEffect(target.EFF_EMPOWERED_HEALING, 1, {power=(dam/100)})
 			target:heal(dam, src)
 		elseif target then
@@ -1215,7 +1215,7 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		DamageType:get(DamageType.BLIGHT).projector(src, x, y, DamageType.BLIGHT, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
-		if target and not target.undead and not target.construct then
+		if target and not target:attr("undead") and not target:attr("construct") then
 			target:setEffect(target.EFF_SLOW, 4, {power=0.2, no_ct_effect=true})
 		end
 	end,
