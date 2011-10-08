@@ -99,7 +99,7 @@ newTalent{
 
 					summoner = self,
 					summoner_gain_exp=false,
-					summon_time = 6,
+					summon_time = 8,
 				}
 
 				m.level = 1
@@ -131,6 +131,7 @@ newTalent{
 					m.image = "npc/vermin_rodent_cute_little_bunny.png"
 				end
 				m.faction = self.faction
+				m.no_necrotic_soul = true
 
 				m:resolve() m:resolve(nil, true)
 				m:forceLevelup(self.level)
@@ -139,7 +140,7 @@ newTalent{
 				m:setEffect(m.EFF_CURSE_HATE, 100, {src=self})
 				m.on_die = function(self, src)
 					local p = self.summoner:isTalentActive(self.summoner.T_NECROTIC_AURA)
-					if p and src and src.reactionToward and src:reactionToward(self) < 0 and rng.percent(50) then
+					if p and src and src.reactionToward and src:reactionToward(self) < 0 and rng.percent(70) then
 						p.souls = math.min(p.souls + 1, p.souls_max)
 						self.summoner.changed = true
 					end
@@ -152,7 +153,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Reaches through the shadows into quiter places, summoning %d harmless creatures.
 		Those creatures are then cursed with a Curse of Hate, making all hostile foes try to kill them.
-		If killed by hostile foes you have 50%% chance to gain a soul.]]):
+		If killed by hostile foes you have 70%% chance to gain a soul.]]):
 		format(math.ceil(self:getTalentLevel(t)))
 	end,
 }
