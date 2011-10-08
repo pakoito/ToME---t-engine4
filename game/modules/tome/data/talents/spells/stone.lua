@@ -77,6 +77,7 @@ newTalent{
 	mode = "sustained",
 	sustain_mana = 70,
 	cooldown = 12,
+	no_npc_use = true,
 	tactical = { BUFF = 2 },
 	getFireRes = function(self, t) return self:combatTalentSpellDamage(t, 5, 80) end,
 	getLightningRes = function(self, t) return self:combatTalentSpellDamage(t, 5, 50) end,
