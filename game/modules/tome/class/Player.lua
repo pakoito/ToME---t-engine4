@@ -503,6 +503,7 @@ end
 
 --- Notify the player of available cooldowns
 function _M:onTalentCooledDown(tid)
+	if not self:knowTalent(tid) then return end
 	local t = self:getTalentFromId(tid)
 
 	local x, y = game.level.map:getTileToScreen(self.x, self.y)
