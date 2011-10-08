@@ -50,3 +50,12 @@ newEntity{ base = "BASE_LORE",
 	-- Only hhalflings can find it
 	checkFilter = function(e) local p = game.party:findMember{main=true} if p.descriptor.race == "Halfling" then return true end return false end,
 }
+
+newEntity{ base = "BASE_LORE",
+	name = "Tale of the Moonsisters", lore="moons-human", unique=true,
+	desc = [[The creation of Eyal's moons.]],
+	level_range = {1, 35},
+	rarity = 40,
+	-- Only humans can find it
+	checkFilter = function(e) local p = game.party:findMember{main=true} if p.descriptor.race == "Human" then return true end return false end,
+}

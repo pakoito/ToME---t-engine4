@@ -234,6 +234,40 @@ However there remains the matter of the Sher'Tul. Clearly these were of greater 
 So what happened to these gods after they had made the races which we see today? One must presume strife between them, and that they killed themselves, or took their battle away from the world. Our creator, seeing the other gods killed or left, must have then entrusted the world to us halflings, knowing that we would rule over it in his stead. This is why at every point in history we have played a pivotal role in the shaping of our world. It is our rightful inheritance, and it is our duty to rule it well.]],
 }
 
+newLore{
+	id = "moons-human",
+	category = "eyal",
+	name = "Tale of the Moonsisters",
+	lore = [[Eyal was raised from Darkness,
+And One came who made a blinding light called Sun,
+But Eyal flinched and said, "It is too bright!"
+So Gerlyk spun Eyal around; thus his face was half-time in light and half-time in shadow,
+But in shadow Eyal became lonely and cried.
+
+And so Gerlyk made him two younger sisters who danced around Eyal
+And kept him in good spirits.
+But the moonsisters became jealous of their brother's affection,
+Threatening to fight and scream.
+Thus Gerlyk separated them so that Eyal would only ever dance with one at a time.
+
+In the summer Eyal dances with the moonsister Altia.
+She sings songs of joy and laughter,
+And brings friends and family together,
+And she glows yellow with mirth.
+In the winter Eyal dances with the moonsister Felia.
+She tells tales of times begone,
+And makes men walk alone in thought,
+And she glows blue with solemness.
+
+But in the time between,
+When both sisters are slimly seen on each side of Eyal,
+Glaring at each other from behind their brother's belly,
+Then the world goes still, and the winds hold their breath, and the oceans lie flat.
+For this is the Time of Balance, when the Darkness rises deepest, and all life is in peril.
+Aye, and Gerlyk did say, "Let no man walk abroad this night, lest Darkness catch him and take him forever."
+Aye, and Gerlyk did walk abroad that night, into Darkness beyond, and has ne'er since been seen.]],
+}
+
 --------------------------------------------------------------------------
 -- Ancient Elven Ruins
 --------------------------------------------------------------------------
