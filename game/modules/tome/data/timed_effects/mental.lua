@@ -1301,16 +1301,16 @@ newEffect{
 		-- Take the new values, dont heal, otherwise you get a free heal each crit .. which is totaly broken
 		local v = new_eff.hp * self.max_life / 100
 		new_eff.life_id = self:addTemporaryValue("max_life", v)
-		new_eff.life_regen_id = self:addTemporaryValue("life_regen", new_eff.regen * self.life_regen / 100)
-		new_eff.stamina_regen_id = self:addTemporaryValue("stamina_regen", new_eff.regen * self.stamina_regen / 100)
+		new_eff.life_regen_id = self:addTemporaryValue("life_regen", new_eff.regen * math.max(0, self.life_regen) / 100)
+		new_eff.stamina_regen_id = self:addTemporaryValue("stamina_regen", new_eff.regen * math.max(0, self.stamina_regen) / 100)
 		return new_eff
 	end,
 	activate = function(self, eff)
 		local v = eff.hp * self.max_life / 100
 		eff.life_id = self:addTemporaryValue("max_life", v)
 		self:heal(v)
-		eff.life_regen_id = self:addTemporaryValue("life_regen", eff.regen * self.life_regen / 100)
-		eff.stamina_regen_id = self:addTemporaryValue("stamina_regen", eff.regen * self.stamina_regen / 100)
+		eff.life_regen_id = self:addTemporaryValue("life_regen", eff.regen * math.max(0, self.life_regen) / 100)
+		eff.stamina_regen_id = self:addTemporaryValue("stamina_regen", eff.regen * math.max(0, self.stamina_regen) / 100)
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("max_life", eff.life_id)
