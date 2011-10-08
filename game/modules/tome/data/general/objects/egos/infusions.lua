@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 newEntity{
-	name = "brawler's ", prefix=true,
+	name = "warrior's ", prefix=true,
 	level_range = {1, 50},
 	rarity = 4,
 	cost = 10,
