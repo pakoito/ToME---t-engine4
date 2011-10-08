@@ -30,6 +30,8 @@ local function evil(npc, player)
 			p:setTalentTypeMastery("cunning/poisons", 1.3)
 		end
 	end
+	game:changeLevel(1, "wilderness")
+	game.log("As you depart the assassin lord says: 'And no not forget, I own you now.'")
 end
 
 newChat{ id="welcome",
