@@ -125,7 +125,9 @@ function _M:addPond(x, y, spots)
 		for j = 1, self.do_ponds.size.h do
 			if pmap[i][j] then
 				self.map(i-1+x, j-1+y, Map.TERRAIN, self:resolve(pmap[i][j], self.grid_list, true))
-				self.map.room_map[i-1+x][j-1+y].special = "pond"
+				if self.map.room_map[i-1+x] and self.map.room_map[i-1+x][j-1+y] then
+					self.map.room_map[i-1+x][j-1+y].special = "pond"
+				end
 			end
 		end
 	end
