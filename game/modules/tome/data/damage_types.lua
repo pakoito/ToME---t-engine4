@@ -171,8 +171,9 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 
 		print("[PROJECTOR] final dam", dam)
 
+		local source_talent = src.__projecting_for and src.__projecting_for.project_type and (src.__projecting_for.project_type.talent_id or src.__projecting_for.project_type.talent) and src.getTalentFromId and src:getTalentFromId(src.__projecting_for.project_type.talent or src.__projecting_for.project_type.talent_id)
 		local dead
-		dead, dam = target:takeHit(dam, src, {damtype=type})
+		dead, dam = target:takeHit(dam, src, {damtype=type, source_talent=source_talent})
 
 		-- Log damage for later
 		if not DamageType:get(type).hideMessage then
@@ -206,8 +207,8 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			game.logSeen(target, "%s is healed by the %s%s#LAST# damage!", target.name:capitalize(), DamageType:get(type).text_color or "#aaaaaa#", DamageType:get(type).name)
 		end
 
-		if dam > 0 and src.__projecting_for and src.__projecting_for.project_type and (src.__projecting_for.project_type.talent_id or src.__projecting_for.project_type.talent) and src.getTalentFromId then
-			local t = src:getTalentFromId(src.__projecting_for.project_type.talent or src.__projecting_for.project_type.talent_id)
+		if dam > 0 and source_talent then
+			local t = source_talent
 
 			if src:attr("spellshock_on_damage") and target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and not target:hasEffect(target.EFF_SPELLSHOCKED) then
 				target:crossTierEffect(target.EFF_SPELLSHOCKED, src:combatSpellpower())

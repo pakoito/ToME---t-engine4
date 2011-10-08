@@ -180,7 +180,7 @@ function _M:onTakeHit(value, src)
 	return value
 end
 
-function _M:die(src)
+function _M:die(src, death_note)
 	if self.dead then self:disappear(src) self:deleteFromMap(game.level.map) return true end
 
 	if src and Faction:get(self.faction) and Faction:get(self.faction).hostile_on_attack then
@@ -255,7 +255,7 @@ function _M:die(src)
 	-- Ok the player managed to kill a boss dont bother him with tutorial anymore
 	if self.rank >= 3.5 and not profile.mod.allow_build.tutorial_done then game:setAllowedBuild("tutorial_done") end
 
-	return mod.class.Actor.die(self, src)
+	return mod.class.Actor.die(self, src, death_note)
 end
 
 function _M:tooltip(x, y, seen_by)

@@ -75,12 +75,12 @@ function _M:takeHit(value, src, death_note)
 end
 
 --- Called when died
-function _M:die(src)
+function _M:die(src, death_note)
 	if game.level:hasEntity(self) then game.level:removeEntity(self) end
 	self.dead = true
 	self.changed = true
 
-	self:check("on_die", src)
+	self:check("on_die", src, death_note)
 end
 
 --- Actor is being attacked!
