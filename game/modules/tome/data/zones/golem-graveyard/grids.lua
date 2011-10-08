@@ -44,6 +44,8 @@ Someone foolish has tried to reconstruct it, but it seems like it misses an eye 
 					else
 						game.zone.base_level = 50
 					end
+					game.zone.min_material_level = 5
+					game.zone.max_material_level = 5
 					game.level.data.no_worldport = true
 					local grass = game.zone:makeEntityByName(game.level, "terrain", "GRASS")
 					local atamathon = game.zone:makeEntityByName(game.level, "actor", "ATAMATHON")
