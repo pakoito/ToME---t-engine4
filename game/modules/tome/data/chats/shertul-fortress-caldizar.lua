@@ -20,6 +20,8 @@
 local has_staff = false
 local o, item, inven_id = player:findInAllInventories("Staff of Absorption")
 if o then has_staff = true end
+local o, item, inven_id = player:findInAllInventories("Awakened Staff of Absorption")
+if o then has_staff = true end
 
 local speak
 if has_staff then
