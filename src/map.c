@@ -398,7 +398,7 @@ static int map_objects_toscreen(lua_State *L)
 			lua_pushboolean(L, FALSE);
 			if (lua_pcall(L, 6, 1, 0))
 			{
-				printf("Display callback error: UID %ld: %sn", dm->uid, lua_tostring(L, -1));
+				printf("Display callback error: UID %ld: %s\n", m->uid, lua_tostring(L, -1));
 				lua_pop(L, 1);
 			}
 			lua_pop(L, 1);
