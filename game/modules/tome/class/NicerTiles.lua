@@ -88,8 +88,9 @@ function _M:replaceAll(level)
 			g:removeAllMOs()
 			g.__nice_tile_base = base
 		else
+			g = g:clone()
+			g:removeAllMOs()
 			g.__nice_tile_base = g:clone()
-			g.__nice_tile_base:removeAllMOs()
 		end
 
 		local id = {g.name or "???"}
