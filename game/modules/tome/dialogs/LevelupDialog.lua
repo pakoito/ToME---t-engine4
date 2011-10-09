@@ -490,7 +490,7 @@ function _M:finish()
 	if not self.on_birth then
 		for t_id, _ in pairs(self.talents_learned) do
 			local t = self.actor:getTalentFromId(t_id)
-			if not self.actor:isTalentCoolingDown(t) then self.actor:startTalentCooldown(t) end
+			if not self.actor:isTalentCoolingDown(t) and not self.actor_dup:knowTalent(t_id) then self.actor:startTalentCooldown(t) end
 		end
 	end
 
