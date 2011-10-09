@@ -99,7 +99,7 @@ function _M:runFollow(path)
 	end
 
 	if #runpath == 0 then
-		game.logPlayer(self, "Invalid running path.")
+		game.logPlayer(self, "You don't see how to get there...")
 		return
 	end
 
