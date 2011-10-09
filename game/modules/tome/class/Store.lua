@@ -68,7 +68,7 @@ function _M:loadup(level, zone)
 		self.last_filled = game.state.stores_restock
 	end
 	-- clear chrono worlds and their various effects
-	if game._chronoworlds then 
+	if game._chronoworlds then
 		game.log("#CRIMSON#Your timetravel has no effect on pre-determined outcomes such as this.")
 		game._chronoworlds = nil
 		if game.player:isTalentActive(game.player.T_DOOR_TO_THE_PAST) then
@@ -118,6 +118,7 @@ function _M:onBuy(who, o, item, nb, before)
 	local price = self:getObjectPrice(o, "buy")
 	if who.money >= price * nb then
 		who:incMoney(- price * nb)
+		game.log("Bought: %s for %0.2f gold.", o:getName{do_color=true}, price * nb)
 	end
 end
 
@@ -136,6 +137,7 @@ function _M:onSell(who, o, item, nb, before)
 	price = math.min(price * nb, self.store.purse * nb)
 	who:incMoney(price)
 	o:forAllStack(function(so) so.__force_store_forget = true end) -- Make sure the store does forget about it when it restocks
+	game.log("Sold: %s for %0.2f gold.", o:getName{do_color=true}, price)
 end
 
 --- Override the default
