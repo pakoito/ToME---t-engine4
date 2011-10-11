@@ -39,7 +39,7 @@ newEffect = function(t)
 		t.image = "effects/"..(t.name):lower():gsub("[^a-z0-9_]", "_")..".png"
 	end
 	if fs.exists("/data/gfx/"..t.image) then t.display_entity = Entity.new{image=t.image, is_effect=true}
-	else t.display_entity = Entity.new{image="effects/default.png", is_effect=true}
+	else t.display_entity = Entity.new{image="effects/default.png", is_effect=true} print("===", t.type, t.name)
 	end
 
 	return oldNewEffect(t)

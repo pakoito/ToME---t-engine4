@@ -365,7 +365,7 @@ newEffect{
 }
 
 newEffect{
-	name = "BECKONED",
+	name = "BECKONED", image = "talents/beckon.png",
 	desc = "Beckoned",
 	long_desc = function(self, eff)
 		local message = ("The target has been beckoned by %s and is heeding the call. There is a %d%% chance of moving towards the beckoner each turn."):format(eff.source.name, eff.chance)
@@ -452,7 +452,7 @@ newEffect{
 }
 
 newEffect{
-	name = "OVERWHELMED",
+	name = "OVERWHELMED", image = "talents/frenzy.png",
 	desc = "Overwhelmed",
 	long_desc = function(self, eff) return ("The target has been overwhemed by a furious assault, reducing attack by %d."):format( -eff.attackChange) end,
 	type = "mental",
@@ -472,7 +472,7 @@ newEffect{
 }
 
 newEffect{
-	name = "HARASSED",
+	name = "HARASSED", image = "talents/harass_prey.png",
 	desc = "Harassed",
 	long_desc = function(self, eff) return ("The target has been harassed by it's stalker, reducing damage by %d%%."):format( -eff.damageChange * 100) end,
 	type = "mental",
@@ -753,7 +753,7 @@ newEffect{
 }
 
 newEffect{
-	name = "HATEFUL_WHISPER",
+	name = "HATEFUL_WHISPER", image = "talents/hateful_whisper.png",
 	desc = "Hateful Whisper",
 	long_desc = function(self, eff) return ("%s has heard the hateful whisper."):format(self.name:capitalize()) end,
 	type = "mental",
@@ -909,7 +909,7 @@ newEffect{
 	end,
 }
 newEffect{
-	name = "PSIFRENZY",
+	name = "PSIFRENZY", image = "talents/frenzied_psifighting.png",
 	desc = "Frenzied Psi-fighting",
 	long_desc = function(self, eff) return ("Causes telekinetically-wielded weapons to hit up to %d targets each turn."):format(eff.power) end,
 	type = "mental",
@@ -921,7 +921,7 @@ newEffect{
 }
 
 newEffect{
-	name = "KINSPIKE_SHIELD",
+	name = "KINSPIKE_SHIELD", image = "talents/kinetic_shield.png",
 	desc = "Spiked Kinetic Shield",
 	long_desc = function(self, eff) return ("The target erects a powerful kinetic shield capable of absorbing %d/%d physical or acid damage before it crumbles."):format(self.kinspike_shield_absorb, eff.power) end,
 	type = "mental",
@@ -940,7 +940,7 @@ newEffect{
 	end,
 }
 newEffect{
-	name = "THERMSPIKE_SHIELD",
+	name = "THERMSPIKE_SHIELD", image = "talents/thermal_shield.png",
 	desc = "Spiked Thermal Shield",
 	long_desc = function(self, eff) return ("The target erects a powerful thermal shield capable of absorbing %d/%d thermal damage before it crumbles."):format(self.thermspike_shield_absorb, eff.power) end,
 	type = "mental",
@@ -959,7 +959,7 @@ newEffect{
 	end,
 }
 newEffect{
-	name = "CHARGESPIKE_SHIELD",
+	name = "CHARGESPIKE_SHIELD", image = "talents/charged_shield.png",
 	desc = "Spiked Charged Shield",
 	long_desc = function(self, eff) return ("The target erects a powerful charged shield capable of absorbing %d/%d lightning or blight damage before it crumbles."):format(self.chargespike_shield_absorb, eff.power) end,
 	type = "mental",
@@ -1015,7 +1015,7 @@ newEffect{
 }
 
 newEffect{
-	name = "MASTERFUL_TELEKINETIC_ARCHERY",
+	name = "MASTERFUL_TELEKINETIC_ARCHERY", image = "talents/masterful_telekinetic_archery.png",
 	desc = "Telekinetic Archery",
 	long_desc = function(self, eff) return ("Your telekinetically-wielded bow automatically attacks the nearest target each turn.") end,
 	type = "mental",
@@ -1492,7 +1492,7 @@ newEffect{
 }
 
 newEffect{
-	name = "FRANTIC_SUMMONING",
+	name = "FRANTIC_SUMMONING", image = "talents/frantic_summoning.png",
 	desc = "Frantic Summoning",
 	long_desc = function(self, eff) return ("Reduces the time taken for summoning by %d%%."):format(eff.power) end,
 	type = "mental",

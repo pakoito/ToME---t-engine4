@@ -70,7 +70,7 @@ newEffect{
 }
 
 newEffect{
-	name = "REGENERATION", image = "talents/infusion_regeneration.png",
+	name = "REGENERATION", image = "talents/infusion__regeneration.png",
 	desc = "Regeneration",
 	long_desc = function(self, eff) return ("A flow of life spins around the target, regenerating %0.2f life per turn."):format(eff.power) end,
 	type = "physical",
@@ -661,7 +661,7 @@ newEffect{
 }
 
 newEffect{
-	name = "HEROISM", image = "talents/infusion_heroism.png",
+	name = "HEROISM", image = "talents/infusion__heroism.png",
 	desc = "Heroism",
 	long_desc = function(self, eff) return ("Increases your three highest stats by %d."):format(eff.power) end,
 	type = "physical",
@@ -769,34 +769,6 @@ newEffect{
 }
 
 newEffect{
-	name = "GOLEM_MOUNT",
-	desc = "Golem Mount",
-	long_desc = function(self, eff) return "The target is inside his golem." end,
-	type = "physical",
-	subtype = { golem=true },
-	status = "beneficial",
-	parameters = { },
-	activate = function(self, eff)
-		self:wearObject(eff.mount, true, true)
-		game.level:removeEntity(eff.mount.mount.actor)
-		eff.mount.mount.effect = self.EFF_GOLEM_MOUNT
-	end,
-	deactivate = function(self, eff)
-		if self:removeObject(self.INVEN_MOUNT, 1, true) then
-			-- Only unmount if dead
-			if not eff.mount.mount.actor.dead then
-				-- Find space
-				local x, y = util.findFreeGrid(self.x, self.y, 10, true, {[engine.Map.ACTOR]=true})
-				if x then
-					eff.mount.mount.actor:move(x, y, true)
-					game.level:addEntity(eff.mount.mount.actor)
-				end
-			end
-		end
-	end,
-}
-
-newEffect{
 	name = "BURROW", image = "talents/burrow.png",
 	desc = "Burrow",
 	long_desc = function(self, eff) return "The target is able to burrow into walls." end,
@@ -837,24 +809,6 @@ newEffect{
 }
 
 newEffect{
-	name = "NO_SUMMON",
-	desc = "Suppress Summon",
-	long_desc = function(self, eff) return "Your summons are suppressed by some force." end,
-	type = "physical",
-	subtype = { supression=true },
-	status = "detrimental",
-	parameters = {},
-	on_gain = function(self, err) return "#Target# attunes to the damage.", "+Resolve" end,
-	on_lose = function(self, err) return "#Target# is no longer attuned.", "-Resolve" end,
-	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("suppress_summon", 1)
-	end,
-	deactivate = function(self, eff)
-		self:removeTemporaryValue("suppress_summon", eff.tmpid)
-	end,
-}
-
-newEffect{
 	name = "RESOLVE", image = "talents/resolve.png",
 	desc = "Resolve",
 	long_desc = function(self, eff) return ("You gain %d%% resistance against %s."):format(eff.res, DamageType:get(eff.damtype).name) end,
@@ -873,7 +827,7 @@ newEffect{
 }
 
 newEffect{
-	name = "WILD_SPEED", image = "talents/infusion_movement.png",
+	name = "WILD_SPEED", image = "talents/infusion__movement.png",
 	desc = "Wild Speed",
 	long_desc = function(self, eff) return ("The movement infusion allows you to run at extreme fast pace. Any other action other than movement will cancel it .Movement is %d%% faster."):format(eff.power) end,
 	type = "physical",
@@ -946,7 +900,7 @@ newEffect{
 }
 
 newEffect{
-	name = "DRAGONS_FIRE",
+	name = "DRAGONS_FIRE", image = "talents/fire_breath.png",
 	desc = "Dragon's Fire",
 	long_desc = function(self, eff) return ("Dragon blood runs through your veins. You can breathe fire (or have it improved if you already could)."):format() end,
 	type = "physical",
@@ -982,30 +936,6 @@ newEffect{
 				end
 			end
 		end
-	end,
-}
-
-newEffect{
-	name = "CRUSHED",
-	desc = "Crushed",
-	long_desc = function(self, eff) return ("Intense gravity that pins and deals %0.2f physical damage per turn."):format(eff.power) end,
-	type = "physical",
-	subtype = { gravity=true },
-	status = "detrimental",
-	parameters = { power=10 },
-	on_gain = function(self, err) return "#Target# is being crushed!", "+Crushed" end,
-	on_lose = function(self, err) return "#Target# stops being crushed.", "-Crushed" end,
-	on_merge = function(self, old_eff, new_eff)
-		-- Merge the flames!
-		local olddam = old_eff.power * old_eff.dur
-		local newdam = new_eff.power * new_eff.dur
-		local dur = math.ceil((old_eff.dur + new_eff.dur) / 2)
-		old_eff.dur = dur
-		old_eff.power = (olddam + newdam) / dur
-		return old_eff
-	end,
-	on_timeout = function(self, eff)
-		DamageType:get(DamageType.PHYSICAL).projector(eff.src, self.x, self.y, DamageType.PHYSICAL, eff.power)
 	end,
 }
 
@@ -1098,7 +1028,7 @@ newEffect{
 }
 
 newEffect{
-	name = "STRANGLE_HOLD",
+	name = "STRANGLE_HOLD", image = "talents/clinch.png",
 	desc = "Strangle Hold",
 	long_desc = function(self, eff) return ("The target is being strangled and may not cast spells and suffers %d damage each turn."):format(eff.power) end,
 	type = "physical",
@@ -1188,7 +1118,7 @@ newEffect{
 }
 
 newEffect{
-	name = "SET_UP",
+	name = "SET_UP", image = "talents/set_up.png",
 	desc = "Set Up",
 	long_desc = function(self, eff) return ("The target is off balance and is %d%% more likely to be crit by the target that set it up.  In addition all it's saves are reduced by %d."):format(eff.power, eff.power) end,
 	type = "physical",
@@ -1421,7 +1351,7 @@ newEffect{
 }
 
 newEffect{
-	name = "IMPLODING",
+	name = "IMPLODING", image = "talents/implode.png",
 	desc = "Slow",
 	long_desc = function(self, eff) return ("Slowed by 50%% and taking %d crushing damage per turn."):format( eff.power) end,
 	type = "physical",
@@ -1464,7 +1394,7 @@ newEffect{
 }
 
 newEffect{
-	name = "ADRENALINE_SURGE",
+	name = "ADRENALINE_SURGE", image = "talents/adrenaline_surge.png",
 	desc = "Adrenaline Surge",
 	long_desc = function(self, eff) return ("The target's combat damage is improved by %d and it an continue to fight past the point of exhaustion, supplementing life for stamina."):format(eff.power) end,
 	type = "physical",
@@ -1482,7 +1412,7 @@ newEffect{
 }
 
 newEffect{
-	name = "BLINDSIDE_BONUS",
+	name = "BLINDSIDE_BONUS", image = "talents/blindside.png",
 	desc = "Blindside Bonus",
 	long_desc = function(self, eff) return ("The target has appeared out of nowhere! It's defense is boosted by %d."):format(eff.defenseChange) end,
 	type = "physical",

@@ -25,7 +25,7 @@ local Map = require "engine.Map"
 local Level = require "engine.Level"
 
 newEffect{
-	name = "MANASURGE", image = "talents/rune_manasurge.png",
+	name = "MANASURGE", image = "talents/rune__manasurge.png",
 	desc = "Surging mana",
 	long_desc = function(self, eff) return ("The mana surge engulfs the target, regenerating %0.2f mana per turn."):format(eff.power) end,
 	type = "magical",
@@ -119,7 +119,7 @@ newEffect{
 }
 
 newEffect{
-	name = "REFLECTIVE_SKIN",
+	name = "REFLECTIVE_SKIN", image = "talents/golem_reflective_skin.png",
 	desc = "Reflective Skin",
 	long_desc = function(self, eff) return ("Magically returns %d%% of any damage done to the attacker."):format(eff.power) end,
 	type = "magical",
@@ -182,7 +182,7 @@ newEffect{
 }
 
 newEffect{
-	name = "SEE_INVISIBLE",
+	name = "SEE_INVISIBLE", image = "talents/keen_senses.png",
 	desc = "See Invisible",
 	long_desc = function(self, eff) return ("Improves/gives the ability to see invisible creatures (power %d)."):format(eff.power) end,
 	type = "magical",
@@ -997,7 +997,7 @@ newEffect{
 }
 
 newEffect{
-	name = "PRESCIENCE",
+	name = "PRESCIENCE", image = "talents/premonition.png",
 	desc = "Prescience",
 	long_desc = function(self, eff) return ("The target's awareness is fully in the present, increasing stealth detection and see invisibility by %d, accuracy by %d, attack power by %d, spell power by %d, and mindpower by %d.")
 	:format(eff.detect, eff.accuracy, eff.physical, eff.spell, eff.mental) end,
@@ -1079,7 +1079,7 @@ newEffect{
 }
 
 newEffect{
-	name = "FLAWED_DESIGN",
+	name = "FLAWED_DESIGN", image = "talents/flawed_design.png",
 	desc = "Flawed Design",
 	long_desc = function(self, eff) return ("The target's past has been altered, reducing all its resistances by %d%%."):format(eff.power) end,
 	type = "magical",
@@ -1355,7 +1355,7 @@ newEffect{
 }
 
 newEffect{
-	name = "SPIN_FATE",
+	name = "SPIN_FATE", image = "talents/spin_fate.png",
 	desc = "Spin Fate",
 	long_desc = function(self, eff) return ("The target's defense has been increased by %d, physical save by %d, spell saves by %d, and mental saves by %d."):
 	format(eff.cur_defense or eff.defense, eff.cur_physical or eff.physical, eff.cur_spell or eff.spell, eff.cur_mental or eff.mental) end,
