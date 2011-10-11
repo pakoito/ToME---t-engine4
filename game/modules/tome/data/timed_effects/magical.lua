@@ -25,7 +25,7 @@ local Map = require "engine.Map"
 local Level = require "engine.Level"
 
 newEffect{
-	name = "MANASURGE",
+	name = "MANASURGE", image = "talents/rune_manasurge.png",
 	desc = "Surging mana",
 	long_desc = function(self, eff) return ("The mana surge engulfs the target, regenerating %0.2f mana per turn."):format(eff.power) end,
 	type = "magical",
@@ -55,7 +55,7 @@ newEffect{
 }
 
 newEffect{
-	name = "STONED",
+	name = "STONED", image = "talents/stone_touch.png",
 	desc = "Stoned",
 	long_desc = function(self, eff) return "The target has been turned to stone, making it subject to shattering but improving physical(+20%), fire(+80%) and lightning(+50%) resistances." end,
 	type = "magical",
@@ -79,7 +79,7 @@ newEffect{
 }
 
 newEffect{
-	name = "EARTHEN_BARRIER",
+	name = "EARTHEN_BARRIER", image = "talents/earthen_barrier.png",
 	desc = "Earthen Barrier",
 	long_desc = function(self, eff) return ("Reduces physical damage received by %d%%."):format(eff.power) end,
 	type = "magical",
@@ -99,7 +99,7 @@ newEffect{
 }
 
 newEffect{
-	name = "MOLTEN_SKIN",
+	name = "MOLTEN_SKIN", image = "talents/golem_molten_skin.png",
 	desc = "Molten Skin",
 	long_desc = function(self, eff) return ("Reduces fire damage received by %d%%."):format(eff.power) end,
 	type = "magical",
@@ -137,7 +137,7 @@ newEffect{
 }
 
 newEffect{
-	name = "VIMSENSE",
+	name = "VIMSENSE", image = "talents/vimsense.png",
 	desc = "Vimsense",
 	long_desc = function(self, eff) return ("Reduces blight resistance by %d%%."):format(eff.power) end,
 	type = "magical",
@@ -153,7 +153,7 @@ newEffect{
 }
 
 newEffect{
-	name = "INVISIBILITY",
+	name = "INVISIBILITY", image = "effects/invisibility.png",
 	desc = "Invisibility",
 	long_desc = function(self, eff) return ("Improves/gives invisibility (power %d)."):format(eff.power) end,
 	type = "magical",
@@ -200,7 +200,7 @@ newEffect{
 }
 
 newEffect{
-	name = "BANE_BLINDED",
+	name = "BANE_BLINDED", image = "effects/bane_blinded.png",
 	desc = "Bane of Blindness",
 	long_desc = function(self, eff) return ("The target is blinded, unable to see anything and takes %0.2f darkness damage per turns."):format(eff.dam) end,
 	type = "magical",
@@ -229,7 +229,7 @@ newEffect{
 }
 
 newEffect{
-	name = "BANE_CONFUSED",
+	name = "BANE_CONFUSED", image = "effects/bane_confused.png",
 	desc = "Bane of Confusion",
 	long_desc = function(self, eff) return ("The target is confused, acting randomly (chance %d%%), unable to perform complex actions and takes %0.2f darkness damage per turns."):format(eff.power, eff.dam) end,
 	type = "magical",
@@ -252,7 +252,7 @@ newEffect{
 }
 
 newEffect{
-	name = "SUPERCHARGE_GOLEM",
+	name = "SUPERCHARGE_GOLEM", image = "talents/supercharge_golem.png",
 	desc = "Supercharge Golem",
 	long_desc = function(self, eff) return ("The target is supercharged, increasing life regen by %0.2f and damage done by 20%%."):format(eff.regen) end,
 	type = "magical",
@@ -290,7 +290,7 @@ newEffect{
 }
 
 newEffect{
-	name = "LIFE_TAP",
+	name = "LIFE_TAP", image = "talents/life_tap.png",
 	desc = "Life Tap",
 	long_desc = function(self, eff) return ("The target taps its blood's hidden power, increasing all damage done by %d%%."):format(eff.power) end,
 	type = "magical",
@@ -308,7 +308,7 @@ newEffect{
 }
 
 newEffect{
-	name = "ARCANE_EYE",
+	name = "ARCANE_EYE", image = "talents/arcane_eye.png",
 	desc = "Arcane Eye",
 	long_desc = function(self, eff) return ("You have an arcane eye observing for you in a radius of %d."):format(eff.radius) end,
 	type = "magical",
@@ -341,7 +341,7 @@ newEffect{
 }
 
 newEffect{
-	name = "ALL_STAT",
+	name = "ALL_STAT", image = "effects/all_stat.png",
 	desc = "All stats increase",
 	long_desc = function(self, eff) return ("All primary stats of the target are increased by %d."):format(eff.power) end,
 	type = "magical",
@@ -365,7 +365,7 @@ newEffect{
 }
 
 newEffect{
-	name = "DISPLACEMENT_SHIELD",
+	name = "DISPLACEMENT_SHIELD", image = "talents/displacement_shield.png",
 	desc = "Displacement Shield",
 	long_desc = function(self, eff) return ("The target is surrounded by a space distortion that randomly sends (%d%% chance) incoming damage to another target (%s). Absorbs %d/%d damage before it crumbles."):format(eff.chance, eff.target.name or "unknown", self.displacement_shield, eff.power) end,
 	type = "magical",
@@ -403,7 +403,7 @@ newEffect{
 }
 
 newEffect{
-	name = "DAMAGE_SHIELD",
+	name = "DAMAGE_SHIELD", image = "talents/barrier.png",
 	desc = "Damage Shield",
 	long_desc = function(self, eff) return ("The target is surrounded by a magical shield, absorbing %d/%d damage before it crumbles."):format(self.damage_shield_absorb, eff.power) end,
 	type = "magical",
@@ -433,7 +433,7 @@ newEffect{
 }
 
 newEffect{
-	name = "MARTYRDOM",
+	name = "MARTYRDOM", image = "talents/martyrdom.png",
 	desc = "Martyrdom",
 	long_desc = function(self, eff) return ("All damage done by the target will also hurt it for %d%%."):format(eff.power) end,
 	type = "magical",
@@ -451,7 +451,7 @@ newEffect{
 }
 
 newEffect{
-	name = "CURSE_VULNERABILITY",
+	name = "CURSE_VULNERABILITY", image = "talents/curse_of_vulnerability.png",
 	desc = "Curse of Vulnerability",
 	long_desc = function(self, eff) return ("The target is cursed, reducing all resistances by %d%%."):format(eff.power) end,
 	type = "magical",
@@ -471,7 +471,7 @@ newEffect{
 }
 
 newEffect{
-	name = "CURSE_IMPOTENCE",
+	name = "CURSE_IMPOTENCE", image = "talents/curse_of_impotence.png",
 	desc = "Curse of Impotence",
 	long_desc = function(self, eff) return ("The target is cursed, reducing all damage done by %d%%."):format(eff.power) end,
 	type = "magical",
@@ -491,7 +491,7 @@ newEffect{
 }
 
 newEffect{
-	name = "CURSE_DEFENSELESSNESS",
+	name = "CURSE_DEFENSELESSNESS", image = "talents/curse_of_defenselessness.png",
 	desc = "Curse of Defenselessness",
 	long_desc = function(self, eff) return ("The target is cursed, reducing defence and all saves by %d."):format(eff.power) end,
 	type = "magical",
@@ -515,7 +515,7 @@ newEffect{
 }
 
 newEffect{
-	name = "CURSE_DEATH",
+	name = "CURSE_DEATH", image = "talents/curse_of_death.png",
 	desc = "Curse of Death",
 	long_desc = function(self, eff) return ("The target is cursed, taking %0.2f darkness damage per turn and preventing natural life regeneration."):format(eff.dam) end,
 	type = "magical",
@@ -537,7 +537,7 @@ newEffect{
 }
 
 newEffect{
-	name = "CURSE_HATE",
+	name = "CURSE_HATE", image = "talents/curse_of_the_meek.png",
 	desc = "Curse of Hate",
 	long_desc = function(self, eff) return ("The target is cursed, force all foes in a radius of 5 to attack it.") end,
 	type = "magical",
@@ -561,7 +561,7 @@ newEffect{
 }
 
 newEffect{
-	name = "BLOODLUST",
+	name = "BLOODLUST", image = "talents/bloodlust.png",
 	desc = "Bloodlust",
 	long_desc = function(self, eff) return ("The target is in a magical bloodlust, improving spellpower by %d."):format(eff.dur) end,
 	type = "magical",
@@ -589,7 +589,7 @@ newEffect{
 }
 
 newEffect{
-	name = "ACID_SPLASH",
+	name = "ACID_SPLASH", image = "talents/acidic_skin.png",
 	desc = "Acid Splash",
 	long_desc = function(self, eff) return ("The target has been splashed with acid, taking %0.2f acid damage per turn, reducing armour by %d and attack by %d."):format(eff.dam, eff.armor or 0, eff.atk) end,
 	type = "magical",
@@ -613,7 +613,7 @@ newEffect{
 }
 
 newEffect{
-	name = "BLOOD_FURY",
+	name = "BLOOD_FURY", image = "talents/blood_fury.png",
 	desc = "Bloodfury",
 	long_desc = function(self, eff) return ("The target's blight and acid damage is increased by %d%%."):format(eff.power) end,
 	type = "magical",
@@ -629,7 +629,7 @@ newEffect{
 }
 
 newEffect{
-	name = "PHOENIX_EGG",
+	name = "PHOENIX_EGG", image = "effects/phoenix_egg.png",
 	desc = "Reviving Phoenix",
 	long_desc = function(self, eff) return "Target is being brought back to life." end,
 	type = "magical",
@@ -663,7 +663,7 @@ newEffect{
 }
 
 newEffect{
-	name = "HURRICANE",
+	name = "HURRICANE", image = "effects/hurricane.png",
 	desc = "Hurricane",
 	long_desc = function(self, eff) return ("The target is in the center of a lightning hurricane, doing %0.2f to %0.2f lightning damage to itself and others around every turn."):format(eff.dam / 3, eff.dam) end,
 	type = "magical",
@@ -693,7 +693,7 @@ newEffect{
 }
 
 newEffect{
-	name = "RECALL",
+	name = "RECALL", image = "effects/recall.png",
 	desc = "Recalling",
 	long_desc = function(self, eff) return "The target is waiting to be recalled back to the worldmap." end,
 	type = "magical",
@@ -719,7 +719,7 @@ newEffect{
 }
 
 newEffect{
-	name = "TELEPORT_ANGOLWEN",
+	name = "TELEPORT_ANGOLWEN", image = "talents/teleport_angolwen.png",
 	desc = "Teleport: Angolwen",
 	long_desc = function(self, eff) return "The target is waiting to be recalled back to Angolwen." end,
 	type = "magical",
@@ -756,7 +756,7 @@ newEffect{
 }
 
 newEffect{
-	name = "PREMONITION_SHIELD",
+	name = "PREMONITION_SHIELD", image = "talents/premonition.png",
 	desc = "Premonition Shield",
 	long_desc = function(self, eff) return ("Reduces %s damage received by %d%%."):format(DamageType:get(eff.damtype).name, eff.resist) end,
 	type = "magical",
@@ -774,7 +774,7 @@ newEffect{
 }
 
 newEffect{
-	name = "CORROSIVE_WORM",
+	name = "CORROSIVE_WORM", image = "talents/corrosive_worm.png",
 	desc = "Corrosive Worm",
 	long_desc = function(self, eff) return ("Target is infected with a corrosive worm doing %0.2f acid damage per turn."):format(eff.dam) end,
 	type = "magical",
@@ -789,7 +789,7 @@ newEffect{
 }
 
 newEffect{
-	name = "WRAITHFORM",
+	name = "WRAITHFORM", image = "talents/wraithform.png",
 	desc = "Wraithform",
 	long_desc = function(self, eff) return ("Turn into a wraith, passing through walls (but not natural obstacles), granting %d defense and %d armour."):format(eff.def, eff.armor) end,
 	type = "magical",
@@ -811,7 +811,7 @@ newEffect{
 }
 
 newEffect{
-	name = "EMPOWERED_HEALING",
+	name = "EMPOWERED_HEALING", image = "effects/empowered_healing.png",
 	desc = "Empowered Healing",
 	long_desc = function(self, eff) return ("Increases the effectiveness of all healing the target receives by %d%%."):format(eff.power * 100) end,
 	type = "magical",
@@ -827,7 +827,7 @@ newEffect{
 }
 
 newEffect{
-	name = "PROVIDENCE",
+	name = "PROVIDENCE", image = "talents/providence.png",
 	desc = "Providence",
 	long_desc = function(self, eff) return ("The target is under protection and its life regeneration is boosted by %d."):format(eff.power) end,
 	type = "magical",
@@ -860,7 +860,7 @@ newEffect{
 }
 
 newEffect{
-	name = "TOTALITY",
+	name = "TOTALITY", image = "talents/totality.png",
 	desc = "Totality",
 	long_desc = function(self, eff) return ("The target's light and darkness spell penetration has been increased by %d%%."):format(eff.power) end,
 	type = "magical",
@@ -880,7 +880,7 @@ newEffect{
 
 -- Circles
 newEffect{
-	name = "SANCTITY",
+	name = "SANCTITY", image = "talents/circle_of_sanctity.png",
 	desc = "Sanctity",
 	long_desc = function(self, eff) return ("The target is protected from silence effects.") end,
 	type = "magical",
@@ -896,7 +896,7 @@ newEffect{
 }
 
 newEffect{
-	name = "SHIFTING_SHADOWS",
+	name = "SHIFTING_SHADOWS", image = "talents/circle_of_shifting_shadows.png",
 	desc = "Shifting Shadows",
 	long_desc = function(self, eff) return ("The target's defense is increased by %d."):format(eff.power) end,
 	type = "magical",
@@ -912,7 +912,7 @@ newEffect{
 }
 
 newEffect{
-	name = "BLAZING_LIGHT",
+	name = "BLAZING_LIGHT", image = "talents/circle_of_blazing_light.png",
 	desc = "Blazing Light",
 	long_desc = function(self, eff) return ("The target is gaining %d positive energy each turn."):format(eff.power) end,
 	type = "magical",
@@ -928,7 +928,7 @@ newEffect{
 }
 
 newEffect{
-	name = "WARDING",
+	name = "WARDING", image = "talents/circle_of_warding.png",
 	desc = "Warding",
 	long_desc = function(self, eff) return ("Projectiles aimed at the target are slowed by %d%%."):format (eff.power) end,
 	type = "magical",
@@ -944,7 +944,7 @@ newEffect{
 }
 
 newEffect{
-	name = "TURN_BACK_THE_CLOCK",
+	name = "TURN_BACK_THE_CLOCK", image = "talents/turn_back_the_clock.png",
 	desc = "Turn Back the Clock",
 	long_desc = function(self, eff) return ("The target has been returned to a much younger state, reducing all its stats by %d."):format(eff.power) end,
 	type = "magical",
@@ -973,7 +973,7 @@ newEffect{
 }
 
 newEffect{
-	name = "WASTING",
+	name = "WASTING", image = "talents/ashes_to_ashes.png",
 	desc = "Wasting",
 	long_desc = function(self, eff) return ("The target is wasting away, taking %0.2f temporal damage per turn."):format(eff.power) end,
 	type = "magical",
@@ -1026,7 +1026,7 @@ newEffect{
 }
 
 newEffect{
-	name = "INVIGORATE",
+	name = "INVIGORATE", image = "talents/invigorate.png",
 	desc = "Invigorate",
 	long_desc = function(self, eff) return ("The target is regaining %d stamina per turn."):format(eff.power) end,
 	type = "magical",
@@ -1044,7 +1044,7 @@ newEffect{
 }
 
 newEffect{
-	name = "GATHER_THE_THREADS",
+	name = "GATHER_THE_THREADS", image = "talents/gather_the_threads.png",
 	desc = "Gather the Threads",
 	long_desc = function(self, eff) return ("The target's spellpower has been increased by %d and will continue to increase by %d each turn."):
 	format(eff.cur_power or eff.power, eff.power/5) end,
@@ -1099,7 +1099,7 @@ newEffect{
 }
 
 newEffect{
-	name = "SPACETIME_TUNING",
+	name = "SPACETIME_TUNING", image = "talents/spacetime_tuning.png",
 	desc = "Spacetime Tuning",
 	long_desc = function(self, eff) return "The target is retuning the fabric of spacetime; any damage will stop it." end,
 	type = "magical",
@@ -1147,7 +1147,7 @@ newEffect{
 }
 
 newEffect{
-	name = "MANAWORM",
+	name = "MANAWORM", image = "effects/manaworm.png",
 	desc = "Manaworm",
 	long_desc = function(self, eff) return ("The target is infected by a manaworm, draining %0.2f mana per turns and releasing it as arcane damage to the target."):format(eff.power) end,
 	type = "magical",
@@ -1165,7 +1165,7 @@ newEffect{
 }
 
 newEffect{
-	name = "SURGE_OF_UNDEATH",
+	name = "SURGE_OF_UNDEATH", image = "talents/surge_of_undeath.png",
 	desc = "Surge of Undeath",
 	long_desc = function(self, eff) return ("Increases the target combat power, spellpower, accuracy by %d, armour penetration by %d and critical chances by %d."):format(eff.power, eff.apr, eff.crit) end,
 	type = "magical",
@@ -1193,7 +1193,7 @@ newEffect{
 }
 
 newEffect{
-	name = "BONE_SHIELD",
+	name = "BONE_SHIELD", image = "talents/bone_shield.png",
 	desc = "Bone Shield",
 	long_desc = function(self, eff) return ("Fully protects from %d damaging actions."):format(#eff.particles) end,
 	type = "magical",
@@ -1222,7 +1222,7 @@ newEffect{
 }
 
 newEffect{
-	name = "REDUX",
+	name = "REDUX", image = "talents/redux.png",
 	desc = "Redux",
 	long_desc = function(self, eff) return "The next activated chronomancy talent that the target uses will be cast twice." end,
 	type = "magical",
@@ -1236,7 +1236,7 @@ newEffect{
 }
 
 newEffect{
-	name = "TEMPORAL_DESTABILIZATION",
+	name = "TEMPORAL_DESTABILIZATION", image = "talents/destabilize.png",
 	desc = "Temporal Destabilization",
 	long_desc = function(self, eff) return ("Target is destabilized and suffering %0.2f temporal damage per turn.  If it dies with this effect active it will explode."):format(eff.dam) end,
 	type = "magical",
@@ -1257,7 +1257,7 @@ newEffect{
 }
 
 newEffect{
-	name = "HASTE",
+	name = "HASTE", image = "talents/haste.png",
 	desc = "Haste",
 	long_desc = function(self, eff) return ("Increases global action speed by %d%%."):format(eff.power * 100) end,
 	type = "magical",
@@ -1275,7 +1275,7 @@ newEffect{
 }
 
 newEffect{
-	name = "CEASE_TO_EXIST",
+	name = "CEASE_TO_EXIST", image = "talents/cease_to_exist.png",
 	desc = "Cease to Exist",
 	long_desc = function(self, eff) return ("The target is being removed from the timeline and is suffering %d temporal damage per turn."):format(eff.dam) end,
 	type = "magical",
@@ -1295,7 +1295,7 @@ newEffect{
 }
 
 newEffect{
-	name = "IMPENDING_DOOM",
+	name = "IMPENDING_DOOM", image = "talents/impending_doom.png",
 	desc = "Impending Doom",
 	long_desc = function(self, eff) return ("The target's final doom is drawing near, preventing all forms of healing and dealing %0.2f arcane damage per turn. The effect will stop if the caster dies."):format(eff.dam) end,
 	type = "magical",
@@ -1317,7 +1317,7 @@ newEffect{
 }
 
 newEffect{
-	name = "RIGOR_MORTIS",
+	name = "RIGOR_MORTIS", image = "talents/rigor_mortis.png",
 	desc = "Rigor Mortis",
 	long_desc = function(self, eff) return ("The target takes %d%% more damage from necrotic minions."):format(eff.power) end,
 	type = "magical",
@@ -1335,7 +1335,7 @@ newEffect{
 }
 
 newEffect{
-	name = "ABYSSAL_SHROUD",
+	name = "ABYSSAL_SHROUD", image = "talents/abyssal_shroud.png",
 	desc = "Abyssal Shroud",
 	long_desc = function(self, eff) return ("The target's lite radius has been reduced by %d and it's darkness resistance by %d%%."):format(eff.lite, eff.power) end,
 	type = "magical",
@@ -1429,7 +1429,7 @@ newEffect{
 }
 
 newEffect{
-	name = "ROTTING_DISEASE",
+	name = "ROTTING_DISEASE", image = "talents/rotting_disease.png",
 	desc = "Rotting Disease",
 	long_desc = function(self, eff) return ("The target is infected by a disease, reducing its constitution by %d and doing %0.2f blight damage per turn."):format(eff.con, eff.dam) end,
 	type = "magical",
@@ -1454,7 +1454,7 @@ newEffect{
 }
 
 newEffect{
-	name = "DECREPITUDE_DISEASE",
+	name = "DECREPITUDE_DISEASE", image = "talents/decrepitude_disease.png",
 	desc = "Decrepitude Disease",
 	long_desc = function(self, eff) return ("The target is infected by a disease, reducing its dexterity by %d and doing %0.2f blight damage per turn."):format(eff.dex, eff.dam) end,
 	type = "magical",
@@ -1479,7 +1479,7 @@ newEffect{
 }
 
 newEffect{
-	name = "WEAKNESS_DISEASE",
+	name = "WEAKNESS_DISEASE", image = "talents/weakness_disease.png",
 	desc = "Weakness Disease",
 	long_desc = function(self, eff) return ("The target is infected by a disease, reducing its strength by %d and doing %0.2f blight damage per turn."):format(eff.str, eff.dam) end,
 	type = "magical",
@@ -1504,7 +1504,7 @@ newEffect{
 }
 
 newEffect{
-	name = "EPIDEMIC",
+	name = "EPIDEMIC", image = "talents/epidemic.png",
 	desc = "Epidemic",
 	long_desc = function(self, eff) return ("The target is infected by a disease, doing %0.2f blight damage per turn and reducig healing received by %d%%.\nEach non-disease blight damage done to it will spread the disease."):format(eff.dam, eff.heal_factor) end,
 	type = "magical",
@@ -1530,7 +1530,7 @@ newEffect{
 }
 
 newEffect{
-	name = "WORM_ROT",
+	name = "WORM_ROT", image = "talents/worm_rot.png",
 	desc = "Worm Rot",
 	long_desc = function(self, eff) return ("The target is infected with carrion worm larvae.  Each turn it will lose one beneficial physical effect and %0.2f blight and acid damage will be inflicted.\nAfter five turns the disease will inflict %0.2f blight damage and spawn a carrion worm mass."):format(eff.dam, eff.burst) end,
 	type = "magical",

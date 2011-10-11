@@ -20,8 +20,8 @@
 --	All timed effects are divided into physical, mental, magical, or other types.  Timed effect types are organized based on what saving throw or dispel would be most appropriate
 --	along with consideration based on how it can be applied.  There's a lot of overlap between natural and magical timed effects so when in doubt an effect will not be magical.
 --	Frozen is a good example of this because of Frost Breath.  Effects falling into the other category have no save and generally can not be removed unless they're specifically called.
-	
---	All subtype organization is based off the root cause if one is available or effect if not.  For example burning is a fire effect, caused by fire.  
+
+--	All subtype organization is based off the root cause if one is available or effect if not.  For example burning is a fire effect, caused by fire.
 --	Stun is a more general effect and can have many causes, thus it's subtype is based off its effect, so in this case the subtype is simply 'stun'.
 --	Burning Shock could easily fall into either of these subtypes.  First we ask if it has a cause, it does, fire.  Therefore it is subtype 'fire' rather then subtype 'stun'.
 
@@ -32,6 +32,18 @@ local Entity = require "engine.Entity"
 local Chat = require "engine.Chat"
 local Map = require "engine.Map"
 local Level = require "engine.Level"
+
+local oldNewEffect = newEffect
+newEffect = function(t)
+	if not t.image then
+		t.image = "effects/"..(t.name):lower():gsub("[^a-z0-9_]", "_")..".png"
+	end
+	if fs.exists("/data/gfx/"..t.image) then t.display_entity = Entity.new{image=t.image, is_effect=true}
+	else t.display_entity = Entity.new{image="effects/default.png", is_effect=true}
+	end
+
+	return oldNewEffect(t)
+end
 
 load("/data/timed_effects/magical.lua")
 load("/data/timed_effects/physical.lua")

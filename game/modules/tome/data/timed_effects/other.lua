@@ -25,7 +25,7 @@ local Map = require "engine.Map"
 local Level = require "engine.Level"
 
 newEffect{
-	name = "INFUSION_COOLDOWN",
+	name = "INFUSION_COOLDOWN", image = "effects/infusion_cooldown.png",
 	desc = "Infusion Saturation",
 	long_desc = function(self, eff) return ("The more you use infusions, the longer they will take to recharge (+%d cooldowns)."):format(eff.power) end,
 	type = "other",
@@ -41,7 +41,7 @@ newEffect{
 }
 
 newEffect{
-	name = "RUNE_COOLDOWN",
+	name = "RUNE_COOLDOWN", image = "effects/rune_cooldown.png",
 	desc = "Runic Saturation",
 	long_desc = function(self, eff) return ("The more you use runes, the longer they will take to recharge (+%d cooldowns)."):format(eff.power) end,
 	type = "other",
@@ -57,7 +57,7 @@ newEffect{
 }
 
 newEffect{
-	name = "TAINT_COOLDOWN",
+	name = "TAINT_COOLDOWN", image = "effects/tainted_cooldown.png",
 	desc = "Tainted",
 	long_desc = function(self, eff) return ("The more you use taints, the longer they will take to recharge (+%d cooldowns)."):format(eff.power) end,
 	type = "other",
@@ -73,7 +73,7 @@ newEffect{
 }
 
 newEffect{
-	name = "TIME_PRISON",
+	name = "TIME_PRISON", image = "talents/time_prison.png",
 	desc = "Time Prison",
 	long_desc = function(self, eff) return "The target is removed from the normal time stream, unable to act but unable to take any damage." end,
 	type = "other",
@@ -96,7 +96,7 @@ newEffect{
 }
 
 newEffect{
-	name = "TIME_SHIELD",
+	name = "TIME_SHIELD", image = "talents/time_shield.png",
 	desc = "Time Shield",
 	long_desc = function(self, eff) return ("The target is surrounded by a time distortion, absorbing %d/%d damage and sending it forward in time."):format(self.time_shield_absorb, eff.power) end,
 	type = "other",
@@ -229,7 +229,7 @@ newEffect{
 }
 
 newEffect{
-	name = "DAMAGE_SMEARING",
+	name = "DAMAGE_SMEARING", image = "talents/damage_smearing.png",
 	desc = "Damage Smearing",
 	long_desc = function(self, eff) return ("Passes damage received in the present off onto the future self."):format(eff.power) end,
 	type = "other",
@@ -272,7 +272,7 @@ newEffect{
 
 -- Borrowed Time and the Borrowed Time stun effect
 newEffect{
-	name = "BORROWED_TIME",
+	name = "BORROWED_TIME", image = "talents/borrowed_time.png",
 	desc = "Borrowed Time",
 	long_desc = function(self, eff) return ("The target's global speed has been increased by %d%%."):format(100) end,
 	type = "other",
@@ -307,7 +307,7 @@ newEffect{
 }
 
 newEffect{
-	name = "PRECOGNITION",
+	name = "PRECOGNITION", image = "talents/precognition.png",
 	desc = "Precognition",
 	long_desc = function(self, eff) return "You walk into the future; when the effect ends, if you are not dead, you are brought back to the past." end,
 	type = "other",
@@ -338,7 +338,7 @@ newEffect{
 }
 
 newEffect{
-	name = "SEE_THREADS",
+	name = "SEE_THREADS", image = "talents/see_the_threads.png",
 	desc = "See the Threads",
 	long_desc = function(self, eff) return ("You walk three different timelines, choosing the one you prefer at the end (current timeline: %d)."):format(eff.thread) end,
 	type = "other",
@@ -444,7 +444,7 @@ newEffect{
 }
 
 newEffect{
-	name = "PARADOX_CLONE",
+	name = "PARADOX_CLONE", image = "talents/paradox_clone.png",
 	desc = "Paradox Clone",
 	long_desc = function(self, eff) return "You've been pulled into the past." end,
 	type = "other",
@@ -469,7 +469,7 @@ newEffect{
 }
 
 newEffect{
-	name = "MILITANT_MIND",
+	name = "MILITANT_MIND", image = "talents/militant_mind.png",
 	desc = "Militant Mind",
 	long_desc = function(self, eff) return ("Increases physical power, spellpower and mindpower by %d."):format(eff.power) end,
 	type = "other",
@@ -489,7 +489,7 @@ newEffect{
 }
 
 newEffect{
-	name = "SEVER_LIFELINE",
+	name = "SEVER_LIFELINE", image = "talents/sever_lifeline.png",
 	desc = "Sever Lifeline",
 	long_desc = function(self, eff) return ("The target lifeline is being cut. When the effect ends %0.2f temporal damage will hit the target."):format(eff.power) end,
 	type = "other",
@@ -522,7 +522,7 @@ newEffect{
 }
 
 newEffect{
-	name = "FADE_FROM_TIME",
+	name = "FADE_FROM_TIME", image = "talents/fade_from_time.png",
 	desc = "Fade From Time",
 	long_desc = function(self, eff) return ("The target is partially removed from the timeline, reducing all damage dealt by %d%%, all damage recieved by %d%%, and the duration of all detrimental effects by %d%%."):
 	format(eff.dur * 2 + 2, eff.cur_power or eff.power, eff.cur_power or eff.power) end,
@@ -558,7 +558,7 @@ newEffect{
 }
 
 newEffect{
-	name = "SHADOW_VEIL",
+	name = "SHADOW_VEIL", image = "talents/shadow_veil.png",
 	desc = "Shadow Veil",
 	long_desc = function(self, eff) return ("You veil yourself in shadows and let them control you. While in the veil you become immune to status effects, gain %d%% all damage reduction and each turn you blink to a nearby foe, hitting it for %d%% darkness weapon damage. While this goes on you can not be stopped unless you are killed and can not control you character."):format(eff.res, eff.dam * 100) end,
 	type = "other",
@@ -596,7 +596,7 @@ newEffect{
 }
 
 newEffect{
-	name = "ZERO_GRAVITY",
+	name = "ZERO_GRAVITY", image = "effects/zero_gravity.png",
 	desc = "Zero Gravity",
 	no_stop_enter_worlmap = true,
 	long_desc = function(self, eff) return ("There is no gravity here, you float in the air. Movement three times as slow, any melee or archery blows have a chance to knockback. Maximum encumberance is greatly increased.") end,

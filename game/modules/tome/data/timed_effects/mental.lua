@@ -26,7 +26,7 @@ local Level = require "engine.Level"
 local Astar = require "engine.Astar"
 
 newEffect{
-	name = "SILENCED",
+	name = "SILENCED", image = "effects/silenced.png",
 	desc = "Silenced",
 	long_desc = function(self, eff) return "The target is silenced, preventing it from casting spells and using some vocal talents." end,
 	type = "mental",
@@ -44,7 +44,7 @@ newEffect{
 }
 
 newEffect{
-	name = "MEDITATION",
+	name = "MEDITATION", image = "talents/meditation.png",
 	desc = "Meditation",
 	long_desc = function(self, eff) return "The target is meditating. Any damage will stop it." end,
 	type = "mental",
@@ -66,7 +66,7 @@ newEffect{
 }
 
 newEffect{
-	name = "SUMMON_CONTROL",
+	name = "SUMMON_CONTROL", image = "talents/summon_control.png",
 	desc = "Summon Control",
 	long_desc = function(self, eff) return ("Reduces damage received by %d%% and increases summon time by %d."):format(eff.res, eff.incdur) end,
 	type = "mental",
@@ -87,7 +87,7 @@ newEffect{
 }
 
 newEffect{
-	name = "CONFUSED",
+	name = "CONFUSED", image = "effects/confused.png",
 	desc = "Confused",
 	long_desc = function(self, eff) return ("The target is confused, acting randomly (chance %d%%) and unable to perform complex actions."):format(eff.power) end,
 	type = "mental",
@@ -107,7 +107,7 @@ newEffect{
 }
 
 newEffect{
-	name = "DOMINANT_WILL",
+	name = "DOMINANT_WILL", image = "talents/yeek_will.png",
 	desc = "Dominated",
 	long_desc = function(self, eff) return ("The target's mind has been shattered. Its body remains as a thrall to your mind.") end,
 	type = "mental",
@@ -142,7 +142,7 @@ newEffect{
 }
 
 newEffect{
-	name = "BATTLE_SHOUT",
+	name = "BATTLE_SHOUT", image = "talents/battle_shout.png",
 	desc = "Battle Shout",
 	long_desc = function(self, eff) return ("Increases maximum life and stamina by %d%%."):format(eff.power) end,
 	type = "mental",
@@ -162,7 +162,7 @@ newEffect{
 }
 
 newEffect{
-	name = "BATTLE_CRY",
+	name = "BATTLE_CRY", image = "talents/battle_cry.png",
 	desc = "Battle Cry",
 	long_desc = function(self, eff) return ("The target's will to defend itself is shattered by the powerful battle cry, reducing defense by %d."):format(eff.power) end,
 	type = "mental",
@@ -180,7 +180,7 @@ newEffect{
 }
 
 newEffect{
-	name = "WILLFUL_COMBAT",
+	name = "WILLFUL_COMBAT", image = "talents/willful_combat.png",
 	desc = "Willful Combat",
 	long_desc = function(self, eff) return ("The target puts all its willpower into its blows, improving damage by %d."):format(eff.power) end,
 	type = "mental",
@@ -198,7 +198,7 @@ newEffect{
 }
 
 newEffect{
-	name = "GLOOM_WEAKNESS",
+	name = "GLOOM_WEAKNESS", image = "effects/gloom_weakness.png",
 	desc = "Gloom Weakness",
 	long_desc = function(self, eff) return ("The gloom reduces the target's attack by %d and damage rating by %d."):format(eff.atk, eff.dam) end,
 	type = "mental",
@@ -220,7 +220,7 @@ newEffect{
 }
 
 newEffect{
-	name = "GLOOM_SLOW",
+	name = "GLOOM_SLOW", image = "effects/gloom_slow.png",
 	desc = "Slowed by the gloom",
 	long_desc = function(self, eff) return ("The gloom reduces the target's global speed by %d%%."):format(eff.power * 100) end,
 	type = "mental",
@@ -240,7 +240,7 @@ newEffect{
 }
 
 newEffect{
-	name = "GLOOM_STUNNED",
+	name = "GLOOM_STUNNED", image = "effects/gloom_stunned.png",
 	desc = "Paralyzed by the gloom",
 	long_desc = function(self, eff) return "The gloom has paralyzed the target, rendering it unable to act." end,
 	type = "mental",
@@ -263,7 +263,7 @@ newEffect{
 }
 
 newEffect{
-	name = "GLOOM_CONFUSED",
+	name = "GLOOM_CONFUSED", image = "effects/gloom_confused.png",
 	desc = "Confused by the gloom",
 	long_desc = function(self, eff) return ("The gloom has confused the target, making it act randomly (%d%% chance) and unable to perform complex actions."):format(eff.power) end,
 	type = "mental",
@@ -283,7 +283,7 @@ newEffect{
 }
 
 newEffect{
-	name = "STALKER",
+	name = "STALKER", image = "talents/stalk.png",
 	desc = "Stalking",
 	display_desc = function(self, eff)
 		return ([[Stalking %d/%d +%d ]]):format(eff.target.life, eff.target.max_life, eff.bonus)
@@ -316,7 +316,7 @@ newEffect{
 }
 
 newEffect{
-	name = "STALKED",
+	name = "STALKED", image = "effects/stalked.png",
 	desc = "Stalked",
 	long_desc = function(self, eff)
 		local effStalker = eff.source:hasEffect(eff.source.EFF_STALKER)
@@ -492,7 +492,7 @@ newEffect{
 }
 
 newEffect{
-	name = "DOMINATED",
+	name = "DOMINATED", image = "talents/dominate.png",
 	desc = "Dominated",
 	long_desc = function(self, eff) return ("The target is dominated, unable to move and losing %d armor, %d defense and suffering %d%% penetration for damage from its master."):format(-eff.armorChange, -eff.defenseChange, eff.resistPenetration) end,
 	type = "mental",
@@ -518,7 +518,7 @@ newEffect{
 }
 
 newEffect{
-	name = "RADIANT_FEAR",
+	name = "RADIANT_FEAR", image = "talents/radiant_fear.png",
 	desc = "Radiating Fear",
 	long_desc = function(self, eff) return "The target is frightening, pushing away other creatures." end,
 	type = "mental",
@@ -565,7 +565,7 @@ newEffect{
 }
 
 newEffect{
-	name = "INVIGORATED",
+	name = "INVIGORATED", image = "talents/cruel_vigor.png",
 	desc = "Invigorated",
 	long_desc = function(self, eff) return ("The target is invigorated by death, increasing global speed by %d%%."):format(eff.speed) end,
 	type = "mental",
@@ -587,7 +587,7 @@ newEffect{
 }
 
 newEffect{
-	name = "FEED",
+	name = "FEED", image = "talents/feed.png",
 	desc = "Feeding",
 	long_desc = function(self, eff) return ("%s is feeding from %s."):format(self.name:capitalize(), eff.target.name) end,
 	type = "mental",
@@ -699,7 +699,7 @@ newEffect{
 }
 
 newEffect{
-	name = "FED_UPON",
+	name = "FED_UPON", image = "effects/fed_upon.png",
 	desc = "Fed Upon",
 	long_desc = function(self, eff) return ("%s is fed upon by %s."):format(self.name:capitalize(), eff.src.name) end,
 	type = "mental",
@@ -717,7 +717,7 @@ newEffect{
 }
 
 newEffect{
-	name = "AGONY",
+	name = "AGONY", image = "talents/agony.png",
 	desc = "Agony",
 	long_desc = function(self, eff) return ("%s is writhing in agony, suffering from %d to %d damage over %d turns."):format(self.name:capitalize(), eff.damage / eff.duration, eff.damage, eff.duration) end,
 	type = "mental",
@@ -829,7 +829,7 @@ newEffect{
 }
 
 newEffect{
-	name = "MADNESS_SLOW",
+	name = "MADNESS_SLOW", image = "effects/madness_slowed.png",
 	desc = "Slowed by madness",
 	long_desc = function(self, eff) return ("Madness reduces the target's global speed by %d%%."):format(eff.power * 100) end,
 	type = "mental",
@@ -849,7 +849,7 @@ newEffect{
 }
 
 newEffect{
-	name = "MADNESS_STUNNED",
+	name = "MADNESS_STUNNED", image = "effects/madness_stunned.png",
 	desc = "Paralyzed by madness",
 	long_desc = function(self, eff) return "Madness has paralyzed the target, rendering it unable to act." end,
 	type = "mental",
@@ -872,7 +872,7 @@ newEffect{
 }
 
 newEffect{
-	name = "MADNESS_CONFUSED",
+	name = "MADNESS_CONFUSED", image = "effects/madness_confused.png",
 	desc = "Confused by madness",
 	long_desc = function(self, eff) return ("Madness has confused the target, making it act randomly (%d%% chance) and unable to perform complex actions."):format(eff.power) end,
 	type = "mental",
@@ -892,7 +892,7 @@ newEffect{
 }
 
 newEffect{
-	name = "QUICKNESS",
+	name = "QUICKNESS", image = "effects/quickness.png",
 	desc = "Quick",
 	long_desc = function(self, eff) return ("Increases run speed by %d%%."):format(eff.power * 100) end,
 	type = "mental",
@@ -979,7 +979,7 @@ newEffect{
 }
 
 newEffect{
-	name = "CONTROL",
+	name = "CONTROL", image = "talents/perfect_control.png",
 	desc = "Perfect control",
 	long_desc = function(self, eff) return ("The target's combat attack and crit chance are improved by %d and %d%%, respectively."):format(eff.power, 0.5*eff.power) end,
 	type = "mental",
@@ -997,7 +997,7 @@ newEffect{
 }
 
 newEffect{
-	name = "PSI_REGEN",
+	name = "PSI_REGEN", image = "talents/matter_is_energy.png",
 	desc = "Matter is energy",
 	long_desc = function(self, eff) return ("The gem's matter gradually transforms, granting %0.2f energy per turn."):format(eff.power) end,
 	type = "mental",
@@ -1027,7 +1027,7 @@ newEffect{
 }
 
 newEffect{
-	name = "WEAKENED_MIND",
+	name = "WEAKENED_MIND", image = "talents/taint__telepathy.png",
 	desc = "Weakened Mind",
 	long_desc = function(self, eff) return ("Decreases mind save by %d."):format(eff.power) end,
 	type = "mental",
@@ -1043,7 +1043,7 @@ newEffect{
 }
 
 newEffect{
-	name = "VOID_ECHOES",
+	name = "VOID_ECHOES", image = "talents/echoes_from_the_void.png",
 	desc = "Void Echoes",
 	long_desc = function(self, eff) return ("The target is seeing echoes from the void and will take %0.2f mind damage as well as some resource damage each turn it fails a mental save."):format(eff.power) end,
 	type = "mental",
@@ -1065,7 +1065,7 @@ newEffect{
 }
 
 newEffect{
-	name = "WAKING_NIGHTMARE",
+	name = "WAKING_NIGHTMARE", image = "talents/waking_nightmare.png",
 	desc = "Waking Nightmare",
 	long_desc = function(self, eff) return ("The target is lost in a waking nightmare that deals %0.2f darkness damage each turn and has a %d%% chance to cause a random effect detrimental."):format(eff.dam, eff.chance) end,
 	type = "mental",
@@ -1098,7 +1098,7 @@ newEffect{
 }
 
 newEffect{
-	name = "INNER_DEMONS",
+	name = "INNER_DEMONS", image = "talents/inner_demons.png",
 	desc = "Inner Demons",
 	long_desc = function(self, eff) return ("The target is plagued by inner demons and each turn there's a %d%% chance that one will appear.  If the caster is killed or the target resists setting his demons loose the effect will end early."):format(eff.chance) end,
 	type = "mental",
@@ -1121,7 +1121,7 @@ newEffect{
 }
 
 newEffect{
-	name = "PACIFICATION_HEX",
+	name = "PACIFICATION_HEX", image = "talents/pacification_hex.png",
 	desc = "Pacification Hex",
 	long_desc = function(self, eff) return ("The target is hexed, granting it %d%% chance each turn to be dazed for 3 turns."):format(eff.chance) end,
 	type = "mental",
@@ -1143,7 +1143,7 @@ newEffect{
 }
 
 newEffect{
-	name = "BURNING_HEX",
+	name = "BURNING_HEX", image = "talents/burning_hex.png",
 	desc = "Burning Hex",
 	long_desc = function(self, eff) return ("The target is hexed. Each time it uses an ability it takes %0.2f fire damage."):format(eff.dam) end,
 	type = "mental",
@@ -1155,7 +1155,7 @@ newEffect{
 }
 
 newEffect{
-	name = "EMPATHIC_HEX",
+	name = "EMPATHIC_HEX", image = "talents/empathic_hex.png",
 	desc = "Empathic Hex",
 	long_desc = function(self, eff) return ("The target is hexed, creating an empathic bond with its victims. It takes %d%% feedback damage from all damage done."):format(eff.power) end,
 	type = "mental",
@@ -1173,7 +1173,7 @@ newEffect{
 }
 
 newEffect{
-	name = "DOMINATION_HEX",
+	name = "DOMINATION_HEX", image = "talents/domination_hex.png",
 	desc = "Domination Hex",
 	long_desc = function(self, eff) return ("The target is hexed, temporarily changing its faction to %s."):format(engine.Faction.factions[eff.faction].name) end,
 	type = "mental",
@@ -1192,7 +1192,7 @@ newEffect{
 }
 
 newEffect{
-	name = "HALFLING_LUCK",
+	name = "HALFLING_LUCK", image = "talents/halfling_luck.png",
 	desc = "Halflings's Luck",
 	long_desc = function(self, eff) return ("The target's luck and cunning combine to grant it %d%% higher combat critical chance and %d%% higher spell critical chance."):format(eff.physical, eff.spell) end,
 	type = "mental",
@@ -1212,7 +1212,7 @@ newEffect{
 }
 
 newEffect{
-	name = "ATTACK",
+	name = "ATTACK", image = "talents/perfect_strike.png",
 	desc = "Attack",
 	long_desc = function(self, eff) return ("The target's combat attack is improved by %d."):format(eff.power) end,
 	type = "mental",
@@ -1230,7 +1230,7 @@ newEffect{
 }
 
 newEffect{
-	name = "DEADLY_STRIKES",
+	name = "DEADLY_STRIKES", image = "talents/deadly_strikes.png",
 	desc = "Deadly Strikes",
 	long_desc = function(self, eff) return ("The target's armour penetration is increased by %d."):format(eff.power) end,
 	type = "mental",
@@ -1248,7 +1248,7 @@ newEffect{
 }
 
 newEffect{
-	name = "FRENZY",
+	name = "FRENZY", image = "effects/frenzy.png",
 	desc = "Frenzy",
 	long_desc = function(self, eff) return ("Increases global action speed by %d%% and physical crit by %d%%.\nAdditionally the target will continue to fight until it's hit points reach -%d%%."):format(eff.power * 100, eff.crit, eff.dieat * 100) end,
 	type = "mental",
@@ -1284,7 +1284,7 @@ newEffect{
 }
 
 newEffect{
-	name = "BLOODBATH",
+	name = "BLOODBATH", image = "talents/bloodbath.png",
 	desc = "Bloodbath",
 	long_desc = function(self, eff) return ("The thrill of combat improves the target's maximum life by %d, life regeneration by %d%% and stamina regeneration by %d%%."):format(eff.hp, eff.regen, eff.regen) end,
 	type = "mental",
@@ -1320,7 +1320,7 @@ newEffect{
 }
 
 newEffect{
-	name = "BLOODRAGE",
+	name = "BLOODRAGE", image = "talents/bloodrage.png",
 	desc = "Bloodrage",
 	long_desc = function(self, eff) return ("The target's strength is increased by %d by the thrill of combat."):format(eff.inc) end,
 	type = "mental",
@@ -1345,7 +1345,7 @@ newEffect{
 }
 
 newEffect{
-	name = "UNSTOPPABLE",
+	name = "UNSTOPPABLE", image = "talents/unstoppable.png",
 	desc = "Unstoppable",
 	long_desc = function(self, eff) return ("The target is unstoppable! It refuses to die, and at the end it will heal %d Life."):format(eff.kills * eff.hp_per_kill * self.max_life / 100) end,
 	type = "mental",
@@ -1365,7 +1365,7 @@ newEffect{
 }
 
 newEffect{
-	name = "INCREASED_LIFE",
+	name = "INCREASED_LIFE", image = "effects/increased_life.png",
 	desc = "Increased Life",
 	long_desc = function(self, eff) return ("The target's maximum life is increased by %d."):format(eff.life) end,
 	type = "mental",
@@ -1392,7 +1392,7 @@ newEffect{
 }
 
 newEffect{
-	name = "RAMPAGE",
+	name = "RAMPAGE", image = "talents/rampage.png",
 	desc = "Rampaging",
 	long_desc = function(self, eff) return "The target is rampaging!" end,
 	type = "mental",
@@ -1424,7 +1424,7 @@ newEffect{
 }
 
 newEffect{
-	name = "ORC_FURY",
+	name = "ORC_FURY", image = "talents/orc_fury.png",
 	desc = "Orcish Fury",
 	long_desc = function(self, eff) return ("The target enters a destructive fury, increasing all damage done by %d%%."):format(eff.power) end,
 	type = "mental",

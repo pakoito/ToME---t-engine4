@@ -30,6 +30,7 @@ function _M:init(x, y, w, h, bgcolor, font, size)
 	self.w, self.h = w, h
 	self.bgcolor = bgcolor
 	self.font = core.display.newFont(font, size)
+	self.fontbig = core.display.newFont(font, size * 2)
 	self.mouse = Mouse.new()
 	self:resize(x, y, w, h)
 end
@@ -55,6 +56,10 @@ function _M:resize(x, y, w, h)
 
 	self.portrait = {core.display.loadImage("/data/gfx/ui/party-portrait.png"):glTexture()}
 	self.portrait_unsel = {core.display.loadImage("/data/gfx/ui/party-portrait-unselect.png"):glTexture()}
+
+	self.icon_green = { core.display.loadImage("/data/gfx/ui/talent_frame_ok.png"):glTexture() }
+	self.icon_yellow = { core.display.loadImage("/data/gfx/ui/talent_frame_sustain.png"):glTexture() }
+	self.icon_red = { core.display.loadImage("/data/gfx/ui/talent_frame_cooldown.png"):glTexture() }
 
 	self.items = {}
 end
@@ -139,6 +144,55 @@ function _M:makePortrait(a, current, x, y)
 	item.w = 40
 	item.h = 40
 	self.items[#self.items+1] = item
+end
+
+function _M:makeEntityIcon(e, tiles, x, y, desc, gtxt, frame)
+	self:mouseTooltip(desc, 40, 40, x, y)
+
+	local item = function(dx, dy)
+		e:toScreen(tiles, dx+x+4, dy+y+4, 32, 32)
+		if gtxt then
+			gtxt._tex:toScreenFull(dx+x+4+2 + (40 - gtxt.fw)/2, dy+y+4+2 + (40 - gtxt.fh)/2, gtxt.w, gtxt.h, gtxt._tex_w, gtxt._tex_h, 0, 0, 0, 0.7)
+			gtxt._tex:toScreenFull(dx+x+4 + (40 - gtxt.fw)/2, dy+y+4 + (40 - gtxt.fh)/2, gtxt.w, gtxt.h, gtxt._tex_w, gtxt._tex_h)
+		end
+		frame[1]:toScreenFull(dx+x, dy+y, 40, 40, frame[2] * 40 / frame[6], frame[3] * 40 / frame[7], 255, 255, 255, 255)
+	end
+	self.items[#self.items+1] = item
+end
+
+function _M:handleEffect(eff_id, e, p, ex, h)
+	local dur = p.dur + 1
+	local name = e.desc
+	local desc = nil
+	local eff_subtype = table.concat(table.keys(e.subtype), "/")
+
+	if e.display_desc then name = e.display_desc(self, p) end
+	if p.save_string and p.amount_decreased and p.maximum and p.total_dur then
+		desc = ("#{bold}##GOLD#%s\n(%s: %s)#WHITE##{normal}#\n"):format(name, e.type, eff_subtype)..e.long_desc(player, p).." "..("%s reduced the duration of this effect by %d turns, from %d to %d."):format(p.save_string, p.amount_decreased, p.maximum, p.total_dur)
+	else
+		desc = ("#{bold}##GOLD#%s\n(%s: %s)#WHITE##{normal}#\n"):format(name, e.type, eff_subtype)..e.long_desc(player, p)
+	end
+
+	if config.settings.tome.hotkey_icons and e.display_entity then
+		local txt = nil
+		if e.decrease > 0 then
+			dur = tostring(dur)
+			txt = self.fontbig:draw(dur, 40, colors.WHITE.r, colors.WHITE.g, colors.WHITE.b, true)[1]
+			txt.fw, txt.fh = self.fontbig:size(dur)
+		end
+		self:makeEntityIcon(e.display_entity, game.hotkeys_display_icons.tiles, ex, h, desc, txt, e.status ~= "detrimental" and self.icon_green or self.icon_red)
+
+		ex = ex + 40
+		if ex + 40 >= self.w then ex = 0 h = h + 40 end
+	else
+		if e.status == "detrimental" then
+			self:mouseTooltip(desc, self:makeTexture((e.decrease > 0) and ("#LIGHT_RED#%s(%d)"):format(name, dur) or ("#LIGHT_RED#%s"):format(name), x, h, 255, 255, 255)) h = h + self.font_h
+		else
+			self:mouseTooltip(desc, self:makeTexture((e.decrease > 0) and ("#LIGHT_GREEN#%s(%d)"):format(name, dur) or ("#LIGHT_GREEN#%s"):format(name), x, h, 255, 255, 255)) h = h + self.font_h
+		end
+		ex = 0
+	end
+	return ex, h
 end
 
 -- Displays the stats
@@ -336,33 +390,41 @@ function _M:display()
 	end
 
 	h = h + self.font_h
+	local ex = 0
 	for tid, act in pairs(player.sustain_talents) do
 		if act then
 			local t = player:getTalentFromId(tid)
 			local displayName = t.name
 			if t.getDisplayName then displayName = t.getDisplayName(player, t, player:isTalentActive(tid)) end
 			local desc = "#GOLD##{bold}#"..displayName.."#{normal}##WHITE#\n"..tostring(player:getTalentFullDescription(t))
-			self:mouseTooltip(desc, self:makeTexture(("#LIGHT_GREEN#%s"):format(displayName), x, h, 255, 255, 255)) h = h + self.font_h
+
+			if config.settings.tome.hotkey_icons and t.display_entity then
+				self:makeEntityIcon(t.display_entity, game.hotkeys_display_icons.tiles, ex, h, desc, txt, self.icon_yellow)
+				ex = ex + 40
+				if ex + 40 >= self.w then ex = 0 h = h + 40 end
+			else
+				self:mouseTooltip(desc, self:makeTexture(("#LIGHT_GREEN#%s"):format(displayName), x, h, 255, 255, 255)) h = h + self.font_h
+				ex = 0
+			end
 		end
 	end
+	h = h + 40 ex = 0
+	local good_e, bad_e = {}, {}
 	for eff_id, p in pairs(player.tmp) do
 		local e = player.tempeffect_def[eff_id]
-		local dur = p.dur + 1
-		local name = e.desc
-		local desc = nil
-		local eff_subtype = table.concat(table.keys(e.subtype), "/")
-		if e.display_desc then name = e.display_desc(self, p) end
-		if p.save_string and p.amount_decreased and p.maximum and p.total_dur then
-			desc = ("#{bold}##GOLD#%s\n(%s: %s)#WHITE##{normal}#\n"):format(name, e.type, eff_subtype)..e.long_desc(player, p).." "..("%s reduced the duration of this effect by %d turns, from %d to %d."):format(p.save_string, p.amount_decreased, p.maximum, p.total_dur)
-		else
-			desc = ("#{bold}##GOLD#%s\n(%s: %s)#WHITE##{normal}#\n"):format(name, e.type, eff_subtype)..e.long_desc(player, p)
-		end
-		if e.status == "detrimental" then
-			self:mouseTooltip(desc, self:makeTexture((e.decrease > 0) and ("#LIGHT_RED#%s(%d)"):format(name, dur) or ("#LIGHT_RED#%s"):format(name), x, h, 255, 255, 255)) h = h + self.font_h
-		else
-			self:mouseTooltip(desc, self:makeTexture((e.decrease > 0) and ("#LIGHT_GREEN#%s(%d)"):format(name, dur) or ("#LIGHT_GREEN#%s"):format(name), x, h, 255, 255, 255)) h = h + self.font_h
-		end
+		if e.status == "detrimental" then bad_e[eff_id] = p else good_e[eff_id] = p end
 	end
+
+	for eff_id, p in pairs(good_e) do
+		local e = player.tempeffect_def[eff_id]
+		ex, h = self:handleEffect(eff_id, e, p, ex, h)
+	end
+	h = h + 40 ex = 0
+	for eff_id, p in pairs(bad_e) do
+		local e = player.tempeffect_def[eff_id]
+		ex, h = self:handleEffect(eff_id, e, p, ex, h)
+	end
+
 	if game.level and game.level.arena then
 		h = h + self.font_h
 		local arena = game.level.arena

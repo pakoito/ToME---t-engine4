@@ -26,14 +26,13 @@ _M.tempeffect_def = {}
 
 --- Defines actor temporary effects
 -- Static!
-function _M:loadDefinition(file)
-	local f, err = loadfile(file)
-	if not f and err then error(err) end
-	setfenv(f, setmetatable({
+function _M:loadDefinition(file, env)
+	local f, err = util.loadfilemods(file, setmetatable(env or {
 		DamageType = require "engine.DamageType",
 		newEffect = function(t) self:newEffect(t) end,
-		load = function(f) self:loadDefinition(f) end
+		load = function(f) self:loadDefinition(f, getfenv(2)) end
 	}, {__index=_G}))
+	if not f and err then error(err) end
 	f()
 end
 

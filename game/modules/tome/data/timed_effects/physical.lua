@@ -25,7 +25,7 @@ local Map = require "engine.Map"
 local Level = require "engine.Level"
 
 newEffect{
-	name = "CUT",
+	name = "CUT", image = "effects/cut.png",
 	desc = "Bleeding",
 	long_desc = function(self, eff) return ("Huge cut that bleeds, doing %0.2f physical damage per turn."):format(eff.power) end,
 	type = "physical",
@@ -49,7 +49,7 @@ newEffect{
 }
 
 newEffect{
-	name = "DEEP_WOUND",
+	name = "DEEP_WOUND", image = "talents/bleeding_edge.png",
 	desc = "Deep Wound",
 	long_desc = function(self, eff) return ("Huge cut that bleeds, doing %0.2f physical damage per turn and decreasing all heals received by %d%%."):format(eff.power, eff.heal_factor) end,
 	type = "physical",
@@ -70,7 +70,7 @@ newEffect{
 }
 
 newEffect{
-	name = "REGENERATION",
+	name = "REGENERATION", image = "talents/infusion_regeneration.png",
 	desc = "Regeneration",
 	long_desc = function(self, eff) return ("A flow of life spins around the target, regenerating %0.2f life per turn."):format(eff.power) end,
 	type = "physical",
@@ -88,7 +88,7 @@ newEffect{
 }
 
 newEffect{
-	name = "POISONED",
+	name = "POISONED", image = "effects/poisoned.png",
 	desc = "Poisoned",
 	long_desc = function(self, eff) return ("The target is poisoned, taking %0.2f nature damage per turn."):format(eff.power) end,
 	type = "physical",
@@ -115,7 +115,7 @@ newEffect{
 }
 
 newEffect{
-	name = "SPYDRIC_POISON",
+	name = "SPYDRIC_POISON", image = "effects/spydric_poison.png",
 	desc = "Spydric Poison",
 	long_desc = function(self, eff) return ("The target is poisoned, taking %0.2f nature damage per turn and unable to move (but can otherwise act freely)."):format(eff.power) end,
 	type = "physical",
@@ -138,7 +138,7 @@ newEffect{
 }
 
 newEffect{
-	name = "INSIDIOUS_POISON",
+	name = "INSIDIOUS_POISON", image = "effects/insidious_poison.png",
 	desc = "Insidious Poison",
 	long_desc = function(self, eff) return ("The target is poisoned, taking %0.2f nature damage per turn and decreasing all heals received by %d%%."):format(eff.power, eff.heal_factor) end,
 	type = "physical",
@@ -161,7 +161,7 @@ newEffect{
 }
 
 newEffect{
-	name = "CRIPPLING_POISON",
+	name = "CRIPPLING_POISON", image = "talents/crippling_poison.png",
 	desc = "Crippling Poison",
 	long_desc = function(self, eff) return ("The target is poisoned and sick, doing %0.2f nature damage per turn. Each time it tries to use a talent there is %d%% chance of failure."):format(eff.power, eff.fail) end,
 	type = "physical",
@@ -185,7 +185,7 @@ newEffect{
 }
 
 newEffect{
-	name = "NUMBING_POISON",
+	name = "NUMBING_POISON", image = "effects/numbing_poison.png",
 	desc = "Numbing Poison",
 	long_desc = function(self, eff) return ("The target is poisoned and sick, doing %0.2f nature damage per turn. All damage it does is reduced by %d%%."):format(eff.power, eff.reduce) end,
 	type = "physical",
@@ -209,7 +209,7 @@ newEffect{
 }
 
 newEffect{
-	name = "STONE_POISON",
+	name = "STONE_POISON", image = "talents/stoning_poison.png",
 	desc = "Stoning Poison",
 	long_desc = function(self, eff) return ("The target is poisoned and sick, doing %0.2f nature damage per turn. When the effect ends the target will turn to stone for %d turns."):format(eff.power, eff.stone) end,
 	type = "physical",
@@ -232,7 +232,7 @@ newEffect{
 }
 
 newEffect{
-	name = "BURNING",
+	name = "BURNING", image = "talents/flame.png",
 	desc = "Burning",
 	long_desc = function(self, eff) return ("The target is on fire, taking %0.2f fire damage per turn."):format(eff.power) end,
 	type = "physical",
@@ -256,7 +256,7 @@ newEffect{
 }
 
 newEffect{
-	name = "BURNING_SHOCK",
+	name = "BURNING_SHOCK", image = "talents/flameshock.png",
 	desc = "Burning Shock",
 	long_desc = function(self, eff) return ("The target is on fire, taking %0.2f fire damage per turn, reducing damage by 70%%, healing received by 50%%, putting random talents on cooldown and reducing movement speed by 50%%. While flameshocked talents do not cooldown."):format(eff.power) end,
 	type = "physical",
@@ -292,7 +292,7 @@ newEffect{
 }
 
 newEffect{
-	name = "STUNNED",
+	name = "STUNNED", image = "effects/stunned.png",
 	desc = "Stunned",
 	long_desc = function(self, eff) return ("The target is stunned, reducing damage by 70%%, healing received by 50%%, putting random talents on cooldown and reducing movement speed by 50%%. While stunned talents do not cooldown."):format() end,
 	type = "physical",
@@ -325,7 +325,7 @@ newEffect{
 }
 
 newEffect{
-	name = "DISARMED",
+	name = "DISARMED", image = "talents/disarm.png",
 	desc = "Disarmed",
 	long_desc = function(self, eff) return "The target is maimed, unable to correctly wield a weapon." end,
 	type = "physical",
@@ -343,7 +343,7 @@ newEffect{
 }
 
 newEffect{
-	name = "CONSTRICTED",
+	name = "CONSTRICTED", image = "talents/constrict.png",
 	desc = "Constricted",
 	long_desc = function(self, eff) return ("The target is constricted, preventing movement and making it suffocate (loses %0.2f air per turn)."):format(eff.power) end,
 	type = "physical",
@@ -367,7 +367,7 @@ newEffect{
 }
 
 newEffect{
-	name = "DAZED",
+	name = "DAZED", image = "effects/dazed.png",
 	desc = "Dazed",
 	long_desc = function(self, eff) return "The target is dazed, rendering it unable to act. Any damage will remove the daze." end,
 	type = "physical",
@@ -385,7 +385,7 @@ newEffect{
 }
 
 newEffect{
-	name = "EVASION",
+	name = "EVASION", image = "talents/evasion.png",
 	desc = "Evasion",
 	long_desc = function(self, eff) return ("The target has %d%% chance to evade melee attacks."):format(eff.chance) end,
 	type = "physical",
@@ -403,7 +403,7 @@ newEffect{
 }
 
 newEffect{
-	name = "SPEED",
+	name = "SPEED", image = "talents/shaloren_speed.png",
 	desc = "Speed",
 	long_desc = function(self, eff) return ("Increases global action speed by %d%%."):format(eff.power * 100) end,
 	type = "physical",
@@ -421,7 +421,7 @@ newEffect{
 }
 
 newEffect{
-	name = "SLOW",
+	name = "SLOW", image = "talents/slow.png",
 	desc = "Slow",
 	long_desc = function(self, eff) return ("Reduces global action speed by %d%%."):format( eff.power * 100) end,
 	type = "physical",
@@ -439,7 +439,7 @@ newEffect{
 }
 
 newEffect{
-	name = "BLINDED",
+	name = "BLINDED", image = "effects/blinded.png",
 	desc = "Blinded",
 	long_desc = function(self, eff) return "The target is blinded, unable to see anything." end,
 	type = "physical",
@@ -465,7 +465,7 @@ newEffect{
 }
 
 newEffect{
-	name = "DWARVEN_RESILIENCE",
+	name = "DWARVEN_RESILIENCE", image = "talents/dwarf_resilience.png",
 	desc = "Dwarven Resilience",
 	long_desc = function(self, eff) return ("The target's skin turns to stone, granting %d armour, %d physical save and %d spell save."):format(eff.armor, eff.physical, eff.spell) end,
 	type = "physical",
@@ -487,7 +487,7 @@ newEffect{
 }
 
 newEffect{
-	name = "STONE_SKIN",
+	name = "STONE_SKIN", image = "talents/stoneskin.png",
 	desc = "Stoneskin",
 	long_desc = function(self, eff) return ("The target's skin reacts to damage, granting %d armour."):format(eff.power) end,
 	type = "physical",
@@ -503,7 +503,7 @@ newEffect{
 }
 
 newEffect{
-	name = "FROZEN_FEET",
+	name = "FROZEN_FEET", image = "talents/frozen_ground.png",
 	desc = "Frozen Feet",
 	long_desc = function(self, eff) return "The target is frozen on the ground, able to act freely but not move." end,
 	type = "physical",
@@ -523,7 +523,7 @@ newEffect{
 }
 
 newEffect{
-	name = "FROZEN",
+	name = "FROZEN", image = "talents/freeze.png",
 	desc = "Frozen",
 	long_desc = function(self, eff) return ("The target is encased in ice. All damage done to you will be split, 40%% absorbed by the ice and 60%% by yourself. Your defense is nullified while in the ice and you may only attack the ice but you are also immune to any new detrimental status effects. The target can not teleport or heal while frozen. %d HP on the iceblock remaining."):format(eff.hp) end,
 	type = "physical", -- Frozen has some serious effects beyond just being frozen, no healing, no teleport, etc.  But it can be applied by clearly non-magical sources i.e. Ice Breath
@@ -580,7 +580,7 @@ newEffect{
 }
 
 newEffect{
-	name = "ETERNAL_WRATH",
+	name = "ETERNAL_WRATH", image = "talents/thaloren_wrath.png",
 	desc = "Wrath of the Eternals",
 	long_desc = function(self, eff) return ("The target calls upon its inner resources, improving all damage by %d%% and reducing all damage taken by %d%%."):format(eff.power, eff.power) end,
 	type = "physical",
@@ -600,7 +600,7 @@ newEffect{
 }
 
 newEffect{
-	name = "SHELL_SHIELD",
+	name = "SHELL_SHIELD", image = "talents/shell_shield.png",
 	desc = "Shell Shield",
 	long_desc = function(self, eff) return ("The target takes cover in its shell, reducing all damage taken by %d%%."):format(eff.power) end,
 	type = "physical",
@@ -618,7 +618,7 @@ newEffect{
 }
 
 newEffect{
-	name = "PAIN_SUPPRESSION",
+	name = "PAIN_SUPPRESSION", image = "talents/infusion__wild.png",
 	desc = "Pain Suppression",
 	long_desc = function(self, eff) return ("The target ignores pain, reducing all damage taken by %d%%."):format(eff.power) end,
 	type = "physical",
@@ -636,7 +636,7 @@ newEffect{
 }
 
 newEffect{
-	name = "SENSE",
+	name = "SENSE", image = "talents/track.png",
 	desc = "Sensing",
 	long_desc = function(self, eff) return "Improves senses, allowing the detection of unseen things." end,
 	type = "physical",
@@ -661,7 +661,7 @@ newEffect{
 }
 
 newEffect{
-	name = "HEROISM",
+	name = "HEROISM", image = "talents/infusion_heroism.png",
 	desc = "Heroism",
 	long_desc = function(self, eff) return ("Increases your three highest stats by %d."):format(eff.power) end,
 	type = "physical",
@@ -681,7 +681,7 @@ newEffect{
 }
 
 newEffect{
-	name = "SUNDER_ARMOUR",
+	name = "SUNDER_ARMOUR", image = "talents/sunder_armour.png",
 	desc = "Sunder Armour",
 	long_desc = function(self, eff) return ("The target's armour is broken, reducing it by %d."):format(eff.power) end,
 	type = "physical",
@@ -697,7 +697,7 @@ newEffect{
 }
 
 newEffect{
-	name = "SUNDER_ARMS",
+	name = "SUNDER_ARMS", image = "talents/sunder_arms.png",
 	desc = "Sunder Arms",
 	long_desc = function(self, eff) return ("The target's combat ability is reduced, reducing its attack by %d."):format(eff.power) end,
 	type = "physical",
@@ -713,7 +713,7 @@ newEffect{
 }
 
 newEffect{
-	name = "PINNED",
+	name = "PINNED", image = "effects/pinned.png",
 	desc = "Pinned to the ground",
 	long_desc = function(self, eff) return "The target is pinned to the ground, unable to move." end,
 	type = "physical",
@@ -731,7 +731,7 @@ newEffect{
 }
 
 newEffect{
-	name = "MIGHTY_BLOWS",
+	name = "MIGHTY_BLOWS", image = "effects/mighty_blows.png",
 	desc = "Mighty Blows",
 	long_desc = function(self, eff) return ("The target's combat damage is improved by %d."):format(eff.power) end,
 	type = "physical",
@@ -749,7 +749,7 @@ newEffect{
 }
 
 newEffect{
-	name = "CRIPPLE",
+	name = "CRIPPLE", image = "talents/cripple.png",
 	desc = "Cripple",
 	long_desc = function(self, eff) return ("The target is crippled, reducing attack by %d and damage by %d."):format(eff.atk, eff.dam) end,
 	type = "physical",
@@ -797,7 +797,7 @@ newEffect{
 }
 
 newEffect{
-	name = "BURROW",
+	name = "BURROW", image = "talents/burrow.png",
 	desc = "Burrow",
 	long_desc = function(self, eff) return "The target is able to burrow into walls." end,
 	type = "physical",
@@ -815,7 +815,7 @@ newEffect{
 }
 
 newEffect{
-	name = "DIM_VISION",
+	name = "DIM_VISION", image = "talents/sticky_smoke.png",
 	desc = "Reduced Vision",
 	long_desc = function(self, eff) return ("The target's vision range is decreased by %d."):format(eff.sight) end,
 	type = "physical",
@@ -855,7 +855,7 @@ newEffect{
 }
 
 newEffect{
-	name = "RESOLVE",
+	name = "RESOLVE", image = "talents/resolve.png",
 	desc = "Resolve",
 	long_desc = function(self, eff) return ("You gain %d%% resistance against %s."):format(eff.res, DamageType:get(eff.damtype).name) end,
 	type = "physical",
@@ -873,7 +873,7 @@ newEffect{
 }
 
 newEffect{
-	name = "WILD_SPEED",
+	name = "WILD_SPEED", image = "talents/infusion_movement.png",
 	desc = "Wild Speed",
 	long_desc = function(self, eff) return ("The movement infusion allows you to run at extreme fast pace. Any other action other than movement will cancel it .Movement is %d%% faster."):format(eff.power) end,
 	type = "physical",
@@ -895,7 +895,7 @@ newEffect{
 }
 
 newEffect{
-	name = "STEP_UP",
+	name = "STEP_UP", image = "talents/step_up.png",
 	desc = "Step Up",
 	long_desc = function(self, eff) return ("Movement is %d%% faster."):format(eff.power) end,
 	type = "physical",
@@ -917,7 +917,7 @@ newEffect{
 }
 
 newEffect{
-	name = "LIGHTNING_SPEED",
+	name = "LIGHTNING_SPEED", image = "talents/lightning_speed.png",
 	desc = "Lightning Speed",
 	long_desc = function(self, eff) return ("Turn into pure lightning, moving %d%% faster. It also increases your lightning resistance by 100%% and your physical resistance by 30%%."):format(eff.power) end,
 	type = "physical",
@@ -1010,7 +1010,7 @@ newEffect{
 }
 
 newEffect{
-	name = "GREATER_WEAPON_FOCUS",
+	name = "GREATER_WEAPON_FOCUS", image = "talents/greater_weapon_focus.png",
 	desc = "Greater Weapon Focus",
 	long_desc = function(self, eff) return ("%d%% chance to score a secondary blow."):format(eff.chance) end,
 	type = "physical",
@@ -1025,7 +1025,7 @@ newEffect{
 
 -- Grappling stuff
 newEffect{
-	name = "GRAPPLING",
+	name = "GRAPPLING", image = "talents/clinch.png",
 	desc = "Grappling",
 	long_desc = function(self, eff) return ("The target is engaged in a grapple.  Any movement will break the effect as will some unarmed talents."):format() end,
 	type = "physical",
@@ -1050,7 +1050,7 @@ newEffect{
 }
 
 newEffect{
-	name = "GRAPPLED",
+	name = "GRAPPLED", image = "talents/grab.png",
 	desc = "Grappled",
 	long_desc = function(self, eff) return ("The target is grappled, unable to move, and has it's defense and attack reduced by %d."):format(eff.power) end,
 	type = "physical",
@@ -1078,7 +1078,7 @@ newEffect{
 }
 
 newEffect{
-	name = "CRUSHING_HOLD",
+	name = "CRUSHING_HOLD", image = "talents/crushing_hold.png",
 	desc = "Crushing Hold",
 	long_desc = function(self, eff) return ("The target is being crushed and suffers %d damage each turn"):format(eff.power) end,
 	type = "physical",
@@ -1124,7 +1124,7 @@ newEffect{
 }
 
 newEffect{
-	name = "MAIMED",
+	name = "MAIMED", image = "talents/maim.png",
 	desc = "Maimed",
 	long_desc = function(self, eff) return ("The target is maimed, reducing damage by %d and global speed by 30%%."):format(eff.power) end,
 	type = "physical",
@@ -1144,7 +1144,7 @@ newEffect{
 }
 
 newEffect{
-	name = "COMBO",
+	name = "COMBO", image = "talents/combo_string.png",
 	desc = "Combo",
 	display_desc = function(self, eff) return eff.cur_power.." Combo" end,
 	long_desc = function(self, eff) return ("The target is in the middle of a combo chain and has earned %d combo points."):format(eff.cur_power) end,
@@ -1170,7 +1170,7 @@ newEffect{
 }
 
 newEffect{
-	name = "DEFENSIVE_MANEUVER",
+	name = "DEFENSIVE_MANEUVER", image = "talents/set_up.png",
 	desc = "Defensive Maneuver",
 	long_desc = function(self, eff) return ("The target's defense is increased by %d."):format(eff.power) end,
 	type = "physical",
@@ -1230,7 +1230,7 @@ newEffect{
 }
 
 newEffect{
-	name = "REFLEXIVE_DODGING",
+	name = "REFLEXIVE_DODGING", image = "talents/heightened_reflexes.png",
 	desc = "Reflexive Dodging",
 	long_desc = function(self, eff) return ("Increases global action speed by %d%%."):format(eff.power * 100) end,
 	type = "physical",
@@ -1248,7 +1248,7 @@ newEffect{
 }
 
 newEffect{
-	name = "WEAKENED_DEFENSES",
+	name = "WEAKENED_DEFENSES", image = "talents/exploit_weakness.png",
 	desc = "Weakened Defenses",
 	long_desc = function(self, eff) return ("The target's physical resistance has been reduced by %d%%."):format(eff.inc) end,
 	type = "physical",
@@ -1315,7 +1315,7 @@ newEffect{
 }
 
 newEffect{
-	name = "WATERS_OF_LIFE",
+	name = "WATERS_OF_LIFE", image = "talents/waters_of_life.png",
 	desc = "Waters of Life",
 	long_desc = function(self, eff) return ("The target purifies all diseases and poisons, turning them into healing effects.") end,
 	type = "physical",
@@ -1333,7 +1333,7 @@ newEffect{
 }
 
 newEffect{
-	name = "ELEMENTAL_HARMONY",
+	name = "ELEMENTAL_HARMONY", image = "effects/elemental_harmony.png",
 	desc = "Elemental Harmony",
 	long_desc = function(self, eff)
 		if eff.type == DamageType.FIRE then return ("Increases global speed by %d%%."):format(100 * (0.1 + eff.power / 16))
@@ -1384,7 +1384,7 @@ newEffect{
 }
 
 newEffect{
-	name = "HEALING_NEXUS",
+	name = "HEALING_NEXUS", image = "talents/healing_nexus.png",
 	desc = "Healing Nexus",
 	long_desc = function(self, eff) return ("All healing done to the target is instead redirected to %s by %d%%."):format(eff.src.name, eff.pct * 100, eff.src.name) end,
 	type = "physical",
@@ -1398,7 +1398,7 @@ newEffect{
 }
 
 newEffect{
-	name = "PSIONIC_BIND",
+	name = "PSIONIC_BIND", image = "effects/psionic _bind.png",
 	desc = "Immobilized",
 	long_desc = function(self, eff) return "Immobilized by telekinetic forces." end,
 	type = "physical",
@@ -1442,7 +1442,7 @@ newEffect{
 }
 
 newEffect{
-	name = "FREE_ACTION",
+	name = "FREE_ACTION", image = "effects/free_action.png",
 	desc = "Free Action",
 	long_desc = function(self, eff) return ("The target gains %d%% stun, daze and pinning immunity."):format(eff.power * 100) end,
 	type = "physical",
