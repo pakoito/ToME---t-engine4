@@ -28,7 +28,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_LITE",
-	name = "brass lantern", color=colors.UMBER,
+	name = "brass lantern", color=colors.UMBER, short_name = "brass",
 	desc = [[A brass container with a wick emerging from it, protected from draughts by a sheet of greased paper. It can be carried by a handle.]],
 	level_range = {1, 20},
 	rarity = 7,
@@ -42,7 +42,7 @@ newEntity{ base = "BASE_LITE",
 }
 
 newEntity{ base = "BASE_LITE",
-	name = "alchemist's lamp", color=colors.LIGHT_UMBER,
+	name = "alchemist's lamp", color=colors.LIGHT_UMBER, short_name = "alchemist",
 	desc = [[A normal brass lantern, enhanced by alchemy to make it brighter.]],
 	level_range = {20, 35},
 	rarity = 10,
@@ -56,7 +56,7 @@ newEntity{ base = "BASE_LITE",
 }
 
 newEntity{ base = "BASE_LITE",
-	name = "dwarven lantern", color=colors.GOLD,
+	name = "dwarven lantern", color=colors.GOLD, short_name = "dwarven",
 	desc = [[Made by the Dwarves, this lantern provides light in the darkest recesses of the earth.]],
 	level_range = {35, 50},
 	rarity = 12,

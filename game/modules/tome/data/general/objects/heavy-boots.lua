@@ -36,7 +36,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_HEAVY_BOOTS",
-	name = "pair of iron boots",
+	name = "pair of iron boots", short_name = "iron",
 	level_range = {1, 20},
 	cost = 5,
 	material_level = 1,
@@ -47,7 +47,7 @@ newEntity{ base = "BASE_HEAVY_BOOTS",
 }
 
 newEntity{ base = "BASE_HEAVY_BOOTS",
-	name = "pair of dwarven-steel boots",
+	name = "pair of dwarven-steel boots", short_name = "d.steel",
 	level_range = {20, 40},
 	cost = 7,
 	material_level = 3,
@@ -58,7 +58,7 @@ newEntity{ base = "BASE_HEAVY_BOOTS",
 }
 
 newEntity{ base = "BASE_HEAVY_BOOTS",
-	name = "pair of voratun boots",
+	name = "pair of voratun boots", short_name = "voratun",
 	level_range = {40, 50},
 	cost = 10,
 	material_level = 5,

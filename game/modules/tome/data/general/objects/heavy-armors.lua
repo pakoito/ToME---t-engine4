@@ -36,7 +36,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_HEAVY_ARMOR",
-	name = "iron mail armour",
+	name = "iron mail armour", short_name = "",
 	level_range = {1, 10},
 	require = { stat = { str=14 }, },
 	cost = 20,
@@ -49,7 +49,7 @@ newEntity{ base = "BASE_HEAVY_ARMOR",
 }
 
 newEntity{ base = "BASE_HEAVY_ARMOR",
-	name = "steel mail armour",
+	name = "steel mail armour", short_name = "steel",
 	level_range = {10, 20},
 	require = { stat = { str=20 }, },
 	cost = 25,
@@ -62,7 +62,7 @@ newEntity{ base = "BASE_HEAVY_ARMOR",
 }
 
 newEntity{ base = "BASE_HEAVY_ARMOR",
-	name = "dwarven-steel mail armour",
+	name = "dwarven-steel mail armour", short_name = "d.steel",
 	level_range = {20, 30},
 	require = { stat = { str=28 }, },
 	cost = 30,
@@ -75,7 +75,7 @@ newEntity{ base = "BASE_HEAVY_ARMOR",
 }
 
 newEntity{ base = "BASE_HEAVY_ARMOR",
-	name = "stralite mail armour",
+	name = "stralite mail armour", short_name = "stralite",
 	level_range = {30, 40},
 	cost = 40,
 	material_level = 4,
@@ -88,7 +88,7 @@ newEntity{ base = "BASE_HEAVY_ARMOR",
 }
 
 newEntity{ base = "BASE_HEAVY_ARMOR",
-	name = "voratun mail armour",
+	name = "voratun mail armour", short_name = "voratun",
 	level_range = {40, 50},
 	require = { stat = { str=48 }, },
 	cost = 50,

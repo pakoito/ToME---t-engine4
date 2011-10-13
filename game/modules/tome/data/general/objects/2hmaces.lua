@@ -36,7 +36,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_GREATMAUL",
-	name = "iron greatmaul",
+	name = "iron greatmaul", short_name = "iron",
 	level_range = {1, 10},
 	require = { stat = { str=11 }, },
 	cost = 5,
@@ -50,7 +50,7 @@ newEntity{ base = "BASE_GREATMAUL",
 }
 
 newEntity{ base = "BASE_GREATMAUL",
-	name = "steel greatmaul",
+	name = "steel greatmaul", short_name = "steel",
 	level_range = {10, 20},
 	require = { stat = { str=16 }, },
 	cost = 10,
@@ -64,7 +64,7 @@ newEntity{ base = "BASE_GREATMAUL",
 }
 
 newEntity{ base = "BASE_GREATMAUL",
-	name = "dwarven-steel greatmaul",
+	name = "dwarven-steel greatmaul", short_name = "d.steel",
 	level_range = {20, 30},
 	require = { stat = { str=24 }, },
 	cost = 15,
@@ -78,7 +78,7 @@ newEntity{ base = "BASE_GREATMAUL",
 }
 
 newEntity{ base = "BASE_GREATMAUL",
-	name = "stralite greatmaul",
+	name = "stralite greatmaul", short_name = "stralite",
 	level_range = {30, 40},
 	require = { stat = { str=35 }, },
 	cost = 25,
@@ -92,7 +92,7 @@ newEntity{ base = "BASE_GREATMAUL",
 }
 
 newEntity{ base = "BASE_GREATMAUL",
-	name = "voratun greatmaul",
+	name = "voratun greatmaul", short_name = "voratun",
 	level_range = {40, 50},
 	require = { stat = { str=48 }, },
 	cost = 35,

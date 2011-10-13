@@ -36,7 +36,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_BATTLEAXE",
-	name = "iron battleaxe",
+	name = "iron battleaxe", short_name = "iron",
 	level_range = {1, 10},
 	require = { stat = { str=11 }, },
 	cost = 5,
@@ -50,7 +50,7 @@ newEntity{ base = "BASE_BATTLEAXE",
 }
 
 newEntity{ base = "BASE_BATTLEAXE",
-	name = "steel battleaxe",
+	name = "steel battleaxe", short_name = "steel",
 	level_range = {10, 20},
 	require = { stat = { str=16 }, },
 	cost = 10,
@@ -64,7 +64,7 @@ newEntity{ base = "BASE_BATTLEAXE",
 }
 
 newEntity{ base = "BASE_BATTLEAXE",
-	name = "dwarven-steel battleaxe",
+	name = "dwarven-steel battleaxe", short_name = "d.steel",
 	level_range = {20, 30},
 	require = { stat = { str=24 }, },
 	cost = 15,
@@ -78,7 +78,7 @@ newEntity{ base = "BASE_BATTLEAXE",
 }
 
 newEntity{ base = "BASE_BATTLEAXE",
-	name = "stralite battleaxe",
+	name = "stralite battleaxe", short_name = "stralite",
 	level_range = {30, 40},
 	require = { stat = { str=35 }, },
 	cost = 25,
@@ -92,7 +92,7 @@ newEntity{ base = "BASE_BATTLEAXE",
 }
 
 newEntity{ base = "BASE_BATTLEAXE",
-	name = "voratun battleaxe",
+	name = "voratun battleaxe", short_name = "voratun",
 	level_range = {40, 50},
 	require = { stat = { str=48 }, },
 	cost = 35,

@@ -36,7 +36,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_MUMMY_WRAPPING",
-	name = "mummy wrappings",
+	name = "mummy wrappings", short_name = "mummy",
 	level_range = {10, 40},
 	require = { stat = { dex=15 }, },
 	cost = 1,

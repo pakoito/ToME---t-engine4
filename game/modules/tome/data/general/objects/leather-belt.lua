@@ -30,21 +30,21 @@ newEntity{
 }
 
 newEntity{ base = "BASE_LEATHER_BELT",
-	name = "rough leather belt",
+	name = "rough leather belt", short_name = "rough",
 	level_range = {1, 20},
 	cost = 1,
 	material_level = 1,
 }
 
 newEntity{ base = "BASE_LEATHER_BELT",
-	name = "hardened leather belt",
+	name = "hardened leather belt", short_name = "hardened",
 	level_range = {20, 40},
 	cost = 2,
 	material_level = 3,
 }
 
 newEntity{ base = "BASE_LEATHER_BELT",
-	name = "drakeskin leather belt",
+	name = "drakeskin leather belt", short_name = "drakeskin",
 	level_range = {40, 50},
 	cost = 4,
 	material_level = 5,

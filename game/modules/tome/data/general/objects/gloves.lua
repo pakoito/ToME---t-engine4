@@ -35,7 +35,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_GLOVES",
-	name = "rough leather gloves",
+	name = "rough leather gloves", short_name = "rough",
 	level_range = {1, 20},
 	cost = 5,
 	material_level = 1,
@@ -52,7 +52,7 @@ newEntity{ base = "BASE_GLOVES",
 }
 
 newEntity{ base = "BASE_GLOVES",
-	name = "hardened leather gloves",
+	name = "hardened leather gloves", short_name = "hardened",
 	level_range = {20, 40},
 	cost = 7,
 	material_level = 3,
@@ -69,7 +69,7 @@ newEntity{ base = "BASE_GLOVES",
 }
 
 newEntity{ base = "BASE_GLOVES",
-	name = "drakeskin leather gloves",
+	name = "drakeskin leather gloves", short_name = "drakeskin",
 	level_range = {40, 50},
 	cost = 10,
 	material_level = 5,

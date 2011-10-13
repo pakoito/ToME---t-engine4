@@ -32,7 +32,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_WIZARD_HAT",
-	name = "linen wizard hat",
+	name = "linen wizard hat", short_name = "linen",
 	level_range = {1, 20},
 	cost = 2,
 	material_level = 1,
@@ -42,7 +42,7 @@ newEntity{ base = "BASE_WIZARD_HAT",
 }
 
 newEntity{ base = "BASE_WIZARD_HAT",
-	name = "cashmere wizard hat",
+	name = "cashmere wizard hat", short_name = "cashmere",
 	level_range = {20, 40},
 	cost = 4,
 	material_level = 3,
@@ -52,7 +52,7 @@ newEntity{ base = "BASE_WIZARD_HAT",
 }
 
 newEntity{ base = "BASE_WIZARD_HAT",
-	name = "elven-silk wizard hat",
+	name = "elven-silk wizard hat", short_name = "e.silk",
 	level_range = {40, 50},
 	cost = 7,
 	material_level = 5,

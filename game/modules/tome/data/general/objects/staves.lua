@@ -41,7 +41,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_STAFF",
-	name = "elm staff",
+	name = "elm staff", short_name = "elm",
 	level_range = {1, 10},
 	require = { stat = { mag=11 }, },
 	cost = 5,
@@ -59,7 +59,7 @@ newEntity{ base = "BASE_STAFF",
 }
 
 newEntity{ base = "BASE_STAFF",
-	name = "ash staff",
+	name = "ash staff", short_name = "ash",
 	level_range = {10, 20},
 	require = { stat = { mag=16 }, },
 	cost = 10,
@@ -77,7 +77,7 @@ newEntity{ base = "BASE_STAFF",
 }
 
 newEntity{ base = "BASE_STAFF",
-	name = "yew staff",
+	name = "yew staff", short_name = "yew",
 	level_range = {20, 30},
 	require = { stat = { mag=24 }, },
 	cost = 15,
@@ -95,7 +95,7 @@ newEntity{ base = "BASE_STAFF",
 }
 
 newEntity{ base = "BASE_STAFF",
-	name = "elven-wood staff",
+	name = "elven-wood staff", short_name = "e.wood",
 	level_range = {30, 40},
 	require = { stat = { mag=35 }, },
 	cost = 25,
@@ -113,7 +113,7 @@ newEntity{ base = "BASE_STAFF",
 }
 
 newEntity{ base = "BASE_STAFF",
-	name = "dragonbone staff",
+	name = "dragonbone staff", short_name = "dragonbone",
 	level_range = {40, 50},
 	require = { stat = { mag=48 }, },
 	cost = 35,

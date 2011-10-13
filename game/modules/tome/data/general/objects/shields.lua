@@ -40,7 +40,7 @@ newEntity{
 -- when using special talents
 
 newEntity{ base = "BASE_SHIELD",
-	name = "iron shield",
+	name = "iron shield", short_name = "iron",
 	level_range = {1, 10},
 	require = { stat = { str=11 }, },
 	cost = 5,
@@ -59,7 +59,7 @@ newEntity{ base = "BASE_SHIELD",
 }
 
 newEntity{ base = "BASE_SHIELD",
-	name = "steel shield",
+	name = "steel shield", short_name = "steel",
 	level_range = {10, 20},
 	require = { stat = { str=16 }, },
 	cost = 10,
@@ -78,7 +78,7 @@ newEntity{ base = "BASE_SHIELD",
 }
 
 newEntity{ base = "BASE_SHIELD",
-	name = "dwarven-steel shield",
+	name = "dwarven-steel shield", short_name = "d.steel",
 	level_range = {20, 30},
 	require = { stat = { str=24 }, },
 	cost = 15,
@@ -97,7 +97,7 @@ newEntity{ base = "BASE_SHIELD",
 }
 
 newEntity{ base = "BASE_SHIELD",
-	name = "stralite shield",
+	name = "stralite shield", short_name = "stralite",
 	level_range = {30, 40},
 	require = { stat = { str=35 }, },
 	cost = 25,
@@ -116,7 +116,7 @@ newEntity{ base = "BASE_SHIELD",
 }
 
 newEntity{ base = "BASE_SHIELD",
-	name = "voratun shield",
+	name = "voratun shield", short_name = "voratun",
 	level_range = {40, 50},
 	require = { stat = { str=48 }, },
 	cost = 35,

@@ -32,7 +32,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_LIGHT_ARMOR",
-	name = "rough leather armour",
+	name = "rough leather armour", short_name = "rough",
 	level_range = {1, 10},
 	require = { stat = { str=10 }, },
 	cost = 10,
@@ -45,7 +45,7 @@ newEntity{ base = "BASE_LIGHT_ARMOR",
 }
 
 newEntity{ base = "BASE_LIGHT_ARMOR",
-	name = "cured leather armour",
+	name = "cured leather armour", short_name = "cured",
 	level_range = {10, 20},
 	require = { stat = { str=14 }, },
 	cost = 12,
@@ -58,7 +58,7 @@ newEntity{ base = "BASE_LIGHT_ARMOR",
 }
 
 newEntity{ base = "BASE_LIGHT_ARMOR",
-	name = "hardened leather armour",
+	name = "hardened leather armour", short_name = "hardened",
 	level_range = {20, 30},
 	require = { stat = { str=16 }, },
 	cost = 15,
@@ -71,7 +71,7 @@ newEntity{ base = "BASE_LIGHT_ARMOR",
 }
 
 newEntity{ base = "BASE_LIGHT_ARMOR",
-	name = "reinforced leather armour",
+	name = "reinforced leather armour", short_name = "reinforced",
 	level_range = {30, 40},
 	cost = 20,
 	require = { stat = { str=18 }, },
@@ -84,7 +84,7 @@ newEntity{ base = "BASE_LIGHT_ARMOR",
 }
 
 newEntity{ base = "BASE_LIGHT_ARMOR",
-	name = "drakeskin leather armour",
+	name = "drakeskin leather armour", short_name = "drakeskin",
 	level_range = {40, 50},
 	require = { stat = { str=20 }, },
 	cost = 25,

@@ -39,7 +39,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_LONGBOW",
-	name = "elm longbow",
+	name = "elm longbow", short_name = "elm",
 	level_range = {1, 10},
 	require = { stat = { dex=11 }, },
 	cost = 5,
@@ -57,7 +57,7 @@ newEntity{ base = "BASE_LONGBOW",
 }
 
 newEntity{ base = "BASE_LONGBOW",
-	name = "ash longbow",
+	name = "ash longbow", short_name = "ash",
 	level_range = {10, 20},
 	require = { stat = { dex=16 }, },
 	cost = 10,
@@ -75,7 +75,7 @@ newEntity{ base = "BASE_LONGBOW",
 }
 
 newEntity{ base = "BASE_LONGBOW",
-	name = "yew longbow",
+	name = "yew longbow", short_name = "yew",
 	level_range = {20, 30},
 	require = { stat = { dex=24 }, },
 	cost = 15,
@@ -93,7 +93,7 @@ newEntity{ base = "BASE_LONGBOW",
 }
 
 newEntity{ base = "BASE_LONGBOW",
-	name = "elven-wood longbow",
+	name = "elven-wood longbow", short_name = "e.wood",
 	level_range = {30, 40},
 	require = { stat = { dex=35 }, },
 	cost = 25,
@@ -111,7 +111,7 @@ newEntity{ base = "BASE_LONGBOW",
 }
 
 newEntity{ base = "BASE_LONGBOW",
-	name = "dragonbone longbow",
+	name = "dragonbone longbow", short_name = "dragonbone",
 	level_range = {40, 50},
 	require = { stat = { dex=48 }, },
 	cost = 35,
@@ -148,7 +148,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_ARROW",
-	name = "elm arrow",
+	name = "elm arrow", short_name = "elm",
 	level_range = {1, 10},
 	require = { stat = { dex=11 }, },
 	cost = 0.05,
@@ -162,7 +162,7 @@ newEntity{ base = "BASE_ARROW",
 }
 
 newEntity{ base = "BASE_ARROW",
-	name = "ash arrow",
+	name = "ash arrow", short_name = "ash",
 	level_range = {10, 20},
 	require = { stat = { dex=16 }, },
 	cost = 0.1,
@@ -176,7 +176,7 @@ newEntity{ base = "BASE_ARROW",
 }
 
 newEntity{ base = "BASE_ARROW",
-	name = "yew arrow",
+	name = "yew arrow", short_name = "yew",
 	level_range = {20, 30},
 	require = { stat = { dex=24 }, },
 	cost = 0.15,
@@ -190,7 +190,7 @@ newEntity{ base = "BASE_ARROW",
 }
 
 newEntity{ base = "BASE_ARROW",
-	name = "elven-wood arrow",
+	name = "elven-wood arrow", short_name = "e.wood",
 	level_range = {30, 40},
 	require = { stat = { dex=35 }, },
 	cost = 0.25,
@@ -204,7 +204,7 @@ newEntity{ base = "BASE_ARROW",
 }
 
 newEntity{ base = "BASE_ARROW",
-	name = "dragonbone arrow",
+	name = "dragonbone arrow", short_name = "dragonbone",
 	level_range = {40, 50},
 	require = { stat = { dex=48 }, },
 	cost = 0.35,

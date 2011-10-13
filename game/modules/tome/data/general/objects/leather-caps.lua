@@ -32,7 +32,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_LEATHER_CAP",
-	name = "rough leather cap",
+	name = "rough leather cap", short_name = "rough",
 	level_range = {1, 20},
 	cost = 2,
 	material_level = 1,
@@ -43,7 +43,7 @@ newEntity{ base = "BASE_LEATHER_CAP",
 }
 
 newEntity{ base = "BASE_LEATHER_CAP",
-	name = "hardened leather cap",
+	name = "hardened leather cap", short_name = "hardened",
 	level_range = {20, 40},
 	cost = 4,
 	material_level = 3,
@@ -54,7 +54,7 @@ newEntity{ base = "BASE_LEATHER_CAP",
 }
 
 newEntity{ base = "BASE_LEATHER_CAP",
-	name = "drakeskin leather cap",
+	name = "drakeskin leather cap", short_name = "drakeskin",
 	level_range = {40, 50},
 	cost = 7,
 	material_level = 5,

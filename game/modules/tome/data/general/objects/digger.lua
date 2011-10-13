@@ -57,7 +57,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_DIGGER",
-	name = "iron pickaxe",
+	name = "iron pickaxe", short_name = "iron",
 	level_range = {1, 20},
 	cost = 3,
 	material_level = 1,
@@ -65,7 +65,7 @@ newEntity{ base = "BASE_DIGGER",
 }
 
 newEntity{ base = "BASE_DIGGER",
-	name = "dwarven-steel pickaxe",
+	name = "dwarven-steel pickaxe", short_name = "d.steel",
 	level_range = {20, 40},
 	cost = 3,
 	material_level = 3,
@@ -73,7 +73,7 @@ newEntity{ base = "BASE_DIGGER",
 }
 
 newEntity{ base = "BASE_DIGGER",
-	name = "voratun pickaxe",
+	name = "voratun pickaxe", short_name = "voratun",
 	level_range = {40, 50},
 	cost = 3,
 	material_level = 5,

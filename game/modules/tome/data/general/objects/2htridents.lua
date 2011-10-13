@@ -38,7 +38,7 @@ Tridents require the exotic weapons mastery talent to use correctly.]],
 }
 
 newEntity{ base = "BASE_TRIDENT",
-	name = "coral trident",
+	name = "coral trident", short_name = "coral",
 	level_range = {1, 10},
 	require = { stat = { str=11 }, },
 	cost = 5,
@@ -52,7 +52,7 @@ newEntity{ base = "BASE_TRIDENT",
 }
 
 newEntity{ base = "BASE_TRIDENT",
-	name = "blue-steel trident",
+	name = "blue-steel trident", short_name = "b.steel",
 	level_range = {10, 20},
 	require = { stat = { str=16 }, },
 	cost = 10,
@@ -66,7 +66,7 @@ newEntity{ base = "BASE_TRIDENT",
 }
 
 newEntity{ base = "BASE_TRIDENT",
-	name = "deep-steel trident",
+	name = "deep-steel trident", short_name = "d.steel",
 	level_range = {20, 30},
 	require = { stat = { str=24 }, },
 	cost = 15,
@@ -80,7 +80,7 @@ newEntity{ base = "BASE_TRIDENT",
 }
 
 newEntity{ base = "BASE_TRIDENT",
-	name = "orite trident",
+	name = "orite trident", short_name = "orite",
 	level_range = {30, 40},
 	require = { stat = { str=35 }, },
 	cost = 25,
@@ -94,7 +94,7 @@ newEntity{ base = "BASE_TRIDENT",
 }
 
 newEntity{ base = "BASE_TRIDENT",
-	name = "orichalcum trident",
+	name = "orichalcum trident", short_name = "orichalcum",
 	level_range = {40, 50},
 	require = { stat = { str=48 }, },
 	cost = 35,

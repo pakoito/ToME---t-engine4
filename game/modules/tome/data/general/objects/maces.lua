@@ -34,7 +34,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_MACE",
-	name = "iron mace",
+	name = "iron mace", short_name = "iron",
 	level_range = {1, 10},
 	require = { stat = { str=11 }, },
 	cost = 5,
@@ -48,7 +48,7 @@ newEntity{ base = "BASE_MACE",
 }
 
 newEntity{ base = "BASE_MACE",
-	name = "steel mace",
+	name = "steel mace", short_name = "steel",
 	level_range = {10, 20},
 	require = { stat = { str=16 }, },
 	cost = 10,
@@ -62,7 +62,7 @@ newEntity{ base = "BASE_MACE",
 }
 
 newEntity{ base = "BASE_MACE",
-	name = "dwarven-steel mace",
+	name = "dwarven-steel mace", short_name = "d.steel",
 	level_range = {20, 30},
 	require = { stat = { str=24 }, },
 	cost = 15,
@@ -76,7 +76,7 @@ newEntity{ base = "BASE_MACE",
 }
 
 newEntity{ base = "BASE_MACE",
-	name = "stralite mace",
+	name = "stralite mace", short_name = "stralite",
 	level_range = {30, 40},
 	require = { stat = { str=35 }, },
 	cost = 25,
@@ -90,7 +90,7 @@ newEntity{ base = "BASE_MACE",
 }
 
 newEntity{ base = "BASE_MACE",
-	name = "voratun mace",
+	name = "voratun mace", short_name = "voratun",
 	level_range = {40, 50},
 	require = { stat = { str=48 }, },
 	cost = 35,

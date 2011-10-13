@@ -32,7 +32,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_LEATHER_BOOT",
-	name = "pair of rough leather boots",
+	name = "pair of rough leather boots", short_name = "rough",
 	level_range = {1, 20},
 	cost = 2,
 	material_level = 1,
@@ -43,7 +43,7 @@ newEntity{ base = "BASE_LEATHER_BOOT",
 }
 
 newEntity{ base = "BASE_LEATHER_BOOT",
-	name = "pair of hardened leather boots",
+	name = "pair of hardened leather boots", short_name = "hardened",
 	level_range = {20, 40},
 	cost = 4,
 	material_level = 3,
@@ -54,7 +54,7 @@ newEntity{ base = "BASE_LEATHER_BOOT",
 }
 
 newEntity{ base = "BASE_LEATHER_BOOT",
-	name = "pair of drakeskin leather boots",
+	name = "pair of drakeskin leather boots", short_name = "drakeskin",
 	level_range = {40, 50},
 	cost = 7,
 	material_level = 5,

@@ -38,7 +38,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_SLING",
-	name = "rough leather sling",
+	name = "rough leather sling", short_name = "rough",
 	level_range = {1, 10},
 	require = { stat = { dex=11 }, },
 	cost = 5,
@@ -56,7 +56,7 @@ newEntity{ base = "BASE_SLING",
 }
 
 newEntity{ base = "BASE_SLING",
-	name = "cured leather sling",
+	name = "cured leather sling", short_name = "cured",
 	level_range = {10, 20},
 	require = { stat = { dex=16 }, },
 	cost = 10,
@@ -74,7 +74,7 @@ newEntity{ base = "BASE_SLING",
 }
 
 newEntity{ base = "BASE_SLING",
-	name = "hardened leather sling",
+	name = "hardened leather sling", short_name = "hardened",
 	level_range = {20, 30},
 	require = { stat = { dex=24 }, },
 	cost = 15,
@@ -92,7 +92,7 @@ newEntity{ base = "BASE_SLING",
 }
 
 newEntity{ base = "BASE_SLING",
-	name = "reinforced leather sling",
+	name = "reinforced leather sling", short_name = "reinforced",
 	level_range = {30, 40},
 	require = { stat = { dex=35 }, },
 	cost = 25,
@@ -110,7 +110,7 @@ newEntity{ base = "BASE_SLING",
 }
 
 newEntity{ base = "BASE_SLING",
-	name = "drakeskin leather sling",
+	name = "drakeskin leather sling", short_name = "drakeskin",
 	level_range = {40, 50},
 	require = { stat = { dex=48 }, },
 	cost = 35,
@@ -147,7 +147,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_SHOT",
-	name = "iron shot",
+	name = "iron shot", short_name = "iron",
 	level_range = {1, 10},
 	require = { stat = { dex=11 }, },
 	cost = 0.05,
@@ -161,7 +161,7 @@ newEntity{ base = "BASE_SHOT",
 }
 
 newEntity{ base = "BASE_SHOT",
-	name = "steel shot",
+	name = "steel shot", short_name = "steel",
 	level_range = {10, 20},
 	require = { stat = { dex=16 }, },
 	cost = 0.10,
@@ -175,7 +175,7 @@ newEntity{ base = "BASE_SHOT",
 }
 
 newEntity{ base = "BASE_SHOT",
-	name = "dwarven-steel shot",
+	name = "dwarven-steel shot", short_name = "d.steel",
 	level_range = {20, 30},
 	require = { stat = { dex=24 }, },
 	cost = 0.15,
@@ -189,7 +189,7 @@ newEntity{ base = "BASE_SHOT",
 }
 
 newEntity{ base = "BASE_SHOT",
-	name = "stralite shot",
+	name = "stralite shot", short_name = "stralite",
 	level_range = {30, 40},
 	require = { stat = { dex=35 }, },
 	cost = 0.25,
@@ -203,7 +203,7 @@ newEntity{ base = "BASE_SHOT",
 }
 
 newEntity{ base = "BASE_SHOT",
-	name = "voratun shot",
+	name = "voratun shot", short_name = "voratun",
 	level_range = {40, 50},
 	require = { stat = { dex=48 }, },
 	cost = 0.35,

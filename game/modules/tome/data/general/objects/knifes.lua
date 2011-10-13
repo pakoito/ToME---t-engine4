@@ -34,7 +34,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_KNIFE",
-	name = "iron dagger",
+	name = "iron dagger", short_name = "iron",
 	level_range = {1, 10},
 	require = { stat = { dex=11 }, },
 	cost = 5,
@@ -48,7 +48,7 @@ newEntity{ base = "BASE_KNIFE",
 }
 
 newEntity{ base = "BASE_KNIFE",
-	name = "steel dagger",
+	name = "steel dagger", short_name = "steel",
 	level_range = {10, 20},
 	require = { stat = { dex=16 }, },
 	cost = 10,
@@ -62,7 +62,7 @@ newEntity{ base = "BASE_KNIFE",
 }
 
 newEntity{ base = "BASE_KNIFE",
-	name = "dwarven-steel dagger",
+	name = "dwarven-steel dagger", short_name = "d.steel",
 	level_range = {20, 30},
 	require = { stat = { dex=24 }, },
 	cost = 15,
@@ -76,7 +76,7 @@ newEntity{ base = "BASE_KNIFE",
 }
 
 newEntity{ base = "BASE_KNIFE",
-	name = "stralite dagger",
+	name = "stralite dagger", short_name = "stralite",
 	level_range = {30, 40},
 	require = { stat = { dex=35 }, },
 	cost = 25,
@@ -90,7 +90,7 @@ newEntity{ base = "BASE_KNIFE",
 }
 
 newEntity{ base = "BASE_KNIFE",
-	name = "voratun dagger",
+	name = "voratun dagger", short_name = "voratun",
 	level_range = {40, 50},
 	require = { stat = { dex=48 }, },
 	cost = 35,
