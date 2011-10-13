@@ -28,6 +28,7 @@ local Talents = require "engine.interface.ActorTalents"
 newEntity{
 	power_source = {nature=true},
 	name = " of cunning (#STATBONUS#)", suffix=true, instant_resolve=true,
+	keywords = {cunning=true},
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 4,
@@ -38,6 +39,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = " of willpower (#STATBONUS#)", suffix=true, instant_resolve=true,
+	keywords = {willpower=true},
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 4,
@@ -48,6 +50,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = " of mastery (#MASTERY#)", suffix=true,
+	keywords = {mastery=true},
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 2,
@@ -68,6 +71,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = " of telepathic range", suffix=true,
+	keywords = {telepathy=true},
 	level_range = {40, 50},
 	rarity = 15,
 	cost = 15,
@@ -78,6 +82,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = " of the fish", suffix=true,
+	keywords = {fish=true},
 	level_range = {25, 50},
 	rarity = 10,
 	cost = 10,
@@ -89,6 +94,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = " of teleportation", suffix=true, instant_resolve=true,
+	keywords = {teleport=true},
 	level_range = {20, 50},
 	rarity = 10,
 	cost = 40,
@@ -110,6 +116,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = "insulating ", prefix=true, instant_resolve=true,
+	keywords = {insulating=true},
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 5,
@@ -124,6 +131,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = "grounding ", prefix=true, instant_resolve=true,
+	keywords = {grounding=true},
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 5,
@@ -138,6 +146,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = "anchoring ", prefix=true, instant_resolve=true,
+	keywords = {anchoring=true},
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 5,
@@ -152,6 +161,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = "stabilizing ", prefix=true, instant_resolve=true,
+	keywords = {stabilizing=true},
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 5,
@@ -164,6 +174,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = "shielding ", prefix=true, instant_resolve=true,
+	keywords = {shielding=true},
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 5,
@@ -176,6 +187,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = "cleansing ", prefix=true, instant_resolve=true,
+	keywords = {cleansing=true},
 	level_range = {1, 50},
 	rarity = 9,
 	cost = 9,
@@ -191,6 +203,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = "restful ", prefix=true, instant_resolve=true,
+	keywords = {restful=true},
 	level_range = {20, 50},
 	greater_ego = 1,
 	rarity = 6,
@@ -203,6 +216,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = "vitalizing ", prefix=true, instant_resolve=true,
+	keywords = {vitalizing=true},
 	level_range = {20, 50},
 	greater_ego = 1,
 	rarity = 15,
@@ -225,6 +239,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = " of murder", suffix=true, instant_resolve=true,
+	keywords = {murder=true},
 	level_range = {30, 50},
 	greater_ego = 1,
 	rarity = 16,
@@ -241,6 +256,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = " of vision", suffix=true, instant_resolve=true,
+	keywords = {vision=true},
 	level_range = {25, 50},
 	greater_ego = 1,
 	rarity = 15,
@@ -257,6 +273,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = " of healing", suffix=true, instant_resolve=true,
+	keywords = {healing=true},
 	level_range = {35, 50},
 	greater_ego = 1,
 	rarity = 18,
@@ -272,6 +289,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = "protective ", prefix=true, instant_resolve=true,
+	keywords = {protect=true},
 	level_range = {30, 50},
 	greater_ego = 1,
 	rarity = 16,
@@ -286,6 +304,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = "enraging ", prefix=true, instant_resolve=true,
+	keywords = {enraging=true},
 	level_range = {40, 50},
 	greater_ego = 1,
 	rarity = 20,
@@ -301,6 +320,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = "archmage's ", prefix=true, instant_resolve=true,
+	keywords = {archmage=true},
 	level_range = {30, 50},
 	greater_ego = 1,
 	rarity = 16,
@@ -320,6 +340,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = "warmaker's ", prefix=true, instant_resolve=true,
+	keywords = {warmaker=true},
 	level_range = {30, 50},
 	greater_ego = 1,
 	rarity = 25,
@@ -342,6 +363,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = "mindweaver's ", prefix=true, instant_resolve=true,
+	keywords = {mindweaver=true},
 	level_range = {20, 50},
 	greater_ego = 1,
 	rarity = 15,
@@ -360,6 +382,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = "savior's ", prefix=true, instant_resolve=true,
+	keywords = {savior=true},
 	level_range = {20, 50},
 	greater_ego = 1,
 	rarity = 15,
@@ -375,6 +398,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = "wanderer's ", prefix=true, instant_resolve=true,
+	keywords = {wanderer=true},
 	level_range = {20, 50},
 	greater_ego = 1,
 	rarity = 15,
@@ -391,6 +415,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = "serendipitous ", prefix=true, instant_resolve=true,
+	keywords = {['serend.']=true},
 	level_range = {20, 50},
 	greater_ego = 1,
 	rarity = 15,
@@ -405,6 +430,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = " of soulsearing", suffix=true, instant_resolve=true,
+	keywords = {soulsear=true},
 	level_range = {40, 50},
 	greater_ego = 1,
 	rarity = 25,
@@ -426,6 +452,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = " of lifeblood", suffix=true, instant_resolve=true,
+	keywords = {lifeblood=true},
 	level_range = {40, 50},
 	greater_ego = 1,
 	rarity = 30,
@@ -443,6 +470,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = " of seduction", suffix=true, instant_resolve=true,
+	keywords = {seducion=true},
 	level_range = {35, 50},
 	greater_ego = 1,
 	rarity = 25,
@@ -459,6 +487,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = " of manastreaming", suffix=true, instant_resolve=true,
+	keywords = {manastream=true},
 	level_range = {20, 50},
 	greater_ego = 1,
 	rarity = 35,
@@ -476,6 +505,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = " of the chosen", suffix=true, instant_resolve=true,
+	keywords = {chosen=true},
 	level_range = {25, 50},
 	greater_ego = 1,
 	rarity = 20,
