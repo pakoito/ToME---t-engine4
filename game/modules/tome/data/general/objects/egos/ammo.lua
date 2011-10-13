@@ -20,6 +20,7 @@
 newEntity{
 	power_source = {arcane=true},
 	name = "flaming ", prefix=true, instant_resolve=true,
+	keywords = {flaming=true},
 	level_range = {1, 50},
 	rarity = 5,
 	wielder = {
@@ -29,6 +30,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = "icy ", prefix=true, instant_resolve=true,
+	keywords = {icy=true},
 	level_range = {15, 50},
 	rarity = 5,
 	wielder = {
@@ -38,6 +40,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = "acidic ", prefix=true, instant_resolve=true,
+	keywords = {acidic=true},
 	level_range = {1, 50},
 	rarity = 5,
 	wielder = {
@@ -47,6 +50,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = "shocking ", prefix=true, instant_resolve=true,
+	keywords = {shocking=true},
 	level_range = {1, 50},
 	rarity = 5,
 	wielder = {
@@ -56,6 +60,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = "poisonous ", prefix=true, instant_resolve=true,
+	keywords = {poisonous=true},
 	level_range = {1, 50},
 	rarity = 5,
 	wielder = {
@@ -66,6 +71,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = "slime-covered ", prefix=true, instant_resolve=true,
+	keywords = {slime=true},
 	level_range = {10, 50},
 	rarity = 5,
 	wielder = {
@@ -76,6 +82,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = "elemental ", prefix=true, instant_resolve=true,
+	keywords = {elemental=true},
 	level_range = {35, 50},
 	greater_ego = 1,
 	rarity = 25,
@@ -92,6 +99,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = " of the wind", suffix=true, instant_resolve=true,
+	keywords = {wind=true},
 	level_range = {10, 50},
 	rarity = 7,
 	combat = {
@@ -103,6 +111,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = " of annihilation", suffix=true,
+	keywords = {['annihil.']=true},
 	level_range = {1, 50},
 	greater_ego = 1,
 	cost = 1,
@@ -119,6 +128,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = " of unerring flight", suffix=true,
+	keywords = {unerring=true},
 	level_range = {1, 50},
 	greater_ego = 1,
 	cost = 1,
