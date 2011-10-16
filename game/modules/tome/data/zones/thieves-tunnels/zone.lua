@@ -24,7 +24,6 @@ return {
 	max_level = 2,
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	width = 30, height = 30,
-	no_worldport = true,
 	ambient_music = "a_lomos_del_dragon_blanco.ogg",
 	generator =  {
 		map = {
