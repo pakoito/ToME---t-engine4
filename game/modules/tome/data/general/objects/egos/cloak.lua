@@ -25,6 +25,7 @@ local DamageType = require "engine.DamageType"
 newEntity{
 	power_source = {technique=true},
 	name = "shadow ", prefix=true, instant_resolve=true,
+	keywords = {shadow=true},
 	level_range = {20, 50},
 	rarity = 5,
 	cost = 6,
@@ -36,6 +37,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = "thick ", prefix=true, instant_resolve=true,
+	keywords = {thick=true},
 	level_range = {1, 40},
 	rarity = 6,
 	cost = 7,
@@ -47,6 +49,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = "plush ", prefix=true, instant_resolve=true,
+	keywords = {plush=true},
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 7,
@@ -58,6 +61,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = " of Eldoral", suffix=true, instant_resolve=true,
+	keywords = {eldoral=true},
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 10,
@@ -72,6 +76,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = " of the Shaloren", suffix=true, instant_resolve=true,
+	keywords = {shaloren=true},
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 10,
@@ -86,6 +91,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = " of Iron Throne", suffix=true, instant_resolve=true,
+	keywords = {['iron.throne']=true},
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 10,
@@ -100,6 +106,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = "oiled ", prefix=true, instant_resolve=true,
+	keywords = {oiled=true},
 	level_range = {1, 40},
 	rarity = 6,
 	cost = 7,
@@ -112,6 +119,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = " of fog", suffix=true, instant_resolve=true,
+	keywords = {fog=true},
 	level_range = {30, 50},
 	greater_ego = 1,
 	rarity = 18,
@@ -132,6 +140,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = " of resilience", suffix=true, instant_resolve=true,
+	keywords = {resilience=true},
 	level_range = {1, 50},
 	rarity = 7,
 	cost = 6,
@@ -143,6 +152,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = " of stability", suffix=true, instant_resolve=true,
+	keywords = {stablity=true},
 	level_range = {1, 50},
 	rarity = 7,
 	cost = 6,
@@ -155,6 +165,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = "enveloping ", prefix=true, instant_resolve=true,
+	keywords = {enveloping=true},
 	level_range = {1, 50},
 	rarity = 5,
 	cost = 6,
@@ -166,6 +177,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = "lightening ", prefix=true, instant_resolve=true,
+	keywords = {lightening=true},
 	level_range = {1, 50},
 	rarity = 10,
 	cost = 10,
@@ -177,6 +189,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = " of sorcery", suffix=true, instant_resolve=true,
+	keywords = {sorcery=true},
 	level_range = {30, 50},
 	greater_ego = 1,
 	rarity = 16,
@@ -194,6 +207,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = " of implacability", suffix=true, instant_resolve=true,
+	keywords = {=true},
 	level_range = {30, 50},
 	greater_ego = 1,
 	rarity = 16,
@@ -208,6 +222,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = "restorative ", prefix=true, instant_resolve=true,
+	keywords = {restorative=true},
 	level_range = {35, 50},
 	greater_ego = 1,
 	rarity = 18,
@@ -224,6 +239,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = "regal ", prefix=true, instant_resolve=true,
+	keywords = {regal=true},
 	level_range = {15, 50},
 	greater_ego = 1,
 	rarity = 15,
@@ -240,6 +256,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = "wyrmwaxed ", prefix=true, instant_resolve=true,
+	keywords = {wyrmwaxed=true},
 	level_range = {35, 50},
 	greater_ego = 1,
 	rarity = 18,
@@ -257,6 +274,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = "battlemaster's ", prefix=true, instant_resolve=true,
+	keywords = {battlemaster=true},
 	level_range = {40, 50},
 	greater_ego = 1,
 	rarity = 40,
@@ -279,6 +297,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = "spellcowled ", prefix=true, instant_resolve=true,
+	keywords = {spellcowled=true},
 	level_range = {10, 50},
 	greater_ego = 1,
 	rarity = 15,
@@ -295,6 +314,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = "marshal's ", prefix=true, instant_resolve=true,
+	keywords = {marshal=true},
 	level_range = {35, 50},
 	greater_ego = 1,
 	rarity = 30,
@@ -314,6 +334,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = "murderer's ", prefix=true, instant_resolve=true,
+	keywords = {murderer=true},
 	level_range = {20, 50},
 	greater_ego = 1,
 	rarity = 20,
@@ -331,6 +352,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = "parasitic ", prefix=true, instant_resolve=true,
+	keywords = {parasitic=true},
 	level_range = {30, 50},
 	greater_ego = 1,
 	rarity = 30,
@@ -348,6 +370,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = " of the guardian", suffix=true, instant_resolve=true,
+	keywords = {guardian=true},
 	level_range = {40, 50},
 	greater_ego = 1,
 	rarity = 35,
@@ -364,6 +387,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = " of conjuring", suffix=true, instant_resolve=true,
+	keywords = {conjuring=true},
 	level_range = {40, 50},
 	greater_ego = 1,
 	rarity = 35,
@@ -378,6 +402,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = " of warlust", suffix=true, instant_resolve=true,
+	keywords = {warlust=true},
 	level_range = {10, 50},
 	greater_ego = 1,
 	rarity = 15,
@@ -393,6 +418,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = " of the hunt", suffix=true, instant_resolve=true,
+	keywords = {hunt=true},
 	level_range = {30, 50},
 	greater_ego = 1,
 	rarity = 30,
@@ -408,6 +434,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = " of backstabbing", suffix=true, instant_resolve=true,
+	keywords = {backstab=true},
 	level_range = {40, 50},
 	greater_ego = 1,
 	rarity = 35,
