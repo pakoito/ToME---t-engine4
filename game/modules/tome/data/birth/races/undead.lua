@@ -41,7 +41,6 @@ newBirthDescriptor{
 		},
 		class =
 		{
-			Celestial = "disallow",
 			Wilder = "disallow",
 		},
 		subclass =
