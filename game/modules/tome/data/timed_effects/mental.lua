@@ -126,6 +126,7 @@ newEffect{
 		self.move_others = true
 		self.summoner = eff.src
 		self.summoner_gain_exp = true
+		if self.dead then return end
 		game.party:addMember(self, {
 			control="full",
 			type="thrall",

@@ -823,6 +823,8 @@ function _M:incMoney(v)
 		world:gainAchievement("TREASURE_HUNTER", self)
 		world:gainAchievement("TREASURE_HOARDER", self)
 		world:gainAchievement("DRAGON_GREED", self)
+		if v >= 0 then game:playSound("actions/coins")
+		else game:playSound("actions/coins_less") end
 	end
 end
 

@@ -90,6 +90,7 @@ newEntity{ base = "BASE_NPC_VAMPIRE",
 
 newEntity{ base = "BASE_NPC_VAMPIRE",
 	name = "master vampire", color=colors.GREEN, image = "npc/master_vampire.png",
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/master_vampire.png", display_h=2, display_y=-1}}},
 	desc=[[It is a humanoid form dressed in robes. Power emanates from its chilling frame.]],
 	level_range = {23, nil}, exp_worth = 1,
 	rarity = 1,

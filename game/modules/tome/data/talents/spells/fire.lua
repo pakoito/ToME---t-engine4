@@ -205,7 +205,7 @@ newTalent{
 			nil, self:spellFriendlyFire()
 		)
 
-		game:playSoundNear(self, "talents/fire")
+		game:playSoundNear(self, "talents/devouringflame")
 		return true
 	end,
 	info = function(self, t)

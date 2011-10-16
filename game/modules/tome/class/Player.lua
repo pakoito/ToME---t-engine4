@@ -1012,6 +1012,7 @@ function _M:on_pickup_object(o)
 	if self:attr("auto_id") and o:getPowerRank() <= self.auto_id then
 		o:identify(true)
 	end
+	if o.pickup_sound then game:playSound(o.pickup_sound) end
 end
 
 --- Tell us when we are targeted
