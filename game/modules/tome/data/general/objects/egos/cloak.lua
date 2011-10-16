@@ -207,7 +207,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = " of implacability", suffix=true, instant_resolve=true,
-	keywords = {=true},
+	keywords = {implacable=true},
 	level_range = {30, 50},
 	greater_ego = 1,
 	rarity = 16,

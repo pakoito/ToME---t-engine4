@@ -82,7 +82,7 @@ newEntity{ base = "BASE_STORE", define_as = "HERBALIST",
 newEntity{ base = "BASE_STORE", define_as = "RUNES",
 	name="Sook's Runes and other Harmless Contraptions",
 	display='5', color=colors.LIGHT_RED,
-	resolvers.store("LAST_HOPE_LIBRARY", "sunwall", "store/shop_door.png", "store/shop_sign_sooks_runes.png"),
+	resolvers.store("SCROLL", "sunwall", "store/shop_door.png", "store/shop_sign_sooks_runes.png"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "ZEMEKKYS",
