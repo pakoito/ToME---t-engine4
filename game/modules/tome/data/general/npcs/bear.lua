@@ -26,6 +26,9 @@ newEntity{
 	type = "animal", subtype = "bear",
 	display = "q", color=colors.WHITE,
 	body = { INVEN = 10 },
+	sound_moam = {"creatures/bears/bear_moan_%d", 1, 2},
+	sound_die = {"creatures/bears/bear_moan_%d", 3, 4},
+	sound_random = {"creatures/bears/bear_growl_%d", 1, 3},
 
 	max_stamina = 100,
 

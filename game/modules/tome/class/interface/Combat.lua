@@ -159,6 +159,9 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 	if sound then game:playSoundNear(self, sound)
 	elseif sound_miss then game:playSoundNear(self, sound_miss) end
 
+	game:playSoundNear(self, self.on_hit_sound or "actions/melee_hit_squish")
+	if self.sound_moam and rng.chance(7) then game:playSoundNear(self, self.sound_moam) end
+
 	-- cleave second attack
 	if self:isTalentActive(self.T_CLEAVE) then
 		local t = self:getTalentFromId(self.T_CLEAVE)

@@ -36,6 +36,9 @@ newEntity{ define_as = "WRATHROOT",
 	display = "#", color=colors.VIOLET,
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/giant_treant_wrathroot.png", display_h=2, display_y=-1}}},
 	desc = [[The ancient grey willow tree, ruler of the Old Forest. He despises trespassers in his territory.]],
+	sound_moam = "creatures/treant/treeant_2",
+	sound_die = {"creatures/treant/treeant_death_%d", 1, 2},
+	sound_random = {"creatures/treant/treeant_%d", 1, 3},
 	killer_message = "and digested by treants",
 	level_range = {12, nil}, exp_worth = 2,
 	max_life = 200, life_rating = 17, fixed_rating = true,
@@ -48,7 +51,7 @@ newEntity{ define_as = "WRATHROOT",
 	instakill_immune = 1,
 	move_others=true,
 
-	combat = { dam=resolvers.levelup(27, 1, 0.8), atk=10, apr=0, dammod={str=1.2} },
+	combat = { dam=resolvers.levelup(27, 1, 0.8), atk=10, apr=0, dammod={str=1.2}, sound="actions/melee_thud" },
 
 	resists = { [DamageType.FIRE] = -50 },
 
@@ -93,6 +96,9 @@ newEntity{ define_as = "SNAPROOT", -- backup guardian
 	type = "giant", subtype = "treant", unique = true,
 	name = "Snaproot",
 	display = "#", color=VIOLET,
+	sound_moam = "creatures/treants/treeant_2",
+	sound_die = {"creatures/treants/treeant_death_%d", 1, 2},
+	sound_random = {"creatures/treants/treeant_%d", 1, 3},
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/giant_treant_snaproot.png", display_h=2, display_y=-1}}},
 	desc = [[This ancient Treant's bark is scorched almost black. It sees humanity as a scourge, to be purged.]],
 	level_range = {50, nil}, exp_worth = 3,
@@ -100,7 +106,7 @@ newEntity{ define_as = "SNAPROOT", -- backup guardian
 	max_life = 1000, life_rating = 40, fixed_rating = true,
 	max_stamina = 200,
 
-	combat = { dam=100, atk=10, apr=0, dammod={str=1.2} },
+	combat = { dam=100, atk=10, apr=0, dammod={str=1.2}, sound="actions/melee_thud" },
 
 	stats = { str=40, dex=10, cun=15, mag=20, wil=38, con=45 },
 

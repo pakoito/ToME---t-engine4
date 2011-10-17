@@ -494,6 +494,8 @@ function _M:act()
 	-- Still enough energy to act ?
 	if self.energy.value < game.energy_to_act then return false end
 
+	if self.sound_random and rng.chance(self.sound_random_chance or 15) then game:playSoundNear(self, self.sound_random) end
+
 	return true
 end
 
@@ -1659,6 +1661,8 @@ function _M:die(src, death_note)
 		p.all_kills[self.name] = p.all_kills[self.name] or 0
 		p.all_kills[self.name] = p.all_kills[self.name] + 1
 	end
+
+	if self.sound_die and (self.unique or rng.chance(5)) then game:playSoundNear(self, self.sound_die) end
 
 	return true
 end

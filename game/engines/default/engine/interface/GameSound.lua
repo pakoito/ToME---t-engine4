@@ -36,6 +36,8 @@ function _M:loaded()
 end
 
 function _M:playSound(name)
+	if type(name) == "table" then name = name[1]:format(rng.range(name[2], name[3])) end
+
 	local s = self.loaded_sounds[name]
 	if not s then
 		local def, ok
