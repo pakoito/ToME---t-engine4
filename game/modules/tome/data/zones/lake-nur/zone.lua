@@ -100,14 +100,15 @@ return {
 		},
 	},
 	post_process = function(level)
-		if level.level > 1 then return end
-		game.state:makeWeather(level, 6, {max_nb=3, chance=1, dir=110, speed={0.1, 0.6}, alpha={0.4, 0.6}, particle_name="weather/dark_cloud_%02d"})
-	end,
+		if level.level == 1 then
+			game.state:makeWeather(level, 6, {max_nb=3, chance=1, dir=110, speed={0.1, 0.6}, alpha={0.4, 0.6}, particle_name="weather/dark_cloud_%02d"})
+		end
 
-	foreground = function(level, x, y, nb_keyframes)
-		if level.level ~= 3 then return end
-		if nb_keyframes > 10 then return end
-		if nb_keyframes > 0 and rng.chance(400 / nb_keyframes) then local s = game:playSound("ambient/horror/ambient_horror_sound_0"..rng.range(1, 6)) if s then s:volume(s:volume() * 1.5) end end
+		if level.level == 3 then
+			game.state:makeAmbientSounds(level, {
+				horror={ chance=400, volume_mod=1.5, files={"ambient/horror/ambient_horror_sound_01","ambient/horror/ambient_horror_sound_02","ambient/horror/ambient_horror_sound_03","ambient/horror/ambient_horror_sound_04","ambient/horror/ambient_horror_sound_05","ambient/horror/ambient_horror_sound_06"}},
+			})
+		end
 	end,
 
 	on_enter = function(lev, old_lev, newzone)

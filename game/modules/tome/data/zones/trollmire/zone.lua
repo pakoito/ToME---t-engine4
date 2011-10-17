@@ -118,11 +118,19 @@ return {
 
 		-- Some clouds floating happily over the trollmire
 		game.state:makeWeather(level, 7, {max_nb=1, speed={0.5, 1.6}, shadow=true, alpha={0.23, 0.35}, particle_name="weather/grey_cloud_%02d"})
+		game.state:makeAmbientSounds(level, {
+			wind={ chance=120, volume_mod=1.5, pitch=0.9, files={"ambient/forest/wind1","ambient/forest/wind2","ambient/forest/wind3","ambient/forest/wind4"}},
+			bird={ chance=600, volume_mod=0.75, files={"ambient/forest/bird1","ambient/forest/bird2","ambient/forest/bird3","ambient/forest/bird4","ambient/forest/bird5","ambient/forest/bird6","ambient/forest/bird7"}},
+			cricket={ chance=1200, volume_mod=0.75, files={"ambient/forest/cricket1","ambient/forest/cricket2"}},
+		})
 	end,
 
 	foreground = function(level, x, y, nb_keyframes)
 		if not config.settings.tome.weather_effects or not level.foreground_particle then return end
 		level.foreground_particle.ps:toScreen(x, y, true, 1)
+
+		if nb_keyframes > 10 then return end
+		if nb_keyframes > 0 and rng.chance(400 / nb_keyframes) then local s = game:playSound("ambient/horror/ambient_horror_sound_0"..rng.range(1, 6)) if s then s:volume(s:volume() * 1.5) end end
 	end,
 
 	on_enter = function(lev, old_lev, newzone)

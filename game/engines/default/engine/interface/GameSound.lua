@@ -45,12 +45,12 @@ function _M:playSound(name)
 			def = f()
 			print("[SOUND] loading from", "/data/sound/"..name..".lua", ":=:", "/data/sound/"..def.file, ":>")
 			ok, def.sample = pcall(core.sound.load, "/data/sound/"..def.file, false)
-			if not ok then return end
+			if not ok then print("Failed loading sound", def.file, def.sample) return end
 			print("[SOUND] :=>", def.sample)
 		elseif fs.exists("/data/sound/"..name..".ogg") then
 			def = {}
 			ok, def.sample = pcall(core.sound.load, "/data/sound/"..name..".ogg", false)
-			if not ok then return end
+			if not ok then print("Failed loading sound", name, def.sample) return end
 			print("[SOUND] loading from", "/data/sound/"..name..".ogg", ":=:", def.sample)
 		else
 			def = {}

@@ -511,6 +511,37 @@ function _M:handleWorldEncounter(target)
 end
 
 --------------------------------------------------------------------
+-- Ambient sounds stuff
+--------------------------------------------------------------------
+function _M:makeAmbientSounds(level, t)
+	local s = {}
+	level.data.ambient_bg_sounds = s
+
+	for chan, data in pairs(t) do
+		data.name = chan
+		s[#s+1] = data
+	end
+end
+
+function _M:playAmbientSounds(level, s, nb_keyframes)
+	for i = 1, #s do
+		local data = s[i]
+
+		if data._sound then if not data._sound:playing() then data._sound = nil end end
+
+		if not data._sound and nb_keyframes > 0 and rng.chance(math.ceil(data.chance / nb_keyframes)) then
+			local f = rng.table(data.files)
+			data._sound = game:playSound(f)
+			print("===playing", data.name, f, data._sound)
+			if data._sound then
+				if data.volume_mod then data._sound:volume(data._sound:volume() * data.volume_mod) end
+				if data.pitch then data._sound:pitch(data.pitch) end
+			end
+		end
+	end
+end
+
+--------------------------------------------------------------------
 -- Weather stuff
 --------------------------------------------------------------------
 function _M:makeWeather(level, nb, params, typ)

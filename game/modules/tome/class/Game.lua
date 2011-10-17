@@ -960,6 +960,9 @@ function _M:display(nb_keyframes)
 			if config.settings.tome.smooth_fov then map._map:drawSeensTexture(map.display_x, map.display_y, nb_keyframes) end
 		end
 
+		-- Handle ambient sounds
+		if self.level.data.ambient_bg_sounds then self.state:playAmbientSounds(self.level, self.level.data.ambient_bg_sounds, nb_keyframes) end
+
 		if not self.zone_name_s then self:updateZoneName() end
 		self.zone_name_s:toScreenFull(
 			map.display_x + map.viewport.width - self.zone_name_w - 15,

@@ -90,6 +90,12 @@ return {
 		level.foreground_particle = require("engine.Particles").new("raindrops", 1, {width=Map.viewport.width, height=Map.viewport.height})
 
 		game.state:makeWeather(level, 6, {max_nb=3, chance=1, dir=110, speed={0.1, 0.6}, alpha={0.3, 0.5}, particle_name="weather/dark_cloud_%02d"})
+
+		game.state:makeAmbientSounds(level, {
+			wind={ chance=120, volume_mod=1.9, pitch=2, files={"ambient/forest/wind1","ambient/forest/wind2","ambient/forest/wind3","ambient/forest/wind4"}},
+			bird={ chance=1200, volume_mod=0.4, pitch=0.4, files={"ambient/forest/bird1","ambient/forest/bird2","ambient/forest/bird3","ambient/forest/bird4","ambient/forest/bird5","ambient/forest/bird6","ambient/forest/bird7"}},
+			creature={ chance=2000, volume_mod=0.2, pitch=0.5, files={"creatures/bears/bear_growl_2", "creatures/bears/bear_growl_3", "creatures/bears/bear_moan_2"}},
+		})
 	end,
 
 	foreground = function(level, x, y, nb_keyframes)
