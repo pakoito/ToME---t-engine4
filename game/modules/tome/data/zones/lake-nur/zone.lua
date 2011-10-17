@@ -107,7 +107,7 @@ return {
 	foreground = function(level, x, y, nb_keyframes)
 		if level.level ~= 3 then return end
 		if nb_keyframes > 10 then return end
-		if nb_keyframes > 0 and rng.chance(400 / nb_keyframes) then local s = game:playSound("ambient/ambient_horror_sound_0"..rng.range(1, 6)) if s then s:volume(s:volume() * 1.5) end end
+		if nb_keyframes > 0 and rng.chance(400 / nb_keyframes) then local s = game:playSound("ambient/horror/ambient_horror_sound_0"..rng.range(1, 6)) if s then s:volume(s:volume() * 1.5) end end
 	end,
 
 	on_enter = function(lev, old_lev, newzone)
