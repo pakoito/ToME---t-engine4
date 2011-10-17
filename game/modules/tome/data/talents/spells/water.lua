@@ -82,7 +82,7 @@ newTalent{
 		local dam = self:spellCrit(t.getDamage(self, t))
 		self:project(tg, x, y, DamageType.COLD, dam, {type="freeze"})
 		self:project(tg, x, y, DamageType.FREEZE, {dur=2+math.ceil(self:getTalentLevelRaw(t)), hp=70 + dam * 1.5})
-		game:playSoundNear(self, "talents/ice")
+		game:playSoundNear(self, "talents/water")
 		return true
 	end,
 	info = function(self, t)
@@ -171,7 +171,7 @@ newTalent{
 			end,
 			false
 		)
-		game:playSoundNear(self, "talents/ice")
+		game:playSoundNear(self, "talents/icestorm")
 		return true
 	end,
 	info = function(self, t)

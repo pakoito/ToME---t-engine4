@@ -110,7 +110,7 @@ newTalent{
 			)
 		end
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "breath_fire", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
-		game:playSoundNear(self, "talents/fire")
+		game:playSoundNear(self, "talents/fireflash")
 		return true
 	end,
 	info = function(self, t)
@@ -140,7 +140,7 @@ newTalent{
 	direct_hit = true,
 	requires_target = true,
 	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=self:spellFriendlyFire(), talent=t, display={particle="bolt_fire", trail="firetrail"}}
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=self:spellFriendlyFire(), talent=t, display={particle="bolt_fire", trail="firetrail"}, sound_stop="talents/fireflash"}
 	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 28, 280) end,
 	action = function(self, t)
@@ -160,7 +160,7 @@ newTalent{
 				)
 			end
 		end)
-		game:playSoundNear(self, "talents/fireflash")
+		game:playSoundNear(self, "talents/fire")
 		return true
 	end,
 	info = function(self, t)

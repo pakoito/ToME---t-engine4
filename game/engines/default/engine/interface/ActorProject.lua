@@ -411,6 +411,8 @@ function _M:projectDoStop(typ, tg, damtype, dam, particles, lx, ly, tmp, rx, ry)
 
 	self:check("on_project_grids", grids)
 
+	if typ.sound_stop then game:playSoundNear({x=lx,y=ly}, typ.sound_stop) end
+
 	for px, ys in pairs(grids) do
 		for py, _ in pairs(ys) do
 			if self:projectDoAct(typ, tg, damtype, dam, particles, px, py, tmp) then break end
