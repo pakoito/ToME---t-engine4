@@ -93,8 +93,8 @@ return {
 
 		game.state:makeAmbientSounds(level, {
 			wind={ chance=120, volume_mod=1.9, pitch=2, files={"ambient/forest/wind1","ambient/forest/wind2","ambient/forest/wind3","ambient/forest/wind4"}},
-			bird={ chance=1200, volume_mod=0.4, pitch=0.4, files={"ambient/forest/bird1","ambient/forest/bird2","ambient/forest/bird3","ambient/forest/bird4","ambient/forest/bird5","ambient/forest/bird6","ambient/forest/bird7"}},
-			creature={ chance=2000, volume_mod=0.2, pitch=0.5, files={"creatures/bears/bear_growl_2", "creatures/bears/bear_growl_3", "creatures/bears/bear_moan_2"}},
+			bird={ chance=1500, volume_mod=0.4, pitch=0.4, files={"ambient/forest/bird1","ambient/forest/bird2","ambient/forest/bird3","ambient/forest/bird4","ambient/forest/bird5","ambient/forest/bird6","ambient/forest/bird7"}},
+			creature={ chance=2500, volume_mod=0.2, pitch=0.5, files={"creatures/bears/bear_growl_2", "creatures/bears/bear_growl_3", "creatures/bears/bear_moan_2"}},
 		})
 	end,
 

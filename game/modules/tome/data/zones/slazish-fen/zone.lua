@@ -88,6 +88,10 @@ return {
 
 	post_process = function(level)
 		game.state:makeWeather(level, 7, {max_nb=1, speed={0.5, 1.6}, shadow=true, alpha={0.23, 0.35}, particle_name="weather/grey_cloud_%02d"})
+		game.state:makeAmbientSounds(level, {
+			wind={ chance=200, volume_mod=1.2, pitch=0.3, files={"ambient/forest/wind1","ambient/forest/wind2","ambient/forest/wind3","ambient/forest/wind4"}},
+			bird={ chance=2000, volume_mod=0.75, pitch=0.4, files={"ambient/forest/bird1","ambient/forest/bird2","ambient/forest/bird3","ambient/forest/bird4","ambient/forest/bird5","ambient/forest/bird6","ambient/forest/bird7"}},
+		})
 
 		if level.level == 1 then
 			local npc1 = game.zone:makeEntityByName(game.level, "actor", "NAGA_TIDEWARDEN")
