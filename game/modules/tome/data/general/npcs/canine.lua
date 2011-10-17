@@ -26,6 +26,9 @@ newEntity{
 	type = "animal", subtype = "canine",
 	display = "C", color=colors.WHITE,
 	body = { INVEN = 10 },
+	sound_moam = {"creatures/wolves/wolf_hurt_%d", 1, 2},
+	sound_die = {"creatures/wolves/wolf_hurt_%d", 1, 1},
+	sound_random = {"creatures/wolves/wolf_howl_%d", 1, 3},
 
 	max_stamina = 150,
 	rank = 1,
@@ -36,7 +39,7 @@ newEntity{
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
 	global_speed_base = 1.2,
 	stats = { str=10, dex=17, mag=3, con=7 },
-	combat = { dammod={str=0.6} },
+	combat = { dammod={str=0.6}, sound="creatures/wolves/wolf_attack_1" },
 	combat_armor = 1, combat_def = 1,
 }
 
@@ -105,11 +108,14 @@ newEntity{ base = "BASE_NPC_CANINE",
 newEntity{ base = "BASE_NPC_CANINE",
 	name = "fox", color=colors.RED, image="npc/canine_fox.png",
 	desc = [[The quick brown fox jumps over the lazy dog.]],
+	sound_moam = {"creatures/foxes/bark_hurt_%d", 1, 1},
+	sound_die = {"creatures/wolves/death_%d", 1, 1},
+	sound_random = {"creatures/wolves/_bark_%d", 1, 2},
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 3,
 	max_life = resolvers.rngavg(40,50),
 	combat_armor = 1, combat_def = 3,
-	combat = { dam=resolvers.levelup(4, 1, 0.7), atk=10, apr=3 },
+	combat = { dam=resolvers.levelup(4, 1, 0.7), atk=10, apr=3, sound="creatures/foxes/attack_1" },
 }
 
 newEntity{ base = "BASE_NPC_CANINE",
