@@ -93,4 +93,5 @@ function _M:init(l, w, force_height)
 	end
 
 	game:registerDialog(self)
+	game:playSound("actions/read")
 end
