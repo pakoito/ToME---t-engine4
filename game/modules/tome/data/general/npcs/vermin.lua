@@ -26,6 +26,9 @@ newEntity{
 	can_multiply = 4,
 	body = { INVEN = 10 },
 
+	sound_die = {"creatures/worms/worm_die_%d", 1, 2},
+	combat = {sound={"creatures/worms/worm_%d", 1, 4}},
+
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
 	global_speed_base = 0.9,
