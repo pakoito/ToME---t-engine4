@@ -494,7 +494,7 @@ function _M:act()
 	-- Still enough energy to act ?
 	if self.energy.value < game.energy_to_act then return false end
 
-	if self.sound_random and rng.chance(self.sound_random_chance or 15) then game:playSoundNear(self, self.sound_random) end
+	if self.sound_random and rng.chance(1 or self.sound_random_chance or 15) then game:playSoundNear(self, self.sound_random) end
 
 	return true
 end
@@ -1815,6 +1815,8 @@ function _M:levelup()
 			game.logPlayer(self, "#AQUAMARINE#You have gained one more life (%d remaining).", self.easy_mode_lifes)
 		end
 		game:updateCurrentChar()
+
+		if self == game.player then game:onTickEnd(function() game:playSound("actions/levelup") end, "levelupsound") end
 	end
 end
 

@@ -35,7 +35,7 @@ function _M:loaded()
 --	setmetatable(self.loaded_sounds, {__mode="v"})
 end
 
-function _M:playSound(name)
+function _M:playSound(name, position)
 	if type(name) == "table" then name = name[1]:format(rng.range(name[2], name[3])) end
 
 	local s = self.loaded_sounds[name]
@@ -65,6 +65,7 @@ function _M:playSound(name)
 	local source = s.sample:use()
 	if s.volume then source:volume((s.volume / 100) * (config.settings.audio.effects_volume / 100))
 	else source:volume(config.settings.audio.effects_volume / 100) end
+	if position then source:location(position.x, position.y, position.z) end
 	source:play()
 	self.playing_sounds[source] = true
 	return source

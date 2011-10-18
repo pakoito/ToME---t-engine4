@@ -230,11 +230,18 @@ function _M:onTickEndExecute()
 		self.on_tick_end = {}
 		for i = 1, #fs do fs[i]() end
 	end
+	self.on_tick_end_names = nil
 end
 
 --- Register things to do on tick end
-function _M:onTickEnd(f)
+function _M:onTickEnd(f, name)
 	self.on_tick_end = self.on_tick_end or {}
+
+	if name then
+		self.on_tick_end_names = self.on_tick_end_names or {}
+		if self.on_tick_end_names[name] then return end
+		self.on_tick_end_names[name] = f
+	end
 
 	self.on_tick_end[#self.on_tick_end+1] = f
 end

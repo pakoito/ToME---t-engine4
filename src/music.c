@@ -291,6 +291,8 @@ static int audio_enable(lua_State *L) {
 		alListenerf(AL_GAIN, 1);
 	else
 		alListenerf(AL_GAIN, 0);
+	alListener3f(AL_POSITION, 0, 0, 0);
+	alDistanceModel(AL_INVERSE_DISTANCE_CLAMPED);
 	return 0;
 }
 
@@ -452,6 +454,7 @@ static int soundPitchLua(lua_State *L) {
 static int soundLocationLua(lua_State *L) {
 	SoundSource *s;
 	ALfloat x, y, z;
+	ALfloat nx, ny, nz;
 	float oldaz, oldel, newaz = 0, newel = 0;
 	int choice;
 
@@ -462,10 +465,16 @@ static int soundLocationLua(lua_State *L) {
 	else if (lua_isboolean(L, 2) && !lua_toboolean(L, 2)) {
 		choice = 1;
 	}
-	else {
+	else if (!lua_isnumber(L, 4)) {
 		newaz = (float)luaL_checknumber(L, 2)*M_PI/180;
 		newel = (float)luaL_checknumber(L, 3)*M_PI/180;
 		choice = 2;
+	}
+	else {
+		nx = luaL_checknumber(L, 2);
+		ny = luaL_checknumber(L, 3);
+		nz = luaL_checknumber(L, 4);
+		choice = 3;
 	}
 
 	alGetSource3f(s->source, AL_POSITION, &x, &y, &z);
@@ -486,6 +495,11 @@ static int soundLocationLua(lua_State *L) {
 	}
 	else if (choice == 2) {
 		alSource3f(s->source, AL_POSITION, cosf(newel)*sinf(newaz), sinf(newel), -cosf(newel)*cosf(newaz));
+	}
+	else if (choice == 3) {
+		alSource3f(s->source, AL_POSITION, nx, ny, nz);
+		if (lua_isnumber(L, 5)) alSourcef(s->source, AL_MAX_DISTANCE, lua_tonumber(L, 5));
+		else alSourcef(s->source, AL_MAX_DISTANCE, 10.0);
 	}
 	return 2;
 }
