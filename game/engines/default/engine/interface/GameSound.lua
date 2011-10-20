@@ -62,6 +62,7 @@ function _M:playSound(name, position)
 			print("[SOUND] loading from", "/data/sound/"..name..".ogg", ":=:", def.sample)
 		else
 			def = {}
+			print("[SOUND] loading from", "/data/sound/"..name..".ogg", ":=: unknown file")
 		end
 
 		self.loaded_sounds[name] = def

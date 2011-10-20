@@ -53,7 +53,7 @@ function _M:block_move(x, y, e, act, couldpass)
 				Dialog:yesnoPopup(self.name, self.door_player_check, function(ret)
 					if ret then
 						game.level.map(x, y, engine.Map.TERRAIN, game.zone.grid_list[self.door_opened])
-						game:playSoundNear({x=x,y=y}, {"door_creaks/creak_%d.ogg",1,4})
+						game:playSoundNear({x=x,y=y}, {"ambient/door_creaks/creak_%d",1,4})
 					end
 				end, "Open", "Leave")
 			end
@@ -63,7 +63,7 @@ function _M:block_move(x, y, e, act, couldpass)
 			end
 		else
 			game.level.map(x, y, engine.Map.TERRAIN, game.zone.grid_list[self.door_opened])
-			game:playSoundNear({x=x,y=y}, {"door_creaks/creak_%d.ogg",1,4})
+			game:playSoundNear({x=x,y=y}, {"ambient/door_creaks/creak_%d",1,4})
 		end
 		return true
 	elseif self.door_opened and not couldpass then
