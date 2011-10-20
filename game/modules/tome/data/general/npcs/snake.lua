@@ -24,6 +24,9 @@ newEntity{
 	type = "animal", subtype = "snake",
 	display = "J", color=colors.WHITE,
 	body = { INVEN = 10 },
+	sound_moam = {"creatures/snakes/snake_%d", 1, 4},
+	sound_die = {"creatures/snakes/snake_die_%d", 1, 2},
+	sound_random = {"creatures/snakes/snake_%d", 1, 4},
 
 	infravision = 10,
 	max_stamina = 110,
@@ -35,6 +38,7 @@ newEntity{
 	ai = "dumb_talented_simple", ai_state = { talent_in=3, ai_move="move_snake" },
 	global_speed_base = 1.3,
 	stats = { str=14, dex=23, mag=5, con=5 },
+	combat = {sound="creatures/snakes/snake_attack"},
 	combat_armor = 1, combat_def = 1,
 }
 

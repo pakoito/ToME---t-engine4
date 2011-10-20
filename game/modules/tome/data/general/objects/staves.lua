@@ -33,7 +33,7 @@ newEntity{
 		talented = "staff",
 		physspeed = 1,
 		damrange = 1.2,
-		sound = "actions/melee", sound_miss = "actions/melee_miss",
+		sound = {"actions/melee", pitch=0.6, vol=1.2}, sound_miss = {"actions/melee", pitch=0.6, vol=1.2},
 		damtype = resolvers.rngtable{DamageType.FIRE, DamageType.COLD, DamageType.ACID, DamageType.LIGHTNING, DamageType.LIGHT, DamageType.DARKNESS, DamageType.NATURE, DamageType.BLIGHT},
 	},
 	desc = [[Staves designed for wielders of magic, by the greats of the art.]],

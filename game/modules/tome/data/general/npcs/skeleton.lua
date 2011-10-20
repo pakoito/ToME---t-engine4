@@ -24,6 +24,9 @@ newEntity{
 	type = "undead", subtype = "skeleton",
 	blood_color = colors.GREY,
 	display = "s", color=colors.WHITE,
+	sound_moam = {"creatures/skeletons/skell_%d", 1, 4},
+	sound_die = "creatures/skeletons/skell_die",
+	sound_random = {"creatures/skeletons/skell_%d", 1, 4},
 
 	combat = { dam=1, atk=1, apr=1 },
 

@@ -36,7 +36,13 @@ function _M:loaded()
 end
 
 function _M:playSound(name, position)
-	if type(name) == "table" then name = name[1]:format(rng.range(name[2], name[3])) end
+	local pitch, vol = nil, 1
+	if type(name) == "table" then
+		if name[2] and name[3] then name[1] = name[1]:format(rng.range(name[2], name[3])) end
+		if name.pitch then pitch = name.pitch end
+		if name.vol then vol = name.vol end
+		name = name[1]
+	end
 
 	local s = self.loaded_sounds[name]
 	if not s then
@@ -63,9 +69,10 @@ function _M:playSound(name, position)
 	end
 	if not s or not s.sample then return end
 	local source = s.sample:use()
-	if s.volume then source:volume((s.volume / 100) * (config.settings.audio.effects_volume / 100))
-	else source:volume(config.settings.audio.effects_volume / 100) end
+	if s.volume then source:volume(vol * (s.volume / 100) * (config.settings.audio.effects_volume / 100))
+	else source:volume(vol * config.settings.audio.effects_volume / 100) end
 	if position then source:location(position.x, position.y, position.z) end
+	if pitch then source:pitch(pitch) end
 	source:play()
 	self.playing_sounds[source] = true
 	return source

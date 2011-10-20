@@ -27,7 +27,7 @@ newEntity{
 	moddable_tile = resolvers.moddable_tile("sword"),
 	encumber = 3,
 	rarity = 5,
-	combat = { talented = "sword", damrange = 1.6, physspeed = 1, sound = "actions/melee", sound_miss = "actions/melee_miss", },
+	combat = { talented = "sword", damrange = 1.6, physspeed = 1, sound = {"actions/melee", pitch=0.6, vol=1.2}, sound_miss = {"actions/melee", pitch=0.6, vol=1.2} },
 	desc = [[Massive two-handed swords.]],
 	twohanded = true,
 	metallic = true,

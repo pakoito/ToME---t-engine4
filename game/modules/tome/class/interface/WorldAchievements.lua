@@ -49,6 +49,7 @@ function _M:gainAchievement(id, src, ...)
 	local ret = WA.gainAchievement(self, id, src, ...)
 
 	if ret then
+		game:onTickEnd(function() game:playSound("actions/achievement") end, "achievementsound")
 		game.state:checkDonation(true) -- They gained someting nice, they could be more receptive
 	end
 	return ret

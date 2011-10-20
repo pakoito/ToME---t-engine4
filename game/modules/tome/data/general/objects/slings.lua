@@ -27,7 +27,7 @@ newEntity{
 	moddable_tile = resolvers.moddable_tile("sling"),
 	encumber = 4,
 	rarity = 5,
-	combat = { talented = "sling", sound = "actions/arrow", sound_miss = "actions/arrow", },
+	combat = { talented = "sling", sound = "actions/sling", sound_miss = "actions/sling", },
 	archery = "sling",
 	require = { talent = { Talents.T_SHOOT }, },
 	proj_image = resolvers.image_material("shot_s", "metal"),
