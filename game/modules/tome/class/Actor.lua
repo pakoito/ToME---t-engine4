@@ -1977,6 +1977,7 @@ function _M:onWear(o, bypass_set)
 	end
 
 	self:updateModdableTile()
+	if self == game.player then game:playSound("actions/wear") end
 end
 
 --- Call when an object is taken off
@@ -2028,6 +2029,7 @@ function _M:onTakeoff(o, bypass_set)
 	end
 
 	self:updateModdableTile()
+	if self == game.player then game:playSound("actions/takeoff") end
 end
 
 --- Call when an object is added

@@ -716,6 +716,7 @@ function _M:doDrop(inven, item, on_done)
 	self:sortInven(inven)
 	self:useEnergy()
 	self.changed = true
+	game:playSound("actions/drop")
 	if on_done then on_done() end
 end
 
