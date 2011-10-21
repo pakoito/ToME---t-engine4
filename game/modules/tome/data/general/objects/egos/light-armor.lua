@@ -25,6 +25,7 @@ load("/data/general/objects/egos/armor.lua")
 newEntity{
 	power_source = {technique=true},
 	name = "troll-hide ", prefix=true, instant_resolve=true,
+	keywords = {troll=true},
 	level_range = {20, 50},
 	greater_ego = 1,
 	rarity = 12,
@@ -37,6 +38,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = "nimble ", prefix=true, instant_resolve=true,
+	keywords = {nimble=true},
 	level_range = {25, 50},
 	greater_ego = 1,
 	rarity = 22,

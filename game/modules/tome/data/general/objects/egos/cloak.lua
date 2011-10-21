@@ -350,24 +350,6 @@ newEntity{
 }
 
 newEntity{
-	power_source = {nature=true},
-	name = "parasitic ", prefix=true, instant_resolve=true,
-	keywords = {parasitic=true},
-	level_range = {30, 50},
-	greater_ego = 1,
-	rarity = 30,
-	cost = 60,
-	wielder = {
-		inc_stats = {
-			[Stats.STAT_CON] = resolvers.mbonus_material(6, 4, function(e, v) return 0, -v end),
-		},
-		poison_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
-		resource_leech_chance = resolvers.mbonus_material(10, 5),
-		resource_leech_value = resolvers.mbonus_material(1, 1),
-	},
-}
-
-newEntity{
 	power_source = {technique=true},
 	name = " of the guardian", suffix=true, instant_resolve=true,
 	keywords = {guardian=true},

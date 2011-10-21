@@ -26,6 +26,7 @@ newEntity{
 	power_source = {nature=true},
 	name = " of the dragon", suffix=true, instant_resolve=true,
 	keywords = {dragon=true},
+	keywords = {dragon=true},
 	level_range = {20, 50},
 	greater_ego = 1,
 	rarity = 20,
@@ -52,6 +53,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = "impenetrable ", prefix=true, instant_resolve=true,
+	keywords = {impenetrable=true},
 	keywords = {['impen.']=true},
 	level_range = {10, 50},
 	rarity = 8,

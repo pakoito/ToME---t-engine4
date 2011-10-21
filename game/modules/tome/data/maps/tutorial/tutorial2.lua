@@ -19,7 +19,8 @@
 
 startx = 0
 starty = 1
-
+endx = 5
+endy = 14
 
 defineTile("0", "SIGN", nil, nil, "TUTORIAL_INTRO_MECHANICS_GUIDE")
 defineTile("1", "SIGN", nil, nil, "TUTORIAL_STATS1")

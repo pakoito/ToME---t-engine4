@@ -123,8 +123,8 @@ newTalent{
 	points = 5,
 	require = techs_req4,
 	info = function(self, t)
-		return ([[Raw magical damage channels through the caster's weapon, increasing physical damage by %d.
-		The damage scales with Magic and Dexterity.]]):
+		return ([[Raw magical damage channels through the caster's weapon, increasing physical power by %d.
+		The bonus scales with Magic and Dexterity.]]):
 		format(self:combatSpellpower() * self:getTalentLevel(Talents.T_ARCANE_DESTRUCTION) / 9)
 	end,
 }

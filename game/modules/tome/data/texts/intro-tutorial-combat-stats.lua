@@ -18,11 +18,7 @@
 -- darkgod@te4.org
 
 return [[
-#LIGHT_GREEN#Welcome to ToME 4!#LAST#
+#LIGHT_GREEN#Welcome to ToME 4#LAST#
 
-For testing purposes, this tutorial is temporarily replacing the usual tutorial. For the release, both tutorials will be available from the birther interface.
-
-It is intended as a showcase for some new changes to the way combat stats work. At the end of the tutorial, you'll find directions pointing you to a document that details what exactly has been changed, and why. Constructive feedback is greatly appreciated!
-
-Onward! The #GOLD#Dungeon of Adventurer Enlightenment#WHITE# awaits you!
+The #GOLD#Dungeon of Adventurer Enlightenment#WHITE# awaits you ahead!
 ]]

@@ -343,24 +343,6 @@ newEntity{
 }
 
 newEntity{
-	power_source = {nature=true},
-	name = "draining ", prefix=true, instant_resolve=true,
-	keywords = {draining=true},
-	level_range = {45, 50},
-	greater_ego = 1,
-	rarity = 40,
-	cost = 100,
-	wielder = {
-		resource_leech_chance = resolvers.mbonus_material(10, 5),
-		resource_leech_value = resolvers.mbonus_material(1, 1),
-
-		on_melee_hit = {
-			[DamageType.BLIGHT] = resolvers.mbonus_material(10, 5),
-		},
-	},
-}
-
-newEntity{
 	power_source = {arcane=true},
 	name = "nightruned ", prefix=true, instant_resolve=true,
 	keywords = {nightruned=true},

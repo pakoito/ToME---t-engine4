@@ -19,7 +19,8 @@
 
 startx = 1
 starty = 1
-
+endx = 5
+endy = 8
 
 defineTile("0", "SIGN_FLOOR", nil, nil, "TUTORIAL_INFORMED1")
 defineTile("1", "SIGN_FLOOR", nil, nil, "TUTORIAL_SCALE1")

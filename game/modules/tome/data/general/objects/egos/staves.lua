@@ -27,6 +27,7 @@ local Talents = require "engine.interface.ActorTalents"
 newEntity{
 	power_source = {arcane=true},
 	name = " of power", suffix=true, instant_resolve=true,
+	keywords = {power=true},
 	level_range = {1, 50},
 	rarity = 4,
 	cost = 8,
@@ -38,6 +39,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = "shimmering ", prefix=true, instant_resolve=true,
+	keywords = {shimmering=true},
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 8,
@@ -50,6 +52,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = " of might", suffix=true, instant_resolve=true,
+	keywords = {might=true},
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 8,
@@ -61,6 +64,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = " of wizardry", suffix=true, instant_resolve=true,
+	keywords = {wizardry=true},
 	level_range = {30, 50},
 	greater_ego = 1,
 	rarity = 18,
@@ -75,6 +79,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = "magma ", prefix=true, instant_resolve=true,
+	keywords = {magma=true},
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 5,
@@ -86,6 +91,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = "temporal ", prefix=true, instant_resolve=true,
+	keywords = {temporal=true},
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 5,
@@ -97,6 +103,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = "icy ", prefix=true, instant_resolve=true,
+	keywords = {icy=true},
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 5,
@@ -108,6 +115,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = "acidic ", prefix=true, instant_resolve=true,
+	keywords = {acidic=true},
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 5,
@@ -119,6 +127,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = "crackling ", prefix=true, instant_resolve=true,
+	keywords = {crackling=true},
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 5,
@@ -129,7 +138,8 @@ newEntity{
 
 newEntity{
 	power_source = {nature=true},
-	name = "naturalist ", prefix=true, instant_resolve=true,
+	name = "naturalist's ", prefix=true, instant_resolve=true,
+	keywords = {naturalist=true},
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 5,
@@ -141,6 +151,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = "blighted ", prefix=true, instant_resolve=true,
+	keywords = {blighted=true},
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 5,
@@ -152,6 +163,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = "sunbathed ", prefix=true, instant_resolve=true,
+	keywords = {sunbathed=true},
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 5,
@@ -163,6 +175,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = "shadow ", prefix=true, instant_resolve=true,
+	keywords = {shadow=true},
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 5,
@@ -174,6 +187,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = " of divination", suffix=true, instant_resolve=true,
+	keywords = {divination=true},
 	level_range = {1, 50},
 	rarity = 8,
 	cost = 8,
@@ -187,6 +201,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = " of conveyance", suffix=true, instant_resolve=true,
+	keywords = {conveyance=true},
 	level_range = {1, 50},
 	rarity = 10,
 	cost = 10,
@@ -208,6 +223,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = " of illumination", suffix=true, instant_resolve=true,
+	keywords = {illumination=true},
 	level_range = {1, 50},
 	rarity = 8,
 	cost = 8,
@@ -221,6 +237,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = " of blasting", suffix=true, instant_resolve=true,
+	keywords = {blasting=true},
 	level_range = {30, 50},
 	greater_ego = 1,
 	rarity = 18,
@@ -241,6 +258,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = " of warding", suffix=true, instant_resolve=true,
+	keywords = {warding=true},
 	level_range = {30, 50},
 	greater_ego = 1,
 	rarity = 20,
@@ -260,6 +278,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = " of channeling", suffix=true, instant_resolve=true,
+	keywords = {channeling=true},
 	level_range = {30, 50},
 	greater_ego = 1,
 	rarity = 18,
@@ -275,6 +294,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = "lifebinding ", prefix=true, instant_resolve=true,
+	keywords = {lifebinding=true},
 	level_range = {30, 50},
 	greater_ego = 1,
 	rarity = 16,
@@ -292,6 +312,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = "infernal ", prefix=true, instant_resolve=true,
+	keywords = {infernal=true},
 	level_range = {30, 50},
 	greater_ego = 1,
 	rarity = 16,
@@ -309,6 +330,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = "chronomancer's ", prefix=true, instant_resolve=true,
+	keywords = {chronomancer=true},
 	level_range = {30, 50},
 	greater_ego = 1,
 	rarity = 16,
@@ -326,15 +348,14 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = "abyssal ", prefix=true, instant_resolve=true,
+	keywords = {abyssal=true},
 	level_range = {30, 50},
 	greater_ego = 1,
 	rarity = 40,
 	cost = 80,
 	wielder = {
-		blind_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, -v end),
-		confusion_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, -v end),
-		resource_leech_chance = resolvers.mbonus_material(10, 5),
-		resource_leech_value = resolvers.mbonus_material(1, 1),
+		resource_leech_chance = resolvers.mbonus_material(4, 1, function(e, v) v=v*10 return 0, v end),
+		resource_leech_value = resolvers.mbonus_material(15, 5),
 		inc_damage = {
 			[DamageType.COLD] = resolvers.mbonus_material(10, 5),
 			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 5),
@@ -349,6 +370,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = "magelord's ", prefix=true, instant_resolve=true,
+	keywords = {magelord=true},
 	level_range = {10, 50},
 	greater_ego = 1,
 	rarity = 40,
@@ -362,6 +384,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = "polar ", prefix=true, instant_resolve=true,
+	keywords = {polar=true},
 	level_range = {10, 50},
 	greater_ego = 1,
 	rarity = 15,
@@ -380,6 +403,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = "ethereal ", prefix=true, instant_resolve=true,
+	keywords = {ethereal=true},
 	level_range = {1, 50},
 	greater_ego = 1,
 	rarity = 10,
@@ -396,6 +420,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = "bloodlich's ", prefix=true, instant_resolve=true,
+	keywords = {bloodlich=true},
 	level_range = {40, 50},
 	greater_ego = 1,
 	rarity = 40,
@@ -416,6 +441,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = " of conflagration", suffix=true, instant_resolve=true,
+	keywords = {conflagration=true},
 	level_range = {30, 50},
 	greater_ego = 1,
 	rarity = 30,
@@ -435,6 +461,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = " of the stars", suffix=true, instant_resolve=true,
+	keywords = {stars=true},
 	level_range = {1, 50},
 	greater_ego = 1,
 	rarity = 15,
@@ -452,6 +479,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = " of ruination", suffix=true, instant_resolve=true,
+	keywords = {ruination=true},
 	level_range = {1, 50},
 	greater_ego = 1,
 	rarity = 15,
@@ -470,6 +498,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = " of lightning", suffix=true, instant_resolve=true,
+	keywords = {lightning=true},
 	level_range = {30, 50},
 	greater_ego = 1,
 	rarity = 30,

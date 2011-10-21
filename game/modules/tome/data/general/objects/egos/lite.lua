@@ -25,6 +25,7 @@ local Talents = require "engine.interface.ActorTalents"
 newEntity{
 	power_source = {technique=true},
 	name = "bright ", prefix=true, instant_resolve=true,
+	keywords = {bright=true},
 	level_range = {1, 50},
 	rarity = 5,
 	cost = 1,
@@ -36,6 +37,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = " of clear sight", suffix=true, instant_resolve=true,
+	keywords = {sight=true},
 	level_range = {10, 50},
 	rarity = 5,
 	cost = 1,
@@ -47,6 +49,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = " of the sun", suffix=true, instant_resolve=true,
+	keywords = {sun=true},
 	level_range = {20, 50},
 	greater_ego = 1,
 	rarity = 9,
@@ -61,6 +64,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = "scorching ", prefix=true, instant_resolve=true,
+	keywords = {scorching=true},
 	level_range = {10, 50},
 	rarity = 5,
 	cost = 4,
@@ -72,6 +76,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = " of revealing", suffix=true, instant_resolve=true,
+	keywords = {revealing=true},
 	level_range = {1, 50},
 	rarity = 7,
 	cost = 10,
@@ -85,6 +90,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = " of clarity", suffix=true, instant_resolve=true,
+	keywords = {clarity=true},
 	level_range = {1, 50},
 	rarity = 7,
 	cost = 10,
@@ -96,6 +102,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = " of health", suffix=true, instant_resolve=true,
+	keywords = {health=true},
 	level_range = {1, 50},
 	rarity = 7,
 	cost = 10,
@@ -107,6 +114,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = " of guile", suffix=true, instant_resolve=true,
+	keywords = {guile=true},
 	level_range = {1, 50},
 	rarity = 7,
 	cost = 10,
@@ -120,6 +128,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = "burglar's ", prefix=true, instant_resolve=true,
+	keywords = {burglar=true},
 	level_range = {15, 50},
 	rarity = 9,
 	cost = 12,
@@ -132,6 +141,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = "guard's ", prefix=true, instant_resolve=true,
+	keywords = {guard=true},
 	level_range = {15, 50},
 	rarity = 9,
 	cost = 12,
@@ -143,6 +153,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = "healer's ", prefix=true, instant_resolve=true,
+	keywords = {heakler=true},
 	level_range = {15, 50},
 	rarity = 9,
 	cost = 12,
@@ -154,6 +165,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = "guide's ", prefix=true, instant_resolve=true,
+	keywords = {guide=true},
 	level_range = {15, 50},
 	rarity = 9,
 	cost = 12,
@@ -165,6 +177,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = "reflective ", prefix=true, instant_resolve=true,
+	keywords = {reflect=true},
 	level_range = {20, 50},
 	greater_ego = 1,
 	rarity = 10,
@@ -181,6 +194,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = "nightwalker's ", prefix=true, instant_resolve=true,
+	keywords = {nightwalker=true},
 	level_range = {30, 50},
 	greater_ego = 1,
 	rarity = 10,
@@ -197,6 +211,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = "ethereal ", prefix=true, instant_resolve=true,
+	keywords = {ethereal=true},
 	level_range = {10, 50},
 	greater_ego = 1,
 	rarity = 10,
@@ -213,6 +228,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = " of illusion", suffix=true, instant_resolve=true,
+	keywords = {illusion=true},
 	level_range = {30, 50},
 	greater_ego = 1,
 	rarity = 10,
@@ -228,6 +244,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = " of corpselight", suffix=true, instant_resolve=true,
+	keywords = {corpselight=true},
 	level_range = {30, 50},
 	greater_ego = 1,
 	rarity = 10,
@@ -242,6 +259,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = "traitor's ", prefix=true, instant_resolve=true,
+	keywords = {traitor=true},
 	level_range = {20, 50},
 	greater_ego = 1,
 	rarity = 30,
@@ -260,6 +278,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = "watchleader's ", prefix=true, instant_resolve=true,
+	keywords = {watchleader=true},
 	level_range = {10, 50},
 	greater_ego = 1,
 	rarity = 30,
@@ -275,6 +294,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = "faithful ", prefix=true, instant_resolve=true,
+	keywords = {faithful=true},
 	level_range = {20, 50},
 	greater_ego = 1,
 	rarity = 20,
@@ -291,6 +311,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = "piercing ", prefix=true, instant_resolve=true,
+	keywords = {piercing=true},
 	level_range = {40, 50},
 	greater_ego = 1,
 	rarity = 20,
@@ -307,6 +328,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = "preserving ", prefix=true, instant_resolve=true,
+	keywords = {preserve=true},
 	level_range = {1, 50},
 	greater_ego = 1,
 	rarity = 10,
@@ -324,6 +346,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = " of the zealot", suffix=true, instant_resolve=true,
+	keywords = {zealot=true},
 	level_range = {20, 50},
 	greater_ego = 1,
 	rarity = 20,
@@ -343,6 +366,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = " of blinding", suffix=true, instant_resolve=true,
+	keywords = {blinding=true},
 	level_range = {20, 50},
 	greater_ego = 1,
 	rarity = 20,
@@ -354,6 +378,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = " of refraction", suffix=true, instant_resolve=true,
+	keywords = {refract=true},
 	level_range = {10, 50},
 	greater_ego = 1,
 	rarity = 10,
@@ -374,6 +399,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = " of moonlight", suffix=true, instant_resolve=true,
+	keywords = {moonlight=true},
 	level_range = {30, 50},
 	greater_ego = 1,
 	rarity = 20,
@@ -388,6 +414,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = " of repulsion", suffix=true, instant_resolve=true,
+	keywords = {repulsion=true},
 	level_range = {1, 50},
 	greater_ego = 1,
 	rarity = 15,

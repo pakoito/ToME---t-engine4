@@ -372,7 +372,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Enter a blood frenzy, draining stamina quickly(-4 stamina/turn). Each time you kill a foe while in blood frenzy you gain a cumulative bonus to weapon power of %d.
+		return ([[Enter a blood frenzy, draining stamina quickly(-4 stamina/turn). Each time you kill a foe while in blood frenzy you gain a cumulative bonus to physical power of %d.
 		Each turn the bonus decreases by 2.]]):format(2 * self:getTalentLevel(t))
 	end,
 }

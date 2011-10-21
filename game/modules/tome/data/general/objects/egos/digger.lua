@@ -262,23 +262,6 @@ newEntity{
 }
 
 newEntity{
-	power_source = {technique=true},
-	name = " of avarice", suffix=true, instant_resolve=true,
-	keywords = {avarice=true},
-	level_range = {40, 50},
-	greater_ego = 1,
-	rarity = 45,
-	cost = 60,
-	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
-	wielder = {
-		blind_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, -v end),
-		combat_mentalresist = resolvers.mbonus_material(10, 5, function(e, v) return 0, -v end),
-		resource_leech_chance = resolvers.mbonus_material(10, 5),
-		resource_leech_value = resolvers.mbonus_material(1, 1),
-	},
-}
-
-newEntity{
 	power_source = {arcane=true},
 	name = " of quickening", suffix=true, instant_resolve=true,
 	keywords = {quickening=true},

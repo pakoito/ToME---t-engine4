@@ -1430,7 +1430,7 @@ newEffect{
 newEffect{
 	name = "OFFBALANCE",
 	desc = "Off-balance",
-	long_desc = function(self, eff) return ("Badly off balance. Attackers gain a 25% bonus to physical critical strike power, the target movement speed is also reduced by 20%%.") end,
+	long_desc = function(self, eff) return ("Badly off balance. Attackers gain a 25% bonus to physical critical strike power and movement speed is reduced by 20%%.") end,
 	type = "physical",
 	subtype = { ["cross tier"]=true },
 	status = "detrimental",

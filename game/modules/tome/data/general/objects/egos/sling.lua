@@ -24,6 +24,7 @@ local Stats = require("engine.interface.ActorStats")
 newEntity{
 	power_source = {technique=true},
 	name = " of power", suffix=true, instant_resolve=true,
+	keywords = {power=true},
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 6,
@@ -33,6 +34,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = "mighty ", prefix=true, instant_resolve=true,
+	keywords = {mighty=true},
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 4,
@@ -44,6 +46,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = "steady ", prefix=true, instant_resolve=true,
+	keywords = {steady=true},
 	level_range = {20, 50},
 	rarity = 9,
 	cost = 10,
@@ -55,6 +58,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = " of dexterity (#STATBONUS#)", suffix=true, instant_resolve=true,
+	keywords = {dex=true},
 	level_range = {20, 50},
 	rarity = 7,
 	cost = 7,
@@ -66,6 +70,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = " of speed", suffix=true, instant_resolve=true,
+	keywords = {speed=true},
 	level_range = {20, 50},
 	rarity = 7,
 	cost = 7,
@@ -75,6 +80,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = " of great speed", suffix=true, instant_resolve=true,
+	keywords = {SPEED=true},
 	level_range = {40, 50},
 	greater_ego = 1,
 	rarity = 10,
@@ -85,6 +91,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = "halfling ", prefix=true, instant_resolve=true,
+	keywords = {halfling=true},
 	level_range = {30, 50},
 	greater_ego = 1,
 	rarity = 24,

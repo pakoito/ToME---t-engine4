@@ -341,21 +341,6 @@ newEntity{
 }
 
 newEntity{
-	power_source = {nature=true},
-	name = " of voracity", suffix=true, instant_resolve=true,
-	keywords = {voracity=true},
-	level_range = {20, 50},
-	greater_ego = 1,
-	rarity = 20,
-	cost = 40,
-	wielder = {
-		resource_leech_chance = resolvers.mbonus_material(10, 5),
-		resource_leech_value = resolvers.mbonus_material(1, 1),
-		max_life = resolvers.mbonus_material(70, 40, function(e, v) return 0, -v end),
-	},
-}
-
-newEntity{
 	power_source = {technique=true},
 	name = " of invasion", suffix=true, instant_resolve=true,
 	keywords = {invasion=true},

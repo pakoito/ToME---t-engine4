@@ -19,6 +19,8 @@
 
 startx = 4
 starty = 15
+endx = 3
+endy = 9
 
 addSpot({22, 16}, "door", "sealed")
 

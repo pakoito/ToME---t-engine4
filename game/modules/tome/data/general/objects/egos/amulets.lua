@@ -450,24 +450,6 @@ newEntity{
 }
 
 newEntity{
-	power_source = {nature=true},
-	name = " of lifeblood", suffix=true, instant_resolve=true,
-	keywords = {lifeblood=true},
-	level_range = {40, 50},
-	greater_ego = 1,
-	rarity = 30,
-	cost = 100,
-	wielder = {
-		resists={
-			[DamageType.LIGHT] = resolvers.mbonus_material(10, 5, function(e, v) return 0, -v end),
-			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 5),
-		},
-		resource_leech_chance = resolvers.mbonus_material(10, 5),
-		resource_leech_value = resolvers.mbonus_material(3, 1),
-	},
-}
-
-newEntity{
 	power_source = {technique=true},
 	name = " of seduction", suffix=true, instant_resolve=true,
 	keywords = {seducion=true},

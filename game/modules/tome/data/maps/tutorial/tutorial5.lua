@@ -19,6 +19,8 @@
 
 startx = 13
 starty = 2 
+endx = 2
+endy = 5
 
 defineTile("0", "SIGN_CAVE", nil, nil, "TUTORIAL_TIMED0")
 defineTile("1", "SIGN_CAVE", nil, nil, "TUTORIAL_TIMED1")

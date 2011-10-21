@@ -20,10 +20,4 @@
 return [[
 #GOLD#Congratulations!#WHITE# You have completed the combat stats tutorial. Hopefully it has been of some use to you.
 
-#LIGHT_GREEN#For those who want to join the discussion on these new mechanics, please first read the document "Transparency.rtf" found here:#WHITE#
-
-tome/data/texts/Transparency.rtf
-
-It explains why changes were made, along with detailing some of the peripheral changes that weren't made obvious in this tutorial. It also points out areas in which further playtesting is needed. This is an essay, not code. Open it with something appropriate to avoid being overwhelmed by a dense wall of text.
-
 ]]

@@ -35,7 +35,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Adds %d damage to all glove and gauntlet strikes.
+		return ([[Grants %d physical power when armed only with gloves or gauntlets.
 		This talent's effects will scale with your level.]]):
 		format(damage)
 	end,
