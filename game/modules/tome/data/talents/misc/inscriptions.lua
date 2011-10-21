@@ -186,11 +186,16 @@ newInscription{
 		local data = self:getInscriptionData(t.short_name)
 		return data.range
 	end,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), selffire=false, radius=self:getTalentRadius(t), talent=t}
+	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		self:project({type="ball", range=self:getTalentRange(t), selffire=true, radius=self:getTalentRadius(t)}, self.x, self.y, engine.DamageType.LITE, 1)
-		self:project({type="ball", range=self:getTalentRange(t), selffire=true, radius=self:getTalentRadius(t)}, self.x, self.y, engine.DamageType.BREAK_STEALTH, 1)
-		self:project({type="ball", range=self:getTalentRange(t), selffire=false, radius=self:getTalentRadius(t)}, self.x, self.y, engine.DamageType.BLINDCUSTOMMIND, {power=data.power + data.inc_stat, turns=data.turns})
+		local tg = self:getTalentTarget(t)
+		self:project(tg, self.x, self.y, engine.DamageType.BLINDCUSTOMMIND, {power=data.power + data.inc_stat, turns=data.turns})
+		tg.selffire = true
+		self:project(tg, self.x, self.y, engine.DamageType.LITE, 1)
+		self:project(tg, self.x, self.y, engine.DamageType.BREAK_STEALTH, 1)
 		return true
 	end,
 	info = function(self, t)
