@@ -206,6 +206,44 @@ function _M:atEnd(v)
 				self:setTile(self.has_custom_tile.f, self.has_custom_tile.w, self.has_custom_tile.h, true)
 				self.actor.has_custom_tile = self.has_custom_tile.f
 			end
+			-- Prevent the game from auto-assigning talents if necessary.
+			if (not config.settings.tome.autoassign_talents_on_birth) then
+				for _, d in pairs(self.descriptors) do
+					local unlearned_talents = { }
+
+					if (d.talents ~= nil and (d.type == "race" or d.type == "subrace" or d.type == "class" or d.type == "subclass")) then
+						for t_id, t_level in pairs(d.talents) do
+							local talent = self.actor:getTalentFromId(t_id)
+							if (talent ~= nil and not talent.no_unlearn_last) then
+								--[[ Award talent points based on the highest available level of the talent
+								     This is in the potential case of a player selecting a race with two points in phase door
+								     and Archmage as his class. Archmage starts with one point in phase door. Cases like this may
+									 result in a conflict of what the player might expect to get back in points. The highest 
+									 amount of points is always awarded to the player (two, in this case).
+								  ]]
+								if (unlearned_talents[talent] == nil) then
+									unlearned_talents[talent] = t_level
+								elseif (unlearned_talents[talent] < t_level) then
+									unlearned_talents[talent] = t_level
+								end
+
+								self.actor:learnPool(talent)
+								print("[BIRTHER] Ignoring auto-assign for " .. t_id .. " (from " .. d.type .. " descriptor \"" .. d.name .. "\")")
+								d.talents[t_id] = nil
+							end
+						end
+
+						-- Give the player the appropriate amount of talent points
+						for talent, t_level in pairs(unlearned_talents) do
+							if (talent.generic == true) then
+								self.actor.unused_generics = self.actor.unused_generics + t_level
+							else
+								self.actor.unused_talents = self.actor.unused_talents + t_level
+							end
+						end
+					end
+				end
+			end
 			self:apply()
 			if self.has_custom_tile then
 				self.actor.make_tile = nil

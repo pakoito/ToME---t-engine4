@@ -238,6 +238,7 @@ function _M:newGame()
 		self:updateCurrentChar()
 	end
 
+	self.bump_attack_disabled = false
 	self.always_target = true
 	local nb_unlocks, max_unlocks = self:countBirthUnlocks()
 	self.creating_player = true
@@ -469,7 +470,7 @@ end
 function _M:save()
 	self.total_playtime = (self.total_playtime or 0) + (os.time() - (self.last_update or self.real_starttime))
 	self.last_update = os.time()
-	return class.save(self, self:defaultSavedFields{difficulty=true, permadeath=true, to_re_add_actors=true, party=true, _chronoworlds=true, total_playtime=true, on_level_load_fcts=true, visited_zones=true}, true)
+	return class.save(self, self:defaultSavedFields{difficulty=true, permadeath=true, to_re_add_actors=true, party=true, _chronoworlds=true, total_playtime=true, on_level_load_fcts=true, visited_zones=true, bump_attack_disabled=true, show_npc_list=true}, true)
 end
 
 function _M:updateCurrentChar()
@@ -1130,6 +1131,15 @@ function _M:setupCommands()
 		RUN_RIGHT_UP = function() self.player:runInit(9) end,
 		RUN_RIGHT_DOWN = function() self.player:runInit(3) end,
 
+		ATTACK_OR_MOVE_LEFT = function() self.player:attackOrMoveDir(4) end,
+		ATTACK_OR_MOVE_RIGHT = function() self.player:attackOrMoveDir(6) end,
+		ATTACK_OR_MOVE_UP = function() self.player:attackOrMoveDir(8) end,
+		ATTACK_OR_MOVE_DOWN = function() self.player:attackOrMoveDir(2) end,
+		ATTACK_OR_MOVE_LEFT_UP = function() self.player:attackOrMoveDir(7) end,
+		ATTACK_OR_MOVE_LEFT_DOWN = function() self.player:attackOrMoveDir(1) end,
+		ATTACK_OR_MOVE_RIGHT_UP = function() self.player:attackOrMoveDir(9) end,
+		ATTACK_OR_MOVE_RIGHT_DOWN = function() self.player:attackOrMoveDir(3) end,
+
 		-- Hotkeys
 		HOTKEY_1 = not_wild(function() self.player:activateHotkey(1) end),
 		HOTKEY_2 = not_wild(function() self.player:activateHotkey(2) end),
@@ -1320,6 +1330,18 @@ function _M:setupCommands()
 		TOGGLE_NPC_LIST = function()
 			self.show_npc_list = not self.show_npc_list
 			self.player.changed = true
+
+			if (self.show_npc_list) then
+				self.log("Displaying creatures.")
+			else
+				self.log("Displaying talents.")
+			end
+
+			-- Update tooltip display if we're hovering over the icon.
+			local mx, my = core.mouse.get()
+			if (mx < self.icons.w and my > self.icons.display_y) then
+				self:mouseIcon(mx, my - self.icons.display_y)
+			end
 		end,
 
 		SCREENSHOT = function() self:saveScreenshot() end,
@@ -1369,6 +1391,22 @@ function _M:setupCommands()
 
 		USERCHAT_SHOW_TALK = function()
 			self.show_userchat = not self.show_userchat
+		end,
+		
+		TOGGLE_BUMP_ATTACK = function()
+			if (self.bump_attack_disabled) then
+				self.log("Movement Mode: #LIGHT_GREEN#Default#LAST#.")
+				self.bump_attack_disabled = false
+			else
+				self.log("Movement Mode: #LIGHT_RED#Passive#LAST#.")
+				self.bump_attack_disabled = true
+			end
+			
+			-- Update tooltip display if we're hovering over the icon.
+			local mx, my = core.mouse.get()
+			if (mx < self.icons.w and my > self.icons.display_y) then
+				self:mouseIcon(mx, my - self.icons.display_y)
+			end
 		end
 	}
 
@@ -1437,9 +1475,9 @@ function _M:setupMouse(reset)
 		)
 	end, nil, "hotkeys", true)
 	-- Use icons
-	self.mouse:registerZone(self.icons.display_x, self.icons.display_y, self.icons.w, self.icons.h, function(button, mx, my, xrel, yrel, bx, by)
+	self.mouse:registerZone(self.icons.display_x, self.icons.display_y, self.icons.w, self.icons.h, function(button, mx, my, xrel, yrel, bx, by, event)
 		self:mouseIcon(bx, by)
-		if button == "left" then self:clickIcon(bx, by) end
+		if button == "left" and event == "button" then self:clickIcon(bx, by) end
 	end)
 	-- Tooltip over the player pane
 	self.mouse:registerZone(self.player_display.display_x, self.player_display.display_y, self.player_display.w, self.player_display.h - self.icons.h, function(button, mx, my, xrel, yrel, bx, by, event)
@@ -1752,7 +1790,9 @@ local _actors_icon, _actors_icon_w, _actors_icon_h = core.display.loadImage("/da
 local _main_menu_icon, _main_menu_icon_w, _main_menu_icon_h = core.display.loadImage("/data/gfx/ui/main-menu-icon.png"):glTexture()
 local _inventory_icon, _inventory_icon_w, _inventory_icon_h = core.display.loadImage("/data/gfx/ui/inventory-icon.png"):glTexture()
 local _charsheet_icon, _charsheet_icon_w, _charsheet_icon_h = core.display.loadImage("/data/gfx/ui/charsheet-icon.png"):glTexture()
-local _sel_icon, _sel_icon_w, _sel_icon_h = core.display.loadImage("/data/gfx/ui/icon-select.png"):glTexture()
+local _mm_aggressive_icon, _mm_aggressive_icon_w, _mm_aggressive_icon_h = core.display.loadImage("/data/gfx/ui/aggressive-icon.png"):glTexture()
+local _mm_passive_icon, _mm_passive_icon_w, _mm_passive_icon_h = core.display.loadImage("/data/gfx/ui/passive-icon.png"):glTexture()
+--local _sel_icon, _sel_icon_w, _sel_icon_h = core.display.loadImage("/data/gfx/ui/icon-select.png"):glTexture()
 
 function _M:displayUI()
 	local middle = self.w * 0.5
@@ -1764,12 +1804,20 @@ function _M:displayUI()
 
 	-- Icons
 	local x, y = icon_x, icon_y
-	_talents_icon:toScreenFull(x, y, _talents_icon_w, _talents_icon_h, _talents_icon_w, _talents_icon_h)
-	if not self.show_npc_list then _sel_icon:toScreenFull(x, y, _sel_icon_w, _sel_icon_h, _sel_icon_w, _sel_icon_h) end
+	if (not self.show_npc_list) then
+		_talents_icon:toScreenFull(x, y, _talents_icon_w, _talents_icon_h, _talents_icon_w, _talents_icon_h)
+	else
+		_actors_icon:toScreenFull(x, y, _actors_icon_w, _actors_icon_h, _actors_icon_w, _actors_icon_h)
+	end
 	x = x + _talents_icon_w
-	_actors_icon:toScreenFull(x, y, _actors_icon_w, _actors_icon_h, _actors_icon_w, _actors_icon_h)
-	if self.show_npc_list then _sel_icon:toScreenFull(x, y, _sel_icon_w, _sel_icon_h, _sel_icon_w, _sel_icon_h) end
-	x = x + _talents_icon_w
+
+	-- This is the old version of what's above. Probably should be deleted?
+--	_talents_icon:toScreenFull(x, y, _talents_icon_w, _talents_icon_h, _talents_icon_w, _talents_icon_h)
+--	if not self.show_npc_list then _sel_icon:toScreenFull(x, y, _sel_icon_w, _sel_icon_h, _sel_icon_w, _sel_icon_h) end
+--	x = x + _talents_icon_w
+--	_actors_icon:toScreenFull(x, y, _actors_icon_w, _actors_icon_h, _actors_icon_w, _actors_icon_h)
+--	if self.show_npc_list then _sel_icon:toScreenFull(x, y, _sel_icon_w, _sel_icon_h, _sel_icon_w, _sel_icon_h) end
+--	x = x + _talents_icon_w
 
 --	if self.logdisplay.changed then core.display.drawQuad(x, y, _sel_icon_w, _sel_icon_h, 139, 210, 77, glow) end
 --	_log_icon:toScreenFull(x, y, _log_icon_w, _log_icon_h, _log_icon_w, _log_icon_h)
@@ -1791,6 +1839,12 @@ function _M:displayUI()
 	_main_menu_icon:toScreenFull(x, y, _main_menu_icon_w, _main_menu_icon_h, _main_menu_icon_w, _main_menu_icon_h)
 	x = x + _talents_icon_w
 	_log_icon:toScreenFull(x, y, _log_icon_w, _log_icon_h, _log_icon_w, _log_icon_h)
+	x = x + _talents_icon_w
+	if (not self.bump_attack_disabled) then
+		_mm_aggressive_icon:toScreenFull(x, y, _mm_aggressive_icon_w, _mm_aggressive_icon_h, _mm_aggressive_icon_w, _mm_aggressive_icon_h)
+	else
+		_mm_passive_icon:toScreenFull(x, y, _mm_passive_icon_w, _mm_passive_icon_h, _mm_passive_icon_w, _mm_passive_icon_h)
+	end
 
 	-- Separators
 --	_sep_horiz.tex[1]:toScreenFull(0, 20, self.w, _sep_horiz[3], _sep_horiz.tex[2], _sep_horiz.tex[3])
@@ -1831,35 +1885,70 @@ end
 
 function _M:clickIcon(bx, by)
 	if bx < _talents_icon_w then
-		self.show_npc_list = false
-		self.player.changed = true
+		self.key:triggerVirtual("TOGGLE_NPC_LIST")
 	elseif bx < 2*_talents_icon_w then
-		self.show_npc_list = true
-		self.player.changed = true
-	elseif bx < 3*_talents_icon_w then
 		self.key:triggerVirtual("SHOW_INVENTORY")
-	elseif bx < 4*_talents_icon_w then
+	elseif bx < 3*_talents_icon_w then
 		self.key:triggerVirtual("SHOW_CHARACTER_SHEET")
-	elseif bx < 5*_talents_icon_w then
+	elseif bx < 4*_talents_icon_w then
 		self.key:triggerVirtual("EXIT")
-	elseif bx < 6*_talents_icon_w then
+	elseif bx < 5*_talents_icon_w then
 		self.key:triggerVirtual("SHOW_MESSAGE_LOG")
+	elseif bx < 6*_talents_icon_w then
+		self.key:triggerVirtual("TOGGLE_BUMP_ATTACK")
 	end
 end
 
 function _M:mouseIcon(bx, by)
+	local virtual
+	local key
+
 	if bx < _talents_icon_w then
-		self:tooltipDisplayAtMap(self.w, self.h, "Display talents\nToggle with #{bold}##GOLD#[tab]#LAST##{normal}#")
+		virtual = "TOGGLE_NPC_LIST"
+		key = self.key.binds_remap[virtual] ~= nil and self.key.binds_remap[virtual][1] or game.key:findBoundKeys(virtual)
+		key = (key ~= nil and game.key:formatKeyString(key) or "unbound"):capitalize()
+		if (not self.show_npc_list) then
+			self:tooltipDisplayAtMap(self.w, self.h, "Displaying talents (#{bold}##GOLD#"..key.."#LAST##{normal}#)\nToggle for creature display")
+		else
+			self:tooltipDisplayAtMap(self.w, self.h, "Displaying creatures (#{bold}##GOLD#"..key.."#LAST##{normal}#)\nToggle for talent display#")
+		end
 	elseif bx < 2*_talents_icon_w then
-		self:tooltipDisplayAtMap(self.w, self.h, "Display creatures\nToggle with #{bold}##GOLD#[tab]#LAST##{normal}#")
+		virtual = "SHOW_INVENTORY"
+		key = self.key.binds_remap[virtual] ~= nil and self.key.binds_remap[virtual][1] or game.key:findBoundKeys(virtual)
+		key = (key ~= nil and game.key:formatKeyString(key) or "unbound"):capitalize()
+		if (key == "I") then
+			self:tooltipDisplayAtMap(self.w, self.h, "#{bold}##GOLD#I#LAST##{normal}#nventory")
+		else
+			self:tooltipDisplayAtMap(self.w, self.h, "Inventory (#{bold}##GOLD#"..key.."#LAST##{normal}#)")
+		end
 	elseif bx < 3*_talents_icon_w then
-		self:tooltipDisplayAtMap(self.w, self.h, "#{bold}##GOLD#I#LAST##{normal}#nventory")
+		virtual = "SHOW_CHARACTER_SHEET"
+		key = self.key.binds_remap[virtual] ~= nil and self.key.binds_remap[virtual][1] or game.key:findBoundKeys(virtual)
+		key = (key ~= nil and game.key:formatKeyString(key) or "unbound"):capitalize()
+		if (key == "C") then
+			self:tooltipDisplayAtMap(self.w, self.h, "#{bold}##GOLD#C#LAST##{normal}#haracter Sheet")
+		else
+			self:tooltipDisplayAtMap(self.w, self.h, "Character Sheet (#{bold}##GOLD#"..key.."#LAST##{normal}#)")
+		end
 	elseif bx < 4*_talents_icon_w then
-		self:tooltipDisplayAtMap(self.w, self.h, "#{bold}##GOLD#C#LAST##{normal}#haracter Sheet")
+		virtual = "EXIT"
+		key = self.key.binds_remap[virtual] ~= nil and self.key.binds_remap[virtual][1] or game.key:findBoundKeys(virtual)
+		key = (key ~= nil and game.key:formatKeyString(key) or "unbound"):capitalize()
+		self:tooltipDisplayAtMap(self.w, self.h, "Main menu (#{bold}##GOLD#"..key.."#LAST##{normal}#)")
 	elseif bx < 5*_talents_icon_w then
-		self:tooltipDisplayAtMap(self.w, self.h, "Main menu (#{bold}##GOLD#Esc#LAST##{normal}#)")
+		virtual = "SHOW_MESSAGE_LOG"
+		key = self.key.binds_remap[virtual] ~= nil and self.key.binds_remap[virtual][1] or game.key:findBoundKeys(virtual)
+		key = (key ~= nil and game.key:formatKeyString(key) or "unbound"):capitalize()
+		self:tooltipDisplayAtMap(self.w, self.h, "Show message/chat log (#{bold}##GOLD#"..key.."#LAST##{normal}#)")
 	elseif bx < 6*_talents_icon_w then
-		self:tooltipDisplayAtMap(self.w, self.h, "Show message/chat log (#{bold}##GOLD#ctrl+m#LAST##{normal}#)")
+		virtual = "TOGGLE_BUMP_ATTACK"
+		key = self.key.binds_remap[virtual] ~= nil and self.key.binds_remap[virtual][1] or game.key:findBoundKeys(virtual)
+		key = (key ~= nil and game.key:formatKeyString(key) or "unbound"):capitalize()
+		if (not self.bump_attack_disabled) then
+			self:tooltipDisplayAtMap(self.w, self.h, "Movement: #LIGHT_GREEN#Default#LAST# (#{bold}##GOLD#"..key.."#LAST##{normal}#)\nToggle for passive mode")
+		else
+			self:tooltipDisplayAtMap(self.w, self.h, "Movement: #LIGHT_RED#Passive#LAST# (#{bold}##GOLD#"..key.."#LAST##{normal}#)\nToggle for default mode")
+		end
 	end
 end
 

@@ -226,6 +226,14 @@ function _M:generateList()
 		self.c_list:drawItem(item)
 	end,}
 
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"New games begin with some talent points auto-assigned.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Auto-assign talent points at birth#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.tome.autoassign_talents_on_birth and "enabled" or "disabled")
+	end, fct=function(item)
+		config.settings.tome.autoassign_talents_on_birth = not config.settings.tome.autoassign_talents_on_birth
+		game:saveSettings("tome.autoassign_talents_on_birth", ("tome.autoassign_talents_on_birth = %s\n"):format(tostring(config.settings.tome.autoassign_talents_on_birth)))
+		self.c_list:drawItem(item)
+	end,}
 
 	self.list = list
 end

@@ -60,7 +60,9 @@ function resolvers.calc.equip(t, e)
 				end
 			end
 
-			e:wearObject(o, true, false)
+			if e:wearObject(o, true, false) == false then
+				e:addObject(e.INVEN_INVEN, o)
+			end
 
 			-- Do not drop it unless it is an ego or better
 			if not o.unique then o.no_drop = true print(" * "..o.name.." => no drop") end

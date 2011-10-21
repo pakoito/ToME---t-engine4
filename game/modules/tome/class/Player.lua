@@ -1044,3 +1044,10 @@ function _M:on_quest_status(quest, status, sub)
 	end
 end
 
+function _M:attackOrMoveDir(dir)
+	local tmp = game.bump_attack_disabled
+	
+	game.bump_attack_disabled = false
+	self:moveDir(dir)
+	game.bump_attack_disabled = tmp
+end

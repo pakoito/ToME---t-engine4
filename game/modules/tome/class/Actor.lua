@@ -2111,6 +2111,13 @@ function _M:learnTalent(t_id, force, nb, extra)
 
 	if t.dont_provide_pool then return true end
 
+	self:learnPool(t)
+	return true
+end
+
+--- Actor learns a resource pool
+-- @param talent a talent definition table
+function _M:learnPool(t)
 	if t.type[1]:find("^spell/") and not self:knowTalent(self.T_MANA_POOL) and t.mana or t.sustain_mana then
 		self:learnTalent(self.T_MANA_POOL, true)
 		self.resource_pool_refs[self.T_MANA_POOL] = (self.resource_pool_refs[self.T_MANA_POOL] or 0) + 1
