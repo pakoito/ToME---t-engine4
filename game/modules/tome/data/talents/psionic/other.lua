@@ -24,6 +24,7 @@ newTalent{
 	cooldown = 0,
 	psi = 0,
 	type_no_req = true,
+	no_unlearn_last = true,
 	no_npc_use = true,
 	action = function(self, t)
 		local inven = self:getInven("INVEN")
@@ -92,6 +93,7 @@ newTalent{
 	range = 1,
 	direct_hit = true,
 	no_energy = true,
+	no_unlearn_last = true,
 	tactical = { BUFF = 3 },
 	do_tkautoattack = function(self, t)
 		if game.zone.wilderness then return end
