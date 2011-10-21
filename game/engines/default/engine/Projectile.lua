@@ -246,7 +246,7 @@ function _M:makeProject(src, display, def, do_move, do_act, do_stop)
 	local speed = def.tg.speed
 	local name = def.tg.name
 	if def.tg.talent then
-		speed = src:getTalentProjectileSpeed(def.tg.talent)
+		speed = src:getTalentProjectileSpeed(def.tg.talent) or speed
 		name = def.tg.talent.name
 		def.tg.talent_id = def.tg.talent.id
 		def.tg.talent = nil
