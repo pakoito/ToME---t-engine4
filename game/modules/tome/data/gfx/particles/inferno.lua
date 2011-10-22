@@ -20,29 +20,30 @@
 base_size = 32
 
 return { generator = function()
-	local ad = rng.range(0, 360)
+	local ad = rng.range(20+90, 160+90)
 	local a = math.rad(ad)
 	local dir = math.rad(ad + 90)
 	local r = rng.range(1, 20)
-	local dirv = math.rad(1)
+	local dirv = math.rad(rng.float(-1,1))
+	local life = rng.range(10,30)
 
 	return {
 		trail = 1,
-		life = 10,
-		size = 4, sizev = -0.1, sizea = 0,
+		life = life,
+		size = rng.range(4, 12), sizev = -0.2, sizea = 0,
 
 		x = r * math.cos(a), xv = -0.1, xa = 0,
 		y = r * math.sin(a), yv = -0.1, ya = 0,
-		dir = dir, dirv = dirv, dira = dir / 20,
-		vel = 1, velv = 0, vela = 0.1,
+		dir = dir, dirv = dirv, dira = -dirv/life,
+		vel = rng.float(0.3, 1), velv = 0, vela = 0,
 
-		r = rng.range(200, 255)/255,   rv = 0, ra = 0,
-		g = rng.range(120, 170)/255,   gv = 0.005, ga = 0.0005,
-		b = rng.range(0, 10)/255,      bv = 0, ba = 0,
-		a = rng.range(25, 220)/255,    av = 0, aa = 0.005,
+		r = rng.float(0.8, 1),   rv = 0, ra = 0,
+		g = rng.float(0.4, 0.7),   gv = 0, ga = 0,
+		b = rng.float(0, 1),      bv = 0, ba = 0,
+		a = rng.float(0.2, 0.8),    av = 0, aa = 0,
 	}
 end, },
 function(self)
 	self.ps:emit(4)
 end,
-40
+40, "fire_particle"
