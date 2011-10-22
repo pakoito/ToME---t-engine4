@@ -806,6 +806,10 @@ end
 function _M:reactionToward(target, no_reflection)
 	if target == self and self:attr("encased_in_ice") then return -100 end
 
+	-- If self or target is a summon bound to a master's will, use the master instead
+	if self.summoner then return self.summoner:reactionToward(target, no_reflection) end
+	if target.summoner then target = target.summoner end
+
 	local v = engine.Actor.reactionToward(self, target)
 
 	if self.reaction_actor and self.reaction_actor[target.unique or target.name] then v = v + self.reaction_actor[target.unique or target.name] end
