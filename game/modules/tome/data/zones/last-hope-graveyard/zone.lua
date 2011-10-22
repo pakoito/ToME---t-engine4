@@ -95,10 +95,10 @@ return {
 			end
 			local r = rng.range(1, 100)
 			if r <= 10 then
-				if not who:knowTalentType("cursed/fateful-aura") then
+				if not who:knowTalentType("cursed/cursed-aura") then
 					Dialog:simplePopup("Curse!", "The coffin was a decoy, a powerful curse was set upon you (check your talents).")
-					who:learnTalentType("cursed/fateful-aura", true)
-					who:learnTalent(who.T_CURSED_TOUCH, true, nil, {no_unlearn=true})
+					who:learnTalentType("cursed/cursed-aura", true)
+					who:learnTalent(who.T_DEFILING_TOUCH, true, nil, {no_unlearn=true})
 				else
 					game.log("There is nothing there.")
 				end

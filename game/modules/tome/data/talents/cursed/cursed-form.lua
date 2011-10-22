@@ -47,9 +47,9 @@ newTalent{
 		return -18 + (self:getTalentLevel(t) * 3) + (18 * getHateMultiplier(self, 0, 1))
 	end,
 	getCurseHealingFactorChange = function(self, t)
-		return 0.05
+		return 0.03
 	end,
-	updateHealingFactor = function(self, t)
+	updateHealingFactor = function(self, t, armorCount)
 		-- initialize
 		if self.unnatural_body_healing_factor == nil then
 			self.unnatural_body_healing_factor = -0.5
@@ -59,15 +59,18 @@ newTalent{
 		-- equipped items changed
 		local oldHealingFactor = self.unnatural_body_healing_factor
 
-		local bonus = t.getCurseHealingFactorChange(self, t)
-		local newHealingFactor = -0.5
-		if self:hasShield() and self:hasShield().cursed then newHealingFactor = newHealingFactor + bonus end
-		if self:getInven("BODY") and self:getInven("BODY")[1] and self:getInven("BODY")[1].cursed then newHealingFactor = newHealingFactor + bonus end
-		if self:getInven("CLOAK") and self:getInven("CLOAK")[1] and self:getInven("CLOAK")[1].cursed then newHealingFactor = newHealingFactor + bonus end
-		if self:getInven("HANDS") and self:getInven("HANDS")[1] and self:getInven("HANDS")[1].cursed then newHealingFactor = newHealingFactor + bonus end
-		if self:getInven("FEET") and self:getInven("FEET")[1] and self:getInven("FEET")[1].cursed then newHealingFactor = newHealingFactor + bonus end
-		if self:getInven("HEAD") and self:getInven("HEAD")[1] and self:getInven("HEAD")[1].cursed then newHealingFactor = newHealingFactor + bonus end
-		if self:getInven("BELT") and self:getInven("BELT")[1] and self:getInven("BELT")[1].cursed then newHealingFactor = newHealingFactor + bonus end
+		if not armorCount then
+			local tDefilingTouch = self:getTalentFromId(self.T_DEFILING_TOUCH)
+			armorCount = 0
+			for id, inven in pairs(self.inven) do
+				if self.inven_def[id].is_worn then
+					for i, item in ipairs(inven) do
+						if item.curse and tDefilingTouch.canCurseItem(self, tDefilingTouch, item) and item.type == "armor" then armorCount = armorCount + 1 end
+					end
+				end
+			end
+		end
+		local newHealingFactor = -0.5 + t.getCurseHealingFactorChange(self, t) * armorCount
 
 		if self.unnatural_body_healing_factor ~= newHealingFactor then
 			self.healing_factor = (self.healing_factor or 1) + newHealingFactor - self.unnatural_body_healing_factor

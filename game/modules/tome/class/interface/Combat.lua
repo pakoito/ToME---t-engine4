@@ -171,6 +171,7 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 
 	-- Cancel stealth!
 	if break_stealth then self:breakStealth() end
+	self:breakPity()
 	self:breakLightningSpeed()
 	self:breakGatherTheThreads()
 	return hit
@@ -560,6 +561,32 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	if hitted and game.level.data.zero_gravity and rng.percent(util.bound(dam, 0, 100)) then
 		target:knockback(self.x, self.y, math.ceil(math.log(dam)))
 	end
+	
+	if hitted and not target.dead then
+		-- Curse of Madness: Twisted Mind
+		if self.hasEffect and self:hasEffect(self.EFF_CURSE_OF_MADNESS) then
+			local eff = self:hasEffect(self.EFF_CURSE_OF_MADNESS)
+			local def = self.tempeffect_def[self.EFF_CURSE_OF_MADNESS]
+			def.doConspirator(self, eff, target)
+		end
+		if target.hasEffect and target:hasEffect(target.EFF_CURSE_OF_MADNESS) then
+			local eff = target:hasEffect(target.EFF_CURSE_OF_MADNESS)
+			local def = target.tempeffect_def[target.EFF_CURSE_OF_MADNESS]
+			def.doConspirator(target, eff, self)
+		end
+		
+		-- Curse of Nightmares: Suffocate
+		if self.hasEffect and self:hasEffect(self.EFF_CURSE_OF_NIGHTMARES) then
+			local eff = self:hasEffect(self.EFF_CURSE_OF_NIGHTMARES)
+			local def = self.tempeffect_def[self.EFF_CURSE_OF_NIGHTMARES]
+			def.doSuffocate(self, eff, target)
+		end
+		if target.hasEffect and target:hasEffect(target.EFF_CURSE_OF_NIGHTMARES) then
+			local eff = target:hasEffect(target.EFF_CURSE_OF_NIGHTMARES)
+			local def = target.tempeffect_def[target.EFF_CURSE_OF_NIGHTMARES]
+			def.doSuffocate(target, eff, self)
+		end
+	end
 
 	-- Visual feedback
 	if hitted then game.level.map:particleEmitter(target.x, target.y, 1, "melee_attack", {color=target.blood_color}) end
@@ -865,7 +892,14 @@ function _M:getOffHandMult(mult)
 	elseif self:knowTalent(Talents.T_CORRUPTED_STRENGTH) then
 		offmult = (mult or 1) / (2 - (math.min(self:getTalentLevel(Talents.T_CORRUPTED_STRENGTH), 8) / 9))
 	end
-
+	if self:hasEffect(self.EFF_CURSE_OF_MADNESS) then
+		local eff = self:hasEffect(self.EFF_CURSE_OF_MADNESS)
+		if eff.level >= 1 and eff.unlockLevel >= 1 then
+			local def = self.tempeffect_def[self.EFF_CURSE_OF_MADNESS]
+			offmult = offmult + ((mult or 1) * def.getOffHandMultChange(eff.level) / 100)
+		end
+	end
+	
 	return offmult
 end
 
@@ -1133,9 +1167,12 @@ function _M:hasCursedWeapon()
 
 	if not self:getInven("MAINHAND") then return end
 	local weapon = self:getInven("MAINHAND")[1]
-	if not weapon or not weapon.cursed then
+	if not weapon or not weapon.curse then
 		return nil
 	end
+	local t = self:getTalentFromId(self.T_DEFILING_TOUCH)
+	if not t.canCurseItem(self, t, weapon) then return nil end
+	
 	return weapon
 end
 
@@ -1147,9 +1184,12 @@ function _M:hasCursedOffhandWeapon()
 
 	if not self:getInven("OFFHAND") then return end
 	local weapon = self:getInven("OFFHAND")[1]
-	if not weapon or not weapon.combat or not weapon.cursed then
+	if not weapon or not weapon.combat or not weapon.curse then
 		return nil
 	end
+	local t = self:getTalentFromId(self.T_DEFILING_TOUCH)
+	if not t.canCurseItem(self, t, weapon) then return nil end
+	
 	return weapon
 end
 

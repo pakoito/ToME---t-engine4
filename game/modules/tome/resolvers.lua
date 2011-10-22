@@ -43,8 +43,8 @@ function resolvers.calc.equip(t, e)
 --			print("Zone made us an equipment according to filter!", o:getName())
 
 			-- curse (done here to ensure object attributes get applied correctly)
-			if e:knowTalent(e.T_CURSED_TOUCH) and not o.cursed_touch then
-				local t = e:getTalentFromId(e.T_CURSED_TOUCH)
+			if e:knowTalent(e.T_DEFILING_TOUCH) then
+				local t = e:getTalentFromId(e.T_DEFILING_TOUCH)
 				t.curseItem(e, t, o)
 			end
 

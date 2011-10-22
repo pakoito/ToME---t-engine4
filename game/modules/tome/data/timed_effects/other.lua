@@ -619,3 +619,673 @@ newEffect{
 		self:checkEncumbrance()
 	end,
 }
+
+newEffect{
+	name = "CURSE_OF_CORPSES",
+	desc = "Curse of Corpses",
+	short_desc = "Corpses",
+	type = "other",
+	subtype = { curse=true },
+	status = "beneficial",
+	no_stop_enter_worlmap = true,
+	decrease = 0,
+	no_remove = true,
+	cancel_on_level_change = true,
+	parameters = {},
+	getResistsUndead = function(level) return -2 * level end,
+	getIncDamageUndead = function(level) return 2 + level * 2 end,
+	getLckChange = function(eff, level)
+		if eff.unlockLevel >= 5 or level <= 2 then return -1 end
+		if level <= 3 then return -2 else return -3 end
+	end,
+	getStrChange = function(level) return level end,
+	getMagChange = function(level) return level end,
+	getCorpselightRadius = function(level) return level + 1 end,
+	getReprieveChance = function(level) return 35 + (level - 4) * 15 end,
+	display_desc = function(self, eff)
+		return ([[Curse of Corpses %d]]):format(eff.level)
+	end,
+	long_desc = function(self, eff)
+		local def, level, bonusLevel = self.tempeffect_def[self.EFF_CURSE_OF_CORPSES], eff.level, math.min(eff.unlockLevel, eff.level)
+
+		return ([[An aura of death surrounds you. #LIGHT_BLUE#Level %d%s#WHITE#
+#CRIMSON#Penalty: #WHITE#Fear of Death: %+d%% resistance against damage from the undead.
+#CRIMSON#Level 1: %sPower over Death: %+d%% damage against the undead.
+#CRIMSON#Level 2: %s%+d Luck, %+d Strength, %+d Magic
+#CRIMSON#Level 3: %sCorpselight: Each death you cause leaves behind a trace of itself, an eerie light of radius %d.
+#CRIMSON#Level 4: %sReprieve from Death: Humanoids you slay have a %d%% chance to rise to fight beside you as ghouls for 6 turns.]]):format(
+		level, self.cursed_aura == self.EFF_CURSE_OF_CORPSES and ", Cursed Aura" or "",
+		def.getResistsUndead(level),
+		bonusLevel >= 1 and "#WHITE#" or "#GREY#", def.getIncDamageUndead(math.max(level, 1)),
+		bonusLevel >= 2 and "#WHITE#" or "#GREY#", def.getLckChange(eff, math.max(level, 2)), def.getStrChange(math.max(level, 2)), def.getMagChange(math.max(level, 2)),
+		bonusLevel >= 3 and "#WHITE#" or "#GREY#", def.getCorpselightRadius(math.max(level, 3)),
+		bonusLevel >= 4 and "#WHITE#" or "#GREY#", def.getReprieveChance(math.max(level, 4)))
+	end,
+	activate = function(self, eff)
+		local def, level, bonusLevel = self.tempeffect_def[self.EFF_CURSE_OF_CORPSES], eff.level, math.min(eff.unlockLevel, eff.level)
+
+		-- penalty: Fear of Death
+		eff.resistsUndeadId = self:addTemporaryValue("resists_actor_type", { ["undead"] = def.getResistsUndead(level) })
+
+		-- level 1: Power over Death
+		if bonusLevel < 1 then return end
+		eff.incDamageUndeadId = self:addTemporaryValue("inc_damage_actor_type", { ["undead"] = def.getIncDamageUndead(level) })
+
+		-- level 2: stats
+		if bonusLevel < 2 then return end
+		eff.incStatsId = self:addTemporaryValue("inc_stats", {
+			[Stats.STAT_LCK] = def.getLckChange(eff, level),
+			[Stats.STAT_STR] = def.getStrChange(level),
+			[Stats.STAT_MAG] = def.getMagChange(level),
+		})
+
+		-- level 3: Corpselight
+		-- level 4: Reprieve from Death
+	end,
+	deactivate = function(self, eff)
+		if eff.resistsUndeadId then self:removeTemporaryValue("resists_actor_type", eff.resistsUndeadId) end
+		if eff.incDamageUndeadId then self:removeTemporaryValue("inc_damage_actor_type", eff.incDamageUndeadId) end
+		if eff.incStatsId then self:removeTemporaryValue("inc_stats", eff.incStatsId) end
+	end,
+	on_merge = function(self, old_eff, new_eff) return old_eff end,
+	doCorpselight = function(self, eff, target)
+		if math.min(eff.unlockLevel, eff.level) >= 3 then
+			local def = self.tempeffect_def[self.EFF_CURSE_OF_CORPSES]
+			local tg = {type="ball", 10, radius=def.getCorpselightRadius(eff.level), talent=t}
+			self:project(tg, target.x, target.y, DamageType.LITE, 1)
+			game.logSeen(target, "#F53CBE#%s's remains glow with a strange light.", target.name:capitalize())
+		end
+	end,
+	npcWalkingCorpse = {
+		name = "walking corpse",
+		display = "z", color=colors.GREY, image="npc/undead_ghoul_ghoul.png",
+		type = "undead", subtype = "ghoul",
+		desc = [[This corpse was recently alive but moves as though it is just learning to use its body.]],
+		body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+		no_drops = true,
+		autolevel = "ghoul",
+		level_range = {1, nil}, exp_worth = 0,
+		ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_ghoul", },
+		stats = { str=14, dex=12, mag=10, con=12 },
+		rank = 2,
+		size_category = 3,
+		infravision = 10,
+		resolvers.racial(),
+		resolvers.tmasteries{ ["technique/other"]=1, },
+		open_door = true,
+		blind_immune = 1,
+		see_invisible = 2,
+		undead = 1,
+		max_life = resolvers.rngavg(90,100),
+		combat_armor = 2, combat_def = 7,
+		resolvers.talents{
+			T_STUN={base=1, every=10, max=5},
+			T_BITE_POISON={base=1, every=10, max=5},
+			T_ROTTING_DISEASE={base=1, every=10, max=5},
+		},
+		combat = { dam=resolvers.levelup(10, 1, 1), atk=resolvers.levelup(5, 1, 1), apr=3, dammod={str=0.6} },
+	},
+	doReprieveFromDeath = function(self, eff, target)
+		local def = self.tempeffect_def[self.EFF_CURSE_OF_CORPSES]
+		if math.min(eff.unlockLevel, eff.level) >= 4 and target.type == "humanoid" and rng.percent(def.getReprieveChance(eff.level)) then
+			if not self:canBe("summon") then return end
+
+			local x, y = target.x, target.y
+			local m = require("mod.class.NPC").new(def.npcWalkingCorpse)
+			m.faction = self.faction
+			m.summoner = self
+			m.summoner_gain_exp = true
+			m.summon_time = 6
+			m:resolve() m:resolve(nil, true)
+			m:forceLevelup(math.max(1, self.level - 2))
+			game.zone:addEntity(game.level, m, "actor", x, y)
+
+			-- Add to the party
+			if self.player then
+				m.remove_from_party_on_death = true
+				game.party:addMember(m, {control="no", type="summon", title="Summon"})
+			end
+
+			game.level.map:particleEmitter(x, y, 1, "slime")
+
+			game.logSeen(target, "#F53CBE#The corpse of the %s pulls itself up to fight for you.", target.name)
+			game:playSoundNear(who, "talents/slime")
+
+			return true
+		else
+			return false
+		end
+	end,
+}
+
+newEffect{
+	name = "CURSE_OF_MADNESS",
+	desc = "Curse of Madness",
+	short_desc = "Madness",
+	type = "other",
+	subtype = { curse=true },
+	status = "beneficial",
+	no_stop_enter_worlmap = true,
+	decrease = 0,
+	no_remove = true,
+	cancel_on_level_change = true,
+	parameters = {},
+	getMindResistChange = function(level) return -level * 3 end,
+	getConfusionImmuneChange = function(level) return -level * 4 end,
+	getCombatCriticalPowerChange = function(level) return level * 3 end,
+	getOffHandMultChange = function(level) return level * 4 end,
+	getLckChange = function(eff, level)
+		if eff.unlockLevel >= 5 or level <= 2 then return -1 end
+		if level <= 3 then return -2 else return -3 end
+	end,
+	getDexChange = function(level) return -1 + level * 2 end,
+	getManiaDamagePercent = function(level) return 16 - (level - 4) * 3 end,
+	display_desc = function(self, eff)
+		return ([[Curse of Madness %d]]):format(eff.level)
+	end,
+	long_desc = function(self, eff)
+		local def, level, bonusLevel = self.tempeffect_def[self.EFF_CURSE_OF_MADNESS], eff.level, math.min(eff.unlockLevel, eff.level)
+
+		return ([[You feel your grip on reality slipping. #LIGHT_BLUE#Level %d%s#WHITE#
+#CRIMSON#Penalty: #WHITE#Fractured Sanity: %+d%% Mind Resistance, %+d%% Confusion Immunity
+#CRIMSON#Level 1: %sUnleashed: %+d%% critical damage, %+d%% off-hand weapon damage
+#CRIMSON#Level 2: %s%+d Luck, %+d Dexterity
+#CRIMSON#Level 3: %sConspirator: When you are confused, any foe that hits you or that you hit in melee becomes confused.
+#CRIMSON#Level 4: %sMania: Any time you take more than %d%% damage during a single turn, the remaining cooldown of one of your talents is reduced by 1.]]):format(
+		level, self.cursed_aura == self.EFF_CURSE_OF_MADNESS and ", Cursed Aura" or "",
+		def.getMindResistChange(level), def.getConfusionImmuneChange(level),
+		bonusLevel >= 1 and "#WHITE#" or "#GREY#", def.getCombatCriticalPowerChange(math.max(level, 1)), def.getOffHandMultChange(math.max(level, 1)),
+		bonusLevel >= 2 and "#WHITE#" or "#GREY#", def.getLckChange(eff, math.max(level, 2)), def.getDexChange(math.max(level, 2)),
+		bonusLevel >= 3 and "#WHITE#" or "#GREY#",
+		bonusLevel >= 4 and "#WHITE#" or "#GREY#", def.getManiaDamagePercent(math.max(level, 4)))
+	end,
+	activate = function(self, eff)
+		local def, level, bonusLevel = self.tempeffect_def[self.EFF_CURSE_OF_MADNESS], eff.level, math.min(eff.unlockLevel, eff.level)
+
+		-- reset stored values
+		eff.last_life = self.life
+
+		-- penalty: Fractured Sanity
+		eff.mindResistId = self:addTemporaryValue("resists", { [DamageType.MIND] = def.getMindResistChange(level) })
+		eff.confusionImmuneId = self:addTemporaryValue("confusion_immune", def.getConfusionImmuneChange(level) )
+
+		-- level 1: Twisted Mind
+		if bonusLevel < 1 then return end
+		eff.getCombatCriticalPowerChangeId = self:addTemporaryValue("combat_critical_power", def.getCombatCriticalPowerChange(level) )
+
+		-- level 2: stats
+		if bonusLevel < 2 then return end
+		eff.incStatsId = self:addTemporaryValue("inc_stats", {
+			[Stats.STAT_LCK] = def.getLckChange(eff, level),
+			[Stats.STAT_DEX] = def.getDexChange(level),
+		})
+
+		-- level 3: Conspirator
+		-- level 4: Mania
+	end,
+	deactivate = function(self, eff)
+		if eff.mindResistId then self:removeTemporaryValue("resists", eff.mindResistId) end
+		if eff.confusionImmuneId then self:removeTemporaryValue("confusion_immune", eff.confusionImmuneId) end
+		if eff.getCombatCriticalPowerChangeId then self:removeTemporaryValue("combat_critical_power", eff.getCombatCriticalPowerChangeId) end
+		if eff.incStatsId then self:removeTemporaryValue("inc_stats", eff.incStatsId) end
+	end,
+	on_timeout = function(self, eff)
+		-- mania
+		if math.min(eff.unlockLevel, eff.level) >= 4 and eff.life ~= eff.last_life then
+			-- occurs pretty close to actual cooldowns in Actor.Act
+			local def = self.tempeffect_def[self.EFF_CURSE_OF_MADNESS]
+			if not self:attr("stunned") and eff.last_life and 100 * (eff.last_life - self.life) / self.max_life >= def.getManiaDamagePercent(eff.level) then
+				-- perform mania
+				local list = {}
+				for tid, cd in pairs(self.talents_cd) do
+					if cd and cd > 0 then
+						list[#list + 1] = tid
+					end
+				end
+				if #list == 0 then return end
+
+				local tid = rng.table(list)
+				local t = self:getTalentFromId(tid)
+
+				self.changed = true
+				self.talents_cd[tid] = self.talents_cd[tid] - 1
+				if self.talents_cd[tid] <= 0 then
+					self.talents_cd[tid] = nil
+					if self.onTalentCooledDown then self:onTalentCooledDown(tid) end
+				end
+				game.logSeen(self, "#F53CBE#%s's mania hastens %s.", self.name:capitalize(), t.name)
+			end
+			eff.last_life = self.life
+		end
+	end,
+	on_merge = function(self, old_eff, new_eff) return old_eff end,
+	doConspirator = function(self, eff, target)
+		if math.min(eff.unlockLevel, eff.level) >= 3 and self:attr("confused") and target:canBe("confusion") then
+			target:setEffect(target.EFF_CONFUSED, 3, {power=60})
+			game.logSeen(self, "#F53CBE#%s spreads confusion to %s.", self.name:capitalize(), target.name)
+		end
+	end,
+}
+
+newEffect{
+	name = "CURSE_OF_SHROUDS",
+	desc = "Curse of Shrouds",
+	short_desc = "Shrouds",
+	type = "other",
+	subtype = { curse=true },
+	status = "beneficial",
+	no_stop_enter_worlmap = true,
+	decrease = 0,
+	no_remove = true,
+	cancel_on_level_change = true,
+	parameters = {},
+	getShroudIncDamageChange = function(level) return -(4 + level * 2) end,
+	getResistsDarknessChange = function(level) return level * 4 end,
+	getResistsCapDarknessChange = function(level) return level * 4 end,
+	getSeeInvisible = function(level) return 2 + level * 2 end,
+	getLckChange = function(eff, level)
+		if eff.unlockLevel >= 5 or level <= 2 then return -1 end
+		if level <= 3 then return -2 else return -3 end
+	end,
+	getConChange = function(level) return -1 + level * 2 end,
+	getShroudResistsAllChange = function(level) return (level - 1) * 5 end,
+	display_desc = function(self, eff)
+		return ([[Curse of Shrouds %d]]):format(eff.level)
+	end,
+	long_desc = function(self, eff)
+		local def, level, bonusLevel = self.tempeffect_def[self.EFF_CURSE_OF_SHROUDS], eff.level, math.min(eff.unlockLevel, eff.level)
+
+		return ([[A shroud of darkness seems to fall across your path. #LIGHT_BLUE#Level %d%s#WHITE#
+#CRIMSON#Penalty: #WHITE#Shroud of Weakness: Small chance of becoming enveloped in a Shroud Of Weakness (reduces damage dealt by %d%%) for 4 turns.
+#CRIMSON#Level 1: %sNightwalker: %+d Darkness Resistance, %+d%% Max Darkness Resistance, %+d See Invisible
+#CRIMSON#Level 2: %s%+d Luck, %+d Constitution
+#CRIMSON#Level 3: %sShroud of Passing: Your form seems to fade as you move, reducing all damage taken by %d%% for 1 turn after movement.
+#CRIMSON#Level 4: %sShroud of Death: The power of every kill seems to envelop you like a shroud, reducing all damage taken by %d%% for 1 turn.]]):format(
+		level, self.cursed_aura == self.EFF_CURSE_OF_SHROUDS and ", Cursed Aura" or "",
+		-def.getShroudIncDamageChange(level),
+		bonusLevel >= 1 and "#WHITE#" or "#GREY#", def.getResistsDarknessChange(math.max(level, 1)), def.getResistsCapDarknessChange(math.max(level, 1)), def.getSeeInvisible(math.max(level, 1)),
+		bonusLevel >= 2 and "#WHITE#" or "#GREY#", def.getLckChange(eff, math.max(level, 2)), def.getConChange(math.max(level, 2)),
+		bonusLevel >= 3 and "#WHITE#" or "#GREY#", def.getShroudResistsAllChange(math.max(level, 3)),
+		bonusLevel >= 4 and "#WHITE#" or "#GREY#", def.getShroudResistsAllChange(math.max(level, 4)))
+	end,
+	activate = function(self, eff)
+		local def, level, bonusLevel = self.tempeffect_def[self.EFF_CURSE_OF_SHROUDS], eff.level, math.min(eff.unlockLevel, eff.level)
+
+		-- penalty: Shroud of Weakness
+
+		-- level 1: Nightwalker
+		if bonusLevel < 1 then return end
+		eff.resistsDarknessId = self:addTemporaryValue("resists", { [DamageType.DARKNESS] = def.getResistsDarknessChange(level) })
+		eff.resistsCapDarknessId = self:addTemporaryValue("resists_cap", { [DamageType.DARKNESS]= def.getResistsCapDarknessChange(level) })
+		eff.seeInvisibleId = self:addTemporaryValue("see_invisible", def.getSeeInvisible(level))
+
+		-- level 2: stats
+		if bonusLevel < 2 then return end
+		eff.incStatsId = self:addTemporaryValue("inc_stats", {
+			[Stats.STAT_LCK] = def.getLckChange(eff, level),
+			[Stats.STAT_CON] = def.getConChange(level),
+		})
+
+		-- level 3: Shroud of Passing
+		-- level 4: Shroud of Death
+	end,
+	deactivate = function(self, eff)
+		if eff.resistsDarknessId then self:removeTemporaryValue("resists", eff.resistsDarknessId) end
+		if eff.resistsCapDarknessId then self:removeTemporaryValue("resists_cap", eff.resistsCapDarknessId) end
+		if eff.seeInvisibleId then self:removeTemporaryValue("see_invisible", eff.seeInvisibleId) end
+		if eff.incStatsId then self:removeTemporaryValue("inc_stats", eff.incStatsId) end
+
+		if self:hasEffect(self.EFF_SHROUD_OF_WEAKNESS) then self:removeEffect(self.EFF_SHROUD_OF_WEAKNESS) end
+		if self:hasEffect(self.EFF_SHROUD_OF_PASSING) then self:removeEffect(self.EFF_SHROUD_OF_PASSING) end
+		if self:hasEffect(self.EFF_SHROUD_OF_DEATH) then self:removeEffect(self.EFF_SHROUD_OF_DEATH) end
+	end,
+	on_merge = function(self, old_eff, new_eff) return old_eff end,
+	on_timeout = function(self, eff)
+		-- Shroud of Weakness
+		if rng.chance(100) then
+			local def = self.tempeffect_def[self.EFF_CURSE_OF_SHROUDS]
+			self:setEffect(self.EFF_SHROUD_OF_WEAKNESS, 4, { power=def.getShroudIncDamageChange(eff.level) })
+		end
+	end,
+	doShroudOfPassing = function(self, eff)
+		-- called after energy is used; eff.moved may be set from movement
+		local effShroud = self:hasEffect(self.EFF_SHROUD_OF_PASSING)
+		if math.min(eff.unlockLevel, eff.level) >= 3 and eff.moved then
+			local def = self.tempeffect_def[self.EFF_CURSE_OF_SHROUDS]
+			if not effShroud then self:setEffect(self.EFF_SHROUD_OF_PASSING, 1, { power=def.getShroudResistsAllChange(eff.level) }) end
+		else
+			if effShroud then self:removeEffect(self.EFF_SHROUD_OF_PASSING) end
+		end
+		eff.moved = false
+	end,
+	doShroudOfDeath = function(self, eff)
+		if math.min(eff.unlockLevel, eff.level) >= 4 and not self:hasEffect(self.EFF_SHROUD_OF_DEATH) then
+			local def = self.tempeffect_def[self.EFF_CURSE_OF_SHROUDS]
+			self:setEffect(self.EFF_SHROUD_OF_DEATH, 1, { power=def.getShroudResistsAllChange(eff.level) })
+		end
+	end,
+}
+
+newEffect{
+	name = "SHROUD_OF_WEAKNESS",
+	desc = "Shroud of Weakness",
+	long_desc = function(self, eff) return ("The target is enveloped in a shroud that seems to hang upon it like a heavy burden. (reduces damage dealt by %d%%)."):format(-eff.power) end,
+	type = "other",
+	subtype = { time=true },
+	status = "detrimental",
+	parameters = { power=10 },
+	activate = function(self, eff)
+		eff.incDamageId = self:addTemporaryValue("inc_damage", {all = eff.power})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("inc_damage", eff.incDamageId)
+	end,
+}
+
+newEffect{
+	name = "SHROUD_OF_PASSING",
+	desc = "Shroud of Passing",
+	long_desc = function(self, eff) return ("The target is enveloped in a shroud that seems to not only obscure it but also to fade it's form (+%d%% resist all)."):format(eff.power) end,
+	type = "other",
+	subtype = { time=true },
+	status = "beneficial",
+	decrease = 0,
+	parameters = { power=10 },
+	activate = function(self, eff)
+		eff.resistsId = self:addTemporaryValue("resists", { all = eff.power })
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("resists", eff.resistsId)
+	end,
+}
+
+newEffect{
+	name = "SHROUD_OF_DEATH",
+	desc = "Shroud of Death",
+	long_desc = function(self, eff) return ("The target is enveloped in a shroud that seems to not only obscure it but also to fade it's form (+%d%% resist all)."):format(eff.power) end,
+	type = "other",
+	subtype = { time=true },
+	status = "beneficial",
+	parameters = { power=10 },
+	activate = function(self, eff)
+		eff.resistsId = self:addTemporaryValue("resists", { all = eff.power })
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("resists", eff.resistsId)
+	end,
+}
+
+newEffect{
+	name = "CURSE_OF_NIGHTMARES",
+	desc = "Curse of Nightmares",
+	short_desc = "Nightmares",
+	type = "other",
+	subtype = { curse=true },
+	status = "beneficial",
+	no_stop_enter_worlmap = true,
+	decrease = 0,
+	no_remove = true,
+	cancel_on_level_change = true,
+	parameters = {},
+	getVisionsReduction = function(level) return 5 + level * 4 end,
+	getResistsPhysicalChange = function(level) return 1 + level end,
+	getResistsCapPhysicalChange = function(level) return 1 + level end,
+	getLckChange = function(eff, level)
+		if eff.unlockLevel >= 5 or level <= 2 then return -1 end
+		if level <= 3 then return -2 else return -3 end
+	end,
+	getWilChange = function(level) return -1 + level * 2 end,
+	getSuffocateAirChange = function(level) return 10 + (level - 3) * 3 end,
+	getNightmareChance = function(level) return 0.1 + (level -4) * 0.05 end,
+	getNightmareRadius = function(level) return 5 + (level - 4) * 2 end,
+	display_desc = function(self, eff)
+		if math.min(eff.unlockLevel, eff.level) >= 4 then
+			return ([[Curse of Nightmares %d: %d%%]]):format(eff.level, eff.nightmareChance or 0)
+		else
+			return ([[Curse of Nightmares %d]]):format(eff.level)
+		end
+	end,
+	long_desc = function(self, eff)
+		local def, level, bonusLevel = self.tempeffect_def[self.EFF_CURSE_OF_NIGHTMARES], eff.level, math.min(eff.unlockLevel, eff.level)
+
+		return ([[Horrible visions fill you mind. #LIGHT_BLUE#Level %d%s#WHITE#
+#CRIMSON#Penalty: #WHITE#Plagued by Visions: Your mental save has a 20%% chance to be reduced by %d%% when tested,
+#CRIMSON#Level 1: %sRemoved from Reality: %+d Physical Resistance, %+d Maximum Physical Resistance
+#CRIMSON#Level 2: %s%+d Luck, %+d Willpower
+#CRIMSON#Level 3: %sSuffocate: Your touch instills a horror that suffocates any weak, non-elite foe that hits you or that you hit in melee. At 3 levels below yours they loose %d air and an additional %d air for each level below that.
+#CRIMSON#Level 4: %sNightmare: Each time you are damaged by a foe there is %d%% chance of triggering a radius %d nightmare (slow effects, hateful whispers, and summoned Terrors) for 8 turns. This chance grows each time you are struck.]]):format(
+		level, self.cursed_aura == self.EFF_CURSE_OF_NIGHTMARES and ", Cursed Aura" or "",
+		def.getVisionsReduction(level),
+		bonusLevel >= 1 and "#WHITE#" or "#GREY#", def.getResistsPhysicalChange(math.max(level, 1)), def.getResistsCapPhysicalChange(math.max(level, 1)),
+		bonusLevel >= 2 and "#WHITE#" or "#GREY#", def.getLckChange(eff, math.max(level, 2)), def.getWilChange(math.max(level, 2)),
+		bonusLevel >= 3 and "#WHITE#" or "#GREY#", def.getSuffocateAirChange(math.max(level, 3)), def.getSuffocateAirChange(math.max(level, 3)),
+		bonusLevel >= 4 and "#WHITE#" or "#GREY#", eff.nightmareChance or 0, def.getNightmareRadius(math.max(level, 4)), def.getNightmareChance(math.max(level, 4)))
+	end,
+	activate = function(self, eff)
+		local def, level, bonusLevel = self.tempeffect_def[self.EFF_CURSE_OF_NIGHTMARES], eff.level, math.min(eff.unlockLevel, eff.level)
+
+		-- penalty: Plagued by Visions
+
+		-- level 1: Removed from Reality
+		if bonusLevel < 1 then return end
+		eff.resistsPhysicalId = self:addTemporaryValue("resists", { [DamageType.PHYSICAL]= def.getResistsPhysicalChange(level) })
+		eff.resistsCapPhysicalId = self:addTemporaryValue("resists_cap", { [DamageType.PHYSICAL]= def.getResistsCapPhysicalChange(level) })
+
+		-- level 2: stats
+		if bonusLevel < 2 then return end
+		eff.incStatsId = self:addTemporaryValue("inc_stats", {
+			[Stats.STAT_LCK] = def.getLckChange(eff, level),
+			[Stats.STAT_WIL] = def.getWilChange(level),
+		})
+
+		-- level 3: Suffocate
+		-- level 4: Nightmare
+	end,
+	deactivate = function(self, eff)
+		if eff.resistsPhysicalId then self:removeTemporaryValue("resists", eff.resistsPhysicalId); end
+		if eff.resistsCapPhysicalId then self:removeTemporaryValue("resists_cap", eff.resistsCapPhysicalId) end
+		if eff.incStatsId then self:removeTemporaryValue("inc_stats", eff.incStatsId) end
+	end,
+	on_merge = function(self, old_eff, new_eff) return old_eff end,
+	doSuffocate = function(self, eff, target)
+		if math.min(eff.unlockLevel, eff.level) >= 3 then
+			if target and target.rank <= 2 and target.level <= self.level - 3 and not target:attr("no_breath") and not target:attr("invulnerable") then
+				local def = self.tempeffect_def[self.EFF_CURSE_OF_NIGHTMARES]
+				local airLoss = (self.level - target.level - 2) * def.getSuffocateAirChange(eff.level)
+				game.logSeen(self, "#F53CBE#%s begins to choke from a suffocating curse. (-%d air)", target.name, airLoss)
+				target:suffocate(airLoss, self, "suffocated from a curse")
+			end
+		end
+	end,
+	npcTerror = {
+		name = "terror",
+		display = "h", color=colors.DARK_GREY, image="npc/horror_eldritch_nightmare_horror.png",
+		blood_color = colors.BLUE,
+		desc = "A formless terror that seems to cut through the air, and its victims, like a knife.",
+		type = "horror", subtype = "eldritch",
+		rank = 2,
+		size_category = 2,
+		body = { INVEN = 10 },
+		no_drops = true,
+		autolevel = "warrior",
+		level_range = {1, nil}, exp_worth = 0,
+		ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_ghoul", },
+		stats = { str=16, dex=20, wil=15, con=15 },
+		infravision = 10,
+		can_pass = {pass_wall=20},
+		resists = {[DamageType.LIGHT] = -50, [DamageType.DARKNESS] = 100},
+		no_breath = 1,
+		fear_immune = 1,
+		blind_immune = 1,
+		infravision = 10,
+		see_invisible = 80,
+		max_life = resolvers.rngavg(50, 80),
+		combat_armor = 1, combat_def = 10,
+		combat = { dam=resolvers.levelup(resolvers.rngavg(15,20), 1, 1.1), atk=resolvers.rngavg(5,15), apr=5, dammod={str=1} },
+		resolvers.talents{
+		},
+	},
+	doNightmare = function(self, eff)
+		if math.min(eff.unlockLevel, eff.level) >= 4 then
+			-- build chance for a nightmare
+			local def = self.tempeffect_def[self.EFF_CURSE_OF_NIGHTMARES]
+			eff.nightmareChance = (eff.nightmareChance or 0) def.getNightmareChance(eff.level)
+
+			-- invoke the nightmare
+			if rng.percent(eff.nightmareChance) then
+				local radius = def.getNightmareRadius(eff.level)
+
+				-- make sure there is at least one creature to torment
+				local seen = false
+				core.fov.calc_circle(self.x, self.y, game.level.map.w, game.level.map.h, radius,
+					function(_, x, y) return game.level.map:opaque(x, y) end,
+					function(_, x, y)
+						local actor = game.level.map(x, y, game.level.map.ACTOR)
+						if actor and actor ~= self and self:reactionToward(actor) < 0 then seen = true end
+					end, nil)
+				if not seen then return false end
+
+				-- start the nightmare: slow, hateful whisper, random Terrors (minor horrors)
+				eff.nightmareChance = 0
+				game.level.map:addEffect(self,
+					self.x, self.y, 8,
+					DamageType.NIGHTMARE, 1,
+					radius,
+					5, nil,
+					engine.Entity.new{alpha=80, display='', color_br=134, color_bg=60, color_bb=134},
+					function(e)
+						-- attempt one summon per turn
+						if not e.src:canBe("summon") then return end
+
+						local def = e.src.tempeffect_def[e.src.EFF_CURSE_OF_NIGHTMARES]
+
+						-- random location nearby..not too picky and these things can move through walls but won't start there
+						local locations = {}
+						local grids = core.fov.circle_grids(e.x, e.y, e.radius, true)
+						for lx, yy in pairs(grids) do for ly, _ in pairs(grids[lx]) do
+							if not game.level.map:checkAllEntities(lx, ly, "block_move") then
+								locations[#locations+1] = {lx, ly}
+							end
+						end end
+						if #locations == 0 then return true end
+						local location = rng.table(locations)
+
+						local m = require("mod.class.NPC").new(def.npcTerror)
+						m.faction = e.src.faction
+						m.summoner = e.src
+						m.summoner_gain_exp = true
+						m.summon_time = 3
+						m:resolve() m:resolve(nil, true)
+						m:forceLevelup(e.src.level)
+
+						-- Add to the party
+						if e.src.player then
+							m.remove_from_party_on_death = true
+							game.party:addMember(m, {control="no", type="nightmare", title="Nightmare"})
+						end
+
+						game.zone:addEntity(game.level, m, "actor", location[1], location[2])
+
+						return true
+					end,
+					false, false)
+
+				game.logSeen(self, "#F53CBE#The air around %s grows cold and terrifying shapes begin to coalesce. A nightmare has begun.", self.name:capitalize())
+				game:playSoundNear(self, "talents/cloud")
+			end
+		end
+	end,
+}
+
+newEffect{
+	name = "CURSE_OF_MISFORTUNE",
+	desc = "Curse of Misfortune",
+	short_desc = "Misfortune",
+	type = "other",
+	subtype = { curse=true },
+	status = "beneficial",
+	no_stop_enter_worlmap = true,
+	decrease = 0,
+	no_remove = true,
+	cancel_on_level_change = true,
+	parameters = {},
+	getCombatDefChange = function(level) return level * 2 end,
+	getCombatDefRangedChange = function(level) return level end,
+	getLckChange = function(eff, level)
+		if eff.unlockLevel >= 5 or level <= 2 then return -1 end
+		if level <= 3 then return -2 else return -3 end
+	end,
+	getCunChange = function(level) return -1 + level * 2 end,
+	getDeviousMindChange = function(level) return 20 + 15 * (level - 3) end,
+	getUnfortunateEndChance = function(level) return 30 + (level - 4) * 10 end,
+	getUnfortunateEndIncrease = function(level) return 40 + (level - 4) * 20 end,
+	display_desc = function(self, eff)
+		return ([[Curse of Misfortune %d]]):format(eff.level)
+	end,
+	long_desc = function(self, eff)
+		local def, level, bonusLevel = self.tempeffect_def[self.EFF_CURSE_OF_MISFORTUNE], eff.level, math.min(eff.unlockLevel, eff.level)
+
+		return ([[Mayhem and destruction seem to follow you. #LIGHT_BLUE#Level %d%s#WHITE#
+#CRIMSON#Penalty: #WHITE#Lost Fortune: You seem to find less gold in your journeys.
+#CRIMSON#Level 1: %sMissed Opportunities: %+d Defense, +%d Ranged Defense
+#CRIMSON#Level 2: %s%+d Luck, %+d Cunning
+#CRIMSON#Level 3: %sDevious Mind: You have an affinity for seeing the devious plans of others (+%d%% chance to avoid traps).
+#CRIMSON#Level 4: %sUnfortunate End: There is a %d%% chance that the damage you deal will increase by %d%% if it is enough to kill your opponent.]]):format(
+		level, self.cursed_aura == self.EFF_CURSE_OF_MISFORTUNE and ", Cursed Aura" or "",
+		bonusLevel >= 1 and "#WHITE#" or "#GREY#", def.getCombatDefChange(math.max(level, 1)), def.getCombatDefRangedChange(math.max(level, 1)),
+		bonusLevel >= 2 and "#WHITE#" or "#GREY#", def.getLckChange(eff, math.max(level, 2)), def.getCunChange(math.max(level, 2)),
+		bonusLevel >= 3 and "#WHITE#" or "#GREY#", def.getDeviousMindChange(math.max(level, 3)),
+		bonusLevel >= 4 and "#WHITE#" or "#GREY#", def.getUnfortunateEndChance(math.max(level, 4)), def.getUnfortunateEndIncrease(math.max(level, 4)))
+	end,
+	activate = function(self, eff)
+		local def, level, bonusLevel = self.tempeffect_def[self.EFF_CURSE_OF_MISFORTUNE], eff.level, math.min(eff.unlockLevel, eff.level)
+
+		-- penalty: Lost Fortune
+		eff.moneyValueMultiplierId = self:addTemporaryValue("money_value_multiplier", 0.5 - level * 0.05)
+
+		-- level 1: Missed Shot
+		if bonusLevel < 1 then return end
+		eff.combatDefId = self:addTemporaryValue("combat_def", def.getCombatDefChange(level))
+		eff.combatDefRangedId = self:addTemporaryValue("combat_def_ranged", def.getCombatDefRangedChange(level))
+
+		-- level 2: stats
+		if bonusLevel < 2 then return end
+		eff.incStatsId = self:addTemporaryValue("inc_stats", {
+			[Stats.STAT_LCK] = def.getLckChange(eff, level),
+			[Stats.STAT_CUN] = def.getCunChange(level),
+		})
+
+		-- level 3: Devious Mind
+		if bonusLevel < 3 then return end
+		eff.trapAvoidanceId = self:addTemporaryValue("trap_avoidance", 50)
+
+		-- level 4: Unfortunate End
+	end,
+	deactivate = function(self, eff)
+		if eff.moneyValueMultiplierId then self:removeTemporaryValue("money_value_multiplier", eff.moneyValueMultiplierId) end
+		if eff.combatDefId then self:removeTemporaryValue("combat_def", eff.combatDefId) end
+		if eff.combatDefRangedId then self:removeTemporaryValue("combat_def_ranged", eff.combatDefRangedId) end
+		if eff.incStatsId then self:removeTemporaryValue("inc_stats", eff.incStatsId) end
+		if eff.trapAvoidanceId then self:removeTemporaryValue("trap_avoidance", eff.trapAvoidanceId) end
+	end,
+	on_merge = function(self, old_eff, new_eff) return old_eff end,
+	doUnfortunateEnd = function(self, eff, target, dam)
+		if math.min(eff.unlockLevel, eff.level) then
+			local def = self.tempeffect_def[self.EFF_CURSE_OF_MISFORTUNE]
+			if target.life - dam > 0 and rng.percent(def.getUnfortunateEndChance(eff.level)) then
+				local multiplier = 1 + def.getUnfortunateEndIncrease(eff.level) / 100
+				if target.life - dam * multiplier <= 0 then
+					-- unfortunate end! note that this does not kill if target.die_at < 0
+					dam = dam * multiplier
+					if target.life - dam <= target.die_at then
+						game.logSeen(target, "#F53CBE#%s suffers an unfortunate end.", target.name:capitalize())
+					else
+						game.logSeen(target, "#F53CBE#%s suffers an unfortunate blow.", target.name:capitalize())
+					end
+				end
+			end
+		end
+
+		return dam
+	end,
+}

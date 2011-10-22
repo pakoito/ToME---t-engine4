@@ -39,7 +39,9 @@ newEntity{ base = "BASE_MONEY", define_as = "MONEY_SMALL",
 	name = "gold pieces", image = "object/money_small.png",
 	add_name = " (#MONEY#)",
 	level_range = {1, 50},
-	money_value = resolvers.rngavg(4, 10),
+	resolvers.generic(function(e)
+		e.money_value = rng.avg(4, 10) * (game.player.money_value_multiplier or 1)
+	end)
 }
 
 newEntity{ base = "BASE_MONEY", define_as = "MONEY_BIG",
@@ -48,5 +50,7 @@ newEntity{ base = "BASE_MONEY", define_as = "MONEY_BIG",
 	level_range = {30, 50},
 	color=colors.GOLD,
 	rarity = 15,
-	money_value = resolvers.rngavg(15, 35),
+	resolvers.generic(function(e)
+		e.money_value = rng.avg(15, 35) * (game.player.money_value_multiplier or 1)
+	end)
 }

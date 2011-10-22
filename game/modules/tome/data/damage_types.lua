@@ -45,6 +45,17 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		-- Increases damage
 		if src.inc_damage then
 			local inc = (src.inc_damage.all or 0) + (src.inc_damage[type] or 0)
+			
+			-- Increases damage for the entity type (Demon, Undead, etc)
+			if target.type and src.inc_damage_actor_type then
+				local incEntity = src.inc_damage_actor_type[target.type]
+				if incEntity and incEntity ~= 0 then
+					print("[PROJECTOR] before inc_damage_actor_type", dam + (dam * inc / 100))
+					local inc = inc + src.inc_damage_actor_type[target.type]
+					print("[PROJECTOR] after inc_damage_actor_type", dam + (dam * inc / 100))
+				end
+			end
+			
 			dam = dam + (dam * inc / 100)
 		end
 
@@ -129,6 +140,19 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			affinity_heal = math.max(0, dam * ((target.damage_affinity.all or 0) + (target.damage_affinity[type] or 0)) / 100)
 		end
 
+		-- reduce by resistance to entity type (Demon, Undead, etc)
+		if target.resists_actor_type and src and src.type then
+			local res = math.min(target.resists_actor_type[src.type] or 0, target.resists_cap_actor_type or 100)
+			if res ~= 0 then
+				print("[PROJECTOR] before entity", src.type, "resists dam", dam)
+				if res >= 100 then dam = 0
+				elseif res <= -100 then dam = dam * 2
+				else dam = dam * ((100 - res) / 100)
+				end
+				print("[PROJECTOR] after entity", src.type, "resists dam", dam)
+			end
+		end
+		
 		-- Reduce damage with resistance
 		if target.resists then
 			local pen = 0
@@ -168,6 +192,13 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			dam = dam - dam * src:attr("numbed") / 100
 			print("[PROJECTOR] numbed dam", dam)
 		end
+		
+		-- Curse of Misfortune: Unfortunate End (chance to increase damage enough to kill)
+		if src and src.hasEffect and src:hasEffect(src.EFF_CURSE_OF_MISFORTUNE) then
+			local eff = src:hasEffect(src.EFF_CURSE_OF_MISFORTUNE)
+			local def = src.tempeffect_def[src.EFF_CURSE_OF_MISFORTUNE]
+			dam = def.doUnfortunateEnd(src, eff, target, dam)
+		end
 
 		print("[PROJECTOR] final dam", dam)
 
@@ -194,6 +225,12 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			local t = src:getTalentFromId(src.T_MADNESS)
 			t.doMadness(target, t, src)
 		end
+		
+		-- Curse of Nightmares: Nightmare
+		if not target.dead and dam > 0 and src and target.hasEffect and target:hasEffect(src.EFF_CURSE_OF_NIGHTMARES) then
+			local eff = target:hasEffect(target.EFF_CURSE_OF_NIGHTMARES)
+			eff.isHit = true -- handle at the end of the turn
+		end
 
 		if not target.dead and dam > 0 and target:attr("elemental_harmony") and not target:hasEffect(target.EFF_ELEMENTAL_HARMONY) then
 			if type == DamageType.FIRE or type == DamageType.COLD or type == DamageType.LIGHTNING or type == DamageType.ACID or type == DamageType.NATURE then
@@ -214,7 +251,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 				target:crossTierEffect(target.EFF_SPELLSHOCKED, src:combatSpellpower())
 			end
 
-			if not src.__projecting_for.talent_on_hit_done then
+			if src.__projecting_for and not src.__projecting_for.talent_on_hit_done then
 				if src.talent_on_spell and next(src.talent_on_spell) and t.is_spell then
 					for id, d in pairs(src.talent_on_spell) do
 						if rng.percent(d.chance) and t.id ~= d.talent then
@@ -1782,5 +1819,33 @@ newDamageType{
 		orc.remove_from_party_on_death = true
 		game.party:addMember(orc, {control="no", type="garkul spirit", title="Garkul Spirit"})
 		orc:setTarget(target)
+	end,
+}
+
+-- speed reduction, hateful whisper
+newDamageType{
+	name = "nightmare", type = "NIGHTMARE",
+	projector = function(src, x, y, type, dam, tmp)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and src:reactionToward(target) < 0 then
+			if rng.chance(10) and not target:hasEffect(target.EFF_HATEFUL_WHISPER) then
+				src:forceUseTalent(src.T_HATEFUL_WHISPER, {ignore_cd=true, ignore_energy=true, force_target=target, force_level=1, ignore_ressources=true})
+			end
+			
+			if rng.chance(30) then
+				target:setEffect(target.EFF_SLOW, 3, {power=0.3})
+			end
+		end
+	end,
+}
+
+newDamageType{
+	name = "weakness", type = "WEAKNESS",
+	projector = function(src, x, y, type, dam, tmp)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			local reapplied = target:hasEffect(target.EFF_WEAKENED)
+			target:setEffect(target.EFF_WEAKENED, dam.dur, { power=incDamage }, reapplied)
+		end
 	end,
 }

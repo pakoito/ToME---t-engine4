@@ -844,6 +844,7 @@ function _M:playerUseItem(object, item, inven)
 				end
 				self:breakStepUp()
 				self:breakStealth()
+				self:breakPity()
 				self:breakLightningSpeed()
 				self:breakGatherTheThreads()
 				return true
@@ -851,6 +852,7 @@ function _M:playerUseItem(object, item, inven)
 
 			self:breakStepUp()
 			self:breakStealth()
+			self:breakPity()
 			self:breakLightningSpeed()
 			self:breakGatherTheThreads()
 			self.changed = true
@@ -1018,7 +1020,7 @@ end
 
 --- Tell us when we are targeted
 function _M:on_targeted(act)
-	if self:attr("invisible") or self:attr("stealth") then
+	if self:attr("invisible") or self:attr("stealth") or self:attr("pity") then
 		if self:canSee(act) and game.level.map.seens(act.x, act.y) then
 			game.logPlayer(self, "#LIGHT_RED#%s has seen you!", act.name:capitalize())
 		else

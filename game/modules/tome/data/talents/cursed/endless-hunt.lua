@@ -205,7 +205,7 @@ newTalent{
 	name = "Surge",
 	type = {"cursed/endless-hunt", 4},
 	mode = "sustained",
-	require = cursed_str_req4,
+	require = cursed_wil_req4,
 	points = 5,
 	cooldown = 10,
 	no_energy = true,

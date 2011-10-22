@@ -144,12 +144,15 @@ function _M:init(t, no_default)
 	t.resists = t.resists or {}
 	t.resists_cap = t.resists_cap or { all = 100 }
 	t.resists_pen = t.resists_pen or {}
+	t.resists_actor_type = t.resists_actor_type or {}
+	t.resists_cap_actor_type = 70
 
 	-- Absorbs a percentage of damage
 	t.damage_affinity = t.damage_affinity or {}
 
 	-- % Increase damage
 	t.inc_damage = t.inc_damage or {}
+	t.inc_damage_actor_type = t.inc_damage_actor_type or {}
 
 	-- Default regen
 	t.air_regen = t.air_regen or 3
@@ -249,6 +252,10 @@ function _M:useEnergy(val)
 			stalk.hit_turns = 0
 		end
 	end
+	
+	-- Curse of Shrouds: turn shroud of passing on or off
+	local eff = self:hasEffect(self.EFF_CURSE_OF_SHROUDS)
+	if eff then self.tempeffect_def[self.EFF_CURSE_OF_SHROUDS].doShroudOfPassing(self, eff) end
 
 	-- Do not fire those talents if this is not turn's end
 	if self:enoughEnergy() or game.zone.wilderness then return end
@@ -370,6 +377,14 @@ function _M:actBase()
 		if self.arcaneBolts then
 			local t = self:getTalentFromId(self.T_ARCANE_BOLTS)
 			t.do_arcaneBolts(self, t)
+		end
+		-- Curse of Nightmares: Nightmare
+		if not self.dead and self:hasEffect(self.EFF_CURSE_OF_NIGHTMARES) then
+			local eff = self:hasEffect(self.EFF_CURSE_OF_NIGHTMARES)
+			if eff.isHit then
+				eff.isHit = false
+				self.tempeffect_def[self.EFF_CURSE_OF_NIGHTMARES].doNightmare(self, eff)
+			end
 		end
 		-- this handles Door to the Past random anomalies
 		if self:isTalentActive(self.T_DOOR_TO_THE_PAST) then
@@ -614,6 +629,9 @@ function _M:move(x, y, force)
 			moved = engine.Actor.move(self, x, y, force)
 		end
 		if not force and moved and (self.x ~= ox or self.y ~= oy) and not self.did_energy then
+			local eff = self:hasEffect(self.EFF_CURSE_OF_SHROUDS)
+			if eff then eff.moved = true end
+	
 			self:useEnergy(game.energy_to_act * self:combatMovementSpeed())
 		end
 	end
@@ -633,8 +651,17 @@ function _M:move(x, y, force)
 		end end
 	end
 
-	if moved and self:knowTalent(self.T_CURSED_TOUCH) then
-		local t = self:getTalentFromId(self.T_CURSED_TOUCH)
+	-- chooseCursedAuraTree allows you to get the Cursed Aura tree
+	if moved and self.chooseCursedAuraTree then
+		if self.player then
+			-- function placed in defiling touch where cursing logic exists
+			local t = self:getTalentFromId(self.T_DEFILING_TOUCH)
+			t.chooseCursedAuraTree(self, t)
+		end
+	end
+	
+	if moved and self:knowTalent(self.T_DEFILING_TOUCH) then
+		local t = self:getTalentFromId(self.T_DEFILING_TOUCH)
 		t.curseFloor(self, t, x, y)
 	end
 
@@ -1635,6 +1662,23 @@ function _M:die(src, death_note)
 			end
 		end)
 	end
+	
+	-- Curse of Corpses: Corpselight
+	-- Curse of Corpses: Reprieve from Death
+	if src and src.hasEffect and src:hasEffect(src.EFF_CURSE_OF_CORPSES) then
+		local eff = src:hasEffect(src.EFF_CURSE_OF_CORPSES)
+		local def = src.tempeffect_def[src.EFF_CURSE_OF_CORPSES]
+		if not def.doReprieveFromDeath(src, eff, self) then
+			def.doCorpselight(src, eff, self)
+		end
+	end
+	
+	-- Curse of Shrouds: Shroud of Death
+	if src and src.hasEffect and src:hasEffect(src.EFF_CURSE_OF_SHROUDS) then
+		local eff = src:hasEffect(src.EFF_CURSE_OF_SHROUDS)
+		local def = src.tempeffect_def[src.EFF_CURSE_OF_SHROUDS]
+		def.doShroudOfDeath(src, eff)
+	end
 
 	-- Increase vim
 	if src and src.knowTalent and src:knowTalent(src.T_VIM_POOL) then src:incVim(1 + src:getWil() / 10) end
@@ -1975,8 +2019,8 @@ function _M:onWear(o, bypass_set)
 	end
 
 	-- apply any special cursed logic
-	if self:knowTalent(self.T_CURSED_TOUCH) then
-		local t = self:getTalentFromId(self.T_CURSED_TOUCH)
+	if self:knowTalent(self.T_DEFILING_TOUCH) then
+		local t = self:getTalentFromId(self.T_DEFILING_TOUCH)
 		t.on_onWear(self, t, o)
 	end
 
@@ -2027,8 +2071,8 @@ function _M:onTakeoff(o, bypass_set)
 	end
 
 	-- apply any special cursed logic
-	if self:knowTalent(self.T_CURSED_TOUCH) then
-		local t = self:getTalentFromId(self.T_CURSED_TOUCH)
+	if self:knowTalent(self.T_DEFILING_TOUCH) then
+		local t = self:getTalentFromId(self.T_DEFILING_TOUCH)
 		t.on_onTakeOff(self, t, o)
 	end
 
@@ -2039,8 +2083,8 @@ end
 --- Call when an object is added
 function _M:onAddObject(o)
 	-- curse the item
-	if self:knowTalent(self.T_CURSED_TOUCH) and not o.cursed_touch then
-		local t = self:getTalentFromId(self.T_CURSED_TOUCH)
+	if self:knowTalent(self.T_DEFILING_TOUCH) then
+		local t = self:getTalentFromId(self.T_DEFILING_TOUCH)
 		t.curseItem(self, t, o)
 	end
 
@@ -2592,6 +2636,7 @@ function _M:postUseTalent(ab, ret)
 	-- Cancel stealth!
 	if ab.id ~= self.T_STEALTH and ab.id ~= self.T_HIDE_IN_PLAIN_SIGHT and not ab.no_break_stealth then self:breakStealth() end
 	if ab.id ~= self.T_LIGHTNING_SPEED then self:breakLightningSpeed() end
+	if ab.id ~= self.T_PITY then self:breakPity() end
 	if ab.id ~= self.T_GATHER_THE_THREADS then self:breakGatherTheThreads() end
 	self:breakStepUp()
 
@@ -2626,6 +2671,14 @@ function _M:breakStealth()
 		if rng.percent(chance) then return end
 
 		self:forceUseTalent(self.T_STEALTH, {ignore_energy=true})
+		self.changed = true
+	end
+end
+
+--- Breaks pity if active
+function _M:breakPity()
+	if self:isTalentActive(self.T_PITY) then
+		self:forceUseTalent(self.T_PITY, {ignore_energy=true})
 		self.changed = true
 	end
 end
@@ -2870,10 +2923,9 @@ function _M:canSeeNoCache(actor, def, def_pct)
 	end
 
 	-- check cursed pity talent
-	if actor:knowTalent(self.T_PITY) then
-		local t = actor:getTalentFromId(self.T_PITY)
-		if core.fov.distance(self.x, self.y, actor.x, actor.y) >= actor:getTalentRange(t) then
-			return false, 50 - actor:getTalentLevel(self.T_PITY) * 5
+	if actor:attr("pity") and actor ~= self then
+		if core.fov.distance(self.x, self.y, actor.x, actor.y) >= actor:attr("pity") then
+			return false, 10
 		end
 	end
 

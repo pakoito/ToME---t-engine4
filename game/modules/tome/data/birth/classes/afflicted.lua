@@ -61,7 +61,6 @@ newBirthDescriptor{
 		["cursed/endless-hunt"]={true, 0.3},
 		["cursed/strife"]={true, 0.3},
 		["cursed/cursed-form"]={true, 0.0},
-		["cursed/fateful-aura"]={true, 0.0},
 		["cursed/unyielding"]={true, 0.0},
 		["technique/combat-training"]={true, 0.3},
 		["cunning/survival"]={false, 0.0},
@@ -70,7 +69,6 @@ newBirthDescriptor{
 	},
 	talents = {
 		[ActorTalents.T_UNNATURAL_BODY] = 1,
-		[ActorTalents.T_CURSED_TOUCH] = 1,
 		[ActorTalents.T_GLOOM] = 1,
 		[ActorTalents.T_SLASH] = 1,
 		[ActorTalents.T_WEAPONS_MASTERY] = 1,
@@ -82,6 +80,7 @@ newBirthDescriptor{
 			{type="weapon", subtype="battleaxe", name="iron battleaxe", autoreq=true, ego_chance=-1000},
 			{type="armor", subtype="light", name="rough leather armour", autoreq=true, ego_chance=-1000}
 		},
+		chooseCursedAuraTree = true
 	},
 	copy_add = {
 		life_rating = 2,
@@ -113,13 +112,11 @@ newBirthDescriptor{
 		["cursed/darkness"]={true, 0.3},
 		["cursed/primal-magic"]={true, 0.3},
 		["cursed/cursed-form"]={true, 0.0},
-		["cursed/fateful-aura"]={true, 0.0},
 		["cunning/survival"]={false, 0.0},
 		["cursed/dark-figure"]={false, 0.0},
 	},
 	talents = {
 		[ActorTalents.T_UNNATURAL_BODY] = 1,
-		[ActorTalents.T_CURSED_TOUCH] = 1,
 		[ActorTalents.T_FEED] = 1,
 		[ActorTalents.T_WILLFUL_STRIKE] = 1,
 		[ActorTalents.T_CALL_SHADOWS] = 1,
@@ -130,6 +127,7 @@ newBirthDescriptor{
 			{type="weapon", subtype="staff", name="elm staff", autoreq=true, ego_chance=-1000},
 			{type="armor", subtype="cloth", name="linen robe", autoreq=true, ego_chance=-1000},
 		},
+		chooseCursedAuraTree = true
 	},
 	copy_add = {
 	},

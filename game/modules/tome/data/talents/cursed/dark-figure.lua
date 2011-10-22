@@ -118,17 +118,29 @@ newTalent{
 newTalent{
 	name = "Pity",
 	type = {"cursed/dark-figure", 4},
-	mode = "passive",
+	mode = "sustained", no_sustain_autoreset = true,
 	require = cursed_wil_req4,
 	points = 5,
-	on_learn = function(self, t)
-	end,
-	on_unlearn = function(self, t)
-	end,
+	cooldown = 10,
+	allow_autocast = true,
+	no_energy = true,
+	tactical = { BUFF = 3 },
 	range = function(self, t) return 9 - math.floor(self:getTalentLevel(t) * 0.7) end,
+	activate = function(self, t)
+		local res = {
+			pityId = self:addTemporaryValue("pity", self:getTalentRange(t))
+		}
+		self:resetCanSeeCacheOf()
+		return res
+	end,
+	deactivate = function(self, t, p)
+		self:removeTemporaryValue("pity", p.pityId)
+		self:resetCanSeeCacheOf()
+		return true
+	end,
 	info = function(self, t)
 		local range = t.range(self, t)
-		return ([[You hide your terrible nature behind a pitiful figure. Those that see you from a distance of %d will ignore you.]]):format(range)
+		return ([[You hide your terrible nature behind a pitiful figure. Those that see you from a distance of %d will ignore you. If you attack or use a talent they will see you for what you are and pity will be deactivated.]]):format(range)
 	end,
 }
 

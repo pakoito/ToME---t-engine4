@@ -1444,3 +1444,21 @@ newEffect{
 		self:removeTemporaryValue("movement_speed", eff.speedid)
 	end,
 }
+
+newEffect{
+	name = "WEAKENED",
+	desc = "Weakened", image = "talents/ruined_earth.png",
+	long_desc = function(self, eff) return ("The target has been weakened, reducing all damage inclicted by %d%%."):format(eff.power) end,
+	type = "physical",
+	subtype = { curse=true },
+	status = "detrimental",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# has been weakened." end,
+	on_lose = function(self, err) return "#Target#'s is no longer weakened." end,
+	activate = function(self, eff)
+		eff.incDamageId = self:addTemporaryValue("inc_damage", {all=-eff.power})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("inc_damage", eff.incDamageId)
+	end,
+}

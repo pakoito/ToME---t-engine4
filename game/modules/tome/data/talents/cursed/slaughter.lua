@@ -42,7 +42,7 @@ newTalent{
 		return self:rescaleDamage(math.sqrt(level) * 40 * ((100 + self:getStat("str")) / 200))
 	end,
 	getPoisonHealFactor = function(self, t, hate)
-		return 50
+		return 30
 	end,
 	getPoisonDuration = function(self, t)
 		local level
@@ -73,19 +73,12 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local level = self:getTalentLevel(t)
-		if level >= 4 or (self:hasCursedWeapon() and level >= 3) then
-			local poisonDamage = t.getPoisonDamage(self, t)
-			local poisonHealFactor = t.getPoisonHealFactor(self, t)
-			local poisonDuration = t.getPoisonDuration(self, t)
-			return ([[Slashes wildly at your target for %d%% (at 0 Hate) to %d%% (at 10+ Hate) damage.
-			Your main weapon inflicts an insidious poison born of your curse causing %d damage and %d%% reduced healing over %d turns.
-			Hate-based effects will improve when wielding cursed weapons (+2.5 hate). The insidious poison improves with a cursed main weapon.]]):format(t.getDamageMultiplier(self, t, 0) * 100, t.getDamageMultiplier(self, t, 10) * 100, poisonDamage, poisonHealFactor, poisonDuration)
-		else
-			return ([[Slashes wildly at your target for %d%% (at 0 Hate) to %d%% (at 10+ Hate) damage.
-			At level 4 (3 when weilding a cursed main weapon) your curse begins to inflict an insidious poison.
-			Hate-based effects will improve when wielding cursed weapons (+2.5 hate). The insidious poison improves with a cursed main weapon.]]):format(t.getDamageMultiplier(self, t, 0) * 100, t.getDamageMultiplier(self, t, 10) * 100)
-		end
+		local poisonDamage = t.getPoisonDamage(self, t)
+		local poisonHealFactor = t.getPoisonHealFactor(self, t)
+		local poisonDuration = t.getPoisonDuration(self, t)
+		return ([[Slashes wildly at your target for %d%% (at 0 Hate) to %d%% (at 10+ Hate) damage.
+		At level 4 (3 when weilding a cursed main weapon), your main weapon inflicts an insidious poison born of your curse causing %d damage and %d%% reduced healing over %d turns.
+		Hate-based effects will improve when wielding cursed weapons (+2.5 hate). The insidious poison improves with a cursed main weapon.]]):format(t.getDamageMultiplier(self, t, 0) * 100, t.getDamageMultiplier(self, t, 10) * 100, poisonDamage, poisonHealFactor, poisonDuration)
 	end,
 }
 
@@ -146,17 +139,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local level = self:getTalentLevel(t)
-		if level >= 4 or (self:hasCursedWeapon() and level >= 3) then
-			local attackChange = t.getAttackChange(self, t)
-			return ([[Assault nearby foes with 4 fast attacks for %d%% (at 0 Hate) to %d%% (at 10+ Hate) damage each. Stalked prey are always targeted if nearby.
-			The intensity of your assault overwhelms anyone who is struck, reducing their attack by %d for 3 turns.
-			Hate-based effects will improve when wielding cursed weapons (+2.5 hate). Attack reduction increases with a cursed main weapon and the Strength stat.]]):format(t.getDamageMultiplier(self, t, 0) * 100, t.getDamageMultiplier(self, t, 10) * 100, -attackChange)
-		else
-			return ([[Assault nearby foes with 4 fast attacks for %d%% (at 0 Hate) to %d%% (at 10+ Hate) damage each. Stalked prey are always targeted if nearby.
-			At level 4 (3 when weilding a cursed main weapon) the intensity of your assault overwhelms anyone who is struck, reducing their attack for 3 turns.
-			Hate-based effects will improve when wielding cursed weapons (+2.5 hate).]]):format(t.getDamageMultiplier(self, t, 0) * 100, t.getDamageMultiplier(self, t, 10) * 100)
-		end
+		local attackChange = t.getAttackChange(self, t)
+		return ([[Assault nearby foes with 4 fast attacks for %d%% (at 0 Hate) to %d%% (at 10+ Hate) damage each. Stalked prey are always targeted if nearby.
+		At level 4 (3 when weilding a cursed main weapon) the intensity of your assault overwhelms anyone who is struck, reducing their attack by %d for 3 turns.
+		Hate-based effects will improve when wielding cursed weapons (+2.5 hate). Attack reduction increases with a cursed main weapon and the Strength stat.]]):format(t.getDamageMultiplier(self, t, 0) * 100, t.getDamageMultiplier(self, t, 10) * 100, -attackChange)
 	end,
 }
 

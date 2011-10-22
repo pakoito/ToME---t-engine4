@@ -670,6 +670,37 @@ function _M:drawDialog(kind, actor_to_compare)
 				end
 			end
 		end
+		
+		local inc_damage_actor_types = {}
+		if player.inc_damage_actor_type then
+			for i, t in pairs(player.inc_damage_actor_type) do
+				if player.inc_damage_actor_type[i] and player.inc_damage_actor_type[i] ~= 0 then
+					inc_damage_actor_types[i] = inc_damage_actor_types[i] or {}
+					inc_damage_actor_types[i][1] = player.inc_damage_actor_type[i]
+				end
+			end
+		end
+		if actor_to_compare and actor_to_compare.inc_damage_actor_type then
+			for i, t in pairs(actor_to_compare.inc_damage_actor_type) do
+				if actor_to_compare.inc_damage_actor_type[i] and actor_to_compare.inc_damage_actor_type[i] ~= 0 then
+					inc_damage_actor_types[i] = inc_damage_actor_types[i] or {}
+					inc_damage_actor_types[i][2] = actor_to_compare.inc_damage_actor_type[i]
+				end
+			end
+		end
+		for i, ts in pairs(inc_damage_actor_types) do
+			if ts[1] then
+				if ts[2] and ts[2] ~= ts[1] then
+					self:mouseTooltip(self.TOOLTIP_INC_DAMAGE, s:drawColorStringBlended(self.font, ("#ORANGE#%-20s: #00ff00#%+d%%%s(%+.0f%%)"):format(i:capitalize().."#LAST# damage", ts[1], ts[2] > ts[1] and "#ff0000#" or "#00ff00#", ts[1] - ts[2] ), w, h, 255, 255, 255, true)) h = h + self.font_h
+				else
+					self:mouseTooltip(self.TOOLTIP_INC_DAMAGE, s:drawColorStringBlended(self.font, ("#ORANGE#%-20s: #00ff00#%+d%%"):format(i:capitalize().."#LAST# damage", ts[1]), w, h, 255, 255, 255, true)) h = h + self.font_h
+				end
+			else
+				if ts[2] then
+					self:mouseTooltip(self.TOOLTIP_INC_DAMAGE, s:drawColorStringBlended(self.font, ("#ORANGE#%-20s: #00ff00#%+d%%(%+.0f%%)"):format(i:capitalize().."#LAST# damage", 0,-ts[2] ), w, h, 255, 255, 255, true)) h = h + self.font_h
+				end
+			end
+		end
 
 		h = 0
 		w = self.w * 0.75
@@ -775,6 +806,13 @@ function _M:drawDialog(kind, actor_to_compare)
 		for i, t in ipairs(DamageType.dam_def) do
 			if player.resists[DamageType[t.type]] and player.resists[DamageType[t.type]] ~= 0 then
 				self:mouseTooltip(self.TOOLTIP_RESIST, s:drawColorStringBlended(self.font, ("%s%-10s#LAST#: #00ff00#%3d%% / %d%%"):format((t.text_color or "#WHITE#"), t.name:capitalize(), player:combatGetResist(DamageType[t.type]), (player.resists_cap[DamageType[t.type]] or 0) + (player.resists_cap.all or 0)), w, h, 255, 255, 255, true)) h = h + self.font_h
+			end
+		end
+		if player.resists_actor_type then
+			for i, t in pairs(player.resists_actor_type) do
+				if t and t ~= 0 then
+					self:mouseTooltip(self.TOOLTIP_RESIST, s:drawColorStringBlended(self.font, ("#ORANGE#%-10s#LAST#: #00ff00#%3d%% / %d%%"):format(i:capitalize(), t, player.resists_cap_actor_type or 100), w, h, 255, 255, 255, true)) h = h + self.font_h
+				end
 			end
 		end
 

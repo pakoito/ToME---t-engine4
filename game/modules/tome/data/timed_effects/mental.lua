@@ -242,24 +242,38 @@ newEffect{
 
 newEffect{
 	name = "GLOOM_STUNNED", image = "effects/gloom_stunned.png",
-	desc = "Paralyzed by the gloom",
-	long_desc = function(self, eff) return "The gloom has paralyzed the target, rendering it unable to act." end,
+	desc = "Stunned by the gloom",
+	long_desc = function(self, eff) return ("The gloom has stunned the target, reducing damage by 70%%, healing received by 50%%, putting random talents on cooldown and reducing movement speed by 50%%. While stunned talents do not cooldown."):format() end,
 	type = "mental",
 	subtype = { gloom=true, stun=true },
 	status = "detrimental",
 	parameters = {},
-	on_gain = function(self, err) return "#F53CBE##Target# is paralyzed with fear!", "+Paralyzed" end,
-	on_lose = function(self, err) return "#Target# overcomes the gloom", "-Paralyzed" end,
+	on_gain = function(self, err) return "#F53CBE##Target# is stunned with fear!", "+Stunned" end,
+	on_lose = function(self, err) return "#Target# overcomes the gloom", "-Stunned" end,
 	activate = function(self, eff)
 		eff.particle = self:addParticles(Particles.new("gloom_stunned", 1))
-		eff.tmpid = self:addTemporaryValue("paralyzed", 1)
-		-- Start the stun counter only if this is the first stun
-		if self.paralyzed == 1 then self.paralyzed_counter = (self:attr("stun_immune") or 0) * 100 end
+
+		eff.tmpid = self:addTemporaryValue("stunned", 1)
+		eff.tcdid = self:addTemporaryValue("no_talents_cooldown", 1)
+		eff.speedid = self:addTemporaryValue("movement_speed", -0.5)
+
+		local tids = {}
+		for tid, lev in pairs(self.talents) do
+			local t = self:getTalentFromId(tid)
+			if t and not self.talents_cd[tid] and t.mode == "activated" and not t.innate then tids[#tids+1] = t end
+		end
+		for i = 1, 4 do
+			local t = rng.tableRemove(tids)
+			if not t then break end
+			self.talents_cd[t.id] = 1 -- Just set cooldown to 1 since cooldown does not decrease while stunned
+		end
 	end,
 	deactivate = function(self, eff)
 		self:removeParticles(eff.particle)
-		self:removeTemporaryValue("paralyzed", eff.tmpid)
-		if not self:attr("paralyzed") then self.paralyzed_counter = nil end
+		
+		self:removeTemporaryValue("stunned", eff.tmpid)
+		self:removeTemporaryValue("no_talents_cooldown", eff.tcdid)
+		self:removeTemporaryValue("movement_speed", eff.speedid)
 	end,
 }
 
@@ -630,7 +644,7 @@ newEffect{
 			local gainList = {}
 			local lossList = {}
 			for id, resist in pairs(eff.target.resists) do
-				if resist > 0 then
+				if resist > 0 and id ~= "all" then
 					local amount = eff.resistGain * 0.01 * resist
 					gainList[id] = amount
 					lossList[id] = -amount
@@ -851,24 +865,38 @@ newEffect{
 
 newEffect{
 	name = "MADNESS_STUNNED", image = "effects/madness_stunned.png",
-	desc = "Paralyzed by madness",
-	long_desc = function(self, eff) return "Madness has paralyzed the target, rendering it unable to act." end,
+	desc = "Stunned by madness",
+	long_desc = function(self, eff) return ("Madness has stunned the target, reducing damage by 70%%, healing received by 50%%, putting random talents on cooldown and reducing movement speed by 50%%. While stunned talents do not cooldown."):format() end,
 	type = "mental",
 	subtype = { madness=true, stun=true },
 	status = "detrimental",
 	parameters = {},
-	on_gain = function(self, err) return "#F53CBE##Target# is paralyzed by madness!", "+Paralyzed" end,
-	on_lose = function(self, err) return "#Target# overcomes the madness", "-Paralyzed" end,
+	on_gain = function(self, err) return "#F53CBE##Target# is stunned by madness!", "+Stunned" end,
+	on_lose = function(self, err) return "#Target# overcomes the madness", "-Stunned" end,
 	activate = function(self, eff)
 		eff.particle = self:addParticles(Particles.new("gloom_stunned", 1))
-		eff.tmpid = self:addTemporaryValue("paralyzed", 1)
-		-- Start the stun counter only if this is the first stun
-		if self.paralyzed == 1 then self.paralyzed_counter = (self:attr("stun_immune") or 0) * 100 end
+
+		eff.tmpid = self:addTemporaryValue("stunned", 1)
+		eff.tcdid = self:addTemporaryValue("no_talents_cooldown", 1)
+		eff.speedid = self:addTemporaryValue("movement_speed", -0.5)
+
+		local tids = {}
+		for tid, lev in pairs(self.talents) do
+			local t = self:getTalentFromId(tid)
+			if t and not self.talents_cd[tid] and t.mode == "activated" and not t.innate then tids[#tids+1] = t end
+		end
+		for i = 1, 4 do
+			local t = rng.tableRemove(tids)
+			if not t then break end
+			self.talents_cd[t.id] = 1 -- Just set cooldown to 1 since cooldown does not decrease while stunned
+		end
 	end,
 	deactivate = function(self, eff)
 		self:removeParticles(eff.particle)
-		self:removeTemporaryValue("paralyzed", eff.tmpid)
-		if not self:attr("paralyzed") then self.paralyzed_counter = nil end
+		
+		self:removeTemporaryValue("stunned", eff.tmpid)
+		self:removeTemporaryValue("no_talents_cooldown", eff.tcdid)
+		self:removeTemporaryValue("movement_speed", eff.speedid)
 	end,
 }
 

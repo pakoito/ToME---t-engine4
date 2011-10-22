@@ -34,7 +34,7 @@ newTalentType{ allow_random=true, type="cursed/primal-magic", name = "primal mag
 
 -- Generic
 newTalentType{ allow_random=true, type="cursed/cursed-form", name = "cursed form", generic = true, description = "You are wracked with the dark energies of the curse." }
-newTalentType{ allow_random=true, type="cursed/fateful-aura", name = "fateful aura", generic = true, description = "The things you surround yourself with soon wither away." }
+newTalentType{ allow_random=true, type="cursed/cursed-aura", name = "cursed aura", generic = true, description = "The things you surround yourself with soon wither away." }
 newTalentType{ allow_random=false, type="cursed/curses", name = "curses", hide = true, description = "The effects of cursed objects." }
 newTalentType{ allow_random=true, type="cursed/dark-figure", name = "dark figure", description = "Life as an outcast has given you time to reflect on your misfortunes." }
 
@@ -101,6 +101,22 @@ cursed_mag_req5 = {
 	level = function(level) return 16 + (level-1)  end,
 }
 
+cursed_lev_req1 = {
+	level = function(level) return 0 + (level-1)  end,
+}
+cursed_lev_req2 = {
+	level = function(level) return 4 + (level-1)  end,
+}
+cursed_lev_req3 = {
+	level = function(level) return 8 + (level-1)  end,
+}
+cursed_lev_req4 = {
+	level = function(level) return 12 + (level-1)  end,
+}
+cursed_lev_req5 = {
+	level = function(level) return 16 + (level-1)  end,
+}
+
 -- utility functions
 function getHateMultiplier(self, min, max, cursedWeaponBonus, hate)
 	local fraction = (hate or self.hate) / 10
@@ -148,5 +164,5 @@ load("/data/talents/cursed/punishments.lua")
 load("/data/talents/cursed/primal-magic.lua")
 
 load("/data/talents/cursed/cursed-form.lua")
-load("/data/talents/cursed/fateful-aura.lua")
+load("/data/talents/cursed/cursed-aura.lua")
 load("/data/talents/cursed/dark-figure.lua")

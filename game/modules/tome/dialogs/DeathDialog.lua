@@ -109,6 +109,13 @@ function _M:resurrectBasic(actor)
 	game:unregisterDialog(self)
 	game.level.map:redisplay()
 	actor.energy.value = game.energy_to_act
+	
+	-- apply cursed equipment
+	if actor.hasTalent and actor.hasTalent(actor.T_DEFILING_TOUCH) then
+		local t = self:getTalentFromId(self.T_DEFILING_TOUCH)
+		t.updateCurses(self, t, true)
+	end
+	
 	actor.changed = true
 	game.paused = true
 end

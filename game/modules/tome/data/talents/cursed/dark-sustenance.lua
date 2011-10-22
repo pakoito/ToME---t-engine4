@@ -197,7 +197,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local resistGain = t.getResistGain(self, t)
-		return ([[Enhances your feeding by reducing your targeted foe's positive resistances by %d%% and increasing yours by the same amount.
+		return ([[Enhances your feeding by reducing your targeted foe's positive resistances by %d%% and increasing yours by the same amount. Resistance to "all" is not affected.
 		Improves with the Willpower stat.]]):format(resistGain)
 	end,
 }

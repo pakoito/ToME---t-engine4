@@ -70,7 +70,7 @@ newTalent{
 		local armorChange = t.getArmorChange(self, t)
 		local defenseChange = t.getDefenseChange(self, t)
 		local resistPenetration = t.getResistPenetration(self, t)
-		return ([[Turn your attention to a nearby foe and dominate them with your overwhelming presence. The target will be unable to move for %d turns and vulnerable to attacks. They will lose %d armor, %d defense and your attacks will gain %d%% resistance penetration.
+		return ([[Turn your attention to a nearby foe and dominate them with your overwhelming presence. The target will be unable to move for %d turns and vulnerable to attacks. They will lose %d armor, %d defense and your attacks will gain %d%% resistance penetration. If the target is adjacent to you, your domination will include a melee attack.
 		Effects will improve with the Strength stat.]]):format(duration, -armorChange, -defenseChange, resistPenetration)
 	end,
 }

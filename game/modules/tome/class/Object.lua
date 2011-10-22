@@ -920,8 +920,11 @@ function _M:getTextualDesc(compare_with)
 		desc:add(talents[tid][3] and {"color","GREEN"} or {"color","WHITE"}, ("Talent on hit(spell): %s (%d%% chance level %d)."):format(self:getTalentFromId(tid).name, talents[tid][1], talents[tid][2]), {"color","LAST"}, true)
 	end
 
-	if self.extra_description then
-		desc:add({"color", "LIGHT_UMBER"}, self.extra_description, {"color","LAST"}, true)
+	if self.curse then
+		local t = game.player:getTalentFromId(game.player.T_DEFILING_TOUCH)
+		if t and t.canCurseItem(game.player, t, self) then
+			desc:add({"color",0xf5,0x3c,0xbe}, game.player.tempeffect_def[self.curse].desc, {"color","LAST"}, true)
+		end
 	end
 
 	local use_desc = self:getUseDesc()

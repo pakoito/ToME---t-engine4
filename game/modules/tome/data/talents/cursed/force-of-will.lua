@@ -113,7 +113,7 @@ newTalent{
 		return combatTalentDamage(self, t, 0, 200)
 	end,
 	getKnockback = function(self, t)
-		return math.floor(self:getTalentLevel(t))
+		return math.floor((self:getTalentLevelRaw(t) + 1) / 2)
 	end,
 	action = function(self, t)
 		local range = self:getTalentRange(t)
@@ -223,7 +223,7 @@ newTalent{
 		return combatTalentDamage(self, t, 0, 240)
 	end,
 	getKnockback = function(self, t)
-		return 2 + math.floor(self:getTalentLevel(t) / 2)
+		return math.floor((self:getTalentLevelRaw(t) + 1) / 2)
 	end,
 	target = function(self, t)
 		return {type="ball", nolock=true, pass_terrain=false, friendly_fire=false, nowarning=true, range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t}
