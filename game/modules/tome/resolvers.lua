@@ -393,7 +393,7 @@ function resolvers.calc.moddable_tile(t, e)
 	elseif slot == "dagger" then r = {"%s_hand_03"}
 	elseif slot == "helm" then r = {"head_05","head_06","head_08","head_10","head_09",}
 	elseif slot == "leather_cap" then r = {"head_03"}
-	elseif slot == "mummy_wrapping" then r = {"upper_body_05","upper_body_06","upper_body_07","upper_body_08","upper_body_19",}
+	elseif slot == "mummy_wrapping" then r = {{"special/mummy_wrappings",true}}
 	end
 	local ml = e.material_level or 1
 	r = r[util.bound(ml, 1, #r)]
