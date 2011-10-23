@@ -860,13 +860,13 @@ newEffect{
 	on_lose = function(self, err) return "#Target# slows down.", "-Step Up" end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("step_up", 1)
-		eff.moveid = self:addTemporaryValue("global_speed_add", eff.power/100)
+		eff.moveid = self:addTemporaryValue("movement_speed", eff.power/100)
 		if self.ai_state then eff.aiid = self:addTemporaryValue("ai_state", {no_talents=1}) end -- Make AI not use talents while using it
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("step_up", eff.tmpid)
 		if eff.aiid then self:removeTemporaryValue("ai_state", eff.aiid) end
-		self:removeTemporaryValue("global_speed_add", eff.moveid)
+		self:removeTemporaryValue("movement_speed", eff.moveid)
 	end,
 }
 
