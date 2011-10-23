@@ -25,7 +25,7 @@ local Textzone = require "engine.ui.Textzone"
 local TextzoneList = require "engine.ui.TextzoneList"
 local Separator = require "engine.ui.Separator"
 local ImageList = require "engine.ui.ImageList"
-local EquipDollFrame = require "engine.ui.EquipDollFrame"
+local EquipDoll = require "engine.ui.EquipDoll"
 
 module(..., package.seeall, class.inherit(Dialog))
 
@@ -37,22 +37,20 @@ function _M:init(title, actor, filter, action, on_select)
 
 	Dialog.init(self, title or "Inventory", math.max(800, game.w * 0.8), math.max(600, game.h * 0.8))
 
-	self.font_bold:setStyle("bold")
-	local tw, th = self.font_bold:size(self.actor.name)
-	local s = core.display.newSurface(tw, th)
-	s:erase(0, 0, 0, 0)
-	s:drawColorStringBlended(self.font_bold, self.actor.name, 0, 0, colors.GOLD.r, colors.GOLD.g, colors.GOLD.b, true)
-	self.font_bold:setStyle("normal")
-	self.charname_tex = {s:glTexture()}
-	self.charname_tex.w = tw
-	self.charname_tex.h = th
-
 	self.max_h = 0
-	local uis = self:generateEquipDollFrames()
+	local uis = {}
 
-	self.inner_scroll = self:makeFrame("ui/tooltip/", self.equipdolls_max_w, self.equipdolls_max_h)
+	self.c_doll = EquipDoll.new{actor=actor, drag_enable=true,
+		fct = function(item, button, event) self:use(item, button, event) end,
+		on_select = function(ui, inven, item, o) if ui.ui.last_display_x then self:select{last_display_x=ui.ui.last_display_x+ui.ui.w, last_display_y=ui.ui.last_display_y, object=o} end end,
+		actorWear = function(ui, ...)
+			if ui:getItem() then self.actor:doTakeoff(ui.inven, ui.item, ui:getItem(), true) end
+			self.actor:doWear(...)
+			self:generateList()
+		end
+	}
 
-	self.c_tabs = ImageList.new{width=self.iw - 20 - self.equipdolls_max_w, height=36, tile_w=32, tile_h=32, padding=5, force_size=true, selection="ctrl-multiple", list={
+	self.c_tabs = ImageList.new{width=self.iw - 20 - self.c_doll.w, height=36, tile_w=32, tile_h=32, padding=5, force_size=true, selection="ctrl-multiple", list={
 		{image="metal-ui/inven_tabs/weapons.png", 	kind="weapons", desc="All kinds of weapons"},
 		{image="metal-ui/inven_tabs/armors.png", 	kind="armors", desc="All kinds of armours"},
 		{image="metal-ui/inven_tabs/jewelry.png", 	kind="jewelry", desc="Rings and Amulets"},
@@ -62,8 +60,9 @@ function _M:init(title, actor, filter, action, on_select)
 		{image="metal-ui/inven_tabs/quests.png", 	kind="quests", desc="Quest and plot related items"},
 	}, fct=function() self:generateList() end, on_select=function(item) self:select(item) end}
 	self.c_tabs.dlist[1][1].selected = true
+	self.c_tabs.no_keyboard_focus = true
 
-	self.c_inven = ListColumns.new{width=self.iw - 20 - self.equipdolls_max_w, height=self.ih - self.max_h*self.font_h - 10 - self.c_tabs.h, sortable=true, scrollbar=true, columns={
+	self.c_inven = ListColumns.new{width=self.iw - 20 - self.c_doll.w, height=self.ih - self.max_h*self.font_h - 10 - self.c_tabs.h, sortable=true, scrollbar=true, columns={
 		{name="", width={20,"fixed"}, display_prop="char", sort="id"},
 		{name="", width={24,"fixed"}, display_prop="object", sort="sortname", direct_draw=function(item, x, y) if item.object then item.object:toScreen(nil, x+4, y, 16, 16) end end},
 		{name="Inventory", width=72, display_prop="name", sort="sortname"},
@@ -73,9 +72,10 @@ function _M:init(title, actor, filter, action, on_select)
 
 	self:generateList()
 
+	uis[#uis+1] = {left=0, top=0, ui=self.c_doll}
 	uis[#uis+1] = {right=0, top=0, ui=self.c_tabs}
 	uis[#uis+1] = {right=0, top=self.c_tabs.h + 5, ui=self.c_inven}
-	uis[#uis+1] = {left=self.equipdolls_max_w, top=5, ui=Separator.new{dir="horizontal", size=self.ih - 10}}
+	uis[#uis+1] = {left=self.c_doll.w, top=5, ui=Separator.new{dir="horizontal", size=self.ih - 10}}
 
 	self:loadUI(uis)
 	self:setFocus(self.c_inven)
@@ -91,6 +91,8 @@ function _M:init(title, actor, filter, action, on_select)
 				self:use(list[list.chars[c]])
 			end
 		end,
+		_TAB = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = util.boundWrap(self.c_tabs.sel_i+1, 1, 7) self.c_tabs:onUse("left") end,
+		[{"_TAB","ctrl"}] = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = util.boundWrap(self.c_tabs.sel_i-1, 1, 7) self.c_tabs:onUse("left", false) end,
 	}
 	self.key:addBinds{
 		HOTKEY_1 = function() self:defineHotkey(1) end,
@@ -206,8 +208,6 @@ end
 
 function _M:on_focus(id, ui)
 	if self.focus_ui and self.focus_ui.ui == self.c_inven then self:select(self.c_inven.list[self.c_inven.sel])
-	elseif self.focus_ui and self.focus_ui.ui and self.focus_ui.ui.doll_select and self.focus_ui.ui:getItem() and self.focus_ui.ui.last_display_x then
-		self:select{last_display_x=self.focus_ui.ui.last_display_x+self.focus_ui.ui.w, last_display_y=self.focus_ui.ui.last_display_y, object=self.focus_ui.ui:getItem()}
 	elseif self.focus_ui and self.focus_ui.ui == self.c_tabs then
 	else
 		game.tooltip_x = nil
@@ -223,52 +223,6 @@ function _M:use(item, button, event)
 			game:unregisterDialog(self)
 		end
 	end
-end
-
-function _M:generateEquipDollFrames()
-	local doll = self.actor.equipdolls[self.actor.equipdoll or "default"]
-	if not doll then return end
-
-	local uis = {}
-	local max_w = 0
-	local max_h = 0
-
-	for k, v in pairs(doll.list) do
-		local inven = self.actor:getInven(k)
-		if inven then
-			for item, def in ipairs(v) do
-				local frame = EquipDollFrame.new{actor=self.actor, inven=inven, name_pos=def.text, item=item, w=doll.w, h=doll.h, iw=doll.iw, ih=doll.ih, ix=doll.ix, iy=doll.iy, bg=doll.itemframe, bg_sel=doll.itemframe_sel, bg_empty=self.actor.inven_def[inven.name].infos and self.actor.inven_def[inven.name].infos.equipdoll_back, drag_enable=true}
-				frame.doll_select = true
-				frame.actorWear = function(_, ...)
-					if frame:getItem() then self.actor:doTakeoff(inven, item, frame:getItem(), true) end
-					self.actor:doWear(...)
-					self:generateList()
-				end
-				frame.fct=function(button, event) if frame:getItem() then self:use({inven=inven, item=item, object=frame:getItem()}, button, event) end end
-				frame.filter = self.filter
-				uis[#uis+1] = {left=def.x, top=def.y, ui=frame, _weight=def.weight}
-				max_w = math.max(def.x, max_w)
-				max_h = math.max(def.y, max_h)
-			end
-		end
-	end
-
-	table.sort(uis, function(a,b) return a._weight < b._weight end)
-
-	self.equipdolls_max_w = max_w + math.floor(doll.w * 2.5)
-	self.equipdolls_max_h = max_h + math.floor(doll.h * 2.5)
-	self.base_doll_y = (self.ih - self.equipdolls_max_h) / 2
-
-	for i, ui in ipairs(uis) do ui.top = ui.top + self.base_doll_y end
-
-	return uis
-end
-
-function _M:innerDisplayBack(x, y, nb_keyframes)
-	local doll = self.actor.equipdolls[self.actor.equipdoll or "default"]
-	if not doll then return end
-
-	self.actor:toScreen(nil, x + doll.doll_x, y + self.base_doll_y + doll.doll_y, 128, 128)
 end
 
 local tab_filters = {
@@ -392,8 +346,4 @@ function _M:drawFrame(x, y, r, g, b, a)
 	if not self.title_fill then return end
 
 	core.display.drawQuad(x + self.frame.title_x, y + self.frame.title_y, self.title_fill, self.frame.title_h, self.title_fill_color.r, self.title_fill_color.g, self.title_fill_color.b, 60)
-
-	Base.drawFrame(self, self.inner_scroll, x, y + self.base_doll_y)
-	if self.title_shadow then self.charname_tex[1]:toScreenFull(x + (self.equipdolls_max_w - self.charname_tex.w) / 2 + 2, y + self.base_doll_y + 5 + 2, self.charname_tex.w, self.charname_tex.h, self.charname_tex[2], self.charname_tex[3], 0, 0, 0, 0.5) end
-	self.charname_tex[1]:toScreenFull(x + (self.equipdolls_max_w - self.charname_tex.w) / 2, y + self.base_doll_y + 5, self.charname_tex.w, self.charname_tex.h, self.charname_tex[2], self.charname_tex[3])
 end

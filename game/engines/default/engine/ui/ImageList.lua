@@ -165,7 +165,7 @@ function _M:onUse(button, forcectrl)
 		elseif self.selection == "multiple" then
 			item.selected = not item.selected
 		elseif self.selection == "ctrl-multiple" then
-			if not forcectrl and not core.key.modState("ctrl") then self:clearSelection() end
+			if not (forcectrl == true or (forcectrl == nil and core.key.modState("ctrl"))) then self:clearSelection() end
 			item.selected = not item.selected
 		end
 		self.fct(item)

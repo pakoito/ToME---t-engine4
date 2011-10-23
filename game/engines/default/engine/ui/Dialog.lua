@@ -493,7 +493,7 @@ function _M:moveFocus(v)
 	local cnt = 0
 	id = util.boundWrap((id or 1) + v, 1, #self.uis)
 	while start ~= id and cnt <= #self.uis do
-		if self.uis[id] and self.uis[id].ui and self.uis[id].ui.can_focus then
+		if self.uis[id] and self.uis[id].ui and self.uis[id].ui.can_focus and not self.uis[id].ui.no_keyboard_focus then
 			self:setFocus(id)
 			break
 		end

@@ -60,7 +60,7 @@ function _M:generate()
 		if event == "motion" and button == "left" and self:getItem() then self:onDrag(self.inven, self.item, self:getItem())
 		elseif button == "drag-end" and self.drag_enable then
 			local drag = game.mouse.dragged.payload
-			print(table.serialize(drag,nil,true))
+--			print(table.serialize(drag,nil,true))
 			if drag.kind == "inventory" and drag.inven and self.actor:getInven(drag.inven) and not self.actor:getInven(drag.inven).worn then
 				self:actorWear(drag.inven, drag.item_idx, drag.object)
 				game.mouse:usedDrag()
