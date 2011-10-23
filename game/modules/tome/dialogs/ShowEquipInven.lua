@@ -50,7 +50,7 @@ function _M:init(title, actor, filter, action, on_select)
 		end
 	}
 
-	self.c_tabs = ImageList.new{width=self.iw - 20 - self.c_doll.w, height=36, tile_w=32, tile_h=32, padding=5, force_size=true, selection="ctrl-multiple", list={
+	local tabslist = {
 		{image="metal-ui/inven_tabs/weapons.png", 	kind="weapons", desc="All kinds of weapons"},
 		{image="metal-ui/inven_tabs/armors.png", 	kind="armors", desc="All kinds of armours"},
 		{image="metal-ui/inven_tabs/jewelry.png", 	kind="jewelry", desc="Rings and Amulets"},
@@ -58,7 +58,10 @@ function _M:init(title, actor, filter, action, on_select)
 		{image="metal-ui/inven_tabs/inscriptions.png", 	kind="inscriptions", desc="Infusions, Runes, ..."},
 		{image="metal-ui/inven_tabs/misc.png", 		kind="misc", desc="Miscellaneous"},
 		{image="metal-ui/inven_tabs/quests.png", 	kind="quests", desc="Quest and plot related items"},
-	}, fct=function() self:generateList() end, on_select=function(item) self:select(item) end}
+	}
+	if actor:attr("has_transmo") then tabslist[#tabslist+1] = {image="metal-ui/inven_tabs/chest.png", kind="transmo", desc="Transmogrification Chest"} end
+
+	self.c_tabs = ImageList.new{width=self.iw - 20 - self.c_doll.w, height=36, tile_w=32, tile_h=32, padding=5, force_size=true, selection="ctrl-multiple", list=tabslist, fct=function() self:generateList() end, on_select=function(item) self:select(item) end}
 	self.c_tabs.dlist[1][1].selected = true
 	self.c_tabs.no_keyboard_focus = true
 
@@ -91,8 +94,8 @@ function _M:init(title, actor, filter, action, on_select)
 				self:use(list[list.chars[c]])
 			end
 		end,
-		_TAB = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = util.boundWrap(self.c_tabs.sel_i+1, 1, 7) self.c_tabs:onUse("left") end,
-		[{"_TAB","ctrl"}] = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = util.boundWrap(self.c_tabs.sel_i-1, 1, 7) self.c_tabs:onUse("left", false) end,
+		_TAB = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = util.boundWrap(self.c_tabs.sel_i+1, 1, 8) self.c_tabs:onUse("left") end,
+		[{"_TAB","ctrl"}] = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = util.boundWrap(self.c_tabs.sel_i-1, 1, 8) self.c_tabs:onUse("left", false) end,
 	}
 	self.key:addBinds{
 		HOTKEY_1 = function() self:defineHotkey(1) end,
@@ -157,6 +160,7 @@ function _M:init(title, actor, filter, action, on_select)
 		SWITCH_PARTY_5 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 5 self.c_tabs:onUse("left") end,
 		SWITCH_PARTY_6 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 6 self.c_tabs:onUse("left") end,
 		SWITCH_PARTY_7 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 7 self.c_tabs:onUse("left") end,
+		SWITCH_PARTY_8 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 8 self.c_tabs:onUse("left") end,
 		ORDER_PARTY_1 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 1 self.c_tabs:onUse("left", true) end,
 		ORDER_PARTY_2 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 2 self.c_tabs:onUse("left", true) end,
 		ORDER_PARTY_3 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 3 self.c_tabs:onUse("left", true) end,
@@ -164,6 +168,7 @@ function _M:init(title, actor, filter, action, on_select)
 		ORDER_PARTY_5 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 5 self.c_tabs:onUse("left", true) end,
 		ORDER_PARTY_6 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 6 self.c_tabs:onUse("left", true) end,
 		ORDER_PARTY_7 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 7 self.c_tabs:onUse("left", true) end,
+		ORDER_PARTY_8 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 87 self.c_tabs:onUse("left", true) end,
 	}
 
 	-- Add tooltips
@@ -226,12 +231,13 @@ function _M:use(item, button, event)
 end
 
 local tab_filters = {
-	weapons = function(o) return o.type == "weapon" end,
-	armors = function(o) return o.type == "armor" end,
-	gems = function(o) return o.type == "gem" or o.type == "alchemist-gem" end,
-	jewelry = function(o) return o.type == "jewelry" end,
-	inscriptions = function(o) return o.type == "scroll" end,
-	quests = function(o) return o.plot or o.quest end,
+	weapons = function(o) return not o.__transmo and (o.type == "weapon") end,
+	armors = function(o) return not o.__transmo and (o.type == "armor") end,
+	gems = function(o) return not o.__transmo and (o.type == "gem" or o.type == "alchemist-gem") end,
+	jewelry = function(o) return not o.__transmo and (o.type == "jewelry") end,
+	inscriptions = function(o) return not o.__transmo and (o.type == "scroll") end,
+	quests = function(o) return not o.__transmo and (o.plot or o.quest) end,
+	transmo = function(o) return o.__transmo end,
 }
 
 function _M:updateTabFilter()
@@ -245,6 +251,7 @@ function _M:updateTabFilter()
 		elseif item.data.kind == "jewelry" then checks[#checks+1] = tab_filters.jewelry
 		elseif item.data.kind == "inscriptions" then checks[#checks+1] = tab_filters.inscriptions
 		elseif item.data.kind == "quests" then checks[#checks+1] = tab_filters.quests
+		elseif item.data.kind == "transmo" then checks[#checks+1] = tab_filters.transmo
 		elseif item.data.kind == "misc" then
 			local misc
 			misc = function(o)

@@ -339,4 +339,11 @@ You have heard of such items before. They are very useful to adventurers, allowi
 			return {id=true, used=true}
 		end
 	},
+
+	on_drop = function(self, who)
+		if who == game.player then
+			game.logPlayer(who, "You cannot bring yourself to drop the %s", self:getName())
+			return true
+		end
+	end,
 }

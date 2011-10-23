@@ -77,9 +77,12 @@ function _M:use(item)
 	elseif act == "transmo" then
 		self:yesnoPopup("Transmogrify", "Really transmogrify "..self.object:getName{}, function(ret)
 			if not ret then return end
-			item.transmo:transmo_inven(self.actor, self.inven, self.item, self.object)
+			self.actor:transmoInven(self.inven, self.item, self.object)
 			self.onuse(self.inven, self.item, self.object, false)
 		end)
+	elseif act == "toinven" then
+		self.object.__transmo = false
+		self.onuse(self.inven, self.item, self.object, false)
 	elseif act == "chat-link" then
 		profile.chat.uc_ext:sendObjectLink(self.object)
 	end
@@ -88,13 +91,17 @@ end
 function _M:generateList()
 	local list = {}
 
-	local transmo_chest = self.actor:findInAllInventoriesBy("define_as", "TRANSMO_CHEST")
+	local transmo_chest = self.actor:attr("has_transmo")
 
-	if self.object:canUseObject() then list[#list+1] = {name="Use", action="use"} end
-	if self.inven == self.actor.INVEN_INVEN and self.object:wornInven() and self.actor:getInven(self.object:wornInven()) then list[#list+1] = {name="Wield/Wear", action="wear"} end
-	if self.inven ~= self.actor.INVEN_INVEN and self.object:wornInven() then list[#list+1] = {name="Take off", action="takeoff"} end
+	if not self.object.__transmo then
+		if self.object:canUseObject() then list[#list+1] = {name="Use", action="use"} end
+		if self.inven == self.actor.INVEN_INVEN and self.object:wornInven() and self.actor:getInven(self.object:wornInven()) then list[#list+1] = {name="Wield/Wear", action="wear"} end
+		if self.inven ~= self.actor.INVEN_INVEN and self.object:wornInven() then list[#list+1] = {name="Take off", action="takeoff"} end
+	else
+		list[#list+1] = {name="Move to normal inventory", action="toinven"}
+	end
 	if self.inven == self.actor.INVEN_INVEN then list[#list+1] = {name="Drop", action="drop"} end
-	if self.inven == self.actor.INVEN_INVEN and transmo_chest and transmo_chest.transmo_filter(self.object) then list[#list+1] = {name="Transmogrify", action="transmo", transmo=transmo_chest} end
+	if self.inven == self.actor.INVEN_INVEN and transmo_chest and self.actor:transmoFilter(self.object) then list[#list+1] = {name="Transmogrify now", action="transmo"} end
 	if profile.auth and profile.hash_valid then list[#list+1] = {name="Link item in chat", action="chat-link"} end
 
 	self.max = 0

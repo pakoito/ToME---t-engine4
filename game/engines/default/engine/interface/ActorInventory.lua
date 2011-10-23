@@ -219,6 +219,10 @@ function _M:onRemoveObject(o)
 	o.carried = nil
 end
 
+--- Called upon dropping an object
+function _M:onDropObject(o)
+end
+
 --- Drop an object on the floor
 -- @param inven the inventory to drop from
 -- @param item the item id to drop
@@ -232,6 +236,9 @@ function _M:dropFloor(inven, item, vocal, all)
 	if o:check("on_drop", self) then return false end
 
 	o = self:removeObject(inven, item, all)
+
+	self:onDropObject(o)
+
 	local ok, idx = game.level.map:addObject(self.x, self.y, o)
 
 	if vocal then game.logSeen(self, "%s drops on the floor: %s.", self.name:capitalize(), o:getName{do_color=true}) end

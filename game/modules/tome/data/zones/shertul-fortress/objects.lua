@@ -29,45 +29,30 @@ newEntity{ base = "BASE_WAND",
 	desc = [[This chest is an extension of Yiilkgur, any items dropped inside is transported to the Fortress, processed by the core and destroyed to extract energy.
 The byproduct of this effect is the creation of gold, which is useless to the Fortress, so it is sent back to you.
 
-When activated it will prompt to destroy items on the floor, if there are none it prompts for your inventory.]],
+When you possess the chest all items you walk upon will automatically be put inside and transmogrified when you leave the level.
+Simply go to your inventory to move them out of the chest if you wish to keep them.
+Items in the chest will not encumber you.]],
 	cost = 0, quest=true,
 
+	carrier = {
+		has_transmo = 1,
+	},
+--[[
 	max_power = 1000, power_regen = 1,
-	pricemod = function(o) if o.type == "gem" then return 0.40 else return 0.05 end end,
-	transmo_filter = function(o) if o:getPrice() <= 0 or o.quest then return false end return true end,
-	transmo_inven = function(self, who, inven, idx, o)
-		local price = math.min(o:getPrice() * self.pricemod(o), 25) * o:getNumber()
-		local price = math.min(o:getPrice() * self.pricemod(o), 25) * o:getNumber()
-		price = math.floor(price * 100) / 100 -- Make sure we get at most 2 digit precision
-		if price ~= price or not tostring(price):find("^[0-9]") then price = 1 end -- NaN is the only value that does not equals itself, this is the way to check it since we do not have a math.isnan method
-		who:removeObject(who:getInven("INVEN"), idx, true)
-		who:sortInven()
-		who:incMoney(price)
-		who:hasQuest("shertul-fortress"):gain_energy(price/10)
-		game.log("You gain %0.2f gold from the transmogrification of %s.", price, o:getName{do_count=true, do_color=true})
-	end,
 	use_power = { name = "open a portal to send items to the Fortress core, extracting energies from it for the Fortress and sending back useless gold.", power = 0,
 		use = function(self, who)
-			-- On the floor or inventory
-			if game.level.map:getObjectTotal(who.x, who.y) > 0 then
-				local x, y = who.x, who.y
-				local d = require("mod.dialogs.ShowPickupFloor").new("Transmogrify", x, y, self.transmo_filter, function(o, idx)
-					local price = math.min(o:getPrice() * self.pricemod(o), 25) * o:getNumber()
-					game.level.map:removeObject(x, y, idx)
-					who:incMoney(price)
-					who:hasQuest("shertul-fortress"):gain_energy(price/10)
-					game.log("You gain %0.2f gold from the transmogrification of %s.", price, o:getName{do_count=true, do_color=true})
-				end, "Transmogrify all", who)
-				game:registerDialog(d)
-			else
-				local d = require("mod.dialogs.ShowInventory").new("Transmogrify", who:getInven("INVEN"), self.transmo_filter, function(o, idx)
-					self:transmo_inven(who, inven, idx, o)
-				end, who)
-				game:registerDialog(d)
-			end
+			who:transmo()
 			return {id=true, used=true}
 		end
 	},
+]]
+
+	on_drop = function(self, who)
+		if who == game.player then
+			game.logPlayer(who, "You cannot bring yourself to drop the %s", self:getName())
+			return true
+		end
+	end,
 }
 
 newEntity{ base = "BASE_CLOTH_ARMOR",

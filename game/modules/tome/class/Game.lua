@@ -563,6 +563,18 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down, auto_zone_stair)
 		return
 	end
 
+	-- Transmo!
+	local p = self:getPlayer(true)
+	if p:attr("has_transmo") then
+		local inven = p:getInven("INVEN")
+		for i = #inven, 1, -1 do
+			local o = inven[i]
+			if o.__transmo then
+				p:transmoInven(inven, i, o)
+			end
+		end
+	end
+
 	-- Finish stuff registered for the previous level
 	self:onTickEndExecute()
 
@@ -1392,7 +1404,7 @@ function _M:setupCommands()
 		USERCHAT_SHOW_TALK = function()
 			self.show_userchat = not self.show_userchat
 		end,
-		
+
 		TOGGLE_BUMP_ATTACK = function()
 			if (self.bump_attack_disabled) then
 				self.log("Movement Mode: #LIGHT_GREEN#Default#LAST#.")
@@ -1401,7 +1413,7 @@ function _M:setupCommands()
 				self.log("Movement Mode: #LIGHT_RED#Passive#LAST#.")
 				self.bump_attack_disabled = true
 			end
-			
+
 			-- Update tooltip display if we're hovering over the icon.
 			local mx, my = core.mouse.get()
 			if (mx < self.icons.w and my > self.icons.display_y) then

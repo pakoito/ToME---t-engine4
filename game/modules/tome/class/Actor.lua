@@ -252,7 +252,7 @@ function _M:useEnergy(val)
 			stalk.hit_turns = 0
 		end
 	end
-	
+
 	-- Curse of Shrouds: turn shroud of passing on or off
 	local eff = self:hasEffect(self.EFF_CURSE_OF_SHROUDS)
 	if eff then self.tempeffect_def[self.EFF_CURSE_OF_SHROUDS].doShroudOfPassing(self, eff) end
@@ -631,7 +631,7 @@ function _M:move(x, y, force)
 		if not force and moved and (self.x ~= ox or self.y ~= oy) and not self.did_energy then
 			local eff = self:hasEffect(self.EFF_CURSE_OF_SHROUDS)
 			if eff then eff.moved = true end
-	
+
 			self:useEnergy(game.energy_to_act * self:combatMovementSpeed())
 		end
 	end
@@ -659,7 +659,7 @@ function _M:move(x, y, force)
 			t.chooseCursedAuraTree(self, t)
 		end
 	end
-	
+
 	if moved and self:knowTalent(self.T_DEFILING_TOUCH) then
 		local t = self:getTalentFromId(self.T_DEFILING_TOUCH)
 		t.curseFloor(self, t, x, y)
@@ -1662,7 +1662,7 @@ function _M:die(src, death_note)
 			end
 		end)
 	end
-	
+
 	-- Curse of Corpses: Corpselight
 	-- Curse of Corpses: Reprieve from Death
 	if src and src.hasEffect and src:hasEffect(src.EFF_CURSE_OF_CORPSES) then
@@ -1672,7 +1672,7 @@ function _M:die(src, death_note)
 			def.doCorpselight(src, eff, self)
 		end
 	end
-	
+
 	-- Curse of Shrouds: Shroud of Death
 	if src and src.hasEffect and src:hasEffect(src.EFF_CURSE_OF_SHROUDS) then
 		local eff = src:hasEffect(src.EFF_CURSE_OF_SHROUDS)
@@ -1917,7 +1917,9 @@ function _M:getEncumbrance()
 	-- Compute encumbrance
 	for inven_id, inven in pairs(self.inven) do
 		for item, o in ipairs(inven) do
-			o:forAllStack(fct)
+			if not o.__transmo then
+				o:forAllStack(fct)
+			end
 		end
 	end
 --	print("Total encumbrance", enc)
@@ -3182,3 +3184,30 @@ function _M:addedToLevel(level, x, y)
 	self:check("on_added_to_level", level, x, y)
 end
 
+--- Called upon dropping an object
+function _M:onDropObject(o)
+	if self:attr("has_transmo") then o.__transmo = false end
+end
+
+function _M:transmoPricemod(o) if o.type == "gem" then return 0.40 else return 0.05 end end
+function _M:transmoFilter(o) if o:getPrice() <= 0 or o.quest then return false end return true end
+function _M:transmoInven(inven, idx, o)
+	local price = math.min(o:getPrice() * self:transmoPricemod(o), 25) * o:getNumber()
+	local price = math.min(o:getPrice() * self:transmoPricemod(o), 25) * o:getNumber()
+	price = math.floor(price * 100) / 100 -- Make sure we get at most 2 digit precision
+	if price ~= price or not tostring(price):find("^[0-9]") then price = 1 end -- NaN is the only value that does not equals itself, this is the way to check it since we do not have a math.isnan method
+	self:removeObject(self:getInven("INVEN"), idx, true)
+	self:sortInven()
+	self:incMoney(price)
+	if self.hasQuest and self:hasQuest("shertul-fortress") then self:hasQuest("shertul-fortress"):gain_energy(price/10) end
+	game.log("You gain %0.2f gold from the transmogrification of %s.", price, o:getName{do_count=true, do_color=true})
+end
+
+function _M:transmo()
+	local d = require("mod.dialogs.ShowInventory").new("Transmogrify", self:getInven("INVEN"), function(o) return self:transmoFilter(o) end, function(o, idx)
+		self:transmoInven(self, inven, idx, o)
+	end, self)
+	game:registerDialog(d)
+
+	return {id=true, used=true}
+end

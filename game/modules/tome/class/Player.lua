@@ -159,7 +159,15 @@ function _M:describeFloor(x, y)
 		local i, nb = 1, 0
 		local obj = game.level.map:getObject(x, y, i)
 		while obj do
-			if not ((obj.auto_pickup and not obj.unique) and self:pickupFloor(i, true)) then
+			local desc = true
+			if (obj.auto_pickup and not obj.unique) and self:pickupFloor(i, true) then desc = false end
+			if self:attr("has_transmo") and obj.__transmo == nil then
+				if self:pickupFloor(i, true) then
+					desc = false
+					obj.__transmo = true
+				end
+			end
+			if desc then
 				if self:attr("auto_id") and obj:getPowerRank() <= self.auto_id then obj:identify(true) end
 				nb = nb + 1
 				i = i + 1
@@ -1048,7 +1056,7 @@ end
 
 function _M:attackOrMoveDir(dir)
 	local tmp = game.bump_attack_disabled
-	
+
 	game.bump_attack_disabled = false
 	self:moveDir(dir)
 	game.bump_attack_disabled = tmp
