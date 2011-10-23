@@ -3203,11 +3203,9 @@ function _M:transmoInven(inven, idx, o)
 	game.log("You gain %0.2f gold from the transmogrification of %s.", price, o:getName{do_count=true, do_color=true})
 end
 
-function _M:transmo()
-	local d = require("mod.dialogs.ShowInventory").new("Transmogrify", self:getInven("INVEN"), function(o) return self:transmoFilter(o) end, function(o, idx)
-		self:transmoInven(self, inven, idx, o)
-	end, self)
-	game:registerDialog(d)
-
-	return {id=true, used=true}
+function _M:transmoGetNumberItems()
+	local inven = self:getInven("INVEN")
+	local nb = 0
+	for i, o in ipairs(inven) do if o.__transmo then nb = nb + 1 end end
+	return nb
 end

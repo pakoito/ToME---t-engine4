@@ -565,14 +565,31 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down, auto_zone_stair)
 
 	-- Transmo!
 	local p = self:getPlayer(true)
-	if p:attr("has_transmo") then
-		local inven = p:getInven("INVEN")
-		for i = #inven, 1, -1 do
-			local o = inven[i]
-			if o.__transmo then
-				p:transmoInven(inven, i, o)
+	if p:attr("has_transmo") and p:transmoGetNumberItems() > 0 then
+		local d
+		local titleupdator = self.player:getEncumberTitleUpdator("Transmogrification Chest")
+		d = self.player:showEquipInven(titleupdator(), nil, function(o, inven, item, button, event)
+			if not o then return end
+			local ud = require("mod.dialogs.UseItemDialog").new(event == "button", self.player, o, item, inven, function(_, _, _, stop)
+				d:generate()
+				d:generateList()
+				d:updateTitle(titleupdator())
+				if stop then self:unregisterDialog(d) end
+			end)
+			self:registerDialog(ud)
+		end)
+		d.unload = function()
+			local inven = p:getInven("INVEN")
+			for i = #inven, 1, -1 do
+				local o = inven[i]
+				if o.__transmo then
+					p:transmoInven(inven, i, o)
+				end
 			end
 		end
+		-- Select the chest tab
+		d.c_tabs.sel_j = 1 d.c_tabs.sel_i = 8 d.c_tabs:onUse("left", false)
+		d:simplePopup("Transmogrification Chest", "When you close the inventory window, all items in the chest will be transmogrified.")
 	end
 
 	-- Finish stuff registered for the previous level

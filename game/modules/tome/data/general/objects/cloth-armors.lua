@@ -32,7 +32,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_CLOTH_ARMOR",
-	name = "linen robe", short_name = "iron",
+	name = "linen robe", short_name = "linen",
 	level_range = {1, 10},
 	cost = 0.5,
 	material_level = 1,

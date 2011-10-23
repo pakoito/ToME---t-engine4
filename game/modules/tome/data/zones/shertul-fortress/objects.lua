@@ -37,16 +37,32 @@ Items in the chest will not encumber you.]],
 	carrier = {
 		has_transmo = 1,
 	},
---[[
+
 	max_power = 1000, power_regen = 1,
-	use_power = { name = "open a portal to send items to the Fortress core, extracting energies from it for the Fortress and sending back useless gold.", power = 0,
+	use_power = { name = "transmogrify all the items in your chest at once(also done automatically when you change level)", power = 0,
 		use = function(self, who)
-			who:transmo()
+			local inven = who:getInven("INVEN")
+			require("engine.ui.Dialog"):yesnoPopup("Transmogrification Chest", "Transmogrify all "..#inven.." item(s) in your chest?", function(ret)
+				if not ret then return end
+				for i = #inven, 1, -1 do
+					local o = inven[i]
+					if o.__transmo then
+						who:transmoInven(inven, i, o)
+					end
+				end
+			end)
 			return {id=true, used=true}
 		end
 	},
-]]
 
+	on_pickup = function(self, who)
+		require("engine.ui.Dialog"):simpleLongPopup("Transmogrification Chest", [[This chest is an extension of Yiilkgur, any items dropped inside is transported to the Fortress, processed by the core and destroyed to extract energy.
+The byproduct of this effect is the creation of gold, which is useless to the Fortress, so it is sent back to you.
+
+When you possess the chest all items you walk upon will automatically be put inside and transmogrified when you leave the level.
+To take an item out, simply go to your inventory to move them out of the chest.
+Items in the chest will not encumber you.]], 500)
+	end,
 	on_drop = function(self, who)
 		if who == game.player then
 			game.logPlayer(who, "You cannot bring yourself to drop the %s", self:getName())

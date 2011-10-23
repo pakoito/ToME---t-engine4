@@ -161,7 +161,7 @@ function _M:describeFloor(x, y)
 		while obj do
 			local desc = true
 			if (obj.auto_pickup and not obj.unique) and self:pickupFloor(i, true) then desc = false end
-			if self:attr("has_transmo") and obj.__transmo == nil then
+			if self:attr("has_transmo") and obj.__transmo == nil and (not obj.quest and not obj.plot) then
 				if self:pickupFloor(i, true) then
 					desc = false
 					obj.__transmo = true
