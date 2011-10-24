@@ -151,6 +151,12 @@ function _M:getAllSelected()
 	return list
 end
 
+function _M:getAllSelectedKeys()
+	local list = {}
+	for i, row in ipairs(self.dlist) do for j, item in ipairs(row) do if item.selected then list[#list+1] = {i,j} end end end
+	return list
+end
+
 function _M:clearSelection()
 	for i, row in ipairs(self.dlist) do for j, item in ipairs(row) do item.selected = false end end
 end

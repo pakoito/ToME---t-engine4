@@ -62,8 +62,12 @@ function _M:init(title, actor, filter, action, on_select)
 	if actor:attr("has_transmo") then tabslist[#tabslist+1] = {image="metal-ui/inven_tabs/chest.png", kind="transmo", desc="Transmogrification Chest"} end
 
 	self.c_tabs = ImageList.new{width=self.iw - 20 - self.c_doll.w, height=36, tile_w=32, tile_h=32, padding=5, force_size=true, selection="ctrl-multiple", list=tabslist, fct=function() self:generateList() end, on_select=function(item) self:select(item) end}
-	self.c_tabs.dlist[1][1].selected = true
 	self.c_tabs.no_keyboard_focus = true
+	if _M._last_tabs then
+		for _, l in ipairs(_M._last_tabs) do self.c_tabs.dlist[l[1]][l[2]].selected = true end
+	else
+		self.c_tabs.dlist[1][1].selected = true
+	end
 
 	self.c_inven = ListColumns.new{width=self.iw - 20 - self.c_doll.w, height=self.ih - self.max_h*self.font_h - 10 - self.c_tabs.h, sortable=true, scrollbar=true, columns={
 		{name="", width={20,"fixed"}, display_prop="char", sort="id"},
@@ -117,6 +121,7 @@ function _M:init(title, actor, filter, action, on_select)
 		HOTKEY_SECOND_5 = function() self:defineHotkey(17) end,
 		HOTKEY_SECOND_6 = function() self:defineHotkey(18) end,
 		HOTKEY_SECOND_7 = function() self:defineHotkey(19) end,
+
 		HOTKEY_SECOND_8 = function() self:defineHotkey(20) end,
 		HOTKEY_SECOND_9 = function() self:defineHotkey(21) end,
 		HOTKEY_SECOND_10 = function() self:defineHotkey(22) end,
@@ -271,6 +276,9 @@ function _M:updateTabFilter()
 		for i = 1, #checks do if checks[i](o) then return true end end
 		return false
 	end
+
+	-- Save for next dialogs
+	_M._last_tabs = self.c_tabs:getAllSelectedKeys()
 end
 
 function _M:generateList(no_update)
