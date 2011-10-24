@@ -213,7 +213,7 @@ newTalent{
 			local params = disease.params
 			params.src = self
 			if target:canBe("disease") then
-				target:setEffect(disease.id, 6, {src=self, dam=disease.params.dam, str=disease.params.str, dex=disease.params.dex, con=disease.params.con, heal_factor=disease.params.heal_factor, burst=disease.params.burst, apply_power=self:combatSpellpower()})
+				target:setEffect(disease.id, 6, {src=self, dam=disease.params.dam, str=disease.params.str, dex=disease.params.dex, con=disease.params.con, heal_factor=disease.params.heal_factor, burst=disease.params.burst, rot_timer=disease.params.rot_timer, apply_power=self:combatSpellpower()})
 			else
 				game.logSeen(target, "%s resists the disease!", target.name:capitalize())
 			end
