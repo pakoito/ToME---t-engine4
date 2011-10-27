@@ -59,54 +59,55 @@ function _M:project(t, x, y, damtype, dam, particles)
 	local srcx, srcy = t.x or self.x, t.y or self.y
 
 	-- Stop at range or on block
-	local lx, ly, is_corner_blocked = x, y
 	local stop_x, stop_y = srcx, srcy
 	local stop_radius_x, stop_radius_y = srcx, srcy
-	local l
+	local l, is_corner_blocked
 	if typ.source_actor.lineFOV then
 		l = typ.source_actor:lineFOV(x, y, nil, nil, srcx, srcy)
 	else
 		l = core.fov.line(srcx, srcy, x, y)
 	end
-	local block_corner = function(_, bx, by)
-		if typ.block_path then
-			local b, h, hr = typ:block_path(bx, by, true)
-			return b and h and not hr
-		else
-			return false
-		end
-	end
+	local block_corner = typ.block_path and function(_, bx, by) local b, h, hr = typ:block_path(bx, by, true) ; return b and h and not hr end
+		or function(_, bx, by) return false end
 
-	local lx, ly, is_corner_blocked = l:step(block_corner)
-	while lx and ly do
-		local block, hit, hit_radius = false, true, true
-		if typ.block_path then
-			block, hit, hit_radius = typ:block_path(lx, ly)
+	l:set_corner_block(block_corner)
+	local lx, ly, blocked_corner_x, blocked_corner_y = l:step()
+
+	-- Being completely blocked by the corner of an adjacent tile is annoying, so let's make it a special case and hit it instead
+	if blocked_corner_x then
+		stop_x = blocked_corner_x
+		stop_y = blocked_corner_y
+		if typ.line then addGrid(blocked_corner_x, blocked_corner_y) end
+		if not t.bypass and game.level.map:checkAllEntities(blocked_corner_x, blocked_corner_y, "on_project", self, t, blocked_corner_x, blocked_corner_y, damtype, dam, particles) then
+			return
 		end
-		if is_corner_blocked then
-			block = true
-			hit_radius = false
-		end
-		if hit then
+	else
+		while lx and ly do
+			local block, hit, hit_radius = false, true, true
 			if is_corner_blocked then
-				stop_x, stop_y = stop_radius_x, stop_radius_y
-			else
+				block, hit, hit_radius = true, true, false
+				lx = stop_radius_x
+				ly = stop_radius_y
+			elseif typ.block_path then
+				block, hit, hit_radius = typ:block_path(lx, ly)
+			end
+			if hit then
 				stop_x, stop_y = lx, ly
+				-- Deal damage: beam
+				if typ.line then addGrid(lx, ly) end
+				-- WHAT DOES THIS DO AGAIN?
+				-- Call the on project of the target grid if possible
+				if not t.bypass and game.level.map:checkAllEntities(lx, ly, "on_project", self, t, lx, ly, damtype, dam, particles) then
+					return
+				end
 			end
-			-- Deal damage: beam
-			if typ.line then addGrid(lx, ly) end
-			-- WHAT DOES THIS DO AGAIN?
-			-- Call the on project of the target grid if possible
-			if not t.bypass and game.level.map:checkAllEntities(lx, ly, "on_project", self, t, lx, ly, damtype, dam, particles) then
-				return
+			if hit_radius then
+				stop_radius_x, stop_radius_y = lx, ly
 			end
-		end
-		if hit_radius then
-			stop_radius_x, stop_radius_y = lx, ly
-		end
 
-		if block then break end
-		lx, ly, is_corner_blocked = l:step(block_corner)
+			if block then break end
+			lx, ly, is_corner_blocked = l:step()
+		end
 	end
 
 	if typ.ball and typ.ball > 0 then
@@ -201,47 +202,44 @@ function _M:canProject(t, x, y)
 	typ.start_y = self.y
 
 	-- Stop at range or on block
-	local lx, ly, is_corner_blocked = x, y
 	local stop_x, stop_y = self.x, self.y
 	local stop_radius_x, stop_radius_y = self.x, self.y
-	local l
+	local l, is_corner_blocked
 	if typ.source_actor.lineFOV then
 		l = typ.source_actor:lineFOV(x, y)
 	else
 		l = core.fov.line(self.x, self.y, x, y)
 	end
-	local block_corner = function(_, bx, by)
-		if typ.block_path then
-			local b, h, hr = typ:block_path(bx, by, true)
-			return b and h and not hr
-		else
-			return false
-		end
-	end
+	local block_corner = typ.block_path and function(_, bx, by) local b, h, hr = typ:block_path(bx, by, true) ; return b and h and not hr end
+		or function(_, bx, by) return false end
 
-	local lx, ly, is_corner_blocked = l:step(block_corner)
-	while lx and ly do
-		local block, hit, hit_radius = false, true, true
-		if typ.block_path then
-			block, hit, hit_radius = typ:block_path(lx, ly)
-		end
-		if is_corner_blocked then
-			block = true
-			hit_radius = false
-		end
-		if hit then
+	l:set_corner_block(block_corner)
+	local lx, ly, blocked_corner_x, blocked_corner_y = l:step()
+
+	-- Being completely blocked by the corner of an adjacent tile is annoying, so let's make it a special case and hit it instead
+	if blocked_corner_x then
+		stop_x = blocked_corner_x
+		stop_y = blocked_corner_y
+	else
+		while lx and ly do
+			local block, hit, hit_radius = false, true, true
 			if is_corner_blocked then
-				stop_x, stop_y = stop_radius_x, stop_radius_y
-			else
+				stop_x = stop_radius_x
+				stop_y = stop_radius_y
+				break
+			elseif typ.block_path then
+				block, hit, hit_radius = typ:block_path(lx, ly)
+			end
+			if hit then
 				stop_x, stop_y = lx, ly
 			end
-		end
-		if hit_radius then
-			stop_radius_x, stop_radius_y = lx, ly
-		end
+			if hit_radius then
+				stop_radius_x, stop_radius_y = lx, ly
+			end
 
-		if block then break end
-		lx, ly, is_corner_blocked = l:step(block_corner)
+			if block then break end
+			lx, ly, is_corner_blocked = l:step()
+		end
 	end
 
 	-- Check for minimum range
@@ -279,6 +277,10 @@ function _M:projectile(t, x, y, damtype, dam, particles)
 	else
 		typ.line_function = core.fov.line(self.x, self.y, x, y)
 	end
+	local block_corner = typ.block_path and function(_, bx, by) local b, h, hr = typ:block_path(bx, by, true) ; return b and h and not hr end
+		or function(_, bx, by) return false end
+
+	typ.line_function:set_corner_block(block_corner)
 
 	local proj = require(self.projectile_class):makeProject(self, t.display, {x=x, y=y, start_x = t.x or self.x, start_y = t.y or self.y, damtype=damtype, tg=t, typ=typ, dam=dam, particles=particles})
 	game.zone:addEntity(game.level, proj, "projectile", t.x or self.x, t.y or self.y)
@@ -296,25 +298,17 @@ end
 -- @return act should we call projectDoAct (usually only for beam)
 -- @return stop is this the last (blocking) tile?
 function _M:projectDoMove(typ, tgtx, tgty, x, y, srcx, srcy)
-	local block_corner = function(_, bx, by)
-		if typ.block_path then
-			local b, h, hr = typ:block_path(bx, by, true)
-			return b and h and not hr
-		else
-			return false
-		end
+	local lx, ly, blocked_corner_x, blocked_corner_y = typ.line_function:step()
+	if blocked_corner_x and x == srcx and y == srcy then
+		return blocked_corner_x, blocked_corner_y, false, true
 	end
-	local lx, ly, is_corner_blocked = typ.line_function:step(block_corner)
 
 	if lx and ly then
 		local block, hit, hit_radius = false, true, true
-		if typ.block_path then
+		if blocked_corner_x then
+			block, hit, hit_radius = true, false, false
+		elseif typ.block_path then
 			block, hit, hit_radius = typ:block_path(lx, ly)
-		end
-		if is_corner_blocked then
-			block = true
-			hit = false
-			hit_radius = false
 		end
 		if block then
 			if hit then

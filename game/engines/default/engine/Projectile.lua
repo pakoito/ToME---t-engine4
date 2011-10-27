@@ -39,16 +39,26 @@ end
 
 function _M:save()
 	if self.project and self.project.def and self.project.def.typ and self.project.def.typ.line_function then
-		self.project.def.typ.line_function_save = { self.project.def.typ.line_function:export() }
-		self.project.def.typ.line_function = nil
+		self.project.def.typ.line_function.line = { game.level.map.w, game.level.map.h, self.project.def.typ.line_function:export() }
 	end
 	return class.save(self, {})
 end
 
 function _M:loaded()
-	if self.project and self.project.def and self.project.def.typ and self.project.def.typ.line_function_save then
-		self.project.def.typ.line_function = core.fov.line_import(unpack(self.project.def.typ.line_function_save))
-		self.project.def.typ.line_function_save = nil
+	if self.project and self.project.def and self.project.def.typ and self.project.def.typ.line_function then
+		self.project.def.typ.line_function.line = core.fov.line_import(unpack(self.project.def.typ.line_function.line))
+
+		-- The metatable gets lost somewhere in the save, so let's remake it
+		local mt = {}
+		mt.__index = function(t, key, ...) if t.line[key] then return t.line[key] end end
+		setmetatable(self.project.def.typ.line_function, mt)
+
+		-- The block function apparently uses an "upvalue" that is no longer available upon save/reload, so let's remake it
+		local typ = self.project.def.typ
+		local block_corner = typ.block_path and function(_, bx, by) local b, h, hr = typ:block_path(bx, by, true) ; return b and h and not hr end
+			or function(_, bx, by) return false end
+
+		self.project.def.typ.line_function:set_corner_block(block_corner)
 	end
 end
 
@@ -252,7 +262,7 @@ function _M:makeProject(src, display, def, do_move, do_act, do_stop)
 		def.tg.talent = nil
 	end
 	speed = speed or 10
-	local p =self.new{
+	local p = _M.new{
 		name = name,
 		display = display.display or ' ', color = display.color or colors.WHITE, image = display.image or nil,
 		travel_particle = display.particle,
@@ -264,6 +274,11 @@ function _M:makeProject(src, display, def, do_move, do_act, do_stop)
 		energy = {mod=speed},
 		tmp_proj = {},
 	}
+
+	-- line_function somehow loses its metatable above in p, so this "hack" makes sure the metatable remains intact
+	if p.project.def.typ and p.project.def.typ.line_function then
+		p.project.def.typ.line_function = def.typ.line_function
+	end
 
 	game.level.map:checkAllEntities(def.x, def.y, "on_projectile_target", p)
 

@@ -88,48 +88,55 @@ function _M:display(dispx, dispy)
 	else
 		l = core.fov.line(self.source_actor.x, self.source_actor.y, self.target.x, self.target.y)
 	end
-	local block_corner = function(_, bx, by)
-		if self.target_type.block_path then
-			local b, h, hr = self.target_type:block_path(bx, by, true)
-			return b and h and not hr
-		else
-			return false
-		end
-	end
+	local block_corner = self.target_type.block_path and function(_, bx, by) local b, h, hr = self.target_type:block_path(bx, by, true) ; return b and h and not hr end
+		or function(_, bx, by) return false end
 
-	local lx, ly, is_corner_blocked = l:step(block_corner)
+	l:set_corner_block(block_corner)
+	local lx, ly, blocked_corner_x, blocked_corner_y = l:step()
 
 	local stop_x, stop_y = self.source_actor.x, self.source_actor.y
 	local stop_radius_x, stop_radius_y = self.source_actor.x, self.source_actor.y
 	local stopped = false
-	while lx and ly do
-		local block, hit, hit_radius = false, true, true
-		if self.target_type.block_path then
-			block, hit, hit_radius = self.target_type:block_path(lx, ly, true)
-		end
+	local block, hit, hit_radius
 
-		if is_corner_blocked then
-			block = true
-			stopped = true
-		end
-
-		-- Update coordinates and set color
-		if hit and not stopped then
-			stop_x, stop_y = lx, ly
-			if not block and hit == "unknown" then s = self.sy end
-		else
+	-- Being completely blocked by the corner of an adjacent tile is annoying, so let's make it a special case and hit it instead
+	if blocked_corner_x then
+		block = true
+		hit = true
+		hit_radius = false
+		stopped = true
+		if self.target_type.min_range and core.fov.distance(self.source_actor.x, self.source_actor.y, lx, ly) < self.target_type.min_range then
 			s = self.sr
 		end
-		if hit_radius and not stopped then
-			stop_radius_x, stop_radius_y = lx, ly
-		end
-		if self.target_type.min_range and not stopped then
-			-- Check if we should be "red"
-			if core.fov.distance(self.source_actor.x, self.source_actor.y, lx, ly) < self.target_type.min_range then
+		s:toScreen(self.display_x + (blocked_corner_x - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (blocked_corner_y - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
+		s = self.sr
+	end
+
+	while lx and ly do
+		if not stopped then 
+			block, hit, hit_radius = false, true, true
+			if self.target_type.block_path then
+				block, hit, hit_radius = self.target_type:block_path(lx, ly, true)
+			end
+
+			-- Update coordinates and set color
+			if hit then
+				stop_x, stop_y = lx, ly
+				if not block and hit == "unknown" then s = self.sy end
+			else
 				s = self.sr
-			-- Check if we were only "red" because of minimum distance
-			elseif s == self.sr then
-				s = self.sb
+			end
+			if hit_radius then
+				stop_radius_x, stop_radius_y = lx, ly
+			end
+			if self.target_type.min_range then
+				-- Check if we should be "red"
+				if core.fov.distance(self.source_actor.x, self.source_actor.y, lx, ly) < self.target_type.min_range then
+					s = self.sr
+				-- Check if we were only "red" because of minimum distance
+				elseif s == self.sr then
+					s = self.sb
+				end
 			end
 		end
 		s:toScreen(self.display_x + (lx - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (ly - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
@@ -138,7 +145,18 @@ function _M:display(dispx, dispy)
 			stopped = true
 		end
 
-		lx, ly, is_corner_blocked = l:step(block_corner)
+		lx, ly, blocked_corner_x, blocked_corner_y = l:step()
+
+		if blocked_corner_x and not stopped then
+			block = true
+			stopped = true
+			hit_radius = false
+			s = self.sr
+			-- double the fun :-P
+			s:toScreen(self.display_x + (blocked_corner_x - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (blocked_corner_y - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
+			s:toScreen(self.display_x + (blocked_corner_x - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (blocked_corner_y - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
+		end
+
 	end
 	self.cursor:toScreen(self.display_x + (self.target.x - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (self.target.y - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
 
@@ -221,9 +239,9 @@ function _M:getType(t)
 	t = table.clone(t)
 	-- Default type def
 	local target_type = {
-		range=20,
-		selffire=true,
-		friendlyfire=true,
+		range = 20,
+		selffire = true,
+		friendlyfire = true,
 		block_path = function(typ, lx, ly, for_highlights)
 			if not typ.no_restrict then
 				if typ.range and typ.start_x then
@@ -233,7 +251,7 @@ function _M:getType(t)
 					local dist = core.fov.distance(typ.source_actor.x, typ.source_actor.y, lx, ly)
 					if dist > typ.range then return true, false, false end
 				end
-				local is_known =  game.level.map.remembers(lx, ly) or game.level.map.seens(lx, ly)
+				local is_known = game.level.map.remembers(lx, ly) or game.level.map.seens(lx, ly)
 				if typ.requires_knowledge and not is_known then
 					return true, false, false
 				end
@@ -247,11 +265,16 @@ function _M:getType(t)
 				elseif typ.stop_block then
 					local nb = game.level.map:checkAllEntitiesCount(lx, ly, "block_move")
 					if nb > 1 or (nb == 1 and game.level.map:checkAllEntities(lx, ly, "block_move") and not game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "pass_projectile")) then
-						if for_highlights and not is_known then
-							return false, "unknown", true
-						else
-							return true, true, true
+						if for_highlights then
+							-- Targeting highlight should be yellow if we don't know what we're firing through
+							if not is_known then
+								return false, "unknown", true
+							-- Don't show the path as blocked if it's blocked by an actor we can't see
+							elseif nb == 1 and typ.source_actor and typ.source_actor.canSee and not typ.source_actor:canSee(game.level.map(lx, ly, engine.Map.ACTOR)) then
+								return false, true, true
+							end
 						end
+						return true, true, true
 					end
 				end
 				if for_highlights and not is_known then
@@ -261,7 +284,7 @@ function _M:getType(t)
 			-- If we don't block the path, then the explode point should be here
 			return false, true, true
 		end,
-		block_radius=function(typ, lx, ly, for_highlights)
+		block_radius = function(typ, lx, ly, for_highlights)
 			return not typ.no_restrict and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") and not game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "pass_projectile") and not (for_highlights and not (game.level.map.remembers(lx, ly) or game.level.map.seens(lx, ly)))
 		end
 	}

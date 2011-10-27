@@ -33,11 +33,11 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-// Floating point espsilons to guarantee smooth floating point transitions and behavior in an integer grid.
-// There were no, and are no, floating point precision guarantees for maps greater than 1024x1024.  Use double precision if desired.
-// Nevertheless, map sizes greater than 10000x10000 should still behave reasonably.
-#define GRID_EPSILON 2.0e-6f
-#define SLOPE_EPSILON 1.53e-5f
+/* Floating point espsilon to guarantee smooth floating point transitions and behavior in an integer grid.
+ * There were no, and are no, floating point precision guarantees for maps greater than 1024x1024.  Use double precision if desired.
+ * Nevertheless, map sizes greater than 10000x10000 should still behave reasonably.
+ */
+#define GRID_EPSILON 4.0e-6f
 
 #ifdef __cplusplus
 extern "C" {
@@ -66,17 +66,21 @@ typedef enum {
     FOV_SHAPE_SQUARE                    /* max(x, y)                      r                                               */
 } fov_shape_type;
 
+/* The following aren't implemented and, hence, aren't used. If the the original library implements it later, we may want to copy it */
 /** Values for the corner peek setting. */
+/*
 typedef enum {
     FOV_CORNER_NOPEEK,
     FOV_CORNER_PEEK
 } fov_corner_peek_type;
-
+*/
 /** Values for the opaque apply setting. */
+/*
 typedef enum {
     FOV_OPAQUE_APPLY,
     FOV_OPAQUE_NOAPPLY
 } fov_opaque_apply_type;
+*/
 
 /** @cond INTERNAL */
 typedef /*@null@*/ unsigned *height_array_t;
@@ -93,10 +97,10 @@ typedef struct {
     fov_shape_type shape;
 
     /** Whether to peek around corners. */
-    fov_corner_peek_type corner_peek;
+    /* fov_corner_peek_type corner_peek; */
 
     /** Whether to call apply on opaque tiles. */
-    fov_opaque_apply_type opaque_apply;
+    /* fov_opaque_apply_type opaque_apply; */
 
     /** \cond INTERNAL */
 
@@ -120,19 +124,10 @@ typedef struct {
     /** y from which the line originates */
     int source_y;
 
-    /** x destination of line */
-    /*  This parameter may be deleted since it appears to be unnecessary */
-    int dest_x;
-
-    /** y destination of line */
-    /*  This parameter may be deleted since it appears to be unnecessary */
-    int dest_y;
-
     /** Parametrization variable used to count the "steps" of the line */
     int t;
 
     /** Parametrization value of t for where line is blocked, if applicable */
-    /*  This parameter may be deleted since it appears to be unnecessary */
     int block_t;
 
     /** Parametrization value of t for where line reaches destination tile */
@@ -144,9 +139,14 @@ typedef struct {
     /** Size of single step in y direction, so for t'th step, delta_y = t*step_y */
     float step_y;
 
+    /** Epsilon used to round toward or away from cardinal directions based on adjacent obstructed grids */
+    float eps;
+
     /** Whether or not the line is blocked */
-    /*  This parameter may be deleted since it appears to be unnecessary */
     bool is_blocked;
+
+    /** Whether the line should begin at the destination (and continue away from the source) */
+    bool start_at_end;
 } fov_line_data;
 
 
@@ -215,7 +215,7 @@ void fov_settings_set_shape(fov_settings_type *settings, fov_shape_type value);
   ...#
 \endverbatim
  */
-void fov_settings_set_corner_peek(fov_settings_type *settings, fov_corner_peek_type value);
+/* void fov_settings_set_corner_peek(fov_settings_type *settings, fov_corner_peek_type value); */
 
 /**
  * Whether to call the apply callback on opaque tiles.
@@ -226,7 +226,7 @@ void fov_settings_set_corner_peek(fov_settings_type *settings, fov_corner_peek_t
  * - FOV_OPAQUE_APPLY \b (default): Call apply callback on opaque tiles.
  * - FOV_OPAQUE_NOAPPLY: Do not call the apply callback on opaque tiles.
  */
-void fov_settings_set_opaque_apply(fov_settings_type *settings, fov_opaque_apply_type value);
+/* void fov_settings_set_opaque_apply(fov_settings_type *settings, fov_opaque_apply_type value); */
 
 /**
  * Set the function used to test whether a map tile is opaque.

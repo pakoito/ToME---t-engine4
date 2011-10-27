@@ -43,7 +43,7 @@ newEntity{ base = "TRAP_WATER",
 	color=colors.BLUE,
 	message = "@Target@ is caught by a water siphon!",
 	dam = resolvers.mbonus_level(90, 15),
-	combatAttackStr = function(self) return self.disarm_power * 2 end,
+	combatPhysicalpower = function(self) return self.disarm_power * 2 end,
 	triggered = function(self, x, y, who)
 		self:project({type="ball",radius=2,x=x,y=y}, x, y, engine.DamageType.PINNING, {dam=self.dam,dur=4})
 		return true

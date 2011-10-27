@@ -233,12 +233,12 @@ newTalent{
 		-- do the rush
 		local block_actor = function(_, bx, by) return game.level.map:checkEntity(bx, by, Map.TERRAIN, "block_move", self) end
 		local l = self:lineFOV(x, y, block_actor)
-		local lx, ly, is_corner_blocked = l:step(block_actor)
+		local lx, ly, is_corner_blocked = l:step()
 		local tx, ty = self.x, self.y
 		while lx and ly do
 			if is_corner_blocked or game.level.map:checkAllEntities(lx, ly, "block_move", self) then break end
 			tx, ty = lx, ly
-			lx, ly, is_corner_blocked = l:step(block_actor)
+			lx, ly, is_corner_blocked = l:step()
 		end
 
 		local ox, oy = self.x, self.y

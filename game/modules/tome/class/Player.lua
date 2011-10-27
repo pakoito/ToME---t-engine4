@@ -425,6 +425,9 @@ function _M:lineFOV(tx, ty, extra_block, block, sx, sy)
 	end
 	local inCreepingDark = false
 
+	extra_block = type(extra_block) == "function" and extra_block
+		or type(extra_block) == "string" and function(_, x, y) return game.level.map:checkAllEntities(x, y, extra_block) end
+
 	block = block or function(_, x, y)
 		if darkVisionRange then
 			if game.level.map:checkAllEntities(x, y, "creepingDark") then
@@ -438,11 +441,11 @@ function _M:lineFOV(tx, ty, extra_block, block, sx, sy)
 		if sees_target then
 			return game.level.map:checkAllEntities(x, y, "block_sight") or
 				game.level.map:checkEntity(x, y, engine.Map.TERRAIN, "block_move") and not game.level.map:checkEntity(x, y, engine.Map.TERRAIN, "pass_projectile") or
-				type(extra_block) == "function" and extra_block(self, x, y)
+				extra_block and extra_block(self, x, y)
 		elseif core.fov.distance(sx, sy, x, y) <= self.sight and (game.level.map.remembers(x, y) or game.level.map.seens(x, y)) then
 			return game.level.map:checkEntity(x, y, Map.TERRAIN, "block_sight") or
 				game.level.map:checkEntity(x, y, engine.Map.TERRAIN, "block_move") and not game.level.map:checkEntity(x, y, engine.Map.TERRAIN, "pass_projectile") or
-				type(extra_block) == "function" and extra_block(self, x, y)
+				extra_block and extra_block(self, x, y)
 		else
 			return true
 		end

@@ -40,7 +40,8 @@ newTalent{
 			local tid = rng.table(spells)
 			if tid then
 				local l = self:lineFOV(target.x, target.y)
-				local lx, ly, is_corner_blocked = l:step(nil, true)
+				l:set_corner_block()
+				local lx, ly, is_corner_blocked = l:step(true)
 				local target_x, target_y = lx, ly
 				-- Check for terrain and friendly actors
 				while lx and ly and not is_corner_blocked and core.fov.distance(self.x, self.y, lx, ly) <= 10 do
@@ -52,7 +53,7 @@ newTalent{
 						break
 					end
 					target_x, target_y = lx, ly
-					lx, ly = l:step(nil, true)
+					lx, ly = l:step(true)
 				end
 				print("[ARCANE COMBAT] autocast ",self:getTalentFromId(tid).name)
 				local old_cd = self:isTalentCoolingDown(self:getTalentFromId(tid))

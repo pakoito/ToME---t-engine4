@@ -51,17 +51,17 @@ newTalent{
 		if core.fov.distance(self.x, self.y, x, y) > 1 then
 			local block_actor = function(_, bx, by) return game.level.map:checkEntity(bx, by, Map.TERRAIN, "block_move", self) end
 			local l = self:lineFOV(x, y, block_actor)
-			local lx, ly, is_corner_blocked = l:step(block_actor)
+			local lx, ly, is_corner_blocked = l:step()
 			if is_corner_blocked or game.level.map:checkAllEntities(lx, ly, "block_move", self) then
 				game.logPlayer(self, "You are too close to build up momentum!")
 				return
 			end
 			local tx, ty = lx, ly
-			lx, ly, is_corner_blocked = l:step(block_actor)
+			lx, ly, is_corner_blocked = l:step()
 			while lx and ly do
 				if is_corner_blocked or game.level.map:checkAllEntities(lx, ly, "block_move", self) then break end
 				tx, ty = lx, ly
-				lx, ly, is_corner_blocked = l:step(block_actor)
+				lx, ly, is_corner_blocked = l:step()
 			end
 
 			self:move(tx, ty, true)
@@ -161,17 +161,17 @@ newTalent{
 		if core.fov.distance(self.x, self.y, x, y) > 1 then
 			local block_actor = function(_, bx, by) return game.level.map:checkEntity(bx, by, Map.TERRAIN, "block_move", self) end
 			local l = self:lineFOV(x, y, block_actor)
-			local lx, ly, is_corner_blocked = l:step(block_actor)
+			local lx, ly, is_corner_blocked = l:step()
 			if is_corner_blocked or game.level.map:checkAllEntities(lx, ly, "block_move", self) then
 				game.logPlayer(self, "You are too close to build up momentum!")
 				return
 			end
 			local tx, ty = lx, ly
-			lx, ly, is_corner_blocked = l:step(block_actor)
+			lx, ly, is_corner_blocked = l:step()
 			while lx and ly do
 				if is_corner_blocked or game.level.map:checkAllEntities(lx, ly, "block_move", self) then break end
 				tx, ty = lx, ly
-				lx, ly, is_corner_blocked = l:step(block_actor)
+				lx, ly, is_corner_blocked = l:step()
 			end
 
 			self:move(tx, ty, true)
@@ -233,17 +233,17 @@ newTalent{
 		if core.fov.distance(self.x, self.y, x, y) > 1 then
 			local block_actor = function(_, bx, by) return game.level.map:checkEntity(bx, by, Map.TERRAIN, "block_move", self) end
 			local l = self:lineFOV(x, y, block_actor)
-			local lx, ly, is_corner_blocked = l:step(block_actor)
+			local lx, ly, is_corner_blocked = l:step()
 			if is_corner_blocked or game.level.map:checkAllEntities(lx, ly, "block_move", self) then
 				game.logPlayer(self, "You are too close to build up momentum!")
 				return
 			end
 			local tx, ty = lx, ly
-			lx, ly, is_corner_blocked = l:step(block_actor)
+			lx, ly, is_corner_blocked = l:step()
 			while lx and ly do
 				if is_corner_blocked or game.level.map:checkAllEntities(lx, ly, "block_move", self) then break end
 				tx, ty = lx, ly
-				lx, ly, is_corner_blocked = l:step(block_actor)
+				lx, ly, is_corner_blocked = l:step()
 			end
 
 			self:move(tx, ty, true)
@@ -303,7 +303,8 @@ newTalent{
 
 		-- We will always project the beam as far as possible
 		local l = self:lineFOV(x, y)
-		local lx, ly, is_corner_blocked = l:step(nil, true)
+		l:set_corner_block()
+		local lx, ly, is_corner_blocked = l:step(true)
 		local target_x, target_y = lx, ly
 		-- Check for terrain and friendly actors
 		while lx and ly and not is_corner_blocked and core.fov.distance(self.x, self.y, lx, ly) <= tg.range do
@@ -315,7 +316,7 @@ newTalent{
 				break
 			end
 			target_x, target_y = lx, ly
-			lx, ly = l:step(nil, true)
+			lx, ly = l:step(true)
 		end
 		x, y = target_x, target_y
 

@@ -168,7 +168,7 @@ newTalent{
 
 		local block_actor = function(_, bx, by) return game.level.map:checkEntity(bx, by, Map.TERRAIN, "block_move", target) end
 		local lineFunction = core.fov.line(self.x, self.y, targetX, targetY, block_actor)
-		local nextX, nextY, is_corner_blocked = lineFunction:step(block_actor)
+		local nextX, nextY, is_corner_blocked = lineFunction:step()
 		local currentX, currentY = self.x, self.y
 
 		while nextX and nextY and not is_corner_blocked do
@@ -214,7 +214,7 @@ newTalent{
 
 			-- allow the move
 			currentX, currentY = nextX, nextY
-			nextX, nextY, is_corner_blocked = lineFunction:step(block_actor)
+			nextX, nextY, is_corner_blocked = lineFunction:step()
 
 			-- attack adjacent targets
 			for i = 0, 8 do

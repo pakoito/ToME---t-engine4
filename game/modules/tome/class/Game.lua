@@ -1558,7 +1558,7 @@ function _M:mouseLeftClick(mx, my)
 	local tmx, tmy = self.level.map:getMouseTile(mx, my)
 	local p = self.player
 	local a = game.level.map(tmx, tmy, Map.ACTOR)
-	if not a then return end
+	if not p:canSee(a) then return end
 	if not p.auto_shoot_talent then return end
 	local t = p:getTalentFromId(p.auto_shoot_talent)
 	if not t then return end
@@ -1576,7 +1576,7 @@ function _M:mouseMiddleClick(mx, my)
 	local tmx, tmy = self.level.map:getMouseTile(mx, my)
 	local p = self.player
 	local a = game.level.map(tmx, tmy, Map.ACTOR)
-	if not a then return end
+	if not p:canSee(a) then return end
 	if not p.auto_shoot_midclick_talent then return end
 	local t = p:getTalentFromId(p.auto_shoot_midclick_talent)
 	if not t then return end

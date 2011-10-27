@@ -1080,6 +1080,16 @@ function core.fov.beam_any_angle_grids(x, y, radius, delta_x, delta_y, angle, bl
 	return grids
 end
 
+function core.fov.set_corner_block(l, block_corner)
+	block_corner = type(block_corner) == "function" and block_corner or
+		block_corner == false and function(_, x, y) return end or
+		type(block_corner) == "string" and function(_, x, y) return game.level.map:checkAllEntities(x, y, what) end or
+		function(_, x, y) return game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") and
+			not game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "pass_projectile") end
+	l.block = block_corner
+	return block_corner
+end
+
 function core.fov.line(sx, sy, tx, ty, block, start_at_end)
 	local what = type(block) == "string" and block or "block_sight"
 	block = type(block) == "function" and block or
@@ -1087,17 +1097,17 @@ function core.fov.line(sx, sy, tx, ty, block, start_at_end)
 		function(_, x, y)
 			return game.level.map:checkAllEntities(x, y, what)
 		end
-	return core.fov.line_base(sx, sy, tx, ty, game.level.map.w, game.level.map.h, start_at_end, block)
-end
 
-tmps = core.fov.line_base(0, 0, 0, 0, 0, 0, function(_, x, y) end)
-getmetatable(tmps).__index.step = function(l, block_corner, dont_stop_at_end)
-	block_corner = type(block_corner) == "function" and block_corner or
-		block_corner == false and function(_, x, y) return end or
-		type(block_corner) == "string" and function(_, x, y) return game.level.map:checkAllEntities(x, y, what) end or
-		function(_, x, y) return game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") and
-			not game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "pass_projectile") end
-	return l:step_base(dont_stop_at_end, game.level.map.w, game.level.map.h, block_corner)
+	local line = core.fov.line_base(sx, sy, tx, ty, game.level.map.w, game.level.map.h, start_at_end, block)
+	local l = {}
+	l.line = line
+	l.block = block
+	l.set_corner_block = core.fov.set_corner_block
+	local mt = {}
+	mt.__index = function(t, key, ...) if t.line[key] then return t.line[key] end end
+	setmetatable(l, mt)
+
+	return l
 end
 
 --- Sets the permissiveness of FoV based on the shape of blocked terrain

@@ -2987,7 +2987,7 @@ function _M:hasLOS(x, y, what)
 
 		local l = core.fov.line(self.x, self.y, x, y, "block_sight")
 		local inCreepingDark, lastX, lastY = false
-		lx, ly, is_corner_blocked = l:step("block_sight")
+		lx, ly, is_corner_blocked = l:step()
 		while lx and ly and not is_corner_blocked do
 			if game.level.map:checkAllEntities(lx, ly, "block_sight") then
 				if darkVisionRange and game.level.map:checkAllEntities(lx, ly, "creepingDark") then
@@ -3002,15 +3002,15 @@ function _M:hasLOS(x, y, what)
 			end
 
 			lastX, lastY = lx, ly
-			lx, ly, is_corner_blocked = l:step("block_sight")
+			lx, ly, is_corner_blocked = l:step()
 		end
 	else
 		local l = core.fov.line(self.x, self.y, x, y, what)
-		lx, ly, is_corner_blocked = l:step(what)
+		lx, ly, is_corner_blocked = l:step()
 		while lx and ly and not is_corner_blocked do
 			if game.level.map:checkAllEntities(lx, ly, what) then break end
 
-			lx, ly, is_corner_blocked = l:step(what)
+			lx, ly, is_corner_blocked = l:step()
 		end
 	end
 

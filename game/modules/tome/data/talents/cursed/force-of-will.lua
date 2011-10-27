@@ -49,7 +49,7 @@ local function forceHit(self, target, sourceX, sourceY, damage, knockback, knock
 		local blocked = false
 		while knockback > 0 do
 			blocked = true
-			local x, y, is_corner_blocked = lineFunction:step(block_actor, true)
+			local x, y, is_corner_blocked = lineFunction:step(true)
 
 			if not game.level.map:isBound(x, y) or is_corner_blocked or game.level.map:checkAllEntities(x, y, "block_move", target) then
 				-- blocked

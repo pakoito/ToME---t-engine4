@@ -23,11 +23,11 @@ local print = function() end
 local checkLOS = function(sx, sy, tx, ty)
 	what = what or "block_sight"
 	local l = core.fov.line(sx, sy, tx, ty, what)
-	local lx, ly, is_corner_blocked = l:step(what)
+	local lx, ly, is_corner_blocked = l:step()
 	while lx and ly and not is_corner_blocked do
 		if game.level.map:checkAllEntities(lx, ly, what) then break end
 
-		lx, ly, is_corner_blocked = l:step(what)
+		lx, ly, is_corner_blocked = l:step()
 	end
 	-- Ok if we are at the end reset lx and ly for the next code
 	if not lx and not ly and not is_corner_blocked then lx, ly = x, y end
