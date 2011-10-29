@@ -31,6 +31,7 @@ return {
 	no_level_connectivity = true,
 	generator =  {
 		map = {
+--[[
 			class = "engine.generator.map.Roomer",
 			nb_rooms = 10,
 			rooms = {"random_room", "lesser_vault"},
@@ -41,7 +42,8 @@ return {
 			up = "UP",
 			down = "DOWN",
 			door = "DOOR",
---[[
+]]
+-- [[
 			class = "engine.generator.map.Building",
 			max_block_w = 15, max_block_h = 15,
 			max_building_w = 5, max_building_h = 5,
@@ -51,7 +53,7 @@ return {
 			up = "FLAT_UP6",
 			down = "FLAT_DOWN4",
 			door = "DOOR",
-]]
+--]]
 		},
 		actor = {
 			class = "engine.generator.actor.Random",

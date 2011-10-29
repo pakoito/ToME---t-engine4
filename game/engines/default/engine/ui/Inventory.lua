@@ -35,6 +35,7 @@ function _M:init(t)
 	self.tabslist = t.tabslist
 	self.fct = t.fct
 	self.on_select = t.select
+	self.on_select_tab = t.select_tab
 	self.on_drag = t.on_drag
 	self.on_drag_end = t.on_drag_end
 
@@ -102,9 +103,19 @@ function _M:generate()
 	end
 end
 
-function _M:selectTab(item)
+function _M:switchTab(filter)
+	if not self.c_tabs then return end
+
+	for i, d in ipairs(self.tabslist) do
+		for k, e in pairs(filter) do if d[k] == e then
+			self.c_tabs.sel_j = 1 self.c_tabs.sel_i = i self.c_tabs:onUse("left", false)
+			return
+		end end
+	end
 end
-function _M:selectItem(item)
+
+function _M:selectTab(item)
+	if self.on_select_tab then self.on_select_tab(item) end
 end
 
 function _M:setInnerFocus(id)
