@@ -182,3 +182,17 @@ function _M:sound(name)
 		game:playSound(sounds[name])
 	end
 end
+
+function _M:makeKeyChar(i)
+	i = i - 1
+	if i < 26 then
+		return string.char(string.byte('a') + i)
+	elseif i < 52 then
+		return string.char(string.byte('A') + i - 26)
+	elseif i < 62 then
+		return string.char(string.byte('0') + i - 52)
+	else
+		-- Invalid
+		return "  "
+	end
+end

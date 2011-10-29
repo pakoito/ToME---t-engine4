@@ -120,6 +120,11 @@ function _M:mouseEvent(button, x, y, xrel, yrel, bx, by, event)
 	self:no_focus()
 end
 
+function _M:getItem()
+	if not self.focus_ui then return nil end
+	return self.focus_ui.ui:getItem(), self.focus_ui.ui.inven, self.focus_ui.ui.item
+end
+
 function _M:generateEquipDollFrames()
 	local doll = self.actor.equipdolls[self.actor.equipdoll or "default"]
 	if not doll then return end

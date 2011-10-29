@@ -20,11 +20,8 @@
 require "engine.class"
 local Base = require "engine.ui.Base"
 local Dialog = require "engine.ui.Dialog"
-local ListColumns = require "engine.ui.ListColumns"
-local Textzone = require "engine.ui.Textzone"
-local TextzoneList = require "engine.ui.TextzoneList"
+local Inventory = require "engine.ui.Inventory"
 local Separator = require "engine.ui.Separator"
-local ImageList = require "engine.ui.ImageList"
 local EquipDoll = require "engine.ui.EquipDoll"
 
 module(..., package.seeall, class.inherit(Dialog))
@@ -37,70 +34,43 @@ function _M:init(title, actor, filter, action, on_select)
 
 	Dialog.init(self, title or "Inventory", math.max(800, game.w * 0.8), math.max(600, game.h * 0.8))
 
-	self.max_h = 0
-	local uis = {}
-
 	self.c_doll = EquipDoll.new{actor=actor, drag_enable=true,
 		fct = function(item, button, event) self:use(item, button, event) end,
 		on_select = function(ui, inven, item, o) if ui.ui.last_display_x then self:select{last_display_x=ui.ui.last_display_x+ui.ui.w, last_display_y=ui.ui.last_display_y, object=o} end end,
 		actorWear = function(ui, ...)
 			if ui:getItem() then self.actor:doTakeoff(ui.inven, ui.item, ui:getItem(), true) end
 			self.actor:doWear(...)
-			self:generateList()
+			self.c_inven:generateList()
 		end
 	}
 
 	local tabslist = {
-		{image="metal-ui/inven_tabs/weapons.png", 	kind="weapons", desc="All kinds of weapons"},
-		{image="metal-ui/inven_tabs/armors.png", 	kind="armors", desc="All kinds of armours"},
-		{image="metal-ui/inven_tabs/jewelry.png", 	kind="jewelry", desc="Rings and Amulets"},
-		{image="metal-ui/inven_tabs/gems.png", 		kind="gems", desc="Gems"},
-		{image="metal-ui/inven_tabs/inscriptions.png", 	kind="inscriptions", desc="Infusions, Runes, ..."},
-		{image="metal-ui/inven_tabs/misc.png", 		kind="misc", desc="Miscellaneous"},
-		{image="metal-ui/inven_tabs/quests.png", 	kind="quests", desc="Quest and plot related items"},
+		{image="metal-ui/inven_tabs/weapons.png", 	kind="weapons",		desc="All kinds of weapons",		filter=function(o) return not o.__transmo and (o.type == "weapon") end},
+		{image="metal-ui/inven_tabs/armors.png", 	kind="armors",		desc="All kinds of armours",		filter=function(o) return not o.__transmo and (o.type == "armor") end},
+		{image="metal-ui/inven_tabs/jewelry.png", 	kind="jewelry",		desc="Rings and Amulets",		filter=function(o) return not o.__transmo and (o.type == "jewelry") end},
+		{image="metal-ui/inven_tabs/gems.png", 		kind="gems",		desc="Gems"		,		filter=function(o) return not o.__transmo and (o.type == "gem" or o.type == "alchemist-gem") end},
+		{image="metal-ui/inven_tabs/inscriptions.png", 	kind="inscriptions",	desc="Infusions, Runes, ...",		filter=function(o) return not o.__transmo and (o.type == "scroll") end},
+		{image="metal-ui/inven_tabs/misc.png", 		kind="misc",		desc="Miscellaneous",			filter="others"},
+		{image="metal-ui/inven_tabs/quests.png", 	kind="quests",		desc="Quest and plot related items",	filter=function(o) return not o.__transmo and (o.plot or o.quest) end},
 	}
-	if actor:attr("has_transmo") then tabslist[#tabslist+1] = {image="metal-ui/inven_tabs/chest.png", kind="transmo", desc="Transmogrification Chest"} end
+	if actor:attr("has_transmo") then tabslist[#tabslist+1] = {image="metal-ui/inven_tabs/chest.png", kind="transmo", desc="Transmogrification Chest", filter=function(o) return o.__transmo end} end
+	self.c_inven = Inventory.new{actor=actor, inven=actor:getInven("INVEN"), width=self.iw - 20 - self.c_doll.w, height=self.ih - 10, tabslist=tabslist,
+		fct=function(item, sel, button, event) self:use(item, button, event) end,
+		on_select=function(item, sel) self:select(item) end,
+		on_drag=function(item) self:onDrag(item) end,
+		on_drag_end=function() self:onDragTakeoff() end,
+	}
 
-	self.c_tabs = ImageList.new{width=self.iw - 20 - self.c_doll.w, height=36, tile_w=32, tile_h=32, padding=5, force_size=true, selection="ctrl-multiple", list=tabslist, fct=function() self:generateList() end, on_select=function(item) self:select(item) end}
-	self.c_tabs.no_keyboard_focus = true
-	if _M._last_tabs then
-		for _, l in ipairs(_M._last_tabs) do self.c_tabs.dlist[l[1]][l[2]].selected = true end
-	else
-		self.c_tabs.dlist[1][1].selected = true
-	end
-
-	self.c_inven = ListColumns.new{width=self.iw - 20 - self.c_doll.w, height=self.ih - self.max_h*self.font_h - 10 - self.c_tabs.h, sortable=true, scrollbar=true, columns={
-		{name="", width={20,"fixed"}, display_prop="char", sort="id"},
-		{name="", width={24,"fixed"}, display_prop="object", sort="sortname", direct_draw=function(item, x, y) if item.object then item.object:toScreen(nil, x+4, y, 16, 16) end end},
-		{name="Inventory", width=72, display_prop="name", sort="sortname"},
-		{name="Category", width=20, display_prop="cat", sort="cat"},
-		{name="Enc.", width=8, display_prop="encumberance", sort="encumberance"},
-	}, list={}, fct=function(item, sel, button, event) self:use(item, button, event) end, select=function(item, sel) self:select(item) end, on_drag=function(item) self:onDrag(item) end, on_drag_end=function() self:onDragTakeoff() end}
-
-	self:generateList()
-
-	uis[#uis+1] = {left=0, top=0, ui=self.c_doll}
-	uis[#uis+1] = {right=0, top=0, ui=self.c_tabs}
-	uis[#uis+1] = {right=0, top=self.c_tabs.h + 5, ui=self.c_inven}
-	uis[#uis+1] = {left=self.c_doll.w, top=5, ui=Separator.new{dir="horizontal", size=self.ih - 10}}
+	local uis = {
+		{left=0, top=0, ui=self.c_doll},
+		{right=0, top=0, ui=self.c_inven},
+		{left=self.c_doll.w, top=5, ui=Separator.new{dir="horizontal", size=self.ih - 10}},
+	}
 
 	self:loadUI(uis)
 	self:setFocus(self.c_inven)
 	self:setupUI()
 
-	self.key:addCommands{
-		__TEXTINPUT = function(c)
-			local list
-			if self.focus_ui and self.focus_ui.ui == self.c_inven then list = self.c_inven.list
-			elseif self.focus_ui and self.focus_ui.ui == self.c_equip then list = self.c_equip.list
-			end
-			if list and list.chars[c] then
-				self:use(list[list.chars[c]])
-			end
-		end,
-		_TAB = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = util.boundWrap(self.c_tabs.sel_i+1, 1, 8) self.c_tabs:onUse("left") end,
-		[{"_TAB","ctrl"}] = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = util.boundWrap(self.c_tabs.sel_i-1, 1, 8) self.c_tabs:onUse("left", false) end,
-	}
 	self.key:addBinds{
 		HOTKEY_1 = function() self:defineHotkey(1) end,
 		HOTKEY_2 = function() self:defineHotkey(2) end,
@@ -121,7 +91,6 @@ function _M:init(title, actor, filter, action, on_select)
 		HOTKEY_SECOND_5 = function() self:defineHotkey(17) end,
 		HOTKEY_SECOND_6 = function() self:defineHotkey(18) end,
 		HOTKEY_SECOND_7 = function() self:defineHotkey(19) end,
-
 		HOTKEY_SECOND_8 = function() self:defineHotkey(20) end,
 		HOTKEY_SECOND_9 = function() self:defineHotkey(21) end,
 		HOTKEY_SECOND_10 = function() self:defineHotkey(22) end,
@@ -152,28 +121,10 @@ function _M:init(title, actor, filter, action, on_select)
 		HOTKEY_FOURTH_11 = function() self:defineHotkey(47) end,
 		HOTKEY_FOURTH_12 = function() self:defineHotkey(48) end,
 		ACCEPT = function()
-			if self.focus_ui and self.focus_ui.ui == self.c_inven then self:use(self.c_inven.list[self.c_inven.sel])
-			elseif self.focus_ui and self.focus_ui.ui == self.c_equip then self:use(self.c_equip.list[self.c_equip.sel])
+			if self.focus_ui and self.focus_ui.ui == self.c_inven then self:use(self.c_inven.c_inven.list[self.c_inven.c_inven.sel])
 			end
 		end,
 		EXIT = function() game:unregisterDialog(self) end,
-
-		SWITCH_PARTY_1 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 1 self.c_tabs:onUse("left") end,
-		SWITCH_PARTY_2 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 2 self.c_tabs:onUse("left") end,
-		SWITCH_PARTY_3 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 3 self.c_tabs:onUse("left") end,
-		SWITCH_PARTY_4 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 4 self.c_tabs:onUse("left") end,
-		SWITCH_PARTY_5 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 5 self.c_tabs:onUse("left") end,
-		SWITCH_PARTY_6 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 6 self.c_tabs:onUse("left") end,
-		SWITCH_PARTY_7 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 7 self.c_tabs:onUse("left") end,
-		SWITCH_PARTY_8 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 8 self.c_tabs:onUse("left") end,
-		ORDER_PARTY_1 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 1 self.c_tabs:onUse("left", true) end,
-		ORDER_PARTY_2 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 2 self.c_tabs:onUse("left", true) end,
-		ORDER_PARTY_3 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 3 self.c_tabs:onUse("left", true) end,
-		ORDER_PARTY_4 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 4 self.c_tabs:onUse("left", true) end,
-		ORDER_PARTY_5 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 5 self.c_tabs:onUse("left", true) end,
-		ORDER_PARTY_6 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 6 self.c_tabs:onUse("left", true) end,
-		ORDER_PARTY_7 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 7 self.c_tabs:onUse("left", true) end,
-		ORDER_PARTY_8 = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = 87 self.c_tabs:onUse("left", true) end,
 	}
 
 	-- Add tooltips
@@ -198,8 +149,8 @@ function _M:defineHotkey(id)
 	if not self.actor or not self.actor.hotkey then return end
 
 	local item = nil
-	if self.focus_ui and self.focus_ui.ui == self.c_inven then item = self.c_inven.list[self.c_inven.sel]
-	elseif self.focus_ui and self.focus_ui.ui == self.c_equip then item = self.c_equip.list[self.c_equip.sel]
+	if self.focus_ui and self.focus_ui.ui == self.c_inven then item = self.c_inven.c_inven.list[self.c_inven.c_inven.sel]
+	elseif self.focus_ui and self.focus_ui.ui == self.c_doll then item = {object=self.c_doll:getItem()}
 	end
 	if not item or not item.object then return end
 
@@ -217,7 +168,7 @@ function _M:select(item)
 end
 
 function _M:on_focus(id, ui)
-	if self.focus_ui and self.focus_ui.ui == self.c_inven then self:select(self.c_inven.list[self.c_inven.sel])
+	if self.focus_ui and self.focus_ui.ui == self.c_inven then self:select(self.c_inven.c_inven.list[self.c_inven.c_inven.sel])
 	elseif self.focus_ui and self.focus_ui.ui == self.c_tabs then
 	else
 		game.tooltip_x = nil
@@ -235,81 +186,8 @@ function _M:use(item, button, event)
 	end
 end
 
-local tab_filters = {
-	weapons = function(o) return not o.__transmo and (o.type == "weapon") end,
-	armors = function(o) return not o.__transmo and (o.type == "armor") end,
-	gems = function(o) return not o.__transmo and (o.type == "gem" or o.type == "alchemist-gem") end,
-	jewelry = function(o) return not o.__transmo and (o.type == "jewelry") end,
-	inscriptions = function(o) return not o.__transmo and (o.type == "scroll") end,
-	quests = function(o) return not o.__transmo and (o.plot or o.quest) end,
-	transmo = function(o) return o.__transmo end,
-}
-
-function _M:updateTabFilter()
-	local list = self.c_tabs:getAllSelected()
-	local checks = {}
-
-	for i, item in ipairs(list) do
-		if item.data.kind == "weapons" then checks[#checks+1] = tab_filters.weapons
-		elseif item.data.kind == "armors" then checks[#checks+1] = tab_filters.armors
-		elseif item.data.kind == "gems" then checks[#checks+1] = tab_filters.gems
-		elseif item.data.kind == "jewelry" then checks[#checks+1] = tab_filters.jewelry
-		elseif item.data.kind == "inscriptions" then checks[#checks+1] = tab_filters.inscriptions
-		elseif item.data.kind == "quests" then checks[#checks+1] = tab_filters.quests
-		elseif item.data.kind == "transmo" then checks[#checks+1] = tab_filters.transmo
-		elseif item.data.kind == "misc" then
-			local misc
-			misc = function(o)
-				-- Anything else
-				for k, fct in pairs(tab_filters) do
-					if fct ~= misc then
-						if fct(o) then return false end
-					end
-				end
-				return true
-			end
-			checks[#checks+1] = misc
-		end
-	end
-
-	self.tab_filter = function(o)
-		for i = 1, #checks do if checks[i](o) then return true end end
-		return false
-	end
-
-	-- Save for next dialogs
-	_M._last_tabs = self.c_tabs:getAllSelectedKeys()
-end
-
-function _M:generateList(no_update)
-	self:updateTabFilter()
-
-	-- Makes up the list
-	self.inven_list = {}
-	local list = self.inven_list
-	local chars = {}
-	local i = 1
-	for item, o in ipairs(self.actor:getInven("INVEN") or {}) do
-		if (not self.filter or self.filter(o)) and (not self.tab_filter or self.tab_filter(o)) then
-			local char = self:makeKeyChar(i)
-
-			local enc = 0
-			o:forAllStack(function(o) enc=enc+o.encumber end)
-
-			list[#list+1] = { id=#list+1, char=char, name=o:getName(), sortname=o:getName():toString():removeColorCodes(), color=o:getDisplayColor(), object=o, inven=self.actor.INVEN_INVEN, item=item, cat=o.subtype, encumberance=enc, desc=o:getDesc() }
-			chars[char] = #list
-			i = i + 1
-		end
-	end
-	list.chars = chars
-
-	if not no_update then
-		self.c_inven:setList(self.inven_list)
-	end
-end
-
 function _M:on_recover_focus()
-	self:generateList()
+	self.c_inven:generateList()
 end
 
 function _M:unload()
@@ -349,7 +227,7 @@ function _M:onDragTakeoff()
 	local drag = game.mouse.dragged.payload
 	if drag.kind == "inventory" and drag.inven and self.actor:getInven(drag.inven) and self.actor:getInven(drag.inven).worn then
 		self.actor:doTakeoff(drag.inven, drag.item_idx, drag.object)
-		self:generateList()
+		self.c_inven:generateList()
 		game.mouse:usedDrag()
 	end
 end
@@ -361,4 +239,8 @@ function _M:drawFrame(x, y, r, g, b, a)
 	if not self.title_fill then return end
 
 	core.display.drawQuad(x + self.frame.title_x, y + self.frame.title_y, self.title_fill, self.frame.title_h, self.title_fill_color.r, self.title_fill_color.g, self.title_fill_color.b, 60)
+end
+
+function _M:generateList()
+	self.c_inven:generateList()
 end
