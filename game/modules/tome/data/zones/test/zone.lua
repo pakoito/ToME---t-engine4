@@ -25,34 +25,44 @@ return {
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	width = 50, height = 50,
-	all_remembered = true,
+--	all_remembered = true,
 	all_lited = true,
---	persistent = "zone",
 	no_level_connectivity = true,
 	generator =  {
 		map = {
 --[[
-			class = "engine.generator.map.Roomer",
-			nb_rooms = 10,
-			rooms = {"random_room", "lesser_vault"},
-			lesser_vaults_list = {"test"},
-			lite_room_chance = 100,
-			['.'] = "FLOOR",
-			['#'] = "WALL",
-			up = "UP",
-			down = "DOWN",
-			door = "DOOR",
-]]
--- [[
 			class = "engine.generator.map.Building",
 			max_block_w = 15, max_block_h = 15,
 			max_building_w = 5, max_building_h = 5,
-			floor = "FLOOR",
-			external_floor = "FLOOR",
-			wall = "WALL",
+			floor = "BAMBOO_HUT_FLOOR",
+			external_floor = "BAMBOO_HUT_FLOOR",
+			wall = "BAMBOO_HUT_WALL",
 			up = "FLAT_UP6",
 			down = "FLAT_DOWN4",
-			door = "DOOR",
+			door = "BAMBOO_HUT_WALL",
+--]]
+--[[
+			class = "engine.generator.map.Forest",
+			edge_entrances = {4,6},
+			zoom = 4,
+			sqrt_percent = 30,
+			noise = "fbm_perlin",
+			floor = {"JUNGLE_GRASS","JUNGLE_GRASS","JUNGLE_GRASS","JUNGLE_GRASS","JUNGLE_DIRT",},
+			wall = "JUNGLE_TREE",
+			up = "GRASS_UP4",
+			down = "GRASS_DOWN6",
+			door = "GRASS",
+--]]
+-- [[
+			class = "engine.generator.map.Roomer",
+			nb_rooms = 10,
+			edge_entrances = {4,6},
+			rooms = {"forest_clearing"},
+			['.'] = {"JUNGLE_GRASS","JUNGLE_GRASS","JUNGLE_GRASS","JUNGLE_DIRT","JUNGLE_DIRT",},
+			['#'] = "JUNGLE_TREE",
+			up = "GRASS_UP4",
+			down = "GRASS_DOWN6",
+			door = "GRASS",
 --]]
 		},
 		actor = {
