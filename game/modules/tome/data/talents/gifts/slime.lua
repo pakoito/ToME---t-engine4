@@ -134,7 +134,7 @@ newTalent{
 
 		for tid, lev in pairs(self.talents) do
 			local t = self:getTalentFromId(tid)
-			if t.mode == "activated" and not t.innate then
+			if t.mode == "activated" and not t.innate and (not self.talents_cd[t.id] or self.talents_cd[t.id] == 0) then
 				self.talents_cd[t.id] = duration
 			end
 		end
