@@ -88,7 +88,7 @@ function _M:resize(x, y, w, h)
 	end
 end
 
-local page_to_hotkey = {"", "SECOND_", "THIRD_"}
+local page_to_hotkey = {"", "SECOND_", "THIRD_", "FOURTH_"}
 
 -- Displays the hotkeys, keybinds & cooldowns
 function _M:display()
@@ -110,7 +110,7 @@ function _M:display()
 	self.clics = {}
 	self.items = {}
 
-	for page = bpage, 3 do for i = 1, 12 do
+	for page = bpage, 4 do for i = 1, 12 do
 		local ts = nil
 		local bi = i
 		local j = i + (12 * (page - 1))
