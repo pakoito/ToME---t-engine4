@@ -115,7 +115,7 @@ newTalent{
 		return util.bound(4 - self:getTalentLevel(t) / 2, 1, 4)
 	end,
 	getDuration = function(self, t)
-		return util.bound(7 - self:getTalentLevel(t) / 2, 2, 7)
+		return math.floor(util.bound(7 - self:getTalentLevel(t) / 2, 2, 7))
 	end,
 	action = function(self, t)
 		local range = self:getTalentRange(t)
