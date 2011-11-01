@@ -627,7 +627,11 @@ newTalent{
 	cooldown = 14,
 	tactical = { ATTACK = 10 },
 	requires_target = true,
-	range = 10,
+	range = 0,
+	radius = 5,
+	target = function(self, t)
+		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
+	end,
 	on_pre_use = function(self, t)
 		local p = self:isTalentActive(self.T_NECROTIC_AURA)
 		if not p then return end
@@ -650,12 +654,22 @@ newTalent{
 		nb = math.min(nb, p.souls)
 		local lev = t.getLevel(self, t)
 
+		-- Summon minions in a cone
+		local tg = self:getTalentTarget(t)
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		local possible_spots = {}
+		self:project(tg, x, y, function(px, py)
+			if not game.level.map:checkAllEntities(px, py, "block_move") then
+				possible_spots[#possible_spots+1] = {x=px, y=py}
+			end
+		end)
 		for i = 1, nb do
 			local minion = makeMinion(self, self:getTalentLevel(t))
-			local x, y = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
-			if minion and x and y then
+			local pos = rng.tableRemove(possible_spots)
+			if minion and pos then
 				p.souls = p.souls - 1
-				necroSetupSummon(self, minion, x, y, lev, true)
+				necroSetupSummon(self, minion, pos.x, pos.y, lev, true)
 			end
 		end
 
