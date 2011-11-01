@@ -45,7 +45,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		-- Increases damage
 		if src.inc_damage then
 			local inc = (src.inc_damage.all or 0) + (src.inc_damage[type] or 0)
-			
+
 			-- Increases damage for the entity type (Demon, Undead, etc)
 			if target.type and src.inc_damage_actor_type then
 				local incEntity = src.inc_damage_actor_type[target.type]
@@ -55,7 +55,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 					print("[PROJECTOR] after inc_damage_actor_type", dam + (dam * inc / 100))
 				end
 			end
-			
+
 			dam = dam + (dam * inc / 100)
 		end
 
@@ -152,7 +152,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 				print("[PROJECTOR] after entity", src.type, "resists dam", dam)
 			end
 		end
-		
+
 		-- Reduce damage with resistance
 		if target.resists then
 			local pen = 0
@@ -192,7 +192,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			dam = dam - dam * src:attr("numbed") / 100
 			print("[PROJECTOR] numbed dam", dam)
 		end
-		
+
 		-- Curse of Misfortune: Unfortunate End (chance to increase damage enough to kill)
 		if src and src.hasEffect and src:hasEffect(src.EFF_CURSE_OF_MISFORTUNE) then
 			local eff = src:hasEffect(src.EFF_CURSE_OF_MISFORTUNE)
@@ -225,7 +225,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			local t = src:getTalentFromId(src.T_MADNESS)
 			t.doMadness(target, t, src)
 		end
-		
+
 		-- Curse of Nightmares: Nightmare
 		if not target.dead and dam > 0 and src and target.hasEffect and target:hasEffect(src.EFF_CURSE_OF_NIGHTMARES) then
 			local eff = target:hasEffect(target.EFF_CURSE_OF_NIGHTMARES)
@@ -772,12 +772,14 @@ newDamageType{
 newDamageType{
 	name = "wave", type = "WAVE",
 	projector = function(src, x, y, type, dam)
+		local srcx, srcy = dam.x, dam.y
+		dam = dam.dam
 		DamageType:get(DamageType.COLD).projector(src, x, y, DamageType.COLD, dam / 2)
 		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam / 2)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
 			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
-				target:knockback(src.x, src.y, 1)
+				target:knockback(srcx, srcy, 1)
 				target:crossTierEffect(target.EFF_OFFBALANCE, src:combatSpellpower())
 				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
 			else
@@ -1831,7 +1833,7 @@ newDamageType{
 			if rng.chance(10) and not target:hasEffect(target.EFF_HATEFUL_WHISPER) then
 				src:forceUseTalent(src.T_HATEFUL_WHISPER, {ignore_cd=true, ignore_energy=true, force_target=target, force_level=1, ignore_ressources=true})
 			end
-			
+
 			if rng.chance(30) then
 				target:setEffect(target.EFF_SLOW, 3, {power=0.3})
 			end

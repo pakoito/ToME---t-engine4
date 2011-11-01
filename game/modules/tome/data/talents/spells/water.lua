@@ -116,7 +116,7 @@ newTalent{
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			self.x, self.y, t.getDuration(self, t),
-			DamageType.WAVE, t.getDamage(self, t),
+			DamageType.WAVE, {dam=t.getDamage(self, t), x=self.x, y=self.y},
 			1,
 			5, nil,
 			engine.Entity.new{alpha=100, display='', color_br=30, color_bg=60, color_bb=200},
