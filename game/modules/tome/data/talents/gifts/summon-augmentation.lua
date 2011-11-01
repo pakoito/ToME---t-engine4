@@ -30,12 +30,12 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t, first_target="friend"}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty or not target or not target.summoner or not target.summoner == self or not target.wild_gift_summon then return nil end
-		target:setEffect(target.EFF_ALL_STAT, 5, {power=2+math.floor(self:getTalentLevel(t) * 2)})
+		target:setEffect(target.EFF_ALL_STAT, 10, {power=self:combatTalentMindDamage(t, 10, 100)/4})
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Induces a killing rage in one of your summons, increasing all its stats by %d for 5 turns.]]):format(2+math.floor(self:getTalentLevel(t) * 2))
+		return ([[Induces a killing rage in one of your summons, increasing all its stats by %d for 10 turns.]]):format(self:combatTalentMindDamage(t, 10, 100)/4)
 	end,
 }
 
