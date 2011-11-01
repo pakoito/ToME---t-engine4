@@ -75,22 +75,25 @@ newEffect{
 newEffect{
 	name = "TIME_PRISON", image = "talents/time_prison.png",
 	desc = "Time Prison",
-	long_desc = function(self, eff) return "The target is removed from the normal time stream, unable to act but unable to take any damage." end,
+	long_desc = function(self, eff) return "The target is removed from the normal time stream, unable to act but unable to take any damage. Time does not pass for this creature." end,
 	type = "other",
 	subtype = { time=true },
 	status = "detrimental",
+	tick_on_timeless = true,
 	parameters = {},
 	on_gain = function(self, err) return "#Target# is removed from time!", "+Out of Time" end,
 	on_lose = function(self, err) return "#Target# is returned to normal time.", "-Out of Time" end,
 	activate = function(self, eff)
 		eff.iid = self:addTemporaryValue("invulnerable", 1)
 		eff.sid = self:addTemporaryValue("time_prison", 1)
+		eff.tid = self:addTemporaryValue("no_timeflow", 1)
 		eff.particle = self:addParticles(Particles.new("time_prison", 1))
 		self.energy.value = 0
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("invulnerable", eff.iid)
 		self:removeTemporaryValue("time_prison", eff.sid)
+		self:removeTemporaryValue("no_timeflow", eff.tid)
 		self:removeParticles(eff.particle)
 	end,
 }

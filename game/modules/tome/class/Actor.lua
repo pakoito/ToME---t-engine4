@@ -284,7 +284,11 @@ end
 function _M:actBase()
 	self.energyBase = self.energyBase - game.energy_to_act
 
-	if self:attr("no_timeflow") then return end
+	if self:attr("no_timeflow") then
+		-- Compute timed effects that can happen even in timeless mode
+		self:timedEffects(function(e, p) if e.tick_on_timeless then return true end end)
+		return
+	end
 
 	if self:isTalentActive (self.T_DARKEST_LIGHT) and self.positive > self.negative then
 		self:forceUseTalent(self.T_DARKEST_LIGHT, {ignore_energy=true})

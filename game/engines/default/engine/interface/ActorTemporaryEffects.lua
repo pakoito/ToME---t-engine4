@@ -61,22 +61,24 @@ function _M:init(t)
 end
 
 --- Counts down timed effects, call from your actors "act" method
---
-function _M:timedEffects()
+-- @param filter if not nil a function that gets passed the effect and its parameters, must return true to handle the effect
+function _M:timedEffects(filter)
 	local todel = {}
 	local def
 	for eff, p in pairs(self.tmp) do
 		def = _M.tempeffect_def[eff]
-		if p.dur <= 0 then
-			todel[#todel+1] = eff
-		else
-			if def.on_timeout then
-				if def.on_timeout(self, p) then
-					todel[#todel+1] = eff
+		if not filter or filter(def, p) then
+			if p.dur <= 0 then
+				todel[#todel+1] = eff
+			else
+				if def.on_timeout then
+					if def.on_timeout(self, p) then
+						todel[#todel+1] = eff
+					end
 				end
 			end
+			p.dur = p.dur - def.decrease
 		end
-		p.dur = p.dur - def.decrease
 	end
 
 	while #todel > 0 do

@@ -98,6 +98,7 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[Removes the target from the flow of time for %d turns. In this state the target can neither act nor be harmed.
+		Time does not pass at all for the target, no talents will cooldown, no resources will regen, ...
 		The duration will increase with your Spellpower.]]):
 		format(duration)
 	end,
