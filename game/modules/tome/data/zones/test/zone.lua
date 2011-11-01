@@ -30,7 +30,7 @@ return {
 	no_level_connectivity = true,
 	generator =  {
 		map = {
---[[
+-- [[
 			class = "engine.generator.map.Building",
 			max_block_w = 15, max_block_h = 15,
 			max_building_w = 5, max_building_h = 5,
@@ -39,7 +39,7 @@ return {
 			wall = "BAMBOO_HUT_WALL",
 			up = "FLAT_UP6",
 			down = "FLAT_DOWN4",
-			door = "BAMBOO_HUT_WALL",
+			door = "BAMBOO_HUT_DOOR",
 --]]
 --[[
 			class = "engine.generator.map.Forest",
@@ -53,16 +53,16 @@ return {
 			down = "GRASS_DOWN6",
 			door = "GRASS",
 --]]
--- [[
+--[[
 			class = "engine.generator.map.Roomer",
 			nb_rooms = 10,
 			edge_entrances = {4,6},
 			rooms = {"forest_clearing"},
 			['.'] = {"JUNGLE_GRASS","JUNGLE_GRASS","JUNGLE_GRASS","JUNGLE_DIRT","JUNGLE_DIRT",},
 			['#'] = "JUNGLE_TREE",
-			up = "GRASS_UP4",
-			down = "GRASS_DOWN6",
-			door = "GRASS",
+			up = "JUNGLE_GRASS_UP4",
+			down = "JUNGLE_GRASS_DOWN6",
+			door = "JUNGLE_GRASS",
 --]]
 		},
 		actor = {

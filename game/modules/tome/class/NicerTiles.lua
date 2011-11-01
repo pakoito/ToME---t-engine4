@@ -200,6 +200,32 @@ function _M:niceTileWall3d(level, i, j, g, nt)
 	end
 end
 
+function _M:niceTileSingleWall(level, i, j, g, nt)
+	local type = nt.type
+	local kind = nt.use_subtype and "subtype" or "type"
+	local g5 = level.map:checkEntity(i, j,   Map.TERRAIN, kind) or type
+	local g8 = level.map:checkEntity(i, j-1, Map.TERRAIN, kind) or type
+	local g2 = level.map:checkEntity(i, j+1, Map.TERRAIN, kind) or type
+	local g4 = level.map:checkEntity(i-1, j, Map.TERRAIN, kind) or type
+	local g6 = level.map:checkEntity(i+1, j, Map.TERRAIN, kind) or type
+
+	if     g5 ~= g4 and g5 == g6 and g5 == g8 and g5 == g2 then self:replace(i, j, self:getTile(nt["e_cross"]))
+	elseif g5 == g4 and g5 ~= g6 and g5 == g8 and g5 == g2 then self:replace(i, j, self:getTile(nt["w_cross"]))
+	elseif g5 == g4 and g5 == g6 and g5 ~= g8 and g5 == g2 then self:replace(i, j, self:getTile(nt["s_cross"]))
+	elseif g5 == g4 and g5 == g6 and g5 == g8 and g5 ~= g2 then self:replace(i, j, self:getTile(nt["n_cross"]))
+
+	elseif g5 ~= g4 and g5 == g6 and g5 == g8 and g5 ~= g2 then self:replace(i, j, self:getTile(nt["ne"]))
+	elseif g5 == g4 and g5 ~= g6 and g5 == g8 and g5 ~= g2 then self:replace(i, j, self:getTile(nt["nw"]))
+	elseif g5 ~= g4 and g5 == g6 and g5 ~= g8 and g5 == g2 then self:replace(i, j, self:getTile(nt["se"]))
+	elseif g5 == g4 and g5 ~= g6 and g5 ~= g8 and g5 == g2 then self:replace(i, j, self:getTile(nt["sw"]))
+
+	elseif g5 == g4 and g5 == g6 and g5 == g8 and g5 == g2 then self:replace(i, j, self:getTile(nt["cross"]))
+
+	elseif g5 ~= g4 and g5 ~= g6 and g5 == g8 and g5 == g2 then self:replace(i, j, self:getTile(nt["v_full"]))
+	elseif g5 == g4 and g5 == g6 and g5 ~= g8 and g5 ~= g2  then self:replace(i, j, self:getTile(nt["h_full"]))
+	end
+end
+
 --- Make walls have a pseudo 3D effect & rounded corners
 function _M:niceTileRoundwall3d(level, i, j, g, nt)
 	local s = level.map:checkEntity(i, j, Map.TERRAIN, "type") or "wall"
@@ -364,6 +390,22 @@ grass_wm = { method="borders", type="grass", forbid={lava=true},
 	water3i={add_mos={{image="terrain/grass/grass_inner_3_%02d.png", display_x=1, display_y=1}}, min=1, max=1},
 	water7i={add_mos={{image="terrain/grass/grass_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=1},
 	water9i={add_mos={{image="terrain/grass/grass_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=1},
+},
+jungle_grass = { method="borders", type="jungle_grass", forbid={lava=true, rock=true, grass=true},
+	default8={add_mos={{image="terrain/jungle/jungle_grass_2_%02d.png", display_y=-1}}, min=1, max=5},
+	default2={add_mos={{image="terrain/jungle/jungle_grass_8_%02d.png", display_y=1}}, min=1, max=5},
+	default4={add_mos={{image="terrain/jungle/jungle_grass_6_%02d.png", display_x=-1}}, min=1, max=5},
+	default6={add_mos={{image="terrain/jungle/jungle_grass_4_%02d.png", display_x=1}}, min=1, max=4},
+
+	default1={add_mos={{image="terrain/jungle/jungle_grass_9_%02d.png", display_x=-1, display_y=1}}, min=1, max=3},
+	default3={add_mos={{image="terrain/jungle/jungle_grass_7_%02d.png", display_x=1, display_y=1}}, min=1, max=3},
+	default7={add_mos={{image="terrain/jungle/jungle_grass_3_%02d.png", display_x=-1, display_y=-1}}, min=1, max=3},
+	default9={add_mos={{image="terrain/jungle/jungle_grass_1_%02d.png", display_x=1, display_y=-1}}, min=1, max=3},
+
+	default1i={add_mos={{image="terrain/jungle/jungle_grass_inner_1_%02d.png", display_x=-1, display_y=1}}, min=1, max=3},
+	default3i={add_mos={{image="terrain/jungle/jungle_grass_inner_3_%02d.png", display_x=1, display_y=1}}, min=1, max=3},
+	default7i={add_mos={{image="terrain/jungle/jungle_grass_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=3},
+	default9i={add_mos={{image="terrain/jungle/jungle_grass_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=3},
 },
 sand = { method="borders", type="sand", forbid={grass=true, lava=true,},
 	default8={add_mos={{image="terrain/sand/sand_2_%02d.png", display_y=-1}}, min=1, max=5},
@@ -752,6 +794,34 @@ function _M:editTileWalls_def(level, i, j, g, nt)
 end
 function _M:editTileSandWalls_def(level, i, j, g, nt)
 	self:editTileGenericSandWalls(level, i, j, g, defs[nt.def], defs[nt.def].type or "grass")
+end
+
+function _M:editTileSingleWall(level, i, j, g, nt, type)
+	type = type or nt.type
+	local kind = nt.use_subtype and "subtype" or "type"
+	local g5 = level.map:checkEntity(i, j,   Map.TERRAIN, kind) or type
+	local g8 = level.map:checkEntity(i, j-1, Map.TERRAIN, kind) or type
+	local g2 = level.map:checkEntity(i, j+1, Map.TERRAIN, kind) or type
+	local g4 = level.map:checkEntity(i-1, j, Map.TERRAIN, kind) or type
+	local g6 = level.map:checkEntity(i+1, j, Map.TERRAIN, kind) or type
+
+	local id = "swv:"..table.concat({g.define_as or "--",type,tostring(g1==g5),tostring(g2==g5),tostring(g8==g5),tostring(g4==g5),tostring(g6==g5)}, ",")
+
+	if     g5 ~= g4 and g5 == g6 and g5 == g8 and g5 == g2 then self:edit(i, j, id, nt["e_cross"])
+	elseif g5 == g4 and g5 ~= g6 and g5 == g8 and g5 == g2 then self:edit(i, j, id, nt["w_cross"])
+	elseif g5 == g4 and g5 == g6 and g5 ~= g8 and g5 == g2 then self:edit(i, j, id, nt["s_cross"])
+	elseif g5 == g4 and g5 == g6 and g5 == g8 and g5 ~= g2 then self:edit(i, j, id, nt["n_cross"])
+
+	elseif g5 ~= g4 and g5 == g6 and g5 == g8 and g5 ~= g2 then self:edit(i, j, id, nt["ne"])
+	elseif g5 == g4 and g5 ~= g6 and g5 == g8 and g5 ~= g2 then self:edit(i, j, id, nt["nw"])
+	elseif g5 ~= g4 and g5 == g6 and g5 ~= g8 and g5 == g2 then self:edit(i, j, id, nt["se"])
+	elseif g5 == g4 and g5 ~= g6 and g5 ~= g8 and g5 == g2 then self:edit(i, j, id, nt["sw"])
+
+	elseif g5 == g4 and g5 == g6 and g5 == g8 and g5 == g2 then self:edit(i, j, id, nt["cross"])
+
+	elseif g5 ~= g4 and g5 ~= g6 and g5 == g8 and g5 == g2 then self:edit(i, j, id, nt["v_full"])
+	elseif g5 == g4 and g5 == g6 and g5 ~= g8 and g5 ~= g2  then self:edit(i, j, id, nt["h_full"])
+	end
 end
 
 -- This array is precomputed, it holds the possible combinations of walls and the nice tile they generate

@@ -1110,7 +1110,8 @@ function _M:setupCommands()
 			end end
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			game.player:setEffect(game.player.EFF_FROZEN, 10, {hp=rng.range(10,100)})
+			game:changeLevel(1,"town-irkkk")
+--			SET ui.Inventory into ShowStore & ShowInventory
 		end end,
 		[{"_f","ctrl"}] = function() if config.settings.cheat then
 			self.player.quests["love-melinda"] = nil

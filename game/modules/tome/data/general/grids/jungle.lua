@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local grass_editer = { method="borders_def", def="grass"}
+local grass_editer = { method="borders_def", def="jungle_grass"}
 
 newEntity{
 	define_as = "JUNGLE_GRASS",
@@ -62,9 +62,106 @@ newEntity{
 	does_block_move = true,
 	block_sight = true,
 	dig = "GRASS",
-	nice_tiler = { method="replace", base={"TREE", 100, 1, 30}},
+	nice_tiler = { method="replace", base={"JUNGLE_TREE", 100, 1, 30}},
 	nice_editer = grass_editer,
 }
 for i = 1, 30 do
-	newEntity{ base="TREE", define_as = "TREE"..i, image = "terrain/jungle/jungle_grass_floor_01.png", add_displays = class:makeTrees("terrain/jungle/jungle_tree_", 17, 7)}
+	newEntity{ base="JUNGLE_TREE", define_as = "JUNGLE_TREE"..i, image = "terrain/jungle/jungle_grass_floor_01.png", add_displays = class:makeTrees("terrain/jungle/jungle_tree_", 17, 7)}
 end
+
+-----------------------------------------
+-- Grassy exits
+-----------------------------------------
+newEntity{
+	define_as = "JUNGLE_GRASS_UP_WILDERNESS",
+	type = "floor", subtype = "grass",
+	name = "exit to the worldmap", image = "terrain/jungle/jungle_grass_floor_01.png", add_mos = {{image="terrain/worldmap.png"}},
+	display = '<', color_r=255, color_g=0, color_b=255,
+	always_remember = true,
+	notice = true,
+	change_level = 1,
+	change_zone = "wilderness",
+	nice_editer = grass_editer,
+}
+
+newEntity{
+	define_as = "JUNGLE_GRASS_UP8",
+	type = "floor", subtype = "grass",
+	name = "way to the previous level", image = "terrain/jungle/jungle_grass_floor_01.png", add_mos = {{image="terrain/way_next_8.png"}},
+	display = '<', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = -1,
+	nice_editer = grass_editer,
+}
+newEntity{
+	define_as = "JUNGLE_GRASS_UP2",
+	type = "floor", subtype = "grass",
+	name = "way to the previous level", image = "terrain/jungle/jungle_grass_floor_01.png", add_mos = {{image="terrain/way_next_2.png"}},
+	display = '<', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = -1,
+	nice_editer = grass_editer,
+}
+newEntity{
+	define_as = "JUNGLE_GRASS_UP4",
+	type = "floor", subtype = "grass",
+	name = "way to the previous level", image = "terrain/jungle/jungle_grass_floor_01.png", add_mos = {{image="terrain/way_next_4.png"}},
+	display = '<', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = -1,
+	nice_editer = grass_editer,
+}
+newEntity{
+	define_as = "JUNGLE_GRASS_UP6",
+	type = "floor", subtype = "grass",
+	name = "way to the previous level", image = "terrain/jungle/jungle_grass_floor_01.png", add_mos = {{image="terrain/way_next_6.png"}},
+	display = '<', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = -1,
+	nice_editer = grass_editer,
+}
+
+newEntity{
+	define_as = "JUNGLE_GRASS_DOWN8",
+	type = "floor", subtype = "grass",
+	name = "way to the next level", image = "terrain/jungle/jungle_grass_floor_01.png", add_mos = {{image="terrain/way_next_8.png"}},
+	display = '>', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = 1,
+	nice_editer = grass_editer,
+}
+newEntity{
+	define_as = "JUNGLE_GRASS_DOWN2",
+	type = "floor", subtype = "grass",
+	name = "way to the next level", image = "terrain/jungle/jungle_grass_floor_01.png", add_mos = {{image="terrain/way_next_2.png"}},
+	display = '>', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = 1,
+	nice_editer = grass_editer,
+}
+newEntity{
+	define_as = "JUNGLE_GRASS_DOWN4",
+	type = "floor", subtype = "grass",
+	name = "way to the next level", image = "terrain/jungle/jungle_grass_floor_01.png", add_mos = {{image="terrain/way_next_4.png"}},
+	display = '>', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = 1,
+	nice_editer = grass_editer,
+}
+newEntity{
+	define_as = "JUNGLE_GRASS_DOWN6",
+	type = "floor", subtype = "grass",
+	name = "way to the next level", image = "terrain/jungle/jungle_grass_floor_01.png", add_mos = {{image="terrain/way_next_6.png"}},
+	display = '>', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = 1,
+	nice_editer = grass_editer,
+}

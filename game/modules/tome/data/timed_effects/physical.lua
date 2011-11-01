@@ -829,7 +829,7 @@ newEffect{
 newEffect{
 	name = "WILD_SPEED", image = "talents/infusion__movement.png",
 	desc = "Wild Speed",
-	long_desc = function(self, eff) return ("The movement infusion allows you to run at extreme fast pace. Any other action other than movement will cancel it .Movement is %d%% faster."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The movement infusion allows you to run at extreme fast pace. Any other action other than movement will cancel it. Movement is %d%% faster."):format(eff.power) end,
 	type = "physical",
 	subtype = { nature=true, speed=true },
 	status = "beneficial",
@@ -838,13 +838,13 @@ newEffect{
 	on_lose = function(self, err) return "#Target# slows down.", "-Wild Speed" end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("wild_speed", 1)
-		eff.moveid = self:addTemporaryValue("global_speed_add", eff.power/100)
+		eff.moveid = self:addTemporaryValue("movement_speed", eff.power/100)
 		if self.ai_state then eff.aiid = self:addTemporaryValue("ai_state", {no_talents=1}) end -- Make AI not use talents while using it
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("wild_speed", eff.tmpid)
 		if eff.aiid then self:removeTemporaryValue("ai_state", eff.aiid) end
-		self:removeTemporaryValue("global_speed_add", eff.moveid)
+		self:removeTemporaryValue("movement_speed", eff.moveid)
 	end,
 }
 
@@ -882,7 +882,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is back to normal.", "-Lightning Speed" end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("lightning_speed", 1)
-		eff.moveid = self:addTemporaryValue("global_speed_add", eff.power/100)
+		eff.moveid = self:addTemporaryValue("movement_speed", eff.power/100)
 		eff.resistsid = self:addTemporaryValue("resists", {
 			[DamageType.PHYSICAL]=30,
 			[DamageType.LIGHTNING]=100,
@@ -895,7 +895,7 @@ newEffect{
 		self:removeTemporaryValue("lightning_speed", eff.tmpid)
 		self:removeTemporaryValue("resists", eff.resistsid)
 		if eff.aiid then self:removeTemporaryValue("ai_state", eff.aiid) end
-		self:removeTemporaryValue("global_speed_add", eff.moveid)
+		self:removeTemporaryValue("movement_speed", eff.moveid)
 	end,
 }
 

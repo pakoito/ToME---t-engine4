@@ -113,7 +113,7 @@ function _M:display(dispx, dispy)
 	end
 
 	while lx and ly do
-		if not stopped then 
+		if not stopped then
 			block, hit, hit_radius = false, true, true
 			if self.target_type.block_path then
 				block, hit, hit_radius = self.target_type:block_path(lx, ly, true)
