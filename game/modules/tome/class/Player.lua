@@ -476,6 +476,15 @@ function _M:onTakeHit(value, src)
 	return ret
 end
 
+function _M:on_set_temporary_effect(eff_id, e, p)
+	mod.class.Actor.on_set_temporary_effect(self, eff_id, e, p)
+
+	if e.status == "detrimental" then
+		self:runStop("detrimental status effect")
+		self:restStop("detrimental status effect")
+	end
+end
+
 function _M:heal(value, src)
 	-- Difficulty settings
 	if game.difficulty == game.DIFFICULTY_EASY then
