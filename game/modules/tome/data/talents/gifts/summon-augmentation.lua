@@ -48,45 +48,42 @@ newTalent{
 	cooldown = 25,
 	range = 10,
 	radius = function(self, t)
-		return 1 + self:getTalentLevelRaw(t)
+		return 3 + self:getTalentLevelRaw(t)
 	end,
 	requires_target = true,
 	no_npc_use = true,
-	getRitchDamage = function(self, t)
-		return self:combatTalentStatDamage(t, "wil", 30, 400)
-	end,
-	getJellyDamage = function(self, t)
-		return self:combatTalentStatDamage(t, "wil", 30, 300)
-	end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t, first_target="friend"}
 		local tx, ty, target = self:getTarget(tg)
-		if not tx or not ty or not target or not target.summoner or not target.summoner == self or not target.wild_gift_summon then return nil end
+		if not tx or not ty or not target or not target.summoner or not target.summoner == self or not target.wild_gift_summon or not target.wild_gift_detonate then return nil end
 
-		if target.name == "ritch flamespitter" then
-			local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t}
-			target:project(tg, target.x, target.y, DamageType.FIRE, t.getRitchDamage(self, t), {type="flame"})
-			target:die()
-		elseif target.name == "black jelly" then
-			local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t}
-			target:project(tg, target.x, target.y, DamageType.SLIME, t.getJellyDamage(self, t), {type="slime"})
-			target:die()
-		else
+		local dt = self:getTalentFromId(target.wild_gift_detonate)
+
+		if not dt.on_detonate then
 			game.logPlayer("You may not detonate this summon.")
 			return nil
 		end
+
+		dt.on_detonate(self, t, target)
+		target:die(self)
+
 		game:playSoundNear(self, "talents/fireflash")
 		return true
 	end,
 	info = function(self, t)
 		local radius = self:getTalentRadius(t)
-		local ritch_damage = t.getRitchDamage(self, t)
-		local jelly_damage = t.getJellyDamage(self, t)
 		return ([[Destroys one of your summons, make it detonate in radius of %d.
-		Only some summons can be detonated:
-		- Ritch Flamespitter: Explodes into a fireball doing %0.2f fire damage
-		- Jelly: Explodes into a ball of slowing slime doing %0.2f damage and slowing for 3 turns for 30%%
-		The effects improves with your Willpower.]]):format(radius, damDesc(self, DamageType.FIRE, ritch_damage), damDesc(self, DamageType.SLIME, jelly_damage))
+		- Ritch Flamespitter: Explodes into a fireball
+		- Hydra: Explodes into a ball of lightning, acid or poison
+		- Rimebark: Explodes into an iceball
+		- Fire Drake: Generates a cloud of fire
+		- War Hound: Explodes into a ball of physical damage
+		- Jelly: Explodes into a ball of slowing slime
+		- Minotaur: Explodes into a sharp ball, cutting all creatures
+		- Stone Golem: Knocks back all creatures
+		- Turtle: Grants a small shell shield to all friendly creatures
+		- Spider: Pins all foes around
+		The effects improves with your Willpower.]]):format(radius)
 	end,
 }
 

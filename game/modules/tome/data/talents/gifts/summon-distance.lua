@@ -195,6 +195,10 @@ newTalent{
 		if not self:canBe("summon") and not silent then game.logPlayer(self, "You can not summon, you are suppressed!") return end
 		return not checkMaxSummon(self, silent)
 	end,
+	on_detonate = function(self, t, m)
+		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
+		self:project(tg, m.x, m.y, DamageType.FIREBURN, self:combatTalentMindDamage(t, 30, 300), {type="flame"})
+	end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
@@ -229,6 +233,8 @@ newTalent{
 
 			combat_armor = 0, combat_def = 0,
 			combat = { dam=1, atk=1, },
+
+			wild_gift_detonate = t.id,
 
 			resolvers.talents{
 				[self.T_RITCH_FLAMESPITTER_BOLT]=self:getTalentLevelRaw(t),
@@ -265,7 +271,7 @@ newTalent{
 	random_ego = "attack",
 	message = "@Source@ summons a 3-headed hydra!",
 	equilibrium = 5,
-	cooldown = 10,
+	cooldown = 18,
 	range = 10,
 	requires_target = true,
 	is_summon = true,
@@ -273,6 +279,10 @@ newTalent{
 	on_pre_use = function(self, t, silent)
 		if not self:canBe("summon") and not silent then game.logPlayer(self, "You can not summon, you are suppressed!") return end
 		return not checkMaxSummon(self, silent)
+	end,
+	on_detonate = function(self, t, m)
+		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
+		self:project(tg, m.x, m.y, rng.table{DamageType.LIGHTNING,DamageType.ACID,DamageType.POISON}, self:combatTalentMindDamage(t, 30, 250), {type="flame"})
 	end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -315,6 +325,8 @@ newTalent{
 				[self.T_POISON_BREATH]=self:getTalentLevelRaw(t),
 			},
 
+			wild_gift_detonate = t.id,
+
 			summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
 			summon_time = math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 			ai_target = {actor=target}
@@ -353,6 +365,10 @@ newTalent{
 		if not self:canBe("summon") and not silent then game.logPlayer(self, "You can not summon, you are suppressed!") return end
 		return not checkMaxSummon(self, silent)
 	end,
+	on_detonate = function(self, t, m)
+		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
+		self:project(tg, m.x, m.y, DamageType.ICE, self:combatTalentMindDamage(t, 30, 300), {type="freeze"})
+	end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
@@ -390,6 +406,8 @@ newTalent{
 
 			combat_armor = 15, combat_def = 0,
 			combat = { dam=resolvers.levelup(resolvers.rngavg(15,25), 1, 1.3), atk=resolvers.levelup(resolvers.rngavg(15,25), 1, 1.3), dammod={cun=1.1} },
+
+			wild_gift_detonate = t.id,
 
 			resolvers.talents{
 				[self.T_WINTER_S_FURY]=self:getTalentLevelRaw(t),
@@ -434,6 +452,16 @@ newTalent{
 		if not self:canBe("summon") and not silent then game.logPlayer(self, "You can not summon, you are suppressed!") return end
 		return not checkMaxSummon(self, silent)
 	end,
+	on_detonate = function(self, t, m)
+		game.level.map:addEffect(self,
+			m.x, m.y, 6,
+			DamageType.FIRE, self:combatTalentMindDamage(t, 10, 70),
+			self:getTalentRadius(t),
+			5, nil,
+			{type="inferno"},
+			nil, true
+		)
+	end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
@@ -469,6 +497,8 @@ newTalent{
 			combat = { dam=15, atk=10, apr=15 },
 
 			resists = { [DamageType.FIRE] = 100, },
+
+			wild_gift_detonate = t.id,
 
 			resolvers.talents{
 				[self.T_FIRE_BREATH]=self:getTalentLevelRaw(t),

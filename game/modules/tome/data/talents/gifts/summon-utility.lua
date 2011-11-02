@@ -102,6 +102,14 @@ newTalent{
 		if not self:canBe("summon") and not silent then game.logPlayer(self, "You can not summon, you are suppressed!") return end
 		return not checkMaxSummon(self, silent)
 	end,
+	on_detonate = function(self, t, m)
+		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
+		self:project(tg, m.x, m.y, function(px, py)
+			local target = game.level.map(px, py, Map.ACTOR)
+			if not target or self:reactionToward(target) < 0 then return end
+			target:setEffect(target.EFF_SHELL_SHIELD, 4, {power=self:combatTalentMindDamage(t, 10, 35)})
+		end, nil, {type="flame"})
+	end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
@@ -136,6 +144,8 @@ newTalent{
 
 			combat_armor = 10, combat_def = 0,
 			combat = { dam=1, atk=1, },
+
+			wild_gift_detonate = t.id,
 
 			resolvers.talents{
 				[self.T_TAUNT]=self:getTalentLevelRaw(t),
@@ -180,6 +190,16 @@ newTalent{
 		return not checkMaxSummon(self, silent)
 	end,
 	requires_target = true,
+	on_detonate = function(self, t, m)
+		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
+		self:project(tg, m.x, m.y, function(px, py)
+			local target = game.level.map(px, py, Map.ACTOR)
+			if not target or self:reactionToward(target) >= 0 then return end
+			if target:canBe("pin") then
+				target:setEffect(target.EFF_PINNED, 3, {apply_power=self:combatMindpower()})
+			end
+		end, nil, {type="flame"})
+	end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
@@ -214,6 +234,8 @@ newTalent{
 
 			combat_armor = 0, combat_def = 0,
 			combat = { dam=resolvers.rngavg(20,25), atk=16, apr=9, damtype=DamageType.NATURE, dammod={dex=1.2} },
+
+			wild_gift_detonate = t.id,
 
 			resolvers.talents{
 				[self.T_SPIDER_WEB]=self:getTalentLevelRaw(t),
