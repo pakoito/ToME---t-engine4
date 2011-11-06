@@ -1112,6 +1112,7 @@ function _M:setupCommands()
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
 			game:changeLevel(1,"town-irkkk")
 --			SET ui.Inventory into ShowStore & ShowInventory
+--			FINISH IRKKK & HUTS
 		end end,
 		[{"_f","ctrl"}] = function() if config.settings.cheat then
 			self.player.quests["love-melinda"] = nil

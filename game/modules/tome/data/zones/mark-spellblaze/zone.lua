@@ -32,6 +32,7 @@ return {
 	ambient_music = "Rainy Day.ogg",
 	min_material_level = 2,
 	max_material_level = 3,
+	is_mark_spellblaze = true,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Forest",
