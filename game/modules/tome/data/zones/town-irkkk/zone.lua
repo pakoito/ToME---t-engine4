@@ -48,4 +48,26 @@ return {
 			nb_object = {0, 0},
 		},
 	},
+
+	foreground = function(level, x, y, nb_keyframes)
+		-- Make cosmetic birds fly over
+		if nb_keyframes > 10 then return end
+		local Map = require "engine.Map"
+		if not level.bird then
+			if nb_keyframes > 0 and rng.chance(500 / nb_keyframes) then
+				local dir = -math.rad(rng.float(310, 340))
+				local dirv = math.rad(rng.float(-0.1, 0.1))
+				local y = rng.range(0, level.map.w / 2 * Map.tile_w)
+				local size = rng.range(32, 64)
+				level.bird = require("engine.Particles").new("eagle", 1, {x=0, y=y, dir=dir, dirv=dirv, size=size, life=800, vel=7, image="particles_images/birds_tropical_01"})
+				level.bird_s = require("engine.Particles").new("eagle", 1, {x=0, y=y, shadow=true, dir=dir, dirv=dirv, size=size, life=800, vel=7, image="particles_images/birds_tropical_shadow_01"})
+			end
+		else
+			local dx, dy = level.map:getScreenUpperCorner() -- Display at map border, always, so it scrolls with the map
+			if level.bird then level.bird.ps:toScreen(dx, dy, true, 1) end
+			if level.bird_s then level.bird_s.ps:toScreen(dx + 100, dy + 120, true, 1) end
+			if level.bird and not level.bird.ps:isAlive() then level.bird = nil end
+			if level.bird_s and not level.bird_s.ps:isAlive() then level.bird_s = nil end
+		end
+	end,
 }

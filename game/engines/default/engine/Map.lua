@@ -28,7 +28,7 @@ local DamageType = require "engine.DamageType"
 module(..., package.seeall, class.make)
 
 --- The map vertical depth storage
-zdepth = 18
+zdepth = 20
 
 --- The place of a terrain entity in a map grid
 TERRAIN = 1

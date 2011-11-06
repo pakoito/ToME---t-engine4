@@ -24,17 +24,24 @@ local g = 1
 local b = 1
 local a = 1
 
+local img
+if not image then img = shadow and "shockbolt/npc/birds_eagle_shadow_01" or "shockbolt/npc/birds_eagle01"
+else img = image end
+
+size = size or 64
+if type(size) == "table" then size = rng.range(size[1], size[2]) end
+
 local first = true
 return { generator = function()
 	return {
 		trail = 0,
-		life = 300,
-		size = shadow and 32 or 64, sizev = 0, sizea = 0,
+		life = life or 300,
+		size = shadow and size / 2 or size, sizev = 0, sizea = 0,
 
 		x = x, xv = 0, xa = 0,
 		y = y, yv = 0, ya = 0,
 		dir = dir, dirv = dirv, dira = 0,
-		vel = 20, velv = 0.02, vela = 0,
+		vel = vel or 5, velv = 0.02, vela = 0,
 
 		r = r, rv = 0, ra = 0,
 		g = g, gv = 0, ga = 0,
@@ -49,4 +56,4 @@ function(self)
 	end
 end,
 nil,
-shadow and "shockbolt/npc/birds_eagle_shadow_01" or "shockbolt/npc/birds_eagle01"
+img
