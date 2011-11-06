@@ -33,13 +33,13 @@ newEntity{
 }
 end
 
-for i = 1, 4 do
-newEntity{ define_as = "BURNT_GROUND"..i,
+newEntity{ define_as = "BURNT_GROUND",
 	type = "floor", subtype = "burnt",
 	name='burnt ground',
-	display='.', color=colors.UMBER, back_color=colors.DARK_GREY, image="terrain/grass_burnt"..i..".png",
+	display='.', color=colors.UMBER, back_color=colors.DARK_GREY, image="terrain/grass_burnt1.png",
+	nice_tiler = { method="replace", base={"BURNT_GROUND", 15, 1, 7}},
 }
-end
+for i = 1, 7 do newEntity{ base="BURNT_GROUND", define_as = "BURNT_GROUND"..i, add_mos={{image="terrain/burnt_floor_deco"..i..".png"}}} end
 
 newEntity{
 	define_as = "ALTAR",

@@ -39,8 +39,39 @@ end
 newEntity{ base = "DOWN", define_as = "ESCAPE_REKNOR", name="Escape route from Reknor", change_zone="reknor-escape", change_level=3, change_zone_auto_stairs = true }
 newEntity{ base = "DOWN", define_as = "DEEP_BELLOW", name="The Deep Bellow", glow=true, change_zone="deep-bellow" }
 
-newEntity{ define_as = "STATUE",
-	display = '@', image="terrain/oldstone_floor.png", add_displays = {mod.class.Grid.new{image="terrain/statue1.png"}},
+newEntity{ define_as = "STATUE1",
+	display = '@', image="terrain/oldstone_floor.png", add_displays = {mod.class.Grid.new{image="terrain/statues/statue_dwarf_taxman.png", z=18, display_y=-1, display_h=2}},
+	name = "The Dwarven Empire Incarnate",
+	does_block_move = true,
+	block_sight = true,
+}
+newEntity{ define_as = "STATUE2",
+	display = '@', image="terrain/oldstone_floor.png", add_displays = {mod.class.Grid.new{image="terrain/statues/statue_dwarf_mage.png", z=18, display_y=-1, display_h=2}},
+	name = "Mystic of the Empire",
+	does_block_move = true,
+	block_sight = true,
+}
+newEntity{ define_as = "STATUE3",
+	display = '@', image="terrain/oldstone_floor.png", add_displays = {mod.class.Grid.new{image="terrain/statues/statue_dwarf_axeman.png", z=18, display_y=-1, display_h=2}},
+	name = "Warrior of the Empire",
+	does_block_move = true,
+	block_sight = true,
+}
+newEntity{ define_as = "STATUE4",
+	display = '@', image="terrain/oldstone_floor.png", add_displays = {mod.class.Grid.new{image="terrain/statues/statue_dwarf_warrior.png", z=18, display_y=-1, display_h=2}},
+	name = "Defender of the Empire",
+	does_block_move = true,
+	block_sight = true,
+}
+newEntity{ define_as = "STATUE5",
+	display = '@', image="terrain/oldstone_floor.png", add_displays = {mod.class.Grid.new{image="terrain/statues/statue_dwarf_axeman2.png", z=18, display_y=-1, display_h=2}},
+	name = "Warrior of the Empire",
+	does_block_move = true,
+	block_sight = true,
+}
+newEntity{ define_as = "STATUE6",
+	display = '@', image="terrain/oldstone_floor.png", add_displays = {mod.class.Grid.new{image="terrain/statues/statue_dwarf_archer.png", z=18, display_y=-1, display_h=2}},
+	name = "Warrior of the Empire",
 	does_block_move = true,
 	block_sight = true,
 }
