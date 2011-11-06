@@ -30,6 +30,7 @@ local DamageType = require "engine.DamageType"
 local Faction = require "engine.Faction"
 local Map = require "engine.Map"
 local Tiles = require "engine.Tiles"
+local InventoryUI = require "engine.ui.Inventory"
 local ActorStats = require "engine.interface.ActorStats"
 local ActorResource = require "engine.interface.ActorResource"
 local ActorTalents = require "engine.interface.ActorTalents"
@@ -257,6 +258,21 @@ Birther:loadDefinition("/data/birth/descriptors.lua")
 
 -- Stores
 Store:loadStores("/data/general/stores/basic.lua")
+
+-- Inventory tabs
+InventoryUI.default_tabslist = function(self)
+	local tabslist = {
+		{image="metal-ui/inven_tabs/weapons.png", 	kind="weapons",		desc="All kinds of weapons",		filter=function(o) return not o.__transmo and (o.type == "weapon") end},
+		{image="metal-ui/inven_tabs/armors.png", 	kind="armors",		desc="All kinds of armours",		filter=function(o) return not o.__transmo and (o.type == "armor") end},
+		{image="metal-ui/inven_tabs/jewelry.png", 	kind="jewelry",		desc="Rings and Amulets",		filter=function(o) return not o.__transmo and (o.type == "jewelry") end},
+		{image="metal-ui/inven_tabs/gems.png", 		kind="gems",		desc="Gems"		,		filter=function(o) return not o.__transmo and (o.type == "gem" or o.type == "alchemist-gem") end},
+		{image="metal-ui/inven_tabs/inscriptions.png", 	kind="inscriptions",	desc="Infusions, Runes, ...",		filter=function(o) return not o.__transmo and (o.type == "scroll") end},
+		{image="metal-ui/inven_tabs/misc.png", 		kind="misc",		desc="Miscellaneous",			filter="others"},
+		{image="metal-ui/inven_tabs/quests.png", 	kind="quests",		desc="Quest and plot related items",	filter=function(o) return not o.__transmo and (o.plot or o.quest) end},
+	}
+	if self.actor:attr("has_transmo") then tabslist[#tabslist+1] = {image="metal-ui/inven_tabs/chest.png", kind="transmo", desc="Transmogrification Chest", filter=function(o) return o.__transmo end} end
+	return tabslist
+end
 
 ------------------------------------------------------------------------
 -- Count the number of talents per types

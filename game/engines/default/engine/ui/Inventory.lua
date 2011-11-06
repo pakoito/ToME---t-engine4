@@ -33,11 +33,18 @@ function _M:init(t)
 	self.w = assert(t.width, "no inventory width")
 	self.h = assert(t.height, "no inventory height")
 	self.tabslist = t.tabslist
+	self.filter = t.filter
 	self.fct = t.fct
 	self.on_select = t.select
 	self.on_select_tab = t.select_tab
 	self.on_drag = t.on_drag
 	self.on_drag_end = t.on_drag_end
+
+	if not self.tabslist and self.default_tabslist then
+		if type(self.default_tabslist) == "function" then self.tabslist = self.default_tabslist(self)
+		else self.tabslist = self.default_tabslist
+		end
+	end
 
 	Base.init(self, t)
 end
@@ -92,15 +99,17 @@ function _M:generate()
 				self:use(list[list.chars[c]])
 			end
 		end,
-		_TAB = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = util.boundWrap(self.c_tabs.sel_i+1, 1, #self.tabslist) self.c_tabs:onUse("left") end,
-		[{"_TAB","ctrl"}] = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = util.boundWrap(self.c_tabs.sel_i-1, 1, self.tabslist) self.c_tabs:onUse("left", false) end,
+		_TAB = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = util.boundWrap(self.c_tabs.sel_i+1, 1, #self.tabslist) self.c_tabs:onUse("left") self.c_tabs:onSelect() end,
+		[{"_TAB","ctrl"}] = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = util.boundWrap(self.c_tabs.sel_i-1, 1, self.tabslist) self.c_tabs:onUse("left", false) self.c_tabs:onSelect() end,
 	}
 	for i = 1, #self.tabslist do
 		self.key:addCommands{
-			['_F'..i] = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = i self.c_tabs:onUse("left") end,
-			[{'_F'..i,"ctrl"}] = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = i self.c_tabs:onUse("left", true) end,
+			['_F'..i] = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = i self.c_tabs:onUse("left") self.c_tabs:onSelect() end,
+			[{'_F'..i,"ctrl"}] = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = i self.c_tabs:onUse("left", true) self.c_tabs:onSelect() end,
 		}
 	end
+
+	self.c_inven:onSelect()
 end
 
 function _M:switchTab(filter)
@@ -108,7 +117,9 @@ function _M:switchTab(filter)
 
 	for i, d in ipairs(self.tabslist) do
 		for k, e in pairs(filter) do if d[k] == e then
-			self.c_tabs.sel_j = 1 self.c_tabs.sel_i = i self.c_tabs:onUse("left", false)
+			self.c_tabs.sel_j = 1 self.c_tabs.sel_i = i
+			self.c_tabs:onUse("left", false)
+			self.c_tabs:onSelect()
 			return
 		end end
 	end
@@ -116,6 +127,7 @@ end
 
 function _M:selectTab(item)
 	if self.on_select_tab then self.on_select_tab(item) end
+	self.c_inven:onSelect()
 end
 
 function _M:setInnerFocus(id)
@@ -137,7 +149,7 @@ function _M:setInnerFocus(id)
 end
 
 function _M:on_focus(id, ui)
-	if self.on_select and ui then self.on_select(ui, ui.ui.inven, ui.ui.item, ui.ui:getItem()) end
+--	if self.on_select and ui then self.on_select(ui, ui.ui.inven, ui.ui.item, ui.ui:getItem()) end
 end
 function _M:no_focus()
 end

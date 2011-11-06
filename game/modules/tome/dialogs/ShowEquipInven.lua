@@ -44,17 +44,7 @@ function _M:init(title, actor, filter, action, on_select)
 		end
 	}
 
-	local tabslist = {
-		{image="metal-ui/inven_tabs/weapons.png", 	kind="weapons",		desc="All kinds of weapons",		filter=function(o) return not o.__transmo and (o.type == "weapon") end},
-		{image="metal-ui/inven_tabs/armors.png", 	kind="armors",		desc="All kinds of armours",		filter=function(o) return not o.__transmo and (o.type == "armor") end},
-		{image="metal-ui/inven_tabs/jewelry.png", 	kind="jewelry",		desc="Rings and Amulets",		filter=function(o) return not o.__transmo and (o.type == "jewelry") end},
-		{image="metal-ui/inven_tabs/gems.png", 		kind="gems",		desc="Gems"		,		filter=function(o) return not o.__transmo and (o.type == "gem" or o.type == "alchemist-gem") end},
-		{image="metal-ui/inven_tabs/inscriptions.png", 	kind="inscriptions",	desc="Infusions, Runes, ...",		filter=function(o) return not o.__transmo and (o.type == "scroll") end},
-		{image="metal-ui/inven_tabs/misc.png", 		kind="misc",		desc="Miscellaneous",			filter="others"},
-		{image="metal-ui/inven_tabs/quests.png", 	kind="quests",		desc="Quest and plot related items",	filter=function(o) return not o.__transmo and (o.plot or o.quest) end},
-	}
-	if actor:attr("has_transmo") then tabslist[#tabslist+1] = {image="metal-ui/inven_tabs/chest.png", kind="transmo", desc="Transmogrification Chest", filter=function(o) return o.__transmo end} end
-	self.c_inven = Inventory.new{actor=actor, inven=actor:getInven("INVEN"), width=self.iw - 20 - self.c_doll.w, height=self.ih - 10, tabslist=tabslist,
+	self.c_inven = Inventory.new{actor=actor, inven=actor:getInven("INVEN"), width=self.iw - 20 - self.c_doll.w, height=self.ih - 10,
 		fct=function(item, sel, button, event) self:use(item, button, event) end,
 		on_select=function(item, sel) self:select(item) end,
 		on_drag=function(item) self:onDrag(item) end,
