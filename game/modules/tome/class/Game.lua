@@ -233,6 +233,9 @@ function _M:newGame()
 
 		self.player:recomputeGlobalSpeed()
 
+		-- Force the hotkeys to be sorted.
+		self.player:sortHotkeys()
+
 		-- Register the character online if possible
 		self.player:getUUID()
 		self:updateCurrentChar()
@@ -1669,6 +1672,8 @@ end
 function _M:saveGame()
 	self:registerHighscore()
 
+	if self.party then for actor, _ in pairs(self.party.members) do engine.interface.PlayerHotkeys:updateQuickHotkeys(actor) end end
+
 	-- savefile_pipe is created as a global by the engine
 	savefile_pipe:push(self.save_name, "game", self)
 	world:saveWorld()
@@ -1991,4 +1996,3 @@ function _M:mouseIcon(bx, by)
 		end
 	end
 end
-

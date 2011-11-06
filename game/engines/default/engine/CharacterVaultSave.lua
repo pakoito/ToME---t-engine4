@@ -30,7 +30,6 @@ function _M:init(savefile, coroutine)
 	self.short_name = savefile:gsub("[^a-zA-Z0-9_-.]", "_")
 	self.save_dir = "/vault/"..self.short_name.."/"
 	self.quickbirth_file = "/vault/"..self.short_name..".quickbirth"
-	self.hotkeys_file = "/vault/"..self.short_name..".hotkeys"
 	self.load_dir = "/tmp/loadsave/"
 end
 

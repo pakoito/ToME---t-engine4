@@ -277,6 +277,7 @@ newEntity{ define_as = "ORB_SCRYING",
 	name = "Orb of Scrying",
 	display = "*", color=colors.VIOLET, image = "object/artifact/orb_scrying.png",
 	encumber = 1,
+	save_hotkey = true,
 	desc = [[This orb was given to you by Elisa the Halfling scryer. It will automatically identify normal and rare items for you and can be activated to contact Elisa for rarer items.]],
 
 	on_drop = function(self, who)

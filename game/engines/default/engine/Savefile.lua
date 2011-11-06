@@ -31,6 +31,7 @@ local Dialog = require "engine.ui.Dialog"
 module(..., package.seeall, class.make)
 
 _M.current_save = false
+_M.hotkeys_file = "/save/quick_hotkeys"
 
 --- Init a savefile
 -- @param savefile the name of the savefile, usually the player's name. It will be sanitized so dont bother doing it
@@ -39,7 +40,6 @@ function _M:init(savefile, coroutine)
 	self.short_name = savefile:gsub("[^a-zA-Z0-9_-.]", "_")
 	self.save_dir = "/save/"..self.short_name.."/"
 	self.quickbirth_file = "/save/"..self.short_name..".quickbirth"
-	self.hotkeys_file = "/save/"..self.short_name..".hotkeys"
 	self.load_dir = "/tmp/loadsave/"
 
 	self.coroutine = coroutine
@@ -172,20 +172,6 @@ function _M:loadQuickBirth()
 	return nil
 end
 
-function _M:loadQuickHotkeys()
-	local f = loadfile(self.hotkeys_file)
-	print("[HOTKEYS]", f)
-	if f then
-		--Call the file body inside its own private environment
-		local def = {}
-		setfenv(f, def)
-		if pcall(f) then
-			return def
-		end
-	end
-	return nil
-end
-
 --- Saves the screenshot of a game
 function _M:saveScreenshot(screenshot)
 	if not screenshot then return end
@@ -235,19 +221,35 @@ function _M:saveGame(game, no_dialog)
 	f:write(("description = %q\n"):format(desc.description))
 	f:close()
 
-	if not no_dialog then popup:done() end
+	-- TODO: Replace this with saving quickhotkeys to the profile.
+	-- Add print_doable_table to utils.lua as table.print_doable?
+	local f = fs.open(_M.hotkeys_file, "w")
+	local function print_doable_table(src, str, print_func, only, skip, is_first_call)
+		str = str or ""
+		print_func = print_func or print
 
-	-- A bit hacky, save hotkeys, this will do until I can make it better for multiplayer stuff
-	local f = fs.open(self.hotkeys_file, "w")
-	if game:getPlayer().hotkey then
-		f:write("quickhotkeys = {}\n")
-		for i, known_t_id in pairs(game:getPlayer().hotkey) do
-			if known_t_id[1] == "talent" then
-				f:write(("quickhotkeys[%q] = %i\n"):format(tostring(known_t_id[2]) , i))
+		if is_first_call then print_func(str .. " = {}") end
+		for k, e in pairs(src) do
+			local new_str = str
+			if (not skip or (skip and not skip[k])) and (not only or (only and only == k)) then
+				if type(e) == "table" then
+					if type(k) ~= "string" then new_str = str .. ("[%s]"):format(tostring(k)) else new_str = str .. ("[%q]"):format(tostring(k)) end
+					print_func(new_str .. " = {}")
+					print_doable_table(e, new_str, print_func)
+				else
+					if type(k) ~= "string" then new_str = new_str .. ("[%s]"):format(tostring(k)) else new_str = new_str .. ("[%q]"):format(tostring(k)) end
+					if type(e) ~= "string" then print_func(new_str .. (" = %s"):format(tostring(e))) else print_func(new_str .. (" = %q"):format(tostring(e))) end
+				end
 			end
 		end
 	end
+
+	print_doable_table(engine.interface.PlayerHotkeys.quickhotkeys, "quickhotkeys", function(s) return f:write(s .. "\n") end, "Player: Global", nil, true)
+	print_doable_table(engine.interface.PlayerHotkeys.quickhotkeys, "quickhotkeys", function(s) return f:write(s .. "\n") end, "Player: Specific", nil, false)
+	print_doable_table(engine.interface.PlayerHotkeys.quickhotkeys, "quickhotkeys", function(s) return f:write(s .. "\n") end, nil, {["Player: Global"] = true, ["Player: Specific"] = true}, false)
 	f:close()
+
+	if not no_dialog then popup:done() end
 end
 
 --- Get a savename for a zone

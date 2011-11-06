@@ -46,6 +46,7 @@ newTalent{
 	target = {type="hit", range=1},
 	tactical = { ATTACK = 1 },
 	no_unlearn_last = true,
+	ignored_by_hotkeyautotalents = true,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)

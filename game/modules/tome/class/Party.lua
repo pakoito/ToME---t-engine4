@@ -211,6 +211,8 @@ function _M:setPlayer(actor, bypass)
 
 	if game.level and actor.x and actor.y then actor:move(actor.x, actor.y, true) end
 
+	if not actor.hotkeys_sorted then actor:sortHotkeys() end
+
 	game.logPlayer(actor, "#MOCCASIN#Character control switched to %s.", actor.name)
 
 	return true

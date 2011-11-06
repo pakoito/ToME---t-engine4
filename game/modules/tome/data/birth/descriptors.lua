@@ -68,6 +68,7 @@ newBirthDescriptor{
 		keep_inven_on_death = true,
 		can_change_level = true,
 		can_change_zone = true,
+		save_hotkeys = true,
 
 		-- Mages are unheard of at first, nobody but them regenerates mana
 		mana_rating = 6,

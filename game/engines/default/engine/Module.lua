@@ -504,6 +504,9 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 	profile:saveGenericProfile("modules_loaded", {name=mod.short_name, nb={"inc", 1}})
 	profile:setConfigsBatch(false)
 
+	-- TODO: Replace this with loading quickhotkeys from the profile.
+	if engine.interface.PlayerHotkeys then engine.interface.PlayerHotkeys:loadQuickHotkeys(mod.short_name, Savefile.hotkeys_file) end
+
 	core.wait.disable()
 
 	core.display.resetAllFonts("normal")

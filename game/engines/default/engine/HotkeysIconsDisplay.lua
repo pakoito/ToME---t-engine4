@@ -240,9 +240,19 @@ function _M:onMouse(button, mx, my, click, on_over, on_click)
 		if drag.kind == "talent" or drag.kind == "inventory" then
 			local i = math.floor(mx / self.frames.w) + (self.actor.hotkey_page-1) * 12 + 1
 			local old = self.actor.hotkey[i]
-			self.actor.hotkey[i] = {drag.kind, drag.id}
-			if drag.source_hotkey_slot then
-				self.actor.hotkey[drag.source_hotkey_slot] = old
+
+			if i <= #page_to_hotkey * 12 then -- Only add this hotkey if we support a valid page for it.
+				self.actor.hotkey[i] = {drag.kind, drag.id}
+
+				if drag.source_hotkey_slot then
+					self.actor.hotkey[drag.source_hotkey_slot] = old
+				end
+
+				-- Update the quickhotkeys table immediately rather than waiting for a save.
+				if self.actor.save_hotkeys then
+					engine.interface.PlayerHotkeys:updateQuickHotkey(self.actor, i)
+					engine.interface.PlayerHotkeys:updateQuickHotkey(self.actor, drag.source_hotkey_slot)
+				end
 			end
 			game.mouse:usedDrag()
 			self.actor.changed = true

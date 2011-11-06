@@ -36,6 +36,7 @@ local function makeGolem()
 		level_range = {1, 50}, exp_worth=0,
 		life_rating = 13,
 		never_anger = true,
+		save_hotkeys = true,
 
 		combat = { dam=10, atk=10, apr=0, dammod={str=1} },
 

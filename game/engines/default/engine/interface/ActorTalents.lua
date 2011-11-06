@@ -259,20 +259,26 @@ function _M:learnTalent(t_id, force, nb)
 		if not ok and err then return nil, err end
 	end
 
-	local found = false
 	if not self.talents[t_id] then
 		-- Auto assign to hotkey
 		if t.mode ~= "passive" and self.hotkey then
-			if self.quickhotkeys then
-				local hk = self.quickhotkeys[t_id]
-				print("[quickhotkeys] are",hk)
-				if self.quickhotkeys[t_id] and not self.hotkey[hk] then
-					print("[quickhotkeys] found")
-					self.hotkey[hk] = {"talent", t_id}
-					found = true
+			local position
+
+			if self.player then
+				if self == game:getPlayer(true) then
+					position = self:findQuickHotkey("Player: Specific", "talent", t_id)
+					if not position then
+						local global_hotkeys = engine.interface.PlayerHotkeys.quickhotkeys["Player: Global"]
+						if global_hotkeys and global_hotkeys["talent"] then position = global_hotkeys["talent"][t_id] end
+					end
+				else
+					position = self:findQuickHotkey(self.name, "talent", t_id)
 				end
 			end
-			if not found then
+
+			if position and not self.hotkey[position] then
+				self.hotkey[position] = {"talent", t_id}
+			else
 				for i = 1, 48 do
 					if not self.hotkey[i] then
 						self.hotkey[i] = {"talent", t_id}

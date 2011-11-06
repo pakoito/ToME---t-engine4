@@ -28,6 +28,7 @@ newEntity{ define_as = "ORB_KNOWLEDGE",
 	name = "Orb of Knowledge", identified = true,
 	display = "*", color=colors.VIOLET, image = "object/ruby.png",
 	encumber = 1,
+	save_hotkey = true,
 	desc = [[This orb was given to you by Elisa the halfling scryer, it will automatically identify normal and rare items for you and can be activated to identify all others.]],
 
 	on_drop = function(self, who)

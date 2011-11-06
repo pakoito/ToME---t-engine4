@@ -41,6 +41,7 @@ local Birther = require "engine.Birther"
 local Store = require "mod.class.Store"
 local WorldAchievements = require "mod.class.interface.WorldAchievements"
 local PlayerLore = require "mod.class.interface.PlayerLore"
+local PlayerHotkeys = require "engine.interface.PlayerHotkeys"
 local Quest = require "engine.Quest"
 local UIBase = require "engine.ui.Base"
 
@@ -97,6 +98,20 @@ else
 	UIBase.font_mono_h = 	UIBase.font_mono:lineSkip()
 	UIBase.font_bold_h = 	UIBase.font_bold:lineSkip()
 end
+
+-- Define how quick hotkeys are saved
+PlayerHotkeys.quickhotkeys_specifics = {
+	function(a)
+		local race = ((a.descriptor and a.descriptor.race) and a.descriptor.race or (a.type and a.type:capitalize() or "No Race"))
+		local subrace = ((a.descriptor and a.descriptor.subrace) and (" (%s)"):format(a.descriptor.subrace) or (a.type and "" or " (No Subrace)"))
+		return ("%s"):format(race .. subrace)
+	end,
+	function(a)
+		local class = ((a.descriptor and a.descriptor.class) and a.descriptor.class or (a.subtype and a.subtype:capitalize() or "No Class"))
+		local subclass = ((a.descriptor and a.descriptor.subclass) and (" (%s)"):format(a.descriptor.subclass) or (a.subtype and "" or " (No Subclass)"))
+		return ("%s"):format(class .. subclass)
+	end,
+}
 
 
 -- Create some noise textures
