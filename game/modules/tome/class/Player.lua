@@ -1069,9 +1069,10 @@ function _M:on_quest_status(quest, status, sub)
 end
 
 function _M:attackOrMoveDir(dir)
-	local tmp = game.bump_attack_disabled
+	local game_or_player = not config.settings.tome.actor_based_movement_mode and game or self
+	local tmp = game_or_player.bump_attack_disabled
 
-	game.bump_attack_disabled = false
+	game_or_player.bump_attack_disabled = false
 	self:moveDir(dir)
-	game.bump_attack_disabled = tmp
+	game_or_player.bump_attack_disabled = tmp
 end

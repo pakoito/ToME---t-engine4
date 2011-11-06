@@ -33,7 +33,7 @@ function _M:bumpInto(target, x, y)
 	local reaction = self:reactionToward(target)
 	if reaction < 0 then
 		if target.encounterAttack and self.player then self:onWorldEncounter(target, x, y) return end
-		if game.player == self and game.bump_attack_disabled then return end
+		if game.player == self and ((not config.settings.tome.actor_based_movement_mode and game.bump_attack_disabled) or (config.settings.tome.actor_based_movement_mode and self.bump_attack_disabled)) then return end
 		return self:useTalent(self.T_ATTACK, nil, nil, nil, target)
 	elseif reaction >= 0 then
 		-- Talk ?

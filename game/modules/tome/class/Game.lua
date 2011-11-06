@@ -241,7 +241,6 @@ function _M:newGame()
 		self:updateCurrentChar()
 	end
 
-	self.bump_attack_disabled = false
 	self.always_target = true
 	local nb_unlocks, max_unlocks = self:countBirthUnlocks()
 	self.creating_player = true
@@ -1437,12 +1436,14 @@ function _M:setupCommands()
 		end,
 
 		TOGGLE_BUMP_ATTACK = function()
-			if (self.bump_attack_disabled) then
+			local game_or_player = not config.settings.tome.actor_based_movement_mode and self or game.player
+
+			if game_or_player.bump_attack_disabled then
 				self.log("Movement Mode: #LIGHT_GREEN#Default#LAST#.")
-				self.bump_attack_disabled = false
+				game_or_player.bump_attack_disabled = false
 			else
 				self.log("Movement Mode: #LIGHT_RED#Passive#LAST#.")
-				self.bump_attack_disabled = true
+				game_or_player.bump_attack_disabled = true
 			end
 
 			-- Update tooltip display if we're hovering over the icon.
@@ -1885,7 +1886,7 @@ function _M:displayUI()
 	x = x + _talents_icon_w
 	_log_icon:toScreenFull(x, y, _log_icon_w, _log_icon_h, _log_icon_w, _log_icon_h)
 	x = x + _talents_icon_w
-	if (not self.bump_attack_disabled) then
+	if (not config.settings.tome.actor_based_movement_mode and not self.bump_attack_disabled) or (config.settings.tome.actor_based_movement_mode and not self.player.bump_attack_disabled) then
 		_mm_aggressive_icon:toScreenFull(x, y, _mm_aggressive_icon_w, _mm_aggressive_icon_h, _mm_aggressive_icon_w, _mm_aggressive_icon_h)
 	else
 		_mm_passive_icon:toScreenFull(x, y, _mm_passive_icon_w, _mm_passive_icon_h, _mm_passive_icon_w, _mm_passive_icon_h)
@@ -1989,7 +1990,7 @@ function _M:mouseIcon(bx, by)
 		virtual = "TOGGLE_BUMP_ATTACK"
 		key = self.key.binds_remap[virtual] ~= nil and self.key.binds_remap[virtual][1] or game.key:findBoundKeys(virtual)
 		key = (key ~= nil and game.key:formatKeyString(key) or "unbound"):capitalize()
-		if (not self.bump_attack_disabled) then
+		if (not config.settings.tome.actor_based_movement_mode and not self.bump_attack_disabled) or (config.settings.tome.actor_based_movement_mode and not self.player.bump_attack_disabled) then
 			self:tooltipDisplayAtMap(self.w, self.h, "Movement: #LIGHT_GREEN#Default#LAST# (#{bold}##GOLD#"..key.."#LAST##{normal}#)\nToggle for passive mode")
 		else
 			self:tooltipDisplayAtMap(self.w, self.h, "Movement: #LIGHT_RED#Passive#LAST# (#{bold}##GOLD#"..key.."#LAST##{normal}#)\nToggle for default mode")

@@ -234,6 +234,16 @@ function _M:generateList()
 		game:saveSettings("tome.autoassign_talents_on_birth", ("tome.autoassign_talents_on_birth = %s\n"):format(tostring(config.settings.tome.autoassign_talents_on_birth)))
 		self.c_list:drawItem(item)
 	end,}
+--[[
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Your movement mode depends on which character/creature you're currently controlling.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Actor-based movement mode#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.tome.actor_based_movement_mode and "enabled" or "disabled")
+	end, fct=function(item)
+		config.settings.tome.actor_based_movement_mode = not config.settings.tome.actor_based_movement_mode
+		game:saveSettings("tome.actor_based_movement_mode", ("tome.actor_based_movement_mode = %s\n"):format(tostring(config.settings.tome.actor_based_movement_mode)))
+		self.c_list:drawItem(item)
+	end,}
+]]
 
 	self.list = list
 end
