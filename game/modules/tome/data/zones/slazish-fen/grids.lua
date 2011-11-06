@@ -54,7 +54,11 @@ newEntity{ base="BOGWATER",
 	define_as = "PORTAL",
 	display = "&", color = colors.BLUE,
 	name = "coral portal",
-	add_displays = {class.new{z=18, image="terrain/naga_portal.png", display_h=2, display_y=-1}},
+	add_displays = {class.new{z=18, image="terrain/naga_portal.png", display_h=2, display_y=-1, embed_particles = {
+		{name="naga_portal_smoke", rad=2, args={smoke="particles_images/smoke_whispery_bright"}},
+		{name="naga_portal_smoke", rad=2, args={smoke="particles_images/smoke_heavy_bright"}},
+		{name="naga_portal_smoke", rad=2, args={smoke="particles_images/smoke_dark"}},
+	}}},
 	does_block_move = true,
 	pass_projectile = true,
 	block_move = function(self, x, y, who, act, couldpass)

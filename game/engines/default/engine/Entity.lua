@@ -114,6 +114,13 @@ function _M:init(t, no_default)
 
 	self.changed = true
 	self.__particles = self.__particles or {}
+
+	if self.embed_particles then
+		local Particles = require "engine.Particles"
+		for i, pd in ipairs(self.embed_particles) do
+			self:addParticles(Particles.new(pd.name, pd.rad or 1, pd.args))
+		end
+	end
 end
 
 --- If we are cloned we need a new uid

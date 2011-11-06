@@ -19,7 +19,7 @@
 
 quickEntity('@', {show_tooltip=true, name="Statue of King Tolak the Fair", display='@', image="terrain/grass.png", add_displays = {mod.class.Grid.new{image="terrain/statues/statue_tolak.png", z=18, display_y=-1, display_h=2}}, color=colors.LIGHT_BLUE, block_move=function(self, x, y, e, act, couldpass) if e and e.player and act then e:learnLore("last-hope-tolak-statue") end return true end})
 quickEntity('Z', {show_tooltip=true, name="Statue of King Toknor the Brave", display='@', image="terrain/grass.png", add_displays = {mod.class.Grid.new{image="terrain/statues/statue_toknor.png", z=18, display_y=-1, display_h=2}}, color=colors.LIGHT_BLUE, block_move=function(self, x, y, e, act, couldpass) if e and e.player and act then e:learnLore("last-hope-toknor-statue") end return true end})
-quickEntity('Y', {show_tooltip=true, name="Statue of Queen Mirvenia the Inspirer", display='@', image="terrain/grass.png", add_displays = {mod.class.Grid.new{image="terrain/statue1.png"}}, color=colors.LIGHT_BLUE, block_move=function(self, x, y, e, act, couldpass) if e and e.player and act then e:learnLore("last-hope-mirvenia-statue") end return true end})
+quickEntity('Y', {show_tooltip=true, name="Statue of Queen Mirvenia the Inspirer", display='@', image="terrain/grass.png", add_displays = {mod.class.Grid.new{image="terrain/statues/statue_mirvenia.png", z=18, display_y=-1, display_h=2}}, color=colors.LIGHT_BLUE, block_move=function(self, x, y, e, act, couldpass) if e and e.player and act then e:learnLore("last-hope-mirvenia-statue") end return true end})
 
 -- defineTile section
 defineTile("<", "GRASS_UP_WILDERNESS")

@@ -51,7 +51,11 @@ on_grant = function(self, who)
 		notice = true,
 		change_level=1, change_zone="temple-of-creation",
 		image = "terrain/underwater/subsea_floor_02.png",
-		add_displays = {mod.class.Grid.new{z=18, image="terrain/naga_portal.png", display_h=2, display_y=-1}},
+		add_displays = {mod.class.Grid.new{z=18, image="terrain/naga_portal.png", display_h=2, display_y=-1, embed_particles = {
+			{name="naga_portal_smoke", rad=2, args={smoke="particles_images/smoke_whispery_bright"}},
+			{name="naga_portal_smoke", rad=2, args={smoke="particles_images/smoke_heavy_bright"}},
+			{name="naga_portal_smoke", rad=2, args={smoke="particles_images/smoke_dark"}},
+		}}},
 	}
 	g:resolve() g:resolve(nil, true)
 	game.zone:addEntity(game.level, g, "terrain", 34, 6)
@@ -71,7 +75,11 @@ portal_back = function(self, who)
 		notice = true,
 		change_level=2, change_zone="flooded-cave",
 		image = "terrain/underwater/subsea_floor_02.png",
-		add_displays = {mod.class.Grid.new{z=18, image="terrain/naga_portal.png", display_h=2, display_y=-1}},
+		add_displays = {mod.class.Grid.new{z=18, image="terrain/naga_portal.png", display_h=2, display_y=-1, embed_particles = {
+			{name="naga_portal_smoke", rad=2, args={smoke="particles_images/smoke_whispery_bright"}},
+			{name="naga_portal_smoke", rad=2, args={smoke="particles_images/smoke_heavy_bright"}},
+			{name="naga_portal_smoke", rad=2, args={smoke="particles_images/smoke_dark"}},
+		}}},
 	}
 	g:resolve() g:resolve(nil, true)
 	game.zone:addEntity(game.level, g, "terrain", 15, 13)
