@@ -112,7 +112,7 @@ newEntity{
 	nice_tiler = { method="replace", base={"BURNT_FOREST", 100, 1, 20}},
 	nice_editer = lava_editer,
 }
-for i = 1, 20 do newEntity{ base="BURNT_FOREST", define_as = "BURNT_FOREST"..i, name = "burnt tree", image = "terrain/lava_floor.png", add_displays = class:makeTrees("terrain/burnttree_alpha")} end
+for i = 1, 20 do newEntity{ base="BURNT_FOREST", define_as = "BURNT_FOREST"..i, name = "burnt tree", image = "terrain/lava_floor.png", add_displays = class:makeTrees("terrain/burnttree_alpha", 8, 0)} end
 
 --------------------------------------------------------------------------------
 -- Iceland
@@ -237,7 +237,7 @@ newEntity{
 	type = "wall", subtype = "sand",
 	name = "oasis", image = "terrain/palmtree.png",
 	display = '#', color=colors.LIGHT_GREEN, back_color={r=93,g=79,b=22},
-	add_displays = class:makeTrees("terrain/palmtree_alpha", 4),
+	add_displays = class:makeTrees("terrain/palmtree_alpha", 8, 5),
 	always_remember = true,
 	can_pass = {pass_tree=1},
 	does_block_move = true,
