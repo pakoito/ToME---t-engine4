@@ -25,6 +25,7 @@ newTalentType{ allow_random=true, type="wild-gift/summon-melee", name = "summoni
 newTalentType{ allow_random=true, type="wild-gift/summon-distance", name = "summoning (distance)", description = "The art of calling creatures to your aid." }
 newTalentType{ allow_random=true, type="wild-gift/summon-utility", name = "summoning (utility)", description = "The art of calling creatures to your aid." }
 newTalentType{ allow_random=true, type="wild-gift/summon-augmentation", name = "summoning (augmentation)", description = "The art of calling creatures to your aid." }
+newTalentType{ allow_random=true, type="wild-gift/summon-advanced", name = "summoning (advanced)", description = "The art of calling creatures to your aid." }
 newTalentType{ allow_random=true, type="wild-gift/slime", name = "slime aspect", generic = true, description = "Through dedicated consumption of slime mold juice, you have gained an affinity with slime molds." }
 newTalentType{ allow_random=true, type="wild-gift/sand-drake", name = "sand drake aspect", description = "Take on the defining aspects of a Sand Drake." }
 newTalentType{ allow_random=true, type="wild-gift/fire-drake", name = "fire drake aspect", description = "Take on the defining aspects of a Fire Drake." }
