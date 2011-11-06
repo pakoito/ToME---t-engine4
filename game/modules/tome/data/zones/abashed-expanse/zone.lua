@@ -33,6 +33,7 @@ return {
 	no_level_connectivity = true,
 	force_controlled_teleport = true,
 	projectile_speed_mod = 0.3,
+	no_autoexplore = true,
 
 	generator =  {
 		map = {

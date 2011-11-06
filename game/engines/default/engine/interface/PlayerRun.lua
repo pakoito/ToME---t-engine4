@@ -135,8 +135,13 @@ function _M:runStep()
 		local oldx, oldy = self.x, self.y
 		local dir_is_cardinal = self.running.dir == 2 or self.running.dir == 4 or self.running.dir == 6 or self.running.dir == 8
 		if self.running.path then
-			if not self.running.path[self.running.cnt] then self:runStop()
-			else self:move(self.running.path[self.running.cnt].x, self.running.path[self.running.cnt].y) end
+			if self.running.explore and self.checkAutoExplore and not self:checkAutoExplore() then
+				self:runStop()
+			elseif not self.running.path[self.running.cnt] then
+				self:runStop()
+			else
+				self:move(self.running.path[self.running.cnt].x, self.running.path[self.running.cnt].y)
+			end
 		else
 			-- Try to move around known traps if possible
 			local dx, dy = dir_to_coord[self.running.dir][1], dir_to_coord[self.running.dir][2]
@@ -177,6 +182,34 @@ function _M:runStep()
 			end
 			-- Move!
 			self:moveDir(self.running.dir)
+
+			if self.running.block_left then self.running.ignore_left = nil end
+			if self.running.ignore_left then
+				self.running.ignore_left = self.running.ignore_left - 1
+				if self.running.ignore_left <= 0 then
+					self.running.ignore_left = nil
+					-- We do this check here because it is path/time dependent, not terrain configuration dependent
+					if dir_is_cardinal and checkDir(self, sides[self.running.dir].soft_left) and checkDir(self, self.running.dir, 2) then
+						self:runStop("terrain change on the left")
+						return false
+					end
+				end
+				if checkDir(self, sides[self.running.dir].soft_left) and (not checkDir(self, self.running.dir) or not dir_is_cardinal) then self.running.block_left = true end
+			end
+			if self.running.block_right then self.running.ignore_right = nil end
+			if self.running.ignore_right then
+				self.running.ignore_right = self.running.ignore_right - 1
+				if self.running.ignore_right <= 0 then
+					self.running.ignore_right = nil
+					-- We do this check here because it is path/time dependent, not terrain configuration dependent
+					if dir_is_cardinal and checkDir(self, sides[self.running.dir].soft_right) and checkDir(self, self.running.dir, 2) then
+						self:runStop("terrain change on the right")
+						return false
+					end
+				end
+				if checkDir(self, sides[self.running.dir].soft_right) and (not checkDir(self, self.running.dir) or not dir_is_cardinal) then self.running.block_right = true end
+			end
+
 		end
 		self:runMoved()
 
@@ -185,34 +218,6 @@ function _M:runStep()
 
 		if not self.running then return false end
 		self.running.cnt = self.running.cnt + 1
-
-		if self.running.block_left then self.running.ignore_left = nil end
-		if self.running.ignore_left then
-			self.running.ignore_left = self.running.ignore_left - 1
-			if self.running.ignore_left <= 0 then
-				self.running.ignore_left = nil
-				-- We do this check here because it is path/time dependent, not terrain configuration dependent
-				if dir_is_cardinal and checkDir(self, sides[self.running.dir].soft_left) and checkDir(self, self.running.dir, 2) then
-					self:runStop("terrain change on the left")
-					return false
-				end
-			end
-			if checkDir(self, sides[self.running.dir].soft_left) and (not checkDir(self, self.running.dir) or not dir_is_cardinal) then self.running.block_left = true end
-		end
-		if self.running.block_right then self.running.ignore_right = nil end
-		if self.running.ignore_right then
-			self.running.ignore_right = self.running.ignore_right - 1
-			if self.running.ignore_right <= 0 then
-				self.running.ignore_right = nil
-				-- We do this check here because it is path/time dependent, not terrain configuration dependent
-				if dir_is_cardinal and checkDir(self, sides[self.running.dir].soft_right) and checkDir(self, self.running.dir, 2) then
-					self:runStop("terrain change on the right")
-					return false
-				end
-			end
-			if checkDir(self, sides[self.running.dir].soft_right) and (not checkDir(self, self.running.dir) or not dir_is_cardinal) then self.running.block_right = true end
-		end
-
 		return true
 	end
 end

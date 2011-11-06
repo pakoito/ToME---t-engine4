@@ -27,6 +27,7 @@ require "engine.interface.PlayerMouse"
 require "mod.class.interface.PlayerStats"
 require "mod.class.interface.PlayerLore"
 require "mod.class.interface.PlayerDumpJSON"
+require "mod.class.interface.PlayerExplore"
 require "mod.class.interface.PartyDeath"
 local Map = require "engine.Map"
 local Dialog = require "engine.ui.Dialog"
@@ -46,6 +47,7 @@ module(..., package.seeall, class.inherit(
 	mod.class.interface.PlayerStats,
 	mod.class.interface.PlayerLore,
 	mod.class.interface.PlayerDumpJSON,
+	mod.class.interface.PlayerExplore,
 	mod.class.interface.PartyDeath
 ))
 

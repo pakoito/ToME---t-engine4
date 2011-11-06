@@ -1529,6 +1529,7 @@ function _M:die(src, death_note)
 						o.droppedBy = self.name
 						self:removeObject(inven, i, true)
 						game.level.map:addObject(self.x, self.y, o)
+						if game.level.map.attrs(self.x, self.y, "obj_seen") then game.level.map.attrs(self.x, self.y, "obj_seen", false) end
 					else
 						o:removed()
 					end

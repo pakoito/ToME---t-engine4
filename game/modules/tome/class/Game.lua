@@ -1153,6 +1153,15 @@ function _M:setupCommands()
 			local ok, err = coroutine.resume(co)
 			if not ok and err then print(debug.traceback(co)) error(err) end
 		end,
+
+		RUN_AUTO = function()
+			if self.zone and self.zone.no_autoexplore or self.level and self.level.no_autoexplore then
+				self.log("You may not auto-explore this level.")
+			elseif not self.player:autoExplore() then
+				self.log("There is nowhere left to explore.")
+			end
+		end,
+
 		RUN_LEFT = function() self.player:runInit(4) end,
 		RUN_RIGHT = function() self.player:runInit(6) end,
 		RUN_UP = function() self.player:runInit(8) end,

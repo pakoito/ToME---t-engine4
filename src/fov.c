@@ -750,8 +750,8 @@ static int lua_fov_line_last_open_xy(lua_State *L)
 		val = (float)line->dest_t * line->step_y - line->eps;
 		y = (val < 0.0f) ? -(int)(0.5f - val) : (int)(0.5f + val);
 	}
-	lua_pushnumber(L, line->source_x);
-	lua_pushnumber(L, line->source_y);
+	lua_pushnumber(L, line->source_x + x);
+	lua_pushnumber(L, line->source_y + y);
 	return 2;
 }
 

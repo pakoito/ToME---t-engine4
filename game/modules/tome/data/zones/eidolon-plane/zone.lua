@@ -29,6 +29,7 @@ return {
 	is_eidolon_plane = true,
 	no_anomalies = true,
 	zero_gravity = true,
+	no_autoexplore = true,
 	ambient_music = "Anne_van_Schothorst_-_Passed_Tense.ogg",
 	generator =  {
 		map = {

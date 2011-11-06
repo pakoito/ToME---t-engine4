@@ -198,3 +198,11 @@ defineAction{
 	group = "movement",
 	name = "Attack diagonally right and down",
 }
+
+defineAction{
+	default = { "sym:_a:false:true:false:false" },
+	type = "RUN_AUTO",
+	group = "movement",
+	name = "Auto-explore",
+}
+
