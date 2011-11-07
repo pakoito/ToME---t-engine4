@@ -32,12 +32,12 @@ defineTile(".", "JUNGLE_GRASS")
 defineTile("t", "JUNGLE_TREE")
 defineTile("*", "BAMBOO_HUT_COOKING3")
 
---defineTile("1", "HARDWALL", nil, nil, "CLOTH_ARMOR_STORE")
---defineTile("2", "HARDWALL", nil, nil, "LIGHT_ARMOR_STORE")
---defineTile("3", "HARDWALL", nil, nil, "STAFF_WEAPON_STORE")
---defineTile("4", "HARDWALL", nil, nil, "SWORD_WEAPON_STORE")
---defineTile("5", "HARDWALL", nil, nil, "RUNEMASTER")
---defineTile("a", "HARDWALL", nil, nil, "ALCHEMIST")
+defineTile("1", "BAMBOO_HUT_FLOOR", nil, "YEEK_STORE_GEM")
+defineTile("2", "BAMBOO_HUT_FLOOR", nil, "YEEK_STORE_2HANDS")
+defineTile("3", "BAMBOO_HUT_FLOOR", nil, "YEEK_STORE_CLOTH")
+defineTile("4", "BAMBOO_HUT_FLOOR", nil, "YEEK_STORE_1HAND")
+defineTile("5", "BAMBOO_HUT_FLOOR", nil, "YEEK_STORE_LEATHER")
+defineTile("6", "BAMBOO_HUT_FLOOR", nil, "YEEK_STORE_NATURE")
 
 -- addSpot section
 
@@ -62,16 +62,16 @@ t~~~~.t..................t..tt...t..t.tt..t..t.t..
 ~~~~~.....t.............t.............t...t....t..
 ~~~~~.............tt........#####.t.t..tt.t.t..t..
 ~~~~~~....t.......t....t....#___#.tt.t.tt...t..t..
-~~~~~~....t.....ttt.........#___#...tt.....tt...t.
+~~~~~~....t.....ttt.........#_4_#...tt.....tt...t.
 ~tt~~~....t.t...tt..........#___#.t..tt....tt...t.
 ~tt~~~......t...t...........##+##....t.tt..tt.t.t.
 ~~~~~~............tt..................t.....t.t.t.
 ~~~~~....tt...........................t...t.t.t.tt
 ~~~~~......................____.......t..ttt.t..tt
-~~~~~.....................______.......ttt.t.t..t.
+~~~~~.....................__1___.......ttt.t.t..t.
 ~~~~~.....###..#####.....________.....tt.ttttt.tt.
-~~~~~.....#_#..#___###...___**___......tt.tt.ttt..
-~~~~~~....#_####_____+...___**___.......tt..ttt...
+~~~~~.....#_#..#_6_###...___**___......tt.tt.ttt..
+~~~~~~....#_####_5___+...___**___.......tt..ttt...
 ~~~~~~....#________###...________.......tt...ttt..
 ~~~~~~....#___######......______.............tttt.
 ~t~~~~~...#_###............____..............t.tt.
@@ -81,7 +81,7 @@ t~~~~.t..................t..tt...t..t.tt..t..t.t..
 ~~~~~~......t...............#__#..........t.ttt..t
 ~~~~~~....tt................#__#..........t.t.tt.t
 ~~t~~~....t...t..........####__####...........tt..
-~~~~~~....t...t..........#________#..........t.t.t
+~~~~~~....t...t..........#__2__3__#..........t.t.t
 ~~~~~~.......t...........#________#........t.t.t.t
 ~~~~~~...................####__####........t...t.t
 ~~~~~~......................#__#............t..ttt

@@ -108,6 +108,32 @@ newEntity{
 }
 
 newEntity{
+	define_as = "TWO_HANDS_WEAPON",
+	name = "two handed weapons",
+	display = '3', color=colors.UMBER,
+	store = {
+		purse = 25,
+		empty_before_restock = false,
+		filters = {
+			{special=function(o) return o.type == "weapon" and o.twohanded end, id=true, tome_drops="store"},
+		},
+	},
+}
+
+newEntity{
+	define_as = "ONE_HAND_WEAPON",
+	name = "one handed weapons",
+	display = '3', color=colors.UMBER,
+	store = {
+		purse = 25,
+		empty_before_restock = false,
+		filters = {
+			{special=function(o) return o.type == "weapon" and not o.twohanded end, id=true, tome_drops="store"},
+		},
+	},
+}
+
+newEntity{
 	define_as = "ARCHER_WEAPON",
 	name = "archery",
 	display = '3', color=colors.UMBER,
