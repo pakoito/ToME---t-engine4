@@ -84,6 +84,13 @@ function _M:init()
 			self.line = self.line .. c
 			self.changed = true
 		end,
+		[{"_v", "ctrl"}] = function(c)
+			local s = core.key.getClipboard()
+			if s then
+				self.line = self.line .. s
+				self.changed = true
+			end
+		end,
 	}
 	-- Scroll message log
 	self:mouseZones{

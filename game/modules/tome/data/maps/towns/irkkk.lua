@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-startx = 39
+startx = 49
 starty = 47
 endx = 49
 endy = 47

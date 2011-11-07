@@ -211,6 +211,31 @@ static int lua_key_unicode(lua_State *L)
 	return 0;
 }
 
+static int lua_key_set_clipboard(lua_State *L)
+{
+	char *str = luaL_checkstring(L, 1);
+	SDL_SetClipboardText(str);
+	return 0;
+}
+
+static int lua_key_get_clipboard(lua_State *L)
+{
+	if (SDL_HasClipboardText())
+	{
+		char *str = SDL_GetClipboardText();
+		if (str)
+		{
+			lua_pushstring(L, str);
+			free(str);
+		}
+		else
+			lua_pushnil(L);
+	}
+	else
+		lua_pushnil(L);
+	return 1;
+}
+
 static const struct luaL_reg keylib[] =
 {
 	{"set_current_handler", lua_set_current_keyhandler},
@@ -218,6 +243,8 @@ static const struct luaL_reg keylib[] =
 	{"symName", lua_get_scancode_name},
 	{"flush", lua_flush_key_events},
 	{"unicodeInput", lua_key_unicode},
+	{"getClipboard", lua_key_get_clipboard},
+	{"setClipboard", lua_key_set_clipboard},
 	{NULL, NULL},
 };
 
