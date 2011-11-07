@@ -133,7 +133,6 @@ function _M:runStep()
 		return false
 	else
 		local oldx, oldy = self.x, self.y
-		local dir_is_cardinal = self.running.dir == 2 or self.running.dir == 4 or self.running.dir == 6 or self.running.dir == 8
 		if self.running.path then
 			if self.running.explore and self.checkAutoExplore and not self:checkAutoExplore() then
 				self:runStop()
@@ -144,6 +143,7 @@ function _M:runStep()
 			end
 		else
 			-- Try to move around known traps if possible
+			local dir_is_cardinal = self.running.dir == 2 or self.running.dir == 4 or self.running.dir == 6 or self.running.dir == 8
 			local dx, dy = dir_to_coord[self.running.dir][1], dir_to_coord[self.running.dir][2]
 			local x, y = self.x + dx, self.y + dy
 			local trap = game.level.map(x, y, game.level.map.TRAP)

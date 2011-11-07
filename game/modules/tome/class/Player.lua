@@ -636,9 +636,11 @@ function _M:runCheck(ignore_memory)
 			end
 		end
 
-		-- Only notice interesting terrains
+		-- Only notice interesting terrains, but allow auto-explore to take us to the exit
 		local grid = game.level.map(x, y, Map.TERRAIN)
-		if grid and grid.notice then noticed = "interesting terrain"; return end
+		if grid and grid.notice and not (what ~= "self" and self.running and self.running.explore == "exit" and #self.running.path == self.running.cnt) then
+			noticed = "interesting terrain"; return
+		end
 		if grid and grid.type and grid.type == "store" then noticed = "store entrance spotted"; return end
 
 		-- Only notice interesting characters

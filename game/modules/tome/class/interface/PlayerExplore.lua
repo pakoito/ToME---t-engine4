@@ -21,6 +21,8 @@
 -- go to unexplored doors, and go to the level exit all while avoiding known traps and water if possible.
 -- Implemented hastily by "tiger_eye", so please direct all complaints and code criticisms to the ToME
 -- forum where they can be promptly ignored ;) (I jest--compliments and suggestions will be most welcome!)
+--
+-- Note that the floodfill algorithm in this file can handle grids with different movement costs
 
 require "engine.class"
 local Map = require "engine.Map"
@@ -204,6 +206,7 @@ local adjacentTiles = {
 }
 
 function _M:autoExplore()
+	local do_unseen = not (game.level.all_remembered or game.zone and game.zone.all_remembered)
 	local node = { self.x, self.y, toSingle(self.x, self.y), 0, 5 }
 	local current_tiles = { node }
 	local unseen_tiles = {}
@@ -213,18 +216,18 @@ function _M:autoExplore()
 	local exits = {}
 	local values = {}
 	values[node[3]] = 0
+	local door_values = {}
 	local slow_values = {}
 	local slow_tiles = {}
 	local iter = 1
 	local running = true
 	local minval = 999999999999999
 	local minval_items = 999999999999999
-	local minval_doors = 999999999999999
 	local val, _, anode, tile_list
 
 	-- a few tunable parameters
 	local extra_iters = 5     -- number of extra iterations to do after we found an item or unseen tile
-	local singlet_greed = 12  -- number of additional moves we're willing to do to explore a single unseen tile
+	local singlet_greed = 5   -- number of additional moves we're willing to do to explore a single unseen tile
 	local item_greed = 5      -- number of additional moves we're willing to do to visit an unseen item rather than an unseen tile
 
 	-- Create a distance map array via flood-fill to locate unseen tiles, unvisited items, closed doors, and exits
@@ -243,7 +246,7 @@ function _M:autoExplore()
 			for _, node in ipairs(tile_list) do
 				local x, y, c, move_cost = unpack(node)
 
-				if not game.level.map.has_seens(x, y) then
+				if not game.level.map.has_seens(x, y) and do_unseen then
 					if not values[c] or values[c] > move_cost then
 						unseen_tiles[#unseen_tiles + 1] = c
 						values[c] = move_cost
@@ -259,24 +262,25 @@ function _M:autoExplore()
 							end
 						end
 						if is_singlet then
-							unseen_singlets[#unseen_singlets+1] = c
+							unseen_singlets[#unseen_singlets + 1] = c
 						end
 					end
 				else
 					-- Increase move cost for known traps and terrain that drains air or deals damage
 					-- These could stack if we want--such as a trap in poisonous water--but this way is slightly faster and "good enough"
 					-- "slow" terrain will be avoided if at all possible
+					-- The additional movement costs below are completely arbitrary
 					local trap = game.level.map(x, y, Map.TRAP)
 					local terrain = game.level.map(x, y, Map.TERRAIN)
 					local is_slow = false
 					if trap and trap:knownBy(self) then
-						move_cost = move_cost + 31
+						move_cost = move_cost + 67
 						is_slow = true
 					elseif terrain.mindam or terrain.maxdam then
-						move_cost = move_cost + 15
+						move_cost = move_cost + 32
 						is_slow = true
 					elseif terrain.air_level and terrain.air_level < 0 and not self.can_breath.water then
-						move_cost = move_cost + 7
+						move_cost = move_cost + 15
 						is_slow = true
 					end
 					-- propagate "current_tiles" for next iteration
@@ -308,7 +312,7 @@ function _M:autoExplore()
 						-- default to reasonable targets if there are no accessible unseen tiles or objects left on the map
 						elseif #unseen_tiles == 0 and #unseen_items == 0 then
 							-- only go to closed doors with unseen grids behind them
-							if terrain.door_opened then
+							if terrain.door_opened and do_unseen then
 								local is_unexplored = false
 								for _, anode in ipairs(listAdjacentTiles(node)) do
 									if not game.level.map.has_seens(anode[1], anode[2]) then
@@ -318,9 +322,8 @@ function _M:autoExplore()
 								end
 								if is_unexplored then
 									unseen_doors[#unseen_doors + 1] = c
-									values[c] = move_cost
-									if move_cost < minval_doors then
-										minval_doors = move_cost
+									if not door_values[c] or door_values[c] > move_cost then
+										door_values[c] = move_cost
 									end
 								end
 							-- go to next level, exit, or previous level (in that order of precedence)
@@ -465,14 +468,31 @@ function _M:autoExplore()
 				end
 			end
 		end
-		-- if no destination yet, go to nearest unexplored closed door
+		-- if no destination yet, go to nearest unexplored closed non-vault door
 		if #choices == 0 then
 			for _, c in ipairs(unseen_doors) do
-				if values[c] == minval_doors then
+				local x, y = toDouble(c)
+				local terrain = game.level.map(x, y, Map.TERRAIN)
+				if not terrain.door_player_check then
 					target_type = "door"
 					choices[#choices + 1] = c
-					local x, y = toDouble(c)
-					local dist = core.fov.distance(self.x, self.y, x, y, true)
+					local dist = core.fov.distance(self.x, self.y, x, y, true) + 10*door_values[c]
+					distances[c] = dist
+					if dist < mindist then
+						mindist = dist
+					end
+				end
+			end
+		end
+		-- ...or vault door
+		if #choices == 0 then
+			for _, c in ipairs(unseen_doors) do
+				local x, y = toDouble(c)
+				local terrain = game.level.map(x, y, Map.TERRAIN)
+				if terrain.door_player_check then
+					target_type = "door"
+					choices[#choices + 1] = c
+					local dist = core.fov.distance(self.x, self.y, x, y, true) + 10*door_values[c]
 					distances[c] = dist
 					if dist < mindist then
 						mindist = dist
@@ -541,16 +561,17 @@ function _M:autoExplore()
 		end
 		-- if still multiple choices, then choose one randomly
 		local target = #choices > 0 and rng.table(choices) or nil
-		local target_x, target_y = toDouble(target)
 
 		-- Now create the path to the target (constructed from target to source)
 		if target then
+			if target_type == "door" then values[target] = door_values[target] end
+			local target_x, target_y = toDouble(target)
 			local x, y = toDouble(target)
 			local path = {{x=x, y=y}}
 			local current_val = values[target]
 			-- the idiot check condition should NEVER occur, but, well, if it does, it'll save us from being stuck in an infinite loop
 			local idiot_counter = 0
-			local idiot_check = current_val + 2
+			local idiot_check = current_val + 5
 			while (path[#path].x ~= self.x or path[#path].y ~= self.y) and idiot_counter <= idiot_check do
 				idiot_counter = idiot_counter + 1
 				-- perform a greedy minimization that prefers cardinal directions
@@ -558,7 +579,7 @@ function _M:autoExplore()
 				local min_cardinal = current_val
 				for _, node in ipairs(listAdjacentTiles(target, true)) do
 					local c = node[3]
-					if values[c] and values[c] < min_cardinal then
+					if values[c] and values[c] <= min_cardinal then
 						min_cardinal = values[c]
 						cardinals[#cardinals + 1] = node
 					end
@@ -576,7 +597,9 @@ function _M:autoExplore()
 				-- Favor cardinal directions since we are constructing the path in reverse.
 				-- This results in dog-leg (or hockey stick)-like movement.  If desired, we could try adding an A*-like heuristic
 				-- to favor straighter line movement (i.e., alternate between diagonal and cardinal moves), but, meh, whatever ;)
-				if min_diagonal < min_cardinal or #cardinals == 0 then
+				-- If our target is a door, it would be very nice to approach it from a cardinal direction, because this would
+				-- give a much better and safer view should the player choose to open the door
+				if #cardinals == 0 or min_diagonal < min_cardinal and not (idiot_counter == 1 and target_type == "door" and min_cardinal < min_diagonal + 2) then
 					current_val = min_diagonal
 					for _, node in ipairs(diagonals) do
 						if values[node[3]] == min_diagonal then
@@ -601,19 +624,24 @@ function _M:autoExplore()
 			if path[#path].x ~= self.x or path[#path].y ~= self.y then
 				path = {}
 			else
-				-- un-reverse the path
+				-- un-reverse the path and don't include the player x, y
 				local temp_path = {}
-				-- never attempt to open a door, so don't include doors or the player in the path
-				if target_type == "door" then
-					for i = #path-1, 2, -1 do temp_path[#temp_path+1] = path[i] end
-				else
-					for i = #path-1, 1, -1 do temp_path[#temp_path+1] = path[i] end
-				end
+				for i = #path-1, 1, -1 do temp_path[#temp_path + 1] = path[i] end
 				path = temp_path
 			end
 
 			if #path > 0 then
 				if self.running and self.running.explore then
+					-- take care of a couple fringe cases
+					-- don't open adjacent doors if we've already been running
+					if #path == 1 and target_type == "door" then return false end
+					-- don't run into adjacent interesting terrain if we've already been running
+					local terrain = game.level.map(path[1].x, path[1].y, Map.TERRAIN)
+					if terrain.notice and not (#path == 1 and target_type == "exit") then
+						self:runStop("interesting terrain")
+						return false
+					end
+
 					self.running.path = path
 					self.running.cnt = 1
 					self.running.explore = target_type
@@ -622,6 +650,11 @@ function _M:autoExplore()
 					self.running.ave_y = (self.running.ave_y*self.running.ave_N + 2*(target_y + self.y)) / (self.running.ave_N + 4)
 					self.running.ave_N = self.running.ave_N + 2
 				else
+					-- another fringe case: if we target an item in an adjacent wall that we've probably already targeted, then mark it as seen and find a new target
+					if #path == 1 and target_type == "item" and game.level.map:checkEntity(target_x, target_y, Map.TERRAIN, "block_move", self, nil, true) then
+						game.level.map.attrs(target_x, target_y, "obj_seen", true)
+						return self:autoExplore()
+					end
 					self.running = {
 						path = path,
 						cnt = 1,
@@ -649,12 +682,53 @@ end
 function _M:checkAutoExplore()
 	if not self.running or not self.running.explore then return false end
 
-	-- if the next spot in the path is blocked, explore a new path if we don't have a specific target (such as an item, door, or exit)
+	-- We can open a door and explore if the player initiated auto-explore directly adjacent to the target door.
+	-- If not, though, then stop, because the player *must* choose to open the door
 	local node = self.running.path[self.running.cnt]
-	if not node or game.level.map.has_seens(node.x, node.y) and game.level.map:checkAllEntities(node.x, node.y, "block_move", self) then
-		if self.running.explore == "unseen" then 
+	local terrain = node and game.level.map(node.x, node.y, Map.TERRAIN)
+	if self.running.explore == "door" and #self.running.path == self.running.cnt then
+		if self.running.cnt == 1 then
+			-- let's not make assumptions.  Double-check that there is a closed door there and that we open it
+			if terrain.door_opened then
+				local sx, sy = self.x, self.y
+				self:move(node.x, node.y)
+				self:runMoved()
+				-- check if there are enemies behind the open door
+				local ret, msg = self:runCheck()
+				if not ret then
+					self:runStop(msg)
+					return false
+				end
+				terrain = game.level.map(node.x, node.y, Map.TERRAIN)
+				if not terrain.door_opened and sx == self.x and sy == self.y then
+					return self:autoExplore()
+				end
+			end
+		end
+		return false
+	end
+
+	-- if we're at the end of the path and we're searching for unseen tiles, then continue with a new path
+	local x, y = self.running.path[#self.running.path].x, self.running.path[#self.running.path].y
+	local obj = game.level.map:getObject(x, y, 1)
+	if not node then
+		if self.running.explore == "unseen" or self.running.explore == "item" and not obj then
 			return self:autoExplore()
 		else
+			return false
+		end
+	end
+
+	-- if the next spot in the path is blocked, explore a new path if we are searching for unseen tiles, otherwise stop
+	if game.level.map.has_seens(node.x, node.y) and game.level.map:checkEntity(node.x, node.y, Map.TERRAIN, "block_move", self, nil, true) then
+	-- game.level.map:checkAllEntities(node.x, node.y, "block_move", self) then
+		if terrain.notice then
+			self:runStop("interesting terrain")
+			return false
+		elseif self.running.explore == "unseen" then 
+			return self:autoExplore()
+		else
+			self:runStop("the path is blocked")
 			return false
 		end
 	end
@@ -677,23 +751,11 @@ function _M:checkAutoExplore()
 	end
 
 	-- continue current path if we haven't seen the target tile or object yet
-	local x, y = self.running.path[#self.running.path].x, self.running.path[#self.running.path].y
 	if not game.level.map.has_seens(x, y) then return true end
-
-	local obj = game.level.map:getObject(x, y, 1)
 	if obj and not game.level.map.attrs(x, y, "obj_seen") then return true end
 
-	-- if we have explored the unseen node or auto-picked up the unseen item, then continue auto-exploring somewhere else
-	if self.running.explore == "unseen" then
-		-- To explore large unseen areas reasonably and efficiently (and not helter skelter randomly), I am going to create
-		-- a "front"--the boundary between seen tiles and unseen tiles--which we'll propagate to get the "front depth".
-		-- This will allow us to apply logic to explore shallow depths first (i.e., near the seen/unseen boundary) while also
-		-- penetrating the depth as much as possible so we can explore efficiently (often with a zig-zag pattern).
---		if not self.running.front_depth then
-			--TODO.  There is a temporary hack in-place until this gets implemented
---		end
-		return self:autoExplore()
-	elseif self.running.explore == "item" and not obj then
+	-- if we have explored the unseen node or the unseen item is no longer there, then continue auto-exploring somewhere else
+	if self.running.explore == "unseen" or self.running.explore == "item" and not obj then
 		return self:autoExplore()
 	else
 	-- otherwise, try to continue running on the current path to reach our target

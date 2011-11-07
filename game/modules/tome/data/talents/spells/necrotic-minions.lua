@@ -628,7 +628,10 @@ newTalent{
 	tactical = { ATTACK = 10 },
 	requires_target = true,
 	range = 0,
-	radius = 5,
+	radius = function(self, t)
+		local aura = self:getTalentFromId(self.T_NECROTIC_AURA)
+		return aura.getRadius(self, aura)
+	end,
 	target = function(self, t)
 		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
@@ -680,7 +683,7 @@ newTalent{
 		local nb = t.getMax(self, t)
 		local lev = t.getLevel(self, t)
 		local c = getMinionChances(self)
-		return ([[Fires powerful undead energies through your necrotic aura. For each recent death that happened inside your aura you will raise an undead minion (up to %d minions).
+		return ([[Fires powerful undead energies through your necrotic aura. For each recent death that happened inside your aura you will raise an undead minion (up to %d minions). These minions will be raised within a cone that extends to the edge of your necrotic aura.
 		The minions level is your level %+d.
 		Each minion has a chance to be:
 		Degenerated skeleton warrior: %d%%

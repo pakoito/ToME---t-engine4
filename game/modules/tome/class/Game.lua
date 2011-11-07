@@ -1157,10 +1157,23 @@ function _M:setupCommands()
 		end,
 
 		RUN_AUTO = function()
-			if self.zone and self.zone.no_autoexplore or self.level and self.level.no_autoexplore then
-				self.log("You may not auto-explore this level.")
-			elseif not self.player:autoExplore() then
-				self.log("There is nowhere left to explore.")
+			if self.level and self.zone then
+				local seen = false
+				-- Check for visible monsters.  Only see LOS actors, so telepathy wont prevent it
+				core.fov.calc_circle(self.player.x, self.player.y, self.level.map.w, self.level.map.h, self.player.sight or 10,
+					function(_, x, y) return self.level.map:opaque(x, y) end,
+					function(_, x, y)
+						local actor = self.level.map(x, y, self.level.map.ACTOR)
+						if actor and actor ~= self.player and self.player:reactionToward(actor) < 0 and
+							self.player:canSee(actor) and game.level.map.seens(x, y) then seen = true end
+					end, nil)
+				if self.zone.no_autoexplore or self.level.no_autoexplore then
+					self.log("You may not auto-explore this level.")
+				elseif seen then
+					self.log("You may not auto-explore with hostile enemies in sight!")
+				elseif not self.player:autoExplore() then
+					self.log("There is nowhere left to explore.")
+				end
 			end
 		end,
 
