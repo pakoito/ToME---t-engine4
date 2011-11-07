@@ -33,6 +33,7 @@ function _M:init(t)
 	self.w = assert(t.width, "no inventory width")
 	self.h = assert(t.height, "no inventory height")
 	self.tabslist = t.tabslist
+	self.columns = t.columns
 	self.filter = t.filter
 	self.fct = t.fct
 	self.on_select = t.select
@@ -40,7 +41,7 @@ function _M:init(t)
 	self.on_drag = t.on_drag
 	self.on_drag_end = t.on_drag_end
 
-	if not self.tabslist and self.default_tabslist then
+	if self.tabslist == nil and self.default_tabslist then
 		if type(self.default_tabslist) == "function" then self.tabslist = self.default_tabslist(self)
 		else self.tabslist = self.default_tabslist
 		end
@@ -66,7 +67,7 @@ function _M:generate()
 		self.uis[#self.uis+1] = {x=0, y=0, ui=self.c_tabs}
 	end
 
-	self.c_inven = ListColumns.new{width=self.w, height=self.h - (self.c_tabs and self.c_tabs.h or 0), sortable=true, scrollbar=true, columns={
+	self.c_inven = ListColumns.new{width=self.w, height=self.h - (self.c_tabs and self.c_tabs.h or 0), sortable=true, scrollbar=true, columns=self.columns or {
 		{name="", width={20,"fixed"}, display_prop="char", sort="id"},
 		{name="", width={24,"fixed"}, display_prop="object", sort="sortname", direct_draw=function(item, x, y) if item.object then item.object:toScreen(nil, x+4, y, 16, 16) end end},
 		{name="Inventory", width=72, display_prop="name", sort="sortname"},
@@ -102,11 +103,13 @@ function _M:generate()
 		_TAB = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = util.boundWrap(self.c_tabs.sel_i+1, 1, #self.tabslist) self.c_tabs:onUse("left") self.c_tabs:onSelect() end,
 		[{"_TAB","ctrl"}] = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = util.boundWrap(self.c_tabs.sel_i-1, 1, self.tabslist) self.c_tabs:onUse("left", false) self.c_tabs:onSelect() end,
 	}
-	for i = 1, #self.tabslist do
-		self.key:addCommands{
-			['_F'..i] = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = i self.c_tabs:onUse("left") self.c_tabs:onSelect() end,
-			[{'_F'..i,"ctrl"}] = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = i self.c_tabs:onUse("left", true) self.c_tabs:onSelect() end,
-		}
+	if self.tabslist then
+		for i = 1, #self.tabslist do
+			self.key:addCommands{
+				['_F'..i] = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = i self.c_tabs:onUse("left") self.c_tabs:onSelect() end,
+				[{'_F'..i,"ctrl"}] = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = i self.c_tabs:onUse("left", true) self.c_tabs:onSelect() end,
+			}
+		end
 	end
 
 	self.c_inven:onSelect()
