@@ -22,15 +22,15 @@ load("/data/general/npcs/gwelgoroth.lua", function(e) if e.rarity then e.derth_r
 local Talents = require("engine.interface.ActorTalents")
 
 newEntity{
-	define_as = "BASE_NPC_ELVALA_TOWN",
-	type = "humanoid", subtype = "shalore",
+	define_as = "BASE_NPC_IRKKK_TOWN",
+	type = "humanoid", subtype = "yeek",
 	display = "p", color=colors.WHITE,
-	faction = "shalore",
+	faction = "the-way",
 	anger_emote = "Catch @himher@!",
 
 	combat = { dam=resolvers.rngavg(1,2), atk=2, apr=0, dammod={str=0.4} },
 
-	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1, PSIONIC_FOCUS=1 },
 	lite = 3,
 
 	life_rating = 10,
@@ -40,36 +40,48 @@ newEntity{
 	open_door = true,
 
 	resolvers.racial(),
-	resolvers.inscriptions(1, "rune"),
+	resolvers.inscriptions(1, "infusion"),
 
-	autolevel = "warrior",
+	autolevel = "wildcaster",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
-	stats = { str=12, dex=8, mag=6, con=10 },
+	stats = { str=7, dex=8, mag=6, wil=15, con=10 },
 
 	emote_random = resolvers.emote_random{allow_backup_guardian=true},
 }
 
-newEntity{ base = "BASE_NPC_ELVALA_TOWN",
-	name = "elvala guard", color=colors.LIGHT_UMBER,
-	desc = [[A stern-looking guard, he will not let you disturb the town.]],
+newEntity{ base = "BASE_NPC_IRKKK_TOWN",
+	name = "yeek mindslayer", color=colors.LIGHT_UMBER,
+	desc = [[A mindslayer in training.]],
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 3,
 	max_life = resolvers.rngavg(70,80),
 	resolvers.equip{
-		{type="weapon", subtype="longsword", autoreq=true},
-		{type="armor", subtype="shield", autoreq=true},
+		{type="weapon", subtype="greatsword", autoreq=true},
 	},
 	combat_armor = 2, combat_def = 0,
-	resolvers.talents{ [Talents.T_RUSH]=1, [Talents.T_PERFECT_STRIKE]=1, },
+	resolvers.talents{
+		[Talents.T_KINETIC_AURA]={base=1, every=7, max=5},
+		[Talents.T_CHARGED_AURA]={base=1, every=7, max=5},
+		[Talents.T_KINETIC_SHIELD]={base=2, every=7, max=5},
+		[Talents.T_EXOTIC_WEAPONS_MASTERY]={base=1, every=7, max=10},
+	},
 }
 
-newEntity{ base = "BASE_NPC_ELVALA_TOWN",
-	name = "shalore rune master", color=colors.RED,
-	desc = [[A tall elf, his skin covered in runes.]],
+newEntity{ base = "BASE_NPC_IRKKK_TOWN",
+	name = "yeek psionic", color=colors.YELLOW,
+	desc = [[You can literaly feel the mental energies emited by this yeek.]],
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 3,
 	max_life = resolvers.rngavg(50,60),
 	ai_state = { talent_in=1, },
-	autolevel = "caster",
-	resolvers.inscriptions(3, {"heat beam rune", "frozen spear rune", "acid wave rune", "lightning rune"}),
+	resolvers.inventory{ inven="PSIONIC_FOCUS",
+		{type="gem"},
+	},
+	resolvers.talents{
+		[Talents.T_MINDLASH]={base=1, every=7, max=5},
+		[Talents.T_PYROKINESIS]={base=1, every=7, max=5},
+		[Talents.T_REACH]={base=3, every=7, max=5},
+		[Talents.T_CHARGED_AURA]={base=1, every=7, max=5},
+		[Talents.T_KINETIC_SHIELD]={base=2, every=7, max=5},
+	},
 }

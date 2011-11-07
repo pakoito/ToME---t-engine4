@@ -299,8 +299,7 @@ newEntity{ base="TOWN", define_as = "TOWN_GATES_OF_MORNING",
 }
 newEntity{ base="TOWN", define_as = "TOWN_IRKKK",
 	name = "Irkkk (Town)", add_mos = {{image="terrain/village_01.png"}},
-	desc = "Yeek Wayist capital",
-	change_level = false,
+	desc = "Yeek Wayist main village",
 	change_zone="town-irkkk",
 }
 newEntity{ base="TOWN", define_as = "TOWN_ZIGUR",

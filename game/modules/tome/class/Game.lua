@@ -1114,7 +1114,6 @@ function _M:setupCommands()
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
 --			self.zone:addEntity(self.level, self.zone:makeEntityByName(self.level, "terrain", 'PORTAL'), "terrain", game.player.x,game.player.y-1)
 			game:changeLevel(1,"town-irkkk")
---			SET ui.Inventory into ShowStore & ShowInventory
 --			FINISH IRKKK & HUTS
 		end end,
 		[{"_f","ctrl"}] = function() if config.settings.cheat then
