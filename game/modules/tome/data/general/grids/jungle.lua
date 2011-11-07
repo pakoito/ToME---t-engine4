@@ -24,7 +24,7 @@ newEntity{
 	type = "floor", subtype = "grass",
 	name = "grass", image = "terrain/jungle/jungle_grass_floor_01.png",
 	display = '.', color=colors.LIGHT_GREEN, back_color={r=44,g=95,b=43},
-	grow = "TREE",
+	grow = "JUNGLE_TREE",
 	nice_tiler = { method="replace", base={"JUNGLE_GRASS_PATCH", 60, 1, 5+8+3+4+4}},
 	nice_editer = grass_editer,
 }
@@ -61,7 +61,7 @@ newEntity{
 	can_pass = {pass_tree=1},
 	does_block_move = true,
 	block_sight = true,
-	dig = "GRASS",
+	dig = "JUNGLE_GRASS",
 	nice_tiler = { method="replace", base={"JUNGLE_TREE", 100, 1, 30}},
 	nice_editer = grass_editer,
 }

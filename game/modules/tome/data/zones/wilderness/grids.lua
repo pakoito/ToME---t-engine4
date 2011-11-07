@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 local grass_editer = {method="borders_def", def="grass_wm"}
+local jungle_grass_editer = { method="borders_def", def="jungle_grass"}
 local sand_editer = {method="borders_def", def="sand"}
 local ice_editer = {method="borders_def", def="ice"}
 local mountain_editer = {method="borders_def", def="mountain"}
@@ -220,6 +221,51 @@ for i = 1, 6 do newEntity{ base="GOLDEN_MOUNTAIN", define_as = "GOLDEN_MOUNTAIN_
 
 
 --------------------------------------------------------------------------------
+-- Jungle
+--------------------------------------------------------------------------------
+
+newEntity{
+	define_as = "JUNGLE_PLAINS",
+	type = "floor", subtype = "grass",
+	name = "plains", image = "terrain/jungle/jungle_grass_floor_01.png",
+	display = '.', color=colors.LIGHT_GREEN, back_color={r=44,g=95,b=43},
+	nice_tiler = { method="replace", base={"JUNGLE_PLAINS_PATCH", 60, 1, 5+8+3+4+4}},
+	nice_editer = jungle_grass_editer,
+}
+for i = 1, 5 do
+	newEntity{ base = "JUNGLE_PLAINS", define_as = "JUNGLE_PLAINS_PATCH"..i, add_displays={class.new{z=3,image = "terrain/jungle/jungle_brush_"..({2,3,4,6,8})[i].."_64_01.png"}} }
+end
+for i = 1, 8 do
+	newEntity{ base = "JUNGLE_PLAINS", define_as = "JUNGLE_PLAINS_PATCH"..(i+5), add_displays={class.new{z=3,image = "terrain/jungle/jungle_brush_"..({4,5,6,7,8,9,10,11})[i].."_128_01.png", display_x=-0.5, display_y=-0.5, display_w=2, display_h=2}} }
+end
+for i = 1, 3 do
+	newEntity{ base = "JUNGLE_PLAINS", define_as = "JUNGLE_PLAINS_PATCH"..(i+5+8), add_displays={class.new{z=3,image = "terrain/jungle/jungle_brush_"..({3,4,5})[i].."_192_01.png", display_x=-1, display_y=-1, display_w=3, display_h=3}} }
+end
+for i = 1, 4 do
+	newEntity{ base = "JUNGLE_PLAINS", define_as = "JUNGLE_PLAINS_PATCH"..(i+5+8+3), add_displays={class.new{z=3,image = "terrain/jungle/jungle_dirt_var_"..i.."_64_01.png"}} }
+end
+for i = 1, 4 do
+	newEntity{ base = "JUNGLE_PLAINS", define_as = "JUNGLE_PLAINS_PATCH"..(i+5+8+3+4), add_displays={class.new{z=3,image = "terrain/jungle/jungle_plant_0"..i..".png"}} }
+end
+
+newEntity{
+	define_as = "JUNGLE_FOREST",
+	type = "wall", subtype = "grass",
+	name = "jungle",
+	image = "terrain/tree.png",
+	display = '#', color=colors.LIGHT_GREEN, back_color={r=44,g=95,b=43},
+	always_remember = true,
+	can_pass = {pass_tree=1},
+	does_block_move = true,
+	block_sight = true,
+	nice_tiler = { method="replace", base={"JUNGLE_FOREST", 100, 1, 30}},
+	nice_editer = jungle_grass_editer,
+}
+for i = 1, 30 do
+	newEntity{ base="JUNGLE_FOREST", define_as = "JUNGLE_FOREST"..i, image = "terrain/jungle/jungle_grass_floor_01.png", add_displays = class:makeTrees("terrain/jungle/jungle_tree_", 17, 7)}
+end
+
+--------------------------------------------------------------------------------
 -- Sand & beaches
 --------------------------------------------------------------------------------
 
@@ -258,6 +304,7 @@ end
 -- Towns
 --------------------------------------------------------------------------------
 newEntity{ base="PLAINS", define_as = "TOWN", notice = true, change_level=1, glow=true, display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, nice_tiler=false }
+newEntity{ base="JUNGLE_PLAINS", define_as = "JUNGLE_TOWN", notice = true, change_level=1, glow=true, display='*', color={r=255, g=255, b=255}, back_color=colors.DARK_GREEN, nice_tiler=false }
 
 newEntity{ base="TOWN", define_as = "TOWN_DERTH",
 	name = "Derth (Town)", add_mos = {{image="terrain/village_01.png"}},
@@ -297,7 +344,7 @@ newEntity{ base="TOWN", define_as = "TOWN_GATES_OF_MORNING",
 	add_displays = {class.new{image="terrain/golden_cave_entrance02.png", z=8}},
 	change_zone="town-gates-of-morning",
 }
-newEntity{ base="TOWN", define_as = "TOWN_IRKKK",
+newEntity{ base="JUNGLE_TOWN", define_as = "TOWN_IRKKK",
 	name = "Irkkk (Town)", add_mos = {{image="terrain/village_01.png"}},
 	desc = "Yeek Wayist main village",
 	change_zone="town-irkkk",
@@ -319,6 +366,7 @@ newEntity{ base="TOWN", define_as = "TOWN_IRON_COUNCIL",
 --------------------------------------------------------------------------------
 newEntity{ base="PLAINS", define_as = "ZONE_PLAINS", change_level=1, glow=true, display='>', color=colors.VIOLET, notice = true, nice_tiler=false }
 newEntity{ base="DESERT", define_as = "ZONE_DESERT", change_level=1, glow=true, display='>', color=colors.VIOLET, notice = true, nice_tiler=false }
+newEntity{ base="JUNGLE_PLAINS", define_as = "ZONE_JUNGLE_PLAINS", change_level=1, glow=true, display='>', color=colors.VIOLET, notice = true, nice_tiler=false }
 
 newEntity{ base="ZONE_PLAINS", define_as = "MAZE",
 	name="A gate into the Maze",
@@ -419,7 +467,7 @@ newEntity{ base="CHARRED_SCAR", define_as = "CHARRED_SCAR_VOLCANO",
 	notice = true, change_level=1, change_zone="charred-scar",
 }
 
-newEntity{ base="ZONE_PLAINS", define_as = "REL_TUNNEL",
+newEntity{ base="ZONE_JUNGLE_PLAINS", define_as = "REL_TUNNEL",
 	name="Tunnel to Maj'Eyal",
 	colors.LIGHT_BLUE,
 	add_mos={{image="terrain/ruin_entrance01.png"}},
