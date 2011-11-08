@@ -236,7 +236,7 @@ function _M:updateQuickHotkeys(actor)
 				elseif hotkey[1] == "inventory" then
 					local item = actor:findInAllInventories(hotkey[2])
 
-					if item.save_hotkey then save_quickhotkey = true end
+					if item and item.save_hotkey then save_quickhotkey = true end
 				end
 
 				if save_quickhotkey then self:updateQuickHotkey(actor, position) end

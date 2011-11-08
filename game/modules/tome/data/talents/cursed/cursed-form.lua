@@ -35,7 +35,7 @@ newTalent{
 		return true
 	end,
 	getHealPerKill = function(self, t)
-		return combatTalentDamage(self, t, 25, 70)
+		return combatTalentDamage(self, t, 15, 50)
 	end,
 	getMaxUnnaturalBodyHeal = function(self, t)
 		return t.getHealPerKill(self, t) * 2

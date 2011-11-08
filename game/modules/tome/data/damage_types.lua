@@ -64,6 +64,11 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			dam = dam + dam * target:attr("inc_necrotic_minions") / 100
 			print("[PROJECTOR] after necrotic increase dam", dam)
 		end
+		
+		if target.isTalentActive and target:isTalentActive(target.T_GESTURE_OF_GUARDING) then
+			local t = target:getTalentFromId(target.T_GESTURE_OF_GUARDING)
+			dam = t.on_damageInflicted(target, t, type, dam, src)
+		end
 
 		-- Blast the iceblock
 		if src.attr and src:attr("encased_in_ice") then
@@ -178,6 +183,11 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		if target.isTalentActive and target:isTalentActive(target.T_ENERGY_DECOMPOSITION) then
 			local t = target:getTalentFromId(target.T_ENERGY_DECOMPOSITION)
 			dam = t.on_damage(target, t, type, dam)
+		end
+		
+		if target.isTalentActive and target:isTalentActive(target.T_GESTURE_OF_GUARDING) then
+			local t = target:getTalentFromId(target.T_GESTURE_OF_GUARDING)
+			dam = t.on_damageReceived(target, t, type, dam, src)
 		end
 
 		if src:attr("stunned") then
@@ -396,8 +406,14 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
 			local mindpower, mentalresist
-			if _G.type(dam) == "table" then dam, mindpower, mentalresist, factor = dam.dam, dam.mindpower, dam.mentalresist end
-			if target:checkHit(mindpower or src:combatMindpower(), mentalresist or target:combatMentalResist(), 0, 95, 15) then
+			if _G.type(dam) == "table" then dam, mindpower, mentalresist, factor, alwaysHit, criticals, crossTierChance = dam.dam, dam.mindpower, dam.mentalresist, dam.alwaysHit, dam.criticals, dam.crossTierChance end
+			if alwaysHit or target:checkHit(mindpower or src:combatMindpower(), mentalresist or target:combatMentalResist(), 0, 95, 15) then
+				if criticals then
+					dam = src:mindCrit(dam)
+				end
+				if crossTierChance and rng.change(crossTierChance) then
+					target:crossTierEffect(target.EFF_BRAINLOCKED, src:combatMindpower())
+				end
 				return DamageType.defaultProjector(src, x, y, type, dam)
 			else
 				game.logSeen(target, "%s resists the mind attack!", target.name:capitalize())

@@ -18,10 +18,6 @@
 -- darkgod@te4.org
 
 
-local function combatTalentDamage(self, t, min, max)
-	return self:combatTalentSpellDamage(t, min, max, (self.level + self:getWil()) * 1.2)
-end
-
 -- damage: initial physical damage and used for fractional knockback damage
 -- knockback: distance to knockback
 -- knockbackDamage: when knockback strikes something, both parties take damage - percent of damage * remaining knockback
@@ -101,7 +97,7 @@ newTalent{
 	require = cursed_wil_req1,
 	points = 5,
 	random_ego = "attack",
-	cooldown = 4,
+	cooldown = 5,
 	hate = 0.5,
 	tactical = { ATTACK = 2 },
 	direct_hit = true,
@@ -110,7 +106,7 @@ newTalent{
 		return 4
 	end,
 	getDamage = function(self, t)
-		return combatTalentDamage(self, t, 0, 200)
+		return self:combatTalentMindDamage(t, 0, 240)
 	end,
 	getKnockback = function(self, t)
 		return math.floor((self:getTalentLevelRaw(t) + 1) / 2)
@@ -133,7 +129,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local knockback = t.getKnockback(self, t)
 		return ([[Focusing your hate, you strike your foe with unseen force for %d damage and %d knockback.
-		Damage increases with the Willpower stat.]]):format(damDesc(self, DamageType.PHYSICAL, damage), knockback)
+		Damage increases with your Mindpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage), knockback)
 	end,
 }
 
@@ -148,7 +144,7 @@ newTalent{
 	tactical = { DEFEND = 2 },
 	no_sustain_autoreset = true,
 	getMaxDamage = function(self, t)
-		return combatTalentDamage(self, t, 0, 200)
+		return self:combatTalentMindDamage(t, 0, 240)
 	end,
 	getDisplayName = function(self, t, p)
 		return ("Deflection (%d)"):format(p.value)
@@ -199,7 +195,7 @@ newTalent{
 	info = function(self, t)
 		local maxDamage = t.getMaxDamage(self, t)
 		return ([[Deflect 50%% of incoming damage with the force of your will. You may deflect up to %d damage, but first your hate must slowly feed your strength (-0.02 hate regeneration while building strength).
-		The maximum damage deflected increases with the Willpower stat.]]):format(maxDamage)
+		The maximum damage deflected increases with your Mindpower.]]):format(maxDamage)
 	end,
 }
 
@@ -220,7 +216,7 @@ newTalent{
 		return math.floor(2 + self:getTalentLevel(t) / 3)
 	end,
 	getDamage = function(self, t)
-		return combatTalentDamage(self, t, 0, 240)
+		return self:combatTalentMindDamage(t, 0, 200)
 	end,
 	getKnockback = function(self, t)
 		return math.floor((self:getTalentLevelRaw(t) + 1) / 2)
@@ -271,7 +267,7 @@ newTalent{
 		local knockback = t.getKnockback(self, t)
 		local dazeDuration = t.getDazeDuration(self, t)
 		return ([[You rage coalesces at a single point and then explodes outward blasting enemies within a radius of %d in all directions. The blast causes %d damage and %d knockback at the center that decreases with distance. Anyone caught in the explosion will also be dazed for 3 turns.
-		Damage increases with the Willpower stat.]]):format(radius, damDesc(self, DamageType.PHYSICAL, damage), knockback)
+		Damage increases with your Mindpower.]]):format(radius, damDesc(self, DamageType.PHYSICAL, damage), knockback)
 	end,
 }
 
@@ -290,7 +286,7 @@ newTalent{
 		return 5 + math.floor(self:getTalentLevel(t))
 	end,
 	getDamage = function(self, t)
-		return combatTalentDamage(self, t, 0, 200)
+		return self:combatTalentMindDamage(t, 0, 140)
 	end,
 	getKnockback = function(self, t)
 		return math.floor(self:getTalentLevel(t))
@@ -348,7 +344,7 @@ newTalent{
 		local knockback = t.getKnockback(self, t)
 		local secondHitChance = t.getSecondHitChance(self, t)
 		return ([[Your fury becomes an unseen force that randomly lashes out at the foes around you. For %d turns you strike one nearby target doing %d damage and %d knockback. At higher levels there is a chance of a second strike.
-		Damage increases with the Willpower stat.]]):format(duration, damDesc(self, DamageType.PHYSICAL, damage), knockback, secondHitChance)
+		Damage increases with your Mindpower.]]):format(duration, damDesc(self, DamageType.PHYSICAL, damage), knockback, secondHitChance)
 	end,
 }
 

@@ -778,7 +778,7 @@ newEffect{
 	on_gain = function(self, err) return "#Target# has heard the hateful whisper!", "+Hateful Whisper" end,
 	on_lose = function(self, err) return "#Target# no longer hears the hateful whisper.", "-Hateful Whisper" end,
 	activate = function(self, eff)
-		DamageType:get(DamageType.MIND).projector(eff.source, self.x, self.y, DamageType.MIND, eff.damage)
+		DamageType:get(DamageType.MIND).projector(eff.source, self.x, self.y, DamageType.MIND, { dam=eff.damage,criticals=true })
 
 		if self.dead then
 			-- only spread on activate if the target is dead

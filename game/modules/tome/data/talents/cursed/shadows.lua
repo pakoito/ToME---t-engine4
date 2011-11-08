@@ -288,12 +288,12 @@ newTalent{
 	name = "Call Shadows",
 	type = {"cursed/shadows", 1},
 	mode = "sustained",
-	require = cursed_mag_req1,
+	require = cursed_cun_req1,
 	points = 5,
 	cooldown = 10,
 	tactical = { BUFF = 5 },
 	getLevel = function(self, t)
-		return self.level --return math.max(1, self.level - 2 + self:getMag(4))
+		return self.level
 	end,
 	getMaxShadows = function(self, t)
 		return math.max(1, math.floor(self:getTalentLevel(t) * 0.55))
@@ -381,7 +381,7 @@ newTalent{
 newTalent{
 	name = "Focus Shadows",
 	type = {"cursed/shadows", 2},
-	require = cursed_mag_req2,
+	require = cursed_cun_req2,
 	points = 5,
 	random_ego = "attack",
 	cooldown = 6,
@@ -460,7 +460,7 @@ newTalent{
 	name = "Shadow Mages",
 	type = {"cursed/shadows", 3},
 	mode = "passive",
-	require = cursed_mag_req3,
+	require = cursed_cun_req3,
 	points = 5,
 	getCloseAttackSpellChance = function(self, t)
 		if self:getTalentLevelRaw(t) > 0 then
@@ -516,7 +516,7 @@ newTalent{
 	name = "Shadow Warriors",
 	type = {"cursed/shadows", 4},
 	mode = "passive",
-	require = cursed_mag_req4,
+	require = cursed_cun_req4,
 	points = 5,
 	getIncDamage = function(self, t)
 		return math.floor((math.sqrt(self:getTalentLevel(t)) - 0.5) * 23)

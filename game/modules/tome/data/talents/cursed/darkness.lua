@@ -20,10 +20,6 @@
 local Object = require "engine.Object"
 local Map = require "engine.Map"
 
-local function combatTalentDamage(self, t, min, max)
-	return self:combatTalentSpellDamage(t, min, max, (self.level + self:getMag()) * 1.2)
-end
-
 local function createDarkTendrils(summoner, x, y, target, damage, duration, pinDuration)
 	if not summoner:getTalentFromId(summoner.T_CREEPING_DARKNESS) then return end
 
@@ -141,7 +137,7 @@ end
 newTalent{
 	name = "Creeping Darkness",
 	type = {"cursed/darkness", 1},
-	require = cursed_mag_req1,
+	require = cursed_wil_req1,
 	points = 5,
 	random_ego = "attack",
 	cooldown = 20,
@@ -277,7 +273,7 @@ newTalent{
 		return 5 + math.floor(self:getTalentLevel(t))
 	end,
 	getDamage = function(self, t)
-		return combatTalentDamage(self, t, 0, 80)
+		return self:combatTalentMindDamage(t, 0, 60)
 	end,
 	action = function(self, t)
 		local range = self:getTalentRange(t)
@@ -325,14 +321,14 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local darkCount = t.getDarkCount(self, t)
 		return ([[Creeping dark slowly spreads from %d spots in a radius of %d around the targeted location. The dark deals %d damage and blocks the sight of any who do not possess Dark Vision or some other magical means of seeing.
-		Damage improves with the Magic stat.]]):format(darkCount, radius, damage)
+		The damage will increase with your Mindpower.]]):format(darkCount, radius, damage)
 	end,
 }
 
 newTalent{
 	name = "Dark Vision",
 	type = {"cursed/darkness", 2},
-	require = cursed_mag_req2,
+	require = cursed_wil_req2,
 	points = 5,
 	mode = "passive",
 	random_ego = "attack",
@@ -340,18 +336,19 @@ newTalent{
 		return math.min(10, math.floor((math.sqrt(self:getTalentLevel(t)) - 0.5) * 5))
 	end,
 	getDamageIncrease = function(self, t)
-		return combatTalentDamage(self, t, 0, 40)
+		return self:combatTalentMindDamage(t, 0, 30)
 	end,
 	info = function(self, t)
 		local damageIncrease = t.getDamageIncrease(self, t)
-		return ([[Your eyes penetrate the darkness to find anyone that may be hiding there. You can also see through your clouds of creeping dark and gain the advantage of doing %d%% more damage to anyone enveloped by it.]]):format(damageIncrease)
+		return ([[Your eyes penetrate the darkness to find anyone that may be hiding there. You can also see through your clouds of creeping dark and gain the advantage of doing %d%% more damage to anyone enveloped by it.
+		The damage will increase with your Mindpower.]]):format(damageIncrease)
 	end,
 }
 
 newTalent{
 	name = "Dark Torrent",
 	type = {"cursed/darkness", 3},
-	require = cursed_mag_req3,
+	require = cursed_wil_req3,
 	points = 5,
 	random_ego = "attack",
 	hate = 0.8,
@@ -362,7 +359,7 @@ newTalent{
 	reflectable = true,
 	requires_target = true,
 	getDamage = function(self, t)
-		return combatTalentDamage(self, t, 0, 270)
+		return self:combatTalentMindDamage(t, 0, 260)
 	end,
 	action = function(self, t)
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
@@ -396,14 +393,14 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[Sends a torrent of searing darkness through your foes doing %d damage. There is a small chance the rushing darkness will blind them for 3 turns and cause them to forget their target.
-		The damage will increase with the Magic stat.]]):format(damDesc(self, DamageType.DARKNESS, damage))
+		The damage will increase with your Mindpower.]]):format(damDesc(self, DamageType.DARKNESS, damage))
 	end,
 }
 
 newTalent{
 	name = "Dark Tendrils",
 	type = {"cursed/darkness", 4},
-	require = cursed_mag_req4,
+	require = cursed_wil_req4,
 	points = 5,
 	random_ego = "attack",
 	cooldown = 10,
@@ -416,7 +413,7 @@ newTalent{
 		return 2 + math.floor(self:getTalentLevel(t) / 2)
 	end,
 	getDamage = function(self, t)
-		return combatTalentDamage(self, t, 0, 100)
+		return self:combatTalentMindDamage(t, 0, 80)
 	end,
 	action = function(self, t)
 		if self.dark_tendrils then return false end
@@ -437,7 +434,7 @@ newTalent{
 		local pinDuration = t.getPinDuration(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[Send tendrils of creeping dark out to attack your target and pin them in the darkness for %d turns. Creeping dark will trail behind the tendrils as they move. The darkness does %d damage per turn.
-		The damage will increase with the Magic stat.]]):format(pinDuration, damage)
+		The damage will increase with your Mindpower.]]):format(pinDuration, damage)
 	end,
 }
 

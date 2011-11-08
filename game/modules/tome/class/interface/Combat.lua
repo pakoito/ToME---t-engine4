@@ -105,7 +105,14 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 	end
 
 	local break_stealth = false
-	if not self:attr("disarmed") and not self:isUnarmed() then
+	if self:isTalentActive(self.T_GESTURE_OF_PAIN) then
+		print("[ATTACK] attacking with Gesture of Pain")
+		local t = self:getTalentFromId(self.T_GESTURE_OF_PAIN)
+		speed, hit = t.attack(self, t, target)
+		break_stealth = true
+	end
+
+	if not speed and not self:attr("disarmed") and not self:isUnarmed() then
 		-- All weapons in main hands
 		if self:getInven(self.INVEN_MAINHAND) then
 			for i, o in ipairs(self:getInven(self.INVEN_MAINHAND)) do
@@ -670,10 +677,6 @@ function _M:combatArmor()
 	if self:knowTalent(self.T_CARBON_SPIKES) and self:isTalentActive(self.T_CARBON_SPIKES) then
 		add = add + self.carbon_armor
 	end
-	if self:knowTalent(self.T_PRIMAL_SKIN) then
-		local t = self:getTalentFromId(self.T_PRIMAL_SKIN)
-		add = add + t.getArmor(self, t)
-	end
 	return self.combat_armor + add
 end
 
@@ -914,14 +917,20 @@ function _M:combatSpellCrit()
 	return self.combat_spellcrit + (self:getCun() - 10) * 0.3 + (self:getLck() - 50) * 0.30 + 1
 end
 
+--- Gets mindcrit
+function _M:combatMindCrit()
+	local add = 0
+	if self:knowTalent(self.T_GESTURE_OF_POWER) then
+		local t = self:getTalentFromId(self.T_GESTURE_OF_POWER)
+		add = t.getMindCritChange(self, t)
+	end
+
+	return self.combat_mindcrit + (self:getCun() - 10) * 0.3 + (self:getLck() - 50) * 0.30 + 1 + add
+end
+
 --- Gets spellspeed
 function _M:combatSpellSpeed()
 	return 1 / self.combat_spellspeed
-end
-
---- Gets mindcrit
-function _M:combatMindCrit()
-	return self.combat_mindcrit + (self:getCun() - 10) * 0.3 + (self:getLck() - 50) * 0.30 + 1
 end
 
 --- Gets summon speed
@@ -1004,15 +1013,6 @@ function _M:spellCrit(dam, add_chance)
 	return dam, crit
 end
 
---- Do we get hit by our own AOE ?
-function _M:spellFriendlyFire()
-	local chance = (self:getLck() - 50) * 0.2
-	if self:isTalentActive(self.T_SPELLCRAFT) then chance = chance + self:getTalentLevelRaw(self.T_SPELLCRAFT) * 20 end
-	chance = 100 - chance
-	print("[SPELL] friendly fire chance", chance)
-	return chance
-end
-
 --- Computes mind crit for a damage
 function _M:mindCrit(dam, add_chance)
 	if self:isTalentActive(self.T_STEALTH) and self:knowTalent(self.T_SHADOWSTRIKE) then
@@ -1026,15 +1026,30 @@ function _M:mindCrit(dam, add_chance)
 	if rng.percent(chance) then
 		dam = dam * (1.5 + (self.combat_critical_power or 0) / 100)
 		crit = true
-		game.logSeen(self, "#{bold}#%s's power attains critical effect!#{normal}#", self.name:capitalize())
+		game.logSeen(self, "#{bold}#%s's mind surges with critical power!#{normal}#", self.name:capitalize())
 	end
 	return dam, crit
+end
+
+--- Do we get hit by our own AOE ?
+function _M:spellFriendlyFire()
+	local chance = (self:getLck() - 50) * 0.2
+	if self:isTalentActive(self.T_SPELLCRAFT) then chance = chance + self:getTalentLevelRaw(self.T_SPELLCRAFT) * 20 end
+	chance = 100 - chance
+	print("[SPELL] friendly fire chance", chance)
+	return chance
 end
 
 --- Gets mindpower
 function _M:combatMindpower(mod)
 	mod = mod or 1
 	local add = 0
+
+	if self:knowTalent(self.T_GESTURE_OF_COMMAND) then
+		local t = self:getTalentFromId(self.T_GESTURE_OF_COMMAND)
+		add = t.getMindpowerChange(self, t)
+	end
+
 	return self:rescaleCombatStats((self.combat_mindpower > 0 and self.combat_mindpower or 0) + add + self:getWil() * 0.7 + self:getCun() * 0.4) * mod
 end
 
@@ -1254,6 +1269,16 @@ function _M:isUnarmed()
 		unarmed = false
 	end
 	return unarmed
+end
+
+-- Get the number of free hands the actor has
+function _M:getFreeHands()
+	if not self:getInven("MAINHAND") or not self:getInven("OFFHAND") then return end
+	local weapon = self:getInven("MAINHAND")[1]
+	local offweapon = self:getInven("OFFHAND")[1]
+	if weapon and offweapon then return 0 end
+	if weapon or offweapon then return 1 end
+	return 2
 end
 
 --- Check if the actor dual wields

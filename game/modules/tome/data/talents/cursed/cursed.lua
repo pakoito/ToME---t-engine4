@@ -30,7 +30,7 @@ newTalentType{ allow_random=true, type="cursed/force-of-will", name = "force of 
 newTalentType{ allow_random=true, type="cursed/darkness", is_spell=true, name = "darkness", description = "Harness the power of darkness to envelop your foes." }
 newTalentType{ allow_random=true, type="cursed/shadows", is_spell=true, name = "shades", description = "Summon shadows from the darkness to aid you." }
 newTalentType{ allow_random=true, type="cursed/punishments", name = "punishments", description = "Your hate becomes punishment in the minds of your foes." }
-newTalentType{ allow_random=true, type="cursed/primal-magic", name = "primal magic", description = "You still control traces of power from your previous life." }
+newTalentType{ allow_random=true, type="cursed/gestures", name = "gestures", description = "Enhance the power of you mind with gestures." }
 
 -- Generic
 newTalentType{ allow_random=true, type="cursed/cursed-form", name = "cursed form", generic = true, description = "You are wracked with the dark energies of the curse." }
@@ -80,24 +80,24 @@ cursed_str_req5 = {
 	level = function(level) return 16 + (level-1)  end,
 }
 
-cursed_mag_req1 = {
-	stat = { mag=function(level) return 12 + (level-1) * 2 end },
+cursed_cun_req1 = {
+	stat = { cun=function(level) return 12 + (level-1) * 2 end },
 	level = function(level) return 0 + (level-1)  end,
 }
-cursed_mag_req2 = {
-	stat = { mag=function(level) return 20 + (level-1) * 2 end },
+cursed_cun_req2 = {
+	stat = { cun=function(level) return 20 + (level-1) * 2 end },
 	level = function(level) return 4 + (level-1)  end,
 }
-cursed_mag_req3 = {
-	stat = { mag=function(level) return 28 + (level-1) * 2 end },
+cursed_cun_req3 = {
+	stat = { cun=function(level) return 28 + (level-1) * 2 end },
 	level = function(level) return 8 + (level-1)  end,
 }
-cursed_mag_req4 = {
-	stat = { mag=function(level) return 36 + (level-1) * 2 end },
+cursed_cun_req4 = {
+	stat = { cun=function(level) return 36 + (level-1) * 2 end },
 	level = function(level) return 12 + (level-1)  end,
 }
-cursed_mag_req5 = {
-	stat = { mag=function(level) return 44 + (level-1) * 2 end },
+cursed_cun_req5 = {
+	stat = { cun=function(level) return 44 + (level-1) * 2 end },
 	level = function(level) return 16 + (level-1)  end,
 }
 
@@ -161,7 +161,7 @@ load("/data/talents/cursed/dark-sustenance.lua")
 load("/data/talents/cursed/shadows.lua")
 load("/data/talents/cursed/darkness.lua")
 load("/data/talents/cursed/punishments.lua")
-load("/data/talents/cursed/primal-magic.lua")
+load("/data/talents/cursed/gestures.lua")
 
 load("/data/talents/cursed/cursed-form.lua")
 load("/data/talents/cursed/cursed-aura.lua")

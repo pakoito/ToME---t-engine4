@@ -273,8 +273,8 @@ function _M:makeDefault()
 	self:setDescriptor("permadeath", "Adventure")
 	self:setDescriptor("race", "Human")
 	self:setDescriptor("subrace", "Higher")
-	self:setDescriptor("class", "Wilder")
-	self:setDescriptor("subclass", "Summoner")
+	self:setDescriptor("class", "Warrior")
+	self:setDescriptor("subclass", "Berserker")
 	__module_extra_info.no_birth_popup = true
 	self:atEnd("created")
 end

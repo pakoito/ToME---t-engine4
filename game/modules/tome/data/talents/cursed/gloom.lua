@@ -221,10 +221,10 @@ newTalent{
 	require = cursed_wil_req4,
 	points = 5,
 	getDamage = function(self, t)
-		return combatTalentDamage(self, t, 3, 15)
+		return combatTalentDamage(self, t, 2, 10)
 	end,
 	getMaxHeal = function(self, t)
-		return combatTalentDamage(self, t, 5, 30)
+		return combatTalentDamage(self, t, 4, 25)
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)

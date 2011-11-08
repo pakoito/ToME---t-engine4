@@ -102,7 +102,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Lightning Breath", short_name = "LIGHTNING_BREATH_HYDRA",
+	name = "Lightning Breath", short_name = "LIGHTNING_BREATH_HYDRA", image = "talents/lightning_breath.png",
 	type = {"wild-gift/other",1},
 	require = gifts_req1,
 	points = 5,

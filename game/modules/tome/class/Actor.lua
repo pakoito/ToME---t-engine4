@@ -377,11 +377,6 @@ function _M:actBase()
 			local t = self:getTalentFromId(self.T_UNSEEN_FORCE)
 			t.do_unseenForce(self, t)
 		end
-		-- this handles doomed arcane bolts turn based effects
-		if self.arcaneBolts then
-			local t = self:getTalentFromId(self.T_ARCANE_BOLTS)
-			t.do_arcaneBolts(self, t)
-		end
 		-- Curse of Nightmares: Nightmare
 		if not self.dead and self:hasEffect(self.EFF_CURSE_OF_NIGHTMARES) then
 			local eff = self:hasEffect(self.EFF_CURSE_OF_NIGHTMARES)

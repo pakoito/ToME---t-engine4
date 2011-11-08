@@ -17,14 +17,6 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local function combatTalentDamage(self, t, min, max)
-	return self:combatTalentSpellDamage(t, min, max, (self.level + self:getWil()) * 1.2)
-end
-
-local function combatPower(self, t, multiplier)
-	return (self.level + self:getWil()) * (multiplier or 1)
-end
-
 newTalent{
 	name = "Feed",
 	type = {"cursed/dark-sustenance", 1},
@@ -37,7 +29,7 @@ newTalent{
 	requires_target = function(self, t) return self:getTalentLevel(t) >= 5 end,
 	direct_hit = true,
 	getHateGain = function(self, t)
-		return math.sqrt(self:getTalentLevel(t)) * 0.2 + self:getWil(0.15, true)
+		return math.sqrt(self:getTalentLevel(t)) * 0.2 + self:combatMindpower() * 0.002
 	end,
 	action = function(self, t)
 		local range = self:getTalentRange(t)
@@ -85,7 +77,7 @@ newTalent{
 	info = function(self, t)
 		local hateGain = t.getHateGain(self, t)
 		return ([[Feed from the essence of your enemy. Draws %0.2f hate per turn from a targeted foe as long as they remain in your line of sight.
-		Improves with the Willpower stat.]]):format(hateGain)
+		Hate gain improves with your Mindpower.]]):format(hateGain)
 	end,
 }
 
@@ -101,7 +93,7 @@ newTalent{
 	direct_hit = true,
 	requires_target = true,
 	getLifeSteal = function(self, t, target)
-		return combatTalentDamage(self, t, 0, 100)
+		return self:combatTalentMindDamage(t, 0, 140)
 	end,
 	action = function(self, t)
 		local effect = self:hasEffect(self.EFF_FEED)
@@ -135,7 +127,7 @@ newTalent{
 	info = function(self, t)
 		local lifeSteal = t.getLifeSteal(self, t)
 		return ([[Devours life from the target of your feeding. %d life from the victim will be added to your own. This healing cannot be reduced. At level 5 Devour Life can be used like the Feed talent to begin feeding.
-		Improves with the Willpower stat.]]):format(lifeSteal)
+		Improves with your Mindpower.]]):format(lifeSteal)
 	end,
 }
 
@@ -174,12 +166,12 @@ newTalent{
 	require = cursed_wil_req3,
 	points = 5,
 	getDamageGain = function(self, t)
-		return math.sqrt(self:getTalentLevel(t)) * 5 + self:getWil(5, true)
+		return math.sqrt(self:getTalentLevel(t)) * 5 + self:combatMindpower() * 0.05
 	end,
 	info = function(self, t)
 		local damageGain = t.getDamageGain(self, t)
 		return ([[Enhances your feeding by reducing your targeted foe's damage by %d%% and increasing yours by the same amount.
-		Improves with the Willpower stat.]]):format(damageGain)
+		Improves with your Mindpower.]]):format(damageGain)
 	end,
 }
 
@@ -190,7 +182,7 @@ newTalent{
 	require = cursed_wil_req4,
 	points = 5,
 	getResistGain = function(self, t)
-		return math.sqrt(self:getTalentLevel(t)) * 22 + self:getWil(15, true)
+		return math.sqrt(self:getTalentLevel(t)) * 14 + self:combatMindpower() * 0.15
 	end,
 	getExtension = function(self, t)
 		return math.floor(self:getTalentLevel(t) - 1)
@@ -198,6 +190,6 @@ newTalent{
 	info = function(self, t)
 		local resistGain = t.getResistGain(self, t)
 		return ([[Enhances your feeding by reducing your targeted foe's positive resistances by %d%% and increasing yours by the same amount. Resistance to "all" is not affected.
-		Improves with the Willpower stat.]]):format(resistGain)
+		Improves with your Mindpower.]]):format(resistGain)
 	end,
 }
