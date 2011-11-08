@@ -185,12 +185,12 @@ function _M:handleEffect(eff_id, e, p, ex, h)
 		ex = ex + 40
 		if ex + 40 >= self.w then ex = 0 h = h + 40 end
 	else
-		if e.status == "detrimental" then
-			self:mouseTooltip(desc, self:makeTexture((e.decrease > 0) and ("#LIGHT_RED#%s(%d)"):format(name, dur) or ("#LIGHT_RED#%s"):format(name), x, h, 255, 255, 255)) h = h + self.font_h
-		else
-			self:mouseTooltip(desc, self:makeTexture((e.decrease > 0) and ("#LIGHT_GREEN#%s(%d)"):format(name, dur) or ("#LIGHT_GREEN#%s"):format(name), x, h, 255, 255, 255)) h = h + self.font_h
-		end
 		ex = 0
+		if e.status == "detrimental" then
+			self:mouseTooltip(desc, self:makeTexture((e.decrease > 0) and ("#LIGHT_RED#%s(%d)"):format(name, dur) or ("#LIGHT_RED#%s"):format(name), ex, h, 255, 255, 255)) h = h + self.font_h
+		else
+			self:mouseTooltip(desc, self:makeTexture((e.decrease > 0) and ("#LIGHT_GREEN#%s(%d)"):format(name, dur) or ("#LIGHT_GREEN#%s"):format(name), ex, h, 255, 255, 255)) h = h + self.font_h
+		end
 	end
 	return ex, h
 end

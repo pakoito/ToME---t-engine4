@@ -117,11 +117,10 @@ function _M:run()
 	self.delayed_log_damage = {}
 	self.calendar = Calendar.new("/data/calendar_allied.lua", "Today is the %s %s of the %s year of the Age of Ascendancy of Maj'Eyal.\nThe time is %02d:%02d.", 122, 167, 11)
 
-	self:resizeIconsHotkeysToolbar()
 	self.hotkeys_display_text = HotkeysDisplay.new(nil, 216, self.h - 52, self.w - 216, 52, "/data/gfx/ui/talents-list.png", font_mono, size_mono)
 	self.hotkeys_display_text:enableShadow(0.6)
 	self.hotkeys_display_text:setColumns(3)
-	self.hotkeys_display = config.settings.tome.hotkey_icons and self.hotkeys_display_icons or self.hotkeys_display_text
+	self:resizeIconsHotkeysToolbar()
 
 	self.player_display = PlayerDisplay.new(0, 200, 200, self.h - 200, {30,30,0}, font_mono, size_mono)
 	self.logdisplay = LogDisplay.new(216, self.map_h_stop - font_h * config.settings.tome.log_lines -16, (self.w - 216) / 2, font_h * config.settings.tome.log_lines, nil, font, size, nil, nil)
@@ -200,7 +199,8 @@ end
 
 --- Resize the hotkeys
 function _M:resizeIconsHotkeysToolbar()
-	local h = (4 + config.settings.tome.hotkey_icons_size) * config.settings.tome.hotkey_icons_rows
+	local h = 52
+	if config.settings.tome.hotkey_icons then h = (4 + config.settings.tome.hotkey_icons_size) * config.settings.tome.hotkey_icons_rows end
 
 	local oldstop = self.map_h_stop or (self.h - h)
 	self.map_h_stop = self.h - h

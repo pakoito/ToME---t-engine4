@@ -220,9 +220,8 @@ function _M:generateList()
 	end, fct=function(item)
 		config.settings.tome.hotkey_icons = not config.settings.tome.hotkey_icons
 		game:saveSettings("tome.hotkey_icons", ("tome.hotkey_icons = %s\n"):format(tostring(config.settings.tome.hotkey_icons)))
-		game.hotkeys_display = config.settings.tome.hotkey_icons and game.hotkeys_display_icons or game.hotkeys_display_text
-		game.hotkeys_display.actor = game.player
 		game.player.changed = true
+		game:resizeIconsHotkeysToolbar()
 		self.c_list:drawItem(item)
 	end,}
 
