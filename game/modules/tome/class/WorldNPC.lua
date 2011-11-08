@@ -86,8 +86,19 @@ function _M:defineDisplayCallback()
 			if on_map then
 				local dh = h * 0.1
 				local lp = self.unit_power / self.max_unit_power + 0.0001
-				core.display.drawQuad(x, y + h - dh, w, dh, 129, 180, 57, 128)
-				core.display.drawQuad(x, y + h - dh, w * lp, dh, 50, 220, 77, 255)
+				if lp > .75 then -- green
+					core.display.drawQuad(x + 3, y + h - dh, w - 6, dh, 129, 180, 57, 128)
+					core.display.drawQuad(x + 3, y + h - dh, (w - 6) * lp, dh, 50, 220, 77, 255)
+				elseif lp > .5 then -- yellow
+					core.display.drawQuad(x + 3, y + h - dh, w - 6, dh, 175, 175, 10, 128)
+					core.display.drawQuad(x + 3, y + h - dh, (w - 6) * lp, dh, 240, 252, 35, 255)
+				elseif lp > .25 then -- orange
+					core.display.drawQuad(x + 3, y + h - dh, w - 6, dh, 185, 88, 0, 128)
+					core.display.drawQuad(x + 3, y + h - dh, (w - 6) * lp, dh, 255, 156, 21, 255)
+				else -- red
+					core.display.drawQuad(x + 3, y + h - dh, w - 6, dh, 167, 55, 39, 128)
+					core.display.drawQuad(x + 3, y + h - dh, (w - 6) * lp, dh, 235, 0, 0, 255)
+				end
 			end
 		end
 
