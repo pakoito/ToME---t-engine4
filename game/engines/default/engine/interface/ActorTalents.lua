@@ -471,7 +471,7 @@ function _M:getTalentLevel(id)
 	else
 		t = _M.talents_def[id]
 	end
-	return (self:getTalentLevelRaw(id)) * (self.talents_types_mastery[t.type[1]] or 1)
+	return (self:getTalentLevelRaw(id)) * ((self.talents_types_mastery[t.type[1]] or 0) + 1)
 end
 
 --- Talent type level, sum of all raw levels of talents inside
@@ -486,12 +486,13 @@ end
 
 --- Return talent type mastery
 function _M:getTalentTypeMastery(tt)
-	return self.talents_types_mastery[tt] or 1
+	return (self.talents_types_mastery[tt] or 0) + 1
 end
 
 --- Sets talent type mastery
 function _M:setTalentTypeMastery(tt, v)
-	self.talents_types_mastery[tt] = v
+	-- "v - 1" because a mastery is expressed as x + 1, not x, so that 0 is the default value (thus getting 1)
+	self.talents_types_mastery[tt] = v - 1
 end
 
 --- Return talent definition from id
@@ -512,7 +513,7 @@ function _M:learnTalentType(tt, v)
 	if v == nil then v = true end
 	if self.talents_types[tt] then return end
 	self.talents_types[tt] = v
-	self.talents_types_mastery[tt] = self.talents_types_mastery[tt] or 1
+	self.talents_types_mastery[tt] = self.talents_types_mastery[tt] or 0
 	self.changed = true
 	return true
 end

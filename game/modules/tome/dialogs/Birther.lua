@@ -186,7 +186,7 @@ function _M:applyingDescriptor(i, d)
 					v, mastery = v, 0
 				end
 				self.actor:learnTalentType(t, v)
-				self.actor.talents_types_mastery[t] = (self.actor.talents_types_mastery[t] or 1) + mastery
+				self.actor.talents_types_mastery[t] = (self.actor.talents_types_mastery[t] or 0) + mastery
 			end
 		end
 	end

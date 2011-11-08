@@ -65,9 +65,9 @@ local function makeGolem()
 			["golem/arcane"] = true,
 		},
 		talents_types_mastery = {
-			["technique/combat-training"] = 1.3,
-			["golem/fighting"] = 1.3,
-			["golem/arcane"] = 1.3,
+			["technique/combat-training"] = 0.3,
+			["golem/fighting"] = 0.3,
+			["golem/arcane"] = 0.3,
 		},
 		inscription_restrictions = { ["inscriptions/runes"] = true, },
                 resolvers.inscription("RUNE:_SHIELDING", {cooldown=14, dur=5, power=100}),
