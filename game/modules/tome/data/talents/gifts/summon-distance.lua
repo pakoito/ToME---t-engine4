@@ -31,13 +31,43 @@ newTalent{ short_name = "RITCH_FLAMESPITTER_BOLT",
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.FIRE, self:spellCrit(self:combatTalentSpellDamage(t, 8, 120)), {type="flame"})
+		self:project(tg, x, y, DamageType.FIRE, self:mindCrit(self:combatTalentMindDamage(t, 8, 120)), {type="flame"})
 		game:playSoundNear(self, "talents/fire")
 		return true
 	end,
 	info = function(self, t)
 		return ([[Conjures up a bolt of fire doing %0.2f fire damage.
 		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 8, 120)))
+	end,
+}
+
+newTalent{
+	name = "Flame Fury", image = "talents/blastwave.png",
+	type = {"wild-gift/other",1},
+	points = 5,
+	eqilibrium = 5,
+	cooldown = 5,
+	tactical = { ATTACKAREA = 2, DISABLE = 2, ESCAPE = 2 },
+	direct_hit = true,
+	requires_target = true,
+	range = 0,
+	radius = function(self, t) return 1 + self:getTalentLevelRaw(t) end,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
+	end,
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 28, 180) end,
+	action = function(self, t)
+		local tg = self:getTalentTarget(t)
+		local grids = self:project(tg, self.x, self.y, DamageType.FIREKNOCKBACK_MIND, {dist=3, dam=self:mindCrit(t.getDamage(self, t))})
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_fire", {radius=tg.radius})
+		game:playSoundNear(self, "talents/fire")
+		return true
+	end,
+	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		local radius = self:getTalentRadius(t)
+		return ([[A wave of fire emanates from you with radius %d, knocking back anything caught inside and setting them ablaze and doing %0.2f fire damage over 3 turns.
+		The damage will increase with your Mindpower.]]):format(radius, damDesc(self, DamageType.FIRE, damage))
 	end,
 }
 
@@ -199,6 +229,10 @@ newTalent{
 		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
 		self:project(tg, m.x, m.y, DamageType.FIREBURN, self:combatTalentMindDamage(t, 30, 300), {type="flame"})
 	end,
+	on_arrival = function(self, t, m)
+		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
+		self:project(tg, m.x, m.y, DamageType.TEMP_EFFECT, {friends=true, eff=self.EFF_LOWER_FIRE_RESIST, dur=4+self:getTalentLevelRaw(t), p={power=self:combatTalentMindDamage(t, 15, 70)}}, {type="flame"})
+	end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
@@ -224,7 +258,7 @@ newTalent{
 			ai = "summoned", ai_real = "tactical", ai_state = { talent_in=1, ally_compassion=10},
 			ai_tactic = resolvers.tactic"ranged",
 			stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
-			inc_stats = { mag=15 + self:getWil() * self:getTalentLevel(t) / 5, wil=10 + self:getTalentLevel(t) * 2, con=10+ self:getTalentLevelRaw(self.T_RESILIENCE)*2, },
+			inc_stats = { wil=15 + self:getWil() * self:getTalentLevel(t) / 5, cun=10 + self:getTalentLevel(t) * 2, con=10+ self:getTalentLevelRaw(self.T_RESILIENCE)*2, },
 			level_range = {self.level, self.level}, exp_worth = 0,
 
 			max_life = resolvers.rngavg(5,10),
@@ -245,6 +279,10 @@ newTalent{
 			summon_time = math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 			ai_target = {actor=target}
 		}
+		if self:attr("wild_summon") and rng.percent(self:attr("wild_summon")) then
+			m.name = m.name.." (wild summon)"
+			m[#m+1] = resolvers.talents{ [self.T_FLAME_FURY]=self:getTalentLevelRaw(t) }
+		end
 
 		setupSummon(self, m, x, y)
 
@@ -253,9 +291,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Summon a Ritch Flamespitter for %d turns to burn your foes to death. Flamespitters are really weak in melee and die easily, but they can burn your foes from afar.
-		It will get %d magic, %d willpower and %d constitution.
+		It will get %d willpower, %d cunning and %d constitution.
 		Your summons inherit some of your stats: increased damage%%, stun/pin/confusion/blindness resistance, armour penetration.
-		Magic stat will increase with your Willpower stat.]])
+		Willpower stat will increase with your Willpower stat.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 		15 + self:getWil() * self:getTalentLevel(t) / 5,
 		10 + self:getTalentLevel(t) * 2,
@@ -283,6 +321,18 @@ newTalent{
 	on_detonate = function(self, t, m)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
 		self:project(tg, m.x, m.y, rng.table{DamageType.LIGHTNING,DamageType.ACID,DamageType.POISON}, self:combatTalentMindDamage(t, 30, 250), {type="flame"})
+	end,
+	on_arrival = function(self, t, m)
+		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
+		self:project(tg, m.x, m.y, DamageType.TEMP_EFFECT, {foes=true, eff=self.EFF_LOWER_FIRE_RESIST, dur=4+self:getTalentLevelRaw(t), p={power=self:combatTalentMindDamage(t, 15, 70)}}, {type="flame"})
+		game.level.map:addEffect(self,
+			m.x, m.y, 6,
+			DamageType.POISON, self:combatTalentMindDamage(t, 10, 40),
+			self:getTalentRadius(t),
+			5, nil,
+			{type="vapour"},
+			nil, false
+		)
 	end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -331,6 +381,10 @@ newTalent{
 			summon_time = math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 			ai_target = {actor=target}
 		}
+		if self:attr("wild_summon") and rng.percent(self:attr("wild_summon")) then
+			m.name = m.name.." (wild summon)"
+			m[#m+1] = resolvers.talents{ [self.T_DISENGAGE]=self:getTalentLevelRaw(t) }
+		end
 
 		setupSummon(self, m, x, y)
 
@@ -368,6 +422,10 @@ newTalent{
 	on_detonate = function(self, t, m)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
 		self:project(tg, m.x, m.y, DamageType.ICE, self:combatTalentMindDamage(t, 30, 300), {type="freeze"})
+	end,
+	on_arrival = function(self, t, m)
+		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
+		self:project(tg, m.x, m.y, DamageType.TEMP_EFFECT, {foes=true, eff=self.EFF_LOWER_COLD_RESIST, dur=4+self:getTalentLevelRaw(t), p={power=self:combatTalentMindDamage(t, 15, 70)}}, {type="flame"})
 	end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -417,6 +475,10 @@ newTalent{
 			summon_time = math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 			ai_target = {actor=target}
 		}
+		if self:attr("wild_summon") and rng.percent(self:attr("wild_summon")) then
+			m.name = m.name.." (wild summon)"
+			m[#m+1] = resolvers.talents{ [self.T_RESOLVE]=self:getTalentLevelRaw(t) }
+		end
 
 		setupSummon(self, m, x, y)
 
@@ -461,6 +523,41 @@ newTalent{
 			{type="inferno"},
 			nil, true
 		)
+	end,
+	on_arrival = function(self, t, m)
+		for i = 1, math.max(1, math.floor(self:getTalentLevel(t) / 2)) do
+			-- Find space
+			local x, y = util.findFreeGrid(m.x, m.y, 5, true, {[Map.ACTOR]=true})
+			if not x then return end
+
+			local NPC = require "mod.class.NPC"
+			local mh = NPC.new{
+				type = "dragon", subtype = "fire",
+				display = "d", color=colors.RED, image = "npc/dragon_fire_fire_drake_hatchling.png",
+				name = "fire drake hatchling", faction = self.faction,
+				desc = [[A mighty fire drake.]],
+				autolevel = "none",
+				ai = "summoned", ai_real = "tactical", ai_state = { talent_in=1, ally_compassion=10},
+				stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
+				inc_stats = { str=15 + self:getWil() * self:getTalentLevel(t) / 6, wil=38, con=20 + self:getTalentLevel(t) * 3 + self:getTalentLevelRaw(self.T_RESILIENCE) * 2, },
+				level_range = {self.level, self.level}, exp_worth = 0,
+
+				max_life = resolvers.rngavg(40, 60),
+				life_rating = 10,
+				infravision = 10,
+
+				combat_armor = 0, combat_def = 0,
+				combat = { dam=resolvers.levelup(resolvers.rngavg(25,40), 1, 0.6), atk=resolvers.rngavg(25,60), apr=25, dammod={str=1.1} },
+				on_melee_hit = {[DamageType.FIRE]=resolvers.mbonus(7, 2)},
+
+				resists = { [DamageType.FIRE] = 100, },
+
+				summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
+				summon_time = m.summon_time,
+				ai_target = {actor=m.ai_target.actor}
+			}
+			setupSummon(self, mh, x, y)
+		end
 	end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -511,6 +608,10 @@ newTalent{
 			summon_time = math.ceil(self:getTalentLevel(t)) + 2 + self:getTalentLevelRaw(self.T_RESILIENCE),
 			ai_target = {actor=target}
 		}
+		if self:attr("wild_summon") and rng.percent(self:attr("wild_summon")) then
+			m.name = m.name.." (wild summon)"
+			m[#m+1] = resolvers.talents{ [self.T_AURA_OF_SILENCE]=self:getTalentLevelRaw(t) }
+		end
 
 		setupSummon(self, m, x, y)
 

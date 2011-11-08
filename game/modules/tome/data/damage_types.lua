@@ -810,6 +810,27 @@ newDamageType{
 	end,
 }
 
+-- Fireburn damage + repulsion; checks for mind power against physical resistance
+newDamageType{
+	name = "fire knockback mind", type = "FIREKNOCKBACK_MIND",
+	projector = function(src, x, y, type, dam, tmp)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if _G.type(dam) ~= "table" then dam = {dam=dam, dist=3} end
+		tmp = tmp or {}
+		if target and not tmp[target] then
+			tmp[target] = true
+			DamageType:get(DamageType.FIREBURN).projector(src, x, y, DamageType.FIREBURN, dam.dam)
+			if target:checkHit(src:combatMindpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
+				target:knockback(src.x, src.y, dam.dist)
+				target:crossTierEffect(target.EFF_OFFBALANCE, src:combatMindpower())
+				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
+			else
+				game.logSeen(target, "%s resists the punch!", target.name:capitalize())
+			end
+		end
+	end,
+}
+
 -- Darkness damage + repulsion; checks for spell power against mental resistance
 newDamageType{
 	name = "darkness knockback", type = "DARKKNOCKBACK",
@@ -888,6 +909,25 @@ newDamageType{
 				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
 			else
 				game.logSeen(target, "%s resists the knockback!", target.name:capitalize())
+			end
+		end
+	end,
+}
+
+-- Fear check + repulsion; checks for mind power against physical resistance
+newDamageType{
+	name = "fear knockback", type = "FEARKNOCKBACK",
+	projector = function(src, x, y, type, dam, tmp)
+		local target = game.level.map(x, y, Map.ACTOR)
+		tmp = tmp or {}
+		if target and not tmp[target] then
+			tmp[target] = true
+			if target:checkHit(src:combatMindpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("fear") then
+				target:knockback(dam.x, dam.y, dam.dist)
+				target:crossTierEffect(target.EFF_BRAINLOCKED, src:combatMindpower())
+				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
+			else
+				game.logSeen(target, "%s resists the frightening sight!", target.name:capitalize())
 			end
 		end
 	end,
@@ -1848,6 +1888,22 @@ newDamageType{
 		if target then
 			local reapplied = target:hasEffect(target.EFF_WEAKENED)
 			target:setEffect(target.EFF_WEAKENED, dam.dur, { power=incDamage }, reapplied)
+		end
+	end,
+}
+
+-- Generic apply temporary effect
+newDamageType{
+	name = "temp effect", type = "TEMP_EFFECT",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			local ok = false
+			if dam.friends then if src:reactionToward(target) >= 0 then ok = true end
+			elseif dam.foes then if src:reactionToward(target) < 0 then ok = true end
+			else ok = true
+			end
+			if ok then target:setEffect(dam.eff, dam.dur, table.clone(dam.p)) end
 		end
 	end,
 }

@@ -110,6 +110,14 @@ newTalent{
 			target:setEffect(target.EFF_SHELL_SHIELD, 4, {power=self:combatTalentMindDamage(t, 10, 35)})
 		end, nil, {type="flame"})
 	end,
+	on_arrival = function(self, t, m)
+		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
+		self:project(tg, m.x, m.y, function(px, py)
+			local target = game.level.map(px, py, Map.ACTOR)
+			if not target or self:reactionToward(target) < 0 then return end
+			target:heal(30 + self:combatTalentMindDamage(t, 10, 350))
+		end, nil, {type="acid"})
+	end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
@@ -156,6 +164,10 @@ newTalent{
 			summon_time = math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 			ai_target = {actor=target}
 		}
+		if self:attr("wild_summon") and rng.percent(self:attr("wild_summon")) then
+			m.name = m.name.." (wild summon)"
+			m[#m+1] = resolvers.talents{ [self.T_BATTLE_CALL]=self:getTalentLevelRaw(t) }
+		end
 
 		setupSummon(self, m, x, y)
 
@@ -199,6 +211,10 @@ newTalent{
 				target:setEffect(target.EFF_PINNED, 3, {apply_power=self:combatMindpower()})
 			end
 		end, nil, {type="flame"})
+	end,
+	on_arrival = function(self, t, m)
+		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), friendlyfire=false, talent=t, x=m.x, y=m.y}
+		self:project(tg, m.x, m.y, DamageType.FEARKNOCKBACK, {dist=1+self:getTalentLevelRaw(t), x=m.x, y=m.y}, {type="acid"})
 	end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -246,6 +262,10 @@ newTalent{
 			summon_time = math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 			ai_target = {actor=target}
 		}
+		if self:attr("wild_summon") and rng.percent(self:attr("wild_summon")) then
+			m.name = m.name.." (wild summon)"
+			m[#m+1] = resolvers.inscription("INFUSION:_INSIDIOUS_POISON", {cooldown=12, range=6, heal_factor=0.6, power=self:getTalentLevel(t) * 60})
+		end
 
 		setupSummon(self, m, x, y)
 

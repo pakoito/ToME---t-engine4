@@ -270,7 +270,7 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeParticles(eff.particle)
-		
+
 		self:removeTemporaryValue("stunned", eff.tmpid)
 		self:removeTemporaryValue("no_talents_cooldown", eff.tcdid)
 		self:removeTemporaryValue("movement_speed", eff.speedid)
@@ -893,7 +893,7 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeParticles(eff.particle)
-		
+
 		self:removeTemporaryValue("stunned", eff.tmpid)
 		self:removeTemporaryValue("no_talents_cooldown", eff.tcdid)
 		self:removeTemporaryValue("movement_speed", eff.speedid)
@@ -1551,5 +1551,26 @@ newEffect{
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("no_equilibrium_summon_fail", eff.failid)
 		self:removeTemporaryValue("fast_summons", eff.speedid)
+	end,
+}
+
+newEffect{
+	name = "WILD_SUMMON", image = "talents/wild_summon.png",
+	desc = "Wild Summon",
+	long_desc = function(self, eff) return ("%d%% chances to get a more powerful summon."):format(eff.chance) end,
+	type = "mental",
+	subtype = { summon=true },
+	status = "beneficial",
+	parameters = { chance=100 },
+	activate = function(self, eff)
+		eff.tid = self:addTemporaryValue("wild_summon", eff.chance)
+	end,
+	on_timeout = function(self, eff)
+		eff.chance = math.floor(eff.chance * 0.66)
+		self:removeTemporaryValue("wild_summon", eff.tid)
+		eff.tid = self:addTemporaryValue("wild_summon", eff.chance)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("wild_summon", eff.tid)
 	end,
 }

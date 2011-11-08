@@ -218,7 +218,7 @@ function _M:atEnd(v)
 								--[[ Award talent points based on the highest available level of the talent
 								     This is in the potential case of a player selecting a race with two points in phase door
 								     and Archmage as his class. Archmage starts with one point in phase door. Cases like this may
-									 result in a conflict of what the player might expect to get back in points. The highest 
+									 result in a conflict of what the player might expect to get back in points. The highest
 									 amount of points is always awarded to the player (two, in this case).
 								  ]]
 								if (unlearned_talents[talent] == nil) then
@@ -273,8 +273,8 @@ function _M:makeDefault()
 	self:setDescriptor("permadeath", "Adventure")
 	self:setDescriptor("race", "Human")
 	self:setDescriptor("subrace", "Higher")
-	self:setDescriptor("class", "Warrior")
-	self:setDescriptor("subclass", "Berserker")
+	self:setDescriptor("class", "Wilder")
+	self:setDescriptor("subclass", "Summoner")
 	__module_extra_info.no_birth_popup = true
 	self:atEnd("created")
 end

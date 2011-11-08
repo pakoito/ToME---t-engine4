@@ -561,7 +561,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	if hitted and game.level.data.zero_gravity and rng.percent(util.bound(dam, 0, 100)) then
 		target:knockback(self.x, self.y, math.ceil(math.log(dam)))
 	end
-	
+
 	if hitted and not target.dead then
 		-- Curse of Madness: Twisted Mind
 		if self.hasEffect and self:hasEffect(self.EFF_CURSE_OF_MADNESS) then
@@ -574,7 +574,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 			local def = target.tempeffect_def[target.EFF_CURSE_OF_MADNESS]
 			def.doConspirator(target, eff, self)
 		end
-		
+
 		-- Curse of Nightmares: Suffocate
 		if self.hasEffect and self:hasEffect(self.EFF_CURSE_OF_NIGHTMARES) then
 			local eff = self:hasEffect(self.EFF_CURSE_OF_NIGHTMARES)
@@ -899,7 +899,7 @@ function _M:getOffHandMult(mult)
 			offmult = offmult + ((mult or 1) * def.getOffHandMultChange(eff.level) / 100)
 		end
 	end
-	
+
 	return offmult
 end
 
@@ -917,6 +917,11 @@ end
 --- Gets spellspeed
 function _M:combatSpellSpeed()
 	return 1 / self.combat_spellspeed
+end
+
+--- Gets mindcrit
+function _M:combatMindCrit()
+	return self.combat_mindcrit + (self:getCun() - 10) * 0.3 + (self:getLck() - 50) * 0.30 + 1
 end
 
 --- Gets summon speed
@@ -1006,6 +1011,24 @@ function _M:spellFriendlyFire()
 	chance = 100 - chance
 	print("[SPELL] friendly fire chance", chance)
 	return chance
+end
+
+--- Computes mind crit for a damage
+function _M:mindCrit(dam, add_chance)
+	if self:isTalentActive(self.T_STEALTH) and self:knowTalent(self.T_SHADOWSTRIKE) then
+		return dam * (1.5 + self:getTalentLevel(self.T_SHADOWSTRIKE) / 7), true
+	end
+
+	local chance = self:combatMindCrit() + (add_chance or 0)
+	local crit = false
+
+	print("[MIND CRIT %]", chance)
+	if rng.percent(chance) then
+		dam = dam * (1.5 + (self.combat_critical_power or 0) / 100)
+		crit = true
+		game.logSeen(self, "#{bold}#%s's power attains critical effect!#{normal}#", self.name:capitalize())
+	end
+	return dam, crit
 end
 
 --- Gets mindpower
@@ -1172,7 +1195,7 @@ function _M:hasCursedWeapon()
 	end
 	local t = self:getTalentFromId(self.T_DEFILING_TOUCH)
 	if not t.canCurseItem(self, t, weapon) then return nil end
-	
+
 	return weapon
 end
 
@@ -1189,7 +1212,7 @@ function _M:hasCursedOffhandWeapon()
 	end
 	local t = self:getTalentFromId(self.T_DEFILING_TOUCH)
 	if not t.canCurseItem(self, t, weapon) then return nil end
-	
+
 	return weapon
 end
 

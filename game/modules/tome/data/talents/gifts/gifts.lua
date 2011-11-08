@@ -55,6 +55,26 @@ gifts_req5 = {
 	stat = { wil=function(level) return 44 + (level-1) * 2 end },
 	level = function(level) return 16 + (level-1)  end,
 }
+gifts_req_high1 = {
+	stat = { wil=function(level) return 22 + (level-1) * 2 end },
+	level = function(level) return 10 + (level-1)  end,
+}
+gifts_req_high2 = {
+	stat = { wil=function(level) return 30 + (level-1) * 2 end },
+	level = function(level) return 14 + (level-1)  end,
+}
+gifts_req_high3 = {
+	stat = { wil=function(level) return 38 + (level-1) * 2 end },
+	level = function(level) return 18 + (level-1)  end,
+}
+gifts_req_high4 = {
+	stat = { wil=function(level) return 46 + (level-1) * 2 end },
+	level = function(level) return 22 + (level-1)  end,
+}
+gifts_req_high5 = {
+	stat = { wil=function(level) return 54 + (level-1) * 2 end },
+	level = function(level) return 26 + (level-1)  end,
+}
 
 load("/data/talents/gifts/call.lua")
 load("/data/talents/gifts/harmony.lua")
@@ -140,12 +160,31 @@ function setupSummon(self, m, x, y, no_control)
 		p.dur = p.dur - 1
 		if p.dur <= 0 then self:removeEffect(self.EFF_FRANTIC_SUMMONING) end
 	end
+
+	if m.wild_gift_detonate and self:isTalentActive(self.T_MASTER_SUMMONER) and self:knowTalent(self.T_GRAND_ARRIVAL) then
+		local dt = self:getTalentFromId(m.wild_gift_detonate)
+		if dt.on_arrival then
+			dt.on_arrival(self, self:getTalentFromId(self.T_GRAND_ARRIVAL), m)
+		end
+	end
+
+	if m.wild_gift_detonate and self:isTalentActive(self.T_MASTER_SUMMONER) and self:knowTalent(self.T_NATURE_CYCLE) then
+		local t = self:getTalentFromId(self.T_NATURE_CYCLE)
+		for _, tid in ipairs{self.T_RAGE, self.T_DETONATE, self.T_WILD_SUMMON} do
+			if self.talents_cd[tid] and rng.percent(t.getChance(self, t)) then
+				self.talents_cd[tid] = self.talents_cd[tid] - t.getReduction(self, t)
+				if self.talents_cd[tid] <= 0 then self.talents_cd[tid] = nil end
+				self.changed = true
+			end
+		end
+	end
 end
 
 load("/data/talents/gifts/summon-melee.lua")
 load("/data/talents/gifts/summon-distance.lua")
 load("/data/talents/gifts/summon-utility.lua")
 load("/data/talents/gifts/summon-augmentation.lua")
+load("/data/talents/gifts/summon-advanced.lua")
 
 load("/data/talents/gifts/earthen-power.lua")
 load("/data/talents/gifts/earthen-vines.lua")

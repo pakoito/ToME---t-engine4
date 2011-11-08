@@ -38,6 +38,10 @@ newTalent{
 		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
 		self:project(tg, m.x, m.y, DamageType.PHYSICAL, self:combatTalentMindDamage(t, 30, 250), {type="flame"})
 	end,
+	on_arrival = function(self, t, m)
+		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
+		self:project(tg, m.x, m.y, DamageType.TEMP_EFFECT, {foes=true, eff=self.EFF_LOWER_PHYSICAL_RESIST, dur=4+self:getTalentLevelRaw(t), p={power=self:combatTalentMindDamage(t, 15, 70)}}, {type="flame"})
+	end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
@@ -79,6 +83,10 @@ newTalent{
 			summon_time = math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 			ai_target = {actor=target}
 		}
+		if self:attr("wild_summon") and rng.percent(self:attr("wild_summon")) then
+			m.name = m.name.." (wild summon)"
+			m[#m+1] = resolvers.talents{ [self.T_TOTAL_THUGGERY]=self:getTalentLevelRaw(t) }
+		end
 
 		setupSummon(self, m, x, y)
 
@@ -117,6 +125,10 @@ newTalent{
 	on_detonate = function(self, t, m)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
 		self:project(tg, m.x, m.y, DamageType.SLIME, self:combatTalentMindDamage(t, 30, 200), {type="flame"})
+	end,
+	on_arrival = function(self, t, m)
+		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
+		self:project(tg, m.x, m.y, DamageType.TEMP_EFFECT, {foes=true, eff=self.EFF_LOWER_NATURE_RESIST, dur=4+self:getTalentLevelRaw(t), p={power=self:combatTalentMindDamage(t, 15, 70)}}, {type="flame"})
 	end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -170,6 +182,10 @@ newTalent{
 				return value - p
 			end,
 		}
+		if self:attr("wild_summon") and rng.percent(self:attr("wild_summon")) then
+			m.name = m.name.." (wild summon)"
+			m[#m+1] = resolvers.talents{ [self.T_SWALLOW]=self:getTalentLevelRaw(t) }
+		end
 
 		setupSummon(self, m, x, y)
 
@@ -208,6 +224,10 @@ newTalent{
 	on_detonate = function(self, t, m)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
 		self:project(tg, m.x, m.y, DamageType.BLEED, self:combatTalentMindDamage(t, 30, 350), {type="flame"})
+	end,
+	on_arrival = function(self, t, m)
+		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
+		self:project(tg, m.x, m.y, DamageType.TEMP_EFFECT, {foes=true, eff=self.EFF_SLOW_MOVE, dur=4+self:getTalentLevelRaw(t), p={power=0.1+self:combatTalentMindDamage(t, 5, 500)/1000}}, {type="flame"})
 	end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -257,6 +277,10 @@ newTalent{
 			summon_time = self:getTalentLevel(t) + 2 + self:getTalentLevelRaw(self.T_RESILIENCE),
 			ai_target = {actor=target}
 		}
+		if self:attr("wild_summon") and rng.percent(self:attr("wild_summon")) then
+			m.name = m.name.." (wild summon)"
+			m[#m+1] = resolvers.talents{ [self.T_RUSH]=self:getTalentLevelRaw(t) }
+		end
 
 		setupSummon(self, m, x, y)
 
@@ -293,6 +317,10 @@ newTalent{
 	on_detonate = function(self, t, m)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
 		self:project(tg, m.x, m.y, DamageType.PHYSKNOCKBACK, {dam=self:combatTalentMindDamage(t, 30, 150), dist=4}, {type="flame"})
+	end,
+	on_arrival = function(self, t, m)
+		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
+		self:project(tg, m.x, m.y, DamageType.TEMP_EFFECT, {foes=true, eff=self.EFF_DAZED, dur=1+self:getTalentLevelRaw(t)/2, p={}}, {type="flame"})
 	end,
 	requires_target = true,
 	action = function(self, t)
@@ -342,8 +370,13 @@ newTalent{
 			faction = self.faction,
 			summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
 			summon_time = math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
-			ai_target = {actor=target}
+			ai_target = {actor=target},
+			resolvers.sustains_at_birth(),
 		}
+		if self:attr("wild_summon") and rng.percent(self:attr("wild_summon")) then
+			m.name = m.name.." (wild summon)"
+			m[#m+1] = resolvers.talents{ [self.T_SHATTERING_IMPACT]=self:getTalentLevelRaw(t) }
+		end
 
 		setupSummon(self, m, x, y)
 

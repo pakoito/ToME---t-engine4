@@ -1446,6 +1446,24 @@ newEffect{
 }
 
 newEffect{
+	name = "SLOW_MOVE",
+	desc = "Slow movement", image = "talents/slow.png",
+	long_desc = function(self, eff) return ("Movement speed is reduced by %d%%."):format(eff.power*100) end,
+	type = "physical",
+	subtype = { nature=true },
+	status = "detrimental",
+	parameters = {power = 1},
+	on_gain = function(self, err) return nil, "+Slow movement" end,
+	on_lose = function(self, err) return nil, "-Slow movement" end,
+	activate = function(self, eff)
+		eff.speedid = self:addTemporaryValue("movement_speed", -eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("movement_speed", eff.speedid)
+	end,
+}
+
+newEffect{
 	name = "WEAKENED",
 	desc = "Weakened", image = "talents/ruined_earth.png",
 	long_desc = function(self, eff) return ("The target has been weakened, reducing all damage inclicted by %d%%."):format(eff.power) end,
@@ -1460,5 +1478,74 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("inc_damage", eff.incDamageId)
+	end,
+}
+
+newEffect{
+	name = "LOWER_FIRE_RESIST",
+	desc = "Lowered fire resistance",
+	long_desc = function(self, eff) return ("The target fire resistance is reduced by %d%%."):format(eff.power) end,
+	type = "physical",
+	subtype = { nature=true },
+	status = "detrimental",
+	parameters = { power=20 },
+	on_gain = function(self, err) return "#Target# becomes more vulnerable to fire.", "+Low. fire resist" end,
+	on_lose = function(self, err) return "#Target# is less vulnerable to fire.", "-Low. fire resist" end,
+	activate = function(self, eff)
+		eff.pid = self:addTemporaryValue("resists", {[DamageType.FIRE]=-eff.power})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("resists", eff.pid)
+	end,
+}
+newEffect{
+	name = "LOWER_COLD_RESIST",
+	desc = "Lowered cold resistance",
+	long_desc = function(self, eff) return ("The target cold resistance is reduced by %d%%."):format(eff.power) end,
+	type = "physical",
+	subtype = { nature=true },
+	status = "detrimental",
+	parameters = { power=20 },
+	on_gain = function(self, err) return "#Target# becomes more vulnerable to cold.", "+Low. cold resist" end,
+	on_lose = function(self, err) return "#Target# is less vulnerable to cold.", "-Low. cold resist" end,
+	activate = function(self, eff)
+		eff.pid = self:addTemporaryValue("resists", {[DamageType.COLD]=-eff.power})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("resists", eff.pid)
+	end,
+}
+newEffect{
+	name = "LOWER_NATURE_RESIST",
+	desc = "Lowered nature resistance",
+	long_desc = function(self, eff) return ("The target nature resistance is reduced by %d%%."):format(eff.power) end,
+	type = "physical",
+	subtype = { nature=true },
+	status = "detrimental",
+	parameters = { power=20 },
+	on_gain = function(self, err) return "#Target# becomes more vulnerable to nature.", "+Low. nature resist" end,
+	on_lose = function(self, err) return "#Target# is less vulnerable to nature.", "-Low. nature resist" end,
+	activate = function(self, eff)
+		eff.pid = self:addTemporaryValue("resists", {[DamageType.NATURE]=-eff.power})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("resists", eff.pid)
+	end,
+}
+newEffect{
+	name = "LOWER_PHYSICAL_RESIST",
+	desc = "Lowered physical resistance",
+	long_desc = function(self, eff) return ("The target physical resistance is reduced by %d%%."):format(eff.power) end,
+	type = "physical",
+	subtype = { nature=true },
+	status = "detrimental",
+	parameters = { power=20 },
+	on_gain = function(self, err) return "#Target# becomes more vulnerable to physical.", "+Low. physical resist" end,
+	on_lose = function(self, err) return "#Target# is less vulnerable to physical.", "-Low. physical resist" end,
+	activate = function(self, eff)
+		eff.pid = self:addTemporaryValue("resists", {[DamageType.PHYSICAL]=-eff.power})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("resists", eff.pid)
 	end,
 }
