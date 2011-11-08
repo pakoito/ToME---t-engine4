@@ -56,7 +56,7 @@ newEntity{ define_as = "THE_MASTER",
 		{type="jewelry", subtype="amulet", defined="AMULET_DREAD", random_art_replace={chance=75}, autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
-	resolvers.drops{chance=100, nb=1, {type="weapon", subtype="staff", defined="STAFF_ABSORPTION", special=function() return game.zone.is_dreadfell end} },
+	resolvers.drops{check=function() return game.zone.is_dreadfell end, chance=100, nb=1, {type="weapon", subtype="staff", defined="STAFF_ABSORPTION"} },
 
 	summon = {
 		{type="undead", number=2, hasxp=true},

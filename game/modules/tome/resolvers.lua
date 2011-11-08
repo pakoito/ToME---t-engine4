@@ -116,6 +116,7 @@ end
 function resolvers.calc.drops(t, e)
 	t = t[1]
 	if not rng.percent(t.chance or 100) then return nil end
+	if t.check and not t.check(e) then return nil end
 
 	-- Iterate of object requests, try to create them and drops them
 	for i = 1, (t.nb or 1) do
