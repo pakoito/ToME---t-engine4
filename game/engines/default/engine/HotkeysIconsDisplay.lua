@@ -238,7 +238,7 @@ function _M:onMouse(button, mx, my, click, on_over, on_click)
 		local drag = game.mouse.dragged.payload
 		print(table.serialize(drag,nil,true))
 		if drag.kind == "talent" or drag.kind == "inventory" then
-			local i = math.floor(mx / self.frames.w) + (self.actor.hotkey_page-1) * 12 + 1
+			local i = math.floor(mx / self.frames.w) + (self.actor.hotkey_page-1) * 12 + 1 + math.floor(my / self.frames.h) * self.max_cols
 			local old = self.actor.hotkey[i]
 
 			if i <= #page_to_hotkey * 12 then -- Only add this hotkey if we support a valid page for it.

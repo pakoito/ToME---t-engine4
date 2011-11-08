@@ -107,12 +107,23 @@ function _M:run()
 	font_h = f:lineSkip()
 	f = core.display.newFont(font_mono, size_mono)
 	font_mono_h = f:lineSkip()
+	self.init_font = font
+	self.init_size_font = size
+	self.init_font_h = font_h
+	self.init_font_mono = font_mono
+	self.init_size_mono = size_mono
+	self.init_font_mono_h = font_mono_h
 
 	self.delayed_log_damage = {}
 	self.calendar = Calendar.new("/data/calendar_allied.lua", "Today is the %s %s of the %s year of the Age of Ascendancy of Maj'Eyal.\nThe time is %02d:%02d.", 122, 167, 11)
 
+	self:resizeIconsHotkeysToolbar()
+	self.hotkeys_display_text = HotkeysDisplay.new(nil, 216, self.h - 52, self.w - 216, 52, "/data/gfx/ui/talents-list.png", font_mono, size_mono)
+	self.hotkeys_display_text:enableShadow(0.6)
+	self.hotkeys_display_text:setColumns(3)
+	self.hotkeys_display = config.settings.tome.hotkey_icons and self.hotkeys_display_icons or self.hotkeys_display_text
+
 	self.player_display = PlayerDisplay.new(0, 200, 200, self.h - 200, {30,30,0}, font_mono, size_mono)
-	self.map_h_stop = self.h - 52
 	self.logdisplay = LogDisplay.new(216, self.map_h_stop - font_h * config.settings.tome.log_lines -16, (self.w - 216) / 2, font_h * config.settings.tome.log_lines, nil, font, size, nil, nil)
 	self.logdisplay.resizeToLines = function() self.logdisplay:resize(216, self.map_h_stop - font_h * config.settings.tome.log_lines -16, (self.w - 216) / 2, font_h * config.settings.tome.log_lines) end
 	self.logdisplay:enableShadow(1)
@@ -124,13 +135,6 @@ function _M:run()
 	profile.chat:enableFading(config.settings.tome.log_fade or 3)
 	profile.chat:enableDisplayChans(false)
 
-	self.hotkeys_display_icons = HotkeysIconsDisplay.new(nil, 216, self.h - 52, self.w - 216, 52, "/data/gfx/ui/talents-list.png", font_mono, size_mono, 48, 48)
-	self.hotkeys_display_icons:enableShadow(0.6)
-	self.hotkeys_display_icons:setColumns(3)
-	self.hotkeys_display_text = HotkeysDisplay.new(nil, 216, self.h - 52, self.w - 216, 52, "/data/gfx/ui/talents-list.png", font_mono, size_mono)
-	self.hotkeys_display_text:enableShadow(0.6)
-	self.hotkeys_display_text:setColumns(3)
-	self.hotkeys_display = config.settings.tome.hotkey_icons and self.hotkeys_display_icons or self.hotkeys_display_text
 	self.npcs_display = ActorsSeenDisplay.new(nil, 216, self.h - font_mono_h * 4.2, self.w - 216, font_mono_h * 4.2, "/data/gfx/ui/talents-list.png", font_mono, size_mono)
 	self.npcs_display:setColumns(3)
 	self.tooltip = Tooltip.new(font_mono, size, {255,255,255}, {30,30,30,230})
@@ -176,7 +180,7 @@ function _M:run()
 	end
 	if not self.player then self:newGame() end
 
-	self:initTargeting()
+	engine.interface.GameTargeting.init(self)
 
 	self.hotkeys_display.actor = self.player
 	self.npcs_display.actor = self.player
@@ -190,6 +194,29 @@ function _M:run()
 	self.player_display.font:setStyle("normal")
 	self.caps_scroll = {s:glTexture()}
 	self.caps_scroll.w, self.caps_scroll.h = s:getSize()
+
+	self.inited = true
+end
+
+--- Resize the hotkeys
+function _M:resizeIconsHotkeysToolbar()
+	local h = (4 + config.settings.tome.hotkey_icons_size) * config.settings.tome.hotkey_icons_rows
+
+	local oldstop = self.map_h_stop or (self.h - h)
+	self.map_h_stop = self.h - h
+
+	self.hotkeys_display_icons = HotkeysIconsDisplay.new(nil, 216, self.h - h, self.w - 216, h, "/data/gfx/ui/talents-list.png", self.init_font_mono, self.init_size_mono, config.settings.tome.hotkey_icons_size, config.settings.tome.hotkey_icons_size)
+	self.hotkeys_display_icons:enableShadow(0.6)
+
+	if self.inited then
+		self:resizeMapViewport(self.w - 216, self.map_h_stop - 16)
+		self.logdisplay.display_y = self.logdisplay.display_y + self.map_h_stop - oldstop
+		profile.chat.display_y = profile.chat.display_y + self.map_h_stop - oldstop
+		self:setupMouse()
+	end
+
+	self.hotkeys_display = config.settings.tome.hotkey_icons and self.hotkeys_display_icons or self.hotkeys_display_text
+	self.hotkeys_display.actor = self.player
 end
 
 --- Checks if the current character is "tainted" by cheating
@@ -443,27 +470,47 @@ function _M:setupDisplayMode(reboot, mode)
 				self.level.map:recreate()
 				self.level.map:moveViewSurround(self.player.x, self.player.y, 8, 8)
 			end
-			self:initTargeting()
+			engine.interface.GameTargeting.init(self)
 		end
 		self:setupMiniMap()
 
-		-- Create the framebuffer
-		self.fbo = core.display.newFBO(Map.viewport.width, Map.viewport.height)
-		if self.fbo then self.fbo_shader = Shader.new("main_fbo") if not self.fbo_shader.shad then self.fbo = nil self.fbo_shader = nil end end
-		if self.player then self.player:updateMainShader() end
-
-		self.full_fbo = core.display.newFBO(self.w, self.h)
-		if self.full_fbo then self.full_fbo_shader = Shader.new("full_fbo") if not self.full_fbo_shader.shad then self.full_fbo = nil self.full_fbo_shader = nil end end
-
---		self.mm_fbo = core.display.newFBO(200, 200)
---		if self.mm_fbo then self.mm_fbo_shader = Shader.new("mm_fbo") if not self.mm_fbo_shader.shad then self.mm_fbo = nil self.mm_fbo_shader = nil end end
+		self:createFBOs()
 	end
 end
 
-function _M:initTargeting()
-	engine.interface.GameTargeting.init(self)
+function _M:createFBOs()
+	-- Create the framebuffer
+	self.fbo = core.display.newFBO(Map.viewport.width, Map.viewport.height)
+	if self.fbo then self.fbo_shader = Shader.new("main_fbo") if not self.fbo_shader.shad then self.fbo = nil self.fbo_shader = nil end end
+	if self.player then self.player:updateMainShader() end
+
+	self.full_fbo = core.display.newFBO(self.w, self.h)
+	if self.full_fbo then self.full_fbo_shader = Shader.new("full_fbo") if not self.full_fbo_shader.shad then self.full_fbo = nil self.full_fbo_shader = nil end end
+
+--	self.mm_fbo = core.display.newFBO(200, 200)
+--	if self.mm_fbo then self.mm_fbo_shader = Shader.new("mm_fbo") if not self.mm_fbo_shader.shad then self.mm_fbo = nil self.mm_fbo_shader = nil end end
 end
 
+function _M:resizeMapViewport(w, h)
+	w = math.floor(w)
+	h = math.floor(h)
+
+	Map.viewport.width = w
+	Map.viewport.height = h
+	Map.viewport.mwidth = math.floor(w / Map.tile_w)
+	Map.viewport.mheight = math.floor(h / Map.tile_h)
+
+	self:createFBOs()
+
+	if self.level then
+		self.level.map:makeCMap()
+		self.level.map:redisplay()
+		if self.player then
+			self.player:updateMainShader()
+			self.level.map:moveViewSurround(self.player.x, self.player.y, config.settings.tome.scroll_dist, config.settings.tome.scroll_dist)
+		end
+	end
+end
 
 function _M:setupMiniMap()
 	if self.level and self.level.map and self.level.map.finished then self.level.map._map:setupMiniMapGridSize(4) end
@@ -560,7 +607,7 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down, auto_zone_stair)
 		self.logPlayer(self.player, "#LIGHT_RED#You may not leave the zone with this character!")
 		return
 	end
-	if game.player:hasEffect(game.player.EFF_PARADOX_CLONE) or game.player:hasEffect(game.player.EFF_IMMINENT_PARADOX_CLONE) then
+	if self.player:hasEffect(self.player.EFF_PARADOX_CLONE) or self.player:hasEffect(self.player.EFF_IMMINENT_PARADOX_CLONE) then
 		self.logPlayer(self.player, "#LIGHT_RED#You cannot escape your fate by leaving the level!")
 		return
 	end
@@ -599,19 +646,19 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down, auto_zone_stair)
 
 	if self.zone and self.level then self.party:leftLevel() end
 
-	if game.player:isTalentActive(game.player.T_JUMPGATE) then
-		game.player:forceUseTalent(game.player.T_JUMPGATE, {ignore_energy=true})
+	if self.player:isTalentActive(self.player.T_JUMPGATE) then
+		self.player:forceUseTalent(self.player.T_JUMPGATE, {ignore_energy=true})
 	end
 
-	if game.player:isTalentActive(game.player.T_JUMPGATE_TWO) then
-		game.player:forceUseTalent(game.player.T_JUMPGATE_TWO, {ignore_energy=true})
+	if self.player:isTalentActive(self.player.T_JUMPGATE_TWO) then
+		self.player:forceUseTalent(self.player.T_JUMPGATE_TWO, {ignore_energy=true})
 	end
 
 	-- clear chrono worlds and their various effects
-	if game._chronoworlds then game._chronoworlds = nil end
+	if self._chronoworlds then self._chronoworlds = nil end
 
-	if game.player:isTalentActive(game.player.T_DOOR_TO_THE_PAST) then
-		game.player:forceUseTalent(game.player.T_DOOR_TO_THE_PAST, {ignore_energy=true})
+	if self.player:isTalentActive(self.player.T_DOOR_TO_THE_PAST) then
+		self.player:forceUseTalent(self.player.T_DOOR_TO_THE_PAST, {ignore_energy=true})
 	end
 
 	local left_zone = self.zone
@@ -727,7 +774,7 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down, auto_zone_stair)
 			self.level:addEntity(act)
 			act:setTarget(nil)
 			if act.ai_state and act.ai_state.tactic_leash_anchor then
-				act.ai_state.tactic_leash_anchor = game.player
+				act.ai_state.tactic_leash_anchor = self.player
 			end
 		end
 		self.to_re_add_actors = nil
@@ -779,7 +826,7 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down, auto_zone_stair)
 	else
 		local lev = self.zone.base_level + self.level.level - 1
 		if self.zone.level_adjust_level then lev = self.zone:level_adjust_level(self.level) end
-		local diff = lev - game.player.level
+		local diff = lev - self.player.level
 		if diff >= 5 then feeling = "You feel a thrill of terror and your heart begins to pound in your chest. You feel terribly threatened upon entering this area."
 		elseif diff >= 2 then feeling = "You feel mildly anxious, and walk with caution."
 		elseif diff >= -2 then feeling = nil
@@ -787,7 +834,7 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down, auto_zone_stair)
 		else feeling = "You stride into this area without a second thought, while stifling a yawn. You feel your time might be better spent elsewhere."
 		end
 	end
-	if feeling then game.log("#TEAL#%s", feeling) end
+	if feeling then self.log("#TEAL#%s", feeling) end
 
 	-- Autosave
 	if config.settings.tome.autosave and not config.settings.cheat and ((left_zone and left_zone.short_name ~= "wilderness") or self.zone.save_per_level) and (left_zone and left_zone.short_name ~= self.zone.short_name) then self:saveGame() end
@@ -821,9 +868,9 @@ function _M:chronoClone(name)
 	local ret = nil
 	if name then
 		self._chronoworlds = self._chronoworlds or {}
-		self._chronoworlds[name] = game:cloneFull()
+		self._chronoworlds[name] = self:cloneFull()
 	else
-		ret = game:cloneFull()
+		ret = self:cloneFull()
 	end
 	d:done()
 	return ret
@@ -895,24 +942,24 @@ function _M:displayDelayedLogDamage()
 	for src, tgts in pairs(self.delayed_log_damage) do
 		for target, dams in pairs(tgts) do
 			if #dams.descs > 1 then
-				game.logSeen(target, "%s hits %s for %s damage (total %0.2f).", src.name:capitalize(), target.name, table.concat(dams.descs, ", "), dams.total)
+				self.logSeen(target, "%s hits %s for %s damage (total %0.2f).", src.name:capitalize(), target.name, table.concat(dams.descs, ", "), dams.total)
 			else
-				game.logSeen(target, "%s hits %s for %s damage.", src.name:capitalize(), target.name, table.concat(dams.descs, ", "))
+				self.logSeen(target, "%s hits %s for %s damage.", src.name:capitalize(), target.name, table.concat(dams.descs, ", "))
 			end
 
 			local rsrc = src.resolveSource and src:resolveSource() or src
 			local rtarget = target.resolveSource and target:resolveSource() or target
 			local x, y = target.x or -1, target.y or -1
-			local sx, sy = game.level.map:getTileToScreen(x, y)
+			local sx, sy = self.level.map:getTileToScreen(x, y)
 			if target.dead then
-				if game.level.map.seens(x, y) and (rsrc == game.player or rtarget == game.player or game.party:hasMember(rsrc) or game.party:hasMember(rtarget)) then
-					game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, rng.float(-2.5, -1.5), ("Kill (%d)!"):format(dams.total), {255,0,255}, true)
+				if self.level.map.seens(x, y) and (rsrc == self.player or rtarget == self.player or self.party:hasMember(rsrc) or self.party:hasMember(rtarget)) then
+					self.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, rng.float(-2.5, -1.5), ("Kill (%d)!"):format(dams.total), {255,0,255}, true)
 				end
 			else
-				if game.level.map.seens(x, y) and (rsrc == game.player or game.party:hasMember(rsrc)) then
-					game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, rng.float(-3, -2), tostring(-math.ceil(dams.total)), {0,255,0})
-				elseif game.level.map.seens(x, y) and (rtarget == game.player or game.party:hasMember(rtarget)) then
-					game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -rng.float(-3, -2), tostring(-math.ceil(dams.total)), {255,0,0})
+				if self.level.map.seens(x, y) and (rsrc == self.player or self.party:hasMember(rsrc)) then
+					self.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, rng.float(-3, -2), tostring(-math.ceil(dams.total)), {0,255,0})
+				elseif self.level.map.seens(x, y) and (rtarget == self.player or self.party:hasMember(rtarget)) then
+					self.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -rng.float(-3, -2), tostring(-math.ceil(dams.total)), {255,0,0})
 				end
 			end
 		end
@@ -1102,7 +1149,7 @@ function _M:setupCommands()
 	-- Debug mode
 	self.key:addCommands{
 		[{"_d","ctrl"}] = function() if config.settings.cheat then
-			local g = game.level.map(game.player.x, game.player.y, Map.TERRAIN)
+			local g = self.level.map(self.player.x, self.player.y, Map.TERRAIN)
 			print(g.define_as, g.image, g.z)
 			for i, a in ipairs(g.add_mos or {}) do print(" => ", a.image) end
 			local add = g.add_displays
@@ -1112,9 +1159,7 @@ function _M:setupCommands()
 			end end
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
---			self.zone:addEntity(self.level, self.zone:makeEntityByName(self.level, "terrain", 'PORTAL'), "terrain", game.player.x,game.player.y-1)
-			game:changeLevel(1,"town-irkkk")
---			FINISH IRKKK & HUTS
+			self:resizeMapViewport(640, 640)
 		end end,
 		[{"_f","ctrl"}] = function() if config.settings.cheat then
 			self.player.quests["love-melinda"] = nil
@@ -1147,7 +1192,7 @@ function _M:setupCommands()
 		MOVE_STAY = function() if core.key.modState("caps") and self.level then self.level.map:centerViewAround(self.player.x, self.player.y) else if self.player:enoughEnergy() then self.player:describeFloor(self.player.x, self.player.y) self.player:useEnergy() end end end,
 
 		RUN = function()
-			game.log("Run in which direction?")
+			self.log("Run in which direction?")
 			local co = coroutine.create(function()
 				local x, y = self.player:getTarget{type="hit", no_restrict=true, range=1, immediate_keys=true, default_target=self.player}
 				if x and y then self.player:runInit(util.getDir(x, y, self.player.x, self.player.y)) end
@@ -1165,7 +1210,7 @@ function _M:setupCommands()
 					function(_, x, y)
 						local actor = self.level.map(x, y, self.level.map.ACTOR)
 						if actor and actor ~= self.player and self.player:reactionToward(actor) < 0 and
-							self.player:canSee(actor) and game.level.map.seens(x, y) then seen = true end
+							self.player:canSee(actor) and self.level.map.seens(x, y) then seen = true end
 					end, nil)
 				if self.zone.no_autoexplore or self.level.no_autoexplore then
 					self.log("You may not auto-explore this level.")
@@ -1282,7 +1327,7 @@ function _M:setupCommands()
 					self.log("You cannot go into the wilds with the following effects: %s", table.concat(stop, ", "))
 				else
 					-- Do not unpause, the player is allowed first move on next level
-					if e.change_level_check and e:change_level_check(game.player) then return end
+					if e.change_level_check and e:change_level_check(self.player) then return end
 					self:changeLevel(e.change_zone and e.change_level or self.level.level + e.change_level, e.change_zone, e.keep_old_lev, e.force_down, e.change_zone_auto_stairs)
 				end
 			else
@@ -1377,7 +1422,7 @@ function _M:setupCommands()
 		-- Debug dialog
 		DEBUG_MODE = function()
 			if config.settings.cheat then
-				game:registerDialog(require("mod.dialogs.debug.DebugMain").new())
+				self:registerDialog(require("mod.dialogs.debug.DebugMain").new())
 			end
 		end,
 
@@ -1406,13 +1451,13 @@ function _M:setupCommands()
 			local menu menu = require("engine.dialogs.GameMenu").new{
 				"resume",
 				"achievements",
-				{ "Show known Lore", function() game:unregisterDialog(menu) game:registerDialog(require("mod.dialogs.ShowLore").new("Tales of Maj'Eyal Lore", self.player)) end },
+				{ "Show known Lore", function() self:unregisterDialog(menu) self:registerDialog(require("mod.dialogs.ShowLore").new("Tales of Maj'Eyal Lore", self.player)) end },
 				"highscores",
-				{ "Inventory", function() game:unregisterDialog(menu) self.key:triggerVirtual("SHOW_INVENTORY") end },
-				{ "Character Sheet", function() game:unregisterDialog(menu) self.key:triggerVirtual("SHOW_CHARACTER_SHEET") end },
+				{ "Inventory", function() self:unregisterDialog(menu) self.key:triggerVirtual("SHOW_INVENTORY") end },
+				{ "Character Sheet", function() self:unregisterDialog(menu) self.key:triggerVirtual("SHOW_CHARACTER_SHEET") end },
 				"keybinds",
-				{"Graphic Mode", function() game:unregisterDialog(menu) game:registerDialog(require("mod.dialogs.GraphicMode").new()) end},
-				{"Game Options", function() game:unregisterDialog(menu) game:registerDialog(require("mod.dialogs.GameOptions").new()) end},
+				{"Graphic Mode", function() self:unregisterDialog(menu) self:registerDialog(require("mod.dialogs.GraphicMode").new()) end},
+				{"Game Options", function() self:unregisterDialog(menu) self:registerDialog(require("mod.dialogs.GameOptions").new()) end},
 				"video",
 				"sound",
 				"save",
@@ -1425,15 +1470,15 @@ function _M:setupCommands()
 			if self.always_target == true then
 				self.always_target = "health"
 				Map:setViewerFaction(nil)
-				game.log("Showing healthbars only.")
+				self.log("Showing healthbars only.")
 			elseif self.always_target == nil then
 				self.always_target = true
 				Map:setViewerFaction(self.player.faction)
-				game.log("Showing healthbars and tactical borders.")
+				self.log("Showing healthbars and tactical borders.")
 			elseif self.always_target == "health" then
 				self.always_target = nil
 				Map:setViewerFaction(nil)
-				game.log("Showing no tactical information.")
+				self.log("Showing no tactical information.")
 			end
 		end,
 
@@ -1547,7 +1592,7 @@ function _M:setupMouse(reset)
 			self.player:mouseMove(tmx + self.minimap_scroll_x, tmy + self.minimap_scroll_y)
 		elseif button == "right" then
 			local tmx, tmy = math.floor(bx / 4), math.floor(by / 4)
-			game.level.map:moveViewSurround(tmx + self.minimap_scroll_x, tmy + self.minimap_scroll_y, 1000, 1000)
+			self.level.map:moveViewSurround(tmx + self.minimap_scroll_x, tmy + self.minimap_scroll_y, 1000, 1000)
 		end
 	end)
 	-- Chat tooltips
@@ -1585,7 +1630,7 @@ end
 function _M:mouseLeftClick(mx, my)
 	local tmx, tmy = self.level.map:getMouseTile(mx, my)
 	local p = self.player
-	local a = game.level.map(tmx, tmy, Map.ACTOR)
+	local a = self.level.map(tmx, tmy, Map.ACTOR)
 	if not p:canSee(a) then return end
 	if not p.auto_shoot_talent then return end
 	local t = p:getTalentFromId(p.auto_shoot_talent)
@@ -1603,7 +1648,7 @@ end
 function _M:mouseMiddleClick(mx, my)
 	local tmx, tmy = self.level.map:getMouseTile(mx, my)
 	local p = self.player
-	local a = game.level.map(tmx, tmy, Map.ACTOR)
+	local a = self.level.map(tmx, tmy, Map.ACTOR)
 	if not p:canSee(a) then return end
 	if not p.auto_shoot_midclick_talent then return end
 	local t = p:getTalentFromId(p.auto_shoot_midclick_talent)
@@ -1744,7 +1789,7 @@ end
 function _M:playSoundNear(who, name)
 	if who and self.level.map.seens(who.x, who.y) then
 		local pos = {x=0,y=0,z=0}
-		if game.player and game.player.x then pos.x, pos.y = who.x - game.player.x, who.y - game.player.y end
+		if self.player and self.player.x then pos.x, pos.y = who.x - self.player.x, who.y - self.player.y end
 		self:playSound(name, pos)
 	end
 end
@@ -1964,8 +2009,8 @@ function _M:mouseIcon(bx, by)
 
 	if bx < _talents_icon_w then
 		virtual = "TOGGLE_NPC_LIST"
-		key = self.key.binds_remap[virtual] ~= nil and self.key.binds_remap[virtual][1] or game.key:findBoundKeys(virtual)
-		key = (key ~= nil and game.key:formatKeyString(key) or "unbound"):capitalize()
+		key = self.key.binds_remap[virtual] ~= nil and self.key.binds_remap[virtual][1] or self.key:findBoundKeys(virtual)
+		key = (key ~= nil and self.key:formatKeyString(key) or "unbound"):capitalize()
 		if (not self.show_npc_list) then
 			self:tooltipDisplayAtMap(self.w, self.h, "Displaying talents (#{bold}##GOLD#"..key.."#LAST##{normal}#)\nToggle for creature display")
 		else
@@ -1973,8 +2018,8 @@ function _M:mouseIcon(bx, by)
 		end
 	elseif bx < 2*_talents_icon_w then
 		virtual = "SHOW_INVENTORY"
-		key = self.key.binds_remap[virtual] ~= nil and self.key.binds_remap[virtual][1] or game.key:findBoundKeys(virtual)
-		key = (key ~= nil and game.key:formatKeyString(key) or "unbound"):capitalize()
+		key = self.key.binds_remap[virtual] ~= nil and self.key.binds_remap[virtual][1] or self.key:findBoundKeys(virtual)
+		key = (key ~= nil and self.key:formatKeyString(key) or "unbound"):capitalize()
 		if (key == "I") then
 			self:tooltipDisplayAtMap(self.w, self.h, "#{bold}##GOLD#I#LAST##{normal}#nventory")
 		else
@@ -1982,8 +2027,8 @@ function _M:mouseIcon(bx, by)
 		end
 	elseif bx < 3*_talents_icon_w then
 		virtual = "SHOW_CHARACTER_SHEET"
-		key = self.key.binds_remap[virtual] ~= nil and self.key.binds_remap[virtual][1] or game.key:findBoundKeys(virtual)
-		key = (key ~= nil and game.key:formatKeyString(key) or "unbound"):capitalize()
+		key = self.key.binds_remap[virtual] ~= nil and self.key.binds_remap[virtual][1] or self.key:findBoundKeys(virtual)
+		key = (key ~= nil and self.key:formatKeyString(key) or "unbound"):capitalize()
 		if (key == "C") then
 			self:tooltipDisplayAtMap(self.w, self.h, "#{bold}##GOLD#C#LAST##{normal}#haracter Sheet")
 		else
@@ -1991,18 +2036,18 @@ function _M:mouseIcon(bx, by)
 		end
 	elseif bx < 4*_talents_icon_w then
 		virtual = "EXIT"
-		key = self.key.binds_remap[virtual] ~= nil and self.key.binds_remap[virtual][1] or game.key:findBoundKeys(virtual)
-		key = (key ~= nil and game.key:formatKeyString(key) or "unbound"):capitalize()
+		key = self.key.binds_remap[virtual] ~= nil and self.key.binds_remap[virtual][1] or self.key:findBoundKeys(virtual)
+		key = (key ~= nil and self.key:formatKeyString(key) or "unbound"):capitalize()
 		self:tooltipDisplayAtMap(self.w, self.h, "Main menu (#{bold}##GOLD#"..key.."#LAST##{normal}#)")
 	elseif bx < 5*_talents_icon_w then
 		virtual = "SHOW_MESSAGE_LOG"
-		key = self.key.binds_remap[virtual] ~= nil and self.key.binds_remap[virtual][1] or game.key:findBoundKeys(virtual)
-		key = (key ~= nil and game.key:formatKeyString(key) or "unbound"):capitalize()
+		key = self.key.binds_remap[virtual] ~= nil and self.key.binds_remap[virtual][1] or self.key:findBoundKeys(virtual)
+		key = (key ~= nil and self.key:formatKeyString(key) or "unbound"):capitalize()
 		self:tooltipDisplayAtMap(self.w, self.h, "Show message/chat log (#{bold}##GOLD#"..key.."#LAST##{normal}#)")
 	elseif bx < 6*_talents_icon_w then
 		virtual = "TOGGLE_BUMP_ATTACK"
-		key = self.key.binds_remap[virtual] ~= nil and self.key.binds_remap[virtual][1] or game.key:findBoundKeys(virtual)
-		key = (key ~= nil and game.key:formatKeyString(key) or "unbound"):capitalize()
+		key = self.key.binds_remap[virtual] ~= nil and self.key.binds_remap[virtual][1] or self.key:findBoundKeys(virtual)
+		key = (key ~= nil and self.key:formatKeyString(key) or "unbound"):capitalize()
 		if (not config.settings.tome.actor_based_movement_mode and not self.bump_attack_disabled) or (config.settings.tome.actor_based_movement_mode and not self.player.bump_attack_disabled) then
 			self:tooltipDisplayAtMap(self.w, self.h, "Movement: #LIGHT_GREEN#Default#LAST# (#{bold}##GOLD#"..key.."#LAST##{normal}#)\nToggle for passive mode")
 		else

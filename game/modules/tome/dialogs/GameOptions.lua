@@ -226,6 +226,32 @@ function _M:generateList()
 		self.c_list:drawItem(item)
 	end,}
 
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Number of rows to show in the icons hotkeys toolbar.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Icons hotkey toolbar rows#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.tome.hotkey_icons_rows)
+	end, fct=function(item)
+		game:registerDialog(GetQuantity.new("Number of icons rows", "From 1 to 4", config.settings.tome.hotkey_icons_rows, 4, function(qty)
+			qty = util.bound(qty, 1, 4)
+			game:saveSettings("tome.hotkey_icons_rows", ("tome.hotkey_icons_rows = %d\n"):format(qty))
+			config.settings.tome.hotkey_icons_rows = qty
+			game:resizeIconsHotkeysToolbar()
+			self.c_list:drawItem(item)
+		end, 1))
+	end,}
+
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Size of the icons in the hotkeys toolbar.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Icons hotkey toolbar icon size#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.tome.hotkey_icons_size)
+	end, fct=function(item)
+		game:registerDialog(GetQuantity.new("Icons size", "From 32 to 64", config.settings.tome.hotkey_icons_size, 64, function(qty)
+			qty = util.bound(qty, 32, 64)
+			game:saveSettings("tome.hotkey_icons_size", ("tome.hotkey_icons_size = %d\n"):format(qty))
+			config.settings.tome.hotkey_icons_size = qty
+			game:resizeIconsHotkeysToolbar()
+			self.c_list:drawItem(item)
+		end, 32))
+	end,}
+
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"New games begin with some talent points auto-assigned.#WHITE#"}
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Auto-assign talent points at birth#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.tome.autoassign_talents_on_birth and "enabled" or "disabled")

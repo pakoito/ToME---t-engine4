@@ -80,13 +80,17 @@ faction_danger_check = function(self, e) return e.unique end
 -- @param fontname font parameters, can be nil
 -- @param fontsize font parameters, can be nil
 function _M:setViewPort(x, y, w, h, tile_w, tile_h, fontname, fontsize, allow_backcolor)
+	local otw, oth = self.tile_w, self.tile_h
+	local ovw, ovh = self.viewport and self.viewport.width, self.viewport and self.viewport.height
+
 	self.allow_backcolor = allow_backcolor
 	self.display_x, self.display_y = math.floor(x), math.floor(y)
 	self.viewport = {width=math.floor(w), height=math.floor(h), mwidth=math.floor(w/tile_w), mheight=math.floor(h/tile_h)}
 	self.tile_w, self.tile_h = tile_w, tile_h
 	self.fontname, self.fontsize = fontname, fontsize
-	self:resetTiles()
 	self.zoom = 1
+
+	if otw ~= self.tile_w or oth ~= self.tile_h then print("[MAP] Reseting tiles caches") self:resetTiles() end
 end
 
 --- Sets zoom level
