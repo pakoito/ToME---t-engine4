@@ -581,7 +581,7 @@ function _M:checkAllEntities(x, y, what, ...)
 	end
 end
 
---- Check all entities of the grid for a property, discarding the results
+--- Check all entities of the grid for a property
 -- This will iterate over all entities without stopping.
 -- No guaranty is given about the iteration order
 -- @param x position
@@ -603,6 +603,34 @@ function _M:checkAllEntitiesNoStop(x, y, what, ...)
 			local e = tile[keys[i]]
 			if e then
 				ret[e] = e:check(what, x, y, ...)
+			end
+		end
+	end
+	return ret
+end
+
+--- Check all entities of the grid for a property
+-- This will iterate over all entities without stopping.
+-- No guaranty is given about the iteration order
+-- @param x position
+-- @param y position
+-- @param what property to check
+-- @return a table containing all return values, indexed by a list of {layer, entity}
+function _M:checkAllEntitiesLayersNoStop(x, y, what, ...)
+	if not x or not y or x < 0 or x >= self.w or y < 0 or y >= self.h then return {} end
+	local ret = {}
+	local tile = self.map[x + y * self.w]
+	if tile then
+		-- Collect the keys so we can modify the table while iterating
+		local keys = {}
+		for k, _ in pairs(tile) do
+			table.insert(keys, k)
+		end
+		-- Now iterate over the stored keys, checking if the entry exists
+		for i = 1, #keys do
+			local e = tile[keys[i]]
+			if e then
+				ret[{keys[i],e}] = e:check(what, x, y, ...)
 			end
 		end
 	end

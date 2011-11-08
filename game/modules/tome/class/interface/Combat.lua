@@ -48,6 +48,12 @@ function _M:bumpInto(target, x, y)
 		elseif self.move_others and not target.cant_be_moved then
 			if target.move_others and self ~= game.player then return end
 
+			-- Check we can both walk in the tile we will end up in
+			local blocks = game.level.map:checkAllEntitiesLayersNoStop(target.x, target.y, "block_move", self)
+			for kind, v in pairs(blocks) do if kind[1] ~= Map.ACTOR and v then return end end
+			blocks = game.level.map:checkAllEntitiesLayersNoStop(self.x, self.y, "block_move", target)
+			for kind, v in pairs(blocks) do if kind[1] ~= Map.ACTOR and v then return end end
+
 			-- Displace
 			local tx, ty, sx, sy = target.x, target.y, self.x, self.y
 			target.x = nil target.y = nil
