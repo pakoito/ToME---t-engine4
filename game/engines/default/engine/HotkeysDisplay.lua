@@ -68,7 +68,7 @@ function _M:resize(x, y, w, h)
 	end
 end
 
-local page_to_hotkey = {"", "SECOND_", "THIRD_", "FOURTH_"}
+local page_to_hotkey = {"", "SECOND_", "THIRD_", "FOURTH_", "FIFTH_"}
 
 -- Displays the hotkeys, keybinds & cooldowns
 function _M:display()

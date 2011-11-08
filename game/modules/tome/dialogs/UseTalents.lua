@@ -72,55 +72,8 @@ Right click or press '*' to configure.
 		end,
 		_ASTERISK = function() self:use(self.cur_item, "right") end,
 	}
+	engine.interface.PlayerHotkeys:bindAllHotkeys(self.key, function(i) self:defineHotkey(i) end)
 	self.key:addBinds{
-		HOTKEY_1 = function() self:defineHotkey(1) end,
-		HOTKEY_2 = function() self:defineHotkey(2) end,
-		HOTKEY_3 = function() self:defineHotkey(3) end,
-		HOTKEY_4 = function() self:defineHotkey(4) end,
-		HOTKEY_5 = function() self:defineHotkey(5) end,
-		HOTKEY_6 = function() self:defineHotkey(6) end,
-		HOTKEY_7 = function() self:defineHotkey(7) end,
-		HOTKEY_8 = function() self:defineHotkey(8) end,
-		HOTKEY_9 = function() self:defineHotkey(9) end,
-		HOTKEY_10 = function() self:defineHotkey(10) end,
-		HOTKEY_11 = function() self:defineHotkey(11) end,
-		HOTKEY_12 = function() self:defineHotkey(12) end,
-		HOTKEY_SECOND_1 = function() self:defineHotkey(13) end,
-		HOTKEY_SECOND_2 = function() self:defineHotkey(14) end,
-		HOTKEY_SECOND_3 = function() self:defineHotkey(15) end,
-		HOTKEY_SECOND_4 = function() self:defineHotkey(16) end,
-		HOTKEY_SECOND_5 = function() self:defineHotkey(17) end,
-		HOTKEY_SECOND_6 = function() self:defineHotkey(18) end,
-		HOTKEY_SECOND_7 = function() self:defineHotkey(19) end,
-		HOTKEY_SECOND_8 = function() self:defineHotkey(20) end,
-		HOTKEY_SECOND_9 = function() self:defineHotkey(21) end,
-		HOTKEY_SECOND_10 = function() self:defineHotkey(22) end,
-		HOTKEY_SECOND_11 = function() self:defineHotkey(23) end,
-		HOTKEY_SECOND_12 = function() self:defineHotkey(24) end,
-		HOTKEY_THIRD_1 = function() self:defineHotkey(25) end,
-		HOTKEY_THIRD_2 = function() self:defineHotkey(26) end,
-		HOTKEY_THIRD_3 = function() self:defineHotkey(27) end,
-		HOTKEY_THIRD_4 = function() self:defineHotkey(28) end,
-		HOTKEY_THIRD_5 = function() self:defineHotkey(29) end,
-		HOTKEY_THIRD_6 = function() self:defineHotkey(30) end,
-		HOTKEY_THIRD_7 = function() self:defineHotkey(31) end,
-		HOTKEY_THIRD_8 = function() self:defineHotkey(32) end,
-		HOTKEY_THIRD_9 = function() self:defineHotkey(33) end,
-		HOTKEY_THIRD_10 = function() self:defineHotkey(34) end,
-		HOTKEY_THIRD_11 = function() self:defineHotkey(35) end,
-		HOTKEY_THIRD_12 = function() self:defineHotkey(36) end,
-		HOTKEY_FOURTH_1 = function() self:defineHotkey(37) end,
-		HOTKEY_FOURTH_2 = function() self:defineHotkey(38) end,
-		HOTKEY_FOURTH_3 = function() self:defineHotkey(39) end,
-		HOTKEY_FOURTH_4 = function() self:defineHotkey(40) end,
-		HOTKEY_FOURTH_5 = function() self:defineHotkey(41) end,
-		HOTKEY_FOURTH_6 = function() self:defineHotkey(42) end,
-		HOTKEY_FOURTH_7 = function() self:defineHotkey(43) end,
-		HOTKEY_FOURTH_8 = function() self:defineHotkey(44) end,
-		HOTKEY_FOURTH_9 = function() self:defineHotkey(45) end,
-		HOTKEY_FOURTH_10 = function() self:defineHotkey(46) end,
-		HOTKEY_FOURTH_11 = function() self:defineHotkey(47) end,
-		HOTKEY_FOURTH_12 = function() self:defineHotkey(48) end,
 		EXIT = function() game:unregisterDialog(self) end,
 	}
 end
@@ -134,7 +87,7 @@ function _M:defineHotkey(id)
 	local item = self.cur_item
 	if not item or not item.talent then return end
 
-	for i = 1, 48 do
+	for i = 1, 12 * self.actor.nb_hotkey_pages do
 		if self.actor.hotkey[i] and self.actor.hotkey[i][1] == "talent" and self.actor.hotkey[i][2] == item.talent then self.actor.hotkey[i] = nil end
 	end
 
@@ -179,11 +132,11 @@ function _M:use(item, button)
 		else table.insert(list, 1, {name="Enable automatic use", what="auto-en"})
 		end
 
-		for i = 1, 48 do list[#list+1] = {name="Hotkey "..i, what=i} end
+		for i = 1, 12 * self.actor.nb_hotkey_pages do list[#list+1] = {name="Hotkey "..i, what=i} end
 		Dialog:listPopup("Bind talent: "..item.name:toString(), "How do you want to bind this talent?", list, 400, 500, function(b)
 			if not b then return end
 			if type(b.what) == "number" then
-				for i = 1, 48 do
+				for i = 1, 12 * self.actor.nb_hotkey_pages do
 					if self.actor.hotkey[i] and self.actor.hotkey[i][1] == "talent" and self.actor.hotkey[i][2] == item.talent then self.actor.hotkey[i] = nil end
 				end
 				self.actor.hotkey[b.what] = {"talent", item.talent}
@@ -197,7 +150,7 @@ function _M:use(item, button)
 			elseif b.what == "unbind" then
 				if self.actor.auto_shoot_talent == item.talent then self.actor.auto_shoot_talent = nil end
 				if self.actor.auto_shoot_midclick_talent == item.talent then self.actor.auto_shoot_midclick_talent = nil end
-				for i = 1, 48 do
+				for i = 1, 12 * self.actor.nb_hotkey_pages do
 					if self.actor.hotkey[i] and self.actor.hotkey[i][1] == "talent" and self.actor.hotkey[i][2] == item.talent then self.actor.hotkey[i] = nil end
 				end
 			elseif b.what == "auto-en" then
@@ -249,7 +202,7 @@ function _M:generateList()
 					desc=self.actor:getTalentFullDescription(t),
 					color=function() return {0xFF, 0xFF, 0xFF} end,
 					hotkey=function(item)
-						for i = 1, 48 do if self.actor.hotkey[i] and self.actor.hotkey[i][1] == "talent" and self.actor.hotkey[i][2] == item.talent then
+						for i = 1, 12 * self.actor.nb_hotkey_pages do if self.actor.hotkey[i] and self.actor.hotkey[i][1] == "talent" and self.actor.hotkey[i][2] == item.talent then
 							return "H.Key "..i..""
 						end end
 						return ""
@@ -306,7 +259,7 @@ function _M:generateList()
 				desc=self.actor:getTalentFullDescription(t),
 				color=function() return {0xFF, 0xFF, 0xFF} end,
 				hotkey=function(item)
-					for i = 1, 48 do if self.actor.hotkey[i] and self.actor.hotkey[i][1] == "talent" and self.actor.hotkey[i][2] == item.talent then
+					for i = 1, 12 * self.actor.nb_hotkey_pages do if self.actor.hotkey[i] and self.actor.hotkey[i][1] == "talent" and self.actor.hotkey[i][2] == item.talent then
 						return "H.Key "..i..""
 					end end
 					return ""

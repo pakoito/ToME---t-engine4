@@ -313,6 +313,80 @@ defineAction{
 	name = "Fourth Hotkey 12",
 }
 
+-- Alt + Shift + Hotkeys
+defineAction{
+	default = { "sym:_1:false:true:true:false" },
+	type = "HOTKEY_FIFTH_1",
+	group = "hotkeys",
+	name = "Fifth Hotkey 1",
+}
+defineAction{
+	default = { "sym:_2:false:true:true:false" },
+	type = "HOTKEY_FIFTH_2",
+	group = "hotkeys",
+	name = "Fifth Hotkey 2",
+}
+defineAction{
+	default = { "sym:_3:false:true:true:false" },
+	type = "HOTKEY_FIFTH_3",
+	group = "hotkeys",
+	name = "Fifth Hotkey 3",
+}
+defineAction{
+	default = { "sym:_4:false:true:true:false" },
+	type = "HOTKEY_FIFTH_4",
+	group = "hotkeys",
+	name = "Fifth Hotkey 4",
+}
+defineAction{
+	default = { "sym:_5:false:true:true:false" },
+	type = "HOTKEY_FIFTH_5",
+	group = "hotkeys",
+	name = "Fifth Hotkey 5",
+}
+defineAction{
+	default = { "sym:_6:false:true:true:false" },
+	type = "HOTKEY_FIFTH_6",
+	group = "hotkeys",
+	name = "Fifth Hotkey 6",
+}
+defineAction{
+	default = { "sym:_7:false:true:true:false" },
+	type = "HOTKEY_FIFTH_7",
+	group = "hotkeys",
+	name = "Fifth Hotkey 7",
+}
+defineAction{
+	default = { "sym:_8:false:true:true:false" },
+	type = "HOTKEY_FIFTH_8",
+	group = "hotkeys",
+	name = "Fifth Hotkey 8",
+}
+defineAction{
+	default = { "sym:_9:false:true:true:false" },
+	type = "HOTKEY_FIFTH_9",
+	group = "hotkeys",
+	name = "Fifth Hotkey 9",
+}
+defineAction{
+	default = { "sym:_0:false:true:true:false" },
+	type = "HOTKEY_FIFTH_10",
+	group = "hotkeys",
+	name = "Fifth Hotkey 10",
+}
+defineAction{
+	default = { "sym:_MINUS:false:true:true:false" },
+	type = "HOTKEY_FIFTH_11",
+	group = "hotkeys",
+	name = "Fifth Hotkey 11",
+}
+defineAction{
+	default = { "sym:_EQUALS:false:true:true:false" },
+	type = "HOTKEY_FIFTH_12",
+	group = "hotkeys",
+	name = "Fifth Hotkey 12",
+}
+
 defineAction{
 	default = { "sym:_PAGEUP:false:false:false:false" },
 	type = "HOTKEY_PREV_PAGE",

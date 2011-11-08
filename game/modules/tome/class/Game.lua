@@ -1144,7 +1144,7 @@ function _M:setupCommands()
 	self.gestures = Gestures.new("Gesture: ", self.key, true)
 
 	-- Helper function to not allow some actions on the wilderness map
-	local not_wild = function(f) return function() if self.zone and not self.zone.wilderness then f() else self.logPlayer(self.player, "You cannot do that on the world map.") end end end
+	local not_wild = function(f) return function(...) if self.zone and not self.zone.wilderness then f(...) else self.logPlayer(self.player, "You cannot do that on the world map.") end end end
 
 	-- Debug mode
 	self.key:addCommands{
@@ -1241,54 +1241,7 @@ function _M:setupCommands()
 		ATTACK_OR_MOVE_RIGHT_DOWN = function() self.player:attackOrMoveDir(3) end,
 
 		-- Hotkeys
-		HOTKEY_1 = not_wild(function() self.player:activateHotkey(1) end),
-		HOTKEY_2 = not_wild(function() self.player:activateHotkey(2) end),
-		HOTKEY_3 = not_wild(function() self.player:activateHotkey(3) end),
-		HOTKEY_4 = not_wild(function() self.player:activateHotkey(4) end),
-		HOTKEY_5 = not_wild(function() self.player:activateHotkey(5) end),
-		HOTKEY_6 = not_wild(function() self.player:activateHotkey(6) end),
-		HOTKEY_7 = not_wild(function() self.player:activateHotkey(7) end),
-		HOTKEY_8 = not_wild(function() self.player:activateHotkey(8) end),
-		HOTKEY_9 = not_wild(function() self.player:activateHotkey(9) end),
-		HOTKEY_10 = not_wild(function() self.player:activateHotkey(10) end),
-		HOTKEY_11 = not_wild(function() self.player:activateHotkey(11) end),
-		HOTKEY_12 = not_wild(function() self.player:activateHotkey(12) end),
-		HOTKEY_SECOND_1 = not_wild(function() self.player:activateHotkey(13) end),
-		HOTKEY_SECOND_2 = not_wild(function() self.player:activateHotkey(14) end),
-		HOTKEY_SECOND_3 = not_wild(function() self.player:activateHotkey(15) end),
-		HOTKEY_SECOND_4 = not_wild(function() self.player:activateHotkey(16) end),
-		HOTKEY_SECOND_5 = not_wild(function() self.player:activateHotkey(17) end),
-		HOTKEY_SECOND_6 = not_wild(function() self.player:activateHotkey(18) end),
-		HOTKEY_SECOND_7 = not_wild(function() self.player:activateHotkey(19) end),
-		HOTKEY_SECOND_8 = not_wild(function() self.player:activateHotkey(20) end),
-		HOTKEY_SECOND_9 = not_wild(function() self.player:activateHotkey(21) end),
-		HOTKEY_SECOND_10 = not_wild(function() self.player:activateHotkey(22) end),
-		HOTKEY_SECOND_11 = not_wild(function() self.player:activateHotkey(23) end),
-		HOTKEY_SECOND_12 = not_wild(function() self.player:activateHotkey(24) end),
-		HOTKEY_THIRD_1 = not_wild(function() self.player:activateHotkey(25) end),
-		HOTKEY_THIRD_2 = not_wild(function() self.player:activateHotkey(26) end),
-		HOTKEY_THIRD_3 = not_wild(function() self.player:activateHotkey(27) end),
-		HOTKEY_THIRD_4 = not_wild(function() self.player:activateHotkey(28) end),
-		HOTKEY_THIRD_5 = not_wild(function() self.player:activateHotkey(29) end),
-		HOTKEY_THIRD_6 = not_wild(function() self.player:activateHotkey(30) end),
-		HOTKEY_THIRD_7 = not_wild(function() self.player:activateHotkey(31) end),
-		HOTKEY_THIRD_8 = not_wild(function() self.player:activateHotkey(32) end),
-		HOTKEY_THIRD_9 = not_wild(function() self.player:activateHotkey(33) end),
-		HOTKEY_THIRD_10 = not_wild(function() self.player:activateHotkey(34) end),
-		HOTKEY_THIRD_11 = not_wild(function() self.player:activateHotkey(35) end),
-		HOTKEY_THIRD_12 = not_wild(function() self.player:activateHotkey(36) end),
-		HOTKEY_FOURTH_1 = not_wild(function() self.player:activateHotkey(37) end),
-		HOTKEY_FOURTH_2 = not_wild(function() self.player:activateHotkey(38) end),
-		HOTKEY_FOURTH_3 = not_wild(function() self.player:activateHotkey(39) end),
-		HOTKEY_FOURTH_4 = not_wild(function() self.player:activateHotkey(40) end),
-		HOTKEY_FOURTH_5 = not_wild(function() self.player:activateHotkey(41) end),
-		HOTKEY_FOURTH_6 = not_wild(function() self.player:activateHotkey(42) end),
-		HOTKEY_FOURTH_7 = not_wild(function() self.player:activateHotkey(43) end),
-		HOTKEY_FOURTH_8 = not_wild(function() self.player:activateHotkey(44) end),
-		HOTKEY_FOURTH_9 = not_wild(function() self.player:activateHotkey(45) end),
-		HOTKEY_FOURTH_10 = not_wild(function() self.player:activateHotkey(46) end),
-		HOTKEY_FOURTH_11 = not_wild(function() self.player:activateHotkey(47) end),
-		HOTKEY_FOURTH_12 = not_wild(function() self.player:activateHotkey(48) end),
+		-- bindings done after
 		HOTKEY_PREV_PAGE = not_wild(function() self.player:prevHotkeyPage() self.log("Hotkey page %d is now displayed.", self.player.hotkey_page) end),
 		HOTKEY_NEXT_PAGE = not_wild(function() self.player:nextHotkeyPage() self.log("Hotkey page %d is now displayed.", self.player.hotkey_page) end),
 
@@ -1511,6 +1464,7 @@ function _M:setupCommands()
 			end
 		end
 	}
+	engine.interface.PlayerHotkeys:bindAllHotkeys(self.key, not_wild(function(i) self.player:activateHotkey(i) end))
 
 	self.key:setCurrent()
 end

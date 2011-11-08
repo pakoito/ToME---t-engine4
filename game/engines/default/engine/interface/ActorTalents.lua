@@ -279,7 +279,7 @@ function _M:learnTalent(t_id, force, nb)
 			if position and not self.hotkey[position] then
 				self.hotkey[position] = {"talent", t_id}
 			else
-				for i = 1, 48 do
+				for i = 1, 12 * self.nb_hotkey_pages do
 					if not self.hotkey[i] then
 						self.hotkey[i] = {"talent", t_id}
 						break

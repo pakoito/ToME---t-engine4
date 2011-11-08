@@ -28,6 +28,8 @@ module(..., package.seeall, class.make)
 _M.quickhotkeys = {}
 _M.quickhotkeys_specifics = {}
 
+_M.nb_hotkey_pages = 5
+
 function _M:init(t)
 	self.hotkey = self.hotkey or {}
 	self.hotkey_page = self.hotkey_page or 1
@@ -72,7 +74,7 @@ function _M:sortHotkeys()
 						sorted[hotkey_type][hotkey_name] = true
 
 						-- Remove from old
-						for z = 1, 48 do if old[z] and old[z][1] == hotkey_type and old[z][2] == hotkey_name then old[z] = nil break end end
+						for z = 1, 12 * self.nb_hotkey_pages do if old[z] and old[z][1] == hotkey_type and old[z][2] == hotkey_name then old[z] = nil break end end
 					end
 				end
 			end
@@ -86,9 +88,9 @@ function _M:sortHotkeys()
 	if self == game:getPlayer(true) then sort_hotkeys(_M.quickhotkeys["Player: Global"]) end
 
 	-- Read all the rest
-	for j = 1, 48 do
+	for j = 1, 12 * self.nb_hotkey_pages do
 		if old[j] then
-			for i = 1, 48 do if not self.hotkey[i] then
+			for i = 1, 12 * self.nb_hotkey_pages do if not self.hotkey[i] then
 				self.hotkey[i] = old[j]
 				print("[SORTING HOTKEYS]" .. " actor = " .. ("%q"):format(self.name) .. " - added back", old[j][2], i)
 				break
@@ -126,12 +128,12 @@ end
 
 --- Switch to previous hotkey page
 function _M:prevHotkeyPage()
-	self.hotkey_page = util.boundWrap(self.hotkey_page - 1, 1, 4)
+	self.hotkey_page = util.boundWrap(self.hotkey_page - 1, 1, self.nb_hotkey_pages)
 	self.changed = true
 end
 --- Switch to next hotkey page
 function _M:nextHotkeyPage()
-	self.hotkey_page = util.boundWrap(self.hotkey_page + 1, 1, 4)
+	self.hotkey_page = util.boundWrap(self.hotkey_page + 1, 1, self.nb_hotkey_pages)
 	self.changed = true
 end
 --- Switch to hotkey page
@@ -150,7 +152,7 @@ function _M:hotkeyAutoTalents()
 	for tid, _ in pairs(self.talents) do
 		local t = self:getTalentFromId(tid)
 		if (t.mode == "activated" or t.mode == "sustained") and not already_hotkeyed[tid] and not t.ignored_by_hotkeyautotalents then
-			for i = 1, 48 do
+			for i = 1, 12 * self.nb_hotkey_pages do
 				if not self.hotkey[i] then
 					self.hotkey[i] = {"talent", tid}
 					break
@@ -243,4 +245,14 @@ function _M:updateQuickHotkeys(actor)
 			end
 		end
 	end
+end
+
+local page_to_hotkey = {"", "SECOND_", "THIRD_", "FOURTH_", "FIFTH_"}
+
+function _M:bindAllHotkeys(key, fct)
+	for page = 1, self.nb_hotkey_pages do for x = 1, 12 do
+		local i = x + (page - 1) * 12
+		local k = "HOTKEY_"..page_to_hotkey[page]..x
+		key:addBind(k, function() fct(i) end)
+	end end
 end
