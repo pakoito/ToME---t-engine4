@@ -28,6 +28,7 @@ newTalent{
 	tactical = { PARADOX = 2 },
 	no_npc_use = true,
 	no_energy = true,
+	no_unlearn_last = true,
 	getAnomaly = function(self, t) return 6 - (self:getTalentLevelRaw(self.T_STATIC_HISTORY) or 0) end,
 	getPower = function(self, t) return math.floor(self:getWil()/2) end,
 	action = function(self, t)
@@ -96,14 +97,14 @@ newTalent{
 		if self:hasEffect(self.T_PRECOGNITION) then
 			save_bonus = save_bonus * 2
 		end
-		
+
 		local mental_save, physical_save, spell_save, defense_bonus = 0
 		if type == "mental" then mental_save = save_bonus end
 		if type == "physical" then physical_save = save_bonus end
-		if type == "spell" then spell_save = save_bonus end		
-		if type == "defense" then defense_bonus = save_bonus end		
+		if type == "spell" then spell_save = save_bonus end
+		if type == "defense" then defense_bonus = save_bonus end
 		print("Spin Fate", type, mental_save, physical_save, spell_save, defense_bonus)
-		
+
 		self:setEffect(self.EFF_SPIN_FATE, t.getDuration(self, t), {max_bonus = t.getSaveBonus(self, t) * 10, defense = defense_bonus, mental = mental_save, physical = physical_save, spell = spell_save})
 		return true
 	end,
@@ -159,7 +160,7 @@ newTalent{
 		-- clear the chronoworlds and the timed effect
 		if game._chronoworlds then game._chronoworlds = nil end
 		game.player.tmp[self.EFF_PRECOGNITION] = nil
-		
+
 		-- check for Spin Fate
 		local eff = self:hasEffect(self.EFF_SPIN_FATE)
 		local mental_power, physical_power, spell_power, accuracy = 0
@@ -170,7 +171,7 @@ newTalent{
 			spell_power = (eff.cur_spell or eff.spell) * percentage
 			accuracy_power = (eff.cur_defense or eff.defense) * percentage
 		end
-							
+
 		self:setEffect(self.EFF_PRESCIENCE, t.getDuration(self, t), {detect=t.getDetection(self, t), mental=mental_power, physical=physical_power, spell=spell_power, accuracy=accuracy_power})
 		if self:knowTalent(self.T_FORESIGHT) then
 			local t = self:getTalentFromId(self.T_FORESIGHT)
@@ -183,7 +184,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local percent = t.getPercentage(self, t)
 		return ([[While under the affects of Precognition you may use Moment of Prescience to cancel it, walking the timeline exactly as you did before to reach the present.
-		Doing so will pull your awareness fully into the moment, increasing your stealth detection and see invisibility by %d for %d turns. 
+		Doing so will pull your awareness fully into the moment, increasing your stealth detection and see invisibility by %d for %d turns.
 		If you have Spin Fate going when you cast this spell you'll gain %d%% of your spin as accuracy, attack power, spell power, or mind power as appropriate.
 		This spell takes no time to cast.]]):
 		format(detect, duration, percent)

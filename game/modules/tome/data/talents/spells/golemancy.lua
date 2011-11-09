@@ -140,6 +140,7 @@ newTalent{
 	cooldown = 20,
 	mana = 10,
 	no_npc_use = true,
+	no_unlearn_last = true,
 	getHeal = function(self, t)
 		local ammo = self:hasAlchemistWeapon()
 		return 50 + self:combatTalentSpellDamage(self.T_GOLEM_POWER, 15, 550, ((ammo and ammo.alchemist_power or 0) + self:combatSpellpower()) / 2)

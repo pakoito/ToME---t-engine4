@@ -26,6 +26,7 @@ newTalent{
 	hide = true,
 	mode = "passive",
 	points = 1,
+	no_unlearn_last = true,
 	getDamage = function(self, t) return self.level * 0.5 end,
 	on_learn = function(self, t)
 		self.combat.sound = "actions/melee"

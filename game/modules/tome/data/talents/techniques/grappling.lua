@@ -27,6 +27,7 @@ newTalent{
 	tactical = { BUFF = 2 },
 	type_no_req = true,
 	no_npc_use = true, -- They dont need it since it auto switches anyway
+	no_unlearn_last = true,
 	getSave = function(self, t) return self:getStr(20, true) end,
 	getDamage = function(self, t) return self:getStr(10, true) end,
 	activate = function(self, t)

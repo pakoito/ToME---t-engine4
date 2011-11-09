@@ -24,6 +24,7 @@ newTalent{
 	points = 1,
 	mana = 30,
 	no_npc_use = true,
+	no_unlearn_last = true,
 	make_gem = function(self, t, base_define)
 		local nb = rng.range(40, 80)
 		local gem = game.zone:makeEntityByName(game.level, "object", "ALCHEMIST_" .. base_define)
