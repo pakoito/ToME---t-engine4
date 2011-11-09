@@ -72,7 +72,7 @@ function _M:use(item)
 	elseif act == "order" then game.party:giveOrders(item.actor)
 	elseif act == "change_level" then game.key:triggerVirtual("CHANGE_LEVEL")
 	elseif act == "pickup" then game.key:triggerVirtual("PICKUP_FLOOR")
-	elseif act == "character_sheet" then game.key:triggerVirtual("SHOW_CHARACTER_SHEET")
+	elseif act == "character_sheet" then game:registerDialog(require("mod.dialogs.CharacterSheet").new(item.actor))
 	elseif act == "quests" then game.key:triggerVirtual("SHOW_QUESTS")
 	elseif act == "levelup" then game.key:triggerVirtual("LEVELUP")
 	elseif act == "inventory" then game.key:triggerVirtual("SHOW_INVENTORY")
@@ -118,8 +118,8 @@ function _M:generateList()
 	if a and not self.on_player and game.party:canOrder(a, false) then list[#list+1] = {name="Give order", action="order", color=colors.simple(colors.TEAL), actor=a} end
 	if self.on_player then list[#list+1] = {name="Rest a while", action="rest", color=colors.simple(colors.ANTIQUE_WHITE)} end
 	if self.on_player then list[#list+1] = {name="Inventory", action="inventory", color=colors.simple(colors.ANTIQUE_WHITE)} end
-	if self.on_player then list[#list+1] = {name="Character Sheet", action="character_sheet", color=colors.simple(colors.ANTIQUE_WHITE)} end
 	if self.on_player then list[#list+1] = {name="Quest Log", action="quests", color=colors.simple(colors.ANTIQUE_WHITE)} end
+	if a then list[#list+1] = {name="Inspect Creature", action="character_sheet", color=colors.simple(colors.ANTIQUE_WHITE), actor=a} end
 	if not self.on_player and a and profile.auth and profile.hash_valid then list[#list+1] = {name="Link creature in chat", action="chat-link"} end
 	if self.on_player and (player.unused_stats > 0 or player.unused_talents > 0 or player.unused_generics > 0 or player.unused_talents_types > 0) then list[#list+1] = {name="Levelup!", action="levelup", color=colors.simple(colors.YELLOW)} end
 

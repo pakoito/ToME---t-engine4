@@ -306,9 +306,9 @@ function _M:drawDialog(kind, actor_to_compare)
 		local cur_exp, max_exp = player.exp, player:getExpChart(player.level+1)
 		h = 0
 		w = 0
-		s:drawStringBlended(self.font, "Sex  : "..(player.descriptor.sex or (player.female and "Female" or "Male")), w, h, 0, 200, 255, true) h = h + self.font_h
-		s:drawStringBlended(self.font, "Race : "..(player.descriptor.subrace or player.type:capitalize()), w, h, 0, 200, 255, true) h = h + self.font_h
-		s:drawStringBlended(self.font, "Class: "..(player.descriptor.subclass or player.subtype:capitalize()), w, h, 0, 200, 255, true) h = h + self.font_h
+		s:drawStringBlended(self.font, "Sex  : "..((player.descriptor and player.descriptor.sex) or (player.female and "Female" or "Male")), w, h, 0, 200, 255, true) h = h + self.font_h
+		s:drawStringBlended(self.font, (player.descriptor and "Race : " or "Type : ")..((player.descriptor and player.descriptor.subrace) or player.type:capitalize()), w, h, 0, 200, 255, true) h = h + self.font_h
+		s:drawStringBlended(self.font, (player.descriptor and "Class: " or "Stype: ")..((player.descriptor and player.descriptor.subclass) or player.subtype:capitalize()), w, h, 0, 200, 255, true) h = h + self.font_h
 		s:drawStringBlended(self.font, "Size : "..(player:TextSizeCategory():capitalize()), w, h, 0, 200, 255, true) h = h + self.font_h
 
 		h = h + self.font_h
@@ -375,8 +375,10 @@ function _M:drawDialog(kind, actor_to_compare)
 		text = compare_fields(player, actor_to_compare, function(actor) return actor.combat_physspeed - 1 end, "%.2f%%", "%+.2f%%", 100)
 		self:mouseTooltip(self.TOOLTIP_SPEED_ATTACK,   s:drawColorStringBlended(self.font, ("Attack speed  : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
 		h = h + self.font_h
-		text = compare_fields(player, actor_to_compare, function(actor) return #actor.died_times end, "%3d", "%+.0f")
-		self:mouseTooltip(self.TOOLTIP_LIVES,       s:drawColorStringBlended(self.font, ("Times died     : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
+		if player.died_times then
+			text = compare_fields(player, actor_to_compare, function(actor) return #actor.died_times end, "%3d", "%+.0f")
+			self:mouseTooltip(self.TOOLTIP_LIVES,       s:drawColorStringBlended(self.font, ("Times died     : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
+		end
 		if player.easy_mode_lifes then
 			text = compare_fields(player, actor_to_compare, "easy_mode_lifes", "%3d", "%+.0f")
 			self:mouseTooltip(self.TOOLTIP_LIVES, s:drawColorStringBlended(self.font,   ("Lives left     : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
@@ -670,7 +672,7 @@ function _M:drawDialog(kind, actor_to_compare)
 				end
 			end
 		end
-		
+
 		local inc_damage_actor_types = {}
 		if player.inc_damage_actor_type then
 			for i, t in pairs(player.inc_damage_actor_type) do
@@ -871,13 +873,13 @@ function _M:dump()
 	nl("  [Tome 4.00 @ www.te4.org Character Dump]")
 	nl()
 
-	nnl(("%-32s"):format(makelabel("Sex", player.descriptor.sex or (player.female and "Female" or "Male"))))
+	nnl(("%-32s"):format(makelabel("Sex", (player.descriptor and player.descriptor.sex) or (player.female and "Female" or "Male"))))
 	nl(("STR:  %d"):format(player:getStr()))
 
-	nnl(("%-32s"):format(makelabel("Race", player.descriptor.subrace or player.type:capitalize())))
+	nnl(("%-32s"):format(makelabel("Race", (player.descriptor and player.descriptor.subrace) or player.type:capitalize())))
 	nl(("DEX:  %d"):format(player:getDex()))
 
-	nnl(("%-32s"):format(makelabel("Class", player.descriptor.subclass or player.subtype:capitalize())))
+	nnl(("%-32s"):format(makelabel("Class", (player.descriptor and player.descriptor.subclass) or player.subtype:capitalize())))
 	nl(("MAG:  %d"):format(player:getMag()))
 
 	nnl(("%-32s"):format(makelabel("Level", ("%d"):format(player.level))))
@@ -934,8 +936,8 @@ function _M:dump()
 	else
 		 nnl(("%-32s"):format(" "))
 	end
-	nl(makelabel("Difficulty", player.descriptor.difficulty or "???"))
-	nl(makelabel("Permadeath", player.descriptor.permadeath or "???"))
+	nl(makelabel("Difficulty", (player.descriptor and player.descriptor.difficulty) or "???"))
+	nl(makelabel("Permadeath", (player.descriptor and player.descriptor.permadeath) or "???"))
 
 	nnl(("%-32s"):format(strings[3]))
 	if player:knowTalent(player.T_MANA_POOL) then

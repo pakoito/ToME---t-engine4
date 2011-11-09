@@ -128,7 +128,7 @@ function _M:runStep()
 	if not self.running then return false end
 
 	local ret, msg = self:runCheck()
-	if not ret and self.running.cnt > 1 then
+	if not ret and (self.running.cnt > 1 or self.running.busy) then
 		self:runStop(msg)
 		return false
 	else
@@ -139,8 +139,21 @@ function _M:runStep()
 			elseif not self.running.path[self.running.cnt] then
 				self:runStop()
 			else
-				self:move(self.running.path[self.running.cnt].x, self.running.path[self.running.cnt].y)
+				-- Allow auto-explore to perform actions other than movement, which should be performed
+				-- or setup in "checkAutoExplore".  Hence, modules can make auto-explore borg-like if desired.
+				-- For example, non-move actions can be picking up an item, using a talent, resting, etc.
+				-- Some actions can require moving into a tile, such as opening a door or bump-attacking an enemy.
+				-- "self.running.cnt" is not incremented while "self.running.busy" exists.
+				if not self.running.busy or self.running.busy.do_move then
+					self:move(self.running.path[self.running.cnt].x, self.running.path[self.running.cnt].y)
+				end
+				self:runMoved()
+				-- Did not move ? no use in running unless we were busy
+				if self.running and not self.running.busy and self.x == oldx and self.y == oldy then
+					self:runStop("didn't move")
+				end
 			end
+			if not self.running then return false end
 		else
 			-- Try to move around known traps if possible
 			local dir_is_cardinal = self.running.dir == 2 or self.running.dir == 4 or self.running.dir == 6 or self.running.dir == 8
@@ -182,6 +195,10 @@ function _M:runStep()
 			end
 			-- Move!
 			self:moveDir(self.running.dir)
+			self:runMoved()
+			-- Did not move ? no use in running
+			if self.x == oldx and self.y == oldy then self:runStop() end
+			if not self.running then return false end
 
 			if self.running.block_left then self.running.ignore_left = nil end
 			if self.running.ignore_left then
@@ -211,13 +228,12 @@ function _M:runStep()
 			end
 
 		end
-		self:runMoved()
-
-		-- Did not move ? no use in running
-		if self.x == oldx and self.y == oldy then self:runStop() end
-
 		if not self.running then return false end
-		self.running.cnt = self.running.cnt + 1
+		if not self.running.busy then
+			self.running.cnt = self.running.cnt + 1
+		elseif self.running.busy.no_energy then
+			return self:runStep()
+		end
 		return true
 	end
 end

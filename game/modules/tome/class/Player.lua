@@ -636,9 +636,17 @@ function _M:runCheck(ignore_memory)
 			end
 		end
 
-		-- Only notice interesting terrains, but allow auto-explore to take us to the exit
+		-- Only notice interesting terrains, but allow auto-explore and A* to take us to the exit.  Auto-explore can also take us through "safe" doors
 		local grid = game.level.map(x, y, Map.TERRAIN)
-		if grid and grid.notice and not (what ~= "self" and self.running and self.running.explore == "exit" and #self.running.path == self.running.cnt) then
+		if grid and grid.notice and not (self.running and self.running.path and (what ~= self and
+				(self.running.explore and grid.door_opened                                          -- safe door
+				or #self.running.path == self.running.cnt and (self.running.explore == "exit"       -- auto-explore onto exit
+				or not self.running.explore and grid.change_level))                                 -- A* onto exit
+				or #self.running.path - self.running.cnt < 2 and (self.running.explore == "portal"  -- auto-explore onto portal
+				or not self.running.explore and grid.orb_portal)                                    -- A* onto portal
+				or self.running.cnt < 3 and grid.orb_portal and                                     -- path from portal
+				game.level.map:checkEntity(self.running.path[1].x, self.running.path[1].y, Map.TERRAIN, "orb_portal")))
+		then 
 			noticed = "interesting terrain"; return
 		end
 		if grid and grid.type and grid.type == "store" then noticed = "store entrance spotted"; return end
