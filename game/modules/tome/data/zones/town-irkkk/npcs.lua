@@ -51,6 +51,7 @@ newEntity{
 
 newEntity{ base = "BASE_NPC_IRKKK_TOWN",
 	name = "yeek mindslayer", color=colors.LIGHT_UMBER,
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/humanoid_yeek_yeek_mindslayer.png", display_h=2, display_y=-1}}},
 	desc = [[A mindslayer in training.]],
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 3,
@@ -88,7 +89,7 @@ newEntity{ base = "BASE_NPC_IRKKK_TOWN",
 
 -------------------------------- Stores
 newEntity{ base = "BASE_NPC_IRKKK_TOWN", define_as = "YEEK_STORE_GEM",
-	name = "gem crafter", color=colors.BLUE,
+	name = "gem crafter", color=colors.BLUE, image = "npc/humanoid_yeek_yeek_psionic.png",
 	desc = [[This yeek has all sorts of gems to sell.]],
 	level_range = {1, nil}, exp_worth = 1,
 	max_life = resolvers.rngavg(50,60),
@@ -107,7 +108,7 @@ newEntity{ base = "BASE_NPC_IRKKK_TOWN", define_as = "YEEK_STORE_GEM",
 }
 
 newEntity{ base = "BASE_NPC_IRKKK_TOWN", define_as = "YEEK_STORE_2HANDS",
-	name = "two hander weapons crafter", color=colors.UMBER,
+	name = "two hander weapons crafter", color=colors.UMBER, image = "npc/humanoid_yeek_yeek_commoner_06.png",
 	desc = [[This yeek has all sorts of two handed weapons to sell.]],
 	level_range = {1, nil}, exp_worth = 1,
 	max_life = resolvers.rngavg(50,60),
@@ -126,7 +127,7 @@ newEntity{ base = "BASE_NPC_IRKKK_TOWN", define_as = "YEEK_STORE_2HANDS",
 }
 
 newEntity{ base = "BASE_NPC_IRKKK_TOWN", define_as = "YEEK_STORE_1HAND",
-	name = "one hander weapons crafter", color=colors.UMBER,
+	name = "one hander weapons crafter", color=colors.UMBER, image = "npc/humanoid_yeek_yeek_commoner_08.png",
 	desc = [[This yeek has all sorts of one handed weapons to sell.]],
 	level_range = {1, nil}, exp_worth = 1,
 	max_life = resolvers.rngavg(50,60),
@@ -145,7 +146,7 @@ newEntity{ base = "BASE_NPC_IRKKK_TOWN", define_as = "YEEK_STORE_1HAND",
 }
 
 newEntity{ base = "BASE_NPC_IRKKK_TOWN", define_as = "YEEK_STORE_CLOTH",
-	name = "tailor", color=colors.BLUE,
+	name = "tailor", color=colors.BLUE, image = "npc/humanoid_yeek_yeek_commoner_04.png",
 	desc = [[This yeek has all sorts of cloth to sell.]],
 	level_range = {1, nil}, exp_worth = 1,
 	max_life = resolvers.rngavg(50,60),
@@ -164,7 +165,7 @@ newEntity{ base = "BASE_NPC_IRKKK_TOWN", define_as = "YEEK_STORE_CLOTH",
 }
 
 newEntity{ base = "BASE_NPC_IRKKK_TOWN", define_as = "YEEK_STORE_LEATHER",
-	name = "tanner", color=colors.BLUE,
+	name = "tanner", color=colors.BLUE, image = "npc/humanoid_yeek_yeek_commoner_07.png",
 	desc = [[This yeek has all sorts of leathers to sell.]],
 	level_range = {1, nil}, exp_worth = 1,
 	max_life = resolvers.rngavg(50,60),
@@ -183,7 +184,7 @@ newEntity{ base = "BASE_NPC_IRKKK_TOWN", define_as = "YEEK_STORE_LEATHER",
 }
 
 newEntity{ base = "BASE_NPC_IRKKK_TOWN", define_as = "YEEK_STORE_NATURE",
-	name = "natural infusions", color=colors.BLUE,
+	name = "natural infusions", color=colors.BLUE, image = "npc/humanoid_yeek_yeek_summoner.png",
 	desc = [[This yeek has all sorts of infusions to sell.]],
 	level_range = {1, nil}, exp_worth = 1,
 	max_life = resolvers.rngavg(50,60),

@@ -747,8 +747,8 @@ newTalent{
 				type = "humanoid", subtype = "yeek",
 				display = "y",
 				name = "yeek mindslayer", color=colors.YELLOW,
+				resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/humanoid_yeek_yeek_mindslayer.png", display_h=2, display_y=-1}}},
 				desc = "A wayist that came to help.",
-				moddable_tile = "yeek",
 
 				body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 
