@@ -1578,3 +1578,19 @@ newEffect{
 		end
 	end,
 }
+
+newEffect{
+	name = "BLOODCASTING", image = "talents/bloodcasting.png",
+	desc = "Bloodcasting",
+	long_desc = function(self, eff) return ("Corruptions consume health instead of vim.") end,
+	type = "magical",
+	subtype = {corruption=true},
+	status = "beneficial",
+	parameters = {},
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("bloodcasting", 1)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("bloodcasting", eff.tmpid)
+	end,
+}

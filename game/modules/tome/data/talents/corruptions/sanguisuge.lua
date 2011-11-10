@@ -45,6 +45,7 @@ newTalent{
 	end,
 }
 
+--[[
 newTalent{
 	name = "Blood Sacrifice",
 	type = {"corruption/sanguisuge", 2},
@@ -80,10 +81,31 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Sacrifices 50%% of your current life to restore %d vim.
+		return ([=[Sacrifices 50%% of your current life to restore %d vim.
 		This only works if there is at least one foe in sight.
-		The effect will increase with your Magic stat.]]):
+		The effect will increase with your Magic stat.]=]):
 		format(30 + self:combatTalentSpellDamage(t, 5, 150))
+	end,
+}
+]]
+newTalent{
+	name = "Bloodcasting",
+	type = {"corruption/sanguisuge", 2},
+	require = corrs_req2,
+	points = 5,
+	vim = 0,
+	cooldown = 18,
+	no_energy = true,
+	range = 10,
+	no_npc_use = true,
+	action = function(self, t)
+		self:setEffect(self.EFF_BLOODCASTING, 2 + math.floor(self:getTalentLevel(t)), {})
+		game:playSoundNear(self, "talents/spell_generic2")
+		return true
+	end,
+	info = function(self, t)
+		return ([[For %d turns your corruption spells will consume health instead of vim if their cost is higher than your vim.]]):
+		format(2 + math.floor(self:getTalentLevel(t)))
 	end,
 }
 

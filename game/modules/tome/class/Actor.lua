@@ -2330,7 +2330,6 @@ end
 
 -- Overwrite incStamina to set up Adrenaline Surge
 local previous_incStamina = _M.incStamina
-
 function _M:incStamina(stamina)
 	if stamina < 0 and self:hasEffect(self.EFF_ADRENALINE_SURGE) then
 		local stamina_cost = math.abs(stamina)
@@ -2343,6 +2342,23 @@ function _M:incStamina(stamina)
 		end
 	else
 		return previous_incStamina(self, stamina)
+	end
+end
+
+-- Overwrite incVim to set up Bloodcasting
+local previous_incVim = _M.incVim
+function _M:incVim(v)
+	if v < 0 and self:attr("bloodcasting") then
+		local cost = math.abs(v)
+		if self.vim - cost < 0 then
+			local damage = cost - (self.vim or 0)
+			self:incVim(-self.vim or 0)
+			self.life = self.life - damage
+		else
+			return previous_incVim(self, v)
+		end
+	else
+		return previous_incVim(self, v)
 	end
 end
 
@@ -2419,7 +2435,7 @@ function _M:preUseTalent(ab, silent, fake)
 			if not silent then game.logPlayer(self, "You do not have enough stamina to use %s.", ab.name) end
 			return false
 		end
-		if ab.vim and self:getVim() < ab.vim then
+		if ab.vim and self:getVim() < ab.vim and (not self:attr("bloodcasting") or self.life < ab.vim) then
 			if not silent then game.logPlayer(self, "You do not have enough vim to use %s.", ab.name) end
 			return false
 		end
