@@ -247,7 +247,7 @@ function _M:act()
 	end
 
 	-- Resting ? Running ? Otherwise pause
-	if not self:restStep() and not self:runStep() and self.player then
+	if not self:restStep() and not self:runStep() and self.player and self:enoughEnergy() then
 		game.paused = true
 	elseif not self.player then
 		self:useEnergy()
@@ -646,7 +646,7 @@ function _M:runCheck(ignore_memory)
 				or not self.running.explore and grid.orb_portal)                                    -- A* onto portal
 				or self.running.cnt < 3 and grid.orb_portal and                                     -- path from portal
 				game.level.map:checkEntity(self.running.path[1].x, self.running.path[1].y, Map.TERRAIN, "orb_portal")))
-		then 
+		then
 			noticed = "interesting terrain"; return
 		end
 		if grid and grid.type and grid.type == "store" then noticed = "store entrance spotted"; return end
