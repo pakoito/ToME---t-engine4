@@ -688,6 +688,9 @@ end
 --- Called after running a step
 function _M:runMoved()
 	self:playerFOV()
+	if self.running and self.running.explore then
+		game.level.map:particleEmitter(self.x, self.y, 1, "dust_trail")
+	end
 end
 
 --- Called after stopping running
