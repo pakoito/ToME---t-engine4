@@ -50,7 +50,7 @@ newTalent{
 	points = 5,
 	mana = 70,
 	cooldown = 30,
-	tactical = { ATTACK = 3, DISABLE = 2 },
+	tactical = { ATTACK = { ARCANE = 3 }, DISABLE = 2 },
 	range = 7,
 	requires_target = true,
 	getMax = function(self, t) return 200 + self:combatTalentSpellDamage(t, 28, 850) end,

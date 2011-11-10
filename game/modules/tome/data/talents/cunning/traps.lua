@@ -159,7 +159,7 @@ newTalent{
 	proj_speed = 10,
 	requires_target = true,
 	range = 10,
-	tactical = { DISABLE = 2 },
+	tactical = { DISABLE = { blind = 2 } },
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -222,7 +222,7 @@ newTalent{
 	stamina = 15,
 	requires_target = true,
 	range = trap_range,
-	tactical = { ATTACKAREA = 2 },
+	tactical = { ATTACKAREA = { FIRE = 2 } },
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local x, y, target = self:getTarget(tg)
@@ -267,7 +267,7 @@ newTalent{
 	stamina = 10,
 	requires_target = true,
 	range = trap_range,
-	tactical = { DISABLE = 2 },
+	tactical = { DISABLE = { pin = 2 } },
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local x, y, target = self:getTarget(tg)
@@ -315,7 +315,7 @@ newTalent{
 	cooldown = 10,
 	stamina = 15,
 	requires_target = true,
-	tactical = { DISABLE = 2 },
+	tactical = { DISABLE = { stun = 2 } },
 	range = trap_range,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -370,7 +370,7 @@ newTalent{
 	cooldown = 25,
 	stamina = 25,
 	requires_target = true,
-	tactical = { DISABLE = 2 },
+	tactical = { DISABLE = { disarm = 2 } },
 	range = trap_range,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -415,7 +415,7 @@ newTalent{
 	points = 1,
 	cooldown = 8,
 	stamina = 15,
-	tactical = { DISABLE = 2 },
+	tactical = { DISABLE = { stun = 2 } },
 	requires_target = true,
 	range = trap_range,
 	action = function(self, t)
@@ -462,7 +462,7 @@ newTalent{
 	points = 1,
 	cooldown = 12,
 	stamina = 12,
-	tactical = { DISABLE = 2 },
+	tactical = { DISABLE = { blind = 1, stun = 1 } },
 	requires_target = true,
 	range = trap_range,
 	action = function(self, t)
@@ -517,7 +517,7 @@ newTalent{
 	points = 1,
 	cooldown = 10,
 	stamina = 12,
-	tactical = { ATTACKAREA = 2 },
+	tactical = { ATTACKAREA = { poison = 2 } },
 	requires_target = true,
 	range = trap_range,
 	action = function(self, t)

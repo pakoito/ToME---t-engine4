@@ -26,7 +26,7 @@ newTalent{
 	mana = 10,
 	cooldown = 6,
 	range = 1,
-	tactical = { ATTACK = 2, DISABLE = 2 },
+	tactical = { ATTACK = { ARCANE = 2 }, DISABLE = { stun = 2 } },
 	requires_target = true,
 	on_pre_use = function(self, t, silent) local shield = self:hasShield() if not shield then if not silent then game.logPlayer(self, "You cannot use Eldricth Blow without a shield!") end return false end return true end,
 	action = function(self, t)
@@ -94,7 +94,7 @@ newTalent{
 	mana = 30,
 	cooldown = 12,
 	requires_target = true,
-	tactical = { ATTACK = 3, DISABLE = 1 },
+	tactical = { ATTACK = { NATURE = 3 }, DISABLE = { stun = 1 } },
 	range = 1,
 	on_pre_use = function(self, t, silent) local shield = self:hasShield() if not shield then if not silent then game.logPlayer(self, "You cannot use Eldricth Fury without a shield!") end return false end return true end,
 	action = function(self, t)
@@ -137,7 +137,7 @@ newTalent{
 	equilibrium = 10,
 	mana = 30,
 	cooldown = 20,
-	tactical = { ATTACKAREA = 3 },
+	tactical = { ATTACKAREA = { PHYSICAL = 3 } },
 	requires_target = true,
 	range = 1,
 	radius = function(self, t) return 1 + self:getTalentLevelRaw(t) end,

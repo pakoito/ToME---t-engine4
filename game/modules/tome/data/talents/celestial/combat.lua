@@ -121,7 +121,7 @@ newTalent{
 	points = 5,
 	cooldown = 10,
 	positive = 10,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = {LIGHT = 2} },
 	range = 1,
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1.1, 1.9) end,

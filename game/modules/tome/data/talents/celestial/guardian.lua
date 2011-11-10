@@ -59,7 +59,7 @@ newTalent{
 	points = 5,
 	cooldown = 8,
 	positive = 20,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = {LIGHT = 2} },
 	requires_target = true,
 	getWeaponDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.8, 1.3) end,
 	getShieldDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.8, 1.3, self:getTalentLevel(self.T_SHIELD_EXPERTISE)) end,

@@ -46,7 +46,7 @@ newTalent{
 	cooldown = 12,
 	stamina = 15,
 	require = cuns_req2,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = {weapon = 2} },
 	no_energy = true,
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.8, 1.4) end,

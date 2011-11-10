@@ -132,7 +132,7 @@ newTalent{
 	random_ego = "attack",
 	psi = 60,
 	cooldown = 10,
-	tactical = { CLOSEIN = 2, ATTACK = 1 },
+	tactical = { CLOSEIN = 2, ATTACK = { PHYSICAL = 1 } },
 	range = function(self, t)
 		local r = 2 + self:getTalentLevel(t)
 		local gem_level = getGemLevel(self)

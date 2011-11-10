@@ -17,7 +17,9 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local print = function() end
+local DamageType = require "engine.DamageType"
+
+--local print = function() end
 
 -- Internal functions
 local checkLOS = function(sx, sy, tx, ty)
@@ -116,36 +118,54 @@ newAI("use_tactical", function(self)
 				end
 				-- Evaluate the tactical weights and weight functions
 				for tact, val in pairs(t.tactical) do
-					if type(val) == "function" then val = val(self, t, self.ai_target.actor) end
+					if type(val) == "function" then val = val(self, t, self.ai_target.actor) or 0 end
 					-- Handle damage_types and resistances
 					local nb_foes_hit, nb_allies_hit, nb_self_hit = 0, 0, 0
 					if type(val) == "table" then
 						for damtype, damweight in pairs(val) do
+							-- Allows a shortcut to just say FIRE instead of DamageType.FIRE in talent's tactical table
+							damtype = DamageType[damtype] or damtype
+							-- Checks a weapon's damtype
+							if damtype == "weapon" then
+								damtype = (weapon and weapon.damtype) or DamageType.PHYSICAL
+							end
 							local pen = 0
 							if self.resists_pen then pen = (self.resists_pen.all or 0) + (self.resists_pen[damtype] or 0) end
 							for i, act in ipairs(foes_hit) do
 								local res = math.min((act.resists.all or 0) + (act.resists[damtype] or 0), (act.resists_cap.all or 0) + (act.resists_cap[damtype] or 0))
 								res = res * (100 - pen) / 100
+								local damweight = type(damweight) == "function" and damweight(self, t, act) or damweight
+								-- Handles status effect immunity
+								damweight = damweight * (act:canBe(damtype) and 1 or 0)
 								nb_foes_hit = nb_foes_hit + damweight * (100 - res) / 100
 							end
 							for i, act in ipairs(self_hit) do
 								local res = math.min((act.resists.all or 0) + (act.resists[damtype] or 0), (act.resists_cap.all or 0) + (act.resists_cap[damtype] or 0))
 								res = res * (100 - pen) / 100
-								nb_self_hit = nb_self_hit + damweight * (100 - res) / 100 * (type(typ.selffire) == "number" and typ.selffire / 100 or 1)
+								local damweight = type(damweight) == "function" and damweight(self, t, act) or damweight
+								-- Handles status effect immunity
+								damweight = damweight * (act:canBe(damtype) and 1 or 0)
+								nb_self_hit = nb_self_hit + damweight * (100 - res) / 100
 							end
 							for i, act in ipairs(allies_hit) do
 								local res = math.min((act.resists.all or 0) + (act.resists[damtype] or 0), (act.resists_cap.all or 0) + (act.resists_cap[damtype] or 0))
 								res = res * (100 - pen) / 100
-								nb_allies_hit = nb_allies_hit + damweight * (100 - res) / 100 * (type(typ.friendlyfire) == "number" and typ.friendlyfire / 100 or 1)
+								local damweight = type(damweight) == "function" and damweight(self, t, act) or damweight
+								-- Handles status effect immunity
+								damweight = damweight * (act:canBe(damtype) and 1 or 0)
+								nb_allies_hit = nb_allies_hit + damweight * (100 - res) / 100
 							end
 						end
 						val = 1
 					-- Or assume no resistances
 					else
 						nb_foes_hit = #foes_hit
-						nb_self_hit = #self_hit * (type(typ.selffire) == "number" and typ.selffire / 100 or 1)
-						nb_allies_hit = #allies_hit * (type(typ.friendlyfire) == "number" and typ.friendlyfire / 100 or 1)
+						nb_self_hit = #self_hit
+						nb_allies_hit = #allies_hit
 					end
+					-- Apply the selffire and friendlyfire options
+					nb_self_hit = nb_self_hit * (type(typ.selffire) == "number" and typ.selffire / 100 or 1)
+					nb_allies_hit = nb_allies_hit * (type(typ.friendlyfire) == "number" and typ.friendlyfire / 100 or 1)
 					-- Use the player set ai_talents weights
 					val = val * (self.ai_talents and self.ai_talents[t.id] or 1) * (1 + lvl / 5)
 					-- Update the weight by the dummy projection data
@@ -160,7 +180,7 @@ newAI("use_tactical", function(self)
 						-- Note the addition of a less than one random value, this means the sorting will randomly shift equal values
 						val = ((t.no_energy==true) and val * 10 or val) + rng.float(0, 0.9)
 						avail[tact][#avail[tact]+1] = {val=val, tid=tid, nb_foes_hit=nb_foes_hit, nb_allies_hit=nb_allies_hit, nb_self_hit=nb_self_hit}
-						print(self.name, self.uid, "tactical ai talents can use", t.name, tid, tact, "weight", avail[tact][#avail[tact]].val)
+						print(self.name, self.uid, "tactical ai talents can use", t.name, tid, tact, "weight", val)
 						ok = true
 					end
 				end
@@ -295,6 +315,19 @@ newAI("use_tactical", function(self)
 		if avail.defend and need_heal and nb_foes_seen > 0 then
 			table.sort(avail.defend, function(a,b) return a.val > b.val end)
 			want.defend = 1 + need_heal / 2 + nb_foes_seen * 0.5
+		end
+		
+		-- Need cure (remove detrimental effects)
+		local nb_detrimental_effs = 0
+		for eff_id, p in pairs(self.tmp) do
+			local e = self.tempeffect_def[eff_id]
+			if e.status == "detrimental" then
+				nb_detrimental_effs = nb_detrimental_effs + 1
+			end
+		end
+		if avail.cure and nb_detrimental_effs > 0 then
+			table.sort(avail.defend, function(a,b) return a.val > b.val end)
+			want.cure = nb_detrimental_effs
 		end
 
 		-- Attacks

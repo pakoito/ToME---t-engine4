@@ -25,7 +25,7 @@ newTalent{
 	mode = "sustained",
 	sustain_equilibrium = 15,
 	cooldown = 30,
-	tactical = { ATTACK = 2, BUFF = 2, DISABLE = 2 },
+	tactical = { ATTACK = { PHYSICAL = 2 }, BUFF = 2, DISABLE = { pin = 2 } },
 	radius = function(self, t) return 4 + math.ceil(self:getTalentLevel(t) / 2) end,
 	getValues = function(self, t) return 4 + self:getTalentLevelRaw(t), self:combatTalentStatDamage(t, "wil", 3, 50) end,
 	do_vines = function(self, t)
@@ -135,7 +135,7 @@ newTalent{
 	cooldown = 10,
 	requires_target = true,
 	range = 20,
-	tactical = { ATTACK = 2, CLOSEIN = 2 },
+	tactical = { ATTACK = { PHYSICAL = 2 }, CLOSEIN = 2 },
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)

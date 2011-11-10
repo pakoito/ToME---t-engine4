@@ -43,7 +43,13 @@ newTalent{
 		end
 		return {type="ball", range=self:getTalentRange(t)+(ammo and ammo.alchemist_bomb and ammo.alchemist_bomb.range or 0), radius=self:getTalentRadius(t), friendlyfire=friendlyfire, talent=t}
 	end,
-	tactical = { ATTACKAREA = 2 },
+	tactical = { ATTACKAREA = function(self, t, target)
+		if self:isTalentActive(self.T_ACID_INFUSION) then return { ACID = 2 }
+		elseif self:isTalentActive(self.T_LIGHTNING_INFUSION) then return { LIGHTNING = 2 }
+		elseif self:isTalentActive(self.T_FROST_INFUSION) then return { COLD = 2 }
+		else return { FIRE = 2 }
+		end
+	end },
 	computeDamage = function(self, t, ammo)
 		local inc_dam = 0
 		local damtype = DamageType.FIRE
@@ -222,7 +228,7 @@ newTalent{
 		end
 		return {type="ball", range=self:getTalentRange(t)+(ammo and ammo.alchemist_bomb and ammo.alchemist_bomb.range or 0), radius=self:getTalentRadius(t), friendlyfire=friendlyfire, talent=t}
 	end,
-	tactical = { ATTACKAREA = 2, DISABLE = 2 },
+	tactical = { ATTACKAREA = { PHYSICAL = 2 }, DISABLE = { knockback = 2 } },
 	computeDamage = function(self, t, ammo)
 		local inc_dam = 0
 		local damtype = DamageType.SPELLKNOCKBACK

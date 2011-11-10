@@ -25,7 +25,7 @@ newTalent{
 	points = 5,
 	cooldown = 14,
 	stamina = 30,
-	tactical = { ESCAPE = 1, ATTACK = 0.5 },
+	tactical = { ESCAPE = 1, ATTACK = { weapon = 0.5 } },
 	require = techs_dex_req1,
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.4, 1) end,

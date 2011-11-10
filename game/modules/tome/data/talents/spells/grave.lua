@@ -26,7 +26,7 @@ newTalent{
 	points = 5,
 	mana = 30,
 	cooldown = 8,
-	tactical = { ATTACKAREA = 2 },
+	tactical = { ATTACKAREA = { COLD = 2 } },
 	range = 7,
 	radius = function(self, t)
 		return 1 + self:getTalentLevelRaw(t)
@@ -139,7 +139,7 @@ newTalent{
 	cooldown = 22,
 	range = 5,
 	radius = 3,
-	tactical = { ATTACK = 2, DISABLE = 1 },
+	tactical = { ATTACK = { COLD = 2 }, DISABLE = { stun = 1 } },
 	requires_target = true,
 	-- implementation of creeping darkness..used in various locations, but stored here
 	canCreep = function(x, y, ignoreCreepingDark)

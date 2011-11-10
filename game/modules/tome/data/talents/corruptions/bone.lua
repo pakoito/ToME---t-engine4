@@ -26,7 +26,7 @@ newTalent{
 	cooldown = 4,
 	range = 10,
 	random_ego = "attack",
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = {PHYSICAL = 2} },
 	direct_hit = true,
 	requires_target = true,
 	target = function(self, t)
@@ -95,7 +95,7 @@ newTalent{
 	points = 5,
 	vim = 25,
 	cooldown = 12,
-	tactical = { ATTACKAREA = 2 },
+	tactical = { ATTACKAREA = {PHYSICAL = 2} },
 	random_ego = "attack",
 	radius = function(self, t)
 		return self:getTalentLevelRaw(t)

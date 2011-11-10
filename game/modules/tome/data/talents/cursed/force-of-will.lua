@@ -99,7 +99,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 5,
 	hate = 0.5,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = { PHYSICAL = 2 } },
 	direct_hit = true,
 	requires_target = true,
 	range = function(self, t)
@@ -206,7 +206,7 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	cooldown = 14,
-	tactical = { ATTACKAREA = 2 },
+	tactical = { ATTACKAREA = { PHYSICAL = 2 }, DISABLE = { stun = 1 } },
 	requires_target = true,
 	hate = 1.5,
 	range = function(self, t)
@@ -278,7 +278,7 @@ newTalent{
 	points = 5,
 	hate = 3,
 	cooldown = 50,
-	tactical = { ATTACKAREA = 2 },
+	tactical = { ATTACKAREA = { PHYSICAL = 2 } },
 	range = function(self, t)
 		return math.floor(4 + self:getTalentLevel(t) / 2.3)
 	end,

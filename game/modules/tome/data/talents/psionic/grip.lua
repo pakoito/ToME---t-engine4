@@ -60,7 +60,7 @@ newTalent{
 		return math.max(c - gem_level, 0)
 	end,
 	psi = 10,
-	tactical = { ATTACK = 2 },
+	tactical = { DISABLE = 2 },
 	range = function(self, t)
 		local r = 5
 		local gem_level = getGemLevel(self)
@@ -110,7 +110,7 @@ newTalent{
 		return math.max(c - 2 * gem_level, 0)
 	end,
 	psi = 40,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = { PHYSICAL = 2 } },
 	range = function(self, t)
 		local r = 3
 		local gem_level = getGemLevel(self)

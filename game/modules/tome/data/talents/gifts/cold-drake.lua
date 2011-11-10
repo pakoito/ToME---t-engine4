@@ -28,7 +28,7 @@ newTalent{
 	equilibrium = 3,
 	cooldown = 7,
 	range = 1,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = { COLD = 2 } },
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
@@ -52,7 +52,7 @@ newTalent{
 	cooldown = 10,
 	sustain_equilibrium = 30,
 	range = 10,
-	tactical = { ATTACK = 2, DEFEND = 2 },
+	tactical = { ATTACK = { COLD = 1 }, DEFEND = 2 },
 	activate = function(self, t)
 		return {
 			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.COLD]=5 * self:getTalentLevel(t)}),
@@ -129,7 +129,7 @@ newTalent{
 	equilibrium = 12,
 	cooldown = 12,
 	message = "@Source@ breathes ice!",
-	tactical = { ATTACKAREA = {[DamageType.COLD] = 2}, DISABLE = 1 },
+	tactical = { ATTACKAREA = { COLD = 2 }, DISABLE = { stun = 1 } },
 	range = 0,
 	radius = function(self, t) return 4 + self:getTalentLevelRaw(t) end,
 	direct_hit = true,

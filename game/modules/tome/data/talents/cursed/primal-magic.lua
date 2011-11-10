@@ -35,7 +35,7 @@ newTalent{
 	hate =  0.8,
 	range = 6,
 	proj_speed = 4,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = { ARCANE = 2 } },
 	getDamage = function(self, t)
 		return combatTalentDamage(self, t, 0, 125)
 	end,
@@ -107,7 +107,9 @@ newTalent{
 	cooldown = function(self, t) return 20 - math.floor(self:getTalentLevel(t) * 1.5) end,
 	hate = 0.5,
 	range = 3,
-	tactical = { ESCAPE = 2 },
+	tactical = { ESCAPE = function(self, t, target)
+		return 2 * self:canBe("teleport")
+	end },
 	action = function(self, t)
 		local x, y = self.x, self.y
 		local range = self:getTalentRange(t)
@@ -161,7 +163,7 @@ newTalent{
 	random_ego = "attack",
 	hate = 3,
 	cooldown = 30,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = { ARCANE = 2 } },
 	range = 10,
 	proj_speed = 20,
 	requires_target = true,

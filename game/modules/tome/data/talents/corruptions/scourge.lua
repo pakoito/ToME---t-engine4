@@ -25,7 +25,7 @@ newTalent{
 	vim = 9,
 	cooldown = 6,
 	range = 1,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = {PHYSICAL = 2} },
 	requires_target = true,
 	action = function(self, t)
 		local weapon, offweapon = self:hasDualWeapon()
@@ -103,7 +103,7 @@ newTalent{
 	range = 0,
 	radius = 1,
 	requires_target = true,
-	tactical = { ATTACK = 2, DISABLE = 1 },
+	tactical = { ATTACK = {ACID = 2}, DISABLE = 1 },
 	target = function(self, t)
 		-- Tries to simulate the acid splash
 		return {type="ballbolt", range=1, radius=self:getTalentRadius(t), selffire=false, talent=t}
@@ -149,7 +149,7 @@ newTalent{
 	cooldown = 8,
 	range = 1,
 	requires_target = true,
-	tactical = { ATTACK = 2, DISABLE = 2 },
+	tactical = { ATTACK = {DARKNESS = 1, BLIGHT = 1}, DISABLE = 2 },
 	action = function(self, t)
 		local weapon, offweapon = self:hasDualWeapon()
 		if not weapon then

@@ -84,7 +84,14 @@ newTalent{
 	stamina = 7,
 	require = cuns_req_high2,
 	requires_target = true,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = function(self, t, target)
+		local nb = 0
+		for eff_id, p in pairs(target.tmp) do
+			local e = target.tempeffect_def[eff_id]
+			if e.subtype.poison then nb = nb + 1 end
+		end
+		return { NATURE = nb}		
+	end },
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -125,7 +132,7 @@ newTalent{
 	require = cuns_req_high3,
 	requires_target = true,
 	no_energy = true,
-	tactical = { ATTACK = 1 },
+	tactical = { ATTACK = {NATURE = 1} },
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)

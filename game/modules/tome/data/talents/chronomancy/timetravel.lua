@@ -58,7 +58,7 @@ newTalent{
 	points = 5,
 	cooldown = 6,
 	paradox = 5,
-	tactical = { ATTACK = 1, DISABLE = 2 },
+	tactical = { ATTACK = {TEMPORAL = 1}, DISABLE = 2 },
 	range = 6,
 	direct_hit = true,
 	reflectable = true,
@@ -124,7 +124,7 @@ newTalent{
 	points = 5,
 	paradox = 10,
 	cooldown = 6,
-	tactical = { ATTACKAREA = 2 },
+	tactical = { ATTACKAREA = {TEMPORAL = 2} },
 	range = 0,
 	radius = function(self, t)
 		return 1 + self:getTalentLevelRaw(t)
@@ -161,7 +161,7 @@ newTalent{
 	points = 5,
 	paradox = 20,
 	cooldown = 50,
-	tactical = { BUFF = 0.5 },
+	tactical = { BUFF = 0.5, CURE = 0.5 },
 	message = "@Source@ manipulates the flow of time.",
 	getCooldownReduction = function(self, t) return 1 + math.floor(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
 	action = function(self, t)

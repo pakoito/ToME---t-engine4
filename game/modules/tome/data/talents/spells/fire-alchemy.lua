@@ -30,7 +30,7 @@ newTalent{
 	proj_speed = 20,
 	range = 10,
 	direct_hit = true,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = { FIRE = 2 } },
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 25, 620) end,
 	action = function(self, t)
@@ -107,9 +107,9 @@ newTalent{
 	range = 0,
 	radius = 3,
 	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false}
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, friendlyfire=false}
 	end,
-	tactical = { ATTACKAREA = 2 },
+	tactical = { ATTACKAREA = { FIRE = 2 } },
 	getDuration = function(self, t) return 5 + self:combatSpellpower(0.05) + self:getTalentLevel(t) end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 5, 90) end,
 	action = function(self, t)
@@ -151,7 +151,7 @@ newTalent{
 	points = 5,
 	proj_speed = 2.4,
 	range = 8,
-	tactical = { ATTACKAREA = 3 },
+	tactical = { ATTACKAREA = { FIRE = 3 } },
 	getFireDamageOnHit = function(self, t) return self:combatTalentSpellDamage(t, 5, 25) end,
 	getResistance = function(self, t) return self:combatTalentSpellDamage(t, 5, 45) end,
 	getFireDamageInSight = function(self, t) return self:combatTalentSpellDamage(t, 15, 70) end,

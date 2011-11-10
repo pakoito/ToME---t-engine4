@@ -50,7 +50,7 @@ newTalent{
 		return 1 + self:getTalentLevelRaw(t)
 	end,
 	proj_speed = 4,
-	tactical = { ATTACKAREA = 2 },
+	tactical = { ATTACKAREA = {FIRE = 1, DARKNESS = 1} },
 	direct_hit = true,
 	requires_target = true,
 	target = function(self, t)

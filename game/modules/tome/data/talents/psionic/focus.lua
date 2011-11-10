@@ -34,7 +34,23 @@ newTalent{
 		return math.max(c - gem_level, 0)
 	end,
 	psi = 10,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = function(self, t, target)
+		local val = { PHYSICAL = 2}
+		if gem_level > 0 and not tg.dead and self:knowTalent(self.T_CONDUIT) and self:isTalentActive(self.T_CONDUIT) then
+			local c =  self:getTalentFromId(self.T_CONDUIT)
+			local auras = self:isTalentActive(c.id)
+			if auras.k_aura_on then
+				val[PHYSICAL] = val[PHYSICAL] + 1
+			end
+			if auras.t_aura_on then
+				val[FIRE] = 1
+			end
+			if auras.c_aura_on then
+				val[LIGHTNING] = 1
+			end
+			return val
+		end
+	end },
 	range = function(self, t)
 		local r = 5
 		local gem_level = getGemLevel(self)
@@ -81,7 +97,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local dam = t.getDamage(self, t)
-		return ([[Focus energies on a distant target to lash it with physical force, doing %d damage.
+		return ([[Focus energies on a distant target to lash it with physical force, doing %d damage as well as any Conduit damage.
 		Mindslayers do not do this sort of ranged attack naturally. The use of a telekinetically-wielded gem as a focus will improve the effects considerably.]]):
 		format(dam)
 	end,
@@ -99,7 +115,7 @@ newTalent{
 		return c - gem_level
 	end,
 	psi = 20,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = { FIRE = 2 } },
 	range = 0,
 	radius = function(self, t)
 		local r = 5

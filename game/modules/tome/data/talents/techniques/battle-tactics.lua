@@ -59,7 +59,7 @@ newTalent{
 	cooldown = 12,
 	stamina = 24,
 	requires_target = true,
-	tactical = { ATTACK = 1, DISABLE = 2 },
+	tactical = { ATTACK = { weapon = 1, cut = 1 }, DISABLE = 2 },
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)

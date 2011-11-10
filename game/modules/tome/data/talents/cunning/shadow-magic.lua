@@ -91,7 +91,7 @@ newTalent{
 	cooldown = 5,
 	stamina = 30,
 	require = cuns_req4,
-	tactical = { CLOSEIN = 2, DISABLE = 1 },
+	tactical = { CLOSEIN = 2, DISABLE = { stun = 1 } },
 	range = function(self, t) return math.floor(5 + self:getTalentLevel(t)) end,
 	direct_hit = true,
 	requires_target = true,

@@ -26,7 +26,7 @@ newTalent{ short_name = "RITCH_FLAMESPITTER_BOLT",
 	range = 10,
 	reflectable = true,
 	requires_target = true,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = { FIRE = 2 } },
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -79,7 +79,7 @@ newTalent{
 	equilibrium = 10,
 	cooldown = 8,
 	message = "@Source@ breathes acid!",
-	tactical = { ATTACKAREA = 2},
+	tactical = { ATTACKAREA = { ACID = 2 } },
 	range = 0,
 	radius = 5,
 	requires_target = true,
@@ -109,7 +109,7 @@ newTalent{
 	equilibrium = 10,
 	cooldown = 8,
 	message = "@Source@ breathes lightning!",
-	tactical = { ATTACKAREA = 2 },
+	tactical = { ATTACKAREA = { LIGHTNING = 2 } },
 	range = 0,
 	radius = 5,
 	requires_target = true,
@@ -144,7 +144,7 @@ newTalent{
 	equilibrium = 10,
 	cooldown = 8,
 	message = "@Source@ breathes poison!",
-	tactical = { ATTACKAREA = 2 },
+	tactical = { ATTACKAREA = { NATURE = 1, poison = 1 } },
 	range = 0,
 	radius = 5,
 	requires_target = true,
@@ -173,7 +173,7 @@ newTalent{
 	points = 5,
 	equilibrium = 10,
 	cooldown = 4,
-	tactical = { ATTACKAREA = 2 },
+	tactical = { ATTACKAREA = { COLD = 2 }, DISABLE = { stun = 1 } },
 	range = 0,
 	radius = 3,
 	target = function(self, t)
@@ -220,7 +220,7 @@ newTalent{
 	range = 10,
 	requires_target = true,
 	is_summon = true,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = { FIRE = 2 } },
 	on_pre_use = function(self, t, silent)
 		if not self:canBe("summon") and not silent then game.logPlayer(self, "You can not summon, you are suppressed!") return end
 		return not checkMaxSummon(self, silent)
@@ -313,7 +313,7 @@ newTalent{
 	range = 10,
 	requires_target = true,
 	is_summon = true,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = { ACID = 1, LIGHTING = 1, NATURE = 1 } },
 	on_pre_use = function(self, t, silent)
 		if not self:canBe("summon") and not silent then game.logPlayer(self, "You can not summon, you are suppressed!") return end
 		return not checkMaxSummon(self, silent)
@@ -414,7 +414,7 @@ newTalent{
 	range = 10,
 	requires_target = true,
 	is_summon = true,
-	tactical = { ATTACK = 1, DISABLE = 2 },
+	tactical = { ATTACK =  { COLD = 1 }, DISABLE = { stun = 2 } },
 	on_pre_use = function(self, t, silent)
 		if not self:canBe("summon") and not silent then game.logPlayer(self, "You can not summon, you are suppressed!") return end
 		return not checkMaxSummon(self, silent)
@@ -509,7 +509,7 @@ newTalent{
 	range = 10,
 	requires_target = true,
 	is_summon = true,
-	tactical = { ATTACK = 2, DISABLE = 2 },
+	tactical = { ATTACK = { FIRE = 2 }, DISABLE = { knockback = 2 } },
 	on_pre_use = function(self, t, silent)
 		if not self:canBe("summon") and not silent then game.logPlayer(self, "You can not summon, you are suppressed!") return end
 		return not checkMaxSummon(self, silent)

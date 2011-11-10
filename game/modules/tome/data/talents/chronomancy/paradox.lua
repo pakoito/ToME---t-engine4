@@ -121,7 +121,7 @@ newTalent{
 	points = 5,
 	paradox = 10,
 	cooldown = 24,
-	tactical = { DEFEND = 2 },
+	tactical = { DEFEND = 2, CURE = 2 },
 	getResist = function(self, t) return self:combatTalentSpellDamage(t, 10, 50) * getParadoxModifier(self, pm) end,
 	action = function(self, t)
 		self:setEffect(self.EFF_FADE_FROM_TIME, 10, {power=t.getResist(self, t)})

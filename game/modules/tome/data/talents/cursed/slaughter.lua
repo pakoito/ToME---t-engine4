@@ -27,7 +27,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 8,
 	hate = 0.2,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = { PHYSICAL = 2 } },
 	requires_target = true,
 	getDamageMultiplier = function(self, t, hate)
 		return 1 + self:combatTalentIntervalDamage(t, "str", 0.3, 1.5, 0.4) * getHateMultiplier(self, 0.3, 1, true, hate)
@@ -87,7 +87,7 @@ newTalent{
 	type = {"cursed/slaughter", 2},
 	require = cursed_str_req2,
 	points = 5,
-	tactical = { ATTACKAREA = 2 },
+	tactical = { ATTACKAREA = { PHYSICAL = 2 } },
 	random_ego = "attack",
 	cooldown = 12,
 	hate = 0.2,

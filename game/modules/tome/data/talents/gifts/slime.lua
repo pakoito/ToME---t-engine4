@@ -27,7 +27,7 @@ newTalent{
 	equilibrium = 2,
 	cooldown = 10,
 	range = 1,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = { NATURE = 1, poison = 1 } },
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
@@ -80,7 +80,7 @@ newTalent{
 	random_ego = "attack",
 	equilibrium = 4,
 	cooldown = 30,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = { NATURE = 2} },
 	range = 10,
 	direct_hit = true,
 	proj_speed = 8,

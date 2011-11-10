@@ -58,7 +58,7 @@ newTalent{
 	random_ego = "attack",
 	stamina = 22,
 	cooldown = function(self, t) return math.floor(40 - self:getTalentLevel(t) * 4) end,
-	tactical = { ATTACK = 1, CLOSEIN = 3 },
+	tactical = { ATTACK = { weapon = 1, stun = 1 }, CLOSEIN = 3 },
 	requires_target = true,
 	range = function(self, t) return math.floor(5 + self:getTalentLevelRaw(t)) end,
 	action = function(self, t)

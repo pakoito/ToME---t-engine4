@@ -67,7 +67,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = function(self, t) return math.ceil(3 * getRelentless(self, cd)) end,
 	message = "@Source@ throws two quick punches.",
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = { weapon = 2 } },
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.1, 0.8) + getStrikingStyle(self, dam) end,
 	-- Learn the appropriate stance
@@ -162,7 +162,7 @@ newTalent{
 	stamina = 12,
 	range = function(self, t) return 2 + math.ceil(self:getTalentLevel(t)/2) end,
 	message = "@Source@ lashes out with a spinning backhand.",
-	tactical = { ATTACKAREA = 2, CLOSEIN = 1 },
+	tactical = { ATTACKAREA = { weapon = 2 }, CLOSEIN = 1 },
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1.0, 1.7) + getStrikingStyle(self, dam) end,
 	action = function(self, t)
@@ -261,7 +261,7 @@ newTalent{
 	cooldown = function(self, t) return math.ceil(24 * getRelentless(self, cd)) end,
 	stamina = 15,
 	message = "@Source@ lashes out with a flurry of fists.",
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = { weapon = 2 } },
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.4, 1.1) + getStrikingStyle(self, dam) end,
 	action = function(self, t)

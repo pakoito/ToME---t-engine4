@@ -27,7 +27,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 10,
 	psi = 10,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = { PHYSICAL = 2 } },
 	range = archery_range,
 	requires_target = true,
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon("bow") then if not silent then game.logPlayer(self, "You require a bow for this talent.") end return false end return true end,
@@ -65,7 +65,7 @@ newTalent{
 	require = psi_cun_high2,
 	range = archery_range,
 	requires_target = true,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = { PHYSICAL = 2 } },
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon("bow") then if not silent then game.logPlayer(self, "You require a bow for this talent.") end return false end return true end,
 	apr_boost = function(self, t)
 		return 10 + 10*self:getTalentLevel(t)
@@ -103,7 +103,7 @@ newTalent{
 		return math.ceil(math.max(18 - 2 * self:getTalentLevel(t), 5))
 	end,
 	psi = 20,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = { PHYSICAL = 2 } },
 	range = archery_range,
 	requires_target = true,
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon("bow") then if not silent then game.logPlayer(self, "You require a bow for this talent.") end return false end return true end,

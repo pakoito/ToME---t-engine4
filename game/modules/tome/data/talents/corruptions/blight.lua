@@ -53,7 +53,7 @@ newTalent{
 	vim = 30,
 	range = 10,
 	radius = 3,
-	tactical = { DISABLE = 2 },
+	tactical = { ATTACKAREA = {BLIGHT = 1}, DISABLE = 2 },
 	requires_target = true,
 	target = function(self, t)
 		return {type="ball", radius=self:getTalentRadius(t), range=self:getTalentRange(t), talent=t}
@@ -118,7 +118,7 @@ newTalent{
 	cooldown = 10,
 	vim = 12,
 	range = 10,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = {ACID = 2} },
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
@@ -149,7 +149,7 @@ newTalent{
 	cooldown = 30,
 	range = 0,
 	radius = 4,
-	tactical = { ATTACKAREA = 2 },
+	tactical = { ATTACKAREA = {NATURE = 2} },
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
 	end,

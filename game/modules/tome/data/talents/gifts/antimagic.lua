@@ -55,7 +55,7 @@ newTalent{
 	points = 5,
 	equilibrium = 20,
 	cooldown = 10,
-	tactical = { DISABLE = 4 },
+	tactical = { DISABLE = { silence = 4 } },
 	radius = function(self, t) return 4 + self:getTalentLevel(t) * 1.5 end,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=true, talent=t}
@@ -126,7 +126,7 @@ newTalent{
 	equilibrium = 10,
 	cooldown = 10,
 	range = 10,
-	tactical = { ATTACK = 3 },
+	tactical = { ATTACK = { ARCANE = 3 } },
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)

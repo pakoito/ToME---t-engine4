@@ -83,7 +83,7 @@ newTalent{
 	cooldown = 20,
 	vim = 20,
 	range = 10,
-	tactical = { ATTACK = 2, DISABLE = 1 },
+	tactical = { ATTACK = {DARKNESS = 2}, DISABLE = 1 },
 	direct_hit = true,
 	requires_target = true,
 	action = function(self, t)

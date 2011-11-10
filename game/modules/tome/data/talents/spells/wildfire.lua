@@ -24,7 +24,12 @@ newTalent{
 	points = 5,
 	mana = 12,
 	cooldown = 5,
-	tactical = { ATTACKAREA = 2, DISABLE = 2, ESCAPE = 2 },
+	tactical = { ATTACKAREA = { FIRE = 2 }, DISABLE = { knockback = 2 }, ESCAPE = { knockback = 2 },
+		CURE = function(self, t, target)
+			if self:attr("burning_wake") and self:attr("cleansing_flame") then
+				return 1
+			end
+	end },
 	direct_hit = true,
 	requires_target = true,
 	range = 0,
@@ -66,7 +71,7 @@ newTalent{
 	points = 5,
 	sustain_mana = 40,
 	cooldown = 30,
-	tactical = { BUFF=2, ATTACKAREA = 1 },
+	tactical = { BUFF=2, ATTACKAREA = { FIRE = 1 } },
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 55) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/fire")

@@ -34,7 +34,7 @@ newTalent{
 		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false}
 	end,
 	requires_target = true,
-	tactical = { ATTACKAREA = 2 },
+	tactical = { ATTACKAREA = { PHYSICAL = 2 } },
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)

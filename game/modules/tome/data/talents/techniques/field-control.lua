@@ -75,7 +75,7 @@ newTalent{
 	random_ego = "defensive",
 	cooldown = 15,
 	stamina = 20,
-	tactical = { ESCAPE = 1, DISABLE = 3 },
+	tactical = { ESCAPE = { knockback = 1 }, DISABLE = { knockback = 3 } },
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}

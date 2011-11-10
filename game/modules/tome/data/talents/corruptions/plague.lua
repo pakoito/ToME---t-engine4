@@ -25,7 +25,7 @@ newTalent{
 	vim = 8,
 	cooldown = 3,
 	random_ego = "attack",
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = {BLIGHT = 2} },
 	requires_target = true,
 	range = function(self, t) return 4 + math.floor(self:getTalentLevel(t)) end,
 	action = function(self, t)
@@ -69,7 +69,17 @@ newTalent{
 	radius = function(self, t)
 		return 1 + math.floor(self:getTalentLevelRaw(t) / 2)
 	end,
-	tactical = { ATTACK = 1 },
+	tactical = { ATTACK = function(self, t, target)
+		-- Count the number of diseases on the target
+		local val = 0
+		for eff_id, p in pairs(target.tmp) do
+			local e = target.tempeffect_def[eff_id]
+			if e.subtype.disease then
+				val = val + 1
+			end
+		end
+		return val
+	end },
 	requires_target = true,
 	target = function(self, t)
 		-- Target trying to combine the bolt and the ball disease spread
@@ -134,7 +144,15 @@ newTalent{
 	cooldown = 15,
 	range = 6,
 	radius = 2,
-	tactical = { DISABLE = 1 },
+	tactical = { DISABLE = function(self, t, target)
+		-- Make sure the target has a disease
+		for eff_id, p in pairs(target.tmp) do
+			local e = target.tempeffect_def[eff_id]
+			if e.subtype.disease then
+				return 2
+			end
+		end
+	end },
 	direct_hit = true,
 	requires_target = true,
 	target = function(self, t)
@@ -192,7 +210,7 @@ newTalent{
 	cooldown = 13,
 	range = 6,
 	radius = 2,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = {BLIGHT = 2} },
 	requires_target = true,
 	do_spread = function(self, t, carrier)
 		-- List all diseases

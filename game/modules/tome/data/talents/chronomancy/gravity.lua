@@ -24,7 +24,7 @@ newTalent{
 	points = 5,
 	paradox = 5,
 	cooldown = 4,
-	tactical = { ATTACKAREA = 2, ESCAPE = 2 },
+	tactical = { ATTACKAREA = {PHYSICAL = 2}, ESCAPE = 2 },
 	range = 0,
 	radius = function(self, t)
 		return 4 + math.floor(self:getTalentLevelRaw (t)/2)
@@ -60,7 +60,7 @@ newTalent{
 	points = 5,
 	paradox = 10,
 	cooldown = 6,
-	tactical = { ATTACKAREA = 2, DISABLE = 2 },
+	tactical = { ATTACKAREA = {PHYSICAL = 2}, DISABLE = 2 },
 	range = 10,
 	radius = function(self, t)
 		return 2 + math.floor(self:getTalentLevel(t) / 3)
@@ -107,7 +107,7 @@ newTalent{
 	points = 5,
 	paradox = 15,
 	cooldown = 14,
-	tactical = { ATTACKAREA = 2, ESCAPE = 2 },
+	tactical = { ATTACKAREA = {PHYSICAL = 2}, ESCAPE = 2 },
 	range = 0,
 	radius = function(self, t)
 		return 1 + math.floor(self:getTalentLevel(t)/2)
@@ -153,7 +153,7 @@ newTalent{
 	points = 5,
 	paradox = 20,
 	cooldown = 24,
-	tactical = { ATTACKAREA = 2, DISABLE = 2 },
+	tactical = { ATTACKAREA = {PHYSICAL = 2}, DISABLE = 2 },
 	range = 10,
 	radius = function(self, t)
 		return 2 + math.floor(self:getTalentLevel(t) / 2)

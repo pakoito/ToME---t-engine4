@@ -216,7 +216,22 @@ newTalent{
 	points = 5,
 	no_energy = true,
 	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 3 end,
-	tactical = { DEFEND = 2 },
+	tactical = {
+		BUFF = function(self, t, target)
+			local nb = 0
+			for eff_id, p in pairs(self.tmp) do
+				if e.status == "beneficial" then nb = nb + 1 end
+			end
+			return nb			
+		end,
+		CURE = function(self, t, target)
+			local nb = 0
+			for eff_id, p in pairs(self.tmp) do
+				if e.status == "detrimental" then nb = nb + 1 end
+			end
+			return nb
+		end,
+	},
 	action = function(self, t)
 		local target = self
 		local todel = {}
@@ -315,7 +330,7 @@ newTalent{
 	points = 5,
 	no_energy = true,
 	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 3 end,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = { PHYSICAL = 2 }, DISABLE = { stun = 1, knockback = 1 } },
 	range = 4,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -601,7 +616,16 @@ newTalent{
 	points = 5,
 	no_energy = true,
 	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 4 end,
-	tactical = { DEFEND = 1, HEAL = 2 },
+	tactical = { DEFEND = 1, HEAL = 2, CURE = function(self, t, target)
+		local nb = 0
+		for eff_id, p in pairs(target.tmp) do
+			local e = target.tempeffect_def[eff_id]
+			if e.status == "detrimental" and (e.type == "physical" or e.type == "magical" or e.type == "mental") then
+				nb = nb + 1
+			end
+		end
+		return nb
+	end },
 	action = function(self, t)
 		local target = self
 		local effs = {}

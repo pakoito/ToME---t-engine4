@@ -108,7 +108,20 @@ newInscription{
 	type = {"inscriptions/infusions", 1},
 	points = 1,
 	no_energy = true,
-	tactical = { DEFEND = 3 },
+	tactical = {
+		DEFEND = 3,
+		CURE = function(self, t, target)
+			local nb = 0
+			local data = self:getInscriptionData(t.short_name)
+			for eff_id, p in pairs(self.tmp) do
+				local e = self.tempeffect_def[eff_id]
+				if data.what[e.type] and e.status == "detrimental" then
+					nb = nb + 1
+				end
+			end
+			return nb
+		end
+	},
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 
@@ -180,7 +193,7 @@ newInscription{
 	name = "Infusion: Sun",
 	type = {"inscriptions/infusions", 1},
 	points = 1,
-	tactical = { ATTACKAREA = 1, DISABLE = 2 },
+	tactical = { ATTACKAREA = 1, DISABLE = { blind = 2 } },
 	range = 0,
 	radius = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
@@ -235,7 +248,7 @@ newInscription{
 	name = "Infusion: Insidious Poison",
 	type = {"inscriptions/infusions", 1},
 	points = 1,
-	tactical = { ATTACK = 1, DISABLE=1 },
+	tactical = { ATTACK = { NATURE = 1 }, DISABLE=1 },
 	requires_target = true,
 	range = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
@@ -264,7 +277,7 @@ newInscription{
 	name = "Infusion: Wild Growth",
 	type = {"inscriptions/infusions", 1},
 	points = 1,
-	tactical = { ATTACKAREA = 2, DISABLE = 3 },
+	tactical = { ATTACKAREA = { PHYSICAL = 1, NATURE = 1 }, DISABLE = 3 },
 	range = 0,
 	radius = 5,
 	direct_hit = true,
@@ -503,7 +516,7 @@ newInscription{
 	is_attack_rune = true,
 	no_energy = true,
 	is_spell = true,
-	tactical = { ATTACK = 1 },
+	tactical = { ATTACK = { FIRE = 1 } },
 	requires_target = true,
 	direct_hit = true,
 	range = function(self, t)
@@ -542,7 +555,7 @@ newInscription{
 	is_attack_rune = true,
 	no_energy = true,
 	is_spell = true,
-	tactical = { ATTACK = 1, DISABLE=1 },
+	tactical = { ATTACK = { COLD = 1 }, DISABLE = { stun = 1 } },
 	requires_target = true,
 	range = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
@@ -578,7 +591,7 @@ newInscription{
 	is_attack_rune = true,
 	no_energy = true,
 	is_spell = true,
-	tactical = { ATTACKAREA = 1 },
+	tactical = { ATTACKAREA = { ACID = 1 } },
 	requires_target = true,
 	direct_hit = true,
 	range = 0,
@@ -615,7 +628,7 @@ newInscription{
 	is_attack_rune = true,
 	no_energy = true,
 	is_spell = true,
-	tactical = { ATTACK = 1 },
+	tactical = { ATTACK = { LIGHTNING = 1 } },
 	requires_target = true,
 	direct_hit = true,
 	range = function(self, t)
@@ -688,7 +701,7 @@ newInscription{
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_spell = true,
-	tactical = { DISABLE = 2, ATTACK = 1 },
+	tactical = { DISABLE = 2, ATTACK = { TEMPORAL = 1 } },
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,

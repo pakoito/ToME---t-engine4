@@ -87,7 +87,7 @@ newTalent{
 	require = undeads_req3,
 	points = 5,
 	cooldown = 25,
-	tactical = { ATTACK = 1, HEAL = 1 },
+	tactical = { ATTACK = { BLIGHT = 1 }, HEAL = 1 },
 	range=1,
 	requires_target = true,
 	action = function(self, t)
@@ -120,7 +120,7 @@ newTalent{
 	require = undeads_req4,
 	points = 5,
 	cooldown = 15,
-	tactical = { ATTACK = 1, DISABLE = 2 },
+	tactical = { ATTACK = 0.5, DISABLE = { stun = 2 } },
 	range = 1,
 	requires_target = true,
 	action = function(self, t)

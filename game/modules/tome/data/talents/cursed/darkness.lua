@@ -144,7 +144,7 @@ newTalent{
 	hate = 1.5,
 	range = 5,
 	radius = 3,
-	tactical = { ATTACK = 1, DISABLE = 2 },
+	tactical = { ATTACK = { DARKNESS = 1 }, DISABLE = 2 },
 	requires_target = true,
 
 	-- implementation of creeping darkness..used in various locations, but stored here
@@ -353,7 +353,7 @@ newTalent{
 	random_ego = "attack",
 	hate = 0.8,
 	cooldown = 6,
-	tactical = { ATTACK = 2, DISABLE = 1 },
+	tactical = { ATTACK = { DARKNESS = 2 }, DISABLE = { blind = 1 } },
 	range = 5,
 	direct_hit = true,
 	reflectable = true,
@@ -406,7 +406,7 @@ newTalent{
 	cooldown = 10,
 	hate = 1.2,
 	range = 6,
-	tactical = { ATTACK = 2, DISABLE = 2 },
+	tactical = { ATTACK = { DARKNESS = 2 }, DISABLE = { pin = 2 } },
 	direct_hit = true,
 	requires_target = true,
 	getPinDuration = function(self, t)

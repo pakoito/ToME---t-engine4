@@ -179,7 +179,7 @@ newTalent{
 	points = 5,
 	mana = 45,
 	cooldown = 15,
-	tactical = { DISABLE = 3 },
+	tactical = { DISABLE = { stun = 1.5, instakill = 1.5 } },
 	range = function(self, t)
 		if self:getTalentLevel(t) < 3 then return 1
 		else return math.floor(self:getTalentLevel(t)) end

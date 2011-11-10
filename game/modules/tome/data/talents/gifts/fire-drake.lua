@@ -33,7 +33,7 @@ newTalent{
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
-	tactical = { DEFEND = 1, DISABLE = 3 },
+	tactical = { DEFEND = 1, DISABLE = { confusion = 3 } },
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		self:project(tg, self.x, self.y, DamageType.CONFUSION, {
@@ -63,7 +63,7 @@ newTalent{
 		return 4 + self:getTalentLevelRaw(t)
 	end,
 	direct_hit = true,
-	tactical = { DEFEND = 1, DISABLE = 2, ESCAPE = 1 },
+	tactical = { DEFEND = { knockback = 2 }, ESCAPE = { knockback = 2 } },
 	requires_target = true,
 	target = function(self, t)
 		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
@@ -90,7 +90,7 @@ newTalent{
 	random_ego = "attack",
 	equilibrium = 10,
 	cooldown = 35,
-	tactical = { ATTACKAREA = 2 },
+	tactical = { ATTACKAREA = { FIRE = 2 } },
 	range = 10,
 	radius = 2,
 	direct_hit = true,
@@ -142,7 +142,7 @@ newTalent{
 	equilibrium = 12,
 	cooldown = 12,
 	message = "@Source@ breathes fire!",
-	tactical = { ATTACKAREA = {[DamageType.FIRE] = 2} },
+	tactical = { ATTACKAREA = { FIRE = 2 } },
 	range = 0,
 	radius = function(self, t) return 4 + self:getTalentLevelRaw(t) end,
 	direct_hit = true,

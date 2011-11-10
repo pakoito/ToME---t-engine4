@@ -79,7 +79,7 @@ newTalent{
 	cooldown = function(self, t)
 		return 15 - (self:getTalentLevelRaw(self.T_AURA_DISCIPLINE) or 0)
 	end,
-	tactical = { ATTACKAREA = 2 },
+	tactical = { ATTACKAREA = { PHYSICAL = 2 } },
 	on_pre_use = function(self, t, silent)
 		if self:isTalentActive(self.T_THERMAL_AURA) and self:isTalentActive(self.T_CHARGED_AURA) then
 			if not silent then game.logSeen(self, "You may only sustain two auras at once. Aura activation cancelled.") end
@@ -198,7 +198,7 @@ newTalent{
 	cooldown = function(self, t)
 		return 15 - (self:getTalentLevelRaw(self.T_AURA_DISCIPLINE) or 0)
 	end,
-	tactical = { ATTACKAREA = 2 },
+	tactical = { ATTACKAREA = { FIRE = 2 } },
 	on_pre_use = function(self, t, silent)
 		if self:isTalentActive(self.T_KINETIC_AURA) and self:isTalentActive(self.T_CHARGED_AURA) then
 			if not silent then game.logSeen(self, "You may only sustain two auras at once. Aura activation cancelled.") end
@@ -314,7 +314,7 @@ newTalent{
 	cooldown = function(self, t)
 		return 15 - (self:getTalentLevelRaw(self.T_AURA_DISCIPLINE) or 0)
 	end,
-	tactical = { ATTACKAREA = 2 },
+	tactical = { ATTACKAREA = { LIGHTNING = 2 } },
 	on_pre_use = function(self, t, silent)
 		if self:isTalentActive(self.T_KINETIC_AURA) and self:isTalentActive(self.T_THERMAL_AURA) then
 			if not silent then game.logSeen(self, "You may only sustain two auras at once. Aura activation cancelled.") end

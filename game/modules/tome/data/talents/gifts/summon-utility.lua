@@ -66,7 +66,7 @@ newTalent{ short_name="SPIDER_WEB",
 	equilibrium = 5,
 	cooldown = 3,
 	range=7,
-	tactical = { DISABLE = 2 },
+	tactical = { DISABLE = { pin = 2 } },
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
@@ -196,7 +196,7 @@ newTalent{
 	cooldown = 10,
 	range = 10,
 	is_summon = true,
-	tactical = { ATTACK = 1, DISABLE = 2 },
+	tactical = { ATTACK = 1, DISABLE = { pin = 2 } },
 	on_pre_use = function(self, t, silent)
 		if not self:canBe("summon") and not silent then game.logPlayer(self, "You can not summon, you are suppressed!") return end
 		return not checkMaxSummon(self, silent)

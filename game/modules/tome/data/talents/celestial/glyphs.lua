@@ -165,7 +165,7 @@ newTalent{
 	points = 5,
 	cooldown = 20,
 	positive = -10,
-	tactical = { ATTACKAREA = 2 },
+	tactical = { ATTACKAREA = {LIGHT = 2} },
 	requires_target = true,
 	range = function(self, t) return math.floor (self:getTalentLevel(t)) end,
 	getDamage = function(self, t) return 15 + self:combatSpellpower(0.12) * self:getTalentLevel(t) end,

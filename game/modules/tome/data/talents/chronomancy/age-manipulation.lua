@@ -24,7 +24,7 @@ newTalent{
 	points = 5,
 	paradox = 5,
 	cooldown = 4,
-	tactical = { ATTACK = 2, DISABLE = 2 },
+	tactical = { ATTACK = {TEMPORAL = 2}, DISABLE = 2 },
 	range = 10,
 	reflectable = true,
 	requires_target = true,
@@ -111,7 +111,7 @@ newTalent{
 	points = 5,
 	paradox = 20,
 	cooldown = 14,
-	tactical = { ATTACKAREA = 2 },
+	tactical = { ATTACKAREA = {TEMPORAL = 2} },
 	range = 0,
 	radius = function(self, t)
 		return 3 + math.floor(self:getTalentLevel(t)/4)
@@ -157,7 +157,7 @@ newTalent{
 	points = 5,
 	paradox = 10,
 	cooldown = 10,
-	tactical = { HEAL = 2 },
+	tactical = { HEAL = 2, CURE = 2 },
 	getHeal = function(self, t) return self:combatTalentSpellDamage(t, 40, 440)*getParadoxModifier(self, pm) end,
 	getRemoveCount = function(self, t) return math.floor(self:getTalentLevel(t)) end,
 	action = function(self, t)

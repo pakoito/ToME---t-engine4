@@ -36,7 +36,7 @@ newTalent{
 	psi = 10,
 	range = 1,
 	requires_target = true,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = { PHYSICAL = 2 } },
 	action = function(self, t)
 		local weapon = self:getInven("MAINHAND") and self:getInven("MAINHAND")[1]
 		if type(weapon) == "boolean" then weapon = nil end
@@ -103,10 +103,17 @@ newTalent{
 	sustain_psi = 0,
 	points = 5,
 	tactical = { ATTACK = function(self, t)
-		local k_aura_on = self:isTalentActive(self.T_KINETIC_AURA)
-		local t_aura_on = self:isTalentActive(self.T_THERMAL_AURA)
-		local c_aura_on = self:isTalentActive(self.T_CHARGED_AURA)
-		return (k_aura_on and 1 or 0) + (t_aura_on and 1 or 0) + (c_aura_on and 1 or 0)
+		local vals = {}
+		if self:isTalentActive(self.T_KINETIC_AURA) then
+			vals[PHYSICAL] = 1
+		end
+		if self:isTalentActive(self.T_THERMAL_AURA) then
+			vals[FIRE] = 1
+		end
+		if self:isTalentActive(self.T_CHARGED_AURA) then
+			vals[LIGHTNING] = 1
+		end
+		return vals
 	end},
 	activate = function(self, t)
 		local ret = {
@@ -159,7 +166,7 @@ newTalent{
 	cooldown = 20,
 	psi = 30,
 	points = 5,
-	tactical = { ATTACK = 3 },
+	tactical = { ATTACK = { PHYSICAL = 3 } },
 	action = function(self, t)
 		local targets = 1 + math.ceil(self:getTalentLevel(t)/5)
 		self:setEffect(self.EFF_PSIFRENZY, 3 * self:getTalentLevelRaw(t), {power=targets})

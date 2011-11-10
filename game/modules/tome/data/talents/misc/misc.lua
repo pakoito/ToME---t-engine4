@@ -44,7 +44,7 @@ newTalent{
 	no_break_stealth = true, -- stealth is broken in attackTarget
 	requires_target = true,
 	target = {type="hit", range=1},
-	tactical = { ATTACK = 1 },
+	tactical = { ATTACK = { PHYSICAL = 1 } },
 	no_unlearn_last = true,
 	ignored_by_hotkeyautotalents = true,
 	action = function(self, t)
@@ -193,8 +193,14 @@ newTalent{
 	points = 5,
 	no_energy = true,
 	cooldown = function(self, t) return 55 - self:getTalentLevel(t) * 5 end,
-	tactical = { DEFEND = 2 },
-	
+	tactical = { CURE = function(self, t, target)
+		local nb = 0
+		for eff_id, p in pairs(self.tmp) do
+			local e = self.tempeffect_def[eff_id]
+			if e.status == "detrimental" then nb = nb + 1 end
+		end
+		return nb
+ 	end},	
 	action = function(self, t)
 		local target = self
 		local todel = {}

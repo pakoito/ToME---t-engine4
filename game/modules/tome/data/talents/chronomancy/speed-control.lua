@@ -85,7 +85,7 @@ newTalent{
 	points = 5,
 	paradox = 15,
 	cooldown = 24,
-	tactical = { ATTACKAREA = 2, DISABLE = 2 },
+	tactical = { ATTACKAREA = {TEMPORAL = 2}, DISABLE = 2 },
 	range = 6,
 	radius = function(self, t)
 		return 2 + math.floor(self:getTalentLevel(t)/4)

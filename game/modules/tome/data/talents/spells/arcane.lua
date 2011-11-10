@@ -58,7 +58,7 @@ newTalent{
 	random_ego = "attack",
 	mana = 10,
 	cooldown = 3,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = { ARCANE = 2 } },
 	range = 10,
 	direct_hit = function(self, t) if self:getTalentLevel(t) >= 3 then return true else return false end end,
 	reflectable = true,

@@ -25,7 +25,7 @@ newTalent{
 	random_ego = "attack",
 	mana = 10,
 	cooldown = 3,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = { PHYSICAL = 1, cut = 1} },
 	range = 10,
 	direct_hit = true,
 	reflectable = true,
@@ -134,7 +134,7 @@ newTalent{
 	random_ego = "attack",
 	mana = 50,
 	cooldown = 30,
-	tactical = { ATTACKAREA = 2, DISABLE = 3 },
+	tactical = { ATTACKAREA = { PHYSICAL = 2 }, DISABLE = { stun = 3 } },
 	range = 10,
 	radius = function(self, t)
 		return 2 + (self:getTalentLevel(t)/2)

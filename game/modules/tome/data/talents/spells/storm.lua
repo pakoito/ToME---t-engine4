@@ -24,7 +24,7 @@ newTalent{
 	points = 5,
 	mana = 12,
 	cooldown = 8,
-	tactical = { ATTACKAREA = 2, DISABLE =1 },
+	tactical = { ATTACKAREA = { LIGHTNING = 2 }, DISABLE = { stun = 1 } },
 	range = 0,
 	radius = function(self, t)
 		return math.floor(2 + self:getTalentLevel(t) * 0.7)
@@ -69,7 +69,7 @@ newTalent{
 	points = 5,
 	mana = 8,
 	cooldown = 4,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = { LIGHTNING = 2 }, DISABLE = { stun = 1 } },
 	range = 10,
 	requires_target = true,
 	reflectable = true,

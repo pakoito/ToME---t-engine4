@@ -26,7 +26,7 @@ newTalent{
 	cooldown = 3,
 	no_energy = "fake",
 	range = 10,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = {TEMPORAL = 2} },
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	requires_target = true,
 	action = function(self, t)
@@ -53,7 +53,7 @@ newTalent{
 	cooldown = 8,
 	no_energy = "fake",
 	range = 10,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = {PHYSICAL = 2} },
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	requires_target = true,
 	action = function(self, t)
@@ -113,7 +113,7 @@ newTalent{
 	cooldown = function(self, t) return 15 - 2 * self:getTalentLevelRaw(t) end,
 	no_energy = true,
 	range = 10,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = {PHYSICAL = 2} },
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	requires_target = true,
 	action = function(self, t)

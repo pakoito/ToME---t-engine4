@@ -25,7 +25,7 @@ newTalent{
 	points = 5,
 	cooldown = 12,
 	stamina = 20,
-	tactical = { DISABLE = 2, ATTACK = 1 },
+	tactical = { DISABLE = { confusion = 2 }, ATTACK = { PHYSICAL = 1 } },
 	require = techs_req1,
 	requires_target = true,
 	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t) / 2) end,

@@ -178,7 +178,7 @@ newTalent{
 	points = 5,
 	mana = 30,
 	cooldown = 10,
-	tactical = { ATTACKAREA = 2 },
+	tactical = { ATTACKAREA = { BLIGHT = 2 } },
 	radius = function(self, t) return 1 + math.floor(self:getTalentLevel(t) / 3) end,
 	range = 8,
 	requires_target = true,

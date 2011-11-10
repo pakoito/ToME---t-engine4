@@ -48,7 +48,7 @@ newTalent{
 	points = 5,
 	paradox = 5,
 	cooldown = 6,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = {TEMPORAL = 2} },
 	range = 10,
 	direct_hit = true,
 	reflectable = true,

@@ -26,7 +26,7 @@ newTalent{
 	cooldown = 10,
 	range = 1,
 	message = "@Source@ tries to swallow @target@!",
-	tactical = { ATTACK = 0.5, EQUILIBRIUM = 0.5},
+	tactical = { ATTACK = { NATURE = 0.5 }, EQUILIBRIUM = 0.5},
 	requires_target = true,
 	no_npc_use = true,
 	action = function(self, t)
@@ -68,7 +68,7 @@ newTalent{
 	message = "@Source@ shakes the ground!",
 	equilibrium = 4,
 	cooldown = 30,
-	tactical = { ATTACKAREA = 2, DISABLE = 2 },
+	tactical = { ATTACKAREA = { PHYSICAL = 2 }, DISABLE = { knockback = 2 } },
 	range = 10,
 	radius = function(self, t)
 		return 2 + self:getTalentLevel(t) / 2
@@ -120,7 +120,7 @@ newTalent{
 	equilibrium = 12,
 	cooldown = 12,
 	message = "@Source@ breathes sand!",
-	tactical = { ATTACKAREA = {[DamageType.PHYSICAL] = 2}, DISABLE = 2 },
+	tactical = { ATTACKAREA = {PHYSICAL = 2}, DISABLE = { blind = 2 } },
 	range = 0,
 	radius = function(self, t) return 4 + self:getTalentLevelRaw(t) end,
 	direct_hit = true,

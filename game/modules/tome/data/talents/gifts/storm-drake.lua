@@ -50,7 +50,7 @@ newTalent{
 	cooldown = 20,
 	range = 0,
 	radius = 1,
-	tactical = { ATTACKAREA = 5 },
+	tactical = { ATTACKAREA = { instakill = 5 } },
 	requires_target = true,
 	target = function(self, t)
 		return {type="ball", radius=self:getTalentRadius(t), selffire=false, talent=t}
@@ -92,7 +92,7 @@ newTalent{
 	equilibrium = 14,
 	cooldown = 15,
 	proj_speed = 2, -- This is purely indicative
-	tactical = { ATTACK = 2, DISABLE = 2 },
+	tactical = { ATTACK = { LIGHTNING = 2 }, DISABLE = { stun = 2 } },
 	range = function(self, t) return 4 + math.floor(self:getTalentLevel(t)) end,
 	requires_target = true,
 	action = function(self, t)
@@ -166,7 +166,7 @@ newTalent{
 	equilibrium = 12,
 	cooldown = 12,
 	message = "@Source@ breathes lightning!",
-	tactical = { ATTACKAREA = {[DamageType.LIGHTNING] = 2} },
+	tactical = { ATTACKAREA = {LIGHTNING = 2}, DISABLE = { stun = 1 } },
 	range = 0,
 	radius = function(self, t) return 4 + self:getTalentLevelRaw(t) end,
 	direct_hit = true,

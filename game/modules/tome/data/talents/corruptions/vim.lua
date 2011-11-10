@@ -26,7 +26,7 @@ newTalent{
 	vim = 10,
 	range = 10,
 	proj_speed = 10,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = {BLIGHT = 2} },
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_slime"}}
@@ -93,7 +93,7 @@ newTalent{
 	points = 5,
 	vim = 30,
 	cooldown = 15,
-	tactical = { ATTACKAREA = 1, DISABLE = 2, ESCAPE = 2 },
+	tactical = { ATTACKAREA = {BLIGHT = 1}, DISABLE = 2, ESCAPE = 2 },
 	range = 7,
 	action = function(self, t)
 		local tg = {type="ball", radius=3, range=self:getTalentRange(t), talent=t}

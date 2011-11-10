@@ -26,7 +26,7 @@ newTalent{
 	cooldown = 4,
 	hate =  0.5,
 	range = 3,
-	tactical = { ATTACKAREA = 2 },
+	tactical = { ATTACKAREA = { MIND = 2 } },
 	getDamage = function(self, t)
 		return self:combatTalentMindDamage(t, 10, 280)
 	end,
@@ -70,7 +70,7 @@ newTalent{
 	cooldown = 10,
 	hate =  0.8,
 	range = 7,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = { MIND = 2 } },
 	direct_hit = true,
 	requires_target = true,
 	getDuration = function(self, t)
@@ -244,7 +244,7 @@ newTalent{
 	cooldown = 3,
 	hate =  0.5,
 	range = 7,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = { MIND = 2 } },
 	direct_hit = true,
 	requires_target = true,
 	getDuration = function(self, t)
@@ -286,7 +286,6 @@ newTalent{
 	mode = "passive",
 	require = cursed_cun_req4,
 	points = 5,
-	tactical = { ATTACK = 2 },
 	getChance = function(self, t)
 		return math.sqrt(self:getTalentLevel(t)) * 8
 	end,

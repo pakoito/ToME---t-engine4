@@ -25,7 +25,7 @@ newTalent{
 	random_ego = "attack",
 	mana = 12,
 	cooldown = 3,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = { FIRE = 2 } },
 	range = 10,
 	reflectable = true,
 	proj_speed = 20,
@@ -82,7 +82,11 @@ newTalent{
 	random_ego = "attack",
 	mana = 30,
 	cooldown = 18,
-	tactical = { ATTACK = 1, DISABLE = 3 },
+	tactical = { ATTACK = { FIRE = 1 }, DISABLE = { stun = 3 }, CURE = function(self, t, target)
+		if self:attr("burning_wake") and self:attr("cleansing_flame") then
+			return 1
+		end
+	end },
 	range = 0,
 	radius = function(self, t)
 		return 3 + self:getTalentLevelRaw(t)
@@ -131,7 +135,7 @@ newTalent{
 	random_ego = "attack",
 	mana = 40,
 	cooldown = 8,
-	tactical = { ATTACKAREA = 2 },
+	tactical = { ATTACKAREA = { FIRE = 2 } },
 	range = 7,
 	radius = function(self, t)
 		return 1 + self:getTalentLevelRaw(t)
@@ -180,7 +184,7 @@ newTalent{
 	random_ego = "attack",
 	mana = 100,
 	cooldown = 30,
-	tactical = { ATTACKAREA = 3 },
+	tactical = { ATTACKAREA = { FIRE = 3 } },
 	range = 10,
 	radius = 5,
 	direct_hit = true,

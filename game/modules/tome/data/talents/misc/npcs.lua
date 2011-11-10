@@ -77,7 +77,7 @@ newTalent{
 	cooldown = 5,
 	range = 1,
 	requires_target = true,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = { NATURE = 1, poison = 1} },
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -101,7 +101,7 @@ newTalent{
 	message = "@Source@ crawls acid onto @target@.",
 	cooldown = 2,
 	range = 1,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = { ACID = 2 } },
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
@@ -126,7 +126,7 @@ newTalent{
 	message = "@Source@ releases blinding spores at @target@.",
 	cooldown = 2,
 	range = 1,
-	tactical = { ATTACK = 2 },
+	tactical = { DISABLE = { blind = 2 } },
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
@@ -151,7 +151,7 @@ newTalent{
 	message = "@Source@ releases poisonous spores at @target@.",
 	cooldown = 2,
 	range = 1,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = { NATURE = 1, poison = 1} },
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
@@ -175,7 +175,7 @@ newTalent{
 	cooldown = 6,
 	stamina = 8,
 	require = { stat = { str=12 }, },
-	tactical = { ATTACK = 1, DISABLE = 2 },
+	tactical = { ATTACK = { PHYSICAL = 1 }, DISABLE = { stun = 2 } },
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
@@ -208,7 +208,7 @@ newTalent{
 	stamina = 8,
 	require = { stat = { str=12 }, },
 	requires_target = true,
-	tactical = { ATTACK = 1, DISABLE = 2 },
+	tactical = { ATTACK = { PHYSICAL = 1 }, DISABLE = { disarm = 2 } },
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -238,7 +238,7 @@ newTalent{
 	stamina = 8,
 	require = { stat = { str=12 }, },
 	requires_target = true,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = { PHYSICAL = 2 }, DISABLE = { stun = 1 } },
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -270,7 +270,7 @@ newTalent{
 	stamina = 8,
 	require = { stat = { str=12 }, },
 	requires_target = true,
-	tactical = { ATTACK = 1, DISABLE = 2 },
+	tactical = { ATTACK = 1, DISABLE = { knockback = 2 } },
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -303,7 +303,7 @@ newTalent{
 	message = "@Source@ bites poison into @target@.",
 	cooldown = 5,
 	range = 1,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = { NATURE = 1, poison = 1} },
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
@@ -386,7 +386,7 @@ newTalent{
 	cooldown = 8,
 	message = "@Source@ diseases @target@.",
 	requires_target = true,
-	tactical = { ATTACK = 2, DISABLE = 1 },
+	tactical = { ATTACK = { BLIGHT = 2 }, DISABLE = { disease = 1 } },
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -416,7 +416,7 @@ newTalent{
 	points = 5,
 	cooldown = 8,
 	message = "@Source@ diseases @target@.",
-	tactical = { ATTACK = 2, DISABLE = 1 },
+	tactical = { ATTACK = { BLIGHT = 2 }, DISABLE = { disease = 1 } },
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
@@ -448,7 +448,7 @@ newTalent{
 	cooldown = 8,
 	message = "@Source@ diseases @target@.",
 	requires_target = true,
-	tactical = { ATTACK = 2, DISABLE = 1 },
+	tactical = { ATTACK = { BLIGHT = 2 }, DISABLE = { disease = 1 } },
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -481,7 +481,7 @@ newTalent{
 	range = 10,
 	direct_hit = true,
 	requires_target = true,
-	tactical = { DISABLE = 3 },
+	tactical = { DISABLE = { confusion = 3 } },
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -500,12 +500,9 @@ newTalent{
 	points = 5,
 	mana = 10,
 	cooldown = 3,
-	tactical = {
-		ATTACK = 10,
-	},
 	range = 10,
 	reflectable = true,
-	tactical = { ATACK = 1 },
+	tactical = { ATTACK = { COLD = 1 } },
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
@@ -527,14 +524,11 @@ newTalent{
 	points = 5,
 	mana = 10,
 	cooldown = 8,
-	tactical = {
-		ATTACK = 10,
-	},
 	range = 10,
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,
-	tactical = { DISABLE = 2, ATTACK = 1 },
+	tactical = { DISABLE = { stun = 2 }, ATTACK = { COLD = 1 } },
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -555,7 +549,7 @@ newTalent{
 	points = 5,
 	mana = 3,
 	cooldown = 2,
-	tactical = { ATTACK = 7 },
+	tactical = { ATTACK = { ARCANE = 7 } },
 	range = 10,
 	reflectable = true,
 	requires_target = true,
@@ -581,7 +575,14 @@ newTalent{
 	points = 5,
 	mana = 30,
 	cooldown = 15,
-	tactical = { PROTECT = 1 },
+	tactical = { CURE = function(self, t, target)
+		local nb = 0
+		for eff_id, p in pairs(self.tmp) do
+			local e = self.tempeffect_def[eff_id]
+			if e.subtype.poison or e.subtype.disease then nb = nb + 1 end
+		end
+		return nb
+	end },
 	getCureCount = function(self, t) return math.floor(self:getTalentLevel(t)) end,
 	action = function(self, t)
 		local target = self
@@ -644,7 +645,7 @@ newTalent{
 	stamina = 8,
 	require = { stat = { str=12 }, },
 	requires_target = true,
-	tactical = { DISABLE = 2, ATTACK = 1 },
+	tactical = { DISABLE = { pin = 2 }, ATTACK = { PHYSICAL = 1 } },
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -675,10 +676,6 @@ newTalent{
 	equilibrium = 12,
 	cooldown = 12,
 	message = "@Source@ projects ink!",
-	tactical = {
-		ATTACKAREA = 10,
-		DEFEND = 5,
-	},
 	range = 0,
 	radius = function(self, t)
 		return 4 + self:getTalentLevelRaw(t)
@@ -691,7 +688,7 @@ newTalent{
 	getDuration = function(self, t)
 		return 2 + self:getTalentLevelRaw(t)
 	end,
-	tactical = { DISABLE = 2 },
+	tactical = { DISABLE = { blind = 2 } },
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
@@ -713,12 +710,9 @@ newTalent{
 	points = 5,
 	equilibrium = 4,
 	cooldown = 6,
-	tactical = {
-		ATTACK = 10,
-	},
 	range = 10,
 	requires_target = true,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = { NATURE = 1, poison = 1} },
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t)}
 		local x, y = self:getTarget(tg)
@@ -739,12 +733,9 @@ newTalent{
 	points = 5,
 	equilibrium = 4,
 	cooldown = 6,
-	tactical = {
-		ATTACK = 10,
-	},
 	range = 10,
 	requires_target = true,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = { BLIGHT = 2 } },
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t)}
 		local x, y = self:getTarget(tg)
@@ -812,9 +803,6 @@ newTalent{
 	type = {"undead/other", 1},
 	points = 5,
 	cooldown = 6,
-	tactical = {
-		ATTACK = 10,
-	},
 	range = 10,
 	radius = 2,
 	direct_hit = true,
@@ -822,7 +810,7 @@ newTalent{
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
 	end,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = { PHYSICAL = 2 } },
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
@@ -844,12 +832,9 @@ newTalent{
 	equilibrium = 4,
 	cooldown = 6,
 	message = "@Source@ seems to search the ground...",
-	tactical = {
-		ATTACK = 10,
-	},
 	range = 10,
 	requires_target = true,
-	tactical = { DISABLE = 2 },
+	tactical = { DISABLE = { stun = 1, pin = 1 } },
 	action = function(self, t)
 		local dur = 2 + self:getTalentLevel(t)
 		local trap = mod.class.Trap.new{
@@ -887,9 +872,6 @@ newTalent{
 	points = 5,
 	equilibrium = 4,
 	cooldown = 6,
-	tactical = {
-		ATTACK = 10,
-	},
 	range = 0,
 	radius = function(self, t)
 		return 2 + self:getTalentLevelRaw(t) / 1.5
@@ -926,13 +908,10 @@ newTalent{
 	points = 5,
 	equilibrium = 5,
 	cooldown = 3,
-	tactical = {
-		ATTACK = 10,
-	},
 	range = 10,
 	radius = 1,
 	direct_hit = true,
-	tactical = { DISABLE = 3, ATTACK = 2, ESCAPE = 2 },
+	tactical = { DISABLE = { knockback = 3 }, ATTACK = {PHYSICAL = 2 }, ESCAPE = { knockback = 2 } },
 	requires_target = true,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t}
@@ -957,9 +936,6 @@ newTalent{
 	points = 5,
 	equilibrium = 5,
 	cooldown = 10,
-	tactical = {
-		ATTACK = 10,
-	},
 	message = "@Source@ howls",
 	range = 10,
 	tactical = { ATTACK = 3 },
@@ -992,9 +968,6 @@ newTalent{
 	points = 5,
 	equilibrium = 5,
 	cooldown = 10,
-	tactical = {
-		ATTACK = 10,
-	},
 	message = "@Source@ shrieks.",
 	range = 10,
 	direct_hit = true,
@@ -1029,7 +1002,7 @@ newTalent{
 	cooldown = 6,
 	stamina = 12,
 	requires_target = true,
-	tactical = { ATTACK = 1, DISABLE = 2 },
+	tactical = { ATTACK = { PHYSICAL = 1 }, DISABLE = { stun = 2 } },
 	action = function(self, t)
 		local weapon = self:hasTwoHandedWeapon()
 		if not weapon then
@@ -1071,7 +1044,7 @@ newTalent{
 	target = function(self, t)
 		return {type="beam", range=self:getTalentRange(t), talent=t}
 	end,
-	tactical = { ATTACK = 3 },
+	tactical = { ATTACK = { MIND = 3 } },
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
@@ -1095,7 +1068,7 @@ newTalent{
 	range = 7,
 	direct_hit = true,
 	requires_target = true,
-	tactical = { DISABLE = 3 },
+	tactical = { DISABLE = { silence = 3 } },
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -1121,7 +1094,7 @@ newTalent{
 	target = function(self, t)
 		return {type="beam", range=self:getTalentRange(t), talent=t}
 	end,
-	tactical = { ATTACK = 2, ESCAPE = 2 },
+	tactical = { ATTACK = { MIND = 2 }, ESCAPE = { knockback = 2 } },
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
@@ -1149,7 +1122,7 @@ newTalent{
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
 	end,
-	tactical = { ATTACK = 2, ATTACKAREA = 2 },
+	tactical = { ATTACKAREA = { BLIGHT = 2 } },
 	action = function(self, t)
 		local duration = self:getTalentLevel(t) + 2
 		local dam = self:combatTalentSpellDamage(t, 4, 65)
@@ -1223,7 +1196,7 @@ newTalent{
 	cooldown = 1,
 	range = 1,
 	requires_target = true,
-	tactical = { ATTACK = 1 },
+	tactical = { ATTACK = { LIGHT = 1 } },
 	action = function(self, t)
 		local tg = {type="bolt", range=1}
 		local x, y, target = self:getTarget(tg)
@@ -1248,7 +1221,7 @@ newTalent{
 	cooldown = 1,
 	range = 1,
 	requires_target = true,
-	tactical = { ATTACK = 1 },
+	tactical = { ATTACK = { COLD = 1 } },
 	action = function(self, t)
 		local tg = {type="bolt", range=1}
 		local x, y, target = self:getTarget(tg)
@@ -1312,7 +1285,7 @@ newTalent{
 	range = 10,
 	proj_speed = 2,
 	requires_target = true,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = { FIRE = 1, PHYSICAL = 1 } },
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t}
 		local x, y = self:getTarget(tg)
@@ -1385,7 +1358,8 @@ newTalent{
 	paradox = 10,
 	cooldown = 8,
 	tactical = {
-		ATTACK = 10,
+		ATTACK = { TEMPORAL = 10 },
+		DISABLE = 10,
 	},
 	range = 3,
 	direct_hit = true,

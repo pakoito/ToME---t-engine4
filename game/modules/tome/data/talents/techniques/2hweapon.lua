@@ -26,7 +26,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 10,
 	stamina = 30,
-	tactical = { ATTACKAREA = 3 },
+	tactical = { ATTACKAREA = { weapon = 3 } },
 	range = 0,
 	radius = 1,
 	requires_target = true,
@@ -112,7 +112,7 @@ newTalent{
 	random_ego = "attack",
 	stamina = 30,
 	cooldown = 18,
-	tactical = { ATTACKAREA = 1, DISABLE = 3 },
+	tactical = { ATTACKAREA = { confusion = 1 }, DISABLE = { confusion = 3 } },
 	range = 0,
 	radius = function(self, t)
 		return 3 + self:getTalentLevelRaw(t)
@@ -155,7 +155,7 @@ newTalent{
 	cooldown = 30,
 	stamina = 30,
 	requires_target = true,
-	tactical = { ATTACK = 1 },
+	tactical = { ATTACK = { weapon = 1 } },
 	on_pre_use = function(self, t, silent) if not self:hasTwoHandedWeapon() then if not silent then game.logPlayer(self, "You require a two handed weapon to use this talent.") end return false end return true end,
 	action = function(self, t)
 		local weapon = self:hasTwoHandedWeapon()
@@ -213,7 +213,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 6,
 	stamina = 8,
-	tactical = { ATTACK = 2, DISABLE = 2 },
+	tactical = { ATTACK = { weapon = 2 }, DISABLE = { stun = 2 } },
 	requires_target = true,
 	on_pre_use = function(self, t, silent) if not self:hasTwoHandedWeapon() then if not silent then game.logPlayer(self, "You require a two handed weapon to use this talent.") end return false end return true end,
 	action = function(self, t)
@@ -257,7 +257,7 @@ newTalent{
 	cooldown = 6,
 	stamina = 12,
 	requires_target = true,
-	tactical = { ATTACK = 2, DISABLE = 2 },
+	tactical = { ATTACK = { weapon = 2 }, DISABLE = { stun = 2 } },
 	on_pre_use = function(self, t, silent) if not self:hasTwoHandedWeapon() then if not silent then game.logPlayer(self, "You require a two handed weapon to use this talent.") end return false end return true end,
 	action = function(self, t)
 		local weapon = self:hasTwoHandedWeapon()
@@ -302,7 +302,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 6,
 	stamina = 12,
-	tactical = { ATTACK = 2, DISABLE = 2 },
+	tactical = { ATTACK = { weapon = 2 }, DISABLE = { stun = 2 } },
 	requires_target = true,
 	on_pre_use = function(self, t, silent) if not self:hasTwoHandedWeapon() then if not silent then game.logPlayer(self, "You require a two handed weapon to use this talent.") end return false end return true end,
 	action = function(self, t)

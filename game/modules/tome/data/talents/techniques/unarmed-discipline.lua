@@ -24,7 +24,7 @@ newTalent{
 	points = 5,
 	cooldown = 6,
 	stamina = 12,
-	tactical = { ATTACK = 2, ESCAPE = 2 },
+	tactical = { ATTACK = { PHYSICAL = 2 }, ESCAPE = { knockback = 2 } },
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentPhysicalDamage(t, 10, 100) * getUnarmedTrainingBonus(self) end,
 	getPush = function(self, t) return 1 + math.ceil(self:getTalentLevel(t)/4) end,
@@ -148,7 +148,7 @@ newTalent{
 	stamina = 18,
 	range = 0,
 	radius = function(self, t) return 1 end,
-	tactical = { ATTACKAREA = 2, DISABLE = 2 },
+	tactical = { ATTACKAREA = { PHYSICAL = 2 }, DISABLE = { knockback = 2 } },
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentPhysicalDamage(t, 15, 150) * getUnarmedTrainingBonus(self) end,
 	target = function(self, t)

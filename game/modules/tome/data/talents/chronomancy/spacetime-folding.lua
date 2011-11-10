@@ -141,7 +141,7 @@ newTalent{
 	random_ego = "attack",
 	paradox = 10,
 	cooldown = 10,
-	tactical = { ATTACK = 1, CLOSEIN = 2 },
+	tactical = { ATTACK = {TEMPORAL = 1}, CLOSEIN = 2 },
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,

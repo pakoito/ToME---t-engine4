@@ -67,6 +67,7 @@ newTalent{
 	mode = "sustained",
 	sustain_equilibrium = 20,
 	cooldown = 30,
+	tactical = { BUFF = 3 },
 	activate = function(self, t)
 		return {
 			tmpid = self:addTemporaryValue("elemental_harmony", self:getTalentLevel(t)),
@@ -101,7 +102,7 @@ newTalent{
 	points = 5,
 	equilibrium = 15,
 	cooldown = 30,
-	tactical = { BUFF=2 },
+	tactical = { BUFF = 2 },
 	on_pre_use = function(self, t) return self:hasEffect(self.EFF_INFUSION_COOLDOWN) end,
 	action = function(self, t)
 		self:removeEffect(self.EFF_INFUSION_COOLDOWN)

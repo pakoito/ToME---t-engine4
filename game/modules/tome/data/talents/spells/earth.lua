@@ -57,7 +57,11 @@ newTalent{
 	random_ego = "attack",
 	mana = 18,
 	cooldown = 6,
-	tactical = { ATTACK = 1, DISABLE = 2, ESCAPE = 2 },
+	tactical = {
+		ATTACK = { PHYSICAL = 1 }, 
+		DISABLE = { knockback = 2 },
+		ESCAPE = { knockback = 2 },
+	},
 	range = 10,
 	reflectable = true,
 	proj_speed = 6,

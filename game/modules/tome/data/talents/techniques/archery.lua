@@ -28,7 +28,7 @@ newTalent{
 	range = archery_range,
 	message = "@Source@ shoots!",
 	requires_target = true,
-	tactical = { ATTACK = 1 },
+	tactical = { ATTACK = { weapon = 1 } },
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	no_unlearn_last = true,
 	use_psi_archery = function(self, t)
@@ -63,7 +63,7 @@ newTalent{
 	require = techs_dex_req1,
 	range = archery_range,
 	requires_target = true,
-	tactical = { ATTACK = 2 },
+	tactical = { ATTACK = { weapon = 2 } },
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	action = function(self, t)
 		local targets = self:archeryAcquireTargets(nil, {one_shot=true})
@@ -174,7 +174,7 @@ newTalent{
 	require = techs_dex_req4,
 	range = archery_range,
 	requires_target = true,
-	tactical = { ATTACK = 3 },
+	tactical = { ATTACK = { weapon = 1 }, STAMINA = 1 },
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	action = function(self, t)
 		local targets = self:archeryAcquireTargets(nil, {one_shot=true})
@@ -206,7 +206,7 @@ newTalent{
 		return rad
 	end,
 	require = techs_dex_req1,
-	tactical = { ATTACKAREA = 2, DISABLE = 2 },
+	tactical = { ATTACKAREA = { FIRE = 2 }, DISABLE = { blind = 2 } },
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	requires_target = true,
 	target = function(self, t)
@@ -247,7 +247,7 @@ newTalent{
 	stamina = 15,
 	require = techs_dex_req2,
 	range = archery_range,
-	tactical = { ATTACK = 1, DISABLE = 1 },
+	tactical = { ATTACK = { weapon = 1 }, DISABLE = 1 },
 	requires_target = true,
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	archery_onhit = function(self, t, target, x, y)
@@ -274,7 +274,7 @@ newTalent{
 	stamina = 15,
 	require = techs_dex_req3,
 	range = archery_range,
-	tactical = { ATTACK = 1, DISABLE = 2 },
+	tactical = { ATTACK = { weapon = 1 }, DISABLE = { pin = 2 } },
 	requires_target = true,
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	archery_onhit = function(self, t, target, x, y)
@@ -311,7 +311,7 @@ newTalent{
 	radius = function(self, t)
 		return 1 + self:getTalentLevel(t) / 3
 	end,
-	tactical = { ATTACKAREA = 2, DISABLE = 3 },
+	tactical = { ATTACKAREA = { weapon = 2 }, DISABLE = { stun = 3 } },
 	requires_target = true,
 	target = function(self, t)
 		return {type="ball", radius=self:getTalentRadius(t), range=self:getTalentRange(t)}

@@ -34,7 +34,7 @@ newTalent{
 		return {type="bolt", range=self:getTalentRange(t), min_range=2}
 	end,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.8, 1.6) end,
-	tactical = { DEFEND = 2, DISABLE = 1 },
+	tactical = { DEFEND = { knockback = 2 }, DISABLE = { knockback = 1 } },
 	action = function(self, t)
 		if self:attr("never_move") then game.logPlayer(self, "Your golem can not do that currently.") return end
 
@@ -144,7 +144,7 @@ newTalent{
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.8, 1.6) end,
 	getPinDuration = function(self, t) return 2 + self:getTalentLevel(t) end,
-	tactical = { DISABLE = 2 },
+	tactical = { ATTACK = { PHYSICAL = 0.5 }, DISABLE = { pin = 2 } },
 	action = function(self, t)
 		if self:attr("never_move") then game.logPlayer(self, "Your golem can not do that currently.") return end
 
@@ -218,7 +218,7 @@ newTalent{
 		return self:combatTalentWeaponDamage(t, 0.4, 1.1)
 	end,
 	getDazeDuration = function(self, t) return 2 + self:getTalentLevel(t) end,
-	tactical = { DISABLE = 3 },
+	tactical = { ATTACKAREA = { PHYSICAL = 0.5 }, DISABLE = { daze = 3 } },
 	action = function(self, t)
 		if self:attr("never_move") then game.logPlayer(self, "Your golem can not do that currently.") return end
 
@@ -294,7 +294,7 @@ newTalent{
 		return {type="beam", range=self:getTalentRange(t), talent=t}
 	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 25, 320) end,
-	tactical = { ATTACK = 3 },
+	tactical = { ATTACK = { FIRE = 1, COLD = 1, LIGHTNING = 1 } },
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
@@ -393,7 +393,7 @@ newTalent{
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), selffire=false, radius=self:getTalentRadius(t), talent=t}
 	end,
-	tactical = { ATTACKAREA = 2, CLOSEIN = 1 },
+	tactical = { ATTACKAREA = { ARCANE = 2 }, CLOSEIN = 1 },
 	getDamage = function(self, t)
 		return self:combatTalentSpellDamage(t, 12, 120)
 	end,
@@ -434,7 +434,7 @@ newTalent{
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), selffire=false, radius=self:getTalentRadius(t)}
 	end,
-	tactical = { ATTACKAREA = 2 },
+	tactical = { ATTACKAREA = { FIRE = 2 } },
 	action = function(self, t)
 		local duration = 5 + self:getTalentLevel(t)
 		local dam = self:combatTalentSpellDamage(t, 12, 120)
@@ -474,7 +474,7 @@ newTalent{
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), selffire=false, radius=self:getTalentRadius(t)}
 	end,
-	tactical = { ATTACKAREA = 3 },
+	tactical = { ATTACKAREA = { FIRE = 3 } },
 	no_npc_use = true,
 	on_pre_use = function(self, t)
 		return self.summoner and self.summoner.dead

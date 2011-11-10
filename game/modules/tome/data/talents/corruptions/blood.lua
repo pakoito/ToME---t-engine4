@@ -24,7 +24,7 @@ newTalent{
 	points = 5,
 	cooldown = 7,
 	vim = 24,
-	tactical = { ATTACKAREA = 2 },
+	tactical = { ATTACKAREA = {BLIGHT = 2} },
 	range = 0,
 	radius = function(self, t)
 		return math.ceil(3 + self:getTalentLevel(t))
@@ -65,7 +65,7 @@ newTalent{
 	vim = 20,
 	range = 10,
 	proj_speed = 20,
-	tactical = { ATTACK = 2, HEAL = 2 },
+	tactical = { ATTACK = {BLIGHT = 2}, HEAL = 2 },
 	requires_target = true,
 	target = function(self, t)
 		return {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_blood"}}
@@ -91,7 +91,7 @@ newTalent{
 	points = 5,
 	cooldown = 12,
 	vim = 30,
-	tactical = { ATTACKAREA = 2, DISABLE = 2 },
+	tactical = { ATTACKAREA = {BLIGHT = 2}, DISABLE = 2 },
 	range = 0,
 	radius = function(self, t)
 		return 2 + self:getTalentLevelRaw(t)

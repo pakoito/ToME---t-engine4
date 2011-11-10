@@ -226,7 +226,7 @@ newTalent{
 	cooldown = function(self, t) return math.max(6, 13 - math.floor(self:getTalentLevel(t))) end,
 	hate = 0.4,
 	range = 6,
-	tactical = { CLOSEIN = 2, ATTACK = 1 },
+	tactical = { CLOSEIN = 2, ATTACK = { PHYSICAL = 0.5 } },
 	requires_target = true,
 	getDefenseChange = function(self, t)
 		return self:combatTalentStatDamage(t, "str", 20, 50)
