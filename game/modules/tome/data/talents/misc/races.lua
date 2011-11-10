@@ -220,13 +220,15 @@ newTalent{
 		BUFF = function(self, t, target)
 			local nb = 0
 			for eff_id, p in pairs(self.tmp) do
+				local e = self.tempeffect_def[eff_id]
 				if e.status == "beneficial" then nb = nb + 1 end
 			end
-			return nb			
+			return nb
 		end,
 		CURE = function(self, t, target)
 			local nb = 0
 			for eff_id, p in pairs(self.tmp) do
+				local e = self.tempeffect_def[eff_id]
 				if e.status == "detrimental" then nb = nb + 1 end
 			end
 			return nb
@@ -618,8 +620,8 @@ newTalent{
 	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 4 end,
 	tactical = { DEFEND = 1, HEAL = 2, CURE = function(self, t, target)
 		local nb = 0
-		for eff_id, p in pairs(target.tmp) do
-			local e = target.tempeffect_def[eff_id]
+		for eff_id, p in pairs(self.tmp) do
+			local e = self.tempeffect_def[eff_id]
 			if e.status == "detrimental" and (e.type == "physical" or e.type == "magical" or e.type == "mental") then
 				nb = nb + 1
 			end
