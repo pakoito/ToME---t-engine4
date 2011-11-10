@@ -1470,7 +1470,7 @@ newEntity{ base = "BASE_GEM",
 				game.logPlayer(who, "The fusing fails!")
 			end
 		end)
-		return true
+		return {id=true, used=true}
 	end },
 }
 

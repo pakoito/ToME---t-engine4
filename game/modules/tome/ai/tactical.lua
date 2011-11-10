@@ -19,7 +19,7 @@
 
 local DamageType = require "engine.DamageType"
 
---local print = function() end
+local print = function() end
 
 -- Internal functions
 local checkLOS = function(sx, sy, tx, ty)
@@ -316,7 +316,7 @@ newAI("use_tactical", function(self)
 			table.sort(avail.defend, function(a,b) return a.val > b.val end)
 			want.defend = 1 + need_heal / 2 + nb_foes_seen * 0.5
 		end
-		
+
 		-- Need cure (remove detrimental effects)
 		local nb_detrimental_effs = 0
 		for eff_id, p in pairs(self.tmp) do
