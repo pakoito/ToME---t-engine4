@@ -344,7 +344,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local chance, val = t.getParams(self, t)
-		return ([[Vampiric energies fill you; each time you deal damage you have a %d%% chance to heal for %d%% of the damage done.
+		return ([[Vampiric energies fill you; each time you deal damage you have %d%% chance to heal for %d%% of the damage done.
 		The absorption percent will increase with your Spellpower.]]):
 		format(chance, val)
 	end,
