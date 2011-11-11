@@ -2192,7 +2192,7 @@ function _M:learnPool(t)
 		self:learnTalent(self.T_EQUILIBRIUM_POOL, true)
 		self.resource_pool_refs[self.T_EQUILIBRIUM_POOL] = (self.resource_pool_refs[self.T_EQUILIBRIUM_POOL] or 0) + 1
 	end
-	if t.type[1]:find("^technique/") and not self:knowTalent(self.T_STAMINA_POOL) and t.stamina or t.sustain_stamina then
+	if (t.type[1]:find("^technique/") or t.type[1]:find("^cunning/")) and not self:knowTalent(self.T_STAMINA_POOL) and t.stamina or t.sustain_stamina then
 		self:learnTalent(self.T_STAMINA_POOL, true)
 		self.resource_pool_refs[self.T_STAMINA_POOL] = (self.resource_pool_refs[self.T_STAMINA_POOL] or 0) + 1
 	end

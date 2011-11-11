@@ -1007,6 +1007,7 @@ function util.loadfilemods(file, env)
 	for i, addon in ipairs(fs.list("/mod/addons/")) do
 		local fn = "/mod/addons/"..addon.."/superload/"..file
 		if fs.exists(fn) then
+			print("Loading mod", fn)
 			local f, err = loadfile(fn)
 			if err then error(err) end
 			local base = prev

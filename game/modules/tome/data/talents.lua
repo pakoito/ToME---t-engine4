@@ -20,8 +20,8 @@
 local tacticals = {}
 local Entity = require "engine.Entity"
 
-local oldNewTalent = newTalent
-newTalent = function(t)
+local oldNewTalent = Talents.newTalent
+Talents.newTalent = function(self, t)
 	assert(engine.interface.ActorTalents.talents_types_def[t.type[1]], "No talent category "..tostring(t.type[1]).." for talent "..t.name)
 	if engine.interface.ActorTalents.talents_types_def[t.type[1]].generic then t.generic = true end
 	if engine.interface.ActorTalents.talents_types_def[t.type[1]].no_silence then t.no_silence = true end
@@ -44,7 +44,7 @@ newTalent = function(t)
 	if fs.exists("/data/gfx/"..t.image) then t.display_entity = Entity.new{image=t.image, is_talent=true}
 	else t.display_entity = Entity.new{image="talents/default.png", is_talent=true}
 	end
-	return oldNewTalent(t)
+	return oldNewTalent(self, t)
 end
 
 damDesc = function(self, type, dam)
@@ -55,6 +55,8 @@ damDesc = function(self, type, dam)
 	end
 	return dam
 end
+
+Talents.damDesc = damDesc
 
 load("/data/talents/misc/misc.lua")
 load("/data/talents/techniques/techniques.lua")

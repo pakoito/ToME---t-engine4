@@ -276,6 +276,8 @@ InventoryUI.default_tabslist = function(self)
 	return tabslist
 end
 
+class:triggerHook{"ToME:load"}
+
 ------------------------------------------------------------------------
 -- Count the number of talents per types
 ------------------------------------------------------------------------

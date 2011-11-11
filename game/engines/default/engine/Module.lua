@@ -282,8 +282,14 @@ function _M:loadAddons(mod)
 
 	for i, add in ipairs(adds) do
 		print("Binding addon", add.long_name)
+		if add.data then fs.mount(fs.getRealPath(add.dir).."/data", "/data-"..add.short_name, false) print(" * with data") end
 		if add.superload then fs.mount(fs.getRealPath(add.dir).."/superload", "/mod/addons/"..add.short_name.."/superload", false) print(" * with superload") end
 		if add.overload then fs.mount(fs.getRealPath(add.dir).."/overload", "/", true) print(" * with overload") end
+		if add.hooks then
+			fs.mount(fs.getRealPath(add.dir).."/hooks", "/hooks/"..add.short_name, true)
+			dofile("/hooks/"..add.short_name.."/load.lua")
+			print(" * with hooks")
+		end
 	end
 end
 

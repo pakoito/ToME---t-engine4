@@ -36,6 +36,7 @@ function _M:loadDefinition(file)
 	local f, err = util.loadfilemods(file, setmetatable({
 		ActorTalents = require("engine.interface.ActorTalents"),
 		newBirthDescriptor = function(t) self:newBirthDescriptor(t) end,
+		getBirthDescriptor = function(type, name) return self:getBirthDescriptor(type, name) end,
 		setAuto = function(type, v) self.birth_auto[type] = v end,
 		setStepNames = function(names) self.step_names = names end,
 		load = function(f) self:loadDefinition(f) end
@@ -63,6 +64,13 @@ function _M:newBirthDescriptor(t)
 	self.birth_descriptor_def[t.type] = self.birth_descriptor_def[t.type] or {}
 	self.birth_descriptor_def[t.type][t.name] = t
 	table.insert(self.birth_descriptor_def[t.type], t)
+end
+
+--- Get one birth descriptor
+-- Static!
+function _M:getBirthDescriptor(type, name)
+	if not self.birth_descriptor_def[type] then return nil end
+	return self.birth_descriptor_def[type][name]
 end
 
 

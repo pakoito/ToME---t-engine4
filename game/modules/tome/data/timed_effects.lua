@@ -33,8 +33,8 @@ local Chat = require "engine.Chat"
 local Map = require "engine.Map"
 local Level = require "engine.Level"
 
-local oldNewEffect = newEffect
-newEffect = function(t)
+local oldNewEffect = TemporaryEffects.newEffect
+TemporaryEffects.newEffect = function(self, t)
 	if not t.image then
 		t.image = "effects/"..(t.name):lower():gsub("[^a-z0-9_]", "_")..".png"
 	end
@@ -42,7 +42,7 @@ newEffect = function(t)
 	else t.display_entity = Entity.new{image="effects/default.png", is_effect=true} print("===", t.type, t.name)
 	end
 
-	return oldNewEffect(t)
+	return oldNewEffect(self, t)
 end
 
 load("/data/timed_effects/magical.lua")

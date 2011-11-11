@@ -31,7 +31,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		print("[PROJECTOR] starting dam", dam)
 
 		local hd = {"DamageProjector:base", src=src, x=x, y=y, type=type, dam=dam}
-		if self:triggerHook(hd) then dam = hd.dam end
+		if src:triggerHook(hd) then dam = hd.dam end
 
 		-- Difficulty settings
 		if game.difficulty == game.DIFFICULTY_EASY and rtarget.player then
@@ -216,7 +216,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		print("[PROJECTOR] final dam", dam)
 
 		local hd = {"DamageProjector:final", src=src, x=x, y=y, type=type, dam=dam}
-		if self:triggerHook(hd) then dam = hd.dam end
+		if src:triggerHook(hd) then dam = hd.dam end
 
 		local source_talent = src.__projecting_for and src.__projecting_for.project_type and (src.__projecting_for.project_type.talent_id or src.__projecting_for.project_type.talent) and src.getTalentFromId and src:getTalentFromId(src.__projecting_for.project_type.talent or src.__projecting_for.project_type.talent_id)
 		local dead

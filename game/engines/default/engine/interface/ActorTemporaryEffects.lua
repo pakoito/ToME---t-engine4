@@ -29,6 +29,7 @@ _M.tempeffect_def = {}
 function _M:loadDefinition(file, env)
 	local f, err = util.loadfilemods(file, setmetatable(env or {
 		DamageType = require "engine.DamageType",
+		TemporaryEffects = self,
 		newEffect = function(t) self:newEffect(t) end,
 		load = function(f) self:loadDefinition(f, getfenv(2)) end
 	}, {__index=_G}))
