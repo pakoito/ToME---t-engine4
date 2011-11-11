@@ -169,6 +169,36 @@ end
 
 -- ---------------------------------------------------------------------
 -- ---------------------------------------------------------------------
+-- Hooks & Events system
+-- ---------------------------------------------------------------------
+-- ---------------------------------------------------------------------
+
+local _hooks = {hooks={}, list={}}
+
+function _M:bindHook(hook, fct)
+	_hooks.list[hook] = _hooks.list[hook] or {}
+	table.insert(_hooks.list[hook], fct)
+
+	local sfct = [[return function(l, self, data) local ok=false]]
+
+	for i, fct in ipairs(_hooks.list[hook]) do
+		sfct = sfct..([[ if l[%d](self, data) then ok=true end]]):format(i)
+	end
+
+	sfct = sfct..[[ return ok end]]
+	local f, err = loadstring(sfct)
+	if not f then error(err) end
+	_hooks.hooks[hook] = f()
+end
+
+function _M:triggerHook(hook)
+	local h = hook[1]
+	if not _hooks.hooks[h] then return end
+	return _hooks.hooks[h](_hooks.list[h], self, hook)
+end
+
+-- ---------------------------------------------------------------------
+-- ---------------------------------------------------------------------
 -- LOAD & SAVE
 -- ---------------------------------------------------------------------
 -- ---------------------------------------------------------------------
@@ -181,6 +211,7 @@ function _M:save(filter, allow)
 		filter._no_save_fields = true
 		filter._mo = true
 		filter._mo_final = true
+		filter._hooks = true
 	else
 		filter.__CLASSNAME = true
 	end

@@ -601,6 +601,9 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		end
 	end
 
+	local hd = {"Combat:attackTargetWith", hitted=hitted, target=target, weapon=weapon, damtype=damtype, mult=mult}
+	if self:triggerHook(hd) then hitted = hd.hitted end
+
 	-- Visual feedback
 	if hitted then game.level.map:particleEmitter(target.x, target.y, 1, "melee_attack", {color=target.blood_color}) end
 

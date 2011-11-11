@@ -1446,6 +1446,9 @@ function _M:onTakeHit(value, src)
 		end
 	end
 
+	local hd = {"Actor:takeHit", value=value, src=src}
+	if self:triggerHook(hd) then value = hd.value end
+
 	-- Resource leech
 	if value > 0 and src and src:attr("resource_leech_chance") and rng.percent(src.resource_leech_chance) then
 		local leech = src.resource_leech_value

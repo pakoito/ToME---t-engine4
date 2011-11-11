@@ -30,6 +30,9 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 
 		print("[PROJECTOR] starting dam", dam)
 
+		local hd = {"DamageProjector:base", src=src, x=x, y=y, type=type, dam=dam}
+		if self:triggerHook(hd) then dam = hd.dam end
+
 		-- Difficulty settings
 		if game.difficulty == game.DIFFICULTY_EASY and rtarget.player then
 			dam = dam * 0.7
@@ -64,7 +67,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			dam = dam + dam * target:attr("inc_necrotic_minions") / 100
 			print("[PROJECTOR] after necrotic increase dam", dam)
 		end
-		
+
 		if target.isTalentActive and target:isTalentActive(target.T_GESTURE_OF_GUARDING) then
 			local t = target:getTalentFromId(target.T_GESTURE_OF_GUARDING)
 			dam = t.on_damageInflicted(target, t, type, dam, src)
@@ -184,7 +187,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			local t = target:getTalentFromId(target.T_ENERGY_DECOMPOSITION)
 			dam = t.on_damage(target, t, type, dam)
 		end
-		
+
 		if target.isTalentActive and target:isTalentActive(target.T_GESTURE_OF_GUARDING) then
 			local t = target:getTalentFromId(target.T_GESTURE_OF_GUARDING)
 			dam = t.on_damageReceived(target, t, type, dam, src)
@@ -211,6 +214,9 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		end
 
 		print("[PROJECTOR] final dam", dam)
+
+		local hd = {"DamageProjector:final", src=src, x=x, y=y, type=type, dam=dam}
+		if self:triggerHook(hd) then dam = hd.dam end
 
 		local source_talent = src.__projecting_for and src.__projecting_for.project_type and (src.__projecting_for.project_type.talent_id or src.__projecting_for.project_type.talent) and src.getTalentFromId and src:getTalentFromId(src.__projecting_for.project_type.talent or src.__projecting_for.project_type.talent_id)
 		local dead
