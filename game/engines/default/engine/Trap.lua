@@ -134,7 +134,8 @@ function _M:trigger(x, y, who)
 		str = str:gsub("@Target@", tname:capitalize())
 		game.logSeen(who, "%s", str)
 	end
-	local known, del = self:triggered(x, y, who)
+	local known, del = false, false
+	if self.triggered then known, del = self:triggered(x, y, who) end
 	if known then
 		self:setKnown(who, true)
 		game.level.map:updateMap(x, y)

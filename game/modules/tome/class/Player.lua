@@ -695,6 +695,7 @@ end
 
 --- Called after stopping running
 function _M:runStopped()
+	game.level.map.clean_fov = true
 	self:playerFOV()
 end
 
