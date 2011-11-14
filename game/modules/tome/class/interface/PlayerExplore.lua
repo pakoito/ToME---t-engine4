@@ -135,12 +135,12 @@ local adjacentTiles = {
 	--Dir 5 (all adjacent, slow)
 	function(node, cardinal_tiles, diagonal_tiles)
 		local x, y, c, val = node[1], node[2], node[3], node[4]+1
-	
+
 		local left_okay = x > 0
 		local right_okay = x < game.level.map.w - 1
 		local lower_okay = y > 0
 		local upper_okay = y < game.level.map.h - 1
-	
+
 		if upper_okay then cardinal_tiles[#cardinal_tiles+1] = {x,     y + 1, c + game.level.map.w, val, 2 } end
 		if left_okay  then cardinal_tiles[#cardinal_tiles+1] = {x - 1, y,     c - 1,                val, 4 } end
 		if right_okay then cardinal_tiles[#cardinal_tiles+1] = {x + 1, y,     c + 1,                val, 6 } end
@@ -511,16 +511,17 @@ function _M:autoExplore()
 							min_diagonal = values[node[3]]
 						end
 					end
+					local plus_one = 0
 					if min_cardinal > min_diagonal then
 						for _, node in ipairs(listAdjacentTiles(c, false, true)) do
 							if values[node[3]] then
 								add_values[node[3]] = values[node[3]] + 1
-								door_values[c] = door_val + 1
+								plus_one = 1
 							end
 						end
 					end
 
-					local dist = core.fov.distance(self.x, self.y, x, y, true) + 10*door_values[c]
+					local dist = core.fov.distance(self.x, self.y, x, y, true) + 10*(door_values[c] + plus_one)
 					distances[c] = dist
 					if dist < mindist then
 						mindist = dist
@@ -738,7 +739,7 @@ function _M:autoExplore()
 					}
 					self.running.dialog.__showup = nil
 					self.running.dialog.__hidden = true
-				
+
 					self:runStep()
 				end
 				return true
@@ -788,7 +789,7 @@ function _M:checkAutoExplore()
 		if terrain.notice then
 			self:runStop("interesting terrain")
 			return false
-		elseif self.running.explore == "unseen" then 
+		elseif self.running.explore == "unseen" then
 			return self:autoExplore()
 		else
 			self:runStop("the path is blocked")

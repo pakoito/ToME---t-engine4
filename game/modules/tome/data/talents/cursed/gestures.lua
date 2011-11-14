@@ -24,7 +24,6 @@ newTalent{
 	require = cursed_cun_req1,
 	points = 5,
 	random_ego = "attack",
-	proj_speed = 4,
 	tactical = { ATTACK = 2 },
 	getBaseDamage = function(self, t)
 		return self:combatTalentMindDamage(t, 0, 125)
@@ -32,12 +31,20 @@ newTalent{
 	getSecondAttackChance = function(self, t)
 		return 20
 	end,
-	attack = function(self, t, target)
-		if self.hate < 0.1 then return true end
-	
-		local freeHands = self:getFreeHands()
-		if freeHands == 0 then return true end
+	preAttack = function(self, t, target)
+		if self.hate < 0.1 then
+			game.logPlayer(self, "You do not have enough hate to use Gesture of Pain.")
+			return false
+		end
+		if self:getFreeHands() == 0 then
+			game.logPlayer(self, "You do not have a free hand to use Gesture of Pain.")
+			return false
+		end
 		
+		return true
+	end,
+	attack = function(self, t, target)
+		local freeHands = self:getFreeHands()		
 		local hit = false
 		
 		local mindpower = self:combatMindpower()

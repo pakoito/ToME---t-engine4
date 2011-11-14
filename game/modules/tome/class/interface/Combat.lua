@@ -114,6 +114,7 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 	if self:isTalentActive(self.T_GESTURE_OF_PAIN) then
 		print("[ATTACK] attacking with Gesture of Pain")
 		local t = self:getTalentFromId(self.T_GESTURE_OF_PAIN)
+		if not t.preAttack(self, t, target) then return false end
 		speed, hit = t.attack(self, t, target)
 		break_stealth = true
 	end
@@ -1286,6 +1287,7 @@ function _M:getFreeHands()
 	local weapon = self:getInven("MAINHAND")[1]
 	local offweapon = self:getInven("OFFHAND")[1]
 	if weapon and offweapon then return 0 end
+	if weapon and weapon.twohanded then return 0 end
 	if weapon or offweapon then return 1 end
 	return 2
 end
