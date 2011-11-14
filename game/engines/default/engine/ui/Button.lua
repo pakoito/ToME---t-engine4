@@ -74,12 +74,21 @@ function _M:display(x, y, nb_keyframes, ox, oy)
 	if self.focused then
 			if button == 1 and mx > ox and mx < ox+self.w and my > oy and my < oy+self.h then
 				self:drawFrame(self.frame, x, y, 0, 1, 0, 1)
+			elseif self.glow then
+			local v = self.glow + (1 - self.glow) * (1 + math.cos(core.game.getTime() / 300)) / 2
+				self:drawFrame(self.frame, x, y, v*0.8, v, 0, 1)
 			else
 				self:drawFrame(self.frame_sel, x, y)
 			end
 	else
-		self:drawFrame(self.frame, x, y)
-		if self.focus_decay then
+		if self.glow then
+			local v = self.glow + (1 - self.glow) * (1 + math.cos(core.game.getTime() / 300)) / 2
+			self:drawFrame(self.frame, x, y, v*0.8, v, 0, 1)
+		else
+			self:drawFrame(self.frame, x, y)
+		end
+
+		if self.focus_decay and not self.glow then
 			self:drawFrame(self.frame_sel, x, y, 1, 1, 1, self.focus_decay / self.focus_decay_max_d)
 			self.focus_decay = self.focus_decay - nb_keyframes
 			if self.focus_decay <= 0 then self.focus_decay = nil end

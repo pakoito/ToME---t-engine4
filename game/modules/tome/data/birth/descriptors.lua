@@ -35,9 +35,12 @@ newBirthDescriptor{
 	},
 	descriptor_choices =
 	{
-		world =
+		difficulty =
 		{
 			Tutorial = "disallow",
+		},
+		world =
+		{
 			["Maj'Eyal"] = "allow",
 			Infinite = "allow",
 			Arena = "allow",
@@ -90,7 +93,7 @@ newBirthDescriptor{
 newBirthDescriptor{
 	type = "difficulty",
 	name = "Tutorial",
-	selection_default = not profile.mod.allow_build.tutorial_done,
+	never_show = true,
 	desc =
 	{
 		"#GOLD##{bold}#Tutorial mode",
@@ -154,7 +157,7 @@ newBirthDescriptor{
 newBirthDescriptor{
 	type = "difficulty",
 	name = "Normal",
-	selection_default = profile.mod.allow_build.tutorial_done,
+	selection_default = true,
 	desc =
 	{
 		"#GOLD##{bold}#Adventure mode#WHITE##{normal}#",

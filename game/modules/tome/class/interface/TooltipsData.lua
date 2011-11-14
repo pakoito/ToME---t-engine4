@@ -273,7 +273,7 @@ The lower it is the faster it is.
 ]]
 TOOLTIP_MINDPOWER = [[#GOLD#Mindpower#LAST#
 Your mindpower value represents how powerful your mental abilities are.
-In addition, when you use mental abilities inflict temporary detrimental effects, every five points of mindpower counteracts a single turn of duration reduction granted by the enemy's saving throws.
+In addition, when your mental abilities inflict temporary detrimental effects, every five points of mindpower counteracts a single turn of duration reduction granted by the enemy's saving throws.In addition, when your mental abilities inflict temporary detrimental effects, every five points of mindpower counteracts a single turn of duration reduction granted by the enemy's saving throws.
 ]]
 
 -------------------------------------------------------------

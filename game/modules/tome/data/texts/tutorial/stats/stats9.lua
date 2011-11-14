@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 return [[
-Now you know the basics: what these seven #GOLD#combat stats#WHITE# mean and when they're used. It's time to look at some numbers. 
+Now you know the basics: what these eight #GOLD#combat stats#WHITE# mean and when they're used. It's time to look at some numbers.
 
 Head north to the stairs, and descend into the #GOLD#Dungeon of Adventurer Enlightenment.#WHITE#
 ]]

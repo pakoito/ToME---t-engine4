@@ -63,6 +63,7 @@ function _M:init(title, actor, order, at_end, quickbirth, w, h)
 	self.c_premade = Button.new{text="Load premade", fct=function() self:loadPremadeUI() end}
 	self.c_tile = Button.new{text="Select custom tile", fct=function() self:selectTile() end}
 	self.c_cancel = Button.new{text="Cancel", fct=function() self:atEnd("quit") end}
+	self.c_tut = Button.new{text="Tutorial", fct=function() self:tutorial() end}
 
 	self.c_name = Textbox.new{title="Name: ", text=(not config.settings.cheat and game.player_name == "player") and "" or game.player_name, chars=30, max_len=50, fct=function()
 		if config.settings.cheat then self:makeDefault() end
@@ -135,6 +136,7 @@ function _M:init(title, actor, order, at_end, quickbirth, w, h)
 		{left=self.c_difficulty_text, top=self.c_campaign, ui=self.c_difficulty},
 		{left=self.c_difficulty, top=self.c_campaign, ui=self.c_permadeath_text},
 		{left=self.c_permadeath_text, top=self.c_campaign, ui=self.c_permadeath},
+		{right=0, top=self.c_name, ui=self.c_tut},
 
 		-- Lists
 		{left=0, top=self.c_permadeath, ui=self.c_race},
@@ -162,6 +164,11 @@ function _M:init(title, actor, order, at_end, quickbirth, w, h)
 	for i, item in ipairs(self.c_permadeath.c_list.list) do if self.default_permadeath == item.id then self.c_permadeath.c_list.sel = i break end end
 	self:setFocus(self.c_campaign)
 	self:setFocus(self.c_name)
+
+	if not profile.mod.allow_build.tutorial_done then
+		self:setFocus(self.c_tut)
+		self.c_tut.glow = 0.70
+	end
 end
 
 function _M:checkNew(fct)
@@ -277,6 +284,37 @@ function _M:makeDefault()
 	self:setDescriptor("subclass", "Berserker")
 	__module_extra_info.no_birth_popup = true
 	self:atEnd("created")
+end
+
+--- Run one of the tutorials
+function _M:tutorial()
+	local run = function(t)
+		self:setDescriptor("sex", "Female")
+		self:setDescriptor("world", "Maj'Eyal")
+		self:setDescriptor("difficulty", "Tutorial")
+		self:setDescriptor("permadeath", "Adventure")
+		self:setDescriptor("race", "Tutorial Human")
+		self:setDescriptor("subrace", "Tutorial "..t)
+		self:setDescriptor("class", "Tutorial Adventurer")
+		self:setDescriptor("subclass", "Tutorial Adventurer")
+		self:atEnd("created")
+	end
+
+	local d = Dialog.new("Tutorials", 170, 100)
+	local basic = Button.new{text="Basic Gameplay", fct=function() run("Basic") d.key:triggerVirtual("EXIT") end}
+	local stats = Button.new{text="Advanced Stats", fct=function() run("Stats") d.key:triggerVirtual("EXIT") end}
+	local cancel = Button.new{text="Cancel", fct=function() d.key:triggerVirtual("EXIT") end}
+	local sep = Separator.new{dir="vertical", size=150}
+
+	d:loadUI{
+		{hcenter=0, top=0, ui=basic},
+		{hcenter=0, top=basic.h, ui=stats},
+		{hcenter=0, bottom=cancel.h, ui=sep},
+		{hcenter=0, bottom=0, ui=cancel},
+	}
+	d:setupUI(false, true)
+	d.key:addBind("EXIT", function() game:unregisterDialog(d) end)
+	game:registerDialog(d)
 end
 
 function _M:randomBirth()
@@ -527,7 +565,7 @@ function _M:isDescriptorAllowed(d, ignore_type)
 	end
 
 	-- Check it is allowed
-	return allowed
+	return allowed and not d.never_show
 end
 
 function _M:getLock(d)

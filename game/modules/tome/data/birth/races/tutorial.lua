@@ -45,7 +45,24 @@ newBirthDescriptor{
 newBirthDescriptor
 {
 	type = "subrace",
-	name = "Tutorial Human",
+	name = "Tutorial Basic",
+	desc = {
+		"A Human hailing from the northern town of Derth. A common kind of man, unremarkable in all respects.",
+	},
+	copy = {
+		default_wilderness = {1, 1, "wilderness"},
+		starting_zone = "tutorial",
+		starting_quest = "tutorial",
+		starting_intro = "tutorial",
+		moddable_tile = "human_#sex#",
+		moddable_tile_base = "base_cornac_01.png",
+	},
+}
+
+newBirthDescriptor
+{
+	type = "subrace",
+	name = "Tutorial Stats",
 	desc = {
 		"A Human hailing from the northern town of Derth. A common kind of man, unremarkable in all respects.",
 	},
