@@ -55,7 +55,15 @@ function _M:generate()
 	self.inner_scroll = self:makeFrame("ui/tooltip/", self.w, self.h)
 
 	self.mouse:registerZone(0, 0, self.w, self.h, function(button, x, y, xrel, yrel, bx, by, event)
-		self:mouseEvent(button, x, y, xrel, yrel, bx, by, event)
+		if self:mouseEvent(button, x, y, xrel, yrel, bx, by, event) then
+			-- nothing, already done
+		elseif button == "drag-end" and self.drag_enable then
+			local drag = game.mouse.dragged.payload
+			if drag.kind == "inventory" and drag.inven and self.actor:getInven(drag.inven) and not self.actor:getInven(drag.inven).worn then
+				self:actorWear(drag.inven, drag.item_idx, drag.object)
+				game.mouse:usedDrag()
+			end
+		end
 	end)
 	self.key:addBinds{
 		ACCEPT = function() if self.focus_ui then self.focus_ui.ui.key:triggerVirtual("ACCEPT") end end,
@@ -114,7 +122,7 @@ function _M:mouseEvent(button, x, y, xrel, yrel, bx, by, event)
 
 			-- Pass the event
 			ui.ui.mouse:delegate(button, bx, by, xrel, yrel, bx, by, event)
-			return
+			return true
 		end
 	end
 	self:no_focus()

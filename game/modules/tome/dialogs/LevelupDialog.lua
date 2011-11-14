@@ -368,7 +368,9 @@ function _M:cancel()
 	end
 	self.actor.last_learnt_talents = self.actor_dup.last_learnt_talents
 ]]
+	local ax, ay = self.actor.x, self.actor.y
 	self.actor:replaceWith(self.actor_dup)
+	self.actor.x, self.actor.y = ax, ay
 	self.actor.changed = true
 	self.actor:removeAllMOs()
 	if game.level and self.actor.x then game.level.map:updateMap(self.actor.x, self.actor.y) end

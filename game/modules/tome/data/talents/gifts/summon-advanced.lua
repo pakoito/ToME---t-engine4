@@ -118,6 +118,6 @@ newTalent{
 		- Stone Golem: Melee blows can deal a small area of effect damage
 		- Turtle: Can force all foes in a radius into melee range
 		- Spider: Can project an insidious poison at its foes, reducing their healing
-		This talent requires Master Summoner to be active to be used.]])
+		This talent requires Master Summoner to be active to be used.]]):format(math.floor(self:getTalentLevel(t)))
 	end,
 }

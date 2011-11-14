@@ -42,7 +42,14 @@ Items in the chest will not encumber you.]],
 	use_power = { name = "transmogrify all the items in your chest at once(also done automatically when you change level)", power = 0,
 		use = function(self, who)
 			local inven = who:getInven("INVEN")
-			require("engine.ui.Dialog"):yesnoPopup("Transmogrification Chest", "Transmogrify all "..#inven.." item(s) in your chest?", function(ret)
+			local nb = 0
+			for i = #inven, 1, -1 do
+				local o = inven[i]
+				if o.__transmo then nb = nb + 1 end
+			end
+			if nb <= 0 then require("engine.ui.Dialog"):simplePopup("Transmogrification Chest", "You do not have any items to transmogrify in your chest.") return {id=true, used=true} end
+
+			require("engine.ui.Dialog"):yesnoPopup("Transmogrification Chest", "Transmogrify all "..nb.." item(s) in your chest?", function(ret)
 				if not ret then return end
 				for i = #inven, 1, -1 do
 					local o = inven[i]
