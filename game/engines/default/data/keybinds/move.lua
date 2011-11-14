@@ -129,3 +129,9 @@ defineAction{
 	group = "movement",
 	name = "Run diagonally right and down",
 }
+defineAction{
+	default = { "sym:_z:false:false:false:false" },
+	type = "RUN_AUTO",
+	group = "movement",
+	name = "Auto-explore",
+}

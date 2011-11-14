@@ -548,12 +548,12 @@ function _M:setTarget(target)
 end
 
 local function spotHostiles(self)
-	local seen = false
+	local seen = {}
 	-- Check for visible monsters, only see LOS actors, so telepathy wont prevent resting
-	core.fov.calc_circle(self.x, self.y, game.level.map.w, game.level.map.h, 20, function(_, x, y) return game.level.map:opaque(x, y) end, function(_, x, y)
+	core.fov.calc_circle(self.x, self.y, game.level.map.w, game.level.map.h, self.sight or 10, function(_, x, y) return game.level.map:opaque(x, y) end, function(_, x, y)
 		local actor = game.level.map(x, y, game.level.map.ACTOR)
 		if actor and self:reactionToward(actor) < 0 and self:canSee(actor) and game.level.map.seens(x, y) then
-			seen = {x=x,y=y,actor=actor}
+			seen[#seen + 1] = {x=x,y=y,actor=actor}
 		end
 	end, nil)
 	return seen
@@ -563,7 +563,12 @@ end
 -- We can rest if no hostiles are in sight, and if we need life/mana/stamina/psi (and their regen rates allows them to fully regen)
 function _M:restCheck()
 	local spotted = spotHostiles(self)
-	if spotted then return false, ("hostile spotted (%s%s)"):format(spotted.actor.name, game.level.map:isOnScreen(spotted.x, spotted.y) and "" or " - offscreen") end
+	if #spotted > 0 then
+		for _, node in ipairs(spotted) do
+			node.actor:addParticles(engine.Particles.new("notice_enemy", 1))
+		end
+		return false, ("hostile spotted (%s%s)"):format(spotted[1].actor.name, game.level.map:isOnScreen(spotted[1].x, spotted[1].y) and "" or " - offscreen")
+	end
 
 	-- Resting improves regen
 	for act, def in pairs(game.party.members) do if game.level:hasEntity(act) and not act.dead then
@@ -619,7 +624,7 @@ end
 -- 'ignore_memory' is only used when checking for paths around traps.  This ensures we don't remember items "obj_seen" that we aren't supposed to
 function _M:runCheck(ignore_memory)
 	local spotted = spotHostiles(self)
-	if spotted then return false, ("hostile spotted (%s%s)"):format(spotted.actor.name, game.level.map:isOnScreen(spotted.x, spotted.y) and "" or " - offscreen") end
+	if #spotted > 0 then return false, ("hostile spotted (%s%s)"):format(spotted[1].actor.name, game.level.map:isOnScreen(spotted[1].x, spotted[1].y) and "" or " - offscreen") end
 
 	if self.air_regen < 0 then return false, "losing breath!" end
 
@@ -697,6 +702,12 @@ end
 function _M:runStopped()
 	game.level.map.clean_fov = true
 	self:playerFOV()
+	local spotted = spotHostiles(self)
+	if #spotted > 0 then
+		for _, node in ipairs(spotted) do
+			node.actor:addParticles(engine.Particles.new("notice_enemy", 1))
+		end
+	end
 end
 
 --- Activates a hotkey with a type "inventory"

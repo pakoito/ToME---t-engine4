@@ -144,4 +144,4 @@ newTalent{
 		return ([[Increases Physical Power by %d. Also increases damage done with exotic weapons by %d%%]]):
 		format(damage, 100*inc)
 	end,
-}
+}
