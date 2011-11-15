@@ -44,6 +44,7 @@ function _M:init(actor)
 	self.c_general = Tab.new{title="General", default=true, fct=function() end, on_change=function(s) if s then self:switchTo("general") end end}
 	self.c_attack = Tab.new{title="Attack", default=false, fct=function() end, on_change=function(s) if s then self:switchTo("attack") end end}
 	self.c_defence = Tab.new{title="Defense", default=false, fct=function() end, on_change=function(s) if s then self:switchTo("defence") end end}
+	self.c_talents = Tab.new{title="Talents", default=false, fct=function() end, on_change=function(s) if s then self:switchTo("talents") end end}
 
 	local tw, th = self.font_bold:size(self.title)
 
@@ -86,6 +87,7 @@ Mouse: Hover over stat for info
 		{left=15, top=self.c_tut.h, ui=self.c_general},
 		{left=15+self.c_general.w, top=self.c_tut.h, ui=self.c_attack},
 		{left=15+self.c_general.w+self.c_attack.w, top=self.c_tut.h, ui=self.c_defence},
+		{left=15+self.c_general.w+self.c_attack.w+self.c_defence.w, top=self.c_tut.h, ui=self.c_talents},
 		{left=0, top=self.c_tut.h + self.c_general.h, ui=self.vs},
 
 		{left=0, top=self.c_tut.h + self.c_general.h + 5 + self.vs.h, ui=self.c_desc},
@@ -104,9 +106,10 @@ end
 
 function _M:switchTo(kind)
 	self:drawDialog(kind, _M.cs_player_dup)
-	if kind == "general" then self.c_attack.selected = false self.c_defence.selected = false
-	elseif kind == "attack" then self.c_general.selected = false self.c_defence.selected = false
-	elseif kind == "defence" then self.c_attack.selected = false self.c_general.selected = false
+	if kind == "general" then self.c_attack.selected = false self.c_defence.selected = false self.c_talents.selected = false
+	elseif kind == "attack" then self.c_general.selected = false self.c_defence.selected = false self.c_talents.selected = false
+	elseif kind == "defence" then self.c_attack.selected = false self.c_general.selected = false self.c_talents.selected = false
+	elseif kind == "talents" then self.c_attack.selected = false self.c_general.selected = false self.c_defence.selected = false
 	end
 	self:updateKeys()
 end
@@ -131,9 +134,11 @@ function _M:updateKeys()
 end
 
 function _M:tabTabs()
-	if self.c_general.selected == true then self.c_attack:select() elseif
-	self.c_attack.selected == true then self.c_defence:select() elseif
-	self.c_defence.selected == true then self.c_general:select() end
+	if self.c_general.selected == true then self.c_attack:select()
+	elseif self.c_attack.selected == true then self.c_defence:select()
+	elseif 	self.c_defence.selected == true then self.c_talents:select()
+	elseif self.c_talents.selected == true then self.c_general:select()
+	end
 end
 
 function _M:mouseZones(t, no_new)
@@ -853,6 +858,38 @@ function _M:drawDialog(kind, actor_to_compare)
 		end
 
 		--player.combat_mentalresist
+
+	elseif kind=="talents" then
+		h = 0
+		w = 0
+
+		local list = {}
+		for j, t in pairs(player.talents_def) do
+			if player:knowTalent(t.id) and not t.hide then
+--				local typename = "talent"
+--				local status = tstring{{"color", "LIGHT_GREEN"}, "Active"}
+--				if self.actor:isTalentCoolingDown(t) then
+--					nodes = cooldowns
+--					status = tstring{{"color", "LIGHT_RED"}, self.actor:isTalentCoolingDown(t).." turns"}
+--				elseif t.mode == "sustained" then
+--					if self.actor:isTalentActive(t.id) then nodes = sustained end
+--					status = self.actor:isTalentActive(t.id) and tstring{{"color", "YELLOW"}, "Sustaining"} or tstring{{"color", "LIGHT_GREEN"}, "Sustain"}
+--				end
+				local lvl = player:getTalentLevelRaw(t)
+				list[#list+1] = {
+					name = ("%s (%d)"):format(t.name, lvl),
+					desc = player:getTalentFullDescription(t):toString(),
+				}
+			end
+		end
+
+		table.sort(list, function(a,b) return a.name < b.name end)
+
+		for i, t in ipairs(list) do
+			self:mouseTooltip(t.desc, s:drawColorStringBlended(self.font, ("#LIGHT_GREEN#%s"):format(t.name), w, h, 255, 255, 255, true)) h = h + self.font_h
+
+			if h + self.font_h >= self.c_desc.h then h = 0 w = w + self.c_desc.w / 6 end
+		end
 	end
 
 	self.c_desc:generate()

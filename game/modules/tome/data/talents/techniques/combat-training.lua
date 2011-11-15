@@ -65,7 +65,7 @@ newTalent{
 		local armor = t.getArmor(self, t)
 		local criticalreduction = t.getCriticalChanceReduction(self, t)
 		local classrestriction = ""
-		if self.descriptor.subclass == "Brawler" then
+		if self.descriptor and self.descriptor.subclass == "Brawler" then
 			classrestriction = "(Note that brawlers will be unable to perform many of their talents in massive armour.)"
 		end
 		if self:knowTalent(self.T_STEALTH) then

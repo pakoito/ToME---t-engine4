@@ -137,7 +137,7 @@ newTalent{
 			if choose then
 				Dialog:yesnoLongPopup(
 					"Cursed Fate",
-					("The %s lying nearby catches your attention. What draws you to it is not the thing itself, but something burning inside you. You feel contempt for it and all worldly things. This feeling is not new but the power of it overwhelms you. You reach out to touch the object, to curse it, to defile it. And you notice it begin to change. The colors of it begin to fade and are replaced with an insatiable hate. For a moment you hesistate..."):format(item.name),
+					("The %s lying nearby catches your attention. What draws you to it is not the thing itself, but something burning inside you. You feel contempt for it and all worldly things. This feeling is not new but the power of it overwhelms you. You reach out to touch the object, to curse it, to defile it. And you notice it begin to change. The colors of it begin to fade and are replaced with an insatiable hate. For a moment you hesistate. You know you must choose to resist this manifestation of your curse now and forever, or fall further into your madness."):format(item.name),
 					300,
 					function(ret)
 						if ret then

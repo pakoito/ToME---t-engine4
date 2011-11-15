@@ -37,6 +37,7 @@ newEntity{
 
 newEntity{ base = "BASE_NPC_CAT",
 	name = "snow cat", color=colors.GRAY,
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/animal_feline_snow_cat.png", display_h=2, display_y=-1}}},
 	desc = [[A large cat with a grey fur matted with black.]],
 	level_range = {3, nil}, exp_worth = 1,
 	rarity = 4,

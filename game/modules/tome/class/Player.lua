@@ -79,6 +79,8 @@ function _M:init(t, no_default)
 
 	t.rank = t.rank or 3
 	t.old_life = 0
+	
+	t.money_value_multiplier = 1 -- changes amounts in gold piles and such
 
 	mod.class.Actor.init(self, t, no_default)
 	engine.interface.PlayerHotkeys.init(self, t)
