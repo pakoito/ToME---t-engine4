@@ -73,8 +73,11 @@ function _M:targetDisplayTooltip(dx, dy)
 end
 
 --- Forces the tooltip to pop with the given text
-function _M:tooltipDisplayAtMap(x, y, text)
+function _M:tooltipDisplayAtMap(x, y, text, extra)
 	self.tooltip:displayAtMap(nil, nil, x, y, text)
+	if extra then
+		if extra.up then self.tooltip.last_display_y = self.tooltip.last_display_y - self.tooltip.h end
+	end
 	self.tooltip_x = {}
 end
 

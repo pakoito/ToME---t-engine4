@@ -570,8 +570,6 @@ end
 function _M:toScreen(x, y, nb_keyframes)
 	if self.__hidden then return end
 
-	if self.first_display then self:firstDisplay() end
-
 	local zoom = 1
 	if self.__showup then
 		local eff = self.__showup_effect or "pop"
@@ -617,6 +615,8 @@ function _M:toScreen(x, y, nb_keyframes)
 	end
 
 	self:innerDisplay(x, y, nb_keyframes, tx, ty)
+
+	if self.first_display then self:firstDisplay() self.first_display = false end
 
 	-- Restiore normal opengl matrix
 	if zoom < 1 then core.display.glScale() end

@@ -538,7 +538,7 @@ function _M:playAmbientSounds(level, s, nb_keyframes)
 				pos.x = math.cos(a) * r
 				pos.y = math.sin(a) * r
 			end
-			print("===playing", data.name, f, data._sound)
+--			print("===playing", data.name, f, data._sound)
 			if data._sound then
 				if data.volume_mod then data._sound:volume(data._sound:volume() * data.volume_mod) end
 				if data.pitch then data._sound:pitch(data.pitch) end

@@ -247,7 +247,7 @@ end
 
 function _M:onSelect(force_refresh)
 	local item = self.list[self.sel]
-	if not item or not force_refresh and self.previtem and self.previtem==item then return end
+	if not item or (not force_refresh and self.previtem and self.previtem==item) then return end
 
 	if rawget(self, "select") then self.select(item, self.sel) end
 --	self.previtem = item

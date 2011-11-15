@@ -34,6 +34,15 @@ function _M:init(title, actor, filter, action, on_select)
 
 	Dialog.init(self, title or "Inventory", math.max(800, game.w * 0.8), math.max(600, game.h * 0.8))
 
+	-- Add tooltips
+	self.on_select = function(item)
+		if item.last_display_x and item.object then
+			game:tooltipDisplayAtMap(item.last_display_x, item.last_display_y, item.object:getDesc({do_color=true}))
+		elseif item.last_display_x and item.data and item.data.desc then
+			game:tooltipDisplayAtMap(item.last_display_x, item.last_display_y, item.data.desc, {up=true})
+		end
+	end
+
 	self.c_doll = EquipDoll.new{actor=actor, drag_enable=true,
 		fct = function(item, button, event) self:use(item, button, event) end,
 		on_select = function(ui, inven, item, o) if ui.ui.last_display_x then self:select{last_display_x=ui.ui.last_display_x+ui.ui.w, last_display_y=ui.ui.last_display_y, object=o} end end,
@@ -46,7 +55,8 @@ function _M:init(title, actor, filter, action, on_select)
 
 	self.c_inven = Inventory.new{actor=actor, inven=actor:getInven("INVEN"), width=self.iw - 20 - self.c_doll.w, height=self.ih - 10,
 		fct=function(item, sel, button, event) self:use(item, button, event) end,
-		on_select=function(item, sel) self:select(item) end,
+		select=function(item, sel) self:select(item) end,
+		select_tab=function(item) self:select(item) end,
 		on_drag=function(item) self:onDrag(item) end,
 		on_drag_end=function() self:onDragTakeoff() end,
 	}
@@ -70,18 +80,16 @@ function _M:init(title, actor, filter, action, on_select)
 		EXIT = function() game:unregisterDialog(self) end,
 	}
 
-	-- Add tooltips
-	self.on_select = function(item)
-		if item.last_display_x and item.object then
-			game:tooltipDisplayAtMap(item.last_display_x, item.last_display_y, item.object:getDesc({do_color=true}))
-		elseif item.last_display_x and item.data and item.data.desc then
-			game:tooltipDisplayAtMap(item.last_display_x, item.last_display_y + self.c_tabs.h, item.data.desc)
-		end
-	end
 	self.key.any_key = function(sym)
 		-- Control resets the tooltip
 		if sym == self.key._LCTRL or sym == self.key._RCTRL then local i = self.cur_item self.cur_item = nil self:select(i) end
 	end
+
+end
+
+function _M:firstDisplay()
+	self.cur_item = nil
+	self.c_inven.c_inven:onSelect(true)
 end
 
 function _M:on_register()

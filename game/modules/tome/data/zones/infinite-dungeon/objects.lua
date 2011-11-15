@@ -23,7 +23,7 @@ load("/data/general/objects/objects.lua")
 newEntity{ define_as = "ORB_KNOWLEDGE",
 	power_source = {unknown=true},
 	unique = true, quest=true,
-	type = "jewelry", subtype="orb",
+	type = "orb", subtype="orb",
 	unided_name = "orb", no_unique_lore = true,
 	name = "Orb of Knowledge", identified = true,
 	display = "*", color=colors.VIOLET, image = "object/ruby.png",

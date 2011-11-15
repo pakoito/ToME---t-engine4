@@ -57,7 +57,7 @@ function _M:generate()
 	self.uis = {}
 
 	if self.tabslist then
-		self.c_tabs = ImageList.new{width=self.w, height=36, tile_w=32, tile_h=32, padding=5, force_size=true, selection="ctrl-multiple", list=self.tabslist, fct=function() self:generateList() end, on_select=function(item) self:selectTab(item) end}
+		self.c_tabs = ImageList.new{width=self.w, height=36, tile_w=32, tile_h=32, padding=5, force_size=true, selection="ctrl-multiple", list=self.tabslist, fct=function() self:generateList() end, on_select=function(item, how) self:selectTab(item, how) end}
 		self.c_tabs.no_keyboard_focus = true
 		if _M._last_tabs then
 			for _, l in ipairs(_M._last_tabs) do self.c_tabs.dlist[l[1]][l[2]].selected = true end
@@ -100,14 +100,14 @@ function _M:generate()
 				self:use(list[list.chars[c]])
 			end
 		end,
-		_TAB = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = util.boundWrap(self.c_tabs.sel_i+1, 1, #self.tabslist) self.c_tabs:onUse("left") self.c_tabs:onSelect() end,
-		[{"_TAB","ctrl"}] = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = util.boundWrap(self.c_tabs.sel_i-1, 1, self.tabslist) self.c_tabs:onUse("left", false) self.c_tabs:onSelect() end,
+		_TAB = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = util.boundWrap(self.c_tabs.sel_i+1, 1, #self.tabslist) self.c_tabs:onUse("left") self.c_tabs:onSelect("key") end,
+		[{"_TAB","ctrl"}] = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = util.boundWrap(self.c_tabs.sel_i-1, 1, #self.tabslist) self.c_tabs:onUse("left", false) self.c_tabs:onSelect("key") end,
 	}
 	if self.tabslist then
 		for i = 1, #self.tabslist do
 			self.key:addCommands{
-				['_F'..i] = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = i self.c_tabs:onUse("left") self.c_tabs:onSelect() end,
-				[{'_F'..i,"ctrl"}] = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = i self.c_tabs:onUse("left", true) self.c_tabs:onSelect() end,
+				['_F'..i] = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = i self.c_tabs:onUse("left") self.c_tabs:onSelect("key") end,
+				[{'_F'..i,"ctrl"}] = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = i self.c_tabs:onUse("left", true) self.c_tabs:onSelect("key") end,
 			}
 		end
 	end
@@ -122,15 +122,15 @@ function _M:switchTab(filter)
 		for k, e in pairs(filter) do if d[k] == e then
 			self.c_tabs.sel_j = 1 self.c_tabs.sel_i = i
 			self.c_tabs:onUse("left", false)
-			self.c_tabs:onSelect()
+			self.c_tabs:onSelect("key")
 			return
 		end end
 	end
 end
 
-function _M:selectTab(item)
+function _M:selectTab(item, how)
 	if self.on_select_tab then self.on_select_tab(item) end
-	self.c_inven:onSelect()
+	if how == "key" then self.c_inven:onSelect() end
 end
 
 function _M:setInnerFocus(id)
@@ -199,6 +199,14 @@ function _M:updateTabFilter()
 	local list = self.c_tabs:getAllSelected()
 	local checks = {}
 
+	-- Check if we selected all tabs
+	for i, item in ipairs(list) do
+		if item.data.filter == "all" then
+			for i, row in ipairs(self.c_tabs.dlist) do for j, item in ipairs(row) do item.selected = item.data.filter ~= "all" end end
+			list = self.c_tabs:getAllSelected()
+		end
+	end
+
 	for i, item in ipairs(list) do
 		if item.data.filter == "others" then
 			local misc
@@ -210,7 +218,7 @@ function _M:updateTabFilter()
 				return true
 			end
 			checks[#checks+1] = misc
-		else
+		elseif type(item.data.filter) == "function" then
 			checks[#checks+1] = item.data.filter
 		end
 	end
@@ -248,10 +256,13 @@ function _M:generateList(no_update)
 
 	if not no_update then
 		self.c_inven:setList(self.inven_list)
+		if self._last_x then self:display(self._last_x, _last_y, 0, self._last_ox, self._last_oy) end
 	end
 end
 
 function _M:display(x, y, nb_keyframes, ox, oy)
+	self._last_x, _last_y, self._last_ox, self._last_oy = x, y, ox, oy
+
 	-- UI elements
 	for i = 1, #self.uis do
 		local ui = self.uis[i]
