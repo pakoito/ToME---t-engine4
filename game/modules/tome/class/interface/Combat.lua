@@ -111,7 +111,14 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 	end
 
 	local break_stealth = false
-	if self:isTalentActive(self.T_GESTURE_OF_PAIN) then
+
+	local hd = {"Combat:attackTarget", target=target, damtype=damtype, mult=mult, noenergy=noenergy}
+	if self:triggerHook(hd) then
+		speed, hit = ht.speed, hd.hit
+		if ht.stop then return hit end
+	end
+
+	if not speed and self:isTalentActive(self.T_GESTURE_OF_PAIN) then
 		print("[ATTACK] attacking with Gesture of Pain")
 		local t = self:getTalentFromId(self.T_GESTURE_OF_PAIN)
 		if not t.preAttack(self, t, target) then return false end
