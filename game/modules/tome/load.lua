@@ -64,6 +64,7 @@ if type(config.settings.tome.weather_effects) == "nil" then config.settings.tome
 if type(config.settings.tome.smooth_fov) == "nil" then config.settings.tome.smooth_fov = true end
 if type(config.settings.tome.daynight) == "nil" then config.settings.tome.daynight = true end
 if type(config.settings.tome.hotkey_icons) == "nil" then config.settings.tome.hotkey_icons = true end
+if type(config.settings.tome.effects_icons) == "nil" then config.settings.tome.effects_icons = true end
 if type(config.settings.tome.autoassign_talents_on_birth) == "nil" then config.settings.tome.autoassign_talents_on_birth = true end
 if type(config.settings.tome.chat_log) == "nil" then config.settings.tome.chat_log = true end
 if type(config.settings.tome.actor_based_movement_mode) == "nil" then config.settings.tome.actor_based_movement_mode = true end

@@ -92,7 +92,7 @@ newEffect{
 	desc = "Poisoned",
 	long_desc = function(self, eff) return ("The target is poisoned, taking %0.2f nature damage per turn."):format(eff.power) end,
 	type = "physical",
-	subtype = { poison=true, nature=true },
+	subtype = { poison=true, nature=true }, no_ct_effect = true,
 	status = "detrimental",
 	parameters = { power=10 },
 	on_gain = function(self, err) return "#Target# is poisoned!", "+Poison" end,

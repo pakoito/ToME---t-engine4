@@ -173,7 +173,7 @@ function _M:handleEffect(eff_id, e, p, ex, h)
 		desc = ("#{bold}##GOLD#%s\n(%s: %s)#WHITE##{normal}#\n"):format(name, e.type, eff_subtype)..e.long_desc(player, p)
 	end
 
-	if config.settings.tome.hotkey_icons and e.display_entity then
+	if config.settings.tome.effects_icons and e.display_entity then
 		local txt = nil
 		if e.decrease > 0 then
 			dur = tostring(dur)
@@ -398,7 +398,7 @@ function _M:display()
 			if t.getDisplayName then displayName = t.getDisplayName(player, t, player:isTalentActive(tid)) end
 			local desc = "#GOLD##{bold}#"..displayName.."#{normal}##WHITE#\n"..tostring(player:getTalentFullDescription(t))
 
-			if config.settings.tome.hotkey_icons and t.display_entity then
+			if config.settings.tome.effects_icons and t.display_entity then
 				self:makeEntityIcon(t.display_entity, game.hotkeys_display_icons.tiles, ex, h, desc, txt, self.icon_yellow)
 				ex = ex + 40
 				if ex + 40 >= self.w then ex = 0 h = h + 40 end
@@ -408,7 +408,7 @@ function _M:display()
 			end
 		end
 	end
-	h = h + 40 ex = 0
+	if config.settings.tome.effects_icons then h = h + 40 ex = 0 end
 	local good_e, bad_e = {}, {}
 	for eff_id, p in pairs(player.tmp) do
 		local e = player.tempeffect_def[eff_id]
@@ -419,7 +419,7 @@ function _M:display()
 		local e = player.tempeffect_def[eff_id]
 		ex, h = self:handleEffect(eff_id, e, p, ex, h)
 	end
-	h = h + 40 ex = 0
+	if config.settings.tome.effects_icons then h = h + 40 ex = 0 end
 	for eff_id, p in pairs(bad_e) do
 		local e = player.tempeffect_def[eff_id]
 		ex, h = self:handleEffect(eff_id, e, p, ex, h)
