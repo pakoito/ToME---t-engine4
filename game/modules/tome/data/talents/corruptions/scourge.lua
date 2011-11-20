@@ -100,7 +100,7 @@ newTalent{
 	points = 5,
 	vim = 18,
 	cooldown = 12,
-	range = 0,
+	range = 1,
 	radius = 1,
 	requires_target = true,
 	tactical = { ATTACK = {ACID = 2}, DISABLE = 1 },

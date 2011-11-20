@@ -43,7 +43,7 @@ function _M:init(title, actor, filter, action, on_select)
 		end
 	end
 
-	self.c_doll = EquipDoll.new{actor=actor, drag_enable=true,
+	self.c_doll = EquipDoll.new{actor=actor, drag_enable=true, filter=filter,
 		fct = function(item, button, event) self:use(item, button, event) end,
 		on_select = function(ui, inven, item, o) if ui.ui.last_display_x then self:select{last_display_x=ui.ui.last_display_x+ui.ui.w, last_display_y=ui.ui.last_display_y, object=o} end end,
 		actorWear = function(ui, ...)
@@ -53,7 +53,7 @@ function _M:init(title, actor, filter, action, on_select)
 		end
 	}
 
-	self.c_inven = Inventory.new{actor=actor, inven=actor:getInven("INVEN"), width=self.iw - 20 - self.c_doll.w, height=self.ih - 10,
+	self.c_inven = Inventory.new{actor=actor, inven=actor:getInven("INVEN"), width=self.iw - 20 - self.c_doll.w, height=self.ih - 10, filter=filter,
 		fct=function(item, sel, button, event) self:use(item, button, event) end,
 		select=function(item, sel) self:select(item) end,
 		select_tab=function(item) self:select(item) end,

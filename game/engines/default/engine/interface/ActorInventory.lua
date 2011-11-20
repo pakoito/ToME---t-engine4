@@ -389,7 +389,10 @@ end
 
 --- Takeoff item
 function _M:takeoffObject(inven, item)
-	local o = self:getInven(inven)[item]
+	inven = self:getInven(inven)
+	if not inven then return false end
+
+	local o = inven[item]
 	if o:check("on_cantakeoff", self, inven) then return false end
 
 	o = self:removeObject(inven, item, true)

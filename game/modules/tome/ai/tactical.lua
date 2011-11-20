@@ -326,7 +326,7 @@ newAI("use_tactical", function(self)
 			end
 		end
 		if avail.cure and nb_detrimental_effs > 0 then
-			table.sort(avail.defend, function(a,b) return a.val > b.val end)
+			table.sort(avail.cure, function(a,b) return a.val > b.val end)
 			want.cure = nb_detrimental_effs
 		end
 

@@ -127,13 +127,25 @@ newInscription{
 
 		local target = self
 		local effs = {}
+		local force = {}
 		local known = false
 
 		-- Go through all temporary effects
 		for eff_id, p in pairs(target.tmp) do
 			local e = target.tempeffect_def[eff_id]
-			if data.what[e.type] and e.status == "detrimental" then
+			if data.what[e.type] and e.status == "detrimental" and e.subtype["cross tier"] then
+				force[#force+1] = {"effect", eff_id}
+			elseif data.what[e.type] and e.status == "detrimental" then
 				effs[#effs+1] = {"effect", eff_id}
+			end
+		end
+
+		-- Cross tier effects are always removed and not part of the random game, otherwise it is a huge nerf to wild infusion
+		for i = 1, #force do
+			local eff = force[i]
+			if eff[1] == "effect" then
+				target:removeEffect(eff[2])
+				known = true
 			end
 		end
 
