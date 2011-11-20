@@ -113,6 +113,9 @@ function _M:onEnterLevel(zone, level)
 	-- Save where we entered
 	self.entered_level = {x=self.x, y=self.y}
 
+	-- mark entrance (if applicable) as noticed
+	game.level.map.attrs(self.x, self.y, "noticed", true)
+
 	-- Fire random escort quest
 	if self.random_escort_levels and self.random_escort_levels[zone.short_name] and self.random_escort_levels[zone.short_name][level.level] then
 		self:grantQuest("escort-duty")
@@ -645,16 +648,23 @@ function _M:runCheck(ignore_memory)
 
 		-- Only notice interesting terrains, but allow auto-explore and A* to take us to the exit.  Auto-explore can also take us through "safe" doors
 		local grid = game.level.map(x, y, Map.TERRAIN)
-		if grid and grid.notice and not (self.running and self.running.path and (what ~= self and
-				(self.running.explore and grid.door_opened                                          -- safe door
+		if grid and grid.notice and not (self.running and self.running.path and (game.level.map.attrs(x, y, "noticed")
+				or (what ~= self and (self.running.explore and grid.door_opened                     -- safe door
 				or #self.running.path == self.running.cnt and (self.running.explore == "exit"       -- auto-explore onto exit
 				or not self.running.explore and grid.change_level))                                 -- A* onto exit
 				or #self.running.path - self.running.cnt < 2 and (self.running.explore == "portal"  -- auto-explore onto portal
 				or not self.running.explore and grid.orb_portal)                                    -- A* onto portal
 				or self.running.cnt < 3 and grid.orb_portal and                                     -- path from portal
-				game.level.map:checkEntity(self.running.path[1].x, self.running.path[1].y, Map.TERRAIN, "orb_portal")))
+				game.level.map:checkEntity(self.running.path[1].x, self.running.path[1].y, Map.TERRAIN, "orb_portal"))))
 		then
-			noticed = "interesting terrain"; return
+			if self.running and self.running.explore and self.running.path and self.running.explore ~= "unseen" and self.running.cnt == #self.running.path + 1 then
+				noticed = "at " .. self.running.explore
+			else
+				noticed = "interesting terrain"
+			end
+			-- let's only remember and ignore standard interesting terrain
+			if not ignore_memory and (grid.change_level or grid.orb_portal) then game.level.map.attrs(x, y, "noticed", true) end
+			return
 		end
 		if grid and grid.type and grid.type == "store" then noticed = "store entrance spotted"; return end
 
@@ -689,7 +699,7 @@ function _M:mouseMove(tmx, tmy, force_move)
 		end
 		return true
 	end
-	return engine.interface.PlayerMouse.mouseMove(self, tmx, tmy, spotHostiles, {recheck=true, astar_check=astar_check}, force_move)
+	return engine.interface.PlayerMouse.mouseMove(self, tmx, tmy, function() local spotted = spotHostiles(self) ; return #spotted > 0 end, {recheck=true, astar_check=astar_check}, force_move)
 end
 
 --- Called after running a step
@@ -1003,7 +1013,8 @@ end
 function _M:useOrbPortal(portal)
 	if portal.special then portal:special(self) return end
 
-	if spotHostiles(self) then game.logPlayer(self, "You can not use the Orb with foes in sight.") return end
+	local spotted = spotHostiles(self)
+	if #spotted > 0 then game.logPlayer(self, "You can not use the Orb with foes in sight.") return end
 
 	if portal.on_preuse then portal:on_preuse(self) end
 

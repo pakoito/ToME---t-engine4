@@ -866,15 +866,6 @@ function _M:drawDialog(kind, actor_to_compare)
 		local list = {}
 		for j, t in pairs(player.talents_def) do
 			if player:knowTalent(t.id) and not t.hide then
---				local typename = "talent"
---				local status = tstring{{"color", "LIGHT_GREEN"}, "Active"}
---				if self.actor:isTalentCoolingDown(t) then
---					nodes = cooldowns
---					status = tstring{{"color", "LIGHT_RED"}, self.actor:isTalentCoolingDown(t).." turns"}
---				elseif t.mode == "sustained" then
---					if self.actor:isTalentActive(t.id) then nodes = sustained end
---					status = self.actor:isTalentActive(t.id) and tstring{{"color", "YELLOW"}, "Sustaining"} or tstring{{"color", "LIGHT_GREEN"}, "Sustain"}
---				end
 				local lvl = player:getTalentLevelRaw(t)
 				list[#list+1] = {
 					name = ("%s (%d)"):format(t.name, lvl),
@@ -909,7 +900,7 @@ function _M:dump()
 	local makelabel = function(s,r) while s:len() < labelwidth do s = s.." " end return ("%s: %s"):format(s, r) end
 
 	local cur_exp, max_exp = player.exp, player:getExpChart(player.level+1)
-	nl("  [Tome 4.00 @ www.te4.org Character Dump]")
+	nl("  [ToME4 @ www.te4.org Character Dump]")
 	nl()
 
 	nnl(("%-32s"):format(makelabel("Sex", (player.descriptor and player.descriptor.sex) or (player.female and "Female" or "Male"))))

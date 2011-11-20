@@ -217,6 +217,7 @@ function _M:autoExplore()
 	local portals = {}
 	local values = {}
 	values[node[3]] = 0
+	local safe_doors = {}
 	local door_values = {}
 	local slow_values = {}
 	local slow_tiles = {}
@@ -329,6 +330,7 @@ function _M:autoExplore()
 								node[4] = move_cost + 1
 								values[c] = move_cost + 1
 								current_tiles_next[#current_tiles_next + 1] = node
+								safe_doors[c] = true
 							end
 						-- go to next level, exit, previous level, or orb portal (in that order of precedence)
 						elseif terrain.change_level then
@@ -404,16 +406,45 @@ function _M:autoExplore()
 		local choices = {}
 		local distances = {}
 		local mindist = 999999999999999
-		-- try to explore cleanly--don't leave single unseen tiles by themselves
-		for _, c in ipairs(unseen_singlets) do
-			if values[c] <= minval + singlet_greed then
-				target_type = "unseen"
-				choices[#choices + 1] = c
+		-- If we already have a suitable target that we haven't reached yet, then use that as our target.  This will be more useful
+		-- if or when we save info between between instances of running auto-explore.  For now it's useful when dodging traps on the fly.
+		if self.running and (self.running.explore == "exit" or self.running.explore == "portal") and (self.x ~= self.running.target.x or self.y ~= self.running.target.y) then
+			-- verify that the target is currently reachable
+			for _, c in ipairs(exits) do
 				local x, y = toDouble(c)
-				local dist = core.fov.distance(self.x, self.y, x, y, true)
-				distances[c] = dist
-				if dist < mindist then
-					mindist = dist
+				if x == self.running.target.x and y == self.running.target.y then
+					target_type = "exit"
+					choices[1] = c
+					distances[c] = 1
+					mindist = 1
+					break
+				end
+			end
+			if #choices == 0 then
+				for _, c in ipairs(portals) do
+					local x, y = toDouble(c)
+					if x == self.running.target.x and y == self.running.target.y then
+						target_type = "portal"
+						choices[1] = c
+						distances[c] = 1
+						mindist = 1
+						break
+					end
+				end
+			end
+		end
+		-- try to explore cleanly--don't leave single unseen tiles by themselves
+		if #choices == 0 then
+			for _, c in ipairs(unseen_singlets) do
+				if values[c] <= minval + singlet_greed then
+					target_type = "unseen"
+					choices[#choices + 1] = c
+					local x, y = toDouble(c)
+					local dist = core.fov.distance(self.x, self.y, x, y, true)
+					distances[c] = dist
+					if dist < mindist then
+						mindist = dist
+					end
 				end
 			end
 		end
@@ -421,7 +452,7 @@ function _M:autoExplore()
 		if #choices == 0 and minval_items <= minval + item_greed then
 			for _, c in ipairs(unseen_items) do
 				if values[c] == minval_items then
-					target_type = "item"
+					target_type = "object"
 					choices[#choices + 1] = c
 					local x, y = toDouble(c)
 					local dist = core.fov.distance(self.x, self.y, x, y, true)
@@ -661,8 +692,9 @@ function _M:autoExplore()
 				-- This results in dog-leg (or hockey stick)-like movement.  If desired, we could try adding an A*-like heuristic
 				-- to favor straighter line movement (i.e., alternate between diagonal and cardinal moves), but, meh, whatever ;)
 				-- If our target is a door, it would be very nice to approach it from a cardinal direction, because this would
-				-- give a much better and safer view should the player choose to open the door
-				if #cardinals == 0 or min_diagonal < min_cardinal and not (idiot_counter == 1 and target_type == "door" and min_cardinal < min_diagonal + 2) then
+				-- give a much better and safer view should the player choose to open the door.  Also do this for "safe" doors
+				local c = toSingle(path[#path].x, path[#path].y)
+				if #cardinals == 0 or min_diagonal < min_cardinal and not (min_cardinal < min_diagonal + 2 and (safe_doors[c] or door_values[c])) then
 					current_val = min_diagonal
 					for _, node in ipairs(diagonals) do
 						if values[node[3]] == min_diagonal then
@@ -698,27 +730,38 @@ function _M:autoExplore()
 					-- take care of a couple fringe cases
 					-- don't open adjacent or target doors if we've already been running
 					if target_type == "door" then
-						if #path == 1 then return false
-						else path[#path] = nil end
+						if #path == 1 then
+							self:runStop("at door")
+							return false
+						else
+							path[#path] = nil
+						end
 					end
 
 					-- don't run into adjacent interesting terrain if we've already been running
-					local terrain = game.level.map(path[1].x, path[1].y, Map.TERRAIN)
-					if terrain.notice and not (#path == 1 and target_type == "exit") then
-						self:runStop("interesting terrain")
-						return false
+					local x, y = path[1].x, path[1].y
+					local terrain = game.level.map(x, y, Map.TERRAIN)
+					if terrain.notice and (target_type ~= "exit" and target_type ~= "portal" or #path ~= 1 and not game.level.map.attrs(x, y, "noticed")) then
+						if safe_doors[toSingle(x, y)] and not self.running.busy then
+							self.running.busy = { type = "opening door", do_move = true, no_energy = true }
+						else
+							if terrain.change_level or terrain.orb_portal then game.level.map.attrs(x, y, "noticed", true) end
+							self:runStop("interesting terrain")
+							return false
+						end
 					end
 
 					self.running.path = path
 					self.running.cnt = 1
 					self.running.explore = target_type
+					self.running.target = {x=target_x, y=target_y}
 					-- hack!
 					self.running.ave_x = (self.running.ave_x*self.running.ave_N + 2*(target_x + self.x)) / (self.running.ave_N + 4)
 					self.running.ave_y = (self.running.ave_y*self.running.ave_N + 2*(target_y + self.y)) / (self.running.ave_N + 4)
 					self.running.ave_N = self.running.ave_N + 2
 				else
 					-- another fringe case: if we target an item in an adjacent wall that we've probably already targeted, then mark it as seen and find a new target
-					if #path == 1 and target_type == "item" and game.level.map:checkEntity(target_x, target_y, Map.TERRAIN, "block_move", self, nil, true) then
+					if #path == 1 and target_type == "object" and game.level.map:checkEntity(target_x, target_y, Map.TERRAIN, "block_move", self, nil, true) then
 						game.level.map.attrs(target_x, target_y, "obj_seen", true)
 						return self:autoExplore()
 					end
@@ -732,6 +775,7 @@ function _M:autoExplore()
 							self:runStop()
 						end, false, true),
 						explore = target_type,
+						target = {x=target_x, y=target_y},
 						-- hack!
 						ave_x = 0.5*(target_x + self.x),
 						ave_y = 0.5*(target_y + self.y),
@@ -753,17 +797,23 @@ function _M:checkAutoExplore()
 	if not self.running or not self.running.explore then return false end
 
 	-- We can open a door and explore if the player initiated auto-explore directly adjacent to the target door.
-	-- If not, though, then stop, because the player *must* choose to open the door
+	-- If not, though, then stop, because the player *must* choose to open the door (except for "safe" doors)
 	local node = self.running.path[self.running.cnt]
-	local terrain = node and game.level.map(node.x, node.y, Map.TERRAIN)
-
-	-- this is either a "safe" door or a target adjacent door.  Either way, we can open it
+	local cx, cy = node and node.x, node and node.y
+	local terrain = node and game.level.map(cx, cy, Map.TERRAIN)
 	if terrain and terrain.door_opened then
-		-- we already tried to open the door but failed
-		if self.running.busy and self.running.busy.type == "opening door" then return false end
-
-		self.running.busy = { type = "opening door", do_move = true, no_energy = true }
-		return true
+		-- we already tried to open the door but failed (always fails on vault doors)
+		if self.running.busy and self.running.busy.type == "opening door" then
+			self:runStop("checked door")
+			return false
+		-- we didn't know this was a door at the time, so explore a new path
+		elseif self.running.explore == "unseen" and self.running.cnt == #self.running.path and game.level.map.has_seens(cx, cy) then
+			return self:autoExplore()
+		-- this is either a "safe" door or a target adjacent door.  Either way, we can open it, which takes a movement action but no energy to do
+		else
+			self.running.busy = { type = "opening door", do_move = true, no_energy = true }
+			return true
+		end
 	end
 	self.running.busy = nil
 
@@ -773,53 +823,73 @@ function _M:checkAutoExplore()
 	end
 
 	-- if we're at the end of the path and we're searching for unseen tiles, then continue with a new path
-	local x, y = self.running.path[#self.running.path].x, self.running.path[#self.running.path].y
-	local obj = game.level.map:getObject(x, y, 1)
+	local tx, ty = self.running.path[#self.running.path].x, self.running.path[#self.running.path].y
+	local obj = game.level.map:getObject(tx, ty, 1)
 	if not node then
-		if self.running.explore == "unseen" or self.running.explore == "item" and not obj then
+		if self.running.explore == "unseen" or self.running.explore == "object" and not obj then
 			return self:autoExplore()
 		else
+			self:runStop("at " .. self.running.explore)
 			return false
 		end
 	end
 
 	-- if the next spot in the path is blocked, explore a new path if we are searching for unseen tiles, otherwise stop
-	if game.level.map.has_seens(node.x, node.y) and game.level.map:checkEntity(node.x, node.y, Map.TERRAIN, "block_move", self, nil, true) then
-	-- game.level.map:checkAllEntities(node.x, node.y, "block_move", self) then
+	if game.level.map.has_seens(cx, cy) and game.level.map:checkEntity(cx, cy, Map.TERRAIN, "block_move", self, nil, true) then
+	-- game.level.map:checkAllEntities(cx, cy, "block_move", self) then
 		if terrain.notice then
+			if terrain.change_level or terrain.orb_portal then game.level.map.attrs(cx, cy, "noticed", true) end
 			self:runStop("interesting terrain")
 			return false
-		elseif self.running.explore == "unseen" then
+		elseif self.running.explore == "unseen" or self.running.explore == "object" and self.running.cnt ~= #self.running.path then
 			return self:autoExplore()
 		else
-			self:runStop("the path is blocked")
+			if self.running.explore == "object" and self.running.cnt == #self.running.path then
+				game.level.map.attrs(cx, cy, "obj_seen", true)
+				self:runStop("at object (diggable)")
+			else
+				self:runStop("the path is blocked")
+			end
 			return false
 		end
+	end
+
+	-- if we are about to step on a trap, then verify that we actually intend to do so
+	local trap = game.level.map(cx, cy, Map.TRAP)
+	if trap and trap:knownBy(self) and self.running.cnt ~= 1 then
+		return self:autoExplore()
 	end
 
 	-- One more kindness to the player: take advantage of asymmetric LoS in this one specific case.
 	-- If an enemy is at '?', the player is able to prevent an ambush by moving to 'x' instead of 't'.
 	-- This is the only sensibly preventable ambush (that I know of) in which the player can move
 	-- in a way to see the would-be ambusher and the would-be ambusher can't see the player.
-	-- 
+	-- However, don't do this if it will step onto a known trap
+	--
 	--   .tx      Moving onto 't' puts us adjacent to an unseen tile, '?'
 	--   ?#@      --> Pick 'x' instead
-	if math.abs(self.x - node.x) == 1 and math.abs(self.y - node.y) == 1 then
-		if game.level.map:checkAllEntities(self.x, node.y, "block_move", self) and not game.level.map:checkAllEntities(node.x, self.y, "block_move", self) and
-				game.level.map:isBound(self.x, 2*node.y - self.y) and not game.level.map.has_seens(self.x, 2*node.y - self.y) then
-			table.insert(self.running.path, self.running.cnt, {x=node.x, y=self.y})
-		elseif game.level.map:checkAllEntities(node.x, self.y, "block_move", self) and not game.level.map:checkAllEntities(self.x, node.y, "block_move", self) and
-				game.level.map:isBound(2*node.x - self.x, self.y) and not game.level.map.has_seens(2*node.x - self.x, self.y) then
-			table.insert(self.running.path, self.running.cnt, {x=self.x, y=node.y})
+	if math.abs(self.x - cx) == 1 and math.abs(self.y - cy) == 1 then
+		if game.level.map:checkAllEntities(self.x, cy, "block_move", self) and not game.level.map:checkAllEntities(cx, self.y, "block_move", self) and
+				game.level.map:isBound(self.x, 2*cy - self.y) and not game.level.map.has_seens(self.x, 2*cy - self.y) then
+			local trap = game.level.map(cx, self.y, Map.TRAP)
+			if not trap or not trap:knownBy(self) then
+				table.insert(self.running.path, self.running.cnt, {x=cx, y=self.y})
+			end
+		elseif game.level.map:checkAllEntities(cx, self.y, "block_move", self) and not game.level.map:checkAllEntities(self.x, cy, "block_move", self) and
+				game.level.map:isBound(2*cx - self.x, self.y) and not game.level.map.has_seens(2*cx - self.x, self.y) then
+			local trap = game.level.map(self.x, cy, Map.TRAP)
+			if not trap or not trap:knownBy(self) then
+				table.insert(self.running.path, self.running.cnt, {x=self.x, y=cy})
+			end
 		end
 	end
 
 	-- continue current path if we haven't seen the target tile or object yet
-	if not game.level.map.has_seens(x, y) then return true end
-	if obj and not game.level.map.attrs(x, y, "obj_seen") then return true end
+	if not game.level.map.has_seens(tx, ty) then return true end
+	if obj and not game.level.map.attrs(tx, ty, "obj_seen") then return true end
 
 	-- if we have explored the unseen node or the unseen item is no longer there, then continue auto-exploring somewhere else
-	if self.running.explore == "unseen" or self.running.explore == "item" and not obj then
+	if self.running.explore == "unseen" or self.running.explore == "object" and not obj then
 		return self:autoExplore()
 	else
 	-- otherwise, try to continue running on the current path to reach our target

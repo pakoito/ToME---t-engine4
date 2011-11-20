@@ -1132,8 +1132,8 @@ newEffect{
 		if math.min(eff.unlockLevel, eff.level) >= 4 then
 			-- build chance for a nightmare
 			local def = self.tempeffect_def[self.EFF_CURSE_OF_NIGHTMARES]
-			eff.nightmareChance = (eff.nightmareChance or 0) def.getNightmareChance(eff.level)
-
+			eff.nightmareChance = (eff.nightmareChance or 0) + def.getNightmareChance(eff.level)
+			
 			-- invoke the nightmare
 			if rng.percent(eff.nightmareChance) then
 				local radius = def.getNightmareRadius(eff.level)

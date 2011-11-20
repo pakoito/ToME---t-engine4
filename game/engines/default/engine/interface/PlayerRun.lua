@@ -367,6 +367,9 @@ function _M:runStop(msg)
 
 	game:unregisterDialog(self.running.dialog)
 
+	if not msg and self.running.explore and self.running.path and self.running.cnt == #self.running.path + 1 then
+		msg = "at " .. self.running.explore
+	end
 	if msg then
 		game.log("Ran for %d turns (stop reason: %s).", self.running.cnt, msg)
 	end
