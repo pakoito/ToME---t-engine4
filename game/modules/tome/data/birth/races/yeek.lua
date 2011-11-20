@@ -44,7 +44,7 @@ newBirthDescriptor{
 		type = "humanoid", subtype="yeek",
 		size_category = 2,
 		default_wilderness = {"playerpop", "yeek"},
-		starting_zone = "wilderness",
+		starting_zone = "town-irkkk",
 		starting_quest = "start-yeek",
 		starting_intro = "yeek",
 		blood_color = colors.BLUE,
