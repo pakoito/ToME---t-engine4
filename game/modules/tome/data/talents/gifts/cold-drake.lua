@@ -30,6 +30,8 @@ newTalent{
 	range = 1,
 	tactical = { ATTACK = { COLD = 2 } },
 	requires_target = true,
+	on_learn = function(self, t) self.resists[DamageType.COLD] = (self.resists[DamageType.COLD] or 0) + 1 end,
+	on_unlearn = function(self, t) self.resists[DamageType.COLD] = (self.resists[DamageType.COLD] or 0) - 1 end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -40,7 +42,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You call upon the mighty claw of a cold drake, doing %d%% weapon damage as cold damage.
-		At level 4 the attack becomes pure ice, giving a chance to freeze the target.]]):format(100 * (1.4 + self:getTalentLevel(t) / 8))
+		At level 4 the attack becomes pure ice, giving a chance to freeze the target.
+		Each point in cold drake talents also increases your cold resistance by 1%%.]]):format(100 * (1.4 + self:getTalentLevel(t) / 8))
 	end,
 }
 
@@ -54,6 +57,8 @@ newTalent{
 	sustain_equilibrium = 30,
 	range = 10,
 	tactical = { ATTACK = { COLD = 1 }, DEFEND = 2 },
+	on_learn = function(self, t) self.resists[DamageType.COLD] = (self.resists[DamageType.COLD] or 0) + 1 end,
+	on_unlearn = function(self, t) self.resists[DamageType.COLD] = (self.resists[DamageType.COLD] or 0) - 1 end,
 	activate = function(self, t)
 		return {
 			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.COLD]=5 * self:getTalentLevel(t)}),
@@ -66,7 +71,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your skin forms icy scales, damaging all that hit you for %0.2f cold damage and increasing your armor by %d.]]):format(damDesc(self, DamageType.COLD, 5 * self:getTalentLevel(t)), 4 * self:getTalentLevel(t))
+		return ([[Your skin forms icy scales, damaging all that hit you for %0.2f cold damage and increasing your armor by %d.
+		Each point in cold drake talents also increases your cold resistance by 1%%.]]):format(damDesc(self, DamageType.COLD, 5 * self:getTalentLevel(t)), 4 * self:getTalentLevel(t))
 	end,
 }
 
@@ -81,6 +87,8 @@ newTalent{
 	range = 10,
 	tactical = { DISABLE = 2 },
 	requires_target = true,
+	on_learn = function(self, t) self.resists[DamageType.COLD] = (self.resists[DamageType.COLD] or 0) + 1 end,
+	on_unlearn = function(self, t) self.resists[DamageType.COLD] = (self.resists[DamageType.COLD] or 0) - 1 end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t}
 		local x, y = self:getTarget(tg)
@@ -117,7 +125,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summons an icy wall for %d turns. Ice walls are transparent.]]):format(4 + self:getTalentLevel(t))
+		return ([[Summons an icy wall for %d turns. Ice walls are transparent.
+		Each point in cold drake talents also increases your cold resistance by 1%%.]]):format(4 + self:getTalentLevel(t))
 	end,
 }
 
@@ -135,6 +144,8 @@ newTalent{
 	radius = function(self, t) return 4 + self:getTalentLevelRaw(t) end,
 	direct_hit = true,
 	requires_target = true,
+	on_learn = function(self, t) self.resists[DamageType.COLD] = (self.resists[DamageType.COLD] or 0) + 1 end,
+	on_unlearn = function(self, t) self.resists[DamageType.COLD] = (self.resists[DamageType.COLD] or 0) - 1 end,
 	target = function(self, t)
 		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
@@ -149,7 +160,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You breathe ice in a frontal cone of radius %d. Any target caught in the area will take %0.2f cold damage and has a 25%% to be frozen for a few turns(higher rank enemies will be frozen for a shorter time).
-		The damage will increase with the Strength stat]]):format(self:getTalentRadius(t), damDesc(self, DamageType.COLD, self:combatTalentStatDamage(t, "str", 30, 430)))
+		The damage will increase with the Strength stat.
+		Each point in cold drake talents also increases your cold resistance by 1%%.]]):format(self:getTalentRadius(t), damDesc(self, DamageType.COLD, self:combatTalentStatDamage(t, "str", 30, 430)))
 	end,
 }
 

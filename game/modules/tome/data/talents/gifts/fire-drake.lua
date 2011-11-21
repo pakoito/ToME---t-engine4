@@ -27,6 +27,8 @@ newTalent{
 	equilibrium = 3,
 	cooldown = 20,
 	range = 0,
+	on_learn = function(self, t) self.resists[DamageType.FIRE] = (self.resists[DamageType.FIRE] or 0) + 1 end,
+	on_unlearn = function(self, t) self.resists[DamageType.FIRE] = (self.resists[DamageType.FIRE] or 0) - 1 end,
 	radius = function(self, t)
 		return 2 + self:getTalentLevelRaw(t)
 	end,
@@ -46,7 +48,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[You let out a powerful roar that sends your foes into utter confusion for 3 turns in a radius of %d.]]):format(radius)
+		return ([[You let out a powerful roar that sends your foes into utter confusion for 3 turns in a radius of %d.
+		Each point in fire drake talents also increases your fire resistance by 1%%.]]):format(radius)
 	end,
 }
 
@@ -59,6 +62,8 @@ newTalent{
 	equilibrium = 7,
 	cooldown = 10,
 	range = 0,
+	on_learn = function(self, t) self.resists[DamageType.FIRE] = (self.resists[DamageType.FIRE] or 0) + 1 end,
+	on_unlearn = function(self, t) self.resists[DamageType.FIRE] = (self.resists[DamageType.FIRE] or 0) - 1 end,
 	radius = function(self, t)
 		return 4 + self:getTalentLevelRaw(t)
 	end,
@@ -78,7 +83,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You summon a powerful gust of wind, knocking back your foes within a radius of %d up to 4 tiles away and damaging them for %d.
-		The damage will increase with the Strength stat]]):format(self:getTalentRadius(t), self:combatTalentStatDamage(t, "str", 15, 90))
+		The damage will increase with the Strength stat.
+		Each point in fire drake talents also increases your fire resistance by 1%%.]]):format(self:getTalentRadius(t), self:combatTalentStatDamage(t, "str", 15, 90))
 	end,
 }
 
@@ -95,6 +101,8 @@ newTalent{
 	radius = 2,
 	direct_hit = true,
 	requires_target = true,
+	on_learn = function(self, t) self.resists[DamageType.FIRE] = (self.resists[DamageType.FIRE] or 0) + 1 end,
+	on_unlearn = function(self, t) self.resists[DamageType.FIRE] = (self.resists[DamageType.FIRE] or 0) - 1 end,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
 	end,
@@ -129,7 +137,8 @@ newTalent{
 		local radius = self:getTalentRadius(t)
 		local duration = t.getDuration(self, t)
 		return ([[Spit a cloud of flames doing %0.2f fire damage in a radius of %d each turn for %d turns.
-		The damage will increase with the Willpower stat]]):format(damDesc(self, DamageType.FIRE, dam), radius, duration)
+		The damage will increase with the Willpower stat.
+		Each point in fire drake talents also increases your fire resistance by 1%%.]]):format(damDesc(self, DamageType.FIRE, dam), radius, duration)
 	end,
 }
 
@@ -147,6 +156,8 @@ newTalent{
 	radius = function(self, t) return 4 + self:getTalentLevelRaw(t) end,
 	direct_hit = true,
 	requires_target = true,
+	on_learn = function(self, t) self.resists[DamageType.FIRE] = (self.resists[DamageType.FIRE] or 0) + 1 end,
+	on_unlearn = function(self, t) self.resists[DamageType.FIRE] = (self.resists[DamageType.FIRE] or 0) - 1 end,
 	target = function(self, t)
 		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
@@ -161,6 +172,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You breathe fire in a frontal cone of radius %d. Any target caught in the area will take %0.2f fire damage over 3 turns.
-		The damage will increase with the Strength stat]]):format(self:getTalentRadius(t), damDesc(self, DamageType.FIRE, self:combatTalentStatDamage(t, "str", 30, 550)))
+		The damage will increase with the Strength stat.
+		Each point in fire drake talents also increases your fire resistance by 1%%.]]):format(self:getTalentRadius(t), damDesc(self, DamageType.FIRE, self:combatTalentStatDamage(t, "str", 30, 550)))
 	end,
 }

@@ -29,6 +29,8 @@ newTalent{
 	range = 10,
 	tactical = { CLOSEIN = 2, ESCAPE = 2 },
 	requires_target = true,
+	on_learn = function(self, t) self.resists[DamageType.LIGHTNING] = (self.resists[DamageType.LIGHTNING] or 0) + 1 end,
+	on_unlearn = function(self, t) self.resists[DamageType.LIGHTNING] = (self.resists[DamageType.LIGHTNING] or 0) - 1 end,
 	action = function(self, t)
 		self:setEffect(self.EFF_LIGHTNING_SPEED, math.ceil(1 + self:getTalentLevel(t) * 0.3), {power=400 + self:getTalentLevel(t) * 70})
 		return true
@@ -37,7 +39,8 @@ newTalent{
 		return ([[You transform into pure lightning, moving %d%% faster for %d game turns.
 		Also provides 30%% physical damage resistance and 100%% lightning resistance.
 		Any actions other than moving will stop this effect.
-		Note: since you will be moving very fast, game turns will pass very slowly.]]):format(400 + self:getTalentLevel(t) * 70, math.ceil(1 + self:getTalentLevel(t) * 0.3))
+		Note: since you will be moving very fast, game turns will pass very slowly.
+		Each point in storm drake talents also increases your lightning resistance by 1%%.]]):format(400 + self:getTalentLevel(t) * 70, math.ceil(1 + self:getTalentLevel(t) * 0.3))
 	end,
 }
 
@@ -52,6 +55,8 @@ newTalent{
 	radius = 1,
 	tactical = { ATTACKAREA = { instakill = 5 } },
 	requires_target = true,
+	on_learn = function(self, t) self.resists[DamageType.LIGHTNING] = (self.resists[DamageType.LIGHTNING] or 0) + 1 end,
+	on_unlearn = function(self, t) self.resists[DamageType.LIGHTNING] = (self.resists[DamageType.LIGHTNING] or 0) - 1 end,
 	target = function(self, t)
 		return {type="ball", radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
@@ -80,7 +85,8 @@ newTalent{
 		local percent = t.getPercent(self, t)
 		return ([[Generate an electrical field around you in a radius of 1. Any creature caught inside will lose %d%% of its current life.
 		This effect can not kill creatures.
-		Life loss will increase with the Willpower stat.]]):format(percent)
+		Life loss will increase with the Willpower stat.
+		Each point in storm drake talents also increases your lightning resistance by 1%%.]]):format(percent)
 	end,
 }
 
@@ -95,6 +101,8 @@ newTalent{
 	tactical = { ATTACK = { LIGHTNING = 2 }, DISABLE = { stun = 2 } },
 	range = function(self, t) return 4 + math.floor(self:getTalentLevel(t)) end,
 	requires_target = true,
+	on_learn = function(self, t) self.resists[DamageType.LIGHTNING] = (self.resists[DamageType.LIGHTNING] or 0) + 1 end,
+	on_unlearn = function(self, t) self.resists[DamageType.LIGHTNING] = (self.resists[DamageType.LIGHTNING] or 0) - 1 end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), nolock=true, talent=t}
 		local x, y = self:getTarget(tg)
@@ -148,7 +156,8 @@ newTalent{
 		Any foe caught in its path take %0.2f lightning damage.
 		When it reaches its target it explodes in a radius of 1 for %0.2f lightning damage, %0.2f physical damage. All affected creatures will be knocked back and the targeted creature will be stunned for 4 turns.
 		The tornado will last for %d turns or until it reaches its target.
-		Damage will increase with your Willpower.]]):format(
+		Damage will increase with your Willpower.
+		Each point in storm drake talents also increases your lightning resistance by 1%%.]]):format(
 			damDesc(self, DamageType.LIGHTNING, self:combatTalentMindDamage(t, 10, 60)),
 			damDesc(self, DamageType.LIGHTNING, self:combatTalentMindDamage(t, 15, 130)),
 			damDesc(self, DamageType.PHYSICAL, self:combatTalentMindDamage(t, 15, 130)),
@@ -171,6 +180,8 @@ newTalent{
 	radius = function(self, t) return 4 + self:getTalentLevelRaw(t) end,
 	direct_hit = true,
 	requires_target = true,
+	on_learn = function(self, t) self.resists[DamageType.LIGHTNING] = (self.resists[DamageType.LIGHTNING] or 0) + 1 end,
+	on_unlearn = function(self, t) self.resists[DamageType.LIGHTNING] = (self.resists[DamageType.LIGHTNING] or 0) - 1 end,
 	target = function(self, t)
 		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
@@ -190,7 +201,8 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[You breathe lightning in a frontal cone of radius %d. Any target caught in the area will take %0.2f to %0.2f lightning damage and can be dazed for 3 turns.
-		The damage will increase with the Strength stat]]):format(
+		The damage will increase with the Strength stat.
+		Each point in storm drake talents also increases your lightning resistance by 1%%.]]):format(
 			self:getTalentRadius(t),
 			damDesc(self, DamageType.LIGHTNING, damage / 3),
 			damDesc(self, DamageType.LIGHTNING, damage)

@@ -29,6 +29,8 @@ newTalent{
 	tactical = { ATTACK = { NATURE = 0.5 }, EQUILIBRIUM = 0.5},
 	requires_target = true,
 	no_npc_use = true,
+	on_learn = function(self, t) self.resists[DamageType.PHYSICAL] = (self.resists[DamageType.PHYSICAL] or 0) + 0.5 end,
+	on_unlearn = function(self, t) self.resists[DamageType.PHYSICAL] = (self.resists[DamageType.PHYSICAL] or 0) - 0.5 end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -54,7 +56,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Attack the target for %d%% nature weapon damage.
-		If the attack brings your target below %d%% life (or kills it) you can try to swallow it, killing it automatically and regaining life and equilibrium depending on its level.]]):
+		If the attack brings your target below %d%% life (or kills it) you can try to swallow it, killing it automatically and regaining life and equilibrium depending on its level.
+		Each point in sand drake talents also increases your physical resistance by 0.5%%.]]):
 		format(100 * self:combatTalentWeaponDamage(t, 1, 1.5), 10 + 3 * self:getTalentLevel(t))
 	end,
 }
@@ -70,6 +73,8 @@ newTalent{
 	cooldown = 30,
 	tactical = { ATTACKAREA = { PHYSICAL = 2 }, DISABLE = { knockback = 2 } },
 	range = 10,
+	on_learn = function(self, t) self.resists[DamageType.PHYSICAL] = (self.resists[DamageType.PHYSICAL] or 0) + 0.5 end,
+	on_unlearn = function(self, t) self.resists[DamageType.PHYSICAL] = (self.resists[DamageType.PHYSICAL] or 0) - 0.5 end,
 	radius = function(self, t)
 		return 2 + self:getTalentLevel(t) / 2
 	end,
@@ -89,7 +94,8 @@ newTalent{
 		return ([[You slam your foot onto the ground, shaking the area around you in a radius of %d.
 		Creatures caught by the quake will be damaged for %d and knocked back up to 4 titles away.
 		The terrain will also be moved around within the quake's radius.
-		The damage will increase with the Strength stat.]]):format(radius, dam)
+		The damage will increase with the Strength stat.
+		Each point in sand drake talents also increases your physical resistance by 0.5%%.]]):format(radius, dam)
 	end,
 }
 
@@ -102,12 +108,15 @@ newTalent{
 	cooldown = 30,
 	range = 10,
 	tactical = { CLOSEIN = 0.5, ESCAPE = 0.5 },
+	on_learn = function(self, t) self.resists[DamageType.PHYSICAL] = (self.resists[DamageType.PHYSICAL] or 0) + 0.5 end,
+	on_unlearn = function(self, t) self.resists[DamageType.PHYSICAL] = (self.resists[DamageType.PHYSICAL] or 0) - 0.5 end,
 	action = function(self, t)
 		self:setEffect(self.EFF_BURROW, 5 + self:getTalentLevel(t) * 3, {})
 		return true
 	end,
 	info = function(self, t)
-		return ([[Allows you to burrow into walls for %d turns.]]):format(5 + self:getTalentLevel(t) * 3)
+		return ([[Allows you to burrow into walls for %d turns.
+		Each point in sand drake talents also increases your physical resistance by 0.5%%.]]):format(5 + self:getTalentLevel(t) * 3)
 	end,
 }
 
@@ -125,6 +134,8 @@ newTalent{
 	radius = function(self, t) return 4 + self:getTalentLevelRaw(t) end,
 	direct_hit = true,
 	requires_target = true,
+	on_learn = function(self, t) self.resists[DamageType.PHYSICAL] = (self.resists[DamageType.PHYSICAL] or 0) + 0.5 end,
+	on_unlearn = function(self, t) self.resists[DamageType.PHYSICAL] = (self.resists[DamageType.PHYSICAL] or 0) - 0.5 end,
 	target = function(self, t)
 		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
@@ -147,7 +158,8 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[You breathe sand in a frontal cone of radius %d. Any target caught in the area will take %0.2f physical damage and be blinded for %d turns.
-		The damage will increase with the Strength stat]]):format(self:getTalentRadius(t), damDesc(self, DamageType.PHYSICAL, damage), duration)
+		The damage will increase with the Strength stat.
+		Each point in sand drake talents also increases your physical resistance by 0.5%%.]]):format(self:getTalentRadius(t), damDesc(self, DamageType.PHYSICAL, damage), duration)
 	end,
 }
 
