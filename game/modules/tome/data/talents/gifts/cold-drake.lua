@@ -35,11 +35,12 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
-		self:attackTarget(target, DamageType.COLD, 1.4 + self:getTalentLevel(t) / 8, true)
+		self:attackTarget(target, (self:getTalentLevel(t) >= 4) and DamageType.ICE or DamageType.COLD, 1.4 + self:getTalentLevel(t) / 8, true)
 		return true
 	end,
 	info = function(self, t)
-		return ([[You call upon the mighty claw of a cold drake, doing %d%% weapon damage as cold damage.]]):format(100 * (1.4 + self:getTalentLevel(t) / 8))
+		return ([[You call upon the mighty claw of a cold drake, doing %d%% weapon damage as cold damage.
+		At level 4 the attack becomes pure ice, giving a chance to freeze the target.]]):format(100 * (1.4 + self:getTalentLevel(t) / 8))
 	end,
 }
 
