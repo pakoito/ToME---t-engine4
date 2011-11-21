@@ -68,13 +68,20 @@ newTalent{
 		self:project(tg, self.x, self.y, function(px, py)
 			local target = game.level.map(px, py, Map.ACTOR)
 			if not target then return end
-			if not target:canBe("instakill") or target.rank > 3 or not target:checkHit(self:combatMindpower(), target:combatPhysicalResist(), 10) then
+			if not target:checkHit(self:combatMindpower(), target:combatPhysicalResist(), 10) then
 				game.logSeen(target, "%s resists the static field!", target.name:capitalize())
 				return
 			end
 			target:crossTierEffect(target.EFF_OFFBALANCE, self:combatMindpower())
 			game.logSeen(target, "%s is caught in the static field!", target.name:capitalize())
-			local dam = target.life * t.getPercent(self, t) / 100
+
+			local perc = t.getPercent(self, t)
+			if target.rank >= 5 then perc = perc / 3
+			elseif target.rank >= 3.5 then perc = perc / 2
+			elseif target.rank >= 3 then perc = perc / 1.5
+			end
+
+			local dam = target.life * perc / 100
 			if target.life - dam < 0 then dam = target.life end
 			target:takeHit(dam, self)
 		end, nil, {type="lightning_explosion"})
@@ -83,7 +90,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local percent = t.getPercent(self, t)
-		return ([[Generate an electrical field around you in a radius of 1. Any creature caught inside will lose %d%% of its current life.
+		return ([[Generate an electrical field around you in a radius of 1. Any creature caught inside will lose %d%% of its current life (effect decreased for higher creature ranks).
 		This effect can not kill creatures.
 		Life loss will increase with the Willpower stat.
 		Each point in storm drake talents also increases your lightning resistance by 1%%.]]):format(percent)
