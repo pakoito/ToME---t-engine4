@@ -96,37 +96,66 @@ newTalent{
 		local _ _, x, y = self:canProject(tg, x, y)
 		if game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then return nil end
 
-		local e = Object.new{
-			old_feat = game.level.map(x, y, Map.TERRAIN),
-			name = "summoned ice wall", image = "npc/iceblock.png",
-			display = '#', color=colors.LIGHT_BLUE, back_color=colors.BLUE,
-			always_remember = true,
-			can_pass = {pass_wall=1},
-			block_move = true,
-			block_sight = false,
-			temporary = 4 + self:getTalentLevel(t),
-			x = x, y = y,
-			canAct = false,
-			act = function(self)
-				self:useEnergy()
-				self.temporary = self.temporary - 1
-				if self.temporary <= 0 then
-					game.level.map(self.x, self.y, engine.Map.TERRAIN, self.old_feat)
-					game.level:removeEntity(self)
-					game.level.map:redisplay()
-				end
-			end,
-			summoner_gain_exp = true,
-			summoner = self,
-		}
-		game.level:addEntity(e)
-		game.level.map(x, y, Map.TERRAIN, e)
+		local addwall = function(x, y)
+			local e = Object.new{
+				old_feat = game.level.map(x, y, Map.TRAP),
+				name = "ice wall", image = "npc/iceblock.png",
+				type = "wall", subtype = "ice",
+				display = '#', color=colors.LIGHT_BLUE, back_color=colors.BLUE,
+				always_remember = true,
+				can_pass = {pass_wall=1},
+				block_move = true,
+				block_sight = false,
+				temporary = 4 + self:getTalentLevel(t),
+				x = x, y = y,
+				canAct = false,
+				act = function(self)
+					self:useEnergy()
+					self.temporary = self.temporary - 1
+					if self.temporary <= 0 then
+						if self.old_feat then game.level.map(self.x, self.y, engine.Map.TRAP, self.old_feat)
+						else game.level.map:remove(self.x, self.y, engine.Map.TRAP) end
+						game.level:removeEntity(self)
+					end
+				end,
+				knownBy = function() return true end,
+				canTrigger = function() return false end,
+				canDisarm = function() return false end,
+				setKnown = function() end,
+				summoner_gain_exp = true,
+				summoner = self,
+			}
+			game.level:addEntity(e)
+			game.level.map(x, y, Map.TRAP, e)
+		end
+
+		local size = 1 + math.floor(self:getTalentLevel(t) / 2)
+		local angle = math.atan2(y - self.y, x - self.x) + math.pi / 2
+		local x1, y1 = x + math.cos(angle) * size, y + math.sin(angle) * size
+		local x2, y2 = x - math.cos(angle) * size, y - math.sin(angle) * size
+
+		local l = line.new(x, y, x1, y1)
+		while true do
+			local lx, ly = l()
+			if not lx or game.level.map:checkAllEntities(lx, ly, "block_move") then break end
+			addwall(lx, ly)
+		end
+
+		local l = line.new(x, y, x2, y2)
+		while true do
+			local lx, ly = l()
+			if not lx or game.level.map:checkAllEntities(lx, ly, "block_move") then break end
+			addwall(lx, ly)
+		end
+
+		if not game.level.map:checkAllEntities(x, y, "block_move") then addwall(x, y) end
+
 		game.level.map:redisplay()
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summons an icy wall for %d turns. Ice walls are transparent.
-		Each point in cold drake talents also increases your cold resistance by 1%%.]]):format(4 + self:getTalentLevel(t))
+		return ([[Summons an icy wall of %d length for %d turns. Ice walls are transparent.
+		Each point in cold drake talents also increases your cold resistance by 1%%.]]):format(3 + math.floor(self:getTalentLevel(t) / 2) * 2, 4 + self:getTalentLevel(t))
 	end,
 }
 
