@@ -111,8 +111,8 @@ newTalent{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if not target then return nil end
 
-		local movedam = self:combatTalentMindDamage(t, 10, 60)
-		local dam = self:combatTalentMindDamage(t, 15, 130)
+		local movedam = self:combatTalentMindDamage(t, 10, 110)
+		local dam = self:combatTalentMindDamage(t, 15, 190)
 
 		local proj = require("engine.Projectile"):makeHoming(
 			self,
@@ -158,9 +158,9 @@ newTalent{
 		The tornado will last for %d turns or until it reaches its target.
 		Damage will increase with your Willpower.
 		Each point in storm drake talents also increases your lightning resistance by 1%%.]]):format(
-			damDesc(self, DamageType.LIGHTNING, self:combatTalentMindDamage(t, 10, 60)),
-			damDesc(self, DamageType.LIGHTNING, self:combatTalentMindDamage(t, 15, 130)),
-			damDesc(self, DamageType.PHYSICAL, self:combatTalentMindDamage(t, 15, 130)),
+			damDesc(self, DamageType.LIGHTNING, self:combatTalentMindDamage(t, 10, 110)),
+			damDesc(self, DamageType.LIGHTNING, self:combatTalentMindDamage(t, 15, 190)),
+			damDesc(self, DamageType.PHYSICAL, self:combatTalentMindDamage(t, 15, 190)),
 			6 + math.ceil(self:getTalentLevel(t) * 2)
 		)
 	end,
