@@ -14,6 +14,22 @@
 #define __PHYSICSFS_INTERNAL__
 #include "physfs_internal.h"
 
+static char *__BIND_PHYSFS_toDependent(dvoid *opaque, const char *name, const char *append)
+{
+	char *f = __PHYSFS_platformCvtToDependent((char *)opaque, name, NULL);
+
+	// Forbid recursions
+	if (!strncmp(name, opaque+1, strlen(opaque+1)))
+	{
+		return NULL;
+	}
+	else
+	{
+		char *f = __PHYSFS_platformCvtToDependent((char *)opaque, name, NULL);
+		return f;
+	}
+}
+
 static PHYSFS_sint64 BIND_PHYSFS_read(fvoid *opaque, void *buffer,
 	PHYSFS_uint32 objSize, PHYSFS_uint32 objCount)
 {
@@ -107,7 +123,7 @@ static void BIND_PHYSFS_enumerateFiles(dvoid *opaque, const char *dname,
                                int omitSymLinks, PHYSFS_EnumFilesCallback cb,
                                const char *origdir, void *callbackdata)
 {
-	char *d = __PHYSFS_platformCvtToDependent((char *)opaque, dname, NULL);
+	char *d = __BIND_PHYSFS_toDependent((char *)opaque, dname, NULL);
 
 	if (d != NULL)
 	{
@@ -119,7 +135,7 @@ static void BIND_PHYSFS_enumerateFiles(dvoid *opaque, const char *dname,
 
 static int BIND_PHYSFS_exists(dvoid *opaque, const char *name)
 {
-	char *f = __PHYSFS_platformCvtToDependent((char *) opaque, name, NULL);
+	char *f = __BIND_PHYSFS_toDependent((char *) opaque, name, NULL);
 	int retval;
 
 	BAIL_IF_MACRO(f == NULL, NULL, 0);
@@ -131,7 +147,7 @@ static int BIND_PHYSFS_exists(dvoid *opaque, const char *name)
 
 static int BIND_PHYSFS_isDirectory(dvoid *opaque, const char *name, int *fileExists)
 {
-	char *d = __PHYSFS_platformCvtToDependent((char *) opaque, name, NULL);
+	char *d = __BIND_PHYSFS_toDependent((char *) opaque, name, NULL);
 	int retval = 0;
 
 	BAIL_IF_MACRO(d == NULL, NULL, 0);
@@ -153,7 +169,7 @@ static PHYSFS_sint64 BIND_PHYSFS_getLastModTime(dvoid *opaque,
                                         const char *name,
                                         int *fileExists)
 {
-	char *d = __PHYSFS_platformCvtToDependent((char *) opaque, name, NULL);
+	char *d = __BIND_PHYSFS_toDependent((char *) opaque, name, NULL);
 	PHYSFS_sint64 retval = -1;
 
 	BAIL_IF_MACRO(d == NULL, NULL, 0);
@@ -169,7 +185,7 @@ static fvoid *doOpen(dvoid *opaque, const char *name,
                      void *(*openFunc)(const char *filename),
                      int *fileExists)
 {
-    char *f = __PHYSFS_platformCvtToDependent((char *) opaque, name, NULL);
+    char *f = __BIND_PHYSFS_toDependent((char *) opaque, name, NULL);
     void *rc = NULL;
 
     BAIL_IF_MACRO(f == NULL, NULL, NULL);
