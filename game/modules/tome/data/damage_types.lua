@@ -68,8 +68,8 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			print("[PROJECTOR] after necrotic increase dam", dam)
 		end
 
-		if target.isTalentActive and target:isTalentActive(target.T_GESTURE_OF_GUARDING) then
-			local t = target:getTalentFromId(target.T_GESTURE_OF_GUARDING)
+		if src.isTalentActive and src:isTalentActive(target.T_GESTURE_OF_GUARDING) then
+			local t = src:getTalentFromId(target.T_GESTURE_OF_GUARDING)
 			dam = t.on_damageInflicted(target, t, type, dam, src)
 		end
 

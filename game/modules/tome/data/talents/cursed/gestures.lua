@@ -40,13 +40,13 @@ newTalent{
 			game.logPlayer(self, "You do not have a free hand to use Gesture of Pain.")
 			return false
 		end
-		
+
 		return true
 	end,
 	attack = function(self, t, target)
-		local freeHands = self:getFreeHands()		
+		local freeHands = self:getFreeHands()
 		local hit = false
-		
+
 		local mindpower = self:combatMindpower()
 		local baseDamage = t.getBaseDamage(self, t)
 		if self:checkHit(mindpower, target:combatMentalResist()) then
@@ -59,7 +59,7 @@ newTalent{
 			game.logSeen(self, "%s resists the Gesture of Pain.", target.name:capitalize())
 			game:playSoundNear(self, "actions/melee_miss")
 		end
-		
+
 		if not target.dead and freeHands > 1 and self.hate >= 0.1 and rng.chance(t.getSecondAttackChance(self, t)) then
 			if self:checkHit(mindpower, target:combatMentalResist()) then
 				local damage = baseDamage * rng.float(0.5, 1)
@@ -72,11 +72,11 @@ newTalent{
 				game:playSoundNear(self, "actions/melee_miss")
 			end
 		end
-		
+
 		if hit then
 			game.level.map:particleEmitter(target.x, target.y, 1, "melee_attack", {color=colors.VIOLET})
 		end
-		
+
 		return self:combatSpeed(), hit
 	end,
 	activate = function(self, t)
@@ -102,7 +102,7 @@ newTalent{
 	getMindpowerChange = function(self, t, freeHands)
 		freeHands = freeHands or self:getFreeHands()
 		if freeHands == 0 then return 0 end
-		
+
 		local change = math.pow(self:getTalentLevel(t), 0.7) * 4
 		if freeHands > 1 then change = change * 1.4 end
 		return math.floor(change)
@@ -123,7 +123,7 @@ newTalent{
 	getMindCritChange = function(self, t, freeHands)
 		freeHands = freeHands or self:getFreeHands()
 		if freeHands == 0 then return 0 end
-		
+
 		local change = math.pow(self:getTalentLevel(t), 0.5) * 2
 		if freeHands > 1 then change = change * 1.4 end
 		return change
@@ -145,16 +145,18 @@ newTalent{
 	getDamageResistChange = function(self, t, distance, freeHands)
 		freeHands = freeHands or self:getFreeHands()
 		if freeHands == 0 then return 0 end
-		
+
 		local change = math.pow(self:getTalentLevel(t), 0.5) * 1.15
 		if freeHands > 1 then change = change * 1.4 end
+		print("===dec by", change,change * math.min(7, distance))
 		return change * math.min(7, distance)
 	end,
 	getIncDamageChange = function(self, t, distance)
 		local change = -(2 + math.pow(self:getTalentLevel(t), 0.5) * 0.8)
+		print("===inc by", change,change * math.min(7, distance))
 		return change * math.min(7, distance)
 	end,
-	on_damageRecieved = function(self, t, type, dam, src)
+	on_damageReceived = function(self, t, type, dam, src)
 		if src and src.x and src.y and (self.x ~= src.x or self.y ~= src.y) and self:hasLOS(src.x, src.y) then
 			local distance = core.fov.distance(src.x, src.y, self.x, self.y)
 			dam = dam * (100 - t.getDamageResistChange(self, t, distance) / 100)
@@ -167,6 +169,12 @@ newTalent{
 			dam = dam * (100 + t.getIncDamageChange(self, t, distance) / 100)
 		end
 		return dam
+	end,
+	activate = function(self, t)
+		return {}
+	end,
+	deactivate = function(self, t, p)
+		return true
 	end,
 	info = function(self, t)
 		local damageResistChange1 = t.getDamageResistChange(self, t, 1, 1)

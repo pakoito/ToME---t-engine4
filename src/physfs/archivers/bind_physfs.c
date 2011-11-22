@@ -26,6 +26,11 @@ static char *__BIND_PHYSFS_toDependent(dvoid *opaque, const char *name, const ch
 	else
 	{
 		char *f = __PHYSFS_platformCvtToDependent((char *)opaque, name, NULL);
+
+		// FIXME: I'm a very very dirty hack; __PHYSFS_platformCvtToDependent is not really meant to return a platform independant path, so why turn it into one (for poor windows users)
+		char *c = f;
+		while (*c) { if (*c == '\\') *c = '/'; c++; }
+
 		return f;
 	}
 }
