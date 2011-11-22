@@ -66,10 +66,12 @@ extern const PHYSFS_Archiver       __PHYSFS_Archiver_MVL;
 extern const PHYSFS_ArchiveInfo    __PHYSFS_ArchiveInfo_WAD;
 extern const PHYSFS_Archiver       __PHYSFS_Archiver_WAD;
 extern const PHYSFS_Archiver       __PHYSFS_Archiver_DIR;
+extern const PHYSFS_Archiver       __PHYSFS_Archiver_BIND_PHYSFS;
 
 
 static const PHYSFS_ArchiveInfo *supported_types[] =
 {
+    &__PHYSFS_Archiver_BIND_PHYSFS,
 #if (defined PHYSFS_SUPPORTS_ZIP)
     &__PHYSFS_ArchiveInfo_ZIP,
 #endif
@@ -96,6 +98,7 @@ static const PHYSFS_ArchiveInfo *supported_types[] =
 
 static const PHYSFS_Archiver *archivers[] =
 {
+    &__PHYSFS_Archiver_BIND_PHYSFS,
     &__PHYSFS_Archiver_DIR,
 #if (defined PHYSFS_SUPPORTS_ZIP)
     &__PHYSFS_Archiver_ZIP,
@@ -419,7 +422,7 @@ static DirHandle *openDirectory(const char *d, int forWriting)
     const PHYSFS_Archiver **i;
     const char *ext;
 
-    BAIL_IF_MACRO(!__PHYSFS_platformExists(d), ERR_NO_SUCH_FILE, NULL);
+//    BAIL_IF_MACRO(!__PHYSFS_platformExists(d), ERR_NO_SUCH_FILE, NULL);
 
     ext = find_filename_extension(d);
     if (ext != NULL)
