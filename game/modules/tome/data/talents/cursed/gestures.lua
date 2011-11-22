@@ -148,25 +148,25 @@ newTalent{
 
 		local change = math.pow(self:getTalentLevel(t), 0.5) * 1.15
 		if freeHands > 1 then change = change * 1.4 end
-		print("===dec by", change,change * math.min(7, distance))
 		return change * math.min(7, distance)
 	end,
 	getIncDamageChange = function(self, t, distance)
 		local change = -(2 + math.pow(self:getTalentLevel(t), 0.5) * 0.8)
-		print("===inc by", change,change * math.min(7, distance))
 		return change * math.min(7, distance)
 	end,
 	on_damageReceived = function(self, t, type, dam, src)
 		if src and src.x and src.y and (self.x ~= src.x or self.y ~= src.y) and self:hasLOS(src.x, src.y) then
 			local distance = core.fov.distance(src.x, src.y, self.x, self.y)
-			dam = dam * (100 - t.getDamageResistChange(self, t, distance) / 100)
+		print("===dec by", t.getDamageResistChange(self, t, distance), distance)
+			dam = dam * (100 - t.getDamageResistChange(self, t, distance)) / 100
 		end
 		return dam
 	end,
-	on_damageInflicted = function(self, type, dam, target)
+	on_damageInflicted = function(self, t, type, dam, target)
 		if target and target.x and target.y and (self.x ~= target.x or self.y ~= target.y) and self:hasLOS(target.x, target.y) then
 			local distance = core.fov.distance(target.x, target.y, self.x, self.y)
-			dam = dam * (100 + t.getIncDamageChange(self, t, distance) / 100)
+		print("===inc by", t.getIncDamageChange(self, t, distance), distance)
+			dam = dam * (100 + t.getIncDamageChange(self, t, distance)) / 100
 		end
 		return dam
 	end,

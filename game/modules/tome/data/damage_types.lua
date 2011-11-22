@@ -69,8 +69,8 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		end
 
 		if src.isTalentActive and src:isTalentActive(target.T_GESTURE_OF_GUARDING) then
-			local t = src:getTalentFromId(target.T_GESTURE_OF_GUARDING)
-			dam = t.on_damageInflicted(target, t, type, dam, src)
+			local t = src:getTalentFromId(src.T_GESTURE_OF_GUARDING)
+			dam = t.on_damageInflicted(src, t, type, dam, target)
 		end
 
 		-- Blast the iceblock
