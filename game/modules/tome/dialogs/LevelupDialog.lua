@@ -410,11 +410,9 @@ function _M:getStatDescription(stat_id)
 			text = text.."Accuracy: "..color..(diff * 0.35).."#LAST#\n"
 		end
 	elseif stat_id == self.actor.STAT_STR then
+		text = text.."Physical power: "..color..(diff).."#LAST#\n"
 		text = text.."Max encumberance: "..color..(diff * 1.8).."#LAST#\n"
 		text = text.."Physical save: "..color..(diff * 0.35).."#LAST#\n"
-		if not self.actor.use_psi_combat then
-			text = text.."Accuracy: "..color..(diff * 0.35).."#LAST#\n"
-		end
 	elseif stat_id == self.actor.STAT_CUN then
 		text = text.."Spell/Physical crit. chance: "..color..(diff * 0.3).."#LAST#\n"
 		text = text.."Mental save: "..color..(diff * 0.35).."#LAST#\n"
@@ -428,9 +426,7 @@ function _M:getStatDescription(stat_id)
 	elseif stat_id == self.actor.STAT_DEX then
 		text = text.."Defense: "..color..(diff * 0.35).."#LAST#\n"
 		text = text.."Ranged defense: "..color..(diff * 0.35).."#LAST#\n"
-		if not self.actor.use_psi_combat then
-			text = text.."Accuracy: "..color..(diff * 0.35).."#LAST#\n"
-		end
+		text = text.."Accuracy: "..color..(diff).."#LAST#\n"
 	end
 
 	if self.actor.player and self.desc_def and self.desc_def.getStatDesc and self.desc_def.getStatDesc(stat_id, self.actor) then
