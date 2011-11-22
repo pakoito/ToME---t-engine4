@@ -78,7 +78,7 @@ choose_combat_stats = function(self, who, status, sub)
 end
 ]=]
 on_grant = function(self)
-	game.player.combat_atk = 24
+	game.player.combat_atk = 25
 	game.player.combat_dam = 7
 	game.player.combat_spellpower = 88
 	game.player.combat_def = 18

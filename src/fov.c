@@ -697,6 +697,58 @@ static int lua_fov_line_step(lua_State *L)
 	return 4;
 }
 
+// Hmm, this function was just added and may change in the near-future.  We probably want
+// to create a line at a specific angle, so let's simply make a function that does just that.
+static int lua_fov_line_change_step(lua_State *L)
+{
+	lua_fov_line *lua_line;
+	if (lua_istable(L, 1)) {
+		lua_getfield(L, 1, "line");
+		lua_line = (lua_fov_line*)auxiliar_checkclass(L, "core{fovline}", -1);
+		lua_pop(L, 1);
+	} else {
+		lua_line = (lua_fov_line*)auxiliar_checkclass(L, "core{fovline}", 1);
+	}
+	fov_line_data *line = &(lua_line->line);
+	float step_x = lua_tonumber(L, 2);
+	float step_y = lua_tonumber(L, 3);
+
+	line->step_x = step_x;
+	line->step_y = step_y;
+	return 0;
+}
+
+// use to "wiggle" away from boundary cases
+static int lua_fov_line_wiggle(lua_State *L)
+{
+	lua_fov_line *lua_line;
+	if (lua_istable(L, 1)) {
+		lua_getfield(L, 1, "line");
+		lua_line = (lua_fov_line*)auxiliar_checkclass(L, "core{fovline}", -1);
+		lua_pop(L, 1);
+	} else {
+		lua_line = (lua_fov_line*)auxiliar_checkclass(L, "core{fovline}", 1);
+	}
+	fov_line_data *line = &(lua_line->line);
+	bool wiggle_me_gently = lua_toboolean(L, 2);
+
+	if (fabs(line->step_x) < fabs(line->step_y)) {
+		if (wiggle_me_gently) {
+			line->step_y += 0.001f;
+		} else {
+			line->step_y -= 0.001f;
+		}
+	} else {
+		if (wiggle_me_gently) {
+			line->step_x += 0.001f;
+		} else {
+			line->step_x -= 0.001f;
+		}
+	}
+
+	return 0;
+}
+
 // The next three functions aren't used anywhere and can probably be deleted
 static int lua_fov_line_blocked_xy(lua_State *L)
 {
@@ -913,6 +965,8 @@ static const struct luaL_reg fovline_reg[] =
 	{"__gc", lua_free_fov_line},
 	{"__call", lua_fov_line_step},
 	{"step", lua_fov_line_step},
+	{"change_step", lua_fov_line_change_step},
+	{"wiggle", lua_fov_line_wiggle},
 	{"is_blocked", lua_fov_line_is_blocked},
 	{"blocked_xy", lua_fov_line_blocked_xy},
 	{"last_open_xy", lua_fov_line_last_open_xy},

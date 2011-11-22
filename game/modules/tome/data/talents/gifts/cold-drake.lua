@@ -134,17 +134,42 @@ newTalent{
 		local x1, y1 = x + math.cos(angle) * size, y + math.sin(angle) * size
 		local x2, y2 = x - math.cos(angle) * size, y - math.sin(angle) * size
 
-		local l = line.new(x, y, x1, y1)
+		local dx1, dy1 = math.abs(x1 - x), math.abs(y1 - y)
+		local dx2, dy2 = math.abs(x2 - x), math.abs(y2 - y)
+		local block_corner = function(_, bx, by)
+				if game.level.map:checkAllEntities(bx, by, "block_move") then return true
+				else addwall(bx, by) ; return false end
+			end
+
+		local l = core.fov.line(x, y, x1, y1, function(_, bx, by) return true end)
+		l:set_corner_block(block_corner)
+		-- use the correct tangent (not approximate) and round corner tie-breakers toward the player (via wiggles!)
+		if dx1 < dy1 then
+			l:change_step((x1-x)/dy1, (y1-y)/dy1)
+			if y < self.y then l:wiggle(true) else l:wiggle() end
+		else
+			l:change_step((x1-x)/dx1, (y1-y)/dx1)
+			if x < self.x then l:wiggle(true) else l:wiggle() end
+		end
 		while true do
-			local lx, ly = l()
-			if not lx or game.level.map:checkAllEntities(lx, ly, "block_move") then break end
+			local lx, ly, is_corner_blocked = l:step()
+			if not lx or is_corner_blocked or game.level.map:checkAllEntities(lx, ly, "block_move") then break end
 			addwall(lx, ly)
 		end
 
-		local l = line.new(x, y, x2, y2)
+		local l = core.fov.line(x, y, x2, y2, function(_, bx, by) return true end)
+		l:set_corner_block(block_corner)
+		-- use the correct tangent (not approximate) and round corner tie-breakers toward the player (via wiggles!)
+		if dx2 < dy2 then
+			l:change_step((x2-x)/dy2, (y2-y)/dy2)
+			if y < self.y then l:wiggle(true) else l:wiggle() end
+		else
+			l:change_step((x2-x)/dx2, (y2-y)/dx2)
+			if x < self.x then l:wiggle(true) else l:wiggle() end
+		end
 		while true do
-			local lx, ly = l()
-			if not lx or game.level.map:checkAllEntities(lx, ly, "block_move") then break end
+			local lx, ly, is_corner_blocked = l:step()
+			if not lx or is_corner_blocked or game.level.map:checkAllEntities(lx, ly, "block_move") then break end
 			addwall(lx, ly)
 		end
 

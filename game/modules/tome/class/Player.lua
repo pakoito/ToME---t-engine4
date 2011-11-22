@@ -79,7 +79,7 @@ function _M:init(t, no_default)
 
 	t.rank = t.rank or 3
 	t.old_life = 0
-	
+
 	t.money_value_multiplier = 1 -- changes amounts in gold piles and such
 
 	mod.class.Actor.init(self, t, no_default)
@@ -167,8 +167,8 @@ function _M:describeFloor(x, y)
 		local obj = game.level.map:getObject(x, y, i)
 		while obj do
 			local desc = true
-			if (obj.auto_pickup and not obj.unique) and self:pickupFloor(i, true) then desc = false end
-			if self:attr("has_transmo") and obj.__transmo == nil and (not obj.quest and not obj.plot) then
+			if obj.auto_pickup and self:pickupFloor(i, true) then desc = false end
+			if desc and self:attr("has_transmo") and obj.__transmo == nil and (not obj.quest and not obj.plot) then
 				if self:pickupFloor(i, true) then
 					desc = false
 					obj.__transmo = true
