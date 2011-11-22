@@ -32,6 +32,7 @@ newTalent{
 	cooldown = 0,
 	no_energy = true,
 	no_npc_use = true,
+	no_unlearn_last = true,
 	-- list of all curses
 	getCurses = function(self, t)
 		return { self.EFF_CURSE_OF_CORPSES, self.EFF_CURSE_OF_MADNESS, self.EFF_CURSE_OF_MISFORTUNE, self.EFF_CURSE_OF_NIGHTMARES, self.EFF_CURSE_OF_SHROUDS }
@@ -39,7 +40,7 @@ newTalent{
 	-- tests whether or not an item can be cursed (takes into account current talent level unless ignoreLevel = true)
 	canCurseItem = function(self, t, item, level)
 		if not item:wornInven() then return false end
-		
+
 		-- possible slots:
 		-- body, head, feet, hands, cloak, belt (armor)
 		-- mainhand (weapon), offhand (weapon/armor;shield), psionic (weapon)
@@ -50,7 +51,7 @@ newTalent{
 		if level >= 2 and item.type == "armor" and (item.slot == "BODY" or item.slot == "CLOAK")  then return true end
 		if level >= 3 and item.type == "armor" and (item.slot == "HEAD" or item.slot == "OFFHAND")  then return true end
 		if level >= 4 and item.type == "armor" and (item.slot == "HANDS" or item.slot == "FEET" or item.slot == "BELT")  then return true end
-		
+
 		return false
 	end,
 	-- curses an item
@@ -66,7 +67,7 @@ newTalent{
 			local curses = t.getCurses(self, t)
 			item.curse = rng.table(curses)
 		end
-		
+
 		local def = self.tempeffect_def[item.curse]
 		item.add_name = (item.add_name or "").." ("..def.short_desc..")"
 	end,
@@ -88,7 +89,7 @@ newTalent{
 				t.curseItem(self, t, item)
 			end
 		end
-	end, 
+	end,
 	-- sets a cursed aura (+2 curse bonus)
 	setCursedAura = function(self, t, curse)
 		self.cursed_aura = curse
@@ -121,7 +122,7 @@ newTalent{
 				item = game.level.map:getObject(x, y, i)
 			end
 		end
-	
+
 		if choose then
 			-- don't bother the player when there is an enemy near
 			local grids = core.fov.circle_grids(self.x, self.y, 10, true)
@@ -133,7 +134,7 @@ newTalent{
 					end
 				end
 			end
-		
+
 			if choose then
 				Dialog:yesnoLongPopup(
 					"Cursed Fate",
@@ -165,38 +166,38 @@ newTalent{
 		local curses = t.getCurses(self, t)
 		local itemCounts = {}
 		local armorCount = 0
-		
+
 		-- count curses in worn items, but only if we can still curse that type of item
 		for id, inven in pairs(self.inven) do
 			if self.inven_def[id].is_worn then
 				for i, item in ipairs(inven) do
 					if item.curse and t.canCurseItem(self, t, item) then
 						if item.type == "armor" then armorCount = armorCount + 1 end
-						
+
 						itemCounts[item.curse] = (itemCounts[item.curse] or 0) + 1
 					end
 				end
 			end
 		end
-		
+
 		-- add cursed aura
 		if self.cursed_aura then
 			itemCounts[self.cursed_aura] = (itemCounts[self.cursed_aura] or 0) + 2
 		end
-		
+
 		-- update cursed effect levels
 		local tDarkGifts = self:getTalentFromId(self.T_DARK_GIFTS)
 		for i, curse in ipairs(curses) do
 			local eff = self:hasEffect(curse)
 			local level = itemCounts[curse] or 0
 			local currentLevel = eff and eff.level or 0
-			
+
 			--print("* curse:", self.tempeffect_def[curse].desc, currentLevel, "->", level, eff)
 			if currentLevel ~= level or forceUpdateEffects then
 				if eff then
 					self:removeEffect(curse, false, true)
 				end
-				
+
 				-- preserve the old eff values when re-starting the effect
 				if level > 0 then
 					if not eff then
@@ -204,14 +205,14 @@ newTalent{
 					end
 					eff.level = math.min(5, level)
 					eff.unlockLevel = math.min(5, tDarkGifts and self:getTalentLevelRaw(tDarkGifts) or 0)
-					
+
 					self:setEffect(curse, 1, eff)
 				end
-				
+
 				self.changed = true
 			end
 		end
-		
+
 		-- update unnatural body
 		if self:knowTalent(self.T_UNNATURAL_BODY) then
 			local t = self:getTalentFromId(self.T_UNNATURAL_BODY)
@@ -246,6 +247,7 @@ newTalent{
 	type = {"cursed/cursed-aura", 2},
 	mode = "passive",
 	require = cursed_lev_req2,
+	no_unlearn_last = true,
 	points = 5,
 	on_learn = function(self, t)
 		local tDefilingTouch = self:getTalentFromId(self.T_DEFILING_TOUCH)
@@ -285,25 +287,25 @@ newTalent{
 		local range = self:getTalentRange(t)
 		local duration = t.getDuration(self, t)
 		local incDamage = t.getIncDamage(self, t)
-		
+
 		-- project first to immediately start the effect
 		local tg = {type="ball", radius=range}
 		self:project(tg, self.x, self.y, DamageType.WEAKNESS, { incDamage=incDamage, dur=3 })
-		
+
 		game.level.map:addEffect(self,
 			self.x, self.y, range,
 			DamageType.WEAKNESS, { incDamage=incDamage, dur=3 },
 			range,
 			5, nil,
 			engine.Entity.new{alpha=80, display='', color_br=30, color_bg=30, color_bb=80})
-			
+
 		return true
 	end,
 	info = function(self, t)
 		local range = self:getTalentRange(t)
 		local duration = t.getDuration(self, t)
 		local incDamage = t.getIncDamage(self, t)
-		
+
 		return ([[Curse the earth around you in a radius of %d for %d turns. Any who stand upon it are weakened, reducing the damage they inflict by %d%%]]):format(range, duration, incDamage)
 	end,
 }
