@@ -107,7 +107,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local inc = t.getPercentInc(self, t)
-		return ([[Increases Physical Power by %d. Also increases damage done with swords, axes, maces, knives, and exotic weapons by %d%%]]):
+		return ([[Increases Physical Power by %d. Also increases damage done with swords, axes, maces by %d%%]]):
 		format(damage, 100*inc)
 	end,
 }

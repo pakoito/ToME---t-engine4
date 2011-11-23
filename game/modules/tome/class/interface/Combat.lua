@@ -841,10 +841,10 @@ function _M:combatPhysicalpower(mod)
 		add = add + 5 * self:getTalentLevel(Talents.T_WEAPONS_MASTERY)
 	end
 	if self:knowTalent(Talents.T_KNIFE_MASTERY) then
-		add = add + 5 * self:getTalentLevel(Talents.T_WEAPONS_MASTERY)
+		add = add + 5 * self:getTalentLevel(Talents.T_KNIFE_MASTERY)
 	end
 	if self:knowTalent(Talents.T_EXOTIC_WEAPONS_MASTERY) then
-		add = add + 5 * self:getTalentLevel(Talents.T_WEAPONS_MASTERY)
+		add = add + 5 * self:getTalentLevel(Talents.T_EXOTIC_WEAPONS_MASTERY)
 	end
 	if self:knowTalent(Talents.T_UNARMED_MASTERY) then
 		add = add + 5 * self:getTalentLevel(Talents.T_UNARMED_MASTERY)
