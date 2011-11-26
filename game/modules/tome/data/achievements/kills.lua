@@ -170,3 +170,11 @@ newAchievement{
 		if self.nb >= 7 then return true end
 	end,
 }
+
+newAchievement{
+	name = "I'm a cool hero", id = "NO_DERTH_DEATH",
+	image = "npc/humanoid_human_human_farmer.png",
+	show = "name",
+	desc = [[Saved Derth without a single inhabitant dying.]],
+	mode = "player",
+}

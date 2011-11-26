@@ -29,7 +29,7 @@ newTalent{
 	on_pre_use = function(self, t)
 		for eff_id, p in pairs(self.tmp) do
 			local e = self.tempeffect_def[eff_id]
-			if e.subtype == "disease" or e.subtype == "poison" then
+			if e.subtype.disease or e.subtype.poison then
 				return true
 			end
 		end

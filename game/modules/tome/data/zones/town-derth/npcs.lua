@@ -47,6 +47,10 @@ newEntity{
 	stats = { str=12, dex=8, mag=6, con=10 },
 
 	emote_random = resolvers.emote_random{allow_backup_guardian=true},
+
+	on_die = function(self)
+		game.zone.unclean_derth_savior = true
+	end,
 }
 
 newEntity{ base = "BASE_NPC_DERTH_TOWN",

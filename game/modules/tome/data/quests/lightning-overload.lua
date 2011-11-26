@@ -73,6 +73,10 @@ kill_one = function(self)
 		local Chat = require "engine.Chat"
 		local chat = Chat.new("derth-attack-over", {name="Scared Halfling"}, game.player)
 		chat:invoke()
+
+		if not game.zone.unclean_derth_savior then
+			world:gainAchievement("NO_DERTH_DEATH", game.player:resolveSource())
+		end
 	end
 end
 

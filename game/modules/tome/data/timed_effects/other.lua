@@ -31,7 +31,7 @@ newEffect{
 	type = "other",
 	subtype = { infusion=true },
 	status = "detrimental",
-	no_stop_enter_worlmap = true,
+	no_stop_enter_worlmap = true, no_stop_resting = true,
 	parameters = { power=1 },
 	on_merge = function(self, old_eff, new_eff)
 		old_eff.dur = new_eff.dur
@@ -47,7 +47,7 @@ newEffect{
 	type = "other",
 	subtype = { rune=true },
 	status = "detrimental",
-	no_stop_enter_worlmap = true,
+	no_stop_enter_worlmap = true, no_stop_resting = true,
 	parameters = { power=1 },
 	on_merge = function(self, old_eff, new_eff)
 		old_eff.dur = new_eff.dur
@@ -63,7 +63,7 @@ newEffect{
 	type = "other",
 	subtype = { taint=true },
 	status = "detrimental",
-	no_stop_enter_worlmap = true,
+	no_stop_enter_worlmap = true, no_stop_resting = true,
 	parameters = { power=1 },
 	on_merge = function(self, old_eff, new_eff)
 		old_eff.dur = new_eff.dur
@@ -1133,7 +1133,7 @@ newEffect{
 			-- build chance for a nightmare
 			local def = self.tempeffect_def[self.EFF_CURSE_OF_NIGHTMARES]
 			eff.nightmareChance = (eff.nightmareChance or 0) + def.getNightmareChance(eff.level)
-			
+
 			-- invoke the nightmare
 			if rng.percent(eff.nightmareChance) then
 				local radius = def.getNightmareRadius(eff.level)

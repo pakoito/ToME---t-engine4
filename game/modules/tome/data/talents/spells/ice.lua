@@ -95,7 +95,7 @@ newTalent{
 	points = 5,
 	mana = 25,
 	cooldown = 15,
-	tactical = { ATTACKAREA = { COLD = function(self, t, target) if target:attr("frozen") then return 2 end end } },
+	tactical = { ATTACKAREA = { COLD = function(self, t, target) if target:attr("frozen") then return 2 end return 0 end } },
 	range = 10,
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 180) end,

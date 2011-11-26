@@ -55,7 +55,7 @@ newTalent{
 		if not x then return end
 		local target = game.level.map(x, y, engine.Map.ACTOR)
 		if not target then return end
-		
+
 		local double_strike = false
 		if self:knowTalent(self.T_DOUBLE_STRIKE) and self:isTalentActive(self.T_STRIKING_STANCE) then
 			local t = self:getTalentFromId(self.T_DOUBLE_STRIKE)
@@ -200,7 +200,7 @@ newTalent{
 			if e.status == "detrimental" then nb = nb + 1 end
 		end
 		return nb
- 	end},	
+ 	end},
 	action = function(self, t)
 		local target = self
 		local todel = {}
@@ -217,7 +217,7 @@ newTalent{
 		}
 		for eff_id, p in pairs(target.tmp) do
 			local e = target.tempeffect_def[eff_id]
-			if e.status == "detrimental" then
+			if e.status == "detrimental" and save_for_effects[e.type] then
 				local save = self[save_for_effects[e.type]](self)
 				local decrease = math.floor(save/5)
 				print("About to reduce duration of... %s. Will use %s. Reducing duration by %d", e.desc, save_for_effects[e.type])
@@ -236,7 +236,7 @@ newTalent{
 		local spell_reduction = math.floor(self:combatSpellResist()/5)
 		local mental_reduction = math.floor(self:combatMentalResist()/5)
 		return ([[Not the Master himself, nor all the orcs in fallen Reknor, nor even the terrifying unknown beyond Reknor's portal could slow your pursuit of the Staff of Absorption.
-		Children will hear of your relentlessness in song for years to come. 
+		Children will hear of your relentlessness in song for years to come.
 		When activated, this ability reduces the duration of all active detrimental effects by the appropriate saving throw duration reduction.
 		Physical effect durations reduced by %d turns
 		Magical effect durations reduced by %d turns

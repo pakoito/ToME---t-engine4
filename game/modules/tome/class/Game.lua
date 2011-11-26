@@ -1159,7 +1159,7 @@ function _M:setupCommands()
 			end end
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			self:resizeMapViewport(640, 640)
+			self.level.map:particleEmitter(game.player.x, game.player.y, 1, "fog", {})
 		end end,
 		[{"_f","ctrl"}] = function() if config.settings.cheat then
 			self.player.quests["love-melinda"] = nil

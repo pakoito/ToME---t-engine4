@@ -92,10 +92,12 @@ newTalent{
 	getDuration = function(self, t) return 1 + math.ceil(self:getTalentLevel(t)) end,
 	getSaveBonus = function(self, t) return self:getTalentLevel(t) end,
 	do_spin_fate = function(self, t, type)
-		game:playSoundNear(self, "talents/spell_generic")
 		local save_bonus = t.getSaveBonus(self, t)
-		if self:hasEffect(self.T_PRECOGNITION) then
+		if self:hasEffect(self.EFF_PRECOGNITION) then
 			save_bonus = save_bonus * 2
+		end
+		if not self:hasEffect(self.EFF_SPIN_FATE) then
+			game:playSoundNear(self, "talents/spell_generic")
 		end
 
 		local mental_save, physical_save, spell_save, defense_bonus = 0
