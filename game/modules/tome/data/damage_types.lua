@@ -962,7 +962,7 @@ newDamageType{
 		local realdam = DamageType:get(DamageType.NATURE).projector(src, x, y, DamageType.NATURE, dam / 6)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and target:canBe("poison") then
-			target:setEffect(target.EFF_POISONED, 5, {src=src, power=dam / 6, apply_power=src:combatAttack()})
+			target:setEffect(target.EFF_POISONED, 5, {src=src, power=dam / 6, apply_power=src.combatAttack and src:combatAttack() or 0})
 		end
 		return realdam
 	end,

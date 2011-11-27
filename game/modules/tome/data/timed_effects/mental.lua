@@ -423,21 +423,6 @@ newEffect{
 				local source = eff.source
 				local moveX, moveY = source.x, source.y -- move in general direction by default
 				if not self:hasLOS(source.x, source.y) then
-					-- move using dmap if available
-					--local c = source:distanceMap(self.x, self.y)
-					--if c then
-					--	local dir = 5
-					--	for i = 1, 9 do
-					--		local sx, sy = util.coordAddDir(self.x, self.y, i)
-					--		local cd = source:distanceMap(sx, sy)
-					--		if cd and cd > c and self:canMove(sx, sy) then c = cd; dir = i end
-					--	end
-					--	if i ~= 5 then
-					--		moveX, moveY = util.coordAddDir(self.x, self.y, dir)
-					--	end
-					--end
-
-					-- move a-star (far more useful than dmap)
 					local a = Astar.new(game.level.map, self)
 					local path = a:calc(self.x, self.y, source.x, source.y)
 					if path then
@@ -448,7 +433,10 @@ newEffect{
 				if moveX and moveY then
 					local old_move_others, old_x, old_y = self.move_others, self.x, self.y
 					self.move_others = true
-					self:moveDirection(moveX, moveY, true)
+					local old = rawget(self, "aiCanPass")
+					self.aiCanPass = mod.class.NPC.aiCanPass
+					mod.class.NPC.moveDirection(self, moveX, moveY, true)
+					self.aiCanPass = old
 					self.move_others = old_move_others
 					if old_x ~= self.x or old_y ~= self.y then
 						if not self.did_energy then

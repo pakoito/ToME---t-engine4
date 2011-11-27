@@ -43,8 +43,8 @@ local strandIndex = 1
 return { generator = function()
 	local size = 4
 	local colorChoice = rng.percent(50)
-	
-	local strand = strands[strandIndex]
+
+	local strand = strands[strandIndex+1]
 	strandIndex = (strandIndex + 1) % strandCount
 
 	return {
@@ -67,4 +67,4 @@ function(self)
 	end
 	nb = nb + 1
 end,
-strandCount * 30
+strandCount * 30

@@ -56,19 +56,19 @@ newTalent{
 			game.logPlayer(self, "You are having trouble focusing on your prey!")
 			return false
 		end
-	
+
 		local duration = t.getDuration(self, t)
 		self:setEffect(self.EFF_STALKER, duration, { target=target, bonus = 1 })
 		target:setEffect(self.EFF_STALKED, duration, { source=self })
-		
+
 		game.level.map:particleEmitter(target.x, target.y, 1, "stalked_start")
-		
+
 		return true
 	end,
 	on_targetDied = function(self, t, target)
 		self:removeEffect(self.EFF_STALKER)
 		target:removeEffect(self.EFF_STALKED)
-		
+
 		-- prevent stalk targeting this turn
 		local stalk = self:isTalentActive(self.T_STALK)
 		if stalk then
@@ -118,13 +118,13 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > range then return nil end
-		
+
 		local duration = t.getDuration(self, t)
 		local chance = t.getChance(self, t)
 		local spellpowerChange = t.getSpellpowerChange(self, t)
 		local mindpowerChange = t.getMindpowerChange(self, t)
 		target:setEffect(target.EFF_BECKONED, duration, { source=self, range=range, chance=chance, spellpowerChange=spellpowerChange, mindpowerChange=mindpowerChange })
-					
+
 		return true
 	end,
 	info = function(self, t)
@@ -170,9 +170,9 @@ newTalent{
 		local effStalker = self:hasEffect(self.EFF_STALKER)
 		local target = effStalker.target
 		if not target or target.dead then return nil end
-		
+
 		target:setEffect(target.EFF_HARASSED, duration, { source=self, damageChange=targetDamageChange })
-		
+
 		for i = 1, 2 do
 			if not target.dead and self:attackTarget(target, nil, damageMultipler, true) then
 				-- remove effects
@@ -181,14 +181,14 @@ newTalent{
 					local t = target:getTalentFromId(tid)
 					if not target.talents_cd[tid] and t.mode == "activated" and not t.innate then tids[#tids+1] = t end
 				end
-				
+
 				local t = rng.tableRemove(tids)
 				if not t then break end
 				target.talents_cd[t.id] = rng.range(3, 5)
 				game.logSeen(target, "%s's %s is disrupted!", target.name:capitalize(), t.name)
 			end
 		end
-		
+
 		return true
 	end,
 	info = function(self, t)
@@ -229,14 +229,14 @@ newTalent{
 			local tCleave = self:getTalentFromId(self.T_CLEAVE)
 			self.talents_cd[self.T_CLEAVE] = tCleave.cooldown
 		end
-			
+
 		if self:isTalentActive(self.T_REPEL) then
 			self:useTalent(self.T_REPEL)
 		elseif self:knowTalent(self.T_REPEL) then
 			local tRepel = self:getTalentFromId(self.T_REPEL)
 			self.talents_cd[self.T_REPEL] = tRepel.cooldown
 		end
-		
+
 		local movementSpeedChange = t.getMovementSpeedChange(self, t)
 		return {
 			moveId = self:addTemporaryValue("movement_speed", movementSpeedChange),
@@ -246,7 +246,7 @@ newTalent{
 	deactivate = function(self, t, p)
 		if p.moveId then self:removeTemporaryValue("movement_speed", p.moveId) end
 		if p.luckId then self:removeTemporaryValue("inc_stats", p.luckId) end
-		
+
 		return true
 	end,
 	info = function(self, t)
