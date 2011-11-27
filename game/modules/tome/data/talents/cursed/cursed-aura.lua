@@ -32,7 +32,7 @@ newTalent{
 	cooldown = 0,
 	no_energy = true,
 	no_npc_use = true,
-	no_unlearn_last = true,
+	--no_unlearn_last = true,
 	-- list of all curses
 	getCurses = function(self, t)
 		return { self.EFF_CURSE_OF_CORPSES, self.EFF_CURSE_OF_MADNESS, self.EFF_CURSE_OF_MISFORTUNE, self.EFF_CURSE_OF_NIGHTMARES, self.EFF_CURSE_OF_SHROUDS }
@@ -109,6 +109,7 @@ newTalent{
 	on_onTakeOff = function(self, t, o)
 		t.updateCurses(self, t)
 	end,
+	
 	-- chooses whether the player accepts the cursed aura tree when a cursable item is found..only offered once for Afflicted classes
 	chooseCursedAuraTree = function(self, t)
 		local choose = false
@@ -223,6 +224,10 @@ newTalent{
 		t.curseInventory(self, t)
 		t.curseFloor(self, t, self.x, self.y)
 		t.updateCurses(self, t)
+	end,
+	on_unlearn = function(self, t)
+		-- turn off cursed aura (which gets disabled, but does not turn off)
+		t.setCursedAura(self, t, nil)
 	end,
 	on_pre_use = function(self, t, silent)
 		return self:getTalentLevelRaw(t) >= 5

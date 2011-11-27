@@ -417,7 +417,7 @@ newDamageType{
 				if criticals then
 					dam = src:mindCrit(dam)
 				end
-				if crossTierChance and rng.change(crossTierChance) then
+				if crossTierChance and rng.chance(crossTierChance) then
 					target:crossTierEffect(target.EFF_BRAINLOCKED, src:combatMindpower())
 				end
 				return DamageType.defaultProjector(src, x, y, type, dam)

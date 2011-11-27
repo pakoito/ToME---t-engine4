@@ -36,6 +36,7 @@ newTalent{
 	psi = 10,
 	tactical = { ATTACK = function(self, t, target)
 		local val = { PHYSICAL = 2}
+		local gem_level = getGemLevel(self)
 		if gem_level > 0 and not target.dead and self:knowTalent(self.T_CONDUIT) and self:isTalentActive(self.T_CONDUIT) then
 			local c =  self:getTalentFromId(self.T_CONDUIT)
 			local auras = self:isTalentActive(c.id)

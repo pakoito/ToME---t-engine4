@@ -774,7 +774,7 @@ newEffect{
 	cancel_on_level_change = true,
 	parameters = {},
 	getMindResistChange = function(level) return -level * 3 end,
-	getConfusionImmuneChange = function(level) return -level * 4 end,
+	getConfusionImmuneChange = function(level) return -level * 0.04 end,
 	getCombatCriticalPowerChange = function(level) return level * 3 end,
 	getOffHandMultChange = function(level) return level * 4 end,
 	getLckChange = function(eff, level)
@@ -796,7 +796,7 @@ newEffect{
 #CRIMSON#Level 3: %sConspirator: When you are confused, any foe that hits you or that you hit in melee becomes confused.
 #CRIMSON#Level 4: %sMania: Any time you take more than %d%% damage during a single turn, the remaining cooldown of one of your talents is reduced by 1.]]):format(
 		level, self.cursed_aura == self.EFF_CURSE_OF_MADNESS and ", Cursed Aura" or "",
-		def.getMindResistChange(level), def.getConfusionImmuneChange(level),
+		def.getMindResistChange(level), def.getConfusionImmuneChange(level) * 100,
 		bonusLevel >= 1 and "#WHITE#" or "#GREY#", def.getCombatCriticalPowerChange(math.max(level, 1)), def.getOffHandMultChange(math.max(level, 1)),
 		bonusLevel >= 2 and "#WHITE#" or "#GREY#", def.getLckChange(eff, math.max(level, 2)), def.getDexChange(math.max(level, 2)),
 		bonusLevel >= 3 and "#WHITE#" or "#GREY#",
