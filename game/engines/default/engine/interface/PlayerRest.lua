@@ -31,14 +31,23 @@ function _M:restInit(turns, what, past, on_end)
 		rest_turns = turns,
 		past = past,
 		on_end = on_end,
-		cnt = 1,
+		cnt = 0,
 		dialog = Dialog:simplePopup(what:capitalize().."...", "You are "..what..", press Enter to stop.", function()
 			self:restStop()
 		end),
 	}
 	self.resting.dialog.__showup = nil
-	self:useEnergy()
+
 	game.log(what:capitalize().." starts...")
+
+	local ret, msg = self:restCheck()
+	if ret and self.resting and self.resting.rest_turns and self.resting.cnt > self.resting.rest_turns then ret = false msg = nil end
+	if not ret then
+		self:restStop(msg)
+	else
+		self:useEnergy()
+		self.resting.cnt = self.resting.cnt + 1
+	end
 end
 
 --- Rest a turn

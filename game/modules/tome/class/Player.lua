@@ -554,6 +554,8 @@ end
 
 local function spotHostiles(self)
 	local seen = {}
+	if not self.x then return seen end
+
 	-- Check for visible monsters, only see LOS actors, so telepathy wont prevent resting
 	core.fov.calc_circle(self.x, self.y, game.level.map.w, game.level.map.h, self.sight or 10, function(_, x, y) return game.level.map:opaque(x, y) end, function(_, x, y)
 		local actor = game.level.map(x, y, game.level.map.ACTOR)
