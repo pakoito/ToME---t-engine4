@@ -453,7 +453,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 
 		if target:checkHit(self:combatAttack(weapon), target:combatPhysicalResist(), 0, 95, 10) and target:canBe("knockback") then
 			target:knockback(self.x, self.y, self:attr("onslaught"))
-			target:crossTierEffect(target.EFF_OFFBALANCE, src:combatAttack())
+			target:crossTierEffect(target.EFF_OFFBALANCE, self:combatAttack())
 		end
 		if lt and lt:checkHit(self:combatAttack(weapon), lt:combatPhysicalResist(), 0, 95, 10) and lt:canBe("knockback") then
 			lt:knockback(self.x, self.y, self:attr("onslaught"))
@@ -1290,7 +1290,7 @@ end
 
 -- Get the number of free hands the actor has
 function _M:getFreeHands()
-	if not self:getInven("MAINHAND") or not self:getInven("OFFHAND") then return end
+	if not self:getInven("MAINHAND") or not self:getInven("OFFHAND") then return 0 end
 	local weapon = self:getInven("MAINHAND")[1]
 	local offweapon = self:getInven("OFFHAND")[1]
 	if weapon and offweapon then return 0 end

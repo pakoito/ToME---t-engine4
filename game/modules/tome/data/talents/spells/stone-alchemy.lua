@@ -28,6 +28,7 @@ newTalent{
 	make_gem = function(self, t, base_define)
 		local nb = rng.range(40, 80)
 		local gem = game.zone:makeEntityByName(game.level, "object", "ALCHEMIST_" .. base_define)
+		if not gem then return end
 
 		local s = {}
 		while nb > 0 do
@@ -42,6 +43,7 @@ newTalent{
 		local d d = self:showEquipInven("Use which gem?", function(o) return not o.unique and o.type == "gem" end, function(o, inven, item)
 			if not o then return end
 			local gem = t.make_gem(self, t, o.define_as)
+			if not gem then return end
 			self:addObject(self.INVEN_INVEN, gem)
 			self:removeObject(inven, item)
 			game.logPlayer(self, "You create: %s", gem:getName{do_color=true, do_count=true})

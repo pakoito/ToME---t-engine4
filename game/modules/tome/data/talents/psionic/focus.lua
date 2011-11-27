@@ -50,6 +50,7 @@ newTalent{
 			end
 			return val
 		end
+		return 0
 	end },
 	range = function(self, t)
 		local r = 5

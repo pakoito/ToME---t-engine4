@@ -60,9 +60,9 @@ function _M:knownLore(lore)
 	return self.lore_known[lore] and true or false
 end
 
-function _M:getLore(lore)
+function _M:getLore(lore, silent)
 	self.additional_lore = self.additional_lore or {}
-	assert(self.lore_defs[lore] or self.additional_lore[lore], "bad lore id "..lore)
+	if not silent then assert(self.lore_defs[lore] or self.additional_lore[lore], "bad lore id "..lore) end
 	return self.lore_defs[lore] or self.additional_lore[lore]
 end
 
@@ -73,8 +73,9 @@ function _M:additionalLore(id, name, category, lore)
 	self.additional_lore[id] = {id=id, name=name, category=category, lore=lore, order=self.additional_lore_nb + #self.lore_defs}
 end
 
-function _M:learnLore(lore, nopopup)
-	local l = self:getLore(lore)
+function _M:learnLore(lore, nopopup, silent)
+	local l = self:getLore(lore, silent)
+	if not l then return end
 	local learnt = false
 	if not self:knownLore(lore) or l.always_pop then
 		game.logPlayer(self, "Lore found: #0080FF#%s", l.name)

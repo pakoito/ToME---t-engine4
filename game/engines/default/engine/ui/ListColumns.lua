@@ -325,7 +325,7 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y)
 			end
 			if col.direct_draw then
 				col.direct_draw(item, x, y, col.fw, self.fh)
-			else
+			elseif item._tex then
 				if self.text_shadow then item._tex[j][1]:toScreenFull(x+1, y+1, col.fw, self.fh, item._tex[j][2], item._tex[j][3], 0, 0, 0, self.text_shadow) end
 				item._tex[j][1]:toScreenFull(x, y, col.fw, self.fh, item._tex[j][2], item._tex[j][3])
 			end

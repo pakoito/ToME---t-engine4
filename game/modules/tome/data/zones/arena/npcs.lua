@@ -416,6 +416,7 @@ newEntity{ name = "Fryjia Loren",
 	resolvers.inscriptions(1, {"manasurge rune"}),
 	resolvers.inscriptions(3, {"manasurge rune", "movement infusion", "wild infusion", "frozen spear rune"}),
 
+	body = { INVEN = 1000, QS_MAINHAND = 1, QS_OFFHAND = 1, MAINHAND = 1, OFFHAND = 1, FINGER = 2, NECK = 1, LITE = 1, BODY = 1, HEAD = 1, CLOAK = 1, HANDS = 1, BELT = 1, FEET = 1, TOOL = 1, QUIVER = 1 },
 	resolvers.equip{
 		{type="weapon", subtype="dagger", autoreq=true},
 		{type="weapon", subtype="dagger", autoreq=true},
@@ -475,6 +476,7 @@ newEntity{ name = "Riala Shalarak",
 
 	summon = {{name = "wisp", number=3, hasxp=false}},
 
+	body = { INVEN = 1000, QS_MAINHAND = 1, QS_OFFHAND = 1, MAINHAND = 1, OFFHAND = 1, FINGER = 2, NECK = 1, LITE = 1, BODY = 1, HEAD = 1, CLOAK = 1, HANDS = 1, BELT = 1, FEET = 1, TOOL = 1, QUIVER = 1 },
 	resolvers.equip{
 		{type="weapon", subtype="staff", autoreq=true},
 		{type="armor", subtype="cloth", autoreq=true}
@@ -518,6 +520,7 @@ newEntity{ name = "Valfren Loren",
 	ai_tactic = resolvers.tactic("tank"),
 	resolvers.inscriptions(3, {}),
 
+	body = { INVEN = 1000, QS_MAINHAND = 1, QS_OFFHAND = 1, MAINHAND = 1, OFFHAND = 1, FINGER = 2, NECK = 1, LITE = 1, BODY = 1, HEAD = 1, CLOAK = 1, HANDS = 1, BELT = 1, FEET = 1, TOOL = 1, QUIVER = 1 },
 	resolvers.equip{
 		{type="weapon", subtype="battleaxe", autoreq=true, force_drop=true, tome_drops="boss"},
 		{type="armor", subtype="massive", autoreq=true, force_drop=true, tome_drops="boss"}
@@ -563,6 +566,7 @@ newEntity{ name = "Rej Arkatis",
 	ai_tactic = resolvers.tactic("melee"),
 	resolvers.inscriptions(4, {"manasurge rune", "movement infusion", "regeneration infusion", "fire beam rune"}),
 
+	body = { INVEN = 1000, QS_MAINHAND = 1, QS_OFFHAND = 1, MAINHAND = 1, OFFHAND = 1, FINGER = 2, NECK = 1, LITE = 1, BODY = 1, HEAD = 1, CLOAK = 1, HANDS = 1, BELT = 1, FEET = 1, TOOL = 1, QUIVER = 1 },
 	resolvers.equip{
 		{type="weapon", subtype="dagger", autoreq=true, force_drop=true, tome_drops="boss"},
 		{type="weapon", subtype="dagger", autoreq=true, force_drop=true, tome_drops="boss"},

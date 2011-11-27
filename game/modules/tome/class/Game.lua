@@ -1064,7 +1064,11 @@ function _M:display(nb_keyframes)
 --			self.mm_fbo:toScreen(0, 0, 200, 200, self.mm_fbo_shader.shad)
 --		else
 			self.minimap_bg:toScreen(0, 0, 200, 200)
-			self.minimap_scroll_x, self.minimap_scroll_y = util.bound(self.player.x - 25, 0, map.w - 50), util.bound(self.player.y - 25, 0, map.h - 50)
+			if self.player.x then
+				self.minimap_scroll_x, self.minimap_scroll_y = util.bound(self.player.x - 25, 0, map.w - 50), util.bound(self.player.y - 25, 0, map.h - 50)
+			else
+				self.minimap_scroll_x, self.minimap_scroll_y = 0, 0
+			end
 			map:minimapDisplay(0, 0, self.minimap_scroll_x, self.minimap_scroll_y, 50, 50, 1)
 --		end
 
