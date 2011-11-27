@@ -190,16 +190,16 @@ newTalent{
 			target:setTarget(self)
 			target.demon_plane_trapper = self
 			target.demon_plane_on_die = target.on_die
-			target.on_die = function(...)
-				target.demon_plane_trapper:forceUseTalent(self.T_DEMON_PLANE, {ignore_energy=true})
-				if target.demon_plane_on_die then target.demon_plane_on_die(...) end
-				target.on_die, target.demon_plane_on_die = target.demon_plane_on_die, nil
+			target.on_die = function(self, ...)
+				self.demon_plane_trapper:forceUseTalent(self.T_DEMON_PLANE, {ignore_energy=true})
+				if self.demon_plane_on_die then self:demon_plane_on_die(...) end
+				self.on_die, self.demon_plane_on_die = self.demon_plane_on_die, nil
 			end
 
 			self.demon_plane_on_die = self.on_die
-			self.on_die = function(...)
+			self.on_die = function(self, ...)
 				self:forceUseTalent(self.T_DEMON_PLANE, {ignore_energy=true})
-				if self.demon_plane_on_die then self.demon_plane_on_die(...) end
+				if self.demon_plane_on_die then self:demon_plane_on_die(...) end
 				self.on_die, self.demon_plane_on_die = self.demon_plane_on_die, nil
 			end
 
