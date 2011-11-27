@@ -461,24 +461,18 @@ newInscription{
 	is_spell = true,
 	no_energy = true,
 	tactical = { BUFF = 4 },
-	on_pre_use = function(self, t)
-		local ok, data = pcall(self.getInscriptionData, self, t.short_name)
-		return ok and data and data.nb_uses and data.nb_uses > 0
-	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:setEffect(self.EFF_SPEED, data.dur, {power=(data.power + data.inc_stat) / 100})
-		self:usedInscription(t.short_name)
 		return true
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[Activate the rune to increase your global speed by %d%% for %d turns.
-		Charges remaining: %d]]):format(data.power + data.inc_stat, data.dur, data.nb_uses)
+		return ([[Activate the rune to increase your global speed by %d%% for %d turns.]]):format(data.power + data.inc_stat, data.dur)
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[speed %d%% for %d turns; %d charges]]):format(data.power + data.inc_stat, data.dur, data.nb_uses)
+		return ([[speed %d%% for %d turns]]):format(data.power + data.inc_stat, data.dur)
 	end,
 }
 
