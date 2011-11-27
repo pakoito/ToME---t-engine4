@@ -334,7 +334,15 @@ function _M:generateRandart(add, base, lev, nb_egos)
 				ego.name = nil
 				ego.unided_name = nil
 
-				table.mergeAddAppendArray(o, ego, true)
+				-- OMFG this is ugly, there is a very rare combinaison that can result in a crash there, so we .. well, ignore it :/
+				-- Sorry.
+				local ok, err = pcall(table.mergeAddAppendArray, o, ego, true)
+				if not ok then
+					print("table.mergeAddAppendArray failed at creating a randart, retrying")
+					game.level.level = oldlev
+					resolvers.current_level = oldclev
+					return self:generateRandart(add, base, lev, nb_egos)
+				end
 			end
 		end
 		o.egos = nil o.egos_chance = nil o.force_ego = nil
