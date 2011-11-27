@@ -200,20 +200,15 @@ newTalent{
 			if e.status == "detrimental" then nb = nb + 1 end
 		end
 		return nb
- 	end},
+	end},
 	action = function(self, t)
 		local target = self
 		local todel = {}
 
 		local save_for_effects = {
-			bane = "combatSpellResist",
-			curse = "combatMentalResist",
-			disease = "combatSpellResist",
-			hex = "combatSpellResist",
 			magical = "combatSpellResist",
 			mental = "combatMentalResist",
 			physical = "combatPhysicalResist",
-			poison = "combatPhysicalResist",
 		}
 		for eff_id, p in pairs(target.tmp) do
 			local e = target.tempeffect_def[eff_id]
@@ -222,7 +217,7 @@ newTalent{
 				local decrease = math.floor(save/5)
 				print("About to reduce duration of... %s. Will use %s. Reducing duration by %d", e.desc, save_for_effects[e.type])
 				p.dur = p.dur - decrease
-				if p.dur <= 0 then todel[#todel+1] = eff end
+				if p.dur <= 0 then todel[#todel+1] = eff_id end
 			end
 		end
 		while #todel > 0 do
