@@ -169,10 +169,12 @@ function _M:describeFloor(x, y)
 			local desc = true
 			if obj.auto_pickup and self:pickupFloor(i, true) then desc = false end
 			if desc and self:attr("has_transmo") and obj.__transmo == nil and (not obj.quest and not obj.plot) then
+				obj.__transmo_pre = true
 				if self:pickupFloor(i, true) then
 					desc = false
 					obj.__transmo = true
 				end
+				obj.__transmo_pre = nil
 			end
 			if desc then
 				if self:attr("auto_id") and obj:getPowerRank() <= self.auto_id then obj:identify(true) end

@@ -1935,7 +1935,7 @@ function _M:getEncumbrance()
 	-- Compute encumbrance
 	for inven_id, inven in pairs(self.inven) do
 		for item, o in ipairs(inven) do
-			if not o.__transmo then
+			if not o.__transmo and not o.__transmo_pre then
 				o:forAllStack(fct)
 			end
 		end
@@ -3098,14 +3098,13 @@ function _M:on_set_temporary_effect(eff_id, e, p)
 		p.dur = util.bound(duration, p.minimum or 0, p.maximum)
 		p.amount_decreased = p.maximum - p.dur
 		local save_type = nil
+
 		if p.apply_save then save_type = p.apply_save else save_type = save_for_effects[e.type] end
-		if save_type == "combatPhysicalResist"
-			then p.save_string = "Physical save"
-		elseif save_type == "combatMentalResist"
-			then p.save_string = "Mental save"
-		elseif save_type == "combatSpellResist"
-			then p.save_string = "Spell save"
+		if save_type == "combatPhysicalResist" then p.save_string = "Physical save"
+		elseif save_type == "combatMentalResist" then p.save_string = "Mental save"
+		elseif save_type == "combatSpellResist" then p.save_string = "Spell save"
 		end
+
 		if not p.no_ct_effect and not e.no_ct_effect and e.status == "detrimental" then self:crossTierEffect(eff_id, p.apply_power, p.apply_save or save_for_effects[e.type]) end
 		p.total_dur = p.dur
 		p.apply_power = nil
