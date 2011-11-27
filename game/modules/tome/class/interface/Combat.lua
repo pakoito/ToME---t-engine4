@@ -457,11 +457,11 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		end
 		if lt and lt:checkHit(self:combatAttack(weapon), lt:combatPhysicalResist(), 0, 95, 10) and lt:canBe("knockback") then
 			lt:knockback(self.x, self.y, self:attr("onslaught"))
-			target:crossTierEffect(target.EFF_OFFBALANCE, src:combatAttack())
+			target:crossTierEffect(target.EFF_OFFBALANCE, self:combatAttack())
 		end
 		if rt and rt:checkHit(self:combatAttack(weapon), rt:combatPhysicalResist(), 0, 95, 10) and rt:canBe("knockback") then
 			rt:knockback(self.x, self.y, self:attr("onslaught"))
-			target:crossTierEffect(target.EFF_OFFBALANCE, src:combatAttack())
+			target:crossTierEffect(target.EFF_OFFBALANCE, self:combatAttack())
 		end
 	end
 
