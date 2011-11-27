@@ -153,9 +153,22 @@ newEntity{
 	always_remember = true,
 	block_move = function(self, x, y, e, act, couldpass)
 		if e and e.player and act then
+			local nb = 0
+			for lore, _ in pairs(profile.mod.lore.lore) do nb = nb + 1 end
+
+			local popup = require("engine.ui.Dialog"):simpleWaiter("Yiilkgur's Library of Lost Mysteries", "Receiving the lost knowledge of the universe...", nil, nil, nb)
+			core.wait.enableManualTick(true)
+			core.display.forceRedraw()
+
 			if profile.mod.lore and profile.mod.lore.lore then
-				for lore, _ in pairs(profile.mod.lore.lore) do game.player:learnLore(lore, true) end
+				for lore, _ in pairs(profile.mod.lore.lore) do
+					game.player:learnLore(lore, true, true)
+					core.wait.manualTick(1)
+				end
 			end
+
+			popup:done()
+
 			game:registerDialog(require("mod.dialogs.ShowLore").new("Yiilkgur's Library of Lost Mysteries", game.player))
 		end
 		return true
