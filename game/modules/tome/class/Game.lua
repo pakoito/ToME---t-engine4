@@ -250,7 +250,7 @@ function _M:newGame()
 	self.state = GameState.new{}
 	local birth_done = function()
 		if self.player.__allow_rod_recall then game.state:allowRodRecall(true) self.player.__allow_rod_recall = nil end
-		if self.player.__allow_transmo_chest and profile.mod.allow_build.transmo_chest then
+		if self.player.__allow_transmo_chest and profile.mod.allow_build.birth_transmo_chest then
 			self.player.__allow_transmo_chest = nil
 			local chest = game.zone:makeEntityByName(game.level, "object", "TRANSMO_CHEST")
 			if chest then
@@ -1799,6 +1799,8 @@ function _M:countBirthUnlocks()
 	local nb = 0
 	local max = 0
 	local list = {
+		birth_transmo_chest = true,
+
 		campaign_infinite_dungeon = true,
 		campaign_arena = true,
 
