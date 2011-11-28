@@ -694,7 +694,7 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down, auto_zone_stair)
 		end
 		if type(self.zone.save_per_level) == "nil" then self.zone.save_per_level = config.settings.tome.save_zone_levels and true or false end
 	end
-	self.zone:getLevel(self, lev, old_lev)
+	local _, is_new = self.zone:getLevel(self, lev, old_lev)
 	self.visited_zones[self.zone.short_name] = true
 
 	-- Post process walls
@@ -854,6 +854,27 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down, auto_zone_stair)
 
 	self.level.map:redisplay()
 	self.level.map:reopen()
+
+	-- Anti stairscum
+	if self.level.last_turn and self.level.last_turn < self.turn then
+		local perc = util.bound(math.floor((self.turn - self.level.last_turn) / 10), 0, 10)
+		for uid, target in pairs(self.level.entities) do
+			if target.life and target.max_life and self.player:reactionToward(target) < 0 then
+				target.life = util.bound(target.life + target.max_life * perc / 10, 0, target.max_life)
+				target.changed = true
+				target.talents_cd = {}
+
+				local todel = {}
+				for eff_id, p in pairs(target.tmp) do
+					local e = target.tempeffect_def[eff_id]
+					if e.status == "detrimental" then todel[#todel+1] = eff_id end
+				end
+				while #todel > 0 do
+					target:removeEffect(table.remove(todel))
+				end
+			end
+		end
+	end
 end
 
 function _M:getPlayer(main)
