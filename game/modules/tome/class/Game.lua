@@ -250,6 +250,14 @@ function _M:newGame()
 	self.state = GameState.new{}
 	local birth_done = function()
 		if self.player.__allow_rod_recall then game.state:allowRodRecall(true) self.player.__allow_rod_recall = nil end
+		if self.player.__allow_transmo_chest and profile.mod.allow_build.transmo_chest then
+			self.player.__allow_transmo_chest = nil
+			local chest = game.zone:makeEntityByName(game.level, "object", "TRANSMO_CHEST")
+			if chest then
+				game.zone:addEntity(game.level, chest, "object")
+				self.player:addObject(self.player:getInven("INVEN"), chest)
+			end
+		end
 
 		for i = 1, 50 do
 			local o = self.state:generateRandart(true)

@@ -75,6 +75,7 @@ newBirthDescriptor{
 	descriptor_choices = default_eyal_descriptors{},
 	copy = {
 		__allow_rod_recall = true,
+		__allow_transmo_chest = true,
 	}
 }
 
@@ -94,6 +95,8 @@ newBirthDescriptor{
 	},
 	descriptor_choices = default_eyal_descriptors{ difficulty = { Tutorial = "never"} },
 	copy = {
+		__allow_transmo_chest = true,
+
 		-- Can levelup forever
 		resolvers.generic(function(e) e.max_level = nil end),
 		no_points_on_levelup = function(self)

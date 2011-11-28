@@ -17,13 +17,9 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/objects/objects-maj-eyal.lua")
+return "New birth equipment: #LIGHT_GREEN#Transmogrification Chest",
+[[You have discovered an old Fortress belonging to the mysterious Sher'tul race.
+The fortress shadow gave you a transmogrification chest which shall make your dealing with storage and gold much easier.
 
-newEntity{ base = "BASE_CLOTH_ARMOR",
-	define_as = "SIMPLE_GOWN",
-	name = "simple gown",
-	cost = 0.5,
-	material_level = 1,
-	moddable_tile = "upper_body_12",
-	egos = false, egos_chance = false,
-}
+All your new characters will now start with a transmogrification chest at birth. All items transmogrified before you find the Fortress with them will only yield gold.
+]]

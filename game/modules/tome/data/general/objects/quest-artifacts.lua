@@ -348,3 +348,62 @@ You have heard of such items before. They are very useful to adventurers, allowi
 		end
 	end,
 }
+
+newEntity{ base = "BASE_WAND",
+	power_source = {unknown=true, arcane=false},
+	type = "chest", subtype = "sher'tul",
+	define_as = "TRANSMO_CHEST",
+	add_name = false,
+	identified=true, force_lore_artifact=true,
+	name = "Transmogrification Chest", display = '~', color=colors.GOLD, unique=true, image = "object/chest4.png",
+	desc = [[This chest is an extension of Yiilkgur, any items dropped inside is transported to the Fortress, processed by the core and destroyed to extract energy.
+The byproduct of this effect is the creation of gold, which is useless to the Fortress, so it is sent back to you.
+
+When you possess the chest all items you walk upon will automatically be put inside and transmogrified when you leave the level.
+Simply go to your inventory to move them out of the chest if you wish to keep them.
+Items in the chest will not encumber you.]],
+	cost = 0, quest=true,
+
+	carrier = {
+		has_transmo = 1,
+	},
+
+	max_power = 1000, power_regen = 1,
+	use_power = { name = "transmogrify all the items in your chest at once(also done automatically when you change level)", power = 0,
+		use = function(self, who)
+			local inven = who:getInven("INVEN")
+			local nb = 0
+			for i = #inven, 1, -1 do
+				local o = inven[i]
+				if o.__transmo then nb = nb + 1 end
+			end
+			if nb <= 0 then require("engine.ui.Dialog"):simplePopup("Transmogrification Chest", "You do not have any items to transmogrify in your chest.") return {id=true, used=true} end
+
+			require("engine.ui.Dialog"):yesnoPopup("Transmogrification Chest", "Transmogrify all "..nb.." item(s) in your chest?", function(ret)
+				if not ret then return end
+				for i = #inven, 1, -1 do
+					local o = inven[i]
+					if o.__transmo then
+						who:transmoInven(inven, i, o)
+					end
+				end
+			end)
+			return {id=true, used=true}
+		end
+	},
+
+	on_pickup = function(self, who)
+		require("engine.ui.Dialog"):simpleLongPopup("Transmogrification Chest", [[This chest is an extension of Yiilkgur, any items dropped inside is transported to the Fortress, processed by the core and destroyed to extract energy.
+The byproduct of this effect is the creation of gold, which is useless to the Fortress, so it is sent back to you.
+
+When you possess the chest all items you walk upon will automatically be put inside and transmogrified when you leave the level.
+To take an item out, simply go to your inventory to move them out of the chest.
+Items in the chest will not encumber you.]], 500)
+	end,
+	on_drop = function(self, who)
+		if who == game.player then
+			game.logPlayer(who, "You cannot bring yourself to drop the %s", self:getName())
+			return true
+		end
+	end,
+}

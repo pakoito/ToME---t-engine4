@@ -86,6 +86,8 @@ spawn_transmo_chest = function(self, energy)
 	game.zone:addEntity(game.level, chest, "object", spot.x + 1, spot.y)
 	game.level.map:particleEmitter(spot.x, spot.y, 1, "demon_teleport")
 	game.player:setQuestStatus(self.id, self.COMPLETED, "transmo-chest")
+
+	game:setAllowedBuild("transmo_chest", true)
 end
 
 gain_energy = function(self, energy)

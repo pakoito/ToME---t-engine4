@@ -130,6 +130,7 @@ newBirthDescriptor{
 		easy_mode_lifes = 99999,
 		__game_difficulty = 1,
 		__allow_rod_recall = false,
+		__allow_transmo_chest = false,
 	},
 }
 newBirthDescriptor{
