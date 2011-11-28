@@ -3107,6 +3107,12 @@ function _M:on_set_temporary_effect(eff_id, e, p)
 
 		if not p.no_ct_effect and not e.no_ct_effect and e.status == "detrimental" then self:crossTierEffect(eff_id, p.apply_power, p.apply_save or save_for_effects[e.type]) end
 		p.total_dur = p.dur
+
+		if e.status == "detrimental" and self:checkHit(save, p.apply_power, 0, 95) then
+			game.logSeen(self, "#ORANGE#%s shrugs off the effect '%s'!", self.name:capitalize(), e.desc)
+			p.dur = p.minimum
+		end
+
 		p.apply_power = nil
 	end
 
