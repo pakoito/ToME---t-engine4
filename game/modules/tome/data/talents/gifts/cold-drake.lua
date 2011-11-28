@@ -59,10 +59,12 @@ newTalent{
 	tactical = { ATTACK = { COLD = 1 }, DEFEND = 2 },
 	on_learn = function(self, t) self.resists[DamageType.COLD] = (self.resists[DamageType.COLD] or 0) + 1 end,
 	on_unlearn = function(self, t) self.resists[DamageType.COLD] = (self.resists[DamageType.COLD] or 0) - 1 end,
+	getDamage = function(self, t) return self:combatTalentStatDamage(t, "wil", 10, 700) / 10 end,
+	getArmor = function(self, t) return self:combatTalentStatDamage(t, "wil", 6, 600) / 10 end,
 	activate = function(self, t)
 		return {
-			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.COLD]=5 * self:getTalentLevel(t)}),
-			armor = self:addTemporaryValue("combat_armor", 4 * self:getTalentLevel(t)),
+			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.COLD]=t.getDamage(self, t)}),
+			armor = self:addTemporaryValue("combat_armor", t.getArmor(self, t)),
 		}
 	end,
 	deactivate = function(self, t, p)
@@ -72,7 +74,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Your skin forms icy scales, damaging all that hit you for %0.2f cold damage and increasing your armor by %d.
-		Each point in cold drake talents also increases your cold resistance by 1%%.]]):format(damDesc(self, DamageType.COLD, 5 * self:getTalentLevel(t)), 4 * self:getTalentLevel(t))
+		Each point in cold drake talents also increases your cold resistance by 1%%.]]):format(damDesc(self, DamageType.COLD, t.getDamage(self, t)), t.getArmor(self, t))
 	end,
 }
 
