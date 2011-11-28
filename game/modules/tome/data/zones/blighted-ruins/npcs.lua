@@ -78,9 +78,8 @@ This specimen looks like it was hastily assembled and is not really complete yet
 	rank = 4,
 	max_life = resolvers.rngavg(100,120), life_rating = 14,
 	combat_armor = 7, combat_def = 7,
-	on_melee_hit = {[DamageType.BLIGHT]=resolvers.mbonus(5, 2)},
 	melee_project = {[DamageType.BLIGHT]=resolvers.mbonus(5, 2)},
-	resolvers.talents{ [Talents.T_BONE_ARMOUR]=3, [Talents.T_THROW_BONES]=1, [Talents.T_STUN]=1, },
+	resolvers.talents{ [Talents.T_BONE_ARMOUR]=3, [Talents.T_THROW_BONES]=1, },
 	resolvers.sustains_at_birth(),
 
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
