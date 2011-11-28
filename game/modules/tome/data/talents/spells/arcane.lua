@@ -122,7 +122,7 @@ newTalent{
 	points = 5,
 	mode = "sustained",
 	cooldown = 30,
-	sustain_mana = 150,
+	sustain_mana = 10,
 	tactical = { DEFEND = 2 },
 	getManaRatio = function(self, t) return 3 - math.max(self:combatTalentSpellDamage(t, 10, 200) / 100, 0.5) end,
 	activate = function(self, t)

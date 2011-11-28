@@ -18,9 +18,9 @@
 -- darkgod@te4.org
 
 local has_staff = false
-local o, item, inven_id = player:findInAllInventories("Staff of Absorption")
+local o, item, inven_id = player:findInAllInventoriesBy("define_as", "STAFF_ABSORPTION")
 if o then has_staff = true end
-local o, item, inven_id = player:findInAllInventories("Awakened Staff of Absorption")
+local o, item, inven_id = player:findInAllInventoriesBy("define_as", "STAFF_ABSORPTION_AWAKENED")
 if o then has_staff = true end
 
 local speak
