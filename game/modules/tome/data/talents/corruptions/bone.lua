@@ -57,7 +57,7 @@ newTalent{
 	tactical = { DISABLE = 1, CLOSEIN = 3 },
 	requires_target = true,
 	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t)}
+		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 
@@ -101,7 +101,7 @@ newTalent{
 		return self:getTalentLevelRaw(t)
 	end,
 	target = function(self, t)
-		return {type="ball", radius=self:getTalentRadius(t), selffire=false}
+		return {type="ball", radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
