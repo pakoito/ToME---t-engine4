@@ -161,11 +161,14 @@ newTalent{
 		if not x or not y then return nil end
 		local _ _, x, y = self:canProject(tg, x, y)
 
+		local ox, oy = self.x, self.y
 		local l = line.new(self.x, self.y, x, y)
 		local nextx, nexty = l()
 		if not nextx or not game.level.map:checkEntity(nextx, nexty, Map.TERRAIN, "block_move", self) then return end
 
 		self:probabilityTravel(x, y, t.getRange(self, t))
+
+		if ox == self.x and oy == self.y then return end
 
 		for i = 1, 5 do self:removeObject(self:getInven("QUIVER"), 1) end
 		game:playSoundNear(self, "talents/arcane")
