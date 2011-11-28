@@ -81,9 +81,13 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			if eff.hp < 0 and not eff.begone then
 				game.logSeen(src, "%s forces the iceblock to shatter.", src.name:capitalize())
 				game:onTickEnd(function() src:removeEffect(src.EFF_FROZEN) end)
-				eff.begone = true
+				eff.begone = game.turn
 			else
 				game:delayedLogDamage(src, {name="Iceblock", x=src.x, y=src.y}, dam, ("%s%d %s#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", math.ceil(dam), DamageType:get(type).name))
+				if eff.begone and eff.begone < game.turn and eff.hp < 0 then
+					game.logSeen(src, "%s forces2 the iceblock to shatter.", src.name:capitalize())
+					src:removeEffect(src.EFF_FROZEN)
+				end
 			end
 			return 0
 		end
