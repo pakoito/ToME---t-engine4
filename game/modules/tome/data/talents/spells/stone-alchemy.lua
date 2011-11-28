@@ -143,7 +143,7 @@ newTalent{
 	name = "Gem Portal",
 	type = {"spell/stone-alchemy",3},
 	require = spells_req3,
-	cooldown = 20,
+	cooldown = function(self, t) return math.max(5, 20 - (self:getTalentLevelRaw(t) * 2)) end,
 	mana = 20,
 	points = 5,
 	range = 1,
@@ -161,8 +161,13 @@ newTalent{
 		if not x or not y then return nil end
 		local _ _, x, y = self:canProject(tg, x, y)
 
-		for i = 1, 5 do self:removeObject(self:getInven("QUIVER"), 1) end
+		local l = line.new(self.x, self.y, x, y)
+		local nextx, nexty = l()
+		if not nextx or not game.level.map:checkEntity(nextx, nexty, Map.TERRAIN, "block_move", self) then return end
+
 		self:probabilityTravel(x, y, t.getRange(self, t))
+
+		for i = 1, 5 do self:removeObject(self:getInven("QUIVER"), 1) end
 		game:playSoundNear(self, "talents/arcane")
 		return true
 	end,
