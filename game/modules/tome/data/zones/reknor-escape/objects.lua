@@ -18,3 +18,25 @@
 -- darkgod@te4.org
 
 load("/data/general/objects/objects-maj-eyal.lua")
+
+newEntity{ base = "BASE_WARAXE",
+	power_source = {arcane=true},
+	define_as = "FAKE_SKULLCLEAVER",
+	unided_name = "fake crimson waraxe",
+	name = "Fake Skullcleaver", unique=true, image = "object/artifact/axe_skullcleaver.png",
+	desc = [[A small but sharp axe, with a handle made of polished bone.  The blade has chopped through the skulls of many, and has been stained a deep crimson.]],
+	require = { stat = { str=18 }, },
+	level_range = {5, 12},
+	rarity = 220,
+	cost = 50,
+	combat = {
+		dam = 16,
+		apr = 3,
+		physcrit = 12,
+		dammod = {str=1},
+		melee_project={[DamageType.DRAINLIFE] = 10},
+	},
+	wielder = {
+		inc_damage = { [DamageType.BLIGHT] = 8 },
+	},
+}

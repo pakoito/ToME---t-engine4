@@ -67,6 +67,7 @@ function resolvers.calc.equip(t, e)
 			-- Do not drop it unless it is an ego or better
 			if not o.unique then o.no_drop = true print(" * "..o.name.." => no drop") end
 			if filter.force_drop then o.no_drop = nil end
+			if filter.never_drop then o.no_drop = true end
 			game.zone:addEntity(game.level, o, "object")
 
 			if t[1].id then o:identify(t[1].id) end
