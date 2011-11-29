@@ -427,8 +427,8 @@ newDamageType{
 				return DamageType.defaultProjector(src, x, y, type, dam)
 			else
 				game.logSeen(target, "%s resists the mind attack!", target.name:capitalize())
-				return 0
 			end
+			return 0
 		end
 	end,
 	death_message = {"psyched", "mentally tortured", "mindraped"},
