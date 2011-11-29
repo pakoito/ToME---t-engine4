@@ -79,6 +79,24 @@ newEffect{
 }
 
 newEffect{
+	name = "ARCANE_STORM", image = "talents/disruption_shield.png",
+	desc = "Arcane Storm",
+	long_desc = function(self, eff) return ("The target is the epicenter of a terrible arcane storm, he gets +%d%% arcane resistance."):format(eff.power) end,
+	type = "magical",
+	subtype = { arcane=true},
+	status = "beneficial",
+	parameters = {power=50},
+	activate = function(self, eff)
+		eff.resistsid = self:addTemporaryValue("resists", {
+			[DamageType.ARCANE]=eff.power,
+		})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("resists", eff.resistsid)
+	end,
+}
+
+newEffect{
 	name = "EARTHEN_BARRIER", image = "talents/earthen_barrier.png",
 	desc = "Earthen Barrier",
 	long_desc = function(self, eff) return ("Reduces physical damage received by %d%%."):format(eff.power) end,

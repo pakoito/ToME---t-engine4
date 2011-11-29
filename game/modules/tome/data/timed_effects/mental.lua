@@ -1554,6 +1554,7 @@ newEffect{
 		eff.tid = self:addTemporaryValue("wild_summon", eff.chance)
 	end,
 	on_timeout = function(self, eff)
+		eff.chance = eff.chance or 100
 		eff.chance = math.floor(eff.chance * 0.66)
 		self:removeTemporaryValue("wild_summon", eff.tid)
 		eff.tid = self:addTemporaryValue("wild_summon", eff.chance)

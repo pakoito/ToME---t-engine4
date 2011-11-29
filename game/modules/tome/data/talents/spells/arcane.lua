@@ -123,17 +123,18 @@ newTalent{
 	mode = "sustained",
 	cooldown = 30,
 	sustain_mana = 10,
+	no_energy = true,
 	tactical = { DEFEND = 2 },
 	getManaRatio = function(self, t) return 3 - math.max(self:combatTalentSpellDamage(t, 10, 200) / 100, 0.5) end,
+	getArcaneResist = function(self, t) return 10 + self:combatTalentSpellDamage(t, 10, 500) / 10 end,
 	explode = function(self, t, dam)
-		game.logSeen(self, "%s's disruption shield collapses and then explodes in a powerful manastorm!", self.name:capitalize())
-		local tg = {type="ball", radius=5}
-		self:project(tg, self.x, self.y, DamageType.ARCANE, dam, {type="manathrust"})
+		game.logSeen(self, "#VIOLET#%s's disruption shield collapses and then explodes in a powerful manastorm!", self.name:capitalize())
 
 		-- Add a lasting map effect
+		self:setEffect(self.EFF_ARCANE_STORM, 10, {power=t.getArcaneResist(self, t)})
 		game.level.map:addEffect(self,
 			self.x, self.y, 10,
-			DamageType.ARCANE, dam,
+			DamageType.ARCANE, dam / 10,
 			3,
 			5, nil,
 			{type="arcanestorm", only_one=true},
@@ -157,10 +158,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local power = t.getManaRatio(self, t)
 		return ([[Uses mana instead of life to take damage. Uses %0.2f mana per damage point taken.
-		If your mana is brought too low by the shield, it will de-activate and the chain reaction will release a deadly arcane explosion with radius 5 of the amount of damage absorbed.
+		If your mana is brought too low by the shield, it will de-activate and the chain reaction will release a deadly arcane storm with radius 3 for 10 turns, dealing 10%% of the damage absorbed each turn.
+		While the arcane storm rages you also get a %d%% arcane resistance.
 		The damage to mana ratio increases with your Spellpower.]]):
-		format(power)
+		format(t.getManaRatio(self, t), t.getArcaneResist(self, t))
 	end,
 }
