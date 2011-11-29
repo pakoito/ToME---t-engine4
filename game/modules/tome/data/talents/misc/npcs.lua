@@ -133,9 +133,17 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
-		self.combat_apr = self.combat_apr + 1000
-		self:attackTarget(target, DamageType.BLIND, 5 + math.ceil(math.log(self:combatTalentWeaponDamage(t, 0.8, 1.4))), true)
-		self.combat_apr = self.combat_apr - 1000
+		local hit = self:attackTarget(target, DamageType.LIGHT, self:combatTalentWeaponDamage(t, 1, 1.8), true)
+
+		-- Try to stun !
+		if hit then
+			if target:canBe("blind") then
+				target:setEffect(target.EFF_BLINDED, math.ceil(5 + self:getTalentLevel(t)), {apply_power=self:combatPhysicalpower()})
+			else
+				game.logSeen(target, "%s resists the blindness blow!", target.name:capitalize())
+			end
+		end
+
 		return true
 	end,
 	info = function(self, t)
