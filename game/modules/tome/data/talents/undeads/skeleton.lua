@@ -78,6 +78,7 @@ newTalent{ short_name = "SKELETON_REASSEMBLE",
 	points = 5,
 	cooldown = function(self, t) return 45 - self:getTalentLevelRaw(t) * 4 end,
 	tactical = { HEAL = 2 },
+	is_heal = true,
 	on_learn = function(self, t)
 		if self:getTalentLevelRaw(t) == 5 then
 			self:attr("self_resurrect", 1)

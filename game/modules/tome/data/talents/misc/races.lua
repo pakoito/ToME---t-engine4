@@ -618,6 +618,7 @@ newTalent{
 	points = 5,
 	no_energy = true,
 	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 4 end,
+	is_heal = true,
 	tactical = { DEFEND = 1, HEAL = 2, CURE = function(self, t, target)
 		local nb = 0
 		for eff_id, p in pairs(self.tmp) do

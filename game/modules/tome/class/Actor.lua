@@ -2522,6 +2522,9 @@ function _M:preUseTalent(ab, silent, fake)
 	-- Special checks
 	if ab.on_pre_use and not (ab.mode == "sustained" and self:isTalentActive(ab.id)) and not ab.on_pre_use(self, ab, silent, fake) then return false end
 
+	-- Cant heal
+	if ab.is_heal and self:attr("no_healing") then return false end
+
 	if not silent then
 		-- Allow for silent talents
 		if ab.message ~= nil then

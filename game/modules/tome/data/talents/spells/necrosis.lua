@@ -84,6 +84,7 @@ newTalent{
 	mana = 35,
 	cooldown = 20,
 	tactical = { HEAL = 2 },
+	is_heal = true,
 	getHeal = function(self, t) return 20 + self:combatTalentSpellDamage(t, 10, 70) end,
 	on_pre_use = function(self, t)
 		if game.party and game.party:hasMember(self) then

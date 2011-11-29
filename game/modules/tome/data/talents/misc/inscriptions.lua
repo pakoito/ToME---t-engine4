@@ -88,6 +88,7 @@ newInscription{
 	type = {"inscriptions/infusions", 1},
 	points = 1,
 	tactical = { HEAL = 2 },
+	is_heal = true,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:heal(data.heal + data.inc_stat)

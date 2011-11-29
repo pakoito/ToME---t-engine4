@@ -35,6 +35,7 @@ newTalent{
 		end
 		return false
 	end,
+	is_heal = true,
 	action = function(self, t)
 		local nb = 0
 		for eff_id, p in pairs(self.tmp) do

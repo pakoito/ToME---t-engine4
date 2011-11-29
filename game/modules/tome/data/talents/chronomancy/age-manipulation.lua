@@ -38,7 +38,7 @@ newTalent{
 		x, y = checkBackfire(self, x, y, t.paradox)
 		self:projectile(tg, x, y, DamageType.CLOCK, self:spellCrit(t.getDamage(self, t)), nil)
 		game:playSoundNear(self, "talents/spell_generic2")
-		
+
 		--bolt #2 (Talent Level 4 Bonus Bolt)
 		if self:getTalentLevel(t) >= 4 then
 			local tg2 = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="temporal_bolt"}}
@@ -51,7 +51,7 @@ newTalent{
 				end
 			end
 		else end
-	
+
 		return true
 	end,
 	info = function(self, t)
@@ -158,12 +158,13 @@ newTalent{
 	paradox = 10,
 	cooldown = 10,
 	tactical = { HEAL = 2, CURE = 2 },
+	is_heal = true,
 	getHeal = function(self, t) return self:combatTalentSpellDamage(t, 40, 440)*getParadoxModifier(self, pm) end,
 	getRemoveCount = function(self, t) return math.floor(self:getTalentLevel(t)) end,
 	action = function(self, t)
 		self:heal(self:spellCrit(t.getHeal(self, t)), self)
 		local target = self
-		
+
 		local effs = {}
 		-- Go through all spell effects
 		for eff_id, p in pairs(target.tmp) do

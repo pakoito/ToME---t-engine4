@@ -72,6 +72,7 @@ newTalent{ short_name = "NATURE_TOUCH",
 	range = 1,
 	requires_target = true,
 	no_npc_use = true,
+	is_heal = true,
 	action = function(self, t)
 		local tg = {default_target=self, type="hit", nowarning=true, range=self:getTalentRange(t), first_target="friend"}
 		local x, y, target = self:getTarget(tg)

@@ -131,30 +131,22 @@ newAI("use_tactical", function(self)
 							end
 							local pen = 0
 							if self.resists_pen then pen = (self.resists_pen.all or 0) + (self.resists_pen[damtype] or 0) end
-							for i, act in ipairs(foes_hit) do
-								local res = math.min((act.resists.all or 0) + (act.resists[damtype] or 0), (act.resists_cap.all or 0) + (act.resists_cap[damtype] or 0))
-								res = res * (100 - pen) / 100
-								local damweight = type(damweight) == "function" and damweight(self, t, act) or damweight
-								-- Handles status effect immunity
-								damweight = damweight * (act:canBe(damtype) and 1 or 0)
-								nb_foes_hit = nb_foes_hit + damweight * (100 - res) / 100
+							local check_resistance = function(actor_list)
+								local weighted_sum = 0
+								for i, act in ipairs(actor_list) do
+									local res = math.min((act.resists.all or 0) + (act.resists[damtype] or 0), (act.resists_cap.all or 0) + (act.resists_cap[damtype] or 0))
+									res = res * (100 - pen) / 100
+									local damweight = damweight
+									if type(damweight) == "function" then damweight = damweight(self, t, act) or 0 end
+									-- Handles status effect immunity
+									damweight = damweight * (act:canBe(damtype) and 1 or 0)
+									weighted_sum = weighted_sum + damweight * (100 - res) / 100
+								end
+								return weighted_sum
 							end
-							for i, act in ipairs(self_hit) do
-								local res = math.min((act.resists.all or 0) + (act.resists[damtype] or 0), (act.resists_cap.all or 0) + (act.resists_cap[damtype] or 0))
-								res = res * (100 - pen) / 100
-								local damweight = type(damweight) == "function" and damweight(self, t, act) or damweight
-								-- Handles status effect immunity
-								damweight = damweight * (act:canBe(damtype) and 1 or 0)
-								nb_self_hit = nb_self_hit + damweight * (100 - res) / 100
-							end
-							for i, act in ipairs(allies_hit) do
-								local res = math.min((act.resists.all or 0) + (act.resists[damtype] or 0), (act.resists_cap.all or 0) + (act.resists_cap[damtype] or 0))
-								res = res * (100 - pen) / 100
-								local damweight = type(damweight) == "function" and damweight(self, t, act) or damweight
-								-- Handles status effect immunity
-								damweight = damweight * (act:canBe(damtype) and 1 or 0)
-								nb_allies_hit = nb_allies_hit + damweight * (100 - res) / 100
-							end
+							nb_foes_hit = check_resistance(foes_hit)
+							nb_self_hit = check_resistance(self_hit)
+							nb_allies_hit = check_resistance(allies_hit)
 						end
 						val = 1
 					-- Or assume no resistances
