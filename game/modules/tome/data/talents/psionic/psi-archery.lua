@@ -225,7 +225,8 @@ newTalent{
 		local apr = 0
 		local crit = 0
 		local speed = 1
-		local o = self:getInven("PSIONIC_FOCUS")[1]
+		local inven = self:getInven("PSIONIC_FOCUS")
+		local o = inven and inven[1]
 		if type(o) == "boolean" then o = nil end
 		if not o then
 			return ([[You temporarily set aside a part of you mind to direct your telekinetically-wielded bow. It will automatically attack the nearest target each turn for %d turns.
