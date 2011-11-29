@@ -350,7 +350,9 @@ function _M:apply()
 			end
 		end
 		if d.talents_types then
-			for t, v in pairs(d.talents_types) do
+			local tt = d.talents_types
+			if type(tt) == "function" then tt = tt(self) end
+			for t, v in pairs(tt) do
 				local mastery
 				if type(v) == "table" then
 					v, mastery = v[1], v[2]

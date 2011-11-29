@@ -1288,7 +1288,7 @@ function _M:onTakeHit(value, src)
 		eff.hp = eff.hp - value * 0.4
 		value = value * 0.6
 		if eff.hp < 0 and not eff.begone then game:onTickEnd(function() self:removeEffect(self.EFF_FROZEN) end) end
-		eff.begone = true
+		eff.begone = game.turn
 	end
 
 	-- Adds hate
@@ -2185,6 +2185,10 @@ end
 --- Actor learns a resource pool
 -- @param talent a talent definition table
 function _M:learnPool(t)
+	local tt = self:getTalentTypeFrom(t.type[1])
+
+	if tt.mana_regen and self.mana_regen == 0 then self.mana_regen = 0.5 end
+
 	if t.type[1]:find("^spell/") and not self:knowTalent(self.T_MANA_POOL) and t.mana or t.sustain_mana then
 		self:learnTalent(self.T_MANA_POOL, true)
 		self.resource_pool_refs[self.T_MANA_POOL] = (self.resource_pool_refs[self.T_MANA_POOL] or 0) + 1

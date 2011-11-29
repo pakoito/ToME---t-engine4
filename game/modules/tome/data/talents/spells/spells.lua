@@ -18,34 +18,34 @@
 -- darkgod@te4.org
 
 -- Archmage spells
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/arcane", name = "arcane", description = "Arcane manipulates the raw magic energies to shape them into both offensive and defensive spells." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/arcane", name = "arcane", description = "Arcane manipulates the raw magic energies to shape them into both offensive and defensive spells." }
 
 -- Elemental spells
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/fire", name = "fire", description = "Harness the power of fire to burn your foes to ashes." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/wildfire", name = "wildfire", min_lev = 10, description = "Harness the power of wildfire to burn your foes to ashes." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/earth", name = "earth", description = "Harness the power of the earth to protect and destroy." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/stone", name = "stone", min_lev = 10, description = "Harness the power of the stone to protect and destroy." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/water", name = "water", description = "Harness the power of water to drown your foes." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/ice", name = "ice", min_lev = 10, description = "Harness the power of ice to freeze and shatter your foes." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/air", name = "air", description = "Harness the power of the air to fry your foes." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/storm", name = "storm", min_lev = 10, description = "Harness the power of the storm to incinerate your foes." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/fire", name = "fire", description = "Harness the power of fire to burn your foes to ashes." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/wildfire", name = "wildfire", min_lev = 10, description = "Harness the power of wildfire to burn your foes to ashes." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/earth", name = "earth", description = "Harness the power of the earth to protect and destroy." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/stone", name = "stone", min_lev = 10, description = "Harness the power of the stone to protect and destroy." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/water", name = "water", description = "Harness the power of water to drown your foes." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/ice", name = "ice", min_lev = 10, description = "Harness the power of ice to freeze and shatter your foes." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/air", name = "air", description = "Harness the power of the air to fry your foes." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/storm", name = "storm", min_lev = 10, description = "Harness the power of the storm to incinerate your foes." }
 
 -- Various other magic schools
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/meta", name = "meta", description = "Meta spells alter the working of magic itself." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/temporal", name = "temporal", description = "The school of time manipulation." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/phantasm", name = "phantasm", description = "Control the power of tricks and illusions." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/enhancement", name = "enhancement", description = "Magical enhancement of your body." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/meta", name = "meta", description = "Meta spells alter the working of magic itself." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/temporal", name = "temporal", description = "The school of time manipulation." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/phantasm", name = "phantasm", description = "Control the power of tricks and illusions." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/enhancement", name = "enhancement", description = "Magical enhancement of your body." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/conveyance", name = "conveyance", generic = true, description = "Conveyance is the school of travel. It allows you to travel faster and to track others." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/divination", name = "divination", generic = true, description = "Divination allows the caster to sense its surroundings, find hidden things." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/aegis", name = "aegis", generic = true, description = "Command the arcane forces into healing and protection." }
 
 -- Alchemist spells
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/explosives", name = "explosive admixtures", description = "Manipulate gems to turn them into explosive magical bombs." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/infusion", name = "infusion", description = "Infusion your gem bombs with the powers of the elements." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/golemancy-base", name = "golemancy", hide = true, description = "Learn to craft and upgrade your golem." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/golemancy", name = "golemancy", description = "Learn to craft and upgrade your golem." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/advanced-golemancy", name = "advanced-golemancy", min_lev = 10, description = "Advanced golem operations." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/fire-alchemy", name = "fire alchemy", description = "Alchemical control over fire." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/explosives", name = "explosive admixtures", description = "Manipulate gems to turn them into explosive magical bombs." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/infusion", name = "infusion", description = "Infusion your gem bombs with the powers of the elements." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/golemancy-base", name = "golemancy", hide = true, description = "Learn to craft and upgrade your golem." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/golemancy", name = "golemancy", description = "Learn to craft and upgrade your golem." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/advanced-golemancy", name = "advanced-golemancy", min_lev = 10, description = "Advanced golem operations." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/fire-alchemy", name = "fire alchemy", description = "Alchemical control over fire." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/stone-alchemy-base", name = "stone alchemy", hide = true, description = "Manipulate gems, imbue their powers into other objects." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/stone-alchemy", name = "stone alchemy", generic = true, description = "Alchemical control over stone and gems." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/staff-combat", name = "staff combat", generic = true, description = "Harness the power of magical staves." }
@@ -54,12 +54,12 @@ newTalentType{ type="golem/arcane", name = "arcane", description = "Golem arcane
 newTalentType{ type="golem/golem", name = "golem", description = "Golem basic capacity." }
 
 -- Necromancer spells
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/necrotic-minions", name = "necrotic minions", description = "Create and empower dumb undead minions." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/advanced-necrotic-minions", name = "advanced necrotic minions", min_lev = 10, description = "Create and empower powerful undead minions." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/nightfall", name = "nightfall", description = "Manipulate darkness itself to slaughter your foes." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/shades", name = "shades", min_lev = 10, description = "Invoke and control shades." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/necrosis", name = "necrosis", description = "Gain control over death, eventually turning into a lich." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/grave", name = "grave", description = "Use the rotting cold doom of the tomb to fell your foes." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/necrotic-minions", name = "necrotic minions", description = "Create and empower dumb undead minions." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/advanced-necrotic-minions", name = "advanced necrotic minions", min_lev = 10, description = "Create and empower powerful undead minions." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/nightfall", name = "nightfall", description = "Manipulate darkness itself to slaughter your foes." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/shades", name = "shades", min_lev = 10, description = "Invoke and control shades." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/necrosis", name = "necrosis", description = "Gain control over death, eventually turning into a lich." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/grave", name = "grave", description = "Use the rotting cold doom of the tomb to fell your foes." }
 
 -- Stone Warden spells
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/arcane-shield", name = "arcane shield", description = "Infuse arcane forces in your shield." }
