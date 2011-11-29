@@ -43,8 +43,16 @@ function _M:dumpToJSON(js)
 		end
 		deaths = deaths.."</ul>"
 	end
+
+	local addons = {}
+	for name, add in pairs(game.__mod_info.addons) do
+		addons[#addons+1] = (" - %s %d.%d.%d"):format(add.long_name, add.version[1], add.version[2], add.version[3])
+	end
+	if #addons > 0 then addons = "<br/>"..table.concat(addons, "<br/>")
+	else addons = "" end
+
 	js:newSection("character", "char", "pairs", "add", {
-		{ game = string.format("%s (version %d.%d.%d)", game.__mod_info.long_name, game.__mod_info.version[1], game.__mod_info.version[2], game.__mod_info.version[3]) },
+		{ game = string.format("%s %d.%d.%d%s", game.__mod_info.long_name, game.__mod_info.version[1], game.__mod_info.version[2], game.__mod_info.version[3], addons) },
 		{ name = self.name },
 		{ sex = self.descriptor.sex },
 		{ type = self.descriptor.subrace .. " " .. self.descriptor.subclass },
