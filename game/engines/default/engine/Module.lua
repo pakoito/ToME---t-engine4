@@ -287,14 +287,20 @@ function _M:loadAddons(mod)
 
 	table.sort(adds, function(a, b) return a.weight < b.weight end)
 
+	mod.addons = {}
 	for i, add in ipairs(adds) do
-		print("Binding addon", add.long_name, add.teaa)
-		local base
+		add.version_name = ("%s-%s-%d.%d.%d"):format(mod.short_name, add.short_name, add.version[1], add.version[2], add.version[3])
+
+		print("Binding addon", add.long_name, add.teaa, add.version_name)
+		local base, vbase
 		if add.teaa then
 			fs.mount(fs.getRealPath(add.teaa), "/loaded-addons/"..add.short_name, true)
 			base = "bind::/loaded-addons/"..add.short_name
+			vbase = "/loaded-addons/"..add.short_name
 		else
 			base = fs.getRealPath(add.dir)
+			fs.mount(base, "/loaded-addons/"..add.short_name, true)
+			vbase = "/loaded-addons/"..add.short_name
 		end
 
 		if add.data then fs.mount(base.."/data", "/data-"..add.short_name, true) print(" * with data") end
@@ -305,8 +311,46 @@ function _M:loadAddons(mod)
 			dofile("/hooks/"..add.short_name.."/load.lua")
 			print(" * with hooks")
 		end
+
+		-- Compute addon md5
+		local md5 = require "md5"
+		local md5s = {}
+		local function fp(dir)
+			for i, file in ipairs(fs.list(dir)) do
+				local f = dir.."/"..file
+				if fs.isdir(f) then
+					fp(f)
+				elseif f:find("%.lua$") then
+					local fff = fs.open(f, "r")
+					if fff then
+						local data = fff:read(10485760)
+						if data and data ~= "" then
+							md5s[#md5s+1] = f..":"..md5.sumhexa(data)
+						end
+						fff:close()
+					end
+				end
+			end
+		end
+		local hash_valid, hash_err
+		local t = core.game.getTime()
+		if config.settings.cheat then
+			hash_valid, hash_err = false, "cheat mode skipping addon validation"
+		else
+			fp(vbase)
+			table.sort(md5s)
+			table.print(md5s)
+			local fmd5 = md5.sumhexa(table.concat(md5s))
+			print("[MODULE LOADER] addon ", add.short_name, " MD5", fmd5, "computed in ", core.game.getTime() - t, vbase)
+			hash_valid, hash_err = profile:checkAddonHash(mod.short_name, add.version_name, fmd5)
+		end
+
+		if hash_err then hash_err = hash_err .. " [addon: "..add.short_name.."]" end
+		add.hash_valid, add.hash_err = hash_valid, hash_err
+
+		mod.addons[add.short_name] = add
 	end
-	table.print(fs.getSearchPath(true))
+--	os.exit()
 end
 
 --- Make a module loadscreen
@@ -469,10 +513,28 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 
 	self:loadAddons(mod)
 
+	-- Check addons
+	if hash_valid then
+		for name, add in pairs(mod.addons) do
+			if not add.hash_valid then
+				hash_valid = false
+				hash_err = add.hash_err or "?????? unknown ...."
+				profile.hash_valid = false
+				break
+			end
+		end
+	end
+
+	local addl = {}
+	for name, add in pairs(mod.addons) do
+		addl[#addl+1] = add.version_name
+	end
+	mod.full_version_string = mod.version_string.." ["..table.concat(addl, ';').."]"
+
 	profile:addStatFields(unpack(mod.profile_stats_fields or {}))
 	profile:setConfigsBatch(true)
 	profile:loadModuleProfile(mod.short_name, mod)
-	profile:currentCharacter(mod.version_string, "game did not tell us")
+	profile:currentCharacter(mod.full_version_string, "game did not tell us")
 
 	-- Init the module code
 	local M, W = mod.load("init")

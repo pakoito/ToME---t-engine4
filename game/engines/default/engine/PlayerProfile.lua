@@ -580,6 +580,8 @@ function _M:syncOnline(module, mod_def)
 end
 
 function _M:checkModuleHash(module, md5)
+do self.hash_valid = true return true end
+
 	self.hash_valid = false
 	if not self.auth then return nil, "no online profile active" end
 	if config.settings.cheat then return nil, "cheat mode active" end
@@ -591,6 +593,19 @@ function _M:checkModuleHash(module, md5)
 	if not ok then return nil, "bad game version" end
 	print("[ONLINE PROFILE] module hash is valid")
 	self.hash_valid = true
+	return true
+end
+
+function _M:checkAddonHash(module, addon, md5)
+	if not self.auth then return nil, "no online profile active" end
+	if config.settings.cheat then return nil, "cheat mode active" end
+	if game and game:isTainted() then return nil, "savefile tainted" end
+	core.profile.pushOrder(table.serialize{o="CheckAddonHash", module=module, addon=addon, md5=md5})
+
+	self:waitEvent("CheckAddonHash", function(e) ok = e.ok end, 10000)
+
+	if not ok then return nil, "bad game addon version" end
+	print("[ONLINE PROFILE] addon hash is valid")
 	return true
 end
 

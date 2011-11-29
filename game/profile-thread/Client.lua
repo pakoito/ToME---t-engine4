@@ -204,7 +204,7 @@ end
 
 function _M:handleOrder(o)
 	o = o:unserialize()
-	if not self.sock and o.o ~= "Login" and o.o ~= "CurrentCharacter" and o.o ~= "CheckModuleHash" then return end -- Dont do stuff without a connection, unless we try to auth
+	if not self.sock and o.o ~= "Login" and o.o ~= "CurrentCharacter" and o.o ~= "CheckModuleHash" and o.o ~= "CheckAddonHash" then return end -- Dont do stuff without a connection, unless we try to auth
 	if self["order"..o.o] then self["order"..o.o](self, o) end
 end
 
@@ -314,6 +314,16 @@ function _M:orderCheckModuleHash(o)
 		cprofile.pushEvent("e='CheckModuleHash' ok=true")
 	else
 		cprofile.pushEvent("e='CheckModuleHash' ok=false")
+	end
+end
+
+function _M:orderCheckAddonHash(o)
+	if not self.sock then cprofile.pushEvent("e='CheckAddonHash' ok=false not_connected=true") end
+	self:command("AMD5", o.md5, o.module, o.addon)
+	if self:read("200") then
+		cprofile.pushEvent("e='CheckAddonHash' ok=true")
+	else
+		cprofile.pushEvent("e='CheckAddonHash' ok=false")
 	end
 end
 
