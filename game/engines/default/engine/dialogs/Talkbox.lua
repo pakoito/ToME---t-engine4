@@ -46,7 +46,7 @@ function _M:init(chat, on_end)
 
 	local list = self:getTargets()
 	self.c_list_text = Textzone.new{auto_width=true, auto_height=true, text="Target: "}
-	self.c_list = Dropdown.new{width=250, fct=function(item) self:checkTarget(item.id..":") self:setFocus(c_box) end, list=list, nb_items=math.min(#list, 10), scrollbar=true}
+	self.c_list = Dropdown.new{width=250, fct=function(item) if not item then return end self:checkTarget(item.id..":") self:setFocus(c_box) end, list=list, nb_items=math.min(#list, 10), scrollbar=true}
 
 	self:loadUI{
 		{left=0, top=0, ui=self.c_box},
