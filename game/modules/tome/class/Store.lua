@@ -77,6 +77,11 @@ function _M:loadup(level, zone)
 	end
 end
 
+--- Checks if the given entity is allowed
+function _M:allowStockObject(e)
+	local price = self:getObjectPrice(o, "buy")
+	return price > 0
+end
 
 --- Called on object purchase try
 -- @param who the actor buying

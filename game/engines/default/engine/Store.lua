@@ -48,6 +48,11 @@ function _M:canRestock()
 	return true
 end
 
+--- Checks if the given entity is allowed
+function _M:allowStockObject(e)
+	return true
+end
+
 --- Fill the store with goods
 -- @param level the level to generate for (instance of type engine.Level)
 -- @param zone the zone to generate for
@@ -74,7 +79,7 @@ function _M:loadup(level, zone, force_nb)
 		local e
 		if not filter.defined then e = zone:makeEntity(level, "object", filter, nil, true)
 		else e = zone:makeEntityByName(level, "object", filter.defined) end
-		if e and not e.not_in_stores then
+		if e and not e.not_in_stores and self:allowStockObject(e) then
 			if s.post_filter and not s.post_filter(e) then
 			else
 				if filter.id then e:identify(filter.id) end
@@ -94,7 +99,7 @@ function _M:loadup(level, zone, force_nb)
 		local e
 		if not filter.defined then e = zone:makeEntity(level, "object", filter, nil, true)
 		else e = zone:makeEntityByName(level, "object", filter.defined) end
-		if e and not e.not_in_stores then
+		if e and not e.not_in_stores and self:allowStockObject(e) then
 			if filter.id then e:identify(filter.id) end
 			self:addObject(inven, e)
 			zone:addEntity(level, e, "object")
