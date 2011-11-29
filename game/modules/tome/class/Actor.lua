@@ -1194,9 +1194,8 @@ function _M:onTakeHit(value, src)
 			self:forceUseTalent(self.T_DISRUPTION_SHIELD, {ignore_energy=true})
 
 			-- Explode!
-			game.logSeen(self, "%s's disruption shield collapses and then explodes in a powerful manastorm!", self.name:capitalize())
-			local tg = {type="ball", radius=5}
-			self:project(tg, self.x, self.y, DamageType.ARCANE, dam, {type="manathrust"})
+			local t = self:getTalentFromId(self.T_DISRUPTION_SHIELD)
+			t.explode(self, t, dam)
 		end
 	end
 

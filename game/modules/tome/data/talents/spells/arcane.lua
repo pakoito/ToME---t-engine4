@@ -125,6 +125,22 @@ newTalent{
 	sustain_mana = 10,
 	tactical = { DEFEND = 2 },
 	getManaRatio = function(self, t) return 3 - math.max(self:combatTalentSpellDamage(t, 10, 200) / 100, 0.5) end,
+	explode = function(self, t, dam)
+		game.logSeen(self, "%s's disruption shield collapses and then explodes in a powerful manastorm!", self.name:capitalize())
+		local tg = {type="ball", radius=5}
+		self:project(tg, self.x, self.y, DamageType.ARCANE, dam, {type="manathrust"})
+
+		-- Add a lasting map effect
+		game.level.map:addEffect(self,
+			self.x, self.y, 10,
+			DamageType.ARCANE, dam,
+			3,
+			5, nil,
+			{type="arcanestorm", only_one=true},
+			function(e) e.x = e.src.x e.y = e.src.y return true end,
+			true
+		)
+	end,
 	activate = function(self, t)
 		local power = t.getManaRatio(self, t)
 		self.disruption_shield_absorb = 0
