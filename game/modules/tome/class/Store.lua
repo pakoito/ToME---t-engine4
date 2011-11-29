@@ -79,7 +79,7 @@ end
 
 --- Checks if the given entity is allowed
 function _M:allowStockObject(e)
-	local price = self:getObjectPrice(o, "buy")
+	local price = self:getObjectPrice(e, "buy")
 	return price > 0
 end
 
