@@ -25,10 +25,12 @@ I cannot stay. I still have much to do. But take this-- it should help you.
 	answers = {
 		{"Ok...", action = function(npc, player)
 			local o = game.zone:makeEntityByName(game.level, "object", "RUNE_RIFT")
-			o:identify(true)
-			game.zone:addEntity(game.level, o, "object")
-			player:addObject(player.INVEN_INVEN, o)
-			game.log("The temporal warden gives you: %s.", o:getName{do_color=true})
+			if o then
+				o:identify(true)
+				game.zone:addEntity(game.level, o, "object")
+				player:addObject(player.INVEN_INVEN, o)
+				game.log("The temporal warden gives you: %s.", o:getName{do_color=true})
+			end
 
 			game:setAllowedBuild("chronomancer")
 			game:setAllowedBuild("chronomancer_temporal_warden", true)

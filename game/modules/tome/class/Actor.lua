@@ -2755,6 +2755,8 @@ end
 --- Return the full description of a talent
 -- You may overload it to add more data (like power usage, ...)
 function _M:getTalentFullDescription(t, addlevel, config)
+	if not t then return tstring{"no talent"} end
+
 	config = config or {}
 	local old = self.talents[t.id]
 	if config.force_level then

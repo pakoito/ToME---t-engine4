@@ -75,7 +75,13 @@ end
 function _M:replaceAll(level)
 	for i = 1, #self.repl do
 		local r = self.repl[i]
-		level.map(r[1], r[2], Map.TERRAIN, r[3])
+		-- Safety check
+		local og = level.map(r[1], r[2], Map.TERRAIN)
+		if og and (og.change_zone or og.change_level) then
+			print("[NICE TILER] *warning* refusing to remove zone/level changer at ", r[1], r[2], og.change_zone, og.change_level)
+		else
+			level.map(r[1], r[2], Map.TERRAIN, r[3])
+		end
 	end
 	self.repl = {}
 

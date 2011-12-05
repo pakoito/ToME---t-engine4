@@ -135,7 +135,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.IMPLOSION, {dur=dur, dam=dam})
-		target:crossTierEffect(target.EFF_OFFBALANCE, self:combatMindpower())
+--		target:crossTierEffect(target.EFF_OFFBALANCE, self:combatMindpower())
 
 		return true
 	end,

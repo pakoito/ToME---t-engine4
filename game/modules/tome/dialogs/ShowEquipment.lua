@@ -56,7 +56,7 @@ function _M:init(title, actor, filter, action)
 	}
 	self.key:addBinds{
 		ACCEPT = function()
-			self:use(self.c_list.list[self.c_list.sel])
+--			self:use(self.c_list.list[self.c_list.sel])
 		end,
 		EXIT = function() game:unregisterDialog(self) end,
 	}
