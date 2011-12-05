@@ -297,6 +297,7 @@ function _M:tutorial()
 		self:setDescriptor("subrace", "Tutorial "..t)
 		self:setDescriptor("class", "Tutorial Adventurer")
 		self:setDescriptor("subclass", "Tutorial Adventurer")
+		self:randomName()
 		self:atEnd("created")
 	end
 
