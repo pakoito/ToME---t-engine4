@@ -751,7 +751,7 @@ function _M:hotkeyInventory(name)
 		Dialog:simplePopup("Item not found", "You do not have any "..name..".")
 	else
 		-- Wear it ??
-		if o:wornInven() and not o.wielded then
+		if o:wornInven() and not o.wielded and inven == self.INVEN_INVEN then
 			if not o.use_no_wear then
 				self:doWear(inven, item, o)
 				return
