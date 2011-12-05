@@ -37,6 +37,7 @@ newTalent{
 		end
 	end,
 	direct_hit = true,
+	is_teleport = true,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
@@ -47,9 +48,9 @@ newTalent{
 		end
 		x, y = checkBackfire(self, x, y, t.paradox)
 		local __, x, y = self:canProject(tg, x, y)
-	
+
 		game.level.map:particleEmitter(self.x, self.y, 1, "temporal_teleport")
-		
+
 		-- since we're using a precise teleport we'll look for a free grid first
 		local tx, ty = util.findFreeGrid(x, y, 5, true, {[Map.ACTOR]=true})
 		if tx and ty then
@@ -57,10 +58,10 @@ newTalent{
 				game.logSeen(self, "The spell fizzles!")
 			end
 		end
-		
+
 		game.level.map:particleEmitter(self.x, self.y, 1, "temporal_teleport")
 		game:playSoundNear(self, "talents/teleport")
-		
+
 		return true
 	end,
 	info = function(self, t)
@@ -91,13 +92,13 @@ newTalent{
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local actors = {}
-		
+
 		--checks for spacetime mastery hit bonus
 		local power = self:combatSpellpower()
 		if self:knowTalent(self.T_SPACETIME_MASTERY) then
 			power = self:combatSpellpower() * (1 + self:getTalentLevel(self.T_SPACETIME_MASTERY)/10)
 		end
-		
+
 		self:project(tg, self.x, self.y, function(px, py)
 			local target = game.level.map(px, py, Map.ACTOR)
 			if not target or target == self then return end
@@ -117,14 +118,14 @@ newTalent{
 			a:setEffect(a.EFF_CONTINUUM_DESTABILIZATION, 100, {power=self:combatSpellpower(0.3)})
 			game.level.map:particleEmitter(a.x, a.y, 1, "teleport")
 		end
-		
+
 		if do_fizzle == true then
 			game.logSeen(self, "The spell fizzles!")
 		end
-		
+
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_teleport", {radius=tg.radius})
 		game:playSoundNear(self, "talents/teleport")
-		
+
 		return true
 	end,
 	info = function(self, t)
@@ -197,13 +198,13 @@ newTalent{
 		exit_x, exit_y = pos[1], pos[2]
 		print("[[wormhole]] entrance ", entrance_x, " :: ", entrance_y)
 		print("[[wormhole]] exit ", exit_x, " :: ", exit_y)
-		
+
 		--checks for spacetime mastery hit bonus
 		local power = self:combatSpellpower()
 		if self:knowTalent(self.T_SPACETIME_MASTERY) then
 			power = self:combatSpellpower() * (1 + self:getTalentLevel(self.T_SPACETIME_MASTERY)/10)
 		end
-		
+
 		-- Adding the entrance wormhole
 		local entrance = mod.class.Trap.new{
 			name = "wormhole",
@@ -251,7 +252,7 @@ newTalent{
 		game.zone:addEntity(game.level, entrance, "trap", entrance_x, entrance_y)
 		game.level.map:particleEmitter(entrance_x, entrance_y, 1, "teleport")
 		game:playSoundNear(self, "talents/heal")
-		
+
 		-- Adding the exit wormhole
 		local exit = entrance:clone()
 		exit.x = exit_x
@@ -261,11 +262,11 @@ newTalent{
 		exit:setKnown(self, true)
 		game.zone:addEntity(game.level, exit, "trap", exit_x, exit_y)
 		game.level.map:particleEmitter(exit_x, exit_y, 1, "teleport")
-		
+
 		-- Linking the wormholes
 		entrance.dest = exit
 		exit.dest = entrance
-		
+
 		game.logSeen(self, "%s folds the space between two points.", self.name)
 		return true
 	end,

@@ -29,6 +29,7 @@ newTalent{
 	requires_target = function(self, t) return self:getTalentLevel(t) >= 4 end,
 	getRange = function(self, t) return 4 + self:combatTalentSpellDamage(t, 10, 15) end,
 	getRadius = function(self, t) return 7 - self:getTalentLevelRaw(t) end,
+	is_teleport = true,
 	action = function(self, t)
 		local target = self
 		if self:getTalentLevel(t) >= 4 then
@@ -107,6 +108,7 @@ newTalent{
 	requires_target = function(self, t) return self:getTalentLevel(t) >= 4 end,
 	getRange = function(self, t) return 100 + self:combatSpellpower(1) end,
 	getRadius = function(self, t) return 20 - self:getTalentLevel(t) end,
+	is_teleport = true,
 	action = function(self, t)
 		local target = self
 

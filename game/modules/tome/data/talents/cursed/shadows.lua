@@ -24,6 +24,7 @@ newTalent{
 	points = 5,
 	range = 10,
 	tactical = { ESCAPE = 2 },
+	is_teleport = true,
 	action = function(self, t)
 		local x, y, range
 		if self.ai_state.shadow_wall then

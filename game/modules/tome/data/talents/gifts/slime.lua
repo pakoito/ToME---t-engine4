@@ -117,6 +117,7 @@ newTalent{
 	getDuration = function(self, t)
 		return math.floor(util.bound(7 - self:getTalentLevel(t) / 2, 2, 7))
 	end,
+	is_teleport = true,
 	action = function(self, t)
 		local range = self:getTalentRange(t)
 		local radius = self:getTalentRadius(t)

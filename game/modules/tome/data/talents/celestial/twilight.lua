@@ -61,6 +61,7 @@ newTalent{
 		local eff = self.sustain_talents[self.T_JUMPGATE]
 		return eff and core.fov.distance(self.x, self.y, eff.jumpgate_x, eff.jumpgate_y) < t.getRange(self, t)
 	end,
+	is_teleport = true,
 	action = function(self, t)
 		local eff = self.sustain_talents[self.T_JUMPGATE]
 		if not eff then
@@ -338,6 +339,7 @@ newTalent{
 	no_npc_use = true,
 	getRange = function(self, t) return math.floor(10 + 3 * self:getTalentLevel(t)) end,
 	-- Check distance in preUseTalent to grey out the talent
+	is_teleport = true,
 	on_pre_use = function(self, t)
 		local eff = self.sustain_talents[self.T_JUMPGATE_TWO]
 		return eff and core.fov.distance(self.x, self.y, eff.jumpgate2_x, eff.jumpgate2_y) < t.getRange(self, t)

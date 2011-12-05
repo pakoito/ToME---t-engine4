@@ -327,6 +327,7 @@ newInscription{
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_spell = true,
+	is_teleport = true,
 	tactical = { ESCAPE = 2 },
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
@@ -350,6 +351,7 @@ newInscription{
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_spell = true,
+	is_teleport = true,
 	tactical = { CLOSEIN = 2 },
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
@@ -388,6 +390,7 @@ newInscription{
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_spell = true,
+	is_teleport = true,
 	tactical = { ESCAPE = 3 },
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
