@@ -320,6 +320,15 @@ function _M:dumpToJSON(js)
 		dead = self.dead and "dead" or nil,
 		winner = self.winner and "winner" or nil,
 	}
+
+	local addons = {}
+	for name, add in pairs(game.__mod_info.addons) do
+		addons[#addons+1] = add.short_name
+	end
+	if #addons > 0 then
+		tags.addons = table.concat(addons, ',')
+	end
+
 	if self.has_custom_tile then
 		tags.tile = self.has_custom_tile
 		js:hiddenData("tile", self.has_custom_tile)
