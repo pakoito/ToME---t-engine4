@@ -69,7 +69,7 @@ end
 function _M:select(item)
 	if item and self.uis[2] then
 		if item.object then
-			self.c_desc:switchItem(item, item.object:getDesc({do_color=true}))
+			self.c_desc:switchItem(item, item.object:getDesc({do_color=true}, self.actor:getInven(item.object:wornInven())))
 		end
 	end
 end

@@ -37,7 +37,7 @@ function _M:init(title, actor, filter, action, on_select)
 	-- Add tooltips
 	self.on_select = function(item)
 		if item.last_display_x and item.object then
-			game:tooltipDisplayAtMap(item.last_display_x, item.last_display_y, item.object:getDesc({do_color=true}))
+			game:tooltipDisplayAtMap(item.last_display_x, item.last_display_y, item.object:getDesc({do_color=true}, self.actor:getInven(item.object:wornInven())))
 		elseif item.last_display_x and item.data and item.data.desc then
 			game:tooltipDisplayAtMap(item.last_display_x, item.last_display_y, item.data.desc, {up=true})
 		end
