@@ -3241,6 +3241,8 @@ end
 --- Called upon dropping an object
 function _M:onDropObject(o)
 	if self:attr("has_transmo") then o.__transmo = false end
+	if self.player then game.level.map.attrs(self.x, self.y, "obj_seen", true)
+	elseif game.level.map.attrs(self.x, self.y, "obj_seen") then game.level.map.attrs(self.x, self.y, "obj_seen", false) end
 end
 
 function _M:transmoPricemod(o) if o.type == "gem" then return 0.40 else return 0.05 end end

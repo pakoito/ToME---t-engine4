@@ -19,8 +19,6 @@
 
 --- This file implements auto-explore whereby a single command can explore unseen tiles and objects,
 -- go to unexplored doors, and go to the level exit all while avoiding known traps and water if possible.
--- Implemented hastily by "tiger_eye", so please direct all complaints and code criticisms to the ToME
--- forum where they can be promptly ignored ;) (I jest--compliments and suggestions will be most welcome!)
 --
 -- Note that the floodfill algorithm in this file can handle grids with different movement costs
 
@@ -39,15 +37,16 @@ local function toDouble(c)
 	return c - y * game.level.map.w, y
 end
 
-local function listAdjacentTiles(node, no_diagonal, no_cardinal)
+-- a flexible but slow function to list all adjacent tile
+local function listAdjacentTiles(tile, no_diagonal, no_cardinal)
 	local tiles = {}
 	local x, y, c, val
-	if type(node) == "table" then
-		x, y, c, val = unpack(node)
+	if type(tile) == "table" then
+		x, y, c, val = unpack(tile)
 		val = val + 1
-	elseif type(node) == "number" then
-		x, y = toDouble(node)
-		c = node
+	elseif type(tile) == "number" then
+		x, y = toDouble(tile)
+		c = tile
 		val = 1
 	else
 		return tiles
@@ -74,12 +73,15 @@ local function listAdjacentTiles(node, no_diagonal, no_cardinal)
 end
 
 -- Performing a flood-fill algorithm in lua with robust logic is going to be relatively slow, so we
--- need to make things more efficient wherever we can.  "adjacentTiles" below is an example of this.
+-- need to make things more efficient wherever we can.  "getNextNodes" below is an example of this.
 -- Every node knows from which direction it was explored, and it only explores adjacent tiles that
 -- may not have previously been explored.  Nodes that were explored from a cardinal direction only
 -- have three new adjacent tiles to iterate over, and diagonal directions have five new tiles.
 -- Therefore, we should favor cardinal direction tile propagation for speed whenever possible.
-local adjacentTiles = {
+--
+-- Note: if we want this to be faster such as using a floodfill for NPCs (better ai!), then we should
+-- perform the floodfill in C, where we could use more advanced tricks to make it blazingly fast.
+local getNextNodes = {
 	-- Dir 1
 	function(node, cardinal_tiles, diagonal_tiles)
 		local x, y, c, val = node[1], node[2], node[3], node[4]+1
@@ -205,8 +207,394 @@ local adjacentTiles = {
 	end
 }
 
+-- Use directional information to list all adjacent tiles more efficiently
+local listAdjacentNodes = {
+	-- Dir 1
+	function(node)
+		local x, y, c, val = node[1], node[2], node[3], node[4]+1
+		local tiles = {{x + 1, y,     c + 1,                    val, 6 },
+		               {x,     y - 1, c     - game.level.map.w, val, 8 },
+		               {x + 1, y - 1, c + 1 - game.level.map.w, val, 9 }}
+		if y < game.level.map.h - 1 then
+			tiles[4]         = {x,     y + 1, c     + game.level.map.w, val, 2 }
+			tiles[5]         = {x + 1, y + 1, c + 1 + game.level.map.w, val, 3 }
+			if x > 0 then
+				tiles[6] = {x - 1, y + 1, c - 1 + game.level.map.w, val, 1 }
+				tiles[7] = {x - 1, y,     c - 1,                    val, 4 }
+				tiles[8] = {x - 1, y - 1, c - 1 - game.level.map.w, val, 7 }
+			end
+		elseif x > 0 then
+			tiles[4]         = {x - 1, y,     c - 1,                    val, 4 }
+			tiles[5]         = {x - 1, y - 1, c - 1 - game.level.map.w, val, 7 }
+		end
+		return tiles
+	end,
+	-- Dir 2
+	function(node)
+		local x, y, c, val = node[1], node[2], node[3], node[4]+1
+		local tiles = {{x,     y - 1, c     - game.level.map.w, val, 8 }}
+
+		if y < game.level.map.h - 1 then
+			tiles[2] = {x,     y + 1, c     + game.level.map.w, val, 2 }
+			if x > 0 then
+				tiles[3] = {x - 1, y + 1, c - 1 + game.level.map.w, val, 1 }
+				tiles[4] = {x - 1, y,     c - 1,                    val, 4 }
+				tiles[5] = {x - 1, y - 1, c - 1 - game.level.map.w, val, 7 }
+			end
+			if x < game.level.map.w - 1 then
+				tiles[#tiles+1] = {x + 1, y + 1, c + 1 + game.level.map.w, val, 3 }
+				tiles[#tiles+1] = {x + 1, y,     c + 1,                    val, 6 }
+				tiles[#tiles+1] = {x + 1, y - 1, c + 1 - game.level.map.w, val, 9 }
+			end
+		else
+			if x > 0 then
+				tiles[2] = {x - 1, y,     c - 1,                    val, 4 }
+				tiles[3] = {x - 1, y - 1, c - 1 - game.level.map.w, val, 7 }
+			end
+			if x < game.level.map.w - 1 then
+				tiles[#tiles+1] = {x + 1, y,     c + 1,                    val, 6 }
+				tiles[#tiles+1] = {x + 1, y - 1, c + 1 - game.level.map.w, val, 9 }
+			end
+		end
+		return tiles
+	end,
+	-- Dir 3
+	function(node)
+		local x, y, c, val = node[1], node[2], node[3], node[4]+1
+		local tiles = {{x - 1, y,     c - 1,                    val, 4 },
+		               {x - 1, y - 1, c - 1 - game.level.map.w, val, 7 },
+		               {x,     y - 1, c     - game.level.map.w, val, 8 }}
+		if y < game.level.map.h - 1 then
+			tiles[4]         = {x - 1, y + 1, c - 1 + game.level.map.w, val, 1 }
+			tiles[5]         = {x,     y + 1, c     + game.level.map.w, val, 2 }
+			if x < game.level.map.w - 1 then
+				tiles[6] = {x + 1, y + 1, c + 1 + game.level.map.w, val, 3 }
+				tiles[7] = {x + 1, y,     c + 1,                    val, 6 }
+				tiles[8] = {x + 1, y - 1, c + 1 - game.level.map.w, val, 9 }
+			end
+		elseif x < game.level.map.w - 1 then
+			tiles[4]         = {x + 1, y,     c + 1,                    val, 6 }
+			tiles[5]         = {x + 1, y - 1, c + 1 - game.level.map.w, val, 9 }
+		end
+		return tiles
+	end,
+	-- Dir 4
+	function(node)
+		local x, y, c, val = node[1], node[2], node[3], node[4]+1
+		local tiles = {{x + 1, y,     c + 1,                    val, 6 }}
+
+		if x > 0 then
+			tiles[2] = {x - 1, y,     c - 1,                    val, 4 }
+			if y < game.level.map.h - 1 then
+				tiles[3] = {x - 1, y + 1, c - 1 + game.level.map.w, val, 1 }
+				tiles[4] = {x,     y + 1, c     + game.level.map.w, val, 2 }
+				tiles[5] = {x + 1, y + 1, c + 1 + game.level.map.w, val, 3 }
+			end
+			if y > 0 then
+				tiles[#tiles+1] = {x - 1, y - 1, c - 1 - game.level.map.w, val, 7 }
+				tiles[#tiles+1] = {x,     y - 1, c     - game.level.map.w, val, 8 }
+				tiles[#tiles+1] = {x + 1, y - 1, c + 1 - game.level.map.w, val, 9 }
+			end
+		else
+			if y < game.level.map.h - 1 then
+				tiles[2] = {x,     y + 1, c     + game.level.map.w, val, 2 }
+				tiles[3] = {x + 1, y + 1, c + 1 + game.level.map.w, val, 3 }
+			end
+			if y > 0 then
+				tiles[#tiles+1] = {x,     y - 1, c     - game.level.map.w, val, 8 }
+				tiles[#tiles+1] = {x + 1, y - 1, c + 1 - game.level.map.w, val, 9 }
+			end
+		end
+		return tiles
+	end,
+	-- Dir 5
+	function(node)
+		local tiles = {}
+		getNextNodes[5](node, tiles, tiles)
+		return tiles
+	end,
+	-- Dir 6
+	function(node)
+		local x, y, c, val = node[1], node[2], node[3], node[4]+1
+		local tiles = {{x - 1, y,     c - 1,                    val, 4 }}
+
+		if x < game.level.map.w - 1 then
+			tiles[2] = {x + 1, y,     c + 1,                    val, 6 }
+			if y < game.level.map.h - 1 then
+				tiles[3] = {x - 1, y + 1, c - 1 + game.level.map.w, val, 1 }
+				tiles[4] = {x,     y + 1, c     + game.level.map.w, val, 2 }
+				tiles[5] = {x + 1, y + 1, c + 1 + game.level.map.w, val, 3 }
+			end
+			if y > 0 then
+				tiles[#tiles+1] = {x - 1, y - 1, c - 1 - game.level.map.w, val, 7 }
+				tiles[#tiles+1] = {x,     y - 1, c     - game.level.map.w, val, 8 }
+				tiles[#tiles+1] = {x + 1, y - 1, c + 1 - game.level.map.w, val, 9 }
+			end
+		else
+			if y < game.level.map.h - 1 then
+				tiles[2] = {x - 1, y + 1, c - 1 + game.level.map.w, val, 1 }
+				tiles[3] = {x,     y + 1, c     + game.level.map.w, val, 2 }
+			end
+			if y > 0 then
+				tiles[#tiles+1] = {x - 1, y - 1, c - 1 - game.level.map.w, val, 7 }
+				tiles[#tiles+1] = {x,     y - 1, c     - game.level.map.w, val, 8 }
+			end
+		end
+		return tiles
+	end,
+	-- Dir 7
+	function(node)
+		local x, y, c, val = node[1], node[2], node[3], node[4]+1
+		local tiles = {{x,     y + 1, c     + game.level.map.w, val, 2 },
+		               {x + 1, y + 1, c + 1 + game.level.map.w, val, 3 },
+		               {x + 1, y,     c + 1,                    val, 6 }}
+		if x > 0 then
+			tiles[4]         = {x - 1, y + 1, c - 1 + game.level.map.w, val, 1 }
+			tiles[5]         = {x - 1, y,     c - 1,                    val, 4 }
+			if y > 0 then
+				tiles[6] = {x - 1, y - 1, c - 1 - game.level.map.w, val, 7 }
+				tiles[7] = {x,     y - 1, c     - game.level.map.w, val, 8 }
+				tiles[8] = {x + 1, y - 1, c + 1 - game.level.map.w, val, 9 }
+			end
+		elseif y > 0 then
+			tiles[4]         = {x,     y - 1, c     - game.level.map.w, val, 8 }
+			tiles[5]         = {x + 1, y - 1, c + 1 - game.level.map.w, val, 9 }
+		end
+		return tiles
+	end,
+	-- Dir 8
+	function(node)
+		local x, y, c, val = node[1], node[2], node[3], node[4]+1
+		local tiles = {{x,     y + 1, c     + game.level.map.w, val, 2 }}
+
+		if y > 0 then
+			tiles[2] = {x,     y - 1, c     - game.level.map.w, val, 8 }
+			if x > 0 then
+				tiles[3] = {x - 1, y + 1, c - 1 + game.level.map.w, val, 1 }
+				tiles[4] = {x - 1, y,     c - 1,                    val, 4 }
+				tiles[5] = {x - 1, y - 1, c - 1 - game.level.map.w, val, 7 }
+			end
+			if x < game.level.map.w - 1 then
+				tiles[#tiles+1] = {x + 1, y + 1, c + 1 + game.level.map.w, val, 3 }
+				tiles[#tiles+1] = {x + 1, y,     c + 1,                    val, 6 }
+				tiles[#tiles+1] = {x + 1, y - 1, c + 1 - game.level.map.w, val, 9 }
+			end
+		else
+			if x > 0 then
+				tiles[2] = {x - 1, y + 1, c - 1 + game.level.map.w, val, 1 }
+				tiles[3] = {x - 1, y,     c - 1,                    val, 4 }
+			end
+			if x < game.level.map.w - 1 then
+				tiles[#tiles+1] = {x + 1, y + 1, c + 1 + game.level.map.w, val, 3 }
+				tiles[#tiles+1] = {x + 1, y,     c + 1,                    val, 6 }
+			end
+		end
+		return tiles
+	end,
+	-- Dir 9
+	function(node)
+		local x, y, c, val = node[1], node[2], node[3], node[4]+1
+		local tiles = {{x - 1, y + 1, c - 1 + game.level.map.w, val, 1 },
+		               {x,     y + 1, c     + game.level.map.w, val, 2 },
+		               {x - 1, y,     c - 1,                    val, 4 }}
+		if x < game.level.map.w - 1 then
+			tiles[4]         = {x + 1, y + 1, c + 1 + game.level.map.w, val, 3 }
+			tiles[5]         = {x + 1, y,     c + 1,                    val, 6 }
+			if y > 0 then
+				tiles[6] = {x - 1, y - 1, c - 1 - game.level.map.w, val, 7 }
+				tiles[7] = {x,     y - 1, c     - game.level.map.w, val, 8 }
+				tiles[8] = {x + 1, y - 1, c + 1 - game.level.map.w, val, 9 }
+			end
+		elseif y > 0 then
+			tiles[4]         = {x - 1, y - 1, c - 1 - game.level.map.w, val, 7 }
+			tiles[5]         = {x,     y - 1, c     - game.level.map.w, val, 8 }
+		end
+		return tiles
+	end
+}
+
+-- List tiles that are adjacent to both current tile and previous tile that the previous tile iterated over.
+-- Right now these (and "listSharedNodesPrevious") are used to infer what might be a wall, and may be useful later.
+-- c = current, p = previous     c*    *c*
+-- * = returned tile             *p    .p.
+local listSharedNodes = {
+	-- Dir 1
+	function(node)
+		local x, y, c, val = unpack(node)
+		return {{x + 1, y,     c + 1,                    val, 6 },
+		        {x,     y - 1, c     - game.level.map.w, val, 8 }}
+	end,
+	-- Dir 2
+	function(node)
+		local x, y, c, val = unpack(node)
+		if     x < 1                    then return {{x + 1, y,     c + 1,                    val, 6 }}
+		elseif x > game.level.map.w - 2 then return {{x - 1, y,     c - 1,                    val, 4 }}
+		else return {{x - 1, y,     c - 1,                    val, 4 },
+		             {x + 1, y,     c + 1,                    val, 6 }}
+		end
+	end,
+	-- Dir 3
+	function(node)
+		local x, y, c, val = unpack(node)
+		return {{x - 1, y,     c - 1,                    val, 4 },
+		        {x,     y - 1, c     - game.level.map.w, val, 8 }}
+	end,
+	-- Dir 4
+	function(node)
+		local x, y, c, val = unpack(node)
+		if     y < 1                    then return {{x,     y + 1, c     + game.level.map.w, val, 2 }}
+		elseif y > game.level.map.h - 2 then return {{x,     y - 1, c     - game.level.map.w, val, 8 }}
+		else return {{x,     y + 1, c     + game.level.map.w, val, 2 },
+		             {x,     y - 1, c     - game.level.map.w, val, 8 }}
+		end
+	end,
+	-- Dir 5
+	function(node) return {} end,
+	-- Dir 6
+	function(node)
+		local x, y, c, val = unpack(node)
+		if     y < 1                    then return {{x,     y + 1, c     + game.level.map.w, val, 2 }}
+		elseif y > game.level.map.h - 2 then return {{x,     y - 1, c     - game.level.map.w, val, 8 }}
+		else return {{x,     y + 1, c     + game.level.map.w, val, 2 },
+		             {x,     y - 1, c     - game.level.map.w, val, 8 }}
+		end
+	end,
+	-- Dir 7
+	function(node)
+		local x, y, c, val = unpack(node)
+		return {{x,     y + 1, c     + game.level.map.w, val, 2 },
+		        {x + 1, y,     c + 1,                    val, 6 }}
+	end,
+	-- Dir 8
+	function(node)
+		local x, y, c, val = unpack(node)
+		if     x < 1                    then return {{x + 1, y,     c + 1,                    val, 6 }}
+		elseif x > game.level.map.w - 2 then return {{x - 1, y,     c - 1,                    val, 4 }}
+		else return {{x - 1, y,     c - 1,                    val, 4 },
+		             {x + 1, y,     c + 1,                    val, 6 }}
+		end
+	end,
+	-- Dir 9
+	function(node)
+		local x, y, c, val = unpack(node)
+		return {{x,     y + 1, c     + game.level.map.w, val, 2 },
+		        {x - 1, y,     c - 1,                    val, 4 }}
+	end
+}
+
+-- A partial complement to "listSharedNodes".  "listSharedNodes" and "listSharedNodesPrevious" allow us to easily
+-- check specific configurations, which will come in handy if/when I rewrite the "hack" for exploring large areas.
+-- c = current, p = previous     c.    .c.
+-- * = returned tile             .p    *p*
+local listSharedNodesPrevious = {
+	-- Dir 1
+	function(node) return {} end,
+	-- Dir 2
+	function(node)
+		local x, y, c, val = unpack(node)
+		if     x < 1                    then return {{x + 1, y - 1, c + 1 - game.level.map.w, val, 9 }}
+		elseif x > game.level.map.w - 2 then return {{x - 1, y - 1, c - 1 - game.level.map.w, val, 7 }}
+		else return {{x + 1, y - 1, c + 1 - game.level.map.w, val, 9 },
+		             {x - 1, y - 1, c - 1 - game.level.map.w, val, 7 }}
+		end
+	end,
+	-- Dir 3
+	function(node) return {} end,
+	-- Dir 4
+	function(node)
+		local x, y, c, val = unpack(node)
+		if     y < 1                    then return {{x + 1, y + 1, c + 1 + game.level.map.w, val, 3 }}
+		elseif y > game.level.map.h - 2 then return {{x + 1, y - 1, c + 1 - game.level.map.w, val, 9 }}
+		else return {{x + 1, y + 1, c + 1 + game.level.map.w, val, 3 },
+		             {x + 1, y - 1, c + 1 - game.level.map.w, val, 9 }}
+		end
+	end,
+	-- Dir 5
+	function(node) return {} end,
+	-- Dir 6
+	function(node)
+		local x, y, c, val = unpack(node)
+		if     y < 1                    then return {{x - 1, y + 1, c - 1 + game.level.map.w, val, 1 }}
+		elseif y > game.level.map.h - 2 then return {{x - 1, y - 1, c - 1 - game.level.map.w, val, 7 }}
+		else return {{x - 1, y + 1, c - 1 + game.level.map.w, val, 1 },
+		             {x - 1, y - 1, c - 1 - game.level.map.w, val, 7 }}
+		end
+	end,
+	-- Dir 7
+	function(node) return {} end,
+	-- Dir 8
+	function(node)
+		local x, y, c, val = unpack(node)
+		if     x < 1                    then return {{x + 1, y + 1, c + 1 + game.level.map.w, val, 3 }}
+		elseif x > game.level.map.w - 2 then return {{x - 1, y + 1, c - 1 + game.level.map.w, val, 1 }}
+		else return {{x + 1, y + 1, c + 1 + game.level.map.w, val, 3 },
+		             {x - 1, y + 1, c - 1 + game.level.map.w, val, 1 }}
+		end
+	end,
+	-- Dir 9
+	function(node) return {} end
+}
+
+local previousNode = {
+	-- Dir 1
+	function(node) local x, y, c, val = unpack(node) ; return {x + 1, y - 1, c + 1 - game.level.map.w, val-1, 9 } end,
+	-- Dir 2
+	function(node) local x, y, c, val = unpack(node) ; return {x,     y - 1, c     - game.level.map.w, val-1, 8 } end,
+	-- Dir 3
+	function(node) local x, y, c, val = unpack(node) ; return {x - 1, y - 1, c - 1 - game.level.map.w, val-1, 7 } end,
+	-- Dir 4
+	function(node) local x, y, c, val = unpack(node) ; return {x + 1, y,     c + 1,                    val-1, 6 } end,
+	-- Dir 5
+	function(node) local x, y, c, val = unpack(node) ; return {x,     y,     c,                        val-1, 5 } end,
+	-- Dir 6
+	function(node) local x, y, c, val = unpack(node) ; return {x - 1, y,     c - 1,                    val-1, 4 } end,
+	-- Dir 7
+	function(node) local x, y, c, val = unpack(node) ; return {x + 1, y + 1, c + 1 + game.level.map.w, val-1, 3 } end,
+	-- Dir 8
+	function(node) local x, y, c, val = unpack(node) ; return {x,     y + 1, c     + game.level.map.w, val-1, 2 } end,
+	-- Dir 9
+	function(node) local x, y, c, val = unpack(node) ; return {x - 1, y + 1, c - 1 + game.level.map.w, val-1, 1 } end
+}
+
+-- One more kindness to the player: take advantage of asymmetric LoS in this one specific case.
+-- If an enemy is at '?', the player is able to prevent an ambush by moving to 'x' instead of 't'.
+-- This is the only sensibly preventable ambush (that I know of) in which the player can move
+-- in a way to see the would-be ambusher and the would-be ambusher can't see the player.
+-- However, don't do this if it will step onto a known trap
+--
+--   .tx      Moving onto 't' puts us adjacent to an unseen tile, '?'
+--   ?#@      --> Pick 'x' instead
+local function checkAmbush(self)
+	if not self.running or not self.running.explore or not self.running.path or not self.running.path[self.running.cnt] then return end
+
+	local cx, cy = self.running.path[self.running.cnt].x, self.running.path[self.running.cnt].y
+	if math.abs(self.x - cx) == 1 and math.abs(self.y - cy) == 1 then
+		if game.level.map:checkAllEntities(self.x, cy, "block_move", self) and not game.level.map:checkAllEntities(cx, self.y, "block_move", self) and
+				game.level.map:isBound(self.x, 2*cy - self.y) and not game.level.map.has_seens(self.x, 2*cy - self.y) then
+			local trap = game.level.map(cx, self.y, Map.TRAP)
+			if not trap or not trap:knownBy(self) then
+				table.insert(self.running.path, self.running.cnt, {x=cx, y=self.y})
+			end
+		elseif game.level.map:checkAllEntities(cx, self.y, "block_move", self) and not game.level.map:checkAllEntities(self.x, cy, "block_move", self) and
+				game.level.map:isBound(2*cx - self.x, self.y) and not game.level.map.has_seens(2*cx - self.x, self.y) then
+			local trap = game.level.map(self.x, cy, Map.TRAP)
+			if not trap or not trap:knownBy(self) then
+				table.insert(self.running.path, self.running.cnt, {x=self.x, y=cy})
+			end
+		end
+	end
+end
+
+-- If a target destination is found, then it creates (or updates) "self.running" and returns true.
+-- If no target, or if we shouldn't explore for some reason, then return false.
 function _M:autoExplore()
+	-- levels that use "all_remembered" (like towns) don't set "has_seen" values to true for all grids,
+	-- so this lets us behave reasonably in these zones: go to objects and then exit
 	local do_unseen = not (game.level.all_remembered or game.zone and game.zone.all_remembered)
+
+	-- if we changed levels, then remove previous auto-explore information
+	if self.running_prev and self.running_prev.level ~= game.level then self.running_prev = nil end
+
 	local node = { self.x, self.y, toSingle(self.x, self.y), 0, 5 }
 	local current_tiles = { node }
 	local unseen_tiles = {}
@@ -230,7 +618,7 @@ function _M:autoExplore()
 
 	-- a few tunable parameters
 	local extra_iters = 5     -- number of extra iterations to do after we found an item or unseen tile
-	local singlet_greed = 5   -- number of additional moves we're willing to do to explore a single unseen tile
+	local singlet_greed = 4   -- number of additional moves we're willing to do to explore a single unseen tile
 	local item_greed = 5      -- number of additional moves we're willing to do to visit an unseen item rather than an unseen tile
 
 	-- Create a distance map array via flood-fill to locate unseen tiles, unvisited items, closed doors, and exits
@@ -241,13 +629,13 @@ function _M:autoExplore()
 		local diagonal_tiles = {}
 		-- Nearly half the time is spent here.  This could be implemented in C if desired, but I think it's fast enough
 		for _, node in ipairs(current_tiles) do
-			adjacentTiles[node[5]](node, cardinal_tiles, diagonal_tiles)
+			getNextNodes[node[5]](node, cardinal_tiles, diagonal_tiles)
 		end
 
 		-- The other half of the time is spent in this loop
 		for _, tile_list in ipairs({cardinal_tiles, diagonal_tiles}) do
 			for _, node in ipairs(tile_list) do
-				local x, y, c, move_cost = unpack(node)
+				local x, y, c, move_cost, dir = unpack(node)
 
 				if not game.level.map.has_seens(x, y) and do_unseen then
 					if not values[c] or values[c] > move_cost then
@@ -258,10 +646,48 @@ function _M:autoExplore()
 						end
 						-- Try to not abandon lone unseen tiles
 						local is_singlet = true
-						for _, anode in ipairs(listAdjacentTiles(node)) do
+						for _, anode in ipairs(listAdjacentNodes[dir](node)) do
 							if not game.level.map.has_seens(anode[1], anode[2]) then
 								is_singlet = false
 								break
+							end
+						end
+
+						-- look for tiles that are probably walls so we can hopefully explore more efficiently by preventing unnecessary return trips.
+						--               ?#       #?#
+						-- For example:  #.  and  ...  are probably walls (in most zones)
+						if not is_singlet then
+							is_singlet = true
+							for _, anode in ipairs(listSharedNodes[dir](node)) do
+								if not game.level.map.has_seens(anode[1], anode[2]) or not game.level.map:checkEntity(anode[1], anode[2], Map.TERRAIN, "does_block_move") then
+									is_singlet = false
+								-- if we propagated diagonally, then check if this might be a wall side, not corner
+								--  c = current,  1 = supposed wall    #c1
+								--  p = previous, 2 = supposed floor   p.2
+								elseif dir % 2 == 1 then
+									local x1 = 2*x - anode[1]
+									local y1 = 2*y - anode[2]
+									if game.level.map.has_seens(x1, y1) and game.level.map:checkEntity(x1, y1, Map.TERRAIN, "does_block_move") then
+										local pnode = previousNode[dir](node)
+										x1 = x1 + pnode[1] - anode[1]
+										y1 = y1 + pnode[2] - anode[2]
+										if game.level.map.has_seens(x1, y1) and not game.level.map:checkEntity(x1, y1, Map.TERRAIN, "does_block_move") then
+											is_singlet = true
+											break
+										end
+									end
+								end
+							end
+							-- if walls are where we expect them to be, check that floors are where we expect:
+							-- c = current, ? = supposed floor   #c#
+							-- p = previous,                     ?p?
+							if is_singlet then
+								for _, anode in ipairs(listSharedNodesPrevious[dir](node)) do
+									if not game.level.map.has_seens(anode[1], anode[2]) or game.level.map:checkEntity(anode[1], anode[2], Map.TERRAIN, "does_block_move") then
+										is_singlet = false
+										break
+									end
+								end
 							end
 						end
 						if is_singlet then
@@ -315,7 +741,7 @@ function _M:autoExplore()
 						-- only go to closed doors with unseen grids behind them. We can go through "safe" doors
 						elseif terrain.door_opened and do_unseen then
 							local is_unexplored = false
-							for _, anode in ipairs(listAdjacentTiles(node)) do
+							for _, anode in ipairs(listAdjacentNodes[dir](node)) do
 								if not game.level.map.has_seens(anode[1], anode[2]) then
 									is_unexplored = true
 									break
@@ -339,7 +765,7 @@ function _M:autoExplore()
 						elseif terrain.orb_portal then
 							local is_portal_center = true
 							local is_small_portal = true
-							for _, anode in ipairs(listAdjacentTiles(node)) do
+							for _, anode in ipairs(listAdjacentNodes[dir](node)) do
 								if not game.level.map:checkEntity(anode[1], anode[2], Map.TERRAIN, "orb_portal") then
 									is_portal_center = false
 								else
@@ -408,11 +834,11 @@ function _M:autoExplore()
 		local mindist = 999999999999999
 		-- If we already have a suitable target that we haven't reached yet, then use that as our target.  This will be more useful
 		-- if or when we save info between between instances of running auto-explore.  For now it's useful when dodging traps on the fly.
-		if self.running and (self.running.explore == "exit" or self.running.explore == "portal") and (self.x ~= self.running.target.x or self.y ~= self.running.target.y) then
+		if self.running_prev and (self.running_prev.explore == "exit" or self.running_prev.explore == "portal") and (self.x ~= self.running_prev.target.x or self.y ~= self.running_prev.target.y) then
 			-- verify that the target is currently reachable
 			for _, c in ipairs(exits) do
 				local x, y = toDouble(c)
-				if x == self.running.target.x and y == self.running.target.y then
+				if x == self.running_prev.target.x and y == self.running_prev.target.y then
 					target_type = "exit"
 					choices[1] = c
 					distances[c] = 1
@@ -423,7 +849,7 @@ function _M:autoExplore()
 			if #choices == 0 then
 				for _, c in ipairs(portals) do
 					local x, y = toDouble(c)
-					if x == self.running.target.x and y == self.running.target.y then
+					if x == self.running_prev.target.x and y == self.running_prev.target.y then
 						target_type = "portal"
 						choices[1] = c
 						distances[c] = 1
@@ -433,11 +859,11 @@ function _M:autoExplore()
 				end
 			end
 		end
-		-- try to explore cleanly--don't leave single unseen tiles by themselves
-		if #choices == 0 then
-			for _, c in ipairs(unseen_singlets) do
-				if values[c] <= minval + singlet_greed then
-					target_type = "unseen"
+		-- go to closest items first
+		if #choices == 0 and minval_items <= minval + item_greed then
+			for _, c in ipairs(unseen_items) do
+				if values[c] == minval_items then
+					target_type = "object"
 					choices[#choices + 1] = c
 					local x, y = toDouble(c)
 					local dist = core.fov.distance(self.x, self.y, x, y, true)
@@ -448,11 +874,11 @@ function _M:autoExplore()
 				end
 			end
 		end
-		-- go to closest items first
-		if #choices == 0 and minval_items <= minval + item_greed then
-			for _, c in ipairs(unseen_items) do
-				if values[c] == minval_items then
-					target_type = "object"
+		-- try to explore cleanly--don't leave single unseen tiles by themselves
+		if #choices == 0 then
+			for _, c in ipairs(unseen_singlets) do
+				if values[c] <= minval + singlet_greed then
+					target_type = "unseen"
 					choices[#choices + 1] = c
 					local x, y = toDouble(c)
 					local dist = core.fov.distance(self.x, self.y, x, y, true)
@@ -741,10 +1167,10 @@ function _M:autoExplore()
 					-- don't run into adjacent interesting terrain if we've already been running
 					local x, y = path[1].x, path[1].y
 					local terrain = game.level.map(x, y, Map.TERRAIN)
-					if terrain.notice and (target_type ~= "exit" and target_type ~= "portal" or #path ~= 1 and not game.level.map.attrs(x, y, "noticed")) then
+					if terrain.notice and (target_type ~= "exit" and target_type ~= "portal" or #path ~= 1) then
 						if safe_doors[toSingle(x, y)] and not self.running.busy then
 							self.running.busy = { type = "opening door", do_move = true, no_energy = true }
-						else
+						elseif not game.level.map.attrs(x, y, "noticed") then
 							if terrain.change_level or terrain.orb_portal then game.level.map.attrs(x, y, "noticed", true) end
 							self:runStop("interesting terrain")
 							return false
@@ -759,6 +1185,8 @@ function _M:autoExplore()
 					self.running.ave_x = (self.running.ave_x*self.running.ave_N + 2*(target_x + self.x)) / (self.running.ave_N + 4)
 					self.running.ave_y = (self.running.ave_y*self.running.ave_N + 2*(target_y + self.y)) / (self.running.ave_N + 4)
 					self.running.ave_N = self.running.ave_N + 2
+					-- end hack!
+					checkAmbush(self)
 				else
 					-- another fringe case: if we target an item in an adjacent wall that we've probably already targeted, then mark it as seen and find a new target
 					if #path == 1 and target_type == "object" and game.level.map:checkEntity(target_x, target_y, Map.TERRAIN, "block_move", self, nil, true) then
@@ -776,13 +1204,24 @@ function _M:autoExplore()
 						end, false, true),
 						explore = target_type,
 						target = {x=target_x, y=target_y},
-						-- hack!
-						ave_x = 0.5*(target_x + self.x),
-						ave_y = 0.5*(target_y + self.y),
-						ave_N = 2,
+						level = game.level
 					}
+					-- hack!
+					if self.running_prev then
+						self.running.ave_N = 0.6*self.running_prev.ave_N
+						self.running.ave_x = (self.running_prev.ave_x*self.running.ave_N + 2*(target_x + self.x)) / (self.running.ave_N + 4)
+						self.running.ave_y = (self.running_prev.ave_y*self.running.ave_N + 2*(target_y + self.y)) / (self.running.ave_N + 4)
+						self.running.ave_N = 2*math.floor(0.5*self.running.ave_N + 1)
+					else
+						self.running.ave_x = 0.5*(target_x + self.x)
+						self.running.ave_y = 0.5*(target_y + self.y)
+						self.running.ave_N = 2
+					end
+					-- end hack!
+
 					self.running.dialog.__showup = nil
 					self.running.dialog.__hidden = true
+					self.running_prev = self.running
 
 					self:runStep()
 				end
@@ -860,29 +1299,8 @@ function _M:checkAutoExplore()
 		return self:autoExplore()
 	end
 
-	-- One more kindness to the player: take advantage of asymmetric LoS in this one specific case.
-	-- If an enemy is at '?', the player is able to prevent an ambush by moving to 'x' instead of 't'.
-	-- This is the only sensibly preventable ambush (that I know of) in which the player can move
-	-- in a way to see the would-be ambusher and the would-be ambusher can't see the player.
-	-- However, don't do this if it will step onto a known trap
-	--
-	--   .tx      Moving onto 't' puts us adjacent to an unseen tile, '?'
-	--   ?#@      --> Pick 'x' instead
-	if math.abs(self.x - cx) == 1 and math.abs(self.y - cy) == 1 then
-		if game.level.map:checkAllEntities(self.x, cy, "block_move", self) and not game.level.map:checkAllEntities(cx, self.y, "block_move", self) and
-				game.level.map:isBound(self.x, 2*cy - self.y) and not game.level.map.has_seens(self.x, 2*cy - self.y) then
-			local trap = game.level.map(cx, self.y, Map.TRAP)
-			if not trap or not trap:knownBy(self) then
-				table.insert(self.running.path, self.running.cnt, {x=cx, y=self.y})
-			end
-		elseif game.level.map:checkAllEntities(cx, self.y, "block_move", self) and not game.level.map:checkAllEntities(self.x, cy, "block_move", self) and
-				game.level.map:isBound(2*cx - self.x, self.y) and not game.level.map.has_seens(2*cx - self.x, self.y) then
-			local trap = game.level.map(self.x, cy, Map.TRAP)
-			if not trap or not trap:knownBy(self) then
-				table.insert(self.running.path, self.running.cnt, {x=self.x, y=cy})
-			end
-		end
-	end
+	-- avoid a simple preventable ambush
+	checkAmbush(self)
 
 	-- continue current path if we haven't seen the target tile or object yet
 	if not game.level.map.has_seens(tx, ty) then return true end

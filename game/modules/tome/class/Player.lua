@@ -724,6 +724,10 @@ function _M:runStopped()
 			node.actor:addParticles(engine.Particles.new("notice_enemy", 1))
 		end
 	end
+
+	-- if you stop at an object (such as on a trap), then mark it as seen
+	local obj = game.level.map:getObject(x, y, 1)
+	if obj then game.level.map.attrs(x, y, "obj_seen", true) end
 end
 
 --- Activates a hotkey with a type "inventory"
