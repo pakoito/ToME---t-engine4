@@ -1117,6 +1117,7 @@ newEffect{
 		infravision = 10,
 		can_pass = {pass_wall=20},
 		resists = {[DamageType.LIGHT] = -50, [DamageType.DARKNESS] = 100},
+		silent_levelup = true,
 		no_breath = 1,
 		fear_immune = 1,
 		blind_immune = 1,
