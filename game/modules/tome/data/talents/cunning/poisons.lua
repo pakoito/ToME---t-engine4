@@ -47,8 +47,8 @@ newTalent{
 	on_unlearn = function(self, t)
 		local lev = self:getTalentLevelRaw(t)
 		if lev == 0 then
-			self.vile_poisons = nil
 			self:unlearnTalent(self.T_DEADLY_POISON)
+			self.vile_poisons = nil
 		elseif lev == 1 then
 			self:unlearnTalent(self.T_NUMBING_POISON)
 		elseif lev == 2 then
@@ -90,7 +90,7 @@ newTalent{
 			local e = target.tempeffect_def[eff_id]
 			if e.subtype.poison then nb = nb + 1 end
 		end
-		return { NATURE = nb}		
+		return { NATURE = nb}
 	end },
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
