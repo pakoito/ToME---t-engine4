@@ -644,14 +644,26 @@ end
 function _M:checkDeps()
 	local talents = ""
 	local stats_ok = true
-	for t_id, _ in pairs(self.talents_changed) do
+
+	local checked = {}
+
+	local function check(t_id)
+		if checked[t_id] then return end
+		checked[t_id] = true
+
 		local t = self.actor:getTalentFromId(t_id)
 		local ok, reason = self.actor:canLearnTalent(t, 0)
 		if not ok and self.actor:knowTalent(t) then talents = talents.."\n#GOLD##{bold}#    - "..t.name.."#{normal}##LAST#("..reason..")" end
 		if reason == "not enough stat" then
 			stats_ok = false
 		end
+
+		local dlist = self.talents_deps[t_id]
+		if dlist then for dtid, _ in pairs(dlist) do check(dtid) end end
 	end
+
+	for t_id, _ in pairs(self.talents_changed) do check(t_id) end
+
 	if talents ~="" then
 		return false, talents, stats_ok
 	else
@@ -704,6 +716,7 @@ function _M:learnTalent(t_id, v)
 				return
 			end
 			self.actor:unlearnTalent(t_id)
+			self.talents_changed[t_id] = true
 			local _, reason = self.actor:canLearnTalent(t, 0)
 			local ok, dep_miss, stats_ok = self:checkDeps()
 			if ok or reason == "not enough stat" or not stats_ok then
@@ -745,6 +758,7 @@ function _M:learnTalent(t_id, v)
 				return
 			end
 			self.actor:unlearnTalent(t_id)
+			self.talents_changed[t_id] = true
 			local _, reason = self.actor:canLearnTalent(t, 0)
 			local ok, dep_miss, stats_ok = self:checkDeps()
 			if ok or reason == "not enough stat" or not stats_ok then
