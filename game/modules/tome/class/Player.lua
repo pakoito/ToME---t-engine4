@@ -607,7 +607,7 @@ function _M:restCheck()
 	end
 
 	-- Enter cooldown waiting rest if we are at max already
-	if self.resting.cnt == 1 then
+	if self.resting.cnt == 0 then
 		self.resting.wait_cooldowns = true
 	end
 
