@@ -796,25 +796,16 @@ newEntity{
 			until not e.unique and e.rarity
 
 			local spider = game.zone:finishEntity(game.level, "actor", e)
+			spider.make_escort = nil
+			spider.silent_levelup = true
 			spider.faction = who.faction
 			spider.ai = "summoned"
 			spider.ai_real = "dumb_talented_simple"
 			spider.summoner = who
 			spider.summon_time = 10
 
-			-- Add to the party
-			if self.player then
-				spider.remove_from_party_on_death = true
-				game.party:addMember(spider, {
-					control="no",
-					type="summon",
-					title="Summon",
-					orders = {target=true, leash=true, anchor=true, talents=true},
-				})
-			end
-
-			game.zone:addEntity(game.level, spider, "actor", x, y)
-			game.level.map:particleEmitter(x, y, 1, "slime")
+			local setupSummon = getfenv(who:getTalentFromId(who.T_SPIDER).action).setupSummon
+			setupSummon(who, spider, x, y)
 
 			game:playSoundNear(who, "talents/slime")
 		end
