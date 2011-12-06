@@ -458,7 +458,7 @@ function _M:getStatNewTalents(stat_id)
 end
 
 function _M:finish()
-	local ok, dep_miss = self:checkDeps()
+	local ok, dep_miss = self:checkDeps(true)
 	if not ok then
 		self:simpleLongPopup("Impossible", "You cannot learn this talent(s): "..dep_miss, game.w * 0.4)
 		return nil
@@ -641,7 +641,7 @@ function _M:learn(v)
 	end
 end
 
-function _M:checkDeps()
+function _M:checkDeps(simple)
 	local talents = ""
 	local stats_ok = true
 
@@ -659,7 +659,7 @@ function _M:checkDeps()
 		end
 
 		local dlist = self.talents_deps[t_id]
-		if dlist then for dtid, _ in pairs(dlist) do check(dtid) end end
+		if dlist and not simple then for dtid, _ in pairs(dlist) do check(dtid) end end
 	end
 
 	for t_id, _ in pairs(self.talents_changed) do check(t_id) end
