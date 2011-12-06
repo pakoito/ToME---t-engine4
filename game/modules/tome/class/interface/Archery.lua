@@ -128,11 +128,10 @@ local function archery_projectile(tx, ty, tg, self)
 	atk = atk + (tg.archery.atk or 0)
 	dam = dam + (tg.archery.dam or 0)
 	print("[ATTACK ARCHERY] to ", target.name, " :: ", dam, apr, armor, "::", mult)
-	if not self:canSee(target) then atk = atk / 3 end
 
 	-- If hit is over 0 it connects, if it is 0 we still have 50% chance
 	local hitted = false
-	if self:checkHit(atk, def) then
+	if self:checkHit(atk, def) and (self:canSee(target) or rng.chance(3)) then
 		apr = apr + (tg.archery.apr or 0)
 		print("[ATTACK ARCHERY] raw dam", dam, "versus", armor, "with APR", apr)
 

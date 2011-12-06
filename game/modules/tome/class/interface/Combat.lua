@@ -295,7 +295,6 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		mult = mult * t.getStalkedDamageMultiplier(self, t, effStalker.bonus)
 	end
 
-	if not self:canSee(target) then atk = atk / 3 end
 	local dam, apr, armor = force_dam or self:combatDamage(weapon), self:combatAPR(weapon), target:combatArmor()
 	print("[ATTACK] to ", target.name, " :: ", dam, apr, armor, def, "::", mult)
 
@@ -320,7 +319,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	elseif self:checkEvasion(target) then
 		evaded = true
 		game.logSeen(target, "%s evades %s.", target.name:capitalize(), self.name)
-	elseif self:checkHit(atk, def) then
+	elseif self:checkHit(atk, def) and (self:canSee(target) or rng.chance(3)) then
 		local pres = util.bound(target:combatArmorHardiness() / 100, 0, 1)
 		print("[ATTACK] raw dam", dam, "versus", armor, pres, "with APR", apr)
 		armor = math.max(0, armor - apr)
@@ -725,17 +724,17 @@ end
 
 --- Gets the attack using only strength
 function _M:combatAttackStr(weapon, ammo)
-	return self:combatAttackBase(weapon, ammo) + (self:getStr(100, true) - 10)
+	return self:rescaleCombatStats(self:combatAttackBase(weapon, ammo) + (self:getStr(100, true) - 10))
 end
 
 --- Gets the attack using only dexterity
 function _M:combatAttackDex(weapon, ammo)
-	return self:combatAttackBase(weapon, ammo) + (self:getDex(100, true) - 10)
+	return self:rescaleCombatStats(self:combatAttackBase(weapon, ammo) + (self:getDex(100, true) - 10))
 end
 
 --- Gets the attack using only magic
 function _M:combatAttackMag(weapon, ammo)
-	return self:combatAttackBase(weapon, ammo) + (self:getMag(100, true) - 10)
+	return self:rescaleCombatStats(self:combatAttackBase(weapon, ammo) + (self:getMag(100, true) - 10))
 end
 
 --- Gets the armor penetration
