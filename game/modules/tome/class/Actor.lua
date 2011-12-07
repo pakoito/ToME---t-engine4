@@ -2257,7 +2257,7 @@ function _M:unlearnTalent(t_id)
 	end
 
 	-- Unsustain ?
-	if not self:knowTalent(t_id) and t.mode == "sustained" then self:forceUseTalent(t_id, {ignore_energy=true}) end
+	if not self:knowTalent(t_id) and t.mode == "sustained" and self:isTalentActive(t_id) then self:forceUseTalent(t_id, {ignore_energy=true}) end
 
 	return true
 end
