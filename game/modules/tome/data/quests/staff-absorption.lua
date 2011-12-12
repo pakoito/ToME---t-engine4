@@ -77,7 +77,7 @@ start_ambush = function(self, who)
 		-- Protect from other hits on the same turn
 		self:setEffect(self.EFF_DAMAGE_SHIELD, 3, {power=1000000})
 
-		local o, item, inven_id = player:findInAllInventoriesBy("define_as", "STAFF_ABSORPTION")
+		local o, item, inven_id = self:findInAllInventoriesBy("define_as", "STAFF_ABSORPTION")
 		if o then
 			self:removeObject(inven_id, item, true)
 			o:removed()
