@@ -252,7 +252,7 @@ newTalent{
 	info = function(self, t)
 		local movementSpeedChange = t.getMovementSpeedChange(self, t)
 		local defenseChange = t.getDefenseChange(self, t, true)
-		return ([[Let hate fuel your movements. While active you gain %d%% movement speed. The recklessness of your movement brings you bad luck (luck -3). Cleave, repel and parry cannot be activate simultaneously and activating one will place the others in cooldown. The speed of your movements combined with the balance and utility of two weapons gives you %d extra defense while dual-wielding.
+		return ([[Let hate fuel your movements. While active you gain %d%% movement speed. The recklessness of your movement brings you bad luck (luck -3). Cleave, repel and surge cannot be activate simultaneously and activating one will place the others in cooldown. The speed of your movements combined with the balance and utility of two weapons gives you %d extra defense while dual-wielding.
 		Movement speed and dual-wielding defense increase with with the Willpower stat.]]):format(movementSpeedChange * 100, defenseChange)
 	end,
 }

@@ -116,7 +116,7 @@ newTalent{
 --		local conversionPercent = t.getConversionPercent(self, t)
 --		local maxConversion = t.getMaxConversion(self, t)
 --		self:setEffect(target.EFF_SUFFERING, duration, { conversionDuration = conversionDuration, conversionPercent = conversionPercent, maxConversion = maxConversion })
---		
+--
 --		return true
 --	end,
 --	info = function(self, t)
@@ -152,10 +152,10 @@ newTalent{
 --
 --		local damagePercent = t.getDamagePercent(self, t)
 --		local distance = t.getDistance(self, t)
---		
+--
 --		local hit = self:attackTarget(target, nil, damagePercent / 100, true)
 --		self:knockback(target.x, target.y, distance)
---	
+--
 --		return true
 --	end,
 --	info = function(self, t)
@@ -197,7 +197,7 @@ newTalent{
 --		local poisonDamage = t.getPoisonDamage(self, t)
 --		local healFactor = t.getHealFactor(self, t)
 --		local duration = t.getDuration(self, t)
---		
+--
 --		local hit = self:attackTarget(target, nil, damagePercent / 100, true)
 --		if hit and target:canBe("poison") then
 --			target:setEffect(target.EFF_INSIDIOUS_POISON, duration, {src=self, power=poisonDamage / duration, heal_factor=healFactor})
@@ -248,10 +248,10 @@ newTalent{
 				game:playSoundNear(self, "talents/teleport")
 				local multiplier = self:combatTalentWeaponDamage(t, 0.7, 1.9) * getHateMultiplier(self, 0.3, 1.0, true)
 				self:attackTarget(target, nil, multiplier, true)
-				
+
 				local defenseChange = t.getDefenseChange(self, t)
 				self:setEffect(target.EFF_BLINDSIDE_BONUS, 1, { defenseChange=defenseChange })
-				
+
 				return true
 			end
 		end
@@ -293,13 +293,13 @@ newTalent{
 		-- local attackCount = t.getAttackCount(self, t)
 		-- local confuseDuration = t.getConfuseDuration(self, t)
 		-- local confuseEfficiency = t.getConfuseEfficiency(self, t)
-		
+
 		-- local minDistance = 1
 		-- local maxDistance = 4
 		-- local startX, startY = self.x, self.y
 		-- local positions = {}
 		-- local targets = {}
-		
+
 		-- -- find all positions and targets in range
 		-- for x = startX - maxDistance, startX + maxDistance do
 			-- for y = startY - maxDistance, startY + maxDistance do
@@ -308,26 +308,26 @@ newTalent{
 						-- and core.fov.distance(startX, startY, x, y) >= minDistance
 						-- and self:hasLOS(x, y) then
 					-- if self:canMove(x, y) then positions[#positions + 1] = {x, y} end
-					
+
 					-- local target = game.level.map(x, y, Map.ACTOR)
 					-- if target and target ~= self and self:reactionToward(target) < 0 then targets[#targets + 1] = target end
 				-- end
 			-- end
 		-- end
-		
+
 		-- -- perform confusion
 		-- for i = 1, #targets do
 			-- self:project({type="hit",x=targets[i].x,y=targets[i].y}, targets[i].x, targets[i].y, DamageType.CONFUSION, { dur = confuseDuration, dam = confuseEfficiency })
 		-- end
-		
+
 		-- -- perform attacks
 		-- for i = 1, attackCount do
 			-- if #targets == 0 then break end
-			
+
 			-- local target = rng.tableRemove(targets)
 			-- local hit = self:attackTarget(target, nil, damagePercent / 100, true)
 		-- end
-		
+
 		-- -- perform movements
 		-- if #positions > 0 then
 			-- for i = 1, 8 do
@@ -339,11 +339,11 @@ newTalent{
 				-- end
 			-- end
 		-- end
-		
+
 		-- game.level.map:particleEmitter(currentX, currentY, 1, "teleport_in")
 		-- local position = positions[rng.range(1, #positions)]
 		-- self:move(position[1], position[2], true)
-		
+
 		-- return true
 	-- end,
 	-- info = function(self, t)
@@ -351,7 +351,7 @@ newTalent{
 		-- local attackCount = t.getAttackCount(self, t)
 		-- local confuseDuration = t.getConfuseDuration(self, t)
 		-- local confuseEfficiency = t.getConfuseEfficiency(self, t)
-		
+
 		-- return ([[With unnatural speed you assail all foes in sight within a range of 4 with wild swings from your axe. You will attack up to %d different targets for %d%% damage. When the assualt finally ends all foes in range will be confused for %d turns and you will find yourself in a nearby location.]]):format(attackCount, damagePercent, confuseDuration)
 	-- end,
 -- }
@@ -384,21 +384,21 @@ newTalent{
 			local tCleave = self:getTalentFromId(self.T_CLEAVE)
 			self.talents_cd[self.T_CLEAVE] = tCleave.cooldown
 		end
-		
+
 		if self:isTalentActive(self.T_SURGE) then
 			self:useTalent(self.T_SURGE)
 		elseif self:knowTalent(self.T_SURGE) then
 			local tSurge = self:getTalentFromId(self.T_SURGE)
 			self.talents_cd[self.T_SURGE] = tSurge.cooldown
 		end
-	
+
 		return {
 			luckId = self:addTemporaryValue("inc_stats", { [Stats.STAT_LCK] = -3 })
 		}
 	end,
 	deactivate = function(self, t, p)
 		if p.luckId then self:removeTemporaryValue("inc_stats", p.luckId) end
-		
+
 		return true
 	end,
 	isRepelled = function(self, t)
@@ -407,7 +407,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local chance = t.getChance(self, t)
-		return ([[Rather than hide from the onslaught you face down every threat. While active you have a %d%% chance of repelling a melee attack. The recklessness of your defense brings you bad luck (luck -3). Cleave, repel and parry cannot be activate simultaneously and activating one will place the others in cooldown.
+		return ([[Rather than hide from the onslaught you face down every threat. While active you have a %d%% chance of repelling a melee attack. The recklessness of your defense brings you bad luck (luck -3). Cleave, repel and surge cannot be activate simultaneously and activating one will place the others in cooldown.
 		Chance increases with with the Strength stat and when equipped with a shield.]]):format(chance)
 	end,
 }

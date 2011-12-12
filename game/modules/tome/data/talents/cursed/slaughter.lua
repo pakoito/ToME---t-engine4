@@ -58,10 +58,10 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
-		
+
 		local damageMultiplier = t.getDamageMultiplier(self, t)
 		local hit = self:attackTarget(target, nil, damageMultiplier, true)
-		
+
 		local level = self:getTalentLevel(t)
 		if hit and target:canBe("poison") and level >= 4 or (self:hasCursedWeapon() and level >= 3) then
 			local poisonDamage = t.getPoisonDamage(self, t)
@@ -116,12 +116,12 @@ newTalent{
 				end
 			end
 		end
-		
+
 		if #targets <= 0 then return nil end
 
 		local damageMultiplier = t.getDamageMultiplier(self, t)
 		local attackChange = t.getAttackChange(self, t)
-		
+
 		local effStalker = self:hasEffect(self.EFF_STALKER)
 		for i = 1, 4 do
 			local target
@@ -322,21 +322,21 @@ newTalent{
 			local tSurge = self:getTalentFromId(self.T_SURGE)
 			self.talents_cd[self.T_SURGE] = tSurge.cooldown
 		end
-			
+
 		if self:isTalentActive(self.T_REPEL) then
 			self:useTalent(self.T_REPEL)
 		elseif self:knowTalent(self.T_REPEL) then
 			local tRepel = self:getTalentFromId(self.T_REPEL)
 			self.talents_cd[self.T_REPEL] = tRepel.cooldown
 		end
-	
+
 		return {
 			luckId = self:addTemporaryValue("inc_stats", { [Stats.STAT_LCK] = -3 })
 		}
 	end,
 	deactivate = function(self, t, p)
 		if p.luckId then self:removeTemporaryValue("inc_stats", p.luckId) end
-		
+
 		return true
 	end,
 	on_attackTarget = function(self, t, target)
@@ -363,7 +363,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local chance = t.getChance(self, t)
-		return ([[While active every swing of your weapon has a %d%% chance of striking a second nearby target for %d%% (at 0 Hate) to %d%% (at 10+ Hate) damage. The recklessness of your attacks brings you bad luck (luck -3). Cleave, repel and parry cannot be activate simultaneously and activating one will place the others in cooldown.
+		return ([[While active every swing of your weapon has a %d%% chance of striking a second nearby target for %d%% (at 0 Hate) to %d%% (at 10+ Hate) damage. The recklessness of your attacks brings you bad luck (luck -3). Cleave, repel and surge cannot be activate simultaneously and activating one will place the others in cooldown.
 		Chance and damage increase with with the Strength stat and when wielding a two-handed weapon (+15%% chance, +25%% damage). Hate-based effects will improve when wielding cursed weapons (+2.5 hate).]]):format(chance, t.getDamageMultiplier(self, t, 0) * 100, t.getDamageMultiplier(self, t, 10) * 100)
 	end,
 }
