@@ -34,7 +34,11 @@ desc = function(self, who)
 	if who:isQuestStatus("shertul-fortress", self.COMPLETED, "butler") then
 		desc[#desc+1] = "#LIGHT_GREEN#* Yiilkgur the Sher'tul Fortress is a suitable location.#WHITE#"
 
-		if who:hasQuest("shertul-fortress").shertul_energy >= 40 then desc[#desc+1] = "#LIGHT_GREEN#* Yiilkgur has enough energy.#WHITE#"
+		if who:hasQuest("shertul-fortress").shertul_energy >= 40 then
+			desc[#desc+1] = "#LIGHT_GREEN#* Yiilkgur has enough energy.#WHITE#"
+
+			if who:knowTalent(who.T_LICHFORM) then desc[#desc+1] = "#LIGHT_GREEN#* You are now on the path of lichdom.#WHITE#"
+			else desc[#desc+1] = "#SLATE#* Use the control orb of Yiilkgur to begin the ceremony.#WHITE#" end
 		else desc[#desc+1] = "#SLATE#* Your lair must amass enough energy to use in your rebirth (40 energy).#WHITE#" end
 	else
 		desc[#desc+1] = "#SLATE#* The ceremony will require a suitable location, secluded and given to the channelling of energy#WHITE#"
