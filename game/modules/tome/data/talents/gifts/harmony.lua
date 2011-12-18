@@ -53,7 +53,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[The waters of life flow through you, purifying any poisons or diseases currently affecting you.
-		For %x turns all poisons and diseases will heal you instead of damaging you.
+		For %d turns all poisons and diseases will heal you instead of damaging you.
 		When activated it also heals you for %d life per diseases or poisons on you.
 		The healing will increase with your Willpower stat.]]):
 		format(5 + self:getTalentLevel(t), self:combatTalentStatDamage(t, "wil", 20, 60))
