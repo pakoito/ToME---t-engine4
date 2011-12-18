@@ -187,6 +187,10 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty or not target then return nil end
+		local _ _, tx, ty = self:canProject(tg, tx, ty)
+		target = game.level.map(tx, ty, Map.ACTOR)
+		if target == self then target = nil end
+		if not target then return end
 
 		self:setEffect(self.EFF_DISPLACEMENT_SHIELD, t.getDuration(self, t), {power=t.getMaxAbsorb(self, t), target=target, chance=t.getTransferChange(self, t)})
 		game:playSoundNear(self, "talents/teleport")
