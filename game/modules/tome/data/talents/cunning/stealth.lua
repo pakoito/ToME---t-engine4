@@ -66,7 +66,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local stealthpower = t.getStealthPower(self, t)
+		local stealthpower = t.getStealthPower(self, t) + (self:attr("inc_stealth") or 0)
 		local radius = t.getRadius(self, t)
 		return ([[Enters stealth mode (with efficiency of %d), making you harder to detect.
 		The efficiency increases with Cunning.
