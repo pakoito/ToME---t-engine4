@@ -230,7 +230,7 @@ function _M:generateList()
 	end
 ]]
 
-	local actives, sustains, sustained, cooldowns = {}, {}, {}, {}
+	local actives, sustains, sustained, unavailables, cooldowns = {}, {}, {}, {}, {}
 	local chars = {}
 
 	-- Find all talents of this school
@@ -242,6 +242,9 @@ function _M:generateList()
 			if self.actor:isTalentCoolingDown(t) then
 				nodes = cooldowns
 				status = tstring{{"color", "LIGHT_RED"}, self.actor:isTalentCoolingDown(t).." turns"}
+			elseif not self.actor:preUseTalent(t) then
+				nodes = unavailables
+				status = tstring{{"color", "GREY"}, "Unavailable"}
 			elseif t.mode == "sustained" then
 				if self.actor:isTalentActive(t.id) then nodes = sustained end
 				status = self.actor:isTalentActive(t.id) and tstring{{"color", "YELLOW"}, "Sustaining"} or tstring{{"color", "LIGHT_GREEN"}, "Sustain"}
@@ -271,10 +274,12 @@ function _M:generateList()
 	table.sort(sustains, function(a,b) return a.cname < b.cname end)
 	table.sort(sustained, function(a,b) return a.cname < b.cname end)
 	table.sort(cooldowns, function(a,b) return a.cname < b.cname end)
+	table.sort(unavailables, function(a,b) return a.cname < b.cname end)
 	for i, node in ipairs(actives) do node.char = self:makeKeyChar(letter) chars[node.char] = node letter = letter + 1 end
 	for i, node in ipairs(sustains) do node.char = self:makeKeyChar(letter) chars[node.char] = node letter = letter + 1 end
 	for i, node in ipairs(sustained) do node.char = self:makeKeyChar(letter) chars[node.char] = node letter = letter + 1 end
 	for i, node in ipairs(cooldowns) do node.char = self:makeKeyChar(letter) chars[node.char] = node letter = letter + 1 end
+	for i, node in ipairs(unavailables) do node.char = self:makeKeyChar(letter) chars[node.char] = node letter = letter + 1 end
 
 
 	list = {
@@ -282,6 +287,7 @@ function _M:generateList()
 		{ char='', name=('#{bold}#Sustainable talents#{normal}#'):toTString(), status='', hotkey='', desc="All sustainable talents you can currently use.", color=function() return colors.simple(colors.LIGHT_GREEN) end, nodes=sustains, shown=true },
 		{ char='', name=('#{bold}#Sustained talents#{normal}#'):toTString(), status='', hotkey='', desc="All sustainable talents you currently sustain, using them will de-activate them.", color=function() return colors.simple(colors.YELLOW) end, nodes=sustained, shown=true },
 		{ char='', name=('#{bold}#Cooling down talents#{normal}#'):toTString(), status='', hotkey='', desc="All talents you have used that are still cooling down.", color=function() return colors.simple(colors.LIGHT_RED) end, nodes=cooldowns, shown=true },
+		{ char='', name=('#{bold}#Unavailable talents#{normal}#'):toTString(), status='', hotkey='', desc="All talents you have that do not have enough resources, or satisfy other dependencies.", color=function() return colors.simple(colors.GREY) end, nodes=unavailables, shown=true },
 		chars = chars,
 	}
 	self.list = list

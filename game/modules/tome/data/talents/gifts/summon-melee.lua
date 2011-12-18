@@ -320,7 +320,7 @@ newTalent{
 	end,
 	on_arrival = function(self, t, m)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
-		self:project(tg, m.x, m.y, DamageType.TEMP_EFFECT, {foes=true, eff=self.EFF_DAZED, dur=1+self:getTalentLevelRaw(t)/2, p={}}, {type="flame"})
+		self:project(tg, m.x, m.y, DamageType.TEMP_EFFECT, {foes=true, eff=self.EFF_DAZED, check_immune="stun", dur=1+self:getTalentLevelRaw(t)/2, p={}}, {type="flame"})
 	end,
 	requires_target = true,
 	action = function(self, t)

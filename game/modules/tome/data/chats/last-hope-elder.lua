@@ -33,7 +33,7 @@ The staff you describe reminds me of an artifact of great power from ancient tim
 		{"Here it is. #LIGHT_GREEN#*Tell him the encounter with the orcs*#LAST# You should keep it. I can feel its power and it would be safer if it were guarded by the armies of the kingdom.",
 		 jump="given_staff", cond=function(npc, player) return player:findInAllInventoriesBy("define_as", "STAFF_ABSORPTION") and player:isQuestStatus("staff-absorption", engine.Quest.COMPLETED, "survived-ukruk") end},
 		{"I am afraid I lost it. #LIGHT_GREEN#*Tell him about the encounter with the orcs*",
-		 jump="lost_staff", cond=function(npc, player) return player:findInAllInventoriesBy("define_as", "STAFF_ABSORPTION") and player:isQuestStatus("staff-absorption", engine.Quest.COMPLETED, "ambush-finish") end},
+		 jump="lost_staff", cond=function(npc, player) return player:isQuestStatus("staff-absorption", engine.Quest.COMPLETED, "ambush-finish") end},
 	}
 }
 

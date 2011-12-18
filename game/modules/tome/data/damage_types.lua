@@ -1929,7 +1929,7 @@ newDamageType{
 			elseif dam.foes then if src:reactionToward(target) < 0 then ok = true end
 			else ok = true
 			end
-			if ok then target:setEffect(dam.eff, dam.dur, table.clone(dam.p)) end
+			if ok and (not dam.check_immune or target:canBe(dam.check_immune)) then target:setEffect(dam.eff, dam.dur, table.clone(dam.p)) end
 		end
 	end,
 }
