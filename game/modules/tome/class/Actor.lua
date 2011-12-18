@@ -1518,6 +1518,28 @@ function _M:die(src, death_note)
 	-- Drop stuff
 	if not self.keep_inven_on_death then
 		if not self.no_drops then
+			local dropx, dropy = self.x, self.y
+			if game.level.map:checkAllEntities(dropx, dropy, "block_move") then
+				local dist = 7
+				local poss = {}
+				for i = self.x - dist, self.x + dist do
+					for j = self.y - dist, self.y + dist do
+						local d = core.fov.distance(self.x, self.y, i, j)
+						if game.level.map:isBound(i, j) and
+						   d <= dist and
+						   not game.level.map:checkAllEntities(i, j, "block_move") then
+							poss[#poss+1] = {i,j,d}
+						end
+					end
+				end
+
+				if #poss > 0 then
+					table.sort(poss, function(a,b) return a[3] < b[3] end)
+					local pos = rng.table(poss)
+					dropx, dropy = pos[1], pos[2]
+				end
+			end
+
 			local invens = {}
 			for inven_id, inven in pairs(self.inven) do invens[#invens+1] = inven end
 			table.sort(invens, function(a,b) if a.id == 1 then return false elseif b.id == 1 then return true else return a.id < b.id end end)
@@ -1534,14 +1556,14 @@ function _M:die(src, death_note)
 
 						-- Drop a random artifact instead
 						local ro = game.zone:makeEntity(game.level, "object", {no_tome_drops=true, unique=true, not_properties={"lore"}}, nil, true)
-						if ro then game.zone:addEntity(game.level, ro, "object", self.x, self.y) end
+						if ro then game.zone:addEntity(game.level, ro, "object", dropx, dropy) end
 					end
 
 					if not o.no_drop then
 						o.droppedBy = self.name
 						self:removeObject(inven, i, true)
-						game.level.map:addObject(self.x, self.y, o)
-						if game.level.map.attrs(self.x, self.y, "obj_seen") then game.level.map.attrs(self.x, self.y, "obj_seen", false) end
+						game.level.map:addObject(dropx, dropy, o)
+						if game.level.map.attrs(dropx, dropy, "obj_seen") then game.level.map.attrs(dropx, dropy, "obj_seen", false) end
 					else
 						o:removed()
 					end
