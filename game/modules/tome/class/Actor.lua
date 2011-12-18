@@ -2023,6 +2023,8 @@ end
 function _M:onWear(o, bypass_set)
 	o.wielded = {}
 
+	o:forAllStack(function(so) so.__transmo = false end)
+
 	if o.set_list and not bypass_set then
 		local list = {}
 		for i, d in ipairs(o.set_list) do
