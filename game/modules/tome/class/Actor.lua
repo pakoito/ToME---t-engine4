@@ -2211,7 +2211,7 @@ end
 function _M:learnPool(t)
 	local tt = self:getTalentTypeFrom(t.type[1])
 
-	if tt.mana_regen and self.mana_regen == 0 then self.mana_regen = 0.5 end
+--	if tt.mana_regen and self.mana_regen == 0 then self.mana_regen = 0.5 end
 
 	if t.type[1]:find("^spell/") and not self:knowTalent(self.T_MANA_POOL) and t.mana or t.sustain_mana then
 		self:learnTalent(self.T_MANA_POOL, true)
