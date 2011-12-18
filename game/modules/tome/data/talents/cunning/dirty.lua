@@ -93,9 +93,9 @@ newTalent{
 			self:setEffect(self.EFF_EVASION, t.getDuration(self, t), {chance=50})
 
 			-- Displace
-			self.x = nil self.y = nil
-			self:move(tx, ty, true)
 			if not target.dead then
+				self.x = nil self.y = nil
+				self:move(tx, ty, true)
 				target.x = nil target.y = nil
 				target:move(sx, sy, true)
 			end
