@@ -574,6 +574,7 @@ end
 
 function _M:leaveLevel(level, lev, old_lev)
 	self.to_re_add_actors = self.to_re_add_actors or {}
+
 	if level:hasEntity(self.player) then
 		level.exited = level.exited or {}
 		if lev > old_lev then
@@ -581,15 +582,16 @@ function _M:leaveLevel(level, lev, old_lev)
 		else
 			level.exited.up = {x=self.player.x, y=self.player.y}
 		end
-		level.last_turn = self.turn
-		for act, _ in pairs(self.party.members) do
-			if self.player ~= act and level:hasEntity(act) then
-				level:removeEntity(act)
-				self.to_re_add_actors[act] = true
-			end
-		end
-		level:removeEntity(self.player)
 	end
+
+	level.last_turn = self.turn
+	for act, _ in pairs(self.party.members) do
+		if self.player ~= act and level:hasEntity(act) then
+			level:removeEntity(act)
+			self.to_re_add_actors[act] = true
+		end
+	end
+	if level:hasEntity(self.player) then level:removeEntity(self.player) end
 end
 
 function _M:onLevelLoad(id, fct, data)
