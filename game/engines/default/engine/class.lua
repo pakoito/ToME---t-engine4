@@ -77,7 +77,7 @@ function _M:getClassName()
 end
 
 function _M:getClass()
-	return getmetatble(self).__index
+	return getmetatable(self).__index
 end
 
 local function clonerecurs(d)

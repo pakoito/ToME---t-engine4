@@ -456,6 +456,7 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 	core.fov.set_permissiveness("square")
 
 	-- Init the module directories
+	fs.mount(engine.homepath, "/")
 	mod.load("setup")
 
 	-- Check the savefile if possible, to add to the progress bar size
