@@ -74,7 +74,8 @@ if not config.settings.window or not config.settings.window.size then
 	local r = list[1] or {w=800, h=600}
 	print("[RESOLUTION] no configured resolution, defaulting to biggest possible: ", r.w, r.h)
 	config.settings.window = config.settings.window or {}
-	config.settings.window.size = math.floor(r.w * 0.9).."x"..math.floor(r.h*0.9)
+	local x, y = math.max(800, math.floor(r.w * 0.75)), math.max(600, math.floor(r.h*0.75))
+	config.settings.window.size = x.."x"..y
 end
 
 -- Move around
