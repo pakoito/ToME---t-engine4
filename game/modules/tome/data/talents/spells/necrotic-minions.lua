@@ -24,6 +24,7 @@ newTalent{
 	mode = "sustained",
 	cooldown = 10,
 	sustain_mana = 10,
+	no_unlearn_last = true,
 	tactical = { BUFF = 2 },
 	die_speach = function(self, t)
 		if rng.percent(90) then return end
