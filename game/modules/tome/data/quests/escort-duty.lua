@@ -348,6 +348,7 @@ on_grant = function(self, who)
 	if not gx then return true end
 	local g = game.level.map(gx, gy, engine.Map.TERRAIN)
 	g = g:cloneFull()
+	g.__nice_tile_base = nil
 	g.show_tooltip = true
 	g.name = "Recall Portal: "..npc.name
 	g.display = '&'

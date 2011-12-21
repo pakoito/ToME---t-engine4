@@ -30,6 +30,7 @@ newEntity{
 		if not x then return end
 
 		local g = game.level.map(x, y, engine.Map.TERRAIN):cloneFull()
+		g.__nice_tile_base = nil
 		g.name = "Entrance to an underwater cave"
 		g.display='>' g.color_r=colors.AQUAMARINE.r g.color_g=colors.AQUAMARINE.g g.color_b=colors.AQUAMARINE.b g.notice = true
 		g.change_level=1 g.change_zone="flooded-cave" g.glow=true
@@ -53,6 +54,7 @@ newEntity{
 		if not x then return end
 
 		local g = game.level.map(x, y, engine.Map.TERRAIN):cloneFull()
+		g.__nice_tile_base = nil
 		g.name = "Entrance to a dark crypt"
 		g.display='>' g.color_r=128 g.color_g=128 g.color_b=128 g.notice = true
 		g.change_level=1 g.change_zone="shadow-crypt" g.glow=true
@@ -74,6 +76,7 @@ newEntity{
 		if not x then return end
 
 		local g = game.level.map(x, y, engine.Map.TERRAIN):cloneFull()
+		g.__nice_tile_base = nil
 		g.name = "Entrance to the orc breeding pit"
 		g.display='>' g.color_r=colors.GREEN.r g.color_g=colors.GREEN.g g.color_b=colors.GREEN.b g.notice = true
 		g.change_level=1 g.change_zone="orc-breeding-pit" g.glow=true
