@@ -1475,7 +1475,13 @@ function _M:setupCommands()
 
 		LOOK_AROUND = function()
 			self.log("Looking around... (direction keys to select interesting things, shift+direction keys to move freely)")
-			local co = coroutine.create(function() self.player:getTarget{type="hit", no_restrict=true, range=2000} end)
+			local co = coroutine.create(function()
+				local x, y = self.player:getTarget{type="hit", no_restrict=true, range=2000}
+				if x and y then
+					local tmx, tmy = self.level.map:getTileToScreen(x, y)
+					self:registerDialog(MapMenu.new(tmx, tmy, x, y))
+				end
+			end)
 			local ok, err = coroutine.resume(co)
 			if not ok and err then print(debug.traceback(co)) error(err) end
 		end,
