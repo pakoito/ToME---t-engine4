@@ -69,8 +69,13 @@ newEntity{ base = "BASE_NPC_ELVEN_CASTER", define_as = "GRAND_CORRUPTOR",
 	ai_tactic = resolvers.tactic"ranged",
 	resolvers.inscriptions(2, "rune"),
 
+	on_added_to_level = function(self)
+		self.on_added_to_level = nil
+		-- Remove the quest starter when not spawned in the mark of the spellblaze
+		if not game.zone.is_mark_spellblaze then self.on_takehit = nil end
+	end,
+
 	on_takehit = function(self, value, src)
-		if not game.zone.is_mark_spellblaze then return value end
 		if not self.chatted and (self.life - value) < self.max_life * 0.4 then
 			self.chatted = true
 			-- Check for magical knowledge
