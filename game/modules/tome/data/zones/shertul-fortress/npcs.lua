@@ -69,7 +69,7 @@ newEntity{ base = "BASE_NPC_HORROR", define_as="WEIRDLING_BEAST",
 	resolvers.inscription("INFUSION:_REGENERATION", {cooldown=10, dur=5, heal=400}),
 	resolvers.inscription("INFUSION:_WILD", {cooldown=8, what={physical=true}, dur=4, power=45}),
 	resolvers.inscription("RUNE:_SHIELDING", {cooldown=10, dur=5, power=500}),
-	resolvers.inscription("RUNE:_SPEED", {cooldown=10, dur=5, power=500}),
+	resolvers.inscription("TAINT:_DEVOURER", {cooldown=10, effects=4, heal=75}),
 	resolvers.inscriptions(1, {"manasurge rune"}),
 
 	resolvers.sustains_at_birth(),
