@@ -80,7 +80,7 @@ function _M:init(t, no_default)
 	t.rank = t.rank or 3
 	t.old_life = 0
 
-	t.money_value_multiplier = 1 -- changes amounts in gold piles and such
+	t.money_value_multiplier = t.money_value_multiplier or 1 -- changes amounts in gold piles and such
 
 	mod.class.Actor.init(self, t, no_default)
 	engine.interface.PlayerHotkeys.init(self, t)
@@ -88,7 +88,7 @@ function _M:init(t, no_default)
 
 	self.descriptor = self.descriptor or {}
 	self.died_times = self.died_times or {}
-	self.last_learnt_talents = { class={}, generic={} }
+	self.last_learnt_talents = self.last_learnt_talents or { class={}, generic={} }
 end
 
 function _M:onBirth(birther)
