@@ -256,7 +256,7 @@ newTalent{
 
 		-- Try to stun !
 		if hit then
-			if target:canBe("stun") then
+			if target:canBe("pin") then
 				target:setEffect(target.EFF_CONSTRICTED, (2 + self:getTalentLevel(t)) * 10, {src=self, power=1.5 * self:getTalentLevel(t), apply_power=self:combatPhysicalpower()})
 			else
 				game.logSeen(target, "%s resists the constriction!", target.name:capitalize())
@@ -663,7 +663,7 @@ newTalent{
 
 		-- Try to stun !
 		if hit then
-			if target:canBe("stun") then
+			if target:canBe("pin") then
 				target:setEffect(target.EFF_PINNED, 1 + self:getTalentLevel(t), {apply_power=self:combatPhysicalpower()})
 			else
 				game.logSeen(target, "%s resists the grab!", target.name:capitalize())
@@ -1026,7 +1026,7 @@ newTalent{
 
 		-- Try to stun !
 		if hit then
-			if target:canBe("stun") then
+			if target:canBe("ping") then
 				target:setEffect(target.EFF_PINNED, 2 + self:getTalentLevel(t), {apply_power=self:combatPhysicalpower()})
 			else
 				game.logSeen(target, "%s resists the crushing!", target.name:capitalize())

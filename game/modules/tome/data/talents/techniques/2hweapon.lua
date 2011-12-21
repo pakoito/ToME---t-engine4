@@ -274,11 +274,7 @@ newTalent{
 
 		-- Try to stun !
 		if hit then
-			if target:canBe("stun") then
-				target:setEffect(target.EFF_SUNDER_ARMOUR, 4 + self:getTalentLevel(t), {power=5*self:getTalentLevel(t), apply_power=self:combatPhysicalpower()})
-			else
-				game.logSeen(target, "%s resists the sundering!", target.name:capitalize())
-			end
+			target:setEffect(target.EFF_SUNDER_ARMOUR, 4 + self:getTalentLevel(t), {power=5*self:getTalentLevel(t), apply_power=self:combatPhysicalpower()})
 		end
 
 		return true
@@ -320,11 +316,7 @@ newTalent{
 
 		-- Try to stun !
 		if hit then
-			if target:canBe("stun") then
-				target:setEffect(target.EFF_SUNDER_ARMS, 4 + self:getTalentLevel(t), {power=3*self:getTalentLevel(t), apply_power=self:combatPhysicalpower()})
-			else
-				game.logSeen(target, "%s resists the sundering!", target.name:capitalize())
-			end
+			target:setEffect(target.EFF_SUNDER_ARMS, 4 + self:getTalentLevel(t), {power=3*self:getTalentLevel(t), apply_power=self:combatPhysicalpower()})
 		end
 
 		return true
