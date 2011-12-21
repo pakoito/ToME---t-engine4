@@ -100,7 +100,7 @@ Take this Transmogrification Chest. It is linked by a permanent farportal to the
 There are, however, unwanted byproducts to this operation: the generation of a metal known as gold. It is of no use to the Fortress and thus will be sent back to you.]],
 	answers = {
 		{"I will, thanks.", jump="welcome", action=function() q:spawn_transmo_chest() end, cond=function(npc, player) return not player:attr("has_transmo") end},
-		{"I have already found such a chest in my travel, will it work?", jump="alreadychest", cond=function(npc, player) return player:attr("has_transmo") end},
+		{"I have already found such a chest in my travel, will it work?", jump="alreadychest", action=function() q:setStatus(q.COMPLETED, "transmo-chest") end, cond=function(npc, player) return player:attr("has_transmo") end},
 	}
 }
 

@@ -3282,7 +3282,7 @@ function _M:transmoInven(inven, idx, o)
 	self:removeObject(self:getInven("INVEN"), idx, true)
 	self:sortInven()
 	self:incMoney(price)
-	if self.hasQuest and self:hasQuest("shertul-fortress") then self:hasQuest("shertul-fortress"):gain_energy(price/10) end
+	if self.hasQuest and self:hasQuest("shertul-fortress") and self:isQuestStatus("shertul-fortress", engine.Quest.COMPLETED, "transmo-chest") then self:hasQuest("shertul-fortress"):gain_energy(price/10) end
 	game.log("You gain %0.2f gold from the transmogrification of %s.", price, o:getName{do_count=true, do_color=true})
 end
 
