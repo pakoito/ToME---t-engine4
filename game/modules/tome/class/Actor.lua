@@ -3171,6 +3171,9 @@ function _M:on_set_temporary_effect(eff_id, e, p)
 	if e.status == "detrimental" and self:attr("negative_status_effect_immune") then
 		p.dur = 0
 	end
+	if self:attr("status_effect_immune") then
+		p.dur = 0
+	end
 end
 
 --- Called when we are the target of a projection

@@ -87,6 +87,7 @@ newEffect{
 		eff.iid = self:addTemporaryValue("invulnerable", 1)
 		eff.sid = self:addTemporaryValue("time_prison", 1)
 		eff.tid = self:addTemporaryValue("no_timeflow", 1)
+		eff.imid = self:addTemporaryValue("status_effect_immune", 1)
 		eff.particle = self:addParticles(Particles.new("time_prison", 1))
 		self.energy.value = 0
 	end,
@@ -94,6 +95,7 @@ newEffect{
 		self:removeTemporaryValue("invulnerable", eff.iid)
 		self:removeTemporaryValue("time_prison", eff.sid)
 		self:removeTemporaryValue("no_timeflow", eff.tid)
+		self:removeTemporaryValue("status_effect_immune", eff.imid)
 		self:removeParticles(eff.particle)
 	end,
 }
