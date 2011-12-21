@@ -141,6 +141,7 @@ newTalent{
 	points = 5,
 	sustain_mana = 150,
 	cooldown = 30,
+	no_unlearn_last = true,
 	no_npc_use = true,
 	becomeLich = function(self, t)
 		self.descriptor.race = "Undead"
