@@ -69,7 +69,7 @@ newTalent{
 
 			target:pull(self.x, self.y, tg.range)
 
-			DamageType:get(DamageType.PHYSICAL).projector(self, px, py, DamageType.PHYSICAL, dam)
+			DamageType:get(DamageType.PHYSICAL).projector(self, target.x, target.y, DamageType.PHYSICAL, dam)
 			if target:canBe("pin") then
 				target:setEffect(target.EFF_PINNED, math.floor(3 + self:getTalentLevel(t)), {apply_power=self:combatSpellpower()})
 			else
