@@ -116,7 +116,7 @@ newTalent{
 		game.logPlayer(self, "Selects a displacement location...")
 		local tg = {type="ball", nolock=true, pass_terrain=false, nowarning=true, range=range, radius=0}
 		x, y = self:getTarget(tg)
-		if not x or not self:hasLos(x, y) then return nil end
+		if not x or not self:hasLOS(x, y) then return nil end
 
 		-- Target code does not restrict the target coordinates to the range, it lets the project function do it
 		-- but we cant ...
