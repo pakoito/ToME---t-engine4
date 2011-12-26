@@ -1178,27 +1178,6 @@ function _M:onTakeHit(value, src)
 
 	end
 
-	if self:attr("disruption_shield") then
-		local mana = self:getMana()
-		local mana_val = value * self:attr("disruption_shield")
-		-- We have enough to absorb the full hit
-		if mana_val <= mana then
-			self:incMana(-mana_val)
-			self.disruption_shield_absorb = self.disruption_shield_absorb + value
-			return 0
-		-- Or the shield collapses in a deadly arcane explosion
-		else
-			local dam = self.disruption_shield_absorb
-
-			-- Deactivate without loosing energy
-			self:forceUseTalent(self.T_DISRUPTION_SHIELD, {ignore_energy=true})
-
-			-- Explode!
-			local t = self:getTalentFromId(self.T_DISRUPTION_SHIELD)
-			t.explode(self, t, dam)
-		end
-	end
-
 	if self:attr("time_shield") then
 		-- Absorb damage into the time shield
 		self.time_shield_absorb = self.time_shield_absorb or 0
@@ -1246,6 +1225,27 @@ function _M:onTakeHit(value, src)
 			else
 				self:removeEffect(self.EFF_DISPLACEMENT_SHIELD)
 			end
+		end
+	end
+
+	if self:attr("disruption_shield") then
+		local mana = self:getMana()
+		local mana_val = value * self:attr("disruption_shield")
+		-- We have enough to absorb the full hit
+		if mana_val <= mana then
+			self:incMana(-mana_val)
+			self.disruption_shield_absorb = self.disruption_shield_absorb + value
+			return 0
+		-- Or the shield collapses in a deadly arcane explosion
+		else
+			local dam = self.disruption_shield_absorb
+
+			-- Deactivate without loosing energy
+			self:forceUseTalent(self.T_DISRUPTION_SHIELD, {ignore_energy=true})
+
+			-- Explode!
+			local t = self:getTalentFromId(self.T_DISRUPTION_SHIELD)
+			t.explode(self, t, dam)
 		end
 	end
 
