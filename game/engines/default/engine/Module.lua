@@ -172,7 +172,7 @@ end
 -- Static
 function _M:listSavefiles(moddir_filter)
 	local allmounts = fs.getSearchPath(true)
-	fs.mount(engine.homepath, "/tmp/listsaves")
+	fs.mount(engine.homepath..fs.getPathSeparator(), "/tmp/listsaves")
 
 	local mods = self:listModules(nil, moddir_filter)
 	for _, mod in ipairs(mods) do
