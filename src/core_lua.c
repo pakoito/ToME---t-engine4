@@ -1479,6 +1479,63 @@ static int sdl_texture_toscreen_full(lua_State *L)
 	return 0;
 }
 
+static int sdl_texture_toscreen_precise(lua_State *L)
+{
+	GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 1);
+	int x = luaL_checknumber(L, 2);
+	int y = luaL_checknumber(L, 3);
+	int w = luaL_checknumber(L, 4);
+	int h = luaL_checknumber(L, 5);
+	GLfloat x1 = luaL_checknumber(L, 6);
+	GLfloat x2 = luaL_checknumber(L, 7);
+	GLfloat y1 = luaL_checknumber(L, 8);
+	GLfloat y2 = luaL_checknumber(L, 9);
+	if (lua_isnumber(L, 10))
+	{
+		float r = luaL_checknumber(L, 10);
+		float g = luaL_checknumber(L, 11);
+		float b = luaL_checknumber(L, 12);
+		float a = luaL_checknumber(L, 13);
+		GLfloat colors[4*4] = {
+			r, g, b, a,
+			r, g, b, a,
+			r, g, b, a,
+			r, g, b, a,
+		};
+		glColorPointer(4, GL_FLOAT, 0, colors);
+	}
+	else
+	{
+		GLfloat colors[4*4] = {
+			1, 1, 1, 1,
+			1, 1, 1, 1,
+			1, 1, 1, 1,
+			1, 1, 1, 1,
+		};
+		glColorPointer(4, GL_FLOAT, 0, colors);
+	}
+
+	tglBindTexture(GL_TEXTURE_2D, *t);
+
+	GLfloat texcoords[2*4] = {
+		x1, y1,
+		x1, y2,
+		x2, y2,
+		x2, y1,
+	};
+
+	glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
+	GLfloat vertices[2*4] = {
+		x, y,
+		x, y + h,
+		x + w, y + h,
+		x + w, y,
+	};
+	glVertexPointer(2, GL_FLOAT, 0, vertices);
+	glDrawArrays(GL_QUADS, 0, 4);
+	return 0;
+}
+
 static int gl_scale(lua_State *L)
 {
 	if (lua_isnumber(L, 1))
@@ -2248,6 +2305,7 @@ static const struct luaL_reg sdl_texture_reg[] =
 	{"close", sdl_free_texture},
 	{"toScreen", sdl_texture_toscreen},
 	{"toScreenFull", sdl_texture_toscreen_full},
+	{"toScreenPrecise", sdl_texture_toscreen_precise},
 	{"makeOutline", sdl_texture_outline},
 	{"toSurface", gl_texture_to_sdl},
 	{"bind", sdl_texture_bind},
