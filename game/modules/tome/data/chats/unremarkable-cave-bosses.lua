@@ -24,7 +24,7 @@ local function attack_krogar(npc, player)
 		elseif e.define_as == "CORRUPTOR" and not e.dead then krogar = e end
 	end
 	krogar.faction = "enemies"
-	fillarel.inc_damage = {all=-80}
+	fillarel.inc_damage.all = -80
 	fillarel:setTarget(krogar)
 	krogar:setTarget(filarel)
 	game.player:setQuestStatus("strange-new-world", engine.Quest.COMPLETED, "sided-fillarel")
@@ -37,7 +37,7 @@ local function attack_fillarel(npc, player)
 		elseif e.define_as == "CORRUPTOR" and not e.dead then krogar = e end
 	end
 	fillarel.faction = "enemies"
-	krogar.inc_damage = {all=-80}
+	krogar.inc_damage.all = -80
 	fillarel:setTarget(krogar)
 	krogar:setTarget(filarel)
 	game.player:setQuestStatus("strange-new-world", engine.Quest.COMPLETED, "sided-krogar")
