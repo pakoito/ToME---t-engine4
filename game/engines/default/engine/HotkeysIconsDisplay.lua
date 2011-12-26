@@ -132,10 +132,15 @@ function _M:display()
 				local t = a:getTalentFromId(tid)
 				display_entity = t.display_entity
 				if a:isTalentCoolingDown(t) then
-					color = {255,0,0}
-					angle = 360 * (1 - (a.talents_cd[t.id] / a:getTalentCooldown(t)))
+					if not a:preUseTalent(t, true, true) then
+						color = {190,190,190}
+						frame = "disabled"
+					else
+						frame = "cooldown"
+						color = {255,0,0}
+						angle = 360 * (1 - (a.talents_cd[t.id] / a:getTalentCooldown(t)))
+					end
 					txt = tostring(a:isTalentCoolingDown(t))
-					frame = "cooldown"
 				elseif a:isTalentActive(t.id) then
 					color = {255,255,0}
 					frame = "sustain"
