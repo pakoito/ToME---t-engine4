@@ -34,8 +34,14 @@ newTalent{
 		local target = self
 
 		if self:getTalentLevel(t) >= 3 then
-			local tx, ty = self:getTarget{type="hit", range=self:getTalentRange(t)}
+			local tg = {type="hit", range=self:getTalentRange(t)}
+			local tx, ty = self:getTarget(tg)
 			if tx and ty and game.level.map(tx, ty, Map.ACTOR) then
+				local _ _, tx, ty = self:canProject(tg, tx, ty)
+				if not tx then return nil end
+				target = game.level.map(tx, ty, Map.ACTOR)
+				if not target then return nil end
+
 				target = game.level.map(tx, ty, Map.ACTOR)
 			else return nil
 			end
