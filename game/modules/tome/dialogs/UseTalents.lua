@@ -171,7 +171,7 @@ end
 -- Display the player tile
 function _M:innerDisplay(x, y, nb_keyframes)
 	if self.cur_item and self.cur_item.entity then
-		self.cur_item.entity:toScreen(game.hotkeys_display_icons.tiles, x + self.iw - 64, y + self.iy + self.c_tut.h + 10, 64, 64)
+		self.cur_item.entity:toScreen(game.uiset.hotkeys_display_icons.tiles, x + self.iw - 64, y + self.iy + self.c_tut.h + 10, 64, 64)
 	end
 end
 
@@ -251,7 +251,7 @@ function _M:generateList()
 			end
 
 			-- Pregenenerate icon with the Tiles instance that allows images
-			if t.display_entity then t.display_entity:getMapObjects(game.hotkeys_display_icons.tiles, {}, 1) end
+			if t.display_entity then t.display_entity:getMapObjects(game.uiset.hotkeys_display_icons.tiles, {}, 1) end
 
 			nodes[#nodes+1] = {
 				name=((t.display_entity and t.display_entity:getDisplayString() or "")..t.name):toTString(),

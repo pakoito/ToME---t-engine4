@@ -37,6 +37,10 @@ function _M:init()
 	UISet.init(self)
 
 	self.res = {}
+	self.party = {}
+
+	self.side_4 = 0
+	self.side_6 = 0
 end
 
 function _M:activate()
@@ -256,6 +260,8 @@ function _M:mouseIcon(bx, by)
 end
 
 -- Load the various shaders used to display resources
+local air_c = {0x92/255, 0xe5, 0xe8}
+local air_sha = Shader.new("resources", {color=air_c, speed=100, amp=0.8, distort={2,2.5}})
 local life_c = {0xc0/255, 0, 0}
 local life_sha = Shader.new("resources", {color=life_c, speed=1000, distort={1.5,1.5}})
 local shield_c = {0.5, 0.5, 0.5}
@@ -278,6 +284,8 @@ local vim_c = {0x90/255, 0x40/255, 0x10/255}
 local vim_sha = Shader.new("resources", {color=vim_c, speed=1000, distort={0.4,0.4}})
 local hate_c = {colors.GREY.r/255, colors.GREY.g/255, colors.GREY.b/255}
 local hate_sha = Shader.new("resources", {color=hate_c, speed=1000, distort={0.4,0.4}})
+local psi_c = {colors.BLUE.r/255, colors.BLUE.g/255, colors.BLUE.b/255}
+local psi_sha = Shader.new("resources", {color=psi_c, speed=2000, distort={0.4,0.4}})
 
 local sshat = {core.display.loadImage("/data/gfx/ui/resources/shadow.png"):glTexture()}
 local bshat = {core.display.loadImage("/data/gfx/ui/resources/back.png"):glTexture()}
@@ -285,14 +293,30 @@ local shat = {core.display.loadImage("/data/gfx/ui/resources/fill.png"):glTextur
 local fshat = {core.display.loadImage("/data/gfx/ui/resources/front.png"):glTexture()}
 local fshat_life = {core.display.loadImage("/data/gfx/ui/resources/front_life.png"):glTexture()}
 local fshat_life_dark = {core.display.loadImage("/data/gfx/ui/resources/front_life_dark.png"):glTexture()}
+local fshat_shield = {core.display.loadImage("/data/gfx/ui/resources/front_life_armored.png"):glTexture()}
+local fshat_shield_dark = {core.display.loadImage("/data/gfx/ui/resources/front_life_armored_dark.png"):glTexture()}
+local fshat_stamina = {core.display.loadImage("/data/gfx/ui/resources/front_stamina.png"):glTexture()}
+local fshat_stamina_dark = {core.display.loadImage("/data/gfx/ui/resources/front_stamina_dark.png"):glTexture()}
 local fshat_mana = {core.display.loadImage("/data/gfx/ui/resources/front_mana.png"):glTexture()}
 local fshat_mana_dark = {core.display.loadImage("/data/gfx/ui/resources/front_mana_dark.png"):glTexture()}
 local fshat_soul = {core.display.loadImage("/data/gfx/ui/resources/front_souls.png"):glTexture()}
 local fshat_soul_dark = {core.display.loadImage("/data/gfx/ui/resources/front_souls_dark.png"):glTexture()}
 local fshat_equi = {core.display.loadImage("/data/gfx/ui/resources/front_nature.png"):glTexture()}
 local fshat_equi_dark = {core.display.loadImage("/data/gfx/ui/resources/front_nature_dark.png"):glTexture()}
+local fshat_paradox = {core.display.loadImage("/data/gfx/ui/resources/front_paradox.png"):glTexture()}
+local fshat_paradox_dark = {core.display.loadImage("/data/gfx/ui/resources/front_paradox_dark.png"):glTexture()}
 local fshat_hate = {core.display.loadImage("/data/gfx/ui/resources/front_hate.png"):glTexture()}
 local fshat_hate_dark = {core.display.loadImage("/data/gfx/ui/resources/front_hate_dark.png"):glTexture()}
+local fshat_positive = {core.display.loadImage("/data/gfx/ui/resources/front_positive.png"):glTexture()}
+local fshat_positive_dark = {core.display.loadImage("/data/gfx/ui/resources/front_positive_dark.png"):glTexture()}
+local fshat_negative = {core.display.loadImage("/data/gfx/ui/resources/front_negative.png"):glTexture()}
+local fshat_negative_dark = {core.display.loadImage("/data/gfx/ui/resources/front_negative_dark.png"):glTexture()}
+local fshat_vim = {core.display.loadImage("/data/gfx/ui/resources/front_vim.png"):glTexture()}
+local fshat_vim_dark = {core.display.loadImage("/data/gfx/ui/resources/front_vim_dark.png"):glTexture()}
+local fshat_psi = {core.display.loadImage("/data/gfx/ui/resources/front_psi.png"):glTexture()}
+local fshat_psi_dark = {core.display.loadImage("/data/gfx/ui/resources/front_psi_dark.png"):glTexture()}
+local fshat_air = {core.display.loadImage("/data/gfx/ui/resources/front_air.png"):glTexture()}
+local fshat_air_dark = {core.display.loadImage("/data/gfx/ui/resources/front_air_dark.png"):glTexture()}
 
 local font_sha = core.display.newFont("/data/font/USENET_.ttf", 14)
 local sfont_sha = core.display.newFont("/data/font/USENET_.ttf", 12)
@@ -302,6 +326,37 @@ function _M:displayResources(scale)
 	if player then
 		local stop = self.map_h_stop - fshat[7]
 		local x, y = 0, 0
+
+		-----------------------------------------------------------------------------------
+		-- Air
+		if player.air < player.max_air then
+			sshat[1]:toScreenFull(x-6, y+8, sshat[6], sshat[7], sshat[2], sshat[3])
+			bshat[1]:toScreenFull(x, y, bshat[6], bshat[7], bshat[2], bshat[3])
+			if air_sha.shad then air_sha.shad:use(true) end
+			local p = player:getAir() / player.max_air
+			shat[1]:toScreenPrecise(x+49, y+10, shat[6] * p, shat[7], 0, p * 1/shat[4], 0, 1/shat[5], air_c[1], air_c[2], air_c[3], 1)
+			if air_sha.shad then air_sha.shad:use(false) end
+
+			if not self.res.air or self.res.air.vc ~= player.air or self.res.air.vm ~= player.max_air or self.res.air.vr ~= player.air_regen then
+				self.res.air = {
+					vc = player.air, vm = player.max_air, vr = player.air_regen,
+					cur = {core.display.drawStringBlendedNewSurface(font_sha, ("%d/%d"):format(player.air, player.max_air), 255, 255, 255):glTexture()},
+					regen={core.display.drawStringBlendedNewSurface(sfont_sha, ("%+0.2f"):format(player.air_regen), 255, 255, 255):glTexture()},
+				}
+			end
+			local dt = self.res.air.cur
+			dt[1]:toScreenFull(2+x+64, 2+y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3], 0, 0, 0, 0.7)
+			dt[1]:toScreenFull(x+64, y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3])
+			dt = self.res.air.regen
+			dt[1]:toScreenFull(2+x+144, 2+y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3], 0, 0, 0, 0.7)
+			dt[1]:toScreenFull(x+144, y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3])
+
+			local front = fshat_air_dark
+			if player.air >= player.max_air * 0.5 then front = fshat_air end
+			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3])
+			y = y + fshat[7]
+			if y > stop then x = x + fshat[6] y = 0 end
+		end
 
 		-----------------------------------------------------------------------------------
 		-- Life & shield
@@ -338,7 +393,10 @@ function _M:displayResources(scale)
 		end
 
 		local front = fshat_life_dark
-		if player.life >= player.max_life then front = fshat_life end
+		if max_shield > 0 then
+			front = fshat_shield_dark
+			if shield >= max_shield * 0.8 then front = fshat_shield end
+		elseif player.life >= player.max_life then front = fshat_life end
 		front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3])
 		y = y + fshat[7]
 		if y > stop then x = x + fshat[6] y = 0 end
@@ -367,7 +425,9 @@ function _M:displayResources(scale)
 			dt[1]:toScreenFull(2+x+144, 2+y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3], 0, 0, 0, 0.7)
 			dt[1]:toScreenFull(x+144, y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3])
 
-			fshat[1]:toScreenFull(x, y, fshat[6], fshat[7], fshat[2], fshat[3])
+			local front = fshat_stamina_dark
+			if player.stamina >= player.max_stamina then front = fshat_stamina end
+			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3])
 			y = y + fshat[7]
 			if y > stop then x = x + fshat[6] y = 0 end
 		end
@@ -492,7 +552,9 @@ function _M:displayResources(scale)
 			dt[1]:toScreenFull(2+x+144, 2+y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3], 0, 0, 0, 0.7)
 			dt[1]:toScreenFull(x+144, y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3])
 
-			fshat[1]:toScreenFull(x, y, fshat[6], fshat[7], fshat[2], fshat[3])
+			local front = fshat_positive_dark
+			if player.positive >= player.max_positive * 0.7 then front = fshat_positive end
+			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3])
 			y = y + fshat[7]
 			if y > stop then x = x + fshat[6] y = 0 end
 		end
@@ -521,7 +583,9 @@ function _M:displayResources(scale)
 			dt[1]:toScreenFull(2+x+144, 2+y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3], 0, 0, 0, 0.7)
 			dt[1]:toScreenFull(x+144, y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3])
 
-			fshat[1]:toScreenFull(x, y, fshat[6], fshat[7], fshat[2], fshat[3])
+			local front = fshat_negative_dark
+			if player.negative >= player.max_negative * 0.7  then front = fshat_negative end
+			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3])
 			y = y + fshat[7]
 			if y > stop then x = x + fshat[6] y = 0 end
 		end
@@ -555,7 +619,9 @@ function _M:displayResources(scale)
 			dt[1]:toScreenFull(2+x+144, 2+y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3], 0, 0, 0, 0.7)
 			dt[1]:toScreenFull(x+144, y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3])
 
-			fshat[1]:toScreenFull(x, y, fshat[6], fshat[7], fshat[2], fshat[3])
+			local front = fshat_paradox
+			if chance <= 10 then front = fshat_paradox_dark end
+			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3])
 			y = y + fshat[7]
 			if y > stop then x = x + fshat[6] y = 0 end
 		end
@@ -584,7 +650,9 @@ function _M:displayResources(scale)
 			dt[1]:toScreenFull(2+x+144, 2+y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3], 0, 0, 0, 0.7)
 			dt[1]:toScreenFull(x+144, y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3])
 
-			fshat[1]:toScreenFull(x, y, fshat[6], fshat[7], fshat[2], fshat[3])
+			local front = fshat_vim_dark
+			if player.vim >= player.max_vim then front = fshat_vim end
+			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3])
 			y = y + fshat[7]
 			if y > stop then x = x + fshat[6] y = 0 end
 		end
@@ -620,8 +688,86 @@ function _M:displayResources(scale)
 			if y > stop then x = x + fshat[6] y = 0 end
 		end
 
+		-----------------------------------------------------------------------------------
+		-- Psi
+		if player:knowTalent(player.T_PSI_POOL) then
+			sshat[1]:toScreenFull(x-6, y+8, sshat[6], sshat[7], sshat[2], sshat[3])
+			bshat[1]:toScreenFull(x, y, bshat[6], bshat[7], bshat[2], bshat[3])
+			if psi_sha.shad then psi_sha.shad:use(true) end
+			local p = player:getPsi() / player.max_psi
+			shat[1]:toScreenPrecise(x+49, y+10, shat[6] * p, shat[7], 0, p * 1/shat[4], 0, 1/shat[5], psi_c[1], psi_c[2], psi_c[3], 1)
+			if psi_sha.shad then psi_sha.shad:use(false) end
+
+			if not self.res.psi or self.res.psi.vc ~= player.psi or self.res.psi.vm ~= player.max_psi or self.res.psi.vr ~= player.psi_regen then
+				self.res.psi = {
+					vc = player.psi, vm = player.max_psi, vr = player.psi_regen,
+					cur = {core.display.drawStringBlendedNewSurface(font_sha, ("%d/%d"):format(player.psi, player.max_psi), 255, 255, 255):glTexture()},
+					regen={core.display.drawStringBlendedNewSurface(sfont_sha, ("%+0.2f"):format(player.psi_regen), 255, 255, 255):glTexture()},
+				}
+			end
+			local dt = self.res.psi.cur
+			dt[1]:toScreenFull(2+x+64, 2+y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3], 0, 0, 0, 0.7)
+			dt[1]:toScreenFull(x+64, y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3])
+			dt = self.res.psi.regen
+			dt[1]:toScreenFull(2+x+144, 2+y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3], 0, 0, 0, 0.7)
+			dt[1]:toScreenFull(x+144, y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3])
+
+			local front = fshat_psi_dark
+			if player.psi >= player.max_psi then front = fshat_psi end
+			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3])
+			y = y + fshat[7]
+			if y > stop then x = x + fshat[6] y = 0 end
+		end
+
 		-- Compute how much space to reserve on the side
 		Map.viewport_padding_4 = 1 + math.floor(scale * x / Map.tile_w)
+		self.side_4 = x + fshat[6]
+	end
+end
+
+function _M:displayBuffs(scale, bx, by)
+end
+
+local portrait = {core.display.loadImage("/data/gfx/ui/party-portrait.png"):glTexture()}
+local portrait_unsel = {core.display.loadImage("/data/gfx/ui/party-portrait-unselect.png"):glTexture()}
+
+function _M:displayParty(scale, bx, by)
+	-- Party members
+	if #game.party.m_list >= 2 and game.level then
+		local hs = portrait[7] + 3
+		local stop = self.map_h_stop - hs
+		local x, y = 0, 0
+
+		for i = 1, #game.party.m_list do
+			local a = game.party.m_list[i]
+			local def = game.party.members[a]
+
+			core.display.drawQuad(x, y, 40, 40, 0, 0, 0, 255)
+			if life_sha.shad then life_sha.shad:use(true) end
+			local p = math.min(1, math.max(0, a.life / a.max_life))
+			core.display.drawQuad(x+1, y+1 + (1-p)*hs, 38, p*38, life_c[1]*255, life_c[2]*255, life_c[3]*255, 178)
+			if life_sha.shad then life_sha.shad:use(false) end
+
+			a:toScreen(nil, x+4, y+4, 32, 32)
+			local p = (game.player == a) and portrait or portrait_unsel
+			p[1]:toScreenFull(x, y, p[6], p[7], p[2], p[3])
+
+			local text = "#GOLD##{bold}#"..a.name.."\n#WHITE##{normal}#Life: "..math.floor(100 * a.life / a.max_life).."%\nLevel: "..a.level.."\n"..def.title
+			game.mouse:unregisterZone("party"..i)
+			game.mouse:registerZone(bx+x, by+y, hs, hs, function(button, mx, my, xrel, yrel, bx, by, event)
+				game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, text)
+				if event == "button" and button == "left" then if def.control == "full" then game.party:select(a) end end
+			end, nil, "party"..i)
+
+			x = x + hs
+			if x + hs > stop then
+				x = 0
+				y = y - hs
+			end
+		end
+
+		-- Compute how much space to reserve on the side
+		Map.viewport_padding_8 = math.floor(scale * y / Map.tile_w)
 	end
 end
 
@@ -632,11 +778,20 @@ function _M:display(nb_keyframes)
 	-- Resources
 	local d = core.display
 	d.glTranslate(0, 0, 0)
-	local scale = 1
-	d.glScale(scale, scale, scale)
-	self:displayResources(scale)
-	d.glScale()
+	self:displayResources(1)
 	d.glTranslate(-0, -0, -0)
+
+	-- Buffs
+	local d = core.display
+	d.glTranslate(game.w, 0, 0)
+	self:displayBuffs(1, game.w, 0)
+	d.glTranslate(-game.w, -0, -0)
+
+	-- Party
+	local d = core.display
+	d.glTranslate(self.side_4, 0, 0)
+	self:displayParty(1, self.side_4, 0)
+	d.glTranslate(-self.side_4, -0, -0)
 
 	-- We display the player's interface
 	profile.chat:toScreen()

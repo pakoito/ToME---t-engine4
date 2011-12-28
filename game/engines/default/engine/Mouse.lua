@@ -97,8 +97,14 @@ function _M:registerZones(t)
 end
 
 function _M:unregisterZone(fct)
-	for i, m in ipairs(self.areas) do
-		if m.fct == fct then table.remove(self.areas, i) break end
+	if type(fct) == "function" then
+		for i, m in ipairs(self.areas) do
+			if m.fct == fct then table.remove(self.areas, i) break end
+		end
+	else
+		for i, m in ipairs(self.areas) do
+			if m.name == fct then table.remove(self.areas, i) break end
+		end
 	end
 end
 
