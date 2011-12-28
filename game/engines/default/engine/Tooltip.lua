@@ -28,7 +28,7 @@ module(..., package.seeall, class.inherit(Base))
 tooltip_bound_x1 = 0
 tooltip_bound_x2 = function() return game.w end
 tooltip_bound_y1 = 0
-tooltip_bound_y2 = function() return game.h end
+tooltip_bound_y2 = function() print("=============gameh", game.h)return game.h end
 
 function _M:init(fontname, fontsize, color, bgcolor, max)
 	self.max = max or 300

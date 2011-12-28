@@ -155,7 +155,7 @@ function _M:generateList()
 				local rt = util.getval(t.requires_target, player, t)
 				local e = t.display_entity
 				-- Pregenenerate icon with the Tiles instance that allows images
-				if t.display_entity then t.display_entity:getMapObjects(game.hotkeys_display_icons.tiles, {}, 1) end
+				if t.display_entity and game.uiset.hotkeys_display_icons then t.display_entity:getMapObjects(game.uiset.hotkeys_display_icons.tiles, {}, 1) end
 				if self.on_player and not rt then
 					tals[#tals+1] = {name=e:getDisplayString()..t.name, dname=t.name, talent=t, action="talent", color=colors.simple(colors.GOLD)}
 				elseif not self.on_player and rt then

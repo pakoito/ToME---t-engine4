@@ -23,7 +23,7 @@ local Map = require "engine.Map"
 
 module(..., package.seeall, class.inherit(Tooltip))
 
-tooltip_bound_y2 = function() return game.map_h_stop end
+tooltip_bound_y2 = function() return game.uiset.map_h_stop end
 
 function _M:init(...)
 	Tooltip.init(self, ...)

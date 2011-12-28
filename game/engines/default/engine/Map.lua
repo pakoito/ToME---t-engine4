@@ -69,6 +69,11 @@ faction_powerful = "tactical_powerful.png"
 faction_self = "tactical_self.png"
 faction_danger_check = function(self, e) return e.unique end
 
+viewport_padding_4 = 0
+viewport_padding_6 = 0
+viewport_padding_2 = 0
+viewport_padding_8 = 0
+
 --- Sets the viewport size
 -- Static
 -- @param x screen coordinate where the map will be displayed (this has no impact on the real display). This is used to compute mouse clicks
@@ -91,6 +96,19 @@ function _M:setViewPort(x, y, w, h, tile_w, tile_h, fontname, fontsize, allow_ba
 	self.zoom = 1
 
 	if otw ~= self.tile_w or oth ~= self.tile_h then print("[MAP] Reseting tiles caches") self:resetTiles() end
+end
+
+--- Sets the map viewport padding, for scrolling purposes (defaults to 0)
+-- Static
+-- @param left left padding
+-- @param right right padding
+-- @param top top padding
+-- @param bottom bottom padding
+function _M:setBoundedPadding(left, right, top, bottom)
+	self.viewport_padding_4 = left
+	self.viewport_padding_6 = right
+	self.viewport_padding_8 = top
+	self.viewport_padding_2 = bottom
 end
 
 --- Sets zoom level
@@ -705,24 +723,24 @@ end
 function _M:moveViewSurround(x, y, marginx, marginy)
 	local omx, omy = self.mx, self.my
 
-	if marginx * 2 > self.viewport.mwidth then
+	if marginx * 2 + viewport_padding_4 + viewport_padding_6 > self.viewport.mwidth then
 		self.mx = x - math.floor(self.viewport.mwidth / 2)
 		self.changed = true
-	elseif self.mx + marginx >= x then
-		self.mx = x - marginx
+	elseif self.mx + marginx + self.viewport_padding_4 >= x then
+		self.mx = x - marginx - self.viewport_padding_4
 		self.changed = true
-	elseif self.mx + self.viewport.mwidth - marginx <= x then
-		self.mx = x - self.viewport.mwidth + marginx
+	elseif self.mx + self.viewport.mwidth - marginx - self.viewport_padding_6 <= x then
+		self.mx = x - self.viewport.mwidth + marginx + self.viewport_padding_6
 		self.changed = true
 	end
-	if marginy * 2 > self.viewport.mheight then
+	if marginy * 2 + viewport_padding_2 + viewport_padding_8 > self.viewport.mheight then
 		self.my = y - math.floor(self.viewport.mheight / 2)
 		self.changed = true
-	elseif self.my + marginy >= y then
-		self.my = y - marginy
+	elseif self.my + marginy + self.viewport_padding_8 >= y then
+		self.my = y - marginy - self.viewport_padding_8
 		self.changed = true
-	elseif self.my + self.viewport.mheight - marginy <= y then
-		self.my = y - self.viewport.mheight + marginy
+	elseif self.my + self.viewport.mheight - marginy - self.viewport_padding_2 <= y then
+		self.my = y - self.viewport.mheight + marginy + self.viewport_padding_2
 		self.changed = true
 	end
 --[[
@@ -741,10 +759,10 @@ end
 
 --- Checks the map is bound to the screen (no "empty space" if the map is big enough)
 function _M:checkMapViewBounded()
-	if self.mx < 0 then self.mx = 0 self.changed = true end
-	if self.my < 0 then self.my = 0 self.changed = true end
-	if self.mx > self.w - self.viewport.mwidth then self.mx = self.w - self.viewport.mwidth self.changed = true end
-	if self.my > self.h - self.viewport.mheight then self.my = self.h - self.viewport.mheight self.changed = true end
+	if self.mx < - self.viewport_padding_4 then self.mx = - self.viewport_padding_4 self.changed = true end
+	if self.my < - self.viewport_padding_8 then self.my = - self.viewport_padding_8 self.changed = true end
+	if self.mx > self.w - self.viewport.mwidth + self.viewport_padding_6 then self.mx = self.w - self.viewport.mwidth + self.viewport_padding_6 self.changed = true end
+	if self.my > self.h - self.viewport.mheight + self.viewport_padding_2 then self.my = self.h - self.viewport.mheight + self.viewport_padding_2 self.changed = true end
 
 	-- Center if smaller than map viewport
 	local centered = false

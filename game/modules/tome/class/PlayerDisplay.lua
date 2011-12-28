@@ -180,7 +180,7 @@ function _M:handleEffect(eff_id, e, p, ex, h)
 			txt = self.fontbig:draw(dur, 40, colors.WHITE.r, colors.WHITE.g, colors.WHITE.b, true)[1]
 			txt.fw, txt.fh = self.fontbig:size(dur)
 		end
-		self:makeEntityIcon(e.display_entity, game.hotkeys_display_icons.tiles, ex, h, desc, txt, e.status ~= "detrimental" and self.icon_green or self.icon_red)
+		self:makeEntityIcon(e.display_entity, game.uiset.hotkeys_display_icons.tiles, ex, h, desc, txt, e.status ~= "detrimental" and self.icon_green or self.icon_red)
 
 		ex = ex + 40
 		if ex + 40 >= self.w then ex = 0 h = h + 40 end
@@ -399,7 +399,7 @@ function _M:display()
 			local desc = "#GOLD##{bold}#"..displayName.."#{normal}##WHITE#\n"..tostring(player:getTalentFullDescription(t))
 
 			if config.settings.tome.effects_icons and t.display_entity then
-				self:makeEntityIcon(t.display_entity, game.hotkeys_display_icons.tiles, ex, h, desc, txt, self.icon_yellow)
+				self:makeEntityIcon(t.display_entity, game.uiset.hotkeys_display_icons.tiles, ex, h, desc, txt, self.icon_yellow)
 				ex = ex + 40
 				if ex + 40 >= self.w then ex = 0 h = h + 40 end
 			else
