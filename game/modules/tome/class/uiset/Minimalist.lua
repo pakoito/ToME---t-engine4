@@ -540,6 +540,21 @@ function _M:displayResources(scale)
 			local p = 1
 			shat[1]:toScreenPrecise(x+49, y+10, shat[6] * p, shat[7], 0, p * 1/shat[4], 0, 1/shat[5], paradox_c[1], paradox_c[2], paradox_c[3], 1)
 			if paradox_sha.shad then paradox_sha.shad:use(false) end
+
+			if not self.res.paradox or self.res.paradox.vc ~= player.paradox or self.res.paradox.vr ~= chance then
+				self.res.paradox = {
+					vc = player.paradox, vr = chance,
+					cur = {core.display.drawStringBlendedNewSurface(font_sha, ("%d"):format(player.paradox), 255, 255, 255):glTexture()},
+					regen={core.display.drawStringBlendedNewSurface(sfont_sha, ("%d%%"):format(chance), 255, 255, 255):glTexture()},
+				}
+			end
+			local dt = self.res.paradox.cur
+			dt[1]:toScreenFull(2+x+64, 2+y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3], 0, 0, 0, 0.7)
+			dt[1]:toScreenFull(x+64, y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3])
+			dt = self.res.paradox.regen
+			dt[1]:toScreenFull(2+x+144, 2+y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3], 0, 0, 0, 0.7)
+			dt[1]:toScreenFull(x+144, y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3])
+
 			fshat[1]:toScreenFull(x, y, fshat[6], fshat[7], fshat[2], fshat[3])
 			y = y + fshat[7]
 			if y > stop then x = x + fshat[6] y = 0 end
