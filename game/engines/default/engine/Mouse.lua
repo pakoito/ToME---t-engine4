@@ -25,6 +25,7 @@ module(..., package.seeall, class.make)
 
 function _M:init()
 	self.areas = {}
+	self.areas_name = {}
 	self.status = {}
 end
 
@@ -43,7 +44,8 @@ function _M:receiveMouse(button, x, y, isup, force_name, extra)
 		else return self:endDrag(x, y) end
 	end
 
-	for i, m in ipairs(self.areas) do
+	for i  = 1, #self.areas do
+		local m = self.areas[i]
 		if (not m.mode or m.mode.button) and (x >= m.x1 and x < m.x2 and y >= m.y1 and y < m.y2) and (not force_name or force_name == m.name) then
 			m.fct(button, x, y, nil, nil, x-m.x1, y-m.y1, "button", extra)
 			break
@@ -53,7 +55,8 @@ end
 
 function _M:receiveMouseMotion(button, x, y, xrel, yrel, force_name, extra)
 	local cur_m = nil
-	for i, m in ipairs(self.areas) do
+	for i  = 1, #self.areas do
+		local m = self.areas[i]
 		if (not m.mode or m.mode.move) and (x >= m.x1 and x < m.x2 and y >= m.y1 and y < m.y2) and (not force_name or force_name == m.name) then
 			m.fct(button, x, y, xrel, yrel, x-m.x1, y-m.y1, "motion", extra)
 			cur_m = m
@@ -85,9 +88,29 @@ function _M:setCurrent()
 	_M.current = self
 end
 
+--- Returns a zone definition by it's name
+function _M:getZone(name)
+	return self.areas_name[name]
+end
+
+--- Update a named zone with new coords
+-- @return true if the zone was found and updated
+function _M:updateZone(name, x, y, w, h, fct)
+	local m = self.areas_name[name]
+	if not m then return false end
+	m.x1 =x
+	m.y1 = y
+	m.x2 = x + w
+	m.y2 = y + h
+	m.fct = fct or m.fct
+	return true
+end
+
 --- Registers a click zone that when clicked will call the object's "onClick" method
 function _M:registerZone(x, y, w, h, fct, mode, name, allow_out_events)
-	table.insert(self.areas, 1, {x1=x,y1=y,x2=x+w,y2=y+h, fct=fct, mode=mode, name=name, allow_out_events=allow_out_events})
+	local d = {x1=x,y1=y,x2=x+w,y2=y+h, fct=fct, mode=mode, name=name, allow_out_events=allow_out_events}
+	table.insert(self.areas, 1, d)
+	if name then self.areas_name[name] = d end
 end
 
 function _M:registerZones(t)
@@ -98,12 +121,14 @@ end
 
 function _M:unregisterZone(fct)
 	if type(fct) == "function" then
-		for i, m in ipairs(self.areas) do
-			if m.fct == fct then table.remove(self.areas, i) break end
+		for i  = #self.areas, 1, -1 do
+			local m = self.areas[i]
+			if m.fct == fct then local m = table.remove(self.areas, i) if m.name then self.areas_name[m.name] = nil end break end
 		end
 	else
-		for i, m in ipairs(self.areas) do
-			if m.name == fct then table.remove(self.areas, i) break end
+		for i  = #self.areas, 1, -1 do
+			local m = self.areas[i]
+			if m.name == fct then local m = table.remove(self.areas, i) if m.name then self.areas_name[m.name] = nil end end
 		end
 	end
 end

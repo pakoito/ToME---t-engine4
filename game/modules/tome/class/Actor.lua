@@ -1974,10 +1974,20 @@ function _M:checkEncumbrance()
 		game.logPlayer(self, "#FF0000#You carry too much--you are encumbered!")
 		game.logPlayer(self, "#FF0000#Drop some of your items.")
 		self.encumbered = self:addTemporaryValue("never_move", 1)
+
+		if self.x and self.y then
+			local sx, sy = game.level.map:getTileToScreen(self.x, self.y)
+			game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, rng.float(-2.5, -1.5), "+ENCUMBERED!", {255,0,0}, true)
+		end
 	elseif self.encumbered and enc <= max then
 		self:removeTemporaryValue("never_move", self.encumbered)
 		self.encumbered = nil
 		game.logPlayer(self, "#00FF00#You are no longer encumbered.")
+
+		if self.x and self.y then
+			local sx, sy = game.level.map:getTileToScreen(self.x, self.y)
+			game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, rng.float(-2.5, -1.5), "-ENCUMBERED!", {255,0,0}, true)
+		end
 	end
 end
 

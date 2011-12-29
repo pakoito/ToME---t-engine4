@@ -43,7 +43,7 @@ newEffect{
 newEffect{
 	name = "RUNE_COOLDOWN", image = "effects/rune_cooldown.png",
 	desc = "Runic Saturation",
-	long_desc = function(self, eff) table.print(eff) return ("The more you use runes, the longer they will take to recharge (+%d cooldowns)."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The more you use runes, the longer they will take to recharge (+%d cooldowns)."):format(eff.power) end,
 	type = "other",
 	subtype = { rune=true },
 	status = "detrimental",

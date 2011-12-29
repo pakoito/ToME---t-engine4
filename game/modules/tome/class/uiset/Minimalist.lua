@@ -38,6 +38,8 @@ function _M:init()
 
 	self.res = {}
 	self.party = {}
+	self.tbuff = {}
+	self.pbuff = {}
 
 	self.side_4 = 0
 	self.side_6 = 0
@@ -66,6 +68,8 @@ function _M:activate()
 	self.init_font_mono = font_mono
 	self.init_size_mono = size_mono
 	self.init_font_mono_h = font_mono_h
+
+	self.buff_font = core.display.newFont(font_mono, size_mono * 2, true)
 
 	self.hotkeys_display_text = HotkeysDisplay.new(nil, 0, game.h - 52, game.w, 52, "/data/gfx/ui/talents-list.png", font_mono, size_mono)
 	self.hotkeys_display_text:enableShadow(0.6)
@@ -260,66 +264,70 @@ function _M:mouseIcon(bx, by)
 end
 
 -- Load the various shaders used to display resources
-local air_c = {0x92/255, 0xe5, 0xe8}
-local air_sha = Shader.new("resources", {color=air_c, speed=100, amp=0.8, distort={2,2.5}})
-local life_c = {0xc0/255, 0, 0}
-local life_sha = Shader.new("resources", {color=life_c, speed=1000, distort={1.5,1.5}})
-local shield_c = {0.5, 0.5, 0.5}
-local shield_sha = Shader.new("resources", {color=shield_c, speed=5000, a=0.8, distort={0.5,0.5}})
-local stam_c = {0xff/255, 0xcc/255, 0x80/255}
-local stam_sha = Shader.new("resources", {color=stam_c, speed=700, distort={1,1.4}})
-local mana_c = {106/255, 146/255, 222/255}
-local mana_sha = Shader.new("resources", {color=mana_c, speed=1000, distort={0.4,0.4}})
-local soul_c = {128/255, 128/255, 128/255}
-local soul_sha = Shader.new("resources", {color=soul_c, speed=1200, distort={0.4,-0.4}})
-local equi_c = {0x00/255, 0xff/255, 0x74/255}
-local equi_sha = Shader.new("resources", {color=equi_c, amp=0.8, speed=20000, distort={0.3,0.25}})
-local paradox_c = {0x2f/255, 0xa0/255, 0xb4/255}
-local paradox_sha = Shader.new("resources", {color=paradox_c, amp=0.8, speed=20000, distort={0.1,0.25}})
-local pos_c = {colors.GOLD.r/255, colors.GOLD.g/255, colors.GOLD.b/255}
-local pos_sha = Shader.new("resources", {color=pos_c, speed=1000, distort={1.6,0.2}})
-local neg_c = {colors.DARK_GREY.r/255, colors.DARK_GREY.g/255, colors.DARK_GREY.b/255}
-local neg_sha = Shader.new("resources", {color=neg_c, speed=1000, distort={1.6,-0.2}})
-local vim_c = {0x90/255, 0x40/255, 0x10/255}
-local vim_sha = Shader.new("resources", {color=vim_c, speed=1000, distort={0.4,0.4}})
-local hate_c = {colors.GREY.r/255, colors.GREY.g/255, colors.GREY.b/255}
-local hate_sha = Shader.new("resources", {color=hate_c, speed=1000, distort={0.4,0.4}})
-local psi_c = {colors.BLUE.r/255, colors.BLUE.g/255, colors.BLUE.b/255}
-local psi_sha = Shader.new("resources", {color=psi_c, speed=2000, distort={0.4,0.4}})
+air_c = {0x92/255, 0xe5, 0xe8}
+air_sha = Shader.new("resources", {color=air_c, speed=100, amp=0.8, distort={2,2.5}})
+life_c = {0xc0/255, 0, 0}
+life_sha = Shader.new("resources", {color=life_c, speed=1000, distort={1.5,1.5}})
+shield_c = {0.5, 0.5, 0.5}
+shield_sha = Shader.new("resources", {color=shield_c, speed=5000, a=0.8, distort={0.5,0.5}})
+stam_c = {0xff/255, 0xcc/255, 0x80/255}
+stam_sha = Shader.new("resources", {color=stam_c, speed=700, distort={1,1.4}})
+mana_c = {106/255, 146/255, 222/255}
+mana_sha = Shader.new("resources", {color=mana_c, speed=1000, distort={0.4,0.4}})
+soul_c = {128/255, 128/255, 128/255}
+soul_sha = Shader.new("resources", {color=soul_c, speed=1200, distort={0.4,-0.4}})
+equi_c = {0x00/255, 0xff/255, 0x74/255}
+equi_sha = Shader.new("resources", {color=equi_c, amp=0.8, speed=20000, distort={0.3,0.25}})
+paradox_c = {0x2f/255, 0xa0/255, 0xb4/255}
+paradox_sha = Shader.new("resources", {color=paradox_c, amp=0.8, speed=20000, distort={0.1,0.25}})
+pos_c = {colors.GOLD.r/255, colors.GOLD.g/255, colors.GOLD.b/255}
+pos_sha = Shader.new("resources", {color=pos_c, speed=1000, distort={1.6,0.2}})
+neg_c = {colors.DARK_GREY.r/255, colors.DARK_GREY.g/255, colors.DARK_GREY.b/255}
+neg_sha = Shader.new("resources", {color=neg_c, speed=1000, distort={1.6,-0.2}})
+vim_c = {0x90/255, 0x40/255, 0x10/255}
+vim_sha = Shader.new("resources", {color=vim_c, speed=1000, distort={0.4,0.4}})
+hate_c = {colors.GREY.r/255, colors.GREY.g/255, colors.GREY.b/255}
+hate_sha = Shader.new("resources", {color=hate_c, speed=1000, distort={0.4,0.4}})
+psi_c = {colors.BLUE.r/255, colors.BLUE.g/255, colors.BLUE.b/255}
+psi_sha = Shader.new("resources", {color=psi_c, speed=2000, distort={0.4,0.4}})
+save_c = pos_c
+save_sha = pos_sha
 
-local sshat = {core.display.loadImage("/data/gfx/ui/resources/shadow.png"):glTexture()}
-local bshat = {core.display.loadImage("/data/gfx/ui/resources/back.png"):glTexture()}
-local shat = {core.display.loadImage("/data/gfx/ui/resources/fill.png"):glTexture()}
-local fshat = {core.display.loadImage("/data/gfx/ui/resources/front.png"):glTexture()}
-local fshat_life = {core.display.loadImage("/data/gfx/ui/resources/front_life.png"):glTexture()}
-local fshat_life_dark = {core.display.loadImage("/data/gfx/ui/resources/front_life_dark.png"):glTexture()}
-local fshat_shield = {core.display.loadImage("/data/gfx/ui/resources/front_life_armored.png"):glTexture()}
-local fshat_shield_dark = {core.display.loadImage("/data/gfx/ui/resources/front_life_armored_dark.png"):glTexture()}
-local fshat_stamina = {core.display.loadImage("/data/gfx/ui/resources/front_stamina.png"):glTexture()}
-local fshat_stamina_dark = {core.display.loadImage("/data/gfx/ui/resources/front_stamina_dark.png"):glTexture()}
-local fshat_mana = {core.display.loadImage("/data/gfx/ui/resources/front_mana.png"):glTexture()}
-local fshat_mana_dark = {core.display.loadImage("/data/gfx/ui/resources/front_mana_dark.png"):glTexture()}
-local fshat_soul = {core.display.loadImage("/data/gfx/ui/resources/front_souls.png"):glTexture()}
-local fshat_soul_dark = {core.display.loadImage("/data/gfx/ui/resources/front_souls_dark.png"):glTexture()}
-local fshat_equi = {core.display.loadImage("/data/gfx/ui/resources/front_nature.png"):glTexture()}
-local fshat_equi_dark = {core.display.loadImage("/data/gfx/ui/resources/front_nature_dark.png"):glTexture()}
-local fshat_paradox = {core.display.loadImage("/data/gfx/ui/resources/front_paradox.png"):glTexture()}
-local fshat_paradox_dark = {core.display.loadImage("/data/gfx/ui/resources/front_paradox_dark.png"):glTexture()}
-local fshat_hate = {core.display.loadImage("/data/gfx/ui/resources/front_hate.png"):glTexture()}
-local fshat_hate_dark = {core.display.loadImage("/data/gfx/ui/resources/front_hate_dark.png"):glTexture()}
-local fshat_positive = {core.display.loadImage("/data/gfx/ui/resources/front_positive.png"):glTexture()}
-local fshat_positive_dark = {core.display.loadImage("/data/gfx/ui/resources/front_positive_dark.png"):glTexture()}
-local fshat_negative = {core.display.loadImage("/data/gfx/ui/resources/front_negative.png"):glTexture()}
-local fshat_negative_dark = {core.display.loadImage("/data/gfx/ui/resources/front_negative_dark.png"):glTexture()}
-local fshat_vim = {core.display.loadImage("/data/gfx/ui/resources/front_vim.png"):glTexture()}
-local fshat_vim_dark = {core.display.loadImage("/data/gfx/ui/resources/front_vim_dark.png"):glTexture()}
-local fshat_psi = {core.display.loadImage("/data/gfx/ui/resources/front_psi.png"):glTexture()}
-local fshat_psi_dark = {core.display.loadImage("/data/gfx/ui/resources/front_psi_dark.png"):glTexture()}
-local fshat_air = {core.display.loadImage("/data/gfx/ui/resources/front_air.png"):glTexture()}
-local fshat_air_dark = {core.display.loadImage("/data/gfx/ui/resources/front_air_dark.png"):glTexture()}
+sshat = {core.display.loadImage("/data/gfx/ui/resources/shadow.png"):glTexture()}
+bshat = {core.display.loadImage("/data/gfx/ui/resources/back.png"):glTexture()}
+shat = {core.display.loadImage("/data/gfx/ui/resources/fill.png"):glTexture()}
+fshat = {core.display.loadImage("/data/gfx/ui/resources/front.png"):glTexture()}
+fshat_life = {core.display.loadImage("/data/gfx/ui/resources/front_life.png"):glTexture()}
+fshat_life_dark = {core.display.loadImage("/data/gfx/ui/resources/front_life_dark.png"):glTexture()}
+fshat_shield = {core.display.loadImage("/data/gfx/ui/resources/front_life_armored.png"):glTexture()}
+fshat_shield_dark = {core.display.loadImage("/data/gfx/ui/resources/front_life_armored_dark.png"):glTexture()}
+fshat_stamina = {core.display.loadImage("/data/gfx/ui/resources/front_stamina.png"):glTexture()}
+fshat_stamina_dark = {core.display.loadImage("/data/gfx/ui/resources/front_stamina_dark.png"):glTexture()}
+fshat_mana = {core.display.loadImage("/data/gfx/ui/resources/front_mana.png"):glTexture()}
+fshat_mana_dark = {core.display.loadImage("/data/gfx/ui/resources/front_mana_dark.png"):glTexture()}
+fshat_soul = {core.display.loadImage("/data/gfx/ui/resources/front_souls.png"):glTexture()}
+fshat_soul_dark = {core.display.loadImage("/data/gfx/ui/resources/front_souls_dark.png"):glTexture()}
+fshat_equi = {core.display.loadImage("/data/gfx/ui/resources/front_nature.png"):glTexture()}
+fshat_equi_dark = {core.display.loadImage("/data/gfx/ui/resources/front_nature_dark.png"):glTexture()}
+fshat_paradox = {core.display.loadImage("/data/gfx/ui/resources/front_paradox.png"):glTexture()}
+fshat_paradox_dark = {core.display.loadImage("/data/gfx/ui/resources/front_paradox_dark.png"):glTexture()}
+fshat_hate = {core.display.loadImage("/data/gfx/ui/resources/front_hate.png"):glTexture()}
+fshat_hate_dark = {core.display.loadImage("/data/gfx/ui/resources/front_hate_dark.png"):glTexture()}
+fshat_positive = {core.display.loadImage("/data/gfx/ui/resources/front_positive.png"):glTexture()}
+fshat_positive_dark = {core.display.loadImage("/data/gfx/ui/resources/front_positive_dark.png"):glTexture()}
+fshat_negative = {core.display.loadImage("/data/gfx/ui/resources/front_negative.png"):glTexture()}
+fshat_negative_dark = {core.display.loadImage("/data/gfx/ui/resources/front_negative_dark.png"):glTexture()}
+fshat_vim = {core.display.loadImage("/data/gfx/ui/resources/front_vim.png"):glTexture()}
+fshat_vim_dark = {core.display.loadImage("/data/gfx/ui/resources/front_vim_dark.png"):glTexture()}
+fshat_psi = {core.display.loadImage("/data/gfx/ui/resources/front_psi.png"):glTexture()}
+fshat_psi_dark = {core.display.loadImage("/data/gfx/ui/resources/front_psi_dark.png"):glTexture()}
+fshat_air = {core.display.loadImage("/data/gfx/ui/resources/front_air.png"):glTexture()}
+fshat_air_dark = {core.display.loadImage("/data/gfx/ui/resources/front_air_dark.png"):glTexture()}
 
-local font_sha = core.display.newFont("/data/font/USENET_.ttf", 14)
-local sfont_sha = core.display.newFont("/data/font/USENET_.ttf", 12)
+font_sha = core.display.newFont("/data/font/USENET_.ttf", 14, true)
+font_sha:setStyle("bold")
+sfont_sha = core.display.newFont("/data/font/USENET_.ttf", 12, true)
+sfont_sha:setStyle("bold")
 
 function _M:displayResources(scale)
 	local player = game.player
@@ -719,19 +727,158 @@ function _M:displayResources(scale)
 			if y > stop then x = x + fshat[6] y = 0 end
 		end
 
+		-----------------------------------------------------------------------------------
+		-- Saving
+		if savefile_pipe.saving then
+			sshat[1]:toScreenFull(x-6, y+8, sshat[6], sshat[7], sshat[2], sshat[3])
+			bshat[1]:toScreenFull(x, y, bshat[6], bshat[7], bshat[2], bshat[3])
+			if save_sha.shad then save_sha.shad:use(true) end
+			local p = savefile_pipe.current_nb / savefile_pipe.total_nb
+			shat[1]:toScreenPrecise(x+49, y+10, shat[6] * p, shat[7], 0, p * 1/shat[4], 0, 1/shat[5], save_c[1], save_c[2], save_c[3], 1)
+			if save_sha.shad then save_sha.shad:use(false) end
+
+			if not self.res.save or self.res.save.vc ~= p then
+				self.res.save = {
+					vc = p,
+					cur = {core.display.drawStringBlendedNewSurface(font_sha, ("Saving... %d%%"):format(p * 100), 255, 255, 255):glTexture()},
+				}
+			end
+			local dt = self.res.save.cur
+			dt[1]:toScreenFull(2+x+64, 2+y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3], 0, 0, 0, 0.7)
+			dt[1]:toScreenFull(x+64, y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3])
+
+			local front = fshat
+			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3])
+			y = y + fshat[7]
+			if y > stop then x = x + fshat[6] y = 0 end
+		end
+
 		-- Compute how much space to reserve on the side
-		Map.viewport_padding_4 = 1 + math.floor(scale * x / Map.tile_w)
 		self.side_4 = x + fshat[6]
+		Map.viewport_padding_4 = math.floor(scale * (self.side_4 / Map.tile_w))
 	end
 end
 
+icon_green = { core.display.loadImage("/data/gfx/ui/talent_frame_ok.png"):glTexture() }
+icon_yellow = { core.display.loadImage("/data/gfx/ui/talent_frame_sustain.png"):glTexture() }
+icon_red = { core.display.loadImage("/data/gfx/ui/talent_frame_cooldown.png"):glTexture() }
+
+function _M:handleEffect(player, eff_id, e, p, x, y, hs, bx, by)
+	local dur = p.dur + 1
+
+	if not self.tbuff[eff_id..":"..dur] then
+		local name = e.desc
+		local desc = nil
+		local eff_subtype = table.concat(table.keys(e.subtype), "/")
+		if e.display_desc then name = e.display_desc(self, p) end
+		if p.save_string and p.amount_decreased and p.maximum and p.total_dur then
+			desc = ("#{bold}##GOLD#%s\n(%s: %s)#WHITE##{normal}#\n"):format(name, e.type, eff_subtype)..e.long_desc(player, p).." "..("%s reduced the duration of this effect by %d turns, from %d to %d."):format(p.save_string, p.amount_decreased, p.maximum, p.total_dur)
+		else
+			desc = ("#{bold}##GOLD#%s\n(%s: %s)#WHITE##{normal}#\n"):format(name, e.type, eff_subtype)..e.long_desc(player, p)
+		end
+
+		local txt = nil
+		if e.decrease > 0 then
+			dur = tostring(dur)
+			txt = self.buff_font:draw(dur, 40, colors.WHITE.r, colors.WHITE.g, colors.WHITE.b, true)[1]
+			txt.fw, txt.fh = self.buff_font:size(dur)
+		end
+		local icon = e.status ~= "detrimental" and icon_green or icon_red
+
+		local desc_fct = function(button, mx, my, xrel, yrel, bx, by, event)
+			game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, desc)
+		end
+		if not game.mouse:updateZone("tbuff"..eff_id, bx+x, by+y, hs, hs, desc_fct) then
+			game.mouse:unregisterZone("tbuff"..eff_id)
+			game.mouse:registerZone(bx+x, by+y, hs, hs, desc_fct, nil, "tbuff"..eff_id)
+		end
+
+		self.tbuff[eff_id..":"..dur] = {eff_id, "tbuff"..eff_id, function(x, y)
+			core.display.drawQuad(x, y, hs, hs, 0, 0, 0, 255)
+			e.display_entity:toScreen(self.hotkeys_display_icons.tiles, x+4, y+4, 32, 32)
+			icon[1]:toScreenFull(x, y, hs, hs, icon[2] * hs / icon[6], icon[3] * hs / icon[7], 255, 255, 255, 255)
+			if txt then
+				txt._tex:toScreenFull(x+4+2 + (40 - txt.fw)/2, y+4+2 + (40 - txt.fh)/2, txt.w, txt.h, txt._tex_w, txt._tex_h, 0, 0, 0, 0.7)
+				txt._tex:toScreenFull(x+4 + (40 - txt.fw)/2, y+4 + (40 - txt.fh)/2, txt.w, txt.h, txt._tex_w, txt._tex_h)
+			end
+		end}
+	end
+
+	self.tbuff[eff_id..":"..dur][3](x, y)
+end
+
 function _M:displayBuffs(scale, bx, by)
+	local player = game.player
+	if player then
+		if player.changed then
+			for _, d in pairs(self.pbuff) do if not player.sustain_talents[d[1]] then game.mouse:unregisterZone(d[2]) end end
+			for _, d in pairs(self.tbuff) do if not player.tmp[d[1]] then game.mouse:unregisterZone(d[2]) end end
+			self.tbuff = {} self.pbuff = {}
+		end
+
+		local hs = 40
+		local stop = self.map_h_stop - hs
+		local x, y = -hs, 0
+
+		for tid, act in pairs(player.sustain_talents) do
+			if act then
+				if not self.pbuff[tid] then
+					local t = player:getTalentFromId(tid)
+					local displayName = t.name
+					if t.getDisplayName then displayName = t.getDisplayName(player, t, player:isTalentActive(tid)) end
+					local desc = "#GOLD##{bold}#"..displayName.."#{normal}##WHITE#\n"..tostring(player:getTalentFullDescription(t))
+
+					if not game.mouse:updateZone("pbuff"..tid, bx+x, by+y, hs, hs) then
+						game.mouse:unregisterZone("pbuff"..tid)
+						game.mouse:registerZone(bx+x, by+y, hs, hs, function(button, mx, my, xrel, yrel, bx, by, event)
+							game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, desc)
+						end, nil, "pbuff"..tid)
+					end
+
+					self.pbuff[tid] = {tid, "pbuff"..tid, function(x, y)
+						core.display.drawQuad(x, y, hs, hs, 0, 0, 0, 255)
+						t.display_entity:toScreen(self.hotkeys_display_icons.tiles, x+4, y+4, 32, 32)
+						icon_yellow[1]:toScreenFull(x, y, hs, hs, icon_yellow[2] * hs / icon_yellow[6], icon_yellow[3] * hs / icon_yellow[7], 255, 255, 255, 255)
+					end}
+				end
+
+				self.pbuff[tid][3](x, y)
+
+				y = y + hs
+				if y + hs >= stop then y = 0 x = x - hs end
+			end
+		end
+
+		local good_e, bad_e = {}, {}
+		for eff_id, p in pairs(player.tmp) do
+			local e = player.tempeffect_def[eff_id]
+			if e.status == "detrimental" then bad_e[eff_id] = p else good_e[eff_id] = p end
+		end
+
+		for eff_id, p in pairs(good_e) do
+			local e = player.tempeffect_def[eff_id]
+			self:handleEffect(player, eff_id, e, p, x, y, hs, bx, by)
+			y = y + hs
+			if y + hs >= stop then y = 0 x = x - hs end
+		end
+		for eff_id, p in pairs(bad_e) do
+			local e = player.tempeffect_def[eff_id]
+			self:handleEffect(player, eff_id, e, p, x, y, hs, bx, by)
+			y = y + hs
+			if y + hs >= stop then y = 0 x = x - hs end
+		end
+	end
 end
 
 local portrait = {core.display.loadImage("/data/gfx/ui/party-portrait.png"):glTexture()}
 local portrait_unsel = {core.display.loadImage("/data/gfx/ui/party-portrait-unselect.png"):glTexture()}
 
 function _M:displayParty(scale, bx, by)
+	if game.player.changed and next(self.party) then
+		for a, d in pairs(self.party) do if not game.party:hasMember(a) then game.mouse:unregisterZone(d[2]) print("==UNREG part ", d[1].name, d[2]) end end
+		self.party = {}
+	end
+
 	-- Party members
 	if #game.party.m_list >= 2 and game.level then
 		local hs = portrait[7] + 3
@@ -740,30 +887,37 @@ function _M:displayParty(scale, bx, by)
 
 		for i = 1, #game.party.m_list do
 			local a = game.party.m_list[i]
-			local def = game.party.members[a]
 
-			core.display.drawQuad(x, y, 40, 40, 0, 0, 0, 255)
-			if life_sha.shad then life_sha.shad:use(true) end
-			local p = math.min(1, math.max(0, a.life / a.max_life))
-			core.display.drawQuad(x+1, y+1 + (1-p)*hs, 38, p*38, life_c[1]*255, life_c[2]*255, life_c[3]*255, 178)
-			if life_sha.shad then life_sha.shad:use(false) end
+			if not self.party[a] then
+				local def = game.party.members[a]
 
-			a:toScreen(nil, x+4, y+4, 32, 32)
-			local p = (game.player == a) and portrait or portrait_unsel
-			p[1]:toScreenFull(x, y, p[6], p[7], p[2], p[3])
+				self.party[a] = {a, "party"..a.uid, function(x, y)
+					core.display.drawQuad(x, y, 40, 40, 0, 0, 0, 255)
+					if life_sha.shad then life_sha.shad:use(true) end
+					local p = math.min(1, math.max(0, a.life / a.max_life))
+					core.display.drawQuad(x+1, y+1 + (1-p)*hs, 38, p*38, life_c[1]*255, life_c[2]*255, life_c[3]*255, 178)
+					if life_sha.shad then life_sha.shad:use(false) end
 
-			local text = "#GOLD##{bold}#"..a.name.."\n#WHITE##{normal}#Life: "..math.floor(100 * a.life / a.max_life).."%\nLevel: "..a.level.."\n"..def.title
-			game.mouse:unregisterZone("party"..i)
-			game.mouse:registerZone(bx+x, by+y, hs, hs, function(button, mx, my, xrel, yrel, bx, by, event)
-				game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, text)
-				if event == "button" and button == "left" then if def.control == "full" then game.party:select(a) end end
-			end, nil, "party"..i)
+					a:toScreen(nil, x+4, y+4, 32, 32)
+					local p = (game.player == a) and portrait or portrait_unsel
+					p[1]:toScreenFull(x, y, p[6], p[7], p[2], p[3])
+				end}
+
+				local text = "#GOLD##{bold}#"..a.name.."\n#WHITE##{normal}#Life: "..math.floor(100 * a.life / a.max_life).."%\nLevel: "..a.level.."\n"..def.title
+				local desc_fct = function(button, mx, my, xrel, yrel, bx, by, event)
+					game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, text)
+					if event == "button" and button == "left" then if def.control == "full" then game.party:select(a) end end
+				end
+				if not game.mouse:updateZone("party"..a.uid, bx+x, by+y, hs, hs, desc_fct) then
+					game.mouse:unregisterZone("party"..a.uid)
+					game.mouse:registerZone(bx+x, by+y, hs, hs, desc_fct, nil, "party"..a.uid)
+				end
+			end
+
+			self.party[a][3](x, y)
 
 			x = x + hs
-			if x + hs > stop then
-				x = 0
-				y = y - hs
-			end
+			if x + hs > stop then x = 0 y = y - hs end
 		end
 
 		-- Compute how much space to reserve on the side

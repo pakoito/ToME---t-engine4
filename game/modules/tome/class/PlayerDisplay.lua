@@ -399,7 +399,7 @@ function _M:display()
 			local desc = "#GOLD##{bold}#"..displayName.."#{normal}##WHITE#\n"..tostring(player:getTalentFullDescription(t))
 
 			if config.settings.tome.effects_icons and t.display_entity then
-				self:makeEntityIcon(t.display_entity, game.uiset.hotkeys_display_icons.tiles, ex, h, desc, txt, self.icon_yellow)
+				self:makeEntityIcon(t.display_entity, game.uiset.hotkeys_display_icons.tiles, ex, h, desc, nil, self.icon_yellow)
 				ex = ex + 40
 				if ex + 40 >= self.w then ex = 0 h = h + 40 end
 			else
