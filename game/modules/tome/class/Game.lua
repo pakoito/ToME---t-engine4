@@ -454,7 +454,7 @@ function _M:resizeMapViewport(w, h)
 end
 
 function _M:setupMiniMap()
-	if self.level and self.level.map and self.level.map.finished then self.level.map._map:setupMiniMapGridSize(4) end
+	if self.level and self.level.map and self.level.map.finished then self.uiset:setupMinimap(self.level) end
 end
 
 function _M:save()
@@ -1013,25 +1013,6 @@ function _M:displayMap(nb_keyframes)
 		-- emotes display
 		map:displayEmotes(nb_keyframe or 1)
 
-		-- Minimap display
---[[
---		if self.mm_fbo then
---			self.mm_fbo:use(true)
---			self.minimap_scroll_x, self.minimap_scroll_y = util.bound(self.player.x - 25, 0, map.w - 50), util.bound(self.player.y - 25, 0, map.h - 50)
---			map:minimapDisplay(0, 0, self.minimap_scroll_x, self.minimap_scroll_y, 50, 50, 1)
---			self.mm_fbo:use(false, self.full_fbo)
---			self.minimap_bg:toScreen(0, 0, 200, 200)
---			self.mm_fbo:toScreen(0, 0, 200, 200, self.mm_fbo_shader.shad)
---		else
-			self.minimap_bg:toScreen(0, 0, 200, 200)
-			if self.player.x then
-				self.minimap_scroll_x, self.minimap_scroll_y = util.bound(self.player.x - 25, 0, map.w - 50), util.bound(self.player.y - 25, 0, map.h - 50)
-			else
-				self.minimap_scroll_x, self.minimap_scroll_y = 0, 0
-			end
-			map:minimapDisplay(0, 0, self.minimap_scroll_x, self.minimap_scroll_y, 50, 50, 1)
---		end
-]]
 		-- Mouse gestures
 		self.gestures:update()
 		self.gestures:display(map.display_x, map.display_y + map.viewport.height - self.gestures.font_h - 5)

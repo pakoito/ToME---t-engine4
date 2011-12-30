@@ -94,6 +94,10 @@ function _M:activate()
 	game.logPlayer = function(e, style, ...) if e == game.player or e == game.party then game.log(style, ...) end end
 end
 
+function _M:setupMinimap(level)
+	level.map._map:setupMiniMapGridSize(4)
+end
+
 function _M:resizeIconsHotkeysToolbar()
 	local h = 52
 	if config.settings.tome.hotkey_icons then h = (4 + config.settings.tome.hotkey_icons_size) * config.settings.tome.hotkey_icons_rows end
@@ -307,6 +311,27 @@ function _M:display(nb_keyframes)
 	-- Now the map, if any
 	game:displayMap(nb_keyframes)
 
+	-- Minimap display
+	if game.level and game.level.map then
+		local map = game.level.map
+--		if self.mm_fbo then
+--			self.mm_fbo:use(true)
+--			self.minimap_scroll_x, self.minimap_scroll_y = util.bound(self.player.x - 25, 0, map.w - 50), util.bound(self.player.y - 25, 0, map.h - 50)
+--			map:minimapDisplay(0, 0, self.minimap_scroll_x, self.minimap_scroll_y, 50, 50, 1)
+--			self.mm_fbo:use(false, self.full_fbo)
+--			self.minimap_bg:toScreen(0, 0, 200, 200)
+--			self.mm_fbo:toScreen(0, 0, 200, 200, self.mm_fbo_shader.shad)
+--		else
+			self.minimap_bg:toScreen(0, 0, 200, 200)
+			if game.player.x then
+				game.minimap_scroll_x, game.minimap_scroll_y = util.bound(game.player.x - 25, 0, map.w - 50), util.bound(game.player.y - 25, 0, map.h - 50)
+			else
+				game.minimap_scroll_x, game.minimap_scroll_y = 0, 0
+			end
+			map:minimapDisplay(0, 0, game.minimap_scroll_x, game.minimap_scroll_y, 50, 50, 1)
+--		end
+	end
+
 	-- We display the player's interface
 	profile.chat:toScreen()
 	self.logdisplay:toScreen()
@@ -360,10 +385,10 @@ function _M:setupMouse(mouse)
 	mouse:registerZone(0, 0, 200, 200, function(button, mx, my, xrel, yrel, bx, by, event)
 		if button == "left" and not xrel and not yrel and event == "button" then
 			local tmx, tmy = math.floor(bx / 4), math.floor(by / 4)
-			game.player:mouseMove(tmx + self.minimap_scroll_x, tmy + self.minimap_scroll_y)
+			game.player:mouseMove(tmx + game.minimap_scroll_x, tmy + game.minimap_scroll_y)
 		elseif button == "right" then
 			local tmx, tmy = math.floor(bx / 4), math.floor(by / 4)
-			self.level.map:moveViewSurround(tmx + self.minimap_scroll_x, tmy + self.minimap_scroll_y, 1000, 1000)
+			self.level.map:moveViewSurround(tmx + game.minimap_scroll_x, tmy + game.minimap_scroll_y, 1000, 1000)
 		end
 	end)
 	-- Chat tooltips
