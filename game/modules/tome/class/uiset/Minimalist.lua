@@ -44,6 +44,7 @@ function _M:init()
 
 	self.side_4 = 0
 	self.side_6 = 0
+	self.side_8 = 0
 end
 
 function _M:activate()
@@ -106,7 +107,7 @@ function _M:activate()
 end
 
 function _M:setupMinimap(level)
-	level.map._map:setupMiniMapGridSize(4)
+	level.map._map:setupMiniMapGridSize(3)
 end
 
 function _M:resizeIconsHotkeysToolbar()
@@ -327,6 +328,15 @@ fshat_psi = {core.display.loadImage("/data/gfx/ui/resources/front_psi.png"):glTe
 fshat_psi_dark = {core.display.loadImage("/data/gfx/ui/resources/front_psi_dark.png"):glTexture()}
 fshat_air = {core.display.loadImage("/data/gfx/ui/resources/front_air.png"):glTexture()}
 fshat_air_dark = {core.display.loadImage("/data/gfx/ui/resources/front_air_dark.png"):glTexture()}
+
+ammo_shadow_default = {core.display.loadImage("/data/gfx/ui/resources/ammo_shadow_default.png"):glTexture()}
+ammo_default = {core.display.loadImage("/data/gfx/ui/resources/ammo_default.png"):glTexture()}
+ammo_shadow_arrow = {core.display.loadImage("/data/gfx/ui/resources/ammo_shadow_arrow.png"):glTexture()}
+ammo_arrow = {core.display.loadImage("/data/gfx/ui/resources/ammo_arrow.png"):glTexture()}
+ammo_shadow_shot = {core.display.loadImage("/data/gfx/ui/resources/ammo_shadow_shot.png"):glTexture()}
+ammo_shot = {core.display.loadImage("/data/gfx/ui/resources/ammo_shot.png"):glTexture()}
+_M['ammo_shadow_alchemist-gem'] = {core.display.loadImage("/data/gfx/ui/resources/ammo_shadow_alchemist-gem.png"):glTexture()}
+_M['ammo_alchemist-gem'] = {core.display.loadImage("/data/gfx/ui/resources/ammo_alchemist-gem.png"):glTexture()}
 
 font_sha = core.display.newFont("/data/font/USENET_.ttf", 14, true)
 font_sha:setStyle("bold")
@@ -768,6 +778,34 @@ function _M:displayResources(scale)
 		elseif game.mouse:getZone("res:psi") then game.mouse:unregisterZone("res:psi") end
 
 		-----------------------------------------------------------------------------------
+		-- Ammo
+		local quiver = player:getInven("QUIVER")
+		local ammo = quiver and quiver[1]
+		if ammo then
+			local amt = ammo:getNumber()
+			local shad, bg
+			if ammo.type == "alchemist-gem" then shad, bg = _M["ammo_shadow_alchemist-gem"], _M["ammo_alchemist-gem"]
+			else shad, bg = _M["ammo_shadow_"..ammo.subtype] or ammo_shadow_default, _M["ammo_"..ammo.subtype] or ammo_default
+			end
+
+			shad[1]:toScreenFull(x, y, shad[6], shad[7], shad[2], shad[3])
+			bg[1]:toScreenFull(x, y, bg[6], bg[7], bg[2], bg[3])
+
+			if not self.res.ammo or self.res.ammo.vc ~= amt then
+				self.res.ammo = {
+					vc = amt,
+					cur = {core.display.drawStringBlendedNewSurface(font_sha, ("%d"):format(amt), 255, 255, 255):glTexture()},
+				}
+			end
+			local dt = self.res.ammo.cur
+			dt[1]:toScreenFull(2+x+44, 2+y+3 + (bg[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3], 0, 0, 0, 0.7)
+			dt[1]:toScreenFull(x+44, y+3 + (bg[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3])
+
+			y = y + bg[7]
+			if y > stop then x = x + fshat[6] y = 0 end
+		end
+
+		-----------------------------------------------------------------------------------
 		-- Saving
 		if savefile_pipe.saving then
 			sshat[1]:toScreenFull(x-6, y+8, sshat[6], sshat[7], sshat[2], sshat[3])
@@ -965,36 +1003,46 @@ function _M:displayParty(scale, bx, by)
 	end
 end
 
+local mm_bg = {core.display.loadImage("/data/gfx/ui/minimap/back.png"):glTexture()}
+local mm_comp = {core.display.loadImage("/data/gfx/ui/minimap/compass.png"):glTexture()}
+local mm_shadow = {core.display.loadImage("/data/gfx/ui/minimap/shadow.png"):glTexture()}
+
 function _M:display(nb_keyframes)
+	local d = core.display
+
 	-- Now the map, if any
 	game:displayMap(nb_keyframes)
 
 	-- Minimap display
 	if game.level and game.level.map then
 		local map = game.level.map
---		self.minimap_bg:toScreen(0, 0, 200, 200)
-		if game.player.x then
-			game.minimap_scroll_x, game.minimap_scroll_y = util.bound(game.player.x - 25, 0, map.w - 50), util.bound(game.player.y - 25, 0, map.h - 50)
-		else
-			game.minimap_scroll_x, game.minimap_scroll_y = 0, 0
-		end
-		map:minimapDisplay(game.w - 200, 0, game.minimap_scroll_x, game.minimap_scroll_y, 50, 50, 0.7)
+		local x, y = game.w - mm_bg[6], 0
+		d.glTranslate(x, y, 0)
+
+		mm_shadow[1]:toScreenFull(0, 2, mm_shadow[6], mm_shadow[7], mm_shadow[2], mm_shadow[3])
+		mm_bg[1]:toScreenFull(0, 0, mm_bg[6], mm_bg[7], mm_bg[2], mm_bg[3])
+		if game.player.x then game.minimap_scroll_x, game.minimap_scroll_y = util.bound(game.player.x - 25, 0, map.w - 50), util.bound(game.player.y - 25, 0, map.h - 50)
+		else game.minimap_scroll_x, game.minimap_scroll_y = 0, 0 end
+
+		mm_comp[1]:toScreenFull(225, 211, mm_comp[6], mm_comp[7], mm_comp[2], mm_comp[3])
+
+		map:minimapDisplay(44, 24, game.minimap_scroll_x, game.minimap_scroll_y, 50, 50, 0.85)
+		d.glTranslate(-x, -y, 0)
+
+		self.side_8 = mm_bg[7]
 	end
 
 	-- Resources
-	local d = core.display
 	d.glTranslate(0, 0, 0)
 	self:displayResources(1)
 	d.glTranslate(-0, -0, -0)
 
 	-- Buffs
-	local d = core.display
-	d.glTranslate(game.w, 210, 0)
-	self:displayBuffs(1, game.w, 0)
-	d.glTranslate(-game.w, -210, -0)
+	d.glTranslate(game.w, self.side_8, 0)
+	self:displayBuffs(1, game.w, self.side_8)
+	d.glTranslate(-game.w, -self.side_8, -0)
 
 	-- Party
-	local d = core.display
 	d.glTranslate(self.side_4, 0, 0)
 	self:displayParty(1, self.side_4, 0)
 	d.glTranslate(-self.side_4, -0, -0)

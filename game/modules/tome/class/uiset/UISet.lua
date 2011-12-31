@@ -29,3 +29,16 @@ end
 
 function _M:resizeIconsHotkeysToolbar()
 end
+
+function _M:getMapSize()
+	local w, h = core.display.size()
+	return 0, 0, w, h
+end
+
+function _M:display(nb_keyframes)
+	-- Now the map, if any
+	game:displayMap(nb_keyframes)
+end
+
+function _M:setupMouse(mouse)
+end
