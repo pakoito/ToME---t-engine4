@@ -40,31 +40,35 @@ function _M:receiveMouse(button, x, y, isup, force_name, extra)
 	if not isup then return end
 
 	if _M.drag then
-		if _M.drag.prestart then _M.drag = nil
+		if _M.drag.prestart then _M.drag = nil print("====?????")
 		else return self:endDrag(x, y) end
 	end
 
 	for i  = 1, #self.areas do
 		local m = self.areas[i]
 		if (not m.mode or m.mode.button) and (x >= m.x1 and x < m.x2 and y >= m.y1 and y < m.y2) and (not force_name or force_name == m.name) then
-			m.fct(button, x, y, nil, nil, x-m.x1, y-m.y1, "button", extra)
+			m.fct(button, x, y, nil, nil, (x-m.x1) / m.scale, (y-m.y1) / m.scale, "button", extra)
 			break
 		end
 	end
 end
 
 function _M:receiveMouseMotion(button, x, y, xrel, yrel, force_name, extra)
+	if _M.drag then
+		if _M.drag.on_move then return _M.drag.on_move(_M.drag, button, x, y, xrel, yrel) end
+	end
+
 	local cur_m = nil
 	for i  = 1, #self.areas do
 		local m = self.areas[i]
 		if (not m.mode or m.mode.move) and (x >= m.x1 and x < m.x2 and y >= m.y1 and y < m.y2) and (not force_name or force_name == m.name) then
-			m.fct(button, x, y, xrel, yrel, x-m.x1, y-m.y1, "motion", extra)
+			m.fct(button, x, y, xrel, yrel, (x-m.x1) / m.scale, (y-m.y1) / m.scale, "motion", extra)
 			cur_m = m
 			break
 		end
 	end
 	if self.last_m and self.last_m.allow_out_events and self.last_m ~= cur_m then
-		self.last_m.fct("none", x, y, xrel, yrel, x-self.last_m.x1, y-self.last_m.y1, "out", extra)
+		self.last_m.fct("none", x, y, xrel, yrel, (x-self.last_m.x1) / self.last_m.scale, (y-self.last_m.y1) / self.last_m.scale, "out", extra)
 	end
 	self.last_m = cur_m
 end
@@ -95,21 +99,25 @@ end
 
 --- Update a named zone with new coords
 -- @return true if the zone was found and updated
-function _M:updateZone(name, x, y, w, h, fct)
+function _M:updateZone(name, x, y, w, h, fct, scale)
 	local m = self.areas_name[name]
 	if not m then return false end
-	m.x1 =x
+	m.scale = scale or m.scale
+	m.x1 = x
 	m.y1 = y
-	m.x2 = x + w
-	m.y2 = y + h
+	m.x2 = x + w * m.scale
+	m.y2 = y + h * m.scale
 	m.fct = fct or m.fct
 	return true
 end
 
 --- Registers a click zone that when clicked will call the object's "onClick" method
-function _M:registerZone(x, y, w, h, fct, mode, name, allow_out_events)
-	local d = {x1=x,y1=y,x2=x+w,y2=y+h, fct=fct, mode=mode, name=name, allow_out_events=allow_out_events}
+function _M:registerZone(x, y, w, h, fct, mode, name, allow_out_events, scale)
+	scale = scale or 1
+
+	local d = {x1=x,y1=y,x2=x+w * scale,y2=y+h * scale, fct=fct, mode=mode, name=name, allow_out_events=allow_out_events, scale=scale}
 	table.insert(self.areas, 1, d)
+
 	if name then self.areas_name[name] = d end
 end
 
@@ -137,7 +145,7 @@ function _M:reset()
 	self.areas = {}
 end
 
-function _M:startDrag(x, y, cursor, payload, on_done)
+function _M:startDrag(x, y, cursor, payload, on_done, on_move)
 	if _M.drag then
 		if _M.drag.prestart and math.max(math.abs(_M.drag.start_x - x), math.abs(_M.drag.start_y - y)) > 6 then
 			_M.drag.prestart = nil
@@ -151,7 +159,7 @@ function _M:startDrag(x, y, cursor, payload, on_done)
 		return
 	end
 
-	_M.drag = {start_x=x, start_y=y, payload=payload, on_done=on_done, prestart=true, cursor=cursor}
+	_M.drag = {start_x=x, start_y=y, payload=payload, on_done=on_done, on_move=on_move, prestart=true, cursor=cursor}
 	print("[MOUSE] pre starting drag'n'drop")
 end
 

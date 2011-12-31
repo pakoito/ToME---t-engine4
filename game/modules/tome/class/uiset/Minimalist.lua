@@ -37,14 +37,33 @@ module(..., package.seeall, class.inherit(UISet, TooltipsData))
 function _M:init()
 	UISet.init(self)
 
+	self.mhandle = {}
 	self.res = {}
 	self.party = {}
 	self.tbuff = {}
 	self.pbuff = {}
 
+	self.places = {
+		player = {x=0, y=0, scale=1},
+	}
+	table.merge(self.places, config.settings.tome.uiset_minimalist and config.settings.tome.uiset_minimalist.places or {}, true)
+
 	self.side_4 = 0
 	self.side_6 = 0
 	self.side_8 = 0
+end
+
+function _M:saveSettings()
+	local lines = {}
+	lines[#lines+1] = ("tome.uiset_minimalist = {}"):format(w)
+	lines[#lines+1] = ("tome.uiset_minimalist.places = {}"):format(w)
+	for _, w in ipairs{"player", "resources", "party", "buffs"} do
+		lines[#lines+1] = ("tome.uiset_minimalist.places.%s = {}"):format(w)
+		if self.places[w] then for k, v in pairs(self.places[w]) do
+			lines[#lines+1] = ("tome.uiset_minimalist.places.%s.%s = %d"):format(w, k, v)
+		end end
+	end
+	game:saveSettings("tome.uiset_minimalist", table.concat(lines, "\n"))
 end
 
 function _M:activate()
@@ -92,8 +111,6 @@ function _M:activate()
 	self.npcs_display = ActorsSeenDisplay.new(nil, 0, game.h - font_mono_h * 4.2, game.w, font_mono_h * 4.2, "/data/gfx/ui/talents-list.png", font_mono, size_mono)
 	self.npcs_display:setColumns(3)
 
-	self:createSeparators()
-
 	game.log = function(style, ...) if type(style) == "number" then game.uiset.logdisplay(...) else game.uiset.logdisplay(style, ...) end end
 	game.logChat = function(style, ...)
 		if true or not config.settings.tome.chat_log then return end
@@ -137,136 +154,7 @@ function _M:getMapSize()
 	return 0, 0, w, (self.map_h_stop or 80) - 16
 end
 
---------------------------------------------------------------
--- UI stuff
---------------------------------------------------------------
-
-local _sep_horiz = {core.display.loadImage("/data/gfx/ui/separator-hori.png")} _sep_horiz.tex = {_sep_horiz[1]:glTexture()}
-
-local _log_icon, _log_icon_w, _log_icon_h = core.display.loadImage("/data/gfx/ui/log-icon.png"):glTexture()
-local _chat_icon, _chat_icon_w, _chat_icon_h = core.display.loadImage("/data/gfx/ui/chat-icon.png"):glTexture()
-local _talents_icon, _talents_icon_w, _talents_icon_h = core.display.loadImage("/data/gfx/ui/talents-icon.png"):glTexture()
-local _actors_icon, _actors_icon_w, _actors_icon_h = core.display.loadImage("/data/gfx/ui/actors-icon.png"):glTexture()
-local _main_menu_icon, _main_menu_icon_w, _main_menu_icon_h = core.display.loadImage("/data/gfx/ui/main-menu-icon.png"):glTexture()
-local _inventory_icon, _inventory_icon_w, _inventory_icon_h = core.display.loadImage("/data/gfx/ui/inventory-icon.png"):glTexture()
-local _charsheet_icon, _charsheet_icon_w, _charsheet_icon_h = core.display.loadImage("/data/gfx/ui/charsheet-icon.png"):glTexture()
-local _mm_aggressive_icon, _mm_aggressive_icon_w, _mm_aggressive_icon_h = core.display.loadImage("/data/gfx/ui/aggressive-icon.png"):glTexture()
-local _mm_passive_icon, _mm_passive_icon_w, _mm_passive_icon_h = core.display.loadImage("/data/gfx/ui/passive-icon.png"):glTexture()
-
-function _M:displayUI()
-	local middle = game.w * 0.5
-	local bottom = game.h * 0.8
-	local bottom_h = game.h * 0.2
-	local icon_x = 0
-	local icon_y = game.h - (_talents_icon_h * 1)
-	local glow = (1+math.sin(core.game.getTime() / 500)) / 2 * 100 + 77
---[[
-	-- Icons
-	local x, y = icon_x, icon_y
-	if (not self.show_npc_list) then
-		_talents_icon:toScreenFull(x, y, _talents_icon_w, _talents_icon_h, _talents_icon_w, _talents_icon_h)
-	else
-		_actors_icon:toScreenFull(x, y, _actors_icon_w, _actors_icon_h, _actors_icon_w, _actors_icon_h)
-	end
-	x = x + _talents_icon_w
-
-	_inventory_icon:toScreenFull(x, y, _inventory_icon_w, _inventory_icon_h, _inventory_icon_w, _inventory_icon_h)
-	x = x + _talents_icon_w
-	_charsheet_icon:toScreenFull(x, y, _charsheet_icon_w, _charsheet_icon_h, _charsheet_icon_w, _charsheet_icon_h)
-	x = x + _talents_icon_w
-	_main_menu_icon:toScreenFull(x, y, _main_menu_icon_w, _main_menu_icon_h, _main_menu_icon_w, _main_menu_icon_h)
-	x = x + _talents_icon_w
-	_log_icon:toScreenFull(x, y, _log_icon_w, _log_icon_h, _log_icon_w, _log_icon_h)
-	x = x + _talents_icon_w
-	if (not config.settings.tome.actor_based_movement_mode and not self.bump_attack_disabled) or (config.settings.tome.actor_based_movement_mode and not game.player.bump_attack_disabled) then
-		_mm_aggressive_icon:toScreenFull(x, y, _mm_aggressive_icon_w, _mm_aggressive_icon_h, _mm_aggressive_icon_w, _mm_aggressive_icon_h)
-	else
-		_mm_passive_icon:toScreenFull(x, y, _mm_passive_icon_w, _mm_passive_icon_h, _mm_passive_icon_w, _mm_passive_icon_h)
-	end
-]]
-	-- Separators
-	_sep_horiz.tex[1]:toScreenFull(0, self.map_h_stop - _sep_horiz[3], game.w, _sep_horiz[3], _sep_horiz.tex[2], _sep_horiz.tex[3])
-end
-
-function _M:createSeparators()
-	local icon_x = 0
-	local icon_y = game.h - (_talents_icon_h * 1)
-	self.icons = {
-		display_x = icon_x,
-		display_y = icon_y,
-		w = 200,
-		h = game.h - icon_y,
-	}
-end
-
-function _M:clickIcon(bx, by)
-	if bx < _talents_icon_w then
-		game.key:triggerVirtual("TOGGLE_NPC_LIST")
-	elseif bx < 2*_talents_icon_w then
-		game.key:triggerVirtual("SHOW_INVENTORY")
-	elseif bx < 3*_talents_icon_w then
-		game.key:triggerVirtual("SHOW_CHARACTER_SHEET")
-	elseif bx < 4*_talents_icon_w then
-		game.key:triggerVirtual("EXIT")
-	elseif bx < 5*_talents_icon_w then
-		game.key:triggerVirtual("SHOW_MESSAGE_LOG")
-	elseif bx < 6*_talents_icon_w then
-		game.key:triggerVirtual("TOGGLE_BUMP_ATTACK")
-	end
-end
-
-function _M:mouseIcon(bx, by)
-	local virtual
-	local key
-
-	if bx < _talents_icon_w then
-		virtual = "TOGGLE_NPC_LIST"
-		key = game.key.binds_remap[virtual] ~= nil and game.key.binds_remap[virtual][1] or game.key:findBoundKeys(virtual)
-		key = (key ~= nil and game.key:formatKeyString(key) or "unbound"):capitalize()
-		if (not self.show_npc_list) then
-			game:tooltipDisplayAtMap(game.w, game.h, "Displaying talents (#{bold}##GOLD#"..key.."#LAST##{normal}#)\nToggle for creature display")
-		else
-			game:tooltipDisplayAtMap(game.w, game.h, "Displaying creatures (#{bold}##GOLD#"..key.."#LAST##{normal}#)\nToggle for talent display#")
-		end
-	elseif bx < 2*_talents_icon_w then
-		virtual = "SHOW_INVENTORY"
-		key = game.key.binds_remap[virtual] ~= nil and game.key.binds_remap[virtual][1] or game.key:findBoundKeys(virtual)
-		key = (key ~= nil and game.key:formatKeyString(key) or "unbound"):capitalize()
-		if (key == "I") then
-			game:tooltipDisplayAtMap(game.w, game.h, "#{bold}##GOLD#I#LAST##{normal}#nventory")
-		else
-			game:tooltipDisplayAtMap(game.w, game.h, "Inventory (#{bold}##GOLD#"..key.."#LAST##{normal}#)")
-		end
-	elseif bx < 3*_talents_icon_w then
-		virtual = "SHOW_CHARACTER_SHEET"
-		key = game.key.binds_remap[virtual] ~= nil and game.key.binds_remap[virtual][1] or game.key:findBoundKeys(virtual)
-		key = (key ~= nil and game.key:formatKeyString(key) or "unbound"):capitalize()
-		if (key == "C") then
-			game:tooltipDisplayAtMap(game.w, game.h, "#{bold}##GOLD#C#LAST##{normal}#haracter Sheet")
-		else
-			game:tooltipDisplayAtMap(game.w, game.h, "Character Sheet (#{bold}##GOLD#"..key.."#LAST##{normal}#)")
-		end
-	elseif bx < 4*_talents_icon_w then
-		virtual = "EXIT"
-		key = game.key.binds_remap[virtual] ~= nil and game.key.binds_remap[virtual][1] or game.key:findBoundKeys(virtual)
-		key = (key ~= nil and game.key:formatKeyString(key) or "unbound"):capitalize()
-		game:tooltipDisplayAtMap(game.w, game.h, "Main menu (#{bold}##GOLD#"..key.."#LAST##{normal}#)")
-	elseif bx < 5*_talents_icon_w then
-		virtual = "SHOW_MESSAGE_LOG"
-		key = game.key.binds_remap[virtual] ~= nil and game.key.binds_remap[virtual][1] or game.key:findBoundKeys(virtual)
-		key = (key ~= nil and game.key:formatKeyString(key) or "unbound"):capitalize()
-		game:tooltipDisplayAtMap(game.w, game.h, "Show message/chat log (#{bold}##GOLD#"..key.."#LAST##{normal}#)")
-	elseif bx < 6*_talents_icon_w then
-		virtual = "TOGGLE_BUMP_ATTACK"
-		key = game.key.binds_remap[virtual] ~= nil and game.key.binds_remap[virtual][1] or game.key:findBoundKeys(virtual)
-		key = (key ~= nil and game.key:formatKeyString(key) or "unbound"):capitalize()
-		if (not config.settings.tome.actor_based_movement_mode and not self.bump_attack_disabled) or (config.settings.tome.actor_based_movement_mode and not game.player.bump_attack_disabled) then
-			game:tooltipDisplayAtMap(game.w, game.h, "Movement: #LIGHT_GREEN#Default#LAST# (#{bold}##GOLD#"..key.."#LAST##{normal}#)\nToggle for passive mode")
-		else
-			game:tooltipDisplayAtMap(game.w, game.h, "Movement: #LIGHT_RED#Passive#LAST# (#{bold}##GOLD#"..key.."#LAST##{normal}#)\nToggle for default mode")
-		end
-	end
-end
+local move_handle = {core.display.loadImage("/data/gfx/ui/move_handle.png"):glTexture()}
 
 -- Load the various shaders used to display resources
 air_c = {0x92/255, 0xe5, 0xe8}
@@ -351,7 +239,7 @@ function _M:showTooltip(x, y, w, h, id, desc)
 	end
 end
 
-function _M:displayResources(scale)
+function _M:displayResources(scale, bx, by)
 	local player = game.player
 	if player then
 		local stop = self.map_h_stop - fshat[7]
@@ -384,7 +272,7 @@ function _M:displayResources(scale)
 			local front = fshat_air_dark
 			if player.air >= player.max_air * 0.5 then front = fshat_air end
 			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3])
-			self:showTooltip(x, y, fshat[6], fshat[7], "res:air", self.TOOLTIP_AIR)
+			self:showTooltip(bx+x, by+y, fshat[6], fshat[7], "res:air", self.TOOLTIP_AIR)
 			y = y + fshat[7]
 			if y > stop then x = x + fshat[6] y = 0 end
 		elseif game.mouse:getZone("res:air") then game.mouse:unregisterZone("res:air") end
@@ -432,10 +320,10 @@ function _M:displayResources(scale)
 			dt[1]:toScreenFull(2+x+64, 2+y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3], 0, 0, 0, 0.7)
 			dt[1]:toScreenFull(x+64, y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3])
 
-			self:showTooltip(x, y, fshat[6], fshat[7], "res:shield", self.TOOLTIP_DAMAGE_SHIELD.."\n---\n"..self.TOOLTIP_LIFE)
+			self:showTooltip(bx+x, by+y, fshat[6], fshat[7], "res:shield", self.TOOLTIP_DAMAGE_SHIELD.."\n---\n"..self.TOOLTIP_LIFE)
 			if game.mouse:getZone("res:life") then game.mouse:unregisterZone("res:life") end
 		else
-			self:showTooltip(x, y, fshat[6], fshat[7], "res:life", self.TOOLTIP_LIFE)
+			self:showTooltip(bx+x, by+y, fshat[6], fshat[7], "res:life", self.TOOLTIP_LIFE)
 			if game.mouse:getZone("res:shield") then game.mouse:unregisterZone("res:shield") end
 		end
 
@@ -476,7 +364,7 @@ function _M:displayResources(scale)
 			if player.stamina >= player.max_stamina then front = fshat_stamina end
 			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3])
 
-			self:showTooltip(x, y, fshat[6], fshat[7], "res:stamina", self.TOOLTIP_STAMINA)
+			self:showTooltip(bx+x, by+y, fshat[6], fshat[7], "res:stamina", self.TOOLTIP_STAMINA)
 			y = y + fshat[7]
 			if y > stop then x = x + fshat[6] y = 0 end
 		elseif game.mouse:getZone("res:stamina") then game.mouse:unregisterZone("res:stamina") end
@@ -508,7 +396,7 @@ function _M:displayResources(scale)
 			local front = fshat_mana_dark
 			if player.mana >= player.max_mana then front = fshat_mana end
 			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3])
-			self:showTooltip(x, y, fshat[6], fshat[7], "res:mana", self.TOOLTIP_MANA)
+			self:showTooltip(bx+x, by+y, fshat[6], fshat[7], "res:mana", self.TOOLTIP_MANA)
 			y = y + fshat[7]
 			if y > stop then x = x + fshat[6] y = 0 end
 		elseif game.mouse:getZone("res:mana") then game.mouse:unregisterZone("res:mana") end
@@ -538,7 +426,7 @@ function _M:displayResources(scale)
 			local front = fshat_soul_dark
 			if pt.souls >= pt.souls_max then front = fshat_soul end
 			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3])
-			self:showTooltip(x, y, fshat[6], fshat[7], "res:necrotic", self.TOOLTIP_NECROTIC_AURA)
+			self:showTooltip(bx+x, by+y, fshat[6], fshat[7], "res:necrotic", self.TOOLTIP_NECROTIC_AURA)
 			y = y + fshat[7]
 			if y > stop then x = x + fshat[6] y = 0 end
 		elseif game.mouse:getZone("res:necrotic") then game.mouse:unregisterZone("res:necrotic") end
@@ -554,7 +442,7 @@ function _M:displayResources(scale)
 				equi_sha:setUniform("speed", s)
 				equi_sha.shad:use(true)
 			end
-			local p = 1
+			local p = chance / 100
 			shat[1]:toScreenPrecise(x+49, y+10, shat[6] * p, shat[7], 0, p * 1/shat[4], 0, 1/shat[5], equi_c[1], equi_c[2], equi_c[3], 1)
 			if equi_sha.shad then equi_sha.shad:use(false) end
 
@@ -575,7 +463,7 @@ function _M:displayResources(scale)
 			local front = fshat_equi
 			if chance <= 85 then front = fshat_equi_dark end
 			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3])
-			self:showTooltip(x, y, fshat[6], fshat[7], "res:equi", self.TOOLTIP_EQUILIBRIUM)
+			self:showTooltip(bx+x, by+y, fshat[6], fshat[7], "res:equi", self.TOOLTIP_EQUILIBRIUM)
 			y = y + fshat[7]
 			if y > stop then x = x + fshat[6] y = 0 end
 		elseif game.mouse:getZone("res:equi") then game.mouse:unregisterZone("res:equi") end
@@ -607,7 +495,7 @@ function _M:displayResources(scale)
 			local front = fshat_positive_dark
 			if player.positive >= player.max_positive * 0.7 then front = fshat_positive end
 			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3])
-			self:showTooltip(x, y, fshat[6], fshat[7], "res:positive", self.TOOLTIP_POSITIVE)
+			self:showTooltip(bx+x, by+y, fshat[6], fshat[7], "res:positive", self.TOOLTIP_POSITIVE)
 			y = y + fshat[7]
 			if y > stop then x = x + fshat[6] y = 0 end
 		elseif game.mouse:getZone("res:positive") then game.mouse:unregisterZone("res:positive") end
@@ -639,7 +527,7 @@ function _M:displayResources(scale)
 			local front = fshat_negative_dark
 			if player.negative >= player.max_negative * 0.7  then front = fshat_negative end
 			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3])
-			self:showTooltip(x, y, fshat[6], fshat[7], "res:negative", self.TOOLTIP_NEGATIVE)
+			self:showTooltip(bx+x, by+y, fshat[6], fshat[7], "res:negative", self.TOOLTIP_NEGATIVE)
 			y = y + fshat[7]
 			if y > stop then x = x + fshat[6] y = 0 end
 		elseif game.mouse:getZone("res:negative") then game.mouse:unregisterZone("res:negative") end
@@ -655,7 +543,7 @@ function _M:displayResources(scale)
 				paradox_sha:setUniform("speed", s)
 				paradox_sha.shad:use(true)
 			end
-			local p = 1
+			local p = 1 - chance / 100
 			shat[1]:toScreenPrecise(x+49, y+10, shat[6] * p, shat[7], 0, p * 1/shat[4], 0, 1/shat[5], paradox_c[1], paradox_c[2], paradox_c[3], 1)
 			if paradox_sha.shad then paradox_sha.shad:use(false) end
 
@@ -676,7 +564,7 @@ function _M:displayResources(scale)
 			local front = fshat_paradox
 			if chance <= 10 then front = fshat_paradox_dark end
 			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3])
-			self:showTooltip(x, y, fshat[6], fshat[7], "res:paradox", self.TOOLTIP_PARADOX)
+			self:showTooltip(bx+x, by+y, fshat[6], fshat[7], "res:paradox", self.TOOLTIP_PARADOX)
 			y = y + fshat[7]
 			if y > stop then x = x + fshat[6] y = 0 end
 		elseif game.mouse:getZone("res:paradox") then game.mouse:unregisterZone("res:paradox") end
@@ -708,7 +596,7 @@ function _M:displayResources(scale)
 			local front = fshat_vim_dark
 			if player.vim >= player.max_vim then front = fshat_vim end
 			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3])
-			self:showTooltip(x, y, fshat[6], fshat[7], "res:vim", self.TOOLTIP_VIM)
+			self:showTooltip(bx+x, by+y, fshat[6], fshat[7], "res:vim", self.TOOLTIP_VIM)
 			y = y + fshat[7]
 			if y > stop then x = x + fshat[6] y = 0 end
 		elseif game.mouse:getZone("res:vim") then game.mouse:unregisterZone("res:vim") end
@@ -740,7 +628,7 @@ function _M:displayResources(scale)
 			local front = fshat_hate_dark
 			if player.hate >= 10 then front = fshat_hate end
 			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3])
-			self:showTooltip(x, y, fshat[6], fshat[7], "res:hate", self.TOOLTIP_HATE)
+			self:showTooltip(bx+x, by+y, fshat[6], fshat[7], "res:hate", self.TOOLTIP_HATE)
 			y = y + fshat[7]
 			if y > stop then x = x + fshat[6] y = 0 end
 		elseif game.mouse:getZone("res:hate") then game.mouse:unregisterZone("res:hate") end
@@ -772,7 +660,7 @@ function _M:displayResources(scale)
 			local front = fshat_psi_dark
 			if player.psi >= player.max_psi then front = fshat_psi end
 			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3])
-			self:showTooltip(x, y, fshat[6], fshat[7], "res:psi", self.TOOLTIP_PSI)
+			self:showTooltip(bx+x, by+y, fshat[6], fshat[7], "res:psi", self.TOOLTIP_PSI)
 			y = y + fshat[7]
 			if y > stop then x = x + fshat[6] y = 0 end
 		elseif game.mouse:getZone("res:psi") then game.mouse:unregisterZone("res:psi") end
@@ -1003,6 +891,115 @@ function _M:displayParty(scale, bx, by)
 	end
 end
 
+local pf_bg = {core.display.loadImage("/data/gfx/ui/playerframe/back.png"):glTexture()}
+local pf_shadow = {core.display.loadImage("/data/gfx/ui/playerframe/shadow.png"):glTexture()}
+local pf_defend = {core.display.loadImage("/data/gfx/ui/playerframe/defend.png"):glTexture()}
+local pf_attack = {core.display.loadImage("/data/gfx/ui/playerframe/attack.png"):glTexture()}
+local pf_levelup = {core.display.loadImage("/data/gfx/ui/playerframe/levelup.png"):glTexture()}
+local pf_encumber = {core.display.loadImage("/data/gfx/ui/playerframe/encumber.png"):glTexture()}
+local pf_exp = {core.display.loadImage("/data/gfx/ui/playerframe/exp.png"):glTexture()}
+local pf_exp_levelup = {core.display.loadImage("/data/gfx/ui/playerframe/exp_levelup.png"):glTexture()}
+
+function _M:displayPlayer(scale, bx, by)
+	local player = game.player
+	if not game.player then return end
+
+	pf_shadow[1]:toScreenFull(0, 0, pf_shadow[6], pf_shadow[7], pf_shadow[2], pf_shadow[3])
+	pf_bg[1]:toScreenFull(0, 0, pf_bg[6], pf_bg[7], pf_bg[2], pf_bg[3])
+	player:toScreen(nil, 22, 22, 40, 40)
+
+	if (not config.settings.tome.actor_based_movement_mode and self or player).bump_attack_disabled then
+		pf_defend[1]:toScreenFull(22, 67, pf_defend[6], pf_defend[7], pf_defend[2], pf_defend[3])
+	else
+		pf_attack[1]:toScreenFull(22, 67, pf_attack[6], pf_attack[7], pf_attack[2], pf_attack[3])
+	end
+
+	if player.unused_stats > 0 or player.unused_talents > 0 or player.unused_generics > 0 or player.unused_talents_types > 0 then
+		local glow = (1+math.sin(core.game.getTime() / 500)) / 2 * 100 + 120
+		pf_levelup[1]:toScreenFull(269, 78, pf_levelup[6], pf_levelup[7], pf_levelup[2], pf_levelup[3], 1, 1, 1, glow / 255)
+		pf_exp_levelup[1]:toScreenFull(108, 74, pf_exp_levelup[6], pf_exp_levelup[7], pf_exp_levelup[2], pf_exp_levelup[3], 1, 1, 1, glow / 255)
+	end
+
+	local cur_exp, max_exp = player.exp, player:getExpChart(player.level+1)
+	local p = math.min(1, math.max(0, cur_exp / max_exp))
+	pf_exp[1]:toScreenPrecise(117, 85, pf_exp[6] * p, pf_exp[7], 0, p * 1/pf_exp[4], 0, 1/pf_exp[5])
+
+	if not self.res.exp or self.res.exp.vc ~= p then
+		self.res.exp = {
+			vc = p,
+			cur = {core.display.drawStringBlendedNewSurface(sfont_sha, ("%d%%"):format(p * 100), 255, 255, 255):glTexture()},
+		}
+	end
+	local dt = self.res.exp.cur
+	dt[1]:toScreenFull(2+87 - dt[6] / 2, 2+89 - dt[7] / 2, dt[6], dt[7], dt[2], dt[3], 0, 0, 0, 0.7)
+	dt[1]:toScreenFull(87 - dt[6] / 2, 89 - dt[7] / 2, dt[6], dt[7], dt[2], dt[3])
+
+	if not self.res.money or self.res.money.vc ~= player.money then
+		self.res.money = {
+			vc = player.money,
+			cur = {core.display.drawStringBlendedNewSurface(font_sha, ("%d"):format(player.money), 255, 215, 0):glTexture()},
+		}
+	end
+	local dt = self.res.money.cur
+	dt[1]:toScreenFull(2+112 - dt[6] / 2, 2+43, dt[6], dt[7], dt[2], dt[3], 0, 0, 0, 0.7)
+	dt[1]:toScreenFull(112 - dt[6] / 2, 43, dt[6], dt[7], dt[2], dt[3])
+
+	if not self.res.pname or self.res.pname.vc ~= player.name then
+		self.res.pname = {
+			vc = player.name,
+			cur = {core.display.drawStringBlendedNewSurface(font_sha, player.name, 255, 255, 255):glTexture()},
+		}
+	end
+	local dt = self.res.pname.cur
+	dt[1]:toScreenFull(2+166, 2+13, dt[6], dt[7], dt[2], dt[3], 0, 0, 0, 0.7)
+	dt[1]:toScreenFull(166, 13, dt[6], dt[7], dt[2], dt[3])
+
+	if not self.res.plevel or self.res.plevel.vc ~= player.level then
+		self.res.plevel = {
+			vc = player.level,
+			cur = {core.display.drawStringBlendedNewSurface(font_sha, "Lvl "..player.level, 255, 255, 255):glTexture()},
+		}
+	end
+	local dt = self.res.plevel.cur
+	dt[1]:toScreenFull(2+253, 2+46, dt[6], dt[7], dt[2], dt[3], 0, 0, 0, 0.7)
+	dt[1]:toScreenFull(253, 46, dt[6], dt[7], dt[2], dt[3])
+
+	if player:attr("encumbered") then
+		local glow = (1+math.sin(core.game.getTime() / 500)) / 2 * 100 + 120
+		pf_encumber[1]:toScreenFull(162, 38, pf_encumber[6], pf_encumber[7], pf_encumber[2], pf_encumber[3], 1, 1, 1, glow / 255)
+	end
+
+	if self.mhandle.player then
+		move_handle[1]:toScreenFull(296, 73, move_handle[6], move_handle[7], move_handle[2], move_handle[3])
+	end
+
+	if not game.mouse:updateZone("pframe", bx, by, pf_bg[6], pf_bg[7], nil, scale) then
+		game.mouse:unregisterZone("pframe")
+
+		local desc_fct = function(button, mx, my, xrel, yrel, bx, by, event)
+			if event == "out" then self.mhandle.player = nil return
+			else self.mhandle.player = true end
+
+			if bx >= 296 and bx <= 296 + move_handle[6] and by >= 73 and by <= 73 + move_handle[7] then
+				game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, "Left mouse drag&drop to move the frame\nRight mouse drag&drop  to scale up/down\nMiddle click to reset to default scale")
+				if event == "button" and button == "middle" then self.places.player.scale = 1 self:saveSettings()
+				elseif event == "motion" and button == "left" then
+					game.mouse:startDrag(mx, my, s, {kind="ui:move", id="player", dx=bx*self.places.player.scale, dy=by*self.places.player.scale},
+						function(drag, used) self:saveSettings() end,
+						function(drag, _, x, y) if self.places[drag.payload.id] then self.places[drag.payload.id].x = x-drag.payload.dx self.places[drag.payload.id].y = y-drag.payload.dy end end
+					)
+				elseif event == "motion" and button == "right" then
+					game.mouse:startDrag(mx, my, s, {kind="ui:resize", id="player", bx=bx, by=by},
+						function(drag, used) self:saveSettings() end,
+						function(drag, _, x, y) if self.places[drag.payload.id] then self.places[drag.payload.id].scale = util.bound(math.max((x-self.places[drag.payload.id].x)/drag.payload.bx, (y-self.places[drag.payload.id].y)/drag.payload.by), 0.5, 2) end end
+					)
+				end
+			end
+		end
+		game.mouse:registerZone(bx, by, pf_bg[6], pf_bg[7], desc_fct, nil, "pframe", true, scale)
+	end
+end
+
 local mm_bg = {core.display.loadImage("/data/gfx/ui/minimap/back.png"):glTexture()}
 local mm_comp = {core.display.loadImage("/data/gfx/ui/minimap/compass.png"):glTexture()}
 local mm_shadow = {core.display.loadImage("/data/gfx/ui/minimap/shadow.png"):glTexture()}
@@ -1032,10 +1029,17 @@ function _M:display(nb_keyframes)
 		self.side_8 = mm_bg[7]
 	end
 
+	-- Player
+	d.glTranslate(self.places.player.x, self.places.player.y, 0)
+	d.glScale(self.places.player.scale, self.places.player.scale, self.places.player.scale)
+	self:displayPlayer(self.places.player.scale, self.places.player.x, self.places.player.y)
+	d.glScale()
+	d.glTranslate(-self.places.player.x, -self.places.player.y, -0)
+
 	-- Resources
-	d.glTranslate(0, 0, 0)
-	self:displayResources(1)
-	d.glTranslate(-0, -0, -0)
+	d.glTranslate(0, 114, 0)
+	self:displayResources(1, 0, 114)
+	d.glTranslate(-0, -114, -0)
 
 	-- Buffs
 	d.glTranslate(game.w, self.side_8, 0)
@@ -1056,9 +1060,6 @@ function _M:display(nb_keyframes)
 	else
 		self.hotkeys_display:toScreen()
 	end
-
-	-- UI
-	self:displayUI()
 end
 
 function _M:setupMouse(mouse)
@@ -1086,11 +1087,7 @@ function _M:setupMouse(mouse)
 			end
 		)
 	end, nil, "hotkeys", true)
-	-- Use icons
-	mouse:registerZone(self.icons.display_x, self.icons.display_y, self.icons.w, self.icons.h, function(button, mx, my, xrel, yrel, bx, by, event)
-		self:mouseIcon(bx, by)
-		if button == "left" and event == "button" then self:clickIcon(bx, by) end
-	end)
+--[[
 	-- Move using the minimap
 	mouse:registerZone(0, 0, 200, 200, function(button, mx, my, xrel, yrel, bx, by, event)
 		if button == "left" and not xrel and not yrel and event == "button" then
@@ -1101,6 +1098,7 @@ function _M:setupMouse(mouse)
 			self.level.map:moveViewSurround(tmx + self.minimap_scroll_x, tmy + self.minimap_scroll_y, 1000, 1000)
 		end
 	end)
+]]
 	-- Chat tooltips
 	profile.chat:onMouse(function(user, item, button, event, x, y, xrel, yrel, bx, by)
 		local mx, my = core.mouse.get()

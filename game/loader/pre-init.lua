@@ -82,7 +82,7 @@ end
 
 --- This is a really naive algorithm, it will not handle objects and such.
 -- Use only for small tables
-function table.serialize(src, sub, no_G)
+function table.serialize(src, sub, no_G, base)
 	local str = ""
 	if sub then str = "{" end
 	for k, e in pairs(src) do
@@ -99,7 +99,7 @@ function table.serialize(src, sub, no_G)
 			elseif tk == "string" then nk = string.format("[%q]", nk)
 			else nk = "["..nk.."]"
 			end
-			if not sub then nk = "_G"..nk end
+			if not sub then nk = (base or "_G")..nk end
 		end
 
 		if te == "table" then
