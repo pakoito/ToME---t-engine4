@@ -40,7 +40,7 @@ function _M:receiveMouse(button, x, y, isup, force_name, extra)
 	if not isup then return end
 
 	if _M.drag then
-		if _M.drag.prestart then _M.drag = nil print("====?????")
+		if _M.drag.prestart then _M.drag = nil
 		else return self:endDrag(x, y) end
 	end
 
@@ -145,22 +145,27 @@ function _M:reset()
 	self.areas = {}
 end
 
-function _M:startDrag(x, y, cursor, payload, on_done, on_move)
+function _M:startDrag(x, y, cursor, payload, on_done, on_move, no_prestart)
+	local start = function()
+		_M.drag.prestart = nil
+		if _M.drag.cursor then
+			local w, h = _M.drag.cursor:getSize()
+			_M.drag.cursor = _M.drag.cursor:glTexture()
+			core.display.setMouseDrag(_M.drag.cursor, w, h)
+		end
+		print("[MOUSE] enabling drag from predrag")
+	end
+
 	if _M.drag then
 		if _M.drag.prestart and math.max(math.abs(_M.drag.start_x - x), math.abs(_M.drag.start_y - y)) > 6 then
-			_M.drag.prestart = nil
-			if _M.drag.cursor then
-				local w, h = _M.drag.cursor:getSize()
-				_M.drag.cursor = _M.drag.cursor:glTexture()
-				core.display.setMouseDrag(_M.drag.cursor, w, h)
-			end
-			print("[MOUSE] enabling drag from predrag")
+			start()
 		end
 		return
 	end
 
 	_M.drag = {start_x=x, start_y=y, payload=payload, on_done=on_done, on_move=on_move, prestart=true, cursor=cursor}
 	print("[MOUSE] pre starting drag'n'drop")
+	if no_prestart then start() end
 end
 
 function _M:endDrag(x, y)
