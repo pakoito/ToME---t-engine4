@@ -17,30 +17,21 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-defineAction{
-	default = { "sym:_TAB:true:false:false:false" },
-	type = "TOGGLE_NPC_LIST",
-	group = "actions",
-	name = "Toggle list of seen creatures",
-}
+require "engine.class"
+local Base = require "engine.ui.Base"
+local Focusable = require "engine.ui.Focusable"
 
-defineAction{
-	default = { "sym:=m:true:false:false:false" },
-	type = "SHOW_MESSAGE_LOG",
-	group = "actions",
-	name = "Show message log",
-}
+--- An empty space
+module(..., package.seeall, class.inherit(Base, Focusable))
 
-defineAction{
-	default = { "sym:_PRINTSCREEN:false:false:false:false" },
-	type = "SCREENSHOT",
-	group = "actions",
-	name = "Take a screenshot",
-}
+function _M:init(t)
+	self.w = assert(t.width, "no empty zone width")
+	self.h = assert(t.height, "no empty zone height")
+	Base.init(self, t)
+end
 
-defineAction{
-	default = { "sym:_TAB:false:false:false:false" },
-	type = "SHOW_MAP",
-	group = "actions",
-	name = "Show map",
-}
+function _M:generate()
+end
+
+function _M:display(x, y)
+end

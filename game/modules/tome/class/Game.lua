@@ -1390,6 +1390,10 @@ function _M:setupCommands()
 			if not ok and err then print(debug.traceback(co)) error(err) end
 		end,
 
+		SHOW_MAP = function()
+			game:registerDialog(require("mod.dialogs.ShowMap").new())
+		end,
+
 		USERCHAT_SHOW_TALK = function()
 			self.show_userchat = not self.show_userchat
 		end,

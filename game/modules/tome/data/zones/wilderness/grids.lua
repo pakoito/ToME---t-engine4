@@ -67,6 +67,7 @@ newEntity{
 	block_sight = true,
 	nice_tiler = { method="replace", base={"FOREST", 100, 1, 30}},
 	nice_editer = grass_editer,
+	special_minimap = colors.GREEN,
 }
 for i = 1, 30 do newEntity{ base="FOREST", define_as = "FOREST"..i, image = "terrain/grass.png", add_displays = class:makeTrees("terrain/tree_alpha", 13, 9)} end
 
@@ -82,6 +83,7 @@ newEntity{
 	block_sight = true,
 	nice_tiler = { method="replace", base={"OLD_FOREST", 100, 1, 30}},
 	nice_editer = grass_editer,
+	special_minimap = colors.GREEN,
 }
 for i = 1, 30 do newEntity{ base="OLD_FOREST", define_as = "OLD_FOREST"..i, image = "terrain/grass.png", add_displays = class:makeTrees("terrain/tree_alpha", 13, 9, colors.GREY)} end
 
@@ -112,6 +114,7 @@ newEntity{
 	block_sight = true,
 	nice_tiler = { method="replace", base={"BURNT_FOREST", 100, 1, 20}},
 	nice_editer = lava_editer,
+	special_minimap = colors.GREY,
 }
 for i = 1, 20 do newEntity{ base="BURNT_FOREST", define_as = "BURNT_FOREST"..i, name = "burnt tree", image = "terrain/lava_floor.png", add_displays = class:makeTrees("terrain/burnttree_alpha", 8, 0)} end
 
@@ -135,6 +138,7 @@ newEntity{
 	can_encounter=true, equilibrium_level=-10,
 	nice_editer = ice_editer,
 	nice_tiler = { method="replace", base={"FROZEN_SEA", 100, 1, 4}},
+	special_minimap = colors.BLUE,
 }
 for i = 1, 4 do newEntity{ base="FROZEN_SEA", define_as = "FROZEN_SEA"..i, add_mos = {{image = "terrain/ice/frozen_ground_5_0"..i..".png"}}} end
 
@@ -169,6 +173,7 @@ newEntity{
 	display = '~', color=colors.AQUAMARINE, back_color=colors.DARK_BLUE,
 	always_remember = true,
 	can_encounter="water", equilibrium_level=-10,
+	special_minimap = colors.BLUE,
 }
 newEntity{ base = "WATER_BASE", define_as = "WATER_BASE_DEEP", can_pass = {pass_water=1}, does_block_move = true }
 
@@ -260,6 +265,7 @@ newEntity{
 	block_sight = true,
 	nice_tiler = { method="replace", base={"JUNGLE_FOREST", 100, 1, 30}},
 	nice_editer = jungle_grass_editer,
+	special_minimap = colors.GREEN,
 }
 for i = 1, 30 do
 	newEntity{ base="JUNGLE_FOREST", define_as = "JUNGLE_FOREST"..i, image = "terrain/jungle/jungle_grass_floor_01.png", add_displays = class:makeTrees("terrain/jungle/jungle_tree_", 17, 7)}

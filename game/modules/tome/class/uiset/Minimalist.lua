@@ -1071,6 +1071,8 @@ function _M:displayPlayer(scale, bx, by)
 end
 
 function _M:displayMinimap(scale, bx, by)
+	if self.no_minimap then return end
+
 	local map = game.level.map
 
 	mm_shadow[1]:toScreenFull(0, 2, mm_shadow[6], mm_shadow[7], mm_shadow[2], mm_shadow[3])
@@ -1107,6 +1109,8 @@ function _M:displayMinimap(scale, bx, by)
 				elseif button == "right" then
 					local tmx, tmy = math.floor((bx-50) / 3), math.floor((by-30) / 3)
 					game.level.map:moveViewSurround(tmx + game.minimap_scroll_x, tmy + game.minimap_scroll_y, 1000, 1000)
+				elseif event == "button" and button == "middle" then
+					game.key:triggerVirtual("SHOW_MAP")
 				end
 			end
 		end
@@ -1159,14 +1163,14 @@ function _M:display(nb_keyframes)
 	profile.chat:toScreen()
 	self.logdisplay:toScreen()
 
-	if self.show_npc_list then
+	if game.show_npc_list then
 		self.npcs_display:toScreen()
 	else
 		self.hotkeys_display:toScreen()
 	end
 
 	sep[1]:toScreenFull(0, self.map_h_stop, game.w, sep[7], sep[2], sep[3])
-	sep_vines[1]:toScreenFull(0, self.map_h_stop, game.w, sep_vines[7], sep_vines[2], sep_vines[3])
+	sep_vines[1]:toScreenFull(0, self.map_h_stop - 3, game.w, sep_vines[7], sep_vines[2], sep_vines[3])
 end
 
 function _M:setupMouse(mouse)
