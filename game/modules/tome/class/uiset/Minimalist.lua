@@ -195,6 +195,17 @@ function _M:saveSettings()
 	game:saveSettings("tome.uiset_minimalist", table.concat(lines, "\n"))
 end
 
+function _M:toggleUI()
+	UISet.toggleUI(self)
+	print("Toggling UI", self.no_ui)
+	self:resizeIconsHotkeysToolbar()
+	self.res = {}
+	self.party = {}
+	self.tbuff = {}
+	self.pbuff = {}
+	if game.level then self:setupMinimap(game.level) end
+end
+
 function _M:activate()
 	local size, size_mono, font, font_mono, font_mono_h, font_h
 	if config.settings.tome.fonts.type == "fantasy" then
@@ -268,8 +279,17 @@ function _M:resizeIconsHotkeysToolbar()
 	self.hotkeys_display_icons = HotkeysIconsDisplay.new(nil, 0, game.h - h, game.w, h, "/data/gfx/ui/hotkeys/back.png", self.init_font_mono, self.init_size_mono, config.settings.tome.hotkey_icons_size, config.settings.tome.hotkey_icons_size)
 	self.hotkeys_display_icons:enableShadow(0.6)
 
+	if self.no_ui then
+		self.map_h_stop = game.h
+		game:resizeMapViewport(game.w, self.map_h_stop)
+		self.logdisplay.display_y = self.logdisplay.display_y + self.map_h_stop - oldstop
+		profile.chat.display_y = profile.chat.display_y + self.map_h_stop - oldstop
+		game:setupMouse()
+		return
+	end
+
 	if game.inited then
-		game:resizeMapViewport(game.w, self.map_h_stop - 16)
+		game:resizeMapViewport(game.w, self.map_h_stop)
 		self.logdisplay.display_y = self.logdisplay.display_y + self.map_h_stop - oldstop
 		profile.chat.display_y = profile.chat.display_y + self.map_h_stop - oldstop
 		game:setupMouse()
@@ -806,7 +826,7 @@ function _M:displayResources(scale, bx, by)
 
 		-- Compute how much space to reserve on the side
 		self.side_4 = x + fshat[6]
-		Map.viewport_padding_4 = math.floor(scale * (self.side_4 / Map.tile_w))
+--		Map.viewport_padding_4 = math.floor(scale * (self.side_4 / Map.tile_w))
 	end
 end
 
@@ -965,7 +985,7 @@ function _M:displayParty(scale, bx, by)
 		end
 
 		-- Compute how much space to reserve on the side
-		Map.viewport_padding_8 = math.floor(scale * y / Map.tile_w)
+--		Map.viewport_padding_8 = math.floor(scale * y / Map.tile_w)
 	end
 end
 
@@ -1096,6 +1116,8 @@ function _M:displayMinimap(scale, bx, by)
 			if event == "out" then self.mhandle.minimap = nil return
 			else self.mhandle.minimap = true end
 
+			game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, "Left mouse to move\nRight mouse to scroll\nMiddle mouse to show full map")
+
 			-- Move handle
 			if bx >= self.mhandle_pos.minimap.x and bx <= self.mhandle_pos.minimap.x + move_handle[6] and by >= self.mhandle_pos.minimap.y and by <= self.mhandle_pos.minimap.y + move_handle[7] then
 				self:uiMoveResize("minimap", button, mx, my, xrel, yrel, bx, by, event)
@@ -1123,6 +1145,8 @@ function _M:display(nb_keyframes)
 
 	-- Now the map, if any
 	game:displayMap(nb_keyframes)
+
+	if self.no_ui then return end
 
 	-- Minimap display
 	if game.level and game.level.map then

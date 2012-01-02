@@ -21,7 +21,7 @@ function loadFunction(fct)
 
 	base.setfenv(fct, settings)
 	local ret, err = base.pcall(fct)
-base.print("====", ret,err)
+	--base.print("====", ret,err)
 	loader.active = false
 
 	if ret then return true

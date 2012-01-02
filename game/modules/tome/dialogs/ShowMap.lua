@@ -50,6 +50,9 @@ function _M:init()
 	local mc = GenericContainer.new{width=mw, height=mh}
 	local uis = { {left=0, top=0, ui=mc} }
 
+	game.minimap_scroll_x = util.bound(game.minimap_scroll_x, 0, math.max(0, map.w - t_per_w))
+	game.minimap_scroll_y = util.bound(game.minimap_scroll_y, 0, math.max(0, map.h - t_per_h))
+
 	mc.mouse:registerZone(0, 0, mc.w, mc.h, function(button, mx, my, xrel, yrel, bx, by, event)
 		if event == "out" then game.tooltip_x, game.tooltip_y = 1, 1 return end
 

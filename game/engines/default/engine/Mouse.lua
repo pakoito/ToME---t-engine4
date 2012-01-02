@@ -143,6 +143,7 @@ end
 
 function _M:reset()
 	self.areas = {}
+	self.areas_name = {}
 end
 
 function _M:startDrag(x, y, cursor, payload, on_done, on_move, no_prestart)

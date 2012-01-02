@@ -198,3 +198,10 @@ defineAction{
 	group = "movement",
 	name = "Attack diagonally right and down",
 }
+
+defineAction{
+	default = { "sym:_w:false:false:true:false" },
+	type = "TOGGLE_UI",
+	group = "interface",
+	name = "Toggle UI display",
+}

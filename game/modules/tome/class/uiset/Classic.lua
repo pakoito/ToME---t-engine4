@@ -312,7 +312,7 @@ function _M:display(nb_keyframes)
 	game:displayMap(nb_keyframes)
 
 	-- Minimap display
-	if game.level and game.level.map then
+	if game.level and game.level.map and not self.no_minimap then
 		local map = game.level.map
 --		if self.mm_fbo then
 --			self.mm_fbo:use(true)

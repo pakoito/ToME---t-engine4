@@ -55,8 +55,6 @@ local Gestures = require "engine.ui.Gestures"
 local Dialog = require "engine.ui.Dialog"
 local MapMenu = require "mod.dialogs.MapMenu"
 
-local UISet = require "mod.class.uiset.Minimalist"
-
 module(..., package.seeall, class.inherit(engine.GameTurnBased, engine.interface.GameMusic, engine.interface.GameSound, engine.interface.GameTargeting))
 
 -- Difficulty settings
@@ -334,7 +332,7 @@ function _M:loaded()
 	Zone.alter_filter = function(...) return self.state:entityFilterAlter(...) end
 	Zone.post_filter = function(...) return self.state:entityFilterPost(...) end
 
-	self.uiset = UISet.new()
+	self.uiset = (require("mod.class.uiset."..(config.settings.tome.uiset_mode or "Minimalist"))).new()
 
 	Map:setViewerActor(self.player)
 	self:setupDisplayMode(false, "init")
@@ -1398,6 +1396,10 @@ function _M:setupCommands()
 			self.show_userchat = not self.show_userchat
 		end,
 
+		TOGGLE_UI = function()
+			self.uiset:toggleUI()
+		end,
+
 		TOGGLE_BUMP_ATTACK = function()
 			local game_or_player = not config.settings.tome.actor_based_movement_mode and self or game.player
 
@@ -1416,7 +1418,7 @@ function _M:setupCommands()
 end
 
 function _M:setupMouse(reset)
-	if reset then self.mouse:reset() end
+	if reset == nil or reset then self.mouse:reset() end
 	self.mouse:registerZone(Map.display_x, Map.display_y, Map.viewport.width, Map.viewport.height, function(button, mx, my, xrel, yrel, bx, by, event, extra)
 		self.tooltip.add_map_str = extra and extra.log_str
 

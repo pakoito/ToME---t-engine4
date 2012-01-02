@@ -42,3 +42,7 @@ end
 
 function _M:setupMouse(mouse)
 end
+
+function _M:toggleUI()
+	self.no_ui = not self.no_ui
+end
