@@ -237,12 +237,12 @@ function _M:activate()
 	self.hotkeys_display_text:setColumns(3)
 	self:resizeIconsHotkeysToolbar()
 
-	self.logdisplay = LogDisplay.new(0, self.map_h_stop - font_h * config.settings.tome.log_lines -16, (game.w) / 2, font_h * config.settings.tome.log_lines, nil, font, size, nil, nil)
+	self.logdisplay = LogDisplay.new(0, self.map_h_stop - font_h * config.settings.tome.log_lines - sep[7], (game.w) / 2, font_h * config.settings.tome.log_lines, nil, font, size, nil, nil)
 	self.logdisplay.resizeToLines = function() self.logdisplay:resize(0, self.map_h_stop - font_h * config.settings.tome.log_lines -16, (game.w) / 2, font_h * config.settings.tome.log_lines) end
 	self.logdisplay:enableShadow(1)
 	self.logdisplay:enableFading(config.settings.tome.log_fade or 3)
 
-	profile.chat:resize(0 + (game.w) / 2, self.map_h_stop - font_h * config.settings.tome.log_lines -16, (game.w) / 2, font_h * config.settings.tome.log_lines, font, size, nil, nil)
+	profile.chat:resize(0 + (game.w) / 2, self.map_h_stop - font_h * config.settings.tome.log_lines - sep[7], (game.w) / 2, font_h * config.settings.tome.log_lines, font, size, nil, nil)
 	profile.chat.resizeToLines = function() profile.chat:resize(0 + (game.w) / 2, self.map_h_stop - font_h * config.settings.tome.log_lines -16, (game.w) / 2, font_h * config.settings.tome.log_lines) end
 	profile.chat:enableShadow(1)
 	profile.chat:enableFading(config.settings.tome.log_fade or 3)
@@ -273,8 +273,9 @@ function _M:resizeIconsHotkeysToolbar()
 	local h = 52
 	if config.settings.tome.hotkey_icons then h = (4 + config.settings.tome.hotkey_icons_size) * config.settings.tome.hotkey_icons_rows end
 
-	local oldstop = self.map_h_stop or (game.h - h - sep[7])
-	self.map_h_stop = game.h - h - sep[7]
+	local oldstop = self.map_h_stop_up or (game.h - h)
+	self.map_h_stop = game.h - h
+	self.map_h_stop_up = game.h - h - sep[7]
 
 	self.hotkeys_display_icons = HotkeysIconsDisplay.new(nil, 0, game.h - h, game.w, h, "/data/gfx/ui/hotkeys/back.png", self.init_font_mono, self.init_size_mono, config.settings.tome.hotkey_icons_size, config.settings.tome.hotkey_icons_size)
 	self.hotkeys_display_icons:enableShadow(0.6)
@@ -282,16 +283,16 @@ function _M:resizeIconsHotkeysToolbar()
 	if self.no_ui then
 		self.map_h_stop = game.h
 		game:resizeMapViewport(game.w, self.map_h_stop)
-		self.logdisplay.display_y = self.logdisplay.display_y + self.map_h_stop - oldstop
-		profile.chat.display_y = profile.chat.display_y + self.map_h_stop - oldstop
+		self.logdisplay.display_y = self.logdisplay.display_y + self.map_h_stop_up - oldstop
+		profile.chat.display_y = profile.chat.display_y + self.map_h_stop_up - oldstop
 		game:setupMouse()
 		return
 	end
 
 	if game.inited then
 		game:resizeMapViewport(game.w, self.map_h_stop)
-		self.logdisplay.display_y = self.logdisplay.display_y + self.map_h_stop - oldstop
-		profile.chat.display_y = profile.chat.display_y + self.map_h_stop - oldstop
+		self.logdisplay.display_y = self.logdisplay.display_y + self.map_h_stop_up - oldstop
+		profile.chat.display_y = profile.chat.display_y + self.map_h_stop_up - oldstop
 		game:setupMouse()
 	end
 
@@ -1193,8 +1194,8 @@ function _M:display(nb_keyframes)
 		self.hotkeys_display:toScreen()
 	end
 
-	sep[1]:toScreenFull(0, self.map_h_stop, game.w, sep[7], sep[2], sep[3])
-	sep_vines[1]:toScreenFull(0, self.map_h_stop - 3, game.w, sep_vines[7], sep_vines[2], sep_vines[3])
+	sep[1]:toScreenFull(0, self.map_h_stop_up, game.w, sep[7], sep[2], sep[3])
+	sep_vines[1]:toScreenFull(0, self.map_h_stop_up - 3, game.w, sep_vines[7], sep_vines[2], sep_vines[3])
 end
 
 function _M:setupMouse(mouse)
