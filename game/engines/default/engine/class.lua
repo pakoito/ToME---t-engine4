@@ -41,22 +41,54 @@ function make(c)
 	return c
 end
 
-function inherit(base, ...)
-	local ifs = {...}
+function inherit(...)
+	local bases = {...}
 	return function(c)
-		if #ifs == 0 then
-			setmetatable(c, {__index=base})
-		else
-			for i, _if in ipairs(ifs) do
-				for k, e in pairs(_if) do
-					if k ~= "init" and k ~= "_NAME" and k ~= "_M" and k ~= "_PACKAGE" and k ~= "new" then
-						c[k] = e
---						print(("caching interface value %s (%s) from %s to %s"):format(k, tostring(e), _if._NAME, c._NAME))
+		c._BASES = bases
+		-- Recursive inheritance caching
+		-- Inheritance proceeds from the first to last argument, so if the first and last base classes share a key the value will match the last base class
+		if #bases > 1 then
+			local skip_key = {init=true, _NAME=true, _M=true, _PACKAGE=true, new=true, _BASES=true, castAs=true}
+			local completed_bases = {}
+--			local inheritance_mapper = {}
+			local cache_inheritance
+			cache_inheritance = function(c, base)
+				-- Only cache a base class once
+				if not completed_bases[base] then
+					-- Recurse first so we replace those values
+					if base._BASES and type(base._BASES) == "table" then
+						for i, _base in ipairs(base._BASES) do
+							cache_inheritance(c, _base)
+						end
 					end
+					-- Cache all the immediate variables
+--					local ncopied = 0
+					for k, e in pairs(base) do
+						if not skip_key[k] and (base[k] ~= nil) then
+--							if c[k] ~= nil then
+--								print(("INHERIT: *WARNING* replacing interface value %s (%s) from %s with (%s) from %s"):format(k, tostring(c[k]), inheritance_mapper[k], tostring(base[k]), base._NAME))
+--							else
+--								print(("INHERIT: caching interface value %s (%s) from %s to %s"):format(k, tostring(e), base._NAME, c._NAME))
+--							end
+							c[k] = base[k]
+--							inheritance_mapper[k] = base._NAME
+--							ncopied = ncopied + 1
+						end
+					end
+--					print(("INHERIT: cached %d values from %s to %s"):format(ncopied, base._NAME, c._NAME))
+					completed_bases[base] = true
+					completed_bases[#completed_bases+1] = base
 				end
 			end
-			setmetatable(c, {__index=base})
+			local i = 1
+			while i <= #bases do
+--				print(("INHERIT: base class #%d, %s"):format(i, bases[i]._NAME))
+				cache_inheritance(c, bases[i])
+				i = i + 1
+			end
+--			print(("INHERIT: recursed through %d base classes for %s"):format(#completed_bases, c._NAME))
 		end
+		setmetatable(c, {__index=bases[1]})
 		c.new = function(...)
 			local obj = {}
 			obj.__CLASSNAME = c._NAME
