@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 require "engine.class"
+local UI = require "engine.ui.Base"
 local UISet = require "mod.class.uiset.UISet"
 local DebugConsole = require "engine.DebugConsole"
 local PlayerDisplay = require "mod.class.PlayerDisplay"
@@ -35,6 +36,13 @@ local Map = require "engine.Map"
 module(..., package.seeall, class.inherit(UISet, TooltipsData))
 
 local move_handle = {core.display.loadImage("/data/gfx/ui/move_handle.png"):glTexture()}
+
+local frames_colors = {
+	ok = {0.3, 0.6, 0.3},
+	sustain = {0.6, 0.6, 0},
+	cooldown = {0.6, 0, 0},
+	disabled = {0.65, 0.65, 0.65},
+}
 
 -- Load the various shaders used to display resources
 air_c = {0x92/255, 0xe5, 0xe8}
@@ -158,6 +166,8 @@ function _M:init()
 		minimap = {x=w - 239, y=0, scale=1},
 	}
 	table.merge(self.places, config.settings.tome.uiset_minimalist and config.settings.tome.uiset_minimalist.places or {}, true)
+
+	self.buffs_base = UI:makeFrame("ui/icon-frame/frame", 40, 40)
 
 	self.side_4 = 0
 	self.side_6 = 0
@@ -851,7 +861,7 @@ function _M:handleEffect(player, eff_id, e, p, x, y, hs, bx, by)
 			txt = self.buff_font:draw(dur, 40, colors.WHITE.r, colors.WHITE.g, colors.WHITE.b, true)[1]
 			txt.fw, txt.fh = self.buff_font:size(dur)
 		end
-		local icon = e.status ~= "detrimental" and icon_green or icon_red
+		local icon = e.status ~= "detrimental" and frames_colors.ok or frames_colors.cooldown
 
 		local desc_fct = function(button, mx, my, xrel, yrel, bx, by, event)
 			game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, desc)
@@ -864,7 +874,7 @@ function _M:handleEffect(player, eff_id, e, p, x, y, hs, bx, by)
 		self.tbuff[eff_id..":"..dur] = {eff_id, "tbuff"..eff_id, function(x, y)
 			core.display.drawQuad(x, y, hs, hs, 0, 0, 0, 255)
 			e.display_entity:toScreen(self.hotkeys_display_icons.tiles, x+4, y+4, 32, 32)
-			icon[1]:toScreenFull(x, y, hs, hs, icon[2] * hs / icon[6], icon[3] * hs / icon[7], 255, 255, 255, 255)
+			UI:drawFrame(self.buffs_base, x, y, icon[1], icon[2], icon[3], 1)
 			if txt then
 				txt._tex:toScreenFull(x+4+2 + (40 - txt.fw)/2, y+4+2 + (40 - txt.fh)/2, txt.w, txt.h, txt._tex_w, txt._tex_h, 0, 0, 0, 0.7)
 				txt._tex:toScreenFull(x+4 + (40 - txt.fw)/2, y+4 + (40 - txt.fh)/2, txt.w, txt.h, txt._tex_w, txt._tex_h)
@@ -906,7 +916,7 @@ function _M:displayBuffs(scale, bx, by)
 					self.pbuff[tid] = {tid, "pbuff"..tid, function(x, y)
 						core.display.drawQuad(x, y, hs, hs, 0, 0, 0, 255)
 						t.display_entity:toScreen(self.hotkeys_display_icons.tiles, x+4, y+4, 32, 32)
-						icon_yellow[1]:toScreenFull(x, y, hs, hs, icon_yellow[2] * hs / icon_yellow[6], icon_yellow[3] * hs / icon_yellow[7], 255, 255, 255, 255)
+						UI:drawFrame(self.buffs_base, x, y, frames_colors.sustain[1], frames_colors.sustain[2], frames_colors.sustain[3], 1)
 					end}
 				end
 

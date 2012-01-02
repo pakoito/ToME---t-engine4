@@ -20,6 +20,7 @@
 require "engine.class"
 local Entity = require "engine.Entity"
 local Tiles = require "engine.Tiles"
+local UI = require "engine.ui.Base"
 
 module(..., package.seeall, class.make)
 
@@ -47,10 +48,12 @@ function _M:init(actor, x, y, w, h, bgcolor, fontname, fontsize, icon_w, icon_h)
 	self.frames = {w=math.floor(fw * icon_w / 64), h=math.floor(fh * icon_h / 64), rw=icon_w / 64, rh=icon_h / 64}
 	self.frames.fx = math.floor((self.frames.w - icon_w) / 2)
 	self.frames.fy = math.floor((self.frames.h - icon_h) / 2)
-	self.frames.ok = { core.display.loadImage("/data/gfx/ui/talent_frame_ok.png"):glTexture() }
-	self.frames.disabled = { core.display.loadImage("/data/gfx/ui/talent_frame_disabled.png"):glTexture() }
-	self.frames.cooldown = { core.display.loadImage("/data/gfx/ui/talent_frame_cooldown.png"):glTexture() }
-	self.frames.sustain = { core.display.loadImage("/data/gfx/ui/talent_frame_sustain.png"):glTexture() }
+--	self.frames.ok = { core.display.loadImage("/data/gfx/ui/talent_frame_ok.png"):glTexture() }
+--	self.frames.disabled = { core.display.loadImage("/data/gfx/ui/talent_frame_disabled.png"):glTexture() }
+--	self.frames.cooldown = { core.display.loadImage("/data/gfx/ui/talent_frame_cooldown.png"):glTexture() }
+--	self.frames.sustain = { core.display.loadImage("/data/gfx/ui/talent_frame_sustain.png"):glTexture() }
+	self.frames.base = UI:makeFrame("ui/icon-frame/frame", self.frames.w, self.frames.h)
+
 
 	self.default_entity = Entity.new{display='?', color=colors.WHITE}
 
@@ -89,6 +92,13 @@ function _M:resize(x, y, w, h)
 end
 
 local page_to_hotkey = {"", "SECOND_", "THIRD_", "FOURTH_", "FIFTH_"}
+
+local frames_colors = {
+	ok = {0.3, 0.6, 0.3},
+	sustain = {0.6, 0.6, 0},
+	cooldown = {0.6, 0, 0},
+	disabled = {0.65, 0.65, 0.65},
+}
 
 -- Displays the hotkeys, keybinds & cooldowns
 function _M:display()
@@ -153,7 +163,7 @@ function _M:display()
 				local cnt = 0
 				if o then cnt = o:getNumber() end
 				if cnt == 0 then
-					color = {128,128,128}
+					color = {190,190,190}
 					frame = "disabled"
 				end
 				display_entity = o
@@ -207,14 +217,18 @@ function _M:toScreen()
 		local item = self.items[i]
 		local key = item.key
 		local gtxt = item.gtxt
-		local frame = self.frames[item.frame]
+		local frame = frames_colors[item.frame]
 		local pagesel = item.pagesel and 1 or 0.5
-		frame[1]:toScreenFull(self.display_x + item.x, self.display_y + item.y, self.frames.w, self.frames.h, frame[2] * self.frames.rw, frame[3] * self.frames.rh, pagesel, pagesel, pagesel, 255)
+
 		item.e:toScreen(self.tiles, self.display_x + item.x + self.frames.fx, self.display_y + item.y + self.frames.fy, self.icon_w, self.icon_h)
 
 		if item.color then core.display.drawQuadPart(self.display_x + item.x + self.frames.fx, self.display_y + item.y + self.frames.fy, self.icon_w, self.icon_h, item.angle, item.color[1], item.color[2], item.color[3], 128) end
 
 		if self.cur_sel == item.i then core.display.drawQuad(self.display_x + item.x + self.frames.fx, self.display_y + item.y + self.frames.fy, self.icon_w, self.icon_h, 128, 128, 255, 80) end
+
+--		frame[1]:toScreenFull(self.display_x + item.x, self.display_y + item.y, self.frames.w, self.frames.h, frame[2] * self.frames.rw, frame[3] * self.frames.rh, pagesel, pagesel, pagesel, 255)
+--		frame[1]:toScreenFull(self.display_x + item.x, self.display_y + item.y, self.frames.w, self.frames.h, frame[2] * self.frames.rw, frame[3] * self.frames.rh, pagesel, pagesel, pagesel, 255)
+		UI:drawFrame(self.frames.base, self.display_x + item.x, self.display_y + item.y, frame[1], frame[2], frame[3], 1)
 
 		if gtxt then
 			if self.shadow then gtxt._tex:toScreenFull(self.display_x + item.x + self.frames.fy + 2 + (self.icon_w - gtxt.fw) / 2, self.display_y + item.y + self.frames.fy + 2 + (self.icon_h - gtxt.fh) / 2, gtxt.w, gtxt.h, gtxt._tex_w, gtxt._tex_h, 0, 0, 0, self.shadow) end
