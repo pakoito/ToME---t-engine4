@@ -947,6 +947,9 @@ function _M:quickSwitchWeapons()
 
 	if not mh1 or not mh2 or not oh1 or not oh2 then return end
 
+	-- Do not reset power of switched items
+	self.no_power_reset_on_wear = true
+
 	local mhset1, mhset2 = {}, {}
 	local ohset1, ohset2 = {}, {}
 	local pfset1, pfset2 = {}, {}
@@ -989,10 +992,22 @@ function _M:quickSwitchWeapons()
 		end
 	end
 
+	self.no_power_reset_on_wear = nil
+
 	self:playerCheckSustains()
 
 	game.logPlayer(self, "You switch your weapons to: %s.", names)
 	self.changed = true
+end
+
+--- Call when an object is worn
+-- This doesnt call the base interface onWear, it copies the code because we need some tricky stuff
+function _M:onWear(o, bypass_set)
+	mod.class.Actor.onWear(self, o, bypass_set)
+
+	if not self.no_power_reset_on_wear then
+		o:forAllStack(function(so) if so.power and so:attr("power_regen") then so.power = 0 end end)
+	end
 end
 
 -- Go through all sustained talents and turn them off if pre_use fails
