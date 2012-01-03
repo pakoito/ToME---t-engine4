@@ -94,3 +94,9 @@ newAchievement{
 		end
 	end,
 }
+
+newAchievement{
+	name = "Look at me, I'm playing a roguelike!", id = "SELF_CENTERED",
+	show = "name",
+	desc = [[Linking yourself in the ingame chat.]],
+}

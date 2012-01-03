@@ -214,6 +214,7 @@ function _M:toggleUI()
 	self.tbuff = {}
 	self.pbuff = {}
 	if game.level then self:setupMinimap(game.level) end
+	game.player.changed = true
 end
 
 function _M:activate()

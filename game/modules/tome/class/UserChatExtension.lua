@@ -35,6 +35,10 @@ function _M:sendObjectLink(o)
 end
 
 function _M:sendActorLink(m)
+	if m == game:getPlayer(true) then
+		world:gainAchievement("SELF_CENTERED", game.player)
+	end
+
 	local rank, rank_color = m:TextRank()
 	local name = rank_color..m.name:removeUIDCodes().."#LAST#"
 	local desc = tostring(m:tooltip(m.x, m.y, game.player) or "???"):removeUIDCodes()
