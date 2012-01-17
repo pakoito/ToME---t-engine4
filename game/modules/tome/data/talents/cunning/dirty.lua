@@ -89,7 +89,7 @@ newTalent{
 		local tx, ty, sx, sy = target.x, target.y, self.x, self.y
 		local hitted = self:attackTarget(target, nil, 0, true)
 
-		if hitted then
+		if hitted and not self.dead then
 			self:setEffect(self.EFF_EVASION, t.getDuration(self, t), {chance=50})
 
 			-- Displace

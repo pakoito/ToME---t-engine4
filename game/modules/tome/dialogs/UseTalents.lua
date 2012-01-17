@@ -242,7 +242,7 @@ function _M:generateList()
 			if self.actor:isTalentCoolingDown(t) then
 				nodes = cooldowns
 				status = tstring{{"color", "LIGHT_RED"}, self.actor:isTalentCoolingDown(t).." turns"}
-			elseif not self.actor:preUseTalent(t) then
+			elseif not self.actor:preUseTalent(t, true, true) then
 				nodes = unavailables
 				status = tstring{{"color", "GREY"}, "Unavailable"}
 			elseif t.mode == "sustained" then

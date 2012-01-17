@@ -157,10 +157,11 @@ newTalent{
 		local duration = 5 + self:getTalentLevel(t)
 		local radius = self:getTalentRadius(t)
 		local dam = self:combatTalentSpellDamage(t, 12, 130)
+		local actor = self
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			self.x, self.y, duration,
-			DamageType.POISON, dam,
+			DamageType.POISON, {dam=dam, apply_power=actor:combatSpellpower()},
 			radius,
 			5, nil,
 			engine.Entity.new{alpha=100, display='', color_br=20, color_bg=220, color_bb=70},

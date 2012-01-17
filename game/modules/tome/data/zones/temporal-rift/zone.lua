@@ -147,6 +147,11 @@ return {
 	end,
 
 	portal_next = function(npc)
+		-- Remove any special terrain already there, for example Volcano
+		local old = game.level.map(npc.x, npc.y, engine.Map.TERRAIN)
+		if game.level:hasEntity(old) then
+              		game.level:removeEntity(old)
+		end
 		local g = game.zone:makeEntityByName(game.level, "terrain", "RIFT")
 		game.zone:addEntity(game.level, g, "terrain", npc.x, npc.y)
 	end,

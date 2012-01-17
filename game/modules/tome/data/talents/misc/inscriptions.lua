@@ -799,7 +799,8 @@ newInscription{
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[Inflicts %0.2f temporal damage.  If your target survives it will be sent %d turns into the future.
-		It will also lower your paradox by 120 (if you have any).]]):format(damDesc(self, DamageType.TEMPORAL, damage), duration)
+		It will also lower your paradox by 120 (if you have any).
+		Note that messing with the spacetime continuum may have unforeseen consequences.]]):format(damDesc(self, DamageType.TEMPORAL, damage), duration)
 	end,
 	short_info = function(self, t)
 		return ("%0.2f temporal damage, removed from time %d turns"):format(t.getDamage(self, t), t.getDuration(self, t))

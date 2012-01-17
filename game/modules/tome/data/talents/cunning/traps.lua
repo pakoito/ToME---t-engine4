@@ -529,15 +529,17 @@ newTalent{
 
 		local dam = 20 + self:getCun() * 0.5 * self:getTalentLevel(self.T_TRAP_MASTERY)
 
+		-- Need to pass the actor in to the triggered function for the apply_power to work correctly
 		local t = basetrap(self, t, x, y, 8 + self:getTalentLevel(self.T_TRAP_MASTERY), {
 			type = "nature", name = "poison gas trap", color=colors.LIGHT_RED, image = "trap/blast_acid01.png",
 			dam = dam,
+			check_hit = self:combatAttack(),
 			lure_trigger = true,
 			triggered = function(self, x, y, who)
 				-- Add a lasting map effect
-				game.level.map:addEffect(self,
+				game.level.map:addEffect(actor,
 					x, y, 4,
-					engine.DamageType.POISON, self.dam,
+					engine.DamageType.POISON, {dam=self.dam, apply_power=self.check_hit},
 					3,
 					5, nil,
 					{type="vapour"},

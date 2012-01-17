@@ -833,7 +833,6 @@ function _M:magicMap(radius, x, y, checker)
 	self:computeFOV(radius, "block_sense", function(x, y)
 		if not checker or checker(x, y) then
 			game.level.map.remembers(x, y, true)
-			game.level.map.has_seens(x, y, true)
 		end
 	end, true, true, true)
 
@@ -1287,8 +1286,10 @@ function _M:onTakeHit(value, src)
 		local eff = self:hasEffect(self.EFF_FROZEN)
 		eff.hp = eff.hp - value * 0.4
 		value = value * 0.6
-		if eff.hp < 0 and not eff.begone then game:onTickEnd(function() self:removeEffect(self.EFF_FROZEN) end) end
-		eff.begone = game.turn
+		if eff.hp < 0 and not eff.begone then
+			game:onTickEnd(function() self:removeEffect(self.EFF_FROZEN) end)
+			eff.begone = game.turn
+		end
 	end
 
 	-- Adds hate
@@ -2033,7 +2034,7 @@ end
 function _M:onWear(o, bypass_set)
 	o.wielded = {}
 
-	o:forAllStack(function(so) so.__transmo = false end)
+	if self.player then o:forAllStack(function(so) so.__transmo = false end) end
 
 	if o.set_list and not bypass_set then
 		local list = {}

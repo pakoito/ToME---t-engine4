@@ -262,10 +262,11 @@ newTalent{
 		self.alchemy_golem.talents[Talents.T_WEAPON_COMBAT], self.alchemy_golem.talents[Talents.T_WEAPONS_MASTERY] = 2 + rawlev * 2, rawlev * 2
 		local ta, td = self:getTalentFromId(Talents.T_WEAPON_COMBAT), self:getTalentFromId(Talents.T_WEAPONS_MASTERY)
 		local attack = ta.getAttack(self.alchemy_golem, ta)
-		local damage = td.getDamage(self.alchemy_golem, td)
+		local power = td.getDamage(self.alchemy_golem, td)
+		local damage = td.getPercentInc(self.alchemy_golem, td)
 		self.alchemy_golem.talents[Talents.T_WEAPON_COMBAT], self.alchemy_golem.talents[Talents.T_WEAPONS_MASTERY] = olda, oldd
-		return ([[Improves your golem's proficiency with weapons, increasing its attack by %d and damage by %d%%.]]):
-		format(attack, 100 * damage)
+		return ([[Improves your golem's proficiency with weapons, increasing its attack by %d, physical power by %d and damage by %d%%.]]):
+		format(attack, power, 100 * damage)
 	end,
 }
 
@@ -299,7 +300,7 @@ newTalent{
 		local heavyarmor = ta.getArmor(self.alchemy_golem, ta)
 		local hardiness = ta.getArmorHardiness(self.alchemy_golem, ta)
 		local crit = ta.getCriticalChanceReduction(self.alchemy_golem, ta)
-		self.alchemy_golem.talents[Talents.T_THICK_SKIN], self.alchemy_golem.talents[Talents.T_ARMOUR_TRAINING] = olda, oldh
+		self.alchemy_golem.talents[Talents.T_THICK_SKIN], self.alchemy_golem.talents[Talents.T_ARMOUR_TRAINING] = oldh, olda
 
 		return ([[Improves your golem's armour training and damage resistance.
 		Increases all damage resistance by %d%%, increases armour value by %d, reduces chance to be critically hit by %d%% when wearing a heavy mail armour or a massive plate armour, increases armour hardiness by %d%% and increases healing factor by %d%%.

@@ -213,7 +213,7 @@ newTalent{
 		for eff_id, p in pairs(target.tmp) do
 			local e = target.tempeffect_def[eff_id]
 			if e.status == "detrimental" and save_for_effects[e.type] then
-				local save = self[save_for_effects[e.type]](self)
+				local save = self[save_for_effects[e.type]](self, true)
 				local decrease = math.floor(save/5)
 				print("About to reduce duration of... %s. Will use %s. Reducing duration by %d", e.desc, save_for_effects[e.type])
 				p.dur = p.dur - decrease
@@ -227,9 +227,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local physical_reduction = math.floor(self:combatPhysicalResist()/5)
-		local spell_reduction = math.floor(self:combatSpellResist()/5)
-		local mental_reduction = math.floor(self:combatMentalResist()/5)
+		local physical_reduction = math.floor(self:combatPhysicalResist(true)/5)
+		local spell_reduction = math.floor(self:combatSpellResist(true)/5)
+		local mental_reduction = math.floor(self:combatMentalResist(true)/5)
 		return ([[Not the Master himself, nor all the orcs in fallen Reknor, nor even the terrifying unknown beyond Reknor's portal could slow your pursuit of the Staff of Absorption.
 		Children will hear of your relentlessness in song for years to come.
 		When activated, this ability reduces the duration of all active detrimental effects by the appropriate saving throw duration reduction.

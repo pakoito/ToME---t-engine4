@@ -80,7 +80,7 @@ if game.player:knowTalent(game.player.T_TELEPORT_ANGOLWEN) then defineTile('ango
 -- Zigur is only know from the start to non casters
 if not game.player:knowTalent(game.player.T_MANA_POOL) and not game.player:knowTalent(game.player.T_VIM_POOL) and not game.player:knowTalent(game.player.T_VIM_POOL) and not game.player:knowTalent(game.player.T_NEGATIVE_POOL) and not game.player:knowTalent(game.player.T_POSITIVE_POOL) and not game.player:knowTalent(game.player.T_PARADOX_POOL) and not game.player:attr("undead") then defineTile('zigur', "TOWN_ZIGUR") else quickEntity('zigur', ')') end
 -- Iron Council is only known to dwarves
-if game.player:knowTalent(game.player.T_DWARF_RESILIENCE) then defineTile('iron-council', "TOWN_IRON_COUNCIL") else quickEntity('iron-council', '#') end
+if game.player.descriptor.race == "Dwarf" then defineTile('iron-council', "TOWN_IRON_COUNCIL") else quickEntity('iron-council', '#') end
 
 
 -- Far East

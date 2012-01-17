@@ -543,7 +543,15 @@ end
 --- Tries to get a target from the user
 function _M:getTarget(typ)
 	if self:attr("encased_in_ice") then
-		return self.x, self.y, self
+		local orig_range = typ.range
+		typ.range = 0
+		local x, y, act = game:targetGetForPlayer(typ)
+		typ.range = orig_range
+		if x then
+			return self.x, self.y, self
+		else
+			return
+		end
 	else
 		return game:targetGetForPlayer(typ)
 	end
