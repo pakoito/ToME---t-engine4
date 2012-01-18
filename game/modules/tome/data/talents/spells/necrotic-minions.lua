@@ -481,6 +481,7 @@ local minions_list = {
 		see_invisible = 7,
 		undead = 1,
 		name = "barrow wight", color=colors.LIGHT_RED, image="npc/barrow_wight.png",
+		resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/barrow_wight.png", display_h=2, display_y=-1}}},
 		desc=[[It is a ghostly nightmare of an entity.]],
 		max_life = resolvers.rngavg(80,90),
 		combat_armor = 10, combat_def = 8,
