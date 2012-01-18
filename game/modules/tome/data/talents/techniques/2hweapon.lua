@@ -322,7 +322,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with your weapon doing %d%% damage. If the attack hits, the target's attack power is reduced by %d for %d turns.
+		return ([[Hits the target with your weapon doing %d%% damage. If the attack hits, the target's accuracy is reduced by %d for %d turns.
 		Attack power reduction chance increase with your Strength stat.]])
 		:format(
 			100 * self:combatTalentWeaponDamage(t, 1, 1.5),
