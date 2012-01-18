@@ -97,7 +97,7 @@ newEffect{
 	on_gain = function(self, err) return "#Target# wanders around!.", "+Confused" end,
 	on_lose = function(self, err) return "#Target# seems more focused.", "-Confused" end,
 	activate = function(self, eff)
-		eff.power = eff.power - (self:attr("confusion_immune") or 0) / 2
+		eff.power = math.max(eff.power - (self:attr("confusion_immune") or 0), 10)
 		eff.tmpid = self:addTemporaryValue("confused", eff.power)
 		if eff.power <= 0 then eff.dur = 0 end
 	end,
