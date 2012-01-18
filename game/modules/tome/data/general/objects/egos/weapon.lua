@@ -523,6 +523,7 @@ newEntity{
 	},
 }
 
+--[[ Todo: make it balanced
 newEntity{
 	power_source = {nature=true},
 	name = "insatiable ", prefix=true, instant_resolve=true,
@@ -541,4 +542,4 @@ newEntity{
 		},
 	},
 }
-
+]]
