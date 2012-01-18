@@ -109,7 +109,7 @@ newTalent{
 	on_onTakeOff = function(self, t, o)
 		t.updateCurses(self, t)
 	end,
-	
+
 	-- chooses whether the player accepts the cursed aura tree when a cursable item is found..only offered once for Afflicted classes
 	chooseCursedAuraTree = function(self, t)
 		local choose = false
@@ -333,13 +333,13 @@ newTalent{
 		local inven = self:getInven("INVEN")
 		local found = false
 		for i, obj in pairs(inven) do
-			if type(obj) == "table" and obj.cursed and obj.type == "weapon" then
+			if type(obj) == "table" and obj.type == "weapon" then
 				found = true
-			break
+				break
 			end
 		end
 		if not found then
-			game.logPlayer(self, "You cannot use %s without a cursed weapon in your inventory!", t.name)
+			game.logPlayer(self, "You cannot use %s without a weapon in your inventory!", t.name)
 			return false
 		end
 
@@ -354,9 +354,9 @@ newTalent{
 		-- select the item
 		local d = self:showInventory("Which weapon will be your sentry?", inven,
 			function(o)
-				return o.cursed and o.type == "weapon"
+				return o.type == "weapon"
 			end, nil)
-		d.action = function(o, item)
+				d.action = function(o, item)
 				d.used_talent = true
 				d.selected_object = o
 				d.selected_item = item
