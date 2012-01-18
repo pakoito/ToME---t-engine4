@@ -55,6 +55,7 @@ local newInscription = function(t)
 			tt.image = "talents/"..(t.short_name or t.name):lower():gsub("[^a-z0-9_]", "_")..".png"
 		end
 		tt.no_unlearn_last = true
+		tt.is_inscription = true
 		newTalent(tt)
 	end
 end
