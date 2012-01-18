@@ -887,13 +887,15 @@ function _M:loadPremadeUI()
 
 	local load = Button.new{text=" Load ", fct=function() if sel then self:loadPremade(sel) game:unregisterDialog(d) end end}
 	local del = Button.new{text="Delete", fct=function() if sel then
-		local vault = CharacterVaultSave.new(sel.short_name)
-		vault:delete()
-		vault:close()
-		lss = Module:listVaultSavesForCurrent()
-		list.list = lss
-		list:generate()
-		sel = nil
+		self:yesnoPopup(sel.name, "Really delete premade: "..sel.name, function(ret) if ret then
+			local vault = CharacterVaultSave.new(sel.short_name)
+			vault:delete()
+			vault:close()
+			lss = Module:listVaultSavesForCurrent()
+			list.list = lss
+			list:generate()
+			sel = nil
+		end end)
 	end end}
 
 	d:loadUI{
