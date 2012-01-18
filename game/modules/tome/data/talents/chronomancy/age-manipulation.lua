@@ -29,7 +29,7 @@ newTalent{
 	reflectable = true,
 	requires_target = true,
 	proj_speed = 5,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 200)*getParadoxModifier(self, pm) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 150)*getParadoxModifier(self, pm) end,
 	getDamageStat = function(self, t) return 2 + math.ceil(t.getDamage(self, t) / 15) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="temporal_bolt"}}
@@ -69,7 +69,7 @@ newTalent{
 	require = chrono_req2,
 	points = 5,
 	paradox = 15,
-	cooldown = 12,
+	cooldown = 14,
 	tactical = { ATTACKAREA = 2, DISABLE= 2 },
 	range = 0,
 	radius = function(self, t)
@@ -81,7 +81,7 @@ newTalent{
 		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
 	getConfuseDuration = function(self, t) return math.floor((self:getTalentLevel(t) + 2) * getParadoxModifier(self, pm)) end,
-	getConfuseEfficency = function(self, t) return (50 + self:getTalentLevelRaw(t) * 10) * getParadoxModifier(self, pm) end,
+	getConfuseEfficency = function(self, t) return 30 + (self:getTalentLevelRaw(t) * 10) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
@@ -99,7 +99,7 @@ newTalent{
 		local duration = t.getConfuseDuration(self, t)
 		local radius = self:getTalentRadius(t)
 		return ([[Reverts the minds of all creatures in a %d radius cone to an infantile state, in effect confusing them for %d turns.
-		The duration and power of the confusion effect will scale with your Paradox.]]):
+		The duration will scale with your Paradox.]]):
 		format(radius, duration)
 	end,
 }

@@ -1017,29 +1017,22 @@ newEffect{
 newEffect{
 	name = "PRESCIENCE", image = "talents/premonition.png",
 	desc = "Prescience",
-	long_desc = function(self, eff) return ("The target's awareness is fully in the present, increasing stealth detection and see invisibility by %d, accuracy by %d, attack power by %d, spell power by %d, and mindpower by %d.")
-	:format(eff.detect, eff.accuracy, eff.physical, eff.spell, eff.mental) end,
+	long_desc = function(self, eff) return ("The target's awareness is fully in the present, increasing stealth detection and see invisibility by %d and defense by %d."):format(eff.detect, eff.defense) end,
 	type = "magical",
 	subtype = { sense=true, temporal=true },
 	status = "beneficial",
-	parameters = { detect = 10, mental=1, physical=1, spell=1, accuracy=1 },
+	parameters = { detect = 10, defense=1},
 	on_gain = function(self, err) return "#Target# has found the present moment!", "+Prescience" end,
 	on_lose = function(self, err) return "#Target#'s awareness returns to normal.", "-Prescience" end,
 	activate = function(self, eff)
-		eff.atkid = self:addTemporaryValue("combat_atk", eff.accuracy)
-		eff.physid = self:addTemporaryValue("combat_dam", eff.physical)
-		eff.spellid = self:addTemporaryValue("combat_spellpower", eff.spell)
-		eff.mentid = self:addTemporaryValue("combat_mindpower", eff.mental)
+		eff.defid = self:addTemporaryValue("combat_def", eff.defense)
 		eff.invis = self:addTemporaryValue("see_invisible", eff.detect)
 		eff.stealth = self:addTemporaryValue("see_stealth", eff.detect)
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("see_invisible", eff.invis)
 		self:removeTemporaryValue("see_stealth", eff.stealth)
-		self:removeTemporaryValue("combat_atk", eff.atkid)
-		self:removeTemporaryValue("combat_dam", eff.physid)
-		self:removeTemporaryValue("combat_spellpower", eff.spellid)
-		self:removeTemporaryValue("combat_mindpower", eff.mentid)
+		self:removeTemporaryValue("combat_def", eff.defid)
 	end,
 }
 
@@ -1375,12 +1368,12 @@ newEffect{
 newEffect{
 	name = "SPIN_FATE", image = "talents/spin_fate.png",
 	desc = "Spin Fate",
-	long_desc = function(self, eff) return ("The target's defense has been increased by %d, physical save by %d, spell saves by %d, and mental saves by %d."):
-	format(eff.cur_defense or eff.defense, eff.cur_physical or eff.physical, eff.cur_spell or eff.spell, eff.cur_mental or eff.mental) end,
+	long_desc = function(self, eff) return ("The target's physical save has been increased by %d, spell saves by %d, and mental saves by %d."):
+	format(eff.cur_physical or eff.physical, eff.cur_spell or eff.spell, eff.cur_mental or eff.mental) end,
 	type = "magical",
 	subtype = { temporal=true },
 	status = "beneficial",
-	parameters = { physical=0, mental=0, spell=0, defense=0, max = 10},
+	parameters = { physical=0, mental=0, spell=0, max = 10},
 	on_gain = function(self, err) return "#Target# takes fate by the hand.", "+Spin Fate" end,
 	on_lose = function(self, err) return "#Target#'s fate is no longer being spun.", "-Spin Fate" end,
 	on_merge = function(self, old_eff, new_eff)
@@ -1388,18 +1381,15 @@ newEffect{
 		self:removeTemporaryValue("combat_physresist", old_eff.physid)
 		self:removeTemporaryValue("combat_spellresist", old_eff.spellid)
 		self:removeTemporaryValue("combat_mentalresist", old_eff.mentalid)
-		self:removeTemporaryValue("combat_def", old_eff.defenseid)
 		-- combine the old and new values
 		old_eff.cur_physical = math.min(new_eff.max_bonus, old_eff.cur_physical + new_eff.physical)
 		old_eff.cur_spell = math.min(new_eff.max_bonus, old_eff.cur_spell + new_eff.spell)
 		old_eff.cur_mental = math.min(new_eff.max_bonus, old_eff.cur_mental + new_eff.mental)
-		old_eff.cur_defense = math.min(new_eff.max_bonus, old_eff.cur_defense + new_eff.defense)
 		-- and apply the current values
 		old_eff.physid = self:addTemporaryValue("combat_physresist", old_eff.cur_physical)
 		old_eff.spellid = self:addTemporaryValue("combat_spellresist", old_eff.cur_spell)
 		old_eff.mentalid = self:addTemporaryValue("combat_mentalresist", old_eff.cur_mental)
-		old_eff.defenseid = self:addTemporaryValue("combat_def", old_eff.cur_defense)
-
+		
 		old_eff.dur = new_eff.dur
 		return old_eff
 	end,
@@ -1408,19 +1398,16 @@ newEffect{
 		eff.cur_physical = eff.physical
 		eff.cur_spell = eff.spell
 		eff.cur_mental = eff.mental
-		eff.cur_defense = eff.defense
 		-- apply current values
 		eff.physid = self:addTemporaryValue("combat_physresist", eff.physical)
 		eff.spellid = self:addTemporaryValue("combat_spellresist", eff.spell)
 		eff.mentalid = self:addTemporaryValue("combat_mentalresist", eff.mental)
-		eff.defenseid = self:addTemporaryValue("combat_def", eff.defense)
 		eff.particle = self:addParticles(Particles.new("arcane_power", 1))
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("combat_physresist", eff.physid)
 		self:removeTemporaryValue("combat_spellresist", eff.spellid)
 		self:removeTemporaryValue("combat_mentalresist", eff.mentalid)
-		self:removeTemporaryValue("combat_def", eff.defenseid)
 		self:removeParticles(eff.particle)
 	end,
 }

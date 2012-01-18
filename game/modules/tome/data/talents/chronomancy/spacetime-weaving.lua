@@ -26,7 +26,7 @@ newTalent{
 	cooldown = 10,
 	tactical = { CLOSEIN = 2, ESCAPE = 2 },
 	range = function(self, t)
-		return 4 + math.floor(self:getTalentLevel(t))
+		return 2 + math.floor(self:getTalentLevel(t))
 	end,
 	requires_target = true,
 	target = function(self, t)
@@ -148,7 +148,7 @@ newTalent{
 		return 10 + math.floor(self:getTalentLevel(t)/2)
 	end,
 	radius = function(self, t)
-		return math.floor(7 - self:getTalentLevel(t))
+		return 7 - math.floor(self:getTalentLevel(t))
 	end,
 	requires_target = true,
 	getDuration = function (self, t) return 5 + math.floor(self:getTalentLevel(t)*getParadoxModifier(self, pm)) end,

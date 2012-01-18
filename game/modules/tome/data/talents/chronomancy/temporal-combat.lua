@@ -23,6 +23,7 @@ newTalent{
 	require = temporal_req1,
 	mode = "sustained",
 	points = 5,
+	sustain_stamina = 50,
 	sustain_paradox = 100,
 	cooldown = 18,
 	tactical = { BUFF = 2 },
@@ -31,19 +32,17 @@ newTalent{
 		game:playSoundNear(self, "talents/arcane")
 		return {
 			stats = self:addTemporaryValue("inc_stats", {[self.STAT_STR] = t.getPower(self, t)}),
-			phys = self:addTemporaryValue("combat_physresist", t.getPower(self, t)),
 			particle = self:addParticles(Particles.new("temporal_focus", 1)),
 		}
 	end,
 	deactivate = function(self, t, p)
 		self:removeParticles(p.particle)
 		self:removeTemporaryValue("inc_stats", p.stats)
-		self:removeTemporaryValue("combat_physresist", p.phys)
 		return true
 	end,
 	info = function(self, t)
 		local power = t.getPower(self, t)
-		return ([[You've learned to boost your strength through your control of the spacetime continuum.  Increases your strength and your physical saves by %d.
+		return ([[You've learned to boost your strength through your control of the spacetime continuum.  Increases your strength by %d.
 		The effect will scale with your Willpower stat.]]):format(power)
 	end
 }
@@ -74,6 +73,7 @@ newTalent{
 	require = temporal_req3,
 	mode = "sustained",
 	points = 5,
+	sustain_stamina = 50,
 	sustain_paradox = 100,
 	cooldown = 18,
 	tactical = { BUFF = 2 },
@@ -82,19 +82,17 @@ newTalent{
 		game:playSoundNear(self, "talents/arcane")
 		return {
 			stats = self:addTemporaryValue("inc_stats", {[self.STAT_MAG] = t.getPower(self, t)}),
-			spell = self:addTemporaryValue("combat_spellresist", t.getPower(self, t)),
 			particle = self:addParticles(Particles.new("arcane_power", 1)),
 		}
 	end,
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("inc_stats", p.stats)
-		self:removeTemporaryValue("combat_spellresist", p.spell)
 		self:removeParticles(p.particle)
 		return true
 	end,
 	info = function(self, t)
 		local power = t.getPower(self, t)
-		return ([[You've learned to boost your magic through your control over the spacetime continuum.  Increases your magic and your spell saves by %d.
+		return ([[You've learned to boost your magic through your control over the spacetime continuum.  Increases your magic by %d.
 		The effect will scale with your Willpower stat.]]):format(power)
 	end
 }

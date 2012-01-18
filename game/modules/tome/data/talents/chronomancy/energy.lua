@@ -94,8 +94,8 @@ newTalent{
 	direct_hit = true,
 	requires_target = true,
 	range = 6,
-	getTalentCount = function(self, t) return 2 + math.floor(self:getTalentLevel(t) * getParadoxModifier(self, pm)/2) end,
-	getCooldown = function(self, t) return math.ceil(self:getTalentLevel(t)) end,
+	getTalentCount = function(self, t) return 1 + math.floor(self:getTalentLevel(t) * getParadoxModifier(self, pm)/2) end,
+	getCooldown = function(self, t) return 1 + math.ceil(self:getTalentLevel(t)/3) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local tx, ty = self:getTarget(tg)

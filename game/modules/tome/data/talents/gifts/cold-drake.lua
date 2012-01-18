@@ -74,7 +74,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Your skin forms icy scales, damaging all that hit you for %0.2f cold damage and increasing your armor by %d.
-		Each point in cold drake talents also increases your cold resistance by 1%%.]]):format(damDesc(self, DamageType.COLD, t.getDamage(self, t)), t.getArmor(self, t))
+		Each point in cold drake talents also increases your cold resistance by 1%%.
+		The damage and defense will scale with your Willpower stat.]]):format(damDesc(self, DamageType.COLD, t.getDamage(self, t)), t.getArmor(self, t))
 	end,
 }
 

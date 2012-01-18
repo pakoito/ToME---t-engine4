@@ -411,6 +411,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		local t = self:getTalentFromId(self.T_WEAPON_FOLDING)
 		local dam = t.getDamage(self, t)
 		DamageType:get(DamageType.TEMPORAL).projector(self, target.x, target.y, DamageType.TEMPORAL, dam)
+		self:incParadox(- t.getParadoxReduction(self, t))
 	end
 
 	-- Ruin
@@ -741,10 +742,6 @@ end
 function _M:combatAPR(weapon)
 	weapon = weapon or self.combat or {}
 	local addapr = 0
-	if self:knowTalent(Talents.T_WEAPON_FOLDING) and self:isTalentActive(self.T_WEAPON_FOLDING) then
-		local t = self:getTalentFromId(self.T_WEAPON_FOLDING)
-		addapr = t.getArmorPen(self, t)
-	end
 	return self.combat_apr + (weapon.apr or 0) + addapr
 end
 

@@ -26,8 +26,8 @@ newTalent{
 	cooldown = 10,
 	tactical = { BUFF = 2 },
 	points = 5,
-	getDamage = function(self, t) return (2 * self:getTalentLevel(t)) + self:combatTalentSpellDamage(t, 10, 70) end,
-	getArmorPen = function(self, t) return (1 * self:getTalentLevel(t)) + self:combatTalentSpellDamage(t, 5, 15) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 40) end,
+	getParadoxReduction = function(self, t) return self:getTalentLevel(t) end,
 	activate = function(self, t)
 		return {}
 	end,
@@ -36,9 +36,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		local ap = t.getArmorPen(self, t)
-		return ([[Folds a single dimension of your weapons (or ammo), allowing them to penetrate %d armor and adding %0.2f temporal damage to your strikes.
-		The armor penetration and damage will increase with your Spellpower.]]):format(ap, damDesc(self, DamageType.TEMPORAL, damage))
+		local paradox_reduction = t.getParadoxReduction(self, t)
+		return ([[Folds a single dimension of your weapons (or ammo), adding %0.2f temporal damage to your strikes and reducing your Paradox by %0.1f every time you land an attack.
+		The damage will increase with your Spellpower.]]):format(damDesc(self, DamageType.TEMPORAL, damage), paradox_reduction)
 	end,
 }
 
@@ -56,7 +56,7 @@ newTalent{
 		return 4 + math.floor(self:getTalentLevel(t))
 	end,
 	getConfuseDuration = function(self, t) return math.floor((self:getTalentLevel(t) + 2) * getParadoxModifier(self, pm)) end,
-	getConfuseEfficency = function(self, t) return (50 + self:getTalentLevelRaw(t) * 10) end,
+	getConfuseEfficency = function(self, t) return (30 + self:getTalentLevelRaw(t) * 10) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local tx, ty, target = self:getTarget(tg)

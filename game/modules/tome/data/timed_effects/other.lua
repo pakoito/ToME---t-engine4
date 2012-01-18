@@ -338,6 +338,8 @@ newEffect{
 				local t = game.player:getTalentFromId(game.player.T_FORESIGHT)
 				t.do_precog_foresight(self, t)
 			end
+			game.player.energy.value = game.energy_to_act
+			game.paused = true
 		end)
 	end,
 }

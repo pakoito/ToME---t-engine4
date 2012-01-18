@@ -47,7 +47,7 @@ newTalent{
 	require = chrono_req_high2,
 	points = 5,
 	paradox = 5,
-	cooldown = 6,
+	cooldown = 4,
 	tactical = { ATTACK = {TEMPORAL = 2} },
 	range = 10,
 	direct_hit = true,

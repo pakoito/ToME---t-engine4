@@ -176,6 +176,7 @@ local function archery_projectile(tx, ty, tg, self)
 		local t = self:getTalentFromId(self.T_WEAPON_FOLDING)
 		local dam = t.getDamage(self, t)
 		DamageType:get(DamageType.TEMPORAL).projector(self, target.x, target.y, DamageType.TEMPORAL, dam)
+		self:incParadox(- t.getParadoxReduction(self, t))
 	end
 
 	-- Conduit (Psi)
