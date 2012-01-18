@@ -23,11 +23,11 @@ local Stats = require("engine.interface.ActorStats")
 local reward_types = {
 	warrior = {
 		types = {
-			["technique/combat-training"] = 0.7,
+			["technique/conditioning"] = 0.7,
 		},
 		talents = {
-			[Talents.T_WEAPON_COMBAT] = 1,
-			[Talents.T_WEAPONS_MASTERY] = 1,
+			[Talents.T_VITALITY] = 1,
+			[Talents.T_UNFLINCHING_RESOLVE] = 1,
 			[Talents.T_EXOTIC_WEAPONS_MASTERY] = 1,
 		},
 		stats = {

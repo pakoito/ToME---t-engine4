@@ -24,12 +24,17 @@ newTalent{
 	require = techs_req_high1,
 	points = 5,
 	mode = "passive",
+	getRegen = function (self, t) return self:getTalentLevel(t) end,
+	getMax = function(self, t) return self:getTalentLevel(t)*5 end,
 	do_bloodbath = function(self, t)
-		self:setEffect(self.EFF_BLOODBATH, 5 + self:getTalentLevelRaw(t), {regen=math.floor(self:getTalentLevel(t) * 40), hp=math.floor(self:getTalentLevel(t) * 2)})
+		self:setEffect(self.EFF_BLOODBATH, 5 + self:getTalentLevelRaw(t), {regen=t.getRegen(self, t), max=t.getMax(self, t), hp=math.floor(self:getTalentLevel(t) * 2)})
 	end,
 	info = function(self, t)
-		return ([[Delight in spilling the blood of your foes. After scoring a critical hit your life and stamina regeneration is increased by %d%% and your maximum life is increased by %d%%.]]):
-		format(math.floor(self:getTalentLevel(t) * 40), math.floor(self:getTalentLevel(t) * 2))
+		local regen = t.getRegen(self, t)
+		local max_regen = t.getMax(self, t)
+		return ([[Delight in spilling the blood of your foes.  After scoring a critical hit your maximum hit points will be increased by %d%%, your life regeneration by %0.2f per turn, and your stamina regeneration by %0.2f per turn.
+		The life and stamina regeneration will stack up to five times for a maximum of %0.2f and %0.2f each turn, respectfully.]]):
+		format(math.floor(self:getTalentLevel(t) * 2), regen, regen/5, max_regen, max_regen/5)
 	end,
 }
 

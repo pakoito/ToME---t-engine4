@@ -1303,11 +1303,11 @@ newEffect{
 newEffect{
 	name = "BLOODBATH", image = "talents/bloodbath.png",
 	desc = "Bloodbath",
-	long_desc = function(self, eff) return ("The thrill of combat improves the target's maximum life by %d, life regeneration by %d%% and stamina regeneration by %d%%."):format(eff.hp, eff.regen, eff.regen) end,
+	long_desc = function(self, eff) return ("The thrill of combat improves the target's maximum life by %d%%, life regeneration by %0.2f, and stamina regeneration by %0.2f."):format(eff.hp, eff.cur_regen or eff.regen, eff.cur_regen/5 or eff.regen/5) end,
 	type = "mental",
 	subtype = { frenzy=true, heal=true },
 	status = "beneficial",
-	parameters = { hp=10, regen=10 },
+	parameters = { hp=10, regen=10, max=50 },
 	on_gain = function(self, err) return nil, "+Bloodbath" end,
 	on_lose = function(self, err) return nil, "-Bloodbath" end,
 	on_merge = function(self, old_eff, new_eff)
@@ -1318,16 +1318,18 @@ newEffect{
 		-- Take the new values, dont heal, otherwise you get a free heal each crit .. which is totaly broken
 		local v = new_eff.hp * self.max_life / 100
 		new_eff.life_id = self:addTemporaryValue("max_life", v)
-		new_eff.life_regen_id = self:addTemporaryValue("life_regen", new_eff.regen * math.max(0, self.life_regen) / 100)
-		new_eff.stamina_regen_id = self:addTemporaryValue("stamina_regen", new_eff.regen * math.max(0, self.stamina_regen) / 100)
+		new_eff.cur_regen = math.min(old_eff.cur_regen + new_eff.regen, new_eff.max)
+		new_eff.life_regen_id = self:addTemporaryValue("life_regen", new_eff.cur_regen)
+		new_eff.stamina_regen_id = self:addTemporaryValue("stamina_regen", new_eff.cur_regen/5)
 		return new_eff
 	end,
 	activate = function(self, eff)
 		local v = eff.hp * self.max_life / 100
 		eff.life_id = self:addTemporaryValue("max_life", v)
 		self:heal(v)
-		eff.life_regen_id = self:addTemporaryValue("life_regen", eff.regen * math.max(0, self.life_regen) / 100)
-		eff.stamina_regen_id = self:addTemporaryValue("stamina_regen", eff.regen * math.max(0, self.stamina_regen) / 100)
+		eff.cur_regen = eff.regen
+		eff.life_regen_id = self:addTemporaryValue("life_regen", eff.regen)
+		eff.stamina_regen_id = self:addTemporaryValue("stamina_regen", eff.regen /5)
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("max_life", eff.life_id)
