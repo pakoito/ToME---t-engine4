@@ -354,15 +354,13 @@ newEntity{
 	rarity = 40,
 	cost = 80,
 	wielder = {
-		resource_leech_chance = resolvers.mbonus_material(4, 1, function(e, v) v=v*10 return 0, v end),
-		resource_leech_value = resolvers.mbonus_material(15, 5),
 		inc_damage = {
-			[DamageType.COLD] = resolvers.mbonus_material(10, 5),
-			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 5),
+			[DamageType.COLD] = resolvers.mbonus_material(25, 5),
+			[DamageType.DARKNESS] = resolvers.mbonus_material(25, 5),
 		},
 		resists_pen = {
-			[DamageType.COLD] = resolvers.mbonus_material(10, 5),
-			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 5),
+			[DamageType.COLD] = resolvers.mbonus_material(15, 5),
+			[DamageType.DARKNESS] = resolvers.mbonus_material(15, 5),
 		},
 	},
 }

@@ -262,7 +262,7 @@ function _M:checkHit(atk, def, min, max, factor, p)
 		max = 100
 	end --ensures predictable combat for the tutorial
 	print("checkHit", atk, def)
-	local hit = 50 + 5 * (atk - def)
+	local hit = math.ceil(50 + 2.5 * (atk - def))
 	hit = util.bound(hit, min, max)
 	print("=> chance to hit", hit)
 	return rng.percent(hit), hit
@@ -348,6 +348,12 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		game.logSeen(target, "%s misses %s.", srcname, target.name)
 	end
 
+	-- cross-tier effect for accuracy vs. defense
+	local tier_diff = self:getTierDiff(atk, def)
+	if hitted and not target.dead and tier_diff > 0 then
+		target:setEffect(target.EFF_OFFGUARD, tier_diff, {})
+	end
+	
 	-- handle stalk targeting for hits (also handled in Actor for turn end effects)
 	if hitted and target ~= self then
 		if effStalker then
@@ -972,7 +978,9 @@ function _M:physicalCrit(dam, weapon, target, atk, def)
 			chance = chance + p.power
 		end
 	end
-
+	if target:hasEffect(target.EFF_OFFGUARD) then
+		chance = chance + 10
+	end
 
 	if target:hasHeavyArmor() and target:knowTalent(target.T_ARMOUR_TRAINING) then
 		chance = chance - target:getTalentLevel(target.T_ARMOUR_TRAINING) * 1.9
@@ -982,11 +990,8 @@ function _M:physicalCrit(dam, weapon, target, atk, def)
 
 	print("[PHYS CRIT %]", chance)
 	if rng.percent(chance) then
-		if tier_diff > 0 then
-			target:crossTierEffect(target.EFF_OFFBALANCE, atk, "combatDefense")
-		end
-		if target:hasEffect(target.EFF_OFFBALANCE) then
-			crit_power_add = 0.25
+		if target:hasEffect(target.EFF_OFFGUARD) then
+			crit_power_add = crit_power_add + 0.1
 		end
 		dam = dam * (1.5 + crit_power_add + (self.combat_critical_power or 0) / 100)
 		crit = true

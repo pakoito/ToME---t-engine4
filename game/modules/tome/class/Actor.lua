@@ -3147,7 +3147,9 @@ function _M:on_set_temporary_effect(eff_id, e, p)
 		p.minimum = p.min_dur or 0 --Default minimum duration is 0. Can specify something else by putting min_dur=foo in p when calling setEffect()
 		save = self[p.apply_save or save_for_effects[e.type]](self)
 		--local duration = p.maximum - math.max(0, math.floor((save - p.apply_power) / 5))
-		local duration = p.maximum - math.max(0, (math.floor(save/5) - math.floor(p.apply_power/5)))
+		--local duration = p.maximum - math.max(0, (math.floor(save/5) - math.floor(p.apply_power/5)))
+		local percentage = 1 - ((save - p.apply_power)/20)
+		local duration = math.min(p.maximum, math.ceil(p.maximum * percentage))
 		p.dur = util.bound(duration, p.minimum or 0, p.maximum)
 		p.amount_decreased = p.maximum - p.dur
 		local save_type = nil
@@ -3163,7 +3165,7 @@ function _M:on_set_temporary_effect(eff_id, e, p)
 
 		if e.status == "detrimental" and self:checkHit(save, p.apply_power, 0, 95) then
 			game.logSeen(self, "#ORANGE#%s shrugs off the effect '%s'!", self.name:capitalize(), e.desc)
-			p.dur = p.minimum
+			p.dur = 0
 		end
 
 		p.apply_power = nil

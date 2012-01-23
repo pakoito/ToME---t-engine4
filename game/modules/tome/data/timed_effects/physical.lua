@@ -1430,7 +1430,7 @@ newEffect{
 newEffect{
 	name = "OFFBALANCE",
 	desc = "Off-balance",
-	long_desc = function(self, eff) return ("Badly off balance. Attackers gain a 25% bonus to physical critical strike power and movement speed is reduced by 20%%.") end,
+	long_desc = function(self, eff) return ("Badly off balance. Global speed is reduced by 15%%.") end,
 	type = "physical",
 	subtype = { ["cross tier"]=true },
 	status = "detrimental",
@@ -1438,10 +1438,26 @@ newEffect{
 	on_gain = function(self, err) return nil, "+Off-balance" end,
 	on_lose = function(self, err) return nil, "-Off-balance" end,
 	activate = function(self, eff)
-		eff.speedid = self:addTemporaryValue("movement_speed", -0.2)
+		eff.speedid = self:addTemporaryValue("global_speed_add", -0.15)
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("movement_speed", eff.speedid)
+		self:removeTemporaryValue("global_speed_add", eff.speedid)
+	end,
+}
+
+newEffect{
+	name = "OFFGUARD",
+	desc = "Off-guard", image = "talents/precise_strikes.png",
+	long_desc = function(self, eff) return ("Badly off guard. Attackers gain a 10% bonus to physical critcal strike chance and physical critcal strike power.") end,
+	type = "physical",
+	subtype = { ["cross tier"]=true },
+	status = "detrimental",
+	parameters = {power = 1},
+	on_gain = function(self, err) return nil, "+Off-guard" end,
+	on_lose = function(self, err) return nil, "-Off-guard" end,
+	activate = function(self, eff)
+	end,
+	deactivate = function(self, eff)
 	end,
 }
 

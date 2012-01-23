@@ -1058,7 +1058,7 @@ newDamageType{
 		DamageType:get(DamageType.NATURE).projector(src, x, y, DamageType.NATURE, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			target:setEffect(target.EFF_SLOW, 3, {power=0.3, no_ct_effect=true})
+			target:setEffect(target.EFF_SLOW, 3, {power=0.15, no_ct_effect=true})
 		end
 	end,
 }

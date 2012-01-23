@@ -164,6 +164,12 @@ local function archery_projectile(tx, ty, tg, self)
 		game.logSeen(target, "%s misses %s.", srcname, target.name)
 	end
 
+	-- cross-tier effect for accuracy vs. defense
+	local tier_diff = self:getTierDiff(atk, def)
+	if hitted and not target.dead and tier_diff > 0 then
+		target:setEffect(target.EFF_OFFGUARD, tier_diff, {})
+	end
+	
 	-- Ranged project
 	if hitted and not target.dead then for typ, dam in pairs(self.ranged_project) do
 		if dam > 0 then
