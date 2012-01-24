@@ -63,7 +63,6 @@ newBirthDescriptor{
 		["spell/fire-alchemy"]={false, 0.3},
 		["spell/staff-combat"]={true, 0.3},
 		["cunning/survival"]={false, -0.1},
-		["technique/combat-training"]={false, 0},
 	},
 	talents = {
 		[ActorTalents.T_CREATE_ALCHEMIST_GEMS] = 1,
