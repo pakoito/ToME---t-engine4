@@ -534,4 +534,10 @@ function _M:scrollUp(i)
 	if self.scroll > #log - 1 then self.scroll = #log - 1 end
 	if self.scroll < 0 then self.scroll = 0 end
 	self.changed = true
+
+	-- Reset fade
+	local time = core.game.getTime()
+	for _, item in ipairs(log) do
+		item.timestamp = time
+	end
 end
