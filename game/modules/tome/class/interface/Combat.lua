@@ -353,7 +353,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	if hitted and not target.dead and tier_diff > 0 then
 		target:setEffect(target.EFF_OFFGUARD, tier_diff, {})
 	end
-	
+
 	-- handle stalk targeting for hits (also handled in Actor for turn end effects)
 	if hitted and target ~= self then
 		if effStalker then
@@ -1114,7 +1114,7 @@ function _M:combatPhysicalResist(fake)
 		add = add + (self:checkOnDefenseCall("physical") or 0)
 	end
 	if self:knowTalent(self.T_POWER_IS_MONEY) then
-		add = add + util.bound(self.money / (80 - self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 5), 0, self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 10)
+		add = add + util.bound(self.money / (90 - self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 5), 0, self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 7)
 	end
 	return self:rescaleCombatStats(self.combat_physresist + (self:getCon() + self:getStr() + (self:getLck() - 50) * 0.5) * 0.35 + add)
 end
@@ -1127,7 +1127,7 @@ function _M:combatSpellResist(fake)
 		add = add + (self:checkOnDefenseCall("spell") or 0)
 	end
 	if self:knowTalent(self.T_POWER_IS_MONEY) then
-		add = add + util.bound(self.money / (80 - self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 5), 0, self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 10)
+		add = add + util.bound(self.money / (90 - self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 5), 0, self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 7)
 	end
 	return self:rescaleCombatStats(self.combat_spellresist + (self:getMag() + self:getWil() + (self:getLck() - 50) * 0.5) * 0.35 + add)
 end
@@ -1144,7 +1144,7 @@ function _M:combatMentalResist(fake)
 		add = add + t.getMental(self, t)
 	end
 	if self:knowTalent(self.T_POWER_IS_MONEY) then
-		add = add + util.bound(self.money / (80 - self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 5), 0, self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 10)
+		add = add + util.bound(self.money / (90 - self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 5), 0, self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 7)
 	end
 	return self:rescaleCombatStats(self.combat_mentalresist + (self:getCun() + self:getWil() + (self:getLck() - 50) * 0.5) * 0.35 + add)
 end
@@ -1175,6 +1175,20 @@ function _M:combatMovementSpeed()
 		mult = 3
 	end
 	return mult * (self.base_movement_speed or 1) / self.movement_speed
+end
+
+--- Computes see stealth
+function _M:combatSeeStealth()
+	local bonus = 0
+	if self:knowTalent(self.T_PIERCING_SIGHT) then bonus = bonus + 5 + self:getTalentLevel(self.T_PIERCING_SIGHT) * self:getCun(15, true) end
+	return self.level / 2 + self:getCun(25, true) + (self:attr("see_stealth") or 0) + bonus
+end
+
+--- Computes see invisible
+function _M:combatSeeInvisible()
+	local bonus = 0
+	if self:knowTalent(self.T_PIERCING_SIGHT) then bonus = bonus + 5 + self:getTalentLevel(self.T_PIERCING_SIGHT) * self:getCun(15, true) end
+	return (self:attr("see_invisible") or 0) + bonus
 end
 
 --- Check if the actor has a gem bomb in quiver

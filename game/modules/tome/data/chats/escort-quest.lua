@@ -99,8 +99,8 @@ local reward_types = {
 		},
 		talents = {
 			[Talents.T_HEIGHTENED_SENSES] = 1,
-			[Talents.T_TRAP_DETECTION] = 1,
-			[Talents.T_TRAP_DISARM] = 1,
+			[Talents.T_TRAP_HANDLING] = 1,
+			[Talents.T_PIERCING_SIGHT] = 1,
 		},
 		stats = {
 			[Stats.STAT_DEX] = 2,

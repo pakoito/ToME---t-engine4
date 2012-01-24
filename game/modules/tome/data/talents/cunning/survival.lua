@@ -18,14 +18,15 @@
 -- darkgod@te4.org
 
 newTalent{
-	name = "Trap Detection",
+	name = "Trap Handling",
 	type = {"cunning/survival", 1},
 	require = cuns_req1,
 	mode = "passive",
 	points = 5,
 	info = function(self, t)
-		return ([[Your attention to detail allows you to detect traps around you (%d detection 'power').]]):
-		format(self:getTalentLevel(t) * self:getCun(25, true))
+		return ([[Your attention to detail allows you to detect traps around you (%d detection 'power').
+		At level 3 you learn to disarm known traps (%d disarm 'power').]]):
+		format(self:getTalentLevel(t) * self:getCun(25, true), self:getTalentLevel(t) * self:getCun(25, true))
 	end,
 }
 
@@ -53,14 +54,16 @@ newTalent{
 }
 
 newTalent{
-	name = "Trap Disarm",
+	name = "Piercing Sight",
 	type = {"cunning/survival", 3},
 	require = cuns_req3,
 	mode = "passive",
 	points = 5,
 	info = function(self, t)
-		return ([[You have learnt to disarm traps (%d disarm power).]]):
-		format(self:getTalentLevel(t) * self:getCun(25, true))
+		return ([[You look at your surroundings with more intensity than most people, allowing you to see stealthed or invisible creatures.
+		Increases stealth detection by %d and invisibility detection by %d.
+		The detection power increases with Cunning.]]):
+		format(5 + self:getTalentLevel(t) * self:getCun(15, true), 5 + self:getTalentLevel(t) * self:getCun(15, true))
 	end,
 }
 

@@ -70,14 +70,14 @@ newBirthDescriptor{
 		--Miscellaneous trees:
 		["cunning/survival"]={true, 0},
 		["technique/combat-training"]={true, 0},
-		
+
 	},
 	talents = {
 		[ActorTalents.T_KINETIC_SHIELD] = 1,
 		[ActorTalents.T_KINETIC_AURA] = 1,
 		[ActorTalents.T_KINETIC_LEECH] = 1,
 		[ActorTalents.T_BEYOND_THE_FLESH] = 1,
-		[ActorTalents.T_TRAP_DETECTION] = 1,
+		[ActorTalents.T_TRAP_HANDLING] = 1,
 		[ActorTalents.T_TELEKINETIC_GRASP] = 1,
 		[ActorTalents.T_TELEKINETIC_SMASH] = 1,
 		[ActorTalents.T_SHOOT] = 1,

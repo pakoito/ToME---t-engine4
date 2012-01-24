@@ -650,8 +650,8 @@ function _M:move(x, y, force)
 	self.did_energy = nil
 
 	-- Try to detect traps
-	if self:knowTalent(self.T_TRAP_DETECTION) then
-		local power = self:getTalentLevel(self.T_TRAP_DETECTION) * self:getCun(25, true)
+	if self:knowTalent(self.T_TRAP_HANDLING) then
+		local power = self:getTalentLevel(self.T_TRAP_HANDLING) * self:getCun(25, true)
 		local grids = core.fov.circle_grids(self.x, self.y, 1, true)
 		for x, yy in pairs(grids) do for y, _ in pairs(yy) do
 			local trap = game.level.map(x, y, Map.TRAP)
@@ -2996,7 +2996,7 @@ function _M:canSeeNoCache(actor, def, def_pct)
 
 	-- Check for stealth. Checks against the target cunning and level
 	if actor:attr("stealth") and actor ~= self then
-		local def = self.level / 2 + self:getCun(25, true) + (self:attr("see_stealth") or 0)
+		local def = self:combatSeeStealth()
 		local hit, chance = self:checkHitOld(def, actor:attr("stealth") + (actor:attr("inc_stealth") or 0), 0, 100)
 		if not hit then
 			return false, chance
@@ -3006,8 +3006,9 @@ function _M:canSeeNoCache(actor, def, def_pct)
 	-- Check for invisibility. This is a "simple" checkHit between invisible and see_invisible attrs
 	if actor:attr("invisible") then
 		-- Special case, 0 see invisible, can NEVER see invisible things
-		if not self:attr("see_invisible") then return false, 0 end
-		local hit, chance = self:checkHitOld(self:attr("see_invisible"), actor:attr("invisible"), 0, 100)
+		local def = self:combatSeeInvisible()
+		if def <= 0 then return false, 0 end
+		local hit, chance = self:checkHitOld(def, actor:attr("invisible"), 0, 100)
 		if not hit then
 			return false, chance
 		end

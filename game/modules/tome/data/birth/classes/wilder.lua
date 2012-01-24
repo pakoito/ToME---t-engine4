@@ -76,7 +76,7 @@ newBirthDescriptor{
 		[ActorTalents.T_WAR_HOUND] = 1,
 		[ActorTalents.T_RITCH_FLAMESPITTER] = 1,
 		[ActorTalents.T_MEDITATION] = 1,
-		[ActorTalents.T_TRAP_DETECTION] = 1,
+		[ActorTalents.T_TRAP_HANDLING] = 1,
 	},
 	copy = {
 		max_life = 90,

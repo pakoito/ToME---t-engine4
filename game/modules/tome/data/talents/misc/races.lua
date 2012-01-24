@@ -449,7 +449,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Money is the heart of the dwarven Empire, it rules over all other considerations.
 		Increases physical, mental and spell saves based on the amount of gold you possess.
-		+1 save every %d gold, up to +%d.]]):format(80 - self:getTalentLevelRaw(t) * 5, self:getTalentLevelRaw(t) * 10)
+		+1 save every %d gold, up to +%d.]]):format(90 - self:getTalentLevelRaw(t) * 5, self:getTalentLevelRaw(t) * 7)
 	end,
 }
 
