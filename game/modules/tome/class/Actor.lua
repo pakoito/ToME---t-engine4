@@ -3298,7 +3298,7 @@ function _M:transmoInven(inven, idx, o)
 	local price = math.min(o:getPrice() * self:transmoPricemod(o), 25) * o:getNumber()
 	price = math.floor(price * 100) / 100 -- Make sure we get at most 2 digit precision
 	if price ~= price or not tostring(price):find("^[0-9]") then price = 1 end -- NaN is the only value that does not equals itself, this is the way to check it since we do not have a math.isnan method
-	self:removeObject(self:getInven("INVEN"), idx, true)
+	if inven and idx then self:removeObject(inven, idx, true) end
 	self:sortInven()
 	self:incMoney(price)
 	if self.hasQuest and self:hasQuest("shertul-fortress") and self:isQuestStatus("shertul-fortress", engine.Quest.COMPLETED, "transmo-chest") then self:hasQuest("shertul-fortress"):gain_energy(price/10) end

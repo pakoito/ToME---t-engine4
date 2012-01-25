@@ -377,7 +377,24 @@ Items in the chest will not encumber you.]],
 				local o = inven[i]
 				if o.__transmo then nb = nb + 1 end
 			end
-			if nb <= 0 then require("engine.ui.Dialog"):simplePopup("Transmogrification Chest", "You do not have any items to transmogrify in your chest.") return {id=true, used=true} end
+			if nb <= 0 then
+				local floor = game.level.map:getObjectTotal(who.x, who.y)
+				if floor == 0 then
+					require("engine.ui.Dialog"):simplePopup("Transmogrification Chest", "You do not have any items to transmogrify in your chest or on the floor.")
+				else
+					require("engine.ui.Dialog"):yesnoPopup("Transmogrification Chest", "Transmogrify all "..floor.." item(s) on the floor?", function(ret)
+						if not ret then return end
+						for i = floor, 1, -1 do
+							local o = game.level.map:getObject(who.x, who.y, i)
+							if who:transmoFilter(o) then
+								game.level.map:removeObject(who.x, who.y, i)
+								who:transmoInven(nil, nil, o)
+							end
+						end
+					end)
+				end
+				return {id=true, used=true}
+			end
 
 			require("engine.ui.Dialog"):yesnoPopup("Transmogrification Chest", "Transmogrify all "..nb.." item(s) in your chest?", function(ret)
 				if not ret then return end
