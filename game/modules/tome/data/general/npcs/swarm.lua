@@ -47,7 +47,7 @@ newEntity{ base = "BASE_NPC_INSECT",
 	level_range = {1, 25}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(1,2),
-	combat = { dam=1, atk=15, apr=20 },
+	combat = { dam=1, atk=0, apr=20 },
 }
 
 newEntity{ base = "BASE_NPC_INSECT",
@@ -56,7 +56,7 @@ newEntity{ base = "BASE_NPC_INSECT",
 	level_range = {2, 25}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(1,3),
-	combat = { dam=2, atk=15, apr=20 },
+	combat = { dam=2, atk=0, apr=20 },
 
 	resolvers.talents{ [Talents.T_BITE_POISON]=1 },
 }
@@ -70,7 +70,7 @@ newEntity{ base = "BASE_NPC_INSECT",
 	level_range = {3, 25}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(3,5),
-	combat = { dam=5, atk=15, apr=20 },
+	combat = { dam=5, atk=5, apr=20 },
 
 	resolvers.talents{ [Talents.T_BITE_POISON]=2 },
 }

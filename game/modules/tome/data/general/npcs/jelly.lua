@@ -56,7 +56,7 @@ newEntity{ base = "BASE_NPC_JELLY",
 	level_range = {1, 25}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(5,9),
-	combat = { dam=5, atk=15, apr=5, damtype=DamageType.POISON },
+	combat = { dam=5, atk=0, apr=5, damtype=DamageType.POISON },
 }
 
 newEntity{ base = "BASE_NPC_JELLY",
@@ -66,7 +66,7 @@ newEntity{ base = "BASE_NPC_JELLY",
 	level_range = {1, 25}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(5,9),
-	combat = { dam=5, atk=15, apr=5, damtype=DamageType.FIRE },
+	combat = { dam=5, atk=0, apr=5, damtype=DamageType.FIRE },
 }
 
 newEntity{ base = "BASE_NPC_JELLY",
@@ -76,7 +76,7 @@ newEntity{ base = "BASE_NPC_JELLY",
 	level_range = {1, 25}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(5,9),
-	combat = { dam=5, atk=15, apr=5, damtype=DamageType.COLD },
+	combat = { dam=5, atk=0, apr=5, damtype=DamageType.COLD },
 }
 
 newEntity{ base = "BASE_NPC_JELLY",
@@ -86,7 +86,7 @@ newEntity{ base = "BASE_NPC_JELLY",
 	level_range = {1, 25}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(5,9),
-	combat = { dam=5, atk=15, apr=5 },
+	combat = { dam=5, atk=0, apr=5 },
 }
 
 newEntity{ base = "BASE_NPC_JELLY",
@@ -96,7 +96,7 @@ newEntity{ base = "BASE_NPC_JELLY",
 	level_range = {1, 25}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(5,9),
-	combat = { dam=5, atk=15, apr=5, damtype=DamageType.LIGHTNING },
+	combat = { dam=5, atk=0, apr=5, damtype=DamageType.LIGHTNING },
 }
 
 newEntity{ base = "BASE_NPC_JELLY",
@@ -106,7 +106,7 @@ newEntity{ base = "BASE_NPC_JELLY",
 	level_range = {1, 25}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(5,9),
-	combat = { dam=5, atk=15, apr=5, damtype=DamageType.ACID },
+	combat = { dam=5, atk=0, apr=5, damtype=DamageType.ACID },
 }
 
 newEntity{ base = "BASE_NPC_JELLY",

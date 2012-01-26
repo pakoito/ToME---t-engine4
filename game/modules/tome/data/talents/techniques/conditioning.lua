@@ -52,7 +52,7 @@ newTalent{
 	tactical = { DEFEND = 2, DISABLE = 1, },
 	range = 0,
 	getRadius = function(self, t) return math.ceil(self:getTalentLevel(t)/2) end,
-	getPenalty = function(self, t) return self:combatTalentStatDamage(t, "con", 5, 25) end,
+	getPenalty = function(self, t) return self:combatTalentStatDamage(t, "con", 5, 30) end,
 	getMinimumLife = function(self, t)
 		return self.max_life * (0.5 - (self:getTalentLevel(t)/20))
 	end,
@@ -63,7 +63,7 @@ newTalent{
 			local target = game.level.map(px, py, engine.Map.ACTOR)
 			if target then
 				if target:canBe("fear") then
-					target:setEffect(target.EFF_INTIMIDATED, 4, {apply_power=self:combatAttackStr(), power=t.getPenalty(self, t)})
+					target:setEffect(target.EFF_INTIMIDATED, 4, {apply_power=self:combatAttackStr(), power=t.getPenalty(self, t), no_ct_effect=true})
 					game.level.map:particleEmitter(target.x, target.y, 1, "flame")
 				else
 					game.logSeen(target, "%s is not intimidated!", target.name:capitalize())
@@ -141,6 +141,7 @@ newTalent{
 	tactical = { STAMINA = 1, BUFF = 2 },
 	getAttackPower = function(self, t) return self:combatTalentStatDamage(t, "con", 5, 25) end,
 	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t)) end,
+	no_energy = true,
 	action = function(self, t)
 		self:setEffect(self.EFF_ADRENALINE_SURGE, t.getDuration(self, t), {power = t.getAttackPower(self, t)})
 		return true
@@ -150,7 +151,8 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		return ([[You release a surge of adrenaline that increases your physical power by %d for %d turns. While the effect is active you may continue to fight beyond the point of exhaustion.
 		Your stamina based sustains will not be disabled if your stamina reaches zero and you may continue to use stamina based talents while at zero stamina at the cost of life.
-		The attack power increase will scale with your Constitution stat.]]):
+		The attack power increase will scale with your Constitution stat.
+		Using this talent does not take a turn.]]):
 		format(attack_power, duration)
 	end,
 }

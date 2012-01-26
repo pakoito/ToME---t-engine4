@@ -167,7 +167,15 @@ local function archery_projectile(tx, ty, tg, self)
 	-- cross-tier effect for accuracy vs. defense
 	local tier_diff = self:getTierDiff(atk, def)
 	if hitted and not target.dead and tier_diff > 0 then
-		target:setEffect(target.EFF_OFFGUARD, tier_diff, {})
+		local reapplied = false
+		-- silence the apply message it if the target already has the effect
+		for eff_id, p in pairs(target.tmp) do
+			local e = target.tempeffect_def[eff_id]
+			if e.desc == "Off-guard" then
+				reapplied = true
+			end
+		end
+		target:setEffect(target.EFF_OFFGUARD, tier_diff, {}, reapplied)
 	end
 	
 	-- Ranged project

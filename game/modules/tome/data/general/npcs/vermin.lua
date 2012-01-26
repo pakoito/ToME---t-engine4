@@ -46,7 +46,7 @@ newEntity{ base = "BASE_NPC_WORM",
 	level_range = {1, 15}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(5,9),
-	combat = { dam=1, atk=15, apr=100 },
+	combat = { dam=1, atk=0, apr=100 },
 
 	resolvers.talents{ [Talents.T_CRAWL_POISON]=1, [Talents.T_MULTIPLY]=1 },
 }
@@ -56,7 +56,7 @@ newEntity{ base = "BASE_NPC_WORM",
 	level_range = {2, 15}, exp_worth = 1,
 	rarity = 2,
 	max_life = resolvers.rngavg(5,9),
-	combat = { dam=1, atk=15, apr=100 },
+	combat = { dam=1, atk=3, apr=100 },
 
 	resolvers.talents{ [Talents.T_CRAWL_ACID]=2, [Talents.T_MULTIPLY]=1 },
 	on_die = function(self, who)

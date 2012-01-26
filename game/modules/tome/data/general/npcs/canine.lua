@@ -50,7 +50,7 @@ newEntity{ base = "BASE_NPC_CANINE",
 	rarity = 1,
 	max_life = resolvers.rngavg(40,70),
 	combat_armor = 1, combat_def = 3,
-	combat = { dam=resolvers.levelup(5, 1, 0.7), atk=15, apr=3 },
+	combat = { dam=resolvers.levelup(5, 1, 0.7), atk=0, apr=3 },
 }
 
 newEntity{ base = "BASE_NPC_CANINE",
@@ -60,7 +60,7 @@ newEntity{ base = "BASE_NPC_CANINE",
 	rarity = 3,
 	max_life = resolvers.rngavg(60,90),
 	combat_armor =2, combat_def = 4,
-	combat = { dam=resolvers.levelup(6, 1, 0.8), atk=15, apr=3 },
+	combat = { dam=resolvers.levelup(6, 1, 0.8), atk=0, apr=3 },
 	resolvers.talents{ [Talents.T_HOWL]=1, },
 }
 
@@ -71,7 +71,7 @@ newEntity{ base = "BASE_NPC_CANINE",
 	rarity = 3,
 	max_life = resolvers.rngavg(80,110),
 	combat_armor = 3, combat_def = 5,
-	combat = { dam=resolvers.levelup(9, 1, 0.9), atk=15, apr=4 },
+	combat = { dam=resolvers.levelup(9, 1, 0.9), atk=5, apr=4 },
 	resolvers.talents{ [Talents.T_HOWL]=1, },
 }
 
@@ -82,7 +82,7 @@ newEntity{ base = "BASE_NPC_CANINE",
 	rarity = 3,
 	max_life = resolvers.rngavg(70,100),
 	combat_armor = 3, combat_def = 4,
-	combat = { dam=resolvers.levelup(8, 1, 0.9), atk=15, apr=3 },
+	combat = { dam=resolvers.levelup(8, 1, 0.9), atk=5, apr=3 },
 	resolvers.talents{ [Talents.T_HOWL]=2, },
 
 	resists = { [DamageType.FIRE] = -50, [DamageType.COLD] = 100 },
@@ -95,7 +95,7 @@ newEntity{ base = "BASE_NPC_CANINE",
 	rarity = 4,
 	max_life = resolvers.rngavg(60,100),
 	combat_armor = 5, combat_def = 7,
-	combat = { dam=resolvers.levelup(10, 1, 1), atk=17, apr=5 },
+	combat = { dam=resolvers.levelup(10, 1, 1), atk=10, apr=5 },
 	resolvers.talents{ [Talents.T_HOWL]=3, },
 	on_die = function(self, who)
 		local part = "WARG_CLAW"
@@ -115,7 +115,7 @@ newEntity{ base = "BASE_NPC_CANINE",
 	rarity = 3,
 	max_life = resolvers.rngavg(40,50),
 	combat_armor = 1, combat_def = 3,
-	combat = { dam=resolvers.levelup(4, 1, 0.7), atk=10, apr=3, sound="creatures/foxes/attack_1" },
+	combat = { dam=resolvers.levelup(4, 1, 0.7), atk=0, apr=3, sound="creatures/foxes/attack_1" },
 }
 
 newEntity{ base = "BASE_NPC_CANINE",

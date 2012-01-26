@@ -47,7 +47,7 @@ newEntity{ base = "BASE_NPC_MOLD",
 	level_range = {1, 25}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(5,9),
-	combat = { dam=5, atk=15, apr=10 },
+	combat = { dam=5, atk=0, apr=10 },
 }
 
 newEntity{ base = "BASE_NPC_MOLD",
@@ -56,7 +56,7 @@ newEntity{ base = "BASE_NPC_MOLD",
 	level_range = {2, 25}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(5,9),
-	combat = { dam=5, atk=15, apr=10 },
+	combat = { dam=5, atk=0, apr=10 },
 }
 
 newEntity{ base = "BASE_NPC_MOLD",
@@ -65,7 +65,7 @@ newEntity{ base = "BASE_NPC_MOLD",
 	level_range = {3, 25}, exp_worth = 1,
 	rarity = 7,
 	max_life = resolvers.rngavg(1,1),
-	combat = { dam=5, atk=15, apr=10 },
+	combat = { dam=5, atk=5, apr=10 },
 
 	resolvers.talents{ [Talents.T_SPORE_BLIND]=1 },
 }
@@ -76,7 +76,7 @@ newEntity{ base = "BASE_NPC_MOLD",
 	level_range = {5, 25}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(5,9),
-	combat = { dam=5, atk=15, apr=10 },
+	combat = { dam=5, atk=10, apr=10 },
 	resolvers.talents{ [Talents.T_SPORE_POISON]=1 },
 }
 

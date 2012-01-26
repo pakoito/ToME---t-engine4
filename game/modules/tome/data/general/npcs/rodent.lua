@@ -44,7 +44,7 @@ newEntity{ base = "BASE_NPC_RODENT",
 	level_range = {1, 3}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(5,9),
-	combat = { dam=5, atk=15, apr=10 },
+	combat = { dam=5, atk=0, apr=10 },
 }
 
 newEntity{ base = "BASE_NPC_RODENT",
@@ -52,7 +52,7 @@ newEntity{ base = "BASE_NPC_RODENT",
 	level_range = {1, 3}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(5,9),
-	combat = { dam=5, atk=15, apr=10 },
+	combat = { dam=5, atk=0, apr=10 },
 }
 
 newEntity{ base = "BASE_NPC_RODENT",
@@ -60,7 +60,7 @@ newEntity{ base = "BASE_NPC_RODENT",
 	level_range = {1, 4}, exp_worth = 1,
 	rarity = 2,
 	max_life = resolvers.rngavg(15,20),
-	combat = { dam=7, atk=15, apr=10 },
+	combat = { dam=7, atk=0, apr=10 },
 }
 
 newEntity{ base = "BASE_NPC_RODENT",
@@ -68,7 +68,7 @@ newEntity{ base = "BASE_NPC_RODENT",
 	level_range = {1, 4}, exp_worth = 1,
 	rarity = 2,
 	max_life = resolvers.rngavg(15,20),
-	combat = { dam=7, atk=15, apr=10 },
+	combat = { dam=7, atk=0, apr=10 },
 }
 
 newEntity{ base = "BASE_NPC_RODENT",
@@ -77,7 +77,7 @@ newEntity{ base = "BASE_NPC_RODENT",
 	level_range = {1, 4}, exp_worth = 1,
 	rarity = 3,
 	max_life = resolvers.rngavg(20,30),
-	combat = { dam=8, atk=16, apr=10 },
+	combat = { dam=8, atk=0, apr=10 },
 }
 
 newEntity{ base = "BASE_NPC_RODENT",
@@ -86,7 +86,7 @@ newEntity{ base = "BASE_NPC_RODENT",
 	level_range = {1, 5}, exp_worth = 1,
 	rarity = 3,
 	max_life = resolvers.rngavg(35,50),
-	combat = { dam=7, atk=15, apr=10 },
+	combat = { dam=7, atk=0, apr=10 },
 	combat_armor = 4, combat_def = 2,
 }
 
@@ -95,7 +95,7 @@ newEntity{ base = "BASE_NPC_RODENT",
 	level_range = {1, 3}, exp_worth = 1,
 	rarity = 3,
 	max_life = resolvers.rngavg(5,9),
-	combat = { dam=5, atk=15, apr=10 },
+	combat = { dam=5, atk=0, apr=10 },
 	resolvers.talents{ [Talents.T_CRAWL_POISON]=1 },
 }
 
@@ -104,6 +104,6 @@ newEntity{ base = "BASE_NPC_RODENT",
 	level_range = {1, 4}, exp_worth = 1,
 	rarity = 4,
 	max_life = resolvers.rngavg(15,20),
-	combat = { dam=7, atk=15, apr=10 },
+	combat = { dam=7, atk=0, apr=10 },
 	resolvers.talents{ [Talents.T_CRAWL_POISON]=1 },
 }

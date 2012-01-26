@@ -104,7 +104,7 @@ newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 	resolvers.drops{chance=60, nb=1, {type="money"} },
 
 	resolvers.talents{
-		[Talents.T_CARBON_SPIKES]={base=3, every=7, max=6},
+		[Talents.T_CARBON_SPIKES]={base=1, every=7, max=6},
 		[Talents.T_STUN]={base=1, every=10, max=5},
 	},
 
@@ -148,7 +148,7 @@ newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 
 	resolvers.talents{
 		[Talents.T_DWARF_RESILIENCE]={base=1, every=5, max=5},
-		[Talents.T_DREDGE_FRENZY]={base=3, every=10, max=5},
+		[Talents.T_DREDGE_FRENZY]={base=1, every=10, max=5},
 		[Talents.T_DOMINATE]={base=1, every=5, max=5},
 	},
 
