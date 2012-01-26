@@ -68,6 +68,7 @@ return {
 			require("engine.ui.Dialog"):simplePopup("Crypt", "The chanting grows louder. You hear a sudden high-pitched scream.")
 		elseif lev == 5 then
 			game.level.turn_counter = 20 * 10
+			game.level.max_turn_counter = 20 * 10
 			game.player:grantQuest("kryl-feijan-escape")
 			game.player:learnLore("kryl-feijan-altar")
 		end

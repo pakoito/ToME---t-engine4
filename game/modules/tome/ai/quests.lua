@@ -41,6 +41,7 @@ newAI("move_quest_limmir", function(self)
 		end
 	else
 		game.level.turn_counter = 370 * 10
+		game.level.max_turn_counter = 370 * 10
 		game.player.changed = true
 		self.ai = "none"
 		self:doEmote("This place is corrupted! I will cleanse it! Protect me while I do it!", 120)

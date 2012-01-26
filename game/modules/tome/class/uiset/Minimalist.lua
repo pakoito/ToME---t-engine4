@@ -105,6 +105,11 @@ fshat_psi_dark = {core.display.loadImage("/data/gfx/ui/resources/front_psi_dark.
 fshat_air = {core.display.loadImage("/data/gfx/ui/resources/front_air.png"):glTexture()}
 fshat_air_dark = {core.display.loadImage("/data/gfx/ui/resources/front_air_dark.png"):glTexture()}
 
+fshat_hourglass = {core.display.loadImage("/data/gfx/ui/resources/hourglass_front.png"):glTexture()}
+sshat_hourglass = {core.display.loadImage("/data/gfx/ui/resources/hourglass_shadow.png"):glTexture()}
+shat_hourglass_top = {core.display.loadImage("/data/gfx/ui/resources/hourglass_top.png"):glTexture()}
+shat_hourglass_bottom = {core.display.loadImage("/data/gfx/ui/resources/hourglass_bottom.png"):glTexture()}
+
 ammo_shadow_default = {core.display.loadImage("/data/gfx/ui/resources/ammo_shadow_default.png"):glTexture()}
 ammo_default = {core.display.loadImage("/data/gfx/ui/resources/ammo_default.png"):glTexture()}
 ammo_shadow_arrow = {core.display.loadImage("/data/gfx/ui/resources/ammo_shadow_arrow.png"):glTexture()}
@@ -809,6 +814,36 @@ function _M:displayResources(scale, bx, by)
 			y = y + bg[7]
 			if y > stop then x = x + fshat[6] y = 0 end
 		end
+
+		-----------------------------------------------------------------------------------
+		-- Hourglass
+		if game.level and game.level.turn_counter then
+			sshat_hourglass[1]:toScreenFull(x-6, y+8, sshat_hourglass[6], sshat_hourglass[7], sshat_hourglass[2], sshat_hourglass[3])
+			local c = game.level.turn_counter
+			local m = math.max(game.level.max_turn_counter, c)
+			local p = 1 - c / m
+			shat_hourglass_top[1]:toScreenPrecise(x+11, y+32 + shat_hourglass_top[7] * p, shat_hourglass_top[6], shat_hourglass_top[7] * (1-p), 0, 1/shat_hourglass_top[4], p/shat_hourglass_top[5], 1/shat_hourglass_top[5], save_c[1], save_c[2], save_c[3], 1)
+			shat_hourglass_bottom[1]:toScreenPrecise(x+12, y+72 + shat_hourglass_bottom[7] * (1-p), shat_hourglass_bottom[6], shat_hourglass_bottom[7] * p, 0, 1/shat_hourglass_bottom[4], (1-p)/shat_hourglass_bottom[5], 1/shat_hourglass_bottom[5], save_c[1], save_c[2], save_c[3], 1)
+
+			if not self.res.hourglass or self.res.hourglass.vc ~= c or self.res.hourglass.vm ~= m then
+				self.res.hourglass = {
+					vc = c, vm = m,
+					cur = {core.display.drawStringBlendedNewSurface(font_sha, ("%d"):format(c/10), 255, 255, 255):glTexture()},
+				}
+			end
+			local front = fshat_hourglass
+			local dt = self.res.hourglass.cur
+			dt[1]:toScreenFull(2+x+(front[6]-dt[6])/2, 2+y+90, dt[6], dt[7], dt[2], dt[3], 0, 0, 0, 0.7)
+			dt[1]:toScreenFull(x+(front[6]-dt[6])/2, y+90, dt[6], dt[7], dt[2], dt[3])
+
+			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3])
+			y = y + front[7]
+			if y > stop then x = x + fshat[6] y = 0 end
+		end
+
+		-- Compute how much space to reserve on the side
+		self.side_4 = x + fshat[6]
+--		Map.viewport_padding_4 = math.floor(scale * (self.side_4 / Map.tile_w))
 
 		-----------------------------------------------------------------------------------
 		-- Saving

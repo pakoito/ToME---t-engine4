@@ -109,6 +109,7 @@ return {
 		game.player:learnTalent(game.player.T_SHOOT, true, nil, {no_unlearn=true})
 		game.player.changed = true
 		level.turn_counter = 60 --5 turns before action starts.
+		level.max_turn_counter = 60 --5 turns before action starts.
 		--world.arena = nil
 		if not world.arena or not world.arena.ver then
 			local emptyScore = {name = nil, score = 0, perk = nil, wave = 1, sex = nil, race = nil, class = nil}
@@ -418,6 +419,7 @@ return {
 					end
 				end
 				game.level.turn_counter = rest_time * 10
+				game.level.max_turn_counter = rest_time * 10
 				game.level.arena.initWave(val)
 			end,
 			checkPinch = function ()
