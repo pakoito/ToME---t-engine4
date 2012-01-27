@@ -163,6 +163,7 @@ function _M:init()
 		resources = {x=fshat[6] - move_handle[6], y=0},
 		minimap = {x=208, y=176},
 		buffs = {x=40 - move_handle[6], y=0},
+		party = {x=portrait[6] - move_handle[6], y=0},
 	}
 
 	local w, h = core.display.size()
@@ -171,6 +172,7 @@ function _M:init()
 		resources = {x=0, y=111, scale=1, a=1},
 		minimap = {x=w - 239, y=0, scale=1, a=1},
 		buffs = {x=w - 40, y=200, scale=1, a=1},
+		party = {x=pf_bg[6], y=0, scale=1, a=1},
 	}
 	table.merge(self.places, config.settings.tome.uiset_minimalist and config.settings.tome.uiset_minimalist.places or {}, true)
 
@@ -1021,6 +1023,7 @@ function _M:displayParty(scale, bx, by)
 		local hs = portrait[7] + 3
 		local stop = self.map_h_stop - hs
 		local x, y = 0, 0
+		local is_first = true
 
 		for i = 1, #game.party.m_list do
 			local a = game.party.m_list[i]
@@ -1029,17 +1032,26 @@ function _M:displayParty(scale, bx, by)
 				local def = game.party.members[a]
 
 				local text = "#GOLD##{bold}#"..a.name.."\n#WHITE##{normal}#Life: "..math.floor(100 * a.life / a.max_life).."%\nLevel: "..a.level.."\n"..def.title
+				local is_first = is_first
 				local desc_fct = function(button, mx, my, xrel, yrel, bx, by, event)
+					if is_first then
+						if event == "out" then self.mhandle.party = nil return
+						else self.mhandle.party = true end
+						-- Move handle
+						if bx >= self.mhandle_pos.party.x and bx <= self.mhandle_pos.party.x + move_handle[6] and by >= self.mhandle_pos.party.y and by <= self.mhandle_pos.party.y + move_handle[7] then
+							self:uiMoveResize("party", button, mx, my, xrel, yrel, bx, by, event)
+							return
+						end
+					end
+
 					game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, text)
-					if event == "button" and button == "left" then if def.control == "full" then game.party:select(a) end end
+
+					if event == "button" and button == "left" then
+						if def.control == "full" then game.party:select(a) end
+					end
 				end
 
 				self.party[a] = {a, "party"..a.uid, function(x, y)
-					if not game.mouse:updateZone("party"..a.uid, bx+x, by+y, hs, hs, desc_fct) then
-						game.mouse:unregisterZone("party"..a.uid)
-						game.mouse:registerZone(bx+x, by+y, hs, hs, desc_fct, nil, "party"..a.uid)
-					end
-
 					core.display.drawQuad(x, y, 40, 40, 0, 0, 0, 255)
 					if life_sha.shad then life_sha.shad:use(true) end
 					local p = math.min(1, math.max(0, a.life / a.max_life))
@@ -1049,13 +1061,24 @@ function _M:displayParty(scale, bx, by)
 					a:toScreen(nil, x+4, y+4, 32, 32)
 					local p = (game.player == a) and portrait or portrait_unsel
 					p[1]:toScreenFull(x, y, p[6], p[7], p[2], p[3])
-				end}
+				end, desc_fct}
+			end
+
+			if not game.mouse:updateZone("party"..a.uid, bx+x, by+y, hs, hs, self.party[a][4], scale) then
+				game.mouse:unregisterZone("party"..a.uid)
+				game.mouse:registerZone(bx+x, by+y, hs, hs, self.party[a][4], nil, "party"..a.uid, true, scale)
 			end
 
 			self.party[a][3](x, y)
 
 			x = x + hs
+			is_first = false
 			if x + hs > stop then x = 0 y = y - hs end
+		end
+
+
+		if self.mhandle.party then
+			move_handle[1]:toScreenFull(portrait[6] - move_handle[6], 0, move_handle[6], move_handle[7], move_handle[2], move_handle[3])
 		end
 
 		-- Compute how much space to reserve on the side
@@ -1255,9 +1278,11 @@ function _M:display(nb_keyframes)
 	d.glTranslate(-self.places.buffs.x, -self.places.buffs.y, -0)
 
 	-- Party
-	d.glTranslate(self.side_4, 0, 0)
-	self:displayParty(1, self.side_4, 0)
-	d.glTranslate(-self.side_4, -0, -0)
+	d.glTranslate(self.places.party.x, self.places.party.y, 0)
+	d.glScale(self.places.party.scale, self.places.party.scale, self.places.party.scale)
+	self:displayParty(self.places.party.scale, self.places.party.x, self.places.party.y)
+	d.glScale()
+	d.glTranslate(-self.places.party.x, -self.places.party.y, -0)
 
 	-- We display the player's interface
 	profile.chat:toScreen()
