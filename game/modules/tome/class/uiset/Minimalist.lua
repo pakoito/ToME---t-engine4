@@ -1047,7 +1047,11 @@ function _M:displayParty(scale, bx, by)
 					game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, text)
 
 					if event == "button" and button == "left" then
-						if def.control == "full" then game.party:select(a) end
+						if def.control == "full" then game.party:select(a)
+						elseif def.orders then game.party:giveOrders(a)
+						end
+					elseif event == "button" and button == "right" then
+						if def.orders then game.party:giveOrders(a) end
 					end
 				end
 
