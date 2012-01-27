@@ -131,7 +131,7 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 
 	-- If hit is over 0 it connects, if it is 0 we still have 50% chance
 	local hitted = false
-	if self:checkHit(atk, def) and (self:canSee(target) or rng.chance(3)) then
+	if self:checkHit(atk, def) and (self:canSee(target) or self:attr("blind_fight") or rng.chance(3)) then
 		apr = apr + (tg.archery.apr or 0)
 		print("[ATTACK ARCHERY] raw dam", dam, "versus", armor, "with APR", apr)
 
@@ -177,7 +177,7 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 		end
 		target:setEffect(target.EFF_OFFGUARD, tier_diff, {}, reapplied)
 	end
-	
+
 	-- Ranged project
 	if hitted and not target.dead then for typ, dam in pairs(self.ranged_project) do
 		if dam > 0 then

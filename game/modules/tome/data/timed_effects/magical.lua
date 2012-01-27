@@ -200,9 +200,9 @@ newEffect{
 }
 
 newEffect{
-	name = "SEE_INVISIBLE", image = "talents/keen_senses.png",
-	desc = "See Invisible",
-	long_desc = function(self, eff) return ("Improves/gives the ability to see invisible creatures (power %d)."):format(eff.power) end,
+	name = "SENSE_HIDDEN", image = "talents/keen_senses.png",
+	desc = "Sense Hidden",
+	long_desc = function(self, eff) return ("Improves/gives the ability to see invisible and stealthed creatures (power %d)."):format(eff.power) end,
 	type = "magical",
 	subtype = { sense=true },
 	status = "beneficial",
@@ -210,10 +210,12 @@ newEffect{
 	on_gain = function(self, err) return "#Target#'s eyes tingle." end,
 	on_lose = function(self, err) return "#Target#'s eyes tingle no more." end,
 	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("see_invisible", eff.power)
+		eff.invisid = self:addTemporaryValue("see_invisible", eff.power)
+		eff.stealthid = self:addTemporaryValue("see_stealth", eff.power)
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("see_invisible", eff.tmpid)
+		self:removeTemporaryValue("see_invisible", eff.invisid)
+		self:removeTemporaryValue("see_stealth", eff.stealthid)
 	end,
 }
 

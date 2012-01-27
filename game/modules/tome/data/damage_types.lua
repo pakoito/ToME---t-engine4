@@ -494,8 +494,8 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		-- Dont lit magically unlit grids
 		local a = game.level.map(x, y, Map.ACTOR)
-		if a and a:isTalentActive(a.T_STEALTH) then
-			a:breakStealth()
+		if a then
+			a:setEffect(a.EFF_LUMINESCENCE, math.ceil(dam.turns), {power=dam.power, no_ct_effect=true})
 		end
 	end,
 }
@@ -1155,7 +1155,7 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and rng.percent(dam.dam) then
 			if target:canBe("confusion") then
-				target:setEffect(target.EFF_CONFUSED, dam.dam, {power=75, apply_power=(dam.power_check or src.combatSpellpower)(src), no_ct_effect=true})
+				target:setEffect(target.EFF_CONFUSED, 4, {power=75, apply_power=(dam.power_check or src.combatSpellpower)(src), no_ct_effect=true})
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end

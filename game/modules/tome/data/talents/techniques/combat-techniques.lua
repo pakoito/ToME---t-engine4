@@ -123,7 +123,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You have learned to focus your blows to hit your target, granting +100 accuracy for %d turns.]]):format(1 + self:getTalentLevel(t))
+		return ([[You have learned to focus your blows to hit your target, granting +100 accuracy and allowing you to attack creatures you can not see without penalty for the next %d turns.]]):format(1 + self:getTalentLevel(t))
 	end,
 }
 

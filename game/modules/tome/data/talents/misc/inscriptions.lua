@@ -220,15 +220,15 @@ newInscription{
 		local data = self:getInscriptionData(t.short_name)
 		local tg = self:getTalentTarget(t)
 		self:project(tg, self.x, self.y, engine.DamageType.BLINDCUSTOMMIND, {power=data.power + data.inc_stat, turns=data.turns})
+		self:project(tg, self.x, self.y, engine.DamageType.BREAK_STEALTH, {power=(data.power + data.inc_stat)/2, turns=data.turns})
 		tg.selffire = true
 		self:project(tg, self.x, self.y, engine.DamageType.LITE, 1)
-		self:project(tg, self.x, self.y, engine.DamageType.BREAK_STEALTH, 1)
 		return true
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[Activate the infusion to brighten the area in a radius of %d, reveals any stealthy creatures.
-		It will also blind any creatures caught inside (power %d) for %d turns.]]):format(data.range, data.power + data.inc_stat, data.turns)
+		return ([[Activate the infusion to brighten the area in a radius of %d and illuminate stealthy creatures, possibly revealing them (reduces stealth power by %d).
+		It will also blind any creatures caught inside (power %d) for %d turns.]]):format(data.range, (data.power + data.inc_stat)/2, data.power + data.inc_stat, data.turns)
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
@@ -498,12 +498,12 @@ newInscription{
 				end end
 			end
 		end)
-		self:setEffect(self.EFF_SEE_INVISIBLE, data.dur, {power=data.power + data.inc_stat})
+		self:setEffect(self.EFF_SENSE_HIDDEN, data.dur, {power=data.power + data.inc_stat})
 		return true
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[Activate the rune to get a vision of the area surrounding you (%d radius) and to allow you to see invisible (power %d) for %d turns.]]):
+		return ([[Activate the rune to get a vision of the area surrounding you (%d radius) and to allow you to see invisible and stealthed creatures (power %d) for %d turns.]]):
 		format(data.range, data.power + data.inc_stat, data.dur)
 	end,
 	short_info = function(self, t)

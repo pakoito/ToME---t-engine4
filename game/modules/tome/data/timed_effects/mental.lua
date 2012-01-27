@@ -436,7 +436,7 @@ newEffect{
 			self:removeEffect(self.EFF_BECKONED)
 		end
 		if not self:enoughEnergy() then return nil end
-		
+
 		local distance = core.fov.distance(self.x, self.y, eff.source.x, eff.source.y)
 		if math.floor(distance) > 1 and distance <= eff.range then
 			-- in range but not adjacent
@@ -490,7 +490,7 @@ newEffect{
 			game.logSeen(self, "#F53CBE#%s is jolted to attention by the damage and is no longer being beckoned.", self.name:capitalize())
 			self:removeEffect(self.EFF_BECKONED)
 		end
-		
+
 		return dam
 	end,
 }
@@ -888,7 +888,7 @@ local function updateFearParticles(self)
 	if self:hasEffect(self.EFF_DISTRESSED) then hasParticles = true end
 	if self:hasEffect(self.EFF_HAUNTED) then hasParticles = true end
 	if self:hasEffect(self.EFF_TORMENTED) then hasParticles = true end
-	
+
 	if not self.fearParticlesId and hasParticles then
 		self.fearParticlesId = self:addParticles(Particles.new("fear_blue", 1))
 	elseif self.fearParticlesId and not hasParticles then
@@ -1094,7 +1094,7 @@ newEffect{
 	},
 	on_timeout = function(self, eff)
 		if eff.source.dead then return true end
-	
+
 		-- tormentors per turn are pre-calculated in a table, but ordered, so take a random one
 		local count = rng.tableRemove(eff.counts)
 		for c = 1, count do
@@ -1115,7 +1115,7 @@ newEffect{
 					m:setTarget(self)
 
 					game.zone:addEntity(game.level, m, "actor", x, y)
-					
+
 					break
 				end
 			end
@@ -1149,7 +1149,7 @@ newEffect{
 			if not self:attr("never_move") and rng.percent(eff.chance) then
 				local source = eff.source
 				local moveX, moveY = self.x + self.x - source.x, self.y + self.y - source.y
-				
+
 				if not self:moveDirection(moveX, moveY, true) then
 					if old_x ~= self.x or old_y ~= self.y then
 						if not self.did_energy then
@@ -1499,9 +1499,11 @@ newEffect{
 	on_lose = function(self, err) return "#Target# aims less carefully." end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("combat_atk", eff.power)
+		eff.bid = self:addTemporaryValue("blind_fight", 1)
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("combat_atk", eff.tmpid)
+		self:removeTemporaryValue("blind_fight", eff.bid)
 	end,
 }
 
@@ -1695,7 +1697,7 @@ newEffect{
 		if eff.physicalDamageChange or 0 > 0 then eff.physicalDamageId = self:addTemporaryValue("inc_damage", { [DamageType.PHYSICAL] = eff.physicalDamageChange }) end
 		if eff.combatPhysResistChange or 0 > 0 then eff.combatPhysResistId = self:addTemporaryValue("combat_physresist", eff.combatPhysResistChange) end
 		if eff.combatMentalResistChange or 0 > 0 then eff.combatMentalResistId = self:addTemporaryValue("combat_mentalresist", eff.combatMentalResistChange) end
-		
+
 		eff.particle = self:addParticles(Particles.new("rampage", 1))
 	end,
 	deactivate = function(self, eff)
@@ -1713,30 +1715,30 @@ newEffect{
 			eff.damageShieldUsed = (eff.damageShieldUsed or 0) + eff.damageShieldMax - eff.damageShield
 			game.logSeen(self, "%s has shrugged off %d damage and is ready for more.", self.name:capitalize(), eff.damageShieldMax - eff.damageShield)
 			eff.damageShield = eff.damageShieldMax
-			
+
 			if eff.damageShieldBonus and eff.damageShieldUsed >= eff.damageShieldBonus and eff.actualDuration < eff.maxDuration then
 				eff.actualDuration = eff.actualDuration + 1
 				eff.dur = eff.dur + 1
 				eff.damageShieldBonus = nil
-				
+
 				game.logPlayer(self, "#F53CBE#Your rampage is invigorated by the intense onslaught! (+1 duration)")
 			end
 		end
 	end,
 	do_onTakeHit = function(self, eff, dam)
 		if not eff.damageShieldMax or eff.damageShield <= 0 then return dam end
-		
+
 		local absorb = math.min(eff.damageShield, dam)
 		eff.damageShield = eff.damageShield - absorb
-			
+
 		--game.logSeen(self, "%s shrugs off %d damage.", self.name:capitalize(), absorb)
-		
+
 		return dam - absorb
 	end,
 	do_postUseTalent = function(self, eff)
 		if eff.dur > 0 then
 			eff.dur = eff.dur - 1
-			
+
 			game.logPlayer(self, "#F53CBE#You feel your rampage slowing down. (-1 duration)")
 		end
 	end,
@@ -1778,15 +1780,15 @@ newEffect{
 				eff.typeKills = eff.typeKills + 1
 				eff.killExperience = eff.killExperience + 0.25
 			end
-		
+
 			e.updateEffect(self, eff)
-		
+
 			-- apply hate bonus
 			if isSubtype and self:knowTalent(self.T_HATE_POOL) then
 				self:incHate(eff.hateBonus)
 				game.logPlayer(self, "#F53CBE#The death of your prey feeds your hate. (+%d hate)", eff.hateBonus)
 			end
-		
+
 			-- apply mimic effect
 			if isSubtype and self:knowTalent(self.T_MIMIC) then
 				local tMimic = self:getTalentFromId(self.T_MIMIC)
@@ -1800,7 +1802,7 @@ newEffect{
 		eff.effectiveness = math.min(1, eff.killExperience / eff.maxKillExperience)
 		eff.subtypeDamageChange = tMarkPrey.getSubtypeDamageChange(self, tMarkPrey) * eff.effectiveness
 		eff.typeDamageChange = tMarkPrey.getTypeDamageChange(self, tMarkPrey) * eff.effectiveness
-		
+
 		local tAnatomy = self:getTalentFromId(self.T_ANATOMY)
 		if tAnatomy and self:getTalentLevelRaw(tAnatomy) > 0 then
 			eff.subtypeAttackChange = tAnatomy.getSubtypeAttackChange(self, tAnatomy) * eff.effectiveness
@@ -1811,7 +1813,7 @@ newEffect{
 			eff.typeAttackChange = 0
 			eff.subtypeStunChance = 0
 		end
-		
+
 		local tOutmaneuver = self:getTalentFromId(self.T_OUTMANEUVER)
 		if tOutmaneuver and self:getTalentLevelRaw(tOutmaneuver) > 0 then
 			eff.typeOutmaneuverChance = tOutmaneuver.getTypeChance(self, tOutmaneuver) * eff.effectiveness
@@ -1820,7 +1822,7 @@ newEffect{
 			eff.typeOutmaneuverChance = 0
 			eff.subtypeOutmaneuverChance = 0
 		end
-		
+
 		eff.hateBonus = tMarkPrey.getHateBonus(self, tMarkPrey)
 	end,
 }
@@ -1875,10 +1877,10 @@ newEffect{
 			old_eff.incStats[id] = math.ceil(value * old_eff.dur / new_eff.dur)
 		end
 		old_eff.dur = new_eff.dur
-		
+
 		-- add new effect
 		self.tempeffect_def[self.EFF_OUTMANEUVERED].addEffect(self, old_eff)
-		
+
 		return old_eff
 	end,
 }
@@ -1888,7 +1890,7 @@ newEffect{
 	desc = "Mimic",
 	long_desc = function(self, eff)
 		if not eff.incStatsId then return "The target is mimicking a previous victim. (no gains)." end
-		
+
 		local desc = "The target is mimicking a previous victim. ("
 		local first = true
 		for id, value in pairs(eff.incStats) do
@@ -1921,7 +1923,7 @@ newEffect{
 				end
 			end
 		end
-		
+
 		if sum > 0 then
 			eff.incStats = {}
 			if sum <= eff.maxIncrease then
@@ -1937,10 +1939,10 @@ newEffect{
 					sumIncrease = sumIncrease + math.floor(value[2])
 				end
 				local remainder = eff.maxIncrease - sumIncrease
-				
+
 				-- sort on fractional amount for distributing the remainder points
 				table.sort(values, function(a,b) return a[2] % 1 > b[2] % 1 end)
-				
+
 				-- convert fractions to stat increases and apply remainder
 				for i, value in ipairs(values) do
 					eff.incStats[value[1]] = math.floor(value[2]) + (i <= remainder and 1 or 0)
@@ -1948,7 +1950,7 @@ newEffect{
 			end
 			eff.incStatsId = self:addTemporaryValue("inc_stats", eff.incStats)
 		end
-		
+
 		if not eff.incStatsId then
 			game.logSeen(self, ("%s is mimicking %s. (no gains)."):format(self.name:capitalize(), eff.target.name))
 		else

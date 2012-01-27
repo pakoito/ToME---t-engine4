@@ -1594,3 +1594,22 @@ newEffect{
 		return old_eff
 	end,
 }
+
+newEffect{
+	name = "LUMINESCENCE",
+	desc = "Luminescence ", image = "talents/infusion__sun.png",
+	long_desc = function(self, eff) return ("The target has been revealed, reducing it's stealth power by %d."):format(eff.power) end,
+	type = "physical",
+	subtype = { nature=true, light=true },
+	status = "detrimental",
+	parameters = { power=20 },
+	on_gain = function(self, err) return "#Target# has been illuminated.", "+Luminescence" end,
+	on_lose = function(self, err) return "#Target# is no longer illuminated.", "-Luminescence" end,
+	activate = function(self, eff)
+		eff.stealthid = self:addTemporaryValue("inc_stealth", -eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("inc_stealth", eff.stealthid)
+	end,
+}
+

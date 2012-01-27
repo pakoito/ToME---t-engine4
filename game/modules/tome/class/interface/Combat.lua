@@ -88,7 +88,7 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 		game.logSeen(self, "%s is too afraid to attack.", self.name:capitalize())
 		return false
 	end
-	
+
 	if self:attr("terrified") and rng.percent(self:attr("terrified")) then
 		if not noenergy then
 			self:useEnergy(game.energy_to_act)
@@ -302,7 +302,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		atk = atk + t.getAttackChange(self, t, effStalker.bonus)
 		mult = mult * t.getStalkedDamageMultiplier(self, t, effStalker.bonus)
 	end
-	
+
 	-- add marked prey damage and attack bonus
 	local effPredator = self:hasEffect(self.EFF_PREDATOR)
 	if effPredator and effPredator.type == target.type then
@@ -314,7 +314,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 			atk = atk + effPredator.typeAttackChange
 		end
 	end
-	
+
 	-- track weakness for hate bonus before the target removes it
 	local effGloomWeakness = target:hasEffect(target.EFF_GLOOM_WEAKNESS)
 
@@ -342,7 +342,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	elseif self:checkEvasion(target) then
 		evaded = true
 		game.logSeen(target, "%s evades %s.", target.name:capitalize(), self.name)
-	elseif self:checkHit(atk, def) and (self:canSee(target) or rng.chance(3)) then
+	elseif self:checkHit(atk, def) and (self:canSee(target) or self:attr("blind_fight") or rng.chance(3)) then
 		local pres = util.bound(target:combatArmorHardiness() / 100, 0, 1)
 		print("[ATTACK] raw dam", dam, "versus", armor, pres, "with APR", apr)
 		armor = math.max(0, armor - apr)
@@ -619,14 +619,14 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	if hitted and game.level.data.zero_gravity and rng.percent(util.bound(dam, 0, 100)) then
 		target:knockback(self.x, self.y, math.ceil(math.log(dam)))
 	end
-	
+
 	-- Weakness hate bonus
 	if hitted and effGloomWeakness and effGloomWeakness.hateBonus or 0 > 0 then
 		self:incHate(effGloomWeakness.hateBonus)
 		game.logPlayer(self, "#F53CBE#You revel in attacking a weakened foe! (+%d hate)", effGloomWeakness.hateBonus)
 		effGloomWeakness.hateBonus = nil
 	end
-	
+
 	-- Rampage
 	if hitted and crit then
 		local eff = self:hasEffect(self.EFF_RAMPAGE)
@@ -637,7 +637,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 			eff.dur = eff.dur + 1
 		end
 	end
-	
+
 	-- Marked Prey
 	if hitted and not target.dead and effPredator and effPredator.type == target.type then
 		if effPredator.subtype == target.subtype then
@@ -649,7 +649,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 					game.logSeen(target, "%s resists the stun!", target.name:capitalize())
 				end
 			end
-			
+
 			-- Outmaneuver
 			if effPredator.subtypeOutmaneuverChance > 0 and rng.percent(effPredator.subtypeOutmaneuverChance) then
 				local t = self:getTalentFromId(self.T_OUTMANEUVER)
@@ -663,7 +663,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 			end
 		end
 	end
-	
+
 	if hitted and crit and target:hasEffect(target.EFF_DISMAYED) then
 		target:removeEffect(target.EFF_DISMAYED)
 	end
@@ -844,7 +844,7 @@ function _M:combatCrit(weapon)
 		addcrit = 1 + self:getTalentLevel(Talents.T_LETHALITY) * 1.3
 	end
 	local crit = self.combat_physcrit + (self:getCun() - 10) * 0.3 + (self:getLck() - 50) * 0.30 + (weapon.physcrit or 1) + addcrit
-	
+
 	return crit
 end
 
@@ -1015,7 +1015,7 @@ end
 --- Gets spellcrit
 function _M:combatSpellCrit()
 	local crit = self.combat_spellcrit + (self:getCun() - 10) * 0.3 + (self:getLck() - 50) * 0.30 + 1
-	
+
 	return crit
 end
 
@@ -1028,7 +1028,7 @@ function _M:combatMindCrit(add)
 	end
 
 	local crit = self.combat_mindcrit + (self:getCun() - 10) * 0.3 + (self:getLck() - 50) * 0.30 + 1 + add
-	
+
 	return crit
 end
 
@@ -1070,7 +1070,7 @@ function _M:physicalCrit(dam, weapon, target, atk, def)
 	if target:hasHeavyArmor() and target:knowTalent(target.T_ARMOUR_TRAINING) then
 		chance = chance - target:getTalentLevel(target.T_ARMOUR_TRAINING) * 1.9
 	end
-	
+
 	if target:hasEffect(target.EFF_DISMAYED) then
 		chance = 100
 	end
