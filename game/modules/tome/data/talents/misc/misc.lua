@@ -141,6 +141,79 @@ newTalent{
 	mode = "passive",
 	hide = true,
 	no_unlearn_last = true,
+	updateRegen = function(self, t)
+		-- hate loss speeds up as hate increases
+		local hate = self:getHate()
+		local hateChange
+		local p = self:isTalentActive(self.T_SEETHE)
+		if p then
+			-- handle seethe mode hate changes
+			if hate > p.sustainHate then
+				-- drop to sustained level of hate
+				hateChange = -math.min(2, hate - p.sustainHate)
+			else
+				hateChange = 0
+			end
+		else
+			-- handle normal hate changes
+			if hate < self.baseline_hate then
+				hateChange = 0
+			else
+				hateChange = -0.7 * math.pow(hate / 100, 1.5)
+			end
+			if hateChange < 0 then
+				hateChange = math.min(0, math.max(hateChange, self.baseline_hate - hate))
+			end
+		end
+		
+		-- old seethe that keeps hate at low levels
+		--if self:knowTalent(self.T_SEETHE) then
+		--	-- seethe prevents loss at low levels and gains some back and very low levels
+		--	local t = self:getTalentFromId(self.T_SEETHE)
+		--	local hateLossMinHate = t.getHateLossMinHate(self, t)
+		--	local hateGainMaxHate = t.getHateGainMaxHate(self, t)
+
+		--	if self:getHate() < hateGainMaxHate then
+		--		hateChange = math.min(t.getHateGainChange(self, t), hateGainMaxHate - self:getHate())
+		--	elseif self:getHate() < hateLossMinHate then
+		--		hateChange = 0
+		--	elseif self:getHate() + hateChange <= hateLossMinHate then
+		--		hateChange = hateLossMinHate - self:getHate()
+		--	end
+		--end
+
+		self.hate_regen = self.hate_regen - (self.hate_decay or 0) + hateChange
+		self.hate_decay = hateChange
+	end,
+	updateBaseline = function(self, t)
+		self.baseline_hate = math.max(10, self:getHate() * 0.5)
+	end,
+	on_kill = function(self, t, target)
+		local hateGain = self.hate_per_kill
+		local hateMessage
+
+		if target.level - 2 > self.level then
+			-- level bonus
+			hateGain = hateGain + (target.level - 2 - self.level) * 2
+			hateMessage = "#F53CBE#You have taken the life of an experienced foe!"
+		end
+
+		if target.rank >= 4 then
+			-- boss bonus
+			hateGain = hateGain * 4
+			hateMessage = "#F53CBE#Your hate has conquered a great adversary!"
+		elseif target.rank >= 3 then
+			-- elite bonus
+			hateGain = hateGain * 2
+			hateMessage = "#F53CBE#An elite foe has fallen to your hate!"
+		end
+		hateGain = math.min(hateGain, 100)
+
+		self.hate = math.min(self.max_hate, self.hate + hateGain)
+		if hateMessage then
+			game.logPlayer(self, hateMessage.." (+%d hate)", hateGain - self.hate_per_kill)
+		end
+	end,
 }
 
 newTalent{

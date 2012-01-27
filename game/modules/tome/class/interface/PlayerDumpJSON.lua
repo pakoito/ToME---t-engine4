@@ -90,7 +90,7 @@ function _M:dumpToJSON(js)
 	if self:knowTalent(self.T_PSI_POOL) then r[#r+1] = {psi=string.format("%d/%d", self.psi, self.max_psi)} end
 	if self:knowTalent(self.T_EQUILIBRIUM_POOL) then r[#r+1] = {equilibrium=string.format("%d", self.equilibrium)} end
 	if self:knowTalent(self.T_PARADOX_POOL) then r[#r+1] = {paradox=string.format("%d", self.paradox)} end
-	if self:knowTalent(self.T_HATE_POOL) then r[#r+1] = {hate=string.format("%0.2f/%0.2f", self.hate, self.max_hate)} end
+	if self:knowTalent(self.T_HATE_POOL) then r[#r+1] = {hate=string.format("%d/%d", self.hate, self.max_hate)} end
 
 	-------------------------------------------------------------------
 	-- Inscriptions

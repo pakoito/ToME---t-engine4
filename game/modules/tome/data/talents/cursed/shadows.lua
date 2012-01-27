@@ -195,7 +195,7 @@ local function createShadow(self, level, duration, target)
 		},
 		evasion = 30,
 		mana = 100,
-		summoner_hate_per_kill = 0.8,
+		summoner_hate_per_kill = self.hate_per_kill,
 		resolvers.talents{
 			[self.T_SHADOW_PHASE_DOOR]=math.max(5, math.floor(1 + level * 0.1)),
 			[self.T_SHADOW_BLINDSIDE]=math.max(5, math.floor(1 + level * 0.1)),
@@ -341,12 +341,12 @@ newTalent{
 		end
 
 		-- use hate
-		if self.hate < 1 then
+		if self.hate < 10 then
 			-- not enough hate..just wait for another try
 			game.logPlayer(self, "You hate is too low to call another shadow!", deflectDamage)
 			return false
 		end
-		self:incHate(-1)
+		self:incHate(-10)
 
 		level = t.getLevel(self, t)
 		local shadow = createShadow(self, level, 1000, nil)
@@ -375,7 +375,7 @@ newTalent{
 	info = function(self, t)
 		local maxShadows = t.getMaxShadows(self, t)
 		local level = t.getLevel(self, t)
-		return ([[While this ability is active you will continually call up to %d level %d shadows to aid you in battle. Shadows are weak combatants that can Heal themselves, Blindside their opponents and Phase Door from place to place. Each shadow costs 1 hate to summon and will be equal in level to you when it appears.]]):format(maxShadows, level)
+		return ([[While this ability is active you will continually call up to %d level %d shadows to aid you in battle. Shadows are weak combatants that can Heal themselves, Blindside their opponents and Phase Door from place to place. Each shadow costs 10 hate to summon and will be equal in level to you when it appears.]]):format(maxShadows, level)
 	end,
 }
 
@@ -386,7 +386,7 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	cooldown = 6,
-	hate = 0.0,
+	hate = 0,
 	range = 6,
 	requires_target = true,
 	tactical = { ATTACK = 2 },

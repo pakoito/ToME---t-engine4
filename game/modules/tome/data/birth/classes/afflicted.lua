@@ -56,7 +56,7 @@ newBirthDescriptor{
 	},
 	stats = { wil=4, str=5, },
 	talents_types = {
-		["cursed/gloom"]={true, 0.0},
+		["cursed/gloom"]={true, 0.3},
 		["cursed/slaughter"]={true, 0.3},
 		["cursed/endless-hunt"]={true, 0.3},
 		["cursed/strife"]={true, 0.3},
@@ -65,7 +65,8 @@ newBirthDescriptor{
 		["technique/combat-training"]={true, 0.3},
 		["cunning/survival"]={false, 0.0},
 		["cursed/rampage"]={false, 0.0},
-		["cursed/dark-figure"]={false, 0.0},
+		["cursed/predator"]={false, 0.0},
+		["cursed/fears"]={false, 0.0},
 	},
 	talents = {
 		[ActorTalents.T_UNNATURAL_BODY] = 1,
@@ -113,7 +114,7 @@ newBirthDescriptor{
 		["cursed/darkness"]={true, 0.3},
 		["cursed/cursed-form"]={true, 0.0},
 		["cunning/survival"]={false, 0.0},
-		["cursed/dark-figure"]={false, 0.0},
+		["cursed/fears"]={false, 0.0},
 	},
 	talents = {
 		[ActorTalents.T_UNNATURAL_BODY] = 1,

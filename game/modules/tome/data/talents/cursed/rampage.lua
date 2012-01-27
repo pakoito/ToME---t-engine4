@@ -22,73 +22,76 @@ newTalent{
 	type = {"cursed/rampage", 1},
 	require = cursed_str_req1,
 	points = 5,
-	tactical = { ATTACK = { PHYSICAL = 3 } },
-	cooldown = function(self, t)
-		local tReflexes = self:getTalentFromId(self.T_REFLEXES)
-		if tReflexes then
-			return tReflexes.getCooldown(self, tReflexes)
-		else
-			return 150
-		end
+	tactical = { ATTACK = 3 },
+	cooldown = 24,
+	hate = 15,
+	no_energy = true,
+	getDuration = function(self, t)
+		return 5
 	end,
-	hate = 0.5,
-	action = function(self, t, hateLoss)
-		local critical = 0
-		local damage = 0
-		local speed = 0
-		local attack = 0
-		local evasion = 0
-
-		local hateMultiplier = getHateMultiplier(self, 0.1, 1.0, true)
-
-		critical = t.getCritical(self, t) * hateMultiplier
-		if not hateLoss then
-			hateLoss = t.getHateLoss(self, t)
+	getMaxDuration = function(self, t)
+		return 8
+	end,
+	getMovementSpeedChange = function(self, t)
+		return math.pow(self:getTalentLevel(t), 0.5) * 1.4
+	end,
+	getCombatPhysSpeedChange = function(self, t)
+		return math.pow(self:getTalentLevel(t), 0.5) * 0.224
+	end,
+	on_pre_use = function(self, t, silent)
+		if self:hasEffect(self.EFF_RAMPAGE) then 
+			if not silent then game.logPlayer(self, "You are already rampaging!") end
+			return false
 		end
-
-		local duration = 5
-		local tBrutality = self:getTalentFromId(self.T_BRUTALITY)
-		if tBrutality then
-			duration = tBrutality.getDuration(self, tBrutality)
-			damage = tBrutality.getDamage(self, tBrutality) * hateMultiplier
+		return true
+	end,
+	action = function(self, t)
+		local duration = t.getDuration(self, t)
+		local eff = {
+			actualDuration = duration,
+			maxDuration = t.getMaxDuration(self, t),
+			movementSpeedChange = t.getMovementSpeedChange(self, t),
+			combatPhysSpeedChange = t.getCombatPhysSpeedChange(self, t),
+			physicalDamageChange = 0,
+			combatPhysResistChange = 0,
+			combatMentalResistChange = 0,
+			damageShield = 0,
+			damageShieldMax = 0,
+		}
+		if self:knowTalent(self.T_BRUTALITY) then
+			local tBrutality = self:getTalentFromId(self.T_BRUTALITY)
+			eff.physicalDamageChange = tBrutality.getPhysicalDamageChange(self, tBrutality)
+			eff.combatPhysResistChange = tBrutality.getCombatPhysResistChange(self, tBrutality)
+			eff.combatMentalResistChange = tBrutality.getCombatMentalResistChange(self, tBrutality)
 		end
-
-		local tReflexes = self:getTalentFromId(self.T_REFLEXES)
-		if tReflexes then
-			speed = tReflexes.getSpeed(self, tReflexes) * hateMultiplier
+		
+		if self:knowTalent(self.T_TENACITY) then
+			local tTenacity = self:getTalentFromId(self.T_TENACITY)
+			eff.damageShield = tTenacity.getDamageShield(self, tTenacity)
+			eff.damageShieldMax = eff.damageShield
+			eff.damageShieldBonus = tTenacity.getDamageShieldBonus(self, tTenacity)
 		end
-
-		local tInstincts = self:getTalentFromId(self.T_INSTINCTS)
-		if tInstincts then
-			attack = tInstincts.getAttack(self, tInstincts) * hateMultiplier
-			evasion = tInstincts.getEvasion(self, tInstincts) * hateMultiplier
-		end
-
-		self:setEffect(self.EFF_RAMPAGE, duration, { critical = critical, damage = damage, speed = speed, attack = attack, evasion = evasion, hateLoss = hateLoss })
+		
+		self:setEffect(self.EFF_RAMPAGE, duration, eff)
 
 		return true
 	end,
-	getHateLoss = function(self, t) return 0.75 - 0.05 * self:getTalentLevelRaw(t) end,
-	getCritical = function(self, t) return 10 + 8 * self:getTalentLevel(t) end,
 	onTakeHit = function(t, self, fractionDamage)
 		if fractionDamage < 0.08 then return false end
 		if self:hasEffect(self.EFF_RAMPAGE) then return false end
-		if rng.percent(3) then
+		if rng.percent(0.5) then
 			t.action(self, t, 0)
 			return true
 		end
 	end,
 	info = function(self, t)
-		local duration = 5
-		local tBrutality = self:getTalentFromId(self.T_BRUTALITY)
-		if tBrutality then
-			duration = tBrutality.getDuration(self, tBrutality)
-		end
-		local hateLoss = t.getHateLoss(self, t)
-		local critical = t.getCritical(self, t)
-		return ([[You enter a terrible rampage for %d turns, destroying everything in your path. There is also a small chance when you are hit that you will rampage.
-		%0.2f hate loss per turn. +%d%% (at 0 Hate) to %d%% (at 10+ Hate) critical chance.
-		Hate-based effects will improve when wielding cursed weapons.]]):format(duration, hateLoss, critical * 0.3, critical * 1.0)
+		local duration = t.getDuration(self, t)
+		local maxDuration = t.getMaxDuration(self, t)
+		local movementSpeedChange = t.getMovementSpeedChange(self, t)
+		local combatPhysSpeedChange = t.getCombatPhysSpeedChange(self, t)
+		return ([[You enter a terrible rampage for %d turns (up to a maximum of %d turns), destroying everything in your path. Starting a rampage is instantaneous. There is also a small chance when you take damage that you will rampage. Any talent, rune or infusion you use while rampaging becomes a distraction and reduces the duration of the rampage by 1. Your first movement while rampaging increases the rampage duration by 1.
+		Rampage Bonus: +%d%% movement speed.
+		Rampage Bonus: +%d%% attack speed]]):format(duration, maxDuration, movementSpeedChange * 100, combatPhysSpeedChange * 100)
 	end,
 }
 
@@ -102,55 +105,121 @@ newTalent{
 	end,
 	on_unlearn = function(self, t)
 	end,
-	getDuration = function(self, t) return 4 + math.floor(1 * self:getTalentLevel(t)) end,
-	getDamage = function(self, t) return 10 * self:getTalentLevel(t) end,
+	getPhysicalDamageChange = function(self, t)
+		return math.pow(self:getTalentLevel(t), 0.7) * 12
+	end,
+	getCombatPhysResistChange = function(self, t)
+		return math.pow(self:getTalentLevel(t), 0.7) * 6
+	end,
+	getCombatMentalResistChange = function(self, t)
+		return math.pow(self:getTalentLevel(t), 0.7) * 6
+	end,
 	info = function(self, t)
-		local duration = t.getDuration(self, t)
-		local damage = t.getDamage(self, t)
-		return ([[Add brutality to your rampage.
-		Rampage lasts %d turns. +%d%% (at 0 Hate) to %d%% (at 10+ Hate) physical damage.
-		Hate-based effects will improve when wielding cursed weapons.]]):format(duration, damage * 0.1, damage * 1.0)
+		local physicalDamageChange = t.getPhysicalDamageChange(self, t)
+		local combatPhysResistChange = t.getCombatPhysResistChange(self, t)
+		local combatMentalResistChange = t.getCombatMentalResistChange(self, t)
+		return ([[You attack with mindless brutality. The first critical hit inflicted while rampaging increases the rampage duration by 1.
+		Rampage Bonus: Your physical damage increases by %d%%.
+		Rampage Bonus: Your physical save increases by %d and mental save increases by %d.]]):format(physicalDamageChange, combatPhysResistChange, combatMentalResistChange)
 	end,
 }
 
 newTalent{
-	name = "Reflexes",
+	name = "Tenacity",
 	type = {"cursed/rampage", 3},
+	mode = "passive",
 	require = cursed_str_req3,
 	points = 5,
-	mode = "passive",
 	on_learn = function(self, t)
 	end,
 	on_unlearn = function(self, t)
 	end,
-	getCooldown = function(self, t) return 150 - math.floor(10 * self:getTalentLevelRaw(t)) end,
-	getSpeed = function(self, t) return 10 * self:getTalentLevel(t) end,
+	getDamageShield = function(self, t)
+		return self:combatTalentStatDamage(t, "str", 20, 100)
+	end,
+	getDamageShieldBonus = function(self, t)
+		return t.getDamageShield(self, t) * 4
+	end,
 	info = function(self, t)
-		local cooldown = t.getCooldown(self, t)
-		local speed = t.getSpeed(self, t)
-		return ([[Add reflexes to your rampage.
-		Rampage cooldown is %d turns. +%d%% (at 0 Hate) to %d%% (at 10+ Hate) speed.
-		Hate-based effects will improve when wielding cursed weapons.]]):format(cooldown, speed * 0.1, speed * 1.0)
+		local damageShield = t.getDamageShield(self, t)
+		local damageShieldBonus = t.getDamageShieldBonus(self, t)
+		return ([[Nothing will stop your rampage.
+		Rampage Bonus: You shrug off up to %d damage each turn during your rampage. If you shrug off more than %d damage, the rampage duration increases by 1.
+		Damage increases with the Strength Stat.]]):format(damageShield, damageShieldBonus)
 	end,
 }
 
 newTalent{
-	name = "Instincts",
+	name = "Slam",
 	type = {"cursed/rampage", 4},
-	mode = "passive",
 	require = cursed_str_req4,
 	points = 5,
-	on_learn = function(self, t)
+	cooldown = 6,
+	hate = 3,
+	random_ego = "attack",
+	tactical = { ATTACKAREA = { weapon = 3 } },
+	getHitCount = function(self, t)
+		return 2 + math.min(math.floor(self:getTalentLevel(t) * 0.5), 3)
 	end,
-	on_unlearn = function(self, t)
+	getStunDuration = function(self, t)
+		return 2
 	end,
-	getAttack = function(self, t) return 20 + 10 * self:getTalentLevel(t) end,
-	getEvasion = function(self, t) return 6 * self:getTalentLevel(t) end,
+	getDamage = function(self, t)
+		return self:combatTalentPhysicalDamage(t, 10, 140)
+	end,
+	on_pre_use = function(self, t, silent)
+		if not self:hasEffect(self.EFF_RAMPAGE) then 
+			if not silent then game.logPlayer(self, "You must be rampaging to use this talant.") end
+			return false
+		end
+		return true
+	end,
+	action = function(self, t)
+		local eff = self:hasEffect(self.EFF_RAMPAGE)
+		if not eff then 
+			if not silent then game.logPlayer(self, "You must be rampaging to use this talant.") end
+			return false
+		end
+		
+		local hitCount = t.getHitCount(self, t)
+		local hits = 0
+		local damage = t.getDamage(self, t) * rng.float(0.5, 1)
+		local stunDuration = t.getStunDuration(self, t)
+		local start = rng.range(0, 8)
+		for i = start, start + 8 do
+			local x = self.x + (i % 3) - 1
+			local y = self.y + math.floor((i % 9) / 3) - 1
+			local target = game.level.map(x, y, Map.ACTOR)
+			if target and not target.dead and self:reactionToward(target) < 0 then
+				game.logSeen(self, "#F53CBE#%s slams %s!", self.name:capitalize(), target.name)
+				DamageType:get(DamageType.PHYSICAL).projector(self, target.x, target.y, DamageType.PHYSICAL, damage)
+				if target:canBe("stun") then
+					target:setEffect(target.EFF_STUNNED, stunDuration, {apply_power=self:combatPhysicalpower()})
+				else
+					game.logSeen(target, "#F53CBE#%s resists the stunning blow!", target.name:capitalize())
+				end
+			
+				hitCount = hitCount - 1
+				hits = hits + 1
+				if hitCount == 0 then break end
+			end
+		end
+		
+		-- bonus duration
+		if hits >= 2 and eff.actualDuration < eff.maxDuration and not eff.slam then
+			game.logPlayer(self, "#F53CBE#Your rampage is invigorated by the collosal slam! (+1 duration)")
+			eff.actualDuration = eff.actualDuration + 1
+			eff.dur = eff.dur + 1
+			eff.slam = true
+		end
+
+		return true
+	end,
 	info = function(self, t)
-		local attack = t.getAttack(self, t)
-		local evasion = t.getEvasion(self, t)
-		return ([[Add instincts to your rampage.
-		+%d%% (at 0 Hate) to %d%% (at 10+ Hate) attack. +%d%% (at 0 Hate) to %d%% (at 10+ Hate) evasion.
-		Hate-based effects will improve when wielding cursed weapons.]]):format(attack * 0.1, attack * 1.0, evasion * 0.1, evasion * 1.0)
+		local hitCount = t.getHitCount(self, t)
+		local stunDuration = t.getStunDuration(self, t)
+		local damage = t.getDamage(self, t)
+		return ([[While rampaging, you slam up to %d adjacent opponents, stunning them for %d turns and damaging them for between %d and %d physical damage. Your first slam of at least two opponents increases the rampage duration by 1.
+		Damage increases with your Physical Power.]]):format(hitCount, stunDuration, damage * 0.5, damage)
 	end,
 }

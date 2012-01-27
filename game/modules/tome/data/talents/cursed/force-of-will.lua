@@ -98,7 +98,7 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	cooldown = 5,
-	hate = 0.5,
+	hate = 5,
 	tactical = { ATTACK = { PHYSICAL = 2 } },
 	direct_hit = true,
 	requires_target = true,
@@ -162,8 +162,8 @@ newTalent{
 	end,
 	do_act = function(self, t, p)
 		local maxDamage = t.getMaxDamage(self, t)
-		if p.value < maxDamage and self.hate >= 0.02 then
-			self:incHate(-0.02)
+		if p.value < maxDamage and self.hate >= 0.2 then
+			self:incHate(-0.2)
 
 			p.value = math.min(p.value + maxDamage / 35, maxDamage)
 
@@ -194,7 +194,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local maxDamage = t.getMaxDamage(self, t)
-		return ([[Deflect 50%% of incoming damage with the force of your will. You may deflect up to %d damage, but first your hate must slowly feed your strength (-0.02 hate regeneration while building strength).
+		return ([[Deflect 50%% of incoming damage with the force of your will. You may deflect up to %d damage, but first your hate must slowly feed your strength (-0.2 hate regeneration while building strength).
 		The maximum damage deflected increases with your Mindpower.]]):format(maxDamage)
 	end,
 }
@@ -208,7 +208,7 @@ newTalent{
 	cooldown = 14,
 	tactical = { ATTACKAREA = { PHYSICAL = 2 }, DISABLE = { stun = 1 } },
 	requires_target = true,
-	hate = 1.5,
+	hate = 15,
 	range = function(self, t)
 		return 4
 	end,
@@ -276,7 +276,7 @@ newTalent{
 	type = {"cursed/force-of-will", 4},
 	require = cursed_wil_req4,
 	points = 5,
-	hate = 3,
+	hate = 30,
 	cooldown = 50,
 	tactical = { ATTACKAREA = { PHYSICAL = 2 } },
 	range = function(self, t)

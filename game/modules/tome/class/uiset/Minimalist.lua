@@ -67,7 +67,7 @@ neg_c = {colors.DARK_GREY.r/255, colors.DARK_GREY.g/255, colors.DARK_GREY.b/255}
 neg_sha = Shader.new("resources", {color=neg_c, speed=1000, distort={1.6,-0.2}})
 vim_c = {0x90/255, 0x40/255, 0x10/255}
 vim_sha = Shader.new("resources", {color=vim_c, speed=1000, distort={0.4,0.4}})
-hate_c = {colors.GREY.r/255, colors.GREY.g/255, colors.GREY.b/255}
+hate_c = {0xF5/255, 0x3C/255, 0xBE/255}
 hate_sha = Shader.new("resources", {color=hate_c, speed=1000, distort={0.4,0.4}})
 psi_c = {colors.BLUE.r/255, colors.BLUE.g/255, colors.BLUE.b/255}
 psi_sha = Shader.new("resources", {color=psi_c, speed=2000, distort={0.4,0.4}})
@@ -737,7 +737,7 @@ function _M:displayResources(scale, bx, by)
 				self.res.hate = {
 					vc = player.hate, vm = player.max_hate, vr = player.hate_regen,
 					cur = {core.display.drawStringBlendedNewSurface(font_sha, ("%d/%d"):format(player.hate, player.max_hate), 255, 255, 255):glTexture()},
-					regen={core.display.drawStringBlendedNewSurface(sfont_sha, ("%+0.2f"):format(player.hate_regen), 255, 255, 255):glTexture()},
+					regen={core.display.drawStringBlendedNewSurface(sfont_sha, ("%+0.1f"):format(player.hate_regen), 255, 255, 255):glTexture()},
 				}
 			end
 			local dt = self.res.hate.cur
@@ -748,7 +748,7 @@ function _M:displayResources(scale, bx, by)
 			dt[1]:toScreenFull(x+144, y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3])
 
 			local front = fshat_hate_dark
-			if player.hate >= 10 then front = fshat_hate end
+			if player.hate >= 100 then front = fshat_hate end
 			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3])
 			self:showResourceTooltip(bx+x*scale, by+y*scale, fshat[6], fshat[7], "res:hate", self.TOOLTIP_HATE)
 			y = y + fshat[7]

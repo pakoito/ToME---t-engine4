@@ -23,7 +23,7 @@ newTalent{
 	require = cursed_wil_req1,
 	points = 5,
 	cooldown = 50,
-	hate = 0.1,
+	hate = 1,
 	getRadius = function(self, t) return 3 + math.floor((self:getTalentLevelRaw(t) - 1) / 2) end,
 	getDuration = function(self, t) return 5 + math.floor(self:getTalentLevel(t) * 2) end,
 	tactical = { DISABLE = 2 },

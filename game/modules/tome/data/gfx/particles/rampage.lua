@@ -23,29 +23,26 @@ local toggle = false
 
 return { generator = function()
 	local ad = rng.range(0, 360)
-	local a = math.rad(ad)
+	local ax = math.cos(math.rad(ad))
+	local ay = math.sin(math.rad(ad))
 	local r = rng.range(0, 20)
 
 	return {
-		trail = 1,
 		life = 35,
-		size = 20, sizev = 0.3, sizea = -0.05,
+		size = 15, sizev = 0.25, sizea = -0.04,
 
-		x = r * math.cos(a) - 10, xv = 0, xa = 0,
-		y = r * math.sin(a) - 10, yv = 0, ya = 0,
-		dir = 0, dirv = 0, dira = 0,
-		vel = 0, velv = 0, vela = 0,
+		x = r * ax, xv = 0, xa = 0,
+		y = r * ay, yv = 0, ya = 0,
+		dir = math.rad(270), dirv = 0, dira = 0,
+		vel = 0.5, velv = 0, vela = 0,
 
 		r = 200 / 255,  rv = 0, ra = 0,
 		g = 16 / 255,  gv = 0, ga = 0,
 		b = 17 / 255,  bv = 0, ba = 0,
-		a = rng.range(40, 50) / 255,  av = -1 / 255, aa = 0
+		a = rng.range(55, 90) / 255,  av = -1 / 255, aa = 0
 	}
 end, },
 function(self)
-	--toggle = not toggle
-	--if toggle then
-		self.ps:emit(1)
-	--end
+	self.ps:emit(1)
 end,
 35

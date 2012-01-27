@@ -165,18 +165,18 @@ function _M:init(t, no_default)
 	t.negative_regen = t.negative_regen or -0.2 -- Positive energy slowly decays
 	t.paradox_regen = t.paradox_regen or 0 -- Paradox does not regen
 	t.psi_regen = t.psi_regen or 0.2 -- Energy regens slowly
-
+	t.hate_regen = t.hate_regen or 0 -- Hate does not regen
+	
 	t.max_positive = t.max_positive or 50
 	t.max_negative = t.max_negative or 50
 	t.positive = t.positive or 0
 	t.negative = t.negative or 0
 
-	t.hate_rating = t.hate_rating or 0.2
-	t.hate_regen = t.hate_regen or 0
-	t.max_hate = t.max_hate or 10
-	t.absolute_max_hate = t.absolute_max_hate or 14
-	t.hate = t.hate or 10
-	t.hate_per_kill = t.hate_per_kill or 0.8
+	t.max_hate = t.max_hate or 100
+	t.hate = t.hate or 100
+	t.baseline_hate = t.baseline_hate or 50 -- below this level hate loss stops
+	t.hate_per_kill = t.hate_per_kill or 8
+	t.default_hate_per_kill = t.hate_per_kill
 
 	t.equilibrium = t.equilibrium or 0
 
@@ -303,30 +303,14 @@ function _M:actBase()
 		local t = self:getTalentFromId(self.T_UNNATURAL_BODY)
 		t.do_regenLife(self, t)
 	end
-	self:regenResources()
-	-- Hate decay
+	
+	-- update hate regen based on calculated decay rate
 	if self:knowTalent(self.T_HATE_POOL) then
-		-- hate loss speeds up as hate increases
-		local hateChange = -math.max(0.02, 0.07 * math.pow(self.hate / 10, 1.5))
-		if self:knowTalent(self.T_SEETHE) then
-			-- seethe prevents loss at low levels and gains some back and very low levels
-			local t = self:getTalentFromId(self.T_SEETHE)
-			local hateLossMinHate = t.getHateLossMinHate(self, t)
-			local hateGainMaxHate = t.getHateGainMaxHate(self, t)
-
-			if self.hate < hateGainMaxHate then
-				hateChange = math.min(t.getHateGainChange(self, t), hateGainMaxHate - self.hate)
-			elseif self.hate < hateLossMinHate then
-				hateChange = 0
-			elseif self.hate + hateChange <= hateLossMinHate then
-				hateChange = hateLossMinHate - self.hate
-			end
-		end
-
-		if hateChange ~= 0 then
-			self:incHate(hateChange)
-		end
+		local t = self:getTalentFromId(self.T_HATE_POOL)
+		t.updateRegen(self, t)
 	end
+	
+	self:regenResources()
 
 	-- Compute timed effects
 	self:timedEffects()
@@ -503,6 +487,19 @@ function _M:act()
 			nb_foes = math.min(nb_foes, self:getTalentLevel(self.T_MILITANT_MIND))
 			self:setEffect(self.EFF_MILITANT_MIND, 4, {power=self:getTalentLevel(self.T_MILITANT_MIND) * nb_foes * 0.6})
 		end
+	end
+	
+	-- Beckon (chance to move actor and consume energy)
+	if self:hasEffect(self.EFF_BECKONED) then
+		self.tempeffect_def[self.EFF_BECKONED].do_act(self, self:hasEffect(self.EFF_BECKONED))
+	end
+	-- Paranoid (chance to attack anyone nearby)
+	if self:hasEffect(self.EFF_PARANOID) then
+		self.tempeffect_def[self.EFF_PARANOID].do_act(self, self:hasEffect(self.EFF_PARANOID))
+	end
+	-- Panicked (chance to run away)
+	if self:hasEffect(self.EFF_PANICKED) then
+		self.tempeffect_def[self.EFF_PANICKED].do_act(self, self:hasEffect(self.EFF_PANICKED))
 	end
 
 	-- Still enough energy to act ?
@@ -695,6 +692,16 @@ function _M:move(x, y, force)
 	if moved and not force and self:knowTalent(self.T_HASTE) and self:hasEffect(self.EFF_HASTE) then
 		local t = self:getTalentFromId(self.T_HASTE)
 		t.do_haste_double(self, t, ox, oy)
+	end
+	
+	if moved and not force and self:hasEffect(self.EFF_RAMPAGE) then
+		local eff = self:hasEffect(self.EFF_RAMPAGE)
+		if not eff.moved and eff.actualDuration < eff.maxDuration then
+			game.logPlayer(self, "#F53CBE#Your movements fuel your rampage! (+1 duration)")
+			eff.moved = true
+			eff.actualDuration = eff.actualDuration + 1
+			eff.dur = eff.dur + 1
+		end
 	end
 
 	return moved
@@ -1115,6 +1122,16 @@ end
 
 --- Called before taking a hit, it's the chance to check for shields
 function _M:onTakeHit(value, src)
+	-- update hate_baseline
+	if self.knowTalent and self:knowTalent(self.T_HATE_POOL) then
+		local t = self:getTalentFromId(self.T_HATE_POOL)
+		t.updateBaseline(self, t)
+	end
+	if src and src.knowTalent and src:knowTalent(src.T_HATE_POOL) then
+		local t = src:getTalentFromId(src.T_HATE_POOL)
+		t.updateBaseline(src, t)
+	end
+
 	-- Un-daze
 	if self:hasEffect(self.EFF_DAZED) then
 		self:removeEffect(self.EFF_DAZED)
@@ -1254,15 +1271,19 @@ function _M:onTakeHit(value, src)
 		value = 0
 	end
 
-	if self:isTalentActive(self.T_BONE_SHIELD) then
-		local t = self:getTalentFromId(self.T_BONE_SHIELD)
-		t.absorb(self, t, self:isTalentActive(self.T_BONE_SHIELD))
-		value = 0
-	end
-
 	if self:isTalentActive(self.T_DEFLECTION) then
 		local t = self:getTalentFromId(self.T_DEFLECTION)
 		value = t.do_onTakeHit(self, t, self:isTalentActive(self.T_DEFLECTION), value)
+	end
+
+	if self:hasEffect(self.EFF_RAMPAGE) then
+		local eff = self:hasEffect(self.EFF_RAMPAGE)
+		value = self.tempeffect_def[self.EFF_RAMPAGE].do_onTakeHit(self, eff, value)
+	end
+
+	if self:hasEffect(self.EFF_BECKONED) then
+		local eff = self:hasEffect(self.EFF_BECKONED)
+		value = self.tempeffect_def[self.EFF_BECKONED].do_onTakeHit(self, eff, value)
 	end
 
 	-- Achievements
@@ -1298,21 +1319,21 @@ function _M:onTakeHit(value, src)
 		local hateMessage
 
 		if value / self.max_life >= 0.15 then
-			-- you take a big hit..adds 0.2 + 0.2 for each 5% over 15%
-			hateGain = hateGain + 0.2 + (((value / self.max_life) - 0.15) * 10 * 0.5)
+			-- you take a big hit..adds 2 + 2 for each 5% over 15%
+			hateGain = hateGain + 2 + (((value / self.max_life) - 0.15) * 100 * 0.5)
 			hateMessage = "#F53CBE#You fight through the pain!"
 		end
 
 		if value / self.max_life >= 0.05 and (self.life - value) / self.max_life < 0.25 then
 			-- you take a hit with low health
-			hateGain = hateGain + 0.4
-			hateMessage = "#F53CBE#Your rage grows even as your life fades!"
+			hateGain = hateGain + 4
+			hateMessage = "#F53CBE#Your hatred grows even as your life fades!"
 		end
 
-		if hateGain >= 0.1 then
-			self.hate = math.min(self.max_hate, self.hate + hateGain)
+		if hateGain >= 1 then
+			self:incHate(hateGain)
 			if hateMessage then
-				game.logPlayer(self, hateMessage.." (+%0.1f hate)", hateGain)
+				game.logPlayer(self, hateMessage.." (+%d hate)", hateGain)
 			end
 		end
 	end
@@ -1329,7 +1350,7 @@ function _M:onTakeHit(value, src)
 		if hateGain >= 0.1 then
 			src.hate = math.min(src.max_hate, src.hate + hateGain)
 			if hateMessage then
-				game.logPlayer(src, hateMessage.." (+%0.1f hate)", hateGain)
+				game.logPlayer(src, hateMessage.." (+%d hate)", hateGain)
 			end
 		end
 	end
@@ -1460,7 +1481,7 @@ function _M:onTakeHit(value, src)
 		src:incNegative(leech * 0.25)
 		src:incEquilibrium(-leech * 0.35)
 		src:incStamina(leech * 0.65)
-		src:incHate(leech * 0.05)
+		src:incHate(leech * 0.2)
 		src:incPsi(leech * 0.2)
 		game.logSeen(src, "#CRIMSON#%s leeches energies from its victim!", src.name:capitalize())
 	end
@@ -1594,38 +1615,17 @@ function _M:die(src, death_note)
 		end
 	end
 
-	-- Adds hate
+	-- handle hate changes on kill
 	if src and src.knowTalent and src:knowTalent(src.T_HATE_POOL) then
-		local hateGain = src.hate_per_kill
-		local hateMessage
-
-		if self.level - 2 > src.level then
-			-- level bonus
-			hateGain = hateGain + (self.level - 2 - src.level) * 0.2
-			hateMessage = "#F53CBE#You have taken the life of an experienced foe!"
-		end
-
-		if self.rank >= 4 then
-			-- boss bonus
-			hateGain = hateGain * 4
-			hateMessage = "#F53CBE#Your hate has conquered a great adversary!"
-		elseif self.rank >= 3 then
-			-- elite bonus
-			hateGain = hateGain * 2
-			hateMessage = "#F53CBE#An elite foe has fallen to your hate!"
-		end
-		hateGain = math.min(hateGain, 10)
-
-		src.hate = math.min(src.max_hate, src.hate + hateGain)
-		if hateMessage then
-			game.logPlayer(src, hateMessage.." (+%0.1f hate)", hateGain - src.hate_per_kill)
-		end
+		local t = src:getTalentFromId(src.T_HATE_POOL)
+		t.updateBaseline(src, t)
+		t.on_kill(src, t, self)
 	end
 
 	if src and src.summoner and src.summoner_hate_per_kill then
 		if src.summoner.knowTalent and src.summoner:knowTalent(src.summoner.T_HATE_POOL) then
 			src.summoner.hate = math.min(src.summoner.max_hate, src.summoner.hate + src.summoner_hate_per_kill)
-			game.logPlayer(src.summoner, "%s feeds you hate from it's latest victim. (+%0.1f hate)", src.name:capitalize(), src.summoner_hate_per_kill)
+			game.logPlayer(src.summoner, "%s feeds you hate from it's latest victim. (+%d hate)", src.name:capitalize(), src.summoner_hate_per_kill)
 		end
 	end
 
@@ -1634,15 +1634,18 @@ function _M:die(src, death_note)
 		t.on_kill(src, t, self)
 	end
 
-	if src and src.knowTalent and src:knowTalent(src.T_CRUEL_VIGOR) then
-		local t = src:getTalentFromId(src.T_CRUEL_VIGOR)
-		t.on_kill(src, t)
-	end
-
 	local effStalked = self:hasEffect(self.EFF_STALKED)
 	if effStalked and not effStalked.source.dead and effStalked.source:hasEffect(self.EFF_STALKER) then
 		local t = effStalked.source:getTalentFromId(effStalked.source.T_STALK)
 		t.on_targetDied(effStalked.source, t, self)
+	end
+	
+	if src and src.hasEffect and src:hasEffect(self.EFF_PREDATOR) then
+		local eff = src:hasEffect(self.EFF_PREDATOR)
+		if self.type == eff.type then
+			local e = self.tempeffect_def[self.EFF_PREDATOR]
+			e.addKill(src, self, e, eff)
+		end
 	end
 
 	if src and src.knowTalent and src:knowTalent(src.T_BLOODRAGE) then
@@ -1855,10 +1858,6 @@ function _M:levelup()
 	self:incMaxPositive(self.positive_negative_rating)
 	self:incMaxNegative(self.positive_negative_rating)
 	self:incMaxPsi(self.psi_rating)
-	if self.max_hate < self.absolute_max_hate then
-		local amount = math.min(self.hate_rating, self.absolute_max_hate - self.max_hate)
-		self:incMaxHate(amount)
-	end
 
 	-- Heal up on new level
 	self:resetToFull()
@@ -2499,7 +2498,7 @@ function _M:preUseTalent(ab, silent, fake)
 			if not silent then game.logPlayer(self, "You do not have enough negative energy to use %s.", ab.name) end
 			return false
 		end
-		if ab.hate and self:getHate() < ab.hate then
+		if ab.hate and self:getHate() < ab.hate * (100 + self:combatFatigue()) / 100 then
 			if not silent then game.logPlayer(self, "You do not have enough hate to use %s.", ab.name) end
 			return false
 		end
@@ -2558,6 +2557,16 @@ function _M:preUseTalent(ab, silent, fake)
 	if self:attr("talent_fail_chance") and (ab.mode ~= "sustained" or not self:isTalentActive(ab.id)) and ab.no_energy ~= true and not fake and not self:attr("force_talent_ignore_ressources") then
 		if rng.percent(self:attr("talent_fail_chance")) then
 			if not silent then game.logSeen(self, "%s fails to use %s.", self.name:capitalize(), ab.name) end
+			self:useEnergy()
+			return false
+		end
+	end
+
+	-- terrified effect
+	if self:attr("terrified") and (ab.mode ~= "sustained" or not self:isTalentActive(ab.id)) and ab.no_energy ~= true and not fake and not self:attr("force_talent_ignore_ressources") then
+		local eff = self:hasEffect(self.EFF_TERRIFIED)
+		if rng.percent(self:attr("terrified")) then
+			if not silent then game.logSeen(self, "%s is too terrified to use %s.", self.name:capitalize(), ab.name) end
 			self:useEnergy()
 			return false
 		end
@@ -2700,7 +2709,7 @@ function _M:postUseTalent(ab, ret)
 			trigger = true; self:incNegative(-ab.negative * (100 + self:combatFatigue()) / 100)
 		end
 		if ab.hate then
-			trigger = true; self:incHate(-ab.hate)
+			trigger = true; self:incHate(-ab.hate * (100 + self:combatFatigue()) / 100)
 		end
 		-- Equilibrium is not affected by fatigue
 		if ab.equilibrium then
@@ -2723,7 +2732,6 @@ function _M:postUseTalent(ab, ret)
 	-- Cancel stealth!
 	if ab.id ~= self.T_STEALTH and ab.id ~= self.T_HIDE_IN_PLAIN_SIGHT and not ab.no_break_stealth then self:breakStealth() end
 	if ab.id ~= self.T_LIGHTNING_SPEED then self:breakLightningSpeed() end
-	if ab.id ~= self.T_PITY then self:breakPity() end
 	if ab.id ~= self.T_GATHER_THE_THREADS then self:breakGatherTheThreads() end
 	self:breakStepUp()
 
@@ -2731,6 +2739,11 @@ function _M:postUseTalent(ab, ret)
 		self:removeEffect(self.EFF_REDUX)
 		-- this still consumes energy but works as the talent suggests it does
 		self:forceUseTalent(ab.id, {ignore_energy=true, ignore_cd = true})
+	end
+	
+	if not ab.innate and self:hasEffect(self.EFF_RAMPAGE) and ab.id ~= self.T_RAMPAGE and ab.id ~= self.T_SLAM then
+		local eff = self:hasEffect(self.EFF_RAMPAGE)
+		value = self.tempeffect_def[self.EFF_RAMPAGE].do_postUseTalent(self, eff, value)
 	end
 
 	return true
@@ -2758,14 +2771,6 @@ function _M:breakStealth()
 		if rng.percent(chance) then return end
 
 		self:forceUseTalent(self.T_STEALTH, {ignore_energy=true})
-		self.changed = true
-	end
-end
-
---- Breaks pity if active
-function _M:breakPity()
-	if self:isTalentActive(self.T_PITY) then
-		self:forceUseTalent(self.T_PITY, {ignore_energy=true})
 		self.changed = true
 	end
 end
@@ -2829,7 +2834,7 @@ function _M:getTalentFullDescription(t, addlevel, config)
 		if t.vim or t.sustain_vim then d:add({"color",0x6f,0xff,0x83}, "Vim cost: ", {"color",0x88,0x88,0x88}, ""..(t.sustain_vim or t.vim), true) end
 		if t.positive or t.sustain_positive then d:add({"color",0x6f,0xff,0x83}, "Positive energy cost: ", {"color",255, 215, 0}, ""..(t.sustain_positive or t.positive * (100 + self:combatFatigue()) / 100), true) end
 		if t.negative or t.sustain_negative then d:add({"color",0x6f,0xff,0x83}, "Negative energy cost: ", {"color", 127, 127, 127}, ""..(t.sustain_negative or t.negative * (100 + self:combatFatigue()) / 100), true) end
-		if t.hate or t.sustain_hate then d:add({"color",0x6f,0xff,0x83}, "Hate cost:  ", {"color", 127, 127, 127}, ""..(t.hate or t.sustain_hate), true) end
+		if t.hate or t.sustain_hate then d:add({"color",0x6f,0xff,0x83}, "Hate cost:  ", {"color", 127, 127, 127}, ""..(t.hate or t.sustain_hate * (100 + 2 * self:combatFatigue()) / 100), true) end
 		if t.paradox or t.sustain_paradox then d:add({"color",0x6f,0xff,0x83}, "Paradox cost: ", {"color",  176, 196, 222}, ("%0.2f"):format(t.sustain_paradox or t.paradox * (1 + (self.paradox / 300))), true) end
 		if t.psi or t.sustain_psi then d:add({"color",0x6f,0xff,0x83}, "Psi cost: ", {"color",0x7f,0xff,0xd4}, ""..(t.sustain_psi or t.psi * (100 + 2 * self.fatigue) / 100), true) end
 	end
@@ -3014,13 +3019,6 @@ function _M:canSeeNoCache(actor, def, def_pct)
 		end
 	end
 
-	-- check cursed pity talent
-	if actor:attr("pity") and actor ~= self then
-		if core.fov.distance(self.x, self.y, actor.x, actor.y) >= actor:attr("pity") then
-			return false, 10
-		end
-	end
-
 	if def ~= nil then
 		return def, def_pct
 	else
@@ -3179,13 +3177,13 @@ function _M:on_set_temporary_effect(eff_id, e, p)
 		local fft = self:hasEffect(self.EFF_FADE_FROM_TIME)
 		p.dur = math.ceil(p.dur * (1 - (fft.power/100)))
 	end
-	if e.status == "detrimental" and e.type ~= "magical" and e.type ~= "other" and self:knowTalent(self.T_SUPPRESSION) then
-		local t = self:getTalentFromId(self.T_SUPPRESSION)
-		p.dur = math.ceil(p.dur * (1 - (t.getPercent(self, t)/100)))
-	end
 	if self:knowTalent(self.T_VITALITY) and e.status == "detrimental" and (e.subtype.wound or e.subtype.poison or e.subtype.disease) then
 		local t = self:getTalentFromId(self.T_VITALITY)
 		p.dur = math.ceil(p.dur * (1 - t.getWoundReduction(self, t)))
+	end
+	if self:hasEffect(self.EFF_HAUNTED) and e.subtype and e.subtype.fear then
+		local e = self.tempeffect_def[self.EFF_HAUNTED]
+		e.on_setFearEffect(self, e)
 	end
 	if e.status == "detrimental" and self:attr("negative_status_effect_immune") then
 		p.dur = 0
@@ -3240,6 +3238,15 @@ function _M:on_projectile_target(x, y, p)
 	if self:knowTalent(self.T_HEIGHTENED_REFLEXES) then
 		local t = self:getTalentFromId(self.T_HEIGHTENED_REFLEXES)
 		t.do_reflexes(self, t)
+	end
+	if self:isTalentActive(self.T_GLOOM) and self:knowTalent(self.T_SANCTUARY) then
+		-- mark temp table with the sanctuary damage change (to lower using tmp from DamageType:project)
+		local t = self:getTalentFromId(self.T_GLOOM)
+		if core.fov.distance(self.x, self.y, p.src_x, p.src_y) > self:getTalentRange(t) then
+			t = self:getTalentFromId(self.T_SANCTUARY)
+			p.tmp_proj.sanctuaryDamageChange = t.getDamageChange(self, t)
+			print("Sanctuary marking reduced damage on projectile:", p.tmp_proj.sanctuaryDamageChange)
+		end
 	end
 end
 

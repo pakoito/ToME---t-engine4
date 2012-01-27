@@ -216,6 +216,22 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			local def = src.tempeffect_def[src.EFF_CURSE_OF_MISFORTUNE]
 			dam = def.doUnfortunateEnd(src, eff, target, dam)
 		end
+		-- Sanctuary: reduces damage if it comes from outside of Gloom
+		if target.isTalentActive and target:isTalentActive(target.T_GLOOM) and target:knowTalent(target.T_SANCTUARY) then
+			if tmp and tmp.sanctuaryDamageChange then
+				-- projectile was targeted outside of gloom
+				dam = dam * (100 + tmp.sanctuaryDamageChange) / 100
+				print("[PROJECTOR] Sanctuary (projectile) dam", dam)
+			elseif src and src.x and src.y then
+				-- assume instantaneous projection and check range to source
+				local t = target:getTalentFromId(target.T_GLOOM)
+				if core.fov.distance(target.x, target.y, src.x, src.y) > target:getTalentRange(t) then
+					t = target:getTalentFromId(target.T_SANCTUARY)
+					dam = dam * (100 + t.getDamageChange(target, t)) / 100
+					print("[PROJECTOR] Sanctuary (source) dam", dam)
+				end
+			end
+		end
 
 		print("[PROJECTOR] final dam", dam)
 

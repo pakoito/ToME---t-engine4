@@ -344,7 +344,7 @@ function _M:projectDoAct(typ, tg, damtype, dam, particles, px, py, tmp)
 		-- Otherwise hit
 		else
 			DamageType:projectingFor(self, {project_type=tg})
-			if type(damtype) == "function" then if damtype(px, py, tg, self) then return true end
+			if type(damtype) == "function" then if damtype(px, py, tg, self, tmp) then return true end
 			else DamageType:get(damtype).projector(self, px, py, damtype, dam, tmp, nil, tg) end
 			if particles and type(particles) == "table" then
 				game.level.map:particleEmitter(px, py, 1, particles.type, particles.args)

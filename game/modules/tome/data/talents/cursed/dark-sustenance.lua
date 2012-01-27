@@ -29,7 +29,7 @@ newTalent{
 	requires_target = function(self, t) return self:getTalentLevel(t) >= 5 end,
 	direct_hit = true,
 	getHateGain = function(self, t)
-		return math.sqrt(self:getTalentLevel(t)) * 0.2 + self:combatMindpower() * 0.002
+		return math.sqrt(self:getTalentLevel(t)) * 2 + self:combatMindpower() * 0.02
 	end,
 	action = function(self, t)
 		local range = self:getTalentRange(t)
@@ -76,7 +76,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local hateGain = t.getHateGain(self, t)
-		return ([[Feed from the essence of your enemy. Draws %0.2f hate per turn from a targeted foe as long as they remain in your line of sight.
+		return ([[Feed from the essence of your enemy. Draws %0.1f hate per turn from a targeted foe as long as they remain in your line of sight.
 		Hate gain improves with your Mindpower.]]):format(hateGain)
 	end,
 }

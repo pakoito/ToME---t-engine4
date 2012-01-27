@@ -107,7 +107,7 @@ function _M:archeryAcquireTargets(tg, params)
 end
 
 --- Archery projectile code
-local function archery_projectile(tx, ty, tg, self)
+local function archery_projectile(tx, ty, tg, self, tmp)
 	local DamageType = require "engine.DamageType"
 	local weapon, ammo = tg.archery.weapon, tg.archery.ammo
 	local talent = self:getTalentFromId(tg.talent_id)
@@ -154,7 +154,7 @@ local function archery_projectile(tx, ty, tg, self)
 		print("[ATTACK ARCHERY] after mult", dam)
 
 		if crit then game.logSeen(self, "#{bold}#%s performs a critical strike!#{normal}#", self.name:capitalize()) end
-		DamageType:get(damtype).projector(self, target.x, target.y, damtype, math.max(0, dam))
+		DamageType:get(damtype).projector(self, target.x, target.y, damtype, math.max(0, dam), tmp)
 		game.level.map:particleEmitter(target.x, target.y, 1, "archery")
 		hitted = true
 
@@ -181,7 +181,7 @@ local function archery_projectile(tx, ty, tg, self)
 	-- Ranged project
 	if hitted and not target.dead then for typ, dam in pairs(self.ranged_project) do
 		if dam > 0 then
-			DamageType:get(typ).projector(self, target.x, target.y, typ, dam)
+			DamageType:get(typ).projector(self, target.x, target.y, typ, dam, tmp)
 		end
 	end end
 
@@ -189,7 +189,7 @@ local function archery_projectile(tx, ty, tg, self)
 	if hitted and not target.dead and self:knowTalent(self.T_WEAPON_FOLDING) and self:isTalentActive(self.T_WEAPON_FOLDING) then
 		local t = self:getTalentFromId(self.T_WEAPON_FOLDING)
 		local dam = t.getDamage(self, t)
-		DamageType:get(DamageType.TEMPORAL).projector(self, target.x, target.y, DamageType.TEMPORAL, dam)
+		DamageType:get(DamageType.TEMPORAL).projector(self, target.x, target.y, DamageType.TEMPORAL, dam, tmp)
 		self:incParadox(- t.getParadoxReduction(self, t))
 	end
 
@@ -202,17 +202,17 @@ local function archery_projectile(tx, ty, tg, self)
 		if auras.k_aura_on then
 			local k_aura = self:getTalentFromId(self.T_KINETIC_AURA)
 			local k_dam = mult * k_aura.getAuraStrength(self, k_aura)
-			DamageType:get(DamageType.PHYSICAL).projector(self, target.x, target.y, DamageType.PHYSICAL, k_dam)
+			DamageType:get(DamageType.PHYSICAL).projector(self, target.x, target.y, DamageType.PHYSICAL, k_dam, tmp)
 		end
 		if auras.t_aura_on then
 			local t_aura = self:getTalentFromId(self.T_THERMAL_AURA)
 			local t_dam = mult * t_aura.getAuraStrength(self, t_aura)
-			DamageType:get(DamageType.FIRE).projector(self, target.x, target.y, DamageType.FIRE, t_dam)
+			DamageType:get(DamageType.FIRE).projector(self, target.x, target.y, DamageType.FIRE, t_dam, tmp)
 		end
 		if auras.c_aura_on then
 			local c_aura = self:getTalentFromId(self.T_CHARGED_AURA)
 			local c_dam = mult * c_aura.getAuraStrength(self, c_aura)
-			DamageType:get(DamageType.LIGHTNING).projector(self, target.x, target.y, DamageType.LIGHTNING, c_dam)
+			DamageType:get(DamageType.LIGHTNING).projector(self, target.x, target.y, DamageType.LIGHTNING, c_dam, tmp)
 		end
 	end
 

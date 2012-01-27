@@ -1565,3 +1565,32 @@ newEffect{
 		self:removeTemporaryValue("resists", eff.pid)
 	end,
 }
+
+newEffect{
+	name = "CURSED_WOUND", image = "talents/slash.png",
+	desc = "Cursed Wound",
+	long_desc = function(self, eff) return ("The target's has a cursed wound, reducing healing by %d%%."):format(-eff.healFactorChange * 100) end,
+	type = "physical",
+	subtype = { wound=true }, no_ct_effect = true,
+	status = "detrimental",
+	parameters = { healFactorChange=-0.1 },
+	on_gain = function(self, err) return "#Target# has a cursed wound!", "+Cursed Wound" end,
+	on_lose = function(self, err) return "#Target# no longer has a cursed wound.", "-Cursed Wound" end,
+	activate = function(self, eff)
+		eff.healFactorId = self:addTemporaryValue("healing_factor", eff.healFactorChange)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("healing_factor", eff.healFactorId)
+	end,
+	on_merge = function(self, old_eff, new_eff)
+		-- add the remaining healing reduction spread out over the new duration
+		old_eff.healFactorChange = math.max(-0.75, (old_eff.healFactorChange / old_eff.totalDuration) * old_eff.dur + new_eff.healFactorChange)
+		old_eff.dur = math.max(old_eff.dur, new_eff.dur)
+		
+		self:removeTemporaryValue("healing_factor", old_eff.healFactorId)
+		old_eff.healFactorId = self:addTemporaryValue("healing_factor", old_eff.healFactorChange)
+		game.logSeen(self, "%s has re-opened a cursed wound!", self.name:capitalize())
+		
+		return old_eff
+	end,
+}

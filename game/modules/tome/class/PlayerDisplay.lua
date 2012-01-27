@@ -349,9 +349,9 @@ function _M:display()
 		)) h = h + self.font_h
 	end
 	if player:knowTalent(player.T_HATE_POOL) then
-		self:mouseTooltip(self.TOOLTIP_HATE, self:makeTextureBar("#F53CBE#Hate:", "%0.1f/%d", player:getHate(), player.max_hate, -math.max(0.02, 0.07 * math.pow(player.hate / 10, 1.5)) + player.hate_regen, x, h, 255, 255, 255,
-			{r=colors.GREY.r / 2, g=colors.GREY.g / 2, b=colors.GREY.b / 2},
-			{r=colors.GREY.r / 5, g=colors.GREY.g / 5, b=colors.GREY.b / 5}
+		self:mouseTooltip(self.TOOLTIP_HATE, self:makeTextureBar("#F53CBE#Hate:", "%d/%d", player:getHate(), player.max_hate, player.hate_regen, x, h, 255, 255, 255,
+			{r=0xF5 / 2, g=0x3C / 2, b=0xBE / 2},
+			{r=0xF5 / 5, g=0x3C / 5, b=0xBE / 5}
 		)) h = h + self.font_h
 	end
 	if (player.unnatural_body_heal  or 0) > 0 and player:knowTalent(player.T_UNNATURAL_BODY) then

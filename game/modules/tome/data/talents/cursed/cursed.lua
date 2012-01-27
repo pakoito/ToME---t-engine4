@@ -23,6 +23,7 @@ newTalentType{ allow_random=true, type="cursed/endless-hunt", name = "endless hu
 newTalentType{ allow_random=true, type="cursed/strife", name = "strife", description = "The battlefield is your home; death and confusion, your comfort." }
 newTalentType{ allow_random=true, type="cursed/gloom", name = "gloom", description = "All those in your sight must share your despair." }
 newTalentType{ allow_random=true, type="cursed/rampage", name = "rampage", description = "Let loose the hate that has grown within." }
+newTalentType{ allow_random=true, type="cursed/predator", name = "predator", description = "Track and kill your prey with single-minded focus." }
 
 -- Doomed
 newTalentType{ allow_random=true, type="cursed/dark-sustenance", name = "dark sustenance", generic = true, description = "Invoke the powerful force of your will." }
@@ -36,7 +37,7 @@ newTalentType{ allow_random=true, type="cursed/gestures", name = "gestures", des
 newTalentType{ allow_random=true, type="cursed/cursed-form", name = "cursed form", generic = true, description = "You are wracked with the dark energies of the curse." }
 newTalentType{ allow_random=true, type="cursed/cursed-aura", name = "cursed aura", generic = true, description = "The things you surround yourself with soon wither away." }
 newTalentType{ allow_random=false, type="cursed/curses", name = "curses", hide = true, description = "The effects of cursed objects." }
-newTalentType{ allow_random=true, type="cursed/dark-figure", name = "dark figure", description = "Life as an outcast has given you time to reflect on your misfortunes." }
+newTalentType{ allow_random=true, type="cursed/fears", name = "fears", description = "Use the fear that lies at the heart of your curse to attack the minds of your enemies." }
 
 cursed_wil_req1 = {
 	stat = { wil=function(level) return 12 + (level-1) * 2 end },
@@ -119,7 +120,7 @@ cursed_lev_req5 = {
 
 -- utility functions
 function getHateMultiplier(self, min, max, cursedWeaponBonus, hate)
-	local fraction = (hate or self.hate) / 10
+	local fraction = (hate or self.hate) / 100
 	if cursedWeaponBonus then
 		if self:hasDualWeapon() then
 			if self:hasCursedWeapon() then fraction = fraction + 0.13 end
@@ -132,29 +133,12 @@ function getHateMultiplier(self, min, max, cursedWeaponBonus, hate)
 	return (min + ((max - min) * fraction))
 end
 
-function checkWillFailure(self, target, minChance, maxChance, attackStrength)
-	-- attack power is analogous to mental resist except all willpower and no cunning
-	local attack = self:getWil() * 0.5 * attackStrength
-	local defense = target:combatMentalResist()
-
-	-- used this instead of checkHit to get a curve that is a little more ratio dependent than difference dependent.
-	-- + 10 prevents large changes for low attack/defense values
-	-- 2 * log adjusts falloff to roughly get 0% break near attack = 0.5 * defense and 100% break near attack = 2 * defense
-	local chance = minChance + (1 + 2 * math.log((attack + 10) / (defense + 10))) * (maxChance - minChance) * 0.5
-
-	local result = rng.avg(1, 100)
-	print("checkWillFailure", self.name, self.level, target.name, target.level, minChance, chance, maxChance)
-
-	if result <= minChance then return true end
-	if result >= maxChance then return false end
-	return result <= chance
-end
-
 load("/data/talents/cursed/slaughter.lua")
 load("/data/talents/cursed/endless-hunt.lua")
 load("/data/talents/cursed/strife.lua")
 load("/data/talents/cursed/gloom.lua")
 load("/data/talents/cursed/rampage.lua")
+load("/data/talents/cursed/predator.lua")
 
 load("/data/talents/cursed/force-of-will.lua")
 load("/data/talents/cursed/dark-sustenance.lua")
@@ -165,4 +149,4 @@ load("/data/talents/cursed/gestures.lua")
 
 load("/data/talents/cursed/cursed-form.lua")
 load("/data/talents/cursed/cursed-aura.lua")
-load("/data/talents/cursed/dark-figure.lua")
+load("/data/talents/cursed/fears.lua")

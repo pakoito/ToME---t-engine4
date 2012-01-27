@@ -28,7 +28,7 @@ newTalent{
 	cooldown = function(self, t)
 		return 8
 	end,
-	hate = 0.4,
+	hate = 4,
 	tactical = { ATTACK = 2 },
 	requires_target = true,
 	range = 2.5,
@@ -49,14 +49,14 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > range then return nil end
 
 		-- attempt domination
 		local duration = t.getDuration(self, t)
 		local armorChange = t.getArmorChange(self, t)
 		local defenseChange = t.getDefenseChange(self, t)
 		local resistPenetration = t.getResistPenetration(self, t)
-		local customMindpower = self:getWil() * 0.5 * 1
-		target:setEffect(target.EFF_DOMINATED, duration, { source = self, armorChange = armorChange, defenseChange = defenseChange, resistPenetration = resistPenetration, apply_power=customMindpower })
+		target:setEffect(target.EFF_DOMINATED, duration, { source = self, armorChange = armorChange, defenseChange = defenseChange, resistPenetration = resistPenetration, apply_power=self:combatMindpower() })
 
 		-- attack if adjacent
 		if core.fov.distance(self.x, self.y, x, y) <= 1 then
@@ -70,7 +70,7 @@ newTalent{
 		local armorChange = t.getArmorChange(self, t)
 		local defenseChange = t.getDefenseChange(self, t)
 		local resistPenetration = t.getResistPenetration(self, t)
-		return ([[Turn your attention to a nearby foe and dominate them with your overwhelming presence. The target will be unable to move for %d turns and vulnerable to attacks. They will lose %d armor, %d defense and your attacks will gain %d%% resistance penetration. If the target is adjacent to you, your domination will include a melee attack.
+		return ([[Turn your attention to a nearby foe and dominate them with your overwhelming presence. If the target fails to save versus Mindpower, it will be unable to move for %d turns and vulnerable to attacks. They will lose %d armor, %d defense and your attacks will gain %d%% resistance penetration. If the target is adjacent to you, your domination will include a melee attack.
 		Effects will improve with the Strength stat.]]):format(duration, -armorChange, -defenseChange, resistPenetration)
 	end,
 }
@@ -96,7 +96,7 @@ newTalent{
 --	require = cursed_str_req2,
 --	points = 5,
 --	cooldown = 30,
---	hate = 0.5,
+--	hate = 5,
 --	tactical = { DEFEND = 3 },
 --	getConversionDuration = function(self, t)
 --		return 3
@@ -108,7 +108,7 @@ newTalent{
 --		return self:combatTalentStatDamage(t, "wil", 40, 80)
 --	end,
 --	getMaxConversion = function(self, t, hate)
---		return self:combatTalentStatDamage(t, "wil", 60, 400) * getHateMultiplier(self, 0.7, 1, true, hate)
+--		return self:combatTalentStatDamage(t, "wil", 60, 400) * getHateMultiplier(self, 0.7, 1, false, hate)
 --	end,
 --	action = function(self, t)
 --		local duration = t.getDuration(self, t)
@@ -135,7 +135,7 @@ newTalent{
 --	points = 5,
 --	random_ego = "attack",
 --	cooldown = 6,
---	hate = 0.4,
+--	hate = 4,
 --	tactical = { ATTACK = 2 },
 --	requires_target = true,
 --	getDamagePercent = function(self, t)
@@ -172,17 +172,17 @@ newTalent{
 --	points = 5,
 --	random_ego = "attack",
 --	cooldown = 6,
---	hate = 0.4,
+--	hate = 4,
 --	tactical = { ATTACK = 2 },
 --	requires_target = true,
 --	getDamagePercent = function(self, t)
 --		return 100 - (40 / self:getTalentLevel(t))
 --	end,
 --	getPoisonDamage = function(self, t, hate)
---		return self:combatTalentStatDamage(t, "wil", 20, 300) * getHateMultiplier(self, 0.5, 1.0, true, hate)
+--		return self:combatTalentStatDamage(t, "wil", 20, 300) * getHateMultiplier(self, 0.5, 1.0, false, hate)
 --	end,
 --	getHealFactor = function(self, t, hate)
---		return self:combatTalentStatDamage(t, "wil", 30, 70) * getHateMultiplier(self, 0.5, 1.0, true, hate)
+--		return self:combatTalentStatDamage(t, "wil", 30, 70) * getHateMultiplier(self, 0.5, 1.0, false, hate)
 --	end,
 --	getDuration = function(self, t)
 --		return math.max(3, math.floor(6.5 - self:getTalentLevel(t) * 0.5))
@@ -208,11 +208,11 @@ newTalent{
 --	info = function(self, t)
 --		local damagePercent = t.getDamagePercent(self, t)
 --		local poisonDamageMin = t.getPoisonDamage(self, t, 0)
---		local poisonDamageMax = t.getPoisonDamage(self, t, 10)
+--		local poisonDamageMax = t.getPoisonDamage(self, t, 100)
 --		local healFactorMin = t.getHealFactor(self, t, 0)
---		local healFactorMax = t.getHealFactor(self, t, 10)
+--		local healFactorMax = t.getHealFactor(self, t, 100)
 --		local duration = t.getDuration(self, t)
---		return ([[Poison your foe with the essence of your curse inflicting %d%% damage and %d (at 0 Hate) to %d (at 10+ Hate) poison damage over %d turns. Healing is also reduced by %d%% (at 0 Hate) to %d%% (at 10+ Hate).
+--		return ([[Poison your foe with the essence of your curse inflicting %d%% damage and %d (at 0 Hate) to %d (at 100+ Hate) poison damage over %d turns. Healing is also reduced by %d%% (at 0 Hate) to %d%% (at 100+ Hate).
 --		Poison damage increases with the Willpower stat. Hate-based effects will improve when wielding cursed weapons.]]):format(damagePercent, poisonDamageMin, poisonDamageMax, duration, healFactorMin, healFactorMax)
 --	end,
 --}
@@ -224,7 +224,7 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	cooldown = function(self, t) return math.max(6, 13 - math.floor(self:getTalentLevel(t))) end,
-	hate = 0.4,
+	hate = 4,
 	range = 6,
 	tactical = { CLOSEIN = 2, ATTACK = { PHYSICAL = 0.5 } },
 	requires_target = true,
@@ -246,7 +246,7 @@ newTalent{
 					and not game.level.map.attrs(x, y, "no_teleport") then
 				self:move(x, y, true)
 				game:playSoundNear(self, "talents/teleport")
-				local multiplier = self:combatTalentWeaponDamage(t, 0.7, 1.9) * getHateMultiplier(self, 0.3, 1.0, true)
+				local multiplier = self:combatTalentWeaponDamage(t, 0.7, 1.9) * getHateMultiplier(self, 0.3, 1.0, false)
 				self:attackTarget(target, nil, multiplier, true)
 
 				local defenseChange = t.getDefenseChange(self, t)
@@ -261,8 +261,7 @@ newTalent{
 	info = function(self, t)
 		local multiplier = self:combatTalentWeaponDamage(t, 0.7, 1.9)
 		local defenseChange = t.getDefenseChange(self, t)
-		return ([[With blinding speed you suddenly appear next to a target up to %d spaces away and attack for %d%% (at 0 Hate) to %d%% (at 10+ Hate) damage. Your sudden appearance catches everyone off-guard giving you %d extra defense for 1 turn.
-		Hate-based effects will improve when wielding cursed weapons.]]):format(self:getTalentRange(t), multiplier * 30, multiplier * 100, defenseChange)
+		return ([[With blinding speed you suddenly appear next to a target up to %d spaces away and attack for %d%% (at 0 Hate) to %d%% (at 100+ Hate) damage. Your sudden appearance catches everyone off-guard giving you %d extra defense for 1 turn.]]):format(self:getTalentRange(t), multiplier * 30, multiplier * 100, defenseChange)
 	end,
 }
 
@@ -273,7 +272,7 @@ newTalent{
 	-- points = 5,
 	-- random_ego = "attack",
 	-- cooldown = 20,
-	-- hate = 1.5,
+	-- hate = 15,
 	-- tactical = { ATTACKAREA = 2 },
 	-- requires_target = false,
 	-- getDamagePercent = function(self, t)

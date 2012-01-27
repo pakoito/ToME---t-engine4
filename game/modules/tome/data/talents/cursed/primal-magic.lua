@@ -32,7 +32,7 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	cooldown = 10,
-	hate =  0.8,
+	hate =  8,
 	range = 6,
 	proj_speed = 4,
 	tactical = { ATTACK = { ARCANE = 2 } },
@@ -105,7 +105,7 @@ newTalent{
 	random_ego = "utility",
 	no_energy = true,
 	cooldown = function(self, t) return 20 - math.floor(self:getTalentLevel(t) * 1.5) end,
-	hate = 0.5,
+	hate = 5,
 	range = 3,
 	tactical = { ESCAPE = function(self, t, target)
 		return 2 * self:canBe("teleport")
@@ -161,7 +161,7 @@ newTalent{
 	require = cursed_mag_req4,
 	points = 5,
 	random_ego = "attack",
-	hate = 3,
+	hate = 30,
 	cooldown = 30,
 	tactical = { ATTACK = { ARCANE = 2 } },
 	range = 10,

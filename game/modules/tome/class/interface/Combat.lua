@@ -88,6 +88,15 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 		game.logSeen(self, "%s is too afraid to attack.", self.name:capitalize())
 		return false
 	end
+	
+	if self:attr("terrified") and rng.percent(self:attr("terrified")) then
+		if not noenergy then
+			self:useEnergy(game.energy_to_act)
+			self.did_energy = true
+		end
+		game.logSeen(self, "%s is too terrified to attack.", self.name:capitalize())
+		return false
+	end
 
 	-- Cancel stealth early if we are noticed
 	if self:isTalentActive(self.T_STEALTH) and target:canSee(self) then
@@ -192,7 +201,6 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 
 	-- Cancel stealth!
 	if break_stealth then self:breakStealth() end
-	self:breakPity()
 	self:breakLightningSpeed()
 	self:breakGatherTheThreads()
 	return hit
@@ -294,6 +302,21 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		atk = atk + t.getAttackChange(self, t, effStalker.bonus)
 		mult = mult * t.getStalkedDamageMultiplier(self, t, effStalker.bonus)
 	end
+	
+	-- add marked prey damage and attack bonus
+	local effPredator = self:hasEffect(self.EFF_PREDATOR)
+	if effPredator and effPredator.type == target.type then
+		if effPredator.subtype == target.subtype then
+			mult = mult + effPredator.subtypeDamageChange
+			atk = atk + effPredator.subtypeAttackChange
+		else
+			mult = mult + effPredator.typeDamageChange
+			atk = atk + effPredator.typeAttackChange
+		end
+	end
+	
+	-- track weakness for hate bonus before the target removes it
+	local effGloomWeakness = target:hasEffect(target.EFF_GLOOM_WEAKNESS)
 
 	local dam, apr, armor = force_dam or self:combatDamage(weapon), self:combatAPR(weapon), target:combatArmor()
 	print("[ATTACK] to ", target.name, " :: ", dam, apr, armor, def, "::", mult)
@@ -596,6 +619,54 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	if hitted and game.level.data.zero_gravity and rng.percent(util.bound(dam, 0, 100)) then
 		target:knockback(self.x, self.y, math.ceil(math.log(dam)))
 	end
+	
+	-- Weakness hate bonus
+	if hitted and effGloomWeakness and effGloomWeakness.hateBonus or 0 > 0 then
+		self:incHate(effGloomWeakness.hateBonus)
+		game.logPlayer(self, "#F53CBE#You revel in attacking a weakened foe! (+%d hate)", effGloomWeakness.hateBonus)
+		effGloomWeakness.hateBonus = nil
+	end
+	
+	-- Rampage
+	if hitted and crit then
+		local eff = self:hasEffect(self.EFF_RAMPAGE)
+		if eff and not eff.critHit and eff.actualDuration < eff.maxDuration then
+			game.logPlayer(self, "#F53CBE#Your rampage is invigorated by your fierce attack! (+1 duration)")
+			eff.critHit = true
+			eff.actualDuration = eff.actualDuration + 1
+			eff.dur = eff.dur + 1
+		end
+	end
+	
+	-- Marked Prey
+	if hitted and not target.dead and effPredator and effPredator.type == target.type then
+		if effPredator.subtype == target.subtype then
+			-- Anatomy stun
+			if effPredator.subtypeStunChance > 0 and rng.percent(effPredator.subtypeStunChance) then
+				if target:canBe("stun") then
+					target:setEffect(target.EFF_STUNNED, 3, {})
+				else
+					game.logSeen(target, "%s resists the stun!", target.name:capitalize())
+				end
+			end
+			
+			-- Outmaneuver
+			if effPredator.subtypeOutmaneuverChance > 0 and rng.percent(effPredator.subtypeOutmaneuverChance) then
+				local t = self:getTalentFromId(self.T_OUTMANEUVER)
+				target:setEffect(target.EFF_OUTMANEUVERED, t.getDuration(self, t), { reduction=t.getReduction(self, t) })
+			end
+		else
+			-- Outmaneuver
+			if effPredator.typeOutmaneuverChance > 0 and rng.percent(effPredator.typeOutmaneuverChance) then
+				local t = self:getTalentFromId(self.T_OUTMANEUVER)
+				target:setEffect(target.EFF_OUTMANEUVERED, t.getDuration(self, t), { reduction=t.getReduction(self, t) })
+			end
+		end
+	end
+	
+	if hitted and crit and target:hasEffect(target.EFF_DISMAYED) then
+		target:removeEffect(target.EFF_DISMAYED)
+	end
 
 	if hitted and not target.dead then
 		-- Curse of Madness: Twisted Mind
@@ -772,7 +843,9 @@ function _M:combatCrit(weapon)
 	if weapon.talented and weapon.talented == "knife" and self:knowTalent(Talents.T_LETHALITY) then
 		addcrit = 1 + self:getTalentLevel(Talents.T_LETHALITY) * 1.3
 	end
-	return self.combat_physcrit + (self:getCun() - 10) * 0.3 + (self:getLck() - 50) * 0.30 + (weapon.physcrit or 1) + addcrit
+	local crit = self.combat_physcrit + (self:getCun() - 10) * 0.3 + (self:getLck() - 50) * 0.30 + (weapon.physcrit or 1) + addcrit
+	
+	return crit
 end
 
 --- Gets the damage range
@@ -941,18 +1014,22 @@ end
 
 --- Gets spellcrit
 function _M:combatSpellCrit()
-	return self.combat_spellcrit + (self:getCun() - 10) * 0.3 + (self:getLck() - 50) * 0.30 + 1
+	local crit = self.combat_spellcrit + (self:getCun() - 10) * 0.3 + (self:getLck() - 50) * 0.30 + 1
+	
+	return crit
 end
 
 --- Gets mindcrit
-function _M:combatMindCrit()
-	local add = 0
+function _M:combatMindCrit(add)
+	local add = add or 0
 	if self:knowTalent(self.T_GESTURE_OF_POWER) then
 		local t = self:getTalentFromId(self.T_GESTURE_OF_POWER)
 		add = t.getMindCritChange(self, t)
 	end
 
-	return self.combat_mindcrit + (self:getCun() - 10) * 0.3 + (self:getLck() - 50) * 0.30 + 1 + add
+	local crit = self.combat_mindcrit + (self:getCun() - 10) * 0.3 + (self:getLck() - 50) * 0.30 + 1 + add
+	
+	return crit
 end
 
 --- Gets spellspeed
@@ -992,6 +1069,10 @@ function _M:physicalCrit(dam, weapon, target, atk, def)
 
 	if target:hasHeavyArmor() and target:knowTalent(target.T_ARMOUR_TRAINING) then
 		chance = chance - target:getTalentLevel(target.T_ARMOUR_TRAINING) * 1.9
+	end
+	
+	if target:hasEffect(target.EFF_DISMAYED) then
+		chance = 100
 	end
 
 	chance = util.bound(chance, 0, 100)
@@ -1067,13 +1148,13 @@ function _M:spellFriendlyFire()
 end
 
 --- Gets mindpower
-function _M:combatMindpower(mod)
+function _M:combatMindpower(mod, add)
 	mod = mod or 1
-	local add = 0
+	add = add or 0
 
 	if self:knowTalent(self.T_GESTURE_OF_COMMAND) then
 		local t = self:getTalentFromId(self.T_GESTURE_OF_COMMAND)
-		add = t.getMindpowerChange(self, t)
+		add = add + t.getMindpowerChange(self, t)
 	end
 
 	return self:rescaleCombatStats((self.combat_mindpower > 0 and self.combat_mindpower or 0) + add + self:getWil() * 0.7 + self:getCun() * 0.4) * mod

@@ -42,7 +42,7 @@ newTalent{
 		return 40
 	end,
 	getHitHateChange = function(self, t, bonus)Patbonus = math.min(bonus, 3)
-		return 0.05 * bonus
+		return 0.5 * bonus
 	end,
 	getAttackChange = function(self, t, bonus)
 		return math.floor(self:combatTalentStatDamage(t, "wil", 10, 30) * math.sqrt(bonus))
@@ -53,7 +53,7 @@ newTalent{
 	doStalk = function(self, t, target)
 		if self:hasEffect(self.EFF_STALKER) or target:hasEffect(self.EFF_STALKED) then
 			-- doesn't support multiple stalkers, stalkees
-			game.logPlayer(self, "You are having trouble focusing on your prey!")
+			game.logPlayer(self, "#F53CBE#You are having trouble focusing on your prey!")
 			return false
 		end
 
@@ -80,9 +80,9 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[When you focus your attacks on a single foe and melee strike them for two consecutive turns your hated of them overcomes you and you begin to stalk them with single-minded purpose. The effect will last for %d turns or until your prey is dead. Stalking gives you bonuses against your foe that grow each turn you hit them and diminish each turn you don't.
-		bonus level 1: +%d attack, +%d%% melee damage, +%0.3f hate/turn prey was hit
-		bonus level 2: +%d attack, +%d%% melee damage, +%0.3f hate/turn prey was hit
-		bonus level 3: +%d attack, +%d%% melee damage, +%0.3f hate/turn prey was hit
+		bonus level 1: +%d attack, +%d%% melee damage, +%0.2f hate/turn prey was hit
+		bonus level 2: +%d attack, +%d%% melee damage, +%0.2f hate/turn prey was hit
+		bonus level 3: +%d attack, +%d%% melee damage, +%0.2f hate/turn prey was hit
 		Attack and damage increase with the Willpower stat.]]):format(duration,
 		t.getAttackChange(self, t, 1), t.getStalkedDamageMultiplier(self, t, 1) * 100 - 100, t.getHitHateChange(self, t, 1),
 		t.getAttackChange(self, t, 2), t.getStalkedDamageMultiplier(self, t, 2) * 100 - 100, t.getHitHateChange(self, t, 2),
@@ -96,14 +96,14 @@ newTalent{
 	require = cursed_wil_req2,
 	points = 5,
 	cooldown = 10,
-	hate = 0.2,
+	hate = 2,
 	tactical = { DISABLE = 2 },
 	range = 10,
 	getDuration = function(self, t)
 		return math.min(20, math.floor(5 + self:getTalentLevel(t) * 2))
 	end,
 	getChance = function(self, t)
-		return math.floor(42 + (math.sqrt(self:getTalentLevel(t)) - 1) * 20)
+		return math.min(75, math.floor(42 + (math.sqrt(self:getTalentLevel(t)) - 1) * 20))
 	end,
 	getSpellpowerChange = function(self, t)
 		return -self:combatTalentStatDamage(t, "wil", 8, 33)
@@ -132,7 +132,7 @@ newTalent{
 		local chance = t.getChance(self, t)
 		local spellpowerChange = t.getSpellpowerChange(self, t)
 		local mindpowerChange = t.getMindpowerChange(self, t)
-		return ([[The connection between predator and prey allows you to speak to the mind of your target and beckon them closer. For %d turns they will try to come to you, even pushing others aside to do so. There is a %d%% chance each turn that they will move towards you instead of acting. The effect makes concentration difficult for your target, reducing spellpower and mindpower by %d until they reach you.
+		return ([[The connection between predator and prey allows you to speak to the mind of your target and beckon them closer. For %d turns they will try to come to you, even pushing others aside to do so. There is a %d%% chance each turn that they will move towards you instead of acting. The chance is halved if the target saves versus Mindpower and the effect may be dispelled if the target takes significant damage. The effect makes concentration difficult for your target, reducing spellpower and mindpower by %d until they reach you.
 		Spellpower and Mindpower reduction increases with the Willpower stat.]]):format(duration, chance, -spellpowerChange)
 	end,
 }
@@ -144,13 +144,13 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	cooldown = 6,
-	hate = 0.5,
+	hate = 5,
 	tactical = { ATTACK = { PHYSICAL = 3 } },
 	getCooldownDuration = function(self, t)
 		return 3 + math.floor(self:getTalentLevel(t) * 0.75)
 	end,
 	getDamageMultiplier = function(self, t, hate)
-		return getHateMultiplier(self, 0.35, 0.67, true, hate)
+		return getHateMultiplier(self, 0.35, 0.67, false, hate)
 	end,
 	getTargetDamageChange = function(self, t)
 		return -self:combatTalentStatDamage(t, "wil", 0.7, 0.9)
@@ -185,7 +185,7 @@ newTalent{
 				local t = rng.tableRemove(tids)
 				if not t then break end
 				target.talents_cd[t.id] = rng.range(3, 5)
-				game.logSeen(target, "%s's %s is disrupted!", target.name:capitalize(), t.name)
+				game.logSeen(target, "#F53CBE#%s's %s is disrupted!", target.name:capitalize(), t.name)
 			end
 		end
 
@@ -196,8 +196,8 @@ newTalent{
 		local cooldownDuration = t.getCooldownDuration(self, t)
 		local targetDamageChange = t.getTargetDamageChange(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[Harass your stalked victim with two quick attacks for %d%% (at 0 Hate) to %d%% (at 10+ Hate) damage each. Each attack that scores a hit disrupts one talent, rune or infusion for %d turns. Your opponent will be unnerved by the attacks, reducing the damage they deal by %d%% for %d turns.
-		Damage reduction increases with the Willpower stat. Hate-based effects will improve when wielding cursed weapons (+2.5 hate).]]):format(t.getDamageMultiplier(self, t, 0) * 100, t.getDamageMultiplier(self, t, 10) * 100, cooldownDuration, -targetDamageChange * 100, duration)
+		return ([[Harass your stalked victim with two quick attacks for %d%% (at 0 Hate) to %d%% (at 100+ Hate) damage each. Each attack that scores a hit disrupts one talent, rune or infusion for %d turns. Your opponent will be unnerved by the attacks, reducing the damage they deal by %d%% for %d turns.
+		Damage reduction increases with the Willpower stat.]]):format(t.getDamageMultiplier(self, t, 0) * 100, t.getDamageMultiplier(self, t, 100) * 100, cooldownDuration, -targetDamageChange * 100, duration)
 	end,
 }
 

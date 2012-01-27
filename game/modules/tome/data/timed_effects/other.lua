@@ -903,11 +903,11 @@ newEffect{
 		local def, level, bonusLevel = self.tempeffect_def[self.EFF_CURSE_OF_SHROUDS], eff.level, math.min(eff.unlockLevel, eff.level)
 
 		return ([[A shroud of darkness seems to fall across your path. #LIGHT_BLUE#Level %d%s#WHITE#
-#CRIMSON#Penalty: #WHITE#Shroud of Weakness: Small chance of becoming enveloped in a Shroud Of Weakness (reduces damage dealt by %d%%) for 4 turns.
+#CRIMSON#Penalty: #WHITE#Shroud of Weakness: Small chance of becoming enveloped in a Shroud of Weakness (reduces damage dealt by %d%%) for 4 turns.
 #CRIMSON#Level 1: %sNightwalker: %+d Darkness Resistance, %+d%% Max Darkness Resistance, %+d See Invisible
 #CRIMSON#Level 2: %s%+d Luck, %+d Constitution
 #CRIMSON#Level 3: %sShroud of Passing: Your form seems to fade as you move, reducing all damage taken by %d%% for 1 turn after movement.
-#CRIMSON#Level 4: %sShroud of Death: The power of every kill seems to envelop you like a shroud, reducing all damage taken by %d%% for 1 turn.]]):format(
+#CRIMSON#Level 4: %sShroud of Death: The power of every kill seems to envelop you like a shroud, reducing all damage taken by %d%% for 3 turns.]]):format(
 		level, self.cursed_aura == self.EFF_CURSE_OF_SHROUDS and ", Cursed Aura" or "",
 		-def.getShroudIncDamageChange(level),
 		bonusLevel >= 1 and "#WHITE#" or "#GREY#", def.getResistsDarknessChange(math.max(level, 1)), def.getResistsCapDarknessChange(math.max(level, 1)), def.getSeeInvisible(math.max(level, 1)),
@@ -968,7 +968,7 @@ newEffect{
 	doShroudOfDeath = function(self, eff)
 		if math.min(eff.unlockLevel, eff.level) >= 4 and not self:hasEffect(self.EFF_SHROUD_OF_DEATH) then
 			local def = self.tempeffect_def[self.EFF_CURSE_OF_SHROUDS]
-			self:setEffect(self.EFF_SHROUD_OF_DEATH, 1, { power=def.getShroudResistsAllChange(eff.level) })
+			self:setEffect(self.EFF_SHROUD_OF_DEATH, 3, { power=def.getShroudResistsAllChange(eff.level) })
 		end
 	end,
 }
@@ -980,6 +980,7 @@ newEffect{
 	type = "other",
 	subtype = { time=true },
 	status = "detrimental",
+	no_stop_resting = true,
 	parameters = { power=10 },
 	activate = function(self, eff)
 		eff.incDamageId = self:addTemporaryValue("inc_damage", {all = eff.power})
@@ -1042,7 +1043,8 @@ newEffect{
 		if level <= 3 then return -2 else return -3 end
 	end,
 	getWilChange = function(level) return -1 + level * 2 end,
-	getSuffocateAirChange = function(level) return 10 + (level - 3) * 3 end,
+	getBaseSuffocateAirChange = function(level) return 10 + (level - 3) * 3 end,
+	getSuffocateAirChange = function(level) return 3 + (level - 3) * 2 end,
 	getNightmareChance = function(level) return 0.1 + (level -4) * 0.05 end,
 	getNightmareRadius = function(level) return 5 + (level - 4) * 2 end,
 	display_desc = function(self, eff)
@@ -1065,7 +1067,7 @@ newEffect{
 		def.getVisionsReduction(level),
 		bonusLevel >= 1 and "#WHITE#" or "#GREY#", def.getResistsPhysicalChange(math.max(level, 1)), def.getResistsCapPhysicalChange(math.max(level, 1)),
 		bonusLevel >= 2 and "#WHITE#" or "#GREY#", def.getLckChange(eff, math.max(level, 2)), def.getWilChange(math.max(level, 2)),
-		bonusLevel >= 3 and "#WHITE#" or "#GREY#", def.getSuffocateAirChange(math.max(level, 3)), def.getSuffocateAirChange(math.max(level, 3)),
+		bonusLevel >= 3 and "#WHITE#" or "#GREY#", def.getBaseSuffocateAirChange(math.max(level, 3)), def.getSuffocateAirChange(math.max(level, 3)),
 		bonusLevel >= 4 and "#WHITE#" or "#GREY#", eff.nightmareChance or 0, def.getNightmareRadius(math.max(level, 4)), def.getNightmareChance(math.max(level, 4)))
 	end,
 	activate = function(self, eff)
@@ -1098,7 +1100,7 @@ newEffect{
 		if math.min(eff.unlockLevel, eff.level) >= 3 then
 			if target and target.rank <= 2 and target.level <= self.level - 3 and not target:attr("no_breath") and not target:attr("invulnerable") then
 				local def = self.tempeffect_def[self.EFF_CURSE_OF_NIGHTMARES]
-				local airLoss = (self.level - target.level - 2) * def.getSuffocateAirChange(eff.level)
+				local airLoss = def.getBaseSuffocateAirChange(eff.level) + (self.level - target.level - 3) * def.getSuffocateAirChange(eff.level)
 				game.logSeen(self, "#F53CBE#%s begins to choke from a suffocating curse. (-%d air)", target.name, airLoss)
 				target:suffocate(airLoss, self, "suffocated from a curse")
 			end

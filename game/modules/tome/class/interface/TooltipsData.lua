@@ -98,8 +98,8 @@ The closer it is to 0 the more in-balance you are. Being out of equilibrium will
 
 TOOLTIP_HATE = [[#GOLD#Hate#LAST#
 Hate represents your inner rage against all that lives and dares face you.
-It slowly decreases and is replenished by killing creatures.
-All afflicted talents are based on Hate, the higher hate is the more effective the talents are.
+It replenished by killing creatures and through the application of your talents.
+All afflicted talents are based on Hate, and many are more effective at higher levels of hate.
 ]]
 
 TOOLTIP_PARADOX = [[#GOLD#Paradox#LAST#

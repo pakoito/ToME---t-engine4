@@ -46,43 +46,14 @@ newTalent{
 	getResist = function(self, t)
 		return -18 + (self:getTalentLevel(t) * 3) + (18 * getHateMultiplier(self, 0, 1))
 	end,
-	getCurseHealingFactorChange = function(self, t)
-		return 0.03
-	end,
-	updateHealingFactor = function(self, t, armorCount)
-		-- initialize
-		if self.unnatural_body_healing_factor == nil then
-			self.unnatural_body_healing_factor = -0.5
-			self.healing_factor = (self.healing_factor or 1) + self.unnatural_body_healing_factor
-		end
-
-		-- equipped items changed
-		local oldHealingFactor = self.unnatural_body_healing_factor
-
-		if not armorCount then
-			local tDefilingTouch = self:getTalentFromId(self.T_DEFILING_TOUCH)
-			armorCount = 0
-			for id, inven in pairs(self.inven) do
-				if self.inven_def[id].is_worn then
-					for i, item in ipairs(inven) do
-						if item.curse and tDefilingTouch.canCurseItem(self, tDefilingTouch, item) and item.type == "armor" then armorCount = armorCount + 1 end
-					end
-				end
-			end
-		end
-		local newHealingFactor = -0.5 + t.getCurseHealingFactorChange(self, t) * armorCount
-
-		if self.unnatural_body_healing_factor ~= newHealingFactor then
-			self.healing_factor = (self.healing_factor or 1) + newHealingFactor - self.unnatural_body_healing_factor
-			self.unnatural_body_healing_factor = newHealingFactor
-			self.changed = true
-		end
+	updateHealingFactor = function(self, t)
+		local change = -0.5 + math.min(100, self:getHate()) * .005
+		self.healing_factor = (self.healing_factor or 1) - (self.unnatural_body_healing_factor or 0) + change
+		self.unnatural_body_healing_factor = change
 	end,
 	do_regenLife  = function(self, t)
-		-- initialize
-		if self.unnatural_body_healing_factor == nil then
-			t.updateHealingFactor(self, t)
-		end
+		-- update healing factor
+		t.updateHealingFactor(self, t)
 
 		-- heal
 		local maxHeal = self.unnatural_body_heal or 0
@@ -112,51 +83,87 @@ newTalent{
 		end
 	end,
 	info = function(self, t)
-		-- initialize
-		if self.unnatural_body_healing_factor == nil then
-			t.updateHealingFactor(self, t)
-		end
-
 		local healPerKill = t.getHealPerKill(self, t)
 		local maxUnnaturalBodyHeal = t.getMaxUnnaturalBodyHeal(self, t)
 		local regenRate = t.getRegenRate(self, t)
-		local healingFactor = self.unnatural_body_healing_factor or -0.5
-		local resist = -18 + (self:getTalentLevel(t) * 3)
-		local curseHealingFactorChange = t.getCurseHealingFactorChange(self, t)
 
-		local modifier1, modifier2 = "more", "more"
-		if resist > 0 then modifier1 = "less" end
-		if resist + 18 > 0 then modifier2 = "less" end
-		return ([[Your body's strength is fed by your hatred. With each kill you regenerate %d life (up to a maximum of %d) at a rate of %0.1f life per turn. This healing cannot be reduced, but most other forms of healing are reduced by %d%%. You also take %d%% %s damage (at 0 Hate) to %d%% %s damage (at 10+ Hate).
-		Healing from kills improves with the Willpower stat. Each piece of cursed armor you wear restores %d%% of your body's ability to heal.]]):format(healPerKill, maxUnnaturalBodyHeal, regenRate, -healingFactor * 100, math.abs(resist), modifier1, math.abs(resist + 18), modifier2, curseHealingFactorChange * 100)
+		return ([[Your body's strength is fed by your hatred. This causes most forms of healing to be 50%% effective (at 0 Hate) to 100%% effective (at 100+ Hate). In addition, after each kill you regenerate %d life (up to a maximum of %d) at a rate of %0.1f life per turn. This healing cannot be reduced by your hate.
+		Healing from kills improves with the Willpower stat.]]):format(healPerKill, maxUnnaturalBodyHeal, regenRate)
 	end,
 }
 
 newTalent{
 	name = "Seethe",
 	type = {"cursed/cursed-form", 2},
+	mode = "sustained",
 	require = cursed_wil_req2,
-	mode = "passive",
 	points = 5,
-	getHateLossMinHate = function(self, t)
-		return math.sqrt(self:getTalentLevel(t)) * 1.3
+	cooldown = 10,
+	no_npc_use = true,
+	getEfficiency = function(self, t)
+		return 90 - 40 / math.pow(self:getTalentLevel(t), 0.6)
 	end,
-	getHateGainMaxHate = function(self, t)
-		return math.max(0, self:getTalentLevel(t) * 0.25)
+	getDamageChange = function(self, t)
+		return -40
 	end,
-	getHateGainChange = function(self, t)
-		return 0.01
+	activate = function(self, t)
+		if self:getHate() < 5 then
+			game.logPlayer(self, "You possess too little hate to seethe.")
+			return nil
+		end
+		
+		-- reduce hate by efficiency
+		local cost = self:getHate() * (1 - t.getEfficiency(self, t) / 100)
+		self:incHate(-cost)
+		
+		-- reduce damage
+		local damageChange = t.getDamageChange(self, t)
+		local incDamageId = self:addTemporaryValue("inc_damage", {all=damageChange})
+		
+		local particlesId = self:addParticles(Particles.new("seethe", 1))
+		game.logSeen(self, "#F53CBE#%s begins to seethe.", self.name:capitalize())
+		
+		return { sustainHate=self:getHate(), incDamageId=incDamageId, particlesId=particlesId }
 	end,
-	on_learn = function(self, t)
-	end,
-	on_unlearn = function(self, t)
+	deactivate = function(self, t, p)
+		self:removeTemporaryValue("inc_damage", p.incDamageId)
+		self:removeParticles(p.particlesId)
+		game.logSeen(self, "#F53CBE#%s is no longer seething.", self.name:capitalize())
+		
+		return true
 	end,
 	info = function(self, t)
-		local hateLossMinHate = t.getHateLossMinHate(self, t)
-		local hateGainMaxHate = t.getHateGainMaxHate(self, t)
-		return ([[You have learned to keep your hatred burning deep inside. Below %0.2f hate you will no longer lose hate over time. Below %0.2f hate you will even slowly gain it back.]]):format(hateLossMinHate, hateGainMaxHate)
+		local efficiency = t.getEfficiency(self, t)
+		local damageChange = t.getDamageChange(self, t)
+		return ([[You have learned to hold onto your hate, biding your time until you are ready to call upon it. When activated, your hate will drop to %d%% of its current value, but will no longer fall over time. Any hate you gain will be quickly lost and any hate you use will not recover. In addition, the exertion of seething will reduce your damage by %d%%.]]):format(efficiency, -damageChange)
 	end
 }
+
+--newTalent{
+--	name = "Seethe",
+--	type = {"cursed/cursed-form", 2},
+--	require = cursed_wil_req2,
+--	mode = "passive",
+--	points = 5,
+--	getHateLossMinHate = function(self, t)
+--		return math.sqrt(self:getTalentLevel(t)) * 13
+--	end,
+--	getHateGainMaxHate = function(self, t)
+--		return math.max(0, self:getTalentLevel(t) * 4)
+--	end,
+--	getHateGainChange = function(self, t)
+--		return 0.1
+--	end,
+--	on_learn = function(self, t)
+--	end,
+--	on_unlearn = function(self, t)
+--	end,
+--	info = function(self, t)
+--		local hateLossMinHate = t.getHateLossMinHate(self, t)
+--		local hateGainMaxHate = t.getHateGainMaxHate(self, t)
+--		return ([[You have learned to keep your hatred burning deep inside. Below %0.1f hate you will no longer lose hate over time. Below %0.1f hate you will even slowly gain it back.]]):format(hateLossMinHate, hateGainMaxHate)
+--	end
+--}
 
 --newTalent{
 --	name = "Seethe",
@@ -208,21 +215,21 @@ newTalent{
 }
 
 newTalent{
-	name = "Stoic",
+	name = "Repression",
 	type = {"cursed/cursed-form", 4},
 	require = cursed_wil_req4,
 	mode = "passive",
 	points = 5,
 	on_learn = function(self, t)
-		self:incIncStat("con", 3)
-		self.hate_per_kill = self.hate_per_kill - 0.03
+		self.healing_factor = self.healing_factor + 0.05
+		self.hate_per_kill = self.hate_per_kill - 0.2
 	end,
 	on_unlearn = function(self, t)
-		self:incIncStat("con", -3)
-		self.hate_per_kill = self.hate_per_kill + 0.03
+		self.healing_factor = self.healing_factor - 0.05
+		self.hate_per_kill = self.hate_per_kill + 0.2
 	end,
 	info = function(self, t)
-		return ([[Years of battling your curse has given you some mastery over it and restored a part of your former self. If that is the path you choose. (+%d constitution, %0.2f hate gain per kill)]]):format(self:getTalentLevelRaw(t) * 3, 0.8 - 0.03 * self:getTalentLevelRaw(t))
+		return ([[Years of battling your curse has given you some mastery over it and restored a part of your former self. If that is the path you choose. (+%d%% healing increase, %0.2f hate gain per kill)]]):format(self:getTalentLevelRaw(t) * 5, self.default_hate_per_kill - 0.2 * self:getTalentLevelRaw(t))
 	end,
 }
 

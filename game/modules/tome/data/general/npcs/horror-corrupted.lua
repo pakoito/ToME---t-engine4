@@ -125,7 +125,7 @@ newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 	size_category = 3,
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },
-	hate_regen = 0.2,
+	hate_regen = 2,
 
 	open_door = true,
 
@@ -219,7 +219,7 @@ newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 	combat = { dam=5, atk=15, apr=5, damtype=DamageType.DARKNESS },
 	combat_armor = 6, combat_def = 0,
 	max_life = resolvers.rngavg(40, 60),
-	hate_regen = 0.2,
+	hate_regen = 2,
 
 	rarity = 4,
 	rank = 2,

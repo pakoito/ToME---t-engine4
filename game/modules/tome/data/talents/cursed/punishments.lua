@@ -24,7 +24,7 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	cooldown = 4,
-	hate =  0.5,
+	hate =  5,
 	range = 3,
 	tactical = { ATTACKAREA = { MIND = 2 } },
 	getDamage = function(self, t)
@@ -68,7 +68,7 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	cooldown = 10,
-	hate =  0.8,
+	hate =  8,
 	range = 7,
 	tactical = { ATTACK = { MIND = 2 } },
 	direct_hit = true,
@@ -125,7 +125,7 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	cooldown = 6,
-	hate =  0.5,
+	hate =  5,
 	getDamage = function(self, t)
 		return combatTalentDamage(self, t, 20, 200)
 	end,
@@ -242,7 +242,7 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	cooldown = 3,
-	hate =  0.5,
+	hate =  5,
 	range = 7,
 	tactical = { ATTACK = { MIND = 2 } },
 	direct_hit = true,
@@ -328,7 +328,7 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	cooldown = 30,
-	hate =  2,
+	hate =  20,
 	range = function(self, t)
 		return 3 + math.floor(self:getTalentLevel(t))
 	end,

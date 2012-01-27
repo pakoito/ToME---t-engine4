@@ -739,7 +739,7 @@ function _M:getTextualDesc(compare_with)
 		compare_fields(w, compare_with, field, "life_regen", "%+.2f", "Life regen: ")
 		compare_fields(w, compare_with, field, "stamina_regen", "%+.2f", "Stamina each turn: ")
 		compare_fields(w, compare_with, field, "mana_regen", "%+.2f", "Mana each turn: ")
-		compare_fields(w, compare_with, field, "hate_regen", "%+.3f", "Hate each turn: ")
+		compare_fields(w, compare_with, field, "hate_regen", "%+.2f", "Hate each turn: ")
 
 		compare_fields(w, compare_with, field, "stamina_regen_on_hit", "%+.2f", "Stamina when hit: ")
 		compare_fields(w, compare_with, field, "mana_regen_on_hit", "%+.2f", "Mana when hit: ")

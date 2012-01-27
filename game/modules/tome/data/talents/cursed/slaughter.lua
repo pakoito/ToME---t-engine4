@@ -26,32 +26,18 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	cooldown = 8,
-	hate = 0.2,
+	hate = 2,
 	tactical = { ATTACK = { PHYSICAL = 2 } },
 	requires_target = true,
 	getDamageMultiplier = function(self, t, hate)
-		return 1 + self:combatTalentIntervalDamage(t, "str", 0.3, 1.5, 0.4) * getHateMultiplier(self, 0.3, 1, true, hate)
+		return 1 + self:combatTalentIntervalDamage(t, "str", 0.3, 1.5, 0.4) * getHateMultiplier(self, 0.3, 1, false, hate)
 	end,
-	getPoisonDamage = function(self, t)
-		local level
-		if self:hasCursedWeapon() then
-			level = math.max(1, self:getTalentLevel(t) - 2)
-		else
-			level = math.max(1, self:getTalentLevel(t) - 3)
-		end
-		return self:rescaleDamage(math.sqrt(level) * 40 * ((100 + self:getStat("str")) / 200))
+	getHealFactorChange = function(self, t)
+		local level = math.max(3 * self:getTalentTypeMastery(t.type[1]), self:getTalentLevel(t))
+		return -math.sqrt(level - 2) * 0.15
 	end,
-	getPoisonHealFactor = function(self, t, hate)
-		return 30
-	end,
-	getPoisonDuration = function(self, t)
-		local level
-		if self:hasCursedWeapon() then
-			level = math.max(1, self:getTalentLevel(t) - 2)
-		else
-			level = math.max(1, self:getTalentLevel(t) - 3)
-		end
-		return math.floor(10 * level)
+	getWoundDuration = function(self, t)
+		return 15
 	end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
@@ -62,23 +48,23 @@ newTalent{
 		local damageMultiplier = t.getDamageMultiplier(self, t)
 		local hit = self:attackTarget(target, nil, damageMultiplier, true)
 
-		local level = self:getTalentLevel(t)
-		if hit and target:canBe("poison") and level >= 4 or (self:hasCursedWeapon() and level >= 3) then
-			local poisonDamage = t.getPoisonDamage(self, t)
-			local poisonHealFactor = t.getPoisonHealFactor(self, t)
-			local poisonDuration = t.getPoisonDuration(self, t)
-			target:setEffect(target.EFF_INSIDIOUS_POISON, poisonDuration, {src=self, power=poisonDamage / poisonDuration, heal_factor=poisonHealFactor})
+		if hit and not target.dead then
+			local level = self:getTalentLevel(t)
+			if target:canBe("poison") and level >= 3 then
+				local healFactorChange = t.getHealFactorChange(self, t)
+				local woundDuration = t.getWoundDuration(self, t)
+				target:setEffect(target.EFF_CURSED_WOUND, woundDuration, { healFactorChange=healFactorChange, totalDuration=woundDuration })
+			end
 		end
-
+				
 		return true
 	end,
 	info = function(self, t)
-		local poisonDamage = t.getPoisonDamage(self, t)
-		local poisonHealFactor = t.getPoisonHealFactor(self, t)
-		local poisonDuration = t.getPoisonDuration(self, t)
-		return ([[Slashes wildly at your target for %d%% (at 0 Hate) to %d%% (at 10+ Hate) damage.
-		At level 4 (3 when weilding a cursed main weapon), your main weapon inflicts an insidious poison born of your curse causing %d damage and %d%% reduced healing over %d turns.
-		Hate-based effects will improve when wielding cursed weapons (+2.5 hate). The insidious poison improves with a cursed main weapon.]]):format(t.getDamageMultiplier(self, t, 0) * 100, t.getDamageMultiplier(self, t, 10) * 100, poisonDamage, poisonHealFactor, poisonDuration)
+		local healFactorChange = t.getHealFactorChange(self, t)
+		local woundDuration = t.getWoundDuration(self, t)
+		return ([[Slashes wildly at your target for %d%% (at 0 Hate) to %d%% (at 100+ Hate) damage.
+		At level 3 any wound you inflict carries a part of your curse, reducing the effectiveness of healing by %d%% for %d turns. The effect will stack.
+		Damage increases with the Strength stat.]]):format(t.getDamageMultiplier(self, t, 0) * 100, t.getDamageMultiplier(self, t, 100) * 100, -healFactorChange * 100, woundDuration)
 	end,
 }
 
@@ -90,17 +76,12 @@ newTalent{
 	tactical = { ATTACKAREA = { PHYSICAL = 2 } },
 	random_ego = "attack",
 	cooldown = 12,
-	hate = 0.2,
+	hate = 2,
 	getDamageMultiplier = function(self, t, hate)
-		return self:combatTalentIntervalDamage(t, "str", 0.25, 0.8, 0.4) * getHateMultiplier(self, 0.5, 1, true, hate)
+		return self:combatTalentIntervalDamage(t, "str", 0.25, 0.8, 0.4) * getHateMultiplier(self, 0.5, 1, false, hate)
 	end,
 	getAttackChange = function(self, t)
-		local level
-		if self:hasCursedWeapon() then
-			level = math.max(1, self:getTalentLevel(t) - 2)
-		else
-			level = math.max(1, self:getTalentLevel(t) - 3)
-		end
+		local level = math.max(1, self:getTalentLevel(t) - 2)
 		return -self:rescaleDamage((math.sqrt(level) - 0.5) * 15 * ((100 + self:getStat("str")) / 200))
 	end,
 	action = function(self, t)
@@ -140,9 +121,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		local attackChange = t.getAttackChange(self, t)
-		return ([[Assault nearby foes with 4 fast attacks for %d%% (at 0 Hate) to %d%% (at 10+ Hate) damage each. Stalked prey are always targeted if nearby.
-		At level 4 (3 when weilding a cursed main weapon) the intensity of your assault overwhelms anyone who is struck, reducing their attack by %d for 3 turns.
-		Hate-based effects will improve when wielding cursed weapons (+2.5 hate). Attack reduction increases with a cursed main weapon and the Strength stat.]]):format(t.getDamageMultiplier(self, t, 0) * 100, t.getDamageMultiplier(self, t, 10) * 100, -attackChange)
+		return ([[Assault nearby foes with 4 fast attacks for %d%% (at 0 Hate) to %d%% (at 100+ Hate) damage each. Stalked prey are always targeted if nearby.
+		At level 3 the intensity of your assault overwhelms anyone who is struck, reducing their attack by %d for 3 turns.
+		Damage and attack reduction increase with the Strength stat.]]):format(t.getDamageMultiplier(self, t, 0) * 100, t.getDamageMultiplier(self, t, 100) * 100, -attackChange)
 	end,
 }
 
@@ -153,12 +134,15 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	cooldown = 20,
-	hate = 0.8,
+	hate = 8,
 	range = 4,
 	tactical = { CLOSEIN = 2 },
 	requires_target = true,
 	getDamageMultiplier = function(self, t, hate)
-		return self:combatTalentIntervalDamage(t, "str", 0.8, 1.7, 0.4) * getHateMultiplier(self, 0.5, 1, true, hate)
+		return self:combatTalentIntervalDamage(t, "str", 0.8, 1.7, 0.4) * getHateMultiplier(self, 0.5, 1, false, hate)
+	end,
+	getMaxAttackCount = function(self, t)
+		return 1 + self:getTalentLevelRaw(t)
 	end,
 	action = function(self, t)
 		local targeting = {type="bolt", range=self:getTalentRange(t), nolock=true}
@@ -171,6 +155,9 @@ newTalent{
 		local nextX, nextY, is_corner_blocked = lineFunction:step()
 		local currentX, currentY = self.x, self.y
 
+		local attackCount = 0
+		local maxAttackCount = t.getMaxAttackCount(self, t)
+		
 		while nextX and nextY and not is_corner_blocked do
 			local blockingTarget = game.level.map(nextX, nextY, Map.ACTOR)
 			if blockingTarget and self:reactionToward(blockingTarget) < 0 then
@@ -221,9 +208,10 @@ newTalent{
 				local x = currentX + (i % 3) - 1
 				local y = currentY + math.floor((i % 9) / 3) - 1
 				local target = game.level.map(x, y, Map.ACTOR)
-				if target and self:reactionToward(target) < 0 then
+				if target and self:reactionToward(target) < 0 and attackCount < maxAttackCount then
 					local damageMultiplier = t.getDamageMultiplier(self, t)
 					self:attackTarget(target, nil, damageMultiplier, true)
+					attackCount = attackCount + 1
 
 					game.level.map:particleEmitter(x, y, 1, "blood", {})
 					game:playSoundNear(self, "actions/melee")
@@ -237,6 +225,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local level = self:getTalentLevelRaw(t)
+		local maxAttackCount = t.getMaxAttackCount(self, t)
 		local size
 		if level >= 5 then
 			size = "Big"
@@ -245,8 +234,7 @@ newTalent{
 		else
 			size = "Small"
 		end
-		return ([[Charge through your opponents, attacking anyone near your path for %d%% (at 0 Hate) to %d%% (at 10+ Hate) damage. %s opponents may be knocked from your path.
-		Hate-based effects will improve when wielding cursed weapons (+2.5 hate).]]):format(t.getDamageMultiplier(self, t, 0) * 100, t.getDamageMultiplier(self, t, 10) * 100, size)
+		return ([[Charge through your opponents, attacking anyone near your path for %d%% (at 0 Hate) to %d%% (at 100+ Hate) damage. %s opponents may be knocked from your path. You can attack a maximum of %d times.]]):format(t.getDamageMultiplier(self, t, 0) * 100, t.getDamageMultiplier(self, t, 100) * 100, size, maxAttackCount)
 	end,
 }
 
@@ -268,7 +256,7 @@ newTalent{
 --				local y = self.y + math.floor((i % 9) / 3) - 1
 --				local secondTarget = game.level.map(x, y, Map.ACTOR)
 --				if secondTarget and secondTarget ~= target and self:reactionToward(secondTarget) < 0 then
---					local multiplier = multiplier or 1 * self:combatTalentWeaponDamage(t, 0.2, 0.7) * getHateMultiplier(self, 0.5, 1.0, true)
+--					local multiplier = multiplier or 1 * self:combatTalentWeaponDamage(t, 0.2, 0.7) * getHateMultiplier(self, 0.5, 1.0, false)
 --					game.logSeen(self, "%s cleaves through another foe!", self.name:capitalize())
 --					self:attackTarget(secondTarget, nil, multiplier, true)
 --					inCleave = false
@@ -282,8 +270,7 @@ newTalent{
 --	info = function(self, t)
 --		local chance = 28 + self:getTalentLevel(t) * 7
 --		local multiplier = self:combatTalentWeaponDamage(t, 0.2, 0.7)
---		return ([[Every swing of your weapon has a %d%% chance of striking a second target for %d%% (at 0 Hate) to %d%% (at 10+ Hate) damage.
---		Hate-based effects will improve when wielding cursed weapons (+2.5 hate).]]):format(chance, multiplier * 50, multiplier * 100)
+--		return ([[Every swing of your weapon has a %d%% chance of striking a second target for %d%% (at 0 Hate) to %d%% (at 100+ Hate) damage.]]):format(chance, multiplier * 50, multiplier * 100)
 --	end,
 --}
 
@@ -303,7 +290,7 @@ newTalent{
 		return chance
 	end,
 	getDamageMultiplier = function(self, t, hate)
-		local damageMultiplier = self:combatTalentIntervalDamage(t, "str", 0.3, 0.9, 0.4) * getHateMultiplier(self, 0.5, 1.0, true, hate)
+		local damageMultiplier = self:combatTalentIntervalDamage(t, "str", 0.3, 0.9, 0.4) * getHateMultiplier(self, 0.5, 1.0, false, hate)
 		if self:hasTwoHandedWeapon() then
 			damageMultiplier = damageMultiplier + 0.25
 		end
@@ -363,8 +350,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local chance = t.getChance(self, t)
-		return ([[While active every swing of your weapon has a %d%% chance of striking a second nearby target for %d%% (at 0 Hate) to %d%% (at 10+ Hate) damage. The recklessness of your attacks brings you bad luck (luck -3). Cleave, repel and surge cannot be activate simultaneously and activating one will place the others in cooldown.
-		Chance and damage increase with with the Strength stat and when wielding a two-handed weapon (+15%% chance, +25%% damage). Hate-based effects will improve when wielding cursed weapons (+2.5 hate).]]):format(chance, t.getDamageMultiplier(self, t, 0) * 100, t.getDamageMultiplier(self, t, 10) * 100)
+		return ([[While active every swing of your weapon has a %d%% chance of striking a second nearby target for %d%% (at 0 Hate) to %d%% (at 100+ Hate) damage. The recklessness of your attacks brings you bad luck (luck -3). Cleave, repel and surge cannot be activate simultaneously and activating one will place the others in cooldown.
+		Chance and damage increase with with the Strength stat and when wielding a two-handed weapon (+15%% chance, +25%% damage).]]):format(chance, t.getDamageMultiplier(self, t, 0) * 100, t.getDamageMultiplier(self, t, 100) * 100)
 	end,
 }
 

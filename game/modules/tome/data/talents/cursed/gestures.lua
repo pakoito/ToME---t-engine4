@@ -32,7 +32,7 @@ newTalent{
 		return 20
 	end,
 	preAttack = function(self, t, target)
-		if self.hate < 0.1 then
+		if self.hate < 1 then
 			game.logPlayer(self, "You do not have enough hate to use Gesture of Pain.")
 			return false
 		end
@@ -52,7 +52,7 @@ newTalent{
 		if self:checkHit(mindpower, target:combatMentalResist()) then
 			local damage = baseDamage * rng.float(0.5, 1)
 			self:project({type="hit", x=target.x,y=target.y}, target.x, target.y, DamageType.MIND, { dam=damage,alwaysHit=true,criticals=true,crossTierChance=100 })
-			self:incHate(-0.1)
+			self:incHate(-1)
 			game:playSoundNear(self, "actions/melee_hit_squish")
 			hit = true
 		else
@@ -60,13 +60,13 @@ newTalent{
 			game:playSoundNear(self, "actions/melee_miss")
 		end
 
-		if not target.dead and freeHands > 1 and self.hate >= 0.1 and rng.chance(t.getSecondAttackChance(self, t)) then
+		if not target.dead and freeHands > 1 and self.hate >= 1 and rng.chance(t.getSecondAttackChance(self, t)) then
 			if self:checkHit(mindpower, target:combatMentalResist()) then
 				local damage = baseDamage * rng.float(0.5, 1)
 				self:project({type="hit", x=target.x,y=target.y}, target.x, target.y, DamageType.MIND, { dam=damage,alwaysHit=true,criticals=true,crossTierChance=100 })
 				game:playSoundNear(self, "actions/melee_hit_squish")
 				hit = true
-				self:incHate(-0.1)
+				self:incHate(-1)
 			else
 				game.logSeen(self, "%s resists the Gesture of Pain.", target.name:capitalize())
 				game:playSoundNear(self, "actions/melee_miss")
@@ -88,7 +88,7 @@ newTalent{
 	info = function(self, t)
 		local baseDamage = t.getBaseDamage(self, t)
 		local secondAttackChance = t.getSecondAttackChance(self, t)
-		return ([[Use a gesture of pain in place of an normal attack to strike into the minds of your enemies, inflicting between %0.1f and %0.1f mind damage. Requires a single free hand. A second free hand adds a %d%% chance of a second attack. Each hit costs 0.1 hate.
+		return ([[Use a gesture of pain in place of an normal attack to strike into the minds of your enemies, inflicting between %0.1f and %0.1f mind damage. Requires a single free hand. A second free hand adds a %d%% chance of a second attack. Each hit costs 1 hate.
 		Can cause critical hits with cross tier effects. The damage will increase with your Mindpower.]]):format(damDesc(self, DamageType.MIND, baseDamage * 0.5), damDesc(self, DamageType.MIND, baseDamage), secondAttackChance)
 	end,
 }

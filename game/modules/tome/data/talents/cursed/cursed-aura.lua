@@ -112,6 +112,9 @@ newTalent{
 
 	-- chooses whether the player accepts the cursed aura tree when a cursable item is found..only offered once for Afflicted classes
 	chooseCursedAuraTree = function(self, t)
+		game.player:runStop()
+		game.player:restStop()
+	
 		local choose = false
 		local x, y, i = self.x, self.y, 1
 		local item = game.level.map:getObject(x, y, i)
@@ -137,6 +140,7 @@ newTalent{
 			end
 
 			if choose then
+				self.chooseCursedAuraTree = nil
 				Dialog:yesnoLongPopup(
 					"Cursed Fate",
 					("The %s lying nearby catches your attention. What draws you to it is not the thing itself, but something burning inside you. You feel contempt for it and all worldly things. This feeling is not new but the power of it overwhelms you. You reach out to touch the object, to curse it, to defile it. And you notice it begin to change. The colors of it begin to fade and are replaced with an insatiable hate. For a moment you hesistate. You know you must choose to resist this manifestation of your curse now and forever, or fall further into your madness."):format(item.name),
@@ -155,7 +159,6 @@ newTalent{
 						else
 							Dialog:simplePopup("Cursed Fate", ("The %s returns to normal and your hate subsides."):format(item.name))
 						end
-						self.chooseCursedAuraTree = nil
 					end,
 					"Release your hate upon the object",
 					"Suppress your affliction")
@@ -213,12 +216,6 @@ newTalent{
 				self.changed = true
 			end
 		end
-
-		-- update unnatural body
-		if self:knowTalent(self.T_UNNATURAL_BODY) then
-			local t = self:getTalentFromId(self.T_UNNATURAL_BODY)
-			t.updateHealingFactor(self, t, armorCount)
-		end
 	end,
 	on_learn = function(self, t)
 		t.curseInventory(self, t)
@@ -243,7 +240,7 @@ At level 1 you gain the ability to curse weapons.
 At level 2 you gain the ability to curse body armor and cloaks.
 At level 3 you gain the ability to curse shields and helmets.
 At level 4 you gain the ability to curse gloves, boots and belts.
-At level 5 you can activate this talent to surround yourself with an aura that adds 2 levels to a curse of your choosing. (Currently %s]]):format(t.getCursedAuraName(self, t))
+At level 5 you can activate this talent to surround yourself with an aura that adds 2 levels to a curse of your choosing. (Currently %s)]]):format(t.getCursedAuraName(self, t))
 	end,
 }
 

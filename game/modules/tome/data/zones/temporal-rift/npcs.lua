@@ -46,7 +46,7 @@ newEntity{ define_as = "BEN_CRUTHDAR_ABOMINATION",
 	resolvers.talents{
 		[Talents.T_GLOOM]=3,
 		[Talents.T_WEAKNESS]=3,
-		[Talents.T_TORMENT]=3,
+		[Talents.T_DISMAY]=3,
 		[Talents.T_UNNATURAL_BODY]=4,
 		[Talents.T_DOMINATE]=1,
 		[Talents.T_BLINDSIDE]=3,
