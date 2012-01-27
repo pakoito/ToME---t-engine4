@@ -162,13 +162,15 @@ function _M:init()
 		player = {x=296, y=73},
 		resources = {x=fshat[6] - move_handle[6], y=0},
 		minimap = {x=208, y=176},
+		buffs = {x=40 - move_handle[6], y=0},
 	}
 
 	local w, h = core.display.size()
 	self.places = {
-		player = {x=0, y=0, scale=1},
-		resources = {x=0, y=111, scale=1},
-		minimap = {x=w - 239, y=0, scale=1},
+		player = {x=0, y=0, scale=1, a=1},
+		resources = {x=0, y=111, scale=1, a=1},
+		minimap = {x=w - 239, y=0, scale=1, a=1},
+		buffs = {x=w - 40, y=200, scale=1, a=1},
 	}
 	table.merge(self.places, config.settings.tome.uiset_minimalist and config.settings.tome.uiset_minimalist.places or {}, true)
 
@@ -877,7 +879,7 @@ function _M:displayResources(scale, bx, by)
 	end
 end
 
-function _M:handleEffect(player, eff_id, e, p, x, y, hs, bx, by)
+function _M:handleEffect(player, eff_id, e, p, x, y, hs, bx, by, is_first, scale)
 	local dur = p.dur + 1
 
 	if not self.tbuff[eff_id..":"..dur] then
@@ -900,11 +902,14 @@ function _M:handleEffect(player, eff_id, e, p, x, y, hs, bx, by)
 		local icon = e.status ~= "detrimental" and frames_colors.ok or frames_colors.cooldown
 
 		local desc_fct = function(button, mx, my, xrel, yrel, bx, by, event)
+			if is_first then
+				if event == "out" then self.mhandle.buffs = nil return
+				else self.mhandle.buffs = true end
+
+				-- Move handle
+				if bx >= self.mhandle_pos.buffs.x and bx <= self.mhandle_pos.buffs.x + move_handle[6] and by >= self.mhandle_pos.buffs.y and by <= self.mhandle_pos.buffs.y + move_handle[7] then self:uiMoveResize("buffs", button, mx, my, xrel, yrel, bx, by, event) end
+			end
 			game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, desc)
-		end
-		if not game.mouse:updateZone("tbuff"..eff_id, bx+x, by+y, hs, hs, desc_fct) then
-			game.mouse:unregisterZone("tbuff"..eff_id)
-			game.mouse:registerZone(bx+x, by+y, hs, hs, desc_fct, nil, "tbuff"..eff_id)
 		end
 
 		self.tbuff[eff_id..":"..dur] = {eff_id, "tbuff"..eff_id, function(x, y)
@@ -915,7 +920,12 @@ function _M:handleEffect(player, eff_id, e, p, x, y, hs, bx, by)
 				txt._tex:toScreenFull(x+4+2 + (40 - txt.fw)/2, y+4+2 + (40 - txt.fh)/2, txt.w, txt.h, txt._tex_w, txt._tex_h, 0, 0, 0, 0.7)
 				txt._tex:toScreenFull(x+4 + (40 - txt.fw)/2, y+4 + (40 - txt.fh)/2, txt.w, txt.h, txt._tex_w, txt._tex_h)
 			end
-		end}
+		end, desc_fct}
+	end
+
+	if not game.mouse:updateZone("tbuff"..eff_id, bx+x, by+y, hs, hs, self.tbuff[eff_id..":"..dur][4], scale) then
+		game.mouse:unregisterZone("tbuff"..eff_id)
+		game.mouse:registerZone(bx+x, by+y, hs, hs, self.tbuff[eff_id..":"..dur][4], nil, "tbuff"..eff_id, true, scale)
 	end
 
 	self.tbuff[eff_id..":"..dur][3](x, y)
@@ -932,7 +942,8 @@ function _M:displayBuffs(scale, bx, by)
 
 		local hs = 40
 		local stop = self.map_h_stop - hs
-		local x, y = -hs, 0
+		local x, y = 0, 0
+		local is_first = true
 
 		for tid, act in pairs(player.sustain_talents) do
 			if act then
@@ -940,25 +951,34 @@ function _M:displayBuffs(scale, bx, by)
 					local t = player:getTalentFromId(tid)
 					local displayName = t.name
 					if t.getDisplayName then displayName = t.getDisplayName(player, t, player:isTalentActive(tid)) end
+
 					local desc = "#GOLD##{bold}#"..displayName.."#{normal}##WHITE#\n"..tostring(player:getTalentFullDescription(t))
-
-					if not game.mouse:updateZone("pbuff"..tid, bx+x, by+y, hs, hs) then
-						game.mouse:unregisterZone("pbuff"..tid)
-						game.mouse:registerZone(bx+x, by+y, hs, hs, function(button, mx, my, xrel, yrel, bx, by, event)
-							game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, desc)
-						end, nil, "pbuff"..tid)
+					local is_first = is_first
+					local desc_fct = function(button, mx, my, xrel, yrel, bx, by, event)
+						if is_first then
+							if event == "out" then self.mhandle.buffs = nil return
+							else self.mhandle.buffs = true end
+							-- Move handle
+							if bx >= self.mhandle_pos.buffs.x and bx <= self.mhandle_pos.buffs.x + move_handle[6] and by >= self.mhandle_pos.buffs.y and by <= self.mhandle_pos.buffs.y + move_handle[7] then self:uiMoveResize("buffs", button, mx, my, xrel, yrel, bx, by, event) end
+						end
+						game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, desc)
 					end
-
 					self.pbuff[tid] = {tid, "pbuff"..tid, function(x, y)
 						core.display.drawQuad(x, y, hs, hs, 0, 0, 0, 255)
 						t.display_entity:toScreen(self.hotkeys_display_icons.tiles, x+4, y+4, 32, 32)
 						UI:drawFrame(self.buffs_base, x, y, frames_colors.sustain[1], frames_colors.sustain[2], frames_colors.sustain[3], 1)
-					end}
+					end, desc_fct}
+				end
+
+				if not game.mouse:updateZone("pbuff"..tid, bx+x, by+y, hs, hs, nil, scale) then
+					game.mouse:unregisterZone("pbuff"..tid)
+					game.mouse:registerZone(bx+x, by+y, hs, hs, self.pbuff[tid][4], nil, "pbuff"..tid, true, scale)
 				end
 
 				self.pbuff[tid][3](x, y)
 
 				y = y + hs
+				is_first = false
 				if y + hs >= stop then y = 0 x = x - hs end
 			end
 		end
@@ -971,15 +991,21 @@ function _M:displayBuffs(scale, bx, by)
 
 		for eff_id, p in pairs(good_e) do
 			local e = player.tempeffect_def[eff_id]
-			self:handleEffect(player, eff_id, e, p, x, y, hs, bx, by)
+			self:handleEffect(player, eff_id, e, p, x, y, hs, bx, by, is_first, scale)
+			is_first = false
 			y = y + hs
 			if y + hs >= stop then y = 0 x = x - hs end
 		end
 		for eff_id, p in pairs(bad_e) do
 			local e = player.tempeffect_def[eff_id]
-			self:handleEffect(player, eff_id, e, p, x, y, hs, bx, by)
+			self:handleEffect(player, eff_id, e, p, x, y, hs, bx, by, is_first, scale)
+			is_first = false
 			y = y + hs
 			if y + hs >= stop then y = 0 x = x - hs end
+		end
+
+		if self.mhandle.buffs then
+			move_handle[1]:toScreenFull(40 - move_handle[6], 0, move_handle[6], move_handle[7], move_handle[2], move_handle[3])
 		end
 	end
 end
@@ -1002,7 +1028,18 @@ function _M:displayParty(scale, bx, by)
 			if not self.party[a] then
 				local def = game.party.members[a]
 
+				local text = "#GOLD##{bold}#"..a.name.."\n#WHITE##{normal}#Life: "..math.floor(100 * a.life / a.max_life).."%\nLevel: "..a.level.."\n"..def.title
+				local desc_fct = function(button, mx, my, xrel, yrel, bx, by, event)
+					game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, text)
+					if event == "button" and button == "left" then if def.control == "full" then game.party:select(a) end end
+				end
+
 				self.party[a] = {a, "party"..a.uid, function(x, y)
+					if not game.mouse:updateZone("party"..a.uid, bx+x, by+y, hs, hs, desc_fct) then
+						game.mouse:unregisterZone("party"..a.uid)
+						game.mouse:registerZone(bx+x, by+y, hs, hs, desc_fct, nil, "party"..a.uid)
+					end
+
 					core.display.drawQuad(x, y, 40, 40, 0, 0, 0, 255)
 					if life_sha.shad then life_sha.shad:use(true) end
 					local p = math.min(1, math.max(0, a.life / a.max_life))
@@ -1013,16 +1050,6 @@ function _M:displayParty(scale, bx, by)
 					local p = (game.player == a) and portrait or portrait_unsel
 					p[1]:toScreenFull(x, y, p[6], p[7], p[2], p[3])
 				end}
-
-				local text = "#GOLD##{bold}#"..a.name.."\n#WHITE##{normal}#Life: "..math.floor(100 * a.life / a.max_life).."%\nLevel: "..a.level.."\n"..def.title
-				local desc_fct = function(button, mx, my, xrel, yrel, bx, by, event)
-					game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, text)
-					if event == "button" and button == "left" then if def.control == "full" then game.party:select(a) end end
-				end
-				if not game.mouse:updateZone("party"..a.uid, bx+x, by+y, hs, hs, desc_fct) then
-					game.mouse:unregisterZone("party"..a.uid)
-					game.mouse:registerZone(bx+x, by+y, hs, hs, desc_fct, nil, "party"..a.uid)
-				end
 			end
 
 			self.party[a][3](x, y)
@@ -1118,7 +1145,7 @@ function _M:displayPlayer(scale, bx, by)
 
 			-- Attack/defend
 			if bx >= 22 and bx <= 22 + pf_defend[6] and by >= 67 and by <= 67 + pf_defend[7] then
-				game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, "Toggle for movement mode")
+				game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, "Toggle for movement mode.\nDefault: when trying to move onto a creature it will attack if hostile.\nPassive: when trying to move onto a creature it will not attack (use ctrl+direction, or rigth click to attack manually)")
 				if event == "button" and button == "left" then game.key:triggerVirtual("TOGGLE_BUMP_ATTACK") end
 			-- Character sheet
 			elseif bx >= 22 and bx <= 22 + 40 and by >= 22 and by <= 22 + 40 then
@@ -1221,9 +1248,11 @@ function _M:display(nb_keyframes)
 	d.glTranslate(-self.places.resources.x, -self.places.resources.y, -0)
 
 	-- Buffs
-	d.glTranslate(game.w, self.side_8, 0)
-	self:displayBuffs(1, game.w, self.side_8)
-	d.glTranslate(-game.w, -self.side_8, -0)
+	d.glTranslate(self.places.buffs.x, self.places.buffs.y, 0)
+	d.glScale(self.places.buffs.scale, self.places.buffs.scale, self.places.buffs.scale)
+	self:displayBuffs(self.places.buffs.scale, self.places.buffs.x, self.places.buffs.y)
+	d.glScale()
+	d.glTranslate(-self.places.buffs.x, -self.places.buffs.y, -0)
 
 	-- Party
 	d.glTranslate(self.side_4, 0, 0)
