@@ -27,6 +27,7 @@ newTalent{
 	cooldown = 20,
 	range = 10,
 	no_npc_use = true,
+	no_energy = true,
 	on_learn = function(self, t)
 		self.equilibrium_regen_on_rest = (self.equilibrium_regen_on_rest or 0) - 0.5
 	end,

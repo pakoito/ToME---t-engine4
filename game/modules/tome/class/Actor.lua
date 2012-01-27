@@ -166,7 +166,7 @@ function _M:init(t, no_default)
 	t.paradox_regen = t.paradox_regen or 0 -- Paradox does not regen
 	t.psi_regen = t.psi_regen or 0.2 -- Energy regens slowly
 	t.hate_regen = t.hate_regen or 0 -- Hate does not regen
-	
+
 	t.max_positive = t.max_positive or 50
 	t.max_negative = t.max_negative or 50
 	t.positive = t.positive or 0
@@ -303,13 +303,13 @@ function _M:actBase()
 		local t = self:getTalentFromId(self.T_UNNATURAL_BODY)
 		t.do_regenLife(self, t)
 	end
-	
+
 	-- update hate regen based on calculated decay rate
 	if self:knowTalent(self.T_HATE_POOL) then
 		local t = self:getTalentFromId(self.T_HATE_POOL)
 		t.updateRegen(self, t)
 	end
-	
+
 	self:regenResources()
 
 	-- Compute timed effects
@@ -488,7 +488,7 @@ function _M:act()
 			self:setEffect(self.EFF_MILITANT_MIND, 4, {power=self:getTalentLevel(self.T_MILITANT_MIND) * nb_foes * 0.6})
 		end
 	end
-	
+
 	-- Beckon (chance to move actor and consume energy)
 	if self:hasEffect(self.EFF_BECKONED) then
 		self.tempeffect_def[self.EFF_BECKONED].do_act(self, self:hasEffect(self.EFF_BECKONED))
@@ -693,7 +693,7 @@ function _M:move(x, y, force)
 		local t = self:getTalentFromId(self.T_HASTE)
 		t.do_haste_double(self, t, ox, oy)
 	end
-	
+
 	if moved and not force and self:hasEffect(self.EFF_RAMPAGE) then
 		local eff = self:hasEffect(self.EFF_RAMPAGE)
 		if not eff.moved and eff.actualDuration < eff.maxDuration then
@@ -1639,7 +1639,7 @@ function _M:die(src, death_note)
 		local t = effStalked.source:getTalentFromId(effStalked.source.T_STALK)
 		t.on_targetDied(effStalked.source, t, self)
 	end
-	
+
 	if src and src.hasEffect and src:hasEffect(self.EFF_PREDATOR) then
 		local eff = src:hasEffect(self.EFF_PREDATOR)
 		if self.type == eff.type then
@@ -2740,7 +2740,7 @@ function _M:postUseTalent(ab, ret)
 		-- this still consumes energy but works as the talent suggests it does
 		self:forceUseTalent(ab.id, {ignore_energy=true, ignore_cd = true})
 	end
-	
+
 	if not ab.innate and self:hasEffect(self.EFF_RAMPAGE) and ab.id ~= self.T_RAMPAGE and ab.id ~= self.T_SLAM then
 		local eff = self:hasEffect(self.EFF_RAMPAGE)
 		value = self.tempeffect_def[self.EFF_RAMPAGE].do_postUseTalent(self, eff, value)
