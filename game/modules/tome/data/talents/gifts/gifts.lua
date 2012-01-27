@@ -127,6 +127,7 @@ function setupSummon(self, m, x, y, no_control)
 	m:attr("blind_immune", self:attr("blind_immune"))
 	m:attr("pin_immune", self:attr("pin_immune"))
 	m:attr("confusion_immune", self:attr("confusion_immune"))
+	m:attr("numbed", self:attr("numbed"))
 	if game.party:hasMember(self) then
 		local can_control = not no_controll and self:knowTalent(self.T_SUMMON_CONTROL)
 

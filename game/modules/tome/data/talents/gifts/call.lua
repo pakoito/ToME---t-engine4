@@ -23,41 +23,39 @@ newTalent{
 	require = gifts_req1,
 	points = 5,
 	message = "@Source@ meditates on nature.",
-	cooldown = 150,
+	mode = "sustained",
+	cooldown = 10,
 	range = 10,
 	no_npc_use = true,
-	action = function(self, t)
-		local seen = false
-		-- Check for visible monsters, only see LOS actors, so telepathy wont prevent it
-		core.fov.calc_circle(self.x, self.y, game.level.map.w, game.level.map.h, 20, function(_, x, y) return game.level.map:opaque(x, y) end, function(_, x, y)
-			local actor = game.level.map(x, y, game.level.map.ACTOR)
-			if actor and actor ~= self and self:reactionToward(actor) < 0 then seen = true end
-		end, nil)
-		if seen then
-			game.logPlayer(self, "There's too much going on for you to use Meditation right now!")
-			return
-		end
+	activate = function(self, t)
+		local pt = 2 + self:combatTalentMindDamage(t, 20, 120) / 10
+		local save = 5 + self:combatTalentMindDamage(t, 10, 40)
+		local heal = 5 + self:combatTalentMindDamage(t, 12, 30)
 
-		local dur = 17 - self:getTalentLevel(t)
-		local e = 10 + self:getWil(50, true) * self:getTalentLevel(t)
-		local tt = e / 2
-		local pt = (e - tt) / dur
-		self:setEffect(self.EFF_MEDITATION, dur, {per_turn=pt, final=tt})
-
-		game:playSoundNear(self, "talents/spell_generic2")
+		game:playSoundNear(self, "talents/heal")
+		return {
+			equi = self:addTemporaryValue("equilibrium_regen", -pt),
+			save = self:addTemporaryValue("combat_mentalresist", save),
+			heal = self:addTemporaryValue("healing_factor", heal / 100),
+			dam = self:addTemporaryValue("numbed", 50),
+		}
+	end,
+	deactivate = function(self, t, p)
+		self:removeTemporaryValue("equilibrium_regen", p.equi)
+		self:removeTemporaryValue("combat_mentalresist", p.save)
+		self:removeTemporaryValue("healing_factor", p.heal)
+		self:removeTemporaryValue("numbed", p.dam)
 		return true
 	end,
 	info = function(self, t)
-		local dur = 17 - self:getTalentLevel(t)
-		local e = 10 + self:getWil(50, true) * self:getTalentLevel(t)
-		local tt = e / 2
-		local pt = (e - tt) / dur
-		return ([[Meditate on your link with Nature. You are considered dazed for %d turns
-		Each turn you regenerate %d equilibrium and %d at the end.
-		If you are hit while meditating you will stop.
-		Meditating require peace and quiet and may not be cast with hostile creatures in sight.
-		The effects will increase with your Willpower stat.]]):
-		format(17 - self:getTalentLevel(t), pt, tt)
+		local pt = 2 + self:combatTalentMindDamage(t, 20, 120) / 10
+		local save = 5 + self:combatTalentMindDamage(t, 10, 40)
+		local heal = 5 + self:combatTalentMindDamage(t, 12, 30)
+		return ([[Meditate on your link with Nature.
+		While meditating you regenerate %d equilibrium per turn, your mental save is increased by %d and your healing factor by %d%%.
+		Your deep meditation does not however let you deal damage correctly, reducing your damage done by 50%%.
+		The effects will increase with your mindpower.]]):
+		format(pt, save, heal)
 	end,
 }
 
@@ -79,15 +77,15 @@ newTalent{ short_name = "NATURE_TOUCH",
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		if not target.undead then
-			target:heal(20 + self:combatTalentStatDamage(t, "wil", 30, 500))
+			target:heal(20 + self:combatTalentMindDamage(t, 20, 500))
 		end
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Touch a target (or yourself) to infuse it with Nature, healing it for %d(heal does not work on undead).
-		Heal will increase with your Willpower stat.]]):
-		format(20 + self:combatTalentStatDamage(t, "wil", 30, 500))
+		return ([[Touch a target (or yourself) to infuse it with Nature, healing it for %d (heal does not work on undead).
+		Heal will increase with your mindpower.]]):
+		format(20 + self:combatTalentMindDamage(t, 20, 500))
 	end,
 }
 
