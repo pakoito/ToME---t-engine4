@@ -24,9 +24,15 @@ newTalent{
 	points = 5,
 	message = "@Source@ meditates on nature.",
 	mode = "sustained",
-	cooldown = 10,
+	cooldown = 20,
 	range = 10,
 	no_npc_use = true,
+	on_learn = function(self, t)
+		self.equilibrium_regen_on_rest = (self.equilibrium_regen_on_rest or 0) - 0.5
+	end,
+	on_unlearn = function(self, t)
+		self.equilibrium_regen_on_rest = (self.equilibrium_regen_on_rest or 0) + 0.5
+	end,
 	activate = function(self, t)
 		local pt = 2 + self:combatTalentMindDamage(t, 20, 120) / 10
 		local save = 5 + self:combatTalentMindDamage(t, 10, 40)
@@ -51,11 +57,13 @@ newTalent{
 		local pt = 2 + self:combatTalentMindDamage(t, 20, 120) / 10
 		local save = 5 + self:combatTalentMindDamage(t, 10, 40)
 		local heal = 5 + self:combatTalentMindDamage(t, 12, 30)
+		local rest = 0.5 * self:getTalentLevelRaw(t)
 		return ([[Meditate on your link with Nature.
 		While meditating you regenerate %d equilibrium per turn, your mental save is increased by %d and your healing factor by %d%%.
 		Your deep meditation does not however let you deal damage correctly, reducing your damage done by 50%%.
+		Also, any time you are resting (even with Meditation not sustained) you enter a simple meditation state that lets you regenerate %0.2f equilibrium per turn.
 		The effects will increase with your mindpower.]]):
-		format(pt, save, heal)
+		format(pt, save, heal, rest)
 	end,
 }
 

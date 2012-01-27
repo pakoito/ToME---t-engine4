@@ -40,6 +40,8 @@ function _M:restInit(turns, what, past, on_end)
 
 	game.log(what:capitalize().." starts...")
 
+	self:onRestStart()
+
 	local ret, msg = self:restCheck()
 	if ret and self.resting and self.resting.rest_turns and self.resting.cnt > self.resting.rest_turns then ret = false msg = nil end
 	if not ret then
@@ -48,6 +50,16 @@ function _M:restInit(turns, what, past, on_end)
 		self:useEnergy()
 		self.resting.cnt = self.resting.cnt + 1
 	end
+end
+
+--- We started resting
+-- Rewrite this method to do whatever you need
+function _M:onRestStart()
+end
+
+--- We stopped resting
+-- Rewrite this method to do whatever you need
+function _M:onRestStop()
 end
 
 --- Rest a turn
@@ -91,6 +103,7 @@ function _M:restStop(msg)
 	end
 
 	if self.resting.on_end then self.resting.on_end(self.resting.cnt, self.resting.rest_turns) end
+	self:onRestStop()
 	self.resting = nil
 	return true
 end

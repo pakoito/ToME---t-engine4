@@ -576,6 +576,22 @@ local function spotHostiles(self)
 	return seen
 end
 
+--- We started resting
+function _M:onRestStart()
+	if self:attr("equilibrium_regen_on_rest") and not self.resting.equilibrium_regen then
+		self:attr("equilibrium_regen", self:attr("equilibrium_regen_on_rest"))
+		self.resting.equilibrium_regen = self:attr("equilibrium_regen_on_rest")
+	end
+end
+
+--- We stopped resting
+function _M:onRestStop()
+	if self.resting.equilibrium_regen then
+		self:attr("equilibrium_regen", -self.resting.equilibrium_regen)
+		self.resting.equilibrium_regen = nil
+	end
+end
+
 --- Can we continue resting ?
 -- We can rest if no hostiles are in sight, and if we need life/mana/stamina/psi (and their regen rates allows them to fully regen)
 function _M:restCheck()
@@ -606,6 +622,7 @@ function _M:restCheck()
 		if self:getMana() < self:getMaxMana() and self.mana_regen > 0 then return true end
 		if self:getStamina() < self:getMaxStamina() and self.stamina_regen > 0 then return true end
 		if self:getPsi() < self:getMaxPsi() and self.psi_regen > 0 then return true end
+		if self:getEquilibrium() > 0 and self.equilibrium_regen < 0 then return true end
 		if self.life < self.max_life and self.life_regen> 0 then return true end
 		for act, def in pairs(game.party.members) do if game.level:hasEntity(act) and not act.dead then
 			if act.life < act.max_life and act.life_regen> 0 then return true end
