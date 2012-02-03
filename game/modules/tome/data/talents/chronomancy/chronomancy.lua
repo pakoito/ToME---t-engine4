@@ -65,7 +65,7 @@ newTalent{
 	require = temporal_req1,
 	points = 5,
 	paradox = 5,
-	cooldown = 1,
+	cooldown = 10,
 	no_npc_use = true,
 	getDuration = function(self, t) return 4 + math.ceil((self:getTalentLevel(t) * 2)) end,
 	action = function(self, t)

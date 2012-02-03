@@ -720,27 +720,32 @@ newInscription{
 	getDamage = function(self, t) return 150 + self:getWil() * 4 end,
 	getDuration = function(self, t) return 4 end,
 	action = function(self, t)
-		-- Find the target and check hit
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
-		local tx, ty, target = self:getTarget(tg)
-		if not tx or not ty then return nil end
-		local _ _, tx, ty = self:canProject(tg, tx, ty)
-		if tx then
-			target = game.level.map(tx, ty, engine.Map.ACTOR)
-		end
-		if target and not target.player then
-			local hit = self:checkHit(self:combatSpellpower(), target:combatSpellResist() + (target:attr("continuum_destabilization") or 0))
-			if not hit then
-				game.logSeen(target, "%s resists!", target.name:capitalize())
-				return true
-			end
-		else
-			return
-		end
+		local x, y, _ = self:getTarget(tg)
+		if not x or not y then return nil end
+		_, x, y = self:canProject(tg, x, y)
+		local target = x and game.level.map(x, y, engine.Map.ACTOR) or nil
+		if not target then return nil end
 
-		-- Create an object to time the effect and store the creature
-		-- First, clone the terrain that we are replacing
+		local hit = self:checkHit(self:combatSpellpower(), target:combatSpellResist() + (target:attr("continuum_destabilization") or 0))
+		if not hit then game.logSeen(target, "%s resists!", target.name:capitalize()) return true end
+		
+		target:setEffect(target.EFF_CONTINUUM_DESTABILIZATION, 100, {power=self:combatSpellpower(0.3)})
+		self:project(tg, x, y, DamageType.TEMPORAL, self:spellCrit(t.getDamage(self, t)))
+		game.level.map:particleEmitter(x, y, 1, "temporal_thrust")
+		game:playSoundNear(self, "talents/arcane")
+
+		-- End it here if we've killed the target or the target is a player
+		if target.dead or target.player then return true end
+		
+		-- set up instability
+		local summoner = self
+		-- Store the current terrain
 		local terrain = game.level.map(target.x, target.y, engine.Map.TERRAIN)
+		-- Store target attributes as needed
+		local a = {}
+		a.life = target.life
+		-- Instability
 		local temporal_instability = mod.class.Object.new{
 			old_feat = game.level.map(target.x, target.y, engine.Map.TERRAIN),
 			name = "temporal instability", type="temporal", subtype="anomaly",
@@ -751,21 +756,23 @@ newInscription{
 			act = function(self)
 				self:useEnergy()
 				self.temporary = self.temporary - 1
+				-- return the rifted actor
 				if self.temporary <= 0 then
 					game.level.map(self.target.x, self.target.y, engine.Map.TERRAIN, self.old_feat)
 					game.level:removeEntity(self)
 					local mx, my = util.findFreeGrid(self.target.x, self.target.y, 20, true, {[engine.Map.ACTOR]=true})
 					game.zone:addEntity(game.level, self.target, "actor", mx, my)
+					self.target.life = a.life
 				end
 			end,
 			summoner_gain_exp = true,
-			summoner = self,
+			summoner = summoner,
 		}
+		
 		-- Mixin the old terrain
 		table.update(temporal_instability, terrain)
 		-- Now update the display overlay
 		local overlay = engine.Entity.new{
-		--	image = "terrain/wormhole.png",
 			display = '&', color=colors.LIGHT_BLUE, image="object/temporal_instability.png",
 			display_on_seen = true,
 			display_on_remember = true,
@@ -775,24 +782,13 @@ newInscription{
 		else
 			table.append(temporal_instability.add_displays, overlay)
 		end
+		
+		game.logSeen(target, "%s has moved forward in time!", target.name:capitalize())
+		game.level:removeEntity(target)
+		game.level:addEntity(temporal_instability)
+		game.level.map(target.x, target.y, engine.Map.TERRAIN, temporal_instability)
 
-		self:project(tg, tx, ty, DamageType.TEMPORAL, self:spellCrit(t.getDamage(self, t)))
-		game.level.map:particleEmitter(tx, ty, 1, "temporal_thrust")
-		game:playSoundNear(self, "talents/arcane")
-		-- Remove the target and place the temporal placeholder
-		if not target.dead then
-			if target ~= self then
-				target:setEffect(target.EFF_CONTINUUM_DESTABILIZATION, 100, {power=self:combatSpellpower(0.3)})
-			end
-			game.logSeen(target, "%s has moved forward in time!", target.name:capitalize())
-			game.level:removeEntity(target)
-			game.level:addEntity(temporal_instability)
-			game.level.map(target.x, target.y, engine.Map.TERRAIN, temporal_instability)
-		else
-			game.logSeen(target, "%s has been killed by the temporal energy!", target.name:capitalize())
-		end
-
-		self:incParadox(-120)
+		self:incParadox(-60)
 
 		return true
 	end,
@@ -800,7 +796,7 @@ newInscription{
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[Inflicts %0.2f temporal damage.  If your target survives it will be sent %d turns into the future.
-		It will also lower your paradox by 120 (if you have any).
+		It will also lower your paradox by 60 (if you have any).
 		Note that messing with the spacetime continuum may have unforeseen consequences.]]):format(damDesc(self, DamageType.TEMPORAL, damage), duration)
 	end,
 	short_info = function(self, t)

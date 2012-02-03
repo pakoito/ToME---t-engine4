@@ -828,12 +828,22 @@ end
 function _M:chronoClone(name)
 	local d = Dialog:simpleWaiter("Chronomancy", "Folding the space time structure...")
 
-	local ret = nil
+	local to_reload = {}
+	for uid, e in pairs(self.level.entities) do
+		if type(e.project) == "table" and e.project.def and e.project.def.typ and e.project.def.typ.line_function then
+			e.project.def.typ.line_function.line = { game.level.map.w, game.level.map.h, e.project.def.typ.line_function:export() }
+			to_reload[#to_reload + 1] = e
+		end
+	end
+
+	local ret = self:cloneFull()
+
+	for uid, e in pairs(to_reload) do e:loaded() end
+
 	if name then
 		self._chronoworlds = self._chronoworlds or {}
-		self._chronoworlds[name] = self:cloneFull()
-	else
-		ret = self:cloneFull()
+		self._chronoworlds[name] = ret
+		ret = nil
 	end
 	d:done()
 	return ret
@@ -852,6 +862,8 @@ function _M:chronoRestore(name, remove)
 
 	ngame:cloneReloaded()
 	_G.game = ngame
+
+	game.inited = nil
 	game:run()
 	game.key:setCurrent()
 	game.mouse:setCurrent()

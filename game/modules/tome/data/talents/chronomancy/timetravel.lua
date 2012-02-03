@@ -66,47 +66,75 @@ newTalent{
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 25, 250) * getParadoxModifier(self, pm) end,
 	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t) / 2 * getParadoxModifier(self, pm)) end,
 	action = function(self, t)
-		-- Find the target and check hit
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
-		local tx, ty, target = self:getTarget(tg)
-		if not tx or not ty then return nil end
-		tx, ty = checkBackfire(self, tx, ty, t.paradox)
-		local _ _, tx, ty = self:canProject(tg, tx, ty)
-		if tx then
-			target = game.level.map(tx, ty, engine.Map.ACTOR)
-		end
+		local x, y, _ = self:getTarget(tg)
+		if not x or not y then return nil end
+		x, y = checkBackfire(self, x, y, t.paradox)
+		_, x, y = self:canProject(tg, x, y)
+		local target = x and game.level.map(x, y, engine.Map.ACTOR) or nil
+		if not target then return nil end
 
-		-- checks for spacetime mastery hit bonus
-		local power = self:combatSpellpower()
-		if self:knowTalent(self.T_SPACETIME_MASTERY) then
-			power = self:combatSpellpower() * (1 + self:getTalentLevel(self.T_SPACETIME_MASTERY)/10)
-		end
-
-		if target then
-			local hit = self:checkHit(power, target:combatSpellResist() + (target:attr("continuum_destabilization") or 0))
-			if not hit then
-				game.logSeen(target, "%s resists!", target.name:capitalize())
-				return true
-			end
-		else
-			return
-		end
-
-		-- deal the damage first so time prison doesn't prevent it
-		self:project(tg, tx, ty, DamageType.TEMPORAL, self:spellCrit(t.getDamage(self, t)))
-		game.level.map:particleEmitter(tx, ty, 1, "temporal_thrust")
+		local hit = self:checkHit(self:combatSpellpower(), target:combatSpellResist() + (target:attr("continuum_destabilization") or 0))
+		if not hit then game.logSeen(target, "%s resists!", target.name:capitalize()) return true end
+		
+		target:setEffect(target.EFF_CONTINUUM_DESTABILIZATION, 100, {power=self:combatSpellpower(0.3)})
+		self:project(tg, x, y, DamageType.TEMPORAL, self:spellCrit(t.getDamage(self, t)))
+		game.level.map:particleEmitter(x, y, 1, "temporal_thrust")
 		game:playSoundNear(self, "talents/arcane")
 
-		-- make sure the target survives the initial hit and then time prison
-		if not target.dead then
-			if target ~= self then
-				target:setEffect(target.EFF_CONTINUUM_DESTABILIZATION, 100, {power=self:combatSpellpower(0.3)})
-			end
-			target:setEffect(target.EFF_TIME_PRISON, t.getDuration(self, t), {})
+		-- End it here if we've killed the target or the target is a player
+		if target.dead or target.player then return true end
+		
+		-- set up instability
+		local summoner = self
+		-- Store the current terrain
+		local terrain = game.level.map(target.x, target.y, engine.Map.TERRAIN)
+		-- Store target attributes as needed
+		local a = {}
+		a.life = target.life
+		-- Instability
+		local temporal_instability = mod.class.Object.new{
+			old_feat = game.level.map(target.x, target.y, engine.Map.TERRAIN),
+			name = "temporal instability", type="temporal", subtype="anomaly",
+			display = '&', color=colors.LIGHT_BLUE,
+			temporary = t.getDuration(self, t),
+			canAct = false,
+			target = target,
+			act = function(self)
+				self:useEnergy()
+				self.temporary = self.temporary - 1
+				-- return the rifted actor
+				if self.temporary <= 0 then
+					game.level.map(self.target.x, self.target.y, engine.Map.TERRAIN, self.old_feat)
+					game.level:removeEntity(self)
+					local mx, my = util.findFreeGrid(self.target.x, self.target.y, 20, true, {[engine.Map.ACTOR]=true})
+					game.zone:addEntity(game.level, self.target, "actor", mx, my)
+					self.target.life = a.life
+				end
+			end,
+			summoner_gain_exp = true,
+			summoner = summoner,
+		}
+		
+		-- Mixin the old terrain
+		table.update(temporal_instability, terrain)
+		-- Now update the display overlay
+		local overlay = engine.Entity.new{
+			display = '&', color=colors.LIGHT_BLUE, image="object/temporal_instability.png",
+			display_on_seen = true,
+			display_on_remember = true,
+		}
+		if not temporal_instability.add_displays then
+			temporal_instability.add_displays = {overlay}
 		else
-			game.logSeen(target, "%s has been killed by the temporal energy!", target.name:capitalize())
+			table.append(temporal_instability.add_displays, overlay)
 		end
-
+		
+		game.logSeen(target, "%s has moved forward in time!", target.name:capitalize())
+		game.level:removeEntity(target)
+		game.level:addEntity(temporal_instability)
+		game.level.map(target.x, target.y, engine.Map.TERRAIN, temporal_instability)
+		
 		return true
 	end,
 	info = function(self, t)

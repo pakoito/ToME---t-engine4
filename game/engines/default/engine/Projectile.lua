@@ -45,7 +45,7 @@ function _M:save()
 end
 
 function _M:loaded()
-	if self.project and self.project.def and self.project.def.typ and self.project.def.typ.line_function then
+	if self.project and self.project.def and self.project.def.typ and self.project.def.typ.line_function and type(self.project.def.typ.line_function.line) == "table" then
 		self.project.def.typ.line_function.line = core.fov.line_import(unpack(self.project.def.typ.line_function.line))
 
 		-- The metatable gets lost somewhere in the save, so let's remake it
