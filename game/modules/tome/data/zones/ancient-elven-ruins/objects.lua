@@ -90,8 +90,8 @@ newEntity{ base = "BASE_LEATHER_CAP", define_as = "CROWN_ETERNAL_NIGHT",
 	set_list = { {"define_as","BINDINGS_ETERNAL_NIGHT"} },
 	on_set_complete = function(self, who)
 		self:specialSetAdd({"wielder","lite"}, -1)
-		self:specialSetAdd({"wielder","confusion_immune"}, 40)
-		self:specialSetAdd({"wielder","knockback_immune"}, 40)
+		self:specialSetAdd({"wielder","confusion_immune"}, 0.3)
+		self:specialSetAdd({"wielder","knockback_immune"}, 0.3)
 		self:specialSetAdd({"wielder","combat_mentalresist"}, 15)
 		self:specialSetAdd({"wielder","combat_spellresist"}, 15)
 		self:specialSetAdd({"wielder","inc_stats"}, {[who.STAT_CUN]=10})
