@@ -58,12 +58,12 @@ newTalent{
 	require = divi_req_high2,
 	points = 5,
 	cooldown = 8,
-	positive = 20,
+	positive = 15,
 	tactical = { ATTACK = {LIGHT = 2} },
 	requires_target = true,
-	getWeaponDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.8, 1.3) end,
-	getShieldDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.8, 1.3, self:getTalentLevel(self.T_SHIELD_EXPERTISE)) end,
-	getLightDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 150) end,
+	getWeaponDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1, 1.5) end,
+	getShieldDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1, 1.5, self:getTalentLevel(self.T_SHIELD_EXPERTISE)) end,
+	getLightDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 200) end,
 	radius = function(self, t)
 		return 2 + self:getTalentLevel(t) / 2
 	end,
@@ -117,7 +117,7 @@ newTalent{
 	cooldown = 10,
 	range = function(self, t) return 1 + self:getTalentLevelRaw(t) end,
 	tactical = { DEFEND = 2 },
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 28, 170) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 40, 400) end,
 	activate = function(self, t)
 		local shield = self:hasShield()
 		if not shield then
@@ -142,7 +142,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		return ([[Negates half of all damage you take.  Once retribution has negated %0.2f damage your shield will explode in a burst of light, inflicting damage equal to the amount negated in a radius of %d and deactivating the talent.
 		The amount absorbed will increase with the Magic stat.]]):
-		format(damDesc(self, DamageType.LIGHT, damage), self:getTalentRange(t))
+		format(damage, self:getTalentRange(t))
 	end,
 }
 

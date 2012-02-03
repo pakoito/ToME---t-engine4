@@ -174,6 +174,9 @@ newEntity{ base = "BASE_NPC_XORN", define_as = "FULL_HARKOR_ZUN",
 	combat_armor = 20, combat_def = 10,
 	combat = { dam=resolvers.mbonus(46, 30), atk=35, apr=18, dammod={str=1}, damtype=DamageType.ACID },
 
+	resists = { [DamageType.PHYSICAL] = 50, [DamageType.ACID] = 50, },
+	no_auto_resists = true,
+	
 	silence_immune = 1,
 	stun_immune = 1,
 	demon = 1,
@@ -191,8 +194,10 @@ newEntity{ base = "BASE_NPC_XORN", define_as = "FULL_HARKOR_ZUN",
 		[Talents.T_EARTHQUAKE]={base=5, every=7, max=9},
 		[Talents.T_EARTHEN_MISSILES]={base=4, every=7, max=8},
 		[Talents.T_CRYSTALLINE_FOCUS]={base=4, every=7, max=8},
-		[Talents.T_STONE_SKIN]={base=4, every=7, max=8},
+		[Talents.T_VOLCANO]={base=2, every=7, max=4},
 	},
+	
+	resolvers.inscriptions(1, {"shielding rune"}),
 	resolvers.sustains_at_birth(),
 
 	on_die = function(self)

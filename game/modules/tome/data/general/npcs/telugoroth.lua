@@ -26,7 +26,7 @@ newEntity{
 	blood_color = colors.PURPLE,
 	display = "E", color=colors.YELLOW,
 
-	combat = { dam=resolvers.levelup(resolvers.mbonus(40, 15), 1, 1.2), atk=15, apr=15, dammod={mag=0.8}, damtype=DamageType.TEMPORAL },
+	combat = { dam=resolvers.levelup(resolvers.mbonus(40, 15), 1, 1.2), atk=15, apr=15, dammod={mag=0.8}, damtype=DamageType.TEMPORAL, },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 
@@ -41,15 +41,10 @@ newEntity{
 	global_speed_base = 1.5,
 	stats = { str=8, dex=12, mag=12, wil=12, con=10 },
 
-	resists = { [DamageType.PHYSICAL] = 10, [DamageType.TEMPORAL] = 100, },
+	resists = { [DamageType.TEMPORAL] = 100, },
 
-	no_breath = 1,
-	poison_immune = 1,
-	disease_immune = 1,
-	stun_immune = 1,
-	blind_immune = 1,
-	knockback_immune = 1,
-	confusion_immune = 1,
+	negative_status_effect_immune = 1,
+	
 }
 
 newEntity{ base = "BASE_NPC_TELUGOROTH",
@@ -58,11 +53,11 @@ newEntity{ base = "BASE_NPC_TELUGOROTH",
 	level_range = {10, nil}, exp_worth = 1,
 	rarity = 2,
 	max_life = resolvers.rngavg(70,80),
-	combat_armor = 0, combat_def = 20,
+	combat_armor = 0, combat_def = 20, combat_def_ranged = 20,
 	on_melee_hit = { [DamageType.TEMPORAL] = resolvers.mbonus(20, 10), },
 
 	resolvers.talents{
-		[Talents.T_TURN_BACK_THE_CLOCK]={base=3, every=10, max=7},
+		[Talents.T_TURN_BACK_THE_CLOCK]=3, -- At rank four this talent gets an extra bolt, no scaling
 	},
 }
 
@@ -73,11 +68,11 @@ newEntity{ base = "BASE_NPC_TELUGOROTH",
 	level_range = {12, nil}, exp_worth = 1,
 	rarity = 4,
 	max_life = resolvers.rngavg(70,80), life_rating = 10,
-	combat_armor = 0, combat_def = 20,
+	combat_armor = 0, combat_def = 20, combat_def_ranged = 20,
 	on_melee_hit = { [DamageType.TEMPORAL] = resolvers.mbonus(20, 10), },
 
 	resolvers.talents{
-		[Talents.T_TURN_BACK_THE_CLOCK]={base=4, every=10, max=8},
+		[Talents.T_TURN_BACK_THE_CLOCK]=3,
 		[Talents.T_ECHOES_FROM_THE_PAST]={base=3, every=10, max=7},
 	},
 	resolvers.sustains_at_birth(),
@@ -91,13 +86,13 @@ newEntity{ base = "BASE_NPC_TELUGOROTH",
 	rarity = 6,
 	rank = 3,
 	max_life = resolvers.rngavg(70,80),
-	combat_armor = 0, combat_def = 20,
+	combat_armor = 0, combat_def = 20, combat_def_ranged = 20,
 	on_melee_hit = { [DamageType.TEMPORAL] = resolvers.mbonus(20, 10), },
 
 	ai = "tactical",
 
 	resolvers.talents{
-		[Talents.T_TURN_BACK_THE_CLOCK]={base=5, every=7},
+		[Talents.T_TURN_BACK_THE_CLOCK]=3,
 		[Talents.T_ECHOES_FROM_THE_PAST]={base=4, every=7},
 		[Talents.T_RETHREAD]={base=3, every=7},
 		[Talents.T_STOP]={base=4, every=7},
@@ -111,17 +106,15 @@ newEntity{ base = "BASE_NPC_TELUGOROTH",
 	level_range = {12, nil}, exp_worth = 1,
 	rarity = 4,
 	max_life = resolvers.rngavg(50,70),
-	combat_armor = 0, combat_def = 20,
+	combat_armor = 0, combat_def = 20, combat_def_ranged = 20,
 	on_melee_hit = { [DamageType.TEMPORAL] = resolvers.mbonus(20, 10), },
 	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_snake" },
 
-	stun_immune = 1,
-	blind_immune = 1,
-	confusion_immune = 1,
-	pin_immune = 1,
-
+	talent_cd_reduction = {[Talents.T_DUST_TO_DUST]=-3},
+	
 	resolvers.talents{
 		[Talents.T_ANOMALY_REARRANGE]=1,
+		[Talents.T_DUST_TO_DUST]={base=3, every=10, max=7},
 		[Talents.T_TEMPORAL_WAKE]={base=3, every=10, max=7},
 	},
 	resolvers.sustains_at_birth(),
@@ -134,18 +127,16 @@ newEntity{ base = "BASE_NPC_TELUGOROTH",
 	level_range = {15, nil}, exp_worth = 1,
 	rarity = 6,
 	max_life = resolvers.rngavg(50,70),
-	combat_armor = 0, combat_def = 20,
+	combat_armor = 0, combat_def = 20, combat_def_ranged = 20,
 	on_melee_hit = { [DamageType.TEMPORAL] = resolvers.mbonus(20, 10), },
 	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_snake" },
 
-	stun_immune = 1,
-	blind_immune = 1,
-	confusion_immune = 1,
-	pin_immune = 1,
-
+	talent_cd_reduction = {[Talents.T_DUST_TO_DUST]=-3},
+	
 	resolvers.talents{
 		[Talents.T_DIMENSIONAL_STEP]={base=5, every=10, max=9},
 		[Talents.T_ANOMALY_REARRANGE]=1,
+		[Talents.T_DUST_TO_DUST]={base=4, every=10, max=8},
 		[Talents.T_TEMPORAL_WAKE]={base=4, every=10, max=8},
 	},
 	resolvers.sustains_at_birth(),
@@ -160,19 +151,17 @@ newEntity{ base = "BASE_NPC_TELUGOROTH",
 	rank = 3,
 	size_category = 4,
 	max_life = resolvers.rngavg(50,70),
-	combat_armor = 0, combat_def = 20,
+	combat_armor = 0, combat_def = 20, combat_def_ranged = 20,
 	on_melee_hit = { [DamageType.TEMPORAL] = resolvers.mbonus(20, 10), },
 	ai = "tactical", ai_state = { talent_in=2, ai_move="move_snake" },
 
-	stun_immune = 1,
-	blind_immune = 1,
-	confusion_immune = 1,
-	pin_immune = 1,
-
+	talent_cd_reduction = {[Talents.T_DUST_TO_DUST]=-3},
+	
 	resolvers.talents{
 		[Talents.T_ANOMALY_TEMPORAL_STORM]=1,
+		[Talents.T_DUST_TO_DUST]={base=4, every=7},
 		[Talents.T_QUANTUM_SPIKE]={base=2, every=7},
-		[Talents.T_DIMENSIONAL_STEP]={base=5, every=7},
+		[Talents.T_SWAP]={base=5, every=7},
 		[Talents.T_ANOMALY_REARRANGE]=1,
 		[Talents.T_TEMPORAL_WAKE]={base=4, every=7},
 	},
