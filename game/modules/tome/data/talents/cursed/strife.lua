@@ -82,7 +82,7 @@ newTalent{
 	require = cursed_str_req2,
 	points = 5,
 	range = function(self, t)
-		return 2 + 6 * (self:getTalentLevel(t) / 6.5)
+		return math.floor(2 + 6 * (self:getTalentLevel(t) / 6.5))
 	end,
 	info = function(self, t)
 		local range = self:getTalentRange(t)

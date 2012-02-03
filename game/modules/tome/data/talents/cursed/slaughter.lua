@@ -81,7 +81,7 @@ newTalent{
 		return self:combatTalentIntervalDamage(t, "str", 0.25, 0.8, 0.4) * getHateMultiplier(self, 0.5, 1, false, hate)
 	end,
 	getAttackChange = function(self, t)
-		local level = math.max(1, self:getTalentLevel(t) - 2)
+		local level = math.max(3 * self:getTalentTypeMastery(t.type[1]) - 2, self:getTalentLevel(t) - 2)
 		return -self:rescaleDamage((math.sqrt(level) - 0.5) * 15 * ((100 + self:getStat("str")) / 200))
 	end,
 	action = function(self, t)
@@ -112,7 +112,7 @@ newTalent{
 				target = rng.table(targets)
 			end
 
-			if self:attackTarget(target, nil, damageMultiplier, true) and not target:hasEffect(target.EFF_OVERWHELMED) then
+			if self:attackTarget(target, nil, damageMultiplier, true) and self:getTalentLevel(t) >= 3 and not target:hasEffect(target.EFF_OVERWHELMED) then
 				target:setEffect(target.EFF_OVERWHELMED, 3, {src=self, attackChange=attackChange})
 			end
 		end
@@ -135,7 +135,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 20,
 	hate = 8,
-	range = 4,
+	range = function(self, t) return 3 + self:getTalentLevelRaw(t) end,
 	tactical = { CLOSEIN = 2 },
 	requires_target = true,
 	getDamageMultiplier = function(self, t, hate)

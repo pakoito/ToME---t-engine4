@@ -134,7 +134,10 @@ newTalent{
 	getTypeChance = function(self, t)
 		return math.sqrt(self:getTalentLevel(t)) * 4
 	end,
-	getReduction = function(self, t)
+	getPhysicalResistChange = function(self, t)
+		return -math.sqrt(self:getTalentLevel(t)) * 8
+	end,
+	getStatReduction = function(self, t)
 		return math.floor(math.sqrt(self:getTalentLevel(t)) * 4.3)
 	end,
 	on_learn = function(self, t)
@@ -152,10 +155,11 @@ newTalent{
 	info = function(self, t)
 		local subtypeChance = t.getSubtypeChance(self, t)
 		local typeChance = t.getTypeChance(self, t)
-		local reduction = t.getReduction(self, t)
+		local physicalResistChange = t.getPhysicalResistChange(self, t)
+		local statReduction = t.getStatReduction(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[Each melee hit gives you a chance to outmaneuver your marked prey, reducing their highest statistic by %d. Subject to your effectiveness against the marked prey, there is a %0.1f%% chance to outmaneuver your marked type and a %0.1f%% maximum chance to outmaneuver your marked sub-type. The effects last for %d turns and can accumulate.
-		Each point in Outmaneuver reduces the kill experience required to reach 100%% effectivess as a Predator.]]):format(reduction, typeChance, subtypeChance, duration)
+		return ([[Each melee hit gives you a chance to outmaneuver your marked prey, lowering their physical resistance by %d%% and reducing their highest statistic by %d. Subject to your effectiveness against the marked prey, there is a %0.1f%% chance to outmaneuver your marked type and a %0.1f%% maximum chance to outmaneuver your marked sub-type. The effects last for %d turns and can accumulate.
+		Each point in Outmaneuver reduces the kill experience required to reach 100%% effectivess as a Predator.]]):format(-physicalResistChange, statReduction, typeChance, subtypeChance, duration)
 	end,
 }
 
@@ -166,7 +170,7 @@ newTalent{
 	require = cursed_lev_req4,
 	points = 5,
 	getMaxIncrease = function(self, t)
-		return math.min(30, math.pow(self:getTalentLevel(t), 0.7) * 6)
+		return math.min(35, math.pow(self:getTalentLevel(t), 0.7) * 7)
 	end,
 	on_learn = function(self, t)
 	end,

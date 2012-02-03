@@ -1831,7 +1831,7 @@ newEffect{
 	name = "OUTMANEUVERED", image = "talents/outmaneuver.png",
 	desc = "Outmaneuvered",
 	long_desc = function(self, eff)
-		local desc = "The target has been outmaneuvered. ("
+		local desc = ("The target has been outmaneuvered. (%d%% physical resistance, "):format(eff.physicalResistChange)
 		local first = true
 		for id, value in pairs(eff.incStats) do
 			if not first then desc = desc..", " end
@@ -1847,6 +1847,9 @@ newEffect{
 	on_gain = function(self, eff) return "#Target# is outmaneuvered." end,
 	on_lose = function(self, eff) return "#Target# is no longer outmaneuvered." end,
 	addEffect = function(self, eff)
+		if eff.physicalResistId then self:removeTemporaryValue("resists", eff.physicalResistId) end
+		eff.physicalResistId = self:addTemporaryValue("resists", { [DamageType.PHYSICAL]=eff.physicalResistChange })
+	
 		local maxId
 		local maxValue = 0
 		for id, def in ipairs(self.stats_def) do
@@ -1860,19 +1863,20 @@ newEffect{
 		end
 		if eff.incStatsId then self:removeTemporaryValue("inc_stats", eff.incStatsId) end
 		eff.incStats = eff.incStats or {}
-		eff.incStats[maxId] = (eff.incStats[maxId] or 0) - eff.reduction
+		eff.incStats[maxId] = (eff.incStats[maxId] or 0) - eff.statReduction
 		eff.incStatsId = self:addTemporaryValue("inc_stats", eff.incStats)
-		game.logSeen(self, ("%s has lost %d %s."):format(self.name:capitalize(), eff.reduction, Stats.stats_def[maxId].name:capitalize()))
+		game.logSeen(self, ("%s has lost %d %s."):format(self.name:capitalize(), eff.statReduction, Stats.stats_def[maxId].name:capitalize()))
 	end,
 	activate = function(self, eff)
-		eff.list = {}
 		self.tempeffect_def[self.EFF_OUTMANEUVERED].addEffect(self, eff)
 	end,
 	deactivate = function(self, eff)
+		if eff.physicalResistId then self:removeTemporaryValue("resists", eff.physicalResistId) end
 		if eff.incStatsId then self:removeTemporaryValue("inc_stats", eff.incStatsId) end
 	end,
 	on_merge = function(self, old_eff, new_eff)
 		-- spread old effects over new duration
+		old_eff.physicalResistChange = math.min(50, new_eff.physicalResistChange + (old_eff.physicalResistChange * old_eff.dur / new_eff.dur))
 		for id, value in pairs(old_eff.incStats) do
 			old_eff.incStats[id] = math.ceil(value * old_eff.dur / new_eff.dur)
 		end
@@ -1911,12 +1915,13 @@ newEffect{
 	parameters = { },
 	on_lose = function(self, eff) return "#Target# is no longer mimicking a previous victim." end,
 	activate = function(self, eff)
-		-- get difference from target stats and self stats
+		-- old version used difference from target stats and self stats; new version just uses target stats
 		local sum = 0
 		local values = {}
 		for id, def in ipairs(self.stats_def) do
 			if def.id and def.id ~= self.STAT_LCK then
-				local diff = eff.target:getStat(def.id, nil, nil, true) - self:getStat(def.id, nil, nil, true)
+				--local diff = eff.target:getStat(def.id, nil, nil, true) - self:getStat(def.id, nil, nil, true)
+				local diff = eff.target:getStat(def.id, nil, nil, false)
 				if diff > 0 then
 					table.insert(values, { def.id, diff })
 					sum = sum + diff
@@ -1967,7 +1972,17 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		if eff.incStatsId then self:removeTemporaryValue("inc_stats", eff.incStatsId) end
+		eff.incStats = nil
 	end,
+	on_merge = function(self, old_eff, new_eff)
+		if old_eff.incStatsId then self:removeTemporaryValue("inc_stats", old_eff.incStatsId) end
+		old_eff.incStats = nil
+		old_eff.incStatsId = nil
+		
+		self.tempeffect_def[self.EFF_MIMIC].activate(self, new_eff)
+		
+		return new_eff
+	end
 }
 
 newEffect{
