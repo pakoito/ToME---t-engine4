@@ -32,7 +32,7 @@ newEntity{
 Vicious predators, they inject corrupting diseases into their foes, and their sharp claws cut through most armours.]],
 	killer_message = ", who incubated her eggs in the corpse,",
 
-	combat = { dam=resolvers.rngavg(10,32), atk=9, apr=4, damtype=DamageType.BLIGHT, dammod={dex=1.2} },
+	combat = { dam=resolvers.rngavg(10,32), atk=0, apr=4, damtype=DamageType.BLIGHT, dammod={dex=1.2} },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 

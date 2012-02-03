@@ -1,3 +1,4 @@
+
 -- TE4 - T-Engine 4
 -- Copyright (C) 2009, 2010, 2011 Nicolas Casalini
 --
@@ -568,6 +569,9 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 
 	-- And now run it!
 	_G.game:run()
+
+	-- Try to bind some debug keys
+	if _G.game.key and _G.game.key.setupRebootKeys then _G.game.key:setupRebootKeys() end
 
 	-- Add user chat if needed
 	if mod.allow_userchat and _G.game.key then

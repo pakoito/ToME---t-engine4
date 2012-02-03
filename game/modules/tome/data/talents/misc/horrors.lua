@@ -419,7 +419,7 @@ newTalent{
 	requires_target = true,
 	is_summon = true,
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 5, 50) end,
-	getExplosion = function(self, t) return self:combatTalentMindDamage(t, 20, 300) end,
+	getExplosion = function(self, t) return self:combatTalentMindDamage(t, 20, 200) end,
 	getSummonTime = function(self, t) return 6 + math.ceil(self:getTalentLevel(t)) end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}

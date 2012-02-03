@@ -143,6 +143,7 @@ elseif _OPTIONS.lua == "jit2" then
 			}
 
 		configuration "windows"
+			if not _OPTIONS["no-cleanup-jit2"] then
 			local list = "../src/luajit2/src/lib_base.c ../src/luajit2/src/lib_math.c ../src/luajit2/src/lib_bit.c ../src/luajit2/src/lib_string.c ../src/luajit2/src/lib_table.c ../src/luajit2/src/lib_io.c ../src/luajit2/src/lib_os.c ../src/luajit2/src/lib_package.c ../src/luajit2/src/lib_debug.c ../src/luajit2/src/lib_jit.c ../src/luajit2/src/lib_ffi.c"
 			prebuildcommands{
 				_OPTIONS.force32bits and "gcc -m32 -o ../src/luajit2/src/buildvm ../src/luajit2/src/buildvm*.c" or "gcc -o ../src/luajit2/src/buildvm ../src/luajit2/src/buildvm*.c",
@@ -154,6 +155,7 @@ elseif _OPTIONS.lua == "jit2" then
 				"../src/luajit2/src/buildvm -m vmdef -o ../src/luajit2/vmdef.lua "..list,
 				"../src/luajit2/src/buildvm -m folddef -o ../src/luajit2/src/lj_folddef.h ../src/luajit2/src/lj_opt_fold.c",
 			}
+			end
 
 end
 

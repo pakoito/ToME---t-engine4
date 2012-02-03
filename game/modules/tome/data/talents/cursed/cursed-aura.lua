@@ -112,9 +112,6 @@ newTalent{
 
 	-- chooses whether the player accepts the cursed aura tree when a cursable item is found..only offered once for Afflicted classes
 	chooseCursedAuraTree = function(self, t)
-		game.player:runStop()
-		game.player:restStop()
-	
 		local choose = false
 		local x, y, i = self.x, self.y, 1
 		local item = game.level.map:getObject(x, y, i)
@@ -128,6 +125,9 @@ newTalent{
 		end
 
 		if choose then
+			game.player:runStop()
+			game.player:restStop()
+		
 			-- don't bother the player when there is an enemy near
 			local grids = core.fov.circle_grids(self.x, self.y, 10, true)
 			for x, yy in pairs(grids) do

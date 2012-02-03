@@ -28,22 +28,11 @@ solution "TEngine"
 
 configuration "windows"
 	libdirs {
-		"/e/libs/SDL-1.2.14/lib",
-		"/e/libs/SDL_ttf-2.0.9/lib",
-		"/e/libs/SDL_image-1.2.10/lib",
-		"/e/libs/SDL_mixer-1.2.11/lib",
-		"/e/libs/libvorbis-1.3.2/lib/.libs",
-		"/e/libs/libogg-1.2.2/src/.libs",
-		"/e/apps/mingw/lib",
+		"/c/mingw2/lib",
 	}
 	includedirs {
-		"/e/libs/SDL-1.2.14/include/SDL",
-		"/e/libs/SDL_ttf-2.0.9/include/",
-		"/e/libs/SDL_image-1.2.10/include/",
-		"/e/libs/SDL_mixer-1.2.11/include/",
-		"/e/libs/libvorbis-1.3.2/include",
-		"/e/libs/libogg-1.2.2/include",
-		"/e/apps/mingw/include/GL",
+		"/c/mingw2/include/SDL",
+		"/c/mingw2/include/GL",
 	}
 
 configuration "macosx"
