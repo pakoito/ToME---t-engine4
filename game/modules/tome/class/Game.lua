@@ -726,6 +726,7 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down, auto_zone_stair)
 	end
 
 	self.player:onEnterLevel(self.zone, self.level)
+	self.player:resetMoveAnim()
 
 	local musics = {}
 	local keep_musics = false

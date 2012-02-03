@@ -325,6 +325,8 @@ end
 
 --- Redisplays the map, storing seen information
 function _M:redisplay()
+	self:checkMapViewBounded()
+	self._map:setScroll(self.mx, self.my, 0)
 	for i = 0, self.w - 1 do for j = 0, self.h - 1 do
 		self._map:setSeen(i, j, self.seens(i, j))
 		self._map:setRemember(i, j, self.remembers(i, j))
@@ -769,7 +771,8 @@ function _M:checkMapViewBounded()
 	if self.w < self.viewport.mwidth then self.mx = math.floor((self.w - self.viewport.mwidth) / 2) centered = true self.changed = true end
 	if self.h < self.viewport.mheight then self.my = math.floor((self.h - self.viewport.mheight) / 2) centered = true self.changed = true end
 
-	self._map:setScroll(self.mx, self.my, centered and 0 or self.smooth_scroll)
+--	self._map:setScroll(self.mx, self.my, centered and 0 or self.smooth_scroll)
+	self._map:setScroll(self.mx, self.my, self.smooth_scroll)
 end
 
 --- Scrolls the map in the given direction
@@ -778,7 +781,7 @@ function _M:scrollDir(dir)
 	self.mx, self.my = util.coordAddDir(self.mx, self.my, dir)
 	self.mx = util.bound(self.mx, 0, self.w - self.viewport.mwidth)
 	self.my = util.bound(self.my, 0, self.h - self.viewport.mheight)
-	self._map:setScroll(self.mx, self.my, self.smooth_scroll)
+	self:checkMapViewBounded()
 end
 
 --- Gets the tile under the mouse
@@ -813,8 +816,8 @@ end
 --- Get the screen offset where to start drawing (upper corner)
 function _M:getScreenUpperCorner()
 	local sx, sy = self._map:getScroll()
-	local x = -self.mx * self.tile_w * self.zoom + self.display_x + sx * self.tile_w * zoom
-	local y = -self.my * self.tile_h * self.zoom + self.display_y + sy * self.tile_h * zoom
+	local x = -self.mx * self.tile_w * self.zoom + self.display_x + sx * zoom
+	local y = -self.my * self.tile_h * self.zoom + self.display_y + sy * zoom
 	return x, y
 end
 
@@ -1135,10 +1138,11 @@ end
 function _M:displayEmotes(nb_keyframes)
 	local del = {}
 	local e = next(self.emotes)
+	local sx, sy = self._map:getScroll()
 	while e do
 		-- Dont bother with obviously out of screen stuff
 		if e.x >= self.mx and e.x < self.mx + self.viewport.mwidth and e.y >= self.my and e.y < self.my + self.viewport.mheight and self.seens(e.x, e.y) then
-			e:display(self.display_x + (e.x - self.mx + 0.5) * self.tile_w * self.zoom, self.display_y + (e.y - self.my - 0.9) * self.tile_h * self.zoom)
+			e:display(self.display_x + sx + (e.x - self.mx + 0.5) * self.tile_w * self.zoom, self.display_y + sy + (e.y - self.my - 0.9) * self.tile_h * self.zoom)
 		end
 
 		for i = 1, nb_keyframes do

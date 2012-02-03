@@ -708,7 +708,7 @@ function _M:autoExplore()
 					elseif terrain.mindam or terrain.maxdam then
 						move_cost = move_cost + 32
 						is_slow = true
-					elseif terrain.air_level and terrain.air_level < 0 and not self.can_breath.water then
+					elseif terrain.air_level and terrain.air_level < 0 and not ((self.can_breath.water or 0) > 0) then
 						move_cost = move_cost + 15
 						is_slow = true
 					end

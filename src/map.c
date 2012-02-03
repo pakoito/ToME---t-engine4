@@ -980,8 +980,8 @@ static int map_draw_seen_texture(lua_State *L)
 	int my = map->my;
 //	x -= map->tile_w * (map->used_animdx + map->used_mx);
 //	y -= map->tile_h * (map->used_animdy + map->used_my);
-	x -= map->tile_w * (map->used_animdx + map->mx);
-	y -= map->tile_h * (map->used_animdy + map->my);
+	x -= map->tile_w * (map->used_animdx + map->oldmx);
+	y -= map->tile_h * (map->used_animdy + map->oldmy);
 
 
 	tglBindTexture(GL_TEXTURE_2D, map->seens_texture);
@@ -1044,13 +1044,18 @@ static int map_set_scroll(lua_State *L)
 		// Already moving, compute starting point
 		else
 		{
-			map->oldmx = map->oldmx - map->used_animdx;
-			map->oldmy = map->oldmy - map->used_animdy;
+			map->oldmx = map->oldmx + map->used_animdx;
+			map->oldmy = map->oldmy + map->used_animdy;
 		}
-		map->move_step = 0;
-		map->move_max = smooth;
+	} else {
+		map->oldmx = x;
+		map->oldmy = y;
 	}
 
+	map->move_step = 0;
+	map->move_max = smooth;
+	map->used_animdx = 0;
+	map->used_animdy = 0;
 	map->mx = x;
 	map->my = y;
 	map->seen_changed = TRUE;
@@ -1060,8 +1065,8 @@ static int map_set_scroll(lua_State *L)
 static int map_get_scroll(lua_State *L)
 {
 	map_type *map = (map_type*)auxiliar_checkclass(L, "core{map}", 1);
-	lua_pushnumber(L, -map->used_animdx);
-	lua_pushnumber(L, -map->used_animdy);
+	lua_pushnumber(L, -map->tile_w*(map->used_animdx + map->oldmx - map->mx));
+	lua_pushnumber(L, -map->tile_h*(map->used_animdy + map->oldmy - map->my));
 	return 2;
 }
 
@@ -1313,15 +1318,15 @@ static int map_to_screen(lua_State *L)
 		{
 			float adx = (float)map->mx - map->oldmx;
 			float ady = (float)map->my - map->oldmy;
-			animdx = adx * map->move_step / (float)map->move_max - adx;
-			animdy = ady * map->move_step / (float)map->move_max - ady;
-			mx = map->mx + (int)(adx * map->move_step / (float)map->move_max - adx);
-			my = map->my + (int)(ady * map->move_step / (float)map->move_max - ady);
+			animdx = adx * map->move_step / (float)map->move_max;
+			animdy = ady * map->move_step / (float)map->move_max;
+			mx = (int)(map->oldmx + animdx);
+			my = (int)(map->oldmy + animdy);
 		}
 		changed = TRUE;
 	}
-	x -= map->tile_w * animdx;
-	y -= map->tile_h * animdy;
+	x -= map->tile_w * (animdx + map->oldmx);
+	y -= map->tile_h * (animdy + map->oldmy);
 	map->used_animdx = animdx;
 	map->used_animdy = animdy;
 
@@ -1337,8 +1342,8 @@ static int map_to_screen(lua_State *L)
 			{
 				if ((i < 0) || (j < 0) || (i >= map->w) || (j >= map->h)) continue;
 
-				int dx = x + (i - map->mx) * map->tile_w;
-				int dy = y + (j - map->my) * map->tile_h;
+				int dx = x + i * map->tile_w;
+				int dy = y + j * map->tile_h;
 				map_object *mo = map->grids[i][j][z];
 				if (!mo) continue;
 

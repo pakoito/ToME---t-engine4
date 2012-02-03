@@ -74,7 +74,8 @@ function _M:display(dispx, dispy)
 	self.target.y = self.target.y or self.source_actor.y
 
 	local ox, oy = self.display_x, self.display_y
-	self.display_x, self.display_y = dispx or self.display_x, dispy or self.display_y
+	local sx, sy = game.level.map._map:getScroll()
+	self.display_x, self.display_y = dispx or sx or self.display_x, dispy or sy or self.display_y
 
 --	self.cursor:toScreen(self.display_x + (self.target.x - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (self.target.y - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
 
