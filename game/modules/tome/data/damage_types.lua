@@ -775,7 +775,7 @@ newDamageType{
 newDamageType{
 	name = "blinding darkness", type = "DARKNESS_BLIND",
 	projector = function(src, x, y, type, dam)
-		local realdam = DamageType:get(DamageType.ACID).projector(src, x, y, DamageType.DARKNESS, dam)
+		local realdam = DamageType:get(DamageType.DARKNESS).projector(src, x, y, DamageType.DARKNESS, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and rng.percent(25) then
 			if target:canBe("blind") then

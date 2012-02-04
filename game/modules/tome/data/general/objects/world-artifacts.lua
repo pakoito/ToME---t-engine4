@@ -1827,6 +1827,8 @@ newEntity{ base = "BASE_HEAVY_ARMOR",
 		combat_armor = 4,
 		fatigue = 12,
 	},
+	max_power = 60, power_regen = 1,
+	use_talent = { id = Talents.T_BLOODCASTING, level = 2, power = 60 },
 }
 
 
