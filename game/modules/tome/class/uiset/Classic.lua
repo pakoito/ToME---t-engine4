@@ -104,6 +104,7 @@ function _M:resizeIconsHotkeysToolbar()
 
 	local oldstop = self.map_h_stop or (game.h - h)
 	self.map_h_stop = game.h - h
+	self.map_h_stop_tooltip = game.h - h
 
 	self.hotkeys_display_icons = HotkeysIconsDisplay.new(nil, 216, game.h - h, game.w - 216, h, "/data/gfx/ui/talents-list.png", self.init_font_mono, self.init_size_mono, config.settings.tome.hotkey_icons_size, config.settings.tome.hotkey_icons_size)
 	self.hotkeys_display_icons:enableShadow(0.6)
@@ -313,6 +314,14 @@ function _M:display(nb_keyframes)
 
 	-- Minimap display
 	if game.level and game.level.map and not self.no_minimap then
+		game.zone_name_s:toScreenFull(
+			map.display_x + map.viewport.width - game.zone_name_w - 15,
+			map.display_y + 5,
+			game.zone_name_w, game.zone_name_h,
+			game.zone_name_tw, game.zone_name_th
+		)
+
+
 		local map = game.level.map
 --		if self.mm_fbo then
 --			self.mm_fbo:use(true)

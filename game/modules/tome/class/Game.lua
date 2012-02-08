@@ -1013,13 +1013,6 @@ function _M:displayMap(nb_keyframes)
 		if self.level.data.ambient_bg_sounds then self.state:playAmbientSounds(self.level, self.level.data.ambient_bg_sounds, nb_keyframes) end
 
 		if not self.zone_name_s then self:updateZoneName() end
-		self.zone_name_s:toScreenFull(
-			map.display_x + map.viewport.width - self.zone_name_w - 15,
---			map.display_y + map.viewport.height - self.zone_name_h - 5,
-			map.display_y + 5,
-			self.zone_name_w, self.zone_name_h,
-			self.zone_name_tw, self.zone_name_th
-		)
 
 		-- emotes display
 		map:displayEmotes(nb_keyframe or 1)

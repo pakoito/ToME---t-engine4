@@ -147,7 +147,10 @@ local mm_transp = {core.display.loadImage("/data/gfx/ui/minimap/transp.png"):glT
 
 local sep = {core.display.loadImage("/data/gfx/ui/hotkeys/separator.png"):glTexture()}
 local sep_vines = {core.display.loadImage("/data/gfx/ui/hotkeys/separator_vines.png"):glTexture()}
-
+local tb_inven = {core.display.loadImage("/data/gfx/ui/hotkeys/inventory.png"):glTexture()}
+local tb_lore = {core.display.loadImage("/data/gfx/ui/hotkeys/lore.png"):glTexture()}
+local tb_quest = {core.display.loadImage("/data/gfx/ui/hotkeys/quest.png"):glTexture()}
+local tb_mainmenu = {core.display.loadImage("/data/gfx/ui/hotkeys/mainmenu.png"):glTexture()}
 
 function _M:init()
 	UISet.init(self)
@@ -175,6 +178,10 @@ function _M:init()
 		party = {x=pf_bg[6], y=0, scale=1, a=1},
 	}
 	table.merge(self.places, config.settings.tome.uiset_minimalist and config.settings.tome.uiset_minimalist.places or {}, true)
+
+	self.sizes = {}
+
+	self.tbbuttons = {inven=0.6, mainmenu=0.6, lore=0.6, quest=0.6}
 
 	self.buffs_base = UI:makeFrame("ui/icon-frame/frame", 40, 40)
 end
@@ -292,6 +299,7 @@ function _M:resizeIconsHotkeysToolbar()
 	local oldstop = self.map_h_stop_up or (game.h - h)
 	self.map_h_stop = game.h - h
 	self.map_h_stop_up = game.h - h - sep[7]
+	self.map_h_stop_tooltip = self.map_h_stop_up
 
 	self.hotkeys_display_icons = HotkeysIconsDisplay.new(nil, 0, game.h - h, game.w, h, "/data/gfx/ui/hotkeys/back.png", self.init_font_mono, self.init_size_mono, config.settings.tome.hotkey_icons_size, config.settings.tome.hotkey_icons_size)
 	self.hotkeys_display_icons:enableShadow(0.6)
@@ -326,8 +334,9 @@ function _M:uiMoveResize(what, button, mx, my, xrel, yrel, bx, by, event)
 	game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, "Left mouse drag&drop to move the frame\nRight mouse drag&drop to scale up/down\nMiddle click to reset to default scale")
 	if event == "button" and button == "middle" then self.places[what].scale = 1 self:saveSettings()
 	elseif event == "motion" and button == "left" then
+		self.ui_moving = what
 		game.mouse:startDrag(mx, my, s, {kind="ui:move", id=what, dx=bx*self.places[what].scale, dy=by*self.places[what].scale},
-			function(drag, used) self:saveSettings() end,
+			function(drag, used) self:saveSettings() self.ui_moving = nil end,
 			function(drag, _, x, y) if self.places[drag.payload.id] then self.places[drag.payload.id].x = x-drag.payload.dx self.places[drag.payload.id].y = y-drag.payload.dy self:boundPlaces() end end,
 			true
 		)
@@ -341,11 +350,35 @@ function _M:uiMoveResize(what, button, mx, my, xrel, yrel, bx, by, event)
 	end
 end
 
-function _M:computePadding(x1, y1, x2, y2)
-	if x1 <= 0 then Map.viewport_padding_4 = math.max(Map.viewport_padding_4, math.floor((x2 - x1) / Map.tile_w)) end 
-	if x2 >= Map.viewport.width - move_handle[6] then Map.viewport_padding_6 = math.max(Map.viewport_padding_6, math.floor((x2 - Map.viewport.width) / Map.tile_w)) end 
-	if y1 <= 0 then Map.viewport_padding_8 = math.max(Map.viewport_padding_8, math.floor((y2 - y1) / Map.tile_h)) end 
-	if y2 >= Map.viewport.height - move_handle[7] then Map.viewport_padding_2 = math.max(Map.viewport_padding_2, math.floor((y2 - Map.viewport.height) / Map.tile_h)) end 
+function _M:computePadding(what, x1, y1, x2, y2)
+	self.sizes[what] = {}
+	local size = self.sizes[what]
+	size.x1 = x1
+	size.x2 = x2
+	size.y1 = y1
+	size.y2 = y2
+	if x1 <= 0 then 
+		Map.viewport_padding_4 = math.max(Map.viewport_padding_4, math.floor((x2 - x1) / Map.tile_w)) 
+		size.left = true
+	end 
+	if x2 >= Map.viewport.width then 
+		Map.viewport_padding_6 = math.max(Map.viewport_padding_6, math.floor((x2 - x1) / Map.tile_w)) 
+		size.right = true
+	end 
+	if y1 <= 0 then 
+		Map.viewport_padding_8 = math.max(Map.viewport_padding_8, math.floor((y2 - y1) / Map.tile_h)) 
+		size.top = true
+	end 
+	if y2 >= Map.viewport.height then 
+		Map.viewport_padding_2 = math.max(Map.viewport_padding_2, math.floor((y2 - y1) / Map.tile_h)) 
+		size.bottom = true
+	end 
+
+	if size.top then size.orient = "down"
+	elseif size.bottom then size.orient = "up"
+	elseif size.left then size.orient = "right"
+	elseif size.right then size.orient = "left"
+	end
 end
 
 function _M:showResourceTooltip(x, y, w, h, id, desc, is_first)
@@ -365,10 +398,21 @@ function _M:showResourceTooltip(x, y, w, h, id, desc, is_first)
 	end
 end
 
+function _M:resourceOrientStep(orient, bx, by, scale, x, y, w, h)
+	if orient == "down" or orient == "up" then 
+		x = x + w
+		if (x + w) * scale >= game.w - bx then x = 0 y = y + h end
+	elseif orient == "right" or orient == "left" then 
+		y = y + h
+		if (y + h) * scale >= self.map_h_stop - by then y = 0 x = x + w end
+	end
+	return x, y
+end
+
 function _M:displayResources(scale, bx, by, a)
 	local player = game.player
 	if player then
-		local stop = self.map_h_stop - fshat[7]
+		local orient = self.sizes.resources and self.sizes.resources.orient or "right"		
 		local x, y = 0, 0
 
 		-----------------------------------------------------------------------------------
@@ -399,8 +443,7 @@ function _M:displayResources(scale, bx, by, a)
 			if player.air >= player.max_air * 0.5 then front = fshat_air end
 			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3], 1, 1, 1, a)
 			self:showResourceTooltip(bx+x*scale, by+y*scale, fshat[6], fshat[7], "res:air", self.TOOLTIP_AIR)
-			y = y + fshat[7]
-			if y > stop then x = x + fshat[6] y = 0 end
+			x, y = self:resourceOrientStep(orient, bx, by, scale, x, y, fshat[6], fshat[7])
 		elseif game.mouse:getZone("res:air") then game.mouse:unregisterZone("res:air") end
 
 		-----------------------------------------------------------------------------------
@@ -459,8 +502,7 @@ function _M:displayResources(scale, bx, by, a)
 			if shield >= max_shield * 0.8 then front = fshat_shield end
 		elseif player.life >= player.max_life then front = fshat_life end
 		front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3], 1, 1, 1, a)
-		y = y + fshat[7]
-		if y > stop then x = x + fshat[6] y = 0 end
+		x, y = self:resourceOrientStep(orient, bx, by, scale, x, y, fshat[6], fshat[7])
 
 		if self.mhandle.resources then
 			move_handle[1]:toScreenFull(fshat[6] - move_handle[6], 0, move_handle[6], move_handle[7], move_handle[2], move_handle[3])
@@ -495,8 +537,7 @@ function _M:displayResources(scale, bx, by, a)
 			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3], 1, 1, 1, a)
 
 			self:showResourceTooltip(bx+x*scale, by+y*scale, fshat[6], fshat[7], "res:stamina", self.TOOLTIP_STAMINA)
-			y = y + fshat[7]
-			if y > stop then x = x + fshat[6] y = 0 end
+			x, y = self:resourceOrientStep(orient, bx, by, scale, x, y, fshat[6], fshat[7])
 		elseif game.mouse:getZone("res:stamina") then game.mouse:unregisterZone("res:stamina") end
 
 		-----------------------------------------------------------------------------------
@@ -527,8 +568,7 @@ function _M:displayResources(scale, bx, by, a)
 			if player.mana >= player.max_mana then front = fshat_mana end
 			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3], 1, 1, 1, a)
 			self:showResourceTooltip(bx+x*scale, by+y*scale, fshat[6], fshat[7], "res:mana", self.TOOLTIP_MANA)
-			y = y + fshat[7]
-			if y > stop then x = x + fshat[6] y = 0 end
+			x, y = self:resourceOrientStep(orient, bx, by, scale, x, y, fshat[6], fshat[7])
 		elseif game.mouse:getZone("res:mana") then game.mouse:unregisterZone("res:mana") end
 
 		-----------------------------------------------------------------------------------
@@ -557,8 +597,7 @@ function _M:displayResources(scale, bx, by, a)
 			if pt.souls >= pt.souls_max then front = fshat_soul end
 			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3], 1, 1, 1, a)
 			self:showResourceTooltip(bx+x*scale, by+y*scale, fshat[6], fshat[7], "res:necrotic", self.TOOLTIP_NECROTIC_AURA)
-			y = y + fshat[7]
-			if y > stop then x = x + fshat[6] y = 0 end
+			x, y = self:resourceOrientStep(orient, bx, by, scale, x, y, fshat[6], fshat[7])
 		elseif game.mouse:getZone("res:necrotic") then game.mouse:unregisterZone("res:necrotic") end
 
 		-----------------------------------------------------------------------------------
@@ -595,8 +634,7 @@ function _M:displayResources(scale, bx, by, a)
 			if chance <= 85 then front = fshat_equi_dark end
 			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3], 1, 1, 1, a)
 			self:showResourceTooltip(bx+x*scale, by+y*scale, fshat[6], fshat[7], "res:equi", self.TOOLTIP_EQUILIBRIUM)
-			y = y + fshat[7]
-			if y > stop then x = x + fshat[6] y = 0 end
+			x, y = self:resourceOrientStep(orient, bx, by, scale, x, y, fshat[6], fshat[7])
 		elseif game.mouse:getZone("res:equi") then game.mouse:unregisterZone("res:equi") end
 
 		-----------------------------------------------------------------------------------
@@ -627,8 +665,7 @@ function _M:displayResources(scale, bx, by, a)
 			if player.positive >= player.max_positive * 0.7 then front = fshat_positive end
 			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3], 1, 1, 1, a)
 			self:showResourceTooltip(bx+x*scale, by+y*scale, fshat[6], fshat[7], "res:positive", self.TOOLTIP_POSITIVE)
-			y = y + fshat[7]
-			if y > stop then x = x + fshat[6] y = 0 end
+			x, y = self:resourceOrientStep(orient, bx, by, scale, x, y, fshat[6], fshat[7])
 		elseif game.mouse:getZone("res:positive") then game.mouse:unregisterZone("res:positive") end
 
 		-----------------------------------------------------------------------------------
@@ -659,8 +696,7 @@ function _M:displayResources(scale, bx, by, a)
 			if player.negative >= player.max_negative * 0.7  then front = fshat_negative end
 			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3], 1, 1, 1, a)
 			self:showResourceTooltip(bx+x*scale, by+y*scale, fshat[6], fshat[7], "res:negative", self.TOOLTIP_NEGATIVE)
-			y = y + fshat[7]
-			if y > stop then x = x + fshat[6] y = 0 end
+			x, y = self:resourceOrientStep(orient, bx, by, scale, x, y, fshat[6], fshat[7])
 		elseif game.mouse:getZone("res:negative") then game.mouse:unregisterZone("res:negative") end
 
 		-----------------------------------------------------------------------------------
@@ -697,8 +733,7 @@ function _M:displayResources(scale, bx, by, a)
 			if chance <= 10 then front = fshat_paradox_dark end
 			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3], 1, 1, 1, a)
 			self:showResourceTooltip(bx+x*scale, by+y*scale, fshat[6], fshat[7], "res:paradox", self.TOOLTIP_PARADOX)
-			y = y + fshat[7]
-			if y > stop then x = x + fshat[6] y = 0 end
+			x, y = self:resourceOrientStep(orient, bx, by, scale, x, y, fshat[6], fshat[7])
 		elseif game.mouse:getZone("res:paradox") then game.mouse:unregisterZone("res:paradox") end
 
 		-----------------------------------------------------------------------------------
@@ -729,8 +764,7 @@ function _M:displayResources(scale, bx, by, a)
 			if player.vim >= player.max_vim then front = fshat_vim end
 			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3], 1, 1, 1, a)
 			self:showResourceTooltip(bx+x*scale, by+y*scale, fshat[6], fshat[7], "res:vim", self.TOOLTIP_VIM)
-			y = y + fshat[7]
-			if y > stop then x = x + fshat[6] y = 0 end
+			x, y = self:resourceOrientStep(orient, bx, by, scale, x, y, fshat[6], fshat[7])
 		elseif game.mouse:getZone("res:vim") then game.mouse:unregisterZone("res:vim") end
 
 		-----------------------------------------------------------------------------------
@@ -761,8 +795,7 @@ function _M:displayResources(scale, bx, by, a)
 			if player.hate >= 100 then front = fshat_hate end
 			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3], 1, 1, 1, a)
 			self:showResourceTooltip(bx+x*scale, by+y*scale, fshat[6], fshat[7], "res:hate", self.TOOLTIP_HATE)
-			y = y + fshat[7]
-			if y > stop then x = x + fshat[6] y = 0 end
+			x, y = self:resourceOrientStep(orient, bx, by, scale, x, y, fshat[6], fshat[7])
 		elseif game.mouse:getZone("res:hate") then game.mouse:unregisterZone("res:hate") end
 
 		-----------------------------------------------------------------------------------
@@ -793,8 +826,7 @@ function _M:displayResources(scale, bx, by, a)
 			if player.psi >= player.max_psi then front = fshat_psi end
 			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3], 1, 1, 1, a)
 			self:showResourceTooltip(bx+x*scale, by+y*scale, fshat[6], fshat[7], "res:psi", self.TOOLTIP_PSI)
-			y = y + fshat[7]
-			if y > stop then x = x + fshat[6] y = 0 end
+			x, y = self:resourceOrientStep(orient, bx, by, scale, x, y, fshat[6], fshat[7])
 		elseif game.mouse:getZone("res:psi") then game.mouse:unregisterZone("res:psi") end
 
 		-----------------------------------------------------------------------------------
@@ -821,8 +853,7 @@ function _M:displayResources(scale, bx, by, a)
 			dt[1]:toScreenFull(2+x+44, 2+y+3 + (bg[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3], 0, 0, 0, 0.7 * a)
 			dt[1]:toScreenFull(x+44, y+3 + (bg[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3], 1, 1, 1, a)
 
-			y = y + bg[7]
-			if y > stop then x = x + fshat[6] y = 0 end
+			x, y = self:resourceOrientStep(orient, bx, by, scale, x, y, fshat[6], fshat[7])
 		end
 
 		-----------------------------------------------------------------------------------
@@ -847,8 +878,7 @@ function _M:displayResources(scale, bx, by, a)
 			dt[1]:toScreenFull(x+(front[6]-dt[6])/2, y+90, dt[6], dt[7], dt[2], dt[3], 1, 1, 1, a)
 
 			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3], 1, 1, 1, a)
-			y = y + front[7]
-			if y > stop then x = x + fshat[6] y = 0 end
+			x, y = self:resourceOrientStep(orient, bx, by, scale, x, y, fshat[6], front[7])
 		end
 
 		-----------------------------------------------------------------------------------
@@ -873,13 +903,23 @@ function _M:displayResources(scale, bx, by, a)
 
 			local front = fshat
 			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3], 1, 1, 1, a)
-			y = y + fshat[7]
-			if y > stop then x = x + fshat[6] y = 0 end
+			x, y = self:resourceOrientStep(orient, bx, by, scale, x, y, fshat[6], fshat[7])
 		end
 
 		-- Compute how much space to reserve on the side
-		self:computePadding(bx, by, bx + (x + fshat[6]) * scale, by + y * scale)
+		self:computePadding("resources", bx, by, bx + (x + fshat[6]) * scale, by + y * scale)
 	end
+end
+
+function _M:buffOrientStep(orient, bx, by, scale, x, y, w, h)
+	if orient == "down" or orient == "up" then 
+		x = x + w
+		if (x + w) * scale >= game.w - bx then x = 0 y = y + h end
+	elseif orient == "right" or orient == "left" then 
+		y = y + h
+		if (y + h) * scale >= self.map_h_stop - by then y = 0 x = x + w end
+	end
+	return x, y
 end
 
 function _M:handleEffect(player, eff_id, e, p, x, y, hs, bx, by, is_first, scale)
@@ -943,8 +983,8 @@ function _M:displayBuffs(scale, bx, by)
 			self.tbuff = {} self.pbuff = {}
 		end
 
+		local orient = self.sizes.buffs and self.sizes.buffs.orient or "right"		
 		local hs = 40
-		local stop = self.map_h_stop - hs
 		local x, y = 0, 0
 		local is_first = true
 
@@ -980,9 +1020,8 @@ function _M:displayBuffs(scale, bx, by)
 
 				self.pbuff[tid][3](x, y)
 
-				y = y + hs
 				is_first = false
-				if y + hs >= stop then y = 0 x = x - hs end
+				x, y = self:buffOrientStep(orient, bx, by, scale, x, y, hs, hs)
 			end
 		end
 
@@ -996,21 +1035,32 @@ function _M:displayBuffs(scale, bx, by)
 			local e = player.tempeffect_def[eff_id]
 			self:handleEffect(player, eff_id, e, p, x, y, hs, bx, by, is_first, scale)
 			is_first = false
-			y = y + hs
-			if y + hs >= stop then y = 0 x = x - hs end
+			x, y = self:buffOrientStep(orient, bx, by, scale, x, y, hs, hs)
 		end
 		for eff_id, p in pairs(bad_e) do
 			local e = player.tempeffect_def[eff_id]
 			self:handleEffect(player, eff_id, e, p, x, y, hs, bx, by, is_first, scale)
 			is_first = false
-			y = y + hs
-			if y + hs >= stop then y = 0 x = x - hs end
+			x, y = self:buffOrientStep(orient, bx, by, scale, x, y, hs, hs)
 		end
 
 		if self.mhandle.buffs then
 			move_handle[1]:toScreenFull(40 - move_handle[6], 0, move_handle[6], move_handle[7], move_handle[2], move_handle[3])
 		end
+
+		self:computePadding("buffs", bx, by, bx + x * scale, by + y * scale)
 	end
+end
+
+function _M:partyOrientStep(orient, bx, by, scale, x, y, w, h)
+	if orient == "down" or orient == "up" then 
+		x = x + w
+		if (x + w) * scale >= game.w - bx then x = 0 y = y + h end
+	elseif orient == "right" or orient == "left" then 
+		y = y + h
+		if (y + h) * scale >= self.map_h_stop - by then y = 0 x = x + w end
+	end
+	return x, y
 end
 
 function _M:displayParty(scale, bx, by)
@@ -1021,8 +1071,8 @@ function _M:displayParty(scale, bx, by)
 
 	-- Party members
 	if #game.party.m_list >= 2 and game.level then
+		local orient = self.sizes.party and self.sizes.party.orient or "down"
 		local hs = portrait[7] + 3
-		local stop = self.map_h_stop - hs
 		local x, y = 0, 0
 		local is_first = true
 
@@ -1076,9 +1126,8 @@ function _M:displayParty(scale, bx, by)
 
 			self.party[a][3](x, y)
 
-			x = x + hs
 			is_first = false
-			if x + hs > stop then x = 0 y = y - hs end
+			x, y = self:partyOrientStep(orient, bx, by, scale, x, y, hs, hs)
 		end
 
 
@@ -1086,8 +1135,7 @@ function _M:displayParty(scale, bx, by)
 			move_handle[1]:toScreenFull(portrait[6] - move_handle[6], 0, move_handle[6], move_handle[7], move_handle[2], move_handle[3])
 		end
 
-		-- Compute how much space to reserve on the side
---		Map.viewport_padding_8 = math.floor(scale * y / Map.tile_w)
+		self:computePadding("party", bx, by, bx + x * scale, by + y * scale)
 	end
 end
 
@@ -1194,7 +1242,7 @@ function _M:displayPlayer(scale, bx, by)
 	end
 
 	-- Compute how much space to reserve on the side
-	self:computePadding(bx, by, bx + pf_bg[6] * scale, by + pf_bg[7] * scale)
+	self:computePadding("player", bx, by, bx + pf_bg[6] * scale, by + pf_bg[7] * scale)
 end
 
 function _M:displayMinimap(scale, bx, by)
@@ -1246,8 +1294,67 @@ function _M:displayMinimap(scale, bx, by)
 		game.mouse:registerZone(bx, by, mm_bg[6], mm_bg[7], desc_fct, nil, "minimap", true, scale)
 	end
 
+	game.zone_name_s:toScreenFull(
+		(mm_bg[6] - game.zone_name_w) / 2,
+		0,
+		game.zone_name_w, game.zone_name_h,
+		game.zone_name_tw, game.zone_name_th
+	)
+
 	-- Compute how much space to reserve on the side
-	self:computePadding(bx, by, bx + mm_bg[6] * scale, by + mm_bg[7] * scale)
+	self:computePadding("minimap", bx, by, bx + mm_bg[6] * scale, by + (mm_bg[7] + game.zone_name_h) * scale)
+end
+
+function _M:displayToolbar(scale, bx, by)
+	-- Toolbar icons
+	local x = 0
+
+	tb_inven[1]:toScreenFull	(x, - tb_inven[7], tb_inven[6], tb_inven[7], tb_inven[2], tb_inven[3], self.tbbuttons.inven, self.tbbuttons.inven, self.tbbuttons.inven, 1)
+	if not game.mouse:updateZone("tb_inven", bx + x * scale, by - tb_inven[7]*scale, tb_inven[6], tb_inven[7], nil, scale) then
+		game.mouse:unregisterZone("tb_inven")
+		local desc_fct = function(button, mx, my, xrel, yrel, bx, by, event) 
+			if event == "out" then self.tbbuttons.inven = 0.6 return else self.tbbuttons.inven = 1 end
+			game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, "Left mouse to show inventory")
+			if button == "left" and not xrel and not yrel and event == "button" then game.key:triggerVirtual("SHOW_INVENTORY") end
+		end
+		game.mouse:registerZone(bx + x * scale, by - tb_inven[7]*scale, tb_inven[6], tb_inven[7], desc_fct, nil, "tb_inven", true, scale)
+	end
+	x = x + tb_inven[6]
+
+	tb_quest[1]:toScreenFull	(x, - tb_quest[7], tb_quest[6], tb_quest[7], tb_quest[2], tb_quest[3], self.tbbuttons.quest, self.tbbuttons.quest, self.tbbuttons.quest, 1)
+	if not game.mouse:updateZone("tb_quest", bx + x * scale, by - tb_quest[7]*scale, tb_quest[6], tb_quest[7], nil, scale) then
+		game.mouse:unregisterZone("tb_quest")
+		local desc_fct = function(button, mx, my, xrel, yrel, bx, by, event)
+			if event == "out" then self.tbbuttons.quest = 0.6 return else self.tbbuttons.quest = 1 end
+			game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, "Left mouse to show quest log")
+			if button == "left" and not xrel and not yrel and event == "button" then game.key:triggerVirtual("SHOW_QUESTS") end
+		end
+		game.mouse:registerZone(bx + x * scale, by - tb_quest[7]*scale, tb_quest[6], tb_quest[7], desc_fct, nil, "tb_quest", true, scale)
+	end
+	x = x + tb_quest[6]
+	
+	tb_lore[1]:toScreenFull		(x, - tb_lore[7], tb_lore[6], tb_lore[7], tb_lore[2], tb_lore[3], self.tbbuttons.lore, self.tbbuttons.lore, self.tbbuttons.lore, 1)
+	if not game.mouse:updateZone("tb_lore", bx + x * scale, by - tb_lore[7]*scale, tb_lore[6], tb_lore[7], nil, scale) then
+		game.mouse:unregisterZone("tb_lore")
+		local desc_fct = function(button, mx, my, xrel, yrel, bx, by, event)
+			if event == "out" then self.tbbuttons.lore = 0.6 return else self.tbbuttons.lore = 1 end
+			game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, "Left mouse to show all known lore")
+			if button == "left" and not xrel and not yrel and event == "button" then game:registerDialog(require("mod.dialogs.ShowLore").new("Tales of Maj'Eyal Lore", game.player)) end
+		end
+		game.mouse:registerZone(bx + x * scale, by - tb_lore[7]*scale, tb_lore[6], tb_lore[7], desc_fct, nil, "tb_lore", true, scale)
+	end
+	x = x + tb_lore[6]
+	
+	tb_mainmenu[1]:toScreenFull	(x, - tb_mainmenu[7], tb_mainmenu[6], tb_mainmenu[7], tb_mainmenu[2], tb_mainmenu[3], self.tbbuttons.mainmenu, self.tbbuttons.mainmenu, self.tbbuttons.mainmenu, 1)
+	if not game.mouse:updateZone("tb_mainmenu", bx + x * scale, by - tb_mainmenu[7]*scale, tb_mainmenu[6], tb_mainmenu[7], nil, scale) then
+		game.mouse:unregisterZone("tb_mainmenu")
+		local desc_fct = function(button, mx, my, xrel, yrel, bx, by, event)
+			if event == "out" then self.tbbuttons.mainmenu = 0.6 return else self.tbbuttons.mainmenu = 1 end
+			game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, "Left mouse to show main menu")
+			if button == "left" and not xrel and not yrel and event == "button" then game.key:triggerVirtual("EXIT") end
+		end
+		game.mouse:registerZone(bx + x * scale, by - tb_mainmenu[7]*scale, tb_mainmenu[6], tb_mainmenu[7], desc_fct, nil, "tb_mainmenu", true, scale)
+	end
 end
 
 function _M:display(nb_keyframes)
@@ -1304,14 +1411,30 @@ function _M:display(nb_keyframes)
 	profile.chat:toScreen()
 	self.logdisplay:toScreen()
 
-	if game.show_npc_list then
-		self.npcs_display:toScreen()
-	else
-		self.hotkeys_display:toScreen()
-	end
+	if game.show_npc_list then self.npcs_display:toScreen() else self.hotkeys_display:toScreen() end
 
+	-- Toolbar separator
 	sep[1]:toScreenFull(0, self.map_h_stop_up, game.w, sep[7], sep[2], sep[3])
 	sep_vines[1]:toScreenFull(0, self.map_h_stop_up - 3, game.w, sep_vines[7], sep_vines[2], sep_vines[3])
+
+	local bx = game.w - (tb_inven[6] + tb_quest[6] + tb_lore[6] + tb_mainmenu[6]) * 0.7
+	local by = self.map_h_stop_up + sep[7]
+	d.glTranslate(bx, by, 0)
+	d.glScale(0.7, 0.7, 0.7)
+	self:displayToolbar(0.7, bx, by)
+	d.glScale()
+	d.glTranslate(-bx, -by, 0)
+
+	-- Display border indicators when possible
+	if self.ui_moving and self.sizes[self.ui_moving] then
+		local size = self.sizes[self.ui_moving]
+		d.glTranslate(Map.display_x, Map.display_y, 0)
+		if size.left then d.drawQuad(0, 0, 10, Map.viewport.height, 0, 200, 0, 50) end
+		if size.right then d.drawQuad(Map.viewport.width - 10, 0, 10, Map.viewport.height, 0, 200, 0, 50) end
+		if size.top then d.drawQuad(0, 0, Map.viewport.width, 10, 0, 200, 0, 50) end
+		if size.bottom then d.drawQuad(0, Map.viewport.height - 10, Map.viewport.width, 10, 0, 200, 0, 50) end
+		d.glTranslate(-Map.display_x, -Map.display_y, -0)
+	end
 end
 
 function _M:setupMouse(mouse)
