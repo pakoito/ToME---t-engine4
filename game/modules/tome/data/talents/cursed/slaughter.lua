@@ -133,13 +133,14 @@ newTalent{
 	require = cursed_str_req3,
 	points = 5,
 	random_ego = "attack",
-	cooldown = 20,
-	hate = 8,
+	cooldown = 15,
+	hate = 5,
 	range = function(self, t) return 3 + self:getTalentLevelRaw(t) end,
 	tactical = { CLOSEIN = 2 },
 	requires_target = true,
 	getDamageMultiplier = function(self, t, hate)
-		return self:combatTalentIntervalDamage(t, "str", 0.8, 1.7, 0.4) * getHateMultiplier(self, 0.5, 1, false, hate)
+		return 0.7 * getHateMultiplier(self, 0.5, 1, false, hate)
+		--return self:combatTalentIntervalDamage(t, "str", 0.8, 1.7, 0.4) * getHateMultiplier(self, 0.5, 1, false, hate)
 	end,
 	getMaxAttackCount = function(self, t)
 		return 1 + self:getTalentLevelRaw(t)

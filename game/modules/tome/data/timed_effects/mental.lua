@@ -1041,7 +1041,7 @@ newEffect{
 newEffect{
 	name = "TORMENTED", image = "effects/tormented.png",
 	desc = "Tormented",
-	long_desc = function(self, eff) return ("The target's mind is being tormented, causing %d apparitions to manifest and attack the target, inflicting %d mind damage each before disappearing."):format(eff.tormentorCount, eff.tormentorDamage) end,
+	long_desc = function(self, eff) return ("The target's mind is being tormented, causing %d apparitions to manifest and attack the target, inflicting %d mind damage each before disappearing."):format(eff.count, eff.damage) end,
 	type = "mental",
 	subtype = { fear=true },
 	status = "detrimental",
@@ -1124,9 +1124,9 @@ newEffect{
 }
 
 newEffect{
-	name = "PANICKED", image = "talents/panicked.png",
+	name = "PANICKED", image = "talents/panic.png",
 	desc = "Panicked",
-	long_desc = function(self, eff) return ("The target has been panicked by %s, causing them to have a %d%% chance of fleeing in terror instead of acting."):format(eff.chance) end,
+	long_desc = function(self, eff) return ("The target has been panicked by %s, causing them to have a %d%% chance of fleeing in terror instead of acting."):format(eff.source.name, eff.chance) end,
 	type = "mental",
 	subtype = { fear=true },
 	status = "detrimental",
@@ -1141,26 +1141,40 @@ newEffect{
 	end,
 	do_act = function(self, eff)
 		if not self:enoughEnergy() then return nil end
-		if eff.source.dead then return nil end
+		if eff.source.dead then return true end
 
 		local distance = core.fov.distance(self.x, self.y, eff.source.x, eff.source.y)
 		if distance <= eff.range then
 			-- in range
 			if not self:attr("never_move") and rng.percent(eff.chance) then
-				local source = eff.source
-				local moveX, moveY = self.x + self.x - source.x, self.y + self.y - source.y
-
-				if not self:moveDirection(moveX, moveY, true) then
-					if old_x ~= self.x or old_y ~= self.y then
-						if not self.did_energy then
-							self:useEnergy()
+				local sourceX, sourceY = eff.source.x, eff.source.y
+				
+				local bestX, bestY
+				local bestDistance = 0
+				local start = rng.range(0, 8)
+				for i = start, start + 8 do
+					local x = self.x + (i % 3) - 1
+					local y = self.y + math.floor((i % 9) / 3) - 1
+					
+					if x ~= self.x or y ~= self.y then
+						local distance = core.fov.distance(x, y, sourceX, sourceY)
+						if distance > bestDistance
+								and game.level.map:isBound(x, y)
+								and not game.level.map:checkAllEntities(x, y, "block_move", self)
+								and not game.level.map(x, y, Map.ACTOR) then
+							bestDistance = distance
+							bestX = x
+							bestY = y
 						end
 					end
+				end
+				
+				if bestX then
+					self:move(bestX, bestY, false)
+					game.logPlayer(self, "#F53CBE#You panic and flee from %s.", eff.source.name)
 				else
-					game.logSeen(self, "#F53CBE#%s panics and tries to move away from %s.", self.name:capitalize(), eff.source.name)
-					if not self.did_energy then
-						self:useEnergy()
-					end
+					game.logSeen(self, "#F53CBE#%s panics and tries to flee from %s.", self.name:capitalize(), eff.source.name)
+					self:useEnergy(game.energy_to_act * self:combatMovementSpeed(bestX, bestY))
 				end
 			end
 		end

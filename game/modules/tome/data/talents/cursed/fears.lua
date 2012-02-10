@@ -232,8 +232,12 @@ newTalent{
 			function(px, py)
 				local actor = game.level.map(px, py, engine.Map.ACTOR)
 				if actor and self:reactionToward(actor) < 0 and actor ~= self then
-					if actor:checkHit(self:combatMindpower(), actor:combatMentalResist(), 0, 95) then
+					if not actor:canBe("fear") then
+						game.logSeen(actor, "#F53CBE#%s ignores the panic!", actor.name:capitalize())
+					elseif actor:checkHit(self:combatMindpower(), actor:combatMentalResist(), 0, 95) then
 						actor:setEffect(actor.EFF_PANICKED, duration, {source=self,range=10,chance=chance})
+					else
+						game.logSeen(actor, "#F53CBE#%s resists the panic!", actor.name:capitalize())
 					end
 				end
 			end,
