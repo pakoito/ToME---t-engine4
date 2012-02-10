@@ -58,6 +58,7 @@ return {
 			},
 			actor = {
 				class = "engine.generator.actor.Random",
+				filters = {{type="elemental", subtype="temporal",}},
 				nb_npc = {15, 25},
 			},
 		} },
@@ -70,6 +71,7 @@ return {
 			},
 			actor = {
 				class = "engine.generator.actor.Random",
+				filters = {{type="horror", subtype="temporal",}},
 				nb_npc = {3, 3},
 			},
 		} },
@@ -90,6 +92,7 @@ return {
 			},
 			actor = {
 				class = "engine.generator.actor.Random",
+				filters = {{type="horror", subtype="temporal",}},
 				nb_npc = {15, 25},
 			},
 		} },

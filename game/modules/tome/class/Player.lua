@@ -162,7 +162,7 @@ end
 
 function _M:describeFloor(x, y)
 	-- Autopickup money
-	if self:getInven(self.INVEN_INVEN) then
+	if self:getInven(self.INVEN_INVEN) and not self.no_inventory_access then
 		local i, nb = 1, 0
 		local obj = game.level.map:getObject(x, y, i)
 		while obj do
@@ -543,9 +543,6 @@ end
 --- Tries to get a target from the user
 function _M:getTarget(typ)
 	if self:attr("encased_in_ice") then
-		if type(typ) ~= "table" then
-			return self.x, self.y, self
-		end
 		local orig_range = typ.range
 		typ.range = 0
 		local x, y, act = game:targetGetForPlayer(typ)

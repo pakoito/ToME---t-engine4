@@ -32,8 +32,8 @@ newTalent{
 	require = cuns_req1,
 	mode = "passive",
 	points = 5,
-	getDefense = function(self, t) return self:getTalentLevel(t) * 1.5 end,
-	getMaximum = function(self, t) return (4 + (self:getTalentLevel(t) * self:getCun(60)) / 6) end,
+	getDefense = function(self, t) return (4 + self:getCun(10)) end,
+	getMaximum = function(self, t) return t.getDefense(self, t) * math.ceil(self:getTalentLevel(t)) end,
 	do_tact_update = function (self, t)
 		local nb_foes = 0
 		local act
@@ -56,7 +56,7 @@ newTalent{
 		local defense = t.getDefense(self, t)
 		local maximum = t.getMaximum(self, t)
 		return ([[Your defense is increased by %d for every adjacent visible foe up to a maximum of +%d defense.
-		The maximum defense increase will scale with the cunning stat.]]):format(defense, maximum)
+		The defense increase per enemy and maximum defense bonus will scale with the cunning stat.]]):format(defense, maximum)
 	end,
 }
 

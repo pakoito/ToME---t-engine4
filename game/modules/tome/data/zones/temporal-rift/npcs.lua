@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 load("/data/general/npcs/telugoroth.lua", rarity(0))
-load("/data/general/npcs/horror.lua", function(e) if e.rarity then e.horror_rarity, e.rarity = e.rarity, nil end end)
+load("/data/general/npcs/horror_temporal.lua", rarity(0))
 
 local Talents = require("engine.interface.ActorTalents")
 
@@ -136,7 +136,7 @@ local twin_take_hit = function(self, value, src)
 	return value
 end
 
-newEntity{ base="BASE_NPC_HORROR", define_as = "CHRONOLITH_TWIN",
+newEntity{ base="BASE_NPC_HORROR_TEMPORAL", define_as = "CHRONOLITH_TWIN",
 	name = "Chronolith Twin", color=colors.VIOLET, unique = true,
 	subtype = "temporal",
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/horror_temporal_cronolith_twin.png", display_h=2, display_y=-1}}},
@@ -185,7 +185,7 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "CHRONOLITH_TWIN",
 	end,
 }
 
-newEntity{ base="BASE_NPC_HORROR", define_as = "CHRONOLITH_CLONE",
+newEntity{ base="BASE_NPC_HORROR_TEMPORAL", define_as = "CHRONOLITH_CLONE",
 	name = "Chronolith Clone", color=colors.VIOLET, unique = true,
 	subtype = "temporal",
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/horror_temporal_cronolith_clone.png", display_h=2, display_y=-1}}},

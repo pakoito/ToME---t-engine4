@@ -30,9 +30,9 @@ newEntity{
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
 
-	stats = { str=22, dex=20, wil=15, con=15 },
-	combat_armor = 0, combat_def = 0,
-	combat = { dam=5, atk=15, apr=7, dammod={str=0.6} },
+	stats = { str=02, dex=20, wil=20, mag=20, con=20, cun=20 },
+	combat_armor = 5, combat_def = 10,
+	combat = { dam=5, atk=10, apr=5, dammod={str=0.6} },
 	infravision = 10,
 	max_life = resolvers.rngavg(10,20),
 	rank = 2,
@@ -45,7 +45,7 @@ newEntity{
 newEntity{ base = "BASE_NPC_HORROR",
 	name = "worm that walks", color=colors.SANDY_BROWN,
 	desc = [[A bulging rotten robe seems to tear at the seams, with masses of bloated worms spilling from out and around the moving form.  Two arm-like appendages, each made up of overlapping mucous-drenched maggots, grasp tightly around the handles of bile-coated waraxes.
-	Each swing drips pestulant fluid before it, and each droplet writhes and wriggles in the air before splashing against the ground.]],
+Each swing drips pestulant fluid before it, and each droplet writhes and wriggles in the air before splashing against the ground.]],
 	level_range = {25, nil}, exp_worth = 1,
 	rarity = 5,
 	max_life = resolvers.rngavg(150,170),
@@ -63,17 +63,22 @@ newEntity{ base = "BASE_NPC_HORROR",
 	stun_immune = 1,
 	blind_immune = 1,
 	disease_immune = 1,
+	
+	combat_spellspeed = 1.3,
+	combat_spellpower = resolvers.levelup(10, 1, 1),
+	
 
 	resists = { [DamageType.PHYSICAL] = 50, [DamageType.ACID] = 100, [DamageType.BLIGHT] = 100, [DamageType.FIRE] = -50},
+	inc_damage = { [DamageType.BLIGHT] = 20, },
 	damage_affinity = { [DamageType.BLIGHT] = 50 },
 	no_auto_resists = true,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.drops{chance=20, nb=1, {} },
 	resolvers.equip{
-		{type="weapon", subtype="waraxe", autoreq=true},
-		{type="weapon", subtype="waraxe", autoreq=true},
-		{type="armor", subtype="robe", autoreq=true}
+		{type="weapon", subtype="waraxe", ego_chance = 100, autoreq=true},
+		{type="weapon", subtype="waraxe", ego_chance = 100, autoreq=true},
+		{type="armor", subtype="robe", ego_chance = 100, autoreq=true}
 	},
 
 	talent_cd_reduction = {[Talents.T_BLINDSIDE]=4},
@@ -114,7 +119,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	rarity = 1,
 	rank = 2,
 	size_category = 4,
-	autolevel = "caster",
+	autolevel = "wildcaster",
 	combat_armor = 1, combat_def = 0,
 	combat = {dam=resolvers.levelup(resolvers.mbonus(25, 15), 1, 1.1), apr=0, atk=resolvers.mbonus(30, 15), dammod={mag=0.6}},
 
@@ -152,8 +157,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	rank = 3,
 	max_life = resolvers.rngavg(150,170),
 	life_rating = 16,
-	autolevel = "caster",
-	stats = { str=15, dex=20, mag=20, wil=20, con=15 },
+	autolevel = "spider",
 	combat_armor = 1, combat_def = 30,
 	combat = { dam=resolvers.levelup(20, 1, 1.1), atk=20, apr=50, dammod={mag=1}, damtype=DamageType.DARKSTUN},
 
@@ -165,9 +169,9 @@ newEntity{ base = "BASE_NPC_HORROR",
 	can_pass = {pass_wall=20},
 	resists = {all = 35, [DamageType.LIGHT] = -50, [DamageType.DARKNESS] = 100},
 
-	blind_immune = 1,
-	see_invisible = 80,
-	no_breath = 1,
+	negative_status_effect_immune = 1,
+	combat_spellpower = resolvers.levelup(30, 1, 2),
+	combat_mindpower = resolvers.levelup(30, 1, 2),
 
 	resolvers.talents{
 		[Talents.T_STEALTH]={base=5, every=12, max=8},
@@ -397,7 +401,7 @@ newEntity{ base = "BASE_NPC_ELDRICTH_EYE",
 		[Talents.T_MIND_DISRUPTION]=3,
 	},
 }
-
+-- TODO: Make Luminous and Radiant Horrors cooler
 newEntity{ base = "BASE_NPC_HORROR",
 	name = "luminous horror", color=colors.YELLOW,
 	desc ="A lanky humanoid shape composed of yellow light.",
@@ -406,7 +410,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	autolevel = "caster",
 	combat_armor = 1, combat_def = 10,
 	combat = { dam=5, atk=15, apr=20, dammod={wil=0.6}, damtype=DamageType.LIGHT},
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1.5, },
 	lite = 1,
 
 	resists = {all = 35, [DamageType.DARKNESS] = -50, [DamageType.LIGHT] = 100, [DamageType.FIRE] = 100},
@@ -483,13 +487,13 @@ newEntity{ base = "BASE_NPC_HORROR",
 	rank = 2,
 	movement_speed = 0.8,
 	size_category = 2,
-	autolevel = "ghoul",
+	autolevel = "zerker",
 	max_life = resolvers.rngavg(80, 100),
 	life_rating = 14,
 	life_regen = 4,
 	combat_armor = 16, combat_def = 1,
 	combat = { dam=resolvers.levelup(resolvers.rngavg(25,40), 1, 0.6), atk=resolvers.rngavg(25,50), apr=25, dammod={str=1.1}, physcrit = 10 },
-	ai_state = { talent_in=2, },
+	ai_state = { talent_in=1.5, },
 
 	resolvers.talents{
 		[Talents.T_BLOODBATH]={base=1, every=5, max=7},
@@ -504,162 +508,6 @@ newEntity{ base = "BASE_NPC_HORROR",
 	},
 }
 
--- temporal horrors
-newEntity{ base = "BASE_NPC_HORROR",
-	subtype = "temporal",
-	dredge = 1,
-	name = "dredgling", color=colors.TAN,
-	desc = "A small pink-skinned humanoid with large bulbous eyes.",
-	level_range = {10, nil}, exp_worth = 1,
-	rarity = 1,
-	rank = 2,
-	size_category = 2,
-	autolevel = "warriormage",
-	max_life = resolvers.rngavg(50, 80),
-	combat_armor = 1, combat_def = 10,
-	combat = { dam=resolvers.levelup(resolvers.rngavg(15,20), 1, 1.1), atk=resolvers.rngavg(5,15), apr=5, dammod={str=1} },
-
-	resists = { [DamageType.TEMPORAL] = 25},
-
-	resolvers.talents{
-		[Talents.T_DUST_TO_DUST]={base=1, every=7, max=5},
-	},
-
-	resolvers.sustains_at_birth(),
-}
-
-newEntity{ base = "BASE_NPC_HORROR",
-	subtype = "temporal",
-	dredge = 1,
-	name = "dredge", color=colors.PINK,
-	desc = "A hulking pink-skinned creature with long arms as thick as tree trunks.  It drags its knuckles on the ground as it lumbers toward you.",
-	level_range = {15, nil}, exp_worth = 1,
-	rarity = 2,
-	rank = 2,
-	size_category = 4,
-	autolevel = "warrior",
-	max_life = resolvers.rngavg(120, 150),
-	life_rating = 16,
-	global_speed_base = 0.7,
-	combat_armor = 1, combat_def = 0,
-	combat = { dam=resolvers.levelup(resolvers.rngavg(25,150), 1, 1.2), atk=resolvers.rngavg(25,130), apr=1, dammod={str=1.1} },
-
-	resists = {all = 10, [DamageType.TEMPORAL] = 25, [DamageType.PHYSICAL] = 25},
-
-	resolvers.talents{
-		[Talents.T_STUN]={base=3, every=7, max=7},
-		[Talents.T_SPEED_SAP]={base=2, every=7, max=6},
-		[Talents.T_CLINCH]={base=2, every=6, max=8},
-		[Talents.T_CRUSHING_HOLD]={base=2, every=6, max=8},
-	},
-
-	resolvers.sustains_at_birth(),
-}
-
-newEntity{ base = "BASE_NPC_HORROR",
-	subtype = "temporal",
-	dredge = 1,
-	name = "dredge captain", color=colors.SALMON,
-	desc = "A thin pink-skinned creature with long spindly arms.  Half its body is old and wrinkly, and the other half appears quite young.",
-	level_range = {20, nil}, exp_worth = 1,
-	rarity = 5,
-	rank = 3,
-	size_category = 3,
-	max_life = resolvers.rngavg(60,80),
-	autolevel = "warriormage",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },
-	combat_armor = 1, combat_def = 0,
-
-	resists = {all = 10, [DamageType.TEMPORAL] = 50},
-
-	make_escort = {
-		{type="horror", subtype="temporal", name="dredge", number=3, no_subescort=true},
-	},
-
-	resolvers.inscriptions(1, {"shielding rune"}),
-	resolvers.inscriptions(1, "infusion"),
-
-	resolvers.talents{
-		[Talents.T_DREDGE_FRENZY]={base=5, every=7, max=9},
-		[Talents.T_SPEED_SAP]={base=3, every=7, max=9},
-	},
-
-	resolvers.sustains_at_birth(),
-}
-
-newEntity{ base = "BASE_NPC_HORROR",
-	subtype = "temporal",
-	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/horror_temporal_temporal_stalker.png", display_h=2, display_y=-1}}},
-	name = "temporal stalker", color=colors.STEEL_BLUE,
-	desc = "A slender metallic monstrosity with long claws in place of fingers, and razor-sharp teeth.",
-	level_range = {20, nil}, exp_worth = 1,
-	rarity = 3,
-	size_category = 3,
-	max_life = resolvers.rngavg(100,180),
-	life_rating = 12,
-	global_speed_base = 1.2,
-	autolevel = "rogue",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
-	combat_armor = 10, combat_def = 10,
-	combat = { dam=resolvers.levelup(resolvers.rngavg(25,100), 1, 1.2), atk=resolvers.rngavg(25,100), apr=25, dammod={dex=1.1} },
-
-	resists = {all = 10, [DamageType.TEMPORAL] = 50},
-
-	resolvers.talents{
-		[Talents.T_PERFECT_AIM]={base=3, every=7, max=5},
-		[Talents.T_SPIN_FATE]={base=5, every=7, max=8},
-		[Talents.T_STEALTH]={base=3, every=7, max=5},
-		[Talents.T_SHADOWSTRIKE]={base=3, every=7, max=5},
-		[Talents.T_UNSEEN_ACTIONS]={base=3, every=7, max=5},
-	},
-
-	resolvers.inscriptions(1, "rune"),
-	resolvers.inscriptions(1, "infusion"),
-
-	resolvers.sustains_at_birth(),
-}
-
-newEntity{ base = "BASE_NPC_HORROR",
-	subtype = "temporal",
-	name = "void horror", color=colors.GREY,
-	desc = "It looks like a hole in spacetime, but you get the impression it's somehow more than that.",
-	level_range = {20, nil}, exp_worth = 1,
-	rarity = 4,
-	rank = 2,
-	size_category = 2,
-	max_life = resolvers.rngavg(80, 120),
-	life_rating = 10,
-	autolevel = "summoner",
-	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_snake" },
-	combat_armor = 1, combat_def = 10,
-	combat = { dam=resolvers.levelup(resolvers.mbonus(40, 15), 1, 1.2), atk=15, apr=15, dammod={wil=0.8}, damtype=DamageType.TEMPORAL },
-	on_melee_hit = { [DamageType.TEMPORAL] = resolvers.mbonus(20, 10), },
-
-	stun_immune = 1,
-	confusion_immune = 1,
-	silence_immune = 1,
-
-	resists = {[DamageType.TEMPORAL] = 50},
-
-	resolvers.talents{
-		[Talents.T_ENERGY_ABSORPTION]={base=3, every=7, max=5},
-		[Talents.T_ENERGY_DECOMPOSITION]={base=3, every=7, max=5},
-		[Talents.T_ENTROPIC_FIELD]={base=3, every=7, max=5},
-		[Talents.T_ECHOES_FROM_THE_VOID]={base=3, every=7, max=5},
-		[Talents.T_VOID_SHARDS]={base=2, every=7, max=5},
-	},
-	-- Random Anomaly on Death
-	on_die = function(self, who)
-		local ts = {}
-		for id, t in pairs(self.talents_def) do
-			if t.type[1] == "chronomancy/anomalies" then ts[#ts+1] = id end
-		end
-		self:forceUseTalent(rng.table(ts), {ignore_energy=true})
-		game.logSeen(self, "%s has collapsed in upon itself.", self.name:capitalize())
-	end,
-
-	resolvers.sustains_at_birth(),
-}
 ------------------------------------------------------------------------
 -- Uniques
 ------------------------------------------------------------------------

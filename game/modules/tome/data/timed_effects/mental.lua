@@ -1357,7 +1357,7 @@ newEffect{
 newEffect{
 	name = "WAKING_NIGHTMARE", image = "talents/waking_nightmare.png",
 	desc = "Waking Nightmare",
-	long_desc = function(self, eff) return ("The target is lost in a waking nightmare that deals %0.2f darkness damage each turn and has a %d%% chance to cause a random effect detrimental."):format(eff.dam, eff.chance) end,
+	long_desc = function(self, eff) return ("The target is lost in a waking nightmare that deals %0.2f darkness damage each turn and has a %d%% chance to cause a random detrimental effect."):format(eff.dam, eff.chance) end,
 	type = "mental",
 	subtype = { madness=true, darkness=true },
 	status = "detrimental",
@@ -1400,7 +1400,7 @@ newEffect{
 	on_timeout = function(self, eff)
 		if eff.src.dead or not game.level:hasEntity(eff.src) then eff.dur = 0 return true end
 		if rng.percent(eff.chance or 0) then
-			if self:checkHit(eff.src:combatSpellpower(), self:combatSpellResist(), 0, 95, 5) then
+			if self:checkHit(eff.src:combatSpellpower(), self:combatMentalResist(), 0, 95, 5) then
 				local t = eff.src:getTalentFromId(eff.src.T_INNER_DEMONS)
 				t.summon_inner_demons(eff.src, self, t)
 			else

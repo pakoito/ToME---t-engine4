@@ -207,7 +207,7 @@ newTalent{
 
 		m.energy.value = 0
 		m.player = nil
-		m.max_life = m.max_life / 2
+		m.max_life = m.max_life / 4
 		m.life = util.bound(m.life, 0, m.max_life)
 		m.inc_damage.all = (m.inc_damage.all or 0) - 50
 		m.forceLevelup = function() end
