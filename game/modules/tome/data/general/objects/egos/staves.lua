@@ -275,13 +275,14 @@ newEntity{
 	use_talent = { id = Talents.T_DISPLACEMENT_SHIELD, level = 4, power = 80 },
 }
 
+-- TODO: Make into an artifact effect and remove
 newEntity{
 	power_source = {arcane=true},
 	name = " of channeling", suffix=true, instant_resolve=true,
 	keywords = {channeling=true},
 	level_range = {30, 50},
 	greater_ego = 1,
-	rarity = 18,
+	rarity = 38,
 	cost = 45,
 	wielder = {
 		combat_spellpower = resolvers.mbonus_material(12, 3),

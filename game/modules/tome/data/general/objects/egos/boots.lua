@@ -357,14 +357,14 @@ newEntity{
 		},
 	},
 }
-
+-- TODO: Make into an artifact effect and remove
 newEntity{
 	power_source = {arcane=true},
 	name = " of spellbinding", suffix=true, instant_resolve=true,
 	keywords = {spellbinding=true},
 	level_range = {10, 50},
 	greater_ego = 1,
-	rarity = 15,
+	rarity = 35,
 	cost = 30,
 	max_power = 80, power_regen = 1,
 	use_talent = { id = Talents.T_METAFLOW, level = 2, power = 80 },

@@ -34,7 +34,8 @@ newEntity{ define_as = "SANDWORM_TUNNELER",
 	name = "sandworm burrower",
 	display = "w", color=colors.GREEN,
 	desc = [[This sandworm seems to not care about your presence at all and simply continues digging its way through the sand.
-	Maybe following it is the only way to move around here...]],
+	
+Maybe following it is the only way to move around here...]],
 	level_range = {12, 50}, exp_worth = 0,
 	max_life = 10000,
 	faction = "sandworm-burrowers",

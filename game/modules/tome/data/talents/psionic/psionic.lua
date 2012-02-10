@@ -28,10 +28,18 @@ newTalentType{ allow_random=true, type="psionic/finer-energy-manipulations", min
 newTalentType{ allow_random=true, type="psionic/mental-discipline", generic = true, name = "mental discipline", description = "Increase mental capacity, endurance, and flexibility." }
 newTalentType{ type="psionic/other", name = "other", description = "Various psionic talents." }
 
+-- Advanced Talent Trees
 newTalentType{ allow_random=true, type="psionic/grip", name = "grip", min_lev = 20, description = "Augment your telekinetic grip." }
 newTalentType{ allow_random=true, type="psionic/psi-archery", name = "psi-archery", min_lev = 10, description = "Use your telekinetic powers to wield bows with deadly effectiveness." }
 newTalentType{ allow_random=true, type="psionic/greater-psi-fighting", name = "greater psi-fighting", description = "Elevate psi-fighting prowess to epic levels." }
 newTalentType{ allow_random=true, type="psionic/brainstorm", name = "brainstorm", description = "Focus your telekinetic powers in ways undreamed of by most mindslayers." }
+
+-- Secret Project...
+-- Solipsist Talent Trees 
+newTalentType{ allow_random=true, type="psionic/psychic-assault", name = "psychic assault", description = "Directly attack your opponents minds." }
+-- Generic Solipsist Trees
+
+
 -- Level 0 wil tree requirements:
 psi_absorb = {
 	stat = { wil=function(level) return 12 + (level-1) * 8 end },
@@ -157,3 +165,6 @@ load("/data/talents/psionic/other.lua")
 
 load("/data/talents/psionic/psi-archery.lua")
 load("/data/talents/psionic/grip.lua")
+
+-- Solipsist
+load("/data/talents/psionic/psychic-assault.lua")

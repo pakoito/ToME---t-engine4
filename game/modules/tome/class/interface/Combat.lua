@@ -1070,6 +1070,10 @@ function _M:physicalCrit(dam, weapon, target, atk, def)
 	if target:hasHeavyArmor() and target:knowTalent(target.T_ARMOUR_TRAINING) then
 		chance = chance - target:getTalentLevel(target.T_ARMOUR_TRAINING) * 1.9
 	end
+	
+	if target:attr("combat_critreduction") then
+		chance = chance - target:attr("combat_critreduction")
+	end
 
 	if target:hasEffect(target.EFF_DISMAYED) then
 		chance = 100

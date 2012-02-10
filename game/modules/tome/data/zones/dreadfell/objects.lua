@@ -42,3 +42,27 @@ newEntity{ base = "BASE_LORE",
 	rarity = false,
 	encumberance = 0,
 }
+
+newEntity{ base = "BASE_LORE",
+	define_as = "BORFAST_LETTER",
+	name = "a letter from the Master", lore="dreadfell-borfast-letter",
+	desc = [[A letter written in a bold, commanding script]],
+	rarity = false,
+	encumberance = 0,
+}
+
+newEntity{ base = "BASE_LORE",
+	define_as = "ALETTA_LETTER",
+	name = "a letter from the Master", lore="dreadfell-aletta-letter",
+	desc = [[A letter written in a bold, commanding script]],
+	rarity = false,
+	encumberance = 0,
+}
+
+newEntity{ base = "BASE_LORE",
+	define_as = "FILIO_LETTER",
+	name = "a letter from the Master", lore="dreadfell-filio-letter",
+	desc = [[A letter written in a bold, commanding script]],
+	rarity = false,
+	encumberance = 0,
+}

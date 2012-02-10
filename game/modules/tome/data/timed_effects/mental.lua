@@ -2122,3 +2122,23 @@ newEffect{
 		self:removeTemporaryValue("wild_summon", eff.tid)
 	end,
 }
+
+newEffect{
+	name = "LOBOTOMIZED", image = "talents/psychic_lobotomy.png",
+	desc = "Lobotomized",
+	long_desc = function(self, eff) return ("The target's mental faculties have been impaired, reducing it's cunning by %d and preventing it from making tactical decisions."):format(eff.power) end,
+	type = "mental",
+	subtype = { confusion=true },
+	status = "detrimental",
+	on_gain = function(self, err) return "#Target# higher mental functions have been imparied.", "+Lobotomized" end,
+	on_lose = function(self, err) return "#Target#'s regains it's senses.", "-Lobotomized" end,
+	parameters = { },
+	activate = function(self, eff)
+		eff.cid = self:addTemporaryValue("inc_stats", {[Stats.STAT_CUN]=-eff.power})
+		if self.ai then self.ai="dumb_talented_simple" end
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("inc_stats", eff.cid)
+		if self.ai then self.ai=eff.ai end
+	end,
+}

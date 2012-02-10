@@ -129,3 +129,46 @@ newLore{
 	image = "the_master_slain.png",
 	lore = [[A powerful staff is grabbed from the Master's dead hands.]],
 }
+
+newLore{
+	id = "dreadfell-borfast-letter",
+	category = "dreadfell",
+	name = "a letter to Borfast from the Master",
+	lore = [[Ah, my dear Borfast, welcome to your glorious undeath! Your armour a cage, your hopes despair, your axe enslaved to my will, your soul mine to feast upon. How does it feel? Rather lovely I like to imagine! You were a valiant opponent, and though you were little threat to me I do like to honour you with this special treatment. And you do like honour, don't you? I know you wished to honour your people by defeating me and destroying my tower, but I'm sure you realise now that it was a rather vain endeavour.
+
+I apologise for what happened to that lovely suit of plate. I know it got a little... worn... during the treatment. But I'm afraid I really did need to find out the locations of your companion, and certain pressures had to be applied. You weren't very talkative, now were you? But I soon made you sing, oh yes. Of course, I could have just used a little divination magic to find out what I wanted, but I do so enjoy a good torture... And my, how joyous your screams were whenever the acid splashed against your beard! Hoh, we did chortle, did we not? But no matter, I've had my best skeletal smiths work on fixing your armour, fit to be worn by my new champion.
+
+I hope you enjoy your new work. Approach it with gusto, that sort of thing. I know in life you always dreamed of being a mighty hero of legend. But, well, what can be more glorious than this? You will live forever as my servant, destined to defend my throne for all time! You will be the envy of all the lesser ghouls that shamble about my halls. Well, until you get slain by some dumb intruding adventurer, of course... But that's the beauty of you heroes - one comes in, makes a mess, and then I get a new plaything to toy with. I wonder who shall replace you, eh?
+
+Until then, do enjoy the work, try to keep the place clean, and remember - I own you forever.
+
+- The Master]],
+}
+
+newLore{
+	id = "dreadfell-aletta-letter",
+	category = "dreadfell",
+	name = "a letter to Aletta from the Master",
+	lore = [[Ah, sweet Aletta! How rich your blood tasted on my lips! I know it's not quite what you were expecting from the next step in our relationship, but aren't surprises the true joy of any romance?
+
+I don't blame you for falling for me, you know, even to the point of betraying all your companions just for me. Women have always had a weakness for my brooding personality and sparkling wit. Even in life I was quite the charmer, and death only improves things, I assure you. I really do have the reputation as a heartbreaker, in more ways than one... Your heart shall now sit in a special place, next to the rest of the offal in my pits.
+
+Thank you for telling me of Borfast's weaknesses - it shall make overcoming the dwarven grunt all the simpler. Your rogue friend remains more elusive, but he will be found and destroyed. You see I have a sort of persistent bloody-mindedness about this sort of thing. There is not a cockroach in this tower that does not obey my every whim and will, and I shall see to it that it remains that way.
+
+You must feel a little betrayed of course. I promised you power beyond your imaginings, and instead I drained your blood, fed your flesh to my servants, and enthralled your soul to my bidding. Well, we all struggle to manage expectations sometimes, eh? At least be glad I let your tortured essence roam the cold fastness of my fortress, haunting anyone foolish enough to invade. And some power I will impart to you, and it is indeed beyond your imaginings, for your mind could never reach the dark places I can. But open your eyes now, for such dark places shall be with you till the end of time... Welcome, indeed, to the dark place of my heart.
+
+- The Master]],
+}
+
+newLore{
+	id = "dreadfell-filio-letter",
+	category = "dreadfell",
+	name = "a letter to Filio from the Master",
+	lore = [[Oh Filio, what a fun game we have had of cat and mouse! Well, perhaps to you it was a life and death struggle, but for me this past three weeks of patiently hunting you through my halls has been the most entertaining of past-times. I have enjoyed extending the game so, letting you escape my clutches when I felt it most prudent, watching as you got ever more desperate. Alas, you have now degraded too much, and it was simply too embarrassing watching you eat your own faeces to survive. I had to put an end to it - I'm sure you understand.
+
+But ah, it's not truly an end, for you get to experience the wonder of undead enslavement! Is it not most exciting? Do your bones not quiver with delight? It is just your bones now, since I have a certain fondness for skeletal servants, but I have been nice enough to pad your heels with leather so you can still sneak about quietly. How you did love to sneak! Now you may spend an eternity doing so, ensuring any future trespassers get quite the surprise wandering through my great keep.
+
+I have let you keep your little sling, since I know you like to play with it. Such a quaint weapon... But this staff I found in your possession - my, what a treasure you have brought me! I do not know whence you stole this artifact, but you clearly were completely unaware of its value or power. It has a history beyond your very comprehension, and in my hands it shall change the future! Thank you kindly, my servant; already you have served your Master well. I'm sure we shall enjoy a great friendship over the many years to come. Well, not friendship exactly - it more involves eternal agony on your part, and a rise to ultimate power and majesty for me. Such is the fate of the weak and the strong, a lesson you have already learned well. What a great teacher I make...
+
+- The Master]],
+}

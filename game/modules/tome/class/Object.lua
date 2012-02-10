@@ -88,7 +88,9 @@ function _M:use(who, typ, inven, item)
 		local ret = self:useObject(who, inven, item)
 		if ret.used then
 			if self.use_sound then game:playSoundNear(who, self.use_sound) end
-			who:useEnergy(game.energy_to_act * (inven.use_speed or 1))
+			if not self.use_no_energy then
+				who:useEnergy(game.energy_to_act * (inven.use_speed or 1))
+			end
 		end
 		return ret
 	end
@@ -711,6 +713,7 @@ function _M:getTextualDesc(compare_with)
 		end
 
 		compare_fields(w, compare_with, field, "combat_critical_power", "%+.2f%%", "Critical mult.: ")
+		compare_fields(w, compare_with, field, "combat_critreduction", "%-d%%", "Reduces opponents crit chance: ")
 
 		compare_fields(w, compare_with, field, "disarm_bonus", "%+d", "Trap disarming bonus: ")
 		compare_fields(w, compare_with, field, "inc_stealth", "%+d", "Stealth bonus: ")
@@ -784,6 +787,10 @@ function _M:getTextualDesc(compare_with)
 
 		if w.undead then
 			desc:add("The wearer is treated as an undead.", true)
+		end
+		
+		if w.blind_fight then
+			desc:add({"color", "YELLOW"}, "Blind-Fight:", {"color", "LAST"}, "This item allows the wearer to attack unseen targets without any penalties.", true)
 		end
 
 		if w.speaks_shertul then
