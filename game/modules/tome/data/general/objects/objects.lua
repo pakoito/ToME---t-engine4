@@ -34,6 +34,7 @@ loadIfNot("/data/general/objects/wands.lua")
 
 -- Tools
 loadIfNot("/data/general/objects/digger.lua")
+loadIfNot("/data/general/objects/misc-tools.lua")
 
 -- Jewelry stuff
 loadIfNot("/data/general/objects/jewelry.lua")

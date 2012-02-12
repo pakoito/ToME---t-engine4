@@ -48,8 +48,9 @@ newEntity{ define_as = "TROLL_PROX",
 	instakill_immune = 1,
 	move_others=true,
 
-	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, TOOL=1 },
 	resolvers.equip{ {type="weapon", subtype="greatmaul", autoreq=true}, },
+	resolvers.equip{ {type="tool", subtype="misc", defined="LUCKY_FOOT", random_art_replace={chance=70}, autoreq=true}, },
 	resolvers.drops{chance=100, nb=1, {unique=true, not_properties={"lore"}} },
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 

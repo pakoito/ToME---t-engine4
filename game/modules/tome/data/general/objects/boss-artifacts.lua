@@ -1204,3 +1204,61 @@ Hard to tell if that really helped its former owner, but it's clear that the ski
 	max_power = 8, power_regen = 1,
 	use_talent = { id = Talents.T_INERTIAL_SHOT, level=3, power = 8 },
 }
+
+newEntity{ base = "BASE_TOOL_MISC",
+	power_source = {nature=true},
+	define_as = "LUCKY_FOOT",
+	unique = true,
+	name = "Prox's Lucky Halfling Foot", color = colors.WHITE,
+	unided_name = "a mummified halfling foot",
+	desc = [[A large hairy foot, very recognizably a halfling's, is strung on a piece of thick twine. In its decomposed state it's hard to tell how long ago it parted with its owner, but from what look like teeth marks around the ankle you get the impression that it wasn't given willingly.
+It has been kept somewhat intact with layers of salt and clay, but in spite of this it's clear that nature is beginning to take its course on the dead flesh. Some say the foot of a halfling brings luck to its bearer - right now the only thing you can be sure of is it stinks.]],
+	level_range = {5, 12},
+	rarity = 200,
+	cost = 10,
+	material_level = 1,
+	metallic = false,
+	sentient = true,
+	wielder = {
+		inc_stats = { [Stats.STAT_LCK] = 5, },
+		combat_def = 5,
+		disarm_bonus = 5,
+	},
+	act = function(self)
+		self:useEnergy()
+		if self.worn_by then
+			local actor = self.worn_by
+			local grids = core.fov.circle_grids(actor.x, actor.y, 1, true)
+			local Map = require "engine.Map"
+			local is_trap = false
+			
+			for x, yy in pairs(grids) do for y, _ in pairs(yy) do
+				local trap = game.level.map(x, y, Map.TRAP)
+				if trap then
+					is_trap = true
+				end
+			end end
+			-- only one twitch per action
+			if is_trap then
+				game.logSeen(actor, "#CRIMSON#%s twitches, alerting %s that a trap is nearby.", self:getName(), actor.name:capitalize())
+				if actor == game.player then
+					game.player:runStop()
+				end
+			end
+		end
+	end,
+	on_wear = function(self, who)
+		self.worn_by = who
+		if who.descriptor and who.descriptor.race == "Halfling" then
+			local Stats = require "engine.interface.ActorStats"
+			self:specialWearAdd({"wielder","inc_stats"}, { [Stats.STAT_LCK] = -10}) -- Overcomes the +5 Bonus and adds a -5 penalty
+			self:specialWearAdd({"wielder","combat_physicalsave"}, -5)
+			self:specialWearAdd({"wielder","combat_mentalsave"}, -5)
+			self:specialWearAdd({"wielder","combat_spellsave"}, -5)
+			game.logPlayer(who, "#LIGHT_RED#You feel uneasy carrying %s.", self:getName())
+		end
+	end,
+	on_takeoff = function(self)
+		self.worn_by = nil
+	end,
+}
