@@ -18,9 +18,18 @@ static char *__BIND_PHYSFS_toDependent(dvoid *opaque, const char *name, const ch
 {
 	char *f = __PHYSFS_platformCvtToDependent((char *)opaque, name, NULL);
 
+//	printf("== %s [%s] ::: %s\n", name, opaque, f);
+	//	if ((strlen(d) > strlen(dname)) && strncmp(d+strlen(dname), dname, strlen(dname))) return;
+
 	// Forbid recursions
 	if (!strncmp(name, opaque+1, strlen(opaque+1)))
 	{
+		return NULL;
+	}
+	// Forbid recursions
+	else if (strstr(name+strlen(opaque), opaque))
+	{
+//		printf("FORBID: %s [%s] => %s\n", name, opaque, f);
 		return NULL;
 	}
 	else
@@ -129,7 +138,6 @@ static void BIND_PHYSFS_enumerateFiles(dvoid *opaque, const char *dname,
                                const char *origdir, void *callbackdata)
 {
 	char *d = __BIND_PHYSFS_toDependent((char *)opaque, dname, NULL);
-
 	if (d != NULL)
 	{
 		PHYSFS_enumerateFilesCallback(d, cb, callbackdata);
