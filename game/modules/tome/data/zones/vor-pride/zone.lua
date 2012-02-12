@@ -21,7 +21,7 @@ return {
 	name = "Vor Pride",
 	level_range = {35, 60},
 	level_scheme = "player",
-	max_level = 4,
+	max_level = 3,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	width = 64, height = 64,
@@ -81,7 +81,7 @@ return {
 				up = "FLAT_UP_WILDERNESS",
 			}, },
 		},
-		[4] = {
+		[3] = {
 			generator = { map = {
 				down = "FLAT_UP_WILDERNESS",
 			}, },

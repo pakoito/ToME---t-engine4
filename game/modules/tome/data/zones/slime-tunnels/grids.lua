@@ -64,7 +64,7 @@ newEntity{
 newEntity{ base = "SLIME_UP",
 	define_as = "UP_GRUSHNAK",
 	name = "exit to Grushnak Pride",
-	change_level = 5,
+	change_level = 6,
 	change_zone = "grushnak-pride",
 	force_down = true,
 }
