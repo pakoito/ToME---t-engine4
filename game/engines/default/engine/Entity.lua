@@ -784,5 +784,7 @@ function _M:loadList(file, no_default, res, mod, loaded)
 	setfenv(f, setmetatable(newenv, {__index=_G}))
 	f()
 
+	self:triggerHook{"Entity:loadList", file=file, no_default=no_default, res=res, mod=mod, loaded=loaded}
+
 	return res
 end

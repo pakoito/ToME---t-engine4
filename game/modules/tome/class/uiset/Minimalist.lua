@@ -956,7 +956,7 @@ function _M:handleEffect(player, eff_id, e, p, x, y, hs, bx, by, is_first, scale
 		end
 
 		self.tbuff[eff_id..":"..dur] = {eff_id, "tbuff"..eff_id, function(x, y)
-			core.display.drawQuad(x, y, hs, hs, 0, 0, 0, 255)
+			core.display.drawQuad(x+4, y+4, 32, 32, 0, 0, 0, 255)
 			e.display_entity:toScreen(self.hotkeys_display_icons.tiles, x+4, y+4, 32, 32)
 			UI:drawFrame(self.buffs_base, x, y, icon[1], icon[2], icon[3], 1)
 			if txt then
@@ -1007,7 +1007,7 @@ function _M:displayBuffs(scale, bx, by)
 						game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, desc)
 					end
 					self.pbuff[tid] = {tid, "pbuff"..tid, function(x, y)
-						core.display.drawQuad(x, y, hs, hs, 0, 0, 0, 255)
+						core.display.drawQuad(x+4, y+4, 32, 32, 0, 0, 0, 255)
 						t.display_entity:toScreen(self.hotkeys_display_icons.tiles, x+4, y+4, 32, 32)
 						UI:drawFrame(self.buffs_base, x, y, frames_colors.sustain[1], frames_colors.sustain[2], frames_colors.sustain[3], 1)
 					end, desc_fct}
