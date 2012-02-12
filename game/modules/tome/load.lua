@@ -271,6 +271,9 @@ Birther:loadDefinition("/data/birth/descriptors.lua")
 -- Stores
 Store:loadStores("/data/general/stores/basic.lua")
 
+-- Configure chat dialogs
+require("engine.dialogs.Chat").show_portraits = true
+
 -- Inventory tabs
 InventoryUI.default_tabslist = function(self)
 	local tabslist = {

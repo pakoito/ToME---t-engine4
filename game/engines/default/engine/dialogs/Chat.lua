@@ -22,8 +22,11 @@ local Dialog = require "engine.ui.Dialog"
 local VariableList = require "engine.ui.VariableList"
 local Textzone = require "engine.ui.Textzone"
 local Separator = require "engine.ui.Separator"
+local ActorFrame = require "engine.ui.ActorFrame"
 
 module(..., package.seeall, class.inherit(Dialog))
+
+show_portraits = false
 
 function _M:init(chat, id)
 	self.cur_id = id
@@ -32,19 +35,32 @@ function _M:init(chat, id)
 	self.player = chat.player
 	Dialog.init(self, self.npc.name, 500, 400)
 
+	local xoff = 0
+	if self.show_portraits then
+		xoff = 64
+	end
+
 	self:generateList()
 
-	self.c_desc = Textzone.new{width=self.iw - 10, height=1, auto_height=true, text=self.text.."\n"}
+	self.c_desc = Textzone.new{width=self.iw - 10 - xoff, height=1, auto_height=true, text=self.text.."\n"}
 
 	self:generateList()
 
-	self.c_list = VariableList.new{width=self.iw - 10, list=self.list, fct=function(item) self:use(item) end, select=function(item) self:select(item) end}
+	self.c_list = VariableList.new{width=self.iw - 10 - xoff, list=self.list, fct=function(item) self:use(item) end, select=function(item) self:select(item) end}
 
-	self:loadUI{
+	local uis = {
 		{left=0, top=0, ui=self.c_desc},
 		{left=0, bottom=0, ui=self.c_list},
 		{left=5, top=self.c_desc.h - 10, ui=Separator.new{dir="vertical", size=self.iw - 10}},
 	}
+	if self.show_portraits then
+		uis[#uis+1] = {right=0, top=0, ui=ActorFrame.new{actor=self.npc, w=64, h=64}}
+		uis[#uis+1] = {left=0, bottom=0, ui=ActorFrame.new{actor=self.player, w=64, h=64}}
+		uis[2].left = nil uis[2].right = 0
+		uis[3].top = math.max(self.c_desc.h, uis[4].ui.h) - 10
+	end
+
+	self:loadUI(uis)
 	self:setFocus(self.c_list)
 	self:setupUI(false, true)
 
