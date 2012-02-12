@@ -1099,7 +1099,7 @@ newEntity{ base = "BASE_AMULET",
 	desc = [[These opalescent orbs stare at you with deathly knowledge, undeceived by your vanities and pretences.  They have lived and died through horrors you could never imagine, and now they lie strung in black chords watching every twitch of the shadows.
 If you close your eyes a moment, you can almost imagine what dread sights they see...]],
 	level_range = {5, 12},
-	rarity = 20,
+	rarity = 200,
 	cost = 100,
 	material_level = 1,
 	metallic = false,
@@ -1118,7 +1118,7 @@ newEntity{ base = "BASE_MASSIVE_ARMOR",
 	power_source = {technique=true},
 	define_as = "BORFAST_CAGE",
 	unique = true,
-	name = "Borfast's Cage", 
+	name = "Borfast's Cage",
 	unided_name = "a suit of pitted and pocked plate-mail",
 	desc = [[Inch thick stralite plates lock together with voratun joints. The whole suit looks impenetrable, but has clearly been subjected to terrible treatment - great dents and misshaping warps, and caustic fissures bored across the surface.
 Though clearly a powerful piece, it must once have been much greater.]],
@@ -1151,7 +1151,7 @@ Though clearly a powerful piece, it must once have been much greater.]],
 
 newEntity{ base = "BASE_LEATHER_CAP", -- No armor training requirement
 	power_source = {nature=true},
-	define_as = "ALETTA_DIADEM", 
+	define_as = "ALETTA_DIADEM",
 	name = "Aletta's Diadem", unique=true, unided_name="jeweled diadem",
 	desc = [[A filigree of silver set with many small jewels, this diadem seems radiant - ethereal almost. But its touch seems to freeze your skin and brings wild thoughts to your mind. You want to drop it, throw it away, and yet you cannot resist thinking of what powers it might bring you.
 Is this temptation a weak will on your part, or some domination from the artifact itself...?]],
@@ -1161,12 +1161,12 @@ Is this temptation a weak will on your part, or some domination from the artifac
 	cost = 1000,
 	material_level = 3,
 	metallic = true,
-	wielder = { 
+	wielder = {
 		inc_stats = { [Stats.STAT_WIL] = 4, [Stats.STAT_CUN] = 4, },
 		combat_mindpower = 12,
 		combat_mindcrit = 5,
 		on_melee_hit={ [DamageType.MIND] = 12, },
-		inc_damage={ [DamageType.MIND] = 10, },	
+		inc_damage={ [DamageType.MIND] = 10, },
 	},
 	max_power = 10, power_regen = 1,
 	use_talent = { id = Talents.T_PSYCHIC_LOBOTOMY, level=3, power = 8 },
@@ -1176,7 +1176,7 @@ newEntity{ base = "BASE_SLING",
 	power_source = {technique=true},
 	define_as = "HARESKIN_SLING",
 	name = "Hare-Skin Sling", unique=true, unided_name = "hare-skin sling",
-	desc = [[This well-tended sling is made from the leather and sinews of a large hare. It feels smooth to the touch yet very durable. Some say that the skin of a hare brings luck and fortune. 
+	desc = [[This well-tended sling is made from the leather and sinews of a large hare. It feels smooth to the touch yet very durable. Some say that the skin of a hare brings luck and fortune.
 Hard to tell if that really helped its former owner, but it's clear that the skin is at least also strong and reliable..]],
 	level_range = {20, 28},
 	rarity = 200,
