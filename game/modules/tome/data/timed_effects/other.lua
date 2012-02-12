@@ -1300,7 +1300,6 @@ newEffect{
 	end,
 }
 
-
 newEffect{
 	name = "RELOADING", image = "talents/reload.png",
 	desc = "Reloading",
@@ -1317,12 +1316,12 @@ newEffect{
 	end,
 	on_timeout = function(self, eff)
 		for i = 1, eff.shots_per_turn do
-			eff.ammo.combat.shots_left = eff.ammo.combat.shots_left + 1
+			eff.ammo.combat.shots_left = util.bound(eff.ammo.combat.shots_left + 1, 0, eff.ammo.combat.capacity)
 			if eff.ammo.combat.shots_left == eff.ammo.combat.capacity then
 				game.logPlayer(self, "Your %s is full.", eff.ammo.name)
 				self:breakReloading()
 				break
-			end	
+			end
 		end
 	end,
 }
