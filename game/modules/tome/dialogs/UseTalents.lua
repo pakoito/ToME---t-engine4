@@ -100,6 +100,7 @@ end
 function _M:onDrag(item)
 	if item and item.talent then
 		local t = self.actor:getTalentFromId(item.talent)
+		if t.mode == "passive" then return end
 		local s = t.display_entity:getEntityFinalSurface(nil, 64, 64)
 		local x, y = core.mouse.get()
 		game.mouse:startDrag(x, y, s, {kind="talent", id=t.id}, function(drag, used)
@@ -231,12 +232,12 @@ function _M:generateList()
 	end
 ]]
 
-	local actives, sustains, sustained, unavailables, cooldowns = {}, {}, {}, {}, {}
+	local actives, sustains, sustained, unavailables, cooldowns, passives = {}, {}, {}, {}, {}, {}
 	local chars = {}
 
 	-- Find all talents of this school
 	for j, t in pairs(self.actor.talents_def) do
-		if self.actor:knowTalent(t.id) and t.mode ~= "passive" then
+		if self.actor:knowTalent(t.id) then
 			local typename = "talent"
 			local nodes = t.mode == "sustained" and sustains or actives
 			local status = tstring{{"color", "LIGHT_GREEN"}, "Active"}
@@ -249,7 +250,7 @@ function _M:generateList()
 			elseif t.mode == "sustained" then
 				if self.actor:isTalentActive(t.id) then nodes = sustained end
 				status = self.actor:isTalentActive(t.id) and tstring{{"color", "YELLOW"}, "Sustaining"} or tstring{{"color", "LIGHT_GREEN"}, "Sustain"}
-			elseif t.mode == "passive" then
+			elseif t.mode == "passive" and not t.hide then
 				nodes = passives
 				status = tstring{{"color", "BLUE"}, "Passive"}
 			end
@@ -280,11 +281,13 @@ function _M:generateList()
 	table.sort(sustained, function(a,b) return a.cname < b.cname end)
 	table.sort(cooldowns, function(a,b) return a.cname < b.cname end)
 	table.sort(unavailables, function(a,b) return a.cname < b.cname end)
+	table.sort(passives, function(a,b) return a.cname < b.cname end)
 	for i, node in ipairs(actives) do node.char = self:makeKeyChar(letter) chars[node.char] = node letter = letter + 1 end
 	for i, node in ipairs(sustains) do node.char = self:makeKeyChar(letter) chars[node.char] = node letter = letter + 1 end
 	for i, node in ipairs(sustained) do node.char = self:makeKeyChar(letter) chars[node.char] = node letter = letter + 1 end
 	for i, node in ipairs(cooldowns) do node.char = self:makeKeyChar(letter) chars[node.char] = node letter = letter + 1 end
 	for i, node in ipairs(unavailables) do node.char = self:makeKeyChar(letter) chars[node.char] = node letter = letter + 1 end
+	for i, node in ipairs(passives) do node.char = "" end
 
 
 	list = {
@@ -293,6 +296,7 @@ function _M:generateList()
 		{ char='', name=('#{bold}#Sustained talents#{normal}#'):toTString(), status='', hotkey='', desc="All sustainable talents you currently sustain, using them will de-activate them.", color=function() return colors.simple(colors.YELLOW) end, nodes=sustained, shown=true },
 		{ char='', name=('#{bold}#Cooling down talents#{normal}#'):toTString(), status='', hotkey='', desc="All talents you have used that are still cooling down.", color=function() return colors.simple(colors.LIGHT_RED) end, nodes=cooldowns, shown=true },
 		{ char='', name=('#{bold}#Unavailable talents#{normal}#'):toTString(), status='', hotkey='', desc="All talents you have that do not have enough resources, or satisfy other dependencies.", color=function() return colors.simple(colors.GREY) end, nodes=unavailables, shown=true },
+		{ char='', name=('#{bold}#Passive talents#{normal}#'):toTString(), status='', hotkey='', desc="All your passive talents, they are always active.", color=function() return colors.simple(colors.WHITE) end, nodes=passives, shown=true },
 		chars = chars,
 	}
 	self.list = list
