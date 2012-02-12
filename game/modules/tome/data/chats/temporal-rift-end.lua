@@ -36,7 +36,7 @@ I cannot stay. I still have much to do. But take this-- it should help you.
 			game:setAllowedBuild("chronomancer_temporal_warden", true)
 
 			local g = game.zone:makeEntityByName(game.level, "terrain", "RIFT")
-			g.change_level = 4
+			g.change_level = 3
 			g.change_zone = "daikara"
 			game.zone:addEntity(game.level, g, "terrain", player.x, player.y)
 		end},

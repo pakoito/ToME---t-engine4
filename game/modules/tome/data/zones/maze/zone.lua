@@ -21,10 +21,10 @@ return {
 	name = "The Maze",
 	level_range = {7, 16},
 	level_scheme = "player",
-	max_level = 5,
+	max_level = 2,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
-	width = 40, height = 40,
+	width = 80, height = 80,
 --	all_remembered = true,
 --	all_lited = true,
 	persistent = "zone",
@@ -41,17 +41,17 @@ return {
 		},
 		actor = {
 			class = "engine.generator.actor.Random",
-			nb_npc = {20, 30},
+			nb_npc = {50, 60},
 			guardian = "MINOTAUR_MAZE",
 			guardian_alert = true,
 		},
 		object = {
 			class = "engine.generator.object.Random",
-			nb_object = {4, 6},
+			nb_object = {10, 14},
 		},
 		trap = {
 			class = "engine.generator.trap.Random",
-			nb_trap = {9, 15},
+			nb_trap = {20, 25},
 		},
 	},
 	levels =
@@ -61,20 +61,23 @@ return {
 				up = "UP_WILDERNESS",
 			}, },
 		},
-		[5] = {
+		[2] = {
+			width = 20, height = 20,
 			generator = { map = {
 				force_last_stair = true,
 				down = "QUICK_EXIT",
+			}, actor = {
+				nb_npc = {10, 12},
 			}, },
 		},
 	},
 
 	post_process = function(level)
 		-- Place a lore note on each level
-		game:placeRandomLoreObjectScale("NOTE", 7, level.level)
+		game:placeRandomLoreObjectScale("NOTE", "maze", level.level)
 
 		local p = game.party:findMember{main=true}
-		if level.level == 4 and p:knowTalent(p.T_TRAP_MASTERY) then
+		if level.level == 1 and p:knowTalent(p.T_TRAP_MASTERY) then
 			local l = game.zone:makeEntityByName(level, "object", "NOTE_LEARN_TRAP")
 			if not l then return end
 			for i = -1, 1 do for j = -1, 1 do

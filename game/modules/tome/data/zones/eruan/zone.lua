@@ -21,7 +21,7 @@ return {
 	name = "Erúan",
 	level_range = {30, 45},
 	level_scheme = "player",
-	max_level = 5,
+	max_level = 4,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	width = 50, height = 50,
@@ -74,7 +74,7 @@ return {
 				up = "SAND_UP_WILDERNESS",
 			}, },
 		},
-		[5] = {
+		[4] = {
 			generator = { map = {
 				class = "engine.generator.map.Static",
 				map = "zones/eruan-last",

@@ -1639,7 +1639,8 @@ function _M:placeRandomLoreObjectScale(base, nb, level)
 	local dist = ({
 		[5] = { {1}, {2,3}, {4,5} }, -- 5 => 3
 		korpul = { {1,2}, {3,4} }, -- 5 => 3
-		[7] = { {1}, {2,3}, {4}, {5, 6}, {7} }, -- 7 => 5
+		maze = { {1,2,3,4},{5,6,7} }, -- 5 => 3
+		[7] = { {1,2}, {3,4}, {5,6}, {7} }, -- 7 => 4
 	})[nb][level]
 	if not dist then return end
 	for _, i in ipairs(dist) do self:placeRandomLoreObject(base..i) end

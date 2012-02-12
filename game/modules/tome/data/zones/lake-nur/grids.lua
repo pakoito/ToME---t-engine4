@@ -28,7 +28,7 @@ newEntity{
 	display = '<', color_r=255, color_g=255, color_b=0,
 	notice = true,
 	always_remember = true,
-	change_level = 5, change_zone = "old-forest", force_down = true,
+	change_level = 4, change_zone = "old-forest", force_down = true,
 }
 
 newEntity{

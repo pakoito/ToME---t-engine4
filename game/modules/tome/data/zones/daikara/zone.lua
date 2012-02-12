@@ -21,7 +21,7 @@ return {
 	name = "Daikara",
 	level_range = {7, 16},
 	level_scheme = "player",
-	max_level = 5,
+	max_level = 4,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	width = 50, height = 50,
@@ -76,7 +76,7 @@ return {
 
 		-- Temporal rift on level 4
 		local p = game.party:findMember{main=true}
-		if level.level == 4 then
+		if level.level == 3 then
 			if p.descriptor.subclass == "Temporal Warden" then
 				local x, y = util.findFreeGrid(level.default_up.x, level.default_up.y, 10, true, {[engine.Map.ACTOR]=true})
 				if x and y then

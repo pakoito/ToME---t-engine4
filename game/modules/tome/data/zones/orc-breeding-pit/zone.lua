@@ -74,5 +74,8 @@ return {
 				nb_npc = {0, 0},
 			}, },
 		},
+		[3] = { width = 25, height = 25, generator = {map = {min_floor=300}} },
+		[4] = { width = 20, height = 20, generator = {map = {min_floor=200}} },
+		[5] = { width = 15, height = 15, generator = {map = {min_floor=120}} },
 	},
 }

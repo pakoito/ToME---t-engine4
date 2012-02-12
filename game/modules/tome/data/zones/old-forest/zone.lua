@@ -21,7 +21,7 @@ return {
 	name = "Old Forest",
 	level_range = {7, 16},
 	level_scheme = "player",
-	max_level = 5,
+	max_level = 4,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	width = 50, height = 50,
@@ -37,7 +37,7 @@ return {
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",
-			nb_rooms = 10,
+			nb_rooms = 11,
 			edge_entrances = {4,6},
 			rooms = {"forest_clearing", {"lesser_vault",8}},
 			rooms_config = {forest_clearing={pit_chance=5, filters={{type="insect", subtype="ant"}, {type="insect"}, {type="animal", subtype="snake"}, {type="animal", subtype="canine"}}}},
@@ -71,7 +71,7 @@ return {
 				up = "GRASS_UP_WILDERNESS",
 			}, },
 		},
-		[5] = {
+		[4] = {
 			generator =  { map = {
 				edge_entrances = {4,2},
 				down = "LAKE_NUR",
