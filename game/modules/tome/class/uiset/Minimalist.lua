@@ -211,7 +211,7 @@ function _M:saveSettings()
 	for _, w in ipairs{"player", "resources", "party", "buffs", "minimap"} do
 		lines[#lines+1] = ("tome.uiset_minimalist.places.%s = {}"):format(w)
 		if self.places[w] then for k, v in pairs(self.places[w]) do
-			lines[#lines+1] = ("tome.uiset_minimalist.places.%s.%s = %d"):format(w, k, v)
+			lines[#lines+1] = ("tome.uiset_minimalist.places.%s.%s = %f"):format(w, k, v)
 		end end
 	end
 	game:saveSettings("tome.uiset_minimalist", table.concat(lines, "\n"))
