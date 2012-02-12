@@ -191,6 +191,11 @@ TOOLTIP_COMBAT_ATTACK = [[#GOLD#Accuracy#LAST#
 Determines your chance to hit your target when measured against the target's Defense.
 When you use Accuracy to inflict temporary physical effects on an enemy, every five points of Accuracy counteracts a single turn of duration reduction granted by the enemy's saving throws.
 ]]
+TOOLTIP_COMBAT_MAX_ATTACK = [[#GOLD#Max accuracy#LAST#
+Your accuracy chance to hit can never be higher than this value.
+Max accuracy is mostly determined by your weapon.
+It affects both your chance to connect physical attacks and to succeed at applying status effects on your foes.
+]]
 TOOLTIP_COMBAT_PHYSICAL_POWER = [[#GOLD#Physical Power#LAST#
 Measures your ability to deal physical damage in combat.
 When you use Physical Power to inflict temporary physical effects on an enemy, every five points of Physical Power counteracts a single turn of duration reduction granted by the enemy's saving throws.
