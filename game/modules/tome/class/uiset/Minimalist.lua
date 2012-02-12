@@ -208,7 +208,7 @@ function _M:saveSettings()
 	local lines = {}
 	lines[#lines+1] = ("tome.uiset_minimalist = {}"):format(w)
 	lines[#lines+1] = ("tome.uiset_minimalist.places = {}"):format(w)
-	for _, w in ipairs{"player", "resources", "party", "buffs"} do
+	for _, w in ipairs{"player", "resources", "party", "buffs", "minimap"} do
 		lines[#lines+1] = ("tome.uiset_minimalist.places.%s = {}"):format(w)
 		if self.places[w] then for k, v in pairs(self.places[w]) do
 			lines[#lines+1] = ("tome.uiset_minimalist.places.%s.%s = %d"):format(w, k, v)
@@ -357,22 +357,22 @@ function _M:computePadding(what, x1, y1, x2, y2)
 	size.x2 = x2
 	size.y1 = y1
 	size.y2 = y2
-	if x1 <= 0 then 
-		Map.viewport_padding_4 = math.max(Map.viewport_padding_4, math.floor((x2 - x1) / Map.tile_w)) 
+	if x1 <= 0 then
+		Map.viewport_padding_4 = math.max(Map.viewport_padding_4, math.floor((x2 - x1) / Map.tile_w))
 		size.left = true
-	end 
-	if x2 >= Map.viewport.width then 
-		Map.viewport_padding_6 = math.max(Map.viewport_padding_6, math.floor((x2 - x1) / Map.tile_w)) 
+	end
+	if x2 >= Map.viewport.width then
+		Map.viewport_padding_6 = math.max(Map.viewport_padding_6, math.floor((x2 - x1) / Map.tile_w))
 		size.right = true
-	end 
-	if y1 <= 0 then 
-		Map.viewport_padding_8 = math.max(Map.viewport_padding_8, math.floor((y2 - y1) / Map.tile_h)) 
+	end
+	if y1 <= 0 then
+		Map.viewport_padding_8 = math.max(Map.viewport_padding_8, math.floor((y2 - y1) / Map.tile_h))
 		size.top = true
-	end 
-	if y2 >= Map.viewport.height then 
-		Map.viewport_padding_2 = math.max(Map.viewport_padding_2, math.floor((y2 - y1) / Map.tile_h)) 
+	end
+	if y2 >= Map.viewport.height then
+		Map.viewport_padding_2 = math.max(Map.viewport_padding_2, math.floor((y2 - y1) / Map.tile_h))
 		size.bottom = true
-	end 
+	end
 
 	if size.top then size.orient = "down"
 	elseif size.bottom then size.orient = "up"
@@ -399,10 +399,10 @@ function _M:showResourceTooltip(x, y, w, h, id, desc, is_first)
 end
 
 function _M:resourceOrientStep(orient, bx, by, scale, x, y, w, h)
-	if orient == "down" or orient == "up" then 
+	if orient == "down" or orient == "up" then
 		x = x + w
 		if (x + w) * scale >= game.w - bx then x = 0 y = y + h end
-	elseif orient == "right" or orient == "left" then 
+	elseif orient == "right" or orient == "left" then
 		y = y + h
 		if (y + h) * scale >= self.map_h_stop - by then y = 0 x = x + w end
 	end
@@ -412,7 +412,7 @@ end
 function _M:displayResources(scale, bx, by, a)
 	local player = game.player
 	if player then
-		local orient = self.sizes.resources and self.sizes.resources.orient or "right"		
+		local orient = self.sizes.resources and self.sizes.resources.orient or "right"
 		local x, y = 0, 0
 
 		-----------------------------------------------------------------------------------
@@ -912,10 +912,10 @@ function _M:displayResources(scale, bx, by, a)
 end
 
 function _M:buffOrientStep(orient, bx, by, scale, x, y, w, h)
-	if orient == "down" or orient == "up" then 
+	if orient == "down" or orient == "up" then
 		x = x + w
 		if (x + w) * scale >= game.w - bx then x = 0 y = y + h end
-	elseif orient == "right" or orient == "left" then 
+	elseif orient == "right" or orient == "left" then
 		y = y + h
 		if (y + h) * scale >= self.map_h_stop - by then y = 0 x = x + w end
 	end
@@ -983,7 +983,7 @@ function _M:displayBuffs(scale, bx, by)
 			self.tbuff = {} self.pbuff = {}
 		end
 
-		local orient = self.sizes.buffs and self.sizes.buffs.orient or "right"		
+		local orient = self.sizes.buffs and self.sizes.buffs.orient or "right"
 		local hs = 40
 		local x, y = 0, 0
 		local is_first = true
@@ -1053,10 +1053,10 @@ function _M:displayBuffs(scale, bx, by)
 end
 
 function _M:partyOrientStep(orient, bx, by, scale, x, y, w, h)
-	if orient == "down" or orient == "up" then 
+	if orient == "down" or orient == "up" then
 		x = x + w
 		if (x + w) * scale >= game.w - bx then x = 0 y = y + h end
-	elseif orient == "right" or orient == "left" then 
+	elseif orient == "right" or orient == "left" then
 		y = y + h
 		if (y + h) * scale >= self.map_h_stop - by then y = 0 x = x + w end
 	end
@@ -1312,7 +1312,7 @@ function _M:displayToolbar(scale, bx, by)
 	tb_inven[1]:toScreenFull	(x, - tb_inven[7], tb_inven[6], tb_inven[7], tb_inven[2], tb_inven[3], self.tbbuttons.inven, self.tbbuttons.inven, self.tbbuttons.inven, 1)
 	if not game.mouse:updateZone("tb_inven", bx + x * scale, by - tb_inven[7]*scale, tb_inven[6], tb_inven[7], nil, scale) then
 		game.mouse:unregisterZone("tb_inven")
-		local desc_fct = function(button, mx, my, xrel, yrel, bx, by, event) 
+		local desc_fct = function(button, mx, my, xrel, yrel, bx, by, event)
 			if event == "out" then self.tbbuttons.inven = 0.6 return else self.tbbuttons.inven = 1 end
 			game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, "Left mouse to show inventory")
 			if button == "left" and not xrel and not yrel and event == "button" then game.key:triggerVirtual("SHOW_INVENTORY") end
@@ -1332,7 +1332,7 @@ function _M:displayToolbar(scale, bx, by)
 		game.mouse:registerZone(bx + x * scale, by - tb_quest[7]*scale, tb_quest[6], tb_quest[7], desc_fct, nil, "tb_quest", true, scale)
 	end
 	x = x + tb_quest[6]
-	
+
 	tb_lore[1]:toScreenFull		(x, - tb_lore[7], tb_lore[6], tb_lore[7], tb_lore[2], tb_lore[3], self.tbbuttons.lore, self.tbbuttons.lore, self.tbbuttons.lore, 1)
 	if not game.mouse:updateZone("tb_lore", bx + x * scale, by - tb_lore[7]*scale, tb_lore[6], tb_lore[7], nil, scale) then
 		game.mouse:unregisterZone("tb_lore")
@@ -1344,7 +1344,7 @@ function _M:displayToolbar(scale, bx, by)
 		game.mouse:registerZone(bx + x * scale, by - tb_lore[7]*scale, tb_lore[6], tb_lore[7], desc_fct, nil, "tb_lore", true, scale)
 	end
 	x = x + tb_lore[6]
-	
+
 	tb_mainmenu[1]:toScreenFull	(x, - tb_mainmenu[7], tb_mainmenu[6], tb_mainmenu[7], tb_mainmenu[2], tb_mainmenu[3], self.tbbuttons.mainmenu, self.tbbuttons.mainmenu, self.tbbuttons.mainmenu, 1)
 	if not game.mouse:updateZone("tb_mainmenu", bx + x * scale, by - tb_mainmenu[7]*scale, tb_mainmenu[6], tb_mainmenu[7], nil, scale) then
 		game.mouse:unregisterZone("tb_mainmenu")
