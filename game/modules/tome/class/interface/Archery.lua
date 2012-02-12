@@ -32,7 +32,7 @@ module(..., package.seeall, class.make)
 function _M:archeryAcquireTargets(tg, params)
 	local weapon, ammo = self:hasArcheryWeapon()
 	if not weapon then
-		game.logPlayer(self, "You must wield a bow or a sling (%s)!", ammo)
+		game.logPlayer(self, "(%s)", ammo)
 		return nil
 	end
 	params = params or {}
@@ -42,28 +42,27 @@ function _M:archeryAcquireTargets(tg, params)
 	weapon = weapon.combat
 
 	local tg = tg or {type="bolt"}
+	tg.type = weapon.tg_type or ammo.combat.tg_type or tg.type
 
 	if not tg.range then tg.range=weapon.range or 6 end
 	tg.display = tg.display or {display='/'}
-	tg.speed = (tg.speed or 20) * (ammo.travel_speed or 100) / 100
+	tg.speed = (tg.speed or 6) * ((ammo.combat.travel_speed or 100) / 100) * (weapon.travel_speed or 100) / 100
 	local x, y = self:getTarget(tg)
 	if not x or not y then return nil end
 
 	-- Find targets to know how many ammo we use
 	local targets = {}
 	if params.one_shot then
-		local a
-		if not ammo.infinite then
-			a = self:removeObject(self:getInven("QUIVER"), 1)
-		else
-			a = ammo
+		if not ammo.combat.shots_left then return nil end
+		if ammo.combat.shots_left == 0 then
+			game.logPlayer(self, "You are out of ammo!")
+			return nil
 		end
-		if a then
-			targets = {{x=x, y=y, ammo=a.combat}}
-		end
+		ammo.combat.shots_left = ammo.combat.shots_left - 1
+		targets = {{x=x, y=y, ammo=ammo.combat}}
 	else
+		if not ammo.combat.shots_left then return nil end
 		local limit_shots = params.limit_shots
-
 		self:project(tg, x, y, function(tx, ty)
 			local target = game.level.map(tx, ty, game.level.map.ACTOR)
 			if not target then return end
@@ -75,14 +74,9 @@ function _M:archeryAcquireTargets(tg, params)
 			end
 
 			for i = 1, params.multishots or 1 do
-				local a
-				if not ammo.infinite then
-					a = self:removeObject(self:getInven("QUIVER"), 1)
-				else
-					a = ammo
-				end
-				if a then targets[#targets+1] = {x=tx, y=ty, ammo=a.combat}
-				else break end
+				if ammo.combat.shots_left == 0 then break end
+				ammo.combat.shots_left = ammo.combat.shots_left - 1
+				targets[#targets+1] = {x=tx, y=ty, ammo=ammo.combat}
 			end
 		end)
 	end
@@ -95,11 +89,6 @@ function _M:archeryAcquireTargets(tg, params)
 		self:useEnergy(game.energy_to_act * (speed or 1))
 
 		if sound then game:playSoundNear(self, sound) end
-
-		if not ammo.infinite and (ammo:getNumber() < 10 or ammo:getNumber() == 50 or ammo:getNumber() == 40 or ammo:getNumber() == 25) then
-			game.logPlayer(self, "You only have %s left!", ammo:getName{do_color=true})
-		end
-
 		return targets
 	else
 		return nil
@@ -124,14 +113,17 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 	-- Does the blow connect? yes .. complex :/
 	if tg.archery.use_psi_archery then self.use_psi_combat = true end
 	local atk, def = self:combatAttack(weapon, ammo), target:combatDefenseRanged()
-	local dam, apr, armor = self:combatDamage(ammo), self:combatAPR(ammo), target:combatArmor()
+	local armor = target:combatArmor()
+	local dam = self:combatDamage(ammo) + self:combatDamage(weapon)
+	local apr = self:combatAPR(ammo) + self:combatAPR(weapon)
 	atk = atk + (tg.archery.atk or 0)
 	dam = dam + (tg.archery.dam or 0)
 	print("[ATTACK ARCHERY] to ", target.name, " :: ", dam, apr, armor, "::", mult)
 
 	-- If hit is over 0 it connects, if it is 0 we still have 50% chance
 	local hitted = false
-	if self:checkHit(atk, def) and (self:canSee(target) or self:attr("blind_fight") or rng.chance(3)) then
+	local crit = false
+	if self:checkHit(atk, def, 0, self:getMaxAccuracy("physical", ammo)) and (self:canSee(target) or self:attr("blind_fight") or rng.chance(3)) then
 		apr = apr + (tg.archery.apr or 0)
 		print("[ATTACK ARCHERY] raw dam", dam, "versus", armor, "with APR", apr)
 
@@ -140,23 +132,27 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 		dam = math.max(dam * pres - armor, 0) + (dam * (1 - pres))
 		print("[ATTACK ARCHERY] after armor", dam)
 
-		local damrange = self:combatDamageRange(ammo)
-		dam = rng.range(dam, dam * damrange)
-		print("[ATTACK ARCHERY] after range", dam)
-
-		local crit
+		local pre_crit_dam = dam
 		if tg.archery.crit_chance then self.combat_physcrit = self.combat_physcrit + tg.archery.crit_chance end
-		dam, crit = self:physicalCrit(dam, ammo, target, atk, def)
+		dam, crit = self:physicalCrit(dam, weapon, target, atk, def)
 		if tg.archery.crit_chance then self.combat_physcrit = self.combat_physcrit - tg.archery.crit_chance end
 		print("[ATTACK ARCHERY] after crit", dam)
 
 		dam = dam * mult
 		print("[ATTACK ARCHERY] after mult", dam)
 
-		if crit then game.logSeen(self, "#{bold}#%s performs a critical strike!#{normal}#", self.name:capitalize()) end
+		if crit then
+			game.logSeen(self, "#{bold}#%s performs a critical strike!#{normal}#", self.name:capitalize())
+			if (weapon.concussion or ammo.concussion) then
+				dam = pre_crit_dam
+				self:doConcussion(dam, target, {weapon, ammo})
+			end
+		end
 		DamageType:get(damtype).projector(self, target.x, target.y, damtype, math.max(0, dam), tmp)
+
 		game.level.map:particleEmitter(target.x, target.y, 1, "archery")
 		hitted = true
+
 
 		if talent.archery_onhit then talent.archery_onhit(self, talent, target, target.x, target.y) end
 	else
@@ -179,11 +175,26 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 	end
 
 	-- Ranged project
-	if hitted and not target.dead then for typ, dam in pairs(self.ranged_project) do
+	local weapon_ranged_project = weapon.ranged_project or {}
+	local ammo_ranged_project = ammo.ranged_project or {}
+	local total_ranged_project = {}
+	table.mergeAdd(total_ranged_project, weapon_ranged_project, true)
+	table.mergeAdd(total_ranged_project, ammo_ranged_project, true)
+	if hitted and not target.dead then for typ, dam in pairs(total_ranged_project) do
 		if dam > 0 then
 			DamageType:get(typ).projector(self, target.x, target.y, typ, dam, tmp)
 		end
 	end end
+
+	-- Talent on hit
+	if hitted and not target.dead and weapon and weapon.talent_on_hit and next(weapon.talent_on_hit) then
+		self:doTalentOnHit(target, weapon)
+	end
+
+	-- Special effect
+	if hitted and not target.dead and weapon and weapon.special_on_hit and weapon.special_on_hit.fct then
+		weapon.special_on_hit.fct(weapon, self, target)
+	end
 
 	-- Temporal cast
 	if hitted and not target.dead and self:knowTalent(self.T_WEAPON_FOLDING) and self:isTalentActive(self.T_WEAPON_FOLDING) then
@@ -237,6 +248,12 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 		target:knockback(self.x, self.y, math.ceil(math.log(dam)))
 	end
 
+	-- Savagery
+	if hitted and crit and self:knowTalent(self.T_SAVAGERY) then
+		local t = self:getTalentFromId(self.T_SAVAGERY)
+		t.do_savagery(self, t)
+	end
+
 	self.use_psi_combat = false
 end
 
@@ -256,17 +273,20 @@ function _M:archeryShoot(targets, talent, tg, params)
 	weapon = weapon.combat
 
 	local tg = tg or {type="bolt"}
+	tg.type = weapon.tg_type or ammo.combat.tg_type or tg.type
 	tg.talent = tg.talent or talent
 
 	if not tg.range then tg.range=weapon.range or 6 end
 	tg.display = tg.display or {display=' ', particle="arrow", particle_args={tile="shockbolt/"..(ammo.proj_image or realweapon.proj_image):gsub("%.png$", "")}}
-	tg.speed = (tg.speed or 20) * (ammo.travel_speed or 100) / 100
+	tg.speed = (tg.speed or 6) * ((ammo.combat.travel_speed or 100) / 100) * (weapon.travel_speed or 100) / 100
 	tg.archery = params or {}
 	tg.archery.weapon = weapon
+	local grids = nil
 	for i = 1, #targets do
 		local tg = table.clone(tg)
 		tg.archery.ammo = targets[i].ammo
 		self:projectile(tg, targets[i].x, targets[i].y, archery_projectile)
+		if ammo.combat.lite then self:project(tg, targets[i].x, targets[i].y, DamageType.LITE, 1) end
 	end
 end
 
@@ -290,13 +310,43 @@ function _M:hasArcheryWeapon(type)
 		return nil, "no shooter"
 	end
 	if not ammo then
-		-- Launchers provide infinite basic ammo
-		ammo = {name="default", infinite=true, combat=weapon.basic_ammo}
+		return nil, "Your quiver is empty."
 	else
-		if not ammo.archery_ammo or weapon.archery ~= ammo.archery_ammo then
+		if not ammo.archery_ammo or weapon.archery ~= ammo.archery_ammo or not ammo.combat then
 			return nil, "bad ammo"
 		end
 	end
 	if type and weapon.archery ~= type then return nil, "bad type" end
 	return weapon, ammo
+end
+
+--- Check if the actor has a bow or sling
+function _M:hasShooter(type)
+	if not self:getInven("MAINHAND") then return nil, "no shooter" end
+	local weapon = self:getInven("MAINHAND")[1]
+	if self.inven[self.INVEN_PSIONIC_FOCUS] then
+		local pf_weapon = self:getInven("PSIONIC_FOCUS")[1]
+		if pf_weapon and pf_weapon.archery then
+			weapon = pf_weapon
+		end
+	end
+	if not weapon or not weapon.archery then
+		return nil, "no shooter"
+	end
+
+	if type and weapon.archery ~= type then return nil, "bad type" end
+	return weapon
+end
+
+--- Check if the actor has a bow or sling and corresponding ammo
+function _M:hasAmmo(type)
+	if not self:getInven("QUIVER") then return nil, "no ammo" end
+	local ammo = self:getInven("QUIVER")[1]
+
+	if not ammo then return nil, "no ammo" end
+	if not ammo.archery_ammo then return nil, "bad ammo" end
+	if not ammo.combat then return nil, "bad ammo" end
+	if not ammo.combat.capacity then return nil, "bad ammo" end
+	if type and ammo.archery_ammo ~= type then return nil, "bad type" end
+	return ammo, "no problem"
 end

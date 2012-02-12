@@ -51,7 +51,7 @@ function _M:init(actor)
 	self.vs = Separator.new{dir="vertical", size=self.iw}
 
 	self.c_tut = Textzone.new{width=self.iw * 0.6, auto_height=true, no_color_bleed=true, font = self.font, text=[[
-Values #00FF00#in bracets ( )#LAST# shows changes made from last character sheet checking.
+Values #00FF00#in brackets ( )#LAST# shows changes made from last character sheet checking.
 Keyboard: #00FF00#'d'#LAST# to save character dump. #00FF00#TAB key#LAST# to switch between tabs.
 Mouse: Hover over stat for info
 ]]}
@@ -188,6 +188,8 @@ function _M:drawDialog(kind, actor_to_compare)
 	local w = 0
 
 	local text = ""
+	local dur_text = ""
+	local sp_text = ""
 
 	if player.__te4_uuid and profile.auth and profile.auth.drupid then
 		local path = "http://te4.org/characters/"..profile.auth.drupid.."/tome/"..player.__te4_uuid
@@ -500,6 +502,32 @@ function _M:drawDialog(kind, actor_to_compare)
 		print_stat(self.actor.STAT_CON, ("%-12s"):format(Stats.stats_def[self.actor.STAT_CON].name:capitalize()), self.TOOLTIP_CON)
 		h = h + self.font_h
 
+		s:drawColorStringBlended(self.font, "#LIGHT_BLUE#Combat stats:", w, h, 255, 255, 255, true) h = h + self.font_h
+
+		text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatPhysicalpower() end, "%3d", "%+.0f")
+		dur_text = ("%d"):format(math.floor(player:combatPhysicalpower()/5))
+		self:mouseTooltip(self.TOOLTIP_SPELL_POWER, s:drawColorStringBlended(self.font, ("Physical power: #00ff00#%s  [+%s effect duration]"):format(text, dur_text), w, h, 255, 255, 255, true)) h = h + self.font_h	
+
+		text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatSpellpower() end, "%3d", "%+.0f")
+		dur_text = ("%d"):format(math.floor(player:combatSpellpower()/5))
+		self:mouseTooltip(self.TOOLTIP_SPELL_POWER, s:drawColorStringBlended(self.font, ("Spellpower    : #00ff00#%s  [+%s effect duration]"):format(text, dur_text), w, h, 255, 255, 255, true)) h = h + self.font_h	
+
+		text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatMindpower() end, "%3d", "%+.0f")
+		dur_text = ("%d"):format(math.floor(player:combatMindpower()/5))
+		self:mouseTooltip(self.TOOLTIP_SPELL_POWER, s:drawColorStringBlended(self.font, ("Mindpower     : #00ff00#%s  [+%s effect duration]"):format(text, dur_text), w, h, 255, 255, 255, true)) h = h + self.font_h	
+
+		text = compare_fields(player, actor_to_compare, function(actor, ...) return math.floor(actor:combatPhysicalResist(true)) end, "%3d", "%+.0f")
+		dur_text = ("%d"):format(math.floor(player:combatPhysicalResist(true)/5))
+		self:mouseTooltip(self.TOOLTIP_PHYS_SAVE,   s:drawColorStringBlended(self.font, ("Physical save : #00ff00#%s  [-%s effect duration]"):format(text, dur_text), w, h, 255, 255, 255, true)) h = h + self.font_h
+		text = compare_fields(player, actor_to_compare, function(actor, ...) return math.floor(actor:combatSpellResist(true)) end, "%3d", "%+.0f")
+		dur_text = ("%d"):format(math.floor(player:combatSpellResist(true)/5))
+		self:mouseTooltip(self.TOOLTIP_SPELL_SAVE,  s:drawColorStringBlended(self.font, ("Spell save    : #00ff00#%s  [-%s effect duration]"):format(text, dur_text), w, h, 255, 255, 255, true)) h = h + self.font_h
+		text = compare_fields(player, actor_to_compare, function(actor, ...) return math.floor(actor:combatMentalResist(true)) end, "%3d", "%+.0f")
+		dur_text = ("%d"):format(math.floor(player:combatMentalResist(true)/5))
+		self:mouseTooltip(self.TOOLTIP_MENTAL_SAVE, s:drawColorStringBlended(self.font, ("Mental save   : #00ff00#%s  [-%s effect duration]"):format(text, dur_text), w, h, 255, 255, 255, true)) h = h + self.font_h
+
+		h = h + self.font_h
+		
 		local nb_inscriptions = 0
 		for i = 1, player.max_inscriptions do if player.inscriptions[i] then nb_inscriptions = nb_inscriptions + 1 end end
 		self:mouseTooltip(self.TOOLTIP_INSCRIPTIONS, s:drawColorStringBlended(self.font, ("#AQUAMARINE#Inscriptions (%d/%d)"):format(nb_inscriptions, player.max_inscriptions), w, h, 255, 255, 255, true)) h = h + self.font_h
@@ -554,22 +582,26 @@ function _M:drawDialog(kind, actor_to_compare)
 
 			for i, o in ipairs(player:getInven(player.INVEN_MAINHAND)) do
 				local mean, dam = o.combat, o.combat
-				if o.archery and mean then
-					dam = (player:getInven("QUIVER")[1] and player:getInven("QUIVER")[1].combat) or o.basic_ammo
-				end
 				if mean and dam then
+					local max_acc = o.combat.max_acc
+					if o.archery and player:hasAmmo(o.archery) then max_acc = player:hasAmmo(o.archery).combat.max_acc end
+					sp_text = (o.combat.affects_spells and " (affects spells)") or ""
+					local attack_speed_bonus = (1 / player:combatSpeed(o.combat))*100 - 100
 					s:drawColorStringBlended(self.font, WeaponTxt, w, h, 255, 255, 255, true) h = h + self.font_h
-					text = compare_fields(player, actor_to_compare, function(actor, ...) return math.floor(actor:combatAttack(...)) end, "%3d", "%+.0f", 1, false, false, mean)
-					dur_text = ("%d"):format(math.floor(player:combatAttack(o.combat)/5))
-					self:mouseTooltip(self.TOOLTIP_COMBAT_ATTACK, s:drawColorStringBlended(self.font, ("Accuracy    : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
-					text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatDamage(...) end, "%3d", "%+.0f", 1, false, false, dam)
+					
+					text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:getCombinedDamage(o) end, "%d", "%+d", 1, false, false, dam)
 					self:mouseTooltip(self.TOOLTIP_COMBAT_DAMAGE, s:drawColorStringBlended(self.font, ("Damage      : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
-					text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatAPR(...) end, "%3d", "%+.0f", 1, false, false, dam)
-					self:mouseTooltip(self.TOOLTIP_COMBAT_APR,    s:drawColorStringBlended(self.font, ("APR         : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
-					text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatCrit(...) end, "%3d%%", "%+.0f%%", 1, false, false, dam)
+					text = compare_fields(player, actor_to_compare, function(actor, ...) return (o.combat.critical_power or 1.1) + (actor.combat_critical_power or 0)/100 end, "%.2fx", "%+.2f")
+					self:mouseTooltip(self.TOOLTIP_INC_CRIT_POWER  , s:drawColorStringBlended(self.font,   ("Crit mult.  : #00ff00#%s%s"):format(text, sp_text), w, h, 255, 255, 255, true)) h = h + self.font_h
+					text = compare_fields(player, actor_to_compare, function(actor, ...) return (max_acc or 75) end, "%d%%", "%+d%%", 1, false, false, mean)
+					self:mouseTooltip(self.TOOLTIP_COMBAT_ATTACK, s:drawColorStringBlended(self.font, ("Max accuracy: #00ff00#%s%s"):format(text, sp_text), w, h, 255, 255, 255, true)) h = h + self.font_h
+					text = compare_fields(player, actor_to_compare, function(actor, ...) return attack_speed_bonus end, "%d%%", "%+d%%", 1, false, false, mean)
+					self:mouseTooltip(self.TOOLTIP_COMBAT_SPEED,  s:drawColorStringBlended(self.font, ("Speed bonus : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
+					text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatAPR(...) end, "%d", "%+d", 1, false, false, dam)
+					self:mouseTooltip(self.TOOLTIP_COMBAT_APR,    s:drawColorStringBlended(self.font, ("Armor pen.  : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
+					text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatCrit(...) end, "%d%%", "%+d%%", 1, false, false, dam)
 					self:mouseTooltip(self.TOOLTIP_COMBAT_CRIT,   s:drawColorStringBlended(self.font, ("Crit. chance: #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
-					text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatSpeed(...) end, "%.2f%%", "%+.2f%%", 100, false, false, mean)
-					self:mouseTooltip(self.TOOLTIP_COMBAT_SPEED,  s:drawColorStringBlended(self.font, ("Speed       : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
+
 				end
 				if mean and mean.range then
 					self:mouseTooltip(self.TOOLTIP_COMBAT_RANGE, s:drawColorStringBlended(self.font, ("Range (Main Hand): #00ff00#%3d"):format(mean.range), w, h, 255, 255, 255, true)) h = h + self.font_h
@@ -580,17 +612,23 @@ function _M:drawDialog(kind, actor_to_compare)
 			s:drawColorStringBlended(self.font, "#LIGHT_BLUE#Unarmed:", w, h, 255, 255, 255, true) h = h + self.font_h
 			local mean, dam = player.combat, player.combat
 			if mean and dam then
-				text = compare_fields(player, actor_to_compare, function(actor, ...) return math.floor(actor:combatAttack(...)) end, "%3d", "%+.0f", 1, false, false, mean)
-				dur_text = ("%d"):format(math.floor(player:combatAttack(player.combat)/5))
-				self:mouseTooltip(self.TOOLTIP_COMBAT_ATTACK, s:drawColorStringBlended(self.font, ("Accuracy    : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
-				text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatDamage(...) end, "%3d", "%+.0f", 1, false, false, dam)
+				sp_text = (player.combat.affects_spells and " (affects spells)") or ""
+				local attack_speed_bonus = (1 / player:combatSpeed(player.combat))*100 - 100
+				local gloves = player:hasGloves()
+				local total_dam = player:combatDamage(player.combat) + (gloves and gloves:getMeleeProjectDam() or 0)
+				text = compare_fields(player, actor_to_compare, function(actor, ...) return total_dam end, "%d", "%+d", 1, false, false, dam)
 				self:mouseTooltip(self.TOOLTIP_COMBAT_DAMAGE, s:drawColorStringBlended(self.font, ("Damage      : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
-				text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatAPR(...) end, "%3d", "%+.0f", 1, false, false, dam)
-				self:mouseTooltip(self.TOOLTIP_COMBAT_APR,    s:drawColorStringBlended(self.font, ("APR         : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
-				text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatCrit(...) end, "%3d%%", "%+.0f%%", 1, false, false, dam)
+				text = compare_fields(player, actor_to_compare, function(actor, ...) return (actor.combat.critical_power or 1.1) + (actor.combat_critical_power or 0)/100 end, "%.2fx", "%+.2f")
+				self:mouseTooltip(self.TOOLTIP_INC_CRIT_POWER  , s:drawColorStringBlended(self.font,   ("Crit mult.  : #00ff00#%s%s"):format(text, sp_text), w, h, 255, 255, 255, true)) h = h + self.font_h
+				text = compare_fields(player, actor_to_compare, function(actor, ...) return actor.combat.max_acc end, "%d%%", "%+d%%", 1, false, false, mean)
+				self:mouseTooltip(self.TOOLTIP_COMBAT_ATTACK, s:drawColorStringBlended(self.font, ("Max accuracy: #00ff00#%s%s"):format(text, sp_text), w, h, 255, 255, 255, true)) h = h + self.font_h
+				text = compare_fields(player, actor_to_compare, function(actor, ...) return attack_speed_bonus end, "%d%%", "%+d%%", 1, false, false, mean)
+				self:mouseTooltip(self.TOOLTIP_COMBAT_SPEED,  s:drawColorStringBlended(self.font, ("Speed bonus : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
+				text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatAPR(...) end, "%d", "%+d", 1, false, false, dam)
+				self:mouseTooltip(self.TOOLTIP_COMBAT_APR,    s:drawColorStringBlended(self.font, ("Armor pen.  : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
+				text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatCrit(...) end, "%d%%", "%+d%%", 1, false, false, dam)
 				self:mouseTooltip(self.TOOLTIP_COMBAT_CRIT,   s:drawColorStringBlended(self.font, ("Crit. chance: #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
-				text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatSpeed(...) end, "%.2f%%", "%+.2f%%", 100, false, false, mean)
-				self:mouseTooltip(self.TOOLTIP_COMBAT_SPEED,  s:drawColorStringBlended(self.font, ("Speed       : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
+
 			end
 			if mean and mean.range then
 				self:mouseTooltip(self.TOOLTIP_COMBAT_RANGE, s:drawColorStringBlended(self.font, ("Range (Main Hand): #00ff00#%3d"):format(mean.range), w, h, 255, 255, 255, true)) h = h + self.font_h
@@ -604,22 +642,25 @@ function _M:drawDialog(kind, actor_to_compare)
 			local offmult = player:getOffHandMult()
 			for i, o in ipairs(player:getInven(player.INVEN_OFFHAND)) do
 				local mean, dam = o.combat, o.combat
-				if o.archery and mean then
-					dam = (player:getInven("QUIVER")[1] and player:getInven("QUIVER")[1].combat) or o.basic_ammo
-				end
 				if mean and dam then
+					local max_acc = o.combat.max_acc
+					if o.archery and player:hasAmmo(o.archery) then max_acc = player:hasAmmo(o.archery).combat.max_acc end
+					sp_text = (o.combat.affects_spells and " (affects spells)") or ""
+					local attack_speed_bonus = (1 / player:combatSpeed(o.combat))*100 - 100
 					s:drawColorStringBlended(self.font, "#LIGHT_BLUE#Off Hand:", w, h, 255, 255, 255, true) h = h + self.font_h
-					text = compare_fields(player, actor_to_compare, function(actor, ...) return math.floor(actor:combatAttack(...)) end, "%3d", "%+.0f", 1, false, false, mean)
-					dur_text = ("%d"):format(math.floor(player:combatAttack(o.combat)/5))
-					self:mouseTooltip(self.TOOLTIP_COMBAT_ATTACK, s:drawColorStringBlended(self.font, ("Accuracy    : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
-					text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatDamage(...) end, "%3d", "%+.0f", offmult, false, false, dam)
+					
+					text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:getCombinedDamage(o, offmult) end, "%d", "%+d", 1, false, false, dam)
 					self:mouseTooltip(self.TOOLTIP_COMBAT_DAMAGE, s:drawColorStringBlended(self.font, ("Damage      : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
-					text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatAPR(...) end, "%3d", "%+.0f", 1, false, false, dam)
-					self:mouseTooltip(self.TOOLTIP_COMBAT_APR,    s:drawColorStringBlended(self.font, ("APR         : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
-					text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatCrit(...) end, "%3d%%", "%+.0f%%", 1, false, false, dam)
+					text = compare_fields(player, actor_to_compare, function(actor, ...) return (o.combat.critical_power or 1.1) + (actor.combat_critical_power or 0)/100 end, "%.2fx", "%+.2f")
+					self:mouseTooltip(self.TOOLTIP_INC_CRIT_POWER  , s:drawColorStringBlended(self.font,   ("Crit mult.  : #00ff00#%s%s"):format(text, sp_text), w, h, 255, 255, 255, true)) h = h + self.font_h
+					text = compare_fields(player, actor_to_compare, function(actor, ...) return (max_acc or 75) end, "%d%%", "%+d%%", 1, false, false, mean)
+					self:mouseTooltip(self.TOOLTIP_COMBAT_ATTACK, s:drawColorStringBlended(self.font, ("Max accuracy: #00ff00#%s%s"):format(text, sp_text), w, h, 255, 255, 255, true)) h = h + self.font_h
+					text = compare_fields(player, actor_to_compare, function(actor, ...) return attack_speed_bonus end, "%d%%", "%+d%%", 1, false, false, mean)
+					self:mouseTooltip(self.TOOLTIP_COMBAT_SPEED,  s:drawColorStringBlended(self.font, ("Speed bonus : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
+					text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatAPR(...) end, "%d", "%+d", 1, false, false, dam)
+					self:mouseTooltip(self.TOOLTIP_COMBAT_APR,    s:drawColorStringBlended(self.font, ("Armor pen.  : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
+					text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatCrit(...) end, "%d%%", "%+d%%", 1, false, false, dam)
 					self:mouseTooltip(self.TOOLTIP_COMBAT_CRIT,   s:drawColorStringBlended(self.font, ("Crit. chance: #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
-					text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatSpeed(...) end, "%.2f%%", "%+.2f%%", 100, false, false, mean)
-					self:mouseTooltip(self.TOOLTIP_COMBAT_SPEED,  s:drawColorStringBlended(self.font, ("Speed       : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
 				end
 				if mean and mean.range then self:mouseTooltip(self.TOOLTIP_COMBAT_RANGE, s:drawColorStringBlended(self.font, ("Range (Off Hand): #00ff00#%3d"):format(mean.range), w, h, 255, 255, 255, true)) h = h + self.font_h end
 			end
@@ -647,10 +688,8 @@ function _M:drawDialog(kind, actor_to_compare)
 		h = 0
 		w = self.w * 0.5
 
-		s:drawColorStringBlended(self.font, "#LIGHT_BLUE#Damage mods.:", w, h, 255, 255, 255, true) h = h + self.font_h
-		text = compare_fields(player, actor_to_compare, function(actor, ...) return 150 + (actor.combat_critical_power or 0) end, "%3d%%", "%+.0f%%")
-		self:mouseTooltip(self.TOOLTIP_INC_CRIT_POWER  , s:drawColorStringBlended(self.font,   ("Critical mult.: #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
-
+		s:drawColorStringBlended(self.font, "#LIGHT_BLUE#Damage mods:", w, h, 255, 255, 255, true) h = h + self.font_h
+		
 		if player.inc_damage.all then
 			text = compare_fields(player, actor_to_compare, function(actor, ...) return actor.inc_damage and actor.inc_damage.all or 0 end, "%3d%%", "%+.0f%%")
 			self:mouseTooltip(self.TOOLTIP_INC_DAMAGE_ALL, s:drawColorStringBlended(self.font, ("All damage    : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
@@ -716,7 +755,7 @@ function _M:drawDialog(kind, actor_to_compare)
 		h = 0
 		w = self.w * 0.75
 
-		s:drawColorStringBlended(self.font, "#LIGHT_BLUE#Damage penetration.:", w, h, 255, 255, 255, true) h = h + self.font_h
+		s:drawColorStringBlended(self.font, "#LIGHT_BLUE#Damage penetration:", w, h, 255, 255, 255, true) h = h + self.font_h
 
 		if player.resists_pen.all then
 			text = compare_fields(player, actor_to_compare, function(actor, ...) return actor.resists_pen and actor.resists_pen.all or 0 end, "%3d%%", "%+.0f%%")
@@ -931,30 +970,31 @@ function _M:dump()
 	if player:getInven(player.INVEN_MAINHAND) then
 		for i, o in ipairs(player:getInven(player.INVEN_MAINHAND)) do
 			local mean, dam = o.combat, o.combat
-			if o.archery and mean then
-				dam = (player:getInven("QUIVER")[1] and player:getInven("QUIVER")[1].combat) or o.basic_ammo
-			end
 			if mean and dam then
-				strings[1] = ("Accuracy(Main Hand): %3d"):format(player:combatAttack(mean))
-				strings[2] = ("Damage  (Main Hand): %3d"):format(player:combatDamage(dam))
-				strings[3] = ("APR     (Main Hand): %3d"):format(player:combatAPR(dam))
-				strings[4] = ("Crit    (Main Hand): %3d%%"):format(player:combatCrit(dam))
-				strings[5] = ("Speed   (Main Hand): %0.2f"):format(player:combatSpeed(mean))
+				strings[1] = ("Damage    (Main Hand): %d"):format(player:getCombinedDamage(o))
+				strings[2] = ("crit mult (Main Hand): %.1fx"):format(o.combat.critical_power)
+				strings[3] = ("Max acc   (Main Hand): %d"):format(o.combat.max_acc)
+				strings[4] = ("Sp. bonus (Main Hand): %d%%"):format((1 / player:combatSpeed(o.combat))*100 - 100)
+				strings[5] = ("APR       (Main Hand): %d"):format(player:combatAPR(dam))
+				strings[6] = ("Crit      (Main Hand): %d%%"):format(player:combatCrit(dam))
 			end
-			if mean and mean.range then strings[6] = ("Range (Main Hand): %3d"):format(mean.range) end
+			if mean and mean.range then strings[7] = ("Range (Main Hand): %3d"):format(mean.range) end
 		end
 	end
 	--Unarmed??
 	if player:isUnarmed() then
+		local gloves = player:hasGloves()
+		local total_dam = player:combatDamage(player.combat) + (gloves and gloves:getMeleeProjectDam() or 0)
 		local mean, dam = player.combat, player.combat
 		if mean and dam then
-			strings[1] = ("Accuracy(Unarmed): %3d"):format(player:combatAttack(mean))
-			strings[2] = ("Damage  (Unarmed): %3d"):format(player:combatDamage(dam))
-			strings[3] = ("APR     (Unarmed): %3d"):format(player:combatAPR(dam))
-			strings[4] = ("Crit    (Unarmed): %3d%%"):format(player:combatCrit(dam))
-			strings[5] = ("Speed   (Unarmed): %0.2f"):format(player:combatSpeed(mean))
+				strings[1] = ("Damage    (Main Hand): %d"):format(total_dam)
+				strings[2] = ("crit mult (Main Hand): %.1fx"):format(player.combat.critical_power)
+				strings[3] = ("Max acc   (Main Hand): %d"):format(player.combat.max_acc)
+				strings[4] = ("Sp. bonus (Main Hand): %d%%"):format((1 / player:combatSpeed(player.combat))*100 - 100)
+				strings[5] = ("APR       (Main Hand): %d"):format(player:combatAPR(dam))
+				strings[6] = ("Crit      (Main Hand): %d%%"):format(player:combatCrit(dam))
 		end
-		if mean and mean.range then strings[6] = ("Range (Unarmed): %3d"):format(mean.range) end
+		if mean and mean.range then strings[7] = ("Range (Unarmed): %d"):format(mean.range) end
 	end
 
 	local enc, max = player:getEncumbrance(), player:getMaxEncumbrance()
@@ -1016,18 +1056,16 @@ function _M:dump()
 		local offmult = player:getOffHandMult()
 		for i, o in ipairs(player:getInven(player.INVEN_OFFHAND)) do
 			local mean, dam = o.combat, o.combat
-			if o.archery and mean then
-				dam = (player:getInven("QUIVER")[1] and player:getInven("QUIVER")[1].combat) or o.basic_ammo
-			end
 			if mean and dam then
 				nl()
-				nl(("Accuracy(Off Hand): %3d"):format(player:combatAttack(mean)))
-				nl(("Damage  (Off Hand): %3d"):format(player:combatDamage(dam) * offmult))
-				nl(("APR     (Off Hand): %3d"):format(player:combatAPR(dam)))
-				nl(("Crit    (Off Hand): %3d%%"):format(player:combatCrit(dam)))
-				nl(("Speed   (Off Hand): %0.2f"):format(player:combatSpeed(mean)))
+				nl(("Damage    (Main Hand): %d"):format(player:getCombinedDamage(o, offmult)))
+				nl(("crit mult (Main Hand): %.1fx"):format(o.combat.critical_power))
+				nl(("Max acc   (Main Hand): %d"):format(o.combat.max_acc))
+				nl(("Sp. bonus (Main Hand): %d%%"):format((1 / player:combatSpeed(o.combat))*100 - 100))
+				nl(("APR       (Main Hand): %d"):format(player:combatAPR(dam)))
+				nl(("Crit      (Main Hand): %d%%"):format(player:combatCrit(dam)))
 			end
-			if mean and mean.range then strings[6] = ("Range (Off Hand): %3d"):format(mean.range) end
+			if mean and mean.range then strings[7] = ("Range (Off Hand): %d"):format(mean.range) end
 		end
 	end
 

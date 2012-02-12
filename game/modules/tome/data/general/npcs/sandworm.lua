@@ -26,7 +26,7 @@ newEntity{
 	level_range = {7, nil},
 	body = { INVEN = 10 },
 
-	combat = { dam=resolvers.levelup(resolvers.mbonus(25, 15), 1, 1), atk=15, apr=0, dammod={str=0.7} },
+	combat = { dam=resolvers.levelup(resolvers.mbonus(25, 15), 1, 1), atk=15, apr=0, dammod={str=resolvers.levelup(0.1, 5, 0.1, 0.7)} },
 
 	infravision = 10,
 	max_life = 40, life_rating = 5,

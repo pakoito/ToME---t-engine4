@@ -249,7 +249,7 @@ newTalent{
 			infravision = 10,
 
 			combat_armor = 0, combat_def = 0,
-			combat = { dam=resolvers.rngavg(20,25), atk=16, apr=9, damtype=DamageType.NATURE, dammod={dex=1.2} },
+			combat = { dam=resolvers.rngavg(20,25), atk=16, apr=9, damtype=DamageType.NATURE, dammod={dex=resolvers.levelup(0.2, 5, 0.2, 1.2)} },
 
 			wild_gift_detonate = t.id,
 

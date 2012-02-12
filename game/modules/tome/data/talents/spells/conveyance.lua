@@ -44,7 +44,7 @@ newTalent{
 			end
 		end
 		if target ~= self and target:canBe("teleport") then
-			local hit = self:checkHit(self:combatSpellpower(), target:combatSpellResist() + (target:attr("continuum_destabilization") or 0))
+			local hit = self:checkHit(self:combatSpellpower(), target:combatSpellResist() + (target:attr("continuum_destabilization") or 0), 0, self:getMaxAccuracy("spell"))
 			if not hit then
 				game.logSeen(target, "The spell fizzles!")
 				return true
@@ -125,7 +125,7 @@ newTalent{
 		end
 
 		if target ~= self and target:canBe("teleport") then
-			local hit = self:checkHit(self:combatSpellpower(), target:combatSpellResist() + (target:attr("continuum_destabilization") or 0))
+			local hit = self:checkHit(self:combatSpellpower(), target:combatSpellResist() + (target:attr("continuum_destabilization") or 0), 0, self:getMaxAccuracy("spell"))
 			if not hit then
 				game.logSeen(target, "The spell fizzles!")
 				return true

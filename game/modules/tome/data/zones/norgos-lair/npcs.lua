@@ -46,7 +46,7 @@ newEntity{ base="BASE_NPC_BEAR", define_as = "NORGOS",
 	instakill_immune = 1,
 	move_others=true,
 
-	combat = { dam=resolvers.levelup(17, 1, 0.8), atk=10, apr=9, dammod={str=1.2} },
+	combat = { dam=resolvers.levelup(17, 1, 0.8), atk=10, apr=9, dammod={str=resolvers.levelup(0.3, 5, 0.2, 1.2)} },
 
 	resists = { [DamageType.COLD] = 20 },
 

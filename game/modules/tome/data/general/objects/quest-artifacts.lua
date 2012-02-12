@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 local Stats = require "engine.interface.ActorStats"
+local Talents = require "engine.interface.ActorTalents"
 
 -- The staff of absorption, the reason the game exists!
 newEntity{ define_as = "STAFF_ABSORPTION",
@@ -26,8 +27,12 @@ newEntity{ define_as = "STAFF_ABSORPTION",
 	slot = "MAINHAND",
 	slot_forbid = "OFFHAND",
 	type = "weapon", subtype="staff",
+	twohanded = true,
 	unided_name = "dark runed staff",
 	name = "Staff of Absorption",
+	flavor_name = "magestaff",
+	no_command = true,
+	material_level = 5,
 	level_range = {30, 30},
 	display = "\\", color=colors.VIOLET, image = "object/artifact/staff_absorption.png",
 	encumber = 7,
@@ -35,17 +40,24 @@ newEntity{ define_as = "STAFF_ABSORPTION",
 Light around it seems to dim and you can feel its tremendous power simply by touching it.]],
 
 	require = { stat = { mag=60 }, },
+	modes = {"fire", "cold", "lightning", "arcane"},
 	combat = {
-		dam = 30,
-		apr = 4,
-		dammod = {mag=1},
+		dam = 40,
+		max_acc = 100,
+		critical_power = 2,
+		dammod = {mag=0.6},
 		damtype = DamageType.ARCANE,
+		affects_spells = true,
 		talented = "staff",
+		physspeed = 1,
+		damrange = 1,
+		sound = {"actions/melee", pitch=0.6, vol=1.2}, sound_miss = {"actions/melee", pitch=0.6, vol=1.2},
 	},
 	wielder = {
 		combat_atk = 20,
 		combat_spellpower = 20,
 		combat_spellcrit = 10,
+		learn_talent = {[Talents.T_COMMAND_STAFF] = 1},
 	},
 
 	max_power = 1000, power_regen = 1,

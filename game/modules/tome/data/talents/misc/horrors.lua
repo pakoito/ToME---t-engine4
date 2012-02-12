@@ -457,7 +457,7 @@ newTalent{
 				autolevel = "summoner",
 				ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_snake" },
 				combat_armor = 1, combat_def = 1,
-				combat = { dam=resolvers.levelup(resolvers.mbonus(40, 15), 1, 1.2), atk=15, apr=15, dammod={wil=0.8}, damtype=DamageType.TEMPORAL },
+				combat = { dam=resolvers.levelup(resolvers.mbonus(40, 15), 1, 1.2), atk=15, apr=15, dammod={wil=resolvers.levelup(0.2, 5, 0.2, 0.8)}, damtype=DamageType.TEMPORAL },
 				on_melee_hit = { [DamageType.TEMPORAL] = resolvers.mbonus(20, 10), },
 
 				infravision = 10,

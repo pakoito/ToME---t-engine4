@@ -368,7 +368,7 @@ newTalent{
 				autolevel = "none",
 				ai = "summoned", ai_real = "tactical", ai_state = { talent_in=2, },
 				stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
-				combat = { dam=resolvers.levelup(resolvers.rngavg(15,25), 1, 1.3), atk=resolvers.levelup(resolvers.rngavg(15,25), 1, 1.3), dammod={str=1.1} },
+				combat = { dam=resolvers.levelup(resolvers.rngavg(15,25), 1, 1.3), atk=resolvers.levelup(resolvers.rngavg(15,25), 1, 1.3), dammod={str=resolvers.levelup(0.2, 5, 0.2, 1.1)} },
 				inc_stats = { str=25 + self:getWil() * self:getTalentLevel(t) / 5, dex=18, con=10 + self:getTalentLevel(t) * 2, },
 
 				level_range = {1, nil}, exp_worth = 0,

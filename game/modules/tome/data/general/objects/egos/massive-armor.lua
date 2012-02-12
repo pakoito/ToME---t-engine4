@@ -29,23 +29,23 @@ newEntity{
 	keywords = {dragon=true},
 	level_range = {20, 50},
 	greater_ego = 1,
-	rarity = 20,
+	rarity = 40,
 	cost = 60,
 	wielder = {
 		resists={
-			[DamageType.ACID] = resolvers.mbonus_material(10, 5),
-			[DamageType.LIGHTNING] = resolvers.mbonus_material(10, 5),
-			[DamageType.FIRE] = resolvers.mbonus_material(10, 5),
-			[DamageType.COLD] = resolvers.mbonus_material(10, 5),
-			[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 5),
+			[DamageType.ACID] = resolvers.mbonus_material("resists"),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material("resists"),
+			[DamageType.FIRE] = resolvers.mbonus_material("resists"),
+			[DamageType.COLD] = resolvers.mbonus_material("resists"),
+			[DamageType.PHYSICAL] = resolvers.mbonus_material("resists"),
 	},
 		inc_stats = {
-			[Stats.STAT_CON] = resolvers.mbonus_material(5, 1),
-			[Stats.STAT_STR] = resolvers.mbonus_material(5, 1),
+			[Stats.STAT_CON] = resolvers.mbonus_material("inc_stats"),
+			[Stats.STAT_STR] = resolvers.mbonus_material("inc_stats"),
 		},
-		stun_immune = resolvers.mbonus_material(20, 20, function(e, v) v=v/100 return 0, v end),
-		knockback_immune = resolvers.mbonus_material(20, 20, function(e, v) v=v/100 return 0, v end),
-		disarm_immune = resolvers.mbonus_material(20, 20, function(e, v) v=v/100 return 0, v end),
+		stun_immune = resolvers.mbonus_material("immunity"),
+		knockback_immune = resolvers.mbonus_material("immunity"),
+		disarm_immune = resolvers.mbonus_material("immunity"),
 		talent_cd_reduction={[Talents.T_RUSH]=5},
 	},
 }
@@ -59,6 +59,6 @@ newEntity{
 	rarity = 8,
 	cost = 7,
 	wielder = {
-		combat_armor = resolvers.mbonus_material(12, 3),
+		combat_armor = resolvers.mbonus_material("combat_armor"),
 	},
 }

@@ -25,7 +25,7 @@ newEntity{
 	display = "V", color=colors.WHITE,
 	desc = [[These ancient cursed beings often take the form of a bat and attack their prey.]],
 
-	combat = { dam=resolvers.levelup(resolvers.mbonus(30, 10), 1, 0.8), atk=10, apr=9, damtype=DamageType.DRAINLIFE, dammod={str=1.9} },
+	combat = { dam=resolvers.levelup(resolvers.mbonus(30, 10), 1, 0.8), atk=10, apr=9, damtype=DamageType.DRAINLIFE, dammod={str=resolvers.levelup(0.3, 5, 0.2, 1.9)} },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	drops = resolvers.drops{chance=20, nb=1, {} },

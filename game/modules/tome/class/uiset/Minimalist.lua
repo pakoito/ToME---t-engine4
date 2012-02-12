@@ -834,7 +834,7 @@ function _M:displayResources(scale, bx, by, a)
 		local quiver = player:getInven("QUIVER")
 		local ammo = quiver and quiver[1]
 		if ammo then
-			local amt = ammo:getNumber()
+			local amt = ammo.combat.shots_left
 			local shad, bg
 			if ammo.type == "alchemist-gem" then shad, bg = _M["ammo_shadow_alchemist-gem"], _M["ammo_alchemist-gem"]
 			else shad, bg = _M["ammo_shadow_"..ammo.subtype] or ammo_shadow_default, _M["ammo_"..ammo.subtype] or ammo_default

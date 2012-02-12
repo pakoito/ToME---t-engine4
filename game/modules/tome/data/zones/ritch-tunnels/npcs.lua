@@ -32,7 +32,7 @@ newEntity{
 Vicious predators, they inject corrupting diseases into their foes, and their sharp claws cut through most armours.]],
 	killer_message = ", who incubated her eggs in the corpse,",
 
-	combat = { dam=resolvers.rngavg(10,32), atk=0, apr=4, damtype=DamageType.BLIGHT, dammod={dex=1.2} },
+	combat = { dam=resolvers.rngavg(10,32), atk=0, apr=4, damtype=DamageType.BLIGHT, dammod={dex=resolvers.levelup(0.1, 5, 0.1, 1.2)} },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 
@@ -110,7 +110,7 @@ newEntity{ base = "BASE_NPC_RITCH_REL", define_as = "HIVE_MOTHER",
 	rank = 4,
 	size_category = 4,
 
-	combat = { dam=30, atk=22, apr=7, dammod={str=1.1} },
+	combat = { dam=30, atk=22, apr=7, dammod={str=resolvers.levelup(0.3, 5, 0.2, 1.1)} },
 
 	resists = { [DamageType.BLIGHT] = 40 },
 

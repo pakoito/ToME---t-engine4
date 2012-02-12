@@ -31,7 +31,7 @@ newEntity{
 	rarity = 12,
 	cost = 14,
 	wielder = {
-		life_regen = resolvers.mbonus_material(60, 15, function(e, v) v=v/10 return 0, v end),
+		life_regen = resolvers.mbonus_material("life_regen", 4),
 	},
 }
 
@@ -44,8 +44,8 @@ newEntity{
 	rarity = 22,
 	cost = 35,
 	wielder = {
-		combat_def_ranged = resolvers.mbonus_material(8, 2),
-		movement_speed = 0.1,
-		inc_stats = { [Stats.STAT_DEX] = resolvers.mbonus_material(3, 2), },
+		--combat_def_ranged = resolvers.mbonus_material("combat_def_ranged"),
+		movement_speed = resolvers.mbonus_material("movement_speed"),
+		inc_stats = { [Stats.STAT_DEX] = resolvers.mbonus_material("inc_stats"), },
 	},
 }

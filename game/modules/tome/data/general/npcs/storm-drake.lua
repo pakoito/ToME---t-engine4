@@ -51,7 +51,7 @@ newEntity{ base = "BASE_NPC_STORM_DRAKE",
 	rank = 1, size_category = 2,
 	max_life = resolvers.rngavg(40,60),
 	combat_armor = 5, combat_def = 0,
-	combat = { dam=resolvers.levelup(resolvers.rngavg(25,40), 1, 0.6), atk=resolvers.rngavg(25,60), apr=25, dammod={str=1.1} },
+	combat = { dam=resolvers.levelup(resolvers.rngavg(25,40), 1, 0.6), atk=resolvers.rngavg(25,60), apr=25, dammod={str=resolvers.levelup(0.2, 5, 0.1, 1.1)} },
 	on_melee_hit = {[DamageType.LIGHTNING]=resolvers.mbonus(7, 2)},
 
 	make_escort = {

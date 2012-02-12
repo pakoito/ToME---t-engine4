@@ -82,7 +82,7 @@ newTalent{
 	getDamage = function(self, t) return self:combatTalentPhysicalDamage(t, 5, 50) * getUnarmedTrainingBonus(self) end,
 	getDamageTwo = function(self, t) return self:combatTalentPhysicalDamage(t, 10, 75) * getUnarmedTrainingBonus(self) end,
 	do_throw = function(self, target, t)
-		local hit = self:checkHit(self:combatAttack(), target:combatDefense(), 0, 95, 5 - self:getTalentLevel(t) / 2)
+		local hit = self:checkHit(self:combatAttack(), target:combatDefense(), 0, self:getMaxAccuracy("physical", self.combat), 5 - self:getTalentLevel(t) / 2)
 		if hit then
 			self:project(target, target.x, target.y, DamageType.PHYSICAL, self:physicalCrit(t.getDamageTwo(self, t), nil, target, self:combatAttack(), target:combatDefense()))
 			-- if grappled stun

@@ -261,7 +261,7 @@ function _M:makeProject(src, display, def, do_move, do_act, do_stop)
 		def.tg.talent_id = def.tg.talent.id
 		def.tg.talent = nil
 	end
-	speed = speed or 10
+	speed = def.tg.speed or speed or 10
 	local p = _M.new{
 		name = name,
 		display = display.display or ' ', color = display.color or colors.WHITE, image = display.image or nil,

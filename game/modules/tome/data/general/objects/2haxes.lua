@@ -17,8 +17,11 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local Talents = require "engine.interface.ActorTalents"
+
 newEntity{
 	define_as = "BASE_BATTLEAXE",
+	flavor_names = {"battleaxe", "greataxe", "bardiche", "warcleaver"},
 	slot = "MAINHAND",
 	slot_forbid = "OFFHAND",
 	type = "weapon", subtype="battleaxe", image = resolvers.image_material("2haxe", "metal"),
@@ -28,7 +31,7 @@ newEntity{
 	encumber = 3,
 	rarity = 5,
 	metallic = true,
-	combat = { talented = "axe", damrange = 1.5, physspeed = 1, sound = {"actions/melee", pitch=0.6, vol=1.2}, sound_miss = {"actions/melee", pitch=0.6, vol=1.2} },
+	combat = { talented = "axe", damrange = 1, physspeed = 1, sound = {"actions/melee", pitch=0.6, vol=1.2}, sound_miss = {"actions/melee", pitch=0.6, vol=1.2} },
 	desc = [[Massive two-handed battleaxes.]],
 	twohanded = true,
 	randart_able = { attack=40, physical=80, spell=20, def=10, misc=10 },
@@ -42,10 +45,10 @@ newEntity{ base = "BASE_BATTLEAXE",
 	cost = 5,
 	material_level = 1,
 	combat = {
-		dam = resolvers.rngavg(6,12),
-		apr = 1,
-		physcrit = 4.5,
-		dammod = {str=1.2},
+		dam = resolvers.cbonus(8),
+		max_acc = resolvers.cbonus(85, 100, 1, 3),
+		critical_power = resolvers.cbonus(17, 29, 0.1),
+		dammod = {str=0.25},
 	},
 }
 
@@ -53,13 +56,13 @@ newEntity{ base = "BASE_BATTLEAXE",
 	name = "steel battleaxe", short_name = "steel",
 	level_range = {10, 20},
 	require = { stat = { str=16 }, },
-	cost = 10,
+	cost = 30,
 	material_level = 2,
 	combat = {
-		dam = resolvers.rngavg(15,23),
-		apr = 2,
-		physcrit = 5,
-		dammod = {str=1.2},
+		dam = resolvers.cbonus(16),
+		max_acc = resolvers.cbonus(85, 100, 1, 3.5),
+		critical_power = resolvers.cbonus(17, 29, 0.1, 3.5),
+		dammod = {str=0.5},
 	},
 }
 
@@ -67,13 +70,13 @@ newEntity{ base = "BASE_BATTLEAXE",
 	name = "dwarven-steel battleaxe", short_name = "d.steel",
 	level_range = {20, 30},
 	require = { stat = { str=24 }, },
-	cost = 15,
+	cost = 80,
 	material_level = 3,
 	combat = {
-		dam = resolvers.rngavg(28,35),
-		apr = 2,
-		physcrit = 6.5,
-		dammod = {str=1.2},
+		dam = resolvers.cbonus(32),
+		max_acc = resolvers.cbonus(85, 100, 1, 4),
+		critical_power = resolvers.cbonus(17, 29, 0.1, 4),
+		dammod = {str=0.75},
 	},
 }
 
@@ -81,13 +84,13 @@ newEntity{ base = "BASE_BATTLEAXE",
 	name = "stralite battleaxe", short_name = "stralite",
 	level_range = {30, 40},
 	require = { stat = { str=35 }, },
-	cost = 25,
+	cost = 120,
 	material_level = 4,
 	combat = {
-		dam = resolvers.rngavg(40,48),
-		apr = 3,
-		physcrit = 7.5,
-		dammod = {str=1.2},
+		dam = resolvers.cbonus(56),
+		max_acc = resolvers.cbonus(85, 100, 1, 4.5),
+		critical_power = resolvers.cbonus(17, 29, 0.1, 4.5),
+		dammod = {str=1},
 	},
 }
 
@@ -95,12 +98,12 @@ newEntity{ base = "BASE_BATTLEAXE",
 	name = "voratun battleaxe", short_name = "voratun",
 	level_range = {40, 50},
 	require = { stat = { str=48 }, },
-	cost = 35,
+	cost = 170,
 	material_level = 5,
 	combat = {
-		dam = resolvers.rngavg(54, 60),
-		apr = 4,
-		physcrit = 8,
-		dammod = {str=1.2},
+		dam = resolvers.cbonus(80),
+		max_acc = resolvers.cbonus(85, 100, 1, 5),
+		critical_power = resolvers.cbonus(17, 29, 0.1, 5),
+		dammod = {str=1.25},
 	},
 }

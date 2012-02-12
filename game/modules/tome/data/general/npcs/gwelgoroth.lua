@@ -25,7 +25,7 @@ newEntity{
 	blood_color = colors.AQUAMARINE,
 	display = "E", color=colors.AQUAMARINE,
 
-	combat = { dam=resolvers.levelup(resolvers.mbonus(40, 15), 1, 1.2), atk=15, apr=15, dammod={mag=0.8}, damtype=DamageType.LIGHTNING },
+	combat = { dam=resolvers.levelup(resolvers.mbonus(40, 15), 1, 1.2), atk=15, apr=15, dammod={mag=resolvers.levelup(0.1, 5, 0.1, 0.8)}, damtype=DamageType.LIGHTNING },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 

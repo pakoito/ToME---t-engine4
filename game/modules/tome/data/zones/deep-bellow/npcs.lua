@@ -92,7 +92,7 @@ It seems to come from the digestive system of the mouth.]],
 	movement_speed = 3,
 	size_category = 1,
 
-	combat = { dam=resolvers.mbonus(25, 15), damtype=DamageType.SLIME, dammod={str=1} },
+	combat = { dam=resolvers.mbonus(25, 15), damtype=DamageType.SLIME, dammod={str=resolvers.levelup(0.1, 5, 0.2, 1)} },
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { talent_in=4, ai_move="move_astar" },

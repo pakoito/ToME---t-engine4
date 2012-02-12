@@ -25,13 +25,13 @@ newTalent{
 	message = "@Source@ rearranges history.",
 	cooldown = 24,
 	tactical = { PARADOX = 2 },
-	getDuration = function(self, t) 
+	getDuration = function(self, t)
 		local duration = 1 + math.floor(self:getTalentLevel(t)/2)
-		
+
 		if self:knowTalent(self.T_PARADOX_MASTERY) then
 			duration = 1 + math.floor((self:getTalentLevel(t)/2) + (self:getTalentLevel(self.T_PARADOX_MASTERY)/2))
 		end
-		
+
 		return duration
 	end,
 	getReduction = function(self, t) return self:combatTalentSpellDamage(t, 30, 300) end,
@@ -74,9 +74,9 @@ newTalent{
 		local target = x and game.level.map(x, y, engine.Map.ACTOR) or nil
 		if not target then return nil end
 
-		local hit = self:checkHit(self:combatSpellpower(), target:combatSpellResist() + (target:attr("continuum_destabilization") or 0))
+		local hit = self:checkHit(self:combatSpellpower(), target:combatSpellResist() + (target:attr("continuum_destabilization") or 0), 0, self:getMaxAccuracy("spell"))
 		if not hit then game.logSeen(target, "%s resists!", target.name:capitalize()) return true end
-		
+
 		target:setEffect(target.EFF_CONTINUUM_DESTABILIZATION, 100, {power=self:combatSpellpower(0.3)})
 		self:project(tg, x, y, DamageType.TEMPORAL, self:spellCrit(t.getDamage(self, t)))
 		game.level.map:particleEmitter(x, y, 1, "temporal_thrust")
@@ -84,7 +84,7 @@ newTalent{
 
 		-- End it here if we've killed the target or the target is a player
 		if target.dead or target.player then return true end
-		
+
 		-- set up instability
 		local summoner = self
 		-- Store the current terrain
@@ -115,7 +115,7 @@ newTalent{
 			summoner_gain_exp = true,
 			summoner = summoner,
 		}
-		
+
 		-- Mixin the old terrain
 		table.update(temporal_instability, terrain)
 		-- Now update the display overlay
@@ -129,12 +129,12 @@ newTalent{
 		else
 			table.append(temporal_instability.add_displays, overlay)
 		end
-		
+
 		game.logSeen(target, "%s has moved forward in time!", target.name:capitalize())
 		game.level:removeEntity(target)
 		game.level:addEntity(temporal_instability)
 		game.level.map(target.x, target.y, engine.Map.TERRAIN, temporal_instability)
-		
+
 		return true
 	end,
 	info = function(self, t)
@@ -197,7 +197,7 @@ newTalent{
 		for tid, cd in pairs(self.talents_cd) do
 			self.talents_cd[tid] = cd - t.getCooldownReduction(self, t)
 		end
-		
+
 		local target = self
 		local todel = {}
 		for eff_id, p in pairs(target.tmp) do
@@ -210,7 +210,7 @@ newTalent{
 		while #todel > 0 do
 			target:removeEffect(table.remove(todel))
 		end
-		
+
 		return true
 	end,
 	info = function(self, t)

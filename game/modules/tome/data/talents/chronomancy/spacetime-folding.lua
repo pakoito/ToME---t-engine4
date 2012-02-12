@@ -76,7 +76,7 @@ newTalent{
 			power = self:combatSpellpower() * (1 + self:getTalentLevel(self.T_SPACETIME_MASTERY)/10)
 		end
 		
-		if target:canBe("teleport") and self:checkHit(power, target:combatSpellResist() + (target:attr("continuum_destabilization") or 0)) then
+		if target:canBe("teleport") and self:checkHit(power, target:combatSpellResist() + (target:attr("continuum_destabilization") or 0), 0, self:getMaxAccuracy("spell")) then
 			target:crossTierEffect(target.EFF_SPELLSHOCKED, self:combatSpellpower())
 			-- first remove the target so the destination tile is empty
 			game.level.map:remove(target.x, target.y, Map.ACTOR)

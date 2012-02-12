@@ -41,7 +41,7 @@ newEntity{
 	size_category = 4,
 
 	combat_armor = 1, combat_def = 1,
-	combat = { dam=resolvers.levelup(resolvers.rngavg(12, 25), 1, 1), atk=10, apr=3, physspeed=2, dammod={str=0.8} },
+	combat = { dam=resolvers.levelup(resolvers.rngavg(12, 25), 1, 1), atk=10, apr=3, physspeed=2, dammod={str=resolvers.levelup(0.2, 5, 0.1, 1.1)} },
 	life_rating = 12,
 	resolvers.tmasteries{ ["technique/other"]=0.25 },
 

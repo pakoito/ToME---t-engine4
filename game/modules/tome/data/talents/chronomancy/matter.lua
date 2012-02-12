@@ -175,7 +175,7 @@ newTalent{
 		
 		-- Try to insta-kill
 		if target then
-			if target:checkHit(self:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("instakill") and target.life > 0 and target.life < target.max_life * 0.2 then
+			if target:checkHit(self:combatSpellpower(), target:combatPhysicalResist(), 0, self:getMaxAccuracy("spell"), 15) and target:canBe("instakill") and target.life > 0 and target.life < target.max_life * 0.2 then
 				-- KILL IT !
 				game.logSeen(target, "%s has been pulled apart at a molecular level!", target.name:capitalize())
 				target:die(self)

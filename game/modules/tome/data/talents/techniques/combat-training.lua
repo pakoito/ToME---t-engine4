@@ -100,15 +100,15 @@ newTalent{
 	name = "Weapons Mastery",
 	type = {"technique/combat-training", 1},
 	points = 10,
-	require = { stat = { str=function(level) return 12 + level * 3 end }, },
+	require = { stat = { str=function(level) return math.ceil(12 + level * 4.5) end }, },
 	mode = "passive",
-	getDamage = function(self, t) return self:getTalentLevel(t) * 5 end,
-	getPercentInc = function(self, t) return math.sqrt(self:getTalentLevel(t) / 10) / 2 end,
+	getDamage = function(self, t) return math.floor(t.getPercentInc(self, t) * self:combatPhysicalpower()) end,
+	getPercentInc = function(self, t) return self:getTalentLevel(t) / 10 end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local inc = t.getPercentInc(self, t)
-		return ([[Increases Physical Power by %d. Also increases damage done with swords, axes, maces by %d%%]]):
-		format(damage, 100*inc)
+		return ([[Increases damage done with swords, axes and maces by %d%% of your physical power (%d).]]):
+		format(100*inc, damage)
 	end,
 }
 
@@ -119,13 +119,13 @@ newTalent{
 	points = 10,
 	require = { stat = { dex=function(level) return 10 + level * 3 end }, },
 	mode = "passive",
-	getDamage = function(self, t) return self:getTalentLevel(t) * 5 end,
-	getPercentInc = function(self, t) return math.sqrt(self:getTalentLevel(t) / 10) / 2 end,
+	getDamage = function(self, t) return math.floor(t.getPercentInc(self, t) * self:combatPhysicalpower()) end,
+	getPercentInc = function(self, t) return self:getTalentLevel(t) / 20 end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local inc = t.getPercentInc(self, t)
-		return ([[Increases Physical Power by %d. Also increases damage done with knives by %d%%]]):
-		format(damage, 100*inc)
+		return ([[Increases damage done with knives by %d%% of your physical power (%d).]]):
+		format(100*inc, damage)
 	end,
 }
 
@@ -136,12 +136,12 @@ newTalent{
 	points = 10,
 	require = { stat = { str=function(level) return 10 + level * 3 end, dex=function(level) return 10 + level * 3 end }, },
 	mode = "passive",
-	getDamage = function(self, t) return self:getTalentLevel(t) * 5 end,
-	getPercentInc = function(self, t) return math.sqrt(self:getTalentLevel(t) / 10) / 2 end,
+	getDamage = function(self, t) return math.floor(t.getPercentInc(self, t) * self:combatPhysicalpower()) end,
+	getPercentInc = function(self, t) return self:getTalentLevel(t) / 10 end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local inc = t.getPercentInc(self, t)
-		return ([[Increases Physical Power by %d. Also increases damage done with exotic weapons by %d%%]]):
-		format(damage, 100*inc)
+		return ([[Increases damage done with exotic weapons by %d%% of your physical power (%d).]]):
+		format(100*inc, damage)
 	end,
 }

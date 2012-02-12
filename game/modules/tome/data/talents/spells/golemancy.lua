@@ -38,7 +38,7 @@ local function makeGolem()
 		never_anger = true,
 		save_hotkeys = true,
 
-		combat = { dam=10, atk=10, apr=0, dammod={str=1} },
+		combat = { dam=10, atk=10, apr=0, dammod={str=resolvers.levelup(0.1, 5, 0.2, 1)} },
 
 		body = { INVEN = 1000, QS_MAINHAND = 1, QS_OFFHAND = 1, MAINHAND = 1, OFFHAND = 1, BODY=1, GEM=2 },
 		equipdoll = "alchemist_golem",

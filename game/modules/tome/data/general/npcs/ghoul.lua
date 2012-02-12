@@ -65,7 +65,7 @@ newEntity{ base = "BASE_NPC_GHOUL",
 	},
 	ai_state = { talent_in=4, },
 
-	combat = { dam=resolvers.levelup(10, 1, 1), atk=resolvers.levelup(5, 1, 1), apr=3, dammod={str=0.6} },
+	combat = { dam=resolvers.levelup(10, 1, 1), atk=resolvers.levelup(5, 1, 1), apr=3, dammod={str=resolvers.levelup(0.1, 5, 0.1, 0.6)} },
 }
 
 newEntity{ base = "BASE_NPC_GHOUL",
@@ -77,7 +77,7 @@ newEntity{ base = "BASE_NPC_GHOUL",
 	combat_armor = 2, combat_def = 8,
 	ai_state = { talent_in=3, },
 
-	combat = { dam=resolvers.levelup(17, 1, 1.1), atk=resolvers.levelup(6, 1, 1), apr=3, dammod={str=0.6} },
+	combat = { dam=resolvers.levelup(17, 1, 1.1), atk=resolvers.levelup(6, 1, 1), apr=3, dammod={str=resolvers.levelup(0.1, 5, 0.1, 0.6)} },
 
 	summon = {{type="undead", subtype="ghoul", name="ghoul", number=1, hasxp=false}, },
 	resolvers.talents{

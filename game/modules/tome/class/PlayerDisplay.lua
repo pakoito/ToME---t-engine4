@@ -375,8 +375,9 @@ function _M:display()
 
 	local quiver = player:getInven("QUIVER")
 	local ammo = quiver and quiver[1]
-	if ammo then
-		self:mouseTooltip(self.TOOLTIP_COMBAT_AMMO, self:makeTexture(("#ANTIQUE_WHITE#Ammo:       #ffffff#%d"):format(ammo:getNumber()), 0, h, 255, 255, 255)) h = h + self.font_h
+	if ammo and ammo.combat then
+		local shots_left = ammo.combat.shots_left or 0
+		self:mouseTooltip(self.TOOLTIP_COMBAT_AMMO, self:makeTexture(("#ANTIQUE_WHITE#Ammo:       #ffffff#%d"):format(shots_left), 0, h, 255, 255, 255)) h = h + self.font_h
 	end
 
 	if savefile_pipe.saving then

@@ -120,12 +120,9 @@ function _M:dumpToJSON(js)
 	if self:getInven(self.INVEN_MAINHAND) then
 		for i, o in ipairs(self:getInven(self.INVEN_MAINHAND)) do
 			local mean, dam = o.combat, o.combat
-			if o.archery and mean then
-				dam = (self:getInven("QUIVER")[1] and self:getInven("QUIVER")[1].combat) or o.basic_ammo
-			end
 			if mean and dam then
 				c[#c+1] = { ["accuracy (main hand)"] = string.format("%d", self:combatAttack(mean)) }
-				c[#c+1] = { ["damage (main hand)"] = string.format("%d", self:combatDamage(dam)) }
+				c[#c+1] = { ["damage (main hand)"] = string.format("%d", self:getCombinedDamage(o))}
 				c[#c+1] = { ["APR (main hand)"] = string.format("%d", self:combatAPR(dam)) }
 				c[#c+1] = { ["crit (main hand)"] = string.format("%d%%", self:combatCrit(dam)) }
 				c[#c+1] = { ["speed (main hand)"] = string.format("%0.2f", self:combatSpeed(mean)) }
@@ -149,12 +146,9 @@ function _M:dumpToJSON(js)
 		local offmult = self:getOffHandMult()
 		for i, o in ipairs(self:getInven(self.INVEN_OFFHAND)) do
 			local mean, dam = o.combat, o.combat
-			if o.archery and mean then
-				dam = (self:getInven("QUIVER")[1] and self:getInven("QUIVER")[1].combat) or o.basic_ammo
-			end
 			if mean and dam then
 				c[#c+1] = { ["accuracy (off hand)"] = string.format("%d", self:combatAttack(mean)) }
-				c[#c+1] = { ["damage (off hand)"] = string.format("%d", self:combatDamage(dam) * offmult) }
+				c[#c+1] = { ["damage (off hand)"] = string.format("%d", self:getCombinedDamage(o) * offmult) }
 				c[#c+1] = { ["APR (off hand)"] = string.format("%d", self:combatAPR(dam)) }
 				c[#c+1] = { ["crit(off hand)"] = string.format("%d%%", self:combatCrit(dam)) }
 				c[#c+1] = { ["speed(off hand)"] = string.format("%0.2f", self:combatSpeed(mean)) }

@@ -38,7 +38,7 @@ newEntity{
 	rarity = 6,
 	cost = 10,
 	wielder = {
-		inc_stats = { [Stats.STAT_STR] = resolvers.mbonus_material(4, 1) },
+		inc_stats = { [Stats.STAT_STR] = resolvers.mbonus_material("inc_stats") },
 	},
 }
 
@@ -51,10 +51,10 @@ newEntity{
 	rarity = 20,
 	cost = 20,
 	wielder = {
-		lite = 1,
+		lite = resolvers.mbonus_material("lite"),
 		inc_stats = {
-			[Stats.STAT_STR] = resolvers.mbonus_material(3, 1),
-			[Stats.STAT_CON] = resolvers.mbonus_material(3, 1),
+			[Stats.STAT_STR] = resolvers.mbonus_material("inc_stats"),
+			[Stats.STAT_CON] = resolvers.mbonus_material("inc_stats"),
 			},
 	},
 }
@@ -67,7 +67,7 @@ newEntity{
 	rarity = 6,
 	cost = 5,
 	wielder = {
-		fatigue = resolvers.mbonus_material(6, 4, function(e, v) return 0, -v end),
+		fatigue = resolvers.mbonus_material("fatigue"),
 	},
 }
 
@@ -79,7 +79,7 @@ newEntity{
 	rarity = 6,
 	cost = 5,
 	wielder = {
-		infravision = resolvers.mbonus_material(2, 1),
+		infravision = resolvers.mbonus_material("infravision"),
 	},
 }
 
@@ -91,7 +91,7 @@ newEntity{
 	rarity = 6,
 	cost = 5,
 	wielder = {
-		resists = { [DamageType.NATURE] = resolvers.mbonus_material(5, 10), },
+		resists = { [DamageType.NATURE] = resolvers.mbonus_material("resists"), },
 	},
 }
 
@@ -104,8 +104,8 @@ newEntity{
 	rarity = 15,
 	cost = 15,
 	wielder = {
-		max_life = resolvers.mbonus_material(20, 20),
-		max_stamina = resolvers.mbonus_material(15, 15),
+		max_life = resolvers.mbonus_material("max_life"),
+		max_stamina = resolvers.mbonus_material("max_stamina"),
 	},
 	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 3) end),
 }
@@ -120,8 +120,8 @@ newEntity{
 	cost = 15,
 	wielder = {
 		resists={
-			[DamageType.FIRE] = resolvers.mbonus_material(5, 5),
-			[DamageType.DARKNESS] = resolvers.mbonus_material(5, 5),
+			[DamageType.FIRE] = resolvers.mbonus_material("resists"),
+			[DamageType.DARKNESS] = resolvers.mbonus_material("resists"),
 		},
 	},
 	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 3) end),
@@ -136,9 +136,9 @@ newEntity{
 	rarity = 20,
 	cost = 70,
 	wielder = {
-		combat_dam = resolvers.mbonus_material(5, 5),
-		combat_apr = resolvers.mbonus_material(4, 4),
-		combat_critical_power = resolvers.mbonus_material(10, 10),
+		combat_dam = resolvers.mbonus_material("combat_dam", 2),
+		combat_apr = resolvers.mbonus_material("combat_apr"),
+		--combat_critical_power = resolvers.mbonus_material("combat_critical_power"),
 	},
 	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 3) end),
 }
@@ -153,9 +153,9 @@ newEntity{
 	cost = 15,
 	wielder = {
 		inc_stats = {
-			[Stats.STAT_CUN] = resolvers.mbonus_material(2, 2),
+			[Stats.STAT_CUN] = resolvers.mbonus_material("inc_stats"),
 			},
-		confusion_immune = resolvers.mbonus_material(3, 2, function(e, v) v=v/10 return 0, v end),
+		confusion_immune = resolvers.mbonus_material("immunity"),
 	},
 	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 3) end),
 }
@@ -169,8 +169,8 @@ newEntity{
 	rarity = 15,
 	cost = 15,
 	wielder = {
-		combat_def = resolvers.mbonus_material(4, 4),
-		combat_armor = resolvers.mbonus_material(3, 2),
+		combat_def = resolvers.mbonus_material("combat_def"),
+		combat_armor = resolvers.mbonus_material("combat_armor"),
 	},
 	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 3) end),
 }
@@ -186,10 +186,10 @@ newEntity{
 	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
 	wielder = {
 		inc_stats = {
-			[Stats.STAT_STR] = resolvers.mbonus_material(7, 3),
+			[Stats.STAT_STR] = resolvers.mbonus_material("inc_stats", 2),
 		},
-		combat_physcrit = resolvers.mbonus_material(5, 1),
-		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, -v end),
+		combat_physcrit = resolvers.mbonus_material("combat_physcrit"),
+		healing_factor = resolvers.mbonus_material("healing_factor", -1),
 	},
 }
 
@@ -203,10 +203,10 @@ newEntity{
 	cost = 40,
 	wielder = {
 		inc_stats = {
-			[Stats.STAT_CUN] = resolvers.mbonus_material(5, 1),
+			[Stats.STAT_CUN] = resolvers.mbonus_material("inc_stats"),
 		},
-		max_mana = resolvers.mbonus_material(40, 20),
-		combat_spellcrit = resolvers.mbonus_material(4, 1),
+		max_mana = resolvers.mbonus_material("max_mana"),
+		combat_spellcrit = resolvers.mbonus_material("combat_spellcrit"),
 	},
 }
 
@@ -221,7 +221,7 @@ newEntity{
 	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 3) end),
 	wielder = {
 		resists_pen = {
-			[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 5),
+			[DamageType.PHYSICAL] = resolvers.mbonus_material("resists_pen"),
 		},
 	},
 }
@@ -237,10 +237,10 @@ newEntity{
 	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
 	wielder = {
 		inc_stats = {
-			[Stats.STAT_CUN] = resolvers.mbonus_material(5, 1),
+			[Stats.STAT_CUN] = resolvers.mbonus_material("inc_stats"),
 		},
-		combat_atk = resolvers.mbonus_material(7, 3),
-		infravision = resolvers.mbonus_material(2, 1),
+		combat_atk = resolvers.mbonus_material("combat_atk"),
+		infravision = resolvers.mbonus_material("infravision"),
 	},
 }
 
@@ -254,13 +254,29 @@ newEntity{
 	cost = 60,
 	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
 	wielder = {
-		combat_mentalresist = resolvers.mbonus_material(7, 3),
-		combat_physresist = resolvers.mbonus_material(7, 3),
-		combat_spellresist = resolvers.mbonus_material(7, 3),
-		max_life = resolvers.mbonus_material(70, 40),
+		combat_mentalresist = resolvers.mbonus_material("save"),
+		--combat_physresist = resolvers.mbonus_material("save"),
+		--combat_spellresist = resolvers.mbonus_material("save"),
+		max_life = resolvers.mbonus_material("max_life"),
 	},
 }
-
+--[=[
+newEntity{
+	power_source = {technique=true},
+	name = " of avarice", suffix=true, instant_resolve=true,
+	level_range = {40, 50},
+	greater_ego = 1,
+	rarity = 45,
+	cost = 60,
+	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
+	wielder = {
+		blind_immune = resolvers.mbonus_material("immunity", -1),
+		combat_mentalresist = resolvers.mbonus_material("save", -1),
+		resource_leech_chance = resolvers.mbonus_material("resource_leech_chance"),
+		resource_leech_value = resolvers.mbonus_material("resource_leech_value"),
+	},	
+}
+]=]
 newEntity{
 	power_source = {arcane=true},
 	name = " of quickening", suffix=true, instant_resolve=true,
@@ -285,10 +301,10 @@ newEntity{
 	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
 	wielder = {
 		inc_stats = {
-			[Stats.STAT_DEX] = resolvers.mbonus_material(5, 1),
+			[Stats.STAT_DEX] = resolvers.mbonus_material("inc_stats"),
 		},
-		pin_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
-		combat_dam = resolvers.mbonus_material(7, 3),
+		pin_immune = resolvers.mbonus_material("immunity"),
+		combat_dam = resolvers.mbonus_material("combat_dam"),
 	},
 }
 
@@ -303,11 +319,11 @@ newEntity{
 	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
 	wielder = {
 		resists={
-			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 5),
+			[DamageType.DARKNESS] = resolvers.mbonus_material("resists"),
 		},
-		blind_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
-		confusion_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
-		infravision = resolvers.mbonus_material(2, 1),
+		blind_immune = resolvers.mbonus_material("immunity"),
+		confusion_immune = resolvers.mbonus_material("immunity"),
+		infravision = resolvers.mbonus_material("infravision"),
 	},
 }
 
@@ -324,8 +340,8 @@ newEntity{
 	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
 	wielder = {
 		inc_stats = {
-			[Stats.STAT_STR] = resolvers.mbonus_material(5, 1),
+			[Stats.STAT_STR] = resolvers.mbonus_material("inc_stats"),
 		},
-		combat_apr = resolvers.mbonus_material(10, 5),
+		combat_apr = resolvers.mbonus_material("combat_apr"),
 	},
 }

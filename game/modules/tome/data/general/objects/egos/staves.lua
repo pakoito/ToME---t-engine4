@@ -26,38 +26,271 @@ local Talents = require "engine.interface.ActorTalents"
 
 newEntity{
 	power_source = {arcane=true},
-	name = " of power", suffix=true, instant_resolve=true,
-	keywords = {power=true},
+	name = " of warding", suffix=true, instant_resolve=true,
+	keywords = {warding=true},
 	level_range = {1, 50},
-	rarity = 4,
-	cost = 8,
+	rarity = 10,
+	cost = 20,
 	wielder = {
-		combat_spellpower = resolvers.mbonus_material(30, 3),
+		learn_talent = {
+			[Talents.T_WARD] = resolvers.mbonus_material("learn_talent"),
+		},
+		wards = {},
+	},
+	combat = {of_warding = true},
+	resolvers.genericlast(function(e)
+		for d, v in pairs(e.wielder.inc_damage) do
+			e.wielder.wards[d] = 2
+		end
+	end),
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = " of savagery", suffix=true, instant_resolve=true,
+	keywords = {savagery=true},
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 40,
+	wielder = {
+		learn_talent = {
+			[Talents.T_SAVAGERY] = resolvers.mbonus_material("learn_talent_5"),
+		},
 	},
 }
 
 newEntity{
 	power_source = {arcane=true},
-	name = "shimmering ", prefix=true, instant_resolve=true,
-	keywords = {shimmering=true},
-	level_range = {1, 50},
-	rarity = 3,
-	cost = 8,
+	name = " of draining", suffix=true, instant_resolve=true,
+	keywords = {draining=true},
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 40,
 	wielder = {
-		max_mana = resolvers.mbonus_material(70, 40),
+		learn_talent = {
+			[Talents.T_SOUL_DRAIN] = resolvers.mbonus_material("learn_talent_5"),
+		},
 	},
 }
 
+newEntity{
+	power_source = {arcane=true},
+	name = " of retribution", suffix=true, instant_resolve=true,
+	keywords = {retribution=true},
+	level_range = {1, 50},
+	rarity = 10,
+	cost = 20,
+	wielder = {
+		learn_talent = {
+			[Talents.T_ELEMENTAL_RETRIBUTION] = resolvers.mbonus_material("learn_talent_5"),
+		},
+		elemental_retribution = {},
+	},
+	combat = {of_retribution = true},
+	resolvers.genericlast(function(e)
+		for d, v in pairs(e.wielder.inc_damage) do
+			e.wielder.elemental_retribution[d] = 1
+		end
+	end),
+}
 
 newEntity{
 	power_source = {arcane=true},
-	name = " of might", suffix=true, instant_resolve=true,
-	keywords = {might=true},
+	name = " of breaching", suffix=true, instant_resolve=true,
+	keywords = {breaching=true},
+	level_range = {1, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 40,
+	wielder = {
+		resists_pen = {},
+	},
+	combat = {of_breaching = true},
+	resolvers.genericlast(function(e)
+		for d, v in pairs(e.wielder.inc_damage) do
+			e.wielder.resists_pen[d] = v/2
+		end
+	end),
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = "potent ", prefix=true, instant_resolve=true,
+	keywords = {potent=true},
 	level_range = {1, 50},
 	rarity = 3,
-	cost = 8,
+	cost = 4,
+	combat = {
+		dam = resolvers.mbonus_material("dam"),
+	},
+	resolvers.genericlast(function(e)
+		e.wielder.inc_damage[e.combat.damtype] = e.combat.dam
+		if e.combat.of_breaching then
+			for d, v in pairs(e.wielder.inc_damage) do
+				e.wielder.resists_pen[d] = math.ceil(e.combat.dam/2)
+			end
+		end
+	end),
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "cruel ", prefix=true, instant_resolve=true,
+	keywords = {cruel=true},
+	level_range = {1, 50},
+	rarity = 3,
+	cost = 4,
+	combat = {
+		critical_power = resolvers.mbonus_material("critical_power"),
+	},
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = "tuned ", prefix=true, instant_resolve=true,
+	keywords = {tuned=true},
+	level_range = {1, 50},
+	rarity = 3,
+	cost = 4,
+	combat = {
+		max_acc = resolvers.mbonus_material("max_acc"),
+	},
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = "evoker's ", prefix=true, instant_resolve=true,
+	keywords = {evoker=true},
+	level_range = {1, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 25,
+	combat = {
+		dam = resolvers.mbonus_material("dam"),
+		critical_power = resolvers.mbonus_material("critical_power"),
+	},
+	resolvers.genericlast(function(e)
+		e.wielder.inc_damage[e.combat.damtype] = e.combat.dam
+		if e.combat.of_breaching then
+			for d, v in pairs(e.wielder.inc_damage) do
+				e.wielder.resists_pen[d] = math.ceil(e.combat.dam/2)
+			end
+		end
+	end),
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = "ritualist's ", prefix=true, instant_resolve=true,
+	keywords = {ritualist=true},
+	level_range = {1, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 25,
+	combat = {
+		dam = resolvers.mbonus_material("dam"),
+		max_acc = resolvers.mbonus_material("max_acc"),
+	},
+	resolvers.genericlast(function(e)
+		e.wielder.inc_damage[e.combat.damtype] = e.combat.dam
+		if e.combat.of_breaching then
+			for d, v in pairs(e.wielder.inc_damage) do
+				e.wielder.resists_pen[d] = math.ceil(e.combat.dam/2)
+			end
+		end
+	end),
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "sadist's ", prefix=true, instant_resolve=true,
+	keywords = {sadist=true},
+	level_range = {1, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 25,
+	combat = {
+		max_acc = resolvers.mbonus_material("max_acc"),
+		critical_power = resolvers.mbonus_material("critical_power"),
+	},
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = "greater ", prefix=true, instant_resolve=true,
+	keywords = {greater=true},
+	level_range = {1, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 25,
+	combat = {is_greater = true,},
+	resolvers.generic(function(e)
+		local dam_tables = {
+			magestaff = {engine.DamageType.FIRE, engine.DamageType.COLD, engine.DamageType.LIGHTNING, engine.DamageType.ARCANE},
+			starstaff = {engine.DamageType.LIGHT, engine.DamageType.DARKNESS, engine.DamageType.TEMPORAL},
+			earthstaff = {engine.DamageType.NATURE, engine.DamageType.BLIGHT, engine.DamageType.ACID},
+		}
+		local d_table = dam_tables[e.flavor_name]
+		for i = 1, #d_table do
+			e.wielder.inc_damage[d_table[i]] = e.combat.dam
+		end
+	end),
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = " of blood", suffix=true, instant_resolve=true,
+	keywords = {blood=true},
+	level_range = {1, 50},
+	rarity = 10,
+	cost = 10,
 	wielder = {
-		combat_spellcrit = resolvers.mbonus_material(15, 4),
+		learn_talent = {
+			[Talents.T_BLOODFLOW] = resolvers.mbonus_material("learn_talent_5"),
+		},
+	},
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = "parasitic ", prefix=true, instant_resolve=true,
+	keywords = {parasitic=true},
+	level_range = {1, 50},
+	greater_ego = 1,
+	rarity = 60,
+	cost = 40,
+	wielder = {
+		resource_leech_chance = resolvers.mbonus_material("resource_leech_chance"),
+		resource_leech_value = resolvers.mbonus_material("resource_leech_value"),
+	},
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = " of channeling", suffix=true, instant_resolve=true,
+	keywords = {channeling=true},
+	level_range = {1, 50},
+	rarity = 10,
+	cost = 20,
+	wielder = {
+		learn_talent = {
+			[Talents.T_CHANNEL_STAFF] = resolvers.mbonus_material("learn_talent"),
+		},
+	},
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = "sentient ", prefix=true, instant_resolve=true,
+	keywords = {sentient=true},
+	level_range = {1, 50},
+	greater_ego = 1,
+	rarity = 60,
+	cost = 200,
+	combat = {
+		sentient = resolvers.rngtable{"default", "aggressive", "fawning"},
 	},
 }
 
@@ -70,130 +303,48 @@ newEntity{
 	rarity = 18,
 	cost = 45,
 	wielder = {
-		combat_spellpower = resolvers.mbonus_material(30, 3),
-		max_mana = resolvers.mbonus_material(100, 10),
-		inc_stats = { [Stats.STAT_MAG] = resolvers.mbonus_material(5, 1), [Stats.STAT_WIL] = resolvers.mbonus_material(5, 1) },
+		learn_talent = {
+			[Talents.T_ELEMENTAL_RETRIBUTION] = resolvers.mbonus_material("learn_talent_5"),
+			[Talents.T_METAFLOW] = resolvers.mbonus_material("learn_talent"),
+			[Talents.T_COMMAND_STAFF] = resolvers.mbonus_material("learn_talent"),
+		},
+		elemental_retribution = {},
 	},
+	combat = {
+		of_retribution = true,
+		max_acc = resolvers.mbonus_material("max_acc"),
+	},
+	resolvers.genericlast(function(e)
+		for d, v in pairs(e.wielder.inc_damage) do
+			e.wielder.elemental_retribution[d] = 1
+		end
+	end),
 }
 
 newEntity{
 	power_source = {arcane=true},
-	name = "magma ", prefix=true, instant_resolve=true,
-	keywords = {magma=true},
+	name = "shadowy ", prefix=true, instant_resolve=true,
+	keywords = {shadowy=true},
 	level_range = {1, 50},
-	rarity = 3,
-	cost = 5,
+	rarity = 20,
+	cost = 20,
 	wielder = {
-		inc_damage={ [DamageType.FIRE] = resolvers.mbonus_material(25, 8), },
-	},
-}
-
-newEntity{
-	power_source = {arcane=true},
-	name = "temporal ", prefix=true, instant_resolve=true,
-	keywords = {temporal=true},
-	level_range = {1, 50},
-	rarity = 3,
-	cost = 5,
-	wielder = {
-		inc_damage={ [DamageType.TEMPORAL] = resolvers.mbonus_material(25, 8), },
-	},
-}
-
-newEntity{
-	power_source = {arcane=true},
-	name = "icy ", prefix=true, instant_resolve=true,
-	keywords = {icy=true},
-	level_range = {1, 50},
-	rarity = 3,
-	cost = 5,
-	wielder = {
-		inc_damage={ [DamageType.COLD] = resolvers.mbonus_material(25, 8), },
-	},
-}
-
-newEntity{
-	power_source = {arcane=true},
-	name = "acidic ", prefix=true, instant_resolve=true,
-	keywords = {acidic=true},
-	level_range = {1, 50},
-	rarity = 3,
-	cost = 5,
-	wielder = {
-		inc_damage={ [DamageType.ACID] = resolvers.mbonus_material(25, 8), },
-	},
-}
-
-newEntity{
-	power_source = {arcane=true},
-	name = "crackling ", prefix=true, instant_resolve=true,
-	keywords = {crackling=true},
-	level_range = {1, 50},
-	rarity = 3,
-	cost = 5,
-	wielder = {
-		inc_damage={ [DamageType.LIGHTNING] = resolvers.mbonus_material(25, 8), },
+		learn_talent = {
+			[Talents.T_FEARSCAPE_FOG] = resolvers.mbonus_material("learn_talent"),
+		},
 	},
 }
 
 newEntity{
 	power_source = {nature=true},
-	name = "naturalist's ", prefix=true, instant_resolve=true,
-	keywords = {naturalist=true},
+	name = " of perception", suffix=true, instant_resolve=true,
+	keywords = {perception=true},
 	level_range = {1, 50},
 	rarity = 3,
-	cost = 5,
+	cost = 4,
 	wielder = {
-		inc_damage={ [DamageType.NATURE] = resolvers.mbonus_material(25, 8), },
-	},
-}
-
-newEntity{
-	power_source = {arcane=true},
-	name = "blighted ", prefix=true, instant_resolve=true,
-	keywords = {blighted=true},
-	level_range = {1, 50},
-	rarity = 3,
-	cost = 5,
-	wielder = {
-		inc_damage={ [DamageType.BLIGHT] = resolvers.mbonus_material(25, 8), },
-	},
-}
-
-newEntity{
-	power_source = {nature=true},
-	name = "sunbathed ", prefix=true, instant_resolve=true,
-	keywords = {sunbathed=true},
-	level_range = {1, 50},
-	rarity = 3,
-	cost = 5,
-	wielder = {
-		inc_damage={ [DamageType.LIGHT] = resolvers.mbonus_material(25, 8), },
-	},
-}
-
-newEntity{
-	power_source = {nature=true},
-	name = "shadow ", prefix=true, instant_resolve=true,
-	keywords = {shadow=true},
-	level_range = {1, 50},
-	rarity = 3,
-	cost = 5,
-	wielder = {
-		inc_damage={ [DamageType.DARKNESS] = resolvers.mbonus_material(25, 8), },
-	},
-}
-
-newEntity{
-	power_source = {arcane=true},
-	name = " of divination", suffix=true, instant_resolve=true,
-	keywords = {divination=true},
-	level_range = {1, 50},
-	rarity = 8,
-	cost = 8,
-	wielder = {
-		talents_types_mastery = {
-			["spell/divination"] = resolvers.mbonus_material(2, 2, function(e, v) v=v/10 return 0, v end),
+		learn_talent = {
+			[Talents.T_PERCEPTION] = resolvers.mbonus_material("learn_talent_5"),
 		},
 	},
 }
@@ -207,7 +358,7 @@ newEntity{
 	cost = 10,
 	wielder = {
 		talents_types_mastery = {
-			["spell/conveyance"] = resolvers.mbonus_material(2, 2, function(e, v) v=v/10 return 0, v end),
+			["spell/conveyance"] = resolvers.mbonus_material("talents_types_mastery"),
 		},
 	},
 	max_power = 120, power_regen = 1,
@@ -225,13 +376,13 @@ newEntity{
 	name = " of illumination", suffix=true, instant_resolve=true,
 	keywords = {illumination=true},
 	level_range = {1, 50},
-	rarity = 8,
-	cost = 8,
+	rarity = 3,
+	cost = 4,
 	wielder = {
-		lite = 1,
+		lite = resolvers.mbonus_material("lite"),
 	},
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_ILLUMINATE, level = 2, power = 10 },
+	max_power = 20, power_regen = 1,
+	use_talent = { id = Talents.T_ILLUMINATE, level = resolvers.mbonus_material("learn_talent_5"), power = 10 },
 }
 
 newEntity{
@@ -242,272 +393,70 @@ newEntity{
 	greater_ego = 1,
 	rarity = 18,
 	cost = 45,
-	wielder = {
-		combat_spellpower = resolvers.mbonus_material(12, 3),
-		combat_spellcrit = resolvers.mbonus_material(4, 2),
-		inc_damage = {
-			[DamageType.FIRE] = resolvers.mbonus_material(15, 5),
-			[DamageType.LIGHTNING] = resolvers.mbonus_material(15, 5),
-		},
+	combat = {
+		critical_power = resolvers.mbonus_material("critical_power"),
 	},
 	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_BLASTWAVE, level = 2, power = 80 },
+	use_talent = { id = Talents.T_BLASTWAVE, level = resolvers.mbonus_material("learn_talent_5"), power = 50 },
 }
 
 
 newEntity{
 	power_source = {arcane=true},
-	name = " of warding", suffix=true, instant_resolve=true,
-	keywords = {warding=true},
-	level_range = {30, 50},
-	greater_ego = 1,
-	rarity = 20,
-	cost = 45,
-	wielder = {
-		combat_spellpower = resolvers.mbonus_material(12, 3),
-		stun_immune = resolvers.mbonus_material(3, 3, function(e, v) v=v/10 return 0, v end),
-		combat_def = resolvers.mbonus_material(16, 4),
-		resists={
-			[DamageType.ARCANE] = resolvers.mbonus_material(5, 5),
-		},
-	},
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_DISPLACEMENT_SHIELD, level = 4, power = 80 },
+	name = " of displacement", suffix=true, instant_resolve=true,
+	keywords = {displacement=true},
+	level_range = {1, 50},
+	rarity = 10,
+	cost = 20,
+	max_power = 30, power_regen = 1,
+	use_talent = { id = Talents.T_DISPLACEMENT_SHIELD, level = resolvers.mbonus_material("learn_talent_5"), power = 20 },
 }
 
--- TODO: Make into an artifact effect and remove
 newEntity{
 	power_source = {arcane=true},
-	name = " of channeling", suffix=true, instant_resolve=true,
-	keywords = {channeling=true},
+	name = " of renewal", suffix=true, instant_resolve=true,
+	keywords = {renewal=true},
 	level_range = {30, 50},
 	greater_ego = 1,
-	rarity = 38,
+	rarity = 18,
 	cost = 45,
-	wielder = {
-		combat_spellpower = resolvers.mbonus_material(12, 3),
-		mana_regen = resolvers.mbonus_material(30, 10, function(e, v) v=v/100 return 0, v end),
-	},
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_METAFLOW, level = 3, power = 80 },
+	max_power = 50, power_regen = 1,
+	use_talent = { id = Talents.T_METAFLOW, level = resolvers.mbonus_material("learn_talent_5"), power = 50 },
 }
 
 newEntity{
 	power_source = {nature=true},
 	name = "lifebinding ", prefix=true, instant_resolve=true,
 	keywords = {lifebinding=true},
-	level_range = {30, 50},
+	level_range = {1, 50},
 	greater_ego = 1,
-	rarity = 16,
-	cost = 35,
+	rarity = 30,
+	cost = 80,
 	wielder = {
-		combat_spellpower = resolvers.mbonus_material(7, 3),
-		life_regen = resolvers.mbonus_material(15, 5, function(e, v) v=v/10 return 0, v end),
-		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, v end),
-		inc_stats = {
-			[Stats.STAT_CON] = resolvers.mbonus_material(4, 3),
-			},
-	},
-}
-
-newEntity{
-	power_source = {arcane=true},
-	name = "infernal ", prefix=true, instant_resolve=true,
-	keywords = {infernal=true},
-	level_range = {30, 50},
-	greater_ego = 1,
-	rarity = 16,
-	cost = 35,
-	wielder = {
-		combat_spellpower = resolvers.mbonus_material(7, 3),
-		see_invisible = resolvers.mbonus_material(15, 5),
-		inc_damage = {
-			[DamageType.FIRE] = resolvers.mbonus_material(20, 5),
-			[DamageType.BLIGHT] = resolvers.mbonus_material(20, 5),
+		learn_talent = {
+			[Talents.T_LIFEBIND] = resolvers.mbonus_material("learn_talent_5"),
 		},
 	},
-}
-
-newEntity{
-	power_source = {arcane=true},
-	name = "chronomancer's ", prefix=true, instant_resolve=true,
-	keywords = {chronomancer=true},
-	level_range = {30, 50},
-	greater_ego = 1,
-	rarity = 16,
-	cost = 35,
-	wielder = {
-		combat_spellpower = resolvers.mbonus_material(7, 3),
-		movement_speed = 0.1,
-		inc_damage = {
-			[DamageType.TEMPORAL] = resolvers.mbonus_material(20, 5),
-		},
-	},
-
 }
 
 newEntity{
 	power_source = {nature=true},
-	name = "abyssal ", prefix=true, instant_resolve=true,
-	keywords = {abyssal=true},
-	level_range = {30, 50},
-	greater_ego = 1,
-	rarity = 40,
-	cost = 80,
-	wielder = {
-		inc_damage = {
-			[DamageType.COLD] = resolvers.mbonus_material(25, 5),
-			[DamageType.DARKNESS] = resolvers.mbonus_material(25, 5),
-		},
-		resists_pen = {
-			[DamageType.COLD] = resolvers.mbonus_material(15, 5),
-			[DamageType.DARKNESS] = resolvers.mbonus_material(15, 5),
-		},
-	},
-}
-
-newEntity{
-	power_source = {arcane=true},
-	name = "magelord's ", prefix=true, instant_resolve=true,
-	keywords = {magelord=true},
-	level_range = {10, 50},
-	greater_ego = 1,
-	rarity = 40,
-	cost = 60,
-	wielder = {
-		max_mana = resolvers.mbonus_material(100, 20),
-		combat_spellpower = resolvers.mbonus_material(20, 5),
-	},
-}
-
-newEntity{
-	power_source = {arcane=true},
-	name = "polar ", prefix=true, instant_resolve=true,
-	keywords = {polar=true},
-	level_range = {10, 50},
-	greater_ego = 1,
-	rarity = 15,
-	cost = 30,
-	wielder = {
-		combat_spellpower = resolvers.mbonus_material(12, 3),
-		inc_damage = {
-			[DamageType.COLD] = resolvers.mbonus_material(15, 5),
-		},
-		on_melee_hit = {
-			[DamageType.ICE] = resolvers.mbonus_material(10, 5),
-		},
-	},
-}
-
-newEntity{
-	power_source = {arcane=true},
-	name = "ethereal ", prefix=true, instant_resolve=true,
-	keywords = {ethereal=true},
+	name = "ghostly ", prefix=true, instant_resolve=true,
+	keywords = {ghostly=true},
 	level_range = {1, 50},
-	greater_ego = 1,
+	rarity = 15,
+	cost = 15,
+	max_power = 50, power_regen = 1,
+	use_talent = { id = Talents.T_WRAITHFORM, level = resolvers.mbonus_material("learn_talent_5"), power = 50 },
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = " of negation", suffix=true, instant_resolve=true,
+	keywords = {negation=true},
+	level_range = {1, 50},
 	rarity = 10,
 	cost = 20,
-	wielder = {
-		inc_damage = {
-			[DamageType.ARCANE] = resolvers.mbonus_material(10, 5),
-		},
-		mana_regen = resolvers.mbonus_material(50, 10, function(e, v) v=v/100 return 0, v end),
-		combat_spellpower = resolvers.mbonus_material(12, 3),
-	},
-}
-
-newEntity{
-	power_source = {arcane=true},
-	name = "bloodlich's ", prefix=true, instant_resolve=true,
-	keywords = {bloodlich=true},
-	level_range = {40, 50},
-	greater_ego = 1,
-	rarity = 40,
-	cost = 90,
-	wielder = {
-		inc_stats = {
-			[Stats.STAT_MAG] = resolvers.mbonus_material(9, 1),
-		},
-		inc_damage = {
-			[DamageType.ACID] = resolvers.mbonus_material(10, 5),
-			[DamageType.LIGHTNING] = resolvers.mbonus_material(10, 5),
-			[DamageType.FIRE] = resolvers.mbonus_material(10, 5),
-			[DamageType.COLD] = resolvers.mbonus_material(10, 5),
-		},
-	},
-}
-
-newEntity{
-	power_source = {arcane=true},
-	name = " of conflagration", suffix=true, instant_resolve=true,
-	keywords = {conflagration=true},
-	level_range = {30, 50},
-	greater_ego = 1,
-	rarity = 30,
-	cost = 60,
-	wielder = {
-		mana_regen = resolvers.mbonus_material(50, 10, function(e, v) v=v/100 return 0, -v end),
-		combat_spellpower = resolvers.mbonus_material(12, 3),
-		inc_damage = {
-			[DamageType.FIRE] = resolvers.mbonus_material(20, 5),
-		},
-		resists_pen = {
-			[DamageType.FIRE] = resolvers.mbonus_material(20, 5),
-		},
-	},
-}
-
-newEntity{
-	power_source = {arcane=true},
-	name = " of the stars", suffix=true, instant_resolve=true,
-	keywords = {stars=true},
-	level_range = {1, 50},
-	greater_ego = 1,
-	rarity = 15,
-	cost = 30,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_STARFALL, level = 2, power = 50 },
-	wielder = {
-		combat_spellpower = resolvers.mbonus_material(12, 3),
-		inc_damage = {
-			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 5),
-		},
-	},
-}
-
-newEntity{
-	power_source = {arcane=true},
-	name = " of ruination", suffix=true, instant_resolve=true,
-	keywords = {ruination=true},
-	level_range = {1, 50},
-	greater_ego = 1,
-	rarity = 15,
-	cost = 30,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_CORRUPTED_NEGATION, level = 2, power = 80 },
-	wielder = {
-		combat_spellpower = resolvers.mbonus_material(12, 3),
-		inc_damage = {
-			[DamageType.BLIGHT] = resolvers.mbonus_material(10, 5),
-			[DamageType.NATURE] = resolvers.mbonus_material(10, 5),
-		},
-	},
-}
-
-newEntity{
-	power_source = {arcane=true},
-	name = " of lightning", suffix=true, instant_resolve=true,
-	keywords = {lightning=true},
-	level_range = {30, 50},
-	greater_ego = 1,
-	rarity = 30,
-	cost = 60,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_CHAIN_LIGHTNING, level = 5, power = 60 },
-	wielder = {
-		combat_spellpower = resolvers.mbonus_material(12, 3),
-		resists_pen = {
-			[DamageType.LIGHTNING] = resolvers.mbonus_material(25, 5),
-		},
-	},
+	max_power = 40, power_regen = 1,
+	use_talent = { id = Talents.T_CORRUPTED_NEGATION, level = resolvers.mbonus_material("learn_talent_5"), power = 40 },
 }

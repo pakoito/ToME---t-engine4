@@ -1186,9 +1186,6 @@ function _M:drawDialog(kind)
 
 			for i, o in ipairs(self.actor:getInven(self.actor.INVEN_MAINHAND)) do
 				local mean, dam = o.combat, o.combat
-				if o.archery and mean then
-					dam = (self.actor:getInven("QUIVER")[1] and self.actor:getInven("QUIVER")[1].combat) or o.basic_ammo
-				end
 				if mean and dam then
 					s:drawColorStringBlended(self.font, WeaponTxt, w, h, 255, 255, 255, true) h = h + self.font_h
 					if self.actor.use_psi_combat then
@@ -1196,7 +1193,7 @@ function _M:drawDialog(kind)
 					else
 						self:mouseTooltip(self.TOOLTIP_COMBAT_ATTACK, s:drawColorStringBlended(self.font, ("Accuracy    : #00ff00#%.1f"):format(self.actor:combatAttack(mean) - self.actor_dup:combatAttack(mean)), w, h, 255, 255, 255, true)) h = h + self.font_h
 					end
-					self:mouseTooltip(self.TOOLTIP_COMBAT_DAMAGE, s:drawColorStringBlended(self.font, ("Damage      : #00ff00#%.1f"):format(self.actor:combatDamage(dam) - self.actor_dup:combatDamage(dam)), w, h, 255, 255, 255, true)) h = h + self.font_h
+					self:mouseTooltip(self.TOOLTIP_COMBAT_DAMAGE, s:drawColorStringBlended(self.font, ("Damage      : #00ff00#%.1f"):format(self.actor:getCombinedDamage(o) - self.actor_dup:getCombinedDamage(o)), w, h, 255, 255, 255, true)) h = h + self.font_h
 					self:mouseTooltip(self.TOOLTIP_COMBAT_APR, s:drawColorStringBlended(self.font,    ("APR         : #00ff00#%.1f"):format(self.actor:combatAPR(dam) - self.actor_dup:combatAPR(dam)), w, h, 255, 255, 255, true)) h = h + self.font_h
 					self:mouseTooltip(self.TOOLTIP_COMBAT_CRIT, s:drawColorStringBlended(self.font,   ("Crit. chance: #00ff00#%.1f%%"):format(self.actor:combatCrit(dam) - self.actor_dup:combatCrit(dam)), w, h, 255, 255, 255, true)) h = h + self.font_h
 					self:mouseTooltip(self.TOOLTIP_COMBAT_SPEED, s:drawColorStringBlended(self.font,  ("Speed       : #00ff00#%.2f%%"):format((self.actor:combatSpeed(mean) - self.actor_dup:combatSpeed(mean))*100), w, h, 255, 255, 255, true)) h = h + self.font_h
@@ -1224,9 +1221,6 @@ function _M:drawDialog(kind)
 			local act_dup_offmult = self.actor_dup:getOffHandMult()
 			for i, o in ipairs(self.actor:getInven(self.actor.INVEN_OFFHAND)) do
 				local mean, dam = o.combat, o.combat
-				if o.archery and mean then
-					dam = (self.actor:getInven("QUIVER")[1] and self.actor:getInven("QUIVER")[1].combat) or o.basic_ammo
-				end
 				if mean and dam then
 					s:drawColorStringBlended(self.font, "#LIGHT_BLUE#Off Hand:", w, h, 255, 255, 255, true) h = h + self.font_h
 					if self.actor.use_psi_combat then
@@ -1234,7 +1228,7 @@ function _M:drawDialog(kind)
 					else
 						self:mouseTooltip(self.TOOLTIP_COMBAT_ATTACK, s:drawColorStringBlended(self.font, ("Accuracy    : #00ff00#%.1f"):format(self.actor:combatAttack(mean) - self.actor_dup:combatAttack(mean)), w, h, 255, 255, 255, true)) h = h + self.font_h
 					end
-					self:mouseTooltip(self.TOOLTIP_COMBAT_DAMAGE, s:drawColorStringBlended(self.font, ("Damage      : #00ff00#%.1f"):format(self.actor:combatDamage(dam) * act_offmult - self.actor_dup:combatDamage(dam) * act_dup_offmult), w, h, 255, 255, 255, true)) h = h + self.font_h
+					self:mouseTooltip(self.TOOLTIP_COMBAT_DAMAGE, s:drawColorStringBlended(self.font, ("Damage      : #00ff00#%.1f"):format(self.actor:getCombinedDamage(o) * act_offmult - self.actor_dup:getCombinedDamage(o) * act_dup_offmult), w, h, 255, 255, 255, true)) h = h + self.font_h
 					self:mouseTooltip(self.TOOLTIP_COMBAT_APR   , s:drawColorStringBlended(self.font, ("APR         : #00ff00#%.1f"):format(self.actor:combatAPR(dam) - self.actor_dup:combatAPR(dam)), w, h, 255, 255, 255, true)) h = h + self.font_h
 					self:mouseTooltip(self.TOOLTIP_COMBAT_CRIT  , s:drawColorStringBlended(self.font, ("Crit. chance: #00ff00#%.1f%%"):format(self.actor:combatCrit(dam) - self.actor_dup:combatCrit(dam)), w, h, 255, 255, 255, true)) h = h + self.font_h
 					self:mouseTooltip(self.TOOLTIP_COMBAT_SPEED , s:drawColorStringBlended(self.font, ("Speed       : #00ff00#%.2f%%"):format((self.actor:combatSpeed(mean) - self.actor_dup:combatSpeed(mean))*100), w, h, 255, 255, 255, true)) h = h + self.font_h

@@ -33,7 +33,7 @@ function _M:init(actor)
 	Dialog.init(self, "Use Talents: "..actor.name, game.w * 0.8, game.h * 0.8)
 
 	self.c_tut = Textzone.new{width=math.floor(self.iw / 2 - 10), height=1, auto_height=true, no_color_bleed=true, text=[[
-You can bind a talent to a hotkey by pressing the corresponding hotkey while selecting a talent or by right-clicking on the talent.
+You can bind a non-passive talent to a hotkey by pressing the corresponding hotkey while selecting a talent or by right-clicking on the talent.
 Check out the keybinding screen in the game menu to bind hotkeys to a key (default is 1-0 plus control or shift).
 Right click or press '*' to configure.
 ]]}
@@ -119,7 +119,8 @@ end
 
 function _M:use(item, button)
 	if not item or not item.talent then return end
-
+	local t = self.actor:getTalentFromId(item.talent)
+	if t.mode == "passive" then return end
 	if button == "right" then
 		local list = {
 			{name="Unbind", what="unbind"},
@@ -127,7 +128,7 @@ function _M:use(item, button)
 			{name="Bind to middle mouse click (on a target)", what="middle"},
 		}
 
-		local t = self.actor:getTalentFromId(item.talent)
+		--local t = self.actor:getTalentFromId(item.talent)
 		if self.actor:isTalentAuto(t) then table.insert(list, 1, {name="Disable automatic use", what="auto-dis"})
 		else table.insert(list, 1, {name="Enable automatic use", what="auto-en"})
 		end
@@ -248,6 +249,9 @@ function _M:generateList()
 			elseif t.mode == "sustained" then
 				if self.actor:isTalentActive(t.id) then nodes = sustained end
 				status = self.actor:isTalentActive(t.id) and tstring{{"color", "YELLOW"}, "Sustaining"} or tstring{{"color", "LIGHT_GREEN"}, "Sustain"}
+			elseif t.mode == "passive" then
+				nodes = passives
+				status = tstring{{"color", "BLUE"}, "Passive"}
 			end
 
 			-- Pregenenerate icon with the Tiles instance that allows images
@@ -262,6 +266,7 @@ function _M:generateList()
 				desc=self.actor:getTalentFullDescription(t),
 				color=function() return {0xFF, 0xFF, 0xFF} end,
 				hotkey=function(item)
+					if t.mode == "passive" then return "" end
 					for i = 1, 12 * self.actor.nb_hotkey_pages do if self.actor.hotkey[i] and self.actor.hotkey[i][1] == "talent" and self.actor.hotkey[i][2] == item.talent then
 						return "H.Key "..i..""
 					end end

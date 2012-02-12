@@ -86,7 +86,7 @@ newTalent{
 		if not target then return end
 		
 		-- does the spell hit?  if not nothing happens
-		if not self:checkHit(self:combatSpellpower(), target:combatSpellResist()) then
+		if not self:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, self:getMaxAccuracy("spell")) then
 			game.logSeen(target, "%s resists!", target.name:capitalize())
 			return true
 		end

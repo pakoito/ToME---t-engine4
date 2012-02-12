@@ -252,7 +252,7 @@ function _M:crossTierEffect(eff_id, apply_power, apply_save, use_given_e)
 		ct_effect = cross_tier_effects[save_for_effects[e.type]]
 	end
 	local dur = self:getTierDiff(apply_power, save)
-	self:setEffect(ct_effect, dur, {})
+	self:setEffect(ct_effect, dur, {no_ct_effect=true})
 end
 
 function _M:getTierDiff(atk, def)
@@ -261,10 +261,28 @@ function _M:getTierDiff(atk, def)
 	return math.max(0, math.max(math.ceil(atk/20), 1) - math.max(math.ceil(def/20), 1))
 end
 
+--- Gets crit magnitude
+function _M:getMaxAccuracy(hit_type, combat)
+	if hit_type == "physical" then return (combat and combat.max_acc) or 75 end
+	local mh = (self:getInven("MAINHAND") and self:getInven("MAINHAND")[1]) or {}
+	local oh = (self:getInven("OFFHAND") and self:getInven("OFFHAND")[1]) or {}
+	local pf = (self:getInven("PSIONIC_FOCUS") and self:getInven("PSIONIC_FOCUS")[1]) or {}
+	if hit_type == "spell" then
+		--if combat and combat.max_acc then return combat.max_acc end
+		return (combat and combat.affects_spells and combat.max_acc) or math.max(
+			(mh.combat and mh.combat.affects_spells and mh.combat.max_acc) or 75,
+			(oh.combat and oh.combat.affects_spells and oh.combat.max_acc) or (oh.special_combat and oh.special_combat.affects_spells and oh.special_combat.max_acc) or 75,
+			(pf.combat and pf.combat.max_acc) or 75
+		)
+	end
+	return 75
+
+end
+
 --New, simpler checkHit that relies on rescaleCombatStats() being used elsewhere
 function _M:checkHit(atk, def, min, max, factor, p)
 	local min = min or 0
-	local max = max or 100
+	local max = max or 75
 	if game.player:hasQuest("tutorial-combat-stats") then
 		min = 0
 		max = 100
@@ -273,6 +291,7 @@ function _M:checkHit(atk, def, min, max, factor, p)
 	local hit = math.ceil(50 + 2.5 * (atk - def))
 	hit = util.bound(hit, min, max)
 	print("=> chance to hit", hit)
+	print("min: ", min, "max: ", max)
 	return rng.percent(hit), hit
 end
 
@@ -337,20 +356,21 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	local hitted = false
 	local crit = false
 	local evaded = false
+	local pre_crit_dam = 0
 	if repelled then
 		game.logSeen(target, "%s repels an attack from %s.", target.name:capitalize(), self.name)
 	elseif self:checkEvasion(target) then
 		evaded = true
 		game.logSeen(target, "%s evades %s.", target.name:capitalize(), self.name)
-	elseif self:checkHit(atk, def) and (self:canSee(target) or self:attr("blind_fight") or rng.chance(3)) then
+	elseif self:checkHit(atk, def, 0, self:getMaxAccuracy("physical", weapon)) and (self:canSee(target) or self:attr("blind_fight") or rng.chance(3)) then
 		local pres = util.bound(target:combatArmorHardiness() / 100, 0, 1)
 		print("[ATTACK] raw dam", dam, "versus", armor, pres, "with APR", apr)
 		armor = math.max(0, armor - apr)
 		dam = math.max(dam * pres - armor, 0) + (dam * (1 - pres))
 		print("[ATTACK] after armor", dam)
-		local damrange = self:combatDamageRange(weapon)
-		dam = rng.range(dam, dam * damrange)
-		print("[ATTACK] after range", dam)
+--		local damrange = self:combatDamageRange(weapon)
+--		dam = rng.range(dam, dam * damrange)
+--		print("[ATTACK] after range", dam)
 		dam, crit = self:physicalCrit(dam, weapon, target, atk, def)
 		print("[ATTACK] after crit", dam)
 		dam = dam * mult
@@ -362,8 +382,25 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 			end
 			print("[ATTACK] after inc by type", dam)
 		end
-
-		if crit then game.logSeen(self, "#{bold}#%s performs a critical strike!#{normal}#", self.name:capitalize()) end
+		--if target:attr("counterstrike") then
+		if target:hasEffect(target.EFF_COUNTERSTRIKE) then
+			dam = dam * 2
+			--self:removeEffect(target.EFF_COUNTERSTRIKE)
+			local eff = target.tmp[target.EFF_COUNTERSTRIKE]
+			eff.nb = eff.nb - 1
+			if eff.nb == 0 then eff.dur = 0 end
+		end
+		pre_crit_dam = dam
+		dam, crit = self:physicalCrit(dam, weapon, target, atk, def)
+		print("[ATTACK] after crit", dam)
+		if crit then
+			game.logSeen(self, "#{bold}#%s performs a critical strike!#{normal}#", self.name:capitalize())
+			-- Concussion
+			if weapon.concussion then
+				dam = pre_crit_dam
+				self:doConcussion(dam, target, {weapon, ammo})
+			end
+		end
 		DamageType:get(damtype).projector(self, target.x, target.y, damtype, math.max(0, dam))
 		hitted = true
 	else
@@ -464,13 +501,17 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		t.do_trigger(self, t, target)
 	end
 
-	-- On hit talent
+--[=[	-- On hit talent
 	if hitted and not target.dead and weapon and weapon.talent_on_hit and next(weapon.talent_on_hit) then
 		for tid, data in pairs(weapon.talent_on_hit) do
 			if rng.percent(data.chance) then
 				self:forceUseTalent(tid, {ignore_cd=true, ignore_energy=true, force_target=target, force_level=data.level, ignore_ressources=true})
 			end
 		end
+	end
+]=]
+	if hitted and not target.dead and weapon and weapon.talent_on_hit and next(weapon.talent_on_hit) then
+		self:doTalentOnHit(target, weapon)
 	end
 
 	-- Shattering Impact
@@ -488,15 +529,15 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		local rx, ry = util.coordAddDir(self.x, self.y, dir_sides[dir or 6].right)
 		local lt, rt = game.level.map(lx, ly, Map.ACTOR), game.level.map(rx, ry, Map.ACTOR)
 
-		if target:checkHit(self:combatAttack(weapon), target:combatPhysicalResist(), 0, 95, 10) and target:canBe("knockback") then
+		if target:checkHit(self:combatAttack(weapon), target:combatPhysicalResist(), 0, self:getMaxAccuracy("physical", weapon), 10) and target:canBe("knockback") then
 			target:knockback(self.x, self.y, self:attr("onslaught"))
 			target:crossTierEffect(target.EFF_OFFBALANCE, self:combatAttack())
 		end
-		if lt and lt:checkHit(self:combatAttack(weapon), lt:combatPhysicalResist(), 0, 95, 10) and lt:canBe("knockback") then
+		if lt and lt:checkHit(self:combatAttack(weapon), lt:combatPhysicalResist(), 0, self:getMaxAccuracy("physical", weapon), 10) and lt:canBe("knockback") then
 			lt:knockback(self.x, self.y, self:attr("onslaught"))
 			target:crossTierEffect(target.EFF_OFFBALANCE, self:combatAttack())
 		end
-		if rt and rt:checkHit(self:combatAttack(weapon), rt:combatPhysicalResist(), 0, 95, 10) and rt:canBe("knockback") then
+		if rt and rt:checkHit(self:combatAttack(weapon), rt:combatPhysicalResist(), 0, self:getMaxAccuracy("physical", weapon), 10) and rt:canBe("knockback") then
 			rt:knockback(self.x, self.y, self:attr("onslaught"))
 			target:crossTierEffect(target.EFF_OFFBALANCE, self:combatAttack())
 		end
@@ -513,6 +554,12 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	if hitted and target:knowTalent(target.T_ACID_BLOOD) then
 		local t = target:getTalentFromId(target.T_ACID_BLOOD)
 		t.do_splash(target, t, self)
+	end
+
+	-- Savagery
+	if hitted and crit and self:knowTalent(self.T_SAVAGERY) then
+		local t = self:getTalentFromId(self.T_SAVAGERY)
+		t.do_savagery(self, t)
 	end
 
 	-- Bloodbath
@@ -579,13 +626,13 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		local t = target:getTalentFromId(target.T_CARBON_SPIKES)
 		t.do_carbonLoss(target, t)
 	end
-
+--[=[
 	-- Riposte!
 	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_RIPOSTE) and rng.percent(target:getTalentLevel(target.T_RIPOSTE) * (5 + target:getDex(5, true))) then
 		game.logSeen(self, "%s ripostes!", target.name:capitalize())
 		target:attackTarget(self, nil, nil, true)
 	end
-
+]=]
 	-- Set Up
 	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:hasEffect(target.EFF_DEFENSIVE_MANEUVER) then
 		local t = target:getTalentFromId(target.T_SET_UP)
@@ -720,7 +767,9 @@ local weapon_talents = {
 function _M:combatCheckTraining(weapon)
 	if not weapon.talented then return 0 end
 	if not weapon_talents[weapon.talented] then return 0 end
-	return self:getTalentLevel(weapon_talents[weapon.talented])
+	local t = self:getTalentFromId(weapon_talents[weapon.talented])
+	return t.getDamage(self, t)
+	--return self:getTalentLevel(weapon_talents[weapon.talented])
 end
 
 --- Gets the defense
@@ -848,10 +897,20 @@ function _M:combatCrit(weapon)
 	return crit
 end
 
+--- Gets crit magnitude
+function _M:combatCritPower(crit_type, weapon)
+	local combat = weapon or self.combat or {}
+	if crit_type == "spell" and not combat.affects_spells then
+		return 1.1
+	else
+		return (combat.critical_power or 1.1) + (self.combat_critical_power or 0)
+	end
+end
+
 --- Gets the damage range
 function _M:combatDamageRange(weapon)
 	weapon = weapon or self.combat or {}
-	return (self.combat_damrange or 0) + (weapon.damrange or 1.1)
+	return (self.combat_damrange or 0) + (weapon.damrange or 1)
 end
 
 
@@ -883,7 +942,7 @@ function _M:combatDamage(weapon)
 	if weapon.talented and weapon.talented == "knife" and self:knowTalent(Talents.T_LETHALITY) then sub_cun_to_str = true end
 
 	local totstat = 0
-	local dammod = weapon.dammod or {str=0.6}
+	local dammod = weapon.dammod or {str=0.1}
 	for stat, mod in pairs(dammod) do
 		if sub_cun_to_str and stat == "str" then stat = "cun" end
 		if self.use_psi_combat and stat == "str" then stat = "wil" end
@@ -898,13 +957,22 @@ function _M:combatDamage(weapon)
 			totstat = totstat * 0.6
 		end
 	end
+	totstat = math.floor(totstat)
 
-	local talented_mod = math.sqrt(self:combatCheckTraining(weapon) / 10) / 2 + 1
+	local talent_dam = self:combatCheckTraining(weapon)
+	--print(("[COMBAT DAMAGE] dam(%f) totstat(%f) talent_dam (%f)"):format(weapon.dam, totstat, talent_dam))
+	return math.floor(weapon.dam + totstat + talent_dam)
+end
 
-	local power = math.max((weapon.dam or 1), 1)
-	power = (math.sqrt(power / 10) - 1) * 0.5 + 1
-	--print(("[COMBAT DAMAGE] power(%f) totstat(%f) talent_mod(%f)"):format(power, totstat, talented_mod))
-	return self:rescaleDamage(0.3*(self:combatPhysicalpower() + totstat) * power * talented_mod)
+function _M:getCombinedDamage(o, offmult)
+	local offmult = offmult or 1
+	local weapon, ammo = self:hasArcheryWeapon()
+	if weapon then
+		return self:combatDamage(weapon.combat)*offmult + self:combatDamage(ammo.combat) + weapon:getRangedProjectDam() + ammo:getRangedProjectDam()
+	else
+		return self:combatDamage(o.combat)*offmult + o:getRangedProjectDam() + o:getMeleeProjectDam()
+	end
+
 end
 
 function _M:combatPhysicalpower(mod)
@@ -920,28 +988,6 @@ function _M:combatPhysicalpower(mod)
 		local t = self:getTalentFromId(self.T_EMPTY_HAND)
 		add = add + t.getDamage(self, t)
 	end
-	if self:knowTalent(Talents.T_WEAPONS_MASTERY) then
-		add = add + 5 * self:getTalentLevel(Talents.T_WEAPONS_MASTERY)
-	end
-	if self:knowTalent(Talents.T_KNIFE_MASTERY) then
-		add = add + 5 * self:getTalentLevel(Talents.T_KNIFE_MASTERY)
-	end
-	if self:knowTalent(Talents.T_EXOTIC_WEAPONS_MASTERY) then
-		add = add + 5 * self:getTalentLevel(Talents.T_EXOTIC_WEAPONS_MASTERY)
-	end
-	if self:knowTalent(Talents.T_UNARMED_MASTERY) then
-		add = add + 5 * self:getTalentLevel(Talents.T_UNARMED_MASTERY)
-	end
-	if self:knowTalent(Talents.T_STAFF_MASTERY) then
-		add = add + 5 * self:getTalentLevel(Talents.T_STAFF_MASTERY)
-	end
-	if self:knowTalent(Talents.T_BOW_MASTERY) then
-		add = add + 5 * self:getTalentLevel(Talents.T_BOW_MASTERY)
-	end
-	if self:knowTalent(Talents.T_SLING_MASTERY) then
-		add = add + 5 * self:getTalentLevel(Talents.T_SLING_MASTERY)
-	end
-
 	return self:rescaleCombatStats((self.combat_dam > 0 and self.combat_dam or 0) + add + self:getStr()) * mod
 end
 
@@ -1050,6 +1096,7 @@ function _M:physicalCrit(dam, weapon, target, atk, def)
 	end
 
 	local chance = self:combatCrit(weapon)
+	local magnitude = self:combatCritPower("physical", weapon)
 	local crit_power_add = 0
 	local crit = false
 	if self:knowTalent(self.T_BACKSTAB) and target:attr("stunned") then chance = chance + self:getTalentLevel(self.T_BACKSTAB) * 10 end
@@ -1063,6 +1110,12 @@ function _M:physicalCrit(dam, weapon, target, atk, def)
 			chance = chance + p.power
 		end
 	end
+	if target:hasEffect(target.EFF_COUNTERSTRIKE) then
+		local p = target:hasEffect(target.EFF_COUNTERSTRIKE)
+		if p and p.src == self then
+			chance = chance + p.crit_inc
+		end
+	end
 	if target:hasEffect(target.EFF_OFFGUARD) then
 		chance = chance + 10
 	end
@@ -1070,7 +1123,7 @@ function _M:physicalCrit(dam, weapon, target, atk, def)
 	if target:hasHeavyArmor() and target:knowTalent(target.T_ARMOUR_TRAINING) then
 		chance = chance - target:getTalentLevel(target.T_ARMOUR_TRAINING) * 1.9
 	end
-	
+
 	if target:attr("combat_critreduction") then
 		chance = chance - target:attr("combat_critreduction")
 	end
@@ -1086,7 +1139,7 @@ function _M:physicalCrit(dam, weapon, target, atk, def)
 		if target:hasEffect(target.EFF_OFFGUARD) then
 			crit_power_add = crit_power_add + 0.1
 		end
-		dam = dam * (1.5 + crit_power_add + (self.combat_critical_power or 0) / 100)
+		dam = dam * (magnitude + crit_power_add + (self.combat_critical_power or 0) / 100)
 		crit = true
 
 	end
@@ -1095,21 +1148,31 @@ end
 
 --- Computes spell crit for a damage
 function _M:spellCrit(dam, add_chance)
-	if self:isTalentActive(self.T_STEALTH) and self:knowTalent(self.T_SHADOWSTRIKE) then
-		return dam * (1.5 + self:getTalentLevel(self.T_SHADOWSTRIKE) / 7), true
-	end
 
 	local chance = self:combatSpellCrit() + (add_chance or 0)
 	local crit = false
 
+	-- get all weapons and use the largest crit magnitude that applies
+	local mh = (self:getInven("MAINHAND") and self:getInven("MAINHAND")[1]) or {}
+	local oh = (self:getInven("OFFHAND") and self:getInven("OFFHAND")[1]) or {}
+	local pf = (self:getInven("PSIONIC_FOCUS") and self:getInven("PSIONIC_FOCUS")[1]) or {}
+	local critical_power = math.max(self:combatCritPower("spell", mh.combat), self:combatCritPower("spell", oh.combat), self:combatCritPower("spell", pf.combat), 1.1)
+
+	if self:isTalentActive(self.T_STEALTH) and self:knowTalent(self.T_SHADOWSTRIKE) then
+		return dam * (critical_power + self:getTalentLevel(self.T_SHADOWSTRIKE) / 7), true
+	end
 	print("[SPELL CRIT %]", chance)
 	if rng.percent(chance) then
-		dam = dam * (1.5 + (self.combat_critical_power or 0) / 100)
+		dam = dam * (critical_power + (self.combat_critical_power or 0) / 100)
 		crit = true
 		game.logSeen(self, "#{bold}#%s's spell attains critical power!#{normal}#", self.name:capitalize())
 
 		if self:attr("mana_on_crit") then self:incMana(self:attr("mana_on_crit")) end
-
+		-- Savagery
+		if self:knowTalent(self.T_SAVAGERY) then
+			local t = self:getTalentFromId(self.T_SAVAGERY)
+			t.do_savagery(self, t)
+		end
 		if self:isTalentActive(self.T_BLOOD_FURY) then
 			local t = self:getTalentFromId(self.T_BLOOD_FURY)
 			t.on_crit(self, t)
@@ -1303,6 +1366,15 @@ function _M:hasStaffWeapon()
 	if not self:getInven("MAINHAND") then return end
 	local weapon = self:getInven("MAINHAND")[1]
 	if not weapon or weapon.subtype ~= "staff" then
+		return nil
+	end
+	return weapon
+end
+
+function _M:hasGloves()
+	if not self:getInven("HANDS") then return end
+	local weapon = self:getInven("HANDS")[1]
+	if not weapon then
 		return nil
 	end
 	return weapon
@@ -1551,3 +1623,18 @@ function _M:startGrapple(target)
 	end
 end
 
+function _M:doConcussion(dam, target, weapons)
+	local weapon = weapons[1] or {}
+	local ammo = weapons[2] or {}
+	if not weapon and not ammo then return end
+	dam = dam * (weapon.concussion or 0) * 0.01 + dam * (ammo.concussion or 0) * 0.01
+	self:project({type="ball", radius=1, selffire=false}, target.x, target.y, DamageType.PHYSICAL, dam)
+end
+
+function _M:doTalentOnHit(target, weapon)
+	for tid, data in pairs(weapon.talent_on_hit) do
+		if rng.percent(data.chance) then
+			self:forceUseTalent(tid, {ignore_cd=true, ignore_energy=true, force_target=target, force_level=data.level, ignore_ressources=true})
+		end
+	end
+end

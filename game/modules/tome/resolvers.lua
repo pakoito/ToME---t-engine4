@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local Talents = require "engine.interface.ActorTalents"
+
 --- Resolves equipment creation for an actor
 function resolvers.equip(t)
 	return {__resolver="equip", __resolve_last=true, t}
@@ -243,25 +245,152 @@ function resolvers.calc.chatfeature(t, e)
 	return nil
 end
 
---- Random bonus based on level (sets the mbonus max level, we use 60 instead of 50 to get some forced randomness at high level)
+
 resolvers.mbonus_max_level = 90
 
---- Random bonus based on level and material quality
+--- Random bonus based on level and material quality. Contains standard inputs for rng.mbonus for each attribute found in egos.
+-- The reason for centralizing ego bonuses here is ease of balancing. If we decide that, for example, combat_physcrit is too abundant on egos in general, we can change the value in the atts table below and alter all egos simultaneously.
 resolvers.current_level = 1
-function resolvers.mbonus_material(max, add, pricefct)
-	return {__resolver="mbonus_material", max, add, pricefct}
+function resolvers.mbonus_material(att_name, mult, subtype_adjust, max, add, pricefct)
+	return {__resolver="mbonus_material", att_name, mult, subtype_adjust, max, add, pricefct}
 end
 function resolvers.calc.mbonus_material(t, e)
+	local att_name = t[1] or nil
 	local ml = e.material_level or 1
-	local v = math.ceil(rng.mbonus(t[1], resolvers.current_level, resolvers.mbonus_max_level) * ml / 5) + (t[2] or 0)
+	local v = 0
+	local atts = {
+		-- format is {max, add, factor1, factor2}
+		-- It's not necessary to have two factors, since they both get applied the same way. But they have two different purposes, and separating them makes things clearer.
+		
+	---COMBAT STATS
+		combat_atk = {8, 2},
+		combat_dam = {8, 2},
+		combat_spellpower = {8, 2},
+		combat_mindpower = {8, 2},
+		combat_def = {8, 2},
+		combat_def_ranged = {8, 2},
+		combat_physresist = {13, 2},
+		combat_spellresist = {13, 2},
+		combat_mentalresist = {13, 2},
+		save = {13, 2},
+	---OTHER
+		dam = {15, 5},
+		critical_power = {8, 2, 1, 0.1},
+		block = {95, 5},
+		physspeed = {3, 1, 5, 0.01},
+		learn_talent = {1, 1},
+		learn_talent_5 = {4, 1},
+		concussion = {5, 5, 10},
+		combat_apr = {2, 1, 5},
+		combat_physcrit = {4, 1},
+		combat_spellcrit = {4, 1},
+		combat_mindcrit = {4, 1},
+		combat_armor = {2, 1, 5},
+		combat_armor_hardiness = {2, 1, 5},
+		fatigue = {3, 1, 5, -1},
+		melee_project = {2, 1, 5},
+		inc_stats = {3, 1},
+		ranged_project = {5, 1, 5},
+		on_melee_hit = {2, 1, 5},
+		--resists = {1, 1, 25},
+		resists = {1, 1, 10},
+		rare_resists = {5, 5},
+		resists_cap = {2, 1, 5},
+		resists_pen = {2, 1, 5},
+		inc_damage = {5, 5},
+		damage_affinity = {3, 1, 10},
+		esp_range = {9, 1},
+		talents_types_mastery = {2, 2, 1, 0.1},
+		talent_on_hit_level = {4, 1},
+		talent_on_hit_chance = {3, 2, 10},
+		combat_critical_power = {1, 1, 1, 0.1},
+		disarm_bonus = {5, 1, 5},
+		trap_detect_power = {5, 1, 5},
+		inc_stealth = {2, 1, 5},
+		max_encumber = {3, 2, 10},
+		immunity = {1, 1, 10, 0.01},
+		life_regen = {3, 1, 5, 0.1},
+		stamina_regen = {4, 1, 1, 0.1},
+		mana_regen = {4, 1, 1, 0.1},
+		hate_regen = {3, 3, 1, 0.001},
+		stamina_regen_on_hit = {5, 2, 5, 0.1},
+		mana_regen_on_hit = {5, 2, 5, 0.1},
+		equilibrium_regen_on_hit = {5, 2, 5, 0.1},
+		mana_on_crit = {7, 1},
+		die_at = {7, 3, 10, -1},
+		max_life = {7, 3, 10},
+		max_mana = {5, 2, 10},
+		max_stamina = {3, 1, 10},
+		max_hate = {5, 5, 1, 0.1},
+		max_vim = {3, 1, 10},
+		max_air = {3, 1, 10},
+		lite = {1, 1},
+		infravision = {2, 1},
+		heightened_senses = {1, 1},
+		see_invisible = {3, 1, 5},
+		invisible = {9, 1},
+		movement_speed = {1, 1, 1, .1},
+		combat_physspeed = {3, 1, 5, 0.01},
+		combat_spellspeed = {3, 1, 5, 0.01},
+		healing_factor = {2, 1, 1, 0.1},
+		life_leech_chance = {9, 1},
+		life_leech_value = {2, 2, 5},
+		resource_leech_chance = {4, 1, 10},
+		resource_leech_value = {15, 5},
+		inc_damage_type = {1, 1, 25},
+		max_acc = {14, 1},
+		capacity = {7, 3},
+		ammo_regen = {3, 1},
+		cross_tier_bonus = {5, 5},
+		wards = {1, 1},
 
-	if e.cost and t[3] then
-		local ap, nv = t[3](e, v)
-		e.cost = e.cost + ap
-		v = nv or v
+--[=[	--Unused, but here in case we want individual immunities to have different numbers. Right now, all egos using immunities just use the "immunity" key above
+		blind_immune = {1.5, 1, 25, 0.01},
+		poison_immune = {1.5, 1, 25, 0.01},
+		disease_immune = {1.5, 1, 25, 0.01},
+		cut_immune = {1.5, 1, 25, 0.01},
+		silence_immune = {1.5, 1, 25, 0.01},
+		disarm_immune = {1.5, 1, 25, 0.01},
+		confusion_immune = {1.5, 1, 25, 0.01},
+		pin_immune = {1.5, 1, 25, 0.01},
+		stun_immune = {1.5, 1, 25, 0.01},
+		fear_immune = {1.5, 1, 25, 0.01},
+		knockback_immune = {1.5, 1, 25, 0.01},
+		instakill_immune = {1.5, 1, 25, 0.01},
+		teleport_immune = {1.5, 1, 25, 0.01},
+		]=]
+		
+	
+	}
+	if not atts[att_name] then return 0 end
+	local parity_fix = 1
+	if t[2] and t[2] < 0 then 
+		parity_fix = -1 
+	end
+	local subtype_adjust = 1
+	if t[3] then
+		if e.twohanded then subtype_adjust = 3
+		elseif e.subtype == "dagger" then subtype_adjust = 1
+		else subtype_adjust = 2
+		end
+	end
+	local max = (atts[att_name][1] or 0) * (t[2] or 1) * parity_fix * subtype_adjust
+	local add = (atts[att_name][2] or 0) * (t[2] or 1) * parity_fix
+	if t[4] and t[5] then 
+		v = math.ceil(rng.mbonus(t[4], resolvers.current_level, resolvers.mbonus_max_level) * ml / 5) + (t[5] or 0) 
+		if e.cost and t[6] then
+			local ap, nv = t[6](e, v)
+			e.cost = e.cost + ap
+			v = nv or v
+		end
+	else
+		local min = add * (atts[att_name][3] or 1) * (atts[att_name][4] or 1)
+		v = math.ceil(rng.mbonus(max, resolvers.current_level, resolvers.mbonus_max_level) * ml / 5) + (add or 0)
+		v = v * (atts[att_name][3] or 1) * (atts[att_name][4] or 1)
+		if v < min then v = min end
 	end
 
-	return v
+	return v * parity_fix
 end
 
 --- Random bonus based on level, more strict
@@ -304,6 +433,74 @@ function resolvers.calc.mbonus(t, e)
 	end
 
 	return v
+end
+
+--- Random, normally-distributed positive bonus used for combat attributes on weapons
+
+function resolvers.cbonus(base, max, factor, stand)
+	return {__resolver="cbonus", base, max, factor, stand}
+end
+function resolvers.calc.cbonus(t, e)
+	local base = t[1]
+	local max = t[2] or 2 * base
+	local factor = t[3] or 1
+	local stand = t[4] or (max - base) / 4
+	local val = util.bound(math.floor(rng.normal(base, stand)), base, max)
+	
+	--update name with flavors that reflect the object's power:
+	if not e.flavor_names then e.flavor_names = {e.subtype, e.subtype, e.subtype, e.subtype} end
+	if not e.flavor_name and e.subtype ~= "staff" then 
+		e.flavor_name = e.flavor_names[1] 
+		e.name = e.name:gsub(e.subtype, e.flavor_name) 
+	end
+	if val > base and e.subtype ~= "staff" then 
+		e.pow = (e.pow or 1) + 1
+		e.name = e.name:gsub(e.flavor_name or e.subtype, e.flavor_names[e.pow]) 
+		e.flavor_name = e.flavor_names[e.pow]
+	end
+	--fill quivers to capacity
+	if e.combat and e.combat.capacity then e.combat.shots_left = e.combat.capacity end
+	return val * factor
+end
+
+--Unused for now:
+function resolvers.w_name()
+	return {__resolver="w_name"}
+end
+function resolvers.calc.w_name(t, e)
+	--update name with flavors that reflect the object's power:
+	if e.subtype ~= "staff" then 
+		print("pow is", e.pow or 11)
+		if not e.flavor_names then e.flavor_names = {e.subtype, e.subtype, e.subtype, e.subtype} end
+		e.name = e.name:gsub(e.flavor_name or e.subtype, e.flavor_names[e.pow] or "error") 
+		e.flavor_name = e.flavor_names[e.pow]
+	end
+end
+
+--- give staves a flavor and appropriate damage type, as well as the command staff talent
+function resolvers.staff_wielder(name)
+	return {__resolver="staff_wielder", name}
+end
+function resolvers.calc.staff_wielder(t, e)
+	local staff_type = rng.table{2, 2, 2, 2, 3, 3, 3, 4, 4, 4}
+	e.flavor_name = e["flavor_names"][staff_type]
+	if staff_type == 2 then
+		e.combat.damtype = rng.table{engine.DamageType.FIRE, engine.DamageType.COLD, engine.DamageType.LIGHTNING, engine.DamageType.ARCANE}
+		e.modes = {"fire", "cold", "lightning", "arcane"}
+		e.name = e.name:gsub(" staff", " magestaff")
+	elseif staff_type == 3 then
+		e.combat.damtype = rng.table{engine.DamageType.LIGHT, engine.DamageType.DARKNESS, engine.DamageType.TEMPORAL}
+		e.modes = {"light", "darkness", "temporal"}
+		e.name = e.name:gsub(" staff", " starstaff")
+	elseif staff_type == 4 then
+		e.combat.damtype = rng.table{engine.DamageType.NATURE, engine.DamageType.BLIGHT, engine.DamageType.ACID}
+		e.modes = {"nature", "blight", "acid"}
+		e.name = e.name:gsub(" staff", " earthstaff")
+	end
+	return {
+		inc_damage = {[e.combat.damtype] = e.combat.dam},
+		learn_talent = {[Talents.T_COMMAND_STAFF] = e.material_level},
+	}
 end
 
 --- Generic resolver, takes a function, executes at the end

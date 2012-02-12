@@ -157,7 +157,6 @@ newBirthDescriptor{
 		["cunning/dirty"]={false, 0},
 	},
 	talents = {
-		[ActorTalents.T_SHOOT] = 1,
 		[ActorTalents.T_FLARE] = 1,
 		[ActorTalents.T_STEADY_SHOT] = 1,
 		[ActorTalents.T_BOW_MASTERY] = 1,
@@ -168,10 +167,14 @@ newBirthDescriptor{
 		max_life = 110,
 		resolvers.equip{ id=true,
 			{type="weapon", subtype="longbow", name="elm longbow", autoreq=true, ego_chance=-1000},
+			{type="ammo", subtype="arrow", name="quiver of elm arrows", autoreq=true, ego_chance=-1000},
 			{type="armor", subtype="light", name="rough leather armour", autoreq=true, ego_chance=-1000}
 		},
 		resolvers.inventory{ id=true, inven="QS_MAINHAND",
 			{type="weapon", subtype="sling", name="rough leather sling", autoreq=true, ego_chance=-1000},
+		},
+		resolvers.inventory{ id=true,
+			{type="ammo", subtype="shot", name="pouch of iron shot", autoreq=true, ego_chance=-1000},
 		},
 		resolvers.generic(function(e)
 			e.auto_shoot_talent = e.T_SHOOT
