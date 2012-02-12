@@ -535,6 +535,7 @@ function _M:defineDisplayCallback()
 	local f_friend = nil
 	local f_enemy = nil
 	local f_neutral = nil
+	local ichat = nil
 
 	self._mo:displayCallback(function(x, y, w, h, zoom, on_map)
 		-- Tactical info
@@ -593,6 +594,16 @@ function _M:defineDisplayCallback()
 					end
 				end
 			end
+		end
+
+		-- Chat
+		if game.level and self.can_talk then
+			local map = game.level.map
+			if not ichat then
+				ichat = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "speak_bubble.png")
+			end
+
+			ichat:toScreen(x + w - 8, y, 8, 8)
 		end
 
 		local e
