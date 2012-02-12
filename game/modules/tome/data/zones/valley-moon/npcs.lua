@@ -105,4 +105,8 @@ newEntity{ define_as = "LIMMIR",
 
 	can_talk = "limmir-valley-moon",
 	can_craft = true,
+	on_die = function(self, who)
+		game.level.turn_counter = nil
+		game.player:hasQuest("master-jeweler"):ritual_end()
+	end,
 }
