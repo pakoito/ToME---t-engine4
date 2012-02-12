@@ -585,7 +585,7 @@ function _M:drawDialog(kind, actor_to_compare)
 				if mean and dam then
 					local max_acc = o.combat.max_acc
 					if o.archery and player:hasAmmo(o.archery) then max_acc = player:hasAmmo(o.archery).combat.max_acc end
-					sp_text = (o.combat.affects_spells and " (affects spells)") or ""
+					sp_text = (o.combat.affects_spells and " (affects spells)") or (o.combat.affects_minds and " (affects mindpowers)") or ""
 					local attack_speed_bonus = (1 / player:combatSpeed(o.combat))*100 - 100
 					s:drawColorStringBlended(self.font, WeaponTxt, w, h, 255, 255, 255, true) h = h + self.font_h
 
@@ -614,7 +614,7 @@ function _M:drawDialog(kind, actor_to_compare)
 			s:drawColorStringBlended(self.font, "#LIGHT_BLUE#Unarmed:", w, h, 255, 255, 255, true) h = h + self.font_h
 			local mean, dam = player.combat, player.combat
 			if mean and dam then
-				sp_text = (player.combat.affects_spells and " (affects spells)") or ""
+				sp_text = (player.combat.affects_spells and " (affects spells)") or (player.combat.affects_minds and " (affects mindpowers)") or ""
 				local attack_speed_bonus = (1 / player:combatSpeed(player.combat))*100 - 100
 				local gloves = player:hasGloves()
 				local total_dam = player:combatDamage(player.combat) + (gloves and gloves:getMeleeProjectDam() or 0)
@@ -649,7 +649,7 @@ function _M:drawDialog(kind, actor_to_compare)
 				if mean and dam then
 					local max_acc = o.combat.max_acc
 					if o.archery and player:hasAmmo(o.archery) then max_acc = player:hasAmmo(o.archery).combat.max_acc end
-					sp_text = (o.combat.affects_spells and " (affects spells)") or ""
+					sp_text = (o.combat.affects_spells and " (affects spells)") or (o.combat.affects_minds and " (affects mindpowers)") or ""
 					local attack_speed_bonus = (1 / player:combatSpeed(o.combat))*100 - 100
 					s:drawColorStringBlended(self.font, "#LIGHT_BLUE#Off Hand:", w, h, 255, 255, 255, true) h = h + self.font_h
 

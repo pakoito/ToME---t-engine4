@@ -274,6 +274,13 @@ function _M:getMaxAccuracy(hit_type, combat)
 			(oh.combat and oh.combat.affects_spells and oh.combat.max_acc) or (oh.special_combat and oh.special_combat.affects_spells and oh.special_combat.max_acc) or 75,
 			(pf.combat and pf.combat.max_acc) or 75
 		)
+	elseif hit_type == "mind" then
+		--if combat and combat.max_acc then return combat.max_acc end
+		return (combat and combat.affects_minds and combat.max_acc) or math.max(
+			(mh.combat and mh.combat.affects_minds and mh.combat.max_acc) or 75,
+			(oh.combat and oh.combat.affects_minds and oh.combat.max_acc) or (oh.special_combat and oh.special_combat.affects_minds and oh.special_combat.max_acc) or 75,
+			(pf.combat and pf.combat.max_acc) or 75
+		)
 	end
 	return 75
 
@@ -900,11 +907,16 @@ end
 --- Gets crit magnitude
 function _M:combatCritPower(crit_type, weapon)
 	local combat = weapon or self.combat or {}
-	if crit_type == "spell" and not combat.affects_spells then
-		return 1.1
-	else
+	if crit_type == "physical" then
 		return (combat.critical_power or 1.1) + (self.combat_critical_power or 0)
+	elseif crit_type == "spell" then
+		if combat.affects_spells then return (combat.critical_power or 1.1) + (self.combat_critical_power or 0)
+		else return 1.1 end
+	elseif crit_type == "mind" then
+		if combat.affects_minds then return (combat.critical_power or 1.1) + (self.combat_critical_power or 0)
+		else return 1.1 end
 	end
+	return 1.1
 end
 
 --- Gets the damage range

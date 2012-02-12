@@ -334,7 +334,7 @@ function _M:getTextualDesc(compare_with)
 	-- Stop here if unided
 	if not self:isIdentified() then return desc end
 
-	local compare_fields = function(item1, items, infield, field, outformat, text, mod, isinversed, isdiffinversed, add_table, change_order, affects_spells)
+	local compare_fields = function(item1, items, infield, field, outformat, text, mod, isinversed, isdiffinversed, add_table, change_order, combat)
 		add_table = add_table or {}
 		mod = mod or 1
 		change_order = change_order or true
@@ -350,7 +350,6 @@ function _M:getTextualDesc(compare_with)
 			ret:add(((item1[field] or 0) + (add_table[field] or 0)) < 0 and {"color","RED"} or {"color","LIGHT_GREEN"}, outformat:format(((item1[field] or 0) + (add_table[field] or 0)) * mod), {"color", "LAST"})
 		end
 		--if change_order then ret:add(text) end
-		--if affects_spells then ret:add(" (affects spells)") end
 		if item1[field] then
 			add = true
 		end
@@ -380,7 +379,8 @@ function _M:getTextualDesc(compare_with)
 			ret:add(")")
 		end
 		if change_order then ret:add(text) end
-		if affects_spells then ret:add(" (affects spells)") end
+		if combat and combat.affects_spells then ret:add(" (affects spells)") end
+		if combat and combat.affects_minds then ret:add(" (affects minds)") end
 		if add then
 			desc:merge(ret)
 			desc:add(true)
@@ -534,8 +534,8 @@ function _M:getTextualDesc(compare_with)
 
 		end
 
-		compare_fields(combat, compare_with, field, "critical_power", "%.1f", " crit multiplier", 1, false, false, add_table, true, combat.affects_spells)
-		compare_fields(combat, compare_with, field, "max_acc", "%d%%", " max hit chance", 1, false, false, add_table, true, combat.affects_spells)
+		compare_fields(combat, compare_with, field, "critical_power", "%.1f", " crit multiplier", 1, false, false, add_table, true, combat)
+		compare_fields(combat, compare_with, field, "max_acc", "%d%%", " max hit chance", 1, false, false, add_table, true, combat)
 		compare_fields(combat, compare_with, field, "capacity", "%d", " capacity", 1, false, false, add_table)
 		compare_fields(combat, compare_with, field, "shots_reloaded_per_turn", "%+d", " reload speed", 1, false, false, add_table)
 		compare_fields(combat, compare_with, field, "ammo_every", "%d", " turns elapse between self-loadings", 1, false, false, add_table)
