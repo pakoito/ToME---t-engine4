@@ -380,6 +380,8 @@ newEntity{ base = "BASE_SHIELD",
 		damtype = DamageType.ARCANE,
 	},
 	wielder = {
+		learn_talent = { [Talents.T_BLOCK] = 5 },
+
 		resists={[DamageType.DARKNESS] = 25},
 		inc_damage={[DamageType.DARKNESS] = 15},
 
@@ -416,6 +418,7 @@ newEntity{ base = "BASE_SHIELD",
 		dammod = {str=0.4},
 	},
 	wielder = {
+		learn_talent = { [Talents.T_BLOCK] = 5 },
 		combat_armor = 10,
 		combat_def = 9,
 		fatigue = 14,
@@ -713,6 +716,7 @@ newEntity{ base = "BASE_SHIELD",
 		dammod = {str=1},
 	},
 	wielder = {
+		learn_talent = { [Talents.T_BLOCK] = 5 },
 		combat_armor = 4,
 		combat_def = 14,
 		combat_def_ranged = 14,
@@ -1239,7 +1243,7 @@ It has been kept somewhat intact with layers of salt and clay, but in spite of t
 			local grids = core.fov.circle_grids(actor.x, actor.y, 1, true)
 			local Map = require "engine.Map"
 			local is_trap = false
-			
+
 			for x, yy in pairs(grids) do for y, _ in pairs(yy) do
 				local trap = game.level.map(x, y, Map.TRAP)
 				if trap then

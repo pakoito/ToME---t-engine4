@@ -539,7 +539,7 @@ newEntity{ base = "BASE_LONGBOW",
 	wielder = {
 		inc_damage={ [DamageType.PHYSICAL] = 12, },
 		lite = 1,
-		inc_stats = { [Stats.STAT_DEX] = 5, [Stats.STAT_WIL] = 4,  },	
+		inc_stats = { [Stats.STAT_DEX] = 5, [Stats.STAT_WIL] = 4,  },
 	},
 }
 
@@ -722,6 +722,7 @@ newEntity{ base = "BASE_SHIELD",
 		damtype = DamageType.FIRE,
 	},
 	wielder = {
+		learn_talent = { [Talents.T_BLOCK] = 5 },
 		resists={[DamageType.FIRE] = 35},
 		on_melee_hit={[DamageType.FIRE] = 17},
 		combat_armor = 9,
@@ -751,6 +752,7 @@ newEntity{ base = "BASE_SHIELD",
 		dammod = {str=0.8,},
 	},
 	wielder = {
+		learn_talent = { [Talents.T_BLOCK] = 5 },
 		combat_armor = 18,
 		combat_def = 20,
 		combat_def_ranged = 10,

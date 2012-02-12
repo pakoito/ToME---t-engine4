@@ -97,6 +97,7 @@ newEntity{ base = "BASE_SHIELD",
 		damtype = DamageType.LIGHT,
 	},
 	wielder = {
+		learn_talent = { [Talents.T_BLOCK] = 5 },
 		lite = 2,
 		combat_armor = 9,
 		combat_def = 16,
