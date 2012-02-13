@@ -727,7 +727,7 @@ newEffect{
 	deactivate = function(self, eff)
 		if (eff.allow_override or (self:canBe("worldport") and not self:attr("never_move"))) and eff.dur <= 0 then
 			game:onTickEnd(function()
-				if eff.leveid == game.zone.short_name.."-"..game.level.level then
+				if eff.leveid == game.zone.short_name.."-"..game.level.level and game.player.can_change_zone then
 					game.logPlayer(self, "You are yanked out of this place!")
 					game:changeLevel(1, eff.where or game.player.last_wilderness)
 				end
@@ -764,7 +764,7 @@ newEffect{
 
 		if self:canBe("worldport") and not self:attr("never_move") then
 			game:onTickEnd(function()
-				if eff.leveid == game.zone.short_name.."-"..game.level.level then
+				if eff.leveid == game.zone.short_name.."-"..game.level.level and game.player.can_change_zone then
 					game.logPlayer(self, "You are yanked out of this place!")
 					game:changeLevel(1, "town-angolwen")
 				end
@@ -1391,7 +1391,7 @@ newEffect{
 		old_eff.physid = self:addTemporaryValue("combat_physresist", old_eff.cur_physical)
 		old_eff.spellid = self:addTemporaryValue("combat_spellresist", old_eff.cur_spell)
 		old_eff.mentalid = self:addTemporaryValue("combat_mentalresist", old_eff.cur_mental)
-		
+
 		old_eff.dur = new_eff.dur
 		return old_eff
 	end,

@@ -27,7 +27,7 @@ function _M:init(t)
 	self.actor = assert(t.actor, "no actorframe actor")
 	self.w = assert(t.w, "no actorframe w")
 	self.h = assert(t.h, "no actorframe h")
-	self.tiles = t.tiles or Tiles.new(w, h, nil, nil, true, nil)
+	self.tiles = t.tiles or Tiles.new(self.w, self.h, nil, nil, true, nil)
 
 	Base.init(self, t)
 end

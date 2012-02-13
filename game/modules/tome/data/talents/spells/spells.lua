@@ -123,6 +123,7 @@ function necroSetupSummon(self, m, x, y, level, no_control)
 	m.summoner = self
 	m.summoner_gain_exp = true
 	m.necrotic_minion = true
+	m.exp_worth = 0
 	m.life_regen = 0
 	m.unused_stats = 0
 	m.unused_talents = 0
