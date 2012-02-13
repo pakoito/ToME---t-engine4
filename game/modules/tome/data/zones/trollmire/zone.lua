@@ -46,7 +46,7 @@ return {
 			door = "GRASS",
 			road = "DIRT",
 			add_road = true,
-			do_ponds =  {
+			do_ponds = {
 				nb = {0, 2},
 				size = {w=25, h=25},
 				pond = {{0.6, "DEEP_WATER"}, {0.8, "DEEP_WATER"}},
