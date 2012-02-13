@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-newEntity{ base = "BASE_LORE",
+newEntity{ base = "BASE_LORE_RANDOM",
 	name = "memories of archmage Varil", lore="spellhunt-note-1", unique=true,
 	desc = [[A collection of thoughts and memories of the archmage Varil, during the Age of Dusk]],
 	level_range = {1, 25},
@@ -26,7 +26,7 @@ newEntity{ base = "BASE_LORE",
 	encumber = 0,
 }
 
-newEntity{ base = "BASE_LORE",
+newEntity{ base = "BASE_LORE_RANDOM",
 	name = "Spellhunter's Guide part 1: How to Detect a Spellweaver", lore="spellhunt-note-2", unique=true,
 	desc = [[The definitive guide to hunting magic users.]],
 	level_range = {1, 25},
@@ -34,7 +34,7 @@ newEntity{ base = "BASE_LORE",
 	is_magic_device = false,
 	encumber = 0,
 }
-newEntity{ base = "BASE_LORE",
+newEntity{ base = "BASE_LORE_RANDOM",
 	name = "Spellhunter's Guide part 2: How to Battle a Magic-User", lore="spellhunt-note-3", unique=true,
 	desc = [[The definitive guide to hunting magic users.]],
 	level_range = {1, 25},
@@ -42,7 +42,7 @@ newEntity{ base = "BASE_LORE",
 	is_magic_device = false,
 	encumber = 0,
 }
-newEntity{ base = "BASE_LORE",
+newEntity{ base = "BASE_LORE_RANDOM",
 	name = "Spellhunter's Guide part 3: How to Kill a Magic-User", lore="spellhunt-note-4", unique=true,
 	desc = [[The definitive guide to hunting magic users.]],
 	level_range = {1, 25},

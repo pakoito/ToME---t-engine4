@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 for i = 1, 4 do
-newEntity{ base = "BASE_LORE",
+newEntity{ base = "BASE_LORE_RANDOM",
 	define_as = "SUNWALL_LORE_NOTE"..i,
 	name = "Loremaster Verutir's note", lore="sunwall-note-"..i, unique="Loremaster Verutir's note "..i,
 	desc = [[A paper scrap containing some lore.]],

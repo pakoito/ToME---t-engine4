@@ -19,7 +19,7 @@
 
 for i = 3, 10 do
 local l = mod.class.interface.PlayerLore.lore_defs["races-"..i]
-newEntity{ base = "BASE_LORE",
+newEntity{ base = "BASE_LORE_RANDOM",
 	define_as = "RACES_NOTE"..i,
 	subtype = "analysis", unique=true,
 	name = l.name, lore="races-"..i,

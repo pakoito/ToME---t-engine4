@@ -17,14 +17,14 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-newEntity{ base = "BASE_LORE",
+newEntity{ base = "BASE_LORE_RANDOM",
 	name = "The story of my salvation", lore="zigur-potion", unique=true,
 	desc = [[An old tale about the fear of magic]],
 	level_range = {1, 20},
 	rarity = 40,
 }
 
-newEntity{ base = "BASE_LORE",
+newEntity{ base = "BASE_LORE_RANDOM",
 	name = "memories of Artelia Firstborn", lore="creation-elf", unique=true,
 	desc = [[The memories of the first elf to have awaken]],
 	level_range = {1, 25},
@@ -33,7 +33,7 @@ newEntity{ base = "BASE_LORE",
 	checkFilter = function(e) local p = game.party:findMember{main=true} if p.descriptor.race == "Elf" then return true end return false end,
 }
 
-newEntity{ base = "BASE_LORE",
+newEntity{ base = "BASE_LORE_RANDOM",
 	name = "human myth of creation", lore="creation-human", unique=true,
 	desc = [[Myth of creation of the humans]],
 	level_range = {1, 25},
@@ -42,7 +42,7 @@ newEntity{ base = "BASE_LORE",
 	checkFilter = function(e) local p = game.party:findMember{main=true} if p.descriptor.race == "Human" then return true end return false end,
 }
 
-newEntity{ base = "BASE_LORE",
+newEntity{ base = "BASE_LORE_RANDOM",
 	name = "a logical analysis of creation, by philosopher Smythen", lore="creation-halfling", unique=true,
 	desc = [[Myth of creation of the halflings]],
 	level_range = {1, 25},
@@ -51,7 +51,7 @@ newEntity{ base = "BASE_LORE",
 	checkFilter = function(e) local p = game.party:findMember{main=true} if p.descriptor.race == "Halfling" then return true end return false end,
 }
 
-newEntity{ base = "BASE_LORE",
+newEntity{ base = "BASE_LORE_RANDOM",
 	name = "Tale of the Moonsisters", lore="moons-human", unique=true,
 	desc = [[The creation of Eyal's moons.]],
 	level_range = {1, 35},
