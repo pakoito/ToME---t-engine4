@@ -133,8 +133,8 @@ newTalent{
 			end,
 			function(self, src, target)
 				local DT = require("engine.DamageType")
-				src:project({type="ball", radius=1}, self.x, self.y, DT.LIGHTNING, self.def.dam)
-				src:project({type="ball", radius=1}, self.x, self.y, DT.MINDKNOCKBACK, self.def.dam)
+				src:project({type="ball", radius=1, x=self.x, y=self.y}, self.x, self.y, DT.LIGHTNING, self.def.dam)
+				src:project({type="ball", radius=1, x=self.x, y=self.y}, self.x, self.y, DT.MINDKNOCKBACK, self.def.dam)
 				if target:canBe("stun") then
 					target:setEffect(target.EFF_STUNNED, 4, {apply_power=src:combatMindpower()})
 				else
