@@ -1065,7 +1065,7 @@ function _M:tooltip(x, y, seen_by)
 	if #resists > 0 then ts:add("Resists: ", table.concat(resists, ','), true) end
 	ts:add("Hardiness/Armour: ", tostring(math.floor(self:combatArmorHardiness())), '% / ', tostring(math.floor(self:combatArmor())), true)
 	ts:add("Size: ", {"color", "ANTIQUE_WHITE"}, self:TextSizeCategory(), {"color", "WHITE"}, true)
-	
+
 	ts:add("#FFD700#Accuracy#FFFFFF#: ", self:colorStats("combatAttack"), "  ")
 	ts:add("#0080FF#Defense#FFFFFF#:  ", self:colorStats("combatDefense"), true)
 	ts:add("#FFD700#P. power#FFFFFF#: ", self:colorStats("combatPhysicalpower"), "  ")
@@ -1110,7 +1110,7 @@ function _M:regenAmmo()
 	--if not ammo then return end
 	local r = (ammo and ammo.combat and ammo.combat.ammo_every)
 	if not r then return end
-	if ammo.combat.shots_left == ammo.combat.capacity then return end
+	if ammo.combat.shots_left >= ammo.combat.capacity then return end
 	--print("reload every r, where r is:", r)
 	ammo.combat.reload_counter = (ammo.combat.reload_counter or 0) + 1
 	--print("reload counter:", ammo.combat.reload_counter)
@@ -2119,13 +2119,13 @@ function _M:onWear(o, bypass_set)
 	end
 
 	-- learn item talents
-	
+
 	if o.wielder and o.wielder.learn_talent then
 		for tid, level in pairs(o.wielder.learn_talent) do
 			self:learnItemTalent(o, tid, level)
 		end
 	end
-	
+
 	self:updateModdableTile()
 	if self == game.player then game:playSound("actions/wear") end
 end
@@ -2187,7 +2187,7 @@ function _M:onTakeoff(o, bypass_set)
 	if o.subtype == "arrow" or o.subtype == "shot" then
 		self:breakReloading()
 	end
-	
+
 	self:updateModdableTile()
 	if self == game.player then game:playSound("actions/takeoff") end
 end
@@ -2364,11 +2364,11 @@ function _M:learnItemTalent(o, tid, level)
 	if not self.item_talent_surplus_levels[tid] then self.item_talent_surplus_levels[tid] = 0 end
 	--item_talent_levels[tid] = item_talent_levels[tid] + level
 	for i = 1, level do
-		if self:getTalentLevelRaw(t) >= max then 
-			self.item_talent_surplus_levels[tid] = self.item_talent_surplus_levels[tid] + 1 
+		if self:getTalentLevelRaw(t) >= max then
+			self.item_talent_surplus_levels[tid] = self.item_talent_surplus_levels[tid] + 1
 		else
 			self:learnTalent(tid, true, 1)
-		end		
+		end
 	end
 end
 
@@ -2379,11 +2379,11 @@ function _M:unlearnItemTalent(o, tid, level)
 	--local item_talent_surplus_levels = self.item_talent_surplus_levels or {}
 	if not self.item_talent_surplus_levels[tid] then self.item_talent_surplus_levels[tid] = 0 end
 	for i = 1, level do
-		if self.item_talent_surplus_levels[tid] > 0 then 
-			self.item_talent_surplus_levels[tid] = self.item_talent_surplus_levels[tid] - 1 
+		if self.item_talent_surplus_levels[tid] > 0 then
+			self.item_talent_surplus_levels[tid] = self.item_talent_surplus_levels[tid] - 1
 		else
 			self:unlearnTalent(tid, true, 1)
-		end	
+		end
 	end
 end
 
@@ -2710,7 +2710,7 @@ function _M:postUseTalent(ab, ret)
 			self:setEffect(self.EFF_TAINT_COOLDOWN, 10, {power=1})
 		end
 	end)
-	
+
 	if not ab.no_energy then
 		if ab.is_spell then
 			self:useEnergy(game.energy_to_act * self:combatSpellSpeed())
