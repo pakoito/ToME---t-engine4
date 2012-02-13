@@ -165,4 +165,16 @@ return {
 
 		game.log("#YELLOW#You hear all the doors being shattered into pieces.")
 	end,
+
+	on_enter = function(lev, old_lev, newzone)
+		local Dialog = require("engine.ui.Dialog")
+		if lev == 2 and not game.level.shown_warning then
+			Dialog:simpleLongPopup("Mausoleum", [[As you tread softly down the stairs a large stone slab slides into place behind you, blocking all retreat. The air is still and stuffy, and in this tight space you feel as if in a coffin, buried alive.
+
+Adding to your unease is a rising feeling of dread, overwhelming fear in fact. A hall of doors lies ahead, and behind each you sense a power of great malevolence and unholy horror. At the end of the corridor you see a faint light beneath a large black door, and you have a vague sense that the other doors are enslaved to this one - obedient, subservient, and waiting...
+
+You hear the sound of a woman sobbing, and every now and then it turns into a fit of pained moans and screams. They echo round the dark chamber and through the darkest parts of your mind, reminding you of every black deed and vile sin you have ever committed. Guilt, horror and terror flood through your thoughts, each competing for stronger control of your psyche. Your only clear thought is of escape, by whatever means you can find.]], 600)
+			game.level.shown_warning = true
+		end
+	end,
 }
