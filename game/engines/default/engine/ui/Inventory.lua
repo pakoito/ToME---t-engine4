@@ -92,14 +92,6 @@ function _M:generate()
 	end)
 	self.key = self.c_inven.key
 	self.key:addCommands{
-		__TEXTINPUT = function(c)
-			local list
-			if self.focus_ui and self.focus_ui.ui == self.c_inven then list = self.c_inven.c_inven.list
-			end
-			if list and list.chars[c] then
-				self:use(list[list.chars[c]])
-			end
-		end,
 		_TAB = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = util.boundWrap(self.c_tabs.sel_i+1, 1, #self.tabslist) self.c_tabs:onUse("left") self.c_tabs:onSelect("key") end,
 		[{"_TAB","ctrl"}] = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = util.boundWrap(self.c_tabs.sel_i-1, 1, #self.tabslist) self.c_tabs:onUse("left", false) self.c_tabs:onSelect("key") end,
 	}
@@ -113,6 +105,15 @@ function _M:generate()
 	end
 
 	self.c_inven:onSelect()
+end
+
+function _M:keyTrigger(c)
+	if not self.focus_ui or not self.focus_ui.ui == self.c_inven then return end
+
+	if self.inven_list.chars[c] then
+		self.c_inven.sel = self.inven_list.chars[c]
+		self.c_inven.key:triggerVirtual("ACCEPT")
+	end
 end
 
 function _M:switchTab(filter)

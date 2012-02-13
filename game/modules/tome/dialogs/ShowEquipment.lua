@@ -54,16 +54,9 @@ function _M:init(title, actor, filter, action)
 	self:setupUI()
 
 	self.key:addCommands{
-		__TEXTINPUT = function(c)
-			if self.list and self.list.chars[c] then
-				self:use(self.list[self.list.chars[c]])
-			end
-		end,
+		__TEXTINPUT = function(c) self.c_doll:keyTrigger(c) end,
 	}
 	self.key:addBinds{
-		ACCEPT = function()
---			self:use(self.c_list.list[self.c_list.sel])
-		end,
 		EXIT = function() game:unregisterDialog(self) end,
 	}
 end

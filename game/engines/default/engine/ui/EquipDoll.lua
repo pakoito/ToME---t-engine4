@@ -36,6 +36,10 @@ function _M:init(t)
 	Base.init(self, t)
 end
 
+function _M:on_focus(v)
+	game:onTickEnd(function() self.key:unicodeInput(v) end)
+end
+
 function _M:generate()
 	self.mouse:reset()
 	self.key:reset()
@@ -72,6 +76,12 @@ function _M:generate()
 		_UP = function() self:moveFocus(-1) end,
 		_DOWN = function() self:moveFocus(1) end,
 	}
+end
+
+function _M:keyTrigger(c)
+	if self.chars and self.chars[c] then
+		self.chars[c].ui.key:triggerVirtual("ACCEPT")
+	end
 end
 
 function _M:setInnerFocus(id)
@@ -164,10 +174,12 @@ function _M:generateEquipDollFrames()
 --	self.base_doll_y = (self.ih - self.h) / 2
 	self.base_doll_y = 0
 
+	self.chars = {}
 	for i, ui in ipairs(uis) do
 		ui.y = ui.y + self.base_doll_y
 		ui.ui.mouse.delegate_offset_x = ui.x
 		ui.ui.mouse.delegate_offset_y = ui.y
+		self.chars[self:makeKeyChar(i)] = ui
 	end
 
 	self.uis = uis

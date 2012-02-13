@@ -73,12 +73,10 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 
 	self.key:addCommands{
 		__TEXTINPUT = function(c)
-			local list
-			if self.focus_ui and self.focus_ui.ui == self.c_inven then list = self.c_inven.c_inven.list
-			elseif self.focus_ui and self.focus_ui.ui == self.c_store then list = self.c_store.c_inven.list
-			end
-			if list and list.chars[c] then
-				self:use(list[list.chars[c]])
+			if self.focus_ui and self.focus_ui.ui == self.c_store then
+				self.c_store:keyTrigger(c)
+			elseif self.focus_ui and self.focus_ui.ui == self.c_inven then
+				self.c_inven:keyTrigger(c)
 			end
 		end,
 	}

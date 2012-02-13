@@ -85,6 +85,15 @@ function _M:init(title, actor, filter, action, on_select)
 		end,
 		EXIT = function() game:unregisterDialog(self) end,
 	}
+	self.key:addCommands{
+		__TEXTINPUT = function(c)
+			if self.focus_ui and self.focus_ui.ui == self.c_doll then
+				self.c_doll:keyTrigger(c)
+			elseif self.focus_ui and self.focus_ui.ui == self.c_inven then
+				self.c_inven:keyTrigger(c)
+			end
+		end,
+	}
 
 	self.key.any_key = function(sym)
 		-- Control resets the tooltip

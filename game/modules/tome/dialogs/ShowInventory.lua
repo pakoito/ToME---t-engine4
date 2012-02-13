@@ -55,8 +55,8 @@ function _M:init(title, inven, filter, action, actor)
 
 	self.key:addCommands{
 		__TEXTINPUT = function(c)
-			if self.list and self.list.chars[c] then
-				self:use(self.list[self.list.chars[c]])
+			if self.focus_ui and self.focus_ui.ui == self.c_inven then
+				self.c_inven:keyTrigger(c)
 			end
 		end,
 	}
