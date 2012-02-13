@@ -28,55 +28,43 @@ newLore{
 	lore = [[I have stared in the mouths of crimson wyrms
 And felt the claws of drakes so sleek
 But through deserts dry and sandy storms
-There is something else I seek]],
-}
-newLore{
-	id = "sandworm-note-2",
-	category = "sandworm lair",
-	name = "song of the sands",
-	lore = [[In the trail of giant worms I walk
+There is something else I seek
+
+In the trail of giant worms I walk
 Through tunnels of sand below
 Of arcane tools let there be no talk
 It's on the wyrmic path I go!]],
 }
 newLore{
-	id = "sandworm-note-3",
+	id = "sandworm-note-2",
 	category = "sandworm lair",
 	name = "song of the sands",
 	lore = [[The dragon's breath corrodes my eyes
 It tears flesh from my skin
 But onward I search to see what lies
-Amidst the sandy depths within]],
-}
-newLore{
-	id = "sandworm-note-4",
-	category = "sandworm lair",
-	name = "song of the sands",
-	lore = [[The piles of sand fall past my head
+Amidst the sandy depths within
+
+The piles of sand fall past my head
 Nearly crushing me alive
 But I hurry on bereft of dread
 For my quest I must survive!]],
 }
 newLore{
-	id = "sandworm-note-5",
+	id = "sandworm-note-3",
 	category = "sandworm lair",
 	name = "song of the sands",
 	lore = [[The sandworms go from strength to strength
 Ever greater do they seem
 Of towering height and massive length
-It is all as if a dream...]],
-}
-newLore{
-	id = "sandworm-note-6",
-	category = "sandworm lair",
-	name = "song of the sands",
-	lore = [[To the darkest depths I now depart
+It is all as if a dream...
+
+To the darkest depths I now depart
 In search of my one fate
 How I long to taste the beating heart
 Of the legendary worm so great!]],
 }
 newLore{
-	id = "sandworm-note-7",
+	id = "sandworm-note-4",
 	category = "sandworm lair",
 	name = "song of the sands",
 	lore = [[I have seen the Queen in glory true

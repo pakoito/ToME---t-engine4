@@ -82,7 +82,7 @@ return {
 
 	post_process = function(level)
 		-- Place a lore note on each level
-		game:placeRandomLoreObjectScale("NOTE", 7, level.level)
+		game:placeRandomLoreObject("NOTE"..level.level)
 
 		if not config.settings.tome.weather_effects then return end
 

@@ -28,6 +28,7 @@ defineTile("~", "DEEP_OCEAN_WATER")
 defineTile("*", "WATER_DOOR")
 defineTile("<", "OLD_FOREST")
 defineTile("-", "GRASS")
+defineTile("!", "GRASS", "NOTE")
 defineTile(">", "WATER_DOWN")
 defineTile(".", "SAND")
 defineTile("T", "TREE")
@@ -40,7 +41,7 @@ defineTile("T", "TREE")
 return [[
 TTTTTTTTTTTTTTTTTTTTTTTTTTTT<TTTTTTTTTTTTTTTTTTTTT
 TTTTTTTTTTTTTTTTTTTTTTTTTT---TTTTTTTTTTTTTTTTTTTTT
-TTTTTTTTTTTTTTTT......TTTT-TTTTTTTTTTTTTTTTTTTTTTT
+TTTTTTTTTTTTTTTT......TTTT!TTTTTTTTTTTTTTTTTTTTTTT
 TTTTTTTTTTT..TT...............TTTTTTTTTTTTTTTTTTTT
 ......TT............................TTTTTTTTTTTTTT
 ...................TT.....TT..........TTTTTTTTTTTT

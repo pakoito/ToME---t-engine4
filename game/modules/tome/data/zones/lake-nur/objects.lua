@@ -22,3 +22,12 @@ local Stats = require "engine.interface.ActorStats"
 local DamageType = require "engine.DamageType"
 
 load("/data/general/objects/objects-maj-eyal.lua")
+
+newEntity{ base = "BASE_LORE",
+	define_as = "NOTE",
+	name = "journal page", lore="old-forest-note-5",
+	desc = [[A paper scrap, left by an adventurer.]],
+	rarity = false,
+	is_magic_device = false,
+	encumberance = 0,
+}

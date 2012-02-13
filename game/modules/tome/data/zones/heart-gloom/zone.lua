@@ -71,8 +71,6 @@ return {
 	},
 
 	post_process = function(level)
-		if level.level == 2 then game:placeRandomLoreObject("NOTE") end
-
 		local Map = require "engine.Map"
 		level.foreground_particle = require("engine.Particles").new("fullgloom", 1, {radius=(Map.viewport.mwidth + Map.viewport.mheight) / 2})
 	end,

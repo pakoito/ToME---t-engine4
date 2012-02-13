@@ -19,7 +19,7 @@
 
 load("/data/general/objects/objects-maj-eyal.lua")
 
-for i = 1, 5 do
+for i = 1, 4 do
 newEntity{ base = "BASE_LORE",
 	define_as = "NOTE"..i,
 	name = "letter", lore="rhaloren-note-"..i,
@@ -29,8 +29,8 @@ newEntity{ base = "BASE_LORE",
 end
 
 newEntity{ base = "BASE_LORE",
-	define_as = "NOTE6",
-	name = "a carefully preserved letter", lore="rhaloren-note-6",
+	define_as = "NOTE5",
+	name = "a carefully preserved letter", lore="rhaloren-note-5",
 	desc = [[A letter.]],
 	rarity = false,
 }

@@ -19,7 +19,7 @@
 
 load("/data/general/objects/objects-maj-eyal.lua")
 
-for i = 1, 7 do
+for i = 1, 4 do
 newEntity{ base = "BASE_LORE",
 	define_as = "NOTE"..i,
 	name = "Song of the Sands", lore="sandworm-note-"..i,

@@ -19,7 +19,7 @@
 
 load("/data/general/objects/objects-maj-eyal.lua")
 
-for i = 1, 7 do
+for i = 1, 2 do
 newEntity{ base = "BASE_LORE",
 	define_as = "NOTE"..i,
 	name = "torn diary page", lore="maze-note-"..i,

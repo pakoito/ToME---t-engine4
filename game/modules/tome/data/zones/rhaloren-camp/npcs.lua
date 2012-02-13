@@ -46,7 +46,7 @@ newEntity{ define_as = "INQUISITOR",
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	equipment = resolvers.equip{ {type="weapon", subtype="greatsword", auto_req=true}, {type="armor", subtype="light", autoreq=true}, },
 	resolvers.drops{chance=100, nb=1, {defined="ROD_OF_ANNULMENT", random_art_replace={chance=75}} },
-	resolvers.drops{chance=100, nb=1, {defined="NOTE6"} },
+	resolvers.drops{chance=100, nb=1, {defined="NOTE5"} },
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 
 	resolvers.talents{

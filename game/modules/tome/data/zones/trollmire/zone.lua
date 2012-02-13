@@ -108,7 +108,7 @@ return {
 
 	post_process = function(level)
 		-- Place a lore note on each level
-		game:placeRandomLoreObjectScale("NOTE", 5, level.level)
+		game:placeRandomLoreObject("NOTE"..level.level)
 
 		-- Rain on bill
 		if level.level == 4 and config.settings.tome.weather_effects then

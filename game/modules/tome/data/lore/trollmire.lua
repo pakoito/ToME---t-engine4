@@ -23,7 +23,7 @@
 
 local check = function(who)
 	local p = game:getPlayer(true)
-	if p:knownLore("trollmire-note-1") and p:knownLore("trollmire-note-2") and p:knownLore("trollmire-note-3") and p:knownLore("trollmire-note-4") and p:knownLore("trollmire-note-5") then
+	if p:knownLore("trollmire-note-1") and p:knownLore("trollmire-note-2") and p:knownLore("trollmire-note-3") then
 		p:grantQuest("trollmire-treasure")
 	end
 end
@@ -33,7 +33,11 @@ newLore{
 	category = "trollmire",
 	name = "tattered paper scrap (trollmire)",
 	lore = [[You find a tattered page scrap. Perhaps this is part of a diary entry.
-"...is a gorgeous glade, but I could swear that looked like a part of a human femur."
+"...is a gorgeous glade, but I could swear that looked like a part of a human femur.
+
+...
+
+Saw an absolutely gigantic troll, but fortunately I threw him off my scent."
 
 Alongside the note is a part of a plan of the region.]],
 	on_learn = check,
@@ -44,8 +48,11 @@ newLore{
 	category = "trollmire",
 	name = "tattered paper scrap (trollmire)",
 	lore = [[You find a tattered page scrap. Perhaps this is part of a diary entry.
-"11th of Allure, year 121"
-Saw an absolutely gigantic troll, but fortunately I threw him off my scent."
+"...ack again, but he's just a stupid old troll. It'll be easy to not let him get wind of me.
+
+...
+
+...initely found his treasure stash further on, but had to turn back. If you get this, HELP!"
 
 Alongside the note is a part of a plan of the region.]],
 	on_learn = check,
@@ -56,31 +63,9 @@ newLore{
 	category = "trollmire",
 	name = "tattered paper scrap (trollmire)",
 	lore = [[You find a tattered page scrap. Perhaps this is part of a diary entry.
-"...ack again, but he's just a stupid old troll. It'll be easy to not let him get wind of me."
+"...writing this in a tree and he's at the bottom of it. Waiting. His club is the size of a tall dwarf. Don't think I'm going to make it..."
 
 Alongside the note is a part of a plan of the region.]],
-	on_learn = check,
-}
-
-newLore{
-	id = "trollmire-note-4",
-	category = "trollmire",
-	name = "tattered paper scrap (trollmire)",
-	lore = [[You find a tattered page scrap. Perhaps this is part of a diary entry.
-"...initely found his treasure stash further on, but had to turn back. If you get this, HELP!"
-
-Alongside the note is a part of a plan of the region.]],
-	on_learn = check,
-}
-
-newLore{
-	id = "trollmire-note-5",
-	category = "trollmire",
-	name = "tattered paper scrap (trollmire)",
 	bloodstains = 3,
-	lore = [[You find a tattered page scrap. Perhaps this is part of a diary entry.
-"...writing this in a tree and he's at the bottom of it. Waiting. His club is the size of a tall dwarf. Don't think I'm going to make it."
-
-Alongside the note is a part of a plan of the region.]],
 	on_learn = check,
 }
