@@ -324,7 +324,6 @@ newTalent{
 	end,
 	on_arrival = function(self, t, m)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
-		self:project(tg, m.x, m.y, DamageType.TEMP_EFFECT, {foes=true, eff=self.EFF_LOWER_FIRE_RESIST, dur=4+self:getTalentLevelRaw(t), p={power=self:combatTalentMindDamage(t, 15, 70)}}, {type="flame"})
 		game.level.map:addEffect(self,
 			m.x, m.y, 6,
 			DamageType.POISON, {dam=self:combatTalentMindDamage(t, 10, 40), apply_power=self:combatMindpower()},
