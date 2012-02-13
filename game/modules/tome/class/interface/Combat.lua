@@ -261,7 +261,7 @@ function _M:getTierDiff(atk, def)
 	return math.max(0, math.max(math.ceil(atk/20), 1) - math.max(math.ceil(def/20), 1))
 end
 
---- Gets crit magnitude
+--- Gets max accuracy
 function _M:getMaxAccuracy(hit_type, combat)
 	if hit_type == "physical" then return (combat and combat.max_acc) or 75 end
 	local mh = (self:getInven("MAINHAND") and self:getInven("MAINHAND")[1]) or {}
@@ -908,12 +908,12 @@ end
 function _M:combatCritPower(crit_type, weapon)
 	local combat = weapon or self.combat or {}
 	if crit_type == "physical" then
-		return (combat.critical_power or 1.1) + (self.combat_critical_power or 0)
+		return (combat.critical_power or 1.1) + (self.combat_critical_power or 0) / 100
 	elseif crit_type == "spell" then
-		if combat.affects_spells then return (combat.critical_power or 1.1) + (self.combat_critical_power or 0)
+		if combat.affects_spells then return (combat.critical_power or 1.1) + (self.combat_critical_power or 0) / 100
 		else return 1.1 end
 	elseif crit_type == "mind" then
-		if combat.affects_minds then return (combat.critical_power or 1.1) + (self.combat_critical_power or 0)
+		if combat.affects_minds then return (combat.critical_power or 1.1) + (self.combat_critical_power or 0) / 100
 		else return 1.1 end
 	end
 	return 1.1
@@ -1151,7 +1151,7 @@ function _M:physicalCrit(dam, weapon, target, atk, def)
 		if target:hasEffect(target.EFF_OFFGUARD) then
 			crit_power_add = crit_power_add + 0.1
 		end
-		dam = dam * (magnitude + crit_power_add + (self.combat_critical_power or 0) / 100)
+		dam = dam * (magnitude + crit_power_add)
 		crit = true
 
 	end
@@ -1175,7 +1175,7 @@ function _M:spellCrit(dam, add_chance)
 	end
 	print("[SPELL CRIT %]", chance)
 	if rng.percent(chance) then
-		dam = dam * (critical_power + (self.combat_critical_power or 0) / 100)
+		dam = dam * (critical_power)
 		crit = true
 		game.logSeen(self, "#{bold}#%s's spell attains critical power!#{normal}#", self.name:capitalize())
 
@@ -1208,9 +1208,15 @@ function _M:mindCrit(dam, add_chance)
 	local chance = self:combatMindCrit() + (add_chance or 0)
 	local crit = false
 
+	-- get all weapons and use the largest crit magnitude that applies
+	local mh = (self:getInven("MAINHAND") and self:getInven("MAINHAND")[1]) or {}
+	local oh = (self:getInven("OFFHAND") and self:getInven("OFFHAND")[1]) or {}
+	local pf = (self:getInven("PSIONIC_FOCUS") and self:getInven("PSIONIC_FOCUS")[1]) or {}
+	local critical_power = math.max(self:combatCritPower("mind", mh.combat), self:combatCritPower("mind", oh.combat), self:combatCritPower("mind", pf.combat), 1.1)
+
 	print("[MIND CRIT %]", chance)
 	if rng.percent(chance) then
-		dam = dam * (1.5 + (self.combat_critical_power or 0) / 100)
+		dam = dam * critical_power
 		crit = true
 		game.logSeen(self, "#{bold}#%s's mind surges with critical power!#{normal}#", self.name:capitalize())
 	end
