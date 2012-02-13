@@ -578,6 +578,7 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down, auto_zone_stair)
 			end
 		end
 		-- Select the chest tab
+		d.c_inven.dont_update_last_tabs = true
 		d.c_inven:switchTab{kind="transmo"}
 		d:simplePopup("Transmogrification Chest", "When you close the inventory window, all items in the chest will be transmogrified.")
 	end

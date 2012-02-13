@@ -229,7 +229,9 @@ function _M:updateTabFilter()
 	end
 
 	-- Save for next dialogs
-	_M._last_tabs = self.c_tabs:getAllSelectedKeys()
+	if not self.dont_update_last_tabs then
+		_M._last_tabs = self.c_tabs:getAllSelectedKeys()
+	end
 end
 
 function _M:generateList(no_update)
