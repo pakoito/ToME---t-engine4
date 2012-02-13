@@ -158,6 +158,7 @@ ActorInventory:defineInventory("GEM", "Socketed Gems", true, "Socketed gems.", n
 ActorInventory:defineInventory("QS_MAINHAND", "Second weapon set: In main hand", false, "Weapon Set 2: Most weapons are wielded in the main hand. Press 'x' to switch weapon sets.", true)
 ActorInventory:defineInventory("QS_OFFHAND", "Second weapon set: In off hand", false, "Weapon Set 2: You can use shields or a second weapon in your off-hand, if you have the talents for it. Press 'x' to switch weapon sets.", true)
 ActorInventory:defineInventory("QS_PSIONIC_FOCUS", "Second weapon set: psionic focus", false, "Weapon Set 2: Object held in your telekinetic grasp. It can be a weapon or some other item to provide a benefit to your psionic powers. Press 'x' to switch weapon sets.", true)
+ActorInventory:defineInventory("QS_QUIVER", "Second weapon set: Quiver", true, "Weapon Set 2: Your readied ammo.", true)
 ActorInventory.equipdolls = {
 	default = { w=48, h=48, itemframe="ui/equipdoll/itemframe48.png", itemframe_sel="ui/equipdoll/itemframe-sel48.png", ix=3, iy=3, iw=42, ih=42, doll_x=116, doll_y=168+64, list={
 		PSIONIC_FOCUS = {{weight=1, x=48, y=48}},

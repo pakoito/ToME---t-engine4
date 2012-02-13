@@ -173,7 +173,7 @@ newBirthDescriptor{
 		resolvers.inventory{ id=true, inven="QS_MAINHAND",
 			{type="weapon", subtype="sling", name="rough leather sling", autoreq=true, ego_chance=-1000},
 		},
-		resolvers.inventory{ id=true,
+		resolvers.inventory{ id=true, inven="QS_QUIVER",
 			{type="ammo", subtype="shot", name="pouch of iron shot", autoreq=true, ego_chance=-1000},
 		},
 		resolvers.generic(function(e)
