@@ -28,7 +28,7 @@ return {
 --	all_remembered = true,
 	all_lited = true,
 	persistent = "zone",
-	ambient_music = "elven_town.ogg",
+	ambient_music = "Inside a dream.ogg",
 	-- Apply a bluish tint to all the map
 	color_shown = {0.5, 1, 0.8, 1},
 	color_obscure = {0.5*0.6, 1*0.6, 0.8*0.6, 0.6},

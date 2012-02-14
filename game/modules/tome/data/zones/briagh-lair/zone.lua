@@ -30,6 +30,7 @@ return {
 	persistent = "zone",
 	min_material_level = 3,
 	max_material_level = 5,
+	ambient_music = "Suspicion.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Cavern",

@@ -28,6 +28,7 @@ return {
 --	all_remembered = true,
 --	all_lited = true,
 	persistent = "zone",
+	ambient_music = "Far away.ogg",
 	-- Apply a darkish tint to all the map
 	color_shown = {0.7, 0.7, 0.7, 1},
 	color_obscure = {0.7*0.6, 0.7*0.6, 0.7*0.6, 0.6},

@@ -27,7 +27,7 @@ return {
 --	all_remembered = true,
 --	all_lited = true,
 	persistent = "zone",
-	ambient_music = "Far Away.ogg",
+	ambient_music = "Far away.ogg",
 	min_material_level = 2,
 	max_material_level = 3,
 	generator =  {

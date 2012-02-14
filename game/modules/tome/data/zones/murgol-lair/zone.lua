@@ -27,6 +27,7 @@ return {
 	width = 50, height = 50,
 --	all_remembered = true,
 --	all_lited = true,
+	ambient_music = "Enemy at the gates.ogg",
 	persistent = "zone",
 	max_material_level = 2,
 	no_random_lore = true,
