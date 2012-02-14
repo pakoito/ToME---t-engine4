@@ -183,8 +183,8 @@ function _M:toScreen()
 			else fade = 0 end
 		end
 
-		if self.shadow then item._tex:toScreenFull(self.display_x+2, h+2, self.fw, self.fh, item._tex_w, item._tex_h, 0,0,0, self.shadow * fade) end
-		item._tex:toScreenFull(self.display_x, h, self.fw, self.fh, item._tex_w, item._tex_h, 1, 1, 1, fade)
+		if self.shadow then item._tex:toScreenFull(self.display_x+2, h+2, item.w, item.h, item._tex_w, item._tex_h, 0,0,0, self.shadow * fade) end
+		item._tex:toScreenFull(self.display_x, h, item.w, item.h, item._tex_w, item._tex_h, 1, 1, 1, fade)
 		h = h - self.fh
 	end
 
@@ -202,4 +202,15 @@ function _M:scrollUp(i)
 	if self.scroll > #self.log - 1 then self.scroll = #self.log - 1 end
 	if self.scroll < 0 then self.scroll = 0 end
 	self.changed = true
+	self:resetFade()
+end
+
+function _M:resetFade()
+	local log = self.log
+
+	-- Reset fade
+	local time = core.game.getTime()
+	for i = 1, #self.dlist do
+		self.dlist[i].date = time
+	end
 end

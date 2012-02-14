@@ -151,6 +151,8 @@ local tb_inven = {core.display.loadImage("/data/gfx/ui/hotkeys/inventory.png"):g
 local tb_lore = {core.display.loadImage("/data/gfx/ui/hotkeys/lore.png"):glTexture()}
 local tb_quest = {core.display.loadImage("/data/gfx/ui/hotkeys/quest.png"):glTexture()}
 local tb_mainmenu = {core.display.loadImage("/data/gfx/ui/hotkeys/mainmenu.png"):glTexture()}
+local tb_padlock_open = {core.display.loadImage("/data/gfx/ui/padlock_open.png"):glTexture()}
+local tb_padlock_closed = {core.display.loadImage("/data/gfx/ui/padlock_closed.png"):glTexture()}
 
 function _M:init()
 	UISet.init(self)
@@ -161,21 +163,32 @@ function _M:init()
 	self.tbuff = {}
 	self.pbuff = {}
 
+	self.locked = true
+
 	self.mhandle_pos = {
 		player = {x=296, y=73},
 		resources = {x=fshat[6] - move_handle[6], y=0},
 		minimap = {x=208, y=176},
 		buffs = {x=40 - move_handle[6], y=0},
 		party = {x=portrait[6] - move_handle[6], y=0},
+		gamelog = {x=function(self) return self.logdisplay.w - move_handle[6] end, y=function(self) return self.logdisplay.h - move_handle[6] end},
+		chatlog = {x=function(self) return profile.chat.w - move_handle[6] end, y=function(self) return profile.chat.h - move_handle[6] end},
 	}
 
 	local w, h = core.display.size()
+
+	local th = 52
+	if config.settings.tome.hotkey_icons then th = (4 + config.settings.tome.hotkey_icons_size) * config.settings.tome.hotkey_icons_rows end
+	local hup = h - th - sep[7]
+
 	self.places = {
 		player = {x=0, y=0, scale=1, a=1},
 		resources = {x=0, y=111, scale=1, a=1},
 		minimap = {x=w - 239, y=0, scale=1, a=1},
 		buffs = {x=w - 40, y=200, scale=1, a=1},
 		party = {x=pf_bg[6], y=0, scale=1, a=1},
+		gamelog = {x=0, y=hup - 200, w=math.floor(w/2), h=200, scale=1, a=1},
+		chatlog = {x=math.floor(w/2), y=hup - 200, w=math.floor(w/2), h=200, scale=1, a=1},
 	}
 	table.merge(self.places, config.settings.tome.uiset_minimalist and config.settings.tome.uiset_minimalist.places or {}, true)
 
@@ -194,10 +207,14 @@ function _M:boundPlaces(w, h)
 		if d.x then
 			d.x = math.floor(d.x)
 			d.y = math.floor(d.y)
-			d.scale = util.bound(d.scale, 0.5, 2)
+			if d.scale then
+				d.scale = util.bound(d.scale, 0.5, 2)
 
-			d.x = util.bound(d.x, -self.mhandle_pos[what].x * d.scale, w - self.mhandle_pos[what].x * d.scale - move_handle[6] * d.scale)
-			d.y = util.bound(d.y, -self.mhandle_pos[what].y * d.scale, self.map_h_stop - self.mhandle_pos[what].y * d.scale - move_handle[7] * d.scale)
+				local mx, my = util.getval(self.mhandle_pos[what].x, self), util.getval(self.mhandle_pos[what].y, self)
+
+				d.x = util.bound(d.x, -mx * d.scale, w - mx * d.scale - move_handle[6] * d.scale)
+				d.y = util.bound(d.y, -my * d.scale, self.map_h_stop - my * d.scale - move_handle[7] * d.scale)
+			end
 		end
 	end
 end
@@ -208,12 +225,13 @@ function _M:saveSettings()
 	local lines = {}
 	lines[#lines+1] = ("tome.uiset_minimalist = {}"):format(w)
 	lines[#lines+1] = ("tome.uiset_minimalist.places = {}"):format(w)
-	for _, w in ipairs{"player", "resources", "party", "buffs", "minimap"} do
+	for _, w in ipairs{"player", "resources", "party", "buffs", "minimap", "gamelog", "chatlog"} do
 		lines[#lines+1] = ("tome.uiset_minimalist.places.%s = {}"):format(w)
 		if self.places[w] then for k, v in pairs(self.places[w]) do
 			lines[#lines+1] = ("tome.uiset_minimalist.places.%s.%s = %f"):format(w, k, v)
 		end end
 	end
+
 	game:saveSettings("tome.uiset_minimalist", table.concat(lines, "\n"))
 end
 
@@ -260,12 +278,12 @@ function _M:activate()
 	self.hotkeys_display_text:setColumns(3)
 	self:resizeIconsHotkeysToolbar()
 
-	self.logdisplay = LogDisplay.new(0, self.map_h_stop - font_h * config.settings.tome.log_lines - sep[7], (game.w) / 2, font_h * config.settings.tome.log_lines, nil, font, size, nil, nil)
-	self.logdisplay.resizeToLines = function() self.logdisplay:resize(0, self.map_h_stop - font_h * config.settings.tome.log_lines -16, (game.w) / 2, font_h * config.settings.tome.log_lines) end
+	self.logdisplay = LogDisplay.new(0, 0, self.places.gamelog.w, self.places.gamelog.h, nil, font, size, nil, nil)
+	self.logdisplay.resizeToLines = function() end
 	self.logdisplay:enableShadow(1)
 	self.logdisplay:enableFading(config.settings.tome.log_fade or 3)
 
-	profile.chat:resize(0 + (game.w) / 2, self.map_h_stop - font_h * config.settings.tome.log_lines - sep[7], (game.w) / 2, font_h * config.settings.tome.log_lines, font, size, nil, nil)
+	profile.chat:resize(0, 0, self.places.chatlog.w, self.places.chatlog.h, font, size, nil, nil)
 	profile.chat.resizeToLines = function() profile.chat:resize(0 + (game.w) / 2, self.map_h_stop - font_h * config.settings.tome.log_lines -16, (game.w) / 2, font_h * config.settings.tome.log_lines) end
 	profile.chat:enableShadow(1)
 	profile.chat:enableFading(config.settings.tome.log_fade or 3)
@@ -330,23 +348,42 @@ function _M:getMapSize()
 	return 0, 0, w, (self.map_h_stop or 80) - 16
 end
 
-function _M:uiMoveResize(what, button, mx, my, xrel, yrel, bx, by, event)
+function _M:uiMoveResize(what, button, mx, my, xrel, yrel, bx, by, event, mode, on_change)
+	if self.locked then return end
+
+	mode = mode or "rescale"
+
 	game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, "Left mouse drag&drop to move the frame\nRight mouse drag&drop to scale up/down\nMiddle click to reset to default scale")
 	if event == "button" and button == "middle" then self.places[what].scale = 1 self:saveSettings()
 	elseif event == "motion" and button == "left" then
 		self.ui_moving = what
 		game.mouse:startDrag(mx, my, s, {kind="ui:move", id=what, dx=bx*self.places[what].scale, dy=by*self.places[what].scale},
-			function(drag, used) self:saveSettings() self.ui_moving = nil end,
-			function(drag, _, x, y) if self.places[drag.payload.id] then self.places[drag.payload.id].x = x-drag.payload.dx self.places[drag.payload.id].y = y-drag.payload.dy self:boundPlaces() end end,
+			function(drag, used) self:saveSettings() self.ui_moving = nil if on_change then on_change("move") end end,
+			function(drag, _, x, y) if self.places[drag.payload.id] then self.places[drag.payload.id].x = x-drag.payload.dx self.places[drag.payload.id].y = y-drag.payload.dy self:boundPlaces() if on_change then on_change("move") end end end,
 			true
 		)
 	elseif event == "motion" and button == "right" then
-		game.mouse:startDrag(mx, my, s, {kind="ui:resize", id=what, bx=bx, by=by},
-			function(drag, used) self:saveSettings() end,
---			function(drag, _, x, y) if self.places[drag.payload.id] then self.places[drag.payload.id].scale = util.bound(math.max((x-self.places[drag.payload.id].x)/drag.payload.bx, (y-self.places[drag.payload.id].y)/drag.payload.by), 0.5, 2) self:boundPlaces() end end,
-			function(drag, _, x, y) if self.places[drag.payload.id] then self.places[drag.payload.id].scale = util.bound(math.max((x-self.places[drag.payload.id].x)/drag.payload.bx), 0.5, 2) self:boundPlaces() end end,
-			true
-		)
+		if mode == "rescale" then
+			game.mouse:startDrag(mx, my, s, {kind="ui:rescale", id=what, bx=bx, by=by},
+				function(drag, used) self:saveSettings() if on_change then on_change(mode) end end,
+				function(drag, _, x, y) if self.places[drag.payload.id] then
+					self.places[drag.payload.id].scale = util.bound(math.max((x-self.places[drag.payload.id].x)/drag.payload.bx), 0.5, 2)
+					self:boundPlaces()
+					if on_change then on_change(mode) end
+				end end,
+				true
+			)
+		elseif mode == "resize" and self.places[what] then
+			game.mouse:startDrag(mx, my, s, {kind="ui:resize", id=what, ox=mx - (self.places[what].x + util.getval(self.mhandle_pos[what].x, self)), oy=my - (self.places[what].y + util.getval(self.mhandle_pos[what].y, self))},
+				function(drag, used) self:saveSettings() if on_change then on_change(mode) end end,
+				function(drag, _, x, y) if self.places[drag.payload.id] then
+					self.places[drag.payload.id].w = math.max(20, x - self.places[drag.payload.id].x + drag.payload.ox)
+					self.places[drag.payload.id].h = math.max(20, y - self.places[drag.payload.id].y + drag.payload.oy)
+					if on_change then on_change(mode) end
+				end end,
+				true
+			)
+		end
 	end
 end
 
@@ -389,7 +426,7 @@ function _M:showResourceTooltip(x, y, w, h, id, desc, is_first)
 				else self.mhandle.resources = true end
 
 				-- Move handle
-				if bx >= self.mhandle_pos.resources.x and bx <= self.mhandle_pos.resources.x + move_handle[6] and by >= self.mhandle_pos.resources.y and by <= self.mhandle_pos.resources.y + move_handle[7] then self:uiMoveResize("resources", button, mx, my, xrel, yrel, bx, by, event) return end
+				if not self.locked and bx >= self.mhandle_pos.resources.x and bx <= self.mhandle_pos.resources.x + move_handle[6] and by >= self.mhandle_pos.resources.y and by <= self.mhandle_pos.resources.y + move_handle[7] then self:uiMoveResize("resources", button, mx, my, xrel, yrel, bx, by, event) return end
 			end
 
 			local extra = {log_str=desc}
@@ -504,7 +541,7 @@ function _M:displayResources(scale, bx, by, a)
 		front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3], 1, 1, 1, a)
 		x, y = self:resourceOrientStep(orient, bx, by, scale, x, y, fshat[6], fshat[7])
 
-		if self.mhandle.resources then
+		if not self.locked then
 			move_handle[1]:toScreenFull(fshat[6] - move_handle[6], 0, move_handle[6], move_handle[7], move_handle[2], move_handle[3])
 		end
 
@@ -950,7 +987,7 @@ function _M:handleEffect(player, eff_id, e, p, x, y, hs, bx, by, is_first, scale
 				else self.mhandle.buffs = true end
 
 				-- Move handle
-				if bx >= self.mhandle_pos.buffs.x and bx <= self.mhandle_pos.buffs.x + move_handle[6] and by >= self.mhandle_pos.buffs.y and by <= self.mhandle_pos.buffs.y + move_handle[7] then self:uiMoveResize("buffs", button, mx, my, xrel, yrel, bx, by, event) end
+				if not self.locked and bx >= self.mhandle_pos.buffs.x and bx <= self.mhandle_pos.buffs.x + move_handle[6] and by >= self.mhandle_pos.buffs.y and by <= self.mhandle_pos.buffs.y + move_handle[7] then self:uiMoveResize("buffs", button, mx, my, xrel, yrel, bx, by, event) end
 			end
 			game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, desc)
 		end
@@ -1002,7 +1039,7 @@ function _M:displayBuffs(scale, bx, by)
 							if event == "out" then self.mhandle.buffs = nil return
 							else self.mhandle.buffs = true end
 							-- Move handle
-							if bx >= self.mhandle_pos.buffs.x and bx <= self.mhandle_pos.buffs.x + move_handle[6] and by >= self.mhandle_pos.buffs.y and by <= self.mhandle_pos.buffs.y + move_handle[7] then self:uiMoveResize("buffs", button, mx, my, xrel, yrel, bx, by, event) end
+							if not self.locked and bx >= self.mhandle_pos.buffs.x and bx <= self.mhandle_pos.buffs.x + move_handle[6] and by >= self.mhandle_pos.buffs.y and by <= self.mhandle_pos.buffs.y + move_handle[7] then self:uiMoveResize("buffs", button, mx, my, xrel, yrel, bx, by, event) end
 						end
 						game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, desc)
 					end
@@ -1044,7 +1081,7 @@ function _M:displayBuffs(scale, bx, by)
 			x, y = self:buffOrientStep(orient, bx, by, scale, x, y, hs, hs)
 		end
 
-		if self.mhandle.buffs then
+		if not self.locked then
 			move_handle[1]:toScreenFull(40 - move_handle[6], 0, move_handle[6], move_handle[7], move_handle[2], move_handle[3])
 		end
 
@@ -1089,7 +1126,7 @@ function _M:displayParty(scale, bx, by)
 						if event == "out" then self.mhandle.party = nil return
 						else self.mhandle.party = true end
 						-- Move handle
-						if bx >= self.mhandle_pos.party.x and bx <= self.mhandle_pos.party.x + move_handle[6] and by >= self.mhandle_pos.party.y and by <= self.mhandle_pos.party.y + move_handle[7] then
+						if not self.locked and bx >= self.mhandle_pos.party.x and bx <= self.mhandle_pos.party.x + move_handle[6] and by >= self.mhandle_pos.party.y and by <= self.mhandle_pos.party.y + move_handle[7] then
 							self:uiMoveResize("party", button, mx, my, xrel, yrel, bx, by, event)
 							return
 						end
@@ -1131,7 +1168,7 @@ function _M:displayParty(scale, bx, by)
 		end
 
 
-		if self.mhandle.party then
+		if not self.locked then
 			move_handle[1]:toScreenFull(portrait[6] - move_handle[6], 0, move_handle[6], move_handle[7], move_handle[2], move_handle[3])
 		end
 
@@ -1208,7 +1245,7 @@ function _M:displayPlayer(scale, bx, by)
 		pf_encumber[1]:toScreenFull(162, 38, pf_encumber[6], pf_encumber[7], pf_encumber[2], pf_encumber[3], 1, 1, 1, glow / 255)
 	end
 
-	if self.mhandle.player then
+	if not self.locked then
 		move_handle[1]:toScreenFull(self.mhandle_pos.player.x, self.mhandle_pos.player.y, move_handle[6], move_handle[7], move_handle[2], move_handle[3])
 	end
 
@@ -1232,7 +1269,7 @@ function _M:displayPlayer(scale, bx, by)
 				game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, "Click to assign stats and talents!")
 				if event == "button" and button == "left" then game.key:triggerVirtual("LEVELUP") end
 			-- Move handle
-			elseif bx >= self.mhandle_pos.player.x and bx <= self.mhandle_pos.player.x + move_handle[6] and by >= self.mhandle_pos.player.y and by <= self.mhandle_pos.player.y + move_handle[7] then
+			elseif not self.locked and bx >= self.mhandle_pos.player.x and bx <= self.mhandle_pos.player.x + move_handle[6] and by >= self.mhandle_pos.player.y and by <= self.mhandle_pos.player.y + move_handle[7] then
 				self:uiMoveResize("player", button, mx, my, xrel, yrel, bx, by, event)
 			else
 				game.mouse:delegate(button, mx, my, xrel, yrel, nil, nil, event, "playmap", nil)
@@ -1260,7 +1297,7 @@ function _M:displayMinimap(scale, bx, by)
 	map:minimapDisplay(50, 30, game.minimap_scroll_x, game.minimap_scroll_y, 50, 50, 0.85)
 	mm_transp[1]:toScreenFull(50, 30, mm_transp[6], mm_transp[7], mm_transp[2], mm_transp[3])
 
-	if self.mhandle.minimap then
+	if not self.locked then
 		move_handle[1]:toScreenFull(self.mhandle_pos.minimap.x, self.mhandle_pos.minimap.y, move_handle[6], move_handle[7], move_handle[2], move_handle[3])
 	end
 
@@ -1274,7 +1311,7 @@ function _M:displayMinimap(scale, bx, by)
 			game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, "Left mouse to move\nRight mouse to scroll\nMiddle mouse to show full map")
 
 			-- Move handle
-			if bx >= self.mhandle_pos.minimap.x and bx <= self.mhandle_pos.minimap.x + move_handle[6] and by >= self.mhandle_pos.minimap.y and by <= self.mhandle_pos.minimap.y + move_handle[7] then
+			if not self.locked and bx >= self.mhandle_pos.minimap.x and bx <= self.mhandle_pos.minimap.x + move_handle[6] and by >= self.mhandle_pos.minimap.y and by <= self.mhandle_pos.minimap.y + move_handle[7] then
 				self:uiMoveResize("minimap", button, mx, my, xrel, yrel, bx, by, event)
 				return
 			end
@@ -1303,6 +1340,87 @@ function _M:displayMinimap(scale, bx, by)
 
 	-- Compute how much space to reserve on the side
 	self:computePadding("minimap", bx, by, bx + mm_bg[6] * scale, by + (mm_bg[7] + game.zone_name_h) * scale)
+end
+
+function _M:displayGameLog(scale, bx, by)
+	local log = self.logdisplay
+
+	if not self.locked then
+		core.display.drawQuad(0, 0, log.w, log.h, 0, 0, 0, 60)
+	end
+
+	local ox, oy = log.display_x, log.display_y
+	log.display_x, log.display_y = 0, 0
+	log:toScreen()
+	log.display_x, log.display_y = ox, oy
+
+	if not self.locked then
+		move_handle[1]:toScreenFull(util.getval(self.mhandle_pos.gamelog.x, self), util.getval(self.mhandle_pos.gamelog.y, self), move_handle[6], move_handle[7], move_handle[2], move_handle[3])
+	end
+
+	if not game.mouse:updateZone("gamelog", bx, by, log.w, log.h, nil, scale) then
+		game.mouse:unregisterZone("gamelog")
+
+		local desc_fct = function(button, mx, my, xrel, yrel, bx, by, event)
+			if event == "out" then self.mhandle.gamelog = nil return
+			else self.mhandle.gamelog = true end
+
+			-- Move handle
+			local mhx, mhy = util.getval(self.mhandle_pos.gamelog.x, self), util.getval(self.mhandle_pos.gamelog.y, self)
+			if not self.locked and bx >= mhx and bx <= mhx + move_handle[6] and by >= mhy and by <= mhy + move_handle[7] then
+				self:uiMoveResize("gamelog", button, mx, my, xrel, yrel, bx, by, event, "resize", function(mode)
+					log:resize(self.places.gamelog.x, self.places.gamelog.x, self.places.gamelog.w, self.places.gamelog.h)
+					log:display()
+					log:resetFade()
+				end)
+				return
+			end
+
+			game.mouse:delegate(button, mx, my, xrel, yrel, nil, nil, event, "playmap", nil)
+		end
+		game.mouse:registerZone(bx, by, log.w, log.h, desc_fct, nil, "gamelog", true, scale)
+	end
+end
+
+function _M:displayChatLog(scale, bx, by)
+	local log = profile.chat
+
+	if not self.locked then
+		core.display.drawQuad(0, 0, log.w, log.h, 0, 0, 0, 60)
+	end
+
+	local ox, oy = log.display_x, log.display_y
+	log.display_x, log.display_y = 0, 0
+	log:toScreen()
+	log.display_x, log.display_y = ox, oy
+
+	if not self.locked then
+		move_handle[1]:toScreenFull(util.getval(self.mhandle_pos.chatlog.x, self), util.getval(self.mhandle_pos.chatlog.y, self), move_handle[6], move_handle[7], move_handle[2], move_handle[3])
+	end
+
+	if not game.mouse:updateZone("chatlog", bx, by, log.w, log.h, nil, scale) then
+		game.mouse:unregisterZone("chatlog")
+
+		local desc_fct = function(button, mx, my, xrel, yrel, bx, by, event)
+			if event == "out" then self.mhandle.chatlog = nil return
+			else self.mhandle.chatlog = true end
+
+			-- Move handle
+			local mhx, mhy = util.getval(self.mhandle_pos.chatlog.x, self), util.getval(self.mhandle_pos.chatlog.y, self)
+			if not self.locked and bx >= mhx and bx <= mhx + move_handle[6] and by >= mhy and by <= mhy + move_handle[7] then
+				self:uiMoveResize("chatlog", button, mx, my, xrel, yrel, bx, by, event, "resize", function(mode)
+					log:resize(self.places.chatlog.x, self.places.chatlog.y, self.places.chatlog.w, self.places.chatlog.h)
+--					log:display()
+					log:resetFade()
+				end)
+				return
+			end
+
+--			game.mouse:delegate(button, mx, my, xrel, yrel, nil, nil, event, "playmap", nil)
+			profile.chat.mouse:delegate(button, mx, my, xrel, yrel, bx, by, event)
+		end
+		game.mouse:registerZone(bx, by, log.w, log.h, desc_fct, nil, "chatlog", true, scale)
+	end
 end
 
 function _M:displayToolbar(scale, bx, by)
@@ -1354,6 +1472,19 @@ function _M:displayToolbar(scale, bx, by)
 			if button == "left" and not xrel and not yrel and event == "button" then game.key:triggerVirtual("EXIT") end
 		end
 		game.mouse:registerZone(bx + x * scale, by - tb_mainmenu[7]*scale, tb_mainmenu[6], tb_mainmenu[7], desc_fct, nil, "tb_mainmenu", true, scale)
+	end
+	x = x + tb_lore[6]
+
+	local padlock = self.locked and tb_padlock_closed or tb_padlock_open
+	padlock[1]:toScreenFull	(x, - padlock[7], padlock[6], padlock[7], padlock[2], padlock[3], self.tbbuttons.padlock, self.tbbuttons.padlock, self.tbbuttons.padlock, 1)
+	if not game.mouse:updateZone("padlock", bx + x * scale, by - padlock[7]*scale, padlock[6], padlock[7], nil, scale) then
+		game.mouse:unregisterZone("padlock")
+		local desc_fct = function(button, mx, my, xrel, yrel, bx, by, event)
+			if event == "out" then self.tbbuttons.padlock = 0.6 return else self.tbbuttons.padlock = 1 end
+			game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, self.locked and "Unlock all interface elements so they can be moved and resized." or "Lock all interface elements so they can not be moved nor resized.")
+			if button == "left" and not xrel and not yrel and event == "button" then self.locked = not self.locked end
+		end
+		game.mouse:registerZone(bx + x * scale, by - padlock[7]*scale, padlock[6], padlock[7], desc_fct, nil, "padlock", true, scale)
 	end
 end
 
@@ -1407,17 +1538,24 @@ function _M:display(nb_keyframes)
 	d.glScale()
 	d.glTranslate(-self.places.party.x, -self.places.party.y, -0)
 
-	-- We display the player's interface
-	profile.chat:toScreen()
-	self.logdisplay:toScreen()
+	-- Game log
+	d.glTranslate(self.places.gamelog.x, self.places.gamelog.y, 0)
+	self:displayGameLog(1, self.places.gamelog.x, self.places.gamelog.y)
+	d.glTranslate(-self.places.gamelog.x, -self.places.gamelog.y, -0)
 
+	-- Chat log
+	d.glTranslate(self.places.chatlog.x, self.places.chatlog.y, 0)
+	self:displayChatLog(1, self.places.chatlog.x, self.places.chatlog.y)
+	d.glTranslate(-self.places.chatlog.x, -self.places.chatlog.y, -0)
+
+	-- Toolbar
 	if game.show_npc_list then self.npcs_display:toScreen() else self.hotkeys_display:toScreen() end
 
 	-- Toolbar separator
 	sep[1]:toScreenFull(0, self.map_h_stop_up, game.w, sep[7], sep[2], sep[3])
 	sep_vines[1]:toScreenFull(0, self.map_h_stop_up - 3, game.w, sep_vines[7], sep_vines[2], sep_vines[3])
 
-	local bx = game.w - (tb_inven[6] + tb_quest[6] + tb_lore[6] + tb_mainmenu[6]) * 0.7
+	local bx = game.w - (tb_inven[6] + tb_quest[6] + tb_lore[6] + tb_mainmenu[6] + tb_padlock_open[6]) * 0.7
 	local by = self.map_h_stop_up + sep[7]
 	d.glTranslate(bx, by, 0)
 	d.glScale(0.7, 0.7, 0.7)
@@ -1438,10 +1576,6 @@ function _M:display(nb_keyframes)
 end
 
 function _M:setupMouse(mouse)
-	-- Scroll message log
-	mouse:registerZone(profile.chat.display_x, profile.chat.display_y, profile.chat.w, profile.chat.h, function(button, mx, my, xrel, yrel, bx, by, event)
-		profile.chat.mouse:delegate(button, mx, my, xrel, yrel, bx, by, event)
-	end)
 	-- Use hotkeys with mouse
 	mouse:registerZone(self.hotkeys_display.display_x, self.hotkeys_display.display_y, game.w, game.h, function(button, mx, my, xrel, yrel, bx, by, event)
 		if self.show_npc_list then return end

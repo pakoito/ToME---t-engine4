@@ -535,6 +535,13 @@ function _M:scrollUp(i)
 	if self.scroll < 0 then self.scroll = 0 end
 	self.changed = true
 
+	self:resetFade()
+end
+
+function _M:resetFade()
+	local log = {}
+	if self.channels[self.cur_channel] then log = self.channels[self.cur_channel].log end
+
 	-- Reset fade
 	local time = core.game.getTime()
 	for _, item in ipairs(log) do
