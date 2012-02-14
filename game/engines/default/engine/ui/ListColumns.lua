@@ -283,6 +283,9 @@ function _M:selectColumn(i, force, reverse)
 end
 
 function _M:display(x, y, nb_keyframes, screen_x, screen_y)
+	self.last_display_x = screen_x
+	self.last_display_y = screen_y
+
 	local bx, by = x, y
 	if self.sel then
 		local item = self.list[self.sel]
