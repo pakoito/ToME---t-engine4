@@ -195,9 +195,9 @@ newEntity{
 	cost = 30,
 	combat = {
 		affects_spells = true,
-		talent_on_hit = { 
+		talent_on_hit = {
 			[Talents.T_DISPERSE_MAGIC] = {
-				level=3, 
+				level=3,
 				chance = resolvers.mbonus_material("talent_on_hit_chance"),
 				} ,
 			},
@@ -228,22 +228,6 @@ newEntity{
 			end
 		end},
 	},
-}
-
-newEntity{
-	power_source = {nature=true},
-	name = "voracious ", prefix=true, instant_resolve=true,
-	keywords = {voracious=true},
-	level_range = {1, 50},
-	greater_ego = 1,
-	rarity = 60,
-	cost = 40,
-	wielder = {
-		resource_leech_chance = resolvers.mbonus_material("resource_leech_chance"),
-		resource_leech_value = resolvers.mbonus_material("resource_leech_value", 2),
-	},
-	max_power = 20, power_regen = 1,
-	use_talent = { id = Talents.T_THERMAL_LEECH, level = 5, power = 20 },
 }
 
 newEntity{

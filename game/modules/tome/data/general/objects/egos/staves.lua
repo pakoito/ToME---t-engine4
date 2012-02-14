@@ -254,20 +254,6 @@ newEntity{
 }
 
 newEntity{
-	power_source = {nature=true},
-	name = "parasitic ", prefix=true, instant_resolve=true,
-	keywords = {parasitic=true},
-	level_range = {1, 50},
-	greater_ego = 1,
-	rarity = 60,
-	cost = 40,
-	wielder = {
-		resource_leech_chance = resolvers.mbonus_material("resource_leech_chance"),
-		resource_leech_value = resolvers.mbonus_material("resource_leech_value"),
-	},
-}
-
-newEntity{
 	power_source = {arcane=true},
 	name = " of channeling", suffix=true, instant_resolve=true,
 	keywords = {channeling=true},

@@ -165,25 +165,6 @@ newEntity{
 }
 
 newEntity{
-	power_source = {nature=true},
-	name = "insatiable ", prefix=true, instant_resolve=true,
-	keywords = {insatiable=true},
-	level_range = {1, 50},
-	greater_ego = 1,
-	rarity = 60,
-	cost = 40,
-	wielder = {
-		resource_leech_chance = resolvers.mbonus_material("resource_leech_chance"),
-		resource_leech_value = resolvers.mbonus_material("resource_leech_value", 2),
-	},
-	combat = {
-		melee_project = {
-			[DamageType.NATURE] = resolvers.mbonus_material("melee_project", 1, true),
-		},
-	},
-}
-
-newEntity{
 	power_source = {arcane=true},
 	name = " of corruption", suffix=true, instant_resolve=true,
 	keywords = {corruption=true},
