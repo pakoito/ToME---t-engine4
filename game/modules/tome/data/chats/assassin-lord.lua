@@ -31,7 +31,7 @@ local function evil(npc, player)
 		end
 	end
 	game:changeLevel(1, "wilderness")
-	game.log("As you depart the assassin lord says: 'And no not forget, I own you now.'")
+	game.log("As you depart the assassin lord says: 'And do not forget, I own you now.'")
 end
 
 newChat{ id="welcome",

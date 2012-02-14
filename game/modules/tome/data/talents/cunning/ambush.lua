@@ -47,7 +47,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[For an instant your weapons turn into a shadow leash that tries to grab the target's weapon, disarming it for %d tuns.
+		return ([[For an instant your weapons turn into a shadow leash that tries to grab the target's weapon, disarming it for %d turns.
 		Duration increases with talent level and chance to succeed with your Dexterity stat.]]):
 		format(duration)
 	end,
