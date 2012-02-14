@@ -1410,14 +1410,12 @@ function _M:displayChatLog(scale, bx, by)
 			if not self.locked and bx >= mhx and bx <= mhx + move_handle[6] and by >= mhy and by <= mhy + move_handle[7] then
 				self:uiMoveResize("chatlog", button, mx, my, xrel, yrel, bx, by, event, "resize", function(mode)
 					log:resize(self.places.chatlog.x, self.places.chatlog.y, self.places.chatlog.w, self.places.chatlog.h)
---					log:display()
 					log:resetFade()
 				end)
 				return
 			end
 
---			game.mouse:delegate(button, mx, my, xrel, yrel, nil, nil, event, "playmap", nil)
-			profile.chat.mouse:delegate(button, mx, my, xrel, yrel, bx, by, event)
+			profile.chat:mouseEvent(button, mx, my, xrel, yrel, bx, bx, event)
 		end
 		game.mouse:registerZone(bx, by, log.w, log.h, desc_fct, nil, "chatlog", true, scale)
 	end
@@ -1600,6 +1598,7 @@ function _M:setupMouse(mouse)
 	-- Chat tooltips
 	profile.chat:onMouse(function(user, item, button, event, x, y, xrel, yrel, bx, by)
 		local mx, my = core.mouse.get()
+print("=====")
 		if not item or not user or item.faded == 0 then game.mouse:delegate(button, mx, my, xrel, yrel, nil, nil, event, "playmap") return end
 
 		local str = tstring{{"color","GOLD"}, {"font","bold"}, user.name, {"color","LAST"}, {"font","normal"}, true}

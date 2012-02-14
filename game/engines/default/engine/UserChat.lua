@@ -380,35 +380,37 @@ function _M:resize(x, y, w, h, fontname, fontsize, color, bgcolor)
 	self.mouse = Mouse.new()
 	self.mouse.delegate_offset_x = self.display_x
 	self.mouse.delegate_offset_y = self.display_y
-	self.mouse:registerZone(0, 0, self.w, self.h, function(button, x, y, xrel, yrel, bx, by, event)
-		if button == "wheelup" then self:scrollUp(1)
-		elseif button == "wheeldown" then self:scrollUp(-1)
-		elseif event == "button" and button == "left" and y <= self.frame.h and self.do_display_chans then
-			local w = 0
-			local last_ok = nil
-			for i = 1, #self.display_chans do
-				local item = self.display_chans[i]
-				last_ok = item
-				w = w + item.w + 4
-				if w > x then break end
-			end
-			if last_ok then
-				local old = self.cur_channel
-				self:selectChannel(last_ok.name)
-				if old == self.cur_channel then self:showLogDialog(nil, self.shadow) end
-			end
-		else
-			if not self.on_mouse or not self.dlist then return end
-			local citem = nil
-			for i = 1, #self.dlist do
-				local item = self.dlist[i]
-				if item.dh and y >= item.dh - self.mouse.delegate_offset_y then citem = self.dlist[i].src break end
-			end
-			self.on_mouse(citem and citem.login and self.channels[self.cur_channel].users[citem.login], citem and citem.login and citem, button, event, x, y, xrel, yrel, bx, by)
-		end
-	end)
+	self.mouse:registerZone(0, 0, self.w, self.h, function(button, x, y, xrel, yrel, bx, by, event) self:mouseEvent(button, x, y, xrel, yrel, bx, by, event) end)
 
 	self.last_chan_update = 0
+end
+
+function _M:mouseEvent(button, x, y, xrel, yrel, bx, by, event)
+	if button == "wheelup" then self:scrollUp(1)
+	elseif button == "wheeldown" then self:scrollUp(-1)
+	elseif event == "button" and button == "left" and y <= self.frame.h and self.do_display_chans then
+		local w = 0
+		local last_ok = nil
+		for i = 1, #self.display_chans do
+			local item = self.display_chans[i]
+			last_ok = item
+			w = w + item.w + 4
+			if w > x then break end
+		end
+		if last_ok then
+			local old = self.cur_channel
+			self:selectChannel(last_ok.name)
+			if old == self.cur_channel then self:showLogDialog(nil, self.shadow) end
+		end
+	else
+		if not self.on_mouse or not self.dlist then return end
+		local citem = nil
+		for i = 1, #self.dlist do
+			local item = self.dlist[i]
+			if item.dh and y >= item.dh - self.mouse.delegate_offset_y then citem = self.dlist[i].src break end
+		end
+		self.on_mouse(citem and citem.login and self.channels[self.cur_channel].users[citem.login], citem and citem.login and citem, button, event, x, y, xrel, yrel, bx, by)
+	end
 end
 
 function _M:enableShadow(v)
