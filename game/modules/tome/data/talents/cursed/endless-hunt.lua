@@ -103,7 +103,7 @@ newTalent{
 		return math.min(20, math.floor(5 + self:getTalentLevel(t) * 2))
 	end,
 	getChance = function(self, t)
-		return math.min(75, math.floor(42 + (math.sqrt(self:getTalentLevel(t)) - 1) * 20))
+		return math.min(75, math.floor(25 + (math.sqrt(self:getTalentLevel(t)) - 1) * 20))
 	end,
 	getSpellpowerChange = function(self, t)
 		return -self:combatTalentStatDamage(t, "wil", 8, 33)
@@ -132,7 +132,7 @@ newTalent{
 		local chance = t.getChance(self, t)
 		local spellpowerChange = t.getSpellpowerChange(self, t)
 		local mindpowerChange = t.getMindpowerChange(self, t)
-		return ([[The connection between predator and prey allows you to speak to the mind of your target and beckon them closer. For %d turns they will try to come to you, even pushing others aside to do so. There is a %d%% chance each turn that they will move towards you instead of acting. The chance is halved if the target saves versus Mindpower and the effect may be dispelled if the target takes significant damage. The effect makes concentration difficult for your target, reducing spellpower and mindpower by %d until they reach you.
+		return ([[The connection between predator and prey allows you to speak to the mind of your target and beckon them closer. For %d turns they will try to come to you, even pushing others aside to do so. They will move towards you instead of acting %d%% of the time but can save verses Mindpower to slow the effect. If they take significant damage, the beckoning may be overcome altogether. The effect makes concentration difficult for your target, reducing spellpower and mindpower by %d until they reach you.
 		Spellpower and Mindpower reduction increases with the Willpower stat.]]):format(duration, chance, -spellpowerChange)
 	end,
 }

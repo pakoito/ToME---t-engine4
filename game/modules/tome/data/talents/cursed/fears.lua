@@ -32,10 +32,10 @@ newTalent{
 		return 8
 	end,
 	getParanoidAttackChance = function(self, t)
-		return math.min(50, self:combatTalentMindDamage(t, 25, 40))
+		return math.min(60, self:combatTalentMindDamage(t, 30, 50))
 	end,
 	getDespairResistAllChange = function(self, t)
-		return -self:combatTalentMindDamage(t, 15, 35)
+		return -self:combatTalentMindDamage(t, 15, 40)
 	end,
 	hasEffect = function(self, t, target)
 		if target:hasEffect(target.EFF_PARANOID) then return true end
@@ -95,6 +95,8 @@ newTalent{
 			for i = 1, duration do
 				eff.counts[i] = math.floor(eff.count / duration) + ((eff.count % duration >= i) and 1 or 0)
 			end
+		else
+			print("* fears: failed to get effect", effectId)
 		end
 		
 		target:setEffect(effectId, duration, eff)
@@ -221,7 +223,7 @@ newTalent{
 		return 3 + math.floor(math.pow(self:getTalentLevel(t), 0.5) * 2.2)
 	end,
 	getChance = function(self, t)
-		return math.floor(25 + (math.sqrt(self:getTalentLevel(t)) - 1) * 20)
+		return math.min(60, math.floor(30 + (math.sqrt(self:getTalentLevel(t)) - 1) * 22))
 	end,
 	action = function(self, t)
 		local range = self:getTalentRange(t)

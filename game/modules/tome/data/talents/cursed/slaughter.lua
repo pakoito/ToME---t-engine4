@@ -104,6 +104,7 @@ newTalent{
 		local attackChange = t.getAttackChange(self, t)
 
 		local effStalker = self:hasEffect(self.EFF_STALKER)
+		if core.fov.distance(self.x, self.y, effStalker.target.x, effStalker.target.y) > 1 then effStalker = nil end
 		for i = 1, 4 do
 			local target
 			if effStalker and not effStalker.target.dead then

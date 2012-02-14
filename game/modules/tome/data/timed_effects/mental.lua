@@ -434,53 +434,68 @@ newEffect{
 	do_act = function(self, eff)
 		if eff.source.dead then
 			self:removeEffect(self.EFF_BECKONED)
+			return
 		end
 		if not self:enoughEnergy() then return nil end
 
-		local distance = core.fov.distance(self.x, self.y, eff.source.x, eff.source.y)
-		if math.floor(distance) > 1 and distance <= eff.range then
-			-- in range but not adjacent
-
-			-- add debuffs
-			if not eff.spellpowerChangeId then eff.spellpowerChangeId = self:addTemporaryValue("combat_spellpower", eff.spellpowerChange) end
-			if not eff.mindpowerChangeId then eff.mindpowerChangeId = self:addTemporaryValue("combat_mindpower", eff.mindpowerChange) end
-
-			-- custom pull logic (adapted from move_dmap; forces movement, pushes others aside, custom particles)
-			local chance = eff.chance
-			if self:checkHit(eff.source:combatMindpower(), self:combatMentalResist(), 0, 95, 5) then chance = chance * 0.5 end
-			if not self:attr("never_move") and rng.percent(chance) then
-				local source = eff.source
-				local moveX, moveY = source.x, source.y -- move in general direction by default
-				if not self:hasLOS(source.x, source.y) then
-					local a = Astar.new(game.level.map, self)
-					local path = a:calc(self.x, self.y, source.x, source.y)
-					if path then
-						moveX, moveY = path[1].x, path[1].y
-					end
-				end
-
-				if moveX and moveY then
-					local old_move_others, old_x, old_y = self.move_others, self.x, self.y
-					self.move_others = true
-					local old = rawget(self, "aiCanPass")
-					self.aiCanPass = mod.class.NPC.aiCanPass
-					mod.class.NPC.moveDirection(self, moveX, moveY, false)
-					self.aiCanPass = old
-					self.move_others = old_move_others
-					if old_x ~= self.x or old_y ~= self.y then
-						game.level.map:particleEmitter(self.x, self.y, 1, "beckoned_move", {power=power, dx=self.x - source.x, dy=self.y - source.y})
-					end
-				end
-			end
+		-- apply periodic timer instead of random chance
+		if not eff.timer then
+			eff.timer = rng.float(0, 100)
+		end
+		if not self:checkHit(eff.source:combatMindpower(), self:combatMentalResist(), 0, 95, 5) then
+			eff.timer = eff.timer + eff.chance * 0.5
+			game.logSeen(self, "#F53CBE#%s struggles against the beckoning.", self.name:capitalize())
 		else
-			-- adjacent or out of range..remove debuffs
-			if eff.spellpowerChangeId then
-				self:removeTemporaryValue("combat_spellpower", eff.spellpowerChangeId)
-				eff.spellpowerChangeId = nil
-			end
-			if eff.mindpowerChangeId then
-				self:removeTemporaryValue("combat_mindpower", eff.mindpowerChangeId)
-				eff.mindpowerChangeId = nil
+			eff.timer = eff.timer + eff.chance
+		end
+
+		if eff.timer > 100 then
+			eff.timer = eff.timer - 100
+
+			local distance = core.fov.distance(self.x, self.y, eff.source.x, eff.source.y)
+			if math.floor(distance) > 1 and distance <= eff.range then
+				-- in range but not adjacent
+
+				-- add debuffs
+				if not eff.spellpowerChangeId then eff.spellpowerChangeId = self:addTemporaryValue("combat_spellpower", eff.spellpowerChange) end
+				if not eff.mindpowerChangeId then eff.mindpowerChangeId = self:addTemporaryValue("combat_mindpower", eff.mindpowerChange) end
+
+				-- custom pull logic (adapted from move_dmap; forces movement, pushes others aside, custom particles)
+
+				if not self:attr("never_move") then
+					local source = eff.source
+					local moveX, moveY = source.x, source.y -- move in general direction by default
+					if not self:hasLOS(source.x, source.y) then
+						local a = Astar.new(game.level.map, self)
+						local path = a:calc(self.x, self.y, source.x, source.y)
+						if path then
+							moveX, moveY = path[1].x, path[1].y
+						end
+					end
+
+					if moveX and moveY then
+						local old_move_others, old_x, old_y = self.move_others, self.x, self.y
+						self.move_others = true
+						local old = rawget(self, "aiCanPass")
+						self.aiCanPass = mod.class.NPC.aiCanPass
+						mod.class.NPC.moveDirection(self, moveX, moveY, false)
+						self.aiCanPass = old
+						self.move_others = old_move_others
+						if old_x ~= self.x or old_y ~= self.y then
+							game.level.map:particleEmitter(self.x, self.y, 1, "beckoned_move", {power=power, dx=self.x - source.x, dy=self.y - source.y})
+						end
+					end
+				end
+			else
+				-- adjacent or out of range..remove debuffs
+				if eff.spellpowerChangeId then
+					self:removeTemporaryValue("combat_spellpower", eff.spellpowerChangeId)
+					eff.spellpowerChangeId = nil
+				end
+				if eff.mindpowerChangeId then
+					self:removeTemporaryValue("combat_mindpower", eff.mindpowerChangeId)
+					eff.mindpowerChangeId = nil
+				end
 			end
 		end
 	end,
@@ -916,7 +931,19 @@ newEffect{
 	do_act = function(self, eff)
 		if not self:enoughEnergy() then return nil end
 
-		if rng.percent(eff.attackChance) then
+		-- apply periodic timer instead of random chance
+		if not eff.timer then
+			eff.timer = rng.float(0, 100)
+		end
+		if not self:checkHit(eff.source:combatMindpower(), self:combatMentalResist(), 0, 95, 5) then
+			eff.timer = eff.timer + eff.attackChance * 0.5
+			game.logSeen(self, "#F53CBE#%s struggles against the paranoia.", self.name:capitalize())
+		else
+			eff.timer = eff.timer + eff.attackChance
+		end
+		if eff.timer > 100 then
+			eff.timer = eff.timer - 100
+
 			local start = rng.range(0, 8)
 			for i = start, start + 8 do
 				local x = self.x + (i % 3) - 1
@@ -924,8 +951,8 @@ newEffect{
 				if (self.x ~= x or self.y ~= y) then
 					local target = game.level.map(x, y, Map.ACTOR)
 					if target then
-						game.logSeen(self, "#F53CBE#%s attacks %s in a fit of paranoia.", self.name, target.name)
-						if self:attackTarget(target, nil, 1, false) then
+						game.logSeen(self, "#F53CBE#%s attacks %s in a fit of paranoia.", self.name:capitalize(), target.name)
+						if self:attackTarget(target, nil, 1, false) and target ~= eff.source then
 							if not target:canBe("fear") then
 								game.logSeen(target, "#F53CBE#%s ignores the fear!", target.name:capitalize())
 							elseif not target:checkHit(eff.mindpower, target:combatMentalResist()) then
@@ -1143,38 +1170,52 @@ newEffect{
 		if not self:enoughEnergy() then return nil end
 		if eff.source.dead then return true end
 
-		local distance = core.fov.distance(self.x, self.y, eff.source.x, eff.source.y)
-		if distance <= eff.range then
-			-- in range
-			if not self:attr("never_move") and rng.percent(eff.chance) then
-				local sourceX, sourceY = eff.source.x, eff.source.y
-				
-				local bestX, bestY
-				local bestDistance = 0
-				local start = rng.range(0, 8)
-				for i = start, start + 8 do
-					local x = self.x + (i % 3) - 1
-					local y = self.y + math.floor((i % 9) / 3) - 1
-					
-					if x ~= self.x or y ~= self.y then
-						local distance = core.fov.distance(x, y, sourceX, sourceY)
-						if distance > bestDistance
-								and game.level.map:isBound(x, y)
-								and not game.level.map:checkAllEntities(x, y, "block_move", self)
-								and not game.level.map(x, y, Map.ACTOR) then
-							bestDistance = distance
-							bestX = x
-							bestY = y
+		-- apply periodic timer instead of random chance
+		if not eff.timer then
+			eff.timer = rng.float(0, 100)
+		end
+		if not self:checkHit(eff.source:combatMindpower(), self:combatMentalResist(), 0, 95, 5) then
+			eff.timer = eff.timer + eff.chance * 0.5
+			game.logSeen(self, "#F53CBE#%s struggles against the panic.", self.name:capitalize())
+		else
+			eff.timer = eff.timer + eff.chance
+		end
+		if eff.timer > 100 then
+			eff.timer = eff.timer - 100
+
+			local distance = core.fov.distance(self.x, self.y, eff.source.x, eff.source.y)
+			if distance <= eff.range then
+				-- in range
+				if not self:attr("never_move") then
+					local sourceX, sourceY = eff.source.x, eff.source.y
+
+					local bestX, bestY
+					local bestDistance = 0
+					local start = rng.range(0, 8)
+					for i = start, start + 8 do
+						local x = self.x + (i % 3) - 1
+						local y = self.y + math.floor((i % 9) / 3) - 1
+
+						if x ~= self.x or y ~= self.y then
+							local distance = core.fov.distance(x, y, sourceX, sourceY)
+							if distance > bestDistance
+									and game.level.map:isBound(x, y)
+									and not game.level.map:checkAllEntities(x, y, "block_move", self)
+									and not game.level.map(x, y, Map.ACTOR) then
+								bestDistance = distance
+								bestX = x
+								bestY = y
+							end
 						end
 					end
-				end
-				
-				if bestX then
-					self:move(bestX, bestY, false)
-					game.logPlayer(self, "#F53CBE#You panic and flee from %s.", eff.source.name)
-				else
-					game.logSeen(self, "#F53CBE#%s panics and tries to flee from %s.", self.name:capitalize(), eff.source.name)
-					self:useEnergy(game.energy_to_act * self:combatMovementSpeed(bestX, bestY))
+
+					if bestX then
+						self:move(bestX, bestY, false)
+						game.logPlayer(self, "#F53CBE#You panic and flee from %s.", eff.source.name)
+					else
+						game.logSeen(self, "#F53CBE#%s panics and tries to flee from %s.", self.name:capitalize(), eff.source.name)
+						self:useEnergy(game.energy_to_act * self:combatMovementSpeed(bestX, bestY))
+					end
 				end
 			end
 		end
@@ -1863,7 +1904,7 @@ newEffect{
 	addEffect = function(self, eff)
 		if eff.physicalResistId then self:removeTemporaryValue("resists", eff.physicalResistId) end
 		eff.physicalResistId = self:addTemporaryValue("resists", { [DamageType.PHYSICAL]=eff.physicalResistChange })
-	
+
 		local maxId
 		local maxValue = 0
 		for id, def in ipairs(self.stats_def) do
@@ -1992,9 +2033,9 @@ newEffect{
 		if old_eff.incStatsId then self:removeTemporaryValue("inc_stats", old_eff.incStatsId) end
 		old_eff.incStats = nil
 		old_eff.incStatsId = nil
-		
+
 		self.tempeffect_def[self.EFF_MIMIC].activate(self, new_eff)
-		
+
 		return new_eff
 	end
 }
