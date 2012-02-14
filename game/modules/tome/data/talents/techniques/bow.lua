@@ -23,15 +23,13 @@ newTalent{
 	points = 10,
 	require = { stat = { dex=function(level) return 12 + level * 3 end }, },
 	mode = "passive",
-	getDamage = function(self, t) return math.floor(t.getPercentInc(self, t) * self:combatPhysicalpower()) end,
-	getPercentInc = function(self, t) return self:getTalentLevel(t) / 10 end,
-	getReloadBoost = function(self, t) return math.floor(self:getTalentLevel(t) / 5) end,
+	getDamage = function(self, t) return self:getTalentLevel(t) * 5 end,
+	getPercentInc = function(self, t) return math.sqrt(self:getTalentLevel(t) / 10) / 2 end,
 	info = function(self, t)
-		local inc = t.getPercentInc(self, t)
 		local damage = t.getDamage(self, t)
-		local shots = t.getReloadBoost(self, t)
-		return ([[Increases damage done with bows by %d%% of your physical power (%d). Also increases the number of arrows you can reload per turn by %d.]]):
-		format(inc * 100, damage, shots)
+		local inc = t.getPercentInc(self, t)
+		return ([[Increases Physical Power by %d. Also increases damage done with bows by %d%%.]]):
+		format(damage, inc * 100)
 	end,
 }
 

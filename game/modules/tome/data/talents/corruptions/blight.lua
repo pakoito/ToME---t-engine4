@@ -91,7 +91,7 @@ newTalent{
 				if #effs == 0 then break end
 				local eff = rng.tableRemove(effs)
 
-				if self:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, self:getMaxAccuracy("spell"), 5) then
+				if self:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, 95, 5) then
 					target:crossTierEffect(target.EFF_SPELLSHOCKED, self:combatSpellpower())
 					if eff[1] == "effect" then
 						target:removeEffect(eff[2])

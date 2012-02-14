@@ -25,7 +25,7 @@ newEntity{
 	display = "X", color=colors.UMBER,
 
 	blood_color = colors.UMBER,
-	combat = { dam=resolvers.levelup(resolvers.mbonus(46, 15), 1, 0.8), atk=15, apr=15, dammod={str=resolvers.levelup(0.2, 5, 0.1, 0.8)} },
+	combat = { dam=resolvers.levelup(resolvers.mbonus(46, 15), 1, 0.8), atk=15, apr=15, dammod={str=0.8} },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.drops{chance=100, nb=1, {type="money"} },

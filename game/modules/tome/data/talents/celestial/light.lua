@@ -25,7 +25,7 @@ newTalent{
 	random_ego = "defensive",
 	cooldown = 10,
 	positive = -10,
-	tactical = { HEAL = 2, },
+	tactical = { HEAL = 2 },
 	getHeal = function(self, t) return self:combatTalentSpellDamage(t, 20, 440) end,
 	is_heal = true,
 	action = function(self, t)

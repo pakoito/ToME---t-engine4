@@ -23,7 +23,6 @@ newTalentType{ type="base/race", name = "race", hide = true, description = "The 
 newTalentType{ type="inscriptions/infusions", name = "infusions", hide = true, description = "Infusions are not class abilities, you must find them or learn them from other people." }
 newTalentType{ is_spell=true, no_silence=true, type="inscriptions/runes", name = "runes", hide = true, description = "Runes are not class abilities, you must find them or learn them from other people." }
 newTalentType{ is_spell=true, no_silence=true, type="inscriptions/taints", name = "taints", hide = true, description = "Taints are not class abilities, you must find them or learn them from other people." }
-newTalentType{ type="misc/item", name = "item", hide = true, description = "Talents granted only by special items." }
 
 -- Load other misc things
 load("/data/talents/misc/inscriptions.lua")
@@ -31,7 +30,6 @@ load("/data/talents/misc/npcs.lua")
 load("/data/talents/misc/horrors.lua")
 load("/data/talents/misc/races.lua")
 load("/data/talents/misc/tutorial.lua")
-load("/data/talents/misc/item.lua")
 
 -- Default melee attack
 newTalent{
@@ -314,4 +312,3 @@ newTalent{
 		format(physical_reduction, spell_reduction, mental_reduction)
 	end,
 }
-

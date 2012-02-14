@@ -34,11 +34,10 @@ newEntity{ base = "BASE_KNIFE", define_as = "LIFE_DRINKER",
 	cost = 450,
 	material_level = 5,
 	combat = {
-		affects_spells = true,
 		dam = 42,
-		max_acc = 100,
-		critical_power = 2.2,
-		dammod = {mag=0.6,str=0.4},
+		apr = 11,
+		physcrit = 18,
+		dammod = {mag=0.55,str=0.35},
 	},
 	wielder = {
 		inc_damage={

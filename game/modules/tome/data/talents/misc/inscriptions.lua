@@ -729,7 +729,7 @@ newInscription{
 
 		local hit = self:checkHit(self:combatSpellpower(), target:combatSpellResist() + (target:attr("continuum_destabilization") or 0))
 		if not hit then game.logSeen(target, "%s resists!", target.name:capitalize()) return true end
-
+		
 		target:setEffect(target.EFF_CONTINUUM_DESTABILIZATION, 100, {power=self:combatSpellpower(0.3)})
 		self:project(tg, x, y, DamageType.TEMPORAL, self:spellCrit(t.getDamage(self, t)))
 		game.level.map:particleEmitter(x, y, 1, "temporal_thrust")
@@ -737,7 +737,7 @@ newInscription{
 
 		-- End it here if we've killed the target or the target is a player
 		if target.dead or target.player then return true end
-
+		
 		-- set up instability
 		local summoner = self
 		-- Store the current terrain
@@ -768,7 +768,7 @@ newInscription{
 			summoner_gain_exp = true,
 			summoner = summoner,
 		}
-
+		
 		-- Mixin the old terrain
 		table.update(temporal_instability, terrain)
 		-- Now update the display overlay
@@ -782,7 +782,7 @@ newInscription{
 		else
 			table.append(temporal_instability.add_displays, overlay)
 		end
-
+		
 		game.logSeen(target, "%s has moved forward in time!", target.name:capitalize())
 		game.level:removeEntity(target)
 		game.level:addEntity(temporal_instability)

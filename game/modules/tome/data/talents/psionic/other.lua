@@ -169,22 +169,21 @@ newTalent{
 		end
 		if o.type == "weapon" then
 			self.use_psi_combat = true
+			atk = self:combatAttack(o.combat)
 			dam = self:combatDamage(o.combat)
-			critical_power = o.combat.critical_power
-			max_acc = o.combat.max_acc
 			apr = self:combatAPR(o.combat)
 			crit = self:combatCrit(o.combat)
+			speed = self:combatSpeed(o.combat)
 			self.use_psi_combat = false
 		end
 		return ([[Allows you to wield a weapon telekinetically, directing it with your willpower and cunning rather than crude flesh. When activated, the telekinetically-wielded weapon will attack a random melee-range target each turn.
 		The telekinetically-wielded weapon uses Willpower in place of Strength and Cunning in place of Dexterity to determine attack and damage.
-		Combat attributes:
-		
-		#LIGHT_GREEN#Damage:#WHITE#          %d
-		#LIGHT_GREEN#Crit multiplier:#WHITE# %.1fx
-		#LIGHT_GREEN#Max accuracy:#WHITE#    %d%%
-		#LIGHT_GREEN#APR:#WHITE#             %d
-		#LIGHT_GREEN#Crit chance:#WHITE#     %0.2f]]):
-		format(dam, critical_power, max_acc, apr, crit)
+		Combat stats:
+		Accuracy: %d
+		Damage: %d
+		APR: %d
+		Crit: %0.2f
+		Speed: %0.2f]]):
+		format(atk, dam, apr, crit, speed)
 	end,
 }

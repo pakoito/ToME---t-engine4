@@ -1148,14 +1148,14 @@ newEffect{
 			-- in range
 			if not self:attr("never_move") and rng.percent(eff.chance) then
 				local sourceX, sourceY = eff.source.x, eff.source.y
-
+				
 				local bestX, bestY
 				local bestDistance = 0
 				local start = rng.range(0, 8)
 				for i = start, start + 8 do
 					local x = self.x + (i % 3) - 1
 					local y = self.y + math.floor((i % 9) / 3) - 1
-
+					
 					if x ~= self.x or y ~= self.y then
 						local distance = core.fov.distance(x, y, sourceX, sourceY)
 						if distance > bestDistance
@@ -1168,7 +1168,7 @@ newEffect{
 						end
 					end
 				end
-
+				
 				if bestX then
 					self:move(bestX, bestY, false)
 					game.logPlayer(self, "#F53CBE#You panic and flee from %s.", eff.source.name)
@@ -1400,7 +1400,7 @@ newEffect{
 	on_timeout = function(self, eff)
 		if eff.src.dead or not game.level:hasEntity(eff.src) then eff.dur = 0 return true end
 		if rng.percent(eff.chance or 0) then
-			if self:checkHit(eff.src:combatSpellpower(), self:combatSpellResist(), 0, eff.src:getMaxAccuracy("spell"), 5) then
+			if self:checkHit(eff.src:combatSpellpower(), self:combatMentalResist(), 0, 95, 5) then
 				local t = eff.src:getTalentFromId(eff.src.T_INNER_DEMONS)
 				t.summon_inner_demons(eff.src, self, t)
 			else
@@ -1863,7 +1863,7 @@ newEffect{
 	addEffect = function(self, eff)
 		if eff.physicalResistId then self:removeTemporaryValue("resists", eff.physicalResistId) end
 		eff.physicalResistId = self:addTemporaryValue("resists", { [DamageType.PHYSICAL]=eff.physicalResistChange })
-
+	
 		local maxId
 		local maxValue = 0
 		for id, def in ipairs(self.stats_def) do
@@ -1992,9 +1992,9 @@ newEffect{
 		if old_eff.incStatsId then self:removeTemporaryValue("inc_stats", old_eff.incStatsId) end
 		old_eff.incStats = nil
 		old_eff.incStatsId = nil
-
+		
 		self.tempeffect_def[self.EFF_MIMIC].activate(self, new_eff)
-
+		
 		return new_eff
 	end
 }
@@ -2121,33 +2121,6 @@ newEffect{
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("wild_summon", eff.tid)
 	end,
-}
-
-newEffect{
-	name = "SAVAGERY", image = "talents/savagery.png",
-	desc = "Savage",
-	long_desc = function(self, eff) return ("Savagely seeking the lives of foes. Critical power increased by %.1f."):format(eff.power) end,
-	type = "physical",
-	subtype = { frenzy=true },
-	status = "beneficial",
-	parameters = { power=1 },
-	on_gain = function(self, err) return nil, "+Savagery" end,
-	on_lose = function(self, err) return nil, "-Savagery" end,
-	on_merge = function(self, old_eff, new_eff)
-		-- stack the critical power boost up to a maximum
-		self:removeTemporaryValue("combat_critical_power", old_eff.tmpid)
-		old_eff.power = math.min(old_eff.power + new_eff.power, 1.5)
-		old_eff.tmpid = self:addTemporaryValue("combat_critical_power", old_eff.power)
-		old_eff.dur = new_eff.dur
-		return old_eff
-	end,
-	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("combat_critical_power", eff.power)
-	end,
-	deactivate = function(self, eff)
-		self:removeTemporaryValue("combat_critical_power", eff.tmpid)
-	end,
-
 }
 
 newEffect{

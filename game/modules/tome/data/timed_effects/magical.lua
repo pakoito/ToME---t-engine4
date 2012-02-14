@@ -1391,7 +1391,7 @@ newEffect{
 		old_eff.physid = self:addTemporaryValue("combat_physresist", old_eff.cur_physical)
 		old_eff.spellid = self:addTemporaryValue("combat_spellresist", old_eff.cur_spell)
 		old_eff.mentalid = self:addTemporaryValue("combat_mentalresist", old_eff.cur_mental)
-
+		
 		old_eff.dur = new_eff.dur
 		return old_eff
 	end,
@@ -1599,87 +1599,5 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("bloodcasting", eff.tmpid)
-	end,
-}
-
-
-newEffect{
-	name = "WARD", image = "talents/ward.png",
-	desc = "Ward",
-	long_desc = function(self, eff) return ("Fully absorbs %d %s attack%s."):format(#eff.particles, DamageType.dam_def[eff.d_type].name, #eff.particles > 1 and "s" or "") end,
-	type = "magical",
-	subtype = { acrane=true },
-	status = "beneficial",
-	parameters = { nb=3 },
-	on_gain = function(self, eff) return ("#Target# warded against %s!"):format(DamageType.dam_def[eff.d_type].name), "+Ward" end,
-	on_lose = function(self, eff) return ("#Target#'s %s ward fades"):format(DamageType.dam_def[eff.d_type].name), "-Ward" end,
-	absorb = function(type, dam, eff, self, src)
-		if eff.d_type ~= type then return dam end
-		game.logPlayer(self, "Your %s ward absorbs the damage!", DamageType.dam_def[eff.d_type].name)
-		local pid = table.remove(eff.particles)
-		if pid then self:removeParticles(pid) end
-		if #eff.particles <= 0 then
-			--eff.dur = 0
-			self:removeEffect(self.EFF_WARD)
-		end
-		return 0
-	end,
-	activate = function(self, eff)
-		local nb = eff.nb
-		local ps = {}
-		for i = 1, nb do ps[#ps+1] = self:addParticles(Particles.new("ward", 1, {color=DamageType.dam_def[eff.d_type].color})) end
-		eff.particles = ps
-	end,
-	deactivate = function(self, eff)
-		for i, particle in ipairs(eff.particles) do self:removeParticles(particle) end
-	end,
-}
-
-newEffect{
-	name = "ELEMENTAL_RETRIBUTION", image = "talents/elemental_retribution.png",
-	desc = "Retribution",
-	long_desc = function(self, eff) return ("Seeking retribution for having suffered %s damage. Spellpower increased by %d."):format(eff.e_string, eff.power) end,
-	type = "magical",
-	subtype = { arcane=true },
-	status = "beneficial",
-	parameters = { power=1 },
-	on_gain = function(self, err) return nil, "+Retribution" end,
-	on_lose = function(self, err) return nil, "-Retribution" end,
-	on_merge = function(self, old_eff, new_eff)
-		-- stack the critical power boost up to a maximum
-		self:removeTemporaryValue("combat_spellpower", old_eff.tmpid)
-		old_eff.power = math.min(old_eff.power + new_eff.power, old_eff.maximum)
-		old_eff.tmpid = self:addTemporaryValue("combat_spellpower", old_eff.power)
-		old_eff.dur = new_eff.dur
-		return old_eff
-	end,
-	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("combat_spellpower", eff.power)
-	end,
-	deactivate = function(self, eff)
-		self:removeTemporaryValue("combat_spellpower", eff.tmpid)
-	end,
-
-}
-
-newEffect{
-	name = "PERCEPTION", image = "talents/perception.png",
-	desc = "Perception",
-	long_desc = function(self, eff) return ("Increased capacity for spotting invisible and stealthy foes, as well as taking advantage of enemy weak points. (%+d see invisible, %+d see through stealth, and %+.1f critical power)"):format(eff.si, eff.ss, eff.crit) end,
-	type = "magical",
-	subtype = { sense=true },
-	status = "beneficial",
-	parameters = { power=10, crit=10, apr=10 },
-	on_gain = function(self, err) return nil, "+Perception" end,
-	on_lose = function(self, err) return nil, "-Perception" end,
-	activate = function(self, eff)
-		eff.siid = self:addTemporaryValue("see_invisible", eff.si)
-		eff.ssid = self:addTemporaryValue("see_stealth", eff.ss)
-		eff.critid = self:addTemporaryValue("combat_critical_power", eff.crit)
-	end,
-	deactivate = function(self, eff)
-		self:removeTemporaryValue("see_invisible", eff.siid)
-		self:removeTemporaryValue("see_stealth", eff.ssid)
-		self:removeTemporaryValue("combat_critical_power", eff.critid)
 	end,
 }

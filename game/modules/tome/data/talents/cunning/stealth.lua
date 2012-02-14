@@ -83,12 +83,12 @@ newTalent{
 	require = cuns_req2,
 	mode = "passive",
 	points = 5,
-	getMultiplier = function(self, t) return self:getTalentLevel(t) / 7 end,
+	getMultiplier = function(self, t) return 1.5 + self:getTalentLevel(t) / 7 end,
 	info = function(self, t)
 		local multiplier = t.getMultiplier(self, t)
 		return ([[When striking from stealth, hits are automatically criticals if the target does not notice you.
-		Shadowstrike criticals have their multiplier increased by %.02f.]]):
-		format(multiplier)
+		Shadowstrikes do %.02f%% damage versus a normal hit.]]):
+		format(multiplier * 100)
 	end,
 }
 

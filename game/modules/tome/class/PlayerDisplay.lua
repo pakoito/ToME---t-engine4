@@ -375,14 +375,8 @@ function _M:display()
 
 	local quiver = player:getInven("QUIVER")
 	local ammo = quiver and quiver[1]
-	if ammo and ammo.combat then
-		local amt, max = 0, 0
-		if ammo.type == "alchemist-gem" then
-			amt = ammo:getNumber()
-		else
-			amt, max = ammo.combat.shots_left, ammo.combat.capacity
-		end
-		self:mouseTooltip(self.TOOLTIP_COMBAT_AMMO, self:makeTexture(("#ANTIQUE_WHITE#Ammo:       #ffffff#%d"):format(amt), 0, h, 255, 255, 255)) h = h + self.font_h
+	if ammo then
+		self:mouseTooltip(self.TOOLTIP_COMBAT_AMMO, self:makeTexture(("#ANTIQUE_WHITE#Ammo:       #ffffff#%d"):format(ammo:getNumber()), 0, h, 255, 255, 255)) h = h + self.font_h
 	end
 
 	if savefile_pipe.saving then

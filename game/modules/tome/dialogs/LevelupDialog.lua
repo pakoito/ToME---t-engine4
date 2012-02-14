@@ -173,38 +173,38 @@ function _M:generateStatsList()
 		{name="Strength",   	color = {(self.actor_dup:getStat(self.actor.STAT_STR, nil, nil, true) == self.actor:getStat(self.actor.STAT_STR, nil, nil, true)) and {255, 255, 255} or {255, 215, 0},
 								(self.actor_dup:getStat(self.actor.STAT_STR, nil, nil, true) == self.actor:getStat(self.actor.STAT_STR, nil, nil, true)) and {255, 255, 255} or {255, 215, 0},
 								(self.actor:getStat(self.actor.STAT_STR, nil, nil, true) - self.actor_dup:getStat(self.actor.STAT_STR, nil, nil, true) + self.actor_dup:getStat(self.actor.STAT_STR) == self.actor:getStat(self.actor.STAT_STR)) and {255, 255, 255} or {255, 215, 0}},
-								base=math.floor(self.actor:getStr(nil, nil, true)),
-								val=math.floor(self.actor:getStr()),
+								base=self.actor:getStr(nil, nil, true),
+								val=self.actor:getStr(),
 								stat_id=self.actor.STAT_STR},
 		{name="Dexterity",  	color = {(self.actor_dup:getStat(self.actor.STAT_DEX, nil, nil, true) == self.actor:getStat(self.actor.STAT_DEX, nil, nil, true)) and {255, 255, 255} or {255, 215, 0},
 								(self.actor_dup:getStat(self.actor.STAT_DEX, nil, nil, true) == self.actor:getStat(self.actor.STAT_DEX, nil, nil, true)) and {255, 255, 255} or {255, 215, 0},
 								(self.actor:getStat(self.actor.STAT_DEX, nil, nil, true) - self.actor_dup:getStat(self.actor.STAT_DEX, nil, nil, true) + self.actor_dup:getStat(self.actor.STAT_DEX) == self.actor:getStat(self.actor.STAT_DEX)) and {255, 255, 255} or {255, 215, 0}},
-								base=math.floor(self.actor:getDex(nil, nil, true)),
-								val=math.floor(self.actor:getDex()),
+								base=self.actor:getDex(nil, nil, true),
+								val=self.actor:getDex(),
 								stat_id=self.actor.STAT_DEX},
 		{name="Magic",        	color = {(self.actor_dup:getStat(self.actor.STAT_MAG, nil, nil, true) == self.actor:getStat(self.actor.STAT_MAG, nil, nil, true)) and {255, 255, 255} or {255, 215, 0},
 								(self.actor_dup:getStat(self.actor.STAT_MAG, nil, nil, true) == self.actor:getStat(self.actor.STAT_MAG, nil, nil, true)) and {255, 255, 255} or {255, 215, 0},
 								(self.actor:getStat(self.actor.STAT_MAG, nil, nil, true) - self.actor_dup:getStat(self.actor.STAT_MAG, nil, nil, true) + self.actor_dup:getStat(self.actor.STAT_MAG) == self.actor:getStat(self.actor.STAT_MAG)) and {255, 255, 255} or {255, 215, 0}},
-								base=math.floor(self.actor:getMag(nil, nil, true)),
-								val=math.floor(self.actor:getMag()),
+								base=self.actor:getMag(nil, nil, true),
+								val=self.actor:getMag(),
 								stat_id=self.actor.STAT_MAG},
 		{name="Willpower",    	color = {(self.actor_dup:getStat(self.actor.STAT_WIL, nil, nil, true) == self.actor:getStat(self.actor.STAT_WIL, nil, nil, true)) and {255, 255, 255} or {255, 215, 0},
 								(self.actor_dup:getStat(self.actor.STAT_WIL, nil, nil, true) == self.actor:getStat(self.actor.STAT_WIL, nil, nil, true)) and {255, 255, 255} or {255, 215, 0},
 								(self.actor:getStat(self.actor.STAT_WIL, nil, nil, true) - self.actor_dup:getStat(self.actor.STAT_WIL, nil, nil, true) + self.actor_dup:getStat(self.actor.STAT_WIL) == self.actor:getStat(self.actor.STAT_WIL)) and {255, 255, 255} or {255, 215, 0}},
-								base=math.floor(self.actor:getWil(nil, nil, true)),
-								val=math.floor(self.actor:getWil()),
+								base=self.actor:getWil(nil, nil, true),
+								val=self.actor:getWil(),
 								stat_id=self.actor.STAT_WIL},
 		{name="Cunning",      	color = {(self.actor_dup:getStat(self.actor.STAT_CUN, nil, nil, true) == self.actor:getStat(self.actor.STAT_CUN, nil, nil, true)) and {255, 255, 255} or {255, 215, 0},
 								(self.actor_dup:getStat(self.actor.STAT_CUN, nil, nil, true) == self.actor:getStat(self.actor.STAT_CUN, nil, nil, true)) and {255, 255, 255} or {255, 215, 0},
 								(self.actor:getStat(self.actor.STAT_CUN, nil, nil, true) - self.actor_dup:getStat(self.actor.STAT_CUN, nil, nil, true) + self.actor_dup:getStat(self.actor.STAT_CUN) == self.actor:getStat(self.actor.STAT_CUN)) and {255, 255, 255} or {255, 215, 0}},
-								base=math.floor(self.actor:getCun(nil, nil, true)),
-								val=math.floor(self.actor:getCun()),
+								base=self.actor:getCun(nil, nil, true),
+								val=self.actor:getCun(),
 								stat_id=self.actor.STAT_CUN},
 		{name="Constitution", 	color = {(self.actor_dup:getStat(self.actor.STAT_CON, nil, nil, true) == self.actor:getStat(self.actor.STAT_CON, nil, nil, true)) and {255, 255, 255} or {255, 215, 0},
 								(self.actor_dup:getStat(self.actor.STAT_CON, nil, nil, true) == self.actor:getStat(self.actor.STAT_CON, nil, nil, true)) and {255, 255, 255} or {255, 215, 0},
 								(self.actor:getStat(self.actor.STAT_CON, nil, nil, true) - self.actor_dup:getStat(self.actor.STAT_CON, nil, nil, true) + self.actor_dup:getStat(self.actor.STAT_CON) == self.actor:getStat(self.actor.STAT_CON)) and {255, 255, 255} or {255, 215, 0}},
-								base=math.floor(self.actor:getCon(nil, nil, true)),
-								val=math.floor(self.actor:getCon()),
+								base=self.actor:getCon(nil, nil, true),
+								val=self.actor:getCon(),
 								stat_id=self.actor.STAT_CON},
 	}
 	self.c_list:onSelect(true)
@@ -1186,6 +1186,9 @@ function _M:drawDialog(kind)
 
 			for i, o in ipairs(self.actor:getInven(self.actor.INVEN_MAINHAND)) do
 				local mean, dam = o.combat, o.combat
+				if o.archery and mean then
+					dam = (self.actor:getInven("QUIVER")[1] and self.actor:getInven("QUIVER")[1].combat) or o.basic_ammo
+				end
 				if mean and dam then
 					s:drawColorStringBlended(self.font, WeaponTxt, w, h, 255, 255, 255, true) h = h + self.font_h
 					if self.actor.use_psi_combat then
@@ -1193,7 +1196,7 @@ function _M:drawDialog(kind)
 					else
 						self:mouseTooltip(self.TOOLTIP_COMBAT_ATTACK, s:drawColorStringBlended(self.font, ("Accuracy    : #00ff00#%.1f"):format(self.actor:combatAttack(mean) - self.actor_dup:combatAttack(mean)), w, h, 255, 255, 255, true)) h = h + self.font_h
 					end
-					self:mouseTooltip(self.TOOLTIP_COMBAT_DAMAGE, s:drawColorStringBlended(self.font, ("Damage      : #00ff00#%.1f"):format(self.actor:getCombinedDamage(o) - self.actor_dup:getCombinedDamage(o)), w, h, 255, 255, 255, true)) h = h + self.font_h
+					self:mouseTooltip(self.TOOLTIP_COMBAT_DAMAGE, s:drawColorStringBlended(self.font, ("Damage      : #00ff00#%.1f"):format(self.actor:combatDamage(dam) - self.actor_dup:combatDamage(dam)), w, h, 255, 255, 255, true)) h = h + self.font_h
 					self:mouseTooltip(self.TOOLTIP_COMBAT_APR, s:drawColorStringBlended(self.font,    ("APR         : #00ff00#%.1f"):format(self.actor:combatAPR(dam) - self.actor_dup:combatAPR(dam)), w, h, 255, 255, 255, true)) h = h + self.font_h
 					self:mouseTooltip(self.TOOLTIP_COMBAT_CRIT, s:drawColorStringBlended(self.font,   ("Crit. chance: #00ff00#%.1f%%"):format(self.actor:combatCrit(dam) - self.actor_dup:combatCrit(dam)), w, h, 255, 255, 255, true)) h = h + self.font_h
 					self:mouseTooltip(self.TOOLTIP_COMBAT_SPEED, s:drawColorStringBlended(self.font,  ("Speed       : #00ff00#%.2f%%"):format((self.actor:combatSpeed(mean) - self.actor_dup:combatSpeed(mean))*100), w, h, 255, 255, 255, true)) h = h + self.font_h
@@ -1221,6 +1224,9 @@ function _M:drawDialog(kind)
 			local act_dup_offmult = self.actor_dup:getOffHandMult()
 			for i, o in ipairs(self.actor:getInven(self.actor.INVEN_OFFHAND)) do
 				local mean, dam = o.combat, o.combat
+				if o.archery and mean then
+					dam = (self.actor:getInven("QUIVER")[1] and self.actor:getInven("QUIVER")[1].combat) or o.basic_ammo
+				end
 				if mean and dam then
 					s:drawColorStringBlended(self.font, "#LIGHT_BLUE#Off Hand:", w, h, 255, 255, 255, true) h = h + self.font_h
 					if self.actor.use_psi_combat then
@@ -1228,7 +1234,7 @@ function _M:drawDialog(kind)
 					else
 						self:mouseTooltip(self.TOOLTIP_COMBAT_ATTACK, s:drawColorStringBlended(self.font, ("Accuracy    : #00ff00#%.1f"):format(self.actor:combatAttack(mean) - self.actor_dup:combatAttack(mean)), w, h, 255, 255, 255, true)) h = h + self.font_h
 					end
-					self:mouseTooltip(self.TOOLTIP_COMBAT_DAMAGE, s:drawColorStringBlended(self.font, ("Damage      : #00ff00#%.1f"):format(self.actor:getCombinedDamage(o) * act_offmult - self.actor_dup:getCombinedDamage(o) * act_dup_offmult), w, h, 255, 255, 255, true)) h = h + self.font_h
+					self:mouseTooltip(self.TOOLTIP_COMBAT_DAMAGE, s:drawColorStringBlended(self.font, ("Damage      : #00ff00#%.1f"):format(self.actor:combatDamage(dam) * act_offmult - self.actor_dup:combatDamage(dam) * act_dup_offmult), w, h, 255, 255, 255, true)) h = h + self.font_h
 					self:mouseTooltip(self.TOOLTIP_COMBAT_APR   , s:drawColorStringBlended(self.font, ("APR         : #00ff00#%.1f"):format(self.actor:combatAPR(dam) - self.actor_dup:combatAPR(dam)), w, h, 255, 255, 255, true)) h = h + self.font_h
 					self:mouseTooltip(self.TOOLTIP_COMBAT_CRIT  , s:drawColorStringBlended(self.font, ("Crit. chance: #00ff00#%.1f%%"):format(self.actor:combatCrit(dam) - self.actor_dup:combatCrit(dam)), w, h, 255, 255, 255, true)) h = h + self.font_h
 					self:mouseTooltip(self.TOOLTIP_COMBAT_SPEED , s:drawColorStringBlended(self.font, ("Speed       : #00ff00#%.2f%%"):format((self.actor:combatSpeed(mean) - self.actor_dup:combatSpeed(mean))*100), w, h, 255, 255, 255, true)) h = h + self.font_h

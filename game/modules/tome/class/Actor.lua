@@ -197,27 +197,19 @@ function _M:init(t, no_default)
 	mod.class.interface.ActorInscriptions.init(self, t)
 
 	-- Default melee barehanded damage
-	self.default_dam = 1
-	self.default_max_acc = 75
-	self.default_critical_power = 1.1
 	self.combat = self.combat or {
-		dam=self.default_dam,
-		atk=0, apr=0,
+		dam=1,
+		atk=1, apr=0,
 		physcrit=0,
 		physspeed =1,
-		critical_power = self.default_critical_power,
-		max_acc = self.default_max_acc,
-
-		dammod = { str=0.1 },
-		damrange=1,
+		dammod = { str=1 },
+		damrange=1.1,
 		talented = "unarmed",
 	}
 	-- Insures we have certain values for gloves to modify
-	self.combat.damrange = self.combat.damrange or 1
+	self.combat.damrange = self.combat.damrange or 1.1
 	self.combat.physspeed = self.combat.physspeed or 1
-	self.combat.dammod = self.combat.dammod or {str=0.1}
-	self.combat.critical_power = self.combat.critical_power or self.default_critical_power
-	self.combat.max_acc = self.combat.max_acc or self.default_max_acc
+	self.combat.dammod = self.combat.dammod or {str=0.6}
 
 	self.talents[self.T_ATTACK] = self.talents[self.T_ATTACK] or 1
 
@@ -307,7 +299,6 @@ function _M:actBase()
 	if not self:attr("no_talents_cooldown") then self:cooldownTalents() end
 	-- Regen resources
 	self:regenLife()
-	self:regenAmmo()
 	if self:knowTalent(self.T_UNNATURAL_BODY) then
 		local t = self:getTalentFromId(self.T_UNNATURAL_BODY)
 		t.do_regenLife(self, t)
@@ -1103,22 +1094,6 @@ function _M:regenLife()
 	if self.life_regen and not self:attr("no_life_regen") then
 		self.life = util.bound(self.life + self.life_regen * util.bound((self.healing_factor or 1), 0, 2.5), self.die_at, self.max_life)
 	end
-end
-
-function _M:regenAmmo()
-	local ammo = self:hasAmmo()
-	--if not ammo then return end
-	local r = (ammo and ammo.combat and ammo.combat.ammo_every)
-	if not r then return end
-	if ammo.combat.shots_left >= ammo.combat.capacity then return end
-	--print("reload every r, where r is:", r)
-	ammo.combat.reload_counter = (ammo.combat.reload_counter or 0) + 1
-	--print("reload counter:", ammo.combat.reload_counter)
-	if ammo.combat.reload_counter == r then
-		ammo.combat.reload_counter = 0
-		ammo.combat.shots_left = math.min(ammo.combat.capacity, (ammo.combat.shots_left + 1))
-	end
-
 end
 
 --- Called before healing
@@ -2118,14 +2093,6 @@ function _M:onWear(o, bypass_set)
 		t.on_onWear(self, t, o)
 	end
 
-	-- learn item talents
-
-	if o.wielder and o.wielder.learn_talent then
-		for tid, level in pairs(o.wielder.learn_talent) do
-			self:learnItemTalent(o, tid, level)
-		end
-	end
-
 	self:updateModdableTile()
 	if self == game.player then game:playSound("actions/wear") end
 end
@@ -2176,16 +2143,6 @@ function _M:onTakeoff(o, bypass_set)
 	if self:knowTalent(self.T_DEFILING_TOUCH) then
 		local t = self:getTalentFromId(self.T_DEFILING_TOUCH)
 		t.on_onTakeOff(self, t, o)
-	end
-
-	if o.wielder and o.wielder.learn_talent then
-		for tid, level in pairs(o.wielder.learn_talent) do
-			self:unlearnItemTalent(o, tid, level)
-		end
-	end
-
-	if o.subtype == "arrow" or o.subtype == "shot" then
-		self:breakReloading()
 	end
 
 	self:updateModdableTile()
@@ -2320,7 +2277,6 @@ function _M:learnPool(t)
 	end
 	-- If we learn an archery talent, also learn to shoot
 	if t.type[1]:find("^technique/archery") and not self:knowTalent(self.T_SHOOT) then
-		print("oddly, that thing in Actor.lua just taught us Shoot as if we didn't already know it.")
 		self:learnTalent(self.T_SHOOT, true)
 		self.resource_pool_refs[self.T_SHOOT] = (self.resource_pool_refs[self.T_SHOOT] or 0) + 1
 	end
@@ -2354,37 +2310,6 @@ function _M:unlearnTalent(t_id)
 	if not self:knowTalent(t_id) and t.mode == "sustained" and self:isTalentActive(t_id) then self:forceUseTalent(t_id, {ignore_energy=true}) end
 
 	return true
-end
-
-function _M:learnItemTalent(o, tid, level)
-	local t = self:getTalentFromId(tid)
-	local max = t.hard_cap or (t.points and t.points + 2) or 5
-	if not self.item_talent_surplus_levels then self.item_talent_surplus_levels = {} end
-	--local item_talent_surplus_levels = self.item_talent_surplus_levels or {}
-	if not self.item_talent_surplus_levels[tid] then self.item_talent_surplus_levels[tid] = 0 end
-	--item_talent_levels[tid] = item_talent_levels[tid] + level
-	for i = 1, level do
-		if self:getTalentLevelRaw(t) >= max then
-			self.item_talent_surplus_levels[tid] = self.item_talent_surplus_levels[tid] + 1
-		else
-			self:learnTalent(tid, true, 1)
-		end
-	end
-end
-
-function _M:unlearnItemTalent(o, tid, level)
-	local t = self:getTalentFromId(tid)
-	local max = (t.points and t.points + 2) or 5
-	if not self.item_talent_surplus_levels then self.item_talent_surplus_levels = {} end
-	--local item_talent_surplus_levels = self.item_talent_surplus_levels or {}
-	if not self.item_talent_surplus_levels[tid] then self.item_talent_surplus_levels[tid] = 0 end
-	for i = 1, level do
-		if self.item_talent_surplus_levels[tid] > 0 then
-			self.item_talent_surplus_levels[tid] = self.item_talent_surplus_levels[tid] - 1
-		else
-			self:unlearnTalent(tid, true, 1)
-		end
-	end
 end
 
 --- Equilibrium check
@@ -2824,7 +2749,6 @@ function _M:postUseTalent(ab, ret)
 	if ab.id ~= self.T_STEALTH and ab.id ~= self.T_HIDE_IN_PLAIN_SIGHT and not ab.no_break_stealth then self:breakStealth() end
 	if ab.id ~= self.T_LIGHTNING_SPEED then self:breakLightningSpeed() end
 	if ab.id ~= self.T_GATHER_THE_THREADS then self:breakGatherTheThreads() end
-	if ab.id ~= self.T_RELOAD then self:breakReloading() end
 	self:breakStepUp()
 
 	if ab.id ~= self.T_REDUX and self:hasEffect(self.EFF_REDUX) and ab.type[1]:find("^chronomancy/") and ab.mode == "activated" and self:getTalentLevel(self.T_REDUX) >= self:getTalentLevel(ab.id) then
@@ -2864,12 +2788,6 @@ function _M:breakStealth()
 
 		self:forceUseTalent(self.T_STEALTH, {ignore_energy=true})
 		self.changed = true
-	end
-end
-
-function _M:breakReloading()
-	if self:hasEffect(self.EFF_RELOADING) then
-		self:removeEffect(self.EFF_RELOADING)
 	end
 end
 

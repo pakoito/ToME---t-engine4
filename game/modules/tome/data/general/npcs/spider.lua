@@ -25,7 +25,7 @@ newEntity{
 	display = "S", color=colors.WHITE,
 	desc = [[Arachnophobia...]],
 
-	combat = { dam=resolvers.levelup(resolvers.mbonus(40, 70), 1, 0.9), atk=16, apr=9, damtype=DamageType.NATURE, dammod={dex=resolvers.levelup(0.2, 5, 0.1, 1.2)} },
+	combat = { dam=resolvers.levelup(resolvers.mbonus(40, 70), 1, 0.9), atk=16, apr=9, damtype=DamageType.NATURE, dammod={dex=1.2} },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 
@@ -263,7 +263,7 @@ newEntity{ base = "BASE_NPC_SPIDER",
 
 	size_category = 1,
 
-	combat = { dam=resolvers.levelup(resolvers.mbonus(40, 70), 1, 0.9), atk=16, apr=9, damtype=DamageType.WASTING},
+	combat = { dam=resolvers.levelup(resolvers.mbonus(40, 70), 1, 0.9), atk=16, apr=9, damtype=DamageType.WASTING, dammod={dex=1.2} },
 
 	combat_armor = 5, combat_def = 10,
 	resists = { [DamageType.NATURE] = 20, [DamageType.LIGHT] = -20, [DamageType.TEMPORAL] = 20, },
@@ -285,7 +285,7 @@ newEntity{ base = "BASE_NPC_SPIDER",
 	life_rating = 13,
 	rank = 2,
 
-	combat = { dam=resolvers.levelup(resolvers.mbonus(40, 70), 1, 0.9), atk=16, apr=9, damtype=DamageType.WASTING},
+	combat = { dam=resolvers.levelup(resolvers.mbonus(40, 70), 1, 0.9), atk=16, apr=9, damtype=DamageType.WASTING, dammod={dex=1.2} },
 
 	combat_armor = 7, combat_def = 17,
 	resists = { [DamageType.NATURE] = 20, [DamageType.LIGHT] = -20, [DamageType.TEMPORAL] = 20, },
@@ -316,7 +316,7 @@ newEntity{ base = "BASE_NPC_SPIDER",
 	ai = "tactical",
 	ai_tactic = resolvers.tactic"melee", ai_state = { ai_move="move_dmap", talent_in=2, },
 
-	combat = { dam=resolvers.levelup(resolvers.mbonus(40, 70), 1, 0.9), atk=16, apr=9, damtype=DamageType.WASTING},
+	combat = { dam=resolvers.levelup(resolvers.mbonus(40, 70), 1, 0.9), atk=16, apr=9, damtype=DamageType.WASTING, dammod={dex=1.2} },
 
 	combat_armor = 7, combat_def = 17,
 	resists = { [DamageType.NATURE] = 20, [DamageType.LIGHT] = -20, [DamageType.TEMPORAL] = 20, },
@@ -354,7 +354,7 @@ newEntity{ base = "BASE_NPC_SPIDER",
 	ai = "tactical",
 	ai_tactic = resolvers.tactic"melee", ai_state = { ai_move="move_dmap", talent_in=1, },
 
-	combat = { dam=resolvers.levelup(resolvers.mbonus(100, 15), 1, 0.9), atk=16, apr=9, damtype=DamageType.WASTING},
+	combat = { dam=resolvers.levelup(resolvers.mbonus(100, 15), 1, 0.9), atk=16, apr=9, damtype=DamageType.WASTING, dammod={dex=1.2} },
 
 	combat_armor = 7, combat_def = 17,
 	resists = { [DamageType.NATURE] = 20, [DamageType.LIGHT] = -20, [DamageType.TEMPORAL] = 20, },

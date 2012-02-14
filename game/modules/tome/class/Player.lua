@@ -617,10 +617,6 @@ function _M:restCheck()
 
 	-- Check resources, make sure they CAN go up, otherwise we will never stop
 	if not self.resting.rest_turns then
-		local ammo = self:hasAmmo()
-		local r = (ammo and ammo.combat and ammo.combat.ammo_every)
-		if r and r > 0 and ammo.combat.shots_left < ammo.combat.capacity then return true end
-
 		if self.air_regen < 0 then return false, "losing breath!" end
 		if self.life_regen <= 0 then return false, "losing health!" end
 		if self:getMana() < self:getMaxMana() and self.mana_regen > 0 then return true end
@@ -631,7 +627,6 @@ function _M:restCheck()
 		for act, def in pairs(game.party.members) do if game.level:hasEntity(act) and not act.dead then
 			if act.life < act.max_life and act.life_regen> 0 then return true end
 		end end
-
 	else
 		return true
 	end

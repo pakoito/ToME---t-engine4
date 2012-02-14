@@ -45,19 +45,6 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			t.on_damage(target, t, type)
 		end
 
-		-- Item-granted damage ward talent
-		--if target:attr("ward") then
-		if target:hasEffect(target.EFF_WARD) then
-			local e = target.tempeffect_def[target.EFF_WARD]
-			dam = e.absorb(type, dam, target.tmp[target.EFF_WARD], target, src)
-		end
-
-		-- Block talent from shields
-		if target:attr("block") then
-			local e = target.tempeffect_def[target.EFF_BLOCKING]
-			dam = e.do_block(type, dam, target.tmp[target.EFF_BLOCKING], target, src)
-		end
-
 		-- Increases damage
 		if src.inc_damage then
 			local inc = (src.inc_damage.all or 0) + (src.inc_damage[type] or 0)
@@ -71,6 +58,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 					print("[PROJECTOR] after inc_damage_actor_type", dam + (dam * inc / 100))
 				end
 			end
+
 			dam = dam + (dam * inc / 100)
 		end
 
@@ -114,12 +102,6 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 				dam = dam + (dam * damageIncrease / 100)
 				game.logPlayer(src, "You strike in the darkness. (+%d damage)", damageIncrease)
 			end
-		end
-
-		-- Elemental Retribution causes the target to get buffed when taking certain kinds of damage
-		if target:knowTalent(target.T_ELEMENTAL_RETRIBUTION) and target ~= src and target.elemental_retribution and target.elemental_retribution[type] and target.elemental_retribution[type] > 0 then
-			local t = target:getTalentFromId(target.T_ELEMENTAL_RETRIBUTION)
-			t.do_retribution(target, t)
 		end
 
 		-- Static reduce damage for psionic kinetic shield
@@ -301,7 +283,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		if dam > 0 and source_talent then
 			local t = source_talent
 
-			if src:attr("spellshock_on_damage") and target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, src:getMaxAccuracy("spell"), 15) and not target:hasEffect(target.EFF_SPELLSHOCKED) then
+			if src:attr("spellshock_on_damage") and target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and not target:hasEffect(target.EFF_SPELLSHOCKED) then
 				target:crossTierEffect(target.EFF_SPELLSHOCKED, src:combatSpellpower())
 			end
 
@@ -346,19 +328,19 @@ local function tryDestroy(who, inven, dam, destroy_prop, proof_prop, msg)
 end
 
 newDamageType{
-	name = "physical", type = "PHYSICAL", text_color = "#WHITE#", color = colors.WHITE,
+	name = "physical", type = "PHYSICAL",
 	death_message = {"battered", "bludgeoned", "sliced", "maimed", "raked", "bled", "impaled", "dissected", "disembowelled", "decapitated", "stabbed", "pierced", "torn limb from limb", "crushed", "shattered", "smashed", "cleaved", "swiped", "struck", "mutilated", "tortured", "skewered", "squished", "mauled", "chopped into tiny pieces", "splattered", "ground", "minced", "punctured", "hacked apart", "eviscerated"},
 }
 
 -- Arcane is basic (usually) unresistable damage
 newDamageType{
-	name = "arcane", type = "ARCANE", text_color = "#PURPLE#", color = colors.PURPLE,
+	name = "arcane", type = "ARCANE", text_color = "#PURPLE#",
 	antimagic_resolve = true,
 	death_message = {"blasted", "energised", "mana-torn", "dweomered", "imploded"},
 }
 -- The elemental damages
 newDamageType{
-	name = "fire", type = "FIRE", text_color = "#LIGHT_RED#", color = colors.LIGHT_RED,
+	name = "fire", type = "FIRE", text_color = "#LIGHT_RED#",
 	antimagic_resolve = true,
 	projector = function(src, x, y, type, dam)
 		if src.fire_convert_to then
@@ -373,7 +355,7 @@ newDamageType{
 	death_message = {"burnt", "scorched", "blazed", "roasted", "flamed", "fried", "combusted", "toasted", "slowly cooked", "boiled"},
 }
 newDamageType{
-	name = "cold", type = "COLD", text_color = "#1133F3#", color = {r=0x11, g=0x33, b=0xF3},
+	name = "cold", type = "COLD", text_color = "#1133F3#",
 	antimagic_resolve = true,
 	projector = function(src, x, y, type, dam)
 		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
@@ -385,7 +367,7 @@ newDamageType{
 	death_message = {"frozen", "chilled", "iced", "cooled", "frozen and shattered into a million little shards"},
 }
 newDamageType{
-	name = "lightning", type = "LIGHTNING", text_color = "#ROYAL_BLUE#", color = colors.ROYAL_BLUE,
+	name = "lightning", type = "LIGHTNING", text_color = "#ROYAL_BLUE#",
 	antimagic_resolve = true,
 	projector = function(src, x, y, type, dam)
 		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
@@ -395,7 +377,7 @@ newDamageType{
 }
 -- Acid destroys potions
 newDamageType{
-	name = "acid", type = "ACID", text_color = "#GREEN#", color = colors.GREEN,
+	name = "acid", type = "ACID", text_color = "#GREEN#",
 	antimagic_resolve = true,
 	projector = function(src, x, y, type, dam)
 		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
@@ -406,12 +388,12 @@ newDamageType{
 
 -- Nature & Blight: Opposing damage types
 newDamageType{
-	name = "nature", type = "NATURE", text_color = "#LIGHT_GREEN#", color = colors.LIGHT_GREEN,
+	name = "nature", type = "NATURE", text_color = "#LIGHT_GREEN#",
 	antimagic_resolve = true,
 	death_message = {"slimed", "splurged", "treehugged", "naturalised"},
 }
 newDamageType{
-	name = "blight", type = "BLIGHT", text_color = "#DARK_GREEN#", color = colors.DARK_GREEN,
+	name = "blight", type = "BLIGHT", text_color = "#DARK_GREEN#",
 	antimagic_resolve = true,
 	projector = function(src, x, y, type, dam, extra)
 		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
@@ -431,21 +413,21 @@ newDamageType{
 
 -- Light damage
 newDamageType{
-	name = "light", type = "LIGHT", text_color = "#YELLOW#", color = colors.YELLOW,
+	name = "light", type = "LIGHT", text_color = "#YELLOW#",
 	antimagic_resolve = true,
 	death_message = {"radiated", "seared", "purified", "sun baked", "jerkied", "tanned"},
 }
 
 -- Darkness damage
 newDamageType{
-	name = "darkness", type = "DARKNESS", text_color = "#GREY#", color = colors.GREY,
+	name = "darkness", type = "DARKNESS", text_color = "#GREY#",
 	antimagic_resolve = true,
 	death_message = {"shadowed", "darkened", "swallowed by the void"},
 }
 
 -- Mind damage
 newDamageType{
-	name = "mind", type = "MIND", text_color = "#YELLOW#", color = colors.YELLOW,
+	name = "mind", type = "MIND", text_color = "#YELLOW#",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
@@ -470,7 +452,7 @@ newDamageType{
 
 -- Temporal damage
 newDamageType{
-	name = "temporal", type = "TEMPORAL", text_color = "#LIGHT_STEEL_BLUE#", color = colors.LIGHT_STEEL_BLUE,
+	name = "temporal", type = "TEMPORAL", text_color = "#LIGHT_STEEL_BLUE#",
 	antimagic_resolve = true,
 	death_message = {"timewarped", "temporally distorted", "spaghettified across the whole of space and time", "paradoxed", "replaced by a time clone (and no one ever knew the difference)", "grandfathered", "time dilated"},
 }
@@ -838,7 +820,7 @@ newDamageType{
 		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam / 2)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, src:getMaxAccuracy("spell"), 15) and target:canBe("knockback") then
+			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
 				target:knockback(srcx, srcy, 1)
 				target:crossTierEffect(target.EFF_OFFBALANCE, src:combatSpellpower())
 				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
@@ -859,7 +841,7 @@ newDamageType{
 		if target and not tmp[target] then
 			tmp[target] = true
 			DamageType:get(DamageType.FIREBURN).projector(src, x, y, DamageType.FIREBURN, dam.dam)
-			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, src:getMaxAccuracy("spell"), 15) and target:canBe("knockback") then
+			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
 				target:knockback(src.x, src.y, dam.dist)
 				target:crossTierEffect(target.EFF_OFFBALANCE, src:combatSpellpower())
 				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
@@ -901,7 +883,7 @@ newDamageType{
 		if target and not tmp[target] then
 			tmp[target] = true
 			DamageType:get(DamageType.DARKNESS).projector(src, x, y, DamageType.DARKNESS, dam.dam)
-			if target:checkHit(src:combatSpellpower(), target:combatMentalResist(), 0, src:getMaxAccuracy("spell"), 15) and target:canBe("knockback") then
+			if target:checkHit(src:combatSpellpower(), target:combatMentalResist(), 0, 95, 15) and target:canBe("knockback") then
 				target:knockback(src.x, src.y, dam.dist)
 				target:crossTierEffect(target.EFF_BRAINLOCKED, src:combatSpellpower())
 				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
@@ -922,7 +904,7 @@ newDamageType{
 		if target and not tmp[target] then
 			tmp[target] = true
 			realdam = DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam)
-			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, src:getMaxAccuracy("spell"), 15) and target:canBe("knockback") then
+			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
 				target:knockback(src.x, src.y, 3)
 				target:crossTierEffect(target.EFF_OFFBALANCE, src:combatSpellpower())
 				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
@@ -1140,7 +1122,7 @@ newDamageType{
 			if src == target then
 				target:setEffect(target.EFF_TIME_PRISON, dam, {no_ct_effect=true})
 				target:setEffect(target.EFF_CONTINUUM_DESTABILIZATION, 100, {power=src:combatSpellpower(0.3), no_ct_effect=true})
-			elseif target:checkHit(src:combatSpellpower() - (target:attr("continuum_destabilization") or 0), target:combatSpellResist(), 0, src:getMaxAccuracy("spell"), 15) then
+			elseif target:checkHit(src:combatSpellpower() - (target:attr("continuum_destabilization") or 0), target:combatSpellResist(), 0, 95, 15) then
 				target:setEffect(target.EFF_TIME_PRISON, dam, {apply_power=src:combatSpellpower() - (target:attr("continuum_destabilization") or 0), apply_save="combatSpellResist", no_ct_effect=true})
 				target:setEffect(target.EFF_CONTINUUM_DESTABILIZATION, 100, {power=src:combatSpellpower(0.3), no_ct_effect=true})
 			else
@@ -1167,10 +1149,9 @@ newDamageType{
 
 -- Confusion
 newDamageType{
-	name = "confusion", type = "RANDOM_CONFUSION", text_color = "#YELLOW#",
+	name = "% chances to confuse", type = "RANDOM_CONFUSION",
 	projector = function(src, x, y, type, dam)
 		if _G.type(dam) == "number" then dam = {dam=dam} end
-		DamageType:get(DamageType.MIND).projector(src, x, y, DamageType.MIND, dam.dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and rng.percent(dam.dam) then
 			if target:canBe("confusion") then
@@ -1271,26 +1252,6 @@ newDamageType{
 		local realdam = DamageType:get(DamageType.BLIGHT).projector(src, x, y, DamageType.BLIGHT, dam.dam)
 		if target and target ~= src and realdam > 0 then
 			src:incVim(realdam * dam.vim * target:getRankVimAdjust())
-		end
-	end,
-}
-
--- Drain all resources
-newDamageType{
-	name = "soul drain", type = "SOUL_DRAIN",
-	projector = function(src, x, y, type, dam)
-		if _G.type(dam) == "number" then dam = {dam=dam, drain=0.5} end
-		local realdam = DamageType:get(DamageType.BLIGHT).projector(src, x, y, DamageType.BLIGHT, dam.dam)
-		local target = game.level.map(x, y, Map.ACTOR)
-		if target and target ~= src and realdam > 0 then
-			target:incMana(-target:getMana()*0.5)
-			target:incVim(-target:getVim()*0.5)
-			target:incPositive(-target:getPositive()*0.5)
-			target:incNegative(-target:getNegative()*0.5)
-			target:incEquilibrium(target:getEquilibrium()*0.5)
-			target:incStamina(-target:getStamina()*0.5)
-			target:incHate(-target:getHate()*0.5)
-			target:incPsi(-target:getPsi()*0.5)
 		end
 	end,
 }
@@ -1484,7 +1445,7 @@ newDamageType{
 		-- check knockback
 		if target and not target:attr("never_move") and not tmp[target] then
 			tmp[target] = true
-			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, src:getMaxAccuracy("spell"), 15) and target:canBe("knockback") then
+			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
 				target:knockback(src.x, src.y, 2)
 				target:crossTierEffect(target.EFF_OFFBALANCE, src:combatSpellpower())
 				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
@@ -1568,7 +1529,7 @@ newDamageType{
 			elseif target ~= src then
 				DamageType:get(DamageType.LIGHT).projector(src, x, y, DamageType.LIGHT, dam )
 				DamageType:get(DamageType.DARKNESS).projector(src, x, y, DamageType.DARKNESS, dam)
-				if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, src:getMaxAccuracy("spell"), 15) and target:canBe("knockback") then
+				if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
 					target:knockback(src.x, src.y, 1)
 					target:crossTierEffect(target.EFF_OFFBALANCE, src:combatSpellpower())
 					game.logSeen(target, "%s is knocked back!", target.name:capitalize())
@@ -1708,7 +1669,7 @@ newDamageType{
 					game.logSeen(target, "%s resists the blindness!", target.name:capitalize())
 				end
 			elseif chance == 3 then
-				if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, src:getMaxAccuracy("spell"), 15) and target:canBe("pin") then
+				if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("pin") then
 					target:setEffect(target.EFF_PINNED, 3, {apply_power=src:combatSpellpower()})
 				else
 					game.logSeen(target, "%s resists the pin!", target.name:capitalize())

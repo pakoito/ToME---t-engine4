@@ -26,7 +26,7 @@ newEntity{
 	blood_color = colors.PURPLE,
 	display = "E", color=colors.YELLOW,
 
-	combat = { dam=resolvers.levelup(resolvers.mbonus(40, 15), 1, 1.2), atk=15, apr=15, dammod={mag=resolvers.levelup(0.1, 5, 0.1, 0.8)}, damtype=DamageType.TEMPORAL },
+	combat = { dam=resolvers.levelup(resolvers.mbonus(40, 15), 1, 1.2), atk=15, apr=15, dammod={mag=0.8}, damtype=DamageType.TEMPORAL, },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 
@@ -44,7 +44,7 @@ newEntity{
 	resists = { [DamageType.TEMPORAL] = 100, },
 
 	negative_status_effect_immune = 1,
-
+	
 }
 
 newEntity{ base = "BASE_NPC_TELUGOROTH",
@@ -111,7 +111,7 @@ newEntity{ base = "BASE_NPC_TELUGOROTH",
 	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_snake" },
 
 	talent_cd_reduction = {[Talents.T_DUST_TO_DUST]=-3},
-
+	
 	resolvers.talents{
 		[Talents.T_ANOMALY_REARRANGE]=1,
 		[Talents.T_DUST_TO_DUST]={base=3, every=10, max=7},
@@ -132,7 +132,7 @@ newEntity{ base = "BASE_NPC_TELUGOROTH",
 	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_snake" },
 
 	talent_cd_reduction = {[Talents.T_DUST_TO_DUST]=-3},
-
+	
 	resolvers.talents{
 		[Talents.T_DIMENSIONAL_STEP]={base=5, every=10, max=9},
 		[Talents.T_ANOMALY_REARRANGE]=1,
@@ -156,7 +156,7 @@ newEntity{ base = "BASE_NPC_TELUGOROTH",
 	ai = "tactical", ai_state = { talent_in=2, ai_move="move_snake" },
 
 	talent_cd_reduction = {[Talents.T_DUST_TO_DUST]=-3},
-
+	
 	resolvers.talents{
 		[Talents.T_ANOMALY_TEMPORAL_STORM]=1,
 		[Talents.T_DUST_TO_DUST]={base=4, every=7},

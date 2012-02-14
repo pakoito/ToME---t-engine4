@@ -23,15 +23,13 @@ newTalent{
 	points = 10,
 	require = { stat = { dex=function(level) return 12 + level * 3 end }, },
 	mode = "passive",
-	getDamage = function(self, t) return math.floor(t.getPercentInc(self, t) * self:combatPhysicalpower()) end,
-	getPercentInc = function(self, t) return self:getTalentLevel(t) / 10 end,
-	getReloadBoost = function(self, t) return math.floor(self:getTalentLevel(t) / 5) end,
+	getDamage = function(self, t) return self:getTalentLevel(t) * 5 end,
+	getPercentInc = function(self, t) return math.sqrt(self:getTalentLevel(t) / 10) / 2 end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local inc = t.getPercentInc(self, t)
-		local shots = t.getReloadBoost(self, t)
-		return ([[Increases damage done with slings by %d%% of your physical power (%d). Also increases the number of shots you can reload per turn by %d.]]):
-		format(inc * 100, damage, shots)
+		return ([[Increases Physical Power by %d. Also increases damage done with slings by %d%%.]]):
+		format(damage, inc * 100)
 	end,
 }
 
@@ -83,8 +81,7 @@ newTalent{
 	tactical = { ATTACK = { weapon = 2 }, DISABLE = { knockback = 2 }, ESCAPE = { knockback = 1 } },
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon("sling") then if not silent then game.logPlayer(self, "You require a sling for this talent.") end return false end return true end,
 	archery_onhit = function(self, t, target, x, y)
-		local w, a = self:hasArcheryWeapon("sling")
-		if target:checkHit(self:combatAttack(), target:combatPhysicalResist(), 0, self:getMaxAccuracy("physical", a.combat), 15) and target:canBe("knockback") then
+		if target:checkHit(self:combatAttack(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
 			target:knockback(self.x, self.y, 4)
 			target:crossTierEffect(target.EFF_OFFBALANCE, self:combatAttack())
 			game.logSeen(target, "%s is knocked back!", target.name:capitalize())

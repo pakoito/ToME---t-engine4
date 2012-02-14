@@ -75,7 +75,7 @@ newTalent{
 			infravision = 10,
 
 			combat_armor = 2, combat_def = 4,
-			combat = { dam=self:getTalentLevel(t) * 10 + rng.avg(12,25), atk=10, apr=10, dammod={str=resolvers.levelup(0.2, 5, 0.1, 0.8)} },
+			combat = { dam=self:getTalentLevel(t) * 10 + rng.avg(12,25), atk=10, apr=10, dammod={str=0.8} },
 
 			wild_gift_detonate = t.id,
 
@@ -165,7 +165,7 @@ newTalent{
 			combat_armor = 1, combat_def = 1,
 			never_move = 1,
 
-			combat = { dam=8, atk=15, apr=5, damtype=DamageType.ACID, dammod={str=resolvers.levelup(0.2, 5, 0.1, 0.7)} },
+			combat = { dam=8, atk=15, apr=5, damtype=DamageType.ACID, dammod={str=0.7} },
 
 			wild_gift_detonate = t.id,
 
@@ -360,7 +360,7 @@ newTalent{
 			level_range = {self.level, self.level}, exp_worth = 0,
 
 			combat_armor = 25, combat_def = -20,
-			combat = { dam=25 + self:getWil(), atk=20, apr=5, dammod={str=resolvers.levelup(0.2, 5, 0.2, 0.9)} },
+			combat = { dam=25 + self:getWil(), atk=20, apr=5, dammod={str=0.9} },
 			resolvers.talents{ [Talents.T_UNSTOPPABLE]=3, [Talents.T_STUN]=3, },
 
 			poison_immune=1, cut_immune=1, fear_immune=1, blind_immune=1,

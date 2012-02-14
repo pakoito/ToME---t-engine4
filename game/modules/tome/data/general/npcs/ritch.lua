@@ -27,7 +27,7 @@ newEntity{
 	desc = [[Ritches are giant insects native to the arid wastes of the southern parts of the Far East.
 Vicious predators, they inject corrupting diseases into their foes, and their sharp claws cut through most armours.]],
 
-	combat = { dam=resolvers.levelup(resolvers.rngavg(30,35), 1, 1), atk=16, apr=70, damtype=DamageType.BLIGHT, dammod={dex=resolvers.levelup(0.1, 5, 0.1, 1.2)} },
+	combat = { dam=resolvers.levelup(resolvers.rngavg(30,35), 1, 1), atk=16, apr=70, damtype=DamageType.BLIGHT, dammod={dex=1.2} },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 

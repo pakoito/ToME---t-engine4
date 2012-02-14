@@ -45,7 +45,7 @@ newTalent{
 		-- Randomly take targets
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local a, id = rng.table(tgts)
-		local hit, chance = a:checkHit(self:combatTalentStatDamage(t, "wil", 5, 110), a:combatPhysicalResist(), 0, self:getMaxAccuracy("spell"), 5)
+		local hit, chance = a:checkHit(self:combatTalentStatDamage(t, "wil", 5, 110), a:combatPhysicalResist(), 0, 95, 5)
 		if a:canBe("pin") and hit then
 			local turns, dam = t.getValues(self, t)
 			a:setEffect(a.EFF_STONE_VINE, turns, {dam=dam, src=self, free=rad*2, free_chance=100-chance})

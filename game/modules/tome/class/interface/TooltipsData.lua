@@ -191,31 +191,27 @@ TOOLTIP_COMBAT_ATTACK = [[#GOLD#Accuracy#LAST#
 Determines your chance to hit your target when measured against the target's Defense.
 When you use Accuracy to inflict temporary physical effects on an enemy, every five points of Accuracy counteracts a single turn of duration reduction granted by the enemy's saving throws.
 ]]
-TOOLTIP_COMBAT_MAX_ATTACK = [[#GOLD#Max accuracy#LAST#
-Your accuracy chance to hit can never be higher than this value.
-Max accuracy is mostly determined by your weapon.
-It affects both your chance to connect physical attacks and to succeed at applying status effects on your foes.
-]]
 TOOLTIP_COMBAT_PHYSICAL_POWER = [[#GOLD#Physical Power#LAST#
 Measures your ability to deal physical damage in combat.
 When you use Physical Power to inflict temporary physical effects on an enemy, every five points of Physical Power counteracts a single turn of duration reduction granted by the enemy's saving throws.
 ]]
 TOOLTIP_COMBAT_DAMAGE = [[#GOLD#Damage#LAST#
-This is the damage you typically inflict on your foes when you hit them, though you
-might do less than this because of the target's armour or percentile damage resistances.
+This is the damage you inflict on your foes when you hit them.
+This damage can be reduced by the target's armour or by percentile damage resistances.
+It is improved by both Strength and Dexterity, some talents can change the stats that affect it.
 ]]
 TOOLTIP_COMBAT_APR = [[#GOLD#Armour Penetration#LAST#
 Armour penetration allows you to ignore a part of the target's armour (this only works for armour, not damage resistance).
 This can never increase the damage you do beyond reducing armour, so it is only useful against armoured foes.
 ]]
 TOOLTIP_COMBAT_CRIT = [[#GOLD#Critical chance#LAST#
-Your chance of dealing a critical hit, which multiplies your normal damage by your critical multiplier.
+Each time you deal damage you have a chance to make a critical hit that deals 150% of the normal damage.
 Some talents allow you to increase this percentage.
 It is improved by Cunning.
 ]]
 TOOLTIP_COMBAT_SPEED = [[#GOLD#Attack speed#LAST#
-This percentage is the frequency with which you get extra attacks. A bonus of 50%, for example,
-means that you will get in an extra strike on every other attack.
+Attack speed represents how fast your attacks are compared to a normal turn.
+The lower it is the faster your attacks are.
 ]]
 TOOLTIP_COMBAT_RANGE = [[#GOLD#Firing range#LAST#
 The maximum distance your weapon can reach.
@@ -290,8 +286,8 @@ This stacks with individual damage type increases.
 TOOLTIP_INC_DAMAGE = [[#GOLD#Damage increase: specific#LAST#
 All damage of this type that you deal, through any means, is increased by this percentage.
 ]]
-TOOLTIP_INC_CRIT_POWER = [[#GOLD#Critical multiplier#LAST#
-Critical strikes multiply damage by this amount.
+TOOLTIP_INC_CRIT_POWER = [[#GOLD#Critical multiplicator#LAST#
+All critical damage (melee, spells, ...) do this much damage.
 ]]
 TOOLTIP_RESIST_ALL = [[#GOLD#Damage resistance: all#LAST#
 All damage you receive, through any means, is decreased by this percentage.

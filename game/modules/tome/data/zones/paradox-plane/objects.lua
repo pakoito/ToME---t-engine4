@@ -36,17 +36,20 @@ According to legend it was made from the first ash sapling to sprout after the S
 	cost = 200,
 	material_level = 5,
 	combat = {
-		dam = 15,
-		critical_power = 1.8,
 		range = 9,
-		dammod = {dex=0.3},
 		physspeed = 0.6,
-		ranged_project={[DamageType.TEMPORAL] = 15},
+	},
+	basic_ammo = {
+		dam = 30,
+		apr = 10,
+		physcrit = 2,
+		dammod = {dex=0.7, str=0.5},
 	},
 	wielder = {
 		life_regen = 2.0,
 		stamina_regen = 1.0,
 		inc_damage={ [DamageType.TEMPORAL] = 10, },
 		inc_stats = { [Stats.STAT_DEX] = 5, [Stats.STAT_WIL] = 4,  },
+		ranged_project={[DamageType.TEMPORAL] = 15},
 	},
 }

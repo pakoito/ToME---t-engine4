@@ -51,7 +51,7 @@ newEntity{ define_as = "WRATHROOT",
 	instakill_immune = 1,
 	move_others=true,
 
-	combat = { dam=resolvers.levelup(27, 1, 0.8), atk=10, apr=0, dammod={str=resolvers.levelup(0.3, 5, 0.2, 1.2)}, sound="actions/melee_thud" },
+	combat = { dam=resolvers.levelup(27, 1, 0.8), atk=10, apr=0, dammod={str=1.2}, sound="actions/melee_thud" },
 
 	resists = { [DamageType.FIRE] = -50 },
 

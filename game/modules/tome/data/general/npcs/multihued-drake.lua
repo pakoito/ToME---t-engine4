@@ -52,7 +52,7 @@ newEntity{ base = "BASE_NPC_MULTIHUED_DRAKE",
 	max_life = resolvers.rngavg(60,80),
 	combat_armor = 5, combat_def = 0,
 	on_melee_hit = {[DamageType.FIRE]=resolvers.mbonus(7, 3), [DamageType.COLD]=resolvers.mbonus(7, 3)},
-	combat = { dam=resolvers.levelup(resolvers.rngavg(25,70), 1, 0.6), atk=resolvers.rngavg(25,70), apr=25, dammod={str=resolvers.levelup(0.2, 5, 0.1, 1.1)} },
+	combat = { dam=resolvers.levelup(resolvers.rngavg(25,70), 1, 0.6), atk=resolvers.rngavg(25,70), apr=25, dammod={str=1.1} },
 
 	resists = { [DamageType.PHYSICAL] = 20, [DamageType.FIRE] = 20, [DamageType.COLD] = 20, [DamageType.ACID] = 20, [DamageType.LIGHTNING] = 20, },
 

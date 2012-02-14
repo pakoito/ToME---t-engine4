@@ -30,7 +30,7 @@ newEntity{
 	rarity = 8,
 	cost = 7,
 	wielder = {
-		combat_armor = resolvers.mbonus_material("combat_armor"),
+		combat_armor = resolvers.mbonus_material(12, 3),
 	},
 }
 
@@ -44,16 +44,16 @@ newEntity{
 	cost = 80,
 	wielder = {
 		resists={
-			[DamageType.FIRE] = resolvers.mbonus_material("resists"),
-			[DamageType.LIGHT] = resolvers.mbonus_material("resists", -1),
-			[DamageType.DARKNESS] = resolvers.mbonus_material("resists"),
+			[DamageType.FIRE] = resolvers.mbonus_material(10, 5),
+			[DamageType.LIGHT] = resolvers.mbonus_material(10, 10, function(e, v) return 0, -v end),
+			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 5),
 		},
 		inc_stats = {
-			[Stats.STAT_CON] = resolvers.mbonus_material("inc_stats", 2),
+			[Stats.STAT_CON] = resolvers.mbonus_material(5, 5),
 		},
-		combat_mentalresist = resolvers.mbonus_material("save", 2),
-		--combat_physresist = resolvers.mbonus_material(5, 5),
-		--combat_spellresist = resolvers.mbonus_material(5, 5),
-		fatigue = resolvers.mbonus_material("fatigue", -1),
-	},
+		combat_mentalresist = resolvers.mbonus_material(5, 5),
+		combat_physresist = resolvers.mbonus_material(5, 5),
+		combat_spellresist = resolvers.mbonus_material(5, 5),
+		fatigue = resolvers.mbonus_material(10, 5),
+	},	
 }

@@ -462,7 +462,7 @@ newTalent{
 			infravision = 10,
 
 			combat_armor = 15, combat_def = 0,
-			combat = { dam=resolvers.levelup(resolvers.rngavg(15,25), 1, 1.3), atk=resolvers.levelup(resolvers.rngavg(15,25), 1, 1.3), dammod={cun=resolvers.levelup(0.2, 5, 0.2, 1.1)} },
+			combat = { dam=resolvers.levelup(resolvers.rngavg(15,25), 1, 1.3), atk=resolvers.levelup(resolvers.rngavg(15,25), 1, 1.3), dammod={cun=1.1} },
 
 			wild_gift_detonate = t.id,
 
@@ -546,7 +546,7 @@ newTalent{
 				infravision = 10,
 
 				combat_armor = 0, combat_def = 0,
-				combat = { dam=resolvers.levelup(resolvers.rngavg(25,40), 1, 0.6), atk=resolvers.rngavg(25,60), apr=25, dammod={str=resolvers.levelup(0.2, 5, 0.2, 1.1)} },
+				combat = { dam=resolvers.levelup(resolvers.rngavg(25,40), 1, 0.6), atk=resolvers.rngavg(25,60), apr=25, dammod={str=1.1} },
 				on_melee_hit = {[DamageType.FIRE]=resolvers.mbonus(7, 2)},
 
 				resists = { [DamageType.FIRE] = 100, },

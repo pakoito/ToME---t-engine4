@@ -166,7 +166,7 @@ newAI("use_tactical", function(self)
 						val = val * (nb_foes_hit - ally_compassion * nb_allies_hit - self_compassion * nb_self_hit)
 					end
 					-- Only take values greater than 0... allows the ai_talents to turn talents off
-					if val > 0 and not self:hasEffect(self.EFF_RELOADING) then
+					if val > 0 then
 						if not avail[tact] then avail[tact] = {} end
 						-- Save the tactic, if the talent is instant it gets a huge bonus
 						-- Note the addition of a less than one random value, this means the sorting will randomly shift equal values
@@ -181,7 +181,7 @@ newAI("use_tactical", function(self)
 	end
 	if ok then
 		local want = {}
-				
+
 		local need_heal = 0
 		local life = 100 * self.life / self.max_life
 		if life < 20 then need_heal = need_heal + 10 * self_compassion / 5
@@ -196,16 +196,6 @@ newAI("use_tactical", function(self)
 			want.heal = need_heal
 		end
 
-		-- Need ammo
-		local a = self:hasAmmo()
-		if avail.ammo and a and not self:hasEffect(self.EFF_RELOADING) then
-			want.ammo = 0
-			local ammo = 100 * a.combat.shots_left / a.combat.capacity
-			if ammo == 0 then want.ammo = want.ammo + 10
-			elseif ammo < 100 then want.ammo = want.ammo + 0.5
-			end
-		end
-		
 		-- Need mana
 		if avail.mana then
 			want.mana = 0
@@ -373,7 +363,6 @@ newAI("use_tactical", function(self)
 			table.sort(selected_talents, function(a,b) return a.val > b.val end)
 			local tid = selected_talents[1].tid
 			print("Tactical choice:", res[1][1], tid)
-			if a then print("shots left:", a.combat.shots_left) end
 			self:useTalent(tid)
 			return true
 		else

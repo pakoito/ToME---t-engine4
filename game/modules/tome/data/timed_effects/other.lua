@@ -730,7 +730,7 @@ newEffect{
 			T_BITE_POISON={base=1, every=10, max=5},
 			T_ROTTING_DISEASE={base=1, every=10, max=5},
 		},
-		combat = { dam=resolvers.levelup(10, 1, 1), atk=resolvers.levelup(5, 1, 1), apr=3, dammod={str=resolvers.levelup(0.2, 5, 0.1, 0.6)} },
+		combat = { dam=resolvers.levelup(10, 1, 1), atk=resolvers.levelup(5, 1, 1), apr=3, dammod={str=0.6} },
 	},
 	doReprieveFromDeath = function(self, eff, target)
 		local def = self.tempeffect_def[self.EFF_CURSE_OF_CORPSES]
@@ -1131,7 +1131,7 @@ newEffect{
 		see_invisible = 80,
 		max_life = resolvers.rngavg(50, 80),
 		combat_armor = 1, combat_def = 10,
-		combat = { dam=resolvers.levelup(resolvers.rngavg(15,20), 1, 1.1), atk=resolvers.rngavg(5,15), apr=5, dammod={str=resolvers.levelup(0.2, 5, 0.2, 1)} },
+		combat = { dam=resolvers.levelup(resolvers.rngavg(15,20), 1, 1.1), atk=resolvers.rngavg(5,15), apr=5, dammod={str=1} },
 		resolvers.talents{
 		},
 	},
@@ -1297,31 +1297,5 @@ newEffect{
 		end
 
 		return dam
-	end,
-}
-
-newEffect{
-	name = "RELOADING", image = "talents/reload.png",
-	desc = "Reloading",
-	long_desc = function(self, eff) return ("Reloading.") end,
-	decrease = 0,
-	type = "other",
-	subtype = { miscellaneous=true },
-	status = "beneficial",
-	parameters = {},
-	activate = function(self, eff)
-		game.logPlayer(self, "#LIGHT_BLUE#You begin reloading.")
-	end,
-	deactivate = function(self, eff)
-	end,
-	on_timeout = function(self, eff)
-		for i = 1, eff.shots_per_turn do
-			eff.ammo.combat.shots_left = util.bound(eff.ammo.combat.shots_left + 1, 0, eff.ammo.combat.capacity)
-			if eff.ammo.combat.shots_left == eff.ammo.combat.capacity then
-				game.logPlayer(self, "Your %s is full.", eff.ammo.name)
-				self:breakReloading()
-				break
-			end
-		end
 	end,
 }

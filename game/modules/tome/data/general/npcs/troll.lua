@@ -27,7 +27,7 @@ newEntity{
 	sound_die = {"creatures/trolls/troll_die_%d", 1, 2},
 	sound_random = {"creatures/trolls/troll_growl_%d", 1, 4},
 
-	combat = { dam=resolvers.levelup(resolvers.mbonus(45, 10), 1, 1), atk=2, apr=6, physspeed=2, dammod={str=resolvers.levelup(0.2, 5, 0.1, 1.1)}, sound="creatures/trolls/stomp" },
+	combat = { dam=resolvers.levelup(resolvers.mbonus(45, 10), 1, 1), atk=2, apr=6, physspeed=2, dammod={str=0.8}, sound="creatures/trolls/stomp" },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.drops{chance=20, nb=1, {} },

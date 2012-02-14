@@ -72,7 +72,6 @@ newTalent{
 		elseif damtype == DamageType.NATURE then    explosion = "slime"               particle = "bolt_slime"     trail = "slimetrail"
 		elseif damtype == DamageType.BLIGHT then    explosion = "slime"               particle = "bolt_slime"     trail = "slimetrail"
 		elseif damtype == DamageType.PHYSICAL then  explosion = "dark"                particle = "stone_shards"   trail = "earthtrail"
-		elseif damtype == DamageType.TEMPORAL then  explosion = "manathrust"          particle = "bolt_arcane"    trail = "arcanetrail"
 		else                                        explosion = "manathrust"          particle = "bolt_arcane"    trail = "arcanetrail" damtype = DamageType.ARCANE
 		end
 
@@ -107,13 +106,13 @@ newTalent{
 	mode = "passive",
 	require = spells_req2,
 	points = 5,
-	getDamage = function(self, t) return math.floor(t.getPercentInc(self, t) * self:combatSpellpower()) end,
-	getPercentInc = function(self, t) return self:getTalentLevel(t) / 10 end,
+	getDamage = function(self, t) return self:getTalentLevel(t) * 5 end,
+	getPercentInc = function(self, t) return math.sqrt(self:getTalentLevel(t) / 10) / 2 end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local inc = t.getPercentInc(self, t)
-		return ([[Increases damage done with staves by %d%% of your spellpower (%d).]]):
-		format(100*inc, damage)
+		return ([[Increases Physical Power by %d. Also increases damage done with staves by %d%%.]]):
+		format(damage, 100 * inc)
 	end,
 }
 

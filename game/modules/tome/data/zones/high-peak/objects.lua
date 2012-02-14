@@ -21,14 +21,12 @@ load("/data/general/objects/objects-far-east.lua")
 load("/data/general/objects/lore/sunwall.lua")
 
 local Stats = require "engine.interface.ActorStats"
-local Talents = require "engine.interface.ActorTalents"
 
 -- The staff of absorption, the reason the game exists!
 newEntity{ define_as = "STAFF_ABSORPTION_AWAKENED", base="BASE_STAFF",
 	power_source = {unknown=true},
 	unique = true, godslayer=true,
 	name = "Awakened Staff of Absorption", identified=true, force_lore_artifact=true,
-	flavor_name = "magestaff",
 	display = "\\", color=colors.VIOLET, image = "object/artifact/staff_absorption.png",
 	encumber = 7,
 	desc = [[Carved with runes of power, this staff seems to have been made long ago. Yet it bears no signs of tarnishment.
@@ -37,42 +35,20 @@ The Sorcerers seem to have awakened its power.
 #{italic}#"And lo they came to Amakthel himself, and thousands were killed in the assault on his throne, and three of the Godslayers were broken beneath his feet. But Falion with his dying breath pierced the great god on his knee with the icy sword Arkil, and seeing his opportunity Caldizar, leader of the Godslayers, advanced with the Staff of Absorption and struck a terrifying blow against Amakthel. So fell the greatest of the gods by the hands of his own children, and his face was forced into the dust."#{normal}#]],
 
 	require = { stat = { mag=60 }, },
-	modes = {"fire", "cold", "lightning", "arcane"},
 	combat = {
-		is_greater = true,
-		of_breaching = true,
-		of_retribution = true,
-		dam = 60,
-		max_acc = 100,
-		critical_power = 2.5,
-		dammod = {mag=0.8},
+		dam = 80,
+		apr = 60,
+		atk = 30,
+		dammod = {mag=1.3},
 		damtype = DamageType.ARCANE,
 	},
 	wielder = {
 		combat_spellpower = 48,
+		combat_spellcrit = 15,
 		max_mana = 100,
 		max_positive = 50,
 		max_negative = 50,
 		inc_stats = { [Stats.STAT_MAG] = 10, [Stats.STAT_WIL] = 10 },
-		inc_damage={
-			[DamageType.FIRE] = 60,
-			[DamageType.LIGHTNING] = 60,
-			[DamageType.COLD] = 60,
-			[DamageType.ARCANE] = 60,
-		},
-		resists_pen={
-			[DamageType.FIRE] = 30,
-			[DamageType.LIGHTNING] = 30,
-			[DamageType.COLD] = 30,
-			[DamageType.ARCANE] = 30,
-		},
-		elemental_retribution = {
-			[DamageType.FIRE] = 1,
-			[DamageType.LIGHTNING] = 1,
-			[DamageType.COLD] = 1,
-			[DamageType.ARCANE] = 1,
-		},
-		learn_talent = {[Talents.T_COMMAND_STAFF] = 5, [Talents.T_ELEMENTAL_RETRIBUTION] = 5,},
 		speaks_shertul = 1,
 	},
 

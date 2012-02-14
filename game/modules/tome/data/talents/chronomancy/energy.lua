@@ -105,7 +105,7 @@ newTalent{
 		local target = game.level.map(tx, ty, Map.ACTOR)
 		if not target then return end
 
-		if not self:checkHit(self:combatSpellpower(), target:combatSpellResist(), 0, self:getMaxAccuracy("spell")) then
+		if not self:checkHit(self:combatSpellpower(), target:combatSpellResist()) then
 			game.logSeen(target, "%s resists!", target.name:capitalize())
 			return true
 		end

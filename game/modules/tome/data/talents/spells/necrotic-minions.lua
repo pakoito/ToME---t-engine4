@@ -316,7 +316,7 @@ local minions_list = {
 			T_ROTTING_DISEASE={base=1, every=10, max=5},
 		},
 		ai_state = { talent_in=4, },
-		combat = { dam=resolvers.levelup(10, 1, 1), atk=resolvers.levelup(5, 1, 1), apr=3, dammod={str=resolvers.levelup(0.1, 5, 0.1, 0.6)} },
+		combat = { dam=resolvers.levelup(10, 1, 1), atk=resolvers.levelup(5, 1, 1), apr=3, dammod={str=0.6} },
 	},
 	ghast = {
 		type = "undead", subtype = "ghoul",
@@ -344,7 +344,7 @@ local minions_list = {
 			T_ROTTING_DISEASE={base=1, every=10, max=5},
 		},
 		ai_state = { talent_in=4, },
-		combat = { dam=resolvers.levelup(10, 1, 1), atk=resolvers.levelup(5, 1, 1), apr=3, dammod={str=resolvers.levelup(0.1, 5, 0.1, 0.6)} },
+		combat = { dam=resolvers.levelup(10, 1, 1), atk=resolvers.levelup(5, 1, 1), apr=3, dammod={str=0.6} },
 	},
 	ghoulking = {
 		type = "undead", subtype = "ghoul",
@@ -368,7 +368,7 @@ local minions_list = {
 		combat_armor = 3, combat_def = 10,
 		ai_state = { talent_in=2, ai_pause=20 },
 		rank = 3,
-		combat = { dam=resolvers.levelup(30, 1, 1.2), atk=resolvers.levelup(8, 1, 1), apr=4, dammod={str=resolvers.levelup(0.1, 5, 0.1, 0.6)} },
+		combat = { dam=resolvers.levelup(30, 1, 1.2), atk=resolvers.levelup(8, 1, 1), apr=4, dammod={str=0.6} },
 		resolvers.talents{
 			T_STUN={base=3, every=9, max=7},
 			T_BITE_POISON={base=3, every=9, max=7},
@@ -382,7 +382,7 @@ local minions_list = {
 	vampire = {
 		type = "undead", subtype = "vampire",
 		display = "V",
-		combat = { dam=resolvers.levelup(resolvers.mbonus(30, 10), 1, 0.8), atk=10, apr=9, damtype=DamageType.DRAINLIFE, dammod={str=resolvers.levelup(0.3, 5, 0.2, 1.9)} },
+		combat = { dam=resolvers.levelup(resolvers.mbonus(30, 10), 1, 0.8), atk=10, apr=9, damtype=DamageType.DRAINLIFE, dammod={str=1.9} },
 		level_range = {1, nil}, exp_worth = 0,
 		body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 		autolevel = "warriormage",
@@ -409,7 +409,7 @@ local minions_list = {
 	m_vampire = {
 		type = "undead", subtype = "vampire",
 		display = "V",
-		combat = { dam=resolvers.levelup(resolvers.mbonus(30, 10), 1, 0.8), atk=10, apr=9, damtype=DamageType.DRAINLIFE, dammod={str=resolvers.levelup(0.3, 5, 0.2, 1.9)} },
+		combat = { dam=resolvers.levelup(resolvers.mbonus(30, 10), 1, 0.8), atk=10, apr=9, damtype=DamageType.DRAINLIFE, dammod={str=1.9} },
 		level_range = {1, nil}, exp_worth = 0,
 		body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 		autolevel = "warriormage",
@@ -522,7 +522,7 @@ local minions_list = {
 		combat_armor = 0, combat_def = resolvers.mbonus(10, 50),
 		invisibility = resolvers.mbonus(5, 10),
 		ai_state = { talent_in=4, },
-		combat = { dam=resolvers.mbonus(45, 45), atk=resolvers.mbonus(25, 45), apr=100, dammod={str=resolvers.levelup(0.1, 5, 0.1, 0.5), mag=resolvers.levelup(0.1, 5, 0.1, 0.5)} },
+		combat = { dam=resolvers.mbonus(45, 45), atk=resolvers.mbonus(25, 45), apr=100, dammod={str=0.5, mag=0.5} },
 		resolvers.talents{
 			T_BURNING_HEX={base=3, every=5, max=7},
 			T_BLUR_SIGHT={base=4, every=6, max=8},
@@ -532,7 +532,7 @@ local minions_list = {
 		type = "undead", subtype = "lich",
 		display = "L",
 		rank = 3, size = 3,
-		combat = { dam=resolvers.rngavg(16,27), atk=16, apr=9, damtype=DamageType.DARKSTUN, dammod={mag=resolvers.levelup(0.2, 5, 0.2, 0.9)} },
+		combat = { dam=resolvers.rngavg(16,27), atk=16, apr=9, damtype=DamageType.DARKSTUN, dammod={mag=0.9} },
 		body = { INVEN = 10, MAINHAND = 1, OFFHAND = 1, FINGER = 2, NECK = 1, LITE = 1, BODY = 1, HEAD = 1, CLOAK = 1, HANDS = 1, BELT = 1, FEET = 1},
 		equipment = resolvers.equip{
 			{type="armor", subtype="cloth", ego_chance=75, autoreq=true},

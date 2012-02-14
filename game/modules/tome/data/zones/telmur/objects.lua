@@ -20,7 +20,6 @@
 load("/data/general/objects/objects-maj-eyal.lua")
 
 local Stats = require "engine.interface.ActorStats"
-local Talents = require "engine.interface.ActorTalents"
 
 newEntity{ base = "BASE_STAFF",
 	power_source = {arcane=true},
@@ -33,17 +32,13 @@ newEntity{ base = "BASE_STAFF",
 	require = { stat = { mag=35 }, },
 	encumberance = 2.5,
 	cost = 500,
-	combat = {
-		dam = 10,
-		max_acc = 80,
-		critical_power = 1.1,
-		dammod = {mag=0.2},
-		damtype = DamageType.PHYSICAL,
-	},
 	wielder = {
 		inc_stats = { [Stats.STAT_MAG] = 4, },
 		max_mana = 50,
 		combat_mentalresist = 8,
-		learn_talent = {[Talents.T_SAVAGERY] = 5},
+		inc_damage={
+			[DamageType.COLD] = 20,
+			[DamageType.ACID] = 20,
+		},
 	},
 }
