@@ -511,9 +511,9 @@ function _M:displayResources(scale, bx, by, a)
 		if player:attr("damage_shield") then shield = shield + player.damage_shield_absorb max_shield = max_shield + player.damage_shield_absorb_max end
 		if player:attr("displacement_shield") then shield = shield + player.displacement_shield max_shield = max_shield + player.displacement_shield_max end
 		if max_shield > 0 then
-			if shield_sha.shad then shield_sha:setUniform("a", a * 0.8) shield_sha.shad:use(true) end
+			if shield_sha.shad then shield_sha:setUniform("a", a * 0.5) shield_sha.shad:use(true) end
 			local p = math.min(1, math.max(0, shield / max_shield))
-			shat[1]:toScreenPrecise(x+49, y+10, shat[6] * p, shat[7], 0, p * 1/shat[4], 0, 1/shat[5], shield_c[1], shield_c[2], shield_c[3], 0.8 * a)
+			shat[1]:toScreenPrecise(x+49, y+10, shat[6] * p, shat[7], 0, p * 1/shat[4], 0, 1/shat[5], shield_c[1], shield_c[2], shield_c[3], 0.5 * a)
 			if shield_sha.shad then shield_sha.shad:use(false) end
 
 			if not self.res.shield or self.res.shield.vc ~= shield or self.res.shield.vm ~= max_shield then
@@ -523,8 +523,8 @@ function _M:displayResources(scale, bx, by, a)
 				}
 			end
 			local dt = self.res.shield.cur
-			dt[1]:toScreenFull(2+x+64, 2+y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3], 0, 0, 0, 0.7 * a)
-			dt[1]:toScreenFull(x+64, y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3], 1, 1, 1, a)
+			dt[1]:toScreenFull(2+x+170-dt[6], 2+y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3], 0, 0, 0, 0.7 * a)
+			dt[1]:toScreenFull(x+170-dt[6], y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3], 1, 1, 1, a)
 
 			self:showResourceTooltip(bx+x*scale, by+y*scale, fshat[6], fshat[7], "res:shield", self.TOOLTIP_DAMAGE_SHIELD.."\n---\n"..self.TOOLTIP_LIFE, true)
 			if game.mouse:getZone("res:life") then game.mouse:unregisterZone("res:life") end
