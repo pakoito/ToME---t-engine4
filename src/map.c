@@ -577,14 +577,14 @@ static void setup_seens_texture(map_type *map)
 
 	int f = (map->is_hex & 1);
 	int realw=1;
-	while (realw < f + (1+f)*map->w) realw *= 2;
+	while (realw < f + (1+f)*(map->w+10)) realw *= 2;
 	int realh=1;
-	while (realh < f + (1+f)*map->h) realh *= 2;
+	while (realh < f + (1+f)*(map->h+10)) realh *= 2;
 	map->seens_map_w = realw;
 	map->seens_map_h = realh;
 
 	glGenTextures(1, &(map->seens_texture));
-	printf("C Map seens texture: %d (%dx%d)\n", map->seens_texture, map->w, map->h);
+	printf("C Map seens texture: %d (%dx%d)\n", map->seens_texture, map->w+10, map->h+10);
 	tglBindTexture(GL_TEXTURE_2D, map->seens_texture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -949,16 +949,19 @@ static void map_update_seen_texture(map_type *map)
 	int ptr = 0;
 	int f = (map->is_hex & 1);
 	int ii, jj;
-	map->seensinfo_w = map->w;
-	map->seensinfo_h = map->h;
+	map->seensinfo_w = map->w+10;
+	map->seensinfo_h = map->h+10;
 
-	for (jj = 0; jj < map->h; jj++)
+	for (jj = 0; jj < map->h+10; jj++)
 	{
-		for (ii = 0; ii < map->w; ii++)
+		for (ii = 0; ii < map->w+10; ii++)
 		{
 			int i = ii, j = jj;
 			ptr = (((1+f)*j + (i & f)) * map->seens_map_w + (1+f)*i) * 4;
-			if ((i < 0) || (j < 0) || (i >= map->w) || (j >= map->h))
+			int ri = i-5, rj = j-5;
+			ri = (ri < 0) ? 0 : (ri >= map->w) ? map->w-1 : ri;
+			rj = (rj < 0) ? 0 : (rj >= map->h) ? map->h-1 : rj;
+			if ((i < 0) || (j < 0) || (i >= map->w+10) || (j >= map->h+10))
 			{
 				seens[ptr] = 0;
 				seens[ptr+1] = 0;
@@ -984,7 +987,7 @@ static void map_update_seen_texture(map_type *map)
 				//ptr += 4;
 				continue;
 			}
-			float v = map->grids_seens[j*map->w+i] * 255;
+			float v = map->grids_seens[rj*map->w+ri] * 255;
 			if (v)
 			{
 				if (v > 255) v = 255;
@@ -1011,7 +1014,7 @@ static void map_update_seen_texture(map_type *map)
 					seens[ptr+3] = (GLubyte)255-v;
 				}
 			}
-			else if (map->grids_remembers[i][j])
+			else if (map->grids_remembers[ri][rj])
 			{
 				seens[ptr] = 0;
 				seens[ptr+1] = 0;
@@ -1080,8 +1083,8 @@ static int map_draw_seen_texture(lua_State *L)
 	int x = lua_tonumber(L, 2);
 	int y = lua_tonumber(L, 3);
 	int nb_keyframes = 0;
-//	x += -map->tile_w * 3;
-//	y += -map->tile_h * 3;
+	x += -map->tile_w * 5;
+	y += -map->tile_h * 5;
 	int w = (map->seens_map_w) * map->tile_w;
 	int h = (map->seens_map_h) * map->tile_h;
 
